@@ -117,8 +117,15 @@ class SSViewer extends Object {
 	
 	public static function getTemplateFile($identifier) {
 		global $_TEMPLATE_MANIFEST;
-		if(isset($_TEMPLATE_MANIFEST[$identifier]['Includes'])) return $_TEMPLATE_MANIFEST[$identifier]['Includes'];
-		else return isset($_TEMPLATE_MANIFEST[$identifier]['main']) ? $_TEMPLATE_MANIFEST[$identifier]['main'] : null;
+		if(self::$current_theme && isset($_TEMPLATE_MANIFEST[$identifier]['themes'][self::$current_theme]['Includes'])) {
+			return $_TEMPLATE_MANIFEST[$identifier]['themes'][self::$current_theme]['Includes'];
+		} else if(isset($_TEMPLATE_MANIFEST[$identifier]['Includes'])){
+			return $_TEMPLATE_MANIFEST[$identifier]['Includes'];
+		} else if(self::$current_theme && isset($_TEMPLATE_MANIFEST[$identifier]['themes'][self::$current_theme]['main'])) {
+			return $_TEMPLATE_MANIFEST[$identifier]['themes'][self::$current_theme]['main'];
+		} else {
+			return isset($_TEMPLATE_MANIFEST[$identifier]['main']) ? $_TEMPLATE_MANIFEST[$identifier]['main'] : null;
+		}
 	}
 	public static function getTemplateContent($identifier) {
 		return file_get_contents(SSViewer::getTemplateFile($identifier));
