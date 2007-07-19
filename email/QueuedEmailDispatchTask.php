@@ -1,0 +1,28 @@
+<?php
+class QueuedEmailDispatchTask extends DailyTask {
+	
+	public function process() {
+		
+		set_time_limit(0);
+		
+		echo "SENDING QUEUED EMAILS\n";
+		
+		$queued = DataObject::get('QueuedEmail', "`Send` < NOW()");
+		
+		if( !$queued )
+			return;
+			
+		foreach( $queued as $data ) {
+			
+			if( !$data->canSendEmail() )
+				continue;
+			
+			$data->send();
+			echo 'Sent to: ' . $data->To()->Email . "\n";
+			
+			$data->delete();
+		}
+	}
+	
+}
+?>

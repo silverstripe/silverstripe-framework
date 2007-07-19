@@ -1,0 +1,6 @@
+<li>
+	<img class="handle" src="sapphire/images/drag.gif" alt="Drag to rearrange order of options" />
+	<input type="text" name="$Name.Attr[Title]" value="$Title.Attr" />
+	<input type="radio" name="$Name.Attr[Default]" value="$ID" />
+	<a href="#"><img src="cms/images/delete.gif" alt="Remove this option" /></a>
+</li>

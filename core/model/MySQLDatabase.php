@@ -1,0 +1,365 @@
+<?php
+
+/**
+ * @package sapphire
+ * @subpackage core
+ */
+
+/**
+ * MySQL connector class.
+ */
+class MySQLDatabase extends Database {
+	/**
+	 * Connection to the DBMS.
+	 * @var resource
+	 */
+	private $dbConn;
+	
+	/**
+	 * True if we are connected to a database.
+	 * @var boolean
+	 */
+	private $active;
+	
+	/**
+	 * The name of the database.
+	 * @var string
+	 */
+	private $database;
+	
+	/**
+	 * Connect to a MySQL database.
+	 * @param array $parameters An map of parameters, which should include:
+	 * <ul><li>server: The server, eg, localhost</li>
+	 * <li>username: The username to log on with</li>
+	 * <li>password: The password to log on with</li>
+	 * <li>database: The database to connect to</li>
+	 */
+	public function __construct($parameters) {
+		$this->dbConn = mysql_connect($parameters['server'], $parameters['username'], $parameters['password']);
+		$this->active = mysql_select_db($parameters['database'], $this->dbConn);
+		$this->database = $parameters['database'];
+		if(!$this->dbConn) {
+			$this->databaseError("Could connect to MySQL database");
+		}
+
+		parent::__construct();
+	}
+	
+	/**
+	 * Returns true if this database supports collations
+	 * @return boolean
+	 */
+	public function supportsCollations() {
+		return $this->getVersion() >= 4.1;
+	}
+	
+	/**
+	 * The version of MySQL.
+	 * @var float
+	 */
+	private $mysqlVersion;
+	
+	/**
+	 * Get the version of MySQL.
+	 * @return float
+	 */
+	public function getVersion() {
+		if(!$this->mysqlVersion) {
+			$this->mysqlVersion = (float)$this->query("SELECT VERSION()")->value();
+		}
+		return $this->mysqlVersion;
+	}
+	
+	public function query($sql, $errorLevel = E_USER_ERROR) {
+		if(isset($_REQUEST['previewwrite']) && in_array(strtolower(substr($sql,0,strpos($sql,' '))), array('insert','update','delete','replace'))) {
+			echo "<p>Will execute: $sql</p>";
+			return;
+		}
+
+		if(isset($_REQUEST['showqueries'])) { 
+			$starttime = microtime(true);
+		}
+		
+		$handle = mysql_query($sql, $this->dbConn);
+		
+		if(isset($_REQUEST['showqueries'])) {
+			$endtime = round(microtime(true) - $starttime,4);
+			Debug::message("\n$sql\n{$endtime}ms\n", false);
+		}
+		
+		if(!$handle && $errorLevel) $this->databaseError("Couldn't run query: $sql | " . mysql_error($this->dbConn), $errorLevel);
+		return new MySQLQuery($this, $handle);
+	}
+	
+	public function getGeneratedID() {
+		return mysql_insert_id($this->dbConn);
+	}
+	
+	/**
+	 * OBSOLETE: Get the ID for the next new record for the table.
+	 * 
+	 * @var string $table The name od the table.
+	 * @return int
+	 */
+	public function getNextID($table) {
+		user_error('getNextID is OBSOLETE (and will no longer work properly)', E_USER_WARNING);
+		$result = $this->query("SELECT MAX(ID)+1 FROM `$table`")->value();
+		return $result ? $result : 1;
+	}
+	
+	public function isActive() {
+		return $this->active ? true : false;	
+	}
+	
+	public function createDatabase() {
+		$this->query("CREATE DATABASE $this->database");
+		if(mysql_select_db($this->database, $this->dbConn)) {
+			$this->active = true;
+			return true;
+		}
+	}
+	
+	public function createTable($tableName) {
+		$this->query("CREATE TABLE `$tableName` (ID int(11) not null auto_increment, primary key (ID)) TYPE=MyISAM");
+	}
+
+	public function renameTable($oldTableName, $newTableName) {
+		$this->query("ALTER TABLE `$oldTableName` RENAME `$newTableName`");
+	}
+	
+	/**
+	 * Checks a table's integrity and repairs it if necessary.
+	 * @var string $tableName The name of the table.
+	 * @return boolean Return true if the table has integrity after the method is complete.
+	 */
+	public function checkAndRepairTable($tableName) {
+		if(!$this->runTableCheckCommand("CHECK TABLE `$tableName`")) {
+			if(!Database::$supressOutput) {
+				echo "<li style=\"color: orange\">Table $tableName: repaired</li>";
+			}
+
+			return $this->runTableCheckCommand("REPAIR TABLE `$tableName` USE_FRM");
+		} else {
+			return true;
+		}
+	}
+	
+	/**
+	 * Helper function used by checkAndRepairTable.
+	 * @param string $sql Query to run.
+	 * @return boolean Returns if the query returns a successful result.
+	 */
+	protected function runTableCheckCommand($sql) {
+		$testResults = $this->query($sql);
+		foreach($testResults as $testRecord) {
+			if(strtolower($testRecord['Msg_text']) != 'ok') {
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	public function createField($tableName, $fieldName, $fieldSpec) {
+		$this->query("ALTER TABLE `$tableName` ADD `$fieldName` $fieldSpec");
+	}
+	
+	/**
+	 * Change the database type of the given field.
+	 * @param string $tableName The name of the tbale the field is in.
+	 * @param string $fieldName The name of the field to change.
+	 * @param string $fieldSpec The new field specification
+	 */
+	public function alterField($tableName, $fieldName, $fieldSpec) {
+		// This wee function was built for MoT.  It will preserve the binary format of the content,
+		// but change the character set
+		/*
+		$changes = $this->query("SELECT ID, `$fieldName` FROM `$tableName`")->map();
+		*/
+
+		$this->query("ALTER TABLE `$tableName` CHANGE `$fieldName` `$fieldName` $fieldSpec");
+
+		// This wee function was built for MoT.  It will preserve the binary format of the content,
+		// but change the character set
+		/*
+		echo "<li>Fixing " . sizeof($changes) . " page's contnet";
+		foreach($changes as $id => $text) {
+			$SQL_text = Convert::raw2sql($text);
+			$this->query("UPDATE `$tableName` SET `$fieldName` = '$SQL_text' WHERE ID = '$id'");
+		}
+		*/
+	}
+	
+	public function fieldList($table) {
+		$fields = DB::query("SHOW FULL FIELDS IN `$table`");
+		foreach($fields as $field) {
+			$fieldSpec = $field['Type'];
+			if(!$field['Null'] || $field['Null'] == 'NO') {
+				$fieldSpec .= ' not null';
+			}
+			
+			if($field['Collation'] && $field['Collation'] != 'NULL') {
+				$collInfo = DB::query("SHOW COLLATION LIKE '$field[Collation]'")->record();
+				$fieldSpec .= " character set $collInfo[Charset] collate $field[Collation]";
+			}
+			
+			if($field['Default'] || $field['Default'] === "0") {
+				$fieldSpec .= " default '" . addslashes($field['Default']) . "'";
+			}
+			if($field['Extra']) $fieldSpec .= " $field[Extra]";
+			
+			$fieldList[$field['Field']] = $fieldSpec;
+		}
+		return $fieldList;
+	}
+	
+	/**
+	 * Create an index on a table.
+	 * @param string $tableName The name of the table.
+	 * @param string $indexName The name of the index.
+	 * @param string $indexSpec The specification of the index, see Database::requireIndex() for more details.
+	 */
+	public function createIndex($tableName, $indexName, $indexSpec) {
+	    $indexSpec = trim($indexSpec);
+	    if($indexSpec[0] != '(') list($indexType, $indexFields) = explode(' ',$indexSpec,2);
+	    else $indexFields = $indexSpec;
+	    if(!isset($indexType)) {
+			$indexType = "index";
+		}
+
+		$this->query("ALTER TABLE `$tableName` ADD $indexType `$indexName` $indexFields");
+	}
+	
+	/**
+	 * Alter an index on a table.
+	 * @param string $tableName The name of the table.
+	 * @param string $indexName The name of the index.
+	 * @param string $indexSpec The specification of the index, see Database::requireIndex() for more details.
+	 */
+	public function alterIndex($tableName, $indexName, $indexSpec) {
+	    $indexSpec = trim($indexSpec);
+	    if($indexSpec[0] != '(') {
+	    	list($indexType, $indexFields) = explode(' ',$indexSpec,2);
+	    } else {
+	    	$indexFields = $indexSpec;
+	    }
+	    
+	    if(!$indexType) {
+	    	$indexType = "index";
+	    }
+    
+		$this->query("ALTER TABLE `$tableName` DROP INDEX `$indexName`");
+		$this->query("ALTER TABLE `$tableName` ADD $indexType `$indexName` $indexFields");
+	}
+	
+	/**
+	 * Return the list of indexes in a table.
+	 * @param string $table The table name.
+	 * @return array
+	 */
+	public function indexList($table) {
+		$indexes = DB::query("SHOW INDEXES IN `$table`");
+		
+		foreach($indexes as $index) {
+			$groupedIndexes[$index['Key_name']]['fields'][$index['Seq_in_index']] = $index['Column_name'];
+			
+			if($index['Index_type'] == 'FULLTEXT') {
+				$groupedIndexes[$index['Key_name']]['type'] = 'fulltext ';
+			} else if(!$index['Non_unique']) {
+				$groupedIndexes[$index['Key_name']]['type'] = 'unique ';
+			} else {
+				$groupedIndexes[$index['Key_name']]['type'] = '';
+			}
+		}
+		
+		foreach($groupedIndexes as $index => $details) {
+			ksort($details['fields']);
+			$indexList[$index] = $details['type'] . '(' . implode(',',$details['fields']) . ')';
+		}
+		
+		return $indexList;
+	}
+
+
+	/**
+	 * Returns a list of all the tables in the database.
+	 * Table names will all be in lowercase.
+	 * @return array
+	 */
+	public function tableList() {
+		foreach($this->query("SHOW TABLES") as $record) {
+			$table = strtolower(reset($record));
+			$tables[$table] = $table;
+		}
+		return isset($tables) ? $tables : null;		
+	}
+	
+	/**
+	 * Return the number of rows affected by the previous operation.
+	 * @return int
+	 */
+	public function affectedRows() {
+		return mysql_affected_rows($this->dbConn);
+	}
+}
+
+/**
+ * A result-set from a MySQL database.
+ */
+class MySQLQuery extends Query {
+	/**
+	 * The MySQLDatabase object that created this result set.
+	 * @var MySQLDatabase
+	 */
+	private $database;
+	
+	/**
+	 * The internal MySQL handle that points to the result set.
+	 * @var resource
+	 */
+	private $handle;
+
+	/**
+	 * Hook the result-set given into a Query class, suitable for use by sapphire.
+	 * @param database The database object that created this query.
+	 * @param handle the internal mysql handle that is points to the resultset.
+	 */
+	public function __construct(MySQLDatabase $database, $handle) {
+		$this->database = $database;
+		$this->handle = $handle;
+		parent::__construct();
+	}
+	
+	public function __destroy() {
+		mysql_free_result($this->handle);
+	}
+	
+	public function seek($row) {
+		return mysql_data_seek($this->handle, $row);
+	}
+	
+	public function numRecords() {
+		return mysql_num_rows($this->handle);
+	}
+	
+	public function nextRecord() {
+		// Coalesce rather than replace common fields.
+		if($data = mysql_fetch_row($this->handle)) {
+			foreach($data as $columnIdx => $value) {
+				$columnName = mysql_field_name($this->handle, $columnIdx);
+				// $value || !$ouput[$columnName] means that the *last* occurring value is shown
+				// !$ouput[$columnName] means that the *first* occurring value is shown
+				if(isset($value) || !isset($output[$columnName])) {
+					$output[$columnName] = $value;
+				}
+			}
+			return $output;
+		} else {
+			return false;
+		}
+	}
+	
+	
+}
+
+?>

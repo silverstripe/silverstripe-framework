@@ -1,0 +1,50 @@
+#GB_header {
+	position: absolute;
+	z-index: 151;
+	margin: 0;
+ 	top: 0;
+	font-size : 14px;
+	font-weight : bold;
+	color: white;
+	background: #0075C9 url(../images/textures/obar.gif) 0px 0px repeat-x !important;
+	height : 22px !important;
+}
+
+#GB_window {
+	border: 0;
+}
+
+#GB_close {
+	padding: 2px 5px 0 0;
+	float: right;
+	color: #fff;
+	font-size: 11px;
+}
+
+.ComplexTableField {
+	margin-bottom: 10px;
+}
+.ComplexTableField .PageControls {
+	margin: 5px 0;
+	text-align:center;
+	display:block;
+	margin-bottom: 5px;
+	background:#ebeadb;
+	border: 1px #cbc7b7 solid;
+}
+.ComplexTableField .PageControls * {
+		display:inline;
+		vertical-align: middle;
+}
+.ComplexTableField .PageControls .Last{
+	float:right; display:block;
+	width:40px; text-align:right;
+}
+.ComplexTableField .PageControls .First{
+	float:left; display:block;
+	width:40px; text-align:left;
+}
+
+.ComplexTableField tbody td {
+	cursor: pointer;
+}

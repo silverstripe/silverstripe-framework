@@ -1,0 +1,153 @@
+html {
+	width : 100%;
+	height : 100%;
+}
+
+body {
+	text-align: center;
+	width : 100%;
+	height : 100%;
+	overflow : hidden;
+	background-color : #EFEFEF !important;
+}
+
+#all {
+	width: 500px;
+	border: 1px #333333 solid;
+	background-color : white;
+	text-align: left;
+	float:left;
+	position : absolute;
+ 	top : 50px;
+	font-family : Verdana, Geneva, Arial, Helvetica, sans-serif;
+	
+}
+
+
+#intro {
+
+	margin : 10px;
+	padding-left : 10px;
+	padding-right : 10px;
+	font-size : 11px;
+
+}
+
+h1{
+
+	color : white;
+	font-size : 12px;
+	border-bottom : 1px solid #333333;
+	background-image : url(../../cms/images/textures/obar.gif);
+	background-repeat : repeat-x;
+	height : 18px;
+	margin-top : 0px;
+	padding-top : 4px;
+	padding-left : 10px;
+	
+}
+
+
+
+
+#supported {
+	
+	
+	display : none;
+	padding : 10px;
+	
+}
+
+
+#noSupport {
+	
+	margin : 10px;
+	padding : 10px;
+	
+}
+
+
+
+form div.field {
+	clear: both;
+	padding : 4px;
+}
+
+form div.field input{
+	
+	height : 26px;
+	font-size : 18px;
+	font-weight : lighter;
+	width : 300px;
+
+
+}
+
+form div.field input.checkbox{
+	
+	height : 26px;
+	font-size : 18px;
+	font-weight : lighter;
+	width : 16px;
+
+
+}
+
+
+fieldset{
+
+
+	border : 3px solid #CCCCCC;
+
+}
+
+
+form label.left {
+	float: left;
+	width: 8em;
+	font-size : 16px;
+	margin-top : 6px;
+}
+
+
+
+p.actions{
+	
+	float : right;
+	
+	
+}
+
+
+/** Form messages **/
+	.message {
+		margin: 1em 0;
+		padding: 0.5em;
+		font-weight: bold;
+		border: 1px black solid;
+
+			background-color: #B9FFB9;
+			border-color: #00FF00;
+	}
+
+	.message.warning{
+		background-color: #FFD2A6;
+		border-color: #FF9300;
+	}
+	.message.bad {
+		background-color: #FF8080;
+		border-color: #FF0000;
+	}
+		.message.required,
+		.message.validation{
+			display:block;
+			margin-top:5px;
+			color:#FF9300;
+			width:240px;
+			border-color: #FF9300;
+		}
+		.message.validation{
+			color:#FF4040;
+			width:240px;
+			border-color: #FF4040;
+		}

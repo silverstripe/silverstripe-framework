@@ -1,0 +1,103 @@
+
+#SilverStripeNavigator {
+	position: fixed;
+	bottom: 0;
+	left: 0;
+	width: 100%;
+	border-top: 3px solid #d4d0c8;
+	background-color:#81858d;
+	height: 18px;
+	overflow:hidden;
+	background-image:url(../../cms/images/textures/bottom.png);
+
+}
+
+#SilverStripeNavigator .holder {
+
+	text-align: center;
+	padding-top : 3px;
+	padding-left : 3px;
+	padding-right : 6px;
+	font-size: 10px;
+	color: white;
+	border-top: 1px solid #555555;
+
+}
+#SilverStripeNavigator #logInStatus {
+	float: right;
+}
+#SilverStripeNavigator #switchView {
+	float: left;
+
+}
+
+#SilverStripeNavigator a  {
+	color: #333;
+	background-color: transparent;
+	text-decoration: none;
+}
+#SilverStripeNavigator a:hover  {
+	color: #333;
+	background-color: transparent;
+	text-decoration: underline;
+}
+
+#SilverStripeNavigator .bottomTabs a  {
+	width: auto;
+	display: block;
+	float : left;
+	height : 13px;
+	padding-left : 12px;
+	padding-right : 12px;
+	position:relative;
+	top : -3px;
+	border : 1px solid #65686e;
+	border-top : none;
+	cursor:pointer;
+	background-color: #cdc9c1;
+	color : #333333;
+	background-image: none;
+}
+
+#SilverStripeNavigator .bottomTabs div.blank {
+	display: block;
+	float : left;
+	height : 13px;
+	padding-left : 12px;
+	padding-right : 12px;
+	position:relative;
+	top : -3px;
+	border : 1px solid #65686e;
+	border-top : none;
+	cursor:pointer;
+	background-color: #cdc9c1;
+	color : #333333;
+
+	border : none;
+	background-color: transparent;
+	padding-right: 2px;
+	padding-left: 2px;
+	padding-top : 2px;
+	color:#FFFFFF;
+}
+
+
+#SilverStripeNavigator .bottomTabs a.current {
+	background-color : #d4d0c8;
+	padding-top : 1px;
+	top : -5px;
+	height : 15px;
+	font-weight:bold;
+	font-size : 11px;
+	border : 1px solid #555555;
+}
+
+#SilverStripeNavigatorMessage {
+	position: absolute;
+	right: 45%;
+	top: 10px;
+	padding: 10px;
+	border-color: #c99;
+	color: #fff;
+	background-color: #c00;
+}

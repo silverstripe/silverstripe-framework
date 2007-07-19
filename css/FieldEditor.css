@@ -1,0 +1,208 @@
+* {
+	font-family: Arial;
+	font-size: 1em;
+}
+
+
+div.field {
+	margin-bottom : 4px;
+}
+
+div.FieldEditor {
+	border: 1px solid #CCCCCC;
+	padding: 0px;
+}
+
+div.FieldEditor ul.Menu {
+	margin: 0;
+	padding: 3px;
+	background-color: #EEEEEE;
+	position: relative;
+}
+
+    div.FieldEditor div.FormOptions div.CompositeField {
+        margin-left: 4em;
+    }
+
+    div.FieldEditor div.FormOptions label.left {
+        line-height: auto;
+        position: relative;
+    }
+
+    div.FieldEditor div.FormOptions label.right,
+    div.FieldEditor div.FormOptions label.CustomActionLabel {
+        margin-left: 0em;
+        float: none;
+        line-height: auto;
+        display: inline;
+    }
+
+	div.FieldEditor input.checkbox {
+		width: auto !important;
+	}
+	
+	div.FieldEditor ul.Menu li {
+		background-color: transparent;
+	}
+	
+	div.FieldEditor div.FieldList {
+		background-color: white;
+		border-bottom: 1px solid #CCCCCC;
+		border-top: 1px solid #CCCCCC;
+		height: 75%;
+		/*overflow-y: scroll;*/
+	}
+	
+	div.FieldEditor div.FormOptions {
+		background-color: #EEEEEE;
+		position: relative;
+		float: left;
+		width:100%;
+	}
+	
+		div.FieldEditor div.FormOptions div.field {
+			position: relative;
+		}
+		
+		div.FieldEditor div.FormOptions div.optionset li {
+			display: block;
+		}
+		
+			div.FieldEditor div.FormOptions div.optionset li label {
+				float: none !important;
+			}
+
+.DragEditable {
+	border: 0;
+}
+
+div.FieldEditor ul li {
+	display: inline;
+}
+
+div.FieldEditor ul a {
+	padding: 3px;
+}
+
+div.FieldEditor ul a:hover {
+	background-color: #CCCCCC;
+}
+
+/*********************************************************************
+ * EditableFormField - Default class for all editable form fields
+ ********************************************************************/
+
+div.EditableFormField {
+	padding: 3px;
+	border-top: 1px dashed #CCCCCC;
+}
+
+div.EditableFormField.mouseOver {
+	background-color: #f3ef9d;
+}
+
+	div.EditableFormField div.hidden {
+		display: none;
+		margin: 0px;
+	}
+
+	div.EditableFormField div.FieldInfo {
+		margin: 0px;
+		padding-right: -3px;
+	}
+	
+		div.EditableFormField div.FieldInfo * {
+			display: inline;
+			margin-right: 3px;
+			margin-left: 0px;
+			vertical-align: middle;
+		}
+		
+		div.EditableFormField div.FieldInfo input,
+		div.EditableFormField div.FieldDefault input {
+			width: 250px;
+			margin-left: 0px;
+		}
+	
+	div.EditableFormField div.ExtraOptions {
+		display: none;
+		margin: 3px 0px 3px 57px;
+		background-color: #EEEEEE;
+		/* IE has background issues without this */
+		/*position: relative;*/
+		padding: 3px;
+	}
+
+/*********************************************************************
+ * EditableDateField
+ ********************************************************************/
+ 
+div.EditableDateField div.FieldDefault input {
+	width: 2em;
+}
+
+	div.EditableDateField div.FieldDefault input.year {
+		width: 4em;
+	}
+ 
+/*********************************************************************
+ * EditableEmailField
+ ********************************************************************/ 
+
+/*********************************************************************
+ * EditableDropdown
+ ********************************************************************/ 
+
+#right #Form_EditForm div.EditableMultiOptionFormField div.FieldDefault ul.EditableDropdownOptions {
+	border: solid 1px #7F9DB9;
+	/* IE */
+	margin: 0px;
+	/* display: none; */
+	display: block;
+	position: relative;
+}
+
+#right #Form_EditForm div.EditableDropdown select {
+	margin-bottom: 0px;
+}
+
+#right #Form_EditForm div.EditableDropdown select,
+#right #Form_EditForm div.EditableMultiOptionFormField ul.EditableDropdownOptions {
+	width: 250px;
+	padding: 3px;
+}
+
+	#right #Form_EditForm li.EditableFormFieldOption {
+		display: block;
+		padding: 2px 0px;
+	}
+
+		#right #Form_EditForm li.EditableFormFieldOption * {
+			vertical-align: middle;
+			display: inline;
+		}
+		
+		#right #Form_EditForm li.EditableFormFieldOption a {
+			width: 16px;
+		}
+		
+		#right #Form_EditForm li.EditableFormFieldOption input.text {
+			width: 170px !important;
+		}
+		
+		#right #Form_EditForm li.EditableFormFieldOption input.radio,
+		#right #Form_EditForm li.EditableFormFieldOption input.checkbox {
+			width: 20px;
+		}
+		
+	  #right #Form_EditForm li.AddDropdownOption {
+			border-top: dashed 1px #7F9DB9;
+			padding-left: 37px;
+			height: auto;
+		}
+	
+		/* Need first rule in order to overwrite */
+		#right #Form_EditForm li.AddDropdownOption input.text {
+			width: 170px !important;	
+			margin-left: 0px;
+		}

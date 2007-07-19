@@ -1,0 +1,34 @@
+.RelatedDataEditor div.children_holder{
+	border: 2px solid rgb(134, 159, 206);
+	padding: 8px 0;
+}
+.RelatedDataEditor div.field{
+	margin-bottom: 0;
+	padding: 0 10px;
+}
+.RelatedDataEditor div.keyholder{
+	background: url(../../sapphire/images/relatedDatafield-key-grad.gif) bottom left repeat-x ;
+}
+.RelatedDataEditor div.keyholder label{
+	width: 140px;
+	margin-left: 0;
+}
+.RelatedDataEditor div.keyholder label span{
+	font-weight: bold;
+	float: right;
+	margin-right: 12px;
+	margin-top: 2px;
+}
+.relatedDataKey {
+	display: inline;
+}
+.nested div.keyholder{
+	background-image: url(../../sapphire/images/relatedDatafield-key-grad2.gif);
+}
+.nested div.children_holder{
+	border: 2px solid rgb(158, 220, 143);
+	padding: 8px 0;
+}
+.RelatedDataEditor .clear{
+	clear: both;
+}

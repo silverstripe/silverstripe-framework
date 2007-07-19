@@ -1,0 +1,291 @@
+<?php
+
+/**
+ * A wrapper class for GD-based images, with lots of manipulation functions.
+ */
+class GD extends Object {
+	protected $gd, $width, $height;
+	protected $quality = 75;
+	
+	function __construct($filename = null) {
+		// If we're working with image resampling, things could take a while.  Bump up the time-limit
+		set_time_limit(300);
+		
+		if($filename) {
+			// We use getimagesize instead of extension checking, because sometimes extensions are wrong.
+			list($width, $height, $type, $attr) = getimagesize($filename);
+			switch($type) {
+				case 1: $this->setGD(imagecreatefromgif($filename)); break;
+				case 2: $this->setGD(imagecreatefromjpeg($filename)); break;
+				case 3: $this->setGD(imagecreatefrompng($filename)); break;
+			}
+		}
+		parent::__construct();
+	}
+	protected function setGD($gd) {
+		$this->gd = $gd;
+		$this->width = imagesx($gd);
+		$this->height = imagesy($gd);
+	}
+	
+	/**
+	 * Set the image quality, used when saving JPEGs.
+	 */
+	function setQuality($quality) {
+		$this->quality = $quality;
+	}
+	
+	/**
+	 * Resize an image to cover the given width/height completely, and crop off any overhanging edges.
+	 */
+	function croppedResize($width, $height) {
+		if(!$this->gd) return;
+		
+		$width = round($width);
+		$height = round($height);
+		
+		$newGD = imagecreatetruecolor($width, $height);
+		
+		// Preserves transparency between images
+		imagealphablending($newGD, false);
+		imagesavealpha($newGD, true);
+		
+		$destAR = $width / $height;
+		if ($this->width > 0 && $this->height > 0 ){
+			// We can't divide by zero theres something wrong.
+			
+			$srcAR = $this->width / $this->height;
+		
+			// Destination narrower than the source
+			if($destAR < $srcAR) {
+				$srcY = 0;
+				$srcHeight = $this->height;
+				
+				$srcWidth = $this->height * $destAR;
+				$srcX = ($this->width - $srcWidth) / 2;
+			
+			// Destination shorter than the source
+			} else {
+				$srcX = 0;
+				$srcWidth = $this->width;
+				
+				$srcHeight = $this->width / $destAR;
+				$srcY = ($this->height - $srcHeight) / 2;
+			}
+			
+			imagecopyresampled($newGD, $this->gd, 0,0, $srcX, $srcY, $width, $height, $srcWidth, $srcHeight);
+		}			
+		$output = new GD();
+		$output->setGD($newGD);
+		return $output;
+	}
+	
+	/**
+	 * Resizes the image to fit within the given region.
+	 * Behaves similarly to paddedResize but without the padding.
+	 * @todo This method isn't very efficent
+	 */
+	function fittedResize($width, $height) {
+	    $gd = $this->resizeByHeight($height);
+	    if($gd->width > $width) $gd = $gd->resizeByWidth($width);
+	    return $gd;
+	}
+	
+	function hasGD() {
+		return $this->gd ? true : false;
+	}
+	
+	
+	/**
+	 * Resize an image, skewing it as necessary.
+	 */
+	function resize($width, $height) {
+		if(!$this->gd) return;
+
+		$width = round($width);
+		$height = round($height);
+		
+		if(!$width && !$height) user_error("No dimensions given", E_USER_ERROR);
+		if(!$width) user_error("Width not given", E_USER_ERROR);
+		if(!$height) user_error("Height not given", E_USER_ERROR);
+
+		$newGD = imagecreatetruecolor($width, $height);
+		
+		// Preserves transparency between images
+		imagealphablending($newGD, false);
+		imagesavealpha($newGD, true);
+
+		imagecopyresampled($newGD, $this->gd, 0,0, 0, 0, $width, $height, $this->width, $this->height);
+
+		$output = new GD();
+		$output->setGD($newGD);
+		return $output;
+	}
+	
+	/**
+	 * Resize an image by width. Preserves aspect ratio.
+	 */
+	function resizeByWidth( $width ) {
+		$heightScale = $width / $this->width;
+		return $this->resize( $width, $heightScale * $this->height );
+	}
+	
+	/**
+	 * Resize an image by height. Preserves aspect ratio
+	 */
+	function resizeByHeight( $height ) {
+		$scale = $height / $this->height;
+		return $this->resize( $scale * $this->width, $height );
+	}
+	
+	/**
+	 * Resize the image by preserving aspect ratio. By default, it will keep the image inside the maxWidth and maxHeight
+	 * Passing useAsMinimum will make the smaller dimension equal to the maximum corresponding dimension
+	 */
+	function resizeRatio( $maxWidth, $maxHeight, $useAsMinimum = false ) {
+		
+		$widthRatio = $maxWidth / $this->width;
+		$heightRatio = $maxHeight / $this->height;
+		
+		if( $widthRatio < $heightRatio )
+			return $useAsMinimum ? $this->resizeByHeight( $maxHeight ) : $this->resizeByWidth( $maxWidth );
+		else
+			return $useAsMinimum ? $this->resizeByWidth( $maxWidth ) : $this->resizeByHeight( $maxHeight );
+	}
+	
+	static function color_web2gd($image, $webColor) {
+		if(substr($webColor,0,1) == "#") $webColor = substr($webColor,1);
+		$r = hexdec(substr($webColor,0,2));
+		$g = hexdec(substr($webColor,2,2));
+		$b = hexdec(substr($webColor,4,2));
+		
+		return imagecolorallocate($image, $r, $g, $b);
+		
+	}
+
+	/**
+	 * Resize to fit fully within the given box, without resizing.  Extra space left around
+	 * the image will be padded with the background color.
+     * @param width
+     * @param height
+     * @param backgroundColour
+	 */
+	function paddedResize($width, $height, $backgroundColor = "FFFFFF") {
+		if(!$this->gd) return;
+
+		$width = round($width);
+		$height = round($height);
+		
+		
+		$newGD = imagecreatetruecolor($width, $height);
+		
+		// Preserves transparency between images
+		imagealphablending($newGD, false);
+		imagesavealpha($newGD, true);
+		
+		$bg = GD::color_web2gd($newGD, $backgroundColor);
+		imagefilledrectangle($newGD, 0, 0, $width, $height, $bg);
+		
+		$destAR = $width / $height;
+		if ($this->width > 0 && $this->height > 0) {
+			// We can't divide by zero theres something wrong.
+			
+			$srcAR = $this->width / $this->height;
+		
+			// Destination narrower than the source
+			if($destAR > $srcAR) {
+				$destY = 0;
+				$destHeight = $height;
+				
+				$destWidth = $height * $srcAR;
+				$destX = ($width - $destWidth) / 2;
+			
+			// Destination shorter than the source
+			} else {
+				$destX = 0;
+				$destWidth = $width;
+				
+				$destHeight = $width / $srcAR;
+				$destY = ($height - $destHeight) / 2;
+			}
+			
+			imagecopyresampled($newGD, $this->gd, $destX, $destY, 0, 0, $destWidth, $destHeight, $this->width, $this->height);
+		}			
+		$output = new GD();
+		$output->setGD($newGD);
+		return $output;
+	}
+
+	/**
+	 * Make the image greyscale
+	 * $rv = red value, defaults to 38
+	 * $gv = green value, defaults to 36
+	 * $bv = blue value, defaults to 26
+	 * Based (more or less entirely, with changes for readability) on code from http://www.teckis.com/scriptix/thumbnails/teck.html
+	 */
+	function greyscale($rv=38, $gv=36, $bv=26) {
+		$width = $this->width;
+		$height = $this->height;
+		$newGD = imagecreatetruecolor($this->width, $this->height);
+		
+		$rt = $rv + $bv + $gv;
+		$rr = ($rv == 0) ? 0 : 1/($rt/$rv);
+		$br = ($bv == 0) ? 0 : 1/($rt/$bv);
+		$gr = ($gv == 0) ? 0 : 1/($rt/$gv);
+		for($dy = 0; $dy <= $height; $dy++) {
+			for($dx = 0; $dx <= $width; $dx++) {
+				$pxrgb = imagecolorat($this->gd, $dx, $dy);
+				$heightgb = ImageColorsforIndex($this->gd, $pxrgb);
+				$newcol = ($rr*$heightgb['red']) + ($br*$heightgb['blue']) + ($gr*$heightgb['green']);
+				$setcol = ImageColorAllocate($newGD, $newcol, $newcol, $newcol);
+				imagesetpixel($newGD, $dx, $dy, $setcol);
+			}
+		}
+		
+		// imagecopyresampled($newGD, $this->gd, 0,0, $srcX, $srcY, $width, $height, $srcWidth, $srcHeight);
+		
+		$output = new GD();
+		$output->setGD($newGD);
+		if($this->quality) $output->setQuality($this->quality);
+		return $output;
+	}
+	
+	function makeDir($dirname) {
+		if(!file_exists(dirname($dirname))) $this->makeDir(dirname($dirname));
+		if(!file_exists($dirname)) mkdir($dirname, 02775);
+	}
+	
+	function writeTo($filename) {
+		$this->makeDir(dirname($filename));
+		
+		if($filename) {
+			if(file_exists($filename)) list($width, $height, $type, $attr) = getimagesize($filename);
+			
+			if(file_exists($filename)) unlink($filename);
+
+			$ext = strtolower(substr($filename, strrpos($filename,'.')+1));
+			if(!isset($type)) switch($ext) {
+				case "gif": $type = 1; break;
+				case "jpeg": case "jpg": case "jpe": $type = 2; break;
+				default: $type = 3; break;
+			}
+			
+			// if the extension does not exist, the file will not be created!
+			
+			switch($type) {
+				case 1: imagegif($this->gd, $filename); break;
+				case 2: imagejpeg($this->gd, $filename, $this->quality); break;
+				
+				// case 3, and everything else
+				default: 
+					// Save them as 8-bit images
+					// imagetruecolortopalette($this->gd, false, 256);
+					imagepng($this->gd, $filename); break;
+			}
+			if(file_exists($filename)) @chmod($filename,0664);
+		}
+	}
+	
+}
+
+?>
