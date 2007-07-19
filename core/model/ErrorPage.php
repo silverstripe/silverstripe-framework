@@ -71,8 +71,8 @@ class ErrorPage extends Page {
 		// Temporarily log out when producing this page
 		$loggedInMember = Member::currentUser();
 		Session::clear("loggedInAs");
-		$alc_enc = $_COOKIE['alc_enc'];
-		Cookie::set('alc_enc',null);
+		$alc_enc = isset($_COOKIE['alc_enc']) ? $_COOKIE['alc_enc'] : null;
+		Cookie::set('alc_enc', null);
 
 		// Run the page
 		Requirements::clear();
@@ -86,7 +86,9 @@ class ErrorPage extends Page {
 
 		// Log back in
 		Session::set("loggedInAs", $loggedInMember->ID);
-		Cookie::set('alc_enc',$alc_enc);
+		if(isset($alc_enc)) {
+			Cookie::set('alc_enc', $alc_enc);
+		}
 		
 		return $this->extension_instances['Versioned']->publish($fromStage, $toStage, $createNewVersion);
 	}

@@ -280,7 +280,7 @@ class Versioned extends DataObjectDecorator {
 			$from = Versioned::get_one_by_stage($this->owner->class, $fromStage, "`{$baseClass}`.ID = {$this->owner->ID}");
 		}
 		
-		$publisherID = Member::currentUser()->ID ?  Member::currentUser()->ID : 0;
+		$publisherID = isset(Member::currentUser()->ID) ? Member::currentUser()->ID : 0;
 		
 		if($from) {
 			$from->forceChange();

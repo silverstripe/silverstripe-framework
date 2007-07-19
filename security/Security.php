@@ -211,7 +211,7 @@ class Security extends Controller {
 			Permission::grant($adminGroup->ID, "ADMIN");
 		}
 		
-		if(!$member) {
+		if(!isset($member)) {
 			$member = Object::create('Member');
 			$member->FirstName = $member->Surname = 'Admin';
 			$member->Email = $username;

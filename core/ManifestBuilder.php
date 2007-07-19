@@ -179,7 +179,7 @@ class ManifestBuilder {
 
 			} else if(substr($item,-4) == '.css') {
 					$cssName = substr($item, 0, -4);
-					Debug::message($item);
+					// Debug::message($item);
 
 					if($themeName) {
 						$cssManifest[$cssName]['themes'][$themeName] = "$folder/$item"; 

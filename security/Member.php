@@ -404,7 +404,7 @@ class Member extends DataObject {
 	function requireDefaultRecords() {
 		parent::requireDefaultRecords();
 		
-		if(!DB::query("SELECT * FROM Member")->value() && $_REQUEST['username'] && $_REQUEST['password']) {
+		if(!DB::query("SELECT * FROM Member")->value() && isset($_REQUEST['username']) && isset($_REQUEST['password'])) {
 			Security::findAnAdministrator($_REQUEST['username'], $_REQUEST['password']);
 			
 			if(!Database::$supressOutput) {
