@@ -96,15 +96,19 @@ class ContentController extends Controller {
 		
 		// Check permissions
 		if($this->dataRecord && !$this->dataRecord->can('View')) Security::permissionFailure($this);
-
-		// Test/dev sites can only be accessed by CMS users
-		/* This is calling login errors in parents. inc.
 		
-		if(!Director::isLive()) {
-			$member = Member::currentUser();
-			if(!$member || !$member->isCMSUser()) Security::permissionFailure($this);
-		}
-		*/
+		Requirements::themedCSS("layout");
+		Requirements::themedCSS("typography");
+	}
+	
+	/**
+	 * Get the project name
+	 *
+	 * @return string
+	 */
+	function project() {
+		global $project;
+		return $project;
 	}
 	
 	/**
