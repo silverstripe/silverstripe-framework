@@ -99,6 +99,7 @@ class ContentController extends Controller {
 		
 		Requirements::themedCSS("layout");
 		Requirements::themedCSS("typography");
+		Requirements::themedCSS("form");
 	}
 	
 	/**
