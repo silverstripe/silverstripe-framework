@@ -205,7 +205,7 @@ class Convert extends Object {
 			);
 		}
 		// Expand hyperlinks
-		if( !$preserveLinks && !$config['PreserveLink']) {
+		if( !$preserveLinks && !isset($config['PreserveLink'])) {
 			$data = preg_replace('/<a[^>]*href\s*=\s*"([^"]*)">(.*?)<\/a>/ie', "Convert::html2raw('\\2').'[\\1]'", $data);
 			$data = preg_replace('/<a[^>]*href\s*=\s*([^ ]*)>(.*?)<\/a>/ie', "Convert::html2raw('\\2').'[\\1]'", $data);
 			
