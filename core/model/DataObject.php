@@ -704,7 +704,7 @@ class DataObject extends Controller {
 				break;
 			}
 		}
-		if(!$joinField) {
+		if(!isset($joinField)) {
 			$joinField = 'ParentID';
 		}
 		
