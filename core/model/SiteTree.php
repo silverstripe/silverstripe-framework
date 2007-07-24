@@ -256,8 +256,51 @@ class SiteTree extends DataObject {
 	}
 	
 	/** 
-	 * This function should return true if the current user can add children to this page.
-	 * It can be overloaded to customise the security model for an application.
+	 * Returns true if the member is allowed to do the given action.
+	 *
+	 * @param string $perm The permission to be checked, such as 'View'.
+	 * @param Member $member The member whose permissions need checking.
+	 *                       Defaults to the currently logged in user.
+	 *
+	 * @return boolean True if the the member is allowed to do the given
+	 *                 action.
+	 *
+	 * @todo Check we get a endless recursion if we use parent::can()
+	 */
+	function can($perm, $member = null) {
+		if(!isset($member)) {
+			$member = Member::currentUser();
+		}
+		
+		// Users with ADMIN permission can always do this
+		if($member && Permission::check('ADMIN')) {
+			return true;
+		}
+
+		switch(strtolower($perm)) {
+			case 'edit':
+				if($this->Editors == 'LoggedInUsers' && $member) return true;
+				if($member && $this->Editors == 'OnlyTheseUsers' && $member->isInGroup($this->EditorsGroup)) return true;
+			break;
+			case 'view':
+			case 'view_page':
+				if($this->Viewers == 'Anyone') return true;
+				if($member && $this->Viewers == 'LoggedInUsers') return true;
+				if($member && $this->Viewers == 'OnlyTheseUsers' && $member->isInGroup($this->ViewersGroup)) return true;
+			break;
+		}
+
+		return false;
+	}
+
+
+	/**
+	 * This function should return true if the current user can add children
+	 * to this page.
+	 *
+	 * It can be overloaded to customise the security model for an
+	 * application.
+	 *
 	 * @return boolean True if the current user can add children.
 	 */
 	public function canAddChildren() {
@@ -288,7 +331,7 @@ class SiteTree extends DataObject {
 	 * @return boolean True if the current user can edit this page.
 	 */
 	public function canEdit() {
-		return true;
+		return $this->can('Edit');
 	}
 
 	/**
@@ -504,6 +547,26 @@ class SiteTree extends DataObject {
 	//------------------------------------------------------------------------------------//
 	
 	/**
+	 * Holds callback functions to be called when getCMSFields() is called
+	 *
+	 * @var array
+	 */
+	static $cms_additions = array();
+
+
+	/**
+	 * Allows modules to extend the cms editing form for all pages in the site
+	 *
+	 * @param mixed $function the name of your function, either as a string,
+	 *                        or in the form array('class','function)
+	 */
+	static function ExtendCMS($function)
+	{
+		self::$cms_additions[] = $function;
+	}
+
+
+	/**
 	 * Returns a FieldSet with which to create the CMS editing form.
 	 * You can override this in your child classes to add extra fields - first
 	 * get the parent fields using parent::getCMSFields(), then use addFieldToTab()
@@ -512,6 +575,7 @@ class SiteTree extends DataObject {
 	 */
 	function getCMSFields() {
 		require_once("forms/Form.php");
+		Requirements::javascript("cms/javascript/SitetreeAccess.js");
 
 		// Backlink report
 		if($this->hasMethod('BackLinkTracking')) {
@@ -613,11 +677,29 @@ class SiteTree extends DataObject {
 					new Tab("BackLinks",
 						new LiteralField("Backlinks", $backlinks)
 					)
+				),
+				new Tab("Access",
+					new HeaderField("Who can display this?", 2),
+					new OptionsetField("Viewers", "",
+														 array("Anyone" => "Anyone",
+																	 "LoggedInUsers" => "Logged-in users",
+																	 "OnlyTheseUsers" => "Only these people (choose from list)")),
+					new DropdownField("ViewersGroup", "Group", Group::map()),
+					new HeaderField("Who can edit this?", 2),
+					new OptionsetField("Editors", "",
+														 array("LoggedInUsers" => "Logged-in users",
+																	 "OnlyTheseUsers" => "Only these people (choose from list)")),
+					new DropdownField("EditorsGroup", "Group", Group::map())
 				)
 			),
 			new NamedLabelField("Status", $message, "pageStatusMessage", true)
 		);
 		
+		foreach(self::$cms_additions as $extension)
+		{
+			$fields = call_user_func($extension,$fields);
+		}
+
 		return $fields;
 	}
 
@@ -634,8 +716,10 @@ class SiteTree extends DataObject {
 			if($this->isPublished() && $this->canEdit())	{
 				$actions[] = FormAction::create('rollback', 'Cancel draft changes')->describe("Delete your draft and revert to the currently published page");
 			}
-			if(!$this->isNew() && $this->canPublish()) $actions[] = new FormAction('publish', 'Publish');
 		}
+
+		if($this->canPublish())
+			$actions[] = new FormAction('publish', 'Save & Publish');
 
 		return new DataObjectSet($actions);
 	}
@@ -890,7 +974,11 @@ class SiteTree extends DataObject {
 		"HasBrokenFile" => "Boolean",
 		"HasBrokenLink" => "Boolean",
 		"Status" => "Varchar",
-		"ReportClass" => "Varchar"
+		"ReportClass" => "Varchar",
+		"Viewers" => "Enum('Anyone, LoggedInUsers, OnlyTheseUsers', 'Anyone')", 
+ 		"Editors" => "Enum('LoggedInUsers, OnlyTheseUsers', 'LoggedInUsers')", 
+ 		"ViewersGroup" => "Int", 
+ 		"EditorsGroup" => "Int" 
 	);
   
   static $indexes = array(
@@ -926,7 +1014,9 @@ class SiteTree extends DataObject {
 		"ShowInMenus" => 1,
 		"ShowInSearch" => 1,
 		"Status" => "New page",
-		"CanCreateChildren" => array(10)
+		"CanCreateChildren" => array(10),
+		"Viewers" => "Anyone", 
+ 		"Editors" => "LoggedInUsers" 
 	);
 
 	static $has_one = array(

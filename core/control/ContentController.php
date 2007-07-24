@@ -39,7 +39,7 @@ class ContentController extends Controller {
 			if($action == "index") $action = "";
 			
 			// '&' in a URL is apparently naughty
-			$action = preg_replace( '/&/', '&amp;', $action );
+			$action = preg_replace('/&/', '&amp;', $action);
 			return $this->URLSegment . "/$action";
 		}else{
 			user_error("ContentController::RelativeLink() No URLSegment given on a '$this->class' object.  Perhaps you should overload it?", E_USER_WARNING);
@@ -48,7 +48,7 @@ class ContentController extends Controller {
 		//if($action == "index") $action = "";
 		
 		// '&' in a URL is apparently naughty
-		// $action = preg_replace( '/&/', '&amp;', $action );
+		// $action = preg_replace('/&/', '&amp;', $action);
 		
 		//return $this->URLSegment . "/$action";
 	}
@@ -126,16 +126,31 @@ class ContentController extends Controller {
 	 */
 	public function getMenu($level) {
 		if($level == 1) {
-			return DataObject::get("SiteTree", "ShowInMenus = 1 AND ParentID = 0");
+			$result = DataObject::get("SiteTree", "ShowInMenus = 1 AND ParentID = 0");
 
 		} else {
 			$parent = $this->data();
 			$stack = array($parent);
-			while($parent = $parent->Parent) array_unshift($stack, $parent);
+			while($parent = $parent->Parent)
+				array_unshift($stack, $parent);
 			
 			if(isset($stack[$level-2]))
-				return $stack[$level-2]->Children();
+				$result = $stack[$level-2]->Children();
 		}
+
+		$visible = array();
+
+		// Remove all entries the can not be viewed by the current user
+		// We might need to create a show in menu permission
+ 		if($result) {
+			foreach($result as $page) {
+				if($page->can('view')) {
+					$visible[] = $page;
+				}
+			}
+		}
+
+		return new DataObjectSet($visible);
 	}
 	/**
 	 * Returns the page in the current page stack of the given level.
@@ -389,4 +404,6 @@ HTML
 		);
 	}
 }
+
+
 ?>
