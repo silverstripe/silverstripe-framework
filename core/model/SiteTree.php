@@ -778,7 +778,7 @@ class SiteTree extends DataObject {
 		array_shift($classes);
 		foreach($classes as $class) {
 			$instance = singleton($class);
-			if(($instance instanceof HiddenClass) && ($class != $this->class)) continue;
+			if((($instance instanceof HiddenClass) || !$instance->canCreate()) && ($class != $this->class)) continue;
 
 			$addAction = $instance->uninherited('add_action', true);
 			if(!$addAction) $addAction = "a $class";
