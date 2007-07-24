@@ -19,7 +19,7 @@ class CheckboxSetField extends OptionsetField {
 		// Get values from the join, if available
 		if(is_object($this->form)) {
 			$record = $this->form->getRecord();
-			if(!$values && $record->hasMethod($this->name)) {
+			if(!$values && $record && $record->hasMethod($this->name)) {
 				$funcName = $this->name;
 				$join = $record->$funcName();
 				foreach($join as $joinItem) $values[] = $joinItem->ID;
