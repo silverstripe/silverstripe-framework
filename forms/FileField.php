@@ -11,7 +11,7 @@ class FileField extends FormField {
 	
 	public function saveInto(DataObject $record) {
 		$fieldName = $this->name . 'ID';
-		$hasOnes = $record->has_one($fieldName);
+		$hasOnes = $record->has_one(/*$fieldName*/$this->name);
 		
 		// assume that the file is connected via a has-one
 		if( !$hasOnes )
