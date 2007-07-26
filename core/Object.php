@@ -243,13 +243,11 @@ class Object {
 		if (empty(Object::$extraStatics[$class])) {
 			Object::$extraStatics[$class] = (array)$statics;
 		} else {
-			Object::$extraStatics[$class] = array_merge(
-				(array)Object::$extraStatics[$class],
-				(array)$statics
-			);
+			$ar1 = (array)Object::$extraStatics[$class]; // First Array To Merge
+			$ar2 = (array)$statics; // Second Array To Merge
+			Object::$extraStatics[$class] = array_merge_recursive($ar1, $ar2);
 		}
 	}
-	
 	
 	function parentClass() {
 		return get_parent_class($this);
