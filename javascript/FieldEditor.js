@@ -77,7 +77,7 @@ FieldEditorField.prototype = {
 		this.toggler.onclick = this.toggle.bind(this);
 		this.extraOptions = this.getExtraOptions();
 		this.visible = false;
-		this.deleteButton = this.findDescendant( 'a', 'delete' );
+		this.deleteButton = this.findDescendant('a', 'delete');
 		
 		//this.style.height = "auto";
 		
