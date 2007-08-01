@@ -362,12 +362,12 @@ class SiteTree extends DataObject {
 	
 	/**
 	 * Return the title, description and keywords metatags.
-	 * @param boolean $includeTitle Show default <title>-tag, set to false for custom templating
+	 * @param boolean|string $includeTitle Show default <title>-tag, set to false for custom templating
 	 * @return string The XHTML metatags
 	 */
 	public function MetaTags($includeTitle = true) {
 		$tags = "";
-		if($includeTitle == true) {
+		if($includeTitle == true || $includeTitle == 'true') {
 			$tags .= "<title>" . Convert::raw2xml($this->MetaTitle ? $this->MetaTitle : $this->Title) . "</title>\n";
 		}
 		$tags .= "<meta name=\"generator\" http-equiv=\"generator\" content=\"SilverStripe 2.0 - http://www.silverstripe.com\" />\n";
