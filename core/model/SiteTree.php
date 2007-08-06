@@ -462,7 +462,7 @@ class SiteTree extends DataObject {
 		$count = 1;
 		while(DataObject::get_one("SiteTree", "URLSegment = '$this->URLSegment' $idFilter")) {
 			$count++;
-			$this->URLSegment = ereg_replace('-[0-9]+','', $this->URLSegment) . "-$count";
+			$this->URLSegment = ereg_replace('-[0-9]+$','', $this->URLSegment) . "-$count";
 		}
 		
 		// If the URLSegment has been changed, rewrite links
