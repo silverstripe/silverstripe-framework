@@ -100,8 +100,9 @@ class Requirements {
 			&& isset($_CSS_MANIFEST[$name]['themes'][$theme])) 
 			Requirements::css($_CSS_MANIFEST[$name]['themes'][$theme], $media);
 
-		else if(isset($_CSS_MANIFEST[$name]) && $_CSS_MANIFEST[$name]['unthemed']) Requirements::css($_CSS_MANIFEST[$name]['unthemed'], $media);
-		else user_error("themedCSS - No CSS file '$name.css' found.", E_USER_WARNING);
+		else if(isset($_CSS_MANIFEST[$name]) && isset($_CSS_MANIFEST[$name]['unthemed'])) Requirements::css($_CSS_MANIFEST[$name]['unthemed'], $media);
+		// Normal requirements fails quietly when there is no css - we should do the same
+		// else user_error("themedCSS - No CSS file '$name.css' found.", E_USER_WARNING);
 	}
 	
 	/**
