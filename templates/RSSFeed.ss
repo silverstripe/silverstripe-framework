@@ -13,7 +13,7 @@
 			<% if Date %><pubDate>$Date.Rfc822</pubDate>
 			<% else %><pubDate>$Created.Rfc822</pubDate><% end_if %>
 			<% if Author %><author>$Author.XML</author><% end_if %>
-			<guid>$ID</guid>
+			<guid>$AbsoluteLink</guid>
 		</item>		
 		<% end_control %>
 
