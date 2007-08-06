@@ -1,27 +1,41 @@
 <?php
 
 /**
+ * Database Administration
+ *
  * @package sapphire
  * @subpackage core
  */
 
-require_once("core/model/DB.php");
 
 /**
- * Utility functions for administrating the database. These can be accessed via URL,
- * eg http://www,yourdomain.com/db/build.
+ * Include the DB class
  */
-class DatabaseAdmin extends Controller {	 
+require_once("core/model/DB.php");
+
+
+
+/**
+ * DatabaseAdmin class
+ *
+ * Utility functions for administrating the database. These can be accessed
+ * via URL, e.g. http://www.yourdomain.com/db/build.
+ */
+class DatabaseAdmin extends Controller {
+
 	/**
 	 * Get the data classes, grouped by their root class
-	 * @return array
+	 *
+	 * @return array Array of data classes, grouped by their root class
 	 */
 	function groupedDataClasses() {
-		// Get all root data objects 
+		// Get all root data objects
 		$allClasses = get_declared_classes();
 		foreach($allClasses as $class) {
-			if(get_parent_class($class) == "DataObject") $rootClasses[$class] = array();
+			if(get_parent_class($class) == "DataObject")
+				$rootClasses[$class] = array();
 		}
+
 		// Assign every other data object one of those
 		foreach($allClasses as $class) {
 			if(!isset($rootClasses[$class]) && is_subclass_of($class, "DataObject")) {
@@ -35,7 +49,8 @@ class DatabaseAdmin extends Controller {
 		}
 		return $rootClasses;
 	}
-	
+
+
 	/**
 	 * Display a simple HTML menu of database admin helpers.
 	 */
@@ -44,19 +59,28 @@ class DatabaseAdmin extends Controller {
 		echo "<p><a href=\"build\">Add missing database fields (similar to sanity check).</a></p>";
 		echo "<p><a href=\"../images/flush\">Flush <b>all</b> of the generated images.</a></p>";
 	}
-	 
+
+
 	/**
 	 * Updates the database schema, creating tables & fields as necessary.
 	 */
 	function build() {
-		if(Director::isLive() && ClassInfo::hasTable('Member') && ClassInfo::hasTable('Group') && ClassInfo::hasTable('Permission')) {
-			BasicAuth::requireLogin("SilverStripe developer access.  Use your CMS login", "ADMIN");
+		if((Director::isLive() && ClassInfo::hasTable('Member') &&
+					ClassInfo::hasTable('Group') && ClassInfo::hasTable('Permission'))
+			 && (!Member::currentUser() || !Member::currentUser()->isAdmin())) {
+			Security::permissionFailure($this,
+				"This page is secured and you need administrator rights to access it. " .
+				"Enter your credentials below and we will send you right along.");
+			return;
 		}
-		
-		$this->doBuild(isset($_REQUEST['quiet']) || isset($_REQUEST['from_installer']));
+
+		// The default time limit of 30 seconds is normally not enough
+		set_time_limit(600);
+
+		$this->doBuild(isset($_REQUEST['quiet']) ||
+									 isset($_REQUEST['from_installer']));
 	}
 
-	
 	/**
 	 * Check if database needs to be built, and build it if it does.
 	 */
@@ -71,21 +95,28 @@ class DatabaseAdmin extends Controller {
 			}
 		}
 	}
-	
+
+
 	/**
 	 * Returns the timestamp of the time that the database was last built
-	 * @return string
-	 */	
+	 *
+	 * @return string Returns the timestamp of the time that the database was
+	 *                last built
+	 */
 	static function lastBuilt() {
-		$file = TEMP_FOLDER . '/database-last-generated-' .str_replace(array('\\','/',':'),'.',Director::baseFolder());
+		$file = TEMP_FOLDER . '/database-last-generated-' .
+			str_replace(array('\\','/',':'), '.' , Director::baseFolder());
+
 		if(file_exists($file)) {
 			return filemtime($file);
 		}
 	}
-	
+
+
 	/**
 	 * Updates the database schema, creating tables & fields as necessary.
-	 * @param boolean $quiet Don't show messages'
+	 *
+	 * @param boolean $quiet Don't show messages
 	 */
 	function doBuild($quiet = false) {
 		if($quiet) {
@@ -106,14 +137,14 @@ class DatabaseAdmin extends Controller {
 		ManifestBuilder::compileManifest();
 		ManifestBuilder::includeEverything();
 
-		// Build the database.  Most of the hard work is handled by DataObject		
+		// Build the database.  Most of the hard work is handled by DataObject
 		$dataClasses = ClassInfo::subclassesFor('DataObject');
 		array_shift($dataClasses);
-		
+
 		if(!$quiet) {
 			echo '<p><b>Creating database tables</b></p>';
 		}
-		
+
 		foreach($dataClasses as $dataClass) {
 			// Test_ indicates that it's the data class is part of testing system
 
@@ -121,17 +152,17 @@ class DatabaseAdmin extends Controller {
 				if(!$quiet) {
 					echo "<li>$dataClass";
 				}
-				
+
 				singleton($dataClass)->requireTable();
 			}
 		}
-		
+
 		ManifestBuilder::compileManifest();
-		
+
 		if(!$quiet) {
 			echo '<p><b>Creating database records</b></p>';
 		}
-		
+
 		foreach($dataClasses as $dataClass) {
 			// Test_ indicates that it's the data class is part of testing system
 
@@ -139,28 +170,30 @@ class DatabaseAdmin extends Controller {
 				if(!$quiet) {
 					echo "<li>$dataClass";
 				}
-				
+
 				singleton($dataClass)->requireDefaultRecords();
 			}
 		}
-		
+
 		touch(TEMP_FOLDER . '/database-last-generated-' .str_replace(array('\\','/',':'),'.', Director::baseFolder()));
-		
+
 		if(isset($_REQUEST['from_installer'])) {
 			echo "OK";
 		}
 	}
-	
+
+
 	/**
 	 * Method used to check mod_rewrite is working correctly in the installer.
 	 */
 	function testinstall() {
 		echo "OK";
 	}
-	
+
+
 	/**
-	 * Remove invalid records from tables - that is, records that
-	 * don't have corresponding records in their parent class tables.
+	 * Remove invalid records from tables - that is, records that don't have
+	 * corresponding records in their parent class tables.
 	 */
 	function cleanup() {
 		$allClasses = get_declared_classes();
@@ -169,7 +202,7 @@ class DatabaseAdmin extends Controller {
 				$baseClasses[] = $class;
 			}
 		}
-		
+
 		foreach($baseClasses as $baseClass) {
 			// Get data classes
 			$subclasses = ClassInfo::subclassesFor($baseClass);
@@ -179,19 +212,22 @@ class DatabaseAdmin extends Controller {
 					unset($subclasses[$k]);
 				}
 			}
-			
+
 			if($subclasses) {
 				$records = DB::query("SELECT * FROM `$baseClass`");
-			
-				
+
+
 				foreach($subclasses as $subclass) {
-					$recordExists[$subclass] = DB::query("SELECT ID FROM `$subclass")->keyedColumn();
+					$recordExists[$subclass] =
+						DB::query("SELECT ID FROM `$subclass")->keyedColumn();
 				}
-				
+
 				foreach($records as $record) {
 					foreach($subclasses as $subclass) {
 						$id = $record['ID'];
-						if($record['ClassName'] != $subclass && !is_subclass_of($record['ClassName'], $subclass) && $recordExists[$subclass][$id]) {
+						if(($record['ClassName'] != $subclass) &&
+							 (!is_subclass_of($record['ClassName'], $subclass)) &&
+							 ($recordExists[$subclass][$id])) {
 							$sql = "DELETE FROM `$subclass` WHERE ID = $record[ID]";
 							echo "<li>$sql";
 							DB::query($sql);
@@ -201,71 +237,80 @@ class DatabaseAdmin extends Controller {
 			}
 		}
 	}
-	
+
+
 	/**
 	 * Imports objects based on a specified CSV file in $_GET['FileName']
 	 */
 	function import(){
 		$FileName = $_GET['FileName'];
-		$FileName = $_SERVER['DOCUMENT_ROOT'] . substr($_SERVER['PHP_SELF'],0,strlen($_SERVER['PHP_SELF'])-18) ."/assets/". $FileName;
-		
+		$FileName = $_SERVER['DOCUMENT_ROOT'] .
+			substr($_SERVER['PHP_SELF'], 0, strlen($_SERVER['PHP_SELF'])-18) .
+			"/assets/" . $FileName;
+
 		if(file_exists($FileName)) {
 			$handle = fopen($FileName,'r');
-			
+
 			if($handle){
 				while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
 					$num = count($data);
 					$row++;
-					
+
 					if($row == 1){
-						for ($c=0; $c < $num; $c++)
+						for ($c=0; $c < $num; $c++) {
 							$ColumnHeaders[] = str_replace(' ','',$data[$c]);
-							// Have to add code here to remove unsafe chars.. 
-					   
+							// Have to add code here to remove unsafe chars..
+						}
+
 					} else {
 						$Product = new Product();
-							
+
 						for ($c=0; $c < $num; $c++) {
 								$Product->$ColumnHeaders[$c] = trim($data[$c]);
 						}
-					  
-						$MainCategory = DataObject::get("ProductGroup", "URLSegment LIKE '". $Product->generateURLSegment($Product->Category) ."'");	
-						 
-						if(!$MainCategory){
-							// if we cant find a main category, create all three sub categories, as they must be unique.
-							
+
+						$MainCategory = DataObject::get("ProductGroup",
+							"URLSegment LIKE '" . $Product->generateURLSegment(
+								$Product->Category) ."'");
+
+						if(!$MainCategory) {
+							// if we can't find a main category, create all three sub
+							// categories, as they must be unique.
+
 							$ProductGroup = new ProductGroup();
 							$ProductGroup->Title = $Product->Category;
 							print_r("<ul><li>Created : $ProductGroup->Title</li>");
 							$ProductGroup->ParentID = 1;
 							$index = $ProductGroup->write();
 							$ProductGroup->flushCache();
-						
-							if($Product->SubCategory){
+
+							if($Product->SubCategory) {
 								$ChildProductGroup = new ProductGroup();
 								$ChildProductGroup->Title = $Product->SubCategory;
 								print_r("<ul><li>Created : $ChildProductGroup->Title</li>");
 								$ChildProductGroup->ClassName = "ProductGroup";
 								$ChildProductGroup->ParentID = $index;
 								$index = $ChildProductGroup->write();
-								$ChildProductGroup->flushCache(); 
+								$ChildProductGroup->flushCache();
 							}
-							
+
 							if($Product->SubCategory2) {
 								$NestedProductGroup = new ProductGroup();
 								$NestedProductGroup->Title = $Product->SubCategory2;
-								print_r("<ul><li>Created : $NestedProductGroup->Title</li>"); 	
-								$NestedProductGroup->ClassName = "ProductGroup"; 
+								print_r("<ul><li>Created : $NestedProductGroup->Title</li>");
+								$NestedProductGroup->ClassName = "ProductGroup";
 								$NestedProductGroup->ParentID = $index;
-								$index = $NestedProductGroup->write(); 
+								$index = $NestedProductGroup->write();
 								$NestedProductGroup->flushCache();
 							}
 						} else {
-							// We've  found a main category. check if theres a second... 
+							// We've  found a main category. check if theres a second...
 							print_r("<ul><li>USING : $MainCategory->Title</li>");
 							$index = $MainCategory->ID;
-							
-							$SubCategory =  DataObject::get_one("ProductGroup","URLSegment LIKE '". $Product->generateURLSegment($Product->SubCategory) ."'");
+
+							$SubCategory =  DataObject::get_one("ProductGroup",
+								"URLSegment LIKE '" . $Product->generateURLSegment(
+									$Product->SubCategory) ."'");
 
 							if(!$SubCategory && $Product->SubCategory) {
 								$ChildProductGroup = new ProductGroup();
@@ -274,57 +319,61 @@ class DatabaseAdmin extends Controller {
 								$ChildProductGroup->ClassName = "ProductGroup";
 								$ChildProductGroup->ParentID = $index;
 								$index = $ChildProductGroup->write();
-								$ChildProductGroup->flushCache();  
-								
+								$ChildProductGroup->flushCache();
+
 								if($Product->SubCategory2) {
 									$NestedProductGroup = new ProductGroup();
 									$NestedProductGroup->Title = $Product->SubCategory2;
-									print_r("<ul><li>$NestedProductGroup->Title</li>"); 	
-									$NestedProductGroup->ClassName = "ProductGroup"; 
+									print_r("<ul><li>$NestedProductGroup->Title</li>");
+									$NestedProductGroup->ClassName = "ProductGroup";
 									$NestedProductGroup->ParentID = $index;
-									$index = $NestedProductGroup->write(); 
-									$NestedProductGroup->flushCache();
-									$index = $SubCategory2->ID;
-								}				
-							} else if($Product->SubCategory){
-								print_r("<ul><li>USING : $SubCategory->Title</li>");
-								$index = $SubCategory->ID;
-								
-								 $SubCategory2 = DataObject::get_one("ProductGroup","URLSegment LIKE '". $Product->generateURLSegment($Product->SubCategory2) ."'");    
-								 
-								 if($Product->SubCategory2) {
-									$NestedProductGroup = new ProductGroup();
-									$NestedProductGroup->Title = $Product->SubCategory2;
-									print_r("<ul><li>$NestedProductGroup->Title</li>"); 	
-									$NestedProductGroup->ClassName = "ProductGroup"; 
-									$NestedProductGroup->ParentID = $index;
-									$index = $NestedProductGroup->write(); 
+									$index = $NestedProductGroup->write();
 									$NestedProductGroup->flushCache();
 									$index = $SubCategory2->ID;
 								}
-							}		
-						}				
-						
-						$MatchedProduct = DataObject::get_one("Product","URLSegment LIKE '". $Product->generateURLSegment($Product->Title) . "'");    
-						
+							} else if($Product->SubCategory){
+								print_r("<ul><li>USING : $SubCategory->Title</li>");
+								$index = $SubCategory->ID;
+
+								$SubCategory2 = DataObject::get_one("ProductGroup",
+									"URLSegment LIKE '" . $Product->generateURLSegment(
+										$Product->SubCategory2) ."'");
+
+								if($Product->SubCategory2) {
+									$NestedProductGroup = new ProductGroup();
+									$NestedProductGroup->Title = $Product->SubCategory2;
+									print_r("<ul><li>$NestedProductGroup->Title</li>");
+									$NestedProductGroup->ClassName = "ProductGroup";
+									$NestedProductGroup->ParentID = $index;
+									$index = $NestedProductGroup->write();
+									$NestedProductGroup->flushCache();
+									$index = $SubCategory2->ID;
+							 }
+							}
+						}
+
+						$MatchedProduct = DataObject::get_one("Product",
+							"URLSegment LIKE '" . $Product->generateURLSegment(
+								$Product->Title) . "'");
+
 						if($MatchedProduct) {
-							// create the new parents / assign many many  
+							// create the new parents / assign many many
 							$MatchedProduct->ParentID = $index;
-							// create the new product                    
+							// create the new product
 							$MatchedProduct->write();
-							$MatchedProduct->flushCache(); 							
+							$MatchedProduct->flushCache();
 							print_r(" <h4>UPDATED</h4></ul></ul></ul><br/><br/>");
 						} else {
 						   // save the new product
 						   $Product->ParentID = $index;
-						   
+
 						   $Product->write();
 						   $Product->flushCache();
-						   print_r(" <h4>New Product $product->Title</h4></ul></ul></ul><br/><br/>");	
+						   print_r(" <h4>New Product $product->Title</h4></ul></ul></ul><br/><br/>");
 						}
 					}
 				}
-				
+
 				fclose($handle);
 			} else {
 				print_r("<h1>Error: Could not open file.</h1>");
@@ -334,20 +383,22 @@ class DatabaseAdmin extends Controller {
 		}
 
 	}
-	
-    /**
+
+	/**
 	 * Imports objects based on a specified CSV file in $_GET['FileName']
 	 */
 	function generateProductGroups() {
 		$FileName = $_GET['FileName'];
-		$FileName = $_SERVER['DOCUMENT_ROOT'] . substr($_SERVER['PHP_SELF'], 0, strlen($_SERVER['PHP_SELF']) - 18) ."/assets/". $FileName;
-		
-		if(file_exists($FileName)) { 
+		$FileName = $_SERVER['DOCUMENT_ROOT'] .
+			substr($_SERVER['PHP_SELF'], 0, strlen($_SERVER['PHP_SELF']) - 18) .
+			"/assets/" . $FileName;
+
+		if(file_exists($FileName)) {
 			$handle = fopen($FileName,'r');
 
-			if($handle){
+			if($handle) {
 				$i = 0;
-				while(($data = fgetcsv($handle, 1000, ",")) !== FALSE) {		
+				while(($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
 					$ProductGroup[$i] = $data[0];
 					if($data[1]) {
 						$ProductGroup[$i][] = $data[1];
@@ -355,15 +406,21 @@ class DatabaseAdmin extends Controller {
 					if($data[2]) {
 						$ProductGroup[$i][][] = $data[2];
 					}
-	            }
-           } else {
+				}
+			} else {
 				print_r("<h1>Error: Could not open file.</h1>");
 			}
-		} else{
-				print_r("<h1>Error: Could not open file.</h1>");
+		} else {
+			print_r("<h1>Error: Could not open file.</h1>");
 		}
-   }
-   
-   function makeURL() {}
+	}
+
+
+	/**
+	 * This method does nothing at the moment...
+	 */
+	function makeURL() {}
 }
+
+
 ?>

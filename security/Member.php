@@ -217,11 +217,31 @@ class Member extends DataObject {
 	/**
 	 * Returns true if this user is an administrator.
 	 * Administrators have access to everything.  The lucky bastards! ;-)
+	 *
+	 * @todo Should this function really exists? Is not {@link isAdmin()} the
+	 *       only right name for this?
+	 * @todo Is {@link Group}::CanCMSAdmin not deprecated?
 	 */
 	function _isAdmin() {
 		if($groups = $this->Groups()) {
 			foreach($groups as $group) if($group->CanCMSAdmin) return true;
 		}
+
+		return Permission::check('ADMIN');
+	}
+
+
+	/**
+	 * Check if the user is an administrator
+	 *
+	 * Alias for {@link _isAdmin()} because the method is used in both ways
+	 * all over the framework.
+	 *
+	 * @return Returns TRUE if this user is an administrator.
+	 * @see _isAdmin()
+	 */
+	public function isAdmin() {
+		return $this->_isAdmin();
 	}
 	function _isCMSUser() {
 		if($groups = $this->Groups()) {
