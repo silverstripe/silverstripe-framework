@@ -90,7 +90,7 @@ class SQLMap extends Object implements Iterator {
 			
 			foreach($items as $item) {
 				$className = isset($item['RecordClassName'])  ? $item['RecordClassName'] :  $item['ClassName'];
-				 ;
+
 				if(!$className) {
 					user_error('SQLMap query could not retrieve className', E_USER_ERROR);
 				}
