@@ -7,7 +7,7 @@
 
 		<% control Entries %>
 		<item>
-			<title>$Title</title>
+			<title>$Title.XML</title>
 			<link>$AbsoluteLink</link>
 			<% if Description %><description>$Description.AbsoluteLinks.EscapeXML</description><% end_if %>
 			<% if Date %><pubDate>$Date.Rfc822</pubDate>
