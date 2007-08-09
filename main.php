@@ -37,7 +37,7 @@ Session::start();
 
 $envFiles = array('../_ss_environment.php', '../../_ss_environment.php', '../../../_ss_environment.php');
 foreach($envFiles as $envFile) {
-        if(file_exists($envFile)) {
+        if(@file_exists($envFile)) {
                 include($envFile);
                 break;
         }

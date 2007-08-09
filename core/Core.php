@@ -15,13 +15,13 @@ function getTempFolder() {
     }
     
     $ssTmp = "$sysTmp/silverstripe-cache";
-    if(!file_exists($ssTmp)) {
+    if(!@file_exists($ssTmp)) {
     	@$worked = mkdir($ssTmp);
     }
     if(!$worked) {
     	$ssTmp = dirname(dirname($_SERVER['SCRIPT_FILENAME'])) . "/silverstripe-cache";
     	$worked = true;
-    	if(!file_exists($ssTmp)) {
+    	if(!@file_exists($ssTmp)) {
     		@$worked = mkdir($ssTmp);
     	}
     }

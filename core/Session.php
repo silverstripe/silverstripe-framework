@@ -42,6 +42,11 @@ class Session {
 	
 	public static function get($name) {
 		$names = explode('.', $name);
+		
+		if(!isset($_SESSION)) {
+			return null;
+		}
+		
 		$var = $_SESSION;
 
 		foreach($names as $n) {
