@@ -15,7 +15,22 @@ function getTempFolder() {
     }
     
     $ssTmp = "$sysTmp/silverstripe-cache";
-    if(!file_exists($ssTmp)) mkdir($ssTmp);
+    if(!file_exists($ssTmp)) {
+    	@$worked = mkdir($ssTmp);
+    }
+    if(!$worked) {
+    	$ssTmp = dirname(dirname($_SERVER['SCRIPT_FILENAME'])) . "/silverstripe-cache";
+    	$worked = true;
+    	if(!file_exists($ssTmp)) {
+    		@$worked = mkdir($ssTmp);
+    	}
+    }
+    if(!$worked) {
+    	user_error("Permission problem gaining access to a temp folder. " .
+    		"Please create a folder named silverstripe-cache in the base folder "  .
+    		"of the installation and ensure it has the correct permissions", E_USER_ERROR);
+    }
+    
     return $ssTmp;
     
 }
