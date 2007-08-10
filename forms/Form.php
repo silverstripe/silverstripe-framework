@@ -455,7 +455,7 @@ class Form extends ViewableData {
 		$dataFields = $this->fields->dataFields();
 		if($dataFields) foreach($dataFields as $field) {
 			$name = $field->Name();
-			$val = $o ? $object->$name : $object[$name];
+			$val = $o ? $object->$name : (isset($object[$name]) ? $object[$name] : null);
 			if($name && $val) $field->setValue($val);
 		}
 	}
