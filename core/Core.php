@@ -14,6 +14,7 @@ function getTempFolder() {
         $sysTmp = dirname($tmpFile);
     }
     
+    $worked = true;
     $ssTmp = "$sysTmp/silverstripe-cache";
     if(!@file_exists($ssTmp)) {
     	@$worked = mkdir($ssTmp);
