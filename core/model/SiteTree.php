@@ -88,11 +88,9 @@ class SiteTree extends DataObject {
 	 * @return DataObjectSet Comments on this page.
 	 */
 	public function Comments() {
-		if(isset($_GET['showspam'])) {
-			$comments =  DataObject::get("PageComment", "ParentID = '" . Convert::raw2sql($this->ID) . "'", "Created DESC");
-		} else {
-			$comments = DataObject::get("PageComment", "ParentID = '" . Convert::raw2sql($this->ID) . "' AND IsSpam = 0", "Created DESC");
-		}
+		$spamfilter = isset($_GET['showspam']) ? '' : 'AND IsSpam=0';
+		$unmoderatedfilter = Permission::check('ADMIN') ? '' : 'AND NeedsModeration = 0';
+		$comments =  DataObject::get("PageComment", "ParentID = '" . Convert::raw2sql($this->ID) . "' $spamfilter $unmoderatedfilter", "Created DESC");
 		
 		return $comments ? $comments : new DataObjectSet();
 	}
