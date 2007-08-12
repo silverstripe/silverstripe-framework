@@ -75,7 +75,9 @@ class DatabaseAdmin extends Controller {
 		}
 
 		// The default time limit of 30 seconds is normally not enough
-		set_time_limit(600);
+		if(ini_get("safe_mode") != "1") {
+			set_time_limit(600);
+		}
 
 		$this->doBuild(isset($_REQUEST['quiet']) ||
 									 isset($_REQUEST['from_installer']));
