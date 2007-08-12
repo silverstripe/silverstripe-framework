@@ -209,10 +209,10 @@ JS;
 	function DetailForm() {
 		
 		// Get all the requests
-		$ID = Convert::raw2xml($_REQUEST['ctf']['ID']);
+		$ID = isset($_REQUEST['ctf']['ID']) ? Convert::raw2xml($_REQUEST['ctf']['ID']) : null;
 		$childID = Convert::raw2xml($_REQUEST['ctf']['childID']);
 		$childClass = Convert::raw2xml($_REQUEST['fieldName']);
-		$this->methodName = $_REQUEST['methodName'];
+		$this->methodName = isset($_REQUEST['methodName']) ? $_REQUEST['methodName'] : null;
 
 		// used to discover fields if requested and for population of field
 		if(is_numeric($childID)) {
