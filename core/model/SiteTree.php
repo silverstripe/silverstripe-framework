@@ -365,7 +365,7 @@ class SiteTree extends DataObject {
 	 */
 	public function MetaTags($includeTitle = true) {
 		$tags = "";
-		if($includeTitle == true || $includeTitle == 'true') {
+		if($includeTitle === true || $includeTitle == 'true') {
 			$tags .= "<title>" . Convert::raw2xml($this->MetaTitle ? $this->MetaTitle : $this->Title) . "</title>\n";
 		}
 		$tags .= "<meta name=\"generator\" http-equiv=\"generator\" content=\"SilverStripe 2.0 - http://www.silverstripe.com\" />\n";
