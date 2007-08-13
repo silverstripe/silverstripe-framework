@@ -3,7 +3,7 @@
  * Multi-line text area.
  */
 class TextareaField extends FormField {
-	protected $rows, $cols;
+	protected $rows, $cols, $disabled = false, $readonly = false;
 	
 	/**
 	 * Create a new multi-line text area field.
@@ -30,7 +30,34 @@ class TextareaField extends FormField {
 			$classAttr = '';
 		}
 		
-		return "<textarea $classAttr id=\"" . $this->id() . "\" name=\"{$this->name}\" rows=\"{$this->rows}\" cols=\"{$this->cols}\">".Convert::raw2att($this->value)."</textarea>";
-	}	
+		$disabled = $this->disabled ? " disabled=\"disabled\"" : "";
+		$readonly = $this->readonly ? " readonly=\"readonly\"" : "";
+		
+		return "<textarea $disabled$readonly $classAttr id=\"" . $this->id() . "\" name=\"{$this->name}\" rows=\"{$this->rows}\" cols=\"{$this->cols}\">".Convert::raw2att($this->value)."</textarea>";
+	}
+	
+	/**
+	 * Performs a readonly transformation on this field. You should still be able
+	 * to copy from this field, and it should still send when you submit
+	 * the form it's attached to.
+	 * The element shouldn't be both disabled and readonly at the same time.
+	 */
+	function performReadonlyTransformation() {
+		$this->readonly = true;
+		$this->disabled = false;
+		return $this;
+	}
+	
+	/**
+	 * Performs a disabled transformation on this field. You shouldn't be able to
+	 * copy from this field, and it should not send any data when you submit the 
+	 * form it's attached to.
+	 * The element shouldn't be both disabled and readonly at the same time.
+	 */
+	function performDisabledTransformation() {
+		$this->disabled = true;
+		$this->readonly = false;
+		return $this;
+	}
 }
 ?>
