@@ -166,7 +166,7 @@ class Member extends DataObject {
 				// Merge existing data into the local record
 				
 				foreach($existingRecord->getAllFields() as $k => $v) {
-					if(!$this->changed[$k]) $this->record[$k] = $v;
+					if(!isset($this->changed[$k]) || !$this->changed[$k]) $this->record[$k] = $v;
 				}
 			}
 		}
