@@ -145,7 +145,7 @@ class MySQLDatabase extends Database {
 	 */
 	public function selectDatabase($dbname) {
 		$this->database = $dbname;
-		if($this->databaseExists($this->databse)) mysql_select_db($this->database, $this->dbConn);
+		if($this->databaseExists($this->database)) mysql_select_db($this->database, $this->dbConn);
 		$this->tableList = $this->fieldList = $this->indexList = null;
 	}
 

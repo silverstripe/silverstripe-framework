@@ -111,7 +111,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 				foreach($fields as $fieldName => $fieldVal) {
 					// Parse a dictionary reference - used to set foreign keys
 					if(substr($fieldVal,0,2) == '=>') {
-						$obj->$fieldName = $this->fixtureDicationary[ substr($fieldVal,2) ];
+						$obj->$fieldName = $this->fixtureDictionary[ substr($fieldVal,2) ];
 						
 					// Regular field value setting
 					} else {
