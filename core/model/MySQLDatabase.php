@@ -114,19 +114,90 @@ class MySQLDatabase extends Database {
 	
 	public function createDatabase() {
 		$this->query("CREATE DATABASE $this->database");
+		$this->query("USE $this->database");
+
+		$this->tableList = $this->fieldList = $this->indexList = null;
+
 		if(mysql_select_db($this->database, $this->dbConn)) {
 			$this->active = true;
 			return true;
 		}
 	}
+
+	/**
+	 * Drop the database that this object is currently connected to.
+	 * Use with caution.
+	 */
+	public function dropDatabase() {
+		$this->query("DROP DATABASE $this->database");
+	}
 	
-	public function createTable($tableName) {
-		$this->query("CREATE TABLE `$tableName` (ID int(11) not null auto_increment, primary key (ID)) TYPE=MyISAM");
+	/**
+	 * Returns the name of the currently selected database
+	 */
+	public function currentDatabase() {
+		return $this->database;
+	}
+	
+	/**
+	 * Switches to the given database.
+	 * If the database doesn't exist, you should call createDatabase() after calling selectDatabase()
+	 */
+	public function selectDatabase($dbname) {
+		$this->database = $dbname;
+		if($this->databaseExists($this->databse)) mysql_select_db($this->database, $this->dbConn);
+		$this->tableList = $this->fieldList = $this->indexList = null;
+	}
+
+	/**
+	 * Returns true if the named database exists.
+	 */
+	public function databaseExists($name) {
+		$SQL_name = Convert::raw2sql($name);
+		return $this->query("SHOW DATABASES LIKE '$SQL_name'")->value() ? true : false;
+	}
+	
+	public function createTable($tableName, $fields = null, $indexes = null) {
+		$fieldSchemas = $indexSchemas = "";
+		if($fields) foreach($fields as $k => $v) $fieldSchemas .= "`$k` $v,\n";
+		if($indexes) foreach($indexes as $k => $v) $fieldSchemas .= $this->getIndexSqlDefinition($k, $v) . ",\n";
+		
+		$this->query("CREATE TABLE `$tableName` (
+				ID int(11) not null auto_increment,
+				$fieldSchemas
+				$indexSchemas
+				primary key (ID)
+			) TYPE=MyISAM");
+	}
+
+	/**
+	 * Alter a table's schema.
+	 * @param $table The name of the table to alter
+	 * @param $newFields New fields, a map of field name => field schema
+	 * @param $newIndexes New indexes, a map of index name => index type
+	 * @param $alteredFields Updated fields, a map of field name => field schema
+	 * @param $alteredIndexes Updated indexes, a map of index name => index type
+	 */
+	public function alterTable($table, $newFields, $newIndexes, $alteredFields, $alteredIndexes) {
+		$fieldSchemas = $indexSchemas = "";
+		
+		if($newFields) foreach($newFields as $k => $v) $alterList[] .= "ADD `$k` $v";
+		if($newIndexes) foreach($newIndexes as $k => $v) $alterList[] .= "ADD " . $this->getIndexSqlDefinition($k, $v) . ",\n";
+		if($alteredFields) foreach($alteredFields as $k => $v) $alterList[] .= "CHANGE `$k` `$k` $v";
+		if($alteredIndexes) foreach($alteredIndexes as $k => $v) {
+			$alterList[] .= "DROP INDEX `$k`";
+			$alterList[] .= "ADD ". $this->getIndexSqlDefinition($k, $v);
+ 		}
+		
+		$alterations = implode(",\n", $alterList);
+		$this->query("ALTER TABLE `$tableName` " . $alterations);
 	}
 
 	public function renameTable($oldTableName, $newTableName) {
 		$this->query("ALTER TABLE `$oldTableName` RENAME `$newTableName`");
 	}
+	
+	
 	
 	/**
 	 * Checks a table's integrity and repairs it if necessary.
@@ -220,14 +291,17 @@ class MySQLDatabase extends Database {
 	 * @param string $indexSpec The specification of the index, see Database::requireIndex() for more details.
 	 */
 	public function createIndex($tableName, $indexName, $indexSpec) {
+		$this->query("ALTER TABLE `$tableName` ADD " . $this->getIndexSqlDefinition($indexName, $indexSpec));
+	}
+	
+	protected function getIndexSqlDefinition($indexName, $indexSpec) {
 	    $indexSpec = trim($indexSpec);
 	    if($indexSpec[0] != '(') list($indexType, $indexFields) = explode(' ',$indexSpec,2);
 	    else $indexFields = $indexSpec;
 	    if(!isset($indexType)) {
 			$indexType = "index";
 		}
-
-		$this->query("ALTER TABLE `$tableName` ADD $indexType `$indexName` $indexFields");
+		return "$indexType `$indexName` $indexFields";
 	}
 	
 	/**
@@ -279,7 +353,6 @@ class MySQLDatabase extends Database {
 		
 		return $indexList;
 	}
-
 
 	/**
 	 * Returns a list of all the tables in the database.

@@ -58,7 +58,12 @@ abstract class Database extends Object {
 	 * The table will have a single field - the integer key ID.
 	 * @param string $table Name of table to create.
 	 */
-	abstract function createTable($table);
+	abstract function createTable($table, $fields = null, $indexes = null);
+	
+	/**
+	 * Alter a table's schema.
+	 */
+	abstract function alterTable($table, $newFields, $newIndexes, $alteredFields, $alteredIndexes);
 	
 	/**
 	 * Rename a table.
@@ -112,6 +117,59 @@ abstract class Database extends Object {
 	 */
 	protected $indexList;
 	
+	
+	/**
+	 * Large array structure that represents a schema update transaction
+	 */
+	protected $schemaUpdateTransaction;
+	
+	/**
+	 * Start a schema-updating transaction.
+	 * All calls to requireTable/Field/Index will keep track of the changes requested, but not actually do anything.
+	 * Once	
+	 */
+	function beginSchemaUpdate() {
+		$this->tableList = $this->tableList();
+		$this->indexList = null;
+		$this->fieldList = null;
+		$this->schemaUpdateTransaction = array();
+	}
+	
+	function endSchemaUpdate() {
+		foreach($this->schemaUpdateTransaction as $tableName => $changes) {
+			switch($changes['command']) {
+				case 'create':
+					$this->createTable($tableName, $changes['newFields'], $changes['newIndexes']);
+					break;
+				
+				case 'alter':
+					$this->alterTable($tableName, $changes['newFields'], $changes['newIndexes'],
+						$changes['alteredFields'], $changes['alteredIndexes']);
+					break;
+			}
+		}
+		$this->schemaUpdateTransaction = null;
+	}
+	
+	// Transactional schema altering functions - they don't do anyhting except for update schemaUpdateTransaction
+	
+	function transCreateTable($table) {
+		$this->schemaUpdateTransaction[$table] = array('command' => 'create');
+	}
+	function transCreateField($table, $field, $schema) {
+		$this->schemaUpdateTransaction[$table]['newFields'][$field] = $schema;
+	}
+	function transCreateIndex($table, $index, $schema) {
+		$this->schemaUpdateTransaction[$table]['newIndexes'][$index] = $schema;
+	}
+	function transAlterField($table, $field, $schema) {
+		$this->schemaUpdateTransaction[$table]['alteredFields'][$field] = $schema;
+	}
+	function transAlterIndex($table, $index, $schema) {
+		$this->schemaUpdateTransaction[$table]['alteredIndexes'][$index] = $schema;
+	}
+	
+	
 	/**
 	 * Generate the following table in the database, modifying whatever already exists
 	 * as necessary.
@@ -124,12 +182,8 @@ abstract class Database extends Object {
 	 *     control over the index.
 	 */
 	function requireTable($table, $fieldSchema = null, $indexSchema = null) {
-		if(!isset($this->tableList)) {
-			$this->tableList = $this->tableList();
-		}
-		
 		if(!isset($this->tableList[strtolower($table)])) {
-			$this->createTable($table);
+			$this->transCreateTable($table);
 			if(!Database::$supressOutput) {
 				echo "<li style=\"color: orange\">Table $table: created</li>";
 			}
@@ -137,20 +191,14 @@ abstract class Database extends Object {
 			$this->checkAndRepairTable($table);
 		}
 			
-		
 		// Create custom fields
 		if($fieldSchema) {
 			foreach($fieldSchema as $fieldName => $fieldSpec) {
-				// echo "<li>$fieldName - "  .ViewableData::castingObjectCreator($fieldSpec);	
-				
-				// Debug::show(ViewableData::castingObjectCreator($fieldSpec));
-			
 				$fieldObj = eval(ViewableData::castingObjectCreator($fieldSpec));
-				
 				$fieldObj->setTable($table);
 				$fieldObj->requireField();
 			}
-		}		
+		}	
 
 		// Create custom indexes
 		if($indexSchema) {
@@ -189,16 +237,18 @@ abstract class Database extends Object {
 		}
 		$spec = ereg_replace(" *, *",",",$spec);
 
-		if(!isset($this->indexList[$table])) {
+		if(!isset($this->tableList[strtolower($table)])) $newTable = true;
+
+		if(!$newTable &&  !isset($this->indexList[$table])) {
 			$this->indexList[$table] = $this->indexList($table);
 		}
-		if(!isset($this->indexList[$table][$index])) {
-			$this->createIndex($table, $index, $spec);
+		if($newTable || !isset($this->indexList[$table][$index])) {
+			$this->transCreateIndex($table, $index, $spec);
 			if(!Database::$supressOutput) {
 				echo "<li style=\"color: red\">Index $table.$index: created as $spec</li>";
 			}
 		} else if($this->indexList[$table][$index] != $spec) {
-			$this->alterIndex($table, $index, $spec);
+			$this->transAlterIndex($table, $index, $spec);
 			if(!Database::$supressOutput) {
 				echo "<li style=\"color: orange\">Index $table.$index: changed to $spec <i style=\"color: #AAA\">(from {$this->indexList[$table][$index]})</i></li>";
 			}
@@ -212,27 +262,34 @@ abstract class Database extends Object {
 	 * @param string $spec The field specification.
 	 */
 	function requireField($table, $field, $spec) {
+		Profiler::mark('requireField');
 		// Collations didn't come in until MySQL 4.1.  Anything earlier will throw a syntax error if you try and use
 		// collations.
 		if(!$this->supportsCollations()) {
 			$spec = eregi_replace(' *character set [^ ]+( collate [^ ]+)?( |$)','\\2',$spec);
 		}
+		if(!isset($this->tableList[strtolower($table)])) $newTable = true;
 
-		if(!isset($this->fieldList[$table])) {
+		if(!$newTable && !isset($this->fieldList[$table])) {
 			$this->fieldList[$table] = $this->fieldList($table);
 		}
 		
-		if(!isset($this->fieldList[$table][$field])) {
-			$this->createField($table, $field, $spec);
+		if($newTable || !isset($this->fieldList[$table][$field])) {
+			Profiler::mark('createField');
+			$this->transCreateField($table, $field, $spec);
+			Profiler::unmark('createField');
 			if(!Database::$supressOutput) {
 				echo "<li style=\"color: red\">Field $table.$field: created as $spec</li>";
 			}
 		} else if($this->fieldList[$table][$field] != $spec) {
-			$this->alterField($table, $field, $spec);
+			Profiler::mark('alterField');
+			$this->transAlterField($table, $field, $spec);
+			Profiler::unmark('alterField');
 			if(!Database::$supressOutput) {
 				echo "<li style=\"color: orange\">Field $table.$field: changed to $spec <i style=\"color: #AAA\">(from {$this->fieldList[$table][$field]})</i></li>";
 			}
 		}
+		Profiler::unmark('requireField');
 	}
 
 	/**

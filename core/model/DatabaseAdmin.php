@@ -121,6 +121,9 @@ class DatabaseAdmin extends Controller {
 	 * @param boolean $quiet Don't show messages
 	 */
 	function doBuild($quiet = false) {
+		$conn = DB::getConn();
+		
+		Profiler::mark('doBuild');
 		if($quiet) {
 			DB::quiet();
 		} else {
@@ -136,8 +139,8 @@ class DatabaseAdmin extends Controller {
 		}
 
 		// Get all our classes
-		ManifestBuilder::compileManifest();
-		ManifestBuilder::includeEverything();
+		// ManifestBuilder::compileManifest();
+		// ManifestBuilder::includeEverything();
 
 		// Build the database.  Most of the hard work is handled by DataObject
 		$dataClasses = ClassInfo::subclassesFor('DataObject');
@@ -146,7 +149,8 @@ class DatabaseAdmin extends Controller {
 		if(!$quiet) {
 			echo '<p><b>Creating database tables</b></p>';
 		}
-
+		
+		$conn->beginSchemaUpdate();
 		foreach($dataClasses as $dataClass) {
 			// Test_ indicates that it's the data class is part of testing system
 
@@ -154,12 +158,14 @@ class DatabaseAdmin extends Controller {
 				if(!$quiet) {
 					echo "<li>$dataClass";
 				}
-
+				Profiler::mark("requireTable $dataClass");
 				singleton($dataClass)->requireTable();
+				Profiler::unmark("requireTable $dataClass");
 			}
 		}
+		$conn->endSchemaUpdate();
 
-		ManifestBuilder::compileManifest();
+		ManifestBuilder::update_db_tables();
 
 		if(!$quiet) {
 			echo '<p><b>Creating database records</b></p>';
@@ -173,7 +179,9 @@ class DatabaseAdmin extends Controller {
 					echo "<li>$dataClass";
 				}
 
+				Profiler::mark("requireDefaultRecords $dataClass");
 				singleton($dataClass)->requireDefaultRecords();
+				Profiler::unmark("requireDefaultRecords $dataClass");
 			}
 		}
 
@@ -182,6 +190,7 @@ class DatabaseAdmin extends Controller {
 		if(isset($_REQUEST['from_installer'])) {
 			echo "OK";
 		}
+		Profiler::unmark('doBuild');
 	}
 
 

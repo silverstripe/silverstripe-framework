@@ -395,43 +395,49 @@ class SiteTree extends DataObject {
 	function requireDefaultRecords() {
 		parent::requireDefaultRecords();
 		
-		if(!DataObject::get_one("SiteTree", "URLSegment = 'home'")) {
-			$homepage = new Page();
-			$homepage->Title = "Home";
-			$homepage->Content = "<p>Welcome to SilverStripe! This is the default homepage. You can edit this page by opening <a href=\"admin/\">the CMS</a>.</p>";
-			$homepage->URLSegment = "home";
-			$homepage->Status = "Published";
-			$homepage->write();
-			$homepage->publish("Stage", "Live");
-			
-			if(!Database::$supressOutput) {
-				echo "<li style=\"color: orange\">Home page created</li>";
-			}
-		}
-		
-		if(DB::query("SELECT COUNT(*) FROM SiteTree")->value() == 1) {
-			$aboutus = new Page();
-			$aboutus->Title = "About Us";
-			$aboutus->Content = "<p>You can fill this page out with your own content, or delete it and create your own pages.<br /></p>";
-			$aboutus->URLSegment = "about-us";
-			$aboutus->Status = "Published";
-			$aboutus->write();
-			$aboutus->publish("Stage", "Live");
-			
-			if(!Database::$supressOutput) {
-				echo "<li style=\"color: orange\">About Us created</li>";
-			}
-			
-			$contactus = new Page();
-			$contactus->Title = "Contact Us";
-			$contactus->Content = "<p>You can fill this page out with your own content, or delete it and create your own pages.<br /></p>";
-			$contactus->URLSegment = "contact-us";
-			$contactus->Status = "Published";
-			$contactus->write();
-			$contactus->publish("Stage", "Live");
-		}
-		
+		if($this->class == 'SiteTree') {
+			if(!DataObject::get_one("SiteTree", "URLSegment = 'home'")) {
+				$homepage = new Page();
+				echo 'Running with the homepage: ' . $homepage->ID;
 
+				$homepage->Title = "Home";
+				$homepage->Content = "<p>Welcome to SilverStripe! This is the default homepage. You can edit this page by opening <a href=\"admin/\">the CMS</a>.</p>";
+				$homepage->URLSegment = "home";
+				$homepage->Status = "Published";
+				$homepage->write();
+				echo 'Created the homepage: ' . $homepage->ID;
+				$homepage->publish("Stage", "Live");
+				$homepage->flushCache();
+
+				if(!Database::$supressOutput) {
+					echo "<li style=\"color: orange\">Home page created</li>";
+				}
+			}
+
+			if(DB::query("SELECT COUNT(*) FROM SiteTree")->value() == 1) {
+				$aboutus = new Page();
+				$aboutus->Title = "About Us";
+				$aboutus->Content = "<p>You can fill this page out with your own content, or delete it and create your own pages.<br /></p>";
+				$aboutus->URLSegment = "about-us";
+				$aboutus->Status = "Published";
+				$aboutus->write();
+				$aboutus->publish("Stage", "Live");
+
+				if(!Database::$supressOutput) {
+					echo "<li style=\"color: orange\">About Us created</li>";
+				}
+
+				$contactus = new Page();
+				$contactus->Title = "Contact Us";
+				$contactus->Content = "<p>You can fill this page out with your own content, or delete it and create your own pages.<br /></p>";
+				$contactus->URLSegment = "contact-us";
+				$contactus->Status = "Published";
+				$contactus->write();
+				$contactus->publish("Stage", "Live");
+
+				$contactus->flushCache();
+			}
+		}
 	}
 
 	//------------------------------------------------------------------------------------//
@@ -697,6 +703,8 @@ class SiteTree extends DataObject {
 		{
 			$fields = call_user_func($extension,$fields);
 		}
+		
+		$this->extend('updateCMSFields', $fields);
 
 		return $fields;
 	}

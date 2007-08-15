@@ -227,5 +227,57 @@ class ManifestBuilder {
 			require_once($filename);
 		}
 	}
+
+	/**
+	 * Updates the active table list in the class info in the manifest, but leaves everything else as-is.
+	 * Much quicker to run than compileManifest :-)
+	 */
+	static function update_db_tables() {
+		global $_ALL_CLASSES;
+		$_ALL_CLASSES['hastable'] = array();
+
+		$tables = DB::getConn()->tableList();
+		
+		// We need to iterate through the full class lists, because the table names come out in lowercase
+		foreach($_ALL_CLASSES['exists'] as $class) {
+			if(isset($tables[strtolower($class)])) $_ALL_CLASSES['hastable'][$class] = $class;
+		}
+		
+		self::write_manifest();
+	}
+	
+	/**
+	 * Write the manifest file, containing the updated values in the applicable globals
+	 */
+	static function write_manifest() {
+		global $_CLASS_MANIFEST, $_TEMPLATE_MANIFEST, $_CSS_MANIFEST, $_ALL_CLASSES;
+
+		$manifest = "\$_CLASS_MANIFEST = " . var_export($_CLASS_MANIFEST, true) . ";\n";
+
+		// Config manifest
+		$baseDir = dirname($_SERVER['SCRIPT_FILENAME']) . "/..";	
+		$baseDir = ereg_replace("/[^/]+/\\.\\.","",$baseDir);
+		$topLevel = scandir($baseDir);
+
+		foreach($topLevel as $filename) {
+			if(is_dir("$baseDir/$filename/") && file_exists("$baseDir/$filename/_config.php")) {
+				$manifest .= "require_once(\"$baseDir/$filename/_config.php\");\n";
+			}
+		}
+
+		$manifest .= "\$_TEMPLATE_MANIFEST = " . var_export($_TEMPLATE_MANIFEST, true) . ";\n";
+		$manifest .= "\$_CSS_MANIFEST = " . var_export($_CSS_MANIFEST, true) . ";\n";
+		$manifest .= "\$_ALL_CLASSES = " . var_export($_ALL_CLASSES, true) . ";\n";
+		$manifest = "<?php\n$manifest\n?>";
+
+		if($fh = fopen(MANIFEST_FILE,"w")) {			
+			fwrite($fh, $manifest);
+			fclose($fh);
+
+		} else {
+			die("Cannot write manifest file!  Check permissions of " . MANIFEST_FILE);
+		}
+	}
+
 }
 ?>
