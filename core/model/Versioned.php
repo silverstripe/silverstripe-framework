@@ -119,12 +119,13 @@ class Versioned extends DataObjectDecorator {
 				// Extra tables for _Live, etc.
 				if($stage != $this->defaultStage) {
 					DB::requireTable("{$table}_$stage", $fields, $indexes);
-				
+					/*
 					if(!DB::query("SELECT * FROM {$table}_$stage")->value()) {
 						$fieldList = implode(", ",array_keys($fields));
 						DB::query("INSERT INTO `{$table}_$stage` (ID,$fieldList)
 							SELECT ID,$fieldList FROM `$table`");
 					}
+					*/
 				}
 
 				// Version fields on each root table (including Stage)
@@ -156,13 +157,14 @@ class Versioned extends DataObjectDecorator {
 			);
 			
 			DB::requireTable("{$table}_versions", $versionFields, $versionIndexes);
-
+			/*
 			if(!DB::query("SELECT * FROM {$table}_versions")->value()) {
 				$fieldList = implode(", ",array_keys($fields));
 								
 				DB::query("INSERT INTO `{$table}_versions` ($fieldList, RecordID, Version) 
 					SELECT $fieldList, ID AS RecordID, 1 AS Version FROM `$table`");
 			}
+			*/
 			
 		} else {
 			DB::dontRequireTable("{$table}_versions");
@@ -566,6 +568,13 @@ class Versioned extends DataObjectDecorator {
 			user_error("Versioned::get_version: Couldn't get $class.$id, version $version", E_USER_ERROR);
 		}
 		return new $className($record);
+	}
+	
+	function contentcontrollerInit($controller) {
+		self::choose_site_stage();
+	}
+	function modelascontrollerInit($controller) {
+		self::choose_site_stage();
 	}
 	
 	protected static $reading_stage = null;
