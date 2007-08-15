@@ -398,14 +398,12 @@ class SiteTree extends DataObject {
 		if($this->class == 'SiteTree') {
 			if(!DataObject::get_one("SiteTree", "URLSegment = 'home'")) {
 				$homepage = new Page();
-				echo 'Running with the homepage: ' . $homepage->ID;
 
 				$homepage->Title = "Home";
 				$homepage->Content = "<p>Welcome to SilverStripe! This is the default homepage. You can edit this page by opening <a href=\"admin/\">the CMS</a>.</p>";
 				$homepage->URLSegment = "home";
 				$homepage->Status = "Published";
 				$homepage->write();
-				echo 'Created the homepage: ' . $homepage->ID;
 				$homepage->publish("Stage", "Live");
 				$homepage->flushCache();
 

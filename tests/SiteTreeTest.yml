@@ -1,0 +1,30 @@
+Page:
+    home:
+        Title: Home
+    about:
+        Title: About Us
+    staff:
+        Title: Staff
+        URLSegment: my-staff
+        Parent: =>Page.about
+    staffduplicate:
+        Title: Staff
+        URLSegment: my-staff
+        Parent: =>Page.about
+    products:
+        Title: Products
+    product1:
+        Title: 1.1 Test Product
+    product2:
+        Title: Another Product
+    product3:
+        Title: Another Product
+    product4:
+        Title: Another Product
+    contact:
+        Title: Contact Us
+        
+ErrorPage:
+    404:
+        Title: Page not Found
+        ErrorCode: 404

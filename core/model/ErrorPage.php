@@ -21,7 +21,7 @@ class ErrorPage extends Page {
 	 */
 	function requireDefaultRecords() {
 		parent::requireDefaultRecords();
-		
+
 		if(!DataObject::get_one("ErrorPage", "ErrorCode = '404'")) {
 			$errorpage = new ErrorPage();
 			$errorpage->ErrorCode = 404;

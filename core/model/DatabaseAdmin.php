@@ -119,11 +119,11 @@ class DatabaseAdmin extends Controller {
 	 * Updates the database schema, creating tables & fields as necessary.
 	 *
 	 * @param boolean $quiet Don't show messages
+	 * @param boolean $populate Populate the database, as well as setting up its schema
 	 */
-	function doBuild($quiet = false) {
+	function doBuild($quiet = false, $populate = true) {
 		$conn = DB::getConn();
 		
-		Profiler::mark('doBuild');
 		if($quiet) {
 			DB::quiet();
 		} else {
@@ -158,30 +158,28 @@ class DatabaseAdmin extends Controller {
 				if(!$quiet) {
 					echo "<li>$dataClass";
 				}
-				Profiler::mark("requireTable $dataClass");
 				singleton($dataClass)->requireTable();
-				Profiler::unmark("requireTable $dataClass");
 			}
 		}
 		$conn->endSchemaUpdate();
 
 		ManifestBuilder::update_db_tables();
+		
+		if($populate) {
+			if(!$quiet) {
+				echo '<p><b>Creating database records</b></p>';
+			}
 
-		if(!$quiet) {
-			echo '<p><b>Creating database records</b></p>';
-		}
+			foreach($dataClasses as $dataClass) {
+				// Test_ indicates that it's the data class is part of testing system
 
-		foreach($dataClasses as $dataClass) {
-			// Test_ indicates that it's the data class is part of testing system
+				if(strpos($dataClass,'Test_') === false) {
+					if(!$quiet) {
+						echo "<li>$dataClass";
+					}
 
-			if(strpos($dataClass,'Test_') === false) {
-				if(!$quiet) {
-					echo "<li>$dataClass";
+					singleton($dataClass)->requireDefaultRecords();
 				}
-
-				Profiler::mark("requireDefaultRecords $dataClass");
-				singleton($dataClass)->requireDefaultRecords();
-				Profiler::unmark("requireDefaultRecords $dataClass");
 			}
 		}
 
@@ -190,7 +188,6 @@ class DatabaseAdmin extends Controller {
 		if(isset($_REQUEST['from_installer'])) {
 			echo "OK";
 		}
-		Profiler::unmark('doBuild');
 	}
 
 
