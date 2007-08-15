@@ -24,7 +24,7 @@ class Debug {
 				if(Director::is_ajax())
 					echo "Debug ($caller[class]$caller[type]$caller[function]() in line $caller[line] of " . basename($caller['file']) . ")\n";
 				else 
-					echo "<div style=\"background-color: white; text-align: left; width: 50em\">\n<hr>\n<h3>Debug <span style=\"font-size: 65%\">($caller[class]$caller[type]$caller[function]() \n<span style=\"font-weight:normal\">in line</span> $caller[line] <\nspan style=\"font-weight:normal\">of</span> " . basename($caller['file']) . ")</span>\n</h3>\n";
+					echo "<div style=\"background-color: white; text-align: left; width: 50em\">\n<hr>\n<h3>Debug <span style=\"font-size: 65%\">($caller[class]$caller[type]$caller[function]() \n<span style=\"font-weight:normal\">in line</span> $caller[line] \n<span style=\"font-weight:normal\">of</span> " . basename($caller['file']) . ")</span>\n</h3>\n";
 			}
 			
 			echo Debug::text($val);
