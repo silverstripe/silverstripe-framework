@@ -1,5 +1,14 @@
 <?php
 
+// Check that PHPUnit is installed
+$hasPhpUnit = false;
+$paths = explode(PATH_SEPARATOR, ini_get('include_path'));
+foreach($paths as $path) {
+	if(file_exists("$path/PHPUnit/Framework.php")) $hasPhpUnit = true;
+}
+
+if($hasPhpUnit) {
+
 require_once 'PHPUnit/Framework.php';
 require_once 'PHPUnit/TextUI/TestRunner.php';
 
@@ -22,6 +31,16 @@ class TestRunner extends Controller {
 			$suite->addTest(new PHPUnit_Framework_TestSuite($test));
 		}
 
-		PHPUnit_TextUI_TestRunner::run($suite);
+		PHPUnit_TextUI_TestRunner::run($suite/*, array("reportDirectory" => "/Users/sminnee/phpunit-report")*/);
 	}
+}
+
+} else {
+
+class TestRunner extends Controller {
+	function index() {
+		echo "Please install PHPUnit using pear.";
+	}
+}
+
 }

@@ -27,6 +27,17 @@ if(ManifestBuilder::staleManifest()) ManifestBuilder::compileManifest();
 
 require_once(MANIFEST_FILE);
 */
+
+
+// Check that PHPUnit is installed
+$hasPhpUnit = false;
+$paths = explode(PATH_SEPARATOR, ini_get('include_path'));
+foreach($paths as $path) {
+	if(file_exists("$path/PHPUnit/Framework.php")) $hasPhpUnit = true;
+}
+
+if($hasPhpUnit) {
+
 require_once 'PHPUnit/Framework.php';
 
 /**
@@ -122,6 +133,11 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 			$dbConn->dropDatabase();
 		}
 	}
+}
+
+} else {
+	// Stub
+	class SapphireTest extends Object {}
 }
 
 ?>
