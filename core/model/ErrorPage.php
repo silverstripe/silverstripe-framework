@@ -73,6 +73,8 @@ class ErrorPage extends Page {
 		Session::clear("loggedInAs");
 		$alc_enc = isset($_COOKIE['alc_enc']) ? $_COOKIE['alc_enc'] : null;
 		Cookie::set('alc_enc', null);
+		
+		$oldStage = Versioned::current_stage();
 
 		// Run the page
 		Requirements::clear();
@@ -83,12 +85,13 @@ class ErrorPage extends Page {
 			fwrite($fh, $errorContent);
 			fclose($fh);
 		}
+		
+		// Restore the version we're currently connected to.
+		Versioned::reading_stage($oldStage);
 
 		// Log back in
-		Session::set("loggedInAs", $loggedInMember->ID);
-		if(isset($alc_enc)) {
-			Cookie::set('alc_enc', $alc_enc);
-		}
+		if($loggedInMember) Session::set("loggedInAs", $loggedInMember->ID);
+		if(isset($alc_enc)) Cookie::set('alc_enc', $alc_enc);
 		
 		return $this->extension_instances['Versioned']->publish($fromStage, $toStage, $createNewVersion);
 	}
