@@ -27,4 +27,24 @@ class SiteTreeTest extends SapphireTest {
 			$this->assertEquals($urlSegment, $obj->URLSegment);
 		}
 	}
+	
+	/**
+	 * Test that publication copies data to SiteTree_Live
+	 */
+	function testPublishCopiesToLiveTable() {
+		$obj = $this->objFromFixture('Page','about');
+		$obj->publish('Stage', 'Live');
+		
+		$createdID = DB::query("SELECT ID FROM SiteTree_Live WHERE URLSegment = '$obj->URLSegment'")->value();
+		$this->assertEquals($obj->ID, $createdID);
+	}
+	
+	
+	/**
+	 * Test that saving changes creates a new version with the correct data in it.
+	 */
+	
+	/**
+	 * Test that publishing an unsaved page will save the changes before publishing
+	 */
 }
