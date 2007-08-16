@@ -82,7 +82,15 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	 * @param $identifier The identifier string, as provided in your fixture file
 	 */
 	protected function idFromFixture($className, $identifier) {
-		return $this->fixtureDictionary["$className.$identifier"];
+		return $this->fixtureDictionary[$className][$identifier];
+	}
+	
+	/**
+	 * Return all of the IDs in the fixture of a particular class name.
+	 * @return A map of fixture-identifier => object-id
+	 */
+	protected function allFixtureIDs($className) {
+		return $this->fixtureDictionary[$className];
 	}
 
 	/**
@@ -111,7 +119,8 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 				foreach($fields as $fieldName => $fieldVal) {
 					// Parse a dictionary reference - used to set foreign keys
 					if(substr($fieldVal,0,2) == '=>') {
-						$obj->$fieldName = $this->fixtureDictionary[ substr($fieldVal,2) ];
+						list($a, $b) = explode('.', substr($fieldVal,2), 2);
+						$obj->$fieldName = $this->fixtureDictionary[$a][$b];
 						
 					// Regular field value setting
 					} else {
@@ -121,7 +130,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 				$obj->write();
 				
 				// Populate the dictionary with the ID
-				$this->fixtureDictionary[$dataClass.'.'.$identifier] = $obj->ID;
+				$this->fixtureDictionary[$dataClass][$identifier] = $obj->ID;
 			}
 		}
 	}
