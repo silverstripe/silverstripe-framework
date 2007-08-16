@@ -5,6 +5,25 @@
  */
 
 class Object {
+	/**
+	 * This DataObjects extensions, eg Versioned.
+	 * @var array
+	 */
+	protected $extension_instances = array();
+
+	/**
+	 * Extensions to be used on this object. An array of extension names
+	 * and parameters eg:
+	 * 
+	 * 	static $extensions = array(
+	 * 		"Hierarchy",
+	 * 		"Versioned('Stage', 'Live')",
+	 * 	);
+	 * 
+	 * @var array
+	 */
+	public static $extensions = null;
+
 	protected static $extraStatics = array();
 	protected static $classConstructed = array();
 
@@ -17,6 +36,8 @@ class Object {
     private static $custom_classes = array();
 	private static $strong_classes = array();
     
+
+
 	/**
 	 * This function allows you to overload class creation methods, so certain classes are 
 	 * always created correctly over your system. 
@@ -94,6 +115,16 @@ class Object {
 	
 	function __construct() {
 		$this->class = get_class($this);	
+
+		// Set up the extensions
+		if($extensions = $this->stat('extensions')) {
+			foreach($extensions as $extension) {
+				$instance = eval("return new $extension;");
+				$instance->setOwner($this);
+				$this->extension_instances[$instance->class] = $instance;
+			}
+		}
+
 		if(!isset(Object::$classConstructed[$this->class])) {
 			$this->defineMethods();
 			Object::$classConstructed[$this->class] = true;
@@ -228,6 +259,10 @@ class Object {
 	 * You can overload it with methods for setting up the class - for example, extra methods.
 	 */
 	protected function defineMethods() {
+		if($this->extension_instances) foreach($this->extension_instances as $i => $instance) {
+			$this->addMethodsFrom('extension_instances', $i);
+		}
+
 		if(isset($_REQUEST['debugmethods']) && isset(Object::$builtInMethods[$this->class])) {
 			echo "<h2>Methods defined for $this->class</h2>";
 			foreach(Object::$builtInMethods[$this->class] as $name => $info) {
@@ -315,6 +350,61 @@ class Object {
 	
 	public function __toString() {
 		return $this->class;
+	}
+	
+	
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	// EXTENSION METHODS
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	/**
+	 * Run the given function on all of this object's extensions
+	 * 
+	 * @param string $funcName The name of the function.
+	 * @param mixed $arg An Argument to be passed to each of the extension functions.
+	 */
+	public function extend($funcName, &$arg) {
+		if($this->extension_instances) {
+			foreach($this->extension_instances as $extension) {
+				if($extension->hasMethod($funcName)) {
+					$extension->$funcName($arg);
+				}
+			}
+		}
+	}
+	
+	/**
+	 * Get an extension on this DataObject
+	 * 
+	 * @param string $name Classname of the Extension (e.g. 'Versioned')
+	 * 
+	 * @return DataObjectDecorator The instance of the extension
+	 */
+	public function getExtension($name) {
+		return $this->extension_instances[$name];
+	}
+	
+	/**
+	 * Returns true if the given extension class is attached to this object
+	 * 
+	 * @param string $requiredExtension Classname of the extension
+	 * 
+	 * @return boolean True if the given extension class is attached to this object
+	 */
+	public function hasExtension($requiredExtension) {
+		return isset($this->extension_instances[$requiredExtension]) ? true : false;
+	}
+
+	/**
+	 * Add an extension to the given object.
+	 * This can be used to add extensions to built-in objects, such as role decorators on Member 
+	 */
+	public static function add_extension($className, $extensionName) {
+		Object::addStaticVars($className, array(
+			'extensions' => array(
+				$extensionName,
+			),
+		));
 	}
 }
 
