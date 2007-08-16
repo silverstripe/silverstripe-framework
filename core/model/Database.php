@@ -154,9 +154,10 @@ abstract class Database extends Object {
 	// Transactional schema altering functions - they don't do anyhting except for update schemaUpdateTransaction
 	
 	function transCreateTable($table) {
-		$this->schemaUpdateTransaction[$table] = array('command' => 'create');
+		$this->schemaUpdateTransaction[$table] = array('command' => 'create', 'newFields' => array(), 'newIndexes' => array());
 	}
 	function transCreateField($table, $field, $schema) {
+		$this->transInitTable($table);
 		$this->schemaUpdateTransaction[$table]['newFields'][$field] = $schema;
 	}
 	function transCreateIndex($table, $index, $schema) {
@@ -167,6 +168,20 @@ abstract class Database extends Object {
 	}
 	function transAlterIndex($table, $index, $schema) {
 		$this->schemaUpdateTransaction[$table]['alteredIndexes'][$index] = $schema;
+	}
+	
+	/**
+	 * Handler for the other transXXX methods - mark the given table as being altered
+	 * if it doesn't already exist
+	 */
+	protected function transInitTable($table) {
+		if(!$this->schemaUpdateTransaction[$table]) $this->schemaUpdateTransaction[$table] = array(
+			'command' => 'alter',
+			'newFields' => array(),
+			'newIndexes' => array(),
+			'alteredFields' => array(),
+			'alteredIndexes' => array(),
+		);		
 	}
 	
 	
@@ -440,6 +455,35 @@ abstract class Query extends Object implements Iterator {
 		foreach($this as $record) {
 			return reset($record);
 		}
+	}
+	
+	/**
+	 * Return an HTML table containing the full result-set
+	 */
+	public function table() {
+		$first = true;
+		$result = "<table>\n";
+		
+		foreach($this as $record) {
+			if($first) {
+				$result .= "<tr>";
+				foreach($record as $k => $v) {
+					$result .= "<th>" . Convert::raw2xml($k) . "</th> ";
+ 				}
+				$result .= "</tr> \n";
+			}
+
+			$result .= "<tr>";
+			foreach($record as $k => $v) {
+				$result .= "<td>" . Convert::raw2xml($v) . "</td> ";
+			}
+			$result .= "</tr> \n";
+			
+			$first = false;
+		}
+		
+		if($first) return "No records found";
+		return $result;
 	}
 	
 	/**
