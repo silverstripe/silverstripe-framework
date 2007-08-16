@@ -39,11 +39,6 @@ class DataObject extends Controller {
 	 */
 	protected $components;
 	
-	/**
-	 * This DataObjects extensions, eg Versioned.
-	 * @var array
-	 */
-	protected $extension_instances = array();
 	
 	/**
 	 * True if this DataObject has been destroyed.
@@ -95,14 +90,6 @@ class DataObject extends Controller {
 			HTTP::register_modification_date($record['LastEdited']);
 		}
 
-		// Set up the extensions
-		if($extensions = $this->stat('extensions')) {
-			foreach($extensions as $extension) {
-				$instance = eval("return new $extension;");
-				$instance->setOwner($this);
-				$this->extension_instances[$instance->class] = $instance;
-			}
-		}
 		parent::__construct();
 
 		// Must be called after parent constructor
@@ -126,15 +113,16 @@ class DataObject extends Controller {
 	
 	/**
 	 * Create a duplicate of this node.
-	 * It will create the duplicate in the database.
+	 * 
+	 * @param $doWrite Perform a write() operation before returning the object.  If this is true, it will create the duplicate in the database.
 	 * 
 	 * @return DataObject A duplicate of this node. The exact type will be the type of this node.
 	 */
-	function duplicate() {
+	function duplicate($doWrite = true) {
 		$className = $this->class;
 		$clone = new $className( $this->record );
 		$clone->ID = 0;
-		$clone->write();
+		if($doWrite) $clone->write();
 		return $clone;
 	}
 	
@@ -175,14 +163,14 @@ class DataObject extends Controller {
 	 */	
 	function defineMethods() {
 		if($this->class == 'DataObject') return;
-		
-		if($this->extension_instances) foreach($this->extension_instances as $i => $instance) {
-			$this->addMethodsFrom('extension_instances', $i);
 
-			// Define the extra db fields
+		parent::defineMethods();
+
+		// Define the extra db fields
+		if($this->extension_instances) foreach($this->extension_instances as $i => $instance) {
 			$instance->loadExtraDBFields();
 		}
-
+		
 		// Set up accessors for joined items
 		if($manyMany = $this->many_many()) {
 			foreach($manyMany as $relationship => $class) {
@@ -201,8 +189,6 @@ class DataObject extends Controller {
 				$this->addWrapperMethod($relationship, 'getComponent');
 			}
 		}
-
-		parent::defineMethods();
 	}
 	
 	/**
@@ -312,6 +298,9 @@ class DataObject extends Controller {
 	 */
 	protected function onBeforeWrite() {
 		$this->brokenOnWrite = false;
+		
+		$dummy = null;
+		$this->extend('augmentBeforeWrite', $dummy);
 	}
 	
 	/**
@@ -1305,56 +1294,6 @@ class DataObject extends Controller {
 	}
 
 	/**
-	 * Run the given function on all of this object's extensions
-	 * 
-	 * @param string $funcName The name of the function.
-	 * @param mixed $arg An Argument to be passed to each of the extension functions.
-	 */
-	public function extend($funcName, &$arg) {
-		if($this->extension_instances) {
-			foreach($this->extension_instances as $extension) {
-				if($extension->hasMethod($funcName)) {
-					$extension->$funcName($arg);
-				}
-			}
-		}
-	}
-	
-	/**
-	 * Get an extension on this DataObject
-	 * 
-	 * @param string $name Classname of the Extension (e.g. 'Versioned')
-	 * 
-	 * @return DataObjectDecorator The instance of the extension
-	 */
-	public function getExtension($name) {
-		return $this->extension_instances[$name];
-	}
-	
-	/**
-	 * Returns true if the given extension class is attached to this object
-	 * 
-	 * @param string $requiredExtension Classname of the extension
-	 * 
-	 * @return boolean True if the given extension class is attached to this object
-	 */
-	public function hasExtension($requiredExtension) {
-		return isset($this->extension_instances[$requiredExtension]) ? true : false;
-	}
-	
-	/**
-	 * Add an extension to the given object.
-	 * This can be used to add extensions to built-in objects, such as role decorators on Member 
-	 */
-	public static function add_extension($className, $extensionName) {
-		Object::addStaticVars($className, array(
-			'extensions' => array(
-				$extensionName,
-			),
-		));
-	}
-	
-	/**
 	 * Get a bunch of fields in a list - a <ul> of <li><b>name:</b> value</li>
 	 * 
 	 * @return string The fields as an HTML unordered list
@@ -1470,6 +1409,11 @@ class DataObject extends Controller {
 	 * Flush the cached results for get_one() 
 	 */
 	public function flushCache() {
+		if($this->class == 'DataObject') {
+			DataObject::$cache_get_one = array();
+			return;			
+		}
+		
 		$classes = ClassInfo::ancestry($this->class);
 		foreach($classes as $class) {
 			// If someone else has called get_one and flushCache() is called, then that object will be destroyed.
@@ -1540,7 +1484,7 @@ class DataObject extends Controller {
 			$tableClasses = ClassInfo::dataClassesFor($callerClass);
 			$baseClass = array_shift($tableClasses);
 			
-			return DataObject::get_one($callerClass,"`$baseClass`.ID = $id");
+			return DataObject::get_one($callerClass,"`$baseClass`.`ID` = $id");
 		} else {
 			user_error("DataObject::get_by_id passed a non-numeric ID #$id", E_USER_WARNING);
 		}
@@ -1695,13 +1639,34 @@ class DataObject extends Controller {
     public function isInDB() {
         return is_numeric( $this->ID ) && $this->ID > 0;    
     }
+
+	/**
+	 * Sets a 'context object' that can be used to provide hints about how to process a particular get / get_one request.  
+	 * In particular, DataObjectDecorators can use this to amend queries more effectively.
+	 * Care must be taken to unset the context object after you're done with it, otherwise you will have a stale context,
+	 * which could cause horrible bugs.
+	 */
+	public static function set_context_obj($obj) {
+		if($obj && self::$context_obj) user_error("Dataobject::set_context_obj called when there is already a context.", E_USER_WARNING);
+		self::$context_obj = $obj;
+	}
+	
+	/**
+	 * Retrieve the current context object.
+	 */
+	public static function context_obj() {
+		return self::$context_obj;
+	}
+	
+	protected static $context_obj = null;
+	
 	
 	//-------------------------------------------------------------------------------------------//
 
 	/**
 	 * Database field definitions.
 	 * This is a map from field names to field type. The field
-	 * type should be a class that extends DBField.
+	 * type should be a class that extends .
 	 * @var array
 	 */
 	public static $db = null;
@@ -1788,18 +1753,5 @@ class DataObject extends Controller {
 	 * @var string
 	 */
 	public static $default_sort = null;
-	
-	/**
-	 * Extensions to be used on this DataObject. An array of extension names
-	 * and parameters eg:
-	 * 
-	 * 	static $extensions = array(
-	 * 		"Hierarchy",
-	 * 		"Versioned('Stage', 'Live')",
-	 * 	);
-	 * 
-	 * @var array
-	 */
-	public static $extensions = null;	
 }
 ?>

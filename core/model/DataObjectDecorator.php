@@ -9,20 +9,7 @@
  * Plug-ins for additional functionality in your DataObjects.
  * DataObject decorators add extra functionality to your data objects.
  */
-abstract class DataObjectDecorator extends Object {
-	/**
-	 * The DataObject that owns this decorator.
-	 * @var DataObject
-	 */
-	protected $owner;
-	
-	/**
-	 * Set the owner of this decorator.
-	 * @param DataObject $owner
-	 */
-	function setOwner(DataObject $owner) {
-		$this->owner = $owner;
-	}
+abstract class DataObjectDecorator extends Extension {
 	
 	/**
 	 * Load the extra database fields defined in extraDBFields.
@@ -43,12 +30,16 @@ abstract class DataObjectDecorator extends Object {
 	 * Edit the given query object to support queries for this extension.
 	 * @param SQLQuery $query Query to augment.
 	 */
-	abstract function augmentSQL(SQLQuery &$query);
+	function augmentSQL(SQLQuery &$query) {
+		
+	}
 	
 	/**
 	 * Update the database schema as required by this extension.
 	 */
-	abstract function augmentDatabase();
+	function augmentDatabase() {
+		
+	}
 	
 	/**
 	 * Define extra database fields.

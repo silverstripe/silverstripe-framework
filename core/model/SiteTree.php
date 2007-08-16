@@ -100,8 +100,8 @@ class SiteTree extends DataObject {
 	 * if you need such behaviour.
 	 * @return SiteTree The duplicated object.
 	 */
-	 public function duplicate() {
-		$page = parent::duplicate();
+	 public function duplicate($doWrite = true) {
+		$page = parent::duplicate($doWrite);
 		$page->CheckedPublicationDifferences = $page->AddedToStage = true;
 		return $page;
 	}
@@ -459,6 +459,8 @@ class SiteTree extends DataObject {
 			$this->URLSegment = $segment;
 		}
 		
+		DataObject::set_context_obj($this);
+		
 		// Ensure URLSegment is unique
 		$idFilter = $this->ID ? " AND `SiteTree`.ID <> '$this->ID'" : '';
 		$count = 1;
@@ -466,6 +468,8 @@ class SiteTree extends DataObject {
 			$count++;
 			$this->URLSegment = ereg_replace('-[0-9]+$','', $this->URLSegment) . "-$count";
 		}
+
+		DataObject::set_context_obj(null);
 		
 		// If the URLSegment has been changed, rewrite links
 		if(isset($this->changed['URLSegment']) && $this->changed['URLSegment']) {
@@ -482,6 +486,7 @@ class SiteTree extends DataObject {
 				
 		parent::onBeforeWrite();
 	}
+	
 	
 	/**
 	 * Generate a URL segment based on the title provided.
