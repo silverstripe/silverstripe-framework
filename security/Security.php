@@ -195,7 +195,9 @@ class Security extends Controller {
 	 */
 	static function findAnAdministrator($username = 'admin', $password = 'password') {
 		$permission = DataObject::get_one("Permission", "`Code` = 'ADMIN'");
-		$adminGroup = DataObject::get_one("Group", "`ID` = '{$permission->GroupID}'", true, "ID");
+
+		$adminGroup = null;
+		if($permission) $adminGroup = DataObject::get_one("Group", "`ID` = '{$permission->GroupID}'", true, "ID");
 		
 		if($adminGroup) {
 			if($adminGroup->Members()->First()) {
