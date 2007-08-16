@@ -16,22 +16,44 @@ require_once 'PHPUnit/TextUI/TestRunner.php';
  * Controller that executes PHPUnit tests
  */
 class TestRunner extends Controller {
+	/**
+	 * Run all test classes
+	 */
 	function index() {
 		ManifestBuilder::includeEverything();
 	
 		$tests = ClassInfo::subclassesFor('SapphireTest');
 		array_shift($tests);
 		
+		$this->runTests($tests);
+	}
+		
+	/**
+	 * Run only a single test class
+	 */
+	function only() {
+		$className = $this->urlParams['ID'];
+		if(class_exists($className)) {
+			$this->runTests(array($className));
+		} else {
+			echo "Class '$className' not found";
+			
+		}
+		
+	}
+
+	function runTests($classList) {
 		echo "<h1>Sapphire PHPUnit Test Runner</h1>";
-		echo "<p>Discovered the following subclasses of SapphireTest for testing: " . implode(", ", $tests) . "</p>";
+		echo "<p>Using the following subclasses of SapphireTest for testing: " . implode(", ", $classList) . "</p>";
 		
 		echo "<pre>";
 		$suite = new PHPUnit_Framework_TestSuite();
-		foreach($tests as $test) {
-			$suite->addTest(new PHPUnit_Framework_TestSuite($test));
+		foreach($classList as $className) {
+			$suite->addTest(new PHPUnit_Framework_TestSuite($className));
 		}
 
-		PHPUnit_TextUI_TestRunner::run($suite/*, array("reportDirectory" => "/Users/sminnee/phpunit-report")*/);
+		/*, array("reportDirectory" => "/Users/sminnee/phpunit-report")*/
+		PHPUnit_TextUI_TestRunner::run($suite);
 	}
 }
 
