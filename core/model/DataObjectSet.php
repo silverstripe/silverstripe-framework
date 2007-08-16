@@ -353,6 +353,23 @@ class DataObjectSet extends ViewableData implements Iterator {
 		}
 	}
     
+	/**
+	 * Add an item to the beginning of the DataObjectSet
+	 * @param DataObject $item Item to add
+	 * @param string $key Key to index this DataObject by.
+	 */
+	public function insertFirst($item, $key = null) {
+		if($key != null) {
+			array_shift($this->items, $item);
+		} else {
+			// Not very efficient :-(
+			$newItems = array();
+			$newItems[$key] = $item;
+			foreach($this->items as $k => $v) $newItems[$k] = $v;
+			$this->items = $newItems;
+		}
+	}
+
     /**
 	* @deprecated Use merge()
     */
@@ -906,6 +923,26 @@ class DataObjectSet extends ViewableData implements Iterator {
     function addWithoutWrite($field) {
         $this->items[] = $field;
 	}
+	
+	/**
+	 * Returns true if the DataObjectSet contains all of the IDs givem
+	 * @param $idList An array of object IDs
+	 */
+	function containsIDs($idList) {
+		foreach($idList as $item) $wants[$item] = true;
+		foreach($this->items as $item) if($item) unset($wants[$item->ID]);
+		return !$wants;
+	}
+	
+	/**
+	 * Returns true if the DataObjectSet contains all of and *only* the IDs given.
+	 * Note that it won't like duplicates very much.
+	 * @param $idList An array of object IDs
+	 */
+	function onlyContainsIDs($idList) {
+		return $this->containsIDs($idList) && sizeof($idList) == sizeof($this->items); 
+	}
+	
 }
 
 /**
