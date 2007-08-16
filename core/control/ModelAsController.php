@@ -13,7 +13,7 @@ class ModelAsController extends Controller implements NestedController {
 	}
 	
 	public function init() {
-		Versioned::choose_site_stage();
+		singleton('SiteTree')->extend('modelascontrollerInit', $this);
 	}
 
 	public function getNestedController() {

@@ -80,7 +80,7 @@ class ContentController extends Controller {
 	
 	public function init() {
 		parent::init();
-
+		
 		// If we've accessed the homepage as /home/, then we should redirect to /.
 		if($this->dataRecord && RootURLController::should_be_on_root($this->dataRecord) && !$this->urlParams['Action'] && !$_POST && !$_FILES) {
 			$getVars = $_GET;
@@ -91,7 +91,8 @@ class ContentController extends Controller {
 			die();
 		}
 		
-		Versioned::choose_site_stage();
+		singleton('SiteTree')->extend('contentcontrollerInit', $this);
+		
 		Director::set_site_mode('site');
 		
 		// Check permissions
