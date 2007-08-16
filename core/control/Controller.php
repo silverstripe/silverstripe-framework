@@ -139,7 +139,7 @@ class Controller extends ViewableData {
 		} else {
 			if(!isset($funcName)) $funcName = $this->action;
 
-			if(method_exists($this, $funcName)) {
+			if($this->hasMethod($funcName)) {
 				if(isset($_GET['debug_controller'])) Debug::show("Found function $funcName on the $this->class controller");
 
 				if(isset($_GET['debug_profile'])) Profiler::mark("$this->class::$funcName (controller action)");		
