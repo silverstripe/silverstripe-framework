@@ -175,13 +175,15 @@ abstract class Database extends Object {
 	 * if it doesn't already exist
 	 */
 	protected function transInitTable($table) {
-		if(!$this->schemaUpdateTransaction[$table]) $this->schemaUpdateTransaction[$table] = array(
-			'command' => 'alter',
-			'newFields' => array(),
-			'newIndexes' => array(),
-			'alteredFields' => array(),
-			'alteredIndexes' => array(),
-		);		
+		if(!isset($this->schemaUpdateTransaction[$table])) {
+			$this->schemaUpdateTransaction[$table] = array(
+				'command' => 'alter',
+				'newFields' => array(),
+				'newIndexes' => array(),
+				'alteredFields' => array(),
+				'alteredIndexes' => array(),
+			);
+		}		
 	}
 	
 	
@@ -247,6 +249,8 @@ abstract class Database extends Object {
 	 * @param string|boolean $spec The specification of the index. See requireTable() for more information.
 	 */
 	function requireIndex($table, $index, $spec) {
+		$newTable = false;
+		
 		if($spec === true) {
 			$spec = "($index)";
 		}
@@ -277,6 +281,8 @@ abstract class Database extends Object {
 	 * @param string $spec The field specification.
 	 */
 	function requireField($table, $field, $spec) {
+		$newTable = false;
+		
 		Profiler::mark('requireField');
 		// Collations didn't come in until MySQL 4.1.  Anything earlier will throw a syntax error if you try and use
 		// collations.

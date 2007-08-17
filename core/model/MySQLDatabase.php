@@ -178,7 +178,7 @@ class MySQLDatabase extends Database {
 	 * @param $alteredFields Updated fields, a map of field name => field schema
 	 * @param $alteredIndexes Updated indexes, a map of index name => index type
 	 */
-	public function alterTable($table, $newFields, $newIndexes, $alteredFields, $alteredIndexes) {
+	public function alterTable($tableName, $newFields, $newIndexes, $alteredFields, $alteredIndexes) {
 		$fieldSchemas = $indexSchemas = "";
 		
 		if($newFields) foreach($newFields as $k => $v) $alterList[] .= "ADD `$k` $v";
