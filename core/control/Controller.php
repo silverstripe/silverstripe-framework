@@ -365,7 +365,7 @@ class Controller extends ViewableData {
 		if($this == self::$controller_stack[0]) {
 			array_shift(self::$controller_stack);
 		} else {
-			user_error("popCurrent called on $this->Controller controller, but it wasn't at the top of the stack", E_USER_WARNING);
+			user_error("popCurrent called on $this->class controller, but it wasn't at the top of the stack", E_USER_WARNING);
 		}
 	}
 	
