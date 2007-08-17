@@ -117,14 +117,16 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 			foreach($items as $identifier => $fields) {
 				$obj = new $dataClass();
 				foreach($fields as $fieldName => $fieldVal) {
-					// Parse a dictionary reference - used to set foreign keys
-					if(substr($fieldVal,0,2) == '=>') {
-						list($a, $b) = explode('.', substr($fieldVal,2), 2);
-						$obj->$fieldName = $this->fixtureDictionary[$a][$b];
+					if($obj->many_many($fieldName)) {
+						$items = split(' *, *',trim($fieldVal));
+						foreach($items as $item) {
+							$parsedItems[] = $this->parseFixtureVal($item);
+						}
+						$obj->write();
+						$obj->$fieldName()->setByIdList($parsedItems);
 						
-					// Regular field value setting
 					} else {
-						$obj->$fieldName = $fieldVal;
+						$obj->$fieldName = $this->parseFixtureVal($fieldVal);
 					}
 				}
 				$obj->write();
@@ -132,6 +134,21 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 				// Populate the dictionary with the ID
 				$this->fixtureDictionary[$dataClass][$identifier] = $obj->ID;
 			}
+		}
+	}
+	
+	/**
+	 * Parse a value from a fixture file.  If it starts with => it will get an ID from the fixture dictionary
+	 */
+	protected function parseFixtureVal($fieldVal) {
+		// Parse a dictionary reference - used to set foreign keys
+		if(substr($fieldVal,0,2) == '=>') {
+			list($a, $b) = explode('.', substr($fieldVal,2), 2);
+			return $this->fixtureDictionary[$a][$b];
+
+		// Regular field value setting
+		} else {
+			return $fieldVal;
 		}
 	}
 	
