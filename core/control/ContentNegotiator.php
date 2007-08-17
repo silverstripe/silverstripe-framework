@@ -23,8 +23,8 @@ class ContentNegotiator {
 	}
 	
 	
-	static function process($content) {
-		if(self::$disabled) return $content;
+	static function process(HTTPResponse $response) {
+		if(self::$disabled) return;
 
 		$mimes = array(
 			"xhtml" => "application/xhtml+xml",
@@ -56,35 +56,39 @@ class ContentNegotiator {
 		}
 
 		$negotiator = new ContentNegotiator();
-		return $negotiator->$chosenFormat($content);
+		$negotiator->$chosenFormat( $response );
 	}
 
-	function xhtml($content) {
+	function xhtml(HTTPResponse $response) {
+		$content = $response->getBody();
+		
 		// Only serve "pure" XHTML if the XML header is present
-		if(substr($content,0,5) == '<' . '?xml' /*|| $_REQUEST['ajax']*/ ) {
-			header("Content-type: application/xhtml+xml; charset=" . self::$encoding);
-			header("Vary: Accept");
+		if(substr($content,0,5) == '<' . '?xml' ) {
+			$response->addHeader("Content-type", "application/xhtml+xml; charset=" . self::$encoding);
+			$response->addHeader("Vary" , "Accept");
+			
 			$content = str_replace('&nbsp;','&#160;', $content);
 			$content = str_replace('<br>','<br />', $content);
 			$content = eregi_replace('(<img[^>]*[^/>])>','\\1/>', $content);
-			return $content;
+			
+			$response->setBody($content);
 
 		} else {
-			return $this->html($content);
+			return $this->html($response);
 		}
 	}
-	function html($content) {
-		if(!headers_sent()) {
-			header("Content-type: text/html; charset=" . self::$encoding);
-			header("Vary: Accept");
-		}
+	function html(HTTPResponse $response) {
+		$response->addHeader("Content-type", "text/html; charset=" . self::$encoding);
+		$response->addHeader("Vary", "Accept");
+
+		$content = $response->getBody();
 
 		$content = ereg_replace("<\\?xml[^>]+\\?>\n?",'',$content);
 		$content = str_replace(array('/>','xml:lang','application/xhtml+xml'),array('>','lang','text/html'), $content);
 		$content = ereg_replace('<!DOCTYPE[^>]+>', '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">', $content);
 		$content = ereg_replace('<html xmlns="[^"]+"','<html ', $content);
-
-		return $content;
+		
+		$response->setBody($content);
 	}
 
 	protected static $disabled;

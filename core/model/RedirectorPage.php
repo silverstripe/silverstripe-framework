@@ -87,7 +87,6 @@ class RedirectorPage_Controller extends Page_Controller {
 		}
 		
 		parent::init();
-		die();
 	}
 }
 ?>

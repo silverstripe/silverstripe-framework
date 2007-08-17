@@ -42,13 +42,17 @@ class Director {
 	function direct($url) {
 		if(isset($_GET['debug_profile'])) Profiler::mark("Director","direct");
 		$controllerObj = Director::getControllerForURL($url);
+
 		if(is_string($controllerObj) && substr($controllerObj,0,9) == 'redirect:') {
 			Director::redirect(substr($controllerObj, 9));
+			
 		} else if($controllerObj) {
-			$output = $controllerObj->run(array_merge((array)$_GET, (array)$_POST, (array)$_FILES));
+			$response = $controllerObj->run(array_merge((array)$_GET, (array)$_POST, (array)$_FILES));
+
 			if(isset($_GET['debug_profile'])) Profiler::mark("Outputting to browser");
-			echo $output;
+			$response->output();
 			if(isset($_GET['debug_profile'])) Profiler::unmark("Outputting to browser");
+			
 		}
 		if(isset($_GET['debug_profile'])) Profiler::unmark("Director","direct");
 	}
@@ -158,20 +162,7 @@ class Director {
 	   *  - if it is just a word without an slashes, then it redirects to another action on the current controller.
 	 */
 	static function redirect($url) {
-		// Attach site-root to relative links, if they have a slash in them
-		if(substr($url,0,4) != "http" && $url[0] != "/" && strpos($url,'/') !== false){
-			$url = Director::baseURL() . $url;
-		}
-		if(headers_sent($file, $line)) {
-			echo 
-			"<p>Redirecting to <a href=\"$url\" title=\"Please click this link if your browser does not redirect you\">$url... (output started on $file, line $line)</a></p>
-			<meta http-equiv=\"refresh\" content=\"1; url=$url\" />
-			<script type=\"text/javascript\">setTimeout('window.location.href = \"$url\"', 50);</script>";
-
-		} else {
-			header("Location: $url");
-		}
-		die();
+		Controller::curr()->redirect($url);
 	}
 
 	/**

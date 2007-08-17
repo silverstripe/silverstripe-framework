@@ -9,7 +9,8 @@ class ModelAsController extends Controller implements NestedController {
 	
 	public function run($requestParams) {
 		$this->init();
-		return $this->getNestedController()->run($requestParams);
+		$nested = $this->getNestedController();
+		return $nested->run($requestParams);
 	}
 	
 	public function init() {

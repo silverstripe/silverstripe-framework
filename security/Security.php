@@ -70,7 +70,7 @@ class Security extends Controller {
 		} else {
 			Director::redirect("Security/login");
 		}
-		exit();
+		return;
 	}
 
 	function LoginForm() {

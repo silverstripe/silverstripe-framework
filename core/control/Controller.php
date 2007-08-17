@@ -19,6 +19,11 @@ class Controller extends ViewableData {
 	protected static $currentController;
 	
 	protected $basicAuthEnabled = true;
+
+	/**
+	 * The HTTPResponse object that the controller returns
+	 */
+	protected $response;
 	
 	function setURLParams($urlParams) {
 		$this->urlParams = $urlParams;
@@ -38,14 +43,20 @@ class Controller extends ViewableData {
 	protected $baseInitCalled = false;
 	function run($requestParams) {
 		if(isset($_GET['debug_profile'])) Profiler::mark("Controller", "run");		
-	
+		Controller::$currentController = $this;
+
+		$this->response = new HTTPResponse();
 		$this->requestParams = $requestParams;
+
 		$this->action = isset($this->urlParams['Action']) ? str_replace("-","_",$this->urlParams['Action']) : "index";
 
 		// Init
 		$this->baseInitCalled = false;
 		$this->init();
 		if(!$this->baseInitCalled) user_error("init() method on class '$this->class' doesn't call Controller::init().  Make sure that you have parent::init() included.", E_USER_WARNING);
+
+		// If we had a redirection or something, halt processing.
+		if($this->response->isFinished()) return $this->response;
 		
 		// Look at the action variables for forms
 		foreach($this->requestParams as $paramName => $paramVal) {
@@ -93,7 +104,7 @@ class Controller extends ViewableData {
 				// disregard validation if a single field is called
 				if(!isset($_REQUEST['action_callfieldmethod'])) {
 					$valid = $form->beforeProcessing();
-					if(!$valid) exit();
+					if(!$valid) return $this->response;
 				}
 				
 				// If the action wasnt' set, choose the default on the form.
@@ -143,6 +154,7 @@ class Controller extends ViewableData {
 				if(isset($_GET['debug_controller'])) Debug::show("Found function $funcName on the $this->class controller");
 
 				if(isset($_GET['debug_profile'])) Profiler::mark("$this->class::$funcName (controller action)");		
+				
 				$result = $this->$funcName($this->urlParams);
 				if(isset($_GET['debug_profile'])) Profiler::unmark("$this->class::$funcName (controller action)");
 				
@@ -163,14 +175,17 @@ class Controller extends ViewableData {
 			
 			$result = $viewer->process($extended);
 		}
+
+		$this->response->setBody($result);
 	
-		if($result) $result = ContentNegotiator::process($result);
+		if($result) ContentNegotiator::process($this->response);
 		
 		// Set up HTTP cache headers
-		HTTP::add_cache_headers();
+		HTTP::add_cache_headers($this->response);
 
 		if(isset($_GET['debug_profile'])) Profiler::unmark("Controller", "run");
-		return $result;
+		
+		return $this->response;
 	}
 
 	function defaultAction($action) {
@@ -234,14 +249,19 @@ class Controller extends ViewableData {
 			Cookie::set("PastMember", true);
 			DB::query("UPDATE Member SET LastVisited = NOW() WHERE ID = $member->ID", null);
 		}
-		Controller::$currentController = $this;
-		
 		
 		// This is used to test that subordinate controllers are actually calling parent::init() - a common bug
 		$this->baseInitCalled = true;
 	}
 
 	public static function currentController() {
+		return Controller::$currentController;
+	}
+	
+	/**
+	 * Returns the current controller
+	 */
+	public static function curr() {
 		return Controller::$currentController;
 	}
 
@@ -302,6 +322,19 @@ class Controller extends ViewableData {
 	 */
 	function PastMember() {
 		return Cookie::get("PastMember") ? true : false;
+	}
+	
+	/**
+	 * Handle redirection
+	 */
+	
+	function redirect($url) {
+		// Attach site-root to relative links, if they have a slash in them
+		if(substr($url,0,4) != "http" && $url[0] != "/" && strpos($url,'/') !== false){
+			$url = Director::baseURL() . $url;
+		}
+
+		$this->response->redirect($url);
 	}
 }
 

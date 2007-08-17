@@ -88,7 +88,7 @@ class ContentController extends Controller {
 			if($getVars) $url = "./?" . http_build_query($getVars);
 			else $url = "./";
 			Director::redirect($url);
-			die();
+			return;
 		}
 		
 		singleton('SiteTree')->extend('contentcontrollerInit', $this);

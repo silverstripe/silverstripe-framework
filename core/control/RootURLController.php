@@ -5,13 +5,17 @@
  */
 class RootURLController extends Controller {
 	protected static $is_at_root = false;
-	
-	/**
-	 * Marks at that we are actually at the root URL before handing control over to another controller
-	 */
-	function index() {
+
+	public function run($requestParams) {
 		self::$is_at_root = true;
-		Director::direct(self::get_homepage_urlsegment() . '/');
+		
+		$controller = new ModelAsController();
+		$controller->setUrlParams(array(
+			'URLSegment' => self::get_homepage_urlsegment(),
+			'Action' => '',
+		));
+
+		return $controller->run($requestParams);
 	}
 	
 	/**
