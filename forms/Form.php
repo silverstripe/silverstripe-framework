@@ -644,7 +644,14 @@ class Form extends ViewableData {
 	
 	function testSubmission($action, $data) {
 		$data['action_' . $action] = true;
+		$data['executeForm'] = $this->name;
 		
-		//$this->controller->run()
+		$response = $this->controller->run($data);
+		return $response;
+	}
+	
+	function testAjaxSubmission($action, $data) {
+		$data['ajax'] = 1;
+		return $this->testSubmission($action, $data);
 	}
 }
