@@ -15,8 +15,17 @@ class Controller extends ViewableData {
 	protected $requestParams;
 	
 	protected $action;
+	
+	/**
+	 * The {@link Session} object for this controller
+	 */
+	protected $session;
 
-	protected static $currentController;
+	/**
+	 * Stack of current controllers.
+	 * Controller::$controller_stack[0] is the current controller.
+	 */
+	protected static $controller_stack = array();
 	
 	protected $basicAuthEnabled = true;
 
@@ -43,7 +52,7 @@ class Controller extends ViewableData {
 	protected $baseInitCalled = false;
 	function run($requestParams) {
 		if(isset($_GET['debug_profile'])) Profiler::mark("Controller", "run");		
-		Controller::$currentController = $this;
+		$this->pushCurrent();
 
 		$this->response = new HTTPResponse();
 		$this->requestParams = $requestParams;
@@ -56,7 +65,10 @@ class Controller extends ViewableData {
 		if(!$this->baseInitCalled) user_error("init() method on class '$this->class' doesn't call Controller::init().  Make sure that you have parent::init() included.", E_USER_WARNING);
 
 		// If we had a redirection or something, halt processing.
-		if($this->response->isFinished()) return $this->response;
+		if($this->response->isFinished()) {
+			$this->popCurrent();
+			return $this->response;
+		}
 		
 		// Look at the action variables for forms
 		foreach($this->requestParams as $paramName => $paramVal) {
@@ -104,7 +116,10 @@ class Controller extends ViewableData {
 				// disregard validation if a single field is called
 				if(!isset($_REQUEST['action_callfieldmethod'])) {
 					$valid = $form->beforeProcessing();
-					if(!$valid) return $this->response;
+					if(!$valid) {
+						$this->popCurrent();
+						return $this->response;
+					}
 				}
 				
 				// If the action wasnt' set, choose the default on the form.
@@ -185,6 +200,7 @@ class Controller extends ViewableData {
 
 		if(isset($_GET['debug_profile'])) Profiler::unmark("Controller", "run");
 		
+		$this->popCurrent();
 		return $this->response;
 	}
 
@@ -255,14 +271,18 @@ class Controller extends ViewableData {
 	}
 
 	public static function currentController() {
-		return Controller::$currentController;
+		return self::curr();
 	}
 	
 	/**
 	 * Returns the current controller
 	 */
 	public static function curr() {
-		return Controller::$currentController;
+		if(Controller::$controller_stack) {
+			return Controller::$controller_stack[0];
+		} else {
+			user_error("No current controller available", E_USER_WARNING);
+		}
 	}
 
 	/**
@@ -323,11 +343,32 @@ class Controller extends ViewableData {
 	function PastMember() {
 		return Cookie::get("PastMember") ? true : false;
 	}
+
+	/**
+	 * Pushes this controller onto the stack of current controllers.
+	 * This means that any redirection, session setting, or other things that rely on Controller::curr() will now write to this
+	 * controller object.
+	 */
+	function pushCurrent() {
+		array_unshift(self::$controller_stack, $this);
+		// Create a new session object
+		if(!$this->session) $this->session = new Session(null);
+	}
+
+	/**
+	 * Pop this controller off the top of the stack.
+	 */
+	function popCurrent() {
+		if($this == self::$controller_stack[0]) {
+			array_shift(self::$controller_stack);
+		} else {
+			user_error("popCurrent called on $this->Controller controller, but it wasn't at the top of the stack", E_USER_WARNING);
+		}
+	}
 	
 	/**
 	 * Handle redirection
 	 */
-	
 	function redirect($url) {
 		// Attach site-root to relative links, if they have a slash in them
 		if(substr($url,0,4) != "http" && $url[0] != "/" && strpos($url,'/') !== false){
@@ -336,6 +377,21 @@ class Controller extends ViewableData {
 
 		$this->response->redirect($url);
 	}
+	
+	/**
+	 * Get the Session object representing this Controller's session
+	 */
+	function getSession() {
+		return $this->session;
+	}
+	
+	/**
+	 * Set the Session object.
+	 */
+	function setSession(Session $session) {
+		$this->session = $session;
+	}
+	
 }
 
 ?>

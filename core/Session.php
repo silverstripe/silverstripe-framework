@@ -2,7 +2,15 @@
 
 /**
  * Handles all manipulation of the session.
- *
+ * 
+ * The static methods are used to manipulate the currently active controller's session.
+ * The instance methods are used to manipulate a particular session.  There can be more than one of these created.
+ * 
+ * In order to support things like testing, the session is associated with a particular Controller.  In normal usage, this is loaded from
+ * and saved to the regular PHP session, but for things like static-page-generation and unit-testing, you can create multiple Controllers,
+ * each with their own session.
+ * 
+ * The instance object is basically just a way of manipulating a set of nested maps, and isn't specific to session data.
  * This class is currently really basic and could do with a more well-thought-out implementation
  *
  * $session->myVar = 'XYZ' would be fine, as would Session::data->myVar.  What about the equivalent
@@ -15,10 +23,41 @@
  */
 class Session {
 	public static function set($name, $val) {
+		return Controller::curr()->getSession()->inst_set($name, $val);
+	}
+	public static function addToArray($name, $val) {
+		return Controller::curr()->getSession()->inst_addToArray($name, $val);
+	}
+	public static function get($name) {
+		return Controller::curr()->getSession()->inst_get($name);
+	}
+	public static function clear($name) {
+		return Controller::curr()->getSession()->inst_clear($name);
+	}
+	public static function getAll() {
+		return Controller::curr()->getSession()->inst_getAll($name);
+	}
+
+	/**
+	 * Session data
+	 */
+	protected $data = array();
+	
+	/**
+	 * Create a new session object, with the given starting data
+	 * @param $data Can be an array of data (such as $_SESSION) or another Session object to clone.
+	 */
+	function __construct($data) {
+		if($data instanceof Session) $data = $data->inst_getAll();
+		
+		$this->data = $data;
+	}
+
+	public function inst_set($name, $val) {
 		$names = explode('.', $name);
 		
 		// We still want to do this even if we have strict path checking for legacy code
-		$var = &$_SESSION;
+		$var = &$this->data;
 			
 		foreach($names as $n) {
 			$var = &$var[$n];
@@ -27,11 +66,11 @@ class Session {
 		$var = $val;
 	}
 	
-	public static function addToArray($name, $val) {
+	public function inst_addToArray($name, $val) {
 		$names = explode('.', $name);
 		
 		// We still want to do this even if we have strict path checking for legacy code
-		$var = &$_SESSION;
+		$var = &$this->data;
 			
 		foreach($names as $n) {
 			$var = &$var[$n];
@@ -40,14 +79,14 @@ class Session {
 		$var[] = $val;
 	}
 	
-	public static function get($name) {
+	public function inst_get($name) {
 		$names = explode('.', $name);
 		
-		if(!isset($_SESSION)) {
+		if(!isset($this->data)) {
 			return null;
 		}
 		
-		$var = $_SESSION;
+		$var = $this->data;
 
 		foreach($names as $n) {
 			if(!isset($var[$n])) {
@@ -59,11 +98,11 @@ class Session {
 		return $var;
 	}
 
-	public static function clear($name) {
+	public function inst_clear($name) {
 		$names = explode('.', $name);
 
 		// We still want to do this even if we have strict path checking for legacy code
-		$var = &$_SESSION;
+		$var = &$this->data;
 			
 		foreach($names as $n) {
 			$var = &$var[$n];
@@ -72,8 +111,8 @@ class Session {
 		$var = null;
 	}
 		
-	public static function getAll() {
-		return $_SESSION;
+	public function inst_getAll() {
+		return $this->data;
 	}
 	
 	/**

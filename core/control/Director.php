@@ -42,16 +42,20 @@ class Director {
 	function direct($url) {
 		if(isset($_GET['debug_profile'])) Profiler::mark("Director","direct");
 		$controllerObj = Director::getControllerForURL($url);
+		
+		// Load the session into the controller
+		$controllerObj->setSession(new Session($_SESSION));
 
 		if(is_string($controllerObj) && substr($controllerObj,0,9) == 'redirect:') {
 			Director::redirect(substr($controllerObj, 9));
 			
 		} else if($controllerObj) {
 			$response = $controllerObj->run(array_merge((array)$_GET, (array)$_POST, (array)$_FILES));
+			
+			// Save the updated session back
+			$_SESSION = $controllerObj->getSession()->inst_getAll();
 
-			if(isset($_GET['debug_profile'])) Profiler::mark("Outputting to browser");
 			$response->output();
-			if(isset($_GET['debug_profile'])) Profiler::unmark("Outputting to browser");
 			
 		}
 		if(isset($_GET['debug_profile'])) Profiler::unmark("Director","direct");
