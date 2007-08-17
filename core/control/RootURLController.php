@@ -9,13 +9,17 @@ class RootURLController extends Controller {
 	public function run($requestParams) {
 		self::$is_at_root = true;
 		
+		$this->pushCurrent();
 		$controller = new ModelAsController();
 		$controller->setUrlParams(array(
 			'URLSegment' => self::get_homepage_urlsegment(),
 			'Action' => '',
 		));
 
-		return $controller->run($requestParams);
+		$result = $controller->run($requestParams);
+		
+		$this->popCurrent();
+		return $result;
 	}
 	
 	/**

@@ -352,7 +352,10 @@ class Controller extends ViewableData {
 	function pushCurrent() {
 		array_unshift(self::$controller_stack, $this);
 		// Create a new session object
-		if(!$this->session) $this->session = new Session(null);
+		if(!$this->session) {
+			if(self::$controller_stack[1]) $this->session = self::$controller_stack[1]->getSession();
+			else $this->session = new Session(null);
+		}
 	}
 
 	/**

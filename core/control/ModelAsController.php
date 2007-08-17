@@ -8,9 +8,14 @@
 class ModelAsController extends Controller implements NestedController {
 	
 	public function run($requestParams) {
+		$this->pushCurrent();
+		
 		$this->init();
 		$nested = $this->getNestedController();
-		return $nested->run($requestParams);
+		$result = $nested->run($requestParams);
+		
+		$this->popCurrent();
+		return $result;
 	}
 	
 	public function init() {
@@ -19,7 +24,6 @@ class ModelAsController extends Controller implements NestedController {
 
 	public function getNestedController() {
 		if($this->urlParams['URLSegment']) {
-
 			$child = DataObject::get_one("SiteTree", "URLSegment = '" . addslashes($this->urlParams['URLSegment']) . "'");
 			if(!$child) {
 				header("HTTP/1.0 404 Not Found");
