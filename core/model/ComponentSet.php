@@ -159,6 +159,8 @@ class ComponentSet extends DataObjectSet {
 	 * @param array $idList List of IDs.
 	 */
 	function setByIDList($idList) {
+		$has = array();
+		
 		// Index current data
 		if($this->items) {
 			foreach($this->items as $item) {
@@ -172,13 +174,14 @@ class ComponentSet extends DataObjectSet {
 		if($idList){
 			foreach($idList as $id) {
 				$itemsToDelete[$id] = false;
-				if(!$has[$id] && $id) {
+				if(!isset($has[$id]) && $id) {
 					$this->add($id);
 				}
 			}
 		}
 		// Delete any unmentionedItems
 		if($itemsToDelete) {
+			$removeList = array();
 			foreach($itemsToDelete as $id => $actuallyDelete) {
 				if($actuallyDelete) $removeList[] = $id;
 			}
