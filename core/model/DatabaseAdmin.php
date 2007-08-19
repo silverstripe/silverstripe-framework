@@ -136,6 +136,7 @@ class DatabaseAdmin extends Controller {
 				echo '<p><b>Creating database</b></p>';
 			}
 			DB::createDatabase();
+			// ManifestBuilder::compileManifest();
 		}
 
 		// Get all our classes
@@ -149,7 +150,7 @@ class DatabaseAdmin extends Controller {
 		if(!$quiet) {
 			echo '<p><b>Creating database tables</b></p>';
 		}
-		
+
 		$conn->beginSchemaUpdate();
 		foreach($dataClasses as $dataClass) {
 			// Test_ indicates that it's the data class is part of testing system

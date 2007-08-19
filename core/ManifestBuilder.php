@@ -119,17 +119,14 @@ class ManifestBuilder {
 		$manifest .= "\$_CSS_MANIFEST = " . var_export($cssManifest, true) . ";\n";
 		DB::connect($databaseConfig);
 
-		if(DB::isActive()) {
-			// Database manifest				
-			$allClasses = ManifestBuilder::allClasses($classManifest);
+		// Database manifest				
+		$allClasses = ManifestBuilder::allClasses($classManifest);
 
-			$manifest .= "\$_ALL_CLASSES = " . var_export($allClasses, true) . ";\n";
+		$manifest .= "\$_ALL_CLASSES = " . var_export($allClasses, true) . ";\n";
 
-			global $_ALL_CLASSES;
-			$_ALL_CLASSES = $allClasses;
-		} else {
-			if(!isset($_REQUEST['from_installer'])) echo '<li>Waiting until the database is created before compiling the manifest</li>';
-		}
+		global $_ALL_CLASSES;
+		$_ALL_CLASSES = $allClasses;
+
 		// Write manifest to disk
 		$manifest = "<?php\n$manifest\n?>";
 
@@ -201,7 +198,14 @@ class ManifestBuilder {
 			$b = basename($file);
 			if($b != 'cli-script.php' && $b != 'main.php') include_once($file);
 		}
-		$tables = DB::getConn()->tableList();
+		
+		if(DB::isActive()) {
+			$tables = DB::getConn()->tableList();
+		} else {
+			$tables = array();
+		}
+		
+		$allClasses['hastable'] = array();
 		
 		// Build a map of classes and their subclasses
 		$_classes = get_declared_classes();
