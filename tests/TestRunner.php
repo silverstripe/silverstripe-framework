@@ -4,7 +4,7 @@
 $hasPhpUnit = false;
 $paths = explode(PATH_SEPARATOR, ini_get('include_path'));
 foreach($paths as $path) {
-	if(file_exists("$path/PHPUnit/Framework.php")) $hasPhpUnit = true;
+	if(@file_exists("$path/PHPUnit/Framework.php")) $hasPhpUnit = true;
 }
 
 if($hasPhpUnit) {
