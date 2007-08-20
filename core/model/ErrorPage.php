@@ -29,9 +29,10 @@ class ErrorPage extends Page {
 			$errorpage->URLSegment = "page-not-found";
 			$errorpage->ShowInMenus = false;
 			$errorpage->Content = "<p>Sorry, it seems you were trying to access a page that doesn't exist.</p><p>Please check the spelling of the URL you were trying to access and try again.</p>";
-			$errorpage->Status = "Published";
+			$errorpage->Status = "New page";
 			$errorpage->write();
-			$errorpage->publish("Stage", "Live");
+			// Don't publish, as the manifest may not be built yet
+			// $errorpage->publish("Stage", "Live");
 
 			
 			if(!Database::$supressOutput) {
