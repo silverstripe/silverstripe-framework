@@ -2,8 +2,9 @@
 class QueuedEmailDispatchTask extends DailyTask {
 	
 	public function process() {
-		
-		set_time_limit(0);
+		if(ini_get("safe_mode") != "1") {
+			set_time_limit(0);
+		}
 		
 		echo "SENDING QUEUED EMAILS\n";
 		
