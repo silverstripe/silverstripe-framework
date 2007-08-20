@@ -99,5 +99,30 @@ class HTTPResponse extends Object {
 	function isFinished() {
 		return $this->statusCode == 302 || $this->statusCode == 301;
 	}
+    
+    /**
+     * Return all the links in the body as an array.
+     * @returns An array of maps.  Each map will contain 'id', 'class', and 'href', representing the HTML attributes of the link.
+     */
+    function getLinks() {
+        $attributes = array('id', 'href', 'class');
+        $links = array();
+		$results = array();
+        
+        preg_match_all('/<a[^>]+>/i', $this->body, $links);
+        // $links[0] contains the actual matches
+        foreach($links[0] as $link) {
+			$processedLink = array();
+            foreach($attributes as $attribute) {
+                $matches = array();
+                if(preg_match('/' . $attribute  . '\s*=\s*"([^"]+)"/i', $link, $matches)) {
+                    $processedLink[$attribute] = $matches[1];
+                }                
+            }
+			$results[] = $processedLink;
+        }
+		
+		return $results;
+    }
 	
 }
