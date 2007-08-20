@@ -38,6 +38,9 @@ class Controller extends ViewableData {
 		$this->urlParams = $urlParams;
 	}
 	
+	/**
+	 * @return
+	 */
 	function getURLParams() {
 		return $this->urlParams;
 	}
@@ -46,8 +49,10 @@ class Controller extends ViewableData {
 	 * Execute the appropriate action handler.  If none is given, use defaultAction to display
 	 * a template.  The default action will be appropriate in most cases where displaying data
 	 * is the core goal; the Viewer can call methods on the controller to get the data it needs.
+	 * 
 	 * @param array $urlParams named parameters extracted from the URL, including Action.
 	 * @param array $requestParams GET and POST variables.
+	 * @return HTTPResponse The response that this controller produces, including HTTP headers such as redirection info
 	 */
 	protected $baseInitCalled = false;
 	function run($requestParams) {
@@ -214,6 +219,7 @@ class Controller extends ViewableData {
 	
 	/**
 	 * Return an SSViewer object to process the data
+	 * @return SSViewer The viewer identified being the default handler for this Controller/Action combination
 	 */
 	function getViewer($action) {
 		// Hard-coded templates
@@ -270,12 +276,17 @@ class Controller extends ViewableData {
 		$this->baseInitCalled = true;
 	}
 
+	/**
+	 * Deprecated - use Controller::curr() instead
+	 * @returns Controller
+	 */
 	public static function currentController() {
 		return self::curr();
 	}
 	
 	/**
 	 * Returns the current controller
+	 * @returns Controller
 	 */
 	public static function curr() {
 		if(Controller::$controller_stack) {
@@ -287,6 +298,7 @@ class Controller extends ViewableData {
 	
 	/**
 	 * Tests whether we have a currently active controller or not
+	 * @return boolean True if there is at least 1 controller in the stack.
 	 */
 	public static function has_curr() {
 		return Controller::$controller_stack ? true : false;
@@ -297,6 +309,7 @@ class Controller extends ViewableData {
 	 * @param perm The permission to be checked, such as 'View'.
 	 * @param member The member whose permissions need checking.  Defaults to the currently logged
 	 * in user.
+	 * @return boolean
 	 */
 	function can($perm, $member = null) {
 		if(!$member) $member = Member::currentUser();
@@ -312,6 +325,7 @@ class Controller extends ViewableData {
 	/**
 	 * returns a date object for use within a template
 	 * Usage: $Now.Year - Returns 2006
+	 * @return Date The current date
 	 */
 	function Now() {
 		$d = new Date(null);
@@ -339,6 +353,7 @@ class Controller extends ViewableData {
 	
 	/**
 	 * Returns true if the visitor has been here before
+	 * @return boolean
 	 */
 	function PastVisitor() {
 		return Cookie::get("PastVisitor") ? true : false;
@@ -346,6 +361,7 @@ class Controller extends ViewableData {
 	 
 	/**
 	 * Return true if the visitor has signed up for a login account before
+	 * @return boolean
 	 */
 	function PastMember() {
 		return Cookie::get("PastMember") ? true : false;
@@ -390,6 +406,7 @@ class Controller extends ViewableData {
 	
 	/**
 	 * Get the Session object representing this Controller's session
+	 * @return Session
 	 */
 	function getSession() {
 		return $this->session;
@@ -404,6 +421,7 @@ class Controller extends ViewableData {
 	
 	/**
 	 * Returns true if this controller is processing an ajax request
+	 * @return boolean True if this controller is processing an ajax request
 	 */
 	function isAjax() {
 		return (

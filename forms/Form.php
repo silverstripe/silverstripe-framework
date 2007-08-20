@@ -129,10 +129,17 @@ class Form extends ViewableData {
 			$this->validator->removeValidation();
 	}
 	
+	/**
+	 * Get the {@link Validator} attached to this form.
+	 * @return Validator
+	 */
 	function getValidator() {
 		return $this->validator;
 	}
 
+	/**
+	 * Set the {@link Validator} on this form.
+	 */
 	function setValidator( Validator $validator ) {
 		if($validator) {
 			$this->validator = $validator;
@@ -140,6 +147,9 @@ class Form extends ViewableData {
 		}
 	}
 
+	/**
+	 * Remove the {@link Validator} from this from.
+	 */
 	function unsetValidator(){
 		$this->validator = null;
 	}
@@ -161,10 +171,18 @@ class Form extends ViewableData {
 	
 	/**
 	 * Return the form's fields - used by the templates
+	 * @return FieldSet The form fields
 	 */
 	function Fields() {
 	  return $this->fields;
 	}
+	
+	/**
+	 * Get a named field from this form's fields.
+	 * It will traverse into composite fields for you, to find the field you want.
+	 * It will only return a data field.
+	 * @return FormField
+	 */
 	function dataFieldByName($name) {
 		return $this->fields->dataFieldByName($name);
 	}
@@ -172,6 +190,7 @@ class Form extends ViewableData {
 	
 	/**
 	 * Return the form's action buttons - used by the templates
+	 * @return FieldSet The action list
 	 */
 	function Actions() {
 		return $this->actions;
@@ -220,6 +239,7 @@ class Form extends ViewableData {
 	
 	/**
 	 * Return the attributes of the form tag - used by the templates
+	 * @return string The attribute string
 	 */
 	function FormAttributes() {
 		// Forms shouldn't be cached, cos their error messages won't be shown
@@ -242,6 +262,11 @@ class Form extends ViewableData {
     $this->target = $target;
   }
 
+	/**
+	 * Returns the encoding type of the form.
+	 * This will be either multipart/form-data - if there are field fields - or application/x-www-form-urlencoded
+	 * @return string The encoding mime type
+	 */
 	function FormEncType() {
 		if(is_array($this->fields->dataFields())){
 			foreach($this->fields->dataFields() as $field) {
@@ -251,14 +276,27 @@ class Form extends ViewableData {
 		return "application/x-www-form-urlencoded";
 	}
 	
+	/**
+	 * Returns the form method.
+	 * @return string 'get' or 'post'
+	 */
 	function FormMethod() {
 		return $this->formMethod;
 	}
+	
+	/**
+	 * Set the form method - get or post
+	 */
 	function setFormMethod($method) {
 		$this->formMethod = strtolower($method);
 		if($this->formMethod == 'get') $this->fields->push(new HiddenField('executeForm', '', $this->name));
 	}
 	
+	/**
+	 * Return the form's action attribute.
+	 * This is build by adding an executeForm get variable to the parent controller's Link() value
+	 * @return string The
+	 */
 	function FormAction() {
 		// "get" form needs ?executeForm added as a hidden field
 		if($this->formMethod == 'post') {
@@ -282,6 +320,7 @@ class Form extends ViewableData {
 	/**
 	 * Returns the field referenced by $_GET[fieldName].
 	 * Used for embedding entire extra helper forms inside complex field types (such as ComplexTableField)
+	 * @return FormField The field referenced by $_GET[fieldName]
 	 */
 	function ReferencedField() {
 		return $this->dataFieldByName($_GET['fieldName']);
@@ -350,6 +389,11 @@ class Form extends ViewableData {
 	}
 	
 	protected $record;
+	
+	/**
+	 * Returns the DataObject that has given this form its data.
+	 * @return DataObject
+	 */
 	function getRecord() {
 		return $this->record;
 	}
@@ -642,6 +686,10 @@ class Form extends ViewableData {
 	// TESTING HELPERS
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
+	/**
+	 * Test a submission of this form.
+	 * @return HTTPResponse the response object that the handling controller produces.  You can interrogate this in your unit test.
+	 */
 	function testSubmission($action, $data) {
 		$data['action_' . $action] = true;
 		$data['executeForm'] = $this->name;
@@ -652,6 +700,10 @@ class Form extends ViewableData {
 		//return $response;
 	}
 	
+	/**
+	 * Test an ajax submission of this form.
+	 * @return HTTPResponse the response object that the handling controller produces.  You can interrogate this in your unit test.
+	 */
 	function testAjaxSubmission($action, $data) {
 		$data['ajax'] = 1;
 		return $this->testSubmission($action, $data);
