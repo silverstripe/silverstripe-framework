@@ -105,7 +105,7 @@ class Security extends Controller {
 
 		$controller = new Page_Controller($tmpPage);
 		$controller->init();
-		Controller::$currentController = $controller;
+		//Controller::$currentController = $controller;
 
 		if(SSViewer::hasTemplate("Security_login")) {
 			return $controller->renderWith(array("Security_login", "Page"));
