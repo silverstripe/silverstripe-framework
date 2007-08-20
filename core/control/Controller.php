@@ -284,6 +284,13 @@ class Controller extends ViewableData {
 			user_error("No current controller available", E_USER_WARNING);
 		}
 	}
+	
+	/**
+	 * Tests whether we have a currently active controller or not
+	 */
+	public static function has_curr() {
+		return Controller::$controller_stack ? true : false;
+	}
 
 	/**
 	 * Returns true if the member is allowed to do the given action.
@@ -393,6 +400,16 @@ class Controller extends ViewableData {
 	 */
 	function setSession(Session $session) {
 		$this->session = $session;
+	}
+	
+	/**
+	 * Returns true if this controller is processing an ajax request
+	 */
+	function isAjax() {
+		return (
+			isset($this->requestParams['ajax']) ||
+			(isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] == "XMLHttpRequest")
+		);
 	}
 	
 }

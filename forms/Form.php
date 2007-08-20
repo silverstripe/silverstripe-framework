@@ -645,9 +645,11 @@ class Form extends ViewableData {
 	function testSubmission($action, $data) {
 		$data['action_' . $action] = true;
 		$data['executeForm'] = $this->name;
+        
+        return Director::test($this->FormAction(), $data, Controller::curr()->getSession());
 		
-		$response = $this->controller->run($data);
-		return $response;
+		//$response = $this->controller->run($data);
+		//return $response;
 	}
 	
 	function testAjaxSubmission($action, $data) {

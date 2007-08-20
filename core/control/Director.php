@@ -54,12 +54,39 @@ class Director {
 			
 			// Save the updated session back
 			$_SESSION = $controllerObj->getSession()->inst_getAll();
-
 			$response->output();
 			
 		}
 		if(isset($_GET['debug_profile'])) Profiler::unmark("Director","direct");
 	}
+	
+	/**
+	 * Test a URL request, returning a response object.
+	 * @param $url The URL to visit
+	 * @param $post The $_POST & $_FILES variables
+	 * @param $session The {@link Session} object representing the current session.
+	 */
+	function test($url, $post = null, $session = null) {
+        $getVars = array();
+		if(strpos($url,'?') !== false) {
+			list($url, $getVarsEncoded) = explode('?', $url, 2);
+            parse_str($getVarsEncoded, $getVars);
+		}
+		
+		$controllerObj = Director::getControllerForURL($url);
+		
+		// Load the session into the controller
+		$controllerObj->setSession($session ? $session : new Session(null));
+
+		if(is_string($controllerObj) && substr($controllerObj,0,9) == 'redirect:') {
+			user_error("Redirection not implemented in Director::test", E_USER_ERROR);
+			
+		} else if($controllerObj) {
+			$response = $controllerObj->run( array_merge($getVars, (array)$post) );
+			return $response;
+		}
+	}
+		
 		
 	static function getControllerForURL($url) {
 		if(isset($_GET['debug_profile'])) Profiler::mark("Director","getControllerForURL");
@@ -289,10 +316,14 @@ class Director {
 	 * @return boolean
 	 */
 	static function is_ajax() {
-		return (
-			isset($_REQUEST['ajax']) ||
-			(isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] == "XMLHttpRequest")
-		);
+		if(Controller::has_curr()) {
+			return Controller::curr()->isAjax();
+		} else {
+			return (
+				isset($_REQUEST['ajax']) ||
+				(isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] == "XMLHttpRequest")
+			);
+		}
 	}
 			 
 	 
