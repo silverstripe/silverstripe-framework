@@ -204,7 +204,6 @@ class Director {
 	static function redirectBack() {
 		$url = (isset($_REQUEST['_REDIRECT_BACK_URL'])) ? $_REQUEST['_REDIRECT_BACK_URL'] : $_SERVER['HTTP_REFERER']; 
 		Director::redirect($url);
-		die();
 	}
 	
 	static function currentURLSegment() {
