@@ -161,12 +161,15 @@ abstract class Database extends Object {
 		$this->schemaUpdateTransaction[$table]['newFields'][$field] = $schema;
 	}
 	function transCreateIndex($table, $index, $schema) {
+		$this->transInitTable($table);
 		$this->schemaUpdateTransaction[$table]['newIndexes'][$index] = $schema;
 	}
 	function transAlterField($table, $field, $schema) {
+		$this->transInitTable($table);
 		$this->schemaUpdateTransaction[$table]['alteredFields'][$field] = $schema;
 	}
 	function transAlterIndex($table, $index, $schema) {
+		$this->transInitTable($table);
 		$this->schemaUpdateTransaction[$table]['alteredIndexes'][$index] = $schema;
 	}
 	
