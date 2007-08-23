@@ -196,12 +196,49 @@ class TableField extends TableListField {
 				{
 					// TODO Needs to be attached to a form existing in the DOM-tree
 					$form = new Form($this, 'EditForm', $fieldset, new FieldSet());
+					$form->loadDataFrom($item);
 					$row = new TableField_Item($item, $this, $form, $this->fieldTypes);
 					$fields = array_merge($fields, $row->Fields()->toArray());
 				}
 			}
 		}
 
+		return $fields;
+	}
+	
+	function SubmittedFieldSet(&$sourceItems){
+		$fields = array ();
+		if($rows = $_POST[$this->name]){
+			if(count($rows)){
+				foreach($rows as $idx => $row){
+					if($idx == 'new'){
+						$newitems = ArrayLib::invert($row);
+						if(count($newitems)){
+							$sourceItems = new DataObjectSet();
+							foreach($newitems as $k => $newitem){
+								$fieldset = $this->FieldSetForRow();
+								if($fieldset){
+									$newitem[ID] = "new".$k;
+									foreach($newitem as $k => $v){
+										if(array_key_exists($k, $this->extraData)){
+											unset($newitem[$k]);
+										}
+									}
+									$sourceItem = new DataObject($newitem);
+									if(!$sourceItem->isEmpty()){
+										$sourceItems->push($sourceItem);
+										$form = new Form($this, "EditForm", $fieldset, new FieldSet());
+										$form->loadDataFrom($sourceItem);
+										$item = new TableField_Item($sourceItem, $this, $form, $this->fieldTypes);
+										$fields = array_merge($fields, $item->Fields()->toArray());
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
 		return $fields;
 	}
 	
@@ -460,17 +497,33 @@ class TableField extends TableListField {
 		$js = "";
 
 		$fields = $this->FieldSet();
+		$fields = new FieldSet($fields);
 		// TODO doesn't automatically update validation when adding a row
 		foreach($fields as $field) {
 			//if the field type has some special specific specification for validation of itself
-			$js .= $field->jsValidation();
+			$js .= $field->jsValidation($this->form->class."_".$this->form->PureName()); 
 		}
 		
 		// TODO Implement custom requiredFields
-		if($this->requiredFields) {
+		$items = $this->sourceItems(); 
+		if($this->requiredFields&&$items->count()) {
 			foreach ($this->requiredFields as $field) {
-				if($fields->dataFieldByName($field)) {
+				/*if($fields->dataFieldByName($field)) {
 					$js .= "\t\t\t\t\trequire('$field');\n";
+				}*/
+				foreach($items as $item){
+					$cellName = $this->Name().'['.$item->ID.']['.$field.']';
+					$js .= "\n";
+					if($fields->dataFieldByName($cellName)) {
+						$js .= <<<JS
+if(typeof fromAnOnBlur != 'undefined'){
+	if(fromAnOnBlur.name == '$cellName')
+		require(fromAnOnBlur);
+}else{
+	require('$cellName');
+}
+JS;
+					}
 				}
 			}
 		}
@@ -480,32 +533,49 @@ class TableField extends TableListField {
 	
 	function php($data) {
 		$valid = true;
-		if($items = $this->sourceItems()) {
-			foreach($items as $item) {
-				// Load the data in to a temporary form (for correct field types)
-				$fieldset = $this->FieldSetForRow();
-				if ($fieldset)
-				{
-					$form = new Form(null, null, $fieldset, new FieldSet());
-					$row = new TableField_Item($item, $this, $form, $this->fieldTypes);
-					$fields = array_merge($fields, $row->Fields()->toArray());
-				}
-			}
-		}
-		$fields = new FieldSet($fields);
-
-		foreach($fields as $field) {
-			$valid = ($field->validate($this) && $valid);
-		}
-
-		if($this->requiredFields) {
-			foreach($this->requiredFields as $field) {
-				if($fields->dataFieldByName($field) && !$data[$field]) {
-					$this->validationError($field,'"' . strip_tags($field) . '" is required',"required");
-				}
-			}
 		
-		}		
+		if($data['methodName'] != 'delete'){
+			$fields = $this->FieldSet();
+			$fields = new FieldSet($fields);
+			
+		}else{
+			return $valid;
+		}
+	}
+	
+	function validate($validator){
+		$valid = true;
+		$fields = $this->SubmittedFieldSet($sourceItemsNew);
+		$fields = new FieldSet($fields);
+		foreach($fields as $field){
+			$valid = $field->validate($validator)&&$valid;
+		}
+
+		//debug::show($this->form->Message());
+		if($this->requiredFields&&$sourceItemsNew&&$sourceItemsNew->count()) {
+			foreach ($this->requiredFields as $field) {
+				foreach($sourceItemsNew as $item){
+					$cellName = $this->Name().'['.$item->ID.']['.$field.']';
+					$cName =  $this->Name().'[new]['.$field.'][]';
+					
+					if($fieldObj = $fields->dataFieldByName($cellName)) {
+						if(!trim($fieldObj->value)){
+							$title = $fieldObj->Title();
+							$errorMessage .= "In $this->name '$title' is required.<br />";
+						}
+					}
+				}
+			}
+		}
+
+		if($errorMessage){
+			$messageType .= "validation";
+			$message .= "<br />".$errorMessage;
+		
+			$validator->validationError($this->name, $message, $messageType);
+		}
+
+		return $valid;
 	}
 	
 	function setRequiredFields($fields) {
@@ -634,7 +704,6 @@ class TableField_Item extends TableListField_Item {
 					$field = new $fieldType($combinedFieldName,$fieldTitle);
 				} else {
 					$field = eval("return new " . $fieldType . ";");
-					
 				}
 				$field->setExtraClass('col'.$i);
 				$this->fields[] = $field;

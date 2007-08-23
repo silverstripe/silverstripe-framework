@@ -1,5 +1,10 @@
 <div id="$id" class="$Classes">
 	<% include TableListField_PageControls %>
+	<% if Message %>
+	<p id="{$id}_error" class="message $MessageType">$Message</p>
+	<% else %>
+	<p id="{$id}_error" class="message $MessageType" style="display: none"></p>
+	<% end_if %>
 	<table class="data">
 		<thead>
 			<tr>
@@ -36,7 +41,7 @@
 			<% control Items %>
 				<tr id="record-$Parent.id-$ID" class="row<% if HighlightClasses %> $HighlightClasses<% end_if %>">
 					<% control Fields %>
-						<td class="$FieldClass $ExtraClass">$Field</td>
+						<td class="$FieldClass $ExtraClass $ClassName $Title tablecolumn">$Field</td>
 					<% end_control %>
 					<td style="display: none">$ExtraData</td>
 					<% if Can(delete) %><td width="18"><a class="deletelink" href="$DeleteLink" title="Delete this row"><img src="cms/images/delete.gif" alt="delete" /></a></td><% end_if %>

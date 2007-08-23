@@ -20,9 +20,9 @@ class DateField extends TextField {
 		return $field;
 	}
 	
-	function jsValidation()
+	function jsValidation($formID = null)
 	{
-		$formID = $this->form->FormName();
+		if(!$formID)$formID = $this->form->FormName(); 
 		
 		$jsFunc =<<<JS
 Behaviour.register({
@@ -42,10 +42,18 @@ Behaviour.register({
 JS;
 		Requirements :: customScript($jsFunc, 'func_validateDate');
 		
-		return "\$('$formID').validateDate('$this->name');";
+//		return "\$('$formID').validateDate('$this->name');";
+		return <<<JS
+if(typeof fromAnOnBlur != 'undefined'){
+	if(fromAnOnBlur.name == '$this->name')
+		$('$formID').validateDate('$this->name');
+}else{
+	$('$formID').validateDate('$this->name');
+}
+JS;
 	}
 
-	function validate()
+	function validate($validator)
 	{
 		if(!empty ($this->value) && !preg_match('/^[0-9]{1,2}\/[0-9]{1,2}\/[0-90-9]{2,4}$/', $this->value))
 		{

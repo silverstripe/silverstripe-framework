@@ -202,6 +202,18 @@ class DataObject extends Controller {
 		return ($this->record && $this->record['ID'] > 0);		
 	}
 	
+	public function isEmpty(){
+		$isEmpty = true;
+		if($this->record){
+			foreach($this->record as $k=>$v){
+				if($k != "ID"){
+					$isEmpty = $isEmpty && !$v;
+				}
+			}
+		}
+		return $isEmpty;
+	}
+	
 	/**
 	 * Get the user friendly singular name of this DataObject.
 	 * If the name is not defined (by redefining $singular_name in the subclass),

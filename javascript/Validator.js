@@ -30,9 +30,17 @@ function findIndexOf(group,index){
 }
 
 function clearErrorMessage(holderDiv){
-	$$('span.message', holderDiv).each(function(el) {
-		Element.hide(el);
-	});
+	//merged by nlou 23/08/2007, r#40674
+	if(holderDiv.tagName == 'TD'){//for tablefield. 
+		$$('span.message', holderDiv).each(function(el){ 
+			Element.hide(el); 
+		} 
+		); 
+	}else{ 
+		$$('span.message', holderDiv.parentNode).each(function(el) { 
+			Element.hide(el); 
+		}); 
+	} 
 }
 
 function clearAllErrorMessages(){
@@ -75,6 +83,13 @@ function require(fieldName,cachedError) {
 		// Sets up radio and checkbox validation
 		if(el.type == 'checkbox' || el.type == 'radio' ){
 			var set = el.checked;
+		}//merged by nlou 23/08/2007, r#40674
+		else if(el.type == 'select-one'){ 
+			if(el.value == ''||el.value == '0'){ 
+				var set = ''; 
+			}else{ 
+				var set = el.value; 
+			} 
 		}else{
 			var set = el.value;
 		}
@@ -168,6 +183,9 @@ function findParentLabel(el){
 							return findParentLabel(el.parentNode);
 						} 
 					}
+				}//merged by nlou 23/08/2007, r#40674
+				else if(el.className.indexOf('tablecolumn') != -1){ 
+					return el.className.substring(0, el.className.indexOf('tablecolumn')-1); 
 				}else{
 					return findParentLabel(el.parentNode);
 				}

@@ -28,7 +28,15 @@ JS;
 
 		Requirements::customScript($jsFunc, 'func_validateEmailField');
 
-		return "\$('$formID').validateEmailField('$this->name');";
+		//return "\$('$formID').validateEmailField('$this->name');";
+		return <<<JS
+if(typeof fromAnOnBlur != 'undefined'){
+	if(fromAnOnBlur.name == '$this->name')
+		$('$formID').validateEmailField('$this->name');
+}else{
+	$('$formID').validateEmailField('$this->name');
+}
+JS;
 	}
 	
 	function validate($validator){

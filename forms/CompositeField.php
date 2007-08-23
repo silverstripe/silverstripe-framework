@@ -164,6 +164,16 @@ class CompositeField extends FormField {
 		$result .= "</ul>";
 		return $result;
 	}
+	
+	function validate($validator){
+		
+		$valid = true;
+		foreach($this->children as $idx => $child){
+			$valid = ($child->validate($validator) && $valid);
+		}
+		
+		return $valid;
+	}
 }
 
 ?>

@@ -39,6 +39,24 @@ abstract class Validator extends Object {
 		);
 	}
 	
+	function showError(){
+		debug::show($this->errors);
+	}
+	
+	function getCombinedError(){
+		if($this->errors) {
+			foreach($this->errors as $error){
+				$ret['message'] .= $error['message']."<br />";
+				$ret['messageType'] .= $error['messageType']."<br />";
+			}
+		
+			return $ret;
+		}
+	}
+	function getError(){
+		return $this->errors;
+	}
+	
 	function requireField($fieldName, $data) {
 		if(!$data[$fieldName]) $this->validationError($fieldName, "$fieldName is required", "required");
 	}

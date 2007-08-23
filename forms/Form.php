@@ -317,6 +317,10 @@ class Form extends ViewableData {
 		return $this->class . '_' . str_replace('.','',$this->name);
 	}
 	
+	function PureName(){
+		return $this->name;
+	}
+	
 	/**
 	 * Returns the field referenced by $_GET[fieldName].
 	 * Used for embedding entire extra helper forms inside complex field types (such as ComplexTableField)

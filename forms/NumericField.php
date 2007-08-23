@@ -15,7 +15,7 @@ Behaviour.register({
 				el = _CURRENT_FORM.elements[fieldName];
 				if(!el || !el.value) return true;
 				
-			 	if(el.value.match(/^([0-9]*$)/)) {
+			 	if(el.value.match(/^([0-9]+(\.[0-9]+)?$)/)) { 
 			 		return true;
 			 	} else {
 					validationError(el, "'" + el.value + "' is not a number, only numbers can be accepted for this field","validation");
@@ -28,7 +28,15 @@ JS;
 
 		Requirements::customScript($jsFunc, 'func_validateNumericField');
 
-		return "\$('$formID').validateNumericField('$this->name');";
+		//return "\$('$formID').validateNumericField('$this->name');";
+		return <<<JS
+if(typeof fromAnOnBlur != 'undefined'){
+	if(fromAnOnBlur.name == '$this->name')
+		$('$formID').validateNumericField('$this->name');
+}else{
+	$('$formID').validateNumericField('$this->name');
+}
+JS;
 	}
 	
 	/** PHP Validation **/

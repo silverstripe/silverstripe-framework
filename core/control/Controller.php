@@ -119,11 +119,21 @@ class Controller extends ViewableData {
 			if($form){
 				$form->loadDataFrom($this->requestParams, true);
 				// disregard validation if a single field is called
+				
+				
 				if(!isset($_REQUEST['action_callfieldmethod'])) {
 					$valid = $form->beforeProcessing();
 					if(!$valid) {
 						$this->popCurrent();
 						return $this->response;
+					}
+				}else{
+					$fieldcaller = $form->dataFieldByName($requestParams['fieldName']); 
+ 					if(is_a($fieldcaller, "TableListField")){ 
+ 						if($fieldcaller->hasMethod('php')){
+							$valid = $fieldcaller->php($requestParams);
+							if(!$valid) exit();
+ 						}
 					}
 				}
 				

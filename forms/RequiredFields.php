@@ -64,7 +64,15 @@ class RequiredFields extends Validator{
 		if($this->required) {
 			foreach($this->required as $field) {
 				if($fields->dataFieldByName($field)) {
-					$js .= "\t\t\t\t\trequire('$field', false, $useLabels);\n";
+					//$js .= "\t\t\t\t\trequire('$field', false, $useLabels);\n";
+					$js .= <<<JS
+						if(typeof fromAnOnBlur != 'undefined'){\n
+							if(fromAnOnBlur.name == '$field')\n
+								require(fromAnOnBlur);\n
+						}else{
+							require('$field');
+						}
+JS;
 				}
 			}
 		}
