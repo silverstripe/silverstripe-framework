@@ -508,7 +508,9 @@ function htmlEmail($to, $from, $subject, $htmlContent, $attachedFiles = false, $
  * Send a plain text e-mail
  */
 function plaintextEmail($to, $from, $subject, $plainContent, $attachedFiles, $customheaders = false) {
-	
+	$subjectIsUnicode = false;	
+	$plainEncoding = false; // Not ensurely where this is supposed to be set, but defined it false for now to remove php notices
+
 	if ($customheaders && is_array($customheaders) == false) {
 		echo "htmlEmail($to, $from, $subject, ...) could not send mail: improper \$customheaders passed:<BR>";
 		dieprintr($headers);
@@ -556,7 +558,7 @@ function plaintextEmail($to, $from, $subject, $plainContent, $attachedFiles, $cu
 	$headers["From"] 		= validEmailAddr($from);
 
 	// Messages with the X-SilverStripeMessageID header can be tracked
-	if($customheaders["X-SilverStripeMessageID"]) {		
+	if(isset($customheaders["X-SilverStripeMessageID"])) {		
 		$bounceAddress = BOUNCE_EMAIL;
 		// Get the human name from the from address, if there is one
 		if(ereg('^([^<>]+)<([^<>])> *$', $from, $parts))
@@ -567,7 +569,9 @@ function plaintextEmail($to, $from, $subject, $plainContent, $attachedFiles, $cu
 	
 	// $headers["Sender"] 		= $from;
 	$headers["X-Mailer"]	= X_MAILER;
-	if (! $customheaders["X-Priority"]) $headers["X-Priority"]	= 3;
+	if(!isset($customheaders["X-Priority"])) {
+		$headers["X-Priority"]	= 3;
+	}
 	
 	$headers = array_merge((array)$headers, (array)$customheaders);
 
@@ -656,6 +660,7 @@ function wrapImagesInline_rewriter($url) {
  * Combine headers w/ the body into a single string
  */
 function processHeaders($headers, $body = false) {
+	$res = '';
 	if(is_array($headers)) while(list($k, $v) = each($headers))
 		$res .= "$k: $v\n";
 	if($body) $res .= "\n$body";

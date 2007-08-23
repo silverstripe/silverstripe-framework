@@ -468,7 +468,7 @@ class DataObject extends Controller {
 			$this->extend('augmentWrite', $manipulation);
 			// New records have their insert into the base data table done first, so that they can pass the 
 			// generated ID on to the rest of the manipulation
-			if(isset($isNewRecord) && $isNewRecord && $manipulation[$baseTable]) {
+			if(isset($isNewRecord) && $isNewRecord && isset($manipulation[$baseTable])) {
 				$manipulation[$baseTable]['command'] = 'update';	
 			}
 			DB::manipulate($manipulation);
