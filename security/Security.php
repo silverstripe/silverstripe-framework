@@ -136,7 +136,7 @@ class Security extends Controller {
 			"Form" => $this->LostPasswordForm(),
 		));
 		
-		Controller::$currentController = $controller;
+		//Controller::$currentController = $controller;
 		return $customisedController->renderWith("Page");
 	}
 
@@ -158,7 +158,7 @@ class Security extends Controller {
 			"Content" => "<p>Thank you, your password has been sent to '$email'.</p>",
 		));
 		
-		Controller::$currentController = $controller;
+		//Controller::$currentController = $controller;
 		return $customisedController->renderWith("Page");
 	}
 	
