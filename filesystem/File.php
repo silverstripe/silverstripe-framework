@@ -178,7 +178,12 @@ class File extends DataObject {
 		while(file_exists("$base/$file")) {
 			$i = isset($i) ? ($i+1) : 2;
 			$oldFile = $file;
-			$file = ereg_replace('[0-9]*(\.[^.]+$)',$i . '\\1', $file);
+			if(substr($file, strlen($file) - strlen('.tar.gz')) == '.tar.gz' ||
+				substr($file, strlen($file) - strlen('.tar.bz2')) == '.tar.bz2') {
+					$file = ereg_replace('[0-9]*(\.tar\.[^.]+$)',$i . '\\1', $file);
+			} else {
+				$file = ereg_replace('[0-9]*(\.[^.]+$)',$i . '\\1', $file);
+			}
 			if($oldFile == $file && $i > 2) user_error("Couldn't fix $file with $i", E_USER_ERROR);
 		}
 		
