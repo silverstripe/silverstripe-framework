@@ -408,7 +408,7 @@ class SiteTree extends DataObject {
 				$homepage->flushCache();
 
 				if(!Database::$supressOutput) {
-					echo "<li style=\"color: orange\">Home page created</li>";
+					echo "<li style=\"color: green\">Home page created</li>";
 				}
 			}
 
@@ -422,7 +422,7 @@ class SiteTree extends DataObject {
 				$aboutus->publish("Stage", "Live");
 
 				if(!Database::$supressOutput) {
-					echo "<li style=\"color: orange\">About Us created</li>";
+					echo "<li style=\"color: green\">About Us created</li>";
 				}
 
 				$contactus = new Page();

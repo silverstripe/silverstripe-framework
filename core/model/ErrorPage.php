@@ -36,7 +36,7 @@ class ErrorPage extends Page {
 
 			
 			if(!Database::$supressOutput) {
-				echo "<li style=\"color: orange\">404  page created</li>";
+				echo "<li style=\"color: green\">404  page created</li>";
 			}
 		}
 	}

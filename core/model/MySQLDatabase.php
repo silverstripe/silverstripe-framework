@@ -207,7 +207,7 @@ class MySQLDatabase extends Database {
 	public function checkAndRepairTable($tableName) {
 		if(!$this->runTableCheckCommand("CHECK TABLE `$tableName`")) {
 			if(!Database::$supressOutput) {
-				echo "<li style=\"color: orange\">Table $tableName: repaired</li>";
+				echo "<li style=\"color: blue\">Table $tableName: repaired</li>";
 			}
 
 			return $this->runTableCheckCommand("REPAIR TABLE `$tableName` USE_FRM");

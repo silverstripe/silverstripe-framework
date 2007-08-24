@@ -428,7 +428,7 @@ class Member extends DataObject {
 			Security::findAnAdministrator($_REQUEST['username'], $_REQUEST['password']);
 			
 			if(!Database::$supressOutput) {
-				echo "<li style=\"color: orange\">Added admin account</li>";
+				echo "<li style=\"color: green\">Added admin account</li>";
 			}
 		}
 	}

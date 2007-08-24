@@ -1596,7 +1596,7 @@ class DataObject extends Controller {
 						$obj->write();
 					}
 					if(!Database::$supressOutput) {
-						echo "<li style=\"color: orange\">Added default records to $baseClass table</li>";
+						echo "<li style=\"color: green\">Added default records to $baseClass table</li>";
 					}
 				}
 			}
