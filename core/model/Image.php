@@ -217,6 +217,10 @@ class Image extends File {
 	function generateStripThumbnail(GD $gd) {
 		return $gd->croppedResize($this->stat('strip_thumbnail_width'),$this->stat('strip_thumbnail_height'));
 	}
+	
+	function generatePad(GD $gd, $width, $height) {
+		return $gd->paddedResize($width, $height);
+	}
 
 	/**
 	 * Return an image object representing the image in the given format.
