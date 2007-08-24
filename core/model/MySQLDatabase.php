@@ -182,7 +182,7 @@ class MySQLDatabase extends Database {
 		$fieldSchemas = $indexSchemas = "";
 		
 		if($newFields) foreach($newFields as $k => $v) $alterList[] .= "ADD `$k` $v";
-		if($newIndexes) foreach($newIndexes as $k => $v) $alterList[] .= "ADD " . $this->getIndexSqlDefinition($k, $v) . ",\n";
+		if($newIndexes) foreach($newIndexes as $k => $v) $alterList[] .= "ADD " . $this->getIndexSqlDefinition($k, $v);
 		if($alteredFields) foreach($alteredFields as $k => $v) $alterList[] .= "CHANGE `$k` `$k` $v";
 		if($alteredIndexes) foreach($alteredIndexes as $k => $v) {
 			$alterList[] .= "DROP INDEX `$k`";
