@@ -1,3 +1,3 @@
-<?
+<?php
 include("main.php");
 ?>
