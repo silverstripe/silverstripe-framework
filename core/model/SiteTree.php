@@ -406,10 +406,7 @@ class SiteTree extends DataObject {
 				$homepage->write();
 				$homepage->publish("Stage", "Live");
 				$homepage->flushCache();
-
-				if(!Database::$supressOutput) {
-					echo "<li style=\"color: green\">Home page created</li>";
-				}
+				Database::alteration_message("Home page created","created");		
 			}
 
 			if(DB::query("SELECT COUNT(*) FROM SiteTree")->value() == 1) {
@@ -420,10 +417,7 @@ class SiteTree extends DataObject {
 				$aboutus->Status = "Published";
 				$aboutus->write();
 				$aboutus->publish("Stage", "Live");
-
-				if(!Database::$supressOutput) {
-					echo "<li style=\"color: green\">About Us created</li>";
-				}
+				Database::alteration_message("About Us created","created");
 
 				$contactus = new Page();
 				$contactus->Title = "Contact Us";

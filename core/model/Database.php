@@ -204,9 +204,7 @@ abstract class Database extends Object {
 	function requireTable($table, $fieldSchema = null, $indexSchema = null) {
 		if(!isset($this->tableList[strtolower($table)])) {
 			$this->transCreateTable($table);
-			if(!Database::$supressOutput) {
-				echo "<li style=\"color: green\">Table $table: created</li>";
-			}
+			Database::alteration_message("Table $table: created","created");
 		} else {
 			$this->checkAndRepairTable($table);
 		}
@@ -239,9 +237,7 @@ abstract class Database extends Object {
 				$suffix = $suffix ? ($suffix+1) : 2;
 			}			
 			$this->renameTable($table, "_obsolete_{$table}$suffix");
-			if(!Database::$supressOutput) {
-				echo "<li style=\"color: red\">Table $table: renamed to _obsolete_{$table}$suffix</li>";
-			}
+			Database::alteration_message("Table $table: renamed to _obsolete_{$table}$suffix","obsolete");
 		}
 	}
 	
@@ -266,14 +262,10 @@ abstract class Database extends Object {
 		}
 		if($newTable || !isset($this->indexList[$table][$index])) {
 			$this->transCreateIndex($table, $index, $spec);
-			if(!Database::$supressOutput) {
-				echo "<li style=\"color: green\">Index $table.$index: created as $spec</li>";
-			}
+			Database::alteration_message("Index $table.$index: created as $spec","created");
 		} else if($this->indexList[$table][$index] != $spec) {
 			$this->transAlterIndex($table, $index, $spec);
-			if(!Database::$supressOutput) {
-				echo "<li style=\"color: blue\">Index $table.$index: changed to $spec <i style=\"color: #AAA\">(from {$this->indexList[$table][$index]})</i></li>";
-			}
+			Database::alteration_message("Index $table.$index: changed to $spec <i style=\"color: #AAA\">(from {$this->indexList[$table][$index]})</i>","changed");			
 		}
 	}
 
@@ -302,16 +294,12 @@ abstract class Database extends Object {
 			Profiler::mark('createField');
 			$this->transCreateField($table, $field, $spec);
 			Profiler::unmark('createField');
-			if(!Database::$supressOutput) {
-				echo "<li style=\"color: green\">Field $table.$field: created as $spec</li>";
-			}
+			Database::alteration_message("Field $table.$field: created as $spec","created");
 		} else if($this->fieldList[$table][$field] != $spec) {
 			Profiler::mark('alterField');
 			$this->transAlterField($table, $field, $spec);
 			Profiler::unmark('alterField');
-			if(!Database::$supressOutput) {
-				echo "<li style=\"color: blue\">Field $table.$field: changed to $spec <i style=\"color: #AAA\">(from {$this->fieldList[$table][$field]})</i></li>";
-			}
+			Database::alteration_message("Field $table.$field: changed to $spec <i style=\"color: #AAA\">(from {$this->fieldList[$table][$field]})</i>","changed");
 		}
 		Profiler::unmark('requireField');
 	}
@@ -385,6 +373,35 @@ abstract class Database extends Object {
 	 */
 	function quiet() {
 		Database::$supressOutput = true;
+	}
+	
+	static function alteration_message($message,$type=""){
+			if(!Database::$supressOutput) {
+				$color = "";
+				switch ($type){
+					case "created":
+						$color = "green";
+						break;
+					case "obsolete":
+						$color = "red";
+						break;
+					case "error":
+						$color = "red";
+						break;
+					case "deleted":
+						$color = "red";
+						break;						
+					case "changed":
+						$color = "blue";
+						break;
+					case "repaired":
+						$color = "blue";
+						break;
+					default:
+						$color="";
+				}
+				echo "<li style=\"color: $color\">$message</li>";
+			}
 	}
 	
 }

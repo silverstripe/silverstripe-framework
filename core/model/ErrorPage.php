@@ -33,11 +33,8 @@ class ErrorPage extends Page {
 			$errorpage->write();
 			// Don't publish, as the manifest may not be built yet
 			// $errorpage->publish("Stage", "Live");
-
 			
-			if(!Database::$supressOutput) {
-				echo "<li style=\"color: green\">404  page created</li>";
-			}
+			Database::alteration_message("404 page created","created");
 		}
 	}
 	
