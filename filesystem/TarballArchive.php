@@ -70,6 +70,12 @@ class TarballArchive extends Archive {
 		return $listing;
 	}
 	
+	function extractTo($destination, $entires = null) {
+		if(!isset($entries)) {
+			$command = "tar -xv{$this->compressionModifiers}f ../$this->filename --directory $destination";
+			$output = `$command`;
+		}
+	}
 	
 }
 
