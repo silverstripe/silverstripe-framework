@@ -205,7 +205,7 @@ abstract class Database extends Object {
 		if(!isset($this->tableList[strtolower($table)])) {
 			$this->transCreateTable($table);
 			if(!Database::$supressOutput) {
-				echo "<li style=\"color: orange\">Table $table: created</li>";
+				echo "<li style=\"color: green\">Table $table: created</li>";
 			}
 		} else {
 			$this->checkAndRepairTable($table);
@@ -240,7 +240,7 @@ abstract class Database extends Object {
 			}			
 			$this->renameTable($table, "_obsolete_{$table}$suffix");
 			if(!Database::$supressOutput) {
-				echo "<li style=\"color: orange\">Table $table: renamed to _obsolete_{$table}$suffix</li>";
+				echo "<li style=\"color: red\">Table $table: renamed to _obsolete_{$table}$suffix</li>";
 			}
 		}
 	}
@@ -267,12 +267,12 @@ abstract class Database extends Object {
 		if($newTable || !isset($this->indexList[$table][$index])) {
 			$this->transCreateIndex($table, $index, $spec);
 			if(!Database::$supressOutput) {
-				echo "<li style=\"color: red\">Index $table.$index: created as $spec</li>";
+				echo "<li style=\"color: green\">Index $table.$index: created as $spec</li>";
 			}
 		} else if($this->indexList[$table][$index] != $spec) {
 			$this->transAlterIndex($table, $index, $spec);
 			if(!Database::$supressOutput) {
-				echo "<li style=\"color: orange\">Index $table.$index: changed to $spec <i style=\"color: #AAA\">(from {$this->indexList[$table][$index]})</i></li>";
+				echo "<li style=\"color: blue\">Index $table.$index: changed to $spec <i style=\"color: #AAA\">(from {$this->indexList[$table][$index]})</i></li>";
 			}
 		}
 	}
@@ -303,14 +303,14 @@ abstract class Database extends Object {
 			$this->transCreateField($table, $field, $spec);
 			Profiler::unmark('createField');
 			if(!Database::$supressOutput) {
-				echo "<li style=\"color: red\">Field $table.$field: created as $spec</li>";
+				echo "<li style=\"color: green\">Field $table.$field: created as $spec</li>";
 			}
 		} else if($this->fieldList[$table][$field] != $spec) {
 			Profiler::mark('alterField');
 			$this->transAlterField($table, $field, $spec);
 			Profiler::unmark('alterField');
 			if(!Database::$supressOutput) {
-				echo "<li style=\"color: orange\">Field $table.$field: changed to $spec <i style=\"color: #AAA\">(from {$this->fieldList[$table][$field]})</i></li>";
+				echo "<li style=\"color: blue\">Field $table.$field: changed to $spec <i style=\"color: #AAA\">(from {$this->fieldList[$table][$field]})</i></li>";
 			}
 		}
 		Profiler::unmark('requireField');
