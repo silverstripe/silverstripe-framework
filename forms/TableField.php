@@ -559,7 +559,7 @@ JS;
 					$cName =  $this->Name().'[new]['.$field.'][]';
 					
 					if($fieldObj = $fields->dataFieldByName($cellName)) {
-						if(!trim($fieldObj->value)){
+						if(!trim($fieldObj->Value())){
 							$title = $fieldObj->Title();
 							$errorMessage .= "In $this->name '$title' is required.<br />";
 						}
