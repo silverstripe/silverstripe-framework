@@ -61,8 +61,19 @@ class HTTPResponse extends Object {
 		return $this->body;
 	}
 	
+	/**
+	 * Add a HTTP header to the response, replacing any header of the same name
+	 */
 	function addHeader($header, $value) {
 		$this->headers[$header] = $value;
+	}
+	
+	/**
+	 * Return the HTTP header of the given name
+	 * @returns string
+	 */
+	function getHeader($header) {
+		return $this->headers[$header];
 	}
 	
 	function redirect($dest) {
