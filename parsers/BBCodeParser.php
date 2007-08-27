@@ -85,7 +85,7 @@ class BBCodeParser extends TextParser {
 	function useable_tagsHTML(){
 		$useabletags = "<ul class='bbcodeExamples'>";
 		foreach($this->usable_tags()->toArray() as $tag){
-			$useabletags = $useabletags."<li>".$tag->Example."</li>";
+			$useabletags = $useabletags."<li><span>".$tag->Example."</span></li>";
 		}
 		return $useabletags."</ul>";
 	}
