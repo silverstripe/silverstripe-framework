@@ -389,9 +389,10 @@ function htmlEmail($to, $from, $subject, $htmlContent, $attachedFiles = false, $
 		dieprintr($headers);
 	}
 
-	if(strpos($subject,"&#") !== false) $subjectIsUnicode = true;
-	if(strpos($htmlContent,"&#") !== false) $bodyIsUnicode = true;
-
+    
+	$subjectIsUnicode = (strpos($subject,"&#") !== false);
+	$bodyIsUnicode = (strpos($htmlContent,"&#") !== false);
+    $plainEncoding = "";
 	
 	// We generate plaintext content by default, but you can pass custom stuff
 	if(!$plainContent) {
@@ -468,7 +469,7 @@ function htmlEmail($to, $from, $subject, $htmlContent, $attachedFiles = false, $
 	$headers["From"] 		= validEmailAddr($from);
 
 	// Messages with the X-SilverStripeMessageID header can be tracked
-	if($customheaders["X-SilverStripeMessageID"]) {		
+	if(isset($customheaders["X-SilverStripeMessageID"])) {
 		$bounceAddress = BOUNCE_EMAIL;
 		// Get the human name from the from address, if there is one
 		if(ereg('^([^<>]+)<([^<>])> *$', $from, $parts))
@@ -479,7 +480,7 @@ function htmlEmail($to, $from, $subject, $htmlContent, $attachedFiles = false, $
 	
 	// $headers["Sender"] 		= $from;
 	$headers["X-Mailer"]	= X_MAILER;
-	if (!$customheaders["X-Priority"]) $headers["X-Priority"]	= 3;
+	if (!isset($customheaders["X-Priority"])) $headers["X-Priority"]	= 3;
 	
 	$headers = array_merge((array)$headers, (array)$customheaders);
 

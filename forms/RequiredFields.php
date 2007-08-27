@@ -16,7 +16,7 @@ class RequiredFields extends Validator{
 	 */
 	function __construct() {
 		$Required = func_get_args();
-		if( is_array( $Required[0] ) )
+		if( isset($Required[0]) && is_array( $Required[0] ) )
 			$Required = $Required[0];
 		$this->required = $Required;
 		

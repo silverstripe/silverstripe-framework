@@ -19,8 +19,8 @@ class FormAction extends FormField {
 		$this->extraData = $extraData;
 		parent::__construct("action_$action", $title, null, $form);
 	}
-	static function create($action, $title = "") {
-		return new FormAction($action, $title);
+	static function create($action, $title = "", $extraData = null) {
+		return new FormAction($action, $title, $extraData);
 	}
 	
 	function actionName() {

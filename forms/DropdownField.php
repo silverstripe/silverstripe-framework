@@ -9,12 +9,12 @@ class DropdownField extends FormField {
 	
 	/**
 	 * Creates a new dropdown field.
-	 * @param name The field name
-	 * @param title The field title
-	 * @param source An map of the dropdown items
-	 * @param value The current value
-	 * @param form The parent form
-	 * @param emptyString mixed Add an empty selection on to of the {source}-Array 
+	 * @param $name The field name
+	 * @param $title The field title
+	 * @param $source An map of the dropdown items
+	 * @param $value The current value
+	 * @param $form The parent form
+	 * @param $emptyString mixed Add an empty selection on to of the {source}-Array 
 	 * 	(can also be boolean, which results in an empty string)
 	 */
 	function __construct($name, $title = "", $source = array(), $value = "", $form = null, $emptyString = null) {

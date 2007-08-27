@@ -7,12 +7,12 @@ class TextareaField extends FormField {
 	
 	/**
 	 * Create a new multi-line text area field.
-	 * @param name Field name
-	 * @param title Field title
-	 * @param rows The number of rows
-	 * @param cols The number of columns
-	 * @param value The current value
-	 * @param form The parent form.  Auto-set when the field is placed in a form.
+	 * @param $name Field name
+	 * @param $title Field title
+	 * @param $rows The number of rows
+	 * @param $cols The number of columns
+	 * @param $value The current value
+	 * @param $form The parent form.  Auto-set when the field is placed in a form.
 	 */
 	function __construct($name, $title = "", $rows = 5, $cols = 20, $value = "", $form = null) {
 		$this->rows = $rows;
