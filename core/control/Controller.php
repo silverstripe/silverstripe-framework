@@ -407,7 +407,7 @@ class Controller extends ViewableData {
 	 */
 	function redirect($url) {
 		// Attach site-root to relative links, if they have a slash in them
-		if(substr($url,0,4) != "http" && $url[0] != "/" && strpos($url,'/') !== false){
+		if($url == "" || $url[0] == '?' || (substr($url,0,4) != "http" && $url[0] != "/" && strpos($url,'/') !== false)){
 			$url = Director::baseURL() . $url;
 		}
 

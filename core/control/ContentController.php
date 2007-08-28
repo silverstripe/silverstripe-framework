@@ -85,8 +85,8 @@ class ContentController extends Controller {
 		if($this->dataRecord && RootURLController::should_be_on_root($this->dataRecord) && !$this->urlParams['Action'] && !$_POST && !$_FILES) {
 			$getVars = $_GET;
 			unset($getVars['url']);
-			if($getVars) $url = "./?" . http_build_query($getVars);
-			else $url = "./";
+			if($getVars) $url = "?" . http_build_query($getVars);
+			else $url = "";
 			Director::redirect($url);
 			return;
 		}
