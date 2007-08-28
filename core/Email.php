@@ -469,7 +469,7 @@ function htmlEmail($to, $from, $subject, $htmlContent, $attachedFiles = false, $
 	$headers["From"] 		= validEmailAddr($from);
 
 	// Messages with the X-SilverStripeMessageID header can be tracked
-	if(isset($customheaders["X-SilverStripeMessageID"])) {
+	if(isset($customheaders["X-SilverStripeMessageID"]) && defined('BOUNCE_EMAIL')) {
 		$bounceAddress = BOUNCE_EMAIL;
 		// Get the human name from the from address, if there is one
 		if(ereg('^([^<>]+)<([^<>])> *$', $from, $parts))
@@ -559,7 +559,7 @@ function plaintextEmail($to, $from, $subject, $plainContent, $attachedFiles, $cu
 	$headers["From"] 		= validEmailAddr($from);
 
 	// Messages with the X-SilverStripeMessageID header can be tracked
-	if(isset($customheaders["X-SilverStripeMessageID"])) {		
+	if(isset($customheaders["X-SilverStripeMessageID"]) && defined('BOUNCE_EMAIL')) {		
 		$bounceAddress = BOUNCE_EMAIL;
 		// Get the human name from the from address, if there is one
 		if(ereg('^([^<>]+)<([^<>])> *$', $from, $parts))
