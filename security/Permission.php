@@ -152,16 +152,18 @@ class Permission extends DataObject {
 	/**
 	 * Returns all members for a specific permission.
 	 * 
-	 * @param $code String
+	 * @param $code String|array Either a single permission code, or a list of permission codes
 	 * @return DataObjectSet
 	 */
 	static function get_members_by_permission($code) {
 		$groupIDs = array();
-		$SQL_code = Convert::raw2sql($code);
+        
+        if(is_array($code)) $SQL_filter = "Permission.Code IN ('" . implode("','", Convert::raw2sql($code)) . "')";
+        else $SQL_filter = "Permission.Code = '" . Convert::raw2sql($code) . "'";
 		
 		$toplevelGroups = DataObject::get(
 			'Group', 
-			"Permission.Code = '{$SQL_code}'", // filter
+			$SQL_filter, // filter
 			null, // limit
 			"LEFT JOIN `Permission` ON `Group`.`ID` = `Permission`.`GroupID`" // join 
 		);
