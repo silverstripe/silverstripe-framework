@@ -77,7 +77,7 @@ class ErrorPage extends Page {
 		// Run the page
 		Requirements::clear();
 		$controller = new ErrorPage_Controller($this);
-		$errorContent = $controller->run( array() );
+		$errorContent = $controller->run( array() )->getBody();
 
 		if($fh = fopen("../assets/error-$this->ErrorCode.html", "w")) {
 			fwrite($fh, $errorContent);
