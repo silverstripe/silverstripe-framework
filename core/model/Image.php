@@ -218,7 +218,7 @@ class Image extends File {
 		return $gd->croppedResize($this->stat('strip_thumbnail_width'),$this->stat('strip_thumbnail_height'));
 	}
 	
-	function generatePad(GD $gd, $width, $height) {
+	function generatePaddedImage(GD $gd, $width, $height) {
 		return $gd->paddedResize($width, $height);
 	}
 
