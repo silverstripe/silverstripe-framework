@@ -99,7 +99,7 @@ class Security extends Controller {
 		Requirements::javascript("jsparty/prototype_improvements.js");
 		Requirements::javascript("jsparty/scriptaculous/effects.js");
 		
-		$tmpPage = new Page();
+		$tmpPage = DataObject::get_one('Page', "URLSegment = 'home'");
 		$tmpPage->Title = "Log in";
 		$tmpPage->URLSegment = "Security";
 
