@@ -2,7 +2,6 @@
 /**
  * Represents a column in the database with the type 'Time'
  */
-require_once("DBField.php"); 
  
 class Time extends DBField {
 
