@@ -415,6 +415,14 @@ class Controller extends ViewableData {
 	}
 	
 	/**
+	 * Tests whether a redirection has been requested.
+	 * @return string If redirect() has been called, it will return the URL redirected to.  Otherwise, it will return null;
+	 */
+	function redirectedTo() {
+		return $this->response->getHeader('Location');
+	} 
+	
+	/**
 	 * Get the Session object representing this Controller's session
 	 * @return Session
 	 */

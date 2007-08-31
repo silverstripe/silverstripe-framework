@@ -188,12 +188,20 @@ class Director {
 	
 	/**
 	 * Redirect to another page.
-	   *  - $url can be an absolute URL
-	   *  - or it can be a URL relative to the "site base"
-	   *  - if it is just a word without an slashes, then it redirects to another action on the current controller.
+	 *  - $url can be an absolute URL
+	 *  - or it can be a URL relative to the "site base"
+	 *  - if it is just a word without an slashes, then it redirects to another action on the current controller.
 	 */
 	static function redirect($url) {
 		Controller::curr()->redirect($url);
+	}
+
+	/**
+	 * Tests whether a redirection has been requested.
+	 * @return string If redirect() has been called, it will return the URL redirected to.  Otherwise, it will return null;
+	 */
+	static function redirected_to() {
+		Controller::curr()->redirectedTo();
 	}
 
 	/**

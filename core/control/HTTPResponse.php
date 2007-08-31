@@ -73,7 +73,11 @@ class HTTPResponse extends Object {
 	 * @returns string
 	 */
 	function getHeader($header) {
-		return $this->headers[$header];
+		if(isset($this->headers[$header])) {
+			return $this->headers[$header];			
+		} else {
+			return null;
+		}
 	}
 	
 	function redirect($dest) {
