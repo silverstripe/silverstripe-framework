@@ -681,6 +681,15 @@ class ViewableData extends Object implements Iterator {
 	function CurrentMember() {
 		return Member::currentUser();
 	}
+
+    /**
+     * Checks if the current user has the given permission.
+     * Can be used to implement security-specific sections within templates
+     * @return int The Permission record-ID if the permission can be found, null otherwise
+     */
+    function HasPerm($permCode) {
+        return Permission::check($permCode);
+    }
 	
 	/**
 	 * Add some arbitrary data to this viewabledata object.  Returns a new object with the
