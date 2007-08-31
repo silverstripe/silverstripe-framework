@@ -415,6 +415,7 @@ class TableField extends TableListField {
 	 */
 	function sortData($data, $recordID = null) {
 		if($data) {
+            $dataObjects = array();
 			foreach($data as $field => $rowData) {
 				$i = 0;
 				$blank = 0;
@@ -432,8 +433,8 @@ class TableField extends TableListField {
 				
 				// TODO ADD stuff for removing rows with incomplete data
 			}
+    		return $dataObjects;
 		}
-		return $dataObjects;
 	}
 	
 	/**
