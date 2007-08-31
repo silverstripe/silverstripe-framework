@@ -21,7 +21,7 @@ class Permission extends DataObject {
 	/**
 	 * Check that the current member has the given permission
 	 * 
-	 * @param $code string
+	 * @param $code string|array Either a list of codes or a single code
 	 * @param $arg string
 	 * @param $memberID integer
 	 * @param $strict Boolean
@@ -61,17 +61,20 @@ class Permission extends DataObject {
 					else use_error("Permission::checkMember: bad arg '$arg'", E_USER_ERROR);
 			}
 			
+			if(is_array($code)) $SQL_codeList = "'" . implode("', '", Convert::raw2sql($code)) . "'";
+			else $SQL_codeList = "'" . Convert::raw2sql($code) . "'";
+			
 			if(!self::$strict_checking || !$strict) {
 				$hasPermission = DB::query("
 					SELECT COUNT(*) 
 					FROM Permission 
-					WHERE (Code LIKE '$code') 
+					WHERE Code IN ('$SQL_codeList') 
 				")->value();
 				if(!$hasPermission) return true;
 			}
 			
 			// Raw SQL for efficiency
-			return DB::query("SELECT ID FROM Permission WHERE (Code LIKE '$code' OR Code LIKE 'ADMIN') AND GroupID IN ($groupCSV) $argClause")->value();
+			return DB::query("SELECT ID FROM Permission WHERE Code IN ($SQL_codeList, 'ADMIN') AND GroupID IN ($groupCSV) $argClause")->value();
 		}
 	}
 	
@@ -206,6 +209,7 @@ class Permission extends DataObject {
 			if(!array_key_exists($otherPerm, $allCodes)) $allCodes[$otherPerm] = $otherPerm;
 		}
 		
+		asort($allCodes);
 		return $allCodes;
 	}
 	
