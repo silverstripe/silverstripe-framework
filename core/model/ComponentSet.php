@@ -159,35 +159,32 @@ class ComponentSet extends DataObjectSet {
 	 * @param array $idList List of IDs.
 	 */
 	function setByIDList($idList) {
-		$has = array();
-		
 		// Index current data
 		if($this->items) {
-			foreach($this->items as $item) {
+			foreach( $this->items as $item )
 				$has[$item->ID] = true;
-			}
 		}
 		
 		// Keep track of items to delete
-		$itemsToDelete = $has;
+		if( isset( $has ) )	
+			$itemsToDelete = $has;
 		
 		if($idList){
 			foreach($idList as $id) {
-				$itemsToDelete[$id] = false;
-				if(!isset($has[$id]) && $id) {
+				if( isset( $itemsToDelete ) )
+					$itemsToDelete[$id] = false;
+				if( ! isset( $has ) || ( $id && ! isset( $has[$id] ) ) )
 					$this->add($id);
-				}
 			}
 		}
 		// Delete any unmentionedItems
-		if($itemsToDelete) {
-			$removeList = array();
+		if( isset( $itemsToDelete ) ) {
 			foreach($itemsToDelete as $id => $actuallyDelete) {
 				if($actuallyDelete) $removeList[] = $id;
 			}
-			if($removeList) {
+			
+			if( isset( $removeList ) )
 				$this->removeMany($removeList);
-			}
 		}
 	}
 	
