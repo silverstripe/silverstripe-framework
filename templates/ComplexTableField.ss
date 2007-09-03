@@ -85,6 +85,7 @@
 			<% end_if %>
 		</tbody>
 	</table>
+	$ExtraData
 	<div class="utility">
 		<% if Can(export) %>
 			$ExportButton
