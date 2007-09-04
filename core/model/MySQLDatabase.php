@@ -40,7 +40,7 @@ class MySQLDatabase extends Database {
 		$this->active = mysql_select_db($parameters['database'], $this->dbConn);
 		$this->database = $parameters['database'];
 		if(!$this->dbConn) {
-			$this->databaseError("Could connect to MySQL database");
+			$this->databaseError("Couldn't connect to MySQL database");
 		}
 
 		parent::__construct();
