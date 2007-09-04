@@ -52,6 +52,8 @@ class ComplexTableField extends TableListField {
 		//"export",
 	);
 	
+	protected $itemClass = 'ComplexTableField_Item';
+	
 	/**
 	 * Template-Overrides
 	 */
@@ -182,7 +184,7 @@ JS;
 		
 		$output = new DataObjectSet();
 		foreach($this->sourceItems as $pageIndex=>$item) {
-			$output->push(Object::create('ComplexTableField_Item',$item, $this, $pageStart+$pageIndex));
+			$output->push(Object::create($this->itemClass,$item, $this, $pageStart+$pageIndex));
 		}
 		return $output;
 	}
@@ -223,7 +225,7 @@ JS;
 		// from the object via a string method call.
 		if(is_a($this->detailFormFields,"Fieldset")){
 			$detailFields = $this->detailFormFields;
-		} else if(is_string($this->detailFormFields)){
+		} else if( $childData && is_string($this->detailFormFields)){
 			$functioncall = $this->detailFormFields;
 			if($childData->hasMethod($functioncall)){
 				$detailFields = $childData->$functioncall();
@@ -233,16 +235,21 @@ JS;
 			if(is_numeric($ID) && $this->getParentClass()) {
 				// make sure the relation-link is existing, even if we just add the sourceClass
 				// and didn't save it
-				$parentIDName = $this->getParentIdName($this->sourceClass,$this->getParentClass());
+				$parentIDName = $this->getParentIdName( $this->getParentClass(), $this->sourceClass );
 				$SNG_sourceClass->$parentIDName = $ID;
 			}
-			$detailFields = $SNG_sourceClass->getCMSFields();
+			$functioncall = $this->detailFormFields;
+			if($SNG_sourceClass->hasMethod($functioncall)){
+				$detailFields = $SNG_sourceClass->$functioncall();
+			}
+			else
+				$detailFields = $SNG_sourceClass->getCMSFields();
 		} else {
 			$detailFields = $childData->getCMSFields();
 		}
 
 		if($this->getParentClass()) {
-			$parentIdName = $this->getParentIdName($this->sourceClass,$this->getParentClass());
+			$parentIdName = $this->getParentIdName( $this->getParentClass(), $this->sourceClass );
 			if(!$parentIdName) {
 				user_error("ComplexTableField::DetailForm() Cannot automatically 
 					determine 'has-one'-relationship to parent, 
@@ -519,17 +526,23 @@ JS;
 	}
 	
 	/**
-	 * Returns the db-fieldname of the currently used has_one-relationshop.
+	 * Returns the db-fieldname of the currently used has_one-relationship.
 	 */
-	function getParentIdName($childClass,$parentClass){
-		$hasOneRelations = singleton($childClass)->has_one();
-		$classes = ClassInfo::ancestry($parentClass);	
-		foreach($hasOneRelations as $k=>$v) {
-			if($v == $parentClass) {
-				return $k . "ID";
-			}else if(array_key_exists($v,$classes)){
-				return $classes[$v] . "ID";
-			}
+	function getParentIdName( $parentClass, $childClass ) {
+		return $this->getParentIdNameRelation( $parentClass, $childClass, 'has_one' );
+	}
+	
+	/**
+	 * Returns the db-fieldname of the currently used relationship.
+	 */
+	function getParentIdNameRelation( $parentClass, $childClass, $relation ){
+		$relations = singleton( $parentClass )->$relation();
+		$classes = ClassInfo::ancestry( $childClass );
+		foreach( $relations as $k => $v ) {
+			if( $v == $childClass )
+				return $k . 'ID';
+			else if( array_key_exists( $v, $classes ) )
+				return $classes[ $v ] . 'ID';
 		}
 		return false;
 	}
