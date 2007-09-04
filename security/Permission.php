@@ -188,7 +188,26 @@ class Permission extends DataObject {
 		);
 		return $members;
 	}
-	
+
+	/**
+	 * Return all of the groups that have one of the given permission codes
+	 * @param $codes array|string Either a single permission code, or an array of permission codes
+	 * @return DataObjectSet The matching group objects
+	 */
+	static function get_groups_by_permission($codes) {
+		if(!is_array($codes)) $codes = array($codes);
+		
+		$SQLa_codes = Convert::raw2sql($codes);
+		$SQL_codes = join("','", $SQLa_codes);
+		
+		return DataObject::get(
+			'Group',
+			"Permission.Code IN ('$SQL_codes')",
+			"",
+			"LEFT JOIN Permission ON Group.ID = Permission.GroupID"
+		);
+	}
+
 	static function get_codes($blankItemText = null) {
 		$classes = ClassInfo::implementorsOf('PermissionProvider');
 		
@@ -213,7 +232,7 @@ class Permission extends DataObject {
 		return $allCodes;
 	}
 	
-	/**
+	/*
 	 * Controller action to list the codes available
 	 */
 	function listcodes() {
