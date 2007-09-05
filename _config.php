@@ -3,4 +3,7 @@
 
 define('MCE_ROOT', 'jsparty/tiny_mce2/');
 
+$path = Director::baseFolder().'/sapphire/pear/';
+set_include_path(get_include_path() . PATH_SEPARATOR . $path);
+
 ?>
