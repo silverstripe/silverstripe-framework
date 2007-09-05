@@ -23,6 +23,15 @@ class SiteTree extends DataObject {
 		}		
 		return Director::baseURL() . $this->URLSegment . "/$action";
 	}
+	
+	/**
+	 * Get the absolute URL for this page by stage
+	 */
+	public function AbsoluteLink() {
+		if($this->hasMethod('alternateAbsoluteLink')) return $this->alternateAbsoluteLink();
+		else return Director::absoluteURL($this->Link());
+	}
+	
 		
 	/**
 	 * Returns link/current, depending on whether you're on the current page.
