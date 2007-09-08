@@ -1,7 +1,4 @@
 <?php
-
-
-
 /**
  * The most common kind if controller; effectively a controller linked to a {@link DataObject}.
  *
@@ -41,16 +38,9 @@ class ContentController extends Controller {
 			// '&' in a URL is apparently naughty
 			$action = preg_replace('/&/', '&amp;', $action);
 			return $this->URLSegment . "/$action";
-		}else{
+		} else {
 			user_error("ContentController::RelativeLink() No URLSegment given on a '$this->class' object.  Perhaps you should overload it?", E_USER_WARNING);
 		}
-		/** TODO : junk from CVS ?? **/
-		//if($action == "index") $action = "";
-		
-		// '&' in a URL is apparently naughty
-		// $action = preg_replace('/&/', '&amp;', $action);
-		
-		//return $this->URLSegment . "/$action";
 	}
 	
 	//----------------------------------------------------------------------------------//
