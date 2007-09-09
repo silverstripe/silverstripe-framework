@@ -4,7 +4,7 @@ class Varchar extends DBField {
 	protected $size;
 	
 	function __construct($name, $size = 50) {
-		$this->size = $size;
+		$this->size = $size ? $size : 50;
 		parent::__construct($name);
 	}
 	function requireField() {
