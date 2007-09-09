@@ -157,7 +157,7 @@ class DatabaseAdmin extends Controller {
 
 			if(strpos($dataClass,'Test_') === false) {
 				if(!$quiet) {
-					echo "<li>$dataClass";
+					echo "<li>$dataClass</li>";
 				}
 				singleton($dataClass)->requireTable();
 			}
@@ -176,7 +176,7 @@ class DatabaseAdmin extends Controller {
 
 				if(strpos($dataClass,'Test_') === false) {
 					if(!$quiet) {
-						echo "<li>$dataClass";
+						echo "<li>$dataClass</li>";
 					}
 
 					singleton($dataClass)->requireDefaultRecords();
