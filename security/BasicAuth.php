@@ -33,7 +33,7 @@ class BasicAuth extends Object {
 			die();
 		}
 		
-		if(!Permission::checkMember($member->ID, 'ADMIN')) {
+		if(!Permission::checkMember($member->ID, $permissonCode)) {
 			header("WWW-Authenticate: Basic realm=\"$realm\"");
 			header('HTTP/1.0 401 Unauthorized');
 
