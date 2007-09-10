@@ -43,6 +43,8 @@ class BasicAuth extends Object {
 			
 			die();
 		}
+		
+		return $member;
 	}
 	
 	static protected $disabled;
