@@ -343,6 +343,19 @@ class Director {
 		return Director::$siteMode;
 	}
 	
+	static $dev_servers = array(
+		'localhost',
+		'127.0.0.1'
+	);
+	static function set_dev_servers($servers) {
+		Director::$dev_servers = $servers;
+	}
+	
+	static $test_servers = array();
+	static function set_test_servers($servers) {
+		Director::$test_servers = $servers;
+	}
+	
 	static protected $environment_type;
 	
 	/**
@@ -360,6 +373,7 @@ class Director {
 	static function isLive() {
 		return !(Director::isDev() || Director::isTest());
 	}
+	
 	static function isDev() {
 		if(self::$environment_type) return self::$environment_type == 'dev';
 		
@@ -375,17 +389,30 @@ class Director {
 
 		if(isset($_SESSION['isDev']) && $_SESSION['isDev']) return true;
 		
-		// Anything running on localhost is automatically dev
-		if($_SERVER['SERVER_ADDR'] == '0.0.0.0' || $_SERVER['REMOTE_ADDR'] == $_SERVER['SERVER_ADDR']) return true;
-
-		$testURL = ".$_SERVER[HTTP_HOST].";
-		return (strpos($testURL, '.test.') === false) && (strpos($testURL, '.dev.') !== false) ;
-	}
-	static function isTest() {
-		if(self::$environment_type) return self::$environment_type == 'test';
+		// Check if we are running on one of the development servers
+		if(in_array($_SERVER['SERVER_ADDR'], Director::$dev_servers))  {
+			return true;
+		}
 		
-		$testURL = ".$_SERVER[HTTP_HOST]."; 
-		return (strpos($testURL, '.test.') !== false);
+		// Check if we are running on one of the test servers
+		if(in_array($_SERVER['SERVER_ADDR'], Director::$test_servers))  {
+			return true;
+		}
+		
+		return false;
+	}
+	
+	static function isTest() {
+		if(self::$environment_type) {
+			return self::$environment_type == 'test';
+		}
+		
+		// Check if we are running on one of the test servers
+		if(in_array($_SERVER['SERVER_ADDR'], Director::$test_servers))  {
+			return true;
+		}
+		
+		return false;
 	}
 
 	/**
