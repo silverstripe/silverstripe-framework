@@ -1,10 +1,10 @@
 <?php
 
 
-require_once('HTML/BBCodeParser.php');
+require_once('HTML/HTML_BBCodeParser.php');
 /*Seting up the PEAR bbcode parser*/  
 $config = parse_ini_file('BBCodeParser.ini', true);
-$options = &PEAR::getStaticProperty('HTML_BBCodeParser', '_options');
+$options = &HTML_BBCodeParser::getStaticProperty('HTML_BBCodeParser', '_options');
 $options = $config['HTML_BBCodeParser'];
 //Debug::show($options);
 unset($options);
