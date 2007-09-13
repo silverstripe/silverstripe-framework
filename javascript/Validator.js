@@ -172,7 +172,7 @@ function findParentLabel(el){
 			if(el.className){
 				if(el.className.indexOf('field') == 0){
 					labels = el.getElementsByTagName('label');
-					if(labels && typeof(labels) == "object"){
+					if(labels){
 						var left = findIndexOf(labels,'left');
 						var right = findIndexOf(labels,'right');
 						if(left){
