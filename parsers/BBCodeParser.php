@@ -35,7 +35,15 @@ class BBCodeParser extends TextParser {
 				"Title" => "Struck-out Text",
 				"Example" => "[s]<s>Struck-out</s>[/s]"
 			)),
-			
+			new ArrayData(array(
+				"Title" => "Colored text",
+				"Example" => "[color=blue]blue text[/color]"
+			)),
+			new ArrayData(array(
+				"Title" => "Alignment",
+				"Example" => "[align=right]right aligned[/align]"
+			)),
+						
 			new ArrayData(array(
 				"Title" => "Website link",
 				"Description" => "Link to another website or URL",
@@ -69,25 +77,11 @@ class BBCodeParser extends TextParser {
 				"Example" => "[code]Code block[/code]"
 			)),
 			new ArrayData(array(
-				"Title" => "HTML Code Block",
-				"Description" => "HTML-formatted code block",
-				"Example" => "[html]HTML code block[/html]"
-			)),
-			new ArrayData(array(
-				"Title" => "HTML Code Block",
-				"Description" => "HTML-formatted code block",
-				"Example" => "[code html]HTML code block[/code]"
-			)),				
-			new ArrayData(array(
-				"Title" => "PHP Code Block",
-				"Description" => "PHP-formatted code block",
-				"Example" => "[php]PHP code block[/php]"
-			)),
-			new ArrayData(array(
-				"Title" => "PHP Code Block",
-				"Description" => "PHP-formatted code block",
-				"Example" => "[code php]PHP code block[/code]"
-			))			
+				"Title" => "Unordered list",
+				"Description" => "Unordered list",
+				"Example" => "[ulist][*]unordered item 1[*]unordered item 2[/ulist]"
+			))						
+			
 					
 		);
 	}
