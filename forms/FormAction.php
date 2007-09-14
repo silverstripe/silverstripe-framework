@@ -14,13 +14,15 @@ class FormAction extends FormField {
 	 * @param form The parent form, auto-set when the field is placed inside a form 
 	 * @param extraData A piece of extra data that can be extracted with $this->extraData.  Useful for
 	 *                  calling $form->buttonClicked()->extraData()
+	 * @param extraClass A CSS class to apply to the button in addition to 'action'
 	 */
-	function __construct($action, $title = "", $form = null, $extraData = null) {
+	function __construct($action, $title = "", $form = null, $extraData = null, $extraClass = '') {
 		$this->extraData = $extraData;
+		$this->extraClass = ' '.$extraClass;
 		parent::__construct("action_$action", $title, null, $form);
 	}
-	static function create($action, $title = "", $extraData = null) {
-		return new FormAction($action, $title, $extraData);
+	static function create($action, $title = "", $extraData = null, $extraClass = null) {
+		return new FormAction($action, $title, null, $extraData, $extraClass);
 	}
 	
 	function actionName() {

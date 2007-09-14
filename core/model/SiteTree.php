@@ -738,11 +738,11 @@ class SiteTree extends DataObject {
 	function getCMSActions() {
 		$actions = array();
 		if($this->isPublished() && $this->canPublish()) {
-			$actions[] = FormAction::create('unpublish', 'Unpublish')->describe("Remove this page from the published site");
+			$actions[] = FormAction::create('unpublish', 'Unpublish', 'delete')->describe("Remove this page from the published site");
 		}
 		if($this->stagesDiffer('Stage','Live')) {
 			if($this->isPublished() && $this->canEdit())	{
-				$actions[] = FormAction::create('rollback', 'Cancel draft changes')->describe("Delete your draft and revert to the currently published page");
+				$actions[] = FormAction::create('rollback', 'Cancel draft changes', 'delete')->describe("Delete your draft and revert to the currently published page");
 			}
 		}
 
