@@ -124,6 +124,14 @@ class GD extends Object {
 		return $output;
 	}
 	
+	/**
+	 * Rotates image by given angle.
+	 * 
+	 * @param angle 
+	 
+	 * @return GD 
+	*/ 
+	
 	function rotate($angle) {
 		if(!$this->gd) return;
 		
@@ -134,6 +142,17 @@ class GD extends Object {
 		return $output;
 	}
 	
+	/**
+	 * Crop's part of image.
+	 * 
+	 * @param top y position of left upper corner of crop rectangle 
+	 * @param left x position of left upper corner of crop rectangle
+	 * @param width rectangle width
+	 * @param height rectangle height
+	 
+	 * @return GD  
+	*/ 
+	
 	function crop($top, $left, $width, $height) {
 		$newGD = imagecreatetruecolor($width, $height);
 		imagecopyresampled($newGD, $this->gd, 0, 0, $left, $top, $width, $height, $width, $height);
@@ -141,6 +160,25 @@ class GD extends Object {
 		$output = new GD();
 		$output->setGD($newGD);
 		return $output;
+	}
+	
+    /**
+	 * Method return width of image.
+	 
+	 * @return integer width.
+	*/ 
+	function getWidth() {
+		return $this->width;
+	}
+	
+	/**
+	 * Method return height of image.
+	 
+	 * @return integer height 
+	*/ 
+	
+	function getHeight() {
+		return $this->height;
 	}
 	
 	/**
