@@ -142,6 +142,7 @@ class EditableRadioField extends EditableFormField {
         $paramMap = $this->parsePrepopulateValue( $value );
         
         // find options and add them
+        $optionNumber = 0;
         foreach( $paramMap['Options'] as $newOption ) {
             if( preg_match( '/([^:]+)[:](.*)/', $newOption, $match ) ) {
                 $newOptionValue = $match[1]; 
@@ -153,7 +154,7 @@ class EditableRadioField extends EditableFormField {
                     'option' . (string)$optionNumber,
                     $newOptionTitle,
                     'new-' . (string)$optionNumber,
-                    $optionData['Sort'],
+                    $newOption['Sort'],
                     $optionNumber == 1,
                     false
                 );
