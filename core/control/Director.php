@@ -336,12 +336,34 @@ class Director {
 	 
 	 
 	static $siteMode;
+	static protected $mode_additions; 
+
+	/** 
+	 * Sets the site mode (if it is the public site or the cms), 
+	 * and runs registered modules. 
+ 	 */ 
 	static function set_site_mode($mode) {
 		Director::$siteMode = $mode;
+		
+		if(isset(self::$mode_additions[$mode])) 
+		foreach(self::$mode_additions[$mode] as $extension) { 
+			call_user_func($extension); 
+		}
 	}
 	static function get_site_mode() {
 		return Director::$siteMode;
 	}
+	
+	/** 
+	 * Allows a module to register with the director to be run once 
+	 * the controller is instantiated.  The optional 'mode' parameter 
+	 * can be either 'site' or 'cms', as those are the two values currently 
+	 * set by controllers.  The callback function will be run at the 
+	 * initialization of the relavant controller. 
+	 */ 
+ 	static function extend_site($function, $mode='site') { 
+		self::$mode_additions[$mode][] = $function; 
+	} 
 	
 	static protected $environment_type;
 	
