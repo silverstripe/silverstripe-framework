@@ -128,12 +128,17 @@ class PDODatabase extends Database {
 		return substr(trim($version), 0, 3); // Just get the major and minor version
 	}
 	
+	/**
+	 * Query the database.
+	 * @var string $sql The query to be issued to the database.
+	 * @return result Return the result of the quers (if any).
+	 */
 	public function query($sql, $errorLevel = E_USER_ERROR) {
 		if(isset($_REQUEST['previewwrite']) && in_array(strtolower(substr($sql,0,6)), array('insert','update'))) {
 			echo "<p>Will execute: $sql</p>";
 			return;
 		}
-			//Debug::backtrace();
+		//Debug::backtrace();
 		if(isset($_REQUEST['showqueries'])) { 
 			Debug::message("\n" . $sql . "\n");
 			$starttime = microtime(true);
@@ -169,6 +174,10 @@ class PDODatabase extends Database {
 		return $handle ? $result : 1;
 	}
 	
+	/**
+	 * Determine if the the table is active.
+	 * @return bool
+	 */
 	public function isActive() {
 		return $this->active ? true : false;
 	}
@@ -206,44 +215,111 @@ class PDODatabase extends Database {
 		if ($fields) {
 			foreach($fields as $k => $v) $fieldSchemas .= "`$k` $v,\n";
 		}
-		if ($indexes) {
-			foreach($indexes as $k => $v) $fieldSchemas .= $this->getIndexSqlDefinition($k, $v) . ",\n";
-		}
 		
 		switch ($parameters['type']) {
-			case "mysql": $create = $dbConn->prepare("CREATE TABLE :tableName (ID INT(11) NOT NULL AUTO_INCREMENT, $fieldSchemas $indexSchemas PRIMARY KEY (ID)) TYPE=MyISAM");
+			case "mysql":
+				$create = $dbConn->prepare("CREATE TABLE :tableName (ID INT(11) NOT NULL AUTO_INCREMENT, $fieldSchemas PRIMARY KEY (ID)) TYPE=MyISAM");
 				break;
-			case "postgresql": $create = $dbConn->prepare("CREATE TABLE :tableName (ID SERIAL, $fieldSchemas $indexSchemas PRIMARY KEY (ID))");
+			case "postgresql":
+				$create = $dbConn->prepare("CREATE TABLE :tableName (ID SERIAL, $fieldSchemas PRIMARY KEY (ID))");
 				break;
-			case "mssql": $create = $dbConn->prepare("CREATE TABLE :tableName (ID INT(11) IDENTITY(1,1), $fieldSchemas $indexSchemas PRIMARY KEY (ID))");
+			case "mssql":
+				$create = $dbConn->prepare("CREATE TABLE :tableName (ID INT(11) IDENTITY(1,1), $fieldSchemas PRIMARY KEY (ID))");
 				break;
 			default:
 				$this->databaseError("This database server is not available");
 		}
 		$create->bindParam(":tableName", $tableName);
 		$create->execute();
+		
+		if ($indexes) {
+			alterTable($tableName, null, $indexes, null, null);
+		}
 	}
 	
+	/**
+	 * Alter fields and indexes in existing table.
+	 * @var string $tableName The name of the table.
+	 * @var string $newFields Fields to add.
+	 * @var string $newIndexes Indexes to add.
+	 * @var string $alteredFields Fields to change.
+	 * @var string $alteredIndexes Indexes to change.
+	 * @return void.
+	 */
 	public function alterTable($table, $newFields, $newIndexes, $alteredFields, $alteredIndexes) {
-		$fieldSchemas = $indexSchemas = "";
 		
 		if ($newFields) {
-			foreach($newFields as $k => $v) $alterList[] .= "ADD `$k` $v";
-		}
-		if ($newIndexes) {
-			foreach($newIndexes as $k => $v) $alterList[] .= "ADD " . $this->getIndexSqlDefinition($k, $v) . ",\n";
-		}
-		if ($alteredFields) {
-			foreach($alteredFields as $k => $v) $alterList[] .= "CHANGE `$k` `$k` $v";
-		}
-		if ($alteredIndexes) foreach($alteredIndexes as $k => $v) {
-			$alterList[] .= "DROP INDEX `$k`";
-			$alterList[] .= "ADD ". $this->getIndexSqlDefinition($k, $v);
+			$add = $dbConn->prepare("ALTER TABLE :table ADD :field :type");
+			$add->bindParam(':table', $table);
+			$add->bindParam(':field', $field);
+			$add->bindParam(':type', $type);
+			foreach ($newFields as $k => $v) {
+				$field = $k;
+				$type = $v;
+				$add->execute();
+			}
 		}
 		
-		$alterations = implode(",\n", $alterList);
-		$this->query("ALTER TABLE `$tableName` " . $alterations);
+		if ($newIndexes) {
+			$add = $dbConn->prepare("CREATE INDEX :name ON :table :column");
+			$add->bindParam(':table', $table);
+			$add->bindParam(':name', $name);
+			$add->bindParam(':column', $column);
+			foreach ($newIndexes as $k => $v) {
+				$name = $k;
+				$column = $v;
+				$add->execute();
+			}
+		}
+		
+		if ($alteredFields) {
+			switch ($parameters['type']) {
+				case "mysql":
+					$alter = $dbConn->prepare("ALTER TABLE :table CHANGE :field :field :type");
+					break;
+				case "postgresql":
+					$alter = $dbConn->prepare("
+						BEGIN;
+						ALTER TABLE :table RENAME :field TO oldfield;
+						ALTER TABLE :table ADD COLUMN :field :type;
+						UPDATE :table SET :field = CAST(oldfield AS :type);
+						ALTER TABLE :table DROP COLUMN oldfield;
+						COMMIT;
+					");
+				break;
+				case "mssql":
+					$this->dbh->query("ALTER TABLE :table ALTER COLUMN :field :type");
+					break;
+				default:
+					$this->databaseError("This database server is not available");
+			}
+			$alter->bindParam(':table', $table);
+			$alter->bindParam(':field', $field);
+			$alter->bindParam(':type', $type);
+			foreach ($alteredFields as $k => $v) {
+				$field = $k;
+				$type = $v;
+				$alter->execute();
+			}
+		}
+		
+		if ($alteredIndexes) {
+			$drop = $dbConn->prepare("DROP INDEX :drop");
+			$alter->bindParam(':drop', $drop);
+			$alter = $dbConn->prepare("CREATE INDEX :name ON :table :column");
+			$alter->bindParam(':table', $table);
+			$alter->bindParam(':name', $name);
+			$alter->bindParam(':column', $column);
+			foreach ($newIndexes as $k => $v) {
+				$drop = $k;
+				$drop->execute();
+				$name = $k;
+				$column = $v;
+				$add->execute();
+			}
+		}
 	}
+	
 	/**
 	 * Rename an existing table, the TO is necessary for PostgreSQL and MS SQL.
 	 * @var string $oldTableName The name of the existing  table.
@@ -259,15 +335,46 @@ class PDODatabase extends Database {
 	}
 	
 	/**
-	 * Checks a table's integrity and repairs it if necessary
+	 * Checks a table's integrity and repairs it if necessary - only available in MySQL, not supported in PostgreSQL and MS SQL.
+	 * @var string $tableName The name of the table.
+	 * @return boolean Return true if the table has integrity after the method is complete.
 	 */
 	public function checkAndRepairTable($tableName) {
+		if ($parameters['type'] == "mysql") {
+			if (!$this->runTableCheckCommand("CHECK TABLE `$tableName`")) {
+				if(!Database::$supressOutput) {
+					echo "<li style=\"color: orange\">Table $tableName: repaired</li>";
+				}
+				return $this->runTableCheckCommand("REPAIR TABLE `$tableName` USE_FRM");
+			} else {
+				return true;
+			}
+		} else {
+			$this->databaseError("Checking and repairing of tables is only supported in MySQL, for other databases please do manual checks");
+			return false;
+		}
 	}
+	
+	/**
+	 * Helper function used by checkAndRepairTable.
+	 * @param string $sql Query to run.
+	 * @return boolean Returns if the query returns a successful result.
+	 */
 	protected function runTableCheckCommand($sql) {
+		foreach($dbConn->query($sql) as $testRecord) {
+			if(strtolower($testRecord['Msg_text']) != 'ok') {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	/**
 	 * Add the given field to the given table.
+	 * @param string $tableName The name of the table on which to create the field.
+	 * @param string $fieldName The field to create.
+	 * @param string $fieldSpec The datatype of the field.
+	 * @return void
 	 */
 	public function createField($tableName, $fieldName, $fieldSpec) {
 		$create = $dbConn->prepare("ALTER TABLE :tableName ADD :fieldName :fieldSpec");
@@ -278,31 +385,103 @@ class PDODatabase extends Database {
 	}
 	
 	/**
-	 * Change the database type of the given field
+	 * Change the database type of the given field.
+	 * @param string $table The table where to change the field.
+	 * @param string $field The field to change.
+	 * @param string $type The new type of the field
+	 * @return void
 	 */
-	public function alterField($tableName, $fieldName, $fieldSpec) {
+	public function alterField($table, $field, $type) {
+		switch ($parameters['type']) {
+			case "mysql":
+				$alter = $dbConn->prepare("ALTER TABLE :table CHANGE :field :field :type");
+				break;
+			case "postgresql":
+				$alter = $dbConn->prepare("
+					BEGIN;
+					ALTER TABLE :table RENAME :field TO oldfield;
+					ALTER TABLE :table ADD COLUMN :field :type;
+					UPDATE :table SET :field = CAST(oldfield AS :type);
+					ALTER TABLE :table DROP COLUMN oldfield;
+					COMMIT;
+				");
+			break;
+			case "mssql":
+				$this->dbh->query("ALTER TABLE :table ALTER COLUMN :field :type");
+				break;
+			default:
+				$this->databaseError("This database server is not available");
+		}
+		$alter->bindParam(':table', $table);
+		$alter->bindParam(':field', $field);
+		$alter->bindParam(':type', $type);
+		$alter->execute();
+	}
+	
+	/**
+	 * Create an index on a table.
+	 * @param string $tableName The name of the table.
+	 * @param string $indexName The name of the index.
+	 * @param string $indexSpec The specification of the index, see Database::requireIndex() for more details.
+	*  @return void
+	 */
+	public function createIndex($tableName, $indexName, $indexSpec) {
+		$add = $dbConn->prepare("CREATE INDEX :name ON :table :column");
+		$add->bindParam(':table', $tableName);
+		$add->bindParam(':name', $indexName);
+		$add->bindParam(':column', $indexSpec);
+		$add->execute();
+	}
+	
+	/**
+	 * Alter an index on a table.
+	 * @param string $tableName The name of the table.
+	 * @param string $indexName The name of the index.
+	 * @param string $indexSpec The specification of the index, see Database::requireIndex() for more details.
+	*  @return void
+	 */
+	public function alterIndex($tableName, $indexName, $indexSpec) {
+		$drop = $dbConn->prepare("DROP INDEX :drop");
+		$alter->bindParam(':drop', $indexName);
+		$alter = $dbConn->prepare("CREATE INDEX :name ON :table :column");
+		$alter->bindParam(':table', $tableName);
+		$alter->bindParam(':name', $indexName);
+		$alter->bindParam(':column', $indexSpec);
+		$drop->execute();
+		$add->execute();
 	}
 	
 	/**
 	 * Get a list of all the fields for the given table.
-	 * Returns a map of field name => field spec
+	 * @param string $able Table of which to show the fields.
+	 * Returns a map of field name => field spec.
 	 */
 	public function fieldList($table) {
+	
+	// to be done - SHOW is used extensively but very MySQL specific
+	
 	}
-
-	public function createIndex($tableName, $indexName, $indexSpec) {
-	}
-	public function alterIndex($tableName, $indexName, $indexSpec) {
-	}
+	
+	/**
+	 * Get a list of all the indexes for the given table.
+	 * @param string $able Table of which to show the indexes.
+	 * Returns a map of indexes.
+	 */
 	public function indexList($table) {
+	
+	// to be done - SHOW is used extensively but very MySQL specific
+	
 	}
-
-
+	
 	/**
 	 * Returns a list of all the tables in the column.
-	 * Table names will all be in lowercase
+	 * Table names will all be in lowercase.
+	 * Returns a map of a table.
 	 */
 	public function tableList() {
+	
+	// to be done - SHOW is used extensively but very MySQL specific
+	
 	}
 	
 	/**
