@@ -78,14 +78,16 @@ class MemberLoginForm extends Form {
 
 			if($backURL = $_REQUEST['BackURL']) {
 				Session::clear("BackURL");
+				Session::clear('SessionForms.MemberLoginForm.Email');
 				Director::redirect($backURL);
-			}else
+			} else
 				Director::redirectBack();
-		}else{
 
+		} else {
+			Session::set('SessionForms.MemberLoginForm.Email', $data['Email']);
 			if($badLoginURL = Session::get("BadLoginURL")){
 				Director::redirect($badLoginURL);
-			}else{
+			} else {
 				Director::redirectBack();
 			}
 		}
