@@ -77,6 +77,8 @@ class EditableTextField extends EditableFormField {
 		$disabled = '';
 		if( $this->readonly ){
 			$disabled = " disabled=\"disabled\"";
+		} else {
+			$disabled = '';
 		}
 		if( $this->Rows == 1 ){
 			return '<div class="field text"><label class="left">Default Text </label> <input class="defaultText" name="Fields['.Convert::raw2att( $this->ID ).'][Default]" type="text" value="'.Convert::raw2att( $this->getField('Default') ).'"'.$disabled.' /></div>';

@@ -72,8 +72,11 @@
   	function DefaultSelect() {
   		$disabled = ($this->readonly) ? " disabled=\"disabled\"" : '';
   			
-  		if($this->Parent()->getField('Default') == $this->ID)
+  		if($this->Parent()->getField('Default') == $this->ID) {
   			$default = " checked=\"checked\"";
+		} else {
+			$default = '';
+		}
   		
   		return "<input class=\"radio\" type=\"radio\" name=\"Fields[{$this->ParentID}][Default]\" value=\"{$this->ID}\"".$disabled.$default." />";
   	}

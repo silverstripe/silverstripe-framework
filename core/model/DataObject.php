@@ -643,6 +643,7 @@ class DataObject extends Controller {
 	public function getComponents($componentName, $filter = "", $sort = "", $join = "", $limit = "", $having = "") {
     	// TODO Does not take different SQL-parameters into account on subsequent calls
     	if(isset($this->componentCache[$componentName])) {
+    	if(isset($this->componentCache[$componentName]) && false != $this->componentCache[$componentName]) {
 	    	return $this->componentCache[$componentName];
     	}
 
@@ -701,6 +702,7 @@ class DataObject extends Controller {
 		foreach($allClasses as $class) {
 			// if this class does a "has-one"-representation, use it
 			if(isset($reversedComponentRelations[$class])) {
+			if(isset($reversedComponentRelations[$class]) && false != $reversedComponentRelations[$class]) {
 				$joinField = $reversedComponentRelations[$class] . 'ID';
 				break;
 			}
@@ -867,6 +869,7 @@ class DataObject extends Controller {
 
 			if($component) {
 				$candidate = eval("return isset({$class}::\$has_many[\$component]) ? {$class}::\$has_many[\$component] : null;");
+				$candidate = eval("if ( isset({$class}::\$has_many[\$component]) ) { return {$class}::\$has_many[\$component]; } else { return false; }");
 				if($candidate) {
 					return $candidate;
 				}

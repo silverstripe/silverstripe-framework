@@ -65,8 +65,11 @@ class EditableFormField extends DataObject {
 		$titleAttr = Convert::raw2att($this->Title);
 		$readOnlyAttr = '';
 		
-		if( $this->readonly )
+		if( $this->readonly ) {
 			$readOnlyAttr = ' disabled="disabled"';
+		} else {
+			$readOnlyAttr = '';
+		}
 		
 		return "<input type=\"text\" class=\"text\" title=\"(Enter Question)\" value=\"$titleAttr\" name=\"Fields[{$this->ID}][Title]\"$readOnlyAttr />";
 	}
@@ -158,7 +161,7 @@ class EditableFormField extends DataObject {
         foreach( $paramList as $param ) {
     
             if( preg_match( '/([^=]+)=(.+)/', $param, $match ) ) {
-                if( is_array( $paramMap[$match[1]] ) ) {
+                if( isset( $paramMap[$match[1]] ) && is_array( $paramMap[$match[1]] ) ) {
                     $paramMap[$match[1]][] = $match[2];
                 } else if( isset( $paramMap[$match[1]] ) ) {
                     $paramMap[$match[1]] = array( $paramMap[$match[1]] );
