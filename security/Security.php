@@ -164,7 +164,12 @@ class Security extends Controller {
 		Requirements::javascript("jsparty/prototype_improvements.js");
 		Requirements::javascript("jsparty/scriptaculous/effects.js");
 
-		$tmpPage = DataObject::get_one('Page', "URLSegment = 'home'"); 
+		$customCSS = project() . '/css/tabs.css';
+		if(Director::fileExists($customCSS)) {
+			Requirements::css($customCSS);
+		}
+
+		$tmpPage = new Page();
 		$tmpPage->Title = "Log in";
 		$tmpPage->URLSegment = "Security";
 

@@ -55,6 +55,16 @@ class MemberAuthenticator extends Authenticator {
   public static function getLoginForm(Controller $controller) {
     return Object::create("MemberLoginForm", $controller, "LoginForm");
   }
+
+
+  /**
+   * Get the name of the authentication method
+   *
+   * @return string Returns the name of the authentication method.
+   */
+  public static function getName() {
+		return "Default login method";
+	}
 }
 
 ?>

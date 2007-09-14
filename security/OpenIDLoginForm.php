@@ -13,7 +13,7 @@
  *
  * @author Markus Lanthaler <markus@silverstripe.com>
  */
-class OpenIDLoginForm extends Form {
+class OpenIDLoginForm extends LoginForm {
 
 	/**
 	 * Constructor
@@ -54,9 +54,9 @@ class OpenIDLoginForm extends Form {
         $fields = new FieldSet(
           new HiddenField("AuthenticationMethod", null, "OpenID"),
           new TextField("OpenIDURL", "OpenID URL",
-						Session::get('SessionForms.OpenIDLoginForm.OpenIDURL')),
+						Session::get('SessionForms.OpenIDLoginForm.OpenIDURL'), null, $this),
           new CheckboxField("Remember", "Remember me next time?",
-						Session::get('SessionForms.OpenIDLoginForm.Remember'))
+						Session::get('SessionForms.OpenIDLoginForm.Remember'), $this)
         );
       }
       if(!$actions) {
@@ -124,6 +124,20 @@ class OpenIDLoginForm extends Form {
     $s = new Security();
     $s->logout();
   }
+
+
+	/**
+   * Get the authenticator class
+   *
+   * <strong>Attention: This method will return the class and not an
+   * instance of the authenticator class!</strong>
+   *
+   * @return Authenticator Returns the authenticator class for this login
+   *                       form.
+   */
+  public static function getAuthenticator() {
+		return new OpenIDAuthenticator;
+	}
 }
 
 

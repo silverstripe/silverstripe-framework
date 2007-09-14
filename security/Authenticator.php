@@ -40,6 +40,14 @@ abstract class Authenticator extends Object
    *              method
    */
   public abstract static function getLoginForm(Controller $controller);
+
+
+  /**
+   * Get the name of the authentication method
+   *
+   * @return string Returns the name of the authentication method.
+   */
+  public abstract static function getName();
 }
 
 ?>

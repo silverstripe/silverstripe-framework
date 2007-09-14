@@ -147,6 +147,16 @@ class OpenIDAuthenticator extends Authenticator {
 	public static function getLoginForm(Controller $controller) {
 		return Object::create("OpenIDLoginForm", $controller, "LoginForm");
 	}
+
+
+  /**
+   * Get the name of the authentication method
+   *
+   * @return string Returns the name of the authentication method.
+   */
+  public static function getName() {
+		return "OpenID/i-name";
+	}
 }
 
 

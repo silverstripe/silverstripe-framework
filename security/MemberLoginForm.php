@@ -9,7 +9,7 @@
 /**
  * Log-in form for the "member" authentication method
  */
-class MemberLoginForm extends Form {
+class MemberLoginForm extends LoginForm {
 
 	/**
 	 * Constructor
@@ -49,12 +49,12 @@ class MemberLoginForm extends Form {
 		} else {
 			if(!$fields) {
 				$fields = new FieldSet(
-					new HiddenField("AuthenticationMethod", null, "Member"),
+					new HiddenField("AuthenticationMethod", null, "Member", $this),
 					new TextField("Email", "Email address",
-						Session::get('SessionForms.MemberLoginForm.Email')),
-					new EncryptField("Password", "Password"),
+						Session::get('SessionForms.MemberLoginForm.Email'), null, $this),
+					new EncryptField("Password", "Password", null, $this),
 					new CheckboxField("Remember", "Remember me next time?",
-						Session::get('SessionForms.MemberLoginForm.Remember'))
+						Session::get('SessionForms.MemberLoginForm.Remember'), $this)
 				);
 			}
 			if(!$actions) {
@@ -183,6 +183,17 @@ class MemberLoginForm extends Form {
 			Director::redirect("Security/lostpassword");
 
 		}
+	}
+
+
+	/**
+   * Get the authenticator class
+   *
+   * @return Authenticator Returns the authenticator class for this login
+   *                       form.
+   */
+  public static function getAuthenticator() {
+		return new MemberAuthenticator;
 	}
 }
 
