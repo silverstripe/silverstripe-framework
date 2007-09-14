@@ -99,7 +99,7 @@ class MySQLDatabase extends Database {
 		return new MySQLQuery($this, $handle);
 	}
 	
-	public function getGeneratedID() {
+	public function getGeneratedID($table) {
 		return mysql_insert_id($this->dbConn);
 	}
 	
