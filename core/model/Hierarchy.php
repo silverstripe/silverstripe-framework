@@ -121,9 +121,8 @@ class Hierarchy extends DataObjectDecorator {
 			return true;
 		}
 
-		if(isset($this->markingFilter['parameter'])) {
-			$parameterName = $this->markingFilter['parameter'];
-			if(is_array($this->markingFilter['value'])) {
+		if(isset($this->markingFilter['parameter']) && $parameterName = $this->markingFilter['parameter']) {
+			if(is_array($this->markingFilter['value'])){
 				$ret = false;
 				foreach($this->markingFilter['value'] as $value) {
 					$ret = $ret||$node->$parameterName==$value;
