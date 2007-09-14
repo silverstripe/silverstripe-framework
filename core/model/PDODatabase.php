@@ -36,6 +36,12 @@ class PDODatabase extends Database {
 	private $stmt;
 
 	/**
+	 * Parameters used for creating a connection
+	 * @var array
+	 */
+	private $param;
+
+	/**
 	 * Connect to a database (MySQL, PostgreSQL, or MS SQL).
 	 * @param parameters An map of parameters, which should include:
 	 * <ul><li>database: The database to connect with</li>
@@ -47,6 +53,7 @@ class PDODatabase extends Database {
 	 * <li>database: The database to connect to</li></ul>
 	 */
 	public function __construct($parameters) {
+		$this->param = $parameters;
 		$connect = self::getConnect($parameters);
 		$connectWithDB = $connect . ';dbname=' . $parameters['database'];
 		try { // Try connect to the database, if it does not exist, create it
@@ -235,6 +242,41 @@ class PDODatabase extends Database {
 		}
 		return true;
 	}
+
+	/**
+	 * Returns true if the named database exists.
+	 */
+	public function databaseExists($name) {
+		$SQL_name = Convert::raw2sql($name);
+		$connect = self::getConnect($this->param);
+		$connectWithDB = $connect . ';dbname=' . $SQL_name;
+		try { // Try connect to the database
+			$testConn = new PDO($connectWithDB, $this->param['username'], $this->param['password']);
+		} catch (PDOException $e) {
+			return false;
+		}
+		return true;
+	}
+
+	/**
+	 * Switches to the given database.
+	 * Simply switching database in PDO is not possible, you need to create a new PDO object
+	 */
+	public function selectDatabase($dbname) {
+		$this->dbConn = null; // Remove the old connection
+		$connect = self::getConnect($param);
+		$connectWithDB = $connect . ';dbname=' . $dbname;
+		try { // Try connect to the database, if it does not exist, create it
+			$this->dbConn = new PDO($connectWithDB, $param['username'], $param['password']);
+		} catch (PDOException $e) {
+			if (!self::createDatabase($connect, $param['username'], $param['password'], $dbname)) {
+				$this->databaseError("Could not connect to the database, make sure the server is available and user credentials are correct");
+			} else {
+				$this->dbConn = new PDO($connectWithDB, $param['username'], $param['password']); // After creating the database, connect to it
+			}
+		}
+	}
+
 	/**
 	 * Create a new table with an integer primary key called ID.
 	 * @var string $tableName The name of the table.
