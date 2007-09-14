@@ -89,7 +89,7 @@ abstract class DBField extends ViewableData {
 	<li><b>Name:</b>{$this->name}</li>
 	<li><b>Table:</b>{$this->tableName}</li>
 	<li><b>Value:</b>{$this->value}</li>
-</ul>		
+</ul>
 DBG;
 	}
 }
