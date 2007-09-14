@@ -61,7 +61,8 @@ class Security extends Controller {
 										? $messageSet['alreadyLoggedIn']
 										: $messageSet['default'];
 
-			Member::logout();
+			if($member = Member::currentUser())
+				$member->logout();
 
 		} else if(substr(Director::history(),0,15) == 'Security/logout') {
 			$message = $messageSet['logInAgain']
