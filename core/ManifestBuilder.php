@@ -18,6 +18,30 @@ class ManifestBuilder {
 	static $restrict_to_modules = array();
 	
 	/**
+	 * @var array $ignore_files Full filenames (without directory-path) which
+	 * should be ignored by the manifest.
+	 */
+	public static $ignore_files = array(
+		'main.php',
+		'cli-script.php',
+		'install.php',
+		'index.php',
+		'check-php.php',
+		'rewritetest.php'
+	);
+
+	/**
+	 * @var array $ignore_folders Foldernames (without path) which
+	 * should be ignored by the manifest.
+	 */
+	public static $ignore_folders = array(
+		'mysql', 
+		'assets', 
+		'shortstat', 
+		'pear',
+	);
+	
+	/**
 	 * Returns true if the manifest file should be regenerated
 	 */
 	static function staleManifest() {
@@ -146,13 +170,45 @@ class ManifestBuilder {
 	private static function getClassManifest($folder, &$classMap) {
 		$items = scandir($folder);
 		if($items) foreach($items as $item) {
-			if($item == 'main.php' || $item == 'cli-script.php' || $item == 'install.php' || $item == 'index.php' || $item == 'check-php.php' || $item == 'rewritetest.php') continue;
+			// ignore files such as index.php
+			if(in_array($item, self::$ignore_files)) continue;
+			
+			// ignore hidden files and folders
 			if(substr($item,0,1) == '.') continue;
-			if(substr($item,-4) == '.php' && substr($item,0,1) != '_') {
+			
+			// ignore files without php-extension
+			if(substr($item,-4) != '.php' && !is_dir("$folder/$item")) continue;
+			
+			// ignore files and folders with underscore-prefix
+			if(substr($item,0,1) == '_') continue;
+			 
+			// ignore certain directories 
+			if(is_dir("$folder/$item") && in_array($item, self::$ignore_folders)) continue;
+			 
+			if(is_dir("$folder/$item")) {
+				// recurse into directories	(if not in $ignore_folders)		
+				ManifestBuilder::getClassManifest("$folder/$item", $classMap);
+			} else {
+				// include item in the manifest
 				$itemCode = substr($item,0,-4);
-				if($classMap && array_key_exists($itemCode, $classMap)) user_error("Warning: there are two '$itemCode' files: '$folder/$item' and '{$classMap[$itemCode]}'.  This might mean that the wrong code is being used.", E_USER_WARNING);
-				$classMap[$itemCode] = "$folder/$item";
-			} else if(is_dir("$folder/$item") && !in_array($item, array('mysql', 'assets', 'shortstat', 'pear'))) ManifestBuilder::getClassManifest("$folder/$item", $classMap);
+				// if $itemCode is already in manifest, check if the two files do really contain the same class
+				if($classMap && array_key_exists($itemCode, $classMap)) {
+					$regex = '/class\s' . $itemCode .'/';
+					if(
+						preg_match($regex, file_get_contents("$folder/$item")) 
+						&& preg_match($regex,  file_get_contents($classMap[$itemCode]))
+					) {
+						user_error("Warning: there are two '$itemCode' files both containing the same class: '$folder/$item' and '{$classMap[$itemCode]}'.  
+							This might mean that the wrong code is being used.", E_USER_WARNING);
+					} else {
+						user_error("Warning: there are two '$itemCode' files with the same filename: '$folder/$item' and '{$classMap[$itemCode]}'.  
+							This might mean that the wrong code is being used.", E_USER_WARNING);
+					}
+				} else {
+					$classMap[$itemCode] = "$folder/$item";
+				}
+			}
+
 		}
 	}
 	
