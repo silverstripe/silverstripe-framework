@@ -135,12 +135,58 @@ class GD extends Object {
 	function rotate($angle) {
 		if(!$this->gd) return;
 		
-		$newGD = imagerotate($this->gd, $angle,0);
-		
+        if(function_exists("imagerotate")) {
+		    $newGD = imagerotate($this->gd, $angle,0);
+		} else {
+		    //imagerotate is not included in PHP included in Ubuntu
+			$newGD = $this->rotatePixelByPixel($angle);	
+		}
 		$output = new GD();
 		$output->setGD($newGD);
 		return $output;
 	}
+	
+	/**
+     * Rotates image by given angle. It's slow because makes it pixel by pixel rather than
+     * using built-in function. Used when imagerotate function is not available(i.e. Ubuntu)
+     * 
+     * @param angle 
+     
+     * @return GD 
+    */ 
+	
+    function rotatePixelByPixel($angle) {
+        $sourceWidth = imagesx($this->gd);
+        $sourceHeight = imagesy($this->gd);
+        if ($angle == 180) {
+            $destWidth = $sourceWidth;
+            $destHeight = $sourceHeight;
+        } else {
+            $destWidth = $sourceHeight;
+            $destHeight = $sourceWidth;
+        }
+        $rotate=imagecreatetruecolor($destWidth,$destHeight);
+        imagealphablending($rotate, false);
+        for ($x = 0; $x < ($sourceWidth); $x++) {
+            for ($y = 0; $y < ($sourceHeight); $y++) {
+                $color = imagecolorat($this->gd, $x, $y);
+                switch ($angle) {
+                    case 90:
+                        imagesetpixel($rotate, $y, $destHeight - $x - 1, $color);
+                    break;
+                    case 180:
+                        imagesetpixel($rotate, $destWidth - $x - 1, $destHeight - $y - 1, $color);
+                    break;
+                    case 270:                    
+                        imagesetpixel($rotate, $destWidth - $y - 1, $x, $color);
+                    break;
+                    default: $rotate = $this->gd;
+                };
+            }
+        }
+        return $rotate;
+    }
+	
 	
 	/**
 	 * Crop's part of image.
