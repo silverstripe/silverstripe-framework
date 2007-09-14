@@ -159,6 +159,7 @@ class ComponentSet extends DataObjectSet {
 	 * @param array $idList List of IDs.
 	 */
 	function setByIDList($idList) {
+		$has = array();
 		// Index current data
 		if($this->items) {
 			foreach( $this->items as $item )
