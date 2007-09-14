@@ -567,7 +567,7 @@ class Form extends ViewableData {
 		if(isset($tableFieldName) && isset($subFieldName) && is_a($fields[$tableFieldName], 'TableField')) {
 			$field = $fields[$tableFieldName]->getField($subFieldName, $fieldName);
 			return $field->$methodName(); 
-		} else if($fields[$fieldName]) {
+		} else if(isset($fields[$fieldName])) {
 			return $fields[$fieldName]->$methodName();
 		} else {
 			user_error("Form::callfieldmethod() Field '$fieldName' not found", E_USER_ERROR);

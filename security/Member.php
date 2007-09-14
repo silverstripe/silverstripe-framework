@@ -290,7 +290,7 @@ class Member extends DataObject {
 
 		$table = "Group_Members";
 
-		if($collatedGroups) {
+		if(isset($collatedGroups)) {
 			$collatedGroups = implode(", ", array_unique($collatedGroups));
 
 			$result = singleton('Group')->instance_get("`ID` IN ($collatedGroups)", "ID", "", "", "Member_GroupSet");
