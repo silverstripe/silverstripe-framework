@@ -61,7 +61,7 @@ class HtmlEditorField extends TextareaField {
 		// We can't use htmlentities as that messes with unicode
 		$cleanVal = str_replace(array("&","<",">"),array("&amp;","&lt;","&gt;"),$cleanVal);
 		// 97% instead of 100% to prevent horizontal scrollbars in IE7
-		$style = "width: 97%; padding:0; margin:0; height: " . ($this->rows * 16) . "px";		
+		$style = "width: 97%; height: " . ($this->rows * 16) . "px";		
 		
 		$class = "htmleditor";
 		$class = ($this->extraClass)?$class." ".$this->extraClass:$class;
