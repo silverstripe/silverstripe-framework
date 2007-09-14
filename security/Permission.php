@@ -3,7 +3,7 @@
 class Permission extends DataObject {
 	static $db = array(
 		"Code" => "Varchar",
-		"Arg" => "Int",	
+		"Arg" => "Int",
 	);
 	static $has_one = array(
 		"Group" => "Group",
@@ -11,7 +11,7 @@ class Permission extends DataObject {
 	static $indexes = array(
 		"Code" => true,
 	);
-	
+
 	/**
 	 * @var $strict_checking Boolean Method to globally disable "strict" checking,
 	 * which means a permission will be granted if the key does not exist at all.
@@ -34,10 +34,10 @@ class Permission extends DataObject {
 			}
 			$memberID = Member::currentUserID();
 		}
-		
+
 		return self::checkMember($memberID, $code, $arg);
 	}
-	
+
 	/**
 	 * Check that the given member has the given permission
 	 * 
@@ -52,11 +52,12 @@ class Permission extends DataObject {
 		$groupList = self::groupList($memberID);
 		if($groupList) {
 			$groupCSV = implode(", ", $groupList);
+
 			// Arg component
 			switch($arg) {
 				case "any": $argClause = "";break;
 				case "all": $argClause = " AND Arg = -1"; break;
-				default: 
+				default:
 					if(is_numeric($arg)) $argClause = "AND Arg IN (-1, $arg) ";
 					else use_error("Permission::checkMember: bad arg '$arg'", E_USER_ERROR);
 			}
@@ -77,8 +78,8 @@ class Permission extends DataObject {
 			return DB::query("SELECT ID FROM Permission WHERE Code IN ($SQL_codeList, 'ADMIN') AND GroupID IN ($groupCSV) $argClause")->value();
 		}
 	}
-	
-	
+
+
 	/**
 	 * Get the list of groups that the given member belongs to.
 	 * Call without an argument to get the groups that the current member belongs to.  In this case, the results will be session-cached
@@ -91,7 +92,7 @@ class Permission extends DataObject {
 		} else {
 			$member = DataObject::get_by_id("Member", $memberID);
 		}
-		
+
 		if($member) {
 			// Build a list of the IDs of the groups.  Most of the heavy lifting is done by Member::Groups
 			// NOTE: This isn't effecient; but it's called once per session so it's a low priority to fix.
@@ -128,17 +129,17 @@ class Permission extends DataObject {
 		$perm->write();
 		return $perm;
 	}
-	
+
 	function requireDefaultRecords() {
 		parent::requireDefaultRecords();
-		
+
 		// Add default content if blank
 		if(!DB::query("SELECT ID FROM Permission")->value()) {
 			$admins = DB::query("SELECT ID FROM `Group` WHERE CanCMSAdmin = 1")->column();
 			if(isset($admins)) {
 				foreach($admins as $admin) Permission::grant($admin, "ADMIN");
 			}
-			
+
 			$authors = DB::query("SELECT ID FROM `Group` WHERE CanCMS = 1")->column();
 			if(isset($authors)) {
 				foreach($authors as $author) {
@@ -148,10 +149,10 @@ class Permission extends DataObject {
 					Permission::grant($author, "CMS_ACCESS_ReportAdmin");
 				}
 			}
-			
+
 		}
 	}
-	
+
 	/**
 	 * Returns all members for a specific permission.
 	 * 
