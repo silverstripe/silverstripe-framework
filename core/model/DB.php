@@ -47,8 +47,10 @@ class DB {
 	 * @param array $database A map of options. The 'type' is the name of the subclass of Database to use. For the rest of the options, see the specific class.
 	 */
 	static function connect($databaseConfig) {
-		if(!$databaseConfig['type']) user_error("DB::connect: Not passed a valid database config", E_USER_ERROR);
-		if ($databaseConfig['pdo']) { // TODO:pkrenn_remove
+		if(!isset($databaseConfig['type']) || empty($databaseConfig['type'])) {
+			user_error("DB::connect: Not passed a valid database config", E_USER_ERROR);
+		}
+		if (isset($databaseConfig['pdo']) && $databaseConfig['pdo']) { // TODO:pkrenn_remove
 			$conn = new PDODatabase($databaseConfig);
 		} else { // TODO:pkrenn_remove begin
 			$dbClass = $databaseConfig['type'];
