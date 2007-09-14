@@ -106,6 +106,7 @@ class Folder extends File {
 				if($actualChild[0] == '.') continue; // ignore hidden files
 				if(substr($actualChild,0,6) == 'Thumbs') continue; // ignore windows cache stuff
 				if($actualChild == '_resampled') continue; // ignore the resampled copies of images
+                if($actualChild == '_tmp') continue; // ignore tmp folder for PhotoEditor.
 				
 				
 				// A record with a bad class type doesn't deserve to exist. It must be purged!
