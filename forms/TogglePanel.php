@@ -3,8 +3,9 @@
 class TogglePanel extends CompositeField {
 	protected $closed = false;
 	
-	function __construct($title, $children) {
+	function __construct($title, $children, $startClosed = false) {
 		$this->title = $title;
+		$this->closed = $startClosed;
 		$this->name = ereg_replace('[^A-Za-z0-9]','',$this->title);
 		parent::__construct($children);
 	}

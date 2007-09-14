@@ -15,7 +15,7 @@ class PasswordField extends FormField {
 	 
 	function Field() {
 		if($this->maxLength){
-			return "<input class=\"text\" type=\"password\" id=\"" . $this->id() . "\" name=\"{$this->name}\" value=\"" . $this->attrValue() . "\" maxlength=\"$this->maxLength\" />";
+			return "<input class=\"text\" type=\"password\" id=\"" . $this->id() . "\" name=\"{$this->name}\" value=\"" . $this->attrValue() . "\" maxlength=\"$this->maxLength\" size=\"$this->maxLength\"/>";
 		}else{
 			return "<input class=\"text\" type=\"password\" id=\"" . $this->id() . "\" name=\"{$this->name}\" value=\"" . $this->attrValue() . "\" />"; 
 		}

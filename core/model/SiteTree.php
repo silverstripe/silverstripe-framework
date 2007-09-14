@@ -387,6 +387,9 @@ class SiteTree extends DataObject {
 		if($this->MetaDescription) {
 			$tags .= "<meta name=\"description\" http-equiv=\"description\" content=\"" . Convert::raw2att($this->MetaDescription) . "\" />\n";
 		}
+		if($this->ExtraMeta) { 
+			$tags .= $this->ExtraMeta . "\n";
+		} 
 
 		return $tags;
 	}
@@ -672,8 +675,12 @@ class SiteTree extends DataObject {
 						new TextField("MetaTitle", "Title"),
 						new TextareaField("MetaDescription", "Description"),
 						new TextareaField("MetaKeywords", "Keywords"),
-						new LiteralField("", "<p>Manually specify a Priority for this page:: (valid values are from 0 to 1)</p>"),
-						new NumericField("Priority","Page Priority")
+						new TogglePanel("Advanced Options...",array( 
+							new TextareaField("ExtraMeta","Custom Meta Tags"), 
+							new LiteralField("", "<p>Manually specify a Priority for this page: (valid values are from 0 to 1, a zero will remove this page from the index)</p>"), 
+							new NumericField("Priority","Page Priority")), 
+ 							true 
+						) 
 					)
 				),
 				new Tab("Behaviour",
@@ -979,6 +986,7 @@ class SiteTree extends DataObject {
 		"MetaTitle" => "Varchar(255)",
 		"MetaDescription" => "Varchar(255)",
 		"MetaKeywords" => "Varchar(255)",
+		"ExtraMeta" => "HTMLText", 
 		"ShowInMenus" => "Boolean",
 		"ShowInSearch" => "Boolean",
 		"HomepageForDomain" => "Varchar(100)",

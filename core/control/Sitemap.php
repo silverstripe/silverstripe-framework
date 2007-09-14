@@ -16,6 +16,12 @@ class Sitemap extends Controller {
 	{
 		foreach($this->Pages as $page)
 		{
+			// If the page has been set to 0 priority, we set a flag so it won't be included
+			if(isset($page->Priority) && $page->Priority <= 0)
+				$page->Include = false;
+			else
+				$page->Include = true;
+			
 			// The one field that isn't easy to deal with in the template is
 			// Change frequency, so we set that here.
 			$properties = $page->toMap();
@@ -59,6 +65,10 @@ class Sitemap extends Controller {
 	
 	static function Ping()
 	{
+		//Don't ping if the site has disabled it
+		if(!Sitemap::$pings)
+			return;
+			
 		$location = urlencode(Director::absoluteBaseURL() . '/sitemap.xml');
 		
 		$response = HTTP::sendRequest("www.google.com", "/webmasters/sitemaps/ping",
@@ -66,6 +76,19 @@ class Sitemap extends Controller {
 			
 		return $response;
 	}
+	
+	protected static $pings = true;
+	
+	/**
+	 * Disables pings to google when the sitemap changes
+	 * To use this, in your _config.php file simply include the line
+	 * Sitemap::DisableGoogleNotification();
+	 */
+	static function DisableGoogleNotification()
+	{
+		self::$pings = false;
+	}
+	
 	
 	function index($url)
 	{

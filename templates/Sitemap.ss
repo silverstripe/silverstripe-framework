@@ -3,11 +3,13 @@
 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 xsi:schemaLocation="http://www.google.com/schemas/sitemap/0.84">
 	<% control Items %>
+	<% if Include %>
 	<url>
 		<loc>$AbsoluteLink</loc>
 		<lastmod>$LastEdited.Format(c)</lastmod>
 		<% if ChangeFreq %><changefreq>$ChangeFreq</changefreq><% end_if %>
 		<% if Priority %><priority>$Priority</priority><% end_if %>
 	</url>
+	<% end_if %>
 	<% end_control %>
 </urlset>
