@@ -12,7 +12,7 @@
 		</div>
 		<% end_if %>
 		
-		<div class="mainblock" style="width: 240px;">
+		<div class="mainblock" style="width: 290px;">
 			<% if UseSimpleForm %>
 			$EditImageSimpleForm
 			<% else %>
