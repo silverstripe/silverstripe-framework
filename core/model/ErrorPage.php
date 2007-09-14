@@ -9,9 +9,11 @@
  * ErrorPage holds the content for the page of an error response.
  */
 class ErrorPage extends Page {
+
 	static $db = array(
 		"ErrorCode" => "Int",
 	);
+
 	static $defaults = array(
 		"ShowInMenus" => 0,
 	);
@@ -37,7 +39,8 @@ class ErrorPage extends Page {
 			Database::alteration_message("404 page created","created");
 		}
 	}
-	
+
+
 	function getCMSFields() {
 		$fields = parent::getCMSFields();
 		
@@ -99,7 +102,8 @@ class ErrorPage extends Page {
  * Controller for ErrorPages.
  */
 class ErrorPage_Controller extends Page_Controller {
-	
+
 }
+
 
 ?>
