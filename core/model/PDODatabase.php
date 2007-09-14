@@ -441,58 +441,63 @@ class PDODatabase extends Database {
 			case "pgsql":
 				foreach ($dbh->query("
 					SELECT
-						a.attname AS field,
-						pg_catalog.format_type(a.atttypid, a.atttypmod) AS type,
-						a.attnotnull AS null
+						column_name AS cname,
+						column_default AS cdefault,
+						is_nullable AS nullable,
+						data_type AS dtype,
+						character_maximum_length AS maxlength
 					FROM
-						pg_class c,
-						pg_attribute a,
-						pg_type t
+						information_schema.columns
 					WHERE
-						c.relname = $table
-						AND a.attnum > 0
-						AND a.attrelid = c.oid
-						AND a.atttypid = t.oid
-						AND (NOT A.attisdropped)
-					ORDER BY
-						a.attnum
+						table_name = $table
 				") as $field) {
-					$fieldSpec = $field['type'];
-					if ($field['null'] == 't') {
+					if ($field['maxlength']) {
+						$fieldSpec = $field['dtype'] . "(" . $field['maxlength'] . ")";
+					} else {
+						$fieldSpec = $field['dtype'];
+					}
+					if ($field['nullable'] == 'NO') {
 						$fieldSpec .= ' not null';
 					}
-					
-					$fieldList[$field['field']] = $fieldSpec;
+					if($field['cdefault'] || $field['cdefault'] === "0") {
+						$fieldSpec .= " default '" . addslashes($field['cdefault']) . "'";
+					}
+					$fieldList[$field['cname']] = $fieldSpec;
 				}
 				break;
 			case "mssql":
 				foreach ($dbh->query("
 					SELECT
-						COLUMN_NAME as 'field',
-						COLUMN_DEFAULT as 'default',
-						IS_NULLABLE as 'null',
-						DATA_TYPE as 'type',
-						COLLATION_NAME as 'collation',
-						CHARACTER_SET_NAME as 'characterset'
+						COLUMN_NAME AS 'cname',
+						COLUMN_DEFAULT AS 'cdefault',
+						IS_NULLABLE AS 'nullable',
+						DATA_TYPE AS 'dtype',
+						COLLATION_NAME AS 'collname',
+						CHARACTER_SET_NAME AS 'cset',
+						CHARACTER_MAXIMUM_LENGTH AS 'maxlength'
 					FROM
 						information_schema.columns
 					WHERE
-						TABLE_NAME = 'tableb'
+						TABLE_NAME = '$table'
 				") as $field) {
-					$fieldSpec = $field['type'];
-					if ($field['null'] == 't') {
+					if ($field['maxlength']) {
+						$fieldSpec = $field['dtype'] . "(" . $field['maxlength'] . ")";
+					} else {
+						$fieldSpec = $field['dtype'];
+					}
+					if ($field['nullable'] == 'NO') {
 						$fieldSpec .= ' not null';
 					}
 					
-					if($field['collation'] && $field['collation'] != 'NULL') {
-						$fieldSpec .= " character set $field[characterset] collate $field[collation]";
+					if($field['collname'] && $field['collname'] != 'NULL') {
+						$fieldSpec .= " character set $field[cset] collate $field[collname]";
 					}
 					
-					if($field['default'] || $field['default'] === "0") {
-						$fieldSpec .= " default '" . addslashes($field['default']) . "'";
+					if($field['cdefault'] || $field['cdefault'] === "0") {
+						$fieldSpec .= " default '" . addslashes($field['cdefault']) . "'";
 					}
 					
-					$fieldList[$field['field']] = $fieldSpec;
+					$fieldList[$field['cname']] = $fieldSpec;
 				}
 				break;
 			default:
@@ -508,9 +513,54 @@ class PDODatabase extends Database {
 	 * Returns a map of indexes.
 	 */
 	public function indexList($table) {
-	
-	// to be done - SHOW is used extensively but very MySQL specific
-	
+		switch (PDO::ATTR_DRIVER_NAME) {
+			case "mysql":
+				foreach($dbh->query("SHOW INDEXES IN '$table'") as $index) {
+					$groupedIndexes[$index['Key_name']]['fields'][$index['Seq_in_index']] = $index['Column_name'];
+					if($index['Index_type'] == 'FULLTEXT') {
+						$groupedIndexes[$index['Key_name']]['type'] = 'fulltext ';
+					} else if(!$index['Non_unique']) {
+						$groupedIndexes[$index['Key_name']]['type'] = 'unique ';
+					} else {
+						$groupedIndexes[$index['Key_name']]['type'] = '';
+					}
+				}
+				foreach($groupedIndexes as $index => $details) {
+					ksort($details['fields']);
+					$indexList[$index] = $details['type'] . '(' . implode(',',$details['fields']) . ')';
+				}
+				break;
+			case "pgsql":
+				foreach($dbh->query("select indexname, indexdef from pg_indexes where tablename = '$table'") as $index) {
+					$indexList[$index['indexname']] = $index['indexdef'];
+				}
+				break;
+			case "mssql":
+				foreach($dbh->query("
+					SELECT
+						i.name AS 'iname',
+						i.type_desc AS 'itype',
+						s.name AS 'sname'
+					FROM
+						sys.indexes i,
+						sys.objects o,
+						sys.index_columns c,
+						sys.columns s
+					WHERE
+						o.name = '$table'
+						AND o.object_id = i.object_id
+						AND o.object_id = c.object_id
+						AND o.object_id = s.object_id
+						AND s.column_id = c.column_id
+				") as $index) {
+					$indexList[$index['iname']] = $index['itype'] . " (" . $index['sname'] . ")";
+				}
+				break;
+			default:
+				$this->databaseError("This database server is not available");
+		}
+		
+		return $indexList;
 	}
 	
 	/**
@@ -594,7 +644,7 @@ class PDOQuery extends Query {
 	
 
 	/**
-	* 
+	*
 	*/
 	public function nextRecord() {
 		$record = $this->stmt->fetch(PDO::FETCH_ASSOC);
