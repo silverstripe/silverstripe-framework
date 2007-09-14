@@ -6,20 +6,19 @@ class Member extends DataObject {
 		'Surname' => "Varchar",
 		'Email' => "Varchar",
 		'Password' => "Varchar",
+		'RememberLoginToken' => "Varchar(50)",
 		'NumVisit' => "Int",
 		'LastVisited' => 'Datetime',
-   		'Bounced' => 'Boolean',
-   		'AutoLoginHash' => 'Varchar(10)',
-   		'AutoLoginExpired' => 'Datetime',
-   		'BlacklistedEmail' => 'Boolean',
+		'Bounced' => 'Boolean',
+		'AutoLoginHash' => 'Varchar(10)',
+		'AutoLoginExpired' => 'Datetime',
+		'BlacklistedEmail' => 'Boolean',
 	);
 	static $belongs_many_many = array(
 		"Groups" => "Group",
 
 	);
-	static $has_one = array(
-	);
-  
+
 	static $has_many = array(
 		'UnsubscribedRecords' => 'Member_UnsubscribeRecord'
 	);
@@ -30,23 +29,86 @@ class Member extends DataObject {
 		'Email' => true,
 	);
 
+
 	/**
-	 * Logs this member in.
+	 * Logs this member in
+	 *
+	 * @param bool $remember If set to TRUE, the member will be logged in
+	 *                       automatically the next time.
 	 */
-	function logIn() {
+	function logIn($remember = false) {
+		session_regenerate_id(true);
 		Session::set("loggedInAs", $this->ID);
+
 		$this->NumVisit++;
+
+		if($remember) {
+
+			$token = substr(md5(uniqid(rand(), true)), 0, 49 - strlen($this->ID));
+			$this->RememberLoginToken = $token;
+			Cookie::set('alc_enc', $this->ID . ':' . $token);
+		} else {
+			$this->RememberLoginToken = null;
+			Cookie::set('alc_enc', null);
+			Cookie::forceExpiry('alc_enc');
+		}
+
 		$this->write();
 	}
 
+
 	/**
-	 *Logs this member in.
+	 * Log the user in if the "remember login" cookie is set
+	 *
+	 * The <i>remember login token</i> will be changed on every successful
+	 * auto-login.
 	 */
-	function logOut(){
-		Cookie::set('alc_enc',null);
-		Session::clear("loggedInAs");
+	static function autoLogin() {
+		if(isset($_COOKIE['alc_enc']) && !Session::get("loggedInAs")) {
+
+			list($uid, $token) = explode(':', $_COOKIE['alc_enc'], 2);
+			$uid = Convert::raw2sql($uid);
+			$token = Convert::raw2sql($token);
+
+			$member = DataObject::get_one(
+					"Member", "Member.ID = $uid And RememberLoginToken = '$token'");
+
+			if($member) {
+				session_regenerate_id(true);
+				Session::set("loggedInAs", $member->ID);
+
+				$token = substr(md5(uniqid(rand(), true)),
+				                0, 49 - strlen($member->ID));
+				$member->RememberLoginToken = $token;
+				Cookie::set('alc_enc', $member->ID . ':' . $token);
+
+				$member->NumVisit++;
+				$member->write();
+			}
+		}
 	}
 
+
+	/**
+	 * Logs this member out.
+	 */
+	function logOut() {
+		Session::clear("loggedInAs");
+		session_regenerate_id(true);
+
+		$this->RememberLoginToken = null;
+		Cookie::set('alc_enc', null);
+		Cookie::forceExpiry('alc_enc');
+
+		$this->write();
+	}
+
+
+	/**
+	 * Generate an auto login hash
+	 *
+	 * @todo This is relative insecure, check if we should fix it
+	 */
 	function generateAutologinHash() {
 		$linkHash = sprintf('%10d', time() );
 
@@ -59,31 +121,51 @@ class Member extends DataObject {
 		$this->write();
 	}
 
+
 	/**
 	 * Log a member in with an auto login hash link
 	 */
-	static function autoLoginHash( $RAW_hash ) {
-
-		$SQL_hash = Convert::raw2sql( $RAW_hash );
+	static function autoLoginHash($RAW_hash) {
+		$SQL_hash = Convert::raw2sql($RAW_hash);
 
 		$member = DataObject::get_one('Member',"`AutoLoginHash`='$SQL_hash' AND `AutoLoginExpired` > NOW()");
 
-		if( $member )
+		if($member)
 			$member->logIn();
 
 		return $member;
 	}
 
-	function sendInfo($type = 'signup'){
+
+	/**
+	 * Send signup, change password or forgot password informations to an user
+	 *
+	 * @param string $type Information type to send ("signup",
+	 *                     "changePassword" or "forgotPassword")
+	 */
+	function sendInfo($type = 'signup') {
 		switch($type) {
-			case "signup": $e = new Member_SignupEmail(); break;
-			case "changePassword": $e = new Member_ChangePasswordEmail(); break;
-			case "forgotPassword": $e = new Member_ForgotPasswordEmail(); break;
+			case "signup":
+				$e = new Member_SignupEmail();
+				break;
+			case "changePassword":
+				$e = new Member_ChangePasswordEmail();
+				break;
+			case "forgotPassword":
+				$e = new Member_ForgotPasswordEmail();
+				break;
 		}
 		$e->populateTemplate($this);
 		$e->send();
 	}
 
+
+	/**
+	 * Returns the fields for the member form
+	 *
+	 * @return FieldSet Returns a {@link FieldSet} containing the fields for
+	 *                  the member form.
+	 */
 	function getMemberFormFields() {
 		return new FieldSet(
 			new TextField("FirstName", "First Name"),
@@ -93,108 +175,84 @@ class Member extends DataObject {
 		);
 	}
 
+
+	/**
+	 * Factory method for the member validator
+	 *
+	 * @return Member_Validator Returns an instance of a
+	 *                          {@link Member_Validator} object.
+	 */
 	function getValidator() {
 		return new Member_Validator();
 	}
 
+
 	/**
-	 * Returns the currenly logged in user
-	 * @todo get_one() is a bit funky.
+	 * Returns the current logged in user
+	 *
+	 * @return bool|Member Returns the member object of the current logged in
+	 *                     user or FALSE.
 	 */
 	static function currentUser() {
-		self::autoLogin();
+		$id = Session::get("loggedInAs");
+		if(!$id) {
+			self::autoLogin();
+			$id = Session::get("loggedInAs");
+		}
 
-		// Return the details
-		if($id = Session::get("loggedInAs")) {
+		if($id) {
 			return DataObject::get_one("Member", "Member.ID = $id");
 		}
 	}
 
-	static function autoLogin() {
-		// Auto-login
-		if(isset($_COOKIE['alc_enc']) && !Session::get("loggedInAs")) {
-			// Deliberately obscure...
-			list($data['Email'], $data['Password']) = explode(':',base64_decode($_COOKIE['alc_enc']),2);
 
-			$lf = new LoginForm(null, null, null, null, false);
-			$lf->performLogin($data);
-
-		}
-	}
-
+	/**
+	 * Get the ID of the current logged in user
+	 *
+	 * @return int Returns the ID of the current logged in user or 0.
+	 */
 	static function currentUserID() {
-		self::autoLogin();
-
 		$id = Session::get("loggedInAs");
+		if(!$id) {
+			self::autoLogin();
+			$id = Session::get("loggedInAs");
+		}
+
 		return is_numeric($id) ? $id : 0;
 	}
 
+
 	/**
-	 * before the save of this member, the blacklisted email table is updated to ensure no
-	 * promotional material is sent to the member. (newsletters)
-	 * standard system messages are still sent such as receipts.
+	 * Add the members email address to the blacklist
+	 *
+	 * With this method the blacklisted email table is updated to ensure that
+	 * no promotional material is sent to the member (newsletters).
+	 * Standard system messages are still sent such as receipts.
+	 *
+	 * @param bool $val Set to TRUE if the address should be added to the
+	 *                  blacklist, otherwise to FALSE.
+	 * @return
+	 * @todo Check for what the parameter $val is needed! (Markus)
 	 */
-	function setBlacklistedEmail($val){
-		if($val && $this->Email){
+	function setBlacklistedEmail($val) {
+		if($val && $this->Email) {
 			$blacklisting = new Email_BlackList();
 	 		$blacklisting->BlockedEmail = $this->Email;
 	 		$blacklisting->MemberID = $this->ID;
 	 		$blacklisting->write();
 		}
-		return $this->setField("BlacklistedEmail",$val);
+
+		$this->setField("BlacklistedEmail", $val);
 	}
 
-	function onBeforeWrite() {
-		// If an email's filled out
-		if($this->Email) {
-			// Look for a record with the same email
-			if($this->ID) $idClause = "AND `Member`.ID <> $this->ID";
-			else $idClause = "";
-
-			$existingRecord = DataObject::get_one("Member", "Email = '" . addslashes($this->Email) . "' $idClause");
-
-			// Debug::message("Found an existing member for email $this->Email");
-
-			// If found
-			if($existingRecord) {
-				// Update this record to merge with that member
-				$newID = $existingRecord->ID;
-				if($this->ID) {
-					DB::query("UPDATE Group_Members SET MemberID = $newID WHERE MemberID = $this->ID");
-				}
-				$this->ID = $newID;
-				// Merge existing data into the local record
-
-				foreach($existingRecord->getAllFields() as $k => $v) {
-					if(!isset($this->changed[$k]) || !$this->changed[$k]) $this->record[$k] = $v;
-				}
-			}
-		}
-
-		parent::onBeforeWrite();
-	}
-
-	/**
-	 * Check if the member is in one of the given groups
-	 */
-	public function inGroups( $groups ) {
-		foreach( $this->Groups() as $group )
-			$memberGroups[] = $group->Title;
-
-		return count( array_intersect( $memberGroups, $groups ) ) > 0;
-	}
-
-    public function inGroup( $groupID ) {
-        foreach( $this->Groups() as $group )
-            if( $groupID == $group->ID )
-                return true;
-
-        return false;
-    }
 
 	/*
 	 * Generate a random password
-	 * BDC - added randomiser to kick in if there's no words file on the filesystem.
+	 *
+	 * BDC - added randomiser to kick in if there's no words file on the
+	 * filesystem.
+	 *
+	 * @return string Returns a random password.
 	 */
 	static function createNewPassword() {
 		if(file_exists('/usr/share/silverstripe/wordlist.txt')) {
@@ -214,17 +272,105 @@ class Member extends DataObject {
 	    	return $output;
 		}
 	}
+
+
+	/**
+	 * Event handler called before writing to the database
+	 *
+	 * If an email's filled out look for a record with the same email and if
+	 * found update this record to merge with that member.
+	 */
+	function onBeforeWrite() {
+		if($this->Email) {
+			if($this->ID) {
+				$idClause = "AND `Member`.ID <> $this->ID";
+			} else {
+				$idClause = "";
+			}
+
+			$existingRecord = DataObject::get_one(
+				"Member", "Email = '" . addslashes($this->Email) . "' $idClause");
+
+			// Debug::message("Found an existing member for email $this->Email");
+
+			if($existingRecord) {
+				$newID = $existingRecord->ID;
+				if($this->ID) {
+					DB::query("UPDATE Group_Members SET MemberID = $newID WHERE MemberID = $this->ID");
+				}
+				$this->ID = $newID;
+				// Merge existing data into the local record
+
+				foreach($existingRecord->getAllFields() as $k => $v) {
+					if(!isset($this->changed[$k]) || !$this->changed[$k]) $this->record[$k] = $v;
+				}
+			}
+		}
+
+		parent::onBeforeWrite();
+	}
+
+
+	/**
+	 * Check if the member is in one of the given groups
+	 *
+	 * @param array $groups Groups to check
+	 * @return bool Returns TRUE if the member is in one of the given groups,
+	 *              otherwise FALSE.
+	 */
+	public function inGroups(array $groups) {
+		foreach($this->Groups() as $group)
+			$memberGroups[] = $group->Title;
+
+		return count(array_intersect($memberGroups, $groups)) > 0;
+	}
+
+
+	/**
+	 * Check if the member is in the given group
+	 *
+	 * @param int $groupID ID of the group to check
+	 * @return bool Returns TRUE if the member is in the given group,
+	 *              otherwise FALSE.
+	 */
+	public function inGroup($groupID) {
+		foreach($this->Groups() as $group) {
+			if($groupID == $group->ID)
+				return true;
+		}
+
+		return false;
+	}
+
+
+	/**
+	 * Alias for {@link inGroup}
+	 *
+	 * @param int $groupID ID of the group to check
+	 * @return bool Returns TRUE if the member is in the given group,
+	 *              otherwise FALSE.
+	 * @see inGroup()
+	 */
+	public function isInGroup($groupID) {
+    return $this->inGroup($groupID);
+	}
+
+
 	/**
 	 * Returns true if this user is an administrator.
 	 * Administrators have access to everything.  The lucky bastards! ;-)
-	 *
+	 * 
+	 * @return Returns TRUE if this user is an administrator.
 	 * @todo Should this function really exists? Is not {@link isAdmin()} the
 	 *       only right name for this?
 	 * @todo Is {@link Group}::CanCMSAdmin not deprecated?
 	 */
 	function _isAdmin() {
 		if($groups = $this->Groups()) {
-			foreach($groups as $group) if($group->CanCMSAdmin) return true;
+			foreach($groups as $group) {
+				if($group->CanCMSAdmin)
+					return true;
+			}
 		}
 
 		return Permission::check('ADMIN');
@@ -245,41 +391,79 @@ class Member extends DataObject {
 	}
 	function _isCMSUser() {
 		if($groups = $this->Groups()) {
-			foreach($groups as $group) if($group->CanCMS) return true;
+			foreach($groups as $group) {
+				if($group->CanCMS)
+					return true;
+			}
 		}
 	}
 
 
-	//----------------------------------------------------------------------------------------//
+	//------------------- HELPER METHODS -----------------------------------//
 
+	/**
+	 * Get the complete name of the member
+	 *
+	 * @return string Returns the first- and surname of the member. If the ID
+	 *                of the member is equal 0, only the surname is returned.
+	 * @todo Check for what this method is used! (Markus)
+	 */
 	public function getTitle() {
 		if($this->getField('ID') === 0)
 			return $this->getField('Surname');
 		return $this->getField('Surname') . ', ' . $this->getField('FirstName');
 	}
 
+
+	/**
+	 * Get the complete name of the member
+	 *
+	 * @return string Returns the first- and surname of the member.
+	 */
 	public function getName() {
 		return $this->FirstName . ' ' . $this->Surname;
 	}
 
-	public function setName( $name ) {
-		$nameParts = explode( ' ', $name );
-		$this->Surname = array_pop( $nameParts );
-		$this->FirstName = join( ' ', $nameParts );
+
+	/**
+	 * Set first- and surname
+	 *
+	 * This method assumes that the last part of the name is the surname, e.g.
+	 * <i>A B C</i> will result in firstname <i>A B</i> and surname <i>C</i>
+	 *
+	 * @param string $name The name
+	 */
+	public function setName($name) {
+		$nameParts = explode(' ', $name);
+		$this->Surname = array_pop($nameParts);
+		$this->FirstName = join(' ', $nameParts);
 	}
 
-	public function splitName( $name ) {
-		return $this->setName( $name );
+
+	/**
+	 * Alias for {@link setName}
+	 *
+	 * @param string $name The name
+	 * @see setName()
+	 */
+	public function splitName($name) {
+		return $this->setName($name);
 	}
 
-	//----------------------------------------------------------------------------------------//
+	//---------------------------------------------------------------------//
 
+
+	/**
+	 * @todo Figure out what this function does and document it! (Markus)
+	 */
 	public function Groups() {
 		$groups = $this->getManyManyComponents("Groups");
 		
 		$unsecure = DataObject::get("Group_Unsecure", "");
-		if($unsecure) foreach($unsecure as $unsecureItem) {
-			$groups->push($unsecureItem);
+		if($unsecure) {
+			foreach($unsecure as $unsecureItem) {
+				$groups->push($unsecureItem);
+			}
 		}
 
 		$groupIDs = $groups->column();
@@ -303,17 +487,13 @@ class Member extends DataObject {
 		return $result;
 	}
 
-	public function isInGroup($groupID) {
-		$groups = $this->Groups();
-		foreach($groups as $group) {
-			if($group->ID == $groupID) return true;
-		}
-    	return false;
-	}
 
+	/**
+	 * @todo Figure out what this function does and document it! (Markus)
+	 */
 	public function map($filter = "", $sort = "", $blank="") {
 		$ret = new SQLMap(singleton('Member')->extendedSQL($filter, $sort));
-		if($blank){
+		if($blank) {
 			$blankMember = new Member();
 			$blankMember->Surname = $blank;
 			$blankMember->ID = 0;
@@ -324,72 +504,102 @@ class Member extends DataObject {
 	}
 
 
-	public static function mapInGroups( $groups = null ) {
-
-		if( !$groups )
+	/**
+	 * @todo Figure out what this function does and document it! (Markus)
+	 */
+	public static function mapInGroups($groups = null) {
+		if(!$groups)
 			return Member::map();
 
 		$groupIDList = array();
 
-		if( is_a( $groups, 'DataObjectSet' ) )
+		if(is_a($groups, 'DataObjectSet')) {
 			foreach( $groups as $group )
 				$groupIDList[] = $group->ID;
-		elseif( is_array( $groups ) )
+		} elseif(is_array($groups)) {
 			$groupIDList = $groups;
-		else
+		} else {
 			$groupIDList[] = $groups;
+		}
 
-		if( empty( $groupIDList ) )
+		if(empty($groupIDList))
 			return Member::map();
 
-		return new SQLMap( singleton('Member')->extendedSQL( "`GroupID` IN (" . implode( ',', $groupIDList ) . ")", "Surname, FirstName", "", "INNER JOIN `Group_Members` ON `MemberID`=`Member`.`ID`") );
+		return new SQLMap(singleton('Member')->extendedSQL(
+			"`GroupID` IN (" . implode( ',', $groupIDList ) .
+			")", "Surname, FirstName", "", "INNER JOIN `Group_Members` ON `MemberID`=`Member`.`ID`"));
 	}
 
 
 	/**
-	 * Return a map of all members in the groups given that have CMS permissions
-	 * Defaults to all groups with CMS permissions
+	 * Get a map of all members in the groups given that have CMS permissions
+	 *
+	 * If no groups are passed, all groups with CMS permissions will be used.
+	 *
+	 * @param array $groups Groups to consider or NULL to use all groups with
+	 *                      CMS permissions.
+	 * @return SQLMap Returns a map of all members in the groups given that
+	 *                have CMS permissions.
 	 */
-	public static function mapInCMSGroups( $groups = null ) {
-		if( !$groups || $groups->Count() == 0 )
-			$groups = DataObject::get('Group',"", "", "INNER JOIN `Permission` ON `Permission`.GroupID = `Group`.ID AND `Permission`.Code IN ('ADMIN', 'CMS_ACCESS_AssetAdmin')");
+	public static function mapInCMSGroups($groups = null) {
+		if(!$groups || $groups->Count() == 0) {
+			$groups = DataObject::get('Group', "", "",
+				"INNER JOIN `Permission` ON `Permission`.GroupID = `Group`.ID AND `Permission`.Code IN ('ADMIN', 'CMS_ACCESS_AssetAdmin')");
+		}
 
 		$groupIDList = array();
 
-		if( is_a( $groups, 'DataObjectSet' ) )
-			foreach( $groups as $group )
+		if(is_a($groups, 'DataObjectSet')) {
+			foreach($groups as $group)
 				$groupIDList[] = $group->ID;
-		elseif( is_array( $groups ) )
+		} elseif(is_array($groups)) {
 			$groupIDList = $groups;
+		}
 
 		/*if( empty( $groupIDList ) )
 			return Member::map();	*/
 
-		$filterClause = ($groupIDList) ? "`GroupID` IN (" . implode( ',', $groupIDList ) . ")" : "";
+		$filterClause = ($groupIDList)
+			? "`GroupID` IN (" . implode( ',', $groupIDList ) . ")"
+			: "";
 
-		return new SQLMap( singleton('Member')->extendedSQL( $filterClause, "Surname, FirstName", "", "INNER JOIN `Group_Members` ON `MemberID`=`Member`.`ID` INNER JOIN `Group` ON `Group`.`ID`=`GroupID`") );
+		return new SQLMap(singleton('Member')->extendedSQL($filterClause,
+			"Surname, FirstName", "",
+			"INNER JOIN `Group_Members` ON `MemberID`=`Member`.`ID` INNER JOIN `Group` ON `Group`.`ID`=`GroupID`"));
 	}
 
-	/**
-	 * When passed an array of groups, and a component set of groups, this function
-	 * will return the array of groups the member is NOT in.
-	 * @param grouplist an array of group code names.
-	 * @param memberGroups a component set of groups ( set to $this->groups() by default )
-	 */
-	public function memberNotInGroups($groupList,$memberGroups = null){
-		if(!$memberGroups) $memberGroups = $this->Groups();
 
-		foreach($memberGroups as $group){
-			if(in_array($group->Code,$groupList)){
-				$index = array_search($group->Code,$groupList);
+	/**
+	 * Get the groups in which the member is NOT in
+	 *
+	 * When passed an array of groups, and a component set of groups, this
+	 * function will return the array of groups the member is NOT in.
+	 *
+	 * @param array $groupList An array of group code names.
+	 * @param array $memberGroups A component set of groups (if set to NULL,
+	 * 														$this->groups() will be used)
+	 * @return array Groups in which the member is NOT in.
+	 */
+	public function memberNotInGroups($groupList, $memberGroups = null){
+		if(!$memberGroups)
+			$memberGroups = $this->Groups();
+
+		foreach($memberGroups as $group) {
+			if(in_array($group->Code, $groupList)) {
+				$index = array_search($group->Code, $groupList);
 				unset($groupList[$index]);
 			}
 		}
 		return $groupList;
 	}
 
+
 	/**
-	 * Return a FieldSet of fields that would appropriate for editing this member.
+	 * Return a {@link FieldSet} of fields that would appropriate for editing
+	 * this member.
+	 *
+	 * @return FieldSet Return a FieldSet of fields that would appropriate for
+	 *                  editing this member.
 	 */
 	public function getCMSFields() {
 		$fields = new FieldSet(
@@ -413,12 +623,19 @@ class Member extends DataObject {
 		return $fields;
 	}
 
-	function unsubscribeFromNewsletter( $newsletterType ) {
+
+	/**
+	 * Unsubscribe from newsletter
+	 *
+	 * @param NewsletterType $newsletterType Newsletter type to unsubscribe
+	 *                                       from
+	 */
+	function unsubscribeFromNewsletter(NewsletterType $newsletterType) {
 		// record today's date in unsubscriptions
-   		 // this is a little bit redundant
-	    $unsubscribeRecord = new Member_UnsubscribeRecord();
-	    $unsubscribeRecord->unsubscribe( $this, $newsletterType );
-		$this->Groups()->remove( $newsletterType->GroupID );
+		// this is a little bit redundant
+		$unsubscribeRecord = new Member_UnsubscribeRecord();
+		$unsubscribeRecord->unsubscribe($this, $newsletterType);
+		$this->Groups()->remove($newsletterType->GroupID);
 	}
 
 	function requireDefaultRecords() {
@@ -431,161 +648,208 @@ class Member extends DataObject {
 	}
 }
 
+
+
+
 /**
- * Special kind of ComponentSet that has special methods for manipulating a user's membership
+ * Special kind of {@link ComponentSet} that has special methods for
+ * manipulating a user's membership
  */
 class Member_GroupSet extends ComponentSet {
 	/**
 	 * Control group membership with a number of checkboxes.
-	 *  - If the checkbox fields are present in $data, then the member will be added to the group with the same codename.
-	 *  - If the checkbox fields are *NOT* present in $data, then the member willb e removed from the group with the same codename.
-	 * @param checkboxes an array list of the checkbox fieldnames (Only values are used.) eg array(0,1,2);
-	 * @param data The form data. usually in the format array(0 => 2) (just pass the checkbox data from your form);
+	 *  - If the checkbox fields are present in $data, then the member will be
+	 *    added to the group with the same codename.
+	 *  - If the checkbox fields are *NOT* present in $data, then the member
+	 *    will be removed from the group with the same codename.
+	 *
+	 * @param array $checkboxes An array list of the checkbox fieldnames (only
+	 *               	          values are used). E.g. array(0, 1, 2)
+	 * @param array $data The form data. Uually in the format array(0 => 2)
+	 *                    (just pass the checkbox data from your form)
 	 */
-	function setByCheckboxes($checkboxes, $data) {
+	function setByCheckboxes(array $checkboxes, array $data) {
 		foreach($checkboxes as $checkbox) {
-			if($data[$checkbox]){
+			if($data[$checkbox]) {
 				$add[] = $checkbox;
-			}else{
+			} else {
 				$remove[] = $checkbox;
 			}
 		}
-		if($add)$this->addManyByCodename($add);
-		if($remove)	$this->removeManyByCodename($remove);
+
+		if($add)
+			$this->addManyByCodename($add);
+
+		if($remove)
+			$this->removeManyByCodename($remove);
 	}
 
+
 	/**
-	 * Allows you to set groups based on a checkboxsetfield.
-	 * (pass the form element from your post data directly to this method, and it
-	 * will update the groups and add and remove the member as appropriate)
-	 * @param checkboxsetField - the CheckboxSetField (with data) from your form.
+	 * Allows you to set groups based on a CheckboxSetField
 	 *
-	 * On the form setup
+	 * Pass the form element from your post data directly to this method, and
+	 * it will update the groups and add and remove the member as appropriate.
 	 *
-	 	$fields->push(
-			new CheckboxSetField(
-				"NewsletterSubscriptions",
-				"Receive email notification of events in ",
-				$sourceitems = DataObject::get("NewsletterType")->toDropDownMap("GroupID","Title"),
-				$selectedgroups = $member->Groups()->Map("ID","ID")
-			)
-		);
+	 * On the form setup:
 	 *
-	 *
+	 * <code>
+	 * $fields->push(
+	 *   new CheckboxSetField(
+	 *     "NewsletterSubscriptions",
+	 *     "Receive email notification of events in ",
+	 *     $sourceitems = DataObject::get("NewsletterType")->toDropDownMap("GroupID","Title"),
+	 *     $selectedgroups = $member->Groups()->Map("ID","ID")
+	 *   )
+	 * );
+	 * </code>
 	 *
 	 * On the form handler:
-	 	$groups = $member->Groups();
-        $checkboxfield = $form->Fields()->fieldByName("NewsletterSubscriptions");
-	 	$groups->setByCheckboxSetField($checkboxfield);
 	 *
+	 * <code>
+	 * $groups = $member->Groups();
+	 * $checkboxfield = $form->Fields()->fieldByName("NewsletterSubscriptions");
+	 * $groups->setByCheckboxSetField($checkboxfield);
+	 * </code>
+	 *
+	 * @param CheckboxSetField $checkboxsetfield The CheckboxSetField (with
+	 *                                           data) from your form.
 	 */
-	function setByCheckboxSetField($checkboxsetfield){
-
+	function setByCheckboxSetField(CheckboxSetField $checkboxsetfield) {
 		// Get the values from the formfield.
 		$values = $checkboxsetfield->Value();
 		$sourceItems = $checkboxsetfield->getSource();
 
-		if($sourceItems){
+		if($sourceItems) {
 			// If (some) values are present, add and remove as necessary.
-			if($values){
+			if($values) {
 				// update the groups based on the selections
-				foreach($sourceItems as $k => $item){
-					if(in_array($k,$values)){
+				foreach($sourceItems as $k => $item) {
+					if(in_array($k,$values)) {
 						$add[] = $k;
-					}else{
+					} else {
 						$remove[] = $k;
 					}
 				}
 
 			// else we should be removing all from the necessary groups.
-			}else{
+			} else {
 				$remove = $sourceItems;
 			}
 
-			if($add)$this->addManyByGroupID($add);
-			if($remove)	$this->RemoveManyByGroupID($remove);
+			if($add)
+				$this->addManyByGroupID($add);
 
-		}else{
-			USER_ERROR("Member::setByCheckboxSetField() - No source items could be found for checkboxsetfield ". $checkboxsetfield->Name(),E_USER_WARNING);
+			if($remove)
+				$this->RemoveManyByGroupID($remove);
+
+		} else {
+			USER_ERROR("Member::setByCheckboxSetField() - No source items could be found for checkboxsetfield " .
+								 $checkboxsetfield->Name(), E_USER_WARNING);
 		}
 	}
 
+
 	/**
-	 * Adds this member to the groups based on the
-	 * groupID.
+	 * Adds this member to the groups based on the group IDs
+	 *
+	 * @param array $ids Group identifiers.
 	 */
 	function addManyByGroupID($groupIds){
 		$groups = $this->getGroupsFromIDs($groupIds);
-		if($groups){
-			foreach($groups as $group){
+		if($groups) {
+			foreach($groups as $group) {
 				$this->add($group);
 			}
 		}
-
 	}
 
+
 	/**
-	 * Removes the member from many groups based on
-	 * the group ID.
+	 * Removes the member from many groups based on the group IDs
+	 *
+	 * @param array $ids Group identifiers.
 	 */
-	function removeManyByGroupID($groupIds){
+	function removeManyByGroupID($groupIds) {
 	 	$groups = $this->getGroupsFromIDs($groupIds);
-	 	if($groups){
-			foreach($groups as $group){
+	 	if($groups) {
+			foreach($groups as $group) {
 				$this->remove($group);
 			}
 		}
-
 	}
 
+
 	/**
-	 * Returns the groups from an array of GroupIDs
+	 * Returns the groups from an array of group IDs
+	 *
+	 * @param array $ids Group identifiers.
+	 * @return mixed Returns the groups from the array of Group IDs.
 	 */
 	function getGroupsFromIDs($ids){
-		if($ids && count($ids) > 1){
-			return	DataObject::get("Group","ID IN (". implode(",",$ids)   .")");
-		}else{
-			return DataObject::get_by_id("Group",$ids[0]);
+		if($ids && count($ids) > 1) {
+			return DataObject::get("Group", "ID IN (" . implode(",", $ids) . ")");
+		} else {
+			return DataObject::get_by_id("Group", $ids[0]);
 		}
 	}
 
 
 	/**
-	 * Adds this member to the groups passed.
+	 * Adds this member to the groups based on the group codenames
+	 *
+	 * @param array $codenames Group codenames
 	 */
 	function addManyByCodename($codenames) {
 		$groups = $this->codenamesToGroups($codenames);
-		if($groups){
+		if($groups) {
 			foreach($groups as $group){
 				$this->add($group);
 			}
 		}
 	}
 
+
 	/**
-	 * Removes this member from the groups passed.
+	 * Removes this member from the groups based on the group codenames
+	 *
+	 * @param array $codenames Group codenames
 	 */
 	function removeManyByCodename($codenames) {
 		$groups = $this->codenamesToGroups($codenames);
-		if($groups){
-			foreach($groups as $group){
+		if($groups) {
+			foreach($groups as $group) {
 				$this->remove($group);
 			}
 		}
 	}
 
+
 	/**
-	 * Helper function to return the appropriate group via a codename.
+	 * Helper function to return the appropriate groups via a codenames
+	 *
+	 * @param array $codenames Group codenames
+	 * @return array Returns the the appropriate groups.
 	 */
 	protected function codenamesToGroups($codenames) {
 		$list = "'" . implode("', '", $codenames) . "'";
 		$output = DataObject::get("Group", "Code IN ($list)");
 
 		// Some are missing - throw warnings
-		if(!$output || $output->Count() != sizeof($list)) {
-			foreach($codenames as $codename) $missing[$codename] = $codename;
-			if($output) foreach($output as $record) unset($missing[$record->Code]);
-			if($missing) user_error("The following group-codes aren't matched to any groups: " . implode(", ", $missing) . ".  You probably need to link up the correct group codes in phpMyAdmin", E_USER_WARNING);
+		if(!$output || ($output->Count() != sizeof($list))) {
+			foreach($codenames as $codename)
+				$missing[$codename] = $codename;
+
+			if($output) {
+				foreach($output as $record)
+					unset($missing[$record->Code]);
+			}
+
+			if($missing)
+				user_error("The following group-codes aren't matched to any groups: " .
+									 implode(", ", $missing) .
+									 ".  You probably need to link up the correct group codes in phpMyAdmin",
+									 E_USER_WARNING);
 		}
 
 		return $output;
@@ -594,9 +858,12 @@ class Member_GroupSet extends ComponentSet {
 
 
 
+/**
+ * Class used as template to send an email to new members
+ */
 class Member_SignupEmail extends Email_Template {
 	protected
-		$from = 'ask@perweek.co.nz',
+		$from = '',  // setting a blank from address uses the site's default administrator email
 		$to = '$Email',
 		$subject = "Thanks for signing up",
 		$body = '
@@ -644,17 +911,19 @@ class Member_SignupEmail extends Email_Template {
 
 	function MemberData() {
 		return $this->template_data->listOfFields(
-		"FirstName","Surname","Email",
-		"Phone","Mobile","Street",
-		"Suburb","City","Postcode","DriversLicense5A","DriversLicense5B"
+			"FirstName", "Surname", "Email",
+			"Phone", "Mobile", "Street",
+			"Suburb", "City", "Postcode", "DriversLicense5A", "DriversLicense5B"
 		);
 	}
 }
 
-/**
-* Send an email saying that the password has been reset.
-*/
 
+
+/**
+ * Class used as template to send an email saying that the password has been
+ * changed
+ */
 class Member_ChangePasswordEmail extends Email_Template {
     protected $from = '';   // setting a blank from address uses the site's default administrator email
     protected $subject = "Your password has been changed";
@@ -662,31 +931,57 @@ class Member_ChangePasswordEmail extends Email_Template {
     protected $to = '$Email';
 }
 
+
+
+/**
+ * Class used as template to send the forgot password email
+ */
 class Member_ForgotPasswordEmail extends Email_Template {
-    protected $from = '';
+    protected $from = '';  // setting a blank from address uses the site's default administrator email
     protected $subject = "Your password";
     protected $ss_template = 'ForgotPasswordEmail';
     protected $to = '$Email';
 }
 
+
+
 /**
- * Record to keep track of which records a member has unsubscribed from and when
+ * Record to keep track of which records a member has unsubscribed from and
+ * when
+ *
+ * @todo Check if that email stuff ($from, $to, $subject, $body) is needed
+ *       here! (Markus)
  */
 class Member_UnsubscribeRecord extends DataObject {
 
-    static $has_one = array(
-        'NewsletterType' => 'NewsletterType',
-        'Member' => 'Member'
-    );
+	static $has_one = array(
+		'NewsletterType' => 'NewsletterType',
+		'Member' => 'Member'
+	);
 
-    function unsubscribe( $member, $newsletterType ) {
-        // $this->UnsubscribeDate()->setVal( 'now' );
-        $this->MemberID = ( is_numeric( $member ) ) ? $member : $member->ID;
-        $this->NewsletterTypeID = ( is_numeric( $newletterType ) ) ? $newsletterType : $newsletterType->ID;
-        $this->write();
-    }
+
+	/**
+	 * Unsubscribe the member from a specific newsletter type
+	 *
+	 * @param int|Member $member Member object or ID
+	 * @param int|NewsletterType $newsletterType Newsletter type object or ID
+	 */
+	function unsubscribe($member, $newsletterType) {
+		// $this->UnsubscribeDate()->setVal( 'now' );
+		$this->MemberID = (is_numeric($member))
+			? $member
+			: $member->ID;
+
+		$this->NewsletterTypeID = (is_numeric($newletterType))
+			? $newsletterType
+			: $newsletterType->ID;
+
+		$this->write();
+	}
+
+
 	protected
-		$from = 'ask@perweek.co.nz',
+		$from = '',  // setting a blank from address uses the site's default administrator email
 		$to = '$Email',
 		$subject = "Your password has been changed",
 		$body = '
@@ -698,9 +993,19 @@ class Member_UnsubscribeRecord extends DataObject {
 			<p>Your password has been changed. Please keep this email, for future reference.</p>';
 }
 
-class Member_Validator extends RequiredFields {
-	protected $customRequired = array('FirstName', 'Email', 'Password');
 
+
+/**
+ * Member Validator
+ */
+class Member_Validator extends RequiredFields {
+
+	protected $customRequired = array('FirstName', 'Email'); //, 'Password');
+
+
+	/**
+	 * Constructor
+	 */
 	public function __construct() {
 		$required = func_get_args();
 		if(isset($required[0]) && is_array($required[0])) {
@@ -708,24 +1013,43 @@ class Member_Validator extends RequiredFields {
 		}
 		$required = array_merge($required, $this->customRequired);
 
-		 parent::__construct($required);
+		parent::__construct($required);
 	}
 
 
+	/**
+	 * Check if the submitted member data is valid
+	 *
+	 * Check if a member with that email doesn't already exist, or if it does
+	 * that it is this member.
+	 *
+	 * @param array $data Submitted data
+	 * @return bool Returns TRUE if the submitted data is valid, otherwise
+	 *              FALSE.
+	 */
 	function php($data) {
 		$valid = parent::php($data);
 
-		// Check if a member with that email doesn't already exist, or if it does that it is this member.
-		$member = DataObject::get_one('Member', "Email = '". Convert::raw2sql($data['Email']) ."'");
-		// if we are in a complex table field popup, use ctf[childID], else use ID
-		$id = (isset($_REQUEST['ctf']['childID'])) ? $_REQUEST['ctf']['childID'] : $_REQUEST['ID'];
+		$member = DataObject::get_one('Member',
+			"Email = '". Convert::raw2sql($data['Email']) ."'");
+
+		// if we are in a complex table field popup, use ctf[childID], else use
+		// ID
+		$id = (isset($_REQUEST['ctf']['childID']))
+			? $_REQUEST['ctf']['childID']
+			: $_REQUEST['ID'];
+
 		if(is_object($member) && $member->ID != $id) {
 			$emailField = $this->form->dataFieldByName('Email');
-			$this->validationError($emailField->id(), "There already exists a member with this email", "required");
+			$this->validationError($emailField->id(),
+														 "There already exists a member with this email",
+														 "required");
 			$valid = false;
 		}
 
 		return $valid;
 	}
 }
+
+
 ?>

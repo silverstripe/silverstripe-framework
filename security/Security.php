@@ -18,20 +18,30 @@ class Security extends Controller {
 	protected static $strictPathChecking = false;
 
 	/**
-	 * Register that we've had a permission failure trying to view the given page.
+	 * Register that we've had a permission failure trying to view the given page
+	 *
 	 * This will redirect to a login page.
-	 * @param page The controller that you were on to cause the permission failure.
-	 * @param messageSet The message to show to the user.  This can be a string, or a map of different
-	 * messages for different contexts.  If you pass an array, you can use the following keys:
-	 *   - default: The default message
-	 *   - logInAgain: The message to show if the user has just logged out and the
-	 *   - alreadyLoggedIn: The message to show if the user is already logged in and lacks the permission to access the item.
 	 * If you don't provide a messageSet, a default will be used.
+	 *
+	 * @param $page The controller that you were on to cause the permission
+	 *              failure.
+	 * @param string|array $messageSet The message to show to the user. This
+	 *                                  can be a string, or a map of different
+	 *                                  messages for different contexts.
+	 *                                  If you pass an array, you can use the
+	 *                                  following keys:
+	 *                                    - default: The default message
+	 *                                    - logInAgain: The message to show
+	 *                                                  if the user has just
+	 *                                                  logged out and the
+	 *                                    - alreadyLoggedIn: The message to
+	 *                                                       show if the user
+	 *                                                       is already logged
+	 *                                                       in and lacks the
+	 *                                                       permission to
+	 *                                                       access the item.
 	 */
-	static function permissionFailure($page = null, $messageSet = null) {
-//		$loginForm = singleton('Security')->LoginForm();
-
-		//user_error('debug', E_USER_ERROR);
+	static function permissionFailure($page, $messageSet = null) {
 		// Prepare the messageSet provided
 		if(!$messageSet) {
 			$messageSet = array(
@@ -47,24 +57,24 @@ class Security extends Controller {
 		if(Member::currentUserID()) {
 			// user_error( 'PermFailure with member', E_USER_ERROR );
 
-			$message = $messageSet['alreadyLoggedIn'] ? $messageSet['alreadyLoggedIn'] : $messageSet['default'];
-			//$_SESSION['LoginForm']['force_form'] = true;
-			//$_SESSION['LoginForm']['type'] = 'warning';
+			$message = $messageSet['alreadyLoggedIn']
+										? $messageSet['alreadyLoggedIn']
+										: $messageSet['default'];
 
 			Member::logout();
 
 		} else if(substr(Director::history(),0,15) == 'Security/logout') {
-			$message = $messageSet['logInAgain'] ? $messageSet['logInAgain'] : $messageSet['default'];
+			$message = $messageSet['logInAgain']
+										? $messageSet['logInAgain']
+										: $messageSet['default'];
 
 		} else {
 			$message = $messageSet['default'];
 		}
 
-/*		$loginForm->sessionMessage($message, 'warning');
-		Session::set("SecurityMessage.Error.message", $message);
-		Session::set("SecurityMessage.Error.type", $type);*/
+		Session::set("Security.Message.message", $message);
+		Session::set("Security.Message.type", 'warning');
 
-//		$_SESSION['LoginForm']['message'] = $message;
 		Session::set("BackURL", $_SERVER['REQUEST_URI']);
 		
 		if(Director::is_ajax()) {
@@ -85,10 +95,10 @@ class Security extends Controller {
 		  switch($_REQUEST['AuthenticationMethod'])
 			{
 				case 'Member':
-					return MemberAuthenticator::GetLoginForm();
+					return MemberAuthenticator::GetLoginForm($this);
 					break;
 				case 'OpenID':
-					return OpenIDAuthenticator::GetLoginForm();
+					return OpenIDAuthenticator::GetLoginForm($this);
 					break;
 			}
 		}
@@ -99,13 +109,16 @@ class Security extends Controller {
   /**
 	 * Get the login forms for all available authentication methods
 	 *
+	 * @return array Returns an array of available login forms (array of Form
+	 *               objects).
+	 *
 	 * @todo Check how to activate/deactivate authentication methods
 	 */
 	function GetLoginForms()
 	{
 		$forms = array();
-		array_push($forms, MemberAuthenticator::GetLoginForm());
-		array_push($forms, OpenIDAuthenticator::GetLoginForm());
+		array_push($forms, MemberAuthenticator::GetLoginForm($this));
+		array_push($forms, OpenIDAuthenticator::GetLoginForm($this));
 
 		return $forms;
 	}
@@ -115,6 +128,7 @@ class Security extends Controller {
 	 * Get a link to a security action
 	 *
 	 * @param string $action Name of the action
+	 * @return string Returns the link to the given action
 	 */
 	function Link($action = null) {
 		return "Security/$action";
@@ -130,15 +144,18 @@ class Security extends Controller {
 	 *                           they should go.
 	 */
 	function logout($redirect = true) {
-		Cookie::set('alc_enc',null);
-		Cookie::forceExpiry('alc_enc');
-		Session::clear("loggedInAs");
-		if($redirect) Director::redirectBack();
+		if($member = Member::currentUser())
+			$member->logOut();
+
+		if($redirect)
+			Director::redirectBack();
 	}
 
 
 	/**
+	 * Show the "login" page
 	 *
+	 * @return string Returns the "login" page as HTML code.
 	 */
 	function login() {
 		Requirements::javascript("jsparty/behaviour.js");
@@ -164,9 +181,23 @@ class Security extends Controller {
 			foreach($forms as $form)
 				$content .= $form->forTemplate();
 
-			$customisedController = $controller->customise(array(
-				"Content" => $content
-			));
+			if(strlen($message = Session::get('Security.Message.message')) > 0) {
+				$message_type = Session::get('Security.Message.type');
+				if($message_type == 'bad') {
+					$message = "<p class=\"message $message_type\">$message</p>";
+				} else {
+					$message = "<p>$message</p>";
+				}
+
+				$customisedController = $controller->customise(array(
+					"Content" => $message,
+					"Form" => $content
+				));
+			} else {
+				$customisedController = $controller->customise(array(
+					"Content" => $content
+				));
+			}
 
 			return $customisedController->renderWith("Page");
 		}
@@ -174,7 +205,9 @@ class Security extends Controller {
 
 
 	/**
+	 * Show the "lost password" page
 	 *
+	 * @return string Returns the "lost password " page as HTML code.
 	 */
 	function lostpassword() {
 		Requirements::javascript("jsparty/prototype.js");
@@ -189,7 +222,8 @@ class Security extends Controller {
 		$controller = new Page_Controller($tmpPage);
 
 		$customisedController = $controller->customise(array(
-			"Content" => "<p>Enter your e-mail address and we will send you a password</p>",
+			"Content" =>
+				"<p>Enter your e-mail address and we will send you a password</p>",
 			"Form" => $this->LostPasswordForm(),
 		));
 		
@@ -199,7 +233,9 @@ class Security extends Controller {
 
 
 	/**
+	 * Show the "password sent" page
 	 *
+	 * @return string Returns the "password sent" page as HTML code.
 	 */
 	function passwordsent() {
 		Requirements::javascript("jsparty/behaviour.js");
@@ -216,7 +252,8 @@ class Security extends Controller {
 		$email = $this->urlParams['ID'];
 		$customisedController = $controller->customise(array(
 			"Title" => "Password sent to '$email'",
-			"Content" => "<p>Thank you, your password has been sent to '$email'.</p>",
+			"Content" =>
+				"<p>Thank you, your password has been sent to '$email'.</p>",
 		));
 		
 		//Controller::$currentController = $controller;
@@ -225,7 +262,9 @@ class Security extends Controller {
 
 
 	/**
+	 * Factory method for the lost password form
 	 *
+	 * @return Form Returns the lost password form
 	 */
 	function LostPasswordForm() {
 		return new MemberLoginForm($this, "LostPasswordForm", new FieldSet(
@@ -238,17 +277,23 @@ class Security extends Controller {
 
 
 	/**
-	 * Authenticate using the given email and password, returning the appropriate member object if
+	 * Authenticate using the given email and password, returning the
+	 * appropriate member object if
+	 *
+	 * @return bool|Member Returns FALSE if authentication fails, otherwise
+	 *                     the member object
 	 */
 	static function authenticate($RAW_email, $RAW_password) {
 		$SQL_email = Convert::raw2sql($RAW_email);
 		$SQL_password = Convert::raw2sql($RAW_password);
 
 		// Default login (see {@setDetaultAdmin()})
-		if( $RAW_email == self::$username && $RAW_password == self::$password && !empty( self::$username ) && !empty( self::$password ) ) {
+		if(($RAW_email == self::$username) && ($RAW_password == self::$password)
+				&& !empty(self::$username) && !empty(self::$password)) {
 			$member = self::findAnAdministrator();
 		} else {
-			$member = DataObject::get_one("Member", "Email = '$SQL_email' And Password = '$SQL_password'");
+			$member = DataObject::get_one("Member",
+				"Email = '$SQL_email' And Password = '$SQL_password'");
 		}
 
 		return $member;
@@ -257,8 +302,12 @@ class Security extends Controller {
 
 	/**
 	 * Return a member with administrator privileges
+	 *
+	 * @return Member Returns a member object that has administrator
+	 *                privileges.
 	 */
-	static function findAnAdministrator($username = 'admin', $password = 'password') {
+	static function findAnAdministrator($username = 'admin',
+																			$password = 'password') {
 		$permission = DataObject::get_one("Permission", "`Code` = 'ADMIN'");
 
 		$adminGroup = null;
@@ -292,10 +341,10 @@ class Security extends Controller {
 
 
 	/**
-	 * This will set a static default-admin (e.g. "td") which is not existing as
-	 * a database-record. By this workaround we can test pages in dev-mode with
-	 * a unified login. Submitted login-credentials are first checked against
-	 * this static information in {@authenticate()}.
+	 * This will set a static default-admin (e.g. "td") which is not existing
+	 * as a database-record. By this workaround we can test pages in dev-mode
+	 * with a unified login. Submitted login-credentials are first checked
+	 * against this static information in {@authenticate()}.
 	 *
 	 * @param $username String
 	 * @param $password String (Cleartext)
@@ -310,10 +359,12 @@ class Security extends Controller {
 
 
 	/**
-	 * Set strict path checking. This prevents sharing of the session
-	 * across several sites in the domain.
+	 * Set strict path checking
 	 *
-	 * @param strictPathChecking boolean to enable or disable strict patch checking.
+	 * This prevents sharing of the session across several sites in the domain.
+	 *
+	 * @param boolean $strictPathChecking To enable or disable strict patch
+	 *                                    checking.
 	 */
 	static function setStrictPathChecking($strictPathChecking) {
 		self::$strictPathChecking = $strictPathChecking;
@@ -321,7 +372,9 @@ class Security extends Controller {
 
 
 	/**
+	 * Get strict path checking
 	 *
+	 * @return boolean Status of strict path checking
 	 */
 	static function getStrictPathChecking() {
 		return self::$strictPathChecking;

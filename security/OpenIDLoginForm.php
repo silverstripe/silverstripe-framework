@@ -1,5 +1,12 @@
 <?php
 
+/**
+ * OpenID log-in form
+ *
+ * @author Markus Lanthaler <markus@silverstripe.com>
+ */
+
+
 
 /**
  * OpenID log-in form
@@ -11,11 +18,19 @@ class OpenIDLoginForm extends Form {
 	/**
 	 * Constructor
 	 *
-	 * @param $controller
-	 * @param $name
-	 * @param $fields
-	 * @param $actions
-	 * @param $checkCurrentUser
+	 * @param Controller $controller The parent controller, necessary to
+	 *                               create the appropriate form action tag.
+	 * @param string $name The method on the controller that will return this
+	 *                     form object.
+	 * @param FieldSet|FormField $fields All of the fields in the form - a
+	 *                                   {@link FieldSet} of {@link FormField}
+	 *                                   objects.
+	 * @param FieldSet|FormAction $actions All of the action buttons in the
+	 *                                     form - a {@link FieldSet} of
+	 *                                     {@link FormAction} objects
+	 * @param bool $checkCurrentUser If set to TRUE, it will be checked if a
+	 *                               the user is currently logged in, and if
+	 *                               so, only a logout button will be rendered
 	 */
   function __construct($controller, $name, $fields = null, $actions = null,
                        $checkCurrentUser = true) {
@@ -28,19 +43,20 @@ class OpenIDLoginForm extends Form {
 			$backURL = $_REQUEST['BackURL'];
 		} else {
 			$backURL = Session::get('BackURL');
-			//Session::clear("BackURL"); don't clear the back URL here! Should be used until the right password is entered!
 		}
 
     if($checkCurrentUser && Member::currentUserID()) {
       $fields = new FieldSet();
-      $actions = new FieldSet(new FormAction("logout", "Log in as someone else"));
+      $actions = new FieldSet(new FormAction("logout",
+																						 "Log in as someone else"));
     } else {
       if(!$fields) {
         $fields = new FieldSet(
           new HiddenField("AuthenticationMethod", null, "OpenID"),
           new TextField("OpenIDURL", "OpenID URL",
-                        Session::get('SessionForms.OpenIDLoginForm.OpenIDURL')),
-          new CheckboxField("Remember", "Remember me next time?", true)
+						Session::get('SessionForms.OpenIDLoginForm.OpenIDURL')),
+          new CheckboxField("Remember", "Remember me next time?",
+						Session::get('SessionForms.OpenIDLoginForm.Remember'))
         );
       }
       if(!$actions) {
@@ -79,60 +95,34 @@ class OpenIDLoginForm extends Form {
 	 * @param array $data Submitted data
 	 */
   public function dologin($data) {
-		if($this->performLogin($data)){
+		Session::set('SessionForms.OpenIDLoginForm.Remember',
+								 isset($data['Remember']));
 
-			if($backURL = $_REQUEST['BackURL']) {
-				Session::clear("BackURL");
-				Session::clear('SessionForms.OpenIDLoginForm.OpenIDURL');
-				Director::redirect($backURL);
-			} else
-				Director::redirectBack();
+		OpenIDAuthenticator::authenticate($data, $this);
 
+		// If the OpenID authenticator returns, an error occured!
+		Session::set('SessionForms.OpenIDLoginForm.OpenIDURL',
+								 $data['OpenIDURL']);
+
+		if($badLoginURL = Session::get("BadLoginURL")){
+			Director::redirect($badLoginURL);
 		} else {
-			Session::set('SessionForms.OpenIDLoginForm.OpenIDURL', $data['OpenIDURL']);
-			if($badLoginURL = Session::get("BadLoginURL")){
-				Director::redirect($badLoginURL);
-			} else {
-				Director::redirectBack();
-			}
+			Director::redirectBack();
 		}
   }
 
 
 	/**
-	 * Log out
+	 * Log out form handler method
 	 *
-	 * @todo Figure out for what this method is used! Is it really used at all?
+	 * This method is called when the user clicks on "logout" on the form
+	 * created when the parameter <i>$checkCurrentUser</i> of the
+	 * {@link __construct constructor} was set to TRUE and the user was
+	 * currently logged in.
 	 */
   public function logout() {
     $s = new Security();
-    return $s->logout();
-  }
-
-
-  /**
-   * Try to authenticate the user
-   *
-   * @param array Submitted data
-   * @return Member Returns the member object on successful authentication
-   *                or NULL on failure.
-   */
-  public function performLogin(array $data) {
-    if($member = OpenIDAuthenticator::authenticate($data)) {
-      $firstname = Convert::raw2xml($member->FirstName);
-      $this->sessionMessage("Welcome Back, {$firstname}", "good");
-      $member->LogIn();
-
-      if(isset($data['Remember'])) {
-        // Deliberately obscure...
-        Cookie::set('alc_enc',base64_encode("$data[OpenIDURL]"));
-      }
-      return $member;
-
-    } else {
-      $this->sessionMessage("Login failed. Please try again.", "bad");
-      return null;
-    }
+    $s->logout();
   }
 }
 

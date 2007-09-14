@@ -7,9 +7,9 @@
  * section of an application.
  *
  * On its own, content controller does very little.  Its constructor is passed a {@link DataObject}
- * which is stored in $this->dataRecord.  Any unrecognised method calls, for example, Title() 
- * and Content(), will be passed along to the data record, 
- * 
+ * which is stored in $this->dataRecord.  Any unrecognised method calls, for example, Title()
+ * and Content(), will be passed along to the data record,
+ *
  * Subclasses of ContentController are generally instantiated by ModelAsController; this will create
  * a controller based on the URLSegment action variable, by looking in the SiteTree table.
  */
@@ -26,7 +26,7 @@ class ContentController extends Controller {
 
 		parent::__construct();
 	}
-	
+
 	public function Link($action = null) {
 		return Director::baseURL() . $this->RelativeLink($action);
 	}
@@ -34,7 +34,7 @@ class ContentController extends Controller {
 
 		if($this->URLSegment){
 			if($action == "index") $action = "";
-			
+
 			// '&' in a URL is apparently naughty
 			$action = preg_replace('/&/', '&amp;', $action);
 			return $this->URLSegment . "/$action";
@@ -42,10 +42,10 @@ class ContentController extends Controller {
 			user_error("ContentController::RelativeLink() No URLSegment given on a '$this->class' object.  Perhaps you should overload it?", E_USER_WARNING);
 		}
 	}
-	
+
 	//----------------------------------------------------------------------------------//
 	// These flexible data methods remove the need for custom code to do simple stuff
-	
+
 	/*
 	 * Return the children of the given page.
 	 * $parentRef can be a page number or a URLSegment
@@ -62,12 +62,12 @@ class ContentController extends Controller {
 		}
 
 	}
-	
+
 	public function Page($url) {
 		$SQL_url = Convert::raw2sql($url);
 		return DataObject::get_one('SiteTree', "URLSegment = '$SQL_url'");
 	}
-	
+
 	public function init() {
 		parent::init();
 		
@@ -84,7 +84,7 @@ class ContentController extends Controller {
 		singleton('SiteTree')->extend('contentcontrollerInit', $this);
 		
 		Director::set_site_mode('site');
-		
+
 		// Check permissions
 		if($this->dataRecord && !$this->dataRecord->can('View')) Security::permissionFailure($this);
 		
@@ -92,7 +92,7 @@ class ContentController extends Controller {
 		Requirements::themedCSS("typography");
 		Requirements::themedCSS("form");
 	}
-	
+
 	/**
 	 * Get the project name
 	 *
@@ -109,9 +109,9 @@ class ContentController extends Controller {
 	public function data() {
 		return $this->dataRecord;
 	}
-	
+
 	/*--------------------------------------------------------------------------------*/
-	
+
 	/**
 	 * Returns a fixed navigation menu of the given level.
 	 */
@@ -147,7 +147,7 @@ class ContentController extends Controller {
 	 * Returns the page in the current page stack of the given level.
 	 * Level(1) will return the main menu item that we're currently inside, etc.
 	 */
-	
+
 	public function Level($level) {
 		$parent = $this->data();
 		$stack = array($parent);
@@ -157,25 +157,28 @@ class ContentController extends Controller {
 
 		return isset($stack[$level-1]) ? $stack[$level-1] : null;
 	}
-	
+
 	public function Menu($level) {
 		return $this->getMenu($level);
 	}
-	
+
 	public function Section2() {
 		return $this->Level(2)->URLSegment;
 	}
-	
+
 	/**
 	 * Returns the default log-in form.
-	 */ 
+	 *
+	 * @todo Check if here should be returned just the default log-in form or
+	 *       all available log-in forms (also OpenID...)
+	 */
 	public function LoginForm() {
-		return Object::create('LoginForm', $this, "LoginForm");
+		return MemberAuthenticator::getLoginForm($this);
 	}
-	
+
 	public function SilverStripeNavigator() {
 		$member = Member::currentUser();
-		
+
 		if(Director::isDev() || ($member && $member->isCMSUser())) {
 			Requirements::css('sapphire/css/SilverStripeNavigator.css');
 
@@ -188,8 +191,8 @@ class ContentController extends Controller {
 							var w = window.open(this.href,windowName(this.target));
 							w.focus();
 							return false;
-						}						
-					}					
+						}
+					}
 				});
 
 				function windowName(suffix) {
@@ -213,9 +216,9 @@ JS
 				$thisPage = $this->Link();
 				$cmsLink = '';
 			}
-			
+
 			$archiveLink = "";
-			
+
 			if($date = Versioned::current_archived_date()) {
 				$dateObj = Object::create('Datetime', $date, null);
 				// $dateObj->setVal($date);
@@ -224,7 +227,7 @@ JS
 				$liveLink = "<a href=\"$thisPage?stage=Live\" target=\"site\" style=\"left : -3px;\">Published Site</a>";
 				$stageLink = "<a href=\"$thisPage?stage=Stage\" target=\"site\" style=\"left : -1px;\">Draft Site</a>";
 				$message = "<div id=\"SilverStripeNavigatorMessage\">Archived site from<br>" . $dateObj->Nice() . "</div>";
-				
+
 			} else if(Versioned::current_stage() == 'Stage') {
 				$stageLink = "<a class=\"current\">Draft Site</a>";
 				$liveLink = "<a href=\"$thisPage?stage=Live\" target=\"site\" style=\"left : -3px;\">Published Site</a>";
@@ -235,7 +238,7 @@ JS
 				$stageLink = "<a href=\"$thisPage?stage=Stage\" target=\"site\" style=\"left : -1px;\">Draft Site</a>";
 				$message = "<div id=\"SilverStripeNavigatorMessage\">PUBLISHED SITE</div>";
 			}
-			
+
 			if($member) {
 				$firstname = Convert::raw2xml($member->FirstName);
 				$surname = Convert::raw2xml($member->Surame);
@@ -254,7 +257,7 @@ JS
 					<div id="logInStatus">
 						$logInMessage
 					</div>
-			
+
 					<div id="switchView" class="bottomTabs">
 						<div class="blank"> View page in: </div>
 						$cmsLink
@@ -291,15 +294,15 @@ HTML;
 			}
 		}
 	}
-	
-	
+
+
 	/**
 	 * Throw an error to test the error system
 	 */
 	function throwerror() {
 		user_error("This is a test of the error handler - nothing to worry about.", E_USER_ERROR);
 	}
-		
+
 	/**
 	 * Throw a warning to test the error system
 	 */
@@ -339,13 +342,13 @@ HTML;
 					<div style="margin-left: auto; margin-right: auto; width: 50%;"><p><a href="home/deleteinstallfiles" style="text-align: center;">Click here to delete the install files.</a></p></div></div>
 HTML
 );
-		
+
 		return array(
 			"Title" => $title,
 			"Content" => $content,
 		);
 	}
-	
+
 	function deleteinstallfiles() {
 		$title = new Varchar("Title");
 		$content = new HTMLText("Content");
@@ -396,7 +399,7 @@ HTML
 HTML
 		;
 		$content->setValue($tempcontent);
-		
+
 		return array(
 			"Title" => $title,
 			"Content" => $content,

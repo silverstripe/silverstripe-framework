@@ -1,6 +1,14 @@
 <?php
 
 /**
+ * OpenID authenticator and controller
+ *
+ * @author Markus Lanthaler <markus@silverstripe.com>
+ */
+
+
+
+/**
  * Require the OpenID consumer code.
  */
 require_once "Auth/OpenID/Consumer.php";
@@ -29,10 +37,13 @@ class OpenIDAuthenticator extends Authenticator {
 	 * Method to authenticate an user
 	 *
 	 * @param array $RAW_data Raw data to authenticate the user
+   * @param Form $form Optional: If passed, better error messages can be
+   *                             produced by using
+   *                             {@link Form::sessionMessage()}
 	 * @return bool|Member Returns FALSE if authentication fails, otherwise
 	 *                     the member object
 	 */
-	public function authenticate(array $RAW_data) {
+	public function authenticate(array $RAW_data, Form $form = null) {
 		$openid = $RAW_data['OpenIDURL'];
 
 		$trust_root = Director::absoluteBaseURL();
@@ -59,8 +70,26 @@ class OpenIDAuthenticator extends Authenticator {
 
 		// No auth request means we can't begin OpenID.
 		if(!$auth_request) {
-			displayError("Authentication error; not a valid OpenID.");
+			if(!is_null($form)) {
+				$form->sessionMessage("That doesn't seem to be a valid OpenID " .
+																"or i-name identifier. Please try again.",
+															"bad");
+			}
+			return false;
 		}
+
+		$SQL_user = Convert::raw2sql($auth_request->endpoint->claimed_id);
+		if(!($member = DataObject::get_one("Member", "Email = '$SQL_user'"))) {
+			if(!is_null($form)) {
+				$form->sessionMessage("Either your account is not enabled for " .
+																"OpenID/i-name authentication " .
+																"or the entered identifier is wrong. " .
+																"Please try again.",
+															"bad");
+			}
+			return false;
+		}
+
 
 
 		/**
@@ -97,6 +126,7 @@ class OpenIDAuthenticator extends Authenticator {
 					 "</title></head>",
 					 "<body onload='document.getElementById(\"".$form_id."\").submit()'>",
 					 $form_html,
+					 "<p>Click &quot;Continue&quot; to login. You are only seeing this because you appear to have JavaScript disabled.</p>",
 					 "</body></html>");
 
 				print implode("\n", $page_contents);
@@ -109,11 +139,13 @@ class OpenIDAuthenticator extends Authenticator {
 	/**
 	 * Method that creates the login form for this authentication method
 	 *
+   * @param Controller The parent controller, necessary to create the
+   *                   appropriate form action tag
 	 * @return Form Returns the login form to use with this authentication
 	 *              method
 	 */
-	public function getLoginForm() {
-		return Object::create("OpenIDLoginForm", $this, "LoginForm");
+	public static function getLoginForm(Controller $controller) {
+		return Object::create("OpenIDLoginForm", $controller, "LoginForm");
 	}
 }
 
@@ -135,11 +167,96 @@ class OpenIDAuthenticator_Controller extends Controller {
 	function run($requestParams) {
 		parent::init();
 
-		if(isset($_GET['debug_profile'])) Profiler::mark("OpenIDAuthenticator_Controller");
+		if(isset($_GET['debug_profile']))
+			Profiler::mark("OpenIDAuthenticator_Controller");
 
-		die("Not implemented yet!");
 
-		if(isset($_GET['debug_profile'])) Profiler::unmark("OpenIDAuthenticator_Controller");
+		/**
+		 * This is where the example will store its OpenID information.
+		 * You should change this path if you want the example store to be
+		 * created elsewhere.  After you're done playing with the example
+		 * script, you'll have to remove this directory manually.
+		 */
+		$store_path = TEMP_FOLDER;
+
+		if(!file_exists($store_path) && !mkdir($store_path)) {
+			print "Could not create the FileStore directory '$store_path'. ".
+					" Please check the effective permissions.";
+			exit(0);
+		}
+		$store = new Auth_OpenID_FileStore($store_path);
+
+		$consumer = new Auth_OpenID_Consumer($store, new SessionWrapper());
+
+
+
+		// Complete the authentication process using the server's response.
+		$response = $consumer->complete();
+
+		if($response->status == Auth_OpenID_CANCEL) {
+			Session::set("Security.Message.message",
+									 "The verification was cancelled. Please try again.");
+			Session::set("Security.Message.type", "bad");
+
+			if(isset($_GET['debug_profile']))
+				Profiler::unmark("OpenIDAuthenticator_Controller");
+
+			Director::redirect("Security/login");
+
+		} else if($response->status == Auth_OpenID_FAILURE) {
+			Session::set("Security.Message.message", // use $response->message ??
+									 "The OpenID/i-name authentication failed.");
+			Session::set("Security.Message.type", "bad");
+
+			if(isset($_GET['debug_profile']))
+				Profiler::unmark("OpenIDAuthenticator_Controller");
+
+			Director::redirect("Security/login");
+
+		} else if($response->status == Auth_OpenID_SUCCESS) {
+			$openid = $response->identity_url;
+			$user = $openid;
+
+			if($response->endpoint->canonicalID) {
+				$user = $response->endpoint->canonicalID;
+			}
+
+
+			if(isset($_GET['debug_profile']))
+				Profiler::unmark("OpenIDAuthenticator_Controller");
+
+
+			$SQL_user = Convert::raw2sql($user);
+			if($member = DataObject::get_one("Member", "Email = '$SQL_user'")) {
+				$firstname = Convert::raw2xml($member->FirstName);
+				Session::set("Security.Message.message", "Welcome Back, {$firstname}");
+				Session::set("Security.Message.type", "good");
+
+				$member->LogIn(
+					Session::get('SessionForms.OpenIDLoginForm.Remember'));
+
+				Session::clear('SessionForms.OpenIDLoginForm.OpenIDURL');
+				Session::clear('SessionForms.OpenIDLoginForm.Remember');
+
+				if($backURL = Session::get("BackURL")) {
+					Session::clear("BackURL");
+					Director::redirect($backURL);
+				}	else {
+					Director::redirectBack();
+				}
+
+			}	else {
+				Session::set("Security.Message.message",
+										 "Login failed. Please try again.");
+				Session::set("Security.Message.type", "bad");
+
+				if($badLoginURL = Session::get("BadLoginURL")) {
+					Director::redirect($badLoginURL);
+				} else {
+					Director::redirectBack();
+				}
+			}
+		}
 	}
 
 
@@ -166,7 +283,7 @@ class OpenIDAuthenticator_Controller extends Controller {
  *
  * @author Markus Lanthaler <markus@silverstripe.com>
  */
-class SessionWrapper {
+class SessionWrapper extends Auth_Yadis_PHPSession {
 
 	/**
 	 * Set a session key/value pair.
