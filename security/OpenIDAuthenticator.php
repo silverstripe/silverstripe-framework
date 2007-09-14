@@ -40,8 +40,12 @@ class OpenIDAuthenticator extends Authenticator {
    * @param Form $form Optional: If passed, better error messages can be
    *                             produced by using
    *                             {@link Form::sessionMessage()}
-	 * @return bool|Member Returns FALSE if authentication fails, otherwise
-	 *                     the member object
+	 * @return bool Returns FALSE if authentication fails, otherwise the
+	 *              method will not return at all because the browser will be
+	 *              redirected to some other server.
+	 *
+	 * @todo Check if we can send the POST request for OpenID 2 directly
+	 *       (without rendering a form and using javascript)
 	 */
 	public function authenticate(array $RAW_data, Form $form = null) {
 		$openid = $RAW_data['OpenIDURL'];
@@ -49,26 +53,12 @@ class OpenIDAuthenticator extends Authenticator {
 		$trust_root = Director::absoluteBaseURL();
 		$return_to_url = $trust_root . 'OpenIDAuthenticator_Controller';
 
-		/**
-		 * @todo Change the store to use the database!
-		 */
-		// FIXXXME
-		$store_path = TEMP_FOLDER;
-
-		if(!file_exists($store_path) && !mkdir($store_path)) {
-			print "Could not create the FileStore directory '$store_path'. ".
-					" Please check the effective permissions.";
-			exit(0);
-		}
-		$store = new Auth_OpenID_FileStore($store_path);
-		// END FIXXXME
-		$consumer = new Auth_OpenID_Consumer($store, new SessionWrapper());
+		$consumer = new Auth_OpenID_Consumer(new OpenIDStorage(),
+																				 new SessionWrapper());
 
 
-		// Begin the OpenID authentication process.
+		// No auth request means we can't begin OpenID
 		$auth_request = $consumer->begin($openid);
-
-		// No auth request means we can't begin OpenID.
 		if(!$auth_request) {
 			if(!is_null($form)) {
 				$form->sessionMessage("That doesn't seem to be a valid OpenID " .
@@ -91,32 +81,23 @@ class OpenIDAuthenticator extends Authenticator {
 		}
 
 
-
-		/**
-		 * @todo Check if the POST request should be send directly (without rendering a form)
-		 */
-		// For OpenID 1, send a redirect.  For OpenID 2, use a Javascript
-		// form to send a POST request to the server.
 		if($auth_request->shouldSendRedirect()) {
+			// For OpenID 1, send a redirect.
 			$redirect_url = $auth_request->redirectURL($trust_root, $return_to_url);
 
-			// If the redirect URL can't be built, display an error
-			// message.
 			if(Auth_OpenID::isFailure($redirect_url)) {
 				displayError("Could not redirect to server: " . $redirect_url->message);
 			} else {
 				Director::redirect($redirect_url);
-//				header("Location: ".$redirect_url);
-
 			}
+
 		} else {
-			// Generate form markup and render it.
+			// For OpenID 2, use a javascript form to send a POST request to the
+			// server.
 			$form_id = 'openid_message';
 			$form_html = $auth_request->formMarkup($trust_root, $return_to_url,
 																						 false, array('id' => $form_id));
 
-			// Display an error if the form markup couldn't be generated;
-			// otherwise, render the HTML.
 			if(Auth_OpenID::isFailure($form_html)) {
 				displayError("Could not redirect to server: " . $form_html->message);
 			} else {
@@ -126,12 +107,15 @@ class OpenIDAuthenticator extends Authenticator {
 					 "</title></head>",
 					 "<body onload='document.getElementById(\"".$form_id."\").submit()'>",
 					 $form_html,
-					 "<p>Click &quot;Continue&quot; to login. You are only seeing this because you appear to have JavaScript disabled.</p>",
+					 "<p>Click &quot;Continue&quot; to login. You are only seeing " .
+					 "this because you appear to have JavaScript disabled.</p>",
 					 "</body></html>");
 
 				print implode("\n", $page_contents);
 			}
 		}
+
+		// Stop the script execution! This method should return only on error
 		exit();
 	}
 
@@ -173,6 +157,8 @@ class OpenIDAuthenticator_Controller extends Controller {
 
 	/**
 	 * Run the controller
+	 *
+	 * @param array $requestParams Passed request parameters
 	 */
 	function run($requestParams) {
 		parent::init();
@@ -181,23 +167,8 @@ class OpenIDAuthenticator_Controller extends Controller {
 			Profiler::mark("OpenIDAuthenticator_Controller");
 
 
-		/**
-		 * This is where the example will store its OpenID information.
-		 * You should change this path if you want the example store to be
-		 * created elsewhere.  After you're done playing with the example
-		 * script, you'll have to remove this directory manually.
-		 */
-		$store_path = TEMP_FOLDER;
-
-		if(!file_exists($store_path) && !mkdir($store_path)) {
-			print "Could not create the FileStore directory '$store_path'. ".
-					" Please check the effective permissions.";
-			exit(0);
-		}
-		$store = new Auth_OpenID_FileStore($store_path);
-
-		$consumer = new Auth_OpenID_Consumer($store, new SessionWrapper());
-
+		$consumer = new Auth_OpenID_Consumer(new OpenIDStorage(),
+																				 new SessionWrapper());
 
 
 		// Complete the authentication process using the server's response.
@@ -277,8 +248,10 @@ class OpenIDAuthenticator_Controller extends Controller {
 	 * @param string $type Message type (e.g. "good" or "bad")
 	 */
 	function sessionMessage($message, $type) {
-		Session::set("FormInfo.OpenIDLoginForm_LoginForm.formError.message", $message);
-		Session::set("'FormInfo.OpenIDLoginForm_LoginForm.formError.type", $type);
+		Session::set("FormInfo.OpenIDLoginForm_LoginForm.formError.message",
+								 $message);
+		Session::set("'FormInfo.OpenIDLoginForm_LoginForm.formError.type",
+								 $type);
 	}
 
 }
