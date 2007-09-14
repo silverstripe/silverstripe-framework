@@ -119,9 +119,9 @@ class PDODatabase extends Database {
 	 * @return float
 	 */
 	public function getVersion() {
-		switch ($type) {
+		switch (PDO::ATTR_DRIVER_NAME) {
 			case "mysql":
-			case "postgresql":
+			case "pgsql":
 				$query = "SELECT VERSION()";
 				break;
 			case "mssql":
@@ -173,8 +173,7 @@ class PDODatabase extends Database {
 	 * @return int
 	 */
 	public function getGeneratedID($table) {
-		$stmt = $dbConn->prepare("SELECT MAX(ID) FROM :table");
-		$stmt->bindParam(":table", $table);
+		$stmt = $dbConn->prepare("SELECT MAX(ID) FROM $table");
 		$handle = $stmt->execute();
 		$result = $stmt->fetchColumn();
 		return $handle ? $result : 0;
@@ -188,8 +187,7 @@ class PDODatabase extends Database {
 	 */
 	public function getNextID($table) {
 		user_error('getNextID is OBSOLETE (and will no longer work properly)', E_USER_WARNING);
-		$stmt = $dbConn->prepare("SELECT MAX(ID)+1 FROM :table");
-		$stmt->bindParam(":table", $table);
+		$stmt = $dbConn->prepare("SELECT MAX(ID)+1 FROM $table");
 		$handle = $stmt->execute();
 		$result = $stmt->fetchColumn();
 		return $handle ? $result : 1;
@@ -216,8 +214,7 @@ class PDODatabase extends Database {
 	public function createDatabase($connect, $username, $password, $database) {
 		try {
 			$dbConn = new PDO($connect, $username, $password);
-			$stmt = $dbConn->prepare("CREATE DATABASE :database");
-			$stmt->bindParam(":database", $database);
+			$stmt = $dbConn->prepare("CREATE DATABASE $database");
 			$stmt->execute();
 			$this->active = true;
 		} catch (PDOException $e) {
@@ -238,19 +235,20 @@ class PDODatabase extends Database {
 		}
 		
 		switch ($parameters['type']) {
+
+		switch (PDO::ATTR_DRIVER_NAME) {
 			case "mysql":
-				$stmt = $dbConn->prepare("CREATE TABLE :tableName (ID INT(11) NOT NULL AUTO_INCREMENT, $fieldSchemas PRIMARY KEY (ID)) TYPE=MyISAM");
+				$stmt = $dbConn->prepare("CREATE TABLE $tableName (ID INT(11) NOT NULL AUTO_INCREMENT, $fieldSchemas PRIMARY KEY (ID)) TYPE=MyISAM");
 				break;
-			case "postgresql":
-				$stmt = $dbConn->prepare("CREATE TABLE :tableName (ID SERIAL, $fieldSchemas PRIMARY KEY (ID))");
+			case "pgsql":
+				$stmt = $dbConn->prepare("CREATE TABLE $tableName (ID SERIAL, $fieldSchemas PRIMARY KEY (ID))");
 				break;
 			case "mssql":
-				$stmt = $dbConn->prepare("CREATE TABLE :tableName (ID INT(11) IDENTITY(1,1), $fieldSchemas PRIMARY KEY (ID))");
+				$stmt = $dbConn->prepare("CREATE TABLE $tableName (ID INT(11) IDENTITY(1,1), $fieldSchemas PRIMARY KEY (ID))");
 				break;
 			default:
 				$this->databaseError("This database server is not available");
 		}
-		$stmt->bindParam(":tableName", $tableName);
 		$stmt->execute();
 
 		if ($indexes) {
@@ -270,72 +268,29 @@ class PDODatabase extends Database {
 	public function alterTable($table, $newFields, $newIndexes, $alteredFields, $alteredIndexes) {
 		
 		if ($newFields) {
-			$stmt = $dbConn->prepare("ALTER TABLE :table ADD :field :type");
-			$stmt->bindParam(':table', $table);
-			$stmt->bindParam(':field', $field);
-			$stmt->bindParam(':type', $type);
-			foreach ($newFields as $k => $v) {
-				$field = $k;
-				$type = $v;
+			foreach ($newFields as $field => $type) {
+				$stmt = $dbConn->prepare("ALTER TABLE $table ADD $field $type");
 				$stmt->execute();
 			}
 		}
 		
 		if ($newIndexes) {
-			$stmt = $dbConn->prepare("CREATE INDEX :name ON :table :column");
-			$stmt->bindParam(':table', $table);
-			$stmt->bindParam(':name', $name);
-			$stmt->bindParam(':column', $column);
-			foreach ($newIndexes as $k => $v) {
-				$name = $k;
-				$column = $v;
+			foreach ($newIndexes as $name => $column) {
+				$stmt = $dbConn->prepare("CREATE INDEX $name ON $table $column");
 				$stmt->execute();
 			}
 		}
 		
 		if ($alteredFields) {
-			switch ($parameters['type']) {
-				case "mysql":
-					$stmt = $dbConn->prepare("ALTER TABLE :table CHANGE :field :field :type");
-					break;
-				case "postgresql":
-					$stmt = $dbConn->prepare("
-						BEGIN;
-						ALTER TABLE :table RENAME :field TO oldfield;
-						ALTER TABLE :table ADD COLUMN :field :type;
-						UPDATE :table SET :field = CAST(oldfield AS :type);
-						ALTER TABLE :table DROP COLUMN oldfield;
-						COMMIT;
-					");
-				break;
-				case "mssql":
-					$stmt = $dbConn->prepare("ALTER TABLE :table ALTER COLUMN :field :type");
-					break;
-				default:
-					$this->databaseError("This database server is not available");
-			}
-			$stmt->bindParam(':table', $table);
-			$stmt->bindParam(':field', $field);
-			$stmt->bindParam(':type', $type);
-			foreach ($alteredFields as $k => $v) {
-				$field = $k;
-				$type = $v;
-				$stmt->execute();
+			foreach ($alteredFields as $field => $type) {
+				alterField($table, $field, $type)
 			}
 		}
 		
 		if ($alteredIndexes) {
-			$drop = $dbConn->prepare("DROP INDEX :drop");
-			$drop->bindParam(':drop', $drop);
-			$stmt = $dbConn->prepare("CREATE INDEX :name ON :table :column");
-			$stmt->bindParam(':table', $table);
-			$stmt->bindParam(':name', $name);
-			$stmt->bindParam(':column', $column);
-			foreach ($newIndexes as $k => $v) {
-				$drop = $k;
-				$drop->execute();
-				$name = $k;
-				$column = $v;
+			foreach ($newIndexes as $name => $column) {
+				$dbConn->query("DROP INDEX $name");
+				$stmt = $dbConn->prepare("CREATE INDEX $name ON $table $column");
 				$stmt->execute();
 			}
 		}
@@ -348,9 +303,7 @@ class PDODatabase extends Database {
 	 * @return void.
 	 */
 	public function renameTable($oldTableName, $newTableName) {
-		$stmt = $dbConn->prepare("ALTER TABLE :oldTableName RENAME TO :newTableName");
-		$stmt->bindParam(":oldTableName", $oldTableName);
-		$stmt->bindParam(":newTableName", $newTableName);
+		$stmt = $dbConn->prepare("ALTER TABLE $oldTableName RENAME TO $newTableName");
 		$stmt->execute();
 	}
 	
@@ -397,10 +350,7 @@ class PDODatabase extends Database {
 	 * @return void
 	 */
 	public function createField($tableName, $fieldName, $fieldSpec) {
-		$stmt = $dbConn->prepare("ALTER TABLE :tableName ADD :fieldName :fieldSpec");
-		$stmt->bindParam(":tableName", $tableName);
-		$stmt->bindParam(":fieldName", $fieldName);
-		$stmt->bindParam(":fieldSpec", $fieldSpec);
+		$stmt = $dbConn->prepare("ALTER TABLE $tableName ADD $fieldName $fieldSpec");
 		$stmt->execute();
 	}
 	
@@ -412,29 +362,26 @@ class PDODatabase extends Database {
 	 * @return void
 	 */
 	public function alterField($table, $field, $type) {
-		switch ($parameters['type']) {
+		switch (PDO::ATTR_DRIVER_NAME) {
 			case "mysql":
-				$stmt = $dbConn->prepare("ALTER TABLE :table CHANGE :field :field :type");
+				$stmt = $dbConn->prepare("ALTER TABLE $table CHANGE $field $field $type");
 				break;
-			case "postgresql":
+			case "pgsql":
 				$stmt = $dbConn->prepare("
 					BEGIN;
-					ALTER TABLE :table RENAME :field TO oldfield;
-					ALTER TABLE :table ADD COLUMN :field :type;
-					UPDATE :table SET :field = CAST(oldfield AS :type);
-					ALTER TABLE :table DROP COLUMN oldfield;
+					ALTER TABLE $table RENAME $field TO oldfield;
+					ALTER TABLE $table ADD COLUMN $field $type;
+					UPDATE $table SET $field = CAST(oldfield AS $type);
+					ALTER TABLE $table DROP COLUMN oldfield;
 					COMMIT;
 				");
 			break;
 			case "mssql":
-				$stmt = $dbConn->prepare("ALTER TABLE :table ALTER COLUMN :field :type");
+				$stmt = $dbConn->prepare("ALTER TABLE $table ALTER COLUMN $field $type");
 				break;
 			default:
 				$this->databaseError("This database server is not available");
 		}
-		$stmt->bindParam(':table', $table);
-		$stmt->bindParam(':field', $field);
-		$stmt->bindParam(':type', $type);
 		$stmt->execute();
 	}
 	
@@ -446,10 +393,7 @@ class PDODatabase extends Database {
 	*  @return void
 	 */
 	public function createIndex($tableName, $indexName, $indexSpec) {
-		$stmt = $dbConn->prepare("CREATE INDEX :name ON :table :column");
-		$stmt->bindParam(':table', $tableName);
-		$stmt->bindParam(':name', $indexName);
-		$stmt->bindParam(':column', $indexSpec);
+		$stmt = $dbConn->prepare("CREATE INDEX $indexName ON $tableName $indexSpec");
 		$stmt->execute();
 	}
 	
@@ -461,25 +405,101 @@ class PDODatabase extends Database {
 	*  @return void
 	 */
 	public function alterIndex($tableName, $indexName, $indexSpec) {
-		$drop = $dbConn->prepare("DROP INDEX :drop");
-		$drop->bindParam(':drop', $indexName);
-		$stmt = $dbConn->prepare("CREATE INDEX :name ON :table :column");
-		$stmt->bindParam(':table', $tableName);
-		$stmt->bindParam(':name', $indexName);
-		$stmt->bindParam(':column', $indexSpec);
-		$drop->execute();
+		$dbConn->query("DROP INDEX $indexName");
+		$stmt = $dbConn->prepare("CREATE INDEX $indexName ON $tableName $indexSpec");
 		$stmt->execute();
 	}
 	
 	/**
 	 * Get a list of all the fields for the given table.
+	 * The results are not totally equal for all databases (for example collations are handled very differently, PostgreSQL disregards zerofill,...)
+	 * but as close as possible and necessary.
 	 * @param string $able Table of which to show the fields.
 	 * Returns a map of field name => field spec.
 	 */
 	public function fieldList($table) {
-	
-	// to be done - SHOW is used extensively but very MySQL specific
-	
+		switch (PDO::ATTR_DRIVER_NAME) {
+			case "mysql":
+				foreach ($dbConn->query("SHOW FULL FIELDS IN $table") as $field) {
+					$fieldSpec = $field['Type'];
+					if(!$field['Null'] || $field['Null'] == 'NO') {
+						$fieldSpec .= ' not null';
+					}
+					if($field['Collation'] && $field['Collation'] != 'NULL') {
+						$values = $dbh->prepare("SHOW COLLATION LIKE '$field[Collation]'");
+						$values->execute();
+						$collInfo = $values->fetchColumn();
+						$fieldSpec .= " character set $collInfo[Charset] collate $field[Collation]";
+					}
+					if($field['Default'] || $field['Default'] === "0") {
+						$fieldSpec .= " default '" . addslashes($field['Default']) . "'";
+					}
+					if($field['Extra']) $fieldSpec .= " $field[Extra]";
+					$fieldList[$field['Field']] = $fieldSpec;
+				}
+				break;
+			case "pgsql":
+				foreach ($dbh->query("
+					SELECT
+						a.attname AS field,
+						pg_catalog.format_type(a.atttypid, a.atttypmod) AS type,
+						a.attnotnull AS null
+					FROM
+						pg_class c,
+						pg_attribute a,
+						pg_type t
+					WHERE
+						c.relname = $table
+						AND a.attnum > 0
+						AND a.attrelid = c.oid
+						AND a.atttypid = t.oid
+						AND (NOT A.attisdropped)
+					ORDER BY
+						a.attnum
+				") as $field) {
+					$fieldSpec = $field['type'];
+					if ($field['null'] == 't') {
+						$fieldSpec .= ' not null';
+					}
+					
+					$fieldList[$field['field']] = $fieldSpec;
+				}
+				break;
+			case "mssql":
+				foreach ($dbh->query("
+					SELECT
+						COLUMN_NAME as 'field',
+						COLUMN_DEFAULT as 'default',
+						IS_NULLABLE as 'null',
+						DATA_TYPE as 'type',
+						COLLATION_NAME as 'collation',
+						CHARACTER_SET_NAME as 'characterset'
+					FROM
+						information_schema.columns
+					WHERE
+						TABLE_NAME = 'tableb'
+				") as $field) {
+					$fieldSpec = $field['type'];
+					if ($field['null'] == 't') {
+						$fieldSpec .= ' not null';
+					}
+					
+					if($field['collation'] && $field['collation'] != 'NULL') {
+						$fieldSpec .= " character set $field[characterset] collate $field[collation]";
+					}
+					
+					if($field['default'] || $field['default'] === "0") {
+						$fieldSpec .= " default '" . addslashes($field['default']) . "'";
+					}
+					
+					$fieldList[$field['field']] = $fieldSpec;
+				}
+				break;
+			default:
+				$this->databaseError("This database server is not available");
+		}
+		
+		return $fieldList;
 	}
 	
 	/**
@@ -499,11 +519,11 @@ class PDODatabase extends Database {
 	 * Returns a map of a table.
 	 */
 	public function tableList() {
-		switch ($parameters['type']) {
+		switch (PDO::ATTR_DRIVER_NAME) {
 			case "mysql":
 				$sql = "SHOW TABLES";
 				break;
-			case "postgresql":
+			case "pgsql":
 				$sql = "SELECT tablename FROM pg_tables WHERE tablename NOT ILIKE 'pg_%' AND tablename NOT ILIKE 'sql_%'";
 				break;
 			case "mssql":
