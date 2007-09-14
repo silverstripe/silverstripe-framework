@@ -30,7 +30,7 @@ class DB {
 	 */
 	static function setConn($globalConn) {
 		DB::$globalConn = $globalConn;
-	}	
+	}
 	
 	/**
 	 * Get the global database connection.
@@ -48,9 +48,22 @@ class DB {
 	 */
 	static function connect($databaseConfig) {
 		if(!$databaseConfig['type']) user_error("DB::connect: Not passed a valid database config", E_USER_ERROR);
-		$dbClass = $databaseConfig['type'];
-		$conn = new $dbClass($databaseConfig);
+		if ($databaseConfig['pdo']) { // TODO:pkrenn_remove
+			$conn = new PDODatabase($databaseConfig);
+		} else { // TODO:pkrenn_remove begin
+			$dbClass = $databaseConfig['type'];
+			$conn = new $dbClass($databaseConfig);
+		} // TODO:pkrenn_remove end
 		DB::setConn($conn);
+	}
+	
+	/**
+	 * Build the connection string from input.
+	 * @param array $parameters The connection details.
+	 * @return string $connect The connection string.
+	 **/
+	public function getConnect($parameters) {
+		return DB::$globalConn->getConnect($parameters);
 	}
 	
 	/**
@@ -106,10 +119,14 @@ class DB {
 	 * Create the database and connect to it. This can be called if the
 	 * initial database connection is not successful because the database
 	 * does not exist.
+	 * @param string $connect Connection string
+	 * @param string $username Database username
+	 * @param string $password Database Password
+	 * @param string $database Database to which to create
 	 * @return boolean Returns true if successful
 	 */
-	static function createDatabase() {
-		return DB::$globalConn->createDatabase();
+	static function createDatabase($connect, $username, $password, $database) {
+		return DB::$globalConn->createDatabase($connect, $username, $password, $database);
 	}
 	
 	/**

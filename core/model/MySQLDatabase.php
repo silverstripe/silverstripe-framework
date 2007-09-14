@@ -47,6 +47,13 @@ class MySQLDatabase extends Database {
 	}
 	
 	/**
+	 * Not implemented, needed for PDO
+	 */
+	public function getConnect($parameters) {
+		return null;
+	}
+	
+	/**
 	 * Returns true if this database supports collations
 	 * @return boolean
 	 */
@@ -109,10 +116,10 @@ class MySQLDatabase extends Database {
 	}
 	
 	public function isActive() {
-		return $this->active ? true : false;	
+		return $this->active ? true : false;
 	}
 	
-	public function createDatabase() {
+	public function createDatabase($connect, $username, $password, $db) {
 		$this->query("CREATE DATABASE $this->database");
 		$this->query("USE $this->database");
 
@@ -361,7 +368,7 @@ class MySQLDatabase extends Database {
 			$table = strtolower(reset($record));
 			$tables[$table] = $table;
 		}
-		return isset($tables) ? $tables : null;		
+		return isset($tables) ? $tables : null;
 	}
 	
 	/**

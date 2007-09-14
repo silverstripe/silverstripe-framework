@@ -135,7 +135,12 @@ class DatabaseAdmin extends Controller {
 			if(!$quiet) {
 				echo '<p><b>Creating database</b></p>';
 			}
-			DB::createDatabase();
+			$parameters = $_REQUEST['db'];
+			$connect = DB::getConnect($parameters);
+			$username = $parameters[username];
+			$password = $parameters[password];
+			$database = $parameters[database];
+			DB::createDatabase($connect, $username, $password, $database);
 			// ManifestBuilder::compileManifest();
 		}
 

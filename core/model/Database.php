@@ -49,9 +49,20 @@ abstract class Database extends Object {
 	 * Create the database and connect to it. This can be called if the
 	 * initial database connection is not successful because the database
 	 * does not exist.
+	 * @param string $connect Connection string
+	 * @param string $username Database username
+	 * @param string $password Database Password
+	 * @param string $database Database to which to create
 	 * @return boolean Returns true if successful
 	 */
-	abstract function createDatabase();	
+	abstract function createDatabase($connect, $username, $password, $database);
+	
+	/**
+	 * Build the connection string from input
+	 * @param array $parameters The connection details
+	 * @return string $connect The connection string
+	 **/
+	abstract function getConnect($parameters);
 	
 	/**
 	 * Create a new table.
