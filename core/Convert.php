@@ -281,7 +281,7 @@ class Convert extends Object {
 	 * @return the HTML version of the string
 	 */
 	static function raw2html($val) {
-		user_error("Convert::raw2xml is deprecated.  Used Convert::raw2xml instead", E_USER_WARNING);
+		user_error("Convert::raw2html is deprecated.  Used Convert::raw2xml instead", E_USER_WARNING);
 		return self::raw2xml($val);
 	}
 
