@@ -5,7 +5,7 @@
  * Controllers are the cornerstone of all site functionality in Sapphire.  The {@link Director}
  * selects a controller to pass control to, and then calls {@link run()}.  This method will execute
  * the appropriate action - either by calling the action method, or displaying the action's template.
- * 
+ *
  * See {@link getTemplate()} for information on how the template is chosen.
  */
 class Controller extends ViewableData {
@@ -44,7 +44,7 @@ class Controller extends ViewableData {
 	function getURLParams() {
 		return $this->urlParams;
 	}
-	
+
 	/**
 	 * Execute the appropriate action handler.  If none is given, use defaultAction to display
 	 * a template.  The default action will be appropriate in most cases where displaying data
@@ -76,6 +76,7 @@ class Controller extends ViewableData {
 		}
 		
 		// Look at the action variables for forms
+		$funcName = null;
 		foreach($this->requestParams as $paramName => $paramVal) {
 			if(substr($paramName,0,7) == 'action_') {
 				// Cleanup action_, _x and _y from image fields
@@ -97,7 +98,7 @@ class Controller extends ViewableData {
 				while(is_a($formController, 'NestedController')) {
 					$formController = $formController->getNestedController();
 				}
-				
+
 			} else {
 				$formController = $this;
 			}
@@ -112,10 +113,10 @@ class Controller extends ViewableData {
 				if(isset($_GET['debug_profile'])) Profiler::unmark("Calling $formMethod", "on $form->class");
 				if(!$form) break; //user_error("Form method '" . $this->requestParams['executeForm'] . "' returns null in controller class '$this->class' ($_SERVER[REQUEST_URI])", E_USER_ERROR);
 			}
-		
-			
+
+
 			// Populate the form
-			if(isset($_GET['debug_profile'])) Profiler::mark("Controller", "populate form");		
+			if(isset($_GET['debug_profile'])) Profiler::mark("Controller", "populate form");
 			if($form){
 				$form->loadDataFrom($this->requestParams, true);
 				// disregard validation if a single field is called
@@ -155,25 +156,26 @@ class Controller extends ViewableData {
 				user_error("No action button has been clicked in this form executon, and no default has been allowed", E_USER_ERROR);
 			}
 
+
 			// First, try a handler method on the controller
 			if($this->hasMethod($funcName) || !$form) {
 				if(isset($_GET['debug_controller'])){
 					Debug::show("Found function $funcName on the controller");
 				}
 
-				if(isset($_GET['debug_profile'])) Profiler::mark("$this->class::$funcName (controller action)");		
+				if(isset($_GET['debug_profile'])) Profiler::mark("$this->class::$funcName (controller action)");
 				$result = $this->$funcName($this->requestParams, $form);
-				if(isset($_GET['debug_profile'])) Profiler::unmark("$this->class::$funcName (controller action)");		
-				
+				if(isset($_GET['debug_profile'])) Profiler::unmark("$this->class::$funcName (controller action)");
+
 			// Otherwise, try a handler method on the form object
 			} else {
 				if(isset($_GET['debug_controller'])) {
 					Debug::show("Found function $funcName on the form object");
 				}
 
-				if(isset($_GET['debug_profile'])) Profiler::mark("$form->class::$funcName (form action)");		
+				if(isset($_GET['debug_profile'])) Profiler::mark("$form->class::$funcName (form action)");
 				$result = $form->$funcName($this->requestParams, $form);
-				if(isset($_GET['debug_profile'])) Profiler::unmark("$form->class::$funcName (form action)");		
+				if(isset($_GET['debug_profile'])) Profiler::unmark("$form->class::$funcName (form action)");
 			}
 
 		// Normal action
@@ -187,22 +189,22 @@ class Controller extends ViewableData {
 				
 				$result = $this->$funcName($this->urlParams);
 				if(isset($_GET['debug_profile'])) Profiler::unmark("$this->class::$funcName (controller action)");
-				
+
 			} else {
 				if(isset($_GET['debug_controller'])) Debug::show("Running default action for $funcName on the $this->class controller" );
 				if(isset($_GET['debug_profile'])) Profiler::mark("Controller::defaultAction($funcName)");
 				$result = $this->defaultAction($funcName, $this->urlParams);
-				if(isset($_GET['debug_profile'])) Profiler::unmark("Controller::defaultAction($funcName)");		
+				if(isset($_GET['debug_profile'])) Profiler::unmark("Controller::defaultAction($funcName)");
 			}
 		}
-		
+
 		// If your controller function returns an array, then add that data to the
 		// default template
-		
+
 		if(is_array($result)) {
 			$extended = $this->customise($result);
 			$viewer = $this->getViewer($funcName);
-			
+
 			$result = $viewer->process($extended);
 		}
 
@@ -222,11 +224,11 @@ class Controller extends ViewableData {
 	function defaultAction($action) {
 		return $this->getViewer($action)->process($this);
 	}
-	
+
 	function getAction() {
 		return $this->action;
 	}
-	
+
 	/**
 	 * Return an SSViewer object to process the data
 	 * @return SSViewer The viewer identified being the default handler for this Controller/Action combination
@@ -247,7 +249,7 @@ class Controller extends ViewableData {
 
 				if($action && $action != "index") $templates[] = $templateName . '_' . $action;
 				$templates[] = $templateName;
-				
+
 				$parentClass = get_parent_class($parentClass);
 			}
 			$templates = array_unique($templates);
@@ -329,9 +331,9 @@ class Controller extends ViewableData {
 			return true;
 		}
 	}
-	
+
 	//-----------------------------------------------------------------------------------
-	
+
 	/**
 	 * returns a date object for use within a template
 	 * Usage: $Now.Year - Returns 2006
@@ -342,25 +344,25 @@ class Controller extends ViewableData {
 		$d->setVal(date("Y-m-d h:i:s"));
 		return $d;
 	}
-	
+
 	/**
 	 * Returns a link to any other page
 	 */
 	function LinkTo($a, $b) {
 		return Director::baseURL() . $a . '/' . $b;
 	}
-	
+
 	function AbsoluteLink() {
 		return Director::absoluteURL($this->Link());
 	}
-	
+
 	/**
 	 * Returns the currently logged in user
 	 */
 	function CurrentMember() {
 		return Member::currentUser();
 	}
-	
+
 	/**
 	 * Returns true if the visitor has been here before
 	 * @return boolean
@@ -368,7 +370,7 @@ class Controller extends ViewableData {
 	function PastVisitor() {
 		return Cookie::get("PastVisitor") ? true : false;
 	}
-	 
+
 	/**
 	 * Return true if the visitor has signed up for a login account before
 	 * @return boolean
