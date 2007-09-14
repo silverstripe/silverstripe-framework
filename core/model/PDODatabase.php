@@ -47,13 +47,15 @@ class PDODatabase extends Database {
 	 * <li>database: The database to connect to</li></ul>
 	 */
 	public function __construct($parameters) {
-		$connect = PDODatabase::getConnect($parameters);
+		$connect = self::getConnect($parameters);
 		$connectWithDB = $connect . ';dbname=' . $parameters['database'];
 		try { // Try connect to the database, if it does not exist, create it
 			$this->dbConn = new PDO($connectWithDB, $parameters['username'], $parameters['password']);
 		} catch (PDOException $e) {
 			if (!self::createDatabase($connect, $parameters['username'], $parameters['password'], $parameters['database'])) {
 				$this->databaseError("Could not connect to the database, make sure the server is available and user credentials are correct");
+			} else {
+				$this->dbConn = new PDO($connectWithDB, $parameters['username'], $parameters['password']); // After creating the database, connect to it
 			}
 		}
 		parent::__construct();
@@ -100,13 +102,13 @@ class PDODatabase extends Database {
 	 */
 	public function supportsCollations() {
 		$collations = false;
-		switch (PDO::ATTR_DRIVER_NAME) {
-			case "pgsql": // Generally supported in PostgreSQL (supported versions)
-			case "mssql": // Generally supported in MS SQL (supported versions)
-				$collations = true;
+		switch (self::getDatabaseServer()) {
+			case "pgsql": // Generally supported in PostgreSQL (supported versions), but handled differently than in MySQL, so do not set
+			case "mssql": // Generally supported in MS SQL (supported versions), but handled differently than in MySQL, so do not set
+				$collations = false;
 				break;
 			case "mysql":
-				if ($this->getVersion() >= 4.1) { // Supported in MySQL since 4.1
+				if (self::getVersion() >= 4.1) { // Supported in MySQL since 4.1
 					$collations = true;
 				}
 				break;
@@ -119,7 +121,7 @@ class PDODatabase extends Database {
 	 * @return float
 	 */
 	public function getVersion() {
-		switch (PDO::ATTR_DRIVER_NAME) {
+		switch (self::getDatabaseServer()) {
 			case "mysql":
 			case "pgsql":
 				$query = "SELECT VERSION()";
@@ -128,13 +130,21 @@ class PDODatabase extends Database {
 				$query = "SELECT @@VERSION";
 				break;
 		}
-		$stmt = $dbConn->prepare($query);
+		$stmt = $this->dbConn->prepare($query);
 		$stmt->execute();
 		$dbVersion = $stmt->fetchColumn();
 		$version = ereg_replace("([A-Za-z-])", "", $dbVersion);
 		return substr(trim($version), 0, 3); // Just get the major and minor version
 	}
 	
+	/**
+	 * Get the database server, namely mysql, pgsql, or mssql.
+	 * @return string
+	 */
+	public function getDatabaseServer() {
+		return $this->dbConn->getAttribute(PDO::ATTR_DRIVER_NAME);
+	}
+
 	/**
 	 * Query the database.
 	 * @var string $sql The query to be issued to the database.
@@ -152,6 +162,8 @@ class PDODatabase extends Database {
 		}
 		
 		$stmt = $dbConn->prepare($sql);
+
+		$stmt = $this->dbConn->prepare($sql);
 		$handle = $stmt->execute(); // Execute and save the return value (true or false)
 
 		if(isset($_REQUEST['showqueries'])) {
@@ -163,7 +175,7 @@ class PDODatabase extends Database {
 			$error = $stmt->errorInfo();
 			$this->databaseError("Couldn't run query: $sql | " . $error[2], $errorLevel);
 		}
-		return new PDOQuery($stmt);
+		return new PDOQuery($this, $stmt);
 	}
 	
 	/**
@@ -173,7 +185,7 @@ class PDODatabase extends Database {
 	 * @return int
 	 */
 	public function getGeneratedID($table) {
-		$stmt = $dbConn->prepare("SELECT MAX(ID) FROM $table");
+		$stmt = $this->dbConn->prepare("SELECT MAX(ID) FROM $table");
 		$handle = $stmt->execute();
 		$result = $stmt->fetchColumn();
 		return $handle ? $result : 0;
@@ -187,7 +199,7 @@ class PDODatabase extends Database {
 	 */
 	public function getNextID($table) {
 		user_error('getNextID is OBSOLETE (and will no longer work properly)', E_USER_WARNING);
-		$stmt = $dbConn->prepare("SELECT MAX(ID)+1 FROM $table");
+		$stmt = $this->dbConn->prepare("SELECT MAX(ID)+1 FROM $table");
 		$handle = $stmt->execute();
 		$result = $stmt->fetchColumn();
 		return $handle ? $result : 1;
@@ -213,8 +225,8 @@ class PDODatabase extends Database {
 	 */
 	public function createDatabase($connect, $username, $password, $database) {
 		try {
-			$dbConn = new PDO($connect, $username, $password);
-			$stmt = $dbConn->prepare("CREATE DATABASE $database");
+			$dbh = new PDO($connect, $username, $password);
+			$stmt = $dbh->prepare("CREATE DATABASE $database");
 			$stmt->execute();
 			$this->active = true;
 		} catch (PDOException $e) {
@@ -236,15 +248,15 @@ class PDODatabase extends Database {
 		
 		switch ($parameters['type']) {
 
-		switch (PDO::ATTR_DRIVER_NAME) {
+		switch (self::getDatabaseServer()) {
 			case "mysql":
-				$stmt = $dbConn->prepare("CREATE TABLE $tableName (ID INT(11) NOT NULL AUTO_INCREMENT, $fieldSchemas PRIMARY KEY (ID)) TYPE=MyISAM");
+				$stmt = $this->dbConn->prepare("CREATE TABLE $tableName (ID INT(11) NOT NULL AUTO_INCREMENT, $fieldSchemas PRIMARY KEY (ID)) TYPE=MyISAM");
 				break;
 			case "pgsql":
-				$stmt = $dbConn->prepare("CREATE TABLE $tableName (ID SERIAL, $fieldSchemas PRIMARY KEY (ID))");
+				$stmt = $this->dbConn->prepare("CREATE TABLE $tableName (ID SERIAL, $fieldSchemas PRIMARY KEY (ID))");
 				break;
 			case "mssql":
-				$stmt = $dbConn->prepare("CREATE TABLE $tableName (ID INT(11) IDENTITY(1,1), $fieldSchemas PRIMARY KEY (ID))");
+				$stmt = $this->dbConn->prepare("CREATE TABLE $tableName (ID INT(11) IDENTITY(1,1), $fieldSchemas PRIMARY KEY (ID))");
 				break;
 			default:
 				$this->databaseError("This database server is not available");
@@ -252,7 +264,7 @@ class PDODatabase extends Database {
 		$stmt->execute();
 
 		if ($indexes) {
-			alterTable($tableName, null, $indexes, null, null);
+			self::alterTable($tableName, null, $indexes, null, null);
 		}
 	}
 	
@@ -265,32 +277,32 @@ class PDODatabase extends Database {
 	 * @var string $alteredIndexes Indexes to change.
 	 * @return void.
 	 */
-	public function alterTable($table, $newFields, $newIndexes, $alteredFields, $alteredIndexes) {
-		
+	public function alterTable($table, $newFields = null, $newIndexes = null, $alteredFields = null, $alteredIndexes = null) {
+
 		if ($newFields) {
 			foreach ($newFields as $field => $type) {
-				$stmt = $dbConn->prepare("ALTER TABLE $table ADD $field $type");
+				$stmt = $this->dbConn->prepare("ALTER TABLE $table ADD $field $type");
 				$stmt->execute();
 			}
 		}
 		
 		if ($newIndexes) {
 			foreach ($newIndexes as $name => $column) {
-				$stmt = $dbConn->prepare("CREATE INDEX $name ON $table $column");
+				$stmt = $this->dbConn->prepare("CREATE INDEX $name ON $table $column");
 				$stmt->execute();
 			}
 		}
 		
 		if ($alteredFields) {
 			foreach ($alteredFields as $field => $type) {
-				alterField($table, $field, $type)
+				self::alterField($table, $field, $type);
 			}
 		}
 		
 		if ($alteredIndexes) {
 			foreach ($newIndexes as $name => $column) {
-				$dbConn->query("DROP INDEX $name");
-				$stmt = $dbConn->prepare("CREATE INDEX $name ON $table $column");
+				$this->dbConn->query("DROP INDEX $name");
+				$stmt = $this->dbConn->prepare("CREATE INDEX $name ON $table $column");
 				$stmt->execute();
 			}
 		}
@@ -303,7 +315,7 @@ class PDODatabase extends Database {
 	 * @return void.
 	 */
 	public function renameTable($oldTableName, $newTableName) {
-		$stmt = $dbConn->prepare("ALTER TABLE $oldTableName RENAME TO $newTableName");
+		$stmt = $this->dbConn->prepare("ALTER TABLE $oldTableName RENAME TO $newTableName");
 		$stmt->execute();
 	}
 	
@@ -334,7 +346,7 @@ class PDODatabase extends Database {
 	 * @return boolean Returns if the query returns a successful result.
 	 */
 	protected function runTableCheckCommand($sql) {
-		foreach($dbConn->query($sql) as $testRecord) {
+		foreach($this->dbConn->query($sql) as $testRecord) {
 			if(strtolower($testRecord['Msg_text']) != 'ok') {
 				return false;
 			}
@@ -350,7 +362,7 @@ class PDODatabase extends Database {
 	 * @return void
 	 */
 	public function createField($tableName, $fieldName, $fieldSpec) {
-		$stmt = $dbConn->prepare("ALTER TABLE $tableName ADD $fieldName $fieldSpec");
+		$stmt = $this->dbConn->prepare("ALTER TABLE $tableName ADD $fieldName $fieldSpec");
 		$stmt->execute();
 	}
 	
@@ -362,12 +374,12 @@ class PDODatabase extends Database {
 	 * @return void
 	 */
 	public function alterField($table, $field, $type) {
-		switch (PDO::ATTR_DRIVER_NAME) {
+		switch (self::getDatabaseServer()) {
 			case "mysql":
-				$stmt = $dbConn->prepare("ALTER TABLE $table CHANGE $field $field $type");
+				$stmt = $this->dbConn->prepare("ALTER TABLE $table CHANGE $field $field $type");
 				break;
 			case "pgsql":
-				$stmt = $dbConn->prepare("
+				$stmt = $this->dbConn->prepare("
 					BEGIN;
 					ALTER TABLE $table RENAME $field TO oldfield;
 					ALTER TABLE $table ADD COLUMN $field $type;
@@ -377,7 +389,7 @@ class PDODatabase extends Database {
 				");
 			break;
 			case "mssql":
-				$stmt = $dbConn->prepare("ALTER TABLE $table ALTER COLUMN $field $type");
+				$stmt = $this->dbConn->prepare("ALTER TABLE $table ALTER COLUMN $field $type");
 				break;
 			default:
 				$this->databaseError("This database server is not available");
@@ -393,7 +405,7 @@ class PDODatabase extends Database {
 	*  @return void
 	 */
 	public function createIndex($tableName, $indexName, $indexSpec) {
-		$stmt = $dbConn->prepare("CREATE INDEX $indexName ON $tableName $indexSpec");
+		$stmt = $this->dbConn->prepare("CREATE INDEX $indexName ON $tableName $indexSpec");
 		$stmt->execute();
 	}
 	
@@ -405,8 +417,8 @@ class PDODatabase extends Database {
 	*  @return void
 	 */
 	public function alterIndex($tableName, $indexName, $indexSpec) {
-		$dbConn->query("DROP INDEX $indexName");
-		$stmt = $dbConn->prepare("CREATE INDEX $indexName ON $tableName $indexSpec");
+		$this->dbConn->query("DROP INDEX $indexName");
+		$stmt = $this->dbConn->prepare("CREATE INDEX $indexName ON $tableName $indexSpec");
 		$stmt->execute();
 	}
 	
@@ -418,15 +430,15 @@ class PDODatabase extends Database {
 	 * Returns a map of field name => field spec.
 	 */
 	public function fieldList($table) {
-		switch (PDO::ATTR_DRIVER_NAME) {
+		switch (self::getDatabaseServer()) {
 			case "mysql":
-				foreach ($dbConn->query("SHOW FULL FIELDS IN $table") as $field) {
+				foreach ($this->dbConn->query("SHOW FULL FIELDS IN $table") as $field) {
 					$fieldSpec = $field['Type'];
 					if(!$field['Null'] || $field['Null'] == 'NO') {
 						$fieldSpec .= ' not null';
 					}
 					if($field['Collation'] && $field['Collation'] != 'NULL') {
-						$values = $dbh->prepare("SHOW COLLATION LIKE '$field[Collation]'");
+						$values = $this->dbConn->prepare("SHOW COLLATION LIKE '$field[Collation]'");
 						$values->execute();
 						$collInfo = $values->fetchColumn();
 						$fieldSpec .= " character set $collInfo[Charset] collate $field[Collation]";
@@ -439,7 +451,7 @@ class PDODatabase extends Database {
 				}
 				break;
 			case "pgsql":
-				foreach ($dbh->query("
+				foreach ($this->dbConn->query("
 					SELECT
 						column_name AS cname,
 						column_default AS cdefault,
@@ -466,7 +478,7 @@ class PDODatabase extends Database {
 				}
 				break;
 			case "mssql":
-				foreach ($dbh->query("
+				foreach ($this->dbConn->query("
 					SELECT
 						COLUMN_NAME AS 'cname',
 						COLUMN_DEFAULT AS 'cdefault',
@@ -513,9 +525,9 @@ class PDODatabase extends Database {
 	 * Returns a map of indexes.
 	 */
 	public function indexList($table) {
-		switch (PDO::ATTR_DRIVER_NAME) {
+		switch (self::getDatabaseServer()) {
 			case "mysql":
-				foreach($dbh->query("SHOW INDEXES IN '$table'") as $index) {
+				foreach($this->dbConn->query("SHOW INDEXES IN '$table'") as $index) {
 					$groupedIndexes[$index['Key_name']]['fields'][$index['Seq_in_index']] = $index['Column_name'];
 					if($index['Index_type'] == 'FULLTEXT') {
 						$groupedIndexes[$index['Key_name']]['type'] = 'fulltext ';
@@ -531,12 +543,12 @@ class PDODatabase extends Database {
 				}
 				break;
 			case "pgsql":
-				foreach($dbh->query("select indexname, indexdef from pg_indexes where tablename = '$table'") as $index) {
+				foreach($this->dbConn->query("SELECT indexname, indexdef FROM pg_indexes WHERE tablename = '$table'") as $index) {
 					$indexList[$index['indexname']] = $index['indexdef'];
 				}
 				break;
 			case "mssql":
-				foreach($dbh->query("
+				foreach($this->dbConn->query("
 					SELECT
 						i.name AS 'iname',
 						i.type_desc AS 'itype',
@@ -569,7 +581,7 @@ class PDODatabase extends Database {
 	 * Returns a map of a table.
 	 */
 	public function tableList() {
-		switch (PDO::ATTR_DRIVER_NAME) {
+		switch (self::getDatabaseServer()) {
 			case "mysql":
 				$sql = "SHOW TABLES";
 				break;
@@ -582,9 +594,11 @@ class PDODatabase extends Database {
 			default:
 				$this->databaseError("This database server is not available");
 		}
-		foreach($dbConn->query($sql) as $record) {
-			$table = strtolower(reset($record));
-			$tables[$table] = $table;
+		if (is_array($this->dbConn->query($sql))) {
+			foreach($this->dbConn->query($sql) as $record) {
+				$table = strtolower(reset($record));
+				$tables[$table] = $table;
+			}
 		}
 		return isset($tables) ? $tables : null;
 	}
@@ -612,7 +626,8 @@ class PDOQuery extends Query {
 	 * Hook the result-set given into a Query class, suitable for use by sapphire.
 	 * @param PDO object $stmt The object of all returned values.
 	 */
-	public function __construct(PDODatabase $stmt) {
+	public function __construct(PDODatabase $database, $stmt) {
+		$this->database = $database;
 		$this->stmt = $stmt;
 		parent::__construct();
 	}

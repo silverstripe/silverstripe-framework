@@ -74,7 +74,7 @@ abstract class Database extends Object {
 	/**
 	 * Alter a table's schema.
 	 */
-	abstract function alterTable($table, $newFields, $newIndexes, $alteredFields, $alteredIndexes);
+	abstract function alterTable($table, $newFields = null, $newIndexes = null, $alteredFields = null, $alteredIndexes = null);
 	
 	/**
 	 * Rename a table.

@@ -78,6 +78,14 @@ class MySQLDatabase extends Database {
 		return $this->mysqlVersion;
 	}
 	
+	/**
+	 * Get the database server, namely mysql.
+	 * @return string
+	 */
+	public function getDatabaseServer() {
+		return "mysql";
+	}
+	
 	public function query($sql, $errorLevel = E_USER_ERROR) {
 		if(isset($_REQUEST['previewwrite']) && in_array(strtolower(substr($sql,0,strpos($sql,' '))), array('insert','update','delete','replace'))) {
 			echo "<p>Will execute: $sql</p>";
@@ -185,7 +193,7 @@ class MySQLDatabase extends Database {
 	 * @param $alteredFields Updated fields, a map of field name => field schema
 	 * @param $alteredIndexes Updated indexes, a map of index name => index type
 	 */
-	public function alterTable($tableName, $newFields, $newIndexes, $alteredFields, $alteredIndexes) {
+	public function alterTable($tableName, $newFields = null, $newIndexes = null, $alteredFields = null, $alteredIndexes = null) {
 		$fieldSchemas = $indexSchemas = "";
 		
 		if($newFields) foreach($newFields as $k => $v) $alterList[] .= "ADD `$k` $v";
