@@ -75,7 +75,7 @@ class DataObjectSet extends ViewableData implements Iterator {
 		}
 		parent::__construct();
 	}
-	
+
 	/**
 	 * Consolidate the DataObjectSet into an array of arrays
 	 * The array will contain the field values of the specified fields
@@ -91,7 +91,7 @@ class DataObjectSet extends ViewableData implements Iterator {
 			}
 			$output[] = $outputRow;
 		}
-		return $output;		
+		return $output;
 	}
 
 	/**
@@ -102,7 +102,7 @@ class DataObjectSet extends ViewableData implements Iterator {
 	public function consolidateString() {
 		$fieldList = func_get_args();
 		$data = $this->consolidate($fieldList);
-		
+
 		$result = "<p>array (<br >";
 		foreach($data as $record) {
 			$result .= " &nbsp; &nbsp; array( ";
@@ -140,7 +140,7 @@ class DataObjectSet extends ViewableData implements Iterator {
 			
 		return $map;
 	}
-	
+
 	/**
 	* Convert this DataObjectSet to an array of maps.
 	* @param string $index Index the array by this field.
@@ -159,7 +159,7 @@ class DataObjectSet extends ViewableData implements Iterator {
 		
 		return $map;
 	}
-	
+
 	/**
 	* Returns an array of ID => $titleField
 	* @param string $index The field you wish to use as a key for the array
@@ -197,7 +197,7 @@ class DataObjectSet extends ViewableData implements Iterator {
 		$this->pageLength = $pageLength;
 		$this->totalSize = $totalSize;
 	}
-	
+
 	/**
 	 * Use the limit from the given query to add prev/next buttons to this DataObjectSet.
 	 * @param SQLQuery $query The query used to generate this DataObjectSet
@@ -242,7 +242,7 @@ class DataObjectSet extends ViewableData implements Iterator {
 		
 		return ceil($this->totalSize / $this->pageLength);
 	}
-	
+
 	/**
 	 * Return a datafeed of page-links, good for use in search results, etc.
 	 * $maxPages will put an upper limit on the number of pages to return.  It will
@@ -252,11 +252,11 @@ class DataObjectSet extends ViewableData implements Iterator {
 	 */
 	public function Pages($maxPages = 0){
 		$ret = new DataObjectSet();
-		
+
 		if($maxPages) {
 			$startPage = ($this->CurrentPage() - floor($maxPages / 2)) - 1;
 			$endPage = $this->CurrentPage() + floor($maxPages / 2);
-			
+
 			if($startPage < 0) {
 				$startPage = 0;
 				$endPage = $maxPages;
@@ -265,7 +265,7 @@ class DataObjectSet extends ViewableData implements Iterator {
 				$endPage = $this->TotalPages();
 				$startPage = max(0, $endPage - $maxPages);
 			}
-			
+
 		} else {
 			$startPage = 0;
 			$endPage = $this->TotalPages();
@@ -328,17 +328,17 @@ class DataObjectSet extends ViewableData implements Iterator {
 			return HTTP::setGetVar($this->paginationGetVar, $this->pageStart + $this->pageLength);
 		}
 	}
-	
+
 	/**
 	 * Allows us to use multiple pagination GET variables on the same page (eg. if you have search results and page comments on a single page)
-	 * 
+	 *
 	 * Example: @see PageCommentInterface::Comments()
 	 * @param string $var The variable to go in the GET string (Defaults to 'start')
 	 */
 	public function setPaginationGetVar($var) {
 			$this->paginationGetVar = $var;
 	}
-	
+
 	/**
 	 * Add an item to the DataObject Set.
 	 * @param DataObject $item Item to add.
@@ -375,7 +375,7 @@ class DataObjectSet extends ViewableData implements Iterator {
     */
 	public function append(DataObjectSet $doset){
 		foreach($doset as $item){
-			$this->push($item);        
+			$this->push($item);
 		}
 	}
     
@@ -467,12 +467,12 @@ class DataObjectSet extends ViewableData implements Iterator {
 	public function getOffset($offset) {
 		$keys = array_keys($this->items);
 		foreach($keys as $i => $key) {
-			if($key == key($this->items)) break;	
+			if($key == key($this->items)) break;
 		}
 		$requiredKey = $keys[$i + $offset];
 		return $this->items [$requiredKey];
 	}
-	
+
 	/**
 	 * Gets a specific slice of an existing set.
 	 * 
@@ -526,6 +526,9 @@ class DataObjectSet extends ViewableData implements Iterator {
 	 * @return DataObject
 	 */
 	public function First() {
+		if(count($this->items) < 1)
+			return null;
+
 		$keys = array_keys($this->items);
 		return sizeof($keys) > 0 ? $this->items[$keys[0]] : null;
 	}
@@ -535,6 +538,9 @@ class DataObjectSet extends ViewableData implements Iterator {
 	 * @return DataObject
 	 */
 	public function Last() {
+		if(count($this->items) < 1)
+			return null;
+
 		$keys = array_keys($this->items);
 		return $this->items[$keys[sizeof($keys)-1]];
 	}
@@ -566,7 +572,7 @@ class DataObjectSet extends ViewableData implements Iterator {
 				$result .= "<li onclick=\"location.href = this.getElementsByTagName('a')[0].href\"><a href=\"$item->Link\">$item->Title</a></li>\n";
 			}
 			$result .= "</ul>\n";
-	
+
 			return $result;
 		}
 	}
@@ -578,8 +584,8 @@ class DataObjectSet extends ViewableData implements Iterator {
 	public function forTemplate() {
 		return $this->UL();
 	}
-	
-	/** 
+
+	/**
 	 * Returns the dataset as an array of ID => "FirstName Surname"
 	 * @param string $key Field name to index the array.
 	 * @param array $values An array of fieldnames to insert in array
@@ -599,12 +605,12 @@ class DataObjectSet extends ViewableData implements Iterator {
 				$map[$item->$key] = implode(" ", $mapValues);
 			}
 		}
-		return $map;		
+		return $map;
 	}
 
-	/** 
+	/**
 	 * Returns the dataset as an array of ID => Title.
-	 * 
+	 *
 	 * TODO Duplication from toDropdownMap()
 	 * 
 	* @param string $key The field you wish to use as a key for the array
@@ -613,14 +619,14 @@ class DataObjectSet extends ViewableData implements Iterator {
 	* @return array
 	 */
 	public function map($key = "ID", $value = "Title", $includeBlank=null) {
-		
+
 		/* Don't do this, add this locally.
 		 * Reasons: 1: In some case this blank value don't/mustn't present.
 		 						2: In some case, this balnk value should be customised, such as (Select from below)
 		 						3: In some case, the key need to be explicitly "0", cos "" and "0" need to be treated differently
 		 */
 		//$map[''] = "(Select)";
-		
+
 		/* Instead do this as an option */
 		if($includeBlank) $map[''] = $includeBlank;
 		
@@ -634,7 +640,7 @@ class DataObjectSet extends ViewableData implements Iterator {
 				$map[$item->$key] = $item->$value;
 			}
 		}
-		return $map;		
+		return $map;
 	}
     
     /**
@@ -660,7 +666,7 @@ class DataObjectSet extends ViewableData implements Iterator {
 		}
 		return $list;
 	}
-	
+
 	/**
 	 * Returns an array of DataObjectSets.  The array is keyed by index.
 	 * @param string $index The field name to index the array by.
@@ -675,7 +681,7 @@ class DataObjectSet extends ViewableData implements Iterator {
 		}
 		return $result;
 	}
-	
+
 	/**
 	 * Groups the items by a given field.
 	 * Returns a DataObjectSet suitable for use in a nested template.
@@ -693,13 +699,13 @@ class DataObjectSet extends ViewableData implements Iterator {
 		}
 		return $groupedAsSet;
 	}
-	
+
 	/**
 	 * Returns a nested unordered list out of a "chain" of DataObject-relations,
 	 * using the automagic ComponentSet-relation-methods to find subsequent DataObjectSets.
 	 * The formatting of the list can be different for each level, and is evaluated as an SS-template
 	 * with access to the current DataObjects attributes and methods.
-	 * 
+	 *
 	 * Example: Groups (Level 0, the "calling" DataObjectSet, needs to be queried externally)
 	 * and their Members (Level 1, determined by the Group->Members()-relation).
 	 * 
@@ -713,11 +719,11 @@ class DataObjectSet extends ViewableData implements Iterator {
 	 * Format:
 	 * array(
 	 * 	array(
-	 * 		"dataclass" => "Root", 
+	 * 		"dataclass" => "Root",
 	 * 		"template" => "<li class=\"\$EvenOdd\"><a href=\"admin/crm/show/\$ID\">\$AccountName</a>"
 	 * 	),
 	 * 	array(
-	 * 		"dataclass" => "GrantObjects", 
+	 * 		"dataclass" => "GrantObjects",
 	 * 		"template" => "<li class=\"\$EvenOdd\"><a href=\"admin/crm/showgrant/\$ID\">#\$GrantNumber: \$TotalAmount.Nice, \$ApplicationDate.ShortMonth \$ApplicationDate.Year</a>"
 	 * 	)
 	 * );
@@ -728,7 +734,7 @@ class DataObjectSet extends ViewableData implements Iterator {
 	public function buildNestedUL($nestingLevels, $ulExtraAttributes = "") {
 		return $this->getChildrenAsUL($nestingLevels, 0, "", $ulExtraAttributes);
 	}
-	
+
 	/**
 	 * Gets called recursively on the child-objects of the chain.
 	 * 
@@ -743,13 +749,13 @@ class DataObjectSet extends ViewableData implements Iterator {
 		$hasNextLevel = false;
 		$ulExtraAttributes = " $ulExtraAttributes";
 		$output = "<ul" . eval($ulExtraAttributes) . ">\n";
-	
+
 		$currentNestingLevel = $nestingLevels[$level];
-		
+
 		// either current or default template
 		$currentTemplate = (!empty($currentNestingLevel)) ? $currentNestingLevel['template'] : $template;
 		$myViewer = SSViewer::fromString($currentTemplate);
-		
+
 		$childrenMethod = $nestingLevels[$level+1]['dataclass'];
 
 		// sql-parts
@@ -760,30 +766,30 @@ class DataObjectSet extends ViewableData implements Iterator {
 		$having = ($nestingLevels[$level+1]['having']) ? $nestingLevels[$level+1]['having'] : null;
 
 		foreach($this as $parent) {
-			$evenOdd = ($itemCount % 2 == 0) ? "even" : "odd"; 
+			$evenOdd = ($itemCount % 2 == 0) ? "even" : "odd";
 			$parent->setField('EvenOdd', $evenOdd);
 			$template = $myViewer->process($parent);
-			
+
 			// if no output is selected, fall back to the id to keep the item "clickable"
-			$output .= $template . "\n"; 
-			
+			$output .= $template . "\n";
+
 			if($childrenMethod) {
 				// workaround for missing groupby/having-parameters in instance_get
 				// get the dataobjects for the next level
 				$children = $parent->$childrenMethod($filter, $sort, $join, $limit, $having);
 				if($children) {
-					$output .= $children->getChildrenAsUL($nestingLevels, $level+1, $currentTemplate, $ulExtraAttributes); 
+					$output .= $children->getChildrenAsUL($nestingLevels, $level+1, $currentTemplate, $ulExtraAttributes);
 				}
 			}
 			$output .= "</li>\n";
 			$itemCount++;
 		}
-		
+
 		$output .= "</ul>\n";
-		
+
 		return $output;
 	}
-	
+
 	/**
 	* Returns a new DataObjectSet of the sorted array
 	* @param string $fieldname the name of the field on the dataobject that you wish to sort the set by
@@ -794,7 +800,7 @@ class DataObjectSet extends ViewableData implements Iterator {
 			column_sort($this->items, $fieldname, $direction, false);
 		}
 	}
-	
+
 	/**
 	* Remove duplicates from this set based on the dataobjects ID.
 	* Assumes all items contained in the set all have IDs.
@@ -821,7 +827,7 @@ class DataObjectSet extends ViewableData implements Iterator {
 		$val .= "</ul>";
 		return $val;
 	}
-	
+
 	/**
 	 * Groups the set by $groupField and returns the parent of each group whose class
 	 * is $groupClassName. If $collapse is true, the group will be collapsed up until an ancestor with the
@@ -839,28 +845,28 @@ class DataObjectSet extends ViewableData implements Iterator {
 		// indexed by it's parent. The parent IDs are later used to find the parents
 		// that make up the returned set.
 		$groupedSet = array();
-		
+
 		// Array to store the subgroups matching the requirements
 		$resultsArray = array();
-		
+
 		// Put this item into the array indexed by $groupField.
 		// the keys are later used to retrieve the top-level records
 		foreach( $this->items as $item ) {
 			$groupedSet[$item->$groupField][] = $item;
 		}
-		
+
 		$parentSet = null;
-		
+
 		// retrieve parents for this set
-		
+
 		// TODO How will we collapse the hierarchy to bridge the gap?
-		
+
 		// if collapse is specified, then find the most direct ancestor of type
 		// $groupClassName
 		if($collapse) {
 			// The most direct ancestors with the type $groupClassName
 			$parentSet = array();
-			
+
 			// get direct parents
 			$parents = DataObject::get( 'SiteTree', "`SiteTree`.`$parentField` IN( " . implode( ",", array_keys( $groupedSet ) ) . ")", $sortParents );	
 			
@@ -869,21 +875,21 @@ class DataObjectSet extends ViewableData implements Iterator {
 				// store the old parent ID. This is required to change the grouped items
 				// in the $groupSet array
 				$oldParentID = $parent->ID;
-				
+
 				// get the parental stack
 				$parentObjects= $parent->parentStack();
 				$parentStack = array();
-				
+
 				foreach( $parentObjects as $parentObj )
 					$parentStack[] = $parentObj->ID;
-				
+
 				// is some particular IDs are required, then get the intersection
 				if($requiredParents && count($requiredParents)) {
 					$parentStack = array_intersect($requiredParents, $parentStack);
 				}
-				
+
 				$newParent = null;
-				
+
 				// If there are no parents, the group can be omitted
 				if(empty($parentStack)) {
 					$newParent = new DataObjectSet();
@@ -896,13 +902,13 @@ class DataObjectSet extends ViewableData implements Iterator {
 				foreach( $groupedSet[$oldParentID] as $descendant ) {
 					$groupedSet[$newParent->ID][] = $descendant;
 				}
-				
+
 				// Add the most direct ancestor of type $groupClassName
 				$parentSet[] = $newParent;
-			}	
+			}
 		// otherwise get the parents of these items
 		} else {
-			
+
 			$requiredIDs = array_keys( $groupedSet );
 			
 			if( $requiredParents && cont($requiredParents)) {
