@@ -414,6 +414,7 @@ class TableField extends TableListField {
 	 * organises the data in the appropriate manner for saving
 	 */
 	function sortData($data, $recordID = null) {
+		$dataObjects = array();
 		if($data) {
             $dataObjects = array();
 			foreach($data as $field => $rowData) {
