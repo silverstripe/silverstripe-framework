@@ -57,7 +57,7 @@ class Debug {
 					$result .= "<li>$k = " . Debug::text($v) . "</li>\n";
 				}
 				$val = $result . "</ul>\n";
-				
+
 			} else if (is_object($val)) {
 				$val = var_export($val, true);
 			} else {
@@ -69,7 +69,7 @@ class Debug {
 			return $val;
 		}
 	}
-	
+
 	/**
 	 * Show a debugging message
 	 */
@@ -82,33 +82,35 @@ class Debug {
 			echo Convert::raw2xml(trim($message)) . "</p>\n";
 		}
 	}
-	
+
 	/**
 	 * Load an error handler
 	 */
 	static function loadErrorHandlers() {
 		Debug::loadFatalErrorHandler();
 	}
-	 
+
 	static function loadFatalErrorHandler() {
 		set_error_handler('errorHandler', E_ALL & ~E_NOTICE);
 	}
 
 	static function warningHandler($errno, $errstr, $errfile, $errline, $errcontext) {
 		if(self::$send_warnings_to) self::emailError(self::$send_warnings_to, $errno, $errstr, $errfile, $errline, $errcontext, "Warning");
-			
+
 		if(Director::isDev()) {
-			self::showError($errno, $errstr, $errfile, $errline, $errcontext);
-			die();
+			if(error_reporting() != 0) { // otherwise the error was suppressed with @
+				self::showError($errno, $errstr, $errfile, $errline, $errcontext);
+				die();
+			}
 		}
 	}
-	
+
 	static function fatalHandler($errno, $errstr, $errfile, $errline, $errcontext) {
 		if(self::$send_errors_to) self::emailError(self::$send_errors_to, $errno, $errstr, $errfile, $errline, $errcontext, "Error");
 
 		if(Director::isDev()) {
 			Debug::showError($errno, $errstr, $errfile, $errline, $errcontext);
-			
+
 		} else {
 			Debug::friendlyError($errno, $errstr, $errfile, $errline, $errcontext);
 		}
@@ -119,7 +121,7 @@ class Debug {
 
 		if(Director::is_ajax()) {
 			echo "ERROR:There has been an error";
-			
+
 		} else {
 			if(file_exists('../assets/error-500.html')) {
 				echo "ERROR:";
@@ -136,27 +138,27 @@ class Debug {
 		if(Director::is_ajax()) {
 			echo "ERROR:Error $errno: $errstr\n At l$errline in $errfile\n";
 			Debug::backtrace();
-			
+
 		} else {
 			echo "<div style=\"border: 5px red solid\">\n";
 			echo "<p style=\"color: white; background-color: red; margin: 0\">FATAL ERROR: $errstr<br />\n At line $errline in $errfile<br />\n<br />\n</p>\n";
 
 			Debug::backtrace();
-		
+
 			echo "<h2>Context</h2>\n";
 			Debug::show($errcontext);
 
 			echo "</div>\n";
 		}
 	}
-	
+
 	static function emailError($emailAddress, $errno, $errstr, $errfile, $errline, $errcontext, $errorType = "Error") {
 		if(strtolower($errorType) == 'warning') {
 			$colour = "orange";
 		} else {
 			$colour = "red";
 		}
-		
+
 		$data = "<div style=\"border: 5px $colour solid\">\n";
 		$data .= "<p style=\"color: white; background-color: $colour; margin: 0\">$errorType: $errstr<br /> At line $errline in $errfile\n<br />\n<br />\n</p>\n";
 
