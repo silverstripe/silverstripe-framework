@@ -288,8 +288,6 @@ class PDODatabase extends Database {
 			foreach($fields as $k => $v) $fieldSchemas .= "`$k` $v,\n";
 		}
 		
-		switch ($parameters['type']) {
-
 		switch (self::getDatabaseServer()) {
 			case "mysql":
 				$stmt = $this->dbConn->prepare("CREATE TABLE $tableName (ID INT(11) NOT NULL AUTO_INCREMENT, $fieldSchemas PRIMARY KEY (ID)) TYPE=MyISAM");
