@@ -1,0 +1,80 @@
+<?php
+/**
+ * Initial implementation of Sitemap support.
+ * SitemapController should handle requests to 'sitemap.xml'
+ * the other two classes are used to render the sitemap
+ */
+
+class Sitemap extends Controller {
+	protected $Pages;
+	function __construct()
+	{
+		$this->Pages=DataObject::get('SiteTree');
+	}
+
+	public function Items()
+	{
+		foreach($this->Pages as $page)
+		{
+			// The one field that isn't easy to deal with in the template is
+			// Change frequency, so we set that here.
+			$properties = $page->toMap();
+			$created = new Datetime($properties['Created']);
+			$now = new Datetime();
+			$versions = $properties['Version'];
+			$timediff = $now->format('U') - $created->format('U');
+			
+			// Check how many revisions have been made over the lifetime of the
+			// Page for a rough estimate of it's changing frequency.
+			
+			$period = $timediff / ($versions + 1);
+			
+			if($period > 60*60*24*365) // > 1 year
+			{
+				$page->ChangeFreq='yearly';
+			}
+			else if($period > 60*60*24*30) // > ~1 month
+			{
+				$page->ChangeFreq='monthly';
+			}
+			else if($period > 60*60*24*7) // > 1 week
+			{
+				$page->ChangeFreq='weekly';
+			}
+			else if($period > 60*60*24) // > 1 day
+			{
+				$page->ChangeFreq='daily';
+			}
+			else if($period > 60*60) // > 1 hour
+			{
+				$page->ChangeFreq='hourly';
+			}
+			else // < 1 hour
+			{
+				$page->ChangeFreq='always';
+			}
+		}
+		return $this->Pages;
+	}
+	
+	static function Ping()
+	{
+		$location = urlencode(Director::absoluteBaseURL() . '/sitemap.xml');
+		
+		$response = HTTP::sendRequest("www.google.com", "/webmasters/sitemaps/ping",
+			"sitemap=" . $location);
+			
+		return $response;
+	}
+	
+	function index($url)
+	{
+		// We need to override the default content-type
+		ContentNegotiator::disable();
+		header('Content-type: application/xml; charset="utf-8"');
+		
+		// But we want to still render.
+		return array();
+	}
+}
+?>

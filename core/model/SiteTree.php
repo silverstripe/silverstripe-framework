@@ -671,7 +671,9 @@ class SiteTree extends DataObject {
 						new HeaderField("Search Engine Meta-tags"),
 						new TextField("MetaTitle", "Title"),
 						new TextareaField("MetaDescription", "Description"),
-						new TextareaField("MetaKeywords", "Keywords")
+						new TextareaField("MetaKeywords", "Keywords"),
+						new LiteralField("", "<p>Manually specify a Priority for this page:: (valid values are from 0 to 1)</p>"),
+						new NumericField("Priority","Page Priority")
 					)
 				),
 				new Tab("Behaviour",
@@ -990,7 +992,8 @@ class SiteTree extends DataObject {
 		"Viewers" => "Enum('Anyone, LoggedInUsers, OnlyTheseUsers', 'Anyone')", 
  		"Editors" => "Enum('LoggedInUsers, OnlyTheseUsers', 'LoggedInUsers')", 
  		"ViewersGroup" => "Int", 
- 		"EditorsGroup" => "Int" 
+ 		"EditorsGroup" => "Int",
+		"Priority" => "Float"
 	);
   
   static $indexes = array(
@@ -1028,7 +1031,8 @@ class SiteTree extends DataObject {
 		"Status" => "New page",
 		"CanCreateChildren" => array(10),
 		"Viewers" => "Anyone", 
- 		"Editors" => "LoggedInUsers" 
+ 		"Editors" => "LoggedInUsers",
+		"Priority" => .5
 	);
 
 	static $has_one = array(

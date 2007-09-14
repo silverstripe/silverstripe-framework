@@ -63,6 +63,7 @@ Director::addRules(10, array(
 	'$Controller/$Action/$ID/$OtherID' => '*',
 	'images/$Action/$Class/$ID/$Field' => 'Image_Uploader',
 	'' => 'RootURLController',
+	'sitemap.xml' => 'Sitemap',
 ));
 
 Director::addRules(1, array(
