@@ -178,7 +178,7 @@ class Folder extends File {
 			Name = '$name', Filename = '$filename', Created = NOW(), LastEdited = NOW(),
 			Title = '$name'");
 			
-		return DB::getGeneratedID();
+		return DB::getGeneratedID("File");
 	}
 
 	/**
