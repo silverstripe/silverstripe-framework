@@ -11,26 +11,35 @@
 	<% if IsAddMode %>
 	<% else %>
 		<% if ShowPagination %>
-		<table class="PageControls">
-			<tr>
-				<td class="Left">
-					<% if PopupFirstLink %><a href="$PopupFirstLink" title="View first $NameSingular"><img src="cms/images/pagination/record-first.png" alt="View first $NameSingular" /></a>
-					<% else %><img src="cms/images/pagination/record-first-g.png" alt="View first $NameSingular" /><% end_if %>
-					<% if PopupPrevLink %><a href="$PopupPrevLink" title="View previous $NameSingular"><img src="cms/images/pagination/record-prev.png" alt="View previous $NameSingular" /></a>
-					<% else %><img src="cms/images/pagination/record-prev-g.png" alt="View previous $NameSingular" /><% end_if %>
-				</td>
-				<td class="Count">
-					Displaying $PopupCurrentItem of $TotalCount
-				</td>
-				<td class="Right">
-					<% if PopupNextLink %><a href="$PopupNextLink" title="View next $NameSingular"><img src="cms/images/pagination/record-next.png" alt="View next $NameSingular" /></a>
-					<% else %><img src="cms/images/pagination/record-next-g.png" alt="View next $NameSingular" /><% end_if %>
-					<% if PopupLastLink %><a href="$PopupLastLink" title="View last $NameSingular"><img src="cms/images/pagination/record-last.png" alt="View last $NameSingular" /></a>
-					<% else %><img src="cms/images/pagination/record-last-g.png" alt="View last $NameSingular" /><% end_if %>
-				</td>
-			</tr>
-		</table>
+		    <div id="Pagination">
+		        <% if PopupPrevLink %>
+    		        <div id="Pagination_Previous">
+    		            <a href="$PopupPrevLink"><img src="cms/images/pagination/previousArrow.png" /></a>
+                        <a href="$PopupPrevLink"><div>Previous</div></a>
+    		        </div>
+                <% end_if %>
+                <% if TotalCount == 1 %>
+                <% else %>
+                    <% control pagination %>
+                        <% if active %>
+                            <a href="$link">$number</a>
+                        <% else %>    
+                            <span>$number</span>
+                        <% end_if %>
+                    <% end_control %>
+                <% end_if %> 
+		        <% if PopupNextLink %>
+    		        <div id="Pagination_Next">
+    		            <a href="$PopupNextLink"><img src="cms/images/pagination/nextArrow.png" /></a>
+                        <a href="$PopupNextLink"><div>Next</div></a>		                
+    		        </div>
+    		    <% end_if %>
 		<% end_if %>
 	<% end_if %>
+	<script type="text/javascript">
+       divQ = $('Pagination').getElementsByTagName('div').length;
+       aQ = $('Pagination').getElementsByTagName('a').length - divQ + 1;
+       $('Pagination').style.width = aQ * 15 + 130 +  "px";       
+	</script>
 </body>
 </html>

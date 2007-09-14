@@ -457,6 +457,35 @@ JS;
 		$start = $_REQUEST['ctf']['start'] - 1;
 		return $this->PopupBaseLink() . "&methodName={$_REQUEST['methodName']}&ctf[childID]={$item->ID}&ctf[start]={$start}";
 	}
+	
+	/**
+     * Method handles pagination in asset popup.
+     *
+     * @return Object DataObjectSet
+     */
+	
+	function pagination() {
+	    $this->pageSize = 10;
+		$currentItem  = $this->PopupCurrentItem();
+		$result = new DataObjectSet();
+        if($currentItem < 6) {
+        	$offset = 1;
+        } elseif($this->totalCount - $currentItem <= 4) {
+        	$offset = $currentItem - (10 - ($this->totalCount - $currentItem));
+        	$offset = $offset <= 0 ? 1 : $offset;
+        } else {
+        	$offset = $currentItem  - 5; 
+        }
+		for($i = $offset;$i <= $offset + $this->pageSize && $i <= $this->totalCount;$i++) {
+            $start = $i - 1;
+			$item = $this->unpagedSourceItems->getOffset($i-1);
+			$links['link'] = $this->PopupBaseLink() . "&methodName={$_REQUEST['methodName']}&ctf[childID]={$item->ID}&ctf[start]={$start}";
+            $links['number'] = $i;
+            $links['active'] = $i == $currentItem ? false : true;
+            $result->push(new ArrayData($links)); 	
+		}
+        return $result;
+	}
 
 	
 	
