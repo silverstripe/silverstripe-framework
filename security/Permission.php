@@ -97,9 +97,15 @@ class Permission extends DataObject {
 			// Build a list of the IDs of the groups.  Most of the heavy lifting is done by Member::Groups
 			// NOTE: This isn't effecient; but it's called once per session so it's a low priority to fix.
 			$groups = $member->Groups();
-			if($groups) foreach($groups as $group) $groupList[] = $group->ID;
-			
-			// Session caching		
+			$groupList = array();
+
+			if($groups) {
+				foreach($groups as $group)
+					$groupList[] = $group->ID;
+			}
+
+
+			// Session caching
 			if(!$memberID) {
 				$_SESSION['Permission_groupList'][$member->ID] = $groupList;
 			}
