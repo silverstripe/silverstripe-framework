@@ -157,7 +157,7 @@ class CompositeField extends FormField {
 	}
 
 	function debug() {
-		$result .= "$this->class ($this->name) <ul>";
+		$result = "$this->class ($this->name) <ul>";
 		foreach($this->children as $child) {
 			$result .= "<li>" . Debug::text($child) . "&nbsp;</li>";
 		}
