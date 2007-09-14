@@ -409,7 +409,7 @@ class SiteTree extends DataObject {
 				$homepage = new Page();
 
 				$homepage->Title = "Home";
-				$homepage->Content = "<p>Welcome to SilverStripe! This is the default homepage. You can edit this page by opening <a href=\"admin/\">the CMS</a>.</p>";
+				$homepage->Content = "<p>Welcome to SilverStripe! This is the default homepage. You can edit this page by opening <a href=\"admin/\">the CMS</a>. You can now access the <a href=\"http://doc.silverstripe.com\">developer documentation</a>, or begin <a href=\"http://doc.silverstripe.com/doku.php?id=tutorials\">the tutorials.</a></p>";
 				$homepage->URLSegment = "home";
 				$homepage->Status = "Published";
 				$homepage->write();
