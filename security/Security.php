@@ -29,7 +29,7 @@ class Security extends Controller {
 	 * If you don't provide a messageSet, a default will be used.
 	 */
 	static function permissionFailure($page = null, $messageSet = null) {
-		$loginForm = singleton('Security')->LoginForm();
+//		$loginForm = singleton('Security')->LoginForm();
 
 		//user_error('debug', E_USER_ERROR);
 		// Prepare the messageSet provided
@@ -60,7 +60,9 @@ class Security extends Controller {
 			$message = $messageSet['default'];
 		}
 
-		$loginForm->sessionMessage($message, 'warning');
+/*		$loginForm->sessionMessage($message, 'warning');
+		Session::set("SecurityMessage.Error.message", $message);
+		Session::set("SecurityMessage.Error.type", $type);*/
 
 //		$_SESSION['LoginForm']['message'] = $message;
 		Session::set("BackURL", $_SERVER['REQUEST_URI']);
@@ -73,15 +75,59 @@ class Security extends Controller {
 		return;
 	}
 
+
+  /**
+	 * Get the login form to process according to the submitted data
+	 */
 	function LoginForm() {
-		return MemberAuthenticator::GetLoginForm();
+		if(is_array($_REQUEST) && isset($_REQUEST['AuthenticationMethod']))
+		{
+		  switch($_REQUEST['AuthenticationMethod'])
+			{
+				case 'Member':
+					return MemberAuthenticator::GetLoginForm();
+					break;
+				case 'OpenID':
+					return OpenIDAuthenticator::GetLoginForm();
+					break;
+			}
+		}
+		user_error('Invalid authentication method', E_USER_ERROR);
 	}
+
+
+  /**
+	 * Get the login forms for all available authentication methods
+	 *
+	 * @todo Check how to activate/deactivate authentication methods
+	 */
+	function GetLoginForms()
+	{
+		$forms = array();
+		array_push($forms, MemberAuthenticator::GetLoginForm());
+		array_push($forms, OpenIDAuthenticator::GetLoginForm());
+
+		return $forms;
+	}
+
+
+	/**
+	 * Get a link to a security action
+	 *
+	 * @param string $action Name of the action
+	 */
 	function Link($action = null) {
 		return "Security/$action";
 	}
+
+
 	/**
+	 * Log the currently logged in user out
+	 *
 	 * @param bool $redirect Redirect the user back to where they came.
-	 * - If it's false, the code calling logout() is responsible for sending the user where-ever they should go.
+	 *                         - If it's false, the code calling logout() is
+	 *                           responsible for sending the user where-ever
+	 *                           they should go.
 	 */
 	function logout($redirect = true) {
 		Cookie::set('alc_enc',null);
@@ -90,6 +136,10 @@ class Security extends Controller {
 		if($redirect) Director::redirectBack();
 	}
 
+
+	/**
+	 *
+	 */
 	function login() {
 		Requirements::javascript("jsparty/behaviour.js");
 		Requirements::javascript("jsparty/loader.js");
@@ -109,14 +159,23 @@ class Security extends Controller {
 			return $controller->renderWith(array("Security_login", "Page"));
 
 		} else {
+			$forms = $this->GetLoginForms();
+			$content = '';
+			foreach($forms as $form)
+				$content .= $form->forTemplate();
+
 			$customisedController = $controller->customise(array(
-				"Content" => $this->LoginForm()->forTemplate()
+				"Content" => $content
 			));
 
 			return $customisedController->renderWith("Page");
 		}
 	}
 
+
+	/**
+	 *
+	 */
 	function lostpassword() {
 		Requirements::javascript("jsparty/prototype.js");
 		Requirements::javascript("jsparty/behaviour.js");
@@ -138,6 +197,10 @@ class Security extends Controller {
 		return $customisedController->renderWith("Page");
 	}
 
+
+	/**
+	 *
+	 */
 	function passwordsent() {
 		Requirements::javascript("jsparty/behaviour.js");
 		Requirements::javascript("jsparty/loader.js");
@@ -161,6 +224,9 @@ class Security extends Controller {
 	}
 
 
+	/**
+	 *
+	 */
 	function LostPasswordForm() {
 		return new MemberLoginForm($this, "LostPasswordForm", new FieldSet(
 				new EmailField("Email", "Email address")
@@ -187,6 +253,7 @@ class Security extends Controller {
 
 		return $member;
 	}
+
 
 	/**
 	 * Return a member with administrator privileges
@@ -223,6 +290,7 @@ class Security extends Controller {
 		return $member;
 	}
 
+
 	/**
 	 * This will set a static default-admin (e.g. "td") which is not existing as
 	 * a database-record. By this workaround we can test pages in dev-mode with
@@ -240,6 +308,7 @@ class Security extends Controller {
 		self::$password = $password;
 	}
 
+
 	/**
 	 * Set strict path checking. This prevents sharing of the session
 	 * across several sites in the domain.
@@ -250,8 +319,13 @@ class Security extends Controller {
 		self::$strictPathChecking = $strictPathChecking;
 	}
 
+
+	/**
+	 *
+	 */
 	static function getStrictPathChecking() {
 		return self::$strictPathChecking;
 	}
 }
+
 ?>

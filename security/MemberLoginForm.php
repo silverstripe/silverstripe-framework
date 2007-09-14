@@ -3,6 +3,7 @@
  * Log-in form for the "member" authentication method
  */
 class MemberLoginForm extends Form {
+
 	/**
 	 * Constructor
 	 *
@@ -97,7 +98,7 @@ class MemberLoginForm extends Form {
 	/**
 	 * Log out
 	 *
-	 * @todo Figure out for what this method is used!
+	 * @todo Figure out for what this method is used! Is it really used at all?
 	 */
 	public function logout(){
 		$s = new Security();
@@ -105,16 +106,19 @@ class MemberLoginForm extends Form {
 	}
 
 
-	/**
-	 * Check the membership
-	 *
-	 * If one of them or both don't match, set the fields which are unmatched with red star *
-	 */
+  /**
+   * Try to authenticate the user
+   *
+   * @param array Submitted data
+   * @return Member Returns the member object on successful authentication
+   *                or NULL on failure.
+   */
 	public function performLogin($data){
 		if($member = MemberAuthenticator::authenticate($data)) {
 			$firstname = Convert::raw2xml($member->FirstName);
 			$this->sessionMessage("Welcome Back, {$firstname}", "good");
 			$member->LogIn();
+			
 			if(isset($data['Remember'])) {
 				// Deliberately obscure...
 				Cookie::set('alc_enc',base64_encode("$data[Email]:$data[Password]"));
