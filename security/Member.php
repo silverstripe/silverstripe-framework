@@ -71,7 +71,7 @@ class Member extends DataObject {
 			$token = Convert::raw2sql($token);
 
 			$member = DataObject::get_one(
-					"Member", "Member.ID = $uid And RememberLoginToken = '$token'");
+					"Member", "Member.ID = '$uid' And RememberLoginToken = '$token'");
 
 			if($member) {
 				session_regenerate_id(true);
