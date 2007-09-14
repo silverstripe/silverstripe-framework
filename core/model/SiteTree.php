@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @package sapphire
  * @subpackage core
@@ -489,6 +490,12 @@ class SiteTree extends DataObject {
 				}
 			}
 		}
+
+
+		// If priority is empty or invalid, set it to the default value
+		if(!is_numeric($this->Priority) ||
+			 (($this->Priority < 0) || ($this->Priority > 1)))
+			$this->Priority = self::$defaults['Priority'];
 
 		parent::onBeforeWrite();
 	}
