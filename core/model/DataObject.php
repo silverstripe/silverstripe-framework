@@ -15,13 +15,13 @@ class DataObject extends Controller {
 	 * @var array
 	 */
 	protected $record;
-	
+
 	/**
 	 * An array indexed by fieldname, true if the field has been changed.
 	 * @var array
 	 */
 	protected $changed;
-	
+
 	/**
 	 * The database record (in the same format as $record), before
 	 * any changes.
@@ -31,7 +31,7 @@ class DataObject extends Controller {
 
 	protected $defs;
 	protected $fieldObjects;
-	
+
 	/**
 	 * The one-to-one, one-to-many and many-to-one components
 	 * indexed by component name.
@@ -45,23 +45,23 @@ class DataObject extends Controller {
 	 * @var boolean
 	 */
 	public $destroyed = false;
-	
+
 	/**
 	 * Human-readable singular name.
 	 * @var string
 	 */
 	static $singular_name = null;
-	
+
 	/**
 	 * Human-readable pluaral name
 	 * @var string
 	 */
 	static $plural_name = null;
-	
-	
+
+
 	/**
 	 * Construct a new DataObject.
-	 * 
+	 *
 	 * @param array|null $record This will be null for a new database record.  Alternatively, you can pass an array of
 	 * field values.  Normally this contructor is only used by the internal systems that get objects from the database.
 	 * @param boolean $isSingleton This this to true if this is a singleton() object, a stub for calling methods.  Singletons
@@ -76,14 +76,14 @@ class DataObject extends Controller {
 		if(!is_array($record)) {
 			if(is_object($record)) $passed = "an object of type '$record->class'";
 			else $passed = "The value '$record'";
-			
-			user_error("DataObject::__construct passed $passed.  It's supposed to be passed an array, 
+
+			user_error("DataObject::__construct passed $passed.  It's supposed to be passed an array,
 				taken straight from the database.  Perhaps you should use DataObject::get_one instead?", E_USER_WARNING);
 			$record = null;
 		}
 
 		$this->record = $this->original = $record;
-		
+
 		// Keep track of the modification date of all the data sourced to make this page
 		// From this we create a Last-Modified HTTP header
 		if(isset($record['LastEdited'])) {
@@ -96,11 +96,11 @@ class DataObject extends Controller {
 		if(!$isSingleton && !$this->record['ID']) {
 			$this->populateDefaults();
 		}
-		
+
 		// prevent populateDefaults() and setField() from marking overwritten defaults as changed
 		$this->changed = array();
 	}
-	
+
 	/**
 	 * Destroy all of this objects dependant objects.
 	 * You'll need to call this to get the memory of an object that has components or extensions freed.
@@ -110,7 +110,7 @@ class DataObject extends Controller {
 		$this->components = null;
 		$this->destroyed = true;
 	}
-	
+
 	/**
 	 * Create a duplicate of this node.
 	 * 
@@ -125,42 +125,42 @@ class DataObject extends Controller {
 		if($doWrite) $clone->write();
 		return $clone;
 	}
-	
+
 	/**
 	 * Set the ClassName attribute; $this->class is also updated.
-	 * 
+	 *
 	 * @param string $className The new ClassName attribute
 	 */
 	function setClassName($className) {
 		$this->class = trim($className);
 		$this->setField("ClassName", $className);
 	}
-	
+
 	/**
 	 * Create a new instance of a different class from this object's record
 	 * This is useful when dynamically changing the type of an instance. Specifically,
-	 * it ensures that the instance of the class is a match for the className of the 
+	 * it ensures that the instance of the class is a match for the className of the
 	 * record.
-	 * 
+	 *
 	 * @param string $newClassName The name of the new class
-	 * 
+	 *
 	 * @return DataObject The new instance of the new class, The exact type will be of the class name provided.
 	 */
 	function newClassInstance($newClassName) {
 		$newRecord = $this->record;
 		//$newRecord['RecordClassName'] = $newRecord['ClassName'] = $newClassName;
-		
+
 		$newInstance = new $newClassName($newRecord);
 		$newInstance->setClassName($newClassName);
 		$newInstance->forceChange();
-		
+
 		return $newInstance;
 	}
 
 	/**
 	 * Adds methods from the extensions.
 	 * Called by Object::__construct() once per class.
-	 */	
+	 */
 	function defineMethods() {
 		if($this->class == 'DataObject') return;
 
@@ -190,12 +190,12 @@ class DataObject extends Controller {
 			}
 		}
 	}
-	
+
 	/**
 	 * Returns true if this object "exists", i.e., has a sensible value.
 	 * The default behaviour for a DataObject is to return true, overload
 	 * this in subclasses, for example, an empty DataObject record could return false.
-	 * 
+	 *
 	 * @return boolean true if this object exists
 	 */
 	public function exists() {
@@ -218,32 +218,32 @@ class DataObject extends Controller {
 	 * Get the user friendly singular name of this DataObject.
 	 * If the name is not defined (by redefining $singular_name in the subclass),
 	 * this returns the class name.
-	 * 
+	 *
 	 * @return string User friendly singular name of this DataObject
 	 */
 	function singular_name() {
 		$name = $this->stat('singular_name');
 		if(!$name) {
-			$name = ucwords(trim(strtolower(ereg_replace('([A-Z])',' \\1',$this->class))));			
-		}		
-		return $name; 
+			$name = ucwords(trim(strtolower(ereg_replace('([A-Z])',' \\1',$this->class))));
+		}
+		return $name;
 	}
-	
+
 	/**
 	 * Get the user friendly plural name of this DataObject
 	 * If the name is not defined (by renaming $plural_name in the subclass),
 	 * this returns a pluralised version of the class name.
-	 * 
+	 *
 	 * @return string User friendly plural name of this DataObject
 	 */
 	function plural_name() {
 		if($name = $this->stat('plural_name')) {
-			return $name;	
-		} else {	
+			return $name;
+		} else {
 			$name = $this->singular_name();
 			if(substr($name,-1) == 'e') $name = substr($name,0,-1);
 			else if(substr($name,-1) == 'y') $name = substr($name,0,-1) . 'ie';
-			
+
 			return ucfirst($name . 's');
 		}
 	}
@@ -251,16 +251,16 @@ class DataObject extends Controller {
 	/**
 	 * Returns the associated database record - in this case, the object itself.
 	 * This is included so that you can call $dataOrController->data() and get a DataObject all the time.
-	 * 
+	 *
 	 * @return DataObject Associated database record
 	 */
 	public function data() {
 		return $this;
 	}
-	
+
 	/**
 	 * Convert this object to a map.
-	 * 
+	 *
 	 * @return array The data as a map.
 	 */
 	public function toMap() {
@@ -271,7 +271,7 @@ class DataObject extends Controller {
 	 * Pass a number of field changes in a map.
 	 * Doesn't write to the database. To write the data,
 	 * use the write() method.
-	 * 
+	 *
 	 * @param array $data A map of field name to data values to update.
 	 */
 	public function update($data) {
@@ -279,13 +279,13 @@ class DataObject extends Controller {
 			$this->$k = $v;
 		}
 	}
-	
+
 	/**
 	 * Pass changes as a map, and try to
 	 * get automatic casting for these fields.
 	 * Doesn't write to the database. To write the data,
 	 * use the write() method.
-	 * 
+	 *
 	 * @param array $data A map of field name to data values to update.
 	 */
 	public function castedUpdate($data) {
@@ -293,7 +293,7 @@ class DataObject extends Controller {
 			$this->setCastedField($k,$v);
 		}
 	}
-	
+
 	/**
 	 * Forces the record to think that all its data has changed.
 	 * Doesn't write to the database.
@@ -314,28 +314,28 @@ class DataObject extends Controller {
 		$dummy = null;
 		$this->extend('augmentBeforeWrite', $dummy);
 	}
-	
+
 	/**
 	 * Used by onBeforeWrite() to ensure child classes call parent::onBeforeWrite()
 	 * @var boolean
 	 */
 	protected $brokenOnWrite = false;
-	
+
 	/**
 	 * Event handler called before deleting from the database.
-	 * You can overload this to clean up or otherwise process data before delete this 
+	 * You can overload this to clean up or otherwise process data before delete this
 	 * record.  Don't forget to call parent::onBeforeDelete(), though!
 	 */
 	protected function onBeforeDelete() {
 		$this->brokenOnDelete = false;
 	}
-	
+
 	/**
 	 * Used by onBeforeDelete() to ensure child classes call parent::onBeforeDelete()
 	 * @var boolean
 	 */
 	protected $brokenOnDelete = false;
-	
+
 	/**
 	 * Load the default values in from the self::$defaults array.
 	 * Will traverse the defaults of the current class and all its parent classes.
@@ -345,7 +345,7 @@ class DataObject extends Controller {
 		$classes = array_reverse(ClassInfo::ancestry($this));
 		foreach($classes as $class) {
 			$singleton = ($class == $this->class) ? $this : singleton($class);
-			
+
 			$defaults = $singleton->stat('defaults');
 
 			if($defaults) foreach($defaults as $fieldName => $fieldValue) {
@@ -372,11 +372,11 @@ class DataObject extends Controller {
 	 *  - $this->onBeforeWrite() gets called beforehand.
 	 *  - Extensions such as Versioned will ammend the database-write to ensure that a version is saved.
 	 *  - Calls to {@link DataObjectLog} can be used to see everything that's been changed.
-	 * 
+	 *
 	 * @param boolean $showDebug Show debugging information
 	 * @param boolean $forceInsert Run INSERT command rather than UPDATE, even if record already exists
 	 * @param boolean $forceWrite Write to database even if there are no changes
-	 * 
+	 *
 	 * @return int The ID of the record
 	 */
 	public function write($showDebug = false, $forceInsert = false, $forceWrite = false) {
@@ -386,14 +386,14 @@ class DataObject extends Controller {
 		if($this->brokenOnWrite) {
 			user_error("$this->class has a broken onBeforeWrite() function.  Make sure that you call parent::onBeforeWrite().", E_USER_ERROR);
 		}
-		
+
 		// New record = everything has changed
 
 		if(($this->ID && is_numeric($this->ID)) && !$forceInsert) {
 			$dbCommand = 'update';
 		} else{
 			$dbCommand = 'insert';
-			
+
 			$this->changed = array();
 			foreach($this->record as $k => $v) {
 				$this->changed[$k] = 2;
@@ -401,16 +401,16 @@ class DataObject extends Controller {
 
 			$firstWrite = true;
 		}
-		
+
 		// No changes made
 		if(!$this->changed) {
 			return $this->record['ID'];
 		}
-		
+
 		foreach($this->getClassAncestry() as $ancestor) {
 			if(ClassInfo::hasTable($ancestor)) $ancestry[] = $ancestor;
 		}
-		
+
 		// Look for some changes to make
 		unset($this->changed['ID']);
 
@@ -454,9 +454,9 @@ class DataObject extends Controller {
 						$manipulation[$class]['fields']["ClassName"] = "'$this->class'";
 					}
 				}
-				
-				// In cases where there are no fields, this 'stub' will get picked up on 
-				if(ClassInfo::hasTable($class)) {				
+
+				// In cases where there are no fields, this 'stub' will get picked up on
+				if(ClassInfo::hasTable($class)) {
 					$manipulation[$class]['command'] = $dbCommand;
 					$manipulation[$class]['id'] = $this->record['ID'];
 				} else {
@@ -464,7 +464,7 @@ class DataObject extends Controller {
 				}
 			}
 
-			
+
 			$this->extend('augmentWrite', $manipulation);
 			// New records have their insert into the base data table done first, so that they can pass the 
 			// generated ID on to the rest of the manipulation
@@ -472,7 +472,7 @@ class DataObject extends Controller {
 				$manipulation[$baseTable]['command'] = 'update';	
 			}
 			DB::manipulate($manipulation);
-			
+
 			if(isset($isNewRecord) && $isNewRecord) {
 				DataObjectLog::addedObject($this);
 			} else {
@@ -493,19 +493,19 @@ class DataObject extends Controller {
 				$component->write($firstWrite);
 			}
 		}
-		
+
 		if(!isset($this->record['Created'])) {
 			$this->record['Created'] = date('Y-m-d H:i:s');
 		}
 		$this->record['LastEdited'] = date('Y-m-d H:i:s');
-		
+
 		return $this->record['ID'];
 	}
-	
+
 	/**
 	 * Perform a write without affecting the version table.
 	 * On objects without versioning.
-	 * 
+	 *
 	 * @return int The ID of the record
 	 */
 	public function writeWithoutVersion() {
@@ -521,7 +521,7 @@ class DataObject extends Controller {
 	 * $this->onBeforeDelete() gets called.
 	 * Note that in Versioned objects, both Stage and Live will be deleted.
 	 */
-	public function delete() {	
+	public function delete() {
 		$this->brokenOnDelete = true;
 		$this->onBeforeDelete();
 		if($this->brokenOnDelete) {
@@ -540,13 +540,13 @@ class DataObject extends Controller {
 
 		$this->OldID = $this->ID;
 		$this->ID = 0;
-		
+
 		DataObjectLog::deletedObject($this);
 	}
-	
+
 	/**
 	 * Delete the record with the given ID.
-	 * 
+	 *
 	 * @param string $className The class name of the record to be deleted
 	 * @param int $id ID of record to be deleted
 	 */
@@ -564,13 +564,13 @@ class DataObject extends Controller {
 	 * @var array
 	 */
 	protected static $ancestry;
-	
+
 	/**
 	 * Get the class ancestry, including the current class name.
 	 * The ancestry will be returned as an array of class names, where the 0th element
 	 * will be the class that inherits directly from DataObject, and the last element
 	 * will be the current class.
-	 * 
+	 *
 	 * @return array Class ancestry
 	 */
 	public function getClassAncestry() {
@@ -586,35 +586,35 @@ class DataObject extends Controller {
 	/**
 	 * Return a component object from a one to one relationship, as a DataObject.
 	 * If no component is available, an 'empty component' will be returned.
-	 * 
+	 *
 	 * @param string $componentName Name of the component
-	 * 
+	 *
 	 * @return DataObject The component object. It's exact type will be that of the component.
 	 */
 	public function getComponent($componentName) {
 		if(isset($this->components[$componentName])) {
 			return $this->components[$componentName];
 		}
-		
+
 		if($componentClass = $this->has_one($componentName)) {
 			$childID = $this->getField($componentName . 'ID');
 
 			if($childID && is_numeric($childID)) {
 				$component = DataObject::get_by_id($componentClass,$childID);
 			}
-		
+
 			// If no component exists, create placeholder object
 			if(!isset($component)) {
 				$component = $this->createComponent($componentName);
 				// We may have had an orphaned ID that needs to be cleaned up
 				$this->setField($componentName . 'ID', 0);
 			}
-		
+
 			// If no component exists, create placeholder object
 			if(!$component) {
 				$component = $this->createComponent($componentName);
 			}
-			
+
 			$this->components[$componentName] = $component;
 			return $component;
 		} else {
@@ -627,17 +627,17 @@ class DataObject extends Controller {
 	 * @var array
 	 */
     protected $componentCache;
-		
+
 	/**
 	 * Returns a one-to-many component, as a ComponentSet.
-	 * 
+	 *
 	 * @param string $componentName Name of the component
 	 * @param string $filter A filter to be inserted into the WHERE clause
 	 * @param string $sort A sort expression to be inserted into the ORDER BY clause. If omitted, the static field $default_sort on the component class will be used.
 	 * @param string $join A single join clause. This can be used for filtering, only 1 instance of each DataObject will be returned.
 	 * @param string $limit A limit expression to be inserted into the LIMIT clause
 	 * @param string $having A filter to be inserted into the HAVING clause
-	 * 
+	 *
 	 * @return ComponentSet The components of the one-to-many relationship.
 	 */
 	public function getComponents($componentName, $filter = "", $sort = "", $join = "", $limit = "", $having = "") {
@@ -657,29 +657,29 @@ class DataObject extends Controller {
 		// get filter
 		$combinedFilter = "$joinField = '$id'";
 		if($filter) $combinedFilter .= " AND {$filter}";
-		
+
 		$result = $componentObj->instance_get($combinedFilter, $sort, $join, $limit, "ComponentSet", $having);
 		if(!$result) {
 			$result = new ComponentSet();
 		}
 		$result->setComponentInfo("1-to-many", $this, null, null, $componentClass, $joinField);
-		
+
 		// If this record isn't in the database, then we want to hold onto this specific ComponentSet,
 		// because it's the only copy of the data that we have.
 		if(!$this->isInDB()) {
 			$this->setComponent($componentName, $result);
-		} 
-		
+		}
+
 		return $result;
 	}
-	
+
 	/**
 	 * Tries to find the db-key for storing a relation (defaults to "ParentID" if no relation is found).
 	 * The iteration is necessary because the most specific class does not always have a database-table.
-	 * 
+	 *
 	 * @param string $componentName Name of one to many component
-	 * 
-	 * @return string Fieldname for the parent-relation 
+	 *
+	 * @return string Fieldname for the parent-relation
 	 */
 	public function getComponentJoinField($componentName) {
 		if(!$componentClass = $this->has_many($componentName)) {
@@ -689,15 +689,15 @@ class DataObject extends Controller {
 
 		// get has-one relations
 		$reversedComponentRelations = array_flip($componentObj->has_one());
-		
+
 		// get all parentclasses for the current class which have tables
 		$allClasses = ClassInfo::ancestry($this->class);
-		
+
 		// use most specific relation by default (turn around order)
 		$allClasses = array_reverse($allClasses);
 
-		// traverse up through all classes with database-tables, starting with the most specific 
-		// (mostly the classname of the calling DataObject)		
+		// traverse up through all classes with database-tables, starting with the most specific
+		// (mostly the classname of the calling DataObject)
 		foreach($allClasses as $class) {
 			// if this class does a "has-one"-representation, use it
 			if(isset($reversedComponentRelations[$class])) {
@@ -708,20 +708,20 @@ class DataObject extends Controller {
 		if(!isset($joinField)) {
 			$joinField = 'ParentID';
 		}
-		
+
 		return $joinField;
 	}
-    
+
     /**
      * Sets the component of a relationship.
-     * 
+     *
      * @param string $componentName Name of the component
      * @param DataObject|ComponentSet $componentValue Value of the component
      */
     public function setComponent($componentName, $componentValue) {
-    	$this->componentCache[$componentName] = $componentValue;   
+    	$this->componentCache[$componentName] = $componentValue;
     }
-	
+
 	/**
 	 * Returns a many-to-many component, as a ComponentSet.
 	 * @param string $componentName Name of the many-many component
@@ -731,13 +731,13 @@ class DataObject extends Controller {
 	 */
 	public function getManyManyComponents($componentName, $filter = "", $sort = "", $join = "", $limit = "", $having = "") {
 		if(isset($this->components[$componentName])) return $this->components[$componentName];
-		
+
 		list($parentClass, $componentClass, $parentField, $componentField, $table) = $this->many_many($componentName);
 
 		if($this->ID && is_numeric($this->ID)) {
 			if($componentClass) {
 				$componentObj = singleton($componentClass);
-				
+
 				// Join expression is done on SiteTree.ID even if we link to Page; it helps work around
 				// database inconsistencies
 				$componentBaseClass = ClassInfo::baseDataClass($componentClass);
@@ -766,32 +766,32 @@ class DataObject extends Controller {
 		}
 		$result->setComponentInfo("many-to-many", $this, $parentClass, $table, $componentClass);
 		$this->components[$componentName] = $result;
-		
+
 		return $result;
 	}
-	
+
 	/**
 	 * Creates an empty component for the given one-one or one-many relationship
-	 * 
+	 *
 	 * @param string $componentName
-	 * 
+	 *
 	 * @return DataObject The empty component. The exact class will be that of the components class.
 	 */
 	protected function createComponent($componentName) {
 		if(($componentClass = $this->has_one($componentName)) || ($componentClass = $this->has_many($componentName))) {
 			$component = new $componentClass(null);
 			return $component;
-			
+
 		} else {
 			user_error("DataObject::createComponent(): Unknown 1-to-1 or 1-to-many component '$componentName' on class '$this->class'", E_USER_ERROR);
 		}
 	}
-	
+
 	/**
 	 * Return the class of a one-to-one component.  If $component is null, return all of the one-to-one components and their classes.
-	 * 
+	 *
 	 * @param string $component Name of component
-	 * 
+	 *
 	 * @return string|array The class of the one-to-one component, or an array of all one-to-one components and their classes.
 	 */
 	public function has_one($component = null) {
@@ -818,18 +818,18 @@ class DataObject extends Controller {
 		}
 		return isset($items) ? $items : null;
 	}
-	
+
 	/**
 	 * Return all of the database fields defined in self::$db and all the parent classes.
 	 * Doesn't include any fields specified by self::$has_one.  Use $this->has_one() to get these fields
-	 * 
+	 *
 	 * @return array The database fields
 	 */
 	public function db() {
 		$classes = ClassInfo::ancestry($this);
 		$good = false;
 		$items = array();
-		
+
 		foreach($classes as $class) {
 			// Wait until after we reach DataObject
 			if(!$good) {
@@ -840,25 +840,25 @@ class DataObject extends Controller {
 			}
 			eval("\$items = array_merge((array){$class}::\$db, (array)\$items);");
 		}
-		
+
 		return $items;
 	}
-	
+
 	/**
 	 * Return the class of a one-to-many component.  If $component is null, return all of the one-to-many components
 	 * and their classes.
-	 * 
+	 *
 	 * @param string $component Name of component
-	 * 
+	 *
 	 * @return string|array The class of the one-to-many component, or an array of all one-to-many components and their classes.
 	 */
 	public function has_many($component = null) {
 		$classes = ClassInfo::ancestry($this);
 		$good = false;
-		
+
 		foreach($classes as $class) {
 			// Wait until after we reach DataObject
-			if(!$good) { 
+			if(!$good) {
 				if($class == 'DataObject') {
 					$good = true;
 				}
@@ -874,23 +874,23 @@ class DataObject extends Controller {
 				eval("\$items = isset(\$items) ? array_merge((array){$class}::\$has_many, (array)\$items) : (array){$class}::\$has_many;");
 			}
 		}
-		
+
 		return isset($items) ? $items : null;
 	}
 
 	/**
-	 * Return information about a many-to-many component. 
+	 * Return information about a many-to-many component.
 	 * The return value is an array of (parentclass, childclass).  If $component is null, then all many-many
 	 * components are returned.
-	 * 
+	 *
 	 * @param string $component Name of component
-	 * 
+	 *
 	 * @return array  An array of (parentclass, childclass), or an array of all many-many components
 	 */
 	public function many_many($component = null) {
 		$classes = ClassInfo::ancestry($this);
 		$good = false;
-		
+
 		foreach($classes as $class) {
 			// Wait until after we reach DataObject
 			if(!$good) {
@@ -899,11 +899,11 @@ class DataObject extends Controller {
 				}
 				continue;
 			}
-			
+
 			if($class == 'DataObject' || $class == 'ViewableData') {
 				continue;
 			}
-			
+
 			if($component) {
 				// Try many_many
 				$candidate = eval("return isset({$class}::\$many_many[\$component]) ? {$class}::\$many_many[\$component] : null;");
@@ -912,7 +912,7 @@ class DataObject extends Controller {
 					$childField = ($class == $candidate) ? "ChildID" : $candidate . "ID";
 					return array($class, $candidate, $parentField, $childField, "{$class}_$component");
 				}
-				
+
 				// Try belongs_many_many
 				$candidate = eval("return isset({$class}::\$belongs_many_many[\$component]) ? {$class}::\$belongs_many_many[\$component] : null;");
 				if($candidate) {
@@ -923,7 +923,7 @@ class DataObject extends Controller {
 					if(!$otherManyMany) {
 						Debug::message("Inverse component of $candidate not found");
 					}
-					
+
 					foreach($otherManyMany as $inverseComponentName => $candidateClass) {
 						if($candidateClass == $class || is_subclass_of($class, $candidateClass)) {
 							$parentField = ($class == $candidate) ? "ChildID" : $candidateClass . "ID";
@@ -936,7 +936,7 @@ class DataObject extends Controller {
 						}
 					}
 					user_error("Orphaned \$belongs_many_many value for $this->class.$component", E_USER_ERROR);
-				}	
+				}
 			} else {
 				eval("\$items = isset(\$items) ? array_merge((array){$class}::\$many_many, (array)\$items) : (array){$class}::\$many_many;");
 				eval("\$items = array_merge((array){$class}::\$belongs_many_many, (array)\$items);");
@@ -948,9 +948,9 @@ class DataObject extends Controller {
 	/**
 	 * Checks if the given fields have been filled out.
 	 * Pass this method a number of field names, it will return true if they all have values.
-	 * 
+	 *
 	 * @param array|string $args,... The field names may be passed either as an array, or as multiple parameters.
-	 * 
+	 *
 	 * @return boolean True if all fields have values, otherwise false
 	 */
 	public function filledOut($args) {
@@ -961,37 +961,37 @@ class DataObject extends Controller {
 				return false;
 			}
 		}
-		return true;		
+		return true;
 	}
 
 	/**
 	 * Gets the value of a field.
 	 * Called by {@link __get()} and any getFieldName() methods you might create.
-	 * 
+	 *
 	 * @param string $field The name of the field
-	 * 
+	 *
 	 * @return mixed The field value
 	 */
 	protected function getField($field) {
 		return isset($this->record[$field]) ? $this->record[$field] : null;
 	}
-	
+
 	/**
 	 * Return a map of all the fields for this record.
-	 * 
+	 *
 	 * @return array A map of field names to field values.
 	 */
 	public function getAllFields() {
 		return $this->record;
 	}
-	
+
 	/**
 	 * Return the fields that have changed.
 	 * The change level affects what the functions defines as "changed":
 	 * Level 1 will return strict changes, even !== ones.
 	 * Level 2 is more lenient, it will onlr return real data changes, for example a change from 0 to null
 	 * would not be included.
-	 * 
+	 *
 	 * @param boolean $databaseFieldsOnly Get only database fields that have changed
 	 * @param int $changeLevel The strictness of what is defined as change
 	 */
@@ -1002,7 +1002,7 @@ class DataObject extends Controller {
 		} else {
 			$fields = $this->changed;
 		}
-		
+
 		// Filter the list to those of a certain change level
 		if($changeLevel > 1) {
 			foreach($fields as $name => $level) {
@@ -1011,14 +1011,14 @@ class DataObject extends Controller {
 				}
 			}
 		}
-		
+
 		return $fields;
 	}
-	
+
 	/**
 	 * Set the value of the field
 	 * Called by {@link __set()} and any setFieldName() methods you might create.
-	 * 
+	 *
 	 * @param string $fieldName Name of the field
 	 * @param mixed $value New field value
 	 */
@@ -1042,18 +1042,18 @@ class DataObject extends Controller {
 				// Record change-level 1 if only the type changed, e.g. 0 !== NULL
 				$this->changed[$fieldName] = 1;
 			}
-			
+
 			// value is always saved back when strict check succeeds
 			$this->record[$fieldName] = $val;
 		}
 	}
-	
+
 	/**
 	 * Set the value of the field, using a casting object.
 	 * This is useful when you aren't sure that a date is in SQL format, for example.
 	 * setCastedField() can also be used, by forms, to set related data.  For example, uploaded images
 	 * can be saved into the Image table.
-	 * 
+	 *
 	 * @param string $fieldName Name of the field
 	 * @param mixed $value New field value
 	 */
@@ -1070,12 +1070,12 @@ class DataObject extends Controller {
 			$this->$fieldName = $val;
 		}
 	}
-	
+
 	/**
 	 * Returns true if the given field exists
-	 * 
+	 *
 	 * @param string $field Name of the field
-	 * 
+	 *
 	 * @return boolean True if the given field exists
 	 */
 	public function hasField($field) {
@@ -1084,11 +1084,11 @@ class DataObject extends Controller {
 
 	/**
 	 * Returns true if the member is allowed to do the given action.
-	 * 
+	 *
 	 * @param string $perm The permission to be checked, such as 'View'.
 	 * @param Member $member The member whose permissions need checking.  Defaults to the currently logged
 	 * in user.
-	 * 
+	 *
 	 * @return boolean True if the the member is allowed to do the given action
 	 */
 	function can($perm, $member = null) {
@@ -1105,25 +1105,25 @@ class DataObject extends Controller {
 					return false;
 				}
 				return $this->Parent->can($perm, $member);
-				
+
 			} else {
 				$permissionCache = $this->uninherited('permissionCache');
-				$memberID = $member ? $member->ID : 'noone';
-	
+				$memberID = $member ? $member->ID : 'none';
+
 				if(!isset($permissionCache[$memberID][$perm])) {
 					if($member->ID) {
 						$groups = $member->Groups();
 					} else {
 						$groups = DataObject::get("Group_Unsecure", "");
 					}
-					
+
 					$groupList = implode(', ', $groups->column("ID"));
-					
+
 					$query = new SQLQuery(
 						"`Page_Can$perm`.PageID",
 						array("`Page_Can$perm`"),
 						"GroupID IN ($groupList)");
-	
+
 					$permissionCache[$memberID][$perm] = $query->execute()->column();
 
 					if($perm == "View") {
@@ -1142,7 +1142,7 @@ class DataObject extends Controller {
 
 					$this->set_uninherited('permissionCache', $permissionCache);
 				}
-				
+
 
 				if($permissionCache[$memberID][$perm]) {
 					return in_array($this->ID, $permissionCache[$memberID][$perm]);
@@ -1152,10 +1152,10 @@ class DataObject extends Controller {
 			return parent::can($perm, $member);
 		}
 	}
-	
+
 	/**
 	 * Debugging used by Debug::show()
-	 * 
+	 *
 	 * @return string HTML data representing this object
 	 */
 	public function debug() {
@@ -1166,22 +1166,22 @@ class DataObject extends Controller {
 		$val .= "</ul>";
 		return $val;
 	}
-	
+
 	/**
 	 * Returns the field type of the given field, if it belongs to this class, and not a parent.
-	 * Can be used to detect whether the given field exists.  
+	 * Can be used to detect whether the given field exists.
 	 * Note that the field type will not include constructor arguments; only the classname.
-	 * 
+	 *
 	 * @param string $field Name of the field
-	 * 
+	 *
 	 * @return string The field type of the given field
-	 */		
+	 */
 	 public function fieldExists($field) {
 		if($field == "ID") return "Int";
 		if($field == "ClassName" && get_parent_class($this) == "DataObject") return "Enum";
 		if($field == "LastEdited" && get_parent_class($this) == "DataObject") return "Datetime";
 		if($field == "Created" && get_parent_class($this) == "DataObject") return "Datetime";
-		
+
 		if($field == "Version") return $this->hasExtension('Versioned') ? "Int" : false;
 		$fieldMap = $this->uninherited('fieldExists');
 		if(!$fieldMap) {
@@ -1195,36 +1195,36 @@ class DataObject extends Controller {
 
 		return isset($fieldMap[$field]) ? strtok($fieldMap[$field],'(') : null;
 	}
-	
+
 	/**
 	 * Return the DBField object that represents the given field.
 	 * This works similarly to obj() but still returns an object even when the field has no value.
-	 * 
+	 *
 	 * @param string $fieldName Name of the field
-	 * 
+	 *
 	 * @return DBField The field as a DBField object
 	 */
 	public function dbObject($fieldName) {
 		$helperPair = $this->castingHelperPair($fieldName);
 		$constructor = $helperPair['castingHelper'];
-		
+
 		if($obj = eval($constructor)) {
 			$obj->setVal($this->$fieldName);
 		}
-		
-		return $obj;		
+
+		return $obj;
 	}
-	
+
 	/**
 	 * Build a {@link SQLQuery} object to perform the given query.
-	 * 
+	 *
 	 * @param string $filter A filter to be inserted into the WHERE clause.
 	 * @param string $sort A sort expression to be inserted into the ORDER BY clause. If omitted, self::$default_sort will be used.
 	 * @param string $limit A limit expression to be inserted into the LIMIT clause.
 	 * @param string $join A single join clause. This can be used for filtering, only 1 instance of each DataObject will be returned.
 	 * @param boolean $restictClasses Restrict results to only objects of either this class of a subclass of this class
 	 * @param string $having A filter to be inserted into the HAVING clause.
-	 * 
+	 *
 	 * @return SQLQuery Query built.
 	 */
 	public function buildSQL($filter = "", $sort = "", $limit = "", $join = "", $restrictClasses = true, $having = "") {
@@ -1243,7 +1243,7 @@ class DataObject extends Controller {
 
 		// Build our intial query
 		$query = new SQLQuery(array("`$baseClass`.*"), "`$baseClass`", $filter, $sort);
-		
+
 		// Join all the tables
 		if($tableClasses) {
 			foreach($tableClasses as $tableClass) {
@@ -1253,14 +1253,14 @@ class DataObject extends Controller {
 		}
 		$query->select[] = "`$baseClass`.ID";
 		$query->select[] = "if(`$baseClass`.ClassName,`$baseClass`.ClassName,'$baseClass') AS RecordClassName";
-		
+
 		// Get the ClassName values to filter to
 		$classNames = ClassInfo::subclassesFor($this->class);
-		
+
 		if(!$classNames) {
 			user_error("DataObject::get() Can't find data sub-classes for '$callerClass'");
 		}
-		
+
 		// If querying the base class, don't bother filtering on class name
 		if($restrictClasses && $this->class != $baseClass) {
 			// Get the ClassName values to filter to
@@ -1279,35 +1279,35 @@ class DataObject extends Controller {
 		if($having) {
 			$query->having[] = $having;
 		}
-		
+
 		if($join) {
 			$query->from[] = $join;
 			$query->groupby[] = reset($query->from) . ".ID";
 		}
-		
+
 		return $query;
 	}
-	
+
 	/**
 	 * Like {@link buildSQL}, but applies the extension modificiations.
-	 * 
+	 *
 	 * @param string $filter A filter to be inserted into the WHERE clause.
 	 * @param string $sort A sort expression to be inserted into the ORDER BY clause. If omitted, self::$default_sort will be used.
 	 * @param string $limit A limit expression to be inserted into the LIMIT clause.
 	 * @param string $join A single join clause. This can be used for filtering, only 1 instance of each DataObject will be returned.
 	 * @param string $having A filter to be inserted into the HAVING clause.
-	 * 
+	 *
 	 * @return SQLQuery Query built
 	 */
 	public function extendedSQL($filter = "", $sort = "", $limit = "", $join = "", $having = ""){
 		$query = $this->buildSQL($filter, $sort, $limit, $join, true, $having);
 		$this->extend('augmentSQL', $query);
-		return $query;		
+		return $query;
 	}
 
 	/**
 	 * Get a bunch of fields in a list - a <ul> of <li><b>name:</b> value</li>
-	 * 
+	 *
 	 * @return string The fields as an HTML unordered list
 	 */
 	function listOfFields() {
@@ -1322,7 +1322,7 @@ class DataObject extends Controller {
 	/**
 	 * Return all objects matching the filter
 	 * sub-classes are automatically selected and included
-	 * 
+	 *
 	 * @param string $callerClass The class of objects to be returned
 	 * @param string $filter A filter to be inserted into the WHERE clause.
 	 * @param string $sort A sort expression to be inserted into the ORDER BY clause.  If omitted, self::$default_sort will be used.
@@ -1330,13 +1330,13 @@ class DataObject extends Controller {
 	 * @param string $limit A limit expression to be inserted into the LIMIT clause.
 	 * @param string $containerClass The container class to return the results in.
 	 * @param string $having A filter to be inserted into the HAVING clause.
-	 * 
+	 *
 	 * @return mixed The objects matching the filter, in the class specified by $containerClass
 	 */
 	public static function get($callerClass, $filter = "", $sort = "", $join = "", $limit = "", $containerClass = "DataObjectSet", $having = "") {
 		return singleton($callerClass)->instance_get($filter, $sort, $join, $limit, $containerClass, $having);
 	}
-	
+
 	/**
 	 * The internal function that actually performs the querying for get().
 	 * DataObject::get("Table","filter") is the same as singleton("Table")->instance_get("filter")
@@ -1347,7 +1347,7 @@ class DataObject extends Controller {
 	 * @param string $limit A limit expression to be inserted into the LIMIT clause.
 	 * @param string $containerClass The container class to return the results in.
 	 * @param string $having A filter to be inserted into the HAVING clause.
-	 * 
+	 *
 	 * @return mixed The objects matching the filter, in the class specified by $containerClass
 	 */
 	public function instance_get($filter = "", $sort = "", $join = "", $limit="", $containerClass = "DataObjectSet", $having = "") {
@@ -1356,16 +1356,16 @@ class DataObject extends Controller {
 		
 		$ret = $this->buildDataObjectSet($records, $containerClass, $query, $this->class);
 		if($ret) $ret->parseQueryLimit($query);
-	
+
 		return $ret;
 	}
-	
+
 	/**
 	 * Take a database {@link Query} and instanciate an object for each record.
-	 * 
+	 *
 	 * @param Query|array $records The database records, a {@link Query} object or an array of maps.
 	 * @param string $containerClass The class to place all of the objects into.
-	 * 
+	 *
 	 * @return mixed The new objects in an object of type $containerClass
 	 */
 	function buildDataObjectSet($records, $containerClass = "DataObjectSet", $query = null, $baseClass = null) {
@@ -1379,7 +1379,7 @@ class DataObject extends Controller {
 				$results[] = new $baseClass($record);
 			} 
 		}
-		
+
 		if(isset($results)) {
 			return new $containerClass($results);
 		}
@@ -1390,18 +1390,18 @@ class DataObject extends Controller {
  	 * @var array
  	 */
  	protected static $cache_get_one;
- 	
+
 	/**
 	 * Return the first item matching the given query.
 	 * All calls to get_one() are cached.
-	 * 
+	 *
 	 * TODO Caching doesn't respect sorting.
-	 * 
+	 *
 	 * @param string $callerClass The class of objects to be returned
 	 * @param string $filter A filter to be inserted into the WHERE clause
 	 * @param boolean $cache Use caching
 	 * @param string $orderby A sort expression to be inserted into the ORDER BY clause.
-	 * 
+	 *
 	 * @return DataObject The first item matching the query
 	 */
 	public static function get_one($callerClass, $filter = "", $cache = true, $orderby = "") {
@@ -1414,11 +1414,11 @@ class DataObject extends Controller {
 				}
 			}
 		}
-		return $cache ? DataObject::$cache_get_one[$callerClass][$filter] : $item;	
+		return $cache ? DataObject::$cache_get_one[$callerClass][$filter] : $item;
 	}
-	
+
 	/**
-	 * Flush the cached results for get_one() 
+	 * Flush the cached results for get_one()
 	 */
 	public function flushCache() {
 		if($this->class == 'DataObject') {
@@ -1435,13 +1435,13 @@ class DataObject extends Controller {
 			DataObject::$cache_get_one[$class] = null;
 		}
 	}
-	
+
 	/**
 	 * Does the hard work for get_one()
-	 * 
+	 *
 	 * @param string $filter A filter to be inserted into the WHERE clause
 	 * @param string $orderby A sort expression to be inserted into the ORDER BY clause.
-	 * 
+	 *
 	 * @return DataObject The first item matching the query
 	 */
 	public function instance_get_one($filter, $orderby = null) {
@@ -1452,7 +1452,7 @@ class DataObject extends Controller {
 		}
 
 		$this->extend('augmentSQL', $query);
-		
+
 		$records = $query->execute();
 		$records->rewind();
 		$record = $records->current();
@@ -1471,24 +1471,24 @@ class DataObject extends Controller {
 			return $record;
 		}
 	}
-	
+
 	/**
 	 * Return the SiteTree object with the given URL segment.
-	 * 
+	 *
 	 * @param string $urlSegment The URL segment, eg 'home'
-	 * 
+	 *
 	 * @return SiteTree The object with the given URL segment
 	 */
 	public static function get_by_url($urlSegment) {
 		return DataObject::get_one("SiteTree", "URLSegment = '" . addslashes((string) $urlSegment) . "'");
 	}
-	
+
 	/**
 	 * Return the given element, searching by ID
-	 * 
+	 *
 	 * @param string $callerClass The class of the object to be returned
 	 * @param int $id The id of the element
-	 *  
+	 *
 	 * @return DataObject The element
 	 */
 	public static function get_by_id($callerClass, $id) {
@@ -1501,9 +1501,9 @@ class DataObject extends Controller {
 			user_error("DataObject::get_by_id passed a non-numeric ID #$id", E_USER_WARNING);
 		}
 	}
-	
+
 	//-------------------------------------------------------------------------------------------//
-	
+
 	/**
 	 * Return the database indexes on this table.
 	 * This array is indexed by the name of the field with the index, and
@@ -1521,25 +1521,25 @@ class DataObject extends Controller {
 				$indexes[$relationshipName . 'ID'] = true;
 			}
 		}
-		
-		if($classIndexes) { 
+
+		if($classIndexes) {
 			foreach($classIndexes as $indexName => $indexType) {
 				$indexes[$indexName] = $indexType;
 			}
 		}
-		
+
 		if(get_parent_class($this) == "DataObject") {
 			$indexes['ClassName'] = true;
 		}
-		
+
 		return $indexes;
 	}
-	
+
 	/**
 	 * Check the database schema and update it as necessary.
 	 */
 	public function requireTable() {
-		// Only build the table if we've actually got fields		
+		// Only build the table if we've actually got fields
 		$fields = $this->databaseFields();
     	$indexes = $this->databaseIndexes();
 
@@ -1548,7 +1548,7 @@ class DataObject extends Controller {
 		} else {
 			DB::dontRequireTable($this->class);
 		}
-		
+
 		// Build any child tables for many_many items
 		if($manyMany = $this->uninherited('many_many', true)) {
 			$extras = $this->uninherited('many_many_extraFields', true);
@@ -1561,21 +1561,21 @@ class DataObject extends Controller {
 				if($extras[$relationship]) {
 					$manymanyFields = array_merge($manymanyFields, $extras[$relationship]);
 				}
-				
+
 				// Build index list
 				$manymanyIndexes = array(
 					"{$this->class}ID" => true,
 					(($this->class == $childClass) ? "ChildID" : "{$childClass}ID") => true,
 				);
-				
+
 				DB::requireTable("{$this->class}_$relationship", $manymanyFields, $manymanyIndexes);
 			}
 		}
-		
+
 		// Let any extentions make their own database fields
 		$this->extend('augmentDatabase', $dummy);
 	}
-	
+
 	/**
 	 * Add default records to database. This function is called whenever the
 	 * database is built, after the database tables have all been created. Overload
@@ -1584,7 +1584,7 @@ class DataObject extends Controller {
 	 */
 	public function requireDefaultRecords() {
 		$defaultRecords = $this->stat('default_records');
-		
+
 		if(!empty($defaultRecords)) {
 			// Populate with default data if table is empty
 			$baseClass = ClassInfo::baseDataClass($this->class);
@@ -1600,12 +1600,12 @@ class DataObject extends Controller {
 			}
 		}
 	}
-	
+
 	/**
 	 * Return the complete set of database fields, including Created, LastEdited and ClassName.
-	 * 
+	 *
 	 * @return array A map of field name to class of all databases fields on this object
-	 * 
+	 *
 	 */
 	public function databaseFields() {
 		// For base tables, add a classname field
@@ -1619,7 +1619,7 @@ class DataObject extends Controller {
 				),
 				(array)$this->customDatabaseFields()
 			);
-			
+
 		// Child table
 		} else {
 			return $this->customDatabaseFields();
@@ -1632,22 +1632,22 @@ class DataObject extends Controller {
 	public function customDatabaseFields() {
 		$db = $this->uninherited('db',true);
 		$has_one = $this->uninherited('has_one',true);
-		
+
 		$def = $db;
 		if($has_one) {
 			foreach($has_one as $field => $joinTo) {
 				$def[$field . 'ID'] = "Int";
 			}
 		}
-		
+
 		return $def;
 	}
-    
+
     /**
     * @return boolean True if the object is in the database
     */
     public function isInDB() {
-        return is_numeric( $this->ID ) && $this->ID > 0;    
+        return is_numeric( $this->ID ) && $this->ID > 0;
     }
 
 	/**
@@ -1680,7 +1680,7 @@ class DataObject extends Controller {
 	 * @var array
 	 */
 	public static $db = null;
-	
+
 	/**
 	 * Use a casting object for a field. This is a map from
 	 * field name to class name of the casting object.
@@ -1690,14 +1690,14 @@ class DataObject extends Controller {
 		"LastEdited" => "Datetime",
 		"Created" => "Datetime",
 	);
-	
+
 	/**
 	 * If a field is in this array, then create a database index
 	 * on that field. This is a map from fieldname to index type.
 	 * @var array
 	 */
 	public static $indexes = null;
-	
+
 	/**
 	 * Inserts standard column-values when a DataObject
 	 * is instanciated. Does not insert default records {@see $default_records}.
@@ -1707,21 +1707,21 @@ class DataObject extends Controller {
 	public static $defaults = null;
 
 	/**
-	 * Multidimensional array which inserts default data into the database 
+	 * Multidimensional array which inserts default data into the database
 	 * on a db/build-call as long as the database-table is empty. Please use this only
 	 * for simple constructs, not for SiteTree-Objects etc. which need special
 	 * behaviour such as publishing and ParentNodes.
-	 * 
+	 *
 	 * Example:
 	 * array(
 	 * 	array('Title' => "DefaultPage1", 'PageTitle' => 'page1'),
 	 * 	array('Title' => "DefaultPage2")
 	 * ).
-	 * 
+	 *
 	 * @var array
 	 */
 	public static $default_records = null;
-	
+
 	/**
 	 * one-to-one relationship definitions.
 	 * This is a map from component name to data type.
@@ -1742,21 +1742,21 @@ class DataObject extends Controller {
 	 * @var array
 	 */
 	public static $many_many = null;
-	
+
 	/**
 	 * Extra fields to include on the connecting many-many table.
 	 * This is a map from field name to field type.
 	 * @var array
 	 */
 	public static $many_many_extraFields = null;
-	
+
 	/**
 	 * The inverse side of a many-many relationship.
 	 * This is a map from component name to data type.
 	 * @var array
 	 */
 	public static $belongs_many_many = null;
-	
+
 	/**
 	 * The default sort expression. This will be inserted in the ORDER BY
 	 * clause of a SQL query if no other sort expression is provided.
