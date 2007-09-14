@@ -494,14 +494,29 @@ class PDODatabase extends Database {
 	}
 	
 	/**
-	 * Returns a list of all the tables in the column.
+	 * Returns a list of all the tables in the database.
 	 * Table names will all be in lowercase.
 	 * Returns a map of a table.
 	 */
 	public function tableList() {
-	
-	// to be done - SHOW is used extensively but very MySQL specific
-	
+		switch ($parameters['type']) {
+			case "mysql":
+				$sql = "SHOW TABLES";
+				break;
+			case "postgresql":
+				$sql = "SELECT tablename FROM pg_tables WHERE tablename NOT ILIKE 'pg_%' AND tablename NOT ILIKE 'sql_%'";
+				break;
+			case "mssql":
+				$sql = "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME NOT LIKE 'sysdiagrams%'";
+				break;
+			default:
+				$this->databaseError("This database server is not available");
+		}
+		foreach($dbConn->query($sql) as $record) {
+			$table = strtolower(reset($record));
+			$tables[$table] = $table;
+		}
+		return isset($tables) ? $tables : null;
 	}
 	
 	/**
