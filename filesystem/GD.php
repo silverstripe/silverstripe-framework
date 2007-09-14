@@ -124,6 +124,25 @@ class GD extends Object {
 		return $output;
 	}
 	
+	function rotate($angle) {
+		if(!$this->gd) return;
+		
+		$newGD = imagerotate($this->gd, $angle,0);
+		
+		$output = new GD();
+		$output->setGD($newGD);
+		return $output;
+	}
+	
+	function crop($top, $left, $width, $height) {
+		$newGD = imagecreatetruecolor($width, $height);
+		imagecopyresampled($newGD, $this->gd, 0, 0, $left, $top, $width, $height, $width, $height);
+		
+		$output = new GD();
+		$output->setGD($newGD);
+		return $output;
+	}
+	
 	/**
 	 * Resize an image by width. Preserves aspect ratio.
 	 */
