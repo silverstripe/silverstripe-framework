@@ -212,7 +212,7 @@ JS;
 		
 		// Get all the requests
 		$ID = isset($_REQUEST['ctf']['ID']) ? Convert::raw2xml($_REQUEST['ctf']['ID']) : null;
-		$childID = Convert::raw2xml($_REQUEST['ctf']['childID']);
+		$childID = isset($_REQUEST['ctf']['childID']) ? Convert::raw2xml($_REQUEST['ctf']['childID']) : null;
 		$childClass = Convert::raw2xml($_REQUEST['fieldName']);
 		$this->methodName = isset($_REQUEST['methodName']) ? $_REQUEST['methodName'] : null;
 
@@ -225,12 +225,12 @@ JS;
 		// from the object via a string method call.
 		if(is_a($this->detailFormFields,"Fieldset")){
 			$detailFields = $this->detailFormFields;
-		} else if( $childData && is_string($this->detailFormFields)){
+		} else if( isset( $childData ) && is_string($this->detailFormFields)){
 			$functioncall = $this->detailFormFields;
 			if($childData->hasMethod($functioncall)){
 				$detailFields = $childData->$functioncall();
 			}
-		} elseif(!$childData || $this->methodName == 'add') {
+		} elseif( ! isset( $childData ) || $this->methodName == 'add') {
 			$SNG_sourceClass = singleton($this->sourceClass);
 			if(is_numeric($ID) && $this->getParentClass()) {
 				// make sure the relation-link is existing, even if we just add the sourceClass
@@ -289,7 +289,7 @@ JS;
 		if ($this->methodName == "show") {
 			$form->makeReadonly();
 		}
-		
+				
 		return $form;
 	}
 	
@@ -623,7 +623,6 @@ class ComplexTableField_Popup extends Form {
 		if(singleton($sourceClass)->hasMethod('getRequirementsForPopup')){
 			singleton($sourceClass)->getRequirementsForPopup();
 		}
-		
 		$actions = new FieldSet();	
 		if(!$readonly) {
 			$actions->push(
@@ -631,7 +630,6 @@ class ComplexTableField_Popup extends Form {
 			);	
 			$saveAction->addExtraClass('save');
 		}
-		
 		parent::__construct($controller, $name, $field, $actions, $validator);
 	}
 
