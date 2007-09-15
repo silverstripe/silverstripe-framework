@@ -340,7 +340,7 @@ class SSViewer_FromString extends SSViewer {
 		fwrite($fh, $template);
 		fclose($fh);
 
-		if(isset($_GET['showtemplate'])) {
+		if(isset($_GET['showtemplate']) && $_GET['showtemplate']) {
 			$lines = file($tmpFile);
 			echo "<h2>Template: $tmpFile</h2>";
 			echo "<pre>";
