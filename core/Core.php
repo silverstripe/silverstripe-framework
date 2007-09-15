@@ -86,8 +86,8 @@ function stripslashes_recursively(&$array) {
 /**
  * This is the main translator function. Returns the string defined by $class and $entity according to the currently set locale
  *
- * @param string $class Class where the entity was defined. It acts as a namespace.
- * @param string $entity Entity that identifies the string inside the namespace.
+ * @param string $entity Entity that identifies the string. It must be in the form "Namespace.Entity" where Namespace will be usually
+ * 						 the class name where this string is used and Entity identifies the string inside the namespace.
  * @param string $string The original string itself. In a usual call this is a mandatory parameter, but if you are reusing a string which
  *				 has already been "declared" (using another call to this function, with the same class and entity), you can omit it.
  * @param string $priority Optional parameter to set a translation priority. If a string is widely used, should have a high priority (PR_HIGH),
@@ -95,19 +95,16 @@ function stripslashes_recursively(&$array) {
  *				    You can use PR_MEDIUM as well. Leaving this field blank will be interpretated as a "normal" priority (less than PR_MEDIUM).
  * @param string $context If the string can be difficult to translate by any reason, you can help translators with some more info using this param
  *
- * @return string The translated string, according to the currently set locale {@link i18n::setLocale()}
+ * @return string The translated string, according to the currently set locale {@link i18n::set_locale()}
  */
-function _($class, $entity, $string = "", $priority = 40, $context = "") {
+function _t($entity, $string = "", $priority = 40, $context = "") {
 	global $lang;
-	$locale = i18n::getLocale();
-	$class = ereg_replace('.*([/\\]+)', "", $class);
-	if(substr($class, -4) == '.php')
-		$class = substr($class, 0, -4);
-
-	if(isset($lang[$locale][$class]) == false)
-	  i18n::includeByClass($class);
-
-	$transEntity = $lang[i18n::getLocale()][$class][$entity];
+	$locale = i18n::get_locale();
+	$entityParts = explode('.',$entity);
+	$realEntity = array_pop($entityParts);
+	$class = implode('.',$entityParts);
+	if(!isset($lang[$locale][$class])) i18n::include_by_class($class);
+	$transEntity = $lang[i18n::get_locale()][$class][$realEntity];
 	return (is_array($transEntity) ? $transEntity[0] : $transEntity);
 }
 

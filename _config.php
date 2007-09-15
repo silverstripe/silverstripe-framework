@@ -56,5 +56,5 @@ Authenticator::registerAuthenticator('OpenIDAuthenticator');
 /**
  * Define a default language different than english
  */
-//LocaleAPI::setLocale('ca_AD'); 
+//LocaleAPI::set_locale('ca_AD'); 
 ?>
