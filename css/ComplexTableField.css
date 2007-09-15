@@ -48,3 +48,7 @@
 .ComplexTableField tbody td {
 	cursor: pointer;
 }
+
+.ComplexTableField tbody td.markingcheckbox {
+	cursor: default;
+}
