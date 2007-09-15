@@ -1275,9 +1275,9 @@ class SiteTree extends DataObject {
 		}
 
 		$tag =
-			($this->DeletedFromStage ? "del title=\"Removed from stage site\"" :
-			($this->AddedToStage ? "ins title=\"Added to stage site\"" :
-			($this->ModifiedOnStage ? "span title=\"Modified on stage site\" class=\"modified\"" : "")));
+			($this->DeletedFromStage ? "del title=\"Removed from draft site\"" :
+			($this->AddedToStage ? "ins title=\"Added to draft site\"" :
+			($this->ModifiedOnStage ? "span title=\"Modified on draft site\" class=\"modified\"" : "")));
 
 		if($tag) {
 			return "<$tag>" . $this->Title . "</" . strtok($tag,' ') . ">";
