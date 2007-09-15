@@ -40,12 +40,29 @@ require_once "Auth/OpenID/SReg.php";
 class OpenIDAuthenticator extends Authenticator {
 
 	/**
+	 * Callback function that is called when the authenticator is registered
+	 *
+	 * Use this method for initialization of a newly registered authenticator.
+	 * Just overload this method and it will be called when the authenticator
+	 * is registered.
+	 * <b>If the method returns FALSE, the authenticator won't be
+	 * registered!</b>
+	 *
+	 * @return bool Returns TRUE on success, FALSE otherwise.
+	 */
+	protected static function onRegister() {
+		Member::addRole('OpenIDAuthenticatedRole');
+		return true;
+	}
+
+
+	/**
 	 * Method to authenticate an user
 	 *
 	 * @param array $RAW_data Raw data to authenticate the user
-   * @param Form $form Optional: If passed, better error messages can be
-   *                             produced by using
-   *                             {@link Form::sessionMessage()}
+	 * @param Form $form Optional: If passed, better error messages can be
+	 *                             produced by using
+	 *                             {@link Form::sessionMessage()}
 	 * @return bool Returns FALSE if authentication fails, otherwise the
 	 *              method will not return at all because the browser will be
 	 *              redirected to some other server.
@@ -54,7 +71,16 @@ class OpenIDAuthenticator extends Authenticator {
 	 *       (without rendering a form and using javascript)
 	 */
 	public function authenticate(array $RAW_data, Form $form = null) {
-		$openid = $RAW_data['OpenIDURL'];
+		$openid = trim($RAW_data['OpenIDURL']);
+
+    if(strlen($openid) == 0) {
+			if(!is_null($form)) {
+				$form->sessionMessage("Please enter your OpenID URL or your i-name.",
+															"bad");
+			}
+			return false;
+		}
+
 
 		$trust_root = Director::absoluteBaseURL();
 		$return_to_url = $trust_root . 'OpenIDAuthenticator_Controller';
@@ -74,8 +100,9 @@ class OpenIDAuthenticator extends Authenticator {
 			return false;
 		}
 
-		$SQL_user = Convert::raw2sql($auth_request->endpoint->claimed_id);
-		if(!($member = DataObject::get_one("Member", "Email = '$SQL_user'"))) {
+		$SQL_identity = Convert::raw2sql($auth_request->endpoint->claimed_id);
+		if(!($member = DataObject::get_one("Member",
+				   "Member.IdentityURL = '$SQL_identity'"))) {
 			if(!is_null($form)) {
 				$form->sessionMessage("Either your account is not enabled for " .
 																"OpenID/i-name authentication " .
@@ -89,10 +116,12 @@ class OpenIDAuthenticator extends Authenticator {
 
 		if($auth_request->shouldSendRedirect()) {
 			// For OpenID 1, send a redirect.
-			$redirect_url = $auth_request->redirectURL($trust_root, $return_to_url);
+			$redirect_url = $auth_request->redirectURL($trust_root,
+																								 $return_to_url);
 
 			if(Auth_OpenID::isFailure($redirect_url)) {
-				displayError("Could not redirect to server: " . $redirect_url->message);
+				displayError("Could not redirect to server: " .
+										 $redirect_url->message);
 			} else {
 				Director::redirect($redirect_url);
 			}
@@ -102,16 +131,19 @@ class OpenIDAuthenticator extends Authenticator {
 			// server.
 			$form_id = 'openid_message';
 			$form_html = $auth_request->formMarkup($trust_root, $return_to_url,
-																						 false, array('id' => $form_id));
+																						 false,
+																						 array('id' => $form_id));
 
 			if(Auth_OpenID::isFailure($form_html)) {
-				displayError("Could not redirect to server: " . $form_html->message);
+				displayError("Could not redirect to server: " .
+										 $form_html->message);
 			} else {
 				$page_contents = array(
 					 "<html><head><title>",
 					 "OpenID transaction in progress",
 					 "</title></head>",
-					 "<body onload='document.getElementById(\"".$form_id."\").submit()'>",
+					 "<body onload='document.getElementById(\"". $form_id .
+					   "\").submit()'>",
 					 $form_html,
 					 "<p>Click &quot;Continue&quot; to login. You are only seeing " .
 					 "this because you appear to have JavaScript disabled.</p>",
@@ -129,8 +161,8 @@ class OpenIDAuthenticator extends Authenticator {
 	/**
 	 * Method that creates the login form for this authentication method
 	 *
-   * @param Controller The parent controller, necessary to create the
-   *                   appropriate form action tag
+	 * @param Controller The parent controller, necessary to create the
+	 *                   appropriate form action tag
 	 * @return Form Returns the login form to use with this authentication
 	 *              method
 	 */
@@ -139,12 +171,12 @@ class OpenIDAuthenticator extends Authenticator {
 	}
 
 
-  /**
-   * Get the name of the authentication method
-   *
-   * @return string Returns the name of the authentication method.
-   */
-  public static function getName() {
+	/**
+	 * Get the name of the authentication method
+	 *
+	 * @return string Returns the name of the authentication method.
+	 */
+	public static function getName() {
 		return "OpenID/i-name";
 	}
 }
@@ -202,10 +234,9 @@ class OpenIDAuthenticator_Controller extends Controller {
 
 		} else if($response->status == Auth_OpenID_SUCCESS) {
 			$openid = $response->identity_url;
-			$user = $openid;
 
 			if($response->endpoint->canonicalID) {
-				$user = $response->endpoint->canonicalID;
+				$openid = $response->endpoint->canonicalID;
 			}
 
 
@@ -213,10 +244,12 @@ class OpenIDAuthenticator_Controller extends Controller {
 				Profiler::unmark("OpenIDAuthenticator_Controller");
 
 
-			$SQL_user = Convert::raw2sql($user);
-			if($member = DataObject::get_one("Member", "Email = '$SQL_user'")) {
+			$SQL_identity = Convert::raw2sql($openid);
+			if($member = DataObject::get_one("Member",
+				   "Member.IdentityURL = '$SQL_identity'")) {
 				$firstname = Convert::raw2xml($member->FirstName);
-				Session::set("Security.Message.message", "Welcome Back, {$firstname}");
+				Session::set("Security.Message.message",
+										 "Welcome Back, {$firstname}");
 				Session::set("Security.Message.type", "good");
 
 				$member->LogIn(

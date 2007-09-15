@@ -36,7 +36,7 @@ class MemberAuthenticator extends Authenticator {
       Session::clear("BackURL");
     } else if(!is_null($form)) {
 			$form->sessionMessage(
-				"That doesn't seem to be the right email address or password. Please try again.",
+				"That doesn't seem to be the right e-mail address or password. Please try again.",
 				"bad");
     }
 
@@ -63,7 +63,7 @@ class MemberAuthenticator extends Authenticator {
    * @return string Returns the name of the authentication method.
    */
   public static function getName() {
-		return "Email &amp; Password";
+		return "E-mail &amp; Password";
 	}
 }
 

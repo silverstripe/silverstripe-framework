@@ -111,7 +111,9 @@ class OpenIDLoginForm extends LoginForm {
 		if($badLoginURL = Session::get("BadLoginURL")){
 			Director::redirect($badLoginURL);
 		} else {
-			Director::redirectBack();
+			// Show the right tab on failed login
+			Director::redirect(Director::absoluteURL(Security::Link("login")) .
+												 '#' . $this->FormName() .'_tab');
 		}
   }
 

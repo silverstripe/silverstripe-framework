@@ -76,8 +76,13 @@ abstract class Authenticator extends Object
     if(is_subclass_of($authenticator, 'Authenticator') == false)
       return false;
 
-    if(in_array($authenticator, self::$authenticators) == false)
-      array_push(self::$authenticators, $authenticator);
+    if(in_array($authenticator, self::$authenticators) == false) {
+      if(call_user_func(array($authenticator, 'onRegister')) === true) {
+        array_push(self::$authenticators, $authenticator);
+      } else {
+        return false;
+      }
+    }
 
     return true;
   }
@@ -92,6 +97,23 @@ abstract class Authenticator extends Object
   public static function getAuthenticators() {
     return self::$authenticators;
   }
+
+
+  /**
+   * Callback function that is called when the authenticator is registered
+   *
+   * Use this method for initialization of a newly registered authenticator.
+   * Just overload this method and it will be called when the authenticator
+   * is registered.
+   * <b>If the method returns FALSE, the authenticator won't be
+   * registered!</b>
+   *
+   * @return bool Returns TRUE on success, FALSE otherwise.
+   */
+  protected static function onRegister() {
+    return true;
+  }
 }
+
 
 ?>

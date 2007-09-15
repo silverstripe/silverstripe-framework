@@ -53,7 +53,7 @@ class MemberLoginForm extends LoginForm {
 				$fields = new FieldSet(
 					new HiddenField("AuthenticationMethod", null,
 													$this->authenticator_class, $this),
-					new TextField("Email", "Email address",
+					new TextField("Email", "E-mail address",
 						Session::get('SessionForms.MemberLoginForm.Email'), null, $this),
 					new EncryptField("Password", "Password", null, $this),
 					new CheckboxField("Remember", "Remember me next time?",
@@ -114,7 +114,9 @@ class MemberLoginForm extends LoginForm {
 			if($badLoginURL = Session::get("BadLoginURL")) {
 				Director::redirect($badLoginURL);
 			} else {
-				Director::redirectBack();
+				// Show the right tab on failed login
+				Director::redirect(Director::absoluteURL(Security::Link("login")) .
+													 '#' . $this->FormName() .'_tab');
 			}
 		}
 	}
@@ -178,7 +180,7 @@ class MemberLoginForm extends LoginForm {
 
 		} else if($data['Email']) {
 			$this->sessionMessage(
-				"Sorry, but I don't recognise the email address. Maybe you need to sign up, or perhaps you used another email address?",
+				"Sorry, but I don't recognise the e-mail address. Maybe you need to sign up, or perhaps you used another e-mail address?",
 				"bad");
 			Director::redirectBack();
 
