@@ -645,8 +645,6 @@ class SiteTree extends DataObject {
 	public function MetaTags($includeTitle = true) {
 		$tags = "";
 		if($includeTitle === true || $includeTitle == 'true') {
-			$tags .= "<title>" . Convert::raw2xml($this->MetaTitle ? $this->MetaTitle : $this->Title) . "</title>\n";
-		if($includeTitle == true) {
 			$tags .= "<title>" . Convert::raw2xml(($this->MetaTitle)
 				? $this->MetaTitle
 				: $this->Title) . "</title>\n";
