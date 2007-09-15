@@ -21,6 +21,12 @@
  * {http://www.openidenabled.com/ PHP OpenID library} finds it files
  */
 $path_extra = realpath(dirname(__FILE__)) . DIRECTORY_SEPARATOR . 'security';
+/**
+ * Add Pear (pear.php.net)
+ */
+$path_extra .= PATH_SEPARATOR . realpath(dirname(__FILE__)) . DIRECTORY_SEPARATOR . 'pear';
+
+
 $path = ini_get('include_path');
 $path = $path_extra . PATH_SEPARATOR . $path;
 ini_set('include_path', $path);
@@ -57,4 +63,7 @@ Authenticator::registerAuthenticator('OpenIDAuthenticator');
  * Define a default language different than english
  */
 //LocaleAPI::set_locale('ca_AD'); 
+
+define('MCE_ROOT', 'jsparty/tiny_mce2/');
+
 ?>
