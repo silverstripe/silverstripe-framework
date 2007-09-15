@@ -1,10 +1,15 @@
 <?php
 
+define('PR_HIGH',100);
+define('PR_MEDIUM',50);
+define('PR_LOW',10);
+
 class i18n extends Controller {
 	static $currentlocale = 'en';
 	
 	static function textCollector() {
 	
+		if (!Permission::check("ADMIN")) die("You must be an admin to enable text collector mode");
 		echo "Collecting text...<br /><br />";
 		
 		//Calculate base directory

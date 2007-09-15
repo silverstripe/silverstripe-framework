@@ -86,7 +86,7 @@ function stripslashes_recursively(&$array) {
 /**
  * This is the main translator function. Returns the string defined by $class and $entity according to the currently set locale
  */
-function _($class, $entity, $string="", $priority=PR_MEDIUM, $context="") {
+function _($class, $entity, $string="", $priority=100, $context="") {
 	global $lang;
 	$locale = i18n::getLocale();
 	$class = ereg_replace('.*([/\\]+)',"",$class);
