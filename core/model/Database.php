@@ -234,9 +234,9 @@ abstract class Database extends Object {
 			foreach($indexSchema as $indexName => $indexDetails) {
 				$this->requireIndex($table, $indexName, $indexDetails);
 			}
-		}		
+		}
 	}
-	
+
 	/**
 	 * If the given table exists, move it out of the way by renaming it to _obsolete_(tablename).
 	 * @param string $table The table name.
@@ -246,7 +246,7 @@ abstract class Database extends Object {
 		if(isset($this->tableList[strtolower($table)])) {
 			while($this->tableList[strtolower("_obsolete_{$table}$suffix")]) {
 				$suffix = $suffix ? ($suffix+1) : 2;
-			}			
+			}
 			$this->renameTable($table, "_obsolete_{$table}$suffix");
 			Database::alteration_message("Table $table: renamed to _obsolete_{$table}$suffix","obsolete");
 		}
@@ -340,17 +340,17 @@ abstract class Database extends Object {
 					case "update":
 						$sql = "update `$table` SET $fieldList where $writeInfo[where]";
 						$this->query($sql);
-						
+
 						// If numAffectedRecord = 0, then we want to run instert instead
 						if(!$this->affectedRows()) {
 							if(!isset($writeInfo['fields']['ID']) && isset($writeInfo['id'])) {
 								$fieldList .= ", ID = $writeInfo[id]";
 							}
 							$sql = "insert into `$table` SET $fieldList";
-							$this->query($sql, null);			
-						}					
+							$this->query($sql, null);
+						}
 						break;
-					
+
 					case "insert":
 						if(!isset($writeInfo['fields']['ID']) && isset($writeInfo['id'])) {
 							$fieldList .= ", ID = $writeInfo[id]";
@@ -358,7 +358,7 @@ abstract class Database extends Object {
 						$sql = "insert into `$table` SET $fieldList";
 						$this->query($sql);
 						break;
-						
+
 					default:
 						$sql = null;
 						user_error("Database::manipulate() Can't recognise command '$writeInfo[command]'", E_USER_ERROR);
@@ -367,7 +367,7 @@ abstract class Database extends Object {
 		}
 	}
 
-	/** 
+	/**
 	 * Error handler for database errors.
 	 * All database errors will call this function to report the error.  It isn't a static function;
 	 * it will be called on the object itself and as such can be overridden in a subclass.
@@ -438,7 +438,7 @@ abstract class Query extends Object implements Iterator {
 	 * @var int
 	 */
 	private $rowNum = -1;
-	
+
 	/**
 	 * Return an array containing all values in the leftmost column.
 	 * @return array
@@ -475,7 +475,7 @@ abstract class Query extends Object implements Iterator {
 		}
 		return $column;
 	}
-	
+
 	/**
 	 * Returns the next record in the iterator.
 	 * @return array
@@ -483,7 +483,7 @@ abstract class Query extends Object implements Iterator {
 	public function record() {
 		return $this->next();
 	}
-	
+
 	/**
 	 * Returns the first column of the first record.
 	 * @return string
@@ -493,7 +493,7 @@ abstract class Query extends Object implements Iterator {
 			return reset($record);
 		}
 	}
-	
+
 	/**
 	 * Return an HTML table containing the full result-set
 	 */
@@ -545,7 +545,7 @@ abstract class Query extends Object implements Iterator {
 			return $this->currentRecord;
 		}
 	}
-	
+
 	/**
 	 * Iterator function implementation. Return the first item of this iterator.
 	 * @return array
@@ -569,7 +569,7 @@ abstract class Query extends Object implements Iterator {
 	 * @return array
 	 */
 	public function next() {
-		$this->currentRecord = $this->nextRecord(); 
+		$this->currentRecord = $this->nextRecord();
 		$this->rowNum++;
 		return $this->currentRecord;
 	}
@@ -581,7 +581,7 @@ abstract class Query extends Object implements Iterator {
 	public function valid() {
 	 	return $this->current() !== false;
 	}
-	
+
 	/**
 	 * Return the next record in the query result.
 	 * @return array

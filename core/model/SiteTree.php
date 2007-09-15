@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @package sapphire
  * @subpackage core
@@ -13,8 +12,172 @@
  * In addition, it contains a number of static methods for querying the site tree.
  */
 class SiteTree extends DataObject {
+
+	/**
+	 * Indicates what kind of children this page type can have.
+	 * This can be an array of allowed child classes, or the string "none" -
+	 * indicating that this page type can't have children.
+	 * If a classname is prefixed by "*", such as "*Page", then only that
+	 * class is allowed - no subclasses. Otherwise, the class and all its
+	 * subclasses are allowed.
+	 *
+	 * @var array
+	 */
+	static $allowed_children = array("SiteTree");
+
+	/**
+	 * The default child class for this page.
+	 *
+	 * @var string
+	 */
+	static $default_child = "Page";
+
+	/**
+	 * The default parent class for this page.
+	 *
+	 * @var string
+	 */
+	static $default_parent = null;
+
+	/**
+	 * Controls whether a page can be in the root of the site tree.
+	 *
+	 * @var bool
+	 */
+	static $can_be_root = true;
+
+	/**
+	 * List of permission codes a user can have to allow a user to create a
+	 * page of this type.
+	 *
+	 * @var array
+	 */
+	static $need_permission = null;
+
+	/**
+	 * If you extend a class, and don't want to be able to select the old class
+	 * in the cms, set this to the old class name. Eg, if you extended Product
+	 * to make ImprovedProduct, then you would set $hide_ancestor to Product.
+	 *
+	 * @var string
+	 */
+	static $hide_ancestor = null;
+
+	static $db = array(
+		"URLSegment" => "Varchar(255)",
+		"Title" => "Varchar(255)",
+		"MenuTitle" => "Varchar(100)",
+		"Content" => "HTMLText",
+		"MetaTitle" => "Varchar(255)",
+		"MetaDescription" => "Varchar(255)",
+		"MetaKeywords" => "Varchar(255)",
+		"ShowInMenus" => "Boolean",
+		"ShowInSearch" => "Boolean",
+		"HomepageForDomain" => "Varchar(100)",
+		"ProvideComments" => "Boolean",
+		"Sort" => "Int",
+		"LegacyURL" => "Varchar(255)",
+		"HasBrokenFile" => "Boolean",
+		"HasBrokenLink" => "Boolean",
+		"Status" => "Varchar",
+		"ReportClass" => "Varchar",
+		"Priority" => "Float",
+
+		"Viewers" => "Enum('Anyone, LoggedInUsers, OnlyTheseUsers', 'Anyone')",
+		"Editors" => "Enum('LoggedInUsers, OnlyTheseUsers', 'LoggedInUsers')",
+		"ViewersGroup" => "Int",
+		"EditorsGroup" => "Int"
+	);
+
+  static $indexes = array(
+    "SearchFields" => "fulltext (Title, MenuTitle, Content, MetaTitle, MetaDescription, MetaKeywords)",
+    "TitleSearchFields" => "fulltext (Title)"
+	);
+
+	static $has_many = array(
+		"Comments" => "PageComment"
+	);
+
+	static $many_many = array(
+		"LinkTracking" => "SiteTree",
+		"ImageTracking" => "File"
+	);
+
+	static $belongs_many_many = array(
+		"BackLinkTracking" => "SiteTree"
+	);
+
+	static $many_many_extraFields = array(
+		"LinkTracking" => array("FieldName" => "Varchar"),
+		"ImageTracking" => array("FieldName" => "Varchar")
+	);
+
+	static $casting = array(
+		"Breadcrumbs" => "HTMLText",
+		"LastEdited" => "Datetime",
+		"Created" => "Datetime",
+	);
+
+	static $defaults = array(
+		"ShowInMenus" => 1,
+		"ShowInSearch" => 1,
+		"Status" => "New page",
+		"CanCreateChildren" => array(10),
+		"Priority" => 0.5,
+
+		"Viewers" => "Anyone",
+		"Editors" => "LoggedInUsers"
+	);
+
+	static $has_one = array(
+		"Parent" => "SiteTree"
+	);
+
+	static $versioning = array(
+		"Stage",  "Live"
+	);
+
+	static $default_sort = "Sort";
+
+	/**
+	 * The text shown in the create page dropdown. If
+	 * this is not set, default to "Create a ClassName".
+	 * @var string
+	 */
+	static $add_action = null;
+
+	/**
+	 * If this is false, the class cannot be created in the CMS.
+	 * @var boolean
+	*/
+	static $can_create = true;
+
+
+	/**
+	 * Icon to use in the CMS
+	 *
+	 * This should be the base filename.  The suffixes -file.gif,
+	 * -openfolder.gif and -closedfolder.gif will be appended to the base name
+	 * that you provide there.
+	 * If you prefer, you can pass an array:
+	 * array("jsparty\tree\images\page", $option).
+	 * $option can be either "file" or "folder" to force the icon to always
+	 * be a file or folder, regardless of whether the page has children or not
+	 *
+	 * @var string|array
+	 */
+	static $icon = array("jsparty/tree/images/page", "file");
+
+
+	static $extensions = array(
+		"Hierarchy",
+		"Versioned('Stage', 'Live')",
+	);
+
+
 	/**
 	 * Get the URL for this page.
+	 *
 	 * @param string $action An action to include in the link
 	 * @return string The URL for this page
 	 */
@@ -25,6 +188,8 @@ class SiteTree extends DataObject {
 		return Director::baseURL() . $this->URLSegment . "/$action";
 	}
 	
+
+
 	/**
 	 * Get the absolute URL for this page by stage
 	 */
@@ -37,25 +202,30 @@ class SiteTree extends DataObject {
 	/**
 	 * Returns link/current, depending on whether you're on the current page.
 	 * This is useful for css styling of menus.
+	 *
 	 * @return string Either 'link' or 'current'.
 	 */
 	public function LinkOrCurrent() {
-		return $this->isCurrent() ? "current" : "link";
+		return ($this->isCurrent()) ? "current" : "link";
 	}
+
 
 	/**
 	 * Returns link/section, depending on whether you're on the current section.
 	 * This is useful for css styling of menus.
+	 *
 	 * @return string Either 'link' or 'section'.
 	 */
 	public function LinkOrSection() {
-		return $this->isSection() ? "section" : "link";
+		return ($this->isSection()) ? "section" : "link";
 	}
 
+
 	/**
-	 * Returns link/current/section, depending if you're not in the current section,
-	 * you're on the current page, or you're in the current section
+	 * Returns link/current/section, depending if you're not in the current
+	 * section, you're on the current page, or you're in the current section
 	 * but not on the current page.
+	 *
 	 * @return string Either 'link', 'current' or 'section'.
 	 */
 	public function LinkingMode() {
@@ -70,31 +240,38 @@ class SiteTree extends DataObject {
 		}
 	}
 
+
 	/**
 	 * Get the URL segment for this page, eg 'home'
+	 *
 	 * @return string The URL segment
 	 */
 	public function ElementName() {
 		return $this->URLSegment;
 	}
 
+
 	/**
 	 * Check if this page is in the given current section.
+	 *
 	 * @param string $sectionName Name of the section to check.
 	 * @return boolean True if we are in the given section.
 	 */
 	public function InSection($sectionName) {
 		$page = Director::currentPage();
 		while($page) {
-			if($sectionName == $page->URLSegment) return true;
+			if($sectionName == $page->URLSegment)
+				return true;
 			$page = $page->Parent;
 		}
 		return false;
 	}
 
+
 	/**
 	 * Returns comments on this page. This will only show comments that
 	 * have been marked as spam if "?showspam=1" is appended to the URL.
+	 *
 	 * @return DataObjectSet Comments on this page.
 	 */
 	public function Comments() {
@@ -105,9 +282,11 @@ class SiteTree extends DataObject {
 		return $comments ? $comments : new DataObjectSet();
 	}
 
+
 	/**
-	 * Create a duplicate of this node. Doesn't affect joined data - create a custom overloading of this
-	 * if you need such behaviour.
+	 * Create a duplicate of this node. Doesn't affect joined data - create a
+	 * custom overloading of this if you need such behaviour.
+	 *
 	 * @return SiteTree The duplicated object.
 	 */
 	 public function duplicate($doWrite = true) {
@@ -116,8 +295,11 @@ class SiteTree extends DataObject {
 		return $page;
 	}
 
+
 	/**
-	 * Duplicates each child of this node recursively and returns the duplicate node.
+	 * Duplicates each child of this node recursively and returns the
+	 * duplicate node.
+	 *
 	 * @return SiteTree The duplicated object.
 	 */
 	public function duplicateWithChildren() {
@@ -126,7 +308,9 @@ class SiteTree extends DataObject {
 
 		if($children) {
 			foreach($children as $child) {
-				$childClone = method_exists( $child, 'duplicateWithChildren' ) ? $child->duplicateWithChildren() : $child->duplicate();
+				$childClone = method_exists($child, 'duplicateWithChildren')
+					? $child->duplicateWithChildren()
+					: $child->duplicate();
 				$childClone->ParentID = $clone->ID;
 				$childClone->write();
 			}
@@ -135,30 +319,39 @@ class SiteTree extends DataObject {
 		return $clone;
 	}
 
+
 	/**
-	 * Duplicate this node and its children as a child of the node with the given id
+	 * Duplicate this node and its children as a child of the node with the
+	 * given ID
+	 *
 	 * @param int $id ID of the new node's new parent
 	 */
-	public function duplicateAsChild( $id ) {
+	public function duplicateAsChild($id) {
 		$newSiteTree = $this->duplicate();
 		$newSiteTree->ParentID = $id;
 		$newSiteTree->write();
 	}
 
+
 	/**
 	 * An array of this pages URL segment and it's parents.
 	 * This is generated by prepareCurrentAndSection for use by
 	 * isCurrent() and isSection()
+	 *
 	 * @var array
 	 */
 	protected static $currentSectionIDs;
+
+
 	/**
 	 * The current page ID.
 	 * This is generated by prepareCurrentAndSection for use by
 	 * isCurrent() and isSection()
+	 *
 	 * @var int
 	 */
 	protected static $currentPageID;
+
 
 	/**
 	 * This function is used for isCurrent() and isSection() to prepare
@@ -169,12 +362,16 @@ class SiteTree extends DataObject {
 			self::$currentPageID = Director::currentPage() ? Director::currentPage()->ID : null;
 			if(!isset(self::$currentPageID)) {
 				self::$currentPageID = -1;
-				$nextID = isset(Director::currentPage()->Parent->ID) ? Director::currentPage()->Parent->ID : null;
+				$nextID = isset(Director::currentPage()->Parent->ID)
+					? Director::currentPage()->Parent->ID
+					: null;
 			} else {
 				$nextID = SiteTree::$currentPageID;
 			}
 
-			$table = (Versioned::current_stage() == "Live") ? "SiteTree_Live" : "SiteTree";
+			$table = (Versioned::current_stage() == "Live")
+				? "SiteTree_Live"
+				: "SiteTree";
 
 			SiteTree::$currentSectionIDs = array();
 			while($nextID) {
@@ -184,8 +381,10 @@ class SiteTree extends DataObject {
 		}
 	}
 
+
 	/**
 	 * Check if this is the currently viewed page.
+	 *
 	 * @return boolean True if this is the current page.
 	 */
 	public function isCurrent() {
@@ -193,8 +392,10 @@ class SiteTree extends DataObject {
 		return $this->ID == SiteTree::$currentPageID;
 	}
 
+
 	/**
 	 * Check if the currently viewed page is in this section.
+	 *
 	 * @return boolean True if the currently viewed page is in this section.
 	 */
 	public function isSection() {
@@ -202,23 +403,29 @@ class SiteTree extends DataObject {
 		return in_array($this->ID, self::$currentSectionIDs);
 	}
 
+
 	/**
 	 * Return a breadcrumb trail to this page.
+	 *
 	 * @param int $maxDepth The maximum depth to traverse.
 	 * @param boolean $unlinked Do not make page names links
 	 * @param string $stopAtPageType ClassName of a page to stop the upwards traversal.
 	 * @return string The breadcrumb trail.
 	 */
-	public function Breadcrumbs($maxDepth = 20, $unlinked = false, $stopAtPageType = false) {
+	public function Breadcrumbs($maxDepth = 20, $unlinked = false,
+															$stopAtPageType = false) {
 		$page = $this;
 		$parts = array();
 		$i = 0;
-		while(($page && (sizeof($parts) < $maxDepth))	|| ($stopAtPageType && $page->ClassName != $stopAtPageType)) {
+		while(($page && (sizeof($parts) < $maxDepth))	||
+					($stopAtPageType && $page->ClassName != $stopAtPageType)) {
 			if($page->ShowInMenus || ($page->ID == $this->ID)) {
 				if($page->URLSegment == 'home') {
 					$hasHome = true;
 				}
-				$parts[] = (($page->ID == $this->ID) || $unlinked) ? Convert::raw2xml($page->Title) : ("<a href=\"" . $page->Link() . "\">" . Convert::raw2xml($page->Title) . "</a>");
+				$parts[] = (($page->ID == $this->ID) || $unlinked)
+					? Convert::raw2xml($page->Title)
+					: ("<a href=\"" . $page->Link() . "\">" . Convert::raw2xml($page->Title) . "</a>");
 			}
 			$page = $page->Parent;
 		}
@@ -226,18 +433,23 @@ class SiteTree extends DataObject {
 		return implode(" &raquo; ", array_reverse($parts));
 	}
 
+
 	/**
 	 * Get the parent of this page.
+	 *
 	 * @return SiteTree Parent of this page.
 	 */
 	public function getParent() {
 		if($this->getField("ParentID"))
-			return DataObject::get_one("SiteTree", "`SiteTree`.ID = " . $this->getField("ParentID"));
+			return DataObject::get_one("SiteTree",
+																 "`SiteTree`.ID = " . $this->getField("ParentID"));
 	}
+
 
 	/**
 	 * Make this page a child of another page.
-	 * @param SiteTree|int $item Either the parent object, or the parent id
+	 *
+	 * @param SiteTree|int $item Either the parent object, or the parent ID
 	 */
 	public function setParent($item) {
 		if(is_object($item)) {
@@ -247,8 +459,11 @@ class SiteTree extends DataObject {
 		}
 	}
 
+
 	/**
-	 * Return a string of the form "parent - page" or "grandparent - parent - page".
+	 * Return a string of the form "parent - page" or
+	 * "grandparent - parent - page".
+	 *
 	 * @param int $level The maximum amount of levels to traverse.
 	 * @param string $seperator Seperating string
 	 * @return string The resulting string
@@ -262,8 +477,14 @@ class SiteTree extends DataObject {
 		}
 		return implode($separator, array_reverse($parts));
 	}
-	
-	/** 
+
+	/**
+	 * This function should return true if the current user can add children
+	 * to this page.
+	 *
+	 * It can be overloaded to customise the security model for an
+	 * application.
+	 *
 	 * Returns true if the member is allowed to do the given action.
 	 *
 	 * @param string $perm The permission to be checked, such as 'View'.
@@ -279,26 +500,31 @@ class SiteTree extends DataObject {
 		if(!isset($member)) {
 			$member = Member::currentUser();
 		}
-		
-		// Users with ADMIN permission can always do this
-		if($member && Permission::check('ADMIN')) {
+		if($member && $member->isAdmin()) {
 			return true;
 		}
 
-		switch(strtolower($perm)) {
-			case 'edit':
-				if($this->Editors == 'LoggedInUsers' && $member) return true;
-				if($member && $this->Editors == 'OnlyTheseUsers' && $member->isInGroup($this->EditorsGroup)) return true;
-			break;
-			case 'view':
+	  switch(strtolower($perm)) {
+	    case 'edit':
+	      if((($this->Editors == 'LoggedInUsers' && $member) ||
+					 ($this->Editors == 'OnlyTheseUsers' && $member &&
+						$member->isInGroup($this->EditorsGroup))) == false)
+					return false;
+				break;
+
+	    case 'view':
 			case 'view_page':
-				if($this->Viewers == 'Anyone') return true;
-				if($member && $this->Viewers == 'LoggedInUsers') return true;
-				if($member && $this->Viewers == 'OnlyTheseUsers' && $member->isInGroup($this->ViewersGroup)) return true;
-			break;
+				if((($this->Viewers == 'Anyone') ||
+						($this->Viewers == 'LoggedInUsers' && $member) ||
+						($this->Viewers == 'OnlyTheseUsers' && $member &&
+						 $member->isInGroup($this->ViewersGroup))) == false)
+					return false;
+				break;
 		}
 
-		return false;
+		return true;
+
+		//return parent::can($perm, $member);
 	}
 
 
@@ -315,27 +541,57 @@ class SiteTree extends DataObject {
 		return $this->canEdit() && $this->stat('allowed_children') != 'none';
 	}
 
+
 	/**
-	 * This function should return true if the current user can delete this page.
-	 * It can be overloaded to customise the security model for an application.
+	 * This function should return true if the current user can view this
+	 * page.
+	 *
+	 * It can be overloaded to customise the security model for an
+	 * application.
+	 *
+	 * @return boolean True if the current user can view this page.
+	 */
+	public function canView() {
+		return $this->can('view');
+	}
+
+
+	/**
+	 * This function should return true if the current user can delete this
+	 * page.
+	 *
+	 * It can be overloaded to customise the security model for an
+	 * application.
+	 *
 	 * @return boolean True if the current user can delete this page.
 	 */
 	public function canDelete() {
 		return $this->stat('can_create') != false;
 	}
 
+
 	/**
-	 * This function should return true if the current user can create new pages of this class.
-	 * It can be overloaded to customise the security model for an application.
-	 * @return boolean True if the current user can create pages on this class.
+	 * This function should return true if the current user can create new
+	 * pages of this class.
+	 *
+	 * It can be overloaded to customise the security model for an
+	 * application.
+	 *
+	 * @return boolean True if the current user can create pages on this
+	 *                 class.
 	 */
 	public function canCreate() {
 		return $this->stat('can_create') != false || Director::isDev();
 	}
 
+
 	/**
-	 * This function should return true if the current user can edit this page.
-	 * It can be overloaded to customise the security model for an application.
+	 * This function should return true if the current user can edit this
+	 * page.
+	 *
+	 * It can be overloaded to customise the security model for an
+	 * application.
+	 *
 	 * @return boolean True if the current user can edit this page.
 	 */
 	public function canEdit() {
@@ -343,8 +599,12 @@ class SiteTree extends DataObject {
 	}
 
 	/**
-	 * This function should return true if the current user can publish this page.
-	 * It can be overloaded to customise the security model for an application.
+	 * This function should return true if the current user can publish this
+	 * page.
+	 *
+	 * It can be overloaded to customise the security model for an
+	 * application.
+	 *
 	 * @return boolean True if the current user can publish this page.
 	 */
 	public function canPublish() {
@@ -353,10 +613,14 @@ class SiteTree extends DataObject {
 
 	/**
 	 * Collate selected descendants of this page.
-	 * $condition will be evaluated on each descendant, and if it is succeeds, that item will be added
-	 * to the $collator array.
-	 * @param string $condition The PHP condition to be evaluated.  The page will be called $item
-	 * @param array $collator An array, passed by reference, to collect all of the matching descendants.
+	 *
+	 * {@link $condition} will be evaluated on each descendant, and if it is
+	 * succeeds, that item will be added to the $collator array.
+	 *
+	 * @param string $condition The PHP condition to be evaluated. The page
+	 *                          will be called $item
+	 * @param array $collator An array, passed by reference, to collect all
+	 *                        of the matching descendants.
 	 */
 	public function collateDescendants($condition, &$collator) {
 		if($children = $this->Children()) {
@@ -368,25 +632,35 @@ class SiteTree extends DataObject {
 		}
 	}
 
+
 	/**
 	 * Return the title, description and keywords metatags.
 	 * @param boolean|string $includeTitle Show default <title>-tag, set to false for custom templating
+	 *
+	 * @param boolean $includeTitle Show default <title>-tag, set to false for
+	 *                              custom templating
 	 * @return string The XHTML metatags
 	 */
 	public function MetaTags($includeTitle = true) {
 		$tags = "";
 		if($includeTitle === true || $includeTitle == 'true') {
 			$tags .= "<title>" . Convert::raw2xml($this->MetaTitle ? $this->MetaTitle : $this->Title) . "</title>\n";
+		if($includeTitle == true) {
+			$tags .= "<title>" . Convert::raw2xml(($this->MetaTitle)
+				? $this->MetaTitle
+				: $this->Title) . "</title>\n";
 		}
 		$tags .= "<meta name=\"generator\" http-equiv=\"generator\" content=\"SilverStripe 2.0 - http://www.silverstripe.com\" />\n";
 
 		$charset = ContentNegotiator::get_encoding();
 		$tags .= "<meta http-equiv=\"Content-type\" content=\"text/html; charset=$charset\" />\n";
 		if($this->MetaKeywords) {
-			$tags .= "<meta name=\"keywords\" http-equiv=\"keywords\" content=\"" . Convert::raw2att($this->MetaKeywords) . "\" />\n";
+			$tags .= "<meta name=\"keywords\" http-equiv=\"keywords\" content=\"" .
+				Convert::raw2att($this->MetaKeywords) . "\" />\n";
 		}
 		if($this->MetaDescription) {
-			$tags .= "<meta name=\"description\" http-equiv=\"description\" content=\"" . Convert::raw2att($this->MetaDescription) . "\" />\n";
+			$tags .= "<meta name=\"description\" http-equiv=\"description\" content=\"" .
+				Convert::raw2att($this->MetaDescription) . "\" />\n";
 		}
 		if($this->ExtraMeta) { 
 			$tags .= $this->ExtraMeta . "\n";
@@ -395,16 +669,30 @@ class SiteTree extends DataObject {
 		return $tags;
 	}
 
+
 	/**
-	 * Returns the object that contains the content that a user would associate with this page.
-	 * Ordinarily, this is just the page itself, but for example on RedirectorPages or VirtualPages
-	 * ContentSource() will return the page that is linked to.
+	 * Returns the object that contains the content that a user would
+	 * associate with this page.
+	 *
+	 * Ordinarily, this is just the page itself, but for example on
+	 * RedirectorPages or VirtualPages ContentSource() will return the page
+	 * that is linked to.
+	 *
 	 * @return SiteTree The content source.
 	 */
 	public function ContentSource() {
 		return $this;
 	}
 
+
+	/**
+	 * Add default records to database.
+	 *
+	 * This function is called whenever the database is built, after the
+	 * database tables have all been created. Overload this to add default
+	 * records when the database is built, but make sure you call
+	 * parent::requireDefaultRecords().
+	 */
 	function requireDefaultRecords() {
 		parent::requireDefaultRecords();
 		
@@ -445,19 +733,23 @@ class SiteTree extends DataObject {
 		}
 	}
 
+
 	//------------------------------------------------------------------------------------//
 
 	protected function onBeforeWrite() {
 		if(!$this->Sort && $this->ParentID) {
-			$this->Sort = DB::query("SELECT MAX(Sort) + 1 FROM SiteTree WHERE ParentID = $this->ParentID")->value();
+			$this->Sort = DB::query(
+				"SELECT MAX(Sort) + 1 FROM SiteTree WHERE ParentID = $this->ParentID")->value();
 		}
 
 		// Auto-set URLSegment
-		if((!$this->URLSegment || $this->URLSegment == 'new-page') && $this->Title) {
+		if((!$this->URLSegment || $this->URLSegment == 'new-page') &&
+			 $this->Title) {
 			$this->URLSegment = $this->generateURLSegment($this->Title);
 
 		// Keep it clean
-		} else if(isset($this->changed['URLSegment']) && $this->changed['URLSegment']) {
+		} else if(isset($this->changed['URLSegment']) &&
+							$this->changed['URLSegment']) {
 			$segment = ereg_replace('[^A-Za-z0-9]+','-',$this->URLSegment);
 			$segment = ereg_replace('-+','-',$segment);
 			if(!$segment) {
@@ -469,7 +761,10 @@ class SiteTree extends DataObject {
 		DataObject::set_context_obj($this);
 		
 		// Ensure URLSegment is unique
-		$idFilter = $this->ID ? " AND `SiteTree`.ID <> '$this->ID'" : '';
+		$idFilter = ($this->ID)
+			? " AND `SiteTree`.ID <> '$this->ID'" :
+			'';
+
 		$count = 1;
 		while(DataObject::get_one("SiteTree", "URLSegment = '$this->URLSegment' $idFilter")) {
 			$count++;
@@ -484,7 +779,8 @@ class SiteTree extends DataObject {
 				$links = $this->BackLinkTracking();
 				if($links) {
 					foreach($links as $link) {
-						$link->rewriteLink($this->original['URLSegment'] . '/', $this->URLSegment . '/');
+						$link->rewriteLink($this->original['URLSegment'] . '/',
+															 $this->URLSegment . '/');
 						$link->write();
 					}
 				}
@@ -501,6 +797,8 @@ class SiteTree extends DataObject {
 	}
 	
 	
+
+
 	/**
 	 * Generate a URL segment based on the title provided.
 	 * @param string $title Page title.
@@ -518,6 +816,7 @@ class SiteTree extends DataObject {
 		return $t;
 	}
 
+
 	function makelinksunique() {
 		$badURLs = "'" . implode("', '", DB::query("SELECT URLSegment, count(*) FROM SiteTree GROUP BY URLSegment HAVING count(*) > 1")->column()) . "'";
 		$pages = DataObject::get("SiteTree", "URLSegment IN ($badURLs)");
@@ -526,11 +825,16 @@ class SiteTree extends DataObject {
 			echo "<li>$page->Title: ";
 			$urlSegment = $page->URLSegment;
 			$page->write();
-			if($urlSegment != $page->URLSegment) echo " changed $urlSegment -> $page->URLSegment";
-			else echo " $urlSegment is already unique";
+			if($urlSegment != $page->URLSegment) {
+				echo " changed $urlSegment -> $page->URLSegment";
+			}
+			else {
+				echo " $urlSegment is already unique";
+			}
 			die();
 		}
 	}
+
 
 	function makelinksuniquequick() {
 		$badURLs = "'" . implode("', '", DB::query("SELECT URLSegment, count(*) FROM SiteTree GROUP BY URLSegment HAVING count(*) > 1")->column()) . "'";
@@ -541,11 +845,16 @@ class SiteTree extends DataObject {
 			$urlSegment = $page['URLSegment'];
 			$newURLSegment = $urlSegment . '-' . $page['ID'];
 			DB::query("UPDATE SiteTree SET URLSegment = '$newURLSegment' WHERE ID = $page[ID]");
-			if($urlSegment != $newURLSegment) echo " changed $urlSegment -> $newURLSegment";
-			else echo " $urlSegment is already unique";
+			if($urlSegment != $newURLSegment) {
+				echo " changed $urlSegment -> $newURLSegment";
+			}
+			else {
+				echo " $urlSegment is already unique";
+			}
 		}
 		echo "<p>done";
 	}
+
 
 	/**
 	 * Replace a URL in html content with a new URL.
@@ -588,9 +897,11 @@ class SiteTree extends DataObject {
 
 	/**
 	 * Returns a FieldSet with which to create the CMS editing form.
+	 *
 	 * You can override this in your child classes to add extra fields - first
-	 * get the parent fields using parent::getCMSFields(), then use addFieldToTab()
-	 * on the FieldSet.
+	 * get the parent fields using parent::getCMSFields(), then use
+	 * addFieldToTab() on the FieldSet.
+	 *
 	 * @return FieldSet The fields to be displayed in the CMS.
 	 */
 	function getCMSFields() {
@@ -600,16 +911,21 @@ class SiteTree extends DataObject {
 		// Backlink report
 		if($this->hasMethod('BackLinkTracking')) {
 			$links = $this->BackLinkTracking();
+
 			if($links->exists()) {
 				foreach($links as $link) {
-					$backlinks[] = "<li><a class=\"cmsEditlink\" href=\"admin/show/$link->ID\">" . $link->Breadcrumbs(null,true). "</a></li>";
+					$backlinks[] = "<li><a class=\"cmsEditlink\" href=\"admin/show/$link->ID\">" .
+						$link->Breadcrumbs(null,true) . "</a></li>";
 				}
-				$backlinks = "<div style=\"clear:left\">The following pages link to this page:<ul>" . implode("",$backlinks) . "</ul></div>";
+				$backlinks = "<div style=\"clear:left\">The following pages link to this page:<ul>" .
+					implode("",$backlinks) . "</ul></div>";
 			}
 		}
+
 		if(!isset($backlinks)) {
 			$backlinks = "<p>This page hasn't been linked to from any pages.</p>";
 		}
+
 
 		// Status / message
 		// Create a status message for multiple parents
@@ -632,8 +948,9 @@ class SiteTree extends DataObject {
 			$lastParent = array_pop($parentPageLinks);
 			$parentList = "'$lastParent'";
 
-			if(count( $parentPageLinks ) > 0) {
-				$parentList = "'" . implode("', '", $parentPageLinks) . "' and " . $parentList;
+			if(count($parentPageLinks) > 0) {
+				$parentList = "'" . implode("', '", $parentPageLinks) . "' and "
+					. $parentList;
 			}
 
 			$statusMessage[] = "This content also appears on the virtual pages in the $parentList sections.";
@@ -647,6 +964,7 @@ class SiteTree extends DataObject {
 		if(isset($statusMessage)) {
 			$message .= "NOTE: " . implode("<br />", $statusMessage);
 		}
+
 
 		// Lay out the fields
 		$fields = new FieldSet(
@@ -731,18 +1049,25 @@ class SiteTree extends DataObject {
 		return $fields;
 	}
 
+
 	/**
 	 * Get the actions available in the CMS for this page - eg Save, Publish.
+	 *
 	 * @return DataObjectSet The available actions for this page.
 	 */
 	function getCMSActions() {
 		$actions = array();
+
 		if($this->isPublished() && $this->canPublish()) {
-			$actions[] = FormAction::create('unpublish', 'Unpublish', 'delete')->describe("Remove this page from the published site");
+			$actions[] = FormAction::create('unpublish', 'Unpublish', 'delete')
+				->describe("Remove this page from the published site");
 		}
-		if($this->stagesDiffer('Stage','Live')) {
+
+		if($this->stagesDiffer('Stage', 'Live')) {
+
 			if($this->isPublished() && $this->canEdit())	{
-				$actions[] = FormAction::create('rollback', 'Cancel draft changes', 'delete')->describe("Delete your draft and revert to the currently published page");
+				$actions[] = FormAction::create('rollback', 'Cancel draft changes', 'delete')
+					->describe("Delete your draft and revert to the currently published page");
 			}
 		}
 
@@ -752,15 +1077,19 @@ class SiteTree extends DataObject {
 		return new DataObjectSet($actions);
 	}
 
+
 	/**
 	 * Check if this page is new - that is, if it has yet to have been written
 	 * to the database.
+	 *
 	 * @return boolean True if this page is new.
 	 */
 	function isNew() {
 		/**
-		 * This check was a problem for a self-hosted site, and may indicate a bug in the interpreter on their server, or a bug here
-		 * Changing the condition from empty( $this->ID ) to !$this->ID && !$this->record['ID'] fixed this.
+		 * This check was a problem for a self-hosted site, and may indicate a
+		 * bug in the interpreter on their server, or a bug here
+		 * Changing the condition from empty($this->ID) to
+		 * !$this->ID && !$this->record['ID'] fixed this.
 		 */
 		if(empty($this->ID))
 			return true;
@@ -771,14 +1100,21 @@ class SiteTree extends DataObject {
 		return stripos($this->ID, 'new') === 0;
 	}
 
+
 	/**
 	 * Check if this page has been published.
+	 *
 	 * @return boolean True if this page has been published.
 	 */
 	function isPublished() {
-		if($this->isNew()) return false;
-		return DB::query("SELECT ID FROM `SiteTree_Live` WHERE ID = $this->ID")->value() ? true : false;
+		if($this->isNew())
+			return false;
+
+		return (DB::query("SELECT ID FROM `SiteTree_Live` WHERE ID = $this->ID")->value())
+			? true
+			: false;
 	}
+
 
 	/**
 	 * Look for ghost parents
@@ -788,22 +1124,29 @@ class SiteTree extends DataObject {
 		$parents->setOwner($this);
 		$ghostPages = DataObject::get("GhostPage", "LinkedPageID = '$this->ID'");
 
-		if($ghostPages) foreach($ghostPages as $ghostPage) {
-			// Ignore root ghost-pages
-			if($p = $ghostPage->getParent()) $parents->push($p);
+		if($ghostPages) {
+			foreach($ghostPages as $ghostPage) {
+				// Ignore root ghost-pages
+				if($p = $ghostPage->getParent())
+					$parents->push($p);
+			}
 		}
+
 		return $parents;
 	}
+
 
 	/**
 	 * Get the class dropdown used in the CMS to change the class of a page.
 	 * This returns the list of options in the drop as a Map from class name
 	 * to text in dropdown.
+	 *
 	 * @return array
 	 */
 	function getClassDropdown() {
 		$classes = ClassInfo::getValidSubClasses('SiteTree');
 		array_shift($classes);
+
 		foreach($classes as $class) {
 			$instance = singleton($class);
 			if((($instance instanceof HiddenClass) || !$instance->canCreate()) && ($class != $this->class)) continue;
@@ -811,15 +1154,19 @@ class SiteTree extends DataObject {
 			$addAction = $instance->uninherited('add_action', true);
 			if(!$addAction) $addAction = "a $class";
 
-			$result[$class] = ($class == $this->class) ? "Currently $addAction" : "Change to $addAction";
+			$result[$class] = ($class == $this->class)
+				? "Currently $addAction"
+				: "Change to $addAction";
 		}
 
 		return $result;
 	}
 
+
 	/**
 	 * Returns an array of the class names of classes that are allowed
 	 * to be children of this class.
+	 *
 	 * @return array
 	 */
 	function allowedChildren() {
@@ -839,9 +1186,10 @@ class SiteTree extends DataObject {
 		}
 	}
 
+
 	/**
-	 * Returns the class name of the default class for children
-	 * of this page.
+	 * Returns the class name of the default class for children of this page.
+	 *
 	 * @return string
 	 */
 	function defaultChild() {
@@ -854,19 +1202,22 @@ class SiteTree extends DataObject {
 		}
 	}
 
+
 	/**
-	 * Returns the class name of the default class for the parent
-	 * of this page.
+	 * Returns the class name of the default class for the parent of this
+	 * page.
+	 *
 	 * @return string
 	 */
 	function defaultParent() {
 		return $this->stat('default_parent');
 	}
 
+
 	/**
-	 * Function to clean up the currently loaded page after a reorganise has been called.
-	 * It should return a piece of JavaScript to be executed on the client side, to clean
-	 * up the results of the reorganise.
+	 * Function to clean up the currently loaded page after a reorganise has
+	 * been called. It should return a piece of JavaScript to be executed on
+	 * the client side, to clean up the results of the reorganise.
 	 */
 	function cmsCleanup_parentChanged() {
 	}
@@ -875,6 +1226,7 @@ class SiteTree extends DataObject {
 	/**
 	 * Get the title for use in menus for this page. If the MenuTitle
 	 * field is set it returns that, else it returns the Title field.
+	 *
 	 * @return string
 	 */
 	function getMenuTitle(){
@@ -885,8 +1237,10 @@ class SiteTree extends DataObject {
 		}
 	}
 
+
 	/**
 	 * Set the menu title for this page.
+	 *
 	 * @param string $value
 	 */
 	function setMenuTitle($value) {
@@ -898,19 +1252,25 @@ class SiteTree extends DataObject {
 	}
 
 	/**
-	 * TitleWithStatus will return the title in an <ins>, <del> or <span class=\"modified\"> tag
-	 * depending on its publication status.
+	 * TitleWithStatus will return the title in an <ins>, <del> or
+	 * <span class=\"modified\"> tag depending on its publication status.
+	 *
 	 * @return string
 	 */
 	function TreeTitle() {
 		// If somthing
 		if(!$this->CheckedPublicationDifferences && $this->ID) {
-			$stageVersion = DB::query("SELECT Version FROM SiteTree WHERE ID = $this->ID")->value();
-			$liveVersion = DB::query("SELECT Version FROM SiteTree_Live WHERE ID = $this->ID")->value();
+			$stageVersion =
+				DB::query("SELECT Version FROM SiteTree WHERE ID = $this->ID")->value();
+			$liveVersion =
+				DB::query("SELECT Version FROM SiteTree_Live WHERE ID = $this->ID")->value();
 
-			if($stageVersion && !$liveVersion) $this->AddedToStage = true;
-			else if(!$stageVersion && $liveVersion) $this->DeletedFromStage = true;
-			else if($stageVersion != $liveVersion) $this->ModifiedOnStage = true;
+			if($stageVersion && !$liveVersion)
+				$this->AddedToStage = true;
+			else if(!$stageVersion && $liveVersion)
+				$this->DeletedFromStage = true;
+			else if($stageVersion != $liveVersion)
+				$this->ModifiedOnStage = true;
 		}
 
 		$tag =
@@ -925,168 +1285,32 @@ class SiteTree extends DataObject {
 		}
 	}
 
+
 	/**
 	 * Return the CSS classes to apply to this node in the CMS tree
-	 * @param Controller $controller The controller object that the tree appears on
+	 *
+	 * @param Controller $controller The controller object that the tree
+	 *                               appears on
 	 * @return string
 	 */
 	function CMSTreeClasses($controller) {
 		$classes = $this->class;
-		if($this->HasBrokenFile || $this->HasBrokenLink) $classes .= " BrokenLink";
-		if(!$this->canAddChildren()) $classes .= " nochildren";
-		if(!$this->canDelete()) $classes .= " nodelete";
-		if($controller->isCurrentPage($this)) $classes .= " current";
+		if($this->HasBrokenFile || $this->HasBrokenLink)
+			$classes .= " BrokenLink";
+
+		if(!$this->canAddChildren())
+			$classes .= " nochildren";
+
+		if(!$this->canDelete())
+			$classes .= " nodelete";
+
+		if($controller->isCurrentPage($this))
+			$classes .= " current";
 
 		$classes .= $this->markingClasses();
 
 		return $classes;
 	}
 
-	/**
-	 * Indicates what kind of children this page type can have.
-	 * This can be an array of allowed child classes, or the string "none" - indicating that
-	 * this page type can't have children.
-	 * If a classname is prefixed by "*", such as "*Page", then only that class is allowed - no
-	 * subclasses.  Otherwise, the class and all its subclasses are allowed.
-	 * @var array
-	 */
-	static $allowed_children = array("SiteTree");
-
-	/**
-	 * The default child class for this page.
-	 * @var string
-	 */
-	static $default_child = "Page";
-
-	/**
-	 * The default parent class for this page.
-	 * @var string
-	 */
-	static $default_parent = null;
-
-	/**
-	 * Controls whether a page can be in the root of the site tree.
-	 * @var bool
-	 */
-	static $can_be_root = true;
-
-	/**
-	 * List of permission codes a user can have to allow a user to create a page
-	 * of this type.
-	 * @var array
-	 */
-	static $need_permission = null;
-
-	/**
-	 * If you extend a class, and don't want to be able to select the old class
-	 * in the cms, set this to the old class name. Eg, if you extended Product to
-	 * make ImprovedProduct, then you would set $hide_ancestor to Product.
-	 * @var string
-	 */
-	static $hide_ancestor = null;
-
-	static $db = array(
-		"URLSegment" => "Varchar(255)",
-		"Title" => "Varchar(255)",
-		"MenuTitle" => "Varchar(100)",
-		"Content" => "HTMLText",
-		"MetaTitle" => "Varchar(255)",
-		"MetaDescription" => "Varchar(255)",
-		"MetaKeywords" => "Varchar(255)",
-		"ExtraMeta" => "HTMLText", 
-		"ShowInMenus" => "Boolean",
-		"ShowInSearch" => "Boolean",
-		"HomepageForDomain" => "Varchar(100)",
-		"ProvideComments" => "Boolean",
-		"Sort" => "Int",
-		"LegacyURL" => "Varchar(255)",
-		"HasBrokenFile" => "Boolean",
-		"HasBrokenLink" => "Boolean",
-		"Status" => "Varchar",
-		"ReportClass" => "Varchar",
-		"Viewers" => "Enum('Anyone, LoggedInUsers, OnlyTheseUsers', 'Anyone')", 
- 		"Editors" => "Enum('LoggedInUsers, OnlyTheseUsers', 'LoggedInUsers')", 
- 		"ViewersGroup" => "Int", 
- 		"EditorsGroup" => "Int",
-		"Priority" => "Float"
-	);
-
-  static $indexes = array(
-    "SearchFields" => "fulltext (Title, MenuTitle, Content, MetaTitle, MetaDescription, MetaKeywords)",
-    "TitleSearchFields" => "fulltext (Title)"
-  );
-
-  	static $has_many = array(
-  		"Comments" => "PageComment"
-  	);
-
-	static $many_many = array(
-		"LinkTracking" => "SiteTree",
-		"ImageTracking" => "File"
-	);
-
-	static $belongs_many_many = array(
-		"BackLinkTracking" => "SiteTree"
-	);
-
-	static $many_many_extraFields = array(
-		"LinkTracking" => array("FieldName" => "Varchar"),
-		"ImageTracking" => array("FieldName" => "Varchar")
-	);
-
-	static $casting = array(
-		"Breadcrumbs" => "HTMLText",
-		"LastEdited" => "Datetime",
-		"Created" => "Datetime",
-	);
-
-	static $defaults = array(
-		"ShowInMenus" => 1,
-		"ShowInSearch" => 1,
-		"Status" => "New page",
-		"CanCreateChildren" => array(10),
-		"Viewers" => "Anyone", 
- 		"Editors" => "LoggedInUsers",
-		"Priority" => .5
-	);
-
-	static $has_one = array(
-		"Parent" => "SiteTree"
-	);
-
-	static $versioning = array(
-		"Stage",  "Live"
-	);
-
-	static $default_sort = "Sort";
-
-	/**
-	 * The text shown in the create page dropdown. If
-	 * this is not set, default to "Create a ClassName".
-	 * @var string
-	 */
-	static $add_action = null;
-
-	/**
-	 * If this is false, the class cannot be created in the CMS.
-	 * @var boolean
-	*/
-	static $can_create = true;
-
-	/**
-	 * Icon to use in the CMS
-	 * This should be the base filename.  The suffixes -file.gif, -openfolder.gif and -closedfolder.gif will
-	 * be appended to the base name that you provide there.
-	 * If you prefer, you can pass an array: array("jsparty/tree/images/page", $option).  $option can be either
-	 * "file" or "folder" to force the icon to always be a file or folder, regardless of whether the page has 
-	 * children or not
-	 * @var string|array
-	 */
-	static $icon = array("jsparty/tree/images/page", "file");
-
-	static $extensions = array(
-		"Hierarchy",
-		"Versioned('Stage', 'Live')",
-	);
 }
 ?>
