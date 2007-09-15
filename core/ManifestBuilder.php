@@ -202,7 +202,7 @@ class ManifestBuilder {
 							This might mean that the wrong code is being used.", E_USER_WARNING);
 					} else {
 						user_error("Warning: there are two '$itemCode' files with the same filename: '$folder/$item' and '{$classMap[$itemCode]}'.  
-							This might mean that the wrong code is being used.", E_USER_WARNING);
+							This might mean that the wrong code is being used.", E_USER_NOTICE);
 					}
 				} else {
 					$classMap[$itemCode] = "$folder/$item";
