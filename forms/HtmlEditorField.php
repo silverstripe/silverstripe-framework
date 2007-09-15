@@ -42,11 +42,17 @@ class HtmlEditorField extends TextareaField {
 				$link = Director::makeRelative($link);
 				$broken = false;
 				if(ereg('^([A-Za-z0-9_\-]+)/?(#.*)?$', $link, $parts)) {
-					if(!DataObject::get_one("SiteTree", "URLSegment = '$parts[1]'", false)) $broken = true;
+					if(!DataObject::get_one("SiteTree", "URLSegment = '$parts[1]'", false)) {
+						$broken = true;
+						// Prevents execution timeouts if a page has 50 identical broken links by only highlighting them once
+						$alreadyHighlighted[$parts[1]] = true;
+					}
 				} else if($link[0] == '/') {
 					$broken = true;
 				} else if(ereg('^assets/',$link)) {
-					if(!DataObject::get_one("File", "Filename = '$link'", false)) $broken = true;
+					if(!DataObject::get_one("File", "Filename = '$link'", false)) {
+						$broken = true;
+					}
 				}
 	
 				// Add a class.  Note that this might create multiple class attributes, which are stripped below
