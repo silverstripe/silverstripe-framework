@@ -262,6 +262,7 @@ JS
 						<div class="blank"> View page in: </div>
 						$cmsLink
 						$stageLink
+						<div class="blank" style="width:1em;"> </div>
 						$liveLink
 						$archiveLink
 					</div>
