@@ -210,6 +210,7 @@ class SSViewer extends Object {
 		
 		// $val, $val.property, $val(param), etc.
 		$replacements = array(
+			'/\$Iteration/' =>  '<?= {dlr}key ?>',
 			'/{\\$([A-Za-z_][A-Za-z0-9_]*)\\(([^),]+), *([^),]+)\\)}/' => '<?= {dlr}item->XML_val("\\1",array("\\2","\\3"),true) ?>',
 			'/{\\$([A-Za-z_][A-Za-z0-9_]*)\\(([^),]+)\\)}/' => '<?= {dlr}item->XML_val("\\1",array("\\2"),true) ?>',
 			'/{\\$([A-Za-z_][A-Za-z0-9_]*)\\.([A-Za-z0-9_]+)\\.([A-Za-z0-9_]+)}/' => '<?= {dlr}item->obj("\\1",null,true)->obj("\\2",null,true)->XML_val("\\3",null,true) ?>',
@@ -232,14 +233,14 @@ class SSViewer extends Object {
 		$content = ereg_replace('<!-- +pc +([A-Za-z0-9_(),]+) +-->', '<' . '% control \\1 %' . '>', $content);
 		$content = ereg_replace('<!-- +pc_end +-->', '<' . '% end_control %' . '>', $content);
 
-		$content = ereg_replace('<' . '% +control +([A-Za-z0-9_]+) +%' . '>', '<? array_push($itemStack, $item); if($loop = $item->obj("\\1")) foreach($loop as $item) { ?>', $content);
-		$content = ereg_replace('<' . '% +control +([A-Za-z0-9_]+)\\.([A-Za-z0-9_]+) +%' . '>', '<? array_push($itemStack, $item); if(($loop = $item->obj("\\1")) && ($loop = $loop->obj("\\2"))) foreach($loop as $item) { ?>', $content);
+		$content = ereg_replace('<' . '% +control +([A-Za-z0-9_]+) +%' . '>', '<? array_push($itemStack, $item); if($loop = $item->obj("\\1")) foreach($loop as $key => $item) { ?>', $content);
+		$content = ereg_replace('<' . '% +control +([A-Za-z0-9_]+)\\.([A-Za-z0-9_]+) +%' . '>', '<? array_push($itemStack, $item); if(($loop = $item->obj("\\1")) && ($loop = $loop->obj("\\2"))) foreach($loop as $key => $item) { ?>', $content);
 
-		$content = ereg_replace('<' . '% +control +([A-Za-z0-9_]+)\\.([A-Za-z0-9_]+)\\(([A-Za-z0-9_-]+)\\) +%' . '>', '<? array_push($itemStack, $item); if(($loop = $item->obj("\\1")) && ($loop = $loop->obj("\\2", array("\\3")))) foreach($loop as $item) { ?>', $content);
+		$content = ereg_replace('<' . '% +control +([A-Za-z0-9_]+)\\.([A-Za-z0-9_]+)\\(([A-Za-z0-9_-]+)\\) +%' . '>', '<? array_push($itemStack, $item); if(($loop = $item->obj("\\1")) && ($loop = $loop->obj("\\2", array("\\3")))) foreach($loop as $key => $item) { ?>', $content);
 
-		$content = ereg_replace('<' . '% +control +([A-Za-z0-9_]+)\\(([A-Za-z0-9_-]+)\\) +%' . '>', '<? array_push($itemStack, $item); if($loop = $item->obj("\\1", array("\\2"))) foreach($loop as $item) { ?>', $content);
-		$content = ereg_replace('<' . '% +control +([A-Za-z0-9_]+)\\(([A-Za-z0-9_-]+), *([A-Za-z0-9_-]+)\\) +%' . '>', '<? array_push($itemStack, $item); if($loop = $item->obj("\\1", array("\\2","\\3"))) foreach($loop as $item) { ?>', $content);
-		$content = ereg_replace('<' . '% +control +([A-Za-z0-9_]+)\\(([A-Za-z0-9_-]+), *([A-Za-z0-9_-]+), *([A-Za-z0-9_-]+)\\) +%' . '>', '<? array_push($itemStack, $item); if($loop = $item->obj("\\1", array("\\2", "\\3", "\\4"))) foreach($loop as $item) { ?>', $content);
+		$content = ereg_replace('<' . '% +control +([A-Za-z0-9_]+)\\(([A-Za-z0-9_-]+)\\) +%' . '>', '<? array_push($itemStack, $item); if($loop = $item->obj("\\1", array("\\2"))) foreach($loop as $key => $item) { ?>', $content);
+		$content = ereg_replace('<' . '% +control +([A-Za-z0-9_]+)\\(([A-Za-z0-9_-]+), *([A-Za-z0-9_-]+)\\) +%' . '>', '<? array_push($itemStack, $item); if($loop = $item->obj("\\1", array("\\2","\\3"))) foreach($loop as $key => $item) { ?>', $content);
+		$content = ereg_replace('<' . '% +control +([A-Za-z0-9_]+)\\(([A-Za-z0-9_-]+), *([A-Za-z0-9_-]+), *([A-Za-z0-9_-]+)\\) +%' . '>', '<? array_push($itemStack, $item); if($loop = $item->obj("\\1", array("\\2", "\\3", "\\4"))) foreach($loop as $key => $item) { ?>', $content);
 		$content = ereg_replace('<' . '% +end_control +%' . '>', '<? } $item = array_pop($itemStack); ?>', $content);
 		$content = ereg_replace('<' . '% +debug +%' . '>', '<? Debug::show($item) ?>', $content);
 		$content = ereg_replace('<' . '% +debug +([A-Za-z0-9_]+) +%' . '>', '<? Debug::show($item->cachedCall("\\1")) ?>', $content);
