@@ -208,8 +208,11 @@ class HTTP {
 		if( $query )
 			$query = '?' . $query;
 			
-		if( self::$userName && self::$password )
+		if( self::$userName && self::$password ) {
 			$auth = "Authorization: Basic " . base64_encode( self::$userName . ':' . self::$password ) . "\r\n";
+		} else {
+			$auth = '';
+		}
 		
 		$request = "GET {$path}{$query} HTTP/1.1\r\nHost: $host\r\nConnection: Close\r\n{$auth}\r\n";
 		
