@@ -82,4 +82,17 @@ function stripslashes_recursively(&$array) {
 		else $array[$k] = stripslashes($v);
 	}
 }
+
+/**
+ * This is the main translator function. Returns the string defined by $class and $entity according to the currently set locale
+ */
+function _($class, $entity, $string="", $priority=PR_MEDIUM, $context="") {
+	global $lang;
+	$locale = LocaleAPI::getLocale();
+	$class = ereg_replace('.*([/\\]+)',"",$class);
+	if (substr($class,-4) == '.php') $class = substr($class,0,-4);
+	if (!$lang[$locale][$class]) LocaleAPI::includeByClass($class);
+	$transEntity = $lang[LocaleAPI::getLocale()][$class][$entity];
+	return (is_array($transEntity) ? $transEntity[0] : $transEntity);
+}
 ?>
