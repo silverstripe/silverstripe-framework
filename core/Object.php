@@ -29,7 +29,7 @@ class Object {
 
 	protected static $extraMethods = array();
 	protected static $builtInMethods = array();
-    
+
     /**
     * Use the class in the value instead of the class in the key
     */
@@ -39,9 +39,9 @@ class Object {
 
 
 	/**
-	 * This function allows you to overload class creation methods, so certain classes are 
-	 * always created correctly over your system. 
-	 * 
+	 * This function allows you to overload class creation methods, so certain classes are
+	 * always created correctly over your system.
+	 *
 	 * @param oldClass = the old classname you want to replace with.
 	 * @param customClass = the new Classname you wish to replace the old class with.
 	 * @param strong - If you want to force a replacement of a class then we use a different array
@@ -54,7 +54,7 @@ class Object {
 			self::$custom_classes[$oldClass] = $customClass;
 		}
     }
-    
+
     public static function getCustomClass( $oldClass ) {
     	if( array_key_exists($oldClass, self::$custom_classes) )
     		return self::$custom_classes[$oldClass];
@@ -62,37 +62,37 @@ class Object {
      		return $oldClass;
 		}
     }
-    
+
 	/**
 	 * Create allows us to override the standard classes of sapphire with our own custom classes.
-	 * create will load strong classes firstly for singleton level and database interaction, otherwise will 
-	 * use the fallback custom classes. 
-	 * To set a strong custom class to overide an object at for say singleton use, use the syntax 
+	 * create will load strong classes firstly for singleton level and database interaction, otherwise will
+	 * use the fallback custom classes.
+	 * To set a strong custom class to overide an object at for say singleton use, use the syntax
 	 *  Object::useCustomClass('Datetime','SSDatetime',true);
 	 * @param className - The classname you want to create
 	 * @param args -  Up to 9 arguments you wish to pass on to the new class
 	 */
     public static function create( $className, $arg0 = null, $arg1 = null, $arg2 = null, $arg3 = null, $arg4 = null, $arg5 = null, $arg6 = null, $arg7 = null, $arg8 = null ) {
-		
+
 		$useStrongClassName =  isset(self::$strong_classes[$className]);
 		$useClassName = isset(self::$custom_classes[$className]);
-		
+
 		if($useStrongClassName){
 			$classToCreate = self::$strong_classes[$className];
 		}elseif($useClassName){
-			$classToCreate = self::$custom_classes[$className];	
+			$classToCreate = self::$custom_classes[$className];
 		}
-		
+
 		$hasStrong = isset(self::$strong_classes[$className]) && class_exists(self::$strong_classes[$className]);
 		$hasNormal = isset(self::$custom_classes[$className]) && class_exists(self::$custom_classes[$className]);
-		
+
 		if( !isset($classToCreate) || (!$hasStrong && !$hasNormal)){
 		  	 $classToCreate = $className;
 		}
-        return new $classToCreate( $arg0, $arg1, $arg2, $arg3, $arg4, $arg5, $arg6, $arg7, $arg8 );   
+        return new $classToCreate( $arg0, $arg1, $arg2, $arg3, $arg4, $arg5, $arg6, $arg7, $arg8 );
     }
-	
-	
+
+
 	/**
 	 * Strong_create is a function to enforce a certain class replacement
 	 * e.g Php5.2's latest introduction of a namespace conflict means we have to replace
@@ -109,10 +109,10 @@ class Object {
 		if( !isset($classToCreate) || !class_exists( self::$strong_classes[$className])){
 		  	 $classToCreate = $className;
 		}
-        return new $classToCreate( $arg0, $arg1, $arg2, $arg3, $arg4, $arg5, $arg6, $arg7, $arg8 ); 
+        return new $classToCreate( $arg0, $arg1, $arg2, $arg3, $arg4, $arg5, $arg6, $arg7, $arg8 );
 	}
-	
-	
+
+
 	function __construct() {
 		$this->class = get_class($this);	
 
@@ -130,8 +130,8 @@ class Object {
 			Object::$classConstructed[$this->class] = true;
 		}
 	}
-	
-	
+
+
 	/**
 	 * Returns true if this object "exists", i.e., has a sensible value.
 	 * Overload this in subclasses.
@@ -140,7 +140,7 @@ class Object {
 	public function exists() {
 		return true;
 	}
-	
+
 	/**
 	 * Returns true if the given method exists.
 	 */
@@ -152,7 +152,7 @@ class Object {
 		if(isset(Object::$extraMethods[$this->class][$methodName])) return true;
 		return false;
 	}
-	
+
 	/**
 	 * Calls a method.
 	 * Extra methods can be hooked to a class using
@@ -163,7 +163,7 @@ class Object {
 			if(isset($config['parameterName'])) {
 				if(isset($config['arrayIndex'])) $obj = $this->{$config['parameterName']}[$config['arrayIndex']];
 				else $obj = $this->{$config['parameterName']};
-				
+
 				if($obj) {
 					return call_user_func_array(array(&$obj, $methodName), $args);
 				} else {
@@ -174,15 +174,15 @@ class Object {
 			} else if(isset($config['wrap'])) {
 				array_unshift($args, $methodName);
 				return call_user_func_array(array(&$this, $config['wrap']), $args);
-	
+
 			} else if(isset($config['function'])) {
 				$function = $config['function'];
 				return $function($this, $args);
-				
+
 			} else if($config['function_str']) {
 				$function = Object::$extraMethods[$this->class][$methodName]['function'] = create_function('$obj, $args', $config['function_str']);
 				return $function($this, $args);
-	
+
 			} else {
 				user_error("Object::__call() Method '$methodName' in class '$this->class' an invalid format: " . var_export(Object::$extraMethods[$this->class][$methodName],true), E_USER_ERROR);
 			}
@@ -205,7 +205,7 @@ class Object {
 			Object::$extraMethods[$this->class][$methodName] = array("parameterName" => $parameterName, "arrayIndex" => $arrayIndex);
 		}
 	}
-	
+
 	/**
 	 * Add a 'wrapper method'.
 	 * For example, Thumbnail($arg, $arg) can be defined to call generateImage("Thumbnail", $arg, $arg)
@@ -213,7 +213,7 @@ class Object {
 	protected function addWrapperMethod($methodName, $wrapperMethod) {
 		Object::$extraMethods[$this->class][$methodName] = array("wrap" => $wrapperMethod);
 	}
-	
+
 	/**
 	 * Create a new method
 	 * @param methodName The name of the method
@@ -231,7 +231,7 @@ class Object {
 	 */
 	function allMethodNames($includeCustom = false) {
 		if(!$this->class) $this->class = get_class($this);
-		
+
 		if(!isset(Object::$builtInMethods['_set'][$this->class])) $this->buildMethodList();
 
 		if($includeCustom && isset(Object::$extraMethods[$this->class])) {
@@ -240,11 +240,11 @@ class Object {
 			return Object::$builtInMethods[$this->class];
 		}
 	}
-	
+
 	function buildMethodList() {
 		if(!$this->class) $this->class = get_class($this);
 		$reflection = new ReflectionClass($this->class);
-		
+
 		$methods = $reflection->getMethods();
 		foreach($methods as $method) {
 			$name = $method->getName();
@@ -253,7 +253,7 @@ class Object {
 		Object::$builtInMethods[$this->class] = $methodNames;
 		Object::$builtInMethods['_set'][$this->class] = true	;
 	}
-	
+
 	/**
 	 * This constructor will be called the first time an object of this class is created.
 	 * You can overload it with methods for setting up the class - for example, extra methods.
@@ -270,7 +270,7 @@ class Object {
 			}
 		}
 	}
-	
+
 	/**
 	 * This method lets us extend a built-in class by adding static variables to it
 	 */
@@ -290,7 +290,7 @@ class Object {
 	function is_a($class) {
 		return is_a($this, $class);
 	}
-	
+
 	/**
 	 * Set an uninherited static variable
 	 */
@@ -310,17 +310,17 @@ class Object {
 
 		return isset(Object::$uninherited_statics[$this->class][$name]) ? Object::$uninherited_statics[$this->class][$name] : null;
 	}
-	
-	
+
+
 	protected static $statics = array();
 	protected static $static_cached = array();
-	
+
 	/**
 	 * Get a static variable
 	 */
 	function stat($name) {
 		if(!$this->class) $this->class = get_class($this);
-		
+
 		if(!isset(Object::$static_cached[$this->class][$name])) {
 			$classes = ClassInfo::ancestry($this->class);
 			foreach($classes as $class) {
@@ -347,7 +347,7 @@ class Object {
 
 	public $class;
 	private static $uninherited_statics = array();
-	
+
 	public function __toString() {
 		return $this->class;
 	}
