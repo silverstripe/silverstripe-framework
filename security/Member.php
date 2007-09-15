@@ -460,7 +460,7 @@ class Member extends DataObject {
 	 */
 	public function Groups() {
 		$groups = $this->getManyManyComponents("Groups");
-		
+
 		$unsecure = DataObject::get("Group_Unsecure", "");
 		if($unsecure) {
 			foreach($unsecure as $unsecureItem) {
@@ -636,11 +636,27 @@ class Member extends DataObject {
 				//new TextField( "Organisation", "Organisation" ),
 				//new OptionsetField("HTMLEmail","Mail Format", array( 1 => 'HTML', 0 => 'Text only' ) )
 			);
-			
+
 		$this->extend('updateCMSFields', $fields);
 		// if($this->hasMethod('updateCMSFields')) $this->updateCMSFields($fields);
-		
+
 		return $fields;
+	}
+
+
+	/**
+	 * Add an extension to the Member class
+	 *
+	 * This method can be used to add behaviour to Member class. The extension
+	 * affects the entire class - all members will get the additional
+	 * behaviour. However, if you want to restrict things, you should add
+	 * appropriate Permission::checkMember() calls to the extensions's
+	 * methods.
+	 *
+	 * @param string $extensionName Class name of the extension to add
+	 */
+	public static function add_role($extensionName) {
+		DataObject::add_extension('Member', $extensionName);
 	}
 
 
