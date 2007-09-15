@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * Allows visibility of a group of fields to be toggled using + and - icons
+ */
 class TogglePanel extends CompositeField {
 	protected $closed = false;
 	
