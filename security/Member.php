@@ -67,11 +67,12 @@ class Member extends DataObject {
 		if(isset($_COOKIE['alc_enc']) && !Session::get("loggedInAs")) {
 
 			@list($uid, $token) = explode(':', $_COOKIE['alc_enc'], 2);
-			$uid = Convert::raw2sql($uid);
-			$token = Convert::raw2sql($token);
+			$SQL_uid = Convert::raw2sql($uid);
 
 			$member = DataObject::get_one(
-					"Member", "Member.ID = '$uid' And RememberLoginToken = '$token'");
+					"Member", "Member.ID = '$SQL_uid'");
+
+			if($member && $member->RememberLoginToken != $token) $member = null;
 
 			if($member) {
 				session_regenerate_id(true);

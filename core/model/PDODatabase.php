@@ -655,6 +655,8 @@ class PDODatabase extends Database {
  * A result-set from a database query (array).
  */
 class PDOQuery extends Query {
+	private $database;
+	private $handle;
 
 	/**
 	 * The object that holds the result set.
