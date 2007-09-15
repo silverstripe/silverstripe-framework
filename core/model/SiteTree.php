@@ -506,9 +506,10 @@ class SiteTree extends DataObject {
 
 	  switch(strtolower($perm)) {
 	    case 'edit':
-	      if((($this->Editors == 'LoggedInUsers' && $member) ||
-					 ($this->Editors == 'OnlyTheseUsers' && $member &&
-						$member->isInGroup($this->EditorsGroup))) == false)
+	      if((Permission::check('CMS_ACCESS_CMSMain') &&
+						(($this->Editors == 'LoggedInUsers' && $member) ||
+					  ($this->Editors == 'OnlyTheseUsers' && $member &&
+						$member->isInGroup($this->EditorsGroup)))) == false)
 					return false;
 				break;
 
@@ -1023,15 +1024,15 @@ class SiteTree extends DataObject {
 					)
 				),
 				new Tab("Access",
-					new HeaderField("Who can display this?", 2),
+					new HeaderField("Who can view this page on my site?", 2),
 					new OptionsetField("Viewers", "",
 														 array("Anyone" => "Anyone",
 																	 "LoggedInUsers" => "Logged-in users",
 																	 "OnlyTheseUsers" => "Only these people (choose from list)")),
 					new DropdownField("ViewersGroup", "Group", Group::map()),
-					new HeaderField("Who can edit this?", 2),
+					new HeaderField("Who can edit this inside the CMS?", 2),
 					new OptionsetField("Editors", "",
-														 array("LoggedInUsers" => "Logged-in users",
+														 array("LoggedInUsers" => "Anyone who can log-in to the CMS",
 																	 "OnlyTheseUsers" => "Only these people (choose from list)")),
 					new DropdownField("EditorsGroup", "Group", Group::map())
 				)
