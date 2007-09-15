@@ -25,11 +25,6 @@ require_once "Auth/OpenID/FileStore.php";
 require_once "Auth/OpenID/SReg.php";
 
 
-//DataObject::addExtension('Member', 'OpenIDAuthenticatedRole');
-//Member::addRole('OpenIDAuthenticatedRole');
-
-
-
 
 
 /**
