@@ -34,6 +34,9 @@ class OpenIDLoginForm extends LoginForm {
 	 */
   function __construct($controller, $name, $fields = null, $actions = null,
                        $checkCurrentUser = true) {
+
+		$this->authenticator_class = 'OpenIDAuthenticator';
+
 		$customCSS = project() . '/css/openid_login.css';
 		if(Director::fileExists($customCSS)) {
 			Requirements::css($customCSS);
@@ -52,7 +55,8 @@ class OpenIDLoginForm extends LoginForm {
     } else {
       if(!$fields) {
         $fields = new FieldSet(
-          new HiddenField("AuthenticationMethod", null, "OpenID"),
+          new HiddenField("AuthenticationMethod", null,
+													$this->authenticator_class, $this),
           new TextField("OpenIDURL", "OpenID URL",
 						Session::get('SessionForms.OpenIDLoginForm.OpenIDURL'), null, $this),
           new CheckboxField("Remember", "Remember me next time?",
@@ -125,19 +129,6 @@ class OpenIDLoginForm extends LoginForm {
     $s->logout();
   }
 
-
-	/**
-   * Get the authenticator class
-   *
-   * <strong>Attention: This method will return the class and not an
-   * instance of the authenticator class!</strong>
-   *
-   * @return Authenticator Returns the authenticator class for this login
-   *                       form.
-   */
-  public static function getAuthenticator() {
-		return new OpenIDAuthenticator;
-	}
 }
 
 

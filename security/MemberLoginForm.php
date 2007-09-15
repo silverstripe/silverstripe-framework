@@ -31,6 +31,8 @@ class MemberLoginForm extends LoginForm {
 	function __construct($controller, $name, $fields = null, $actions = null,
 											 $checkCurrentUser = true) {
 
+		$this->authenticator_class = 'MemberAuthenticator';
+
 		$customCSS = project() . '/css/member_login.css';
 		if(Director::fileExists($customCSS)) {
 			Requirements::css($customCSS);
@@ -49,7 +51,8 @@ class MemberLoginForm extends LoginForm {
 		} else {
 			if(!$fields) {
 				$fields = new FieldSet(
-					new HiddenField("AuthenticationMethod", null, "Member", $this),
+					new HiddenField("AuthenticationMethod", null,
+													$this->authenticator_class, $this),
 					new TextField("Email", "Email address",
 						Session::get('SessionForms.MemberLoginForm.Email'), null, $this),
 					new EncryptField("Password", "Password", null, $this),
@@ -185,16 +188,6 @@ class MemberLoginForm extends LoginForm {
 		}
 	}
 
-
-	/**
-   * Get the authenticator class
-   *
-   * @return Authenticator Returns the authenticator class for this login
-   *                       form.
-   */
-  public static function getAuthenticator() {
-		return new MemberAuthenticator;
-	}
 }
 
 

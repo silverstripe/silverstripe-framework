@@ -93,17 +93,15 @@ class Security extends Controller {
 	function LoginForm() {
 		if(is_array($_REQUEST) && isset($_REQUEST['AuthenticationMethod']))
 		{
-		  switch($_REQUEST['AuthenticationMethod'])
-			{
-				case 'Member':
-					return MemberAuthenticator::GetLoginForm($this);
-					break;
-				case 'OpenID':
-					return OpenIDAuthenticator::GetLoginForm($this);
-					break;
+			$authenticator = trim($_REQUEST['AuthenticationMethod']);
+
+			$authenticators = Authenticator::getAuthenticators();
+			if(in_array($authenticator, $authenticators)) {
+				return call_user_func(array($authenticator, 'GetLoginForm'), $this);
 			}
 		}
-		user_error('Invalid authentication method', E_USER_ERROR);
+
+		user_error('Passed invalid authentication method', E_USER_ERROR);
 	}
 
 
@@ -118,8 +116,13 @@ class Security extends Controller {
 	function GetLoginForms()
 	{
 		$forms = array();
-		array_push($forms, MemberAuthenticator::GetLoginForm($this));
-		array_push($forms, OpenIDAuthenticator::GetLoginForm($this));
+
+		$authenticators = Authenticator::getAuthenticators();
+		foreach($authenticators as $authenticator) {
+		  array_push($forms,
+								 call_user_func(array($authenticator, 'GetLoginForm'),
+																$this));
+		}
 
 		return $forms;
 	}

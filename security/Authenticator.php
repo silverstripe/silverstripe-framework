@@ -19,6 +19,14 @@
 abstract class Authenticator extends Object
 {
   /**
+   * This variable holds all authenticators that should be used
+   *
+   * @var array
+   */
+  private static $authenticators = array();
+
+
+  /**
    * Method to authenticate an user
    *
    * @param array $RAW_data Raw data to authenticate the user
@@ -48,6 +56,42 @@ abstract class Authenticator extends Object
    * @return string Returns the name of the authentication method.
    */
   public abstract static function getName();
+
+
+  /**
+   * Register a new authenticator
+   *
+   * The new authenticator has to exist and to be derived from the
+   * {@link Authenticator}.
+   * Every authenticator can be registered only once.
+   *
+   * @return bool Returns TRUE on success, FALSE otherwise.
+   */
+  public static function registerAuthenticator($authenticator) {
+    $authenticator = trim($authenticator);
+
+    if(class_exists($authenticator) == false)
+      return false;
+
+    if(is_subclass_of($authenticator, 'Authenticator') == false)
+      return false;
+
+    if(in_array($authenticator, self::$authenticators) == false)
+      array_push(self::$authenticators, $authenticator);
+
+    return true;
+  }
+
+
+  /**
+   * Get all registered authenticators
+   *
+   * @return array Returns an array with the class names of all registered
+   *               authenticators.
+   */
+  public static function getAuthenticators() {
+    return self::$authenticators;
+  }
 }
 
 ?>
