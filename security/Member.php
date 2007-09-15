@@ -66,7 +66,7 @@ class Member extends DataObject {
 	static function autoLogin() {
 		if(isset($_COOKIE['alc_enc']) && !Session::get("loggedInAs")) {
 
-			@list($uid, $token) = explode(':', $_COOKIE['alc_enc'], 2);
+			@list($uid, $token) = explode(':', urldecode($_COOKIE['alc_enc']), 2);
 			$SQL_uid = Convert::raw2sql($uid);
 
 			$member = DataObject::get_one(
