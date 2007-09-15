@@ -84,6 +84,13 @@ function stripslashes_recursively(&$array) {
 }
 
 /**
+ * Priorities definition. These constants are used in calls to _t() as an optional argument
+ */
+define('PR_HIGH',100);
+define('PR_MEDIUM',50);
+define('PR_LOW',10);
+
+/**
  * This is the main translator function. Returns the string defined by $class and $entity according to the currently set locale
  *
  * @param string $entity Entity that identifies the string. It must be in the form "Namespace.Entity" where Namespace will be usually

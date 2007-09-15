@@ -154,7 +154,7 @@ class SSViewer extends Object {
 			if(isset($_GET['debug_profile'])) Profiler::mark("SSViewer::process - compile", " for $template");
 			
 			$content = file_get_contents($template);
-			$content = SSViewer::parseTemplateContent($content);
+			$content = SSViewer::parseTemplateContent($content, $template);
 			
 			$fh = fopen($cacheFile,'w');
 			fwrite($fh, $content);
@@ -186,7 +186,7 @@ class SSViewer extends Object {
 		
 		$itemStack = array();
 		$val = "";
-		
+
 		include($cacheFile);
 
 		$output = $val;		
@@ -199,7 +199,7 @@ class SSViewer extends Object {
 		return $output;
 	}
 
-	static function parseTemplateContent($content) {			
+	static function parseTemplateContent($content, $template="") {			
 		while(true) {
 			$oldContent = $content;
 			$content = preg_replace_callback('/<' . '% include +([A-Za-z0-9_]+) +%' . '>/', create_function(
@@ -282,7 +282,8 @@ class SSViewer extends Object {
 		$content = ereg_replace('<' . '% +end_if +%' . '>', '<? }  ?>', $content);
 
 		// i18n
-		$content = ereg_replace('<' . '% +_t\((([^)]|\)[^;])*)\); +%' . '>', '<?= _t(\\1) ?>', $content);
+		ereg('.*[\/](.*)',$template,$path);
+		$content = ereg_replace('<' . '% +_t\((\'([^\']*)\'|"([^"]*)")(([^)]|\)[^;])*)\); +%' . '>', '<?= _t(\''. $path[1] . '.\\2\\3\'\\4) ?>', $content);
 
 		// </base> isnt valid html? !? 
 		$content = ereg_replace('<' . '% +base_tag +%' . '>', '<base href="<?= Director::absoluteBaseURL(); ?>" />', $content);

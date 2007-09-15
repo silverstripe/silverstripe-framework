@@ -6,13 +6,6 @@
  * @author Bernat Foj Capell <bernat@silverstripe.com>
  */
 
-/**
- * Priorities definition. These constants are used in calls to _() as an optional argument
- */
-define('PR_HIGH',100);
-define('PR_MEDIUM',50);
-define('PR_LOW',10);
-
 class i18n extends Controller {
 	
 	/**
@@ -118,6 +111,7 @@ class i18n extends Controller {
 			
 			if (isset($callMap[$class.'--'.$entity])) echo "Warning! Redeclaring entity $entity in file $file<br>";
 
+			if (substr($regs[2],0,1) == '"') $regs[2] = addcslashes($regs[2],'\'');
 			$mst .= '$lang[\'en_US\'][\'' . $class . '\'][\'' . $entity . '\'] = ';
 			if ($regs[5]) {
 				$mst .= "array(\n\t'" . substr($regs[2],1,-1) . "',\n\t" . substr($regs[5],1);
@@ -148,11 +142,11 @@ class i18n extends Controller {
 		static $callMap;
 		$content = file_get_contents($file);
 		$mst = '';
-		while (ereg('_t[[:space:]]*\([[:space:]]*("[^,]*"|\\\'[^,]*\\\')[[:space:]]*,[[:space:]]*("([^"]|\\\")*"|\'([^\']|\\\\\')*\')([[:space:]]*,[[:space:]]*[^,)]*)?([[:space:]]*,[[:space:]]*("([^"]|\\\")*"|\'([^\']|\\\\\')*\'))?[[:space:]]*\)',$content,$regs)) {
+		while (ereg('_t[[:space:]]*\([[:space:]]*("[^"]*"|\\\'[^\']*\\\')[[:space:]]*,[[:space:]]*("([^"]|\\\")*"|\'([^\']|\\\\\')*\')([[:space:]]*,[[:space:]]*[^,)]*)?([[:space:]]*,[[:space:]]*("([^"]|\\\")*"|\'([^\']|\\\\\')*\'))?[[:space:]]*\)',$content,$regs)) {
 
 			$entityParts = explode('.',substr($regs[1],1,-1));
 			$entity = array_pop($entityParts);
-			
+
 			// Entity redeclaration check
 			if (isset($callMap[$index.'--'.$entity])) echo "Warning! Redeclaring entity $entity in file $file<br>";
 
@@ -165,7 +159,7 @@ class i18n extends Controller {
 					$mst .= ",\n\t'" . substr($regs[6],2,-1) . '\''; 
 				}
 				$mst .= "\n);";
-			} else $mst .= '\'' . substr($regs[2],2,-1) . '\';';
+			} else $mst .= '\'' . substr($regs[2],1,-1) . '\';';
 			$mst .= "\n";
 			$content = str_replace($regs[0],"",$content);
 

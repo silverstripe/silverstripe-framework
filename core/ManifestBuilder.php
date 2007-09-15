@@ -184,6 +184,9 @@ class ManifestBuilder {
 			 
 			// ignore certain directories 
 			if(is_dir("$folder/$item") && in_array($item, self::$ignore_folders)) continue;
+			
+			// i18n: ignore language files (loaded on demand)
+			if($item == 'lang' && is_dir("$folder/$item") && ereg_replace("/[^/]+/\\.\\.","",$folder.'/..') == Director::baseFolder()) continue; 
 			 
 			if(is_dir("$folder/$item")) {
 				// recurse into directories	(if not in $ignore_folders)		

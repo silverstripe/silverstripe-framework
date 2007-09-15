@@ -62,7 +62,7 @@ Authenticator::registerAuthenticator('OpenIDAuthenticator');
 /**
  * Define a default language different than english
  */
-//LocaleAPI::set_locale('ca_AD'); 
+//i18n::set_locale('ca_AD'); 
 
 define('MCE_ROOT', 'jsparty/tiny_mce2/');
 
