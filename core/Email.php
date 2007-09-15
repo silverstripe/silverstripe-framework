@@ -395,15 +395,16 @@ function htmlEmail($to, $from, $subject, $htmlContent, $attachedFiles = false, $
     $plainEncoding = "";
 	
 	// We generate plaintext content by default, but you can pass custom stuff
+	$plainEncoding = '';
 	if(!$plainContent) {
 		$plainContent = Convert::xml2raw($htmlContent);
-		if($bodyIsUnicode) $plainEncoding = "base64";
+		if(isset($bodyIsUnicode) && $bodyIsUnicode) $plainEncoding = "base64";
 	}
 
 
 	// If the subject line contains extended characters, we must encode the 
 	$subject = Convert::xml2raw($subject);
-	if($subjectIsUnicode)
+	if(isset($subjectIsUnicode) && $subjectIsUnicode)
 		$subject = "=?UTF-8?B?" . base64_encode($subject) . "?=";
 
 
