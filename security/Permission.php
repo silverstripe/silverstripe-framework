@@ -217,11 +217,11 @@ class Permission extends DataObject {
 
 	static function get_codes($blankItemText = null) {
 		$classes = ClassInfo::implementorsOf('PermissionProvider');
-		
+
 		$allCodes = array();
 		if($blankItemText) $allCodes[''] = ($blankItemText === true) ? '(select)' : $blankItemText;
 		$allCodes['ADMIN'] = 'Full administrative rights';
-		
+
 		foreach($classes as $class) {
 			$SNG = singleton($class);
 			$someCodes = $SNG->providePermissions();
@@ -244,7 +244,7 @@ class Permission extends DataObject {
 	 */
 	function listcodes() {
 		if(!Permission::check('ADMIN')) Security::permissionFailure();
-		
+
 		echo "<h1>The following permission codes are defined</h1>";
 		$codes = self::get_codes();
 		echo "<pre>";
