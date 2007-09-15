@@ -13,7 +13,7 @@ function getTempFolder() {
         unlink($tmpFile);
         $sysTmp = dirname($tmpFile);
     }
-    
+
     $worked = true;
     $ssTmp = "$sysTmp/silverstripe-cache";
     if(!@file_exists($ssTmp)) {
@@ -33,7 +33,7 @@ function getTempFolder() {
     }
     
     return $ssTmp;
-    
+
 }
 
 define('TEMP_FOLDER', getTempFolder());
@@ -45,7 +45,7 @@ define('TEMP_FOLDER', getTempFolder());
  * If your class contains an underscore, for example, Page_Controller, then the filename is
  * expected to be the stuff before the underscore.  In this case, Page.php.
  */
-function __autoload($className) {	
+function __autoload($className) {
 	global $_CLASS_MANIFEST;
 	if(($pos = strpos($className,'_')) !== false) $className = substr($className,0,$pos);
 	if(isset($_CLASS_MANIFEST[$className])) include_once($_CLASS_MANIFEST[$className]);
@@ -97,13 +97,19 @@ function stripslashes_recursively(&$array) {
  *
  * @return string The translated string, according to the currently set locale {@link i18n::setLocale()}
  */
-function _($class, $entity, $string="", $priority=40, $context="") {
+function _($class, $entity, $string = "", $priority = 40, $context = "") {
 	global $lang;
 	$locale = i18n::getLocale();
-	$class = ereg_replace('.*([/\\]+)',"",$class);
-	if (substr($class,-4) == '.php') $class = substr($class,0,-4);
-	if (isset(!$lang[$locale][$class])) i18n::includeByClass($class);
+	$class = ereg_replace('.*([/\\]+)', "", $class);
+	if(substr($class, -4) == '.php')
+		$class = substr($class, 0, -4);
+
+	if(isset($lang[$locale][$class]) == false)
+	  i18n::includeByClass($class);
+
 	$transEntity = $lang[i18n::getLocale()][$class][$entity];
 	return (is_array($transEntity) ? $transEntity[0] : $transEntity);
 }
+
+
 ?>
