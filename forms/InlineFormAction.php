@@ -6,6 +6,17 @@
 class InlineFormAction extends FormField {
 	
 	protected $includeDefaultJS = true;
+
+	/**
+	 * Create a new action button.
+	 * @param action The method to call when the button is clicked
+	 * @param title The label on the button
+	 * @param extraClass A CSS class to apply to the button in addition to 'action'
+	 */
+	function __construct($action, $title = "", $extraClass = '') {
+		$this->extraClass = ' '.$extraClass;
+		parent::__construct($action, $title, null, null);
+	}
 	
 	function performReadonlyTransformation() {
 		return new InlineFormAction_ReadOnly( $this->name, $this->title );
@@ -16,7 +27,7 @@ class InlineFormAction extends FormField {
 			Requirements::javascriptTemplate('sapphire/javascript/InlineFormAction.js',array('ID'=>$this->id()));
 		}
 		
-		return "<input type=\"submit\" name=\"action_{$this->name}\" value=\"{$this->title}\" id=\"{$this->id()}\" class=\"action$extraClass\" />";
+		return "<input type=\"submit\" name=\"action_{$this->name}\" value=\"{$this->title}\" id=\"{$this->id()}\" class=\"action{$this->extraClass}\" />";
 	}	
 	
 	function Title() { 
