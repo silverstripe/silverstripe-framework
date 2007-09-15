@@ -5,7 +5,7 @@ class Member extends DataObject {
 		'FirstName' => "Varchar",
 		'Surname' => "Varchar",
 		'Email' => "Varchar",
-		'Password' => "Varchar",
+		'Password' => "Varchar(64)", // support for up to SHA256!
 		'RememberLoginToken' => "Varchar(50)",
 		'NumVisit' => "Int",
 		'LastVisited' => 'Datetime',
@@ -13,7 +13,10 @@ class Member extends DataObject {
 		'AutoLoginHash' => 'Varchar(10)',
 		'AutoLoginExpired' => 'Datetime',
 		'BlacklistedEmail' => 'Boolean',
+		'PasswordEncryption' => "Enum('none', 'none')",
+		'Salt' => "Varchar(50)"
 	);
+
 	static $belongs_many_many = array(
 		"Groups" => "Group",
 
@@ -28,6 +31,26 @@ class Member extends DataObject {
 	static $indexes = array(
 		'Email' => true,
 	);
+
+
+	/**
+	 * This method is used to initialize the static database members
+	 *
+	 * Since PHP doesn't support any expressions for the initialization of
+	 * static member variables we need a method that does that.
+	 *
+	 * This method adds all supported encryption algorithms to the
+	 * PasswordEncryption Enum field.
+	 *
+	 * @todo Maybe it would be useful to define this in DataObject and call
+	 *       it automatically?
+	 */
+	public static function init_db_fields() {
+		self::$db['PasswordEncryption'] = "Enum(array('none', '" .
+			implode("', '", array_map("addslashes",
+																Security::get_encryption_algorithms())) .
+			"'), 'none')";
+	}
 
 
 	/**
@@ -280,6 +303,17 @@ class Member extends DataObject {
 	 * found update this record to merge with that member.
 	 */
 	function onBeforeWrite() {
+		if(isset($this->changed['Password']) && $this->changed['Password']) {
+			// Password was changed: encrypt the password according the settings
+			$encryption_details = Security::encrypt_password($this->Password);
+			$this->Password = $encryption_details['password'];
+			$this->Salt = $encryption_details['salt'];
+			$this->PasswordEncryption = $encryption_details['algorithm'];
+
+			$this->changed['Salt'] = true;
+			$this->changed['PasswordEncryption'] = true;
+		}
+
 		if($this->Email) {
 			if($this->ID) {
 				$idClause = "AND `Member`.ID <> $this->ID";
@@ -1087,5 +1121,8 @@ class Member_Validator extends RequiredFields {
 	}
 }
 
+// Initialize the static DB variables to add the supported encryption
+// algorithms to the PasswordEncryption Enum field
+Member::init_db_fields();
 
 ?>

@@ -27,10 +27,20 @@ class MemberAuthenticator extends Authenticator {
    */
   public function authenticate(array $RAW_data, Form $form = null) {
     $SQL_user = Convert::raw2sql($RAW_data['Email']);
-    $SQL_password = Convert::raw2sql($RAW_data['Password']);
 
-    $member = DataObject::get_one(
-        "Member", "Email = '$SQL_user' AND Password = '$SQL_password'");
+    $member = DataObject::get_one("Member",
+			"Email = '$SQL_user' AND Password IS NOT NULL");
+
+		if($member) {
+			$encryption_details =
+				Security::encrypt_password($RAW_data['Password'], $member->Salt,
+																	 $member->PasswordEncryption);
+
+			// Check if the entered password is valid
+			if(($member->Password != $encryption_details['password']))
+			  $member = null;
+		}
+
 
     if($member) {
       Session::clear("BackURL");

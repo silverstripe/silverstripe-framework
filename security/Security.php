@@ -15,7 +15,36 @@ class Security extends Controller {
 	 */
 	protected static $password;
 
+	/**
+	 * If set to TRUE to prevent sharing of the session across several sites
+	 * in the domain.
+	 *
+	 * @var bool
+	 */
 	protected static $strictPathChecking = false;
+
+	/**
+	 * Should passwords be stored encrypted?
+	 *
+	 * @var bool
+	 */
+	protected static $encryptPasswords = true;
+
+	/**
+	 * The password encryption algorithm to use if {@link $encryptPasswords}
+	 * is set to TRUE.
+	 *
+	 * @var string
+	 */
+	protected static $encryptionAlgorithm = 'sha1';
+
+	/**
+	 * Should a salt be used for the password encryption?
+	 *
+	 * @var bool
+	 */
+	protected static $useSalt = true;
+
 
 	/**
 	 * Register that we've had a permission failure trying to view the given page
@@ -45,9 +74,9 @@ class Security extends Controller {
 		// Prepare the messageSet provided
 		if(!$messageSet) {
 			$messageSet = array(
-				'default' => "That page is secured. Enter your email address and password and we will send you right along.",
-				'alreadyLoggedIn' => "You don't have access to this page.  If you have another password that can access that page, you can log in below.",
-				'logInAgain' => "You have been logged out.  If you would like to log in again, enter a username and password below.",
+				'default' => "That page is secured. Enter your credentials below and we will send you right along.",
+				'alreadyLoggedIn' => "You don't have access to this page.  If you have another account that can access that page, you can log in below.",
+				'logInAgain' => "You have been logged out.  If you would like to log in again, enter your credentials below.",
 			);
 		} else if(!is_array($messageSet)) {
 			$messageSet = array('default' => $messageSet);
@@ -388,6 +417,239 @@ class Security extends Controller {
 	static function getStrictPathChecking() {
 		return self::$strictPathChecking;
 	}
+
+
+	/**
+	 * Set if passwords should be encrypted or not
+	 *
+	 * @param bool $encrypt Set to TRUE if you want that all (new) passwords
+	 *                      will be stored encrypted, FALSE if you want to
+	 *                      store the passwords in clear text.
+	 */
+	public static function encrypt_passwords($encrypt) {
+		self::$encryptPasswords = (bool)$encrypt;
+	}
+
+
+	/**
+	 * Get a list of all available encryption algorithms
+	 *
+	 * This method tries to use PHP's hash_algos() function. If it is not
+	 * supported or it returns no algorithms, as a failback mechanism it tries
+	 * to use the md5() and sha1() function and returns them.
+	 *
+	 * @return array Returns an array of strings containing all supported
+	 *               encryption algorithms.
+	 */
+	public static function get_encryption_algorithms() {
+		$result = function_exists('hash_algos')
+			? hash_algos()
+			: array();
+
+		if(count($result) == 0) {
+			if(function_exists('md5'))
+				$result[] = 'md5';
+
+			if(function_exists('sha1'))
+				$result[] = 'sha1';
+		}
+
+		return $result;
+	}
+
+
+	/**
+	 * Set the password encryption algorithm
+	 *
+	 * @param string $algorithm One of the available password encryption
+	 *                          algorithms determined by
+	 *                          {@link Security::get_encryption_algorithms()}
+	 * @param bool $use_salt Set to TRUE if a random salt should be used to
+	 *                       encrypt the passwords, otherwise FALSE
+	 * @return bool Returns TRUE if the passed algorithm was valid, otherwise
+	 *              FALSE.
+	 */
+	public static function set_password_encryption_algorithm($algorithm,
+																													 $use_salt) {
+		if(in_array($algorithm, self::get_encryption_algorithms()) == false)
+		  return false;
+
+		self::$encryptionAlgorithm = $algorithm;
+		self::$useSalt = (bool)$use_salt;
+
+		return true;
+	}
+
+
+	/**
+	 * Get the the password encryption details
+	 *
+	 * The return value is an array of the following form:
+	 * <code>
+	 *   array('encrypt_passwords' => bool,
+	 *         'algorithm' => string,
+	 *         'use_salt' => bool)
+	 * </code>
+	 *
+	 * @return array Returns an associative array containing all the
+	 *               password encryption relevant information.
+	 */
+	public static function get_password_encryption_details() {
+		return array('encrypt_passwords' => self::$encryptPasswords,
+								 'algorithm' => self::$encryptionAlgorithm,
+								 'use_salt' => self::$useSalt);
+	}
+
+
+	/**
+	 * Encrypt a password
+	 *
+	 * Encrypt a password according to the current password encryption
+	 * settings.
+	 * Use {@link Security::get_password_encryption_details()} to retrieve the
+	 * current settings.
+	 * If the settings are so that passwords shouldn't be encrypted, the
+	 * result is simple the clear text password with an empty salt except when
+	 * a custom algorithm ($algorithm parameter) was passed.
+	 *
+	 * @param string $password The password to encrypt
+	 * @param string $salt Optional: The salt to use. If it is not passed, but
+	 *                     needed, the method will automatically create a
+	 *                     random salt that will then be returned as return
+	 *                     value.
+	 * @pram strin $algorithm Optional: Use another algorithm to encrypt the
+	 *                        password (so that the encryption algorithm can
+	 *                        be changed over the time).
+	 * @return mixed Returns an associative array containing the encrypted
+	 *               password and the used salt in the form
+	 *               <i>array('encrypted_password' => string, 'salt' =>
+	 *               string, 'algorithm' => string)</i>.
+	 *               If the passed algorithm is invalid, FALSE will be
+	 *               returned.
+	 *
+	 * @see encrypt_passwords()
+	 * @see set_password_encryption_algorithm()
+	 * @see get_password_encryption_details()
+	 */
+	public static function encrypt_password($password, $salt = null,
+																					$algorithm = null) {
+		if(strlen(trim($password)) == 0) {
+			// An empty password was passed, return an empty password an salt!
+			return array('password' => null,
+									 'salt' => null,
+									 'algorithm' => 'none');
+
+		} elseif((self::$encryptPasswords == false) || ($algorithm == 'none')) {
+			// The password should not be encrypted
+			return array('password' => substr($password, 0, 64),
+									 'salt' => null,
+									 'algorithm' => 'none');
+
+		} elseif(strlen(trim($algorithm)) != 0) {
+			// A custom encryption algorithm was passed, check if we can use it
+			if(in_array($algorithm, self::get_encryption_algorithms()) == false)
+				return false;
+
+		} else {
+			// Just use the default encryption algorithm
+			$algorithm = self::$encryptionAlgorithm;
+		}
+
+
+		// If no salt was provided but we need one we just generate a random one
+		if(strlen(trim($salt)) == 0)
+			 $salt = null;
+
+		if((self::$useSalt == true) && is_null($salt)) {
+			$salt = sha1(mt_rand()) . time();
+			$salt = substr(base_convert($salt, 16, 36), 0, 50);
+		}
+
+
+    // Encrypt the password
+		if(function_exists('hash')) {
+			$password = hash($algorithm, $password . $salt);
+		} else {
+			$password = call_user_func($algorithm, $password . $salt);
+		}
+
+		// Convert the base of the hexadecimal password to 36 to make it shorter
+		// In that way we can store also a SHA256 encrypted password in just 64
+		// letters.
+		$password = substr(base_convert($password, 16, 36), 0, 64);
+
+
+		return array('password' => $password,
+								 'salt' => $salt,
+								 'algorithm' => $algorithm);
+	}
+
+
+	/**
+	 * Encrypt all passwords
+	 *
+	 * Action to encrypt all *clear text* passwords in the database according
+	 * to the current settings.
+	 * If the current settings are so that passwords shouldn't be encrypted,
+	 * an explanation will be printed out.
+	 *
+	 * To run this action, the user needs to have administrator rights!
+	 */
+	function encryptallpasswords() {
+		// Only administrators can run this method
+		if(!Member::currentUser() || !Member::currentUser()->isAdmin()) {
+			Security::permissionFailure($this,
+				"This page is secured and you need administrator rights to access it. " .
+				"Enter your credentials below and we will send you right along.");
+			return;
+		}
+
+
+		if(self::$encryptPasswords == false) {
+			print "<h1>Password encryption disabled!</h1>\n";
+			print "<p>To encrypt your passwords change your password settings by adding\n";
+			print "<pre>Security::encrypt_passwords(true);</pre>\nto mysite/_config.php</p>";
+
+			return;
+		}
+
+
+		// Are there members with a clear text password?
+		$members = DataObject::get("Member",
+			"PasswordEncryption = 'none' AND Password IS NOT NULL");
+
+		if(!$members) {
+			print "<h1>No passwords to encrypt</h1>\n";
+			print "<p>There are no members with a clear text password that could be encrypted!</p>\n";
+
+			return;
+		}
+
+		// Encrypt the passwords...
+		print "<h1>Encrypting all passwords</h1>";
+		print '<p>The passwords will be encrypted using the &quot;' .
+			htmlentities(self::$encryptionAlgorithm) . '&quot; algorithm ';
+
+		print (self::$useSalt)
+			? "with a salt to increase the security.</p>\n"
+			: "without using a salt to increase the security.</p><p>\n";
+
+		foreach($members as $member) {
+			// Force the update of the member record, as new passwords get
+			// automatically encrypted according to the settings, this will do all
+			// the work for us
+			$member->forceChange();
+			$member->write();
+
+			print "  Encrypted credentials for member &quot;";
+			print htmlentities($member->getTitle()) . '&quot; (ID: ' . $member->ID .
+				'; E-Mail: ' . htmlentities($member->Email) . ")<br />\n";
+		}
+
+		print '</p>';
+	}
+
 }
+
 
 ?>

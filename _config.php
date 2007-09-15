@@ -66,4 +66,20 @@ Authenticator::registerAuthenticator('OpenIDAuthenticator');
 
 define('MCE_ROOT', 'jsparty/tiny_mce2/');
 
+/**
+ * Should passwords be encrypted (TRUE) or stored in clear text (FALSE)?
+ */
+Security::encrypt_passwords(true);
+
+
+/**
+ * Which algorithm should be used to encrypt? Should a salt be used to
+ * increase the security?
+ *
+ * You can get a list of supported algorithms by calling
+ * {@link Security::get_encryption_algorithms()}
+ */
+Security::set_password_encryption_algorithm('sha1', true);
+
+
 ?>
