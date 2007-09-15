@@ -1,22 +1,37 @@
 <?php
 
 /**
- * Generates the manifest file and keeps it fresh.
- * The manifest file is a PHP include that contains global variables that represent the collected
- * contents of the application: 
- * <ul><li>all classes</li>
- * <li>all templates</li>
- * <li>all _config.php files</li></ul>
- * Traversing the filesystem to collect this information on everypage
- * This information is cached so that it need not be regenerated on every pageview.
+ * ManifestBuilder
+ *
+ * The manifest file is a PHP include that contains global variables that
+ * represent the collected contents of the application:
+ *   - all classes
+ *   - all templates
+ *   - all _config.php files
+ *
+ * Traversing the filesystem to collect this information on everypage.
+ * This information is cached so that it need not be regenerated on every
+ * pageview.
  */
- 
+
+
+
+/**
+ * Define a constant for the name of the manifest file
+ */
 define("MANIFEST_FILE", TEMP_FOLDER . "/manifest" . str_replace(array("/",":", "\\"),"_", $_SERVER['SCRIPT_FILENAME']));
 
+
+
+/**
+ * ManifestBuilder
+ *
+ * The ManifestBuilder class generates the manifest file and keeps it fresh.
+ */
 class ManifestBuilder {
-	
+
 	static $restrict_to_modules = array();
-	
+
 	/**
 	 * @var array $ignore_files Full filenames (without directory-path) which
 	 * should be ignored by the manifest.
@@ -41,76 +56,92 @@ class ManifestBuilder {
 		'pear',
 	);
 	
+
 	/**
 	 * Returns true if the manifest file should be regenerated
+	 *
+	 * @return bool Returns TRUE if the manifest file should be regenerated,
+	 *              otherwise FALSE.
 	 */
 	static function staleManifest() {
-		/*if(Director::isDev() || Director::isTest()) $lastEdited = Filesystem::folderModTime(".", array('ss','php'));
-		else*/ $lastEdited = filemtime("../");
+		/*if(Director::isDev() || Director::isTest())
+			$lastEdited = Filesystem::folderModTime(".", array('ss','php'));
+		else*/
+			$lastEdited = filemtime("../");
 
-		return !file_exists(MANIFEST_FILE) 
-			|| (filemtime(MANIFEST_FILE) < $lastEdited) 
+		return !file_exists(MANIFEST_FILE)
+			|| (filemtime(MANIFEST_FILE) < $lastEdited)
 			|| (filemtime(MANIFEST_FILE) < time() - 3600)
 			|| isset($_GET['buildmanifest']) || isset($_GET['flush']);
 	}
-	
+
+
 	/**
-	 * Generates a new manifest file and saves it to MANIFEST_FILE
+	 * Generates a new manifest file and saves it to {@link MANIFEST_FILE}
 	 */
 	static function compileManifest() {
 
 		// Config manifest
-		$baseDir = dirname($_SERVER['SCRIPT_FILENAME']) . "/..";	
-		$baseDir = ereg_replace("/[^/]+/\\.\\.","",$baseDir);
+		$baseDir = dirname($_SERVER['SCRIPT_FILENAME']) . "/..";
+		$baseDir = ereg_replace("/[^/]+/\\.\\.", "", $baseDir);
 
-		// locate the exclude file
-		$topLevel = scandir( $baseDir );
-		
+		// locate and include the exclude files
+		$topLevel = scandir($baseDir);
 		foreach($topLevel as $file) {
 			$fullPath = $baseDir . '/' . $file;
-			
-			// echo $fullPath . '<br />';
-			
-			if( is_dir($fullPath . '/') && file_exists($fullPath . '/_exclude.php') )
+
+			if(is_dir($fullPath . '/') && file_exists($fullPath . '/_exclude.php'))
 				require_once($fullPath . '/_exclude.php');
 		}
-		
-		$classManifest = array();
-		
+
+
 		// Class manifest
-		if( is_array(self::$restrict_to_modules) && count(self::$restrict_to_modules) ) {
+		$classManifest = array();
+		if(is_array(self::$restrict_to_modules) && count(self::$restrict_to_modules)) {
+			// $restrict_to_modules is set, so we include only those specified
+			// modules
 			foreach(self::$restrict_to_modules as $module)
-				ManifestBuilder::getClassManifest($baseDir.'/'.$module, $classManifest); 
+				ManifestBuilder::getClassManifest($baseDir . '/' . $module,
+																					$classManifest);
 		} else {
-			// Only include directories if they have an _config.php file
+			// Include all directories which have an _config.php file but don't
+			// have an _manifest_exclude file
 			$topLevel = scandir($baseDir);
 			foreach($topLevel as $filename) {
-				if(is_dir("$baseDir/$filename") && file_exists("$baseDir/$filename/_config.php")) {
-					ManifestBuilder::getClassManifest("$baseDir/$filename", $classManifest);
+				if(is_dir("$baseDir/$filename") &&
+					   file_exists("$baseDir/$filename/_config.php") &&
+					   !file_exists("$baseDir/$filename/_manifest_exclude")) {
+					ManifestBuilder::getClassManifest("$baseDir/$filename",
+																						$classManifest);
 				}
 			}
 		}
-			
-		
-		$manifest = "\$_CLASS_MANIFEST = " . var_export($classManifest, true) . ";\n";
+
+
+		$manifest = "\$_CLASS_MANIFEST = " . var_export($classManifest, true) .
+			";\n";
 
 		// Load the manifest in, so that the autoloader works
 		global $_CLASS_MANIFEST;
 		$_CLASS_MANIFEST = $classManifest;
-		
+
 
 		// _config.php manifest
 		global $databaseConfig;
 		$topLevel = scandir($baseDir);
 		foreach($topLevel as $filename) {
-			if(is_dir("$baseDir/$filename/") && file_exists("$baseDir/$filename/_config.php")) {
+			if(is_dir("$baseDir/$filename/") &&
+				   file_exists("$baseDir/$filename/_config.php") &&
+					 !file_exists("$baseDir/$filename/_manifest_exclude")) {
 				$manifest .= "require_once(\"$baseDir/$filename/_config.php\");\n";
-				// Include this so that we're set up for connecting to the database in the rest of the manifest builder
-				require_once("$baseDir/$filename/_config.php");		
+				// Include this so that we're set up for connecting to the database
+				// in the rest of the manifest builder
+				require_once("$baseDir/$filename/_config.php");
 			}
 		}
 
-		if(!project()) user_error("\$project isn't set", E_USER_WARNING);
+		if(!project())
+			user_error("\$project isn't set", E_USER_WARNING);
 
 		// Template & CSS manifest
 		$templateManifest = array();
@@ -142,35 +173,45 @@ class ManifestBuilder {
 		$manifest .= "\$_TEMPLATE_MANIFEST = " . var_export($templateManifest, true) . ";\n";
 		$manifest .= "\$_CSS_MANIFEST = " . var_export($cssManifest, true) . ";\n";
 		DB::connect($databaseConfig);
+				
+		if(DB::isActive()) {
+			// Database manifest
+			$allClasses = ManifestBuilder::allClasses($classManifest);
 
-		// Database manifest				
-		$allClasses = ManifestBuilder::allClasses($classManifest);
+			$manifest .= "\$_ALL_CLASSES = " . var_export($allClasses, true) . ";\n";
 
-		$manifest .= "\$_ALL_CLASSES = " . var_export($allClasses, true) . ";\n";
-
-		global $_ALL_CLASSES;
-		$_ALL_CLASSES = $allClasses;
+			global $_ALL_CLASSES;
+			$_ALL_CLASSES = $allClasses;
+		} else {
+			if(!isset($_REQUEST['from_installer']))
+				echo '<li>Waiting until the database is created before compiling ' .
+					'the manifest</li>';
+		}
 
 		// Write manifest to disk
 		$manifest = "<?php\n$manifest\n?>";
 
-		if($fh = fopen(MANIFEST_FILE,"w")) {			
-
+		if($fh = fopen(MANIFEST_FILE, "w")) {
 			fwrite($fh, $manifest);
 			fclose($fh);
-
 		} else {
-			die("Cannot write manifest file!  Check permissions of " . MANIFEST_FILE);
+			die("Cannot write manifest file! Check permissions of " .
+					MANIFEST_FILE);
 		}
 	}
 
+
 	/**
-	 * Generates the class manifest - a list of all the PHP files in the application
+	 * Generates the class manifest - a list of all the PHP files in the
+	 * application
+	 *
+	 * @param string $folder The folder to traverse (recursively)
+	 * @pram array $classMap The already built class map
 	 */
 	private static function getClassManifest($folder, &$classMap) {
 		$items = scandir($folder);
 		if($items) foreach($items as $item) {
-			// ignore files such as index.php
+			// Skip some specific PHP files
 			if(in_array($item, self::$ignore_files)) continue;
 			
 			// ignore hidden files and folders
@@ -184,6 +225,9 @@ class ManifestBuilder {
 			 
 			// ignore certain directories 
 			if(is_dir("$folder/$item") && in_array($item, self::$ignore_folders)) continue;
+
+			// ignore directories with _manifest_exlude file
+			if(is_dir("$folder/$item") && file_exists("$folder/$item/_manifest_exclude")) continue;
 			
 			// i18n: ignore language files (loaded on demand)
 			if($item == 'lang' && is_dir("$folder/$item") && ereg_replace("/[^/]+/\\.\\.","",$folder.'/..') == Director::baseFolder()) continue; 
@@ -214,9 +258,11 @@ class ManifestBuilder {
 
 		}
 	}
-	
+
+
 	/**
-	 * Generates the template/css manifest - a list of all the .SS & .CSS files in the application
+	 * Generates the template manifest - a list of all the .SS files in the
+	 * application
 	 */
 	private static function getTemplateManifest($baseDir, $folder, &$templateManifest, &$cssManifest, $themeName = null) {
 		$items = scandir("$baseDir/$folder");
@@ -249,13 +295,23 @@ class ManifestBuilder {
 			}
 		}
 	}
-	
+
+
+	/**
+	 * Include everything, so that actually *all* classes are available and
+	 * build a map of classes and their subclasses and the information if
+	 * the class has a database table
+	 *
+	 * @return array Returns an array that holds all class relevant
+	 *               information.
+	 */
 	private static function allClasses($classManifest) {
-		
+
 		// Include everything, so we actually have *all* classes
 		foreach($classManifest as $file) {
 			$b = basename($file);
-			if($b != 'cli-script.php' && $b != 'main.php') include_once($file);
+			if($b != 'cli-script.php' && $b != 'main.php')
+			  include_once($file);
 		}
 		
 		if(DB::isActive()) {
@@ -268,25 +324,36 @@ class ManifestBuilder {
 		
 		// Build a map of classes and their subclasses
 		$_classes = get_declared_classes();
-		
 		foreach($_classes as $class) {
 			$allClasses['exists'][$class] = $class;
-			if(isset($tables[strtolower($class)])) $allClasses['hastable'][$class] = $class;
+
+			if(isset($tables[strtolower($class)]))
+				$allClasses['hastable'][$class] = $class;
+
 			foreach($_classes as $subclass) {
-				if(is_subclass_of($class, $subclass)) $allClasses['parents'][$class][$subclass] = $subclass;
-				if(is_subclass_of($subclass, $class)) $allClasses['children'][$class][$subclass] = $subclass;
+				if(is_subclass_of($class, $subclass))
+					$allClasses['parents'][$class][$subclass] = $subclass;
+
+				if(is_subclass_of($subclass, $class))
+					$allClasses['children'][$class][$subclass] = $subclass;
 			}
 		}
-		
+
 		return $allClasses;
 	}
-	
+
+
+	/**
+	 * Include all files of the class manifest so that that actually *all*
+	 * classes are available
+	 */
 	static function includeEverything() {
 		global $_CLASS_MANIFEST;
+
 		foreach($_CLASS_MANIFEST as $filename) {
-			if( preg_match( '/.*cli-script\.php$/', $filename ) )
+			if(preg_match('/.*cli-script\.php$/', $filename))
 				continue;
-				
+
 			require_once($filename);
 		}
 	}
@@ -343,4 +410,6 @@ class ManifestBuilder {
 	}
 
 }
+
+
 ?>
