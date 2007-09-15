@@ -63,7 +63,7 @@ class MemberAuthenticator extends Authenticator {
    * @return string Returns the name of the authentication method.
    */
   public static function getName() {
-		return "Email & Password";
+		return "Email &amp; Password";
 	}
 }
 
