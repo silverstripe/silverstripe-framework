@@ -27,6 +27,12 @@ TableListField.prototype = {
 		
 		rules['#'+this.id+' div.PageControls a'] = {onclick: this.paginate.bind(this)};
 		
+		rules['#'+this.id+' table.data tr td.markingcheckbox'] = {
+			onclick : function(e) {
+			    // do nothing for clicks in marking box cells (e.g. if checkbox is missed)
+			}
+		};
+
 		// initialize summary (if needed)
 		// TODO Breaks with nested divs
 		var summaryCols = $$('tfoot tr.summary td', this);
