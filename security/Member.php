@@ -107,7 +107,7 @@ class Member extends DataObject {
 	/**
 	 * Generate an auto login hash
 	 *
-	 * @todo This is relative insecure, check if we should fix it
+	 * @todo This is relative insecure, check if we should fix it (Markus)
 	 */
 	function generateAutologinHash() {
 		$linkHash = sprintf('%10d', time() );
@@ -231,8 +231,6 @@ class Member extends DataObject {
 	 *
 	 * @param bool $val Set to TRUE if the address should be added to the
 	 *                  blacklist, otherwise to FALSE.
-	 * @return
-	 * @todo Check for what the parameter $val is needed! (Markus)
 	 */
 	function setBlacklistedEmail($val) {
 		if($val && $this->Email) {
@@ -406,7 +404,6 @@ class Member extends DataObject {
 	 *
 	 * @return string Returns the first- and surname of the member. If the ID
 	 *                of the member is equal 0, only the surname is returned.
-	 * @todo Check for what this method is used! (Markus)
 	 */
 	public function getTitle() {
 		if($this->getField('ID') === 0)
@@ -454,7 +451,11 @@ class Member extends DataObject {
 
 
 	/**
-	 * @todo Figure out what this function does and document it! (Markus)
+	 * Get a "many-to-many" map that holds for all members their group
+	 * memberships
+	 *
+	 * @return Member_GroupSet Returns a map holding for all members their
+	 *                         group memberships.
 	 */
 	public function Groups() {
 		$groups = $this->getManyManyComponents("Groups");
@@ -469,7 +470,8 @@ class Member extends DataObject {
 		$groupIDs = $groups->column();
 		$collatedGroups = array();
 		foreach($groups as $group) {
-			$collatedGroups = array_merge((array)$collatedGroups, $group->collateAncestorIDs());
+			$collatedGroups = array_merge((array)$collatedGroups,
+																		$group->collateAncestorIDs());
 		}
 
 		$table = "Group_Members";
@@ -482,14 +484,22 @@ class Member extends DataObject {
 			$result = new Member_GroupSet();
 		}
 
-		$result->setComponentInfo("many-to-many", $this, "Member", $table, "Group");
+		$result->setComponentInfo("many-to-many", $this, "Member", $table,
+															"Group");
 
 		return $result;
 	}
 
 
 	/**
-	 * @todo Figure out what this function does and document it! (Markus)
+	 * Get member SQLMap
+	 *
+	 * @param string $filter Filter for the SQL statement (WHERE clause)
+	 * @param string $sort Sorting function (ORDER clause)
+	 * @param string $blank Shift a blank member in the items
+	 * @return SQLMap Returns an SQLMap that returns all Member data.
+	 *
+	 * @todo Improve documentation of this function! (Markus)
 	 */
 	public function map($filter = "", $sort = "", $blank="") {
 		$ret = new SQLMap(singleton('Member')->extendedSQL($filter, $sort));
@@ -500,12 +510,21 @@ class Member extends DataObject {
 
 			$ret->getItems()->shift($blankMember);
 		}
+
 		return $ret;
 	}
 
 
 	/**
-	 * @todo Figure out what this function does and document it! (Markus)
+	 * Get a member SQLMap of members in specific groups
+	 *
+	 * @param mixed $groups Optional groups to include in the map. If NULL is
+	 *                      passed, all groups are returned, i.e.
+	 *                      {@link map()} will be called.
+	 * @return SQLMap Returns an SQLMap that returns all Member data.
+	 * @see map()
+	 *
+	 * @todo Improve documentation of this function! (Markus)
 	 */
 	public static function mapInGroups($groups = null) {
 		if(!$groups)
