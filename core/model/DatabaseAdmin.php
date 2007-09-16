@@ -123,7 +123,7 @@ class DatabaseAdmin extends Controller {
 	 */
 	function doBuild($quiet = false, $populate = true) {
 		$conn = DB::getConn();
-		
+
 		if($quiet) {
 			DB::quiet();
 		} else {
@@ -170,7 +170,7 @@ class DatabaseAdmin extends Controller {
 		$conn->endSchemaUpdate();
 
 		ManifestBuilder::update_db_tables();
-		
+
 		if($populate) {
 			if(!$quiet) {
 				echo '<p><b>Creating database records</b></p>';
@@ -189,7 +189,8 @@ class DatabaseAdmin extends Controller {
 			}
 		}
 
-		touch(TEMP_FOLDER . '/database-last-generated-' .str_replace(array('\\','/',':'),'.', Director::baseFolder()));
+		touch(TEMP_FOLDER . '/database-last-generated-' .
+					str_replace(array('\\', '/', ':'), '.', Director::baseFolder()));
 
 		if(isset($_REQUEST['from_installer'])) {
 			echo "OK";
