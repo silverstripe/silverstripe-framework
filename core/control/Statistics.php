@@ -16,7 +16,7 @@ class Statistics extends Controller {
 	{
 
 		$top = <<<END
-<div id="trendchart">
+<div id="trendchart" style="display: none">
 <h2>Trends</h2>
 <div><canvas id="chart" height="400" width="700"></canvas></div>
 <div id="chart_legend"><legend>Legend</legend></div>
@@ -143,8 +143,9 @@ END;
 	static function UserRecordTable() {
 		$records = DataObject::get('Member');
 		$top = <<<END
-		<div id="usertable">
+		<div id="usertable" style="display: none">
 		<h2>Registered Users</h2>
+		<p><a href="$baseURL/admin/statistics/usercsv">Export as CSV</a></p>
 		<table class="sortable-onload-1 rowstyle-alt no-arrow paginate-10 statstable" border="0" cellspacing="1" cellpadding="0">
 			<thead>
 				<tr><th class="sortable-numeric">ID</th><th class="sortable-text">Email</th><th class="sortable-sortDatetime">Joined</th></tr>
@@ -177,9 +178,9 @@ END;
 	static function getRecentViews($limit = 15) {
 		$records = DataObject::get('PageView', null, 'Created DESC', null, $limit);
 		$top = <<<END
-		<div id="viewtable">
+		<div id="recentviewtable">
 		<h2>Recent Page Views</h2>
-		<table class="sortable-onload-1 rowstyle-alt no-arrow paginate-10 statstable" border="0" cellspacing="0" cellpadding="0">
+		<table class="sortable-onload-1 rowstyle-alt no-arrow paginate-10 statstable" border="0" cellspacing="1" cellpadding="0">
 			<thead>
 				<tr><th class="sortable-numeric">ID</th><th class="sortable-sortDatetime">Time</th><th class="sortable-text">Browser</th><th class="sortable-text">OS</th><th>User</th><th class="sortable-text">Page</th></tr>
 			</thead>
@@ -255,8 +256,9 @@ END;
 				$records = DataObject::get('PageView');
 		}
 		$top = <<<END
-		<div id="viewtable">
+		<div id="viewtable" style="display: none">
 		<h2>Page Views</h2>
+		<p><a href="$baseURL/admin/statistics/viewcsv">Export as CSV</a></p>
 		<table class="sortable-onload-1 rowstyle-alt no-arrow paginate-10 statstable" border="0" cellspacing="1" cellpadding="0">
 			<thead>
 				<tr><th class="sortable-numeric">ID</th><th class="sortable-sortDatetime">Time</th><th class="sortable-text">Browser</th><th class="sortable-text">OS</th><th class="sortable-text">User</th><th class="sortable-text">Page</th></tr>
@@ -284,7 +286,7 @@ END;
 
 	static function BrowserChart($type = "Pie", $color = "blue") {
 		$top = <<<END
-<div id="browserchart">
+<div id="browserchart" style="display: none">
 <h2>Browsers</h2>
 <div><canvas id="bchart" height="400" width="700"></canvas></div>
 </div>
@@ -347,7 +349,7 @@ END;
 
 	static function OSChart($type = "Pie", $color = "blue") {
 		$top = <<<END
-<div id="oschart">
+<div id="oschart" style="display: none">
 <h2>Operating Systems</h2>
 <div><canvas id="ochart" height="400" width="700"></canvas></div>
 </div>
@@ -410,7 +412,7 @@ END;
 
 	static function ActivityChart($type = "Pie", $color = "blue") {
 		$top = <<<END
-<div id="uacchart">
+<div id="uacchart" style="display: none">
 <h2>User Activity</h2>
 <div><canvas id="uchart" height="400" width="700"></canvas></div>
 </div>
@@ -472,6 +474,79 @@ END;
 
 
 		return $top . $ds . "\n};\n\n" . $opts . "\n\n" . $bot;
+	}
+
+	static function getViewCSV($time = 'all') {
+		$data = "ID, ClassName, Created, LastEdited, Browser, FromExternal, Referrer, SearchEngine, Keywords, OS, PageID, UserID, BrowserVersion, IP\n";
+
+		switch($time) {
+			case 'all':
+				$records = DataObject::get('PageView');
+				break;
+			case 'year':
+				$pt = time() - 31556926;
+				$pt = date("Y-m-d H:i:s", $pt);
+				$ct = time() + 10;
+				$ct = date("Y-m-d H:i:s", $ct);
+				$records = DataObject::get('PageView', "Created >= '$pt' AND Created <= '$ct'");
+				break;
+			case 'month':
+				$pt = time() - 2629744;
+				$pt = date("Y-m-d H:i:s", $pt);
+				$ct = time() + 10;
+				$ct = date("Y-m-d H:i:s", $ct);
+				$records = DataObject::get('PageView', "Created >= '$pt' AND Created <= '$ct'");
+				break;
+			case 'week':
+				$pt = time() - 604800;
+				$pt = date("Y-m-d H:i:s", $pt);
+				$ct = time() + 10;
+				$ct = date("Y-m-d H:i:s", $ct);
+				$records = DataObject::get('PageView', "Created >= '$pt' AND Created <= '$ct'");
+				break;
+			case 'day':
+				$pt = time() - 86400;
+				$pt = date("Y-m-d H:i:s", $pt);
+				$ct = time() + 10;
+				$ct = date("Y-m-d H:i:s", $ct);
+				$records = DataObject::get('PageView', "Created >= '$pt' AND Created <= '$ct'");
+				break;
+			case 'hour':
+				$pt = time() - 3600;
+				$pt = date("Y-m-d H:i:s", $pt);
+				$ct = time() + 10;
+				$ct = date("Y-m-d H:i:s", $ct);
+				$records = DataObject::get('PageView', "Created >= '$pt' AND Created <= '$ct'");
+				break;
+			case 'minute':
+				$pt = time() - 60;
+				$pt = date("Y-m-d H:i:s", $pt);
+				$ct = time() + 10;
+				$ct = date("Y-m-d H:i:s", $ct);
+				$records = DataObject::get('PageView', "Created >= '$pt' AND Created <= '$ct'");
+				break;
+			default:
+				$records = DataObject::get('PageView');
+		}
+
+		foreach($records as $x) {
+			$r = $x->toMap();
+			$data .= implode(', ', $r) . "\n";
+		}
+
+		return $data;
+	}
+
+	static function getUserCSV() {
+		$data = "ID, ClassName, Created, LastEdited, FirstName, Surname, Email, Password, NumVisit, LastVisited, Bounced, AutoLoginHash, AutoLoginExpired, BlacklistedEmail, RememberLoginToken, IdentityURL, PasswordEncryption, Salt\n";
+
+		$records = DataObject::get('Member');
+
+		foreach($records as $x) {
+			$r = $x->toMap();
+			$data .= implode(', ', $r) . "\n";
+		}
+		return $data;
 	}
 
 }
