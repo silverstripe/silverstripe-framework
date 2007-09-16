@@ -57,7 +57,7 @@ END;
 
 				$sum = 0;
 
-				$ds .= "{$class}Set: [";
+				$ds .= "{$class}: [";
 
 				for($i = 1; $i <= $days; $i++) {
 
@@ -328,6 +328,135 @@ END;
 
 		$opts = <<<END
 var boptions = {
+
+	axisLabelFontSize:		10,
+
+
+	padding: {left: 30, right: 0, top: 10, bottom: 30},
+
+	backgroundColor: '#cccccc',
+
+	colorScheme: '{$color}',\n\n
+
+END;
+		$opts .= $xt . "]\n};";
+
+
+		return $top . $ds . "\n};\n\n" . $opts . "\n\n" . $bot;
+	}
+
+	static function OSChart($type = "Pie", $color = "blue") {
+		$top = <<<END
+<div id="oschart">
+<h2>Operating Systems</h2>
+<div><canvas id="ochart" height="400" width="700"></canvas></div>
+</div>
+
+		<script type="text/javascript">\n
+END;
+
+		$bot = <<<END
+var ochart = new Plotr.{$type}Chart('ochart', ooptions);
+
+		ochart.addDataset(ochartdata);
+
+
+		ochart.render();
+
+		</script>
+END;
+
+		$ds = "var ochartdata = { \n'Set': [";
+
+		$records = DataObject::get('PageView');
+		$oss = array();
+		foreach($records as $r) {
+			$ra = $r->toMap();
+			$cb = $ra['OS'];
+			if($oss[$cb] >= 1) {
+				$oss[$cb]++;
+			} else {
+				$oss[$cb] = 1;
+			}
+		}
+
+		$xt = "xTicks: [";
+		$i = 0;
+		foreach($oss as $bn => $bc) {
+			$ds .= "[{$i}, {$bc}], ";
+			$xt .= "{v:" . $i . ", label:'" . $bn . "'}, ";
+			$i++;
+		}
+		$ds .= "]\n";
+
+		$opts = <<<END
+var ooptions = {
+
+	axisLabelFontSize:		10,
+
+
+	padding: {left: 30, right: 0, top: 10, bottom: 30},
+
+	backgroundColor: '#cccccc',
+
+	colorScheme: '{$color}',\n\n
+
+END;
+		$opts .= $xt . "]\n};";
+
+
+		return $top . $ds . "\n};\n\n" . $opts . "\n\n" . $bot;
+	}
+
+	static function ActivityChart($type = "Pie", $color = "blue") {
+		$top = <<<END
+<div id="uacchart">
+<h2>User Activity</h2>
+<div><canvas id="uchart" height="400" width="700"></canvas></div>
+</div>
+
+		<script type="text/javascript">\n
+END;
+
+		$bot = <<<END
+var uacchart = new Plotr.{$type}Chart('uchart', uacoptions);
+
+		uacchart.addDataset(uacchartdata);
+
+
+		uacchart.render();
+
+		</script>
+END;
+
+		$ds = "var uacchartdata = { \n'Set': [";
+
+		$records = DataObject::get('PageView');
+		$users = array();
+		foreach($records as $r) {
+			$ra = $r->toMap();
+			$cb = $ra['UserID'];
+			if($cb == -1) {
+				continue;
+			}
+			if($users[$cb] >= 1) {
+				$users[$cb]++;
+			} else {
+				$users[$cb] = 1;
+			}
+		}
+
+		$xt = "xTicks: [";
+		$i = 0;
+		foreach($users as $bn => $bc) {
+			$ds .= "[{$i}, {$bc}], ";
+			$xt .= "{v:" . $i . ", label:'" . $bn . "'}, ";
+			$i++;
+		}
+		$ds .= "]\n";
+
+		$opts = <<<END
+var uacoptions = {
 
 	axisLabelFontSize:		10,
 
