@@ -413,7 +413,7 @@ class Hierarchy extends DataObjectDecorator {
 					}
 					
 					if(isset($idxStageChildren)) {
-						$foundInLive = Versioned::get_by_stage( $baseClass, 'Live', "`{$baseClass}_Live`.`ID` IN (" . implode(",", array_keys($idxStageChildren)) . ")", "" );
+						$foundInLive = Versioned::get_by_stage( $baseClass, 'Live', "`{$baseClass}`.`ID` IN (" . implode(",", array_keys($idxStageChildren)) . ")", "" );
 					}
 					
 					if(isset($idxLiveChildren)) {
@@ -503,7 +503,7 @@ class Hierarchy extends DataObjectDecorator {
 	public function liveChildren($showAll = false) {
 		$extraFilter = $showAll ? '' : " AND ShowInMenus = 1";
 		$baseClass = ClassInfo::baseDataClass($this->owner->class);
-		return Versioned::get_by_stage($baseClass, "Live", "`{$baseClass}_Live`.`ParentID` = " . (int)$this->owner->ID . " AND `{$baseClass}_Live`.ID != " . (int)$this->owner->ID. $extraFilter, "");
+		return Versioned::get_by_stage($baseClass, "Live", "`{$baseClass}`.`ParentID` = " . (int)$this->owner->ID . " AND `{$baseClass}`.ID != " . (int)$this->owner->ID. $extraFilter, "");
 	}
 	
 	/**
