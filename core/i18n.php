@@ -710,8 +710,11 @@ class i18n extends Controller {
 	 * @return array Map of languages in the form langCode => langName
 	 */
 	static function get_existing_languages($className = 'SiteTree', $where = '') {
+		if(!Translatable::is_enabled()) return false;
+		
 		$query = new SQLQuery('Lang',$className.'_lang',$where,"",'Lang');
-		$langlist = array_merge(array(Translatable::default_lang()), (array)$query->execute()->column());
+		$dbLangs = $query->execute()->column();
+		$langlist = array_merge((array)Translatable::default_lang(), (array)$dbLangs);
 		$returnMap = array();
 		$allCodes = array_merge(i18n::$allLocales, i18n::$commonLanguages);
 		foreach ($langlist as $langCode) {
@@ -762,10 +765,13 @@ class i18n extends Controller {
 	 * @param string $module Module's name
 	 */
 	protected static function process_module($baseDir, $module) {	
+    	if(!Translatable::is_enabled()) return false;
+    	
     	// Only search for text in folder with a _config.php file (which means they are modules)  
 		if(is_dir("$baseDir/$module") && is_file("$baseDir/$module/_config.php") 
 		&& !in_array($module, array('sapphire','jsparty')) && substr($module,0,1) != '.') {  
 
+			$fileList = array();
 			i18n::get_files_rec("$baseDir/$module/code", $fileList);
 			$mst = '';
 			foreach($fileList as $file) {
@@ -795,7 +801,7 @@ class i18n extends Controller {
 					echo "Created file: $langFolder/en_US.php<br />";
 		
 				} else {
-					die("Cannot write language file! Please check permissions of $langFolder/en_US.php");
+					user_error("Cannot write language file! Please check permissions of $langFolder/en_US.php", E_USER_ERROR);
 				}
 			}
 		}
@@ -960,7 +966,7 @@ class i18n extends Controller {
 	 * This method will delete every SiteTree instance in the given language
 	 */
 	public function removelang() {
-		if (!Permission::check("ADMIN")) die("You must be an admin to remove a language");
+		if (!Permission::check("ADMIN")) user_error("You must be an admin to remove a language", E_USER_ERROR);
 		$translatedToDelete = Translatable::get_by_lang('SiteTree',$this->urlParams['ID']);
 		foreach ($translatedToDelete as $object) {
 			$object->delete();
@@ -976,7 +982,7 @@ class i18n extends Controller {
 	 */	
 	public function textcollector() {
 	
-		if (!Permission::check("ADMIN")) die("You must be an admin to enable text collector mode");
+		if (!Permission::check("ADMIN")) user_error("You must be an admin to enable text collector mode", E_USER_ERROR);
 		echo "Collecting text...<br /><br />";
 		
 		//Calculate base directory
