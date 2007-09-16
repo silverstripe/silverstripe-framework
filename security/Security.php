@@ -192,11 +192,13 @@ class Security extends Controller {
 	 * @return string Returns the "login" page as HTML code.
 	 */
 	public function login() {
-		Requirements::javascript("jsparty/behaviour.js");
 		Requirements::javascript("jsparty/loader.js");
 		Requirements::javascript("jsparty/prototype.js");
+		Requirements::javascript("jsparty/behaviour.js");
 		Requirements::javascript("jsparty/prototype_improvements.js");
+		Requirements::javascript("jsparty/tabstrip/tabstrip.js");
 		Requirements::javascript("jsparty/scriptaculous/effects.js");
+		Requirements::css("jsparty/tabstrip/tabstrip.css");
 
 		$customCSS = project() . '/css/tabs.css';
 		if(Director::fileExists($customCSS)) {
