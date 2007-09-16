@@ -13,10 +13,28 @@ class Permission extends DataObject {
 	);
 
 	/**
+	 * Permissions declared as belonging to the system. This is used to provide
+	 * permission matrices.
+	 */
+	static $declared_permissions = null;
+	
+	protected static $declared_permissions_list = null;
+	
+	/**
 	 * @var $strict_checking Boolean Method to globally disable "strict" checking,
 	 * which means a permission will be granted if the key does not exist at all.
 	 */
 	static $strict_checking = true;
+	
+	/**
+	 * If this setting is set, then permissions can imply other permissions
+	 */
+	static $implied_permissions = false;
+	
+	/**
+	 * Set to false to prevent the 'ADMIN' permission from implying all permissions in the system
+	 */
+	static $admin_implies_all = true;
 	
 	/**
 	 * Check that the current member has the given permission
@@ -49,6 +67,12 @@ class Permission extends DataObject {
 	 */
 	static function checkMember($memberID, $code, $arg = "any", $strict = true) {
 		// Group component
+		$perms_list = self::get_declared_permissions_list();
+		
+		if(self::$declared_permissions && is_array($perms_list) && !in_array($code, $perms_list)) {
+			// user_error("Permission '$code' has not been declared. Use Permission::declare_permissions() to add this permission", E_USER_WARNING);
+		}
+		
 		$groupList = self::groupList($memberID);
 		if($groupList) {
 			$groupCSV = implode(", ", $groupList);
@@ -250,6 +274,66 @@ class Permission extends DataObject {
 		echo "<pre>";
 		print_r($codes);
 	}
+	
+	/**
+	 * Declare an array of permissions for the system. Permissions can be grouped by nesting arrays
+	 * scalar values are always treated as permissions.
+	 * 
+	 * @param $permArray A (possibly nested) array of permissions to declare for the system.
+	 */
+	static function declare_permissions($permArray) {
+		if(is_array(self::$declared_permissions)) self::$declared_permissions = array_merge_recursive(self::$declared_permissions, $permArray);
+		else self::$declared_permissions = $permArray;
+	}
+	
+	/**
+	 * Get a linear list of the permissions in the system.
+	 */
+	static function get_declared_permissions_list() {
+		if(!self::$declared_permissions) return null;
+		
+		if(self::$declared_permissions_list) return self::$declared_permissions_list;
+		
+		self::$declared_permissions_list = array();
+		
+		self::traverse_declared_permissions(self::$declared_permissions, self::$declared_permissions_list);
+		return self::$declared_permissions_list;
+	}
+	
+	/**
+	 * Recursively traverse the nested list of declared permissions and create a linear list.
+	 * 
+	 * @param $declared Nested structure of permissions.
+	 * @param $list List of permissions in the structure
+	 */
+	protected static function traverse_declared_permissions($declared, &$list) {
+		if(!is_array($declared)) return;
+		
+		foreach($declared as $perm => $value) {
+			if($value instanceof Permission_Group) {
+				$list[] = $value->getName();
+				self::traverse_declared_permissions($value->getPermissions(), &$list);
+			} else $list[$perm] = $value;
+		}
+	}
 }
 
+class Permission_Group {
+	
+	protected $name;
+	protected $permissions = array();
+	
+	function __construct($name, $permissions) {
+		$this->name = $name;
+		$this->permissions = $permissions;
+	}
+	
+	function getName() {
+		return $this->name;
+	}
+	
+	function getPermissions() {
+		return $this->permissions;
+	}
+}
 ?>
