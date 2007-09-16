@@ -1,20 +1,47 @@
 <?php
 class Permission extends DataObject {
 
+  // the (1) after Type specifies the DB default value which is needed for
+	// upgrades from older SilverStripe versions
 	static $db = array(
 		"Code" => "Varchar",
 		"Arg" => "Int",
+		"Type" => "Int(1)"
 	);
 	static $has_one = array(
-		"Group" => "Group",
+		"Group" => "Group"
 	);
 	static $indexes = array(
-		"Code" => true,
+		"Code" => true
+	);
+	static $defaults = array(
+		"Type" => 1
 	);
 
 	/**
-	 * Permissions declared as belonging to the system. This is used to provide
-	 * permission matrices.
+	 * This is the value to use for the "Type" field if a permission should be
+	 * granted.
+	 */
+	const GRANT_PERMISSION = 1;
+
+	/**
+	 * This is the value to use for the "Type" field if a permission should be
+	 * denied.
+	 */
+	const DENY_PERMISSION = -1;
+
+	/**
+	 * This is the value to use for the "Type" field if a permission should be
+	 * inherited.
+	 */
+	const INHERIT_PERMISSION = 0;
+
+
+	/**
+	 * Method to globally disable "strict" checking, which means a permission
+	 * will be granted if the key does not exist at all.
+	 *
+	 * @var bool
 	 */
 	static $declared_permissions = null;
 
@@ -129,12 +156,15 @@ class Permission extends DataObject {
 
 			// Raw SQL for efficiency
 			$permission = DB::query("
-				SELECT ID
-				FROM Permission
-				WHERE (Code IN ($SQL_codeList $adminFilter)
-					AND GroupID IN ($groupCSV)
-					$argClause
-			")->value();
+					SELECT ID
+					FROM Permission
+					WHERE (
+						Code IN ($SQL_codeList $adminFilter)
+						AND Type = " . self::GRANT_PERMISSION . "
+						AND GroupID IN ($groupCSV)
+						$argClause
+					)
+				")->value();
 			
 			if($permission)
 				return $permission;
@@ -142,8 +172,15 @@ class Permission extends DataObject {
 
 			// Strict checking disabled?
 			if(!self::$strict_checking || !$strict) {
-				if(!DB::query("SELECT COUNT(*) FROM Permission " .
-												"WHERE (Code IN '$code')'")->value()) {
+				$hasPermission = DB::query("
+					SELECT COUNT(*) 
+					FROM Permission 
+					WHERE (
+						(Code IN '$code')' 
+						AND (Type = " . self::GRANT_PERMISSION . ")
+					)
+				")->value();
+				if(!$hasPermission) {
 					return true;
 				}
 			}
@@ -210,6 +247,41 @@ class Permission extends DataObject {
 		$perm = new Permission();
 		$perm->GroupID = $groupID;
 		$perm->Code = $code;
+		$perm->Type = self::GRANT_PERMISSION;
+
+		// Arg component
+		switch($arg) {
+			case "any":
+				break;
+			case "all":
+				$perm->Arg = -1;
+			default:
+				if(is_numeric($arg)) {
+					$perm->Arg = $arg;
+				} else {
+					use_error("Permission::checkMember: bad arg '$arg'",
+										E_USER_ERROR);
+				}
+		}
+
+		$perm->write();
+		return $perm;
+	}
+
+
+	/**
+	 * Deny the given permission code/arg to the given group
+	 *
+	 * @param int $groupID The ID of the group
+	 * @param string $code The permission code
+	 * @param string Optional: The permission argument (e.g. a page ID).
+	 * @returns Permission Returns the new permission object.
+	 */
+	public static function deny($groupID, $code, $arg = "any") {
+		$perm = new Permission();
+		$perm->GroupID = $groupID;
+		$perm->Code = $code;
+		$perm->Type = self::DENY_PERMISSION;
 
 		// Arg component
 		switch($arg) {
@@ -275,14 +347,16 @@ class Permission extends DataObject {
 	public static function get_members_by_permission($code) {
 		$groupIDs = array();
         
-        if(is_array($code)) $SQL_filter = "Permission.Code IN ('" . implode("','", Convert::raw2sql($code)) . "')";
-        else $SQL_filter = "Permission.Code = '" . Convert::raw2sql($code) . "'";
+        $SQL_codeList = (is_array($code)) ? implode("','", Convert::raw2sql($code)) : Convert::raw2sql($code);
+
+		$SQL_filter = "Permission.Code IN ('" . $SQL_codeList . "') " .
+			"AND Permission.Type = " . self::GRANT_PERMISSION;
 		
 		$toplevelGroups = DataObject::get(
 			'Group', 
 			$SQL_filter, // filter
 			null, // limit
-			"LEFT JOIN `Permission` ON `Group`.`ID` = `Permission`.`GroupID`" // join
+			"LEFT JOIN `Permission` ON `Group`.`ID` = `Permission`.`GroupID`"
 		);
 		if(!$toplevelGroups)
 			return false;
