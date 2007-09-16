@@ -243,6 +243,14 @@ class Translatable extends DataObjectDecorator {
 	static function enable() {
 		Translatable::$enabled = true;
 	}
+
+	/**
+	 * Disable the multilingual feature
+	 *
+	 */
+	static function disable() {
+		Translatable::$enabled = false;
+	}
 	
 	/**
 	 * Check whether multilingual support has been enabled
@@ -391,6 +399,7 @@ class Translatable extends DataObjectDecorator {
 		// Every _lang table wants Versioned support
 		return ($this->owner->databaseFields() && $this->hasOwnTranslatableFields());
 	}
+
 	function augmentDatabase() {
 		if (! $this->stat('enabled')) return false;
 		Translatable::set_reading_lang(Translatable::default_lang());
