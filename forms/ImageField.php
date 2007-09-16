@@ -38,7 +38,7 @@ class ImageField extends FileField {
 		$data = $this->form->getRecord();
 		// if the record was written for the first time (has an arbitrary "new"-ID),
 		// update the imagefield to enable uploading
-		if($record->ID && substr($data->ID, 0, 3) == 'new') {
+		if($record->ID && $data && substr($data->ID, 0, 3) == 'new') {
 			FormResponse::update_dom_id($this->id(), $this->Field($record->ID));
 		}
 	}
