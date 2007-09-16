@@ -859,6 +859,11 @@ class Email_BounceHandler extends Controller {
 				$newNewsletterSentRecipient->ParentID = $newsletter_id_date_parts[0];
 				$newNewsletterSentRecipient->write();
 			}
+
+			// Now we are going to Blacklist this member so that email will not be sent to them in the future.
+			// Note: Sending can be re-enabled by going to 'Mailing List' 'Bounced' tab and unchecking the box under 'Blacklisted'
+			$member->setBlacklistedEmail(TRUE);
+			echo '<p><b>Member: '.$member->FirstName.' '.$member->Surname.' <'.$member->Email.'> was added to the Email Blacklist!</b></p>';
 		}
 
 
