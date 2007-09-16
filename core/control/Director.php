@@ -223,7 +223,7 @@ class Director {
 		if(isset($_REQUEST['_REDIRECT_BACK_URL'])) {
 			$url = $_REQUEST['_REDIRECT_BACK_URL'];
 		} else if(isset($_SERVER['HTTP_REFERER'])) {
-			$_SERVER['HTTP_REFERER'];
+			$url = $_SERVER['HTTP_REFERER'];
 		}
 
 		Director::redirect($url);
