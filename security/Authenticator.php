@@ -66,6 +66,8 @@ abstract class Authenticator extends Object {
    * {@link Authenticator}.
    * Every authenticator can be registered only once.
    *
+   * @param string $authenticator Name of the authenticator class to
+   *                              register
    * @return bool Returns TRUE on success, FALSE otherwise.
    */
   public static function register_authenticator($authenticator) {
@@ -86,6 +88,18 @@ abstract class Authenticator extends Object {
     }
 
     return true;
+  }
+
+
+  /**
+   * Check if a given authenticator is registered
+   *
+   * @param string $authenticator Name of the authenticator class to check
+   * @return bool Returns TRUE if the authenticator is registered, FALSE
+   *              otherwise.
+   */
+  public static function is_registered($authenticator) {
+    return in_array($authenticator, self::$authenticators);
   }
 
 
