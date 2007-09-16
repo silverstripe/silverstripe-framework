@@ -15,16 +15,16 @@ class Statistics extends Controller {
 	static function TrendChart($table, $filter = "day", $name, $type, $color)
 	{
 
-		$top = <<<END
+		$top = <<<HTML
 <div id="trendchart" style="display: none">
 <h2>Trends</h2>
 <div><canvas id="chart" height="400" width="700"></canvas></div>
 <div id="chart_legend"><legend>Legend</legend></div>
 </div>
 		<script type="text/javascript">\n
-END;
+HTML;
 
-		$bot = <<<END
+		$bot = <<<HTML
 var chart = new Plotr.{$type}Chart('chart',options);
 
 		chart.addDataset(chartdata);
@@ -35,7 +35,7 @@ var chart = new Plotr.{$type}Chart('chart',options);
 		chart.addLegend($('chart_legend'));
 
 		</script>
-END;
+HTML;
 
 		$ds = "var chartdata = { \n";
 
@@ -122,7 +122,7 @@ END;
 
 		}
 
-		$opts = <<<END
+		$opts = <<<HTML
 var options = {
 
 	axisLabelFontSize:		10,
@@ -133,7 +133,7 @@ var options = {
 
 	colorScheme: '{$color}',\n\n
 
-END;
+HTML;
 		$opts .= $xt . "]\n};";
 
 
@@ -142,7 +142,8 @@ END;
 
 	static function UserRecordTable() {
 		$records = DataObject::get('Member');
-		$top = <<<END
+		$baseURL = Director::baseURL();
+		$top = <<<HTML
 		<div id="usertable" style="display: none">
 		<h2>Registered Users</h2>
 		<p><a href="$baseURL/admin/statistics/usercsv">Export as CSV</a></p>
@@ -151,7 +152,7 @@ END;
 				<tr><th class="sortable-numeric">ID</th><th class="sortable-text">Email</th><th class="sortable-sortDatetime">Joined</th></tr>
 			</thead>
 			<tbody>
-END;
+HTML;
 		$bod = "";
 		foreach($records as $x) {
 			$r = $x->toMap();
@@ -160,11 +161,11 @@ END;
 			$date = date("F j, Y G:i:s", strtotime($r['Created']));
 			$bod .= "<tr><td>$id</td><td>$email</td><td>$date</td></tr>";
 		}
-		$bot = <<<END
+		$bot = <<<HTML
 			</tbody>
 		</table>
 		</div>
-END;
+HTML;
 		//$js = "\n\n<script type=\"text/javascript\">\n\tvar usertable = new TableKit('usertable');\nusertable.initialize();\n</script>\n";
 		return $top . $bod . $bot;
 	}
@@ -177,7 +178,7 @@ END;
 
 	static function getRecentViews($limit = 15) {
 		$records = DataObject::get('PageView', null, 'Created DESC', null, $limit);
-		$top = <<<END
+		$top = <<<HTML
 		<div id="recentviewtable">
 		<h2>Recent Page Views</h2>
 		<table class="sortable-onload-1 rowstyle-alt no-arrow paginate-10 statstable" border="0" cellspacing="1" cellpadding="0">
@@ -185,7 +186,7 @@ END;
 				<tr><th class="sortable-numeric">ID</th><th class="sortable-sortDatetime">Time</th><th class="sortable-text">Browser</th><th class="sortable-text">OS</th><th>User</th><th class="sortable-text">Page</th></tr>
 			</thead>
 			<tbody>
-END;
+HTML;
 		$bod = "";
 		foreach($records as $x) {
 			$r = $x->toMap();
@@ -197,11 +198,11 @@ END;
 			$page = $r['PageID'];
 			$bod .= "<tr><td>$id</td><td>$time</td><td>$browser</td><td>$os</td><td>$user</td><td>$page</td></tr>";
 		}
-		$bot = <<<END
+		$bot = <<<HTML
 			</tbody>
 		</table>
 		</div>
-END;
+HTML;
 		return $top . $bod . $bot;
 	}
 
@@ -255,7 +256,8 @@ END;
 			default:
 				$records = DataObject::get('PageView');
 		}
-		$top = <<<END
+		$baseURL = Director::baseURL();
+		$top = <<<HTML
 		<div id="viewtable" style="display: none">
 		<h2>Page Views</h2>
 		<p><a href="$baseURL/admin/statistics/viewcsv">Export as CSV</a></p>
@@ -264,7 +266,7 @@ END;
 				<tr><th class="sortable-numeric">ID</th><th class="sortable-sortDatetime">Time</th><th class="sortable-text">Browser</th><th class="sortable-text">OS</th><th class="sortable-text">User</th><th class="sortable-text">Page</th></tr>
 			</thead>
 			<tbody>
-END;
+HTML;
 		$bod = "";
 		foreach($records as $x) {
 			$r = $x->toMap();
@@ -276,25 +278,25 @@ END;
 			$page = $r['PageID'];
 			$bod .= "<tr><td>$id</td><td>$time</td><td>$browser</td><td>$os</td><td>$user</td><td>$page</td></tr>";
 		}
-		$bot = <<<END
+		$bot = <<<HTML
 			</tbody>
 		</table>
 		</div>
-END;
+HTML;
 		return $top . $bod . $bot;
 	}
 
 	static function BrowserChart($type = "Pie", $color = "blue") {
-		$top = <<<END
+		$top = <<<HTML
 <div id="browserchart" style="display: none">
 <h2>Browsers</h2>
 <div><canvas id="bchart" height="400" width="700"></canvas></div>
 </div>
 
 		<script type="text/javascript">\n
-END;
+HTML;
 
-		$bot = <<<END
+		$bot = <<<HTML
 var bchart = new Plotr.{$type}Chart('bchart', boptions);
 
 		bchart.addDataset(bchartdata);
@@ -303,7 +305,7 @@ var bchart = new Plotr.{$type}Chart('bchart', boptions);
 		bchart.render();
 
 		</script>
-END;
+HTML;
 
 		$ds = "var bchartdata = { \n'Set': [";
 
@@ -312,7 +314,7 @@ END;
 		foreach($records as $r) {
 			$ra = $r->toMap();
 			$cb = $ra['Browser'] . " " . $ra['BrowserVersion'];
-			if($browsers[$cb] >= 1) {
+			if(isset($browsers[$cb]) && $browsers[$cb] >= 1) {
 				$browsers[$cb]++;
 			} else {
 				$browsers[$cb] = 1;
@@ -328,7 +330,7 @@ END;
 		}
 		$ds .= "]\n";
 
-		$opts = <<<END
+		$opts = <<<HTML
 var boptions = {
 
 	axisLabelFontSize:		10,
@@ -340,7 +342,7 @@ var boptions = {
 
 	colorScheme: '{$color}',\n\n
 
-END;
+HTML;
 		$opts .= $xt . "]\n};";
 
 
@@ -348,16 +350,16 @@ END;
 	}
 
 	static function OSChart($type = "Pie", $color = "blue") {
-		$top = <<<END
+		$top = <<<HTML
 <div id="oschart" style="display: none">
 <h2>Operating Systems</h2>
 <div><canvas id="ochart" height="400" width="700"></canvas></div>
 </div>
 
 		<script type="text/javascript">\n
-END;
+HTML;
 
-		$bot = <<<END
+		$bot = <<<HTML
 var ochart = new Plotr.{$type}Chart('ochart', ooptions);
 
 		ochart.addDataset(ochartdata);
@@ -366,7 +368,7 @@ var ochart = new Plotr.{$type}Chart('ochart', ooptions);
 		ochart.render();
 
 		</script>
-END;
+HTML;
 
 		$ds = "var ochartdata = { \n'Set': [";
 
@@ -375,7 +377,7 @@ END;
 		foreach($records as $r) {
 			$ra = $r->toMap();
 			$cb = $ra['OS'];
-			if($oss[$cb] >= 1) {
+			if(isset($oss[$cb]) && $oss[$cb] >= 1) {
 				$oss[$cb]++;
 			} else {
 				$oss[$cb] = 1;
@@ -391,7 +393,7 @@ END;
 		}
 		$ds .= "]\n";
 
-		$opts = <<<END
+		$opts = <<<HTML
 var ooptions = {
 
 	axisLabelFontSize:		10,
@@ -403,7 +405,7 @@ var ooptions = {
 
 	colorScheme: '{$color}',\n\n
 
-END;
+HTML;
 		$opts .= $xt . "]\n};";
 
 
@@ -411,16 +413,16 @@ END;
 	}
 
 	static function ActivityChart($type = "Pie", $color = "blue") {
-		$top = <<<END
+		$top = <<<HTML
 <div id="uacchart" style="display: none">
 <h2>User Activity</h2>
 <div><canvas id="uchart" height="400" width="700"></canvas></div>
 </div>
 
 		<script type="text/javascript">\n
-END;
+HTML;
 
-		$bot = <<<END
+		$bot = <<<HTML
 var uacchart = new Plotr.{$type}Chart('uchart', uacoptions);
 
 		uacchart.addDataset(uacchartdata);
@@ -429,7 +431,7 @@ var uacchart = new Plotr.{$type}Chart('uchart', uacoptions);
 		uacchart.render();
 
 		</script>
-END;
+HTML;
 
 		$ds = "var uacchartdata = { \n'Set': [";
 
@@ -441,7 +443,7 @@ END;
 			if($cb == -1) {
 				continue;
 			}
-			if($users[$cb] >= 1) {
+			if(isset($users[$cb]) && $users[$cb] >= 1) {
 				$users[$cb]++;
 			} else {
 				$users[$cb] = 1;
@@ -457,7 +459,7 @@ END;
 		}
 		$ds .= "]\n";
 
-		$opts = <<<END
+		$opts = <<<HTML
 var uacoptions = {
 
 	axisLabelFontSize:		10,
@@ -469,7 +471,7 @@ var uacoptions = {
 
 	colorScheme: '{$color}',\n\n
 
-END;
+HTML;
 		$opts .= $xt . "]\n};";
 
 
