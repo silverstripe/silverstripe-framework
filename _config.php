@@ -10,7 +10,7 @@
  * on your site, e.g. to register the OpenID authentication method type
  *
  * <code>
- * Authenticator::registerAuthenticator('OpenIDAuthenticator');
+ * Authenticator::register_authenticator('OpenIDAuthenticator');
  * </code>
  */
 
@@ -18,7 +18,7 @@
 
 /**
  * Add the security folder to the include path so that the
- * {http://www.openidenabled.com/ PHP OpenID library} finds it files
+ * {@link http://www.openidenabled.com/ PHP OpenID library} finds it files
  */
 $path_extra = realpath(dirname(__FILE__)) . DIRECTORY_SEPARATOR . 'security';
 /**
@@ -51,19 +51,22 @@ define('Auth_OpenID_RAND_SOURCE', null);
 /**
  * Register the {@link OpenIDAuthenticator OpenID authenticator}
  */
-Authenticator::registerAuthenticator('MemberAuthenticator');
+Authenticator::register_authenticator('MemberAuthenticator');
 
 
 /**
  * Register the {@link OpenIDAuthenticator OpenID authenticator}
  */
-Authenticator::registerAuthenticator('OpenIDAuthenticator');
+Authenticator::register_authenticator('OpenIDAuthenticator');
 
 /**
  * Define a default language different than english
  */
 //i18n::set_locale('ca_AD'); 
 
+/**
+ * The root directory of TinyMCE
+ */
 define('MCE_ROOT', 'jsparty/tiny_mce2/');
 
 /**
@@ -82,9 +85,12 @@ Security::encrypt_passwords(true);
 Security::set_password_encryption_algorithm('sha1', true);
 
 /**
- * The secret key that needs to be sent along with pings to /Email_BounceHandler.
- * Change this to something different for increase security (you can override it in mysite/_config.php to ease upgrades).
- * For more information see: http://doc.silverstripe.com/doku.php?id=email_bouncehandler
+ * The secret key that needs to be sent along with pings to /Email_BounceHandler
+ *
+ * Change this to something different for increase security (you can
+ * override it in mysite/_config.php to ease upgrades).
+ * For more information see:
+ * {@link http://doc.silverstripe.com/doku.php?id=email_bouncehandler}
  */
 define('EMAIL_BOUNCEHANDLER_KEY', '1aaaf8fb60ea253dbf6efa71baaacbb3');
 

@@ -66,8 +66,7 @@ class OpenIDStorage extends Auth_OpenID_MySQLStore {
 	 * @todo Create the tables during installation, so we can reduce the
 	 *       number of needed SQL queries.
 	 */
-	function __construct($associations_table = null, $nonces_table = null)
-	{
+	function __construct($associations_table = null, $nonces_table = null) {
 		if(is_null($associations_table))
 			$associations_table = 'authentication_openid_associations';
 
@@ -106,8 +105,7 @@ class OpenIDStorage extends Auth_OpenID_MySQLStore {
 	 *
 	 * @access private
 	 */
-	function setSQL()
-	{
+	function setSQL() {
 		parent::setSQL();
 
 		$this->sql['nonce_table'] =
@@ -138,8 +136,7 @@ class OpenIDStorage extends Auth_OpenID_MySQLStore {
 	 *         FALSE otherwise.
 	 * @access private
 	 */
-	function isError($value)
-	{
+	function isError($value) {
 		return ($value === false);
 	}
 
@@ -149,8 +146,7 @@ class OpenIDStorage extends Auth_OpenID_MySQLStore {
 	 *
 	 * @return bool Returns TRUE on success, FALSE on failure.
 	 */
-	function create_nonce_table()
-	{
+	function create_nonce_table() {
 		return $this->resultToBool(
 			$this->connection->query($this->sql['nonce_table']));
 	}
@@ -161,8 +157,7 @@ class OpenIDStorage extends Auth_OpenID_MySQLStore {
 	 *
 	 * @return bool Returns TRUE on success, FALSE on failure.
 	 */
-	function create_assoc_table()
-	{
+	function create_assoc_table() {
 		return $this->resultToBool(
 			$this->connection->query($this->sql['assoc_table']));
 	}
@@ -175,7 +170,7 @@ class OpenIDStorage extends Auth_OpenID_MySQLStore {
  * the {@link OpenIDStorage} class.
  *
  * @author Markus Lanthaler <markus@silverstripe.com>
- * 
+ *
  * @todo If the new database abstraction adds support for transactions and
  *       prepared statements (placeholders) use that code without emulating
  *       it here.
@@ -197,10 +192,9 @@ class OpenIDDatabaseConnection extends Auth_OpenID_DatabaseConnection {
 	 *                       the result of a query is not important, like a
 	 *                       DDL query.
 	 */
-	public function query($sql, $params = array())
-	{
+	public function query($sql, $params = array()) {
 		if(($sql = $this->generateQuery($sql, $params)) === false)
-			 return false;
+			return false;
 
 		return DB::query($sql);
 	}
@@ -219,8 +213,7 @@ class OpenIDDatabaseConnection extends Auth_OpenID_DatabaseConnection {
 	 *                       the result set.
 	 *                       FALSE if no such result was found.
 	 */
-	public function getOne($sql, $params = array())
-	{
+	public function getOne($sql, $params = array()) {
 		if(($sql = $this->generateQuery($sql, $params)) === false)
 			 return false;
 
@@ -244,10 +237,9 @@ class OpenIDDatabaseConnection extends Auth_OpenID_DatabaseConnection {
 	 *                       column name.
 	 *                       FALSE if no such result was found.
 	 */
-	public function getRow($sql, $params = array())
-	{
+	public function getRow($sql, $params = array()) {
 		if(($sql = $this->generateQuery($sql, $params)) === false)
-			 return false;
+			return false;
 
 		if(($result = DB::query($sql)) === false)
 			return false;
@@ -267,8 +259,7 @@ class OpenIDDatabaseConnection extends Auth_OpenID_DatabaseConnection {
 	 * @return array $result An array of arrays representing the result of the
 	 *                       query; each array is keyed on column name.
 	 */
-	public function getAll($sql, $params = array())
-	{
+	public function getAll($sql, $params = array()) {
 		if(($sql = $this->generateQuery($sql, $params)) === false)
 			 return false;
 
@@ -276,7 +267,7 @@ class OpenIDDatabaseConnection extends Auth_OpenID_DatabaseConnection {
 			return false;
 
 		for($result_array = array(); $result->valid(); $result->next()) {
-	    array_push($result_array, $result->current());
+			array_push($result_array, $result->current());
 		}
 
 		return $result_array;
@@ -288,32 +279,28 @@ class OpenIDDatabaseConnection extends Auth_OpenID_DatabaseConnection {
 	 *
 	 * @param bool $mode TRUE if auto-commit is to be used; FALSE if not.
 	 */
-	public function autoCommit($mode)
-	{
+	public function autoCommit($mode) {
 	}
 
 
 	/**
 	 * Starts a transaction on this connection, if supported.
 	 */
-	public function begin()
-	{
+	public function begin() {
 	}
 
 
 	/**
 	 * Commits a transaction on this connection, if supported.
 	 */
-	public function commit()
-	{
+	public function commit() {
 	}
 
 
 	/**
 	 * Performs a rollback on this connection, if supported.
 	 */
-	public function rollback()
-	{
+	public function rollback() {
 	}
 
 
@@ -330,8 +317,7 @@ class OpenIDDatabaseConnection extends Auth_OpenID_DatabaseConnection {
 	 *                             string or an invalid number of parameters
 	 *                             was passed.
 	 */
-	private function generateQuery($sql, $params = array())
-	{
+	private function generateQuery($sql, $params = array()) {
 		$tokens   = preg_split('/((?<!\\\)[&?!])/', $sql, -1,
 													 PREG_SPLIT_DELIM_CAPTURE);
 		$token     = 0;
@@ -379,8 +365,7 @@ class OpenIDDatabaseConnection extends Auth_OpenID_DatabaseConnection {
 	 * @return mixed The formatted data. The format depends on the input's
 	 *               PHP type-
 	 */
-	private function quote($in)
-	{
+	private function quote($in) {
 		if(is_int($in)) {
 			return $in;
 		} elseif(is_float($in)) {

@@ -2,6 +2,8 @@
 
 /**
  * LoginForm base class
+ *
+ * @author Markus Lanthaler <markus@silverstripe.com>
  */
 
 
@@ -14,8 +16,8 @@
  *
  * @author Markus Lanthaler <markus@silverstripe.com>
  */
-abstract class LoginForm extends Form
-{
+abstract class LoginForm extends Form {
+
   /**
    * Authenticator class to use with this login form
    *

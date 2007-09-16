@@ -2,6 +2,8 @@
 
 /**
  * Authenticator base class
+ *
+ * @author Markus Lanthaler <markus@silverstripe.com>
  */
 
 
@@ -13,11 +15,9 @@
  * methods like {@link MemberAuthenticator} or {@link OpenIDAuthenticator}.
  *
  * @author Markus Lanthaler <markus@silverstripe.com>
- *
- * @todo Wouldn't be an interface be the better choice?
  */
-abstract class Authenticator extends Object
-{
+abstract class Authenticator extends Object {
+
   /**
    * This variable holds all authenticators that should be used
    *
@@ -36,7 +36,8 @@ abstract class Authenticator extends Object
    * @return bool|Member Returns FALSE if authentication fails, otherwise
    *                     the member object
    */
-  public abstract function authenticate(array $RAW_data, Form $form = null);
+  public abstract static function authenticate(array $RAW_data,
+                                               Form $form = null);
 
 
   /**
@@ -47,7 +48,7 @@ abstract class Authenticator extends Object
    * @return Form Returns the login form to use with this authentication
    *              method
    */
-  public abstract static function getLoginForm(Controller $controller);
+  public abstract static function get_login_form(Controller $controller);
 
 
   /**
@@ -55,7 +56,7 @@ abstract class Authenticator extends Object
    *
    * @return string Returns the name of the authentication method.
    */
-  public abstract static function getName();
+  public abstract static function get_name();
 
 
   /**
@@ -67,7 +68,7 @@ abstract class Authenticator extends Object
    *
    * @return bool Returns TRUE on success, FALSE otherwise.
    */
-  public static function registerAuthenticator($authenticator) {
+  public static function register_authenticator($authenticator) {
     $authenticator = trim($authenticator);
 
     if(class_exists($authenticator) == false)
@@ -77,7 +78,7 @@ abstract class Authenticator extends Object
       return false;
 
     if(in_array($authenticator, self::$authenticators) == false) {
-      if(call_user_func(array($authenticator, 'onRegister')) === true) {
+      if(call_user_func(array($authenticator, 'on_register')) === true) {
         array_push(self::$authenticators, $authenticator);
       } else {
         return false;
@@ -94,7 +95,7 @@ abstract class Authenticator extends Object
    * @return array Returns an array with the class names of all registered
    *               authenticators.
    */
-  public static function getAuthenticators() {
+  public static function get_authenticators() {
     return self::$authenticators;
   }
 
@@ -110,7 +111,7 @@ abstract class Authenticator extends Object
    *
    * @return bool Returns TRUE on success, FALSE otherwise.
    */
-  protected static function onRegister() {
+  protected static function on_register() {
     return true;
   }
 }

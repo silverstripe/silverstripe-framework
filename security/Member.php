@@ -1,4 +1,14 @@
 <?php
+
+/**
+ * Member classes
+ */
+
+
+
+/**
+ * The member class which represents the users of the system
+ */
 class Member extends DataObject {
 
 	static $db = array(

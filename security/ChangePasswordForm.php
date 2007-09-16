@@ -1,10 +1,28 @@
 <?php
 
 /**
+ * Change password form
+ */
+
+
+/**
  * Standard Change Password Form
  */
 class ChangePasswordForm extends Form {
 
+	/**
+	 * Constructor
+	 *
+	 * @param Controller $controller The parent controller, necessary to
+	 *                               create the appropriate form action tag.
+	 * @param string $name The method on the controller that will return this
+	 *                     form object.
+	 * @param FieldSet|FormField $fields All of the fields in the form - a
+	 *                                   {@link FieldSet} of {@link FormField}
+	 *                                   objects.
+	 * @param FieldSet|FormAction $actions All of the action buttons in the
+	 *                                     form - a {@link FieldSet} of
+	 */
 	function __construct($controller, $name, $fields = null, $actions = null) {
 		if(!$fields) {
 			$fields = new FieldSet();
@@ -23,6 +41,7 @@ class ChangePasswordForm extends Form {
 
 		parent::__construct($controller, $name, $fields, $actions);
 	}
+
 
 	/**
 	 * Change the password
@@ -51,7 +70,6 @@ class ChangePasswordForm extends Form {
 				Director::redirect('loginpage');
 			}
 		}
-
 
 		// Check the new password
 		if($data['NewPassword1'] == $data['NewPassword2']) {

@@ -25,7 +25,7 @@ class MemberAuthenticator extends Authenticator {
    * @return bool|Member Returns FALSE if authentication fails, otherwise
    *                     the member object
    */
-  public function authenticate(array $RAW_data, Form $form = null) {
+  public static function authenticate(array $RAW_data, Form $form = null) {
     $SQL_user = Convert::raw2sql($RAW_data['Email']);
 
     $member = DataObject::get_one("Member",
@@ -56,7 +56,7 @@ class MemberAuthenticator extends Authenticator {
    * @return Form Returns the login form to use with this authentication
    *              method
    */
-  public static function getLoginForm(Controller $controller) {
+  public static function get_login_form(Controller $controller) {
     return Object::create("MemberLoginForm", $controller, "LoginForm");
   }
 
@@ -66,9 +66,10 @@ class MemberAuthenticator extends Authenticator {
    *
    * @return string Returns the name of the authentication method.
    */
-  public static function getName() {
+  public static function get_name() {
 		return "E-mail &amp; Password";
 	}
 }
+
 
 ?>

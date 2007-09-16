@@ -45,9 +45,9 @@ class OpenIDAuthenticator extends Authenticator {
 	 *
 	 * @return bool Returns TRUE on success, FALSE otherwise.
 	 */
-	protected static function onRegister() {
+	protected static function on_register() {
 		Member::addRole('OpenIDAuthenticatedRole');
-		return true;
+		return parent::on_register();
 	}
 
 
@@ -65,7 +65,7 @@ class OpenIDAuthenticator extends Authenticator {
 	 * @todo Check if we can send the POST request for OpenID 2 directly
 	 *       (without rendering a form and using javascript)
 	 */
-	public function authenticate(array $RAW_data, Form $form = null) {
+	public static function authenticate(array $RAW_data, Form $form = null) {
 		$openid = trim($RAW_data['OpenIDURL']);
 
     if(strlen($openid) == 0) {
@@ -161,7 +161,7 @@ class OpenIDAuthenticator extends Authenticator {
 	 * @return Form Returns the login form to use with this authentication
 	 *              method
 	 */
-	public static function getLoginForm(Controller $controller) {
+	public static function get_login_form(Controller $controller) {
 		return Object::create("OpenIDLoginForm", $controller, "LoginForm");
 	}
 
@@ -171,7 +171,7 @@ class OpenIDAuthenticator extends Authenticator {
 	 *
 	 * @return string Returns the name of the authentication method.
 	 */
-	public static function getName() {
+	public static function get_name() {
 		return "OpenID/i-name";
 	}
 }

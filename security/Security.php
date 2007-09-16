@@ -124,9 +124,10 @@ class Security extends Controller {
 		{
 			$authenticator = trim($_REQUEST['AuthenticationMethod']);
 
-			$authenticators = Authenticator::getAuthenticators();
+			$authenticators = Authenticator::get_authenticators();
 			if(in_array($authenticator, $authenticators)) {
-				return call_user_func(array($authenticator, 'GetLoginForm'), $this);
+				return call_user_func(array($authenticator, 'get_login_form'),
+															$this);
 			}
 		}
 
@@ -146,10 +147,10 @@ class Security extends Controller {
 	{
 		$forms = array();
 
-		$authenticators = Authenticator::getAuthenticators();
+		$authenticators = Authenticator::get_authenticators();
 		foreach($authenticators as $authenticator) {
 		  array_push($forms,
-								 call_user_func(array($authenticator, 'GetLoginForm'),
+								 call_user_func(array($authenticator, 'get_login_form'),
 																$this));
 		}
 
@@ -218,6 +219,13 @@ class Security extends Controller {
 			$content = '';
 			foreach($forms as $form)
 				$content .= $form->forTemplate();
+
+			foreach($forms as $form) {
+				$content .= "<li><a href=\"$link_base#{$form->FormName()}_tab\">{$form->getAuthenticator()->get_name()}</a></li>\n";
+				$content_forms .= '<div class="tab" id="' . $form->FormName() . '_tab">' . $form->forTemplate() . "</div>\n";
+			}
+
+			$content .= "</ul>\n" . $content_forms . "\n</div>\n";
 
 			if(strlen($message = Session::get('Security.Message.message')) > 0) {
 				$message_type = Session::get('Security.Message.type');
@@ -422,7 +430,8 @@ class Security extends Controller {
 						'">here</a> or change your password after you <a href="' .
 						$this->link('login') . '">logged in</a>.</p>'));
 			} else {
-				self::permissionFailure($this, 'You must be logged in in order to change your password!');
+				self::permissionFailure($this,
+					'You must be logged in in order to change your password!');
 				die();
 			}
 		}
@@ -526,7 +535,8 @@ class Security extends Controller {
 	/**
 	 * Set strict path checking
 	 *
-	 * This prevents sharing of the session across several sites in the domain.
+	 * This prevents sharing of the session across several sites in the
+	 * domain.
 	 *
 	 * @param boolean $strictPathChecking To enable or disable strict patch
 	 *                                    checking.
