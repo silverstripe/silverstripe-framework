@@ -24,8 +24,14 @@ class ModelAsController extends Controller implements NestedController {
 
 	public function getNestedController() {
 		if($this->urlParams['URLSegment']) {
-			$child = DataObject::get_one("SiteTree", "URLSegment = '" . addslashes($this->urlParams['URLSegment']) . "'");
+			$SQL_URLSegment = Convert::raw2sql($this->urlParams['URLSegment']);
+			if (Translatable::is_enabled()) {
+				$child = Translatable::get_one("SiteTree", "URLSegment = '$SQL_URLSegment'");
+			} else {
+				$child = DataObject::get_one("SiteTree", "URLSegment = '$SQL_URLSegment'");
+			}
 			if(!$child) {
+
 				header("HTTP/1.0 404 Not Found");
 				$child = $this->get404Page();
 			}
