@@ -372,7 +372,7 @@ class Security extends Controller {
 			} else {
 				self::permissionFailure($this,
 					'You must be logged in in order to change your password!');
-				die();
+				return;
 			}
 		}
 
@@ -423,7 +423,7 @@ class Security extends Controller {
 	 */
 	static function findAnAdministrator($username = 'admin', $password = 'password') {
 		$permission = DataObject::get_one("Permission", "`Code` = 'ADMIN'", true, "ID");
-		
+
 		$adminGroup = null;
 		if($permission) $adminGroup = DataObject::get_one("Group", "`ID` = '{$permission->GroupID}'", true, "ID");
 		

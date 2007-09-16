@@ -128,6 +128,7 @@ class OpenIDAuthenticator extends Authenticator {
 										 $redirect_url->message);
 			} else {
 				Director::redirect($redirect_url);
+				return false;
 			}
 
 		} else {
@@ -203,6 +204,9 @@ class OpenIDAuthenticator_Controller extends Controller {
 	 * @param array $requestParams Passed request parameters
 	 */
 	function run($requestParams) {
+		Controller::$currentController = $this;
+		$this->response = new HTTPResponse();
+
 		parent::init();
 
 		if(isset($_GET['debug_profile']))
@@ -281,6 +285,8 @@ class OpenIDAuthenticator_Controller extends Controller {
 				}
 			}
 		}
+
+		return $this->response;
 	}
 
 
