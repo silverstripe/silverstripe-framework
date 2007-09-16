@@ -849,7 +849,9 @@ class Email_BounceHandler extends Controller {
         $record->write();
         
         echo "Handled bounced email to address: $email";  
-      }
+	} else {
+		echo 'Sorry, this bounce report has already been logged, not logging this duplicate bounce.';
+	}
     }
     
     
