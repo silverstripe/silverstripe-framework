@@ -10,7 +10,7 @@ class Member extends DataObject {
 		'NumVisit' => "Int",
 		'LastVisited' => 'Datetime',
 		'Bounced' => 'Boolean',
-		'AutoLoginHash' => 'Varchar(10)',
+		'AutoLoginHash' => 'Varchar(30)',
 		'AutoLoginExpired' => 'Datetime',
 		'BlacklistedEmail' => 'Boolean',
 		'PasswordEncryption' => "Enum('none', 'none')",
@@ -30,6 +30,7 @@ class Member extends DataObject {
 
 	static $indexes = array(
 		'Email' => true,
+		'AutoLoginHash' => 'unique (AutoLoginHash)'
 	);
 
 
@@ -50,6 +51,21 @@ class Member extends DataObject {
 			implode("', '", array_map("addslashes",
 																Security::get_encryption_algorithms())) .
 			"'), 'none')";
+	}
+
+
+	/**
+	 * Check if the passed password matches the stored one
+	 *
+	 * @param string $password The clear text password to check
+	 * @return bool Returns TRUE if the passed password is valid, otherwise
+	 *              FALSE.
+	 */
+	public function checkPassword($password) {
+		$encryption_details = Security::encrypt_password($password, $this->Salt,
+			$this->PasswordEncryption);
+
+		return ($this->Password === $encryption_details['password']);
 	}
 
 
@@ -131,30 +147,40 @@ class Member extends DataObject {
 	/**
 	 * Generate an auto login hash
 	 *
-	 * @todo This is relative insecure, check if we should fix it (Markus)
+	 * This creates an auto login hash that can be used to reset the password.
+	 *
+	 * @param int $lifetime The lifetime of the auto login hash in days
+	 *                      (by default 2 days)
+	 *
+	 * @todo Make it possible to handle database errors such as a "duplicate
+	 *       key" error
 	 */
-	function generateAutologinHash() {
-		$linkHash = sprintf('%10d', time() );
+	function generateAutologinHash($lifetime = 2) {
 
-		while( DataObject::get_one( 'Member', "`AutoLoginHash`='$linkHash'" ) )
-			$linkHash = sprintf('%10d', abs( time() * rand( 1, 10 ) ) );
+		do {
+			$hash = substr(base_convert(md5(uniqid(mt_rand(), true)), 16, 36),
+										 0, 30);
+		} while(DataObject::get_one('Member', "`AutoLoginHash` = '$hash'"));
 
-		$this->AutoLoginHash = $linkHash;
-		$this->AutoLoginExpired = date('Y-m-d', time() + ( 60 * 60 * 24 * 14 ) );
+		$this->AutoLoginHash = $hash;
+		$this->AutoLoginExpired = date('Y-m-d', time() + (86400 * $lifetime));
 
 		$this->write();
 	}
 
 
 	/**
-	 * Log a member in with an auto login hash link
+	 * Return the member for the auto login hash
+	 *
+	 * @param bool $login Should the member be logged in?
 	 */
-	static function autoLoginHash($RAW_hash) {
+	static function autoLoginHash($RAW_hash, $login = false) {
 		$SQL_hash = Convert::raw2sql($RAW_hash);
 
-		$member = DataObject::get_one('Member',"`AutoLoginHash`='$SQL_hash' AND `AutoLoginExpired` > NOW()");
+		$member = DataObject::get_one('Member',"`AutoLoginHash`='" . $SQL_hash .
+																	"' AND `AutoLoginExpired` > NOW()");
 
-		if($member)
+		if($login && $member)
 			$member->logIn();
 
 		return $member;
@@ -166,8 +192,10 @@ class Member extends DataObject {
 	 *
 	 * @param string $type Information type to send ("signup",
 	 *                     "changePassword" or "forgotPassword")
+	 * @param array $data Additional data to pass to the email (can be used in
+	 *                    the template)
 	 */
-	function sendInfo($type = 'signup') {
+	function sendInfo($type = 'signup', $data = null) {
 		switch($type) {
 			case "signup":
 				$e = new Member_SignupEmail();
@@ -179,6 +207,12 @@ class Member extends DataObject {
 				$e = new Member_ForgotPasswordEmail();
 				break;
 		}
+
+		if(is_array($data)) {
+			foreach($data as $key => $value)
+				$e->$key = $value;
+		}
+
 		$e->populateTemplate($this);
 		$e->send();
 	}
@@ -1008,7 +1042,7 @@ class Member_ChangePasswordEmail extends Email_Template {
  */
 class Member_ForgotPasswordEmail extends Email_Template {
     protected $from = '';  // setting a blank from address uses the site's default administrator email
-    protected $subject = "Your password";
+    protected $subject = "Your password reset link";
     protected $ss_template = 'ForgotPasswordEmail';
     protected $to = '$Email';
 }

@@ -1,8 +1,4 @@
 <p>Hi $FirstName,</p>
 
-<p>Here's your password for <a href="home/">$BaseHref</a>.</p>
+<p>Here's is your <a href="$PasswordResetLink">password reset link</a> for $BaseHref</p>
 
-<p>
-Email: $Email<br />
-Password: $Password
-</p>

@@ -31,14 +31,8 @@ class MemberAuthenticator extends Authenticator {
     $member = DataObject::get_one("Member",
 			"Email = '$SQL_user' AND Password IS NOT NULL");
 
-		if($member) {
-			$encryption_details =
-				Security::encrypt_password($RAW_data['Password'], $member->Salt,
-																	 $member->PasswordEncryption);
-
-			// Check if the entered password is valid
-			if(($member->Password != $encryption_details['password']))
-			  $member = null;
+		if($member && ($member->checkPassword($RAW_data['Password']) == false)) {
+			$member = null;
 		}
 
 

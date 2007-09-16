@@ -119,7 +119,7 @@ class Security extends Controller {
   /**
 	 * Get the login form to process according to the submitted data
 	 */
-	function LoginForm() {
+	protected function LoginForm() {
 		if(is_array($_REQUEST) && isset($_REQUEST['AuthenticationMethod']))
 		{
 			$authenticator = trim($_REQUEST['AuthenticationMethod']);
@@ -142,7 +142,7 @@ class Security extends Controller {
 	 *
 	 * @todo Check how to activate/deactivate authentication methods
 	 */
-	function GetLoginForms()
+	protected function GetLoginForms()
 	{
 		$forms = array();
 
@@ -163,7 +163,7 @@ class Security extends Controller {
 	 * @param string $action Name of the action
 	 * @return string Returns the link to the given action
 	 */
-	function Link($action = null) {
+	public static function Link($action = null) {
 		return "Security/$action";
 	}
 
@@ -176,7 +176,7 @@ class Security extends Controller {
 	 *                           responsible for sending the user where-ever
 	 *                           they should go.
 	 */
-	function logout($redirect = true) {
+	public function logout($redirect = true) {
 		if($member = Member::currentUser())
 			$member->logOut();
 
@@ -190,7 +190,7 @@ class Security extends Controller {
 	 *
 	 * @return string Returns the "login" page as HTML code.
 	 */
-	function login() {
+	public function login() {
 		Requirements::javascript("jsparty/behaviour.js");
 		Requirements::javascript("jsparty/loader.js");
 		Requirements::javascript("jsparty/prototype.js");
@@ -245,53 +245,25 @@ class Security extends Controller {
 	/**
 	 * Show the "lost password" page
 	 *
-	 * @return string Returns the "lost password " page as HTML code.
+	 * @return string Returns the "lost password" page as HTML code.
 	 */
-	function lostpassword() {
-		Requirements::javascript("jsparty/prototype.js");
-		Requirements::javascript("jsparty/behaviour.js");
-		Requirements::javascript("jsparty/loader.js");
-		Requirements::javascript("jsparty/prototype_improvements.js");
-		Requirements::javascript("jsparty/scriptaculous/effects.js");
+	public function lostpassword() {
+		Requirements::javascript('jsparty/prototype.js');
+		Requirements::javascript('jsparty/behaviour.js');
+		Requirements::javascript('jsparty/loader.js');
+		Requirements::javascript('jsparty/prototype_improvements.js');
+		Requirements::javascript('jsparty/scriptaculous/effects.js');
 
 		$tmpPage = new Page();
-		$tmpPage->Title = "Lost Password";
-		$tmpPage->URLSegment = "Security";
+		$tmpPage->Title = 'Lost Password';
+		$tmpPage->URLSegment = 'Security';
 		$controller = new Page_Controller($tmpPage);
 
 		$customisedController = $controller->customise(array(
-			"Content" =>
-				"<p>Enter your e-mail address and we will send you a password</p>",
-			"Form" => $this->LostPasswordForm(),
-		));
-		
-		//Controller::$currentController = $controller;
-		return $customisedController->renderWith("Page");
-	}
-
-
-	/**
-	 * Show the "password sent" page
-	 *
-	 * @return string Returns the "password sent" page as HTML code.
-	 */
-	function passwordsent() {
-		Requirements::javascript("jsparty/behaviour.js");
-		Requirements::javascript("jsparty/loader.js");
-		Requirements::javascript("jsparty/prototype.js");
-		Requirements::javascript("jsparty/prototype_improvements.js");
-		Requirements::javascript("jsparty/scriptaculous/effects.js");
-
-		$tmpPage = new Page();
-		$tmpPage->Title = "Lost Password";
-		$tmpPage->URLSegment = "Security";
-		$controller = new Page_Controller($tmpPage);
-
-		$email = $this->urlParams['ID'];
-		$customisedController = $controller->customise(array(
-			"Title" => "Password sent to '$email'",
-			"Content" =>
-				"<p>Thank you, your password has been sent to '$email'.</p>",
+			'Content' =>
+				'<p>Enter your e-mail address and we will send you a link with ' .
+				'which you can reset your password</p>',
+			'Form' => $this->LostPasswordForm(),
 		));
 		
 		//Controller::$currentController = $controller;
@@ -304,13 +276,169 @@ class Security extends Controller {
 	 *
 	 * @return Form Returns the lost password form
 	 */
-	function LostPasswordForm() {
-		return new MemberLoginForm($this, "LostPasswordForm", new FieldSet(
-				new EmailField("Email", "Email address")
-			), new FieldSet(
-				new FormAction("forgotPassword", "Send me my password")
-			), false
-		);
+	public function LostPasswordForm() {
+		return new MemberLoginForm($this, 'LostPasswordForm',
+			new FieldSet(new EmailField('Email', 'E-mail address')),
+			new FieldSet(new FormAction('forgotPassword',
+																	'Send me the password reset link')),
+			false);
+	}
+
+
+	/**
+	 * Show the "password sent" page
+	 *
+	 * @return string Returns the "password sent" page as HTML code.
+	 */
+	public function passwordsent() {
+		Requirements::javascript('jsparty/behaviour.js');
+		Requirements::javascript('jsparty/loader.js');
+		Requirements::javascript('jsparty/prototype.js');
+		Requirements::javascript('jsparty/prototype_improvements.js');
+		Requirements::javascript('jsparty/scriptaculous/effects.js');
+
+		$tmpPage = new Page();
+		$tmpPage->Title = 'Lost Password';
+		$tmpPage->URLSegment = 'Security';
+		$controller = new Page_Controller($tmpPage);
+
+		$email = Convert::raw2xml($this->urlParams['ID']);
+		$customisedController = $controller->customise(array(
+			'Title' => "Password reset link sent to '$email'",
+			'Content' =>
+				"<p>Thank you! The password reset link has been sent to '$email'.</p>",
+		));
+		
+		//Controller::$currentController = $controller;
+		return $customisedController->renderWith("Page");
+	}
+
+
+	/**
+	 * Create a link to the password reset form
+	 *
+	 * @param string $autoLoginHash The auto login hash
+	 */
+	public static function getPasswordResetLink($autoLoginHash) {
+		$autoLoginHash = urldecode($autoLoginHash);
+		return self::Link('changepassword') . "?h=$autoLoginHash";
+	}
+
+
+	/**
+	 * Show the "change password" page
+	 *
+	 * @return string Returns the "change password" page as HTML code.
+	 */
+	public function changepassword() {
+		$tmpPage = new Page();
+		$tmpPage->Title = 'Change your password';
+		$tmpPage->URLSegment = 'Security';
+		$controller = new Page_Controller($tmpPage);
+
+		if(isset($_REQUEST['h']) && Member::autoLoginHash($_REQUEST['h'])) {
+			// The auto login hash is valid, store it for the change password form
+			Session::set('AutoLoginHash', $_REQUEST['h']);
+
+			$customisedController = $controller->customise(array(
+				'Content' =>
+					'<p>Please enter a new password.</p>',
+				'Form' => $this->ChangePasswordForm(),
+			));
+
+		} elseif(Member::currentUser()) {
+			// let a logged in user change his password
+			$customisedController = $controller->customise(array(
+				'Content' => '<p>You can change your password below.</p>',
+				'Form' => $this->ChangePasswordForm()));
+
+		} else {
+			// show an error message if the auto login hash is invalid and the
+			// user is not logged in
+			if(isset($_REQUEST['h'])) {
+				$customisedController = $controller->customise(array('Content' =>
+					"<p>The password reset link is invalid or expired.</p>\n" .
+						'<p>You can request a new one <a href="' .
+						$this->Link('lostpassword') .
+						'">here</a> or change your password after you <a href="' .
+						$this->link('login') . '">logged in</a>.</p>'));
+			} else {
+				self::permissionFailure($this, 'You must be logged in in order to change your password!');
+				die();
+			}
+		}
+
+		Controller::$currentController = $controller;
+		return $customisedController->renderWith('Page');
+	}
+
+
+	/**
+	 * Create a link to the password reset form
+	 *
+	 * @param string $autoLoginHash The auto login hash
+	 */
+	public static function getPasswordResetLink($autoLoginHash) {
+		$autoLoginHash = urldecode($autoLoginHash);
+		return self::Link('changepassword') . "?h=$autoLoginHash";
+	}
+
+
+	/**
+	 * Show the "change password" page
+	 *
+	 * @return string Returns the "change password" page as HTML code.
+	 */
+	public function changepassword() {
+		$tmpPage = new Page();
+		$tmpPage->Title = 'Change your password';
+		$tmpPage->URLSegment = 'Security';
+		$controller = new Page_Controller($tmpPage);
+
+		if(isset($_REQUEST['h']) && Member::autoLoginHash($_REQUEST['h'])) {
+			// The auto login hash is valid, store it for the change password form
+			Session::set('AutoLoginHash', $_REQUEST['h']);
+
+			$customisedController = $controller->customise(array(
+				'Content' =>
+					'<p>Please enter a new password.</p>',
+				'Form' => $this->ChangePasswordForm(),
+			));
+
+		} elseif(Member::currentUser()) {
+			// let a logged in user change his password
+			$customisedController = $controller->customise(array(
+				'Content' => '<p>You can change your password below.</p>',
+				'Form' => $this->ChangePasswordForm()));
+
+		} else {
+			// show an error message if the auto login hash is invalid and the
+			// user is not logged in
+			if(isset($_REQUEST['h'])) {
+				$customisedController = $controller->customise(array('Content' =>
+					"<p>The password reset link is invalid or expired.</p>\n" .
+						'<p>You can request a new one <a href="' .
+						$this->Link('lostpassword') .
+						'">here</a> or change your password after you <a href="' .
+						$this->link('login') . '">logged in</a>.</p>'));
+			} else {
+				self::permissionFailure($this, 'You must be logged in in order to change your password!');
+				die();
+			}
+		}
+
+		Controller::$currentController = $controller;
+		return $customisedController->renderWith('Page');
+	}
+
+
+	/**
+	 * Factory method for the lost password form
+	 *
+	 * @return Form Returns the lost password form
+	 */
+	public function ChangePasswordForm() {
+		return new ChangePasswordForm($this, 'ChangePasswordForm');
 	}
 
 
@@ -321,7 +449,7 @@ class Security extends Controller {
 	 * @return bool|Member Returns FALSE if authentication fails, otherwise
 	 *                     the member object
 	 */
-	static function authenticate($RAW_email, $RAW_password) {
+	public static function authenticate($RAW_email, $RAW_password) {
 		$SQL_email = Convert::raw2sql($RAW_email);
 		$SQL_password = Convert::raw2sql($RAW_password);
 
@@ -344,10 +472,9 @@ class Security extends Controller {
 	 * @return Member Returns a member object that has administrator
 	 *                privileges.
 	 */
-	static function findAnAdministrator($username = 'admin',
-																			$password = 'password') {
-		$permission = DataObject::get_one("Permission", "`Code` = 'ADMIN'");
-
+	static function findAnAdministrator($username = 'admin', $password = 'password') {
+		$permission = DataObject::get_one("Permission", "`Code` = 'ADMIN'", true, "ID");
+		
 		$adminGroup = null;
 		if($permission) $adminGroup = DataObject::get_one("Group", "`ID` = '{$permission->GroupID}'", true, "ID");
 		
@@ -387,7 +514,7 @@ class Security extends Controller {
 	 * @param $username String
 	 * @param $password String (Cleartext)
 	 */
-	static function setDefaultAdmin( $username, $password ) {
+	public static function setDefaultAdmin($username, $password) {
 		if( self::$username || self::$password )
 			return;
 
@@ -404,7 +531,7 @@ class Security extends Controller {
 	 * @param boolean $strictPathChecking To enable or disable strict patch
 	 *                                    checking.
 	 */
-	static function setStrictPathChecking($strictPathChecking) {
+	public static function setStrictPathChecking($strictPathChecking) {
 		self::$strictPathChecking = $strictPathChecking;
 	}
 
@@ -414,7 +541,7 @@ class Security extends Controller {
 	 *
 	 * @return boolean Status of strict path checking
 	 */
-	static function getStrictPathChecking() {
+	public static function getStrictPathChecking() {
 		return self::$strictPathChecking;
 	}
 
@@ -595,7 +722,7 @@ class Security extends Controller {
 	 *
 	 * To run this action, the user needs to have administrator rights!
 	 */
-	function encryptallpasswords() {
+	public function encryptallpasswords() {
 		// Only administrators can run this method
 		if(!Member::currentUser() || !Member::currentUser()->isAdmin()) {
 			Security::permissionFailure($this,

@@ -168,25 +168,25 @@ class MemberLoginForm extends LoginForm {
 	function forgotPassword($data) {
 		$SQL_data = Convert::raw2sql($data);
 
-		if($data['Email'] && $member = DataObject::get_one("Member",
-				"Member.Email = '$SQL_data[Email]'")) {
-			if(!$member->Password) {
-				$member->createNewPassword();
-				$member->write();
-			}
+		if(($data['Email']) && ($member = DataObject::get_one("Member",
+				"Member.Email = '$SQL_data[Email]'"))) {
 
-			$member->sendInfo('forgotPassword');
+			$member->generateAutologinHash();
+
+			$member->sendInfo('forgotPassword', array('PasswordResetLink' =>
+				Security::getPasswordResetLink($member->AutoLoginHash)));
+
 			Director::redirect('Security/passwordsent/' . urlencode($data['Email']));
 
 		} else if($data['Email']) {
 			$this->sessionMessage(
-				"Sorry, but I don't recognise the e-mail address. Maybe you need to sign up, or perhaps you used another e-mail address?",
+				"Sorry, but I don't recognise the e-mail address. Maybe you need " .
+					"to sign up, or perhaps you used another e-mail address?",
 				"bad");
 			Director::redirectBack();
 
 		} else {
 			Director::redirect("Security/lostpassword");
-
 		}
 	}
 
