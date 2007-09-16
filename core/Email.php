@@ -797,6 +797,12 @@ class Email_BounceHandler extends Controller {
         return;
       }   
       
+	// Check against access key defined in sapphire/_config.php
+	if( !isset($_REQUEST['Key']) || $_REQUEST['Key'] != EMAIL_BOUNCEHANDLER_KEY) {
+		echo 'Error: Access validation failed. Invalid "Key" specified.';
+		return;
+	}
+
         if( !$_REQUEST['Email'] ) {
             echo "No email address";
             return;    
