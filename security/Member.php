@@ -19,7 +19,7 @@ class Member extends DataObject {
 		'RememberLoginToken' => "Varchar(50)",
 		'NumVisit' => "Int",
 		'LastVisited' => 'Datetime',
-		'Bounced' => 'Boolean',
+		'Bounced' => 'Boolean', // Note: This does not seem to be used anywhere.
 		'AutoLoginHash' => 'Varchar(30)',
 		'AutoLoginExpired' => 'Datetime',
 		'BlacklistedEmail' => 'Boolean',
