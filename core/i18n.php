@@ -994,25 +994,7 @@ class i18n extends Controller {
 		
 		echo "Done!";
 	
-	}
 
-	function updater() {
-		DB::query("update Sitetree_lang set lang='es' where lang='Spanish'");
-		DB::query("update Sitetree_lang set lang='af' where lang='Afrikaans'");
-		DB::query("update Sitetree_lang set lang='ca' where lang='Catalan'");
-		DB::query("update Sitetree_lang set lang='nl' where lang='Dutch'");
-		DB::query("update Sitetree_lang_versions set lang='es' where lang='Spanish'");
-		DB::query("update Sitetree_lang_versions set lang='af' where lang='Afrikaans'");
-		DB::query("update Sitetree_lang_versions set lang='ca' where lang='Catalan'");
-		DB::query("update Sitetree_lang_versions set lang='nl' where lang='Dutch'");
-		DB::query("update Sitetree_lang_live set lang='es' where lang='Spanish'");
-		DB::query("update Sitetree_lang_live set lang='af' where lang='Afrikaans'");
-		DB::query("update Sitetree_lang_live set lang='ca' where lang='Catalan'");
-		DB::query("update Sitetree_lang_live set lang='nl' where lang='Dutch'");
-		DB::query("update i18nEntity_lang set lang='de_DE' where lang='German'");
-		DB::query("update i18nEntity_lang set lang='ca_AD' where lang='Catalan'");
-		DB::query("update i18nEntity_lang_versions set lang='de_DE' where lang='German'");
-		DB::query("update i18nEntity_lang_versions set lang='ca_AD' where lang='Catalan'");
 	}
 
 	
