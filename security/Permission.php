@@ -62,7 +62,8 @@ class Permission extends DataObject {
 	 *                  disabled, TRUE will be returned if the permission does
 	 *                  not exist at all.
 	 */
-	static function check($code, $arg = "any", $memberID = null, $strict = true) {
+	static function check($code, $arg = "any", $memberID = null,
+												$strict = true) {
 		if(!$memberID) {
 			if(!Member::currentUser()) {
 				return false;
@@ -70,7 +71,7 @@ class Permission extends DataObject {
 			$memberID = Member::currentUserID();
 		}
 
-		return self::checkMember($memberID, $code, $arg);
+		return self::checkMember($memberID, $code, $arg, $strict);
 	}
 
 
