@@ -4,6 +4,9 @@ class GroupedDropdownField extends DropdownField {
   * @desc Returns a <select> tag containing all the appropriate <option> tags, with <optgroup> tags around the <option> tags as required
   */
   function Field() {
+		// Initialisations
+		$options = '';
+		$classAttr = '';
     if($extraClass = trim($this->extraClass())) {
 			$classAttr = "class=\"$extraClass\"";
 		}
