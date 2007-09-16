@@ -173,7 +173,7 @@ class ContentController extends Controller {
 	 *       all available log-in forms (also OpenID...)
 	 */
 	public function LoginForm() {
-		return MemberAuthenticator::getLoginForm($this);
+		return MemberAuthenticator::get_login_form($this);
 	}
 
 	public function SilverStripeNavigator() {
@@ -312,6 +312,8 @@ HTML;
 	}
 	
 	
+
+
 	/**
 	 * This action is called by the installation system
 	 */
@@ -356,7 +358,7 @@ HTML
 		$tempcontent = '';
 		$username = Session::get('username');
 		$password = Session::get('password');
-		
+
 		$installfiles = array(
 			'index.php',
 			'install.php',
@@ -366,17 +368,17 @@ HTML
 			'config-form.html',
 			'index.html'
 		);
-		
+
 		foreach($installfiles as $installfile) {
 			if(file_exists('../' . $installfile)) {
 				unlink('../' . $installfile);
 			}
-			
+
 			if(file_exists('../' . $installfile)) {
 				$unsuccessful[] = $installfile;
 			}
 		}
-				
+
 		if(isset($unsuccessful)) {
 			$title->setValue("Unable to delete installation files");
 			$tempcontent = "<p style=\"margin: 1em 0\">Unable to delete installation files. Please delete the files below manually:</p><ul>";
