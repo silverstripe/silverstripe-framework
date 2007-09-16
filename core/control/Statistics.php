@@ -16,16 +16,28 @@ class Statistics extends Controller {
 	{
 
 		$top = <<<END
-<div id="trendchart"><canvas id="tchart" height="300" width="500"></canvas></div>
+<div id="trendchart">
+<h2>Trends</h2>
+<div><canvas id="chart" height="400" width="700"></canvas></div>
+<div id="chart_legend"><legend>Legend</legend></div>
+</div>
 		<script type="text/javascript">\n
 END;
 
 		$bot = <<<END
+var chart = new Plotr.{$type}Chart('chart',options);
+
+		chart.addDataset(chartdata);
+
+
+		chart.render();
+
+		chart.addLegend($('chart_legend'));
 
 		</script>
 END;
 
-		$ds = "var tchartdata = { \n";
+		$ds = "var chartdata = { \n";
 
 		foreach($table as $class) {
 			$record = DataObject::get($class, "", "Created DESC");
@@ -37,6 +49,7 @@ END;
 			$startyear = $startyear->Format('Y');
 			$startmonth = new DateTime($props['Created']);
 			$startmonth = $startmonth->Format('m');
+
 
 			if($filter == "day") {
 				$days = new DateTime($props['Created']);
@@ -112,7 +125,7 @@ END;
 		$opts = <<<END
 var options = {
 
-	axis: {labelFontSize: 10},
+	axisLabelFontSize:		10,
 
 	padding: {left: 30, right: 0, top: 10, bottom: 30},
 
@@ -124,13 +137,14 @@ END;
 		$opts .= $xt . "]\n};";
 
 
-			return $top . $ds . "\n};\n\n" /*. $opts*/ . "\n\n" . $bot;
+			return $top . $ds . "\n};\n\n" . $opts . "\n\n" . $bot;
 	}
 
 	static function UserRecordTable() {
 		$records = DataObject::get('Member');
 		$top = <<<END
 		<div id="usertable">
+		<h2>Registered Users</h2>
 		<table class="sortable-onload-1 rowstyle-alt no-arrow paginate-10 statstable" border="0" cellspacing="1" cellpadding="0">
 			<thead>
 				<tr><th class="sortable-numeric">ID</th><th class="sortable-text">Email</th><th class="sortable-sortDatetime">Joined</th></tr>
@@ -164,6 +178,7 @@ END;
 		$records = DataObject::get('PageView', null, 'Created DESC', null, $limit);
 		$top = <<<END
 		<div id="viewtable">
+		<h2>Recent Page Views</h2>
 		<table class="sortable-onload-1 rowstyle-alt no-arrow paginate-10 statstable" border="0" cellspacing="0" cellpadding="0">
 			<thead>
 				<tr><th class="sortable-numeric">ID</th><th class="sortable-sortDatetime">Time</th><th class="sortable-text">Browser</th><th class="sortable-text">OS</th><th>User</th><th class="sortable-text">Page</th></tr>
@@ -241,6 +256,7 @@ END;
 		}
 		$top = <<<END
 		<div id="viewtable">
+		<h2>Page Views</h2>
 		<table class="sortable-onload-1 rowstyle-alt no-arrow paginate-10 statstable" border="0" cellspacing="1" cellpadding="0">
 			<thead>
 				<tr><th class="sortable-numeric">ID</th><th class="sortable-sortDatetime">Time</th><th class="sortable-text">Browser</th><th class="sortable-text">OS</th><th class="sortable-text">User</th><th class="sortable-text">Page</th></tr>
@@ -268,12 +284,21 @@ END;
 
 	static function BrowserChart($type = "Pie", $color = "blue") {
 		$top = <<<END
-<div id="browserchart"><canvas id="bchart" height="300" width="500"></canvas></div>
+<div id="browserchart">
+<h2>Browsers</h2>
+<div><canvas id="bchart" height="400" width="700"></canvas></div>
+</div>
 
 		<script type="text/javascript">\n
 END;
 
 		$bot = <<<END
+var bchart = new Plotr.{$type}Chart('bchart', boptions);
+
+		bchart.addDataset(bchartdata);
+
+
+		bchart.render();
 
 		</script>
 END;
@@ -304,15 +329,8 @@ END;
 		$opts = <<<END
 var boptions = {
 
-	axis: {
-				lineWidth:			1.0,
-				lineColor:			'#000000',
-				tickSize:			3.0,
-				labelColor:			'#666666',
-				labelFont:			'Tahoma',
-				labelFontSize:		20,
-				labelWidth: 		50.0
-		},
+	axisLabelFontSize:		10,
+
 
 	padding: {left: 30, right: 0, top: 10, bottom: 30},
 
@@ -324,7 +342,7 @@ END;
 		$opts .= $xt . "]\n};";
 
 
-		return $top . $ds . "\n};\n\n" /*. $opts*/ . "\n\n" . $bot;
+		return $top . $ds . "\n};\n\n" . $opts . "\n\n" . $bot;
 	}
 
 }
