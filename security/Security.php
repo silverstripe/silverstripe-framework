@@ -215,10 +215,14 @@ class Security extends Controller {
 			return $controller->renderWith(array("Security_login", "Page"));
 
 		} else {
+			// Needed because the <base href=".."> in the template makes problems
+			// with the tabstrip library otherwise
+			$link_base = Director::absoluteURL($this->Link("login"));
+
 			$forms = $this->GetLoginForms();
-			$content = '';
-			foreach($forms as $form)
-				$content .= $form->forTemplate();
+			$content = '<div id="Form_EditForm">';
+			$content .= '<ul class="tabstrip">';
+			$content_forms = '';
 
 			foreach($forms as $form) {
 				$content .= "<li><a href=\"$link_base#{$form->FormName()}_tab\">{$form->getAuthenticator()->get_name()}</a></li>\n";
