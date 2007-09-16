@@ -55,6 +55,10 @@ class OpenIDLoginForm extends LoginForm {
     } else {
       if(!$fields) {
         $fields = new FieldSet(
+					new LiteralField("OpenIDDescription", '
+		<div id="OpenIDDescription"><p>OpenID is an Internet-wide identity system
+		  that allows you to sign in to many websites with a single account.
+			For more information visit <a href="http://openid.net">openid.net</a>.</p></div>'),
           new HiddenField("AuthenticationMethod", null,
 													$this->authenticator_class, $this),
           new TextField("OpenIDURL", "OpenID URL",
