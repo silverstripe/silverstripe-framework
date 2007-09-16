@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <rss version="2.0">
 	<channel>
-		<title>$Title</title>
+		<title>$Title.XML</title>
 		<link>$Link</link>
-		<description>$Description</description>
+		<description>$Description.XML</description>
 
 		<% control Entries %>
 		<item>
@@ -14,7 +14,7 @@
 			<% else %><pubDate>$Created.Rfc822</pubDate><% end_if %>
 			<% if Author %><author>$Author.XML</author><% end_if %>
 			<guid>$AbsoluteLink</guid>
-		</item>		
+		</item>
 		<% end_control %>
 
 	</channel>
