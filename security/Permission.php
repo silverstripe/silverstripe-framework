@@ -62,8 +62,7 @@ class Permission extends DataObject {
 	 *                  disabled, TRUE will be returned if the permission does
 	 *                  not exist at all.
 	 */
-	static function check($code, $arg = "any", $memberID = null,
-												$strict = true) {
+	public static function check($code, $arg = "any", $memberID = null, $strict = true) {
 		if(!$memberID) {
 			if(!Member::currentUser()) {
 				return false;
@@ -89,7 +88,7 @@ class Permission extends DataObject {
 	 *                  disabled, TRUE will be returned if the permission does
 	 *                  not exist at all.
 	 */
-	static function checkMember($memberID, $code, $arg = "any", $strict = true) {
+	public static function checkMember($memberID, $code, $arg = "any", $strict = true) {
 		$perms_list = self::get_declared_permissions_list();
 
 		if(self::$declared_permissions && is_array($perms_list) &&
@@ -165,7 +164,7 @@ class Permission extends DataObject {
 	 * @return array Returns a list of group IDs to which the member belongs
 	 *               to or NULL.
 	 */
-	static function groupList($memberID = null) {
+	public static function groupList($memberID = null) {
 		// Default to current member, with session-caching
 		if(!$memberID) {
 			$member = Member::currentUser();
@@ -207,7 +206,7 @@ class Permission extends DataObject {
 	 * @param string Optional: The permission argument (e.g. a page ID).
 	 * @returns Permission Returns the new permission object.
 	 */
-	static function grant($groupID, $code, $arg = "any") {
+	public static function grant($groupID, $code, $arg = "any") {
 		$perm = new Permission();
 		$perm->GroupID = $groupID;
 		$perm->Code = $code;
@@ -238,7 +237,7 @@ class Permission extends DataObject {
 	 * This function is called whenever the database is built, after the
 	 * database tables have all been created.
 	 */
-	function requireDefaultRecords() {
+	public function requireDefaultRecords() {
 		parent::requireDefaultRecords();
 
 		// Add default content if blank
@@ -273,7 +272,7 @@ class Permission extends DataObject {
 	 * @return DataObjectSet Returns a set of member that have the specified
 	 *                       permission.
 	 */
-	static function get_members_by_permission($code) {
+	public static function get_members_by_permission($code) {
 		$groupIDs = array();
         
         if(is_array($code)) $SQL_filter = "Permission.Code IN ('" . implode("','", Convert::raw2sql($code)) . "')";
@@ -341,7 +340,7 @@ class Permission extends DataObject {
 	 *               {@link Permission::check()}. The value is a description
 	 *               suitable for using in an interface.
 	 */
-	static function get_codes($blankItemText = null) {
+	public static function get_codes($blankItemText = null) {
 		$classes = ClassInfo::implementorsOf('PermissionProvider');
 
 		$allCodes = array();
@@ -376,7 +375,7 @@ class Permission extends DataObject {
 	 *
 	 * @see Permission::get_codes()
 	 */
-	function listcodes() {
+	public function listcodes() {
 		if(!Permission::check('ADMIN'))
 			Security::permissionFailure();
 
@@ -412,7 +411,7 @@ class Permission extends DataObject {
 	 *
 	 * @return array Linear list of declared permissions in the system.
 	 */
-	static function get_declared_permissions_list() {
+	public static function get_declared_permissions_list() {
 		if(!self::$declared_permissions)
 			return null;
 
@@ -488,7 +487,7 @@ class Permission_Group {
 	 *                           {@link Permission::check()}. The value is
 	 *                           suitable for using in an interface.
 	 */
-	function __construct($name, $permissions) {
+	public function __construct($name, $permissions) {
 		$this->name = $name;
 		$this->permissions = $permissions;
 	}
@@ -498,7 +497,7 @@ class Permission_Group {
 	 *
 	 * @return string Name (label) of the permission group
 	 */
-	function getName() {
+	public function getName() {
 		return $this->name;
 	}
 
@@ -511,7 +510,7 @@ class Permission_Group {
 	 *               used in {@link Permission::check()}. The value is
 	 *               suitable for using in an interface.
 	 */
-	function getPermissions() {
+	public function getPermissions() {
 		return $this->permissions;
 	}
 }
