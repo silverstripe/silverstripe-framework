@@ -309,6 +309,8 @@ class Member extends DataObject {
 		}
 
 		$this->setField("BlacklistedEmail", $val);
+		// Save the BlacklistedEmail field to the Member table
+		$this->write();
 	}
 
 
