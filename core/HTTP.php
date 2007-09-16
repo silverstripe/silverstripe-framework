@@ -266,7 +266,8 @@ class HTTP {
 
 	}
 
-	protected static $cache_age = 86400, $modification_date;
+	protected static $cache_age = 86400, $modification_date = null;
+	protected static $etag = null;
 
 	/**
 	 * Set the maximum age of this page in web caches, in seconds
@@ -277,12 +278,17 @@ class HTTP {
 
 	static function register_modification_date($dateString) {
 		$timestamp = strtotime($dateString);
-		if($timestamp > self::$modification_date) self::$modification_date = $timestamp;
+		if($timestamp > self::$modification_date)
+			self::$modification_date = $timestamp;
 	}
 
 	static function register_modification_timestamp($timestamp) {
 		if($timestamp > self::$modification_date)
 			self::$modification_date = $timestamp;
+	}
+
+	static function register_etag($etag) {
+		self::$etag = $etag;
 	}
 
 	/**
@@ -315,6 +321,10 @@ class HTTP {
 
 				$expires = 2 * time() - self::$modification_date;
 				header("Expires: " . self::gmt_date($expires));
+			}
+
+			if(self::$etag) {
+				header('ETag: ' . self::$etag);
 			}
 		}
 	}
