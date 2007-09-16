@@ -50,10 +50,12 @@ class UniqueTextField extends TextField {
 		}
 		*/
 		
+		$fieldSize = $this->maxLength ? min( $this->maxLength, 30 ) : 30;
+
 		if($this->maxLength){
-			return /*implode("", $restrictedInputs).*/"<input class=\"".$this->class."\" type=\"text\" id=\"" . $this->id() . "\" name=\"{$this->name}\" value=\"" . $this->attrValue() . "\" maxlength=\"$this->maxLength\" /><input type=\"hidden\" name=\"restricted-messages[".$this->id()."]\" id=\"".$this->id()."-restricted-message\" value=\"{$this->restrictedMessage}\" />";
+			return /*implode("", $restrictedInputs).*/"<input class=\"".$this->class."\" type=\"text\" id=\"" . $this->id() . "\" name=\"{$this->name}\" value=\"" . $this->attrValue() . "\" maxlength=\"$this->maxLength\" size=\"$fieldSize\" /><input type=\"hidden\" name=\"restricted-messages[".$this->id()."]\" id=\"".$this->id()."-restricted-message\" value=\"{$this->restrictedMessage}\" />";
 		}else{
-			return /*implode("", $restrictedInputs).*/"<input class=\"".$this->class."\" type=\"text\" id=\"" . $this->id() . "\" name=\"{$this->name}\" value=\"" . $this->attrValue() . "\" /><input type=\"hidden\" name=\"restricted-messages[".$this->id()."]\" id=\"".$this->id()."-restricted-message\" value=\"{$this->restrictedMessage}\" />"; 
+			return /*implode("", $restrictedInputs).*/"<input class=\"".$this->class."\" type=\"text\" id=\"" . $this->id() . "\" name=\"{$this->name}\" value=\"" . $this->attrValue() . "\" size=\"30\" /><input type=\"hidden\" name=\"restricted-messages[".$this->id()."]\" id=\"".$this->id()."-restricted-message\" value=\"{$this->restrictedMessage}\" />"; 
 		}
 	}
 }

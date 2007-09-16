@@ -991,7 +991,10 @@ class SiteTree extends DataObject {
 								"[^A-Za-z0-9-]+",
 								"-",
 								"URLs can only be made up of letters, digits and hyphens.",
-								""
+								"",
+								"",
+								"",
+								50
 							),
 							new LabelField("/")
 						),
