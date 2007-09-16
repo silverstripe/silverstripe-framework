@@ -917,7 +917,7 @@ class Email_BlackList extends DataObject{
      * sent has specifically been blocked.
      */
     static function isBlocked($email){
-    	$blockedEmails = DataObject::get("Email_BlackList")->toDropDownMap("ID","Email");
+    	$blockedEmails = DataObject::get("Email_BlackList")->toDropDownMap("ID","BlockedEmail");
     	if($blockedEmails){
 	    	if(in_array($email,$blockedEmails)){
 	    		return true;
