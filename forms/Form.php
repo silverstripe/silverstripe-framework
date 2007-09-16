@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 /**
  * Bulk of the form system
@@ -9,8 +9,8 @@
  * The form class is an extensible base for all forms on a sapphire application.  It can be used
  * either by extending it, and creating processor methods on the subclass, or by creating instances
  * of form whose actions are handled by the parent controller.
- * 
- * In either case, if you want to get a form to do anything, it must be inextricably tied to a 
+ *
+ * In either case, if you want to get a form to do anything, it must be inextricably tied to a
  * controller.  The constructor is passed a controller and a method on that controller.  This method
  * should return the form object, and it shouldn't require any arguments.  Parameters, if necessary,
  * can be passed using the URL or get variables.  These restrictions are in place so that we can
@@ -26,53 +26,53 @@ class Form extends ViewableData {
 	public static $backup_post_data = false;
 	
 	protected static $current_action;
-	
+
 	/**
 	 * Keeps track of whether this form has a default action or not.
 	 * Set to false by $this->disableDefaultAction();
 	 */
 	protected $hasDefaultAction = true;
-	
+
 	/**
 	 * Accessed by Form.ss; modified by formHtmlContent.
 	 * A performance enhancement over the generate-the-form-tag-and-then-remove-it code that was there previously
 	 */
 	public $IncludeFormTag = true;
-	
+
 	/**
 	 * Create a new form, with the given fields an action buttons.
 	 * @param controller The parent controller, necessary to create the appropriate form action tag.
-	 * @param name The method on the controller that will return this form object. 
+	 * @param name The method on the controller that will return this form object.
 	 * @param fields All of the fields in the form - a {@link FieldSet} of {@link FormField} objects.
 	 * @param actions All of the action buttons in the form - a {@link FieldSet} of {@link FormAction} objects
 	 */
-	function __construct($controller, $name, FieldSet $fields, FieldSet $actions, $validator = null) {		
+	function __construct($controller, $name, FieldSet $fields, FieldSet $actions, $validator = null) {
 		parent::__construct();
 
 		foreach($fields as $field) {
 			$field->setForm($this);
 		}
 		foreach($actions as $action) $actions->setForm($this);
-		
+
 		$this->fields = $fields;
 		$this->actions = $actions;
 		$this->controller = $controller;
 		$this->name = $name;
-		
+
 		// Form validation
 		if($validator) {
 			$this->validator = $validator;
 			$this->validator->setForm($this);
 		}
 
-		// Form error controls 
+		// Form error controls
 		$errorInfo = Session::get("FormInfo.{$this->FormName()}");
-	
+
 		if(isset($errorInfo['errors']) && is_array($errorInfo['errors'])){
 			foreach($errorInfo['errors'] as $error){
 				$field = $this->fields->dataFieldByName($error['fieldName']);
-				
-				if(!$field){ 
+
+				if(!$field){
          	$errorInfo['message'] = $error['message'];
 					$errorInfo['type'] = $error['messageType'];
 				} else {
@@ -81,23 +81,23 @@ class Form extends ViewableData {
 			}
 
 			// load data in from previous submission upon error
-			if($errorInfo['data'])
+			if(isset($errorInfo['data']))
 				$this->loadDataFrom($errorInfo['data']);
 
 		}
-		
+
 		if(isset($errorInfo['message']) && isset($errorInfo['type'])) {
 			$this->setMessage($errorInfo['message'],$errorInfo['type']);
 		}
 	}
-	
+
 	/**
 	 * Convert this form into a readonly form
 	 */
 	function makeReadonly() {
 		$this->transform(new ReadonlyTransformation());
 	}
-	
+
 	/**
 	 * Add an error message to a field on this form.  It will be saved into the session
 	 * and used the next time this form is displayed.
@@ -109,21 +109,21 @@ class Form extends ViewableData {
 			'messageType' => $messageType,
 		));
 	}
-		
+
 	function transform(FormTransformation $trans) {
 		$newFields = new FieldSet();
 		foreach($this->fields as $field) {
 			$newFields->push($field->transform($trans));
 		}
 		$this->fields = $newFields;
-		
+
 		$newActions = new FieldSet();
 		foreach($this->actions as $action) {
 			$newActions->push($action->transform($trans));
 		}
 		$this->actions = $newActions;
-		
-		
+
+
 		// We have to remove validation, if the fields are not editable ;-)
 		if($this->validator)
 			$this->validator->removeValidation();
@@ -163,12 +163,12 @@ class Form extends ViewableData {
 			$newFields->push($field->transformTo($format));
 		}
 		$this->fields = $newFields;
-		
+
 		// We have to remove validation, if the fields are not editable ;-)
 		if($this->validator)
 			$this->validator->removeValidation();
 	}
-	
+
 	/**
 	 * Return the form's fields - used by the templates
 	 * @return FieldSet The form fields
@@ -186,8 +186,8 @@ class Form extends ViewableData {
 	function dataFieldByName($name) {
 		return $this->fields->dataFieldByName($name);
 	}
-	
-	
+
+
 	/**
 	 * Return the form's action buttons - used by the templates
 	 * @return FieldSet The action list
@@ -202,7 +202,7 @@ class Form extends ViewableData {
 	function unsetAllActions(){
 		$this->actions = new FieldSet();
 	}
-	
+
 	/**
 	 * Unset the form's action button by its name
 	 */
@@ -211,7 +211,7 @@ class Form extends ViewableData {
 
 		$action->unsetthis();
 	}
-	
+
 	/**
 	 * Unset the form's dataField by its name
 	 */
@@ -225,7 +225,7 @@ class Form extends ViewableData {
 				break;*/
 			}
 		}
-		
+
 	}
 	
 	/**
@@ -236,7 +236,7 @@ class Form extends ViewableData {
 		$tab = $this->Fields()->findOrMakeTab($tabName);
 		$tab->removeByName($fieldName);
 	}
-	
+
 	/**
 	 * Return the attributes of the form tag - used by the templates
 	 * @return string The attribute string
@@ -248,11 +248,11 @@ class Form extends ViewableData {
 		if($this->validator) $this->validator->includeJavascriptValidation();
 		if($this->target) $target = " target=\"".$this->target."\"";
     else $target = "";
-    
-    return "id=\"" . $this->FormName() . "\" action=\"" . $this->FormAction() 
+
+    return "id=\"" . $this->FormName() . "\" action=\"" . $this->FormAction()
 				. "\" method=\"" . $this->FormMethod() . "\" enctype=\"" . $this->FormEncType() . "\"$target";
 	}
-  
+
   protected $target;
   /**
   * Set the target of this form to any value - useful for opening the form contents in a new window or refreshing another frame
@@ -309,9 +309,9 @@ class Form extends ViewableData {
 			return $this->controller->Link();
 		}
 	}
-	
+
 	/**
-	 * Returns the name of the form 
+	 * Returns the name of the form
 	 */
 	function FormName() {
 		return $this->class . '_' . str_replace('.','',$this->name);
@@ -329,15 +329,15 @@ class Form extends ViewableData {
 	function ReferencedField() {
 		return $this->dataFieldByName($_GET['fieldName']);
 	}
-	
+
 	/**
 	 * The next functions store and modify the forms
-	 * message attributes. messages are stored in session under 
+	 * message attributes. messages are stored in session under
 	 * $_SESSION[formname][message];
 	 */
 	protected $message, $messageType;
 	function Message() {
-		$this->getMessageFromSession(); 
+		$this->getMessageFromSession();
 		$message = $this->message;
 		$this->clearMessage();
 		return $message;
@@ -346,18 +346,18 @@ class Form extends ViewableData {
 		$this->getMessageFromSession();
 		return $this->messageType;
 	}
-	
+
 	protected function getMessageFromSession() {
 		if($this->message || $this->messageType) {
-			return $this->message;			
+			return $this->message;
 		}else{
 			$this->message = Session::get("FormInfo.{$this->FormName()}.formError.message");
 			$this->messageType = Session::get("FormInfo.{$this->FormName()}.formError.type");
 
 			Session::clear("FormInfo.{$this->FormName()}");
-		} 
+		}
 	}
-	
+
 	/**
 	 * Set a status message for the form.
 	 * @param message the text of the message
@@ -377,12 +377,12 @@ class Form extends ViewableData {
 		Session::set("FormInfo.{$this->FormName()}.formError.message", $message);
 		Session::set("'FormInfo.{$this->FormName()}.formError.type", $type);
 	}
-	
+
 	static function messageForForm( $formName, $message, $type ) {
 		Session::set("FormInfo.{$formName}.formError.message", $message);
 		Session::set("FormInfo.{$formName}.formError.type", $type);
 	}
-	
+
 	function clearMessage() {
 		$this->message  = null;
 		Session::clear("FormInfo.{$this->FormName()}.errors");
@@ -391,7 +391,7 @@ class Form extends ViewableData {
 	function resetValidation() {
 		Session::clear("FormInfo.{$this->FormName()}.errors");
 	}
-	
+
 	protected $record;
 	
 	/**
@@ -401,7 +401,7 @@ class Form extends ViewableData {
 	function getRecord() {
 		return $this->record;
 	}
-	
+
 	/**
 	 * Processing that occurs before a form is executed.
 	 * This includes form validation, if it fails, we redirect back
@@ -409,8 +409,8 @@ class Form extends ViewableData {
 	 */
 	 function beforeProcessing(){
 		if($this->validator){
-			$errors = $this->validator->validate(); 
-	
+			$errors = $this->validator->validate();
+
 			if($errors){
 				if(Director::is_ajax()) {
 					// Send validation errors back as JSON with a flag at the start
@@ -428,25 +428,25 @@ class Form extends ViewableData {
 					return false;
 				} else {
 					$data = $this->getData();
-					
+
 					// People will get worried if you leave credit card information in session..
 					if(isset($data['CreditCardNumber']))	unset($data['CreditCardNumber']);
 					if(isset($data['DateExpiry'])) unset($data['Expiry']);
-					
+
 					// Load errors into session and post back
 					Session::set("FormInfo.{$this->FormName()}", array(
 						'errors' => $errors,
 						'data' => $data,
 					));
-					
+
 					Director::redirectBack();
 				}
-				return false;	
+				return false;
 			}
 		}
 		return true;
 	}
-	
+
 	/**
 	 * Load data from the given object.
 	 * It will call $object->MyField to get the value of MyField.
@@ -465,21 +465,21 @@ class Form extends ViewableData {
 			user_error("Form::loadDataFrom() not passed an array or an object", E_USER_WARNING);
 			return;
 		}
-		
+
 		$dataFields = $this->fields->dataFields();
 		if($dataFields) foreach($dataFields as $field) {
-			
+
 			if($name = $field->Name()) {
 				if($o) {
 					$val = $object->$name;
 				} else {
 					$val = isset($object[$name]) ? $object[$name] : null;
 				}
-				
+
 				// First check looks for (fieldname)_unchanged, an indicator that we shouldn't overwrite the field value
 				if($o || !isset($object[$name . '_unchanged'])) {
 					// Second check was the original check: save the value if we have one
-					if(isset($val) || $loadBlanks) {		
+					if(isset($val) || $loadBlanks) {
 						$field->setValue($val);
 					}
 				}
@@ -511,19 +511,19 @@ class Form extends ViewableData {
 	 * Save the contents of this form into the given data object.
 	 * It will make use of setCastedField() to do this.
 	 */
-	function saveInto(DataObject $dataObject) {	
+	function saveInto(DataObject $dataObject) {
 		$dataFields = $this->fields->dataFields();
 		$lastField = null;
-		
+
 		if($dataFields) foreach($dataFields as $field) {
 			$saveMethod = "save{$field->Name()}";
-		
+
 			if($field->Name() == "ClassName"){
-				$lastField = $field;	
+				$lastField = $field;
 			}else if( $dataObject->hasMethod( $saveMethod ) ){
 				$dataObject->$saveMethod( $field->Value());
 			} else if($field->Name() != "ID"){
-				$field->saveInto($dataObject);	
+				$field->saveInto($dataObject);
 			}
 		}
 		if($lastField) $lastField->saveInto($dataObject);
@@ -542,7 +542,7 @@ class Form extends ViewableData {
 		}
 		return $data;
 	}
-	
+
 	/**
 	 * Call the given method on the given field.
 	 * This is used by Ajax-savvy form fields.  By putting '&action=callfieldmethod' to the end
@@ -555,7 +555,7 @@ class Form extends ViewableData {
 		$fieldName = $data['fieldName'];
 		$methodName = $data['methodName'];
 		$fields = $this->fields->dataFields();
-		
+
 		// special treatment needed for TableField-class and TreeDropdownField
 		if(strpos($fieldName, '[')) {
 			preg_match_all('/([^\[]*)/',$fieldName, $fieldNameMatches);
@@ -566,7 +566,7 @@ class Form extends ViewableData {
 
 		if(isset($tableFieldName) && isset($subFieldName) && is_a($fields[$tableFieldName], 'TableField')) {
 			$field = $fields[$tableFieldName]->getField($subFieldName, $fieldName);
-			return $field->$methodName(); 
+			return $field->$methodName();
 		} else if(isset($fields[$fieldName])) {
 			return $fields[$fieldName]->$methodName();
 		} else {
@@ -574,8 +574,8 @@ class Form extends ViewableData {
 		}
 
 	}
-	
-	
+
+
 	/**
 	 * Return a rendered version of this form.
 	 * This is returned when you access a form as $FormObject rather than <% control FormObject %>
@@ -584,7 +584,7 @@ class Form extends ViewableData {
 		$form = $this->renderWith("Form");
 		return $form;
 	}
-	
+
 	/**
 	 * Returns an HTML rendition of this form, without the <form> tag itself.
 	 * Attaches 3 extra hidden files, _form_action, _form_name, _form_method, and _form_enctype.  These are
@@ -594,28 +594,28 @@ class Form extends ViewableData {
 		$this->IncludeFormTag = false;
 		$content = $this->forTemplate();
 		$this->IncludeFormTag = true;
-		
+
 		$content .= "<input type=\"hidden\" name=\"_form_action\" id=\"" . $this->FormName . "_form_action\" value=\"" . $this->FormAction() . "\" />\n";
 		$content .= "<input type=\"hidden\" name=\"_form_name\" value=\"" . $this->FormName() . "\" />\n";
 		$content .= "<input type=\"hidden\" name=\"_form_method\" value=\"" . $this->FormMethod() . "\" />\n";
 		$content .= "<input type=\"hidden\" name=\"_form_enctype\" value=\"" . $this->FormEncType() . "\" />\n";
-		
+
 		return $content;
 	}
-	
+
 	function debug() {
 		$result = "<h3>$this->class</h3><ul>";
 		foreach($this->fields as $field) {
 			$result .= "<li>$field" . $field->debug() . "</li>";
 		}
 		$result .= "</ul>";
-		
+
 		if( $this->validator )
 			$result .= "<h3>Validator</h3>" . $this->validator->debug();
-		
-		return $result;		
+
+		return $result;
 	}
-	
+
 	/**
 	 * Render this form using the given template, and return the result as a string
 	 * You can pass either an SSViewer or a template name
@@ -628,8 +628,8 @@ class Form extends ViewableData {
 		if(is_string($template)) $template = new SSViewer($template);
 		return $template->process($custom);
 	}
-	
-	
+
+
 	protected $buttonClickedFunc;
 	/**
 	 * Sets the button that was clicked.  This should only be called by the Controller.
@@ -638,21 +638,21 @@ class Form extends ViewableData {
 	function setButtonClicked($funcName) {
 		$this->buttonClickedFunc = $funcName;
 	}
-	
+
 	function buttonClicked() {
 		foreach($this->actions as $action) {
 			if($this->buttonClickedFunc == $action->actionName()) return $action;
 		}
 	}
-	
+
 	/**
 	 * Return the default button that should be clicked when another one isn't available
 	 */
 	function defaultAction() {
-		if($this->hasDefaultAction && $this->actions) 
+		if($this->hasDefaultAction && $this->actions)
 			return $this->actions->First();
 	}
-	
+
 	/**
 	 * Disable the default button.
 	 * Ordinarily, when a form is processed and no action_XXX button is available, then the first button in the actions list
@@ -661,7 +661,7 @@ class Form extends ViewableData {
 	function disableDefaultAction() {
 		$this->hasDefaultAction = false;
 	}
-	
+
 	/**
 	 * Returns the name of a field, if that's the only field that the current controller is interested in.
 	 * It checks for a call to the callfieldmethod action.
@@ -670,7 +670,7 @@ class Form extends ViewableData {
 	static function single_field_required() {
 		if(self::current_action() == 'callfieldmethod') return $_REQUEST['fieldName'];
 	}
-	
+
 	/**
 	 * Return the current form action being called, if available.
 	 * This is useful for optimising your forms
@@ -678,7 +678,7 @@ class Form extends ViewableData {
 	static function current_action() {
 		return self::$current_action;
 	}
-	
+
 	/**
 	 * Set the current form action.  Should only be called by Controller.
 	 */
