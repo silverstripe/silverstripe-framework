@@ -55,7 +55,7 @@ class OpenIDAuthenticator extends Authenticator {
 	 * @return bool Returns TRUE on success, FALSE otherwise.
 	 */
 	protected static function on_register() {
-		Member::addRole('OpenIDAuthenticatedRole');
+		Member::add_role('OpenIDAuthenticatedRole');
 		return parent::on_register();
 	}
 
