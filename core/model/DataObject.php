@@ -1290,7 +1290,7 @@ class DataObject extends Controller {
 	}
 
 	/**
-	 * Like {@link buildSQL}, but applies the extension modificiations.
+	 * Like {@link buildSQL}, but applies the extension modifications.
 	 *
 	 * @param string $filter A filter to be inserted into the WHERE clause.
 	 * @param string $sort A sort expression to be inserted into the ORDER BY clause. If omitted, self::$default_sort will be used.
