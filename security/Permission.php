@@ -1,6 +1,6 @@
 <?php
-
 class Permission extends DataObject {
+
 	static $db = array(
 		"Code" => "Varchar",
 		"Arg" => "Int",
@@ -17,9 +17,14 @@ class Permission extends DataObject {
 	 * permission matrices.
 	 */
 	static $declared_permissions = null;
-	
+
+  /**
+	 * Linear list of declared permissions in the system.
+	 *
+	 * @var array
+	 */
 	protected static $declared_permissions_list = null;
-	
+
 	/**
 	 * @var $strict_checking Boolean Method to globally disable "strict" checking,
 	 * which means a permission will be granted if the key does not exist at all.
@@ -28,22 +33,34 @@ class Permission extends DataObject {
 	
 	/**
 	 * If this setting is set, then permissions can imply other permissions
+	 *
+	 * @var bool
 	 */
 	static $implied_permissions = false;
-	
+
 	/**
-	 * Set to false to prevent the 'ADMIN' permission from implying all permissions in the system
+	 * Set to false to prevent the 'ADMIN' permission from implying all
+	 * permissions in the system
+	 *
+	 * @var bool
 	 */
 	static $admin_implies_all = true;
-	
+
+
 	/**
 	 * Check that the current member has the given permission
 	 * 
-	 * @param $code string|array Either a list of codes or a single code
-	 * @param $arg string
-	 * @param $memberID integer
-	 * @param $strict Boolean
-	 * @return Integer
+	 * @param string $code Code of the permission to check
+	 * @param string $arg Optional argument (e.g. a permissions for a specific
+	 *                    page)
+	 * @param int $memberID Optional member ID. If set to NULL, the permssion
+	 *                      will be checked for the current user
+	 * @param bool $strict Use "strict" checking (which means a permission
+	 *                     will be granted if the key does not exist at all)?
+	 * @return int|bool The ID of the permission record if the permission
+	 *                  exists; null otherwise. If "strict" checking is
+	 *                  disabled, TRUE will be returned if the permission does
+	 *                  not exist at all.
 	 */
 	static function check($code, $arg = "any", $memberID = null, $strict = true) {
 		if(!$memberID) {
@@ -56,39 +73,60 @@ class Permission extends DataObject {
 		return self::checkMember($memberID, $code, $arg);
 	}
 
+
 	/**
 	 * Check that the given member has the given permission
-	 * 
-	 * @param memberID The ID of the member to check.  Leave blank for the current member
-	 * @param $code string
-	 * @param $arg string
-	 * @param $strict Boolean
-	 * @return Integer The ID of the Permission record if the permission exists; null otherwise
+	 * @param int memberID The ID of the member to check. Leave blank for the
+	 *                     current member
+	 * @param string $code Code of the permission to check
+	 * @param string $arg Optional argument (e.g. a permissions for a specific
+	 *                    page)
+	 * @param bool $strict Use "strict" checking (which means a permission
+	 *                     will be granted if the key does not exist at all)?
+	 * @return int|bool The ID of the permission record if the permission
+	 *                  exists; null otherwise. If "strict" checking is
+	 *                  disabled, TRUE will be returned if the permission does
+	 *                  not exist at all.
 	 */
 	static function checkMember($memberID, $code, $arg = "any", $strict = true) {
-		// Group component
 		$perms_list = self::get_declared_permissions_list();
-		
-		if(self::$declared_permissions && is_array($perms_list) && !in_array($code, $perms_list)) {
-			// user_error("Permission '$code' has not been declared. Use Permission::declare_permissions() to add this permission", E_USER_WARNING);
+
+		if(self::$declared_permissions && is_array($perms_list) &&
+				!in_array($code, $perms_list)) {
+			//user_error("Permission '$code' has not been declared. Use " .
+			//					 "Permission::declare_permissions() to add this permission",
+			//					 E_USER_WARNING);
 		}
-		
+
 		$groupList = self::groupList($memberID);
 		if($groupList) {
 			$groupCSV = implode(", ", $groupList);
 
 			// Arg component
 			switch($arg) {
-				case "any": $argClause = "";break;
-				case "all": $argClause = " AND Arg = -1"; break;
+				case "any":
+					$argClause = "";
+					break;
+				case "all":
+					$argClause = " AND Arg = -1";
+					break;
 				default:
-					if(is_numeric($arg)) $argClause = "AND Arg IN (-1, $arg) ";
-					else use_error("Permission::checkMember: bad arg '$arg'", E_USER_ERROR);
+					if(is_numeric($arg)) {
+						$argClause = "AND Arg IN (-1, $arg) ";
+					} else {
+						use_error("Permission::checkMember: bad arg '$arg'",
+											E_USER_ERROR);
+					}
 			}
 			
 			if(is_array($code)) $SQL_codeList = "'" . implode("', '", Convert::raw2sql($code)) . "'";
 			else $SQL_codeList = "'" . Convert::raw2sql($code) . "'";
 			
+
+			$adminFilter = (self::$admin_implies_all)
+				?  ",'ADMIN'"
+				: '';
+
 			if(!self::$strict_checking || !$strict) {
 				$hasPermission = DB::query("
 					SELECT COUNT(*) 
@@ -97,8 +135,15 @@ class Permission extends DataObject {
 				")->value();
 				if(!$hasPermission) return true;
 			}
-			
+
 			// Raw SQL for efficiency
+			return DB::query("
+				SELECT ID
+				FROM Permission
+				WHERE (Code IN ($SQL_codeList $adminFilter)
+					AND GroupID IN ($groupCSV)
+					$argClause
+			")->value();
 			return DB::query("SELECT ID FROM Permission WHERE Code IN ($SQL_codeList, 'ADMIN') AND GroupID IN ($groupCSV) $argClause")->value();
 		}
 	}
@@ -106,20 +151,30 @@ class Permission extends DataObject {
 
 	/**
 	 * Get the list of groups that the given member belongs to.
-	 * Call without an argument to get the groups that the current member belongs to.  In this case, the results will be session-cached
+	 *
+	 * Call without an argument to get the groups that the current member
+	 * belongs to. In this case, the results will be session-cached.
+	 *
+	 * @param int $memberID The ID of the member. Leave blank for the current
+	 *                      member.
+	 * @return array Returns a list of group IDs to which the member belongs
+	 *               to or NULL.
 	 */
 	static function groupList($memberID = null) {
 		// Default to current member, with session-caching
 		if(!$memberID) {
 			$member = Member::currentUser();
-			if($member && isset($_SESSION['Permission_groupList'][$member->ID])) return $_SESSION['Permission_groupList'][$member->ID];
+			if($member && isset($_SESSION['Permission_groupList'][$member->ID]))
+				return $_SESSION['Permission_groupList'][$member->ID];
 		} else {
 			$member = DataObject::get_by_id("Member", $memberID);
 		}
 
 		if($member) {
-			// Build a list of the IDs of the groups.  Most of the heavy lifting is done by Member::Groups
-			// NOTE: This isn't effecient; but it's called once per session so it's a low priority to fix.
+			// Build a list of the IDs of the groups.  Most of the heavy lifting
+			// is done by Member::Groups
+			// NOTE: This isn't effecient; but it's called once per session so
+			// it's a low priority to fix.
 			$groups = $member->Groups();
 			$groupList = array();
 
@@ -138,9 +193,14 @@ class Permission extends DataObject {
 		}
 	}
 
+
 	/**
 	 * Grant the given permission code/arg to the given group
-	 * @returns The new permission object
+	 *
+	 * @param int $groupID The ID of the group
+	 * @param string $code The permission code
+	 * @param string Optional: The permission argument (e.g. a page ID).
+	 * @returns Permission Returns the new permission object.
 	 */
 	static function grant($groupID, $code, $arg = "any") {
 		$perm = new Permission();
@@ -149,28 +209,45 @@ class Permission extends DataObject {
 
 		// Arg component
 		switch($arg) {
-			case "any": break;
-			case "all": $perm->Arg = -1;
-			default: 
-				if(is_numeric($arg)) $perm->Arg = $arg;
-				else use_error("Permission::checkMember: bad arg '$arg'", E_USER_ERROR);
+			case "any":
+				break;
+			case "all":
+				$perm->Arg = -1;
+			default:
+				if(is_numeric($arg)) {
+					$perm->Arg = $arg;
+				} else {
+					use_error("Permission::checkMember: bad arg '$arg'",
+										E_USER_ERROR);
+				}
 		}
 
 		$perm->write();
 		return $perm;
 	}
 
+
+	/**
+	 * Add default records to database.
+	 *
+	 * This function is called whenever the database is built, after the
+	 * database tables have all been created.
+	 */
 	function requireDefaultRecords() {
 		parent::requireDefaultRecords();
 
 		// Add default content if blank
 		if(!DB::query("SELECT ID FROM Permission")->value()) {
-			$admins = DB::query("SELECT ID FROM `Group` WHERE CanCMSAdmin = 1")->column();
+			$admins = DB::query("SELECT ID FROM `Group` WHERE CanCMSAdmin = 1")
+				->column();
+
 			if(isset($admins)) {
-				foreach($admins as $admin) Permission::grant($admin, "ADMIN");
+				foreach($admins as $admin)
+					Permission::grant($admin, "ADMIN");
 			}
 
-			$authors = DB::query("SELECT ID FROM `Group` WHERE CanCMS = 1")->column();
+			$authors = DB::query("SELECT ID FROM `Group` WHERE CanCMS = 1")
+				->column();
 			if(isset($authors)) {
 				foreach($authors as $author) {
 					Permission::grant($author, "CMS_ACCESS_CMSMain");
@@ -183,11 +260,13 @@ class Permission extends DataObject {
 		}
 	}
 
+
 	/**
 	 * Returns all members for a specific permission.
 	 * 
 	 * @param $code String|array Either a single permission code, or a list of permission codes
-	 * @return DataObjectSet
+	 * @return DataObjectSet Returns a set of member that have the specified
+	 *                       permission.
 	 */
 	static function get_members_by_permission($code) {
 		$groupIDs = array();
@@ -199,17 +278,21 @@ class Permission extends DataObject {
 			'Group', 
 			$SQL_filter, // filter
 			null, // limit
-			"LEFT JOIN `Permission` ON `Group`.`ID` = `Permission`.`GroupID`" // join 
+			"LEFT JOIN `Permission` ON `Group`.`ID` = `Permission`.`GroupID`" // join
 		);
-		if(!$toplevelGroups) return false;
+		if(!$toplevelGroups)
+			return false;
+
 		foreach($toplevelGroups as $group) {
 			$familyIDs = $group->collateFamilyIDs();
 			if(is_array($familyIDs)) {
 				$groupIDs = array_merge($groupIDs, array_values($familyIDs));
 			}
 		}
-		if(!count($groupIDs)) return false;
-		
+
+		if(!count($groupIDs))
+			return false;
+
 		$members = DataObject::get(
 			Object::getCustomClass('Member'),
 			$_filter = "`Group`.ID IN (" . implode(",",$groupIDs) . ")",
@@ -239,11 +322,29 @@ class Permission extends DataObject {
 		);
 	}
 
+
+	/**
+	 * Get a list of all available permission codes
+	 *
+	 * @param bool|string $blankItemText Text for permission with the empty
+	 *                                   code (""). If set to TRUE it will be
+	 *                                   set to "(select)"; if set to NULL or
+	 *                                   FALSE the empty permission is not
+	 *                                   included in the list.
+	 * @return array Returns an array of all available permission codes. The
+	 *               array indicies are the permission codes as used in
+	 *               {@link Permission::check()}. The value is a description
+	 *               suitable for using in an interface.
+	 */
 	static function get_codes($blankItemText = null) {
 		$classes = ClassInfo::implementorsOf('PermissionProvider');
 
 		$allCodes = array();
-		if($blankItemText) $allCodes[''] = ($blankItemText === true) ? '(select)' : $blankItemText;
+		if($blankItemText){
+			$allCodes[''] = ($blankItemText === true)
+				? '(select)'
+				: $blankItemText;
+		}
 		$allCodes['ADMIN'] = 'Full administrative rights';
 
 		foreach($classes as $class) {
@@ -254,9 +355,11 @@ class Permission extends DataObject {
 			}
 		}
 
-		$otherPerms = DB::query("SELECT DISTINCT Code From Permission")->column();
+		$otherPerms = DB::query("SELECT DISTINCT Code From Permission")
+			->column();
 		foreach($otherPerms as $otherPerm) {
-			if(!array_key_exists($otherPerm, $allCodes)) $allCodes[$otherPerm] = $otherPerm;
+			if(!array_key_exists($otherPerm, $allCodes))
+				$allCodes[$otherPerm] = $otherPerm;
 		}
 		
 		asort($allCodes);
@@ -265,75 +368,148 @@ class Permission extends DataObject {
 	
 	/*
 	 * Controller action to list the codes available
+	 *
+	 * @see Permission::get_codes()
 	 */
 	function listcodes() {
-		if(!Permission::check('ADMIN')) Security::permissionFailure();
+		if(!Permission::check('ADMIN'))
+			Security::permissionFailure();
 
 		echo "<h1>The following permission codes are defined</h1>";
 		$codes = self::get_codes();
 		echo "<pre>";
 		print_r($codes);
 	}
-	
+
+
 	/**
-	 * Declare an array of permissions for the system. Permissions can be grouped by nesting arrays
-	 * scalar values are always treated as permissions.
-	 * 
-	 * @param $permArray A (possibly nested) array of permissions to declare for the system.
+	 * Declare an array of permissions for the system.
+	 *
+	 * Permissions can be grouped by nesting arrays. Scalar values are always
+	 * treated as permissions.
+	 *
+	 * @param array $permArray A (possibly nested) array of permissions to
+	 *                         declare for the system.
 	 */
 	static function declare_permissions($permArray) {
-		if(is_array(self::$declared_permissions)) self::$declared_permissions = array_merge_recursive(self::$declared_permissions, $permArray);
-		else self::$declared_permissions = $permArray;
+		if(is_array(self::$declared_permissions)) {
+			self::$declared_permissions =
+				array_merge_recursive(self::$declared_permissions, $permArray);
+		}
+		else {
+			self::$declared_permissions = $permArray;
+		}
 	}
-	
+
+
 	/**
 	 * Get a linear list of the permissions in the system.
+	 *
+	 * @return array Linear list of declared permissions in the system.
 	 */
 	static function get_declared_permissions_list() {
-		if(!self::$declared_permissions) return null;
-		
-		if(self::$declared_permissions_list) return self::$declared_permissions_list;
-		
+		if(!self::$declared_permissions)
+			return null;
+
+		if(self::$declared_permissions_list)
+			return self::$declared_permissions_list;
+
 		self::$declared_permissions_list = array();
-		
-		self::traverse_declared_permissions(self::$declared_permissions, self::$declared_permissions_list);
+
+		self::traverse_declared_permissions(self::$declared_permissions,
+																				self::$declared_permissions_list);
+
 		return self::$declared_permissions_list;
 	}
-	
+
+
 	/**
-	 * Recursively traverse the nested list of declared permissions and create a linear list.
-	 * 
-	 * @param $declared Nested structure of permissions.
-	 * @param $list List of permissions in the structure
+	 * Recursively traverse the nested list of declared permissions and create
+	 * a linear list.
+	 *
+	 * @param aeeay $declared Nested structure of permissions.
+	 * @param $list List of permissions in the structure. The result will be
+	 *              written to this array.
 	 */
-	protected static function traverse_declared_permissions($declared, &$list) {
-		if(!is_array($declared)) return;
-		
+	protected static function traverse_declared_permissions($declared,
+																													&$list) {
+		if(!is_array($declared))
+			return;
+
 		foreach($declared as $perm => $value) {
 			if($value instanceof Permission_Group) {
 				$list[] = $value->getName();
 				self::traverse_declared_permissions($value->getPermissions(), $list);
-			} else $list[$perm] = $value;
+			} else {
+				$list[$perm] = $value;
+			}
 		}
 	}
 }
 
+
+/**
+ * Permission_Group class
+ *
+ * This class is used to group permissions together for showing on an
+ * interface.
+ */
 class Permission_Group {
-	
+
+	/**
+	 * Name of the permission group (can be used as label in an interface)
+	 * @var string
+	 */
 	protected $name;
+
+	/**
+	 * Associative array of permissions in this permission group. The array
+	 * indicies are the permission codes as used in
+	 * {@link Permission::check()}. The value is suitable for using in an
+	 * interface.
+	 * @var string
+	 */
 	protected $permissions = array();
-	
+
+
+	/**
+	 * Constructor
+	 *
+	 * @param string $name Text that could be used as label used in an
+	 *                     interface
+	 * @param array $permissions Associative array of permissions in this
+	 *                           permission group. The array indicies are the
+	 *                           permission codes as used in
+	 *                           {@link Permission::check()}. The value is
+	 *                           suitable for using in an interface.
+	 */
 	function __construct($name, $permissions) {
 		$this->name = $name;
 		$this->permissions = $permissions;
 	}
-	
+
+	/**
+	 * Get the name of the permission group
+	 *
+	 * @return string Name (label) of the permission group
+	 */
 	function getName() {
 		return $this->name;
 	}
-	
+
+
+	/**
+	 * Get permissions
+	 *
+	 * @return array Associative array of permissions in this permission
+	 *               group. The array indicies are the permission codes as
+	 *               used in {@link Permission::check()}. The value is
+	 *               suitable for using in an interface.
+	 */
 	function getPermissions() {
 		return $this->permissions;
 	}
 }
+
+
 ?>
