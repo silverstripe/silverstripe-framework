@@ -71,6 +71,9 @@ class ContentController extends Controller {
 	public function init() {
 		parent::init();
 		
+		//Log page views
+		Statistics::Collect();
+
 		// If we've accessed the homepage as /home/, then we should redirect to /.
 		if($this->dataRecord && RootURLController::should_be_on_root($this->dataRecord) && !$this->urlParams['Action'] && !$_POST && !$_FILES) {
 			$getVars = $_GET;
