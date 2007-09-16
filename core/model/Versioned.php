@@ -145,18 +145,19 @@ class Versioned extends DataObjectDecorator {
 			if ($suffix) $table = "{$classTable}_$suffix";
 			else $table = $classTable;
 
-			$tableList = DB::tableList();
-			if(($fields = $this->owner->databaseFields()) && isset($tableList[strtolower($table)])) {
+			if(($fields = $this->owner->databaseFields())) {
 			$indexes = $this->owner->databaseIndexes();
 			if($this->owner->parentClass() == "DataObject") {
 				$rootTable = true;
 				}
 				
-				if ($suffix) {
-					$fields = $this->owner->getExtension($allSuffixes[$suffix])->fieldsInExtraTables($suffix);
+				if ($suffix && ($ext = $this->owner->getExtension($allSuffixes[$suffix]))) {
+					if (!$ext->isVersionedTable($table)) continue;
+					$fields = $ext->fieldsInExtraTables($suffix);
 					$indexes = $fields['indexes'];
 					$fields = $fields['db'];
-			}
+				} else if (!$ext) continue;
+
 			
 			// Create tables for other stages			
 			foreach($this->stages as $stage) {
@@ -255,7 +256,7 @@ class Versioned extends DataObjectDecorator {
 				// Add any extra, unchanged fields to the version record.
 				$data = DB::query("SELECT * FROM $table WHERE ID = $id")->record();
 				if($data) foreach($data as $k => $v) {
-					$newManipulation['fields'][$k] = "'" . addslashes($v) . "'";
+					if (!isset($newManipulation['fields'][$k])) $newManipulation['fields'][$k] = "'" . addslashes($v) . "'";
 				}
 
 				// Set up a new entry in (table)_versions
@@ -281,8 +282,7 @@ class Versioned extends DataObjectDecorator {
 			// Putting a Version of -1 is a signal to leave the version table alone, despite their being no version
 			if($manipulation[$table]['fields']['Version'] < 0) unset($manipulation[$table]['fields']['Version']);
 
-			// TODO : better check (canbeversioned?)
-			//if(get_parent_class($table) != "DataObject") unset($manipulation[$table]['fields']['Version']);
+			if(!$this->hasVersionField($table)) unset($manipulation[$table]['fields']['Version']);
 			
 			// Grab a version number - it should be the same across all tables.
 			if(isset($manipulation[$table]['fields']['Version'])) $thisVersion = $manipulation[$table]['fields']['Version'];
@@ -299,6 +299,12 @@ class Versioned extends DataObjectDecorator {
 		if(isset($thisVersion)) $this->owner->Version = str_replace("'","",$thisVersion);
 	}
 	
+	/**
+	 * Determine if a table is supporting the Versioned extensions (e.g. $table_versions does exists)
+	 *
+	 * @param string $table Table name
+	 * @return boolean
+	 */
 	function canBeVersioned($table) {
 		
 		$tableParts = explode('_',$table);
@@ -318,6 +324,17 @@ class Versioned extends DataObjectDecorator {
 		return true;
 	}
 	
+	/**
+	 * Check if a certain table has the 'Version' field
+	 *
+	 * @param string $table Table name
+	 * @return boolean Returns false if the field isn't in the table, true otherwise
+	 */
+	function hasVersionField($table) {
+		
+		$tableParts = explode('_',$table);
+		return ('DataObject' == get_parent_class($tableParts[0]));
+	}
 	function extendWithSuffix($table) {
 		foreach (Versioned::$versionableExtensions as $versionableExtension => $suffixes) {
 			if ($this->owner->hasExtension($versionableExtension)) {

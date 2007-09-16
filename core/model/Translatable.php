@@ -371,7 +371,7 @@ class Translatable extends DataObjectDecorator {
 	 * Determine if the DataObject has any own translatable field (not inherited).
 	 * @return boolean
 	 */
-	function hasOwnFields() {
+	function hasOwnTranslatableFields() {
 		$ownFields = $this->owner->stat('db');
 		if ($ownFields == singleton($this->owner->parentClass())->stat('db'))return false;
 		foreach ((array)$this->translatableFields as $translatableField) {
@@ -380,12 +380,23 @@ class Translatable extends DataObjectDecorator {
 		return false;
 	}
 	
+	/**
+	 * Determine if a table needs Versioned support
+	 * This is called at db/build time
+	 *
+	 * @param string $table Table name
+	 * @return boolean
+	 */
+	function isVersionedTable($table) {
+		// Every _lang table wants Versioned support
+		return ($this->owner->databaseFields() && $this->hasOwnTranslatableFields());
+	}
 	function augmentDatabase() {
 		if (! $this->stat('enabled')) return false;
 		Translatable::set_reading_lang(Translatable::default_lang());
 		$table = $this->owner->class;
 
-		if(($fields = $this->owner->databaseFields()) && $this->hasOwnFields()) {
+		if(($fields = $this->owner->databaseFields()) && $this->hasOwnTranslatableFields()) {
 			//Calculate the required fields
 			foreach ($fields as $field => $type) {
 				if (array_search($field,$this->translatableFields) === false) unset($fields[$field]);
@@ -432,13 +443,17 @@ class Translatable extends DataObjectDecorator {
 						$SessionOrigID = Session::get($this->owner->ID.'_originalLangID');
 						$manipulation["{$table}_lang"]['fields']['OriginalLangID'] = $this->owner->ID = 
 							( $SessionOrigID ? $SessionOrigID : Translatable::$creatingFromID);
-						$manipulation["{$table}_lang"]['fields']['Lang'] = "'$lang'" ;
-						//$manipulation["{$table}_lang"]['id'] = $manipulation["{$table}_lang"]['fields']['ID'] = DB::getNextID("{$table}_lang");
 						$manipulation["{$table}_lang"]['RecordID'] = $manipulation["{$table}_lang"]['fields']['OriginalLangID'];
+						// populate lang field
+						$manipulation["{$table}_lang"]['fields']['Lang'] = "'$lang'" ;
+						// get a valid id, pre-inserting
+						DB::query("INSERT INTO {$table}_lang SET Created = NOW(), Lang = '$lang'");
+						$manipulation["{$table}_lang"]['id'] = $manipulation["{$table}_lang"]['fields']['ID'] = DB::getGeneratedID("{$table}_lang");
+						$manipulation["{$table}_lang"]['command'] = 'update';
 						// we don't have to insert anything in $table if we are inserting in $table_lang
 						unset($manipulation[$table]);
-						// now dataobjects create a record before the real write in the base table, so we have to delete it - 20/08/2007
-						DB::query("DELETE FROM $table WHERE ID=$fakeID");
+						// now dataobjects may create a record before the real write in the base table, so we have to delete it - 20/08/2007
+						if (is_numeric($fakeID)) DB::query("DELETE FROM $table WHERE ID=$fakeID");
 					}
 					else {
 						if (!isset($manipulation[$table]['fields']['OriginalLangID'])) {
@@ -582,7 +597,7 @@ class Translatable extends DataObjectDecorator {
 	 */
 	function fieldsInExtraTables($table){
 
-		if(($fields = $this->owner->databaseFields()) && $this->hasOwnFields()) {
+		if(($fields = $this->owner->databaseFields()) && $this->hasOwnTranslatableFields()) {
 			//Calculate the required fields
 			foreach ($fields as $field => $type) {
 				if (array_search($field,$this->translatableFields) === false) unset($fields[$field]);
