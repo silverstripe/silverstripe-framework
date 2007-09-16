@@ -712,7 +712,7 @@ class Member extends DataObject {
 				new TextField("Email", "Email"),
 				/*new TextField("Password", "Password")*/
 				new PasswordField("Password", "Password"),
-				new LanguageDropdownField("Lang","Language")
+				new LanguageDropdownField("Lang", "Language")
 				//new TextareaField("Address","Address"),
 				//new TextField("JobTitle", "Job Title"),
 				//new TextField( "Organisation", "Organisation" ),
@@ -1136,7 +1136,7 @@ class Member_Validator extends RequiredFields {
 
 
 	/**
-	 * Check if the submitted member data is valid
+	 * Check if the submitted member data is valid (server-side)
 	 *
 	 * Check if a member with that email doesn't already exist, or if it does
 	 * that it is this member.
@@ -1165,8 +1165,43 @@ class Member_Validator extends RequiredFields {
 			$valid = false;
 		}
 
+
+		// Execute the validators on the extensions
+		if($this->extension_instances) {
+			foreach($this->extension_instances as $extension) {
+				if($extension->hasMethod('updatePHP')) {
+					$valid &= $extension->updatePHP($data, $this->form);
+				}
+			}
+		}
+
+
 		return $valid;
 	}
+
+
+	/**
+	 * Check if the submitted member data is valid (client-side)
+	 *
+	 * @param array $data Submitted data
+	 * @return bool Returns TRUE if the submitted data is valid, otherwise
+	 *              FALSE.
+	 */
+	function javascript() {
+		$js = parent::javascript();
+
+		// Execute the validators on the extensions
+		if($this->extension_instances) {
+			foreach($this->extension_instances as $extension) {
+				if($extension->hasMethod('updateJavascript')) {
+					$extension->updateJavascript($js, $this->form);
+				}
+			}
+		}
+
+		return $js;
+	}
+
 }
 
 // Initialize the static DB variables to add the supported encryption

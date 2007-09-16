@@ -5,8 +5,10 @@
  * @subpackage core
  */
 
+
 /**
- * Plug-ins for additional functionality in your DataObjects.
+ * Plug-ins for additional functionality in your DataObjects
+ *
  * DataObject decorators add extra functionality to your data objects.
  */
 abstract class DataObjectDecorator extends Extension {
@@ -17,6 +19,7 @@ abstract class DataObjectDecorator extends Extension {
 	function loadExtraDBFields() {
 		$fields = $this->extraDBFields();
 		$className = $this->owner->class;
+
 		if($fields) {
 			foreach($fields as $relationType => $fields) {
 				if(in_array($relationType, array('db', 'has_one', 'indexes',
@@ -29,33 +32,44 @@ abstract class DataObjectDecorator extends Extension {
 		}
 	}
 
+
 	/**
-	 * Edit the given query object to support queries for this extension.
+	 * Edit the given query object to support queries for this extension
+	 *
 	 * @param SQLQuery $query Query to augment.
 	 */
 	function augmentSQL(SQLQuery &$query) {
-		
 	}
+
 
 	/**
 	 * Update the database schema as required by this extension.
 	 */
 	function augmentDatabase() {
-		
 	}
 
+
 	/**
-	 * Define extra database fields.
-	 * Return an map where the keys are db, has_one, etc, and the values are additional fields / relations to be defined.
+	 * Define extra database fields
+	 *
+	 * Return a map where the keys are db, has_one, etc, and the values are
+	 * additional fields/relations to be defined.
+	 *
+	 * @return array Returns a map where the keys are db, has_one, etc, and
+	 *               the values are additional fields/relations to be defined.
 	 */
 	function extraDBFields() {
 		return array();
 	}
 
+
 	/**
-	 * This function is used to provide modifications to the form in the CMS by the
-	 * decorator.  By default, no changes are made - if you want you can overload
-	 * this function.
+	 * This function is used to provide modifications to the form in the CMS
+	 * by the decorator.
+	 * By default, no changes are made - if you want you can overload this
+	 * function.
+	 *
+	 * @param FieldSet $fields The FieldSet to modify.
 	 */
 	function updateCMSFields(FieldSet &$fields) {
 	}

@@ -56,6 +56,8 @@ class OpenIDAuthenticator extends Authenticator {
 	 */
 	protected static function on_register() {
 		Member::add_role('OpenIDAuthenticatedRole');
+		Object::add_extension('Member_Validator',
+													'OpenIDAuthenticatedRole_Validator');
 		return parent::on_register();
 	}
 
