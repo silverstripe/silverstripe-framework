@@ -312,7 +312,7 @@ class Permission extends DataObject {
 		foreach($declared as $perm => $value) {
 			if($value instanceof Permission_Group) {
 				$list[] = $value->getName();
-				self::traverse_declared_permissions($value->getPermissions(), &$list);
+				self::traverse_declared_permissions($value->getPermissions(), $list);
 			} else $list[$perm] = $value;
 		}
 	}
