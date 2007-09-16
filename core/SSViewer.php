@@ -284,7 +284,7 @@ class SSViewer extends Object {
 
 		// i18n
 		ereg('.*[\/](.*)',$template,$path);
-		$content = ereg_replace('<' . '% +_t\((\'([^\']*)\'|"([^"]*)")(([^)]|\)[^;])*)\); +%' . '>', '<?= _t(\''. $path[1] . '.\\2\\3\'\\4) ?>', $content);
+		$content = ereg_replace('<' . '% +_t\((\'([^\']*)\'|"([^"]*)")(([^)]|\)[^ ]|\) +[^% ])*)\) +%' . '>', '<?= _t(\''. $path[1] . '.\\2\\3\'\\4) ?>', $content);
 
 		// </base> isnt valid html? !? 
 		$content = ereg_replace('<' . '% +base_tag +%' . '>', '<base href="<?= Director::absoluteBaseURL(); ?>" />', $content);
