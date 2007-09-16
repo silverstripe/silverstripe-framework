@@ -142,7 +142,7 @@ class RSSFeed extends ViewableData {
 	 * @return string Returns the title of the feed.
 	 */
 	function Title() {
-		return Convert::raw2xml($this->title);
+		return $this->title;
 	}
 
 
@@ -162,7 +162,7 @@ class RSSFeed extends ViewableData {
 	 * @return string Returns the description of the feed.
 	 */
 	function Description() {
-		return Convert::raw2xml($this->description);
+		return $this->description;
 	}
 
 
