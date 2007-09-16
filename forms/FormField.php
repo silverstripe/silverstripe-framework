@@ -244,7 +244,7 @@ class FormField extends ViewableData {
 		$Name = $this->XML_val('Name');
 		$Field = $this->XML_val('Field');
 		
-		$titleBlock = "<label class=\"left\" for=\"{$this->id()}\">$Title</label>";
+		$titleBlock = (!empty($Title)) ? "<label class=\"left\" for=\"{$this->id()}\">$Title</label>" : "";
 		$messageBlock = (!empty($Message)) ? "<span class=\"message $MessageType\">$Message</span>" : "";
 		$rightTitleBlock = (!empty($rightTitle)) ? "<label class=\"right\" for=\"{$this->id()}\">$RightTitle</label>" : "";
 
