@@ -125,6 +125,7 @@ class Director {
 						if($_REQUEST['debug'] == 1) Debug::message("Redirecting to $controller");
 
 						if(isset($_GET['debug_profile'])) Profiler::unmark("Director","getControllerForURL");
+						
 						return "redirect:" . Director::absoluteURL(substr($controller,2), true);
 
 					} else {
@@ -147,6 +148,7 @@ class Director {
 						if(isset($arguments['URLSegment'])) self::$urlSegment = $arguments['URLSegment'] . "/";
 
 						if(isset($_GET['debug_profile'])) Profiler::unmark("Director","getControllerForURL");
+						
 						return $controllerObj;
 					}
 				}
@@ -165,7 +167,11 @@ class Director {
 	static function currentPage() {
 		if(isset(Director::$urlParams['URLSegment'])) {
 			$SQL_urlSegment = Convert::raw2sql(Director::$urlParams['URLSegment']);
-			return DataObject::get_one("SiteTree", "URLSegment = '$SQL_urlSegment'");
+			if (Translatable::is_enabled()) {
+				return Translatable::get_one("SiteTree", "URLSegment = '$SQL_urlSegment'");
+			} else {
+				return DataObject::get_one("SiteTree", "URLSegment = '$SQL_urlSegment'");
+			}
 		} else {
 			return Controller::currentController();
 		}
