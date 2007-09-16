@@ -594,9 +594,9 @@ class Security extends Controller {
 	 *                     needed, the method will automatically create a
 	 *                     random salt that will then be returned as return
 	 *                     value.
-	 * @pram strin $algorithm Optional: Use another algorithm to encrypt the
-	 *                        password (so that the encryption algorithm can
-	 *                        be changed over the time).
+	 * @param string $algorithm Optional: Use another algorithm to encrypt the
+	 *                          password (so that the encryption algorithm can
+	 *                          be changed over the time).
 	 * @return mixed Returns an associative array containing the encrypted
 	 *               password and the used salt in the form
 	 *               <i>array('encrypted_password' => string, 'salt' =>
