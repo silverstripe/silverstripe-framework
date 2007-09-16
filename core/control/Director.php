@@ -207,13 +207,25 @@ class Director {
 		Controller::curr()->redirectedTo();
 	}
 
-	/**
-	 * Uses either the HTTP_REFERER or a manually set request-variable called _REDIRECT_BACK_URL.
-     * This variable is needed in scenarios where not HTTP-Referer is sent (e.g when calling a page
-     * by location.href in IE).
-     */
+	/*
+	 * Redirect back
+	 *
+	 * Uses either the HTTP_REFERER or a manually set request-variable called
+	 * _REDIRECT_BACK_URL.
+	 * This variable is needed in scenarios where not HTTP-Referer is sent (
+	 * e.g when calling a page by location.href in IE).
+	 * If none of the two variables is available, it will redirect to the base
+	 * URL (see {@link baseURL()}).
+	 */
 	static function redirectBack() {
-		$url = (isset($_REQUEST['_REDIRECT_BACK_URL'])) ? $_REQUEST['_REDIRECT_BACK_URL'] : $_SERVER['HTTP_REFERER'];
+		$url = self::baseURL();
+
+		if(isset($_REQUEST['_REDIRECT_BACK_URL'])) {
+			$url = $_REQUEST['_REDIRECT_BACK_URL'];
+		} else if(isset($_SERVER['HTTP_REFERER'])) {
+			$_SERVER['HTTP_REFERER'];
+		}
+
 		Director::redirect($url);
 	}
 
