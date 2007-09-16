@@ -179,6 +179,37 @@ class FieldSet extends DataObjectSet {
 		$this->items[] = $item;
 	}
 	
+
+	/**
+	 * Inserts an item before the item with name $name
+	 * It can be buried in a composite field
+	 * If no item with name $name is found, $item is inserted at the end of the FieldSet
+	 *
+	 * @param FormField $item The item to be inserted
+	 * @param string $name The name of the item that $item should be before
+	 * @param int $level For internal use only, should not be passed
+	 */
+	public function insertBeforeRecursive($item, $name, $level = 0) {
+		if($this->sequentialSet) $this->sequentialSet = null;
+		$i = 0;
+		foreach($this->items as $child) {
+			if($name == $child->Name() || $name == $child->id) {
+				array_splice($this->items, $i, 0, array($item));
+			
+				return $level;
+			} else if($child->isComposite()) {
+				if($level = $child->insertBeforeRecursive($item,$name,$level+1)) return $level;
+			}
+			
+			$i++;
+		}
+		if ($level === 0) {
+		$this->items[] = $item;
+			return 0;
+		}
+		return false;
+	}
+	
 	public function insertAfter($item, $name) {
 		if($this->sequentialSet) $this->sequentialSet = null;
 		
