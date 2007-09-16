@@ -310,7 +310,7 @@ class DataObject extends Controller {
 	 */
 	protected function onBeforeWrite() {
 		$this->brokenOnWrite = false;
-		
+
 		$dummy = null;
 		$this->extend('augmentBeforeWrite', $dummy);
 	}
@@ -408,7 +408,8 @@ class DataObject extends Controller {
 		}
 
 		foreach($this->getClassAncestry() as $ancestor) {
-			if(ClassInfo::hasTable($ancestor)) $ancestry[] = $ancestor;
+			if(ClassInfo::hasTable($ancestor))
+				$ancestry[] = $ancestor;
 		}
 
 		// Look for some changes to make
@@ -426,50 +427,52 @@ class DataObject extends Controller {
 			
 			// New records have their insert into the base data table done first, so that they can pass the 
 			// generated primary key on to the rest of the manipulation
-			if(!$this->record['ID']) {
+			if(!$this->record['ID'] && isset($ancestry[0])) {
 				$baseTable = $ancestry[0];
-				
+
 				DB::query("INSERT INTO `{$baseTable}` SET Created = NOW()");
 				$this->record['ID'] = DB::getGeneratedID($baseTable);
 				$this->changed['ID'] = 2;
-				
+
 				$isNewRecord = true;
 			}
 
 			// Divvy up field saving into a number of database manipulations
-			foreach($ancestry as $idx => $class) {
-				$classSingleton = singleton($class);
-				foreach($this->record as $fieldName => $value) {
-					if(isset($this->changed[$fieldName]) && $this->changed[$fieldName] && $fieldType = $classSingleton->fieldExists($fieldName)) {
-						$manipulation[$class]['fields'][$fieldName] = $value ? ("'" . addslashes($value) . "'") : singleton($fieldType)->nullValue();
+			if(is_array($ancestry)) {
+				foreach($ancestry as $idx => $class) {
+					$classSingleton = singleton($class);
+					foreach($this->record as $fieldName => $value) {
+						if(isset($this->changed[$fieldName]) && $this->changed[$fieldName] && $fieldType = $classSingleton->fieldExists($fieldName)) {
+							$manipulation[$class]['fields'][$fieldName] = $value ? ("'" . addslashes($value) . "'") : singleton($fieldType)->nullValue();
+						}
 					}
-				}
 
-				// Add the class name to the base object
-				if($idx == 0) {
-					$manipulation[$class]['fields']["LastEdited"] = "now()";
-					if($dbCommand == 'insert') {
-						$manipulation[$class]['fields']["Created"] = "now()";
-						//echo "<li>$this->class - " .get_class($this);
-						$manipulation[$class]['fields']["ClassName"] = "'$this->class'";
+					// Add the class name to the base object
+					if($idx == 0) {
+						$manipulation[$class]['fields']["LastEdited"] = "now()";
+						if($dbCommand == 'insert') {
+							$manipulation[$class]['fields']["Created"] = "now()";
+							//echo "<li>$this->class - " .get_class($this);
+							$manipulation[$class]['fields']["ClassName"] = "'$this->class'";
+						}
 					}
-				}
 
-				// In cases where there are no fields, this 'stub' will get picked up on
-				if(ClassInfo::hasTable($class)) {
-					$manipulation[$class]['command'] = $dbCommand;
-					$manipulation[$class]['id'] = $this->record['ID'];
-				} else {
-					unset($manipulation[$class]);
+					// In cases where there are no fields, this 'stub' will get picked up on
+					if(ClassInfo::hasTable($class)) {
+						$manipulation[$class]['command'] = $dbCommand;
+						$manipulation[$class]['id'] = $this->record['ID'];
+					} else {
+						unset($manipulation[$class]);
+					}
 				}
 			}
 
 
 			$this->extend('augmentWrite', $manipulation);
-			// New records have their insert into the base data table done first, so that they can pass the 
+			// New records have their insert into the base data table done first, so that they can pass the
 			// generated ID on to the rest of the manipulation
 			if(isset($isNewRecord) && $isNewRecord && isset($manipulation[$baseTable])) {
-				$manipulation[$baseTable]['command'] = 'update';	
+				$manipulation[$baseTable]['command'] = 'update';
 			}
 			DB::manipulate($manipulation);
 
@@ -501,6 +504,7 @@ class DataObject extends Controller {
 
 		return $this->record['ID'];
 	}
+
 
 	/**
 	 * Perform a write without affecting the version table.
@@ -726,7 +730,7 @@ class DataObject extends Controller {
 	 * Returns a many-to-many component, as a ComponentSet.
 	 * @param string $componentName Name of the many-many component
 	 * @return ComponentSet The set of components
-	 * 
+	 *
 	 * TODO Implement query-params
 	 */
 	public function getManyManyComponents($componentName, $filter = "", $sort = "", $join = "", $limit = "", $having = "") {
@@ -741,7 +745,7 @@ class DataObject extends Controller {
 				// Join expression is done on SiteTree.ID even if we link to Page; it helps work around
 				// database inconsistencies
 				$componentBaseClass = ClassInfo::baseDataClass($componentClass);
-				
+
 				$query = $componentObj->extendedSQL(
 					"`$table`.$parentField = $this->ID", // filter 
 					$sort,
@@ -1378,7 +1382,7 @@ class DataObject extends Controller {
 				$results[] = new $record['RecordClassName']($record);
 			} else {
 				$results[] = new $baseClass($record);
-			} 
+			}
 		}
 
 		if(isset($results)) {
@@ -1426,7 +1430,7 @@ class DataObject extends Controller {
 			DataObject::$cache_get_one = array();
 			return;			
 		}
-		
+
 		$classes = ClassInfo::ancestry($this->class);
 		foreach($classes as $class) {
 			// If someone else has called get_one and flushCache() is called, then that object will be destroyed.
@@ -1464,7 +1468,7 @@ class DataObject extends Controller {
 				$record = new $record['RecordClassName']($record);
 			} else {
 				$record = new $this->class($record);
-			}	
+			}
 
 			// Rather than restrict classes at the SQL-query level, we now check once the object has been instantiated
 			// This lets us check up on weird errors where the class has been incorrectly set, and give warnings to our
@@ -1668,7 +1672,7 @@ class DataObject extends Controller {
 	public static function context_obj() {
 		return self::$context_obj;
 	}
-	
+
 	protected static $context_obj = null;
 	
 	
@@ -1765,4 +1769,6 @@ class DataObject extends Controller {
 	 */
 	public static $default_sort = null;
 }
+
+
 ?>
