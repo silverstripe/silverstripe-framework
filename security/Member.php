@@ -24,7 +24,8 @@ class Member extends DataObject {
 		'AutoLoginExpired' => 'Datetime',
 		'BlacklistedEmail' => 'Boolean',
 		'PasswordEncryption' => "Enum('none', 'none')",
-		'Salt' => "Varchar(50)"
+		'Salt' => "Varchar(50)",
+		'Lang' => "Varchar(12)"
 	);
 
 	static $belongs_many_many = array(
@@ -710,7 +711,8 @@ class Member extends DataObject {
 				new HeaderField( "User Details" ),
 				new TextField("Email", "Email"),
 				/*new TextField("Password", "Password")*/
-				new PasswordField("Password", "Password")
+				new PasswordField("Password", "Password"),
+				new LanguageDropdownField("Lang","Language")
 				//new TextareaField("Address","Address"),
 				//new TextField("JobTitle", "Job Title"),
 				//new TextField( "Organisation", "Organisation" ),
