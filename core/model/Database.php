@@ -344,6 +344,7 @@ abstract class Database extends Object {
 						if(!isset($writeInfo['fields']['ID']) && isset($writeInfo['id'])) {
 							$fieldList .= ", ID = $writeInfo[id]";
 						}
+						$fieldList = Database::replace_with_null($fieldList);
 						$sql = "insert into `$table` SET $fieldList";
 						$this->query($sql);
 						break;
@@ -355,7 +356,24 @@ abstract class Database extends Object {
 			}
 		}
 	}
+	
+	/** Replaces "''" with "null", recursively walks through the given array.
+	 * @param string $array Array where the replacement should happen
+	 */
+	static function replace_with_null(&$array) {
+		$array = str_replace('\'\'', "null", $array);
+		
+		if(is_array($array)) {
+			foreach($array as $key => $value) {
+				if (is_array($value)) {
+					array_walk($array, array(Database, 'replace_with_null'));
+				}
+			}
+		}
 
+		return $array;
+	}
+	
 	/** 
 	 * Error handler for database errors.
 	 * All database errors will call this function to report the error.  It isn't a static function;
