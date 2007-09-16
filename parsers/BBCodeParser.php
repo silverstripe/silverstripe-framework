@@ -11,9 +11,9 @@ unset($options);
 
 /**
  * TODO Investigate whether SSViewer will be fast enough to handle hundreds of little template files.
- * 
+ *
  * A better (more SS) way of doing the HTML code in here is to place them all in small template files
- * (eg. BBCodeParser_Code.ss contains the HTML for BBCodeParser::parseCode()), but the overhead this 
+ * (eg. BBCodeParser_Code.ss contains the HTML for BBCodeParser::parseCode()), but the overhead this
  * would cause is likely to make this very unusable, as nice as it would be.
  */
 class BBCodeParser extends TextParser {
@@ -35,7 +35,7 @@ class BBCodeParser extends TextParser {
 				"Title" => "Struck-out Text",
 				"Example" => "[s]<s>Struck-out</s>[/s]"
 			)),
-			
+
 			new ArrayData(array(
 				"Title" => "Website link",
 				"Description" => "Link to another website or URL",
@@ -45,7 +45,7 @@ class BBCodeParser extends TextParser {
 				"Title" => "Website link",
 				"Description" => "Link to another website or URL",
 				"Example" => "[url=http://www.website.com/]Some website[/url]"
-			)),			
+			)),
 			new ArrayData(array(
 				"Title" => "Email link",
 				"Description" => "Create link to an email address",
@@ -55,14 +55,14 @@ class BBCodeParser extends TextParser {
 				"Title" => "Email link",
 				"Description" => "Create link to an email address",
 				"Example" => "[email=you@yoursite.com]email me[/email]"
-			)),		
+			)),
 
 			new ArrayData(array(
 				"Title" => "Image",
 				"Description" => "Show an image in your post",
 				"Example" => "[img]http://www.website.com/image.jpg[/img]"
 			)),
-			
+
 			new ArrayData(array(
 				"Title" => "Code Block",
 				"Description" => "Unformatted code block",
@@ -77,7 +77,7 @@ class BBCodeParser extends TextParser {
 				"Title" => "HTML Code Block",
 				"Description" => "HTML-formatted code block",
 				"Example" => "[code html]HTML code block[/code]"
-			)),				
+			)),
 			new ArrayData(array(
 				"Title" => "PHP Code Block",
 				"Description" => "PHP-formatted code block",
@@ -87,11 +87,11 @@ class BBCodeParser extends TextParser {
 				"Title" => "PHP Code Block",
 				"Description" => "PHP-formatted code block",
 				"Example" => "[code php]PHP code block[/code]"
-			))			
-					
+			))
+
 		);
 	}
-	
+
 	function useable_tagsHTML(){
 		$useabletags = "<ul class='bbcodeExamples'>";
 		foreach($this->usable_tags()->toArray() as $tag){
