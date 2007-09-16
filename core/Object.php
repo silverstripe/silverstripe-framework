@@ -304,7 +304,14 @@ class Object {
 		// Copy a built-in value into our own array cache.  PHP's static variable support is shit.
 		if($builtIn) {
 			$val = $this->stat($name);
-			$val2 = eval("return " . get_parent_class($this) . "::\$$name;");
+			$val2 = null;
+			try {
+				$reflection = new ReflectionClass(get_parent_class($this));
+				$property = $reflection->getProperty($name);
+				$val2 = $property->getValue();
+			} catch(Exception $exc) {
+				// do nothing.. the property doesn't exists!
+			}
 			return ($val != $val2) ? $val : null;
 		}
 
