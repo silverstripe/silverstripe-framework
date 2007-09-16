@@ -33,10 +33,11 @@ class PageView extends DataObject {
 
 	static $defaults = array();
 
-	protected $hitdata;
+	protected $hitdata = null;
 
 	function init() {
-		$this->hitdata = get_browser(null, true);
+		if($hitdata = @get_browser(null, true))
+			$this->hitdata = get_browser(null, true);
 	}
 
 	function record() {
@@ -55,12 +56,16 @@ class PageView extends DataObject {
 	}
 
 	function setBrowser() {
-		$this->setField('Browser', $this->hitdata['browser']);
-		$this->setField('BrowserVersion', $this->hitdata['version']);
+		if(isset($this->hitdata['browser']))
+			$this->setField('Browser', $this->hitdata['browser']);
+
+		if(isset($this->hitdata['version']))
+			$this->setField('BrowserVersion', $this->hitdata['version']);
 	}
 
 	function setOS() {
-		$this->setField('OS', $this->hitdata['platform']);
+		if(isset($this->hitdata['platform']))
+			$this->setField('OS', $this->hitdata['platform']);
 	}
 
 	function setUserID() {
@@ -79,7 +84,7 @@ class PageView extends DataObject {
 	}
 
 	function setIP() {
-		if ($_SERVER['HTTP_X_FORWARDED_FOR']){
+		if(isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
 			$ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
 		} else {
 			$ip = $_SERVER['REMOTE_ADDR'];
