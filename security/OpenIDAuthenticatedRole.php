@@ -32,7 +32,7 @@ class OpenIDAuthenticatedRole extends DataObjectDecorator {
 			'db' => array('IdentityURL' => 'Varchar(255)'),
 			'has_one' => array(),
 			'defaults' => array('IdentityURL' => null),
-			'indexes' => array('IdentityURL', 'unique (IdentityURL)')
+			'indexes' => array('IdentityURL' => 'unique (IdentityURL)')
 		);
 	}
 
