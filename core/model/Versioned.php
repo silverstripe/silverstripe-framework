@@ -107,15 +107,17 @@ class Versioned extends DataObjectDecorator {
 	}
 	/**
 	 * An array of DataObject extensions that may require versioning for extra tables
-	 * The array value is a set of suffixes to form these table names, assuming a preceding '_'
-	 * 
-	 * e.g. if Extension1 creates a new table 'Class_suffix1' 
+	 * The array value is a set of suffixes to form these table names, assuming a preceding '_'.
+	 * E.g. if Extension1 creates a new table 'Class_suffix1' 
 	 * and Extension2 the tables 'Class_suffix2' and 'Class_suffix3':
 	 *
 	 * 	$versionableExtensions = array(
 	 * 		'Extension1' => 'suffix1',
 	 * 		'Extension2' => array('suffix2', 'suffix3'),
 	 * 	);
+	 * 
+	 * Make sure your extension has a static $enabled-property that determines if it is
+	 * processed by Versioned.
 	 *
 	 * @var array
 	 */
@@ -127,7 +129,7 @@ class Versioned extends DataObjectDecorator {
 		// Build a list of suffixes whose tables need versioning
 		$allSuffixes = array();
 		foreach (Versioned::$versionableExtensions as $versionableExtension => $suffixes) {
-			if ($this->owner->hasExtension($versionableExtension)) {
+			if ($this->owner->hasExtension($versionableExtension) && singleton($versionableExtension)->stat('enabled')) {
 				$allSuffixes = array_merge($allSuffixes, (array)$suffixes);
 				foreach ((array)$suffixes as $suffix) {
 					$allSuffixes[$suffix] = $versionableExtension;
@@ -135,7 +137,7 @@ class Versioned extends DataObjectDecorator {
 			}
 		}
 
-		// Add the zero-suffix table to the list (table name = class name)
+		// Add the default table with an empty suffix to the list (table name = class name)
 		array_push($allSuffixes,'');
 
 		foreach ($allSuffixes as $key => $suffix) {
@@ -146,76 +148,74 @@ class Versioned extends DataObjectDecorator {
 			else $table = $classTable;
 
 			if(($fields = $this->owner->databaseFields())) {
-			$indexes = $this->owner->databaseIndexes();
-			if($this->owner->parentClass() == "DataObject") {
-				$rootTable = true;
+				$indexes = $this->owner->databaseIndexes();
+				if($this->owner->parentClass() == "DataObject") {
+					$rootTable = true;
 				}
-				
 				if ($suffix && ($ext = $this->owner->getExtension($allSuffixes[$suffix]))) {
 					if (!$ext->isVersionedTable($table)) continue;
 					$fields = $ext->fieldsInExtraTables($suffix);
 					$indexes = $fields['indexes'];
 					$fields = $fields['db'];
-				} else if (!$ext) continue;
-
+				}
 			
-			// Create tables for other stages			
-			foreach($this->stages as $stage) {
-				// Extra tables for _Live, etc.
-				if($stage != $this->defaultStage) {
-					DB::requireTable("{$table}_$stage", $fields, $indexes);
-					/*
-					if(!DB::query("SELECT * FROM {$table}_$stage")->value()) {
-						$fieldList = implode(", ",array_keys($fields));
-						DB::query("INSERT INTO `{$table}_$stage` (ID,$fieldList)
-							SELECT ID,$fieldList FROM `$table`");
+				// Create tables for other stages			
+				foreach($this->stages as $stage) {
+					// Extra tables for _Live, etc.
+					if($stage != $this->defaultStage) {
+						DB::requireTable("{$table}_$stage", $fields, $indexes);
+						/*
+						if(!DB::query("SELECT * FROM {$table}_$stage")->value()) {
+							$fieldList = implode(", ",array_keys($fields));
+							DB::query("INSERT INTO `{$table}_$stage` (ID,$fieldList)
+								SELECT ID,$fieldList FROM `$table`");
+						}
+						*/
 					}
-					*/
+	
+					// Version fields on each root table (including Stage)
+					if(isset($rootTable)) {
+						$stageTable = ($stage == $this->defaultStage) ? $table : "{$table}_$stage";
+						DB::requireField($stageTable, "Version", "int(11) not null default '0'");
+					}
 				}
-
-				// Version fields on each root table (including Stage)
-				if(isset($rootTable)) {
-					$stageTable = ($stage == $this->defaultStage) ? $table : "{$table}_$stage";
-					DB::requireField($stageTable, "Version", "int(11) not null default '0'");
+				
+				// Create table for all versions
+				$versionFields = array_merge(
+					array(
+						"RecordID" => "Int",
+						"Version" => "Int",
+						"WasPublished" => "Boolean",
+						"AuthorID" => "Int",
+						"PublisherID" => "Int"				
+					),
+					(array)$fields
+				);
+				
+				$versionIndexes = array_merge(
+					array(
+						'RecordID_Version' => '(RecordID, Version)',
+						'RecordID' => true,
+						'Version' => true,
+					),
+					(array)$indexes
+				);
+				
+				DB::requireTable("{$table}_versions", $versionFields, $versionIndexes);
+				/*
+				if(!DB::query("SELECT * FROM {$table}_versions")->value()) {
+					$fieldList = implode(", ",array_keys($fields));
+									
+					DB::query("INSERT INTO `{$table}_versions` ($fieldList, RecordID, Version) 
+						SELECT $fieldList, ID AS RecordID, 1 AS Version FROM `$table`");
 				}
-			}
-			
-			// Create table for all versions
-			$versionFields = array_merge(
-				array(
-					"RecordID" => "Int",
-					"Version" => "Int",
-					"WasPublished" => "Boolean",
-					"AuthorID" => "Int",
-					"PublisherID" => "Int"				
-				),
-				(array)$fields
-			);
-			
-			$versionIndexes = array_merge(
-				array(
-					'RecordID_Version' => '(RecordID, Version)',
-					'RecordID' => true,
-					'Version' => true,
-				),
-				(array)$indexes
-			);
-			
-			DB::requireTable("{$table}_versions", $versionFields, $versionIndexes);
-			/*
-			if(!DB::query("SELECT * FROM {$table}_versions")->value()) {
-				$fieldList = implode(", ",array_keys($fields));
-								
-				DB::query("INSERT INTO `{$table}_versions` ($fieldList, RecordID, Version) 
-					SELECT $fieldList, ID AS RecordID, 1 AS Version FROM `$table`");
-			}
-			*/
-			
-		} else {
-			DB::dontRequireTable("{$table}_versions");
-			foreach($this->stages as $stage) {
-				if($stage != $this->defaultStage) DB::dontrequireTable("{$table}_$stage");
-			}
+				*/
+				
+			} else {
+				DB::dontRequireTable("{$table}_versions");
+				foreach($this->stages as $stage) {
+					if($stage != $this->defaultStage) DB::dontrequireTable("{$table}_$stage");
+				}
 			}
 		}
 	}
