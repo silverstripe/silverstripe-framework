@@ -28,13 +28,19 @@ class MemberAuthenticator extends Authenticator {
   public static function authenticate(array $RAW_data, Form $form = null) {
     $SQL_user = Convert::raw2sql($RAW_data['Email']);
 
-    $member = DataObject::get_one("Member",
-			"Email = '$SQL_user' AND Password IS NOT NULL");
-
-		if($member && ($member->checkPassword($RAW_data['Password']) == false)) {
-			$member = null;
-		}
-
+	// Default login (see {@setDetaultAdmin()})
+	$defaultUsername = Security::get_default_username();
+	$defaultPassword = Security::get_default_password();
+	if($RAW_data['Email'] == $defaultUsername 
+		&& $RAW_data['Password'] == $defaultPassword 
+		&& !empty($defaultUsername) 
+		&& !empty($defaultPassword) 
+	) {
+		$member = Security::findAnAdministrator();
+	} else {
+		$member = DataObject::get_one("Member", "Email = '$SQL_user' AND Password IS NOT NULL");
+		if($member && ($member->checkPassword($RAW_data['Password']) == false)) $member = null;
+	}
 
     if($member) {
       Session::clear("BackURL");

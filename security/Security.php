@@ -6,14 +6,14 @@
 class Security extends Controller {
 
 	/**
-	 * @var $username String Only used in dev-mode by setDefaultAdmin()
+	 * @var $default_username String Only used in dev-mode by setDefaultAdmin()
 	 */
-	protected static $username;
+	protected static $default_username;
 
 	/**
-	 * @var $password String Only used in dev-mode by setDefaultAdmin()
+	 * @var $default_password String Only used in dev-mode by setDefaultAdmin()
 	 */
-	protected static $password;
+	protected static $default_password;
 
 	/**
 	 * If set to TRUE to prevent sharing of the session across several sites
@@ -335,6 +335,25 @@ class Security extends Controller {
 		$autoLoginHash = urldecode($autoLoginHash);
 		return self::Link('changepassword') . "?h=$autoLoginHash";
 	}
+	
+	/**
+	 * Returns a username set by setDefaultAdmin()
+	 * 
+	 * @return String
+	 */
+	public static function get_default_username() {
+		return self::$default_username;
+	}
+
+	/**
+	 * Returns a password set by setDefaultAdmin()
+	 * 
+	 * @return String
+	 */
+	public static function get_default_password() {
+		return self::$default_password;
+	}
+
 
 	/**
 	 * Show the "change password" page
@@ -407,8 +426,8 @@ class Security extends Controller {
 		$SQL_password = Convert::raw2sql($RAW_password);
 
 		// Default login (see {@setDetaultAdmin()})
-		if(($RAW_email == self::$username) && ($RAW_password == self::$password)
-				&& !empty(self::$username) && !empty(self::$password)) {
+		if(($RAW_email == self::$default_username) && ($RAW_password == self::$default_password)
+				&& !empty(self::$default_username) && !empty(self::$default_password)) {
 			$member = self::findAnAdministrator();
 		} else {
 			$member = DataObject::get_one("Member",
@@ -468,11 +487,11 @@ class Security extends Controller {
 	 * @param $password String (Cleartext)
 	 */
 	public static function setDefaultAdmin($username, $password) {
-		if( self::$username || self::$password )
-			return;
+		// don't overwrite if already set
+		if(self::$default_username || self::$default_password) return false;
 
-		self::$username = $username;
-		self::$password = $password;
+		self::$default_username = $username;
+		self::$default_password = $password;
 	}
 
 
