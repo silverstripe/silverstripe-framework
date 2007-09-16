@@ -65,4 +65,9 @@ html,body {
 	clear: none;
 }
 
+.ComplexTableField_Popup input.action
+{
+    position: relative;
+    float: right;
+}
 
