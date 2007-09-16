@@ -80,7 +80,8 @@ class PageView extends DataObject {
 
 	function setPageID() {
 		$currentPage = Director::currentPage();
-		$this->setField('PageID', $currentPage->ID);
+		if($currentPage)
+			$this->setField('PageID', $currentPage->ID);
 	}
 
 	function setIP() {
