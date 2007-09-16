@@ -77,6 +77,12 @@ class TabSet extends CompositeField {
 		$field->setTabSet($this);
 	}
 	
+	public function insertBeforeRecursive($field, $insertBefore, $level) {
+		$level = parent::insertBeforeRecursive($field, $insertBefore, $level+1);
+		if ($level === 0) $field->setTabSet($this);
+		return $level;
+	}
+	
 	public function removeByName( $tabName ) {
 		parent::removeByName( $tabName );
 	}
