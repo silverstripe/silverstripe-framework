@@ -58,7 +58,7 @@ class Permission extends DataObject {
 	 * @param bool $strict Use "strict" checking (which means a permission
 	 *                     will be granted if the key does not exist at all)?
 	 * @return int|bool The ID of the permission record if the permission
-	 *                  exists; null otherwise. If "strict" checking is
+	 *                  exists; FALSE otherwise. If "strict" checking is
 	 *                  disabled, TRUE will be returned if the permission does
 	 *                  not exist at all.
 	 */
@@ -85,7 +85,7 @@ class Permission extends DataObject {
 	 * @param bool $strict Use "strict" checking (which means a permission
 	 *                     will be granted if the key does not exist at all)?
 	 * @return int|bool The ID of the permission record if the permission
-	 *                  exists; null otherwise. If "strict" checking is
+	 *                  exists; FALSE otherwise. If "strict" checking is
 	 *                  disabled, TRUE will be returned if the permission does
 	 *                  not exist at all.
 	 */
@@ -128,24 +128,28 @@ class Permission extends DataObject {
 				?  ",'ADMIN'"
 				: '';
 
-			if(!self::$strict_checking || !$strict) {
-				$hasPermission = DB::query("
-					SELECT COUNT(*) 
-					FROM Permission 
-					WHERE Code IN ('$SQL_codeList') 
-				")->value();
-				if(!$hasPermission) return true;
-			}
-
 			// Raw SQL for efficiency
-			return DB::query("
+			$permission = DB::query("
 				SELECT ID
 				FROM Permission
 				WHERE (Code IN ($SQL_codeList $adminFilter)
 					AND GroupID IN ($groupCSV)
 					$argClause
 			")->value();
-			return DB::query("SELECT ID FROM Permission WHERE Code IN ($SQL_codeList, 'ADMIN') AND GroupID IN ($groupCSV) $argClause")->value();
+			
+			if($permission)
+				return $permission;
+
+
+			// Strict checking disabled?
+			if(!self::$strict_checking || !$strict) {
+				if(!DB::query("SELECT COUNT(*) FROM Permission " .
+												"WHERE (Code IN '$code')'")->value()) {
+					return true;
+				}
+			}
+
+			return false;
 		}
 	}
 
