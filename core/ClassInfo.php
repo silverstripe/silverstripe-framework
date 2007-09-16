@@ -10,7 +10,7 @@ class ClassInfo {
 	 */	 
 	static function ready() {
 		global $_ALL_CLASSES;
-		return $_ALL_CLASSES && $_ALL_CLASSES['hastable'];
+		return $_ALL_CLASSES && isset($_ALL_CLASSES['hastable']) && $_ALL_CLASSES['hastable'];
 	}
 	static function allClasses() {
 		global $_ALL_CLASSES;
