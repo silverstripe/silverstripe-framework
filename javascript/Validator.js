@@ -2,13 +2,13 @@ var _CURRENT_FORM;
 
 function initialiseForm(form, fromAnOnBlur) {
 	_CURRENT_FORM = form;
-	
+
 	if(fromAnOnBlur) {
 		limitValidationErrorsTo(fromAnOnBlur);
 	} else {
 		clearValidationErrorLimit();
 	}
-		
+
 	_HAS_HAD_FORM_ERROR = false;
 	clearValidationErrorCache();
 }
@@ -20,13 +20,14 @@ function hasHadFormError() {
 /**
  * Returns group with the correct classname
  */
-function findIndexOf(group,index){
-	var i, group;
-	for( i=0 ; i < group.length ; i++ ) {
-		if(group[i].className.indexOf(index) > -1){
+function findIndexOf(group,index) {
+	var i;
+	for(i = 0; i < group.length; i++) {
+		if(group[i].className.indexOf(index) > -1) {
 			return group[i];
 		}
 	}
+	return null;
 }
 
 function clearErrorMessage(holderDiv){
@@ -43,7 +44,7 @@ function clearErrorMessage(holderDiv){
 	} 
 }
 
-function clearAllErrorMessages(){
+function clearAllErrorMessages() {
 	$$('span.message').each(function(el) {
 		Element.hide(el);
 	});
@@ -51,37 +52,37 @@ function clearAllErrorMessages(){
 
 function require(fieldName,cachedError) {
 	el = _CURRENT_FORM.elements[fieldName];
-	
+
 	// see if the field is an optionset
-	if( el == null ) {
-		
+	if(el == null) {
+
 		var descendants = _CURRENT_FORM.getElementsByTagName('*');
-		
+
 		el = $(fieldName);
-		
-		if( el == null )
+
+		if(el == null)
 			return true;
-		
-		if( Element.hasClassName( el, 'optionset' ) ) {	
-			el.type = 'optionset';	
-				
+
+		if(Element.hasClassName(el, 'optionset')) {
+			el.type = 'optionset';
+
 			var options = el.getElementsByTagName('input');
-			
-			for( var i = 0; i < options.length; i++ ) {
-				if( options[i].checked )
-					if( el.value != null )
+
+			for(var i = 0; i < options.length; i++) {
+				if(options[i].checked)
+					if(el.value != null)
 						el.value += ',' + options[i].value;
 					else
 						el.value = options[i].value;
 			}
 		}
-		
+
 	}
 
-		
-	if(el != null){
+
+	if(el != null) {
 		// Sets up radio and checkbox validation
-		if(el.type == 'checkbox' || el.type == 'radio' ){
+		if(el.type == 'checkbox' || el.type == 'radio') {
 			var set = el.checked;
 		}//merged by nlou 23/08/2007, r#40674
 		else if(el.type == 'select-one'){ 
@@ -93,23 +94,23 @@ function require(fieldName,cachedError) {
 		}else{
 			var set = el.value;
 		}
-		
-		
-		
+
+
+
 		var baseEl;
-		
-		// Sometimes require events are triggered of 
+
+		// Sometimes require events are triggered of
 		// associative elements like labels ;-p
-		if(el.type){
-			if( el.parentNode.className.indexOf('form') != -1) set = true;
+		if(el.type) {
+			if(el.parentNode.className.indexOf('form') != -1) set = true;
 			baseEl = el;
-		
+
 		} else {
 			if(_CURRENT_FORM.elements[fieldName]) {
 			//Some elements are nested and need to be "got"
 				var i, hasValue = false;
-				if(_CURRENT_FORM.elements[fieldName].length > 1){
-					for( i=0 ; i < el.length ; i++ ) {
+				if(_CURRENT_FORM.elements[fieldName].length > 1) {
+					for(i=0; i < el.length; i++) {
 						if(el[i].checked && el[i].value) {
 							hasValue = true;
 							break;
@@ -122,66 +123,66 @@ function require(fieldName,cachedError) {
 
 				} else {
 					set = "";
-					baseEl = el.parentNode;	
+					baseEl = el.parentNode;
 				}
 
 			} else {
 				set = true;
 			}
 		}
-		
+
 		// This checks to see if the input has a value, and the field is not a readonly.
-		if( ( typeof set == 'undefined' || set == "" ) ) {
+		if((typeof set == 'undefined' || set == "")) {
 			//fieldgroup validation
 			var fieldLabel = findParentLabel(baseEl);
 
-			// Some fields do-not have labels, in 
+			// Some fields do-not have labels, in
 			// which case we need a blank one
-			if(fieldLabel == null || fieldLabel == ""){
-				fieldlabel = "this field";	
+			if(fieldLabel == null || fieldLabel == "") {
+				fieldlabel = "this field";
 			}
-			
+
 			var errorMessage = "Please fill out \"$FieldLabel\", it is required."
 			if(baseEl.requiredErrorMsg) errorMessage = baseEl.requiredErrorMsg;
 			else if(_CURRENT_FORM.requiredErrorMsg) errorMessage = _CURRENT_FORM.requiredErrorMsg;
-			
+
 			validationError(baseEl, errorMessage.replace('$FieldLabel', fieldLabel),"required",cachedError);
 			return false;
-			
-		}else{
-			if(!hasHadFormError()){
+
+		} else {
+			if(!hasHadFormError()) {
 				clearErrorMessage(baseEl.parentNode);
 			}
 			return true;
 		}
 	}
-	
+
 	return true;
 }
 
 /**
  * Returns the label of the blockset which contains the classname left
  */
-function findParentLabel(el){
-	// If the el's type is HTML then were at the uppermost parent, so return 
+function findParentLabel(el) {
+	// If the el's type is HTML then were at the uppermost parent, so return
 	// null. its handled by the validator function anyway :-)
-	if(el){
-		if(el.className == "undefined"){
+	if(el) {
+		if(el.className == "undefined") {
 			return null;
-		}else{
-			if(el.className){
-				if(el.className.indexOf('field') == 0){
+		} else {
+			if(el.className) {
+				if(el.className.indexOf('field') == 0) {
 					labels = el.getElementsByTagName('label');
 					if(labels){
 						var left = findIndexOf(labels,'left');
 						var right = findIndexOf(labels,'right');
-						if(left){
+						if(left) {
 							return strip_tags(left.innerHTML);
-						}else if(right){
+						} else if(right) {
 							return strip_tags(right.innerHTML);
-						}else{
+						} else {
 							return findParentLabel(el.parentNode);
-						} 
+						}
 					}
 				}//merged by nlou 23/08/2007, r#40674
 				else if(el.className.indexOf('tablecolumn') != -1){ 
@@ -189,7 +190,7 @@ function findParentLabel(el){
 				}else{
 					return findParentLabel(el.parentNode);
 				}
-			}else{
+			} else {
 				return findParentLabel(el.parentNode);
 			}
 		}
@@ -201,11 +202,11 @@ function findParentLabel(el){
 /**
  * Adds a validation error to an element
  */
-function validationError(field,message, messageClass, cacheError){
+function validationError(field,message, messageClass, cacheError) {
 	if(typeof(field) == 'string') {
 		field = $(field);
 	}
-	
+
 	if(cacheError) {
 		_ERROR_CACHE[_ERROR_CACHE.length] = {
 			"field": field,
@@ -214,38 +215,38 @@ function validationError(field,message, messageClass, cacheError){
 		}
 		return;
 	}
-	
-	// The validation function should only be called if you've just left a field, 
+
+	// The validation function should only be called if you've just left a field,
 	// or the field is being validated on final submission
-	if(_LIMIT_VALIDATION_ERRORS && _LIMIT_VALIDATION_ERRORS != field){
+	if(_LIMIT_VALIDATION_ERRORS && _LIMIT_VALIDATION_ERRORS != field) {
 		// clearErrorMessage(field.parentNode);
 		return;
 	}
-	
+
 	_HAS_HAD_FORM_ERROR = true;
-	
+
 	// See if the tag has a reference to the validationMessage (quicker than the one below)
 	var validationMessage = field.validationMessage;
-	
-	// Cycle through the elements to see if it has a span 
-	// ( for a validation or required messages )
+
+	// Cycle through the elements to see if it has a span
+	// (for a validation or required messages)
 	if(!validationMessage) {
-		
-		//Get the parent holder of the element 
+
+		//Get the parent holder of the element
 		var FieldHolder = field.parentNode;
 		var allSpans = FieldHolder.getElementsByTagName('span');
 		validationMessage = findIndexOf(allSpans,'message');
 	}
-	
+
 	// If we didn't find it, create it
 	if(!validationMessage) {
 		validationMessage = document.createElement('span');
 		FieldHolder.appendChild(validationMessage);
 	}
-	
+
 	// Keep a reference to it
 	field.validationMessage = validationMessage;
-	
+
 	// Set the attributes
 	validationMessage.className = "message " + messageClass;
 	validationMessage.innerHTML = message;
@@ -255,7 +256,7 @@ function validationError(field,message, messageClass, cacheError){
 /**
  * Set a limitation so that only validation errors for the given element will actually be shown
  */
- 
+
 var _LIMIT_VALIDATION_ERRORS = null;
 function limitValidationErrorsTo(field) {
 	_LIMIT_VALIDATION_ERRORS = field;
@@ -265,12 +266,12 @@ function clearValidationErrorLimit() {
 	_LIMIT_VALIDATION_ERRORS = null;
 }
 
-function clearValidationErrorCache(){
+function clearValidationErrorCache() {
 	_ERROR_CACHE = new Array();
 }
 
-function showCachedValidationErrors(){
-	for(i = 0; i < _ERROR_CACHE.length; i++){
+function showCachedValidationErrors() {
+	for(i = 0; i < _ERROR_CACHE.length; i++) {
 		validationError(_ERROR_CACHE[i]["field"],
 		_ERROR_CACHE[i]["message"],
 		_ERROR_CACHE[i]["messageClass"],
