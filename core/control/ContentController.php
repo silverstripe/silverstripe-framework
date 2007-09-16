@@ -299,6 +299,13 @@ HTML;
 		}
 	}
 
+	/**
+	 * Returns the xml:lang and lang attributes
+	 */
+	function LangAttributes() {
+		$lang = Translatable::current_lang();
+		return "xml:lang=\"$lang\" lang=\"$lang\"";	
+	}
 
 	/**
 	 * Throw an error to test the error system
