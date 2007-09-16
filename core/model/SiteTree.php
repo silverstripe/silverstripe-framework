@@ -171,8 +171,8 @@ class SiteTree extends DataObject {
 
 	static $extensions = array(
 		"Hierarchy",
-		"Versioned('Stage', 'Live')",
-	);
+		"Translatable('Title', 'MenuTitle', 'Content', 'URLSegment', 'MetaTitle', 'MetaDescription', 'MetaKeywords', 'Status')",
+		"Versioned('Stage', 'Live')"	);
 
 
 	/**
@@ -635,7 +635,7 @@ class SiteTree extends DataObject {
 
 
 	/**
-	 * Return the title, description and keywords metatags.
+	 * Return the title, description, keywords and language metatags.
 	 * @param boolean|string $includeTitle Show default <title>-tag, set to false for custom templating
 	 *
 	 * @param boolean $includeTitle Show default <title>-tag, set to false for
@@ -664,6 +664,7 @@ class SiteTree extends DataObject {
 		if($this->ExtraMeta) { 
 			$tags .= $this->ExtraMeta . "\n";
 		} 
+		$tags .= "<meta http-equiv=\"Content-Language\" content=\"". Translatable::current_lang() ."\"/>\n";
 
 		return $tags;
 	}
