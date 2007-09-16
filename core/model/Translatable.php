@@ -84,7 +84,7 @@ class Translatable extends DataObjectDecorator {
 	 */
 	static function choose_site_lang() {
 		if(isset($_GET['lang'])) {
-			$_GET['lang'] = ucfirst(strtolower($_GET['lang']));
+			$_GET['lang'] = strtolower($_GET['lang']);
 			Translatable::set_reading_lang($_GET['lang']);
 		}
 		else if($lang = Session::get('currentLang')) {
@@ -163,8 +163,8 @@ class Translatable extends DataObjectDecorator {
 		} else {
 			$langsAvailable = (array)Translatable::get_langs_by_id($callerClass, $record->ID);
 			$langsAvailable[] = Translatable::default_lang();
-			if(isset($_GET['lang']) && array_search(ucfirst(strtolower($_GET['lang'])),$langsAvailable) !== false) {
-				$lang = ucfirst(strtolower($_GET['lang']));
+			if(isset($_GET['lang']) && array_search(strtolower($_GET['lang']),$langsAvailable) !== false) {
+				$lang = strtolower($_GET['lang']);
 			} else if(($possible = Session::get('currentLang')) && array_search($possible,$langsAvailable)) {
 				$lang = $possible;
 			} else if (($member = Member::currentUser()) && ($possible = $member->PreferredLang)) {
@@ -303,18 +303,20 @@ class Translatable extends DataObjectDecorator {
 						else {
 							$parts = explode(' AND ',$wherecl);
 							foreach ($parts as $j => $part) {
-								if (strpos($part,'.') === false)
+								// Divide this clause between the left ($innerparts[1]) and right($innerparts[2]) part of the condition
+								ereg('(`?[[:alnum:]_-]*`?\.?`?[[:alnum:]_-]*`?)(.*)', $part, $innerparts);
+								if (strpos($innerparts[1],'.') === false)
 									//it may be ambiguous, so sometimes we will need to add the table
-									$parts[$j] = ($this->isInAugmentedTable($part, $table) ? "`{$table}_lang`." : "")."$part";
+									$parts[$j] = ($this->isInAugmentedTable($innerparts[1], $table) ? "`{$table}_lang`." : "")."$part";
 								else {
 									/* if the table has been specified we have to determine if the original (without _lang) name has to be used
 									 * because we don't have the queried field in the augmented table (which usually means
 									 * that is not a translatable field)
 									 */
-									$clauseparts = explode('.',$part);
+									$clauseparts = explode('.',$innerparts[1]);
 									$originalTable = str_replace('`','',str_replace('_lang','',$clauseparts[0]));
 									$parts[$j] = ($this->isInAugmentedTable($clauseparts[1], $originalTable) ? "`{$originalTable}_lang`" : "`$originalTable`") 
-												  . ".{$clauseparts[1]}";
+												  . ".{$clauseparts[1]}{$innerparts[2]}";
 								}
 							}
 							$query->where[$i] = implode(' AND ',$parts);
