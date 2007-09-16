@@ -1,4 +1,3 @@
-<div class="tabset" id="$id">
 	<ul class="tabstrip">
 	<% control Tabs %>
 		<li class="$FirstLast $MiddleString"><a href="#$id" id="tab-$id">$Title</a></li>
@@ -16,4 +15,3 @@
 		<% end_if %>
 		</div>
 	<% end_control %>
-</div>
