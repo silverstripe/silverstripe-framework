@@ -9,6 +9,15 @@
 
 
 /**
+ * Add the security folder to the include path so that the
+ * {@link http://www.openidenabled.com/ PHP OpenID library} finds its files
+ */
+ini_set('include_path', ini_get('include_path') . PATH_SEPARATOR .
+				realpath(dirname(__FILE__)));
+
+
+
+/**
  * Require the OpenID consumer code.
  */
 require_once "Auth/OpenID/Consumer.php";

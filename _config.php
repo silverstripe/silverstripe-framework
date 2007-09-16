@@ -17,16 +17,9 @@
 
 
 /**
- * Add the security folder to the include path so that the
- * {@link http://www.openidenabled.com/ PHP OpenID library} finds it files
- */
-$path_extra = realpath(dirname(__FILE__)) . DIRECTORY_SEPARATOR . 'security';
-/**
  * Add Pear (pear.php.net)
  */
-$path_extra .= PATH_SEPARATOR . realpath(dirname(__FILE__)) . DIRECTORY_SEPARATOR . 'pear';
-
-
+$path_extra = PATH_SEPARATOR . realpath(dirname(__FILE__)) . DIRECTORY_SEPARATOR . 'pear';
 $path = ini_get('include_path');
 $path = $path_extra . PATH_SEPARATOR . $path;
 ini_set('include_path', $path);
@@ -64,6 +57,7 @@ Authenticator::register_authenticator('OpenIDAuthenticator');
  */
 //i18n::set_locale('ca_AD'); 
 
+
 /**
  * The root directory of TinyMCE
  */
@@ -93,5 +87,6 @@ Security::set_password_encryption_algorithm('sha1', true);
  * {@link http://doc.silverstripe.com/doku.php?id=email_bouncehandler}
  */
 define('EMAIL_BOUNCEHANDLER_KEY', '1aaaf8fb60ea253dbf6efa71baaacbb3');
+
 
 ?>
