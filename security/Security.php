@@ -332,66 +332,6 @@ class Security extends Controller {
 		return self::Link('changepassword') . "?h=$autoLoginHash";
 	}
 
-
-	/**
-	 * Show the "change password" page
-	 *
-	 * @return string Returns the "change password" page as HTML code.
-	 */
-	public function changepassword() {
-		$tmpPage = new Page();
-		$tmpPage->Title = 'Change your password';
-		$tmpPage->URLSegment = 'Security';
-		$controller = new Page_Controller($tmpPage);
-
-		if(isset($_REQUEST['h']) && Member::autoLoginHash($_REQUEST['h'])) {
-			// The auto login hash is valid, store it for the change password form
-			Session::set('AutoLoginHash', $_REQUEST['h']);
-
-			$customisedController = $controller->customise(array(
-				'Content' =>
-					'<p>Please enter a new password.</p>',
-				'Form' => $this->ChangePasswordForm(),
-			));
-
-		} elseif(Member::currentUser()) {
-			// let a logged in user change his password
-			$customisedController = $controller->customise(array(
-				'Content' => '<p>You can change your password below.</p>',
-				'Form' => $this->ChangePasswordForm()));
-
-		} else {
-			// show an error message if the auto login hash is invalid and the
-			// user is not logged in
-			if(isset($_REQUEST['h'])) {
-				$customisedController = $controller->customise(array('Content' =>
-					"<p>The password reset link is invalid or expired.</p>\n" .
-						'<p>You can request a new one <a href="' .
-						$this->Link('lostpassword') .
-						'">here</a> or change your password after you <a href="' .
-						$this->link('login') . '">logged in</a>.</p>'));
-			} else {
-				self::permissionFailure($this, 'You must be logged in in order to change your password!');
-				die();
-			}
-		}
-
-		Controller::$currentController = $controller;
-		return $customisedController->renderWith('Page');
-	}
-
-
-	/**
-	 * Create a link to the password reset form
-	 *
-	 * @param string $autoLoginHash The auto login hash
-	 */
-	public static function getPasswordResetLink($autoLoginHash) {
-		$autoLoginHash = urldecode($autoLoginHash);
-		return self::Link('changepassword') . "?h=$autoLoginHash";
-	}
-
-
 	/**
 	 * Show the "change password" page
 	 *

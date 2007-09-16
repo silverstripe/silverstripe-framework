@@ -33,6 +33,7 @@ function getTempFolder() {
     }
     
     return $ssTmp;
+}
 
 
 /**
