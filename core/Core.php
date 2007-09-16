@@ -34,9 +34,14 @@ function getTempFolder() {
     
     return $ssTmp;
 
+
+/**
+ * Define the temporary folder if it wasn't defined yet
+ */
+if(!defined('TEMP_FOLDER')) {
+	define('TEMP_FOLDER', getTempFolder());
 }
 
-define('TEMP_FOLDER', getTempFolder());
 
 /**
  * Sapphire class autoloader.  Requires the ManifestBuilder to work.
