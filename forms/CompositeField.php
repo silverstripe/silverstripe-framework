@@ -67,8 +67,30 @@ class CompositeField extends FormField {
 		$content .= "</div>";
 				
 		return $content;
-	}	
+	}
+		
+	/**
+	 * Returns the fields in the restricted field holder inside a DIV.
+	 */
+	function SmallFieldHolder() {//return $this->FieldHolder();
+		$fs = $this->FieldSet();
+		$idAtt = isset($this->id) ? " id=\"{$this->id}\"" : '';
+		$className = ($this->columnCount) ? "field CompositeField {$this->extraClass()} multicolumn" : "field CompositeField {$this->extraClass()}";
+		$content = "<div class=\"$className\"$idAtt>";
+		
+		foreach($fs as $subfield) {//echo ' subf'.$subfield->Name();
+			if($this->columnCount) {
+				$className = "column{$this->columnCount}";
+				if(!next($fs)) $className .= " lastcolumn";
+				$content .= "<div class=\"{$className}\">" . $subfield->FieldHolder() . "</div>";
+			} else if($subfield){
+				$content .= $subfield->SmallFieldHolder() . " ";
+			}
+		}	
+		$content .= "</div>";
 	
+		return $content;
+	}	
 	/**
 	 * Add all of the non-composite fields contained within this field to the list.
 	 * Sequentialisation is used when connecting the form to its data source
@@ -108,7 +130,11 @@ class CompositeField extends FormField {
 		$this->children->push($field);
 	}
 	public function insertBefore($field, $insertBefore) {
-		$this->children->insertBefore($field, $insertBefore);
+		return $this->children->insertBefore($field, $insertBefore);
+	}
+
+	public function insertBeforeRecursive($field, $insertBefore, $level = 0) {
+		return $this->children->insertBeforeRecursive($field, $insertBefore, $level+1);
 	}
 	public function removeByName($fieldName) {
 		$this->children->removeByName($fieldName);
