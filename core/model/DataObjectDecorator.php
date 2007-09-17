@@ -19,7 +19,7 @@ abstract class DataObjectDecorator extends Extension {
 		$className = $this->owner->class;
 		if($fields) {
 			foreach($fields as $relationType => $fields) {
-				if(in_array($relationType, array('db','has_one','many_many','belongs_many_many','many_many_extraFields'))) {
+				if(in_array($relationType, array('db','has_one','has_many','many_many','belongs_many_many','many_many_extraFields'))) {
 					eval("$className::\$$relationType = array_merge((array){$className}::\$$relationType, (array)\$fields);");
 				}
 			}
