@@ -339,25 +339,6 @@ class Security extends Controller {
 	}
 	
 	/**
-	 * Returns a username set by setDefaultAdmin()
-	 * 
-	 * @return String
-	 */
-	public static function get_default_username() {
-		return self::$default_username;
-	}
-
-	/**
-	 * Returns a password set by setDefaultAdmin()
-	 * 
-	 * @return String
-	 */
-	public static function get_default_password() {
-		return self::$default_password;
-	}
-
-
-	/**
 	 * Show the "change password" page
 	 *
 	 * @return string Returns the "change password" page as HTML code.
@@ -494,6 +475,21 @@ class Security extends Controller {
 
 		self::$default_username = $username;
 		self::$default_password = $password;
+	}
+	
+	/**
+	 * Checks if the passed credentials are matching the default-admin.
+	 * Compares cleartext-password set through Security::setDefaultAdmin().
+	 * 
+	 * @param string $username
+	 * @param string $password 
+	 * @return bool
+	 */
+	public static function checkDefaultAdmin($username, $password) {
+		return (
+			self::$default_username == $username
+			&& self::$default_password == $password
+		);
 	}
 
 
