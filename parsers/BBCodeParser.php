@@ -97,6 +97,7 @@ class BBCodeParser extends TextParser {
 
 	function parse() {
 		$this->content = str_replace(array('&', '<', '>'), array('&amp;', '&lt;', '&gt;'), $this->content);
+		$this->content = str_replace("\n", "<br />", $this->content);
 		return HTML_BBCodeParser::staticQparse($this->content);
 	}
 	
