@@ -29,7 +29,11 @@ class File extends DataObject {
 		"Title" => "Varchar(255)",
 		"Filename" => "Varchar(255)",
 		"Content" => "Text",
-		"Sort" => "Int"
+		"Sort" => "Int",
+		"PopupWidth" => "Int",
+		"PopupHeight" => "Int",
+		"Embed" => "Boolean",
+		'LimitDimensions' => 'Boolean'
 	);
 	static $indexes = array(
 		"SearchFields" => "fulltext (Filename,Title,Content)",
@@ -67,7 +71,7 @@ class File extends DataObject {
 	}
 	
 	static function allowedFileType( $extension ) {
-		return !in_array($extension, self::$allowed_file_types);
+		return true;
 	}
 	
 	/*
@@ -593,7 +597,7 @@ class File extends DataObject {
 		$query = $this->extendedSQL($filter, $sort, $limit, $join, $having);
 		$baseTable = reset($query->from);
 
-		$query->select = array("$baseTable.ID","$baseTable.ClassName","$baseTable.Created","$baseTable.LastEdited","$baseTable.Name","$baseTable.Title","$baseTable.ParentID","$baseTable.Filename","if($baseTable.ClassName,$baseTable.ClassName,'File') AS RecordClassName");
+		$query->select = array("$baseTable.ID","$baseTable.ClassName","$baseTable.Created","$baseTable.LastEdited","$baseTable.Name","$baseTable.Title","$baseTable.Content","$baseTable.ParentID","$baseTable.Filename","if($baseTable.ClassName,$baseTable.ClassName,'File') AS RecordClassName","$baseTable.PopupWidth","$baseTable.PopupHeight","$baseTable.Embed","$baseTable.LimitDimensions");
 		$records = $query->execute();
 		$ret = $this->buildDataObjectSet($records, $containerClass);
 		if($ret) $ret->parseQueryLimit($query);
