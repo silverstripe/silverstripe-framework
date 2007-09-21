@@ -318,6 +318,11 @@ HTML;
 			$fourohfour->publish("Stage", "Live");
 		}
 		
+		if(isset($_SESSION['StatsID']) && $_SESSION['StatsID']) {
+			$url = 'http://ss2stat.silverstripe.com/Installation/installed?ID=' . $_SESSION['StatsID'];
+			@file_get_contents($url);
+		}
+		
 		$title = new Varchar("Title");
 		$content = new HTMLText("Content");
 		$username = Session::get('username');
