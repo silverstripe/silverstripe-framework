@@ -1021,17 +1021,13 @@ class Member_SignupEmail extends Email_Template {
 					</li>
 				<% end_if %>
 
-				<% if DriversLicense5A %>
-					<li><strong>Drivers License:</strong> $DriversLicense5A<% if DriversLicense5B %> - $DriversLicense5B <% end_if %></li>
-				<% end_if %>
-
 			</ul>';
 
 	function MemberData() {
 		return $this->template_data->listOfFields(
 			"FirstName", "Surname", "Email",
 			"Phone", "Mobile", "Street",
-			"Suburb", "City", "Postcode", "DriversLicense5A", "DriversLicense5B"
+			"Suburb", "City", "Postcode"
 		);
 	}
 }
@@ -1090,7 +1086,7 @@ class Member_UnsubscribeRecord extends DataObject {
 			? $member
 			: $member->ID;
 
-		$this->NewsletterTypeID = (is_numeric($newletterType))
+		$this->NewsletterTypeID = (is_numeric($newsletterType))
 			? $newsletterType
 			: $newsletterType->ID;
 
