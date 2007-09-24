@@ -18,10 +18,11 @@
 //
 // $Id: BBCodeParser.php,v 1.17 2007/07/02 18:46:30 cweiske Exp $
 //
+// Modified by SilverStripe www.silverstripe.com
 
 /**
 * @package  SSHTMLBBCodeParser
-* @author   Stijn de Reede  <sjr@gmx.co.uk>
+* @author   Stijn de Reede  <sjr@gmx.co.uk> , SilverStripe
 *
 *
 * This is a parser to replace UBB style tags with their html equivalents. It
@@ -52,34 +53,7 @@
 * unset($options);
 *
 *
-* The _definedTags variables should be in this format:
-* array('tag'                                // the actual tag used
-*           => array('htmlopen'  => 'open',  // the opening tag in html
-*                    'htmlclose' => 'close', // the closing tag in html,
-*                                               can be set to an empty string
-*                                               if no closing tag is present
-*                                               in html (like <img>)
-*                    'allowed'   => 'allow', // tags that are allowed inside
-*                                               this tag. Values can be all
-*                                               or none, or either of these
-*                                               two, followed by a ^ and then
-*                                               followed by a comma seperated
-*                                               list of exceptions on this
-*                    'attributes' => array() // an associative array containing
-*                                               the tag attributes and their
-*                                               printf() html equivalents, to
-*                                               which the first argument is
-*                                               the value, and the second is
-*                                               the quote. Default would be
-*                                               something like this:
-*                                               'attr' => 'attr=%2$s%1$s%2$s'
-*                   ),
-*       'etc'
-*           => (...)
-*       )
 */
-
-
 
 class SSHTMLBBCodeParser
 {
