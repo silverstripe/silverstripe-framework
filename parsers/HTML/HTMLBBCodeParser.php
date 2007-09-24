@@ -20,7 +20,7 @@
 //
 
 /**
-* @package  HTML_BBCodeParser
+* @package  SSHTMLBBCodeParser
 * @author   Stijn de Reede  <sjr@gmx.co.uk>
 *
 *
@@ -34,21 +34,21 @@
 *
 *
 * Usage:
-* $parser = new HTML_BBCodeParser();
+* $parser = new SSHTMLBBCodeParser();
 * $parser->setText('normal [b]bold[/b] and normal again');
 * $parser->parse();
 * echo $parser->getParsed();
 * or:
-* $parser = new HTML_BBCodeParser();
+* $parser = new SSHTMLBBCodeParser();
 * echo $parser->qparse('normal [b]bold[/b] and normal again');
 * or:
-* echo HTML_BBCodeParser::staticQparse('normal [b]bold[/b] and normal again');
+* echo SSHTMLBBCodeParser::staticQparse('normal [b]bold[/b] and normal again');
 *
 *
 * Setting the options from the ini file:
 * $config = parse_ini_file('BBCodeParser.ini', true);
-* $options = &PEAR::getStaticProperty('HTML_BBCodeParser', '_options');
-* $options = $config['HTML_BBCodeParser'];
+* $options = &PEAR::getStaticProperty('SSHTMLBBCodeParser', '_options');
+* $options = $config['SSHTMLBBCodeParser'];
 * unset($options);
 *
 *
@@ -81,7 +81,7 @@
 
 
 
-class HTML_BBCodeParser
+class SSHTMLBBCodeParser
 {
     /**
      * An array of tags parsed by the engine, should be overwritten by filters
@@ -164,10 +164,10 @@ class HTML_BBCodeParser
      * @access   public
      * @author   Stijn de Reede  <sjr@gmx.co.uk>
      */
-    function HTML_BBCodeParser($options = array())
+    function SSHTMLBBCodeParser($options = array())
     {
         // set the already set options
-        $baseoptions = &HTML_BBCodeParser::getStaticProperty('HTML_BBCodeParser', '_options');
+        $baseoptions = &SSHTMLBBCodeParser::getStaticProperty('SSHTMLBBCodeParser', '_options');
         if (is_array($baseoptions)) {
             foreach ($baseoptions as  $k => $v)  {
                 $this->_options[$k] = $v;
@@ -197,7 +197,7 @@ class HTML_BBCodeParser
         unset($baseoptions);
 
         // return if this is a subclass
-        if (is_subclass_of($this, 'HTML_BBCodeParser_Filter')) {
+        if (is_subclass_of($this, 'SSHTMLBBCodeParser_Filter')) {
             return;
         }
 
@@ -237,20 +237,23 @@ class HTML_BBCodeParser
      */
     function addFilter($filter)
     {
+  
         $filter = ucfirst($filter);
         if (!array_key_exists($filter, $this->_filters)) {
-            $class = 'HTML_BBCodeParser_Filter_'.$filter;
+            $class = 'SSHTMLBBCodeParser_Filter_'.$filter;
             @include_once 'HTML/BBCodeParser/Filter/'.$filter.'.php';
             if (!class_exists($class)) {
-            	
+
                 //PEAR::raiseError("Failed to load filter $filter", null, PEAR_ERROR_DIE);
             }
+
             $this->_filters[$filter] = new $class;
             $this->_definedTags = array_merge(
                 $this->_definedTags,
                 $this->_filters[$filter]->_definedTags
             );
         }
+
     }
 
     /**
@@ -327,7 +330,7 @@ class HTML_BBCodeParser
         $this->_preparsed = $this->_text;
 
         // return if this is a subclass
-        if (is_subclass_of($this, 'HTML_BBCodeParser')) {
+        if (is_subclass_of($this, 'SSHTMLBBCodeParser')) {
             return;
         }
 
@@ -887,7 +890,7 @@ class HTML_BBCodeParser
      */
     function staticQparse($str)
     {
-        $p = new HTML_BBCodeParser();
+        $p = new SSHTMLBBCodeParser();
         $str = $p->qparse($str);
         unset($p);
         return $str;

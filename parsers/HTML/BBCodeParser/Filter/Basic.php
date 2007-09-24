@@ -20,7 +20,7 @@
 //
 
 /**
-* @package  HTML_BBCodeParser
+* @package  SSHTMLBBCodeParser
 * @author   Stijn de Reede  <sjr@gmx.co.uk>
 */
 
@@ -30,7 +30,7 @@ require_once 'HTML/BBCodeParser/Filter.php';
 
 
 
-class HTML_BBCodeParser_Filter_Basic extends HTML_BBCodeParser_Filter
+class SSHTMLBBCodeParser_Filter_Basic extends SSHTMLBBCodeParser_Filter
 {
 
     /**

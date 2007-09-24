@@ -4,8 +4,8 @@
 require_once('HTML/HTMLBBCodeParser.php');
 /*Seting up the PEAR bbcode parser*/  
 $config = parse_ini_file('BBCodeParser.ini', true);
-$options = &HTML_BBCodeParser::getStaticProperty('HTML_BBCodeParser', '_options');
-$options = $config['HTML_BBCodeParser'];
+$options = &SSHTMLBBCodeParser::getStaticProperty('SSHTMLBBCodeParser', '_options');
+$options = $config['SSHTMLBBCodeParser'];
 //Debug::show($options);
 unset($options);
 
@@ -101,7 +101,7 @@ class BBCodeParser extends TextParser {
 	
 	function parse() {
 		$this->content = str_replace(array('&', '<', '>'), array('&amp;', '&lt;', '&gt;'), $this->content);
-		$this->content = HTML_BBCodeParser::staticQparse($this->content);
+		$this->content = SSHTMLBBCodeParser::staticQparse($this->content);
 		$this->content = "<p>".$this->content."</p>";
 		$this->content = str_replace("\n\n", "</p><p>", $this->content);		
 		$this->content = str_replace("\n", "<br />", $this->content);

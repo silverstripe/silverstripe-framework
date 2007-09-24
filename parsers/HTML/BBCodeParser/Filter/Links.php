@@ -20,7 +20,7 @@
 //
 
 /**
-* @package  HTML_BBCodeParser
+* @package  SSHTMLBBCodeParser
 * @author   Stijn de Reede  <sjr@gmx.co.uk>
 */
 require_once 'HTML/BBCodeParser/Filter.php';
@@ -28,7 +28,7 @@ require_once 'HTML/BBCodeParser/Filter.php';
 /**
  *
  */
-class HTML_BBCodeParser_Filter_Links extends HTML_BBCodeParser_Filter
+class SSHTMLBBCodeParser_Filter_Links extends SSHTMLBBCodeParser_Filter
 {
     /**
      * List of allowed schemes
@@ -81,7 +81,7 @@ class HTML_BBCodeParser_Filter_Links extends HTML_BBCodeParser_Filter
      */
     function _preparse()
     {
-        $options = HTML_BBCodeParser::getStaticProperty('HTML_BBCodeParser', '_options');
+        $options = SSHTMLBBCodeParser::getStaticProperty('SSHTMLBBCodeParser', '_options');
         $o = $options['open'];
         $c = $options['close'];
         $oe = $options['open_esc'];
@@ -110,7 +110,7 @@ class HTML_BBCodeParser_Filter_Links extends HTML_BBCodeParser_Filter
     function smarterPPLinkExpand($matches)
     {
         //echo '<hr><pre>';var_dump($matches);echo '</pre><hr>';
-        $options = HTML_BBCodeParser::getStaticProperty('HTML_BBCodeParser','_options');
+        $options = SSHTMLBBCodeParser::getStaticProperty('SSHTMLBBCodeParser','_options');
         $o = $options['open'];
         $c = $options['close'];
 
@@ -171,7 +171,7 @@ class HTML_BBCodeParser_Filter_Links extends HTML_BBCodeParser_Filter
      */
     function smarterPPLink($matches)
     {
-        $options = HTML_BBCodeParser::getStaticProperty('HTML_BBCodeParser','_options');
+        $options = SSHTMLBBCodeParser::getStaticProperty('SSHTMLBBCodeParser','_options');
         $o = $options['open'];
         $c = $options['close'];
 
