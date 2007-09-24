@@ -9,14 +9,19 @@ $options = $config['HTML_BBCodeParser'];
 //Debug::show($options);
 unset($options);
 
-/**
- * TODO Investigate whether SSViewer will be fast enough to handle hundreds of little template files.
- * 
- * A better (more SS) way of doing the HTML code in here is to place them all in small template files
- * (eg. BBCodeParser_Code.ss contains the HTML for BBCodeParser::parseCode()), but the overhead this 
- * would cause is likely to make this very unusable, as nice as it would be.
- */
+
 class BBCodeParser extends TextParser {
+
+	protected static $autolinkUrls = true;
+	
+	static function autolinkUrls() {
+		return (self::$autolinkUrls != null) ? true : false;
+	}
+	
+	static function disable_autolink_urls($autolink = false) {
+		BBCodeParser::$autolinkUrls = $autolink;
+	}
+	
 	static function usable_tags() {
 		return new DataObjectSet(
 			new ArrayData(array(
@@ -94,16 +99,14 @@ class BBCodeParser extends TextParser {
 		return $useabletags."</ul>";
 	}
 	
-
 	function parse() {
 		$this->content = str_replace(array('&', '<', '>'), array('&amp;', '&lt;', '&gt;'), $this->content);
 		$this->content = HTML_BBCodeParser::staticQparse($this->content);
 		$this->content = "<p>".$this->content."</p>";
 		$this->content = str_replace("\n\n", "</p><p>", $this->content);		
-		$this->content = str_replace("\n", "<br />", $this->content);	
+		$this->content = str_replace("\n", "<br />", $this->content);
 		return $this->content;
 	}
-	
 	
 }
 ?>

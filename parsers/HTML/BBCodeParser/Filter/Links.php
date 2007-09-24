@@ -118,6 +118,11 @@ class HTML_BBCodeParser_Filter_Links extends HTML_BBCodeParser_Filter
         if ($matches[1] == $o.'url'.$c) {
             return $matches[0];
         }
+        
+        if(!BBCodeParser::autolinkUrls()){
+        	return $matches[0];
+        }
+        
 
         $punctuation = '.,;:'; // Links can't end with these chars
         $trailing = '';
