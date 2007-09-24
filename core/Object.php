@@ -200,9 +200,12 @@ class Object {
 	protected function addMethodsFrom($parameterName, $arrayIndex = null) {
 		$obj = isset($arrayIndex) ? $this->{$parameterName}[$arrayIndex] : $this->$parameterName;
 		if(!$obj) user_error("Object::addMethodsFrom: $parameterName/$arrayIndex", E_USER_ERROR);
-		$methodNames = $obj->allMethodNames(true);
-		foreach($methodNames as $methodName) {
-			Object::$extraMethods[$this->class][$methodName] = array("parameterName" => $parameterName, "arrayIndex" => $arrayIndex);
+		// Hack to fix Fatal error: Call to undefined method stdClass::allMethodNames()
+		if(method_exists($obj, 'allMethodNames')) {
+			$methodNames = $obj->allMethodNames(true);
+			foreach($methodNames as $methodName) {
+				Object::$extraMethods[$this->class][$methodName] = array("parameterName" => $parameterName, "arrayIndex" => $arrayIndex);
+			}
 		}
 	}
 	
