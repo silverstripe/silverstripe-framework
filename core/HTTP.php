@@ -160,7 +160,7 @@ class HTTP {
 		global $global_mimetypes;
 		if(!$global_mimetypes) self::loadMimeTypes();
 		$ext = strtolower(substr($filename,strrpos($filename,'.')+1));
-		return $global_mimetypes[$ext];
+		if(isset($global_mimetypes[$ext])) return $global_mimetypes[$ext];
 	}
 
 	/*

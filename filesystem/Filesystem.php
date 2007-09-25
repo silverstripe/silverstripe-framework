@@ -15,7 +15,7 @@ class Filesystem extends Object {
 	static function removeFolder( $folder ) {
 		
 		// remove a file encountered by a recursive call.
-		if( !is_dir( $folder ) )
+		if( !is_dir( $folder ) || is_link($folder) )
 			unlink( $folder );
 		else {
 			

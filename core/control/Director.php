@@ -190,6 +190,12 @@ class Director {
 	}
 
 	static function protocolAndHost() {
+		if(self::$alternateBaseURL) {
+			if(preg_match('/^(http[^:]*:\/\/[^/]+)\//1', self::$alternateBaseURL, $matches)) {
+				return $matches[1];
+			}
+		}
+
 		$s = (isset($_SERVER['SSL']) || isset($_SERVER['HTTPS'])) ? 's' : '';
 		return "http$s://" . $_SERVER['HTTP_HOST'];
 	}
