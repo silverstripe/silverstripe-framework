@@ -24,7 +24,6 @@ class Member extends DataObject {
 		'UnsubscribedRecords' => 'Member_UnsubscribeRecord'
 	);
   	static $many_many = array();
-  	static $belongs_many_many = array();
   	static $many_many_extraFields = array();
 	static $default_sort = "Surname, FirstName";
 	
