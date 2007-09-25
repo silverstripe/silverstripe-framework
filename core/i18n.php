@@ -418,8 +418,8 @@ class i18n extends Controller {
 		'my_MM' => 'Burmese (Myanmar)',
 		'myv_RU' => 'Erzya (Russia)',
 		'na_NR' => 'Nauru (Nauru)',
-		'nb_NO' => 'Norwegian Bokmål (Norway)',
-		'nb_SJ' => 'Norwegian Bokmål (Svalbard and Jan Mayen)',
+		'nb_NO' => 'Norwegian Bokmï¿½l (Norway)',
+		'nb_SJ' => 'Norwegian Bokmï¿½l (Svalbard and Jan Mayen)',
 		'nd_ZW' => 'North Ndebele (Zimbabwe)',
 		'ndc_MZ' => 'ndc (Mozambique)',
 		'ne_NP' => 'Nepali (Nepal)',
@@ -791,7 +791,8 @@ class i18n extends Controller {
 				// Create folder for lang files
 				$langFolder = $baseDir . '/' . $module . '/lang';
 				if(!file_exists($baseDir. '/' . $module . '/lang')) {
-					mkdir($langFolder);
+					mkdir($langFolder, 02775);
+					touch($baseDir. '/' . $module . '/lang/_manifest_exclude');
 				}
 				
 				// Open the English file and write the Master String Table
@@ -918,15 +919,25 @@ class i18n extends Controller {
 	}
 	
 	/**
+	 * Include a locale file determined by module name and locale 
+	 * 
+	 * @param string $module Module that contains the locale file
+	 * @param string $locale Locale to be loaded
+	 */
+	static function include_locale_file($module, $locale) {
+		if (file_exists($file = Director::getAbsFile("$module/lang/$locale.php"))) include_once($file);
+	}
+
+	/**
 	 * Includes all available language files for a certain defined locale
 	 * 
 	 * @param string $locale All resources from any module in locale $locale will be loaded
 	 */
 	static function include_by_locale($locale) {
-		if (file_exists($file = Director::getAbsFile("cms/lang/$locale.php"))) include_once($file);
-		$topLevel = array_diff(scandir(Director::baseFolder()),array('cms'));
+		$topLevel = scandir(Director::baseFolder());
 		foreach($topLevel as $module) {
-			if (file_exists($file = Director::getAbsFile("$module/lang/$locale.php"))) { 
+			if (file_exists(Director::getAbsFile("$module/_config.php")) && 
+			  file_exists($file = Director::getAbsFile("$module/lang/$locale.php"))) { 
 				include_once($file);
 			}
 		}
