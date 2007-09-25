@@ -41,7 +41,9 @@ class LanguageDropdownField extends GroupedDropdownField {
 					));
 		if (isset($alllangs[Translatable::default_lang()])) unset($alllangs[Translatable::default_lang()]);
 
+		asort($alllangs);
 		if (count($usedlangs)) {
+			asort($usedlangs);
 			parent::__construct($name, $title, array(
 					"Used languages" => $usedlangs,
 					"Other languages" => $alllangs
