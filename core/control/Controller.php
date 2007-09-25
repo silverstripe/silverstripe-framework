@@ -269,15 +269,15 @@ class Controller extends ViewableData {
 	 */
 	function init() {
 		// Test and development sites should be secured, via basic-auth
-		if(ClassInfo::ready() && ClassInfo::hasTable("Member") && Director::isTest() && $this->basicAuthEnabled) {
+		if(ClassInfo::hasTable("Group") && ClassInfo::hasTable("Member") && Director::isTest() && $this->basicAuthEnabled) {
 			BasicAuth::requireLogin("SilverStripe test website.  Use your  CMS login", "ADMIN");
 		}		
 		
 		//
 		Cookie::set("PastVisitor", true);
 
-		// ClassInfo::ready() called to ensure that we're not in a very-first-setup stage
-		if(ClassInfo::ready() && ClassInfo::hasTable("Member") && ($member = Member::currentUser())) {
+		// ClassInfo::hasTable() called to ensure that we're not in a very-first-setup stage
+		if(ClassInfo::hasTable("Group") && ClassInfo::hasTable("Member") && ($member = Member::currentUser())) {
 			Cookie::set("PastMember", true);
 			DB::query("UPDATE Member SET LastVisited = NOW() WHERE ID = $member->ID", null);
 		}
