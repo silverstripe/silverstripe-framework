@@ -12,6 +12,13 @@ class i18n extends Controller {
 	 * This static variable is used to store the current defined locale. Default value is 'en_US'
 	 */
 	static $currentlocale = 'en_US';
+	
+	/**
+	 * This is the locale in which generated language files are (we assume US English)
+	 *
+	 * @var string
+	 */
+	static $default_locale = 'en_US';
 
 	/**
 	 * An exhaustive list of possible locales (code => language and country)
@@ -743,7 +750,7 @@ class i18n extends Controller {
 	 */
 	static function get_locale_name($code) {
 		$langs = i18n::get_locale_list();
-		return $langs[$code];
+		return isset($langs[$code]) ? $langs[$code] : false;
 	}
 	
 	/**
@@ -757,6 +764,30 @@ class i18n extends Controller {
 		return ($code ? $code : $name);
 	}
 	
+	/**
+	 * Searches the root-directory for module-directories
+	 * (identified by having a _config.php on their first directory-level
+	 * and a language-file with the default locale in the /lang-subdirectory).
+	 * 
+	 * @return array
+	 */
+	static function get_translatable_modules() {
+		$translatableModules = array();
+		
+		$baseDir = Director::baseFolder();
+		$modules = scandir($baseDir);
+		foreach($modules as $module) {
+			$moduleDir = $baseDir . DIRECTORY_SEPARATOR . $module;
+			if(
+				is_dir($moduleDir) 
+				&& is_file($moduleDir . DIRECTORY_SEPARATOR . "_config.php")
+				&& is_file($moduleDir . DIRECTORY_SEPARATOR . "lang" . DIRECTORY_SEPARATOR . i18n::$default_locale . ".php")
+			) {
+				$translatableModules[] = $module;
+			}
+		}
+		return $translatableModules;
+	}
 
 	/**
 	 * Searches for all the files in a given module
@@ -1010,11 +1041,7 @@ class i18n extends Controller {
 		}
 		
 		echo "Done!";
-	
-
 	}
-
 	
 }
-
 ?>
