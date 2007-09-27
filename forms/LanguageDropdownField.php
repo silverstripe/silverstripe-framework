@@ -12,11 +12,11 @@ class LanguageDropdownField extends GroupedDropdownField {
 	 * @param string $title
 	 * @param array $dontInclude list of languages that won't be included
 	 * @param string $translatingClass Name of the class with translated instances where to look for used languages
-	 * @param string $list Indicates the source language list. Can be either Common-English, Common-Native or Locale
+	 * @param string $list Indicates the source language list. Can be either Common-English, Common-Native  Locale
 	 */
 	function __construct($name, $title, $dontInclude = array(), $translatingClass = 'SiteTree', $list = 'Common-English' ) {
 		$usedlangs = array_diff(
-						i18n::get_existing_languages($translatingClass),
+						i18n::get_existing_content_languages($translatingClass),
 						$dontInclude
 					);
 		// we accept in dontInclude both language codes and names, so another diff is required
@@ -24,6 +24,7 @@ class LanguageDropdownField extends GroupedDropdownField {
 						array_flip($usedlangs),
 						$dontInclude
 					));
+
 		if (isset($usedlangs[Translatable::default_lang()])) unset($usedlangs[Translatable::default_lang()]);
 					
 		if ('Common-English' == $list) $languageList = i18n::get_common_languages();
@@ -45,7 +46,7 @@ class LanguageDropdownField extends GroupedDropdownField {
 		if (count($usedlangs)) {
 			asort($usedlangs);
 			parent::__construct($name, $title, array(
-					"Used languages" => $usedlangs,
+					"Available languages" => $usedlangs,
 					"Other languages" => $alllangs
 				),
 				reset($usedlangs)
