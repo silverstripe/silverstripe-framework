@@ -11,7 +11,7 @@ class i18n extends Controller {
 	/**
 	 * This static variable is used to store the current defined locale. Default value is 'en_US'
 	 */
-	static $currentlocale = 'en_US';
+	static $current_locale = 'en_US';
 	
 	/**
 	 * This is the locale in which generated language files are (we assume US English)
@@ -25,7 +25,7 @@ class i18n extends Controller {
 	 *
 	 * @var array
 	 */
-	static $allLocales = array(
+	static $all_locales = array(
 		'aa_DJ' => 'Afar (Djibouti)',
 		'ab_GE' => 'Abkhazian (Georgia)',
 		'abr_GH' => 'Abron (Ghana)',
@@ -199,7 +199,7 @@ class i18n extends Controller {
 		'en_TZ' => 'English (Tanzania)',
 		'en_UG' => 'English (Uganda)',
 		'en_UM' => 'English (United States Minor Outlying Islands)',
-//		'en_US' => 'English (United States)',
+		'en_US' => 'English (United States)',
 		'en_VC' => 'English (Saint Vincent and the Grenadines)',
 		'en_VG' => 'English (British Virgin Islands)',
 		'en_VI' => 'English (U.S. Virgin Islands)',
@@ -601,7 +601,7 @@ class i18n extends Controller {
 	 *  A list of commonly used languages, in the form
 	 *  langcode => array( EnglishName, NativeName)
 	 */
-	static $commonLanguages = array(
+	static $common_languages = array(
 		'af' => array('Afrikaans', 'Afrikaans'),
 		'sq' => array('Albanian', 'shqip'),
 		'ar' => array('Arabic', '&#1575;&#1604;&#1593;&#1585;&#1576;&#1610;&#1577;'),
@@ -695,7 +695,7 @@ class i18n extends Controller {
 	 */
 	static function get_common_languages($native = false) {
 		$languages = array();
-		foreach (i18n::$commonLanguages as $code => $name) {
+		foreach (i18n::$common_languages as $code => $name) {
 			$languages[$code] = ($native ? $name[1] : $name[0]);
 		}
 		return $languages;
@@ -707,7 +707,7 @@ class i18n extends Controller {
 	 * @return list of languages in the form 'code' => 'name'
 	 */
 	static function get_locale_list() {
-		return i18n::$allLocales;
+		return i18n::$all_locales;
 	}
 	
 	/**
@@ -716,18 +716,46 @@ class i18n extends Controller {
 	 * @param string $className Look for languages in elements of this class
 	 * @return array Map of languages in the form langCode => langName
 	 */
-	static function get_existing_languages($className = 'SiteTree', $where = '') {
+	static function get_existing_content_languages($className = 'SiteTree', $where = '') {
 		if(!Translatable::is_enabled()) return false;
 		
 		$query = new SQLQuery('Lang',$className.'_lang',$where,"",'Lang');
 		$dbLangs = $query->execute()->column();
 		$langlist = array_merge((array)Translatable::default_lang(), (array)$dbLangs);
 		$returnMap = array();
-		$allCodes = array_merge(i18n::$allLocales, i18n::$commonLanguages);
+		$allCodes = array_merge(i18n::$all_locales, i18n::$common_languages);
 		foreach ($langlist as $langCode) {
 			$returnMap[$langCode] = (is_array($allCodes[$langCode]) ? $allCodes[$langCode][0] : $allCodes[$langCode]);
 		}
 		return $returnMap;
+	}
+	
+	/**
+	 * Searches the root-directory for module-directories
+	 * (identified by having a _config.php on their first directory-level).
+	 * Returns all found locales.
+	 * 
+	 * @return array
+	 */
+	static function get_existing_translations() {
+		$locales = array();
+		
+		$baseDir = Director::baseFolder();
+		$modules = scandir($baseDir);
+		foreach($modules as $module) {
+			$moduleDir = $baseDir . DIRECTORY_SEPARATOR . $module;
+			$langDir = $moduleDir . DIRECTORY_SEPARATOR . "lang";
+			if(is_dir($moduleDir) && is_file($moduleDir . DIRECTORY_SEPARATOR . "_config.php") && is_dir($langDir)) {
+				$moduleLocales = scandir($langDir);
+				foreach($moduleLocales as $moduleLocale) {
+					if(preg_match('/(.*)\.php$/',$moduleLocale, $matches)) {
+						$locales[$matches[1]] = self::$all_locales[$matches[1]];				
+					}
+				} 
+			}
+		}
+
+		return $locales;
 	}
 	
 	/**
@@ -738,7 +766,7 @@ class i18n extends Controller {
 	 * @return Name of the language
 	 */
 	static function get_language_name($code, $native = false) {
-		$langs = i18n::$commonLanguages;
+		$langs = i18n::$common_languages;
 		return ($native ? $langs[$code][1] : $langs[$code][0]);
 	}
 	
@@ -937,7 +965,7 @@ class i18n extends Controller {
 	 * @param string $locale Locale to be set 
 	 */
 	static function set_locale($locale) {
-		if ($locale) i18n::$currentlocale = $locale;
+		if ($locale) i18n::$current_locale = $locale;
 	}
 
 	/**
@@ -946,7 +974,7 @@ class i18n extends Controller {
 	 * @return string Current locale in the system
 	 */
 	static function get_locale() {
-		return i18n::$currentlocale;
+		return i18n::$current_locale;
 	}
 	
 	/**
