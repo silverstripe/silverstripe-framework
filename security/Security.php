@@ -222,7 +222,6 @@ class Security extends Controller {
 			Requirements::javascript("jsparty/scriptaculous/effects.js");
 			Requirements::css("jsparty/tabstrip/tabstrip.css");
 			Requirements::css("sapphire/css/Form.css");
-			Requirements::css("sapphire/css/Security_login.css");
 			
 			// Needed because the <base href=".."> in the template makes problems
 			// with the tabstrip library otherwise
