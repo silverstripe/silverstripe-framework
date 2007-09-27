@@ -29,7 +29,7 @@ class MemberAuthenticator extends Authenticator {
     $SQL_user = Convert::raw2sql($RAW_data['Email']);
 
 	// Default login (see {@setDetaultAdmin()})
-	if(Security::checkDefaultAdmin($RAW_data['Email'], $RAW_data['Password'])) {
+	if(Security::check_default_admin($RAW_data['Email'], $RAW_data['Password'])) {
 		$member = Security::findAnAdministrator();
 	} else {
 		$member = DataObject::get_one("Member", "Email = '$SQL_user' AND Password IS NOT NULL");

@@ -192,14 +192,6 @@ class Security extends Controller {
 	 * @return string Returns the "login" page as HTML code.
 	 */
 	public function login() {
-		Requirements::javascript("jsparty/loader.js");
-		Requirements::javascript("jsparty/prototype.js");
-		Requirements::javascript("jsparty/behaviour.js");
-		Requirements::javascript("jsparty/prototype_improvements.js");
-		Requirements::javascript("jsparty/tabstrip/tabstrip.js");
-		Requirements::javascript("jsparty/scriptaculous/effects.js");
-		Requirements::css("jsparty/tabstrip/tabstrip.css");
-
 		$customCSS = project() . '/css/tabs.css';
 		if(Director::fileExists($customCSS)) {
 			Requirements::css($customCSS);
@@ -213,15 +205,29 @@ class Security extends Controller {
 		$controller->init();
 		//Controller::$currentController = $controller;
 
-		if(SSViewer::hasTemplate("Security_login")) {
-			return $controller->renderWith(array("Security_login", "Page"));
-
-		} else {
+		$content = '';
+		$forms = $this->GetLoginForms();
+		if(!count($forms)) {
+			user_error('No login-forms found, please use Authenticator::register_authenticator() to add one', E_USER_ERROR);
+		}
+		
+		// only display tabs when more than one authenticator is provided
+		// to save bandwidth and reduce the amount of custom styling needed 
+		if(count($forms) > 1) {
+			Requirements::javascript("jsparty/loader.js");
+			Requirements::javascript("jsparty/prototype.js");
+			Requirements::javascript("jsparty/behaviour.js");
+			Requirements::javascript("jsparty/prototype_improvements.js");
+			Requirements::javascript("jsparty/tabstrip/tabstrip.js");
+			Requirements::javascript("jsparty/scriptaculous/effects.js");
+			Requirements::css("jsparty/tabstrip/tabstrip.css");
+			Requirements::css("sapphire/css/Form.css");
+			Requirements::css("sapphire/css/Security_login.css");
+			
 			// Needed because the <base href=".."> in the template makes problems
 			// with the tabstrip library otherwise
 			$link_base = Director::absoluteURL($this->Link("login"));
 
-			$forms = $this->GetLoginForms();
 			$content = '<div id="Form_EditForm">';
 			$content .= '<ul class="tabstrip">';
 			$content_forms = '';
@@ -232,25 +238,32 @@ class Security extends Controller {
 			}
 
 			$content .= "</ul>\n" . $content_forms . "\n</div>\n";
-
-			if(strlen($message = Session::get('Security.Message.message')) > 0) {
-				$message_type = Session::get('Security.Message.type');
-				if($message_type == 'bad') {
-					$message = "<p class=\"message $message_type\">$message</p>";
-				} else {
-					$message = "<p>$message</p>";
-				}
-
-				$customisedController = $controller->customise(array(
-					"Content" => $message,
-					"Form" => $content
-				));
+		} else {
+			$content .= $forms[0]->forTemplate();
+		}
+		
+		if(strlen($message = Session::get('Security.Message.message')) > 0) {
+			$message_type = Session::get('Security.Message.type');
+			if($message_type == 'bad') {
+				$message = "<p class=\"message $message_type\">$message</p>";
 			} else {
-				$customisedController = $controller->customise(array(
-					"Content" => $content
-				));
+				$message = "<p>$message</p>";
 			}
 
+			$customisedController = $controller->customise(array(
+				"Content" => $message,
+				"Form" => $content
+			));
+		} else {
+			$customisedController = $controller->customise(array(
+				"Content" => $content
+			));
+		}
+
+		// custom processing
+		if(SSViewer::hasTemplate("Security_login")) {
+			return $customisedController->renderWith(array("Security_login", "Page"));
+		} else {
 			return $customisedController->renderWith("Page");
 		}
 	}
@@ -485,7 +498,7 @@ class Security extends Controller {
 	 * @param string $password 
 	 * @return bool
 	 */
-	public static function checkDefaultAdmin($username, $password) {
+	public static function check_default_admin($username, $password) {
 		return (
 			self::$default_username == $username
 			&& self::$default_password == $password
