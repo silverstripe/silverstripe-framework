@@ -152,7 +152,7 @@ class ManifestBuilder {
 				$itemCode = substr($item,0,-4);
 				if($classMap && array_key_exists($itemCode, $classMap)) user_error("Warning: there are two '$itemCode' files: '$folder/$item' and '{$classMap[$itemCode]}'.  This might mean that the wrong code is being used.", E_USER_WARNING);
 				$classMap[$itemCode] = "$folder/$item";
-			} else if(is_dir("$folder/$item") && !in_array($item, array('mysql', 'assets', 'shortstat', 'pear'))) ManifestBuilder::getClassManifest("$folder/$item", $classMap);
+			} else if(is_dir("$folder/$item") && !in_array($item, array('mysql', 'assets', 'shortstat', 'HTML'))) ManifestBuilder::getClassManifest("$folder/$item", $classMap);
 		}
 	}
 	
