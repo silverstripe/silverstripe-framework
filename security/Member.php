@@ -710,9 +710,8 @@ class Member extends DataObject {
 				new TextField("Surname", "Surname"),
 				new HeaderField( "User Details" ),
 				new TextField("Email", "Email"),
-				/*new TextField("Password", "Password")*/
-				new PasswordField("Password", "Password"),
-				new LanguageDropdownField("Lang", "Language")
+				new DropdownField("Lang", "Interface Language", i18n::get_existing_translations()),
+				new PasswordField("Password", "Password")
 				//new TextareaField("Address","Address"),
 				//new TextField("JobTitle", "Job Title"),
 				//new TextField( "Organisation", "Organisation" ),
@@ -720,7 +719,6 @@ class Member extends DataObject {
 			);
 
 		$this->extend('updateCMSFields', $fields);
-		// if($this->hasMethod('updateCMSFields')) $this->updateCMSFields($fields);
 
 		return $fields;
 	}
@@ -765,8 +763,6 @@ class Member extends DataObject {
 		}
 	}
 }
-
-
 
 
 /**
@@ -975,6 +971,74 @@ class Member_GroupSet extends ComponentSet {
 }
 
 
+
+class Member_ProfileForm extends Form {
+	
+	function __construct($controller, $name, $member) {
+		Requirements::clear();
+		Requirements::css('jsparty/tabstrip/tabstrip.css');
+		Requirements::css('cms/css/typography.css');
+		Requirements::javascript("jsparty/prototype.js");
+		Requirements::javascript("jsparty/behaviour.js");
+		Requirements::javascript("jsparty/prototype_improvements.js");
+		Requirements::javascript("jsparty/loader.js");
+		Requirements::javascript("jsparty/tabstrip/tabstrip.js");
+		Requirements::javascript("jsparty/scriptaculous/scriptaculous.js");
+		Requirements::javascript("jsparty/scriptaculous/controls.js");
+		Requirements::javascript("jsparty/layout_helpers.js");
+		Requirements::css("sapphire/css/Form.css");
+		
+		
+		$fields = singleton('Member')->getCMSFields();
+		$fields->push(new HiddenField('ID','ID',$member->ID));
+
+		$actions = new FieldSet(
+			new FormAction('dosave',_t('CMSMain.SAVE'))
+		);
+		
+		$validator = new RequiredFields(
+		
+		);
+		
+		parent::__construct($controller, $name, $fields, $actions, $validator);
+		
+		$this->loadDataFrom($member);
+	}
+	
+	function dosave($data, $form) {
+		$SQL_data = Convert::raw2sql($data);
+		
+		$member = DataObject::get_by_id("Member", $SQL_data['ID']);
+		if($member->canEdit()) {
+			if(!empty($SQL_data['Password']) && !empty($SQL_data['ConfirmPassword'])) {
+				if($SQL_data['Password']==$SQL_data['ConfirmPassword']) {
+					$member->Password=$SQL_data['Password'];
+				} else {
+					$form->addErrorMessage("Blurb","Both passwords need to match. Please try again.","bad");
+					Director::redirectBack();
+				}
+			} else {
+				$form->dataFieldByName("Password")->setValue($member->Password);
+			}
+		}
+		if($nicknameCheck = DataObject::get_one("Member","`Nickname` = '{$SQL_data['Nickname']}' AND `Member`.`ID` != '{$member->ID}'")){
+  			if($nicknameCheck) {
+  				$form->addErrorMessage("Blurb","Sorry, that nickname already exists. Please choose another.","bad");
+  				Director::redirectBack();
+  				die;
+  			}
+  		}
+		
+		if($SQL_data['Lang'] != $member->Lang) {
+			$form->addErrorMessage("Generic", _t('CMSMain.REFRESHLANG'),"good");
+		}
+		
+		$form->saveInto($member);
+		$member->write();
+		
+		Director::redirectBack();
+	}
+}
 
 /**
  * Class used as template to send an email to new members
