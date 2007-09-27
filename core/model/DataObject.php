@@ -193,8 +193,8 @@ class DataObject extends Controller {
 	
 	/**
 	 * Returns true if this object "exists", i.e., has a sensible value.
-	 * The default behaviour for a DataObject is to return true, overload
-	 * this in subclasses, for example, an empty DataObject record could return false.
+	 * The default behaviour for a DataObject is to return true if
+	 * the object exists in the database, you can override this in subclasses.
 	 * 
 	 * @return boolean true if this object exists
 	 */
