@@ -23,9 +23,7 @@ body {
 	
 }
 
-
 #intro {
-
 	margin : 10px;
 	padding-left : 10px;
 	padding-right : 10px;
@@ -34,7 +32,6 @@ body {
 }
 
 h1{
-
 	color : white;
 	font-size : 12px;
 	border-bottom : 1px solid #333333;
@@ -47,34 +44,17 @@ h1{
 	
 }
 
-
-
-
 #supported {
-	
-	
 	display : none;
 	padding : 10px;
-	
 }
-
 
 #noSupport {
-	
 	margin : 10px;
 	padding : 10px;
-	
-}
-
-
-
-form div.field {
-	clear: both;
-	padding : 4px;
 }
 
 form div.field input{
-	
 	height : 26px;
 	font-size : 18px;
 	font-weight : lighter;
@@ -84,7 +64,6 @@ form div.field input{
 }
 
 form div.field input.checkbox{
-	
 	height : 26px;
 	font-size : 18px;
 	font-weight : lighter;
@@ -93,14 +72,9 @@ form div.field input.checkbox{
 
 }
 
-
 fieldset{
-
-
 	border : 3px solid #CCCCCC;
-
 }
-
 
 form label.left {
 	float: left;
@@ -108,46 +82,3 @@ form label.left {
 	font-size : 16px;
 	margin-top : 6px;
 }
-
-
-
-p.actions{
-	
-	float : right;
-	
-	
-}
-
-
-/** Form messages **/
-	.message {
-		margin: 1em 0;
-		padding: 0.5em;
-		font-weight: bold;
-		border: 1px black solid;
-
-			background-color: #B9FFB9;
-			border-color: #00FF00;
-	}
-
-	.message.warning{
-		background-color: #FFD2A6;
-		border-color: #FF9300;
-	}
-	.message.bad {
-		background-color: #FF8080;
-		border-color: #FF0000;
-	}
-		.message.required,
-		.message.validation{
-			display:block;
-			margin-top:5px;
-			color:#FF9300;
-			width:240px;
-			border-color: #FF9300;
-		}
-		.message.validation{
-			color:#FF4040;
-			width:240px;
-			border-color: #FF4040;
-		}
