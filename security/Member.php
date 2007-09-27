@@ -978,6 +978,7 @@ class Member_ProfileForm extends Form {
 		Requirements::clear();
 		Requirements::css('jsparty/tabstrip/tabstrip.css');
 		Requirements::css('cms/css/typography.css');
+		Requirements::css('cms/css/cms_right.css');
 		Requirements::javascript("jsparty/prototype.js");
 		Requirements::javascript("jsparty/behaviour.js");
 		Requirements::javascript("jsparty/prototype_improvements.js");
@@ -987,6 +988,8 @@ class Member_ProfileForm extends Form {
 		Requirements::javascript("jsparty/scriptaculous/controls.js");
 		Requirements::javascript("jsparty/layout_helpers.js");
 		Requirements::css("sapphire/css/Form.css");
+		
+		Requirements::css("sapphire/css/MemberProfileForm.css");
 		
 		
 		$fields = singleton('Member')->getCMSFields();
