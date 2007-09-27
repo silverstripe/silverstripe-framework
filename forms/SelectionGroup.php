@@ -18,7 +18,10 @@ class SelectionGroup extends CompositeField {
 	 */
 	function __construct($name, $items) {
 		$this->name = $name;
+		
 		parent::__construct($items);
+		
+		Requirements::css('sapphire/css/SelectionGroup.css');
 	}
 	
 	function FieldSet() {

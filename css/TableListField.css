@@ -1,0 +1,182 @@
+table.TableField, 
+table.TableListField, 
+.TableListField table.data, 
+table.CMSList {
+	border-collapse: collapse;
+	border-spacing: 0;
+	border : 1px solid #aaaaaa;
+	width : 100%;
+}
+
+/* HACK Preventing IE6 from showing double borders */
+body>div table.TableField, 
+body>div table.TableListField, 
+body>div .TableListField table.data, 
+body>div table.CMSList {
+	border-collapse: separate;
+}
+
+table.TableField td, 
+table.TableListField td, 
+.TableListField table.data td, 
+table.CMSList td {
+	border-style:none;
+}
+
+table.TableField th, 
+table.TableListField th, 
+.TableListField table.data th, 
+table.CMSList th {
+	whitespace: no-wrap;
+}
+
+table.TableField thead th, 
+.TableListField table.data thead th, 
+table.CMSList thead th {
+	background-image : url(../../cms/images/tables/thead.png);
+	background-repeat : repeat-x;
+	background-position : left bottom;
+	background-color : #ebeadb;
+	height : 24px;
+	border-right : 1px solid #aca899;
+	border-left : 1px solid #ffffff;
+	padding-left : 5px;
+}
+
+table.TableField thead th span, 
+.TableListField table.data thead th span {
+	display: block;
+	float: left;
+}
+
+table.TableField thead th a, 
+.TableListField table.data thead th a, 
+table.CMSList thead th a {
+	color: #000;
+}
+
+table.TableField thead th span.sortLink, 
+.TableListField table.data thead th span.sortLink, 
+table.CMSList thead th span.sortLink {
+	width: 16px;
+	height: 16px;
+	overflow: hidden;
+}
+
+table.TableField tfoot tr.summary td, 
+.TableListField table.data tfoot tr.summary td, 
+table.CMSList tfoot tr.summary td {
+	background-color : #ebeadb;
+}
+
+table.TableField tbody td, 
+table.TableField tfoot td, 
+.TableListField table.data tbody td, 
+.TableListField table.data tfoot td, 
+table.CMSList tbody td,
+table.CMSList tfoot td {
+	border : 1px solid #f1efe2;
+	padding-left : 5px;
+}
+
+.TableField td input,
+.TableListField td input {
+	width: 98%;
+}
+
+table.data tbody td input {
+	border:0 !important;
+}
+
+table.TableField tbody td.checkbox, 
+.TableListField table.data tbody td.checkbox, 
+table.CMSList tbody td.checkbox {
+	border : 1px solid #f1efe2;
+	padding-left : 5px;
+	background-image : url(../../cms/images/tables/checkbox.png);
+	background-repeat : repeat-x;
+	background-position : left bottom;
+}
+
+table.TableField tbody tr.over td, 
+.TableListField table.data tbody tr.over td, 
+table.CMSList tbody td.over td{
+	background-color: #FFC;
+}
+
+table.TableField tbody tr.current td, 
+.TableListField table.data tbody tr.current td, 
+table.CMSList tbody td.current td {
+	background-color: #316ac5;
+	color : white;
+}
+
+.TableListField table.data tfoot .addlink img {
+	vertical-align: middle;
+	margin: 3px 6px 3px 3px;
+}
+
+.right form .TableField span.readonly {
+	border: 0;
+	background: none;
+	padding: 0;
+	margin-bottom: 0;
+}
+
+.TableListField div.utility {
+	margin-top: 0.5em;
+}
+
+.TableListField div.utility a {
+	font-size: 9px;
+	border: 1px solid #aaa;
+	padding: 2px;
+}
+
+form .TableField .message {
+	width: auto;
+}
+
+
+
+
+#Pagination {
+    margin-top: 10px;
+    margin-left: auto;	
+    margin-right: auto;
+}
+#Pagination a {
+    font-size: 14px;
+    width: 1px;
+    heigth: 1px;
+    margin: 1px;
+}
+#Pagination span {
+    
+    display: inline;
+    color: red;
+    font-size: 14px;
+}
+#Pagination div {
+    display: inline;
+}
+#Pagination_Next a {
+    text-decoration: none;	
+}
+#Pagination_Next a div {
+    position: relative;
+    left: -20px;
+}
+#Pagination_Next a img {
+    position: relative;
+    top: -15px;
+    left: 5px;
+}
+#Pagination_Previous a {
+    text-decoration: none;  
+}
+#Pagination_Previous a img {
+    position: relative;
+    top: -15px;
+    left: 35px;
+}

@@ -6,8 +6,9 @@
 class ProgressBar extends FormField {
 
 	function FieldHolder() {
-    Requirements::javascript('sapphire/javascript/ProgressBar.js');
-    
+		Requirements::javascript('sapphire/javascript/ProgressBar.js');
+		Requirements::css('sapphire/css/ProgressBar.css');
+		
 		return $this->renderWith('ProgressBar');
 	}
 

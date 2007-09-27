@@ -9,6 +9,12 @@ class CheckboxSetField extends OptionsetField {
 	
 		
 	protected $disabled = false;
+	
+	function __construct($name, $title = "", $source = array(), $value = "", $form = null) {
+		parent::__construct($name, $title, $source, $value, $form);
+		
+		Requirements::css('sapphire/css/CheckboxSetField.css');
+	}
   
   	/**
   	* Object handles arrays and dosets being passed by reference

@@ -1,0 +1,31 @@
+.SelectionGroup {
+	padding: 0px;
+	clear : both;
+}
+.SelectionGroup li {
+	list-style-type: none;
+	float : left;
+	clear : both;
+}
+.SelectionGroup li input {
+	width: 20px;
+	float : left;
+
+}
+
+.SelectionGroup li div.field {
+	display: none;
+	font-size: 1em;
+}
+.SelectionGroup li input, .right .SelectionGroup li label {
+	display: block;
+}	
+.SelectionGroup li.selected div.field {
+	margin-left: 30px;
+	display: block;
+	margin-bottom: 1em;
+}	
+
+.SelectionGroup li.selected label.selector {
+	font-weight: bold;
+}

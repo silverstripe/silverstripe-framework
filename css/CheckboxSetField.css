@@ -1,0 +1,12 @@
+#right form .CheckboxSetField ul{
+	margin:0;
+	padding:0;
+}
+#right form .CheckboxSetField ul li{
+	list-style:none !important;
+	margin:0;
+	padding:0;
+}
+#right form .CheckboxSetField input{
+	width:auto;
+}

@@ -16,6 +16,9 @@ class TreeDropdownField extends FormField {
 		$this->sourceObject = $sourceObject;
 		$this->keyField = $keyField;
 		$this->labelField = $labelField;
+		
+		Requirements::css('sapphire/css/TreeDropdownField.css');
+		
 		parent::__construct($name, $title);
 	}
 	
