@@ -4,10 +4,12 @@ var checkedListField = 'selected';
 var checkedArray = null;
 
 Event.observe( window, 'load', function() {
-	$( 'sitetree' ).observeMethod( 'NodeClicked' , function() {
-		checkedListNameArray = null;
-		checkedArray = null;
-	} );
+	if($('sitetree')) {
+		$('sitetree').observeMethod( 'NodeClicked' , function() {
+			checkedListNameArray = null;
+			checkedArray = null;
+		} );
+	}
 } );
 
 RelationComplexTableField = Class.create();
