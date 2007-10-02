@@ -17,12 +17,10 @@
 
 
 /**
- * Add Pear (pear.php.net)
+ * Add pear parser to include path
  */
-$path_extra = PATH_SEPARATOR . realpath(dirname(__FILE__)) . DIRECTORY_SEPARATOR . 'pear';
-$path = ini_get('include_path');
-$path = $path_extra . PATH_SEPARATOR . $path;
-ini_set('include_path', $path);
+$path = Director::baseFolder().'/sapphire/parsers/';
+set_include_path(get_include_path() . PATH_SEPARATOR . $path);
 
 
 /**
