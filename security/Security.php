@@ -266,6 +266,11 @@ class Security extends Controller {
 			return $customisedController->renderWith("Page");
 		}
 	}
+	
+	function basicauthlogin() {
+		$member = BasicAuth::requireLogin("SilverStripe login", 'ADMIN');
+		$member->LogIn();
+	}
 
 
 	/**
