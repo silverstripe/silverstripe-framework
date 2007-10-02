@@ -36,7 +36,7 @@ class RedirectorPage extends Page {
 		if($this->RedirectionType == 'External') {
 			return $this->ExternalURL;
 		} else {
-			$linkTo = DataObject::get_by_id("SiteTree", $this->LinkToID);
+			$linkTo = $this->LinkToID ? DataObject::get_by_id("SiteTree", $this->LinkToID) : null;
 			if($linkTo) {
 				return $linkTo->Link();
 			}
