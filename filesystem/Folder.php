@@ -168,6 +168,7 @@ class Folder extends File {
 		}
 
 		if(Member::currentUser()) $ownerID = Member::currentUser()->ID;
+		else $ownerID = 0;
 		
 		$filename = addslashes($this->Filename . $name);
 		if($className == 'Folder' ) $filename .= '/';
