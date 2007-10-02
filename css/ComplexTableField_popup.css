@@ -72,3 +72,48 @@ form fieldset {
     float: right;
 }
 
+/* Pagination */ 
+
+ComplexTableField_Pagination {
+	margin-top: 10px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+#ComplexTableField_Pagination a {
+	font-size: 14px;
+	width: 1px;
+	height: 1px;
+	margin: 1px;
+}
+
+#ComplexTableField_Pagination span {
+	display: inline;
+	color: red;
+	font-size: 14px;
+}
+
+#ComplexTableField_Pagination div {
+	display: inline;
+}
+
+#ComplexTableField_Pagination_Next a,#ComplexTableField_Pagination_Previous a {
+	text-decoration: none;
+}
+
+#ComplexTableField_Pagination_Next a div {
+	position: relative;
+	left: -20px;
+}
+
+#ComplexTableField_Pagination_Next a img {
+	position: relative;
+	top: -15px;
+	left: 5px;
+}
+
+#ComplexTableField_Pagination_Previous a img {
+	position: relative;
+	top: -15px;
+	left: 35px;
+}
