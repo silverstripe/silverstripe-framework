@@ -53,7 +53,7 @@ class ManifestBuilder {
 		'mysql', 
 		'assets', 
 		'shortstat', 
-		'pear',
+		'HTML',
 	);
 	
 
