@@ -1,0 +1,18 @@
+#OpenIDLoginForm_LoginForm_OpenIDURL {
+  background: url(../../sapphire/images/openid-small.gif) no-repeat;
+  background-color: #fff;
+  background-position: 0 50%;
+  color: #000;
+  padding-left: 18px;
+  width: 284px;
+}
+
+#OpenIDDescription {
+  margin-bottom: 2em;
+}
+
+#OpenIDDescription p {
+  font-size: 1em;
+  line-height: 1.3em;
+  margin-top: 0.5em !important;
+}

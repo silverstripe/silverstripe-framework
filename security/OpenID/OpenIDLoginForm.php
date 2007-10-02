@@ -37,10 +37,7 @@ class OpenIDLoginForm extends LoginForm {
 
 		$this->authenticator_class = 'OpenIDAuthenticator';
 
-		$customCSS = project() . '/css/openid_login.css';
-		if(Director::fileExists($customCSS)) {
-			Requirements::css($customCSS);
-		}
+		Requirements::themedCSS('openid_login');
 
 		if(isset($_REQUEST['BackURL'])) {
 			$backURL = $_REQUEST['BackURL'];
