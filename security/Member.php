@@ -96,7 +96,6 @@ class Member extends DataObject {
 		$this->NumVisit++;
 
 		if($remember) {
-
 			$token = substr(md5(uniqid(rand(), true)), 0, 49 - strlen($this->ID));
 			$this->RememberLoginToken = $token;
 			Cookie::set('alc_enc', $this->ID . ':' . $token);
@@ -118,21 +117,20 @@ class Member extends DataObject {
 	 */
 	static function autoLogin() {
 		if(strpos(Cookie::get('alc_enc'), ':') && !Session::get("loggedInAs")) {
-
 			list($uid, $token) = explode(':', Cookie::get('alc_enc'), 2);
 			$SQL_uid = Convert::raw2sql($uid);
 
-			$member = DataObject::get_one(
-					"Member", "Member.ID = '$SQL_uid'");
+			$member = DataObject::get_one("Member", "Member.ID = '$SQL_uid'");
 
-			if($member && $member->RememberLoginToken != $token) $member = null;
+			if($member && $member->RememberLoginToken != $token) {
+				$member = null;
+			}
 
 			if($member) {
 				session_regenerate_id(true);
 				Session::set("loggedInAs", $member->ID);
 
-				$token = substr(md5(uniqid(rand(), true)),
-				                0, 49 - strlen($member->ID));
+				$token = substr(md5(uniqid(rand(), true)), 0, 49 - strlen($member->ID));
 				$member->RememberLoginToken = $token;
 				Cookie::set('alc_enc', $member->ID . ':' . $token);
 

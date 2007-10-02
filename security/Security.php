@@ -6,12 +6,18 @@
 class Security extends Controller {
 
 	/**
-	 * @var $default_username String Only used in dev-mode by setDefaultAdmin()
+	 * Default user name. Only used in dev-mode by {@link setDefaultAdmin()}
+	 * 
+	 * @var string
+	 * @see setDefaultAdmin()
 	 */
 	protected static $default_username;
 
 	/**
-	 * @var $default_password String Only used in dev-mode by setDefaultAdmin()
+	 * Default password. Only used in dev-mode by {@link setDefaultAdmin()}
+	 * 
+	 * @var string
+	 * @see setDefaultAdmin()
 	 */
 	protected static $default_password;
 
@@ -420,6 +426,7 @@ class Security extends Controller {
 	 *
 	 * @return bool|Member Returns FALSE if authentication fails, otherwise
 	 *                     the member object
+	 * @see setDefaultAdmin()
 	 */
 	public static function authenticate($RAW_email, $RAW_password) {
 		$SQL_email = Convert::raw2sql($RAW_email);
@@ -478,17 +485,21 @@ class Security extends Controller {
 
 
 	/**
+	 * Set a default admin in dev-mode
+	 * 
 	 * This will set a static default-admin (e.g. "td") which is not existing
 	 * as a database-record. By this workaround we can test pages in dev-mode
 	 * with a unified login. Submitted login-credentials are first checked
 	 * against this static information in {@authenticate()}.
 	 *
-	 * @param $username String
-	 * @param $password String (Cleartext)
+	 * @param string $username The user name
+	 * @param string $password The password in cleartext
 	 */
 	public static function setDefaultAdmin($username, $password) {
 		// don't overwrite if already set
-		if(self::$default_username || self::$default_password) return false;
+		if(self::$default_username || self::$default_password) {
+			return false;
+		}
 
 		self::$default_username = $username;
 		self::$default_password = $password;
