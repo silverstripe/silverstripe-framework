@@ -29,11 +29,7 @@ class File extends DataObject {
 		"Title" => "Varchar(255)",
 		"Filename" => "Varchar(255)",
 		"Content" => "Text",
-		"Sort" => "Int",
-		"PopupWidth" => "Int",
-		"PopupHeight" => "Int",
-		"Embed" => "Boolean",
-		'LimitDimensions' => 'Boolean'
+		"Sort" => "Int"
 	);
 	static $indexes = array(
 		"SearchFields" => "fulltext (Filename,Title,Content)",
@@ -594,10 +590,13 @@ class File extends DataObject {
 	 * be a better way of approaching this?
 	 */
 	public function instance_get($filter = "", $sort = "", $join = "", $limit="", $containerClass = "DataObjectSet", $having="") {
+		if($this->hasMethod('alternative_instance_get')) return $this->alternative_instance_get($filter, $sort, $join, $limit, $containerClass, $having);
+		
 		$query = $this->extendedSQL($filter, $sort, $limit, $join, $having);
 		$baseTable = reset($query->from);
+		
+		$query->select = array("$baseTable.ID","$baseTable.ClassName","$baseTable.Created","$baseTable.LastEdited","$baseTable.Name","$baseTable.Title","$baseTable.Content","$baseTable.ParentID","$baseTable.Filename","if($baseTable.ClassName,$baseTable.ClassName,'File') AS RecordClassName");
 
-		$query->select = array("$baseTable.ID","$baseTable.ClassName","$baseTable.Created","$baseTable.LastEdited","$baseTable.Name","$baseTable.Title","$baseTable.Content","$baseTable.ParentID","$baseTable.Filename","if($baseTable.ClassName,$baseTable.ClassName,'File') AS RecordClassName","$baseTable.PopupWidth","$baseTable.PopupHeight","$baseTable.Embed","$baseTable.LimitDimensions");
 		$records = $query->execute();
 		$ret = $this->buildDataObjectSet($records, $containerClass);
 		if($ret) $ret->parseQueryLimit($query);
