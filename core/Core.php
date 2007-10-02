@@ -4,6 +4,11 @@
  * This is loaded into the TEMP_FOLDER define on start up
  */
 function getTempFolder() {
+	$ssTmp = dirname(dirname($_SERVER['SCRIPT_FILENAME'])) . "/silverstripe-cache";
+    if(@file_exists($ssTmp)) {
+    	return $ssTmp;
+    }
+	
     if(function_exists('sys_get_temp_dir')) {
         $sysTmp = sys_get_temp_dir();
     } elseif(isset($_ENV['TMP'])) {
