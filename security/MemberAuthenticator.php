@@ -24,16 +24,19 @@ class MemberAuthenticator extends Authenticator {
    *                             {@link Form::sessionMessage()}
    * @return bool|Member Returns FALSE if authentication fails, otherwise
    *                     the member object
+   * @see Security::setDefaultAdmin()
    */
   public static function authenticate(array $RAW_data, Form $form = null) {
     $SQL_user = Convert::raw2sql($RAW_data['Email']);
 
-	// Default login (see {@setDetaultAdmin()})
+	// Default login (see Security::setDefaultAdmin())
 	if(Security::check_default_admin($RAW_data['Email'], $RAW_data['Password'])) {
 		$member = Security::findAnAdministrator();
 	} else {
 		$member = DataObject::get_one("Member", "Email = '$SQL_user' AND Password IS NOT NULL");
-		if($member && ($member->checkPassword($RAW_data['Password']) == false)) $member = null;
+		if($member && ($member->checkPassword($RAW_data['Password']) == false)) {
+			$member = null;
+		}
 	}
 
     if($member) {
