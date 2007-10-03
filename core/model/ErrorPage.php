@@ -83,7 +83,7 @@ class ErrorPage extends Page {
 		$errorContent = $controller->run( array() )->getBody();
 
 		if($fh = fopen("../assets/error-$this->ErrorCode.html", "w")) {
-			fwrite($fh, $errorContent->getBody());
+			fwrite($fh, $errorContent);
 			fclose($fh);
 		}
 		
