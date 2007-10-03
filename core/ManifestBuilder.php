@@ -174,19 +174,13 @@ class ManifestBuilder {
 		$manifest .= "\$_CSS_MANIFEST = " . var_export($cssManifest, true) . ";\n";
 		DB::connect($databaseConfig);
 				
-		if(DB::isActive()) {
-			// Database manifest
-			$allClasses = ManifestBuilder::allClasses($classManifest);
-
-			$manifest .= "\$_ALL_CLASSES = " . var_export($allClasses, true) . ";\n";
-
-			global $_ALL_CLASSES;
-			$_ALL_CLASSES = $allClasses;
-		} else {
-			if(!isset($_REQUEST['from_installer']))
-				echo '<li>Waiting until the database is created before compiling ' .
-					'the manifest</li>';
-		}
+		// Database manifest
+		$allClasses = ManifestBuilder::allClasses($classManifest);
+		
+		$manifest .= "\$_ALL_CLASSES = " . var_export($allClasses, true) . ";\n";
+		
+		global $_ALL_CLASSES;
+		$_ALL_CLASSES = $allClasses;
 
 		// Write manifest to disk
 		$manifest = "<?php\n$manifest\n?>";
