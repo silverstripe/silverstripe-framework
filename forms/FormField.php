@@ -9,6 +9,11 @@
 class FormField extends ViewableData {
 	protected $form;
 	protected $name, $title, $value ,$message, $messageType, $extraClass;
+	
+	/**
+	 * @var $description string Adds a "title"-attribute to the markup.
+	 * TODO Implement in all subclasses
+	 */
 	protected $description;
 	
 	/**
