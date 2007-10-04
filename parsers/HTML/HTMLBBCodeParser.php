@@ -215,7 +215,7 @@ class SSHTMLBBCodeParser
         $filter = ucfirst($filter);
         if (!array_key_exists($filter, $this->_filters)) {
             $class = 'SSHTMLBBCodeParser_Filter_'.$filter;
-            @include_once 'HTML/BBCodeParser/Filter/'.$filter.'.php';
+            @include_once 'BBCodeParser/Filter/'.$filter.'.php';
             if (!class_exists($class)) {
 
                 //PEAR::raiseError("Failed to load filter $filter", null, PEAR_ERROR_DIE);
