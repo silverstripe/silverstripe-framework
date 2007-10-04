@@ -31,14 +31,11 @@ class CustomRequiredFields extends RequiredFields{
 		if(is_array($this->required)){
 
 			foreach($this->required as $field) {
-				if($fields->dataFieldByName($field)) {
-					if(is_array($field) && $field['js']){
-						$code .= $field['js'] . "\n";
-	
-					}else{
-						$code .= "						require('$field');\n";
-						//Tabs for output tabbing :-)
-					}
+				if(is_array($field) && $field['js']){
+					$code .= $field['js'] . "\n";
+				}else if($fields->dataFieldByName($field)) {
+					$code .= "						require('$field');\n";
+					//Tabs for output tabbing :-)
 				}
 			}
 		}else{
@@ -59,15 +56,13 @@ class CustomRequiredFields extends RequiredFields{
 		}
 		if($this->required){
 			foreach($this->required as $key => $field) {
-				if($fields->dataFieldByName($field)) {
-					if(is_array($field) && $field['php']){
-						eval($field['php']);
-					}else{
-						// if an error is found, the form is returned.
-						if(!$data[$field]) {
-							$this->validationError($field,"$field is required","required");
-							return false;
-						}
+				if(is_array($field) && $field['php']){
+					eval($field['php']);
+				}else if($fields->dataFieldByName($field)) {
+					// if an error is found, the form is returned.
+					if(!$data[$field]) {
+						$this->validationError($field,"$field is required","required");
+						return false;
 					}
 				}
 			}	
