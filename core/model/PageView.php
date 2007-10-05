@@ -36,8 +36,8 @@ class PageView extends DataObject {
 	protected $hitdata = null;
 
 	function init() {
-		if($hitdata = @get_browser(null, true))
-			$this->hitdata = get_browser(null, true);
+		$browscap = new Browscap();
+		$this->hitdata = $browscap->getBrowser(null, true);
 	}
 
 	function record() {
@@ -56,16 +56,16 @@ class PageView extends DataObject {
 	}
 
 	function setBrowser() {
-		if(isset($this->hitdata['browser']))
-			$this->setField('Browser', $this->hitdata['browser']);
+		if(isset($this->hitdata['Browser']))
+			$this->setField('Browser', $this->hitdata['Browser']);
 
-		if(isset($this->hitdata['version']))
-			$this->setField('BrowserVersion', $this->hitdata['version']);
+		if(isset($this->hitdata['Version']))
+			$this->setField('BrowserVersion', $this->hitdata['Version']);
 	}
 
 	function setOS() {
-		if(isset($this->hitdata['platform']))
-			$this->setField('OS', $this->hitdata['platform']);
+		if(isset($this->hitdata['Platform']))
+			$this->setField('OS', $this->hitdata['Platform']);
 	}
 
 	function setUserID() {
