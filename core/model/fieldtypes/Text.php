@@ -58,6 +58,9 @@ class Text extends DBField {
 		return $ret;
 	}
 	
+	/**
+	 * Caution: Not XML/HTML-safe - does not respect closing tags.
+	 */
 	function FirstSentence() {
 		$data = Convert::xml2raw( $this->value );
 		
@@ -69,6 +72,9 @@ class Text extends DBField {
 			return $this->Summary(20);
 	}	
 
+	/**
+	 * Caution: Not XML/HTML-safe - does not respect closing tags.
+	 */
 	function Summary($maxWords = 50) {
 		
 		// get first sentence?
@@ -114,6 +120,7 @@ class Text extends DBField {
 	
 	/**
 	* Performs the same function as the big summary, but doesnt trim new paragraphs off data.
+	* Caution: Not XML/HTML-safe - does not respect closing tags.
 	*/
 	function BigSummary($maxWords = 50, $plain = 1) {
 		
@@ -149,6 +156,9 @@ class Text extends DBField {
 		return $result;
 	}
 	
+	/**
+	 * Caution: Not XML/HTML-safe - does not respect closing tags.
+	 */
 	function FirstParagraph($plain = 1) {
 		// get first sentence?
 		// this needs to be more robust
