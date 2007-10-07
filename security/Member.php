@@ -1025,13 +1025,6 @@ class Member_ProfileForm extends Form {
 				$form->dataFieldByName("Password")->setValue($member->Password);
 			}
 		}
-		if($nicknameCheck = DataObject::get_one("Member","`Nickname` = '{$SQL_data['Nickname']}' AND `Member`.`ID` != '{$member->ID}'")){
-  			if($nicknameCheck) {
-  				$form->addErrorMessage("Blurb","Sorry, that nickname already exists. Please choose another.","bad");
-  				Director::redirectBack();
-  				die;
-  			}
-  		}
 		
 		if($SQL_data['Lang'] != $member->Lang) {
 			$form->addErrorMessage("Generic", _t('CMSMain.REFRESHLANG'),"good");
