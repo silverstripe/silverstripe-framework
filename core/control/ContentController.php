@@ -86,7 +86,7 @@ class ContentController extends Controller {
 		Director::set_site_mode('site');
 		
 		// Check permissions
-		if($this->dataRecord && !$this->dataRecord->can('View')) {
+		if($this->dataRecord && $this->URLSegment != 'Security' && !$this->dataRecord->can('View')) {
 			Security::permissionFailure($this);
 		}
 	}

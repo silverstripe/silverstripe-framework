@@ -291,6 +291,7 @@ class SiteTree extends DataObject {
 			break;
 			case 'view':
 			case 'view_page':
+				if(!$this->Viewers) return true; // If Viewers isn't set, then assume it is Anyone 
 				if($this->Viewers == 'Anyone') return true;
 				if($member && $this->Viewers == 'LoggedInUsers') return true;
 				if($member && $this->Viewers == 'OnlyTheseUsers' && $member->isInGroup($this->ViewersGroup)) return true;
