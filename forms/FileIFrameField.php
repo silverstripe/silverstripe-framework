@@ -25,5 +25,21 @@ class FileIFrameField extends FileField {
 			return FormField::Field();
 		}
 	}
+	
+	public function saveInto(DataObject $record) {
+		$fieldName = $this->name . 'ID';
+		$hasOnes = $record->has_one($this->name);
+		if(!$hasOnes) $hasOnes = $record->has_one($fieldName);
+		
+		// assume that the file is connected via a has-one
+		if( !$hasOnes || !$_FILES[$this->name]['name']){
+			return;
+		}
+		
+		$file = new File();
+		$file->loadUploaded($_FILES[$this->name]);
+		
+		$record->$fieldName = $file->ID;	
+	}
 }
 ?>
