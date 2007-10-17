@@ -3,6 +3,8 @@ TableListField.prototype = {
 	
 	deleteConfirmMessage: "Are you sure you want to delete this record?",
 	
+	errorMessage: "Error talking to server",
+	
 	initialize: function() {
 		var rules = {};
 		
@@ -22,7 +24,7 @@ TableListField.prototype = {
 			onmouseout: function(e) {
 				var sortLinks = $$('span.sortLinkHidden a', this);
 				if(sortLinks) Element.hide(sortLinks[0]);
-			},
+			}
 		};
 		
 		rules['#'+this.id+' div.PageControls a'] = {onclick: this.paginate.bind(this)};
@@ -36,6 +38,7 @@ TableListField.prototype = {
 		// initialize summary (if needed)
 		// TODO Breaks with nested divs
 		var summaryCols = $$('tfoot tr.summary td', this);
+		this._summaryDefs = [];
 		if(summaryCols) {
 			rules['#'+this.id+' table.data tbody input'] = {
 				onchange: function(e) {
@@ -55,7 +58,6 @@ TableListField.prototype = {
 					//root._summarise();
 				}.bind(this)
 			};
-			this._summaryDefs = [];
 		}
 		
 		Behaviour.register(rules);
@@ -85,7 +87,7 @@ TableListField.prototype = {
 					onComplete: function(){
 						Effect.Fade(row);
 					}.bind(this),
-					onFailure: ajaxErrorHandler
+					onFailure: this.ajaxErrorHandler.bind(this)
 				}
 			);
 		}
@@ -108,12 +110,21 @@ TableListField.prototype = {
 			el.href, 
 			{
 				postBody: 'update=1',
-				onComplete: Ajax.Evaluator
+				onComplete: Ajax.Evaluator,
+				onFailure: this.ajaxErrorHandler.bind(this)
 			}
 		);
 		
 		Event.stop(e);
 		return false;
+	},
+	
+	ajaxErrorHandler: function(response) {
+		if(typeof(window.ajaxErrorHandler) == 'function') {
+			window.ajaxErrorHandler();
+		} else {
+			alert(this.errorMessage);
+		}
 	},
 	
 	_getSummaryDefs: function(summaryCols) {
@@ -129,6 +140,8 @@ TableListField.prototype = {
 	
 	_summarise: function() {
 		var rows = $$('tbody tr', this);
+		if(!rows) return false;
+		
 		var columnData = [];
 		// prepare the array (gets js-errors otherwise)
 		var cols = $$('td', rows[0]);

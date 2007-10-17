@@ -1,5 +1,8 @@
 ComplexTableFieldPopupForm = Class.create();
 ComplexTableFieldPopupForm.prototype = {
+	
+	errorMessage: "Error talking to server",
+	
 	initialize: function() {
 		Behaviour.register({
 			"form#ComplexTableField_Popup_DetailForm .Actions input.action": {
@@ -21,16 +24,19 @@ ComplexTableFieldPopupForm.prototype = {
 		if(window != top && parent.parent.GB_hide) {
 			var theForm = Event.findElement(e,"form");
 			var submitButton = document.getElementsBySelector("input.action",theForm)[0];
-			parent.parent.statusMessage('saving');
+			if(parent.parent.statusMessage != undefined) parent.parent.statusMessage('saving');
 			submitButton.setAttribute("disabled","true");
 
-			showIndicator('ComplexTableField_submitForm', submitButton.parentNode);
+			submitButton._oldValue = submitButton.value;
+			submitButton.value = ingize(submitButton.value);
+			Element.addClassName(submitButton,'loading');
 			
 			new parent.parent.Ajax.Request(
 				theForm.getAttribute("action"),
 				{
 					parameters: Form.serialize(theForm)+"&ajax=1",
-					onComplete: this.updateTableAfterSave.bind(this)
+					onComplete: this.updateTableAfterSave.bind(this),
+					onFailure: this.ajaxErrorHandler.bind(this)
 				}
 			);
 			Event.stop(e);
@@ -42,7 +48,7 @@ ComplexTableFieldPopupForm.prototype = {
 	
 	updateTableAfterSave : function(response) {
 		eval(response.responseText);
-		var theForm =document.getElementsByTagName("form")[0];
+		var theForm = document.getElementsByTagName("form")[0];
 
 		// don't update when validation is present and failed
 		if(!this.validate || (this.validate && !hasHadFormError())) {
@@ -56,33 +62,43 @@ ComplexTableFieldPopupForm.prototype = {
 		} else {
 			var submitbutton = document.getElementsBySelector("input.action",theForm)[0];
 			submitbutton.disabled = false;
-			hideIndicator('ComplexTableField_submitForm');
+			submitButton.value = submitButton._oldValue;
+			Element.removeClassName(submitButton,'loading');
 		}
 	},
 	
 	ajaxErrorHandler: function(response) {
-		var submitbutton = document.getElementsBySelector("input.action",theForm)[0];
-		submitbutton.disabled = false;
-		hideIndicator('ComplexTableField_submitForm');
+		var submitButton = document.getElementsBySelector("form input.action")[0];
+		submitButton.disabled = false;
+		submitButton.value = submitButton._oldValue;
+		Element.removeClassName(submitButton,'loading');
 		
-		// does not work due to sandbox-iframe restrictions?
-		parent.parent.ajaxErrorHandler();
+		// TODO does not work due to sandbox-iframe restrictions?
+		if(typeof(parent.parent.ajaxErrorHandler) == 'function') {
+			parent.parent.ajaxErrorHandler();
+		} else {
+			alert(this.errorMessage);
+		}
 	},
 	
 	updateAndHide: function(response) {
 		var theForm =document.getElementsByTagName("form")[0];
 		
-		var submitbutton = document.getElementsBySelector("input.action",theForm)[0];
-		submitbutton.disabled = false;
-		hideIndicator('ComplexTableField_submitForm');
+		var submitButton = document.getElementsBySelector("input.action",theForm)[0];
+		submitButton.disabled = false;
+		submitButton.value = submitButton._oldValue;
+		Element.removeClassName(submitButton,'loading');
 		
-		// apparently firefox doesn't remember its DOM after innerHTML, so we help out here...
-		var cachedObj = this.GB_OpenerObj;
-		var cachedParentObj = this.GB_OpenerObj.parentNode;
-		Element.replace(this.GB_OpenerObj, response.responseText);
-		this.Behaviour.apply(cachedParentObj);
-		cachedObj = null;
-		this.GB_OpenerObj = null;
+		// TODO Fix DOM-relation after pagination inside popup
+		if(this.GB_OpenerObj) {
+			// apparently firefox doesn't remember its DOM after innerHTML, so we help out here...
+			var cachedObj = this.GB_OpenerObj;
+			var cachedParentObj = this.GB_OpenerObj.parentNode;
+			Element.replace(this.GB_OpenerObj, response.responseText);
+			this.Behaviour.apply(cachedParentObj);
+			cachedObj = null;
+			this.GB_OpenerObj = null;
+		}
 		
 		// causes IE6 to go nuts
 		//this.GB_hide();

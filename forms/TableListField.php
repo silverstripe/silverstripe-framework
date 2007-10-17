@@ -186,6 +186,10 @@ class TableListField extends FormField {
 
 		parent::__construct($name);
 		
+		Requirements::javascript('jsparty/prototype.js');
+		Requirements::javascript('jsparty/behaviour.js');
+		Requirements::javascript('jsparty/prototype_improvements.js');
+		Requirements::javascript('jsparty/scriptaculous/effects.js');
 		Requirements::javascript('sapphire/javascript/TableListField.js');
 		Requirements::css('sapphire/css/TableListField.css');
 	}

@@ -7,6 +7,11 @@ html,body {
 	background: #fff;	
 }
 
+#ComplexTableField_Popup_DetailForm input.loading {
+	background: #fff url(../../cms/images/network-save.gif) left center no-repeat;
+	padding-left:16px;
+}
+
 .PageControls {
 	padding: 5px;
 	width: 100%;
@@ -66,15 +71,9 @@ form fieldset {
 	clear: none;
 }
 
-.ComplexTableField_Popup input.action
-{
-    position: relative;
-    float: right;
-}
-
 /* Pagination */ 
 
-ComplexTableField_Pagination {
+#ComplexTableField_Pagination {
 	margin-top: 10px;
 	margin-left: auto;
 	margin-right: auto;

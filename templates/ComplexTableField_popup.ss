@@ -6,7 +6,6 @@
 	<body>
 		<div class="right $PopupClasses">
 			$DetailForm
-			<img src="cms/images/network-save.gif" class="ajaxloader" style="display: none" />
 		</div>
 		<% if IsAddMode %>
 		<% else %>
