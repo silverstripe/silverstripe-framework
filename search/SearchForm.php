@@ -127,7 +127,8 @@ class SearchForm extends Form {
 	 	
 	 	if($this->showInSearchTurnOn)	$extraFilter .= " AND showInSearch <> 0";
 
-		$limit = (int)$_GET['start'] . ", " . (int) $numPerPage;
+		$start = isset($_GET['start']) ? (int)$_GET['start'] : 0;
+		$limit = $start . ", " . (int) $numPerPage;
 		
 		$notMatch = $invertedMatch ? "NOT " : "";
 		if($keywords) {
@@ -171,7 +172,7 @@ class SearchForm extends Form {
 			$objects[] = new $record['ClassName']($record);
 		$doSet = new DataObjectSet($objects);
 		
-		$doSet->setPageLimits($_GET['start'], $numPerPage, $totalCount);
+		$doSet->setPageLimits(isset($_GET['start']) ? (int)$_GET['start'] : 0, $numPerPage, $totalCount);
 		return $doSet;
 
 
