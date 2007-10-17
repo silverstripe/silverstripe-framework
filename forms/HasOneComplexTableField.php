@@ -85,11 +85,13 @@ class HasOneComplexTableField extends ComplexTableField {
 	function saveInto( DataObject $record ) {
 		$fieldName = $this->name;
 		$fieldNameID = $fieldName . 'ID';
-			
-		if( $val = $this->value[ $this->htmlListField ] )
-			$record->$fieldNameID = $val;
-		else
-			$record->$fieldNameID = 0;
+
+		$record->$fieldNameID = 0;
+		if($val = $this->value[$this->htmlListField]) {
+			if($val != 'undefined') {
+				$record->$fieldNameID = $val;
+			}
+		}
 				
 		$record->write();
 	}

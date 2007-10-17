@@ -21,8 +21,11 @@ class HasManyComplexTableField extends HasOneComplexTableField {
 		
 		$items = array();
 		
-		if( $list = $this->value[ $this->htmlListField ] )
-			$items = explode( ',', $list );
+		if($list = $this->value[$this->htmlListField]) {
+			if($list != 'undefined') {
+				$items = explode(',', $list);
+			}
+		}
 				
 		$saveDest->setByIDList( $items );
 	}
