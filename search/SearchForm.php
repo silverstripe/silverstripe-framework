@@ -170,7 +170,9 @@ class SearchForm extends Form {
 
 		foreach($records as $record)
 			$objects[] = new $record['ClassName']($record);
-		$doSet = new DataObjectSet($objects);
+
+		if(isset($objects)) $doSet = new DataObjectSet($objects);
+		else $doSet = new DataObjectSet();
 		
 		$doSet->setPageLimits(isset($_GET['start']) ? (int)$_GET['start'] : 0, $numPerPage, $totalCount);
 		return $doSet;
