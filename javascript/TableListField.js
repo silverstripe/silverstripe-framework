@@ -22,7 +22,7 @@ TableListField.prototype = {
 			onmouseout: function(e) {
 				var sortLinks = $$('span.sortLinkHidden a', this);
 				if(sortLinks) Element.hide(sortLinks[0]);
-			},
+			}
 		};
 		
 		rules['#'+this.id+' div.PageControls a'] = {onclick: this.paginate.bind(this)};
