@@ -32,6 +32,13 @@ class FormAction extends FormField {
 		return $this->extraData;
 	}
 	
+	/**
+	 * Avoid rendering with DefaultFieldHolder (renders <label>-tags etc.)
+	 */
+	function FieldHolder() {
+		return $this->Field();
+	}
+	
 	function Field() {
 		$titleAttr = $this->description ? "title=\"" . Convert::raw2att($this->description) . "\"" : '';
 		return "<input class=\"action" . $this->extraClass() . "\" id=\"" . $this->id() . "\" type=\"submit\" name=\"{$this->name}\" value=\"" . $this->attrTitle() . "\" $titleAttr />";

@@ -19,7 +19,7 @@ class ConfirmedFormAction extends FormAction {
 		parent::__construct($action, $title, $form);
 	}
 	function Field() {
-		return "<input class=\"action\" id=\"" . $this->id() . "\" type=\"submit\" name=\"{$this->name}\" value=\"{$this->title}\" onclick=\"return confirm('$this->confirmation')\" />";
+		return "<input class=\"action " . $this->extraClass() . "\" id=\"" . $this->id() . "\" type=\"submit\" name=\"{$this->name}\" value=\"{$this->title}\" onclick=\"return confirm('$this->confirmation');\" />";
 	}
 }
 
