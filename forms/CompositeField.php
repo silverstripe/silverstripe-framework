@@ -45,6 +45,10 @@ class CompositeField extends FormField {
 	public function setID($id) {
 		$this->id = $id;
 	}
+	
+	public function Field() {
+		return $this->FieldHolder();
+	}
 
 	/**
 	 * Returns the fields nested inside another DIV
@@ -53,18 +57,18 @@ class CompositeField extends FormField {
 		$fs = $this->FieldSet();
 		$idAtt = isset($this->id) ? " id=\"{$this->id}\"" : '';
 		$className = ($this->columnCount) ? "field CompositeField {$this->extraClass()} multicolumn" : "field CompositeField {$this->extraClass()}";
-		$content = "<div class=\"$className\"$idAtt>";
+		$content = "<div class=\"$className\"$idAtt>\n";
 		
 		foreach($fs as $subfield) {
 			if($this->columnCount) {
 				$className = "column{$this->columnCount}";
 				if(!next($fs)) $className .= " lastcolumn";
-				$content .= "<div class=\"{$className}\">" . $subfield->FieldHolder() . "</div>";
+				$content .= "\n<div class=\"{$className}\">\n" . $subfield->FieldHolder() . "\n</div>\n";
 			} else if($subfield){
-				$content .= $subfield->FieldHolder() . " ";
+				$content .= "\n" . $subfield->FieldHolder() . "\n";
 			}
 		}
-		$content .= "</div>";
+		$content .= "</div>\n";
 				
 		return $content;
 	}
