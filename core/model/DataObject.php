@@ -117,6 +117,9 @@ class DataObject extends Controller {
 	 * @param $doWrite Perform a write() operation before returning the object.  If this is true, it will create the duplicate in the database.
 	 * 
 	 * @return DataObject A duplicate of this node. The exact type will be the type of this node.
+	 * Caution: Doesn't duplicate relations.
+	 * 
+	 * @return DataObject
 	 */
 	function duplicate($doWrite = true) {
 		$className = $this->class;
@@ -294,6 +297,93 @@ class DataObject extends Controller {
 		}
 	}
 
+	/**
+	 * Merges data and relations from another object of same class,
+	 * without conflict resolution. Allows to specify which
+	 * dataset takes priority in case its not empty.
+	 * has_one-relations are just transferred with priority 'right'.
+	 * has_many and many_many-relations are added regardless of priority.
+	 * 
+	 * Caution: has_many/many_many relations are moved rather than duplicated,
+	 * meaning they are not connected to the merged object any longer.
+	 * Caution: Just saves updated has_many/many_many relations to the database,
+	 * doesn't write the updated object itself (just writes the object-properties). 
+	 * Caution: Does not delete the merged object.
+	 * Caution: Does now overwrite Created date on the original object.
+	 * 
+	 * @param $obj DataObject
+	 * @param $priority String left|right Determines who wins in case of a conflict (optional)
+	 * @param $includeRelations Boolean Merge any existing relations (optional)
+	 * @param $overwriteWithEmpty Boolean Overwrite existing left values with empty right values. 
+	 * 	Only applicable with $priority='right'. (optional)
+	 * @return Boolean
+	 */
+	public function merge($rightObj, $priority = 'right', $includeRelations = true, $overwriteWithEmpty = false) {
+		$leftObj = $this;
+		
+		if($leftObj->ClassName != $rightObj->ClassName) {
+			// we can't merge similiar subclasses because they might have additional relations
+			user_error("DataObject->merge(): Invalid object class '{$rightObj->ClassName}' 
+				(expected '{$leftObj->ClassName}').", E_USER_WARNING);
+			return false;
+		}
+
+		if(!$rightObj->ID) {
+			user_error("DataObject->merge(): Please write your merged-in object to the database before merging, 
+				to make sure all relations are transferred properly.').", E_USER_WARNING);
+			return false;
+		}
+		
+		// makes sure we don't merge data like ID or ClassName
+		$leftData = $leftObj->customDatabaseFields();
+		$rightData = $rightObj->customDatabaseFields();
+		
+		foreach($rightData as $key=>$rightVal) {
+			// don't merge conflicting values if priority is 'left'
+			if($priority == 'left' && $leftObj->{$key} !== $rightObj->{$key}) continue;
+			
+			// don't overwrite existing left values with empty right values (if $overwriteWithEmpty is set)
+			if($priority == 'right' && !$overwriteWithEmpty && empty($rightObj->{$key})) continue;
+
+			// TODO remove redundant merge of has_one fields
+			$leftObj->{$key} = $rightObj->{$key};
+		}
+		
+		// merge relations
+		if($includeRelations) {
+			if($manyMany = $this->many_many()) {
+				foreach($manyMany as $relationship => $class) {
+					$leftComponents = $leftObj->getManyManyComponents($relationship);
+					$rightComponents = $rightObj->getManyManyComponents($relationship);
+					if($rightComponents && $rightComponents->exists()) $leftComponents->addMany($rightComponents->column('ID'));
+					$leftComponents->write();
+				}
+			}
+
+			if($hasMany = $this->has_many()) {
+				foreach($hasMany as $relationship => $class) {
+					$leftComponents = $leftObj->getComponents($relationship);
+					$rightComponents = $rightObj->getComponents($relationship);
+					if($rightComponents && $rightComponents->exists()) $leftComponents->addMany($rightComponents->column('ID'));
+					$leftComponents->write();
+				}
+	
+			}
+
+			if($hasOne = $this->has_one()) {
+				foreach($hasOne as $relationship => $class) {
+					$leftComponent = $leftObj->getComponent($relationship);
+					$rightComponent = $rightObj->getComponent($relationship);
+					if($leftComponent->exists() && $rightComponent->exists() && $priority == 'right') {
+						$leftObj->{$relationship . 'ID'} = $rightObj->{$relationship . 'ID'};
+					}
+				}
+			}
+		}
+		
+		return true;
+	}
+	
 	/**
 	 * Forces the record to think that all its data has changed.
 	 * Doesn't write to the database.
