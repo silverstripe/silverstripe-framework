@@ -19,7 +19,7 @@ class LoginForm extends Form {
 				$fields = new FieldSet(
 					new TextField("Email", "Email address", Session::get('SessionForms.LoginForm.Email')),
 					new EncryptField("Password", "Password"),
-					new CheckboxField("Remember", "Remember me next time?",true)
+					new CheckboxField("Remember", "Remember me next time?", true)
 				);
 			}
 			if(!$actions) {
@@ -46,17 +46,21 @@ class LoginForm extends Form {
 	}
 	
 	public function dologin($data) {
-		if($this->performLogin($data)){
+		if($this->performLogin($data)) {
 			if(isset($_REQUEST['BackURL']) && $backURL = $_REQUEST['BackURL']) {
 				Session::clear("BackURL");
 				Director::redirect($backURL);
-			}else
+			} else {
 				Director::redirectBack();
-		}else{
+			}
+		} else {
+			if(isset($_REQUEST['BackURL']) && $backURL = $_REQUEST['BackURL']) {
+				Session::set('BackURL', $backURL);
+			}
 			
-			if($badLoginURL = Session::get("BadLoginURL")){
+			if($badLoginURL = Session::get("BadLoginURL")) {
 				Director::redirect($badLoginURL);
-			}else{
+			} else {
 				Director::redirectBack();
 			}
 		}
