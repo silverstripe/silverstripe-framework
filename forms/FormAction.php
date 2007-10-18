@@ -28,15 +28,9 @@ class FormAction extends FormField {
 	function actionName() {
 		return substr($this->name,7);
 	}
+
 	function extraData() {
 		return $this->extraData;
-	}
-	
-	/**
-	 * Avoid rendering with DefaultFieldHolder (renders <label>-tags etc.)
-	 */
-	function FieldHolder() {
-		return $this->Field();
 	}
 	
 	function Field() {
