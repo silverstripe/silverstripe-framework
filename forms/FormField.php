@@ -227,7 +227,7 @@ class FormField extends ViewableData {
 		if($this->value) $val = $this->dontEscape ? ($this->reserveNL?Convert::raw2xml($this->value):$this->value) : Convert::raw2xml($this->value);
 		else $val = '<i>(none)</i>';
 		$valforInput = $this->value ? Convert::raw2att($val) : "";
-		return "<span class=\"readonly\" id=\"" . $this->id() . "\">$val</span><input type=\"hidden\" name=\"".$this->name."\" value=\"".$valforInput."\" />";
+		return "<span class=\"readonly\" id=\"" . $this->id() . "\">$val</span>\n<input type=\"hidden\" name=\"".$this->name."\" value=\"".$valforInput."\" />";
 	}
 	/**
 	 * Returns a "Field Holder" for this field - used by templates.
@@ -266,11 +266,11 @@ HTML;
 		
 		// set label
 		if($title = $this->RightTitle()){
-			$result .= "<label class=\"right\" for=\"" . $this->id() . "\">{$title}</label>";
+			$result .= "<label class=\"right\" for=\"" . $this->id() . "\">{$title}</label>\n";
 		} elseif($title = $this->LeftTitle()) {
-			$result .= "<label class=\"left\" for=\"" . $this->id() . "\">{$title}</label>";
+			$result .= "<label class=\"left\" for=\"" . $this->id() . "\">{$title}</label>\n";
 		} elseif($title = $this->Title()) {
-			$result .= "<label for=\"" . $this->id() . "\">{$title}</label>";
+			$result .= "<label for=\"" . $this->id() . "\">{$title}</label>\n";
 		}
 		
 		$result .= $this->Field();

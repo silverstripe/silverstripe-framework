@@ -13,13 +13,11 @@
 		<div class="clear"><!-- --></div>
 	</fieldset>
 
-	<% if Actions %>
-	<p class="Actions">
-	<% control Actions %>
-	$Field
-	<% end_control %>
-	</p>
-	<% end_if %>
+<% if Actions %>
+	<div class="Actions">
+			<% control Actions %>$Field<% end_control %>
+	</div>
+<% end_if %>
 <% if IncludeFormTag %>
 </form>
 <% end_if %>

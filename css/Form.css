@@ -28,7 +28,7 @@ form input.maxlength {
 	width: auto;
 }
 
-form p.actions{
+form .actions{
 	float : right;
 }
 
