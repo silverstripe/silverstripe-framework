@@ -534,8 +534,9 @@ Behaviour.register(
 				$('Fields_fields').appendChild(newField);
 				
 				// Behaviour.debug();
-				if( newField ) {
+				if(newField) {
 					Behaviour.apply(newField,true);
+					FieldEditor.applyTo('div.FieldEditor');
 				}
 				
 				// do we want to make sorting explicit?
