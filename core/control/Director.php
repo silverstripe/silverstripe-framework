@@ -53,7 +53,10 @@ class Director {
 			$response = $controllerObj->run(array_merge((array)$_GET, (array)$_POST, (array)$_FILES));
 			
 			// Save the updated session back
-			$_SESSION = $controllerObj->getSession()->inst_getAll();
+			foreach($controllerObj->getSession()->inst_getAll() as $k => $v) {
+    			$_SESSION[$k] = $v;
+			}
+		
 			$response->output();
 			
 		}
