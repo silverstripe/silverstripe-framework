@@ -68,7 +68,7 @@ class TabSet extends CompositeField {
 	/**
 	 * Add a new child field to the end of the set.
 	 */
-	public function push(Tab $field) {
+	public function push($field) {
 		parent::push($field);
 		$field->setTabSet($this);
 	}
