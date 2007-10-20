@@ -12,6 +12,7 @@
  * ));
  */
 class ArrayData extends ViewableData {
+
 	protected $array;
 	
 	public function __construct($array) {
@@ -19,15 +20,17 @@ class ArrayData extends ViewableData {
 	}
 	
 	public function getField($f) {
-		if(is_array($this->array[$f]))
+		if(is_array($this->array[$f])) {
 			return new ArrayData($this->array[$f]);
-		
-		else
+		} else {
 			return $this->array[$f];
+		}
 	}
+	
 	public function hasField($f) {
 		return isset($this->array[$f]);
 	}
+	
 }
 
 ?>
