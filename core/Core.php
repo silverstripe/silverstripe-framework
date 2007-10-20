@@ -122,7 +122,7 @@ function _t($entity, $string = "", $priority = 40, $context = "") {
 	$realEntity = array_pop($entityParts);
 	$class = implode('.',$entityParts);
 	if(!isset($lang[$locale][$class])) i18n::include_by_class($class);
-	$transEntity = $lang[i18n::get_locale()][$class][$realEntity];
+	$transEntity = isset($lang[i18n::get_locale()][$class][$realEntity]) ? $lang[i18n::get_locale()][$class][$realEntity] : $string;
 	return (is_array($transEntity) ? $transEntity[0] : $transEntity);
 }
 
