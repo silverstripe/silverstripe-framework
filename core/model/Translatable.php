@@ -1,8 +1,29 @@
 <?php
 
 /**
- * The Translatable decorator allows your DataObjects to have versions in different languages,
+ * The {Translatable} decorator allows your DataObjects to have versions in different languages,
  * defining which fields are can be translated.
+ * 
+ * Common language names (e.g. 'en') are used in {Translatable} for
+ * database-entities. On the other hand, the file-based i18n-translations 
+ * always have a "locale" (e.g. 'en_US').
+ * 
+ * You can enable {Translatabe} for any DataObject-subclass:
+ * <example>
+ * static $extensions = array(
+ * 	"Translatable('MyTranslatableVarchar', 'OtherTranslatableText')"
+ * );
+ * </example>
+ * 
+ * Caution: Does not apply any character-set conversion, it is assumed that all content
+ * is stored and represented in UTF-8 (Unicode). Please make sure your database and
+ * HTML-templates adjust to this.
+ * 
+ * Caution: Further decorations of DataObject might conflict with this implementation,
+ * e.g. when overriding the get_one()-calls (which are already extended by {Translatable}).
+ * 
+ * @author Bernat Foj Capell <bernat@silverstripe.com>
+ * 
  */
 class Translatable extends DataObjectDecorator {
 	
@@ -79,21 +100,43 @@ class Translatable extends DataObjectDecorator {
 	
 	/**
 	 * Choose the language the site is currently on.
-	 * If $_GET['lang'] is set, then it will use that language, and store it in the session.
+	 * If $_GET['lang'] or $_COOKIE['lang'] is set, then it will use that language, and store it in the session.
 	 * Otherwise it checks the session for a possible stored language. The final option is the member preference.
+	 * 
+	 * @param $langsAvailable array A numerical array of languages which are valid choices (optional)
+	 * @return string Selected language (also saved in $reading_lang).
 	 */
-	static function choose_site_lang() {
-		if(isset($_GET['lang'])) {
-			$_GET['lang'] = strtolower($_GET['lang']);
-			self::set_reading_lang($_GET['lang']);
+	static function choose_site_lang($langsAvailable = null) {
+		if(is_array($langsAvailable)) {
+			if(isset($_GET['lang']) && in_array(strtolower($_GET['lang']),$langsAvailable)) {
+				self::set_reading_lang($_GET['lang']);
+			} elseif(isset($_COOKIE['lang']) && in_array(strtolower($_COOKIE['lang']),$langsAvailable)) {
+				self::set_reading_lang($_COOKIE['lang']);
+			} else if($lang = Session::get('currentLang') && in_array(strtolower($lang),$langsAvailable)) {
+				self::set_reading_lang($lang);
+			} else if (($member = Member::currentUser()) && ($lang = $member->Locale)
+				 && in_array(strtolower($lang),$langsAvailable)
+			) {
+				self::set_reading_lang($lang);			
+			} else {
+				self::set_reading_lang(self::default_lang());
+			}
+		} else {
+			if(isset($_GET['lang'])) {
+				self::set_reading_lang($_GET['lang']);
+			} elseif(isset($_COOKIE['lang'])) {
+				self::set_reading_lang($_COOKIE['lang']);
+			} else if($lang = Session::get('currentLang')) {
+				self::set_reading_lang($lang);
+			} else if (($member = Member::currentUser()) && ($lang = $member->Locale)) {
+				self::set_reading_lang($lang);			
+			} else {
+				self::set_reading_lang(self::default_lang());
+			}
 		}
-		else if($lang = Session::get('currentLang')) {
-			self::set_reading_lang($lang);
-		}
-		else if (($member = Member::currentUser()) && ($lang = $member->Lang)) {
-			self::set_reading_lang($lang);			
-		}
-		self::$language_decided = true; 
+		self::$language_decided = true;
+		
+		return self::$reading_lang; 
 	}
 		
 	/**
@@ -110,7 +153,7 @@ class Translatable extends DataObjectDecorator {
 	 * @paran $lang String
 	 */
 	static function set_default_lang($lang) {
-		self::$default_lang = $lang;
+		self::$default_lang = strtolower($lang);
 	}
 
 	/**
@@ -135,8 +178,8 @@ class Translatable extends DataObjectDecorator {
 	 * @param string $lang New reading language.
 	 */
 	static function set_reading_lang($lang) {
-		Session::set('currentLang',$lang);
-		self::$reading_lang = $lang;
+		Session::set('currentLang',strtolower($lang));
+		self::$reading_lang = strtolower($lang);
 	}	
 	
 	/**
@@ -162,7 +205,8 @@ class Translatable extends DataObjectDecorator {
 	 * @return DataObject
 	 */
 	static function get_one($callerClass, $filter = "") {
-		self::$language_decided = true;self::$reading_lang = self::default_lang();
+		self::$language_decided = true;
+		self::$reading_lang = self::default_lang();
 		$record = DataObject::get_one($callerClass, $filter);
 		if (!$record) {
 			self::$bypass = true;
@@ -172,13 +216,7 @@ class Translatable extends DataObjectDecorator {
 		} else {
 			$langsAvailable = (array)self::get_langs_by_id($callerClass, $record->ID);
 			$langsAvailable[] = self::default_lang();
-			if(isset($_GET['lang']) && array_search(strtolower($_GET['lang']),$langsAvailable) !== false) {
-				$lang = strtolower($_GET['lang']);
-			} else if(($possible = Session::get('currentLang')) && array_search($possible,$langsAvailable)) {
-				$lang = $possible;
-			} else if (($member = Member::currentUser()) && ($possible = $member->PreferredLang)) {
-				$lang = $possible;
-			}
+			$lang = self::choose_site_lang($langsAvailable);
 			if (isset($lang)) {
 				$transrecord = self::get_one_by_lang($callerClass, $lang, "`$callerClass`.ID = $record->ID");
 				if ($transrecord) {
@@ -228,7 +266,8 @@ class Translatable extends DataObjectDecorator {
 	 */
 	static function get_langs_by_id($class, $id) {
 		$query = new SQLQuery('Lang',"{$class}_lang","(`{$class}_lang`.OriginalLangID =$id)");
-		return $query->execute()->column();
+		$langs = $query->execute()->column();
+		return ($langs) ? array_values($langs) : false;
 	}
 		
 	/**
@@ -358,7 +397,7 @@ class Translatable extends DataObjectDecorator {
 						 * the original table (was renamed to _lang) since some fields that we require may be there
 						 */
 						if ($query->select[0][0] == '`') $query->select = array_merge(array("`$table`.*"),$query->select);
-					} else unset($query->from[$table]);//var_dump($query);echo'<br><br>';
+					} else unset($query->from[$table]);
 				} else {
 					$query->from[$table] = str_replace("`{$table}`.OriginalLangID","`{$table}`.ID",$query->from[$table]);
 				}

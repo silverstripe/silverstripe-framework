@@ -24,8 +24,8 @@ class Member extends DataObject {
 		'AutoLoginExpired' => 'Datetime',
 		'BlacklistedEmail' => 'Boolean',
 		'PasswordEncryption' => "Enum('none', 'none')",
-		'Salt' => "Varchar(50)",
-		'Lang' => "Varchar(12)"
+		'Salt' => 'Varchar(50)',
+		'Locale' => 'Varchar(6)', 
 	);
 
 	static $belongs_many_many = array(
@@ -704,6 +704,8 @@ class Member extends DataObject {
 	 *                  editing this member.
 	 */
 	public function getCMSFields() {
+		$locale = ($this->Locale) ? $this->Locale : i18n::get_locale();
+		
 		$fields = new FieldSet(
 				//new TextField("Salutation", "Title"),
 				new HeaderField( "Personal Details" ),
@@ -711,7 +713,7 @@ class Member extends DataObject {
 				new TextField("Surname", "Surname"),
 				new HeaderField( "User Details" ),
 				new TextField("Email", "Email"),
-				new DropdownField("Lang", "Interface Language", i18n::get_existing_translations()),
+				new DropdownField("Locale", "Interface Language", i18n::get_existing_translations(), $locale),
 				new PasswordField("Password", "Password")
 				//new TextareaField("Address","Address"),
 				//new TextField("JobTitle", "Job Title"),
@@ -1026,8 +1028,8 @@ class Member_ProfileForm extends Form {
 			}
 		}
 		
-		if($SQL_data['Lang'] != $member->Lang) {
-			$form->addErrorMessage("Generic", _t('CMSMain.REFRESHLANG'),"good");
+		if($SQL_data['Locale'] != $member->Locale) {
+			$form->addErrorMessage("Generic", _t('Member.REFRESHLANG'),"good");
 		}
 		
 		$form->saveInto($member);
