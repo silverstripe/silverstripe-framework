@@ -103,6 +103,15 @@ class Translatable extends DataObjectDecorator {
 	static function default_lang() {
 		return self::$default_lang;
 	}
+	
+	/**
+	 * Set default language.
+	 * 
+	 * @paran $lang String
+	 */
+	static function set_default_lang($lang) {
+		self::$default_lang = $lang;
+	}
 
 	/**
 	 * Check whether the default and current reading language are the same.
