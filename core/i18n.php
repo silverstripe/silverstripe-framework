@@ -1,7 +1,24 @@
 <?php
 
 /**
- * Silverstripe i18n API
+ * Base-class for storage and retrieval of translated entities.
+ * Most common use is translation of the CMS-interface through the _t()-method
+ * (in controller/model) and the <% _t() %> template variable.
+ * 
+ * File-based i18n-translations always have a "locale" (e.g. 'en_US').
+ * Common language names (e.g. 'en') are mainly used in {Translatable} for
+ * database-entities.
+ * 
+ * Features a "textcollector-mode" that parses all files with a certain extension
+ * (currently *.php and *.ss) for new translatable strings. Textcollector will write
+ * updated string-tables to their respective folders inside the module, and automatically
+ * namespace entities to the classes/templates they are found in (e.g. $lang['en_US']['AssetAdmin']['UPLOADFILES']).
+ * 
+ * Caution: Does not apply any character-set conversion, it is assumed that all content
+ * is stored and represented in UTF-8 (Unicode). Please make sure your files are created with the correct
+ * character-set, and your HTML-templates render UTF-8.
+ *
+ * Please see the {Translatable} DataObjectDecorator for managing translations of database-content.
  *
  * @author Bernat Foj Capell <bernat@silverstripe.com>
  */
@@ -1114,7 +1131,7 @@ class i18n extends Controller {
 		else {
 			global $_CLASS_MANIFEST;
 			$path = $_CLASS_MANIFEST[$class];
-			ereg('.*/([^/]+)/code/',$path,$module);
+			ereg(Director::baseFolder() . '/([^/]+)/',$path,$module);
 		}
 		if (file_exists($file = Director::getAbsFile("{$module[1]}/lang/". self::get_locale() . '.php'))) {
 			include_once($file);
@@ -1143,7 +1160,7 @@ class i18n extends Controller {
 
 	/**
 	 * This is the main method to build the master string tables with the original strings.
-	 * It will search for existent modules that use the i18n feature, parse the _() calls
+	 * It will search for existent modules that use the i18n feature, parse the _t() calls
 	 * and write the resultant files in the lang folder of each module.
 	 */	
 	public function textcollector() {
