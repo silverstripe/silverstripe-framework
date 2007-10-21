@@ -1003,7 +1003,7 @@ class SiteTree extends DataObject {
 						new TextField("MetaTitle", "Title"),
 						new TextareaField("MetaDescription", "Description"),
 						new TextareaField("MetaKeywords", "Keywords"),
-						new TogglePanel("Advanced Options...",array( 
+						new ToggleCompositeField("Advanced Options...",array( 
 							new TextareaField("ExtraMeta","Custom Meta Tags"), 
 							new LiteralField("", "<p>Manually specify a Priority for this page: (valid values are from 0 to 1, a zero will remove this page from the index)</p>"), 
 							new NumericField("Priority","Page Priority")), 

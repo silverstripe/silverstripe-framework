@@ -619,15 +619,20 @@ class Translatable extends DataObjectDecorator {
 		$tasks = array(
 			'dup' => array(),
 		);
-		foreach ($fields as $field) {
+		foreach($fields as $field) {
 			if ($field->isComposite()) {
 				$innertasks = $this->duplicateOrReplaceFields($field->FieldSet());
 				$tasks['dup'] = array_merge($tasks['dup'],$innertasks['dup']);
 			}
-			else if (($fieldname = $field->Name()) && array_key_exists($fieldname,$this->original_values)) {
+			else if(($fieldname = $field->Name()) && array_key_exists($fieldname,$this->original_values)) {
 				// Get a copy of the original field to show the untranslated value
-				if (is_subclass_of($field->class,'TextareaField')) $nonEditableField = new MoreLessField($fieldname,$field->Title(),'','+','-');
-				else $nonEditableField = $field->performDisabledTransformation();
+				if(is_subclass_of($field->class,'TextareaField')) {
+					$nonEditableField = new ToggleField($fieldname,$field->Title(),'','+','-');
+					$nonEditableField->labelMore = '+';
+					$nonEditableField->labelLess = '-';
+				} else {
+					$nonEditableField = $field->performDisabledTransformation();
+				} 
 
 				$nonEditableField_holder = new CompositeField($nonEditableField);
 				$nonEditableField_holder->setName($fieldname.'_holder');
@@ -736,3 +741,4 @@ class Translatable extends DataObjectDecorator {
 	}
 		
 }
+?>
