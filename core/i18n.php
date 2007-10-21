@@ -760,7 +760,7 @@ class i18n extends Controller {
 	 */
 	static function get_common_languages($native = false) {
 		$languages = array();
-		foreach (i18n::$common_languages as $code => $name) {
+		foreach (self::$common_languages as $code => $name) {
 			$languages[$code] = ($native ? $name[1] : $name[0]);
 		}
 		return $languages;
@@ -772,7 +772,7 @@ class i18n extends Controller {
 	 * @return list of languages in the form 'code' => 'name'
 	 */
 	static function get_locale_list() {
-		return i18n::$all_locales;
+		return self::$all_locales;
 	}
 	
 	/**
@@ -788,7 +788,7 @@ class i18n extends Controller {
 		$dbLangs = $query->execute()->column();
 		$langlist = array_merge((array)Translatable::default_lang(), (array)$dbLangs);
 		$returnMap = array();
-		$allCodes = array_merge(i18n::$all_locales, i18n::$common_languages);
+		$allCodes = array_merge(self::$all_locales, self::$common_languages);
 		foreach ($langlist as $langCode) {
 			$returnMap[$langCode] = (is_array($allCodes[$langCode]) ? $allCodes[$langCode][0] : $allCodes[$langCode]);
 		}
@@ -831,7 +831,7 @@ class i18n extends Controller {
 	 * @return Name of the language
 	 */
 	static function get_language_name($code, $native = false) {
-		$langs = i18n::$common_languages;
+		$langs = self::$common_languages;
 		return ($native ? $langs[$code][1] : $langs[$code][0]);
 	}
 	
@@ -842,7 +842,7 @@ class i18n extends Controller {
 	 * @return Name of the locale
 	 */
 	static function get_locale_name($code) {
-		$langs = i18n::get_locale_list();
+		$langs = self::get_locale_list();
 		return isset($langs[$code]) ? $langs[$code] : false;
 	}
 	
@@ -853,7 +853,7 @@ class i18n extends Controller {
 	 * @return Language code (if the name is not found, it'll return the passed name)
 	 */
 	static function get_language_code($name) {
-		$code = array_search($name,i18n::get_common_languages());
+		$code = array_search($name,self::get_common_languages());
 		return ($code ? $code : $name);
 	}
 	
@@ -863,8 +863,8 @@ class i18n extends Controller {
 	 * @return Language
 	 */
 	static function get_tinymce_lang() {
-		if(isset(i18n::$tinymce_lang[i18n::get_locale()])) {
-			return i18n::$tinymce_lang[i18n::get_locale()];
+		if(isset(self::$tinymce_lang[self::get_locale()])) {
+			return self::$tinymce_lang[self::get_locale()];
 		}
 		
 		return 'en';
@@ -887,7 +887,7 @@ class i18n extends Controller {
 			if(
 				is_dir($moduleDir) 
 				&& is_file($moduleDir . DIRECTORY_SEPARATOR . "_config.php")
-				&& is_file($moduleDir . DIRECTORY_SEPARATOR . "lang" . DIRECTORY_SEPARATOR . i18n::$default_locale . ".php")
+				&& is_file($moduleDir . DIRECTORY_SEPARATOR . "lang" . DIRECTORY_SEPARATOR . self::$default_locale . ".php")
 			) {
 				$translatableModules[] = $module;
 			}
@@ -909,18 +909,18 @@ class i18n extends Controller {
 		&& !in_array($module, array('sapphire','jsparty')) && substr($module,0,1) != '.') {  
 
 			$fileList = array();
-			i18n::get_files_rec("$baseDir/$module/code", $fileList);
+			self::get_files_rec("$baseDir/$module/code", $fileList);
 			$mst = '';
 			foreach($fileList as $file) {
-				$mst .= i18n::report_calls_code($file);
+				$mst .= self::report_calls_code($file);
 			}
 			$fileList = NULL;
 			
 			// Make sure the templates directory exists before trying to open it  
 			if (is_dir("$baseDir/$module/templates")) {
-				i18n::get_files_rec("$baseDir/$module/templates", $fileList);
+				self::get_files_rec("$baseDir/$module/templates", $fileList);
 				foreach($fileList as $index => $file) {
-					$mst .= i18n::report_calls_tpl($index, $file);
+					$mst .= self::report_calls_tpl($index, $file);
 				}
 			}
 			
@@ -957,7 +957,7 @@ class i18n extends Controller {
 			if(substr($item,0,1) == '.') continue;
 			if(substr($item,-4) == '.php') $fileList[substr($item,0,-4)] = "$folder/$item";
 			else if(substr($item,-3) == '.ss') $fileList[$item] = "$folder/$item";
-			else if(is_dir("$folder/$item")) i18n::get_files_rec("$folder/$item", $fileList);
+			else if(is_dir("$folder/$item")) self::get_files_rec("$folder/$item", $fileList);
 		}
 	}
 	
@@ -1043,7 +1043,7 @@ class i18n extends Controller {
 	 * @param string $locale Locale to be set 
 	 */
 	static function set_locale($locale) {
-		if ($locale) i18n::$current_locale = $locale;
+		if ($locale) self::$current_locale = $locale;
 	}
 
 	/**
@@ -1052,8 +1052,10 @@ class i18n extends Controller {
 	 * @return string Current locale in the system
 	 */
 	static function get_locale() {
-		return i18n::$current_locale;
+		return self::$current_locale;
 	}
+	
+	
 	
 	/**
 	 * Include a locale file determined by module name and locale 
@@ -1098,11 +1100,11 @@ class i18n extends Controller {
 			$path = $_CLASS_MANIFEST[$class];
 			ereg('.*/([^/]+)/code/',$path,$module);
 		}
-		if (file_exists($file = Director::getAbsFile("{$module[1]}/lang/". i18n::get_locale() . '.php'))) {
+		if (file_exists($file = Director::getAbsFile("{$module[1]}/lang/". self::get_locale() . '.php'))) {
 			include_once($file);
-		} else if (i18n::get_locale() != 'en_US') {
-			i18n::set_locale('en_US');
-			i18n::include_by_class($class);
+		} else if (self::get_locale() != 'en_US') {
+			self::set_locale('en_US');
+			self::include_by_class($class);
 		} else {
 			user_error("Locale file $file should exist", E_USER_WARNING);
 		}
@@ -1140,10 +1142,10 @@ class i18n extends Controller {
 		if (!isset($_GET['module'])) {
 			$topLevel = scandir($baseDir);
 			foreach($topLevel as $module) {
-				i18n::process_module($baseDir, $module);
+				self::process_module($baseDir, $module);
 			}
 		} else {
-			i18n::process_module($baseDir, $_GET['module']);
+			self::process_module($baseDir, $_GET['module']);
 		}
 		
 		echo "Done!";

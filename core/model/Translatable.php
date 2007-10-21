@@ -73,8 +73,8 @@ class Translatable extends DataObjectDecorator {
 	 * @return boolean Returns true if $table exists.
 	 */
 	static function table_exists($table) {
-		if (!Translatable::$tableList) Translatable::$tableList = DB::tableList();
-		return isset(Translatable::$tableList[strtolower($table)]);
+		if (!self::$tableList) self::$tableList = DB::tableList();
+		return isset(self::$tableList[strtolower($table)]);
 	}
 	
 	/**
@@ -85,15 +85,15 @@ class Translatable extends DataObjectDecorator {
 	static function choose_site_lang() {
 		if(isset($_GET['lang'])) {
 			$_GET['lang'] = strtolower($_GET['lang']);
-			Translatable::set_reading_lang($_GET['lang']);
+			self::set_reading_lang($_GET['lang']);
 		}
 		else if($lang = Session::get('currentLang')) {
-			Translatable::set_reading_lang($lang);
+			self::set_reading_lang($lang);
 		}
 		else if (($member = Member::currentUser()) && ($lang = $member->Lang)) {
-			Translatable::set_reading_lang($lang);			
+			self::set_reading_lang($lang);			
 		}
-		Translatable::$language_decided = true; 
+		self::$language_decided = true; 
 	}
 		
 	/**
@@ -101,7 +101,7 @@ class Translatable extends DataObjectDecorator {
 	 * @return string
 	 */
 	static function default_lang() {
-		return Translatable::$default_lang;
+		return self::$default_lang;
 	}
 
 	/**
@@ -109,7 +109,7 @@ class Translatable extends DataObjectDecorator {
 	 * @return boolean Return true if both default and reading language are the same.
 	 */
 	static function is_default_lang() {
-		return (!Translatable::current_lang() || Translatable::$default_lang == Translatable::current_lang());
+		return (!self::current_lang() || self::$default_lang == self::current_lang());
 	}
 
 	/**
@@ -117,8 +117,8 @@ class Translatable extends DataObjectDecorator {
 	 * @return string
 	 */
 	static function current_lang() {
-		if (!Translatable::$language_decided) Translatable::choose_site_lang();
-		return Translatable::$reading_lang;
+		if (!self::$language_decided) self::choose_site_lang();
+		return self::$reading_lang;
 	}
 		
 	/**
@@ -127,7 +127,7 @@ class Translatable extends DataObjectDecorator {
 	 */
 	static function set_reading_lang($lang) {
 		Session::set('currentLang',$lang);
-		Translatable::$reading_lang = $lang;
+		self::$reading_lang = $lang;
 	}	
 	
 	/**
@@ -138,10 +138,10 @@ class Translatable extends DataObjectDecorator {
 	 * @return DataObject
 	 */
 	static function get_one_by_lang($class, $lang, $filter = '') {
-		$oldLang = Translatable::current_lang();
-		Translatable::set_reading_lang($lang);
+		$oldLang = self::current_lang();
+		self::set_reading_lang($lang);
 		$result = DataObject::get_one($class, $filter, false);
-		Translatable::set_reading_lang($oldLang);
+		self::set_reading_lang($oldLang);
 		return $result;
 	}
 	
@@ -153,16 +153,16 @@ class Translatable extends DataObjectDecorator {
 	 * @return DataObject
 	 */
 	static function get_one($callerClass, $filter = "") {
-		Translatable::$language_decided = true;Translatable::$reading_lang = Translatable::default_lang();
+		self::$language_decided = true;self::$reading_lang = self::default_lang();
 		$record = DataObject::get_one($callerClass, $filter);
 		if (!$record) {
-			Translatable::$bypass = true;
+			self::$bypass = true;
 			$record = DataObject::get_one($callerClass, $filter, false);
-			Translatable::$bypass = false;
-			if ($record) Translatable::set_reading_lang($record->Lang);
+			self::$bypass = false;
+			if ($record) self::set_reading_lang($record->Lang);
 		} else {
-			$langsAvailable = (array)Translatable::get_langs_by_id($callerClass, $record->ID);
-			$langsAvailable[] = Translatable::default_lang();
+			$langsAvailable = (array)self::get_langs_by_id($callerClass, $record->ID);
+			$langsAvailable[] = self::default_lang();
 			if(isset($_GET['lang']) && array_search(strtolower($_GET['lang']),$langsAvailable) !== false) {
 				$lang = strtolower($_GET['lang']);
 			} else if(($possible = Session::get('currentLang')) && array_search($possible,$langsAvailable)) {
@@ -171,9 +171,9 @@ class Translatable extends DataObjectDecorator {
 				$lang = $possible;
 			}
 			if (isset($lang)) {
-				$transrecord = Translatable::get_one_by_lang($callerClass, $lang, "`$callerClass`.ID = $record->ID");
+				$transrecord = self::get_one_by_lang($callerClass, $lang, "`$callerClass`.ID = $record->ID");
 				if ($transrecord) {
-					Translatable::set_reading_lang($lang);
+					self::set_reading_lang($lang);
 					$record = $transrecord;
 				}
 			}
@@ -191,10 +191,10 @@ class Translatable extends DataObjectDecorator {
 	 * @return mixed The objects matching the conditions.
 	 */
 	static function get_by_lang($class, $lang, $filter = '', $sort = '') {
-		$oldLang = Translatable::current_lang();
-		Translatable::set_reading_lang($lang);
+		$oldLang = self::current_lang();
+		self::set_reading_lang($lang);
 		$result = DataObject::get($class, $filter, $sort);
-		Translatable::set_reading_lang($oldLang);
+		self::set_reading_lang($oldLang);
 		return $result;
 	}
 	
@@ -207,7 +207,7 @@ class Translatable extends DataObjectDecorator {
 	static function get_original($class, $originalLangID) {
 		$baseClass = $class;
 		while( ($p = get_parent_class($baseClass)) != "DataObject") $baseClass = $p;
-		return Translatable::get_one_by_lang($class,Translatable::default_lang(),"`$baseClass`.ID = $originalLangID");
+		return self::get_one_by_lang($class,self::default_lang(),"`$baseClass`.ID = $originalLangID");
 	}
 
 	/**
@@ -230,10 +230,10 @@ class Translatable extends DataObjectDecorator {
 	 * @param string $lang The name of the language
 	 */
 	static function write(DataObject $object, $lang) {
-		$oldLang = Translatable::current_lang();
-		Translatable::set_reading_lang($lang);
+		$oldLang = self::current_lang();
+		self::set_reading_lang($lang);
 		$result = $object->write();
-		Translatable::set_reading_lang($oldLang);
+		self::set_reading_lang($oldLang);
 	}
 
 	/**
@@ -241,7 +241,7 @@ class Translatable extends DataObjectDecorator {
 	 *
 	 */
 	static function enable() {
-		Translatable::$enabled = true;
+		self::$enabled = true;
 	}
 
 	/**
@@ -249,7 +249,7 @@ class Translatable extends DataObjectDecorator {
 	 *
 	 */
 	static function disable() {
-		Translatable::$enabled = false;
+		self::$enabled = false;
 	}
 	
 	/**
@@ -258,7 +258,7 @@ class Translatable extends DataObjectDecorator {
 	 * @return boolean True if enabled
 	 */
 	static function is_enabled() {
-		return Translatable::$enabled;
+		return self::$enabled;
 	}
 	
 	/**
@@ -267,7 +267,7 @@ class Translatable extends DataObjectDecorator {
 	 * @param int $id
 	 */
 	static function creating_from($id) {
-		Translatable::$creatingFromID = $id;
+		self::$creatingFromID = $id;
 	}
 
 	
@@ -290,13 +290,13 @@ class Translatable extends DataObjectDecorator {
 
 	function augmentSQL(SQLQuery &$query) {
 		if (! $this->stat('enabled')) return false;
-		if((($lang = Translatable::current_lang()) && !Translatable::is_default_lang()) || Translatable::$bypass) {
+		if((($lang = self::current_lang()) && !self::is_default_lang()) || self::$bypass) {
 			foreach($query->from as $table => $dummy) {
 				if(!isset($baseTable)) {
 					$baseTable = $table;
 				}
 				
-				if (Translatable::table_exists("{$table}_lang")) {
+				if (self::table_exists("{$table}_lang")) {
 					$query->renameTable($table, $table . '_lang');
 					if (stripos($query->sql(),'.ID')) {
 						// Every reference to ID is now OriginalLangID
@@ -339,7 +339,7 @@ class Translatable extends DataObjectDecorator {
 					}
 					
 					// unless we are bypassing this query, add the language filter
-					if (!Translatable::$bypass) $query->where[] = "`{$table}_lang`.Lang = '$lang'";
+					if (!self::$bypass) $query->where[] = "`{$table}_lang`.Lang = '$lang'";
 					
 					// unless this is a deletion, the query is applied to the joined table
 					if (!$query->delete) {
@@ -402,7 +402,7 @@ class Translatable extends DataObjectDecorator {
 
 	function augmentDatabase() {
 		if (! $this->stat('enabled')) return false;
-		Translatable::set_reading_lang(Translatable::default_lang());
+		self::set_reading_lang(self::default_lang());
 		$table = $this->owner->class;
 
 		if(($fields = $this->owner->databaseFields()) && $this->hasOwnTranslatableFields()) {
@@ -441,17 +441,17 @@ class Translatable extends DataObjectDecorator {
 	 */
 	function augmentWrite(&$manipulation) { 
 		if (! $this->stat('enabled')) return false;
-		if(($lang = Translatable::current_lang()) && !Translatable::is_default_lang()) {
+		if(($lang = self::current_lang()) && !self::is_default_lang()) {
 			$tables = array_keys($manipulation);
 			foreach($tables as $table) {
-				if (Translatable::table_exists("{$table}_lang")) {
+				if (self::table_exists("{$table}_lang")) {
 					$manipulation["{$table}_lang"] = $manipulation[$table];
 					if ($manipulation[$table]['command'] == 'insert') {
 						$fakeID = $this->owner->ID;
 						// In an insert we've to populate our fields and generate a new id (since the passed one it's relative to $table)
 						$SessionOrigID = Session::get($this->owner->ID.'_originalLangID');
 						$manipulation["{$table}_lang"]['fields']['OriginalLangID'] = $this->owner->ID = 
-							( $SessionOrigID ? $SessionOrigID : Translatable::$creatingFromID);
+							( $SessionOrigID ? $SessionOrigID : self::$creatingFromID);
 						$manipulation["{$table}_lang"]['RecordID'] = $manipulation["{$table}_lang"]['fields']['OriginalLangID'];
 						// populate lang field
 						$manipulation["{$table}_lang"]['fields']['Lang'] = "'$lang'" ;
@@ -508,7 +508,7 @@ class Translatable extends DataObjectDecorator {
 		$baseClass = $this->owner->class;
 		while( ($p = get_parent_class($baseClass)) != "DataObject") $baseClass = $p;
 		$allFields = $this->owner->getAllFields();
-		if(!Translatable::is_default_lang()) {
+		if(!self::is_default_lang()) {
 			// Get the original version record, to show the original values
 			if (!is_numeric($allFields['ID'])) {
 				$originalLangID = Session::get($this->owner->ID . '_originalLangID');
@@ -516,9 +516,9 @@ class Translatable extends DataObjectDecorator {
 			} else {
 				$originalLangID = $allFields['ID'];
 			}
-			$originalRecord = Translatable::get_one_by_lang(
+			$originalRecord = self::get_one_by_lang(
 					$this->owner->class, 
-					Translatable::$default_lang, 
+					self::$default_lang, 
 					"`$baseClass`.ID = ".$originalLangID
 			);
 			$this->original_values = $originalRecord->getAllFields();
@@ -538,7 +538,7 @@ class Translatable extends DataObjectDecorator {
 		} else {
 			$alreadyTranslatedLangs = null;
 			if (is_numeric($allFields['ID'])) {
-				$alreadyTranslatedLangs = Translatable::get_langs_by_id($baseClass,$allFields['ID']);
+				$alreadyTranslatedLangs = self::get_langs_by_id($baseClass,$allFields['ID']);
 			}
 			if (!$alreadyTranslatedLangs) $alreadyTranslatedLangs = array();
 			foreach ($alreadyTranslatedLangs as $i => $langCode) {
@@ -681,8 +681,8 @@ class Translatable extends DataObjectDecorator {
 	 * @return string Extended table name
 	 */
 	function extendWithSuffix($table) {
-		if((($lang = Translatable::current_lang()) && !Translatable::is_default_lang())) {
-			if (Translatable::table_exists("{$table}_lang")) return $table.'_lang';
+		if((($lang = self::current_lang()) && !self::is_default_lang())) {
+			if (self::table_exists("{$table}_lang")) return $table.'_lang';
 		}
 		return $table;
 	}
