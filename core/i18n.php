@@ -9,23 +9,23 @@
 class i18n extends Controller {
 	
 	/**
-	 * This static variable is used to store the current defined locale. Default value is 'en_US'
+	 * This static variable is used to store the current defined locale.
 	 */
-	static $current_locale = 'en_US';
+	protected static $current_locale = '';
 	
 	/**
 	 * This is the locale in which generated language files are (we assume US English)
 	 *
 	 * @var string
 	 */
-	static $default_locale = 'en_US';
+	protected static $default_locale = 'en_US';
 
 	/**
 	 * An exhaustive list of possible locales (code => language and country)
 	 *
 	 * @var array
 	 */
-	static $all_locales = array(
+	public static $all_locales = array(
 		'aa_DJ' => 'Afar (Djibouti)',
 		'ab_GE' => 'Abkhazian (Georgia)',
 		'abr_GH' => 'Abron (Ghana)',
@@ -504,7 +504,7 @@ class i18n extends Controller {
 	 *  A list of commonly used languages, in the form
 	 *  langcode => array( EnglishName, NativeName)
 	 */
-	static $common_languages = array(
+	public static $common_languages = array(
 		'af' => array('Afrikaans', 'Afrikaans'),
 		'sq' => array('Albanian', 'shqip'),
 		'ar' => array('Arabic', '&#1575;&#1604;&#1593;&#1585;&#1576;&#1610;&#1577;'),
@@ -1052,10 +1052,26 @@ class i18n extends Controller {
 	 * @return string Current locale in the system
 	 */
 	static function get_locale() {
-		return self::$current_locale;
+		return (!empty(self::$current_locale)) ? self::$current_locale : self::$default_locale;
 	}
 	
+	/**
+	 * Set default language (proxy for Translatable::set_default_lang())
+	 * 
+	 * @param $lang String
+	 */
+	static function set_default_lang($lang) {
+		Translatable::set_default_lang($lang);
+	}
 	
+	/**
+	 * Get default language (proxy for Translatable::default_lang())
+	 * 
+	 * @return String
+	 */
+	static function default_lang() {
+		return Translatable::default_lang();
+	}
 	
 	/**
 	 * Include a locale file determined by module name and locale 
