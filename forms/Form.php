@@ -317,7 +317,10 @@ class Form extends ViewableData {
 		return $this->class . '_' . str_replace('.','',$this->name);
 	}
 	
-	function PureName(){
+	/**
+	 * @return string
+	 */
+	function Name(){
 		return $this->name;
 	}
 	

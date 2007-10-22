@@ -503,7 +503,7 @@ class TableField extends TableListField {
 		// TODO doesn't automatically update validation when adding a row
 		foreach($fields as $field) {
 			//if the field type has some special specific specification for validation of itself
-			$js .= $field->jsValidation($this->form->class."_".$this->form->PureName()); 
+			$js .= $field->jsValidation($this->form->class."_".$this->form->Name()); 
 		}
 		
 		// TODO Implement custom requiredFields
