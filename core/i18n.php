@@ -391,7 +391,7 @@ class i18n extends Controller {
 		'pt_TL' => 'Portuguese (East Timor)',
 		'qu_BO' => 'Quechua (Bolivia)',
 		'qu_PE' => 'Quechua (Peru)',
-		'rcf_RE' => 'Rï¿½union Creole French (Reunion)',
+		'rcf_RE' => 'Réunion Creole French (Reunion)',
 		'rej_ID' => 'Rejang (Indonesia)',
 		'rif_MA' => 'Tarifit (Morocco)',
 		'rjb_IN' => 'Rajbanshi (India)',
@@ -911,37 +911,116 @@ class i18n extends Controller {
 		}
 		return $translatableModules;
 	}
+	
+	/**
+	 * Given a file name (a php class name, without the .php ext, or a template name, including the .ss extension)
+	 * this helper function determines the module where this file is located
+	 * 
+	 * @param string $name php class name or template file name
+	 * @return string Module where the file is located
+	 */
+	protected static function get_owner_module($name) {
+		if (substr($name,-3) == '.ss') {
+			global $_TEMPLATE_MANIFEST;
+			$path = current($_TEMPLATE_MANIFEST[substr($name,0,-3)]);
+			ereg('.*/([^/]+)/templates/',$path,$module);
+		} else {
+			global $_CLASS_MANIFEST;
+			$path = $_CLASS_MANIFEST[$name];
+			ereg('.*/([^/]+)/code/',$path,$module);
+		}
+		return $module[1];
+
+	}
 
 	/**
-	 * Searches for all the files in a given module
+	 * Build the module's master string table
 	 *
 	 * @param string $baseDir Silverstripe's base directory
 	 * @param string $module Module's name
+	 * @return string Generated master string table
 	 */
 	protected static function process_module($baseDir, $module) {	
-    	if(!Translatable::is_enabled()) return false;
     	
-    	// Only search for text in folder with a _config.php file (which means they are modules)  
-		if(is_dir("$baseDir/$module") && is_file("$baseDir/$module/_config.php") 
-		&& !in_array($module, array('sapphire','jsparty')) && substr($module,0,1) != '.') {  
+    	// Only search for calls in folder with a _config.php file (which means they are modules)  
+		if(is_dir("$baseDir/$module") && is_file("$baseDir/$module/_config.php") && substr($module,0,1) != '.') {  
 
-			$fileList = array();
-			self::get_files_rec("$baseDir/$module/code", $fileList);
 			$mst = '';
-			foreach($fileList as $file) {
-				$mst .= self::report_calls_code($file);
-			}
-			$fileList = NULL;
-			
-			// Make sure the templates directory exists before trying to open it  
-			if (is_dir("$baseDir/$module/templates")) {
-				self::get_files_rec("$baseDir/$module/templates", $fileList);
-				foreach($fileList as $index => $file) {
-					$mst .= self::report_calls_tpl($index, $file);
+			// Search for calls in code files if these exists
+			if(is_dir("$baseDir/$module/code")) {
+				$fileList = array();
+				self::get_files_rec("$baseDir/$module/code", $fileList);
+				foreach($fileList as $file) {
+					$mst .= self::report_calls_code($file);
+				}
+			} else if('sapphire' == $module) {
+				// sapphire doesn't have the usual module structure, so we'll scan all subfolders
+				$fileList = array();
+				self::get_files_rec("$baseDir/$module", $fileList);
+				foreach($fileList as $file) {
+					if('.ss' != substr($file,-3)) $mst .= self::report_calls_code($file);
 				}
 			}
 			
-			if ($mst) {
+			// Search for calls in template files if these exists
+			if(is_dir("$baseDir/$module/templates")) {
+				$fileList = array();
+				$includedtpl[$module] = array();
+				self::get_files_rec("$baseDir/$module/templates", $fileList);
+				foreach($fileList as $index => $file) {
+					$mst .= self::report_calls_tpl($index, $file, $includedtpl[$module]);
+				}
+			}
+			
+			return $mst;
+			
+		} else return false;
+	}
+
+	/**
+	 * Write the master string table of every processed module
+	 *
+	 * @param string $baseDir Silverstripe's base directory
+	 * @param array $allmst Module's master string tables
+	 * @param array $includedtpl Templates included by other templates
+	 */
+	protected static function write_mst($baseDir, $allmst, $includedtpl) {
+			
+			// Evaluate the constructed mst
+			foreach($allmst as $mst) eval($mst);
+
+			// Resolve template dependencies
+			foreach($includedtpl as $tplmodule => $includers) {
+				// Variable initialization
+				$stringsCode = '';
+				$moduleCode = '';
+				$modulestoinclude = array();
+				
+				foreach($includers as $includertpl => $allincluded) 
+					foreach($allincluded as $included)
+						// we will only add code if the included template has localizable strings
+						if(isset($lang['en_US']["$included.ss"])) {
+							$module = self::get_owner_module("$included.ss");
+							
+							/* if the module of the included template is not the same as the includer's one
+							 * we will need to load the first one in order to have these included strings in memory
+							 */
+							if ($module != $tplmodule) $modulestoinclude[$module] = $included;
+							
+							// Give the includer name to the included strings in order to be used from the includer template
+							$stringsCode .= "\$lang['en_US']['$includertpl'] = " .
+									"array_merge(\$lang['en_US']['$includertpl'], \$lang['en_US']['$included.ss']);\n";
+						}
+				
+				// Include a template for every needed module (the module language file will then be autoloaded)
+				foreach($modulestoinclude as $tpltoinclude) $moduleCode .= "self::include_by_class('$tpltoinclude.ss');\n";
+				
+				// Add the extra code to the existing module mst
+				if ($stringsCode) $allmst[$tplmodule] .= "\n$moduleCode$stringsCode";
+			}
+			
+			// Write each module language file
+			foreach($allmst as $module => $mst) {
 				// Create folder for lang files
 				$langFolder = $baseDir . '/' . $module . '/lang';
 				if(!file_exists($baseDir. '/' . $module . '/lang')) {
@@ -959,7 +1038,7 @@ class i18n extends Controller {
 					user_error("Cannot write language file! Please check permissions of $langFolder/en_US.php", E_USER_ERROR);
 				}
 			}
-		}
+
 	}
 
 	/**
@@ -993,7 +1072,8 @@ class i18n extends Controller {
 			$entity = array_pop($entityParts);
 			$class = implode('.',$entityParts);
 			
-			if (isset($callMap[$class.'--'.$entity])) user_error("Warning! Redeclaring entity $entity in file $file<br>", E_USER_WARNING);
+			if (isset($callMap["$class--$entity"])) 
+				echo "Warning! Redeclaring entity $entity in file $file (previously declared in {$callMap["$class--$entity"]})<br>";
 
 			if (substr($regs[2],0,1) == '"') $regs[2] = addcslashes($regs[2],'\'');
 			$mst .= '$lang[\'en_US\'][\'' . $class . '\'][\'' . $entity . '\'] = ';
@@ -1008,7 +1088,7 @@ class i18n extends Controller {
 			$mst .= "\n";
 			$content = str_replace($regs[0],"",$content);
 
-			$callMap[$class.'--'.$entity] = $regs[2];
+			$callMap["$class--$entity"] = $file;
 		}
 		
 		return $mst;
@@ -1020,11 +1100,20 @@ class i18n extends Controller {
 	 * 
 	 * @param string $index Index used to namespace strings 
 	 * @param string $file Path to the file to be parsed
+	 * @param string $included List of explicitly included templates
 	 * @return string Built Master String Table from this file
 	 */
-	protected static function report_calls_tpl($index, $file) {
+	protected static function report_calls_tpl($index, $file, &$included) {
 		static $callMap;
 		$content = file_get_contents($file);
+		
+		// Search for included templates
+		preg_match_all('/<' . '% include +([A-Za-z0-9_]+) +%' . '>/', $content, $inc, PREG_SET_ORDER);
+		foreach ($inc as $template) {
+			if (!isset($included[$index])) $included[$index] = array();
+			array_push($included[$index], $template[1]);
+		}
+
 		$mst = '';
 		while (ereg('_t[[:space:]]*\([[:space:]]*("[^"]*"|\\\'[^\']*\\\')[[:space:]]*,[[:space:]]*("([^"]|\\\")*"|\'([^\']|\\\\\')*\')([[:space:]]*,[[:space:]]*[^,)]*)?([[:space:]]*,[[:space:]]*("([^"]|\\\")*"|\'([^\']|\\\\\')*\'))?[[:space:]]*\)',$content,$regs)) {
 
@@ -1032,7 +1121,8 @@ class i18n extends Controller {
 			$entity = array_pop($entityParts);
 
 			// Entity redeclaration check
-			if (isset($callMap[$index.'--'.$entity])) user_error("Warning! Redeclaring entity $entity in file $file<br>", E_USER_WARNING);
+			if (isset($callMap["$index--$entity"])) 
+				echo "Warning! Redeclaring entity $entity in file $file (previously declared in {$callMap["$class--$entity"]})<br>";
 
 			if (substr($regs[2],0,1) == '"') $regs[2] = addcslashes($regs[2],'\'');
 			$mst .= '$lang[\'en_US\'][\'' . $index . '\'][\'' . $entity . '\'] = ';
@@ -1047,7 +1137,7 @@ class i18n extends Controller {
 			$mst .= "\n";
 			$content = str_replace($regs[0],"",$content);
 
-			$callMap[$index.'--'.$entity] = $regs[3];
+			$callMap["$index--$entity"] = $file;
 		}
 		
 		return $mst;
@@ -1123,17 +1213,8 @@ class i18n extends Controller {
 	 * @param string $class Resources for this class will be included, according to the set locale.
 	 */
 	static function include_by_class($class) {
-		if (substr($class,-3) == '.ss') {
-			global $_TEMPLATE_MANIFEST;
-			$path = current($_TEMPLATE_MANIFEST[substr($class,0,-3)]);
-			ereg('.*/([^/]+)/templates/',$path,$module);
-		}
-		else {
-			global $_CLASS_MANIFEST;
-			$path = $_CLASS_MANIFEST[$class];
-			ereg(Director::baseFolder() . '/([^/]+)/',$path,$module);
-		}
-		if (file_exists($file = Director::getAbsFile("{$module[1]}/lang/". self::get_locale() . '.php'))) {
+		$module = self::get_owner_module($class);
+		if (file_exists($file = Director::getAbsFile("$module/lang/". self::get_locale() . '.php'))) {
 			include_once($file);
 		} else if (self::get_locale() != 'en_US') {
 			self::set_locale('en_US');
@@ -1171,15 +1252,26 @@ class i18n extends Controller {
 		//Calculate base directory
 		$baseDir = Director::baseFolder();
 
+		// A master string tables array (one mst per module)
+		$mst = array();
+		// A list of included templates dependencies
+		$includedtpl = array();
+
 		//Search for and process existent modules, or use the passed one instead
 		if (!isset($_GET['module'])) {
 			$topLevel = scandir($baseDir);
 			foreach($topLevel as $module) {
-				self::process_module($baseDir, $module);
+				// we store the master string tables 
+				$processed = self::process_module($baseDir, $module, $includedtpl);
+				if ($processed) $mst[$module] = $processed;
 			}
 		} else {
-			self::process_module($baseDir, $_GET['module']);
+			$processed = self::process_module($baseDir, $_GET['module'], $includedtpl);
+			if ($processed) $mst[$module] = $processed;
 		}
+		
+		// Write the generated master string tables
+		self::write_mst($baseDir, $mst, $includedtpl);
 		
 		echo "Done!";
 	}
