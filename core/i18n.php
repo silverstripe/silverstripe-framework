@@ -1181,6 +1181,25 @@ class i18n extends Controller {
 	}
 	
 	/**
+	 * Enables the multilingual content feature (proxy for Translatable::enable())
+	 */
+	static function enable() {
+		Translatable::enable();
+	}
+
+	/**
+	 * Disable the multilingual content feature (proxy for Translatable::disable())
+	 */
+	static function disable() {
+		Translatable::disable();
+	}
+
+	/**
+ 	 * Include a locale file determined by module name and locale 
+ 	 * 
+ 	 * @param string $module Module that contains the locale file
+	
+	/**
 	 * Include a locale file determined by module name and locale 
 	 * 
 	 * @param string $module Module that contains the locale file
