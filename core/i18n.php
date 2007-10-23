@@ -923,11 +923,11 @@ class i18n extends Controller {
 		if (substr($name,-3) == '.ss') {
 			global $_TEMPLATE_MANIFEST;
 			$path = current($_TEMPLATE_MANIFEST[substr($name,0,-3)]);
-			ereg('.*/([^/]+)/templates/',$path,$module);
+			ereg(Director::baseFolder() . '/([^/]+)/',$path,$module);
 		} else {
 			global $_CLASS_MANIFEST;
 			$path = $_CLASS_MANIFEST[$name];
-			ereg('.*/([^/]+)/code/',$path,$module);
+			ereg(Director::baseFolder() . '/([^/]+)/',$path,$module);
 		}
 		return $module[1];
 
