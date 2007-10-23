@@ -515,11 +515,18 @@ class Security extends Controller {
 	 */
 	public static function check_default_admin($username, $password) {
 		return (
-			self::$default_username == $username
-			&& self::$default_password == $password
+			self::$default_username === $username
+			&& self::$default_password === $password
+			&& self::has_default_admin()
 		);
 	}
-
+	
+	/**
+	 * Check that the default admin account has been set.
+	 */
+	public static function has_default_admin() {
+		return !empty(self::$default_admin) && !empty(self::$default_password);		
+	}
 
 	/**
 	 * Set strict path checking
