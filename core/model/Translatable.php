@@ -112,29 +112,28 @@ class Translatable extends DataObjectDecorator {
 				self::set_reading_lang($_GET['lang']);
 			} elseif(isset($_COOKIE['lang']) && in_array(strtolower($_COOKIE['lang']),$langsAvailable)) {
 				self::set_reading_lang($_COOKIE['lang']);
-			} else if($lang = Session::get('currentLang') && in_array(strtolower($lang),$langsAvailable)) {
-				self::set_reading_lang($lang);
+			} else if(Session::get('currentLang') 
+				&& in_array(strtolower(Session::get('currentLang')),$langsAvailable)
+			) {
+				self::set_reading_lang(Session::get('currentLang'));
 			} else if (($member = Member::currentUser()) && ($lang = $member->Locale)
 				 && in_array(strtolower($lang),$langsAvailable)
 			) {
 				self::set_reading_lang($lang);			
-			} else {
-				self::set_reading_lang(self::default_lang());
 			}
 		} else {
 			if(isset($_GET['lang'])) {
 				self::set_reading_lang($_GET['lang']);
 			} elseif(isset($_COOKIE['lang'])) {
 				self::set_reading_lang($_COOKIE['lang']);
-			} else if($lang = Session::get('currentLang')) {
-				self::set_reading_lang($lang);
+			} else if(Session::get('currentLang')) {
+				self::set_reading_lang(Session::get('currentLang'));
 			} else if (($member = Member::currentUser()) && ($lang = $member->Locale)) {
 				self::set_reading_lang($lang);			
 			} else {
 				self::set_reading_lang(self::default_lang());
 			}
 		}
-		self::$language_decided = true;
 		
 		return self::$reading_lang; 
 	}
