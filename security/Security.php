@@ -525,7 +525,7 @@ class Security extends Controller {
 	 * Check that the default admin account has been set.
 	 */
 	public static function has_default_admin() {
-		return !empty(self::$default_admin) && !empty(self::$default_password);		
+		return !empty(self::$default_username) && !empty(self::$default_password);		
 	}
 
 	/**
