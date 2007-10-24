@@ -187,7 +187,7 @@ class OpenIDStorage extends Auth_OpenID_OpenIDStore {
 				"  timestamp INTEGER,\n".
 				"  salt CHAR(40),\n".
 				"  UNIQUE (server_url(255), timestamp, salt)\n".
-				")";
+				") DEFAULT CHARACTER SET latin1";
 
 		$this->sql['assoc_table'] =
 				"CREATE TABLE %s (\n".
@@ -198,7 +198,7 @@ class OpenIDStorage extends Auth_OpenID_OpenIDStore {
 				"  lifetime INTEGER,\n".
 				"  assoc_type VARCHAR(64),\n".
 				"  PRIMARY KEY (server_url(255), handle)\n".
-				")";
+				") DEFAULT CHARACTER SET latin1";
 
 		$this->sql['set_assoc'] =
 				"REPLACE INTO %s VALUES (?, ?, !, ?, ?, ?)";
