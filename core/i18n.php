@@ -1180,6 +1180,10 @@ class i18n extends Controller {
 		return Translatable::default_lang();
 	}
 	
+	static function default_locale() {
+		return self::$default_locale;
+	}
+	
 	/**
 	 * Enables the multilingual content feature (proxy for Translatable::enable())
 	 */
