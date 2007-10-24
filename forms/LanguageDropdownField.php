@@ -16,14 +16,14 @@ class LanguageDropdownField extends GroupedDropdownField {
 	 */
 	function __construct($name, $title, $dontInclude = array(), $translatingClass = 'SiteTree', $list = 'Common-English' ) {
 		$usedlangs = array_diff(
-						i18n::get_existing_content_languages($translatingClass),
-						$dontInclude
-					);
+			i18n::get_existing_content_languages($translatingClass),
+			$dontInclude
+		);
 		// we accept in dontInclude both language codes and names, so another diff is required
-		$usedlangs = array_flip(array_diff(
-						array_flip($usedlangs),
-						$dontInclude
-					));
+		$usedlangs = array_diff(
+			$usedlangs,
+			array_flip($dontInclude)
+		);
 
 		if (isset($usedlangs[Translatable::default_lang()])) unset($usedlangs[Translatable::default_lang()]);
 					
