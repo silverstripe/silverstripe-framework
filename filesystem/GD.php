@@ -357,7 +357,7 @@ class GD extends Object {
 	
 	function makeDir($dirname) {
 		if(!file_exists(dirname($dirname))) $this->makeDir(dirname($dirname));
-		if(!file_exists($dirname)) mkdir($dirname, 02775);
+		if(!file_exists($dirname)) mkdir($dirname, Filesystem::$folder_create_mask);
 	}
 	
 	function writeTo($filename) {

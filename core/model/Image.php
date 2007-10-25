@@ -130,11 +130,11 @@ class Image extends File {
 
 		// Create a folder		
 		if(!file_exists("$base/assets")) {
-			mkdir("$base/assets", 02775);
+			mkdir("$base/assets", Filesystem::$folder_create_mask);
 		}
 		
 		if(!file_exists("$base/assets/$class")) {
-			mkdir("$base/assets/$class", 02775);
+			mkdir("$base/assets/$class", Filesystem::$folder_create_mask);
 		}
 
 		// Generate default filename

@@ -12,7 +12,7 @@ class PostBackup extends Object {
 		
 		// Append to the file
 		if(!file_exists(BACKUP_DIR))
-			mkdir(BACKUP_DIR, 0775, true);
+			mkdir(BACKUP_DIR, Filesystem::$folder_create_mask, true);
 		
 		$backupFile = fopen(BACKUP_DIR . '/' . $form->class, 'a');
 		

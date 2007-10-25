@@ -21,7 +21,7 @@ class Folder extends File {
 				$item->ParentID = $parentID;
 				$item->Name = $part;
 				$item->write();
-				if(!file_exists($item->getFullPath())) mkdir($item->getFullPath(),02775);
+				if(!file_exists($item->getFullPath())) mkdir($item->getFullPath(),Filesystem::$folder_create_mask);
 			}
 			$parentID = $item->ID;
 		}

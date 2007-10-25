@@ -348,8 +348,8 @@ class i18n extends Controller {
 		'my_MM' => 'Burmese (Myanmar)',
 		'myv_RU' => 'Erzya (Russia)',
 		'na_NR' => 'Nauru (Nauru)',
-		'nb_NO' => 'Norwegian Bokmål (Norway)',
-		'nb_SJ' => 'Norwegian Bokmål (Svalbard and Jan Mayen)',
+		'nb_NO' => 'Norwegian Bokmï¿½l (Norway)',
+		'nb_SJ' => 'Norwegian Bokmï¿½l (Svalbard and Jan Mayen)',
 		'nd_ZW' => 'North Ndebele (Zimbabwe)',
 		'ndc_MZ' => 'Ndau (Mozambique)',
 		'ne_NP' => 'Nepali (Nepal)',
@@ -391,7 +391,7 @@ class i18n extends Controller {
 		'pt_TL' => 'Portuguese (East Timor)',
 		'qu_BO' => 'Quechua (Bolivia)',
 		'qu_PE' => 'Quechua (Peru)',
-		'rcf_RE' => 'Réunion Creole French (Reunion)',
+		'rcf_RE' => 'Rï¿½union Creole French (Reunion)',
 		'rej_ID' => 'Rejang (Indonesia)',
 		'rif_MA' => 'Tarifit (Morocco)',
 		'rjb_IN' => 'Rajbanshi (India)',
@@ -1024,7 +1024,7 @@ class i18n extends Controller {
 				// Create folder for lang files
 				$langFolder = $baseDir . '/' . $module . '/lang';
 				if(!file_exists($baseDir. '/' . $module . '/lang')) {
-					mkdir($langFolder, 02775);
+					mkdir($langFolder, Filesystem::$folder_create_mask);
 					touch($baseDir. '/' . $module . '/lang/_manifest_exclude');
 				}
 				

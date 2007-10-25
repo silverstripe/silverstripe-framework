@@ -1,12 +1,17 @@
 <?php
 
 class Filesystem extends Object {
+	
+	public static $file_create_mask = 02775;
+	
+	public static $folder_create_mask = 02775;
+	
 	/**
 	 * Create a folder, recursively
 	 */
 	static function makeFolder($folder) {
 		if(!file_exists($base = dirname($folder))) self::makeFolder($base);
-		if(!file_exists($folder)) mkdir($folder, 02775);
+		if(!file_exists($folder)) mkdir($folder, Filesystem::$folder_create_mask);
 	}
 	
 	/**

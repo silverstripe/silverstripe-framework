@@ -161,10 +161,10 @@ class File extends DataObject {
 
 		// Create a folder for uploading.
 		if(!file_exists("$base/assets")){
-			mkdir("$base/assets", 02775);
+			mkdir("$base/assets", Filesystem::$folder_create_mask);
 		}
 		if(!file_exists("$base/assets/Uploads")){
-			mkdir("$base/assets/Uploads", 02775);
+			mkdir("$base/assets/Uploads", Filesystem::$folder_create_mask);
 		}
 
 		// Generate default filename
