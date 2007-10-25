@@ -735,9 +735,9 @@ class DataObject extends Controller {
 	 * @return ComponentSet The components of the one-to-many relationship.
 	 */
 	public function getComponents($componentName, $filter = "", $sort = "", $join = "", $limit = "", $having = "") {
-    	// TODO Does not take different SQL-parameters into account on subsequent calls
-    	if(isset($this->componentCache[$componentName]) && false != $this->componentCache[$componentName]) {
-	    	return $this->componentCache[$componentName];
+    	$sum = md5("{$filter}_{$sort}_{$join}_{$limit}_{$having}");
+    	if(isset($this->componentCache[$componentName . '_' . $sum]) && false != $this->componentCache[$componentName . '_' . $sum]) {
+	    	return $this->componentCache[$componentName . '_' . $sum];
     	}
 
 		if(!$componentClass = $this->has_many($componentName)) {
@@ -761,7 +761,7 @@ class DataObject extends Controller {
 		// If this record isn't in the database, then we want to hold onto this specific ComponentSet,
 		// because it's the only copy of the data that we have.
 		if(!$this->isInDB()) {
-			$this->setComponent($componentName, $result);
+			$this->setComponent($componentName . '_' . $sum, $result);
 		}
 
 		return $result;
