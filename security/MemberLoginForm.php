@@ -46,24 +46,22 @@ class MemberLoginForm extends LoginForm {
 
 		if($checkCurrentUser && Member::currentUserID()) {
 			$fields = new FieldSet();
-			$actions = new FieldSet(new FormAction("logout",
-																						 "Log in as someone else"));
+			$actions = new FieldSet(new FormAction("logout", _t('Member.BUTTONLOGINOTHER', "Log in as someone else")));
 		} else {
 			if(!$fields) {
 				$fields = new FieldSet(
-					new HiddenField("AuthenticationMethod", null,
-													$this->authenticator_class, $this),
-					new TextField("Email", "E-mail address",
+					new HiddenField("AuthenticationMethod", null, $this->authenticator_class, $this),
+					new TextField("Email", _t('Member.EMAIL'),
 						Session::get('SessionForms.MemberLoginForm.Email'), null, $this),
-					new EncryptField("Password", "Password", null, $this),
-					new CheckboxField("Remember", "Remember me next time?",
+					new EncryptField("Password", _t('Member.PASSWORD'), null, $this),
+					new CheckboxField("Remember", _t('Member.REMEMBERME', "Remember me next time?"),
 						Session::get('SessionForms.MemberLoginForm.Remember'), $this)
 				);
 			}
 			if(!$actions) {
 				$actions = new FieldSet(
-					new FormAction("dologin", "Log in"),
-					new FormAction("forgotPassword", "I've lost my password")
+					new FormAction("dologin", _t('Member.BUTTONLOGIN', "Log in")),
+					new FormAction("forgotPassword", _t('Member.BUTTONLOSTPASSWORD', "I've lost my password"))
 				);
 			}
 		}
@@ -83,7 +81,7 @@ class MemberLoginForm extends LoginForm {
 		parent::getMessageFromSession();
 		if(($member = Member::currentUser()) &&
 				!Session::get('MemberLoginForm.force_message')) {
-			$this->message = "You're logged in as $member->FirstName.";
+			$this->message = sprintf(_t('Member.LOGGEDINAS', "You're logged in as %s."), $member->FirstName);
 		}
 		Session::set('MemberLoginForm.force_message', false);
 	}
@@ -146,7 +144,9 @@ class MemberLoginForm extends LoginForm {
 	public function performLogin($data) {
 		if($member = MemberAuthenticator::authenticate($data, $this)) {
 			$firstname = Convert::raw2xml($member->FirstName);
-			Session::set("Security.Message.message", "Welcome Back, {$firstname}");
+			Session::set("Security.Message.message", 
+				sprintf(_t('Member.WELCOMEBACK', "Welcome Back, %s"), $firstname)
+			);
 			Session::set("Security.Message.type", "good");
 
 			$member->LogIn(isset($data['Remember']));
@@ -180,8 +180,8 @@ class MemberLoginForm extends LoginForm {
 
 		} else if($data['Email']) {
 			$this->sessionMessage(
-				"Sorry, but I don't recognise the e-mail address. Maybe you need " .
-					"to sign up, or perhaps you used another e-mail address?",
+				_t('Member.ERRORSIGNUP', "Sorry, but I don't recognise the e-mail address. Maybe you need " .
+					"to sign up, or perhaps you used another e-mail address?"),
 				"bad");
 			Director::redirectBack();
 

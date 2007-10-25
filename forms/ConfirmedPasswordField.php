@@ -22,8 +22,8 @@ class ConfirmedPasswordField extends FormField {
 		
 		// naming with underscores to prevent values from actually being saved somewhere
 		$this->children = new FieldSet(
-			new PasswordField("{$name}[_Password]", 'Password'),
-			new PasswordField("{$name}[_ConfirmPassword]",'Confirm Password')
+			new PasswordField("{$name}[_Password]", _t('Member.PASSWORD')),
+			new PasswordField("{$name}[_ConfirmPassword]",_t('Member.CONFIRMPASSWORD', 'Confirm Password'))
 		);
 		
 		parent::__construct($name, $title, $value, $form);
@@ -156,14 +156,14 @@ JS;
 		$passwordConfirmField->setValue($_POST[$name]['_ConfirmPassword']);
 		// both password-fields should be the same
 		if($passwordField->Value() != $passwordConfirmField->Value()) {
-			$validator->validationError($name, "Passwords don't match", "validation", false);
+			$validator->validationError($name, _t('Form.VALIDATIONPASSWORDSDONTMATCH',"Passwords don't match"), "validation", false);
 			return false;
 		}
 
 		if(!$this->canBeEmpty) {
 			// both password-fields shouldn't be empty
 			if(!$passwordField->Value() || !$passwordConfirmField->Value()) {
-				$validator->validationError($name, "Passwords can't be empty", "validation", false);
+				$validator->validationError($name, _t('Form.VALIDATIONPASSWORDSNOTEMPTY', "Passwords can't be empty"), "validation", false);
 				return false;
 			}
 		}
@@ -193,7 +193,7 @@ JS;
 			if(!preg_match('/^(([a-zA-Z]+\d+)|(\d+[a-zA-Z]+))[a-zA-Z0-9]*$/',$passwordField->Value())) {
 				$validator->validationError(
 					'Password', 
-					"Passwords must have at least one digit and one alphanumeric character.", 
+					_t('Form.VALIDATIONSTRONGPASSWORD', "Passwords must have at least one digit and one alphanumeric character."), 
 					"validation", 
 					false
 				);

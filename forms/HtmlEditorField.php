@@ -232,73 +232,73 @@ class HtmlEditorField_Toolbar extends ViewableData {
 	
 	function Buttons() {
 		return new DataObjectSet(
-			new HtmlEditorField_button("Bold","bold","Bold (Ctrl+B)"),
-			new HtmlEditorField_button("Italic","italic","Italic (Ctrl+I)"),
-			new HtmlEditorField_button("Underline","underline", "Underline (Ctrl+U)"),
-			new HtmlEditorField_button("Strikethrough","strikethrough"),
+			new HtmlEditorField_button("Bold","bold",_t('HtmlEditorField.BUTTONBOLD', "Bold (Ctrl+B)")),
+			new HtmlEditorField_button("Italic","italic",_t('HtmlEditorField.BUTTONITALIC', "Italic (Ctrl+I)")),
+			new HtmlEditorField_button("Underline","underline", _t('HtmlEditorField.BUTTONUNDERLINE', "Underline (Ctrl+U)")),
+			new HtmlEditorField_button("Strikethrough","strikethrough", _t('HtmlEditorField.BUTTONSTRIKE', "strikethrough")),
 			new HtmlEditorField_separator(),
-			new HtmlEditorField_button("JustifyLeft","justifyleft","Align left"),
-			new HtmlEditorField_button("JustifyCenter","justifycenter","Align center"),
-			new HtmlEditorField_button("JustifyRight","justifyright","Align right"),
-			new HtmlEditorField_button("JustifyFull","justifyfull","Justify"),
+			new HtmlEditorField_button("JustifyLeft","justifyleft", _t('HtmlEditorField.BUTTONALIGNLEFT', "Align left")),
+			new HtmlEditorField_button("JustifyCenter","justifycenter", _t('HtmlEditorField.BUTTONALIGNCENTER', "Align center")),
+			new HtmlEditorField_button("JustifyRight","justifyright",_t('HtmlEditorField.BUTTONALIGNRIGHT',"Align right")),
+			new HtmlEditorField_button("JustifyFull","justifyfull",_t('HtmlEditorField.BUTTONALIGNJUSTIFY',"Justify")),
 			
 			/*new HtmlEditorField_dropdown("mceSetCSSClass", "styleSelect", array(
 				"mceContentBody" => "mceContentBody",
 			)),*/
 			new HtmlEditorField_dropdown("FormatBlock", "formatSelect", array(
-				"<p>" => "Paragraph",
-				"<address>" => "Address",
-				"<pre>" => "Preformatted",
-				"<h1>" => "Heading 1",
-				"<h2>" => "Heading 2",
-				"<h3>" => "Heading 3",
-				"<h4>" => "Heading 4",
-				"<h5>" => "Heading 5",
-				"<h6>" => "Heading 6",
+				"<p>" => _t('HtmlEditorField.FORMATP', "Paragraph", PR_MEDIUM, '<p> tag'),
+				"<address>" => _t('HtmlEditorField.FORMATADDR', "Address", PR_MEDIUM, '<address> tag'),
+				"<pre>" => "Preformatted",_t('HtmlEditorField.FORMATADDR', "Address", PR_MEDIUM, '<address> tag'),
+				"<h1>" => _t('HtmlEditorField.FORMATH1', "Heading 1", PR_MEDIUM, '<h1> tag'),
+				"<h2>" => _t('HtmlEditorField.FORMATH2', "Heading 2", PR_MEDIUM, '<h2> tag'),
+				"<h3>" => _t('HtmlEditorField.FORMATH3', "Heading 3", PR_MEDIUM, '<h3> tag'),
+				"<h4>" => _t('HtmlEditorField.FORMATH4', "Heading 4", PR_MEDIUM, '<h4> tag'),
+				"<h5>" => _t('HtmlEditorField.FORMATH5', "Heading 5", PR_MEDIUM, '<h5> tag'),
+				"<h6>" => _t('HtmlEditorField.FORMATH6', "Heading 6", PR_MEDIUM, '<h6> tag'),
 			)),
 			new HtmlEditorField_separator(),
-			new HtmlEditorField_button("InsertUnorderedList","bullist","Bullet-point list"),
-			new HtmlEditorField_button("InsertOrderedList","numlist","Numbered list"),
-			new HtmlEditorField_button("Outdent","outdent","Decrease outdent"),
-			new HtmlEditorField_button("Indent","indent","Increase indent"),
-			new HtmlEditorField_button("inserthorizontalrule","hr","Insert horizontal line"),
-			new HtmlEditorField_button("mceCharMap","charmap","Insert symbol"),
+			new HtmlEditorField_button("InsertUnorderedList","bullist",_t('HtmlEditorField.BULLETLIST', "Bullet-point list")),
+			new HtmlEditorField_button("InsertOrderedList","numlist",_t('HtmlEditorField.OL', "Numbered list")),
+			new HtmlEditorField_button("Outdent","outdent",_t('HtmlEditorField.OUTDENT', "Decrease outdent")),
+			new HtmlEditorField_button("Indent","indent",_t('HtmlEditorField.INDENT', "Increase indent")),
+			new HtmlEditorField_button("inserthorizontalrule","hr",_t('HtmlEditorField.HR', "Insert horizontal line")),
+			new HtmlEditorField_button("mceCharMap","charmap",_t('HtmlEditorField.CHARMAP', "Insert symbol")),
 			
 			new HtmlEditorField_break(),
 			
-			new HtmlEditorField_button("Undo","undo","Undo (Ctrl+Z)"),
-			new HtmlEditorField_button("Redo","redo","Redo (Ctrl+Y)"),
+			new HtmlEditorField_button("Undo","undo",_t('HtmlEditorField.UNDO', "Undo (Ctrl+Z)")),
+			new HtmlEditorField_button("Redo","redo",_t('HtmlEditorField.REDO', "Redo (Ctrl+Y)")),
 			new HtmlEditorField_separator(),
-			new HtmlEditorField_button("Cut","cut","Cut (Ctrl+X)"),
-			new HtmlEditorField_button("Copy","copy","Copy (Ctrl+C)"),
-			new HtmlEditorField_button("Paste","paste","Paste (Ctrl+V)"),
+			new HtmlEditorField_button("Cut","cut",_t('HtmlEditorField.CUT', "Cut (Ctrl+X)")),
+			new HtmlEditorField_button("Copy","copy",_t('HtmlEditorField.COPY', "Copy (Ctrl+C)")),
+			new HtmlEditorField_button("Paste","paste",_t('HtmlEditorField.PASTE', "Paste (Ctrl+V)")),
 			new HtmlEditorField_separator(),
 
-			new HtmlEditorField_button("ssImage","image","Insert image"),
-			new HtmlEditorField_button("ssFlash","flash:flash","Insert flash"),
+			new HtmlEditorField_button("ssImage","image",_t('HtmlEditorField.IMAGE', "Insert image")),
+			new HtmlEditorField_button("ssFlash","flash:flash",_t('HtmlEditorField.FLASH', "Insert flash")),
 			
-			new HtmlEditorField_button("ssLink","link","Insert/edit link for highlighted text"),
-			new HtmlEditorField_button("unlink","unlink","Remove link"),
-			new HtmlEditorField_button("mceInsertAnchor","anchor","Insert/edit anchor"),
+			new HtmlEditorField_button("ssLink","link",_t('HtmlEditorField.LINK', "Insert/edit link for highlighted text")),
+			new HtmlEditorField_button("unlink","unlink",_t('HtmlEditorField.UNLINK', "Remove link")),
+			new HtmlEditorField_button("mceInsertAnchor","anchor",_t('HtmlEditorField.ANCHOR', "Insert/edit anchor")),
 			new HtmlEditorField_separator(),
 
-			new HtmlEditorField_button("mceCodeEditor","code","Edit HTML Code"),
+			new HtmlEditorField_button("mceCodeEditor","code",_t('HtmlEditorField.EDITCODE', "Edit HTML Code")),
 			
 			// We don't need this because tinymce is good at auto-tidying
 			// new HtmlEditorField_button("mceCleanup","cleanup","Clean up code"),
 			
 			
-			new HtmlEditorField_button("mceToggleVisualAid","visualaid","Show/hide guidelines"),
+			new HtmlEditorField_button("mceToggleVisualAid","visualaid",_t('HtmlEditorField.VISUALAID', "Show/hide guidelines")),
 			
 			new HtmlEditorField_separator(),
 
-			new HtmlEditorField_button("mceInsertTable","table:table","Insert table"),
-			new HtmlEditorField_button("mceTableInsertRowBefore","table:table_insert_row_before","Insert row before"),
-			new HtmlEditorField_button("mceTableInsertRowAfter","table:table_insert_row_after","Insert row after"),
-			new HtmlEditorField_button("mceTableDeleteRow","table:table_delete_row","Delete row"),
-			new HtmlEditorField_button("mceTableInsertColBefore","table:table_insert_col_before","Insert column before"),
-			new HtmlEditorField_button("mceTableInsertColAfter","table:table_insert_col_after","Insert column after"),
-			new HtmlEditorField_button("mceTableDeleteCol","table:table_delete_col","Delete column")
+			new HtmlEditorField_button("mceInsertTable","table:table",_t('HtmlEditorField.INSERTTABLE', "Insert table")),
+			new HtmlEditorField_button("mceTableInsertRowBefore","table:table_insert_row_before",_t('HtmlEditorField.INSERTROWBEF', "Insert row before")),
+			new HtmlEditorField_button("mceTableInsertRowAfter","table:table_insert_row_after",_t('HtmlEditorField.INSERTROWAFTER', "Insert row after")),
+			new HtmlEditorField_button("mceTableDeleteRow","table:table_delete_row",_t('HtmlEditorField.DELETEROW', "Delete row")),
+			new HtmlEditorField_button("mceTableInsertColBefore","table:table_insert_col_before",_t('HtmlEditorField.INSERTCOLBEF', "Insert column before")),
+			new HtmlEditorField_button("mceTableInsertColAfter","table:table_insert_col_after",_t('HtmlEditorField.INSERTCOLAFTER', "Insert column after")),
+			new HtmlEditorField_button("mceTableDeleteCol","table:table_delete_col",_t('HtmlEditorField.DELETECOL', "Delete column"))
 			
 		);
 	}
@@ -312,25 +312,25 @@ class HtmlEditorField_Toolbar extends ViewableData {
 			$this->controller,
 			"{$this->name}.LinkForm", 
 			new FieldSet(
-				new OptionsetField("LinkType", "Link to", 
+				new OptionsetField("LinkType", _t('HtmlEditorField.LINKTO', "Link to"), 
 					array(
-						"internal" => "Page on the site",
-						"external" => "Another website",
-						"email" => "Email address",
-						"file" => "Download a file",			
+						"internal" => _t('HtmlEditorField.LINKINTERNAL',"Page on the site"),
+						"external" => _t('HtmlEditorField.LINKEXTERNAL',"Another website"),
+						"email" => _t('HtmlEditorField.LINKEMAIL', "Email address"),
+						"file" => _t('HtmlEditorField.LINKFILE', "Download a file"),			
 					)
 				),
-				new TreeDropdownField("internal", "Page", "SiteTree", "URLSegment"),
-				new TextField("external", "URL"),
-				new EmailField("email", "Email address"),
-				new TreeDropdownField("file","File","File", "Filename"),
-				new TextField("Description", "Link description"),
-				new CheckboxField("TargetBlank", "Open link in a new window?")
+				new TreeDropdownField("internal", _t('HtmlEditorField.PAGE', "Page"), "SiteTree", "URLSegment"),
+				new TextField("external", _t('HtmlEditorField.URL', "URL")),
+				new EmailField("email", _t('HtmlEditorField.EMAIL', "Email address")),
+				new TreeDropdownField("file",_t('HtmlEditorField.FILE', "File"),"File", "Filename"),
+				new TextField("Description", _t('HtmlEditorField.LINKDESCR', "Link description")),
+				new CheckboxField("TargetBlank", _t('HtmlEditorField.LINKOPENNEWWIN', "Open link in a new window?"))
 			),
 			new FieldSet(
-				new FormAction("insert", "Insert link"),
-				new FormAction("remove", "Remove link"),
-				new FormAction("cancel", "Cancel")
+				new FormAction("insert", _t('HtmlEditorField.BUTTONINSERTLINK', "Insert link")),
+				new FormAction("remove", _t('HtmlEditorField.BUTTONREMOVELINK', "Remove link")),
+				new FormAction("cancel", _t('HtmlEditorField.BUTTONCANCEL', "Cancel"))
 			)
 		);
 		$form->loadDataFrom($this);
@@ -340,15 +340,15 @@ class HtmlEditorField_Toolbar extends ViewableData {
 	function ImageForm() {
 		$form = new Form($this->controller, "{$this->name}.ImageForm", 
 		new FieldSet(
-			new TreeDropdownField("FolderID", "Folder", "Folder"),
+			new TreeDropdownField("FolderID", _t('HtmlEditorField.FOLDER', "Folder"), "Folder"),
 			new ThumbnailStripField("Image", "FolderID", "getimages"),
-			new TextField("AltText", "Description", "", 80),
-			new DropdownField("CSSClass", "Alignment / style", array(
-				"left" => "On the left, with text wrapping around.",
-				"right" => "On the right, with text wrapping around.",
-				"center" => "Centred, on its own.",
+			new TextField("AltText", _t('HtmlEditorField.ALTTEXT', "Description"), "", 80),
+			new DropdownField("CSSClass", _t('HtmlEditorField.CSSCLASS', "Alignment / style"), array(
+				"left" => _t('HtmlEditorField.CSSCLASSLEFT', "On the left, with text wrapping around."),
+				"right" => _t('HtmlEditorField.CSSCLASSRIGHT', "On the right, with text wrapping around."),
+				"center" => _t('HtmlEditorField.CSSCLASSCENTER', "Centred, on its own."),
 			)),
-			new FieldGroup("Dimensions",
+			new FieldGroup(_t('HtmlEditorField.IMAGEDIMENSIONS', "Dimensions"),
 				new TextField("Width", "", "", 5),
 				new TextField("Height", "x", "", 5)
 			)
@@ -367,10 +367,10 @@ class HtmlEditorField_Toolbar extends ViewableData {
 	function FlashForm() {
 		$form = new Form($this->controller, "{$this->name}.FlashForm", 
 			new FieldSet(
-				new TreeDropdownField("FolderID", "Folder", "Folder"),
+				new TreeDropdownField("FolderID", _t('HtmlEditorField.FOLDER'), "Folder"),
 				new ThumbnailStripField("Flash", "FolderID", "getflash"),
-				new TextField("Width", "Width (px)"),
-				new TextField("Height", "Height (px)")
+				new TextField('Width', _t('HtmlEditorField.IMAGEWIDTHPX', "Width (px)")),
+				new TextField('Height', _t('HtmlEditorField.IMAGEHEIGHTPX', "Height (px)"))
 			),
 			new FieldSet()
 		);

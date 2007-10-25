@@ -826,10 +826,10 @@ class SiteTree extends DataObject {
 			$urlSegment = $page->URLSegment;
 			$page->write();
 			if($urlSegment != $page->URLSegment) {
-				echo " changed $urlSegment -> $page->URLSegment";
+				echo sprintf(_t('SiteTree.LINKSCHANGEDTO', " changed %s -> %s"), $urlSegment, $page->URLSegment);
 			}
 			else {
-				echo " $urlSegment is already unique";
+				echo sprintf(_t('SiteTree.LINKSALREADYUNIQUE', " %s is already unique"), $urlSegment);
 			}
 			die();
 		}
@@ -846,10 +846,10 @@ class SiteTree extends DataObject {
 			$newURLSegment = $urlSegment . '-' . $page['ID'];
 			DB::query("UPDATE SiteTree SET URLSegment = '$newURLSegment' WHERE ID = $page[ID]");
 			if($urlSegment != $newURLSegment) {
-				echo " changed $urlSegment -> $newURLSegment";
+				echo sprintf(_t('SiteTree.LINKSCHANGEDTO'), $urlSegment, $newURLSegment);
 			}
 			else {
-				echo " $urlSegment is already unique";
+				echo sprintf(_t('SiteTree.LINKSALREADYUNIQUE'), $urlSegment);
 			}
 		}
 		echo "<p>done";
@@ -917,13 +917,14 @@ class SiteTree extends DataObject {
 					$backlinks[] = "<li><a class=\"cmsEditlink\" href=\"admin/show/$link->ID\">" .
 						$link->Breadcrumbs(null,true) . "</a></li>";
 				}
-				$backlinks = "<div style=\"clear:left\">The following pages link to this page:<ul>" .
-					implode("",$backlinks) . "</ul></div>";
+				$backlinks = "<div style=\"clear:left\">
+					" . _t('SiteTree.PAGESLINKING', 'The following pages link to this page:') . 
+					"<ul>" . implode("",$backlinks) . "</ul></div>";
 			}
 		}
 
 		if(!isset($backlinks)) {
-			$backlinks = "<p>This page hasn't been linked to from any pages.</p>";
+			$backlinks = "<p>" . _t('SiteTree.NOBACKLINKS', 'This page hasn\'t been linked to from any pages.') . "</p>";
 		}
 
 
@@ -941,7 +942,9 @@ class SiteTree extends DataObject {
 				if($parentPage->ID) {
 					$parentPageLinks[] = "<a class=\"cmsEditlink\" href=\"admin/show/$linkedPage->ID\">{$parentPage->Title}</a>";
 				} else {
-					$parentPageLinks[] = "<a class=\"cmsEditlink\" href=\"admin/show/$linkedPage->ID\">Site Content (Top Level)</a>";
+					$parentPageLinks[] = "<a class=\"cmsEditlink\" href=\"admin/show/$linkedPage->ID\">" .
+						_t('SiteTree.TOPLEVEL', 'Site Content (Top Level)') .
+						"</a>";
 				}
 			}
 
@@ -953,11 +956,14 @@ class SiteTree extends DataObject {
 					. $parentList;
 			}
 
-			$statusMessage[] = "This content also appears on the virtual pages in the $parentList sections.";
+			$statusMessage[] = sprintf(
+				_t('SiteTree.APPEARSVIRTUALPAGES', "This content also appears on the virtual pages in the %s sections."),
+				$parentList
+			);
 		}
 
 		if($this->HasBrokenLink || $this->HasBrokenFile) {
-			$statusMessage[] = "This page has broken links.";
+			$statusMessage[] = _t('SiteTree.HASBROKENLINKS', "This page has broken links.");
 		}
 
 		$message = "STATUS: $this->Status<br />";
@@ -969,29 +975,29 @@ class SiteTree extends DataObject {
 		// Lay out the fields
 		$fields = new FieldSet(
 			new TabSet("Root",
-				new TabSet("Content",
-					new Tab("Main",
-						new TextField("Title", "Page name"),
+				$tabContent = new TabSet('Content',
+					$tabMain = new Tab('Main',
+						new TextField("Title", _t('SiteTree.PAGETITLE', "Page name")),
 						/*new UniqueTextField("Title",
 								"Title",
 								"SiteTree",
 								"Another page is using that name. Page names should be unique.",
 								"Page Name"
 						),*/
-						new TextField("MenuTitle", "Navigation label"),
-						new HtmlEditorField("Content","Content")
+						new TextField("MenuTitle", _t('SiteTree.MENUTITLE', "Navigation label")),
+						new HtmlEditorField("Content", _t('SiteTree.HTMLEDITORTITLE', "Content", PR_MEDIUM, 'HTML editor title'))
 					),
-					new Tab("Meta-data",
-						new FieldGroup("URL",
+					$tabMeta = new Tab('Meta-data',
+						new FieldGroup(_t('SiteTree.URL', "URL"),
 							new LabelField("http://www.yoursite.com/"),
 							//new TextField("URLSegment",""),
 							new UniqueRestrictedTextField("URLSegment",
 								"URLSegment",
 								"SiteTree",
-								"Another page is using that URL. URL must be unique for each page",
+								_t('SiteTree.VALIDATIONURLSEGMENT1', "Another page is using that URL. URL must be unique for each page"),
 								"[^A-Za-z0-9-]+",
 								"-",
-								"URLs can only be made up of letters, digits and hyphens.",
+								_t('SiteTree.VALIDATIONURLSEGMENT2', "URLs can only be made up of letters, digits and hyphens."),
 								"",
 								"",
 								"",
@@ -999,48 +1005,91 @@ class SiteTree extends DataObject {
 							),
 							new LabelField("/")
 						),
-						new HeaderField("Search Engine Meta-tags"),
-						new TextField("MetaTitle", "Title"),
-						new TextareaField("MetaDescription", "Description"),
-						new TextareaField("MetaKeywords", "Keywords"),
-						new ToggleCompositeField("Advanced Options...",array( 
-							new TextareaField("ExtraMeta","Custom Meta Tags"), 
-							new LiteralField("", "<p>Manually specify a Priority for this page: (valid values are from 0 to 1, a zero will remove this page from the index)</p>"), 
-							new NumericField("Priority","Page Priority")), 
+						new HeaderField(_t('SiteTree.METAHEADER', "Search Engine Meta-tags")),
+						new TextField("MetaTitle", _t('SiteTree.METATITLE', "Title")),
+						new TextareaField("MetaDescription", _t('SiteTree.METADESC', "Description")),
+						new TextareaField("MetaKeywords", _t('SiteTree.METAKEYWORDS', "Keywords")),
+						new ToggleCompositeField(_t('SiteTree.METAADVANCEDHEADER', "Advanced Options..."),
+							array( 
+								new TextareaField("ExtraMeta",_t('SiteTree.METAEXTRA', "Custom Meta Tags")), 
+								new LiteralField(
+									"", 
+									"<p>" .
+									_t(
+										'SiteTree.METANOTEPRIORITY', 
+										"Manually specify a Priority for this page: 
+											(valid values are from 0 to 1, a zero will remove this page from the index)"
+									) .
+									"</p>"
+								), 
+								new NumericField("Priority", _t('SiteTree.METAPAGEPRIO', "Page Priority"))
+							), 
  							true 
-						) 
+						)
 					)
 				),
-				new Tab("Behaviour",
-					new DropdownField("ClassName", "Page type", $this->getClassDropdown()),
-					new CheckboxField("ShowInMenus", "Show in menus?"),
-					new CheckboxField("ShowInSearch", "Show in search?"),
+				$tabBehaviour = new Tab('Behaviour',
+					new DropdownField(
+						"ClassName", 
+						_t('SiteTree.PAGETYPE', "Page type", PR_MEDIUM, 'Classname of a page object'), 
+						$this->getClassDropdown()
+					),
+					new CheckboxField("ShowInMenus", _t('SiteTree.SHOWINMENUS', "Show in menus?")),
+					new CheckboxField("ShowInSearch", _t('SiteTree.SHOWINSEARCH', "Show in search?")),
 					/*, new TreeMultiselectField("MultipleParents", "Page appears within", "SiteTree")*/
-					new CheckboxField("ProvideComments", "Allow comments on this page?"),
-					new LiteralField("", "<p>Use this page as the 'home page' for the following domains: (separate multiple domains with commas)</p>"),
-					new TextField("HomepageForDomain", "Domain(s)")
+					new CheckboxField("ProvideComments", _t('SiteTree.ALLOWCOMMENTS', "Allow comments on this page?")),
+					new LiteralField(
+						"", 
+						"<p>" . 
+							_t('SiteTree.NOTEUSEASHOMEPAGE', 
+							"Use this page as the 'home page' for the following domains: 
+							(separate multiple domains with commas)") .
+						"</p>"
+					),
+					new TextField(
+						"HomepageForDomain",
+						_t('SiteTree.HOMEPAGEFORDOMAIN', "Domain(s)", PR_MEDIUM, 'Listing domains that should be used as homepage')
+					)
 				),
-				new TabSet("Reports",
-					new Tab("BackLinks",
+				$tabReports = new TabSet('Reports',
+					$tabBacklinks =new Tab('Backlinks',
 						new LiteralField("Backlinks", $backlinks)
 					)
 				),
-				new Tab("Access",
-					new HeaderField("Who can view this page on my site?", 2),
-					new OptionsetField("Viewers", "",
-														 array("Anyone" => "Anyone",
-																	 "LoggedInUsers" => "Logged-in users",
-																	 "OnlyTheseUsers" => "Only these people (choose from list)")),
-					new DropdownField("ViewersGroup", "Group", Group::map()),
-					new HeaderField("Who can edit this inside the CMS?", 2),
-					new OptionsetField("Editors", "",
-														 array("LoggedInUsers" => "Anyone who can log-in to the CMS",
-																	 "OnlyTheseUsers" => "Only these people (choose from list)")),
-					new DropdownField("EditorsGroup", "Group", Group::map())
+				$tabAccess = new Tab('Access',
+					new HeaderField(_t('SiteTree.ACCESSHEADER', "Who can view this page on my site?"), 2),
+					new OptionsetField(
+						"Viewers", 
+						"",
+						array(
+							"Anyone" => _t('SiteTree.ACCESSANYONE', "Anyone"),
+							"LoggedInUsers" => _t('SiteTree.ACCESSLOGGEDIN', "Logged-in users"),
+							"OnlyTheseUsers" => _t('SiteTree.ACCESSONLYTHESE', "Only these people (choose from list)")
+						)
+					),
+					new DropdownField("ViewersGroup", _t('SiteTree.GROUP', "Group"), Group::map()),
+					new HeaderField(_t('SiteTree.EDITHEADER', "Who can edit this inside the CMS?"), 2),
+					new OptionsetField(
+						"Editors", 
+						"",
+						array(
+							"LoggedInUsers" => _t('SiteTree.EDITANYONE', "Anyone who can log-in to the CMS"),
+							"OnlyTheseUsers" => _t('SiteTree.EDITONLYTHESE', "Only these people (choose from list)")
+						)
+					),
+					new DropdownField("EditorsGroup", _t('SiteTree.GROUP'), Group::map())
 				)
 			),
 			new NamedLabelField("Status", $message, "pageStatusMessage", true)
 		);
+		
+		$tabContent->setTitle(_t('SiteTree.TABCONTENT', "Content"));
+		$tabMain->setTitle(_t('SiteTree.TABMAIN', "Main"));
+		$tabMeta->setTitle(_t('SiteTree.TABMETA', "Meta-data"));
+		$tabBehaviour->setTitle(_t('SiteTree.TABBEHAVIOUR', "Behaviour"));
+		$tabReports->setTitle(_t('SiteTree.TABREPORTS', "Reports"));
+		$tabAccess->setTitle(_t('SiteTree.TABACCESS', "Access"));
+		$tabBacklinks->setTitle(_t('SiteTree.TABBACKLINKS', "BackLinks"));
 
 		foreach(self::$cms_additions as $extension)
 		{
@@ -1062,8 +1111,8 @@ class SiteTree extends DataObject {
 		$actions = array();
 
 		if($this->isPublished() && $this->canPublish()) {
-			$unpublish = FormAction::create('unpublish', 'Unpublish', 'delete');
-			$unpublish->describe("Remove this page from the published site");
+			$unpublish = FormAction::create('unpublish', _t('SiteTree.BUTTONUNPUBLISH', 'Unpublish'), 'delete');
+			$unpublish->describe(_t('SiteTree.BUTTONUNPUBLISHDESC', "Remove this page from the published site"));
 			$unpublish->addExtraClass('delete');
 			$actions[] = $unpublish;
 		}
@@ -1071,15 +1120,15 @@ class SiteTree extends DataObject {
 		if($this->stagesDiffer('Stage', 'Live')) {
 
 			if($this->isPublished() && $this->canEdit())	{
-				$rollback = FormAction::create('rollback', 'Cancel draft changes', 'delete');
-				$rollback->describe("Delete your draft and revert to the currently published page");
+				$rollback = FormAction::create('rollback', _t('SiteTree.BUTTONCANCELDRAFT', 'Cancel draft changes'), 'delete');
+				$rollback->describe(_t('SiteTree.BUTTONCANCELDRAFTDESC', "Delete your draft and revert to the currently published page"));
 				$rollback->addExtraClass('delete');
 				$actions[] = $rollback;
 			}
 		}
 
 		if($this->canPublish())
-			$actions[] = new FormAction('publish', 'Save & Publish');
+			$actions[] = new FormAction('publish', _t('SiteTree.BUTTONSAVEPUBLISH', 'Save & Publish'));
 
 		return new DataObjectSet($actions);
 	}
@@ -1281,9 +1330,12 @@ class SiteTree extends DataObject {
 		}
 
 		$tag =
-			($this->DeletedFromStage ? "del title=\"Removed from draft site\"" :
-			($this->AddedToStage ? "ins title=\"Added to draft site\"" :
-			($this->ModifiedOnStage ? "span title=\"Modified on draft site\" class=\"modified\"" : "")));
+			($this->DeletedFromStage ? 
+				"del title=\"" . _t('SiteTree.REMOVEDFROMDRAFT', 'Removed from draft site') . "\"" :
+			($this->AddedToStage ? 
+				"ins title=\"" . _t('SiteTree.ADDEDTODRAFT', 'Added to draft site') . "\"" :
+			($this->ModifiedOnStage ? 
+				"span title=\"" . _t('SiteTree.MODIFIEDONDRAFT', 'Modified on draft site') . "\" class=\"modified\"" : "")));
 
 		if($tag) {
 			return "<$tag>" . $this->Title . "</" . strtok($tag,' ') . ">";

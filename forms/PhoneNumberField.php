@@ -158,7 +158,7 @@ JS;
 		if(!$valid){
 			$validator->validationError(
 				$this->name, 
-				"Please enter a valid phone number",
+				_t('PhoneNumberField.VALIDATION', "Please enter a valid phone number"),
 				"validation", 
 				false
 			);

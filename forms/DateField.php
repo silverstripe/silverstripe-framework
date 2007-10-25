@@ -57,7 +57,12 @@ JS;
 	{
 		if(!empty ($this->value) && !preg_match('/^[0-9]{1,2}\/[0-9]{1,2}\/[0-90-9]{2,4}$/', $this->value))
 		{
-			$validator->validationError($this->name, "Please enter a valid  date format (DD/MM/YYYY).", "validation", false);
+			$validator->validationError(
+				$this->name, 
+				_t('DateField.VALIDDATEFORMAT', "Please enter a valid  date format (DD/MM/YYYY)."), 
+				"validation", 
+				false
+			);
 			return false;
 		}
 		return true;

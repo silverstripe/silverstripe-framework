@@ -136,7 +136,7 @@ JS;
 		if(!$valid){
 			$validator->validationError(
 				$this->name, 
-				"Please enter a valid bank number",
+				_t('Form.VALIDATIONBANKACC', "Please enter a valid bank number"),
 				"validation", 
 				false
 			);

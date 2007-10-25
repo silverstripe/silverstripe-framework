@@ -6,7 +6,7 @@
 * Note: This Only duplicates $db fields and not the $has_one etc.. 
 */
 class VirtualPage extends Page {
-	static $add_action = "a 'virtual' page that uses another page's content";
+	static $add_action = "Virtual page (another page's content)";
 	
 	static $icon = array("cms/images/treeicons/page-shortcut-gold","file");
 	
@@ -57,7 +57,11 @@ class VirtualPage extends Page {
 		$fields = parent::getCMSFields($cms);
 		
 		// Setup the linking to the original page.
-		$copyContentFromField = new TreeDropdownField("CopyContentFromID", "Choose a page to link to", "SiteTree");
+		$copyContentFromField = new TreeDropdownField(
+			"CopyContentFromID", 
+			_t('VirtualPage.CHOOSE', "Choose a page to link to"), 
+			"SiteTree"
+		);
 		$copyContentFromField->setFilterFunction(create_function('$item', 'return $item->ClassName != "VirtualPage";'));
 		
 		// Setup virtual fields
@@ -70,12 +74,16 @@ class VirtualPage extends Page {
 		}
 		
 		// Add fields to the tab
-		$fields->addFieldToTab("Root.Content.Main", new HeaderField("This is a virtual page"), "Title");
+		$fields->addFieldToTab("Root.Content.Main", 
+			new HeaderField(_t('VirtualPage.HEADER', "This is a virtual page")), 
+			"Title"
+		);
 		$fields->addFieldToTab("Root.Content.Main", $copyContentFromField, "Title");
 		
 		// Create links back to the original object in the CMS
 		if($this->CopyContentFromID) {
-			$linkToContent = "<a class=\"cmsEditlink\" href=\"admin/show/$this->CopyContentFromID\">click here to edit the content</a>";
+			$linkToContent = "<a class=\"cmsEditlink\" href=\"admin/show/$this->CopyContentFromID\">" . 
+				_t('VirtualPage.EDITCONTENT', 'click here to edit the content') . "</a>";
 			$fields->addFieldToTab("Root.Content.Main", new LabelField($linkToContent, null, true), "Title");
 		}
 	

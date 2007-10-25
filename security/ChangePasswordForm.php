@@ -27,15 +27,15 @@ class ChangePasswordForm extends Form {
 		if(!$fields) {
 			$fields = new FieldSet();
 			if(Member::currentUser()) {
-				$fields->push(new EncryptField("OldPassword","Your old password"));
+				$fields->push(new EncryptField("OldPassword",_t('Member.YOUROLDPASSWORD', "Your old password")));
 			}
 
-			$fields->push(new EncryptField("NewPassword1", "New Password"));
-			$fields->push(new EncryptField("NewPassword2", "Confirm New Password"));
+			$fields->push(new EncryptField("NewPassword1", _t('Member.NEWPASSWORD', "New Password")));
+			$fields->push(new EncryptField("NewPassword2", _t('Member.CONFIRMNEWPASSWORD', "Confirm New Password")));
 		}
 		if(!$actions) {
 			$actions = new FieldSet(
-				new FormAction("changePassword", "Change Password")
+				new FormAction("changePassword", _t('Member.BUTTONCHANGEPASSWORD', "Change Password"))
 			);
 		}
 
@@ -54,7 +54,9 @@ class ChangePasswordForm extends Form {
 			if($member->checkPassword($data['OldPassword']) == false) {
 				$this->clearMessage();
 				$this->sessionMessage(
-					"Your current password does not match, please try again", "bad");
+					_t('Member.ERRORPASSWORDNOTMATCH', "Your current password does not match, please try again"), 
+					"bad"
+				);
 				Director::redirectBack();
 			}
 		}
@@ -82,7 +84,7 @@ class ChangePasswordForm extends Form {
 
 			$this->clearMessage();
 			$this->sessionMessage(
-				"Your password has been changed, and a copy emailed to you.",
+				_t('Member.PASSWORDCHANGED', "Your password has been changed, and a copy emailed to you."),
 				"good");
 			Session::clear('AutoLoginHash');
 			Director::redirect(Security::Link('login'));
@@ -90,7 +92,7 @@ class ChangePasswordForm extends Form {
 		} else {
 			$this->clearMessage();
 			$this->sessionMessage(
-				"Your have entered your new password differently, try again",
+				_t('Member.ERRORNEWPASSWORD', "Your have entered your new password differently, try again"),
 				"bad");
 			Director::redirectBack();
 		}

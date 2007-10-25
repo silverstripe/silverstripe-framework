@@ -81,8 +81,10 @@ class OpenIDAuthenticator extends Authenticator {
 
     if(strlen($openid) == 0) {
 			if(!is_null($form)) {
-				$form->sessionMessage("Please enter your OpenID URL or your i-name.",
-															"bad");
+				$form->sessionMessage(
+					_t('OpenIDAuthenticator.ERRORCRED', "Please enter your OpenID URL or your i-name."),
+					"bad"
+				);
 			}
 			return false;
 		}
@@ -99,9 +101,13 @@ class OpenIDAuthenticator extends Authenticator {
 		$auth_request = $consumer->begin($openid);
 		if(!$auth_request) {
 			if(!is_null($form)) {
-				$form->sessionMessage("That doesn't seem to be a valid OpenID " .
-																"or i-name identifier. Please try again.",
-															"bad");
+				$form->sessionMessage(
+					_t('OpenIDAuthenticator.ERRORNOVALID',
+						"That doesn't seem to be a valid OpenID " .
+						"or i-name identifier. Please try again."
+					),
+					"bad"
+				);
 			}
 			return false;
 		}
@@ -110,11 +116,14 @@ class OpenIDAuthenticator extends Authenticator {
 		if(!($member = DataObject::get_one("Member",
 				   "Member.IdentityURL = '$SQL_identity'"))) {
 			if(!is_null($form)) {
-				$form->sessionMessage("Either your account is not enabled for " .
-																"OpenID/i-name authentication " .
-																"or the entered identifier is wrong. " .
-																"Please try again.",
-															"bad");
+				$form->sessionMessage(
+					_t('OpenIDAuthenticator.ERRORNOTENABLED', 
+						"Either your account is not enabled for " .
+						"OpenID/i-name authentication " .
+						"or the entered identifier is wrong. " .
+						"Please try again."),
+					"bad"
+				);
 			}
 			return false;
 		}
@@ -147,13 +156,15 @@ class OpenIDAuthenticator extends Authenticator {
 			} else {
 				$page_contents = array(
 					 "<html><head><title>",
-					 "OpenID transaction in progress",
+					 _t('OpenIDAuthenticator.TRANSACTIONINPROGRESS', "OpenID transaction in progress"),
 					 "</title></head>",
 					 "<body onload='document.getElementById(\"". $form_id .
 					   "\").submit()'>",
 					 $form_html,
-					 "<p>Click &quot;Continue&quot; to login. You are only seeing " .
-					 "this because you appear to have JavaScript disabled.</p>",
+					 _t('OpenIDAuthenticator.TRANSACTIONNOTE', 
+						"<p>Click &quot;Continue&quot; to login. You are only seeing " .
+					 	"this because you appear to have JavaScript disabled.</p>"
+					 ),
 					 "</body></html>");
 
 				print implode("\n", $page_contents);
@@ -224,7 +235,7 @@ class OpenIDAuthenticator_Controller extends Controller {
 
 		if($response->status == Auth_OpenID_CANCEL) {
 			Session::set("Security.Message.message",
-									 "The verification was cancelled. Please try again.");
+				_t('OpenIDAuthenticator.VERIFICATIONCANCELLED', "The verification was cancelled. Please try again."));
 			Session::set("Security.Message.type", "bad");
 
 			if(isset($_GET['debug_profile']))
@@ -234,7 +245,8 @@ class OpenIDAuthenticator_Controller extends Controller {
 
 		} else if($response->status == Auth_OpenID_FAILURE) {
 			Session::set("Security.Message.message", // use $response->message ??
-									 "The OpenID/i-name authentication failed.");
+				_t('OpenIDAuthenticator.AUTHFAILED', "The OpenID/i-name authentication failed.")
+			);
 			Session::set("Security.Message.type", "bad");
 
 			if(isset($_GET['debug_profile']))
@@ -259,7 +271,8 @@ class OpenIDAuthenticator_Controller extends Controller {
 				   "Member.IdentityURL = '$SQL_identity'")) {
 				$firstname = Convert::raw2xml($member->FirstName);
 				Session::set("Security.Message.message",
-										 "Welcome Back, {$firstname}");
+					sprintf(_t('Member.WELCOMEBACK'), $firstname)
+				);
 				Session::set("Security.Message.type", "good");
 
 				$member->LogIn(
@@ -277,7 +290,8 @@ class OpenIDAuthenticator_Controller extends Controller {
 
 			}	else {
 				Session::set("Security.Message.message",
-										 "Login failed. Please try again.");
+					_t('OpenIDAuthenticator.LOGINFAILED', "Login failed. Please try again.")
+				);
 				Session::set("Security.Message.type", "bad");
 
 				if($badLoginURL = Session::get("BadLoginURL")) {

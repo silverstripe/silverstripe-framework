@@ -121,7 +121,7 @@ JS;
 	function validate($validator) {
 		// TODO Implement server-side validation
 		if($this->value == null) {
-			$validator->validationError($this->name,"Please ensure you have set all date values","validation");
+			$validator->validationError($this->name,_t('Form.VALIDATIONALLDATEVALUES',"Please ensure you have set all date values"),"validation");
 			return false;
 		} else {
 			return true;	
@@ -136,7 +136,7 @@ JS;
 class CompositeDateField_Disabled extends DateField {
 	function setValue($val) {
 		if($val && $val != "0000-00-00") $this->value = date('d/m/Y', strtotime($val));
-		else $this->value = "(No date set)";
+		else $this->value = _t('Form.DATENOTSET', "(No date set)");
 	}
 	function Field() {
 		if($this->value) {
@@ -144,7 +144,7 @@ class CompositeDateField_Disabled extends DateField {
 			$df->setValue($this->dataValue());
 			$val = Convert::raw2xml($this->value);
 		} else {
-			$val = '<i>(not set)</i>';
+			$val = '<i>' . _t('Form.NOTSET', '(not set)') . '</i>';
 		}
 		
 		return "<span class=\"readonly\" id=\"" . $this->id() . "\">$val</span>";

@@ -47,26 +47,28 @@ class OpenIDLoginForm extends LoginForm {
 
     if($checkCurrentUser && Member::currentUserID()) {
       $fields = new FieldSet();
-      $actions = new FieldSet(new FormAction("logout",
-																						 "Log in as someone else"));
+      $actions = new FieldSet(new FormAction("logout", _t('Member.BUTTONLOGINOTHER')));
     } else {
       if(!$fields) {
         $fields = new FieldSet(
-					new LiteralField("OpenIDDescription", '
-		<div id="OpenIDDescription"><p>OpenID is an Internet-wide identity system
-		  that allows you to sign in to many websites with a single account.
-			For more information visit <a href="http://openid.net">openid.net</a>.</p></div>'),
+					new LiteralField("OpenIDDescription", 
+						_t('OpenIDLoginForm.DESC', 
+							'<div id="OpenIDDescription"><p>OpenID is an Internet-wide identity system
+		  					that allows you to sign in to many websites with a single account.
+							For more information visit <a href="http://openid.net">openid.net</a>.</p></div>
+						')
+					),
           new HiddenField("AuthenticationMethod", null,
 													$this->authenticator_class, $this),
-          new TextField("OpenIDURL", "OpenID URL",
+          new TextField("OpenIDURL", _t('OpenIDLoginForm.URL', "OpenID URL"),
 						Session::get('SessionForms.OpenIDLoginForm.OpenIDURL'), null, $this),
-          new CheckboxField("Remember", "Remember me next time?",
+          new CheckboxField("Remember", _t('Member.REMEMBERME'),
 						Session::get('SessionForms.OpenIDLoginForm.Remember'), $this)
         );
       }
       if(!$actions) {
         $actions = new FieldSet(
-          new FormAction("dologin", "Log in")
+          new FormAction("dologin", _t('Member.BUTTONLOGIN'))
         );
       }
     }
@@ -86,7 +88,7 @@ class OpenIDLoginForm extends LoginForm {
     parent::getMessageFromSession();
     if(($member = Member::currentUser()) &&
          !Session::get('OpenIDLoginForm.force_message')) {
-      $this->message = "You're logged in as $member->FirstName.";
+      $this->message = sprintf(_t('Member.LOGGEDINAS'), $member->FirstName);
     }
     Session::set('OpenIDLoginForm.force_message', false);
   }

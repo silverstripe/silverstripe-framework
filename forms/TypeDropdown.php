@@ -8,7 +8,7 @@ class TypeDropdown extends DropdownField {
 		
 		$options = DataObject::get( $className );
 		
-		$optionArray = array( '0' => 'None' );
+		$optionArray = array( '0' => _t('TypeDropdown.NONE', 'None') );
 		
 		foreach( $options as $option )
 			$optionArray[$option->ID] = $option->Title;

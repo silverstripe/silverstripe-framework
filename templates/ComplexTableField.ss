@@ -13,9 +13,9 @@
 						<span class="sortLink <% if SortBy %><% else %>sortLinkHidden<% end_if %>">
 							<a href="$SortLink"">
 								<% if SortDirection = desc %>
-								<img src="cms/images/bullet_arrow_up.png" alt="Sort ascending" />
+								<img src="cms/images/bullet_arrow_up.png" alt="<% _t('SORTASC', 'Sort ascending') %>" />
 								<% else %>
-								<img src="cms/images/bullet_arrow_down.png" alt="Sort descending" />
+								<img src="cms/images/bullet_arrow_down.png" alt="<% _t('SORTDESC', 'Sort descending') %>" />
 								<% end_if %>
 							</a>
 							&nbsp;
@@ -47,7 +47,7 @@
 			<tr>
 				<% if Markable %><td width="18">&nbsp;</td><% end_if %>
 				<td colspan="$ItemCount">
-					<a class="popuplink addlink" href="$AddLink" alt="add"><img src="cms/images/add.gif" alt="add" />Add $Title</a>
+					<a class="popuplink addlink" href="$AddLink" alt="add"><img src="cms/images/add.gif" alt="add" /><% _t('ADDITEM', 'Add', PR_MEDIUM, 'Add [name]') %> $Title</a>
 				</td>
 				<% if Can(show) %><td width="18">&nbsp;</td><% end_if %>
 				<% if Can(edit) %><td width="18">&nbsp;</td><% end_if %>
@@ -64,20 +64,20 @@
 					<td>$Value</td>
 					<% end_control %>
 					<% if Can(show) %>
-						<td width="18"><a class="popuplink showlink" href="$ShowLink" target="_blank"><img src="cms/images/show.png" alt="show" /></a></td>
+						<td width="18"><a class="popuplink showlink" href="$ShowLink" target="_blank"><img src="cms/images/show.png" alt="<% _t('SHOW', 'show') %>" /></a></td>
 					<% end_if %>
 					<% if Can(edit) %>
-						<td width="18"><a class="popuplink editlink" href="$EditLink" target="_blank"><img src="cms/images/edit.gif" alt="edit" /></a></td>
+						<td width="18"><a class="popuplink editlink" href="$EditLink" target="_blank"><img src="cms/images/edit.gif" alt="<% _t('EDIT', 'edit') %>" /></a></td>
 					<% end_if %>
 					<% if Can(delete) %>
-						<td width="18"><a class="deletelink" href="$DeleteLink" title="Delete this row"><img src="cms/images/delete.gif" alt="delete" /></a></td>
+						<td width="18"><a class="deletelink" href="$DeleteLink" title="<% _t('DELETEROW', 'Delete this row') %>"><img src="cms/images/delete.gif" alt="<% _t('DELETE', 'delete') %>" /></a></td>
 					<% end_if %>
 				</tr>
 			<% end_control %>
 			<% else %>
 				<tr class="notfound">
 					<% if Markable %><th width="18">&nbsp;</th><% end_if %>
-					<td colspan="$Headings.Count"><i>No items found</i></td>
+					<td colspan="$Headings.Count"><i><% _t('NOITEMSFOUND', 'No items found') %></i></td>
 					<% if Can(show) %><td width="18">&nbsp;</td><% end_if %>
 					<% if Can(edit) %><td width="18">&nbsp;</td><% end_if %>
 					<% if Can(delete) %><td width="18">&nbsp;</td><% end_if %>

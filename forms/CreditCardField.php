@@ -82,7 +82,15 @@ JS;
 					case 2: $number = "third"; break;
 					case 3: $number = "fourth"; break;
 				}
-				$validator->validationError($this->name,"Please ensure you have entered the " . $number . " credit card number correctly.","validation",false);
+				$validator->validationError(
+					$this->name,
+					sprintf(
+						_t('Form.VALIDATIONCREDITNUMBER', "Please ensure you have entered the %s credit card number correctly."),
+						$number
+					),
+					"validation",
+					false
+				);
 				return false;
 			}
 		$i++;

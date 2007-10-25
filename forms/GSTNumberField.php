@@ -39,7 +39,7 @@ JS;
 		if(!$valid){
 			$validator->validationError(
 				$this->name, 
-				"Please enter a valid GST Number",
+				_t('GSTNumberField.VALIDATION', "Please enter a valid GST Number"),
 				"validation", 
 				false
 			);

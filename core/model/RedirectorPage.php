@@ -46,44 +46,66 @@ class RedirectorPage extends Page {
 	function getCMSFields() {
 		Requirements::javascript("sapphire/javascript/RedirectorPage.js");
 		
-    	return new FieldSet(
+    	$fields = new FieldSet(
 			new TabSet("Root",
-				new Tab("Content",
-					new TextField("Title", "Page name"),
-					new TextField("MenuTitle", "Navigation label"),
-					new FieldGroup("URL",
+				$tabContent = new Tab("Content",
+					new TextField("Title", _t('SiteTree.PAGETITLE')),
+					new TextField("MenuTitle", _t('SiteTree.MENUTITLE')),
+					new FieldGroup(_t('SiteTree.URL'),
 						new LabelField("http://www.yoursite.com/"),
 						new TextField("URLSegment",""),
 						new LabelField("/")
 					),
-					new HeaderField("This page will redirect users to another page"),
-					new OptionsetField("RedirectionType", "Redirect to", array(
-						"Internal" => "A page on your website",
-						"External" => "Another website",
-					), "Internal"),
-					new TreeDropdownField("LinkToID", "Page on your website", "SiteTree"),
-					new TextField("ExternalURL", "Other websiteURL"),
-					new TextareaField("MetaDescription", "Meta Description")
+					new HeaderField(_t('RedirectorPage.HEADER', "This page will redirect users to another page")),
+					new OptionsetField(
+						"RedirectionType", 
+						_t('RedirectorPage.REDIRECTTO', "Redirect to"), 
+						array(
+							"Internal" => _t('RedirectorPage.REDIRECTTOPAGE', "A page on your website"),
+							"External" => _t('RedirectorPage.REDIRECTTOEXTERNAL', "Another website"),
+						), 
+						"Internal"
+					),
+					new TreeDropdownField(	
+						"LinkToID", 
+						_t('RedirectorPage.YOURPAGE', "Page on your website"), 
+						"SiteTree"
+					),
+					new TextField("ExternalURL", _t('RedirectorPage.OTHERURL', "Other website URL")),
+					new TextareaField("MetaDescription", _t('SiteTree.METADESC'))
 				),
-				new Tab("Behaviour",
-					new DropdownField("ClassName", "Page type", $this->getClassDropdown()),
-					new CheckboxField("ShowInMenus", "Show in menus?"),
-					new CheckboxField("ShowInSearch", "Show in search?")
+				$tabBehaviour = new Tab("Behaviour",
+					new DropdownField("ClassName", _t('SiteTree.PAGETYPE'), $this->getClassDropdown()),
+					new CheckboxField("ShowInMenus", _t('SiteTree.SHOWINMENUS')),
+					new CheckboxField("ShowInSearch", _t('SiteTree.SHOWINSEARCH'))
 				)
 			)
 		);
+		
+		$tabContent->setTitle(_t('SiteTree.TABCONTENT'));
+		$tabBehaviour->setTitle(_t('SiteTree.TABBEHAVIOUR'));
+		
+		return $fields;
 	}
 }
 
 class RedirectorPage_Controller extends Page_Controller {
 	function init() {
 		if($this->RedirectionType == 'External') {
-			if($this->ExternalURL) Director::redirect($this->ExternalURL);
-			else echo "<p>A redirector page has been set up without anywhere to redirect to.</p>";
+			if($this->ExternalURL) {
+				Director::redirect($this->ExternalURL);
+			} else {
+				echo "<p>" .
+					_t('RedirectorPage.HASBEENSETUP', 'A redirector page has been set up without anywhere to redirect to.') .
+					"</p>";
+			}
 		} else {
 			$linkTo = DataObject::get_by_id("SiteTree", $this->LinkToID);
-			if($linkTo) Director::redirect($linkTo->Link());
-			else echo "<p>A redirector page has been set up without anywhere to redirect to.</p>";
+			if($linkTo) {
+				Director::redirect($linkTo->Link());
+			} else {
+				echo "<p>" . _t('RedirectorPage.HASBEENSETUP') . "</p>";
+			}
 		}
 		
 		parent::init();

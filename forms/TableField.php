@@ -563,7 +563,12 @@ JS;
 					if($fieldObj = $fields->dataFieldByName($cellName)) {
 						if(!trim($fieldObj->Value())){
 							$title = $fieldObj->Title();
-							$errorMessage .= "In $this->name '$title' is required.<br />";
+							$errorMessage .= sprintf(
+								_t('TableField.ISREQUIRED', "In %s '%s' is required."),
+								$this->name,
+								$title
+							);
+							$errorMessage .= "<br />";
 						}
 					}
 				}

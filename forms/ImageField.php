@@ -28,7 +28,7 @@ class ImageField extends FileField {
 
 			return $iframe . $hiddenField;
 		} else {
-			$this->value = 'You can add images once you have saved for the first time.';
+			$this->value = _t('ImageField.NOTEADDIMAGES', 'You can add images once you have saved for the first time.');
 			return FormField::Field();
 		}
 	}

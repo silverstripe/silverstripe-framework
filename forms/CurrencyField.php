@@ -64,7 +64,7 @@ JS;
 
 	function validate() {
 		if(!empty ($this->value) && !preg_match('/^\$?(\d{1,3}(\,\d{3})*|(\d+))(\.\d{2})?$/', $this->value)) {
-			$validator->validationError($this->name, "Please enter a valid currency.", "validation", false);
+			$validator->validationError($this->name, _t('Form.VALIDCURRENCY', "Please enter a valid currency."), "validation", false);
 			return false;
 		}
 		return true;

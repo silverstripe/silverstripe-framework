@@ -102,7 +102,7 @@ JS;
 		$result = DB::query( "SELECT COUNT(*) FROM " . $this->restrictedTable . " WHERE " . $this->restrictedField . " = '" . $this->value . "'" )->value();
 
 		if( $result && ( $result > 0 ) ) {
-			$validator->validationError( $this->name, "The value entered is not unique" );
+			$validator->validationError( $this->name, _t('Form.VALIDATIONNOTUNIQUE', "The value entered is not unique") );
 			return false;
 		}
 

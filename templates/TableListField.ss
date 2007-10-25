@@ -20,9 +20,9 @@
 					<span class="sortLink <% if SortBy %><% else %>sortLinkHidden<% end_if %>">
 						<a href="$SortLink"">
 							<% if SortDirection = desc %>
-							<img src="cms/images/bullet_arrow_up.png" alt="Sort ascending" />
+							<img src="cms/images/bullet_arrow_up.png" alt="<% _t('SORTASC') %>" />
 							<% else %>
-							<img src="cms/images/bullet_arrow_down.png" alt="Sort descending" />
+							<img src="cms/images/bullet_arrow_down.png" alt="<% _t('SORTDESC') %>" />
 							<% end_if %>
 						</a>
 						&nbsp;
@@ -63,12 +63,12 @@
 				<% else %>
 					<tr class="notfound">
 						<% if Markable %><th width="18">&nbsp;</th><% end_if %>
-						<td colspan="$Headings.Count"><i>No items found</i></td>
+						<td colspan="$Headings.Count"><i><% _t('NOITEMSFOUND') %></i></td>
 						<% if Can(delete) %><td width="18">&nbsp;</td><% end_if %>
 					</tr>
 				<% end_if %>
 				<% if Can(add) %>
-					$AddRecordForm.AsTableRow
+					$AddRecordAsTableRow
 				<% end_if %>
 			<% end_if %>
 		</tbody>

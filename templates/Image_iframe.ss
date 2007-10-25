@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" >
 	<head>
 		<% base_tag %>
-		<title>Image Uploading Iframe</title>
+		<title><% _t('TITLE', 'Image Uploading Iframe') %></title>
 	</head>
 
 	<body>

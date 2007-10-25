@@ -48,7 +48,7 @@ class ErrorPage extends Page {
 			"Root.Content.Main", 
 			new DropdownField(
 				"ErrorCode",
-				"Error code",
+				_t('ErrorPage.CODE', "Error code"),
 				array(
 					404 => "404 - Page not found",
 					500 => "500 - Server error"

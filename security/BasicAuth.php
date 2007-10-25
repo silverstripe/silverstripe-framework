@@ -25,9 +25,9 @@ class BasicAuth extends Object {
 			header('HTTP/1.0 401 Unauthorized');
 
 			if(isset($_SERVER['PHP_AUTH_USER'])) {
-				echo "That username / password isn't recognised";
+				echo _t('BasicAuth.ERRORNOTREC', "That username / password isn't recognised");
 			} else {
-				echo "Please enter a username and password.";
+				echo _t('BasicAuth.ENTERINFO', "Please enter a username and password.");
 			}
 			
 			die();
@@ -38,7 +38,7 @@ class BasicAuth extends Object {
 			header('HTTP/1.0 401 Unauthorized');
 
 			if(isset($_SERVER['PHP_AUTH_USER'])) {
-				echo "That user is not an administrator.";
+				echo _t('BasicAuth.ERRORNOTADMIN', "That user is not an administrator.");
 			}
 			
 			die();

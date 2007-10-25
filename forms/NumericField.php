@@ -42,7 +42,14 @@ JS;
 	/** PHP Validation **/
 	function validate($validator){
 		if($this->value && !is_numeric($this->value)){
- 			$validator->validationError($this->name,"'$this->value' is not a number, only numbers can be accepted for this field","validation");
+ 			$validator->validationError(
+ 				$this->name,
+				sprintf(
+					_t('NumericField.VALIDATION', "'%s' is not a number, only numbers can be accepted for this field"),
+					$this->value
+				),
+				"validation"
+			);
 			return false;
 		} else{
 			return true;

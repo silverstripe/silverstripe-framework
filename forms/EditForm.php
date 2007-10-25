@@ -10,7 +10,7 @@ class EditForm extends Form {
 	  $this->data = $controller->data();
 		
 	  $actions = new FieldSet(
-		  new FormAction("save", "Save Changes")
+		  new FormAction("save", _t('Form.SAVECHANGES', "Save Changes"))
 	  );
 		
 		$sequential = $fields->dataFields();

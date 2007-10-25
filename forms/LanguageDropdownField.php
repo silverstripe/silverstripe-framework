@@ -45,9 +45,11 @@ class LanguageDropdownField extends GroupedDropdownField {
 		asort($alllangs);
 		if (count($usedlangs)) {
 			asort($usedlangs);
+			$labelAvail = _t('Form.LANGAVAIL', "Available languages");
+			$labelOther = _t('Form.LANGAOTHER', "Other languages");
 			parent::__construct($name, $title, array(
-					"Available languages" => $usedlangs,
-					"Other languages" => $alllangs
+					$labelAvail => $usedlangs,
+					$labelOther => $alllangs
 				),
 				reset($usedlangs)
 			);

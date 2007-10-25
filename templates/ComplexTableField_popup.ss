@@ -15,7 +15,7 @@
 						<% if PopupPrevLink %>
 							<td id="ComplexTableField_Pagination_Previous">
 								<a href="$PopupPrevLink"><img src="cms/images/pagination/record-prev.png" /></a>
-								<a href="$PopupPrevLink"><div>Previous</div></a>
+								<a href="$PopupPrevLink"><div><% _t('PREVIOUS', 'Previous') %></div></a>
 							</td>
 						<% end_if %>
 						<% if TotalCount == 1 %>
@@ -33,7 +33,7 @@
 						<% if PopupNextLink %>
 							<td id="ComplexTableField_Pagination_Next">
 								<a href="$PopupNextLink"><img src="cms/images/pagination/record-next.png" /></a>
-								<a href="$PopupNextLink"><div>Next</div></a>
+								<a href="$PopupNextLink"><div><% _t('NEXT', 'Next') %></div></a>
 							</td>
 						<% end_if %>
 					</td>

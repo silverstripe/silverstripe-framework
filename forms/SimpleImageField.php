@@ -61,7 +61,7 @@ class SimpleImageField_Disabled extends FormField {
 	      elseif($imageField->CMSThumbnail()) $field .= "<img src=\"".$imageField->CMSThumbnail()->URL()."\" />";
 	      else {} // This shouldn't be called but it sometimes is for some reason, so we don't do anything
 	    }else{
-	    	$field .= "<label>No Image Uploaded</label>";
+	    	$field .= "<label>" . _t('SimpleImageField.NOUPLOAD', 'No Image Uploaded') . "</label>";
 	    }
 	    $field .= "</div>";
 	    return $field;

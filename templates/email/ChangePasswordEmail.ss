@@ -1,6 +1,11 @@
-<p>Hi $FirstName,</p>
+<p><% _t('HELLO', 'Hi')) %> $FirstName,</p>
 
-<p>You changed your password for $BaseHref.<br />
-  You can now use the following credentials to log in:</p>
-<p>E-mail: $Email<br />
-  Password: $CleartextPassword</p>
+<p>
+	<% _t('CHANGEPASSWORDTEXT1', 'You changed your password for', PR_MEDIUM, 'for a url') %>$BaseHref.<br />
+	<% _t('CHANGEPASSWORDTEXT2', 'You can now use the following credentials to log in:')
+</p>
+
+<p>
+	<% _t('EMAIL') %>: $Email<br />
+	<% _t('PASSWORD') %>: $CleartextPassword
+</p>

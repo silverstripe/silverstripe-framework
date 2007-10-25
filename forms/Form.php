@@ -418,7 +418,7 @@ class Form extends ViewableData {
 				if(Director::is_ajax()) {
 					// Send validation errors back as JSON with a flag at the start
 					//echo "VALIDATIONERROR:" . Convert::array2json($errors);
-					FormResponse::status_message('Validation failed', 'bad');
+					FormResponse::status_message(_t('Form.VALIDATIONFAILED', 'Validation failed'), 'bad');
 					foreach($errors as $error) {
 						FormResponse::add(sprintf(
 							"validationError('%s', '%s', '%s');\n",

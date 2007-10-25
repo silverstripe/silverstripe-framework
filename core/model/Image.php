@@ -507,34 +507,43 @@ class Image_Uploader extends Controller {
 	 */
 	function EditImageForm() {
 		$isImage = $this->IsImage();
-		$type =  $isImage ? "Image" : "File";
+		$type =  $isImage ? _t('Controller.IMAGE', "Image") : _t('Controller.FILE', "File");
 		if($this->Image()->ID) {
-			$title = "Replace " . $type;
-			$fromYourPC = "With one from your computer";
-			$fromTheDB = "With one from the file store";
+			$title = sprintf(
+				_t('ImageUploader.REPLACE', "Replace %s", PR_MEDIUM, 'Replace file/image'), 
+				$type
+			);
+			$fromYourPC = _t('ImageUploader.ONEFROMCOMPUTER', "With one from your computer");
+			$fromTheDB = _t('ImageUplaoder.ONEFROMFILESTORE', "With one from the file store");
 		} else {
-			$title = "Attach ". $type;
-			$fromYourPC = "From your computer";
-			$fromTheDB = "From the file store";
+			$title = sprintf(
+				_t('ImageUploader.ATTACH', "Attach %s", PR_MEDIUM, 'Attach image/file'),
+				$type
+			);
+			$fromYourPC = _t('ImageUploader.FROMCOMPUTER', "From your computer");
+			$fromTheDB = _t('ImageUploader.FROMFILESTORE', "From the file store");
 		}
-		return new Form($this, 'EditImageForm', new FieldSet(
-			new HiddenField("Class", null, $this->urlParams['Class']),
-			new HiddenField("ID", null, $this->urlParams['ID']),
-			new HiddenField("Field", null, $this->urlParams['Field']),
-			new HeaderField($title),
-			new SelectionGroup("ImageSource", array(
-				"new//$fromYourPC" => new FieldGroup("",
-					new FileField("Upload","")
-				),
-				"existing//$fromTheDB" => new FieldGroup("",
-					new TreeDropdownField("ExistingFile", "","File")
-				)
-			))
-		),
-		
-		new FieldSet(
-			new FormAction("save",$title)
-		));
+		return new Form(
+			$this, 
+			'EditImageForm', 
+			new FieldSet(
+				new HiddenField("Class", null, $this->urlParams['Class']),
+				new HiddenField("ID", null, $this->urlParams['ID']),
+				new HiddenField("Field", null, $this->urlParams['Field']),
+				new HeaderField($title),
+				new SelectionGroup("ImageSource", array(
+					"new//$fromYourPC" => new FieldGroup("",
+						new FileField("Upload","")
+					),
+					"existing//$fromTheDB" => new FieldGroup("",
+						new TreeDropdownField("ExistingFile", "","File")
+					)
+				))
+			),
+			new FieldSet(
+				new FormAction("save",$title)
+			)
+		);
 	}
 	
 	/**
@@ -543,13 +552,19 @@ class Image_Uploader extends Controller {
 	 */
 	function EditImageSimpleForm() {
 		$isImage = $this->IsImage();
-		$type =  $isImage ? "Image" : "File";
+		$type =  $isImage ? _t('Controller.IMAGE') : _t('Controller.FILE');
 		if($this->Image()->ID) {
-			$title = "Replace " . $type;
-			$fromYourPC = "With one from your computer";
+			$title = sprintf(
+				_t('ImageUploader.REPLACE'), 
+				$type
+			);
+			$fromYourPC = _t('ImageUploader.ONEFROMCOMPUTER');
 		} else {
-			$title = "Attach". $type;
-			$fromTheDB = "From the file store";
+			$title = sprintf(
+				_t('ImageUploader.ATTACH'), 
+				$type
+			);
+			$fromTheDB = _t('ImageUploader.ONEFROMFILESTORE');
 		}
 		
 		return new Form($this, 'EditImageSimpleForm', new FieldSet(
@@ -570,15 +585,35 @@ class Image_Uploader extends Controller {
 	function DeleteImageForm() {
 		if($this->Image()->ID) {
 			$isImage = $this->IsImage();
-			$type =  $isImage ? "Image" : "File";
-			$title = "Delete " . $type;
-			return new Form($this,'DeleteImageForm', new FieldSet(
-				new HiddenField("ID", null, $this->urlParams['ID']),
-				new HeaderField($title),
-				new LabelField("Click the button below to remove this $type.")
+			$type =  $isImage ? _t('Controller.IMAGE') : _t('Controller.FILE');
+			$title = sprintf(
+				_t('ImageUploader.DELETE', 'Delete %s', PR_MEDIUM, 'Delete file/image'), 
+				$type
+			);
+			return new Form(
+				$this,
+				'DeleteImageForm', 
+				new FieldSet(
+					new HiddenField("ID", null, $this->urlParams['ID']),
+					new HeaderField($title),
+					new LabelField(
+						sprintf(
+							_t(
+								'ImageUploader.CLICKREMOVE',
+								"Click the button below to remove this %s.",
+								PR_MEDIUM,
+								'... this image/file'
+							),
+							$type
+						)
+					)
 				),
 				new FieldSet(
-					new ConfirmedFormAction("delete",$title, "Do you really want to remove this $type?")
+					new ConfirmedFormAction(
+						"delete",
+						$title, 
+						sprintf(_t('ImageUploader.REALLYDELETE', "Do you really want to remove this %s?"), $type)
+					)
 				)
 			);
 		}

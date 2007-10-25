@@ -64,13 +64,20 @@ class OpenIDAuthenticatedRole extends DataObjectDecorator {
 	 * to edit the new database fields.
 	 */
 	function updateCMSFields(FieldSet &$fields) {
-		$fields->push(new HeaderField("OpenID/i-name credentials"), "OpenIDHeader");
-		$fields->push(new LiteralField("OpenIDDescription",
-			"<p>Make sure you enter your normalized OpenID/i-name credentials " .
-			"here, i.e. with protocol and trailing slash for OpenID (e.g. " .
-			"http://openid.silverstripe.com/).</p>"));
-		$fields->push(new TextField("IdentityURL", "OpenID URL/i-name"),
-									              "IdentityURL");
+		$fields->push(
+			new HeaderField(_t('Security.OPENIDHEADER', "OpenID/i-name credentials")), 
+			"OpenIDHeader"
+		);
+		$fields->push(
+			new LiteralField("OpenIDDescription",
+				_t('Security.OPENIDDESC',"<p>Make sure you enter your normalized OpenID/i-name credentials 
+				here, i.e. with protocol and trailing slash for OpenID (e.g. http://openid.silverstripe.com/).</p>")
+			)
+		);
+		$fields->push(
+			new TextField("IdentityURL", _t('Security.OPENIDURL', "OpenID URL/i-name")),
+			"IdentityURL"
+		);
 	}
 
 
@@ -132,7 +139,7 @@ class OpenIDAuthenticatedRole_Validator extends Extension {
 		if(is_object($member) && $member->ID != $id) {
 			$field = $form->dataFieldByName('IdentityURL');
 			$this->owner->validationError($field->id(),
-				"There already exists a member with this identity URL",
+				_t('Security.MEMBERALREADYEXISTS', "There already exists a member with this identity URL"),
 				"required");
 			return false;
 		}

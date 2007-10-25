@@ -103,9 +103,18 @@ class Security extends Controller {
 		// Prepare the messageSet provided
 		if(!$messageSet) {
 			$messageSet = array(
-				'default' => "That page is secured. Enter your credentials below and we will send you right along.",
-				'alreadyLoggedIn' => "You don't have access to this page.  If you have another account that can access that page, you can log in below.",
-				'logInAgain' => "You have been logged out.  If you would like to log in again, enter your credentials below.",
+				'default' => _t(
+					'Security.NOTEPAGESECURED', 
+					"That page is secured. Enter your credentials below and we will send you right along."
+				),
+				'alreadyLoggedIn' => _t(
+					'Security.ALREADYLOGGEDIN', 
+					"You don't have access to this page.  If you have another account that can access that page, you can log in below."
+				),
+				'logInAgain' => _t(
+					'Security.LOGGEDOUT',
+					"You have been logged out.  If you would like to log in again, enter your credentials below."
+				),
 			);
 		} else if(!is_array($messageSet)) {
 			$messageSet = array('default' => $messageSet);
@@ -315,14 +324,18 @@ class Security extends Controller {
 		Requirements::javascript('jsparty/scriptaculous/effects.js');
 
 		$tmpPage = new Page();
-		$tmpPage->Title = 'Lost Password';
+		$tmpPage->Title = _t('Security.LOSTPASSWORDHEADER', 'Lost Password');
 		$tmpPage->URLSegment = 'Security';
 		$controller = new Page_Controller($tmpPage);
 
 		$customisedController = $controller->customise(array(
-			'Content' =>
-				'<p>Enter your e-mail address and we will send you a link with ' .
-				'which you can reset your password</p>',
+			'Content' => 
+				'<p>' . 
+				_t(
+					'Security.NOTERESETPASSWORD', 
+					'Enter your e-mail address and we will send you a link with which you can reset your password'
+				) . 
+				'</p>',
 			'Form' => $this->LostPasswordForm(),
 		));
 		
@@ -338,9 +351,11 @@ class Security extends Controller {
 	 */
 	public function LostPasswordForm() {
 		return new MemberLoginForm($this, 'LostPasswordForm',
-			new FieldSet(new EmailField('Email', 'E-mail address')),
-			new FieldSet(new FormAction('forgotPassword',
-																	'Send me the password reset link')),
+			new FieldSet(new EmailField('Email', _t('Member.EMAIL'))),
+			new FieldSet(new FormAction(
+				'forgotPassword',
+				_t('Security.BUTTONSEND', 'Send me the password reset link')
+			)),
 			false);
 	}
 
@@ -358,15 +373,17 @@ class Security extends Controller {
 		Requirements::javascript('jsparty/scriptaculous/effects.js');
 
 		$tmpPage = new Page();
-		$tmpPage->Title = 'Lost Password';
+		$tmpPage->Title = _t('Security.LOSTPASSWORDHEADER');
 		$tmpPage->URLSegment = 'Security';
 		$controller = new Page_Controller($tmpPage);
 
 		$email = Convert::raw2xml($this->urlParams['ID']);
 		$customisedController = $controller->customise(array(
-			'Title' => "Password reset link sent to '$email'",
+			'Title' => sprintf(_t('Security.PASSWORDSENTHEADER', "Password reset link sent to '%s'"), $email),
 			'Content' =>
-				"<p>Thank you! The password reset link has been sent to '$email'.</p>",
+				"<p>" . 
+				sprintf(_t('Security.PASSWORDSENTTEXT', "Thank you! The password reset link has been sent to '%s'."), $email) .
+				"</p>",
 		));
 		
 		//Controller::$currentController = $controller;
@@ -391,7 +408,7 @@ class Security extends Controller {
 	 */
 	public function changepassword() {
 		$tmpPage = new Page();
-		$tmpPage->Title = 'Change your password';
+		$tmpPage->Title = _t('Security.CHANGEPASSWORDHEADER', 'Change your password');
 		$tmpPage->URLSegment = 'Security';
 		$controller = new Page_Controller($tmpPage);
 
@@ -401,29 +418,39 @@ class Security extends Controller {
 
 			$customisedController = $controller->customise(array(
 				'Content' =>
-					'<p>Please enter a new password.</p>',
+					'<p>' . 
+					_t('Security.ENTERNEWPASSWORD', 'Please enter a new password.') .
+					'</p>',
 				'Form' => $this->ChangePasswordForm(),
 			));
 
 		} elseif(Member::currentUser()) {
 			// let a logged in user change his password
 			$customisedController = $controller->customise(array(
-				'Content' => '<p>You can change your password below.</p>',
+				'Content' => '<p>' . _t('Security.CHANGEPASSWORDBELOW', 'You can change your password below.') . '</p>',
 				'Form' => $this->ChangePasswordForm()));
 
 		} else {
 			// show an error message if the auto login hash is invalid and the
 			// user is not logged in
 			if(isset($_REQUEST['h'])) {
-				$customisedController = $controller->customise(array('Content' =>
-					"<p>The password reset link is invalid or expired.</p>\n" .
-						'<p>You can request a new one <a href="' .
-						$this->Link('lostpassword') .
-						'">here</a> or change your password after you <a href="' .
-						$this->link('login') . '">logged in</a>.</p>'));
+				$customisedController = $controller->customise(
+					array('Content' =>
+						sprintf(
+							_t('Security.NOTERESETLINKINVALID',
+								"<p>The password reset link is invalid or expired.</p>\n" .
+								'<p>You can request a new one <a href="%s">here</a> or change your password after you <a href="%s">logged in</a>.</p>'
+							),
+							$this->Link('lostpassword'),
+							$this->link('login')
+						)
+					)
+				);
 			} else {
-				self::permissionFailure($this,
-					'You must be logged in in order to change your password!');
+				self::permissionFailure(
+					$this,
+					_t('Security.ERRORPASSWORDPERMISSION', 'You must be logged in in order to change your password!')
+				);
 				return;
 			}
 		}

@@ -29,7 +29,7 @@
 		<% if Can(add) %>
 			<tr>
 				<td colspan="$ItemCount">
-					<a href="#" class="addrow" title="Add a new row"><img src="cms/images/add.gif" alt="add" /> Add $Title</a>
+					<a href="#" class="addrow" title="Add a new row"><img src="cms/images/add.gif" alt="<% _t('ADD') %>" /> <% _t('ADDITEM') %> $Title</a>
 				</td>
 				<td style="display: none"></td>
 				<% if Can(delete) %><td width="18">&nbsp;</td><% end_if %>
@@ -44,13 +44,13 @@
 						<td class="$FieldClass $ExtraClass $ClassName $Title tablecolumn">$Field</td>
 					<% end_control %>
 					<td style="display: none">$ExtraData</td>
-					<% if Can(delete) %><td width="18"><a class="deletelink" href="$DeleteLink" title="Delete this row"><img src="cms/images/delete.gif" alt="delete" /></a></td><% end_if %>
+					<% if Can(delete) %><td width="18"><a class="deletelink" href="$DeleteLink" title="<% _t('DELETEROW') %>"><img src="cms/images/delete.gif" alt="<% _t('DELETE') %>" /></a></td><% end_if %>
 				</tr>
 			<% end_control %>
 			<% else %>
 				<tr class="notfound">
 					<% if Markable %><th width="18">&nbsp;</th><% end_if %>
-					<td colspan="$Headings.Count"><i>No $NamePlural found</i></td>
+					<td colspan="$Headings.Count"><i><% _t('NOITEMSFOUND') %></i></td>
 					<% if Can(delete) %><td width="18">&nbsp;</td><% end_if %>
 				</tr>
 			<% end_if %>
@@ -58,7 +58,7 @@
 	</table>
 	<div class="utility">
 		<% if Can(export) %>
-			<a href="$ExportLink" target="_blank">Export to CSV</a>
+			<a href="$ExportLink" target="_blank"><% _t('CSVEXPORT', 'Export to CSV' ) %></a>
 		<% end_if %>
 	</div>
 </div>

@@ -238,10 +238,10 @@ class Member extends DataObject {
 	 */
 	function getMemberFormFields() {
 		return new FieldSet(
-			new TextField("FirstName", "First Name"),
-			new TextField("Surname", "Surname"),
-			new TextField("Email", "Email"),
-			new TextField("Password", "Password")
+			new TextField("FirstName", _t('Member.FIRSTNAME', 'First Name')),
+			new TextField("Surname", _t('Member.SURNAME', "Surname")),
+			new TextField("Email", _t('Member.EMAIL', "Email", PR_MEDIUM, 'Noun')),
+			new TextField("Password", _t('Member.PASSWORD', 'Password'))
 		);
 	}
 
@@ -708,13 +708,18 @@ class Member extends DataObject {
 		
 		$fields = new FieldSet(
 				//new TextField("Salutation", "Title"),
-				new HeaderField( "Personal Details" ),
-				new TextField("FirstName", "First Name"),
-				new TextField("Surname", "Surname"),
-				new HeaderField( "User Details" ),
-				new TextField("Email", "Email"),
-				new DropdownField("Locale", "Interface Language", i18n::get_existing_translations(), $locale),
-				new PasswordField("Password", "Password")
+				new HeaderField(_t('Member.PERSONALDETAILS', "Personal Details", PR_MEDIUM, 'Headline for formfields')),
+				new TextField("FirstName", _t('Member.FIRSTNAME')),
+				new TextField("Surname", _t('Member.SURNAME')),
+				new HeaderField(_t('Member.USERDETAILS', "User Details", PR_MEDIUM, 'Headline for formfields')),
+				new TextField("Email", _t('Member.EMAIL')),
+				new DropdownField(
+					"Locale", 
+					_t('Member.INTERFACELANG', "Interface Language", PR_MEDIUM, 'Language of the CMS'), 
+					i18n::get_existing_translations(), 
+					$locale
+				),
+				new PasswordField("Password", _t('Member.PASSWORD'))
 				//new TextareaField("Address","Address"),
 				//new TextField("JobTitle", "Job Title"),
 				//new TextField( "Organisation", "Organisation" ),
@@ -1043,48 +1048,45 @@ class Member_ProfileForm extends Form {
  * Class used as template to send an email to new members
  */
 class Member_SignupEmail extends Email_Template {
-	protected
-		$from = '',  // setting a blank from address uses the site's default administrator email
-		$to = '$Email',
-		$subject = "Thanks for signing up",
-		$body = '
-			<h1>Welcome, $FirstName.</h1>
-			<p>Thanks for signing up to become a new member, your details are listed below for future reference.</p>
+	protected $from = '';  // setting a blank from address uses the site's default administrator email
+	protected $to = '$Email';
+	protected $subject = '';
+	protected $body = '';
 
-			<p>You can login to the website using the credentials listed below:
+	function __construct() {
+		$this->subject = _t('Member.EMAILSIGNUPSUBJECT', "Thanks for signing up");
+		$this->body = '
+			<h1>' . _t('WELCOME','Welcome') . ', $FirstName.</h1>
+			<p>' . _t('Member.EMAILSIGNUPINTRO1','Thanks for signing up to become a new member, your details are listed below for future reference.') . '</p>
+
+			<p>' . _t('Member.EMAILSIGNUPINTRO2','You can login to the website using the credentials listed below')  . ':
 				<ul>
-					<li><strong>Email:</strong>$Email</li>
-					<li><strong>Password:</strong>$Password</li>
+					<li><strong>' . _t('Member.EMAIL') . '</strong>$Email</li>
+					<li><strong>' . _t('Member.PASSWORD') . ':</strong>$Password</li>
 				</ul>
 			</p>
 
-			<h3>Contact Information</h3>
+			<h3>' . _t('Member.CONTACTINFO','Contact Information') . '</h3>
 			<ul>
-				<li><strong>Name:</strong> $FirstName $Surname</li>
+				<li><strong>' . _t('Member.NAME','Name')  . ':</strong> $FirstName $Surname</li>
 				<% if Phone %>
-					<li><strong>Phone:</strong> $Phone</li>
+					<li><strong>' . _t('Member.PHONE','Phone') . ':</strong> $Phone</li>
 				<% end_if %>
 
 				<% if Mobile %>
-					<li><strong>Mobile:</strong> $Mobile</li>
+					<li><strong>' . _t('Member.MOBILE','Mobile') . ':</strong> $Mobile</li>
 				<% end_if %>
 
-				<% if RuralAddressCheck %>
-					<li><strong>Rural Address:</strong>
-						$RapidResponse $Road<br/>
-						$RDNumber<br/>
-						$City $Postcode
-					</li>
-				<% else %>
-					<li><strong>Address:</strong>
-					<br/>
-					$Number $Street $StreetType<br/>
-					$Suburb<br/>
-					$City $Postcode
-					</li>
-				<% end_if %>
+				<li><strong>' . _t('Member.ADDRESS','Address') . ':</strong>
+				<br/>
+				$Number $Street $StreetType<br/>
+				$Suburb<br/>
+				$City $Postcode
+				</li>
 
-			</ul>';
+			</ul>
+		';
+	}
 
 	function MemberData() {
 		return $this->template_data->listOfFields(
@@ -1103,9 +1105,13 @@ class Member_SignupEmail extends Email_Template {
  */
 class Member_ChangePasswordEmail extends Email_Template {
     protected $from = '';   // setting a blank from address uses the site's default administrator email
-    protected $subject = "Your password has been changed";
+    protected $subject = '';
     protected $ss_template = 'ChangePasswordEmail';
     protected $to = '$Email';
+    
+    function __construct() {
+    	$this->subject = _t('Member.SUBJECTPASSWORDCHANGED', "Your password has been changed", PR_MEDIUM, 'Email subject');
+    }
 }
 
 
@@ -1115,9 +1121,13 @@ class Member_ChangePasswordEmail extends Email_Template {
  */
 class Member_ForgotPasswordEmail extends Email_Template {
     protected $from = '';  // setting a blank from address uses the site's default administrator email
-    protected $subject = "Your password reset link";
+    protected $subject = '';
     protected $ss_template = 'ForgotPasswordEmail';
     protected $to = '$Email';
+    
+    function __construct() {
+    	$this->subject = _t('Member.SUBJECTPASSWORDRESET', "Your password reset link", PR_MEDIUM, 'Email subject');
+    }
 }
 
 
@@ -1160,14 +1170,20 @@ class Member_UnsubscribeRecord extends DataObject {
 	protected
 		$from = '',  // setting a blank from address uses the site's default administrator email
 		$to = '$Email',
-		$subject = "Your password has been changed",
-		$body = '
-			<h1>Here\'s your new password</h1>
-			<p>
-				<strong>Email:</strong> $Email<br />
-				<strong>Password:</strong> $Password
-			</p>
-			<p>Your password has been changed. Please keep this email, for future reference.</p>';
+		$subject = '',
+		$body = '';
+			
+		function __construct() {
+			$this->subject = _t('Member.SUBJECTPASSWORDCHANGED');
+			
+			$this->body = '
+				<h1>' . _t('Member.EMAILPASSWORDINTRO', "Here's your new password") . '</h1>
+				<p>
+					<strong>' . _t('Member.EMAIL') . ':</strong> $Email<br />
+					<strong>' . _t('Member.PASSWORD') . ':</strong> $Password
+				</p>
+				<p>' . _t('Member.EMAILPASSWORDAPPENDIX', 'Your password has been changed. Please keep this email, for future reference.') . '</p>';
+		}
 }
 
 
@@ -1219,8 +1235,8 @@ class Member_Validator extends RequiredFields {
 		if(is_object($member) && $member->ID != $id) {
 			$emailField = $this->form->dataFieldByName('Email');
 			$this->validationError($emailField->id(),
-														 "There already exists a member with this email",
-														 "required");
+				_t('Member.VALIDATIONMEMBEREXISTS', "There already exists a member with this email"),
+				"required");
 			$valid = false;
 		}
 

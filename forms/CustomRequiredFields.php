@@ -61,7 +61,11 @@ class CustomRequiredFields extends RequiredFields{
 				}else if($fields->dataFieldByName($field)) {
 					// if an error is found, the form is returned.
 					if(!$data[$field]) {
-						$this->validationError($field,"$field is required","required");
+						$this->validationError(
+							$field,
+							sprintf(_t('Form.FIELDISREQUIRED', "%s is required"), $field),
+							"required"
+						);
 						return false;
 					}
 				}

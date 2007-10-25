@@ -40,11 +40,12 @@ class MemberAuthenticator extends Authenticator {
 	}
 
     if($member) {
-      Session::clear("BackURL");
+		Session::clear("BackURL");
     } else if(!is_null($form)) {
-			$form->sessionMessage(
-				"That doesn't seem to be the right e-mail address or password. Please try again.",
-				"bad");
+		$form->sessionMessage(
+			_t('Member.ERRORWRONGCRED', "That doesn't seem to be the right e-mail address or password. Please try again."),
+			"bad"
+		);
     }
 
     return $member;
@@ -70,7 +71,7 @@ class MemberAuthenticator extends Authenticator {
    * @return string Returns the name of the authentication method.
    */
   public static function get_name() {
-		return "E-mail &amp; Password";
+		return _t('MemberAuthenticator.TITLE', "E-mail &amp; Password");
 	}
 }
 
