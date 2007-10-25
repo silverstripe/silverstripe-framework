@@ -7,14 +7,10 @@
 
 class Statistics extends Controller {
 
-	function __construct()
-	{
-
+	function __construct() {
 	}
 
-	static function TrendChart($table, $filter = "day", $name, $type, $color)
-	{
-
+	static function trend_chart($table, $filter = "day", $name, $type, $color) {
 		$top = <<<HTML
 <div id="trendchart" style="display: none">
 <h2>Trends</h2>
@@ -140,7 +136,7 @@ HTML;
 			return $top . $ds . "\n};\n\n" . $opts . "\n\n" . $bot;
 	}
 
-	static function UserRecordTable() {
+	static function user_record_table() {
 		$records = DataObject::get('Member');
 		$baseURL = Director::baseURL();
 		$top = <<<HTML
@@ -170,13 +166,13 @@ HTML;
 		return $top . $bod . $bot;
 	}
 
-	static function Collect() {
+	static function collect() {
 		$hit = new PageView();
 		$hit->record();
 		return;
 	}
 
-	static function getRecentViews($limit = 15) {
+	static function get_recent_views($limit = 15) {
 		$records = DataObject::get('PageView', null, 'Created DESC', null, $limit);
 		$top = <<<HTML
 		<div id="recentviewtable">
@@ -206,7 +202,7 @@ HTML;
 		return $top . $bod . $bot;
 	}
 
-	static function getViews($time = 'all') {
+	static function get_views($time = 'all') {
 		switch($time) {
 			case 'all':
 				$records = DataObject::get('PageView');
@@ -286,7 +282,7 @@ HTML;
 		return $top . $bod . $bot;
 	}
 
-	static function BrowserChart($type = "Pie", $color = "blue") {
+	static function browser_chart($type = "Pie", $color = "blue") {
 		$top = <<<HTML
 <div id="browserchart" style="display: none">
 <h2>Browsers</h2>
@@ -349,7 +345,7 @@ HTML;
 		return $top . $ds . "\n};\n\n" . $opts . "\n\n" . $bot;
 	}
 
-	static function OSChart($type = "Pie", $color = "blue") {
+	static function os_chart($type = "Pie", $color = "blue") {
 		$top = <<<HTML
 <div id="oschart" style="display: none">
 <h2>Operating Systems</h2>
@@ -412,7 +408,7 @@ HTML;
 		return $top . $ds . "\n};\n\n" . $opts . "\n\n" . $bot;
 	}
 
-	static function ActivityChart($type = "Pie", $color = "blue") {
+	static function activity_chart($type = "Pie", $color = "blue") {
 		$top = <<<HTML
 <div id="uacchart" style="display: none">
 <h2>User Activity</h2>
@@ -478,7 +474,7 @@ HTML;
 		return $top . $ds . "\n};\n\n" . $opts . "\n\n" . $bot;
 	}
 
-	static function getViewCSV($time = 'all') {
+	static function get_view_csv($time = 'all') {
 		$data = "ID, ClassName, Created, LastEdited, Browser, FromExternal, Referrer, SearchEngine, Keywords, OS, PageID, UserID, BrowserVersion, IP\n";
 
 		switch($time) {
@@ -539,7 +535,7 @@ HTML;
 		return $data;
 	}
 
-	static function getUserCSV() {
+	static function get_user_csv() {
 		$data = "ID, ClassName, Created, LastEdited, FirstName, Surname, Email, Password, NumVisit, LastVisited, Bounced, AutoLoginHash, AutoLoginExpired, BlacklistedEmail, RememberLoginToken, IdentityURL, PasswordEncryption, Salt\n";
 
 		$records = DataObject::get('Member');
