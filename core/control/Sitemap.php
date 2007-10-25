@@ -7,20 +7,19 @@
 
 class Sitemap extends Controller {
 	protected $Pages;
-	function __construct()
-	{
+	
+	function __construct() {
 		$this->Pages=DataObject::get('SiteTree');
 	}
 
-	public function Items()
-	{
-		foreach($this->Pages as $page)
-		{
+	public function Items() {
+		foreach($this->Pages as $page) {
 			// If the page has been set to 0 priority, we set a flag so it won't be included
-			if(isset($page->Priority) && $page->Priority <= 0)
+			if(isset($page->Priority) && $page->Priority <= 0) {
 				$page->Include = false;
-			else
+			} else {
 				$page->Include = true;
+			}
 			
 			// The one field that isn't easy to deal with in the template is
 			// Change frequency, so we set that here.
@@ -35,36 +34,24 @@ class Sitemap extends Controller {
 			
 			$period = $timediff / ($versions + 1);
 			
-			if($period > 60*60*24*365) // > 1 year
-			{
+			if($period > 60*60*24*365) { // > 1 year
 				$page->ChangeFreq='yearly';
-			}
-			else if($period > 60*60*24*30) // > ~1 month
-			{
+			} else if($period > 60*60*24*30) { // > ~1 month
 				$page->ChangeFreq='monthly';
-			}
-			else if($period > 60*60*24*7) // > 1 week
-			{
+			} else if($period > 60*60*24*7) { // > 1 week
 				$page->ChangeFreq='weekly';
-			}
-			else if($period > 60*60*24) // > 1 day
-			{
+			} else if($period > 60*60*24) { // > 1 day
 				$page->ChangeFreq='daily';
-			}
-			else if($period > 60*60) // > 1 hour
-			{
+			} else if($period > 60*60) { // > 1 hour
 				$page->ChangeFreq='hourly';
-			}
-			else // < 1 hour
-			{
+			} else { // < 1 hour
 				$page->ChangeFreq='always';
 			}
 		}
 		return $this->Pages;
 	}
 	
-	static function Ping()
-	{
+	static function ping() {
 		//Don't ping if the site has disabled it
 		if(!Sitemap::$pings)
 			return;
@@ -84,14 +71,12 @@ class Sitemap extends Controller {
 	 * To use this, in your _config.php file simply include the line
 	 * Sitemap::DisableGoogleNotification();
 	 */
-	static function DisableGoogleNotification()
-	{
+	static function DisableGoogleNotification() {
 		self::$pings = false;
 	}
 	
 	
-	function index($url)
-	{
+	function index($url) {
 		// We need to override the default content-type
 		ContentNegotiator::disable();
 		header('Content-type: application/xml; charset="utf-8"');
