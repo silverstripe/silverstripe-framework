@@ -173,7 +173,7 @@ class Director {
 				return DataObject::get_one("SiteTree", "URLSegment = '$SQL_urlSegment'");
 			}
 		} else {
-			return Controller::currentController();
+			return Controller::curr();
 		}
 	}
 

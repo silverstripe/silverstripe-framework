@@ -756,7 +756,7 @@ class ViewableData extends Object implements Iterator {
 	 * @return Controller
 	 */
 	function CurrentPage() {
-		return Controller::currentController();
+		return Controller::curr();
 	}
 	
 	/**

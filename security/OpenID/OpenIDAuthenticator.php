@@ -206,7 +206,7 @@ class OpenIDAuthenticator_Controller extends Controller {
 	 * @param array $requestParams Passed request parameters
 	 */
 	function run($requestParams) {
-		Controller::$currentController = $this;
+		$this->pushCurrent();
 		$this->response = new HTTPResponse();
 
 		parent::init();

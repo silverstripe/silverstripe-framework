@@ -428,7 +428,7 @@ class Security extends Controller {
 			}
 		}
 
-		Controller::$currentController = $controller;
+		//Controller::$currentController = $controller;
 		return $customisedController->renderWith('Page');
 	}
 
