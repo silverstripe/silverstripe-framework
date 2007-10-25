@@ -1173,7 +1173,7 @@ class Member_UnsubscribeRecord extends DataObject {
 		$subject = '',
 		$body = '';
 			
-		function __construct() {
+		function __construct($record = null, $isSingleton = false) {
 			$this->subject = _t('Member.SUBJECTPASSWORDCHANGED');
 			
 			$this->body = '
@@ -1183,6 +1183,8 @@ class Member_UnsubscribeRecord extends DataObject {
 					<strong>' . _t('Member.PASSWORD') . ':</strong> $Password
 				</p>
 				<p>' . _t('Member.EMAILPASSWORDAPPENDIX', 'Your password has been changed. Please keep this email, for future reference.') . '</p>';
+				
+			parent::__construct($record, $isSingleton);
 		}
 }
 
