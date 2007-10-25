@@ -1289,6 +1289,7 @@ class i18n extends Controller {
 				if ($processed) $mst[$module] = $processed;
 			}
 		} else {
+			$module = basename($_GET['module']);
 			$processed = self::process_module($baseDir, $_GET['module'], $includedtpl);
 			if ($processed) $mst[$module] = $processed;
 		}
