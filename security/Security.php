@@ -50,6 +50,29 @@ class Security extends Controller {
 	 * @var bool
 	 */
 	protected static $useSalt = true;
+	
+	/**
+	 * Location of word list to use for generating passwords
+	 * 
+	 * @var string
+	 */
+	protected static $wordlist = '/usr/share/silverstripe/wordlist.txt';
+	
+	/**
+	 * Get location of word list file
+	 */
+	static function get_word_list() {
+		return Security::$wordlist;
+	}
+	
+	/**
+	 * Set location of word list file
+	 * 
+	 * @param string $wordListFile Location of word list file
+	 */
+	static function set_word_list($wordListFile) {
+		Security::$wordlist = $wordListFile;
+	}
 
 
 	/**
