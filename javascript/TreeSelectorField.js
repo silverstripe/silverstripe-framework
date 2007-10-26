@@ -36,7 +36,7 @@ TreeDropdownField.prototype = {
 	},
 	
 	helperURLBase: function() {
-		return this.ownerForm().action + '&action_callfieldmethod=1&fieldName=' + this.inputTag.name + '&ajax=1'
+		return this.ownerForm().action + '&action_callfieldmethod=1&fieldName=' + this.inputTag.name + '&ajax=1' + ($('SecurityID') ? '&SecurityID=' + $('SecurityID').value : '');
 	},
 	ownerForm: function() {
 		var f =this.parentNode;
