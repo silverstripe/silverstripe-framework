@@ -129,8 +129,10 @@ class RSSFeed extends ViewableData {
 	 */
 	function Entries() {
 		$output = new DataObjectSet();
-		foreach($this->entries as $entry) {
-			$output->push(new RSSFeed_Entry($entry, $this->titleField, $this->descriptionField, $this->authorField));
+		if(isset($this->entries)) {
+			foreach($this->entries as $entry) {
+				$output->push(new RSSFeed_Entry($entry, $this->titleField, $this->descriptionField, $this->authorField));
+			}	
 		}
 		return $output;
 	}
