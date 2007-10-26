@@ -1,5 +1,4 @@
 <?php
-
 /**
  * RSSFeed class
  *
@@ -70,7 +69,6 @@ class RSSFeed extends ViewableData {
 	 */
 	protected $etag;
 
-
 	/**
 	 * Constructor
 	 *
@@ -107,7 +105,6 @@ class RSSFeed extends ViewableData {
 		$this->etag = $etag;
 	}
 
-
 	/**
 	 * Include an link to the feed
 	 *
@@ -120,7 +117,6 @@ class RSSFeed extends ViewableData {
 			'<link rel="alternate" type="application/rss+xml" title="' . $title .
 			'" href="' . $url . '" />');
 	}
-
 
 	/**
 	 * Get the RSS feed entries
@@ -137,7 +133,6 @@ class RSSFeed extends ViewableData {
 		return $output;
 	}
 
-
 	/**
 	 * Get the title of thisfeed
 	 *
@@ -146,7 +141,6 @@ class RSSFeed extends ViewableData {
 	function Title() {
 		return $this->title;
 	}
-
 
 	/**
 	 * Get the URL of this feed
@@ -157,7 +151,6 @@ class RSSFeed extends ViewableData {
 		return Director::absoluteURL($this->link);
 	}
 
-
 	/**
 	 * Get the description of this feed
 	 *
@@ -166,7 +159,6 @@ class RSSFeed extends ViewableData {
 	function Description() {
 		return $this->description;
 	}
-
 
 	/**
 	 * Output the feed to the browser
@@ -186,8 +178,6 @@ class RSSFeed extends ViewableData {
 		echo $body;
 	}
 }
-
-
 
 /**
  * RSSFeed_Entry class
@@ -226,7 +216,6 @@ class RSSFeed_Entry extends ViewableData {
 	 */
 	protected $authorField;
 
-
 	/**
 	 * Create a new RSSFeed entry.
 	 */
@@ -238,7 +227,6 @@ class RSSFeed_Entry extends ViewableData {
 		$this->authorField = $authorField;
 	}
 
-
 	/**
 	 * Get the description of this entry
 	 *
@@ -248,7 +236,6 @@ class RSSFeed_Entry extends ViewableData {
 		if($this->titleField)
 			return $this->failover->obj($this->titleField);
 	}
-
 
 	/**
 	 * Get the description of this entry
@@ -260,7 +247,6 @@ class RSSFeed_Entry extends ViewableData {
 			return $this->failover->obj($this->descriptionField);
 	}
 
-
 	/**
 	 * Get the author of this entry
 	 *
@@ -271,7 +257,6 @@ class RSSFeed_Entry extends ViewableData {
 			return $this->failover->obj($this->authorField);
 	}
 
-
 	/**
 	 * Get a link to this entry
 	 *
@@ -281,6 +266,4 @@ class RSSFeed_Entry extends ViewableData {
 		return $this->failover->AbsoluteLink();
 	}
 }
-
-
 ?>
