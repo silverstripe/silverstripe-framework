@@ -2,18 +2,28 @@
 
 class ManyManyComplexTableField extends HasManyComplexTableField {
 	
-	protected $itemClass = 'ManyManyComplexTableField_Item';
+	private $manyManyParentClass;
 	
+	protected $itemClass = 'ManyManyComplexTableField_Item';
+		
 	function __construct( $controller, $name, $sourceClass, $fieldList, $detailFormFields = null, $sourceFilter = "", $sourceSort = "", $sourceJoin = "") {
 
 		parent::__construct( $controller, $name, $sourceClass, $fieldList, $detailFormFields, $sourceFilter, $sourceSort, $sourceJoin );
 		
-		$parent = $this->controller->ClassName;
-		$manyManyTable = $parent . '_' . $this->name;
+		$classes = array_reverse( ClassInfo::ancestry( $this->controller->ClassName ) );
+		foreach( $classes as $class ) {
+			$singleton = singleton( $class );
+			$manyManyRelations = $singleton->uninherited( 'many_many', true );
+			if( isset( $manyManyRelations ) && array_key_exists( $this->name, $manyManyRelations ) ) {
+				$this->manyManyParentClass = $class;
+				$manyManyTable = $class . '_' . $this->name;
+				break;
+			}
+		}
 		$source = $this->sourceClass;
 		$parentID = $this->controller->ID;
 		
-		$this->sourceJoin .= " LEFT JOIN `$manyManyTable` ON ( `$source`.`ID` = `{$source}ID` AND `{$parent}ID` = '$parentID' )";
+		$this->sourceJoin .= " LEFT JOIN `$manyManyTable` ON ( `$source`.`ID` = `{$source}ID` AND `{$this->manyManyParentClass}ID` = '$parentID' )";
 		
 		$this->joinField = 'Checked';
 	}
@@ -36,7 +46,7 @@ class ManyManyComplexTableField extends HasManyComplexTableField {
 					$query->select[] = $k;
 			}
 			$parent = $this->controller->ClassName;
-			$query->select[] = "IF(`{$parent}ID` IS NULL, '0', '1') AS $this->joinField";
+			$query->select[] = "IF(`{$this->manyManyParentClass}ID` IS NULL, '0', '1') AS $this->joinField";
 		}
 		return clone $query;
 	}
