@@ -289,12 +289,12 @@ class Geoip extends Object {
 			// Note: At time of writing, $result is always zero for this program
 
 			if ($code == 127) {
-				trigger_error("ip2country($address) cannot find or run geoiplookup executable.", E_trigger_error);
+				user_error("ip2country($address) cannot find or run geoiplookup executable.", E_USER_NOTICE);
 				return false;
 			}
 			
 			if ($result == false) {
-				trigger_error("ip2country($address): geoiplookup executable returned nothing.", E_trigger_error);
+				user_error("ip2country($address): geoiplookup executable returned nothing.", E_USER_NOTICE);
 				return false;
 			}
 			
