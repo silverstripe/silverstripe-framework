@@ -108,16 +108,16 @@ class Translatable extends DataObjectDecorator {
 	 */
 	static function choose_site_lang($langsAvailable = null) {
 		if(is_array($langsAvailable)) {
-			if(isset($_GET['lang']) && in_array(strtolower($_GET['lang']),$langsAvailable)) {
+			if(isset($_GET['lang']) && in_array($_GET['lang'],$langsAvailable)) {
 				self::set_reading_lang($_GET['lang']);
-			} elseif(isset($_COOKIE['lang']) && in_array(strtolower($_COOKIE['lang']),$langsAvailable)) {
+			} elseif(isset($_COOKIE['lang']) && in_array($_COOKIE['lang'],$langsAvailable)) {
 				self::set_reading_lang($_COOKIE['lang']);
 			} else if(Session::get('currentLang') 
-				&& in_array(strtolower(Session::get('currentLang')),$langsAvailable)
+				&& in_array(Session::get('currentLang'),$langsAvailable)
 			) {
 				self::set_reading_lang(Session::get('currentLang'));
 			} else if (($member = Member::currentUser()) && ($lang = $member->Locale)
-				 && in_array(strtolower($lang),$langsAvailable)
+				 && in_array($lang,$langsAvailable)
 			) {
 				self::set_reading_lang($lang);			
 			}
@@ -152,7 +152,7 @@ class Translatable extends DataObjectDecorator {
 	 * @paran $lang String
 	 */
 	static function set_default_lang($lang) {
-		self::$default_lang = strtolower($lang);
+		self::$default_lang = $lang;
 	}
 
 	/**
@@ -177,8 +177,8 @@ class Translatable extends DataObjectDecorator {
 	 * @param string $lang New reading language.
 	 */
 	static function set_reading_lang($lang) {
-		Session::set('currentLang',strtolower($lang));
-		self::$reading_lang = strtolower($lang);
+		Session::set('currentLang',$lang);
+		self::$reading_lang = $lang;
 	}	
 	
 	/**
