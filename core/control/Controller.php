@@ -155,6 +155,15 @@ class Controller extends ViewableData {
 			if(!isset($funcName)) {
 				user_error("No action button has been clicked in this form executon, and no default has been allowed", E_USER_ERROR);
 			}
+			
+			// Protection against CSRF attacks
+			if($form->securityEnabled()) {
+				$securityID = Session::get('SecurityID');
+
+				if(!$securityID || !isset($this->requestParams['SecurityID']) || $securityID != $this->requestParams['SecurityID']) {
+					trigger_error("Security ID doesn't match, possible CRSF attack.", E_USER_ERROR);
+				}
+			}
 
 
 			// First, try a handler method on the controller

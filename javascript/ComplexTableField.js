@@ -109,6 +109,10 @@ ComplexTableField.prototype = {
 				return false;
 			}
 		}
+		
+		if($('SecurityID')) {
+			popupLink = popupLink + '&SecurityID=' + $('SecurityID').value;
+		}
 
 		GB_OpenerObj = this;
 		// use same url to refresh the table after saving the popup, but use a generic rendering method

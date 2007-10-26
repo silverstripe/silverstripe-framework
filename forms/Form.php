@@ -174,7 +174,21 @@ class Form extends ViewableData {
 	 * @return FieldSet The form fields
 	 */
 	function Fields() {
-	  return $this->fields;
+		if($this->securityEnabled()) {
+			if(Session::get('SecurityID')) {
+				$securityID = Session::get('SecurityID');
+			} else {
+				$securityID = rand();
+				Session::set('SecurityID', $securityID);
+			}
+			
+			$fieldsClone = clone $this->fields;
+			$fieldsClone->push(new HiddenField('SecurityID', 'SecurityID', $securityID));
+			
+			return $fieldsClone;
+		} else {
+			return $this->fields;
+		}
 	}
 	
 	/**
@@ -664,6 +678,27 @@ class Form extends ViewableData {
 	function disableDefaultAction() {
 		$this->hasDefaultAction = false;
 	}
+	
+	private $security = true;
+	
+	/**
+	 * Disable the requirement of a SecurityID in the Form. This security protects
+	 * against CSRF attacks, but you should disable this if you don't want to tie 
+	 * a form to a session - eg a search form.
+	 */
+	function disableSecurity() {
+		$this->security = false;
+	}
+	
+	/**
+	 * Returns true if security is enabled - that is if the SecurityID
+	 * should be included and checked on this form.
+	 *
+	 * @return bool
+	 */
+	function securityEnabled() {
+		return $this->security;
+	}
 
 	/**
 	 * Returns the name of a field, if that's the only field that the current controller is interested in.
@@ -688,6 +723,7 @@ class Form extends ViewableData {
 	static function set_current_action($action) {
 		self::$current_action = $action;
 	}
+	
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// TESTING HELPERS
