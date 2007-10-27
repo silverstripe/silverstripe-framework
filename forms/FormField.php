@@ -251,7 +251,7 @@ class FormField extends ViewableData {
 		
 		$titleBlock = (!empty($Title)) ? "<label class=\"left\" for=\"{$this->id()}\">$Title</label>" : "";
 		$messageBlock = (!empty($Message)) ? "<span class=\"message $MessageType\">$Message</span>" : "";
-		$rightTitleBlock = (!empty($rightTitle)) ? "<label class=\"right\" for=\"{$this->id()}\">$RightTitle</label>" : "";
+		$rightTitleBlock = (!empty($RightTitle)) ? "<label class=\"right\" for=\"{$this->id()}\">$RightTitle</label>" : "";
 
 		return <<<HTML
 <div id="$Name" class="field $Type $extraClass">$titleBlock<span class="middleColumn">$Field</span>$rightTitleBlock$messageBlock</div>
