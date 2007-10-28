@@ -81,6 +81,10 @@ class ErrorPage extends Page {
 		Requirements::clear();
 		$controller = new ErrorPage_Controller($this);
 		$errorContent = $controller->run( array() )->getBody();
+		
+		if(!file_exists("../assets")) {
+			mkdir("../assets", 02775);
+		}
 
 		if($fh = fopen("../assets/error-$this->ErrorCode.html", "w")) {
 			fwrite($fh, $errorContent);
