@@ -157,7 +157,7 @@ class Controller extends ViewableData {
 			}
 			
 			// Protection against CSRF attacks
-			if($form->securityEnabled()) {
+			if($form->securityTokenEnabled()) {
 				$securityID = Session::get('SecurityID');
 
 				if(!$securityID || !isset($this->requestParams['SecurityID']) || $securityID != $this->requestParams['SecurityID']) {

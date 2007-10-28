@@ -174,7 +174,7 @@ class Form extends ViewableData {
 	 * @return FieldSet The form fields
 	 */
 	function Fields() {
-		if($this->securityEnabled()) {
+		if($this->securityTokenEnabled()) {
 			if(Session::get('SecurityID')) {
 				$securityID = Session::get('SecurityID');
 			} else {
@@ -686,7 +686,7 @@ class Form extends ViewableData {
 	 * against CSRF attacks, but you should disable this if you don't want to tie 
 	 * a form to a session - eg a search form.
 	 */
-	function disableSecurity() {
+	function disableSecurityToken() {
 		$this->security = false;
 	}
 	
@@ -696,7 +696,7 @@ class Form extends ViewableData {
 	 *
 	 * @return bool
 	 */
-	function securityEnabled() {
+	function securityTokenEnabled() {
 		return $this->security;
 	}
 

@@ -36,6 +36,8 @@ class SearchForm extends Form {
 		$fields->push(new HiddenField("executeForm", null, $name));
 		
 		parent::__construct($controller, $name, $fields, $actions);
+		
+		$this->disableSecurityToken();
 	}
 	
 	function FormMethod() {
