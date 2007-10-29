@@ -46,7 +46,7 @@ class SQLMap extends Object implements Iterator {
 	 */
 	public function rewind() {
 		$this->genItems();
-		return $this->items->rewind()->Title;
+		return $this->items->rewind() ? $this->items->rewind()->Title : null;
 	}
 	
 	public function current() {
