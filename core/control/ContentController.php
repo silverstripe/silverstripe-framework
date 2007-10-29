@@ -384,7 +384,7 @@ HTML
 
 		foreach($installfiles as $installfile) {
 			if(file_exists('../' . $installfile)) {
-				unlink('../' . $installfile);
+				@unlink('../' . $installfile);
 			}
 
 			if(file_exists('../' . $installfile)) {
