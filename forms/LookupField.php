@@ -12,7 +12,7 @@ class LookupField extends DropdownField {
 			else $mappedValue = $this->source->getItem($this->value);
 		}
 		
-		if(!$mappedValue)
+		if(!isset($mappedValue))
 			$mappedValue = "<i>(none)</i>";
 
 		if($this->value) {
