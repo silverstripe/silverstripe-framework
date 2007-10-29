@@ -25,6 +25,10 @@ class SSDatetime extends Date {
 		DB::requireField($this->tableName, $this->name, "datetime");
 	}
 	
+	function URLDatetime() {
+		return date('Y-m-d%20H:i:s', strtotime($this->value));
+	}
+	
 	function __construct( $name ) {
 		// Debug::show( 'Created SSDatetime: ' . $name );
 		parent::__construct( $name );

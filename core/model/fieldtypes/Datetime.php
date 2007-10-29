@@ -24,6 +24,10 @@ if(!class_exists('Datetime')) {
 			return date('H:i', strtotime($this->value));
 		}
 	
+		function URLDatetime() {
+			return date('Y-m-d%20H:i:s', strtotime($this->value));
+		}
+		
 		function requireField() {
 			DB::requireField($this->tableName, $this->name, "datetime");
 		}
