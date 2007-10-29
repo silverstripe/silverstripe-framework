@@ -623,10 +623,21 @@ class Image_Uploader extends Controller {
 	 * Save the data in this form.
 	 */
 	function save($data, $form) {
+		if($data['Upload']['size'] == 0) {
+			// No image has been uploaded
+			Director::redirectBack();
+			return;
+		}
 		$owner = DataObject::get_by_id($data['Class'], $data['ID']);
 		$fieldName = $data['Field'] . 'ID';
 
 		if($data['ImageSource'] == 'existing') {
+			if(!$data['ExistingFile']) {
+				// No image has been selected
+				Director::redirectBack();
+				return;
+			}
+			
 			$owner->$fieldName = $data['ExistingFile'];
 
 			// Edit the class name, if applicable
