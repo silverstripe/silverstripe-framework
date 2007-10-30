@@ -159,6 +159,14 @@ class Group extends DataObject {
 	public function setCode($val){
 		$this->setField("Code",SiteTree::generateURLSegment($val));
 	}
+	
+	function onBeforeWrite() {
+		parent::onBeforeWrite();
+		
+		if(stripos($this->Code, 'new-') === 0) {
+			$this->setCode($this->Title);
+		}
+	}
 }
 class Group_Unsecure extends Group {
 }
