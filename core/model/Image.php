@@ -594,7 +594,9 @@ class Image_Uploader extends Controller {
 				$this,
 				'DeleteImageForm', 
 				new FieldSet(
+					new HiddenField("Class", null, $this->urlParams['Class']),
 					new HiddenField("ID", null, $this->urlParams['ID']),
+					new HiddenField("Field", null, $this->urlParams['Field']),
 					new HeaderField($title),
 					new LabelField(
 						sprintf(
@@ -677,8 +679,10 @@ class Image_Uploader extends Controller {
 	 * Delete the image referenced by this form.
 	 */
 	function delete($data, $form) {
-		$image = $this->Image();
-		$image->delete();
+		$owner = DataObject::get_by_id( $data[ 'Class' ], $data[ 'ID' ] );
+		$fieldName = $data[ 'Field' ] . 'ID';
+		$owner->$fieldName = 0;
+		$owner->write();
 		Director::redirect($this->Link('iframe'));
 	}
 
