@@ -5,8 +5,8 @@
 class LabelledLiteralField extends LiteralField {
 	
 	function __construct( $name, $title, $content ) {
-		$this->title = $title;
 		parent::__construct( $name, $content );
+		$this->setTitle( $title );
 	}
 	
 	function FieldHolder() {
