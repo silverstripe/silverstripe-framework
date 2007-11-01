@@ -1079,8 +1079,8 @@ class SiteTree extends DataObject {
 					),
 					new DropdownField("EditorsGroup", _t('SiteTree.GROUP'), Group::map())
 				)
-			),
-			new NamedLabelField("Status", $message, "pageStatusMessage", true)
+			)
+			//new NamedLabelField("Status", $message, "pageStatusMessage", true)
 		);
 		
 		$tabContent->setTitle(_t('SiteTree.TABCONTENT', "Content"));
