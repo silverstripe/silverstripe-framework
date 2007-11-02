@@ -130,9 +130,13 @@ HTML;
 	  */
 	function Title() {
 		$title = parent::Title();
-		return <<<HTML
+		if( $title ) {
+			return <<<HTML
 <span class="keylabel">$title</span>
 HTML;
+		}
+		else
+			return '';
 	}
 }
 ?>
