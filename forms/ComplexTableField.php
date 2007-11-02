@@ -465,7 +465,7 @@ JS;
      */
 	
 	function pagination() {
-	    $this->pageSize = 10;
+		$this->pageSize = 9;
 		$currentItem  = $this->PopupCurrentItem();
 		$result = new DataObjectSet();
         if($currentItem < 6) {

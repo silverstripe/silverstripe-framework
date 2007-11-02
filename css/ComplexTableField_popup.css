@@ -72,6 +72,10 @@ form fieldset {
 }
 
 /* Pagination */ 
+#ComplexTableField_Pagination,
+#ComplexTableField_Pagination * {
+	vertical-align: middle;
+}
 
 #ComplexTableField_Pagination {
 	margin-top: 10px;
@@ -80,7 +84,7 @@ form fieldset {
 }
 
 #ComplexTableField_Pagination a {
-	font-size: 14px;
+	font-size: 1.2em;
 	width: 1px;
 	height: 1px;
 	margin: 1px;
@@ -88,8 +92,8 @@ form fieldset {
 
 #ComplexTableField_Pagination span {
 	display: inline;
-	color: red;
-	font-size: 14px;
+	font-weight: bold;
+	font-size: 1.2em;
 }
 
 #ComplexTableField_Pagination div {
@@ -98,21 +102,4 @@ form fieldset {
 
 #ComplexTableField_Pagination_Next a,#ComplexTableField_Pagination_Previous a {
 	text-decoration: none;
-}
-
-#ComplexTableField_Pagination_Next a div {
-	position: relative;
-	left: -20px;
-}
-
-#ComplexTableField_Pagination_Next a img {
-	position: relative;
-	top: -15px;
-	left: 5px;
-}
-
-#ComplexTableField_Pagination_Previous a img {
-	position: relative;
-	top: -15px;
-	left: 35px;
 }

@@ -32,8 +32,8 @@
 						<% end_if %>
 						<% if PopupNextLink %>
 							<td id="ComplexTableField_Pagination_Next">
-								<a href="$PopupNextLink"><img src="cms/images/pagination/record-next.png" /></a>
 								<a href="$PopupNextLink"><div><% _t('NEXT', 'Next') %></div></a>
+								<a href="$PopupNextLink"><img src="cms/images/pagination/record-next.png" /></a>
 							</td>
 						<% end_if %>
 					</td>
