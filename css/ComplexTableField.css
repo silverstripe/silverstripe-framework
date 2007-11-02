@@ -35,6 +35,7 @@
 .ComplexTableField .PageControls * {
 		display:inline;
 		vertical-align: middle;
+		font-weight: bold;
 }
 .ComplexTableField .PageControls .Last{
 	float:right; display:block;
