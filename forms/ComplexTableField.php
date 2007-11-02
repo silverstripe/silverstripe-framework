@@ -633,7 +633,7 @@ class ComplexTableField_Popup extends Form {
 		Requirements::css('jsparty/tabstrip/tabstrip.css');
 		Requirements::css('sapphire/css/Form.css');
 		Requirements::css('sapphire/css/ComplexTableField_popup.css');
-		Requirements::css('cms/css/typography.css');
+		Requirements::css('cms/css/cms_typography.css');
 		Requirements::javascript("jsparty/prototype.js");
 		Requirements::javascript("jsparty/behaviour.js");
 		Requirements::javascript("jsparty/prototype_improvements.js");

@@ -985,7 +985,7 @@ class Member_ProfileForm extends Form {
 	function __construct($controller, $name, $member) {
 		Requirements::clear();
 		Requirements::css('jsparty/tabstrip/tabstrip.css');
-		Requirements::css('cms/css/typography.css');
+		Requirements::css('cms/css/cms_typography.css');
 		Requirements::css('cms/css/cms_right.css');
 		Requirements::javascript("jsparty/prototype.js");
 		Requirements::javascript("jsparty/behaviour.js");

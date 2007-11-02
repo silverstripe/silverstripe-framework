@@ -817,7 +817,7 @@ JS
 
 	function printall() {
 		Requirements::clear();
-		Requirements::css('cms/css/typography.css');
+		Requirements::css('cms/css/cms_typography.css');
 		Requirements::css('cms/css/cms_right.css');
 		Requirements::css('sapphire/css/TableListField_print.css');
 		$vd = new ViewableData();
