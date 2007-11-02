@@ -17,8 +17,8 @@
 
 .calendarpopup {
 	position: absolute;
-	left: 9em;
-	top: 2em;
+	left: 10em;
+	top: -0.1em;
 	display: none;
 }
 .calendarpopup.focused {
