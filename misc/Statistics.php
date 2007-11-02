@@ -41,14 +41,14 @@ HTML;
 
 			$props = $record->toArray();
 			$props = $props[0]->toMap();
-			$startyear = new DateTime($props['Created']);
+			$startyear = new SSDatetime($props['Created']);
 			$startyear = $startyear->Format('Y');
-			$startmonth = new DateTime($props['Created']);
+			$startmonth = new SSDatetime($props['Created']);
 			$startmonth = $startmonth->Format('m');
 
 
 			if($filter == "day") {
-				$days = new DateTime($props['Created']);
+				$days = new SSDatetime($props['Created']);
 				$days = $days->Format('t');
 
 				$sum = 0;
@@ -59,7 +59,7 @@ HTML;
 
 					foreach($record as $v) {
 						$props = $v->toMap();
-						$currdate = new DateTime($props['Created']);
+						$currdate = new SSDatetime($props['Created']);
 						$curryear = $currdate->Format('Y');
 						$currmonth = $currdate->Format('m');
 						$currday = $currdate->Format('j');
@@ -85,7 +85,7 @@ HTML;
 
 					foreach($record as $v) {
 						$props = $v->toMap();
-						$currdate = new DateTime($props['Created']);
+						$currdate = new SSDatetime($props['Created']);
 						$curryear = $currdate->Format('Y');
 						$currmonth = $currdate->Format('m');
 						$currday = $currdate->Format('j');
