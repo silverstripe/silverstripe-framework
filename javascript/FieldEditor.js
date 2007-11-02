@@ -509,7 +509,7 @@ Behaviour.register(
 				if( Element.hasClassName( $('Fields'), 'readonly' ) )
 					return false;
 				
-				action = this.urlForFieldMethod("addfield") + "&Type=" + this.id;
+				action = this.urlForFieldMethod("addfield") + "&Type=" + this.id + ($('SecurityID') ? '&SecurityID=' + $('SecurityID').value : '');;
 				
 				statusMessage('Adding new field' );
 
