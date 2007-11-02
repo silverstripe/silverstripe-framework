@@ -25,8 +25,11 @@ class TimeField extends TextField {
 	 * Change the setValue to store the time (in a datetime field)
 	 * we store the current date as well (although we don't use it for this field)
 	 */
-	function setValue($val) {
-		$this->value = (date("Y-m-d",time()) . " " . date("H:i",strtotime($val)) );
+	function setValue( $val ) {
+		if( $val )
+			$this->value = (date("Y-m-d",time()) . " " . date("H:i",strtotime($val)) );
+		else
+			$this->value = null;
 	}
 	
 	/**
