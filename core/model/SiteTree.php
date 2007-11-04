@@ -515,7 +515,7 @@ class SiteTree extends DataObject {
 
 	    case 'view':
 			case 'view_page':
-				if((($this->Viewers == 'Anyone') ||
+				if(((!$this->Viewers) || ($this->Viewers == 'Anyone') ||
 						($this->Viewers == 'LoggedInUsers' && $member) ||
 						($this->Viewers == 'OnlyTheseUsers' && $member &&
 						 $member->isInGroup($this->ViewersGroup))) == false)
