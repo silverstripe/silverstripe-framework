@@ -1,0 +1,17 @@
+.popupdatetime ul {
+	list-style:none;
+	padding-left:0;
+	font-size:1em;
+}
+
+.popupdatetime ul li {
+	display:inline;
+}
+
+.popupdatetime ul li .calendarpopup {
+	top: -0.4em;
+}
+
+.popupdatetime ul li .dropdownpopup {
+	top: -0.25em;
+}
