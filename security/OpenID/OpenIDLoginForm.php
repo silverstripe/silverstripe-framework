@@ -108,15 +108,17 @@ class OpenIDLoginForm extends LoginForm {
 		OpenIDAuthenticator::authenticate($data, $this);
 
 		// If the OpenID authenticator returns, an error occured!
-		Session::set('SessionForms.OpenIDLoginForm.OpenIDURL',
-								 $data['OpenIDURL']);
+		Session::set('SessionForms.OpenIDLoginForm.OpenIDURL', $data['OpenIDURL']);
+		
+		if(isset($_REQUEST['BackURL']) && $backURL = $_REQUEST['BackURL']) {
+			Session::set('BackURL', $backURL);
+		}
 
 		if($badLoginURL = Session::get("BadLoginURL")){
 			Director::redirect($badLoginURL);
 		} else {
 			// Show the right tab on failed login
-			Director::redirect(Director::absoluteURL(Security::Link("login")) .
-												 '#' . $this->FormName() .'_tab');
+			Director::redirect(Director::absoluteURL(Security::Link("login")) . '#' . $this->FormName() .'_tab');
 		}
   }
 
