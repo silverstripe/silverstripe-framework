@@ -442,16 +442,18 @@ class Director {
 				return true;
 			}
 		}
-
+		
 		if(isset($_SESSION['isDev']) && $_SESSION['isDev']) return true;
 		
 		// Check if we are running on one of the development servers
-		if(in_array($_SERVER['SERVER_ADDR'], Director::$dev_servers))  {
+		if(in_array($_SERVER['HTTP_HOST'], Director::$dev_servers))  {
 			return true;
 		}
 		
+
+		
 		// Check if we are running on one of the test servers
-		if(in_array($_SERVER['SERVER_ADDR'], Director::$test_servers))  {
+		if(in_array($_SERVER['HTTP_HOST'], Director::$test_servers))  {
 			return true;
 		}
 		
@@ -464,7 +466,7 @@ class Director {
 		}
 		
 		// Check if we are running on one of the test servers
-		if(in_array($_SERVER['SERVER_ADDR'], Director::$test_servers))  {
+		if(in_array($_SERVER['HTTP_HOST'], Director::$test_servers))  {
 			return true;
 		}
 		
