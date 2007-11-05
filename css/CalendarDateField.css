@@ -20,6 +20,7 @@
 	left: 10em;
 	top: -0.15em;
 	display: none;
+	z-index: 2;
 }
 .calendarpopup.focused {
 	display: block;
