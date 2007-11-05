@@ -1,12 +1,7 @@
 * {
-	font-family: Arial;
-	font-size: 1em;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 10px;
 }
-
-
-/*div.field {
-	margin-bottom : 4px;
-}*/
 
 div.FieldEditor {
 	border: 1px solid #CCCCCC;
@@ -16,7 +11,7 @@ div.FieldEditor {
 div.FieldEditor ul.Menu {
 	margin: 0;
 	padding: 3px;
-	background-color: #EEEEEE;
+	background-color: #eee;
 	position: relative;
 }
 
@@ -25,7 +20,6 @@ div.FieldEditor ul.Menu {
     }
 
     div.FieldEditor div.FormOptions label.left {
-        line-height: auto;
         position: relative;
     }
 
