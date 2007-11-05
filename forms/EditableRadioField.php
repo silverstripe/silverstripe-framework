@@ -120,6 +120,7 @@ class EditableRadioField extends EditableFormField {
 	function createField( $asFilter = false ) {
 		$optionSet = $this->Options();
 		$options = array();
+		$defaultOption = '';
 		
 		if( $asFilter )
 			$options['-1'] = '(Any)';
@@ -132,7 +133,7 @@ class EditableRadioField extends EditableFormField {
 		}
 		
 		// return radiofields
-		return new OptionsetField( $this->Name, $this->Title, $options, $defaultOption );
+		return new OptionsetField($this->Name, $this->Title, $options, $defaultOption);
 	}
     
     function prepopulate( $value ) {
