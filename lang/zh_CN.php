@@ -4,7 +4,7 @@ i18n::include_locale_file('sapphire', 'en_US');
 
 global $lang;
 
-$lang['zh_CN'] = $lang['en_US'];
+if(!isset($lang['zh_CN'])) $lang['zh_CN'] = $lang['en_US'];
 
 $lang['zh_CN']['ComplexTableField.ss']['DELETEROW'] = '删除此行';
 $lang['zh_CN']['ComplexTableField.ss']['DELETE'] = '删除';
