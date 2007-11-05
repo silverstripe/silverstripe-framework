@@ -21,7 +21,7 @@
 						<% if TotalCount == 1 %>
 						<% else %>
 							<td>
-								<% control pagination %>
+								<% control Pagination %>
 									<% if active %>
 										<a href="$link">$number</a>
 									<% else %>

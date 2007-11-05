@@ -464,7 +464,7 @@ JS;
      * @return Object DataObjectSet
      */
 	
-	function pagination() {
+	function Pagination() {
 		$this->pageSize = 9;
 		$currentItem  = $this->PopupCurrentItem();
 		$result = new DataObjectSet();
