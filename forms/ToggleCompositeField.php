@@ -9,9 +9,9 @@ class ToggleCompositeField extends CompositeField {
 	 */
 	public $headingLevel = 2;
 	
-	function __construct($title, $children) {
+	function __construct($name, $title, $children) {
+		$this->name = $name;
 		$this->title = $title;
-		$this->name = ereg_replace('[^A-Za-z0-9]','',$this->title);
 
 		$this->startClosed(true);
 		

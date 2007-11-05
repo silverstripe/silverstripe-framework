@@ -1009,7 +1009,9 @@ class SiteTree extends DataObject {
 						new TextField("MetaTitle", _t('SiteTree.METATITLE', "Title")),
 						new TextareaField("MetaDescription", _t('SiteTree.METADESC', "Description")),
 						new TextareaField("MetaKeywords", _t('SiteTree.METAKEYWORDS', "Keywords")),
-						new ToggleCompositeField(_t('SiteTree.METAADVANCEDHEADER', "Advanced Options..."),
+						new ToggleCompositeField(
+							'AdvancedOptions',
+							_t('SiteTree.METAADVANCEDHEADER', "Advanced Options..."),
 							array( 
 								new TextareaField("ExtraMeta",_t('SiteTree.METAEXTRA', "Custom Meta Tags")), 
 								new LiteralField(
