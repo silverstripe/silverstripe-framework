@@ -47,7 +47,7 @@ class FormField extends ViewableData {
 		$this->name = $name;
 		$this->title = ($title === null) ? $name : $title;
 
-		if($value) $this->value = $value;
+		if(isset($value)) $this->value = $value;
 		if($form) $this->setForm($form);
 
 		parent::__construct();
