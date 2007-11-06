@@ -1039,7 +1039,7 @@ class Member_SignupEmail extends Email_Template {
 	function __construct() {
 		$this->subject = _t('Member.EMAILSIGNUPSUBJECT', "Thanks for signing up");
 		$this->body = '
-			<h1>' . _t('WELCOME','Welcome') . ', $FirstName.</h1>
+			<h1>' . _t('Member.GREETING','Welcome') . ', $FirstName.</h1>
 			<p>' . _t('Member.EMAILSIGNUPINTRO1','Thanks for signing up to become a new member, your details are listed below for future reference.') . '</p>
 
 			<p>' . _t('Member.EMAILSIGNUPINTRO2','You can login to the website using the credentials listed below')  . ':
