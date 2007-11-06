@@ -312,6 +312,7 @@ class HtmlEditorField_Toolbar extends ViewableData {
 			$this->controller,
 			"{$this->name}.LinkForm", 
 			new FieldSet(
+				new HeaderField('Link'),
 				new OptionsetField("LinkType", _t('HtmlEditorField.LINKTO', "Link to"), 
 					array(
 						"internal" => _t('HtmlEditorField.LINKINTERNAL',"Page on the site"),
@@ -340,13 +341,14 @@ class HtmlEditorField_Toolbar extends ViewableData {
 	function ImageForm() {
 		$form = new Form($this->controller, "{$this->name}.ImageForm", 
 		new FieldSet(
+			new HeaderField('Image'),
 			new TreeDropdownField("FolderID", _t('HtmlEditorField.FOLDER', "Folder"), "Folder"),
 			new ThumbnailStripField("Image", "FolderID", "getimages"),
 			new TextField("AltText", _t('HtmlEditorField.ALTTEXT', "Description"), "", 80),
 			new DropdownField("CSSClass", _t('HtmlEditorField.CSSCLASS', "Alignment / style"), array(
 				"left" => _t('HtmlEditorField.CSSCLASSLEFT', "On the left, with text wrapping around."),
 				"right" => _t('HtmlEditorField.CSSCLASSRIGHT', "On the right, with text wrapping around."),
-				"center" => _t('HtmlEditorField.CSSCLASSCENTER', "Centred, on its own."),
+				"center" => _t('HtmlEditorField.CSSCLASSCENTER', "Centered, on its own."),
 			)),
 			new FieldGroup(_t('HtmlEditorField.IMAGEDIMENSIONS', "Dimensions"),
 				new TextField("Width", "", "", 5),
@@ -367,6 +369,7 @@ class HtmlEditorField_Toolbar extends ViewableData {
 	function FlashForm() {
 		$form = new Form($this->controller, "{$this->name}.FlashForm", 
 			new FieldSet(
+				new HeaderField('Flash'),
 				new TreeDropdownField("FolderID", _t('HtmlEditorField.FOLDER'), "Folder"),
 				new ThumbnailStripField("Flash", "FolderID", "getflash"),
 				new TextField('Width', _t('HtmlEditorField.IMAGEWIDTHPX', "Width (px)")),
