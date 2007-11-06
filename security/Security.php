@@ -327,6 +327,7 @@ class Security extends Controller {
 		$tmpPage->Title = _t('Security.LOSTPASSWORDHEADER', 'Lost Password');
 		$tmpPage->URLSegment = 'Security';
 		$controller = new Page_Controller($tmpPage);
+		$controller->init();
 
 		$customisedController = $controller->customise(array(
 			'Content' => 
@@ -376,6 +377,7 @@ class Security extends Controller {
 		$tmpPage->Title = _t('Security.LOSTPASSWORDHEADER');
 		$tmpPage->URLSegment = 'Security';
 		$controller = new Page_Controller($tmpPage);
+		$controller->init();
 
 		$email = Convert::raw2xml($this->urlParams['ID']);
 		$customisedController = $controller->customise(array(
@@ -411,6 +413,7 @@ class Security extends Controller {
 		$tmpPage->Title = _t('Security.CHANGEPASSWORDHEADER', 'Change your password');
 		$tmpPage->URLSegment = 'Security';
 		$controller = new Page_Controller($tmpPage);
+		$controller->init();
 
 		if(isset($_REQUEST['h']) && Member::autoLoginHash($_REQUEST['h'])) {
 			// The auto login hash is valid, store it for the change password form
