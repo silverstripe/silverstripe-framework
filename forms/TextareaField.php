@@ -24,11 +24,15 @@ class TextareaField extends FormField {
 	 * Returns a <textarea> tag - used in templates.
 	 */
 	function Field() {
-		if($extraClass = trim($this->extraClass())) {
-			$classAttr = "class=\"$extraClass\"";
-		} else {
-			$classAttr = '';
+		$classAttr = '';
+		if( $this->readonly ) {
+			$classAttr .= 'class="readonly';
+			if( $extraClass = trim( $this->extraClass() ) )
+				$classAttr .= " $extraClass";
+			$classAttr .= '"';
 		}
+		else if( $extraClass = trim( $this->extraClass() ) )
+			$classAttr .= 'class="' . $extraClass . '"';
 		
 		$disabled = $this->disabled ? " disabled=\"disabled\"" : "";
 		$readonly = $this->readonly ? " readonly=\"readonly\"" : "";
