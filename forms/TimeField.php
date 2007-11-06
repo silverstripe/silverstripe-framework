@@ -57,14 +57,13 @@ class TimeField extends TextField {
  * The readonly class for our TimeField
  */
 class TimeField_Readonly extends TimeField {
-	function Field() {
-		$extraClass = $this->extraClass();
-		$fieldSize = $this->maxLength ? min( $this->maxLength, 30 ) : 30;
-		if($this->maxLength) {
-			return "<input readonly=\"readonly\" class=\"text maxlength$extraClass readonly\" type=\"text\" id=\"" . $this->id() . "\" name=\"{$this->name}\" value=\"" . $this->attrValue() . "\" maxlength=\"$this->maxLength\" size=\"$fieldSize\" />";
-		} else {
-			return "<input readonly=\"readonly\" class=\"text$extraClass readonly\" type=\"text\" id=\"" . $this->id() . "\" name=\"{$this->name}\" value=\"" . $this->attrValue() . "\" />"; 
-		}
-	}
 	
+	function Field() {
+		if( $this->value )
+			$val = $this->attrValue();
+		else
+			$val = '<i>(not set)</i>';
+		
+		return "<span class=\"readonly\" id=\"" . $this->id() . "\">$val</span>";
+	}
 }
