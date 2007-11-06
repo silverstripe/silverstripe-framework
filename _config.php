@@ -26,6 +26,7 @@ set_include_path(get_include_path() . PATH_SEPARATOR . $path);
  * Register the {@link OpenIDAuthenticator OpenID authenticator}
  */
 Authenticator::register_authenticator('MemberAuthenticator');
+Authenticator::set_default_authenticator('MemberAuthenticator');
 
 /**
  * Define a default language different than english

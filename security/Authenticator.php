@@ -1,13 +1,4 @@
 <?php
-
-/**
- * Authenticator base class
- *
- * @author Markus Lanthaler <markus@silverstripe.com>
- */
-
-
-
 /**
  * Abstract base class for an authentication method
  *
@@ -24,6 +15,14 @@ abstract class Authenticator extends Object {
    * @var array
    */
   private static $authenticators = array();
+  
+  /**
+   * Used to influence the order of authenticators on the login-screen
+   * (default shows first).
+   * 
+   * @var string
+   */
+  private static $default_authenticator = '';
 
 
   /**
@@ -110,7 +109,31 @@ abstract class Authenticator extends Object {
    *               authenticators.
    */
   public static function get_authenticators() {
+    // put default authenticator first (mainly for tab-order on loginform)
+    if($key = array_search(self::$default_authenticator,self::$authenticators)) {
+    	unset(self::$authenticators[$key]);
+	    array_unshift(self::$authenticators, self::$default_authenticator);
+    }
+    
     return self::$authenticators;
+  }
+  
+  /**
+   * Set a default authenticator (shows first in tabs)
+   *
+   * @param string
+   */
+  public static function set_default_authenticator($authenticator) {
+    self::$default_authenticator = $authenticator;
+    
+    
+  }
+  
+  /**
+   * @return string
+   */
+  public static function get_default_authenticator() {
+    return self::$default_authenticator;
   }
 
 
