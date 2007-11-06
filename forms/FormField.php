@@ -42,8 +42,7 @@ class FormField extends ViewableData {
 	 * @param form Reference to the container form
 	 * @param maxLength The Maximum length of the attribute
 	 */
-	function __construct($name, $title = null, $value = "", $form = null, $rightTitle = null) {
-
+	function __construct($name, $title = null, $value = null, $form = null, $rightTitle = null) {
 		$this->name = $name;
 		$this->title = ($title === null) ? $name : $title;
 
