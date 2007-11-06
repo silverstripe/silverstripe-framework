@@ -7,15 +7,14 @@ html>body div.TreeDropdownField {
 }
 
 div.TreeDropdownField span.items {
-	display: block;
-	height: 100%;
+	height: 14px;
 	border: 1px #7f9db9 solid;
 	cursor: pointer;
-	width: 33em;
+	width: 30.5em;
 	float: left;
-	padding-top: 2px;
-	padding-bottom: 2px;
-	background-color: white;
+	padding: 3px 0 2px 4px;
+	background-color: #fff;
+	margin:0;
 }
 
 div.TreeDropdownField div.tree_holder {
@@ -25,7 +24,7 @@ div.TreeDropdownField div.tree_holder {
 	margin: 0;
 	height: 200px;
 	overflow: auto;
-	background-color: white;
+	background-color: #fff;
 	/**
 	 * HACK IE6, see http://www.hedgerwow.com/360/bugs/css-select-free.html
 	 */
@@ -56,14 +55,14 @@ div.TreeDropdownField div.tree_holder iframe {
 }
 
 div.TreeDropdownField a.editLink {
-	border-width: 1px 1px 1px 0;
-	background: url(../../sapphire/images/TreeDropdownField_button.gif) left top no-repeat;
+	border:none;
+	text-decoration: none;
+	background: url(../../sapphire/images/TreeDropdownField_button.gif) no-repeat left top;
 	width: 19px;
 	height: 21px;
 	margin: 0;
-	padding: 0;
-	float: left;
-	clear: right;
+	padding: 0 0 0 1px;
 	z-index: 0;
 	overflow: hidden;
+	float:right;
 }
