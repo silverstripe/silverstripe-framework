@@ -108,18 +108,14 @@ class Translatable extends DataObjectDecorator {
 	 */
 	static function choose_site_lang($langsAvailable = null) {
 		if(is_array($langsAvailable)) {
-			if(isset($_GET['lang']) && in_array($_GET['lang'],$langsAvailable)) {
+			if(isset($_GET['lang']) && in_array($_GET['lang'], $langsAvailable)) {
 				self::set_reading_lang($_GET['lang']);
-			} elseif(isset($_COOKIE['lang']) && in_array($_COOKIE['lang'],$langsAvailable)) {
+			} elseif(isset($_COOKIE['lang']) && in_array($_COOKIE['lang'], $langsAvailable)) {
 				self::set_reading_lang($_COOKIE['lang']);
-			} else if(Session::get('currentLang') 
-				&& in_array(Session::get('currentLang'),$langsAvailable)
-			) {
+			} else if(Session::get('currentLang') && in_array(Session::get('currentLang'), $langsAvailable)) {
 				self::set_reading_lang(Session::get('currentLang'));
-			} else if (($member = Member::currentUser()) && ($lang = $member->Locale)
-				 && in_array($lang,$langsAvailable)
-			) {
-				self::set_reading_lang($lang);			
+			} else {
+				self::set_reading_lang(self::default_lang());		
 			}
 		} else {
 			if(isset($_GET['lang'])) {
@@ -128,8 +124,6 @@ class Translatable extends DataObjectDecorator {
 				self::set_reading_lang($_COOKIE['lang']);
 			} else if(Session::get('currentLang')) {
 				self::set_reading_lang(Session::get('currentLang'));
-			} else if (($member = Member::currentUser()) && ($lang = $member->Locale)) {
-				self::set_reading_lang($lang);			
 			} else {
 				self::set_reading_lang(self::default_lang());
 			}
