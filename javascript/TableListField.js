@@ -83,7 +83,7 @@ TableListField.prototype = {
 				link.getAttribute("href"),
 				{
 					method: 'post', 
-					postBody: 'forceajax=1',
+					postBody: 'forceajax=1' + ($('SecurityID') ? '&SecurityID=' + $('SecurityID').value : ''),
 					onComplete: function(){
 						Effect.Fade(row);
 					}.bind(this),
