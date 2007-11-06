@@ -269,7 +269,7 @@ $lang['en_US']['Member']['INTERFACELANG'] = array(
 	'Language of the CMS'
 );
 $lang['en_US']['Member']['EMAILSIGNUPSUBJECT'] = 'Thanks for signing up';
-$lang['en_US']['']['WELCOME'] = 'Welcome';
+$lang['en_US']['Member']['GREETING'] = 'Welcome';
 $lang['en_US']['Member']['EMAILSIGNUPINTRO1'] = 'Thanks for signing up to become a new member, your details are listed below for future reference.';
 $lang['en_US']['Member']['EMAILSIGNUPINTRO2'] = 'You can login to the website using the credentials listed below';
 $lang['en_US']['Member']['CONTACTINFO'] = 'Contact Information';
