@@ -10,11 +10,12 @@ div.TreeDropdownField span.items {
 	height: 14px;
 	border: 1px #7f9db9 solid;
 	cursor: pointer;
-	width: 30.5em;
+	width: 25.4em;
 	float: left;
-	padding: 3px 0 2px 4px;
+	padding: 2px 0 2.5px 4px;
 	background-color: #fff;
 	margin:0;
+	font-size: 12px;
 }
 
 div.TreeDropdownField div.tree_holder {
@@ -31,6 +32,10 @@ div.TreeDropdownField div.tree_holder {
 	position:absolute;
 	z-index:10;
 	width:33em;/*must have for any value*/;
+}
+
+div.TreeDropdownField div.tree_holder ul.tree a {
+	font-size: 12px;
 }
 
 html>body div.TreeDropdownField div.tree_holder {
