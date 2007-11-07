@@ -272,7 +272,53 @@ class Debug {
 		
 		return $funcName;
 	}
+	
+	/**
+	 * Check if the user has permissions to run URL debug tools,
+	 * else redirect them to log in.
+	 */
+	static function require_developer_login() {
+		if(Director::isDev())	{
+			return;
+		}
+		if(isset($_SESSION['loggedInAs'])) {
+			// We have to do some raw SQL here, because this method is called in Object::defineMethods().
+			// This means we have to be careful about what objects we create, as we don't want Object::defineMethods()
+			// being called again.
+			// This basically calls Permission::checkMember($_SESSION['loggedInAs'], 'ADMIN');
+			
+			$memberID = $_SESSION['loggedInAs'];
+			
+			$groups = DB::query("SELECT GroupID from Group_Members WHERE MemberID=" . $memberID);
+			$groupCSV = implode($groups->column(), ',');
+			
+			$permission = DB::query("
+				SELECT ID
+				FROM Permission
+				WHERE (
+					Code = 'ADMIN'
+					AND Type = " . Permission::GRANT_PERMISSION . "
+					AND GroupID IN ($groupCSV)
+				)
+			")->value();
+			
+			if($permission) {
+				return;
+			}
+		}
+		
+		// This basically does the same as
+		// Security::permissionFailure(null, "You need to login with developer access to make use of debugging tools.");
+		// We have to do this because of how early this method is called in execution.
+		$_SESSION['Security']['Message']['message'] = "You need to login with developer access to make use of debugging tools.";
+		$_SESSION['Security']['Message']['type'] =  'warning';
+		$_SESSION['BackURL'] = $_SERVER['REQUEST_URI'];
+		header("HTTP/1.1 302 Found");
+		header("Location: " . Director::baseURL() . "Security/login");
+		die();
+	}
 }
+
 function errorHandler($errno, $errstr, $errfile, $errline, $errcontext) {
 	switch($errno) {
 		case E_ERROR:

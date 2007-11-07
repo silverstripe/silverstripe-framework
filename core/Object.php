@@ -267,6 +267,7 @@ class Object {
 		}
 
 		if(isset($_REQUEST['debugmethods']) && isset(Object::$builtInMethods[$this->class])) {
+			Debug::require_developer_login();
 			echo "<h2>Methods defined for $this->class</h2>";
 			foreach(Object::$builtInMethods[$this->class] as $name => $info) {
 				echo "<li>$name";
