@@ -4,8 +4,8 @@ i18n::include_locale_file('sapphire', 'en_US');
 
 global $lang;
 
-if(!isset($lang['zh_CN'])) $lang['zh_CN'] = $lang['en_US'];
 
+if(!isset($lang['zh_CN'])) $lang['zh_CN'] = $lang['en_US'];
 $lang['zh_CN']['ComplexTableField.ss']['DELETEROW'] = '删除此行';
 $lang['zh_CN']['ComplexTableField.ss']['DELETE'] = '删除';
 $lang['zh_CN']['ComplexTableField.ss']['NOITEMSFOUND'] = '没有发现数据';
@@ -20,7 +20,6 @@ $lang['zh_CN']['ChangePasswordEmail.ss']['CHANGEPASSWORDTEXT2'] = '您现在可�
 $lang['zh_CN']['ForgotPasswordEmail.ss']['HELLO'] = '嗨';
 $lang['zh_CN']['SiteTree']['BUTTONSAVEPUBLISH'] = '保存并发布';
 $lang['zh_CN']['Form']['SAVECHANGES'] = '保存更改';
-$lang['zh_CN']['Member']['REFRESHLANG'] = '您已更改了界面语言。请刷新您的浏览器窗口，以使更改生效。';
 $lang['zh_CN']['ErrorPage']['CODE'] = '错误代码';
 $lang['zh_CN']['GhostPage']['NOLINKED'] = '该鬼页没有被链接的网页。';
 $lang['zh_CN']['Controller']['IMAGE'] = '图像';
@@ -221,7 +220,6 @@ $lang['zh_CN']['TypeDropdown']['NONE'] = '（无选项）';
 $lang['zh_CN']['BasicAuth']['ERRORNOTREC'] = '没有找到此用户名/密码';
 $lang['zh_CN']['BasicAuth']['ENTERINFO'] = '请输入用户名和密码';
 $lang['zh_CN']['BasicAuth']['ERRORNOTADMIN'] = '此用户没有管理员权限。';
-$lang['zh_CN']['']['WELCOME'] = '欢迎';
 $lang['zh_CN']['MemberAuthenticator']['TITLE'] = '电邮地址和密码';
 $lang['zh_CN']['Security']['NOTEPAGESECURED'] = '此页是受安全保护的。输入您的登录信息，我们会将您送达。';
 $lang['zh_CN']['Security']['ALREADYLOGGEDIN'] = '您无访问此页的权限。如果您拥有另一个可访问次页的帐户，请在下面登录。';
@@ -240,5 +238,20 @@ $lang['zh_CN']['ComplexTableField.ss']['SORTDESC'] = '递减排序';
 $lang['zh_CN']['ComplexTableField.ss']['ADDITEM'] = '新加';
 $lang['zh_CN']['ComplexTableField.ss']['SHOW'] = '显示';
 $lang['zh_CN']['ComplexTableField.ss']['EDIT'] = '编辑';
-
+$lang['zh_CN']['ChangePasswordEmail.ss']['CHANGEPASSWORDTEXT1'] = '您已更改了登陆%s的密码';
+$lang['zh_CN']['Member']['GREETING'] = '欢迎，';
+$lang['zh_CN']['Date']['HOUR'] = '个小时';
+$lang['zh_CN']['Date']['HOURS'] = '个小时';
+$lang['zh_CN']['Date']['MIN'] = '分钟';
+$lang['zh_CN']['Date']['AWAY'] = '后';
+$lang['zh_CN']['Date']['DAY'] = '天';
+$lang['zh_CN']['Date']['AGO'] = '前';
+$lang['zh_CN']['Date']['SECS'] = '秒';
+$lang['zh_CN']['Date']['DAYS'] = '天';
+$lang['zh_CN']['Date']['YEAR'] = '年';
+$lang['zh_CN']['Date']['YEARS'] = '年';
+$lang['zh_CN']['Date']['MONTH'] = '月';
+$lang['zh_CN']['Date']['MONTHS'] = '月';
+$lang['zh_CN']['Date']['MINS'] = '分钟';
+$lang['zh_CN']['Date']['SEC'] = '秒';
 ?>

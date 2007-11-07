@@ -91,40 +91,41 @@ class Date extends DBField {
 	 */
 	function Ago() {
 		if($this->value) {
-			if(time() < strtotime($this->value)) $agoWord = " away";
-			else $agoWord = " ago";
+			if(time() < strtotime($this->value)) $agoWord = _t("Date.AWAY", " away");
+			else $agoWord = _t("Date.AGO", " ago");
 
 			return $this->TimeDiff() . $agoWord;
 		}
 	}
 
 	function TimeDiff() {
+
 		if($this->value) {
 			$ago = abs(time() - strtotime($this->value));
 			
 			if($ago < 60) {
 				$span = $ago;
-				return ($span != 1) ? "{$span} secs" : "{$span} sec";
+				return ($span != 1) ? "{$span}"._t("Date.SECS", " secs") : "{$span}"._t("Date.SEC", " sec");
 			}
 			if($ago < 3600) {
 				$span = round($ago/60);
-				return ($span != 1) ? "{$span} mins" : "{$span} min";
+				return ($span != 1) ? "{$span}"._t("Date.MINS", " mins") : "{$span}"._t("Date.MIN", " min");
 			}
 			if($ago < 86400) {
 				$span = round($ago/3600);
-				return ($span != 1) ? "{$span} hours" : "{$span} hour";
+				return ($span != 1) ? "{$span}"._t("Date.HOURS", " hours") : "{$span}"._t("Date.HOUR", " hour");
 			}
 			if($ago < 86400*30) {
 				$span = round($ago/86400);
-				return ($span != 1) ? "{$span} days" : "{$span} day";
+				return ($span != 1) ? "{$span}"._t("Date.DAYS", " days") : "{$span}"._t("Date.DAY", " day");
 			}
 			if($ago < 86400*365) {
 				$span = round($ago/86400/30);
-				return ($span != 1) ? "{$span} months" : "{$span} month";
+				return ($span != 1) ? "{$span}"._t("Date.MONTHS", " months") : "{$span}"._t("Date.MONTH", " month");
 			}
 			if($ago > 86400*365) {
 				$span = round($ago/86400/365);
-				return ($span != 1) ? "{$span} years" : "{$span} year";
+				return ($span != 1) ? "{$span}"._t("Date.YEARS", " years") : "{$span}"._t("Date.YEAR", " year");
 			}
 		}
 	}
