@@ -338,33 +338,37 @@ class HtmlEditorField_Toolbar extends ViewableData {
 	}
 
 	function ImageForm() {
-		$form = new Form($this->controller, "{$this->name}.ImageForm", 
-		new FieldSet(
-			new LiteralField('Heading', '<h2><img src="cms/images/closeicon.gif" alt="close" title="close" />Image</h2>'),
-			new TreeDropdownField("FolderID", _t('HtmlEditorField.FOLDER', "Folder"), "Folder"),
-			new ThumbnailStripField("Image", "FolderID", "getimages"),
-			new TextField("AltText", _t('HtmlEditorField.ALTTEXT', "Description"), "", 80),
-			new DropdownField("CSSClass", _t('HtmlEditorField.CSSCLASS', "Alignment / style"), array(
-				"left" => _t('HtmlEditorField.CSSCLASSLEFT', "On the left, with text wrapping around."),
-				"right" => _t('HtmlEditorField.CSSCLASSRIGHT', "On the right, with text wrapping around."),
-				"center" => _t('HtmlEditorField.CSSCLASSCENTER', "Centered, on its own."),
-			)),
-			new FieldGroup(_t('HtmlEditorField.IMAGEDIMENSIONS', "Dimensions"),
-				new TextField("Width", _t('HtmlEditorField.IMAGEWIDTHPX', "Width"), 5),
-				new TextField("Height", "x " . _t('HtmlEditorField.IMAGEHEIGHTPX', "Height"), 5)
+		$form = new Form(
+			$this->controller,
+			"{$this->name}.ImageForm", 
+			new FieldSet(
+				new LiteralField('Heading', '<h2><img src="cms/images/closeicon.gif" alt="close" title="close" />Image</h2>'),
+				new TreeDropdownField("FolderID", _t('HtmlEditorField.FOLDER', "Folder"), "Folder"),
+				new ThumbnailStripField("Image", "FolderID", "getimages"),
+				new TextField("AltText", _t('HtmlEditorField.ALTTEXT', "Description"), "", 80),
+				new DropdownField("CSSClass", _t('HtmlEditorField.CSSCLASS', "Alignment / style"), array(
+					"left" => _t('HtmlEditorField.CSSCLASSLEFT', "On the left, with text wrapping around."),
+					"right" => _t('HtmlEditorField.CSSCLASSRIGHT', "On the right, with text wrapping around."),
+					"center" => _t('HtmlEditorField.CSSCLASSCENTER', "Centered, on its own."),
+				)),
+				new FieldGroup(_t('HtmlEditorField.IMAGEDIMENSIONS', "Dimensions"),
+					new TextField("Width", _t('HtmlEditorField.IMAGEWIDTHPX', "Width"), 5),
+					new TextField("Height", "x " . _t('HtmlEditorField.IMAGEHEIGHTPX', "Height"), 5)
+				)
+			),
+			new FieldSet(
+				new FormAction("insertimage", "Insert image"),
+				new FormAction("editimage", "Edit image")
 			)
-		),
-		new FieldSet(
-			new FormAction("insertimage", "Insert image"),
-			new FormAction("editimage", "Edit image")
-		)
 		);
 		$form->loadDataFrom($this);
 		return $form;
 	}
 
 	function FlashForm() {
-		$form = new Form($this->controller, "{$this->name}.FlashForm", 
+		$form = new Form(
+			$this->controller,
+			"{$this->name}.FlashForm", 
 			new FieldSet(
 				new LiteralField('Heading', '<h2><img src="cms/images/closeicon.gif" alt="close" title="close" />Flash</h2>'),
 				new TreeDropdownField("FolderID", _t('HtmlEditorField.FOLDER'), "Folder"),
