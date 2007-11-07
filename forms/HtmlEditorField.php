@@ -356,10 +356,8 @@ class HtmlEditorField_Toolbar extends ViewableData {
 			)
 		),
 		new FieldSet(
-		/*
 			new FormAction("insertimage", "Insert image"),
-			new FormAction("cancel", "Cancel")
-		*/
+			new FormAction("editimage", "Edit image")
 		)
 		);
 		$form->loadDataFrom($this);
