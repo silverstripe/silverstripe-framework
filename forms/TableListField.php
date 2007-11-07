@@ -412,6 +412,7 @@ JS
 		$this->setShowPagination(false);
 		$this->setPermissions(array());
 		$this->IsReadOnly = true;
+		$this->addExtraClass( 'readonly' );
 		return $this;
 	}
 	
@@ -980,7 +981,7 @@ JS
 			$items[] = $this->template;
 		}
 
-		return implode(" ", $items);
+		return implode(" ", $items) . ' ' . $this->extraClass();
 	}
 	
 	 
