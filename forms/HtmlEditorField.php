@@ -330,8 +330,7 @@ class HtmlEditorField_Toolbar extends ViewableData {
 			),
 			new FieldSet(
 				new FormAction("insert", _t('HtmlEditorField.BUTTONINSERTLINK', "Insert link")),
-				new FormAction("remove", _t('HtmlEditorField.BUTTONREMOVELINK', "Remove link")),
-				new FormAction("cancel", _t('HtmlEditorField.BUTTONCANCEL', "Cancel"))
+				new FormAction("remove", _t('HtmlEditorField.BUTTONREMOVELINK', "Remove link"))
 			)
 		);
 		$form->loadDataFrom($this);
