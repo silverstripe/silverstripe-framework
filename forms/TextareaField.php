@@ -37,7 +37,10 @@ class TextareaField extends FormField {
 		$disabled = $this->disabled ? " disabled=\"disabled\"" : "";
 		$readonly = $this->readonly ? " readonly=\"readonly\"" : "";
 		
-		return "<textarea $disabled$readonly $classAttr id=\"" . $this->id() . "\" name=\"{$this->name}\" rows=\"{$this->rows}\" cols=\"{$this->cols}\">".Convert::raw2att($this->value)."</textarea>";
+		if( $this->readonly )
+			return "<span $disabled$readonly $classAttr id=\"" . $this->id() . "\" name=\"{$this->name}\" rows=\"{$this->rows}\" cols=\"{$this->cols}\">" . ( $this->value ? Convert::raw2att( $this->value ) : '<i>(not set)</i>' ) . "</span>";
+		else
+			return "<textarea $disabled$readonly $classAttr id=\"" . $this->id() . "\" name=\"{$this->name}\" rows=\"{$this->rows}\" cols=\"{$this->cols}\">".Convert::raw2att($this->value)."</textarea>";
 	}
 	
 	/**
@@ -62,6 +65,10 @@ class TextareaField extends FormField {
 		$this->disabled = true;
 		$this->readonly = false;
 		return $this;
+	}
+	
+	function Type() {
+		return parent::Type() . ( $this->readonly ? ' readonly' : '' ); 
 	}
 }
 ?>
