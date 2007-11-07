@@ -71,6 +71,16 @@ form fieldset {
 	clear: none;
 }
 
+.right.ComplexTableField_Popup form textarea,
+.right.ComplexTableField_Popup form input.text,
+.right.ComplexTableField_Popup form textarea.htmleditor {
+	width: 98.3%;
+}
+
+.right.ComplexTableField_Popup form h2 {
+	line-height: normal;
+}
+
 /* Pagination */ 
 #ComplexTableField_Pagination,
 #ComplexTableField_Pagination * {
