@@ -177,7 +177,7 @@ class HtmlEditorField extends TextareaField {
 class HtmlEditorField_readonly extends ReadonlyField {
 	function Field() {
 		$valforInput = $this->value ? Convert::raw2att($this->value) : "";
-		return "<span class=\"readonly typography\" id=\"" . $this->id() . "\">$this->value</span><input type=\"hidden\" name=\"".$this->name."\" value=\"".$valforInput."\" />";
+		return "<span class=\"readonly typography\" id=\"" . $this->id() . "\">" . ( $this->value && $this->value != '<p></p>' ? $this->value : '<i>(not set)</i>' ) . "</span><input type=\"hidden\" name=\"".$this->name."\" value=\"".$valforInput."\" />";
 	}
 	function Type() {
 		return 'htmleditorfield readonly';
