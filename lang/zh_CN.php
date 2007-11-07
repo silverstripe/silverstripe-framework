@@ -250,8 +250,8 @@ $lang['zh_CN']['Date']['SECS'] = '秒';
 $lang['zh_CN']['Date']['DAYS'] = '天';
 $lang['zh_CN']['Date']['YEAR'] = '年';
 $lang['zh_CN']['Date']['YEARS'] = '年';
-$lang['zh_CN']['Date']['MONTH'] = '月';
-$lang['zh_CN']['Date']['MONTHS'] = '月';
+$lang['zh_CN']['Date']['MONTH'] = '个月';
+$lang['zh_CN']['Date']['MONTHS'] = '个月';
 $lang['zh_CN']['Date']['MINS'] = '分钟';
 $lang['zh_CN']['Date']['SEC'] = '秒';
 ?>
