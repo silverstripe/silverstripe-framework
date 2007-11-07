@@ -218,7 +218,7 @@ $lang['en_US']['HtmlEditorField']['ALTTEXT'] = 'Description';
 $lang['en_US']['HtmlEditorField']['CSSCLASS'] = 'Alignment / style';
 $lang['en_US']['HtmlEditorField']['CSSCLASSLEFT'] = 'On the left, with text wrapping around.';
 $lang['en_US']['HtmlEditorField']['CSSCLASSRIGHT'] = 'On the right, with text wrapping around.';
-$lang['en_US']['HtmlEditorField']['CSSCLASSCENTER'] = 'Centred, on its own.';
+$lang['en_US']['HtmlEditorField']['CSSCLASSCENTER'] = 'Centered, on its own.';
 $lang['en_US']['HtmlEditorField']['IMAGEDIMENSIONS'] = 'Dimensions';
 $lang['en_US']['HtmlEditorField']['IMAGEWIDTHPX'] = 'Width (px)';
 $lang['en_US']['HtmlEditorField']['IMAGEHEIGHTPX'] = 'Height (px)';
@@ -271,7 +271,7 @@ $lang['en_US']['Member']['INTERFACELANG'] = array(
 	'Language of the CMS'
 );
 $lang['en_US']['Member']['EMAILSIGNUPSUBJECT'] = 'Thanks for signing up';
-$lang['en_US']['']['WELCOME'] = 'Welcome';
+$lang['en_US']['Member']['GREETING'] = 'Welcome';
 $lang['en_US']['Member']['EMAILSIGNUPINTRO1'] = 'Thanks for signing up to become a new member, your details are listed below for future reference.';
 $lang['en_US']['Member']['EMAILSIGNUPINTRO2'] = 'You can login to the website using the credentials listed below';
 $lang['en_US']['Member']['CONTACTINFO'] = 'Contact Information';
@@ -300,21 +300,6 @@ $lang['en_US']['Member']['BUTTONLOGIN'] = 'Log in';
 $lang['en_US']['Member']['BUTTONLOSTPASSWORD'] = 'I\'ve lost my password';
 $lang['en_US']['Member']['LOGGEDINAS'] = 'You\'re logged in as %s.';
 $lang['en_US']['Member']['WELCOMEBACK'] = 'Welcome Back, %s';
-$lang['en_US']['Security']['OPENIDHEADER'] = 'OpenID/i-name credentials';
-$lang['en_US']['Security']['OPENIDDESC'] = '<p>Make sure you enter your normalized OpenID/i-name credentials 
-				here, i.e. with protocol and trailing slash for OpenID (e.g. http://openid.silverstripe.com/).</p>';
-$lang['en_US']['Security']['OPENIDURL'] = 'OpenID URL/i-name';
-$lang['en_US']['Security']['MEMBERALREADYEXISTS'] = 'There already exists a member with this identity URL';
-$lang['en_US']['OpenIDAuthenticator']['ERRORCRED'] = 'Please enter your OpenID URL or your i-name.';
-$lang['en_US']['OpenIDAuthenticator']['TRANSACTIONINPROGRESS'] = 'OpenID transaction in progress';
-$lang['en_US']['OpenIDAuthenticator']['VERIFICATIONCANCELLED'] = 'The verification was cancelled. Please try again.';
-$lang['en_US']['OpenIDAuthenticator']['AUTHFAILED'] = 'The OpenID/i-name authentication failed.';
-$lang['en_US']['OpenIDAuthenticator']['LOGINFAILED'] = 'Login failed. Please try again.';
-$lang['en_US']['OpenIDLoginForm']['DESC'] = '<div id="OpenIDDescription"><p>OpenID is an Internet-wide identity system
-		  					that allows you to sign in to many websites with a single account.
-							For more information visit <a href="http://openid.net">openid.net</a>.</p></div>
-						';
-$lang['en_US']['OpenIDLoginForm']['URL'] = 'OpenID URL';
 $lang['en_US']['Security']['NOTEPAGESECURED'] = 'That page is secured. Enter your credentials below and we will send you right along.';
 $lang['en_US']['Security']['ALREADYLOGGEDIN'] = 'You don\'t have access to this page.  If you have another account that can access that page, you can log in below.';
 $lang['en_US']['Security']['LOGGEDOUT'] = 'You have been logged out.  If you would like to log in again, enter your credentials below.';
