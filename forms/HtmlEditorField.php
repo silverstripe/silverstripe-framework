@@ -325,7 +325,7 @@ class HtmlEditorField_Toolbar extends ViewableData {
 					)
 				),
 				new TreeDropdownField("internal", _t('HtmlEditorField.PAGE', "Page"), "SiteTree", "URLSegment"),
-				new TextField("external", _t('HtmlEditorField.URL', "URL")),
+				new TextField("external", _t('HtmlEditorField.URL', "URL"), 'http://'),
 				new EmailField("email", _t('HtmlEditorField.EMAIL', "Email address")),
 				new TreeDropdownField("file",_t('HtmlEditorField.FILE', "File"),"File", "Filename"),
 				new TextField("Description", _t('HtmlEditorField.LINKDESCR', "Link description")),
