@@ -81,7 +81,7 @@ class Security extends Controller {
 	 * This will redirect to a login page.
 	 * If you don't provide a messageSet, a default will be used.
 	 *
-	 * @param $page The controller that you were on to cause the permission
+	 * @param Controller $controller The controller that you were on to cause the permission
 	 *              failure.
 	 * @param string|array $messageSet The message to show to the user. This
 	 *                                  can be a string, or a map of different
@@ -99,7 +99,7 @@ class Security extends Controller {
 	 *                                                       permission to
 	 *                                                       access the item.
 	 */
-	static function permissionFailure($page, $messageSet = null) {
+	static function permissionFailure($controller, $messageSet = null) {
 		// Prepare the messageSet provided
 		if(!$messageSet) {
 			$messageSet = array(
