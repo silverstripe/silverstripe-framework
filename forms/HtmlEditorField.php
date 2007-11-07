@@ -351,8 +351,8 @@ class HtmlEditorField_Toolbar extends ViewableData {
 				"center" => _t('HtmlEditorField.CSSCLASSCENTER', "Centered, on its own."),
 			)),
 			new FieldGroup(_t('HtmlEditorField.IMAGEDIMENSIONS', "Dimensions"),
-				new TextField("Width", "", "", 5),
-				new TextField("Height", "x", "", 5)
+				new TextField("Width", "Width", 5),
+				new TextField("Height", "x Height", 5)
 			)
 		),
 		new FieldSet(
