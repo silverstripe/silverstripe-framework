@@ -312,7 +312,7 @@ class HtmlEditorField_Toolbar extends ViewableData {
 			$this->controller,
 			"{$this->name}.LinkForm", 
 			new FieldSet(
-				new HeaderField('Link'),
+				new LiteralField('Heading', '<h2><img src="cms/images/closeicon.gif" alt="close" title="close" />Link</h2>'),
 				new OptionsetField("LinkType", _t('HtmlEditorField.LINKTO', "Link to"), 
 					array(
 						"internal" => _t('HtmlEditorField.LINKINTERNAL',"Page on the site"),
@@ -341,7 +341,7 @@ class HtmlEditorField_Toolbar extends ViewableData {
 	function ImageForm() {
 		$form = new Form($this->controller, "{$this->name}.ImageForm", 
 		new FieldSet(
-			new HeaderField('Image'),
+			new LiteralField('Heading', '<h2><img src="cms/images/closeicon.gif" alt="close" title="close" />Image</h2>'),
 			new TreeDropdownField("FolderID", _t('HtmlEditorField.FOLDER', "Folder"), "Folder"),
 			new ThumbnailStripField("Image", "FolderID", "getimages"),
 			new TextField("AltText", _t('HtmlEditorField.ALTTEXT', "Description"), "", 80),
@@ -367,7 +367,7 @@ class HtmlEditorField_Toolbar extends ViewableData {
 	function FlashForm() {
 		$form = new Form($this->controller, "{$this->name}.FlashForm", 
 			new FieldSet(
-				new HeaderField('Flash'),
+				new LiteralField('Heading', '<h2><img src="cms/images/closeicon.gif" alt="close" title="close" />Flash</h2>'),
 				new TreeDropdownField("FolderID", _t('HtmlEditorField.FOLDER'), "Folder"),
 				new ThumbnailStripField("Flash", "FolderID", "getflash"),
 				new TextField('Width', _t('HtmlEditorField.IMAGEWIDTHPX', "Width (px)")),
