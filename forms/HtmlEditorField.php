@@ -351,8 +351,8 @@ class HtmlEditorField_Toolbar extends ViewableData {
 				"center" => _t('HtmlEditorField.CSSCLASSCENTER', "Centered, on its own."),
 			)),
 			new FieldGroup(_t('HtmlEditorField.IMAGEDIMENSIONS', "Dimensions"),
-				new TextField("Width", "Width", 5),
-				new TextField("Height", "x Height", 5)
+				new TextField("Width", _t('HtmlEditorField.IMAGEWIDTHPX', "Width"), 5),
+				new TextField("Height", "x " . _t('HtmlEditorField.IMAGEHEIGHTPX', "Height"), 5)
 			)
 		),
 		new FieldSet(
@@ -370,8 +370,10 @@ class HtmlEditorField_Toolbar extends ViewableData {
 				new LiteralField('Heading', '<h2><img src="cms/images/closeicon.gif" alt="close" title="close" />Flash</h2>'),
 				new TreeDropdownField("FolderID", _t('HtmlEditorField.FOLDER'), "Folder"),
 				new ThumbnailStripField("Flash", "FolderID", "getflash"),
-				new TextField('Width', _t('HtmlEditorField.IMAGEWIDTHPX', "Width (px)")),
-				new TextField('Height', _t('HtmlEditorField.IMAGEHEIGHTPX', "Height (px)"))
+				new FieldGroup(_t('HtmlEditorField.IMAGEDIMENSIONS', "Dimensions"),
+					new TextField("Width", _t('HtmlEditorField.IMAGEWIDTHPX', "Width"), 5),
+					new TextField("Height", "x " . _t('HtmlEditorField.IMAGEHEIGHTPX', "Height"), 5)
+				)
 			),
 			new FieldSet()
 		);
