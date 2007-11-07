@@ -89,6 +89,8 @@ class HtmlEditorField extends TextareaField {
 		
 		$content = eregi_replace('width=([0-9]+)','width="\\1"',$content);
 		$content = eregi_replace('height=([0-9]+)','height="\\1"',$content);
+		$content = eregi_replace('src="([^\?]*)\?r=[0-9]+"','src="\\1"',$content);
+		$content = eregi_replace('mce_src="([^\?]*)\?r=[0-9]+"','mce_src="\\1"',$content);
 		
 		$content = preg_replace_callback('/(<img[^>]* )(width="|height="|src=")([^"]+)("[^>]* )(width="|height="|src=")([^"]+)("[^>]* )(width="|height="|src=")([^"]+)("[^>]*>)/i', "HtmlEditorField_dataValue_processImage", $content);
 		
@@ -118,7 +120,7 @@ class HtmlEditorField extends TextareaField {
 				// $candidateFile->destroy();
 			}
 		}
-
+		
 		$images = HTTP::getImagesIn($content);
 		
 		if($images){
@@ -196,6 +198,7 @@ function HtmlEditorField_dataValue_processImage($parts) {
 	$info[$parts[8]] = $parts[9]; $partSource[$parts[8]] = 9;
 	$src = Director::makeRelative($info['src="']);
 	
+
 	if(substr($src,0,10) == '../assets/') $src = substr($src,3);
 	
 	$width = $info['width="'];
@@ -206,7 +209,7 @@ function HtmlEditorField_dataValue_processImage($parts) {
 	}
 	
 	// find the image inserted from the HTML editor
-	$image = Image::find($src);
+	$image = Image::find(urldecode($src));
 	
 	if($image) {
 		// If we have an image, generate the resized image.
