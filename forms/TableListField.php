@@ -903,7 +903,7 @@ JS
 	}
 	
 	function BaseLink() {
-		return $this->FormAction() . "&action_callfieldmethod&fieldName={$this->Name()}&ctf[ID]={$this->sourceID()}&methodName=ajax_refresh";
+		return $this->FormAction() . "&action_callfieldmethod&fieldName={$this->Name()}&ctf[ID]={$this->sourceID()}&methodName=ajax_refresh&SecurityID=" . Session::get('SecurityID');
 	}
 	
 	/**
