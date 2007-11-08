@@ -972,6 +972,20 @@ class SiteTree extends DataObject {
 		}
 
 
+		$pagePriorities = array(
+			'0' => _t('SiteTree.PRIORITYNOTINDEXED', "Not indexed"),
+			'1.0' => '1 - ' . _t('SiteTree.PRIORITYMOSTIMPORTANT', "Most important"),
+			'0.9' => '2',
+			'0.8' => '3',
+			'0.7' => '4',
+			'0.6' => '5',
+			'0.5' => '6',
+			'0.4' => '7',
+			'0.3' => '8',
+			'0.2' => '9',
+			'0.1' => '10 - ' . _t('SiteTree.PRIORITYLEASTIMPORTANT', "Least important")
+		);
+
 		// Lay out the fields
 		$fields = new FieldSet(
 			new TabSet("Root",
@@ -1019,12 +1033,11 @@ class SiteTree extends DataObject {
 									"<p>" .
 									_t(
 										'SiteTree.METANOTEPRIORITY', 
-										"Manually specify a Priority for this page: 
-											(valid values are from 0 to 1, a zero will remove this page from the index)"
+										"Manually specify a Priority for this page"
 									) .
 									"</p>"
 								), 
-								new NumericField("Priority", _t('SiteTree.METAPAGEPRIO', "Page Priority"))
+								new DropdownField("Priority", _t('SiteTree.METAPAGEPRIO', "Page Priority"), $pagePriorities)
 							), 
  							true 
 						)
