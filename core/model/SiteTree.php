@@ -123,8 +123,6 @@ class SiteTree extends DataObject {
 		"ShowInSearch" => 1,
 		"Status" => "New page",
 		"CanCreateChildren" => array(10),
-		"Priority" => 0.5,
-
 		"Viewers" => "Anyone",
 		"Editors" => "LoggedInUsers"
 	);
@@ -894,6 +892,19 @@ class SiteTree extends DataObject {
 		self::$cms_additions[] = $function;
 	}
 
+	/**
+	 * The default value of the priority field depends on the depth of the page in
+	 * the site tree, so it must be calculated dynamically.
+	 */
+	function getPriority() {		
+		if($this->getField('Priority') === null) {
+			$parentStack = $this->parentStack();
+			$numParents = is_array($parentStack) ? count($parentStack) - 1: 0;
+			return max(0.1, 1.0 - ($numParents / 10));
+		}
+			
+		return $this->getField('Priority');
+	}
 
 	/**
 	 * Returns a FieldSet with which to create the CMS editing form.
@@ -973,7 +984,7 @@ class SiteTree extends DataObject {
 
 
 		$pagePriorities = array(
-			'0' => _t('SiteTree.PRIORITYNOTINDEXED', "Not indexed"),
+			'0.0' => _t('SiteTree.PRIORITYNOTINDEXED', "Not indexed"),
 			'1.0' => '1 - ' . _t('SiteTree.PRIORITYMOSTIMPORTANT', "Most important"),
 			'0.9' => '2',
 			'0.8' => '3',
@@ -985,7 +996,7 @@ class SiteTree extends DataObject {
 			'0.2' => '9',
 			'0.1' => '10 - ' . _t('SiteTree.PRIORITYLEASTIMPORTANT', "Least important")
 		);
-
+		
 		// Lay out the fields
 		$fields = new FieldSet(
 			new TabSet("Root",
