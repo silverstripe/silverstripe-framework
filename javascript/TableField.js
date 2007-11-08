@@ -84,7 +84,7 @@ Object.extend(TableField.prototype,{
 				link.getAttribute("href"),
 				{
 					method: 'post', 
-					postBody: 'ajax=1',
+					postBody: 'ajax=1' + ($('SecurityID') ? '&SecurityID=' + $('SecurityID').value : ''),
 					onComplete: function(response){
 						if(response.responseText == "1"){
 							Effect.Fade(
