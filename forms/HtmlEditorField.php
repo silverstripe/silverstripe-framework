@@ -355,13 +355,13 @@ class HtmlEditorField_Toolbar extends ViewableData {
 					"center" => _t('HtmlEditorField.CSSCLASSCENTER', "Centered, on its own."),
 				)),
 				new FieldGroup(_t('HtmlEditorField.IMAGEDIMENSIONS', "Dimensions"),
-					new TextField("Width", _t('HtmlEditorField.IMAGEWIDTHPX', "Width"), 5),
-					new TextField("Height", "x " . _t('HtmlEditorField.IMAGEHEIGHTPX', "Height"), 5)
+					new TextField("Width", _t('HtmlEditorField.IMAGEWIDTHPX', "Width"), 100),
+					new TextField("Height", "x " . _t('HtmlEditorField.IMAGEHEIGHTPX', "Height"), 100)
 				)
 			),
 			new FieldSet(
-				new FormAction("insertimage", "Insert image"),
-				new FormAction("editimage", "Edit image")
+				new FormAction("insertimage", _t('HtmlEditorField.BUTTONINSERTIMAGE', 'Insert image')),
+				new FormAction("editimage", _t('HtmlEditorField.BUTTONEDITIMAGE', 'Edit image'))
 			)
 		);
 		$form->loadDataFrom($this);
@@ -377,11 +377,13 @@ class HtmlEditorField_Toolbar extends ViewableData {
 				new TreeDropdownField("FolderID", _t('HtmlEditorField.FOLDER'), "Folder"),
 				new ThumbnailStripField("Flash", "FolderID", "getflash"),
 				new FieldGroup(_t('HtmlEditorField.IMAGEDIMENSIONS', "Dimensions"),
-					new TextField("Width", _t('HtmlEditorField.IMAGEWIDTHPX', "Width"), 5),
-					new TextField("Height", "x " . _t('HtmlEditorField.IMAGEHEIGHTPX', "Height"), 5)
+					new TextField("Width", _t('HtmlEditorField.IMAGEWIDTHPX', "Width"), 100),
+					new TextField("Height", "x " . _t('HtmlEditorField.IMAGEHEIGHTPX', "Height"), 100)
 				)
 			),
-			new FieldSet()
+			new FieldSet(
+				new FormAction("insertflash", _t('HtmlEditorField.BUTTONINSERTFLASH', 'Insert Flash'))
+			)
 		);
 		$form->loadDataFrom($this);
 		return $form;
