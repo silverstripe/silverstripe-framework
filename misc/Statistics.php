@@ -36,7 +36,7 @@ HTML;
 		$ds = "var chartdata = { \n";
 
 		foreach($table as $class) {
-			$record = DataObject::get($class, "", "Created DESC");
+			$record = DataObject::get($class, "", $class.".Created DESC");
 			$total = $record->TotalItems();
 
 			$props = $record->toArray();
