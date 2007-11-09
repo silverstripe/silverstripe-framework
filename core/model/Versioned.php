@@ -498,9 +498,10 @@ class Versioned extends DataObjectDecorator {
 			Session::set('currentStage', $_GET['stage']);
 			Session::clear('archiveDate');
 		}
-		if(isset($_GET['archiveDate']))
+		if(isset($_GET['archiveDate'])) {
 			Session::set('archiveDate', $_GET['archiveDate']);
-
+		}
+		
 		if(Session::get('archiveDate')) {
 			Versioned::reading_archived_date(Session::get('archiveDate'));
 		} else if(Session::get('currentStage')) {
