@@ -135,7 +135,8 @@ class DatabaseAdmin extends Controller {
 			if(!$quiet) {
 				echo '<p><b>Creating database</b></p>';
 			}
-			$parameters = $_REQUEST['db'];
+			global $databaseConfig;
+			$parameters = $databaseConfig ? $databaseConfig : $_REQUEST['db'];
 			$connect = DB::getConnect($parameters);
 			$username = $parameters[username];
 			$password = $parameters[password];
