@@ -476,7 +476,7 @@ class File extends DataObject {
 	function getRelativePath() {
 
 		if($this->ParentID) {
-			$p = $this->Parent();
+			$p = DataObject::get_one('Folder', "ID={$this->ParentID}");
 
 			if($p->ID) return $p->getRelativePath() . $this->getField("Name");
 			else return "assets/" . $this->getField("Name");
