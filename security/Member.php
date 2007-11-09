@@ -755,11 +755,9 @@ class Member extends DataObject {
 	}
 	
 	function canEdit() {
-		if( $this->ID == Member::currentUserID() )
-			return true;
-		if( $member = Member::currentUser() )
-			return $member->can( 'AdminCMS' );
-		return false;
+		if( $this->ID == Member::currentUserID() ) return true;
+		
+		return Permission::check( 'ADMIN' );
 	}
 }
 
