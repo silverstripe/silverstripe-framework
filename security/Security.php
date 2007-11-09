@@ -99,7 +99,7 @@ class Security extends Controller {
 	 *                                                       permission to
 	 *                                                       access the item.
 	 */
-	static function permissionFailure($controller, $messageSet = null) {
+	static function permissionFailure($controller = null, $messageSet = null) {
 		// Prepare the messageSet provided
 		if(!$messageSet) {
 			$messageSet = array(

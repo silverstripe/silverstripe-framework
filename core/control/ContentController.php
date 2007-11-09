@@ -85,13 +85,23 @@ class ContentController extends Controller {
 		}
 		
 		singleton('SiteTree')->extend('contentcontrollerInit', $this);
-		
 		Director::set_site_mode('site');
 
-		// Check permissions
+		// Check page permissions
 		if($this->dataRecord && $this->URLSegment != 'Security' && !$this->dataRecord->can('View')) {
 			Security::permissionFailure($this);
 		}
+
+		// Draft/Archive security check - only CMS users should be able to look at stage/archived content
+		if($this->URLSegment != 'Security' && (Versioned::current_archived_date() || (Versioned::current_stage() && Versioned::current_stage() != 'Live'))) {
+			if(!Permission::check('CMS_ACCESS_CMSMain')) {
+				$link = $this->Link();
+				$message = _t("ContentController.DRAFT_SITE_ACCESS_RESTRICTION", "You must log in with your CMS password in order to view the draft or archived content.  <a href=\"%s\">Click here to go back to the published site.</a>");
+				Security::permissionFailure($this, sprintf($message, "$link?stage=Live"));
+				return;
+			}
+		}		
+
 	}
 
 	/**
@@ -180,7 +190,7 @@ class ContentController extends Controller {
 	public function SilverStripeNavigator() {
 		$member = Member::currentUser();
 
-		if(Director::isDev() || ($member && $member->isCMSUser())) {
+		if(Director::isDev() || Permission::check('CMS_ACCESS_CMSMain')) {
 			Requirements::css('sapphire/css/SilverStripeNavigator.css');
 
 			Requirements::javascript('jsparty/behaviour.js');
