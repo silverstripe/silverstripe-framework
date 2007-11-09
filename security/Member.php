@@ -753,6 +753,14 @@ class Member extends DataObject {
 			Database::alteration_message("Added admin account","created");
 		}
 	}
+	
+	function canEdit() {
+		if( $this->ID == Member::currentUserID() )
+			return true;
+		if( $member = Member::currentUser() )
+			return $member->can( 'AdminCMS' );
+		return false;
+	}
 }
 
 
