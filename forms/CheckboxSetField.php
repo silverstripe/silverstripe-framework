@@ -114,6 +114,8 @@ class CheckboxSetField extends OptionsetField {
 			if($this->value){
 				$this->value = str_replace(",", "{comma}", $this->value);
 				$record->$fieldname = implode(",", $this->value);
+			} else {
+				$record->$fieldname = '';
 			}
 		}
 	}
