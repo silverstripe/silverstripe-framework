@@ -4,26 +4,29 @@ ToggleField.prototype = {
 		var rules = {};
 		rules['#' + this.id + ' .triggerMore'] = {
 			onclick: function(e) {
-				this.toggle();
+				Element.toggle(this);
 				Event.stop(e); return false;
 			}.bind(this)
 		};
 		rules['#' + this.id + ' .triggerLess'] = {
 			onclick: function(e) {
-				this.toggle();
+				Element.toggle(this);
 				Event.stop(e); return false;
 			}.bind(this)
 		};
 		Behaviour.register(rules);
 		
 		if(Element.hasClassName(this, 'startClosed')) {
-			this.toggle();
+			Element.toggle(this);
 		}
 	},
 	
 	toggle: function() {
-		Element.toggle($$('#' + this.id + ' .contentLess')[0]);
-		Element.toggle($$('#' + this.id + ' .contentMore')[0]);
+		var lessDivs = $$('#' + this.id + ' .contentLess');
+		if(lessDivs) Element.toggle(lessDivs[0]);
+		
+		var moreDivs = $$('#' + this.id + ' .contentMore');
+		if(moreDivs) Element.toggle(moreDivs[0]);
 	}
 }
 ToggleField.applyTo('div.toggleField');
