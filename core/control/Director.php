@@ -8,10 +8,33 @@
  * steps.
  */
 class Director {
+	
 	static private $urlSegment;
+	
 	static private $urlParams;
 
 	static private $rules = array();
+	
+	static $siteMode;
+	
+	static $alternateBaseFolder;
+
+	static $alternateBaseURL;
+	
+	static $dev_servers = array(
+		'localhost',
+		'127.0.0.1'
+	);
+	
+	static $test_servers = array();
+	
+	static protected $environment_type;
+
+	/** 
+	 * Sets the site mode (if it is the public site or the cms), 
+	 * and runs registered modules. 
+ 	 */ 
+	static protected $callbacks;
 
 	function __construct() {
 		if(isset($_GET['debug_profile'])) Profiler::mark("Director", "construct");
@@ -163,6 +186,7 @@ class Director {
 	static function urlParam($name) {
 		return Director::$urlParams[$name];
 	}
+	
 	static function urlParams() {
 		return Director::$urlParams;
 	}
@@ -259,7 +283,6 @@ class Director {
 	/**
 	 * Returns a URL for the given controller
 	 */
-	static $alternateBaseURL;
 	static function baseURL() {
 		if(self::$alternateBaseURL) return self::$alternateBaseURL;
 		else {
@@ -268,11 +291,11 @@ class Director {
 			else return $base . '/';
 		}
 	}
+	
 	static function setBaseURL($baseURL) {
 		self::$alternateBaseURL = $baseURL;
 	}
 
-	static $alternateBaseFolder;
 	static function baseFolder() {
 		if(self::$alternateBaseFolder) return self::$alternateBaseFolder;
 		else return dirname(dirname($_SERVER['SCRIPT_FILENAME']));
@@ -296,10 +319,12 @@ class Director {
 	static function getAbsURL($url) {
 		return Director::baseURL() . '/' . $url;
 	}
+	
 	static function getAbsFile($file) {
 		if($file[0] == '/') return $file;
 		return Director::baseFolder() . '/' . $file;
 	}
+	
 	static function fileExists($file) {
 		return file_exists(Director::getAbsFile($file));
 	}
@@ -310,6 +335,7 @@ class Director {
 	 static function absoluteBaseURL() {
 	 	return Director::absoluteURL(Director::baseURL());
 	 }
+	 
 	 static function absoluteBaseURLWithAuth() {
 	 	if($_SERVER['PHP_AUTH_USER'])
 			$login = "$_SERVER[PHP_AUTH_USER]:$_SERVER[PHP_AUTH_PW]@";
@@ -363,16 +389,6 @@ class Director {
 		}
 	}
 
-
-
-	static $siteMode;
-
-	/** 
-	 * Sets the site mode (if it is the public site or the cms), 
-	 * and runs registered modules. 
- 	 */ 
-	static protected $mode_additions;
-
 	/**
 	 * Sets the site mode (if it is the public site or the cms),
 	 * and runs registered modules.
@@ -380,12 +396,13 @@ class Director {
 	static function set_site_mode($mode) {
 		Director::$siteMode = $mode;
 		
-		if(isset(self::$mode_additions[$mode])) {
-			foreach(self::$mode_additions[$mode] as $extension) {
+		if(isset(self::$callbacks[$mode])) {
+			foreach(self::$callbacks[$mode] as $extension) {
 				call_user_func($extension);
 			}
 		}
 	}
+	
 	static function get_site_mode() {
 		return Director::$siteMode;
 	}
@@ -395,29 +412,23 @@ class Director {
 	 * the controller is instantiated.  The optional 'mode' parameter
 	 * can be either 'site' or 'cms', as those are the two values currently
 	 * set by controllers.  The callback function will be run at the
-	 * initialization of the relavant controller.
+	 * initialization of the relevant controller.
+	 * 
+	 * @param $function string PHP-function array based on http://php.net/call_user_func
+	 * @param $mode string
 	 */
-	static function extendSite($function, $mode='site') {
-		self::$mode_additions[$mode][] = $function;
+	static function add_callback($function, $mode = 'site') {
+		self::$callbacks[$mode][] = $function;
 	}
 
-
-	
-	static $dev_servers = array(
-		'localhost',
-		'127.0.0.1'
-	);
 	static function set_dev_servers($servers) {
 		Director::$dev_servers = $servers;
 	}
 	
-	static $test_servers = array();
 	static function set_test_servers($servers) {
 		Director::$test_servers = $servers;
 	}
 	
-	static protected $environment_type;
-
 	/**
 	 * Force the environment type to be dev, test or live.
 	 * This will affect the results of isLive, isDev, and isTest
@@ -433,6 +444,7 @@ class Director {
 	static function isLive() {
 		return !(Director::isDev() || Director::isTest());
 	}
+	
 	static function isDev() {
 		if(self::$environment_type) return self::$environment_type == 'dev';
 
@@ -452,8 +464,6 @@ class Director {
 		if(in_array($_SERVER['HTTP_HOST'], Director::$dev_servers))  {
 			return true;
 		}
-		
-
 		
 		// Check if we are running on one of the test servers
 		if(in_array($_SERVER['HTTP_HOST'], Director::$test_servers))  {
