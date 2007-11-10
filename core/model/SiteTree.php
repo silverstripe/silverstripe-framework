@@ -871,27 +871,6 @@ class SiteTree extends DataObject {
 		}
 	}
 
-	//------------------------------------------------------------------------------------//
-	
-	/**
-	 * Holds callback functions to be called when getCMSFields() is called
-	 *
-	 * @var array
-	 */
-	static $cms_additions = array();
-
-
-	/**
-	 * Allows modules to extend the cms editing form for all pages in the site
-	 *
-	 * @param mixed $function the name of your function, either as a string,
-	 *                        or in the form array('class','function)
-	 */
-	static function ExtendCMS($function)
-	{
-		self::$cms_additions[] = $function;
-	}
-
 	/**
 	 * The default value of the priority field depends on the depth of the page in
 	 * the site tree, so it must be calculated dynamically.
@@ -1042,9 +1021,12 @@ class SiteTree extends DataObject {
 								new LiteralField(
 									"", 
 									"<p>" .
-									_t(
-										'SiteTree.METANOTEPRIORITY', 
-										"Manually specify a Priority for this page"
+									sprintf(
+										_t(
+											'SiteTree.METANOTEPRIORITY', 
+											"Manually specify a Google Sitemaps priority for this page (%s)"
+										),
+										'<a href="https://www.google.com/webmasters/tools/docs/en/protocol.html#prioritydef">?</a>'
 									) .
 									"</p>"
 								), 
@@ -1117,11 +1099,6 @@ class SiteTree extends DataObject {
 		$tabAccess->setTitle(_t('SiteTree.TABACCESS', "Access"));
 		$tabBacklinks->setTitle(_t('SiteTree.TABBACKLINKS', "BackLinks"));
 
-		foreach(self::$cms_additions as $extension)
-		{
-			$fields = call_user_func($extension,$fields);
-		}
-		
 		$this->extend('updateCMSFields', $fields);
 
 		return $fields;

@@ -62,8 +62,7 @@ $lang['en_US']['SiteTree']['METADESC'] = 'Description';
 $lang['en_US']['SiteTree']['METAKEYWORDS'] = 'Keywords';
 $lang['en_US']['SiteTree']['METAADVANCEDHEADER'] = 'Advanced Options...';
 $lang['en_US']['SiteTree']['METAEXTRA'] = 'Custom Meta Tags';
-$lang['en_US']['SiteTree']['METANOTEPRIORITY'] = 'Manually specify a Priority for this page: 
-											(valid values are from 0 to 1, a zero will remove this page from the index)';
+$lang['en_US']['SiteTree']['METANOTEPRIORITY'] = 'Manually specify a Google Sitemaps priority for this page (%s)';
 $lang['en_US']['SiteTree']['METAPAGEPRIO'] = 'Page Priority';
 $lang['en_US']['SiteTree']['PAGETYPE'] = array(
 	'Page type',
