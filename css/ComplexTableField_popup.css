@@ -96,6 +96,9 @@ form fieldset {
 
 #ComplexTableField_Pagination a {
 	/*font-size: 1.2em;*/
+	font-size: 13px;
+	font-weight: bold;
+	text-decoration: none;
 	width: 1px;
 	height: 1px;
 	margin: 1px;
@@ -108,13 +111,20 @@ form fieldset {
 #ComplexTableField_Pagination span {
 	display: inline;
 	font-weight: bold;
-	font-size: 1.2em;
+	font-size: 15px;
+	color: #f00;
 }
 
 #ComplexTableField_Pagination div {
 	display: inline;
 }
 
-#ComplexTableField_Pagination_Next a,#ComplexTableField_Pagination_Previous a {
-	text-decoration: none;
+#ComplexTableField_Pagination_Previous {
+	padding-right: 10px;
+}
+#ComplexTableField_Pagination_Next {
+	padding-left: 10px;
+}
+#ComplexTableField_Pagination_Next img,#ComplexTableField_Pagination_Previous img {
+	margin: 0 3px 2px;
 }
