@@ -388,6 +388,13 @@ class Director {
 			);
 		}
 	}
+	
+	/**
+	 * @return boolean
+	 */
+	public static function is_cli() {
+		return preg_match('/cli-script\.php/', $_SERVER['SCRIPT_NAME']);
+	}
 
 	/**
 	 * Sets the site mode (if it is the public site or the cms),
