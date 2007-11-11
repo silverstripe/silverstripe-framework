@@ -1268,8 +1268,11 @@ class i18n extends Controller {
 	 * and write the resultant files in the lang folder of each module.
 	 */	
 	public function textcollector() {
-	
-		if (!Permission::check("ADMIN")) user_error("You must be an admin to enable text collector mode", E_USER_ERROR);
+		// allows textcollector to run in CLI without admin-check
+		if(!Permission::check("ADMIN") && !Director::is_cli()) {
+			user_error("You must be an admin or use CLI-mode to enable text collector", E_USER_ERROR);
+		}
+		
 		echo "Collecting text...<br /><br />";
 		
 		//Calculate base directory
