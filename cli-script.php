@@ -90,11 +90,7 @@ $url = $_GET['url'];
 $url = $_SERVER['argv'][1];
 
 
-
 // Direct away - this is the "main" function, that hands control to the apporopriate controllerx
-$dir = new Director();
-$dir->direct($url);
-
-
+Director::direct($url);
 
 ?>
