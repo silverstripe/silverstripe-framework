@@ -1273,7 +1273,11 @@ class i18n extends Controller {
 			user_error("You must be an admin or use CLI-mode to enable text collector", E_USER_ERROR);
 		}
 		
-		echo "Collecting text...<br /><br />";
+		if(Director::is_cli()) {
+			echo "Collecting text...\n";
+		} else {
+			echo "Collecting text...<br /><br />";
+		}
 		
 		//Calculate base directory
 		$baseDir = Director::baseFolder();
