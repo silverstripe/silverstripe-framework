@@ -91,13 +91,18 @@ form fieldset {
 	margin-top: 10px;
 	margin-left: auto;
 	margin-right: auto;
+	font-size: 11px;
 }
 
 #ComplexTableField_Pagination a {
-	font-size: 1.2em;
+	/*font-size: 1.2em;*/
 	width: 1px;
 	height: 1px;
 	margin: 1px;
+}
+
+#ComplexTableField_Pagination a:hover {
+	background: none;
 }
 
 #ComplexTableField_Pagination span {
