@@ -1032,7 +1032,11 @@ class i18n extends Controller {
 				if($fh = fopen($langFolder . '/en_US.php', "w")) {
 					fwrite($fh, "<?php\n\nglobal \$lang;\n\n" . $mst . "\n?>");			
 					fclose($fh);
-					echo "Created file: $langFolder/en_US.php<br />";
+					if(Director::is_cli()) {
+						echo "Created file: $langFolder/en_US.php\n";
+					} else {
+						echo "Created file: $langFolder/en_US.php<br />";
+					}
 		
 				} else {
 					user_error("Cannot write language file! Please check permissions of $langFolder/en_US.php", E_USER_ERROR);
@@ -1304,7 +1308,7 @@ class i18n extends Controller {
 		// Write the generated master string tables
 		self::write_mst($baseDir, $mst, $includedtpl);
 		
-		echo "Done!";
+		echo "Done!\n";
 	}
 	
 }
