@@ -8,12 +8,16 @@ class LookupField extends DropdownField {
 	function Field() {
 		if(trim($this->value)) {
 			$this->value = trim($this->value);
-			if(is_array($this->source)) $mappedValue = $this->source[$this->value];
-			else $mappedValue = $this->source->getItem($this->value);
+			if(is_array($this->source)) {
+				$mappedValue = isset($this->source[$this->value]) ? $this->source[$this->value] : null;
+			} else {
+				$mappedValue = $this->source->getItem($this->value);
+			}
 		}
 		
-		if(!isset($mappedValue))
+		if(!isset($mappedValue)) {
 			$mappedValue = "<i>(none)</i>";
+		}
 
 		if($this->value) {
 			$val = $this->dontEscape
