@@ -9,7 +9,7 @@ class Sitemap extends Controller {
 	protected $Pages;
 	
 	function __construct() {
-		$this->Pages=DataObject::get('SiteTree');
+		$this->Pages = Versioned::get_by_stage('SiteTree', 'Live');
 	}
 
 	public function Items() {

@@ -558,7 +558,7 @@ class Versioned extends DataObjectDecorator {
 	 * @param string $filter A filter to be inserted into the WHERE clause.
 	 * @return DataObject
 	 */
-	static function get_one_by_stage($class, $stage, $filter) {
+	static function get_one_by_stage($class, $stage, $filter = '') {
 		$oldStage = Versioned::$reading_stage;
 		Versioned::$reading_stage = $stage;
 		singleton($class)->flushCache();
@@ -569,7 +569,7 @@ class Versioned extends DataObjectDecorator {
 		return $result;
 	}
 	
-	static function get_by_stage($class, $stage, $filter, $sort) {
+	static function get_by_stage($class, $stage, $filter = '', $sort = '') {
 		$oldStage = Versioned::$reading_stage;
 		Versioned::$reading_stage = $stage;
 		$result = DataObject::get($class, $filter, $sort);
