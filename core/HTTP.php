@@ -167,7 +167,7 @@ class HTTP {
 	 * Load the mime-type data from the system file
 	 */
 	static function loadMimeTypes() {
-		if(file_exists('/etc/mime.types')) {
+		if(@file_exists('/etc/mime.types')) {
 			$mimeTypes = file('/etc/mime.types');
 			foreach($mimeTypes as $typeSpec) {
 				if(($typeSpec = trim($typeSpec)) && substr($typeSpec,0,1) != "#") {
