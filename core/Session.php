@@ -35,7 +35,10 @@ class Session {
 		return Controller::curr()->getSession()->inst_clear($name);
 	}
 	public static function getAll() {
-		return Controller::curr()->getSession()->inst_getAll($name);
+		return Controller::curr()->getSession()->inst_getAll();
+	}
+	public static function save() {
+		return Controller::curr()->getSession()->inst_save();
 	}
 
 	/**
@@ -114,6 +117,14 @@ class Session {
 	public function inst_getAll() {
 		return $this->data;
 	}
+	
+	public function inst_save() {
+		// Save the updated session back
+		foreach($this->data as $k => $v) {
+			$_SESSION[$k] = $v;
+		}
+	}
+	
 	
 	/**
 	* Sets the appropriate form message in session, with type. This will be shown once,

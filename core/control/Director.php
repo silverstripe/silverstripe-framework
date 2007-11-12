@@ -75,11 +75,8 @@ class Director {
 		} else if($controllerObj) {
 			$response = $controllerObj->run(array_merge((array)$_GET, (array)$_POST, (array)$_FILES));
 			
-			// Save the updated session back
-			foreach($controllerObj->getSession()->inst_getAll() as $k => $v) {
-				$_SESSION[$k] = $v;
-			}
-		
+			
+			$controllerObj->getSession()->inst_save();
 
 			if(isset($_GET['debug_profile'])) Profiler::mark("Outputting to browser");
 			$response->output();
