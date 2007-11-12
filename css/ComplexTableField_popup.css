@@ -81,6 +81,11 @@ form fieldset {
 	line-height: normal;
 }
 
+.right.ComplexTableField_Popup form div.Actions input {
+	font-size: 11px;
+	margin-top: 10px;
+}
+
 /* Pagination */ 
 #ComplexTableField_Pagination,
 #ComplexTableField_Pagination * {
