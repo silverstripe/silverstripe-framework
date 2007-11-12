@@ -706,6 +706,9 @@ class Member extends DataObject {
 	public function getCMSFields() {
 		$locale = ($this->Locale) ? $this->Locale : i18n::get_locale();
 		
+		$password = new ConfirmedPasswordField('Password', 'Password');
+		$password->setCanBeEmpty(true);
+		
 		$fields = new FieldSet(
 				//new TextField("Salutation", "Title"),
 				new HeaderField(_t('Member.PERSONALDETAILS', "Personal Details", PR_MEDIUM, 'Headline for formfields')),
@@ -719,11 +722,7 @@ class Member extends DataObject {
 					i18n::get_existing_translations(), 
 					$locale
 				),
-				new PasswordField("Password", _t('Member.PASSWORD'))
-				//new TextareaField("Address","Address"),
-				//new TextField("JobTitle", "Job Title"),
-				//new TextField( "Organisation", "Organisation" ),
-				//new OptionsetField("HTMLEmail","Mail Format", array( 1 => 'HTML', 0 => 'Text only' ) )
+				$password
 			);
 
 		$this->extend('updateCMSFields', $fields);
