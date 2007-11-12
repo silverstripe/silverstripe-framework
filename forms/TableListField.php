@@ -924,7 +924,8 @@ JS
 		unset($params['forcehtml']);
 		// TODO Refactor
 		unset($params['ctf']);
-		$params['ctf'][$this->Name()]['search'] = (isset($_REQUEST['ctf'][$this->Name()]['search'])) ? $_REQUEST['ctf'][$this->Name()]['search'] : null; 
+		$params['ctf'][$this->Name()]['search'] = (isset($_REQUEST['ctf'][$this->Name()]['search'])) ? $_REQUEST['ctf'][$this->Name()]['search'] : null;
+		$params['SecurityID'] = Session::get('SecurityID');
 		
 		// unset all actions (otherwise they override action_callfieldmethod)
 		foreach($params as $paramKey => $paramVal) {
