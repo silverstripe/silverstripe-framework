@@ -52,8 +52,8 @@ class Sitemap extends Controller {
 	}
 	
 	static function ping() {
-		//Don't ping if the site has disabled it
-		if(!Sitemap::$pings)
+		//Don't ping if the site has disabled it, or if the site is in dev mode
+		if(!Sitemap::$pings || Director::isDev())
 			return;
 			
 		$location = urlencode(Director::absoluteBaseURL() . '/sitemap.xml');
