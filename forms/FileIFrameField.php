@@ -16,7 +16,7 @@ class FileIFrameField extends FileField {
 
 			$parentID = $data->ID;
 			$parentField = $this->name;
-			$iframe = "<iframe name=\"{$this->name}_iframe\" src=\"images/iframe/$parentClass/$parentID/$parentField\" style=\"height: 132px; width: 600px; border-style: none;\"></iframe>";
+			$iframe = "<iframe name=\"{$this->name}_iframe\" src=\"images/iframe/$parentClass/$parentID/$parentField\" style=\"height: 152px; width: 600px; border-style: none;\"></iframe>";
 	
 			return $iframe . $hiddenField;
 			
