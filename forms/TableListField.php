@@ -109,7 +109,7 @@ class TableListField extends FormField {
 	/**
 	 * Character to seperate exported columns in the CSV file
 	 */
-	protected $csvSeparator = ";";
+	protected $csvSeparator = ",";
 	
 	/*
 	 * Boolean deciding whether to include a header row in the CSV file
@@ -751,7 +751,7 @@ JS
 	 }
 	
 	/**
-	 * Set the CSV separator character.  Defaults to ;
+	 * Set the CSV separator character.  Defaults to ,
 	 */
 	function setCsvSeparator($csvSeparator) {
 		$this->csvSeparator = $csvSeparator;
