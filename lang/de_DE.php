@@ -6,7 +6,6 @@ global $lang;
 
 $lang['de_DE'] = $lang['en_US'];
 
-$lang['de_DE']['Member']['REFRESHLANG'] = 'Sie haben die Sprache Ihrer Benutzeroberfläche geändert. Bitte laden Sie dieses Browserfenster neu.';
 $lang['de_DE']['Member']['FIRSTNAME'] = 'Vorname';
 $lang['de_DE']['Member']['SURNAME'] = 'Nachname';
 $lang['de_DE']['Member']['EMAIL'] = 'Email';
@@ -21,7 +20,6 @@ $lang['de_DE']['Member']['MOBILE'] = 'Mobil';
 $lang['de_DE']['Member']['ADDRESS'] = 'Adresse';
 $lang['de_DE']['ToggleField']['MORE'] = 'mehr';
 $lang['de_DE']['ToggleField']['LESS'] = 'weniger';
-$lang['de_DE']['']['WELCOME'] = 'Willkommen';
 $lang['de_DE']['ErrorPage']['CODE'] = 'Fehlercode';
 $lang['de_DE']['GhostPage']['NOLINKED'] = 'Diese Stellvertreter-Seite ist nicht verlinkt.';
 $lang['de_DE']['Controller']['IMAGE'] = 'Bild';
@@ -197,7 +195,6 @@ $lang['de_DE']['HtmlEditorField']['LINKDESCR'] = 'Beschreigung des Verweises';
 $lang['de_DE']['HtmlEditorField']['LINKOPENNEWWIN'] = 'Verweis in neuem Fenster öffnen?';
 $lang['de_DE']['HtmlEditorField']['BUTTONINSERTLINK'] = 'Verweis einfügen';
 $lang['de_DE']['HtmlEditorField']['BUTTONREMOVELINK'] = 'Verweise entfernen';
-$lang['de_DE']['HtmlEditorField']['BUTTONCANCEL'] = 'Abbrechen';
 $lang['de_DE']['HtmlEditorField']['FOLDER'] = 'Ordner';
 $lang['de_DE']['HtmlEditorField']['ALTTEXT'] = 'Beschreibung';
 $lang['de_DE']['HtmlEditorField']['CSSCLASS'] = 'Ausrichtung/Stil';
@@ -241,5 +238,20 @@ $lang['de_DE']['ComplexTableField_popup.ss']['NEXT'] = 'nächste';
 $lang['de_DE']['Image_iframe.ss']['TITLE'] = 'Iframe Bilder hochladen';
 $lang['de_DE']['Member']['EMAILSIGNUPINTRO2'] = 'Sie können sich auf der Website mit den unten angegebenen Angaben einloggen';
 $lang['de_DE']['ChangePasswordEmail.ss']['CHANGEPASSWORDTEXT2'] = 'Sie können nun folgende Angaben benutzen um sich einzuloggen';
+$lang['de_DE']['Date']['DAY'] = 'Tag';
+$lang['de_DE']['Date']['MONTHS'] = 'Monat';
+$lang['de_DE']['Member']['GREETING'] = 'Willkommen';
+$lang['de_DE']['Date']['YEAR'] = 'Jahr';
+$lang['de_DE']['Date']['YEARS'] = 'Jahre';
+$lang['de_DE']['Date']['DAYS'] = 'Tage';
+$lang['de_DE']['Date']['MINS'] = 'Minuten';
+$lang['de_DE']['Date']['SEC'] = 'Sekunden';
+$lang['de_DE']['Date']['AGO'] = 'vor';
+$lang['de_DE']['Date']['SECS'] = 'Sekunden';
+$lang['de_DE']['Date']['HOUR'] = 'Stunde';
+$lang['de_DE']['Date']['HOURS'] = 'Stunden';
+$lang['de_DE']['Date']['MIN'] = 'Minuten';
+$lang['de_DE']['Date']['AWAY'] = 'weg';
+$lang['de_DE']['Date']['MONTH'] = 'Monat';
 
 ?>

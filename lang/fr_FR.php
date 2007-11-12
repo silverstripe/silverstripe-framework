@@ -4,7 +4,7 @@ i18n::include_locale_file('sapphire', 'en_US');
 
 global $lang;
 
-if(!isset($lang['fr_FR'])) $lang['fr_FR'] = $lang['en_US'];
+$lang['fr_FR'] = $lang['en_US'];
 
 $lang['fr_FR']['SiteTree']['MODIFIEDONDRAFT'] = 'Modifié sur le site brouillon';
 $lang['fr_FR']['SiteTree']['ADDEDTODRAFT'] = 'Ajouté au site brouillon';
@@ -186,7 +186,6 @@ $lang['fr_FR']['HtmlEditorField']['LINKDESCR'] = 'Description du lien';
 $lang['fr_FR']['HtmlEditorField']['LINKOPENNEWWIN'] = 'Ouvrir le lien dans une nouvelle fenêtre ?';
 $lang['fr_FR']['HtmlEditorField']['BUTTONINSERTLINK'] = 'Insérer un lien';
 $lang['fr_FR']['HtmlEditorField']['BUTTONREMOVELINK'] = 'Supprimer le lien';
-$lang['fr_FR']['HtmlEditorField']['BUTTONCANCEL'] = 'Annuler';
 $lang['fr_FR']['HtmlEditorField']['FOLDER'] = 'Dossier';
 $lang['fr_FR']['HtmlEditorField']['ALTTEXT'] = 'Description';
 $lang['fr_FR']['HtmlEditorField']['CSSCLASS'] = 'Alignement / Style';
@@ -253,9 +252,6 @@ $lang['fr_FR']['ChangePasswordEmail.ss']['CHANGEPASSWORDTEXT1'] = 'Vous avez mod
 $lang['fr_FR']['ChangePasswordEmail.ss']['CHANGEPASSWORDTEXT2'] = 'Vous pouvez maintenant utiliser les détails suivants pour vous connecter :';
 $lang['fr_FR']['ForgotPasswordEmail.ss']['HELLO'] = 'Salut';
 $lang['fr_FR']['Member']['GREETING'] = 'Bienvenue';
-$lang['fr_FR']['OpenIDAuthenticator']['LOGINFAILED'] = 'Connection echouée. Essayez encore s\'il vous plaît.';
-$lang['fr_FR']['OpenIDAuthenticator']['VERIFICATIONCANCELLED'] = 'La vérification a été annulée. Essayez encore s\'il vous plaît.';
-$lang['fr_FR']['Security']['MEMBERALREADYEXISTS'] = 'Un membre ayant cette URL d\'identité existe déjà';
 $lang['fr_FR']['Date']['YEAR'] = 'année';
 $lang['fr_FR']['Date']['YEARS'] = 'années';
 $lang['fr_FR']['Date']['DAYS'] = 'jours';
@@ -267,13 +263,5 @@ $lang['fr_FR']['Date']['HOUR'] = 'heure';
 $lang['fr_FR']['Date']['HOURS'] = 'heures';
 $lang['fr_FR']['Date']['MIN'] = 'minutes';
 $lang['fr_FR']['Date']['AWAY'] = 'plus tard';
-$lang['fr_FR']['OpenIDLoginForm']['URL'] = 'URL OpenID';
-$lang['fr_FR']['OpenIDAuthenticator']['AUTHFAILED'] = 'L\'authentification OpenID / I-name a échoué.';
-$lang['fr_FR']['OpenIDAuthenticator']['TRANSACTIONINPROGRESS'] = 'Transaction OpenID en cours';
-$lang['fr_FR']['OpenIDAuthenticator']['ERRORCRED'] = 'Entrez votre URL OpenID ou votre i-name s\'il vous plaît.';
-$lang['fr_FR']['Security']['OPENIDHEADER'] = 'OpenID / I-name identifiants';
-$lang['fr_FR']['Security']['OPENIDURL'] = 'URL OpenID / I-name';
-$lang['fr_FR']['OpenIDLoginForm']['DESC'] = '<div id="OpenIDDescription"><p>OpenID est un système d\'authentification décentralisé sur Internet qui permet de s\'authentifier auprès de plusieurs sites web avec un seul compte. Pour plus d\'informations, visiter <a href="http://openid.net">openid.net</a>.</p></div>';
-$lang['fr_FR']['Security']['OPENIDDESC'] = '<p>Assurez-vous d\'entrer vos détails OpenID / I-name ici, cad en accord avec le protocole et les slashs pour OpenID ( cad http://openid.silverstripe.com/ ).</p>';
 
 ?>
