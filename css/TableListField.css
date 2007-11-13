@@ -79,6 +79,14 @@ table.CMSList tfoot td {
 	padding-left : 5px;
 }
 
+.TableListField table.data tfoot tr.addtogrouprow td {
+	padding:3px;
+}
+
+.TableListField table.data tfoot tr.addtogrouprow input {
+	width: 94%;
+}
+
 .TableField td input,
 .TableListField td input {
 	width: 98%;
