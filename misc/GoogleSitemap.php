@@ -1,11 +1,11 @@
 <?php
 /**
  * Initial implementation of Sitemap support.
- * SitemapController should handle requests to 'sitemap.xml'
+ * GoogleSitemap should handle requests to 'sitemap.xml'
  * the other two classes are used to render the sitemap
  */
 
-class Sitemap extends Controller {
+class GoogleSitemap extends Controller {
 	protected $Pages;
 	
 	function __construct() {
