@@ -341,45 +341,35 @@ class HtmlEditorField_Toolbar extends ViewableData {
 	}
 
 	function ImageForm() {
-		$fields = new FieldSet(
-			new LiteralField('Heading', '<h2><img src="cms/images/closeicon.gif" alt="close" title="close" />Image</h2>'),
-			new TreeDropdownField("FolderID", _t('HtmlEditorField.FOLDER', "Folder"), "Folder"),
-			new ThumbnailStripField("Image", "FolderID", "getimages"),
-			new TextField("AltText", _t('HtmlEditorField.ALTTEXT', "Description"), "", 80),
-			new DropdownField("CSSClass", _t('HtmlEditorField.CSSCLASS', "Alignment / style"), array(
-				"left" => _t('HtmlEditorField.CSSCLASSLEFT', "On the left, with text wrapping around."),
-				"right" => _t('HtmlEditorField.CSSCLASSRIGHT', "On the right, with text wrapping around."),
-				"center" => _t('HtmlEditorField.CSSCLASSCENTER', "Centered, on its own."),
-			)),
-			new FieldGroup(_t('HtmlEditorField.IMAGEDIMENSIONS', "Dimensions"),
-				new TextField("Width", _t('HtmlEditorField.IMAGEWIDTHPX', "Width"), 100),
-				new TextField("Height", "x " . _t('HtmlEditorField.IMAGEHEIGHTPX', "Height"), 100)
-			)
-		);
-		
-		// We don't want SWFUpload on linux, since it doesn't work
-		$browscap = new Browscap();
-		$hitdata = $browscap->getBrowser(null, true);
-		if(!($hitdata['Platform'] && stristr($hitdata['Platform'], 'linux'))) {
-			$fields->insertBefore(new LiteralField('AddFolderOrUpload',
-					'<div style="clear:both;"></div><div id="AddFolderGroup" style="display:inline">
-						<a style="" href="#" id="AddFolder" class="link">' . _t('HtmlEditorField.CREATEFOLDER','create folder') . '</a>
-						<input style="display: none;margin-left: 2px;width: 94px;" id="NewFolderName" class="addFolder" type="text">
-						<a style="display: none;" href="#" id="FolderOk" class="link addFolder">' . _t('HtmlEditorField.OK','ok') . '</a>
-						<a style="display: none;" href="#" id="FolderCancel" class="link addFolder">' . _t('HtmlEditorField.FOLDERCANCEL','cancel') . '</a>
-					</div>|
-					<div id="UploadGroup" class="group" style="display: inline;margin-top:2px;">
-						<a href="#" id="UploadFiles" class="link">' . _t('HtmlEditorField.UPLOAD','upload') . '</a>
-					</div>
-				'),
-				'Image'
-			);
-		}
-	
 		$form = new Form(
 			$this->controller,
 			"{$this->name}.ImageForm", 
-			$fields,
+			new FieldSet(
+				new LiteralField('Heading', '<h2><img src="cms/images/closeicon.gif" alt="close" title="close" />Image</h2>'),
+				new TreeDropdownField("FolderID", _t('HtmlEditorField.FOLDER', "Folder"), "Folder"),
+				new LiteralField('AddFolderOrUpload',
+				'<div style="clear:both;"></div><div id="AddFolderGroup" style="display:inline">
+	                 <a style="" href="#" id="AddFolder" class="link">' . _t('HtmlEditorField.CREATEFOLDER','create folder') . '</a>
+	                 <input style="display: none;margin-left: 2px;width: 94px;" id="NewFolderName" class="addFolder" type="text">
+	                 <a style="display: none;" href="#" id="FolderOk" class="link addFolder">' . _t('HtmlEditorField.OK','ok') . '</a>
+	                 <a style="display: none;" href="#" id="FolderCancel" class="link addFolder">' . _t('HtmlEditorField.FOLDERCANCEL','cancel') . '</a>
+                 </div>|
+                 <div id="UploadGroup" class="group" style="display: inline;margin-top:2px;">
+                    <a href="#" id="UploadFiles" class="link">' . _t('HtmlEditorField.UPLOAD','upload') . '</a>
+                 </div>
+                '),
+				new ThumbnailStripField("Image", "FolderID", "getimages"),
+				new TextField("AltText", _t('HtmlEditorField.ALTTEXT', "Description"), "", 80),
+				new DropdownField("CSSClass", _t('HtmlEditorField.CSSCLASS', "Alignment / style"), array(
+					"left" => _t('HtmlEditorField.CSSCLASSLEFT', "On the left, with text wrapping around."),
+					"right" => _t('HtmlEditorField.CSSCLASSRIGHT', "On the right, with text wrapping around."),
+					"center" => _t('HtmlEditorField.CSSCLASSCENTER', "Centered, on its own."),
+				)),
+				new FieldGroup(_t('HtmlEditorField.IMAGEDIMENSIONS', "Dimensions"),
+					new TextField("Width", _t('HtmlEditorField.IMAGEWIDTHPX', "Width"), 100),
+					new TextField("Height", "x " . _t('HtmlEditorField.IMAGEHEIGHTPX', "Height"), 100)
+				)
+			),
 			new FieldSet(
 				new FormAction("insertimage", _t('HtmlEditorField.BUTTONINSERTIMAGE', 'Insert image')),
 				new FormAction("editimage", _t('HtmlEditorField.BUTTONEDITIMAGE', 'Edit image'))
