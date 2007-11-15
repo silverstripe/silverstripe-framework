@@ -88,7 +88,7 @@ class MySQLDatabase extends Database {
 	
 	public function query($sql, $errorLevel = E_USER_ERROR) {
 		if(isset($_REQUEST['previewwrite']) && in_array(strtolower(substr($sql,0,strpos($sql,' '))), array('insert','update','delete','replace'))) {
-			Debug::message("Will execute: $sql";
+			Debug::message("Will execute: $sql");
 			return;
 		}
 
