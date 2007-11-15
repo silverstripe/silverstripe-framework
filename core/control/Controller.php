@@ -161,7 +161,9 @@ class Controller extends ViewableData {
 				$securityID = Session::get('SecurityID');
 
 				if(!$securityID || !isset($this->requestParams['SecurityID']) || $securityID != $this->requestParams['SecurityID']) {
-					trigger_error("Security ID doesn't match, possible CRSF attack.", E_USER_ERROR);
+					// Don't show this error, as spammers create a million of these
+					// trigger_error("Security ID doesn't match, possible CRSF attack.", E_USER_ERROR);
+					die();
 				}
 			}
 
