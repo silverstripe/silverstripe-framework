@@ -4,7 +4,8 @@
  * This is loaded into the TEMP_FOLDER define on start up
  */
 function getTempFolder() {
-	$ssTmp = dirname(dirname($_SERVER['SCRIPT_FILENAME'])) . "/silverstripe-cache";
+	$cachefolder = "silverstripe-cache" . str_replace(array("/",":", "\\"),"-", substr($_SERVER['SCRIPT_FILENAME'], 0, strlen($_SERVER['SCRIPT_FILENAME']) - strlen('/sapphire/main.php')));
+	$ssTmp = dirname(dirname($_SERVER['SCRIPT_FILENAME'])) . "/" . $cachefolder;
     if(@file_exists($ssTmp)) {
     	return $ssTmp;
     }
@@ -20,7 +21,7 @@ function getTempFolder() {
     }
 
     $worked = true;
-    $ssTmp = "$sysTmp/silverstripe-cache";
+    $ssTmp = "$sysTmp/$cachefolder";
     if(!@file_exists($ssTmp)) {
     	@$worked = mkdir($ssTmp);
     }
