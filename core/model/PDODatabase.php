@@ -158,7 +158,7 @@ class PDODatabase extends Database {
 	 */
 	public function query($sql, $errorLevel = E_USER_ERROR) {
 		if(isset($_REQUEST['previewwrite']) && in_array(strtolower(substr($sql,0,6)), array('insert','update'))) {
-			echo "<p>Will execute: $sql</p>";
+			Debug::message("Will execute: $sql");
 			return;
 		}
 		//Debug::backtrace();
