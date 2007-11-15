@@ -13,42 +13,50 @@ class Sitemap extends Controller {
 	}
 
 	public function Items() {
+		$newPages = new DataObjectSet();
+		
 		foreach($this->Pages as $page) {
-			// If the page has been set to 0 priority, we set a flag so it won't be included
-			if(isset($page->Priority) && $page->Priority <= 0) {
-				$page->Include = false;
-			} else {
-				$page->Include = true;
-			}
+			// Only include pages from this host
+			if(parse_url($page->AbsoluteLink(), PHP_URL_HOST) == $_SERVER['HTTP_HOST']) {
 			
-			// The one field that isn't easy to deal with in the template is
-			// Change frequency, so we set that here.
-			$properties = $page->toMap();
-			$created = new Datetime($properties['Created']);
-			$now = new Datetime();
-			$versions = $properties['Version'];
-			$timediff = $now->format('U') - $created->format('U');
+				// If the page has been set to 0 priority, we set a flag so it won't be included
+				if(isset($page->Priority) && $page->Priority <= 0) {
+					$page->Include = false;
+				} else {
+					$page->Include = true;
+				}
 			
-			// Check how many revisions have been made over the lifetime of the
-			// Page for a rough estimate of it's changing frequency.
+				// The one field that isn't easy to deal with in the template is
+				// Change frequency, so we set that here.
+				$properties = $page->toMap();
+				$created = new Datetime($properties['Created']);
+				$now = new Datetime();
+				$versions = $properties['Version'];
+				$timediff = $now->format('U') - $created->format('U');
 			
-			$period = $timediff / ($versions + 1);
+				// Check how many revisions have been made over the lifetime of the
+				// Page for a rough estimate of it's changing frequency.
 			
-			if($period > 60*60*24*365) { // > 1 year
-				$page->ChangeFreq='yearly';
-			} else if($period > 60*60*24*30) { // > ~1 month
-				$page->ChangeFreq='monthly';
-			} else if($period > 60*60*24*7) { // > 1 week
-				$page->ChangeFreq='weekly';
-			} else if($period > 60*60*24) { // > 1 day
-				$page->ChangeFreq='daily';
-			} else if($period > 60*60) { // > 1 hour
-				$page->ChangeFreq='hourly';
-			} else { // < 1 hour
-				$page->ChangeFreq='always';
+				$period = $timediff / ($versions + 1);
+			
+				if($period > 60*60*24*365) { // > 1 year
+					$page->ChangeFreq='yearly';
+				} else if($period > 60*60*24*30) { // > ~1 month
+					$page->ChangeFreq='monthly';
+				} else if($period > 60*60*24*7) { // > 1 week
+					$page->ChangeFreq='weekly';
+				} else if($period > 60*60*24) { // > 1 day
+					$page->ChangeFreq='daily';
+				} else if($period > 60*60) { // > 1 hour
+					$page->ChangeFreq='hourly';
+				} else { // < 1 hour
+					$page->ChangeFreq='always';
+				}
+				
+				$newPages->push($page);
 			}
 		}
-		return $this->Pages;
+		return $newPages;
 	}
 	
 	static function ping() {
