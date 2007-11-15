@@ -75,7 +75,7 @@ class ContentController extends Controller {
 		Statistics::collect();
 
 		// If we've accessed the homepage as /home/, then we should redirect to /.
-		if($this->dataRecord && RootURLController::should_be_on_root($this->dataRecord) && !$this->urlParams['Action'] && !$_POST && !$_FILES) {
+		if($this->dataRecord && $this->dataRecord instanceof SiteTree && RootURLController::should_be_on_root($this->dataRecord) && !$this->urlParams['Action'] && !$_POST && !$_FILES) {
 			$getVars = $_GET;
 			unset($getVars['url']);
 			if($getVars) $url = "?" . http_build_query($getVars);
