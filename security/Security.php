@@ -834,6 +834,19 @@ class Security extends Controller {
 
 		print '</p>';
 	}
+	
+	/**
+	 * Checks the database is in a state to perform security checks.
+	 * @return bool
+	 */
+	public static function database_is_ready() {
+		return
+			ClassInfo::hasTable('Member') &&
+			ClassInfo::hasTable('Group') &&
+			ClassInfo::hasTable('Permission') &&
+			(($permissionFields = DB::fieldList('Permission')) && isset($permissionFields['Type'])) &&
+			(($memberFields = DB::fieldList('Member')) && isset($memberFields['RememberLoginToken']));
+	}
 
 }
 

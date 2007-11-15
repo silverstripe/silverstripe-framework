@@ -65,9 +65,7 @@ class DatabaseAdmin extends Controller {
 	 * Updates the database schema, creating tables & fields as necessary.
 	 */
 	function build() {
-		if((Director::isLive() && ClassInfo::hasTable('Member') &&
-					ClassInfo::hasTable('Group') && ClassInfo::hasTable('Permission'))
-			 && (!Member::currentUser() || !Member::currentUser()->isAdmin())) {
+		if(Director::isLive() && Security::database_is_ready() && (!Member::currentUser() || !Member::currentUser()->isAdmin())) {
 			Security::permissionFailure($this,
 				"This page is secured and you need administrator rights to access it. " .
 				"Enter your credentials below and we will send you right along.");
@@ -79,8 +77,7 @@ class DatabaseAdmin extends Controller {
 			set_time_limit(600);
 		}
 
-		$this->doBuild(isset($_REQUEST['quiet']) ||
-									 isset($_REQUEST['from_installer']));
+		$this->doBuild(isset($_REQUEST['quiet']) || isset($_REQUEST['from_installer']));
 	}
 
 	/**

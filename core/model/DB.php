@@ -218,6 +218,16 @@ class DB {
 	static function tableList() {
 		return DB::$globalConn->tableList();
 	}
+	
+	/**
+	 * Get a list of all the fields for the given table.
+	 * Returns a map of field name => field spec.
+	 * @param string $table The table name.
+	 * @return array
+	 */
+	static function fieldList($table) {
+		return DB::$globalConn->fieldList($table);
+	}
 
 	/**
 	 * Enable supression of database messages.

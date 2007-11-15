@@ -528,7 +528,7 @@ class DataObject extends Controller {
 			}
 
 			// Divvy up field saving into a number of database manipulations
-			if(is_array($ancestry)) {
+			if(isset($ancestry) && is_array($ancestry)) {
 				foreach($ancestry as $idx => $class) {
 					$classSingleton = singleton($class);
 					foreach($this->record as $fieldName => $value) {
