@@ -27,7 +27,7 @@ table.TableField th,
 table.TableListField th, 
 .TableListField table.data th, 
 table.CMSList th {
-	whitespace: no-wrap;
+	white-space: nowrap;
 }
 
 table.TableField thead th, 
@@ -155,8 +155,6 @@ form .TableField .message {
 }
 
 
-
-
 #Pagination {
     margin-top: 10px;
     margin-left: auto;	
@@ -165,7 +163,7 @@ form .TableField .message {
 #Pagination a {
     font-size: 14px;
     width: 1px;
-    heigth: 1px;
+    height: 1px;
     margin: 1px;
 }
 #Pagination span {
