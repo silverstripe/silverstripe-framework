@@ -353,7 +353,7 @@ class HtmlEditorField_Toolbar extends ViewableData {
 	                 <input style="display: none;margin-left: 2px;width: 94px;" id="NewFolderName" class="addFolder" type="text">
 	                 <a style="display: none;" href="#" id="FolderOk" class="link addFolder">' . _t('HtmlEditorField.OK','ok') . '</a>
 	                 <a style="display: none;" href="#" id="FolderCancel" class="link addFolder">' . _t('HtmlEditorField.FOLDERCANCEL','cancel') . '</a>
-                 </div>|
+                 </div><div id="PipeSeparator" style="display:inline">|</div>
                  <div id="UploadGroup" class="group" style="display: inline;margin-top:2px;">
                     <a href="#" id="UploadFiles" class="link">' . _t('HtmlEditorField.UPLOAD','upload') . '</a>
                  </div>
