@@ -9,9 +9,12 @@ class RestfulService extends ViewableData {
 	protected $queryString;
 	protected $rawXML;
 	protected $errorTag;
+	protected $checkErrors;
+	protected $cache_expire;
 	
-	function __construct($base){
+	function __construct($base, $expiry=3600){
 		$this->baseURL = $base;
+		$this->cache_expire = $expiry;
 	}
 	
 	/**
@@ -32,27 +35,46 @@ class RestfulService extends ViewableData {
  	*/
 	
 	function connect(){
-	$url = $this->constructURL();
-	
-	$ch = curl_init();
-	$timeout = 5;
-	curl_setopt($ch, CURLOPT_URL, $url);
-	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-	curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
-	$this->rawXML = curl_exec($ch);
-	curl_close($ch);
-	
-	//Debug::show($url);
-	
-	//Try using file_get_contents if cURL is not installed in your system.
-	//$this->rawXML = file_get_contents($url);
-	if($this->rawXML != "")
-		if($this->checkErrors == true)
-			return $this->errorCatch($this->rawXML);
-		else
-			return $this->rawXML;
-	else
-		user_error("Invalid Response (maybe your calling to wrong URL or server unavailable)", E_USER_ERROR);
+		$url = $this->constructURL(); // url for the request
+		
+		// check for file exists in cache		
+		// set the cache directory
+		$cachedir = TEMP_FOLDER; // default silverstripe-cache
+			
+		$cache_file = md5($url); // encoded name of cache file
+		$cache_path = $cachedir . "/$cache_file";
+				
+		if((@file_exists("$cache_path") && ((@filemtime($cache_path) + $this->cache_expire) > (time())))){
+			$this->rawXML = file_get_contents($cache_path);
+		}	else {
+			// not available in cache fetch from server
+			$ch = curl_init();
+			$timeout = 5;
+			curl_setopt($ch, CURLOPT_URL, $url);
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+			curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
+			$this->rawXML = curl_exec($ch);
+			curl_close($ch);
+			
+			// save the response in cache
+			$fp = @fopen($cache_path,"w+");
+			@fwrite($fp,$this->rawXML);
+			@fclose($fp);
+		}
+		
+		// Try using file_get_contents if cURL is not installed in your system.
+		// $this->rawXML = file_get_contents($url);
+		
+		// results returned - from cache / live
+		if($this->rawXML != ""){
+			if($this->checkErrors == true) {
+				return $this->errorCatch($this->rawXML);
+			} else {
+				return $this->rawXML;
+			}
+		} else {
+			user_error("Invalid Response (maybe your calling to wrong URL or server unavailable)", E_USER_ERROR);
+		}
 	}
 	
 	/**
