@@ -26,7 +26,7 @@ class Decimal extends DBField {
 		DB::requireField($this->tableName, $this->name, "decimal($this->wholeSize,$this->decimalSize)");
 	}
 	
-	function saveInto() {
+	function saveInto($dataObject) {
 		$fieldName = $this->name;
 		if($fieldName) {
 			$dataObject->$fieldName = (float)preg_replace('/[^0-9.]/', '', $this->value);
