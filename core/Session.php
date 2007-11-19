@@ -45,6 +45,7 @@ class Session {
 	 * Session data
 	 */
 	protected $data = array();
+	protected $changedData = array();
 	
 	/**
 	 * Create a new session object, with the given starting data
@@ -61,12 +62,15 @@ class Session {
 		
 		// We still want to do this even if we have strict path checking for legacy code
 		$var = &$this->data;
+		$diffVar = &$this->changedData;
 			
 		foreach($names as $n) {
 			$var = &$var[$n];
+			$diffVar = &$diffVar[$n];
 		}
 			
 		$var = $val;
+		$diffVar = $val;
 	}
 	
 	public function inst_addToArray($name, $val) {
@@ -74,12 +78,15 @@ class Session {
 		
 		// We still want to do this even if we have strict path checking for legacy code
 		$var = &$this->data;
+		$diffVar = &$this->changedData;
 			
 		foreach($names as $n) {
 			$var = &$var[$n];
+			$diffVar = &$diffVar[$n];
 		}
 			
 		$var[] = $val;
+		$diffVar[sizeof($var)-1] = $val;
 	}
 	
 	public function inst_get($name) {
@@ -106,25 +113,43 @@ class Session {
 
 		// We still want to do this even if we have strict path checking for legacy code
 		$var = &$this->data;
+		$diffVar = &$this->changedData;
 			
 		foreach($names as $n) {
 			$var = &$var[$n];
+			$diffVar = &$diffVar[$n];
 		}
 			
 		$var = null;
+		$diffVar = null;
 	}
 		
 	public function inst_getAll() {
 		return $this->data;
 	}
 	
+	/**
+	 * Save data to session
+	 * Only save the changes, so that anyone manipulating $_SESSION directly doesn't get burned.
+	 */ 
 	public function inst_save() {
-		// Save the updated session back
-		foreach($this->data as $k => $v) {
-			$_SESSION[$k] = $v;
-		}
+		$this->recursivelyApply($this->changedData, $_SESSION);
 	}
 	
+	/**
+	 * Recursively apply the changes represented in $data to $dest.
+	 * Used to update $_SESSION
+	 */	
+	protected function recursivelyApply($data, &$dest) {
+		foreach($data as $k => $v) {
+			if(is_array($v)) {
+				if(!isset($dest[$k])) $dest[$k] = array();
+				$this->recursivelyApply($v, $dest[$k]);
+			} else {
+				$dest[$k] = $v;
+			}
+		}
+	}
 	
 	/**
 	* Sets the appropriate form message in session, with type. This will be shown once,
