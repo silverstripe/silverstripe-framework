@@ -844,7 +844,7 @@ class Member_GroupSet extends ComponentSet {
 
 			// else we should be removing all from the necessary groups.
 			} else {
-				$remove = $sourceItems;
+				$remove = array_keys($sourceItems);
 			}
 
 			if($add)
