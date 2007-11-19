@@ -60,7 +60,7 @@ class CustomRequiredFields extends RequiredFields{
 					eval($field['php']);
 				}else if($fields->dataFieldByName($field)) {
 					// if an error is found, the form is returned.
-					if(!$data[$field]) {
+					if(!$data[$field] || preg_match('/^\s*$/', $data[$field])) {
 						$this->validationError(
 							$field,
 							sprintf(_t('Form.FIELDISREQUIRED', "%s is required"), $field),

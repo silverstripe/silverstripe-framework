@@ -95,8 +95,6 @@ function require(fieldName,cachedError) {
 			var set = el.value;
 		}
 
-
-
 		var baseEl;
 
 		// Sometimes require events are triggered of
@@ -132,7 +130,7 @@ function require(fieldName,cachedError) {
 		}
 
 		// This checks to see if the input has a value, and the field is not a readonly.
-		if((typeof set == 'undefined' || set == "")) {
+		if( ( typeof set == 'undefined' || (typeof(set) == 'string' && set.match(/^\s*$/)) ) ) {
 			//fieldgroup validation
 			var fieldLabel = findParentLabel(baseEl);
 
