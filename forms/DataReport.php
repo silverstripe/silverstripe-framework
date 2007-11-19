@@ -517,7 +517,8 @@ HTML
 	}
 	
 	protected function getReportType() {
-		return 'DataReport';
+		if(class_exists($this->name)) return $this->name;
+		else return $this->class;
 	}
 	
 	/**
@@ -568,7 +569,10 @@ class DataReport_Controller extends Controller{
 			$sord = array("Order.ID"=>"DESC"),
 			$join = array("MemberID"=>array("table"=>"Member", "field"=>"ID"))
 		);
-		$orderReport->filter_onchange();
+		
+		if($orderReport->hasMethod('getReportField')) $orderReport = $orderReport->getReportField();
+		
+		if($orderReport->hasMethod('filter_onchange')) $orderReport->filter_onchange();
 		$orderReport->exportToCSV("report.csv");
 	}
 }
