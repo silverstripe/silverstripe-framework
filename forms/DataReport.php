@@ -402,7 +402,7 @@ HTML
 			$i=0;
 			
 			//$k is the key of base table, $v is an array with joined table and join key, such as
-			// $v = array("ID"=>array("table"=>"Payment", "field"=>"OrderID")).
+			// $v = array("ID"=>array("table"=>"Payment", "field"=>"OrderID", "joinclass" => "Order")).
 			// otherwise it treats it as a SQL-string ("LEFT JOIN x ON  x=y")
 			foreach($this->join as $k => $v){
 				$join .= ( $i==0 ) ? "" :" ";
@@ -414,7 +414,9 @@ HTML
 					if(!$k || !is_string($k)) $k = $v['joinColumn'];
 					if(!$v['howtojoin']) $v['howtojoin'] = "LEFT JOIN";
 					$this->joinedTables[] = $v['table'];
-					$join .="$v[howtojoin] `$v[table]` on `{$this->baseClass}`.`$k` = `$v[table]`.`$v[field]`";
+					// FIX Stupid arbitrary array-structure makes this neccessary
+					$joinClass = ($v['joinclass']) ? $v['joinclass'] : $this->baseClass;
+					$join .="$v[howtojoin] `$v[table]` on `{$joinClass}`.`{$k}` = `$v[table]`.`$v[field]`";
 				}
 				$i++;
 			}
