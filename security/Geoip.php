@@ -18,8 +18,8 @@
 
 class Geoip extends Object {
 	
-	static $default_country_code;
-	
+	public static $default_country_code = false;
+
 	/** ISO 3166 Country Codes **/
 	/** 
 	 * Includes additional codes for Europe,
@@ -310,9 +310,10 @@ class Geoip extends Object {
 			if ($start) $start+=2;
 			$code = substr($country, $start, 2); // skip space	
 		}
+
 		if ($code == 'IP' || $code == '--') {
-			if(self::$default_country_code) $code = self::$default_country_code;
-			else return false;
+			 if (self::$default_country_code) $code = self::$default_country_code;
+			 else return false;
 		}
 		
 		if(!$codeOnly) {
