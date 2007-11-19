@@ -82,7 +82,7 @@ Behaviour.register({
 			return !error;
 		},
 		onsubmit : function() {
-			return this.validate();
+			if(typeof this.bypassValidation == 'undefined' || !this.bypassValidation) return this.validate();
 		}
 	},
 	'#$formID input' : {
