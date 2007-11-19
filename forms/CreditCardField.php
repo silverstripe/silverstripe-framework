@@ -73,6 +73,9 @@ JS;
 	}
 	
 	function validate($validator){
+		// If the field is empty then don't return an invalidation message
+		if(!trim(implode("", $this->value))) return true;
+		
 		$i=0;
 		if($this->value) foreach($this->value as $part){
 			if(!$part || !(strlen($part) == 4) || !ereg("([0-9]{4})",$part)){
