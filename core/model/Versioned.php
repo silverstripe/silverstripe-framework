@@ -466,7 +466,7 @@ class Versioned extends DataObjectDecorator {
 		$fields = array_keys($fromRecord->getAllFields());
 		
 		foreach($fields as $field) {
-			if(in_array($field, array("ID","Version","RecordID","AuthorID"))) continue;
+			if(in_array($field, array("ID","Version","RecordID","AuthorID", "ParentID"))) continue;
 			
 			$fromRecord->$field = Diff::compareHTML($fromRecord->$field, $toRecord->$field);
 		}
@@ -623,6 +623,9 @@ class Versioned extends DataObjectDecorator {
 	 * Return the latest version of the given page
 	 */
 	static function get_latest_version($class, $id) {
+		$oldStage = Versioned::$reading_stage;
+		Versioned::$reading_stage = null;
+
 		$baseTable = ClassInfo::baseDataClass($class);
 		$query = singleton($class)->buildVersionSQL("`{$baseTable}`.RecordID = $id", "`{$baseTable}`.Version DESC");
 		$query->limit = 1;
@@ -633,6 +636,9 @@ class Versioned extends DataObjectDecorator {
 			Debug::show($record);
 			user_error("Versioned::get_version: Couldn't get $class.$id, version $version", E_USER_ERROR);
 		}
+
+		Versioned::$reading_stage = $oldStage;
+
 		return new $className($record);
 	}
 	
