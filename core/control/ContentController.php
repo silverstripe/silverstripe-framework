@@ -154,20 +154,6 @@ class ContentController extends Controller {
 
 		return new DataObjectSet($visible);
 	}
-	/**
-	 * Returns the page in the current page stack of the given level.
-	 * Level(1) will return the main menu item that we're currently inside, etc.
-	 */
-
-	public function Level($level) {
-		$parent = $this->data();
-		$stack = array($parent);
-		while($parent = $parent->Parent) {
-			array_unshift($stack, $parent);
-		}
-
-		return isset($stack[$level-1]) ? $stack[$level-1] : null;
-	}
 
 	public function Menu($level) {
 		return $this->getMenu($level);

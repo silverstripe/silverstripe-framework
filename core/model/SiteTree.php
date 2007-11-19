@@ -1347,7 +1347,20 @@ class SiteTree extends DataObject {
 		}
 	}
 
+	/**
+	 * Returns the page in the current page stack of the given level.
+	 * Level(1) will return the main menu item that we're currently inside, etc.
+	 */
+	public function Level($level) {
+		$parent = $this;
+		$stack = array($parent);
+		while($parent = $parent->Parent) {
+			array_unshift($stack, $parent);
+		}
 
+		return isset($stack[$level-1]) ? $stack[$level-1] : null;
+	}
+	
 	/**
 	 * Return the CSS classes to apply to this node in the CMS tree
 	 *
