@@ -311,7 +311,7 @@ class Geoip extends Object {
 			$code = substr($country, $start, 2); // skip space	
 		}
 		if ($code == 'IP' || $code == '--') {
-			if(self::$default_country_code) return self::$default_country_code;
+			if(self::$default_country_code) $code = self::$default_country_code;
 			else return false;
 		}
 		
