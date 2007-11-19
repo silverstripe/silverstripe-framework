@@ -561,6 +561,17 @@ class Form extends ViewableData {
 		return $data;
 	}
 
+	function resetData($fieldName, $fieldValue){
+		$dataFields = $this->fields->dataFields();
+		if($dataFields){
+			foreach($dataFields as $field) {
+				if($field->Name()==$fieldName) {
+					$field = $field->setValue($fieldValue);
+				}
+			}
+		}		
+	}
+	
 	/**
 	 * Call the given method on the given field.
 	 * This is used by Ajax-savvy form fields.  By putting '&action=callfieldmethod' to the end
