@@ -126,11 +126,19 @@ class Email extends ViewableData {
 				"From" => $this->from,
 				"Subject" => $this->subject,
 				"Body" => $this->body,
-				"BaseURL" => $this->BaseURL()
+				"BaseURL" => $this->BaseURL(),
+				"IsEmail" => true,
 			));
 		} else {
 			return $this;
 		}
+	}
+	
+	/**
+	 * Used by SSViewer templates to detect if we're rendering an email template rather than a page template
+	 */
+	public function IsEmail() {
+		return true;
 	}
 	
 	/**
