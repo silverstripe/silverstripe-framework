@@ -15,7 +15,7 @@ class CurrencyField extends TextField {
 	 */
 	function dataValue() {
 		if($this->value){
-			return ereg_replace('[^0-9.]',"", $this->value);
+			return preg_replace('/[^0-9.]/',"", $this->value);
 		}else{
 			return 0.00;
 		}
@@ -82,7 +82,7 @@ class CurrencyField_Readonly extends ReadonlyField{
 	function Field() {
 		if($this->value){
 			$val = $this->dontEscape ? ($this->reserveNL?Convert::raw2xml($this->value):$this->value) : Convert::raw2xml($this->value);
-			$val = '$' . number_format(ereg_replace('[^0-9.]',"",$val), 2);
+			$val = '$' . number_format(preg_replace('/[^0-9.]/',"",$val), 2);
 			
 		}else {
 			$val = '<i>$0.00</i>';

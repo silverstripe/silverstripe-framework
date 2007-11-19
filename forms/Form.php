@@ -538,7 +538,7 @@ class Form extends ViewableData {
 			if($field->Name() == "ClassName"){
 				$lastField = $field;
 			}else if( $dataObject->hasMethod( $saveMethod ) ){
-				$dataObject->$saveMethod( $field->Value());
+				$dataObject->$saveMethod( $field->dataValue());
 			} else if($field->Name() != "ID"){
 				$field->saveInto($dataObject);
 			}
