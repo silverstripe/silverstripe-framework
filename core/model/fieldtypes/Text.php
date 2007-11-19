@@ -57,6 +57,34 @@ class Text extends DBField {
 		
 		return $ret;
 	}
+
+	/**
+	 * Limit sentences, can be controlled by passing an integer.
+	 * @param int $sentCount The amount of sentences you want.
+	 */
+	function LimitSentences($sentCount = 2) {
+		$data = Convert::xml2raw($this->value);
+		$sentences = explode('.', $data);
+		if(count($sentences) == 1) {
+			return $sentences[0] . '.';
+		} elseif(count($sentences) > 1) {
+			if(is_numeric($sentCount) && $sentCount != 0) {
+				if($sentCount == 1) {
+					$output = $sentences[0] . '. ';						
+				} else {
+					for($i = 1; $i <= $sentCount-1; $i++) {
+						if($sentences[0]) {
+							$output .= $sentences[0] . '. ';
+						}
+						if($sentences[$i]) {
+							$output .= $sentences[$i] . '. ';		
+						}
+					}					
+				}
+				return $output;				
+			}
+		}
+	}
 	
 	/**
 	 * Caution: Not XML/HTML-safe - does not respect closing tags.
