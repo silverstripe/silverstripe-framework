@@ -7,8 +7,8 @@
  * SmallFieldHolder() is called, which just prefixes $Field with a <label> tag, if the Title is set.
  */
 class FieldGroup extends CompositeField {
-	
 	protected $zebra;
+	public $subfieldParam = "SmallFieldHolder";
 	
 	function __construct($arg1 = null, $arg2 = null) {
 		if(is_array($arg1) || is_a($arg1, 'FieldSet')) {
@@ -55,6 +55,8 @@ class FieldGroup extends CompositeField {
 	 * it is easier to overwrite the <div class="field"> behaviour in a more specific class
 	 */
 	function Field() {
+		$subfieldParam = $this->subfieldParam;
+		
 		$fs = $this->FieldSet();
     	$spaceZebra = isset($this->zebra) ? " $this->zebra" : '';
     	$idAtt = isset($this->id) ? " id=\"{$this->id}\"" : '';
@@ -62,7 +64,7 @@ class FieldGroup extends CompositeField {
 		foreach($fs as $subfield) {
 	      $childZebra = (!isset($childZebra) || $childZebra == "odd") ? "even" : "odd";
 	      if($subfield->hasMethod('setZebra')) $subfield->setZebra($childZebra);
-			$content .= $subfield->SmallFieldHolder() . " ";
+			$content .= $subfield->$subfieldParam() . " ";
 		}
 		$content .= "</span>";
 		return $content;
