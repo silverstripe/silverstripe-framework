@@ -3,7 +3,6 @@
 /**
  * Main file that handles every page request.
  */
-
 $_SERVER['HTTP_HOST'] = $_SERVER['argv'][2];
 $_SERVER['SCRIPT_FILENAME'] = __FILE__;
 chdir(dirname($_SERVER['SCRIPT_FILENAME']));
@@ -20,13 +19,18 @@ if(function_exists('mb_http_output')) {
 if( preg_match( '/(test\.totallydigital\.co\.nz|dev\.totallydigital\.co\.nz\/test)(.*)/', $_SERVER['SCRIPT_FILENAME'], $nameMatch ) ) {
 	$_SERVER['SCRIPT_NAME'] = $nameMatch[2];
 	$_SERVER['HTTP_HOST'] = $nameMatch[1];
-} elseif( preg_match( '/dev\.totallydigital\.co\.nz(.*)/', $_SERVER['SCRIPT_FILENAME'], $nameMatch ) )
+	$envType = 'test';
+} elseif( preg_match( '/dev\.totallydigital\.co\.nz(.*)/', $_SERVER['SCRIPT_FILENAME'], $nameMatch ) ) {
 	$_SERVER['SCRIPT_NAME'] = $nameMatch[1];
-elseif( preg_match( '/\/sites\/[^\/]+\/www(.*)/', $_SERVER['SCRIPT_FILENAME'], $nameMatch ) )
+	$envType = 'dev';
+} elseif( preg_match( '/\/sites\/[^\/]+\/www(.*)/', $_SERVER['SCRIPT_FILENAME'], $nameMatch ) ) {
 	$_SERVER['SCRIPT_NAME'] = $nameMatch[1];	
-elseif( preg_match( '/\/sites\/[^\/]+(.*)/', $_SERVER['SCRIPT_FILENAME'], $nameMatch ) )
+	$envType = 'live';
+} elseif( preg_match( '/\/sites\/[^\/]+(.*)/', $_SERVER['SCRIPT_FILENAME'], $nameMatch ) ) {
 	$_SERVER['SCRIPT_NAME'] = $nameMatch[1];
-elseif(!isset($_SERVER['SCRIPT_NAME'])) {
+} elseif(isset($_SERVER['SCRIPT_NAME'])) {
+	$envType = 'live';
+} else {
 	echo "Error: could not determine server configuration {$_SERVER['SCRIPT_FILENAME']}\n";
 	exit();	
 }	
@@ -38,7 +42,6 @@ if($_REQUEST && get_magic_quotes_gpc()) {
 }
 
 if($_REQUEST['trace']) apd_set_pprof_trace();
-
 
 require_once("core/ManifestBuilder.php");
 require_once("core/ClassInfo.php");
@@ -64,6 +67,8 @@ if(ManifestBuilder::staleManifest()){
 require_once(MANIFEST_FILE);
 
 if($_GET['debugmanifest']) Debug::show(file_get_contents(MANIFEST_FILE));
+
+Director::set_environment_type($envType);
 
 // Default director
 Director::addRules(10, array(
