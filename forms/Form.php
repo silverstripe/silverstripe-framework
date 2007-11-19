@@ -488,7 +488,8 @@ class Form extends ViewableData {
 
 			if($name = $field->Name()) {
 				if($o) {
-					$val = $object->$name;
+					// this was failing with the field named 'Name'
+					$val = $object->getField($name);
 				} else {
 					$val = isset($object[$name]) ? $object[$name] : null;
 				}
