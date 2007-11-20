@@ -409,6 +409,10 @@ class ViewableData extends Object implements Iterator {
 			if(!$castedClass || $castedClass == 'HTMLText' || $castedClass == 'HTMLVarchar' || $castedClass == 'Text') {
 				// Case 2: the value is already XML-safe, just return it
 				
+				// This replacement is needed to get hash-links working.  It's currently being done by Text::AbsoluteLinks()
+				// This is used in the inform template, but not necessarily elsewhere.
+				//$val = str_replace('$CurrentPageURL', $_SERVER['REQUEST_URI'], $val);
+				
 			} else {
 				// Case 3: the value is raw and must be made XML-safe
 				$val = Convert::raw2xml($val);
