@@ -252,6 +252,48 @@ class Member extends DataObject {
 	 * @return Member_Validator Returns an instance of a
 	 *                          {@link Member_Validator} object.
 	 */
+	function getNewsletterSubscriptions(){
+		$groups =  $this->Groups()->toDropDownMap("ID","ID");
+		return $groups;
+	}
+	
+	/**
+	 * This does some cunning and automatically save the newsletter subscriptions
+	 * by adding and removing the member from the appropriate
+	 * groups based on a checkboxset field.
+	 * This function is called by the form handler
+	 * whenever form->saveInto($member); is called with an 
+	 * checkboxsetfield in the data with the name
+	 * "newsletterSubscriptions"
+	 */
+	function saveNewsletterSubscriptions($groups){
+    	$checkboxsetfield = new CheckboxSetField(
+			"NewsletterSubscriptions",
+			"",
+			$sourceitems = DataObject::get("NewsletterType")->toDropDownMap("GroupID","Title"),
+			$selectedgroups = $groups
+		);
+		return $this->Groups()->setByCheckboxSetField($checkboxsetfield);
+	}
+	
+	function removeAllNewsletterSubscriptions(){
+		$groups = $this->Groups();
+		$groupIDs = $groups->getIDList();
+		$newsletterTypes = DataObject::get("NewsletterType");
+		if($newsletterTypes&&$newsletterTypes->count()){
+			foreach($newsletterTypes as $type){
+				$newsletterGroupIDs[] = $type->GroupID;
+			}
+		}
+		if($newsletterGroupIDs) {
+			foreach($newsletterGroupIDs as $newsletterGroupID){
+				if($groupIDs&&in_array($newsletterGroupID, $groupIDs)){
+					$groups->remove($newsletterGroupID);
+				}
+			}
+		}
+	}
+	
 	function getValidator() {
 		return new Member_Validator();
 	}
