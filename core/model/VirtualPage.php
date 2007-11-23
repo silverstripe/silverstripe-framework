@@ -6,6 +6,7 @@
 * Note: This Only duplicates $db fields and not the $has_one etc.. 
 */
 class VirtualPage extends Page {
+
 	static $add_action = "Virtual page (another page's content)";
 	
 	static $icon = array("cms/images/treeicons/page-shortcut-gold","file");

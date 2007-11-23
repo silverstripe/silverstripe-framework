@@ -314,7 +314,7 @@ class Director {
 	}
 
 	static function getAbsURL($url) {
-		return Director::baseURL() . '/' . $url;
+		return Director::baseURL() . $url;
 	}
 	
 	static function getAbsFile($file) {

@@ -6,9 +6,19 @@
  * the creation of the field in the database,
  */
 abstract class DBField extends ViewableData {
+	
 	protected $value;
+	
 	protected $tableName;
+	
 	protected $name;
+	
+	/**
+	 * @var $default mixed Default-value in the database.
+	 * Might be overridden on DataObject-level, but still useful for setting defaults on
+	 * already existing records after a db-build.
+	 */
+	protected $defaultVal;
 	
 	function __construct($name) {
 		$this->name = $name;
@@ -29,12 +39,15 @@ abstract class DBField extends ViewableData {
 	function setVal($value) {
 		return $this->setValue($value);
 	}
+	
 	function setValue($value) {
 		$this->value = $value;
 	}
+	
 	function setTable($tableName) {
 		$this->tableName = $tableName;
 	}
+	
 	function forTemplate() {
 		return $this->value;
 	}
@@ -45,15 +58,19 @@ abstract class DBField extends ViewableData {
 	function ATT() {
 		return Convert::raw2att($this->value);
 	}
+	
 	function RAW() {
 		return $this->value;
 	}
+	
 	function JS() {
 		return Convert::raw2js($this->value);
 	}
+	
 	function HTML(){
 		return Convert::raw2xml($this->value);
 	}
+	
 	function XML(){
 		return Convert::raw2xml($this->value);
 	}
@@ -93,5 +110,4 @@ abstract class DBField extends ViewableData {
 DBG;
 	}
 }
-
 ?>

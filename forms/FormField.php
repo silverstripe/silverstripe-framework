@@ -237,6 +237,8 @@ class FormField extends ViewableData {
 	 * a good idea to put the actual HTML for field holders into templates.  The default field holder
 	 * is the DefaultFieldHolder template.  This lets you override the HTML for specific sites, if it's
 	 * necessary.
+	 * 
+	 * TODO Add "validationError" if needed.
 	 */
 	function FieldHolder() {
 		$Title = $this->XML_val('Title');
@@ -262,7 +264,6 @@ HTML;
 	 */
 	function SmallFieldHolder() {
 		$result = '';
-		
 		// set label
 		if($title = $this->RightTitle()){
 			$result .= "<label class=\"right\" for=\"" . $this->id() . "\">{$title}</label>\n";
@@ -324,6 +325,12 @@ HTML;
 	
 	function transform(FormTransformation $trans) {
 		return $trans->transform($this);
+	}
+	
+	function hasClass($class){
+		$patten = '/'.strtolower($class).'/i';
+		$subject = strtolower($this->class." ".$this->extraClass);
+		return preg_match($patten, $subject);
 	}
 	
 	/**

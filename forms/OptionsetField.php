@@ -38,12 +38,19 @@ class OptionsetField extends DropdownField {
 			$odd = ($odd + 1) % 2;
 			$extraClass = $odd ? "odd" : "even";
 			$extraClass .= " val" . str_replace(' ','',$key);
+			$this->disabled ? $disabled = " disabled=\"disabled\"" : $disable = "";
 			
-			$options .= "<li class=\"".$extraClass."\"><input id=\"$itemID\" name=\"$this->name\" type=\"radio\" value=\"$key\"$checked /> <label for=\"$itemID\">$value</label></li>\n";
+			$options .= "<li class=\"".$extraClass."\"><input id=\"$itemID\" name=\"$this->name\" type=\"radio\" value=\"$key\"$checked $disabled/> <label for=\"$itemID\">$value</label></li>\n";
 		}
 		$id = $this->id();
-		return "<ul id=\"$id\" class=\"optionset\">\n$options</ul>\n";
+		return "<ul id=\"$id\" class=\"optionset {$this->extraClass}\">\n$options</ul>\n";
 	}
+	
+	protected $disabled = false;
+	function setDisabled($val) {
+		$this->disabled = $val;
+	}
+	
 
 	
 	function performReadonlyTransformation() {

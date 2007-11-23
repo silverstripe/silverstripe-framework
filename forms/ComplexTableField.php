@@ -247,9 +247,8 @@ JS;
 		} else {
 			$detailFields = $childData->getCMSFields();
 		}
-
 		if($this->getParentClass()) {
-			$parentIdName = $this->getParentIdName( $this->getParentClass(), $this->sourceClass );
+			$parentIdName = $this->getParentIdName($this->sourceClass,$this->getParentClass());
 			if(!$parentIdName) {
 				user_error("ComplexTableField::DetailForm() Cannot automatically 
 					determine 'has-one'-relationship to parent, 
@@ -262,12 +261,15 @@ JS;
 			$detailFields->push(new HiddenField("$parentIdName"," ",$ID));
 		} 
 
-
 		// the ID field confuses the Controller-logic in finding the right view for ReferencedField
 		$detailFields->removeByName('ID');
 
+		// only add childID if we're not adding a record		
+		if($this->methodName != 'add') {
+			$detailFields->push(new HiddenField("ctf[childID]","",$childID));
+		}
+
 		// add a namespaced ID instead thats "converted" by saveComplexTableField()
-		$detailFields->push(new HiddenField("ctf[childID]","",$childID));
 		$detailFields->push(new HiddenField("ctf[ClassName]","",$this->sourceClass));
 
 		$readonly = ($this->methodName == "show");
@@ -399,9 +401,8 @@ JS;
 		// we can't rely on $idField being populated, and fall back to the request-params.
 		// this is a workaround for a bug where each subsequent popup-call didn't have ID
 		// of the parent set, and so didn't properly save the relation
-		return ($idField->Value()) ? $idField->Value() : (isset($_REQUEST['ctf']['ID']) ? $_REQUEST['ctf']['ID'] : null);
+		return ($idField->Value()) ? $idField->Value() : $_REQUEST['ctf']['ID'];
  	} 
-	
 	 
 	/**
 	 * #################################
@@ -409,7 +410,11 @@ JS;
 	 * #################################
 	 */
 	function PopupBaseLink() {
-		return $this->FormAction() . "&action_callfieldmethod&fieldName={$this->Name()}&ctf[ID]={$this->sourceID()}";
+		$link = $this->FormAction() . "&action_callfieldmethod&fieldName={$this->Name()}";
+		if(!strpos($link,'ctf[ID]')) {
+			$link = HTTP::setGetVar('ctf[ID]',$this->sourceID(),$link);
+		}
+		return $link;
 	}
 
 	function PopupCurrentItem() {
@@ -689,8 +694,9 @@ class ComplexTableField_Popup extends Form {
 			$childObject = DataObject::get_by_id($this->sourceClass, $id);
 		} else {
 			$childObject = new $this->sourceClass();
-			$childObject->write(); // Give it an ID prior to calling saveInto
+			$this->fields->removeByName('ID');
 		}
+
 		$this->saveInto($childObject);
 		$childObject->write();
 

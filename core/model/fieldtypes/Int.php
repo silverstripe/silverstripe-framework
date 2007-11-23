@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * @param $defaultVal int
+ */
 class Int extends DBField {
 
 	function __construct($name, $defaultVal = 0) {
@@ -10,6 +12,13 @@ class Int extends DBField {
 		parent::__construct($name);
 	}
 
+	
+	function __construct($name, $defaultVal = null) {
+		$this->defaultVal = is_numeric($defaultVal) ? $defaultVal : 0;
+		
+		parent::__construct($name);
+	}
+	
 	function Formatted() {
 		return number_format($this->value);
 	}

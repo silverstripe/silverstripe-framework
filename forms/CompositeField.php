@@ -182,6 +182,40 @@ class CompositeField extends FormField {
 		
 		return $this;
 	}
+
+	/**
+	 * Return a readonly version of this field.  Keeps the composition but returns readonly
+	 * versions of all the children
+	 */
+	public function dropDatalessField() {
+		$newChildren = new FieldSet();
+
+		foreach($this->children as $idx => $child) {
+			
+			if(is_object($child)){
+				if(get_class($child)=='HeaderField'||get_class($child)=='LabelField'||get_class($child)=='TableListField'||is_subclass_of($child, 'TableListField')||get_class($field)=='SelectionGroup'||is_subclass_of($field, 'SelectionGroup')){
+					$newChildren->push($child, $idx);
+				}elseif($child->isComposite()){
+					$newChildren->push($child->dropDatalessField());
+				}elseif((get_class($child)!='DatalessField'&&!is_subclass_of($child, 'DatalessField'))){
+					if($this->hasClass('Undropable')||$child->Value()!==NULL){
+						$newChildren->push($child, $idx);
+					}
+				}
+			}elseif(is_array($child)){
+				foreach($child as $idx=>$subChild){
+					if(is_object($subChild)){
+						if($subChild->isComposite){
+							$newChildren->push($subChild->dropDatalessField());
+						}
+					}
+				}
+			}
+		}
+		$this->children = $newChildren;
+		return $this;
+	}
+	
 	function IsReadonly() {
 		return $this->readonly;
 	}

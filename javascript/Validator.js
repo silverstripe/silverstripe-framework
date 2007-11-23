@@ -42,11 +42,17 @@ function clearErrorMessage(holderDiv){
 			Element.hide(el); 
 		}); 
 	} 
+	$$('div.validationError', holderDiv.parentNode).each(function(el) {
+		Element.removeClassName(el,'validationError');
+	});
 }
 
 function clearAllErrorMessages() {
 	$$('span.message').each(function(el) {
 		Element.hide(el);
+	});
+	$$('div.validationError').each(function(el) {
+		Element.removeClassName(el,'validationError');
 	});
 }
 
@@ -249,6 +255,10 @@ function validationError(field,message, messageClass, cacheError) {
 	validationMessage.className = "message " + messageClass;
 	validationMessage.innerHTML = message;
 	validationMessage.style.display = "block";
+	
+	// Set Classname on holder
+	var holder = document.getParentOfElement(field,'div','field');
+	Element.addClassName(holder, 'validationError');
 }
 
 /**

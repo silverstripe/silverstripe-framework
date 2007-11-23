@@ -4,7 +4,7 @@
  * A redirector page redirects when the page is visited.
  */
 class RedirectorPage extends Page {
-	static $add_action = "a redirector to another page";
+	static $add_action = "Redirector to another page";
 	static $icon = array("cms/images/treeicons/page-shortcut","file");
 	
 	static $db = array(

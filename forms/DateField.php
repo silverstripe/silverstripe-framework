@@ -4,16 +4,27 @@
  * Default Value represented in the format
  */
 class DateField extends TextField {
+	
 	function setValue($val) {
-		if(preg_match('/^([\d]{1,2})\/([\d]{1,2})\/([\d]{2,4})/', $val, $parts)) {
-			$val = "$parts[3]-$parts[2]-$parts[1]";
+		if($val && preg_match('/^([\d]{2,4})-([\d]{1,2})-([\d]{1,2})/', $val)) {
+			$this->value = preg_replace('/^([\d]{2,4})-([\d]{1,2})-([\d]{1,2})/','\\3/\\2/\\1', $val);
+		} else {
+			$this->value = $val;
 		}
-		if($val) $this->value = date('d/m/Y', strtotime($val));
-		else $this->value = null;
 	}
+	
 	function dataValue() {
-		return preg_replace('/^([0-9]{1,2})\/([0-9]{1,2})\/([0-90-9]{2,4})/', '\\3-\\2-\\1', $this->value);
+		if(is_array($this->value)) {
+			return $this->value['Year'] . '-' . $this->value['Month'] . '-' . $this->value['Day'];
+		} elseif(preg_match('/^([\d]{1,2})\/([\d]{1,2})\/([\d]{2,4})/', $this->value, $parts)) {
+			return "$parts[3]-$parts[2]-$parts[1]";
+		} elseif(!empty($this->value)) {
+			return date('Y-m-d', strtotime($this->value));
+		} else {
+			return null;
+		}
 	}
+	
 	function performReadonlyTransformation() {
 		$field = new DateField_Disabled($this->name, $this->title, $this->value);
 		$field->setForm($this->form);

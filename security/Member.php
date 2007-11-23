@@ -414,13 +414,33 @@ class Member extends DataObject {
 	 * @return bool Returns TRUE if the member is in the given group,
 	 *              otherwise FALSE.
 	 */
+
 	public function inGroup($groupID) {
 		foreach($this->Groups() as $group) {
 			if($groupID == $group->ID)
 				return true;
-		}
+			}
 
 		return false;
+	}
+	
+	static function createNewPassword() {
+		if(file_exists('/usr/share/silverstripe/wordlist.txt')) {
+			$words = file('/usr/share/silverstripe/wordlist.txt');
+	
+			list($usec, $sec) = explode(' ', microtime());
+			srand($sec + ((float) $usec * 100000));
+			
+			$word = trim($words[rand(0,sizeof($words)-1)]);
+			$number = rand(10,999);
+			
+			return $word . $number;
+		} else {
+			$random = rand();
+		    $string = md5($random);
+    		$output = substr($string, 0, 6);
+	    	return $output;
+		}
 	}
 
 

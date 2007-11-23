@@ -24,6 +24,24 @@ class SelectionGroup extends CompositeField {
 		Requirements::css('sapphire/css/SelectionGroup.css');
 	}
 	
+	/**
+	 * Return a readonly version of this field.  Keeps the composition but returns readonly
+	 * versions of all the children
+	 */
+	public function performDisabledTransformation($trans) {
+		$newChildren = array();
+		if($this->children) foreach($this->children as $idx => $child) {
+			if(is_object($child)) {
+				$child = $child->transform($trans);
+			}
+			$newChildren[$idx] = $child;
+		}
+
+		$this->children = new FieldSet($newChildren);
+		$this->readonly = true;
+		return $this;
+	}
+	
 	function FieldSet() {
 		$items = parent::FieldSet()->toArray();
 		

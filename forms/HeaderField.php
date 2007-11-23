@@ -13,10 +13,12 @@ class HeaderField extends DatalessField {
 		parent::__construct(null, $title, null, $form);
 	}
 	function Field() {
-		if($this->allowHTML) $XML_title = $this->title;
-		else $XML_title = Convert::raw2xml($this->title);
+		$XML_title = ($this->allowHTML) ? $this->title : Convert::raw2xml($this->title);
 		
-		return "<h$this->headingLevel>$XML_title</h$this->headingLevel>";
+		// extraclass
+		$XML_class = ($this->extraClass()) ? " class=\"{$this->extraClass()}\"" : '';  
+		
+		return "<h{$this->headingLevel}{$XML_class}>$XML_title</h$this->headingLevel>";
 	}
 }
 ?>

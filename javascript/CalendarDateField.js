@@ -49,8 +49,12 @@ NumericField.prototype = {
 		if( testedOk ) {
 			this.oldValue = this.value = testValue;
 			
+			// DEBUG This produces weird javascript-errors, and is not very useable at all
+			// DONT MERGE
+			/*
 			if( this.value.length == this.maxLength && this.nextField )
 				this.nextField.focus();
+			*/
 				
 			if( this.callOnValidate )
 				this.callOnValidate();

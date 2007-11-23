@@ -20,6 +20,7 @@ class FieldSet extends DataObjectSet {
 
 	protected function collateDataFields(&$list) {
 		foreach($this as $field) {
+
 			if($field->isComposite()) $field->collateDataFields($list);
 			if($field->hasData()) {
 				$name = $field->Name();

@@ -147,6 +147,10 @@ class Form extends ViewableData {
 		}
 	}
 
+	function unsetValidator(){
+		$this->validator = null;
+	}
+
 	/**
 	 * Remove the {@link Validator} from this from.
 	 */
@@ -673,7 +677,6 @@ class Form extends ViewableData {
 			if($this->buttonClickedFunc == $action->actionName()) return $action;
 		}
 	}
-
 	/**
 	 * Return the default button that should be clicked when another one isn't available
 	 */
@@ -762,5 +765,22 @@ class Form extends ViewableData {
 	function testAjaxSubmission($action, $data) {
 		$data['ajax'] = 1;
 		return $this->testSubmission($action, $data);
+	}
+	function dropDatalessField(){
+		foreach($this->Fields() as $field){
+			if(get_class($field)!='SelectionGroup'&&get_class($field)!='TableListField'&&!is_subclass_of($field, 'TableListField')){
+				if((get_class($field)=='DatalessField' ||is_subclass_of($field, 'DatalessField'))&&get_class($field)!='HeaderField'&&get_class($field)!='LabelField'){
+					$this->Fields()->removeByName($field->Name());
+				}elseif($field->isComposite()){
+					$field->dropDatalessField();
+				}else{
+					if(get_class($field) != "HeaderField" &&get_class($field) != "LabelField"&& $field->Value() === NULL){
+						$this->Fields()->removeByName($field->Name());
+					}
+				}
+			}
+				
+			
+		}
 	}
 }

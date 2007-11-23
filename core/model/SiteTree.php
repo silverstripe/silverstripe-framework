@@ -1211,13 +1211,26 @@ class SiteTree extends DataObject {
 			if((($instance instanceof HiddenClass) || !$instance->canCreate()) && ($class != $this->class)) continue;
 
 			$addAction = $instance->uninherited('add_action', true);
-			if(!$addAction) $addAction = "a $class";
+			if(!$addAction) {
+				$addAction = $instance->singular_name();
+			}
 
-			$result[$class] = ($class == $this->class)
+			if($class == $this->class) {
+				$currentClass = $class;
+				$currentAddAction = $addAction;
+			} else {
+				$result[$class] = ($class == $this->class)
 				? "Currently $addAction"
 				: "Change to $addAction";
+			}
 		}
-
+		
+		// sort alphabetically, and put current on top
+		asort($result);
+		$result = array_reverse($result);
+		$result[$currentClass] = "{$currentAddAction} (current)";
+		$result = array_reverse($result);
+		
 		return $result;
 	}
 
