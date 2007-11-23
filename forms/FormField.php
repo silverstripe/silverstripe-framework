@@ -398,11 +398,6 @@ HTML;
 	function setExtraClass($extraClass){
 		$this->extraClasses[] = $extraClass;
 	}
-	
-	function _getExtraClass(){
-		return $this->extraClass;
-	}
-
 }
 
 ?>
