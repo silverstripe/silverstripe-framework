@@ -15,7 +15,7 @@
  * @param $sourceClass string The source class of this field
  * @param $fieldList array An array of field headings of Fieldname => Heading Text (eg. heading1)
  * @param $fieldTypes array An array of field types of fieldname => fieldType (eg. formfield). Do not use for extra data/hiddenfields.
- * @param $filterField string The actual limiting filter, eg. 1 (Legacy, please use $sourceFilter in the form "ParentID = 1" instead) 
+ * @param $filterField string DEPRECATED The actual limiting filter, eg. 1 (please use $sourceFilter in the form "ParentID = 1" instead) 
  * @param $sourceFilter string The filter you wish to limit the objects by
  * @param $editExisting boolean (Note: Has to stay on this position for legacy reasons)
  * @param $sourceSort string
@@ -81,16 +81,15 @@ class TableField extends TableListField {
 	 * table, we can set this wantDefaultAddRow to be false.
 	 * @param boolean $wantDefaultAddRow
 	 */
-	
 	protected $wantDefaultAddRow = true;
-	
+
 	function __construct($name, $sourceClass, $fieldList, $fieldTypes, $filterField = null, 
 						$sourceFilter = null, $editExisting = true, $sourceSort = null, $sourceJoin = null) {
 		
 		$this->fieldTypes = $fieldTypes;
 		$this->filterField = $filterField;
-		$this->editExisting = $editExisting;
 		
+		$this->editExisting = $editExisting;
 		parent::__construct($name, $sourceClass, $fieldList, $sourceFilter, $sourceSort, $sourceJoin);
 
 		Requirements::javascript('sapphire/javascript/TableField.js');
@@ -108,7 +107,7 @@ class TableField extends TableListField {
 			$class = $this->fieldTypes[$fieldName];
 			if(is_object($class)) $class = "";
 			$class = $class." ".$extraClass;
-			$headings[] = new ArrayData(array("Name" => $fieldName, "Title" => $fieldTitle, "Class" => $class), "");
+			$headings[] = new ArrayData(array("Name" => $fieldName, "Title" => $fieldTitle, "Class" => $class));
 			$i++;
 		}
 		return new DataObjectSet($headings);
@@ -139,20 +138,13 @@ class TableField extends TableListField {
 				// Legacy: If a filterField is specified and the sourceFilter is a valid ID (old format)
 				$SQL_filter = Convert::raw2sql($this->sourceFilter);
 				$SQL_filterField = $this->filterField;
-				$items = DataObject::get($this->sourceClass,"`$SQL_filterField` = '$SQL_filter'", $this->sourceSort, $this->sourceJoin, $limit);
+				$items = DataObject::get($this->sourceClass,"`$SQL_filterField` = '$SQL_filter'", $this->sourceSort, $this->sourceJoin);
 			} else {
 				// get query
 				$dataQuery = $this->getQuery();
-				$dataQuery->limit = $limit;
-
 				// get data
 				$records = $dataQuery->execute();
-				
-				$items = new DataObjectSet();
-				foreach($records as $record){
-					if(!get_class($record)) $record = new DataObject($record);
-					$items->push($record);
-				}
+				$items = singleton($this->sourceClass)->buildDataObjectSet($records);
 			}
 		}
 
@@ -204,12 +196,49 @@ class TableField extends TableListField {
 				{
 					// TODO Needs to be attached to a form existing in the DOM-tree
 					$form = new Form($this, 'EditForm', $fieldset, new FieldSet());
+					$form->loadDataFrom($item);
 					$row = new TableField_Item($item, $this, $form, $this->fieldTypes);
 					$fields = array_merge($fields, $row->Fields()->toArray());
 				}
 			}
 		}
 
+		return $fields;
+	}
+	
+	function SubmittedFieldSet(&$sourceItems){
+		$fields = array ();
+		if($rows = $_POST[$this->name]){
+			if(count($rows)){
+				foreach($rows as $idx => $row){
+					if($idx == 'new'){
+						$newitems = ArrayLib::invert($row);
+						if(count($newitems)){
+							$sourceItems = new DataObjectSet();
+							foreach($newitems as $k => $newitem){
+								$fieldset = $this->FieldSetForRow();
+								if($fieldset){
+									$newitem[ID] = "new".$k;
+									foreach($newitem as $k => $v){
+										if(array_key_exists($k, $this->extraData)){
+											unset($newitem[$k]);
+										}
+									}
+									$sourceItem = new DataObject($newitem);
+									if(!$sourceItem->isEmpty()){
+										$sourceItems->push($sourceItem);
+										$form = new Form($this, "EditForm", $fieldset, new FieldSet());
+										$form->loadDataFrom($sourceItem);
+										$item = new TableField_Item($sourceItem, $this, $form, $this->fieldTypes);
+										$fields = array_merge($fields, $item->Fields()->toArray());
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
 		return $fields;
 	}
 	
@@ -224,17 +253,17 @@ class TableField extends TableListField {
 	 * Saves the Dataobjects contained in the field
 	 */
 	function saveInto(DataObject $record) {
-		
 		// CMS sometimes tries to set the value to one.
 		if(is_array($this->value)){
+			
 			// Sort into proper array
 			$this->value = ArrayLib::invert($this->value);
-			$dataObjects = $this->sortData($this->value);
+			$dataObjects = $this->sortData($this->value, $record->ID);
 			if($dataObjects['new']) {
-				$newFields = $this->sortData($dataObjects['new']);
+				$newFields = $this->sortData($dataObjects['new'], $record->ID);
 			}
+
 			$savedObj = $this->saveData($dataObjects, $this->editExisting);
-	    
 			if($savedObj && $newFields) {
 				$savedObj += $this->saveData($newFields,false);
 			} else if($newFields) {
@@ -276,6 +305,16 @@ class TableField extends TableListField {
 		return $fieldset;
 	}
 	
+	function performReadonlyTransformation() {
+		$this->permissions = array('show');
+		return $this;
+	}
+
+	function performDisabledTransformation() {
+		$this->permissions = array('show');
+		return $this;
+	}
+	
 	/**
 	 * Needed for Form->callfieldmethod.
 	 */
@@ -303,81 +342,88 @@ class TableField extends TableListField {
 	    
 	    // add hiddenfields
 	    if($this->extraData) {
-			foreach($this->extraData as $fieldName => $fieldValue) {
-				$fieldset->push(new HiddenField($fieldName));
+				foreach($this->extraData as $fieldName => $fieldValue) {
+					$fieldset->push(new HiddenField($fieldName));
+				}
 			}
-		}
 		
 	    $form = new Form(null, null, $fieldset, new FieldSet());
 
-		if($dataObjects) {
-			foreach ($dataObjects as $objectid => $fieldValues) {
-		        // we have to "sort" new data first, and process it in a seperate saveData-call (see setValue())
-		        if($objectid === "new") {
-		        	continue;
-		        }
-		        
-		        // extra data was creating fields, but
-		        if($this->extraData) $fieldValues = array_merge( $this->extraData, $fieldValues );
-		        
-		        $hasData = false;
-		        $obj = new $this->sourceClass();
-				
-				if($ExistingValues) {
-					$obj->ID = $objectid;
-				}
-				// Legacy: Use the filter as a predefined relationship-ID 
-				if(!empty($this->filterField) && intval($this->sourceFilter) > 0) {
-					$filterField = $this->filterField;
-					$obj->$filterField = $this->sourceFilter;
-				}
-				
-				// Determine if there is changed data for saving
-				$dataFields = array();
-				
-				foreach($fieldValues as $type => $value) {
-					if(is_array($this->extraData)){ // if the field is an actual datafield (not a preset hiddenfield)
-						if(!in_array($type, array_keys($this->extraData))){
-							$dataFields[$type] = $value;
-						}
-					}else{  // all fields are real 
-						$dataFields[$type] = $value;
-					}					
-				}
-			
-				$dataValues = ArrayLib::array_values_recursive($dataFields);
-				foreach($dataValues as $value) {
-					if(!empty($value)) {
-						$hasData = true;
+			if($dataObjects) {
+				foreach ($dataObjects as $objectid => $fieldValues) {
+	        // we have to "sort" new data first, and process it in a seperate saveData-call (see setValue())
+	        if($objectid === "new") {
+	        	continue;
+	        }
+
+	        // extra data was creating fields, but
+	        if($this->extraData) {
+	        	$fieldValues = array_merge( $this->extraData, $fieldValues );
+	        }
+	        
+	        $hasData = false;
+	        $obj = new $this->sourceClass();
+					
+					if($ExistingValues) {
+						$obj->ID = $objectid;
 					}
-				}
+					
+					// Legacy: Use the filter as a predefined relationship-ID 
+					if(!empty($this->filterField) && intval($this->sourceFilter) > 0) {
+						$filterField = $this->filterField;
+						$obj->$filterField = $this->sourceFilter;
+					}
+					
+					// Determine if there is changed data for saving
+					$dataFields = array();
+					
+					foreach($fieldValues as $type => $value) {
+						if(is_array($this->extraData)){ // if the field is an actual datafield (not a preset hiddenfield)
+							if(!in_array($type, array_keys($this->extraData))){
+								$dataFields[$type] = $value;
+							}
+						}else{  // all fields are real 
+							$dataFields[$type] = $value;
+						}					
+					}
 				
-				// save
-				if($hasData) {
-					
-					$form->loadDataFrom($fieldValues, true);
-					$form->saveInto($obj);
-					
-					$objectid = $obj->write();
-					$savedObj[$objectid] = "Updated";
+					$dataValues = ArrayLib::array_values_recursive($dataFields);
+				
+					foreach($dataValues as $value) {
+						if(!empty($value)) {
+							$hasData = true;
+						}
+					}
+
+					// save
+					if($hasData) {
+						$form->loadDataFrom($fieldValues, true);
+						$form->saveInto($obj);
+										
+						$objectid = $obj->write();
+						
+						$savedObj[$objectid] = "Updated";
+					}
+	
 				}
-
+				return $savedObj;
 			}
-
-			return $savedObj;
-		}
 	}
 	
 	/** 
 	 * organises the data in the appropriate manner for saving
 	 */
-	function sortData($data) {
+	function sortData($data, $recordID = null) {
+		$dataObjects = array();
 		if($data) {
+            $dataObjects = array();
 			foreach($data as $field => $rowData) {
 				$i = 0;
 				$blank = 0;
 				if(!is_array($rowData)) continue;
 				foreach($rowData as $id => $value) {
+					if($value == '$RecordID') $value = $recordID;
+					
 					if($value){
 						$dataObjects[$id][$field] = $value;
 					}else{
@@ -388,8 +434,8 @@ class TableField extends TableListField {
 				
 				// TODO ADD stuff for removing rows with incomplete data
 			}
+    		return $dataObjects;
 		}
-		return $dataObjects;
 	}
 	
 	/**
@@ -428,12 +474,12 @@ class TableField extends TableListField {
 	 * @return String
 	 */
 	function delete() {	
-		$childId = Convert::raw2sql($_REQUEST['childID']);	
+		$childId = Convert::raw2sql($_REQUEST['childID']);
 		if (is_numeric($childId)) {
 			$childObject = DataObject::get_by_id($this->sourceClass, $childId);
 			if($childObject) {
 				$childObject->delete();
-				return 1;
+				return 1;		
 			}
 		}else{
 			return 0;
@@ -453,17 +499,33 @@ class TableField extends TableListField {
 		$js = "";
 
 		$fields = $this->FieldSet();
+		$fields = new FieldSet($fields);
 		// TODO doesn't automatically update validation when adding a row
 		foreach($fields as $field) {
 			//if the field type has some special specific specification for validation of itself
-			$js .= $field->jsValidation();
+			$js .= $field->jsValidation($this->form->class."_".$this->form->Name()); 
 		}
 		
 		// TODO Implement custom requiredFields
-		if($this->requiredFields) {
+		$items = $this->sourceItems(); 
+		if($this->requiredFields&&$items->count()) {
 			foreach ($this->requiredFields as $field) {
-				if($fields->dataFieldByName($field)) {
+				/*if($fields->dataFieldByName($field)) {
 					$js .= "\t\t\t\t\trequire('$field');\n";
+				}*/
+				foreach($items as $item){
+					$cellName = $this->Name().'['.$item->ID.']['.$field.']';
+					$js .= "\n";
+					if($fields->dataFieldByName($cellName)) {
+						$js .= <<<JS
+if(typeof fromAnOnBlur != 'undefined'){
+	if(fromAnOnBlur.name == '$cellName')
+		require(fromAnOnBlur);
+}else{
+	require('$cellName');
+}
+JS;
+					}
 				}
 			}
 		}
@@ -473,32 +535,54 @@ class TableField extends TableListField {
 	
 	function php($data) {
 		$valid = true;
-		if($items = $this->sourceItems()) {
-			foreach($items as $item) {
-				// Load the data in to a temporary form (for correct field types)
-				$fieldset = $this->FieldSetForRow();
-				if ($fieldset)
-				{
-					$form = new Form(null, null, $fieldset, new FieldSet());
-					$row = new TableField_Item($item, $this, $form, $this->fieldTypes);
-					$fields = array_merge($fields, $row->Fields()->toArray());
-				}
-			}
-		}
-		$fields = new FieldSet($fields);
-
-		foreach($fields as $field) {
-			$valid = ($field->validate($this) && $valid);
-		}
-
-		if($this->requiredFields) {
-			foreach($this->requiredFields as $field) {
-				if($fields->dataFieldByName($field) && !$data[$field]) {
-					$this->validationError($field,'"' . strip_tags($field) . '" is required',"required");
-				}
-			}
 		
-		}		
+		if($data['methodName'] != 'delete'){
+			$fields = $this->FieldSet();
+			$fields = new FieldSet($fields);
+			
+		}else{
+			return $valid;
+		}
+	}
+	
+	function validate($validator){
+		$valid = true;
+		$fields = $this->SubmittedFieldSet($sourceItemsNew);
+		$fields = new FieldSet($fields);
+		foreach($fields as $field){
+			$valid = $field->validate($validator)&&$valid;
+		}
+
+		//debug::show($this->form->Message());
+		if($this->requiredFields&&$sourceItemsNew&&$sourceItemsNew->count()) {
+			foreach ($this->requiredFields as $field) {
+				foreach($sourceItemsNew as $item){
+					$cellName = $this->Name().'['.$item->ID.']['.$field.']';
+					$cName =  $this->Name().'[new]['.$field.'][]';
+					
+					if($fieldObj = $fields->dataFieldByName($cellName)) {
+						if(!trim($fieldObj->Value())){
+							$title = $fieldObj->Title();
+							$errorMessage .= sprintf(
+								_t('TableField.ISREQUIRED', "In %s '%s' is required."),
+								$this->name,
+								$title
+							);
+							$errorMessage .= "<br />";
+						}
+					}
+				}
+			}
+		}
+
+		if($errorMessage){
+			$messageType .= "validation";
+			$message .= "<br />".$errorMessage;
+		
+			$validator->validationError($this->name, $message, $messageType);
+		}
+
+		return $valid;
 	}
 	
 	function setRequiredFields($fields) {
@@ -550,12 +634,33 @@ class TableField_Item extends TableListField_Item {
 			if($this->fieldset) {
 				$i=0;
 				foreach($this->fieldset as $field) {
-					$combinedFieldName = $this->parent->Name() . "[" . $this->ID . "][" . $field->Name() . "]";
-					if($this->isAddRow) $combinedFieldName .= '[]';
 					$origFieldName = $field->Name();
+
+					// set unique fieldname with id
+					$combinedFieldName = $this->parent->Name() . "[" . $this->ID . "][" . $origFieldName . "]";
+					if($this->isAddRow) $combinedFieldName .= '[]';
+					
+					// get value
+					if(strpos($origFieldName,'.') === false) {
+						$value = $field->dataValue();
+					} else {					
+						// this supports the syntax fieldName = Relation.RelatedField				
+						$fieldNameParts = explode('.', $origFieldName)	;
+						$tmpItem = $this->item;
+						for($j=0;$j<sizeof($fieldNameParts);$j++) {
+							$relationMethod = $fieldNameParts[$j];
+							$idField = $relationMethod . 'ID';
+							if($j == sizeof($fieldNameParts)-1) {
+								$value = $tmpItem->$relationMethod;
+							} else {
+								$tmpItem = $tmpItem->$relationMethod();
+							}
+						}
+					}
+					
 					$field->Name = $combinedFieldName;
-					$field->value = $field->dataValue();
-					$field->addExtraClass('col'.$i);
+					$field->setValue($field->dataValue());
+					$field->setExtraClass('col'.$i);
 					$field->setForm($this->data);
 
 					// transformation
@@ -570,6 +675,18 @@ class TableField_Item extends TableListField_Item {
 						
 					}
 					
+					// formatting
+					$item = $this->item;
+					$value = $field->Value();
+					if(array_key_exists($origFieldName, $this->parent->fieldFormatting)) {
+						$format = str_replace('$value', "__VAL__", $this->parent->fieldFormatting[$origFieldName]);
+						$format = preg_replace('/\$([A-Za-z0-9-_]+)/','$item->$1', $format);
+						$format = str_replace('__VAL__', '$value', $format);
+						eval('$value = "' . $format . '";');
+						$field->dontEscape = true;
+						$field->setValue($value);
+					}
+					
 					$this->fields[] = $field;
 					$i++;
 				}
@@ -577,19 +694,27 @@ class TableField_Item extends TableListField_Item {
 		// New record
 		} else {
 			$list = $this->parent->FieldList();
-			foreach($list as $shortFieldName => $fieldTitle) {
+			$i=0;
+			foreach($list as $fieldName => $fieldTitle) {
+				if(strpos($fieldName, ".")) {
+					$shortFieldName = substr($fieldName, strpos($fieldName, ".")+1, strlen($fieldName));
+				} else {
+					$shortFieldName = $fieldName;
+				}
 				$combinedFieldName = $this->parent->Name() . "[new][" . $shortFieldName . "][]";
-				$fieldType = $this->fieldTypes[$shortFieldName];
+				$fieldType = $this->fieldTypes[$fieldName];
 				if(isset($fieldType->class) && is_subclass_of($fieldType, 'FormField')) {
-					$fieldType = clone $fieldType; // we can't use the same instance all over, as we change names
-					$fieldType->Name = $combinedFieldName;
-					$this->fields[] = $fieldType;
+					$field = clone $fieldType; // we can't use the same instance all over, as we change names
+					$field->Name = $combinedFieldName;
 				} elseif(strpos($fieldType, '(') === false) {
 					//echo ("<li>Type: ".$fieldType." fieldName: ". $filedName. " Title: ".$fieldTitle."</li>");
-					$this->fields[] = new $fieldType($combinedFieldName,$fieldTitle);
+					$field = new $fieldType($combinedFieldName,$fieldTitle);
 				} else {
-					$this->fields[] = eval("return new " . $fieldType . ";");
+					$field = eval("return new " . $fieldType . ";");
 				}
+				$field->setExtraClass('col'.$i);
+				$this->fields[] = $field;
+				$i++;
 			}
 		}
 		
@@ -628,15 +753,22 @@ class TableField_Item extends TableListField_Item {
 	 */
 	function BaseLink() {
 		$parent = $this->parent;
-		return $parent->FormAction() . "&action_callfieldmethod&fieldName=". $parent->Name() . "&childID=" . $this->ID;
+		$action = $parent->FormAction();
+		if(substr($action, -1, 1) !== '&'){
+			$action = $action."&";
+		} 
+		$action = str_replace('&', '&amp;', $action);
+
+		return $action . "action_callfieldmethod=1&amp;fieldName=". $parent->Name() . "&amp;childID=" . $this->ID;
 	}
 	/**
 	 * Runs the delete() method on the Tablefield parent.
 	 * Allows the deletion of objects via ajax
 	 */
 	function DeleteLink() {
-		return $this->BaseLink() . "&methodName=delete";
+		return $this->BaseLink() . "&amp;methodName=delete";
 	}
 
 }
+
 ?>
