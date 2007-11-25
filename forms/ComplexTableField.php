@@ -401,7 +401,7 @@ JS;
 		// we can't rely on $idField being populated, and fall back to the request-params.
 		// this is a workaround for a bug where each subsequent popup-call didn't have ID
 		// of the parent set, and so didn't properly save the relation
-		return ($idField->Value()) ? $idField->Value() : $_REQUEST['ctf']['ID'];
+		return ($idField->Value()) ? $idField->Value() : (isset($_REQUEST['ctf']['ID']) ? $_REQUEST['ctf']['ID'] : null); 
  	} 
 	 
 	/**
