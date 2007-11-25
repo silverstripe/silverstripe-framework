@@ -329,7 +329,7 @@ HTML;
 	
 	function hasClass($class){
 		$patten = '/'.strtolower($class).'/i';
-		$subject = strtolower($this->class." ".$this->extraClass);
+		$subject = strtolower($this->class." ".$this->extraClass());
 		return preg_match($patten, $subject);
 	}
 	
