@@ -77,10 +77,10 @@ class XML extends Object {
 		// Strip namespaces out of tags and attributes
 		$tag = ereg_replace('[^:]+:','',$tag);
 		if($attributes) foreach($attributes as $k => $v) $newAttributes[ereg_replace('[^:]+:','',$k)] = $v;
-		$attributes = $newAttributes;
+		$attributes = isset($newAttributes) ? $newAttributes : $attributes;
 		
 		
-		if($attributes['class']) {
+		if(isset($attributes['class'])) {
 			$this->context[] = "$tag.{$attributes['class']}";
 		} else {
 			$this->context[] = $tag;
@@ -92,6 +92,8 @@ class XML extends Object {
 		$tagProcessorFunc = "process_$tag";
 		if($this->hasMethod($tagProcessorFunc)) {
 			$this->$tagProcessorFunc($attributes);
+		}elseif($this->hasMethod($tagProcessorFunc = "process_tag")){
+			$this->$tagProcessorFunc($tag, $attributes);	
 		}
 		
 		
@@ -111,6 +113,9 @@ class XML extends Object {
 		
 		if(method_exists($this, $funcName = "process_{$tag}_end")) {
 			$this->$funcName($this->collatedText, $attributes);
+		}elseif(method_exists($this,$funcName = "process_tag_end")){ 
+			// else run default method
+				$this->$funcName($tag,$this->collatedText, $attributes);	
 		}
 		
 		$this->collatedText = "";
