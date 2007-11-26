@@ -366,7 +366,7 @@ class Member extends DataObject {
 	 *
 	 * @return string Returns a random password.
 	 */
-	static function createNewPassword() {
+	static function create_new_password() {
 		if(file_exists(Security::get_word_list())) {
 			$words = file(Security::get_word_list());
 
