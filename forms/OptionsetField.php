@@ -38,7 +38,7 @@ class OptionsetField extends DropdownField {
 			$odd = ($odd + 1) % 2;
 			$extraClass = $odd ? "odd" : "even";
 			$extraClass .= " val" . str_replace(' ','',$key);
-			$disabled = $this->disabled ? 'disabled="disabled"' : $disable = '';
+			$disabled = $this->disabled ? 'disabled="disabled"' : '';
 			
 			$options .= "<li class=\"".$extraClass."\"><input id=\"$itemID\" name=\"$this->name\" type=\"radio\" value=\"$key\"$checked $disabled/> <label for=\"$itemID\">$value</label></li>\n";
 		}
