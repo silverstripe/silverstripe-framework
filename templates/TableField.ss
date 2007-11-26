@@ -41,7 +41,7 @@
 			<% control Items %>
 				<tr id="record-$Parent.id-$ID" class="row<% if HighlightClasses %> $HighlightClasses<% end_if %>">
 					<% control Fields %>
-						<td class="$FieldClass $ExtraClass $ClassName $Title tablecolumn">$Field</td>
+						<td class="$FieldClass $extraClass $ClassName $Title tablecolumn">$Field</td>
 					<% end_control %>
 					<td style="display: none">$ExtraData</td>
 					<% if Can(delete) %><td width="18"><a class="deletelink" href="$DeleteLink" title="<% _t('DELETEROW') %>"><img src="cms/images/delete.gif" alt="<% _t('DELETE') %>" /></a></td><% end_if %>
