@@ -147,10 +147,6 @@ class Form extends ViewableData {
 		}
 	}
 
-	function unsetValidator(){
-		$this->validator = null;
-	}
-
 	/**
 	 * Remove the {@link Validator} from this from.
 	 */
