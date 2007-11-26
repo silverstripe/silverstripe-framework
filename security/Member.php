@@ -466,26 +466,6 @@ class Member extends DataObject {
 		return false;
 	}
 	
-	static function createNewPassword() {
-		if(file_exists('/usr/share/silverstripe/wordlist.txt')) {
-			$words = file('/usr/share/silverstripe/wordlist.txt');
-	
-			list($usec, $sec) = explode(' ', microtime());
-			srand($sec + ((float) $usec * 100000));
-			
-			$word = trim($words[rand(0,sizeof($words)-1)]);
-			$number = rand(10,999);
-			
-			return $word . $number;
-		} else {
-			$random = rand();
-		    $string = md5($random);
-    		$output = substr($string, 0, 6);
-	    	return $output;
-		}
-	}
-
-
 	/**
 	 * Alias for {@link inGroup}
 	 *
