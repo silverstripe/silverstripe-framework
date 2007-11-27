@@ -8,7 +8,9 @@ class DMYDateField extends CalendarDateField {
 	function setValue( $value ) {
 		if( is_array( $value ) && $value['Day'] && $value['Month'] && $value['Year'] )
 			$this->value = $value['Year'] . '-' . $value['Month'] . '-' . $value['Day'];
-		else
+		else if(is_array($value)&&(!$value['Day']||!$value['Month']||!$value['Year']))  
+ 			$this->value = null; 
+ 		else if(is_string($value)) 
 			$this->value = $value;
 	}
 	
