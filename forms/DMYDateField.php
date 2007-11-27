@@ -51,5 +51,20 @@ class DMYDateField extends CalendarDateField {
 			</div>
 HTML;
 	}
+	
+	function validate($validator) 
+ 	{ 
+ 		if(!empty ($this->value) && !preg_match('/^[0-90-9]{2,4}\-[0-9]{1,2}\-[0-90-9]{1,2}$/', $this->value)) 
+ 		{ 
+ 			$validator->validationError( 
+ 				$this->name,  
+ 				_t('DMYDateField.VALIDDATEFORMAT', "Please enter a valid  date format (DD-MM-YYYY)."),  
+ 				"validation",  
+ 				false 
+ 			); 
+ 			return false; 
+ 		} 
+ 	return true; 
+ 	} 
 }
 ?>
