@@ -422,6 +422,10 @@ class Controller extends ViewableData {
 	 * Handle redirection
 	 */
 	function redirect($url) {
+		if($this->response->getHeader('Location')) {
+			user_error("Already directed to " . $this->response->getHeader('Location') . "; now trying to direct to $url", E_USER_ERROR);
+		}
+
 		// Attach site-root to relative links, if they have a slash in them
 		if($url == "" || $url[0] == '?' || (substr($url,0,4) != "http" && $url[0] != "/" && strpos($url,'/') !== false)){
 			$url = Director::baseURL() . $url;

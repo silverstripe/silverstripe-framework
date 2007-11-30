@@ -240,7 +240,7 @@ class Director {
 	 * @return string If redirect() has been called, it will return the URL redirected to.  Otherwise, it will return null;
 	 */
 	static function redirected_to() {
-		Controller::curr()->redirectedTo();
+		return Controller::curr()->redirectedTo();
 	}
 
 	/*
