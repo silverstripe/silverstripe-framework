@@ -8,7 +8,7 @@
 /**
  * A single database record & abstract class for the data-access-model.
  */
-class DataObject extends Controller {
+class DataObject extends Controller implements DataObjectInterface {
 	/**
 	 * Data stored in this objects database record. An array indexed
 	 * by fieldname.
