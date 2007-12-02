@@ -71,6 +71,7 @@ class SiteTree extends DataObject {
 		"MetaTitle" => "Varchar(255)",
 		"MetaDescription" => "Varchar(255)",
 		"MetaKeywords" => "Varchar(255)",
+		"ExtraMeta" => "HTMLText",
 		"ShowInMenus" => "Boolean",
 		"ShowInSearch" => "Boolean",
 		"HomepageForDomain" => "Varchar(100)",
