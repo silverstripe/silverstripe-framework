@@ -361,7 +361,7 @@ class SiteTree extends DataObject {
 			self::$currentPageID = Director::currentPage() ? Director::currentPage()->ID : null;
 			if(!isset(self::$currentPageID)) {
 				self::$currentPageID = -1;
-				$nextID = isset(Director::currentPage()->Parent->ID)
+				$nextID = (Director::currentPage() && isset(Director::currentPage()->Parent->ID))
 					? Director::currentPage()->Parent->ID
 					: null;
 			} else {
