@@ -13,7 +13,11 @@ class BasicAuth extends Object {
 		
 		
 		if(isset($_SERVER['PHP_AUTH_USER']) && isset($_SERVER['PHP_AUTH_PW'])) {
-			$member = Security::authenticate($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW']);
+			$member = MemberAuthenticator::authenticate(array(
+				'Email' => $_SERVER['PHP_AUTH_USER'], 
+				'Password' => $_SERVER['PHP_AUTH_PW'],
+			), $this);
+			
 			if($member) {
 				$authenticated = true;
 			}
