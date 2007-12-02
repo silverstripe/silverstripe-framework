@@ -9,7 +9,7 @@ Behaviour.register({
 			
 			var urlSegmentField = $('Form_EditForm_URLSegment');
 			var newSuggestion = urlSegmentField.suggestNewValue( this.value.toLowerCase() );
-			var isNew = $('Form_EditForm_ID').value.indexOf("new") == 0;
+			var isNew = urlSegmentField.value.indexOf("new") == 0;
 			
 			if( newSuggestion == urlSegmentField.value || isNew || confirm( 'Would you like me to change the URL to:\n\n' + newSuggestion + '/\n\nClick Ok to change the URL, click Cancel to leave it as:\n\n' + urlSegmentField.value ) )
 				urlSegmentField.value = newSuggestion;
