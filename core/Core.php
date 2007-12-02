@@ -5,7 +5,7 @@
  */
 function getTempFolder() {
 	$cachefolder = "silverstripe-cache" . str_replace(array("/",":", "\\"),"-", substr($_SERVER['SCRIPT_FILENAME'], 0, strlen($_SERVER['SCRIPT_FILENAME']) - strlen('/sapphire/main.php')));
-	$ssTmp = dirname(dirname($_SERVER['SCRIPT_FILENAME'])) . "/" . $cachefolder;
+	$ssTmp = dirname(dirname($_SERVER['SCRIPT_FILENAME'])) . "/silverstripe-cache";
     if(@file_exists($ssTmp)) {
     	return $ssTmp;
     }
