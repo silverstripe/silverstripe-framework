@@ -61,7 +61,7 @@ class GoogleSitemap extends Controller {
 	
 	static function ping() {
 		//Don't ping if the site has disabled it, or if the site is in dev mode
-		if(!Sitemap::$pings || Director::isDev())
+		if(!GoogleSitemap::$pings || Director::isDev())
 			return;
 			
 		$location = urlencode(Director::absoluteBaseURL() . '/sitemap.xml');
@@ -77,7 +77,7 @@ class GoogleSitemap extends Controller {
 	/**
 	 * Disables pings to google when the sitemap changes
 	 * To use this, in your _config.php file simply include the line
-	 * Sitemap::DisableGoogleNotification();
+	 * GoogleSitemap::DisableGoogleNotification();
 	 */
 	static function DisableGoogleNotification() {
 		self::$pings = false;
