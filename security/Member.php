@@ -1054,18 +1054,6 @@ class Member_ProfileForm extends Form {
 		$SQL_data = Convert::raw2sql($data);
 		
 		$member = DataObject::get_by_id("Member", $SQL_data['ID']);
-		if($member->canEdit()) {
-			if(!empty($SQL_data['Password']) && !empty($SQL_data['ConfirmPassword'])) {
-				if($SQL_data['Password']==$SQL_data['ConfirmPassword']) {
-					$member->Password=$SQL_data['Password'];
-				} else {
-					$form->addErrorMessage("Blurb","Both passwords need to match. Please try again.","bad");
-					Director::redirectBack();
-				}
-			} else {
-				$form->dataFieldByName("Password")->setValue($member->Password);
-			}
-		}
 		
 		if($SQL_data['Locale'] != $member->Locale) {
 			$form->addErrorMessage("Generic", _t('Member.REFRESHLANG'),"good");
