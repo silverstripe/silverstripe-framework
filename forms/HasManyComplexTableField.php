@@ -51,7 +51,7 @@ class HasManyComplexTableField_Item extends ComplexTableField_Item {
 		$joinVal = $this->item->{$this->parent->joinField};
 		$parentID = $this->parent->getControllerID();
 		
-		if( $this->parent->IsReadOnly || ! $this->Can( 'edit' ) || ( $joinVal > 0 && $joinVal != $parentID ) )
+		if( $this->parent->IsReadOnly || ( $joinVal > 0 && $joinVal != $parentID ) )
 			return "<input class=\"checkbox\" type=\"checkbox\" name=\"$name\" value=\"{$this->item->ID}\" disabled=\"disabled\"/>";
 		else if( $joinVal == $parentID )
 			return "<input class=\"checkbox\" type=\"checkbox\" name=\"$name\" value=\"{$this->item->ID}\" checked=\"checked\"/>";

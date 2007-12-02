@@ -121,7 +121,7 @@ class HasOneComplexTableField_Item extends ComplexTableField_Item {
 		$joinVal = $this->parent->getControllerJoinID();
 		$childID = $this->item->ID;
 				
-		if( $this->parent->IsReadOnly || ! $this->Can( 'edit' ) )
+		if( $this->parent->IsReadOnly )
 			return "<input class=\"radio\" type=\"radio\" name=\"$name\" value=\"{$this->item->ID}\" disabled=\"disabled\"/>";
 		else if( $joinVal == $childID )
 			return "<input class=\"radio\" type=\"radio\" name=\"$name\" value=\"{$this->item->ID}\" checked=\"checked\"/>";

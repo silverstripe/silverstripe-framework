@@ -74,7 +74,7 @@ class ManyManyComplexTableField_Item extends ComplexTableField_Item {
 	function MarkingCheckbox() {
 		$name = $this->parent->Name() . '[]';
 		
-		if( $this->parent->IsReadOnly || ! $this->Can( 'edit' ) )
+		if( $this->parent->IsReadOnly )
 			return "<input class=\"checkbox\" type=\"checkbox\" name=\"$name\" value=\"{$this->item->ID}\" disabled=\"disabled\"/>";
 		else if( $this->item->{$this->parent->joinField} )
 			return "<input class=\"checkbox\" type=\"checkbox\" name=\"$name\" value=\"{$this->item->ID}\" checked=\"checked\"/>";
