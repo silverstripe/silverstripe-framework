@@ -1118,7 +1118,7 @@ class DataObject extends Controller implements DataObjectInterface {
 	 * Called by {@link __set()} and any setFieldName() methods you might create.
 	 *
 	 * @param string $fieldName Name of the field
-	 * @param mixed $value New field value
+	 * @param mixed $val New field value
 	 */
 	function setField($fieldName, $val) {
 		$defaults = $this->stat('defaults');
