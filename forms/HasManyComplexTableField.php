@@ -1,11 +1,83 @@
 <?php
 
-class HasManyComplexTableField extends HasOneComplexTableField {
+class HasManyComplexTableField extends ComplexTableField {
 		
+	public $joinField;
+	
+	protected $addTitle;
+	
+	protected $htmlListEndName = 'CheckedList'; // If you change the value, do not forget to change it also in the JS file
+	
+	protected $htmlListField = 'selected'; // If you change the value, do not forget to change it also in the JS file
+	
+	protected $template = 'RelationComplexTableField';
+	
 	protected $itemClass = 'HasManyComplexTableField_Item';
+	
+	protected $relationAutoSetting = false;
+	
+	function __construct( $controller, $name, $sourceClass, $fieldList, $detailFormFields = null, $sourceFilter = "", $sourceSort = "", $sourceJoin = "") {
+
+		parent::__construct( $controller, $name, $sourceClass, $fieldList, $detailFormFields, $sourceFilter, $sourceSort, $sourceJoin );
+
+		$this->Markable = true;
 		
-	function getParentIdName( $parentClass, $childClass ) {
-		return $this->getParentIdNameRelation( $childClass, $parentClass, 'has_one' );
+		$this->joinField = $this->getParentIdName( $this->controller->ClassName, $this->sourceClass );
+	}
+	
+	function getQuery( $limitClause = null ) {
+		if( $this->customQuery ) {
+			$query = $this->customQuery;
+			$query->select[] = "{$this->sourceClass}.ID AS ID";
+			$query->select[] = "{$this->sourceClass}.ClassName AS ClassName";
+			$query->select[] = "{$this->sourceClass}.ClassName AS RecordClassName";
+		}
+		else {
+			$query = singleton( $this->sourceClass )->extendedSQL( $this->sourceFilter, $this->sourceSort, $limitClause, $this->sourceJoin );
+			
+			// Add more selected fields if they are from joined table.
+
+			$SNG = singleton( $this->sourceClass );
+			foreach( $this->FieldList() as $k => $title ) {
+				if( ! $SNG->hasField( $k ) && ! $SNG->hasMethod( 'get' . $k ) )
+					$query->select[] = $k;
+			}
+		}
+		return clone $query;
+	}
+	
+	function sourceItems() {
+		if($this->sourceItems)
+			return $this->sourceItems;
+		
+		$limitClause = '';
+		if( isset( $_REQUEST[ 'ctf' ][ $this->Name() ][ 'start' ] ) && is_numeric( $_REQUEST[ 'ctf' ][ $this->Name() ][ 'start' ] ) )
+			$limitClause = $_REQUEST[ 'ctf' ][ $this->Name() ][ 'start' ] . ", $this->pageSize";
+		else
+			$limitClause = "0, $this->pageSize";
+		
+		$dataQuery = $this->getQuery( $limitClause );
+		$records = $dataQuery->execute();
+		$items = new DataObjectSet();
+		foreach( $records as $record ) {
+			if( ! get_class( $record ) )
+				$record = new DataObject( $record );
+			$items->push( $record );
+		}
+		
+		$dataQuery = $this->getQuery();
+		$records = $dataQuery->execute();
+		$unpagedItems = new DataObjectSet();
+		foreach( $records as $record ) {
+			if( ! get_class( $record ) )
+				$record = new DataObject( $record );
+			$unpagedItems->push( $record );
+		}
+		$this->unpagedSourceItems = $unpagedItems;
+		
+		$this->totalCount = ( $this->unpagedSourceItems ) ? $this->unpagedSourceItems->TotalItems() : null;
+		
+		return $items;
 	}
 		
 	function getControllerID() {
@@ -28,7 +100,16 @@ class HasManyComplexTableField extends HasOneComplexTableField {
 		
 		$saveDest->setByIDList( $items );
 	}
-		
+	
+	function setAddTitle( $addTitle ) {
+		if( is_string( $addTitle ) )
+			$this->addTitle = $addTitle;
+	}
+	
+	function Title() {
+		return $this->addTitle ? $this->addTitle : parent::Title();
+	}
+	
 	function ExtraData() {
 		$items = array();
 		foreach( $this->unpagedSourceItems as $item ) {
