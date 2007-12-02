@@ -623,25 +623,14 @@ class Security extends Controller {
 	/**
 	 * Get a list of all available encryption algorithms
 	 *
-	 * This method tries to use PHP's hash_algos() function. If it is not
-	 * supported or it returns no algorithms, as a failback mechanism it tries
-	 * to use the md5() and sha1() function and returns them.
-	 *
 	 * @return array Returns an array of strings containing all supported
 	 *               encryption algorithms.
 	 */
 	public static function get_encryption_algorithms() {
-		$result = function_exists('hash_algos')
-			? hash_algos()
-			: array();
-
-		if(count($result) == 0) {
-			if(function_exists('md5'))
-				$result[] = 'md5';
-
-			if(function_exists('sha1'))
-				$result[] = 'sha1';
-		}
+		// We return all the hashes that don't have commas in the name, as database exports get confused by comma in ENUM keys. :-(
+		return array(
+			'md4', 'md5', 'sha1', 'sha256', 'sha384', 'sha512', 'ripemd128', 'ripemd160', 'whirlpool', 'snefru', 'gost', 'alder32', 'crc32', 'crc32b'
+		);
 
 		return $result;
 	}
