@@ -77,6 +77,8 @@ class ComplexTableField extends TableListField {
 	 */
 	protected $detailFormValidator = null;
 	
+	protected $relationAutoSetting = true;
+	
 	/**
 	 * See class comments
 	 *
@@ -100,8 +102,9 @@ class ComplexTableField extends TableListField {
 		Requirements::javascript("sapphire/javascript/ComplexTableField.js");
 		Requirements::css("jsparty/greybox/greybox.css");
 		Requirements::css("sapphire/css/ComplexTableField.css");
-
+		
 		parent::__construct($name, $sourceClass, $fieldList, $sourceFilter, $sourceSort, $sourceJoin);
+		
 	}
 
 	function isComposite() {
@@ -258,7 +261,8 @@ JS;
 			}
 			// add relational fields
 			$detailFields->push(new HiddenField("ctf[parentClass]"," ",$this->getParentClass()));
-			$detailFields->push(new HiddenField("$parentIdName"," ",$ID));
+			if( $this->relationAutoSetting )
+				$detailFields->push(new HiddenField("$parentIdName"," ",$ID));
 		} 
 
 		// the ID field confuses the Controller-logic in finding the right view for ReferencedField
@@ -563,7 +567,7 @@ JS;
 	 * Returns the db-fieldname of the currently used has_one-relationship.
 	 */
 	function getParentIdName( $parentClass, $childClass ) {
-		return $this->getParentIdNameRelation( $parentClass, $childClass, 'has_one' );
+		return $this->getParentIdNameRelation( $childClass, $parentClass, 'has_one' );
 	}
 	
 	/**
@@ -696,7 +700,7 @@ class ComplexTableField_Popup extends Form {
 			$childObject = new $this->sourceClass();
 			$this->fields->removeByName('ID');
 		}
-
+		
 		$this->saveInto($childObject);
 		$childObject->write();
 
