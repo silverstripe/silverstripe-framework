@@ -231,18 +231,22 @@ class Member extends DataObject {
 
 
 	/**
-	 * Returns the fields for the member form
+	 * Returns the fields for the member form - used in the registration/profile module.
+	 * It should return fields that are editable by the admin and the logged-in user. 
 	 *
 	 * @return FieldSet Returns a {@link FieldSet} containing the fields for
 	 *                  the member form.
 	 */
 	function getMemberFormFields() {
-		return new FieldSet(
+		$fields = new FieldSet(
 			new TextField("FirstName", _t('Member.FIRSTNAME', 'First Name')),
 			new TextField("Surname", _t('Member.SURNAME', "Surname")),
 			new TextField("Email", _t('Member.EMAIL', "Email", PR_MEDIUM, 'Noun')),
 			new TextField("Password", _t('Member.PASSWORD', 'Password'))
 		);
+		
+		$this->extend('augmentMemberFormFields', $fields);
+		return $fields;
 	}
 
 
