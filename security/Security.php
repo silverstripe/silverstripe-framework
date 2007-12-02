@@ -491,8 +491,10 @@ class Security extends Controller {
 				&& !empty(self::$default_username) && !empty(self::$default_password)) {
 			$member = self::findAnAdministrator();
 		} else {
-			$member = DataObject::get_one("Member",
-				"Email = '$SQL_email' And Password = '$SQL_password'");
+			$member = DataObject::get_one("Member", 	"Email = '$SQL_email' AND Password IS NOT NULL");
+			if($member && ($member->checkPassword($RAW_password) == false)) {
+				$member = null;
+			}
 		}
 
 		return $member;
