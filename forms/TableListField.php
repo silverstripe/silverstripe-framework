@@ -1081,7 +1081,7 @@ class TableListField_Item extends ViewableData {
 	}
 
 	function BaseLink() {
-		return $this->parent->FormAction() . "&action_callfieldmethod&fieldName={$this->parent->Name()}&tf[childID]={$this->item->ID}";
+		return $this->parent->FormAction() . "&action_callfieldmethod&fieldName={$this->parent->Name()}&ctf[childID]={$this->item->ID}";
 	}
 
 	function DeleteLink() {
