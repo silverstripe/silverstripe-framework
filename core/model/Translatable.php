@@ -180,12 +180,14 @@ class Translatable extends DataObjectDecorator {
 	 * @param string $class The name of the class.
 	 * @param string $lang  The name of the language.
 	 * @param string $filter A filter to be inserted into the WHERE clause.
+	 * @param boolean $cache Use caching (default: false)
+	 * @param string $orderby A sort expression to be inserted into the ORDER BY clause.
 	 * @return DataObject
 	 */
-	static function get_one_by_lang($class, $lang, $filter = '') {
+	static function get_one_by_lang($class, $lang, $filter = '', $cache = false, $orderby = "") {
 		$oldLang = self::current_lang();
 		self::set_reading_lang($lang);
-		$result = DataObject::get_one($class, $filter, false);
+		$result = DataObject::get_one($class, $filter, $cache, $orderby);
 		self::set_reading_lang($oldLang);
 		return $result;
 	}
@@ -195,15 +197,17 @@ class Translatable extends DataObjectDecorator {
 	 *
 	 * @param string $callerClass The name of the class
 	 * @param string $filter A filter to be inserted into the WHERE clause.
+	 * @param boolean $cache Use caching (default: false)
+	 * @param string $orderby A sort expression to be inserted into the ORDER BY clause.
 	 * @return DataObject
 	 */
-	static function get_one($callerClass, $filter = "") {
+	static function get_one($callerClass, $filter = "", $cache = false, $orderby = "") {
 		self::$language_decided = true;
 		self::$reading_lang = self::default_lang();
 		$record = DataObject::get_one($callerClass, $filter);
 		if (!$record) {
 			self::$bypass = true;
-			$record = DataObject::get_one($callerClass, $filter, false);
+			$record = DataObject::get_one($callerClass, $filter, $cache, $orderby);
 			self::$bypass = false;
 			if ($record) self::set_reading_lang($record->Lang);
 		} else {
@@ -228,12 +232,16 @@ class Translatable extends DataObjectDecorator {
 	 * @param string $lang  The name of the language
 	 * @param string $filter A filter to be inserted into the WHERE clause.
 	 * @param string $sort A sort expression to be inserted into the ORDER BY clause.
+	 * @param string $join A single join clause.  This can be used for filtering, only 1 instance of each DataObject will be returned.
+	 * @param string $limit A limit expression to be inserted into the LIMIT clause.
+	 * @param string $containerClass The container class to return the results in.
+	 * @param string $having A filter to be inserted into the HAVING clause.
 	 * @return mixed The objects matching the conditions.
 	 */
-	static function get_by_lang($class, $lang, $filter = '', $sort = '') {
+	static function get_by_lang($class, $lang, $filter = '', $sort = '', $join = "", $limit = "", $containerClass = "DataObjectSet", $having = "") {
 		$oldLang = self::current_lang();
 		self::set_reading_lang($lang);
-		$result = DataObject::get($class, $filter, $sort);
+		$result = DataObject::get($class, $filter, $sort, $join, $limit, $containerClass, $having);
 		self::set_reading_lang($oldLang);
 		return $result;
 	}
