@@ -44,6 +44,14 @@ class Controller extends ViewableData {
 	function getURLParams() {
 		return $this->urlParams;
 	}
+	
+	/**
+	 * Returns the HTTPResponse object that this controller is building up.
+	 * Can be used to set the status code and headers
+	 */
+	function getResponse() {
+		return $this->response;
+	}
 
 	/**
 	 * Execute the appropriate action handler.  If none is given, use defaultAction to display

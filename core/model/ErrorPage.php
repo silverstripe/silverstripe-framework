@@ -106,11 +106,6 @@ class ErrorPage extends Page {
  * Controller for ErrorPages.
  */
 class ErrorPage_Controller extends Page_Controller {
-	function init() {
-		parent::init();
-		
-		$this->response->setStatusCode($this->dataRecord->ErrorCode);
-	}
 }
 
 

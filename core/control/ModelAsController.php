@@ -31,8 +31,7 @@ class ModelAsController extends Controller implements NestedController {
 				$child = DataObject::get_one("SiteTree", "URLSegment = '$SQL_URLSegment'");
 			}
 			if(!$child) {
-
-				header("HTTP/1.0 404 Not Found");
+				Director::set_status_code(404);
 				$child = $this->get404Page();
 			}
 		

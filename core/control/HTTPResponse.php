@@ -53,6 +53,9 @@ class HTTPResponse extends Object {
 		if(isset(self::$status_codes[$code])) $this->statusCode = $code;
 		else user_error("Unrecognised HTTP status code '$code'", E_USER_WARNING);
 	}
+	function getStatusCode() {
+		return $this->statusCode;
+	}
 	
 	function setBody($body) {
 		$this->body = $body;

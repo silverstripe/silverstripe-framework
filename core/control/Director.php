@@ -242,6 +242,20 @@ class Director {
 	static function redirected_to() {
 		return Controller::curr()->redirectedTo();
 	}
+	
+	/**
+	 * Sets the HTTP status code
+	 */
+	static function set_status_code($code) {
+		return Controller::curr()->getResponse()->setStatusCode($code);
+	}
+	
+	/**
+	 * Returns the current HTTP status code
+	 */
+	static function get_status_code() {
+		return Controller::curr()->getResponse()->getStatusCode();
+	}
 
 	/*
 	 * Redirect back
