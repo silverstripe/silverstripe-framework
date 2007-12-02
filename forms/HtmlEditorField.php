@@ -362,7 +362,9 @@ class HtmlEditorField_Toolbar extends ViewableData {
 				new TextField("AltText", _t('HtmlEditorField.ALTTEXT', "Description"), "", 80),
 				new DropdownField("CSSClass", _t('HtmlEditorField.CSSCLASS', "Alignment / style"), array(
 					"left" => _t('HtmlEditorField.CSSCLASSLEFT', "On the left, with text wrapping around."),
+					"leftAlone" => _t('HtmlEditorField.CSSCLASSLEFTALONE', "On the left, on its own."),
 					"right" => _t('HtmlEditorField.CSSCLASSRIGHT', "On the right, with text wrapping around."),
+					"rightAlone" => _t('HtmlEditorField.CSSCLASSRIGHTALONE', "On the right, on its own."),
 					"center" => _t('HtmlEditorField.CSSCLASSCENTER', "Centered, on its own."),
 				)),
 				new FieldGroup(_t('HtmlEditorField.IMAGEDIMENSIONS', "Dimensions"),
