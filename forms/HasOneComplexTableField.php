@@ -3,7 +3,9 @@
 class HasOneComplexTableField extends HasManyComplexTableField {
 	
 	protected $itemClass = 'HasOneComplexTableField_Item';
-		
+	
+	public $isOneToOne = false;
+	
 	function getParentIdName( $parentClass, $childClass ) {
 		return $this->getParentIdNameRelation( $parentClass, $childClass, 'has_one' );
 	}
@@ -24,7 +26,15 @@ class HasOneComplexTableField extends HasManyComplexTableField {
 		
 		$record->write();
 	}
-		
+	
+	function setOneToOne() {
+		$this->isOneToOne = true;
+	}
+	
+	function isChildSet( $childID ) {
+		return DataObject::get( $this->controller->ClassName, '`' . $this->joinField . "` = '$childID'" );
+	}
+	
 	function ExtraData() {
 		$val = $this->getControllerJoinID() ? $this->getControllerJoinID() : '';
 		$inputId = $this->id() . '_' . $this->htmlListEndName;
@@ -39,10 +49,11 @@ class HasOneComplexTableField_Item extends ComplexTableField_Item {
 	function MarkingCheckbox() {
 		$name = $this->parent->Name() . '[]';
 		
+		$isOneToOne = $this->parent->isOneToOne;
 		$joinVal = $this->parent->getControllerJoinID();
 		$childID = $this->item->ID;
-				
-		if( $this->parent->IsReadOnly )
+						
+		if( $this->parent->IsReadOnly || ( $isOneToOne && $joinVal != $childID && $this->parent->isChildSet( $childID ) ) )
 			return "<input class=\"radio\" type=\"radio\" name=\"$name\" value=\"{$this->item->ID}\" disabled=\"disabled\"/>";
 		else if( $joinVal == $childID )
 			return "<input class=\"radio\" type=\"radio\" name=\"$name\" value=\"{$this->item->ID}\" checked=\"checked\"/>";
