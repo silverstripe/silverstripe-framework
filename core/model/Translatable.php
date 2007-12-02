@@ -474,9 +474,18 @@ class Translatable extends DataObjectDecorator {
 			foreach ($indexes as $index => $type) {
 				if (true === $type && array_search($index,$langFields) === false) unset($indexes[$index]);
 			}
+
+			$langIndexes = array_merge(
+				array(
+					'OriginalLangID_Lang' => '(OriginalLangID, Lang)',
+					'OriginalLangID' => true,
+					'Lang' => true,
+				),
+				(array)$indexes
+			);
 			
 			// Create table for translated instances			
-			DB::requireTable("{$table}_lang", $langFields, $indexes);
+			DB::requireTable("{$table}_lang", $langFields, $langIndexes);
 			
 		} else {
 			DB::dontRequireTable("{$table}_lang");
