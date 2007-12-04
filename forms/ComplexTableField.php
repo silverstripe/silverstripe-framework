@@ -42,6 +42,12 @@ class ComplexTableField extends TableListField {
 	protected $parentClass;
 
 	/**
+	 * @var string Database column name for the used relation (e.g. FamilyID
+	 * if one Family has_many Individuals).
+	 */
+	protected $parentIdName;
+
+	/**
 	 * @var array Influence output without having to subclass the template.
 	 */
 	protected $permissions = array(
@@ -250,6 +256,7 @@ JS;
 		} else {
 			$detailFields = $childData->getCMSFields();
 		}
+		
 		if($this->getParentClass()) {
 			$parentIdName = $this->getParentIdName($this->sourceClass,$this->getParentClass());
 			if(!$parentIdName) {
@@ -261,6 +268,7 @@ JS;
 			}
 			// add relational fields
 			$detailFields->push(new HiddenField("ctf[parentClass]"," ",$this->getParentClass()));
+			
 			if( $this->relationAutoSetting )
 				$detailFields->push(new HiddenField("$parentIdName"," ",$ID));
 		} 
@@ -571,9 +579,21 @@ JS;
 	}
 	
 	/**
+	 * Manually overwrites the parent-ID relations.
+	 * @see setParentClass()
+	 * 
+	 * @param String $str Example: FamilyID (when one Individual has_one Family)
+	 */
+	function setParentIdName($str) {
+		$this->parentIdName = $str;
+	}
+	
+	/**
 	 * Returns the db-fieldname of the currently used relationship.
 	 */
 	function getParentIdNameRelation( $parentClass, $childClass, $relation ){
+		if($this->parentIdName) return $this->parentIdName; 
+		
 		$relations = singleton( $parentClass )->$relation();
 		$classes = ClassInfo::ancestry( $childClass );
 		foreach( $relations as $k => $v ) {
@@ -700,7 +720,7 @@ class ComplexTableField_Popup extends Form {
 			$childObject = new $this->sourceClass();
 			$this->fields->removeByName('ID');
 		}
-		
+
 		$this->saveInto($childObject);
 		$childObject->write();
 
