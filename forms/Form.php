@@ -529,7 +529,7 @@ class Form extends ViewableData {
 	 * Save the contents of this form into the given data object.
 	 * It will make use of setCastedField() to do this.
 	 */
-	function saveInto(DataObject $dataObject) {
+	function saveInto(DataObjectInterface $dataObject) {
 		$dataFields = $this->fields->dataFields();
 		$lastField = null;
 

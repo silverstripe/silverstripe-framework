@@ -1591,10 +1591,15 @@ class DataObject extends Controller implements DataObjectInterface {
 	 */
 	public static function get_by_id($callerClass, $id) {
 		if(is_numeric($id)) {
-			$tableClasses = ClassInfo::dataClassesFor($callerClass);
-			$baseClass = array_shift($tableClasses);
-			
-			return DataObject::get_one($callerClass,"`$baseClass`.`ID` = $id");
+			if(singleton($callerClass) instanceof DataObject) {
+				$tableClasses = ClassInfo::dataClassesFor($callerClass);
+				$baseClass = array_shift($tableClasses);
+				return DataObject::get_one($callerClass,"`$baseClass`.`ID` = $id");
+				
+			// This simpler code will be used by non-DataObject classes that implement DataObjectInterface
+			} else {
+				return DataObject::get_one($callerClass,"`ID` = $id");
+			}
 		} else {
 			user_error("DataObject::get_by_id passed a non-numeric ID #$id", E_USER_WARNING);
 		}

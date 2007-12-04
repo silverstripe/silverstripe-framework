@@ -44,4 +44,17 @@ interface DataObjectInterface {
 	 */
 	function delete();
 	
+	/**
+	 * Get the named field.
+	 * This function is sometimes called explicitly by the form system, so you need to define it, even if you use the
+	 * default field system.
+	 */
+	function __get($fieldName);
+	
+	/**
+	 * Save content from a form into a field on this data object.
+	 * Since the data comes straight from a form it can't be trusted and will need to be validated / escaped.'
+	 */
+	function setCastedField($fieldName, $val);
+	
 }

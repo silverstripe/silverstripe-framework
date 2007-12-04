@@ -96,7 +96,7 @@ class FormField extends ViewableData {
 	 * Method to save this form field into the given data object.
 	 * By default, makes use of $this->dataValue()
 	 */
-	function saveInto(DataObject $record) {
+	function saveInto(DataObjectInterface $record) {
 		if($this->name) {
 			$record->setCastedField($this->name, $this->dataValue());
 		}
