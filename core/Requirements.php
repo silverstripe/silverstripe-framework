@@ -114,7 +114,7 @@ class Requirements {
 	static function clear($fileOrID = null) {
 		if($fileOrID) {
 			foreach(array('javascript','css', 'customScript', 'customCSS') as $type) {
-				if(Requirements::${$type}[$fileOrID]) {
+				if(isset(Requirements::${$type}[$fileOrID])) {
 					Requirements::$disabled[$type][$fileOrID] = Requirements::${$type}[$fileOrID];
 					unset(Requirements::${$type}[$fileOrID]);
 				}
