@@ -837,6 +837,9 @@ class i18n extends Controller {
 			}
 		}
 
+		// sort by title (not locale)
+		asort($locales);
+		
 		return $locales;
 	}
 	
