@@ -475,6 +475,7 @@ class DataObject extends Controller implements DataObjectInterface {
 	public function write($showDebug = false, $forceInsert = false, $forceWrite = false) {
 		$firstWrite = false;
 		$this->brokenOnWrite = true;
+		$isNewRecord = false;
 		$this->onBeforeWrite();
 		if($this->brokenOnWrite) {
 			user_error("$this->class has a broken onBeforeWrite() function.  Make sure that you call parent::onBeforeWrite().", E_USER_ERROR);
