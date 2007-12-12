@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Main file that handles every page request.
+ * Main file that handles every page request.  .htaccess must be configured to send all requests to main.php
  */
 
 require_once("core/Core.php");
