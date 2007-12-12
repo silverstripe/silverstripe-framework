@@ -740,6 +740,16 @@ class ViewableData extends Object implements Iterator {
 		return Director::absoluteBaseURL();
 	}
 	
+  /**
+   * When rendering some objects it is necessary to iterate over the object being rendered, to
+   * do this, you need access to itself.
+   *
+   * @return ViewableData
+   */
+  function Me() {
+    return $this;
+  }
+	
 	/**
 	 * Return a Debugger object.
 	 * This is set up like so that you can put $Debug.Content into your template to get debugging
