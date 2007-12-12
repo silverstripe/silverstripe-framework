@@ -372,7 +372,7 @@ abstract class Database extends Object {
 	 * @param string $array Array where the replacement should happen
 	 */
 	static function replace_with_null(&$array) {
-		$array = str_replace('\'\'', "null", $array);
+		$array = ereg_replace('= *\'\'', "= null", $array);
 		
 		if(is_array($array)) {
 			foreach($array as $key => $value) {
