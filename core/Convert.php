@@ -59,7 +59,7 @@ class Convert extends Object {
 			return $val;
 			
 		} else {
-			return str_replace(array('"',"\n","\r", "'"), array('\"','\n','\r', "\'"), $val);
+			return str_replace(array("\\", '"',"\n","\r", "'"), array("\\\\", '\"','\n','\r', "\\'"), $val);
 		}
 	}
 	
