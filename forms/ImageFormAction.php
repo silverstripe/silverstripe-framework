@@ -25,6 +25,7 @@ class ImageFormAction extends FormAction {
 		Requirements::javascript('jsparty/behaviour.js');
 		Requirements::javascript('sapphire/javascript/ImageFormAction.js');
 		
+		$classClause = '';
 		if($this->className) $classClause = $this->className . ' ';
 		if($this->hoverImage) $classClause .= 'rollover ';
 		return "<input class=\"{$classClause}action\" id=\"" . $this->id() . "\" type=\"image\" name=\"{$this->name}\" src=\"{$this->image}\" title=\"{$this->title}\" alt=\"{$this->title}\" />";
