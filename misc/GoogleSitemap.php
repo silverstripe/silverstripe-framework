@@ -8,11 +8,9 @@
 class GoogleSitemap extends Controller {
 	protected $Pages;
 	
-	function __construct() {
-		$this->Pages = Versioned::get_by_stage('SiteTree', 'Live');
-	}
-
 	public function Items() {
+		$this->Pages = Versioned::get_by_stage('SiteTree', 'Live');
+
 		$newPages = new DataObjectSet();
 		
 		foreach($this->Pages as $page) {
