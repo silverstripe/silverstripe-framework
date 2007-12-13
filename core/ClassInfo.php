@@ -10,7 +10,7 @@ class ClassInfo {
 	 */	 
 	static function ready() {
 		global $_ALL_CLASSES;
-		return $_ALL_CLASSES && isset($_ALL_CLASSES['hastable']) && $_ALL_CLASSES['hastable'];
+		return $_ALL_CLASSES && $_ALL_CLASSES['hastable'];
 	}
 	static function allClasses() {
 		global $_ALL_CLASSES;
@@ -102,30 +102,12 @@ class ClassInfo {
 	}
 
 	/**
-	 * Return all the class names implementing the given interface.
-	 * Note: this method is slow; if that becomes a problem you may need to reimplement this to cache results in
-	 * the manifest.
-	 * @return array A self-keyed array of class names
+	 * @return array A self-keyed array of class names. Note that this is only available with Silverstripe
+	 * classes and not built-in PHP classes.
 	 */
-	protected static $implementors_of = array();
 	static function implementorsOf($interfaceName) {
-		if(array_key_exists($interfaceName, self::$implementors_of)) return self::$implementors_of[$interfaceName];
-
-		$matchingClasses = array();	
-
-		$classes = self::allClasses();
-		foreach($classes as $potentialClass) {
-			if(class_exists($potentialClass)) {
-				$refl = new ReflectionClass($potentialClass);
-				if($refl->implementsInterface($interfaceName)) {
-					$matchingClasses[$potentialClass] = $potentialClass;
-				}
-			}
-		}
-		
-		self::$implementors_of[$interfaceName] = $matchingClasses;
-
-		return $matchingClasses;
+	    global $_ALL_CLASSES;
+		return $_ALL_CLASSES['implementors'][$interfaceName];
 	}
 }
 ?>
