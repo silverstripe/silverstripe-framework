@@ -66,13 +66,14 @@ class Director {
 		if(isset($_GET['debug_profile'])) Profiler::mark("Director","direct");
 		$controllerObj = Director::getControllerForURL($url);
 		
-		// Load the session into the controller
-		$controllerObj->setSession(new Session($_SESSION));
-
 		if(is_string($controllerObj) && substr($controllerObj,0,9) == 'redirect:') {
-			Director::redirect(substr($controllerObj, 9));
-			
+			$response = new HTTPResponse();
+			$response->redirect(substr($controllerObj, 9));
+			$response->output();
 		} else if($controllerObj) {
+			// Load the session into the controller
+			$controllerObj->setSession(new Session($_SESSION));
+		
 			$response = $controllerObj->run(array_merge((array)$_GET, (array)$_POST, (array)$_FILES));
 			
 			
