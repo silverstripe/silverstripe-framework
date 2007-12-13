@@ -176,7 +176,7 @@ class SearchForm extends Form {
 		if(isset($objects)) $doSet = new DataObjectSet($objects);
 		else $doSet = new DataObjectSet();
 		
-		$doSet->setPageLimits(isset($_GET['start']) ? (int)$_GET['start'] : 0, $numPerPage, $totalCount);
+		$doSet->setPageLimits($start, $numPerPage, $totalCount);
 		return $doSet;
 
 
