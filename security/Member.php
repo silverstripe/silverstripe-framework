@@ -28,6 +28,9 @@ class Member extends DataObject {
 		'Locale' => 'Varchar(6)', 
 	);
 
+	static $has_one = arrary(
+	);
+
 	static $belongs_many_many = array(
 		"Groups" => "Group",
 
