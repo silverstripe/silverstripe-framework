@@ -310,9 +310,14 @@ class Object {
 			$val = $this->stat($name);
 			$val2 = null;
 			try {
-				$reflection = new ReflectionClass(get_parent_class($this));
-				$property = $reflection->getProperty($name);
-				$val2 = $property->getValue();
+				// The reflection doesn't work properly in 5.1.2
+				if(phpversion() == '5.1.2') {
+					$val2 = eval('return ' . get_parent_class($this) . "::\$$name;");
+				} else {
+					$reflection = new ReflectionClass(get_parent_class($this));
+					$property = $reflection->getProperty($name);
+					$val2 = $property->getValue();
+				}
 			} catch(Exception $exc) {
 				// do nothing.. the property doesn't exists!
 			}
