@@ -212,6 +212,31 @@ class Text extends DBField {
 		}
 	}
 	
+	function ContextSummary($characters = 500, $string = false, $html = true) {
+		if(!$string) {
+			// If no string is supplied, use the string from a SearchForm
+			$string = $_REQUEST['Search'];
+		}
+		
+		// Remove HTML tags so we don't have to deal with matching tags
+		$text = $html ? $this->NoHTML() : $this->value;
+		
+		// Find the search string
+		$position = (int) stripos($text, $string);
+		
+		// We want to search string to be in the middle of our block to give it some context
+		$position = max(0, $position - ($characters / 2));
+		
+		if($position > 0) {
+			// We don't want to start mid-word
+			$position = (int) strrpos($text, ' ', -$position);
+		}
+		
+		$summary = substr($text, $position, $characters);
+		
+		return $summary;
+	}
+	
 	/**
 	 * Allows a sub-class of TextParser to be rendered. @see TextParser for implementation details.
 	 */
