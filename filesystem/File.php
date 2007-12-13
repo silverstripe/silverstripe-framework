@@ -232,9 +232,7 @@ class File extends DataObject {
 
 	function loadallcontent() {
 		ini_set("max_execution_time", 50000);
-		// get all file objects(not folders)
-		//$start = (int)$_GET[start];
-		$allFiles = DataObject::get("File"); /*, "ClassName = 'File' AND Filename LIKE '%.pdf'"/*, "", "", "$start, 5"*///);
+		$allFiles = DataObject::get("File");
 		$total = $allFiles->TotalItems();
 
 		$i = 0;
@@ -244,9 +242,6 @@ class File extends DataObject {
 			`echo "$i / $total" > $tmp/progress`;
 			$file->loadContent();
 		}
-		//Director::redirect(HTTP::setGetVar("start", $start + 5));
-
-		// run loadcontent on each one
 	}
 
 	/**
