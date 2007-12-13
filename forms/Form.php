@@ -183,7 +183,7 @@ class Form extends ViewableData {
 			}
 			
 			$fieldsClone = clone $this->fields;
-			$fieldsClone->push(new HiddenField('SecurityID', 'SecurityID', $securityID));
+			$fieldsClone->push(new HiddenField('SecurityID', '', $securityID));
 			
 			return $fieldsClone;
 		} else {
