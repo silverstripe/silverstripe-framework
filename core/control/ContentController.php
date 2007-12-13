@@ -144,7 +144,7 @@ class ContentController extends Controller {
 
 		// Remove all entries the can not be viewed by the current user
 		// We might need to create a show in menu permission
- 		if($result) {
+ 		if(isset($result)) {
 			foreach($result as $page) {
 				if($page->can('view')) {
 					$visible[] = $page;
