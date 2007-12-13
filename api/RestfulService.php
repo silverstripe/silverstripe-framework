@@ -56,10 +56,6 @@ class RestfulService extends ViewableData {
 			$this->rawXML = curl_exec($ch);
 			curl_close($ch);
 			
-			// save the response in cache
-			$fp = @fopen($cache_path,"w+");
-			@fwrite($fp,$this->rawXML);
-			@fclose($fp);
 		}
 		
 		// Try using file_get_contents if cURL is not installed in your system.
@@ -67,6 +63,11 @@ class RestfulService extends ViewableData {
 		
 		// results returned - from cache / live
 		if($this->rawXML != ""){
+			// save the response in cache
+			$fp = @fopen($cache_path,"w+");
+			@fwrite($fp,$this->rawXML);
+			@fclose($fp);
+			
 			if($this->checkErrors == true) {
 				return $this->errorCatch($this->rawXML);
 			} else {
