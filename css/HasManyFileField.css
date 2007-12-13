@@ -1,0 +1,11 @@
+#right form .hasmanyfile a.addFile,
+#right form .hasmanyfile a.uploadFile,
+#right form .hasmanyfile li {
+	font-size: 1.2em;
+	padding-left: 3px;
+}
+
+#right form .hasmanyfile a.removeFile {
+	padding-left: 3px;
+	font-size: 0.8em;
+}
