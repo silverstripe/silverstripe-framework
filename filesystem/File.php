@@ -240,7 +240,7 @@ class File extends DataObject {
 			$i++;
 			$tmp = TEMP_FOLDER;
 			`echo "$i / $total" > $tmp/progress`;
-			$file->loadContent();
+			$file->write();
 		}
 	}
 
@@ -255,22 +255,18 @@ class File extends DataObject {
 
 				//echo("<pre>Content for $this->Filename:\n$content</pre>");
 				$this->Content = $content;
-				$this->write();
 				break;
 			case 'doc':
 				$content = `catdoc $filename`;
 				$this->Content = $content;
-				$this->write();
 				break;
 			case 'ppt':
 				$content = `catppt $filename`;
 				$this->Content = $content;
-				$this->write();
 				break;
 			case 'txt';
 				$content = file_get_contents($this->FileName);
 				$this->Content = $content;
-				$this->write();
 		}
 	}
 
