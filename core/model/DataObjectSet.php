@@ -309,6 +309,18 @@ class DataObjectSet extends ViewableData implements Iterator {
 		return $this->TotalPages() > 1;
 	}
 	
+	function FirstItem() {
+		return isset($this->pageStart) ? $this->pageStart + 1 : 1;
+	}
+	
+	function LastItem() {
+		if(isset($this->pageStart)) {
+			return min($this->pageStart + $this->pageLength, $this->totalSize);
+		} else {
+			return min($this->pageLength, $this->totalSize);
+		}
+	}
+	
 	/**
 	 * Returns the URL of the previous page.
 	 * @return string
