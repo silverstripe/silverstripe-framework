@@ -326,6 +326,13 @@ class Folder extends File {
 		
 	}
 	
+	/**
+	 * Since this is a folder, we don't have any content as such.
+	 */
+	function loadContent() {
+		return;
+	}
+	
 }
 
 ?>

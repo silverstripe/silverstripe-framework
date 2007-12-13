@@ -233,18 +233,18 @@ class File extends DataObject {
 	function loadallcontent() {
 		ini_set("max_execution_time", 50000);
 		// get all file objects(not folders)
-		$start = (int)$_GET[start];
-		$allFiles = DataObject::get("File", "ClassName = 'File' AND Filename LIKE '%.pdf'", "", "", "$start, 5");
+		//$start = (int)$_GET[start];
+		$allFiles = DataObject::get("File"); /*, "ClassName = 'File' AND Filename LIKE '%.pdf'"/*, "", "", "$start, 5"*///);
 		$total = $allFiles->TotalItems();
 
-		$i = $start;
+		$i = 0;
 		foreach($allFiles as $file) {
 			$i++;
 			$tmp = TEMP_FOLDER;
 			`echo "$i / $total" > $tmp/progress`;
 			$file->loadContent();
 		}
-		Director::redirect(HTTP::setGetVar("start", $start + 5));
+		//Director::redirect(HTTP::setGetVar("start", $start + 5));
 
 		// run loadcontent on each one
 	}
@@ -253,17 +253,29 @@ class File extends DataObject {
 	 * Gets the content of this file and puts it in the field Content
 	 */
 	function loadContent() {
-
+		$filename = escapeshellarg($this->getFullPath());
 		switch(strtolower($this->getExtension())){
 			case 'pdf':
-				$filename = escapeshellarg($this->getFullPath());
-
-				$content = `pstotext $filename`;
+				$content = `pdftotext $filename -`;
 
 				//echo("<pre>Content for $this->Filename:\n$content</pre>");
 				$this->Content = $content;
 				$this->write();
 				break;
+			case 'doc':
+				$content = `catdoc $filename`;
+				$this->Content = $content;
+				$this->write();
+				break;
+			case 'ppt':
+				$content = `catppt $filename`;
+				$this->Content = $content;
+				$this->write();
+				break;
+			case 'txt';
+				$content = file_get_contents($this->FileName);
+				$this->Content = $content;
+				$this->write();
 		}
 	}
 
@@ -323,6 +335,8 @@ class File extends DataObject {
 				$brokenPage->write();
 			}
 		}
+		
+		$this->loadContent();
 	}
 
 	/**
@@ -509,7 +523,7 @@ class File extends DataObject {
 	 * legacy code.
 	 */
 	function getExtension() {
-		return strtolower(substr($this->getField('Name'),strrpos($this->getField('Name'),'.')+1));
+		return strtolower(substr($this->getField('Filename'),strrpos($this->getField('Filename'),'.')+1));
 	}
 	function getFileType() {
 		$types = array(
