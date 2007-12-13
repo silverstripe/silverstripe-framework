@@ -212,14 +212,14 @@ class Text extends DBField {
 		}
 	}
 	
-	function ContextSummary($characters = 500, $string = false, $html = true) {
+	function ContextSummary($characters = 500, $string = false, $striphtml = true, $highlight = true) {
 		if(!$string) {
 			// If no string is supplied, use the string from a SearchForm
 			$string = $_REQUEST['Search'];
 		}
 		
 		// Remove HTML tags so we don't have to deal with matching tags
-		$text = $html ? $this->NoHTML() : $this->value;
+		$text = $striphtml ? $this->NoHTML() : $this->value;
 		
 		// Find the search string
 		$position = (int) stripos($text, $string);
@@ -227,14 +227,22 @@ class Text extends DBField {
 		// We want to search string to be in the middle of our block to give it some context
 		$position = max(0, $position - ($characters / 2));
 		
+		
 		if($position > 0) {
 			// We don't want to start mid-word
-			$position = (int) strrpos($text, ' ', -$position);
+			$position = max((int) strrpos(substr($text, 0, $position), ' '), (int) strrpos(substr($text, 0, $position), "\n"));
 		}
 		
 		$summary = substr($text, $position, $characters);
 		
-		return $summary;
+		if($highlight) {
+			// Add a span around all occurences of the search term
+			$summary = str_ireplace($string, "<span class=\"highlight\">$string</span>", $summary);
+		}
+		
+		// trim it, because if we counted back and found a space then there will be an extra
+		// space at the front
+		return trim($summary);
 	}
 	
 	/**
