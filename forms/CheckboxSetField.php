@@ -84,8 +84,9 @@ class CheckboxSetField extends OptionsetField {
 			$extraClass .= " val" . str_replace(' ','',$key);
 					
 			$itemID = $this->id() . "_" . ereg_replace('[^a-zA-Z0-9]+','',$key);
-
-			if($items){
+			
+			$checked ="";
+			if(isset($items)){
 				in_array($key,$items) ? $checked = " checked=\"checked\"" : $checked = "";
 			}
 			
