@@ -20,6 +20,7 @@ class CustomRequiredFields extends RequiredFields{
 	 * which is generated at the header of each page 
 	 */
 	function javascript() {
+		$code = '';
 		$fields = $this->form->Fields();
 		foreach($fields as $field){
 			//if the field type has some special specific specification for validation of itself
