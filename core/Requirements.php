@@ -11,6 +11,7 @@ class Requirements {
 	private static $customCSS = array();
 	private static $customHeadTags = "";
 	private static $disabled = array();
+	private static $blocked = array();
 	
 	/**
 	 * Register the given javascript file as required.
@@ -133,6 +134,35 @@ class Requirements {
 	}
 	
 	/**
+	 * Needed to actively prevent the inclusion of a file,
+	 * e.g. when using your own prototype.js.
+	 * Blocking should only be used as an exception, because
+	 * it is hard to trace back. You can just block items with an
+	 * ID, so make sure you add an unique identifier to customCSS() and customScript().
+	 * 
+	 * @param string $fileOrID
+	 */
+	static function block($fileOrID) {
+		self::$blocked[$fileOrID] = $fileOrID;
+	}
+
+	/**
+	 * Removes an item from the blocking-list.
+	 * CAUTION: Does not "re-add" any previously blocked elements.
+	 * @param string $fileOrID
+	 */
+	static function unblock($fileOrID) {
+		unset(self::$blocked[$fileOrID]);
+	}
+
+	/**
+	 * Removes all items from the blocking-list.
+	 */
+	static function unblock_all() {
+		self::$blocked = array();
+	}
+	
+	/**
 	 * Restore requirements cleared by call to Requirements::clear
 	 */
 	static function restore() {
@@ -154,30 +184,30 @@ class Requirements {
 			$prefix = "";
 			$requirements = '';
 	
-			foreach(Requirements::$javascript as $file => $dummy) {
+			foreach(array_diff_key(self::$javascript,self::$blocked) as $file => $dummy) {
 				if(substr($file,0,7) == 'http://' || Director::fileExists($file)) {
 					$requirements .= "<script type=\"text/javascript\" src=\"$prefix$file\"></script>\n";
 				}
 			}
 			
-			if(Requirements::$customScript) {
+			if(self::$customScript) {
 				$requirements .= "<script type=\"text/javascript\">\n//<![CDATA[\n";
-				foreach(Requirements::$customScript as $script) {
+				foreach(array_diff_key(self::$customScript,self::$blocked) as $script) {
 					$requirements .= "$script\n";
 				}
 				$requirements .= "\n//]]>\n</script>\n";
 			}
-			foreach(Requirements::$css as $file => $params) {					
+			foreach(array_diff_key(self::$css,self::$blocked) as $file => $params) {					
 				if(Director::fileExists($file)) {
 					$media = (isset($params['media'])) ? " media=\"{$params['media']}\"" : "";
 					$requirements .= "<link rel=\"stylesheet\" type=\"text/css\"{$media} href=\"$prefix$file\" />\n";
 				}
 			}
-			foreach(Requirements::$customCSS as $css) {
+			foreach(array_diff_key(self::$customCSS,self::$blocked) as $css) {
 				$requirements .= "<style type=\"text/css\">\n$css\n</style>\n";
 			}
 			
-			$requirements .= Requirements::$customHeadTags;
+			$requirements .= self::$customHeadTags;
 	
 			if(isset($_GET['debug_profile'])) Profiler::unmark("Requirements::includeInHTML");
 			return eregi_replace("(</head[^>]*>)", $requirements . "\\1", $content);
