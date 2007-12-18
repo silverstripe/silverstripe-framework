@@ -506,11 +506,28 @@ class Director {
 	}
 
 	/**
-	 * @todo These functions are deprecated, let's use isLive isDev and isTest instead.
+	 * @deprecated use isDev() instead
 	 */
-	function isDevMode() { return self::isDev(); }
-	function isTestMode() { return self::isTest(); }
-	function isLiveMode() { return self::isLive(); }
+	function isDevMode() {
+		user_error('Director::isDevMode() is deprecated. Use Director::isDev() instead.', E_USER_NOTICE);
+		return self::isDev();
+	}
+	
+	/**
+	 * @deprecated use isTest() instead
+	 */
+	function isTestMode() {
+		user_error('Director::isTestMode() is deprecated. Use Director::isTest() instead.', E_USER_NOTICE);
+		return self::isTest();
+	}
+	
+	/**
+	 * @deprecated use isLive() instead
+	 */
+	function isLiveMode() {
+		user_error('Director::isLiveMode() is deprecated. Use Director::isLive() instead.', E_USER_NOTICE);
+		return self::isLive();
+	}
 
 }
 

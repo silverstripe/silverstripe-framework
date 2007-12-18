@@ -393,9 +393,10 @@ HTML;
 	// ###################
 	
 	/**
-	 * DEPRECATED Please use addExtraClass
+	 * @deprecated please use addExtraClass
 	 */
-	function setExtraClass($extraClass){
+	function setExtraClass($extraClass) {
+		user_error('FormField::setExtraClass() is deprecated. Use FormField::addExtraClass() instead.', E_USER_NOTICE);
 		$this->extraClasses[] = $extraClass;
 	}
 }

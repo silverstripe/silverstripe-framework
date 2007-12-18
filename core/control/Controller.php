@@ -311,10 +311,11 @@ class Controller extends ViewableData {
 	}
 
 	/**
-	 * Deprecated - use Controller::curr() instead
+	 * @deprecated use Controller::curr() instead
 	 * @returns Controller
 	 */
 	public static function currentController() {
+		user_error('Controller::currentController() is deprecated. Use Controller::curr() instead.', E_USER_NOTICE);
 		return self::curr();
 	}
 	

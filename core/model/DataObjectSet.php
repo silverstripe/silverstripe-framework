@@ -386,6 +386,7 @@ class DataObjectSet extends ViewableData implements Iterator {
 	* @deprecated Use merge()
     */
 	public function append(DataObjectSet $doset){
+		user_error('DataObjectSet::append() is deprecated. Use DataObjectSet::merge() instead.', E_USER_NOTICE);
 		foreach($doset as $item){
 			$this->push($item);
 		}
