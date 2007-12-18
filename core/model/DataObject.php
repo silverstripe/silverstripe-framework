@@ -1703,6 +1703,9 @@ class DataObject extends Controller implements DataObjectInterface {
 				}
 			}
 		}
+
+		// Let any extentions make their own database default data
+		$this->extend('augmentDefaultRecords', $dummy);
 	}
 
 	/**
