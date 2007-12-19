@@ -164,6 +164,7 @@ class i18n extends Controller {
 		'en_FR' => 'English (France)',
 		'en_IT' => 'English (Italy)',
 		'en_NL' => 'English (Netherlands)',
+		'eo_XX' => 'Esperanto',
 		'es_419' => 'Spanish (Latin America)',
 		'es_AR' => 'Spanish (Argentina)',
 		'es_BO' => 'Spanish (Bolivia)',
