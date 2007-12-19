@@ -28,6 +28,8 @@ HasManyFileFieldAddButton.prototype = {
 		input.value = fileid;
 		
 		text = document.createTextNode(name);
+		link = document.createElement('a');
+		link.appendChild(text);
 		
 		removelink = document.createElement('a');
 		removelink.className = 'removeFile';
@@ -35,7 +37,7 @@ HasManyFileFieldAddButton.prototype = {
 		
 		li = document.createElement('li');
 		li.appendChild(input);
-		li.appendChild(text);
+		li.appendChild(link);
 		li.appendChild(removelink);
 		list.appendChild(li);
 		
@@ -90,9 +92,13 @@ HasManyFileFieldUploadButton.prototype = {
 		ids = serverData.match(idregex);
 		fileid = ids[1];
 		
-		nameregex = /\/\* Names: ([A-Za-z0-9_. -]+) \*\//;
+		console.log(serverData);
+		
+		nameregex = /\/\* Names: ([^\s]+) \*\//;
 		names = serverData.match(nameregex);
 		name = names[1];
+		
+		console.log(name);
 		
 		fieldid = this.parentNode.parentNode.id;
 		list = this.parentNode.parentNode.list;
@@ -104,6 +110,8 @@ HasManyFileFieldUploadButton.prototype = {
 		input.value = fileid;
 		
 		text = document.createTextNode(name);
+		link = document.createElement('a');
+		link.appendChild(text);
 		
 		removelink = document.createElement('a');
 		removelink.className = 'removeFile';
@@ -111,7 +119,7 @@ HasManyFileFieldUploadButton.prototype = {
 		
 		li = document.createElement('li');
 		li.appendChild(input);
-		li.appendChild(text);
+		li.appendChild(link);
 		li.appendChild(removelink);
 		list.appendChild(li);
 		
