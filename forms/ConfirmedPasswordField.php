@@ -255,7 +255,7 @@ JS;
 
 		if(!$this->canBeEmpty) {
 			// both password-fields shouldn't be empty
-			if(!$$value || !$passwordConfirmField->Value()) {
+			if(!$value || !$passwordConfirmField->Value()) {
 				$validator->validationError($name, _t('Form.VALIDATIONPASSWORDSNOTEMPTY', "Passwords can't be empty"), "validation", false);
 				return false;
 			}
