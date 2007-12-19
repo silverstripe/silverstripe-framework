@@ -1,38 +1,102 @@
 <?php
 /**
  * Shows two password-fields, and checks for matching passwords.
- * 
- * TODO readonlytransformation
+ * Optionally hides the fields by default and shows
+ * a link to toggle their visibility.
  */
 class ConfirmedPasswordField extends FormField {
 	
+	/**
+	 * Minimum character length of the password.
+	 *
+	 * @var int
+	 */
 	public $minLength = 6;
 	
+	/**
+	 * Maximum character length of the password.
+	 *
+	 * @var int
+	 */
 	public $maxLength = 20;
 	
-	public $excludeChars = '\s';
-	
+	/**
+	 * Enforces at least one digit and one alphanumeric
+	 * character (in addition to {$minLength} and {$maxLength}
+	 *
+	 * @var boolean
+	 */
 	public $requireStrongPassword = false;
 	
+	/**
+	 * Allow empty fields in serverside validation
+	 *
+	 * @var boolean
+	 */
 	public $canBeEmpty = false;
 	
-	function __construct($name, $title = null, $value = "", $form = null) {
-		// we have labels for the subfields
-		$title = false;
-		
+	/**
+	 * Hide the two password fields by default,
+	 * and provide a link instead that toggles them.
+	 *
+	 * @var boolean
+	 */
+	protected $showOnClick = false;
+	
+	/**
+	 * Title for the link that triggers
+	 * the visibility of password fields.
+	 *
+	 * @var string
+	 */
+	public $showOnClickTitle = 'Change Password';
+	
+	/**
+	 * @param string $name
+	 * @param string $title
+	 * @param mixed $value
+	 * @param Form $form
+	 * @param boolean $showOnClick
+	 */
+	function __construct($name, $title = null, $value = "", $form = null, $showOnClick = false) {
 		// naming with underscores to prevent values from actually being saved somewhere
 		$this->children = new FieldSet(
 			new PasswordField("{$name}[_Password]", _t('Member.PASSWORD')),
 			new PasswordField("{$name}[_ConfirmPassword]",_t('Member.CONFIRMPASSWORD', 'Confirm Password'))
 		);
+
+		$this->showOnClick = $showOnClick;
+		if($this->showOnClick) {
+			$this->children->push(new HiddenField("{$name}[_PasswordFieldVisible]"));
+		}
+		
+		// we have labels for the subfields
+		$title = false;
 		
 		parent::__construct($name, $title, $value, $form);
 	}
 	
 	function Field() {
+		Requirements::javascript('jsparty/prototype.js');
+		Requirements::javascript('jsparty/behaviour.js');
+		Requirements::javascript('sapphire/javascript/ConfirmedPasswordField.js');
+		
 		$content = '';
+		
+		if($this->showOnClick) {
+			
+			$content .= "<div class=\"showOnClick\">\n";
+			$content .= "<a href=\"#\">{$this->showOnClickTitle}</a>\n";
+			$content .= "<div class=\"showOnClickContainer\">";
+		}
+		
 		foreach($this->children as $field) {
-			$content.= $field->FieldHolder();
+			$content .= $field->FieldHolder();
+		}
+
+		if($this->showOnClick) {
+			$content .= "</div>\n";
+			$content .= "</div>\n";
 		}
 		
 		return $content;
@@ -69,11 +133,21 @@ class ConfirmedPasswordField extends FormField {
 		
 	}
 	
-	function jsValidation()
-	{
+	function jsValidation() {
 		$formID = $this->form->FormName();
+		$jsTests = '';
 		
-		$jsTests = "
+		$jsTests .= "
+			// if fields are hidden, reset values and don't validate
+			var containers = $$('.showOnClickContainer', $('#'+fieldName));
+			if(containers.length && !Element.visible(containers[0])) {
+				passEl.value = null;
+				confEl.value = null;
+				return true;
+			}
+		";
+		
+		$jsTests .= "
 			if(passEl.value != confEl.value) {
 				validationError(confEl, \"Passwords have to match.\", \"error\");
 				return false;
@@ -89,7 +163,7 @@ class ConfirmedPasswordField extends FormField {
 			";
 		}
 		
-		if(($this->minLength || $this->maxLength) && !$this->canBeEmpty) {
+		if(($this->minLength || $this->maxLength)) {
 			if($this->minLength && $this->maxLength) {
 				$limit = "{$this->minLength},{$this->maxLength}";
 				$errorMsg = "Passwords must be {$this->minLength} to {$this->maxLength} characters long.";
@@ -102,7 +176,7 @@ class ConfirmedPasswordField extends FormField {
 			}
 			$limitRegex = '/^.{' . $limit . '}$/';
 			$jsTests .= "
-			if(!passEl.value.match({$limitRegex})) {
+			if(passEl.value && !passEl.value.match({$limitRegex})) {
 				validationError(confEl, \"{$errorMsg}\", \"error\");
 				return false;
 			}
@@ -147,29 +221,48 @@ if(typeof fromAnOnBlur != 'undefined'){
 JS;
 	}
 
+	/**
+	 * Determines if the field was actually
+	 * shown on the clientside - if not,
+	 * we don't validate or save it.
+	 * 
+	 * @return bool
+	 */
+	function isSaveable() {
+		$isVisible = $this->children->fieldByName($this->Name() . '[_PasswordFieldVisible]');
+		return (!$this->showOnClick || ($this->showOnClick && $isVisible && $isVisible->Value()));
+	}
+	
 	function validate() {
 		$validator = $this->form->getValidator();
 		$name = $this->name;
+		
+		// if field isn't visible, don't validate
+		if(!$this->isSaveable()) return true; 
+		
 		$passwordField = $this->children->fieldByName($name.'[_Password]');
 		$passwordConfirmField = $this->children->fieldByName($name.'[_ConfirmPassword]');
 		$passwordField->setValue($_POST[$name]['_Password']);
 		$passwordConfirmField->setValue($_POST[$name]['_ConfirmPassword']);
+		
+		$value = $passwordField->Value();
+		
 		// both password-fields should be the same
-		if($passwordField->Value() != $passwordConfirmField->Value()) {
+		if($value != $passwordConfirmField->Value()) {
 			$validator->validationError($name, _t('Form.VALIDATIONPASSWORDSDONTMATCH',"Passwords don't match"), "validation", false);
 			return false;
 		}
 
 		if(!$this->canBeEmpty) {
 			// both password-fields shouldn't be empty
-			if(!$passwordField->Value() || !$passwordConfirmField->Value()) {
+			if(!$$value || !$passwordConfirmField->Value()) {
 				$validator->validationError($name, _t('Form.VALIDATIONPASSWORDSNOTEMPTY', "Passwords can't be empty"), "validation", false);
 				return false;
 			}
 		}
 			
 		// lengths
-		if(($this->minLength || $this->maxLength) && !$this->canBeEmpty) {
+		if(($this->minLength || $this->maxLength)) {
 			if($this->minLength && $this->maxLength) {
 				$limit = "{$this->minLength},{$this->maxLength}";
 				$errorMsg = "Passwords must be {$this->minLength} to {$this->maxLength} characters long.";
@@ -181,7 +274,7 @@ JS;
 				$errorMsg = "Passwords must be at most {$this->maxLength} characters long.";
 			}
 			$limitRegex = '/^.{' . $limit . '}$/';
-			if(!preg_match($limitRegex,$passwordField->Value())) {
+			if(!empty($value) && !preg_match($limitRegex,$value)) {
 				$validator->validationError('Password', $errorMsg, 
 					"validation", 
 					false
@@ -190,7 +283,7 @@ JS;
 		}
 		
 		if($this->requireStrongPassword) {
-			if(!preg_match('/^(([a-zA-Z]+\d+)|(\d+[a-zA-Z]+))[a-zA-Z0-9]*$/',$passwordField->Value())) {
+			if(!preg_match('/^(([a-zA-Z]+\d+)|(\d+[a-zA-Z]+))[a-zA-Z0-9]*$/',$value)) {
 				$validator->validationError(
 					'Password', 
 					_t('Form.VALIDATIONSTRONGPASSWORD', "Passwords must have at least one digit and one alphanumeric character."), 
@@ -203,7 +296,16 @@ JS;
 		return true;
 	}
 	
+	/**
+	 * Only save if field was shown on the client,
+	 * and is not empty.
+	 *
+	 * @param DataObject $record
+	 * @return bool
+	 */
 	function saveInto(DataObject $record) {
+		if(!$this->isSaveable()) return false;
+		
 		if(!($this->canBeEmpty && !$this->value)) {
 			parent::saveInto($record);
 		}
