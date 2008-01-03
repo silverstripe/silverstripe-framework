@@ -1255,11 +1255,14 @@ class Member_Validator extends RequiredFields {
 
 		// if we are in a complex table field popup, use ctf[childID], else use
 		// ID
-		$id = (isset($_REQUEST['ctf']['childID']))
-			? $_REQUEST['ctf']['childID']
-			: $_REQUEST['ID'];
+		if(isset($_REQUEST['ctf']['childID']))
+			$id = $_REQUEST['ctf']['childID'];
+		elseif(isset($_REQUEST['ID']))
+			$id = $_REQUEST['ID'];
+		else
+			$id = null;
 
-		if(is_object($member) && $member->ID != $id) {
+		if($id && is_object($member) && $member->ID != $id) {
 			$emailField = $this->form->dataFieldByName('Email');
 			$this->validationError($emailField->id(),
 				_t('Member.VALIDATIONMEMBEREXISTS', "There already exists a member with this email"),
