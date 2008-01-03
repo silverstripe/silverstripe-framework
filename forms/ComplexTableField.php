@@ -58,15 +58,34 @@ class ComplexTableField extends TableListField {
 		//"export",
 	);
 	
-	protected $itemClass = 'ComplexTableField_Item';
-	
 	/**
-	 * Template-Overrides
+	 * Template for main rendering
+	 *
+	 * @var string
 	 */
 	protected $template = "ComplexTableField";
 
+	/**
+	 * Template for popup (form rendering)
+	 *
+	 * @var string
+	 */
 	protected $templatePopup = "ComplexTableField_popup";
 
+	/**
+	 * Classname for each row/item
+	 *
+	 * @var string
+	 */
+	public $itemClass = 'ComplexTableField_Item';
+	
+	/**
+	 * Classname for the popup form
+	 *
+	 * @var string
+	 */
+	public $popupClass = 'ComplexTableField_Popup';
+	
 	/**
 	 * @var boolean Trigger pagination (defaults to true for ComplexTableField)
 	 */
@@ -83,6 +102,12 @@ class ComplexTableField extends TableListField {
 	 */
 	protected $detailFormValidator = null;
 	
+	/**
+	 * Automatically detect a has-one relationship
+	 * in the popup (=child-class) and save the relation ID.
+	 *
+	 * @var boolean
+	 */
 	protected $relationAutoSetting = true;
 	
 	/**
@@ -227,7 +252,8 @@ JS;
 
 		// used to discover fields if requested and for population of field
 		if(is_numeric($childID)) {
-			$childData = DataObject::get_by_id($this->sourceClass, $childID);
+ 			// we have to use the basedataclass, otherwise we might exclude other subclasses 
+ 			$childData = DataObject::get_by_id(ClassInfo::baseDataClass($this->sourceClass), $childID); 
 		}
 		
 		// If the fieldset is passed, use it, else use the formfields returned
@@ -291,7 +317,7 @@ JS;
 			$this->detailFormValidator = singleton($this->sourceClass)->getValidator();
 		}
 
-		$form = Object::create('ComplexTableField_Popup',$this, "DetailForm", $detailFields, $this->sourceClass, $readonly, $this->detailFormValidator);
+		$form = Object::create($this->popupClass,$this, "DetailForm", $detailFields, $this->sourceClass, $readonly, $this->detailFormValidator);
 	
 		if (is_numeric($childID)) {
 			if ($this->methodName == "show" || $this->methodName == "edit") {
@@ -508,7 +534,7 @@ JS;
 
 	/**
 	 * #################################
-	 *           Utilty
+	 *           Utility
 	 * #################################
 	 */
 
@@ -725,7 +751,7 @@ class ComplexTableField_Popup extends Form {
 		$childObject->write();
 
 		// if ajax-call in an iframe, close window by javascript, else redirect to referrer
-		if(!$_REQUEST['ajax']) {
+		if(!Director::is_ajax()) {
 			Director::redirect(substr($_SERVER['REQUEST_URI'],0,strpos($_SERVER['REQUEST_URI'],"?")));
 		}
 	}
