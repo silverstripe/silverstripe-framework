@@ -425,7 +425,7 @@ class Permission extends DataObject {
 		}
 		$allCodes['ADMIN'] = 'Full administrative rights';
 
-		foreach($classes as $class) {
+		if($classes) foreach($classes as $class) {
 			$SNG = singleton($class);
 			$someCodes = $SNG->providePermissions();
 			if($someCodes) foreach($someCodes as $k => $v) {
@@ -435,7 +435,7 @@ class Permission extends DataObject {
 
 		$otherPerms = DB::query("SELECT DISTINCT Code From Permission")
 			->column();
-		foreach($otherPerms as $otherPerm) {
+		if($otherPerms) foreach($otherPerms as $otherPerm) {
 			if(!array_key_exists($otherPerm, $allCodes))
 				$allCodes[$otherPerm] = $otherPerm;
 		}
