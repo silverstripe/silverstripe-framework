@@ -926,14 +926,14 @@ class i18n extends Controller {
 	protected static function get_owner_module($name) {
 		if (substr($name,-3) == '.ss') {
 			global $_TEMPLATE_MANIFEST;
-			$path = current($_TEMPLATE_MANIFEST[substr($name,0,-3)]);
-			ereg(Director::baseFolder() . '/([^/]+)/',$path,$module);
+			$path = str_replace('\\','/',Director::makeRelative(current($_TEMPLATE_MANIFEST[substr($name,0,-3)])));
+			ereg('/([^/]+)/',$path,$module);
 		} else {
 			global $_CLASS_MANIFEST;
-			$path = $_CLASS_MANIFEST[$name];
-			ereg(Director::baseFolder() . '/([^/]+)/',$path,$module);
+			$path = str_replace('\\','/',Director::makeRelative($_CLASS_MANIFEST[$name]));
+			ereg('/([^/]+)/', $path, $module);
 		}
-		return $module[1];
+		return ($module) ? $module[1] : false;
 
 	}
 
@@ -1245,13 +1245,15 @@ class i18n extends Controller {
 	 */
 	static function include_by_class($class) {
 		$module = self::get_owner_module($class);
+		if(!$module) user_error("i18n::include_by_class: Class {$class} not found", E_USER_WARNING);
+		
 		if (file_exists($file = Director::getAbsFile("$module/lang/". self::get_locale() . '.php'))) {
 			include_once($file);
 		} else if (self::get_locale() != 'en_US') {
 			self::set_locale('en_US');
 			self::include_by_class($class);
 		} else {
-			user_error("Locale file $file should exist", E_USER_WARNING);
+			user_error("i18n::include_by_class: Locale file $file should exist", E_USER_WARNING);
 		}
 	}
 	
