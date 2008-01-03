@@ -107,7 +107,7 @@ class ClassInfo {
 	 */
 	static function implementorsOf($interfaceName) {
 	    global $_ALL_CLASSES;
-		return $_ALL_CLASSES['implementors'][$interfaceName];
+		return (isset($_ALL_CLASSES['implementors'][$interfaceName])) ? $_ALL_CLASSES['implementors'][$interfaceName] : false;
 	}
 }
 ?>
