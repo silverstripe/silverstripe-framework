@@ -124,7 +124,7 @@ class Security extends Controller {
 		if(Member::currentUserID()) {
 			// user_error( 'PermFailure with member', E_USER_ERROR );
 
-			$message = isset($messageSet['alreadyLoggedIn'])
+			$message = $messageSet['alreadyLoggedIn']
 										? $messageSet['alreadyLoggedIn']
 										: $messageSet['default'];
 
