@@ -127,6 +127,9 @@ class CompositeField extends FormField {
 	function isComposite() { return true; }
 	function hasData() { return false; }
 
+	public function fieldByName($name) {
+		return $this->children->fieldByName($name);
+	}
 	/**
 	 * Add a new child field to the end of the set.
 	 */
