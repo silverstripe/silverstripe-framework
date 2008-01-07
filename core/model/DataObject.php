@@ -739,34 +739,38 @@ class DataObject extends Controller implements DataObjectInterface {
 	 * @return ComponentSet The components of the one-to-many relationship.
 	 */
 	public function getComponents($componentName, $filter = "", $sort = "", $join = "", $limit = "", $having = "") {
-    	$sum = md5("{$filter}_{$sort}_{$join}_{$limit}_{$having}");
-    	if(isset($this->componentCache[$componentName . '_' . $sum]) && false != $this->componentCache[$componentName . '_' . $sum]) {
-	    	return $this->componentCache[$componentName . '_' . $sum];
-    	}
+		$result = null;
+		
+		$sum = md5("{$filter}_{$sort}_{$join}_{$limit}_{$having}");
+		if(isset($this->componentCache[$componentName . '_' . $sum]) && false != $this->componentCache[$componentName . '_' . $sum]) {
+			return $this->componentCache[$componentName . '_' . $sum];
+		}
 
 		if(!$componentClass = $this->has_many($componentName)) {
 			user_error("DataObject::getComponents(): Unknown 1-to-many component '$componentName' on class '$this->class'", E_USER_ERROR);
 		}
-
-		$componentObj = singleton($componentClass);
-		$id = $this->getField("ID");
+		
 		$joinField = $this->getComponentJoinField($componentName);
-
-		// get filter
-		$combinedFilter = "$joinField = '$id'";
-		if($filter) $combinedFilter .= " AND {$filter}";
-
-		$result = $componentObj->instance_get($combinedFilter, $sort, $join, $limit, "ComponentSet", $having);
-		if(!$result) {
-			$result = new ComponentSet();
+		
+		if($this->isInDB()) { //Check to see whether we should query the db
+			$componentObj = singleton($componentClass);
+			$id = $this->getField("ID");
+			
+			// get filter
+			$combinedFilter = "$joinField = '$id'";
+			if($filter) $combinedFilter .= " AND {$filter}";
+			
+			$result = $componentObj->instance_get($combinedFilter, $sort, $join, $limit, "ComponentSet", $having);
 		}
-		$result->setComponentInfo("1-to-many", $this, null, null, $componentClass, $joinField);
-
-		// If this record isn't in the database, then we want to hold onto this specific ComponentSet,
-		// because it's the only copy of the data that we have.
-		if(!$this->isInDB()) {
+		
+		if(!$result) {
+			// If this record isn't in the database, then we want to hold onto this specific ComponentSet,
+			// because it's the only copy of the data that we have.
+			$result = new ComponentSet();
 			$this->setComponent($componentName . '_' . $sum, $result);
 		}
+		
+		$result->setComponentInfo("1-to-many", $this, null, null, $componentClass, $joinField);
 
 		return $result;
 	}
