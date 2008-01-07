@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <rss version="2.0">
 	<channel>
-		<title>$Title.XML</title>
+		<title>$Title</title>
 		<link>$Link</link>
-		<description>$Description.XML</description>
+		<% if Description %><description>$Description.XML</description><% end_if %>
 
 		<% control Entries %>
 		<item>
