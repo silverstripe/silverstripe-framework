@@ -4,7 +4,11 @@ i18n::include_locale_file('sapphire', 'en_US');
 
 global $lang;
 
-$lang['zh_CN'] = $lang['en_US'];
+if(array_key_exists('zh_CN', $lang) && is_array($lang['zh_CN'])) {
+	$lang['zh_CN'] = array_merge($lang['en_US'], $lang['zh_CN']);
+} else {
+	$lang['zh_CN'] = $lang['en_US'];
+}
 
 $lang['zh_CN']['BasicAuth']['ENTERINFO'] = '请输入用户名和密码';
 $lang['zh_CN']['BasicAuth']['ERRORNOTADMIN'] = '此用户没有管理员权限。';

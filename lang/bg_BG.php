@@ -4,7 +4,11 @@ i18n::include_locale_file('sapphire', 'en_US');
 
 global $lang;
 
-$lang['bg_BG'] = $lang['en_US'];
+if(array_key_exists('bg_BG', $lang) && is_array($lang['bg_BG'])) {
+	$lang['bg_BG'] = array_merge($lang['en_US'], $lang['bg_BG']);
+} else {
+	$lang['bg_BG'] = $lang['en_US'];
+}
 
 $lang['bg_BG']['BasicAuth']['ENTERINFO'] = 'Моля, въведете потребителско име и парола.';
 $lang['bg_BG']['BasicAuth']['ERRORNOTADMIN'] = 'Този потребител не е администратор.';
