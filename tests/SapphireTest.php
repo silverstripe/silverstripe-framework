@@ -124,6 +124,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 				$obj = new $dataClass();
 				foreach($fields as $fieldName => $fieldVal) {
 					if($obj->many_many($fieldName) || $obj->has_many($fieldName)) {
+						$parsedItems = array();
 						$items = split(' *, *',trim($fieldVal));
 						foreach($items as $item) {
 							$parsedItems[] = $this->parseFixtureVal($item);
