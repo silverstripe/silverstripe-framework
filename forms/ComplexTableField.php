@@ -289,7 +289,7 @@ JS;
 		}
 		
 		if($this->getParentClass()) {
-			$parentIdName = $this->getParentIdName($this->sourceClass,$this->getParentClass());
+			$parentIdName = $this->getParentIdName($this->getParentClass(), $this->sourceClass);
 			if(!$parentIdName) {
 				user_error("ComplexTableField::DetailForm() Cannot automatically 
 					determine 'has-one'-relationship to parent, 
@@ -743,10 +743,8 @@ class ComplexTableField_Popup extends Form {
 	 * @see {Form::ReferencedField}).
 	 */
 	function saveComplexTableField() {
-		$id = Convert::raw2sql($_REQUEST['ctf']['childID']);
-
-		if (is_numeric($id)) {
-			$childObject = DataObject::get_by_id($this->sourceClass, $id);
+		if(isset($_REQUEST['ctf']['childID']) && is_numeric($_REQUEST['ctf']['childID'])) {
+			$childObject = DataObject::get_by_id($this->sourceClass, $_REQUEST['ctf']['childID']);
 		} else {
 			$childObject = new $this->sourceClass();
 			$this->fields->removeByName('ID');
