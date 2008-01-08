@@ -123,13 +123,13 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 			foreach($items as $identifier => $fields) {
 				$obj = new $dataClass();
 				foreach($fields as $fieldName => $fieldVal) {
-					if($obj->many_many($fieldName)) {
+					if($obj->many_many($fieldName) || $obj->has_many($fieldName)) {
 						$items = split(' *, *',trim($fieldVal));
 						foreach($items as $item) {
 							$parsedItems[] = $this->parseFixtureVal($item);
 						}
 						$obj->write();
-						$obj->$fieldName()->setByIdList($parsedItems);
+						$obj->getComponents($fieldName)->setByIDList($parsedItems);
 						
 					} else {
 						$obj->$fieldName = $this->parseFixtureVal($fieldVal);
