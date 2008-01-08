@@ -1,4 +1,10 @@
 <?php
+
+/**
+ * @package sapphire
+ * @subpackage synchronisation
+ */
+
 /**
  * Functions to provide synchronisation between two Silverstripe implementations. This allows the same entry to have two different
  * IDs on each installation

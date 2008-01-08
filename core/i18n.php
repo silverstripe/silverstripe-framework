@@ -21,6 +21,8 @@
  * Please see the {Translatable} DataObjectDecorator for managing translations of database-content.
  *
  * @author Bernat Foj Capell <bernat@silverstripe.com>
+ * @package sapphire
+ * @subpackage misc
  */
 
 class i18n extends Controller {

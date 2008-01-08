@@ -1,4 +1,10 @@
 <?php
+
+/**
+ * @package sapphire
+ * @subpackage misc
+ */
+
 /* Geoip.php 
 
  Known to work with the following versions of GeoIP:

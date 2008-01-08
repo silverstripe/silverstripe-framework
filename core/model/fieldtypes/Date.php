@@ -1,5 +1,13 @@
 <?php
 
+/**
+ * @package sapphire
+ * @subpackage model
+ */
+
+/**
+ * Represents a date field.
+ */
 class Date extends DBField {
 	
 	function setValue($value) {

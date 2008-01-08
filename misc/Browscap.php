@@ -1,6 +1,11 @@
 <?php
 
 /**
+ * @package sapphire
+ * @subpackage misc
+ */
+
+/**
  * Browscap.ini parsing class with caching and update capabilities
  *
  * PHP version 5
@@ -19,7 +24,6 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  *
- * @package    Browscap
  * @author     Jonathan Stoppani <st.jonathan@gmail.com>
  * @copyright  Copyright (c) 2006 Jonathan Stoppani
  * @version    0.7
@@ -656,7 +660,6 @@ class Browscap
 /**
  * Browscap.ini parsing class exception
  *
- * @package    Browscap
  * @author     Jonathan Stoppani <st.jonathan@gmail.com>
  * @copyright  Copyright (c) 2006 Jonathan Stoppani
  * @license    http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License

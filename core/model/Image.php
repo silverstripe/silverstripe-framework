@@ -2,7 +2,7 @@
 
 /**
  * @package sapphire
- * @subpackage core
+ * @subpackage filesystem
  */
 
 /**

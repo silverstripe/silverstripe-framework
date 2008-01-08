@@ -1,5 +1,13 @@
 <?php
 
+/**
+ * @package sapphire
+ * @subpackage misc
+ */
+
+/**
+ * Library of static methods for manipulating arrays.
+ */
 class ArrayLib extends Object {
 	static function invert($arr) {
 		if (! $arr) return false;

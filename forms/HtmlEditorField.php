@@ -1,6 +1,11 @@
 <?php
 
 /**
+ * @package sapphire
+ * @subpackage forms
+ */
+
+/**
  * A WYSIWYG editor field, powered by tinymce.
  * tinymce editor fields are created from <textarea> tags which are then converted with javascript.
  * The {@link Requirements} system is used to ensure that all necessary javascript is included.

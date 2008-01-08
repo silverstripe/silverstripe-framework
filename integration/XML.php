@@ -1,6 +1,11 @@
 <?php
 
 /**
+ * @package sapphire
+ * @subpackage misc
+ */
+
+/**
  * Base class for XML parsers
  */
 class XML extends Object {

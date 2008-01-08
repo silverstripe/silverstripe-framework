@@ -1,6 +1,11 @@
 <?php
 
 /**
+ * @package sapphire
+ * @subpackage forms
+ */
+
+/**
  * TableField behaves in the same manner as TableListField, however allows the addition of 
  * fields and editing of attributes specified, and filtering results.
  * 

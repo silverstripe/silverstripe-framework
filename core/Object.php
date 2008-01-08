@@ -1,9 +1,14 @@
 <?php
+
+/**
+ * @package sapphire
+ * @subpackage core
+ */
+
 /**
  * Base object that all others should inherit from.
  * This object provides a number of helper methods that patch over PHP's deficiencies.
  */
-
 class Object {
 	/**
 	 * This DataObjects extensions, eg Versioned.

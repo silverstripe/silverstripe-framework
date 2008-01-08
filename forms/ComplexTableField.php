@@ -1,6 +1,11 @@
 <?php
 
 /**
+ * @package sapphire
+ * @subpackage forms
+ */
+
+/**
  * Provides a tabuar list in your form with view, edit and add links to edit records
  * with a "has-one"-relationship. Detail-views are shown in a greybox-iframe.
  * Features pagination in the overview as well as the detail-views.

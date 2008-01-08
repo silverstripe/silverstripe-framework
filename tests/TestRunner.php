@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @package sapphire
+ * @subpackage testing
+ */
+
 // Check that PHPUnit is installed
 $hasPhpUnit = false;
 $paths = explode(PATH_SEPARATOR, ini_get('include_path'));

@@ -1,4 +1,10 @@
 <?php
+
+/**
+ * @package sapphire
+ * @subpackage forms
+ */
+
 	/**
 	 * EditableCheckbox
 	 * A user modifiable checkbox on a UserDefinedForm

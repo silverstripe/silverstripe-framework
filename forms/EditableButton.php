@@ -1,4 +1,10 @@
 <?php
+
+/**
+ * @package sapphire
+ * @subpackage forms
+ */
+
 	/**
 	 * EditableButton
 	 * Allows a user to modify the text on the button

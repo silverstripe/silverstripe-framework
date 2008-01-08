@@ -1,4 +1,10 @@
 <?php
+
+/**
+ * @package sapphire
+ * @subpackage forms
+ */
+
 	/**
 	 * EditableDropdownOption
 	 * Represents a single entry in an EditableDropdown

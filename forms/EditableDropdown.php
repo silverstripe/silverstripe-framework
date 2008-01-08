@@ -1,4 +1,10 @@
 <?php
+
+/**
+ * @package sapphire
+ * @subpackage forms
+ */
+
 	/**
 	 * EditableDropdown
 	 * Represents a modifiable dropdown box on a form

@@ -1,8 +1,13 @@
 <?php
+
+/**
+ * @package sapphire
+ * @subpackage search
+ */
+
 /**
  * Standard basic search form
  */
-
 class SearchForm extends Form {
 	
 	protected $showInSearchTurnOn;

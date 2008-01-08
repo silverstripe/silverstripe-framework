@@ -1,9 +1,9 @@
 <?php
 
 /**
- * Change password form
+ * @package sapphire
+ * @subpackage security
  */
-
 
 /**
  * Standard Change Password Form

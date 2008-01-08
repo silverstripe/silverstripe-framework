@@ -1,8 +1,14 @@
 <?php
-	/**
-	 * EditableDropdownOption
-	 * Represents a single entry in an EditableRadioField
-   */
+
+/**
+ * @package sapphire
+ * @subpackage forms
+ */
+
+/**
+ * EditableDropdownOption
+ * Represents a single entry in an EditableRadioField
+ */
   
   class EditableRadioOption extends DataObject {
   	

@@ -14,6 +14,9 @@
  *
  *  html: HTML source suitable for use in a page or email
  *  text: Plain-text content, suitable for display to a user as-is, or insertion in a plaintext email.
+ *
+ * @package sapphire
+ * @subpackage misc
  */
 class Convert extends Object {
 	// Convert raw to other formats

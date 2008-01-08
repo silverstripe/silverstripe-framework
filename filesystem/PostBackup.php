@@ -1,4 +1,10 @@
 <?php
+
+/**
+ * @package sapphire
+ * @subpackage forms
+ */
+
 /**
  * Writes the POST array to a file as a last-ditch effort to preserve entered data.
  */

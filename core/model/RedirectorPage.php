@@ -1,6 +1,10 @@
 <?php
 
 /**
+ * @package cms
+ */
+
+/**
  * A redirector page redirects when the page is visited.
  */
 class RedirectorPage extends Page {

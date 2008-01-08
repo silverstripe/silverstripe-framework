@@ -1,6 +1,12 @@
 <?php
+
 /**
- * 
+ * @package sapphire
+ * @subpackage model
+ */
+
+/**
+ * Represents a floating point field.
  */
 class Float extends DBField {
 	

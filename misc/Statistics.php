@@ -1,6 +1,10 @@
 <?php
 
 /**
+ * @package cms
+ */
+
+/**
  * Statistics class for gathering and formatting of statistical data for tables and charts in
  * both public and administrative contexts.
  */

@@ -1,10 +1,15 @@
 <?php
+
+/**
+ * @package sapphire
+ * @subpackage misc
+ */
+
 /**
  * Initial implementation of Sitemap support.
  * GoogleSitemap should handle requests to 'sitemap.xml'
  * the other two classes are used to render the sitemap
  */
-
 class GoogleSitemap extends Controller {
 	protected $Pages;
 	

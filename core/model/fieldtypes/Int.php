@@ -1,5 +1,13 @@
 <?php
+
 /**
+ * @package sapphire
+ * @subpackage model
+ */
+
+/**
+ * Represents an integer field.
+ *
  * @param $defaultVal int
  */
 class Int extends DBField {

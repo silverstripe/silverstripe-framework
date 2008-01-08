@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @package sapphire
+ * @subpackage forms
+ */
+
 class HasManyComplexTableField extends ComplexTableField {
 		
 	public $joinField;

@@ -1,6 +1,11 @@
 <?php
 
 /**
+ * @package sapphire
+ * @subpackage security
+ */
+
+/**
  * Provides an interface to HTTP basic authentication.
  */
 class BasicAuth extends Object {

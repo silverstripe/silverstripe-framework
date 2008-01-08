@@ -1,6 +1,11 @@
 <?php
 
 /**
+ * @package sapphire
+ * @subpackage model
+ */
+
+/**
  * The Versioned decorator allows your DataObjects to have several versions, allowing
  * you to rollback changes and view history. An example of this is the pages used in the CMS.
  */

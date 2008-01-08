@@ -1,6 +1,11 @@
 <?php
 
 /**
+ * @package sapphire
+ * @subpackage misc
+ */
+
+/**
  ** Contains heaps of tools that you can use when importing database information
  **/
 

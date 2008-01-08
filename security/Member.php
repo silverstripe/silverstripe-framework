@@ -2,9 +2,9 @@
 
 /**
  * Member classes
+ * @package sapphire
+ * @subpackage security
  */
-
-
 
 /**
  * The member class which represents the users of the system

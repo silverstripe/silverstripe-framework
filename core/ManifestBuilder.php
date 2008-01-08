@@ -1,8 +1,13 @@
 <?php
 
 /**
- * ManifestBuilder
- *
+ * Name of the manifest file
+ */
+define("MANIFEST_FILE", TEMP_FOLDER . "/manifest" . str_replace(array("/",":", "\\"),"_", $_SERVER['SCRIPT_FILENAME']));
+
+/**
+ * The ManifestBuilder class generates the manifest file and keeps it fresh.
+ * 
  * The manifest file is a PHP include that contains global variables that
  * represent the collected contents of the application:
  *   - all classes
@@ -12,21 +17,9 @@
  * Traversing the filesystem to collect this information on everypage.
  * This information is cached so that it need not be regenerated on every
  * pageview.
- */
-
-
-
-/**
- * Define a constant for the name of the manifest file
- */
-define("MANIFEST_FILE", TEMP_FOLDER . "/manifest" . str_replace(array("/",":", "\\"),"_", $_SERVER['SCRIPT_FILENAME']));
-
-
-
-/**
- * ManifestBuilder
  *
- * The ManifestBuilder class generates the manifest file and keeps it fresh.
+ * @package sapphire
+ * @subpackage core
  */
 class ManifestBuilder {
 

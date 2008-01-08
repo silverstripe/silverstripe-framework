@@ -21,6 +21,9 @@
  * 
  * TODO Force a specific execution order ($forceTop, $forceBottom)
  * TODO Extension to return different formats, e.g. JSON or XML
+ *
+ * @package sapphire
+ * @subpackage forms
  */
 class FormResponse {
 	

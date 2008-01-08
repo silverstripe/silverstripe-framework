@@ -1,6 +1,11 @@
 <?php
 
 /**
+ * @package sapphire
+ * @subpackage forms
+ */
+
+/**
  * Represents a field in a form.  
  * A FieldSet contains a number of FormField objects which make up the whole of a form.
  * In addition to single fields, FormField objects can be "composite", for example, the {@link TabSet}

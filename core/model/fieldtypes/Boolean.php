@@ -1,4 +1,10 @@
 <?php
+
+/**
+ * @package sapphire
+ * @subpackage model
+ */
+
 /**
  * Represents a boolean field.
  * 

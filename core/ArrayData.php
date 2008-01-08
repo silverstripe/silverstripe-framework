@@ -1,6 +1,11 @@
 <?php
 
 /**
+ * @package sapphire
+ * @subpackage view
+ */
+
+/**
  * Lets you wrap a bunch of array data into a ViewableData object.
  * This is useful when you want to pass data to a template in the "SilverStripe 1" way of giving a 
  * big data array.

@@ -1,12 +1,10 @@
 <?php
 
 /**
- * LoginForm base class
- *
  * @author Markus Lanthaler <markus@silverstripe.com>
+ * @package sapphire
+ * @subpackage security
  */
-
-
 
 /**
  * Abstract base class for a login form

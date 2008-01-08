@@ -1,5 +1,13 @@
 <?php
 
+/**
+ * @package sapphire
+ * @subpackage model
+ */
+
+/**
+ * Represents a short text field.
+ */
 class Varchar extends DBField {
 	protected $size;
 	

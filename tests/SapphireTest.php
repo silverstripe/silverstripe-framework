@@ -1,4 +1,10 @@
 <?php
+
+/**
+ * @package sapphire
+ * @subpackage testing
+ */
+
 /*
 $dir = dirname(dirname((__FILE__)));
 $_SERVER['SCRIPT_FILENAME'] = "$dir/main.php";

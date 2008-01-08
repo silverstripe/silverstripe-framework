@@ -2,6 +2,9 @@
 
 /**
  * Represenets an HTTPResponse returned by a controller.
+ *
+ * @package sapphire
+ * @subpackage control
  */
 class HTTPResponse extends Object {
 	protected static $status_codes = array(

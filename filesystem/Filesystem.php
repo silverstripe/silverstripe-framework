@@ -1,5 +1,13 @@
 <?php
 
+/**
+ * @package sapphire
+ * @subpackage filesystem
+ */
+
+/**
+ * A collection of static methods for manipulating the filesystem.
+ */
 class Filesystem extends Object {
 	
 	public static $file_create_mask = 02775;

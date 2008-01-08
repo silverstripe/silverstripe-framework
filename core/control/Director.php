@@ -6,6 +6,9 @@
  * one of a number of patterns, and determines the controller, action and any argument to be
  * used.  It then runs the controller, which will finally run the viewer and/or perform processing
  * steps.
+ *
+ * @package sapphire
+ * @subpackage control
  */
 class Director {
 	

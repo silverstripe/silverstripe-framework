@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @package sapphire
+ * @subpackage forms
+ */
+
 class HasOneComplexTableField extends HasManyComplexTableField {
 	
 	protected $itemClass = 'HasOneComplexTableField_Item';

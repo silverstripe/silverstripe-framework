@@ -1,5 +1,13 @@
 <?php
 
+/**
+ * @package sapphire
+ * @subpackage security
+ */
+
+/**
+ * A security group.
+ */
 class Group extends DataObject {
 	// This breaks too many things for upgraded sites
 	// static $default_sort = "Sort";

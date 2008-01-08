@@ -1,5 +1,14 @@
 <?php
 
+/**
+ * @package sapphire
+ * @subpackage widgets
+ */
+
+/**
+ * Base class for widgets.
+ * Widgets let CMS authors drag and drop small pieces of functionality into defined areas of their websites.
+ */
 class Widget extends DataObject {
 	static $db = array(
 		"ParentID" => "Int",

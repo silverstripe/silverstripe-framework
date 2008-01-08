@@ -1,6 +1,9 @@
 <?php
 /**
  * Class of static methods to support debugging.
+ *
+ * @package sapphire
+ * @subpackage core
  */
 class Debug {
 	

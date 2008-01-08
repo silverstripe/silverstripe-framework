@@ -21,9 +21,10 @@
 
 
 /**
-* @package  SSHTMLBBCodeParser
-* @author   Stijn de Reede  <sjr@gmx.co.uk>
-*/
+ * @package  sapphire
+ * @subpackage misc
+ * @author   Stijn de Reede  <sjr@gmx.co.uk>
+ */
 
 require_once 'HTML/BBCodeParser/Filter.php';
 

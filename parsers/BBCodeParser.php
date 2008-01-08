@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * @package sapphire
+ * @subpackage misc
+ */
 
 require_once('HTML/HTMLBBCodeParser.php');
 /*Seting up the PEAR bbcode parser*/  
@@ -10,6 +14,10 @@ $options = $config['SSHTMLBBCodeParser'];
 unset($options);
 
 
+/**
+ * BBCode parser object.
+ * Use on a text field in a template with $Content.Parse(BBCodeParser).
+ */
 class BBCodeParser extends TextParser {
 
 	protected static $autolinkUrls = true;

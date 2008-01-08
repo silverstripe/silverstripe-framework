@@ -1,6 +1,12 @@
 <?php
+
 /**
- * Decimal value.
+ * @package sapphire
+ * @subpackage model
+ */
+
+/**
+ * Represents a Decimal field.
  */
 class Decimal extends DBField {
 	protected $wholeSize, $decimalSize;

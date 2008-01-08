@@ -1,5 +1,11 @@
 <?php
-	/**
+
+/**
+ * @package sapphire
+ * @subpackage forms
+ */
+
+/**
  * EditableDropdown
  * Represents a set of selectable radio buttons
  */

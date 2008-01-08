@@ -1,7 +1,8 @@
 <?php
 
 /**
- * Bulk of the form system
+ * @package sapphire
+ * @subpackage forms
  */
 
 /**

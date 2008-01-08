@@ -1,8 +1,14 @@
 <?php
-	/**
-	 * EditableTextField
-	 * This control represents a user-defined field in a user defined form
-	 */
+
+/**
+ * @package sapphire
+ * @subpackage forms
+ */
+
+/**
+ * EditableTextField
+ * This control represents a user-defined field in a user defined form
+ */
 class EditableTextField extends EditableFormField {
 	
 	static $db = array(

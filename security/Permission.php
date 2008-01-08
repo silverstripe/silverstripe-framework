@@ -1,4 +1,13 @@
 <?php
+
+/**
+ * @package sapphire
+ * @subpackage security
+ */
+
+/**
+ * Represents a permission assigned to a group.
+ */
 class Permission extends DataObject {
 
   // the (1) after Type specifies the DB default value which is needed for

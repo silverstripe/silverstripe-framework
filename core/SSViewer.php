@@ -1,6 +1,11 @@
 <?php
 
 /**
+ * @package sapphire
+ * @subpackage view
+ */
+
+/**
  * The SSViewer executes a .ss template file.
  * The SSViewer class handles rendering of .ss templates.  In addition to a full template in
  * the views folder, a template in views/Content or views/Layout will be rendered into $Content and

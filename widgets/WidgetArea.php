@@ -1,5 +1,13 @@
 <?php
 
+/**
+ * @package sapphire
+ * @subpackage synchronisation
+ */
+
+/**
+ * Represents a set of widgets shown on a page.
+ */
 class WidgetArea extends DataObject {
 	static $db = array();
 	

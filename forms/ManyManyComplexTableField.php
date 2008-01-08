@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @package sapphire
+ * @subpackage forms
+ */
+
 class ManyManyComplexTableField extends HasManyComplexTableField {
 	
 	private $manyManyParentClass;

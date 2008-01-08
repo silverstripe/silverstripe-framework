@@ -1,8 +1,13 @@
 <?php
-	/**
-	 * SubmittedFormReportField
-	 * Displays a summary of instances of a form submitted to the website
-	 */
+
+/**
+ * @package cms
+ */
+
+/**
+ * SubmittedFormReportField
+ * Displays a summary of instances of a form submitted to the website
+ */
 	
 class SubmittedFormReportField extends FormField {
 	

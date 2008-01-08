@@ -1,4 +1,10 @@
 <?php
+
+/**
+ * @package sapphire
+ * @subpackage forms
+ */
+
 /**
  * Creates an editable field that displays members in a given group
  */

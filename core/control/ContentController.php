@@ -12,6 +12,9 @@
  *
  * Subclasses of ContentController are generally instantiated by ModelAsController; this will create
  * a controller based on the URLSegment action variable, by looking in the SiteTree table.
+ *
+ * @package sapphire
+ * @subpackage control
  */
 class ContentController extends Controller {
 	protected $dataRecord;

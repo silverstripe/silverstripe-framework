@@ -1,5 +1,13 @@
 <?php
 
+/**
+ * @package sapphire
+ * @subpackage model
+ */
+
+/**
+ * Represents a long text field.
+ */
 class Text extends DBField {
 	static $casting = array(
 		"AbsoluteLinks" => "HTMLText",

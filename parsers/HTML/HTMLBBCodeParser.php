@@ -21,7 +21,8 @@
 // Modified by SilverStripe www.silverstripe.com
 
 /**
-* @package  SSHTMLBBCodeParser
+* @package  sapphire
+* @subpackage misc
 * @author   Stijn de Reede  <sjr@gmx.co.uk> , SilverStripe
 *
 *

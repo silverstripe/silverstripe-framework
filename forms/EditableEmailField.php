@@ -1,4 +1,10 @@
 <?php
+
+/**
+ * @package sapphire
+ * @subpackage forms
+ */
+
 	/**
 	 * EditableEmailField
 	 * Allow users to define a validating editable email field for a UserDefinedForm

@@ -1,8 +1,7 @@
 <?php
-
 /**
  * @package sapphire
- * @subpackage core
+ * @subpackage model
  */
 
 /**

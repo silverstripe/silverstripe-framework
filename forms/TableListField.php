@@ -1,4 +1,10 @@
 <?php
+
+/**
+ * @package sapphire
+ * @subpackage forms
+ */
+
 /**
  * Form field that embeds a list into a form, such as a member list or a file list.
  * 

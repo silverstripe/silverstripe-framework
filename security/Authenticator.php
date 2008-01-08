@@ -1,4 +1,10 @@
 <?php
+
+/**
+ * @package sapphire
+ * @subpackage security
+ */
+
 /**
  * Abstract base class for an authentication method
  *

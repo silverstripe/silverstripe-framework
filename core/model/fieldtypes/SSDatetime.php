@@ -1,4 +1,13 @@
 <?php
+
+/**
+ * @package sapphire
+ * @subpackage model
+ */
+
+/**
+ * Represents a date-time field.
+ */
 class SSDatetime extends Date {
 	function setValue($value) {
 		if($value) $this->value = date('Y-m-d H:i:s', strtotime($value));

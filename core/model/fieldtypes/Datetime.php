@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @package sapphire
+ * @subpackage model
+ */
+
 if(!class_exists('Datetime')) {
 	class Datetime extends Date {
 		function __construct($name) {

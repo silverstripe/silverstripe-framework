@@ -1,6 +1,12 @@
 <?php
+
 /**
- * Standard basical search form
+ * @package sapphire
+ * @subpackage search
+ */
+
+/**
+ * More advanced search form
  */
 class AdvancedSearchForm extends SearchForm {
 	

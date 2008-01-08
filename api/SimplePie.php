@@ -1,4 +1,10 @@
 <?php
+
+/**
+ * @package sapphire
+ * @subpackage integration
+ */
+
 /****************************************************
 SIMPLEPIE
 A PHP-Based RSS and Atom Feed Framework

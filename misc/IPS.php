@@ -1,6 +1,11 @@
 <?php
 
 /**
+ * @package sapphire
+ * @subpackage misc
+ */
+
+/**
  * Ioncube Performance Suite management
  */
 class IPS extends Controller {

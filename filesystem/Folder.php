@@ -1,5 +1,13 @@
 <?php
 
+/**
+ * @package sapphire
+ * @subpackage filesystem
+ */
+
+/**
+ * Represents a folder in the assets directory.
+ */
 class Folder extends File {
 	
 	static $many_many = array(

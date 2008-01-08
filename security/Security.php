@@ -1,6 +1,11 @@
 <?php
 
 /**
+ * @package sapphire
+ * @subpackage security
+ */
+
+/**
  * Implements a basic security model
  */
 class Security extends Controller {

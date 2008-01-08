@@ -1,5 +1,12 @@
 <?php
 /**
+ * This file contains several methods that control the core behaviour of Sapphire.
+ *
+ * @package sapphire
+ * @subpackage core
+ */
+
+/**
  * Returns the temporary folder that sapphire/silverstripe should use for its cache files
  * This is loaded into the TEMP_FOLDER define on start up
  */

@@ -4,7 +4,7 @@
  * Database Administration
  *
  * @package sapphire
- * @subpackage core
+ * @subpackage model
  */
 
 

@@ -1,4 +1,9 @@
 <?php
+
+/**
+ * @package cms
+ */
+
 /**
  * SubmittedForm
  * Contents of an UserDefinedForm submission

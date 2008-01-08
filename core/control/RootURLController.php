@@ -1,7 +1,10 @@
 <?php
 
 /**
- * This controller handles what happens when you visit the root URL
+ * This controller handles what happens when you visit the root URL.
+ *
+ * @package sapphire
+ * @subpackage control
  */
 class RootURLController extends Controller {
 	protected static $is_at_root = false;
