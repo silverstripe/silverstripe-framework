@@ -7,25 +7,25 @@
 
 class HasOneComplexTableField extends HasManyComplexTableField {
 	
-	protected $itemClass = 'HasOneComplexTableField_Item';
+	public $itemClass = 'HasOneComplexTableField_Item';
 	
 	public $isOneToOne = false;
 	
-	function getParentIdName( $parentClass, $childClass ) {
-		return $this->getParentIdNameRelation( $parentClass, $childClass, 'has_one' );
+	function getParentIdName($parentClass, $childClass) {
+		return $this->getParentIdNameRelation($parentClass, $childClass, 'has_one');
 	}
 			
 	function getControllerJoinID() {
 		return $this->controller->{$this->joinField};
 	}
 	
-	function saveInto( DataObject $record ) {
+	function saveInto(DataObject $record) {
 		$fieldName = $this->name;
 		$fieldNameID = $fieldName . 'ID';
 		
 		$record->$fieldNameID = 0;
-		if( $val = $this->value[ $this->htmlListField ] ) {
-			if( $val != 'undefined' )
+		if($val = $this->value[ $this->htmlListField ]) {
+			if($val != 'undefined')
 				$record->$fieldNameID = $val;
 		}
 		
@@ -36,8 +36,8 @@ class HasOneComplexTableField extends HasManyComplexTableField {
 		$this->isOneToOne = true;
 	}
 	
-	function isChildSet( $childID ) {
-		return DataObject::get( $this->controller->ClassName, '`' . $this->joinField . "` = '$childID'" );
+	function isChildSet($childID) {
+		return DataObject::get($this->controller->ClassName, '`' . $this->joinField . "` = '$childID'");
 	}
 	
 	function ExtraData() {
@@ -58,9 +58,9 @@ class HasOneComplexTableField_Item extends ComplexTableField_Item {
 		$joinVal = $this->parent->getControllerJoinID();
 		$childID = $this->item->ID;
 						
-		if( $this->parent->IsReadOnly || ( $isOneToOne && $joinVal != $childID && $this->parent->isChildSet( $childID ) ) )
+		if($this->parent->IsReadOnly || ($isOneToOne && $joinVal != $childID && $this->parent->isChildSet($childID)))
 			return "<input class=\"radio\" type=\"radio\" name=\"$name\" value=\"{$this->item->ID}\" disabled=\"disabled\"/>";
-		else if( $joinVal == $childID )
+		else if($joinVal == $childID)
 			return "<input class=\"radio\" type=\"radio\" name=\"$name\" value=\"{$this->item->ID}\" checked=\"checked\"/>";
 		else
 			return "<input class=\"radio\" type=\"radio\" name=\"$name\" value=\"{$this->item->ID}\"/>";
