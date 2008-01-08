@@ -48,26 +48,34 @@ class Debug {
 	}
 
 	static function text($val) {
-		if(is_object($val) && $val->hasMethod('debug')) {
-			return $val->debug();
-		} else {
-			if(is_array($val)) {
-				$result = "<ul>\n";
-				foreach($val as $k => $v) {
-					$result .= "<li>$k = " . Debug::text($v) . "</li>\n";
-				}
-				$val = $result . "</ul>\n";
-
-			} else if (is_object($val)) {
-				$val = var_export($val, true);
+		if(is_object($val)) {
+			if(method_exists($val, 'hasMethod')) {
+				$hasDebugMethod = $val->hasMethod('debug');
 			} else {
-				if(true || !Director::is_ajax()) {
-					$val = "<pre style=\"font-family: Courier new\">" . htmlentities($val) . "</pre>\n";
-				}
+				$hasDebugMethod = method_exists($val, 'debug');
 			}
-
-			return $val;
+			
+			if($hasDebugMethod) {
+				return $val->debug();
+			}
 		}
+
+		if(is_array($val)) {
+			$result = "<ul>\n";
+			foreach($val as $k => $v) {
+				$result .= "<li>$k = " . Debug::text($v) . "</li>\n";
+			}
+			$val = $result . "</ul>\n";
+
+		} else if (is_object($val)) {
+			$val = var_export($val, true);
+		} else {
+			if(true || !Director::is_ajax()) {
+				$val = "<pre style=\"font-family: Courier new\">" . htmlentities($val) . "</pre>\n";
+			}
+		}
+
+		return $val;
 	}
 
 	/**
@@ -144,6 +152,7 @@ class Debug {
 			echo "<p style=\"color: white; background-color: red; margin: 0\">FATAL ERROR: $errstr<br />\n At line $errline in $errfile<br />\n<br />\n</p>\n";
 
 			Debug::backtrace();
+			//Debug::show(debug_backtrace());
 
 			echo "<h2>Context</h2>\n";
 			Debug::show($errcontext);
@@ -240,7 +249,7 @@ class Debug {
 		while( $bt && in_array(self::full_func_name($bt[0]), $ignoredFunctions) ) {
 			array_shift($bt);
 		}
-
+		
 		$result = "";
 		foreach($bt as $item) {
 			if(Director::is_ajax() && !$ignoreAjax) {
@@ -254,6 +263,8 @@ class Debug {
 			}
 		}
 		
+		$result .= 'hi';
+		echo $result;
 		if($returnVal) return $result;
 		else echo $result;
 	}
@@ -268,7 +279,16 @@ class Debug {
 		if(isset($item['function'])) $funcName .= $item['function'];
 		
 		if($showArgs && isset($item['args'])) {
-			@$funcName .= "(" . implode(",", (array)$item['args'])  .")";
+			$args = array();
+			foreach($item['args'] as $arg) {
+				if(!is_object($arg) || method_exists($arg, '__toString')) {
+					$args[] = (string) $arg;
+				} else {
+					$args[] = get_class($arg);
+				}
+			}
+		
+			$funcName .= "(" . implode(",", $args)  .")";
 		}
 		
 		return $funcName;
