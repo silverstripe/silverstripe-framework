@@ -127,7 +127,7 @@ class MySQLDatabase extends Database {
 		return $this->active ? true : false;
 	}
 	
-	public function createDatabase($connect, $username, $password, $db) {
+	public function createDatabase() {
 		$this->query("CREATE DATABASE $this->database");
 		$this->query("USE $this->database");
 

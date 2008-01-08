@@ -58,6 +58,7 @@ class PDODatabase extends Database {
 		try { // Try connect to the database, if it does not exist, create it
 			$this->dbConn = new PDO($connectWithDB, $parameters['username'], $parameters['password']);
 		} catch (PDOException $e) {
+			// To do - this is an instance method, not a static method.  Call it as such.
 			if (!self::createDatabase($connect, $parameters['username'], $parameters['password'], $parameters['database'])) {
 				$this->databaseError("Could not connect to the database, make sure the server is available and user credentials are correct");
 			} else {
@@ -228,6 +229,7 @@ class PDODatabase extends Database {
 	 * @param string $password Database Password
 	 * @param string $database Database to which to create
 	 * @return boolean Returns true if successful
+	 * @todo This shouldn't take any arguments; it should take the information given in the constructor instead.
 	 */
 	public function createDatabase($connect, $username, $password, $database) {
 		try {
