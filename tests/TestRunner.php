@@ -20,8 +20,6 @@ class TestRunner extends Controller {
 	 * Run all test classes
 	 */
 	function index() {
-		ManifestBuilder::includeEverything();
-	
 		$tests = ClassInfo::subclassesFor('SapphireTest');
 		array_shift($tests);
 		
@@ -49,6 +47,8 @@ class TestRunner extends Controller {
 		echo "<pre>";
 		$suite = new PHPUnit_Framework_TestSuite();
 		foreach($classList as $className) {
+			// Ensure that the autoloader pulls in the test class, as PHPUnit won't know how to do this.
+			class_exists($className);
 			$suite->addTest(new PHPUnit_Framework_TestSuite($className));
 		}
 
