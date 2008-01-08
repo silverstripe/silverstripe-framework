@@ -275,6 +275,9 @@ class HtmlEditorField_Toolbar extends ViewableData {
 			new HtmlEditorField_button("Cut","cut",_t('HtmlEditorField.CUT', "Cut (Ctrl+X)")),
 			new HtmlEditorField_button("Copy","copy",_t('HtmlEditorField.COPY', "Copy (Ctrl+C)")),
 			new HtmlEditorField_button("Paste","paste",_t('HtmlEditorField.PASTE', "Paste (Ctrl+V)")),
+			new HtmlEditorField_button("mcePasteText","paste:pastetext",_t('HtmlEditorField.PASTETEXT', "Paste plain text")),
+			new HtmlEditorField_button("mcePasteWord","paste:pasteword",_t('HtmlEditorField.PASTEWORD', "Paste from Word")),
+			new HtmlEditorField_button("mceSelectAll","paste:selectall",_t('HtmlEditorField.SELECTALL', "Select All (Ctrl+A)")),
 			new HtmlEditorField_separator(),
 
 			new HtmlEditorField_button("ssImage","image",_t('HtmlEditorField.IMAGE', "Insert image")),
