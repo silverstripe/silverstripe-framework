@@ -1503,7 +1503,7 @@ class DataObject extends Controller implements DataObjectInterface {
 	 */
 	public static function get_one($callerClass, $filter = "", $cache = true, $orderby = "") {
 		$sum = md5("{$filter}_{$orderby}");
-		if(!$cache || !isset(DataObject::$cache_get_one[$callerClass][$sum]) || DataObject::$cache_get_one[$callerClass][$sum]->destroyed) {
+		if(!$cache || !isset(DataObject::$cache_get_one[$callerClass][$sum]) || !DataObject::$cache_get_one[$callerClass][$sum] || DataObject::$cache_get_one[$callerClass][$sum]->destroyed) {
 			$item = singleton($callerClass)->instance_get_one($filter, $orderby);
 			if($cache) {
 				DataObject::$cache_get_one[$callerClass][$sum] = $item;
