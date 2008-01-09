@@ -1495,8 +1495,6 @@ class DataObject extends Controller implements DataObjectInterface {
 	 * Return the first item matching the given query.
 	 * All calls to get_one() are cached.
 	 *
-	 * TODO Caching doesn't respect sorting.
-	 *
 	 * @param string $callerClass The class of objects to be returned
 	 * @param string $filter A filter to be inserted into the WHERE clause
 	 * @param boolean $cache Use caching
@@ -1505,16 +1503,17 @@ class DataObject extends Controller implements DataObjectInterface {
 	 * @return DataObject The first item matching the query
 	 */
 	public static function get_one($callerClass, $filter = "", $cache = true, $orderby = "") {
-		if(!$cache || !isset(DataObject::$cache_get_one[$callerClass][$filter]) || DataObject::$cache_get_one[$callerClass][$filter]->destroyed) {
+		$sum = md5("{$filter}_{$orderby}");
+		if(!$cache || !isset(DataObject::$cache_get_one[$callerClass][$sum]) || DataObject::$cache_get_one[$callerClass][$sum]->destroyed) {
 			$item = singleton($callerClass)->instance_get_one($filter, $orderby);
 			if($cache) {
-				DataObject::$cache_get_one[$callerClass][$filter] = $item;
-				if(!DataObject::$cache_get_one[$callerClass][$filter]) {
-					DataObject::$cache_get_one[$callerClass][$filter] = false;
+				DataObject::$cache_get_one[$callerClass][$sum] = $item;
+				if(!DataObject::$cache_get_one[$callerClass][$sum]) {
+					DataObject::$cache_get_one[$callerClass][$sum] = false;
 				}
 			}
 		}
-		return $cache ? DataObject::$cache_get_one[$callerClass][$filter] : $item;
+		return $cache ? DataObject::$cache_get_one[$callerClass][$sum] : $item;
 	}
 
 	/**
