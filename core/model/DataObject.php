@@ -734,14 +734,13 @@ class DataObject extends Controller implements DataObjectInterface {
 	 * @param string $sort A sort expression to be inserted into the ORDER BY clause. If omitted, the static field $default_sort on the component class will be used.
 	 * @param string $join A single join clause. This can be used for filtering, only 1 instance of each DataObject will be returned.
 	 * @param string $limit A limit expression to be inserted into the LIMIT clause
-	 * @param string $having A filter to be inserted into the HAVING clause
 	 *
 	 * @return ComponentSet The components of the one-to-many relationship.
 	 */
-	public function getComponents($componentName, $filter = "", $sort = "", $join = "", $limit = "", $having = "") {
+	public function getComponents($componentName, $filter = "", $sort = "", $join = "", $limit = "") {
 		$result = null;
 		
-		$sum = md5("{$filter}_{$sort}_{$join}_{$limit}_{$having}");
+		$sum = md5("{$filter}_{$sort}_{$join}_{$limit}");
 		if(isset($this->componentCache[$componentName . '_' . $sum]) && false != $this->componentCache[$componentName . '_' . $sum]) {
 			return $this->componentCache[$componentName . '_' . $sum];
 		}
@@ -760,7 +759,7 @@ class DataObject extends Controller implements DataObjectInterface {
 			$combinedFilter = "$joinField = '$id'";
 			if($filter) $combinedFilter .= " AND {$filter}";
 			
-			$result = $componentObj->instance_get($combinedFilter, $sort, $join, $limit, "ComponentSet", $having);
+			$result = $componentObj->instance_get($combinedFilter, $sort, $join, $limit, "ComponentSet");
 		}
 		
 		if(!$result) {
@@ -1432,12 +1431,11 @@ class DataObject extends Controller implements DataObjectInterface {
 	 * @param string $join A single join clause.  This can be used for filtering, only 1 instance of each DataObject will be returned.
 	 * @param string $limit A limit expression to be inserted into the LIMIT clause.
 	 * @param string $containerClass The container class to return the results in.
-	 * @param string $having A filter to be inserted into the HAVING clause.
 	 *
 	 * @return mixed The objects matching the filter, in the class specified by $containerClass
 	 */
-	public static function get($callerClass, $filter = "", $sort = "", $join = "", $limit = "", $containerClass = "DataObjectSet", $having = "") {
-		return singleton($callerClass)->instance_get($filter, $sort, $join, $limit, $containerClass, $having);
+	public static function get($callerClass, $filter = "", $sort = "", $join = "", $limit = "", $containerClass = "DataObjectSet") {
+		return singleton($callerClass)->instance_get($filter, $sort, $join, $limit, $containerClass);
 	}
 
 	/**
@@ -1449,12 +1447,11 @@ class DataObject extends Controller implements DataObjectInterface {
 	 * @param string $join A single join clause.  This can be used for filtering, only 1 instance of each DataObject will be returned.
 	 * @param string $limit A limit expression to be inserted into the LIMIT clause.
 	 * @param string $containerClass The container class to return the results in.
-	 * @param string $having A filter to be inserted into the HAVING clause.
 	 *
 	 * @return mixed The objects matching the filter, in the class specified by $containerClass
 	 */
-	public function instance_get($filter = "", $sort = "", $join = "", $limit="", $containerClass = "DataObjectSet", $having = "") {
-		$query = $this->extendedSQL($filter, $sort, $limit, $join, $having);
+	public function instance_get($filter = "", $sort = "", $join = "", $limit="", $containerClass = "DataObjectSet") {
+		$query = $this->extendedSQL($filter, $sort, $limit, $join);
 		$records = $query->execute();
 		
 		$ret = $this->buildDataObjectSet($records, $containerClass, $query, $this->class);
