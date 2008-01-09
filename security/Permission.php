@@ -7,6 +7,8 @@
 
 /**
  * Represents a permission assigned to a group.
+ * @package sapphire
+ * @subpackage security
  */
 class Permission extends DataObject {
 

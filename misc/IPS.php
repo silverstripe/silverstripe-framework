@@ -7,6 +7,8 @@
 
 /**
  * Ioncube Performance Suite management
+ * @package sapphire
+ * @subpackage misc
  */
 class IPS extends Controller {
 	function index() {

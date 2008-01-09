@@ -10,6 +10,7 @@
  * should inherit from this.
  *
  * In addition, it contains a number of static methods for querying the site tree.
+ * @package cms
  */
 class SiteTree extends DataObject {
 

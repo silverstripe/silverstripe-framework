@@ -1,8 +1,15 @@
 <?php
 
 /**
+ * @package forms
+ * @subpackage fields-relational
+ */
+
+/**
  * An extension to dropdown field, pre-configured to list languages.
  * The languages already used in the site will be on top.
+ * @package forms
+ * @subpackage fields-relational
  */
 class LanguageDropdownField extends GroupedDropdownField {
 	

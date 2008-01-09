@@ -1,8 +1,8 @@
 <?php
 
 /**
- * @package sapphire
- * @subpackage forms
+ * @package forms
+ * @subpackage fields-relational
  */
 
 /**
@@ -17,6 +17,8 @@
  * @param $sourceFilter string The filter field you wish to limit the objects by (eg. parentID)
  * @param $sourceSort string
  * @param $sourceJoin string
+ * @package forms
+ * @subpackage fields-relational
  */
 class TableListField extends FormField {
 	
@@ -1004,6 +1006,12 @@ JS
 	}
 }
 
+/**
+ * A single record in a TableListField.
+ * @package forms
+ * @subpackage fields-relational
+ * @see TableListField
+ */
 class TableListField_Item extends ViewableData {
 	protected $item, $parent;
 	

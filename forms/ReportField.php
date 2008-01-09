@@ -1,13 +1,15 @@
 <?php
 
 /**
- * @package sapphire
- * @subpackage forms
+ * @package forms
+ * @subpackage fields-reports
  */
 
 /**
  * Displays complex reports based on the list of tables and fields provided to
  * the object.
+ * @package forms
+ * @subpackage fields-reports
  */
 class ReportField extends FormField{
 
@@ -325,6 +327,8 @@ HTML;
 /**
  * Assisting class. Determines whether or not a column is hidden.
  * Not so helpful here, but we could overload it in other classes.
+ * @package forms
+ * @subpackage fields-reports
  */
 class ReportField_SimpleFilter extends Object {
 
@@ -352,6 +356,8 @@ class ReportField_SimpleFilter extends Object {
 /**
  * This class instantiates an instance of the report field and receives ajax requests
  * to the report field.
+ * @package forms
+ * @subpackage fields-reports
  */
 class ReportField_Controller extends Controller {
 

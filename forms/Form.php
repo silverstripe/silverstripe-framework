@@ -1,8 +1,8 @@
 <?php
 
 /**
- * @package sapphire
- * @subpackage forms
+ * @package forms
+ * @subpackage core
  */
 
 /**
@@ -19,6 +19,8 @@
  * resource-intensive.
  *
  * @example forms/Form.php See how you can create a form on your controller.
+ * @package forms
+ * @subpackage core
  */
 class Form extends ViewableData {
 	protected $fields, $actions, $controller, $name, $validator;

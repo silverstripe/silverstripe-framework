@@ -10,6 +10,8 @@
  * Plug-ins for additional functionality in your DataObjects
  *
  * DataObject decorators add extra functionality to your data objects.
+ * @package sapphire
+ * @subpackage model
  */
 abstract class DataObjectDecorator extends Extension {
 

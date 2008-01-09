@@ -27,7 +27,9 @@
  * This will (mostly) be used to create helper blocks - telling users what things will be parsed.
  * Again, @see BBCodeParser for an example of the syntax
  * 
- * TODO Define a proper syntax for (or refactor) usable_tags that can be extended as needed.
+ * @todo Define a proper syntax for (or refactor) usable_tags that can be extended as needed.
+ * @package sapphire
+ * @subpackage misc
  */
 abstract class TextParser extends Object {
 	protected $content;

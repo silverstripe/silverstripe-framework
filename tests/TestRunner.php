@@ -14,11 +14,15 @@ foreach($paths as $path) {
 
 if($hasPhpUnit) {
 
+/**
+ */
 require_once 'PHPUnit/Framework.php';
 require_once 'PHPUnit/TextUI/TestRunner.php';
 
 /**
  * Controller that executes PHPUnit tests
+ * @package sapphire
+ * @subpackage testing
  */
 class TestRunner extends Controller {
 	/**
@@ -64,6 +68,9 @@ class TestRunner extends Controller {
 
 } else {
 
+/**
+ * @ignore
+ */
 class TestRunner extends Controller {
 	function index() {
 		echo "Please install PHPUnit using pear.";

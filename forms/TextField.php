@@ -1,6 +1,14 @@
 <?php
+
+/**
+ * @package forms
+ * @subpackage fields-basic
+ */
+
 /**
  * Text input field.
+ * @package forms
+ * @subpackage fields-basic
  */
 class TextField extends FormField {
 	protected $maxLength;

@@ -8,6 +8,8 @@
 /**
  * Requirements tracker, for javascript and css.
  * @todo Document the requirements tracker, and discuss it with the others.
+ * @package sapphire
+ * @subpackage view
  */
 class Requirements {
 	private static $javascript = array();

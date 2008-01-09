@@ -1,6 +1,14 @@
 <?php
+
+/**
+ * @package forms
+ * @subpackage fields-dataless
+ */
+
 /**
  * It's a LiteralField ... with a Label
+ * @package forms
+ * @subpackage fields-dataless
  */
 class LabelledLiteralField extends LiteralField {
 	

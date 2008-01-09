@@ -1,6 +1,14 @@
 <?php
+
 /**
- * Moved to seperate file for caching reasons 
+ * @package forms
+ * @subpackage fields-structural
+ */
+
+/**
+ * Implements a single tab in a {@link TabSet}.
+ * @package forms
+ * @subpackage fields-structural
  */
 class Tab extends CompositeField {
 	protected $tabSet;

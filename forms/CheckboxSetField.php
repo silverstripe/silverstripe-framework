@@ -1,9 +1,17 @@
 <?php
+
+/**
+ * @package forms
+ * @subpackage fields-basic
+ */
+
 /**
  * Displays a set of checkboxes as a logical group.
  *
  * ASSUMPTION -> IF you pass your source as an array, you pass values as an array too.
  * 				Likewise objects are handled the same.
+ * @package forms
+ * @subpackage fields-basic
  */
 class CheckboxSetField extends OptionsetField {
 	

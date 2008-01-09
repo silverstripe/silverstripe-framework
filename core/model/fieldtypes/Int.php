@@ -7,8 +7,8 @@
 
 /**
  * Represents an integer field.
- *
- * @param $defaultVal int
+ * @package sapphire
+ * @subpackage model
  */
 class Int extends DBField {
 

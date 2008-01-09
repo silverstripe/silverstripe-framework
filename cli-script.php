@@ -1,8 +1,17 @@
 #!/usr/bin/php5
 <?php
+
+
 /**
- * Main file that handles every page request.
+ * File similar to main.php designed for command-line scripts
+ * 
+ * This file lets you execute Sapphire requests from the command-line.  The URL is passed as the first argument to the scripts.
+ * 
+ * @package sapphire
+ * @subpackage core
  */
+
+
 $_SERVER['HTTP_HOST'] = $_SERVER['argv'][2];
 $_SERVER['SCRIPT_FILENAME'] = __FILE__;
 chdir(dirname($_SERVER['SCRIPT_FILENAME']));

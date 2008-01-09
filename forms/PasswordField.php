@@ -1,7 +1,14 @@
 <?php
 
 /**
+ * @package forms
+ * @subpackage fields-formattedinput
+ */
+
+/**
  * Password input field.
+ * @package forms
+ * @subpackage fields-formattedinput
  */
 class PasswordField extends FormField {
 

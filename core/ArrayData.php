@@ -15,6 +15,8 @@
  *    "ClassName" => "Page",
  *    "AddAction" => "Add a new Page page",
  * ));
+ * @package sapphire
+ * @subpackage view
  */
 class ArrayData extends ViewableData {
 

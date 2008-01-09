@@ -7,6 +7,8 @@
 
 /**
  * More advanced search form
+ * @package sapphire
+ * @subpackage search
  */
 class AdvancedSearchForm extends SearchForm {
 	

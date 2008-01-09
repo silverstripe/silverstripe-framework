@@ -9,6 +9,8 @@
  * RSSFeed class
  *
  * This class is used to create an RSS feed.
+ * @package sapphire
+ * @subpackage integration
  */
 class RSSFeed extends ViewableData {
 
@@ -191,6 +193,8 @@ class RSSFeed extends ViewableData {
  * This class is used for entries of an RSS feed.
  *
  * @see RSSFeed
+ * @package sapphire
+ * @subpackage integration
  */
 class RSSFeed_Entry extends ViewableData {
 

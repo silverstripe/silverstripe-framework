@@ -1,7 +1,14 @@
 <?php
 
 /**
+ * @package forms
+ * @subpackage fields-dataless
+ */
+
+/**
  * Hidden field.
+ * @package forms
+ * @subpackage fields-dataless
  */
 class HiddenField extends FormField {
 	/**

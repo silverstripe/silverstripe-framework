@@ -1,6 +1,11 @@
 <?php
 
 /**
+ * @package sapphire
+ * @subpackage core
+ */
+
+/**
  * Name of the manifest file
  */
 define("MANIFEST_FILE", TEMP_FOLDER . "/manifest" . str_replace(array("/",":", "\\"),"_", $_SERVER['SCRIPT_FILENAME']));
@@ -10,14 +15,18 @@ define("MANIFEST_FILE", TEMP_FOLDER . "/manifest" . str_replace(array("/",":", "
  * 
  * The manifest file is a PHP include that contains global variables that
  * represent the collected contents of the application:
- *   - all classes
- *   - all templates
+ *   - all classes ({@link __autoload()})
+ *   - all templates ({@link SSViewer})
  *   - all _config.php files
  *
  * Traversing the filesystem to collect this information on everypage.
  * This information is cached so that it need not be regenerated on every
  * pageview.
+ * 
+ * {@link ManifestBuilder::compileManifest()} is called by {@link main.php} 
+ * whenever {@link ManifestBuilder::staleManifest()} returns true.
  *
+ * @see main.php, __autoload(), SSViewer, Requirements::themedCSS()
  * @package sapphire
  * @subpackage core
  */

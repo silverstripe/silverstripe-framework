@@ -7,6 +7,8 @@
 
 /**
  * Represents a date field.
+ * @package sapphire
+ * @subpackage model
  */
 class Date extends DBField {
 	

@@ -1,7 +1,14 @@
 <?php
+
 /**
- * This class allows you to specify special required fields to be executed as 
- * part of form validation
+ * @package forms
+ * @subpackage validators
+ */
+
+/**
+ * Specify special required fields to be executed as part of form validation
+ * @package forms
+ * @subpackage validators
  */
 class CustomRequiredFields extends RequiredFields{
 	protected $required;

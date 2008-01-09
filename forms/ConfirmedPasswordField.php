@@ -1,8 +1,16 @@
 <?php
+
+/**
+ * @package forms
+ * @subpackage fields-formattedinput
+ */
+
 /**
  * Shows two password-fields, and checks for matching passwords.
  * Optionally hides the fields by default and shows
  * a link to toggle their visibility.
+ * @package forms
+ * @subpackage fields-formattedinput
  */
 class ConfirmedPasswordField extends FormField {
 	

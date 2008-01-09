@@ -17,6 +17,8 @@
  * 
  * The instance object is basically just a way of manipulating a set of nested maps, and isn't specific to session data.
  * This class is currently really basic and could do with a more well-thought-out implementation
+ * @package sapphire
+ * @subpackage control
  */
 class Session {
 	public static function set($name, $val) {

@@ -1,7 +1,15 @@
 <?php
+
+/**
+ * @package forms
+ * @subpackage fields-datetime
+ */
+
 /**
  * Date field.
  * Default Value represented in the format
+ * @package forms
+ * @subpackage fields-datetime
  */
 class DateField extends TextField {
 	

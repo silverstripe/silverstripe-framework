@@ -7,8 +7,8 @@
 
 /**
  * Represents a boolean field.
- * 
- * @param $defaultVal int
+ * @package sapphire
+ * @subpackage model
  */
 class Boolean extends DBField {
 	

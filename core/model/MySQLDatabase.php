@@ -7,6 +7,8 @@
 
 /**
  * MySQL connector class.
+ * @package sapphire
+ * @subpackage model
  */
 class MySQLDatabase extends Database {
 	/**

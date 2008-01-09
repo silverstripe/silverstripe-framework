@@ -1,8 +1,15 @@
 <?php
-	/**
-	 * FieldEditor
-	 * Allows CMS user to create forms dynamically
-	 */
+
+/**
+ * @package forms
+ * @subpackage fieldeditor
+ */
+
+/**
+ * Allows CMS user to create forms dynamically.
+ * @package forms
+ * @subpackage fieldeditor
+ */
 class FieldEditor extends FormField {
 	
 	protected $readonly = false;

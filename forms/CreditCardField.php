@@ -1,9 +1,15 @@
 <?php
 
 /**
- * CreditCard field, contains validation and formspec for creditcard fields.
+ * @package forms
+ * @subpackage fields-formattedinput
  */
 
+/**
+ * CreditCard field, contains validation and formspec for creditcard fields.
+ * @package forms
+ * @subpackage fields-formattedinput
+ */
 class CreditCardField extends TextField {
 	
 	function Field() {

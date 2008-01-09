@@ -7,6 +7,8 @@
 
 /**
  * Library of static methods for manipulating arrays.
+ * @package sapphire
+ * @subpackage misc
  */
 class ArrayLib extends Object {
 	static function invert($arr) {

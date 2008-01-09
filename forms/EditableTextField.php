@@ -1,13 +1,15 @@
 <?php
 
 /**
- * @package sapphire
- * @subpackage forms
+ * @package forms
+ * @subpackage fieldeditor
  */
 
 /**
  * EditableTextField
  * This control represents a user-defined field in a user defined form
+ * @package forms
+ * @subpackage fieldeditor
  */
 class EditableTextField extends EditableFormField {
 	

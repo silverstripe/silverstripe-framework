@@ -7,6 +7,8 @@
 
 /**
  * Represents a date-time field.
+ * @package sapphire
+ * @subpackage model
  */
 class SSDatetime extends Date {
 	function setValue($value) {

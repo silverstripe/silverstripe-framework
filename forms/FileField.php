@@ -1,6 +1,14 @@
 <?php
+
+/**
+ * @package forms
+ * @subpackage fields-files
+ */
+
 /**
  * Represents a file type which can be added to a form.
+ * @package forms
+ * @subpackage fields-files
  */
 class FileField extends FormField {
 	public function Field() {

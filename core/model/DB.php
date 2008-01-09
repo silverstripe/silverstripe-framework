@@ -8,6 +8,8 @@
 /**
  * Global database interface, complete with static methods.
  * Use this class for interacting with the database.
+ * @package sapphire
+ * @subpackage model
  */
 class DB {
 	/**

@@ -1,4 +1,10 @@
 <?php
+
+/**
+ * @package forms
+ * @subpackage core
+ */
+
 /**
  * This class collects all output that needs to be returned after an Form-Request to the client. It automatically determines
  * if it needs to send back javascript after an Ajax-Request or just redirect to another page (on a normal request).
@@ -19,11 +25,11 @@
  * - Please DON'T escape literal parameters which are passed to FormResponse, they are escaped automatically.
  * - Some functions assume a {LeftAndMain}-based environment (e.g. load_form())
  * 
- * TODO Force a specific execution order ($forceTop, $forceBottom)
+ * TODO Force a specific execution order ($forceTop, $forceBottom)Ω
  * TODO Extension to return different formats, e.g. JSON or XML
  *
- * @package sapphire
- * @subpackage forms
+ * @package forms
+ * @subpackage core
  */
 class FormResponse {
 	

@@ -1,7 +1,14 @@
 <?php
 
 /**
+ * @package forms
+ * @subpackage fields-dataless
+ */
+
+/**
  * A {@link LabelField} that lets you give it a name; makes it easier to delete ;)
+ * @package forms
+ * @subpackage fields-dataless
  */
 class NamedLabelField extends LabelField {
 	protected $className;

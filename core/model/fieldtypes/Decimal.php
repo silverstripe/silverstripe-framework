@@ -7,6 +7,8 @@
 
 /**
  * Represents a Decimal field.
+ * @package sapphire
+ * @subpackage model
  */
 class Decimal extends DBField {
 	protected $wholeSize, $decimalSize;

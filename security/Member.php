@@ -8,6 +8,8 @@
 
 /**
  * The member class which represents the users of the system
+ * @package sapphire
+ * @subpackage security
  */
 class Member extends DataObject {
 

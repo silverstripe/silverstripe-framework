@@ -1,9 +1,17 @@
 <?php
 
 /**
+ * @package forms
+ * @subpackage fields-formattedinput
+ */
+
+/**
  * A WYSIWYG editor field, powered by tinymce.
  * tinymce editor fields are created from <textarea> tags which are then converted with javascript.
  * The {@link Requirements} system is used to ensure that all necessary javascript is included.
+ * @package forms
+ * @subpackage fields-formattedinput
+ * @deprecated It's not clear that this field works properly.  Just use {@link HtmlEditorField}.
  */
 class HtmlOneLineField extends TextField {
 	/**

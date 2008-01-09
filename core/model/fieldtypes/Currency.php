@@ -8,6 +8,8 @@
 /**
  * Represents a decimal field containing a currency amount.
  * Currency the currency class only supports single currencies.
+ * @package sapphire
+ * @subpackage model
  */
 class Currency extends Decimal {
 	

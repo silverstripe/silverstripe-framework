@@ -1,6 +1,15 @@
 <?php
+
 /**
- * Clears all fields on a form
+ * @package forms
+ * @subpackage actions
+ */
+
+/**
+ * Action that clears all fields on a form.
+ * Inserts an input tag with type=reset.
+ * @package forms
+ * @subpackage actions
  */
 class ResetFormAction extends FormAction {
 	

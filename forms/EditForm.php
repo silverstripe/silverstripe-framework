@@ -1,8 +1,17 @@
 <?php
+
+/**
+ * @package forms
+ * @subpackage core
+ */
+
 /**
  * Creates an edit form on a site page.
  * Extends the basic form class to automatically look up, and save to, the data-object referred to
  * by controller->data().
+ * @package forms
+ * @subpackage core
+ * @deprecated I'm not sure if this is in production use?  Is this a legacy of a bygone era?
  */
 class EditForm extends Form {
 	function __construct($controller, $name, FieldSet $fields) {

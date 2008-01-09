@@ -1,10 +1,15 @@
 <?php
 
-require_once("forms/Form.php");
+/**
+ * @package forms
+ * @subpackage fields-structural
+ */
 
 /**
  * DataObjectSet designed for form fields.
  * It extends the DataObjectSet with the ability to get a sequential set of fields.
+ * @package forms
+ * @subpackage fields-structural
  */
 class FieldSet extends DataObjectSet {
 	protected $sequentialSet;

@@ -1,6 +1,14 @@
 <?php
+
+/**
+ * @package forms
+ * @subpackage fields-basic
+ */
+
 /**
  * Single checkbox field.
+ * @package forms
+ * @subpackage fields-basic
  */
 class CheckboxField extends FormField {
 	/**

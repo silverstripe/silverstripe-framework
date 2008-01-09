@@ -7,6 +7,8 @@
 
 /**
  * Standard basic search form
+ * @package sapphire
+ * @subpackage search
  */
 class SearchForm extends Form {
 	

@@ -1,15 +1,16 @@
 <?php
 
 /**
- * @package sapphire
- * @subpackage forms
+ * @package forms
+ * @subpackage fieldeditor
  */
 
-	/**
+/**
  * EditableDropdown
  * Represents a set of selectable radio buttons
+ * @package forms
+ * @subpackage fieldeditor
  */
-
 class EditableCheckboxGroupField extends EditableFormField {
 	
 	protected $readonly;

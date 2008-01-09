@@ -15,6 +15,8 @@
 
 /**
  * Execution time profiler.
+ * @package sapphire
+ * @subpackage misc
  */
 class Profiler {
     var $description;

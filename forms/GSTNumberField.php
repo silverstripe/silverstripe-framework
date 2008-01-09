@@ -1,6 +1,14 @@
 <?php
+
+/**
+ * @package forms
+ * @subpackage fields-formattedinput
+ */
+
 /**
  * Field for displaying NZ GST numbers (usually 8-9 digits in the format ##-###-### or ##-###-####).
+ * @package forms
+ * @subpackage fields-formattedinput
  * @see http://www.ird.govt.nz/payroll-employers/software-developers/software-specs/
  */
 class GSTNumberField extends TextField {

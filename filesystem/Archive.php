@@ -8,6 +8,8 @@
 /**
  * Class for handling archives.
  * To implement a specific archive system, create a subclass of this abstract class, and amend the implementation of Archive::open().
+ * @package sapphire
+ * @subpackage filesystem
  */
 abstract class Archive extends Object {
 	/**

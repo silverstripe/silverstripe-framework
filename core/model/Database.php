@@ -8,6 +8,8 @@
 /**
  * Abstract database connectivity class.
  * Sub-classes of this implement the actual database connection libraries
+ * @package sapphire
+ * @subpackage model
  */
 abstract class Database extends Object {
 	/**

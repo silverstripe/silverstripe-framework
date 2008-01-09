@@ -1,7 +1,15 @@
 <?php
+
+/**
+ * @package forms
+ * @subpackage fields-formattedinput
+ */
+
 /**
  * A Single Numeric field extending a typical 
  * TextField but with validation.
+ * @package forms
+ * @subpackage fields-formattedinput
  */
 class NumericField extends TextField{
 	

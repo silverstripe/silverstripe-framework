@@ -7,6 +7,8 @@
 
 /**
  * Synchroniser controller - used to let two servers communicate
+ * @package sapphire
+ * @subpackage synchronisation
  */
 class Synchronise extends Controller {
 	

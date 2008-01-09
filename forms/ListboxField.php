@@ -1,7 +1,14 @@
 <?php
 
 /**
- * Dropdown field, created from a <select> tag.
+ * @package forms
+ * @subpackage fields-basic
+ */
+
+/**
+ * Multi-line listbox field, created from a <select> tag.
+ * @package forms
+ * @subpackage fields-basic
  */
 class ListboxField extends DropdownField {
 	protected $source;

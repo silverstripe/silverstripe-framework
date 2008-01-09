@@ -1,8 +1,8 @@
 <?php
 
 /**
- * @package sapphire
- * @subpackage forms
+ * @package forms
+ * @subpackage validators
  */
 
 /**
@@ -14,8 +14,9 @@
  * FormResponse if the request was made by ajax.
  * 
  * @example forms/Form.php See how you can create a form on your controller.
- */
- 
+ * @package forms
+ * @subpackage validators
+ */ 
 abstract class Validator extends Object {
 	protected $form;
 	protected $errors;

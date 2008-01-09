@@ -7,6 +7,8 @@
 
 /**
  * Soap server class
+ * @package sapphire
+ * @subpackage integration
  */
 class SapphireSoapServer extends Controller {
 	static $methods = array();

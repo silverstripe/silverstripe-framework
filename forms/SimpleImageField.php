@@ -1,9 +1,15 @@
 <?php
 
 /**
+ * @package forms
+ * @subpackage fields-files
+ */
+
+/**
  * SimpleImageField provides an easy way of uploading images to Image has_one relationships.
  * Unlike ImageField, it doesn't use an iframe.
- *
+ * @package forms
+ * @subpackage fields-files
  */
 class SimpleImageField extends FileField {
   function saveInto(DataObject $record) {

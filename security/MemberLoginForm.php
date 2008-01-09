@@ -7,6 +7,8 @@
 
 /**
  * Log-in form for the "member" authentication method
+ * @package sapphire
+ * @subpackage security
  */
 class MemberLoginForm extends LoginForm {
 

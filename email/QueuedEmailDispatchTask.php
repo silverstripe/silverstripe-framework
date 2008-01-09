@@ -7,6 +7,8 @@
 
 /**
  * Daily task to send queued email.
+ * @package sapphire
+ * @subpackage email
  */
 class QueuedEmailDispatchTask extends DailyTask {
 	

@@ -8,6 +8,8 @@
 /**
  * Object representing a SQL query.
  * The various parts of the SQL query can be manipulated individually.
+ * @package sapphire
+ * @subpackage model
  */
 class SQLQuery extends Object {
 	/**

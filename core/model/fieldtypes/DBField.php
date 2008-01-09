@@ -9,6 +9,8 @@
  * Single field in the database.
  * Every field from the database is represented as a sub-class of DBField.  In addition to supporting
  * the creation of the field in the database,
+ * @package sapphire
+ * @subpackage model
  */
 abstract class DBField extends ViewableData {
 	

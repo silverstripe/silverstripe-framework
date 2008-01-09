@@ -28,7 +28,8 @@
  * e.g. when overriding the get_one()-calls (which are already extended by {Translatable}).
  * 
  * @author Bernat Foj Capell <bernat@silverstripe.com>
- * 
+ * @package sapphire
+ * @subpackage misc
  */
 class Translatable extends DataObjectDecorator {
 	
@@ -148,7 +149,7 @@ class Translatable extends DataObjectDecorator {
 	/**
 	 * Set default language.
 	 * 
-	 * @paran $lang String
+	 * @param $lang String
 	 */
 	static function set_default_lang($lang) {
 		self::$default_lang = $lang;

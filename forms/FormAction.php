@@ -1,8 +1,15 @@
 <?php
 
 /**
+ * @package forms
+ * @subpackage actions
+ */
+
+/**
  * Single action button.
  * The action buttons are <input type="submit"> tags.
+ * @package forms
+ * @subpackage actions
  */
 class FormAction extends FormField {
 	protected $extraData;

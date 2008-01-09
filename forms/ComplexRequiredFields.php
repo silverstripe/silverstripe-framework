@@ -1,9 +1,16 @@
 <?php 
 
 /**
- * Bulk of the form system
+ * @package forms
+ * @subpackage validators
  */
 
+/**
+ * Validator that makes it easy to do required-fields while still allowing custom behaviour.
+ * @package forms
+ * @subpackage validators
+ * @deprecated How is this better than / different from {@link CustomRequiredFields}?
+ */
 class ComplexRequiredFields extends RequiredFields{
 	protected $required;
 

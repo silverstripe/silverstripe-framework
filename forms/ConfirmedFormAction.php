@@ -1,8 +1,15 @@
 <?php
 
 /**
+ * @package forms
+ * @subpackage actions
+ */
+
+/**
  * Action button with confirmation text.
  * These button are useful for things like delete buttons.
+ * @package forms
+ * @subpackage actions
  */
 class ConfirmedFormAction extends FormAction {
 	protected $confirmation;

@@ -6,6 +6,7 @@
 
 /**
  * ErrorPage holds the content for the page of an error response.
+ * @package cms
  */
 class ErrorPage extends Page {
 

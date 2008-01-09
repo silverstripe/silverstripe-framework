@@ -8,6 +8,8 @@
 /**
  * The Versioned decorator allows your DataObjects to have several versions, allowing
  * you to rollback changes and view history. An example of this is the pages used in the CMS.
+ * @package sapphire
+ * @subpackage model
  */
 class Versioned extends DataObjectDecorator {
 	/**
@@ -692,6 +694,9 @@ class Versioned extends DataObjectDecorator {
 
 /**
  * Represents a single version of a record.
+ * @package sapphire
+ * @subpackage model
+ * @see Versioned
  */
 class Versioned_Version extends ViewableData {
 	protected $record;

@@ -1,8 +1,15 @@
 <?php
+
+/**
+ * @package forms
+ * @subpackage fields-relational
+ */
+
 /**
  * This formfield represents many-many joins using a tree selector shown in a dropdown styled element
  * which can be added to any form usually in the CMS. 
- *  
+ * @package forms
+ * @subpackage fields-relational
  */
 class TreeMultiselectField extends TreeDropdownField {
 	function __construct($name, $title, $sourceObject = "Group", $keyField = "ID", $labelField = "Title") {

@@ -1,5 +1,15 @@
 <?php
 
+/**
+ * @package forms
+ * @subpackage fields-relational
+ */
+
+/**
+ * Dropdown-like field that gives you a tree of items, using ajax.
+ * @package forms
+ * @subpackage fields-relational
+ */
 class TreeDropdownField extends FormField {
 	protected $sourceObject, $keyField, $labelField, $filterFunc;
 	protected $treeBaseID = 0;

@@ -1,7 +1,14 @@
 <?php 
+
 /**
- * A field that will upload files to a page
- * for use within the CMS.
+ * @package forms
+ * @subpackage fields-files
+ */
+
+/**
+ * A field that will upload files to a page for use within the CMS.
+ * @package forms
+ * @subpackage fields-files
  */
 class FileIFrameField extends FileField {
 	

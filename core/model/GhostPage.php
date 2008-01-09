@@ -7,6 +7,7 @@
 /**
  * Ghost pages are placeholder pages that are used to facilitate the apparent support for
  * multiple parents.
+ * @package cms
  */
 class GhostPage extends SiteTree implements HiddenClass {
 	static $has_one = array(

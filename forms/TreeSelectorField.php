@@ -1,5 +1,15 @@
 <?php
 
+/**
+ * @package forms
+ * @subpackage fields-relational
+ */
+
+/**
+ * @deprecated Use {@link TreeDropdownField} or {@link TreeMultiselectField}
+ * @package forms
+ * @subpackage fields-relational
+ */
 class TreeSelectorField extends FormField {
 	protected $sourceObject;
 	

@@ -7,6 +7,8 @@
 
 /**
  * Implements a basic security model
+ * @package sapphire
+ * @subpackage security
  */
 class Security extends Controller {
 

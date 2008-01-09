@@ -1,7 +1,14 @@
 <?php
 
 /**
+ * @package forms
+ * @subpackage fields-datetime
+ */
+
+/**
  * This field creates a date field that shows a calendar on pop-up
+ * @package forms
+ * @subpackage fields-datetime
  */
 class CalendarDateField extends DateField {
 	protected $futureOnly;

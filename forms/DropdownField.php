@@ -1,7 +1,14 @@
 <?php
 
 /**
+ * @package forms
+ * @subpackage fields-basic
+ */
+
+/**
  * Dropdown field, created from a <select> tag.
+ * @package forms
+ * @subpackage fields-basic
  */
 class DropdownField extends FormField {
 	protected $source;

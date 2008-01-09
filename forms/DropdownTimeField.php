@@ -1,5 +1,15 @@
 <?php
 
+/**
+ * @package forms
+ * @subpackage fields-datetime
+ */
+
+/**
+ * Field for entering time that provides clock for selecting time.
+ * @package forms
+ * @subpackage fields-datetime
+ */
 class DropdownTimeField extends TimeField {
 	
 	function __construct( $name, $title = null, $value = "", $timeformat = 'H:i a' ){

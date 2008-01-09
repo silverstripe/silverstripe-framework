@@ -1,10 +1,15 @@
 <?php
 
 /**
- * @package sapphire
- * @subpackage forms
+ * @package forms
+ * @subpackage fields-relational
  */
 
+/**
+ * ComplexTableField designed to edit a has_many join.
+ * @package forms
+ * @subpackage fields-relational
+ */
 class HasManyComplexTableField extends ComplexTableField {
 		
 	public $joinField;

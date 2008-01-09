@@ -1,13 +1,15 @@
 <?php
 
 /**
- * @package sapphire
- * @subpackage forms
+ * @package forms
+ * @subpackage fieldeditor
  */
 
 /**
  * EditableDateField
  * Allows a user to add a date field to the Field Editor
+ * @package forms
+ * @subpackage fieldeditor
  */
 class EditableDateField extends EditableFormField {
 	static $singular_name = 'Date field';

@@ -8,6 +8,8 @@
 /**
  * Base object that all others should inherit from.
  * This object provides a number of helper methods that patch over PHP's deficiencies.
+ * @package sapphire
+ * @subpackage core
  */
 class Object {
 	/**

@@ -7,6 +7,8 @@
 
 /**
  * Represents a long text field.
+ * @package sapphire
+ * @subpackage model
  */
 class Text extends DBField {
 	static $casting = array(

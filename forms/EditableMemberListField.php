@@ -1,12 +1,14 @@
 <?php
 
 /**
- * @package sapphire
- * @subpackage forms
+ * @package forms
+ * @subpackage fieldeditor
  */
 
 /**
  * Creates an editable field that displays members in a given group
+ * @package forms
+ * @subpackage fieldeditor
  */
 class EditableMemberListField extends EditableFormField {
 	

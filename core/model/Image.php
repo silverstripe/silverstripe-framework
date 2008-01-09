@@ -7,6 +7,8 @@
 
 /**
  * Represents an image attached to a page.
+ * @package sapphire
+ * @subpackage filesystem
  */
 class Image extends File {
 	/**

@@ -7,6 +7,8 @@
 
 /**
  * PDO (general database) connector class.
+ * @package sapphire
+ * @subpackage model
  */
 class PDODatabase extends Database {
 	/**

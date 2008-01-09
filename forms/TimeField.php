@@ -1,12 +1,16 @@
 <?php
+
+/**
+ * @package forms
+ * @subpackage fields-datetime
+ */
+
 /**
  * Date field.
  * Default Value represented in the format passed as constructor.
  * 
- * @param name - The name of the field
- * @param title - The Title of the field
- * @param value - the value for the field
- * @param format - The Time format in date php format e.g. G:ia
+ * @package forms
+ * @subpackage fields-datetime
  */
 class TimeField extends TextField {
 	// Stores our time format;
@@ -15,6 +19,10 @@ class TimeField extends TextField {
 	/**
 	 * Constructor saves the format difference. Timefields shouldn't 
 	 * have a problem with length as times can only be represented in on way.
+	 * @param $name string The name of the field
+	 * @param $title string The Title of the field
+	 * @param $value string the value for the field
+	 * @param $timeformat string The Time format in date php format e.g. G:ia
 	 */
 	function __construct($name, $title = null, $value = "",$timeformat = "g:ia"){
 		parent::__construct($name,$title,$value);

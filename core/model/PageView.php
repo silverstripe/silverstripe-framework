@@ -5,6 +5,7 @@
 
 /**
  * Data object that represents any page view in the system.
+ * @package cms
  */
 class PageView extends DataObject {
 

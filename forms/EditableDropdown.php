@@ -1,15 +1,16 @@
 <?php
 
 /**
- * @package sapphire
- * @subpackage forms
+ * @package forms
+ * @subpackage fieldeditor
  */
 
-	/**
-	 * EditableDropdown
-	 * Represents a modifiable dropdown box on a form
-	 */
-
+/**
+ * EditableDropdown
+ * Represents a modifiable dropdown box on a form
+ * @package forms
+ * @subpackage fieldeditor
+ */
 class EditableDropdown extends EditableFormField {
 	
 	static $has_many = array(

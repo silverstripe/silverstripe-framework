@@ -1,6 +1,11 @@
 <?php
 
 /**
+ * @package sapphire
+ * @subpackage misc
+ */
+
+/**
  * Base-class for storage and retrieval of translated entities.
  * Most common use is translation of the CMS-interface through the _t()-method
  * (in controller/model) and the <% _t() %> template variable.
@@ -24,7 +29,6 @@
  * @package sapphire
  * @subpackage misc
  */
-
 class i18n extends Controller {
 	
 	/**

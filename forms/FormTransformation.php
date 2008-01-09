@@ -1,8 +1,8 @@
 <?php
 
 /**
- * @package sapphire
- * @subpackage forms
+ * @package forms
+ * @subpackage transformations
  */
 
 /**
@@ -16,6 +16,8 @@
  *   - Define transformFieldType($field) methods on your subclass of FormTransformation.
  * 
  * To actually perform the transformation, call $form->transform(new MyTransformation());
+ * @package forms
+ * @subpackage transformations
  */
 class FormTransformation extends Object {
 	function transform(FormField $field) {

@@ -15,6 +15,8 @@
  * 
  * ViewableData cover page controls, controllers, and data objects.  It's the basic unit of
  * data exchange.  More specifically, it's anything that can be put into a view.
+ * @package sapphire
+ * @subpackage view
  */
 class ViewableData extends Object implements Iterator {
 	/**
@@ -885,6 +887,8 @@ class ViewableData extends Object implements Iterator {
 /**
  * A ViewableData object that has been customised with extra data. Use
  * ViewableData->customise() to create.
+ * @package sapphire
+ * @subpackage view
  */
 class ViewableData_Customised extends ViewableData {
 	public function castingHelperPair($field) {
@@ -991,6 +995,8 @@ class ViewableData_Customised extends ViewableData {
 /**
  * A ViewableData object that has been customised with an extra object. Use
  * ViewableData->customise() to create.
+ * @package sapphire
+ * @subpackage view
  */
 class ViewableData_ObjectCustomised extends ViewableData {
 	function __construct($obj, $extraObj) {
@@ -1060,6 +1066,8 @@ class ViewableData_ObjectCustomised extends ViewableData {
 
 /**
  * Debugger helper.
+ * @package sapphire
+ * @subpackage view
  * @todo Finish this off
  */
 class ViewableData_Debugger extends ViewableData {

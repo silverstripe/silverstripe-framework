@@ -1,8 +1,15 @@
 <?php
 
 /**
+ * @package forms
+ * @subpackage fields-basic
+ */
+
+/**
  * Set of radio buttons designed to emulate a dropdown.
  * It even uses the same constructor as a dropdown field.
+ * @package forms
+ * @subpackage fields-basic
  */
 class OptionsetField extends DropdownField {
 	
@@ -19,7 +26,7 @@ class OptionsetField extends DropdownField {
 	}
 
 	/**
-	 * Create a <ul> containing sets of radio buttons and labels.  The IDs are set to
+	 * Create a UL tag containing sets of radio buttons and labels.  The IDs are set to
 	 * FieldID_ItemKey, where ItemKey is the key with all non-alphanumerics removed.
 	 */
 	function Field() {

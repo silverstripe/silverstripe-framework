@@ -5,23 +5,19 @@
  * @subpackage misc
  */
 
-/* Geoip.php 
 
- Known to work with the following versions of GeoIP:
- - GEO-106FREE 20030401 Build 1 Copyright (c) 2003 MaxMind.com All Rights Reserved
- - GEO-106FREE 20030803 Build 1 Copyright (c) 2003 MaxMind LLC All Rights Reserved
-
- Routines for DNS to country resolution;
-
+/**
+ * Routines for DNS to country resolution
+ * 
+ *  - convert address (either ip or domainname) to country.
+ *  - returns false if IP address not found / not known;
+ *  - otherwise an array 
+ *  - set $codeOnly to true if you just want the country code
+ *  - give a default for IP
+ *
+ * @package sapphire
+ * @subpackage misc
  */
-
-// convert address (either ip or domainname) to country.
-
-// returns false if IP address not found / not known;
-// otherwise an array 
-// set $codeOnly to true if you just want the country code
-// give a default for IP/
-
 class Geoip extends Object {
 	
 	public static $default_country_code = false;

@@ -1,12 +1,14 @@
 <?php
 
 /**
- * @package sapphire
- * @subpackage forms
+ * @package forms
+ * @subpackage fieldeditor
  */
 
 /**
  * Allows an editor to insert a generic heading into a field
+ * @package forms
+ * @subpackage fieldeditor
  */
 class EditableFormHeading extends EditableFormField {
 	static $singular_name = 'Form heading';

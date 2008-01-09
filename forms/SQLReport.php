@@ -1,5 +1,15 @@
 <?php
 
+/**
+ * @package forms
+ * @subpackage fields-reports
+ */
+
+/**
+ * @package forms
+ * @subpackage fields-reports
+ * @deprecated This should be considered alpha code; reporting needs a clean-up.
+ */
 class SQLReport extends DataReport {
 	protected $sql;
 	

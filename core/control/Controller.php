@@ -12,6 +12,8 @@
  * the appropriate action - either by calling the action method, or displaying the action's template.
  *
  * See {@link getTemplate()} for information on how the template is chosen.
+ * @package sapphire
+ * @subpackage control
  */
 class Controller extends ViewableData {
 	
@@ -44,7 +46,7 @@ class Controller extends ViewableData {
 	}
 	
 	/**
-	 * @return
+	 * @return array The parameters extracted from the URL by the {@link Director}.
 	 */
 	function getURLParams() {
 		return $this->urlParams;
@@ -59,11 +61,32 @@ class Controller extends ViewableData {
 	}
 
 	/**
+	 * Executes this controller, and return an {@link HTTPResponse} object with the result.
+	 * 
+	 * This method first does a few set-up activities:
+	 *  - Push this controller ont to the controller stack - see {@link Controller::curr()} for information about this.
+	 *  - Call {@link init()}
+	 * 
+	 * Then it looks for the action method.  The action is taken from $this->urlParams['Action'] - for this reason, it's important
+	 * to have $Action included in your Director rule
+	 * 
+	 * If $requestParams['executeForm'] is set, then the Controller assumes that we're processing a form.  This is usually
+	 * set by adding ?executeForm=XXX to the form's action URL.  Form processing differs in the following ways:
+	 *  - The action name will be the name of the button clicked.  If no button-click can be detected, the first button in the
+	 *    list will be assumed.
+	 *  - If the given action method doesn't exist on the controller, Controller will look for that method on the Form object.
+	 *    this lets developers package both a form and its action handlers in a single subclass of Form.
+	 * 
+	 * NOTE: You should rarely need to overload run() - this kind of change is only really appropriate for things like nested
+	 * controllers - {@link ModelAsController} and {@link RootURLController} are two examples here.  If you want to make more
+	 * orthodox functionality, it's better to overload {@link init()} or {@link index()}.
+	 * 
+	 * 
+	 * 
 	 * Execute the appropriate action handler.  If none is given, use defaultAction to display
 	 * a template.  The default action will be appropriate in most cases where displaying data
 	 * is the core goal; the Viewer can call methods on the controller to get the data it needs.
 	 * 
-	 * @param array $urlParams named parameters extracted from the URL, including Action.
 	 * @param array $requestParams GET and POST variables.
 	 * @return HTTPResponse The response that this controller produces, including HTTP headers such as redirection info
 	 */

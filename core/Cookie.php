@@ -7,6 +7,8 @@
 
 /**
  * A set of static methods for manipulating cookies.
+ * @package sapphire
+ * @subpackage misc
  */
 class Cookie extends Object {
 	/**

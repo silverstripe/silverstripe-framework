@@ -1,10 +1,18 @@
 <?php
+
+/**
+ * @package forms
+ * @subpackage validators
+ */
+
 /**
  * Required Fields allows you to set which fields
  * need to be present before submitting the form
  * Submit an array of arguments or each field as a
  * seperate argument. Validation is performed on a name by
  * name basis.
+ * @package forms
+ * @subpackage validators
  */
 class RequiredFields extends Validator{
 	protected $required;

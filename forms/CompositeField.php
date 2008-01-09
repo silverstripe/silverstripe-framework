@@ -1,9 +1,16 @@
 <?php
 
 /**
+ * @package forms
+ * @subpackage fields-structural
+ */
+
+/**
  * Base class for all fields that contain other fields.
  * Implements sequentialisation - so that when we're saving / loading data, we can populate
  * a tabbed form properly.  All of the children are stored in $this->children
+ * @package forms
+ * @subpackage fields-structural
  */
 class CompositeField extends FormField {
 	protected $children;

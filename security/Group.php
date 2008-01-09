@@ -7,6 +7,8 @@
 
 /**
  * A security group.
+ * @package sapphire
+ * @subpackage security
  */
 class Group extends DataObject {
 	// This breaks too many things for upgraded sites

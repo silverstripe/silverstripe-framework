@@ -7,6 +7,8 @@
 
 /**
  * A single database record & abstract class for the data-access-model.
+ * @package sapphire
+ * @subpackage model
  */
 class DataObject extends Controller implements DataObjectInterface {
 	/**
@@ -113,16 +115,10 @@ class DataObject extends Controller implements DataObjectInterface {
 
 	/**
 	 * Create a duplicate of this node.
+	 * Caution: Doesn't duplicate relations.
 	 * 
 	 * @param $doWrite Perform a write() operation before returning the object.  If this is true, it will create the duplicate in the database.
-	 * 
 	 * @return DataObject A duplicate of this node. The exact type will be the type of this node.
-	 * Caution: Doesn't duplicate relations.
-	 * 
-	 * @return DataObject
-	 * Caution: Doesn't duplicate relations.
-	 * 
-	 * @return DataObject
 	 */
 	function duplicate($doWrite = true) {
 		$className = $this->class;
@@ -1408,7 +1404,10 @@ class DataObject extends Controller implements DataObjectInterface {
 	}
 
 	/**
-	 * Get a bunch of fields in a list - a <ul> of <li><b>name:</b> value</li>
+	 * Get a bunch of fields in an HTML LI, like this:
+	 *  - name: value
+	 *  - name: value
+	 *  - name: value
 	 *
 	 * @return string The fields as an HTML unordered list
 	 */

@@ -7,6 +7,8 @@
 
 /**
  * Represents an enumeration field.
+ * @package sapphire
+ * @subpackage model
  */
 class Enum extends DBField {
 	

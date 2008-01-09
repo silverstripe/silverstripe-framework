@@ -1,6 +1,14 @@
 <?php
+
+/**
+ * @package forms
+ * @subpackage fields-basic
+ */
+
 /**
  * Multi-line text area.
+ * @package forms
+ * @subpackage fields-basic
  */
 class TextareaField extends FormField {
 	protected $rows, $cols, $disabled = false, $readonly = false;

@@ -8,6 +8,8 @@
 /**
  * RestfulService class allows you to consume various RESTful APIs.
  * Through this you could connect and aggregate data of various web services.
+ * @package sapphire
+ * @subpackage integration
  */
 class RestfulService extends ViewableData {
 	protected $baseURL;
@@ -24,7 +26,7 @@ class RestfulService extends ViewableData {
 	
 	/**
  	* Sets the Query string parameters to send a request.
- 	* @param params An array passed with necessary parameters. 
+ 	* @param $params array An array passed with necessary parameters. 
  	*/
 	function setQueryString($params=NULL){
 		$this->queryString = http_build_query($params,'','&');
@@ -85,9 +87,9 @@ class RestfulService extends ViewableData {
 	
 	/**
  	* Gets attributes as an array, of a particular type of element.
- 	* @params xml - the source xml to parse, this could be the original response received.
- 	* @params collection - parent node which wraps the elements, if available
- 	* @params element - element we need to extract the attributes.
+ 	* @param $xml string The source xml to parse, this could be the original response received.
+ 	* @param $collection string The name of parent node which wraps the elements, if available
+ 	* @param $element string The element we need to extract the attributes.
  	* Example : <photo id="2636" owner="123" secret="ab128" server="2"> 
  	* returns id, owner,secret and sever attribute values of all such photo elements.
  	*/
@@ -117,10 +119,10 @@ class RestfulService extends ViewableData {
 	
 	/**
  	* Gets an attribute of a particular element.
- 	* @params xml - the source xml to parse, this could be the original response received.
- 	* @params collection - parent node which wraps the element, if available
- 	* @params element - element we need to extract the attribute
- 	* @params attr - name of the attribute
+ 	* @param $xml string The source xml to parse, this could be the original response received.
+ 	* @param $collection string The name of the parent node which wraps the element, if available
+ 	* @param $element string The element we need to extract the attribute
+ 	* @param $attr string The name of the attribute
  	*/
 	
 	function getAttribute($xml, $collection=NULL, $element=NULL, $attr){
@@ -142,9 +144,9 @@ class RestfulService extends ViewableData {
 	/**
  	* Gets set of node values as an array. 
  	* When you get to the depth in the hierachchy use node_child_subchild syntax to get the value.
- 	* @params xml - the source xml to parse, this could be the original response received.
- 	* @params collection - parent node which wraps the elements, if available
- 	* @params element - element we need to extract the node values.
+ 	* @param $xml string The the source xml to parse, this could be the original response received.
+ 	* @param $collection string The name of parent node which wraps the elements, if available
+ 	* @param $element string The element we need to extract the node values.
  	*/
 	
 	function getValues($xml, $collection=NULL, $element=NULL){
@@ -182,9 +184,9 @@ class RestfulService extends ViewableData {
 	
 	/**
  	* Gets a single node value. 
- 	* @params xml - the source xml to parse, this could be the original response received.
- 	* @params collection - parent node which wraps the elements, if available
- 	* @params element - element we need to extract the node value.
+ 	* @param $xml string The source xml to parse, this could be the original response received.
+ 	* @param $collection string The name of parent node which wraps the elements, if available
+ 	* @param $element string The element we need to extract the node value.
  	*/
 	
 	function getValue($xml, $collection=NULL, $element=NULL){

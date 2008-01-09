@@ -9,6 +9,8 @@
  * Represents a large text field that contains HTML content.
  * 
  * This behaves similarly to Text, but the template processor won't escape any HTML content within it.
+ * @package sapphire
+ * @subpackage model
  */
 class HTMLText extends Text {
 

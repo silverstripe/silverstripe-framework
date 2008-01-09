@@ -1,6 +1,11 @@
 <?php
 
 /**
+ * @package sapphire
+ * @subpackage misc
+ */
+
+/**
  * A class with HTTP-related helpers.
  * Like Debug, this is more a bundle of methods than a class ;-)
  * 

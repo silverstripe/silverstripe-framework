@@ -1,7 +1,12 @@
 <?php
+
+/**
+ * @package sapphire
+ * @subpackage core
+ */
+
 /**
  * Class of static methods to support debugging.
- *
  * @package sapphire
  * @subpackage core
  */

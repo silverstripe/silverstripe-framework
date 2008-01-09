@@ -8,6 +8,8 @@
 /**
  * DataObjects that use the Hierachy decorator can be be organised as a hierachy, with children and parents.
  * The most obvious example of this is SiteTree.
+ * @package sapphire
+ * @subpackage model
  */
 class Hierarchy extends DataObjectDecorator {
 	protected $markedNodes;
@@ -295,7 +297,7 @@ class Hierarchy extends DataObjectDecorator {
 	}
 
 	/**
-	 * Return a partial tree as a <ul>.
+	 * Return a partial tree as an HTML UL.
 	 */
 	public function partialTreeAsUL($minCount = 50) {
 		$children = $this->owner->AllChildren();

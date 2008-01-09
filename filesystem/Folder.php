@@ -7,6 +7,8 @@
 
 /**
  * Represents a folder in the assets directory.
+ * @package sapphire
+ * @subpackage filesystem
  */
 class Folder extends File {
 	

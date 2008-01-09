@@ -1,6 +1,11 @@
 <?php
 
 /**
+ * @package sapphire
+ * @subpackage misc
+ */
+
+/**
  * Library of conversion functions, implemented as static methods.
  *
  * The methods are all of the form (format)2(format), where the format is one of

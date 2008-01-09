@@ -29,6 +29,8 @@
  * @version    0.7
  * @license    http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
  * @link       http://garetjax.info/projects/browscap/
+ * @package sapphire
+ * @subpackage misc
  */
 class Browscap
 {

@@ -7,6 +7,8 @@
 
 /**
  * This class represents a set of database objects, such as the results of a query
+ * @package sapphire
+ * @subpackage model
  */
 class DataObjectSet extends ViewableData implements Iterator {
 	/**

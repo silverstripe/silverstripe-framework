@@ -1,12 +1,15 @@
 <?php
 /**
- * TabSet.php contains all of the classes used to build tabbed forms
+ * @package forms
+ * @subpackage fields-structural
  */
 
 /**
  * Defines a set of tabs in a form.
  * The tabs are build with our standard tabstrip javascript library.  By default, the HTML is
  * generated using FieldHolder.
+ * @package forms
+ * @subpackage fields-structural
  */
 class TabSet extends CompositeField {
 	public function __construct($id) {

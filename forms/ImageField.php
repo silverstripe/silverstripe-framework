@@ -1,7 +1,14 @@
 <?php
 
 /**
+ * @package forms
+ * @subpackage fields-files
+ */
+
+/**
  * A field that will upload attached images.
+ * @package forms
+ * @subpackage fields-files
  */
 class ImageField extends FileField {
 

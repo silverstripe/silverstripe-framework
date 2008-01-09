@@ -1,10 +1,15 @@
 <?php
 
 /**
- * @package sapphire
- * @subpackage forms
+ * @package forms
+ * @subpackage fields-relational
  */
 
+/**
+ * Special ComplexTableField for editing a many_many relation.
+ * @package forms
+ * @subpackage fields-relational
+ */
 class ManyManyComplexTableField extends HasManyComplexTableField {
 	
 	private $manyManyParentClass;
@@ -77,6 +82,11 @@ HTML;
 	}
 }
 
+/**
+ * One record in a {@link ManyManyComplexTableField}.
+ * @package forms
+ * @subpackage fields-relational
+ */
 class ManyManyComplexTableField_Item extends ComplexTableField_Item {
 	
 	function MarkingCheckbox() {

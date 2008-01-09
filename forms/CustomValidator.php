@@ -1,7 +1,15 @@
 <?php
 
 /**
+ * @package forms
+ * @subpackage validators
+ */
+
+/**
  * Custom javascript validation
+ * @package forms
+ * @subpackage validators
+ * @deprecated How is this better than / different from {@link CustomRequiredFields}?
  */
 class CustomValidator extends Validator {
 	protected $javascriptCode;

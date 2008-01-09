@@ -1,8 +1,15 @@
 <?php
 
 /**
+ * @package forms
+ * @subpackage transformations
+ */
+
+/**
  * Transformation that will make a form printable.
  * Builds on readonly forms with different behaviour for tabsets.
+ * @package forms
+ * @subpackage transformations
  */
 class PrintableTransformation extends ReadonlyTransformation {
 	function transformTabSet($field) {
@@ -15,6 +22,8 @@ class PrintableTransformation extends ReadonlyTransformation {
 
 /**
  * Class representing printable tabsets
+ * @package forms
+ * @subpackage transformations
  */
 class PrintableTransformation_TabSet extends TabSet {
 	function __construct($tabs) {

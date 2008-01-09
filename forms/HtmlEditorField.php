@@ -1,14 +1,16 @@
 <?php
 
 /**
- * @package sapphire
- * @subpackage forms
+ * @package forms
+ * @subpackage fields-formattedinput
  */
 
 /**
  * A WYSIWYG editor field, powered by tinymce.
  * tinymce editor fields are created from <textarea> tags which are then converted with javascript.
  * The {@link Requirements} system is used to ensure that all necessary javascript is included.
+ * @package forms
+ * @subpackage fields-formattedinput
  */
 class HtmlEditorField extends TextareaField {
 	protected $rows;

@@ -1,14 +1,15 @@
 <?php
 
 /**
- * @package sapphire
- * @subpackage forms
+ * @package forms
+ * @subpackage fieldeditor
  */
 
 /**
  * Represents an editable form field
+ * @package forms
+ * @subpackage fieldeditor
  */
-	 
 class EditableFormField extends DataObject {
 	
 	static $default_sort = "Sort";

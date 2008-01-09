@@ -11,6 +11,8 @@
  * looks at the db object to gather information about a file such as URL
  *
  * It then uses this for all processing functions (like image manipulation)
+ * @package sapphire
+ * @subpackage filesystem
  */
 class File extends DataObject {
 	static $default_sort = "Name";

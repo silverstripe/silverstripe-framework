@@ -1,14 +1,16 @@
 <?php
 
 /**
- * @package sapphire
- * @subpackage forms
+ * @package forms
+ * @subpackage fieldeditor
  */
 
-	/**
-	 * EditableEmailField
-	 * Allow users to define a validating editable email field for a UserDefinedForm
-	 */
+/**
+ * EditableEmailField
+ * Allow users to define a validating editable email field for a UserDefinedForm
+ * @package forms
+ * @subpackage fieldeditor
+ */
 class EditableEmailField extends EditableFormField {
 	
 	static $db = array(

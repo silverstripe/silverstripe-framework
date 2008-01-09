@@ -1,8 +1,16 @@
 <?php
-	/**
-	 * Text field that automatically checks that the value entered is unique for the given
-	 * set of fields in a given set of tables
-	 */
+
+/**
+ * @package forms
+ * @subpackage fields-formattedinput
+ */
+
+/**
+ * Text field that automatically checks that the value entered is unique for the given
+ * set of fields in a given set of tables
+ * @package forms
+ * @subpackage fields-formattedinput
+ */
 class AjaxUniqueTextField extends TextField {
 	
 	protected $restrictedField;

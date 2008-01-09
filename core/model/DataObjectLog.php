@@ -9,6 +9,8 @@
  * A DataObjectLog is a log of changes that have been made to the database in this session.
  * It was designed to help with updates to the CMS tree, and could be used wherever an Ajax call 
  * needs to update a complex on-screen representation of your data.
+ * @package sapphire
+ * @subpackage model
  */
 class DataObjectLog extends Object {
 	/**

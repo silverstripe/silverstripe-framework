@@ -1,13 +1,15 @@
 <?php
 
 /**
- * @package sapphire
- * @subpackage forms
+ * @package forms
+ * @subpackage fieldeditor
  */
 
 /**
  * EditableFileField
  * Allows a user to add a field that can be used to upload a file
+ * @package forms
+ * @subpackage fieldeditor
  */
 class EditableFileField extends EditableFormField {
 	

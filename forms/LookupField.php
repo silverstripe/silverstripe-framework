@@ -1,5 +1,17 @@
 <?php
 
+/**
+ * @package forms
+ * @subpackage fields-basic
+ */
+
+
+/**
+ * Read-only complement of {@link DropdownField}.
+ * Shows the "human value" of the dropdown field for the currently selected value.
+ * @package forms
+ * @subpackage fields-basic
+ */
 class LookupField extends DropdownField {
 
 	/**

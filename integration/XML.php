@@ -7,6 +7,8 @@
 
 /**
  * Base class for XML parsers
+ * @package sapphire
+ * @subpackage misc
  */
 class XML extends Object {
 	protected $parser;

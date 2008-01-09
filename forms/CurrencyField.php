@@ -1,7 +1,14 @@
 <?php
 
 /**
+ * @package forms
+ * @subpackage fields-formattedinput
+ */
+
+/**
  * Currency field.
+ * @package forms
+ * @subpackage fields-formattedinput
  */
 class CurrencyField extends TextField {
 	/**

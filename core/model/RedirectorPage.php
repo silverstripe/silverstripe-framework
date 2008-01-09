@@ -6,6 +6,7 @@
 
 /**
  * A redirector page redirects when the page is visited.
+ * @package cms
  */
 class RedirectorPage extends Page {
 	static $add_action = "Redirector to another page";

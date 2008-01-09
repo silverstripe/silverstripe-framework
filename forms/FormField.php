@@ -1,8 +1,8 @@
 <?php
 
 /**
- * @package sapphire
- * @subpackage forms
+ * @package forms
+ * @subpackage core
  */
 
 /**
@@ -10,6 +10,8 @@
  * A FieldSet contains a number of FormField objects which make up the whole of a form.
  * In addition to single fields, FormField objects can be "composite", for example, the {@link TabSet}
  * field.  Composite fields let us define complex forms without having to resort to custom HTML.
+ * @package forms
+ * @subpackage core
  */
 class FormField extends ViewableData {
 	protected $form;

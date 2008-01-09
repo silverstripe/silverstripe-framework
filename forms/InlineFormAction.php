@@ -1,7 +1,15 @@
 <?php
+
+/**
+ * @package forms
+ * @subpackage actions
+ */
+
 /**
  * Render a button that will act as 
  * If you want to add custom behaviour, please set {inlcudeDefaultJS} to false and work with behaviour.js.
+ * @package forms
+ * @subpackage actions
  */
 class InlineFormAction extends FormField {
 	

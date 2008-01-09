@@ -13,6 +13,8 @@ define('X_MAILER', 'SilverStripe Mailer - version 2006.06.21 (Sent from "'.$_SER
 
 /**
  * Class to support sending emails.
+ * @package sapphire
+ * @subpackage email
  */
 class Email extends ViewableData {
 	protected $from, $to, $subject, $body, $plaintext_body, $cc, $bcc;
@@ -793,8 +795,10 @@ function loadMimeTypes() {
 }
 
 /**
-* Base class that email bounce handlers extend
-*/
+ * Base class that email bounce handlers extend
+ * @package sapphire
+ * @subpackage email
+ */
 class Email_BounceHandler extends Controller {
 	
 	function init() {
@@ -909,6 +913,11 @@ class Email_BounceHandler extends Controller {
     
 }
 
+/**
+ * Database record for recording a bounced email
+ * @package sapphire
+ * @subpackage email
+ */
 class Email_BounceRecord extends DataObject {
     static $db = array(
         'BounceEmail' => 'Varchar',
@@ -924,6 +933,8 @@ class Email_BounceRecord extends DataObject {
 /**
  * This class is responsible for ensuring that members who are on it receive NO email 
  * communication at all. any correspondance is caught before the email is sent.
+ * @package sapphire
+ * @subpackage email
  */
 class Email_BlackList extends DataObject{
 	 static $db = array(

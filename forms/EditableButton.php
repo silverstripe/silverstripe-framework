@@ -1,14 +1,14 @@
 <?php
 
 /**
- * @package sapphire
- * @subpackage forms
+ * @package forms
+ * @subpackage fieldeditor
  */
 
-	/**
-	 * EditableButton
-	 * Allows a user to modify the text on the button
-	 */
+/**
+ * EditableButton
+ * Allows a user to modify the text on the button
+ */
 class EditableButton extends FormField {
 	
 	function Field() {

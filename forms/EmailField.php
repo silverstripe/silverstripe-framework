@@ -1,7 +1,14 @@
 <?php
 
 /**
+ * @package forms
+ * @subpackage fields-formattedinput
+ */
+
+/**
  * Text field with Email Validation.
+ * @package forms
+ * @subpackage fields-formattedinput
  */
 class EmailField extends TextField {
 	

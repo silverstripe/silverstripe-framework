@@ -7,6 +7,8 @@
 
 /**
  * Provides an interface to HTTP basic authentication.
+ * @package sapphire
+ * @subpackage security
  */
 class BasicAuth extends Object {
 	/**

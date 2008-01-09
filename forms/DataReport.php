@@ -1,7 +1,16 @@
 <?php
+
+/**
+ * @package forms
+ * @subpackage fields-reports
+ */
+
 /**
  * Displays complex reports based on base Table of DataObject and available functions/fields provided to
  * the object.
+ * @package forms
+ * @subpackage fields-reports
+ * @deprecated This should be considered alpha code; reporting needs a clean-up.
  */
 class DataReport extends FormField {
 	

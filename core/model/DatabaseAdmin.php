@@ -20,6 +20,8 @@ require_once("core/model/DB.php");
  *
  * Utility functions for administrating the database. These can be accessed
  * via URL, e.g. http://www.yourdomain.com/db/build.
+ * @package sapphire
+ * @subpackage model
  */
 class DatabaseAdmin extends Controller {
 

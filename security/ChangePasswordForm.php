@@ -7,6 +7,8 @@
 
 /**
  * Standard Change Password Form
+ * @package sapphire
+ * @subpackage security
  */
 class ChangePasswordForm extends Form {
 

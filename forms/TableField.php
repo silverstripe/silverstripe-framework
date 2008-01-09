@@ -1,8 +1,8 @@
 <?php
 
 /**
- * @package sapphire
- * @subpackage forms
+ * @package forms
+ * @subpackage fields-relational
  */
 
 /**
@@ -26,7 +26,9 @@
  * @param $sourceSort string
  * @param $sourceJoin string
  * 
- * TODO We should refactor this to support a single FieldSet instead of evaluated Strings for building FormFields
+ * @todo We should refactor this to support a single FieldSet instead of evaluated Strings for building FormFields
+ * @package forms
+ * @subpackage fields-relational
  */
  
 class TableField extends TableListField {
@@ -596,8 +598,10 @@ JS;
 }
 
 /**
- * encapsulation object for the table field. it stores the dataobject, 
- * and nessecary encapsulation fields
+ * Single record in a TableField.
+ * @package forms
+ * @subpackage fields-relational
+ * @see TableField
  */ 
 class TableField_Item extends TableListField_Item {
 	
