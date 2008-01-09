@@ -1505,7 +1505,7 @@ class DataObject extends Controller implements DataObjectInterface {
 	 * @return DataObject The first item matching the query
 	 */
 	public static function get_one($callerClass, $filter = "", $cache = true, $orderby = "") {
-		if(!$cache || !isset(DataObject::$cache_get_one[$callerClass][$filter]) || isset(DataObject::$cache_get_one[$callerClass][$filter]->destroyed)) {
+		if(!$cache || !isset(DataObject::$cache_get_one[$callerClass][$filter]) || DataObject::$cache_get_one[$callerClass][$filter]->destroyed) {
 			$item = singleton($callerClass)->instance_get_one($filter, $orderby);
 			if($cache) {
 				DataObject::$cache_get_one[$callerClass][$filter] = $item;
