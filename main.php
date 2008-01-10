@@ -50,6 +50,27 @@ if(isset($_REQUEST['trace'])) {
 	apd_set_pprof_trace();
 }
 
+// Ensure we have enough memory
+$memString = ini_get("memory_limit");
+switch(strtolower(substr($memString,-1))) {
+	case "k":
+		$memory = round(substr($memString,0,-1)*1024);
+		break;
+	case "m":
+		$memory = round(substr($memString,0,-1)*1024*1024);
+		break;
+	case "g":
+		$memory = round(substr($memString,0,-1)*1024*1024*1024);
+		break;
+	default:
+		$memory = round($memString);
+}
+// Check we have at least 32M
+if($memory < (32 * 1024 * 1024)) {
+	// Increase memory limit
+	ini_set('memory_limit', '32M');
+}
+
 
 require_once("core/ManifestBuilder.php");
 require_once("core/ClassInfo.php");
