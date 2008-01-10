@@ -70,11 +70,26 @@ class TestRunner extends Controller {
 
 /**
  * @ignore
+ * @package sapphire
+ * @subpackage testing
  */
 class TestRunner extends Controller {
 	function index() {
 		echo "Please install PHPUnit using pear.";
 	}
+}
+
+// This class is here to help with documentation.
+
+/**
+ * PHPUnit is a testing framework that can be installed using PEAR.
+ * It's not bundled with Sapphire, you will need to install it yourself.
+ * 
+ * @package sapphire
+ * @subpackage testing
+ */
+class PHPUnit_Framework_TestCase {
+	
 }
 
 }

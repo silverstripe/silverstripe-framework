@@ -44,11 +44,15 @@ foreach($paths as $path) {
 
 if($hasPhpUnit) {
 
+/**
+ */
 require_once 'PHPUnit/Framework.php';
 
 /**
  * Test case class for the Sapphire framework.
  * Sapphire unit testing is based on PHPUnit, but provides a number of hooks into our data model that make it easier to work with.
+ * @package sapphire
+ * @subpackage testing
  */
 class SapphireTest extends PHPUnit_Framework_TestCase {
 	function setUp() {
@@ -171,6 +175,11 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 
 } else {
 	// Stub
+	/**
+	 * @ignore 
+	 * @package sapphire
+	 * @subpackage testing
+	 */
 	class SapphireTest extends Object {}
 }
 
