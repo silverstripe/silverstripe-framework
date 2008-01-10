@@ -95,7 +95,7 @@ class DataObject extends Controller implements DataObjectInterface {
 		parent::__construct();
 
 		// Must be called after parent constructor
-		if(!$isSingleton && !isset($this->record['ID'])) {
+		if(!$isSingleton && !$this->record['ID']) {
 			$this->populateDefaults();
 		}
 
