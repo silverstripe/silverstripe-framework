@@ -313,7 +313,7 @@ class ManifestBuilder {
 				self::parse_file($file);
 		}
 
-		$tables = DB::getConn()->tableList();
+		$tables = DB::isActive() ? DB::getConn()->tableList() : array();
 
 		$allClasses["parents"] = self::find_parents();
 		$allClasses["children"] = self::find_children();
