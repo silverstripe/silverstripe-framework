@@ -1257,13 +1257,13 @@ class i18n extends Controller {
 		if (file_exists($file = Director::getAbsFile("$module/lang/". self::get_locale() . '.php'))) {
 			include_once($file);
 		} else if (self::get_locale() != 'en_US') {
+		        $old = self::get_locale();
 			self::set_locale('en_US');
 			self::include_by_class($class);
+			self::set_locale($old);
+
 		} else if(file_exists(Director::getAbsFile("$module/lang"))) {
-			// Throw an error if the given module doesn't have translations
-			if($module != project()) {
-				user_error("i18n::include_by_class: Locale file $file should exist", E_USER_WARNING);
-			}
+			user_error("i18n::include_by_class: Locale file $file should exist", E_USER_WARNING);
 		}
 	}
 	
