@@ -67,6 +67,23 @@ class ArrayLib extends Object {
 		return $arr;
 	}
 	
+	/**
+	 * Determines if an array is associative by checking
+	 * for existing keys via array_key_exists().
+	 * @see http://nz.php.net/manual/en/function.is-array.php#76188
+	 *
+	 * @param array $arr
+	 * @return boolean
+	 */
+	static function is_associative($arr) {
+		if(is_array($arr) && ! empty($arr)) {
+	        for($iterator = count($arr) - 1; $iterator; $iterator--) {
+	            if (!array_key_exists($iterator, $arr)) return true;
+	        }
+	        return !array_key_exists(0, $arr);
+	    }
+    	return false;
+	}
 }
 
 ?>
