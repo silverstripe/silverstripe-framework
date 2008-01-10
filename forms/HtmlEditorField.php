@@ -223,16 +223,21 @@ function HtmlEditorField_dataValue_processImage($parts) {
 	// find the image inserted from the HTML editor
 	$image = Image::find(urldecode($src));
 	
+	// If we have an image, insert the resampled one into the src attribute; otherwise, leave the img src alone.
 	if($image) {
 		// If we have an image, generate the resized image.
 		$resizedImage = $image->getFormattedImage("ResizedImage",$width, $height);
 		$parts[$partSource['src="']] = $resizedImage->getRelativePath() ;
-	} else {
-		$parts[$partSource['src="']] = "";
 	}
 		
 	$parts[0] = "";
 	$result = implode("", $parts);
+
+	// Insert an empty alt tag if there isn't one
+	if(strpos($result, "alt=") === false) {
+		$result = substr_replace($result, ' alt="" />', -2);
+	}
+
 	return $result;
 }
 
