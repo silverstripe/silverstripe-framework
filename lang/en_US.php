@@ -350,4 +350,47 @@ $lang['en_US']['ChangePasswordEmail.ss']['CHANGEPASSWORDTEXT1'] = array(
 $lang['en_US']['ChangePasswordEmail.ss']['CHANGEPASSWORDTEXT2'] = 'You can now use the following credentials to log in:';
 $lang['en_US']['ForgotPasswordEmail.ss']['HELLO'] = 'Hi';
 
+// New2
+
+$lang['en_US']['TableField.ss']['ADD'] = 'Add a new row';
+$lang['en_US']['TableField.ss']['ADDITEM'] = 'Add';
+$lang['en_US']['TableField.ss']['DELETEROW'] = 'Delete this row';
+$lang['en_US']['TableField.ss']['DELETE'] = 'delete';
+
+$lang['en_US']['Security']['MEMBERALREADYEXISTS'] = 'There already exists a member with this identity URL';
+$lang['en_US']['Security']['OPENIDURL'] = 'OpenID URL/i-name';
+$lang['en_US']['Security']['OPENIDDESC'] = '<p>Make sure you enter your normalized OpenID/i-name credentials 
+				here, i.e. with protocol and trailing slash for OpenID (e.g. http://openid.silverstripe.com/).</p>';
+$lang['en_US']['Security']['OPENIDHEADER'] = 'OpenID/i-name credentials';
+$lang['en_US']['Security']['EDITOPENIDURL'] = 'OpenID URL/i-name (e.g. http://openid.silverstripe.com/)';
+$lang['en_US']['Security']['OPENIDURLNORMALIZATION'] = '<p>Make sure you enter your normalized OpenID/i-name credentials 
+				here, i.e. with protocol and trailing slash for OpenID (e.g. http://openid.silverstripe.com/).</p>';
+
+$lang['en_US']['TableListField']['CSVEXPORT'] = 'Export to CSV';
+$lang['en_US']['TableListField']['PRINT'] = 'Print';
+
+$lang['en_US']['Permission']['FULLADMINRIGHTS'] = 'Full administrative rights';
+
+$lang['en_US']['Page']['CLASSNAME'] = 'Page';
+
+$lang['en_US']['Statistics']['TRENDS'] = 'Trends';
+$lang['en_US']['Statistics']['LEGEND'] = 'Legend';
+$lang['en_US']['Statistics']['BROWSERS'] = 'Browsers';
+$lang['en_US']['Statistics']['ID'] = 'ID';
+$lang['en_US']['Statistics']['EMAIL'] = 'Email';
+$lang['en_US']['Statistics']['JOINED'] = 'Joined';
+$lang['en_US']['Statistics']['REGISTEREDUSERS'] = 'Registered Users';
+$lang['en_US']['Statistics']['CSVEXPORT'] = 'Export as CSV';
+
+$lang['en_US']['Statistics']['RECENTPAGEVIEWS'] = 'Recent Page Views';
+$lang['en_US']['Statistics']['TIME'] = 'Time';
+$lang['en_US']['Statistics']['BROWSER'] = 'Browser';
+$lang['en_US']['Statistics']['OSABREV'] = 'OS';
+$lang['en_US']['Statistics']['USER'] = 'User';
+$lang['en_US']['Statistics']['PAGE'] = 'Page';
+$lang['en_US']['Statistics']['PAGEVIEWS'] = 'Page Views';
+$lang['en_US']['Statistics']['OS'] = 'Operating Systems';
+$lang['en_US']['Statistics']['USERACTIVITY'] = 'User Activity';
+
+
 ?>

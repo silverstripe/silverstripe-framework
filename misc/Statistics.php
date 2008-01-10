@@ -16,11 +16,13 @@ class Statistics extends Controller {
 	}
 
 	static function trend_chart($table, $filter = "day", $name, $type, $color) {
+	        $trendstrl = _t('Statistics.TRENDS', 'Trends');
+		$legendtrl = _t('Statistics.LEGEND', 'Legend');
 		$top = <<<HTML
 <div id="trendchart" style="display: none">
-<h2>Trends</h2>
+<h2>{$trendstrl}</h2>
 <div><canvas id="chart" height="400" width="700"></canvas></div>
-<div id="chart_legend"><legend>Legend</legend></div>
+<div id="chart_legend"><legend>{$legendtrl}</legend></div>
 </div>
 		<script type="text/javascript">\n
 HTML;
@@ -144,13 +146,18 @@ HTML;
 	static function user_record_table() {
 		$records = DataObject::get('Member');
 		$baseURL = Director::baseURL();
+		$registereduserstrl = _t('Statistics.REGISTEREDUSERS', 'Registered Users');
+		$exporttrl = _t('Statistics.CSVEXPORT', 'Export as CSV');
+		$idtrl = _t('Statistics.ID', 'ID');
+		$emailtrl = _t('Statistics.EMAIL', 'Email');
+		$joinedtrl = _t('Statistics.JOINED');
 		$top = <<<HTML
 		<div id="usertable" style="display: none">
-		<h2>Registered Users</h2>
-		<p><a href="$baseURL/admin/statistics/usercsv">Export as CSV</a></p>
+		<h2>{$registereduserstrl}</h2>
+		<p><a href="$baseURL/admin/statistics/usercsv">{$exporttrl}</a></p>
 		<table class="sortable-onload-1 rowstyle-alt no-arrow paginate-10 statstable" border="0" cellspacing="1" cellpadding="0">
 			<thead>
-				<tr><th class="sortable-numeric">ID</th><th class="sortable-text">Email</th><th class="sortable-sortDatetime">Joined</th></tr>
+			        <tr><th class="sortable-numeric">{$idtrl}</th><th class="sortable-text">{$emailtrl}</th><th class="sortable-sortDatetime">{$joinedtrl}</th></tr>
 			</thead>
 			<tbody>
 HTML;
@@ -179,12 +186,19 @@ HTML;
 
 	static function get_recent_views($limit = 15) {
 		$records = DataObject::get('PageView', null, 'Created DESC', null, $limit);
+		$recentpvtrl = _t('Statistics.RECENTPAGEVIEWS', 'Recent Page Views');
+		$idtrl = _t('Statistics.ID', 'ID');
+		$timetrl = _t('Statistics.TIME', 'Time');
+		$browsertrl = _t('Statistics.BROWSER', 'Browser');
+		$ostrl = _t('Statistics.OSABREV', 'OS');
+		$usertrl = _t('Statistics.USER', 'User');
+		$pagetrl = _t('Statistics.PAGE', 'Page');
 		$top = <<<HTML
 		<div id="recentviewtable">
-		<h2>Recent Page Views</h2>
+		<h2>{$recentpvtrl}</h2>
 		<table class="sortable-onload-1 rowstyle-alt no-arrow paginate-10 statstable" border="0" cellspacing="1" cellpadding="0">
 			<thead>
-				<tr><th class="sortable-numeric">ID</th><th class="sortable-sortDatetime">Time</th><th class="sortable-text">Browser</th><th class="sortable-text">OS</th><th>User</th><th class="sortable-text">Page</th></tr>
+			        <tr><th class="sortable-numeric">{$idtrl}</th><th class="sortable-sortDatetime">{$timetrl}</th><th class="sortable-text">{$browsertrl}</th><th class="sortable-text">{$ostrl}</th><th>{$usertrl}</th><th class="sortable-text">{$pagetrl}</th></tr>
 			</thead>
 			<tbody>
 HTML;
@@ -258,13 +272,21 @@ HTML;
 				$records = DataObject::get('PageView');
 		}
 		$baseURL = Director::baseURL();
+		$pageviewstrl = _t('Statistics.PAGEVIEWS', 'Page Views');
+		$idtrl = _t('Statistics.ID', 'ID');
+		$timetrl = _t('Statistics.TIME', 'Time');
+		$browsertrl = _t('Statistics.BROWSER', 'Browser');
+		$ostrl = _t('Statistics.OSABREV', 'OS');
+		$usertrl = _t('Statistics.USER', 'User');
+		$pagetrl = _t('Statistics.PAGE', 'Page');
+		$exporttrl = _t('Statistics.CSVEXPORT', 'Export as CSV');
 		$top = <<<HTML
 		<div id="viewtable" style="display: none">
-		<h2>Page Views</h2>
-		<p><a href="$baseURL/admin/statistics/viewcsv">Export as CSV</a></p>
+		<h2>{$pageviewstrl}</h2>
+		<p><a href="$baseURL/admin/statistics/viewcsv">{$exporttrl}</a></p>
 		<table class="sortable-onload-1 rowstyle-alt no-arrow paginate-10 statstable" border="0" cellspacing="1" cellpadding="0">
 			<thead>
-				<tr><th class="sortable-numeric">ID</th><th class="sortable-sortDatetime">Time</th><th class="sortable-text">Browser</th><th class="sortable-text">OS</th><th class="sortable-text">User</th><th class="sortable-text">Page</th></tr>
+				<tr><th class="sortable-numeric">{$idtrl}</th><th class="sortable-sortDatetime">{$timetrl}</th><th class="sortable-text">{$browsertrl}</th><th class="sortable-text">{$ostrl}</th><th class="sortable-text">{$usertrl}</th><th class="sortable-text">{$pagetrl}</th></tr>
 			</thead>
 			<tbody>
 HTML;
@@ -288,9 +310,10 @@ HTML;
 	}
 
 	static function browser_chart($type = "Pie", $color = "blue") {
+	        $browserstrl = _t('Statistics.BROWSERS', 'Browsers');
 		$top = <<<HTML
 <div id="browserchart" style="display: none">
-<h2>Browsers</h2>
+<h2>{$browserstrl}</h2>
 <div><canvas id="bchart" height="400" width="700"></canvas></div>
 </div>
 
@@ -351,9 +374,10 @@ HTML;
 	}
 
 	static function os_chart($type = "Pie", $color = "blue") {
+	        $ostrl = _t('Statistics.OS', 'Operating Systems');
 		$top = <<<HTML
 <div id="oschart" style="display: none">
-<h2>Operating Systems</h2>
+<h2>{$ostrl}</h2>
 <div><canvas id="ochart" height="400" width="700"></canvas></div>
 </div>
 
@@ -414,9 +438,10 @@ HTML;
 	}
 
 	static function activity_chart($type = "Pie", $color = "blue") {
+	        $useracttrl = _t('Statistics.USERACTIVITY', 'User Activity');
 		$top = <<<HTML
 <div id="uacchart" style="display: none">
-<h2>User Activity</h2>
+<h2>{$useracttrl}</h2>
 <div><canvas id="uchart" height="400" width="700"></canvas></div>
 </div>
 

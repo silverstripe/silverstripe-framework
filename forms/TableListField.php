@@ -854,13 +854,13 @@ JS
 		$links = new DataObjectSet();
 		if($this->can('export')) {
 			$links->push(new ArrayData(array(
-				'Title' => 'Export to CSV',
+				'Title' => _t('TableListField.CSVEXPORT', 'Export to CSV'),
 				'Link' => $this->ExportLink()
 			)));
 		}
 		if($this->can('print')) {
 			$links->push(new ArrayData(array(
-				'Title' => 'Print',
+				'Title' => _t('TableListField.PRINT', 'Print'),
 				'Link' => $this->PrintLink()
 			)));
 		}
@@ -895,14 +895,24 @@ JS
 	}
 	
 	function Title() {
+	  // adding translating functionality
+	  // this is a bit complicated, because this parameter is passed to this class
+	  // and should come here translated already
+	  // adding this to TODO probably add a method to the classes
+	  // to return they're translated string
+	  // added by ruibarreiros @ 27/11/2007
 		return singleton($this->sourceClass)->singular_name();
 	}
 	
 	function NameSingular() {
-		return singleton($this->sourceClass)->singular_name();
+	  // same as Title()
+	  // added by ruibarreiros @ 27/11/2007
+	        return singleton($this->sourceClass)->singular_name();
 	}
 
 	function NamePlural() {
+	  // same as Title()
+	  // added by ruibarreiros @ 27/11/2007
 		return singleton($this->sourceClass)->plural_name();
 	} 
 	

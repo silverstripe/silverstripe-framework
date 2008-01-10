@@ -616,4 +616,46 @@ $lang['pt_PT']['TableListField_PageControls.ss']['DISPLAYING'] = 'A Mostrar';
 $lang['pt_PT']['TableListField_PageControls.ss']['TO'] = 'até';
 $lang['pt_PT']['TableListField_PageControls.ss']['OF'] = 'de';
 
+// New2
+
+$lang['pt_PT']['TableField.ss']['ADD'] = 'Adicionar nova linha';
+$lang['pt_PT']['TableField.ss']['ADDITEM'] = 'Adicionar';
+$lang['pt_PT']['TableField.ss']['DELETEROW'] = 'Apagar esta linha';
+$lang['pt_PT']['TableField.ss']['DELETE'] = 'apagar';
+
+$lang['pt_PT']['Security']['OPENIDHEADER'] = 'Credenciais OpenID/i-name';
+$lang['pt_PT']['Security']['MEMBERALREADYEXISTS'] = 'Já existe um utilizador com esta identidade';
+$lang['pt_PT']['Security']['OPENIDURL'] = 'OpenID URL/i-name';
+$lang['pt_PT']['Security']['OPENIDDESC'] = '<p>Certifique-se que inseriu aqui as suas credenciais OpenID/i-name normalizadas 
+				, p.ex. com protocolo e barra para a direita para o OpenID (ex. http://openid.silverstripe.com/).</p>';
+$lang['pt_PT']['Security']['EDITOPENIDURL'] = 'OpenID URL/i-name (ex. http://openid.silverstripe.com/)';
+$lang['pt_PT']['Security']['OPENIDURLNORMALIZATION'] = '<p>Certifique-se que inseriu aqui as suas credenciais OpenID/i-name normalizadas 
+				, p.ex. com protocolo e barra para a direita para o OpenID (ex. http://openid.silverstripe.com/).</p>';
+
+$lang['pt_PT']['TableListField']['CSVEXPORT'] = 'Exportar para CSV';
+$lang['pt_PT']['TableListField']['PRINT'] = 'Imprimir';
+
+$lang['pt_PT']['Permission']['FULLADMINRIGHTS'] = 'Permissões de administração total';
+
+$lang['pt_PT']['Page']['CLASSNAME'] = 'Página';
+
+$lang['pt_PT']['Statistics']['TRENDS'] = 'Tendências';
+$lang['pt_PT']['Statistics']['LEGEND'] = 'Legenda';
+$lang['pt_PT']['Statistics']['BROWSERS'] = 'Browsers';
+$lang['pt_PT']['Statistics']['ID'] = 'ID';
+$lang['pt_PT']['Statistics']['EMAIL'] = 'Email';
+$lang['pt_PT']['Statistics']['JOINED'] = 'Creado em';
+$lang['pt_PT']['Statistics']['REGISTEREDUSERS'] = 'Utilizadores Registados';
+$lang['pt_PT']['Statistics']['CSVEXPORT'] = 'Exportar como CSV';
+$lang['pt_PT']['Statistics']['RECENTPAGEVIEWS'] = 'Visualização Recente de Páginas';
+$lang['pt_PT']['Statistics']['TIME'] = 'Data/Hora';
+$lang['pt_PT']['Statistics']['BROWSER'] = 'Browser';
+$lang['pt_PT']['Statistics']['OSABREV'] = 'SO';
+$lang['pt_PT']['Statistics']['USER'] = 'Utilizador';
+$lang['pt_PT']['Statistics']['PAGE'] = 'Página';
+$lang['pt_PT']['Statistics']['PAGEVIEWS'] = 'Visualizações';
+$lang['pt_PT']['Statistics']['OS'] = 'Sistemas Operativos';
+$lang['pt_PT']['Statistics']['USERACTIVITY'] = 'Actividade dos Utilizadores';
+
+
 ?>
