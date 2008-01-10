@@ -21,7 +21,7 @@ class SearchForm extends Form {
 		$this->showInSearchTurnOn = $showInSearchTurnOn;
 	
 		if(!$fields) {
-		        $fields = new FieldSet(new TextField("Search", _t('SearchForm.SEARCH', 'Search'));
+		        $fields = new FieldSet(new TextField("Search", _t('SearchForm.SEARCH', 'Search')));
 		}
 		if(!$actions) {
 			$actions = new FieldSet(
