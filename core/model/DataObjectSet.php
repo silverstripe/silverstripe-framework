@@ -63,16 +63,32 @@ class DataObjectSet extends ViewableData implements Iterator {
 	
 	/**
 	 * Create a new DataObjectSet.
-	 * @param array|DataObject,... $items The DataObjects to use in this set, either as an array or as multiple variables
+	 * 
+	 * @param ViewableData|array|mixed $items Parameters to use in this set, either as an associative array, object with simple properties, or as multiple parameters.
+	 * TODO Does NOT automatically convert objects with complex datatypes (e.g. converting arrays within an objects to its own DataObjectSet)							
 	 */
-	public function __construct($items = null, $otherArg = null) {
+	public function __construct($items = null) {
 		if($items) {
-			if (is_array($items)) {
-				// We now have support for using the key of a data object set
-				$this->items = $items;
-			} else if($allArgs = func_get_args()) {
-				$this->items = $allArgs;
+			// if the first parameter is not an array, or we have more than one parameter, collate all parameters to an array
+			// otherwise use the passed array
+			$itemsArr = (!is_array($items) || count(func_get_args()) > 1) ? func_get_args() : $items;
+			
+			// We now have support for using the key of a data object set
+			for($i=0; $i<count($itemsArr); $i++) {
+				if(is_subclass_of($itemsArr[$i], 'ViewableData')) {
+					$this->items[] = $itemsArr[$i];
+				} elseif(is_object($itemsArr[$i]) || ArrayLib::is_associative($itemsArr[$i])) {
+					$this->items[] = new ArrayData($itemsArr[$i]);
+				} else {
+					user_error(
+						"DataObjectSet::__construct: Passed item #{$i} is not an object or associative array, 
+						can't be properly iterated on in templates", 
+						E_USER_WARNING
+					);						
+					$this->items[] = $itemsArr[$i];
+				}
 			}
+
 			$this->current = $this->prepareItem(current($this->items));
 		}
 		parent::__construct();
