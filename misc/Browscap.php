@@ -95,7 +95,7 @@ class Browscap
 	 * $updateMethod:	The method to use to update the file, has to be a value of
 	 *                  an UPDATE_* constant, null or false.
 	 */
-	public $remoteIniUrl  	= 'http://browsers.garykeith.com/stream.asp?BrowsCapINI';
+	public $remoteIniUrl  	= 'http://browsers.garykeith.com/stream.asp?Lite_BrowsCapINI';
 	public $remoteVerUrl  	= 'http://browsers.garykeith.com/version-date.asp';
 	public $timeout			= 5;
 	public $updateInterval	= 432000; // 5 days
