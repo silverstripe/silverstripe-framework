@@ -1260,7 +1260,10 @@ class i18n extends Controller {
 			self::set_locale('en_US');
 			self::include_by_class($class);
 		} else {
-			user_error("i18n::include_by_class: Locale file $file should exist", E_USER_WARNING);
+			// Throw an error if the given module doesn't have translations
+			if($module != project()) {
+				user_error("i18n::include_by_class: Locale file $file should exist", E_USER_WARNING);
+			}
 		}
 	}
 	
