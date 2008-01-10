@@ -6,6 +6,7 @@
 
 /**
  * A file uploaded on a UserDefinedForm field
+ * @package cms
  */
 class SubmittedFileField extends SubmittedFormField {
 	

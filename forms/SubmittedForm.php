@@ -5,8 +5,8 @@
  */
 
 /**
- * SubmittedForm
  * Contents of an UserDefinedForm submission
+ * @package cms
  */
 class SubmittedForm extends DataObject {
 	static $has_one = array(

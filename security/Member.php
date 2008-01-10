@@ -815,6 +815,8 @@ class Member extends DataObject {
 /**
  * Special kind of {@link ComponentSet} that has special methods for
  * manipulating a user's membership
+ * @package sapphire
+ * @subpackage security
  */
 class Member_GroupSet extends ComponentSet {
 	/**
@@ -1019,6 +1021,11 @@ class Member_GroupSet extends ComponentSet {
 
 
 
+/**
+ * Form for editing a member profile.
+ * @package sapphire
+ * @subpackage security
+ */
 class Member_ProfileForm extends Form {
 	
 	function __construct($controller, $name, $member) {
@@ -1073,6 +1080,8 @@ class Member_ProfileForm extends Form {
 
 /**
  * Class used as template to send an email to new members
+ * @package sapphire
+ * @subpackage security
  */
 class Member_SignupEmail extends Email_Template {
 	protected $from = '';  // setting a blank from address uses the site's default administrator email
@@ -1129,6 +1138,8 @@ class Member_SignupEmail extends Email_Template {
 /**
  * Class used as template to send an email saying that the password has been
  * changed
+ * @package sapphire
+ * @subpackage security
  */
 class Member_ChangePasswordEmail extends Email_Template {
     protected $from = '';   // setting a blank from address uses the site's default administrator email
@@ -1145,6 +1156,8 @@ class Member_ChangePasswordEmail extends Email_Template {
 
 /**
  * Class used as template to send the forgot password email
+ * @package sapphire
+ * @subpackage security
  */
 class Member_ForgotPasswordEmail extends Email_Template {
     protected $from = '';  // setting a blank from address uses the site's default administrator email
@@ -1160,9 +1173,9 @@ class Member_ForgotPasswordEmail extends Email_Template {
 
 
 /**
- * Record to keep track of which records a member has unsubscribed from and
- * when
- *
+ * Record to keep track of which records a member has unsubscribed from and when.
+ * @package sapphire
+ * @subpackage security
  * @todo Check if that email stuff ($from, $to, $subject, $body) is needed
  *       here! (Markus)
  */
@@ -1219,6 +1232,8 @@ class Member_UnsubscribeRecord extends DataObject {
 
 /**
  * Member Validator
+ * @package sapphire
+ * @subpackage security
  */
 class Member_Validator extends RequiredFields {
 

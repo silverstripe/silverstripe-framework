@@ -264,9 +264,9 @@ class Image extends File {
 	 * Generate an image on the specified format. It will save the image
 	 * at the location specified by cacheFilename(). The image will be generated
 	 * using the specific 'generate' method for the specified format.
-	 * @var string $format Name of the format to generate.
-	 * @var string $arg1 Argument to pass to the generate method.
-	 * @var string $arg2 A second argument to pass to the generate method.
+	 * @param string $format Name of the format to generate.
+	 * @param string $arg1 Argument to pass to the generate method.
+	 * @param string $arg2 A second argument to pass to the generate method.
 	 */
 	function generateFormattedImage($format, $arg1 = null, $arg2 = null) {
 		$cacheFile = $this->cacheFilename($format, $arg1, $arg2);
@@ -367,7 +367,11 @@ class Image extends File {
 }
 
 /**
- * Image not stored in the database, that is just a cached resampled image
+ * A resized / processed {@link Image} object.
+ * When Image object are processed or resized, a suitable Image_Cached object is returned, pointing to the
+ * cached copy of the processed image.
+ * @package sapphire
+ * @subpackage filesystem
  */
 class Image_Cached extends Image {
 	/**
@@ -395,6 +399,12 @@ class Image_Cached extends Image {
 	}
 }
 
+/**
+ * A db field type designed to help save images.
+ * @deprecated Use a has_one relationship pointing to the file table instead.
+ * @package sapphire
+ * @subpackage filesystem
+ */
 class Image_Saver extends DBField {
 	function saveInto($record) {
 		$image = $record->getComponent($this->name);
@@ -414,8 +424,9 @@ class Image_Saver extends DBField {
 }
 
 /**
- * Uploader support for the uploading anything which is a File or subclass of 
- * File, eg Image.
+ * Uploader support for the uploading anything which is a File or subclass of File, eg Image.
+ * @package sapphire
+ * @subpackage filesystem
  */
 class Image_Uploader extends Controller {
 	/**

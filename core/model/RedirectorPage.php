@@ -2,11 +2,13 @@
 
 /**
  * @package cms
+ * @subpackage content
  */
 
 /**
  * A redirector page redirects when the page is visited.
  * @package cms
+ * @subpackage content
  */
 class RedirectorPage extends Page {
 	static $add_action = "Redirector to another page";
@@ -94,6 +96,11 @@ class RedirectorPage extends Page {
 	}
 }
 
+/**
+ * Controller for the {@link RedirectorPage}.
+ * @package cms
+ * @subpackage content
+ */
 class RedirectorPage_Controller extends Page_Controller {
 	function init() {
 		if($this->RedirectionType == 'External') {

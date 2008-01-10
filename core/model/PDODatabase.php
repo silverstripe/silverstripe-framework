@@ -313,11 +313,11 @@ class PDODatabase extends Database {
 
 	/**
 	 * Alter fields and indexes in existing table.
-	 * @var string $tableName The name of the table.
-	 * @var string $newFields Fields to add.
-	 * @var string $newIndexes Indexes to add.
-	 * @var string $alteredFields Fields to change.
-	 * @var string $alteredIndexes Indexes to change.
+	 * @param string $tableName The name of the table.
+	 * @param string $newFields Fields to add.
+	 * @param string $newIndexes Indexes to add.
+	 * @param string $alteredFields Fields to change.
+	 * @param string $alteredIndexes Indexes to change.
 	 * @return void.
 	 */
 	public function alterTable($table, $newFields = null, $newIndexes = null, $alteredFields = null, $alteredIndexes = null) {
@@ -353,8 +353,8 @@ class PDODatabase extends Database {
 
 	/**
 	 * Rename an existing table, the TO is necessary for PostgreSQL and MS SQL.
-	 * @var string $oldTableName The name of the existing table.
-	 * @var string $newTableName How the table should be named from now on.
+	 * @param string $oldTableName The name of the existing table.
+	 * @param string $newTableName How the table should be named from now on.
 	 * @return void.
 	 */
 	public function renameTable($oldTableName, $newTableName) {
@@ -656,6 +656,8 @@ class PDODatabase extends Database {
 
 /**
  * A result-set from a database query (array).
+ * @package sapphire
+ * @subpackage model
  */
 class PDOQuery extends Query {
 	private $database;

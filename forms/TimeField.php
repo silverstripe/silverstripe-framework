@@ -6,7 +6,7 @@
  */
 
 /**
- * Date field.
+ * Time field.
  * Default Value represented in the format passed as constructor.
  * 
  * @package forms
@@ -62,7 +62,9 @@ class TimeField extends TextField {
 }
 
 /**
- * The readonly class for our TimeField
+ * The readonly class for our {@link TimeField}.
+ * @package forms
+ * @subpackage fields-datetime
  */
 class TimeField_Readonly extends TimeField {
 	

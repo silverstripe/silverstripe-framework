@@ -23,7 +23,7 @@ class YAMLNode {
    */
   public $parent;
   public $id;
-  /**#@+*/
+  /**#@-*/
   /**
    * @access public
    * @var mixed
@@ -349,7 +349,7 @@ class Spyc {
   private $_isInline;
   private $_dumpIndent;
   private $_dumpWordWrap;
-  /**#@+*/
+  /**#@-*/
 
   /**** Public Properties ****/
 
@@ -358,7 +358,7 @@ class Spyc {
    * @var mixed
    */
   public $_nodeId;
-  /**#@+*/
+  /**#@-*/
 
   /**** Private Methods ****/
 

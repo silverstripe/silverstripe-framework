@@ -54,6 +54,11 @@ HTML;
 	}
 }
 
+/**
+ * Single record of a {@link HasOneComplexTableField} field.
+ * @package forms
+ * @subpackage fields-relational
+ */
 class HasOneComplexTableField_Item extends ComplexTableField_Item {
 	
 	function MarkingCheckbox() {

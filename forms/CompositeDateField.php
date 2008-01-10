@@ -143,6 +143,8 @@ JS;
 /**
  * Allows dates to be represented in a form, by
  * showing in a user friendly format, eg, dd/mm/yyyy.
+ * @package forms
+ * @subpackage fields-datetime
  */
 class CompositeDateField_Disabled extends DateField {
 	function setValue($val) {

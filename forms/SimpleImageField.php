@@ -54,6 +54,11 @@ class SimpleImageField extends FileField {
 	} 
 }
 
+/**
+ * Disabled version of {@link SimpleImageField}.
+ * @package forms
+ * @subpackage fields-files
+ */
 class SimpleImageField_Disabled extends FormField {
 		
 	function Field() {

@@ -666,6 +666,8 @@ class Browscap
  * @copyright  Copyright (c) 2006 Jonathan Stoppani
  * @license    http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
  * @link       http://garetjax.info/projects/browscap/
+ * @package sapphire
+ * @subpackage misc
  */
 class Browscap_Exception extends Exception
 {}

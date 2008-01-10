@@ -201,8 +201,8 @@ HTML
 	
 	/**
 		*Todo: Returns the HTML for the body of the reported table, excluding table header
-		*@Param rowCallBack: the function name for how the rows are formated
-		*@Param cellCallBack: the function name for how the cells are formated
+		* @param rowCallBack: the function name for how the rows are formated
+		* @param cellCallBack: the function name for how the cells are formated
 		*/
 	protected function datacells($rowCallBack = 'htmlTableRow', $cellCallBack = 'htmlTableDataCell' ) {
 		$records = $this->getRecords();
@@ -555,6 +555,9 @@ HTML
 
 /**
  * A controller class work for exporting reported table to CSV format.
+ * @package forms
+ * @subpackage fields-reports
+ * @deprecated This should be considered alpha code; reporting needs a clean-up.
  */
 class DataReport_Controller extends Controller{
 

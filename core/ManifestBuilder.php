@@ -205,7 +205,7 @@ class ManifestBuilder {
 	 * application
 	 *
 	 * @param string $folder The folder to traverse (recursively)
-	 * @pram array $classMap The already built class map
+	 * @param array $classMap The already built class map
 	 */
 	private static function getClassManifest($folder, &$classMap) {
 		$items = scandir($folder);

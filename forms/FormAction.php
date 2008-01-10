@@ -58,6 +58,10 @@ class FormAction extends FormField {
 	}
 }
 
+/**
+ * @package forms
+ * @subpackage actions
+ */
 class FormAction_WithoutLabel extends FormAction {
 	function Title(){
 		return null;

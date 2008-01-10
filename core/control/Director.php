@@ -86,8 +86,8 @@ class Director {
 	 *  - output the response to the browser, using {@link HTTPResponse::output()}.
 	 * 
 	 * @param $url String, the URL the user is visiting, without the querystring.
-	 * @uses getControllerForURL() The rule-lookup logic is handled by this.
-	 * @uses Controller::run() The actual page logic is handled by this.
+	 * @uses getControllerForURL() rule-lookup logic is handled by this.
+	 * @uses Controller::run() Controller::run() handles the page logic for a Director::direct() call.
 	 */
 	function direct($url) {
 		if(isset($_GET['debug_profile'])) Profiler::mark("Director","direct");
@@ -125,7 +125,7 @@ class Director {
 	 * calls of Director::test(), you can simulate a peristed session.
 	 * 
 	 * @uses getControllerForURL() The rule-lookup logic is handled by this.
-	 * @uses Controller::run() The actual page logic is handled by this.
+	 * @uses Controller::run() Controller::run() handles the page logic for a Director::direct() call.
 	 */
 	function test($url, $post = null, $session = null) {
         $getVars = array();

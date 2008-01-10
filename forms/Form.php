@@ -18,7 +18,6 @@
  * recreate the form object upon form submission, without the use of a session, which would be too
  * resource-intensive.
  *
- * @example forms/Form.php See how you can create a form on your controller.
  * @package forms
  * @subpackage core
  */

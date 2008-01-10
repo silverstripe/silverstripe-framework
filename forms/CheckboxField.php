@@ -84,6 +84,11 @@ HTML;
 	}
 }
 
+/**
+ * Readonly version of a checkbox field - "Yes" or "No".
+ * @package forms
+ * @subpackage fields-basic
+ */
 class CheckboxField_Readonly extends ReadonlyField {
 	function performReadonlyTransformation() {
 		return $this;

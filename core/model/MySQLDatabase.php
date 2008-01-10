@@ -32,10 +32,10 @@ class MySQLDatabase extends Database {
 	/**
 	 * Connect to a MySQL database.
 	 * @param array $parameters An map of parameters, which should include:
-	 * <ul><li>server: The server, eg, localhost</li>
-	 * <li>username: The username to log on with</li>
-	 * <li>password: The password to log on with</li>
-	 * <li>database: The database to connect to</li>
+	 *  - server: The server, eg, localhost
+	 *  - username: The username to log on with
+	 *  - password: The password to log on with
+	 *  - database: The database to connect to
 	 */
 	public function __construct($parameters) {
 		$this->dbConn = mysql_connect($parameters['server'], $parameters['username'], $parameters['password']);
@@ -392,6 +392,8 @@ class MySQLDatabase extends Database {
 
 /**
  * A result-set from a MySQL database.
+ * @package sapphire
+ * @subpackage model
  */
 class MySQLQuery extends Query {
 	/**

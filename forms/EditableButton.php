@@ -8,6 +8,8 @@
 /**
  * EditableButton
  * Allows a user to modify the text on the button
+ * @package forms
+ * @subpackage fieldeditor
  */
 class EditableButton extends FormField {
 	

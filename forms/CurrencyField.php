@@ -79,7 +79,9 @@ JS;
 }
 
 /**
- * Creates the appropriate readonly field for this class.
+ * Readonly version of a {@link CurrencyField}.
+ * @package forms
+ * @subpackage fields-formattedinput
  */
 class CurrencyField_Readonly extends ReadonlyField{
 	

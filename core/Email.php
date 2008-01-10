@@ -368,6 +368,11 @@ class Email extends ViewableData {
     }
 }
 
+/**
+ * Implements an email template that can be populated.
+ * @package sapphire
+ * @subpackage email
+ */
 class Email_Template extends Email {
 	public function __construct() {
 	}

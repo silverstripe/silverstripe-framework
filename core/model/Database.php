@@ -445,6 +445,8 @@ abstract class Database extends Object {
  * Primarily, the Query class takes care of the iterator plumbing, letting the subclasses focusing
  * on providing the specific data-access methods that are required: {@link nextRecord()}, {@link numRecords()}
  * and {@link seek()}
+ * @package sapphire
+ * @subpackage model
  */
 abstract class Query extends Object implements Iterator {
 	/**

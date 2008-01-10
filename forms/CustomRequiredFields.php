@@ -15,8 +15,7 @@ class CustomRequiredFields extends RequiredFields{
 		
 	/**
 	 * Pass each field to be validated as a seperate argument
-	 * __construct()'s arguments needs to be an array
-	 * @mpeel Unfortunately the line 'function __construct(array $required)' breaks older versions of PHP 5, so remove the forcing of array
+	 * @param $required array The list of required fields
 	 */
 	function __construct($required) {
 		$this->required = $required;

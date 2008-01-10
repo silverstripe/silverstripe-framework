@@ -104,6 +104,7 @@ class ErrorPage extends Page {
 
 /**
  * Controller for ErrorPages.
+ * @package cms
  */
 class ErrorPage_Controller extends Page_Controller {
 	public function init() {

@@ -89,8 +89,10 @@ JS;
 }
 
 /**
- * Allows dates to be represented in a form, by
- * showing in a user friendly format, eg, dd/mm/yyyy.
+ * Disabled version of {@link DateField}.
+ * Allows dates to be represented in a form, by showing in a user friendly format, eg, dd/mm/yyyy.
+ * @package forms
+ * @subpackage fields-datetime
  */
 class DateField_Disabled extends DateField {
 	

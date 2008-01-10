@@ -16,6 +16,9 @@ $_SERVER['HTTP_HOST'] = $_SERVER['argv'][2];
 $_SERVER['SCRIPT_FILENAME'] = __FILE__;
 chdir(dirname($_SERVER['SCRIPT_FILENAME']));
 
+/**
+ * Include Sapphire's core code
+ */
 require_once("core/Core.php");
 
 header("Content-type: text/html; charset=\"utf-8\"");

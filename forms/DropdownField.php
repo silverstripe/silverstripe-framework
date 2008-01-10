@@ -85,9 +85,12 @@ class DropdownField extends FormField {
 }
 
 /**
-  * The class is originally designed to be used by RelatedDataEditor
-  * However, it can potentially be used as a normal dropdown field with add links in a normal form
-  */
+ * Dropdown field with an add button to the right.
+ * The class is originally designed to be used by RelatedDataEditor
+ * However, it can potentially be used as a normal dropdown field with add links in a normal form
+ * @package forms
+ * @subpackage fields-basic
+ */
 class DropdownField_WithAdd extends DropdownField {
 		
 	protected $addText, $useExistingText, $addLink, $useExistingLink;

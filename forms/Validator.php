@@ -13,7 +13,6 @@
  * TODO Automatically mark fields after serverside validation and replace the form through
  * FormResponse if the request was made by ajax.
  * 
- * @example forms/Form.php See how you can create a form on your controller.
  * @package forms
  * @subpackage validators
  */ 

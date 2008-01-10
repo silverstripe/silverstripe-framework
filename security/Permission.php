@@ -542,6 +542,8 @@ class Permission extends DataObject {
  *
  * This class is used to group permissions together for showing on an
  * interface.
+ * @package sapphire
+ * @subpackage security
  */
 class Permission_Group {
 

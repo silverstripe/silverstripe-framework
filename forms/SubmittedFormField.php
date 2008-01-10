@@ -5,10 +5,9 @@
  */
 
 /**
- * SubmittedFormField
  * Data received from a UserDefinedForm submission
+ * @package cms
  */
- 
 class SubmittedFormField extends DataObject {
 	
 	static $db = array(

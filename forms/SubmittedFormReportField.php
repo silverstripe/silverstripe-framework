@@ -5,10 +5,9 @@
  */
 
 /**
- * SubmittedFormReportField
  * Displays a summary of instances of a form submitted to the website
+ * @package cms
  */
-	
 class SubmittedFormReportField extends FormField {
 	
 	/**

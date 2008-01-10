@@ -183,6 +183,11 @@ class HtmlEditorField extends TextareaField {
 	}
 }
 
+/**
+ * Readonly version of an {@link HTMLEditorField}.
+ * @package forms
+ * @subpackage fields-formattedinput
+ */
 class HtmlEditorField_readonly extends ReadonlyField {
 	function Field() {
 		$valforInput = $this->value ? Convert::raw2att($this->value) : "";
@@ -231,7 +236,12 @@ function HtmlEditorField_dataValue_processImage($parts) {
 	return $result;
 }
 
-
+/**
+ * External toolbar for the HtmlEditorField.
+ * This is used by the CMS
+ * @package forms
+ * @subpackage fields-formattedinput
+ */
 class HtmlEditorField_Toolbar extends ViewableData {
 	protected $controller, $name;
 	
@@ -414,7 +424,10 @@ class HtmlEditorField_Toolbar extends ViewableData {
 
 
 /**
- * These controls are used when manually constructing a toolbar, as we do in the CMS
+ * Base class for HTML editor toolbar buttons.
+ * These controls are used when manually constructing a toolbar, as we do in the CMS.
+ * @package forms
+ * @subpackage fields-formattedinput
  */
 class HtmlEditorField_control extends ViewableData {
 	protected $command;
@@ -423,6 +436,11 @@ class HtmlEditorField_control extends ViewableData {
 	function Command() { return $this->command; }
 }
 
+/**
+ * Button on the HTML edityor toolbar.
+ * @package forms
+ * @subpackage fields-formattedinput
+ */
 class HtmlEditorField_button extends HtmlEditorField_control {
 	function __construct($command, $icon, $title = null) {
 		$this->title = $title ? $title : $command;
@@ -452,8 +470,20 @@ class HtmlEditorField_button extends HtmlEditorField_control {
 		return $this->icon;
 	}
 }
+
+/**
+ * Separator on the HTML edityor toolbar.
+ * @package forms
+ * @subpackage fields-formattedinput
+ */
 class HtmlEditorField_separator extends HtmlEditorField_control {
 }
+
+/**
+ * Dropdown field on the HTML editor toolbar.
+ * @package forms
+ * @subpackage fields-formattedinput
+ */
 class HtmlEditorField_dropdown extends HtmlEditorField_control {
 	protected $options, $idSegment;
 	
@@ -477,6 +507,12 @@ class HtmlEditorField_dropdown extends HtmlEditorField_control {
 		return $this->idSegment;
 	}
 }
+
+/**
+ * Line break on the HTML editor toolbar.
+ * @package forms
+ * @subpackage fields-formattedinput
+ */
 class HtmlEditorField_break extends HtmlEditorField_control {
 }
 

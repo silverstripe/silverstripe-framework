@@ -645,6 +645,11 @@ JS;
 
 }
 
+/**
+ * Single row of a {@link ComplexTableField}.
+ * @package forms
+ * @subpackage fields-relational
+ */
 class ComplexTableField_Item extends TableListField_Item {
 	/**
 	 * Needed to transfer pagination-status from overview.
@@ -680,6 +685,8 @@ class ComplexTableField_Item extends TableListField_Item {
  * detailed view of the source class your presenting.
  * You can customise the fields and requirements as well as any
  * permissions you might need.
+ * @package forms
+ * @subpackage fields-relational
  */
 class ComplexTableField_Popup extends Form {
 	protected $sourceClass;
