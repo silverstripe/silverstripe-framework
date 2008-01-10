@@ -45,7 +45,7 @@ class CurrencyField extends TextField {
 	 */
 	function jsValidation() {
 		$formID = $this->form->FormName();
-		
+		$error = _t('CurrencyField.VALIDATIONJS', 'Please enter a valid currency.');
 		$jsFunc =<<<JS
 Behaviour.register({
 	"#$formID": {
@@ -55,7 +55,7 @@ Behaviour.register({
 			
 			var value = \$F(el);
 			if(value.length > 0 && !value.match(/^\\$?(\d{1,3}(\,\d{3})*|(\d+))(\.\d{2})?\$/)) {
-				validationError(el,"Please enter a valid currency.","validation",false);
+				validationError(el,"$error","validation",false);
 				return false;
 			}
 			return true;			
@@ -91,10 +91,10 @@ class CurrencyField_Readonly extends ReadonlyField{
 	function Field() {
 		if($this->value){
 			$val = $this->dontEscape ? ($this->reserveNL?Convert::raw2xml($this->value):$this->value) : Convert::raw2xml($this->value);
-			$val = '$' . number_format(preg_replace('/[^0-9.]/',"",$val), 2);
+			$val = _t('CurrencyField.CURRENCYSYMBOL', '$') . number_format(preg_replace('/[^0-9.]/',"",$val), 2);
 			
 		}else {
-			$val = '<i>$0.00</i>';
+		        $val = '<i>'._t('CurrencyField.CURRENCYSYMBOL', '$').'0.00</i>';
 		}
 		$valforInput = $this->value ? Convert::raw2att($val) : "";
 		return "<span class=\"readonly\" id=\"" . $this->id() . "\">$val</span><input type=\"hidden\" name=\"".$this->name."\" value=\"".$valforInput."\" />";

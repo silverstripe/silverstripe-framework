@@ -1,13 +1,13 @@
 <div class="EditableEmailField EditableFormField" id="$Name.Attr">
 	<div class="FieldInfo">
-		<img class="handle" src="sapphire/images/drag.gif" alt="Drag to rearrange order of fields" />
-		<img class="icon" src="sapphire/images/fe_icons/text-email.png" alt="Email address field" />
+		<img class="handle" src="sapphire/images/drag.gif" alt="<% _t('DRAG', 'Drag to rearrange order of fields') %>" />
+		<img class="icon" src="sapphire/images/fe_icons/text-email.png" alt="<% _t('EMAIL', 'Email address field') %>" />
 		$TitleField
-		<a class="toggler" href="#" title="More options"><img src="cms/images/edit.gif" alt="More options" /></a>
+		<a class="toggler" href="#" title="<% _t('MORE', 'More options') %>"><img src="cms/images/edit.gif" alt="<% _t('MORE', 'More options') %>" /></a>
 		<% if CanDelete %>
-    <a class="delete" href="#" title="Delete this field"><img src="cms/images/delete.gif" alt="Delete this field" /></a>
+    <a class="delete" href="#" title="<% _t('DELETE', 'Delete this field') %>"><img src="cms/images/delete.gif" alt="<% _t('DELETE', 'Delete this field') %>" /></a>
 	  <% else %>
-    <img src="cms/images/locked.gif" alt="This field is required for this form and cannot be deleted" />
+    <img src="cms/images/locked.gif" alt="<% _t('REQUIRED', 'This field is required for this form and cannot be deleted') %>" />
     <% end_if %>
   </div>
 	<div class="ExtraOptions" id="$Name.Attr-extraOptions">

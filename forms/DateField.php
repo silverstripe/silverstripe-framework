@@ -42,7 +42,7 @@ class DateField extends TextField {
 	function jsValidation($formID = null)
 	{
 		if(!$formID)$formID = $this->form->FormName(); 
-		
+		$error = _t('DateField.VALIDATIONJS', 'Please enter a valid date format (DD/MM/YYYY).');
 		$jsFunc =<<<JS
 Behaviour.register({
 	"#$formID": {
@@ -51,7 +51,7 @@ Behaviour.register({
 			var value = \$F(el);
 			
 			if(value && value.length > 0 && !value.match(/^[0-9]{1,2}\/[0-9]{1,2}\/[0-90-9]{2,4}\$/)) {
-				validationError(el,"Please enter a valid date format (DD/MM/YYYY).","validation",false);
+				validationError(el,"$error","validation",false);
 				return false;
 			}
 			return true;
@@ -98,7 +98,7 @@ class DateField_Disabled extends DateField {
 	
 	function setValue($val) {
 		if($val && $val != "0000-00-00") $this->value = date('d/m/Y', strtotime($val));
-		else $this->value = "(No date set)";
+		else $this->value = '('._t('DateField.NODATESET', 'No date set').')';
 	}
 	
 	function Field() {
@@ -107,12 +107,12 @@ class DateField_Disabled extends DateField {
 			$df->setValue($this->dataValue());
 			
 			if(date('Y-m-d', time()) == $this->dataValue()) {
-				$val = Convert::raw2xml($this->value . ' (today)');
+			        $val = Convert::raw2xml($this->value . ' ('._t('DateField.TODAY','today').')');
 			} else {
 				$val = Convert::raw2xml($this->value . ', ' . $df->Ago());
 			}
 		} else {
-			$val = '<i>(not set)</i>';
+		        $val = '<i>('._t('DateField.NOTSET', 'not set').')</i>';
 		}
 		
 		return "<span class=\"readonly\" id=\"" . $this->id() . "\">$val</span>";

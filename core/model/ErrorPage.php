@@ -27,10 +27,10 @@ class ErrorPage extends Page {
 		if(!DataObject::get_one("ErrorPage", "ErrorCode = '404'")) {
 			$errorpage = new ErrorPage();
 			$errorpage->ErrorCode = 404;
-			$errorpage->Title = "Page not found";
+			$errorpage->Title = _t('ErrorPage.DEFAULTERRORPAGETITLE', 'Page not found');
 			$errorpage->URLSegment = "page-not-found";
 			$errorpage->ShowInMenus = false;
-			$errorpage->Content = "<p>Sorry, it seems you were trying to access a page that doesn't exist.</p><p>Please check the spelling of the URL you were trying to access and try again.</p>";
+			$errorpage->Content = _t('ErrorPage.DEFAULTERRORPAGECONTENT', '<p>Sorry, it seems you were trying to access a page that doesn\'t exist.</p><p>Please check the spelling of the URL you were trying to access and try again.</p>');
 			$errorpage->Status = "New page";
 			$errorpage->write();
 			// Don't publish, as the manifest may not be built yet
@@ -50,8 +50,8 @@ class ErrorPage extends Page {
 				"ErrorCode",
 				_t('ErrorPage.CODE', "Error code"),
 				array(
-					404 => "404 - Page not found",
-					500 => "500 - Server error"
+				        404 => _t('ErrorPage.404', '404 - Page not found'),
+					500 => _t('ErrorPage.500', '500 - Server error')
 				)
 			),
 			"Content"

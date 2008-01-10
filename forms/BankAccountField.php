@@ -91,7 +91,7 @@ class BankAccountField extends FormField {
 				$jsRequired .= "require('$name')\n";
 			}
 		}
-		
+		$error = _t('BankAccountField.VALIDATIONJS', 'Please enter a valid bank number');
 		$jsFunc =<<<JS
 Behaviour.register({
 	"#$formID": {
@@ -115,7 +115,7 @@ Behaviour.register({
 					// TODO Find a way to mark multiple error fields
 					validationError(
 						fieldName+"-AccountNumber",
-						"Please enter a valid bank number",
+						"$error",
 						"validation",
 						false
 					);

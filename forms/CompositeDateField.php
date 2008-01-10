@@ -16,7 +16,7 @@ class CompositeDateField extends DateField {
 		list($year,$month, $date) = explode('-', $value);
 		
 		$this->dateDropdown = new DropdownField($name."[date]", "",
-			array('NotSet' => '(Day)',
+			array('NotSet' => '('._t('CompositeDateField.DAY', 'Day').')',
 						'01'=>'01', '02'=>'02', '03'=>'03', '04'=>'04', '05'=>'05',
 						'06'=>'06', '07'=>'07', '08'=>'08', '09'=>'09', '10'=>'10',
 						'11'=>'11', '12'=>'12', '13'=>'13', '14'=>'14', '15'=>'15',
@@ -29,7 +29,7 @@ class CompositeDateField extends DateField {
 		);
 
 		$this->monthDropdown = new DropdownField($name."[month]", "",
-			array( 'NotSet' => '(Month)',
+			array( 'NotSet' => '('._t('CompositeDateField.MONTH', 'Month').')',
 						'01'=>'01', '02'=>'02', '03'=>'03', '04'=>'04', '05'=>'05',
 						'06'=>'06', '07'=>'07', '08'=>'08', '09'=>'09', '10'=>'10',
 						'11'=>'11', '12'=>'12'
@@ -94,7 +94,11 @@ class CompositeDateField extends DateField {
 	
 	function jsValidation() {
 		$formID = $this->form->FormName();
-		
+		$error1 = _t('CompositeDateField.VALIDATIONJS1', 'Please ensure you have set the');
+		$error2 = _t('CompositeDateField.VALIDATIONJS2', 'correctly.');
+		$day = _t('CompositeDateField.DAYJS', 'day');
+		$month = _t('CompositeDateField.MONTHJS', 'month');
+		$year = _t('CompositeDateField.YEARJS', 'year');
 		$jsFunc =<<<JS
 Behaviour.register({
 	"#$formID": {
@@ -110,11 +114,11 @@ Behaviour.register({
 				// The default selected value is 'NotSet'
 				if(dateParts[i].value == 'NotSet'){
 					switch(i){
-						case 0: err = "day"; break;
-						case 1: err = "month"; break;
-						case 2: err = "year"; break;
+						case 0: err = "$day"; break;
+						case 1: err = "$month"; break;
+						case 2: err = "$year"; break;
 					}
-					validationError(dateParts[i],"Please ensure you have set the '" + err + "' correctly.","validation");
+					validationError(dateParts[i],"$error1 '" + err + "' $error2","validation");
 					return false;
 				}
 			}

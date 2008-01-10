@@ -38,66 +38,66 @@ class BBCodeParser extends TextParser {
 	static function usable_tags() {
 		return new DataObjectSet(
 			new ArrayData(array(
-				"Title" => "Bold Text",
-				"Example" => "[b]<b>Bold</b>[/b]"
+				"Title" => _t('BBCodeParser.BOLD', 'Bold Text'),
+				"Example" => '[b]<b>'._t('BBCodeParser.BOLDEXAMPLE', 'Bold').'</b>[/b]'
 			)),
 			new ArrayData(array(
-				"Title" => "Italic Text",
-				"Example" => "[i]<i>Italics</i>[/i]"
+				"Title" => _t('BBCodeParser.ITALIC', 'Italic Text'),
+				"Example" => '[i]<i>'._t('BBCodeParser.ITALICEXAMPLE', 'Italics').'</i>[/i]'
 			)),
 			new ArrayData(array(
-				"Title" => "Underlined Text",
-				"Example" => "[u]<u>Underlined</u>[/u]"
+				"Title" => _t('BBCodeParser.UNDERLINE', 'Underlined Text'),
+				"Example" => '[u]<u>'._t('BBCodeParser.UNDERLINEEXAMPLE', 'Underlined').'</u>[/u]'
 			)),
 			new ArrayData(array(
-				"Title" => "Struck-out Text",
-				"Example" => "[s]<s>Struck-out</s>[/s]"
+				"Title" => _t('BBCodeParser.STRUCK', 'Struck-out Text'),
+				"Example" => '[s]<s>'._t('BBCodeParser.STRUCKEXAMPLE', 'Struck-out').'</s>[/s]'
 			)),
 			new ArrayData(array(
-				"Title" => "Colored text",
-				"Example" => "[color=blue]blue text[/color]"
+				"Title" => _t('BBCodeParser.COLORED', 'Colored text'),
+				"Example" => '[color=blue]'._t('BBCodeParser.COLOREDEXAMPLE', 'blue text').'[/color]'
 			)),
 			new ArrayData(array(
-				"Title" => "Alignment",
-				"Example" => "[align=right]right aligned[/align]"
+				"Title" => _t('BBCodeParser.ALIGNEMENT', 'Alignment'),
+				"Example" => '[align=right]'._t('BBCodeParser.ALIGNEMENTEXAMPLE', 'right aligned').'[/align]'
 			)),
 						
 			new ArrayData(array(
-				"Title" => "Website link",
-				"Description" => "Link to another website or URL",
-				"Example" => "[url]http://www.website.com/[/url]"
+				"Title" => _t('BBCodeParser.LINK', 'Website link'),
+				"Description" => _t('BBCodeParser.LINKDESCRIPTION', 'Link to another website or URL'),
+				"Example" => '[url]http://www.website.com/[/url]'
 			)),
 			new ArrayData(array(
-				"Title" => "Website link",
-				"Description" => "Link to another website or URL",
+				"Title" => _t('BBCodeParser.LINK', 'Website link'),
+				"Description" => _t('BBCodeParser.LINKDESCRIPTION', 'Link to another website or URL'),
 				"Example" => "[url=http://www.website.com/]Some website[/url]"
 			)),			
 			new ArrayData(array(
-				"Title" => "Email link",
-				"Description" => "Create link to an email address",
+				"Title" => _t('BBCodeParser.EMAILLINK', 'Email link'),
+				"Description" => _t('BBCodeParser.EMAILLINKDESCRIPTION', 'Create link to an email address'),
 				"Example" => "[email]you@yoursite.com[/email]"
 			)),
 				new ArrayData(array(
-				"Title" => "Email link",
-				"Description" => "Create link to an email address",
+				"Title" => _t('BBCodeParser.EMAILLINK', 'Email link'),
+				"Description" => _t('BBCodeParser.EMAILLINKDESCRIPTION', 'Create link to an email address'),
 				"Example" => "[email=you@yoursite.com]email me[/email]"
 			)),		
 
 			new ArrayData(array(
-				"Title" => "Image",
-				"Description" => "Show an image in your post",
+				"Title" => _t('BBCodeParser.IMAGE', 'Image'),
+				"Description" => _t('BBCodeParser.IMAGEDESCRIPTION', 'Show an image in your post'),
 				"Example" => "[img]http://www.website.com/image.jpg[/img]"
 			)),
 			
 			new ArrayData(array(
-				"Title" => "Code Block",
-				"Description" => "Unformatted code block",
-				"Example" => "[code]Code block[/code]"
+				"Title" => _t('BBCodeParser.CODE', 'Code Block'),
+				"Description" => _t('BBCodeParser.CODEDESCRIPTION', 'Unformatted code block'),
+				"Example" => '[code]'._t('BBCodeParser.CODEEXAMPLE', 'Code block').'[/code]'
 			)),
 			new ArrayData(array(
-				"Title" => "Unordered list",
-				"Description" => "Unordered list",
-				"Example" => "[ulist][*]unordered item 1[*]unordered item 2[/ulist]"
+				"Title" => _t('BBCodeParser.UNORDERED', 'Unordered list'),
+				"Description" => _t('BBCodeParser.UNORDEREDDESCRIPTION', 'Unordered list'),
+				"Example" => '[ulist][*]'._t('BBCodeParser.UNORDEREDEXAMPLE1', 'unordered item 1').'[*]'._t('BBCodeParser.UNORDEREDEXAMPLE2', 'unordered item 2').'[/ulist]'
 			))						
 			
 					

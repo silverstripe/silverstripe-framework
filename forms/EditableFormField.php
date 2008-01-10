@@ -78,7 +78,7 @@ class EditableFormField extends DataObject {
 			$readOnlyAttr = '';
 		}
 		
-		return "<input type=\"text\" class=\"text\" title=\"(Enter Question)\" value=\"$titleAttr\" name=\"Fields[{$this->ID}][Title]\"$readOnlyAttr />";
+		return "<input type=\"text\" class=\"text\" title=\"("._t('EditableFormField.ENTERQUESTION', 'Enter Question').")\" value=\"$titleAttr\" name=\"Fields[{$this->ID}][Title]\"$readOnlyAttr />";
 	}
 	
 	function Name() {
@@ -111,9 +111,9 @@ class EditableFormField extends DataObject {
 		$extraOptions = new FieldSet();
 		
 		if( !$this->Parent()->hasMethod( 'hideExtraOption' ) ){
-			$extraOptions->push( new CheckboxField($baseName . "[Required]", "Required?", $this->Required) );
+		        $extraOptions->push( new CheckboxField($baseName . "[Required]", _t('EditableFormField.REQUIRED', 'Required?'), $this->Required) );
 		}elseif( !$this->Parent()->hideExtraOption( 'Required' ) ){
-			$extraOptions->push( new CheckboxField($baseName . "[Required]", "Required?", $this->Required) );
+			$extraOptions->push( new CheckboxField($baseName . "[Required]", _t('EditableFormField.REQUIRED', 'Required?'), $this->Required) );
 		}
 		
 		if( $this->Parent()->hasMethod( 'getExtraOptionsForField' ) ) {

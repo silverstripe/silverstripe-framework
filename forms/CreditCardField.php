@@ -29,7 +29,12 @@ class CreditCardField extends TextField {
 	
 	function jsValidation() {
 		$formID = $this->form->FormName();
-		
+		$error = _t('CreditCardField.VALIDATIONJS1', 'Please ensure you have entered the');
+		$error2 = _t('CreditCardField.VALIDATIONJS2', 'credit card number correctly.');
+		$first = _t('CreditCardField.FIRST', 'first');
+		$second = _t('CreditCardField.SECOND', 'second');
+		$third = _t('CreditCardField.THIRD', 'third');
+		$fourth = _t('CreditCardField.FOURTH', 'fourth');
 		$jsFunc =<<<JS
 Behaviour.register({
 	"#$formID": {
@@ -58,12 +63,12 @@ Behaviour.register({
 						!cardParts[i].value.match(/[0-9]{4}/)
 					){
 						switch(i){
-							case 0: number = "first"; break;
-							case 1: number = "second"; break;
-							case 2: number = "third"; break;
-							case 3: number = "fourth"; break;
+							case 0: number = "$first"; break;
+							case 1: number = "$second"; break;
+							case 2: number = "$third"; break;
+							case 3: number = "$fourth"; break;
 						}
-						validationError(cardParts[i],"Please ensure you have entered the " + number + " credit card number correctly.","validation",false);
+						validationError(cardParts[i],"$error1 " + number + " $error2","validation",false);
 					return false;
 					}
 				}
@@ -86,10 +91,10 @@ JS;
 		if($this->value) foreach($this->value as $part){
 			if(!$part || !(strlen($part) == 4) || !ereg("([0-9]{4})",$part)){
 				switch($i){
-					case 0: $number = "first"; break;
-					case 1: $number = "second"; break;
-					case 2: $number = "third"; break;
-					case 3: $number = "fourth"; break;
+				        case 0: $number = _t('CreditCardField.FIRST', 'first'); break;
+					case 1: $number = _t('CreditCardField.SECOND', 'second'); break;
+					case 2: $number = _t('CreditCardField.THIRD', 'third'); break;
+					case 3: $number = _t('CreditCardField.FOURTH', 'fourth'); break;
 				}
 				$validator->validationError(
 					$this->name,

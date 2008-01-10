@@ -14,7 +14,7 @@ class EmailField extends TextField {
 	
 	function jsValidation() {
 		$formID = $this->form->FormName();
-		
+		$error = _t('EmailField.VALIDATIONJS', 'Please enter an email address.');
 		$jsFunc =<<<JS
 Behaviour.register({
 	"#$formID": {
@@ -25,7 +25,7 @@ Behaviour.register({
 		 	if(el.value.match(/^([a-zA-Z0-9_+\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/)) {
 		 		return true;
 		 	} else {
-				validationError(el, "Please enter an email address.","validation");
+				validationError(el, "$error","validation");
 		 		return false;
 		 	} 	
 		}

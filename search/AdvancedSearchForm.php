@@ -19,27 +19,27 @@ class AdvancedSearchForm extends SearchForm {
 		if(!$fields) {
 			$fields = new FieldSet(
 				$searchBy = new CompositeField(
-					new HeaderField("SEARCH BY"),
-					new TextField("+", "All Words"),
-					new TextField("quote", "Exact Phrase"),
-					new TextField("any", "At Least One Of the Words"),
-					new TextField("-", "Without the Words")
+					new HeaderField(_t('AdvancedSearchForm.SEARCHBY', 'SEARCH BY')),
+					new TextField("+", _t('AdvancedSearchForm.ALLWORDS', 'All Words')),
+					new TextField("quote", _t('AdvancedSearchForm.EXACT', 'Exact Phrase')),
+					new TextField("any", _t('AdvancedSearchForm.ATLEAST', 'At Least One Of the Words')),
+					new TextField("-", _t('AdvancedSearchForm.WITHOUT', 'Without the Words'))
 				),
 				$sortBy = new CompositeField(
-					new HeaderField("SORT RESULTS BY"),
+					new HeaderField(_t('AdvancedSearchForm.SORTBY', 'SORT RESULTS BY')),
 					new OptionsetField("sortby", "",
 						array(
-							'Relevance' =>'Relevance',
-							'LastUpdated' => 'Last Updated',
-							'PageTitle' => 'Page Title',
+						        'Relevance' => _t('AdvancedSearchForm.RELEVANCE', 'Relevance'),
+							'LastUpdated' => _t('AdvancedSearchForm.LASTUPDATED', 'Last Updated'),
+							'PageTitle' => _t('AdvancedSearchForm.PAGETITLE', 'Page Title'),
 						),
 						'Relevance'
 					)
 				),
 				$chooseDate = new CompositeField(
-					new HeaderField("LAST UPDATED"),
-					new CompositeDateField("From", "From"),
-					new CompositeDateField("To", "To")
+					new HeaderField(_t('AdvancedSearchForm.LASTUPDATEDHEADER', 'LAST UPDATED')),
+					new CompositeDateField("From", _t('AdvancedSearchForm.FROM', 'From')),
+					new CompositeDateField("To", _t('AdvancedSearchForm.TO', 'To'))
 				)					
 			);
 			
@@ -51,7 +51,7 @@ class AdvancedSearchForm extends SearchForm {
 		
 		if(!$actions) {
 			$actions = new FieldSet(
-				new FormAction("results", "Go")
+				new FormAction("results", _t('AdvancedSearchForm.GO', 'Go'))
 			);
 		}
 		parent::__construct($controller, $name, $fields, $actions);

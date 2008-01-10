@@ -68,8 +68,8 @@ HTML;
 	 */
 	function gettree() {
 		echo "<div class=\"actions\">
-			<input type=\"button\" name=\"save\" value=\"save\" />
-			<input type=\"button\" name=\"cancel\" value=\"cancel\" />
+			<input type=\"button\" name=\"save\" value=\""._t('TreeSelectorField.SAVE', 'save')."\" />
+			<input type=\"button\" name=\"cancel\" value=\""._t('TreeSelectorField.CANCEL', 'cancel')."\" />
 		</div>";
 		
 

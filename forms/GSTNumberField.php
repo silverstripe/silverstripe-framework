@@ -15,7 +15,7 @@ class GSTNumberField extends TextField {
 	
 	function jsValidation() {
 		$formID = $this->form->FormName();
-		
+		$error = _t('GSTNumberField.VALIDATIONJS', 'Please enter a valid GST Number');
 		$jsFunc =<<<JS
 Behaviour.register({
 	"#$formID": {
@@ -25,7 +25,7 @@ Behaviour.register({
 			
 			var value = \$F(el);
 			if(value.length > 0 && !value.match(/^[0-9]{2}[\-]?[0-9]{3}[\-]?[0-9]{3,4}\$/)) {
-				validationError(el,"Please enter a valid GST Number","validation",false);
+				validationError(el,"$error","validation",false);
 				return false;
 			}
 			return true;

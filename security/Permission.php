@@ -434,7 +434,7 @@ class Permission extends DataObject {
 				? '(select)'
 				: $blankItemText;
 		}
-		$allCodes['ADMIN'] = 'Full administrative rights';
+		$allCodes['ADMIN'] = _t('Permission.FULLADMINRIGHTS', 'Full administrative rights');
 
 		if($classes) foreach($classes as $class) {
 			$SNG = singleton($class);
@@ -464,7 +464,7 @@ class Permission extends DataObject {
 		if(!Permission::check('ADMIN'))
 			Security::permissionFailure();
 
-		echo "<h1>The following permission codes are defined</h1>";
+		echo '<h1>'._t('Permission.PERMSDEFINED', 'The following permission codes are defined').'</h1>';
 		$codes = self::get_codes();
 		echo "<pre>";
 		print_r($codes);

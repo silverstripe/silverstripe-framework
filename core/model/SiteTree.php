@@ -708,8 +708,8 @@ class SiteTree extends DataObject {
 			if(!DataObject::get_one("SiteTree", "URLSegment = 'home'")) {
 				$homepage = new Page();
 
-				$homepage->Title = "Home";
-				$homepage->Content = "<p>Welcome to SilverStripe! This is the default homepage. You can edit this page by opening <a href=\"admin/\">the CMS</a>. You can now access the <a href=\"http://doc.silverstripe.com\">developer documentation</a>, or begin <a href=\"http://doc.silverstripe.com/doku.php?id=tutorials\">the tutorials.</a></p>";
+				$homepage->Title = _t('SiteTree.DEFAULTHOMETITLE', 'Home');
+				$homepage->Content = _t('SiteTree.DEFAULTHOMECONTENT', '<p>Welcome to SilverStripe! This is the default homepage. You can edit this page by opening <a href=\"admin/\">the CMS</a>. You can now access the <a href=\"http://doc.silverstripe.com\">developer documentation</a>, or begin <a href=\"http://doc.silverstripe.com/doku.php?id=tutorials\">the tutorials.</a></p>');
 				$homepage->URLSegment = "home";
 				$homepage->Status = "Published";
 				$homepage->write();
@@ -720,8 +720,8 @@ class SiteTree extends DataObject {
 
 			if(DB::query("SELECT COUNT(*) FROM SiteTree")->value() == 1) {
 				$aboutus = new Page();
-				$aboutus->Title = "About Us";
-				$aboutus->Content = "<p>You can fill this page out with your own content, or delete it and create your own pages.<br /></p>";
+				$aboutus->Title = _t('SiteTree.DEFAULTABOUTTITLE', 'About Us');
+				$aboutus->Content = _t('SiteTree.DEFAULTABOUTCONTENT', '<p>You can fill this page out with your own content, or delete it and create your own pages.<br /></p>');
 				$aboutus->URLSegment = "about-us";
 				$aboutus->Status = "Published";
 				$aboutus->write();
@@ -729,8 +729,8 @@ class SiteTree extends DataObject {
 				Database::alteration_message("About Us created","created");
 
 				$contactus = new Page();
-				$contactus->Title = "Contact Us";
-				$contactus->Content = "<p>You can fill this page out with your own content, or delete it and create your own pages.<br /></p>";
+				$contactus->Title = _t('SiteTree.DEFAULTCONTACTTITLE', 'Contact Us');
+				$contactus->Content = _t('SiteTree.DEFAULTCONTACTCONTENT', '<p>You can fill this page out with your own content, or delete it and create your own pages.<br /></p>');
 				$contactus->URLSegment = "contact-us";
 				$contactus->Status = "Published";
 				$contactus->write();
@@ -1220,25 +1220,28 @@ class SiteTree extends DataObject {
 			$instance = singleton($class);
 			if((($instance instanceof HiddenClass) || !$instance->canCreate()) && ($class != $this->class)) continue;
 
+			/*
 			$addAction = $instance->uninherited('add_action', true);
 			if(!$addAction) {
 				$addAction = $instance->singular_name();
 			}
+			*/
+			$addAction = $instance->i18n_singular_name();
 
 			if($class == $this->class) {
 				$currentClass = $class;
 				$currentAddAction = $addAction;
 			} else {
 				$result[$class] = ($class == $this->class)
-				? "Currently $addAction"
-				: "Change to $addAction";
+				  ? _t('SiteTree.CURRENTLY', 'Currently').' '.$addAction
+				  : _t('SiteTree.CHANGETO', 'Change to').' '.$addAction;
 			}
 		}
 		
 		// sort alphabetically, and put current on top
 		asort($result);
 		$result = array_reverse($result);
-		$result[$currentClass] = "{$currentAddAction} (current)";
+		$result[$currentClass] = $currentAddAction.' ('._t('SiteTree.CURRENT','current').')';
 		$result = array_reverse($result);
 		
 		return $result;

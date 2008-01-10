@@ -37,12 +37,12 @@ class EditableTextField extends EditableFormField {
 		$baseName = "Fields[$this->ID]";
 		
 		$extraFields = new FieldSet(
-			new TextField($baseName . "[Size]", "Length of text box", (string)$this->Size),
-			new FieldGroup("Text length",
+			new TextField($baseName . "[Size]", _t('EditableTextField.TEXTBOXLENGTH', 'Length of text box'), (string)$this->Size),
+			new FieldGroup(_t('EditableTextField.TEXTLENGTH', 'Text length'),
 				new TextField($baseName . "[MinLength]", "", (string)$this->MinLength),
 				new TextField($baseName . "[MaxLength]", " - ", (string)$this->MaxLength)
 			),
-			new TextField($baseName . "[Rows]", "Number of rows", (string)$this->Rows)
+			new TextField($baseName . "[Rows]", _t('EditableTextField.NUMBERROWS', 'Number of rows'), (string)$this->Rows)
 		);
 		
 		foreach( parent::ExtraOptions() as $extraField )
@@ -89,9 +89,9 @@ class EditableTextField extends EditableFormField {
 			$disabled = '';
 		}
 		if( $this->Rows == 1 ){
-			return '<div class="field text"><label class="left">Default Text </label> <input class="defaultText" name="Fields['.Convert::raw2att( $this->ID ).'][Default]" type="text" value="'.Convert::raw2att( $this->getField('Default') ).'"'.$disabled.' /></div>';
+		        return '<div class="field text"><label class="left">'._t('EditableTextField.DEFAULTTEXT', 'Default Text').' </label> <input class="defaultText" name="Fields['.Convert::raw2att( $this->ID ).'][Default]" type="text" value="'.Convert::raw2att( $this->getField('Default') ).'"'.$disabled.' /></div>';
 		}else{
-			return '<div class="field text"><label class="left">Default Text </label> <textarea class="defaultText" name="Fields['.Convert::raw2att( $this->ID ).'][Default]"'.$disabled.'>'.Convert::raw2att( $this->getField('Default') ).'</textarea></div>';
+			return '<div class="field text"><label class="left">'._t('EditableTextField.DEFAULTTEXT', 'Default Text').' </label> <textarea class="defaultText" name="Fields['.Convert::raw2att( $this->ID ).'][Default]"'.$disabled.'>'.Convert::raw2att( $this->getField('Default') ).'</textarea></div>';
 		}
 	}
 }

@@ -231,7 +231,7 @@ class FormField extends ViewableData {
 	 */
 	function Field() {
 		if($this->value) $val = $this->dontEscape ? ($this->reserveNL?Convert::raw2xml($this->value):$this->value) : Convert::raw2xml($this->value);
-		else $val = '<i>(none)</i>';
+		else $val = '<i>('._t('FormField.NONE', 'none').')</i>';
 		$valforInput = $this->value ? Convert::raw2att($val) : "";
 		return "<span class=\"readonly\" id=\"" . $this->id() . "\">$val</span>\n<input type=\"hidden\" name=\"".$this->name."\" value=\"".$valforInput."\" />";
 	}

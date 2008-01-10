@@ -104,7 +104,7 @@ class Date extends DBField {
 			if(time() < strtotime($this->value)) $agoWord = _t("Date.AWAY", " away");
 			else $agoWord = _t("Date.AGO", " ago");
 
-			return $this->TimeDiff() . $agoWord;
+			return $this->TimeDiff() . ' ' . $agoWord;
 		}
 	}
 

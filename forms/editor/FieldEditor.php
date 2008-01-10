@@ -182,8 +182,8 @@ class FieldEditor extends FormField {
 	function FormOptions() {
 		if($this->haveFormOptions){
 			$fields = new FieldSet(
-				new EmailField( "{$this->name}[EmailTo]", "Email submission to:", $this->form->getRecord()->EmailTo ),
-				new CheckboxField( "{$this->name}[EmailOnSubmit]", "Email form on submit:", $this->form->getRecord()->EmailOnSubmit )
+				new EmailField( "{$this->name}[EmailTo]", _t('FieldEditor.EMAILSUBMISSION', 'Email submission to:'), $this->form->getRecord()->EmailTo ),
+				new CheckboxField( "{$this->name}[EmailOnSubmit]", _t('FieldEditor.EMAILONSUBMIT', 'Email form on submit:'), $this->form->getRecord()->EmailOnSubmit )
 			);
 		        
 		    if( $this->form->getRecord()->hasMethod( 'customFormActions' ) ) {

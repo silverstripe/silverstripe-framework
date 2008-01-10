@@ -135,9 +135,10 @@ HTML
 		$idexport = $this->id() . '_exportToCSV';
 		$idtype = $this->id() . '_Type';
 		$class = $this->class;
-				if($this->export){
-			$exportButton =<<<HTML
-<input name="$idexport" style="width: 12em" type="button" id="$idexport" class="DataReport_ExportToCSVButton" value="Export to CSV" />
+		if($this->export){
+		  $value = _t('EXPORTCSV', 'Export to CSV');
+		  $exportButton =<<<HTML
+<input name="$idexport" style="width: 12em" type="button" id="$idexport" class="DataReport_ExportToCSVButton" value="$value" />
 <input name="Type" type="hidden" value="$class" id="$idtype" />
 HTML
 ;

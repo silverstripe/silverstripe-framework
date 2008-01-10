@@ -4,7 +4,7 @@
 <div class="reports" id="FormSubmissions">
 <% control Submissions %>
 	<div class="report">
-		<span class="submitted">Submitted at $Created.Nice <% if Recipient %>to $Recipient<% end_if %></span>
+		<span class="submitted"><% _t('SUBMITTED', 'Submitted at') %> $Created.Nice <% if Recipient %>to $Recipient<% end_if %></span>
 		<table>
 			<% control FieldValues %>
 				<tr>

@@ -232,6 +232,27 @@ class DataObject extends Controller implements DataObjectInterface {
 	}
 
 	/**
+	 * Get the translated user friendly singular name of this DataObject
+	 * same as singular_name() but runs it through the translating function
+	 *
+	 * NOTE:
+	 * It uses as default text if no translation found the $add_action when
+	 * defined or else the default text is singular_name()
+	 *
+	 * Translating string is in the form:
+	 *     $this->class.SINGULARNAME
+	 * Example:
+	 *     Page.SINGULARNAME
+	 *
+	 * @return string User friendly translated singular name of this DataObject
+	 */
+	function i18n_singular_name()
+	{
+	        $name = (!empty($this->add_action)) ? $this->add_action : $this->singular_name();
+		return _t($this->class.'.SINGULARNAME', $name);
+	}
+
+	/**
 	 * Get the user friendly plural name of this DataObject
 	 * If the name is not defined (by renaming $plural_name in the subclass),
 	 * this returns a pluralised version of the class name.
@@ -248,6 +269,22 @@ class DataObject extends Controller implements DataObjectInterface {
 
 			return ucfirst($name . 's');
 		}
+	}
+
+	/**
+	 * Get the translated user friendly plural name of this DataObject
+	 * Same as plural_name but runs it through the translation function
+	 * Translation string is in the form:
+	 *      $this->class.PLURALNAME
+	 * Example:
+	 *      Page.PLURALNAME
+	 *
+	 * @return string User friendly translated plural name of this DataObject
+	 */
+	function i18n_plural_name()
+	{
+	        $name = $this->plural_name();
+		return _t($this->class.'.PLURALNAME', $name);
 	}
 
 	/**

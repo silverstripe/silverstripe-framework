@@ -154,18 +154,20 @@ class ConfirmedPasswordField extends FormField {
 				return true;
 			}
 		";
-		
+
+		$error1 = _t('ConfirmedPasswordField.HAVETOMATCH', 'Passwords have to match.');
 		$jsTests .= "
 			if(passEl.value != confEl.value) {
-				validationError(confEl, \"Passwords have to match.\", \"error\");
+				validationError(confEl, \"$error1\", \"error\");
 				return false;
 			}
 		";
 		
+		$error2 = _t('ConfirmedPasswordField.NOEMPTY', 'Passwords can\'t be empty.');
 		if(!$this->canBeEmpty) {
 			$jsTests .= "
 				if(!passEl.value || !confEl.value) {
-					validationError(confEl, \"Passwords can't be empty.\", \"error\");
+					validationError(confEl, \"$error2\", \"error\");
 					return false;
 				}
 			";
@@ -174,13 +176,13 @@ class ConfirmedPasswordField extends FormField {
 		if(($this->minLength || $this->maxLength)) {
 			if($this->minLength && $this->maxLength) {
 				$limit = "{$this->minLength},{$this->maxLength}";
-				$errorMsg = "Passwords must be {$this->minLength} to {$this->maxLength} characters long.";
+				$errorMsg = sprintf(_t('ConfirmedPasswordField.BETWEEN', 'Passwords must be %s to %s characters long.'), $this->minLength, $this->maxLength);
 			} elseif($this->minLength) {
 				$limit = "{$this->minLength}";
-				$errorMsg = "Passwords must be at least {$this->minLength} characters long.";
+				$errorMsg = sprintf(_t('ConfirmedPasswordField.ATLEAST', 'Passwords must be at least %s characters long.'), $this->minLength);
 			} elseif($this->maxLength) {
 				$limit = "0,{$this->maxLength}";
-				$errorMsg = "Passwords must be at most {$this->maxLength} characters long.";
+				$errorMsg = sprintf(_t('ConfirmedPasswordField.MAXIMUM', 'Passwords must be at most %s characters long.'), $this->maxLength);
 			}
 			$limitRegex = '/^.{' . $limit . '}$/';
 			$jsTests .= "
@@ -191,12 +193,13 @@ class ConfirmedPasswordField extends FormField {
 			";
 		}
 		
+		$error3 = _t('ConfirmedPasswordField.LEASTONE', 'Passwords must have at least one digit and one alphanumeric character.');
 		if($this->requireStrongPassword) {
 			$jsTests .= "
 				if(!passEl.value.match(/^(([a-zA-Z]+\d+)|(\d+[a-zA-Z]+))[a-zA-Z0-9]*$/)) {
 					validationError(
 						confEl, 
-						\"Passwords must have at least one digit and one alphanumeric character.\", 
+						\"$error3\", 
 						\"error\"
 					);
 					return false;
@@ -273,13 +276,13 @@ JS;
 		if(($this->minLength || $this->maxLength)) {
 			if($this->minLength && $this->maxLength) {
 				$limit = "{$this->minLength},{$this->maxLength}";
-				$errorMsg = "Passwords must be {$this->minLength} to {$this->maxLength} characters long.";
+				$errorMsg = sprintf(_t('ConfirmedPasswordField.BETWEEN', 'Passwords must be %s to %s characters long.'), $this->minLength, $this->maxLength);
 			} elseif($this->minLength) {
 				$limit = "{$this->minLength}";
-				$errorMsg = "Passwords must be at least {$this->minLength} characters long.";
+				$errorMsg = sprintf(_t('ConfirmedPasswordField.ATLEAST', 'Passwords must be at least %s characters long.'), $this->minLength);
 			} elseif($this->maxLength) {
 				$limit = "0,{$this->maxLength}";
-				$errorMsg = "Passwords must be at most {$this->maxLength} characters long.";
+				$errorMsg = sprintf(_t('ConfirmedPasswordField.MAXIMUM', 'Passwords must be at most %s characters long.'), $this->maxLength);
 			}
 			$limitRegex = '/^.{' . $limit . '}$/';
 			if(!empty($value) && !preg_match($limitRegex,$value)) {

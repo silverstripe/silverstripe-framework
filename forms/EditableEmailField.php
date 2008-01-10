@@ -30,7 +30,7 @@ class EditableEmailField extends EditableFormField {
 		$baseName = "Fields[$this->ID]";
 		
 		$extraFields = new FieldSet(
-			new CheckboxField( $baseName . "[SendCopy]", "Send copy of submission to this address", $this->SendCopy )
+			new CheckboxField( $baseName . "[SendCopy]", _t('EditableEmailField.SENDCOPY', 'Send copy of submission to this address'), $this->SendCopy )
 		);
 		
 		foreach( parent::ExtraOptions() as $extraField )

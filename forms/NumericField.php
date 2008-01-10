@@ -15,7 +15,7 @@ class NumericField extends TextField{
 	
 	function jsValidation() {
 		$formID = $this->form->FormName();
-		
+		$error = _t('NumericField.VALIDATIONJS', 'is not a number, only numbers can be accepted for this field');
 		$jsFunc =<<<JS
 Behaviour.register({
 	"#$formID": {
@@ -26,7 +26,7 @@ Behaviour.register({
 			 	if(el.value.match(/^([0-9]+(\.[0-9]+)?$)/)) { 
 			 		return true;
 			 	} else {
-					validationError(el, "'" + el.value + "' is not a number, only numbers can be accepted for this field","validation");
+					validationError(el, "'" + el.value + "' $error","validation");
 			 		return false;
 			 	}
 			}
