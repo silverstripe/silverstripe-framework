@@ -234,7 +234,7 @@ class Debug {
 	 * @deprecated Use send_errors_to() instead.
 	 */
 	static function sendLiveErrorsTo($emailAddress) {
-		user_error('Debug::sendLiveErrorsTo() is deprecated. Use Director::send_errors_to() instead.', E_USER_NOTICE);
+		user_error('Debug::sendLiveErrorsTo() is deprecated. Use Debug::send_errors_to() instead.', E_USER_NOTICE);
 		if(!Director::isDev()) self::send_errors_to($emailAddress, true);
 	}
 	
