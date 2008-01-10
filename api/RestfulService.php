@@ -8,6 +8,7 @@
 /**
  * RestfulService class allows you to consume various RESTful APIs.
  * Through this you could connect and aggregate data of various web services.
+ * For more info visit wiki documentation - http://doc.silverstripe.com/doku.php?id=restfulservice  
  * @package sapphire
  * @subpackage integration
  */
@@ -19,6 +20,11 @@ class RestfulService extends ViewableData {
 	protected $checkErrors;
 	protected $cache_expire;
 	
+	/**
+ 	* Creates a new restful service.
+ 	* @param string $base Base URL of the web service eg: api.example.com 
+ 	* @param int $expiry Set the cache expiry interva. Defaults to 1 hour (3600 seconds)
+ 	*/
 	function __construct($base, $expiry=3600){
 		$this->baseURL = $base;
 		$this->cache_expire = $expiry;
@@ -26,7 +32,7 @@ class RestfulService extends ViewableData {
 	
 	/**
  	* Sets the Query string parameters to send a request.
- 	* @param $params array An array passed with necessary parameters. 
+ 	* @param array $params An array passed with necessary parameters. 
  	*/
 	function setQueryString($params=NULL){
 		$this->queryString = http_build_query($params,'','&');
@@ -42,56 +48,62 @@ class RestfulService extends ViewableData {
  	*/
 	
 	function connect(){
-		$url = $this->constructURL(); // url for the request
+		$url = $this->constructURL(); //url for the request
 		
-		// check for file exists in cache		
-		// set the cache directory
-		$cachedir = TEMP_FOLDER; // default silverstripe-cache
+		//check for file exists in cache		
+		//set the cache directory
+		$cachedir=TEMP_FOLDER; //default silverstrip-cache
 			
-		$cache_file = md5($url); // encoded name of cache file
-		$cache_path = $cachedir . "/$cache_file";
+		$cache_file = md5($url); //encoded name of cache file
+		$cache_path = $cachedir."/$cache_file";
 				
-		if((@file_exists("$cache_path") && ((@filemtime($cache_path) + $this->cache_expire) > (time())))){
+		if(( @file_exists("$cache_path") && ((@filemtime($cache_path) + $this->cache_expire) > ( time() )))){
 			$this->rawXML = file_get_contents($cache_path);
-		}	else {
-			// not available in cache fetch from server
+		}
+		else {//not available in cache fetch from server
+			
 			$ch = curl_init();
 			$timeout = 5;
+			$useragent = "SilverStripe/2.2";
 			curl_setopt($ch, CURLOPT_URL, $url);
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+			curl_setopt($ch, CURLOPT_USERAGENT, $useragent);
 			curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
 			$this->rawXML = curl_exec($ch);
 			curl_close($ch);
 			
+			
 		}
 		
-		// Try using file_get_contents if cURL is not installed in your system.
-		// $this->rawXML = file_get_contents($url);
+		//Try using file_get_contents if cURL is not installed in your system.
+		//$this->rawXML = file_get_contents($url);
 		
-		// results returned - from cache / live
+		//results returned - from cache / live
 		if($this->rawXML != ""){
-			// save the response in cache
+			//save the response in cache
 			$fp = @fopen($cache_path,"w+");
 			@fwrite($fp,$this->rawXML);
 			@fclose($fp);
-			
+					
 			if($this->checkErrors == true) {
 				return $this->errorCatch($this->rawXML);
-			} else {
+			}
+			else {
 				return $this->rawXML;
 			}
-		} else {
-			user_error("Invalid Response (maybe your calling to wrong URL or server unavailable)", E_USER_ERROR);
 		}
-	}
+		else {
+			user_error("Invalid Response (maybe your calling to wrong URL or server unavailable)", E_USER_ERROR);
+			}
+		}
 	
 	/**
  	* Gets attributes as an array, of a particular type of element.
- 	* @param $xml string The source xml to parse, this could be the original response received.
- 	* @param $collection string The name of parent node which wraps the elements, if available
- 	* @param $element string The element we need to extract the attributes.
  	* Example : <photo id="2636" owner="123" secret="ab128" server="2"> 
  	* returns id, owner,secret and sever attribute values of all such photo elements.
+ 	* @param string $xml The source xml to parse, this could be the original response received.
+ 	* @param string $collection The name of parent node which wraps the elements, if available
+ 	* @param string $element The element we need to extract the attributes.
  	*/
 	
 	function getAttributes($xml, $collection=NULL, $element=NULL){
@@ -119,10 +131,10 @@ class RestfulService extends ViewableData {
 	
 	/**
  	* Gets an attribute of a particular element.
- 	* @param $xml string The source xml to parse, this could be the original response received.
- 	* @param $collection string The name of the parent node which wraps the element, if available
- 	* @param $element string The element we need to extract the attribute
- 	* @param $attr string The name of the attribute
+ 	* @param string $xml The source xml to parse, this could be the original response received.
+ 	* @param string $collection The name of the parent node which wraps the element, if available
+ 	* @param string $element The element we need to extract the attribute
+ 	* @param string $attr The name of the attribute
  	*/
 	
 	function getAttribute($xml, $collection=NULL, $element=NULL, $attr){
@@ -144,9 +156,9 @@ class RestfulService extends ViewableData {
 	/**
  	* Gets set of node values as an array. 
  	* When you get to the depth in the hierachchy use node_child_subchild syntax to get the value.
- 	* @param $xml string The the source xml to parse, this could be the original response received.
- 	* @param $collection string The name of parent node which wraps the elements, if available
- 	* @param $element string The element we need to extract the node values.
+ 	* @param string $xml The the source xml to parse, this could be the original response received.
+ 	* @param string $collection The name of parent node which wraps the elements, if available
+ 	* @param string $element The element we need to extract the node values.
  	*/
 	
 	function getValues($xml, $collection=NULL, $element=NULL){
@@ -170,13 +182,24 @@ class RestfulService extends ViewableData {
 	}
 	
 	protected function getRecurseValues($xml,&$data,$parent=""){
+		$conv_value = "";
 		$child_count = 0;
 		foreach($xml as $key=>$value)
 		{
 			$child_count++;    
 			$k = ($parent == "") ? (string)$key : $parent . "_" . (string)$key;
-			if($this->getRecurseValues($value,$data,$k) == 0)  // no childern, aka "leaf node"
-				$data[$k] = Convert::raw2xml($value);  
+			if($this->getRecurseValues($value,$data,$k) == 0){  // no childern, aka "leaf node"
+				   $conv_value = Convert::raw2xml($value);
+			}  
+			//Review the fix for similar node names overriding it's predecessor
+			if(array_key_exists($k, $data) == true) {	
+				$data[$k] = $data[$k] . ",". $conv_value;		
+			}
+			else {
+				 $data[$k] = $conv_value;
+			}
+			
+			
 		}
 		return $child_count;
 			
@@ -184,9 +207,9 @@ class RestfulService extends ViewableData {
 	
 	/**
  	* Gets a single node value. 
- 	* @param $xml string The source xml to parse, this could be the original response received.
- 	* @param $collection string The name of parent node which wraps the elements, if available
- 	* @param $element string The element we need to extract the node value.
+ 	* @param string $xml The source xml to parse, this could be the original response received.
+ 	* @param string $collection The name of parent node which wraps the elements, if available
+ 	* @param string $element The element we need to extract the node value.
  	*/
 	
 	function getValue($xml, $collection=NULL, $element=NULL){
@@ -201,6 +224,11 @@ class RestfulService extends ViewableData {
 			return Convert::raw2xml($childElements);
 	}
 	
+	/**
+ 	* Searches for a node in document tree and returns it value. 
+ 	* @param string $xml source xml to parse, this could be the original response received.
+ 	* @param string $node Node to search for
+ 	*/
 	function searchValue($xml, $node=NULL){
 		$xml = new SimpleXMLElement($xml);
 		$childElements = $xml->xpath($node);
@@ -209,6 +237,11 @@ class RestfulService extends ViewableData {
 			return Convert::raw2xml($childElements[0]);
 	}
 	
+	/**
+ 	* Searches for a node in document tree and returns its attributes. 
+ 	* @param string $xml the source xml to parse, this could be the original response received.
+ 	* @param string $node Node to search for
+ 	*/
 	function searchAttributes($xml, $node=NULL){
 		$xml = new SimpleXMLElement($xml);
 		$output = new DataObjectSet();
@@ -224,8 +257,6 @@ class RestfulService extends ViewableData {
 			
 			$output->push(new ArrayData($data));
 		}
-			
-			//Debug::show($attr_value);
 		
 		return $output;
 	}
