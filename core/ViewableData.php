@@ -683,6 +683,22 @@ class ViewableData extends Object implements Iterator {
 	function CurrentMember() {
 		return Member::currentUser();
 	}
+	
+	/**
+	 * Returns the Security ID.
+	 * This is used to prevent CRSF attacks in forms.
+	 * @return int
+	 */
+	function SecurityID() {
+		if(Session::get('SecurityID')) {
+			$securityID = Session::get('SecurityID');
+		} else {
+			$securityID = rand();
+			Session::set('SecurityID', $securityID);
+		}
+		
+		return $securityID;
+	}
 
     /**
      * Checks if the current user has the given permission.
