@@ -271,7 +271,6 @@ class Debug {
 			}
 		}
 		
-		$result .= 'hi';
 		echo $result;
 		if($returnVal) return $result;
 		else echo $result;
