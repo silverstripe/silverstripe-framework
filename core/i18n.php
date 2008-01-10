@@ -310,6 +310,7 @@ class i18n extends Controller {
 		'lah_PK' => 'Lahnda (Pakistan)',
 		'lb_LU' => 'Luxembourgish (Luxembourg)',
 		'lbe_RU' => 'Lak (Russia)',
+		'lc_XX' => 'LOLCAT',
 		'lez_RU' => 'Lezghian (Russia)',
 		'lg_UG' => 'Ganda (Uganda)',
 		'lij_IT' => 'Ligurian (Italy)',
