@@ -6,7 +6,8 @@
  */
 
 /**
- * This class represents a set of database objects, such as the results of a query
+ * This class represents a set of {@link ViewableData} subclasses (mostly {@link DataObject} or {@link ArrayData}.
+ * It is used by the ORM-layer of Silverstripe to return query-results from {@link SQLQuery}.
  * @package sapphire
  * @subpackage model
  */
@@ -62,10 +63,10 @@ class DataObjectSet extends ViewableData implements Iterator {
 	protected $paginationGetVar = "start";
 	
 	/**
-	 * Create a new DataObjectSet.
+	 * Create a new DataObjectSet. If you pass one or more arguments, it will try to convert them into {@link ArrayData} objects. 
+	 * TODO Does NOT automatically convert objects with complex datatypes (e.g. converting arrays within an objects to its own DataObjectSet)							
 	 * 
 	 * @param ViewableData|array|mixed $items Parameters to use in this set, either as an associative array, object with simple properties, or as multiple parameters.
-	 * TODO Does NOT automatically convert objects with complex datatypes (e.g. converting arrays within an objects to its own DataObjectSet)							
 	 */
 	public function __construct($items = null) {
 		if($items) {

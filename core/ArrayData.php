@@ -6,15 +6,15 @@
  */
 
 /**
- * Lets you wrap a bunch of array data into a ViewableData object.
- * This is useful when you want to pass data to a template in the "SilverStripe 1" way of giving a 
- * big data array.
+ * Lets you wrap a bunch of array data into a {@link ViewableData} object.
  *
- * Usage:
+ * <code>
  * new ArrayData(array(
  *    "ClassName" => "Page",
  *    "AddAction" => "Add a new Page page",
  * ));
+ * </code>
+ *
  * @package sapphire
  * @subpackage view
  */
@@ -23,7 +23,8 @@ class ArrayData extends ViewableData {
 	protected $array;
 	
 	/**
-	 * @param object|array $array Either an object with simple properties or an associative array
+	 * @param object|array $array Either an object with simple properties or an associative array.
+	 * Converts object-properties to indices of an associative array.
 	 */
 	public function __construct($array) {
 		if(is_object($array)) {
