@@ -44,20 +44,27 @@ class ContentNegotiator {
 			$chosenFormat = $_GET['forceFormat'];
 
 		} else {
-			foreach($mimes as $format => $mime) {
-				$regExp = '/' . str_replace(array('+','/'),array('\+','\/'), $mime) . '(;q=(\d+\.\d+))?/i';
-				if (preg_match($regExp, $_SERVER['HTTP_ACCEPT'], $matches)) {
-					$preference = isset($matches[2]) ? $matches[2] : 1;
-					if(!isset($q[$preference])) $q[$preference] = $format;
-				}
-			}
-
-			if($q) {
-				// Get the preferred format
-				krsort($q);
-				$chosenFormat = reset($q);
+			// The W3C validator doesn't send an HTTP_ACCEPT header, but it can support xhtml.  We put this special case in here so that
+			// designers don't get worried that their templates are HTML4.
+ 			if(substr($_SERVER['HTTP_USER_AGENT'], 0, 14) == 'W3C_Validator/') {
+				$chosenFormat = "xhtml";
+	
 			} else {
-				$chosenFormat = "html";
+				foreach($mimes as $format => $mime) {
+					$regExp = '/' . str_replace(array('+','/'),array('\+','\/'), $mime) . '(;q=(\d+\.\d+))?/i';
+					if (preg_match($regExp, $_SERVER['HTTP_ACCEPT'], $matches)) {
+						$preference = isset($matches[2]) ? $matches[2] : 1;
+						if(!isset($q[$preference])) $q[$preference] = $format;
+					}
+				}
+
+				if($q) {
+					// Get the preferred format
+					krsort($q);
+					$chosenFormat = reset($q);
+				} else {
+					$chosenFormat = "html";
+				}
 			}
 		}
 
