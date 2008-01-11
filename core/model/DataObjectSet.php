@@ -75,18 +75,18 @@ class DataObjectSet extends ViewableData implements Iterator {
 			$itemsArr = (!is_array($items) || count(func_get_args()) > 1) ? func_get_args() : $items;
 			
 			// We now have support for using the key of a data object set
-			for($i=0; $i<count($itemsArr); $i++) {
-				if(is_subclass_of($itemsArr[$i], 'ViewableData')) {
-					$this->items[] = $itemsArr[$i];
-				} elseif(is_object($itemsArr[$i]) || ArrayLib::is_associative($itemsArr[$i])) {
-					$this->items[] = new ArrayData($itemsArr[$i]);
+			foreach($itemsArr as $i => $item) {
+				if(is_subclass_of($item, 'ViewableData')) {
+					$this->items[$i] = $item;
+				} elseif(is_object($item) || ArrayLib::is_associative($item)) {
+					$this->items[$i] = new ArrayData($item);
 				} else {
 					user_error(
 						"DataObjectSet::__construct: Passed item #{$i} is not an object or associative array, 
 						can't be properly iterated on in templates", 
 						E_USER_WARNING
 					);						
-					$this->items[] = $itemsArr[$i];
+					$this->items[$i] = $item;
 				}
 			}
 
