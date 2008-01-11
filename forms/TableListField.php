@@ -110,7 +110,7 @@ class TableListField extends FormField {
 	 * @var $customSourceItems DataObjectSet Use the manual setting of a result-set only as a last-resort
 	 * for sets which can't be resolved in a single query.
 	 *
-	 * TODO: Add pagination support for customSourceItems.
+	 * @todo: Add pagination support for customSourceItems.
 	 */
 	protected $customSourceItems;
 	
@@ -734,7 +734,7 @@ JS
 	 *           Search
 	 * #################################
 	 * 
-	 * TODO Not fully implemented at the moment
+	 * @todo Not fully implemented at the moment
 	 */
 	 
 	 /**
@@ -776,7 +776,7 @@ JS
 	 * Exports a given set of comma-separated IDs (from a previous search-query, stored in a HiddenField).
 	 * Uses {$csv_columns} if present, and falls back to {$result_columns}.
 	 * 
-	 * TODO Make relation-syntax available (at the moment you'll have to use custom sql) 
+	 * @todo Make relation-syntax available (at the moment you'll have to use custom sql) 
 	 */
 	function export() {
 		

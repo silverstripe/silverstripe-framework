@@ -95,7 +95,7 @@ class DataReport extends FormField {
 	}*/
 	
 	/**
-		* Todo: to set export flag to be $export 
+		* @todo: to set export flag to be $export 
 		*/
 	public function setExport($export){
 		$this->export = $export;
@@ -110,7 +110,7 @@ class DataReport extends FormField {
 	}
 	
 	/** 
-		* Todo: to overwrite its parent's FieldHolder, the returned HTML <div> section contains the reported Table and a export button.
+		* @todo: to overwrite its parent's FieldHolder, the returned HTML <div> section contains the reported Table and a export button.
 		*/
 	function FieldHolder() {
 		//Requirements::javascript( "sapphire/javascript/DataReport.js" );
@@ -129,7 +129,7 @@ HTML
 	}
 	
 	/**
-		* Todo: to return a export button in HTML Style if $this->export flag is true (it defaults as true)
+		* @todo: to return a export button in HTML Style if $this->export flag is true (it defaults as true)
 		*/
 	protected function htmlExportButton(){
 		$idexport = $this->id() . '_exportToCSV';
@@ -187,7 +187,7 @@ HTML
 		
 	
  /**
-	 * Todo: Returns the HTML for the headers of the columns.
+	 * @todo: Returns the HTML for the headers of the columns.
 	 */
 	protected function columnheaders( $rowCallBack = 'htmlTableRow', $cellCallBack = 'htmlTableHeadCell' ) {
 		$html = "";
@@ -229,21 +229,21 @@ HTML
 	}
 	
 	/**
-		* Todo: Return the HTML for one cell of the table header
+		* @todo: Return the HTML for one cell of the table header
 		*/
 	function htmlTableHeadCell($value) {
 		return "<th>" . htmlentities( $value ) . "</th>";
 	}
 	
 	/**
-		* Todo: Return one cell of the table header in csv format
+		* @todo: Return one cell of the table header in csv format
 		*/
 	function csvHeadCell($value) {
 		return $this->csvCell( $value );
 	}
 	
 	/**
-		* Todo: Return the HTML for one cell of one row of the table
+		* @todo: Return the HTML for one cell of one row of the table
 		*/
 	function htmlTableDataCell($record, $field, $fieldIndex=null){
 		$value = $this->getRecordFieldValue($record, $field);

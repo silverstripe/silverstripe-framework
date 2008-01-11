@@ -861,7 +861,7 @@ class DataObject extends Controller implements DataObjectInterface {
 	 * @param string $componentName Name of the many-many component
 	 * @return ComponentSet The set of components
 	 *
-	 * TODO Implement query-params
+	 * @todo Implement query-params
 	 */
 	public function getManyManyComponents($componentName, $filter = "", $sort = "", $join = "", $limit = "", $having = "") {
 		if(isset($this->components[$componentName])) return $this->components[$componentName];

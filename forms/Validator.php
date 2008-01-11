@@ -10,7 +10,7 @@
  * the use of Required fields.
  * Relies on javascript for client-side validation, and marking fields after serverside validation.
  * 
- * TODO Automatically mark fields after serverside validation and replace the form through
+ * @todo Automatically mark fields after serverside validation and replace the form through
  * FormResponse if the request was made by ajax.
  * 
  * @package forms

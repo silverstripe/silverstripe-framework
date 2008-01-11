@@ -19,7 +19,7 @@ class FormField extends ViewableData {
 	
 	/**
 	 * @var $description string Adds a "title"-attribute to the markup.
-	 * TODO Implement in all subclasses
+	 * @todo Implement in all subclasses
 	 */
 	protected $description;
 	
@@ -245,7 +245,7 @@ class FormField extends ViewableData {
 	 * is the DefaultFieldHolder template.  This lets you override the HTML for specific sites, if it's
 	 * necessary.
 	 * 
-	 * TODO Add "validationError" if needed.
+	 * @todo Add "validationError" if needed.
 	 */
 	function FieldHolder() {
 		$Title = $this->XML_val('Title');

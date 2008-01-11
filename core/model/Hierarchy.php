@@ -524,7 +524,7 @@ class Hierarchy extends DataObjectDecorator {
 	 * Get the next node in the tree of the type. If there is no instance of the className descended from this node,
 	 * then search the parents.
 	 * 
-	 * TODO Write!
+	 * @todo Write!
 	 */
 	public function naturalPrev( $className, $afterNode = null ) {
 		return null;

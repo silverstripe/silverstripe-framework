@@ -110,7 +110,7 @@ class PhoneNumberField extends FormField {
 	}
 	
 	/**
-	 * TODO Very basic validation at the moment
+	 * @todo Very basic validation at the moment
 	 */
 	function jsValidation() {
 		$formID = $this->form->FormName();
@@ -155,7 +155,7 @@ JS;
 	}
 	
 	/**
-	 * TODO Very basic validation at the moment
+	 * @todo Very basic validation at the moment
 	 */
 	function validate($validator){
 		$valid = preg_match(

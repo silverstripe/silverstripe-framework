@@ -56,7 +56,7 @@ class ArrayData extends ViewableData {
 	 * Converts an object with simple properties to 
 	 * an associative array.
 	 * 
-	 * TODO Allow for recursive creation of DataObjectSets when property value is an object/array
+	 * @todo Allow for recursive creation of DataObjectSets when property value is an object/array
 	 *
 	 * @param obj $obj
 	 * @return array

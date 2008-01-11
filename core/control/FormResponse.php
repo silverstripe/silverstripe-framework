@@ -25,8 +25,8 @@
  * - Please DON'T escape literal parameters which are passed to FormResponse, they are escaped automatically.
  * - Some functions assume a {LeftAndMain}-based environment (e.g. load_form())
  * 
- * TODO Force a specific execution order ($forceTop, $forceBottom)Ω
- * TODO Extension to return different formats, e.g. JSON or XML
+ * @todo Force a specific execution order ($forceTop, $forceBottom)Ω
+ * @todo Extension to return different formats, e.g. JSON or XML
  *
  * @package forms
  * @subpackage core
@@ -107,7 +107,7 @@ class FormResponse {
 	 * 
 	 * @param $scriptContent string
 	 * 
-	 * TODO Should this content be escaped?
+	 * @todo Should this content be escaped?
 	 */
 	static function add($scriptContent, $uniquenessID = null) {
 		if(isset($uniquenessID)) {
@@ -219,7 +219,7 @@ class FormResponse {
 	 * @param $replaceMethod string Method for replacing - either 'replace' (=outerHTML) or 'update' (=innerHTML)
 	 *   (Caution: "outerHTML" might cause problems on the client-side, e.g. on table-tags)
 	 * 
-	 * TODO More fancy replacing with loading-wheel etc.
+	 * @todo More fancy replacing with loading-wheel etc.
 	 */
 	static function update_dom_id($domID, $domContent, $reapplyBehaviour = true, $replaceMethod = 'replace', $uniquenessID = null) {
 		//self::$non_ajax_content = $domContent;

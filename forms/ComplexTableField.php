@@ -183,7 +183,7 @@ JS;
 	 * so even if a single record is displayed in a popup, we need the results
 	 * to make pagination work.
 	 *
-	 * TODO Merge with more efficient querying of TableListField
+	 * @todo Merge with more efficient querying of TableListField
 	 */
 	function sourceItems() {
 		if($this->sourceItems) {

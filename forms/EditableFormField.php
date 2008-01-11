@@ -141,7 +141,7 @@ class EditableFormField extends DataObject {
 	
 	/**
 	 * Return an evaluation appropriate for a filter clause
-	 * TODO: escape the string
+	 * @todo: escape the string
 	 */
 	function filterClause( $value ) {
 		// Not filtering on this field

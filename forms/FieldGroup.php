@@ -59,7 +59,7 @@ class FieldGroup extends CompositeField {
 	 * Returns a set of <span class="subfield"> tags, each containing a sub-field.
 	 * You can also use <% control FieldSet %>, if you'd like more control over the generated HTML
 	 * 
-	 * TODO Shouldn't use SmallFieldHolder() (very difficult to style), 
+	 * @todo Shouldn't use SmallFieldHolder() (very difficult to style), 
 	 * it is easier to overwrite the <div class="field"> behaviour in a more specific class
 	 */
 	function Field() {

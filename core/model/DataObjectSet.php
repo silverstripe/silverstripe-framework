@@ -64,7 +64,7 @@ class DataObjectSet extends ViewableData implements Iterator {
 	
 	/**
 	 * Create a new DataObjectSet. If you pass one or more arguments, it will try to convert them into {@link ArrayData} objects. 
-	 * TODO Does NOT automatically convert objects with complex datatypes (e.g. converting arrays within an objects to its own DataObjectSet)							
+	 * @todo Does NOT automatically convert objects with complex datatypes (e.g. converting arrays within an objects to its own DataObjectSet)							
 	 * 
 	 * @param ViewableData|array|mixed $items Parameters to use in this set, either as an associative array, object with simple properties, or as multiple parameters.
 	 */
@@ -643,7 +643,7 @@ class DataObjectSet extends ViewableData implements Iterator {
 	/**
 	 * Returns the dataset as an array of ID => Title.
 	 *
-	 * TODO Duplication from toDropdownMap()
+	 * @todo Duplication from toDropdownMap()
 	 * 
 	* @param string $key The field you wish to use as a key for the array
 	* @param string $value The field or method you wish to use to get values for the map

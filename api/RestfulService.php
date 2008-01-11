@@ -44,7 +44,7 @@ class RestfulService extends ViewableData {
 	
 	/**
  	* Connects to the RESTful service and gets its response.
- 	* TODO implement authentication via cURL for
+ 	* @todo implement authentication via cURL for
  	*/
 	
 	function connect(){
