@@ -645,7 +645,7 @@ class Image_Uploader extends Controller {
 		}
 		$owner = DataObject::get_by_id($data['Class'], $data['ID']);
 		$fieldName = $data['Field'] . 'ID';
-
+		
 		if($data['ImageSource'] == 'existing') {
 			if(!$data['ExistingFile']) {
 				// No image has been selected
@@ -658,6 +658,14 @@ class Image_Uploader extends Controller {
 			// Edit the class name, if applicable
 			$existingFile = DataObject::get_by_id("File", $data['ExistingFile']);
 			$desiredClass = $owner->has_one($data['Field']);
+			
+			// Unless specifically asked, we don't want the user to be able
+			// to select a folder
+			if(is_a($existingFile, 'Folder') && $desiredClass != 'Folder') {
+				Director::redirectBack();
+				return;
+			}
+			
 			if(!is_a($existingFile, $desiredClass)) {
 				$existingFile->ClassName = $desiredClass;
 				$existingFile->write();
