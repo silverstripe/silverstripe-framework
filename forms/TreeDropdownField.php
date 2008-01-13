@@ -18,7 +18,7 @@ class TreeDropdownField extends FormField {
 	 * Create a new tree dropdown field.
 	 * @param name The name of the field.
 	 * @param title The label of the field.
-	 * @param sourceObject The object-type to list in the tree.  Must be a 'heirarchy' object.
+	 * @param sourceObject The object-type to list in the tree.  Must be a 'hierachy' object.
 	 * @param keyField The column of that object-type to return as the field value.  Defaults to ID
 	 * @param labelField The column to show as the human-readable value in the tree.  Defaults to Title
 	 */
