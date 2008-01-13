@@ -863,7 +863,7 @@ class DataObject extends Controller implements DataObjectInterface {
 	 *
 	 * @todo Implement query-params
 	 */
-	public function getManyManyComponents($componentName, $filter = "", $sort = "", $join = "", $limit = "", $having = "") {
+	public function getManyManyComponents($componentName, $filter = "", $sort = "", $join = "", $limit = "") {
 		if(isset($this->components[$componentName])) return $this->components[$componentName];
 
 		list($parentClass, $componentClass, $parentField, $componentField, $table) = $this->many_many($componentName);
@@ -880,8 +880,7 @@ class DataObject extends Controller implements DataObjectInterface {
 					"`$table`.$parentField = $this->ID", // filter 
 					$sort,
 					$limit,
-					"INNER JOIN `$table` ON `$table`.$componentField = `$componentBaseClass`.ID", // join 
-					$having // having
+					"INNER JOIN `$table` ON `$table`.$componentField = `$componentBaseClass`.ID" // join
 				);
 				array_unshift($query->select, "`$table`.*");
 				
