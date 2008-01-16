@@ -83,12 +83,14 @@ class TableField extends TableListField {
 	protected $requiredFields = null;
 	
 	/**
-	 * For some table, we want Can(add) to be true, so we can add,
-	 * but we don't want the default add row to be presented in the 
-	 * table, we can set this wantDefaultAddRow to be false.
-	 * @param boolean $wantDefaultAddRow
+	 * Shows a row of empty fields for adding a new record
+	 * (turned on by default). 
+	 * Please use {@link TableField::$permissions} to control
+	 * if the "add"-functionality incl. button is shown at all.
+	 * 
+	 * @param boolean $showAddRow
 	 */
-	protected $wantDefaultAddRow = true;
+	public $showAddRow = true;
 
 	function __construct($name, $sourceClass, $fieldList, $fieldTypes, $filterField = null, 
 						$sourceFilter = null, $editExisting = true, $sourceSort = null, $sourceJoin = null) {
@@ -179,7 +181,7 @@ class TableField extends TableListField {
 		}
 		// Create a temporary DataObject
 		if($this->Can('add')) {
-			if($this->wantDefaultAddRow){
+			if($this->showAddRow){
 				$output->push(new TableField_Item(null, $this, null, $this->fieldTypes, true));
 			}
 		}
@@ -452,10 +454,6 @@ class TableField extends TableListField {
 		$this->extraData = $extraData;
 	}
 	
-	function setWantDefaultAddRow($bool){
-		$this->wantDefaultAddRow = $bool;
-	}
-
 	/**
 	 * @return array
 	 */
