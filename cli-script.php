@@ -72,6 +72,24 @@ foreach($envFiles as $envFile) {
 	}
 }
 
+// Find the URL of this script
+if(isset($_FILE_TO_URL_MAPPING)) {
+	$fullPath = $testPath = $_SERVER['SCRIPT_FILENAME'];
+	while($testPath && $testPath != "/") {
+		if(isset($_FILE_TO_URL_MAPPING[$testPath])) {
+			$url = $_FILE_TO_URL_MAPPING[$testPath] . substr($fullPath,strlen($testPath));
+			$_SERVER['HTTP_HOST'] = parse_url($url, PHP_URL_HOST);
+			$_SERVER['SCRIPT_NAME'] = parse_url($url, PHP_URL_PATH);
+			$_SERVER['REQUEST_PORT'] = parse_url($url, PHP_URL_PORT);
+			break;
+		}
+		$testPath = dirname($testPath);
+	}
+	
+}
+
+
+
 if(ManifestBuilder::staleManifest()){
 	ManifestBuilder::compileManifest();
 }		
@@ -80,7 +98,7 @@ require_once(MANIFEST_FILE);
 
 if($_GET['debugmanifest']) Debug::show(file_get_contents(MANIFEST_FILE));
 
-Director::set_environment_type($envType);
+if(!isset(Director::$environment_type)) Director::set_environment_type($envType);
 
 // Default director
 Director::addRules(10, array(
@@ -103,9 +121,14 @@ DB::connect($databaseConfig);
 
 // Get the request URL
 // $baseURL = dirname(dirname($_SERVER[SCRIPT_NAME]));
-$url = $_GET['url'];
 $url = $_SERVER['argv'][1];
 
+if(isset($_SERVER['argv'][2])) {
+	parse_str($_SERVER['argv'][2], $_GET);
+	$_REQUEST = $_GET;
+	print_r($_GET);
+	
+}
 
 // Direct away - this is the "main" function, that hands control to the apporopriate controllerx
 Director::direct($url);
