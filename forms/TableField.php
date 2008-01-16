@@ -515,7 +515,7 @@ class TableField extends TableListField {
 		
 		// TODO Implement custom requiredFields
 		$items = $this->sourceItems(); 
-		if($this->requiredFields&&$items->count()) {
+		if($items&&$this->requiredFields&&$items->count()) {
 			foreach ($this->requiredFields as $field) {
 				/*if($fields->dataFieldByName($field)) {
 					$js .= "\t\t\t\t\trequire('$field');\n";
