@@ -19,7 +19,11 @@
  *
  *  html: HTML source suitable for use in a page or email
  *  text: Plain-text content, suitable for display to a user as-is, or insertion in a plaintext email.
- *
+ * 
+ * Objects of type {@link ViewableData} can have an "escaping type",
+ * which determines if they are automatically escaped before output by {@link SSViewer}. 
+ * 
+ * @usedby ViewableData::XML_val()
  * @package sapphire
  * @subpackage misc
  */

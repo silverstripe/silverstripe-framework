@@ -273,10 +273,11 @@ class ViewableData extends Object implements Iterator {
 	/**
 	 * Return the string-format type for the given field.
 	 *
+	 * @usedby ViewableData::XML_val()
 	 * @param string $fieldName 
 	 * @return string 'xml'|'raw'
 	 */
-	function escapeFlagForField($fieldName) {
+	function escapeTypeForField($fieldName) {
 		$helperPair = $this->castingHelperPair($fieldName);
 		$castedClass = $helperPair['className'];
 		if(!$castedClass || $castedClass == 'HTMLText' || $castedClass == 'HTMLVarchar') return "xml";
@@ -417,7 +418,7 @@ class ViewableData extends Object implements Iterator {
 			}
 			
 			// Case 2: Check if the value is raw and must be made XML-safe
-			if($this->escapeFlagForField($fieldName) != 'xml') $val = Convert::raw2xml($val);
+			if($this->escapeTypeForField($fieldName) != 'xml') $val = Convert::raw2xml($val);
 			
 			if(isset($_GET['debug_profile'])) {
 				Profiler::unmark('casting cost');
