@@ -87,6 +87,23 @@ class Member extends DataObject {
 		return ($this->Password === $encryption_details['password']);
 	}
 
+	/**
+	 * Regenerate the session_id, if possible.
+	 * Calls session_regenerate_id(), unless Windmill is controlling the browsing session.
+	 * Windmill is a testing framework that can't handle session_regenerate_id() calls.
+	 */
+	static function session_regenerate_id() {
+		// This has been temporarily disabled.
+		return;
+		
+		if(strpos($_SERVER['HTTP_REFERER'],'windmill-serv') !== false) {
+			Session::set('isWindmill', true);
+		}
+		
+		if(!Session::get('isWindmill')) {
+			session_regenerate_id(true);
+		}
+	}
 
 	/**
 	 * Logs this member in
@@ -95,7 +112,8 @@ class Member extends DataObject {
 	 *                       automatically the next time.
 	 */
 	function logIn($remember = false) {
-		session_regenerate_id(true);
+		self::session_regenerate_id();
+
 		Session::set("loggedInAs", $this->ID);
 
 		$this->NumVisit++;
@@ -132,7 +150,7 @@ class Member extends DataObject {
 			}
 
 			if($member) {
-				session_regenerate_id(true);
+				self::session_regenerate_id();
 				Session::set("loggedInAs", $member->ID);
 
 				$token = substr(md5(uniqid(rand(), true)), 0, 49 - strlen($member->ID));
@@ -151,7 +169,7 @@ class Member extends DataObject {
 	 */
 	function logOut() {
 		Session::clear("loggedInAs");
-		session_regenerate_id(true);
+		self::session_regenerate_id();
 
 		$this->RememberLoginToken = null;
 		Cookie::set('alc_enc', null);
