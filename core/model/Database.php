@@ -402,7 +402,7 @@ abstract class Database extends Object {
 		}
 	}
 	
-	/** Replaces "''" with "null", recursively walks through the given array. 
+	/** Replaces "\'\'" with "null", recursively walks through the given array. 
 	 * @param string $array Array where the replacement should happen
 	 */
 	static function replace_with_null(&$array) {
