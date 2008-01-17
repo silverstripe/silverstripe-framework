@@ -90,6 +90,15 @@ class HtmlEditorField extends TextareaField {
 	}
 	
 	function saveInto($record) {
+		if(!$record->escapeFlagForField($this->name) != 'xml') {
+			user_error("HTMLEditorField should save into an HTMLText or HTMLVarchar field.  
+				If you don't, your template won't display properly.  
+				This changed in version 2.2.2, so please update 
+				your database field '$this->name'", 
+				E_USER_WARNING
+			);
+		}
+		
 		$content = $this->value;
 		
 		$content = preg_replace('/mce_real_src="[^"]+"/i', "", $content);

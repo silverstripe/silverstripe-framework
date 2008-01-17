@@ -271,6 +271,19 @@ class ViewableData extends Object implements Iterator {
 	}
 	
 	/**
+	 * Return the string-format type for the given field.
+	 *
+	 * @param string $fieldName 
+	 * @return string 'xml'|'raw'
+	 */
+	function escapeFlagForField($fieldName) {
+		$helperPair = $this->castingHelperPair($fieldName);
+		$castedClass = $helperPair['className'];
+		if(!$castedClass || $castedClass == 'HTMLText' || $castedClass == 'HTMLVarchar') return "xml";
+		else return "raw";
+	}
+	
+	/**
 	 * Return the object version of the given field/method.
 	 * @param string $fieldName The name of the field/method.
 	 * @param array $args The arugments.
@@ -403,18 +416,8 @@ class ViewableData extends Object implements Iterator {
 				Profiler::mark('casting cost');
 			}
 			
-			$helperPair = $this->castingHelperPair($fieldName);
-			$castedClass = $helperPair['className'];
-			
-			// Note: these probably shouldn't be hard-coded.  But right now it's not a problem, and I don't
-			// want to over-engineer
-			if(!$castedClass || $castedClass == 'HTMLText' || $castedClass == 'HTMLVarchar' || $castedClass == 'Text') {
-				// Case 2: the value is already XML-safe, just return it
-				
-			} else {
-				// Case 3: the value is raw and must be made XML-safe
-				$val = Convert::raw2xml($val);
-			}
+			// Case 2: Check if the value is raw and must be made XML-safe
+			if($this->escapeFlagForField($fieldName) != 'xml') $val = Convert::raw2xml($val);
 			
 			if(isset($_GET['debug_profile'])) {
 				Profiler::unmark('casting cost');
