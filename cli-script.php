@@ -11,8 +11,8 @@
  * @subpackage core
  */
 
+if(isset($_SERVER['argv'][2])) $_SERVER['HTTP_HOST'] = $_SERVER['argv'][2];
 
-$_SERVER['HTTP_HOST'] = $_SERVER['argv'][2];
 $_SERVER['SCRIPT_FILENAME'] = __FILE__;
 chdir(dirname($_SERVER['SCRIPT_FILENAME']));
 
@@ -53,7 +53,7 @@ if($_REQUEST && get_magic_quotes_gpc()) {
 	stripslashes_recursively($_REQUEST);
 }
 
-if($_REQUEST['trace']) apd_set_pprof_trace();
+if(isset($_REQUEST['trace'])) apd_set_pprof_trace();
 
 require_once("core/ManifestBuilder.php");
 require_once("core/ClassInfo.php");
@@ -96,7 +96,7 @@ if(ManifestBuilder::staleManifest()){
 
 require_once(MANIFEST_FILE);
 
-if($_GET['debugmanifest']) Debug::show(file_get_contents(MANIFEST_FILE));
+if(isset($_GET['debugmanifest'])) Debug::show(file_get_contents(MANIFEST_FILE));
 
 if(!isset(Director::$environment_type)) Director::set_environment_type($envType);
 

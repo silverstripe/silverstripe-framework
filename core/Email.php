@@ -5,10 +5,17 @@
  * @subpackage email
  */
 
-/**
- * X-Mailer header value on emails sent
- */
-define('X_MAILER', 'SilverStripe Mailer - version 2006.06.21 (Sent from "'.$_SERVER['SERVER_NAME'].'")');
+if(isset($_SERVER['SERVER_NAME'])) {
+	/**
+	 * X-Mailer header value on emails sent
+	 */
+	define('X_MAILER', 'SilverStripe Mailer - version 2006.06.21 (Sent from "'.$_SERVER['SERVER_NAME'].'")');
+} else {
+	/**
+	 * @ignore
+	 */
+	define('X_MAILER', 'SilverStripe Mailer - version 2006.06.21');
+}
 // Note: The constant 'BOUNCE_EMAIL' should be defined as a valid email address for where bounces should be returned to.
 
 /**
