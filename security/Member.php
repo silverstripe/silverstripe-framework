@@ -88,21 +88,12 @@ class Member extends DataObject {
 	}
 
 	/**
-	 * Regenerate the session_id, if possible.
-	 * Calls session_regenerate_id(), unless Windmill is controlling the browsing session.
-	 * Windmill is a testing framework that can't handle session_regenerate_id() calls.
+	 * Regenerate the session_id.
+	 * This wrapper is here to make it easier to disable calls to session_regenerate_id(), should you need to.  They have caused problems in certain
+	 * quirky problems (such as using the Windmill 0.3.6 proxy).
 	 */
 	static function session_regenerate_id() {
-		// This has been temporarily disabled.
-		return;
-		
-		if(strpos($_SERVER['HTTP_REFERER'],'windmill-serv') !== false) {
-			Session::set('isWindmill', true);
-		}
-		
-		if(!Session::get('isWindmill')) {
-			session_regenerate_id(true);
-		}
+		session_regenerate_id(true);
 	}
 
 	/**
