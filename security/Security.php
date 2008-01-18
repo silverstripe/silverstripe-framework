@@ -634,10 +634,19 @@ class Security extends Controller {
 	 *               encryption algorithms.
 	 */
 	public static function get_encryption_algorithms() {
-		// We return all the hashes that don't have commas in the name, as database exports get confused by comma in ENUM keys. :-(
-		return array(
-			'md4', 'md5', 'sha1', 'sha256', 'sha384', 'sha512', 'ripemd128', 'ripemd160', 'whirlpool', 'snefru', 'gost', 'alder32', 'crc32', 'crc32b'
-		);
+		$result = function_exists('hash_algos') ? hash_algos() : array(); 
+
+		if(count($result) == 0) { 
+			if(function_exists('md5')) $result[] = 'md5'; 
+
+			if(function_exists('sha1')) $result[] = 'sha1'; 
+		} else {
+			foreach ($result as $i => $algorithm) {
+				if (preg_match('/,/',$algorithm)) {
+					unset($result[$i]);
+				}
+			}
+		}
 
 		return $result;
 	}
