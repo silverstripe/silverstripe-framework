@@ -200,10 +200,15 @@ JS;
 			$SQL_start = intval($_REQUEST['ctf'][$this->Name()]['start']);
 			$limitClause .= " OFFSET {$SQL_start}";
 		}
+		
+		$sort = $this->sourceSort;
+		if(isset($_REQUEST['ctf'][$this->Name()]['sort'])) {
+			$sort = Convert::raw2sql($_REQUEST['ctf'][$this->Name()]['sort']);
+		}
 				
-		$sourceItems = DataObject::get($this->sourceClass, $this->sourceFilter, $this->sourceSort, $this->sourceJoin, $limitClause);
+		$sourceItems = DataObject::get($this->sourceClass, $this->sourceFilter, $sort, $this->sourceJoin, $limitClause);
 
-		$this->unpagedSourceItems = DataObject::get($this->sourceClass, $this->sourceFilter, $this->sourceSort, $this->sourceJoin);
+		$this->unpagedSourceItems = DataObject::get($this->sourceClass, $sort, $this->sourceSort, $this->sourceJoin);
 
 		$this->totalCount = ($this->unpagedSourceItems) ? $this->unpagedSourceItems->TotalItems() : null;
 
