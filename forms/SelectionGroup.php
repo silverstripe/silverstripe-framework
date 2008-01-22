@@ -51,20 +51,15 @@ class SelectionGroup extends CompositeField {
 	
 	function FieldSet() {
 		$items = parent::FieldSet()->toArray();
-		
-		if(!$items || !in_array($this->value, array_keys($items))) {
-			$firstSelected = " class=\"selected\"";
-			$checked = " checked=\"checked\"";
-		}
-		
+
 		$count = 0;
+		$firstSelected = $checked ="";
 		foreach($items as $key => $item) {
 			if(strpos($key,'//') !== false) {
 				list($key,$title) = explode('//', $key,2);
 			} else {
 				$title = $key;
 			}
-			
 			if($this->value == $key) {
 				$firstSelected = " class=\"selected\"";
 				$checked = " checked=\"checked\"";
