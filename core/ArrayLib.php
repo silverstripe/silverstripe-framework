@@ -84,6 +84,30 @@ class ArrayLib extends Object {
 	    }
     	return false;
 	}
+
+	/**
+	 * Recursively searches an array $haystack for the value(s) $needle.
+	 * Assumes that all values in $needle (if $needle is an array) are at 
+	 * the SAME level, not spread across multiple dimensions of the $haystack.
+	 *
+	 * @param mixed $needle
+	 * @param array $haystack
+	 * @param boolean $strict
+	 * @return boolean
+	 */
+	static function in_array_recursive($needle, $haystack, $strict = false) {
+		if(!is_array($haystack)) return false; // Not an array, we've gone as far as we can down this branch
+		
+		if(in_array($needle, $haystack, $strict)) return true; // Is it in this level of the array?
+		else {
+			foreach($haystack as $obj) { // It's not, loop over the rest of this array
+				if(self::in_array_recursive($needle, $obj, $strict)) return true; 
+			}
+		}
+		
+		return false; // Never found $needle :(
+	}
+	
 }
 
 ?>
