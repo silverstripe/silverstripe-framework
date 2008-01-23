@@ -273,7 +273,7 @@ class Browscap
 				
 				$browser = $value = $browser + $this->_browsers[$key];
 				
-				while (array_key_exists(3, $value)) {
+				while (array_key_exists(3, $value) && $value[3] != null && $value[3] != '') {
 					$value      =   $this->_browsers[$value[3]];
 					$browser    +=  $value;
 				}
