@@ -39,7 +39,7 @@ class FileIFrameField extends FileField {
 		if(!$hasOnes) $hasOnes = $record->has_one($fieldName);
 		
 		// assume that the file is connected via a has-one
-		if( !$hasOnes || !$_FILES[$this->name]['name']){
+		if( !$hasOnes || !isset($_FILES[$this->name]) ||  !$_FILES[$this->name]['name']){
 			return;
 		}
 		
