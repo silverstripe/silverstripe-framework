@@ -88,7 +88,10 @@ class SiteTree extends DataObject {
 		"Viewers" => "Enum('Anyone, LoggedInUsers, OnlyTheseUsers', 'Anyone')",
 		"Editors" => "Enum('LoggedInUsers, OnlyTheseUsers', 'LoggedInUsers')",
 		"ViewersGroup" => "Int",
-		"EditorsGroup" => "Int"
+		"EditorsGroup" => "Int",
+		
+		// Simple task tracking
+		"ToDo" => "Text",
 	);
 
   static $indexes = array(
@@ -1068,6 +1071,10 @@ class SiteTree extends DataObject {
 						"HomepageForDomain",
 						_t('SiteTree.HOMEPAGEFORDOMAIN', "Domain(s)", PR_MEDIUM, 'Listing domains that should be used as homepage')
 					)
+				),
+				$tabToDo = new Tab($this->ToDo ? 'To-do **' : 'To-do',
+					new LiteralField("ToDoHelp", _t('SiteTree.TODOHELP', "<p>You can use this to keep track of work that needs to be done to the content of your site.  To see all your pages with to do information, open the 'Site Reports' window on the left and select 'To Do'</p>")),
+					new TextareaField("ToDo", "")
 				),
 				$tabReports = new TabSet('Reports',
 					$tabBacklinks =new Tab('Backlinks',
