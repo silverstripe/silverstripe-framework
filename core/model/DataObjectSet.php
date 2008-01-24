@@ -849,12 +849,19 @@ class DataObjectSet extends ViewableData implements Iterator {
 	 				$previous =  null;
 	 				foreach($this->items as $key => $item){
 	 					//check if current item field value equals the next
-	 					if($item->$field == $previous->$field){
-	 						
+	 					if($previous && $item->$field == $previous->$field){
+	 						$item->Ranking = $this->convertIntToRank($count - 1)." equal";
+	 						$previous->Ranking = $this->convertIntToRank($count - 1)." equal";	
+	 					if($skipduplicates){
+	 						$count++;
 	 					}
-	 
+	 																
+	 					}else{
 	 					$item->Ranking = $this->convertIntToRank($count);
-	 					$count++;
+	 						$count++;
+	 					}
+
+	 					$previous = $item;
 	 				}
 	 		}	
 	 }
