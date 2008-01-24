@@ -65,7 +65,7 @@ class ManyManyComplexTableField extends HasManyComplexTableField {
 					$query->select[] = $k;
 			}
 			$parent = $this->controller->ClassName;
-			$query->select[] = "IF(`{$this->manyManyParentClass}ID` IS NULL, '0', '1') AS $this->joinField";
+			$query->select[] = "IF(`{$this->manyManyParentClass}ID` IS NULL, '0', '1') AS Checked";
 		}
 		return clone $query;
 	}
