@@ -29,6 +29,12 @@ class ManyManyComplexTableField extends HasManyComplexTableField {
 				$manyManyTable = $class . '_' . $this->name;
 				break;
 			}
+			$belongsManyManyRelations = $singleton->uninherited( 'belongs_many_many', true );
+			 if( isset( $belongsManyManyRelations ) && array_key_exists( $this->name, $belongsManyManyRelations ) ) {
+				$this->manyManyParentClass = $class;
+				$manyManyTable = $belongsManyManyRelations[$this->name] . '_' . $this->name;
+				break;
+			}
 		}
 		$source = $this->sourceClass;
 		$sourceField = $this->sourceClass;
