@@ -43,6 +43,9 @@ class Int extends DBField {
 	function Nice() {
 		return sprintf( '%d', $this->value );
 	}
+	
+	
+	
 }
 
 ?>

@@ -832,6 +832,56 @@ class DataObjectSet extends ViewableData implements Iterator {
 			column_sort($this->items, $fieldname, $direction, false);
 		}
 	}
+	
+	
+	/**
+	 * Adds ranking field to the dataobjects according to current ordering of dataobjects
+	 * @param string $duplicatevalue the field being compared (used to check for equal ranks). Equals are excluded if null.
+	 * @param boolean $skipduplicates skip the next number if there are equal ranks eg 1st equal, 1st equal, 3rd, 4th
+	 */
+	 public function addRankings($field = 'ID', $skipduplicates = false){
+	 		//do a sort by duplicate value?	
+	 		
+	 		//suffixes of number values
+
+	 		$count = 1;
+	 		if($this->items){
+	 				$previous =  null;
+	 				foreach($this->items as $key => $item){
+	 					//check if current item field value equals the next
+	 					if($item->$field == $previous->$field){
+	 						
+	 					}
+	 
+	 					$item->Ranking = $this->convertIntToRank($count);
+	 					$count++;
+	 				}
+	 		}	
+	 }
+	
+	/**
+	 * Helperfunction for converting ints to rank values. 
+	 * Should we move this to Int or somthing and just use in the template? The problem this poses is having "equal" values eg "1st equal"
+	 * @param 
+	 */
+	private function convertIntToRank($value){
+			 $rankconv = array(
+	 			11 => "th",
+	 			12 => "th",
+	 			13 => "th",
+	 			1=> "st",
+	 			2 => "nd",
+	 			3 => "rd",
+	 		);
+	 	//if the value ends with any of $rankconv, then add that suffix
+	 	foreach($rankconv as $key => $val){
+	 		if(ereg($key."$",$value)){
+	 			return $value.$val;
+	 		}
+	 	}
+		return $value."th";
+	}
+	
 
 	/**
 	* Remove duplicates from this set based on the dataobjects ID.
