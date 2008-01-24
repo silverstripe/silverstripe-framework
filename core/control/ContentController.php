@@ -232,17 +232,17 @@ JS
 				$archiveLink = "<a class=\"current\">Archived Site</a>";
 				$liveLink = "<a href=\"$thisPage?stage=Live\" target=\"site\" style=\"left : -3px;\">Published Site</a>";
 				$stageLink = "<a href=\"$thisPage?stage=Stage\" target=\"site\" style=\"left : -1px;\">Draft Site</a>";
-				$message = "<div id=\"SilverStripeNavigatorMessage\">Archived site from<br>" . $dateObj->Nice() . "</div>";
+				$message = "<div id=\"SilverStripeNavigatorMessage\" title=\"Note: this message won't be shown to your visitors\">Archived site from<br>" . $dateObj->Nice() . "</div>";
 
 			} else if(Versioned::current_stage() == 'Stage') {
 				$stageLink = "<a class=\"current\">Draft Site</a>";
 				$liveLink = "<a href=\"$thisPage?stage=Live\" target=\"site\" style=\"left : -3px;\">Published Site</a>";
-				$message = "<div id=\"SilverStripeNavigatorMessage\">DRAFT SITE</div>";
+				$message = "<div id=\"SilverStripeNavigatorMessage\" title=\"Note: this message won't be shown to your visitors\">DRAFT SITE</div>";
 
 			} else {
 				$liveLink = "<a class=\"current\">Published Site</a>";
 				$stageLink = "<a href=\"$thisPage?stage=Stage\" target=\"site\" style=\"left : -1px;\">Draft Site</a>";
-				$message = "<div id=\"SilverStripeNavigatorMessage\">PUBLISHED SITE</div>";
+				$message = "<div id=\"SilverStripeNavigatorMessage\" title=\"Note: this message won't be shown to your visitors\">PUBLISHED SITE</div>";
 			}
 
 			if($member) {
