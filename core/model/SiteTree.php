@@ -1374,9 +1374,9 @@ class SiteTree extends DataObject {
 				"span title=\"" . _t('SiteTree.MODIFIEDONDRAFT', 'Modified on draft site') . "\" class=\"modified\"" : "")));
 
 		if($tag) {
-			return "<$tag>" . $this->Title . "</" . strtok($tag,' ') . ">";
+			return "<$tag>" . $this->MenuTitle . "</" . strtok($tag,' ') . ">";
 		}	else {
-			return $this->Title;
+			return $this->MenuTitle;
 		}
 	}
 
