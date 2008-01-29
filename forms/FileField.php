@@ -11,6 +11,21 @@
  * @subpackage fields-files
  */
 class FileField extends FormField {
+	/**
+	 * Create a new file field.
+	 * @param string $name The internal field name, passed to forms.
+	 * @param string $title The field label.
+	 * @param int $value The value of the field.
+	 * @param Form $form Reference to the container form
+	 * @param string $rightTitle Used in SmallFieldHolder() to force a right-aligned label
+	 * @param string $folderName Folder to upload files to
+	 */
+	function __construct($name, $title = null, $value = null, $form = null, $rightTitle = null, $folderName = 'Uploads') {
+		$this->folderName = $folderName;
+	
+		parent::__construct($name, $title, $value, $form, $rightTitle);
+	}
+
 	public function Field() {
 		return 
 		   $this->createTag("input", array("type" => "file", "name" => $this->name, "id" => $this->id())) . 
@@ -26,7 +41,7 @@ class FileField extends FormField {
 			return;
 		
 		$file = new File();
-		$file->loadUploaded($_FILES[$this->name]);
+		$file->loadUploaded($_FILES[$this->name], $this->folderName);
 		
 		$record->$fieldName = $file->ID;	
 	}

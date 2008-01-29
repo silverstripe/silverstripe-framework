@@ -156,7 +156,7 @@ class File extends DataObject {
 	/**
 	 * Save an file passed from a form post into this object
 	 */
-	function loadUploaded($tmpFile) {
+	function loadUploaded($tmpFile, $folderName = 'Uploads') {
 		if(!is_array($tmpFile)) user_error("File::loadUploaded() Not passed an array.  Most likely, the form hasn't got the right enctype", E_USER_ERROR);
 		if(!$tmpFile['size']) return;
 		
@@ -171,8 +171,8 @@ class File extends DataObject {
 		if(!file_exists("$base/assets")){
 			mkdir("$base/assets", Filesystem::$folder_create_mask);
 		}
-		if(!file_exists("$base/assets/Uploads")){
-			mkdir("$base/assets/Uploads", Filesystem::$folder_create_mask);
+		if(!file_exists("$base/assets/$folderName")){
+			mkdir("$base/assets/$folderName", Filesystem::$folder_create_mask);
 		}
 
 		// Generate default filename
