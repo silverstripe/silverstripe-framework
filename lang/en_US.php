@@ -25,12 +25,6 @@ $lang['en_US']['ImageUploader']['DELETE'] = array(
 	 PR_MEDIUM,
 	'Delete file/image'
 );
-$lang['en_US']['ImageUploader']['CLICKREMOVE'] = array(
-	'Click the button below to remove this %s.',
-	
-								PR_MEDIUM,
-	'... this image/file'
-);
 $lang['en_US']['ImageUploader']['REALLYDELETE'] = 'Do you really want to remove this %s?';
 $lang['en_US']['RedirectorPage']['HEADER'] = 'This page will redirect users to another page';
 $lang['en_US']['RedirectorPage']['REDIRECTTO'] = 'Redirect to';

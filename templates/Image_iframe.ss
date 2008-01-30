@@ -6,12 +6,6 @@
 	</head>
 
 	<body>
-		<% if Image.ID %>
-		<div class="mainblock" >
-			$Image.CMSThumbnail
-		</div>
-		<% end_if %>
-		
 		<div class="mainblock" style="width: 290px;">
 			<% if UseSimpleForm %>
 			$EditImageSimpleForm
@@ -19,9 +13,13 @@
 			$EditImageForm
 			<% end_if %>
 		</div>
-		<% if DeleteImageForm %>
-		<div class="mainblock" style="width: 150px;">
-			$DeleteImageForm
+		
+		<% if Image.ID %>
+		<div class="mainblock" >
+			$Image.CMSThumbnail
+			<% if DeleteImageForm %>
+				$DeleteImageForm
+			<% end_if %>
 		</div>
 		<% end_if %>
 		

@@ -611,19 +611,7 @@ class Image_Uploader extends Controller {
 				new FieldSet(
 					new HiddenField("Class", null, $this->urlParams['Class']),
 					new HiddenField("ID", null, $this->urlParams['ID']),
-					new HiddenField("Field", null, $this->urlParams['Field']),
-					new HeaderField($title),
-					new LabelField(
-						sprintf(
-							_t(
-								'ImageUploader.CLICKREMOVE',
-								"Click the button below to remove this %s.",
-								PR_MEDIUM,
-								'... this image/file'
-							),
-							$type
-						)
-					)
+					new HiddenField("Field", null, $this->urlParams['Field'])
 				),
 				new FieldSet(
 					new ConfirmedFormAction(

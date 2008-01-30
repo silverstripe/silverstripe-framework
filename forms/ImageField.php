@@ -31,7 +31,7 @@ class ImageField extends FileField {
 			$parentClass = $data->class;
 			$parentField = $this->name;
 
-			$iframe = "<iframe name=\"{$this->name}_iframe\" src=\"images/iframe/$parentClass/$parentID/$parentField\" style=\"height: 152px; width: 600px; border-style: none;\"></iframe>";
+			$iframe = "<iframe name=\"{$this->name}_iframe\" src=\"images/iframe/$parentClass/$parentID/$parentField\" style=\"height: 152px; width: 525px; border: none;\" frameborder=\"0\"></iframe>";
 
 			return $iframe . $hiddenField;
 		} else {
