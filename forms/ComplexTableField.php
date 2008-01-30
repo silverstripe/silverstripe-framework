@@ -333,7 +333,6 @@ JS;
 	
 		if (is_numeric($childID)) {
 			if ($this->methodName == "show" || $this->methodName == "edit") {
-
 				$form->loadDataFrom($childData);
 			}
 		}
@@ -767,8 +766,14 @@ class ComplexTableField_Popup extends Form {
 		$this->saveInto($childObject);
 		$childObject->write();
 
-		// if ajax-call in an iframe, close window by javascript, else redirect to referrer
-		if(!Director::is_ajax()) {
+		if(Director::is_ajax()) {
+			// if ajax-call in an iframe, update window
+			$form = $this->controller->DetailForm();
+			$form->loadDataFrom($childObject);
+			FormResponse::update_dom_id($form->FormName(), $form->formHtmlContent(), true, 'update');
+			return FormResponse::respond();
+		} else {
+			// else redirect to referrer
 			Director::redirect(substr($_SERVER['REQUEST_URI'],0,strpos($_SERVER['REQUEST_URI'],"?")));
 		}
 	}
