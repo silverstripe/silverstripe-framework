@@ -605,7 +605,7 @@ class Image_Uploader extends Controller {
 				_t('ImageUploader.DELETE', 'Delete %s', PR_MEDIUM, 'Delete file/image'), 
 				$type
 			);
-			return new Form(
+			$form = new Form(
 				$this,
 				'DeleteImageForm', 
 				new FieldSet(
@@ -614,13 +614,16 @@ class Image_Uploader extends Controller {
 					new HiddenField("Field", null, $this->urlParams['Field'])
 				),
 				new FieldSet(
-					new ConfirmedFormAction(
+					$deleteAction = new ConfirmedFormAction(
 						"delete",
 						$title, 
 						sprintf(_t('ImageUploader.REALLYDELETE', "Do you really want to remove this %s?"), $type)
 					)
 				)
 			);
+			$deleteAction->addExtraClass('delete');
+			
+			return $form;
 		}
 	}
 	
