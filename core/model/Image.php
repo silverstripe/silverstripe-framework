@@ -433,6 +433,8 @@ class Image_Uploader extends Controller {
 	 * Ensures the css is loaded for the iframe.
 	 */
 	function iframe() {
+		if(!Permission::check('ADMIN')) Security::permissionFailure($this);
+		
 		Requirements::css("cms/css/Image_iframe.css");
 		return array();
 	}
@@ -711,6 +713,8 @@ class Image_Uploader extends Controller {
 	 * Flush all of the generated images.
 	 */
 	function flush() {
+		if(!Permission::check('ADMIN')) Security::permissionFailure($this);
+		
 		$images = DataObject::get("Image","");
 		$numItems = 0;
 		$num = 0;
@@ -731,6 +735,8 @@ class Image_Uploader extends Controller {
 	 * @deprecated This function is only used to migrate content from old databases.
 	 */
 	function transferlegacycontent() {
+		if(!Permission::check('ADMIN')) Security::permissionFailure($this);
+		
 		$images = DB::query("SELECT * FROM _obsolete_Image");
 		echo "<h3>Transferring images</h3>";
 		foreach($images as $image) {
