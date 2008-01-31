@@ -66,7 +66,7 @@ class PageView extends DataObject {
 
 	private function recordFromExternal() {
 		$http_host = "http://".$_SERVER['HTTP_HOST'];
-		if (!strstr($_SERVER['HTTP_REFERER'], $http_host) && $_SERVER['HTTP_REFERER'] != null)
+		if (isset($_SERVER['HTTP_REFERER']) && !strstr($_SERVER['HTTP_REFERER'], $http_host) && $_SERVER['HTTP_REFERER'] != null)
 			$this->FromExternal = 1;
 	}
 
@@ -79,7 +79,7 @@ class PageView extends DataObject {
 	}
 	
 	private function recordReferrer() {
-		$this->Referrer = $_SERVER['HTTP_REFERER'];
+		if(isset($_SERVER['HTTP_REFERER'])) $this->Referrer = $_SERVER['HTTP_REFERER'];
 	}
 
 	private function recordOS() {
