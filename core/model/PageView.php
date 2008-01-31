@@ -4,7 +4,15 @@
  */
 
 /**
- * Data object that represents any page view in the system.
+ * Data object that logs statistics for any page view in the system.
+ * 
+ * Inbound links from external websites are distinquished by a 'true'
+ * value in the FromExternal field. False values are
+ * 
+ * The referring urls are recorded in the Referrer field.
+ * 
+ * Information about the users browser version and operating system is also recorded.
+ * 
  * @package cms
  */
 class PageView extends DataObject {
@@ -34,66 +42,67 @@ class PageView extends DataObject {
 	static $defaults = array();
 
 	protected $hitdata = null;
-
+	
 	function init() {
 		$browscap = new Browscap();
 		$this->hitdata = $browscap->getBrowser(null, true);
 	}
-
+	
+	/**
+	 * gathers data for this page view and writes
+	 * it to the data source.
+	 */
 	function record() {
 		$this->init();
-		$this->setBrowser();
-		$this->setOS();
-		$this->setUserID();
-		$this->setPageID();
-		$this->setIP();
+		$this->recordBrowser();
+		$this->recordOS();
+		$this->recordUserID();
+		$this->recordPageID();
+		$this->recordIP();
+		$this->recordFromExternal();
+		$this->recordReferrer();
 		$this->write(true);
 	}
 
-	function sanitize($str) {
-		//TODO
-		return $str;
+	private function recordFromExternal() {
+		$http_host = "http://".$_SERVER['HTTP_HOST'];
+		if (!strstr($_SERVER['HTTP_REFERER'], $http_host) && $_SERVER['HTTP_REFERER'] != null)
+			$this->FromExternal = 1;
 	}
 
-	function setBrowser() {
-		if(isset($this->hitdata['Browser']))
-			$this->setField('Browser', $this->hitdata['Browser']);
+	private function recordBrowser() {
+		if (isset($this->hitdata['Browser']))
+			$this->Browser = $this->hitdata['Browser'];
 
-		if(isset($this->hitdata['Version']))
-			$this->setField('BrowserVersion', $this->hitdata['Version']);
+		if (isset($this->hitdata['Version']))
+			$this->BrowserVersion = $this->hitdata['Version'];
+	}
+	
+	private function recordReferrer() {
+		$this->Referrer = $_SERVER['HTTP_REFERER'];
 	}
 
-	function setOS() {
+	private function recordOS() {
 		if(isset($this->hitdata['Platform']))
-			$this->setField('OS', $this->hitdata['Platform']);
+			$this->OS = $this->hitdata['Platform'];
 	}
 
-	function setUserID() {
+	private function recordUserID() {
 		$isLogged = Session::get('loggedInAs');
-		if($isLogged) {
-			$id = $isLogged;
-		} else {
-			$id = -1;
-		}
-		$this->setField('UserID', $id);
+		$id = ($isLogged) ? $isLogged : -1;
+		$this->UserID = $id;
 	}
 
-	function setPageID() {
+	private function recordPageID() {
 		$currentPage = Director::currentPage();
-		if($currentPage)
-			$this->setField('PageID', $currentPage->ID);
+		if ($currentPage) $this->PageID = $currentPage->ID;
 	}
 
-	function setIP() {
-		if(isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-			$ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
-		} else {
-			$ip = $_SERVER['REMOTE_ADDR'];
-		}
-		$this->setField('IP', $ip);
+	private function recordIP() {
+		$this->IP = (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) 
+					 ? $_SERVER['HTTP_X_FORWARDED_FOR'] : $_SERVER['REMOTE_ADDR'];
 	}
-
+	
 }
-
 
 ?>
