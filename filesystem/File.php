@@ -165,7 +165,7 @@ class File extends DataObject {
 		// have been uploaded.
 		$base = dirname(dirname($_SERVER['SCRIPT_FILENAME']));
 		$class = $this->class;
-		$parentFolder = Folder::findOrMake("Uploads");
+		$parentFolder = Folder::findOrMake($folderName);
 
 		// Create a folder for uploading.
 		if(!file_exists("$base/assets")){
@@ -181,7 +181,7 @@ class File extends DataObject {
 		$file = ereg_replace('-+', '-',$file);
 		$file = basename($file);
 
-		$file = "assets/Uploads/$file";
+		$file = "assets/$folderName/$file";
 
 		while(file_exists("$base/$file")) {
 			$i = isset($i) ? ($i+1) : 2;
