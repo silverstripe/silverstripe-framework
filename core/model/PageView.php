@@ -7,7 +7,7 @@
  * Data object that logs statistics for any page view in the system.
  * 
  * Inbound links from external websites are distinquished by a 'true'
- * value in the FromExternal field. False values are
+ * value in the FromExternal field.
  * 
  * The referring urls are recorded in the Referrer field.
  * 
