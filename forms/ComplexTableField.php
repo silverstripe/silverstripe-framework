@@ -208,7 +208,7 @@ JS;
 				
 		$sourceItems = DataObject::get($this->sourceClass, $this->sourceFilter, $sort, $this->sourceJoin, $limitClause);
 
-		$this->unpagedSourceItems = DataObject::get($this->sourceClass, $sort, $this->sourceSort, $this->sourceJoin);
+		$this->unpagedSourceItems = DataObject::get($this->sourceClass, $this->sourceFilter, $sort, $this->sourceJoin);
 
 		$this->totalCount = ($this->unpagedSourceItems) ? $this->unpagedSourceItems->TotalItems() : null;
 
