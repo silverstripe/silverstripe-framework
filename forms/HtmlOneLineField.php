@@ -10,6 +10,8 @@
  * tinymce editor fields are created from <textarea> tags which are then converted with javascript.
  * The {@link Requirements} system is used to ensure that all necessary javascript is included.
  * @package forms
+ * Caution: Only works within the CMS with a global tinymce-menubar, see {@link CMSMain}
+ * 
  * @subpackage fields-formattedinput
  * @deprecated It's not clear that this field works properly.  Just use {@link HtmlEditorField}.
  */
