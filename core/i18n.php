@@ -937,6 +937,7 @@ class i18n extends Controller {
 			ereg('/([^/]+)/',$path,$module);
 		} else {
 			global $_CLASS_MANIFEST;
+			if(strpos($name,'_') !== false) $name = strtok($name,'_');
 			$path = str_replace('\\','/',Director::makeRelative($_CLASS_MANIFEST[$name]));
 			ereg('/([^/]+)/', $path, $module);
 		}
