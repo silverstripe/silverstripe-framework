@@ -440,13 +440,13 @@ function htmlEmail($to, $from, $subject, $htmlContent, $attachedFiles = false, $
 
 
 	// Make the plain text part
-	$headers["Content-Type"] = "text/plain; charset=\"iso-8859-15\"";
+	$headers["Content-Type"] = "text/plain; charset=\"utf-8\"";
 	$headers["Content-Transfer-Encoding"] = $plainEncoding ? $plainEncoding : "quoted-printable";
 
 	$plainPart = processHeaders($headers, ($plainEncoding == "base64") ? chunk_split(base64_encode($plainContent),60) : wordwrap($plainContent,120));
 
 	// Make the HTML part
-	$headers["Content-Type"] = "text/html; charset=\"iso-8859-15\"";
+	$headers["Content-Type"] = "text/html; charset=\"utf-8\"";
         
 	
 	// Add basic wrapper tags if the body tag hasn't been given
@@ -454,7 +454,7 @@ function htmlEmail($to, $from, $subject, $htmlContent, $attachedFiles = false, $
 		$htmlContent =
 			"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\">\n" .
 			"<HTML><HEAD>\n" .
-			"<META http-equiv=Content-Type content=\"text/html; charset=iso-8859-15\">\n" .
+			"<META http-equiv=Content-Type content=\"text/html; charset=utf-8\">\n" .
 			"<STYLE type=3Dtext/css></STYLE>\n\n".
 			"</HEAD>\n" .
 			"<BODY bgColor=#ffffff>\n" .
@@ -558,7 +558,7 @@ function plaintextEmail($to, $from, $subject, $plainContent, $attachedFiles, $cu
 
 
 	// Make the plain text part
-	$headers["Content-Type"] = "text/plain; charset=\"iso-8859-15\"";
+	$headers["Content-Type"] = "text/plain; charset=\"utf-8\"";
 	$headers["Content-Transfer-Encoding"] = $plainEncoding ? $plainEncoding : "quoted-printable";
 
 	$plainContent = ($plainEncoding == "base64") ? chunk_split(base64_encode($plainContent),60) : QuotedPrintable_encode($plainContent);
@@ -663,7 +663,7 @@ function wrapImagesInline($htmlContent) {
 	
 	
 	// Make the HTML part
-	$headers["Content-Type"] = "text/html; charset=\"iso-8859-15\"";
+	$headers["Content-Type"] = "text/html; charset=\"utf-8\"";
 	$headers["Content-Transfer-Encoding"] = "quoted-printable";
 	$multiparts[] = processHeaders($headers, QuotedPrintable_encode($replacedContent));
 	
