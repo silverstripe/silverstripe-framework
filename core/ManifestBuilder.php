@@ -93,6 +93,8 @@ class ManifestBuilder {
 		// locate and include the exclude files
 		$topLevel = scandir($baseDir);
 		foreach($topLevel as $file) {
+			if($file[0] == '.') continue
+			
 			$fullPath = $baseDir . '/' . $file;
 
 			if(@is_dir($fullPath . '/') && file_exists($fullPath . '/_exclude.php'))
@@ -113,6 +115,7 @@ class ManifestBuilder {
 			// have an _manifest_exclude file
 			$topLevel = scandir($baseDir);
 			foreach($topLevel as $filename) {
+				if($filename[0] == '.') continue;
 				if(@is_dir("$baseDir/$filename") &&
 						 file_exists("$baseDir/$filename/_config.php") &&
 						 !file_exists("$baseDir/$filename/_manifest_exclude")) {
@@ -135,6 +138,7 @@ class ManifestBuilder {
 		global $databaseConfig;
 		$topLevel = scandir($baseDir);
 		foreach($topLevel as $filename) {
+			if($filename[0] == '.') continue;
 			if(@is_dir("$baseDir/$filename/") &&
 					 file_exists("$baseDir/$filename/_config.php") &&
 					 !file_exists("$baseDir/$filename/_manifest_exclude")) {
@@ -155,7 +159,7 @@ class ManifestBuilder {
 		// Only include directories if they have an _config.php file
 		$topLevel = scandir($baseDir);
 		foreach($topLevel as $filename) {
-			if(substr($filename,0,1) == '.') continue;
+			if($filename[0] == '.') continue;
 			if($filename != 'themes' && @is_dir("$baseDir/$filename") && file_exists("$baseDir/$filename/_config.php")) {
 				ManifestBuilder::getTemplateManifest($baseDir, $filename, $templateManifest, $cssManifest);
 			}
@@ -486,6 +490,7 @@ class ManifestBuilder {
 		$topLevel = scandir($baseDir);
 
 		foreach($topLevel as $filename) {
+			if($filename[0] == '.') continue;
 			if(@is_dir("$baseDir/$filename/") && file_exists("$baseDir/$filename/_config.php")) {
 				$manifest .= "require_once(\"$baseDir/$filename/_config.php\");\n";
 			}
