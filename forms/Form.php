@@ -36,6 +36,11 @@ class Form extends ViewableData {
 	protected $hasDefaultAction = true;
 
 	/**
+	 * Variable set to true once the SecurityID hidden field has been added.
+	 */
+	protected $securityTokenAdded = false;
+
+	/**
 	 * Accessed by Form.ss; modified by formHtmlContent.
 	 * A performance enhancement over the generate-the-form-tag-and-then-remove-it code that was there previously
 	 */
@@ -176,7 +181,7 @@ class Form extends ViewableData {
 	 * @return FieldSet The form fields
 	 */
 	function Fields() {
-		if($this->securityTokenEnabled()) {
+		if(!$this->securityTokenAdded && $this->securityTokenEnabled()) {
 			if(Session::get('SecurityID')) {
 				$securityID = Session::get('SecurityID');
 			} else {
@@ -184,13 +189,11 @@ class Form extends ViewableData {
 				Session::set('SecurityID', $securityID);
 			}
 			
-			$fieldsClone = clone $this->fields;
-			$fieldsClone->push(new HiddenField('SecurityID', '', $securityID));
-			
-			return $fieldsClone;
-		} else {
-			return $this->fields;
+			$this->fields->push(new HiddenField('SecurityID', '', $securityID));
+			$this->securityTokenAdded = true;
 		}
+		
+		return $this->fields;
 	}
 	
 	/**
