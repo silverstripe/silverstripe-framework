@@ -530,92 +530,95 @@ class DataObject extends Controller implements DataObjectInterface {
 		}
 
 		// No changes made
-		if(!$this->changed) {
-			return $this->record['ID'];
-		}
-
-		foreach($this->getClassAncestry() as $ancestor) {
-			if(ClassInfo::hasTable($ancestor))
-				$ancestry[] = $ancestor;
-		}
-
-		// Look for some changes to make
-		unset($this->changed['ID']);
-
-		$hasChanges = false;
-		foreach($this->changed as $fieldName => $changed) {
-			if($changed) {
-				$hasChanges = true;
-				break;
-			}
-		}
-
-		if($hasChanges || $forceWrite || !$this->record['ID']) {
-			
-			// New records have their insert into the base data table done first, so that they can pass the 
-			// generated primary key on to the rest of the manipulation
-			if(!$this->record['ID'] && isset($ancestry[0])) {
-				$baseTable = $ancestry[0];
-
-				DB::query("INSERT INTO `{$baseTable}` SET Created = NOW()");
-				$this->record['ID'] = DB::getGeneratedID($baseTable);
-				$this->changed['ID'] = 2;
-
-				$isNewRecord = true;
+		if($this->changed) {
+			foreach($this->getClassAncestry() as $ancestor) {
+				if(ClassInfo::hasTable($ancestor))
+					$ancestry[] = $ancestor;
 			}
 
-			// Divvy up field saving into a number of database manipulations
-			if(isset($ancestry) && is_array($ancestry)) {
-				foreach($ancestry as $idx => $class) {
-					$classSingleton = singleton($class);
-					foreach($this->record as $fieldName => $value) {
-						if(isset($this->changed[$fieldName]) && $this->changed[$fieldName] && $fieldType = $classSingleton->fieldExists($fieldName)) {
-							$manipulation[$class]['fields'][$fieldName] = $value ? ("'" . addslashes($value) . "'") : singleton($fieldType)->nullValue();
-						}
-					}
+			// Look for some changes to make
+			unset($this->changed['ID']);
 
-					// Add the class name to the base object
-					if($idx == 0) {
-						$manipulation[$class]['fields']["LastEdited"] = "now()";
-						if($dbCommand == 'insert') {
-							$manipulation[$class]['fields']["Created"] = "now()";
-							//echo "<li>$this->class - " .get_class($this);
-							$manipulation[$class]['fields']["ClassName"] = "'$this->class'";
-						}
-					}
-
-					// In cases where there are no fields, this 'stub' will get picked up on
-					if(ClassInfo::hasTable($class)) {
-						$manipulation[$class]['command'] = $dbCommand;
-						$manipulation[$class]['id'] = $this->record['ID'];
-					} else {
-						unset($manipulation[$class]);
-					}
+			$hasChanges = false;
+			foreach($this->changed as $fieldName => $changed) {
+				if($changed) {
+					$hasChanges = true;
+					break;
 				}
 			}
 
+			if($hasChanges || $forceWrite || !$this->record['ID']) {
+			
+				// New records have their insert into the base data table done first, so that they can pass the 
+				// generated primary key on to the rest of the manipulation
+				if(!$this->record['ID'] && isset($ancestry[0])) {
+					$baseTable = $ancestry[0];
 
-			$this->extend('augmentWrite', $manipulation);
-			// New records have their insert into the base data table done first, so that they can pass the
-			// generated ID on to the rest of the manipulation
-			if(isset($isNewRecord) && $isNewRecord && isset($manipulation[$baseTable])) {
-				$manipulation[$baseTable]['command'] = 'update';
+					DB::query("INSERT INTO `{$baseTable}` SET Created = NOW()");
+					$this->record['ID'] = DB::getGeneratedID($baseTable);
+					$this->changed['ID'] = 2;
+
+					$isNewRecord = true;
+				}
+
+				// Divvy up field saving into a number of database manipulations
+				if(isset($ancestry) && is_array($ancestry)) {
+					foreach($ancestry as $idx => $class) {
+						$classSingleton = singleton($class);
+						foreach($this->record as $fieldName => $value) {
+							if(isset($this->changed[$fieldName]) && $this->changed[$fieldName] && $fieldType = $classSingleton->fieldExists($fieldName)) {
+								$manipulation[$class]['fields'][$fieldName] = $value ? ("'" . addslashes($value) . "'") : singleton($fieldType)->nullValue();
+							}
+						}
+
+						// Add the class name to the base object
+						if($idx == 0) {
+							$manipulation[$class]['fields']["LastEdited"] = "now()";
+							if($dbCommand == 'insert') {
+								$manipulation[$class]['fields']["Created"] = "now()";
+								//echo "<li>$this->class - " .get_class($this);
+								$manipulation[$class]['fields']["ClassName"] = "'$this->class'";
+							}
+						}
+
+						// In cases where there are no fields, this 'stub' will get picked up on
+						if(ClassInfo::hasTable($class)) {
+							$manipulation[$class]['command'] = $dbCommand;
+							$manipulation[$class]['id'] = $this->record['ID'];
+						} else {
+							unset($manipulation[$class]);
+						}
+					}
+				}
+
+
+				$this->extend('augmentWrite', $manipulation);
+				// New records have their insert into the base data table done first, so that they can pass the
+				// generated ID on to the rest of the manipulation
+				if(isset($isNewRecord) && $isNewRecord && isset($manipulation[$baseTable])) {
+					$manipulation[$baseTable]['command'] = 'update';
+				}
+				DB::manipulate($manipulation);
+
+				if(isset($isNewRecord) && $isNewRecord) {
+					DataObjectLog::addedObject($this);
+				} else {
+					DataObjectLog::changedObject($this);
+				}
+
+				$this->changed = null;
+			} elseif ( $showDebug ) {
+				echo "<b>Debug:</b> no changes for DataObject<br />";
 			}
-			DB::manipulate($manipulation);
 
-			if(isset($isNewRecord) && $isNewRecord) {
-				DataObjectLog::addedObject($this);
-			} else {
-				DataObjectLog::changedObject($this);
+			// Clears the cache for this object so get_one returns the correct object.
+			$this->flushCache();
+
+			if(!isset($this->record['Created'])) {
+				$this->record['Created'] = date('Y-m-d H:i:s');
 			}
-
-			$this->changed = null;
-		} elseif ( $showDebug ) {
-			echo "<b>Debug:</b> no changes for DataObject<br />";
+			$this->record['LastEdited'] = date('Y-m-d H:i:s');
 		}
-
-		// Clears the cache for this object so get_one returns the correct object.
-		$this->flushCache();
 
 		// Write ComponentSets as necessary
 		if($this->components) {
@@ -623,11 +626,6 @@ class DataObject extends Controller implements DataObjectInterface {
 				$component->write($firstWrite);
 			}
 		}
-
-		if(!isset($this->record['Created'])) {
-			$this->record['Created'] = date('Y-m-d H:i:s');
-		}
-		$this->record['LastEdited'] = date('Y-m-d H:i:s');
 
 		return $this->record['ID'];
 	}
