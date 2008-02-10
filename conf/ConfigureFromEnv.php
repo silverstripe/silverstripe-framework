@@ -17,6 +17,10 @@
  * You can configure the environment with this define:
  *  - SS_ENVIRONMENT_TYPE: The environment type: dev, test or live.
  * 
+ * You can configure the default admin with these defines
+ *  - SS_DEFAULT_ADMIN_USERNAME: The username of the default admin - this is a non-database user with administrative privileges.
+ *  - SS_DEFAULT_ADMIN_PASSWORD: The password of the default admin.
+ * 
  * Email:
  *  - SS_SEND_ALL_EMAILS_TO: If you set this define, all emails will be redirected to this address.
  * 
@@ -49,4 +53,9 @@ $databaseConfig = array(
 
 if(defined('SS_SEND_ALL_EMAILS_TO')) {
 	Email::send_all_emails_to(SS_SEND_ALL_EMAILS_TO);
+}
+
+if(defined('SS_DEFAULT_ADMIN_USERNAME')) {
+	if(!defined('SS_DEFAULT_ADMIN_PASSWORD')) user_error("SS_DEFAULT_ADMIN_PASSWORD must be defined in your _ss_environment.php, if SS_DEFAULT_ADMIN_USERNAME is defined.  See http://doc.silverstripe.com/doku.php?id=environment-management for more infomration", E_USER_ERROR);
+	Security::setDefaultAdmin(SS_DEFAULT_ADMIN_USERNAME, SS_DEFAULT_ADMIN_PASSWORD);
 }
