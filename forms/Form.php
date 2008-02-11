@@ -22,7 +22,17 @@
  * @subpackage core
  */
 class Form extends ViewableData {
-	protected $fields, $actions, $controller, $name, $validator;
+	
+	protected $fields;
+	
+	protected $actions;
+	
+	protected $controller;
+	
+	protected $name;
+
+	protected $validator;
+	
 	protected $formMethod = "post";
 	
 	public static $backup_post_data = false;
@@ -56,9 +66,7 @@ class Form extends ViewableData {
 	function __construct($controller, $name, FieldSet $fields, FieldSet $actions, $validator = null) {
 		parent::__construct();
 
-		foreach($fields as $field) {
-			$field->setForm($this);
-		}
+		foreach($fields as $field) $field->setForm($this);
 		foreach($actions as $action) $actions->setForm($this);
 
 		$this->fields = $fields;
@@ -197,6 +205,15 @@ class Form extends ViewableData {
 	}
 	
 	/**
+	 * Setter for the form fields.
+	 *
+	 * @param FieldSet $fields
+	 */
+	function setFields($fields) {
+		$this->fields = $fields;
+	}
+	
+	/**
 	 * Get a named field from this form's fields.
 	 * It will traverse into composite fields for you, to find the field you want.
 	 * It will only return a data field.
@@ -215,6 +232,15 @@ class Form extends ViewableData {
 		return $this->actions;
 	}
 
+	/**
+	 * Setter for the form actions.
+	 *
+	 * @param FieldSet $actions
+	 */
+	function setActions($actions) {
+		$this->actions = $actions;
+	}
+	
 	/**
 	 * Unset all form actions
 	 */
