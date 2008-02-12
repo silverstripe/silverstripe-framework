@@ -206,13 +206,13 @@ JS;
 			$sort = Convert::raw2sql($_REQUEST['ctf'][$this->Name()]['sort']);
 		}
 				
-		$sourceItems = DataObject::get($this->sourceClass, $this->sourceFilter, $sort, $this->sourceJoin, $limitClause);
+		$this->sourceItems = DataObject::get($this->sourceClass, $this->sourceFilter, $sort, $this->sourceJoin, $limitClause);
 
 		$this->unpagedSourceItems = DataObject::get($this->sourceClass, $this->sourceFilter, $sort, $this->sourceJoin);
 
 		$this->totalCount = ($this->unpagedSourceItems) ? $this->unpagedSourceItems->TotalItems() : null;
 
-		return $sourceItems;
+		return $this->sourceItems;
 	}
 
 	/**
