@@ -358,7 +358,7 @@ class ManifestBuilder {
 		if(!$file) die("Couldn't open $filename<br />");
 
 		$classes = array();
-		$size = preg_match_all('/class (.*){/', $file, $classes);
+		$size = preg_match_all('/class (.*)[ \n]*{/m', $file, $classes);
 
 		for($i=0; $i < $size; $i++) {
 				//we have a class
