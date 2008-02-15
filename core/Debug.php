@@ -107,7 +107,7 @@ class Debug {
 	}
 
 	static function loadFatalErrorHandler() {
-		set_error_handler('errorHandler', E_ALL & ~E_NOTICE);
+		set_error_handler('errorHandler', (E_ALL ^ E_NOTICE) ^ E_USER_NOTICE);
 	}
 
 	static function warningHandler($errno, $errstr, $errfile, $errline, $errcontext) {
