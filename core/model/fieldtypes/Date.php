@@ -139,6 +139,46 @@ class Date extends DBField {
 			}
 		}
 	}
+	
+	/**
+	 * Gets the time difference, but always returns it in a certain format
+	 * @param string $format The format, could be one of these: 
+	 * 'seconds', 'minutes', 'hours', 'days', 'months', 'years'.
+	 * 
+	 * @return string
+	 */
+	function TimeDiffIn($format) {
+		if($this->value) {
+			$ago = abs(time() - strtotime($this->value));
+			
+			switch($format) {
+				case "seconds":
+					$span = $ago;
+					return ($span != 1) ? "{$span} seconds" : "{$span} second";
+				break;
+				case "minutes":
+					$span = round($ago/60);
+					return ($span != 1) ? "{$span} minutes" : "{$span} minute";
+				break;
+				case "hours":
+					$span = round($ago/3600);
+					return ($span != 1) ? "{$span} hours" : "{$span} hour";
+				break;
+				case "days":
+					$span = round($ago/86400);
+					return ($span != 1) ? "{$span} days" : "{$span} day";
+				break;
+				case "months":
+					$span = round($ago/86400/30);
+					return ($span != 1) ? "{$span} months" : "{$span} month";
+				break;
+				case "years":
+					$span = round($ago/86400/365);
+					return ($span != 1) ? "{$span} years" : "{$span} year";
+				break;
+			}
+		}
+	}
 
 	function requireField() {
 		DB::requireField($this->tableName, $this->name, "date");
