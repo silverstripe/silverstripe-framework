@@ -1872,6 +1872,15 @@ class DataObject extends Controller implements DataObjectInterface {
 	/**
 	 * one-to-many relationship definitions.
 	 * This is a map from component name to data type.
+	 * 
+	 * Caution: Because this doesn't define any data structure itself, you should
+	 * specify a $has_one relationship on the other end of the relationship. 
+	 * Also, if the $has_one relationship on the other end has multiple
+	 * definitions of this class (e.g. two different relationships to the Member
+	 * object), then you need to write a custom accessor (e.g. overload the
+	 * function from the key of this array), because sapphire won't know which
+	 * to access.
+	 * 
 	 * @var array
 	 */
 	public static $has_many = null;
