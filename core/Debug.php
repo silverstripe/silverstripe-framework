@@ -111,13 +111,11 @@ class Debug {
 	}
 
 	static function warningHandler($errno, $errstr, $errfile, $errline, $errcontext) {
+	  if(error_reporting() == 0) return;
 		if(self::$send_warnings_to) self::emailError(self::$send_warnings_to, $errno, $errstr, $errfile, $errline, $errcontext, "Warning");
 
 		if(Director::isDev()) {
-			if(error_reporting() != 0) { // otherwise the error was suppressed with @
-				self::showError($errno, $errstr, $errfile, $errline, $errcontext);
-				die();
-			}
+		  self::showError($errno, $errstr, $errfile, $errline, $errcontext);
 		}
 	}
 
