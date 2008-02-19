@@ -390,8 +390,8 @@ class DataObjectSet extends ViewableData implements Iterator {
 	 * @param string $key Key to index this DataObject by.
 	 */
 	public function insertFirst($item, $key = null) {
-		if($key != null) {
-			array_shift($this->items, $item);
+		if($key == null) {
+			array_unshift($this->items, $item);
 		} else {
 			// Not very efficient :-(
 			$newItems = array();
