@@ -10,7 +10,7 @@
  * @package sapphire
  * @subpackage model
  */
-class DataObject extends Controller implements DataObjectInterface {
+class DataObject extends ViewableData implements DataObjectInterface {
 	/**
 	 * Data stored in this objects database record. An array indexed
 	 * by fieldname.

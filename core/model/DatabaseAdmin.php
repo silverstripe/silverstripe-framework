@@ -25,6 +25,14 @@ require_once("core/model/DB.php");
  */
 class DatabaseAdmin extends Controller {
 
+	/// SECURITY ///
+	static $allowed_actions = array(
+		'build',
+		'cleanup',
+		'testinstall',
+		'import'
+	);
+
 	/**
 	 * Get the data classes, grouped by their root class
 	 *

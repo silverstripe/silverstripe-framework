@@ -17,6 +17,19 @@
  */
 class Controller extends ViewableData {
 	
+	/**
+	 * Define a list of actions that are allowed to be called on this controller.
+	 * The variable should be an array of action names. This sample s
+	 *
+	 * array(
+	 *		'someaction', // someaction can be accessed by anyone, any time
+	 *		'otheraction' => true, // So can otheraction
+	 *		'restrictedaction' => 'ADMIN', // restrictedaction can only be people with ADMIN privilege
+	 *		'complexaction' '->canComplexAction' // complexaction can only be accessed if $this->canComplexAction() returns true
+	 *	);
+	 */
+	static $allowed_actions = null;
+	
 	protected $urlParams;
 	
 	protected $requestParams;
@@ -98,7 +111,13 @@ class Controller extends ViewableData {
 		$this->response = new HTTPResponse();
 		$this->requestParams = $requestParams;
 
-		$this->action = isset($this->urlParams['Action']) ? str_replace("-","_",$this->urlParams['Action']) : "index";
+		$this->action = isset($this->urlParams['Action']) ? strtolower(str_replace("-","_",$this->urlParams['Action'])) : "";
+		if(!$this->action) $this->action = 'index';
+		
+		// Check security on the controller
+		if(!$this->checkAccessAction($this->action)) {
+			user_error("Disallowed action: '$this->action' on controller '$this->class'", E_USER_ERROR);
+		}
 
 		// Init
 		$this->baseInitCalled = false;
@@ -507,6 +526,33 @@ class Controller extends ViewableData {
 			(isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] == "XMLHttpRequest")
 		);
 	}
+	
+	/**
+	 * Check thAT
+	 */
+	function checkAccessAction($action) {
+		$access = $this->stat('allowed_actions');
+
+		if($access === null) {
+			user_error("Deprecated: please define accessAction() on your Controllers for security purposes", E_USER_NOTICE);
+			return true;
+		}
+		
+		if($action == 'index') return true;
+		
+		if(isset($access[$action])) {
+			$test = $access[$action];
+			if($test === true) return true;
+			if(substr($test,0,2) == '->') {
+				$funcName = substr($test,2);
+				return $this->$funcName();
+			}
+			if(Permission::check($test)) return true;
+		} else if((($key = array_search($action, $access)) !== false) && is_numeric($key)) {
+			return true;
+		}
+		return false;
+	} 
 	
 }
 
