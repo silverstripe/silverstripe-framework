@@ -177,6 +177,26 @@ class Group extends DataObject {
 			$this->setCode($this->Title);
 		}
 	}
+	
+	public function canEdit() {
+		if($this->hasMethod('alternateCanEdit')) return $this->alternateCanEdit();
+		else return Member::currentUserID() ? true : false;
+	}
+
+	/**
+	 * Returns all of the children for the CMS Tree.
+	 * Filters to only those groups that the current user can edit
+	 */
+	function AllChildrenIncludingDeleted() {
+		$children = $this->extInstance('Hierarchy')->AllChildrenIncludingDeleted();
+		$filteredChildren = new DataObjectSet();
+		
+		foreach($children as $child) {
+			if($child->canEdit()) $filteredChildren->push($child);
+		}
+		
+		return $filteredChildren;
+	}
 }
 
 /**
