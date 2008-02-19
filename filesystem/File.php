@@ -287,7 +287,8 @@ class File extends DataObject {
 	}
 
 	function TreeTitle() {
-		return $this->Title;
+		if($this->hasMethod('alternateTreeTitle')) return $this->alternateTreeTitle();
+		else return $this->Title;
 	}
 
 	/**
@@ -594,6 +595,13 @@ class File extends DataObject {
 		echo "<p>Done!";
 	}
 
+
+	/**
+	 * Select clause for DataObject::get('File') operations/
+	 * Stores an array, suitable for a {@link SQLQuery} object.
+	 */
+	private static $dataobject_select;
+
 	/**
 	 * We've overridden the DataObject::get function for File so that the very large content field
 	 * is excluded!
@@ -607,8 +615,23 @@ class File extends DataObject {
 		
 		$query = $this->extendedSQL($filter, $sort, $limit, $join, $having);
 		$baseTable = reset($query->from);
-		
-		$query->select = array("$baseTable.ID","$baseTable.ClassName","$baseTable.Created","$baseTable.LastEdited","$baseTable.Name","$baseTable.Title","$baseTable.Content","$baseTable.ParentID","$baseTable.Filename","if($baseTable.ClassName,$baseTable.ClassName,'File') AS RecordClassName");
+
+		// Work out which columns we're actually going to select
+		// In short, we select everything except File.Content
+		if(!self::$dataobject_select) {
+			self::$dataobject_select = array();
+			foreach($query->select as $item) {
+				if($item == "`File`.*") {
+					$fileColumns = DB::query("SHOW FIELDS IN `File`")->column();
+					$columnsToAdd = array_diff($fileColumns, array('Content'));
+					foreach($columnsToAdd as $otherItem) self::$dataobject_select[] = '`File`.' . $otherItem;
+				} else {
+					self::$dataobject_select[] = $item;
+				}
+			}
+		}
+
+		$query->select = self::$dataobject_select;
 
 		$records = $query->execute();
 		$ret = $this->buildDataObjectSet($records, $containerClass);
