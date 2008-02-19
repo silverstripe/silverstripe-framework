@@ -1163,6 +1163,10 @@ class Member_ChangePasswordEmail extends Email_Template {
     function __construct() {
     	$this->subject = _t('Member.SUBJECTPASSWORDCHANGED', "Your password has been changed", PR_MEDIUM, 'Email subject');
     }
+    
+    function BaseHref() {
+    	return 'http://'.(($subsite = Subsite::currentSubsite()) ? $subsite->domain() : Subsite::default_domain()).'/';
+    }    
 }
 
 
