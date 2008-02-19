@@ -53,6 +53,8 @@ class Member extends DataObject {
 	);
 
 
+	static $notify_password_change = false;
+	
 	/**
 	 * This method is used to initialize the static database members
 	 *
@@ -448,7 +450,7 @@ class Member extends DataObject {
 			}
 		}
 
-		if($this->changed['Password']) $this->sendInfo('changePassword');
+		if($this->changed['Password'] && Member::$notify_password_change) $this->sendInfo('changePassword');
 		
 		parent::onBeforeWrite();
 	}
