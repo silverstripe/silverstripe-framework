@@ -107,7 +107,12 @@ JS;
 
 	function validate( $validate ) {
 		
-		$result = DB::query( "SELECT COUNT(*) FROM " . $this->restrictedTable . " WHERE " . $this->restrictedField . " = '" . $this->value . "'" )->value();
+		$result = DB::query(sprintf(
+			"SELECT COUNT(*) FROM `%s` WHERE `%s` = '%s'",
+			$this->restrictedTable,
+			$this->restrictedField,
+			Convert::raw2sql($this->value)
+		))->value();
 
 		if( $result && ( $result > 0 ) ) {
 			$validator->validationError( $this->name, _t('Form.VALIDATIONNOTUNIQUE', "The value entered is not unique") );
