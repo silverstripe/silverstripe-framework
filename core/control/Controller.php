@@ -534,7 +534,7 @@ class Controller extends ViewableData {
 		$access = $this->stat('allowed_actions');
 
 		if($access === null) {
-			user_error("Deprecated: please define accessAction() on your Controllers for security purposes", E_USER_NOTICE);
+			//user_error("Deprecated: please define static \$allowed_actions on your Controllers for security purposes", E_USER_NOTICE);
 			return true;
 		}
 		
