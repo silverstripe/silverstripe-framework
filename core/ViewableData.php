@@ -889,7 +889,9 @@ class ViewableData extends Object implements Iterator {
 	 * Object-casting information for class methods
 	 * @var mixed
 	 */
-	public static $casting = null;
+	public static $casting = array(
+		'BaseHref' => 'Varchar'
+	);
 	
 	/**
 	 * Keep a record of the parent node of this data node.
