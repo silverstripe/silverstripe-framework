@@ -226,13 +226,13 @@ class Member extends DataObject {
 	function sendInfo($type = 'signup', $data = null) {
 		switch($type) {
 			case "signup":
-				$e = new Member_SignupEmail();
+				$e = Object::create('Member_SignupEmail');
 				break;
 			case "changePassword":
-				$e = new Member_ChangePasswordEmail();
+				$e = Object::create('Member_ChangePasswordEmail');
 				break;
 			case "forgotPassword":
-				$e = new Member_ForgotPasswordEmail();
+				$e = Object::create('Member_ForgotPasswordEmail');
 				break;
 		}
 
@@ -1163,10 +1163,6 @@ class Member_ChangePasswordEmail extends Email_Template {
     function __construct() {
     	$this->subject = _t('Member.SUBJECTPASSWORDCHANGED', "Your password has been changed", PR_MEDIUM, 'Email subject');
     }
-    
-    function BaseHref() {
-    	return 'http://'.(($subsite = Subsite::currentSubsite()) ? $subsite->domain() : Subsite::default_domain()).'/';
-    }    
 }
 
 
