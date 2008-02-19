@@ -335,7 +335,7 @@ class Hierarchy extends DataObjectDecorator {
 					continue;
 				}
 				$idList[] = $child->ID;
-				$child->loadDescendantIDListInto($idList);
+				$child->getExtension('Hierarchy')->loadDescendantIDListInto($idList);
 			}
 		}
 	}
