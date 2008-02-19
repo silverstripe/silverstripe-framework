@@ -1415,6 +1415,9 @@ class SiteTree extends DataObject {
 		if($controller->isCurrentPage($this))
 			$classes .= " current";
 
+		if(!$this->canEdit() && !$this->canAddChildren()) 
+			$classes .= " disabled";
+		
 		$classes .= $this->markingClasses();
 
 		return $classes;
