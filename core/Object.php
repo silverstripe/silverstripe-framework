@@ -403,7 +403,7 @@ class Object {
 	 * 
 	 * @return DataObjectDecorator The instance of the extension
 	 */
-	public function getExtension($name) {
+	public function extInstance($name) {
 		return $this->extension_instances[$name];
 	}
 	

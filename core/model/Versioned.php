@@ -159,7 +159,7 @@ class Versioned extends DataObjectDecorator {
 				if($this->owner->parentClass() == "DataObject") {
 					$rootTable = true;
 				}
-				if ($suffix && ($ext = $this->owner->getExtension($allSuffixes[$suffix]))) {
+				if ($suffix && ($ext = $this->owner->extInstance($allSuffixes[$suffix]))) {
 					if (!$ext->isVersionedTable($table)) continue;
 					$fields = $ext->fieldsInExtraTables($suffix);
 					$indexes = $fields['indexes'];
@@ -345,7 +345,7 @@ class Versioned extends DataObjectDecorator {
 	function extendWithSuffix($table) {
 		foreach (Versioned::$versionableExtensions as $versionableExtension => $suffixes) {
 			if ($this->owner->hasExtension($versionableExtension)) {
-				$table = $this->owner->getExtension($versionableExtension)->extendWithSuffix($table);
+				$table = $this->owner->extInstance($versionableExtension)->extendWithSuffix($table);
 			}
 		}
 		return $table;
