@@ -448,6 +448,8 @@ class Member extends DataObject {
 			}
 		}
 
+		if($this->changed['Password']) $this->sendInfo('changePassword');
+		
 		parent::onBeforeWrite();
 	}
 
