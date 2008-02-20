@@ -151,13 +151,13 @@ class Debug {
 		header("HTTP/1.0 500 Internal server error");
 
 		if(Director::is_ajax()) {
-			echo "ERROR:There has been an error";
+			echo "There has been an error";
 
 		} else {
 			if(file_exists('../assets/error-500.html')) {
 				include('../assets/error-500.html');
 			} else {
-				echo "ERROR:<h1>Error</h1><p>The website server has not been able to respond to your request.</p>\n";
+				echo "<h1>Error</h1><p>The website server has not been able to respond to your request.</p>\n";
 			}
 		}
 	}
