@@ -667,7 +667,7 @@ class TableField_Item extends TableListField_Item {
 					
 					$field->Name = $combinedFieldName;
 					$field->setValue($field->dataValue());
-					$field->setExtraClass('col'.$i);
+					$field->addExtraClass('col'.$i);
 					$field->setForm($this->data);
 
 					// transformation
@@ -719,7 +719,7 @@ class TableField_Item extends TableListField_Item {
 				} else {
 					$field = eval("return new " . $fieldType . ";");
 				}
-				$field->setExtraClass('col'.$i);
+				$field->addExtraClass('col'.$i);
 				$this->fields[] = $field;
 				$i++;
 			}
