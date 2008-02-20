@@ -531,10 +531,22 @@ class Controller extends ViewableData {
 	 * Check thAT
 	 */
 	function checkAccessAction($action) {
-		$access = $this->stat('allowed_actions');
-
-		if($access === null) {
-			//user_error("Deprecated: please define static \$allowed_actions on your Controllers for security purposes", E_USER_NOTICE);
+		// Collate self::$allowed_actions from this class and all parent classes
+		$access = null;
+		$className = $this->class;
+		while($className != 'Controller') {
+			// Merge any non-null parts onto $access.
+			$accessPart = eval("return $className::\$allowed_actions;");
+			if($accessPart !== null) $access = array_merge((array)$access, $accessPart);
+			
+			// Build an array of parts for checking if part[0] == part[1], which means that this class doesn't directly define it.
+			$accessParts[] = $accessPart;
+			
+			$className = get_parent_class($className);
+		}
+		
+		if($access === null || $accessParts[0] === $accessParts[1]) {
+			// user_error("Deprecated: please define static \$allowed_actions on your Controllers for security purposes", E_USER_NOTICE);
 			return true;
 		}
 		
