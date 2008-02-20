@@ -191,7 +191,7 @@ class Group extends DataObject {
 		$children = $this->extInstance('Hierarchy')->AllChildrenIncludingDeleted();
 		$filteredChildren = new DataObjectSet();
 		
-		foreach($children as $child) {
+		if($children) foreach($children as $child) {
 			if($child->canEdit()) $filteredChildren->push($child);
 		}
 		
