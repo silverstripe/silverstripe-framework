@@ -19,14 +19,16 @@ class Controller extends ViewableData {
 	
 	/**
 	 * Define a list of actions that are allowed to be called on this controller.
-	 * The variable should be an array of action names. This sample s
+	 * The variable should be an array of action names. This sample shows the different values that it can contain:
 	 *
+	 * <code>
 	 * array(
 	 *		'someaction', // someaction can be accessed by anyone, any time
 	 *		'otheraction' => true, // So can otheraction
 	 *		'restrictedaction' => 'ADMIN', // restrictedaction can only be people with ADMIN privilege
 	 *		'complexaction' '->canComplexAction' // complexaction can only be accessed if $this->canComplexAction() returns true
 	 *	);
+	 * </code>
 	 */
 	static $allowed_actions = null;
 	
