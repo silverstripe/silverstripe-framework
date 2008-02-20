@@ -31,6 +31,17 @@
  */
 
 /**
+ * Include _ss_environment.php file
+ */
+$envFiles = array('../_ss_environment.php', '../../_ss_environment.php', '../../../_ss_environment.php');
+foreach($envFiles as $envFile) {
+        if(@file_exists($envFile)) {
+                include($envFile);
+                break;
+        }
+}
+
+/**
  * Include Sapphire's core code
  */
 require_once("core/Core.php");
@@ -85,14 +96,6 @@ if(Director::isDev()) {
 }
 
 Session::start();
-
-$envFiles = array('../_ss_environment.php', '../../_ss_environment.php', '../../../_ss_environment.php');
-foreach($envFiles as $envFile) {
-        if(@file_exists($envFile)) {
-                include($envFile);
-                break;
-        }
-}
 
 if(isset($_GET['url'])) {
 	$url = $_GET['url'];
