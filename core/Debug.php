@@ -6,19 +6,26 @@
  */
 
 /**
- * Class of static methods to support debugging.
+ * Supports debugging and core error handling via static methods.
+ * 
  * @package sapphire
  * @subpackage core
  */
 class Debug {
 	
 	/**
-	 * @var $mail_server string Custom mailserver for sending debug mails.
+	 * @var $custom_smtp_server string Custom mailserver for sending mails.
 	 */
 	protected static $custom_smtp_server = '';
 	
+	/**
+	 * @var $send_errors_to string Email address to send error notifications
+	 */
 	protected static $send_errors_to;
 	
+	/**
+	 * @var $send_warnings_to string Email address to send warning notifications
+	 */
 	protected static $send_warnings_to;
 	
 	/**
@@ -41,6 +48,10 @@ class Debug {
 		}
 
 	}
+	
+	/**
+	 * Emails the contents of the output buffer
+	 */
 	static function mailBuffer( $email, $subject ) {
 		mail( $email, $subject, ob_get_contents() );
 		ob_end_clean();
@@ -101,13 +112,19 @@ class Debug {
 
 	/**
 	 * Load an error handler
+	 * 
+	 * @todo why does this delegate to loadFatalErrorHandler?
 	 */
 	static function loadErrorHandlers() {
 		Debug::loadFatalErrorHandler();
 	}
 
+	/**
+	 * @todo can this be moved into loadErrorHandlers?
+	 */
 	static function loadFatalErrorHandler() {
 		set_error_handler('errorHandler', (E_ALL ^ E_NOTICE) ^ E_USER_NOTICE);
+		set_exception_handler('exceptionHandler');
 	}
 
 	static function warningHandler($errno, $errstr, $errfile, $errline, $errcontext) {
@@ -138,7 +155,6 @@ class Debug {
 
 		} else {
 			if(file_exists('../assets/error-500.html')) {
-				echo "ERROR:";
 				include('../assets/error-500.html');
 			} else {
 				echo "ERROR:<h1>Error</h1><p>The website server has not been able to respond to your request.</p>\n";
@@ -254,7 +270,7 @@ class Debug {
 		$bt = debug_backtrace();
 
 		// Ingore functions that are plumbing of the error handler
-		$ignoredFunctions = array('Debug::emailError','Debug::warningHandler','Debug::fatalHandler','errorHandler','Debug::showError','Debug::backtrace');
+		$ignoredFunctions = array('Debug::emailError','Debug::warningHandler','Debug::fatalHandler','errorHandler','Debug::showError','Debug::backtrace', 'exceptionHandler');
 		while( $bt && in_array(self::full_func_name($bt[0]), $ignoredFunctions) ) {
 			array_shift($bt);
 		}
@@ -271,10 +287,12 @@ class Debug {
 				$result .= "</p>\n";
 			}
 		}
-		
-		echo $result;
-		if($returnVal) return $result;
-		else echo $result;
+
+		if ($returnVal) {
+			return $result;
+		} else {
+			echo $result;
+		}
 	}
 	
 	/**
@@ -346,6 +364,16 @@ class Debug {
 		header("Location: " . Director::baseURL() . "Security/login");
 		die();
 	}
+}
+
+function exceptionHandler($exception) {
+	$errno = E_USER_ERROR;
+	$type = get_class($exception);
+	$message = "Uncaught " . $type . ": " . $exception->getMessage();
+	$file = $exception->getFile();
+	$line = $exception->getLine();
+	$context = $exception->getTrace();
+	Debug::fatalHandler($errno, $message, $file, $line, $context);
 }
 
 function errorHandler($errno, $errstr, $errfile, $errline, $errcontext) {
