@@ -862,7 +862,10 @@ class DataObject extends ViewableData implements DataObjectInterface {
 	 * @todo Implement query-params
 	 */
 	public function getManyManyComponents($componentName, $filter = "", $sort = "", $join = "", $limit = "") {
-		if(isset($this->components[$componentName])) return $this->components[$componentName];
+		$sum = md5("{$filter}_{$sort}_{$join}_{$limit}_{$having}");
+    	if(isset($this->componentCache[$componentName . '_' . $sum]) && false != $this->componentCache[$componentName . '_' . $sum]) {
+	    	return $this->componentCache[$componentName . '_' . $sum];
+    	}
 
 		list($parentClass, $componentClass, $parentField, $componentField, $table) = $this->many_many($componentName);
 
@@ -896,7 +899,12 @@ class DataObject extends ViewableData implements DataObjectInterface {
 			$result = new ComponentSet();
 		}
 		$result->setComponentInfo("many-to-many", $this, $parentClass, $table, $componentClass);
-		$this->components[$componentName] = $result;
+
+		// If this record isn't in the database, then we want to hold onto this specific ComponentSet,
+		// because it's the only copy of the data that we have.
+		if(!$this->isInDB()) {
+			$this->setComponent($componentName . '_' . $sum, $result);
+		}
 
 		return $result;
 	}
