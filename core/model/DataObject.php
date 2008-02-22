@@ -862,7 +862,7 @@ class DataObject extends ViewableData implements DataObjectInterface {
 	 * @todo Implement query-params
 	 */
 	public function getManyManyComponents($componentName, $filter = "", $sort = "", $join = "", $limit = "") {
-		$sum = md5("{$filter}_{$sort}_{$join}_{$limit}_{$having}");
+		$sum = md5("{$filter}_{$sort}_{$join}_{$limit}");
     	if(isset($this->componentCache[$componentName . '_' . $sum]) && false != $this->componentCache[$componentName . '_' . $sum]) {
 	    	return $this->componentCache[$componentName . '_' . $sum];
     	}
@@ -1380,9 +1380,32 @@ class DataObject extends ViewableData implements DataObjectInterface {
 		}
 
 		$baseClass = array_shift($tableClasses);
+		$select = array("`$baseClass`.*");
+		
+		// If sort contains a function call, let's move the sort clause into a separate selected field.
+		// Some versions of MySQL choke if you have a group function referenced directly in the ORDER BY
+		if($sort && strpos($sort,'(') !== false) {
+			// Sort can be "Col1 DESC|ASC, Col2 DESC|ASC", we need to handle that
+			$sortParts = explode(",", $sort);
+			foreach($sortParts as $i => $sortPart) {
+				$sortPart = trim($sortPart);
+				if(substr(strtolower($sortPart),-5) == ' desc') {
+					$select[] = substr($sortPart,0,-5) . " AS _SortColumn{$i}";
+					$newSorts[] = "_SortColumn{$i} DESC";
+				} else if(substr(strtolower($sortPart),-4) == ' asc') {
+					$select[] = substr($sortPart,0,-4) . " AS _SortColumn{$i}";
+					$newSorts[] = "_SortColumn{$i} ASC";
+				} else {
+					$select[] = "$sortPart AS _SortColumn{$i}";
+					$newSorts[] = "_SortColumn{$i} ASC";
+				}
+			}
+			
+			$sort =  implode(", ", $newSorts);
+		}
 
 		// Build our intial query
-		$query = new SQLQuery(array("`$baseClass`.*"), "`$baseClass`", $filter, $sort);
+		$query = new SQLQuery($select, "`$baseClass`", $filter, $sort);
 
 		// Join all the tables
 		if($tableClasses) {
