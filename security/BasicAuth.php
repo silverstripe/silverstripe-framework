@@ -17,6 +17,7 @@ class BasicAuth extends Object {
 	 */
 	static function requireLogin($realm, $permissionCode) {
 		if(self::$disabled) return true;
+		if(!Security::database_is_ready()) return true;
 		
 		
 		if(isset($_SERVER['PHP_AUTH_USER']) && isset($_SERVER['PHP_AUTH_PW'])) {
