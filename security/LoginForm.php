@@ -1,12 +1,10 @@
 <?php
 
 /**
- * LoginForm base class
- *
  * @author Markus Lanthaler <markus@silverstripe.com>
+ * @package sapphire
+ * @subpackage security
  */
-
-
 
 /**
  * Abstract base class for a login form
@@ -15,6 +13,8 @@
  * {@link MemberLoginForm} or {@link OpenIDLoginForm}.
  *
  * @author Markus Lanthaler <markus@silverstripe.com>
+ * @package sapphire
+ * @subpackage security
  */
 abstract class LoginForm extends Form {
 	function __construct($controller, $name, $fields, $actions) {

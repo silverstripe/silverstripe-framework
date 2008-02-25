@@ -1,13 +1,14 @@
 <?php
 
 /**
- * Log-in form for the "member" authentication method
+ * @package sapphire
+ * @subpackage security
  */
-
-
 
 /**
  * Log-in form for the "member" authentication method
+ * @package sapphire
+ * @subpackage security
  */
 class MemberLoginForm extends LoginForm {
 
@@ -99,7 +100,7 @@ class MemberLoginForm extends LoginForm {
 			Session::clear('SessionForms.MemberLoginForm.Email');
 			Session::clear('SessionForms.MemberLoginForm.Remember');
 
-			if($backURL = $_REQUEST['BackURL']) {
+			if(isset($_REQUEST['BackURL']) && $backURL = $_REQUEST['BackURL']) {
 				Session::clear("BackURL");
 				Director::redirect($backURL);
 			} else {

@@ -2,7 +2,7 @@
 
 /**
  * @package sapphire
- * @subpackage core
+ * @subpackage view
  */
 
 /**
@@ -15,6 +15,8 @@
  * 
  * ViewableData cover page controls, controllers, and data objects.  It's the basic unit of
  * data exchange.  More specifically, it's anything that can be put into a view.
+ * @package sapphire
+ * @subpackage view
  */
 class ViewableData extends Object implements Iterator {
 	/**
@@ -269,6 +271,20 @@ class ViewableData extends Object implements Iterator {
 	}
 	
 	/**
+	 * Return the string-format type for the given field.
+	 *
+	 * @usedby ViewableData::XML_val()
+	 * @param string $fieldName 
+	 * @return string 'xml'|'raw'
+	 */
+	function escapeTypeForField($fieldName) {
+		$helperPair = $this->castingHelperPair($fieldName);
+		$castedClass = $helperPair['className'];
+		if(!$castedClass || $castedClass == 'HTMLText' || $castedClass == 'HTMLVarchar') return "xml";
+		else return "raw";
+	}
+	
+	/**
 	 * Return the object version of the given field/method.
 	 * @param string $fieldName The name of the field/method.
 	 * @param array $args The arugments.
@@ -401,18 +417,8 @@ class ViewableData extends Object implements Iterator {
 				Profiler::mark('casting cost');
 			}
 			
-			$helperPair = $this->castingHelperPair($fieldName);
-			$castedClass = $helperPair['className'];
-			
-			// Note: these probably shouldn't be hard-coded.  But right now it's not a problem, and I don't
-			// want to over-engineer
-			if(!$castedClass || $castedClass == 'HTMLText' || $castedClass == 'HTMLVarchar' || $castedClass == 'Text') {
-				// Case 2: the value is already XML-safe, just return it
-				
-			} else {
-				// Case 3: the value is raw and must be made XML-safe
-				$val = Convert::raw2xml($val);
-			}
+			// Case 2: Check if the value is raw and must be made XML-safe
+			if($this->escapeTypeForField($fieldName) != 'xml') $val = Convert::raw2xml($val);
 			
 			if(isset($_GET['debug_profile'])) {
 				Profiler::unmark('casting cost');
@@ -681,6 +687,22 @@ class ViewableData extends Object implements Iterator {
 	function CurrentMember() {
 		return Member::currentUser();
 	}
+	
+	/**
+	 * Returns the Security ID.
+	 * This is used to prevent CRSF attacks in forms.
+	 * @return int
+	 */
+	function SecurityID() {
+		if(Session::get('SecurityID')) {
+			$securityID = Session::get('SecurityID');
+		} else {
+			$securityID = rand();
+			Session::set('SecurityID', $securityID);
+		}
+		
+		return $securityID;
+	}
 
     /**
      * Checks if the current user has the given permission.
@@ -739,6 +761,16 @@ class ViewableData extends Object implements Iterator {
 	function BaseHref() {
 		return Director::absoluteBaseURL();
 	}
+	
+  /**
+   * When rendering some objects it is necessary to iterate over the object being rendered, to
+   * do this, you need access to itself.
+   *
+   * @return ViewableData
+   */
+  function Me() {
+    return $this;
+  }
 	
 	/**
 	 * Return a Debugger object.
@@ -857,7 +889,9 @@ class ViewableData extends Object implements Iterator {
 	 * Object-casting information for class methods
 	 * @var mixed
 	 */
-	public static $casting = null;
+	public static $casting = array(
+		'BaseHref' => 'Varchar'
+	);
 	
 	/**
 	 * Keep a record of the parent node of this data node.
@@ -875,6 +909,8 @@ class ViewableData extends Object implements Iterator {
 /**
  * A ViewableData object that has been customised with extra data. Use
  * ViewableData->customise() to create.
+ * @package sapphire
+ * @subpackage view
  */
 class ViewableData_Customised extends ViewableData {
 	public function castingHelperPair($field) {
@@ -981,6 +1017,8 @@ class ViewableData_Customised extends ViewableData {
 /**
  * A ViewableData object that has been customised with an extra object. Use
  * ViewableData->customise() to create.
+ * @package sapphire
+ * @subpackage view
  */
 class ViewableData_ObjectCustomised extends ViewableData {
 	function __construct($obj, $extraObj) {
@@ -1050,6 +1088,8 @@ class ViewableData_ObjectCustomised extends ViewableData {
 
 /**
  * Debugger helper.
+ * @package sapphire
+ * @subpackage view
  * @todo Finish this off
  */
 class ViewableData_Debugger extends ViewableData {

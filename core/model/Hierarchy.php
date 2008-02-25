@@ -2,12 +2,14 @@
 
 /**
  * @package sapphire
- * @subpackage core
+ * @subpackage model
  */
 
 /**
  * DataObjects that use the Hierachy decorator can be be organised as a hierachy, with children and parents.
  * The most obvious example of this is SiteTree.
+ * @package sapphire
+ * @subpackage model
  */
 class Hierarchy extends DataObjectDecorator {
 	protected $markedNodes;
@@ -295,7 +297,7 @@ class Hierarchy extends DataObjectDecorator {
 	}
 
 	/**
-	 * Return a partial tree as a <ul>.
+	 * Return a partial tree as an HTML UL.
 	 */
 	public function partialTreeAsUL($minCount = 50) {
 		$children = $this->owner->AllChildren();
@@ -333,7 +335,7 @@ class Hierarchy extends DataObjectDecorator {
 					continue;
 				}
 				$idList[] = $child->ID;
-				$child->loadDescendantIDListInto($idList);
+				$child->extInstance('Hierarchy')->loadDescendantIDListInto($idList);
 			}
 		}
 	}
@@ -522,7 +524,7 @@ class Hierarchy extends DataObjectDecorator {
 	 * Get the next node in the tree of the type. If there is no instance of the className descended from this node,
 	 * then search the parents.
 	 * 
-	 * TODO Write!
+	 * @todo Write!
 	 */
 	public function naturalPrev( $className, $afterNode = null ) {
 		return null;

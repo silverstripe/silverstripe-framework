@@ -1,7 +1,15 @@
 <?php
+
 /**
-* Base class invoked from CLI rather than the webserver (Cron jobs, handling email bounces)
-*/
+ * @package sapphire
+ * @subpackage cron
+ */
+
+/**
+ * Base class invoked from CLI rather than the webserver (Cron jobs, handling email bounces)
+ * @package sapphire
+ * @subpackage cron
+ */
 abstract class CliController extends Controller {
     function init() {
       $this->disableBasicAuth();

@@ -1,9 +1,16 @@
 <?php
 
 /**
+ * @package sapphire
+ * @subpackage control
+ */
+
+/**
  * ModelAsController will hand over all control to the appopriate model object
  * It uses URLSegment to determine the right object.  Also, if (ModelClass)_Controller exists,
  * that controller will be used instead.  It should be a subclass of ContentController.
+ *
+ * @package sapphire
  */
 class ModelAsController extends Controller implements NestedController {
 	

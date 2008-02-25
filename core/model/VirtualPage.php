@@ -1,11 +1,17 @@
 <?php
 
 /**
+ * @package cms
+ */
+
+/**
 * Virtual Page creates an instance of a  page, with the same fields that the original page had, but readonly.
 * This allows you can have a page in mulitple places in the site structure, with different children without duplicating the content
 * Note: This Only duplicates $db fields and not the $has_one etc.. 
+* @package cms
 */
 class VirtualPage extends Page {
+
 	static $add_action = "Virtual page (another page's content)";
 	
 	static $icon = array("cms/images/treeicons/page-shortcut-gold","file");
@@ -119,7 +125,8 @@ class VirtualPage extends Page {
 }
 
 /**
- * @desc 
+ * Controller for the virtual page.
+ * @package cms
  */
 class VirtualPage_Controller extends Page_Controller {
 

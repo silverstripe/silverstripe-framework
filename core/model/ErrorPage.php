@@ -1,12 +1,12 @@
 <?php
 
 /**
- * @package sapphire
- * @subpackage core
+ * @package cms
  */
 
 /**
  * ErrorPage holds the content for the page of an error response.
+ * @package cms
  */
 class ErrorPage extends Page {
 
@@ -27,10 +27,10 @@ class ErrorPage extends Page {
 		if(!DataObject::get_one("ErrorPage", "ErrorCode = '404'")) {
 			$errorpage = new ErrorPage();
 			$errorpage->ErrorCode = 404;
-			$errorpage->Title = "Page not found";
+			$errorpage->Title = _t('ErrorPage.DEFAULTERRORPAGETITLE', 'Page not found');
 			$errorpage->URLSegment = "page-not-found";
 			$errorpage->ShowInMenus = false;
-			$errorpage->Content = "<p>Sorry, it seems you were trying to access a page that doesn't exist.</p><p>Please check the spelling of the URL you were trying to access and try again.</p>";
+			$errorpage->Content = _t('ErrorPage.DEFAULTERRORPAGECONTENT', '<p>Sorry, it seems you were trying to access a page that doesn\'t exist.</p><p>Please check the spelling of the URL you were trying to access and try again.</p>');
 			$errorpage->Status = "New page";
 			$errorpage->write();
 			// Don't publish, as the manifest may not be built yet
@@ -50,8 +50,29 @@ class ErrorPage extends Page {
 				"ErrorCode",
 				_t('ErrorPage.CODE', "Error code"),
 				array(
-					404 => "404 - Page not found",
-					500 => "500 - Server error"
+					400 => _t('ErrorPage.400', '400 - Bad Request'),
+					401 => _t('ErrorPage.401', '401 - Unauthorized'),
+					403 => _t('ErrorPage.403', '403 - Forbidden'),
+					404 => _t('ErrorPage.404', '404 - Not Found'),
+					405 => _t('ErrorPage.405', '405 - Method Not Allowed'),
+					406 => _t('ErrorPage.406', '406 - Not Acceptable'),
+					407 => _t('ErrorPage.407', '407 - Proxy Authentication Required'),
+					408 => _t('ErrorPage.408', '408 - Request Timeout'),
+					409 => _t('ErrorPage.409', '409 - Conflict'),
+					410 => _t('ErrorPage.410', '410 - Gone'),
+					411 => _t('ErrorPage.411', '411 - Length Required'),
+					412 => _t('ErrorPage.412', '412 - Precondition Failed'),
+					413 => _t('ErrorPage.413', '413 - Request Entity Too Large'),
+					414 => _t('ErrorPage.414', '414 - Request-URI Too Long'),
+					415 => _t('ErrorPage.415', '415 - Unsupported Media Type'),
+					416 => _t('ErrorPage.416', '416 - Request Range Not Satisfiable'),
+					417 => _t('ErrorPage.417', '417 - Expectation Failed'),
+					500 => _t('ErrorPage.500', '500 - Internal Server Error'),
+					501 => _t('ErrorPage.501', '501 - Not Implemented'),
+					502 => _t('ErrorPage.502', '502 - Bad Gateway'),
+					503 => _t('ErrorPage.503', '503 - Service Unavailable'),
+					504 => _t('ErrorPage.504', '504 - Gateway Timeout'),
+					505 => _t('ErrorPage.505', '505 - HTTP Version Not Supported'),
 				)
 			),
 			"Content"
@@ -104,6 +125,7 @@ class ErrorPage extends Page {
 
 /**
  * Controller for ErrorPages.
+ * @package cms
  */
 class ErrorPage_Controller extends Page_Controller {
 	public function init() {

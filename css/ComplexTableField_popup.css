@@ -81,6 +81,17 @@ form fieldset {
 	line-height: normal;
 }
 
+.ComplexTableField_Popup form p.checkbox input {
+	margin:0pt 1px;
+}
+.ComplexTableField_Popup form ul.optionset {
+	margin: 0;
+	padding: 0;
+}
+.ComplexTableField_Popup form ul.optionset li {
+	margin: 4px 0;
+}
+
 .right.ComplexTableField_Popup form div.Actions input {
 	font-size: 11px;
 	margin-top: 10px;

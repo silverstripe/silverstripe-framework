@@ -1,6 +1,11 @@
 <?php
 
 /**
+ * @package sapphire
+ * @subpackage view
+ */
+
+/**
  * The SSViewer executes a .ss template file.
  * The SSViewer class handles rendering of .ss templates.  In addition to a full template in
  * the views folder, a template in views/Content or views/Layout will be rendered into $Content and
@@ -9,6 +14,8 @@
  * Compiled templates are cached.  If you put ?flush=1 on your URL, it will force the template to be recompiled.  This
  * is a hack; the system should really detect when a page needs re-fetching.
  * @todo Fix the broken caching.
+ * @package sapphire
+ * @subpackage view
  */
 class SSViewer extends Object {
 	private $chosenTemplates;
@@ -286,6 +293,10 @@ class SSViewer extends Object {
 		ereg('.*[\/](.*)',$template,$path);
 		$content = ereg_replace('<' . '% +_t\((\'([^\']*)\'|"([^"]*)")(([^)]|\)[^ ]|\) +[^% ])*)\) +%' . '>', '<?= _t(\''. $path[1] . '.\\2\\3\'\\4) ?>', $content);
 
+		// i18n - sprintf => "sprintf(_t(...),$argument)"
+		// CAUTION: No spaces allowed between arguments!
+		$content = ereg_replace('<' . '% +sprintf\(_t\((\'([^\']*)\'|"([^"]*)")(([^)]|\)[^ ]|\) +[^% ])*)\),\<\?= +([^\?]*) +\?\>) +%' . '>', '<?= sprintf(_t(\''. $path[1] . '.\\2\\3\'\\4),\\6) ?>', $content);
+		
 		// </base> isnt valid html? !? 
 		$content = ereg_replace('<' . '% +base_tag +%' . '>', '<base href="<?= Director::absoluteBaseURL(); ?>" />', $content);
 
@@ -324,7 +335,11 @@ class SSViewer extends Object {
 	}
 }
 
-
+/**
+ * Special SSViewer that will process a template passed as a string, rather than a filename.
+ * @package sapphire
+ * @subpackage view
+ */
 class SSViewer_FromString extends SSViewer {
 	protected $content;
 	

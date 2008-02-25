@@ -4,7 +4,11 @@ i18n::include_locale_file('sapphire', 'en_US');
 
 global $lang;
 
-$lang['ru_RU'] = $lang['en_US'];
+if(array_key_exists('ru_RU', $lang) && is_array($lang['ru_RU'])) {
+	$lang['ru_RU'] = array_merge($lang['en_US'], $lang['ru_RU']);
+} else {
+	$lang['ru_RU'] = $lang['en_US'];
+}
 
 $lang['ru_RU']['BasicAuth']['ENTERINFO'] = 'Пожалуйста, введите имя пользователя и пароль.';
 $lang['ru_RU']['BasicAuth']['ERRORNOTADMIN'] = 'Такой пользователь не является администратором.';

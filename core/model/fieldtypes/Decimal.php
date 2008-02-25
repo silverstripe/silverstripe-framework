@@ -1,6 +1,14 @@
 <?php
+
 /**
- * Decimal value.
+ * @package sapphire
+ * @subpackage model
+ */
+
+/**
+ * Represents a Decimal field.
+ * @package sapphire
+ * @subpackage model
  */
 class Decimal extends DBField {
 	protected $wholeSize, $decimalSize;
@@ -24,6 +32,15 @@ class Decimal extends DBField {
 	
 	function requireField() {
 		DB::requireField($this->tableName, $this->name, "decimal($this->wholeSize,$this->decimalSize)");
+	}
+	
+	function saveInto($dataObject) {
+		$fieldName = $this->name;
+		if($fieldName) {
+			$dataObject->$fieldName = (float)preg_replace('/[^0-9.]/', '', $this->value);
+		} else {
+			user_error("DBField::saveInto() Called on a nameless '" . get_class($this) . "' object", E_USER_ERROR);
+		}
 	}	
 }
 

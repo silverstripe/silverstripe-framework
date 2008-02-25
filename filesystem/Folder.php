@@ -1,5 +1,15 @@
 <?php
 
+/**
+ * @package sapphire
+ * @subpackage filesystem
+ */
+
+/**
+ * Represents a folder in the assets directory.
+ * @package sapphire
+ * @subpackage filesystem
+ */
 class Folder extends File {
 	
 	static $many_many = array(
@@ -85,13 +95,16 @@ class Folder extends File {
 
 		
 		// Get index of database content
-		$dbChildren = DataObject::get("File", "ParentID = $parentID");
-		if(isset($dbChildren)) {
+		// We don't use DataObject so that things like subsites doesn't muck with this.
+		$dbChildren = DB::query("SELECT * FROM File WHERE ParentID = $parentID");
+		$hasDbChild = array();
+		if($dbChildren) {
 			foreach($dbChildren as $dbChild) {
-				$hasDbChild[$dbChild->Name] = $dbChild;
+				$className = $dbChild['ClassName'];
+				$hasDbChild[$dbChild['Name']] = new $className($dbChild);
 			}
-			$unwantedDbChildren = $hasDbChild;
 		}
+		$unwantedDbChildren = $hasDbChild;
 		
 		
 		// Iterate through the actual children, correcting the database as necessary
@@ -324,6 +337,92 @@ class Folder extends File {
 	 */
 	function cmsCleanup_parentChanged(){
 		
+	}
+
+	/**
+	 * Return the FieldSet used to edit this folder in the CMS.
+	 * You can modify this fieldset by subclassing folder, or by creating a {@link DataObjectDecorator}
+	 * and implemeting updateCMSFields(FieldSet $fields) on that decorator.	
+	 */
+	function getCMSFields() {
+		$nameField = ($this->ID > 0) ? new TextField("Name") : new HiddenField("Name");
+
+		$fileList = new AssetTableField(
+			$this,
+			"Files",
+			"File", 
+			array("Title" => _t('AssetAdmin.TITLE', "Title"), "LinkedURL" => _t('AssetAdmin.FILENAME', "Filename")), 
+			""
+		);
+		$fileList->setFolder($this);
+		$fileList->setPopupCaption(_t('AssetAdmin.VIEWEDITASSET', "View/Edit Asset"));
+
+		$nameField = ($this->ID && $this->ID != "root") ? new TextField("Name", "Folder Name") : new HiddenField("Name");
+		if( $this->userCanEdit() ) {
+			$deleteButton = new InlineFormAction('deletemarked',_t('AssetAdmin.DELSELECTED','Delete selected files'), 'delete');
+			$deleteButton->includeDefaultJS(false);
+		} else {
+			$deleteButton = new HiddenField('deletemarked');
+		}
+
+		$fields = new FieldSet(
+			new HiddenField("Title"),
+			new TabSet("Root", 
+				new Tab(_t('AssetAdmin.FILESTAB', "Files"),
+					$nameField,
+					$fileList,
+					$deleteButton,
+					new HiddenField("FileIDs"),
+					new HiddenField("DestFolderID")
+				),
+				new Tab(_t('AssetAdmin.DETAILSTAB', "Details"), 
+					new ReadonlyField("URL", _t('AssetAdmin.URL', 'URL')),
+					new ReadonlyField("ClassName", _t('AssetAdmin.TYPE','Type')),
+					new ReadonlyField("Created", _t('AssetAdmin.CREATED','First Uploaded')),
+					new ReadonlyField("LastEdited", _t('AssetAdmin.LASTEDITED','Last Updated'))
+				),
+				new Tab(_t('AssetAdmin.UPLOADTAB', "Upload"),
+					new LiteralField("UploadIframe",
+						$this->getUploadIframe()
+					)
+				)/* This has been disabled for now because of it's mass memory consumption
+				,
+				new Tab(_t('AssetAdmin.UNUSEDFILESTAB', "Unused files"),
+				    new LiteralField("UnusedAssets",
+	                    "<div id=\"UnusedAssets\"><h2>"._t('AssetAdmin.UNUSEDFILESTITLE', 'Unused files')."</h2>"
+	                ),
+				    $this->getAssetList(),
+				    new LiteralField("UnusedThumbnails",
+	                   "</div>
+	                        <div id=\"UnusedThumbnails\">
+	                            <h2>"._t('AssetAdmin.UNUSEDTHUMBNAILSTITLE', 'Unused thumbnails')."</h2>
+	                            <button class=\"action\">"._t('AssetAdmin.DELETEUNUSEDTHUMBNAILS', 'Delete unused thumbnails')."</button>
+	                        </div>"
+	                )     
+	            )*/
+		    ),
+			new HiddenField("ID")
+		);
+
+		$this->extend('updateCMSFields', $fields);
+		
+		return $fields;
+	}
+
+	/**
+	 * Display the upload form.  Returns an iframe tag that will show admin/assets/uploadiframe.
+	 */
+	function getUploadIframe() {
+		return <<<HTML
+		<iframe name="AssetAdmin_upload" src="admin/assets/uploadiframe/{$this->ID}" id="AssetAdmin_upload" border="0" style="border-style: none; width: 100%; height: 200px">
+		</iframe>
+HTML;
+	}
+	/**
+	 * Since this is a folder, we don't have any content as such.
+	 */
+	function loadContent() {
+		return;
 	}
 	
 }

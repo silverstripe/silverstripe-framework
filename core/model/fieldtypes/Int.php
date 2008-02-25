@@ -1,5 +1,15 @@
 <?php
 
+/**
+ * @package sapphire
+ * @subpackage model
+ */
+
+/**
+ * Represents an integer field.
+ * @package sapphire
+ * @subpackage model
+ */
 class Int extends DBField {
 
 	function __construct($name, $defaultVal = 0) {
@@ -33,6 +43,9 @@ class Int extends DBField {
 	function Nice() {
 		return sprintf( '%d', $this->value );
 	}
+	
+	
+	
 }
 
 ?>

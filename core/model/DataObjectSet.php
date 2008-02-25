@@ -2,11 +2,14 @@
 
 /**
  * @package sapphire
- * @subpackage core
+ * @subpackage model
  */
 
 /**
- * This class represents a set of database objects, such as the results of a query
+ * This class represents a set of {@link ViewableData} subclasses (mostly {@link DataObject} or {@link ArrayData}.
+ * It is used by the ORM-layer of Silverstripe to return query-results from {@link SQLQuery}.
+ * @package sapphire
+ * @subpackage model
  */
 class DataObjectSet extends ViewableData implements Iterator {
 	/**
@@ -60,17 +63,33 @@ class DataObjectSet extends ViewableData implements Iterator {
 	protected $paginationGetVar = "start";
 	
 	/**
-	 * Create a new DataObjectSet.
-	 * @param array|DataObject,... $items The DataObjects to use in this set, either as an array or as multiple variables
+	 * Create a new DataObjectSet. If you pass one or more arguments, it will try to convert them into {@link ArrayData} objects. 
+	 * @todo Does NOT automatically convert objects with complex datatypes (e.g. converting arrays within an objects to its own DataObjectSet)							
+	 * 
+	 * @param ViewableData|array|mixed $items Parameters to use in this set, either as an associative array, object with simple properties, or as multiple parameters.
 	 */
-	public function __construct($items = null, $otherArg = null) {
+	public function __construct($items = null) {
 		if($items) {
-			if (is_array($items)) {
-				// We now have support for using the key of a data object set
-				$this->items = $items;
-			} else if($allArgs = func_get_args()) {
-				$this->items = $allArgs;
+			// if the first parameter is not an array, or we have more than one parameter, collate all parameters to an array
+			// otherwise use the passed array
+			$itemsArr = (!is_array($items) || count(func_get_args()) > 1) ? func_get_args() : $items;
+			
+			// We now have support for using the key of a data object set
+			foreach($itemsArr as $i => $item) {
+				if(is_subclass_of($item, 'ViewableData')) {
+					$this->items[$i] = $item;
+				} elseif(is_object($item) || ArrayLib::is_associative($item)) {
+					$this->items[$i] = new ArrayData($item);
+				} else {
+					user_error(
+						"DataObjectSet::__construct: Passed item #{$i} is not an object or associative array, 
+						can't be properly iterated on in templates", 
+						E_USER_WARNING
+					);						
+					$this->items[$i] = $item;
+				}
 			}
+
 			$this->current = $this->prepareItem(current($this->items));
 		}
 		parent::__construct();
@@ -309,6 +328,18 @@ class DataObjectSet extends ViewableData implements Iterator {
 		return $this->TotalPages() > 1;
 	}
 	
+	function FirstItem() {
+		return isset($this->pageStart) ? $this->pageStart + 1 : 1;
+	}
+	
+	function LastItem() {
+		if(isset($this->pageStart)) {
+			return min($this->pageStart + $this->pageLength, $this->totalSize);
+		} else {
+			return min($this->pageLength, $this->totalSize);
+		}
+	}
+	
 	/**
 	 * Returns the URL of the previous page.
 	 * @return string
@@ -359,8 +390,8 @@ class DataObjectSet extends ViewableData implements Iterator {
 	 * @param string $key Key to index this DataObject by.
 	 */
 	public function insertFirst($item, $key = null) {
-		if($key != null) {
-			array_shift($this->items, $item);
+		if($key == null) {
+			array_unshift($this->items, $item);
 		} else {
 			// Not very efficient :-(
 			$newItems = array();
@@ -374,6 +405,7 @@ class DataObjectSet extends ViewableData implements Iterator {
 	* @deprecated Use merge()
     */
 	public function append(DataObjectSet $doset){
+		user_error('DataObjectSet::append() is deprecated. Use DataObjectSet::merge() instead.', E_USER_NOTICE);
 		foreach($doset as $item){
 			$this->push($item);
 		}
@@ -611,7 +643,7 @@ class DataObjectSet extends ViewableData implements Iterator {
 	/**
 	 * Returns the dataset as an array of ID => Title.
 	 *
-	 * TODO Duplication from toDropdownMap()
+	 * @todo Duplication from toDropdownMap()
 	 * 
 	* @param string $key The field you wish to use as a key for the array
 	* @param string $value The field or method you wish to use to get values for the map

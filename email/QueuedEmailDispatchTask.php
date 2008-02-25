@@ -1,4 +1,15 @@
 <?php
+
+/**
+ * @package sapphire
+ * @subpackage email
+ */
+
+/**
+ * Daily task to send queued email.
+ * @package sapphire
+ * @subpackage email
+ */
 class QueuedEmailDispatchTask extends DailyTask {
 	
 	public function process() {

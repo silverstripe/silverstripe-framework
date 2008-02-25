@@ -1,7 +1,21 @@
 <?php
 
+/**
+ * @package sapphire
+ * @subpackage model
+ */
+
 if(!class_exists('Datetime')) {
+	/**
+	 * @package sapphire
+	 * @subpackage model
+	 * @deprecated Use {@link SSDatetime} instead, as PHP 5.2 has its own Datetime class.  Object::create('Datetime') will instantiate an SSDatetime object.
+	 */
 	class Datetime extends Date {
+		function __construct($name) {
+			user_error('Datetime is deprecated. Use SSDatetime instead.', E_USER_NOTICE);
+			parent::__construct($name);
+		}
 		
 		function setValue($value) {
 			if($value) $this->value = date('Y-m-d H:i:s', strtotime($value));

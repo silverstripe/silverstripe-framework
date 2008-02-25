@@ -1,12 +1,14 @@
 <?php
 
 /**
- * Change password form
+ * @package sapphire
+ * @subpackage security
  */
-
 
 /**
  * Standard Change Password Form
+ * @package sapphire
+ * @subpackage security
  */
 class ChangePasswordForm extends Form {
 
@@ -26,7 +28,7 @@ class ChangePasswordForm extends Form {
 	function __construct($controller, $name, $fields = null, $actions = null) {
 		if(!$fields) {
 			$fields = new FieldSet();
-			if(Member::currentUser()) {
+			if(Member::currentUser() && (!isset($_REQUEST['h']) || !Member::autoLoginHash($_REQUEST['h']))) {
 				$fields->push(new EncryptField("OldPassword",_t('Member.YOUROLDPASSWORD', "Your old password")));
 			}
 

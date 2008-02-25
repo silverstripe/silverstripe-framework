@@ -1,9 +1,16 @@
 <?php
+
+/**
+ * @package sapphire
+ * @subpackage core
+ */
+
 /**
  * Base object that all others should inherit from.
  * This object provides a number of helper methods that patch over PHP's deficiencies.
+ * @package sapphire
+ * @subpackage core
  */
-
 class Object {
 	/**
 	 * This DataObjects extensions, eg Versioned.
@@ -396,7 +403,7 @@ class Object {
 	 * 
 	 * @return DataObjectDecorator The instance of the extension
 	 */
-	public function getExtension($name) {
+	public function extInstance($name) {
 		return $this->extension_instances[$name];
 	}
 	
@@ -422,6 +429,123 @@ class Object {
 			),
 		));
 	}
+		
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	// CACHE METHODS (added by simon_w (simon -at- simon -dot- geek -dot- nz))
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+
+	/**
+	 * Loads a current cache from the filesystem, if it can.
+	 *
+	 * @param string $cachename The name of the cache to load
+	 * @param int $expire The lifetime of the cache in seconds
+	 * @return mixed The data from the cache, or false if the cache wasn't loaded
+	 */
+	protected function loadCache($cachename, $expire = 3600) {
+		$cache_dir = TEMP_FOLDER;
+		$cache_path = $cache_dir . "/" . $this->sanitiseCachename($cachename);
+		if((!isset($_GET['flush']) || $_GET['flush']!=1) && (@file_exists($cache_path) && ((@filemtime($cache_path) + $expire) > (time())))) {
+			return @unserialize(file_get_contents($cache_path));
+		}
+		return false;
+	}
+	
+	/**
+	 * Saves a cache to the file system
+	 *
+	 * @param string $cachename The name of the cache to save
+	 * @param mixed $data The data to cache
+	 */
+	protected function saveCache($cachename, $data) {
+		$cache_dir = TEMP_FOLDER;
+		$cache_path = $cache_dir . "/" . $this->sanitiseCachename($cachename);
+		$fp = @fopen($cache_path, "w+");
+		if(!$fp) {
+			return; // Throw an error?
+		}
+		@fwrite($fp, @serialize($data));
+		@fclose($fp);
+	}
+	
+	/**
+	 * Makes a cache name safe to use in a file system
+	 *
+	 * @param string $cachename The cache name to sanitise
+	 * @return string the sanitised cache name
+	 */
+	protected function sanitiseCachename($cachename) {
+		// Replace illegal characters with underscores
+		$cachename = str_replace(array('~', '.', '/', '!', ' ', "\n", "\r", "\t", '\\', ':', '"', '\'', ';'), '_', $cachename);
+		return $cachename;
+	}
+	
+	/**
+	 * Caches the return value of a method.
+	 *
+	 * @param callback $callback The method to cache
+	 * @param int $expire The lifetime of the cache
+	 * @param string|int $id An id for the cache
+	 * @return mixed The cached return of the method
+	 */
+	public function cacheToFile($callback, $expire = 3600, $id = false) {
+		if(!$this->class) {
+			$this->class = get_class($this);
+		}
+		if(!method_exists($this->class, $callback)) {
+			user_error("Class {$this->class} doesn't have the method $callback.", E_USER_ERROR);
+		}
+		$cachename = $this->class . "_" . $callback;
+		if($id) {
+			$cachename .= "_" . (string)$id;
+		}
+		if(($data = $this->loadCache($cachename, $expire)) !== false) {
+			return $data;
+		}
+		// No cache to use
+		$data = $this->$callback();
+		if($data === false) {
+			// Some problem with function. Didn't give anything to cache. So don't cache it.
+			return false;
+		}
+		$this->saveCache($cachename, $data);
+		return $data;
+	}
+	
+	/**
+	 * Caches the return value of a method. Passes args to the method as well.
+	 *
+	 * @param callback $callback The method to cache
+	 * @param array $args The arguments to pass to the method
+	 * @param int $expire The lifetime of the cache
+	 * @param string|int $id An id for the cache
+	 * @return mixed The cached return of the method
+	 */
+	// I know this is almost exactly the same as cacheToFile, but call_user_func_array() is slow.
+	// Which is why there's two separate functions
+	public function cacheToFileWithArgs($callback, $args = array(), $expire = 3600, $id = false) {
+		if(!$this->class) {
+			$this->class = get_class($this);
+		}
+		if(!method_exists($this->class, $callback)) {
+			user_error("Class {$this->class} doesn't have the method $callback.", E_USER_ERROR);
+		}
+		$cachename = $this->class . "_" . $callback;
+		if($id) {
+			$cachename .= "_" . (string)$id;
+		}
+		if(($data = $this->loadCache($cachename, $expire)) !== false) {
+			return $data;
+		}
+		// No cache to use
+		$data = call_user_func_array(array($this, $callback), $args);
+		if($data === false) {
+			// Some problem with function. Didn't give anything to cache. So don't cache it.
+			return false;
+		}
+		$this->saveCache($cachename, $data);
+		return $data;
+	}
 }
 
 /**
@@ -430,4 +554,3 @@ class Object {
  * // ENFORCE STRONG_CREATE
  */
 Object::useCustomClass('Datetime','SSDatetime',true);
-?>

@@ -23,6 +23,10 @@ table.CMSList td {
 	border-style:none;
 }
 
+.TableListField table.data td.nolabel{
+	display: none;
+}
+
 table.TableField th, 
 table.TableListField th, 
 .TableListField table.data th, 

@@ -4,7 +4,11 @@ i18n::include_locale_file('sapphire', 'en_US');
 
 global $lang;
 
-$lang['fr_FR'] = $lang['en_US'];
+if(array_key_exists('fr_FR', $lang) && is_array($lang['fr_FR'])) {
+	$lang['fr_FR'] = array_merge($lang['en_US'], $lang['fr_FR']);
+} else {
+	$lang['fr_FR'] = $lang['en_US'];
+}
 
 $lang['fr_FR']['BasicAuth']['ENTERINFO'] = 'Entrer un identifiant et un mot de passe s\'il vous plaît.';
 $lang['fr_FR']['BasicAuth']['ERRORNOTADMIN'] = 'Cet utilisateur n\'est pas un administrateur.';
@@ -22,6 +26,7 @@ $lang['fr_FR']['ComplexTableField.ss']['SORTASC'] = 'Tri croissant';
 $lang['fr_FR']['ComplexTableField.ss']['SORTDESC'] = 'Tri décroissant';
 $lang['fr_FR']['ComplexTableField_popup.ss']['NEXT'] = 'Suivant';
 $lang['fr_FR']['ComplexTableField_popup.ss']['PREVIOUS'] = 'Précédent';
+$lang['fr_FR']['ContentController']['DRAFT_SITE_ACCESS_RESTRICTION'] = 'Vous devez vous authentifier avec votre mot de passe CMS afin de pouvoir consulter le contenu brouillon ou archivé. <a href="%s">Cliquer ici pour revenir au site publié.</a>';
 $lang['fr_FR']['Controller']['FILE'] = 'Fichier';
 $lang['fr_FR']['Controller']['IMAGE'] = 'Image';
 $lang['fr_FR']['Date']['AGO'] = 'auparavant';
@@ -239,6 +244,7 @@ $lang['fr_FR']['SiteTree']['PAGETITLE'] = 'Nom de la page';
 $lang['fr_FR']['SiteTree']['PAGETYPE'] = 'Type de page';
 $lang['fr_FR']['SiteTree']['PRIORITYLEASTIMPORTANT'] = 'Moins importante';
 $lang['fr_FR']['SiteTree']['PRIORITYMOSTIMPORTANT'] = 'Plus importante';
+$lang['fr_FR']['SiteTree']['PRIORITYNOTINDEXED'] = 'Non indexé';
 $lang['fr_FR']['SiteTree']['REMOVEDFROMDRAFT'] = 'Supprimé du site brouillon';
 $lang['fr_FR']['SiteTree']['SHOWINMENUS'] = 'Afficher dans les menus ?';
 $lang['fr_FR']['SiteTree']['SHOWINSEARCH'] = 'Afficher dans les recherches ?';

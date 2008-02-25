@@ -1,5 +1,15 @@
 <?php
 
+/**
+ * @package sapphire
+ * @subpackage model
+ */
+
+/**
+ * Represents a long text field.
+ * @package sapphire
+ * @subpackage model
+ */
 class Text extends DBField {
 	static $casting = array(
 		"AbsoluteLinks" => "HTMLText",
@@ -56,6 +66,34 @@ class Text extends DBField {
 		$ret = Convert::raw2xml($ret);
 		
 		return $ret;
+	}
+
+	/**
+	 * Limit sentences, can be controlled by passing an integer.
+	 * @param int $sentCount The amount of sentences you want.
+	 */
+	function LimitSentences($sentCount = 2) {
+		$data = Convert::xml2raw($this->value);
+		$sentences = explode('.', $data);
+		if(count($sentences) == 1) {
+			return $sentences[0] . '.';
+		} elseif(count($sentences) > 1) {
+			if(is_numeric($sentCount) && $sentCount != 0) {
+				if($sentCount == 1) {
+					$output = $sentences[0] . '. ';						
+				} else {
+					for($i = 1; $i <= $sentCount-1; $i++) {
+						if($sentences[0]) {
+							$output .= $sentences[0] . '. ';
+						}
+						if($sentences[$i]) {
+							$output .= $sentences[$i] . '. ';		
+						}
+					}					
+				}
+				return $output;				
+			}
+		}
 	}
 	
 	/**
@@ -182,6 +220,39 @@ class Text extends DBField {
 			
 			return $data;			
 		}
+	}
+	
+	function ContextSummary($characters = 500, $string = false, $striphtml = true, $highlight = true) {
+		if(!$string) {
+			// If no string is supplied, use the string from a SearchForm
+			$string = $_REQUEST['Search'];
+		}
+		
+		// Remove HTML tags so we don't have to deal with matching tags
+		$text = $striphtml ? $this->NoHTML() : $this->value;
+		
+		// Find the search string
+		$position = (int) stripos($text, $string);
+		
+		// We want to search string to be in the middle of our block to give it some context
+		$position = max(0, $position - ($characters / 2));
+		
+		
+		if($position > 0) {
+			// We don't want to start mid-word
+			$position = max((int) strrpos(substr($text, 0, $position), ' '), (int) strrpos(substr($text, 0, $position), "\n"));
+		}
+		
+		$summary = substr($text, $position, $characters);
+		
+		if($highlight) {
+			// Add a span around all occurences of the search term
+			$summary = str_ireplace($string, "<span class=\"highlight\">$string</span>", $summary);
+		}
+		
+		// trim it, because if we counted back and found a space then there will be an extra
+		// space at the front
+		return trim($summary);
 	}
 	
 	/**

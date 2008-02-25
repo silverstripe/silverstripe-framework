@@ -1,36 +1,41 @@
 <?php
 
 /**
- * ManifestBuilder
- *
+ * @package sapphire
+ * @subpackage core
+ */
+
+/**
+ * Name of the manifest file
+ */
+define("MANIFEST_FILE", TEMP_FOLDER . "/manifest" . str_replace(array("/",":", "\\"),"_", $_SERVER['SCRIPT_FILENAME']));
+
+/**
+ * The ManifestBuilder class generates the manifest file and keeps it fresh.
+ * 
  * The manifest file is a PHP include that contains global variables that
  * represent the collected contents of the application:
- *   - all classes
- *   - all templates
+ *   - all classes ({@link __autoload()})
+ *   - all templates ({@link SSViewer})
  *   - all _config.php files
  *
  * Traversing the filesystem to collect this information on everypage.
  * This information is cached so that it need not be regenerated on every
  * pageview.
- */
-
-
-
-/**
- * Define a constant for the name of the manifest file
- */
-define("MANIFEST_FILE", TEMP_FOLDER . "/manifest" . str_replace(array("/",":", "\\"),"_", $_SERVER['SCRIPT_FILENAME']));
-
-
-
-/**
- * ManifestBuilder
+ * 
+ * {@link ManifestBuilder::compileManifest()} is called by {@link main.php} 
+ * whenever {@link ManifestBuilder::staleManifest()} returns true.
  *
- * The ManifestBuilder class generates the manifest file and keeps it fresh.
+ * @see main.php, __autoload(), SSViewer, Requirements::themedCSS()
+ * @package sapphire
+ * @subpackage core
  */
 class ManifestBuilder {
 
 	static $restrict_to_modules = array();
+	static $extendsArray = array();
+	static $classArray = array();
+	static $implementsArray = array();
 
 	/**
 	 * @var array $ignore_files Full filenames (without directory-path) which
@@ -50,12 +55,12 @@ class ManifestBuilder {
 	 * should be ignored by the manifest.
 	 */
 	public static $ignore_folders = array(
-		'mysql', 
-		'assets', 
-		'shortstat', 
+		'mysql',
+		'assets',
+		'shortstat',
 		'HTML',
 	);
-	
+
 
 	/**
 	 * Returns true if the manifest file should be regenerated
@@ -88,9 +93,11 @@ class ManifestBuilder {
 		// locate and include the exclude files
 		$topLevel = scandir($baseDir);
 		foreach($topLevel as $file) {
+			if($file[0] == '.') continue
+			
 			$fullPath = $baseDir . '/' . $file;
 
-			if(is_dir($fullPath . '/') && file_exists($fullPath . '/_exclude.php'))
+			if(@is_dir($fullPath . '/') && file_exists($fullPath . '/_exclude.php'))
 				require_once($fullPath . '/_exclude.php');
 		}
 
@@ -108,9 +115,10 @@ class ManifestBuilder {
 			// have an _manifest_exclude file
 			$topLevel = scandir($baseDir);
 			foreach($topLevel as $filename) {
-				if(is_dir("$baseDir/$filename") &&
-					   file_exists("$baseDir/$filename/_config.php") &&
-					   !file_exists("$baseDir/$filename/_manifest_exclude")) {
+				if($filename[0] == '.') continue;
+				if(@is_dir("$baseDir/$filename") &&
+						 file_exists("$baseDir/$filename/_config.php") &&
+						 !file_exists("$baseDir/$filename/_manifest_exclude")) {
 					ManifestBuilder::getClassManifest("$baseDir/$filename",
 																						$classManifest);
 				}
@@ -130,8 +138,9 @@ class ManifestBuilder {
 		global $databaseConfig;
 		$topLevel = scandir($baseDir);
 		foreach($topLevel as $filename) {
-			if(is_dir("$baseDir/$filename/") &&
-				   file_exists("$baseDir/$filename/_config.php") &&
+			if($filename[0] == '.') continue;
+			if(@is_dir("$baseDir/$filename/") &&
+					 file_exists("$baseDir/$filename/_config.php") &&
 					 !file_exists("$baseDir/$filename/_manifest_exclude")) {
 				$manifest .= "require_once(\"$baseDir/$filename/_config.php\");\n";
 				// Include this so that we're set up for connecting to the database
@@ -150,12 +159,12 @@ class ManifestBuilder {
 		// Only include directories if they have an _config.php file
 		$topLevel = scandir($baseDir);
 		foreach($topLevel as $filename) {
-			if(substr($filename,0,1) == '.') continue;
-			if($filename != 'themes' && is_dir("$baseDir/$filename") && file_exists("$baseDir/$filename/_config.php")) {
+			if($filename[0] == '.') continue;
+			if($filename != 'themes' && @is_dir("$baseDir/$filename") && file_exists("$baseDir/$filename/_config.php")) {
 				ManifestBuilder::getTemplateManifest($baseDir, $filename, $templateManifest, $cssManifest);
 			}
 		}
-		
+
 		// Get themes
 		if(file_exists("$baseDir/themes")) {
 			$themeDirs = scandir("$baseDir/themes");
@@ -173,12 +182,12 @@ class ManifestBuilder {
 		$manifest .= "\$_TEMPLATE_MANIFEST = " . var_export($templateManifest, true) . ";\n";
 		$manifest .= "\$_CSS_MANIFEST = " . var_export($cssManifest, true) . ";\n";
 		DB::connect($databaseConfig);
-				
+
 		// Database manifest
 		$allClasses = ManifestBuilder::allClasses($classManifest);
-		
+
 		$manifest .= "\$_ALL_CLASSES = " . var_export($allClasses, true) . ";\n";
-		
+
 		global $_ALL_CLASSES;
 		$_ALL_CLASSES = $allClasses;
 
@@ -200,34 +209,34 @@ class ManifestBuilder {
 	 * application
 	 *
 	 * @param string $folder The folder to traverse (recursively)
-	 * @pram array $classMap The already built class map
+	 * @param array $classMap The already built class map
 	 */
 	private static function getClassManifest($folder, &$classMap) {
 		$items = scandir($folder);
 		if($items) foreach($items as $item) {
 			// Skip some specific PHP files
 			if(in_array($item, self::$ignore_files)) continue;
-			
+
 			// ignore hidden files and folders
 			if(substr($item,0,1) == '.') continue;
-			
+
 			// ignore files without php-extension
-			if(substr($item,-4) != '.php' && !is_dir("$folder/$item")) continue;
-			
+			if(substr($item,-4) != '.php' && !@is_dir("$folder/$item")) continue;
+
 			// ignore files and folders with underscore-prefix
 			if(substr($item,0,1) == '_') continue;
-			 
-			// ignore certain directories 
-			if(is_dir("$folder/$item") && in_array($item, self::$ignore_folders)) continue;
+
+			// ignore certain directories
+			if(@is_dir("$folder/$item") && in_array($item, self::$ignore_folders)) continue;
 
 			// ignore directories with _manifest_exlude file
-			if(is_dir("$folder/$item") && file_exists("$folder/$item/_manifest_exclude")) continue;
-			
+			if(@is_dir("$folder/$item") && file_exists("$folder/$item/_manifest_exclude")) continue;
+
 			// i18n: ignore language files (loaded on demand)
-			if($item == 'lang' && is_dir("$folder/$item") && ereg_replace("/[^/]+/\\.\\.","",$folder.'/..') == Director::baseFolder()) continue; 
-			 
-			if(is_dir("$folder/$item")) {
-				// recurse into directories	(if not in $ignore_folders)		
+			if($item == 'lang' && @is_dir("$folder/$item") && ereg_replace("/[^/]+/\\.\\.","",$folder.'/..') == Director::baseFolder()) continue;
+
+			if(@is_dir("$folder/$item")) {
+				// recurse into directories (if not in $ignore_folders)
 				ManifestBuilder::getClassManifest("$folder/$item", $classMap);
 			} else {
 				// include item in the manifest
@@ -236,13 +245,13 @@ class ManifestBuilder {
 				if($classMap && array_key_exists($itemCode, $classMap)) {
 					$regex = '/class\s' . $itemCode .'/';
 					if(
-						preg_match($regex, file_get_contents("$folder/$item")) 
+						preg_match($regex, file_get_contents("$folder/$item"))
 						&& preg_match($regex,  file_get_contents($classMap[$itemCode]))
 					) {
-						user_error("Warning: there are two '$itemCode' files both containing the same class: '$folder/$item' and '{$classMap[$itemCode]}'.  
+						user_error("Warning: there are two '$itemCode' files both containing the same class: '$folder/$item' and '{$classMap[$itemCode]}'.
 							This might mean that the wrong code is being used.", E_USER_WARNING);
 					} else {
-						user_error("Warning: there are two '$itemCode' files with the same filename: '$folder/$item' and '{$classMap[$itemCode]}'.  
+						user_error("Warning: there are two '$itemCode' files with the same filename: '$folder/$item' and '{$classMap[$itemCode]}'.
 							This might mean that the wrong code is being used.", E_USER_NOTICE);
 					}
 				} else {
@@ -266,11 +275,11 @@ class ManifestBuilder {
 				$templateName = substr($item, 0, -3);
 				$templateType = substr($folder,strrpos($folder,'/')+1);
 				if($templateType == "templates") $templateType = "main";
-				
+
 				if($themeName) {
-					$templateManifest[$templateName]['themes'][$themeName][$templateType] = "$baseDir/$folder/$item"; 
+					$templateManifest[$templateName]['themes'][$themeName][$templateType] = "$baseDir/$folder/$item";
 				} else {
-					$templateManifest[$templateName][$templateType] = "$baseDir/$folder/$item"; 
+					$templateManifest[$templateName][$templateType] = "$baseDir/$folder/$item";
 				}
 
 			} else if(substr($item,-4) == '.css') {
@@ -278,13 +287,13 @@ class ManifestBuilder {
 					// Debug::message($item);
 
 					if($themeName) {
-						$cssManifest[$cssName]['themes'][$themeName] = "$folder/$item"; 
+						$cssManifest[$cssName]['themes'][$themeName] = "$folder/$item";
 					} else {
-						$cssManifest[$cssName]['unthemed'] = "$folder/$item"; 
+						$cssManifest[$cssName]['unthemed'] = "$folder/$item";
 					}
 
 
-			} else if(is_dir("$baseDir/$folder/$item")) {
+			} else if(@is_dir("$baseDir/$folder/$item")) {
 				ManifestBuilder::getTemplateManifest($baseDir, "$folder/$item", $templateManifest, $cssManifest, $themeName);
 			}
 		}
@@ -305,51 +314,148 @@ class ManifestBuilder {
 		foreach($classManifest as $file) {
 			$b = basename($file);
 			if($b != 'cli-script.php' && $b != 'main.php')
-			  include_once($file);
+				self::parse_file($file);
 		}
-		
-		if(DB::isActive()) {
-			$tables = DB::getConn()->tableList();
-		} else {
-			$tables = array();
+
+		$tables = DB::isActive() ? DB::getConn()->tableList() : array();
+
+		$allClasses["parents"] = self::find_parents();
+		$allClasses["children"] = self::find_children();
+		$allClasses["implementors"] = self::$implementsArray;
+
+		foreach(self::$classArray as $class => $info) {
+			$allClasses['exists'][$class] = $class;
+			if(isset($tables[strtolower($class)])) $allClasses['hastable'][$class] = $class;
 		}
-		
-		$allClasses['hastable'] = array();
-		
+
 		// Build a map of classes and their subclasses
 		$_classes = get_declared_classes();
+
 		foreach($_classes as $class) {
 			$allClasses['exists'][$class] = $class;
-
-			if(isset($tables[strtolower($class)]))
-				$allClasses['hastable'][$class] = $class;
-
+			if(isset($tables[strtolower($class)])) $allClasses['hastable'][$class] = $class;
 			foreach($_classes as $subclass) {
-				if(is_subclass_of($class, $subclass))
-					$allClasses['parents'][$class][$subclass] = $subclass;
-
-				if(is_subclass_of($subclass, $class))
-					$allClasses['children'][$class][$subclass] = $subclass;
+				if(is_subclass_of($class, $subclass)) $allClasses['parents'][$class][$subclass] = $subclass;
+				if(is_subclass_of($subclass, $class)) $allClasses['children'][$class][$subclass] = $subclass;
 			}
 		}
 
 		return $allClasses;
 	}
 
+/**
+	 * Parses a php file and adds any class or interface information into self::$classArray
+	 *
+	 * @param string $filename
+	 */
+	private static function parse_file($filename) {
+		$file = file_get_contents($filename);
+
+		$implements = "";
+		$extends = "";
+		$class="";
+
+		if(!$file) die("Couldn't open $filename<br />");
+
+		$classes = array();
+		$size = preg_match_all('/class (.*)[ \n]*{/m', $file, $classes);
+
+		for($i=0; $i < $size; $i++) {
+				//we have a class
+				$args = split("implements", $classes[1][$i]);
+				$implements = isset($args[1]) ? $args[1] : null;
+
+				$interfaces = explode(",", $implements);
+				$args = split("extends", $args[0]);
+				$extends = trim(isset($args[1]) ? $args[1] : null);
+				$class = trim($args[0]);
+				if($extends) self::$extendsArray[$extends][$class] = $class;
+
+				foreach($interfaces as $interface) {
+					self::$implementsArray[$interface][$class] = $class;
+				}
+
+				self::$classArray[$class] = array(
+					"interfaces" => $interfaces,
+					"extends" => $extends,
+					"file" => $filename
+				);
+			}
+
+			$interfaces = array();
+			$size = preg_match_all('/interface (.*){/', $file, $interfaces);
+
+			for($i=0;$i<$size;$i++) {
+				$class = trim($interfaces[1][$i]);
+				self::$classArray[$class] = array(
+					"interfaces"=>array(),
+					"extends" => "",
+					"isinterface"=>true
+				);
+			}
+	}
 
 	/**
-	 * Include all files of the class manifest so that that actually *all*
-	 * classes are available
+	 * Moves through self::$classArray and creates an array containing parent data
+	 *
+	 * @return array
 	 */
-	static function includeEverything() {
-		global $_CLASS_MANIFEST;
+	private static function find_parents() {
+		$parentArray = array();
+		foreach(self::$classArray as $class => $info) {
+			$extendArray = array();
 
-		foreach($_CLASS_MANIFEST as $filename) {
-			if(preg_match('/.*cli-script\.php$/', $filename))
-				continue;
+			$parent = $info["extends"];
 
-			require_once($filename);
+			while($parent) {
+				$extendArray[$parent] = $parent;
+				$parent = isset(self::$classArray[$parent]["extends"]) ? self::$classArray[$parent]["extends"] : null;
+			}
+			$parentArray[$class] = array_reverse($extendArray);
 		}
+		return $parentArray;
+	}
+
+	/**
+	 * Iterates through self::$classArray and returns an array with any descendant data
+	 *
+	 * @return array
+	 */
+	private static function find_children() {
+		$childrenArray = array();
+		foreach(self::$extendsArray as $class => $children) {
+			$allChildren = $children;
+			foreach($children as $childName) {
+				$allChildren = array_merge($allChildren, self::up_children($childName));
+			}
+			$childrenArray[$class] = $allChildren;
+		}
+		return $childrenArray;
+	}
+
+	/**
+	 * Helper function to find all children of give class
+	 *
+	 * @param string $class
+	 * @return array
+	 */
+	private static function get_children($class) {
+		return isset(self::$extendsArray[$class]) ? self::$extendsArray[$class] : array();
+	}
+
+	/**
+	 * Returns a flat array with all children of a given class
+	 *
+	 * @param string $class
+	 * @param array $results
+	 */
+	function up_children($class) {
+		$children = self::get_Children($class);
+		$results = $children;
+			foreach($children as $className) {
+				$results = array_merge($results, self::up_children($className));
+			}
+			return $results;;
 	}
 
 	/**
@@ -361,15 +467,15 @@ class ManifestBuilder {
 		$_ALL_CLASSES['hastable'] = array();
 
 		$tables = DB::getConn()->tableList();
-		
+
 		// We need to iterate through the full class lists, because the table names come out in lowercase
 		foreach($_ALL_CLASSES['exists'] as $class) {
 			if(isset($tables[strtolower($class)])) $_ALL_CLASSES['hastable'][$class] = $class;
 		}
-		
+
 		self::write_manifest();
 	}
-	
+
 	/**
 	 * Write the manifest file, containing the updated values in the applicable globals
 	 */
@@ -379,12 +485,13 @@ class ManifestBuilder {
 		$manifest = "\$_CLASS_MANIFEST = " . var_export($_CLASS_MANIFEST, true) . ";\n";
 
 		// Config manifest
-		$baseDir = dirname($_SERVER['SCRIPT_FILENAME']) . "/..";	
+		$baseDir = dirname($_SERVER['SCRIPT_FILENAME']) . "/..";
 		$baseDir = ereg_replace("/[^/]+/\\.\\.","",$baseDir);
 		$topLevel = scandir($baseDir);
 
 		foreach($topLevel as $filename) {
-			if(is_dir("$baseDir/$filename/") && file_exists("$baseDir/$filename/_config.php")) {
+			if($filename[0] == '.') continue;
+			if(@is_dir("$baseDir/$filename/") && file_exists("$baseDir/$filename/_config.php")) {
 				$manifest .= "require_once(\"$baseDir/$filename/_config.php\");\n";
 			}
 		}
@@ -394,7 +501,7 @@ class ManifestBuilder {
 		$manifest .= "\$_ALL_CLASSES = " . var_export($_ALL_CLASSES, true) . ";\n";
 		$manifest = "<?php\n$manifest\n?>";
 
-		if($fh = fopen(MANIFEST_FILE,"w")) {			
+		if($fh = fopen(MANIFEST_FILE,"w")) {
 			fwrite($fh, $manifest);
 			fclose($fh);
 

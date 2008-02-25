@@ -1,4 +1,10 @@
 <?php
+
+/**
+ * @package  sapphire
+ * @subpackage misc
+ */
+
 /* vim: set expandtab tabstop=4 shiftwidth=4: */
 // +----------------------------------------------------------------------+
 // | PHP Version 4                                                        |
@@ -21,40 +27,38 @@
 // Modified by SilverStripe www.silverstripe.com
 
 /**
-* @package  SSHTMLBBCodeParser
-* @author   Stijn de Reede  <sjr@gmx.co.uk> , SilverStripe
-*
-*
-* This is a parser to replace UBB style tags with their html equivalents. It
-* does not simply do some regex calls, but is complete stack based
-* parse engine. This ensures that all tags are properly nested, if not,
-* extra tags are added to maintain the nesting. This parser should only produce
-* xhtml 1.0 compliant code. All tags are validated and so are all their attributes.
-* It should be easy to extend this parser with your own tags, see the _definedTags
-* format description below.
-*
-*
-* Usage:
-* $parser = new SSHTMLBBCodeParser();
-* $parser->setText('normal [b]bold[/b] and normal again');
-* $parser->parse();
-* echo $parser->getParsed();
-* or:
-* $parser = new SSHTMLBBCodeParser();
-* echo $parser->qparse('normal [b]bold[/b] and normal again');
-* or:
-* echo SSHTMLBBCodeParser::staticQparse('normal [b]bold[/b] and normal again');
-*
-*
-* Setting the options from the ini file:
-* $config = parse_ini_file('BBCodeParser.ini', true);
-* $options = &PEAR::getStaticProperty('SSHTMLBBCodeParser', '_options');
-* $options = $config['SSHTMLBBCodeParser'];
-* unset($options);
-*
-*
-*/
-
+ * @package  sapphire
+ * @subpackage misc
+ * @author   Stijn de Reede  <sjr@gmx.co.uk> , SilverStripe
+ *
+ *
+ * This is a parser to replace UBB style tags with their html equivalents. It
+ * does not simply do some regex calls, but is complete stack based
+ * parse engine. This ensures that all tags are properly nested, if not,
+ * extra tags are added to maintain the nesting. This parser should only produce
+ * xhtml 1.0 compliant code. All tags are validated and so are all their attributes.
+ * It should be easy to extend this parser with your own tags, see the _definedTags
+ * format description below.
+ *
+ *
+ * Usage:
+ * $parser = new SSHTMLBBCodeParser();
+ * $parser->setText('normal [b]bold[/b] and normal again');
+ * $parser->parse();
+ * echo $parser->getParsed();
+ * or:
+ * $parser = new SSHTMLBBCodeParser();
+ * echo $parser->qparse('normal [b]bold[/b] and normal again');
+ * or:
+ * echo SSHTMLBBCodeParser::staticQparse('normal [b]bold[/b] and normal again');
+ *
+ *
+ * Setting the options from the ini file:
+ * $config = parse_ini_file('BBCodeParser.ini', true);
+ *  $options = &PEAR::getStaticProperty('SSHTMLBBCodeParser', '_options');
+ * $options = $config['SSHTMLBBCodeParser'];
+ * unset($options);
+ */
 class SSHTMLBBCodeParser
 {
     /**
@@ -323,7 +327,7 @@ class SSHTMLBBCodeParser
      * $_preparsed variable. The method uses _buildTag() to check if a tag is
      * valid and to build the actual tag to be added to the tag array.
      *
-     * TODO: - rewrite whole method, as this one is old and probably slow
+     * @todo: - rewrite whole method, as this one is old and probably slow
      *       - see if a recursive method would be better than an iterative one
      *
      * @return   none

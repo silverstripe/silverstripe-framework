@@ -1,5 +1,15 @@
 <?php
 
+/**
+ * @package sapphire
+ * @subpackage model
+ */
+
+/**
+ * Represents an enumeration field.
+ * @package sapphire
+ * @subpackage model
+ */
 class Enum extends DBField {
 	
 	protected $enum, $default;

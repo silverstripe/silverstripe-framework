@@ -1,5 +1,15 @@
 <?php
 
+/**
+ * @package sapphire
+ * @subpackage model
+ */
+
+/**
+ * Represents a decimal field from 0-1 containing a percentage value.
+ * @package sapphire
+ * @subpackage model
+ */
 class Percentage extends Decimal {
 	
 	/**

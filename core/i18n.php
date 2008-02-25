@@ -1,6 +1,11 @@
 <?php
 
 /**
+ * @package sapphire
+ * @subpackage misc
+ */
+
+/**
  * Base-class for storage and retrieval of translated entities.
  * Most common use is translation of the CMS-interface through the _t()-method
  * (in controller/model) and the <% _t() %> template variable.
@@ -21,8 +26,9 @@
  * Please see the {Translatable} DataObjectDecorator for managing translations of database-content.
  *
  * @author Bernat Foj Capell <bernat@silverstripe.com>
+ * @package sapphire
+ * @subpackage misc
  */
-
 class i18n extends Controller {
 	
 	/**
@@ -304,6 +310,7 @@ class i18n extends Controller {
 		'lah_PK' => 'Lahnda (Pakistan)',
 		'lb_LU' => 'Luxembourgish (Luxembourg)',
 		'lbe_RU' => 'Lak (Russia)',
+		'lc_XX' => 'LOLCAT',
 		'lez_RU' => 'Lezghian (Russia)',
 		'lg_UG' => 'Ganda (Uganda)',
 		'lij_IT' => 'Ligurian (Italy)',
@@ -349,8 +356,8 @@ class i18n extends Controller {
 		'my_MM' => 'Burmese (Myanmar)',
 		'myv_RU' => 'Erzya (Russia)',
 		'na_NR' => 'Nauru (Nauru)',
-		'nb_NO' => 'Norwegian Bokm�l (Norway)',
-		'nb_SJ' => 'Norwegian Bokm�l (Svalbard and Jan Mayen)',
+		'nb_NO' => 'Norwegian Bokmal (Norway)',
+		'nb_SJ' => 'Norwegian Bokmal (Svalbard and Jan Mayen)',
 		'nd_ZW' => 'North Ndebele (Zimbabwe)',
 		'ndc_MZ' => 'Ndau (Mozambique)',
 		'ne_NP' => 'Nepali (Nepal)',
@@ -838,6 +845,9 @@ class i18n extends Controller {
 			}
 		}
 
+		// sort by title (not locale)
+		asort($locales);
+		
 		return $locales;
 	}
 	
@@ -923,14 +933,15 @@ class i18n extends Controller {
 	protected static function get_owner_module($name) {
 		if (substr($name,-3) == '.ss') {
 			global $_TEMPLATE_MANIFEST;
-			$path = current($_TEMPLATE_MANIFEST[substr($name,0,-3)]);
-			ereg(Director::baseFolder() . '/([^/]+)/',$path,$module);
+			$path = str_replace('\\','/',Director::makeRelative(current($_TEMPLATE_MANIFEST[substr($name,0,-3)])));
+			ereg('/([^/]+)/',$path,$module);
 		} else {
 			global $_CLASS_MANIFEST;
-			$path = $_CLASS_MANIFEST[$name];
-			ereg(Director::baseFolder() . '/([^/]+)/',$path,$module);
+			if(strpos($name,'_') !== false) $name = strtok($name,'_');
+			$path = str_replace('\\','/',Director::makeRelative($_CLASS_MANIFEST[$name]));
+			ereg('/([^/]+)/', $path, $module);
 		}
-		return $module[1];
+		return ($module) ? $module[1] : false;
 
 	}
 
@@ -1242,13 +1253,18 @@ class i18n extends Controller {
 	 */
 	static function include_by_class($class) {
 		$module = self::get_owner_module($class);
+		if(!$module) user_error("i18n::include_by_class: Class {$class} not found", E_USER_WARNING);
+		
 		if (file_exists($file = Director::getAbsFile("$module/lang/". self::get_locale() . '.php'))) {
 			include_once($file);
 		} else if (self::get_locale() != 'en_US') {
+		        $old = self::get_locale();
 			self::set_locale('en_US');
 			self::include_by_class($class);
-		} else {
-			user_error("Locale file $file should exist", E_USER_WARNING);
+			self::set_locale($old);
+
+		} else if(file_exists(Director::getAbsFile("$module/lang"))) {
+			user_error("i18n::include_by_class: Locale file $file should exist", E_USER_WARNING);
 		}
 	}
 	

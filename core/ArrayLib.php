@@ -1,5 +1,15 @@
 <?php
 
+/**
+ * @package sapphire
+ * @subpackage misc
+ */
+
+/**
+ * Library of static methods for manipulating arrays.
+ * @package sapphire
+ * @subpackage misc
+ */
 class ArrayLib extends Object {
 	static function invert($arr) {
 		if (! $arr) return false;
@@ -55,6 +65,47 @@ class ArrayLib extends Object {
 			}
 		}
 		return $arr;
+	}
+	
+	/**
+	 * Determines if an array is associative by checking
+	 * for existing keys via array_key_exists().
+	 * @see http://nz.php.net/manual/en/function.is-array.php#76188
+	 *
+	 * @param array $arr
+	 * @return boolean
+	 */
+	static function is_associative($arr) {
+		if(is_array($arr) && ! empty($arr)) {
+	        for($iterator = count($arr) - 1; $iterator; $iterator--) {
+	            if (!array_key_exists($iterator, $arr)) return true;
+	        }
+	        return !array_key_exists(0, $arr);
+	    }
+    	return false;
+	}
+
+	/**
+	 * Recursively searches an array $haystack for the value(s) $needle.
+	 * Assumes that all values in $needle (if $needle is an array) are at 
+	 * the SAME level, not spread across multiple dimensions of the $haystack.
+	 *
+	 * @param mixed $needle
+	 * @param array $haystack
+	 * @param boolean $strict
+	 * @return boolean
+	 */
+	static function in_array_recursive($needle, $haystack, $strict = false) {
+		if(!is_array($haystack)) return false; // Not an array, we've gone as far as we can down this branch
+		
+		if(in_array($needle, $haystack, $strict)) return true; // Is it in this level of the array?
+		else {
+			foreach($haystack as $obj) { // It's not, loop over the rest of this array
+				if(self::in_array_recursive($needle, $obj, $strict)) return true; 
+			}
+		}
+		
+		return false; // Never found $needle :(
 	}
 	
 }

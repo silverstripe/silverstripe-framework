@@ -1,4 +1,10 @@
 <?php
+
+/**
+ * @package sapphire
+ * @subpackage misc
+ */
+
 /********************************************************************************\
  * Copyright (C) Carl Taylor (cjtaylor@adepteo.com)                             *
  * Copyright (C) Torben Nehmer (torben@nehmer.net) for Code Cleanup             *
@@ -6,6 +12,12 @@
 \********************************************************************************/
 
 /// Enable multiple timers to aid profiling of performance over sections of code
+
+/**
+ * Execution time profiler.
+ * @package sapphire
+ * @subpackage misc
+ */
 class Profiler {
     var $description;
     var $startTime;

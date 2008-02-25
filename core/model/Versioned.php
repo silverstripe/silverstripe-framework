@@ -1,8 +1,15 @@
 <?php
 
 /**
+ * @package sapphire
+ * @subpackage model
+ */
+
+/**
  * The Versioned decorator allows your DataObjects to have several versions, allowing
  * you to rollback changes and view history. An example of this is the pages used in the CMS.
+ * @package sapphire
+ * @subpackage model
  */
 class Versioned extends DataObjectDecorator {
 	/**
@@ -152,7 +159,7 @@ class Versioned extends DataObjectDecorator {
 				if($this->owner->parentClass() == "DataObject") {
 					$rootTable = true;
 				}
-				if ($suffix && ($ext = $this->owner->getExtension($allSuffixes[$suffix]))) {
+				if ($suffix && ($ext = $this->owner->extInstance($allSuffixes[$suffix]))) {
 					if (!$ext->isVersionedTable($table)) continue;
 					$fields = $ext->fieldsInExtraTables($suffix);
 					$indexes = $fields['indexes'];
@@ -338,7 +345,7 @@ class Versioned extends DataObjectDecorator {
 	function extendWithSuffix($table) {
 		foreach (Versioned::$versionableExtensions as $versionableExtension => $suffixes) {
 			if ($this->owner->hasExtension($versionableExtension)) {
-				$table = $this->owner->getExtension($versionableExtension)->extendWithSuffix($table);
+				$table = $this->owner->extInstance($versionableExtension)->extendWithSuffix($table);
 			}
 		}
 		return $table;
@@ -466,7 +473,7 @@ class Versioned extends DataObjectDecorator {
 		$fields = array_keys($fromRecord->getAllFields());
 		
 		foreach($fields as $field) {
-			if(in_array($field, array("ID","Version","RecordID","AuthorID"))) continue;
+			if(in_array($field, array("ID","Version","RecordID","AuthorID", "ParentID"))) continue;
 			
 			$fromRecord->$field = Diff::compareHTML($fromRecord->$field, $toRecord->$field);
 		}
@@ -623,6 +630,9 @@ class Versioned extends DataObjectDecorator {
 	 * Return the latest version of the given page
 	 */
 	static function get_latest_version($class, $id) {
+		$oldStage = Versioned::$reading_stage;
+		Versioned::$reading_stage = null;
+
 		$baseTable = ClassInfo::baseDataClass($class);
 		$query = singleton($class)->buildVersionSQL("`{$baseTable}`.RecordID = $id", "`{$baseTable}`.Version DESC");
 		$query->limit = 1;
@@ -633,10 +643,16 @@ class Versioned extends DataObjectDecorator {
 			Debug::show($record);
 			user_error("Versioned::get_version: Couldn't get $class.$id, version $version", E_USER_ERROR);
 		}
+
+		Versioned::$reading_stage = $oldStage;
+
 		return new $className($record);
 	}
 	
 	static function get_version($class, $id, $version) {
+		$oldStage = Versioned::$reading_stage;
+		Versioned::$reading_stage = null;
+
 		$baseTable = ClassInfo::baseDataClass($class);
 		$query = singleton($class)->buildVersionSQL("`{$baseTable}`.RecordID = $id AND `{$baseTable}`.Version = $version");
 		$record = $query->execute()->record();
@@ -646,6 +662,9 @@ class Versioned extends DataObjectDecorator {
 			Debug::show($record);
 			user_error("Versioned::get_version: Couldn't get $class.$id, version $version", E_USER_ERROR);
 		}
+
+		Versioned::$reading_stage = $oldStage;
+
 		return new $className($record);
 	}
 
@@ -675,6 +694,9 @@ class Versioned extends DataObjectDecorator {
 
 /**
  * Represents a single version of a record.
+ * @package sapphire
+ * @subpackage model
+ * @see Versioned
  */
 class Versioned_Version extends ViewableData {
 	protected $record;

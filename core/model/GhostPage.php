@@ -1,13 +1,13 @@
 <?php
 
 /**
- * @package sapphire
- * @subpackage core
+ * @package cms
  */
 
 /**
  * Ghost pages are placeholder pages that are used to facilitate the apparent support for
  * multiple parents.
+ * @package cms
  */
 class GhostPage extends SiteTree implements HiddenClass {
 	static $has_one = array(
@@ -96,6 +96,7 @@ class GhostPage extends SiteTree implements HiddenClass {
 
 /**
  * Controller for GhostPages
+ * @package cms
  */
 class GhostPage_Controller extends Page_Controller {
 	function getViewer($action) {
@@ -105,6 +106,7 @@ class GhostPage_Controller extends Page_Controller {
 
 /**
  * Special type of ComponentSet just for GhostPages
+ * @package cms
  */
 class GhostPage_ComponentSet extends ComponentSet {
 	function setOwner($ownerObj) {

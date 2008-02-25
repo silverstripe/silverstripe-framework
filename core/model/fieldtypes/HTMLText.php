@@ -1,5 +1,17 @@
 <?php
 
+/**
+ * @package sapphire
+ * @subpackage model
+ */
+
+/**
+ * Represents a large text field that contains HTML content.
+ * 
+ * This behaves similarly to Text, but the template processor won't escape any HTML content within it.
+ * @package sapphire
+ * @subpackage model
+ */
 class HTMLText extends Text {
 
 	/**
@@ -43,13 +55,17 @@ class HTMLText extends Text {
 				$summary .= $parts[$pIndex++] . ' ';
 		}
 		
-		
+		// Tags that shouldn't be closed
+		$noClose = array("br", "img");
 		
 		// make sure that the summary is well formed XHTML by closing tags
 		while( $openTag = array_pop( $tagStack ) ) {
 			preg_match( '/^<(\w+)\s+/', $openTag, $tagName );
-			if(sizeof($tagName) > 0)
-				$summary .= "</{$tagName[1]}>";	
+			if(sizeof($tagName) > 0) {
+			    if(!in_array($tagName[1], $noClose)) {
+					$summary .= "</{$tagName[1]}>";
+			    }
+			}
 		}
 		
 		return $summary;

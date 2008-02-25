@@ -1,5 +1,15 @@
 <?php
 
+/**
+ * @package sapphire
+ * @subpackage integration
+ */
+
+/**
+ * Soap server class
+ * @package sapphire
+ * @subpackage integration
+ */
 class SapphireSoapServer extends Controller {
 	static $methods = array();
 	static $xsd_types = array(

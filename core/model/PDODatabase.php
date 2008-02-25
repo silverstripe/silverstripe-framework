@@ -2,18 +2,20 @@
 
 /**
  * @package sapphire
- * @subpackage core
+ * @subpackage model
  */
 
 /**
  * PDO (general database) connector class.
+ * @package sapphire
+ * @subpackage model
  */
 class PDODatabase extends Database {
 	/**
 	 * Connection to the DBMS.
 	 * @var resource
 	 */
-	private $dbConn=null;
+	private $dbConn;
 
 	/**
 	 * True if we are connected to a database.
@@ -38,7 +40,7 @@ class PDODatabase extends Database {
 	 * Parameters used for creating a connection
 	 * @var array
 	 */
-	protected $param;
+	private $param;
 
 	/**
 	 * Connect to a database (MySQL, PostgreSQL, or MS SQL).
@@ -53,20 +55,18 @@ class PDODatabase extends Database {
 	 */
 	public function __construct($parameters) {
 		$this->param = $parameters;
-		$connect = $this->getConnect();
-		//$connect=$this->getConnect($parameters);
+		$connect = self::getConnect($parameters);
 		$connectWithDB = $connect . ';dbname=' . $parameters['database'];
-		echo 'connect with DB: ' . $connectWithDB . '<br>';
 		try { // Try connect to the database, if it does not exist, create it
 			$this->dbConn = new PDO($connectWithDB, $parameters['username'], $parameters['password']);
 		} catch (PDOException $e) {
+			// To do - this is an instance method, not a static method.  Call it as such.
 			if (!self::createDatabase($connect, $parameters['username'], $parameters['password'], $parameters['database'])) {
 				$this->databaseError("Could not connect to the database, make sure the server is available and user credentials are correct");
 			} else {
 				$this->dbConn = new PDO($connectWithDB, $parameters['username'], $parameters['password']); // After creating the database, connect to it
 			}
 		}
-	
 		parent::__construct();
 	}
 
@@ -75,12 +75,8 @@ class PDODatabase extends Database {
 	 * @param array $parameters The connection details.
 	 * @return string $connect The connection string.
 	 **/
-	/*public function getConnect($parameters) {
-		echo 'PDODatabase::getConnect:<pre>';
-		print_r($parameters);
-		echo '</pre>';
-		$type=$parameters['pdo_type'];
-		/*switch ($parameters['pdo_type']) {
+	public function getConnect($parameters) {
+		switch ($parameters['type']) {
 			case "mysql":
 				$port = '3306';
 				$type = 'mysql';
@@ -102,25 +98,12 @@ class PDODatabase extends Database {
 				break;
 			default:
 				$this->databaseError("This database server is not available");
-		}*/
-	/*
+		}
 		if (isset($parameters['port']) && is_numeric($parameters['port'])) {
 			$port = $parameters['port'];
-		} else {
-			//assumes that a port is required for a database connection
-			$this->databaseError("This database server is not available");
 		}
 		$connect = $type . ':host=' . $parameters['server'] . $instance . ';port=' . $port;
 		return $connect;
-	}*/
-	public function getConnect(){
-		Debug::backtrace();
-		user_error("PDODatabase subclasses need to implement getConnect", E_USER_ERROR);
-		//echo 'getting getConnect with these parameters:<pre>';
-		//print_r($parameters);
-		//echo '</pre>';
-		//return $this->getConnect($parameters);
-		
 	}
 
 	/**
@@ -248,11 +231,9 @@ class PDODatabase extends Database {
 	 * @param string $password Database Password
 	 * @param string $database Database to which to create
 	 * @return boolean Returns true if successful
+	 * @todo This shouldn't take any arguments; it should take the information given in the constructor instead.
 	 */
 	public function createDatabase($connect, $username, $password, $database) {
-		echo 'connect:<pre>';
-		print_r($connect);
-		echo '</pre>';
 		try {
 			$dbh = new PDO($connect, $username, $password);
 			$stmt = $dbh->prepare("CREATE DATABASE $database");
@@ -309,7 +290,7 @@ class PDODatabase extends Database {
 		if ($fields) {
 			foreach($fields as $k => $v) $fieldSchemas .= "`$k` $v,\n";
 		}
-		echo 'boo!';
+		
 		switch (self::getDatabaseServer()) {
 			case "mysql":
 				$stmt = $this->dbConn->prepare("CREATE TABLE $tableName (ID INT(11) NOT NULL AUTO_INCREMENT, $fieldSchemas PRIMARY KEY (ID)) TYPE=MyISAM");
@@ -332,11 +313,11 @@ class PDODatabase extends Database {
 
 	/**
 	 * Alter fields and indexes in existing table.
-	 * @var string $tableName The name of the table.
-	 * @var string $newFields Fields to add.
-	 * @var string $newIndexes Indexes to add.
-	 * @var string $alteredFields Fields to change.
-	 * @var string $alteredIndexes Indexes to change.
+	 * @param string $tableName The name of the table.
+	 * @param string $newFields Fields to add.
+	 * @param string $newIndexes Indexes to add.
+	 * @param string $alteredFields Fields to change.
+	 * @param string $alteredIndexes Indexes to change.
 	 * @return void.
 	 */
 	public function alterTable($table, $newFields = null, $newIndexes = null, $alteredFields = null, $alteredIndexes = null) {
@@ -372,8 +353,8 @@ class PDODatabase extends Database {
 
 	/**
 	 * Rename an existing table, the TO is necessary for PostgreSQL and MS SQL.
-	 * @var string $oldTableName The name of the existing table.
-	 * @var string $newTableName How the table should be named from now on.
+	 * @param string $oldTableName The name of the existing table.
+	 * @param string $newTableName How the table should be named from now on.
 	 * @return void.
 	 */
 	public function renameTable($oldTableName, $newTableName) {
@@ -387,7 +368,7 @@ class PDODatabase extends Database {
 	 * @return boolean Return true if the table has integrity after the method is complete.
 	 */
 	public function checkAndRepairTable($tableName) {
-		if ($parameters['pdo_type'] == "mysql") {
+		if ($parameters['type'] == "mysql") {
 			if (!$this->runTableCheckCommand("CHECK TABLE `$tableName`")) {
 				if(!Database::$supressOutput) {
 					echo "<li style=\"color: orange\">Table $tableName: repaired</li>";
@@ -587,8 +568,6 @@ class PDODatabase extends Database {
 	 * Returns a map of indexes.
 	 */
 	public function indexList($table) {
-		echo 'self::getDatabaseServer=' . self::getDatabaseServer() . '<br>';
-		
 		switch (self::getDatabaseServer()) {
 			case "mysql":
 				foreach($this->dbConn->query("SHOW INDEXES IN '$table'") as $index) {
@@ -677,6 +656,8 @@ class PDODatabase extends Database {
 
 /**
  * A result-set from a database query (array).
+ * @package sapphire
+ * @subpackage model
  */
 class PDOQuery extends Query {
 	private $database;

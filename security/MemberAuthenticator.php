@@ -1,17 +1,17 @@
 <?php
 
 /**
- * Member authenticator
- *
+ * @package sapphire
+ * @subpackage security
  * @author Markus Lanthaler <markus@silverstripe.com>
  */
-
-
 
 /**
  * Authenticator for the default "member" method
  *
  * @author Markus Lanthaler <markus@silverstripe.com>
+ * @package sapphire
+ * @subpackage security
  */
 class MemberAuthenticator extends Authenticator {
 

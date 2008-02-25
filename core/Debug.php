@@ -1,16 +1,31 @@
 <?php
+
 /**
- * Class of static methods to support debugging.
+ * @package sapphire
+ * @subpackage core
+ */
+
+/**
+ * Supports debugging and core error handling via static methods.
+ * 
+ * @package sapphire
+ * @subpackage core
  */
 class Debug {
 	
 	/**
-	 * @var $mail_server string Custom mailserver for sending debug mails.
+	 * @var $custom_smtp_server string Custom mailserver for sending mails.
 	 */
 	protected static $custom_smtp_server = '';
 	
+	/**
+	 * @var $send_errors_to string Email address to send error notifications
+	 */
 	protected static $send_errors_to;
 	
+	/**
+	 * @var $send_warnings_to string Email address to send warning notifications
+	 */
 	protected static $send_warnings_to;
 	
 	/**
@@ -33,6 +48,10 @@ class Debug {
 		}
 
 	}
+	
+	/**
+	 * Emails the contents of the output buffer
+	 */
 	static function mailBuffer( $email, $subject ) {
 		mail( $email, $subject, ob_get_contents() );
 		ob_end_clean();
@@ -48,26 +67,34 @@ class Debug {
 	}
 
 	static function text($val) {
-		if(is_object($val) && $val->hasMethod('debug')) {
-			return $val->debug();
-		} else {
-			if(is_array($val)) {
-				$result = "<ul>\n";
-				foreach($val as $k => $v) {
-					$result .= "<li>$k = " . Debug::text($v) . "</li>\n";
-				}
-				$val = $result . "</ul>\n";
-
-			} else if (is_object($val)) {
-				$val = var_export($val, true);
+		if(is_object($val)) {
+			if(method_exists($val, 'hasMethod')) {
+				$hasDebugMethod = $val->hasMethod('debug');
 			} else {
-				if(true || !Director::is_ajax()) {
-					$val = "<pre style=\"font-family: Courier new\">" . htmlentities($val) . "</pre>\n";
-				}
+				$hasDebugMethod = method_exists($val, 'debug');
 			}
-
-			return $val;
+			
+			if($hasDebugMethod) {
+				return $val->debug();
+			}
 		}
+
+		if(is_array($val)) {
+			$result = "<ul>\n";
+			foreach($val as $k => $v) {
+				$result .= "<li>$k = " . Debug::text($v) . "</li>\n";
+			}
+			$val = $result . "</ul>\n";
+
+		} else if (is_object($val)) {
+			$val = var_export($val, true);
+		} else {
+			if(true || !Director::is_ajax()) {
+				$val = "<pre style=\"font-family: Courier new\">" . htmlentities($val) . "</pre>\n";
+			}
+		}
+
+		return $val;
 	}
 
 	/**
@@ -85,23 +112,27 @@ class Debug {
 
 	/**
 	 * Load an error handler
+	 * 
+	 * @todo why does this delegate to loadFatalErrorHandler?
 	 */
 	static function loadErrorHandlers() {
 		Debug::loadFatalErrorHandler();
 	}
 
+	/**
+	 * @todo can this be moved into loadErrorHandlers?
+	 */
 	static function loadFatalErrorHandler() {
-		set_error_handler('errorHandler', E_ALL & ~E_NOTICE);
+		set_error_handler('errorHandler', (E_ALL ^ E_NOTICE) ^ E_USER_NOTICE);
+		set_exception_handler('exceptionHandler');
 	}
 
 	static function warningHandler($errno, $errstr, $errfile, $errline, $errcontext) {
+	  if(error_reporting() == 0) return;
 		if(self::$send_warnings_to) self::emailError(self::$send_warnings_to, $errno, $errstr, $errfile, $errline, $errcontext, "Warning");
 
 		if(Director::isDev()) {
-			if(error_reporting() != 0) { // otherwise the error was suppressed with @
-				self::showError($errno, $errstr, $errfile, $errline, $errcontext);
-				die();
-			}
+		  self::showError($errno, $errstr, $errfile, $errline, $errcontext);
 		}
 	}
 
@@ -120,14 +151,13 @@ class Debug {
 		header("HTTP/1.0 500 Internal server error");
 
 		if(Director::is_ajax()) {
-			echo "ERROR:There has been an error";
+			echo "There has been an error";
 
 		} else {
 			if(file_exists('../assets/error-500.html')) {
-				echo "ERROR:";
 				include('../assets/error-500.html');
 			} else {
-				echo "ERROR:<h1>Error</h1><p>The website server has not been able to respond to your request.</p>\n";
+				echo "<h1>Error</h1><p>The website server has not been able to respond to your request.</p>\n";
 			}
 		}
 	}
@@ -144,6 +174,7 @@ class Debug {
 			echo "<p style=\"color: white; background-color: red; margin: 0\">FATAL ERROR: $errstr<br />\n At line $errline in $errfile<br />\n<br />\n</p>\n";
 
 			Debug::backtrace();
+			//Debug::show(debug_backtrace());
 
 			echo "<h2>Context</h2>\n";
 			Debug::show($errcontext);
@@ -169,7 +200,10 @@ class Debug {
 		if(self::$custom_smtp_server) {
 			ini_set("SMTP", self::$custom_smtp_server);			
 		}
-		mail($emailAddress, "$errorType on $_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]", $data, "Content-type: text/html\nFrom: errors@silverstripe.com");
+
+		$relfile = Director::makeRelative($errfile);
+		if($relfile[0] == '/') $relfile = substr($relfile,1);
+		mail($emailAddress, "$errorType at $relfile line $errline (http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI])", $data, "Content-type: text/html\nFrom: errors@silverstripe.com");
 	}
 	
 	/**
@@ -214,9 +248,10 @@ class Debug {
 
 	/**
 	 * Deprecated.  Send live errors and warnings to the given address.
-	 * Use send_errors_to() instead.
+	 * @deprecated Use send_errors_to() instead.
 	 */
 	static function sendLiveErrorsTo($emailAddress) {
+		user_error('Debug::sendLiveErrorsTo() is deprecated. Use Debug::send_errors_to() instead.', E_USER_NOTICE);
 		if(!Director::isDev()) self::send_errors_to($emailAddress, true);
 	}
 	
@@ -235,11 +270,11 @@ class Debug {
 		$bt = debug_backtrace();
 
 		// Ingore functions that are plumbing of the error handler
-		$ignoredFunctions = array('Debug::emailError','Debug::warningHandler','Debug::fatalHandler','errorHandler','Debug::showError','Debug::backtrace');
+		$ignoredFunctions = array('Debug::emailError','Debug::warningHandler','Debug::fatalHandler','errorHandler','Debug::showError','Debug::backtrace', 'exceptionHandler');
 		while( $bt && in_array(self::full_func_name($bt[0]), $ignoredFunctions) ) {
 			array_shift($bt);
 		}
-
+		
 		$result = "";
 		foreach($bt as $item) {
 			if(Director::is_ajax() && !$ignoreAjax) {
@@ -252,9 +287,12 @@ class Debug {
 				$result .= "</p>\n";
 			}
 		}
-		
-		if($returnVal) return $result;
-		else echo $result;
+
+		if ($returnVal) {
+			return $result;
+		} else {
+			echo $result;
+		}
 	}
 	
 	/**
@@ -267,7 +305,16 @@ class Debug {
 		if(isset($item['function'])) $funcName .= $item['function'];
 		
 		if($showArgs && isset($item['args'])) {
-			@$funcName .= "(" . implode(",", (array)$item['args'])  .")";
+			$args = array();
+			foreach($item['args'] as $arg) {
+				if(!is_object($arg) || method_exists($arg, '__toString')) {
+					$args[] = (string) $arg;
+				} else {
+					$args[] = get_class($arg);
+				}
+			}
+		
+			$funcName .= "(" . implode(",", $args)  .")";
 		}
 		
 		return $funcName;
@@ -317,6 +364,16 @@ class Debug {
 		header("Location: " . Director::baseURL() . "Security/login");
 		die();
 	}
+}
+
+function exceptionHandler($exception) {
+	$errno = E_USER_ERROR;
+	$type = get_class($exception);
+	$message = "Uncaught " . $type . ": " . $exception->getMessage();
+	$file = $exception->getFile();
+	$line = $exception->getLine();
+	$context = $exception->getTrace();
+	Debug::fatalHandler($errno, $message, $file, $line, $context);
 }
 
 function errorHandler($errno, $errstr, $errfile, $errline, $errcontext) {

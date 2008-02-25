@@ -4,7 +4,11 @@ i18n::include_locale_file('sapphire', 'en_US');
 
 global $lang;
 
-$lang['sv_SE'] = $lang['en_US'];
+if(array_key_exists('sv_SE', $lang) && is_array($lang['sv_SE'])) {
+	$lang['sv_SE'] = array_merge($lang['en_US'], $lang['sv_SE']);
+} else {
+	$lang['sv_SE'] = $lang['en_US'];
+}
 
 $lang['sv_SE']['BasicAuth']['ENTERINFO'] = 'Var god ange användarnamn och lösenord';
 $lang['sv_SE']['BasicAuth']['ERRORNOTADMIN'] = 'Den användaren är ingen administratör';
@@ -124,6 +128,7 @@ $lang['sv_SE']['HtmlEditorField']['LINKOPENNEWWIN'] = 'Öppna länk i nytt föns
 $lang['sv_SE']['HtmlEditorField']['LINKTO'] = 'Länka till';
 $lang['sv_SE']['HtmlEditorField']['OK'] = 'ok';
 $lang['sv_SE']['HtmlEditorField']['OL'] = 'Numrerad lista';
+$lang['sv_SE']['HtmlEditorField']['OUTDENT'] = 'Minska indrag';
 $lang['sv_SE']['HtmlEditorField']['PAGE'] = 'Sida';
 $lang['sv_SE']['HtmlEditorField']['PASTE'] = 'Klistra in';
 $lang['sv_SE']['HtmlEditorField']['REDO'] = 'Gör om';
@@ -210,6 +215,7 @@ $lang['sv_SE']['SiteTree']['APPEARSVIRTUALPAGES'] = 'Det här innehållet finns 
 $lang['sv_SE']['SiteTree']['BUTTONCANCELDRAFT'] = 'Upphäv utkast-ändringar';
 $lang['sv_SE']['SiteTree']['BUTTONCANCELDRAFTDESC'] = 'Radera ditt utkast och återgå till den publicerade sidan';
 $lang['sv_SE']['SiteTree']['BUTTONSAVEPUBLISH'] = 'Spara & publicera';
+$lang['sv_SE']['SiteTree']['BUTTONUNPUBLISH'] = 'Avpublicera';
 $lang['sv_SE']['SiteTree']['BUTTONUNPUBLISHDESC'] = 'Ta bort den här sidan från den publicerade sajten';
 $lang['sv_SE']['SiteTree']['EDITANYONE'] = 'Alla som kan logga in';
 $lang['sv_SE']['SiteTree']['EDITHEADER'] = 'Vem kan redigera den här sidan från CMS:et';
@@ -226,6 +232,7 @@ $lang['sv_SE']['SiteTree']['METADESC'] = 'Beskrivning';
 $lang['sv_SE']['SiteTree']['METAEXTRA'] = 'Egna meta-taggar';
 $lang['sv_SE']['SiteTree']['METAHEADER'] = 'Meta-taggar för sökmotorer';
 $lang['sv_SE']['SiteTree']['METAKEYWORDS'] = 'Nyckelord';
+$lang['sv_SE']['SiteTree']['METAPAGEPRIO'] = 'Sidprioritet';
 $lang['sv_SE']['SiteTree']['METATITLE'] = 'Titel';
 $lang['sv_SE']['SiteTree']['MODIFIEDONDRAFT'] = 'Modifierad på utkast-sajten';
 $lang['sv_SE']['SiteTree']['NOBACKLINKS'] = 'Den här sidan har inte blivit länkad från någon annan sida.';

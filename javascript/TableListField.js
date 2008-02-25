@@ -12,6 +12,10 @@ TableListField.prototype = {
 			onclick: this.deleteRecord.bind(this)
 		};
 		
+		rules['#'+this.id+' th a'] = {
+			onclick: this.paginate.bind(this)
+		};
+		
 		rules['#'+this.id+' th'] = {
 			initialize: function() {
 				var sortLinks = $$('span.sortLinkHidden a', this);

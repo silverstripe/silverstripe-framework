@@ -4,7 +4,11 @@ i18n::include_locale_file('sapphire', 'en_US');
 
 global $lang;
 
-$lang['nl_NL'] = $lang['en_US'];
+if(array_key_exists('nl_NL', $lang) && is_array($lang['nl_NL'])) {
+	$lang['nl_NL'] = array_merge($lang['en_US'], $lang['nl_NL']);
+} else {
+	$lang['nl_NL'] = $lang['en_US'];
+}
 
 $lang['nl_NL']['BasicAuth']['ENTERINFO'] = 'Voer een gebruikers naam en wachtwoord in.';
 $lang['nl_NL']['BasicAuth']['ERRORNOTADMIN'] = 'Die gebruiker is geen beheerder.';
