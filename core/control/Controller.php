@@ -547,6 +547,14 @@ class Controller extends ViewableData {
 			$className = get_parent_class($className);
 		}
 		
+		// Add $allowed_actions from extensions
+		if($this->extension_instances) {
+			foreach($this->extension_instances as $inst) {
+				$accessPart = $inst->stat('allowed_actions');
+				if($accessPart !== null) $access = array_merge((array)$access, $accessPart);
+			}
+		}
+		
 		if($access === null || $accessParts[0] === $accessParts[1]) {
 			// user_error("Deprecated: please define static \$allowed_actions on your Controllers for security purposes", E_USER_NOTICE);
 			return true;
