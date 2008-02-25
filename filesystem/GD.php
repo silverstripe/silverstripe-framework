@@ -1,14 +1,7 @@
 <?php
 
 /**
- * @package sapphire
- * @subpackage filesystem
- */
-
-/**
  * A wrapper class for GD-based images, with lots of manipulation functions.
- * @package sapphire
- * @subpackage filesystem
  */
 class GD extends Object {
 	protected $gd, $width, $height;

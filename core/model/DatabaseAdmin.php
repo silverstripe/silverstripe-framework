@@ -4,7 +4,7 @@
  * Database Administration
  *
  * @package sapphire
- * @subpackage model
+ * @subpackage core
  */
 
 
@@ -20,18 +20,8 @@ require_once("core/model/DB.php");
  *
  * Utility functions for administrating the database. These can be accessed
  * via URL, e.g. http://www.yourdomain.com/db/build.
- * @package sapphire
- * @subpackage model
  */
 class DatabaseAdmin extends Controller {
-
-	/// SECURITY ///
-	static $allowed_actions = array(
-		'build',
-		'cleanup',
-		'testinstall',
-		'import'
-	);
 
 	/**
 	 * Get the data classes, grouped by their root class

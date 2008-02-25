@@ -1,14 +1,6 @@
 <?php
-
 /**
- * @package sapphire
- * @subpackage cron
- */
-
-/**
- * Classes that must be run monthly extend this class
- * @package sapphire
- * @subpackage cron
+ * Executed a task monthly
  */
 class MonthlyTask extends ScheduledTask {
 

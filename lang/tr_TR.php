@@ -4,11 +4,7 @@ i18n::include_locale_file('sapphire', 'en_US');
 
 global $lang;
 
-if(array_key_exists('tr_TR', $lang) && is_array($lang['tr_TR'])) {
-	$lang['tr_TR'] = array_merge($lang['en_US'], $lang['tr_TR']);
-} else {
-	$lang['tr_TR'] = $lang['en_US'];
-}
+$lang['tr_TR'] = $lang['en_US'];
 
 $lang['tr_TR']['BasicAuth']['ENTERINFO'] = 'Lütfen kullanıcı adı ve şifrenizi giriniz.';
 $lang['tr_TR']['BasicAuth']['ERRORNOTADMIN'] = 'O kullanıcı, yönetici değildir';

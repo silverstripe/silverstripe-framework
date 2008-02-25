@@ -2,13 +2,11 @@
 
 /**
  * @package sapphire
- * @subpackage filesystem
+ * @subpackage core
  */
 
 /**
  * Represents an image attached to a page.
- * @package sapphire
- * @subpackage filesystem
  */
 class Image extends File {
 	/**
@@ -264,9 +262,9 @@ class Image extends File {
 	 * Generate an image on the specified format. It will save the image
 	 * at the location specified by cacheFilename(). The image will be generated
 	 * using the specific 'generate' method for the specified format.
-	 * @param string $format Name of the format to generate.
-	 * @param string $arg1 Argument to pass to the generate method.
-	 * @param string $arg2 A second argument to pass to the generate method.
+	 * @var string $format Name of the format to generate.
+	 * @var string $arg1 Argument to pass to the generate method.
+	 * @var string $arg2 A second argument to pass to the generate method.
 	 */
 	function generateFormattedImage($format, $arg1 = null, $arg2 = null) {
 		$cacheFile = $this->cacheFilename($format, $arg1, $arg2);
@@ -367,11 +365,7 @@ class Image extends File {
 }
 
 /**
- * A resized / processed {@link Image} object.
- * When Image object are processed or resized, a suitable Image_Cached object is returned, pointing to the
- * cached copy of the processed image.
- * @package sapphire
- * @subpackage filesystem
+ * Image not stored in the database, that is just a cached resampled image
  */
 class Image_Cached extends Image {
 	/**
@@ -399,12 +393,6 @@ class Image_Cached extends Image {
 	}
 }
 
-/**
- * A db field type designed to help save images.
- * @deprecated Use a has_one relationship pointing to the file table instead.
- * @package sapphire
- * @subpackage filesystem
- */
 class Image_Saver extends DBField {
 	function saveInto($record) {
 		$image = $record->getComponent($this->name);
@@ -424,17 +412,14 @@ class Image_Saver extends DBField {
 }
 
 /**
- * Uploader support for the uploading anything which is a File or subclass of File, eg Image.
- * @package sapphire
- * @subpackage filesystem
+ * Uploader support for the uploading anything which is a File or subclass of 
+ * File, eg Image.
  */
 class Image_Uploader extends Controller {
 	/**
 	 * Ensures the css is loaded for the iframe.
 	 */
 	function iframe() {
-		if(!Permission::check('ADMIN')) Security::permissionFailure($this);
-		
 		Requirements::css("cms/css/Image_iframe.css");
 		return array();
 	}
@@ -605,25 +590,34 @@ class Image_Uploader extends Controller {
 				_t('ImageUploader.DELETE', 'Delete %s', PR_MEDIUM, 'Delete file/image'), 
 				$type
 			);
-			$form = new Form(
+			return new Form(
 				$this,
 				'DeleteImageForm', 
 				new FieldSet(
 					new HiddenField("Class", null, $this->urlParams['Class']),
 					new HiddenField("ID", null, $this->urlParams['ID']),
-					new HiddenField("Field", null, $this->urlParams['Field'])
+					new HiddenField("Field", null, $this->urlParams['Field']),
+					new HeaderField($title),
+					new LabelField(
+						sprintf(
+							_t(
+								'ImageUploader.CLICKREMOVE',
+								"Click the button below to remove this %s.",
+								PR_MEDIUM,
+								'... this image/file'
+							),
+							$type
+						)
+					)
 				),
 				new FieldSet(
-					$deleteAction = new ConfirmedFormAction(
+					new ConfirmedFormAction(
 						"delete",
 						$title, 
 						sprintf(_t('ImageUploader.REALLYDELETE', "Do you really want to remove this %s?"), $type)
 					)
 				)
 			);
-			$deleteAction->addExtraClass('delete');
-			
-			return $form;
 		}
 	}
 	
@@ -638,7 +632,7 @@ class Image_Uploader extends Controller {
 		}
 		$owner = DataObject::get_by_id($data['Class'], $data['ID']);
 		$fieldName = $data['Field'] . 'ID';
-		
+
 		if($data['ImageSource'] == 'existing') {
 			if(!$data['ExistingFile']) {
 				// No image has been selected
@@ -651,14 +645,6 @@ class Image_Uploader extends Controller {
 			// Edit the class name, if applicable
 			$existingFile = DataObject::get_by_id("File", $data['ExistingFile']);
 			$desiredClass = $owner->has_one($data['Field']);
-			
-			// Unless specifically asked, we don't want the user to be able
-			// to select a folder
-			if(is_a($existingFile, 'Folder') && $desiredClass != 'Folder') {
-				Director::redirectBack();
-				return;
-			}
-			
 			if(!is_a($existingFile, $desiredClass)) {
 				$existingFile->ClassName = $desiredClass;
 				$existingFile->write();
@@ -704,8 +690,6 @@ class Image_Uploader extends Controller {
 	 * Flush all of the generated images.
 	 */
 	function flush() {
-		if(!Permission::check('ADMIN')) Security::permissionFailure($this);
-		
 		$images = DataObject::get("Image","");
 		$numItems = 0;
 		$num = 0;
@@ -726,8 +710,6 @@ class Image_Uploader extends Controller {
 	 * @deprecated This function is only used to migrate content from old databases.
 	 */
 	function transferlegacycontent() {
-		if(!Permission::check('ADMIN')) Security::permissionFailure($this);
-		
 		$images = DB::query("SELECT * FROM _obsolete_Image");
 		echo "<h3>Transferring images</h3>";
 		foreach($images as $image) {

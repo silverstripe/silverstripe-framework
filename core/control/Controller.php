@@ -1,36 +1,14 @@
 <?php
 
 /**
- * @package sapphire
- * @subpackage control
- */
-
-/**
  * Base controller class.
  * Controllers are the cornerstone of all site functionality in Sapphire.  The {@link Director}
  * selects a controller to pass control to, and then calls {@link run()}.  This method will execute
  * the appropriate action - either by calling the action method, or displaying the action's template.
  *
  * See {@link getTemplate()} for information on how the template is chosen.
- * @package sapphire
- * @subpackage control
  */
 class Controller extends ViewableData {
-	
-	/**
-	 * Define a list of actions that are allowed to be called on this controller.
-	 * The variable should be an array of action names. This sample shows the different values that it can contain:
-	 *
-	 * <code>
-	 * array(
-	 *		'someaction', // someaction can be accessed by anyone, any time
-	 *		'otheraction' => true, // So can otheraction
-	 *		'restrictedaction' => 'ADMIN', // restrictedaction can only be people with ADMIN privilege
-	 *		'complexaction' '->canComplexAction' // complexaction can only be accessed if $this->canComplexAction() returns true
-	 *	);
-	 * </code>
-	 */
-	static $allowed_actions = null;
 	
 	protected $urlParams;
 	
@@ -61,7 +39,7 @@ class Controller extends ViewableData {
 	}
 	
 	/**
-	 * @return array The parameters extracted from the URL by the {@link Director}.
+	 * @return
 	 */
 	function getURLParams() {
 		return $this->urlParams;
@@ -76,32 +54,11 @@ class Controller extends ViewableData {
 	}
 
 	/**
-	 * Executes this controller, and return an {@link HTTPResponse} object with the result.
-	 * 
-	 * This method first does a few set-up activities:
-	 *  - Push this controller ont to the controller stack - see {@link Controller::curr()} for information about this.
-	 *  - Call {@link init()}
-	 * 
-	 * Then it looks for the action method.  The action is taken from $this->urlParams['Action'] - for this reason, it's important
-	 * to have $Action included in your Director rule
-	 * 
-	 * If $requestParams['executeForm'] is set, then the Controller assumes that we're processing a form.  This is usually
-	 * set by adding ?executeForm=XXX to the form's action URL.  Form processing differs in the following ways:
-	 *  - The action name will be the name of the button clicked.  If no button-click can be detected, the first button in the
-	 *    list will be assumed.
-	 *  - If the given action method doesn't exist on the controller, Controller will look for that method on the Form object.
-	 *    this lets developers package both a form and its action handlers in a single subclass of Form.
-	 * 
-	 * NOTE: You should rarely need to overload run() - this kind of change is only really appropriate for things like nested
-	 * controllers - {@link ModelAsController} and {@link RootURLController} are two examples here.  If you want to make more
-	 * orthodox functionality, it's better to overload {@link init()} or {@link index()}.
-	 * 
-	 * 
-	 * 
 	 * Execute the appropriate action handler.  If none is given, use defaultAction to display
 	 * a template.  The default action will be appropriate in most cases where displaying data
 	 * is the core goal; the Viewer can call methods on the controller to get the data it needs.
 	 * 
+	 * @param array $urlParams named parameters extracted from the URL, including Action.
 	 * @param array $requestParams GET and POST variables.
 	 * @return HTTPResponse The response that this controller produces, including HTTP headers such as redirection info
 	 */
@@ -113,13 +70,7 @@ class Controller extends ViewableData {
 		$this->response = new HTTPResponse();
 		$this->requestParams = $requestParams;
 
-		$this->action = isset($this->urlParams['Action']) ? strtolower(str_replace("-","_",$this->urlParams['Action'])) : "";
-		if(!$this->action) $this->action = 'index';
-		
-		// Check security on the controller
-		if(!$this->checkAccessAction($this->action)) {
-			user_error("Disallowed action: '$this->action' on controller '$this->class'", E_USER_ERROR);
-		}
+		$this->action = isset($this->urlParams['Action']) ? str_replace("-","_",$this->urlParams['Action']) : "index";
 
 		// Init
 		$this->baseInitCalled = false;
@@ -162,7 +113,6 @@ class Controller extends ViewableData {
 
 			// Create the form object
 			$form = $formController;
-
 			$formObjParts = explode('.', $this->requestParams['executeForm']);
 			foreach($formObjParts as $formMethod){
 				if(isset($_GET['debug_profile'])) Profiler::mark("Calling $formMethod", "on $form->class");
@@ -170,7 +120,6 @@ class Controller extends ViewableData {
 				if(isset($_GET['debug_profile'])) Profiler::unmark("Calling $formMethod", "on $form->class");
 				if(!$form) break; //user_error("Form method '" . $this->requestParams['executeForm'] . "' returns null in controller class '$this->class' ($_SERVER[REQUEST_URI])", E_USER_ERROR);
 			}
-
 
 			// Populate the form
 			if(isset($_GET['debug_profile'])) Profiler::mark("Controller", "populate form");
@@ -360,11 +309,10 @@ class Controller extends ViewableData {
 	}
 
 	/**
-	 * @deprecated use Controller::curr() instead
+	 * Deprecated - use Controller::curr() instead
 	 * @returns Controller
 	 */
 	public static function currentController() {
-		user_error('Controller::currentController() is deprecated. Use Controller::curr() instead.', E_USER_NOTICE);
 		return self::curr();
 	}
 	
@@ -483,10 +431,6 @@ class Controller extends ViewableData {
 	 * Handle redirection
 	 */
 	function redirect($url) {
-		if($this->response->getHeader('Location')) {
-			user_error("Already directed to " . $this->response->getHeader('Location') . "; now trying to direct to $url", E_USER_ERROR);
-		}
-
 		// Attach site-root to relative links, if they have a slash in them
 		if($url == "" || $url[0] == '?' || (substr($url,0,4) != "http" && $url[0] != "/" && strpos($url,'/') !== false)){
 			$url = Director::baseURL() . $url;
@@ -528,45 +472,6 @@ class Controller extends ViewableData {
 			(isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] == "XMLHttpRequest")
 		);
 	}
-	
-	/**
-	 * Check thAT
-	 */
-	function checkAccessAction($action) {
-		// Collate self::$allowed_actions from this class and all parent classes
-		$access = null;
-		$className = $this->class;
-		while($className != 'Controller') {
-			// Merge any non-null parts onto $access.
-			$accessPart = eval("return $className::\$allowed_actions;");
-			if($accessPart !== null) $access = array_merge((array)$access, $accessPart);
-			
-			// Build an array of parts for checking if part[0] == part[1], which means that this class doesn't directly define it.
-			$accessParts[] = $accessPart;
-			
-			$className = get_parent_class($className);
-		}
-		
-		if($access === null || $accessParts[0] === $accessParts[1]) {
-			// user_error("Deprecated: please define static \$allowed_actions on your Controllers for security purposes", E_USER_NOTICE);
-			return true;
-		}
-		
-		if($action == 'index') return true;
-		
-		if(isset($access[$action])) {
-			$test = $access[$action];
-			if($test === true) return true;
-			if(substr($test,0,2) == '->') {
-				$funcName = substr($test,2);
-				return $this->$funcName();
-			}
-			if(Permission::check($test)) return true;
-		} else if((($key = array_search($action, $access)) !== false) && is_numeric($key)) {
-			return true;
-		}
-		return false;
-	} 
 	
 }
 

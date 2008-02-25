@@ -1,18 +1,10 @@
 <?php
-
-/**
- * @package sapphire
- * @subpackage filesystem
- */
-
 /**
  * This class handles the representation of a File within Sapphire
  * Note: The files are stored in the "/assets/" directory, but sapphire
  * looks at the db object to gather information about a file such as URL
  *
  * It then uses this for all processing functions (like image manipulation)
- * @package sapphire
- * @subpackage filesystem
  */
 class File extends DataObject {
 	static $default_sort = "Name";
@@ -156,7 +148,7 @@ class File extends DataObject {
 	/**
 	 * Save an file passed from a form post into this object
 	 */
-	function loadUploaded($tmpFile, $folderName = 'Uploads') {
+	function loadUploaded($tmpFile) {
 		if(!is_array($tmpFile)) user_error("File::loadUploaded() Not passed an array.  Most likely, the form hasn't got the right enctype", E_USER_ERROR);
 		if(!$tmpFile['size']) return;
 		
@@ -165,14 +157,14 @@ class File extends DataObject {
 		// have been uploaded.
 		$base = dirname(dirname($_SERVER['SCRIPT_FILENAME']));
 		$class = $this->class;
-		$parentFolder = Folder::findOrMake($folderName);
+		$parentFolder = Folder::findOrMake("Uploads");
 
 		// Create a folder for uploading.
 		if(!file_exists("$base/assets")){
 			mkdir("$base/assets", Filesystem::$folder_create_mask);
 		}
-		if(!file_exists("$base/assets/$folderName")){
-			mkdir("$base/assets/$folderName", Filesystem::$folder_create_mask);
+		if(!file_exists("$base/assets/Uploads")){
+			mkdir("$base/assets/Uploads", Filesystem::$folder_create_mask);
 		}
 
 		// Generate default filename
@@ -181,7 +173,7 @@ class File extends DataObject {
 		$file = ereg_replace('-+', '-',$file);
 		$file = basename($file);
 
-		$file = "assets/$folderName/$file";
+		$file = "assets/Uploads/$file";
 
 		while(file_exists("$base/$file")) {
 			$i = isset($i) ? ($i+1) : 2;
@@ -240,41 +232,38 @@ class File extends DataObject {
 
 	function loadallcontent() {
 		ini_set("max_execution_time", 50000);
-		$allFiles = DataObject::get("File");
+		// get all file objects(not folders)
+		$start = (int)$_GET[start];
+		$allFiles = DataObject::get("File", "ClassName = 'File' AND Filename LIKE '%.pdf'", "", "", "$start, 5");
 		$total = $allFiles->TotalItems();
 
-		$i = 0;
+		$i = $start;
 		foreach($allFiles as $file) {
 			$i++;
 			$tmp = TEMP_FOLDER;
 			`echo "$i / $total" > $tmp/progress`;
-			$file->write();
+			$file->loadContent();
 		}
+		Director::redirect(HTTP::setGetVar("start", $start + 5));
+
+		// run loadcontent on each one
 	}
 
 	/**
 	 * Gets the content of this file and puts it in the field Content
 	 */
 	function loadContent() {
-		$filename = escapeshellarg($this->getFullPath());
+
 		switch(strtolower($this->getExtension())){
 			case 'pdf':
-				$content = `pdftotext $filename -`;
+				$filename = escapeshellarg($this->getFullPath());
+
+				$content = `pstotext $filename`;
 
 				//echo("<pre>Content for $this->Filename:\n$content</pre>");
 				$this->Content = $content;
+				$this->write();
 				break;
-			case 'doc':
-				$content = `catdoc $filename`;
-				$this->Content = $content;
-				break;
-			case 'ppt':
-				$content = `catppt $filename`;
-				$this->Content = $content;
-				break;
-			case 'txt';
-				$content = file_get_contents($this->FileName);
-				$this->Content = $content;
 		}
 	}
 
@@ -287,8 +276,7 @@ class File extends DataObject {
 	}
 
 	function TreeTitle() {
-		if($this->hasMethod('alternateTreeTitle')) return $this->alternateTreeTitle();
-		else return $this->Title;
+		return $this->Title;
 	}
 
 	/**
@@ -335,8 +323,6 @@ class File extends DataObject {
 				$brokenPage->write();
 			}
 		}
-		
-		$this->loadContent();
 	}
 
 	/**
@@ -523,7 +509,7 @@ class File extends DataObject {
 	 * legacy code.
 	 */
 	function getExtension() {
-		return strtolower(substr($this->getField('Filename'),strrpos($this->getField('Filename'),'.')+1));
+		return strtolower(substr($this->getField('Name'),strrpos($this->getField('Name'),'.')+1));
 	}
 	function getFileType() {
 		$types = array(
@@ -595,13 +581,6 @@ class File extends DataObject {
 		echo "<p>Done!";
 	}
 
-
-	/**
-	 * Select clause for DataObject::get('File') operations/
-	 * Stores an array, suitable for a {@link SQLQuery} object.
-	 */
-	private static $dataobject_select;
-
 	/**
 	 * We've overridden the DataObject::get function for File so that the very large content field
 	 * is excluded!
@@ -615,23 +594,8 @@ class File extends DataObject {
 		
 		$query = $this->extendedSQL($filter, $sort, $limit, $join, $having);
 		$baseTable = reset($query->from);
-
-		// Work out which columns we're actually going to select
-		// In short, we select everything except File.Content
-		if(!self::$dataobject_select) {
-			self::$dataobject_select = array();
-			foreach($query->select as $item) {
-				if($item == "`File`.*") {
-					$fileColumns = DB::query("SHOW FIELDS IN `File`")->column();
-					$columnsToAdd = array_diff($fileColumns, array('Content'));
-					foreach($columnsToAdd as $otherItem) self::$dataobject_select[] = '`File`.' . $otherItem;
-				} else {
-					self::$dataobject_select[] = $item;
-				}
-			}
-		}
-
-		$query->select = self::$dataobject_select;
+		
+		$query->select = array("$baseTable.ID","$baseTable.ClassName","$baseTable.Created","$baseTable.LastEdited","$baseTable.Name","$baseTable.Title","$baseTable.Content","$baseTable.ParentID","$baseTable.Filename","if($baseTable.ClassName,$baseTable.ClassName,'File') AS RecordClassName");
 
 		$records = $query->execute();
 		$ret = $this->buildDataObjectSet($records, $containerClass);

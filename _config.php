@@ -12,10 +12,9 @@
  * <code>
  * Authenticator::register_authenticator('OpenIDAuthenticator');
  * </code>
- *
- * @package sapphire
- * @subpackage core
  */
+
+
 
 /**
  * Add pear parser to include path

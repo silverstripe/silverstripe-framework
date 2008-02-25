@@ -1,11 +1,6 @@
 <?php
 
 /**
- * @package sapphire
- * @subpackage misc
- */
-
-/**
  * Browscap.ini parsing class with caching and update capabilities
  *
  * PHP version 5
@@ -24,13 +19,12 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  *
+ * @package    Browscap
  * @author     Jonathan Stoppani <st.jonathan@gmail.com>
  * @copyright  Copyright (c) 2006 Jonathan Stoppani
  * @version    0.7
  * @license    http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
  * @link       http://garetjax.info/projects/browscap/
- * @package sapphire
- * @subpackage misc
  */
 class Browscap
 {
@@ -95,7 +89,7 @@ class Browscap
 	 * $updateMethod:	The method to use to update the file, has to be a value of
 	 *                  an UPDATE_* constant, null or false.
 	 */
-	public $remoteIniUrl  	= 'http://browsers.garykeith.com/stream.asp?Lite_BrowsCapINI';
+	public $remoteIniUrl  	= 'http://browsers.garykeith.com/stream.asp?BrowsCapINI';
 	public $remoteVerUrl  	= 'http://browsers.garykeith.com/version-date.asp';
 	public $timeout			= 5;
 	public $updateInterval	= 432000; // 5 days
@@ -273,7 +267,7 @@ class Browscap
 				
 				$browser = $value = $browser + $this->_browsers[$key];
 				
-				while (array_key_exists(3, $value) && $value[3] != null && $value[3] != '') {
+				while (array_key_exists(3, $value)) {
 					$value      =   $this->_browsers[$value[3]];
 					$browser    +=  $value;
 				}
@@ -662,12 +656,11 @@ class Browscap
 /**
  * Browscap.ini parsing class exception
  *
+ * @package    Browscap
  * @author     Jonathan Stoppani <st.jonathan@gmail.com>
  * @copyright  Copyright (c) 2006 Jonathan Stoppani
  * @license    http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
  * @link       http://garetjax.info/projects/browscap/
- * @package sapphire
- * @subpackage misc
  */
 class Browscap_Exception extends Exception
 {}

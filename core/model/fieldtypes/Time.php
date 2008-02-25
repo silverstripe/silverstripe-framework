@@ -1,15 +1,8 @@
 <?php
-
-/**
- * @package sapphire
- * @subpackage model
- */
-
 /**
  * Represents a column in the database with the type 'Time'
- * @package sapphire
- * @subpackage model
  */
+ 
 class Time extends DBField {
 
 	function setVal($value) {

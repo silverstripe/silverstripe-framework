@@ -4,11 +4,7 @@ i18n::include_locale_file('sapphire', 'en_US');
 
 global $lang;
 
-if(array_key_exists('hr_HR', $lang) && is_array($lang['hr_HR'])) {
-	$lang['hr_HR'] = array_merge($lang['en_US'], $lang['hr_HR']);
-} else {
-	$lang['hr_HR'] = $lang['en_US'];
-}
+$lang['hr_HR'] = $lang['en_US'];
 
 $lang['hr_HR']['BasicAuth']['ENTERINFO'] = 'Unesite korisničko ime i lozinu';
 $lang['hr_HR']['BasicAuth']['ERRORNOTADMIN'] = 'Korisnik nije administrator';
@@ -26,7 +22,6 @@ $lang['hr_HR']['ComplexTableField.ss']['SORTASC'] = 'Sortiraj (ascending)';
 $lang['hr_HR']['ComplexTableField.ss']['SORTDESC'] = 'Sortiraj (descending)';
 $lang['hr_HR']['ComplexTableField_popup.ss']['NEXT'] = 'Slijedeći';
 $lang['hr_HR']['ComplexTableField_popup.ss']['PREVIOUS'] = 'Prethodni';
-$lang['hr_HR']['ContentController']['DRAFT_SITE_ACCESS_RESTRICTION'] = 'Morate biti prijavljeni sa vašom CMS zaporkom kako bi ste mogli vidjeti privremeni ili arhivirani sadržaj. <a href="%s">Kliknite kako bi ste se vratili na objavljen dio stranice</a>';
 $lang['hr_HR']['Controller']['FILE'] = 'Datoteka';
 $lang['hr_HR']['Controller']['IMAGE'] = 'Slika';
 $lang['hr_HR']['Date']['AGO'] = 'prije';
@@ -75,9 +70,6 @@ $lang['hr_HR']['HtmlEditorField']['BUTTONALIGNLEFT'] = 'Lijevo poravnanje';
 $lang['hr_HR']['HtmlEditorField']['BUTTONALIGNRIGHT'] = 'Desno poravnanje';
 $lang['hr_HR']['HtmlEditorField']['BUTTONBOLD'] = 'Bold (Ctrl+B)';
 $lang['hr_HR']['HtmlEditorField']['BUTTONCANCEL'] = 'Otkaži';
-$lang['hr_HR']['HtmlEditorField']['BUTTONEDITIMAGE'] = 'Uredi sliku';
-$lang['hr_HR']['HtmlEditorField']['BUTTONINSERTFLASH'] = 'Umetni Flash';
-$lang['hr_HR']['HtmlEditorField']['BUTTONINSERTIMAGE'] = 'Umetni sliku';
 $lang['hr_HR']['HtmlEditorField']['BUTTONINSERTLINK'] = 'Ubaci vezu';
 $lang['hr_HR']['HtmlEditorField']['BUTTONITALIC'] = 'Italic (Ctrl+I)';
 $lang['hr_HR']['HtmlEditorField']['BUTTONREMOVELINK'] = 'Obriši vezu';
@@ -85,7 +77,6 @@ $lang['hr_HR']['HtmlEditorField']['BUTTONSTRIKE'] = 'strikethrough';
 $lang['hr_HR']['HtmlEditorField']['BUTTONUNDERLINE'] = 'Underline (Ctrl+U)';
 $lang['hr_HR']['HtmlEditorField']['CHARMAP'] = 'Ubaci simbol';
 $lang['hr_HR']['HtmlEditorField']['COPY'] = 'Copy (Ctrl+C)';
-$lang['hr_HR']['HtmlEditorField']['CREATEFOLDER'] = 'izradite mapu ( direktorij )';
 $lang['hr_HR']['HtmlEditorField']['CSSCLASS'] = 'Poravnanje / Stil';
 $lang['hr_HR']['HtmlEditorField']['CSSCLASSCENTER'] = 'Centralno';
 $lang['hr_HR']['HtmlEditorField']['CSSCLASSLEFT'] = 'Lijevo, sa okruženjem teksta.';
@@ -98,7 +89,6 @@ $lang['hr_HR']['HtmlEditorField']['EMAIL'] = 'Email adresa';
 $lang['hr_HR']['HtmlEditorField']['FILE'] = 'Datoteka';
 $lang['hr_HR']['HtmlEditorField']['FLASH'] = 'Ubaci flash';
 $lang['hr_HR']['HtmlEditorField']['FOLDER'] = 'Direktorij';
-$lang['hr_HR']['HtmlEditorField']['FOLDERCANCEL'] = 'prekini';
 $lang['hr_HR']['HtmlEditorField']['FORMATADDR'] = 'Adresa';
 $lang['hr_HR']['HtmlEditorField']['FORMATH1'] = 'Naslov 1 (h1)';
 $lang['hr_HR']['HtmlEditorField']['FORMATH2'] = 'Naslov 2 (h2)';
@@ -126,7 +116,6 @@ $lang['hr_HR']['HtmlEditorField']['LINKFILE'] = 'Downlad datoteke';
 $lang['hr_HR']['HtmlEditorField']['LINKINTERNAL'] = 'Stranicu na ovom webu';
 $lang['hr_HR']['HtmlEditorField']['LINKOPENNEWWIN'] = 'Otvori vezu (link) u novom prozoru?';
 $lang['hr_HR']['HtmlEditorField']['LINKTO'] = 'Poveži na';
-$lang['hr_HR']['HtmlEditorField']['OK'] = 'uredu';
 $lang['hr_HR']['HtmlEditorField']['OL'] = 'Numbered list (OL)';
 $lang['hr_HR']['HtmlEditorField']['OUTDENT'] = 'Smanji uvlačenje';
 $lang['hr_HR']['HtmlEditorField']['PAGE'] = 'Stranica';
@@ -134,7 +123,6 @@ $lang['hr_HR']['HtmlEditorField']['PASTE'] = 'Paste (Ctrl+V)';
 $lang['hr_HR']['HtmlEditorField']['REDO'] = 'Redo (Ctrl+Y)';
 $lang['hr_HR']['HtmlEditorField']['UNDO'] = 'Undo (Ctrl+Z)';
 $lang['hr_HR']['HtmlEditorField']['UNLINK'] = 'Obriši link';
-$lang['hr_HR']['HtmlEditorField']['UPLOAD'] = 'postavi';
 $lang['hr_HR']['HtmlEditorField']['URL'] = 'URL';
 $lang['hr_HR']['HtmlEditorField']['VISUALAID'] = 'Pokaži/Sakrij vodilice';
 $lang['hr_HR']['ImageField']['NOTEADDIMAGES'] = 'Slike možete dodavati nakon što spremite prvi put.';
@@ -242,9 +230,6 @@ $lang['hr_HR']['SiteTree']['NOTEUSEASHOMEPAGE'] = 'Koristi ovu stranicu kao poč
 $lang['hr_HR']['SiteTree']['PAGESLINKING'] = 'Slijedeće stranice su vezane na ovu:';
 $lang['hr_HR']['SiteTree']['PAGETITLE'] = 'Ime stranice';
 $lang['hr_HR']['SiteTree']['PAGETYPE'] = 'Vrsta stranice';
-$lang['hr_HR']['SiteTree']['PRIORITYLEASTIMPORTANT'] = 'Nebitno';
-$lang['hr_HR']['SiteTree']['PRIORITYMOSTIMPORTANT'] = 'Najvažnije';
-$lang['hr_HR']['SiteTree']['PRIORITYNOTINDEXED'] = 'Nije zapisano ( Indeksirano )';
 $lang['hr_HR']['SiteTree']['REMOVEDFROMDRAFT'] = 'Obrisano sa privremene stranice';
 $lang['hr_HR']['SiteTree']['SHOWINMENUS'] = 'Pokaži u izbornicima?';
 $lang['hr_HR']['SiteTree']['SHOWINSEARCH'] = 'Pokaži u tražilici?';

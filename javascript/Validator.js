@@ -42,17 +42,11 @@ function clearErrorMessage(holderDiv){
 			Element.hide(el); 
 		}); 
 	} 
-	$$('div.validationError', holderDiv.parentNode).each(function(el) {
-		Element.removeClassName(el,'validationError');
-	});
 }
 
 function clearAllErrorMessages() {
 	$$('span.message').each(function(el) {
 		Element.hide(el);
-	});
-	$$('div.validationError').each(function(el) {
-		Element.removeClassName(el,'validationError');
 	});
 }
 
@@ -101,6 +95,8 @@ function require(fieldName,cachedError) {
 			var set = el.value;
 		}
 
+
+
 		var baseEl;
 
 		// Sometimes require events are triggered of
@@ -136,7 +132,7 @@ function require(fieldName,cachedError) {
 		}
 
 		// This checks to see if the input has a value, and the field is not a readonly.
-		if( ( typeof set == 'undefined' || (typeof(set) == 'string' && set.match(/^\s*$/)) ) ) {
+		if((typeof set == 'undefined' || set == "")) {
 			//fieldgroup validation
 			var fieldLabel = findParentLabel(baseEl);
 
@@ -255,10 +251,6 @@ function validationError(field,message, messageClass, cacheError) {
 	validationMessage.className = "message " + messageClass;
 	validationMessage.innerHTML = message;
 	validationMessage.style.display = "block";
-	
-	// Set Classname on holder
-	var holder = document.getParentOfElement(field,'div','field');
-	Element.addClassName(holder, 'validationError');
 }
 
 /**

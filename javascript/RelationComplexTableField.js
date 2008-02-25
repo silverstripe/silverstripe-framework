@@ -4,13 +4,11 @@ var checkedListField = 'selected';
 var checkedArray = null;
 
 Event.observe( window, 'load', function() {
-	if($('sitetree')){
-		if(typeof $('sitetree').observeMethod != 'undefined') {
-			$('sitetree').observeMethod( 'NodeClicked' , function() {
-				checkedListNameArray = null;
-				checkedArray = null;
-			} );
-		}
+	if($('sitetree')) {
+		$('sitetree').observeMethod( 'NodeClicked' , function() {
+			checkedListNameArray = null;
+			checkedArray = null;
+		} );
 	}
 } );
 
@@ -26,14 +24,13 @@ RelationComplexTableField.prototype = {
 		// 2) Initialize The Array Or Update The Hidden Input Field And The HTML Table
 		
 		var checkedListName = checkedList.getAttribute( 'name' );
-		//if( checkedListNameArray == null ) {
+		if( checkedListNameArray == null ) {
 			checkedListNameArray = [];
 			checkedListNameArray.push( checkedListName );
 			checkedArray = [];
 			if( checkedList.getAttribute( 'value' ) )
 				checkedArray.push( checkedList.getAttribute( 'value' ).split( ',' ) );
-		//}
-		/*
+		}
 		else if( checkedListNameArray.indexOf( checkedListName ) < 0 ) {
 			checkedListNameArray.push( checkedListName );
 			if( checkedList.getAttribute( 'value' ) )
@@ -58,7 +55,7 @@ RelationComplexTableField.prototype = {
 				else
 					markingInput.removeAttribute( 'checked' );
 			}
-		} */
+		}
 				
 		// 3) Create The Rules
 		

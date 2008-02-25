@@ -1,14 +1,6 @@
 <?php
-
-/**
- * @package sapphire
- * @subpackage email
- */
-
 /**
  * Stores a queued email to be sent at the given time
- * @package sapphire
- * @subpackage email
  */
 class QueuedEmail extends DataObject {
 	

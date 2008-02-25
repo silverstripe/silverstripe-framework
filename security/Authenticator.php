@@ -1,10 +1,4 @@
 <?php
-
-/**
- * @package sapphire
- * @subpackage security
- */
-
 /**
  * Abstract base class for an authentication method
  *
@@ -12,8 +6,6 @@
  * methods like {@link MemberAuthenticator} or {@link OpenIDAuthenticator}.
  *
  * @author Markus Lanthaler <markus@silverstripe.com>
- * @package sapphire
- * @subpackage security
  */
 abstract class Authenticator extends Object {
 

@@ -1,14 +1,8 @@
 <?php
-/**
- * @package sapphire
- * @subpackage control
- */
 
 /**
  * The content negotiator performs text/html or application/xhtml+xml switching.
  * It does this through the static function ContentNegotiator::process()
- * @package sapphire
- * @subpackage control
  */
 class ContentNegotiator {
 	protected static $encoding = 'utf-8';
@@ -44,27 +38,20 @@ class ContentNegotiator {
 			$chosenFormat = $_GET['forceFormat'];
 
 		} else {
-			// The W3C validator doesn't send an HTTP_ACCEPT header, but it can support xhtml.  We put this special case in here so that
-			// designers don't get worried that their templates are HTML4.
- 			if(isset($_SERVER['HTTP_USER_AGENT']) && substr($_SERVER['HTTP_USER_AGENT'], 0, 14) == 'W3C_Validator/') {
-				$chosenFormat = "xhtml";
-	
-			} else {
-				foreach($mimes as $format => $mime) {
-					$regExp = '/' . str_replace(array('+','/'),array('\+','\/'), $mime) . '(;q=(\d+\.\d+))?/i';
-					if (isset($_SERVER['HTTP_ACCEPT']) && preg_match($regExp, $_SERVER['HTTP_ACCEPT'], $matches)) {
-						$preference = isset($matches[2]) ? $matches[2] : 1;
-						if(!isset($q[$preference])) $q[$preference] = $format;
-					}
+			foreach($mimes as $format => $mime) {
+				$regExp = '/' . str_replace(array('+','/'),array('\+','\/'), $mime) . '(;q=(\d+\.\d+))?/i';
+				if (preg_match($regExp, $_SERVER['HTTP_ACCEPT'], $matches)) {
+					$preference = isset($matches[2]) ? $matches[2] : 1;
+					if(!isset($q[$preference])) $q[$preference] = $format;
 				}
+			}
 
-				if($q) {
-					// Get the preferred format
-					krsort($q);
-					$chosenFormat = reset($q);
-				} else {
-					$chosenFormat = "html";
-				}
+			if($q) {
+				// Get the preferred format
+				krsort($q);
+				$chosenFormat = reset($q);
+			} else {
+				$chosenFormat = "html";
 			}
 		}
 

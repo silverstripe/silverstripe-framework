@@ -4,11 +4,7 @@ i18n::include_locale_file('sapphire', 'en_US');
 
 global $lang;
 
-if(array_key_exists('hu_HU', $lang) && is_array($lang['hu_HU'])) {
-	$lang['hu_HU'] = array_merge($lang['en_US'], $lang['hu_HU']);
-} else {
-	$lang['hu_HU'] = $lang['en_US'];
-}
+$lang['hu_HU'] = $lang['en_US'];
 
 $lang['hu_HU']['BasicAuth']['ENTERINFO'] = 'Kérünk, ajd meg egy felhasználónevet és jelszót.';
 $lang['hu_HU']['BasicAuth']['ERRORNOTADMIN'] = 'Ez a felhasználó nem adminisztrátor. ';

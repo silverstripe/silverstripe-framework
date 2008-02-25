@@ -1,27 +1,23 @@
 <?php
+/* Geoip.php 
 
-/**
- * @package sapphire
- * @subpackage misc
+ Known to work with the following versions of GeoIP:
+ - GEO-106FREE 20030401 Build 1 Copyright (c) 2003 MaxMind.com All Rights Reserved
+ - GEO-106FREE 20030803 Build 1 Copyright (c) 2003 MaxMind LLC All Rights Reserved
+
+ Routines for DNS to country resolution;
+
  */
 
+// convert address (either ip or domainname) to country.
 
-/**
- * Routines for DNS to country resolution
- * 
- *  - convert address (either ip or domainname) to country.
- *  - returns false if IP address not found / not known;
- *  - otherwise an array 
- *  - set $codeOnly to true if you just want the country code
- *  - give a default for IP
- *
- * @package sapphire
- * @subpackage misc
- */
+// returns false if IP address not found / not known;
+// otherwise an array 
+// set $codeOnly to true if you just want the country code
+// give a default for IP/
+
 class Geoip extends Object {
 	
-	public static $default_country_code = false;
-
 	/** ISO 3166 Country Codes **/
 	/** 
 	 * Includes additional codes for Europe,
@@ -312,11 +308,7 @@ class Geoip extends Object {
 			if ($start) $start+=2;
 			$code = substr($country, $start, 2); // skip space	
 		}
-
-		if ($code == 'IP' || $code == '--') {
-			 if (self::$default_country_code) $code = self::$default_country_code;
-			 else return false;
-		}
+		if ($code == 'IP' || $code == '--') return false;
 		
 		if(!$codeOnly) {
 			$name = substr($country, $start+4);

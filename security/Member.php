@@ -2,14 +2,12 @@
 
 /**
  * Member classes
- * @package sapphire
- * @subpackage security
  */
+
+
 
 /**
  * The member class which represents the users of the system
- * @package sapphire
- * @subpackage security
  */
 class Member extends DataObject {
 
@@ -53,8 +51,6 @@ class Member extends DataObject {
 	);
 
 
-	static $notify_password_change = false;
-	
 	/**
 	 * This method is used to initialize the static database members
 	 *
@@ -89,14 +85,6 @@ class Member extends DataObject {
 		return ($this->Password === $encryption_details['password']);
 	}
 
-	/**
-	 * Regenerate the session_id.
-	 * This wrapper is here to make it easier to disable calls to session_regenerate_id(), should you need to.  They have caused problems in certain
-	 * quirky problems (such as using the Windmill 0.3.6 proxy).
-	 */
-	static function session_regenerate_id() {
-		session_regenerate_id(true);
-	}
 
 	/**
 	 * Logs this member in
@@ -105,8 +93,7 @@ class Member extends DataObject {
 	 *                       automatically the next time.
 	 */
 	function logIn($remember = false) {
-		self::session_regenerate_id();
-
+		session_regenerate_id(true);
 		Session::set("loggedInAs", $this->ID);
 
 		$this->NumVisit++;
@@ -143,7 +130,7 @@ class Member extends DataObject {
 			}
 
 			if($member) {
-				self::session_regenerate_id();
+				session_regenerate_id(true);
 				Session::set("loggedInAs", $member->ID);
 
 				$token = substr(md5(uniqid(rand(), true)), 0, 49 - strlen($member->ID));
@@ -162,7 +149,7 @@ class Member extends DataObject {
 	 */
 	function logOut() {
 		Session::clear("loggedInAs");
-		self::session_regenerate_id();
+		session_regenerate_id(true);
 
 		$this->RememberLoginToken = null;
 		Cookie::set('alc_enc', null);
@@ -226,13 +213,13 @@ class Member extends DataObject {
 	function sendInfo($type = 'signup', $data = null) {
 		switch($type) {
 			case "signup":
-				$e = Object::create('Member_SignupEmail');
+				$e = new Member_SignupEmail();
 				break;
 			case "changePassword":
-				$e = Object::create('Member_ChangePasswordEmail');
+				$e = new Member_ChangePasswordEmail();
 				break;
 			case "forgotPassword":
-				$e = Object::create('Member_ForgotPasswordEmail');
+				$e = new Member_ForgotPasswordEmail();
 				break;
 		}
 
@@ -272,48 +259,6 @@ class Member extends DataObject {
 	 * @return Member_Validator Returns an instance of a
 	 *                          {@link Member_Validator} object.
 	 */
-	function getNewsletterSubscriptions(){
-		$groups =  $this->Groups()->toDropDownMap("ID","ID");
-		return $groups;
-	}
-	
-	/**
-	 * This does some cunning and automatically save the newsletter subscriptions
-	 * by adding and removing the member from the appropriate
-	 * groups based on a checkboxset field.
-	 * This function is called by the form handler
-	 * whenever form->saveInto($member); is called with an 
-	 * checkboxsetfield in the data with the name
-	 * "newsletterSubscriptions"
-	 */
-	function saveNewsletterSubscriptions($groups){
-    	$checkboxsetfield = new CheckboxSetField(
-			"NewsletterSubscriptions",
-			"",
-			$sourceitems = DataObject::get("NewsletterType")->toDropDownMap("GroupID","Title"),
-			$selectedgroups = $groups
-		);
-		return $this->Groups()->setByCheckboxSetField($checkboxsetfield);
-	}
-	
-	function removeAllNewsletterSubscriptions(){
-		$groups = $this->Groups();
-		$groupIDs = $groups->getIDList();
-		$newsletterTypes = DataObject::get("NewsletterType");
-		if($newsletterTypes&&$newsletterTypes->count()){
-			foreach($newsletterTypes as $type){
-				$newsletterGroupIDs[] = $type->GroupID;
-			}
-		}
-		if($newsletterGroupIDs) {
-			foreach($newsletterGroupIDs as $newsletterGroupID){
-				if($groupIDs&&in_array($newsletterGroupID, $groupIDs)){
-					$groups->remove($newsletterGroupID);
-				}
-			}
-		}
-	}
-	
 	function getValidator() {
 		return new Member_Validator();
 	}
@@ -386,7 +331,7 @@ class Member extends DataObject {
 	 *
 	 * @return string Returns a random password.
 	 */
-	static function create_new_password() {
+	static function createNewPassword() {
 		if(file_exists(Security::get_word_list())) {
 			$words = file(Security::get_word_list());
 
@@ -450,12 +395,6 @@ class Member extends DataObject {
 			}
 		}
 
-		if($this->SetPassword) $this->Password = $this->SetPassword;
-		
-		if(Director::isLive() &&
-			$this->changed['Password'] && $this->record['Password'] && 
-			Member::$notify_password_change) $this->sendInfo('changePassword');
-		
 		parent::onBeforeWrite();
 	}
 
@@ -482,16 +421,16 @@ class Member extends DataObject {
 	 * @return bool Returns TRUE if the member is in the given group,
 	 *              otherwise FALSE.
 	 */
-
 	public function inGroup($groupID) {
 		foreach($this->Groups() as $group) {
 			if($groupID == $group->ID)
 				return true;
-			}
+		}
 
 		return false;
 	}
-	
+
+
 	/**
 	 * Alias for {@link inGroup}
 	 *
@@ -832,8 +771,6 @@ class Member extends DataObject {
 /**
  * Special kind of {@link ComponentSet} that has special methods for
  * manipulating a user's membership
- * @package sapphire
- * @subpackage security
  */
 class Member_GroupSet extends ComponentSet {
 	/**
@@ -914,7 +851,7 @@ class Member_GroupSet extends ComponentSet {
 
 			// else we should be removing all from the necessary groups.
 			} else {
-				$remove = array_keys($sourceItems);
+				$remove = $sourceItems;
 			}
 
 			if($add)
@@ -1038,11 +975,6 @@ class Member_GroupSet extends ComponentSet {
 
 
 
-/**
- * Form for editing a member profile.
- * @package sapphire
- * @subpackage security
- */
 class Member_ProfileForm extends Form {
 	
 	function __construct($controller, $name, $member) {
@@ -1097,8 +1029,6 @@ class Member_ProfileForm extends Form {
 
 /**
  * Class used as template to send an email to new members
- * @package sapphire
- * @subpackage security
  */
 class Member_SignupEmail extends Email_Template {
 	protected $from = '';  // setting a blank from address uses the site's default administrator email
@@ -1155,8 +1085,6 @@ class Member_SignupEmail extends Email_Template {
 /**
  * Class used as template to send an email saying that the password has been
  * changed
- * @package sapphire
- * @subpackage security
  */
 class Member_ChangePasswordEmail extends Email_Template {
     protected $from = '';   // setting a blank from address uses the site's default administrator email
@@ -1173,8 +1101,6 @@ class Member_ChangePasswordEmail extends Email_Template {
 
 /**
  * Class used as template to send the forgot password email
- * @package sapphire
- * @subpackage security
  */
 class Member_ForgotPasswordEmail extends Email_Template {
     protected $from = '';  // setting a blank from address uses the site's default administrator email
@@ -1190,9 +1116,9 @@ class Member_ForgotPasswordEmail extends Email_Template {
 
 
 /**
- * Record to keep track of which records a member has unsubscribed from and when.
- * @package sapphire
- * @subpackage security
+ * Record to keep track of which records a member has unsubscribed from and
+ * when
+ *
  * @todo Check if that email stuff ($from, $to, $subject, $body) is needed
  *       here! (Markus)
  */
@@ -1249,8 +1175,6 @@ class Member_UnsubscribeRecord extends DataObject {
 
 /**
  * Member Validator
- * @package sapphire
- * @subpackage security
  */
 class Member_Validator extends RequiredFields {
 
@@ -1289,14 +1213,11 @@ class Member_Validator extends RequiredFields {
 
 		// if we are in a complex table field popup, use ctf[childID], else use
 		// ID
-		if(isset($_REQUEST['ctf']['childID']))
-			$id = $_REQUEST['ctf']['childID'];
-		elseif(isset($_REQUEST['ID']))
-			$id = $_REQUEST['ID'];
-		else
-			$id = null;
+		$id = (isset($_REQUEST['ctf']['childID']))
+			? $_REQUEST['ctf']['childID']
+			: $_REQUEST['ID'];
 
-		if($id && is_object($member) && $member->ID != $id) {
+		if(is_object($member) && $member->ID != $id) {
 			$emailField = $this->form->dataFieldByName('Email');
 			$this->validationError($emailField->id(),
 				_t('Member.VALIDATIONMEMBEREXISTS', "There already exists a member with this email"),

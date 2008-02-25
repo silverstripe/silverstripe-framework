@@ -1,14 +1,7 @@
 <?php
 
 /**
- * @package sapphire
- * @subpackage security
- */
-
-/**
  * Provides an interface to HTTP basic authentication.
- * @package sapphire
- * @subpackage security
  */
 class BasicAuth extends Object {
 	/**
@@ -17,15 +10,10 @@ class BasicAuth extends Object {
 	 */
 	static function requireLogin($realm, $permissionCode) {
 		if(self::$disabled) return true;
-		if(!Security::database_is_ready()) return true;
 		
 		
 		if(isset($_SERVER['PHP_AUTH_USER']) && isset($_SERVER['PHP_AUTH_PW'])) {
-			$member = MemberAuthenticator::authenticate(array(
-				'Email' => $_SERVER['PHP_AUTH_USER'], 
-				'Password' => $_SERVER['PHP_AUTH_PW'],
-			), null);
-			
+			$member = Security::authenticate($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW']);
 			if($member) {
 				$authenticated = true;
 			}

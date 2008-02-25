@@ -1,15 +1,8 @@
 <?php
-
-/**
- * @package sapphire
- * @subpackage search
- */
-
 /**
  * Standard basic search form
- * @package sapphire
- * @subpackage search
  */
+
 class SearchForm extends Form {
 	
 	protected $showInSearchTurnOn;
@@ -21,11 +14,11 @@ class SearchForm extends Form {
 		$this->showInSearchTurnOn = $showInSearchTurnOn;
 	
 		if(!$fields) {
-		        $fields = new FieldSet(new TextField("Search", _t('SearchForm.SEARCH', 'Search')));
+			$fields = new FieldSet(new TextField("Search", "Search"));
 		}
 		if(!$actions) {
 			$actions = new FieldSet(
-				new FormAction("getResults", _t('SearchForm.GO', 'Go'))
+				new FormAction("getResults", "Go")
 			);
 		}
 		
@@ -183,7 +176,7 @@ class SearchForm extends Form {
 		if(isset($objects)) $doSet = new DataObjectSet($objects);
 		else $doSet = new DataObjectSet();
 		
-		$doSet->setPageLimits($start, $numPerPage, $totalCount);
+		$doSet->setPageLimits(isset($_GET['start']) ? (int)$_GET['start'] : 0, $numPerPage, $totalCount);
 		return $doSet;
 
 

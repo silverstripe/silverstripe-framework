@@ -1,15 +1,8 @@
 <?php
 
 /**
- * @package sapphire
- * @subpackage view
- */
-
-/**
  * Requirements tracker, for javascript and css.
  * @todo Document the requirements tracker, and discuss it with the others.
- * @package sapphire
- * @subpackage view
  */
 class Requirements {
 	private static $javascript = array();
@@ -18,7 +11,6 @@ class Requirements {
 	private static $customCSS = array();
 	private static $customHeadTags = "";
 	private static $disabled = array();
-	private static $blocked = array();
 	
 	/**
 	 * Register the given javascript file as required.
@@ -122,7 +114,7 @@ class Requirements {
 	static function clear($fileOrID = null) {
 		if($fileOrID) {
 			foreach(array('javascript','css', 'customScript', 'customCSS') as $type) {
-				if(isset(Requirements::${$type}[$fileOrID])) {
+				if(Requirements::${$type}[$fileOrID]) {
 					Requirements::$disabled[$type][$fileOrID] = Requirements::${$type}[$fileOrID];
 					unset(Requirements::${$type}[$fileOrID]);
 				}
@@ -138,35 +130,6 @@ class Requirements {
 			Requirements::$customScript = array();
 			Requirements::$customCSS = array();
 		}
-	}
-	
-	/**
-	 * Needed to actively prevent the inclusion of a file,
-	 * e.g. when using your own prototype.js.
-	 * Blocking should only be used as an exception, because
-	 * it is hard to trace back. You can just block items with an
-	 * ID, so make sure you add an unique identifier to customCSS() and customScript().
-	 * 
-	 * @param string $fileOrID
-	 */
-	static function block($fileOrID) {
-		self::$blocked[$fileOrID] = $fileOrID;
-	}
-
-	/**
-	 * Removes an item from the blocking-list.
-	 * CAUTION: Does not "re-add" any previously blocked elements.
-	 * @param string $fileOrID
-	 */
-	static function unblock($fileOrID) {
-		unset(self::$blocked[$fileOrID]);
-	}
-
-	/**
-	 * Removes all items from the blocking-list.
-	 */
-	static function unblock_all() {
-		self::$blocked = array();
 	}
 	
 	/**
@@ -191,30 +154,30 @@ class Requirements {
 			$prefix = "";
 			$requirements = '';
 	
-			foreach(array_diff_key(self::$javascript,self::$blocked) as $file => $dummy) {
+			foreach(Requirements::$javascript as $file => $dummy) {
 				if(substr($file,0,7) == 'http://' || Director::fileExists($file)) {
 					$requirements .= "<script type=\"text/javascript\" src=\"$prefix$file\"></script>\n";
 				}
 			}
 			
-			if(self::$customScript) {
+			if(Requirements::$customScript) {
 				$requirements .= "<script type=\"text/javascript\">\n//<![CDATA[\n";
-				foreach(array_diff_key(self::$customScript,self::$blocked) as $script) {
+				foreach(Requirements::$customScript as $script) {
 					$requirements .= "$script\n";
 				}
 				$requirements .= "\n//]]>\n</script>\n";
 			}
-			foreach(array_diff_key(self::$css,self::$blocked) as $file => $params) {					
+			foreach(Requirements::$css as $file => $params) {					
 				if(Director::fileExists($file)) {
 					$media = (isset($params['media'])) ? " media=\"{$params['media']}\"" : "";
 					$requirements .= "<link rel=\"stylesheet\" type=\"text/css\"{$media} href=\"$prefix$file\" />\n";
 				}
 			}
-			foreach(array_diff_key(self::$customCSS,self::$blocked) as $css) {
+			foreach(Requirements::$customCSS as $css) {
 				$requirements .= "<style type=\"text/css\">\n$css\n</style>\n";
 			}
 			
-			$requirements .= self::$customHeadTags;
+			$requirements .= Requirements::$customHeadTags;
 	
 			if(isset($_GET['debug_profile'])) Profiler::unmark("Requirements::includeInHTML");
 			return eregi_replace("(</head[^>]*>)", $requirements . "\\1", $content);

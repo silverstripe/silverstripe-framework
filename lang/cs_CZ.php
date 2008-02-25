@@ -4,11 +4,7 @@ i18n::include_locale_file('sapphire', 'en_US');
 
 global $lang;
 
-if(array_key_exists('cs_CZ', $lang) && is_array($lang['cs_CZ'])) {
-	$lang['cs_CZ'] = array_merge($lang['en_US'], $lang['cs_CZ']);
-} else {
-	$lang['cs_CZ'] = $lang['en_US'];
-}
+$lang['cs_CZ'] = $lang['en_US'];
 
 $lang['cs_CZ']['BasicAuth']['ENTERINFO'] = 'Prosím zadejte uživatelské jméno a heslo.';
 $lang['cs_CZ']['BasicAuth']['ERRORNOTADMIN'] = 'Tento uživatel není administrátor.';

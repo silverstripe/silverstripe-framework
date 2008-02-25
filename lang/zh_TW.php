@@ -4,11 +4,7 @@ i18n::include_locale_file('sapphire', 'en_US');
 
 global $lang;
 
-if(array_key_exists('zh_TW', $lang) && is_array($lang['zh_TW'])) {
-	$lang['zh_TW'] = array_merge($lang['en_US'], $lang['zh_TW']);
-} else {
-	$lang['zh_TW'] = $lang['en_US'];
-}
+$lang['zh_TW'] = $lang['en_US'];
 
 $lang['zh_TW']['BasicAuth']['ENTERINFO'] = '請輸入帳號密碼。';
 $lang['zh_TW']['BasicAuth']['ERRORNOTADMIN'] = '那個使用者不是管理員。';

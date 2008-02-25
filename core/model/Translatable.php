@@ -1,11 +1,6 @@
 <?php
 
 /**
- * @package sapphire
- * @subpackage misc
- */
-
-/**
  * The {Translatable} decorator allows your DataObjects to have versions in different languages,
  * defining which fields are can be translated.
  * 
@@ -28,8 +23,7 @@
  * e.g. when overriding the get_one()-calls (which are already extended by {Translatable}).
  * 
  * @author Bernat Foj Capell <bernat@silverstripe.com>
- * @package sapphire
- * @subpackage misc
+ * 
  */
 class Translatable extends DataObjectDecorator {
 	
@@ -149,7 +143,7 @@ class Translatable extends DataObjectDecorator {
 	/**
 	 * Set default language.
 	 * 
-	 * @param $lang String
+	 * @paran $lang String
 	 */
 	static function set_default_lang($lang) {
 		self::$default_lang = $lang;
@@ -610,17 +604,17 @@ class Translatable extends DataObjectDecorator {
 			}
 			$fields->addFieldsToTab(
 				'Root',
-				new Tab(_t('Translatable.TRANSLATIONS', 'Translations'),
-					new HeaderField(_t('Translatable.CREATE', 'Create new translation'), 2),
-					$langDropdown = new LanguageDropdownField("NewTransLang", _t('Translatable.NEWLANGUAGE', 'New language'), $alreadyTranslatedLangs),
-					$createButton = new InlineFormAction('createtranslation',_t('Translatable.CREATEBUTTON', 'Create'))
+				new Tab("Translations",
+					new HeaderField("Create new translation", 2),
+					$langDropdown = new LanguageDropdownField("NewTransLang", "New language", $alreadyTranslatedLangs),
+					$createButton = new InlineFormAction('createtranslation',"Create")
 				)
 			);
 			if (count($alreadyTranslatedLangs)) {
 				$fields->addFieldsToTab(
 					'Root.Translations',
 					new FieldSet(
-						new HeaderField(_t('Translatable.EXISTING', 'Existing translations:'), 3),
+						new HeaderField("Existing translations:", 3),
 						new LiteralField('existingtrans',implode(', ',$alreadyTranslatedLangs))
 					)
 				);

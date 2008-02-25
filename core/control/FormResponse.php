@@ -1,10 +1,4 @@
 <?php
-
-/**
- * @package forms
- * @subpackage core
- */
-
 /**
  * This class collects all output that needs to be returned after an Form-Request to the client. It automatically determines
  * if it needs to send back javascript after an Ajax-Request or just redirect to another page (on a normal request).
@@ -25,11 +19,8 @@
  * - Please DON'T escape literal parameters which are passed to FormResponse, they are escaped automatically.
  * - Some functions assume a {LeftAndMain}-based environment (e.g. load_form())
  * 
- * @todo Force a specific execution order ($forceTop, $forceBottom)Ω
- * @todo Extension to return different formats, e.g. JSON or XML
- *
- * @package forms
- * @subpackage core
+ * TODO Force a specific execution order ($forceTop, $forceBottom)
+ * TODO Extension to return different formats, e.g. JSON or XML
  */
 class FormResponse {
 	
@@ -107,7 +98,7 @@ class FormResponse {
 	 * 
 	 * @param $scriptContent string
 	 * 
-	 * @todo Should this content be escaped?
+	 * TODO Should this content be escaped?
 	 */
 	static function add($scriptContent, $uniquenessID = null) {
 		if(isset($uniquenessID)) {
@@ -219,7 +210,7 @@ class FormResponse {
 	 * @param $replaceMethod string Method for replacing - either 'replace' (=outerHTML) or 'update' (=innerHTML)
 	 *   (Caution: "outerHTML" might cause problems on the client-side, e.g. on table-tags)
 	 * 
-	 * @todo More fancy replacing with loading-wheel etc.
+	 * TODO More fancy replacing with loading-wheel etc.
 	 */
 	static function update_dom_id($domID, $domContent, $reapplyBehaviour = true, $replaceMethod = 'replace', $uniquenessID = null) {
 		//self::$non_ajax_content = $domContent;

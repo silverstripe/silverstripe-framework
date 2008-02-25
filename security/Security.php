@@ -1,14 +1,7 @@
 <?php
 
 /**
- * @package sapphire
- * @subpackage security
- */
-
-/**
  * Implements a basic security model
- * @package sapphire
- * @subpackage security
  */
 class Security extends Controller {
 
@@ -131,7 +124,7 @@ class Security extends Controller {
 		if(Member::currentUserID()) {
 			// user_error( 'PermFailure with member', E_USER_ERROR );
 
-			$message = isset($messageSet['alreadyLoggedIn'])
+			$message = $messageSet['alreadyLoggedIn']
 										? $messageSet['alreadyLoggedIn']
 										: $messageSet['default'];
 
@@ -243,7 +236,7 @@ class Security extends Controller {
 		}
 
 		$tmpPage = new Page();
-		$tmpPage->Title = _t('Security.LOGIN', 'Log in');
+		$tmpPage->Title = "Log in";
 		$tmpPage->URLSegment = "Security";
 		$tmpPage->ID = -1; // Set the page ID to -1 so we dont get the top level pages as its children
 
@@ -634,19 +627,10 @@ class Security extends Controller {
 	 *               encryption algorithms.
 	 */
 	public static function get_encryption_algorithms() {
-		$result = function_exists('hash_algos') ? hash_algos() : array(); 
-
-		if(count($result) == 0) { 
-			if(function_exists('md5')) $result[] = 'md5'; 
-
-			if(function_exists('sha1')) $result[] = 'sha1'; 
-		} else {
-			foreach ($result as $i => $algorithm) {
-				if (preg_match('/,/',$algorithm)) {
-					unset($result[$i]);
-				}
-			}
-		}
+		// We return all the hashes that don't have commas in the name, as database exports get confused by comma in ENUM keys. :-(
+		return array(
+			'md4', 'md5', 'sha1', 'sha256', 'sha384', 'sha512', 'ripemd128', 'ripemd160', 'whirlpool', 'snefru', 'gost', 'alder32', 'crc32', 'crc32b'
+		);
 
 		return $result;
 	}
@@ -793,16 +777,16 @@ class Security extends Controller {
 		// Only administrators can run this method
 		if(!Member::currentUser() || !Member::currentUser()->isAdmin()) {
 			Security::permissionFailure($this,
-				_t('Security.PERMFAILURE',' This page is secured and you need administrator rights to access it. 
-				Enter your credentials below and we will send you right along.'));
+				"This page is secured and you need administrator rights to access it. " .
+				"Enter your credentials below and we will send you right along.");
 			return;
 		}
 
 
 		if(self::$encryptPasswords == false) {
-		        print '<h1>'._t('Security.ENCDISABLED1', 'Password encryption disabled!')."</h1>\n";
-			print '<p>'._t('Security.ENCDISABLED2', 'To encrypt your passwords change your password settings by adding')."\n";
-			print "<pre>Security::encrypt_passwords(true);</pre>\n"._t('Security.ENCDISABLED3', 'to mysite/_config.php')."</p>";
+			print "<h1>Password encryption disabled!</h1>\n";
+			print "<p>To encrypt your passwords change your password settings by adding\n";
+			print "<pre>Security::encrypt_passwords(true);</pre>\nto mysite/_config.php</p>";
 
 			return;
 		}
@@ -813,19 +797,20 @@ class Security extends Controller {
 			"PasswordEncryption = 'none' AND Password IS NOT NULL");
 
 		if(!$members) {
-		        print '<h1>'._t('Security.NOTHINGTOENCRYPT1', 'No passwords to encrypt')."</h1>\n";
-			print '<p>'._t('Security.NOTHINGTOENCRYPT2', 'There are no members with a clear text password that could be encrypted!')."</p>\n";
+			print "<h1>No passwords to encrypt</h1>\n";
+			print "<p>There are no members with a clear text password that could be encrypted!</p>\n";
 
 			return;
 		}
 
 		// Encrypt the passwords...
-		print '<h1>'._t('Security.ENCRYPT', 'Encrypting all passwords').'</h1>';
-		print '<p>'.sprintf(_t('Security.ENCRYPTWITH', 'The passwords will be encrypted using the &quot;%s&quot; algorithm'), htmlentities(self::$encryptionAlgorithm));
+		print "<h1>Encrypting all passwords</h1>";
+		print '<p>The passwords will be encrypted using the &quot;' .
+			htmlentities(self::$encryptionAlgorithm) . '&quot; algorithm ';
 
 		print (self::$useSalt)
-		        ? _t('Security.ENCRYPTWITHSALT', 'with a salt to increase the security.')."</p>\n"
-		        : _t('Security.ENCRYPTWITHOUTSALT', 'without using a salt to increase the security.')."</p><p>\n";
+			? "with a salt to increase the security.</p>\n"
+			: "without using a salt to increase the security.</p><p>\n";
 
 		foreach($members as $member) {
 			// Force the update of the member record, as new passwords get
@@ -834,9 +819,9 @@ class Security extends Controller {
 			$member->forceChange();
 			$member->write();
 
-			print '  '._t('Security.ENCRYPTEDMEMBERS', 'Encrypted credentials for member &quot;');
-			print htmlentities($member->getTitle()) . '&quot; ('._t('Security.ID', 'ID:').' ' . $member->ID .
-			        '; '._t('Security.EMAIL', 'E-Mail:').' ' . htmlentities($member->Email) . ")<br />\n";
+			print "  Encrypted credentials for member &quot;";
+			print htmlentities($member->getTitle()) . '&quot; (ID: ' . $member->ID .
+				'; E-Mail: ' . htmlentities($member->Email) . ")<br />\n";
 		}
 
 		print '</p>';

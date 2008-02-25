@@ -23,13 +23,14 @@ ComplexTableFieldPopupForm.prototype = {
 		// only do ajaxy stuff for content loaded in an iframe
 		if(window != top && parent.parent.GB_hide) {
 			var theForm = Event.findElement(e,"form");
-			if(parent.parent.statusMessage != undefined) parent.parent.statusMessage('saving');
 			var submitButton = document.getElementsBySelector("input.action",theForm)[0];
-			if(typeof submitButton != 'undefined') {
-				submitButton.disabled = true;
-				Element.addClassName(submitButton,'loading');
-			}
+			if(parent.parent.statusMessage != undefined) parent.parent.statusMessage('saving');
+			submitButton.setAttribute("disabled","true");
 
+			submitButton._oldValue = submitButton.value;
+			submitButton.value = ingize(submitButton.value);
+			Element.addClassName(submitButton,'loading');
+			
 			new parent.parent.Ajax.Request(
 				theForm.getAttribute("action"),
 				{
@@ -47,7 +48,6 @@ ComplexTableFieldPopupForm.prototype = {
 	
 	updateTableAfterSave : function(response) {
 		eval(response.responseText);
-
 		var theForm = document.getElementsByTagName("form")[0];
 
 		// don't update when validation is present and failed
@@ -60,20 +60,18 @@ ComplexTableFieldPopupForm.prototype = {
 				}
 			);
 		} else {
-			var submitButton = document.getElementsBySelector("input.action",theForm)[0];
-			if(typeof submitButton != 'undefined') {
-				submitButton.disabled = false;
-				Element.removeClassName(submitButton,'loading');
-			}
+			var submitbutton = document.getElementsBySelector("input.action",theForm)[0];
+			submitbutton.disabled = false;
+			submitButton.value = submitButton._oldValue;
+			Element.removeClassName(submitButton,'loading');
 		}
 	},
 	
 	ajaxErrorHandler: function(response) {
-		var submitButton = document.getElementsBySelector("input.action",theForm)[0];
-		if(typeof submitButton != 'undefined') {
-			submitButton.disabled = false;
-			Element.removeClassName(submitButton,'loading');
-		}
+		var submitButton = document.getElementsBySelector("form input.action")[0];
+		submitButton.disabled = false;
+		submitButton.value = submitButton._oldValue;
+		Element.removeClassName(submitButton,'loading');
 		
 		// TODO does not work due to sandbox-iframe restrictions?
 		if(typeof(parent.parent.ajaxErrorHandler) == 'function') {
@@ -87,10 +85,9 @@ ComplexTableFieldPopupForm.prototype = {
 		var theForm =document.getElementsByTagName("form")[0];
 		
 		var submitButton = document.getElementsBySelector("input.action",theForm)[0];
-		if(typeof submitButton != 'undefined') {
-			submitButton.disabled = false;
-			Element.removeClassName(submitButton,'loading');
-		}
+		submitButton.disabled = false;
+		submitButton.value = submitButton._oldValue;
+		Element.removeClassName(submitButton,'loading');
 		
 		// TODO Fix DOM-relation after pagination inside popup
 		if(this.GB_OpenerObj) {

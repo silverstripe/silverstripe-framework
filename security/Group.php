@@ -1,15 +1,5 @@
 <?php
 
-/**
- * @package sapphire
- * @subpackage security
- */
-
-/**
- * A security group.
- * @package sapphire
- * @subpackage security
- */
 class Group extends DataObject {
 	// This breaks too many things for upgraded sites
 	// static $default_sort = "Sort";
@@ -177,33 +167,7 @@ class Group extends DataObject {
 			$this->setCode($this->Title);
 		}
 	}
-	
-	public function canEdit() {
-		if($this->hasMethod('alternateCanEdit')) return $this->alternateCanEdit();
-		else return Member::currentUserID() ? true : false;
-	}
-
-	/**
-	 * Returns all of the children for the CMS Tree.
-	 * Filters to only those groups that the current user can edit
-	 */
-	function AllChildrenIncludingDeleted() {
-		$children = $this->extInstance('Hierarchy')->AllChildrenIncludingDeleted();
-		$filteredChildren = new DataObjectSet();
-		
-		if($children) foreach($children as $child) {
-			if($child->canEdit()) $filteredChildren->push($child);
-		}
-		
-		return $filteredChildren;
-	}
 }
-
-/**
- * A group representing everyone, including users not logged in.
- * @package sapphire
- * @subpackage security
- */
 class Group_Unsecure extends Group {
 }
 ?>

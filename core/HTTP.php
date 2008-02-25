@@ -1,16 +1,8 @@
 <?php
 
 /**
- * @package sapphire
- * @subpackage misc
- */
-
-/**
  * A class with HTTP-related helpers.
  * Like Debug, this is more a bundle of methods than a class ;-)
- * 
- * @package sapphire
- * @subpackage misc
  */
 class HTTP {
 
@@ -43,7 +35,6 @@ class HTTP {
 	 * Turn all relative URLs in the content to absolute URLs
 	 */
 	static function absoluteURLs($html) {
-		$html = str_replace('$CurrentPageURL', $_SERVER['REQUEST_URI'], $html);
 		return HTTP::urlRewriter($html, '(substr($URL,0,1) == "/") ? ( Director::protocolAndHost() . $URL ) : ( (ereg("^[A-Za-z]+:", $URL)) ? $URL : Director::absoluteBaseURL() . $URL )' );
 	}
 

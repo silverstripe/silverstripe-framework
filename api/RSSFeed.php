@@ -1,26 +1,10 @@
 <?php
-
-/**
- * @package sapphire
- * @subpackage integration
- */
-
 /**
  * RSSFeed class
  *
  * This class is used to create an RSS feed.
- * @package sapphire
- * @subpackage integration
  */
 class RSSFeed extends ViewableData {
-	/**
-	 * Casting information for this object's methods.
-	 * Let's us use $Title.XML in templates
-	 */
-	public static $casting = array(
-		"Title" => "Varchar",
-		"Description" => "Varchar",
-	);
 
 	/**
 	 * Holds the feed entries
@@ -65,7 +49,7 @@ class RSSFeed extends ViewableData {
 	protected $descriptionField;
 
 	/**
-	 * Name of the author field of feed entries
+	 Name of the author field of feed entries
 	 *
 	 * @var string
 	 */
@@ -201,10 +185,9 @@ class RSSFeed extends ViewableData {
  * This class is used for entries of an RSS feed.
  *
  * @see RSSFeed
- * @package sapphire
- * @subpackage integration
  */
 class RSSFeed_Entry extends ViewableData {
+
 	/**
 	 * The object that represents the item, it contains all the data.
 	 *
@@ -227,7 +210,7 @@ class RSSFeed_Entry extends ViewableData {
 	protected $descriptionField;
 
 	/**
-	 * Name of the author field of feed entries
+	 Name of the author field of feed entries
 	 *
 	 * @var string
 	 */

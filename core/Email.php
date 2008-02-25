@@ -1,27 +1,10 @@
 <?php
 
-/**
- * @package sapphire
- * @subpackage email
- */
+define('X_MAILER', 'SilverStripe Mailer - version 2006.06.21 (Sent from "'.$_SERVER['SERVER_NAME'].'")');
 
-if(isset($_SERVER['SERVER_NAME'])) {
-	/**
-	 * X-Mailer header value on emails sent
-	 */
-	define('X_MAILER', 'SilverStripe Mailer - version 2006.06.21 (Sent from "'.$_SERVER['SERVER_NAME'].'")');
-} else {
-	/**
-	 * @ignore
-	 */
-	define('X_MAILER', 'SilverStripe Mailer - version 2006.06.21');
-}
 // Note: The constant 'BOUNCE_EMAIL' should be defined as a valid email address for where bounces should be returned to.
-
 /**
  * Class to support sending emails.
- * @package sapphire
- * @subpackage email
  */
 class Email extends ViewableData {
 	protected $from, $to, $subject, $body, $plaintext_body, $cc, $bcc;
@@ -143,19 +126,11 @@ class Email extends ViewableData {
 				"From" => $this->from,
 				"Subject" => $this->subject,
 				"Body" => $this->body,
-				"BaseURL" => $this->BaseURL(),
-				"IsEmail" => true,
+				"BaseURL" => $this->BaseURL()
 			));
 		} else {
 			return $this;
 		}
-	}
-	
-	/**
-	 * Used by SSViewer templates to detect if we're rendering an email template rather than a page template
-	 */
-	public function IsEmail() {
-		return true;
 	}
 	
 	/**
@@ -375,11 +350,6 @@ class Email extends ViewableData {
     }
 }
 
-/**
- * Implements an email template that can be populated.
- * @package sapphire
- * @subpackage email
- */
 class Email_Template extends Email {
 	public function __construct() {
 	}
@@ -440,13 +410,13 @@ function htmlEmail($to, $from, $subject, $htmlContent, $attachedFiles = false, $
 
 
 	// Make the plain text part
-	$headers["Content-Type"] = "text/plain; charset=\"utf-8\"";
+	$headers["Content-Type"] = "text/plain; charset=\"iso-8859-15\"";
 	$headers["Content-Transfer-Encoding"] = $plainEncoding ? $plainEncoding : "quoted-printable";
 
 	$plainPart = processHeaders($headers, ($plainEncoding == "base64") ? chunk_split(base64_encode($plainContent),60) : wordwrap($plainContent,120));
 
 	// Make the HTML part
-	$headers["Content-Type"] = "text/html; charset=\"utf-8\"";
+	$headers["Content-Type"] = "text/html; charset=\"iso-8859-15\"";
         
 	
 	// Add basic wrapper tags if the body tag hasn't been given
@@ -454,7 +424,7 @@ function htmlEmail($to, $from, $subject, $htmlContent, $attachedFiles = false, $
 		$htmlContent =
 			"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\">\n" .
 			"<HTML><HEAD>\n" .
-			"<META http-equiv=Content-Type content=\"text/html; charset=utf-8\">\n" .
+			"<META http-equiv=Content-Type content=\"text/html; charset=iso-8859-15\">\n" .
 			"<STYLE type=3Dtext/css></STYLE>\n\n".
 			"</HEAD>\n" .
 			"<BODY bgColor=#ffffff>\n" .
@@ -558,7 +528,7 @@ function plaintextEmail($to, $from, $subject, $plainContent, $attachedFiles, $cu
 
 
 	// Make the plain text part
-	$headers["Content-Type"] = "text/plain; charset=\"utf-8\"";
+	$headers["Content-Type"] = "text/plain; charset=\"iso-8859-15\"";
 	$headers["Content-Transfer-Encoding"] = $plainEncoding ? $plainEncoding : "quoted-printable";
 
 	$plainContent = ($plainEncoding == "base64") ? chunk_split(base64_encode($plainContent),60) : QuotedPrintable_encode($plainContent);
@@ -663,7 +633,7 @@ function wrapImagesInline($htmlContent) {
 	
 	
 	// Make the HTML part
-	$headers["Content-Type"] = "text/html; charset=\"utf-8\"";
+	$headers["Content-Type"] = "text/html; charset=\"iso-8859-15\"";
 	$headers["Content-Transfer-Encoding"] = "quoted-printable";
 	$multiparts[] = processHeaders($headers, QuotedPrintable_encode($replacedContent));
 	
@@ -787,7 +757,7 @@ function getMimeType($filename) {
 function loadMimeTypes() {
 	$mimetypePathCustom = '/etc/mime.types';
 	$mimetypePathGeneric = Director::baseFolder() . '/sapphire/email/mime.types';
-	$mimeTypes = file_exists($mimetypePathGeneric) ?  file($mimetypePathGeneric) : file($mimetypePathCustom);
+	$mimeTypes = file_exists($mimetypePathCustom) ? file($mimetypePathCustom) : file($mimetypePathGeneric);
 	foreach($mimeTypes as $typeSpec) {
 		if(($typeSpec = trim($typeSpec)) && substr($typeSpec,0,1) != "#") {
 			$parts = split("[ \t\r\n]+", $typeSpec);
@@ -807,10 +777,8 @@ function loadMimeTypes() {
 }
 
 /**
- * Base class that email bounce handlers extend
- * @package sapphire
- * @subpackage email
- */
+* Base class that email bounce handlers extend
+*/
 class Email_BounceHandler extends Controller {
 	
 	function init() {
@@ -925,11 +893,6 @@ class Email_BounceHandler extends Controller {
     
 }
 
-/**
- * Database record for recording a bounced email
- * @package sapphire
- * @subpackage email
- */
 class Email_BounceRecord extends DataObject {
     static $db = array(
         'BounceEmail' => 'Varchar',
@@ -945,8 +908,6 @@ class Email_BounceRecord extends DataObject {
 /**
  * This class is responsible for ensuring that members who are on it receive NO email 
  * communication at all. any correspondance is caught before the email is sent.
- * @package sapphire
- * @subpackage email
  */
 class Email_BlackList extends DataObject{
 	 static $db = array(

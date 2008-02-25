@@ -1,14 +1,8 @@
 <?php
-
-/**
- * @package sapphire
- * @subpackage model
- */
-
 /**
  * Represents a boolean field.
- * @package sapphire
- * @subpackage model
+ * 
+ * @param $defaultVal int
  */
 class Boolean extends DBField {
 	

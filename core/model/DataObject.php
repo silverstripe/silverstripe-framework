@@ -2,15 +2,13 @@
 
 /**
  * @package sapphire
- * @subpackage model
+ * @subpackage core
  */
 
 /**
  * A single database record & abstract class for the data-access-model.
- * @package sapphire
- * @subpackage model
  */
-class DataObject extends ViewableData implements DataObjectInterface {
+class DataObject extends Controller {
 	/**
 	 * Data stored in this objects database record. An array indexed
 	 * by fieldname.
@@ -95,7 +93,7 @@ class DataObject extends ViewableData implements DataObjectInterface {
 		parent::__construct();
 
 		// Must be called after parent constructor
-		if(!$isSingleton && (!isset($this->record['ID']) || !$this->record['ID'])) {
+		if(!$isSingleton && !$this->record['ID']) {
 			$this->populateDefaults();
 		}
 
@@ -115,10 +113,13 @@ class DataObject extends ViewableData implements DataObjectInterface {
 
 	/**
 	 * Create a duplicate of this node.
-	 * Caution: Doesn't duplicate relations.
 	 * 
 	 * @param $doWrite Perform a write() operation before returning the object.  If this is true, it will create the duplicate in the database.
+	 * 
 	 * @return DataObject A duplicate of this node. The exact type will be the type of this node.
+	 * Caution: Doesn't duplicate relations.
+	 * 
+	 * @return DataObject
 	 */
 	function duplicate($doWrite = true) {
 		$className = $this->class;
@@ -232,27 +233,6 @@ class DataObject extends ViewableData implements DataObjectInterface {
 	}
 
 	/**
-	 * Get the translated user friendly singular name of this DataObject
-	 * same as singular_name() but runs it through the translating function
-	 *
-	 * NOTE:
-	 * It uses as default text if no translation found the $add_action when
-	 * defined or else the default text is singular_name()
-	 *
-	 * Translating string is in the form:
-	 *     $this->class.SINGULARNAME
-	 * Example:
-	 *     Page.SINGULARNAME
-	 *
-	 * @return string User friendly translated singular name of this DataObject
-	 */
-	function i18n_singular_name()
-	{
-	        $name = (!empty($this->add_action)) ? $this->add_action : $this->singular_name();
-		return _t($this->class.'.SINGULARNAME', $name);
-	}
-
-	/**
 	 * Get the user friendly plural name of this DataObject
 	 * If the name is not defined (by renaming $plural_name in the subclass),
 	 * this returns a pluralised version of the class name.
@@ -269,22 +249,6 @@ class DataObject extends ViewableData implements DataObjectInterface {
 
 			return ucfirst($name . 's');
 		}
-	}
-
-	/**
-	 * Get the translated user friendly plural name of this DataObject
-	 * Same as plural_name but runs it through the translation function
-	 * Translation string is in the form:
-	 *      $this->class.PLURALNAME
-	 * Example:
-	 *      Page.PLURALNAME
-	 *
-	 * @return string User friendly translated plural name of this DataObject
-	 */
-	function i18n_plural_name()
-	{
-	        $name = $this->plural_name();
-		return _t($this->class.'.PLURALNAME', $name);
 	}
 
 	/**
@@ -508,7 +472,6 @@ class DataObject extends ViewableData implements DataObjectInterface {
 	public function write($showDebug = false, $forceInsert = false, $forceWrite = false) {
 		$firstWrite = false;
 		$this->brokenOnWrite = true;
-		$isNewRecord = false;
 		$this->onBeforeWrite();
 		if($this->brokenOnWrite) {
 			user_error("$this->class has a broken onBeforeWrite() function.  Make sure that you call parent::onBeforeWrite().", E_USER_ERROR);
@@ -530,95 +493,92 @@ class DataObject extends ViewableData implements DataObjectInterface {
 		}
 
 		// No changes made
-		if($this->changed) {
-			foreach($this->getClassAncestry() as $ancestor) {
-				if(ClassInfo::hasTable($ancestor))
-					$ancestry[] = $ancestor;
+		if(!$this->changed) {
+			return $this->record['ID'];
+		}
+
+		foreach($this->getClassAncestry() as $ancestor) {
+			if(ClassInfo::hasTable($ancestor))
+				$ancestry[] = $ancestor;
+		}
+
+		// Look for some changes to make
+		unset($this->changed['ID']);
+
+		$hasChanges = false;
+		foreach($this->changed as $fieldName => $changed) {
+			if($changed) {
+				$hasChanges = true;
+				break;
 			}
+		}
 
-			// Look for some changes to make
-			unset($this->changed['ID']);
-
-			$hasChanges = false;
-			foreach($this->changed as $fieldName => $changed) {
-				if($changed) {
-					$hasChanges = true;
-					break;
-				}
-			}
-
-			if($hasChanges || $forceWrite || !$this->record['ID']) {
+		if($hasChanges || $forceWrite || !$this->record['ID']) {
 			
-				// New records have their insert into the base data table done first, so that they can pass the 
-				// generated primary key on to the rest of the manipulation
-				if(!$this->record['ID'] && isset($ancestry[0])) {
-					$baseTable = $ancestry[0];
+			// New records have their insert into the base data table done first, so that they can pass the 
+			// generated primary key on to the rest of the manipulation
+			if(!$this->record['ID'] && isset($ancestry[0])) {
+				$baseTable = $ancestry[0];
 
-					DB::query("INSERT INTO `{$baseTable}` SET Created = NOW()");
-					$this->record['ID'] = DB::getGeneratedID($baseTable);
-					$this->changed['ID'] = 2;
+				DB::query("INSERT INTO `{$baseTable}` SET Created = NOW()");
+				$this->record['ID'] = DB::getGeneratedID($baseTable);
+				$this->changed['ID'] = 2;
 
-					$isNewRecord = true;
-				}
+				$isNewRecord = true;
+			}
 
-				// Divvy up field saving into a number of database manipulations
-				if(isset($ancestry) && is_array($ancestry)) {
-					foreach($ancestry as $idx => $class) {
-						$classSingleton = singleton($class);
-						foreach($this->record as $fieldName => $value) {
-							if(isset($this->changed[$fieldName]) && $this->changed[$fieldName] && $fieldType = $classSingleton->fieldExists($fieldName)) {
-								$manipulation[$class]['fields'][$fieldName] = $value ? ("'" . addslashes($value) . "'") : singleton($fieldType)->nullValue();
-							}
-						}
-
-						// Add the class name to the base object
-						if($idx == 0) {
-							$manipulation[$class]['fields']["LastEdited"] = "now()";
-							if($dbCommand == 'insert') {
-								$manipulation[$class]['fields']["Created"] = "now()";
-								//echo "<li>$this->class - " .get_class($this);
-								$manipulation[$class]['fields']["ClassName"] = "'$this->class'";
-							}
-						}
-
-						// In cases where there are no fields, this 'stub' will get picked up on
-						if(ClassInfo::hasTable($class)) {
-							$manipulation[$class]['command'] = $dbCommand;
-							$manipulation[$class]['id'] = $this->record['ID'];
-						} else {
-							unset($manipulation[$class]);
+			// Divvy up field saving into a number of database manipulations
+			if(isset($ancestry) && is_array($ancestry)) {
+				foreach($ancestry as $idx => $class) {
+					$classSingleton = singleton($class);
+					foreach($this->record as $fieldName => $value) {
+						if(isset($this->changed[$fieldName]) && $this->changed[$fieldName] && $fieldType = $classSingleton->fieldExists($fieldName)) {
+							$manipulation[$class]['fields'][$fieldName] = $value ? ("'" . addslashes($value) . "'") : singleton($fieldType)->nullValue();
 						}
 					}
+
+					// Add the class name to the base object
+					if($idx == 0) {
+						$manipulation[$class]['fields']["LastEdited"] = "now()";
+						if($dbCommand == 'insert') {
+							$manipulation[$class]['fields']["Created"] = "now()";
+							//echo "<li>$this->class - " .get_class($this);
+							$manipulation[$class]['fields']["ClassName"] = "'$this->class'";
+						}
+					}
+
+					// In cases where there are no fields, this 'stub' will get picked up on
+					if(ClassInfo::hasTable($class)) {
+						$manipulation[$class]['command'] = $dbCommand;
+						$manipulation[$class]['id'] = $this->record['ID'];
+					} else {
+						unset($manipulation[$class]);
+					}
 				}
-
-
-				$this->extend('augmentWrite', $manipulation);
-				// New records have their insert into the base data table done first, so that they can pass the
-				// generated ID on to the rest of the manipulation
-				if(isset($isNewRecord) && $isNewRecord && isset($manipulation[$baseTable])) {
-					$manipulation[$baseTable]['command'] = 'update';
-				}
-				DB::manipulate($manipulation);
-
-				if(isset($isNewRecord) && $isNewRecord) {
-					DataObjectLog::addedObject($this);
-				} else {
-					DataObjectLog::changedObject($this);
-				}
-
-				$this->changed = null;
-			} elseif ( $showDebug ) {
-				echo "<b>Debug:</b> no changes for DataObject<br />";
 			}
 
-			// Clears the cache for this object so get_one returns the correct object.
-			$this->flushCache();
 
-			if(!isset($this->record['Created'])) {
-				$this->record['Created'] = date('Y-m-d H:i:s');
+			$this->extend('augmentWrite', $manipulation);
+			// New records have their insert into the base data table done first, so that they can pass the
+			// generated ID on to the rest of the manipulation
+			if(isset($isNewRecord) && $isNewRecord && isset($manipulation[$baseTable])) {
+				$manipulation[$baseTable]['command'] = 'update';
 			}
-			$this->record['LastEdited'] = date('Y-m-d H:i:s');
+			DB::manipulate($manipulation);
+
+			if(isset($isNewRecord) && $isNewRecord) {
+				DataObjectLog::addedObject($this);
+			} else {
+				DataObjectLog::changedObject($this);
+			}
+
+			$this->changed = null;
+		} elseif ( $showDebug ) {
+			echo "<b>Debug:</b> no changes for DataObject<br />";
 		}
+
+		// Clears the cache for this object so get_one returns the correct object.
+		$this->flushCache();
 
 		// Write ComponentSets as necessary
 		if($this->components) {
@@ -626,6 +586,11 @@ class DataObject extends ViewableData implements DataObjectInterface {
 				$component->write($firstWrite);
 			}
 		}
+
+		if(!isset($this->record['Created'])) {
+			$this->record['Created'] = date('Y-m-d H:i:s');
+		}
+		$this->record['LastEdited'] = date('Y-m-d H:i:s');
 
 		return $this->record['ID'];
 	}
@@ -765,42 +730,39 @@ class DataObject extends ViewableData implements DataObjectInterface {
 	 * @param string $sort A sort expression to be inserted into the ORDER BY clause. If omitted, the static field $default_sort on the component class will be used.
 	 * @param string $join A single join clause. This can be used for filtering, only 1 instance of each DataObject will be returned.
 	 * @param string $limit A limit expression to be inserted into the LIMIT clause
+	 * @param string $having A filter to be inserted into the HAVING clause
 	 *
 	 * @return ComponentSet The components of the one-to-many relationship.
 	 */
-	public function getComponents($componentName, $filter = "", $sort = "", $join = "", $limit = "") {
-		$result = null;
-		
-		$sum = md5("{$filter}_{$sort}_{$join}_{$limit}");
-		if(isset($this->componentCache[$componentName . '_' . $sum]) && false != $this->componentCache[$componentName . '_' . $sum]) {
-			return $this->componentCache[$componentName . '_' . $sum];
-		}
+	public function getComponents($componentName, $filter = "", $sort = "", $join = "", $limit = "", $having = "") {
+    	$sum = md5("{$filter}_{$sort}_{$join}_{$limit}_{$having}");
+    	if(isset($this->componentCache[$componentName . '_' . $sum]) && false != $this->componentCache[$componentName . '_' . $sum]) {
+	    	return $this->componentCache[$componentName . '_' . $sum];
+    	}
 
 		if(!$componentClass = $this->has_many($componentName)) {
 			user_error("DataObject::getComponents(): Unknown 1-to-many component '$componentName' on class '$this->class'", E_USER_ERROR);
 		}
-		
+
+		$componentObj = singleton($componentClass);
+		$id = $this->getField("ID");
 		$joinField = $this->getComponentJoinField($componentName);
-		
-		if($this->isInDB()) { //Check to see whether we should query the db
-			$componentObj = singleton($componentClass);
-			$id = $this->getField("ID");
-			
-			// get filter
-			$combinedFilter = "$joinField = '$id'";
-			if($filter) $combinedFilter .= " AND {$filter}";
-			
-			$result = $componentObj->instance_get($combinedFilter, $sort, $join, $limit, "ComponentSet");
-		}
-		
+
+		// get filter
+		$combinedFilter = "$joinField = '$id'";
+		if($filter) $combinedFilter .= " AND {$filter}";
+
+		$result = $componentObj->instance_get($combinedFilter, $sort, $join, $limit, "ComponentSet", $having);
 		if(!$result) {
-			// If this record isn't in the database, then we want to hold onto this specific ComponentSet,
-			// because it's the only copy of the data that we have.
 			$result = new ComponentSet();
+		}
+		$result->setComponentInfo("1-to-many", $this, null, null, $componentClass, $joinField);
+
+		// If this record isn't in the database, then we want to hold onto this specific ComponentSet,
+		// because it's the only copy of the data that we have.
+		if(!$this->isInDB()) {
 			$this->setComponent($componentName . '_' . $sum, $result);
 		}
-		
-		$result->setComponentInfo("1-to-many", $this, null, null, $componentClass, $joinField);
 
 		return $result;
 	}
@@ -859,13 +821,10 @@ class DataObject extends ViewableData implements DataObjectInterface {
 	 * @param string $componentName Name of the many-many component
 	 * @return ComponentSet The set of components
 	 *
-	 * @todo Implement query-params
+	 * TODO Implement query-params
 	 */
-	public function getManyManyComponents($componentName, $filter = "", $sort = "", $join = "", $limit = "") {
-		$sum = md5("{$filter}_{$sort}_{$join}_{$limit}");
-    	if(isset($this->componentCache[$componentName . '_' . $sum]) && false != $this->componentCache[$componentName . '_' . $sum]) {
-	    	return $this->componentCache[$componentName . '_' . $sum];
-    	}
+	public function getManyManyComponents($componentName, $filter = "", $sort = "", $join = "", $limit = "", $having = "") {
+		if(isset($this->components[$componentName])) return $this->components[$componentName];
 
 		list($parentClass, $componentClass, $parentField, $componentField, $table) = $this->many_many($componentName);
 
@@ -881,7 +840,8 @@ class DataObject extends ViewableData implements DataObjectInterface {
 					"`$table`.$parentField = $this->ID", // filter 
 					$sort,
 					$limit,
-					"INNER JOIN `$table` ON `$table`.$componentField = `$componentBaseClass`.ID" // join
+					"INNER JOIN `$table` ON `$table`.$componentField = `$componentBaseClass`.ID", // join 
+					$having // having
 				);
 				array_unshift($query->select, "`$table`.*");
 				
@@ -899,12 +859,7 @@ class DataObject extends ViewableData implements DataObjectInterface {
 			$result = new ComponentSet();
 		}
 		$result->setComponentInfo("many-to-many", $this, $parentClass, $table, $componentClass);
-
-		// If this record isn't in the database, then we want to hold onto this specific ComponentSet,
-		// because it's the only copy of the data that we have.
-		if(!$this->isInDB()) {
-			$this->setComponent($componentName . '_' . $sum, $result);
-		}
+		$this->components[$componentName] = $result;
 
 		return $result;
 	}
@@ -1380,32 +1335,9 @@ class DataObject extends ViewableData implements DataObjectInterface {
 		}
 
 		$baseClass = array_shift($tableClasses);
-		$select = array("`$baseClass`.*");
-		
-		// If sort contains a function call, let's move the sort clause into a separate selected field.
-		// Some versions of MySQL choke if you have a group function referenced directly in the ORDER BY
-		if($sort && strpos($sort,'(') !== false) {
-			// Sort can be "Col1 DESC|ASC, Col2 DESC|ASC", we need to handle that
-			$sortParts = explode(",", $sort);
-			foreach($sortParts as $i => $sortPart) {
-				$sortPart = trim($sortPart);
-				if(substr(strtolower($sortPart),-5) == ' desc') {
-					$select[] = substr($sortPart,0,-5) . " AS _SortColumn{$i}";
-					$newSorts[] = "_SortColumn{$i} DESC";
-				} else if(substr(strtolower($sortPart),-4) == ' asc') {
-					$select[] = substr($sortPart,0,-4) . " AS _SortColumn{$i}";
-					$newSorts[] = "_SortColumn{$i} ASC";
-				} else {
-					$select[] = "$sortPart AS _SortColumn{$i}";
-					$newSorts[] = "_SortColumn{$i} ASC";
-				}
-			}
-			
-			$sort =  implode(", ", $newSorts);
-		}
 
 		// Build our intial query
-		$query = new SQLQuery($select, "`$baseClass`", $filter, $sort);
+		$query = new SQLQuery(array("`$baseClass`.*"), "`$baseClass`", $filter, $sort);
 
 		// Join all the tables
 		if($tableClasses) {
@@ -1469,10 +1401,7 @@ class DataObject extends ViewableData implements DataObjectInterface {
 	}
 
 	/**
-	 * Get a bunch of fields in an HTML LI, like this:
-	 *  - name: value
-	 *  - name: value
-	 *  - name: value
+	 * Get a bunch of fields in a list - a <ul> of <li><b>name:</b> value</li>
 	 *
 	 * @return string The fields as an HTML unordered list
 	 */
@@ -1495,11 +1424,12 @@ class DataObject extends ViewableData implements DataObjectInterface {
 	 * @param string $join A single join clause.  This can be used for filtering, only 1 instance of each DataObject will be returned.
 	 * @param string $limit A limit expression to be inserted into the LIMIT clause.
 	 * @param string $containerClass The container class to return the results in.
+	 * @param string $having A filter to be inserted into the HAVING clause.
 	 *
 	 * @return mixed The objects matching the filter, in the class specified by $containerClass
 	 */
-	public static function get($callerClass, $filter = "", $sort = "", $join = "", $limit = "", $containerClass = "DataObjectSet") {
-		return singleton($callerClass)->instance_get($filter, $sort, $join, $limit, $containerClass);
+	public static function get($callerClass, $filter = "", $sort = "", $join = "", $limit = "", $containerClass = "DataObjectSet", $having = "") {
+		return singleton($callerClass)->instance_get($filter, $sort, $join, $limit, $containerClass, $having);
 	}
 
 	/**
@@ -1511,11 +1441,12 @@ class DataObject extends ViewableData implements DataObjectInterface {
 	 * @param string $join A single join clause.  This can be used for filtering, only 1 instance of each DataObject will be returned.
 	 * @param string $limit A limit expression to be inserted into the LIMIT clause.
 	 * @param string $containerClass The container class to return the results in.
+	 * @param string $having A filter to be inserted into the HAVING clause.
 	 *
 	 * @return mixed The objects matching the filter, in the class specified by $containerClass
 	 */
-	public function instance_get($filter = "", $sort = "", $join = "", $limit="", $containerClass = "DataObjectSet") {
-		$query = $this->extendedSQL($filter, $sort, $limit, $join);
+	public function instance_get($filter = "", $sort = "", $join = "", $limit="", $containerClass = "DataObjectSet", $having = "") {
+		$query = $this->extendedSQL($filter, $sort, $limit, $join, $having);
 		$records = $query->execute();
 		
 		$ret = $this->buildDataObjectSet($records, $containerClass, $query, $this->class);
@@ -1559,6 +1490,8 @@ class DataObject extends ViewableData implements DataObjectInterface {
 	 * Return the first item matching the given query.
 	 * All calls to get_one() are cached.
 	 *
+	 * TODO Caching doesn't respect sorting.
+	 *
 	 * @param string $callerClass The class of objects to be returned
 	 * @param string $filter A filter to be inserted into the WHERE clause
 	 * @param boolean $cache Use caching
@@ -1567,17 +1500,16 @@ class DataObject extends ViewableData implements DataObjectInterface {
 	 * @return DataObject The first item matching the query
 	 */
 	public static function get_one($callerClass, $filter = "", $cache = true, $orderby = "") {
-		$sum = md5("{$filter}_{$orderby}");
-		if(!$cache || !isset(DataObject::$cache_get_one[$callerClass][$sum]) || !DataObject::$cache_get_one[$callerClass][$sum] || DataObject::$cache_get_one[$callerClass][$sum]->destroyed) {
+		if(!$cache || !isset(DataObject::$cache_get_one[$callerClass][$filter]) || isset(DataObject::$cache_get_one[$callerClass][$filter]->destroyed)) {
 			$item = singleton($callerClass)->instance_get_one($filter, $orderby);
 			if($cache) {
-				DataObject::$cache_get_one[$callerClass][$sum] = $item;
-				if(!DataObject::$cache_get_one[$callerClass][$sum]) {
-					DataObject::$cache_get_one[$callerClass][$sum] = false;
+				DataObject::$cache_get_one[$callerClass][$filter] = $item;
+				if(!DataObject::$cache_get_one[$callerClass][$filter]) {
+					DataObject::$cache_get_one[$callerClass][$filter] = false;
 				}
 			}
 		}
-		return $cache ? DataObject::$cache_get_one[$callerClass][$sum] : $item;
+		return $cache ? DataObject::$cache_get_one[$callerClass][$filter] : $item;
 	}
 
 	/**
@@ -1656,15 +1588,10 @@ class DataObject extends ViewableData implements DataObjectInterface {
 	 */
 	public static function get_by_id($callerClass, $id) {
 		if(is_numeric($id)) {
-			if(singleton($callerClass) instanceof DataObject) {
-				$tableClasses = ClassInfo::dataClassesFor($callerClass);
-				$baseClass = array_shift($tableClasses);
-				return DataObject::get_one($callerClass,"`$baseClass`.`ID` = $id");
-				
-			// This simpler code will be used by non-DataObject classes that implement DataObjectInterface
-			} else {
-				return DataObject::get_one($callerClass,"`ID` = $id");
-			}
+			$tableClasses = ClassInfo::dataClassesFor($callerClass);
+			$baseClass = array_shift($tableClasses);
+			
+			return DataObject::get_one($callerClass,"`$baseClass`.`ID` = $id");
 		} else {
 			user_error("DataObject::get_by_id passed a non-numeric ID #$id", E_USER_WARNING);
 		}
@@ -1903,15 +1830,6 @@ class DataObject extends ViewableData implements DataObjectInterface {
 	/**
 	 * one-to-many relationship definitions.
 	 * This is a map from component name to data type.
-	 * 
-	 * Caution: Because this doesn't define any data structure itself, you should
-	 * specify a $has_one relationship on the other end of the relationship. 
-	 * Also, if the $has_one relationship on the other end has multiple
-	 * definitions of this class (e.g. two different relationships to the Member
-	 * object), then you need to write a custom accessor (e.g. overload the
-	 * function from the key of this array), because sapphire won't know which
-	 * to access.
-	 * 
 	 * @var array
 	 */
 	public static $has_many = null;

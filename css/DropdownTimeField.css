@@ -38,6 +38,3 @@
 .dropdownpopup.focused {
 	display: block;
 }
-.dropdownpopup select option {
-	font-size: 12px;
-}

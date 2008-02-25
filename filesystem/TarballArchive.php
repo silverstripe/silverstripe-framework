@@ -1,15 +1,5 @@
 <?php
 
-/**
- * @package sapphire
- * @subpackage filesystem
- */
-
-/**
- * Implementation of .tar, .tar.gz, and .tar.bz2 archive handler.
- * @package sapphire
- * @subpackage filesystem
- */
 class TarballArchive extends Archive {
 	private $filename = '';
 	private $compressionModifiers = '';

@@ -1,10 +1,4 @@
 <?php
-
-/**
- * @package sapphire
- * @subpackage control
- */
-
 /**
  * The most common kind if controller; effectively a controller linked to a {@link DataObject}.
  *
@@ -18,9 +12,6 @@
  *
  * Subclasses of ContentController are generally instantiated by ModelAsController; this will create
  * a controller based on the URLSegment action variable, by looking in the SiteTree table.
- *
- * @package sapphire
- * @subpackage control
  */
 class ContentController extends Controller {
 	protected $dataRecord;
@@ -163,6 +154,20 @@ class ContentController extends Controller {
 
 		return new DataObjectSet($visible);
 	}
+	/**
+	 * Returns the page in the current page stack of the given level.
+	 * Level(1) will return the main menu item that we're currently inside, etc.
+	 */
+
+	public function Level($level) {
+		$parent = $this->data();
+		$stack = array($parent);
+		while($parent = $parent->Parent) {
+			array_unshift($stack, $parent);
+		}
+
+		return isset($stack[$level-1]) ? $stack[$level-1] : null;
+	}
 
 	public function Menu($level) {
 		return $this->getMenu($level);
@@ -232,17 +237,17 @@ JS
 				$archiveLink = "<a class=\"current\">Archived Site</a>";
 				$liveLink = "<a href=\"$thisPage?stage=Live\" target=\"site\" style=\"left : -3px;\">Published Site</a>";
 				$stageLink = "<a href=\"$thisPage?stage=Stage\" target=\"site\" style=\"left : -1px;\">Draft Site</a>";
-				$message = "<div id=\"SilverStripeNavigatorMessage\" title=\"Note: this message won't be shown to your visitors\">Archived site from<br>" . $dateObj->Nice() . "</div>";
+				$message = "<div id=\"SilverStripeNavigatorMessage\">Archived site from<br>" . $dateObj->Nice() . "</div>";
 
 			} else if(Versioned::current_stage() == 'Stage') {
 				$stageLink = "<a class=\"current\">Draft Site</a>";
 				$liveLink = "<a href=\"$thisPage?stage=Live\" target=\"site\" style=\"left : -3px;\">Published Site</a>";
-				$message = "<div id=\"SilverStripeNavigatorMessage\" title=\"Note: this message won't be shown to your visitors\">DRAFT SITE</div>";
+				$message = "<div id=\"SilverStripeNavigatorMessage\">DRAFT SITE</div>";
 
 			} else {
 				$liveLink = "<a class=\"current\">Published Site</a>";
 				$stageLink = "<a href=\"$thisPage?stage=Stage\" target=\"site\" style=\"left : -1px;\">Draft Site</a>";
-				$message = "<div id=\"SilverStripeNavigatorMessage\" title=\"Note: this message won't be shown to your visitors\">PUBLISHED SITE</div>";
+				$message = "<div id=\"SilverStripeNavigatorMessage\">PUBLISHED SITE</div>";
 			}
 
 			if($member) {

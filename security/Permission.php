@@ -1,15 +1,4 @@
 <?php
-
-/**
- * @package sapphire
- * @subpackage security
- */
-
-/**
- * Represents a permission assigned to a group.
- * @package sapphire
- * @subpackage security
- */
 class Permission extends DataObject {
 
   // the (1) after Type specifies the DB default value which is needed for
@@ -434,9 +423,9 @@ class Permission extends DataObject {
 				? '(select)'
 				: $blankItemText;
 		}
-		$allCodes['ADMIN'] = _t('Permission.FULLADMINRIGHTS', 'Full administrative rights');
+		$allCodes['ADMIN'] = 'Full administrative rights';
 
-		if($classes) foreach($classes as $class) {
+		foreach($classes as $class) {
 			$SNG = singleton($class);
 			$someCodes = $SNG->providePermissions();
 			if($someCodes) foreach($someCodes as $k => $v) {
@@ -446,7 +435,7 @@ class Permission extends DataObject {
 
 		$otherPerms = DB::query("SELECT DISTINCT Code From Permission")
 			->column();
-		if($otherPerms) foreach($otherPerms as $otherPerm) {
+		foreach($otherPerms as $otherPerm) {
 			if(!array_key_exists($otherPerm, $allCodes))
 				$allCodes[$otherPerm] = $otherPerm;
 		}
@@ -464,7 +453,7 @@ class Permission extends DataObject {
 		if(!Permission::check('ADMIN'))
 			Security::permissionFailure();
 
-		echo '<h1>'._t('Permission.PERMSDEFINED', 'The following permission codes are defined').'</h1>';
+		echo "<h1>The following permission codes are defined</h1>";
 		$codes = self::get_codes();
 		echo "<pre>";
 		print_r($codes);
@@ -542,8 +531,6 @@ class Permission extends DataObject {
  *
  * This class is used to group permissions together for showing on an
  * interface.
- * @package sapphire
- * @subpackage security
  */
 class Permission_Group {
 

@@ -1,14 +1,13 @@
 <?php
+
 /**
  * @package sapphire
- * @subpackage model
+ * @subpackage core
  */
 
 /**
  * This is a special kind of DataObjectSet used to represent the items linked to in a 1-many or many-many
  * join.  It provides add and remove methods that will update the database.
- * @package sapphire
- * @subpackage model
  */
 class ComponentSet extends DataObjectSet {
 	/**
@@ -89,8 +88,9 @@ class ComponentSet extends DataObjectSet {
 		}
 		
 		if(is_object($item)) {
-      		if(!is_a($item, $this->childClass)) {
-      			user_error("ComponentSet::add() Tried to add an '{$item->class}' object, but a '{$this->childClass}' object expected", E_USER_ERROR);
+			// TODO Should this allow subclasses?
+      		if($item->class != $this->childClass) {
+      			user_error("ComponentSet::add() Tried to add an '{$item->class}' object, but '{$this->childClass}' expected", E_USER_ERROR);
       		}
 		} else {
 			$id = $item;
@@ -195,8 +195,8 @@ class ComponentSet extends DataObjectSet {
 	 */
 	function remove($item) {
 		if(is_object($item)) {
-			if(!is_a($item, $this->childClass)) {
-				user_error("ComponentSet::remove() Tried to remove an '{$item->class}' object, but a '{$this->childClass}' object expected", E_USER_ERROR);
+			if($item->class != $this->childClass && !is_subclass_of($item, $this->childClass)) {
+				user_error("ComponentSet::remove() Tried to remove an '{$item->class}' object, but '{$this->childClass}' expected", E_USER_ERROR);
 			}
 		} else {
 			$item = DataObject::get_by_id($this->childClass, $item);

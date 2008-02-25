@@ -1,11 +1,6 @@
 <?php
 
 /**
- * @package sapphire
- * @subpackage misc
- */
-
-/**
  * Library of conversion functions, implemented as static methods.
  *
  * The methods are all of the form (format)2(format), where the format is one of
@@ -19,13 +14,6 @@
  *
  *  html: HTML source suitable for use in a page or email
  *  text: Plain-text content, suitable for display to a user as-is, or insertion in a plaintext email.
- * 
- * Objects of type {@link ViewableData} can have an "escaping type",
- * which determines if they are automatically escaped before output by {@link SSViewer}. 
- * 
- * @usedby ViewableData::XML_val()
- * @package sapphire
- * @subpackage misc
  */
 class Convert extends Object {
 	// Convert raw to other formats
@@ -71,7 +59,7 @@ class Convert extends Object {
 			return $val;
 			
 		} else {
-			return str_replace(array("\\", '"',"\n","\r", "'"), array("\\\\", '\"','\n','\r', "\\'"), $val);
+			return str_replace(array('"',"\n","\r", "'"), array('\"','\n','\r', "\'"), $val);
 		}
 	}
 	
@@ -291,40 +279,27 @@ class Convert extends Object {
 	 *
 	 * @param  $val the string you wish to convert
 	 * @return the HTML version of the string
-	 * @deprecated
 	 */
 	static function raw2html($val) {
-		user_error("Convert::raw2html is deprecated.  Used Convert::raw2xml instead", E_USER_NOTICE);
+		user_error("Convert::raw2html is deprecated.  Used Convert::raw2xml instead", E_USER_WARNING);
 		return self::raw2xml($val);
 	}
-	
-	/**
-	 * @deprecated
-	 */
+
 	static function html2plain($val){
-		user_error("html2plain is deprecated.  Use xml2raw instead.", E_USER_NOTICE);
+		user_error("html2plain is deprecated.  Use xml2raw instead.", E_USER_WARNING);
 		return self::html2raw($val);
 	}
-	
-	/**
-	 * @deprecated
-	 */
+
 	static function html2text($val, $preserveLinks = false) {
-		user_error("html2text is deprecated.  Use xml2raw instead.", E_USER_NOTICE);
+		user_error("html2text is deprecated.  Use xml2raw instead.", E_USER_WARNING);
 		return self::html2raw($val);
 	}
-	
-	/**
-	 * @deprecated
-	 */
+
 	static function raw2reserveNL($val){
-		user_error("Convert::raw2reserveNL is deprecated.  Used Convert::raw2xml instead", E_USER_NOTICE);
+		user_error("Convert::raw2reserveNL is deprecated.  Used Convert::raw2xml instead", E_USER_WARNING);
 		return self::raw2xml($val);
 	}
-	
-	/**
-	 * @deprecated
-	 */
+
 	static function raw2attr($val) {
 		user_error("raw2attr is deprecated.  Use raw2att instead.", E_USER_WARNING);
 		return self::raw2att($val);

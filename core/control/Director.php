@@ -1,21 +1,11 @@
 <?php
 
 /**
- * @package sapphire
- * @subpackage control
- */
-
-/**
- * Director is responsible for processing URLs, and providing environment information.
- * 
- * The most important part of director is {@link Director::direct()}, which is passed a URL and will execute the appropriate
- * controller.
- * 
- * Director also has a number of static methods that provide information about the environment, such as {@link Director::set_environment_type()}.
- *
- * @package sapphire
- * @subpackage control
- * @see Director::direct(),Director::addRules(),Director::set_environment_type()
+ * Director is responsible for processing the URL
+ * Director is the first step in the "execution pipeline".  It parses the URL, matching it to
+ * one of a number of patterns, and determines the controller, action and any argument to be
+ * used.  It then runs the controller, which will finally run the viewer and/or perform processing
+ * steps.
  */
 class Director {
 	
@@ -63,44 +53,26 @@ class Director {
 
 
 	/**
-	 * Add URL matching rules to the Director.
-	 * 
-	 * The director is responsible for turning URLs into Controller objects.  It does thi
-	 * 
-	 * @param $priority The priority of the rules; higher values will get your rule checked first.  
-	 * We recommend priority 100 for your site's rules.  The built-in rules are priority 10, standard modules are priority 50.
+	 * Add new rules
 	 */
 	static function addRules($priority, $rules) {
 		Director::$rules[$priority] = isset(Director::$rules[$priority]) ? array_merge($rules, (array)Director::$rules[$priority]) : $rules;
 	}
 
 	/**
-	 * Process the given URL, creating the appropriate controller and executing it.
-	 * 
-	 * This method will:
-	 *  - iterate over all of the rules given in {@link Director::addRules()}, and find the first one that matches.
-	 *  - instantiate the {@link Controller} object required by that rule, and call {@link Controller::setURLParams()} to give the URL paramters to the controller.
-	 *  - link the Controller's session to PHP's main session, using {@link Controller::setSession()}.
-	 *  - call {@link Controller::run()} on that controller
-	 *  - save the Controller's session back into PHP's main session.
-	 *  - output the response to the browser, using {@link HTTPResponse::output()}.
-	 * 
-	 * @param $url String, the URL the user is visiting, without the querystring.
-	 * @uses getControllerForURL() rule-lookup logic is handled by this.
-	 * @uses Controller::run() Controller::run() handles the page logic for a Director::direct() call.
+	 * Process the given URL, creating the appropriate controller and executing it
 	 */
 	function direct($url) {
 		if(isset($_GET['debug_profile'])) Profiler::mark("Director","direct");
 		$controllerObj = Director::getControllerForURL($url);
 		
+		// Load the session into the controller
+		$controllerObj->setSession(new Session($_SESSION));
+
 		if(is_string($controllerObj) && substr($controllerObj,0,9) == 'redirect:') {
-			$response = new HTTPResponse();
-			$response->redirect(substr($controllerObj, 9));
-			$response->output();
+			Director::redirect(substr($controllerObj, 9));
+			
 		} else if($controllerObj) {
-			// Load the session into the controller
-			$controllerObj->setSession(new Session($_SESSION));
-		
 			$response = $controllerObj->run(array_merge((array)$_GET, (array)$_POST, (array)$_FILES));
 			
 			
@@ -116,16 +88,9 @@ class Director {
 	
 	/**
 	 * Test a URL request, returning a response object.
-	 * 
-	 * This method is the counterpart of Director::direct() that is used in functional testing.  It will execute the URL given,
-	 * 
 	 * @param $url The URL to visit
 	 * @param $post The $_POST & $_FILES variables
-	 * @param $session The {@link Session} object representing the current session.  By passing the same object to multiple
-	 * calls of Director::test(), you can simulate a peristed session.
-	 * 
-	 * @uses getControllerForURL() The rule-lookup logic is handled by this.
-	 * @uses Controller::run() Controller::run() handles the page logic for a Director::direct() call.
+	 * @param $session The {@link Session} object representing the current session.
 	 */
 	function test($url, $post = null, $session = null) {
         $getVars = array();
@@ -275,7 +240,7 @@ class Director {
 	 * @return string If redirect() has been called, it will return the URL redirected to.  Otherwise, it will return null;
 	 */
 	static function redirected_to() {
-		return Controller::curr()->redirectedTo();
+		Controller::curr()->redirectedTo();
 	}
 	
 	/**
@@ -363,7 +328,7 @@ class Director {
 	}
 
 	static function getAbsURL($url) {
-		return Director::baseURL() . $url;
+		return Director::baseURL() . '/' . $url;
 	}
 	
 	static function getAbsFile($file) {
@@ -436,17 +401,11 @@ class Director {
 	}
 	
 	/**
-	 * Returns true if this script is being run from the command line rather than the webserver.
-	 * 
 	 * @return boolean
 	 */
 	public static function is_cli() {
 		return preg_match('/cli-script\.php/', $_SERVER['SCRIPT_NAME']);
 	}
-
-	////////////////////////////////////////////////////////////////////////////////////////////
-	// Site mode methods
-	////////////////////////////////////////////////////////////////////////////////////////////
 
 	/**
 	 * Sets the site mode (if it is the public site or the cms),
@@ -480,35 +439,17 @@ class Director {
 		self::$callbacks[$mode][] = $function;
 	}
 
-	////////////////////////////////////////////////////////////////////////////////////////////
-	// Environment type methods
-	////////////////////////////////////////////////////////////////////////////////////////////
-
+	static function set_dev_servers($servers) {
+		Director::$dev_servers = $servers;
+	}
+	
+	static function set_test_servers($servers) {
+		Director::$test_servers = $servers;
+	}
+	
 	/**
-	 * Set the environment type of the current site.
-	 *
-	 * Typically, a SilverStripe site have a number of environments: 
-	 *  - development environments, such a copy on your local machine.
-	 *  - test sites, such as the one you show the client before going live.
-	 *  - the live site itself.
-	 * 
-	 * The behaviour of these environments often varies slightly.  For example, development sites may have errors dumped to the screen,
-	 * and order confirmation emails might be sent to the developer instead of the client.
-	 * 
-	 * To help with this, Sapphire support the notion of an environment type.  The environment type can be dev, test, or live.
-	 * 
-	 * You can set it explicitly with Director::set_environment_tpye().  Or you can use {@link Director::set_dev_servers()} and {@link Director::set_test_servers()}
-	 * to set it implicitly, based on the value of $_SERVER['HTTP_HOST'].  If the HTTP_HOST value is one of the servers listed, then
-	 * the environment type will be test or dev.  Otherwise, the environment type will be live.
-	 *
-	 * Dev mode can also be forced by putting ?isDev=1 in your URL, which will ask you to log in and then push the site into dev
-	 * mode for the remainder of the session. Putting ?isDev=0 onto the URL can turn it back.
-	 * Generally speaking, these methods will be called from your _config.php file.
-	 * 
-	 * Once the environment type is set, it can be checked with {@link Director::isDev()}, {@link Director::isTest()}, and
-	 * {@link Director::isLive()}.
-	 * 
-	 * @param $et string The environment type: dev, test, or live.
+	 * Force the environment type to be dev, test or live.
+	 * This will affect the results of isLive, isDev, and isTest
 	 */
 	static function set_environment_type($et) {
 		if($et != 'dev' && $et != 'test' && $et != 'live') {
@@ -518,36 +459,10 @@ class Director {
 		}
 	}
 
-	/**
-	 * Specify HTTP_HOST values that are development environments.
-	 * For information about environment types, see {@link Director::set_environment_type()}.
-	 * @param $servers array An array of HTTP_HOST values that should be treated as development environments.
-	 */
-	static function set_dev_servers($servers) {
-		Director::$dev_servers = $servers;
-	}
-	
-	/**
-	 * Specify HTTP_HOST values that are test environments.
-	 * For information about environment types, see {@link Director::set_environment_type()}.
-	 * @param $servers array An array of HTTP_HOST values that should be treated as test environments.
-	 */
-	static function set_test_servers($servers) {
-		Director::$test_servers = $servers;
-	}
-
-	/*
-	 * This function will return true if the site is in a live environment.
-	 * For information about environment types, see {@link Director::set_environment_type()}.
-	 */
 	static function isLive() {
 		return !(Director::isDev() || Director::isTest());
 	}
 	
-	/**
-	 * This function will return true if the site is in a development environment.
-	 * For information about environment types, see {@link Director::set_environment_type()}.
-	 */
 	static function isDev() {
 		if(self::$environment_type) return self::$environment_type == 'dev';
 
@@ -576,10 +491,6 @@ class Director {
 		return false;
 	}
 	
-	/**
-	 * This function will return true if the site is in a test environment.
-	 * For information about environment types, see {@link Director::set_environment_type()}.
-	 */
 	static function isTest() {
 		if(self::$environment_type) {
 			return self::$environment_type == 'test';
@@ -594,28 +505,11 @@ class Director {
 	}
 
 	/**
-	 * @deprecated use isDev() instead
+	 * @todo These functions are deprecated, let's use isLive isDev and isTest instead.
 	 */
-	function isDevMode() {
-		user_error('Director::isDevMode() is deprecated. Use Director::isDev() instead.', E_USER_NOTICE);
-		return self::isDev();
-	}
-	
-	/**
-	 * @deprecated use isTest() instead
-	 */
-	function isTestMode() {
-		user_error('Director::isTestMode() is deprecated. Use Director::isTest() instead.', E_USER_NOTICE);
-		return self::isTest();
-	}
-	
-	/**
-	 * @deprecated use isLive() instead
-	 */
-	function isLiveMode() {
-		user_error('Director::isLiveMode() is deprecated. Use Director::isLive() instead.', E_USER_NOTICE);
-		return self::isLive();
-	}
+	function isDevMode() { return self::isDev(); }
+	function isTestMode() { return self::isTest(); }
+	function isLiveMode() { return self::isLive(); }
 
 }
 

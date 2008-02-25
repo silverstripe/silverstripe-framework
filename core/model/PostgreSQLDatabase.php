@@ -8,11 +8,12 @@
 /**
  * MySQL connector class.
  */
-class MySQLDatabase extends Database {
+class PostgreSQLDatabase extends PDODatabase {
 	/**
 	 * Connection to the DBMS.
 	 * @var resource
 	 */
+	
 	private $dbConn;
 	
 	/**
@@ -27,66 +28,97 @@ class MySQLDatabase extends Database {
 	 */
 	private $database;
 	
+	private $pdo_type = 'pgsql';
+	private $server;
+	private $instance;
+	private $port = '5432';
+	private $username;
+	private $password;
+	
+	
 	/**
-	 * Connect to a MySQL database.
+	 * Connect to a PostgreSQL database.
 	 * @param array $parameters An map of parameters, which should include:
 	 * <ul><li>server: The server, eg, localhost</li>
 	 * <li>username: The username to log on with</li>
 	 * <li>password: The password to log on with</li>
 	 * <li>database: The database to connect to</li>
 	 */
+	
 	public function __construct($parameters) {
-		$this->dbConn = mysql_connect($parameters['server'], $parameters['username'], $parameters['password']);
+		/*$this->dbConn = sql_connect($parameters['server'], $parameters['username'], $parameters['password']);
 		$this->active = mysql_select_db($parameters['database'], $this->dbConn);
 		$this->database = $parameters['database'];
 		if(!$this->dbConn) {
 			$this->databaseError("Couldn't connect to MySQL database");
-		}
+		}*/
+		//$parameters ['port'] = $this->port;
+		//$parameters ['pdo_type'] = $this->pdo_type;
+		//$parameters ['instance'] = $this->instance;
+		foreach($parameters as $key=>$value)
+			$this->$key=$value;
+			
+		parent::__construct ( $parameters );
+	}
+	
+	/**
+	 * This is a PostgreSQL-specific connection string.  
+	 * @param array $parameters The connection details.
+	 * @return string $connect The connection string.
+	 **/
+	public function getConnect() {
+		echo 'PostgreSQLDatabase::getConnect:<pre>';
+		//Debug::show($parameters);
+		echo '</pre>';
+		
+		//if (isset ( $parameters ['port'] ) && is_numeric ( $parameters ['port'] ))
+		if(isset($this->port) && is_numeric($this->port))
+			$port = ';port=' . $parameters ['port']; else
+			$port = '';
+		
+		$connect = $this->pdo_type . ':host=' . $this->server . $this->instance . $port . '; user=' . $this->username . '; password=' . $this->password;
+		echo 'returning ' . $connect . '<br>';
+		return $connect;
+	}
 
-		parent::__construct();
-	}
-	
-	/**
-	 * Not implemented, needed for PDO
-	 */
-	public function getConnect($parameters) {
-		return null;
-	}
-	
-	/**
-	 * Returns true if this database supports collations
-	 * @return boolean
-	 */
-	public function supportsCollations() {
-		return $this->getVersion() >= 4.1;
-	}
-	
-	/**
-	 * The version of MySQL.
-	 * @var float
-	 */
-	private $mysqlVersion;
-	
-	/**
-	 * Get the version of MySQL.
-	 * @return float
-	 */
-	public function getVersion() {
-		if(!$this->mysqlVersion) {
-			$this->mysqlVersion = (float)$this->query("SELECT VERSION()")->value();
-		}
-		return $this->mysqlVersion;
-	}
-	
-	/**
-	 * Get the database server, namely mysql.
-	 * @return string
-	 */
-	public function getDatabaseServer() {
-		return "mysql";
-	}
-	
-	public function query($sql, $errorLevel = E_USER_ERROR) {
+/**
+ * Returns true if this database supports collations
+ * @return boolean
+ */
+//public function supportsCollations() {
+//	return $this->getVersion() >= 4.1;
+//}
+
+
+/**
+ * The version of MySQL.
+ * @var float
+ */
+//private $mysqlVersion;
+
+
+/**
+ * Get the version of MySQL.
+ * @return float
+ */
+//public function getVersion() {
+//	if(!$this->mysqlVersion) {
+//		$this->mysqlVersion = (float)$this->query("SELECT VERSION()")->value();
+//	}
+//	return $this->mysqlVersion;
+//}
+
+
+/**
+ * Get the database server, namely mysql.
+ * @return string
+ */
+//public function getDatabaseServer() {
+//	return "mysql";
+//}
+
+
+/*public function query($sql, $errorLevel = E_USER_ERROR) {
 		if(isset($_REQUEST['previewwrite']) && in_array(strtolower(substr($sql,0,strpos($sql,' '))), array('insert','update','delete','replace'))) {
 			Debug::message("Will execute: $sql");
 			return;
@@ -106,27 +138,29 @@ class MySQLDatabase extends Database {
 		if(!$handle && $errorLevel) $this->databaseError("Couldn't run query: $sql | " . mysql_error($this->dbConn), $errorLevel);
 		return new MySQLQuery($this, $handle);
 	}
-	
-	public function getGeneratedID($table) {
-		return mysql_insert_id($this->dbConn);
-	}
-	
-	/**
-	 * OBSOLETE: Get the ID for the next new record for the table.
-	 * 
-	 * @var string $table The name od the table.
-	 * @return int
-	 */
+	*/
+//public function getGeneratedID($table) {
+//	return mysql_insert_id($this->dbConn);
+//}
+
+
+/**
+ * OBSOLETE: Get the ID for the next new record for the table.
+ * 
+ * @var string $table The name od the table.
+ * @return int
+ */
+/*
 	public function getNextID($table) {
 		user_error('getNextID is OBSOLETE (and will no longer work properly)', E_USER_WARNING);
 		$result = $this->query("SELECT MAX(ID)+1 FROM `$table`")->value();
 		return $result ? $result : 1;
-	}
-	
+	}*/
+/*
 	public function isActive() {
 		return $this->active ? true : false;
-	}
-	
+	}*/
+/*
 	public function createDatabase($connect, $username, $password, $db) {
 		$this->query("CREATE DATABASE $this->database");
 		$this->query("USE $this->database");
@@ -137,41 +171,45 @@ class MySQLDatabase extends Database {
 			$this->active = true;
 			return true;
 		}
-	}
+	}*/
 
-	/**
-	 * Drop the database that this object is currently connected to.
-	 * Use with caution.
-	 */
+/**
+ * Drop the database that this object is currently connected to.
+ * Use with caution.
+ */
+/*
 	public function dropDatabase() {
 		$this->query("DROP DATABASE $this->database");
-	}
-	
-	/**
-	 * Returns the name of the currently selected database
-	 */
+	}*/
+
+/**
+ * Returns the name of the currently selected database
+ */
+/*
 	public function currentDatabase() {
 		return $this->database;
-	}
-	
-	/**
-	 * Switches to the given database.
-	 * If the database doesn't exist, you should call createDatabase() after calling selectDatabase()
-	 */
+	}*/
+
+/**
+ * Switches to the given database.
+ * If the database doesn't exist, you should call createDatabase() after calling selectDatabase()
+ */
+/*
 	public function selectDatabase($dbname) {
 		$this->database = $dbname;
 		if($this->databaseExists($this->database)) mysql_select_db($this->database, $this->dbConn);
 		$this->tableList = $this->fieldList = $this->indexList = null;
-	}
+	}*/
 
-	/**
-	 * Returns true if the named database exists.
-	 */
+/**
+ * Returns true if the named database exists.
+ */
+/*
 	public function databaseExists($name) {
 		$SQL_name = Convert::raw2sql($name);
 		return $this->query("SHOW DATABASES LIKE '$SQL_name'")->value() ? true : false;
-	}
-	
+	}*/
+/*
 	public function createTable($tableName, $fields = null, $indexes = null) {
 		$fieldSchemas = $indexSchemas = "";
 		if($fields) foreach($fields as $k => $v) $fieldSchemas .= "`$k` $v,\n";
@@ -184,15 +222,16 @@ class MySQLDatabase extends Database {
 				primary key (ID)
 			) TYPE=MyISAM");
 	}
-
-	/**
-	 * Alter a table's schema.
-	 * @param $table The name of the table to alter
-	 * @param $newFields New fields, a map of field name => field schema
-	 * @param $newIndexes New indexes, a map of index name => index type
-	 * @param $alteredFields Updated fields, a map of field name => field schema
-	 * @param $alteredIndexes Updated indexes, a map of index name => index type
-	 */
+	*/
+/**
+ * Alter a table's schema.
+ * @param $table The name of the table to alter
+ * @param $newFields New fields, a map of field name => field schema
+ * @param $newIndexes New indexes, a map of index name => index type
+ * @param $alteredFields Updated fields, a map of field name => field schema
+ * @param $alteredIndexes Updated indexes, a map of index name => index type
+ */
+/*
 	public function alterTable($tableName, $newFields = null, $newIndexes = null, $alteredFields = null, $alteredIndexes = null) {
 		$fieldSchemas = $indexSchemas = "";
 		
@@ -206,19 +245,19 @@ class MySQLDatabase extends Database {
 		
 		$alterations = implode(",\n", $alterList);
 		$this->query("ALTER TABLE `$tableName` " . $alterations);
-	}
-
+	}*/
+/*
 	public function renameTable($oldTableName, $newTableName) {
 		$this->query("ALTER TABLE `$oldTableName` RENAME `$newTableName`");
 	}
-	
-	
-	
-	/**
-	 * Checks a table's integrity and repairs it if necessary.
-	 * @var string $tableName The name of the table.
-	 * @return boolean Return true if the table has integrity after the method is complete.
-	 */
+	*/
+
+/**
+ * Checks a table's integrity and repairs it if necessary.
+ * @var string $tableName The name of the table.
+ * @return boolean Return true if the table has integrity after the method is complete.
+ */
+/*
 	public function checkAndRepairTable($tableName) {
 		if(!$this->runTableCheckCommand("CHECK TABLE `$tableName`")) {
 			Database::alteration_message("Table $tableName: repaired","repaired");
@@ -226,13 +265,14 @@ class MySQLDatabase extends Database {
 		} else {
 			return true;
 		}
-	}
-	
-	/**
-	 * Helper function used by checkAndRepairTable.
-	 * @param string $sql Query to run.
-	 * @return boolean Returns if the query returns a successful result.
-	 */
+	}*/
+
+/**
+ * Helper function used by checkAndRepairTable.
+ * @param string $sql Query to run.
+ * @return boolean Returns if the query returns a successful result.
+ */
+/*
 	protected function runTableCheckCommand($sql) {
 		$testResults = $this->query($sql);
 		foreach($testResults as $testRecord) {
@@ -242,23 +282,25 @@ class MySQLDatabase extends Database {
 		}
 		return true;
 	}
-	
+	*/
+/*
 	public function createField($tableName, $fieldName, $fieldSpec) {
 		$this->query("ALTER TABLE `$tableName` ADD `$fieldName` $fieldSpec");
 	}
-	
-	/**
-	 * Change the database type of the given field.
-	 * @param string $tableName The name of the tbale the field is in.
-	 * @param string $fieldName The name of the field to change.
-	 * @param string $fieldSpec The new field specification
-	 */
+	*/
+/**
+ * Change the database type of the given field.
+ * @param string $tableName The name of the tbale the field is in.
+ * @param string $fieldName The name of the field to change.
+ * @param string $fieldSpec The new field specification
+ */
+/*
 	public function alterField($tableName, $fieldName, $fieldSpec) {
 		// This wee function was built for MoT.  It will preserve the binary format of the content,
 		// but change the character set
-		/*
-		$changes = $this->query("SELECT ID, `$fieldName` FROM `$tableName`")->map();
-		*/
+		
+		//$changes = $this->query("SELECT ID, `$fieldName` FROM `$tableName`")->map();
+		
 
 		$this->query("ALTER TABLE `$tableName` CHANGE `$fieldName` `$fieldName` $fieldSpec");
 
@@ -271,8 +313,8 @@ class MySQLDatabase extends Database {
 			$this->query("UPDATE `$tableName` SET `$fieldName` = '$SQL_text' WHERE ID = '$id'");
 		}
 		*/
-	}
-	
+//}
+/*
 	public function fieldList($table) {
 		$fields = DB::query("SHOW FULL FIELDS IN `$table`");
 		foreach($fields as $field) {
@@ -295,17 +337,18 @@ class MySQLDatabase extends Database {
 		}
 		return $fieldList;
 	}
-	
-	/**
-	 * Create an index on a table.
-	 * @param string $tableName The name of the table.
-	 * @param string $indexName The name of the index.
-	 * @param string $indexSpec The specification of the index, see Database::requireIndex() for more details.
-	 */
+	*/
+/**
+ * Create an index on a table.
+ * @param string $tableName The name of the table.
+ * @param string $indexName The name of the index.
+ * @param string $indexSpec The specification of the index, see Database::requireIndex() for more details.
+ */
+/*
 	public function createIndex($tableName, $indexName, $indexSpec) {
 		$this->query("ALTER TABLE `$tableName` ADD " . $this->getIndexSqlDefinition($indexName, $indexSpec));
-	}
-	
+	}*/
+/*
 	protected function getIndexSqlDefinition($indexName, $indexSpec) {
 	    $indexSpec = trim($indexSpec);
 	    if($indexSpec[0] != '(') list($indexType, $indexFields) = explode(' ',$indexSpec,2);
@@ -314,14 +357,15 @@ class MySQLDatabase extends Database {
 			$indexType = "index";
 		}
 		return "$indexType `$indexName` $indexFields";
-	}
-	
-	/**
-	 * Alter an index on a table.
-	 * @param string $tableName The name of the table.
-	 * @param string $indexName The name of the index.
-	 * @param string $indexSpec The specification of the index, see Database::requireIndex() for more details.
-	 */
+	}*/
+
+/**
+ * Alter an index on a table.
+ * @param string $tableName The name of the table.
+ * @param string $indexName The name of the index.
+ * @param string $indexSpec The specification of the index, see Database::requireIndex() for more details.
+ */
+/*
 	public function alterIndex($tableName, $indexName, $indexSpec) {
 	    $indexSpec = trim($indexSpec);
 	    if($indexSpec[0] != '(') {
@@ -337,12 +381,13 @@ class MySQLDatabase extends Database {
 		$this->query("ALTER TABLE `$tableName` DROP INDEX `$indexName`");
 		$this->query("ALTER TABLE `$tableName` ADD $indexType `$indexName` $indexFields");
 	}
-	
-	/**
-	 * Return the list of indexes in a table.
-	 * @param string $table The table name.
-	 * @return array
-	 */
+	*/
+/**
+ * Return the list of indexes in a table.
+ * @param string $table The table name.
+ * @return array
+ */
+/*
 	public function indexList($table) {
 		$indexes = DB::query("SHOW INDEXES IN `$table`");
 		
@@ -364,13 +409,14 @@ class MySQLDatabase extends Database {
 		}
 		
 		return $indexList;
-	}
+	}*/
 
-	/**
-	 * Returns a list of all the tables in the database.
-	 * Table names will all be in lowercase.
-	 * @return array
-	 */
+/**
+ * Returns a list of all the tables in the database.
+ * Table names will all be in lowercase.
+ * @return array
+ */
+/*
 	public function tableList() {
 		foreach($this->query("SHOW TABLES") as $record) {
 			$table = strtolower(reset($record));
@@ -378,64 +424,66 @@ class MySQLDatabase extends Database {
 		}
 		return isset($tables) ? $tables : null;
 	}
-	
-	/**
-	 * Return the number of rows affected by the previous operation.
-	 * @return int
-	 */
+	*/
+/**
+ * Return the number of rows affected by the previous operation.
+ * @return int
+ */
+/*
 	public function affectedRows() {
 		return mysql_affected_rows($this->dbConn);
-	}
+	}*/
 }
 
 /**
- * A result-set from a MySQL database.
+ * A result-set from a PostgreSQL database.
+ * Created by Geoff, 25 February 2008.  Basically a pg_* conversion from the original MySQL version
  */
-class MySQLQuery extends Query {
+class PostgreSQLQuery extends Query {
 	/**
-	 * The MySQLDatabase object that created this result set.
-	 * @var MySQLDatabase
+	 * The PostgreSQL object that created this result set.
+	 * @var PostgreSQL
 	 */
 	private $database;
 	
 	/**
-	 * The internal MySQL handle that points to the result set.
+	 * The internal PostgreSQL handle that points to the result set.
 	 * @var resource
 	 */
 	private $handle;
-
+	
 	/**
 	 * Hook the result-set given into a Query class, suitable for use by sapphire.
 	 * @param database The database object that created this query.
 	 * @param handle the internal mysql handle that is points to the resultset.
 	 */
-	public function __construct(MySQLDatabase $database, $handle) {
+	public function __construct(PostgreSQLDatabase $database, $handle) {
 		$this->database = $database;
 		$this->handle = $handle;
-		parent::__construct();
+		parent::__construct ();
 	}
 	
 	public function __destroy() {
-		mysql_free_result($this->handle);
+		pg_free_result ( $this->handle );
 	}
 	
 	public function seek($row) {
-		return mysql_data_seek($this->handle, $row);
+		return pg_fetch_row ( $this->handle, $row );
 	}
 	
 	public function numRecords() {
-		return mysql_num_rows($this->handle);
+		return pg_num_rows ( $this->handle );
 	}
 	
 	public function nextRecord() {
 		// Coalesce rather than replace common fields.
-		if($data = mysql_fetch_row($this->handle)) {
-			foreach($data as $columnIdx => $value) {
-				$columnName = mysql_field_name($this->handle, $columnIdx);
+		if ($data = pg_fetch_row ( $this->handle )) {
+			foreach ( $data as $columnIdx => $value ) {
+				$columnName = pg_field_name ( $this->handle, $columnIdx );
 				// $value || !$ouput[$columnName] means that the *last* occurring value is shown
 				// !$ouput[$columnName] means that the *first* occurring value is shown
-				if(isset($value) || !isset($output[$columnName])) {
-					$output[$columnName] = $value;
+				if (isset ( $value ) || ! isset ( $output [$columnName] )) {
+					$output [$columnName] = $value;
 				}
 			}
 			return $output;
@@ -443,8 +491,7 @@ class MySQLQuery extends Query {
 			return false;
 		}
 	}
-	
-	
+
 }
 
 ?>

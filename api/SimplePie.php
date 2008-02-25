@@ -1,22 +1,26 @@
 <?php
+/****************************************************
+SIMPLEPIE
+A PHP-Based RSS and Atom Feed Framework
+Takes the hard work out of managing a complete RSS/Atom solution.
 
-/**
- * @package sapphire
- * @subpackage integration
- */
+Version: "Lemon Meringue"
+Updated: 3 November 2006
+Copyright: 2004-2006 Ryan Parman, Geoffrey Sneddon
+http://simplepie.org
 
-/**
- * A PHP-Based RSS and Atom Feed Framework
- * Takes the hard work out of managing a complete RSS/Atom solution.
- * Version: "Lemon Meringue"
- * Updated: 3 November 2006
- * Copyright: 2004-2006 Ryan Parman, Geoffrey Sneddon
- * http://simplepie.org
- * LICENSE: GNU Lesser General Public License 2.1 (LGPL)
- * Please submit all bug reports and feature requests to the SimplePie forums. http://simplepie.org/support/
- * @package sapphire
- * @subpackage integration
- */
+*****************************************************
+LICENSE:
+
+GNU Lesser General Public License 2.1 (LGPL)
+http://creativecommons.org/licenses/LGPL/2.1/
+
+*****************************************************
+Please submit all bug reports and feature requests to the SimplePie forums.
+http://simplepie.org/support/
+
+****************************************************/
+
 class SimplePie
 {
 	// SimplePie Info
@@ -1168,10 +1172,6 @@ EOT;
 	}
 }
 
-/**
- * @package sapphire
- * @subpackage integration
- */
 class SimplePie_Item
 {
 	var $data;
@@ -1681,10 +1681,6 @@ class SimplePie_Item
 	}
 }
 
-/**
- * @package sapphire
- * @subpackage integration
- */
 class SimplePie_Author
 {
 	var $name;
@@ -1736,10 +1732,6 @@ class SimplePie_Author
 	}
 }
 
-/**
- * @package sapphire
- * @subpackage integration
- */
 class SimplePie_Enclosure
 {
 	var $link;
@@ -2127,10 +2119,6 @@ class SimplePie_Enclosure
 	}
 }
 
-/**
- * @package sapphire
- * @subpackage integration
- */
 class SimplePie_File
 {
 	var $url;
@@ -2389,10 +2377,6 @@ class SimplePie_File
 	}
 }
 
-/**
- * @package sapphire
- * @subpackage integration
- */
 class SimplePie_Cache
 {
 	var $location;
@@ -2460,10 +2444,6 @@ class SimplePie_Cache
 	}
 }
 
-/**
- * @package sapphire
- * @subpackage integration
- */
 class SimplePie_Misc
 {
 	function absolutize_url($relative, $base)
@@ -3574,10 +3554,6 @@ class SimplePie_Misc
 	}
 }
 
-/**
- * @package sapphire
- * @subpackage integration
- */
 class SimplePie_Locator
 {
 	var $useragent;
@@ -3782,10 +3758,6 @@ class SimplePie_Locator
 	}
 }
 
-/**
- * @package sapphire
- * @subpackage integration
- */
 class SimplePie_Parser
 {	
 	var $encoding;
@@ -4418,10 +4390,6 @@ class SimplePie_Parser
 	}
 }
 
-/**
- * @package sapphire
- * @subpackage integration
- */
 class SimplePie_Sanitize
 {
 	// Private vars

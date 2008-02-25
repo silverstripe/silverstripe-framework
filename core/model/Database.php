@@ -2,14 +2,12 @@
 
 /**
  * @package sapphire
- * @subpackage model
+ * @subpackage core
  */
 
 /**
  * Abstract database connectivity class.
  * Sub-classes of this implement the actual database connection libraries
- * @package sapphire
- * @subpackage model
  */
 abstract class Database extends Object {
 	/**
@@ -51,20 +49,20 @@ abstract class Database extends Object {
 	 * Create the database and connect to it. This can be called if the
 	 * initial database connection is not successful because the database
 	 * does not exist.
-	 * 
-	 * It takes no parameters, and should create the database from the information
-	 * specified in the constructor.
-	 * 
+	 * @param string $connect Connection string
+	 * @param string $username Database username
+	 * @param string $password Database Password
+	 * @param string $database Database to which to create
 	 * @return boolean Returns true if successful
 	 */
-	abstract function createDatabase();
+	abstract function createDatabase($connect, $username, $password, $database);
 	
 	/**
 	 * Build the connection string from input
 	 * @param array $parameters The connection details
 	 * @return string $connect The connection string
 	 **/
-	abstract function getConnect($parameters);
+	abstract function getConnect();
 	
 	/**
 	 * Create a new table.
@@ -309,38 +307,6 @@ abstract class Database extends Object {
 			Profiler::unmark('createField');
 			Database::alteration_message("Field $table.$field: created as $spec","created");
 		} else if($this->fieldList[$table][$field] != $spec) {
-			// If enums are being modified, then we need to fix existing data in the table.
-			// Update any records where the enum is set to a legacy value to be set to the default.
-			// One hard-coded exception is SiteTree - the default for this is Page.
-			if(substr($spec, 0, 4) == "enum") {
-				$new = substr($spec, 5);
-				$old = substr($this->fieldList[$table][$field], 5);
-				$new = substr($new, 0, strpos($new, ')'));
-				$old = substr($old, 0, strpos($old, ')'));
-				$new = str_replace("'", '', $new);
-				$old = str_replace("'", '', $old);
-				$new = explode(',', $new);
-				$old = explode(',', $old);
-				$holder = array();
-				foreach($old as $check) {
-					if(!in_array($check, $new)) {
-						$holder[] = $check;
-					}
-				}
-				if(count($holder)) {
-					$default = explode('default ', $spec);
-					$default = $default[1];
-					if($default == "'SiteTree'") $default = "'Page'";
-					$query = "UPDATE `$table` SET $field=$default WHERE $field IN (";
-					for($i=0;$i+1<count($holder);$i++) {
-						$query .= "'{$holder[$i]}', ";
-					}
-					$query .= "'{$holder[$i]}')";
-					DB::query($query);
-					$amount = DB::affectedRows();
-					Database::alteration_message("Changed $amount rows to default value of field $field (Value: $default)");
-				}
-			}
 			Profiler::mark('alterField');
 			$this->transAlterField($table, $field, $spec);
 			Profiler::unmark('alterField');
@@ -402,11 +368,11 @@ abstract class Database extends Object {
 		}
 	}
 	
-	/** Replaces "\'\'" with "null", recursively walks through the given array. 
+	/** Replaces "''" with "null", recursively walks through the given array. 
 	 * @param string $array Array where the replacement should happen
 	 */
 	static function replace_with_null(&$array) {
-		$array = ereg_replace('= *\'\'', "= null", $array);
+		$array = str_replace('\'\'', "null", $array);
 		
 		if(is_array($array)) {
 			foreach($array as $key => $value) {
@@ -477,8 +443,6 @@ abstract class Database extends Object {
  * Primarily, the Query class takes care of the iterator plumbing, letting the subclasses focusing
  * on providing the specific data-access methods that are required: {@link nextRecord()}, {@link numRecords()}
  * and {@link seek()}
- * @package sapphire
- * @subpackage model
  */
 abstract class Query extends Object implements Iterator {
 	/**

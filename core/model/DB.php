@@ -2,14 +2,12 @@
 
 /**
  * @package sapphire
- * @subpackage model
+ * @subpackage core
  */
 
 /**
  * Global database interface, complete with static methods.
  * Use this class for interacting with the database.
- * @package sapphire
- * @subpackage model
  */
 class DB {
 	/**
@@ -31,6 +29,8 @@ class DB {
 	 * @var Database $globalConn
 	 */
 	static function setConn($globalConn) {
+		Debug::message("setConn called");
+		Debug::backtrace();
 		DB::$globalConn = $globalConn;
 	}
 
@@ -49,15 +49,31 @@ class DB {
 	 * @param array $database A map of options. The 'type' is the name of the subclass of Database to use. For the rest of the options, see the specific class.
 	 */
 	static function connect($databaseConfig) {
+		echo 'db:connect:<pre>';
+		print_r($databaseConfig);
+		echo '</pre>';
+		//At this point, the database 'type' value should be the class name we want to instantiate.
+		//This class that gets called will create a value in the parameters array called pdo_type which
+		//is the name of the driver we want to use (ie, pgsql).
+		
 		if(!isset($databaseConfig['type']) || empty($databaseConfig['type'])) {
 			user_error("DB::connect: Not passed a valid database config", E_USER_ERROR);
 		}
-		if (isset($databaseConfig['pdo']) && $databaseConfig['pdo']) { // TODO:pkrenn_remove
+		//if($databaseConfig['type']=='pdo'){
+		//	$conn = new PDODatabase($databaseConfig);
+		//} else {
+			$dbClass = $databaseConfig['type'];
+			echo 'creating a ' . $dbClass . ' instance!<br>';
+			//This will shoot off to the PostgreSQLDatabase class...
+			$conn = new $dbClass($databaseConfig);
+		//}
+		/*if (isset($databaseConfig['pdo']) && $databaseConfig['pdo']) { // TODO:pkrenn_remove
 			$conn = new PDODatabase($databaseConfig);
 		} else { // TODO:pkrenn_remove begin
 			$dbClass = $databaseConfig['type'];
 			$conn = new $dbClass($databaseConfig);
-		} // TODO:pkrenn_remove end
+		} // TODO:pkrenn_remove end*/
+		
 		DB::setConn($conn);
 	}
 
@@ -67,6 +83,7 @@ class DB {
 	 * @return string $connect The connection string.
 	 **/
 	public function getConnect($parameters) {
+		echo 'the DB:$globalConn value is ' . DB::$globalConn . '<br>';
 		return DB::$globalConn->getConnect($parameters);
 	}
 
