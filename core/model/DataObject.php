@@ -1387,7 +1387,19 @@ class DataObject extends ViewableData implements DataObjectInterface {
 		if($sort && strpos($sort,'(') !== false) {
 			// Sort can be "Col1 DESC|ASC, Col2 DESC|ASC", we need to handle that
 			$sortParts = explode(",", $sort);
-			foreach($sortParts as $i => $sortPart) {
+			
+			// If you have select if(X,A,B),C then the array will return 'if(X','A','B)','C'.
+			// Turn this into 'if(X,A,B)','C' by counting brackets
+			while(list($i,$sortPart) = each($sortParts)) {
+				while(substr_count($sortPart,'(') > substr_count($sortPart,')')) {
+					list($i,$nextSortPart) = each($sortParts);
+					if($i === null) break;
+					$sortPart .= ',' . $nextSortPart;
+				}
+				$lumpedSortParts[] = $sortPart;
+			}
+			
+			foreach($lumpedSortParts as $i => $sortPart) {
 				$sortPart = trim($sortPart);
 				if(substr(strtolower($sortPart),-5) == ' desc') {
 					$select[] = substr($sortPart,0,-5) . " AS _SortColumn{$i}";
