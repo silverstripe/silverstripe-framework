@@ -48,6 +48,9 @@ class Translatable extends DataObjectDecorator {
 	
 	/**
 	 * The language in which we are reading dataobjects.
+	 * Usually stored in session, specific to the "site mode":
+	 * either 'site' or 'cms'.
+	 * @see Director::get_site_mode()
 	 * @var string
 	 */
 	protected static $reading_lang = null;
@@ -107,32 +110,36 @@ class Translatable extends DataObjectDecorator {
 	/**
 	 * Choose the language the site is currently on.
 	 * If $_GET['lang'] or $_COOKIE['lang'] is set, then it will use that language, and store it in the session.
-	 * Otherwise it checks the session for a possible stored language. The final option is the member preference.
+	 * Otherwise it checks the session for a possible stored language, either from namespace to the site_mode
+	 * ('site' or 'cms'), or for a 'global' language setting. 
+	 * The final option is the member preference.
+	 * 
+	 * @uses Director::get_site_mode()
 	 * 
 	 * @param $langsAvailable array A numerical array of languages which are valid choices (optional)
 	 * @return string Selected language (also saved in $reading_lang).
 	 */
 	static function choose_site_lang($langsAvailable = null) {
-		if(is_array($langsAvailable)) {
-			if(isset($_GET['lang']) && in_array($_GET['lang'], $langsAvailable)) {
-				self::set_reading_lang($_GET['lang']);
-			} elseif(isset($_COOKIE['lang']) && in_array($_COOKIE['lang'], $langsAvailable)) {
-				self::set_reading_lang($_COOKIE['lang']);
-			} else if(Session::get('currentLang') && in_array(Session::get('currentLang'), $langsAvailable)) {
-				self::set_reading_lang(Session::get('currentLang'));
-			} else {
-				self::set_reading_lang(self::default_lang());		
-			}
+		$siteMode = Director::get_site_mode(); // either 'cms' or 'site'
+
+		if(isset($_GET['lang']) && (!isset($langsAvailable) || in_array($_GET['lang'], $langsAvailable))) {
+			// get from GET parameter
+			self::set_reading_lang($_GET['lang']);
+		} elseif(isset($_COOKIE['lang.' . $siteMode]) && $siteMode && (!isset($langsAvailable) || in_array($_COOKIE['lang.' . $siteMode], $langsAvailable))) {
+			// get from namespaced cookie
+			self::set_reading_lang($_COOKIE[$siteMode . '.lang']);
+		} elseif(isset($_COOKIE['lang']) && (!isset($langsAvailable) || in_array($_COOKIE['lang'], $langsAvailable))) {
+			// get from generic cookie
+			self::set_reading_lang($_COOKIE['lang']);
+		} else if(Session::get('lang.' . $siteMode) && (!isset($langsAvailable) || in_array(Session::get('lang.' . $siteMode), $langsAvailable))) {
+			// get from namespaced session ('cms' or 'site') 
+			self::set_reading_lang(Session::get('lang.' . $siteMode));
+		} else if(Session::get('lang.global') && (!isset($langsAvailable) || in_array(Session::get('lang.global'), $langsAvailable))) {
+			// get from global session 
+			self::set_reading_lang(Session::get('lang.global'));
 		} else {
-			if(isset($_GET['lang'])) {
-				self::set_reading_lang($_GET['lang']);
-			} elseif(isset($_COOKIE['lang'])) {
-				self::set_reading_lang($_COOKIE['lang']);
-			} else if(Session::get('currentLang')) {
-				self::set_reading_lang(Session::get('currentLang'));
-			} else {
-				self::set_reading_lang(self::default_lang());
-			}
+			// get default lang stored in class
+			self::set_reading_lang(self::default_lang());
 		}
 		
 		return self::$reading_lang; 
@@ -173,11 +180,14 @@ class Translatable extends DataObjectDecorator {
 	}
 		
 	/**
-	 * Set the reading language.
+	 * Set the reading language, either namespaced to 'site' (website content)
+	 * or 'cms' (management backend).
+	 * 
 	 * @param string $lang New reading language.
 	 */
 	static function set_reading_lang($lang) {
-		Session::set('currentLang',$lang);
+		$key = (Director::get_site_mode()) ? 'lang.' . Director::get_site_mode() : 'lang.global';
+		Session::set($key, $lang);
 		self::$reading_lang = $lang;
 	}	
 	
