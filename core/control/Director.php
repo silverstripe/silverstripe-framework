@@ -451,6 +451,8 @@ class Director {
 	/**
 	 * Sets the site mode (if it is the public site or the cms),
 	 * and runs registered modules.
+	 * 
+	 * @param string $mode 'site' or 'cms' 
 	 */
 	static function set_site_mode($mode) {
 		Director::$siteMode = $mode;
@@ -462,6 +464,9 @@ class Director {
 		}
 	}
 	
+	/**
+	 * @return string 'site' or 'cms'
+	 */
 	static function get_site_mode() {
 		return Director::$siteMode;
 	}
