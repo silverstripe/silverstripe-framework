@@ -27,6 +27,8 @@ class ModelAsController extends Controller implements NestedController {
 	
 	public function init() {
 		singleton('SiteTree')->extend('modelascontrollerInit', $this);
+		
+		Director::set_site_mode('site');
 	}
 
 	public function getNestedController() {
