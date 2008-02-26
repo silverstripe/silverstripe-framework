@@ -333,7 +333,7 @@ class Director {
 		if(self::$alternateBaseURL) return self::$alternateBaseURL;
 		else {
 			$base = dirname(dirname($_SERVER['SCRIPT_NAME']));
-			if($base == '/' || $base == '\\') return '/';
+			if($base == '/' || $base == '/.' || $base == '\\') return '/';
 			else return $base . '/';
 		}
 	}
