@@ -171,6 +171,9 @@ class HtmlEditorField extends TextareaField {
 			}
 			// $imageTracking->destroy();
 		}
+		
+		// Sometimes clients will double-escape %20.  Fix this up with this dirty hack
+		$content = str_replace('%2520', '%20', $content);
 			
 		$record->$fieldName = $content;
 	}
