@@ -413,16 +413,7 @@ class Member extends DataObject {
 	 * found update this record to merge with that member.
 	 */
 	function onBeforeWrite() {
-		if(isset($this->changed['Password']) && $this->changed['Password']) {
-			// Password was changed: encrypt the password according the settings
-			$encryption_details = Security::encrypt_password($this->Password);
-			$this->Password = $encryption_details['password'];
-			$this->Salt = $encryption_details['salt'];
-			$this->PasswordEncryption = $encryption_details['algorithm'];
-
-			$this->changed['Salt'] = true;
-			$this->changed['PasswordEncryption'] = true;
-		}
+		if($this->SetPassword) $this->Password = $this->SetPassword;
 
 		if($this->Email) {
 			if($this->ID) {
@@ -449,13 +440,22 @@ class Member extends DataObject {
 				}
 			}
 		}
-
-		if($this->SetPassword) $this->Password = $this->SetPassword;
 		
 		if(Director::isLive() &&
 			$this->changed['Password'] && $this->record['Password'] && 
 			Member::$notify_password_change) $this->sendInfo('changePassword');
 		
+		if(isset($this->changed['Password']) && $this->changed['Password']) {
+			// Password was changed: encrypt the password according the settings
+			$encryption_details = Security::encrypt_password($this->Password);
+			$this->Password = $encryption_details['password'];
+			$this->Salt = $encryption_details['salt'];
+			$this->PasswordEncryption = $encryption_details['algorithm'];
+
+			$this->changed['Salt'] = true;
+			$this->changed['PasswordEncryption'] = true;
+		}
+
 		parent::onBeforeWrite();
 	}
 
