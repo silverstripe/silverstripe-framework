@@ -226,7 +226,7 @@ class Email extends ViewableData {
 		$to = self::$send_all_emails_to;
 	    if($this->cc) $subject .= ", cc to $this->cc";
 	    if($this->bcc) $subject .= ", bcc to $this->bcc";
-		$usbject .= ']';
+		$subject .= ']';
 	} else {
 	    if($this->cc) $headers["Cc"] = $this->cc;
 	    if($this->bcc) $headers["Bcc"] = $this->bcc;
