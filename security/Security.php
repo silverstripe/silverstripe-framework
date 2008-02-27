@@ -647,6 +647,15 @@ class Security extends Controller {
 				}
 			}
 		}
+		
+		// Support for MySQL password() and old_password() functions.  These aren't recommended unless you need them,
+		// but can be helpful for migrating legacy user-sets into a SilverStripe application.
+		// Since DB::getConn() doesn't exist yet, we need to look at $databaseConfig. Gack!
+		global $databaseConfig;
+		if($databaseConfig['type'] == 'MySQLDatabase') {
+			$result[] = 'password';
+			$result[] = 'old_password';
+		}
 
 		return $result;
 	}
@@ -748,6 +757,17 @@ class Security extends Controller {
 			// Just use the default encryption algorithm
 			$algorithm = self::$encryptionAlgorithm;
 		}
+		
+		// Support for MySQL password() and old_password() authentication
+		if(strtolower($algorithm) == 'password' || strtolower($algorithm) == 'old_password') {
+			$SQL_password = Convert::raw2sql($password);
+			$enc = DB::query("SELECT $algorithm('$SQL_password')")->value();
+			return array(
+				'password' => $enc,
+				'salt' => null,
+				'algorithm' => $algorithm,
+			);
+		}
 
 
 		// If no salt was provided but we need one we just generate a random one
@@ -760,7 +780,7 @@ class Security extends Controller {
 		}
 
 
-    // Encrypt the password
+    	// Encrypt the password
 		if(function_exists('hash')) {
 			$password = hash($algorithm, $password . $salt);
 		} else {
