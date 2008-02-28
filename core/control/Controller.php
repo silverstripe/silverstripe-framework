@@ -555,7 +555,7 @@ class Controller extends ViewableData {
 			}
 		}
 		
-		if($access === null || $accessParts[0] === $accessParts[1]) {
+		if($access === null || (isset($accessParts[1]) && $accessParts[0] === $accessParts[1])) {
 			// user_error("Deprecated: please define static \$allowed_actions on your Controllers for security purposes", E_USER_NOTICE);
 			return true;
 		}
