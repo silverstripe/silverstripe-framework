@@ -75,6 +75,8 @@ class Controller extends ViewableData {
 		return $this->response;
 	}
 
+	protected $baseInitCalled = false;
+
 	/**
 	 * Executes this controller, and return an {@link HTTPResponse} object with the result.
 	 * 
@@ -96,8 +98,6 @@ class Controller extends ViewableData {
 	 * controllers - {@link ModelAsController} and {@link RootURLController} are two examples here.  If you want to make more
 	 * orthodox functionality, it's better to overload {@link init()} or {@link index()}.
 	 * 
-	 * 
-	 * 
 	 * Execute the appropriate action handler.  If none is given, use defaultAction to display
 	 * a template.  The default action will be appropriate in most cases where displaying data
 	 * is the core goal; the Viewer can call methods on the controller to get the data it needs.
@@ -105,7 +105,6 @@ class Controller extends ViewableData {
 	 * @param array $requestParams GET and POST variables.
 	 * @return HTTPResponse The response that this controller produces, including HTTP headers such as redirection info
 	 */
-	protected $baseInitCalled = false;
 	function run($requestParams) {
 		if(isset($_GET['debug_profile'])) Profiler::mark("Controller", "run");		
 		$this->pushCurrent();
@@ -292,10 +291,17 @@ class Controller extends ViewableData {
 		return $this->response;
 	}
 
+	/**
+	 * This is the default action handler used if a method doesn't exist.
+	 * It will process the controller object with the template returned by {@link getViewer()}
+	 */
 	function defaultAction($action) {
 		return $this->getViewer($action)->process($this);
 	}
 
+	/**
+	 * Returns the action that is being executed on this controller.
+	 */
 	function getAction() {
 		return $this->action;
 	}
@@ -330,8 +336,9 @@ class Controller extends ViewableData {
 	}
   
 	/**
-	 * Call this to disable basic authentication on test sites
+	 * Call this to disable basic authentication on test sites.
 	 * must be called in the init() method
+	 * @deprecated Use BasicAuth::disable() instead?  This is used in CliController - it should be updated.
 	 */
 	function disableBasicAuth() {
 		$this->basicAuthEnabled = false;
@@ -394,6 +401,7 @@ class Controller extends ViewableData {
 	 * @param member The member whose permissions need checking.  Defaults to the currently logged
 	 * in user.
 	 * @return boolean
+	 * @deprecated I don't believe that the system has widespread use/support of this.
 	 */
 	function can($perm, $member = null) {
 		if(!$member) $member = Member::currentUser();
@@ -419,11 +427,15 @@ class Controller extends ViewableData {
 
 	/**
 	 * Returns a link to any other page
+	 * @deprecated It's unclear what value this has; construct a link manually or use your own custom link-gen functions.
 	 */
 	function LinkTo($a, $b) {
 		return Director::baseURL() . $a . '/' . $b;
 	}
 
+	/**
+	 * Returns an absolute link to this controller
+	 */
 	function AbsoluteLink() {
 		return Director::absoluteURL($this->Link());
 	}
@@ -480,7 +492,8 @@ class Controller extends ViewableData {
 	}
 	
 	/**
-	 * Handle redirection
+	 * Redirct to the given URL.
+	 * It is generally recommended to call Director::redirect() rather than calling this function directly.
 	 */
 	function redirect($url) {
 		if($this->response->getHeader('Location')) {
@@ -530,7 +543,8 @@ class Controller extends ViewableData {
 	}
 	
 	/**
-	 * Check thAT
+	 * Check that the given action is allowed to be called on this controller.
+	 * This method is called by run() and makes use of {@link self::$allowed_actions}.
 	 */
 	function checkAccessAction($action) {
 		// Collate self::$allowed_actions from this class and all parent classes
@@ -547,7 +561,7 @@ class Controller extends ViewableData {
 			$className = get_parent_class($className);
 		}
 		
-		if($access === null || $accessParts[0] === $accessParts[1]) {
+		if($access === null || (sizeof($accessParts) > 1 && $accessParts[0] === $accessParts[1])) {
 			// user_error("Deprecated: please define static \$allowed_actions on your Controllers for security purposes", E_USER_NOTICE);
 			return true;
 		}

@@ -21,14 +21,26 @@ class ClassInfo {
 		global $_ALL_CLASSES;
 		return $_ALL_CLASSES && $_ALL_CLASSES['hastable'];
 	}
+	
+	/**
+	 * @todo Improve documentation
+	 */
 	static function allClasses() {
 		global $_ALL_CLASSES;
 		return $_ALL_CLASSES['exists'];
 	}
+
+	/**
+	 * @todo Improve documentation
+	 */
 	static function exists($class) {
 		global $_ALL_CLASSES;
 		return isset($_ALL_CLASSES['exists'][$class]) ? $_ALL_CLASSES['exists'][$class] : null;
 	}
+
+	/**
+	 * @todo Improve documentation
+	 */
 	static function hasTable($class) {
 		global $_ALL_CLASSES;
 		return isset($_ALL_CLASSES['hastable'][$class]) ? $_ALL_CLASSES['hastable'][$class] : null;
@@ -90,6 +102,9 @@ class ClassInfo {
 		return $baseDataClass ? $baseDataClass : $class;
 	}
 	
+	/**
+	 * @todo Improve documentation
+	 */
 	static function subclassesFor($class){
 		global $_ALL_CLASSES;
 		$subclasses = isset($_ALL_CLASSES['children'][$class]) ? $_ALL_CLASSES['children'][$class] : null;
@@ -98,6 +113,9 @@ class ClassInfo {
 		return $subclasses;
 	}
 	
+	/**
+	 * @todo Improve documentation
+	 */
 	static function ancestry($class, $onlyWithTables = false) {
 		global $_ALL_CLASSES;
 		

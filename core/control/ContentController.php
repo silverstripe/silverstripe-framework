@@ -6,7 +6,7 @@
  */
 
 /**
- * The most common kind if controller; effectively a controller linked to a {@link DataObject}.
+ * The most common kind of controller; effectively a controller linked to a {@link DataObject}.
  *
  * ContentControllers are most useful in the content-focused areas of a site.  This is generally
  * the bulk of a site; however, they may be less appropriate in, for example, the user management
@@ -18,6 +18,8 @@
  *
  * Subclasses of ContentController are generally instantiated by ModelAsController; this will create
  * a controller based on the URLSegment action variable, by looking in the SiteTree table.
+ * 
+ * @todo Can this be used for anything other than SiteTree controllers?
  *
  * @package sapphire
  * @subpackage control

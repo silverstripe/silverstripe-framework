@@ -7,6 +7,7 @@
 
 /**
  * Soap server class
+ * @todo Improve documentation
  * @package sapphire
  * @subpackage integration
  */

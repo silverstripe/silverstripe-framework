@@ -35,6 +35,9 @@ class ArrayLib extends Object {
 		return $newArr;
 	}
 	
+	/**
+	 * @todo Improve documentation
+	 */
 	static function array_values_recursive($arr) {
 	   $lst = array();
 	   foreach(array_keys($arr) as $k){

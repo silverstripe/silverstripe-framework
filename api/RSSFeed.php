@@ -9,6 +9,7 @@
  * RSSFeed class
  *
  * This class is used to create an RSS feed.
+ * @todo Improve documentation
  * @package sapphire
  * @subpackage integration
  */

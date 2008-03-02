@@ -7,6 +7,7 @@
 
 /**
  * Abstract task representing scheudled tasks
+ * @todo Improve documentation
  * @package sapphire
  * @subpackage cron
  */

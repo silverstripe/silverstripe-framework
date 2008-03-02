@@ -149,6 +149,10 @@ class Director {
 	}
 		
 		
+	/**
+	 * Returns the controller that should be used to handle the given URL.
+	 * @todo More information about director rules.
+	 */
 	static function getControllerForURL($url) {
 		if(isset($_GET['debug_profile'])) Profiler::mark("Director","getControllerForURL");
 		$url = preg_replace( array( '/\/+/','/^\//', '/\/$/'),array('/','',''),$url);
@@ -214,15 +218,24 @@ class Director {
 		}
 	}
 
-
+	/**
+	 * Returns the urlParam with the given name
+	 */
 	static function urlParam($name) {
 		return Director::$urlParams[$name];
 	}
 	
+	/**
+	 * Returns an array of urlParams
+	 */
 	static function urlParams() {
 		return Director::$urlParams;
 	}
 
+	/**
+	 * Returns the dataobject of the current page.
+	 * This will only return a value if you are looking at a SiteTree page
+	 */
 	static function currentPage() {
 		if(isset(Director::$urlParams['URLSegment'])) {
 			$SQL_urlSegment = Convert::raw2sql(Director::$urlParams['URLSegment']);
@@ -236,7 +249,10 @@ class Director {
 		}
 	}
 
-
+	/**
+	 * Turns the given URL into an absolute URL.
+	 * @todo Document how relativeToSiteBase works
+	 */
 	static function absoluteURL($url, $relativeToSiteBase = false) {
 		if(strpos($url,'/') === false && !$relativeToSiteBase) $url = dirname($_SERVER['REQUEST_URI'] . 'x') . '/' . $url;
 
@@ -248,6 +264,9 @@ class Director {
 		return $url;
 	}
 
+	/**
+	 * Returns the part of the URL, 'http://www.mysite.com'.
+	 */
 	static function protocolAndHost() {
 		if(self::$alternateBaseURL) {
 			if(preg_match('/^(http[^:]*:\/\/[^/]+)\//1', self::$alternateBaseURL, $matches)) {
@@ -314,12 +333,16 @@ class Director {
 		Director::redirect($url);
 	}
 
+	/**
+	 * @deprecated This seems like a bit of a hack; is it used anywhere?
+	 */
 	static function currentURLSegment() {
 		return Director::$urlSegment;
 	}
 
 	/**
 	 * Returns a URL to composed of the given segments - usually controller, action, parameter
+	 * @deprecated This function has little value.  Just craft links yourself.
 	 */
 	static function link() {
 		$parts = func_get_args();
@@ -327,7 +350,8 @@ class Director {
 	}
 
 	/**
-	 * Returns a URL for the given controller
+	 * Returns the root URL for the site.
+	 * It will be automatically calculated unless it is overridden with {@link setBaseURL()}.
 	 */
 	static function baseURL() {
 		if(self::$alternateBaseURL) return self::$alternateBaseURL;
@@ -338,18 +362,35 @@ class Director {
 		}
 	}
 	
+	/**
+	 * Sets the root URL for the website.
+	 * If the site isn't accessible from the URL you provide, weird things will happen.
+	 */
 	static function setBaseURL($baseURL) {
 		self::$alternateBaseURL = $baseURL;
 	}
 
+	/**
+	 * Returns the root filesystem folder for the site.
+	 * It will be automatically calculated unless it is overridden with {@link setBaseFolder()}.
+	 */
 	static function baseFolder() {
 		if(self::$alternateBaseFolder) return self::$alternateBaseFolder;
 		else return dirname(dirname($_SERVER['SCRIPT_FILENAME']));
 	}
+
+	/**
+	 * Sets the root folder for the website.
+	 * If the site isn't accessible from the folder you provide, weird things will happen.
+	 */
 	static function setBaseFolder($baseFolder) {
 		self::$alternateBaseFolder = $baseFolder;
 	}
 
+	/**
+	 * Turns an absolute URL or folder into one that's relative to the root of the site.
+	 * This is useful when turning a URL into a filesystem reference, or vice versa.
+	 */
 	static function makeRelative($url) {
 		$base1 = self::absoluteBaseURL();
 		$base2 = self::baseFolder();
@@ -362,26 +403,39 @@ class Director {
 		return $url;
 	}
 
+	/**
+	 * @deprecated This method's behaviour isn't very useful or consistent.
+	 */
 	static function getAbsURL($url) {
 		return Director::baseURL() . $url;
 	}
-	
+
+	/**
+	 * Given a filesystem reference relative to the site root, return the full filesystem path
+	 */
 	static function getAbsFile($file) {
 		if($file[0] == '/') return $file;
 		return Director::baseFolder() . '/' . $file;
 	}
 	
+	/**
+	 * Returns true if the given file exists.
+	 * @param $file Filename specified relative to the site root
+	 */
 	static function fileExists($file) {
 		return file_exists(Director::getAbsFile($file));
 	}
 
 	/**
-	 * Returns the Absolute URL for the given controller
+	 * Returns the Absolute URL of the site root.
 	 */
 	 static function absoluteBaseURL() {
 	 	return Director::absoluteURL(Director::baseURL());
 	 }
 	 
+	/**
+	 * Returns the Absolute URL of the site root, embedding the current basic-auth credentials into the URL.
+	 */
 	 static function absoluteBaseURLWithAuth() {
 	 	if($_SERVER['PHP_AUTH_USER'])
 			$login = "$_SERVER[PHP_AUTH_USER]:$_SERVER[PHP_AUTH_PW]@";
@@ -391,7 +445,12 @@ class Director {
 	 }
 
 	/**
-	 * Force the site to run on SSL.  To use, call from _config.php
+	 * Force the site to run on SSL.  To use, call from _config.php.
+	 * 
+	 * For example:
+	 * <code>
+	 * if(Director::isLive()) Director::forceSSL();
+	 * </code>
 	 */
 	static function forceSSL() {
 		if(!isset($_SERVER['HTTPS']) && !Director::isDev()){
@@ -403,7 +462,7 @@ class Director {
 	}
 
 	/**
-	 * Force a redirect to www.domain
+	 * Force a redirect to a domain starting with "www."
 	 */
 	static function forceWWW() {
 		if(!Director::isDev() && !Director::isTest() && strpos( $_SERVER['SERVER_NAME'], 'www') !== 0 ){
@@ -449,8 +508,7 @@ class Director {
 	////////////////////////////////////////////////////////////////////////////////////////////
 
 	/**
-	 * Sets the site mode (if it is the public site or the cms),
-	 * and runs registered modules.
+	 * Sets the site mode (if it is the public site or the cms), and runs registered modules.
 	 * 
 	 * @param string $mode 'site' or 'cms' 
 	 */

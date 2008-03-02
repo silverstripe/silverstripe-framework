@@ -7,6 +7,8 @@
 /**
  * The content negotiator performs text/html or application/xhtml+xml switching.
  * It does this through the static function ContentNegotiator::process()
+ * 
+ * @todo Improve documentation
  * @package sapphire
  * @subpackage control
  */
