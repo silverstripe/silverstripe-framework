@@ -94,7 +94,14 @@ class Widget extends DataObject {
 		$this->Name = $this->class.$this->ID;
 		$this->write();
 	}
-
+	
+	function FormObjectLink($formName) {
+		if(is_numeric($this->ID)) {
+			return "WidgetFormProxy/index/$this->ID?executeForm=$formName";
+		} else {
+			user_error("Attempted to create a form on a widget that hasn't been saved to the database.", E_USER_WARNING);
+		}
+	}
 }
 
 ?>

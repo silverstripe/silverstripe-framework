@@ -147,20 +147,10 @@ class Controller extends ViewableData {
 				Form::set_current_action($funcName);
 			}
 			
-			// Get the appropraite ocntroller: sometimes we want to get a form from another controller
-			if(isset($this->requestParams['formController'])) {
-				$formController = Director::getControllerForURL($this->requestParams['formController']);
-
-				while(is_a($formController, 'NestedController')) {
-					$formController = $formController->getNestedController();
-				}
-
-			} else {
-				$formController = $this;
-			}
-
+			$formOwner = $this->getFormOwner();
+			
 			// Create the form object
-			$form = $formController;
+			$form = $formOwner;
 
 			$formObjParts = explode('.', $this->requestParams['executeForm']);
 			foreach($formObjParts as $formMethod){
@@ -204,7 +194,7 @@ class Controller extends ViewableData {
 				}
 				
 			}else{
-				 user_error("No form (" . Session::get('CMSMain.currentPage') . ") returned by $formController->class->$_REQUEST[executeForm]", E_USER_WARNING);	
+				 user_error("No form (" . Session::get('CMSMain.currentPage') . ") returned by $formOwner->class->$_REQUEST[executeForm]", E_USER_WARNING);	
 			}
 			if(isset($_GET['debug_profile'])) Profiler::unmark("Controller", "populate form");		
 			
@@ -236,6 +226,9 @@ class Controller extends ViewableData {
 				if(isset($_GET['debug_profile'])) Profiler::mark("$this->class::$funcName (controller action)");
 				$result = $this->$funcName($this->requestParams, $form);
 				if(isset($_GET['debug_profile'])) Profiler::unmark("$this->class::$funcName (controller action)");
+				
+			} else if(isset($formOwner) && $formOwner->hasMethod($funcName)) {
+				$result = $formOwner->$funcName($this->requestParams, $form);
 
 			// Otherwise, try a handler method on the form object
 			} else {
@@ -289,6 +282,25 @@ class Controller extends ViewableData {
 		
 		$this->popCurrent();
 		return $this->response;
+	}
+	
+	/**
+	 * Return the object that is going to own a form that's being processed, and handle its execution.
+	 * Note that the result needn't be an actual controller object.
+	 */
+	function getFormOwner() {
+		// Get the appropraite ocntroller: sometimes we want to get a form from another controller
+		if(isset($this->requestParams['formController'])) {
+			$formController = Director::getControllerForURL($this->requestParams['formController']);
+
+			while(is_a($formController, 'NestedController')) {
+				$formController = $formController->getNestedController();
+			}
+			return $formController;
+
+		} else {
+			return $this;
+		}
 	}
 
 	/**
