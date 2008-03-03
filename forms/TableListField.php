@@ -242,7 +242,7 @@ JS
 				"Name" => $fieldName, 
 				"Title" => $fieldTitle,
 				"IsSortable" => $isSortable,
-				"SortLink" => $sortLink,
+				"SortLink" => Convert::raw2xml($sortLink),
 				"SortBy" => $isSorted,
 				"SortDirection" => (isset($_REQUEST['ctf'][$this->Name()]['dir'])) ? $_REQUEST['ctf'][$this->Name()]['dir'] : null 
 			));
