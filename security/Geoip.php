@@ -293,7 +293,6 @@ class Geoip extends Object {
 			// Note: At time of writing, $result is always zero for this program
 
 			if ($code == 127) {
-				user_error("ip2country($address) cannot find or run geoiplookup executable.", E_USER_NOTICE);
 				return false;
 			}
 			
