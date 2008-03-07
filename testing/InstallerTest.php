@@ -11,7 +11,8 @@
  * @subpackage misc
  */
 class InstallerTest extends Controller {
-	function testRewrite() {
+
+	function testrewrite() {
 		echo "OK";
 	}
 }
