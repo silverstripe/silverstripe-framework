@@ -52,6 +52,14 @@ class File extends DataObject {
 	static $belongs_many_many = array(
 		"BackLinkTracking" => "SiteTree",
 	);
+	
+	/**
+	 * Cached result of a "SHOW FIELDS" call
+	 * in instance_get() for performance reasons.
+	 *
+	 * @var array
+	 */
+	protected static $cache_file_fields = null;
 
 
 	/**
@@ -609,29 +617,29 @@ class File extends DataObject {
 	 * @todo Admittedly this is a bit of a hack; but we need a way of ensuring that large
 	 * TEXT fields don't stuff things up for the rest of us.  Perhaps a separate search table would
 	 * be a better way of approaching this?
+	 * @deprecated alternative_instance_get()
 	 */
 	public function instance_get($filter = "", $sort = "", $join = "", $limit="", $containerClass = "DataObjectSet", $having="") {
-		if($this->hasMethod('alternative_instance_get')) return $this->alternative_instance_get($filter, $sort, $join, $limit, $containerClass, $having);
-		
 		$query = $this->extendedSQL($filter, $sort, $limit, $join, $having);
 		$baseTable = reset($query->from);
 
+		$excludeDbColumns = array('Content');
+		
 		// Work out which columns we're actually going to select
 		// In short, we select everything except File.Content
-		if(!self::$dataobject_select) {
-			self::$dataobject_select = array();
-			foreach($query->select as $item) {
-				if($item == "`File`.*") {
-					$fileColumns = DB::query("SHOW FIELDS IN `File`")->column();
-					$columnsToAdd = array_diff($fileColumns, array('Content'));
-					foreach($columnsToAdd as $otherItem) self::$dataobject_select[] = '`File`.' . $otherItem;
-				} else {
-					self::$dataobject_select[] = $item;
+		$filteredSelect = array();
+		foreach($query->select as $i => $item) {
+			if($item == "`File`.*") {
+				if(!isset(self::$cache_file_fields)) self::$cache_file_fields = DB::query("SHOW FIELDS IN `File`")->column();
+				$columnsToAdd = array_diff(self::$cache_file_fields, $excludeDbColumns);
+				foreach($columnsToAdd as $otherItem) {
+					$filteredSelect[] = '`File`.' . $otherItem;
 				}
+			} else {
+				$filteredSelect[] = $item;
 			}
 		}
-
-		$query->select = self::$dataobject_select;
+		$query->select = $filteredSelect;
 
 		$records = $query->execute();
 		$ret = $this->buildDataObjectSet($records, $containerClass);
@@ -645,6 +653,12 @@ class File extends DataObject {
 	 */
 	function userCanEdit() {
 		return false;
+	}
+	
+	public function flushCache() {
+		parent::flushCache();
+		
+		unset(self::$cache_file_fields);
 	}
 }
 
