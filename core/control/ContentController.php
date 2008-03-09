@@ -312,22 +312,6 @@ HTML;
 		return "xml:lang=\"$lang\" lang=\"$lang\"";	
 	}
 
-	/**
-	 * Throw an error to test the error system
-	 */
-	function throwerror() {
-		user_error("This is a test of the error handler - nothing to worry about.", E_USER_ERROR);
-	}
-
-	/**
-	 * Throw a warning to test the error system
-	 */
-	function throwwarning() {
-		user_error("This is a test of the warning handler - nothing to worry about.", E_USER_WARNING);
-	}
-	
-	
-
 
 	/**
 	 * This action is called by the installation system
