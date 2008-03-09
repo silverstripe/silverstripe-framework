@@ -658,7 +658,7 @@ class File extends DataObject {
 	public function flushCache() {
 		parent::flushCache();
 		
-		unset(self::$cache_file_fields);
+		self::$cache_file_fields = null;
 	}
 }
 
