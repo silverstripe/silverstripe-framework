@@ -56,6 +56,23 @@ class Member extends DataObject {
 	static $notify_password_change = false;
 	
 	/**
+	 * All searchable database columns
+	 * in this object, currently queried
+	 * with a "column LIKE '%keywords%'
+	 * statement.
+	 *
+	 * @var array
+	 * @todo Generic implementation of $searchable_fields on DataObject,
+	 * with definition for different searching algorithms
+	 * (LIKE, FULLTEXT) and default FormFields to construct a searchform.
+	 */
+	static $searchable_fields = array(
+		'FirstName' => true,
+		'Surname' => true,
+		'Email' => true,
+	);
+	
+	/**
 	 * This method is used to initialize the static database members
 	 *
 	 * Since PHP doesn't support any expressions for the initialization of
@@ -69,8 +86,7 @@ class Member extends DataObject {
 	 */
 	public static function init_db_fields() {
 		self::$db['PasswordEncryption'] = "Enum(array('none', '" .
-			implode("', '", array_map("addslashes",
-																Security::get_encryption_algorithms())) .
+			implode("', '", array_map("addslashes", Security::get_encryption_algorithms())) .
 			"'), 'none')";
 	}
 
@@ -79,19 +95,18 @@ class Member extends DataObject {
 	 * Check if the passed password matches the stored one
 	 *
 	 * @param string $password The clear text password to check
-	 * @return bool Returns TRUE if the passed password is valid, otherwise
-	 *              FALSE.
+	 * @return bool Returns TRUE if the passed password is valid, otherwise FALSE.
 	 */
 	public function checkPassword($password) {
-		$encryption_details = Security::encrypt_password($password, $this->Salt,
-			$this->PasswordEncryption);
+		$encryption_details = Security::encrypt_password($password, $this->Salt, $this->PasswordEncryption);
 
 		return ($this->Password === $encryption_details['password']);
 	}
 
 	/**
 	 * Regenerate the session_id.
-	 * This wrapper is here to make it easier to disable calls to session_regenerate_id(), should you need to.  They have caused problems in certain
+	 * This wrapper is here to make it easier to disable calls to session_regenerate_id(), should you need to.  
+	 * They have caused problems in certain
 	 * quirky problems (such as using the Windmill 0.3.6 proxy).
 	 */
 	static function session_regenerate_id() {
@@ -101,8 +116,7 @@ class Member extends DataObject {
 	/**
 	 * Logs this member in
 	 *
-	 * @param bool $remember If set to TRUE, the member will be logged in
-	 *                       automatically the next time.
+	 * @param bool $remember If set to TRUE, the member will be logged in automatically the next time.
 	 */
 	function logIn($remember = false) {
 		self::session_regenerate_id();
@@ -177,11 +191,9 @@ class Member extends DataObject {
 	 *
 	 * This creates an auto login hash that can be used to reset the password.
 	 *
-	 * @param int $lifetime The lifetime of the auto login hash in days
-	 *                      (by default 2 days)
+	 * @param int $lifetime The lifetime of the auto login hash in days (by default 2 days)
 	 *
-	 * @todo Make it possible to handle database errors such as a "duplicate
-	 *       key" error
+	 * @todo Make it possible to handle database errors such as a "duplicate key" error
 	 */
 	function generateAutologinHash($lifetime = 2) {
 
@@ -218,10 +230,8 @@ class Member extends DataObject {
 	/**
 	 * Send signup, change password or forgot password informations to an user
 	 *
-	 * @param string $type Information type to send ("signup",
-	 *                     "changePassword" or "forgotPassword")
-	 * @param array $data Additional data to pass to the email (can be used in
-	 *                    the template)
+	 * @param string $type Information type to send ("signup", "changePassword" or "forgotPassword")
+	 * @param array $data Additional data to pass to the email (can be used in the template)
 	 */
 	function sendInfo($type = 'signup', $data = null) {
 		switch($type) {
@@ -379,9 +389,7 @@ class Member extends DataObject {
 
 
 	/*
-	 * Generate a random password
-	 *
-	 * BDC - added randomiser to kick in if there's no words file on the
+	 * Generate a random password, with randomiser to kick in if there's no words file on the
 	 * filesystem.
 	 *
 	 * @return string Returns a random password.
