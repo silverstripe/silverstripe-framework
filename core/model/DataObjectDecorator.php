@@ -16,7 +16,28 @@
 abstract class DataObjectDecorator extends Extension {
 
 	/**
+	 * Statics on a {@link DataObject} subclass
+	 * which can be decorated onto. This list is
+	 * limited for security and performance reasons.
+	 *
+	 * @var array
+	 */
+	protected static $decoratable_statics = array(
+		'db', 
+		'has_one', 
+		'indexes', 
+		'defaults', 
+		'has_many', 
+		'many_many', 
+		'belongs_many_many', 
+		'many_many_extraFields',
+		'searchable_fields',
+	);
+	
+	/**
 	 * Load the extra database fields defined in extraDBFields.
+	 * 
+	 * @todo Rename to "extraStaticFields", as it decorates more than database related fields.
 	 */
 	function loadExtraDBFields() {
 		$fields = $this->extraDBFields();
@@ -24,7 +45,7 @@ abstract class DataObjectDecorator extends Extension {
 
 		if($fields) {
 			foreach($fields as $relationType => $fields) {
-				if(in_array($relationType, array('db', 'has_one', 'indexes', 'defaults', 'has_many', 'many_many', 'belongs_many_many', 'many_many_extraFields'))) {
+				if(in_array($relationType, self::$decoratable_statics)) {
 					eval("$className::\$$relationType = array_merge((array){$className}::\$$relationType, (array)\$fields);");
 				}
 			}
