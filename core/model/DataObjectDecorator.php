@@ -37,7 +37,7 @@ abstract class DataObjectDecorator extends Extension {
 	/**
 	 * Load the extra database fields defined in extraDBFields.
 	 * 
-	 * @todo Rename to "extraStaticFields", as it decorates more than database related fields.
+	 * @todo Rename to "loadExtraStaticFields", as it decorates more than database related fields.
 	 */
 	function loadExtraDBFields() {
 		$fields = $this->extraDBFields();
