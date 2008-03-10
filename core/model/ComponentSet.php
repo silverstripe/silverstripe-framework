@@ -124,6 +124,7 @@ class ComponentSet extends DataObjectSet {
 	protected function loadChildIntoDatabase($item, $extraFields = null) {
 		if($this->type == '1-to-many') {
 			$child = DataObject::get_by_id($this->childClass,$item->ID);
+			if (!$child) $child = $item;
 			$joinField = $this->joinField;
 			$child->$joinField = $this->ownerObj->ID;
 			$child->write();
