@@ -358,6 +358,10 @@ HTML
 		*Todo: get all records of base table that meet the $this->filter, $this->join, $this->datefilter, sort by $this->sort
 		*/
 	function getRecords(){
+		$join = '';
+		$filter = '';
+		$sort = '';
+		
 		if($this->filter){
 			$i=0;
 			//$this->filter should be an array, such as array("MemberID"=>array("1", "2), "OrderType"=>"normal")
