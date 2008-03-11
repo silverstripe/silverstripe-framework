@@ -204,6 +204,8 @@ class Versioned extends DataObjectDecorator {
 						'RecordID_Version' => '(RecordID, Version)',
 						'RecordID' => true,
 						'Version' => true,
+						'AuthorID' => true,
+						'PublisherID' => true,
 					),
 					(array)$indexes
 				);
