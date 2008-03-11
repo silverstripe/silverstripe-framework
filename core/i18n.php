@@ -938,10 +938,12 @@ class i18n extends Controller {
 		} else {
 			global $_CLASS_MANIFEST;
 			if(strpos($name,'_') !== false) $name = strtok($name,'_');
-			$path = str_replace('\\','/',Director::makeRelative($_CLASS_MANIFEST[$name]));
-			ereg('/([^/]+)/', $path, $module);
+			if(isset($_CLASS_MANIFEST[$name])) {
+				$path = str_replace('\\','/',Director::makeRelative($_CLASS_MANIFEST[$name]));
+				ereg('/([^/]+)/', $path, $module);
+			}
 		}
-		return ($module) ? $module[1] : false;
+		return (isset($module)) ? $module[1] : false;
 
 	}
 
