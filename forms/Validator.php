@@ -8,7 +8,10 @@
 /**
  * This validation class handles all form and custom form validation through
  * the use of Required fields.
+ * 
  * Relies on javascript for client-side validation, and marking fields after serverside validation.
+ * 
+ * Acts as a visitor to individual form fields.
  * 
  * @todo Automatically mark fields after serverside validation and replace the form through
  * FormResponse if the request was made by ajax.
@@ -37,7 +40,14 @@ abstract class Validator extends Object {
 		return $this->errors;
 	}
 	
-	function validationError($fieldName,$message,$messageType){
+	/**
+	 * Callback to register an error on a field (Called from implementations of {@link FormField::validate})
+	 * 
+	 * @param $fieldName name of the field
+	 * @param $message error message to display
+	 * @param $messageType optional parameter, gets loaded into the HTML class attribute in the rendered output
+	 */
+	function validationError($fieldName,$message,$messageType=''){
 		$this->errors[] = array(
 			'fieldName' => $fieldName,
 			'message' => $message,

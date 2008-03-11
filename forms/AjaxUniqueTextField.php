@@ -105,7 +105,7 @@ JS;
 
 	}
 
-	function validate( $validate ) {
+	function validate( $validator ) {
 		
 		$result = DB::query(sprintf(
 			"SELECT COUNT(*) FROM `%s` WHERE `%s` = '%s'",
