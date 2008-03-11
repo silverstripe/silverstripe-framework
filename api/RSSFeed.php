@@ -280,7 +280,9 @@ class RSSFeed_Entry extends ViewableData {
 	 * @return string Returns the URL of this entry
 	 */
 	function AbsoluteLink() {
-		return $this->failover->AbsoluteLink();
+		if($this->failover->hasMethod('AbsoluteLink')) return $this->failover->AbsoluteLink();
+		else if($this->failover->hasMethod('Link')) return Director::absoluteURL($this->link);
+		else user_error($this->failover->class . " object has either an AbsoluteLink nor a Link method.  Can't put a link in the RSS feed", E_USER_WARNING);
 	}
 }
 ?>
