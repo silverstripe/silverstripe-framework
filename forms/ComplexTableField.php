@@ -461,7 +461,7 @@ JS;
 	function PopupBaseLink() {
 		$link = $this->FormAction() . "&action_callfieldmethod&fieldName={$this->Name()}";
 		if(!strpos($link,'ctf[ID]')) {
-			$link = HTTP::setGetVar('ctf[ID]',$this->sourceID(),$link);
+			$link = str_replace('&amp;','&',HTTP::setGetVar('ctf[ID]',$this->sourceID(),$link));
 		}
 		return $link;
 	}
