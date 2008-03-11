@@ -222,7 +222,7 @@ class Director {
 	 * Returns the urlParam with the given name
 	 */
 	static function urlParam($name) {
-		return Director::$urlParams[$name];
+		if(isset(Director::$urlParams[$name])) return Director::$urlParams[$name];
 	}
 	
 	/**
