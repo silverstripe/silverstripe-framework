@@ -18,7 +18,7 @@
  * @package sapphire
  * @subpackage view
  */
-class ViewableData extends Object implements Iterator {
+class ViewableData extends Object implements IteratorAggregate {
 	/**
 	 * The iterator position.
 	 * @var int
@@ -87,6 +87,18 @@ class ViewableData extends Object implements Iterator {
 			}
 		}		
 		parent::defineMethods();
+	}
+	
+	/**
+	 * Returns a "1 record iterator"
+	 * Views <%control %> tags operate by looping over an item for as many instances as are 
+	 * available.  When you stick a single ViewableData object in a control tag, the foreach()
+	 * loop still needs to work.  We do this by creating an iterator that only returns one record.
+	 * This will always return the current ViewableData object.
+	 * @return ViewableData_Iterator A 1 record iterator
+	 */
+	function getIterator() {
+		return new ViewableData_Iterator($this);
 	}
 	
 	/**
@@ -798,63 +810,6 @@ class ViewableData extends Object implements Iterator {
 	function Top() {
 		return SSViewer::topLevel();
 	}
-	
-	/** 
-	 * Implementation of a "1 record iterator"
-	 * Views <%control %> tags operate by looping over an item for as many instances as are 
-	 * available.  When you stick a single ViewableData object in a control tag, the foreach()
-	 * loop still needs to work.  We do this by creating an iterator that only returns one record.
-	 * This will always return the current ViewableData object.
-	 */
-	public function current() { 
-		if($this->show) {
-			return $this;
-		}
-	}
-	
-	/** 
-	 * Implementation of a "1 record iterator"
-	 * Views <%control %> tags operate by looping over an item for as many instances as are 
-	 * available.  When you stick a single ViewableData object in a control tag, the foreach()
-	 * loop still needs to work.  We do this by creating an iterator that only returns one record.
-	 * Rewinds the iterator back to the start.
-	 */
-	public function rewind() { 
-		$this->show = true;
-	}
-	
-	/** 
-	 * Implementation of a "1 record iterator"
-	 * Views <%control %> tags operate by looping over an item for as many instances as are 
-	 * available.  When you stick a single ViewableData object in a control tag, the foreach()
-	 * loop still needs to work.  We do this by creating an iterator that only returns one record.
-	 * Return the key for the current object.
-	 */
-	public function key() { 
-		return 0;
-	}
-	
-	/** 
-	 * Implementation of a "1 record iterator"
-	 * Views <%control %> tags operate by looping over an item for as many instances as are 
-	 * available.  When you stick a single ViewableData object in a control tag, the foreach()
-	 * loop still needs to work.  We do this by creating an iterator that only returns one record.
-	 * Get the next object.
-	 */
-	public function next() {
-		return $this->show = false;
-	}
-	
-	/** 
-	 * Implementation of a "1 record iterator"
-	 * Views <%control %> tags operate by looping over an item for as many instances as are 
-	 * available.  When you stick a single ViewableData object in a control tag, the foreach()
-	 * loop still needs to work.  We do this by creating an iterator that only returns one record.
-	 * Check if there is a current object.
-	 */
-	public function valid() { 
-		return $this->show;
-	}
 
 
 	/**
@@ -879,11 +834,7 @@ class ViewableData extends Object implements Iterator {
 		}
 	}
 	
-	/** 
-	 * Internal state toggler for the "1 record iterator"
-	 * @var bool
-	 */
-	private $show;
+
 
 	/**
 	 * Object-casting information for class methods
@@ -1145,6 +1096,63 @@ class ViewableData_Debugger extends ViewableData {
 				echo $d->forTemplate();
 			}
 		}
+	}
+}
+
+/**
+ * Implementation of a "1 record iterator"
+ * Views <%control %> tags operate by looping over an item for as many instances as are 
+ * available.  When you stick a single ViewableData object in a control tag, the foreach()
+ * loop still needs to work.  We do this by creating an iterator that only returns one record.
+ * This will always return the current ViewableData object.
+ */
+class ViewableData_Iterator implements Iterator {
+	function __construct($viewableData) {
+		$this->viewableData = $viewableData;
+		$this->show = true;
+	}
+
+	/** 
+	 * Internal state toggler
+	 * @var bool
+	 */
+	private $show;
+
+	/** 
+	 * This will always return the current ViewableData object.
+	 */
+	public function current() { 
+		if($this->show) {
+			return $this->viewableData;
+		}
+	}
+	
+	/** 
+	 * Rewinds the iterator back to the start.
+	 */
+	public function rewind() { 
+		$this->show = true;
+	}
+	
+	/** 
+	 * Return the key for the current object.
+	 */
+	public function key() { 
+		return 0;
+	}
+	
+	/** 
+	 * Get the next object.
+	 */
+	public function next() {
+		return $this->show = false;
+	}
+	
+	/** 
+	 * Check if there is a current object.
+	 */
+	public function valid() { 
+		return $this->show;
 	}
 }
 

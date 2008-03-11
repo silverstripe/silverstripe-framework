@@ -495,7 +495,7 @@ JS;
 			return null;
 		}
 
-		$item = $this->unpagedSourceItems->getOffset($_REQUEST['ctf']['start'] + 1);
+		$item = $this->unpagedSourceItems->getIterator()->getOffset($_REQUEST['ctf']['start'] + 1);
 
 		$start = $_REQUEST['ctf']['start'] + 1;
 		return Convert::raw2att($this->PopupBaseLink() . "&methodName={$_REQUEST['methodName']}&ctf[childID]={$item->ID}&ctf[start]={$start}");
@@ -506,7 +506,7 @@ JS;
 			return null;
 		}
 
-		$item = $this->unpagedSourceItems->getOffset($_REQUEST['ctf']['start'] - 1);
+		$item = $this->unpagedSourceItems->getIterator()->getOffset($_REQUEST['ctf']['start'] - 1);
 
 		$start = $_REQUEST['ctf']['start'] - 1;
 		return Convert::raw2att($this->PopupBaseLink() . "&methodName={$_REQUEST['methodName']}&ctf[childID]={$item->ID}&ctf[start]={$start}");
@@ -532,7 +532,7 @@ JS;
         }
 		for($i = $offset;$i <= $offset + $this->pageSize && $i <= $this->totalCount;$i++) {
             $start = $i - 1;
-			$item = $this->unpagedSourceItems->getOffset($i-1);
+			$item = $this->unpagedSourceItems->getIterator()->getOffset($i-1);
 			$links['link'] = Convert::raw2att($this->PopupBaseLink() . "&methodName={$_REQUEST['methodName']}&ctf[childID]={$item->ID}&ctf[start]={$start}");
             $links['number'] = $i;
             $links['active'] = $i == $currentItem ? false : true;

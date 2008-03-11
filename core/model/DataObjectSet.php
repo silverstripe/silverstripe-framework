@@ -11,7 +11,7 @@
  * @package sapphire
  * @subpackage model
  */
-class DataObjectSet extends ViewableData implements Iterator {
+class DataObjectSet extends ViewableData implements IteratorAggregate {
 	/**
 	 * The DataObjects in this set.
 	 * @var array
@@ -90,7 +90,7 @@ class DataObjectSet extends ViewableData implements Iterator {
 				}
 			}
 
-			$this->current = $this->prepareItem(current($this->items));
+			
 		}
 		parent::__construct();
 	}
@@ -440,70 +440,6 @@ class DataObjectSet extends ViewableData implements Iterator {
 			$this->push($item);
 		}
 	}
-	
-	/**
-	 * Rewind the iterator to the beginning of the set.
-	 * @return DataObject The first item in the set.
-	 */
-	public function rewind() {
-		$this->current = $this->prepareItem(reset($this->items));
-		return $this->current;
-	}
-	
-	/**
-	 * Return the current object of the iterator.
-	 * @return DataObject
-	 */
-	public function current() {
-		return $this->current;
-	}
-	
-	/**
-	 * Return the key of the current object of the iterator.
-	 * @return mixed
-	 */
-	public function key() {
-		return key($this->items);
-	}
-	
-	/**
-	 * Return the next item in this set.
-	 * @return DataObject
-	 */
-	public function next() {
-		$this->current = $this->prepareItem(next($this->items));
-		return $this->current;
-	}
-	
-	/**
-	 * Return the next item in this set without progressing the iterator.
-	 * @return DataObject
-	 */
-	public function peekNext() {
-		return $this->getOffset(1);
-	}
-	
-	/**
-	 * Return the prvious item in this set, without affecting the iterator.
-	 * @return DataObject
-	 */
-	public function peekPrev() {
-		return $this->getOffset(-1);
-	}
-	
-	/**
-	 * Return the object in this set offset by $offset from the iterator pointer.
-	 * @param int $offset The offset.
-	 * @return DataObject
-	 */
-	public function getOffset($offset) {
-		$keys = array_keys($this->items);
-		foreach($keys as $i => $key) {
-			if($key == key($this->items)) break;
-		}
-		$requiredKey = $keys[$i + $offset];
-		return $this->items [$requiredKey];
-	}
 
 	/**
 	 * Gets a specific slice of an existing set.
@@ -521,28 +457,14 @@ class DataObjectSet extends ViewableData implements Iterator {
 		}
 		return $set;
 	}
-	
+
 	/**
-	 * Prepare an item taken from the internal array for 
-	 * output by this iterator.  Ensures that it is an object.
-	 * @param DataObject $item Item to prepare
-	 * @return DataObject
+	 * Returns an Iterator for this DataObjectSet.
+	 * This function allows you to use DataObjectSets in foreach loops
+	 * @return DataObjectSet_Iterator
 	 */
-	protected function prepareItem($item) {
-		if(is_object($item)) {
-			$item->iteratorProperties(key($this->items), sizeof($this->items));
-		}
-		// This gives some reliablity but it patches over the root cause of the bug...
-		// else if(key($this->items) !== null) $item = new ViewableData();
-		return $item;
-	}
-	
-	/**
-	 * Check the iterator is pointing to a valid item in the set.
-	 * @return boolean
-	 */
-	public function valid() {
-	 	return $this->current !== false;
+	public function getIterator() {
+		return new DataObjectSet_Iterator($this->items);
 	}
 	
 	/**
@@ -1036,6 +958,105 @@ function column_sort_callback_basic($a, $b) {
 	}
 	
 	return $result;
+}
+
+/**
+ * An Iterator for a DataObjectSet
+ */
+class DataObjectSet_Iterator implements Iterator {
+	function __construct($items) {
+		$this->items = $items;
+		
+		$this->current = $this->prepareItem(current($this->items));
+	}
+	
+	/**
+	 * Prepare an item taken from the internal array for 
+	 * output by this iterator.  Ensures that it is an object.
+	 * @param DataObject $item Item to prepare
+	 * @return DataObject
+	 */
+	protected function prepareItem($item) {
+		if(is_object($item)) {
+			$item->iteratorProperties(key($this->items), sizeof($this->items));
+		}
+		// This gives some reliablity but it patches over the root cause of the bug...
+		// else if(key($this->items) !== null) $item = new ViewableData();
+		return $item;
+	}
+	
+	
+	/**
+	 * Return the current object of the iterator.
+	 * @return DataObject
+	 */
+	public function current() {
+		return $this->current;
+	}
+	
+	/**
+	 * Return the key of the current object of the iterator.
+	 * @return mixed
+	 */
+	public function key() {
+		return key($this->items);
+	}
+	
+	/**
+	 * Return the next item in this set.
+	 * @return DataObject
+	 */
+	public function next() {
+		$this->current = $this->prepareItem(next($this->items));
+		return $this->current;
+	}
+	
+	/**
+	 * Rewind the iterator to the beginning of the set.
+	 * @return DataObject The first item in the set.
+	 */
+	public function rewind() {
+		$this->current = $this->prepareItem(reset($this->items));
+		return $this->current;
+	}
+	
+	/**
+	 * Check the iterator is pointing to a valid item in the set.
+	 * @return boolean
+	 */
+	public function valid() {
+	 	return $this->current !== false;
+	}
+	
+	/**
+	 * Return the next item in this set without progressing the iterator.
+	 * @return DataObject
+	 */
+	public function peekNext() {
+		return $this->getOffset(1);
+	}
+	
+	/**
+	 * Return the prvious item in this set, without affecting the iterator.
+	 * @return DataObject
+	 */
+	public function peekPrev() {
+		return $this->getOffset(-1);
+	}
+	
+	/**
+	 * Return the object in this set offset by $offset from the iterator pointer.
+	 * @param int $offset The offset.
+	 * @return DataObject
+	 */
+	public function getOffset($offset) {
+		$keys = array_keys($this->items);
+		foreach($keys as $i => $key) {
+			if($key == key($this->items)) break;
+		}
+		$requiredKey = $keys[$i + $offset];
+		return $this->items [$requiredKey];
+	}
 }
 
 ?>

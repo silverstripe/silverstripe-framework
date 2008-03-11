@@ -11,7 +11,7 @@
  * @package sapphire
  * @subpackage model
  */
-class SQLMap extends Object implements Iterator {
+class SQLMap extends Object implements IteratorAggregate {
 	/**
 	 * The query used to generate the map.
 	 * @var SQLQuery
@@ -49,32 +49,11 @@ class SQLMap extends Object implements Iterator {
 	}
 	
 	/*
-	 * Iterator functions - necessary for foreach to work
+	 * Iterator - necessary for foreach to work
 	 */
-	public function rewind() {
+	public function getIterator() {
 		$this->genItems();
-		return $this->items->rewind() ? $this->items->rewind()->Title : null;
-	}
-	
-	public function current() {
-		$this->genItems();
-		return $this->items->current()->Title;
-	}
-	
-	public function key() {
-		$this->genItems();
-		return $this->items->current()->ID;
-	}
-	
-	public function next() {
-		$this->genItems();
-		$next = $this->items->next();
-		return isset($next->Title) ? $next->Title : null;
-	}
-	
-	public function valid() {
-		$this->genItems();
-	 	return $this->items->valid();
+		return $this->items->getIterator();
 	}
 	
 	/**
