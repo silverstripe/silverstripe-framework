@@ -360,6 +360,7 @@ class HtmlEditorField_Toolbar extends ViewableData {
 					array(
 						"internal" => _t('HtmlEditorField.LINKINTERNAL',"Page on the site"),
 						"external" => _t('HtmlEditorField.LINKEXTERNAL',"Another website"),
+						"anchor" => _t('HtmlEditorField.LINKANCHOR',"Anchor on this page"),
 						"email" => _t('HtmlEditorField.LINKEMAIL', "Email address"),
 						"file" => _t('HtmlEditorField.LINKFILE', "Download a file"),			
 					)
@@ -368,6 +369,7 @@ class HtmlEditorField_Toolbar extends ViewableData {
 				new TextField("external", _t('HtmlEditorField.URL', "URL"), 'http://'),
 				new EmailField("email", _t('HtmlEditorField.EMAIL', "Email address")),
 				new TreeDropdownField("file",_t('HtmlEditorField.FILE', "File"),"File", "Filename"),
+				new TextField("Anchor", _t('HtmlEditorField.ANCHORVALUE', "Anchor")),
 				new TextField("Description", _t('HtmlEditorField.LINKDESCR', "Link description")),
 				new CheckboxField("TargetBlank", _t('HtmlEditorField.LINKOPENNEWWIN', "Open link in a new window?"))
 			),
