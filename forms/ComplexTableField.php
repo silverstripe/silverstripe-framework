@@ -477,7 +477,7 @@ JS;
 
 		$item = $this->unpagedSourceItems->First();
 		$start = 0;
-		return $this->PopupBaseLink() . "&methodName={$_REQUEST['methodName']}&ctf[childID]={$item->ID}&ctf[start]={$start}";
+		return Convert::raw2att($this->PopupBaseLink() . "&methodName={$_REQUEST['methodName']}&ctf[childID]={$item->ID}&ctf[start]={$start}");
 	}
 
 	function PopupLastLink() {
@@ -487,7 +487,7 @@ JS;
 
 		$item = $this->unpagedSourceItems->Last();
 		$start = $this->totalCount - 1;
-		return $this->PopupBaseLink() . "&methodName={$_REQUEST['methodName']}&ctf[childID]={$item->ID}&ctf[start]={$start}";
+		return Convert::raw2att($this->PopupBaseLink() . "&methodName={$_REQUEST['methodName']}&ctf[childID]={$item->ID}&ctf[start]={$start}");
 	}
 
 	function PopupNextLink() {
@@ -498,7 +498,7 @@ JS;
 		$item = $this->unpagedSourceItems->getOffset($_REQUEST['ctf']['start'] + 1);
 
 		$start = $_REQUEST['ctf']['start'] + 1;
-		return $this->PopupBaseLink() . "&methodName={$_REQUEST['methodName']}&ctf[childID]={$item->ID}&ctf[start]={$start}";
+		return Convert::raw2att($this->PopupBaseLink() . "&methodName={$_REQUEST['methodName']}&ctf[childID]={$item->ID}&ctf[start]={$start}");
 	}
 
 	function PopupPrevLink() {
@@ -509,7 +509,7 @@ JS;
 		$item = $this->unpagedSourceItems->getOffset($_REQUEST['ctf']['start'] - 1);
 
 		$start = $_REQUEST['ctf']['start'] - 1;
-		return $this->PopupBaseLink() . "&methodName={$_REQUEST['methodName']}&ctf[childID]={$item->ID}&ctf[start]={$start}";
+		return Convert::raw2att($this->PopupBaseLink() . "&methodName={$_REQUEST['methodName']}&ctf[childID]={$item->ID}&ctf[start]={$start}");
 	}
 	
 	/**
@@ -533,7 +533,7 @@ JS;
 		for($i = $offset;$i <= $offset + $this->pageSize && $i <= $this->totalCount;$i++) {
             $start = $i - 1;
 			$item = $this->unpagedSourceItems->getOffset($i-1);
-			$links['link'] = $this->PopupBaseLink() . "&methodName={$_REQUEST['methodName']}&ctf[childID]={$item->ID}&ctf[start]={$start}";
+			$links['link'] = Convert::raw2att($this->PopupBaseLink() . "&methodName={$_REQUEST['methodName']}&ctf[childID]={$item->ID}&ctf[start]={$start}");
             $links['number'] = $i;
             $links['active'] = $i == $currentItem ? false : true;
             $result->push(new ArrayData($links)); 	
@@ -566,7 +566,7 @@ JS;
 	}
 
 	function AddLink() {
-		return "{$this->PopupBaseLink()}&methodName=add";
+		return Convert::raw2att("{$this->PopupBaseLink()}&methodName=add");
 	}
 
 	/**
@@ -671,15 +671,15 @@ class ComplexTableField_Item extends TableListField_Item {
 	}
 
 	function EditLink() {
-		return $this->PopupBaseLink() . "&methodName=edit";
+		return Convert::raw2att($this->PopupBaseLink() . "&methodName=edit");
 	}
 
 	function ShowLink() {
-		return $this->PopupBaseLink() . "&methodName=show";
+		return Convert::raw2att($this->PopupBaseLink() . "&methodName=show");
 	}
 
 	function DeleteLink() {
-		return $this->PopupBaseLink() . "&methodName=delete";
+		return Convert::raw2att($this->PopupBaseLink() . "&methodName=delete");
 	}
 }
 
