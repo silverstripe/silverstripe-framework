@@ -161,8 +161,10 @@ class Email extends ViewableData {
 	/**
 	 * Load all the template variables into the internal variables, including
 	 * the template into body.  Called before send() or debugSend()
+	 * $isPlain=true will cause the template to be ignored, otherwise the GenericEmail template will be used
+	 * and it won't be plain email :) 
 	 */
-	protected function parseVariables() {
+	protected function parseVariables($isPlain = false) {
 		if(!$this->parseVariables_done) {
 			$this->parseVariables_done = true;
 
@@ -176,7 +178,7 @@ class Email extends ViewableData {
 			
 			// Process a .SS template file
 			$fullBody = $this->body;
-			if($this->ss_template) {
+			if($this->ss_template && !$isPlain) {
 				// Requery data so that updated versions of To, From, Subject, etc are included
 				$data = $this->templateData();
 				
@@ -207,7 +209,7 @@ class Email extends ViewableData {
     
     Requirements::clear();
     
-    $this->parseVariables();
+    $this->parseVariables(true);
     
     if(empty($this->from)) $this->from = Email::getAdminEmail();
             
