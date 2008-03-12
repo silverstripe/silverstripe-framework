@@ -253,12 +253,14 @@ JS;
 	 * <parentIDName>, Link back to the correct parent record (e.g. "parentID").
 	 * parentClass, Link back to correct container-class (the parent-record might have many 'has-one'-relationships)
 	 * CAUTION: "ID" in the DetailForm would be the "childID" in the overview table.
+	 * 
+	 * @param int $childID
 	 */
-	function DetailForm() {
+	function DetailForm($childID = null) {
 
 		// Get all the requests
 		$ID = isset($_REQUEST['ctf']['ID']) ? Convert::raw2xml($_REQUEST['ctf']['ID']) : null;
-		$childID = isset($_REQUEST['ctf']['childID']) ? Convert::raw2xml($_REQUEST['ctf']['childID']) : null;
+		if(!isset($childID)) $childID = isset($_REQUEST['ctf']['childID']) ? Convert::raw2xml($_REQUEST['ctf']['childID']) : null;
 		$childClass = Convert::raw2xml($_REQUEST['fieldName']);
 		$this->methodName = isset($_REQUEST['methodName']) ? $_REQUEST['methodName'] : null;
 
@@ -766,9 +768,10 @@ class ComplexTableField_Popup extends Form {
 		$this->saveInto($childObject);
 		$childObject->write();
 
+		// if ajax-call in an iframe, update window
 		if(Director::is_ajax()) {
-			// if ajax-call in an iframe, update window
-			$form = $this->controller->DetailForm();
+			// Newly saved objects need their ID reflected in the reloaded form to avoid double saving 
+			$form = $this->controller->DetailForm($childObject->ID);
 			$form->loadDataFrom($childObject);
 			FormResponse::update_dom_id($form->FormName(), $form->formHtmlContent(), true, 'update');
 			return FormResponse::respond();
