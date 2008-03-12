@@ -391,7 +391,7 @@ JS
 			
 			// Add more selected fields if they are from joined table.
 			foreach($this->FieldList() as $k=>$title){
-				if(!singleton($this->sourceClass)->hasField($k))
+				if(singleton($this->sourceClass)->hasDatabaseField($k))
 					$query->select[] = $k;
 			}
 		}
