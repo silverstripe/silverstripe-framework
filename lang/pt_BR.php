@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * Portuguese (Brazil) language pack
+ * @package sapphire
+ * @subpackage i18n
+ */
+
 i18n::include_locale_file('sapphire', 'en_US');
 
 global $lang;
