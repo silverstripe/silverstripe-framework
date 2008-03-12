@@ -776,8 +776,7 @@ class ComplexTableField_Popup extends Form {
 			FormResponse::update_dom_id($form->FormName(), $form->formHtmlContent(), true, 'update');
 			return FormResponse::respond();
 		} else {
-			// else redirect to referrer
-			Director::redirect(substr($_SERVER['REQUEST_URI'],0,strpos($_SERVER['REQUEST_URI'],"?")));
+			Director::redirectBack();
 		}
 	}
 
