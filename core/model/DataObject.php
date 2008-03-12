@@ -1223,6 +1223,17 @@ class DataObject extends ViewableData implements DataObjectInterface {
 	}
 
 	/**
+	 * Returns true if the given field exists as a database column
+	 *
+	 * @param string $field Name of the field
+	 *
+	 * @return boolean
+	 */
+	public function hasDatabaseField($field) {
+		return array_key_exists($field, $this->databaseFields());
+	}
+
+	/**
 	 * Returns true if the member is allowed to do the given action.
 	 *
 	 * @param string $perm The permission to be checked, such as 'View'.
