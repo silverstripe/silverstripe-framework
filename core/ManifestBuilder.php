@@ -365,14 +365,15 @@ class ManifestBuilder {
 				$args = split("implements", $classes[1][$i]);
 				$implements = isset($args[1]) ? $args[1] : null;
 
-				$interfaces = explode(",", $implements);
+				$interfaces = explode(",", trim($implements));
+				
 				$args = split("extends", $args[0]);
 				$extends = trim(isset($args[1]) ? $args[1] : null);
 				$class = trim($args[0]);
-				if($extends) self::$extendsArray[$extends][$class] = $class;
+				if($extends) self::$extendsArray[trim($extends)][$class] = $class;
 
 				foreach($interfaces as $interface) {
-					self::$implementsArray[$interface][$class] = $class;
+					self::$implementsArray[trim($interface)][$class] = $class;
 				}
 
 				self::$classArray[$class] = array(
