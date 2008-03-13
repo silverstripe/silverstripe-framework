@@ -184,11 +184,12 @@ class Form extends ViewableData {
 			$this->validator->removeValidation();
 	}
 
+		
 	/**
-	 * Return the form's fields - used by the templates
-	 * @return FieldSet The form fields
+	 * Generate extra special fields - namely the SecurityID field
+	 * @todo Is there anything wrong with putting this in __construct?
 	 */
-	function Fields() {
+	protected function genExtraFields() {
 		if(!$this->securityTokenAdded && $this->securityTokenEnabled()) {
 			if(Session::get('SecurityID')) {
 				$securityID = Session::get('SecurityID');
@@ -200,8 +201,27 @@ class Form extends ViewableData {
 			$this->fields->push(new HiddenField('SecurityID', '', $securityID));
 			$this->securityTokenAdded = true;
 		}
-		
+	}
+	
+	/**
+	 * Return the form's fields - used by the templates
+	 * @return FieldSet The form fields
+	 */
+	function Fields() {
+		$this->genExtraFields();
 		return $this->fields;
+	}
+	
+	/**
+	 * Return a block of HTML containing all the hidden fields for this form.
+	 * Useful when doing custom field layouts
+	 */
+	function HiddenFields() {
+		$output = "";
+		foreach($this->fields->dataFields() as $field) {
+			if($field instanceof HiddenField) $output .= $field->Field();
+		}
+		return $output;
 	}
 	
 	/**
@@ -220,6 +240,7 @@ class Form extends ViewableData {
 	 * @return FormField
 	 */
 	function dataFieldByName($name) {
+		$this->genExtraFields();
 		return $this->fields->dataFieldByName($name);
 	}
 
