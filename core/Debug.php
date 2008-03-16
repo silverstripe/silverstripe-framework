@@ -6,7 +6,37 @@
  */
 
 /**
- * Supports debugging and core error handling via static methods.
+ * Supports debugging and core error handling.
+ * 
+ * Attaches custom methods to the default 
+ * error handling hooks in PHP. Currently, three levels
+ * of error are supported:
+ * 
+ * - Notice
+ * - Warning
+ * - Error
+ * 
+ * Notice level errors are currently unsupported, and will be passed
+ * directly to the normal PHP error output.
+ * 
+ * Uncaught exceptions are currently passed to the debug
+ * reporter as standard PHP errors.
+ * 
+ * There are four different types of error handler supported by the
+ * Debug class:
+ * 
+ * - Friendly
+ * - Fatal
+ * - Logger
+ * - Emailer
+ * 
+ * Currently, only Friendly, Fatal, and Emailer handlers are implemented.
+ * 
+ * @todo port header/footer wrapping code to external reporter class
+ * @todo add support for user defined config: Debug::die_on_notice(true | false)
+ * @todo add appropriate handling for E_NOTICE and E_USER_NOTICE levels
+ * @todo better way of figuring out the error context to display in highlighted source
+ * @todo implement error logger handler
  * 
  * @package sapphire
  * @subpackage core
@@ -39,7 +69,7 @@ class Debug {
 				if(Director::is_ajax())
 					echo "Debug ($caller[class]$caller[type]$caller[function]() in line $caller[line] of " . basename($caller['file']) . ")\n";
 				else 
-					echo "<div style=\"background-color: white; text-align: left; width: 50em\">\n<hr>\n<h3>Debug <span style=\"font-size: 65%\">($caller[class]$caller[type]$caller[function]() \n<span style=\"font-weight:normal\">in line</span> $caller[line] \n<span style=\"font-weight:normal\">of</span> " . basename($caller['file']) . ")</span>\n</h3>\n";
+					echo "<div style=\"background-color: white; text-align: left;\">\n<hr>\n<h3>Debug <span style=\"font-size: 65%\">($caller[class]$caller[type]$caller[function]() \n<span style=\"font-weight:normal\">in line</span> $caller[line] \n<span style=\"font-weight:normal\">of</span> " . basename($caller['file']) . ")</span>\n</h3>\n";
 			}
 			
 			echo Debug::text($val);
@@ -64,6 +94,12 @@ class Debug {
 			echo Debug::text($val);
 			die();
 		}
+	}
+	
+	static function dump($val) {
+		echo '<pre style="background-color:#ccc;padding:5px;">';
+		print_r($val);
+		echo '</pre>';
 	}
 
 	static function text($val) {
@@ -123,7 +159,8 @@ class Debug {
 	 * @todo can this be moved into loadErrorHandlers?
 	 */
 	static function loadFatalErrorHandler() {
-		set_error_handler('errorHandler', (E_ALL ^ E_NOTICE) ^ E_USER_NOTICE);
+		//set_error_handler('errorHandler', (E_ALL ^ E_NOTICE) ^ E_USER_NOTICE);
+		set_error_handler('errorHandler', E_ALL);
 		set_exception_handler('exceptionHandler');
 	}
 
@@ -164,22 +201,50 @@ class Debug {
 
 	static function showError($errno, $errstr, $errfile, $errline, $errcontext) {
 		if(!headers_sent()) header("HTTP/1.0 500 Internal server error");
-
 		if(Director::is_ajax()) {
 			echo "ERROR:Error $errno: $errstr\n At l$errline in $errfile\n";
 			Debug::backtrace();
-
 		} else {
-			echo "<div style=\"border: 5px red solid\">\n";
-			echo "<p style=\"color: white; background-color: red; margin: 0\">FATAL ERROR: $errstr<br />\n At line $errline in $errfile<br />\n<br />\n</p>\n";
-
+			echo '<!DOCTYPE html><html><head><title>'. $_SERVER['REQUEST_METHOD'] . ' ' .$_SERVER['REQUEST_URI'] .'</title>';
+			echo '<style type="text/css">';
+			echo 'body { background-color:#eee; margin:0; padding:0; font-family:Helvetica,Arial,sans-serif; }';
+			echo '.info { border-bottom:1px dotted #333; background-color:#ccdef3; margin:0; padding:6px 12px; }';
+			echo '.info h1 { margin:0; padding:0; color:#333; letter-spacing:-2px; }';
+			echo '.header { margin:0; border-bottom:6px solid #ccdef3; height:23px; background-color:#666673; padding:4px 0 2px 6px; background-image:url('.Director::absoluteBaseURL().'cms/images/mainmenu/top-bg.gif); }';
+			echo '.trace { padding:6px 12px; }';
+			echo '.trace li { font-size:14px; margin:6px 0; }';
+			echo 'pre { margin-left:18px; }';
+			echo 'pre span { color:#999;}';
+			echo 'pre .error { color:#f00; }';
+			echo '</style></head>';
+			echo '<body>';
+			echo '<div class="header"><img src="'. Director::absoluteBaseURL() .'cms/images/mainmenu/logo.gif" width="26" height="23"></div>';
+			echo '<div class="info">';
+			echo "<h1>" . strip_tags($errstr) . "</h1>";
+			echo "<h3>{$_SERVER['REQUEST_METHOD']} {$_SERVER['REQUEST_URI']}</h3>";
+			echo "<p>Line <strong>$errline</strong> in <strong>$errfile</strong></p>";
+			echo '</div>';
+			echo '<div class="trace"><h3>Source</h3>';
+			$lines = file($errfile);
+			$offset = $errline-10;
+			$lines = array_slice($lines, $offset, 16);
+			echo '<pre>';
+			$offset++;
+			foreach($lines as $line) {
+				$line = htmlentities($line);
+				if ($offset == $errline) {
+					echo "<span>$offset</span> <span class=\"error\">$line</span>";
+				} else {
+					echo "<span>$offset</span> $line";
+				}
+				$offset++;
+			}
+			echo '</pre><h3>Trace</h3>';
 			Debug::backtrace();
-			//Debug::show(debug_backtrace());
-
-			echo "<h2>Context</h2>\n";
-			Debug::show($errcontext);
-
+			echo '</div>';
 			echo "</div>\n";
+			echo "</body></html>";
+			die();
 		}
 	}
 
@@ -275,18 +340,24 @@ class Debug {
 			array_shift($bt);
 		}
 		
-		$result = "";
+		$result = "<ul>";
 		foreach($bt as $item) {
 			if(Director::is_ajax() && !$ignoreAjax) {
 				$result .= self::full_func_name($item,true) . "\n";
 				$result .= "line $item[line] of " . basename($item['file']) . "\n\n";
 			} else {
-				$result .= "<p><b>" . self::full_func_name($item,true) . "</b>\n<br />\n";
-				$result .= isset($item['line']) ? "line $item[line] of " : '';
+				if ($item['function'] == 'user_error') {
+					$name = $item['args'][0];
+				} else {
+					$name = self::full_func_name($item,true);
+				}
+				$result .= "<li><b>" . $name . "</b>\n<br />\n";
+				$result .= isset($item['line']) ? "Line $item[line] of " : '';
 				$result .=  isset($item['file']) ? basename($item['file']) : ''; 
-				$result .= "</p>\n";
+				$result .= "</li>\n";
 			}
 		}
+		$result .= "</ul>";
 
 		if ($returnVal) {
 			return $result;
@@ -384,11 +455,31 @@ function errorHandler($errno, $errstr, $errfile, $errline, $errcontext) {
 			Debug::fatalHandler($errno, $errstr, $errfile, $errline, $errcontext);
 			break;
 
+		case E_NOTICE:
 		case E_WARNING:
 		case E_CORE_WARNING:
 		case E_USER_WARNING:
 			Debug::warningHandler($errno, $errstr, $errfile, $errline, $errcontext);
 			break;
+			
 	}
 }
+
+/**
+ * Interface for rendering an error report.
+ * 
+ * @todo decide whether to subclass this to display email and debug dumps 
+ */
+class DebugReporter {
+	
+	function writeHeader() {
+		
+	}
+	
+	function writeFooter() {
+		
+	}
+	
+}
+
 ?>
