@@ -12,6 +12,14 @@
  * @subpackage fields-structural
  */
 class FieldSet extends DataObjectSet {
+	
+	/**
+	 * Cached flat representation of all fields in this set,
+	 * including fields nested in {@link CompositeFields}.
+	 *
+	 * @uses self::collateDataFields()
+	 * @var array
+	 */
 	protected $sequentialSet;
 	
 	/**
@@ -148,7 +156,9 @@ class FieldSet extends DataObjectSet {
 	}
 
 	/**
-	 * Returns the named field
+	 * Returns the named field.
+	 * 
+	 * @todo Implement similiarly to dataFieldByName() to support nested sets - or merge with dataFields()
 	 */
 	public function fieldByName($name) {
 		foreach($this->items as $child) {
@@ -252,6 +262,24 @@ class FieldSet extends DataObjectSet {
 			if(isset($data[$fieldName])) $field->setValue($data[$fieldName]);
 		}
 	}
+	
+	/**
+	 * Return all <input type="hidden"> fields
+	 * in a form - including fields nested in {@link CompositeFields}.
+	 * Useful when doing custom field layouts.
+	 * 
+	 * @return FieldSet
+	 */
+	function HiddenFields() {
+		$hiddenFields = new FieldSet();
+		$dataFields = $this->dataFields();
+		
+		if($dataFields) foreach($dataFields as $field) {
+			if($field instanceof HiddenField) $hiddenFields->push($field);
+		}
+		
+		return $hiddenFields;
+	}
 
 	/**
 	 * Convert this form into a readonly form
@@ -268,7 +296,6 @@ class FieldSet extends DataObjectSet {
 	function makeReadonly() {
 		return $this->transform(new ReadonlyTransformation());
 	}
-	
 	
 }
 
