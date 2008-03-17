@@ -20,6 +20,9 @@ class RestfulService extends ViewableData {
 	protected $checkErrors;
 	protected $cache_expire;
 	
+	protected $authUsername, $authPassword;
+	protected $customHeaders = array();
+	
 	/**
  	* Creates a new restful service.
  	* @param string $base Base URL of the web service eg: api.example.com 
@@ -38,8 +41,23 @@ class RestfulService extends ViewableData {
 		$this->queryString = http_build_query($params,'','&');
 	}
 	
+	/**
+	 * Set basic authentication
+	 */
+	function basicAuth($username, $password) {
+		$this->authUsername = $username;
+		$this->authPassword = $password;
+	}
+	
+	/**
+	 * Set a custom HTTP header
+	 */
+	function httpHeader($header) {
+		$this->customHeaders[] = $header;
+	}
+	
 	protected function constructURL(){
-		return "$this->baseURL?$this->queryString";
+		return "$this->baseURL" . ($this->queryString ? "?$this->queryString" : "");
 	}
 	
 	/**
@@ -47,8 +65,8 @@ class RestfulService extends ViewableData {
  	* @todo implement authentication via cURL for
  	*/
 	
-	function connect(){
-		$url = $this->constructURL(); //url for the request
+	function connect($subURL){
+		$url = $this->constructURL() . $subURL; //url for the request
 		
 		//check for file exists in cache		
 		//set the cache directory
@@ -57,10 +75,10 @@ class RestfulService extends ViewableData {
 		$cache_file = md5($url); //encoded name of cache file
 		$cache_path = $cachedir."/$cache_file";
 				
-		if(( @file_exists("$cache_path") && ((@filemtime($cache_path) + $this->cache_expire) > ( time() )))){
+		if( !isset($_GET['flush']) && ( @file_exists("$cache_path") && ((@filemtime($cache_path) + $this->cache_expire) > ( time() )))){
 			$this->rawXML = file_get_contents($cache_path);
-		}
-		else {//not available in cache fetch from server
+			
+		} else {//not available in cache fetch from server
 			
 			$ch = curl_init();
 			$timeout = 5;
@@ -69,9 +87,33 @@ class RestfulService extends ViewableData {
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 			curl_setopt($ch, CURLOPT_USERAGENT, $useragent);
 			curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
+			curl_setopt($ch, CURLOPT_FOLLOWLOCATION,1);
+
+			if($this->customHeaders) curl_setopt($ch, CURLOPT_HTTPHEADER, $this->customHeaders);
+			if($this->authUsername) curl_setopt($ch, CURLOPT_USERPWD, "$this->authUsername:$this->authPassword");
+		
 			$this->rawXML = curl_exec($ch);
+			if($this->rawXML === false) {
+				user_error("Curl Error:" . curl_error($ch), E_USER_WARNING);
+				return;
+			}
+			
+			$statusCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 			curl_close($ch);
 			
+			// Success
+			if($statusCode >= 200 && $statusCode < 300) return $this->rawXML;
+
+			// Failure
+			switch($statusCode) {
+				case 401: 
+					user_error("Bad username/password given to RestfulService, url $url", E_USER_WARNING);
+					break;
+
+				default: 
+					user_error("Error code $statusCode from url $url", E_USER_WARNING);
+					break;
+			}
 			
 		}
 		
@@ -91,11 +133,10 @@ class RestfulService extends ViewableData {
 			else {
 				return $this->rawXML;
 			}
-		}
-		else {
+		} else {
 			user_error("Invalid Response (maybe your calling to wrong URL or server unavailable)", E_USER_ERROR);
-			}
 		}
+	}
 	
 	/**
  	* Gets attributes as an array, of a particular type of element.
