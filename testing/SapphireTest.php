@@ -61,7 +61,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 		$className = get_class($this);
 		$fixtureFile = eval("return {$className}::\$fixture_file;");
 
-		if($fixureFile) {
+		if($fixtureFile) {
 			// Create a temporary database
 			$dbConn = DB::getConn();
 			$dbname = 'tmpdb' . rand(1000000,9999999);
