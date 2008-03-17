@@ -79,10 +79,14 @@ class Image extends File {
 	}
 
 	/**
-	 * Get the URL for this Image.
-	 * @return boolean
+	 * Get the relative URL for this Image.
+	 * Overwrites File->URL() which returns an absolute URL.
+	 * 
+	 * @todo Refactor to return absolute URL like {@link File}
+	 * @uses Director::baseURL()
+	 * @return string
 	 */
-	function URL() {
+	function getURL() {
 		return Director::baseURL() . $this->Filename;
 	}
 	
@@ -363,6 +367,20 @@ class Image extends File {
 	 */
 	function getHeight() {
 		return $this->getDimensions(1);
+	}
+	
+	
+	
+	
+	// ###################
+	// DEPRECATED
+	// ###################
+	
+	/**
+	 * @deprecated
+	 */
+	function URL() {
+		user_error('Image::URL() is deprecated, please use the attribute directly as $myImage->URL.', E_USER_NOTICE);
 	}
 }
 

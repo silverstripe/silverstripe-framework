@@ -480,6 +480,22 @@ class File extends DataObject {
 		return $this->getField('ParentID');
 	}
 
+	/**
+	 * Gets the absolute URL accessible through the web.
+	 * 
+	 * @uses Director::absoluteBaseURL()
+	 * @return string
+	 */
+	function getAbsoluteURL() {
+		return Director::absoluteBaseURL() . $this->getFilename();
+	}
+	
+	/**
+	 * Gets the absolute URL accessible through the web.
+	 * 
+	 * @uses Director::absoluteBaseURL()
+	 * @return string
+	 */
 	function getURL() {
 		return Director::absoluteBaseURL() . $this->getFilename();
 	}
