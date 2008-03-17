@@ -15,15 +15,19 @@ class Currency extends Decimal {
 	
 	function Nice() {
 		// return "<span title=\"$this->value\">$" . number_format($this->value, 2) . '</span>';
-		return '$' . number_format($this->value, 2);
+		$val = '$' . number_format(abs($this->value), 2);
+		if($this->value < 0) return "($val)";
+		else return $val;
 	}
 	
 	function Whole() {
-		return '$' . number_format($this->value, 0);
+		$val = '$' . number_format(abs($this->value), 0);
+		if($this->value < 0) return "($val)";
+		else return $val;
 	}
 	
 	function setValue($value) {
-		$this->value = ereg_replace('[^0-9.]+','', $value);
+		$this->value = ereg_replace('[^0-9.\-]+','', $value);
 	}
 }
 
