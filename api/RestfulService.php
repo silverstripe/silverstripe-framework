@@ -94,8 +94,18 @@ class RestfulService extends ViewableData {
 		
 			$this->rawXML = curl_exec($ch);
 			if($this->rawXML === false) {
-				user_error("Curl Error:" . curl_error($ch), E_USER_WARNING);
-				return;
+				$curlError = curl_error($ch);
+				// Problem verifying the server SSL certificate; just ignore it as it's not mandatory
+				if(strpos($curlError,'14090086') !== false) {
+					curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+					$this->rawXML = curl_exec($ch);
+					$curlError = curl_error($ch);
+				}
+				
+				if($this->rawXML === false) {
+					user_error("Curl Error:" . $curlError, E_USER_WARNING);
+					return;
+				}
 			}
 			
 			$statusCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
