@@ -18,10 +18,16 @@ class Folder extends File {
 	);
 	
 	/*
-	 * Find the given folder or create it, recursively
+	 * Find the given folder or create it, recursively.
+	 * 
+	 * @param $folderPath string Absolute or relative path to the file
 	 */
-	static function findOrMake($folder) {
-		$parts = explode("/",$folder);
+	static function findOrMake($folderPath) {
+		$folderPath = trim(Director::makeRelative($folderPath));
+		// replace leading and trailing slashes
+		$folderPath = preg_replace('/^\/?(.*)\/?$/', '$1', $folderPath);
+		
+		$parts = explode("/",$folderPath);
 		$parentID = 0;
 
 		foreach($parts as $part) {
