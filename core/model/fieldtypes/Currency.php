@@ -27,7 +27,16 @@ class Currency extends Decimal {
 	}
 	
 	function setValue($value) {
-		$this->value = ereg_replace('[^0-9.\-]+','', $value);
+		$matches = null;
+		if(is_numeric($value)) {
+			$this->value = $value;
+			
+		} else if(preg_match('/-?\$?[0-9,]+(.[0-9]+)?([Ee][0-9]+)?/', $value, $matches)) {
+			$this->value = str_replace(array('$',','),'',$matches[0]);
+			
+		} else {
+			$this->value = 0;
+		}
 	}
 }
 
