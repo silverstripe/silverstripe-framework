@@ -152,6 +152,7 @@ class Object {
 	 * Returns true if the given method exists.
 	 */
 	public function hasMethod($methodName) {
+		$methodName = strtolower($methodName);
 		if(!isset($this->class)) $this->class = get_class($this);
 		if(!isset(Object::$builtInMethods['_set'][$this->class])) $this->buildMethodList();
 
@@ -165,8 +166,9 @@ class Object {
 	 * Extra methods can be hooked to a class using
 	 */
 	public function __call($methodName, $args) {
-		if(isset(Object::$extraMethods[$this->class][$methodName])) {
-			$config = Object::$extraMethods[$this->class][$methodName];
+		$lowerMethodName = strtolower($methodName);
+		if(isset(Object::$extraMethods[$this->class][$lowerMethodName])) {
+			$config = Object::$extraMethods[$this->class][$lowerMethodName];
 			if(isset($config['parameterName'])) {
 				if(isset($config['arrayIndex'])) $obj = $this->{$config['parameterName']}[$config['arrayIndex']];
 				else $obj = $this->{$config['parameterName']};
@@ -179,7 +181,7 @@ class Object {
 				}
 
 			} else if(isset($config['wrap'])) {
-				array_unshift($args, $methodName);
+				array_unshift($args, $config['methodName']);
 				return call_user_func_array(array(&$this, $config['wrap']), $args);
 
 			} else if(isset($config['function'])) {
@@ -187,7 +189,7 @@ class Object {
 				return $function($this, $args);
 
 			} else if($config['function_str']) {
-				$function = Object::$extraMethods[$this->class][$methodName]['function'] = create_function('$obj, $args', $config['function_str']);
+				$function = Object::$extraMethods[$this->class][strtolower($methodName)]['function'] = create_function('$obj, $args', $config['function_str']);
 				return $function($this, $args);
 
 			} else {
@@ -211,7 +213,7 @@ class Object {
 		if(method_exists($obj, 'allMethodNames')) {
 			$methodNames = $obj->allMethodNames(true);
 			foreach($methodNames as $methodName) {
-				Object::$extraMethods[$this->class][$methodName] = array("parameterName" => $parameterName, "arrayIndex" => $arrayIndex);
+				Object::$extraMethods[$this->class][strtolower($methodName)] = array("parameterName" => $parameterName, "arrayIndex" => $arrayIndex);
 			}
 		}
 	}
@@ -221,7 +223,7 @@ class Object {
 	 * For example, Thumbnail($arg, $arg) can be defined to call generateImage("Thumbnail", $arg, $arg)
 	 */
 	protected function addWrapperMethod($methodName, $wrapperMethod) {
-		Object::$extraMethods[$this->class][$methodName] = array("wrap" => $wrapperMethod);
+		Object::$extraMethods[$this->class][strtolower($methodName)] = array("wrap" => $wrapperMethod, "methodName" => $methodName);
 	}
 
 	/**
@@ -232,7 +234,7 @@ class Object {
 	 * any protected methods; the method is actually contained in an external function.
 	 */
 	protected function createMethod($methodName, $methodCode) {
-		Object::$extraMethods[$this->class][$methodName] = array("function_str" => $methodCode);
+		Object::$extraMethods[$this->class][strtolower($methodName)] = array("function_str" => $methodCode);
 	}
 
 	/**
@@ -258,7 +260,7 @@ class Object {
 		$methods = $reflection->getMethods();
 		foreach($methods as $method) {
 			$name = $method->getName();
-			$methodNames[$name] = $name;
+			$methodNames[strtolower($name)] = $name;
 		}
 		Object::$builtInMethods[$this->class] = $methodNames;
 		Object::$builtInMethods['_set'][$this->class] = true	;
