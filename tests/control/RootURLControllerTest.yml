@@ -1,0 +1,15 @@
+Page:
+    home:
+        Title: Home
+    page1:
+        Title: First Page
+        URLSegment: page1
+        HomepageForDomain: page.co.nz, help.com,something.com, www.something.com
+    page2:
+        Title: Second Page
+        URLSegment: page2
+        HomepageForDomain: other.co.nz, right
+    page3:
+        Title: Third Page
+        URLSegment: page3
+        HomepageForDomain: only.com

@@ -36,8 +36,8 @@ class RootURLController extends Controller {
 	static function get_homepage_urlsegment() {
 		$host = $_SERVER['HTTP_HOST'];
 		$host = str_replace('www.','',$host);
-		$SQL_host = Convert::raw2sql($host);
-		$homePageOBJ = DataObject::get_one("SiteTree", "HomepageForDomain = '$SQL_host'");
+		$SQL_host = str_replace('.','\\.',Convert::raw2sql($host));
+        $homePageOBJ = DataObject::get_one("SiteTree", "HomepageForDomain REGEXP '(,|^) *$SQL_host *(,|\$)'");
 
 		if($homePageOBJ) {
 			return $homePageOBJ->URLSegment;
