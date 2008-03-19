@@ -55,29 +55,34 @@ require_once 'PHPUnit/Framework.php';
  * @subpackage testing
  */
 class SapphireTest extends PHPUnit_Framework_TestCase {
+	static $fixture_file = null;
+	
 	function setUp() {
-		
-		// Create a temporary database
-		$dbConn = DB::getConn();
-		$dbname = 'tmpdb' . rand(1000000,9999999);
-		while(!$dbname || $dbConn->databaseExists($dbname)) {
-			$dbname = 'tmpdb' . rand(1000000,9999999);
-		}
-		$dbConn->selectDatabase($dbname);
-		
-		// This code is a bit misplaced; we want some way of the whole session being reinitialised...
-		Versioned::reading_stage(null);
-
-		$dbConn->createDatabase();
-		singleton('DataObject')->flushCache();
-
-		$dbadmin = new DatabaseAdmin();
-		$dbadmin->doBuild(true, false);
-
-		// Load the fixture into the database
 		$className = get_class($this);
 		$fixtureFile = eval("return {$className}::\$fixture_file;");
-		$this->loadFixture($fixtureFile);
+
+		if($fixtureFile) {
+			// Create a temporary database
+			$dbConn = DB::getConn();
+			$dbname = 'tmpdb' . rand(1000000,9999999);
+			while(!$dbname || $dbConn->databaseExists($dbname)) {
+				$dbname = 'tmpdb' . rand(1000000,9999999);
+			}
+			$dbConn->selectDatabase($dbname);
+		
+			// This code is a bit misplaced; we want some way of the whole session being reinitialised...
+			Versioned::reading_stage(null);
+
+			$dbConn->createDatabase();
+			singleton('DataObject')->flushCache();
+
+			$dbadmin = new DatabaseAdmin();
+			$dbadmin->doBuild(true, false);
+
+			// Load the fixture into the database
+			$className = get_class($this);
+			$this->loadFixture($fixtureFile);
+		}
 	}
 	
 	/**
@@ -166,7 +171,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	function tearDown() {
 		// Delete our temporary database
 		$dbConn = DB::getConn();
-		if(substr($dbConn->currentDatabase(),0,5) == 'tmpdb') {
+		if($dbConn && substr($dbConn->currentDatabase(),0,5) == 'tmpdb') {
 			// echo "Deleted temp database " . $dbConn->currentDatabase() . "\n";
 			$dbConn->dropDatabase();
 		}
