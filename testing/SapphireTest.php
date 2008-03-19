@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @package sapphire
  * @subpackage testing
@@ -34,19 +33,11 @@ if(ManifestBuilder::staleManifest()) ManifestBuilder::compileManifest();
 require_once(MANIFEST_FILE);
 */
 
-
-// Check that PHPUnit is installed
-$hasPhpUnit = false;
-$paths = explode(PATH_SEPARATOR, ini_get('include_path'));
-foreach($paths as $path) {
-	if(@file_exists("$path/PHPUnit/Framework.php")) $hasPhpUnit = true;
-}
-
-if($hasPhpUnit) {
-
 /**
  */
+if(hasPhpUnit()) {
 require_once 'PHPUnit/Framework.php';
+}
 
 /**
  * Test case class for the Sapphire framework.
@@ -139,7 +130,11 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 							$parsedItems[] = $this->parseFixtureVal($item);
 						}
 						$obj->write();
-						$obj->getComponents($fieldName)->setByIDList($parsedItems);
+						if($obj->many_many($fieldName)) {
+							$obj->getManyManyComponents($fieldName)->setByIDList($parsedItems);
+						} else {
+							$obj->getComponents($fieldName)->setByIDList($parsedItems);
+						}
 						
 					} else {
 						$obj->$fieldName = $this->parseFixtureVal($fieldVal);
@@ -172,20 +167,13 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 		// Delete our temporary database
 		$dbConn = DB::getConn();
 		if($dbConn && substr($dbConn->currentDatabase(),0,5) == 'tmpdb') {
-			// echo "Deleted temp database " . $dbConn->currentDatabase() . "\n";
-			$dbConn->dropDatabase();
+			$dbName = $dbConn->currentDatabase();
+			if($dbName && DB::query("SHOW DATABASES LIKE '$dbName'")->value()) {
+				// echo "Deleted temp database " . $dbConn->currentDatabase() . "\n";
+				$dbConn->dropDatabase();
+			}
 		}
 	}
-}
-
-} else {
-	// Stub
-	/**
-	 * @ignore 
-	 * @package sapphire
-	 * @subpackage testing
-	 */
-	class SapphireTest extends Object {}
 }
 
 ?>

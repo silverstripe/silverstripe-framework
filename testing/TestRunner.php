@@ -6,18 +6,20 @@
  */
 
 // Check that PHPUnit is installed
-$hasPhpUnit = false;
-$paths = explode(PATH_SEPARATOR, ini_get('include_path'));
-foreach($paths as $path) {
-	if(@file_exists("$path/PHPUnit/Framework.php")) $hasPhpUnit = true;
+function hasPhpUnit() {
+	$paths = explode(PATH_SEPARATOR, ini_get('include_path'));
+	foreach($paths as $path) {
+		if(@file_exists("$path/PHPUnit/Framework.php")) return true;
+	}
+	return false;
 }
-
-if($hasPhpUnit) {
 
 /**
  */
+if(hasPhpUnit()) {
 require_once 'PHPUnit/Framework.php';
 require_once 'PHPUnit/TextUI/TestRunner.php';
+}
 
 /**
  * Controller that executes PHPUnit tests
@@ -29,10 +31,14 @@ class TestRunner extends Controller {
 	 * Run all test classes
 	 */
 	function index() {
-		$tests = ClassInfo::subclassesFor('SapphireTest');
-		array_shift($tests);
+		if(hasPhpUnit()) {
+			$tests = ClassInfo::subclassesFor('SapphireTest');
+			array_shift($tests);
 		
-		$this->runTests($tests);
+			$this->runTests($tests);
+		} else {
+			echo "Please install PHPUnit using pear";
+		}
 	}
 		
 	/**
@@ -66,21 +72,8 @@ class TestRunner extends Controller {
 	}
 }
 
-} else {
-
-/**
- * @ignore
- * @package sapphire
- * @subpackage testing
- */
-class TestRunner extends Controller {
-	function index() {
-		echo "Please install PHPUnit using pear.";
-	}
-}
-
 // This class is here to help with documentation.
-
+if(!hasPhpUnit()) {
 /**
  * PHPUnit is a testing framework that can be installed using PEAR.
  * It's not bundled with Sapphire, you will need to install it yourself.
@@ -91,5 +84,4 @@ class TestRunner extends Controller {
 class PHPUnit_Framework_TestCase {
 	
 }
-
 }
