@@ -380,7 +380,7 @@ class Image extends File {
 	 * @deprecated
 	 */
 	function URL() {
-		user_error('Image::URL() is deprecated, please use the attribute directly as $myImage->URL.', E_USER_NOTICE);
+		return $this->getURL();
 	}
 }
 
