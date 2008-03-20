@@ -833,6 +833,8 @@ class i18n extends Controller {
 		$baseDir = Director::baseFolder();
 		$modules = scandir($baseDir);
 		foreach($modules as $module) {
+			if($module[0] == '.') continue;
+			
 			$moduleDir = $baseDir . DIRECTORY_SEPARATOR . $module;
 			$langDir = $moduleDir . DIRECTORY_SEPARATOR . "lang";
 			if(is_dir($moduleDir) && is_file($moduleDir . DIRECTORY_SEPARATOR . "_config.php") && is_dir($langDir)) {
