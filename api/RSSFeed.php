@@ -189,10 +189,17 @@ class RSSFeed extends ViewableData {
 			HTTP::register_etag($this->etag);
 		}
 
-		$body = str_replace('&nbsp;', '&#160;', $this->renderWith('RSSFeed'));
+		$body = $this->feedContent();
 		HTTP::add_cache_headers($body);
 		header("Content-type: text/xml");
 		echo $body;
+	}
+	
+	/**
+	 * Return the content of the RSS feed
+	 */
+	function feedContent() {
+		return str_replace('&nbsp;', '&#160;', $this->renderWith('RSSFeed'));
 	}
 }
 
@@ -251,8 +258,7 @@ class RSSFeed_Entry extends ViewableData {
 	 * @return string Returns the description of the entry.
 	 */
 	function Title() {
-		if($this->titleField)
-			return $this->failover->obj($this->titleField);
+		return $this->rssField($this->titleField, 'Varchar');
 	}
 
 	/**
@@ -261,8 +267,7 @@ class RSSFeed_Entry extends ViewableData {
 	 * @return string Returns the description of the entry.
 	 */
 	function Description() {
-		if($this->descriptionField)
-			return $this->failover->obj($this->descriptionField);
+		return $this->rssField($this->descriptionField, 'Text');
 	}
 
 	/**
@@ -276,13 +281,29 @@ class RSSFeed_Entry extends ViewableData {
 	}
 
 	/**
+	 * Return the named field as an obj() call from $this->failover.
+	 * Default to the given class if there's no casting information.
+	 */
+	function rssField($fieldName, $defaultClass = 'Varchar') {
+		if($fieldName) {
+			if($this->failover->castingHelperPair($fieldName)) {
+				return $this->failover->obj($fieldName);
+			} else {
+				$obj = new $defaultClass($fieldName);
+				$obj->setValue($this->failover->XML_val($fieldName));
+				return $obj;
+			}
+		}
+	}
+
+	/**
 	 * Get a link to this entry
 	 *
 	 * @return string Returns the URL of this entry
 	 */
 	function AbsoluteLink() {
 		if($this->failover->hasMethod('AbsoluteLink')) return $this->failover->AbsoluteLink();
-		else if($this->failover->hasMethod('Link')) return Director::absoluteURL($this->link);
+		else if($this->failover->hasMethod('Link')) return Director::absoluteURL($this->failover->Link());
 		else user_error($this->failover->class . " object has either an AbsoluteLink nor a Link method.  Can't put a link in the RSS feed", E_USER_WARNING);
 	}
 }
