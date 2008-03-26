@@ -60,8 +60,7 @@ class ManifestBuilder {
 		'shortstat',
 		'HTML',
 	);
-
-
+	
 	/**
 	 * Returns true if the manifest file should be regenerated
 	 *
@@ -85,11 +84,41 @@ class ManifestBuilder {
 	 * Generates a new manifest file and saves it to {@link MANIFEST_FILE}
 	 */
 	static function compileManifest() {
-
 		// Config manifest
 		$baseDir = dirname($_SERVER['SCRIPT_FILENAME']) . "/..";
 		$baseDir = ereg_replace("/[^/]+/\\.\\.", "", $baseDir);
-
+		
+		$manifest = self::generate_php_file(self::get_manifest_info($baseDir));
+		
+		if($fh = fopen(MANIFEST_FILE, "w")) {
+			fwrite($fh, $manifest);
+			fclose($fh);
+		} else {
+			die("Cannot write manifest file! Check permissions of " .
+					MANIFEST_FILE);
+		}
+	}
+	
+	/**
+	 * Turn an array produced by get_manifest_info() into the content of the manifest PHP include
+	 */
+	static function generate_php_file($manifestInfo) {
+		$output = "<?php\n";
+		
+		foreach($manifestInfo['globals'] as $globalName => $globalVal) {
+			$output .= "\$$globalName = " . var_export($globalVal, true) . ";\n\n";
+		}
+		foreach($manifestInfo['require_once'] as $requireItem) {
+			$output .= "require_once(\"$requireItem\");\n";
+		}
+		
+		return $output;
+	}
+	
+	/**
+	 * Return an array containing information for the manifest
+	 */
+	static function get_manifest_info($baseDir) {
 		// locate and include the exclude files
 		$topLevel = scandir($baseDir);
 		foreach($topLevel as $file) {
@@ -125,14 +154,11 @@ class ManifestBuilder {
 			}
 		}
 
-
-		$manifest = "\$_CLASS_MANIFEST = " . var_export($classManifest, true) .
-			";\n";
+		$manifestInfo["globals"]["_CLASS_MANIFEST"] = $classManifest;
 
 		// Load the manifest in, so that the autoloader works
 		global $_CLASS_MANIFEST;
 		$_CLASS_MANIFEST = $classManifest;
-
 
 		// _config.php manifest
 		global $databaseConfig;
@@ -142,7 +168,7 @@ class ManifestBuilder {
 			if(@is_dir("$baseDir/$filename/") &&
 					 file_exists("$baseDir/$filename/_config.php") &&
 					 !file_exists("$baseDir/$filename/_manifest_exclude")) {
-				$manifest .= "require_once(\"$baseDir/$filename/_config.php\");\n";
+				$manifestInfo["require_once"][] = "$baseDir/$filename/_config.php";
 				// Include this so that we're set up for connecting to the database
 				// in the rest of the manifest builder
 				require_once("$baseDir/$filename/_config.php");
@@ -179,28 +205,20 @@ class ManifestBuilder {
 		// Ensure that any custom templates get favoured
 		ManifestBuilder::getTemplateManifest($baseDir, project(), $templateManifest, $cssManifest);
 
-		$manifest .= "\$_TEMPLATE_MANIFEST = " . var_export($templateManifest, true) . ";\n";
-		$manifest .= "\$_CSS_MANIFEST = " . var_export($cssManifest, true) . ";\n";
+		$manifestInfo["globals"]["_TEMPLATE_MANIFEST"] = $templateManifest;
+		$manifestInfo["globals"]["_CSS_MANIFEST"] = $cssManifest;
+
 		DB::connect($databaseConfig);
 
 		// Database manifest
 		$allClasses = ManifestBuilder::allClasses($classManifest);
 
-		$manifest .= "\$_ALL_CLASSES = " . var_export($allClasses, true) . ";\n";
+		$manifestInfo["globals"]["_ALL_CLASSES"] = $allClasses;
 
 		global $_ALL_CLASSES;
 		$_ALL_CLASSES = $allClasses;
 
-		// Write manifest to disk
-		$manifest = "<?php\n$manifest\n?>";
-
-		if($fh = fopen(MANIFEST_FILE, "w")) {
-			fwrite($fh, $manifest);
-			fclose($fh);
-		} else {
-			die("Cannot write manifest file! Check permissions of " .
-					MANIFEST_FILE);
-		}
+		return $manifestInfo;
 	}
 
 
@@ -309,7 +327,10 @@ class ManifestBuilder {
 	 *               information.
 	 */
 	private static function allClasses($classManifest) {
-
+		self::$classArray = array();
+		self::$extendsArray = array();
+		self::$implementsArray = array();
+		
 		// Include everything, so we actually have *all* classes
 		foreach($classManifest as $file) {
 			$b = basename($file);
@@ -339,7 +360,7 @@ class ManifestBuilder {
 				if(is_subclass_of($subclass, $class)) $allClasses['children'][$class][$subclass] = $subclass;
 			}
 		}
-
+		
 		return $allClasses;
 	}
 
