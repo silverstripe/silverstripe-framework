@@ -128,6 +128,7 @@ Director::addRules(10, array(
 	'images/$Action/$Class/$ID/$Field' => 'Image_Uploader',
 	'' => 'RootURLController',
 	'sitemap.xml' => 'GoogleSitemap',
+	'api/v1/$ClassName/$ID' => 'RestfulServer',
 ));
 
 Director::addRules(1, array(

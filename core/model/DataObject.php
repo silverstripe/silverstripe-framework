@@ -59,6 +59,13 @@ class DataObject extends ViewableData implements DataObjectInterface {
 	 * @var string
 	 */
 	static $plural_name = null;
+	
+	
+	/**
+	 * Allow API access to this object?
+	 * @todo Define the options that can be set here
+	 */
+	static $api_access = false;
 
 
 	/**
