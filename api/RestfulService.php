@@ -61,10 +61,9 @@ class RestfulService extends ViewableData {
 	}
 	
 	/**
- 	* Connects to the RESTful service and gets its response.
- 	* @todo implement authentication via cURL for
- 	*/
-	
+	 * Connects to the RESTful service and gets its response.
+	 * @deprecated Use {@link request()} instead.
+ 	 */
 	function connect($subURL){
 		$url = $this->constructURL() . $subURL; //url for the request
 		
@@ -146,6 +145,76 @@ class RestfulService extends ViewableData {
 		} else {
 			user_error("Invalid Response (maybe your calling to wrong URL or server unavailable)", E_USER_ERROR);
 		}
+	}
+	
+	/**
+	 * Makes a request to the RESTful server, and return a {@link RestfulService_Response} object for parsing of the result.
+	 * @todo Better POST, PUT, DELETE, and HEAD support
+	 * @todo Caching of requests - probably only GET and HEAD requestst
+	 * @todo JSON support in RestfulService_Response
+	 * @todo Pass the response headers to RestfulService_Response
+	 *
+	 * This is a replacement of {@link connect()}.
+	 */
+	function request($subURL, $method = "GET", $data = null, $headers = null) {
+		$url = $this->baseURL . $subURL; //url for the request
+		$method = strtoupper($method);
+		
+		assert(in_array($method, array('GET','POST','PUT','DELETE','HEAD','OPTIONS')));
+		
+		//check for file exists in cache		
+		//set the cache directory
+		
+		/* we've disabled caching until we can figure out how to deal with storing responses
+		$cachedir=TEMP_FOLDER; //default silverstrip-cache
+		$cache_file = md5($url); //encoded name of cache file
+		$cache_path = $cachedir."/$cache_file";
+				
+		if( !isset($_GET['flush']) && ( @file_exists("$cache_path") && ((@filemtime($cache_path) + $this->cache_expire) > ( time() )))){
+			$this->rawXML = file_get_contents($cache_path);
+			
+		} else {//not available in cache fetch from server
+		*/
+		$ch = curl_init();
+		$timeout = 5;
+		$useragent = "SilverStripe/2.2";
+		curl_setopt($ch, CURLOPT_URL, $url);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		curl_setopt($ch, CURLOPT_USERAGENT, $useragent);
+		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
+		curl_setopt($ch, CURLOPT_FOLLOWLOCATION,1);
+		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method);
+		
+		if($this->customHeaders) {
+			$headers = array_merge((array)$this->customHeaders, (array)$headers);
+		}
+
+		if($headers) curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+		if($this->authUsername) curl_setopt($ch, CURLOPT_USERPWD, "$this->authUsername:$this->authPassword");
+	
+		$responseBody = curl_exec($ch);
+		
+		if($responseBody === false) {
+			$curlError = curl_error($ch);
+			// Problem verifying the server SSL certificate; just ignore it as it's not mandatory
+			if(strpos($curlError,'14090086') !== false) {
+				curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+				$responseBody = curl_exec($ch);
+				$curlError = curl_error($ch);
+			}
+			
+			if($respnoseBody === false) {
+				user_error("Curl Error:" . $curlError, E_USER_WARNING);
+				return;
+			}
+		}
+
+		$statusCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+		$response = new RestfulService_Response($responseBody, curl_getinfo($ch, CURLINFO_HTTP_CODE));
+		
+		curl_close($ch);
+		
+		return $response;
 	}
 	
 	/**
@@ -311,7 +380,36 @@ class RestfulService extends ViewableData {
 		
 		return $output;
 	}
-	
-	
 }
+
+class RestfulService_Response extends HTTPResponse {
+	protected $simpleXML;
+	
+	function __construct($body, $statusCode = 200, $headers = null) {
+		$this->setbody($body);
+		$this->setStatusCode($statusCode);
+		$this->headers = $headers;
+	}
+	
+	function simpleXML() {
+		if(!$this->simpleXML) $this->simpleXML = new SimpleXMLElement($this->body);
+		return $this->simpleXML;
+	}
+	
+	/**
+	 * Return an array of xpath matches
+	 */
+	function xpath($xpath) {
+		return $this->simpleXML()->xpath($xpath);
+	}
+	
+	/**
+	 * Return the first xpath match
+	 */
+	function xpath_one($xpath) {
+		$items = $this->xpath($xpath);
+		return $items[0];
+	}
+}
+
 ?>
