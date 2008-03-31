@@ -84,55 +84,125 @@ class RestfulServer extends Controller {
 			return $this->notFound();
 		}
 		
+		// TO DO - inspect that Accept header as well.  $_GET['accept'] can still be checked, as it's handy for debugging
+		$contentType = isset($_GET['accept']) ? $_GET['accept'] : 'text/xml';
+		
 		if($obj->stat('api_access') && $obj->canView()) {
-		
-			$xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<$className>\n";
-			foreach($obj->db() as $fieldName => $fieldType) {
-				$xml .= "<$fieldName>" . Convert::raw2xml($obj->$fieldName) . "</$fieldName>\n";
-			}
+			switch($contentType) {
+				case "text/xml":
+					$this->getResponse()->addHeader("Content-type", "text/xml");
+					return $this->dataObjectAsXML($obj);
 
-			foreach($obj->has_one() as $relName => $relObj) {
-				$fieldName = $relName . 'ID';
-				if($obj->$fieldName) {
-					$href = Director::absoluteURL(self::$api_base . "$relObj/" . $obj->$fieldName);
-				} else {
-					$href = Director::absoluteURL(self::$api_base . "$className/$id/$relName");
-				}
-				$xml .= "<$relName linktype=\"has_one\" href=\"$href\" id=\"{$obj->$fieldName}\" />\n";
-			}
+				case "text/json":
+					$this->getResponse()->addHeader("Content-type", "text/json");
+					return $this->dataObjectAsJSON($obj);
 
-			foreach($obj->has_many() as $relName => $relObj) {
-				$xml .= "<$relName linktype=\"has_many\">\n";
-				$items = $obj->$relName();
-				foreach($items as $item) {
-					//$href = Director::absoluteURL(self::$api_base . "$className/$id/$relName/$item->ID");
-					$href = Director::absoluteURL(self::$api_base . "$relObj/$item->ID");
-					$xml .= "<$relObj href=\"$href\" id=\"{$item->ID}\" />\n";
-				}
-				$xml .= "</$relName>\n";
+				case "text/html":
+				case "application/xhtml+xml":
+					$this->getResponse()->addHeader("Content-type", "text/json");
+					return $this->dataObjectAsXHTML($obj);
 			}
-
-			foreach($obj->many_many() as $relName => $relObj) {
-				$xml .= "<$relName linktype=\"many_many\">\n";
-				$items = $obj->$relName();
-				foreach($items as $item) {
-					//$href = Director::absoluteURL(self::$api_base . "$className/$id/$relName/$item->ID");
-					$href = Director::absoluteURL(self::$api_base . "$relObj/$item->ID");
-					$xml .= "<$relObj href=\"$href\" id=\"{$item->ID}\" />\n";
-				}
-				$xml .= "</$relName>\n";
-			}
-
-			$xml .= "</$className>";
-		
-			$this->getResponse()->addHeader("Content-type", "text/xml");
-			
-			return $xml;
 		} else {
 			return $this->permissionFailure();
 		}
 	}
 	
+	/**
+	 * Generate an XML representation of the given DataObject.
+	 */
+	protected function dataObjectAsXML(DataObject $obj) {
+		$className = $obj->class;
+		$id = $obj->ID;
+		
+		$json = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<$className>\n";
+		foreach($obj->db() as $fieldName => $fieldType) {
+			$json .= "<$fieldName>" . Convert::raw2xml($obj->$fieldName) . "</$fieldName>\n";
+		}
+
+		foreach($obj->has_one() as $relName => $relClass) {
+			$fieldName = $relName . 'ID';
+			if($obj->$fieldName) {
+				$href = Director::absoluteURL(self::$api_base . "$relClass/" . $obj->$fieldName);
+			} else {
+				$href = Director::absoluteURL(self::$api_base . "$className/$id/$relName");
+			}
+			$json .= "<$relName linktype=\"has_one\" href=\"$href\" id=\"{$obj->$fieldName}\" />\n";
+		}
+
+		foreach($obj->has_many() as $relName => $relClass) {
+			$json .= "<$relName linktype=\"has_many\">\n";
+			$items = $obj->$relName();
+			foreach($items as $item) {
+				//$href = Director::absoluteURL(self::$api_base . "$className/$id/$relName/$item->ID");
+				$href = Director::absoluteURL(self::$api_base . "$relClass/$item->ID");
+				$json .= "<$relClass href=\"$href\" id=\"{$item->ID}\" />\n";
+			}
+			$json .= "</$relName>\n";
+		}
+
+		foreach($obj->many_many() as $relName => $relClass) {
+			$json .= "<$relName linktype=\"many_many\">\n";
+			$items = $obj->$relName();
+			foreach($items as $item) {
+				//$href = Director::absoluteURL(self::$api_base . "$className/$id/$relName/$item->ID");
+				$href = Director::absoluteURL(self::$api_base . "$relClass/$item->ID");
+				$json .= "<$relClass href=\"$href\" id=\"{$item->ID}\" />\n";
+			}
+			$json .= "</$relName>\n";
+		}
+
+		$json .= "</$className>";
+		
+		return $json;
+	}
+
+	
+	/**
+	 * Generate an XML representation of the given DataObject.
+	 */
+	protected function dataObjectAsJSON(DataObject $obj) {
+		$className = $obj->class;
+		$id = $obj->ID;
+		
+		$json = "{\n  className : \"$className\",\n";
+		foreach($obj->db() as $fieldName => $fieldType) {
+			$jsonParts[] = "$fieldName : \"" . Convert::raw2js($obj->$fieldName) . "\"";
+		}
+
+		foreach($obj->has_one() as $relName => $relClass) {
+			$fieldName = $relName . 'ID';
+			if($obj->$fieldName) {
+				$href = Director::absoluteURL(self::$api_base . "$relClass/" . $obj->$fieldName);
+			} else {
+				$href = Director::absoluteURL(self::$api_base . "$className/$id/$relName");
+			}
+			$jsonParts[] = "$relName : { className : \"$relClass\", href : \"$href\", id : \"{$obj->$fieldName}\" }";
+		}
+
+		foreach($obj->has_many() as $relName => $relClass) {
+			$jsonInnerParts = array();
+			$items = $obj->$relName();
+			foreach($items as $item) {
+				//$href = Director::absoluteURL(self::$api_base . "$className/$id/$relName/$item->ID");
+				$href = Director::absoluteURL(self::$api_base . "$relClass/$item->ID");
+				$jsonInnerParts[] = "{ className : \"$relClass\", href : \"$href\", id : \"{$obj->$fieldName}\" }";
+			}
+			$jsonParts[] = "$relName : [\n    " . implode(",\n    ", $jsonInnerParts) . "  \n  ]";
+		}
+
+		foreach($obj->many_many() as $relName => $relClass) {
+			$jsonInnerParts = array();
+			$items = $obj->$relName();
+			foreach($items as $item) {
+				//$href = Director::absoluteURL(self::$api_base . "$className/$id/$relName/$item->ID");
+				$href = Director::absoluteURL(self::$api_base . "$relClass/$item->ID");
+				$jsonInnerParts[] = "    { className : \"$relClass\", href : \"$href\", id : \"{$obj->$fieldName}\" }";
+			}
+			$jsonParts[] = "$relName : [\n    " . implode(",\n    ", $jsonInnerParts) . "\n  ]";
+		}
+		
+		return "{\n  " . implode(",\n  ", $jsonParts) . "\n}";
+	}	
 	/**
 	 * Handler for object delete
 	 */
