@@ -56,7 +56,7 @@ class TabSet extends CompositeField {
 		$this->tabSet = $val;
 	}
 	public function getTabSet() {
-		return $this->tabSet;
+		if(isset($this->tabSet)) return $this->tabSet;
 	}
 	
 	/**
