@@ -31,9 +31,6 @@ class DataObject extends ViewableData implements DataObjectInterface {
 	 */
 	protected $original;
 
-	protected $defs;
-	protected $fieldObjects;
-
 	/**
 	 * The one-to-one, one-to-many and many-to-one components
 	 * indexed by component name.
