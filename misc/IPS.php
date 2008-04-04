@@ -1,16 +1,15 @@
 <?php
-
-/**
- * @package sapphire
- * @subpackage misc
- */
-
 /**
  * Ioncube Performance Suite management
  * @package sapphire
  * @subpackage misc
  */
 class IPS extends Controller {
+	
+	static $allowed_actions = array(
+		'index' => 'ADMIN',	
+	);
+	
 	function index() {
 		echo "<h1>Ioncube Performance Suite Management</h1>";
 		
