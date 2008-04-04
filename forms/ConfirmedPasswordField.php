@@ -1,14 +1,9 @@
 <?php
-
-/**
- * @package forms
- * @subpackage fields-formattedinput
- */
-
 /**
  * Shows two password-fields, and checks for matching passwords.
  * Optionally hides the fields by default and shows
  * a link to toggle their visibility.
+ * 
  * @package forms
  * @subpackage fields-formattedinput
  */
@@ -69,7 +64,7 @@ class ConfirmedPasswordField extends FormField {
 	function __construct($name, $title = null, $value = "", $form = null, $showOnClick = false) {
 		// naming with underscores to prevent values from actually being saved somewhere
 		$this->children = new FieldSet(
-			new PasswordField("{$name}[_Password]", _t('Member.PASSWORD')),
+			new PasswordField("{$name}[_Password]", (isset($title)) ? $title : _t('Member.PASSWORD')),
 			new PasswordField("{$name}[_ConfirmPassword]",_t('Member.CONFIRMPASSWORD', 'Confirm Password'))
 		);
 
