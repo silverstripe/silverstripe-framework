@@ -66,6 +66,13 @@ class Security extends Controller {
 	protected static $wordlist = '/usr/share/silverstripe/wordlist.txt';
 	
 	/**
+	 * Template thats used to render the pages.
+	 *
+	 * @var string
+	 */
+	public static $template_main = 'Page';
+	
+	/**
 	 * Get location of word list file
 	 */
 	static function get_word_list() {
@@ -307,9 +314,9 @@ class Security extends Controller {
 
 		// custom processing
 		if(SSViewer::hasTemplate("Security_login")) {
-			return $customisedController->renderWith(array("Security_login", "Page"));
+			return $customisedController->renderWith(array("Security_login", self::$template_main));
 		} else {
-			return $customisedController->renderWith("Page");
+			return $customisedController->renderWith(self::$template_main);
 		}
 	}
 	
@@ -349,7 +356,7 @@ class Security extends Controller {
 		));
 		
 		//Controller::$currentController = $controller;
-		return $customisedController->renderWith("Page");
+		return $customisedController->renderWith(self::$template_main);
 	}
 
 
@@ -397,7 +404,7 @@ class Security extends Controller {
 		));
 		
 		//Controller::$currentController = $controller;
-		return $customisedController->renderWith("Page");
+		return $customisedController->renderWith(self::$template_main);
 	}
 
 
@@ -467,7 +474,7 @@ class Security extends Controller {
 		}
 
 		//Controller::$currentController = $controller;
-		return $customisedController->renderWith('Page');
+		return $customisedController->renderWith(self::$template_main);
 	}
 
 
