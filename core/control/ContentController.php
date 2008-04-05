@@ -82,9 +82,6 @@ class ContentController extends Controller {
 	public function init() {
 		parent::init();
 		
-		//Log page views
-		Statistics::collect();
-
 		// If we've accessed the homepage as /home/, then we should redirect to /.
 		if($this->dataRecord && $this->dataRecord instanceof SiteTree && RootURLController::should_be_on_root($this->dataRecord) && !$this->urlParams['Action'] && !$_POST && !$_FILES) {
 			$getVars = $_GET;
