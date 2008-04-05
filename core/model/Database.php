@@ -246,7 +246,8 @@ abstract class Database extends Object {
 	function dontRequireTable($table) {
 		if(!isset($this->tableList)) $this->tableList = $this->tableList();
 		if(isset($this->tableList[strtolower($table)])) {
-			while($this->tableList[strtolower("_obsolete_{$table}$suffix")]) {
+			$suffix = '';
+			while(isset($this->tableList[strtolower("_obsolete_{$table}$suffix")])) {
 				$suffix = $suffix ? ($suffix+1) : 2;
 			}
 			$this->renameTable($table, "_obsolete_{$table}$suffix");
