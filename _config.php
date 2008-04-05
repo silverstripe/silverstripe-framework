@@ -18,6 +18,13 @@
  */
 
 /**
+ * PHP 5.2 has a namespace conflict with our datetime class,
+ * for legacy support, we use this overload method.
+ * // ENFORCE STRONG_CREATE
+ */
+Object::useCustomClass('Datetime','SSDatetime',true);
+
+/**
  * Add pear parser to include path
  */
 $path = Director::baseFolder().'/sapphire/parsers/';

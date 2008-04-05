@@ -1,17 +1,13 @@
 <?php
-
-/**
- * @package sapphire
- * @subpackage core
- */
-
 /**
  * Base object that all others should inherit from.
  * This object provides a number of helper methods that patch over PHP's deficiencies.
+ * 
  * @package sapphire
  * @subpackage core
  */
 class Object {
+	
 	/**
 	 * This DataObjects extensions, eg Versioned.
 	 * @var array
@@ -44,6 +40,23 @@ class Object {
 	private static $strong_classes = array();
     
 
+	function __construct() {
+		$this->class = get_class($this);	
+
+		// Set up the extensions
+		if($extensions = $this->stat('extensions')) {
+			foreach($extensions as $extension) {
+				$instance = eval("return new $extension;");
+				$instance->setOwner($this);
+				$this->extension_instances[$instance->class] = $instance;
+			}
+		}
+
+		if(!isset(Object::$classConstructed[$this->class])) {
+			$this->defineMethods();
+			Object::$classConstructed[$this->class] = true;
+		}
+	}
 
 	/**
 	 * This function allows you to overload class creation methods, so certain classes are
@@ -117,25 +130,6 @@ class Object {
 		  	 $classToCreate = $className;
 		}
         return new $classToCreate( $arg0, $arg1, $arg2, $arg3, $arg4, $arg5, $arg6, $arg7, $arg8 );
-	}
-
-
-	function __construct() {
-		$this->class = get_class($this);	
-
-		// Set up the extensions
-		if($extensions = $this->stat('extensions')) {
-			foreach($extensions as $extension) {
-				$instance = eval("return new $extension;");
-				$instance->setOwner($this);
-				$this->extension_instances[$instance->class] = $instance;
-			}
-		}
-
-		if(!isset(Object::$classConstructed[$this->class])) {
-			$this->defineMethods();
-			Object::$classConstructed[$this->class] = true;
-		}
 	}
 
 
@@ -285,14 +279,20 @@ class Object {
 	}
 
 	/**
-	 * This method lets us extend a built-in class by adding static variables to it
+	 * This method lets us extend a built-in class by adding pseudo-static variables to it.
+	 * 
+	 * @param string $class Classname
+	 * @param array $statics Statics to add, with keys being static property names on the class
+	 * @param boolean $replace Replace the whole variable instead of merging arrays 
 	 */
-	static function addStaticVars($class, $statics) {
-		if (empty(Object::$extraStatics[$class])) {
+	static function addStaticVars($class, $statics, $replace = false) {
+		if(empty(Object::$extraStatics[$class])) {
 			Object::$extraStatics[$class] = (array)$statics;
+		} elseif($replace) {
+			Object::$extraStatics[$class] = $statics;
 		} else {
-			$ar1 = (array)Object::$extraStatics[$class]; // First Array To Merge
-			$ar2 = (array)$statics; // Second Array To Merge
+			$ar1 = (array)Object::$extraStatics[$class];
+			$ar2 = (array)$statics;
 			Object::$extraStatics[$class] = array_merge_recursive($ar1, $ar2);
 		}
 	}
@@ -300,6 +300,7 @@ class Object {
 	function parentClass() {
 		return get_parent_class($this);
 	}
+	
 	function is_a($class) {
 		return is_a($this, $class);
 	}
@@ -310,6 +311,7 @@ class Object {
 	function set_uninherited($name, $val) {
 		return Object::$uninherited_statics[$this->class][$name] = $val;
 	}
+	
 	/**
 	 * Get an uninherited static variable
 	 */
@@ -341,12 +343,16 @@ class Object {
 	protected static $static_cached = array();
 
 	/**
-	 * Get a static variable
+	 * Get a static variable.
+	 * 
+	 * @param string $name
+	 * @param boolean $uncached
+	 * @return mixed
 	 */
-	function stat($name) {
+	function stat($name, $uncached = false) {
 		if(!$this->class) $this->class = get_class($this);
 
-		if(!isset(Object::$static_cached[$this->class][$name])) {
+		if(!isset(Object::$static_cached[$this->class][$name]) || $uncached) {
 			$classes = ClassInfo::ancestry($this->class);
 			foreach($classes as $class) {
 				if(isset(Object::$extraStatics[$class][$name])) {
@@ -436,7 +442,6 @@ class Object {
 	// CACHE METHODS (added by simon_w (simon -at- simon -dot- geek -dot- nz))
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-
 	/**
 	 * Loads a current cache from the filesystem, if it can.
 	 *
@@ -549,10 +554,4 @@ class Object {
 		return $data;
 	}
 }
-
-/**
- * PHP 5.2 has a namespace conflict with our datetime class,
- * for legacy support, we use this overload method.
- * // ENFORCE STRONG_CREATE
- */
-Object::useCustomClass('Datetime','SSDatetime',true);
+?>
