@@ -413,6 +413,12 @@ class Director {
 	/**
 	 * Given a filesystem reference relative to the site root, return the full filesystem path
 	 */
+	/**
+	 * Cleans up a given file-path
+	 * 
+	 * @param string $file
+	 * @return string
+	 */
 	static function getAbsFile($file) {
 		if($file[0] == '/') return $file;
 		return Director::baseFolder() . '/' . $file;
@@ -423,6 +429,8 @@ class Director {
 	 * @param $file Filename specified relative to the site root
 	 */
 	static function fileExists($file) {
+		// replace any appended query-strings, e.g. /path/to/foo.php?bar=1 to /path/to/foo.php
+		$file = preg_replace('/([^\?]*)?.*/','$1',$file);
 		return file_exists(Director::getAbsFile($file));
 	}
 
