@@ -565,13 +565,20 @@ class Form extends ViewableData {
 
 		$dataFields = $this->fields->dataFields();
 		if($dataFields) foreach($dataFields as $field) {
-
-			if($name = $field->Name()) {
+			$name = $field->Name();
+			if($name) {
 				if($o) {
 					// this was failing with the field named 'Name'
 					$val = $object->__get($name);
 				} else {
-					$val = isset($object[$name]) ? $object[$name] : null;
+					if(strpos($name,'[') && is_array($object) && !isset($object[$name])) {
+						// if field is in array-notation, we need to resolve the array-structure PHP creates from query-strings
+						preg_match('/' . addcslashes($name,'[]') . '=([^&]*)/', urldecode(http_build_query($object)), $matches);
+						$val = isset($matches[1]) ? $matches[1] : null;
+					} else {
+						// else we assume its a simple key-string
+						$val = isset($object[$name]) ? $object[$name] : null;
+					}
 				}
 
 				// First check looks for (fieldname)_unchanged, an indicator that we shouldn't overwrite the field value
