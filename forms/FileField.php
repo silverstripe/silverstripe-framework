@@ -34,11 +34,10 @@ class FileField extends FormField {
 	
 	public function saveInto(DataObject $record) {
 		$fieldName = $this->name . 'ID';
-		$hasOnes = $record->has_one(/*$fieldName*/$this->name);
+		$hasOnes = $record->has_one($this->name);
 		
 		// assume that the file is connected via a has-one
-		if( !$hasOnes )
-			return;
+		if(!$hasOnes) return false;
 		
 		$file = new File();
 		$file->loadUploaded($_FILES[$this->name], $this->folderName);
