@@ -37,7 +37,7 @@ class ChangePasswordForm extends Form {
 		}
 		if(!$actions) {
 			$actions = new FieldSet(
-				new FormAction("changePassword", _t('Member.BUTTONCHANGEPASSWORD', "Change Password"))
+				new FormAction("doChangePassword", _t('Member.BUTTONCHANGEPASSWORD', "Change Password"))
 			);
 		}
 
@@ -50,7 +50,7 @@ class ChangePasswordForm extends Form {
 	 *
 	 * @param array $data The user submitted data
 	 */
-	function changePassword(array $data) {
+	function doChangePassword(array $data) {
 		if($member = Member::currentUser()) {
 			// The user was logged in, check the current password
 			if($member->checkPassword($data['OldPassword']) == false) {
