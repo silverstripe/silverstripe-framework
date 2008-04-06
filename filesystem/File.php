@@ -15,18 +15,8 @@
  * @subpackage filesystem
  */
 class File extends DataObject {
+
 	static $default_sort = "Name";
-
-	/**
-	 * @var array Key is the extension, which has an array of MaxSize and WarnSize,
-	 * e.g. array("jpg" => array("MaxSize"=>1000, "WarnSize=>500"))
-	 */
-	static $file_size_restrictions = array();
-
-	/**
-	 * @var array Collection of extensions, e.g. array("jpg","gif")
-	 */
-	static $allowed_file_types = array();
 
 	static $singular_name = "File";
 
@@ -39,16 +29,20 @@ class File extends DataObject {
 		"Content" => "Text",
 		"Sort" => "Int"
 	);
+	
 	static $indexes = array(
 		"SearchFields" => "fulltext (Filename,Title,Content)",
 	);
+	
 	static $has_one = array(
 		"Parent" => "File",
 		"Owner" => "Member"
 	);
+	
 	static $extensions = array(
 		"Hierarchy",
 	);
+	
 	static $belongs_many_many = array(
 		"BackLinkTracking" => "SiteTree",
 	);
@@ -60,32 +54,41 @@ class File extends DataObject {
 	 * @var array
 	 */
 	protected static $cache_file_fields = null;
+	
+	function Link($action = null) {
+		return Director::baseURL() . $this->RelativeLink($action);
+	}
 
+	function RelativeLink($action = null){
+		return $this->Filename;
+	}
+
+	function TreeTitle() {
+		return $this->Title;
+	}
 
 	/**
-	 * Set the maximum
+	 * Event handler called before deleting from the database.
+	 * You can overload this to clean up or otherwise process data before delete this
+	 * record.  Don't forget to call parent::onBeforeDelete(), though!
 	 */
-	static function setMaxFileSize( $maxSize, $warningSize, $extension = '*' ) {
-		self::$file_size_restrictions[$extension]['MaxSize'] = $maxSize;
-		self::$file_size_restrictions[$extension]['WarnSize'] = $warningSize;
-	}
-	
-	static function getMaxFileSize($extension = '*') {
-		if(!isset(self::$file_size_restrictions[$extension])) {
-			if(isset(self::$file_size_restrictions['*'])) {
-				$extension = '*';
-			} else {
-				return null;
-			}	
+	protected function onBeforeDelete() {
+		parent::onBeforeDelete();
+
+		$this->autosetFilename();
+		if($this->Filename && $this->Name && file_exists($this->getFullPath()) && !is_dir($this->getFullPath())) {
+			unlink($this->getFullPath());
 		}
 
-		return array( self::$file_size_restrictions[$extension]['MaxSize'], self::$file_size_restrictions[$extension]['WarnSize'] );
+		if($brokenPages = $this->BackLinkTracking()) {
+			foreach($brokenPages as $brokenPage) {
+				Notifications::event("BrokenLink", $brokenPage, $brokenPage->OwnerID);
+				$brokenPage->HasBrokenFile = true;
+				$brokenPage->write();
+			}
+		}
 	}
-
-	static function allowedFileType( $extension ) {
-		return true;
-	}
-
+	
 	/*
 	 * Find the given file
 	 */
@@ -138,19 +141,6 @@ class File extends DataObject {
 	function Icon() {
 		$ext = $this->Extension;
 		if(!Director::fileExists("sapphire/images/app_icons/{$ext}_32.gif")) {
-			/*switch($ext) {
-				case "aif": case "au": case "mid": case "midi": case "mp3": case "ra": case "ram": case "rm":
-				case "mp3": case "wav": case "m4a":
-					$ext = "audio"; break;
-
-				case "arc": case "rar": case "tar": case "gz": case "tgz": case "bz2": case "dmg":
-					$ext = "zip"; break;
-
-				case "bmp": case "gif": case "jpg": case "jpeg": case "pcx": case "tif": case "png":
-					$ext = "image"; break;
-
-			}*/
-
 			$ext = $this->appCategory();
 		}
 
@@ -162,81 +152,20 @@ class File extends DataObject {
 	}
 
 	/**
-	 * Save an file passed from a form post into this object
+	 * Save an file passed from a form post into this object.
+	 * DEPRECATED Please instanciate an Upload-object instead and pass the file
+	 * via {Upload->loadIntoFile()}.
+	 * 
+	 * @param $tmpFile array Indexed array that PHP generated for every file it uploads.
+	 * @return Boolean|string Either success or error-message.
 	 */
-	function loadUploaded($tmpFile, $folderName = 'Uploads') {
-		if(!is_array($tmpFile)) user_error("File::loadUploaded() Not passed an array.  Most likely, the form hasn't got the right enctype", E_USER_ERROR);
-		if(!$tmpFile['size']) return;
+	function loadUploaded($tmpFile) {
+		user_error('File::loadUploaded is deprecated, please use the Upload class directly.', E_USER_NOTICE);
 		
+		$upload = new Upload();
+		$upload->loadIntoFile($tmpFile, $this);
 		
-		// @TODO This puts a HUGE limitation on files especially when lots
-		// have been uploaded.
-		$base = dirname(dirname($_SERVER['SCRIPT_FILENAME']));
-		$class = $this->class;
-		$parentFolder = Folder::findOrMake($folderName);
-
-		// Create a folder for uploading.
-		if(!file_exists("$base/assets")){
-			mkdir("$base/assets", Filesystem::$folder_create_mask);
-		}
-		if(!file_exists("$base/assets/$folderName")){
-			mkdir("$base/assets/$folderName", Filesystem::$folder_create_mask);
-		}
-
-		// Generate default filename
-		$file = str_replace(' ', '-',$tmpFile['name']);
-		$file = ereg_replace('[^A-Za-z0-9+.-]+','',$file);
-		$file = ereg_replace('-+', '-',$file);
-		$file = basename($file);
-
-		$file = "assets/$folderName/$file";
-
-		while(file_exists("$base/$file")) {
-			$i = isset($i) ? ($i+1) : 2;
-			$oldFile = $file;
-			if(substr($file, strlen($file) - strlen('.tar.gz')) == '.tar.gz' ||
-				substr($file, strlen($file) - strlen('.tar.bz2')) == '.tar.bz2') {
-					$file = ereg_replace('[0-9]*(\.tar\.[^.]+$)',$i . '\\1', $file);
-			} else {
-				$file = ereg_replace('[0-9]*(\.[^.]+$)',$i . '\\1', $file);
-			}
-			if($oldFile == $file && $i > 2) user_error("Couldn't fix $file with $i", E_USER_ERROR);
-		}
-
-		if(file_exists($tmpFile['tmp_name']) && copy($tmpFile['tmp_name'], "$base/$file")) {
-			// Update with the new image
-			/*$this->Filename = */ // $this->Name = null;
-			// $this->Filename = $file;
-
-			// This is to prevent it from trying to rename the file
-			$this->record['Name'] = null;
-			$this->ParentID = $parentFolder->ID;
-			$this->Name = basename($file);
-			$this->write();
-			return true;
-		} else {
-			user_error("File::loadUploaded: Couldn't copy '$tmpFile[tmp_name]' to '$file'", E_USER_ERROR);
-			return false;
-		}
-	}
-
-	/**
-	 * This function ensures the file table is correct with the files in the assets folder.
-	 */
-	static function sync() {
-		singleton('Folder')->syncChildren();
-		$finished = false;
-		while(!$finished) {
-			$orphans = DB::query("SELECT C.ID FROM File AS C LEFT JOIN File AS P ON C.ParentID = P.ID WHERE P.ID IS NULL AND C.ParentID > 0");
-			$finished = true;
-			if($orphans) foreach($orphans as $orphan) {
-				$finished = false;
-				// Delete the database record but leave the filesystem alone
-				$file = DataObject::get_by_id("File", $orphan['ID']);
-				$file->deleteDatabaseOnly();
-			}
-		}
-
+		return $upload->isError();
 	}
 
 	/*
@@ -244,79 +173,6 @@ class File extends DataObject {
 	 */
 	function test() {
 		Debug::show(get_defined_functions());
-	}
-
-	function loadallcontent() {
-		ini_set("max_execution_time", 50000);
-		$allFiles = DataObject::get("File");
-		$total = $allFiles->TotalItems();
-
-		$i = 0;
-		foreach($allFiles as $file) {
-			$i++;
-			$tmp = TEMP_FOLDER;
-			`echo "$i / $total" > $tmp/progress`;
-			$file->write();
-		}
-	}
-
-	/**
-	 * Gets the content of this file and puts it in the field Content
-	 */
-	function loadContent() {
-		$filename = escapeshellarg($this->getFullPath());
-		switch(strtolower($this->getExtension())){
-			case 'pdf':
-				$content = `pdftotext $filename -`;
-
-				//echo("<pre>Content for $this->Filename:\n$content</pre>");
-				$this->Content = $content;
-				break;
-			case 'doc':
-				$content = `catdoc $filename`;
-				$this->Content = $content;
-				break;
-			case 'ppt':
-				$content = `catppt $filename`;
-				$this->Content = $content;
-				break;
-			case 'txt';
-				$content = file_get_contents($this->FileName);
-				$this->Content = $content;
-		}
-	}
-
-	function Link($action = null) {
-		return Director::baseURL() . $this->RelativeLink($action);
-	}
-
-	function RelativeLink($action = null){
-		return $this->Filename;
-	}
-
-	function TreeTitle() {
-		if($this->hasMethod('alternateTreeTitle')) return $this->alternateTreeTitle();
-		else return $this->Title;
-	}
-
-	/**
-	 * Event handler called before deleting from the database.
-	 * You can overload this to clean up or otherwise process data before delete this
-	 * record.  Don't forget to call parent::onBeforeDelete(), though!
-	 */
-	protected function onBeforeDelete() {
-		parent::onBeforeDelete();
-
-		$this->autosetFilename();
-		if($this->Filename && $this->Name && file_exists($this->getFullPath()) && !is_dir($this->getFullPath())) unlink($this->getFullPath());
-
-		if($brokenPages = $this->BackLinkTracking()) {
-			foreach($brokenPages as $brokenPage) {
-				Notifications::event("BrokenLink", $brokenPage, $brokenPage->OwnerID);
-				$brokenPage->HasBrokenFile = true;
-				$brokenPage->write();
-			}
-		}
 	}
 
 	/**
@@ -343,8 +199,6 @@ class File extends DataObject {
 				$brokenPage->write();
 			}
 		}
-		
-		$this->loadContent();
 	}
 
 	/**
@@ -549,6 +403,7 @@ class File extends DataObject {
 	function getExtension() {
 		return strtolower(substr($this->getField('Filename'),strrpos($this->getField('Filename'),'.')+1));
 	}
+	
 	function getFileType() {
 		$types = array(
 			'gif' => 'GIF Image - good for diagrams',
@@ -563,6 +418,7 @@ class File extends DataObject {
 			'pdf' => 'Adobe Acrobat PDF file',
 		);
 		$ext = $this->getExtension();
+		
 		return isset($types[$ext]) ? $types[$ext] : 'unknown';
 	}
 
@@ -571,13 +427,16 @@ class File extends DataObject {
 	 */
 	function getSize() {
 		$size = $this->getAbsoluteSize();
-		if($size){
-			if($size < 1024) return $size . ' bytes';
-			if($size < 1024*10) return (round($size/1024*10)/10). ' KB';
-			if($size < 1024*1024) return round($size/1024) . ' KB';
-			if($size < 1024*1024*10) return (round(($size/1024)/1024*10)/10) . ' MB';
-			if($size < 1024*1024*1024) return round(($size/1024)/1024) . ' MB';
-		}
+		
+		return ($size) ? self::format_size($size) : false;
+	}
+	
+	public static function format_size($size) {
+		if($size < 1024) return $size . ' bytes';
+		if($size < 1024*10) return (round($size/1024*10)/10). ' KB';
+		if($size < 1024*1024) return round($size/1024) . ' KB';
+		if($size < 1024*1024*10) return (round(($size/1024)/1024*10)/10) . ' MB';
+		if($size < 1024*1024*1024) return round(($size/1024)/1024) . ' MB';
 	}
 
 	/**
@@ -590,33 +449,6 @@ class File extends DataObject {
 		}else{
 			return 0;
 		}
-	}
-
-	//--------------------------------------------------------------------------------------------------//
-	// Helper control functions
-	function moverootfilesto() {
-		if($folder = $this->urlParams[ID]) {
-			$newParent = Folder::findOrMake($folder);
-			$files = DataObject::get("File", "ClassName != 'Folder' AND ParentID = 0");
-			foreach($files as $file) {
-				echo "<li>" , $file->RelativePath;
-				$file->ParentID = $newParent->ID;
-				echo " -> " , $file->RelativePath;
-			}
-		}
-	}
-
-	/**
-	 * Cleanup function to reset all the Filename fields.  Visit File/fixfiles to call.
-	 */
-	function fixfiles() {
-		$files = DataObject::get("File");
-		foreach($files as $file) {
-			$file->resetFilename();
-			echo "<li>", $file->Filename;
-			$file->write();
-		}
-		echo "<p>Done!";
 	}
 
 
@@ -676,7 +508,74 @@ class File extends DataObject {
 		
 		self::$cache_file_fields = null;
 	}
-}
+	
+	
+	
+	
+	
+	
+	
+	
+		
+	
+	/**
+	 * DEPRECATED
+	 */
+	static $file_size_restrictions = array();
 
+	/**
+	 * DEPRECATED 
+	 */
+	static $allowed_file_types = array();
+	
+	/**
+	 * DEPRECATED 
+	 */
+	static function setMaxFileSize( $maxSize, $warningSize, $extension = '*' ) {
+		user_error('File::setMaxFileSize is deprecated',E_USER_ERROR);
+	}
+	
+	/**
+	 * DEPRECATED 
+	 */
+	static function getMaxFileSize($extension = '*') {
+		user_error('File::getMaxFileSize is deprecated',E_USER_ERROR);
+	}
+
+	/**
+	 * DEPRECATED 
+	 */
+	static function sync() {
+		user_error('File::sync is deprecated - please use FileSystem::sync',E_USER_ERROR);
+	}
+	
+	/**
+	 * DEPRECATED
+	 */
+	function moverootfilesto() {
+		user_error('File::moverootfilesto is deprecated - please use FileSystem::moverootfilesto',E_USER_ERROR);
+	}
+
+	/**
+	 * DEPRECATED
+	 */
+	function fixfiles() {
+		user_error('File::fixfiles is deprecated - please use FileSystem::fixfiles',E_USER_ERROR);
+	}
+	
+/**
+	 * DEPRECATED
+	 */
+	function loadContent() {
+		user_error('File::loadContent deprecated',E_USER_ERROR);
+	}
+	
+	/**
+	 * DEPRECATED
+	 */
+	public function loadallcontent() {
+		user_error('File::loadallcontent deprecated',E_USER_ERROR);
+	}
+}
 
 ?>

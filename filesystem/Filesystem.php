@@ -1,12 +1,7 @@
 <?php
-
-/**
- * @package sapphire
- * @subpackage filesystem
- */
-
 /**
  * A collection of static methods for manipulating the filesystem.
+ 
  * @package sapphire
  * @subpackage filesystem
  */
@@ -15,6 +10,8 @@ class Filesystem extends Object {
 	public static $file_create_mask = 02775;
 	
 	public static $folder_create_mask = 02775;
+	
+	protected protected static $cache_folderModTime;
 	
 	/**
 	 * Create a folder, recursively
@@ -27,8 +24,7 @@ class Filesystem extends Object {
 	/**
 	 * Remove a directory and all subdirectories and files
 	 */
-	static function removeFolder( $folder ) {
-		
+	static function removeFolder($folder) {
 		// remove a file encountered by a recursive call.
 		if( !is_dir( $folder ) || is_link($folder) )
 			unlink( $folder );
@@ -45,13 +41,41 @@ class Filesystem extends Object {
 		}
 	}
 	
+	 
+	public function moverootfilesto() {
+		if(!Permission::check('ADMIN')) Security::permissionFailure($this);
+		
+		if($folder = $this->urlParams['ID']) {
+			$newParent = Folder::findOrMake($folder);
+			$files = DataObject::get("File", "ClassName != 'Folder' AND ParentID = 0");
+			foreach($files as $file) {
+				echo "<li>" , $file->RelativePath;
+				$file->ParentID = $newParent->ID;
+				echo " -> " , $file->RelativePath;
+			}
+		}
+	}
+
+	/**
+	 * Cleanup function to reset all the Filename fields.  Visit File/fixfiles to call.
+	 */
+	public function fixfiles() {
+		if(!Permission::check('ADMIN')) Security::permissionFailure($this);
+		
+		$files = DataObject::get("File");
+		foreach($files as $file) {
+			$file->resetFilename();
+			echo "<li>", $file->Filename;
+			$file->write();
+		}
+		echo "<p>Done!";
+	}
+	
 	/*
 	 * Return the most recent modification time of anything in the folder.
 	 * @param $folder The folder, relative to the site root
 	 * @param $extensionList An option array of file extensions to limit the search to
 	 */
-	 
-	protected static $cache_folderModTime;
 	static function folderModTime($folder, $extensionList = null, $recursiveCall = false) {
 		//$cacheID = $folder . ',' . implode(',', $extensionList);
 		//if(!$recursiveCall && self::$cache_folderModTime[$cacheID]) return self::$cache_folderModTime[$cacheID];
@@ -89,7 +113,25 @@ class Filesystem extends Object {
 		else return $filename[0] == '/';
 	}
 
+	/**
+	 * This function ensures the file table is correct with the files in the assets folder.
+	 */
+	static function sync() {
+		singleton('Folder')->syncChildren();
+		$finished = false;
+		while(!$finished) {
+			$orphans = DB::query("SELECT C.ID FROM File AS C LEFT JOIN File AS P ON C.ParentID = P.ID WHERE P.ID IS NULL AND C.ParentID > 0");
+			$finished = true;
+			if($orphans) foreach($orphans as $orphan) {
+				$finished = false;
+				// Delete the database record but leave the filesystem alone
+				$file = DataObject::get_by_id("File", $orphan['ID']);
+				$file->deleteDatabaseOnly();
+			}
+		}
 
+	}
+	
 }
 
 ?>
