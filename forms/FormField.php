@@ -42,6 +42,13 @@ class FormField extends ViewableData {
 	protected $leftTitle;
 	
 	/**
+	 * Set the "tabindex" HTML attribute on the field.
+	 *
+	 * @var int
+	 */
+	protected $tabIndex;
+	
+	/**
 	 * Create a new field.
 	 * @param name The internal field name, passed to forms.
 	 * @param title The field label.
@@ -77,6 +84,9 @@ class FormField extends ViewableData {
 		return $this->name;
 	}
 	
+	function attrName() {
+		return $this->name;
+	}
 	
 	/** 
 	 * Returns the field message, used by form validation
@@ -141,6 +151,36 @@ class FormField extends ViewableData {
 	
 	function setLeftTitle($val) { 
 		$this->leftTitle = $val;
+	}
+	
+	/**
+	 * Set tabindex HTML attribute
+	 * (defaults to none).
+	 *
+	 * @param int $index
+	 */
+	public function setTabIndex($index) {
+		$this->tabIndex = $index;
+	}
+	
+	/**
+	 * Get tabindex (if previously set)
+	 *
+	 * @return int
+	 */
+	public function getTabIndex() {
+		return $this->tabIndex;
+	}
+
+	/**
+	 * Get tabindex HTML string
+	 *
+	 * @param int $increment Increase current tabindex by this value
+	 * @return string
+	 */
+	protected function getTabIndexHTML($increment = 0) {
+		$tabIndex = (int)$this->getTabIndex() + (int)$increment;
+		return (is_numeric($tabIndex)) ? ' tabindex = "' . $tabIndex . '"' : '';
 	}
 	
 	/**
@@ -242,7 +282,7 @@ class FormField extends ViewableData {
 		if($this->value) $val = $this->dontEscape ? ($this->reserveNL?Convert::raw2xml($this->value):$this->value) : Convert::raw2xml($this->value);
 		else $val = '<i>('._t('FormField.NONE', 'none').')</i>';
 		$valforInput = $this->value ? Convert::raw2att($val) : "";
-		return "<span class=\"readonly\" id=\"" . $this->id() . "\">$val</span>\n<input type=\"hidden\" name=\"".$this->name."\" value=\"".$valforInput."\" />";
+		return "<span class=\"readonly\" id=\"" . $this->id() . "\">$val</span>\n<input type=\"hidden\" name=\"".$this->name."\" value=\"".$valforInput."\"" . $this->getTabIndexHTML() . " />";
 	}
 	/**
 	 * Returns a "Field Holder" for this field - used by templates.
