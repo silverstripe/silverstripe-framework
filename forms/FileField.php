@@ -37,7 +37,7 @@ class FileField extends FormField {
 		$hasOnes = $record->has_one($this->name);
 		
 		// assume that the file is connected via a has-one
-		if(!$hasOnes) return false;
+		if(!$hasOnes || !isset($_FILES[$this->name]) ||  !$_FILES[$this->name]['name']) return false;
 		
 		$file = new File();
 		$file->loadUploaded($_FILES[$this->name], $this->folderName);
