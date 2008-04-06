@@ -24,13 +24,13 @@ class TextField extends FormField {
 	function Field() {
 		$attributes = array(
 			'type' => 'text',
-			'class' => $this->extraClass() . " maxlength",
+			'class' => $this->extraClass() . ' text',
 			'id' => $this->id(),
 			'name' => $this->attrName(),
 			'value' => $this->attrValue(),
 			'tabindex' => $this->getTabIndex(),
 			'maxlength' => ($this->maxLength) ? $this->maxLength : null,
-			'size' => ($this->maxLength) ? min( $this->maxLength, 30 ) : 30
+			'size' => ($this->maxLength) ? min( $this->maxLength, 30 ) : null 
 		);
 		
 		return $this->createTag('input', $attributes);
