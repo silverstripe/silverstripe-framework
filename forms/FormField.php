@@ -212,6 +212,15 @@ class FormField extends ViewableData {
 	}
 	
 	/**
+	 * Get the currently used form.
+	 *
+	 * @return Form
+	 */
+	function getForm() {
+		return $this->form; 
+	}
+	
+	/**
 	 * Sets the error message to be displayed on the form field
 	 * Set by php validation of the form
 	 */
