@@ -1,10 +1,4 @@
 <?php
-
-/**
- * @package forms
- * @subpackage fields-relational
- */
-
 /**
  * TableField behaves in the same manner as TableListField, however allows the addition of 
  * fields and editing of attributes specified, and filtering results.
@@ -27,6 +21,7 @@
  * @param $sourceJoin string
  * 
  * @todo We should refactor this to support a single FieldSet instead of evaluated Strings for building FormFields
+ * 
  * @package forms
  * @subpackage fields-relational
  */
@@ -668,7 +663,7 @@ class TableField_Item extends TableListField_Item {
 					$field->Name = $combinedFieldName;
 					$field->setValue($field->dataValue());
 					$field->addExtraClass('col'.$i);
-					$field->setForm($this->data);
+					$field->setForm($this->Parent()->getForm());
 
 					// transformation
 					if(isset($this->parent->transformationConditions[$origFieldName])) {
