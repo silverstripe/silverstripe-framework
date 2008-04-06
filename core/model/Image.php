@@ -116,7 +116,7 @@ class Image extends File {
 	 * @return boolean Returns true if successful
 	 */
 	function loadUploaded($tmpFile) {
-		if(parent::loadUploaded($tmpFile)) {
+		if(parent::loadUploaded($tmpFile) === true) {
 			$this->deleteFormattedImages();
 			return true;
 		}
