@@ -313,12 +313,14 @@ $lang['en_US']['HtmlEditorField']['LINK'] = 'Link';
 $lang['en_US']['HtmlEditorField']['LINKTO'] = 'Link to';
 $lang['en_US']['HtmlEditorField']['LINKINTERNAL'] = 'Page on the site';
 $lang['en_US']['HtmlEditorField']['LINKEXTERNAL'] = 'Another website';
+$lang['en_US']['HtmlEditorField']['LINKANCHOR'] = 'Anchor on this page';
 $lang['en_US']['HtmlEditorField']['LINKEMAIL'] = 'Email address';
 $lang['en_US']['HtmlEditorField']['LINKFILE'] = 'Download a file';
 $lang['en_US']['HtmlEditorField']['PAGE'] = 'Page';
 $lang['en_US']['HtmlEditorField']['URL'] = 'URL';
 $lang['en_US']['HtmlEditorField']['EMAIL'] = 'Email address';
 $lang['en_US']['HtmlEditorField']['FILE'] = 'File';
+$lang['en_US']['HtmlEditorField']['ANCHORVALUE'] = 'Anchor';
 $lang['en_US']['HtmlEditorField']['LINKDESCR'] = 'Link description';
 $lang['en_US']['HtmlEditorField']['LINKOPENNEWWIN'] = 'Open link in a new window?';
 $lang['en_US']['HtmlEditorField']['BUTTONINSERTLINK'] = 'Insert link';
@@ -496,6 +498,11 @@ $lang['en_US']['Security']['ENCRYPTWITHOUTSALT'] = 'without using a salt to incr
 $lang['en_US']['Security']['ENCRYPTEDMEMBERS'] = 'Encrypted credentials for member &quot;';
 $lang['en_US']['Security']['ID'] = 'ID:';
 $lang['en_US']['Security']['EMAIL'] = 'E-Mail:';
+$lang['en_US']['LeftAndMain']['SITECONTENT'] = array(
+	'Site Content',
+	PR_HIGH,
+	'Menu title'
+);
 $lang['en_US']['ComplexTableField.ss']['SORTASC'] = 'Sort ascending';
 $lang['en_US']['ComplexTableField.ss']['SORTDESC'] = 'Sort descending';
 $lang['en_US']['ComplexTableField.ss']['ADDITEM'] = 'add';
