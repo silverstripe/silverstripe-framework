@@ -207,7 +207,7 @@ class Folder extends File {
 	 */
 	function addUploadToFolder($tmpFile) {
 		if(!is_array($tmpFile)) {
-			user_error("File::loadUploaded() Not passed an array.  Most likely, the form hasn't got the right enctype", E_USER_ERROR);
+			user_error("Folder::addUploadToFolder() Not passed an array.  Most likely, the form hasn't got the right enctype", E_USER_ERROR);
 		}
 		
 		if(!$tmpFile['size']) {
@@ -236,7 +236,7 @@ class Folder extends File {
 			// Update with the new image
 			return $this->constructChild(basename($file));
 		} else {
-			user_error("File::loadUploaded: Couldn't copy '$tmpFile[tmp_name]' to '$file'", E_USER_ERROR);
+			user_error("Folder::addUploadToFolder: Couldn't copy '$tmpFile[tmp_name]' to '$file'", E_USER_ERROR);
 			return false;
 		}
 	}
