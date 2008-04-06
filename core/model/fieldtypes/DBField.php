@@ -62,6 +62,9 @@ abstract class DBField extends ViewableData {
 	function HTMLATT() {
 		return Convert::raw2htmlatt($this->value);
 	}
+	function URLATT() {
+		return urlencode($this->value);
+	}
 	function ATT() {
 		return Convert::raw2att($this->value);
 	}
