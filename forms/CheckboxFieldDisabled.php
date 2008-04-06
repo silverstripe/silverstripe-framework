@@ -15,11 +15,17 @@ class CheckboxFieldDisabled extends CheckboxField {
 	 * Returns a single checkbox field - used by templates.
 	 */
 	function Field() {
-		$checked = '';
-		if($this->value)
-			$checked = " checked = \"checked\"";
-		return "<input class=\"checkbox\" disabled=\"disabled\" type=\"checkbox\" id=\"" .
-			$this->id() . "\" name=\"{$this->name}\"$checked />";
+		$attributes = array(
+			'type' => 'checkbox',
+			'class' => $this->extraClass() . " text",
+			'id' => $this->id(),
+			'name' => $this->attrName(),
+			'tabindex' => $this->getTabIndexHTML(),
+			'checked' => ($this->value) ? 'checked' : false,
+			'disabled' => 'disabled' 
+		);
+		
+		return $this->createTag('input', $attributes);
 	}
 }
 

@@ -29,7 +29,7 @@ HTML;
 		Requirements::css("jsparty/calendar/calendar-win2k-1.css");
 
 		$field = parent::Field();
-
+		
 		$id = $this->id();
 		$val = $this->attrValue();
 		

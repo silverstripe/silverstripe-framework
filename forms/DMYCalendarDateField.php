@@ -46,9 +46,9 @@ class DMYCalendarDateField extends CalendarDateField {
 		return <<<HTML
 			<div class="dmycalendardate">
 				<input type="hidden" id="$id" name="{$this->name}" value="$val" />
-				<input type="text" id="$id-day" class="day numeric" name="{$fieldNamePrefix}[{$fieldName}-Day]" value="$day" maxlength="2" />/
-				<input type="text" id="$id-month" class="month numeric" name="{$fieldNamePrefix}[{$fieldName}-Month]" value="$month" maxlength="2" />/
-				<input type="text" id="$id-year" class="year numeric" name="{$fieldNamePrefix}[{$fieldName}-Year]" value="$year" maxlength="4" />
+				<input type="text" id="$id-day" class="day numeric" name="{$fieldNamePrefix}[{$fieldName}-Day]" value="$day" maxlength="2"$tabIndex0 />/
+				<input type="text" id="$id-month" class="month numeric" name="{$fieldNamePrefix}[{$fieldName}-Month]" value="$month" maxlength="2"$tabIndex1 />/
+				<input type="text" id="$id-year" class="year numeric" name="{$fieldNamePrefix}[{$fieldName}-Year]" value="$year" maxlength="4"$tabIndex2 />
 				<div class="calendarpopup" id="{$id}-calendar"></div>
 			</div>
 HTML;

@@ -46,6 +46,9 @@ class CompositeDateField extends DateField {
 	}
 	
 	function Field() {
+		$this->dateDropdown->setTabIndex($this->getTabIndex());
+		$this->monthDropdown->setTabIndex($this->getTabIndex()+1);
+		$this->yearDropdown->setTabIndex($this->getTabIndex()+2);
 		return $this->dateDropdown->Field() . $this->monthDropdown->Field() . $this->yearDropdown->Field();
 	}
 

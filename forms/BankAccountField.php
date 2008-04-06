@@ -46,11 +46,17 @@ class BankAccountField extends FormField {
 		) = explode(" ",$this->value);
 		$valueArr = self::convert_format_nz($valueArr);
 		
-		$field->push(new NumericField($this->name.'[BankCode]', '', $valueArr['BankCode'], 2));
-		$field->push(new NumericField($this->name.'[BranchCode]', '', $valueArr['BranchCode'], 4));
-		$field->push(new NumericField($this->name.'[AccountNumber]', '', $valueArr['AccountNumber'], 8));
-		$field->push(new NumericField($this->name.'[AccountSuffix]', '', $valueArr['AccountSuffix'], 3));
-			
+		$field->push($n1 = new NumericField($this->name.'[BankCode]', '', $valueArr['BankCode'], 2));
+		$field->push($n2 = new NumericField($this->name.'[BranchCode]', '', $valueArr['BranchCode'], 4));
+		$field->push($n3 = new NumericField($this->name.'[AccountNumber]', '', $valueArr['AccountNumber'], 8));
+		$field->push($n4 = new NumericField($this->name.'[AccountSuffix]', '', $valueArr['AccountSuffix'], 3));
+		if($this->tabIndex) {
+			$n1->setTabIndex($this->getTabIndex());
+			$n2->setTabIndex($this->getTabIndex()+1);
+			$n3->setTabIndex($this->getTabIndex()+2);
+			$n4->setTabIndex($this->getTabIndex()+3);
+		}
+		
 		return $field;
 	}
 	

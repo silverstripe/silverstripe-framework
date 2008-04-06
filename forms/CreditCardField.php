@@ -16,10 +16,10 @@ class CreditCardField extends TextField {
 		$parts = explode("\n", chunk_split($this->value,4,"\n"));
 		$parts = array_pad($parts, 4, "");
 		$field = "<span id=\"{$this->name}_Holder\" class=\"creditCardField\">" .
-				"<input autocomplete=\"off\" name=\"{$this->name}[0]\" value=\"$parts[0]\" maxlength=\"4\" /> - " .
-				"<input autocomplete=\"off\" name=\"{$this->name}[1]\" value=\"$parts[1]\" maxlength=\"4\" /> - " .
-				"<input autocomplete=\"off\" name=\"{$this->name}[2]\" value=\"$parts[2]\" maxlength=\"4\" /> - " .
-				"<input autocomplete=\"off\" name=\"{$this->name}[3]\" value=\"$parts[3]\" maxlength=\"4\" /></span>";
+				"<input autocomplete=\"off\" name=\"{$this->name}[0]\" value=\"$parts[0]\" maxlength=\"4\"" . $this->getTabIndexHTML(0) . " /> - " .
+				"<input autocomplete=\"off\" name=\"{$this->name}[1]\" value=\"$parts[1]\" maxlength=\"4\"" . $this->getTabIndexHTML(1) . " /> - " .
+				"<input autocomplete=\"off\" name=\"{$this->name}[2]\" value=\"$parts[2]\" maxlength=\"4\"" . $this->getTabIndexHTML(2) . " /> - " .
+				"<input autocomplete=\"off\" name=\"{$this->name}[3]\" value=\"$parts[3]\" maxlength=\"4\"" . $this->getTabIndexHTML(3) . " /></span>";
 		return $field;
 	}
 	function dataValue() {

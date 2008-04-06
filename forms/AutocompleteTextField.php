@@ -28,13 +28,18 @@ class AutocompleteTextField extends TextField {
 		// Requirements::javascript('sapphire/javascript/AutocompleteTextField.js');
 		$extraClass = $this->extraClass();
 		
-		$fieldSize = $this->maxLength ? min( $this->maxLength, 30 ) : 30;
-		
-		if($this->maxLength) {
-			return "<input class=\"text maxlength$extraClass\" type=\"text\" id=\"" . $this->id() . "\" name=\"{$this->name}\" value=\"" . $this->attrValue() . "\" maxlength=\"$this->maxLength\" size=\"$fieldSize\" /><div id=\"" . $this->id() . "_Options\" class=\"autocompleteoptions\"></div>";
-		} else {
-			return "<input class=\"text$extraClass\" type=\"text\" id=\"" . $this->id() . "\" name=\"{$this->name}\" value=\"" . $this->attrValue() . "\" /><div id=\"" . $this->id() . "_Options\" class=\"autocompleteoptions\"></div>"; 
-		}
+		$attributes = array(
+			'class' => "{$this->class} text",
+			'type' => 'text',
+			'id' => $this->id(),
+			'name' => $this->name,
+			'value' => $this->attrValue(),
+			'tabindex' => $this->getTabIndexHTML(),
+			'size' => $this->maxLength ? min( $this->maxLength, 30 ) : 30 
+		); 	
+		if($this->maxLength) $attributes['maxlength'] = $this->maxLength;
+
+		return $this->createTag('input', $attributes) . "<div id=\"" . $this->id() . "_Options\" class=\"autocompleteoptions\"></div>";
 	}
 	
 	function FieldHolder() {

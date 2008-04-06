@@ -41,14 +41,20 @@ class AjaxUniqueTextField extends TextField {
 		
 		$url = Convert::raw2att( $this->validateURL );
 		
-		if( $this->restrictedRegex )
+		if($this->restrictedRegex)
 			$restrict = "<input type=\"hidden\" class=\"hidden\" name=\"{$this->name}Restricted\" id=\"" . $this->id() . "RestrictedRegex\" value=\"{$this->restrictedRegex}\" />";
 		
-		if($this->maxLength) {
-			return "<input class=\"".$this->class."\" text\" type=\"text\" id=\"" . $this->id() . "\" name=\"{$this->name}\" value=\"" . $this->attrValue() . "\" maxlength=\"$this->maxLength\" />$restrict";
-		} else {
-			return "<input class=\"".$this->class."\" text\" type=\"text\" id=\"" . $this->id() . "\" name=\"{$this->name}\" value=\"" . $this->attrValue() . "\" />$restrict"; 
-		}
+		$attributes = array(
+			'type' => 'text',
+			'class' => $this->extraClass() . " text",
+			'id' => $this->id(),
+			'name' => $this->attrName(),
+			'value' => $this->attrValue(),
+			'tabindex' => $this->getTabIndexHTML(),
+			'maxlength' => ($this->maxLength) ? $this->maxLength : null
+		);
+		
+		return $this->createTag('input', $attributes);
 	}
 
 	function jsValidation() {

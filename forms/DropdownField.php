@@ -55,7 +55,7 @@ class DropdownField extends FormField {
 		$id = $this->id();
 		$disabled = $this->disabled ? " disabled=\"disabled\"" : "";
 		
-		return "<select $classAttr $disabled name=\"$this->name\" id=\"$id\">$options</select>";
+		return "<select $classAttr $disabled name=\"$this->name\" id=\"$id\"" . $this->getTabIndexHTML() . ">$options</select>";
 	}
 	
 	function isSelected(){

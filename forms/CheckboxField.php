@@ -20,9 +20,18 @@ class CheckboxField extends FormField {
 	protected $disabled;
 	
 	function Field() {
-		$checked = $this->value ? "checked=\"checked\"" : '';
-		$disabled = $this->disabled ? " disabled=\"disabled\"" : "";
-		return "<input class=\"checkbox\" type=\"checkbox\" value=\"1\" id=\"" . $this->id() . "\" name=\"{$this->name}\" $checked $disabled />";
+		$attributes = array(
+			'type' => 'checkbox',
+			'class' => $this->extraClass(),
+			'id' => $this->id(),
+			'name' => $this->attrName(),
+			'value' => 1,
+			'tabindex' => $this->getTabIndexHTML(),
+			'checked' => $this->value ? "checked=\"checked\"" : '',
+			'disabled' => $this->disabled ? " disabled=\"disabled\"" : "",  
+		);
+		
+		return $this->createTag('input', $attributes);
 	}
 	
 	
