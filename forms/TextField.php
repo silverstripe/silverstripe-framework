@@ -22,15 +22,18 @@ class TextField extends FormField {
 	}
 	
 	function Field() {
-		$extraClass = $this->extraClass();
+		$attributes = array(
+			'type' => 'text',
+			'class' => $this->extraClass() . " maxlength",
+			'id' => $this->id(),
+			'name' => $this->attrName(),
+			'value' => $this->attrValue(),
+			'tabindex' => $this->getTabIndexHTML(),
+			'maxlength' => ($this->maxLength) ? $this->maxLength : null,
+			'size' => ($this->maxLength) ? min( $this->maxLength, 30 ) : 30
+		);
 		
-		$fieldSize = $this->maxLength ? min( $this->maxLength, 30 ) : 30;
-		
-		if($this->maxLength) {
-			return "<input class=\"text maxlength$extraClass\" type=\"text\" id=\"" . $this->id() . "\" name=\"{$this->name}\" value=\"" . $this->attrValue() . "\" maxlength=\"$this->maxLength\" size=\"$fieldSize\" />";
-		} else {
-			return "<input class=\"text$extraClass\" type=\"text\" id=\"" . $this->id() . "\" name=\"{$this->name}\" value=\"" . $this->attrValue() . "\" />"; 
-		}
+		return $this->createTag('input', $attributes);
 	}
 	
 	function InternallyLabelledField() {
