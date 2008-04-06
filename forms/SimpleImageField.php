@@ -12,37 +12,27 @@
  * @subpackage fields-files
  */
 class SimpleImageField extends FileField {
-  function saveInto(DataObject $record) {
-    $fieldName = $this->name;
-    if($record) $imageField = $record->$fieldName();
-    
-    
-    if($imageField) $imageField->loadUploaded($this->value);
-    
-    $idFieldName = $fieldName . 'ID';
-    if($record) $record->$idFieldName = $imageField->ID;
-  }
   
-  function Field() {
-    $record = $this->form->getRecord();
-    $fieldName = $this->name;
-    if($record) {
-    	$imageField = $record->$fieldName();
-    } else {
-    	$imageField = "";
-    }
-    	
-    $field = "<div class=\"simpleimage\">";
-    $field .= $this->createTag("input", array("type" => "file", "name" => $this->name)) . $this->createTag("input", array("type" => "hidden", "name" => "MAX_FILE_SIZE", "value" => 30*1024*1024));
-    if($imageField && $imageField->exists()) {
-      if($imageField->hasMethod('Thumbnail') && $imageField->Thumbnail()) $field .= "<img src=\"".$imageField->Thumbnail()->URL()."\" />";
-      else if($imageField->CMSThumbnail()) $field .= "<img src=\"".$imageField->CMSThumbnail()->URL()."\" />";
-      else {} // This shouldn't be called but it sometimes is for some reason, so we don't do anything
-    }
-    $field .= "</div>";
-    
-    return $field;
-  }
+	function Field() {
+	    $record = $this->form->getRecord();
+	    $fieldName = $this->name;
+	    if($record) {
+	    	$imageField = $record->$fieldName();
+	    } else {
+	    	$imageField = "";
+	    }
+	    	
+	    $field = "<div class=\"simpleimage\">";
+	    $field .= $this->createTag("input", array("type" => "file", "name" => $this->name)) . $this->createTag("input", array("type" => "hidden", "name" => "MAX_FILE_SIZE", "value" => 30*1024*1024));
+	    if($imageField && $imageField->exists()) {
+	      if($imageField->hasMethod('Thumbnail') && $imageField->Thumbnail()) $field .= "<img src=\"".$imageField->Thumbnail()->URL()."\" />";
+	      else if($imageField->CMSThumbnail()) $field .= "<img src=\"".$imageField->CMSThumbnail()->URL()."\" />";
+	      else {} // This shouldn't be called but it sometimes is for some reason, so we don't do anything
+	    }
+	    $field .= "</div>";
+	    
+	    return $field;
+	}
   
 	/**
 	 * Returns a readonly version of this field
@@ -77,6 +67,5 @@ class SimpleImageField_Disabled extends FormField {
 	    $field .= "</div>";
 	    return $field;
 	}
-	
 
 }
