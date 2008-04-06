@@ -1142,7 +1142,7 @@ class i18n extends Controller {
 
 			// Entity redeclaration check
 			if (isset($callMap["$index--$entity"])) 
-				echo "Warning! Redeclaring entity $entity in file $file (previously declared in {$callMap["$class--$entity"]})<br>";
+				echo "Warning! Redeclaring entity $entity in file $file (previously declared in {$callMap["$index--$entity"]})<br>";
 
 			if (substr($regs[2],0,1) == '"') $regs[2] = addcslashes($regs[2],'\'');
 			$mst .= '$lang[\'en_US\'][\'' . $index . '\'][\'' . $entity . '\'] = ';
