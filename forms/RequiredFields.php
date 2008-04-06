@@ -102,12 +102,13 @@ JS;
 		}
 		if($this->required) {
 			foreach($this->required as $field) {
-				if($fields->dataFieldByName($field) && !$data[$field]) {
+				$fieldObj = $fields->dataFieldByName($field);
+				if($fieldObj && !$data[$field]) {
 					$this->validationError(
 						$field,
 						sprintf(
 							_t('Form.FIELDISREQUIRED'),
-							strip_tags($field)
+							strip_tags($fieldObj->Title())
 						),
 						"required"
 					);
