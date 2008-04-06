@@ -130,6 +130,10 @@ class VirtualPage extends Page {
  */
 class VirtualPage_Controller extends Page_Controller {
 
+	static $allowed_actions = array(
+		'loadcontentall' => 'ADMIN',
+	);
+	
 	/**
 	 * Reloads the content if the version is different ;-)
 	 */
