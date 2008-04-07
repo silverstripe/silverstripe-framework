@@ -171,7 +171,7 @@ class ManifestBuilder {
 				$manifestInfo["require_once"][] = "$baseDir/$filename/_config.php";
 				// Include this so that we're set up for connecting to the database
 				// in the rest of the manifest builder
-				require_once("$baseDir/$filename/_config.php");
+				require("$baseDir/$filename/_config.php");
 			}
 		}
 
@@ -377,6 +377,22 @@ class ManifestBuilder {
 		$class="";
 
 		if(!$file) die("Couldn't open $filename<br />");
+
+		// Remove comments from $file so that we don't make use of a class-def inside a comment
+		$file = preg_replace('/\/\/.*([\n\r])/','$1', $file);
+		$file = preg_replace('/\/\*.*\*\//Us','', $file);
+
+		// Remove strings from $file so that we don't make use of a class-def inside a strin
+		$file = str_replace(array("\\'",'\\"'), "{! ESCAPED QUOTE !}", $file);
+		$file = preg_replace("/'[^']*'/s",'', $file);
+		$file = preg_replace('/"[^"]*"/s','', $file);
+		
+		// Remove heredoc strings from $file so that we don't make use of a class-def inside a strin
+		if(preg_match_all('/<<<(.*)/', $file, $heredocs)) {
+			foreach($heredocs[1] as $code) {
+				$file = preg_replace('/<<<' . $code . '\n.*\n' . $code . '[\n;]/s', '', $file);
+			}
+		}
 
 		$classes = array();
 		$size = preg_match_all('/class (.*)[ \n]*{/m', $file, $classes);

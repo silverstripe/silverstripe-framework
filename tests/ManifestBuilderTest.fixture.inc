@@ -15,9 +15,12 @@ PHP
 	'sapphire/MyClass.php' => <<<PHP
 <?php
 
+/* This is a comment before */
 class MyClass extends Object {
 
 }
+
+/* This is a comment between */
 
 class MyClass_Other extends DataObject implements Something {
 
@@ -26,6 +29,39 @@ class MyClass_Other extends DataObject implements Something {
 class MyClass_Final extends DataObject implements Something, Else {
 
 }
+
+/**
+Here we have a class in a comment:
+class MyClass_InComment extends DataObject {
+	
+}
+
+This class definition isn't named correctly:
+class UnrelatedCLass extends DataObject {
+	
+}
+
+ */
+
+// This is another class definition: class MyClass_InSlashSlashComment extends DataObject {
+
+// Here's a class definition in a string:
+\$string = <<<MYCODE
+
+class MyClass_InHeredocString extends DataObject {
+	
+}
+
+MYCODE;
+
+// Other definitions inside strings:
+\$string2 = 'class MyClass_InSingleQuoteString extends DataObject {
+}'
+\$string3 = "class MyClass_InDoubleQuoteString extends DataObject { 
+}
+
+I've included \"an escaped quote\" in this to ensure that it can handle that.
+"
 
 ?>
 PHP
