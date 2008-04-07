@@ -198,11 +198,11 @@ class Requirements {
 			}
 			
 			if(self::$customScript) {
-				$requirements .= "<script type=\"text/javascript\">\n//<![CDATA[\n";
 				foreach(array_diff_key(self::$customScript,self::$blocked) as $script) {
+					$requirements .= "<script type=\"text/javascript\">\n//<![CDATA[\n";
 					$requirements .= "$script\n";
+					$requirements .= "\n//]]>\n</script>\n";
 				}
-				$requirements .= "\n//]]>\n</script>\n";
 			}
 			foreach(array_diff_key(self::$css,self::$blocked) as $file => $params) {					
 				if(Director::fileExists($file)) {
