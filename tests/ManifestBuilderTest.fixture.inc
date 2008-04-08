@@ -26,7 +26,7 @@ class MyClass_Other extends DataObject implements Something {
 
 }
 
-class MyClass_Final extends DataObject implements Something, Else {
+class MyClass_Final extends DataObject implements Something, OtherClass {
 
 }
 
@@ -58,6 +58,19 @@ MYCODE;
 \$string2 = 'class MyClass_InSingleQuoteString extends DataObject {
 }'
 \$string3 = "class MyClass_InDoubleQuoteString extends DataObject { 
+}
+
+I've included \"an escaped quote\" in this to ensure that it can handle that.
+"
+
+/* let's define a class between two strings to confirm that it gets discovered */
+class MyClass_ClassBetweenTwoStrings extends DataObject {
+	
+	
+}
+
+
+\$string4 = "class MyClass_InDoubleQuoteString extends DataObject { 
 }
 
 I've included \"an escaped quote\" in this to ensure that it can handle that.

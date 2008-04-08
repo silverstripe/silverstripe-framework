@@ -12,6 +12,7 @@ class ManifestBuilderTest extends SapphireTest {
 		$this->assertContains('MyClass', array_keys($manifestInfo['globals']['_ALL_CLASSES']['exists']));
 		$this->assertContains('MyClass_Other', array_keys($manifestInfo['globals']['_ALL_CLASSES']['exists']));
 		$this->assertContains('MyClass_Final', array_keys($manifestInfo['globals']['_ALL_CLASSES']['exists']));
+		$this->assertContains('MyClass_ClassBetweenTwoStrings', array_keys($manifestInfo['globals']['_ALL_CLASSES']['exists']));
 		
 		// Check aspects of PHP file
 		$manifest = ManifestBuilder::generate_php_file($manifestInfo);
@@ -68,9 +69,12 @@ class ManifestBuilderTest extends SapphireTest {
 	}
 
 	
-	protected $originalClassManifest, $originalProject;
+	protected $originalClassManifest, $originalProject, $originalAllClasses;
 
 	function setUp() {
+		// Trick the auto-loder into loading this class before we muck with the manifest
+		new TokenisedRegularExpression(null);
+		
 		include('tests/ManifestBuilderTest.fixture.inc');		
 
 		// Build the fixture specified above
@@ -100,15 +104,17 @@ class ManifestBuilderTest extends SapphireTest {
 			}
 		}
 
-		global $_CLASS_MANIFEST, $project;
+		global $_CLASS_MANIFEST, $_ALL_CLASSES, $project;
+		$this->originalAllClasses = $_ALL_CLASSES;
 		$this->originalClassManifest = $_CLASS_MANIFEST;
 		$this->originalProject = $project;
 	}
 
 	function tearDown() { 
-		global $_CLASS_MANIFEST, $project;
+		global $_CLASS_MANIFEST, $_ALL_CLASSES, $project;
 		$project = $this->originalProject;
 		$_CLASS_MANIFEST = $this->originalClassManifest;
+		$_ALL_CLASSES = $this->originalAllClasses;
 
 		// Kill the folder after we're done
 		$baseFolder = TEMP_FOLDER . '/manifest-test/';

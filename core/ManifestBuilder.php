@@ -377,61 +377,93 @@ class ManifestBuilder {
 		$class="";
 
 		if(!$file) die("Couldn't open $filename<br />");
-
-		// Remove comments from $file so that we don't make use of a class-def inside a comment
-		$file = preg_replace('/\/\/.*([\n\r])/','$1', $file);
-		$file = preg_replace('/\/\*.*\*\//Us','', $file);
-
-		// Remove strings from $file so that we don't make use of a class-def inside a strin
-		$file = str_replace(array("\\'",'\\"'), "{! ESCAPED QUOTE !}", $file);
-		$file = preg_replace("/'[^']*'/s",'', $file);
-		$file = preg_replace('/"[^"]*"/s','', $file);
 		
-		// Remove heredoc strings from $file so that we don't make use of a class-def inside a strin
-		if(preg_match_all('/<<<(.*)/', $file, $heredocs)) {
-			foreach($heredocs[1] as $code) {
-				$file = preg_replace('/<<<' . $code . '\n.*\n' . $code . '[\n;]/s', '', $file);
+		// We cache the parse results of each file, since only a few files will have changed between flushings
+		// And, although it's accurate, TokenisedRegularExpression isn't particularly fast
+		$parseCacheFile = TEMP_FOLDER . "/manifestClassParse-" . str_replace(array("/",":", "\\"),"_", realpath($filename));
+		if(!file_exists($parseCacheFile) || filemtime($parseCacheFile) < filemtime($filename)) {
+			$tokens = token_get_all($file);
+			$classes = self::getClassDefParser()->findAll($tokens);
+			$interfaces = self::getInterfaceDefParser()->findAll($tokens);
+			
+			$cacheContent = '<?php
+				$classes = ' . var_export($classes,true) . ';
+				$interfaces = ' . var_export($interfaces,true) . ';';
+			if($fh = fopen($parseCacheFile,'w')) {
+				fwrite($fh, $cacheContent);
+				fclose($fh);
 			}
+			
+		} else {
+			include($parseCacheFile);
 		}
 
-		$classes = array();
-		$size = preg_match_all('/class (.*)[ \n]*{/m', $file, $classes);
-
-		for($i=0; $i < $size; $i++) {
-				//we have a class
-				$args = split("implements", $classes[1][$i]);
-				$implements = isset($args[1]) ? $args[1] : null;
-
-				$interfaces = explode(",", trim($implements));
-				
-				$args = split("extends", $args[0]);
-				$extends = trim(isset($args[1]) ? $args[1] : null);
-				$class = trim($args[0]);
-				if($extends) self::$extendsArray[trim($extends)][$class] = $class;
-
-				foreach($interfaces as $interface) {
-					self::$implementsArray[trim($interface)][$class] = $class;
-				}
-
-				self::$classArray[$class] = array(
-					"interfaces" => $interfaces,
-					"extends" => $extends,
-					"file" => $filename
-				);
+		foreach($classes as $class) {
+			$className = $class['className'];
+			unset($class['className']);
+			$class['file'] = $filename;
+			if(!isset($class['extends'])) $class['extends'] = null;
+			
+			if($class['extends']) self::$extendsArray[$class['extends']][$className] = $className;
+			if(isset($class['interfaces'])) foreach($class['interfaces'] as $interface) {
+				self::$implementsArray[$interface][$className] = $className;
 			}
+			
+			self::$classArray[$className] = $class;
+		}
 
-			$interfaces = array();
-			$size = preg_match_all('/interface (.*){/', $file, $interfaces);
-
-			for($i=0;$i<$size;$i++) {
-				$class = trim($interfaces[1][$i]);
-				self::$classArray[$class] = array(
-					"interfaces"=>array(),
-					"extends" => "",
-					"isinterface"=>true
-				);
-			}
+		foreach($interfaces as $interface) {
+			$className = $interface['interfaceName'];
+			unset($interface['interfaceName']);
+			$interface['file'] = $filename;
+			if(!isset($interface['extends'])) $interface['extends'] = null;
+			self::$classArray[$className] = $interface;
+		}
 	}
+	
+	/**
+	 * Returns a {@link TokenisedRegularExpression} object that will parse class definitions
+	 * @return TokenisedRegularExpression
+	 */
+	public static function getClassDefParser() {
+		return new TokenisedRegularExpression(array(
+			0 => T_CLASS,
+			1 => T_WHITESPACE,
+			2 => array(T_STRING, 'can_jump_to' => array(7, 14), 'save_to' => 'className'),
+			3 => T_WHITESPACE,
+			4 => T_EXTENDS,
+			5 => T_WHITESPACE,
+			6 => array(T_STRING, 'save_to' => 'extends', 'can_jump_to' => 14),
+			7 => T_WHITESPACE,
+			8 => T_IMPLEMENTS,
+			9 => T_WHITESPACE,
+			10 => array(T_STRING, 'can_jump_to' => 14, 'save_to' => 'interfaces[]'),
+			11 => array(T_WHITESPACE, 'optional' => true),
+			12 => array(',', 'can_jump_to' => 10),
+			13 => array(T_WHITESPACE, 'can_jump_to' => 10),
+			14 => array(T_WHITESPACE, 'optional' => true),
+			15 => '{',
+		));
+	}
+
+	/**
+	 * Returns a {@link TokenisedRegularExpression} object that will parse class definitions
+	 * @return TokenisedRegularExpression
+	 */
+	public static function getInterfaceDefParser() {
+		return new TokenisedRegularExpression(array(
+			0 => T_INTERFACE,
+			1 => T_WHITESPACE,
+			2 => array(T_STRING, 'can_jump_to' => 7, 'save_to' => 'interfaceName'),
+			3 => T_WHITESPACE,
+			4 => T_EXTENDS,
+			5 => T_WHITESPACE,
+			6 => array(T_STRING, 'save_to' => 'extends'),
+			7 => array(T_WHITESPACE, 'optional' => true),
+			8 => '{',
+		));
+	}
+	
 
 	/**
 	 * Moves through self::$classArray and creates an array containing parent data
