@@ -1,6 +1,7 @@
 <?php
 class UploadTest extends SapphireTest {
-	
+	static $fixture_file = 'sapphire/tests/filesystem/UploadTest.yml';
+
 	function testUpload() {
 		// create tmp file
 		$tmpFileName = 'UploadTest_testUpload.txt';
