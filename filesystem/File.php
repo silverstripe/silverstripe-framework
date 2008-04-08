@@ -618,20 +618,18 @@ class File extends DataObject {
 
 		// Work out which columns we're actually going to select
 		// In short, we select everything except File.Content
-		if(!self::$dataobject_select) {
-			self::$dataobject_select = array();
-			foreach($query->select as $item) {
-				if($item == "`File`.*") {
-					$fileColumns = DB::query("SHOW FIELDS IN `File`")->column();
-					$columnsToAdd = array_diff($fileColumns, array('Content'));
-					foreach($columnsToAdd as $otherItem) self::$dataobject_select[] = '`File`.' . $otherItem;
-				} else {
-					self::$dataobject_select[] = $item;
-				}
+		$dataobject_select = array();
+		foreach($query->select as $item) {
+			if($item == "`File`.*") {
+				$fileColumns = DB::query("SHOW FIELDS IN `File`")->column();
+				$columnsToAdd = array_diff($fileColumns, array('Content'));
+				foreach($columnsToAdd as $otherItem) $dataobject_select[] = '`File`.' . $otherItem;
+			} else {
+				$dataobject_select[] = $item;
 			}
 		}
 
-		$query->select = self::$dataobject_select;
+		$query->select = $dataobject_select;
 
 		$records = $query->execute();
 		$ret = $this->buildDataObjectSet($records, $containerClass);
