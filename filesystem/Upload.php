@@ -162,6 +162,9 @@ class Upload extends Controller {
 	 * @return boolean
 	 */
 	public function validate($tmpFile) {
+		// we don't validate for empty upload fields yet
+		if(!isset($tmpFile['name']) || empty($tmpFile['name'])) return true;
+
 		$pathInfo = pathinfo($tmpFile['name']);
 		// filesize validation
 		if(!$this->isValidSize($tmpFile)) {
