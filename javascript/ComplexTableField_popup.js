@@ -92,6 +92,8 @@ ComplexTableFieldPopupForm.prototype = {
 			Element.removeClassName(submitButton,'loading');
 		}
 		
+		onload_init_tabstrip();
+		
 		// TODO Fix DOM-relation after pagination inside popup
 		if(this.GB_OpenerObj) {
 			// apparently firefox doesn't remember its DOM after innerHTML, so we help out here...
