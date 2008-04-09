@@ -314,9 +314,9 @@ class Security extends Controller {
 
 		// custom processing
 		if(SSViewer::hasTemplate("Security_login")) {
-			return $customisedController->renderWith(array("Security_login", self::$template_main));
+			return $customisedController->renderWith(array("Security_login", $this->stat('template_main')));
 		} else {
-			return $customisedController->renderWith(self::$template_main);
+			return $customisedController->renderWith($this->stat('template_main'));
 		}
 	}
 	
@@ -356,7 +356,7 @@ class Security extends Controller {
 		));
 		
 		//Controller::$currentController = $controller;
-		return $customisedController->renderWith(self::$template_main);
+		return $customisedController->renderWith($this->stat('template_main'));
 	}
 
 
@@ -404,7 +404,7 @@ class Security extends Controller {
 		));
 		
 		//Controller::$currentController = $controller;
-		return $customisedController->renderWith(self::$template_main);
+		return $customisedController->renderWith($this->stat('template_main'));
 	}
 
 
@@ -474,7 +474,7 @@ class Security extends Controller {
 		}
 
 		//Controller::$currentController = $controller;
-		return $customisedController->renderWith(self::$template_main);
+		return $customisedController->renderWith($this->stat('template_main'));
 	}
 
 
