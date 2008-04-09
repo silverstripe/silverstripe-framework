@@ -34,6 +34,65 @@ class Group extends DataObject {
 		"Hierarchy",
 	);
 	
+	/**
+	 * Caution: Only call on instances, not through a singleton.
+	 *
+	 * @return FieldSet
+	 */
+	public function getCMSFields() {
+		$fields = new FieldSet(
+			new TabSet("Root",
+				new Tab(_t('SecurityAdmin.MEMBERS', 'Members'),
+					new TextField("Title", _t('SecurityAdmin.GROUPNAME', 'Group name')),
+					$memberList = new MemberTableField(
+						$this,
+						"Members",
+						$record,
+						null,
+						false
+					)
+				),
+
+				new Tab(_t('SecurityAdmin.PERMISSIONS', 'Permissions'),
+					new LiteralField(
+						"", 
+						"<p>" . 
+						_t('SecurityAdmin.ADVANCEDONLY',
+							"This section is for advanced users only.
+							See <a href=\"http://doc.silverstripe.com/doku.php?id=permissions:codes\" target=\"_blank\">this page</a>
+							for more information."
+						) . 
+						"</p>"
+					),
+					new TableField(
+						"Permissions",
+						"Permission",
+						array(
+						        "Code" => _t('SecurityAdmin.CODE', 'Code'),
+						        "Arg" => _t('SecurityAdmin.OPTIONALID', 'Optional ID'),
+						),
+						array(
+							"Code" => "PermissionDropdownField",
+							"Arg" => "TextField",
+						),
+						"GroupID", $id
+					)
+				)
+			)
+		);
+
+		if(!Permission::check('EDIT_PERMISSIONS')) $fields->removeFieldFromTab('Root', 'Permissions');
+		
+		$memberList->setController($this);
+		$memberList->setPermissions(array('show', 'edit', 'delete', 'export', 'add'));
+		$memberList->setParentClass('Group');
+		$memberList->setPopupCaption(_t('SecurityAdmin.VIEWUSER', 'View User'));
+
+		$fields->push($idField = new HiddenField("ID"));
+		
+		return $fields;
+	}
+	
 	static function getAdminGroups() {
 		return DataObject::get('Group',"CanCMSAdmin=1");
 	}
