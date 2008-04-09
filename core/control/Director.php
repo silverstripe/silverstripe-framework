@@ -419,6 +419,12 @@ class Director {
 	 * @param string $file
 	 * @return string
 	 */
+	/**
+	 * Cleans up a given file-path
+	 * 
+	 * @param string $file
+	 * @return string
+	 */
 	static function getAbsFile($file) {
 		if($file[0] == '/') return $file;
 		return Director::baseFolder() . '/' . $file;
