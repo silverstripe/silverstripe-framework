@@ -44,8 +44,10 @@ class PageView extends DataObject {
 	protected $hitdata = null;
 	
 	function init() {
-		$browscap = new Browscap();
-		$this->hitdata = $browscap->getBrowser(null, true);
+		if(Statistics::$browscap_enabled) {
+			$browscap = new Browscap();
+			$this->hitdata = $browscap->getBrowser(null, true);
+		}
 	}
 	
 	/**

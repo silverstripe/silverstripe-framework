@@ -1,19 +1,21 @@
 <?php
-
-/**
- * @package cms
- */
-
 /**
  * Statistics class for gathering and formatting of statistical data for tables and charts in
  * both public and administrative contexts.
+ * 
  * @package cms
  */
 
 class Statistics extends Controller {
 
-	function __construct() {
-	}
+	/**
+	 * Enable logging of browser information
+	 * based on the third-party Browscap library.
+	 * Turned off by default.
+	 * 
+	 * @var boolean 
+	 */
+	public static $browscap_enabled = false;
 
 	static function trend_chart($table, $filter = "day", $name, $type, $color) {
 	        $trendstrl = _t('Statistics.TRENDS', 'Trends');
