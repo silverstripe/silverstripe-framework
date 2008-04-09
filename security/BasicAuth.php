@@ -11,9 +11,22 @@
  * @subpackage security
  */
 class BasicAuth extends Object {
+	
+	/**
+	 * Used on test-environments by default,
+	 * but can be explicitly disabled.
+	 *
+	 * @var boolean
+	 */
+	static protected $disabled;
+
 	/**
 	 * Require basic authentication.  Will request a username and password if none is given.
-	 * @param memberValidationFunction A boolean method to call on the member to validate them.
+	 * 
+	 * @usedby Controller::init()
+	 * @param string $realm
+	 * @param string|array $permissionCode
+	 * @return Member $member 
 	 */
 	static function requireLogin($realm, $permissionCode) {
 		if(self::$disabled) return true;
@@ -59,7 +72,6 @@ class BasicAuth extends Object {
 		return $member;
 	}
 	
-	static protected $disabled;
 	static function disable() {
 		self::$disabled = true;
 	}

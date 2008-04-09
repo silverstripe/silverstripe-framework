@@ -358,6 +358,8 @@ class Controller extends ViewableData {
 	
 	/**
 	 * Initialisation function that is run before any action on the controller is called.
+	 * 
+	 * @uses BasicAuth::requireLogin()
 	 */
 	function init() {
 		// Test and development sites should be secured, via basic-auth
