@@ -116,7 +116,7 @@ class Permission extends DataObject {
 	 * Check that the given member has the given permission
 	 * @param int memberID The ID of the member to check. Leave blank for the
 	 *                     current member
-	 * @param string $code Code of the permission to check
+	 * @param string|array $code Code of the permission to check
 	 * @param string $arg Optional argument (e.g. a permissions for a specific
 	 *                    page)
 	 * @param bool $strict Use "strict" checking (which means a permission
@@ -160,7 +160,8 @@ class Permission extends DataObject {
 			if(is_array($code)) $SQL_codeList = "'" . implode("', '", Convert::raw2sql($code)) . "'";
 			else $SQL_codeList = "'" . Convert::raw2sql($code) . "'";
 			
-
+			$SQL_code = Convert::raw2sql($code);
+			
 			$adminFilter = (self::$admin_implies_all)
 				?  ",'ADMIN'"
 				: '';
@@ -187,7 +188,7 @@ class Permission extends DataObject {
 					SELECT COUNT(*) 
 					FROM Permission 
 					WHERE (
-						(Code IN '$code')' 
+						(Code IN '$SQL_code')' 
 						AND (Type = " . self::GRANT_PERMISSION . ")
 					)
 				")->value();
