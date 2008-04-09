@@ -219,7 +219,7 @@ class Controller extends ViewableData {
 
 				if(!$securityID || !isset($this->requestParams['SecurityID']) || $securityID != $this->requestParams['SecurityID']) {
 					// Don't show error on live sites, as spammers create a million of these
-					if(Director::isDev()) {
+					if(!Director::isLive()) {
 						trigger_error("Security ID doesn't match, possible CRSF attack.", E_USER_ERROR);
 					} else {
 						die();
