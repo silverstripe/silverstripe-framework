@@ -206,7 +206,7 @@ class Requirements {
 			}
 			foreach(array_diff_key(self::$css,self::$blocked) as $file => $params) {					
 				if(Director::fileExists($file)) {
-					$media = (isset($params['media'])) ? " media=\"{$params['media']}\"" : "";
+					$media = (isset($params['media']) && !empty($params['media'])) ? " media=\"{$params['media']}\"" : "";
 					$requirements .= "<link rel=\"stylesheet\" type=\"text/css\"{$media} href=\"$prefix$file\" />\n";
 				}
 			}
