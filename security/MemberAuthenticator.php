@@ -26,7 +26,7 @@ class MemberAuthenticator extends Authenticator {
    *                     the member object
    * @see Security::setDefaultAdmin()
    */
-  public static function authenticate(array $RAW_data, Form $form = null) {
+  public static function authenticate($RAW_data, Form $form = null) {
     $SQL_user = Convert::raw2sql($RAW_data['Email']);
 
 	// Default login (see Security::setDefaultAdmin())
