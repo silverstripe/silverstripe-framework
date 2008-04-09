@@ -118,20 +118,9 @@ class Email extends ViewableData {
 			$this->customHeaders[$headerName] .= $headerValue;
 		}
 	}
-
-	/**
-	 * Debugging help
-	 */
-	public function debug() {
-		$this->parseVariables();
-
-		return "<h2>Email template $this->class</h2>\n" . 
-			"<p><b>From:</b> $this->from\n" .
-			"<b>To:</b> $this->to\n" . 
-			"<b>Cc:</b> $this->cc\n" . 
-			"<b>Bcc:</b> $this->bcc\n" . 
-			"<b>Subject:</b> $this->subject</p>" . 
-			$this->body;
+	
+	public function BaseURL() {
+		return Director::absoluteBaseURL();
 	}
 
 	protected function templateData() {
@@ -156,6 +145,20 @@ class Email extends ViewableData {
 	 */
 	public function IsEmail() {
 		return true;
+	}
+	
+	/**
+	 * Populate this email template with values.
+	 * This may be called many times.
+	 */
+	function populateTemplate($data) {
+    	if($this->template_data) {
+			$this->template_data = $this->template_data->customise($data);	
+		} else {
+			if(is_array($data)) $data = new ArrayData($data);
+			$this->template_data = $this->customise($data);
+		}
+		$this->parseVariables_done = false;
 	}
 	
 	/**
@@ -193,13 +196,28 @@ class Email extends ViewableData {
 			$this->body = HTTP::absoluteURLs($fullBody);
 		}
 	}
+	
+	/**
+	 * Debugging help
+	 */
+	public function debug() {
+		$this->parseVariables();
+
+		return "<h2>Email template $this->class</h2>\n" . 
+			"<p><b>From:</b> $this->from\n" .
+			"<b>To:</b> $this->to\n" . 
+			"<b>Cc:</b> $this->cc\n" . 
+			"<b>Bcc:</b> $this->bcc\n" . 
+			"<b>Subject:</b> $this->subject</p>" . 
+			$this->body;
+	}
   
-  /**
-  * @desc Validates the email address. Returns true of false
-  */
-  static function validEmailAddress($address) {
-    return ereg('^([a-zA-Z0-9_+\.\-]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$', $address);
-  }
+	/**
+	 * @desc Validates the email address. Returns true of false
+	*/
+	static function validEmailAddress($address) {
+		return ereg('^([a-zA-Z0-9_+\.\-]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$', $address);
+	}
   
   /**
   * @desc Send the email in plaintext
@@ -383,26 +401,7 @@ class Email extends ViewableData {
  * @subpackage email
  */
 class Email_Template extends Email {
-	public function __construct() {
-	}
-
-	public function BaseURL() {
-		return Director::absoluteBaseURL();
-	}
 	
-	/**
-	 * Populate this email template with values.
-	 * This may be called many times.
-	 */
-	function populateTemplate($data) {
-    if($this->template_data) {
-			$this->template_data = $this->template_data->customise($data);	
-		} else {
-			if(is_array($data)) $data = new ArrayData($data);
-			$this->template_data = $this->customise($data);
-		}
-		$this->parseVariables_done = false;
-	}
 }
 
 
