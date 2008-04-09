@@ -42,7 +42,7 @@ class FileField extends FormField {
 	 * trigger saving the ID of newly created file into "PlayerImageID"
 	 * on the record).
 	 *
-	 * @var unknown_type
+	 * @var boolean
 	 */
 	public $relationAutoSetting = true;
 	
@@ -103,21 +103,27 @@ class FileField extends FormField {
 	public function saveInto(DataObject $record) {
 		if(!isset($_FILES[$this->name])) return false;
 		
+		if($this->relationAutoSetting) {
+			// assume that the file is connected via a has-one
+			$hasOnes = $record->has_one($this->name);
+			// try to create a file matching the relation
+			$file = (is_string($hasOnes)) ? Object::create($hasOnes) : new File(); 
+		} else {
+			$file = new File();
+		}
+		
 		$this->upload->setAllowedExtensions($this->allowedExtensions);
 		$this->upload->setAllowedMaxFileSize($this->allowedMaxFileSize);
-		$this->upload->load($_FILES[$this->name]);
+		$this->upload->loadIntoFile($_FILES[$this->name], $file);
 		if($this->upload->isError()) return false;
 		
 		$file = $this->upload->getFile();
 		
 		if($this->relationAutoSetting) {
-			$fieldName = $this->name . 'ID';
-			// assume that the file is connected via a has-one
-			$hasOnes = $record->has_one($this->name);
 			if(!$hasOnes) return false;
 			
 			// save to record
-			$record->$fieldName = $file->ID;	
+			$record->{$this->name . 'ID'} = $file->ID;
 		}
 	}
 	
