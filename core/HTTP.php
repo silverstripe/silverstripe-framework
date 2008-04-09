@@ -231,46 +231,36 @@ class HTTP {
 		return $response;
 	}
 
-	static function sendPostRequest( $host, $path, $data, $name, $query = '', $port = 80 ) {
+	/**
+	 * Send a HTTP POST request through fsockopen().
+	 *
+	 * @param string $host Absolute URI without path, e.g. http://silverstripe.com
+	 * @param string $path Path with leading slash
+	 * @param array|string $data Payload for the request
+	 * @param string $name Parametername for the payload (only if passed as a string)
+	 * @param string $query
+	 * @param string $port
+	 * @return string Raw HTTP-result including headers
+	 */
+	static function sendPostRequest($host, $path, $data, $name = null, $query = '', $port = 80) {
+		$socket = fsockopen($host, $port, $errno, $error);
 
-		$socket = fsockopen( $host, $port, $errno, $error );
-
-		if( !$socket )
+		if(!$socket)
 			return $error;
 
-		if( self::$userName && self::$password )
-			$auth = "Authorization: Basic " . base64_encode( self::$userName . ':' . self::$password ) . "\r\n";
+		if(self::$userName && self::$password)
+			$auth = "Authorization: Basic " . base64_encode(self::$userName . ':' . self::$password) . "\r\n";
 
-		if( $query )
+		if($query)
 			$query = '?' . $query;
 
-		$data = urlencode( $data );
-		$data = $name . '=' . $data;
-		$length = strlen( $data );
+		$dataStr = (is_array($data)) ? http_build_query($data) : $name . '=' . urlencode($data);
+		$request = "POST {$path}{$query} HTTP/1.1\r\nHost: $host\r\n{$auth}Content-Type: application/x-www-form-urlencoded\r\nContent-Length: " . strlen($dataStr) . "\r\n\r\n";
+		$request .= $dataStr . "\r\n\r\n";
 
-		$request = "POST {$path}{$query} HTTP/1.1\r\nHost: $host\r\n{$auth}Content-Type: application/x-www-form-urlencoded\r\nContent-Length: $length\r\n\r\n";
-
-		$request .= $data . "\r\n\r\n";
-
-		fwrite( $socket, $request );
-		$response = stream_get_contents( $socket );
-
-		/*if( $query )
-			$query = '?' . $query;
-
-		$vars['synchronise'] = $data;
-
-		$curl = curl_init('http://' . $host . $path );
-
-		curl_setopt( $curl, CURLOPT_RETURNTRANSFER, 1);
-		curl_setopt( $curl, CURLOPT_POSTFIELDS, $vars );
-		curl_setopt( $curl, CURLOPT_POST, 1 );
-		curl_setopt( $curl, CURLOPT_VERBOSE, true );
-		curl_setopt( $curl, CURLOPT_USERPWD, self::$userName . ':' . self::$password);
-
-		$response = curl_exec( $curl );
-		curl_close( $curl );*/
-
+		fwrite($socket, $request);
+		$response = stream_get_contents($socket);
+		
 		return $response;
 
 	}
