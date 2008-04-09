@@ -401,7 +401,18 @@ class File extends DataObject {
 	 * legacy code.
 	 */
 	function getExtension() {
-		return strtolower(substr($this->getField('Filename'),strrpos($this->getField('Filename'),'.')+1));
+		return self::get_file_extension($this->getField('Filename'));
+	}
+	
+	/**
+	 * Gets the extension of a filepath or filename,
+	 * by stripping away everything before the last "dot".
+	 *
+	 * @param string $filename
+	 * @return string
+	 */
+	public static function get_file_extension($filename) {
+		return strtolower(substr($filename,strrpos($filename,'.')+1));
 	}
 	
 	function getFileType() {
