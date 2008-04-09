@@ -525,7 +525,7 @@ class Security extends Controller {
 		$permission = DataObject::get_one("Permission", "`Code` = 'ADMIN'", true, "ID");
 
 		$adminGroup = null;
-		if($permission) $adminGroup = DataObject::get_one("Group", "`ID` = '{$permission->GroupID}'", true, "ID");
+		if($permission) $adminGroup = DataObject::get_one("Group", "`Group`.`ID` = '{$permission->GroupID}'", true, "`Group`.`ID`");
 		
 		if($adminGroup) {
 			if($adminGroup->Members()->First()) {
