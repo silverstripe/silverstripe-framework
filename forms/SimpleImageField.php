@@ -22,16 +22,35 @@ class SimpleImageField extends FileField {
 	    	$imageField = "";
 	    }
 	    	
-	    $field = "<div class=\"simpleimage\">";
-	    $field .= $this->createTag("input", array("type" => "file", "name" => $this->name)) . $this->createTag("input", array("type" => "hidden", "name" => "MAX_FILE_SIZE", "value" => 30*1024*1024));
-	    if($imageField && $imageField->exists()) {
-	      if($imageField->hasMethod('Thumbnail') && $imageField->Thumbnail()) $field .= "<img src=\"".$imageField->Thumbnail()->URL()."\" />";
-	      else if($imageField->CMSThumbnail()) $field .= "<img src=\"".$imageField->CMSThumbnail()->URL()."\" />";
-	      else {} // This shouldn't be called but it sometimes is for some reason, so we don't do anything
-	    }
-	    $field .= "</div>";
+	    $html = "<div class=\"simpleimage\">";
+	    $html .= $this->createTag("input", 
+			array(
+				"type" => "file", 
+				"name" => $this->name, 
+				"id" => $this->id(),
+				"tabindex" => $this->getTabIndex()
+			)
+		) . 
+		$html .= $this->createTag("input", 
+	   		array(
+	   			"type" => "hidden", 
+	   			"name" => "MAX_FILE_SIZE", 
+	   			"value" => $this->getAllowedMaxFileSize(),
+				"tabindex" => $this->getTabIndex()
+	   		)
+	   	);
 	    
-	    return $field;
+	   	if($imageField && $imageField->exists()) {
+	      if($imageField->hasMethod('Thumbnail') && $imageField->Thumbnail()) {
+	      	$html .= "<img src=\"".$imageField->Thumbnail()->URL()."\" />";
+	      } else if($imageField->CMSThumbnail()) {
+			$html .= "<img src=\"".$imageField->CMSThumbnail()->URL()."\" />";
+	      }
+	    }
+	    
+	    $html .= "</div>";
+	    
+	    return $html;
 	}
   
 	/**
