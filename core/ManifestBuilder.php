@@ -89,6 +89,7 @@ class ManifestBuilder {
 		// Config manifest
 		$baseDir = dirname($_SERVER['SCRIPT_FILENAME']) . "/..";
 		$baseDir = ereg_replace("/[^/]+/\\.\\.", "", $baseDir);
+		$baseDir = preg_replace("/\\\\/", "/", $baseDir);
 
 		// locate and include the exclude files
 		$topLevel = scandir($baseDir);
@@ -488,6 +489,7 @@ class ManifestBuilder {
 		// Config manifest
 		$baseDir = dirname($_SERVER['SCRIPT_FILENAME']) . "/..";
 		$baseDir = ereg_replace("/[^/]+/\\.\\.","",$baseDir);
+		$baseDir = preg_replace("/\\\\/", "/", $baseDir);
 		$topLevel = scandir($baseDir);
 
 		foreach($topLevel as $filename) {
