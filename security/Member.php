@@ -38,6 +38,8 @@ class Member extends DataObject {
 
 	);
 
+	static $has_one = array();
+	
 	static $has_many = array(
 		'UnsubscribedRecords' => 'Member_UnsubscribeRecord'
 	);
