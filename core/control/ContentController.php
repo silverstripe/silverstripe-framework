@@ -93,7 +93,9 @@ class ContentController extends Controller {
 			return;
 		}
 		
-		singleton('SiteTree')->extend('contentcontrollerInit', $this);
+		$this->dataRecord->extend('contentcontrollerInit', $this);
+		if(Director::redirected_to()) return;
+		
 		Director::set_site_mode('site');
 
 		// Check page permissions
