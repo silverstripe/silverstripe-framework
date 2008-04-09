@@ -96,6 +96,18 @@ abstract class Authenticator extends Object {
 
     return true;
   }
+  
+	/**
+	 * Remove a previously registered authenticator
+	 *
+	 * @param string $authenticator Name of the authenticator class to register
+	 * @return bool Returns TRUE on success, FALSE otherwise.
+	 */
+	public static function unregister_authenticator($authenticator) {
+		if(call_user_func(array($authenticator, 'on_unregister')) === true) {
+        	unset(self::$authenticators[$authenticator]);
+		};
+	}
 
 
   /**
@@ -122,7 +134,7 @@ abstract class Authenticator extends Object {
     	unset(self::$authenticators[$key]);
 	    array_unshift(self::$authenticators, self::$default_authenticator);
     }
-    
+
     return self::$authenticators;
   }
   
@@ -157,6 +169,15 @@ abstract class Authenticator extends Object {
    * @return bool Returns TRUE on success, FALSE otherwise.
    */
   protected static function on_register() {
+    return true;
+  }
+  
+  /**
+   * Callback function that is called when an authenticator is removed.
+   *
+   * @return bool
+   */
+  protected static function on_unregister() {
     return true;
   }
 }
