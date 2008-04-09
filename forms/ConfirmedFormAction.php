@@ -30,7 +30,7 @@ class ConfirmedFormAction extends FormAction {
 			'type' => 'submit',
 			'class' => $this->extraClass(),
 			'id' => $this->id(),
-			'name' => $this->attrName(),
+			'name' => $this->Name(),
 			'value' => $this->attrTitle(),
 			'tabindex' => $this->getTabIndexHTML(),
 			'onclick' => "return confirm('$this->confirmation');"

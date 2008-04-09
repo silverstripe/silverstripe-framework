@@ -26,8 +26,8 @@ class TextField extends FormField {
 			'type' => 'text',
 			'class' => $this->extraClass() . ' text',
 			'id' => $this->id(),
-			'name' => $this->attrName(),
-			'value' => $this->attrValue(),
+			'name' => $this->Name(),
+			'value' => $this->Value(),
 			'tabindex' => $this->getTabIndex(),
 			'maxlength' => ($this->maxLength) ? $this->maxLength : null,
 			'size' => ($this->maxLength) ? min( $this->maxLength, 30 ) : null 

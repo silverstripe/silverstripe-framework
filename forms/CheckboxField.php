@@ -24,7 +24,7 @@ class CheckboxField extends FormField {
 			'type' => 'checkbox',
 			'class' => $this->extraClass(),
 			'id' => $this->id(),
-			'name' => $this->attrName(),
+			'name' => $this->Name(),
 			'value' => 1,
 			'tabindex' => $this->getTabIndexHTML(),
 			'checked' => $this->value ? "checked=\"checked\"" : '',

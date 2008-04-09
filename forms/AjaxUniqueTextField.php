@@ -48,8 +48,8 @@ class AjaxUniqueTextField extends TextField {
 			'type' => 'text',
 			'class' => $this->extraClass() . " text",
 			'id' => $this->id(),
-			'name' => $this->attrName(),
-			'value' => $this->attrValue(),
+			'name' => $this->Name(),
+			'value' => $this->Value(),
 			'tabindex' => $this->getTabIndexHTML(),
 			'maxlength' => ($this->maxLength) ? $this->maxLength : null
 		);

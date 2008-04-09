@@ -33,7 +33,7 @@ class AutocompleteTextField extends TextField {
 			'type' => 'text',
 			'id' => $this->id(),
 			'name' => $this->name,
-			'value' => $this->attrValue(),
+			'value' => $this->Value(),
 			'tabindex' => $this->getTabIndexHTML(),
 			'size' => $this->maxLength ? min( $this->maxLength, 30 ) : 30 
 		); 	
