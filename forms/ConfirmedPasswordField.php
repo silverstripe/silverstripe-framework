@@ -60,12 +60,18 @@ class ConfirmedPasswordField extends FormField {
 	 * @param mixed $value
 	 * @param Form $form
 	 * @param boolean $showOnClick
+	 * @param string $titleConfirmField Alternate title (not localizeable)
 	 */
-	function __construct($name, $title = null, $value = "", $form = null, $showOnClick = false) {
+	function __construct($name, $title = null, $value = "", $form = null, $showOnClick = false, $titleConfirmField = null) {
 		// naming with underscores to prevent values from actually being saved somewhere
 		$this->children = new FieldSet(
-			new PasswordField("{$name}[_Password]", (isset($title)) ? $title : _t('Member.PASSWORD')),
-			new PasswordField("{$name}[_ConfirmPassword]",_t('Member.CONFIRMPASSWORD', 'Confirm Password'))
+			new PasswordField(
+				"{$name}[_Password]", 
+				(isset($title)) ? $title : _t('Member.PASSWORD')),
+			new PasswordField(
+				"{$name}[_ConfirmPassword]",
+				(isset($titleConfirmField)) ? $titleConfirmField : _t('Member.CONFIRMPASSWORD', 'Confirm Password')
+			)
 		);
 
 		$this->showOnClick = $showOnClick;
