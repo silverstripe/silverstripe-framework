@@ -113,7 +113,7 @@ class Controller extends ViewableData {
 		$this->response = new HTTPResponse();
 		$this->requestParams = $requestParams;
 
-		$this->action = isset($this->urlParams['Action']) ? strtolower(str_replace("-","_",$this->urlParams['Action'])) : "";
+		$this->action = isset($this->urlParams['Action']) ? str_replace("-","_",$this->urlParams['Action']) : "";
 		if(!$this->action) $this->action = 'index';
 		
 		// Check security on the controller
@@ -533,6 +533,8 @@ class Controller extends ViewableData {
 	 * Check thAT
 	 */
 	function checkAccessAction($action) {
+		$action = strtolower($action);
+		
 		// Collate self::$allowed_actions from this class and all parent classes
 		$access = null;
 		$className = $this->class;
