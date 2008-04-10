@@ -506,10 +506,13 @@ class DataObject extends ViewableData implements DataObjectInterface {
 	 * @param boolean $showDebug Show debugging information
 	 * @param boolean $forceInsert Run INSERT command rather than UPDATE, even if record already exists
 	 * @param boolean $forceWrite Write to database even if there are no changes
+	 * @param boolean $writeComponents Call write() on all associated component instances which were previously
+	 * 					retrieved through {@link getComponent()}, {@link getComponents()} or {@link getManyManyComponents()}
+	 * 					(Default: false)
 	 *
 	 * @return int The ID of the record
 	 */
-	public function write($showDebug = false, $forceInsert = false, $forceWrite = false) {
+	public function write($showDebug = false, $forceInsert = false, $forceWrite = false, $writeComponents = false) {
 		$firstWrite = false;
 		$this->brokenOnWrite = true;
 		$isNewRecord = false;
@@ -625,16 +628,36 @@ class DataObject extends ViewableData implements DataObjectInterface {
 		}
 
 		// Write ComponentSets as necessary
-		if($this->components) {
-			foreach($this->components as $component) {
-				$component->write($firstWrite);
-			}
+		if($writeComponents) {
+			$this->writeComponents(true);
 		}
 
 		return $this->record['ID'];
 	}
 
 
+	/**
+	 * Write the cached components to the database. Cached components could refer to two different instances of the same record.
+	 * 
+	 * @param $recursive Recursively write components
+	 */
+	public function writeComponents($recursive = false) {
+		if(!$this->components) return;
+		
+		foreach($this->components as $component) {
+			$component->write(false, false, false, $recursive);
+		}
+	}
+	
+	/**
+	 * Gets all fields that written in the last write()-call
+	 * 
+	 * @return array
+	 */
+	public function getLastWriteFields() {
+		return $this->lastWriteFields;
+	}
+	
 	/**
 	 * Perform a write without affecting the version table.
 	 * On objects without versioning.
