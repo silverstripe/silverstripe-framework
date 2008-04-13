@@ -184,7 +184,7 @@ class Director {
 				if($matched) {
 
 					if(substr($controller,0,2) == '->') {
-						if($_REQUEST['debug'] == 1) Debug::message("Redirecting to $controller");
+						if(isset($_REQUEST['debug']) && $_REQUEST['debug'] == 1) Debug::message("Redirecting to $controller");
 
 						if(isset($_GET['debug_profile'])) Profiler::unmark("Director","getControllerForURL");
 						
