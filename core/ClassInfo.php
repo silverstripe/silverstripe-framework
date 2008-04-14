@@ -64,9 +64,14 @@ class ClassInfo {
 	 * Return the database tables linked to this class.
 	 * Gets an array of the current class, it subclasses and its ancestors.  It then filters that list
 	 * to those with DB tables
+	 * 
+	 * @param mixed $class string of the classname or instance of the class
+	 * @return array
 	 */
 	static function dataClassesFor($class) {
 		global $_ALL_CLASSES;
+		if (is_object($class)) $class = get_class($class);
+		
 		if(!$_ALL_CLASSES['parents'][$class]) user_error("ClassInfo::dataClassesFor() no parents for $class", E_USER_WARNING);
 		foreach($_ALL_CLASSES['parents'][$class] as $subclass) {
 			if(isset($_ALL_CLASSES['hastable'][$subclass])){
@@ -91,9 +96,13 @@ class ClassInfo {
 	/**
 	 * Return the root data class for that class.
 	 * This root table has a lot of special use in the DataObject system.
+	 * 
+	 * @param mixed $class string of the classname or instance of the class
+	 * @return array
 	 */
 	static function baseDataClass($class) {
 		global $_ALL_CLASSES;
+		if (is_object($class)) $class = get_class($class);
 		reset($_ALL_CLASSES['parents'][$class]);
 		while($val = next($_ALL_CLASSES['parents'][$class])) {
 			if($val == 'DataObject') break;
@@ -103,10 +112,14 @@ class ClassInfo {
 	}
 	
 	/**
-	 * @todo Improve documentation
+	 * Returns a list of classes that inherit from the given class.
+	 * 
+	 * @param mixed $class string of the classname or instance of the class
+	 * @return array
 	 */
 	static function subclassesFor($class){
 		global $_ALL_CLASSES;
+		if (is_object($class)) $class = get_class($class);
 		$subclasses = isset($_ALL_CLASSES['children'][$class]) ? $_ALL_CLASSES['children'][$class] : null;
 		if(isset($subclasses)) array_unshift($subclasses, $class);
 		else $subclasses[$class] = $class;
