@@ -93,7 +93,9 @@ class ContentController extends Controller {
 			return;
 		}
 		
-		$this->dataRecord->extend('contentcontrollerInit', $this);
+		if($this->dataRecord) $this->dataRecord->extend('contentcontrollerInit', $this);
+		else singleton('SiteTree')->extend('contentcontrollerInit', $this);
+
 		if(Director::redirected_to()) return;
 		
 		Director::set_site_mode('site');
