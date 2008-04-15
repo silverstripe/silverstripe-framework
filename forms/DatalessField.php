@@ -40,5 +40,13 @@ class DatalessField extends FormField {
 	function performReadonlyTransformation() {
 		return $this;
 	}
+	
+	/**
+	 * As DatalessFields are not initialized with an ID/name,
+	 * we keep the title for a unique reference.
+	 */
+	function Name() {
+		return $this->title;
+	}
 }
 ?>
