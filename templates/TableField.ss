@@ -61,4 +61,7 @@
 			<a href="$ExportLink" target="_blank"><% _t('CSVEXPORT', 'Export to CSV' ) %></a>
 		<% end_if %>
 	</div>
+	<% if Message %>
+	<span class="message $MessageType">$Message</span>
+	<% end_if %>
 </div>
