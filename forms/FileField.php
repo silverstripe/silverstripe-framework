@@ -204,6 +204,8 @@ class FileField extends FormField {
 	}
 	
 	public function validate($validator) {
+		if(!isset($_FILES[$this->name])) return true;
+		
 		$tmpFile = $_FILES[$this->name];
 		$this->upload->setAllowedExtensions($this->allowedExtensions);
 		$this->upload->setAllowedMaxFileSize($this->allowedMaxFileSize);
