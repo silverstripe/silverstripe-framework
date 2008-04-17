@@ -49,7 +49,7 @@ class Email extends ViewableData {
 	/**
 	 * Create a new email.
 	 */
-	public function __construct($from, $to, $subject, $body = null, $bounceHandlerURL = null, $cc = null, $bcc=null ) {
+	public function __construct($from = null, $to = null, $subject = null, $body = null, $bounceHandlerURL = null, $cc = null, $bcc=null ) {
 		$this->from = $from;
 		$this->to = $to;
 		$this->subject = $subject;
