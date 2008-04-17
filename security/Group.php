@@ -47,7 +47,7 @@ class Group extends DataObject {
 					$memberList = new MemberTableField(
 						$this,
 						"Members",
-						$record,
+						$this,
 						null,
 						false
 					)
@@ -75,7 +75,8 @@ class Group extends DataObject {
 							"Code" => "PermissionDropdownField",
 							"Arg" => "TextField",
 						),
-						"GroupID", $id
+						null,
+						"GroupID = {$this->ID}"
 					)
 				)
 			)
