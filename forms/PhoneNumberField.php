@@ -83,8 +83,10 @@ class PhoneNumberField extends FormField {
 		else
 			return array( '', '', $this->value, '' );
 		
-		if( is_array( $parts ) )	
+		if( is_array( $parts ) ) {	
 			array_shift( $parts );
+			$parts = array_pad($parts, 4, false);
+		}
 			
 		return $parts;
 	}
