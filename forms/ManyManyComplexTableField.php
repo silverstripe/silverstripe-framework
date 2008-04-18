@@ -36,7 +36,8 @@ class ManyManyComplexTableField extends HasManyComplexTableField {
 				break;
 			}
 		}
-		$source = $this->sourceClass;
+		$tableClasses = ClassInfo::dataClassesFor($this->sourceClass);
+		$source = array_shift($tableClasses);
 		$sourceField = $this->sourceClass;
 		if($this->manyManyParentClass == $source)
 			$sourceField = 'Child';
