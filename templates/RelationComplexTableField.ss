@@ -29,7 +29,7 @@
 			<tr>
 				<% if Markable %><td width="18">&nbsp;</td><% end_if %>
 				<td colspan="$ItemCount">
-					<a class="popuplink addlink" href="$AddLink" alt="<% _t('ADD', 'Add') %>"><img src="cms/images/add.gif" alt="<% _t('ADD', 'add') %>" /><% _t('ADD', 'Add') %> $Title</a>
+					<a class="popuplink addlink" href="$AddLink" alt="<% _t('ADD', 'Add') %>"><img src="cms/images/add.gif" alt="<% _t('ADD', 'Add') %>" /><% _t('ADD', 'Add') %> $Title</a>
 				</td>
 				<% if Can(show) %><td width="18">&nbsp;</td><% end_if %>
 				<% if Can(edit) %><td width="18">&nbsp;</td><% end_if %>
