@@ -29,7 +29,7 @@ class CreditCardField extends TextField {
 	
 	function jsValidation() {
 		$formID = $this->form->FormName();
-		$error = _t('CreditCardField.VALIDATIONJS1', 'Please ensure you have entered the');
+		$error1 = _t('CreditCardField.VALIDATIONJS1', 'Please ensure you have entered the');
 		$error2 = _t('CreditCardField.VALIDATIONJS2', 'credit card number correctly.');
 		$first = _t('CreditCardField.FIRST', 'first');
 		$second = _t('CreditCardField.SECOND', 'second');
