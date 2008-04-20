@@ -484,7 +484,8 @@ class Controller extends ViewableData {
 	 */
 	function redirect($url) {
 		if($this->response->getHeader('Location')) {
-			user_error("Already directed to " . $this->response->getHeader('Location') . "; now trying to direct to $url", E_USER_ERROR);
+			user_error("Already directed to " . $this->response->getHeader('Location') . "; now trying to direct to $url", E_USER_WARNING);
+			return;
 		}
 
 		// Attach site-root to relative links, if they have a slash in them
