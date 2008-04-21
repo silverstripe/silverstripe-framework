@@ -630,16 +630,13 @@ JS;
 	/**
 	 * Returns the db-fieldname of the currently used relationship.
 	 */
-	function getParentIdNameRelation( $parentClass, $childClass, $relation ){
+	function getParentIdNameRelation($parentClass, $childClass, $relation) {
 		if($this->parentIdName) return $this->parentIdName; 
 		
-		$relations = singleton( $parentClass )->$relation();
-		$classes = ClassInfo::ancestry( $childClass );
-		foreach( $relations as $k => $v ) {
-			if( $v == $childClass )
-				return $k . 'ID';
-			else if( array_key_exists( $v, $classes ) )
-				return $classes[ $v ] . 'ID';
+		$relations = singleton($parentClass)->$relation();
+		$classes = ClassInfo::ancestry($childClass);
+		foreach($relations as $k => $v) {
+			if(array_key_exists($v, $classes)) return $k . 'ID';
 		}
 		return false;
 	}
