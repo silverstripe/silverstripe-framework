@@ -60,15 +60,15 @@ class PhoneNumberField extends FormField {
 		if( is_array( $value ) ) {
 			$completeNumber = '';
 		
-			if( $value['Country'] )
+			if( isset($value['Country']) )
 				$completeNumber .= '+' . $value['Country'];
 				
-			if( $value['Area'] )
+			if( isset($value['Area']) )
 				$completeNumber .= '(' . $value['Area'] . ')';
 				
 			$completeNumber .= $value['Number'];
 			
-			if( $value['Extension'] )
+			if( isset($value['Extension']) )
 				$completeNumber .= '#' . $value['Extension'];
 				
 			return $completeNumber;
