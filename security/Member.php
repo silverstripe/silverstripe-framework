@@ -450,7 +450,7 @@ class Member extends DataObject {
 		}
 		
 		if(Director::isLive() &&
-			$this->changed['Password'] && $this->record['Password'] && 
+			isset($this->changed['Password']) && $this->changed['Password'] && $this->record['Password'] && 
 			Member::$notify_password_change) $this->sendInfo('changePassword');
 		
 		if(isset($this->changed['Password']) && $this->changed['Password']) {
