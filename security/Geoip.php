@@ -285,7 +285,7 @@ class Geoip extends Object {
 	static function ip2country($address, $codeOnly = false) {	
 		
 		// Detect internal networks - this is us, so we're NZ
-		if(substr($address,0,7)=="192.168" || substr($address,0,4)=="127.") {
+		if(substr($address,0,7)=="192.168" || substr($address,0,4)=="127." || $address == "::1") {
 			$code = "NZ";		
 		} else {
 			$cmd = "geoiplookup ".escapeshellarg($address);	
