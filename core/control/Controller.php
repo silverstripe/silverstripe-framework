@@ -509,7 +509,7 @@ class Controller extends ViewableData {
 	 * Redirct to the given URL.
 	 * It is generally recommended to call Director::redirect() rather than calling this function directly.
 	 */
-	function redirect($url) {
+	function redirect($url, $code=302) {
 		if($this->response->getHeader('Location')) {
 			user_error("Already directed to " . $this->response->getHeader('Location') . "; now trying to direct to $url", E_USER_ERROR);
 		}
@@ -519,7 +519,7 @@ class Controller extends ViewableData {
 			$url = Director::baseURL() . $url;
 		}
 
-		$this->response->redirect($url);
+		$this->response->redirect($url, $code);
 	}
 	
 	/**

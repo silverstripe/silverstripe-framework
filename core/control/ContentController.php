@@ -88,7 +88,7 @@ class ContentController extends Controller {
 			unset($getVars['url']);
 			if($getVars) $url = "?" . http_build_query($getVars);
 			else $url = "";
-			Director::redirect($url);
+			Director::redirect($url, 301);
 			return;
 		}
 		

@@ -53,6 +53,15 @@ class HTTPResponse extends Object {
 		505 => 'HTTP Version Not Supported',
 	);
 	
+	protected static $redirect_codes = array(
+		301,
+		302,
+		303,
+		304,
+		305,
+		307
+	);
+	
 	protected $statusCode = 200;
 	protected $headers = array();
 	protected $body = null;
@@ -91,8 +100,9 @@ class HTTPResponse extends Object {
 		}
 	}
 	
-	function redirect($dest) {
-		$this->statusCode = 302;
+	function redirect($dest, $code=302) {
+		if(!in_array($code, self::$redirect_codes)) $code = 302;
+		$this->statusCode = $code;
 		$this->headers['Location'] = $dest;
 	}
 
@@ -100,7 +110,7 @@ class HTTPResponse extends Object {
 	 * Send this HTTPReponse to the browser
 	 */
 	function output() {
-		if($this->statusCode == 302 && headers_sent($file, $line)) {
+		if(in_array($this->statusCode, self::$redirect_codes) && headers_sent($file, $line)) {
 			$url = $this->headers['Location'];
 			echo 
 			"<p>Redirecting to <a href=\"$url\" title=\"Please click this link if your browser does not redirect you\">$url... (output started on $file, line $line)</a></p>

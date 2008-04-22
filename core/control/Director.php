@@ -285,8 +285,8 @@ class Director {
 	 *  - or it can be a URL relative to the "site base"
 	 *  - if it is just a word without an slashes, then it redirects to another action on the current controller.
 	 */
-	static function redirect($url) {
-		Controller::curr()->redirect($url);
+	static function redirect($url, $code=302) {
+		Controller::curr()->redirect($url, $code);
 	}
 
 	/**
