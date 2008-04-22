@@ -514,25 +514,15 @@ class SiteTree extends DataObject {
 		if($member && $member->isAdmin()) {
 			return true;
 		}
-
-	  switch(strtolower($perm)) {
-	    case 'edit':
-	      if((Permission::check('CMS_ACCESS_CMSMain') &&
-						(($this->Editors == 'LoggedInUsers' && $member) ||
-					  ($this->Editors == 'OnlyTheseUsers' && $member &&
-						$member->isInGroup($this->EditorsGroup)))) == false)
-					return false;
-				break;
-
-	    case 'view':
-			case 'view_page':
-				if(((!$this->Viewers) || ($this->Viewers == 'Anyone') ||
-						($this->Viewers == 'LoggedInUsers' && $member) ||
-						($this->Viewers == 'OnlyTheseUsers' && $member &&
-						 $member->isInGroup($this->ViewersGroup))) == false)
-					return false;
-				break;
+		
+		if(method_exists($this, 'can' . ucfirst($perm))) {
+			$method = 'can' . ucfirst($perm);
+			return $this->$method($member);
 		}
+		
+		$args = array($perm, $member, true);
+		$this->extend('alternateCan', $args);
+		if($args[2] == false) return false;
 
 		return true;
 
@@ -549,7 +539,18 @@ class SiteTree extends DataObject {
 	 *
 	 * @return boolean True if the current user can add children.
 	 */
-	public function canAddChildren() {
+	public function canAddChildren($member = null) {
+		if(!isset($member)) {
+			$member = Member::currentUser();
+		}
+		if($member && $member->isAdmin()) {
+			return true;
+		}
+		
+		$args = array($member, true);
+		$this->extend('alternateCanAddChildren', $args);
+		if($args[1] == false) return false;
+		
 		return $this->canEdit() && $this->stat('allowed_children') != 'none';
 	}
 
@@ -563,8 +564,48 @@ class SiteTree extends DataObject {
 	 *
 	 * @return boolean True if the current user can view this page.
 	 */
-	public function canView() {
-		return $this->can('view');
+	public function canView($member = null) {
+		if(!isset($member)) {
+			$member = Member::currentUser();
+		}
+		if($member && $member->isAdmin()) {
+			return true;
+		}
+		
+		$args = array($member, true);
+		$this->extend('alternateCanView', $args);
+		if($args[1] == false) return false;
+		
+		if(((!$this->Viewers) || ($this->Viewers == 'Anyone') ||
+						($this->Viewers == 'LoggedInUsers' && $member) ||
+						($this->Viewers == 'OnlyTheseUsers' && $member &&
+						 $member->isInGroup($this->ViewersGroup))) == false)
+					return false;
+		return true;
+	}
+	
+	/**
+	 * This function should return true if the current user can view this
+	 * page.
+	 *
+	 * It can be overloaded to customise the security model for an
+	 * application.
+	 *
+	 * @return boolean True if the current user can view this page.
+	 */
+	public function canView_page($member = null) {
+		if(!isset($member)) {
+			$member = Member::currentUser();
+		}
+		if($member && $member->isAdmin()) {
+			return true;
+		}
+		
+		$args = array($member, true);
+		$this->extend('alternateCanView_page', $args);
+		if($args[1] == false) return false;
+		
+		return $this->canView($member);
 	}
 
 
@@ -577,7 +618,18 @@ class SiteTree extends DataObject {
 	 *
 	 * @return boolean True if the current user can delete this page.
 	 */
-	public function canDelete() {
+	public function canDelete($member = null) {
+		if(!isset($member)) {
+			$member = Member::currentUser();
+		}
+		if($member && $member->isAdmin()) {
+			return true;
+		}
+		
+		$args = array($member, true);
+		$this->extend('alternateCanDelete', $args);
+		if($args[1] == false) return false;
+		
 		return $this->stat('can_create') != false;
 	}
 
@@ -592,7 +644,18 @@ class SiteTree extends DataObject {
 	 * @return boolean True if the current user can create pages on this
 	 *                 class.
 	 */
-	public function canCreate() {
+	public function canCreate($member = null) {
+		if(!isset($member)) {
+			$member = Member::currentUser();
+		}
+		if($member && $member->isAdmin()) {
+			return true;
+		}
+		
+		$args = array($member, true);
+		$this->extend('alternateCanCreate', $args);
+		if($args[1] == false) return false;
+		
 		return $this->stat('can_create') != false || Director::isDev();
 	}
 
@@ -606,8 +669,25 @@ class SiteTree extends DataObject {
 	 *
 	 * @return boolean True if the current user can edit this page.
 	 */
-	public function canEdit() {
-		return $this->can('Edit');
+	public function canEdit($member = null) {
+		if(!isset($member)) {
+			$member = Member::currentUser();
+		}
+		if($member && $member->isAdmin()) {
+			return true;
+		}
+		
+		$args = array($member, true);
+		$this->extend('alternateCanEdit', $args);
+		if($args[1] == false) return false;
+		
+		if((Permission::check('CMS_ACCESS_CMSMain') &&
+						(($this->Editors == 'LoggedInUsers' && $member) ||
+					  ($this->Editors == 'OnlyTheseUsers' && $member &&
+						$member->isInGroup($this->EditorsGroup)))) == false)
+					return false;
+		
+		return true;
 	}
 
 	/**
@@ -619,7 +699,18 @@ class SiteTree extends DataObject {
 	 *
 	 * @return boolean True if the current user can publish this page.
 	 */
-	public function canPublish() {
+	public function canPublish($member = null) {
+		if(!isset($member)) {
+			$member = Member::currentUser();
+		}
+		if($member && $member->isAdmin()) {
+			return true;
+		}
+		
+		$args = array($member, true);
+		$this->extend('alternateCanPublish', $args);
+		if($args[1] == false) return false;
+		
 		return $this->canEdit();
 	}
 
