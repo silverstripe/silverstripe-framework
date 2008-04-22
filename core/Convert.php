@@ -143,6 +143,9 @@ class Convert extends Object {
 	}
 
 	static function array2json( $array ) {
+		if(function_exists("json_encode")) {
+			return json_encode($array);
+		}
 		$result = array();
 		
 		// Debug::show($array);
