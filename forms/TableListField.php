@@ -295,7 +295,7 @@ JS
 	
 	function sourceItems() {
 		$SQL_limit = ($this->pageSize) ? "{$this->pageSize}" : "0";
-		if(is_numeric($_REQUEST['ctf'][$this->Name()]['start'])) {
+		if(isset($_REQUEST['ctf'][$this->Name()]['start']) && is_numeric($_REQUEST['ctf'][$this->Name()]['start'])) {
 			$SQL_start = (isset($_REQUEST['ctf'][$this->Name()]['start'])) ? intval($_REQUEST['ctf'][$this->Name()]['start']) : "0";
 		}
 		if(isset($this->customSourceItems)) {
@@ -311,7 +311,7 @@ JS
 			$dataQuery = $this->getQuery();
 			
 			// we don't limit when doing certain actions
-			if(!in_array($_REQUEST['methodName'],array('printall','export'))) {
+			if(!isset($_REQUEST['methodName']) || !in_array($_REQUEST['methodName'],array('printall','export'))) {
 				$dataQuery->limit = $SQL_limit;
 				if(isset($SQL_start)) {
 					$dataQuery->limit .= " OFFSET {$SQL_start}";
