@@ -269,7 +269,7 @@ class Director {
 	 */
 	static function protocolAndHost() {
 		if(self::$alternateBaseURL) {
-			if(preg_match('/^(http[^:]*:\/\/[^/]+)\//1', self::$alternateBaseURL, $matches)) {
+			if(preg_match('/^(http[^:]*:\/\/[^\/]+)\//', self::$alternateBaseURL, $matches)) {
 				return $matches[1];
 			}
 		}
