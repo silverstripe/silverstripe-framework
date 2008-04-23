@@ -567,11 +567,12 @@ class Director {
 		if(in_array($_SERVER['HTTP_HOST'], Director::$dev_servers))  {
 			return true;
 		}
-		
+		/*
 		// Check if we are running on one of the test servers
 		if(in_array($_SERVER['HTTP_HOST'], Director::$test_servers))  {
 			return true;
 		}
+		*/
 		
 		return false;
 	}
