@@ -134,6 +134,16 @@ class Director {
             parse_str($getVarsEncoded, $getVars);
 		}
 		
+		$existingRequestVars = $_REQUEST;
+		$existingGetVars = $_GET;
+		$existingPostVars = $_POST;
+		$existingSessionVars = $_SESSION;
+		
+		$_REQUEST = array_merge((array)$getVars, (array)$post);
+		$_GET = (array)$getVars;
+		$_POST = (array)$post;
+		$_SESSION = $session ? $session->inst_getAll() : array(); 
+		
 		$controllerObj = Director::getControllerForURL($url);
 		
 		// Load the session into the controller
@@ -144,6 +154,10 @@ class Director {
 			
 		} else if($controllerObj) {
 			$response = $controllerObj->run( array_merge($getVars, (array)$post) );
+			$_REQUEST = $existingRequestVars;
+			$_GET = $existingGetVars;
+			$_POST = $existingPostVars;
+			$_SESSION = $existingSessionVars;
 			return $response;
 		}
 	}
