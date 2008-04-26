@@ -11,6 +11,10 @@ ComplexTableFieldPopupForm.prototype = {
 		});
 	},
 	
+	loadNewPage : function(content) {
+		this.innerHTML = content;
+	}
+	
 	submitForm : function(e) {
 		// if custom validation implementation (extend class to implement)
 		if(this.validate) {
@@ -46,7 +50,9 @@ ComplexTableFieldPopupForm.prototype = {
 	},
 	
 	updateTableAfterSave : function(response) {
-		eval(response.responseText);
+		try {
+			eval(response.responseText);
+		} catch(er) { alert(er.message); }
 
 		var theForm = document.getElementsByTagName("form")[0];
 
