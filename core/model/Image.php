@@ -451,7 +451,7 @@ class Image_Uploader extends Controller {
 	 * Ensures the css is loaded for the iframe.
 	 */
 	function iframe() {
-		if(!Permission::check('ADMIN')) Security::permissionFailure($this);
+		if(!Permission::check('CMS_ACCESS_CMSMain')) Security::permissionFailure($this);
 		
 		Requirements::css("cms/css/Image_iframe.css");
 		return array();
