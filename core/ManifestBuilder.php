@@ -87,6 +87,7 @@ class ManifestBuilder {
 		// Config manifest
 		$baseDir = dirname($_SERVER['SCRIPT_FILENAME']) . "/..";
 		$baseDir = ereg_replace("/[^/]+/\\.\\.", "", $baseDir);
+		$baseDir = preg_replace("/\\\\/", "/", $baseDir);
 		
 		$manifest = self::generate_php_file(self::get_manifest_info($baseDir));
 		
@@ -557,6 +558,7 @@ class ManifestBuilder {
 		// Config manifest
 		$baseDir = dirname($_SERVER['SCRIPT_FILENAME']) . "/..";
 		$baseDir = ereg_replace("/[^/]+/\\.\\.","",$baseDir);
+		$baseDir = preg_replace("/\\\\/", "/", $baseDir);
 		$topLevel = scandir($baseDir);
 
 		foreach($topLevel as $filename) {
