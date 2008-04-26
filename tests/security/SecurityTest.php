@@ -11,7 +11,7 @@ class SecurityTest extends SapphireTest {
 	 * Test that the login form redirects to the change password form after logging in with an expired password
 	 */
 	function testExpiredPassword() {
-		// BAD PASSWORDS ARE LOCKED OUT
+		/* BAD PASSWORDS ARE LOCKED OUT */
 		
 		$session = new Session(array());
 		$badResponse = $this->doTestLoginForm('sam@silverstripe.com' , 'badpassword', $session);
@@ -19,7 +19,7 @@ class SecurityTest extends SapphireTest {
 		$this->assertRegExp('/Security\/login/', $badResponse->getHeader('Location'));
 		$this->assertNull($session->inst_get('loggedInAs'));
 
-		// UNEXPIRED PASSWORD GO THROUGH WITHOUT A HITCH
+		/* UNEXPIRED PASSWORD GO THROUGH WITHOUT A HITCH */
 
 		$session = new Session(array());
 		$goodResponse = $this->doTestLoginForm('sam@silverstripe.com' , '1nitialPassword', $session);
@@ -27,7 +27,7 @@ class SecurityTest extends SapphireTest {
 		$this->assertEquals(Director::baseURL() . 'test/link', $goodResponse->getHeader('Location'));
 		$this->assertEquals($this->idFromFixture('Member', 'test'), $session->inst_get('loggedInAs'));
 		
-		// EXPIRED PASSWORDS ARE SENT TO THE CHANGE PASSWORD FORM
+		/* EXPIRED PASSWORDS ARE SENT TO THE CHANGE PASSWORD FORM */
 		
 		$session = new Session(array());
 		$expiredResponse = $this->doTestLoginForm('expired@silverstripe.com' , '1nitialPassword', $session);
@@ -41,19 +41,19 @@ class SecurityTest extends SapphireTest {
 		
 		Member::lock_out_after_incorrect_logins(5);
 		
-		// LOG IN WITH A BAD PASSWORD 7 TIMES
+		/* LOG IN WITH A BAD PASSWORD 7 TIMES */
 
 		for($i=1;$i<=7;$i++) {
 			$this->doTestLoginForm('sam@silverstripe.com' , 'incorrectpassword', $session);
 			$member = DataObject::get_by_id("Member", $this->idFromFixture('Member', 'test'));
 			
-			// THE FIRST 4 TIMES, THE MEMBER SHOULDN'T BE LOCKED OUT
+			/* THE FIRST 4 TIMES, THE MEMBER SHOULDN'T BE LOCKED OUT */
 			if($i < 5) {
 				$this->assertNull($member->LockedOutUntil);
 				$this->assertTrue(false !== stripos($this->loginErrorMessage($session), "That doesn't seem to be the right e-mail address or password"));
 			}
 			
-			// AFTER THAT THE USER IS LOCKED OUT FOR 15 MINUTES
+			/* AFTER THAT THE USER IS LOCKED OUT FOR 15 MINUTES */
 
 			//(we check for at least 14 minutes because we don't want a slow running test to report a failure.)
 			else {
@@ -65,12 +65,12 @@ class SecurityTest extends SapphireTest {
 			}
 		}
 		
-		// THE USER CAN'T LOG IN NOW, EVEN IF THEY GET THE RIGHT PASSWORD
+		/* THE USER CAN'T LOG IN NOW, EVEN IF THEY GET THE RIGHT PASSWORD */
 		
 		$this->doTestLoginForm('sam@silverstripe.com' , '1nitialPassword', $session);
 		$this->assertNull($session->inst_get('loggedInAs'));
 		
-		// BUT, IF TIME PASSES, THEY CAN LOG IN
+		/* BUT, IF TIME PASSES, THEY CAN LOG IN */
 
 		// (We fake this by re-setting LockedOutUntil)
 		$member = DataObject::get_by_id("Member", $this->idFromFixture('Member', 'test'));
@@ -83,7 +83,7 @@ class SecurityTest extends SapphireTest {
 		// Log the user out
 		$session->inst_set('loggedInAs', null);
 
-		// NOW THAT THE LOCK-OUT HAS EXPIRED, CHECK THAT WE ARE ALLOWED 4 FAILED ATTEMPTS BEFORE LOGGING IN
+		/* NOW THAT THE LOCK-OUT HAS EXPIRED, CHECK THAT WE ARE ALLOWED 4 FAILED ATTEMPTS BEFORE LOGGING IN */
 
 		$this->doTestLoginForm('sam@silverstripe.com' , 'incorrectpassword', $session);
 		$this->doTestLoginForm('sam@silverstripe.com' , 'incorrectpassword', $session);
