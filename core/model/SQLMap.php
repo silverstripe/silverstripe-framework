@@ -48,12 +48,9 @@ class SQLMap extends Object implements IteratorAggregate {
 		}
 	}
 	
-	/*
-	 * Iterator - necessary for foreach to work
-	 */
 	public function getIterator() {
 		$this->genItems();
-		return $this->items->getIterator();
+		return new SQLMap_Iterator($this->items->getIterator());
 	}
 	
 	/**
@@ -84,6 +81,39 @@ class SQLMap extends Object implements IteratorAggregate {
 				$this->items->push(new $className($item));
 			}
 		}
+	}
+}
+
+class SQLMap_Iterator extends Object implements Iterator {
+	protected $items;
+	
+	function __construct(Iterator $items) {
+		$this->items = $items;
+	}
+
+	
+	/*
+	 * Iterator functions - necessary for foreach to work
+	 */
+	public function rewind() {
+		return $this->items->rewind() ? $this->items->rewind()->Title : null;
+	}
+	
+	public function current() {
+		return $this->items->current()->Title;
+	}
+	
+	public function key() {
+		return $this->items->current()->ID;
+	}
+	
+	public function next() {
+		$next = $this->items->next();
+		return isset($next->Title) ? $next->Title : null;
+	}
+	
+	public function valid() {
+	 	return $this->items->valid();
 	}
 }
 
