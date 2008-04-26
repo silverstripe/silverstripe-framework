@@ -39,6 +39,7 @@ class FieldSet extends DataObjectSet {
 				$name = $field->Name();
 				if(isset($list[$name])) {
 					if($this->form) $errSuffix = " in your '{$this->form->class}' form called '" . $this->form->Name() . "'";
+					else $errSuffix = '';
 					user_error("collateDataFields() I noticed that a field called '$name' appears twice$errSuffix.", E_USER_ERROR);
 				}
 				$list[$name] = $field;
