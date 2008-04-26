@@ -257,7 +257,10 @@ class Group extends DataObject {
 	
 	public function canEdit() {
 		if($this->hasMethod('alternateCanEdit')) return $this->alternateCanEdit();
-		else return Member::currentUserID() ? true : false;
+		else {
+			return Permission::check("ADMIN") 
+				|| (Member::currentUserID() && !DataObject::get("Permission", "GroupID = $this->ID AND Code = 'ADMIN'"));
+		}
 	}
 
 	/**
