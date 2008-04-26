@@ -34,7 +34,9 @@ class Cookie extends Object {
 	}	
 	
 	static function forceExpiry( $name ) {
-		setcookie( $name, null, time() - 86400 );
+		if(!headers_sent($file, $line)) {
+			setcookie( $name, null, time() - 86400 );
+		}
 	}
 }
 
