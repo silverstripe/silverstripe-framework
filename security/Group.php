@@ -22,6 +22,7 @@ class Group extends DataObject {
 		"CanCMSAdmin" => "Boolean",
 		"Locked" => "Boolean",
 		"Sort" => "Int",
+		"IPRestrictions" => "Text",
 	);
 	static $has_one = array(
 		"Parent" => "SiteTree",
@@ -272,6 +273,26 @@ class Group extends DataObject {
 		}
 		
 		return $filteredChildren;
+	}
+	
+	/**
+	 * Returns true if the given IP address is granted access to this group.
+	 * For unrestricted groups, this always returns true.
+	 */
+	function allowedIPAddress($ip) {
+		if(!$this->IPRestrictions) return true;
+		$ipPatterns = explode("\n", $this->IPRestrictions);
+		foreach($ipPatterns as $ipPattern) {
+			$ipPattern = trim($ipPattern);
+			if(preg_match('/^([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)$/', $ipPattern, $matches)) {
+				if($ip == $ipPattern) return true;
+			} else if(preg_match('/^([0-9]+\.[0-9]+\.[0-9]+)\/24$/', $ipPattern, $matches)
+					|| preg_match('/^([0-9]+\.[0-9]+)\/16$/', $ipPattern, $matches)
+					|| preg_match('/^([0-9]+)\/8$/', $ipPattern, $matches)) {
+				if(substr($ip, 0, strlen($matches[1])) == $matches[1]) return true;
+			}
+		}
+		return false;
 	}
 }
 

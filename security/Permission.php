@@ -177,7 +177,7 @@ class Permission extends DataObject {
 						$argClause
 					)
 				")->value();
-			
+				
 			if($permission)
 				return $permission;
 

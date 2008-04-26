@@ -720,7 +720,13 @@ class Member extends DataObject {
 		if(count($collatedGroups) > 0) {
 			$collatedGroups = implode(", ", array_unique($collatedGroups));
 
-			$result = singleton('Group')->instance_get("`ID` IN ($collatedGroups)", "ID", "", "", "Member_GroupSet");
+			$unfilteredGroups = singleton('Group')->instance_get("`ID` IN ($collatedGroups)", "ID", "", "", "Member_GroupSet");
+			$result = new ComponentSet();
+			
+			// Only include groups where allowedIPAddress() returns true
+			foreach($unfilteredGroups as $group) {
+				if($group->allowedIPAddress($_SERVER['REMOTE_ADDR'])) $result->push($group);
+			}
 		} else {
 			$result = new Member_GroupSet();
 		}
