@@ -36,6 +36,18 @@ class MemberTest extends SapphireTest {
 	}
 	
 	/**
+	 * Test that changed passwords will send an email
+	 */
+	function testChangedPasswordEmaling() {
+		$this->clearEmails();
+
+		$member = $this->objFromFixture('Member', 'test');
+		$valid = $member->changePassword('32asDF##$$%%');
+		$this->assertTrue($valid->valid());
+		$this->assertEmailSent("sam@silverstripe.com", null, "/changed password/", '/sam@silverstripe\.com.*32asDF##\$\$%%/');
+	}
+	
+	/**
 	 * Test that passwords validate against NZ e-government guidelines
 	 *  - don't allow the use of the last 6 passwords
 	 *  - require at least 3 of lowercase, uppercase, digits and punctuation
