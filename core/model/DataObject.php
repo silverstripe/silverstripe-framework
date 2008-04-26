@@ -1002,16 +1002,10 @@ class DataObject extends ViewableData implements DataObjectInterface {
 	 */
 	public function has_one($component = null) {
 		$classes = ClassInfo::ancestry($this);
-		$good = false;
 
 		foreach($classes as $class) {
 			// Wait until after we reach DataObject
-			if(!$good) {
-				if($class == 'DataObject') {
-					$good = true;
-				}
-				continue;
-			}
+			if(in_array($class, array('Object', 'ViewableData', 'DataObject'))) continue;
 
 			if($component) {
 				$candidate = eval("return isset({$class}::\$has_one[\$component]) ? {$class}::\$has_one[\$component] : null;");
@@ -1060,16 +1054,9 @@ class DataObject extends ViewableData implements DataObjectInterface {
 	 */
 	public function has_many($component = null) {
 		$classes = ClassInfo::ancestry($this);
-		$good = false;
 
 		foreach($classes as $class) {
-			// Wait until after we reach DataObject
-			if(!$good) {
-				if($class == 'DataObject') {
-					$good = true;
-				}
-				continue;
-			}
+			if(in_array($class, array('ViewableData', 'Object', 'DataObject'))) continue;
 
 			if($component) {
 				$candidate = eval("return isset({$class}::\$has_many[\$component]) ? {$class}::\$has_many[\$component] : null;");
@@ -1096,20 +1083,10 @@ class DataObject extends ViewableData implements DataObjectInterface {
 	 */
 	public function many_many($component = null) {
 		$classes = ClassInfo::ancestry($this);
-		$good = false;
 
 		foreach($classes as $class) {
 			// Wait until after we reach DataObject
-			if(!$good) {
-				if($class == 'DataObject') {
-					$good = true;
-				}
-				continue;
-			}
-
-			if($class == 'DataObject' || $class == 'ViewableData') {
-				continue;
-			}
+			if(in_array($class, array('ViewableData', 'Object', 'DataObject'))) continue;
 
 			if($component) {
 				// Try many_many
