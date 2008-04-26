@@ -48,10 +48,14 @@ require_once 'PHPUnit/Framework.php';
 class SapphireTest extends PHPUnit_Framework_TestCase {
 	static $fixture_file = null;
 	
+	protected $originalMailer;
+	protected $mailer;
+	
 	function setUp() {
 		$className = get_class($this);
 		$fixtureFile = eval("return {$className}::\$fixture_file;");
-
+		
+		// Set up fixture
 		if($fixtureFile) {
 			// Create a temporary database
 			$dbConn = DB::getConn();
@@ -74,6 +78,11 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 			$className = get_class($this);
 			$this->loadFixture($fixtureFile);
 		}
+		
+		// Set up email
+		$this->originalMailer = Email::mailer();
+		$this->mailer = new TestMailer();
+		Email::set_mailer($this->mailer);
 	}
 	
 	/**
@@ -172,6 +181,58 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 				// echo "Deleted temp database " . $dbConn->currentDatabase() . "\n";
 				$dbConn->dropDatabase();
 			}
+		}
+		
+		// Restore email configuration
+		Email::set_mailer($this->originalMailer);
+		$this->originalMailer = null;
+		$this->mailer = null;
+	}
+	
+	/**
+	 * Clear the log of emails sent
+	 */
+	function clearEmails() {
+		return $this->mailer->clearEmails();
+	}
+
+	/**
+	 * Search for an email that was sent.
+	 * All of the parameters can either be a string, or, if they start with "/", a PREG-compatible regular expression.
+	 * @param $to
+	 * @param $from
+	 * @param $subject
+	 * @param $content
+	 * @return An array containing the keys: 'type','to','from','subject','content', 'plainContent','attachedFiles','customHeaders','htmlContent',inlineImages'
+	 */
+	function findEmail($to, $from = null, $subject = null, $content = null) {
+		return $this->mailer->findEmail($to, $from, $subject, $content);
+	}
+	
+	/**
+	 * Assert that the matching email was sent since the last call to clearEmails()
+	 * All of the parameters can either be a string, or, if they start with "/", a PREG-compatible regular expression.
+	 * @param $to
+	 * @param $from
+	 * @param $subject
+	 * @param $content
+	 * @return An array containing the keys: 'type','to','from','subject','content', 'plainContent','attachedFiles','customHeaders','htmlContent',inlineImages'
+	 */
+	function assertEmailSent($to, $from = null, $subject = null, $content = null) {
+		// To do - this needs to be turned into a "real" PHPUnit ass
+		if(!$this->findEmail($to, $from, $subject, $content)) {
+			
+			$infoParts = "";
+			$withParts = array();
+			if($to) $infoParts .= " to '$to'";
+			if($from) $infoParts .= " from '$from'";
+			if($subject) $withParts[] = "subject '$subject'";
+			if($content) $withParts[] = "content '$content'";
+			if($withParts) $infoParts .= " with " . implode(" and ", $withParts);
+			
+			throw new PHPUnit_Framework_AssertionFailedError(
+                "Failed asserting that an email was sent$infoParts."
+            );
 		}
 	}
 }
