@@ -28,6 +28,7 @@ class Member extends DataObject {
 		'PasswordEncryption' => "Enum('none', 'none')",
 		'Salt' => 'Varchar(50)',
 		'PasswordExpiry' => 'Date',
+		'LockedOutUntil' => 'Datetime',
 		'Locale' => 'Varchar(6)',
 	);
 
@@ -84,6 +85,8 @@ class Member extends DataObject {
 	 * By default, this is null, which means that passwords never expire
 	 */
 	protected static $password_expiry_days = null;
+
+	protected static $lock_out_after_incorrect_logins = null;
 	
 	/**
 	 * This method is used to initialize the static database members
@@ -111,9 +114,18 @@ class Member extends DataObject {
 	 * @return bool Returns TRUE if the passed password is valid, otherwise FALSE.
 	 */
 	public function checkPassword($password) {
-		$encryption_details = Security::encrypt_password($password, $this->Salt, $this->PasswordEncryption);
-
-		return ($this->Password === $encryption_details['password']);
+		// Only confirm that the password matches if the user isn't locked out
+		if(!$this->isLockedOut()) {
+			$encryption_details = Security::encrypt_password($password, $this->Salt, $this->PasswordEncryption);
+			return ($this->Password === $encryption_details['password']);
+		}
+	}
+	
+	/**
+	 * Returns true if this user is locked out
+	 */
+	public function isLockedOut() {
+		return $this->LockedOutUntil && time() < strtotime($this->LockedOutUntil);
 	}
 
 	/**
@@ -141,6 +153,14 @@ class Member extends DataObject {
 		self::$password_expiry_days = $days;
 	}
 	
+	/**
+	 * Configure the security system to lock users out after this many incorrect logins
+	 */
+	static function lock_out_after_incorrect_logins($numLogins) {
+		self::$lock_out_after_incorrect_logins = $numLogins;
+	}
+	
+	
 	function isPasswordExpired() {
 		if(!$this->PasswordExpiry) return false;
 		return strtotime(date('Y-m-d')) >= strtotime($this->PasswordExpiry);
@@ -167,6 +187,15 @@ class Member extends DataObject {
 			Cookie::set('alc_enc', null);
 			Cookie::forceExpiry('alc_enc');
 		}
+		
+		// Clear the incorrect log-in count
+		if(self::$lock_out_after_incorrect_logins) {
+			$failedLogins = Session::get('Member.FailedLogins');
+			$failedLogins[$this->Email] = 0;
+			Session::set('Member.FailedLogins', $failedLogins);
+		}
+		
+		$this->LockedOutUntil = null;
 
 		$this->write();
 	}
@@ -916,6 +945,25 @@ class Member extends DataObject {
 		}
 		
 		return $valid;
+	}
+	
+	/**
+	 * Tell this member that someone made a failed attempt at logging in as them.
+	 * This can be used to lock the user out temporarily if too many failed attempts are made.
+	 */
+	function registerFailedLogin() {
+		if(self::$lock_out_after_incorrect_logins) {
+			// Keep a tally of the number of failed log-ins so that we can lock people out
+			$failedLogins = Session::get('Member.FailedLogins');
+			if(!isset($failedLogins[$this->Email])) $failedLogins[$this->Email] = 0;
+			$failedLogins[$this->Email]++;
+			Session::set('Member.FailedLogins', $failedLogins);
+	
+			if($failedLogins[$this->Email] >= self::$lock_out_after_incorrect_logins) {
+				$this->LockedOutUntil = date('Y-m-d H:i:s', time() + 15*60);
+				$this->write();
+			}
+		}
 	}
 }
 
