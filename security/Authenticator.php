@@ -43,7 +43,7 @@ abstract class Authenticator extends Object {
    * @return bool|Member Returns FALSE if authentication fails, otherwise
    *                     the member object
    */
-  public abstract static function authenticate(array $RAW_data,
+  public abstract static function authenticate($RAW_data,
                                                Form $form = null);
 
 
