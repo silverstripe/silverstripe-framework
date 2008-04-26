@@ -47,7 +47,9 @@ abstract class DataObjectDecorator extends Extension {
 			foreach($fields as $relationType => $fields) {
 				if(in_array($relationType, self::$decoratable_statics)) {
 					eval("$className::\$$relationType = array_merge((array){$className}::\$$relationType, (array)\$fields);");
+					$this->owner->set_stat($relationType, eval("return $className::\$$relationType;"));
 				}
+				$this->owner->set_uninherited('fieldExists', null); 
 			}
 		}
 	}
