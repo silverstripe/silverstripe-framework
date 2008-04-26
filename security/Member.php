@@ -27,7 +27,8 @@ class Member extends DataObject {
 		'BlacklistedEmail' => 'Boolean',
 		'PasswordEncryption' => "Enum('none', 'none')",
 		'Salt' => 'Varchar(50)',
-		'Locale' => 'Varchar(6)', 
+		'PasswordExpiry' => 'Date',
+		'Locale' => 'Varchar(6)',
 	);
 
 	static $belongs_many_many = array(
@@ -71,6 +72,19 @@ class Member extends DataObject {
 		'Email' => true,
 	);
 	
+	
+	/**
+	 * {@link PasswordValidator} object for validating user's password
+	 */
+	protected static $password_validator = null;
+	
+	
+	/**
+	 * The number of days that a password should be valid for.
+	 * By default, this is null, which means that passwords never expire
+	 */
+	protected static $password_expiry_days = null;
+	
 	/**
 	 * This method is used to initialize the static database members
 	 *
@@ -109,7 +123,27 @@ class Member extends DataObject {
 	 * quirky problems (such as using the Windmill 0.3.6 proxy).
 	 */
 	static function session_regenerate_id() {
-		session_regenerate_id(true);
+		if(!headers_sent()) session_regenerate_id(true);
+	}
+	
+	/**
+	 * Set a {@link PasswordValidator} object to use to validate member's passwords.
+	 */
+	static function set_password_validator($pv) {
+		self::$password_validator = $pv;
+	}
+
+	/**
+	 * Set the number of days that a password should be valid for.
+	 * Set to null (the default) to have passwords never expire.
+	 */
+	static function set_password_expiry($days) {
+		self::$password_expiry_days = $days;
+	}
+	
+	function isPasswordExpired() {
+		if(!$this->PasswordExpiry) return false;
+		return strtotime(date('Y-m-d')) >= strtotime($this->PasswordExpiry);
 	}
 
 	/**
@@ -419,6 +453,7 @@ class Member extends DataObject {
 	 * If an email's filled out look for a record with the same email and if
 	 * found update this record to merge with that member.
 	 */
+
 	function onBeforeWrite() {
 		if($this->SetPassword) $this->Password = $this->SetPassword;
 
@@ -452,7 +487,8 @@ class Member extends DataObject {
 			isset($this->changed['Password']) && $this->changed['Password'] && $this->record['Password'] && 
 			Member::$notify_password_change) $this->sendInfo('changePassword');
 		
-		if(isset($this->changed['Password']) && $this->changed['Password']) {
+		// The test on $this->ID is used for when records are initially created
+		if(!$this->ID || (isset($this->changed['Password']) && $this->changed['Password'])) {
 			// Password was changed: encrypt the password according the settings
 			$encryption_details = Security::encrypt_password($this->Password);
 			$this->Password = $encryption_details['password'];
@@ -461,9 +497,27 @@ class Member extends DataObject {
 
 			$this->changed['Salt'] = true;
 			$this->changed['PasswordEncryption'] = true;
+			
+			// If we haven't manually set a password expiry
+			if(!isset($this->changed['PasswordExpiry']) || !$this->changed['PasswordExpiry']) {
+				// then set it for us
+				if(self::$password_expiry_days) {
+					$this->PasswordExpiry = date('Y-m-d', time() + 86400 * self::$password_expiry_days);
+				} else {
+					$this->PasswordExpiry = null;
+				}
+			}
 		}
 
 		parent::onBeforeWrite();
+	}
+	
+	function onAfterWrite() {
+		parent::onAfterWrite();
+
+		if(isset($this->changed['Password']) && $this->changed['Password']) {
+			MemberPassword::log($this);
+		}
 	}
 
 
@@ -832,6 +886,36 @@ class Member extends DataObject {
 		if( $this->ID == Member::currentUserID() ) return true;
 		
 		return Permission::check( 'ADMIN' );
+	}
+
+
+	/**
+	 * Validate this member object.
+	 */
+	function validate() {
+		$valid = parent::validate();
+		
+		if(!$this->ID || (isset($this->changed['Password']) && $this->changed['Password'])) {
+			if(self::$password_validator) {
+				$valid->combineAnd(self::$password_validator->validate($this->Password, $this));
+			}
+		}
+
+		return $valid;
+	}	
+	
+	function changePassword($password) {
+		$this->Password = $password;
+		$valid = $this->validate();
+		
+		if($valid->valid()) {
+			$this->AutoLoginHash = null;
+			$this->write();
+
+			$this->sendinfo('changePassword', array('CleartextPassword' => $password));
+		}
+		
+		return $valid;
 	}
 }
 
@@ -1347,7 +1431,6 @@ class Member_Validator extends RequiredFields {
 
 		return $js;
 	}
-
 }
 
 // Initialize the static DB variables to add the supported encryption

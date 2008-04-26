@@ -1,0 +1,99 @@
+<?php
+
+/**
+ * A class that combined as a boolean result with an optional list of error messages.
+ * This is used for returning validation results from validators
+ */
+class ValidationResult extends Object {
+	/**
+	 * Boolean - is the result valid or not
+	 */
+	protected $isValid;
+
+	
+	/**
+	 * Array of errors
+	 */
+	protected $errorList = array();
+
+	/**
+	 * Create a new ValidationResult.
+	 * By default, it is a successful result.	Call $this->error() to record errors.
+	 */
+	function __construct($valid = true, $message = null) {
+		$this->isValid = true;
+		if($message) $this->errorList[] = $message;
+	}
+	
+	/**
+	 * Record an error against this validation result,
+	 * @param $message The validation error message
+	 * @param $code An optional error code string, that can be accessed with {@link $this->codeList()}.
+	 */
+	function error($message, $code = null) {
+		$message = trim($message);
+		if(substr($message,-1) == '.') $message = substr($message,0,-1);
+		
+		$this->isValid = false;
+		
+		if($code) {
+			if(!is_numeric($code)) {
+				$this->errorList[$code] = $message;
+			} else {
+				user_error("ValidationResult::error() - Don't use a numeric code '$code'.  Use a string.  I'm going to ignore it.", E_USER_WARNING);
+				$this->errorList[$code] = $message;
+			}
+		} else {
+			$this->errorList[] = $message;
+		}
+	}
+	
+	/**
+	 * Returns true if the result is valid.
+	 */
+	function valid() {
+		return $this->isValid;
+	}
+	
+	/**
+	 * Get an array of errors
+	 */
+	function messageList() {
+		return $this->errorList;
+	}
+
+	/**
+	 * Get an array of error codes
+	 */
+	function codeList() {
+		$codeList = array();
+		foreach($this->errorList as $k => $v) if(!is_numeric($k)) $codeList[] = $k;
+		return $codeList;
+	}
+	
+	/**
+	 * Get the error message as a string.
+	 */
+	function message() {
+		return implode("; ", $this->errorList);
+	}
+	
+	/**
+	 * Get a starred list of all messages
+	 */
+	function starredList() {
+		return " * " . implode("\n * ", $this->errorList);
+	}
+	
+	/**
+	 * Combine this Validation Result with the ValidationResult given in other.
+	 * It will be valid if both this and the other result are valid.
+	 * This object will be modified to contain the new validation information.
+	 */
+	function combineAnd(ValidationResult $other) {
+		$this->isValid = $this->isValid && $other->valid();
+		$this->errorList = array_merge($this->errorList, $other->messageList());
+	}
+	
+	
+}

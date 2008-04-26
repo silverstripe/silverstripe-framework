@@ -37,7 +37,7 @@ class ChangePasswordForm extends Form {
 		}
 		if(!$actions) {
 			$actions = new FieldSet(
-				new FormAction("changePassword", _t('Member.BUTTONCHANGEPASSWORD', "Change Password"))
+				new FormAction("doChangePassword", _t('Member.BUTTONCHANGEPASSWORD', "Change Password"))
 			);
 		}
 
@@ -50,7 +50,7 @@ class ChangePasswordForm extends Form {
 	 *
 	 * @param array $data The user submitted data
 	 */
-	function changePassword(array $data) {
+	function doChangePassword(array $data) {
 		if($member = Member::currentUser()) {
 			// The user was logged in, check the current password
 			if($member->checkPassword($data['OldPassword']) == false) {
@@ -60,6 +60,7 @@ class ChangePasswordForm extends Form {
 					"bad"
 				);
 				Director::redirectBack();
+				return;
 			}
 		}
 
@@ -72,24 +73,26 @@ class ChangePasswordForm extends Form {
 			if(!$member) {
 				Session::clear('AutoLoginHash');
 				Director::redirect('loginpage');
+				return;
 			}
 		}
 
 		// Check the new password
 		if($data['NewPassword1'] == $data['NewPassword2']) {
-			$member->Password = $data['NewPassword1'];
-			$member->AutoLoginHash = null;
-			$member->write();
+			$isValid = $member->changePassword($data['NewPassword1']);
+			if($isValid->valid()) {
+				$this->clearMessage();
+				$this->sessionMessage(
+					_t('Member.PASSWORDCHANGED', "Your password has been changed, and a copy emailed to you."),
+					"good");
+				Session::clear('AutoLoginHash');
+				Director::redirect(Security::Link('login'));
 
-			$member->sendinfo('changePassword',
-												array('CleartextPassword' => $data['NewPassword1']));
-
-			$this->clearMessage();
-			$this->sessionMessage(
-				_t('Member.PASSWORDCHANGED', "Your password has been changed, and a copy emailed to you."),
-				"good");
-			Session::clear('AutoLoginHash');
-			Director::redirect(Security::Link('login'));
+			} else {
+				$this->clearMessage();
+				$this->sessionMessage(nl2br("We couldn't accept that password:\n" . $isValid->starredList()), "bad");
+				Director::redirectBack();
+			}
 
 		} else {
 			$this->clearMessage();

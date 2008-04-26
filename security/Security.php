@@ -172,8 +172,7 @@ class Security extends Controller {
 	 * Get the login form to process according to the submitted data
 	 */
 	protected function LoginForm() {
-		if(is_array($_REQUEST) && isset($_REQUEST['AuthenticationMethod']))
-		{
+		if(isset($this->requestParams['AuthenticationMethod'])) {
 			$authenticator = trim($_REQUEST['AuthenticationMethod']);
 
 			$authenticators = Authenticator::get_authenticators();

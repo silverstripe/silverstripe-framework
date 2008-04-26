@@ -99,8 +99,19 @@ class MemberLoginForm extends LoginForm {
 		if($this->performLogin($data)) {
 			Session::clear('SessionForms.MemberLoginForm.Email');
 			Session::clear('SessionForms.MemberLoginForm.Remember');
+			
+			if(Member::currentUser()->isPasswordExpired()) {
+				if(isset($_REQUEST['BackURL']) && $backURL = $_REQUEST['BackURL']) {
+					Session::set('BackURL', $backURL);
+				}
 
-			if(isset($_REQUEST['BackURL']) && $backURL = $_REQUEST['BackURL']) {
+				$cp = new ChangePasswordForm(null, 'ChangePasswordForm');
+				$cp->sessionMessage('Your password has expired.  Please choose a new one.', 'good');
+				
+				Director::redirect('Security/changepassword');
+				
+				
+			} else if(isset($_REQUEST['BackURL']) && $backURL = $_REQUEST['BackURL']) {
 				Session::clear("BackURL");
 				Director::redirect($backURL);
 			} else {

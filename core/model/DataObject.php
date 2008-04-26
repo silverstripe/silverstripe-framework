@@ -432,17 +432,48 @@ class DataObject extends ViewableData implements DataObjectInterface {
 		foreach($this->record as $fieldName => $fieldVal)
 			$this->changed[$fieldName] = 1;
 	}
+	
+	/**
+	 * Validate the current object.
+	 *
+	 * By default, there is no validation - objects are always valid!  However, you can overload this method in your
+	 * DataObject sub-classes to specify custom validation.
+	 * 
+	 * Invalid objects won't be able to be written - a warning will be thrown and no write will occur.  onBeforeWrite()
+	 * and onAfterWrite() won't get called either.
+	 * 
+	 * It is expected that you call validate() in your own application to test that an object is valid before attempting
+	 * a write, and respond appropriately if it isnt'.
+	 * 
+	 * @return A {@link ValidationResult} object
+	 */
+	protected function validate() {
+		return new ValidationResult();
+	}
 
 	/**
 	 * Event handler called before writing to the database.
 	 * You can overload this to clean up or otherwise process data before writing it to the
 	 * database.  Don't forget to call parent::onBeforeWrite(), though!
+	 *
+	 * This called after {@link $this->validate()}, so you can be sure that your data is valid.
 	 */
 	protected function onBeforeWrite() {
 		$this->brokenOnWrite = false;
 
 		$dummy = null;
 		$this->extend('augmentBeforeWrite', $dummy);
+	}
+
+	/**
+	 * Event handler called after writing to the database.
+	 * You can overload this to act upon changes made to the data after it is written.
+	 * $this->changed will have a record
+	 * database.  Don't forget to call parent::onAfterWrite(), though!
+	 */
+	protected function onAfterWrite() {
+		$dummy = null;
+		$this->extend('augmentAfterWrite', $dummy);
 	}
 
 	/**
@@ -516,6 +547,13 @@ class DataObject extends ViewableData implements DataObjectInterface {
 		$firstWrite = false;
 		$this->brokenOnWrite = true;
 		$isNewRecord = false;
+		
+		$valid = $this->validate();
+		if(!$valid->valid()) {
+			user_error("Validation error writing a $this->class object: " . $valid->message() . ".  Object not written.", E_USER_WARNING);
+			return false;
+		}
+		
 		$this->onBeforeWrite();
 		if($this->brokenOnWrite) {
 			user_error("$this->class has a broken onBeforeWrite() function.  Make sure that you call parent::onBeforeWrite().", E_USER_ERROR);
@@ -612,6 +650,8 @@ class DataObject extends ViewableData implements DataObjectInterface {
 				} else {
 					DataObjectLog::changedObject($this);
 				}
+				
+				$this->onAfterWrite();
 
 				$this->changed = null;
 			} elseif ( $showDebug ) {
