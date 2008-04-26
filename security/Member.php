@@ -946,8 +946,10 @@ class Member extends DataObject {
 		if($valid->valid()) {
 			$this->AutoLoginHash = null;
 			$this->write();
+			
+			// Emails will be sent by Member::onBeforeWrite().
 
-			$this->sendinfo('changePassword', array('CleartextPassword' => $password));
+			//$this->sendinfo('changePassword', array('CleartextPassword' => $password));
 		}
 		
 		return $valid;
