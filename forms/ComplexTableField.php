@@ -273,7 +273,7 @@ JS;
 		// If the fieldset is passed, use it, else use the formfields returned
 		// from the object via a string method call.
 		if(is_a($this->detailFormFields,"Fieldset")){
-			$detailFields = $this->detailFormFields;
+			$detailFields = clone $this->detailFormFields;
 		} else if( isset( $childData ) && is_string($this->detailFormFields)){
 			$functioncall = $this->detailFormFields;
 			if($childData->hasMethod($functioncall)){
