@@ -30,7 +30,7 @@ class SimpleImageField extends FileField {
 				"id" => $this->id(),
 				"tabindex" => $this->getTabIndex()
 			)
-		) . 
+		);
 		$html .= $this->createTag("input", 
 	   		array(
 	   			"type" => "hidden", 
