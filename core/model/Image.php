@@ -11,6 +11,11 @@
  * @subpackage filesystem
  */
 class Image extends File {
+	
+	static $casting = array(
+		'Tag' => 'HTMLText',
+	);
+
 	/**
 	 * The width of an image thumbnail in a strip.
 	 * @var int
@@ -94,7 +99,7 @@ class Image extends File {
 	 * Return an XHTML img tag for this Image.
 	 * @return string
 	 */
-	function Tag() {
+	function getTag() {
 		if(file_exists("../" . $this->Filename)) {
 			$url = $this->URL();
 			$title = $this->Title;
@@ -375,6 +380,13 @@ class Image extends File {
 	// ###################
 	// DEPRECATED
 	// ###################
+	
+	/**
+	 * @deprecated
+	 */
+	function Tag() {
+		return $this->getTag();
+	}
 	
 	/**
 	 * @deprecated
