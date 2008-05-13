@@ -587,14 +587,13 @@ class Translatable extends DataObjectDecorator {
 			);
 			$this->original_values = $originalRecord->getAllFields();
 			$alltasks = array( 'dup' => array());
-			$field = $fields->current();
-			do {
+			foreach($fields as $field) {
 				if ($field->isComposite()) {
 					$innertasks = $this->duplicateOrReplaceFields($field->FieldSet());
 					// more efficient and safe than array_merge_recursive
 					$alltasks['dup'] = array_merge($alltasks['dup'],$innertasks['dup']);
 				} 
-			} while ($field = $fields->next());
+			}
 			foreach ($alltasks['dup'] as $fieldname => $newfield) {
 				// Duplicate the field
 				$fields->replaceField($fieldname,$newfield);
