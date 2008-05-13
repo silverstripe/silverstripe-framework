@@ -75,8 +75,7 @@ class EditableDropdownOption extends DataObject {
 	function DefaultSelect() {
 		$disabled = ($this->readonly) ? " disabled=\"disabled\"" : '';		
 		
-		if( $this->Parent()->getField('Default') == $this->ID )
-			$default = " checked=\"checked\"";
+		$default = ($this->Parent()->getField('Default') == $this->ID) ? " checked=\"checked\"" : "";
 	
 		return "<input class=\"radio\" type=\"radio\" name=\"Fields[{$this->ParentID}][Default]\" value=\"{$this->ID}\"".$disabled.$default." />";
 	}
