@@ -72,7 +72,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 			singleton('DataObject')->flushCache();
 
 			$dbadmin = new DatabaseAdmin();
-			$dbadmin->doBuild(true, false);
+			$dbadmin->doBuild(true, false, true);
 
 			// Load the fixture into the database
 			$className = get_class($this);

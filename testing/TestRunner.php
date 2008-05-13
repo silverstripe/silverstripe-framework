@@ -22,11 +22,30 @@ require_once 'PHPUnit/TextUI/TestRunner.php';
 }
 
 /**
- * Controller that executes PHPUnit tests
+ * Controller that executes PHPUnit tests.
+ * 
  * @package sapphire
  * @subpackage testing
  */
 class TestRunner extends Controller {
+	/** @ignore */
+	private static $default_reporter;
+	
+	/**
+	 * Override the default reporter with a custom configured subclass.
+	 *
+	 * @param string $reporter
+	 */
+	static function set_reporter($reporter) {
+		if (is_string($reporter)) $reporter = new $reporter;
+		self::$default_reporter = $reporter;
+	}
+	
+	function init() {
+		parent::init();
+		if (!self::$default_reporter) self::set_reporter('DebugReporter');
+	}
+	
 	/**
 	 * Run all test classes
 	 */
@@ -56,9 +75,12 @@ class TestRunner extends Controller {
 	}
 
 	function runTests($classList) {
+		self::$default_reporter->writeHeader();
+		echo '<div class="info">';
 		echo "<h1>Sapphire PHPUnit Test Runner</h1>";
 		echo "<p>Using the following subclasses of SapphireTest for testing: " . implode(", ", $classList) . "</p>";
-		
+		echo "</div>";
+		echo '<div class="trace">';
 		echo "<pre>";
 		$suite = new PHPUnit_Framework_TestSuite();
 		foreach($classList as $className) {
@@ -69,6 +91,8 @@ class TestRunner extends Controller {
 
 		/*, array("reportDirectory" => "/Users/sminnee/phpunit-report")*/
 		PHPUnit_TextUI_TestRunner::run($suite);
+		echo '</div>';
+		self::$default_reporter->writeFooter();
 	}
 }
 

@@ -128,7 +128,7 @@ class DatabaseAdmin extends Controller {
 	 * @param boolean $quiet Don't show messages
 	 * @param boolean $populate Populate the database, as well as setting up its schema
 	 */
-	function doBuild($quiet = false, $populate = true) {
+	function doBuild($quiet = false, $populate = true, $testMode = false) {
 		$conn = DB::getConn();
 
 		if($quiet) {
@@ -166,13 +166,12 @@ class DatabaseAdmin extends Controller {
 
 		$conn->beginSchemaUpdate();
 		foreach($dataClasses as $dataClass) {
-			// Test_ indicates that it's the data class is part of testing system
-
-			if(strpos($dataClass,'Test_') === false) {
+			$SNG = singleton($dataClass);
+			if($testMode || !($SNG instanceof TestOnly)) {
 				if(!$quiet) {
 					echo "<li>$dataClass</li>";
 				}
-				singleton($dataClass)->requireTable();
+				$SNG->requireTable();
 			}
 		}
 		$conn->endSchemaUpdate();

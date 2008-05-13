@@ -133,12 +133,17 @@ class Director {
 			list($url, $getVarsEncoded) = explode('?', $url, 2);
             parse_str($getVarsEncoded, $getVars);
 		}
-		
+
 		$existingRequestVars = $_REQUEST;
 		$existingGetVars = $_GET;
 		$existingPostVars = $_POST;
 		$existingSessionVars = $_SESSION;
-		
+
+		$_REQUEST = $existingRequestVars;
+		$_GET = $existingGetVars;
+		$_POST = $existingPostVars;
+		$_SESSION = $existingSessionVars;		
+
 		$_REQUEST = array_merge((array)$getVars, (array)$post);
 		$_GET = (array)$getVars;
 		$_POST = (array)$post;
