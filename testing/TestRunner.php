@@ -53,6 +53,7 @@ class TestRunner extends Controller {
 		if(hasPhpUnit()) {
 			$tests = ClassInfo::subclassesFor('SapphireTest');
 			array_shift($tests);
+			unset($tests['FunctionalTest']);
 		
 			$this->runTests($tests);
 		} else {
@@ -75,16 +76,21 @@ class TestRunner extends Controller {
 	}
 
 	function runTests($classList) {
-		self::$default_reporter->writeHeader();
-		echo '<div class="info">';
-		echo "<h1>Sapphire PHPUnit Test Runner</h1>";
-		echo "<p>Using the following subclasses of SapphireTest for testing: " . implode(", ", $classList) . "</p>";
-		echo "</div>";
-		echo '<div class="trace">';
-		echo "<pre>";
+		if(!Director::is_cli()) {
+			self::$default_reporter->writeHeader();
+			echo '<div class="info">';
+			echo "<h1>Sapphire PHPUnit Test Runner</h1>";
+			echo "<p>Using the following subclasses of SapphireTest for testing: " . implode(", ", $classList) . "</p>";
+			echo "</div>";
+			echo '<div class="trace">';
+			echo "<pre>";
+		} else {
+			echo "Sapphire PHPUnit Test Runner\n";
+			echo "Using the following subclasses of SapphireTest for testing: " . implode(", ", $classList) . "\n\n";
+		}
 		
 		// Remove our error handler so that PHP can use its own
-		restore_error_handler();	
+		//restore_error_handler();	
 		
 		$suite = new PHPUnit_Framework_TestSuite();
 		foreach($classList as $className) {
@@ -94,13 +100,17 @@ class TestRunner extends Controller {
 		}
 
 		/*, array("reportDirectory" => "/Users/sminnee/phpunit-report")*/
-		PHPUnit_TextUI_TestRunner::run($suite);
-		echo '</div>';
+		$testResult = PHPUnit_TextUI_TestRunner::run($suite);
+		
+		if(!Director::is_cli()) echo '</div>';
 		
 		// Put the error handlers back
 		Debug::loadErrorHandlers();
 		
-		self::$default_reporter->writeFooter();
+		if(!Director::is_cli()) self::$default_reporter->writeFooter();
+		
+		// Todo: we should figure out how to pass this data back through Director more cleanly
+		if(Director::is_cli() && $testResult->errorCount() > 0) exit(2);
 	}
 }
 
