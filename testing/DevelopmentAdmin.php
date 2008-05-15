@@ -25,7 +25,11 @@ HTML;
 	}
 	
 	function tests() {
-		return new TestRunner();
+		if(isset($this->urlParams['NestedAction'])) {
+			Director::redirect("TestRunner/only/" . $this->urlParams['NestedAction']);
+		} else {
+			Director::redirect("TestRunner/");
+		}
 	}
 	
 	function tasks($request) {

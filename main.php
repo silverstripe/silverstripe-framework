@@ -129,7 +129,7 @@ Director::addRules(10, array(
 	'' => 'RootURLController',
 	'sitemap.xml' => 'GoogleSitemap',
 	'api/v1/$ClassName/$ID' => 'RestfulServer',
-	'dev/$Action' => 'DevelopmentAdmin'
+	'dev/$Action/$NestedAction' => 'DevelopmentAdmin'
 ));
 
 Director::addRules(1, array(
