@@ -120,22 +120,6 @@ if(isset($_GET['debug_profile'])) Profiler::mark('all_execution');
 
 if(isset($_GET['debug_profile'])) Profiler::mark('main.php init');
 
-// Default director
-Director::addRules(10, array(
-	'Security/$Action/$ID' => 'Security',
-	'db/$Action' => 'DatabaseAdmin',
-	'$Controller/$Action/$ID/$OtherID' => '*',
-	'images/$Action/$Class/$ID/$Field' => 'Image_Uploader',
-	'' => 'RootURLController',
-	'sitemap.xml' => 'GoogleSitemap',
-	'api/v1/$ClassName/$ID' => 'RestfulServer',
-	'dev/$Action/$NestedAction' => 'DevelopmentAdmin'
-));
-
-Director::addRules(1, array(
-	'$URLSegment/$Action/$ID/$OtherID' => 'ModelAsController',
-));
-
 // Load error handlers
 Debug::loadErrorHandlers();
 
