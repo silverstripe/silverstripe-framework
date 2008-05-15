@@ -936,7 +936,7 @@ class Member extends DataObject {
 			}
 		}
 
-		if((!$this->ID && $this->Password) || (isset($this->changed['SetPassword']) && $this->changed['SetPassword'])) {
+		if((!$this->ID && $this->SetPassword) || (isset($this->changed['SetPassword']) && $this->changed['SetPassword'])) {
 			if(self::$password_validator) {
 				$valid->combineAnd(self::$password_validator->validate($this->SetPassword, $this));
 			}
