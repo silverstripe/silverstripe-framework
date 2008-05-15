@@ -100,16 +100,6 @@ if(isset($_GET['debugmanifest'])) Debug::show(file_get_contents(MANIFEST_FILE));
 
 if(!isset(Director::$environment_type)) Director::set_environment_type($envType);
 
-// Default director
-Director::addRules(10, array(
-	'Security/$Action' => 'Security',
-	'db/$Action' => 'DatabaseAdmin',
-	'$Controller/$Action/$ID/$OtherID' => '*',
-	'images/$Action/$Class/$ID/$Field' => 'Image_Uploader',
-	'' => '->home/',
-	'$URLSegment/$Action/$ID/$OtherID' => 'ModelAsController',
-));
-
 // Load error handlers
 Debug::loadErrorHandlers();
 
