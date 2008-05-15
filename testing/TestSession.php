@@ -47,7 +47,6 @@ class TestSession {
 		
 		$postVars = array();
 		parse_str($submission->_encode(), $postVars);
-		Debug::show($postVars);
 		return $this->post($url, $postVars);
 	}
 	
@@ -83,6 +82,11 @@ class TestSession {
 	function lastContent() {
 		return $this->lastResponse->getBody();
 	}
+	
+	function cssParser() {
+		return new CSSContentParser($this->lastContent());
+	}
+
 	
 	/**
 	 * Get the last response as a SimplePage object
