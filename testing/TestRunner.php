@@ -82,6 +82,10 @@ class TestRunner extends Controller {
 		echo "</div>";
 		echo '<div class="trace">';
 		echo "<pre>";
+		
+		// Remove our error handler so that PHP can use its own
+		restore_error_handler();	
+		
 		$suite = new PHPUnit_Framework_TestSuite();
 		foreach($classList as $className) {
 			// Ensure that the autoloader pulls in the test class, as PHPUnit won't know how to do this.
@@ -92,6 +96,10 @@ class TestRunner extends Controller {
 		/*, array("reportDirectory" => "/Users/sminnee/phpunit-report")*/
 		PHPUnit_TextUI_TestRunner::run($suite);
 		echo '</div>';
+		
+		// Put the error handlers back
+		Debug::loadErrorHandlers();
+		
 		self::$default_reporter->writeFooter();
 	}
 }
