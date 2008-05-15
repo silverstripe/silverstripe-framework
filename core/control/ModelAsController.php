@@ -19,7 +19,11 @@ class ModelAsController extends Controller implements NestedController {
 		
 		$this->init();
 		$nested = $this->getNestedController();
-		$result = $nested->run($requestParams);
+		if(is_object($nested)) {
+			$result = $nested->run($requestParams);
+		} else {
+			$result = $nested;
+		}
 		
 		$this->popCurrent();
 		return $result;
@@ -61,7 +65,7 @@ class ModelAsController extends Controller implements NestedController {
 			
 				return $controller;
 			} else {
-				die("The requested page couldn't be found.");
+				return "The requested page couldn't be found.";
 			}
 			
 		} else {
