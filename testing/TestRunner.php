@@ -108,9 +108,8 @@ class TestRunner extends Controller {
 		Debug::loadErrorHandlers();
 		
 		if(!Director::is_cli()) self::$default_reporter->writeFooter();
-		
 		// Todo: we should figure out how to pass this data back through Director more cleanly
-		if(Director::is_cli() && $testResult->errorCount() > 0) exit(2);
+		if(Director::is_cli() && ($testResult->failureCount() + $testResult->errorCount()) > 0) exit(2);
 	}
 }
 
