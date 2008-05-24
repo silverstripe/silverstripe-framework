@@ -178,7 +178,7 @@ class File extends DataObject {
 	/**
 	 * Delete the database record (recursively for folders) without touching the filesystem
 	 */
-	protected function deleteDatabaseOnly() {
+	public function deleteDatabaseOnly() {
 		if(is_numeric($this->ID)) DB::query("DELETE FROM File WHERE ID = $this->ID");
 	}
 
