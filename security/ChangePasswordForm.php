@@ -86,7 +86,8 @@ class ChangePasswordForm extends Form {
 					_t('Member.PASSWORDCHANGED', "Your password has been changed, and a copy emailed to you."),
 					"good");
 				Session::clear('AutoLoginHash');
-				Director::redirect(Security::Link('login'));
+				$redirectURL = HTTP::setGetVar('BackURL', urlencode(Director::absoluteBaseURL()), Security::Link('login'));
+				Director::redirect($redirectURL);
 
 			} else {
 				$this->clearMessage();
