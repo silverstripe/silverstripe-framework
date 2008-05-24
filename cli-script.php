@@ -116,8 +116,6 @@ $url = $_SERVER['argv'][1];
 if(isset($_SERVER['argv'][2])) {
 	parse_str($_SERVER['argv'][2], $_GET);
 	$_REQUEST = $_GET;
-	print_r($_GET);
-	
 }
 
 // Direct away - this is the "main" function, that hands control to the apporopriate controllerx
