@@ -127,6 +127,7 @@ class Filesystem extends Object {
 				// Delete the database record but leave the filesystem alone
 				$file = DataObject::get_by_id("File", $orphan['ID']);
 				$file->deleteDatabaseOnly();
+				unset($file);
 			}
 		}
 
