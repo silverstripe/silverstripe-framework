@@ -80,7 +80,8 @@ class TestSession {
 	 * Get the most recent response's content
 	 */
 	function lastContent() {
-		return $this->lastResponse->getBody();
+		if(is_string($this->lastResponse)) return $this->lastResponse;
+		else return $this->lastResponse->getBody();
 	}
 	
 	function cssParser() {

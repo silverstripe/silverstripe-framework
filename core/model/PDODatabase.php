@@ -233,7 +233,7 @@ class PDODatabase extends Database {
 	 * @return boolean Returns true if successful
 	 * @todo This shouldn't take any arguments; it should take the information given in the constructor instead.
 	 */
-	public function createDatabase($connect, $username, $password, $database) {
+	public function createDatabase() {
 		try {
 			$dbh = new PDO($connect, $username, $password);
 			$stmt = $dbh->prepare("CREATE DATABASE $database");

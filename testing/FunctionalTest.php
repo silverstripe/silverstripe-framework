@@ -20,21 +20,58 @@
  * </code>
  */
 class FunctionalTest extends SapphireTest {
+	/**
+	 * Set this to true on your sub-class to disable the use of themes in this test.
+	 * This can be handy for functional testing of modules without having to worry about whether a user has changed
+	 * behaviour by replacing the theme.
+	 */
+	static $disable_themes = false;
+	
+	/**
+	 * Set this to true on your sub-class to use the draft site by default for every test in this class.
+	 */
+	static $use_draft_site = false;
+	
 	protected $mainSession = null;
 	
 	/**
 	 * CSSContentParser for the most recently requested page.
 	 */
 	protected $cssParser = null;
+	
+	private $originalTheme = null;
+	
+	/**
+	 * Returns the {@link Session} object for this test
+	 */
+	function session() {
+		return $this->mainSession->session();
+	}
 
 	function setUp() {
 		parent::setUp();
 		$this->mainSession = new TestSession();
+
+		// Disable theme, if necessary
+		if($this->stat('disable_themes')) {
+			$this->originalTheme = SSViewer::current_theme();
+			SSViewer::set_theme(null);
+		}
+		
+		// Switch to draft site, if necessary
+		if($this->stat('use_draft_site')) {
+			$this->useDraftSite();
+		}
 	}
-	
+
 	function tearDown() {
 		parent::tearDown();
 		$this->mainSession = null;
+
+		// Re-enable theme, if previously disabled
+		if($this->stat('disable_themes')) {
+			SSViewer::set_theme($this->originalTheme);
+		}
 	}
 
 	/**
@@ -42,7 +79,9 @@ class FunctionalTest extends SapphireTest {
 	 */
 	function get($url) {
 		$this->cssParser = null;
-		return $this->mainSession->get($url);
+		$response = $this->mainSession->get($url);
+		if(is_object($response) && $response->getHeader('Location')) $response = $this->mainSession->followRedirection();
+		return $response;
 	}
 
 	/**
@@ -50,7 +89,9 @@ class FunctionalTest extends SapphireTest {
 	 */
 	function post($url, $data) {
 		$this->cssParser = null;
-		return $this->mainSession->post($url, $data);
+		$response = $this->mainSession->post($url, $data);
+		if(is_object($response) && $response->getHeader('Location')) $response = $this->mainSession->followRedirection();
+		return $response;
 	}
 	
 	/**
@@ -59,7 +100,9 @@ class FunctionalTest extends SapphireTest {
 	 */
 	function submitForm($formID, $button = null, $data = array()) {
 		$this->cssParser = null;
-		return $this->mainSession->submitForm($formID, $button, $data);
+		$response = $this->mainSession->submitForm($formID, $button, $data);
+		if(is_object($response) && $response->getHeader('Location')) $response = $this->mainSession->followRedirection();
+		return $response;
 	}
 	
 	/**
@@ -89,7 +132,7 @@ class FunctionalTest extends SapphireTest {
 	 */
 	function assertPartialMatchBySelector($selector, $expectedMatches) {
 		$items = $this->cssParser()->getBySelector($selector);
-		foreach($items as $item) $actuals[$item . ''] = true;
+		foreach($items as $item) $actuals[] = trim(preg_replace("/[ \n\r\t]+/", " ", $item. ''));
 		
 		foreach($expectedMatches as $match) {
 			if(!isset($actuals[$match])) {
@@ -115,7 +158,7 @@ class FunctionalTest extends SapphireTest {
 	 */
 	function assertExactMatchBySelector($selector, $expectedMatches) {
 		$items = $this->cssParser()->getBySelector($selector);
-		foreach($items as $item) $actuals[] = $item . '';
+		foreach($items as $item) $actuals[] = trim(preg_replace("/[ \n\r\t]+/", " ", $item. ''));
 		
 		if($expectedMatches != $actuals) {
 			throw new PHPUnit_Framework_AssertionFailedError(
@@ -172,4 +215,22 @@ class FunctionalTest extends SapphireTest {
 	        );
 		}
 	}	
+	
+	/**
+	 * Use the draft (stage) site for testing.
+	 * This is helpful if you're not testing publication functionality and don't want "stage management" cluttering your test.
+	 */
+	function useDraftSite() {
+		$this->session()->inst_set('currentStage', 'Stage');
+		$this->session()->inst_set('unsecuredDraftSite', true);
+	}
+
+	/**
+	 * Return a static variable from this class.
+	 * Gets around PHP's lack of late static binding.
+	 */
+	function stat($varName) {
+		$className = get_class($this);
+		return eval("return {$className}::\$$varName;");
+	}
 }

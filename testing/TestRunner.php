@@ -60,6 +60,19 @@ class TestRunner extends Controller {
 			echo "Please install PHPUnit using pear";
 		}
 	}
+	
+	function coverage() {
+		if(hasPhpUnit()) {
+			ManifestBuilder::includeEverything();
+			$tests = ClassInfo::subclassesFor('SapphireTest');
+			array_shift($tests);
+			unset($tests['FunctionalTest']);
+		
+			$this->runTests($tests, true);
+		} else {
+			echo "Please install PHPUnit using pear";
+		}
+	}
 		
 	/**
 	 * Run only a single test class
@@ -75,7 +88,7 @@ class TestRunner extends Controller {
 		
 	}
 
-	function runTests($classList) {
+	function runTests($classList, $coverage = false) {
 		if(!Director::is_cli()) {
 			self::$default_reporter->writeHeader();
 			echo '<div class="info">';
@@ -100,7 +113,16 @@ class TestRunner extends Controller {
 		}
 
 		/*, array("reportDirectory" => "/Users/sminnee/phpunit-report")*/
-		$testResult = PHPUnit_TextUI_TestRunner::run($suite);
+		if($coverage) {
+			$testResult = PHPUnit_TextUI_TestRunner::run($suite, array("reportDirectory" => "../assets/coverage-report"));
+		} else {
+			$testResult = PHPUnit_TextUI_TestRunner::run($suite);
+		}
+		
+		if($coverage) {
+			$coverageURL = Director::absoluteURL('assets/coverage-report');
+			echo "<p><a href=\"$coverageURL\">Coverage report available here</a></p>";
+		}
 		
 		if(!Director::is_cli()) echo '</div>';
 		

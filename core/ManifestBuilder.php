@@ -581,6 +581,11 @@ class ManifestBuilder {
 			die("Cannot write manifest file!  Check permissions of " . MANIFEST_FILE);
 		}
 	}
+	
+	static function includeEverything() {
+		global $_CLASS_MANIFEST;
+		foreach($_CLASS_MANIFEST as $classFile) require_once($classFile);
+	}
 
 }
 

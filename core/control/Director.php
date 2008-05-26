@@ -413,12 +413,15 @@ class Director {
 	static function makeRelative($url) {
 		$base1 = self::absoluteBaseURL();
 		$base2 = self::baseFolder();
+		$base3 = self::baseURL();
 
 		// Allow for the accidental inclusion of a // in the URL
 		$url = ereg_replace('([^:])//','\\1/',$url);
 
 		if(substr($url,0,strlen($base1)) == $base1) return substr($url,strlen($base1));
-		if(substr($url,0,strlen($base2)) == $base2) return substr($url,strlen($base2));
+		else if(substr($url,0,strlen($base2)) == $base2) return substr($url,strlen($base2));
+		else if(substr($url,0,strlen($base3)) == $base3) return substr($url,strlen($base3));
+		
 		return $url;
 	}
 
