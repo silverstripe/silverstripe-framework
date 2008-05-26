@@ -259,7 +259,7 @@ class Form extends ViewableData {
 	 */
 	function dataFieldByName($name) {
 		foreach($this->getExtraFields() as $field) {
-			if(!$this->fields->dataFieldByName($field->Name)) $this->fields->push($field);
+			if(!$this->fields->dataFieldByName($field->Name())) $this->fields->push($field);
 		}
 		
 		return $this->fields->dataFieldByName($name);
