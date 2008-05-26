@@ -132,7 +132,7 @@ class FunctionalTest extends SapphireTest {
 	 */
 	function assertPartialMatchBySelector($selector, $expectedMatches) {
 		$items = $this->cssParser()->getBySelector($selector);
-		foreach($items as $item) $actuals[] = trim(preg_replace("/[ \n\r\t]+/", " ", $item. ''));
+		foreach($items as $item) $actuals[trim(preg_replace("/[ \n\r\t]+/", " ", $item. ''))] = true;
 		
 		foreach($expectedMatches as $match) {
 			if(!isset($actuals[$match])) {
