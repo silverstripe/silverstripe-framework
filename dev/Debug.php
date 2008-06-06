@@ -205,7 +205,7 @@ class Debug {
 			echo "ERROR:Error $errno: $errstr\n At l$errline in $errfile\n";
 			Debug::backtrace();
 		} else {
-			$reporter = new DebugReporter();
+			$reporter = new DebugView();
 			$reporter->writeHeader();
 			echo '<div class="info">';
 			echo "<h1>" . strip_tags($errstr) . "</h1>";
