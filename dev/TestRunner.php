@@ -43,7 +43,7 @@ class TestRunner extends Controller {
 	
 	function init() {
 		parent::init();
-		if (!self::$default_reporter) self::set_reporter('DebugReporter');
+		if (!self::$default_reporter) self::set_reporter('DebugView');
 	}
 	
 	/**
