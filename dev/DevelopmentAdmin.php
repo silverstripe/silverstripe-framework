@@ -14,14 +14,19 @@ class DevelopmentAdmin extends Controller {
 	);
 	
 	function index() {
-		return <<<HTML
-			<h1>sapphire development tools</h1>
+		$renderer = new DebugView();
+		$renderer->writeHeader();
+		echo <<<HTML
+			<div class="info"><h1>Sapphire Development Tools</h1></div>
+			<div class="options">
 			<ul>
-				<li><a href="dev/tests">/dev/tests: Run all unit tests</a></li>
-				<li><a href="dev/tasks">/dev/tasks: See a list of build tasks to run</a></li>
+				<li><a href="tests">/dev/tests: See a list of unit tests to run</a></li>
+				<li><a href="tasks">/dev/tasks: See a list of build tasks to run</a></li>
 				<li><a href="db/build?flush=1">/db/build?flush=1: Rebuild the database</a></li>
 			</ul>
+			</div>
 HTML;
+		$renderer->writeFooter();
 	}
 	
 	function tests() {
