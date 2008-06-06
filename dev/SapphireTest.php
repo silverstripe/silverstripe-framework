@@ -4,34 +4,7 @@
  * @subpackage testing
  */
 
-/*
-$dir = dirname(dirname((__FILE__)));
-$_SERVER['SCRIPT_FILENAME'] = "$dir/main.php";
-chdir($dir);
 
-require_once 'core/Core.php';
-require_once("core/ManifestBuilder.php");
-require_once("core/ClassInfo.php");
-require_once('core/Object.php');
-require_once('core/control/Director.php');
-require_once('filesystem/Filesystem.php');
-require_once("core/Session.php");
-
-$envFiles = array('../_ss_environment.php', '../../_ss_environment.php', '../../../_ss_environment.php');
-foreach($envFiles as $envFile) {
-        if(@file_exists($envFile)) {
-                include($envFile);
-                break;
-        }
-}
-
-require_once(MANIFEST_FILE);
-print_r($_CLASS_MANIFEST);
-
-if(ManifestBuilder::staleManifest()) ManifestBuilder::compileManifest();
-
-require_once(MANIFEST_FILE);
-*/
 
 /**
  */
