@@ -265,7 +265,6 @@ class Form extends ViewableData {
 		return $this->fields->dataFieldByName($name);
 	}
 
-
 	/**
 	 * Return the form's action buttons - used by the templates
 	 * 
@@ -309,7 +308,6 @@ class Form extends ViewableData {
 				$child = null;
 			}
 		}
-
 	}
 	
 	/**
@@ -403,13 +401,13 @@ class Form extends ViewableData {
 	 * Returns the name of the form
 	 */
 	function FormName() {
-		return $this->class . '_' . str_replace('.','',$this->name);
+		return $this->class . '_' . str_replace('.', '', $this->name);
 	}
 	
 	/**
 	 * @return string
 	 */
-	function Name(){
+	function Name() {
 		return $this->name;
 	}
 	
@@ -692,14 +690,19 @@ class Form extends ViewableData {
 
 	}
 
-
 	/**
 	 * Return a rendered version of this form.
+	 * 
+	 * This also allows for subclasses of Form to have their own template,
+	 * falling back to 'Form' if it doesn't exist.
+	 * 
 	 * This is returned when you access a form as $FormObject rather than <% control FormObject %>
 	 */
 	function forTemplate() {
-		$form = $this->renderWith("Form");
-		return $form;
+		return $this->renderWith(array(
+			$this->class,
+			'Form'
+		));
 	}
 
 	/**
