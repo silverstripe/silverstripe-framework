@@ -157,7 +157,7 @@ class FieldSet extends DataObjectSet {
 	}
 
 	/**
-	 * Returns the named field.
+	 * Returns a named field.
 	 * 
 	 * @todo Implement similiarly to dataFieldByName() to support nested sets - or merge with dataFields()
 	 */
@@ -168,34 +168,40 @@ class FieldSet extends DataObjectSet {
 	}
 
 	/**
-	 * Returns the named field in a sequential set.
-	 * use this if your using nested formfields.
+	 * Returns a named field in a sequential set.
+	 * Use this if you're using nested FormFields.
+	 * 
+	 * @param string $name The name of the field to return
+	 * @return FormField instance
 	 */
 	public function dataFieldByName($name) {
-		if($dataFields = $this->dataFields()){
+		if($dataFields = $this->dataFields()) {
 			foreach($dataFields as $child) {
 				if($name == $child->Name() || $name == $child->id) return $child;
 			}
 		}                                 
 	}
-	
+
+	/**
+	 * Inserts a field before a particular field in a FieldSet.
+	 *
+	 * @param FormField $item The form field to insert
+	 * @param string $name Name of the field to insert before
+	 */
 	public function insertBefore($item, $name) {
 		if($this->sequentialSet) $this->sequentialSet = null;
 		
 		$i = 0;
-		
 		foreach($this->items as $child) {
 			if($name == $child->Name() || $name == $child->id) {
 				array_splice($this->items, $i, 0, array($item));
 			
 				return;
 			}
-			
 			$i++;
 		}
 		$this->items[] = $item;
 	}
-	
 
 	/**
 	 * Inserts an item before the item with name $name
@@ -227,28 +233,42 @@ class FieldSet extends DataObjectSet {
 		return false;
 	}
 	
+	/**
+	 * Inserts a field after a particular field in a FieldSet.
+	 *
+	 * @param FormField $item The form field to insert
+	 * @param string $name Name of the field to insert after
+	 */
 	public function insertAfter($item, $name) {
 		if($this->sequentialSet) $this->sequentialSet = null;
 		
 		$i = 0;
-		
 		foreach($this->items as $child) {
 			if($name == $child->Name() || $name == $child->id) {
 				array_splice($this->items, $i + 1, 0, array($item));
-			
 				return;
 			}
-			
 			$i++;
 		}
 		$this->items[] = $item;
 	}
 	
+	/**
+	 * Push a single field into this FieldSet instance.
+	 *
+	 * @param FormField $item The FormField to add
+	 * @param string $key An option array key (field name)
+	 */
 	public function push($item, $key = null) {
 		if($this->sequentialSet) $this->sequentialSet = null;
 		return parent::push($item, $key = null);
 	}
-	
+
+	/**
+	 * Set the Form instance for this FieldSet.
+	 *
+	 * @param Form $form
+	 */
 	public function setForm($form) {
 		foreach($this as $field) $field->setForm($form);
 	}
@@ -283,7 +303,10 @@ class FieldSet extends DataObjectSet {
 	}
 
 	/**
-	 * Convert this form into a readonly form
+	 * Transform this FieldSet with a given tranform method,
+	 * e.g. $this->transform(new ReadonlyTransformation())
+	 * 
+	 * @return FieldSet
 	 */
 	function transform($trans) {
 		$this->sequentialSet = null;
@@ -294,6 +317,11 @@ class FieldSet extends DataObjectSet {
 		return $newFields;
 	}
 	
+	/**
+	 * Transforms this FieldSet instance to readonly.
+	 *
+	 * @return FieldSet
+	 */
 	function makeReadonly() {
 		return $this->transform(new ReadonlyTransformation());
 	}
