@@ -67,15 +67,16 @@ class Email extends ViewableData {
 	/**
 	 * Create a new email.
 	 */
-	public function __construct($from = null, $to = null, $subject = null, $body = null, $bounceHandlerURL = null, $cc = null, $bcc=null ) {
+	public function __construct($from = null, $to = null, $subject = null, $body = null, $bounceHandlerURL = null, $cc = null, $bcc = null) {
 		$this->from = $from;
 		$this->to = $to;
 		$this->subject = $subject;
 		$this->body = $body;
 		$this->cc = $cc;
 		$this->bcc = $bcc;
-        $this->setBounceHandlerURL( $bounceHandlerURL );
+		$this->setBounceHandlerURL($bounceHandlerURL);
 	}
+	
 	public function attachFileFromString($data, $filename, $mimetype = null) {
 		$this->attachments[] = array(
 			'contents' => $data,
@@ -136,9 +137,24 @@ class Email extends ViewableData {
 			$this->customHeaders[$headerName] .= $headerValue;
 		}
 	}
-	
+
 	public function BaseURL() {
 		return Director::absoluteBaseURL();
+	}
+	
+	/**
+	 * Debugging help
+	 */
+	public function debug() {
+		$this->parseVariables();
+
+		return "<h2>Email template $this->class</h2>\n" . 
+			"<p><b>From:</b> $this->from\n" .
+			"<b>To:</b> $this->to\n" . 
+			"<b>Cc:</b> $this->cc\n" . 
+			"<b>Bcc:</b> $this->bcc\n" . 
+			"<b>Subject:</b> $this->subject</p>" . 
+			$this->body;
 	}
 
 	protected function templateData() {
@@ -215,21 +231,6 @@ class Email extends ViewableData {
 		}
 	}
 	
-	/**
-	 * Debugging help
-	 */
-	public function debug() {
-		$this->parseVariables();
-
-		return "<h2>Email template $this->class</h2>\n" . 
-			"<p><b>From:</b> $this->from\n" .
-			"<b>To:</b> $this->to\n" . 
-			"<b>Cc:</b> $this->cc\n" . 
-			"<b>Bcc:</b> $this->bcc\n" . 
-			"<b>Subject:</b> $this->subject</p>" . 
-			$this->body;
-	}
-  
 	/**
 	 * @desc Validates the email address. Returns true of false
 	*/
@@ -419,12 +420,13 @@ class Email extends ViewableData {
  * @subpackage email
  */
 class Email_Template extends Email {
-	
+
+	public function __construct($from = null, $to = null, $subject = null, $body = null, $bounceHandlerURL = null, $cc = null, $bcc = null) {
+		parent::__construct($from, $to, $subject, $body, $bounceHandlerURL, $cc, $bcc);
+		user_error('Email_Template is deprecated. Please use Email instead.', E_USER_NOTICE);
+	}
+
 }
-
-
-
-
 
 /**
  * Base class that email bounce handlers extend

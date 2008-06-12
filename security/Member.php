@@ -1253,7 +1253,7 @@ class Member_ProfileForm extends Form {
  * @package sapphire
  * @subpackage security
  */
-class Member_SignupEmail extends Email_Template {
+class Member_SignupEmail extends Email {
 	protected $from = '';  // setting a blank from address uses the site's default administrator email
 	protected $to = '$Email';
 	protected $subject = '';
@@ -1311,7 +1311,7 @@ class Member_SignupEmail extends Email_Template {
  * @package sapphire
  * @subpackage security
  */
-class Member_ChangePasswordEmail extends Email_Template {
+class Member_ChangePasswordEmail extends Email {
     protected $from = '';   // setting a blank from address uses the site's default administrator email
     protected $subject = '';
     protected $ss_template = 'ChangePasswordEmail';
@@ -1329,7 +1329,7 @@ class Member_ChangePasswordEmail extends Email_Template {
  * @package sapphire
  * @subpackage security
  */
-class Member_ForgotPasswordEmail extends Email_Template {
+class Member_ForgotPasswordEmail extends Email {
     protected $from = '';  // setting a blank from address uses the site's default administrator email
     protected $subject = '';
     protected $ss_template = 'ForgotPasswordEmail';
