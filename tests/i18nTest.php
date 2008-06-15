@@ -1,5 +1,8 @@
 <?php
-
+/**
+ * @package sapphire
+ * @subpackage tests
+ */
 class i18nTest extends SapphireTest {
 	function testGetExistingTranslations() {
 		$translations = i18n::get_existing_translations();

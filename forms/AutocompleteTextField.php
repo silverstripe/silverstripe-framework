@@ -1,10 +1,4 @@
 <?php
-
-/**
- * @package forms
- * @subpackage fields-formattedinput
- */
-
 /**
  * Autocompleting text field, using script.aculo.us
  * @package forms

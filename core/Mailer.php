@@ -1,4 +1,8 @@
 <?php
+/**
+ * @package sapphire
+ * @subpackage email
+ */
 
 /**
  * Mailer objects are responsible for actually sending emails.

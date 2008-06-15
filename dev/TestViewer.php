@@ -1,7 +1,8 @@
 <?php
-
 /**
  * Allows human reading of a test in a format suitable for agile documentation
+ * @package sapphire
+ * @subpackage testing
  */
 class TestViewer extends Controller {
 	/**

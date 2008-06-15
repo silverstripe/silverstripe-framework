@@ -1,4 +1,8 @@
 <?php
+/**
+ * @package sapphire
+ * @subpackage tests
+ */
 class FormTest extends SapphireTest {
 	
 	public function testLoadDataFromRequest() {

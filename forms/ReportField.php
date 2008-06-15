@@ -1,10 +1,4 @@
 <?php
-
-/**
- * @package forms
- * @subpackage fields-reports
- */
-
 /**
  * Displays complex reports based on the list of tables and fields provided to
  * the object.

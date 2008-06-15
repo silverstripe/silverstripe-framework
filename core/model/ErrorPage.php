@@ -1,9 +1,4 @@
 <?php
-
-/**
- * @package cms
- */
-
 /**
  * ErrorPage holds the content for the page of an error response.
  * @package cms

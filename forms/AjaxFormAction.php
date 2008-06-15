@@ -1,10 +1,4 @@
 <?php
-
-/**
- * @package forms
- * @subpackage actions
- */
-
 /**
  * Action button with Ajax/JavaScript overloading.
  * @package forms

@@ -1,10 +1,4 @@
 <?php
-
-/**
- * @package sapphire
- * @subpackage misc
- */
-
 /**
  * Base class for XML parsers
  * @package sapphire

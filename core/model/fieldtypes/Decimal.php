@@ -1,10 +1,4 @@
 <?php
-
-/**
- * @package sapphire
- * @subpackage model
- */
-
 /**
  * Represents a Decimal field.
  * @package sapphire

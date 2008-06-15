@@ -1,10 +1,4 @@
 <?php
-
-/**
- * @package sapphire
- * @subpackage view
- */
-
 /**
  * Generic class for all data that will be accessed from a view.
  * 

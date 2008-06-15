@@ -11,6 +11,9 @@
  * 
  * Member::set_password_validator($pwdValidator);
  * </code>
+ *
+ * @package sapphire
+ * @subpackage security
  */
 class PasswordValidator extends Object {
 	static $character_strength_tests = array(

@@ -1,10 +1,4 @@
 <?php
-
-/**
- * @package forms
- * @subpackage fields-structural
- */
-
 /**
  * Base class for all fields that contain other fields.
  * Implements sequentialisation - so that when we're saving / loading data, we can populate

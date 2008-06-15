@@ -1,10 +1,4 @@
 <?php
-
-/**
- * @package forms
- * @subpackage actions
- */
-
 /**
  * Action that clears all fields on a form.
  * Inserts an input tag with type=reset.

@@ -1,10 +1,5 @@
 <?php
 /**
- * @package sapphire
- * @subpackage model
- */
-
-/**
  * Represents a single year field.
  * 
  * @package sapphire

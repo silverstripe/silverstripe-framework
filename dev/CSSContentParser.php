@@ -8,6 +8,9 @@
  * 
  * It was built to facilitate testing using PHPUnit and contains a number of assert methods that will throw PHPUnit
  * assertion exception when applicable.
+ * 
+ * @package sapphire
+ * @subpackage core
  */
 class CSSContentParser extends Object {
 	protected $simpleXML = null;

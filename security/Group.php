@@ -1,10 +1,4 @@
 <?php
-
-/**
- * @package sapphire
- * @subpackage security
- */
-
 /**
  * A security group.
  * @package sapphire

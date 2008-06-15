@@ -1,10 +1,4 @@
 <?php
-
-/**
- * @package sapphire
- * @subpackage integration
- */
-
 /**
  * RSSFeed class
  *

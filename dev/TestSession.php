@@ -1,8 +1,9 @@
 <?php
-
 /**
  * Represents a test usage session of a web-app
  * It will maintain session-state from request to request
+ * @package sapphire
+ * @subpackage testing
  */
 class TestSession {
 	private $session;

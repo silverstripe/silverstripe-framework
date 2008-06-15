@@ -1,10 +1,4 @@
 <?php
-
-/**
- * @package sapphire
- * @subpackage integration
- */
-
 /**
  * A PHP-Based RSS and Atom Feed Framework
  * Takes the hard work out of managing a complete RSS/Atom solution.

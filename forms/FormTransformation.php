@@ -1,10 +1,4 @@
 <?php
-
-/**
- * @package forms
- * @subpackage transformations
- */
-
 /**
  * This class represents "transformations" of a form - such as making it printable or making it readonly.
  * The idea is that sometimes you will want to make your own such transformations, and you shouldn't have

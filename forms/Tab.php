@@ -1,10 +1,4 @@
 <?php
-
-/**
- * @package forms
- * @subpackage fields-structural
- */
-
 /**
  * Implements a single tab in a {@link TabSet}.
  * @package forms

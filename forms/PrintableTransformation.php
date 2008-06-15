@@ -1,10 +1,4 @@
 <?php
-
-/**
- * @package forms
- * @subpackage transformations
- */
-
 /**
  * Transformation that will make a form printable.
  * Builds on readonly forms with different behaviour for tabsets.

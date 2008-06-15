@@ -1,13 +1,5 @@
 <?php
-
-/**
- * @package sapphire
- * @subpackage core
- */
-
-/**
- * Name of the manifest file
- */
+// Name of the manifest file
 define("MANIFEST_FILE", TEMP_FOLDER . "/manifest" . str_replace(array("/",":", "\\"),"_", $_SERVER['SCRIPT_FILENAME']));
 
 /**

@@ -1,5 +1,8 @@
 <?php
-
+/**
+ * @package sapphire
+ * @subpackage tests
+ */
 class CurrencyTest extends SapphireTest {
 	function testNiceFormatting() {
 		// Test a bunch of different data values and results in Nice() and Whole()

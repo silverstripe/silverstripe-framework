@@ -1,10 +1,4 @@
 <?php
-
-/**
- * @package forms
- * @subpackage fields-formattedinput
- */
-
 /**
  * Text field with Email Validation.
  * @package forms

@@ -1,10 +1,4 @@
 <?php
-
-/**
- * @package forms
- * @subpackage fields-structural
- */
-
 /**
  * Lets you include a nested group of fields inside a template.
  * This control gives you more flexibility over form layout.

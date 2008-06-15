@@ -1,10 +1,4 @@
 <?php
-
-/**
- * @package forms
- * @subpackage transformations
- */
-
 /**
  * Transformation that will turn a form into a readonly version of itself
  * @package forms

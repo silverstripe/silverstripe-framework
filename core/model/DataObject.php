@@ -1,10 +1,4 @@
 <?php
-
-/**
- * @package sapphire
- * @subpackage model
- */
-
 /**
  * A single database record & abstract class for the data-access-model.
  * @package sapphire

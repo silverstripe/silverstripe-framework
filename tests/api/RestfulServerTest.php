@@ -1,5 +1,8 @@
 <?php
-
+/**
+ * @package sapphire
+ * @subpackage tests
+ */
 class RestfulServerTest extends SapphireTest {
 	static $fixture_file = 'sapphire/tests/api/RestfulServerTest.yml';
 	

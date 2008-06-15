@@ -1,10 +1,4 @@
 <?php
-
-/**
- * @package sapphire
- * @subpackage security
- */
-
 /**
  * Implements a basic security model
  * @package sapphire

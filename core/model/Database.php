@@ -1,10 +1,4 @@
 <?php
-
-/**
- * @package sapphire
- * @subpackage model
- */
-
 /**
  * Abstract database connectivity class.
  * Sub-classes of this implement the actual database connection libraries

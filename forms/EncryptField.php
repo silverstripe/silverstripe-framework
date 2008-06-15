@@ -1,10 +1,4 @@
 <?php
-
-/**
- * @package forms
- * @subpackage fields-formattedinput
- */
-
 /**
  * Duplicate of {@link PasswordField}.
  * @package forms

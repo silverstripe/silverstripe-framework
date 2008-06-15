@@ -1,10 +1,4 @@
 <?php
-
-/**
- * @package sapphire
- * @subpackage security
- */
-
 /**
  * Log-in form for the "member" authentication method
  * @package sapphire

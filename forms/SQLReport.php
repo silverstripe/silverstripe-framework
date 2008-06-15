@@ -1,10 +1,4 @@
 <?php
-
-/**
- * @package forms
- * @subpackage fields-reports
- */
-
 /**
  * @package forms
  * @subpackage fields-reports

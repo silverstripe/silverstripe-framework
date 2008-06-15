@@ -1,10 +1,4 @@
 <?php
-
-/**
- * @package sapphire
- * @subpackage filesystem
- */
-
 /**
  * Represents a folder in the assets directory.
  * @package sapphire

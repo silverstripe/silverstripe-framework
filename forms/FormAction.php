@@ -1,10 +1,4 @@
 <?php
-
-/**
- * @package forms
- * @subpackage actions
- */
-
 /**
  * Single action button.
  * The action buttons are <input type="submit"> tags.

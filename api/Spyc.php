@@ -7,8 +7,6 @@
  * @link http://spyc.sourceforge.net/
  * @copyright Copyright 2005-2006 Chris Wanstrath
  * @license http://www.opensource.org/licenses/mit-license.php MIT License
- * @package sapphire
- * @subpackage misc
  */
 
 /**

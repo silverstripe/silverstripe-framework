@@ -1,10 +1,4 @@
 <?php
-
-/**
- * @package sapphire
- * @subpackage model
- */
-
 /**
  * This is a class used to represent key->value pairs generated from database queries.
  * The query isn't actually executed until you need it.

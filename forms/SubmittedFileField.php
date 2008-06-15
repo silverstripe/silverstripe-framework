@@ -1,9 +1,4 @@
 <?php
-
-/**
- * @package cms
- */
-
 /**
  * A file uploaded on a UserDefinedForm field
  * @package cms

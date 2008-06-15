@@ -1,10 +1,4 @@
 <?php
-
-/**
- * @package forms
- * @subpackage fieldeditor
- */
-
 /**
  * EditableTextField
  * This control represents a user-defined field in a user defined form

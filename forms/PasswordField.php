@@ -1,10 +1,4 @@
 <?php
-
-/**
- * @package forms
- * @subpackage fields-formattedinput
- */
-
 /**
  * Password input field.
  * @package forms

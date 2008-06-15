@@ -1,10 +1,4 @@
 <?php
-
-/**
- * @package forms
- * @subpackage transformations
- */
-
 /**
  * Transformation that disables all the fields on the form.
  * @package forms

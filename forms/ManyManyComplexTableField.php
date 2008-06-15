@@ -1,10 +1,4 @@
 <?php
-
-/**
- * @package forms
- * @subpackage fields-relational
- */
-
 /**
  * Special ComplexTableField for editing a many_many relation.
  * @package forms

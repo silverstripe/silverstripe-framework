@@ -1,10 +1,4 @@
 <?php
-
-/**
- * @package forms
- * @subpackage fields-relational
- */
-
 /**
  * @deprecated Use {@link TreeDropdownField} or {@link TreeMultiselectField}
  * @package forms

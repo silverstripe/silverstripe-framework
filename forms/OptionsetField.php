@@ -1,10 +1,4 @@
 <?php
-
-/**
- * @package forms
- * @subpackage fields-basic
- */
-
 /**
  * Set of radio buttons designed to emulate a dropdown.
  * It even uses the same constructor as a dropdown field.

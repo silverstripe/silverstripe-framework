@@ -1,10 +1,4 @@
 <?php 
-
-/**
- * @package forms
- * @subpackage validators
- */
-
 /**
  * Validator that makes it easy to do required-fields while still allowing custom behaviour.
  * @package forms

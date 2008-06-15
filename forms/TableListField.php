@@ -1,10 +1,4 @@
 <?php
-
-/**
- * @package forms
- * @subpackage fields-relational
- */
-
 /**
  * Form field that embeds a list into a form, such as a member list or a file list.
  * 

@@ -1,11 +1,4 @@
 <?php
-/**
- * @package  sapphire
- * @subpackage misc
- */
-
-/**
- */
 require_once 'HTML/HTMLBBCodeParser.php';
 
 /**

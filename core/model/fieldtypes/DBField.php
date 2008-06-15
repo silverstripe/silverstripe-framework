@@ -1,10 +1,4 @@
 <?php
-
-/**
- * @package sapphire
- * @subpackage model
- */
-
 /**
  * Single field in the database.
  * Every field from the database is represented as a sub-class of DBField.  In addition to supporting

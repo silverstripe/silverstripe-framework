@@ -1,7 +1,7 @@
 <?php
-
 /**
- * Test
+ * @package sapphire
+ * @subpackage email
  */
 class TestMailer extends Mailer {
 	protected $emailsSent = array();

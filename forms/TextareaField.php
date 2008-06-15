@@ -1,10 +1,4 @@
 <?php
-
-/**
- * @package forms
- * @subpackage fields-basic
- */
-
 /**
  * Multi-line text area.
  * @package forms

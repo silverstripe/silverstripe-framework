@@ -1,10 +1,4 @@
 <?php
-
-/**
- * @package forms
- * @subpackage fields-formattedinput
- */
-
 /**
  * Field for displaying phone numbers. It separates the number, the area code and optionally the country code
  * and extension.

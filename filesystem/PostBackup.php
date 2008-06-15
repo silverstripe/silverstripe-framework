@@ -1,10 +1,4 @@
 <?php
-
-/**
- * @package forms
- * @subpackage core
- */
-
 /**
  * Writes the POST array to a file as a last-ditch effort to preserve entered data.
  * @package forms

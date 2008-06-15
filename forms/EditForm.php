@@ -1,10 +1,4 @@
 <?php
-
-/**
- * @package forms
- * @subpackage core
- */
-
 /**
  * Creates an edit form on a site page.
  * Extends the basic form class to automatically look up, and save to, the data-object referred to

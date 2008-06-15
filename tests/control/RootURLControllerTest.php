@@ -1,5 +1,8 @@
 <?php
-
+/**
+ * @package sapphire
+ * @subpackage tests
+ */
 class RootURLControllerTest extends SapphireTest {
 	static $fixture_file = 'sapphire/tests/control/RootURLControllerTest.yml';
 	

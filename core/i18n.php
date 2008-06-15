@@ -1,10 +1,4 @@
 <?php
-
-/**
- * @package sapphire
- * @subpackage misc
- */
-
 /**
  * Base-class for storage and retrieval of translated entities.
  * Most common use is translation of the CMS-interface through the _t()-method

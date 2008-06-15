@@ -1,10 +1,4 @@
 <?php
-
-/**
- * @package sapphire
- * @subpackage control
- */
-
 /**
  * ModelAsController will hand over all control to the appopriate model object
  * It uses URLSegment to determine the right object.  Also, if (ModelClass)_Controller exists,

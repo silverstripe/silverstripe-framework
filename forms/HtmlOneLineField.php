@@ -1,10 +1,4 @@
 <?php
-
-/**
- * @package forms
- * @subpackage fields-formattedinput
- */
-
 /**
  * A WYSIWYG editor field, powered by tinymce.
  * tinymce editor fields are created from <textarea> tags which are then converted with javascript.

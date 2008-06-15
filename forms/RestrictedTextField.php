@@ -1,10 +1,4 @@
 <?php
-
-/**
- * @package forms
- * @subpackage fields-formatted
- */
-
 /**
  * A Text field that cannot contain certain characters
  * @package forms

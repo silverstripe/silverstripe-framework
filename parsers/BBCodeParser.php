@@ -1,13 +1,4 @@
 <?php
-
-/**
- * @package sapphire
- * @subpackage misc
- */
-
-/**
- *
- */
 require_once('HTML/HTMLBBCodeParser.php');
 /*Seting up the PEAR bbcode parser*/  
 $config = parse_ini_file('BBCodeParser.ini', true);

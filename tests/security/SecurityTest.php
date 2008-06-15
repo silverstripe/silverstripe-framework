@@ -2,6 +2,9 @@
 
 /**
  * Test the security class, including log-in form, change password form, etc
+ *
+ * @package sapphire
+ * @subpackage tests
  */
 class SecurityTest extends SapphireTest {
 	static $fixture_file = 'sapphire/tests/security/MemberTest.yml';

@@ -1,5 +1,8 @@
 <?php
-
+/**
+ * @package sapphire
+ * @subpackage tests
+ */
 class RSSFeedTest extends SapphireTest {
 	
 	function testRSSFeed() {

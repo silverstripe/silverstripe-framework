@@ -1,10 +1,4 @@
 <?php
-
-/**
- * @package forms
- * @subpackage fieldeditor
- */
-
 /**
  * Allows CMS user to create forms dynamically.
  * @package forms

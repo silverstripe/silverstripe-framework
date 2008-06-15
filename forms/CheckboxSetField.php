@@ -1,10 +1,4 @@
 <?php
-
-/**
- * @package forms
- * @subpackage fields-basic
- */
-
 /**
  * Displays a set of checkboxes as a logical group.
  *

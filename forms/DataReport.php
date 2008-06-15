@@ -1,10 +1,4 @@
 <?php
-
-/**
- * @package forms
- * @subpackage fields-reports
- */
-
 /**
  * Displays complex reports based on base Table of DataObject and available functions/fields provided to
  * the object.

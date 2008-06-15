@@ -1,10 +1,4 @@
 <?php
-
-/**
- * @package forms
- * @subpackage fields-basic
- */
-
 /**
  * Read-only field, with <label> and <span>
  * @package forms

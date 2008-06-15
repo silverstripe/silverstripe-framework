@@ -1,10 +1,4 @@
 <?php
-
-/**
- * @package sapphire
- * @subpackage cron
- */
-
 /**
  * Abstract task representing scheudled tasks
  * @todo Improve documentation

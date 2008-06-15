@@ -1,10 +1,4 @@
 <?php
-
-/**
- * @package forms
- * @subpackage fields-relational
- */
-
 /**
  * ComplexTableField with a radio button column, designed to edit a has_one join.
  * @package forms

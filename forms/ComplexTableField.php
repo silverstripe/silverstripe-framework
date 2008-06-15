@@ -1,10 +1,4 @@
 <?php
-
-/**
- * @package forms
- * @subpackage fields-relational
- */
-
 /**
  * Provides a tabuar list in your form with view, edit and add links to edit records
  * with a "has-one"-relationship. Detail-views are shown in a greybox-iframe.

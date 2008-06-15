@@ -1,10 +1,4 @@
 <?php
-
-/**
- * @package sapphire
- * @subpackage filesystem
- */
-
 /**
  * Represents an image attached to a page.
  * @package sapphire

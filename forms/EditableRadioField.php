@@ -1,10 +1,4 @@
 <?php
-
-/**
- * @package forms
- * @subpackage fieldeditor
- */
-
 /**
  * EditableDropdown
  * Represents a set of selectable radio buttons

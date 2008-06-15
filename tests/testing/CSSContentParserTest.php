@@ -1,5 +1,8 @@
 <?php
-
+/**
+ * @package sapphire
+ * @subpackage tests
+ */
 class CSSContentParserTest extends SapphireTest {
 	function testSelector2xpath() {
 		$parser = new CSSContentParser("<html><head><title>test</title></head><body><p>test</p></body></html>");

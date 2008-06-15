@@ -1,11 +1,4 @@
 <?php
-
-/**
- * @package sapphire
- * @subpackage misc
- */
-
-
 /**
  * Routines for DNS to country resolution
  * 

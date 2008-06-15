@@ -1,10 +1,4 @@
 <?php
-
-/**
- * @package forms
- * @subpackage fields-datetime
- */
-
 /**
  * Time field.
  * Default Value represented in the format passed as constructor.

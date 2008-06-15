@@ -1,10 +1,4 @@
 <?php
-
-/**
- * @package forms
- * @subpackage fields-basic
- */
-
 /**
  * Multi-line listbox field, created from a <select> tag.
  * @package forms

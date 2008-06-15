@@ -1,10 +1,4 @@
 <?php
-
-/**
- * @package forms
- * @subpackage fieldeditor
- */
-
 /**
  * EditableCheckbox
  * A user modifiable checkbox on a UserDefinedForm

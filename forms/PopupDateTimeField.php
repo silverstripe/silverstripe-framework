@@ -1,10 +1,4 @@
 <?php
-
-/**
- * @package forms
- * @subpackage fields-datetime
- */
-
 /**
  * Field for entering a date/time pair.
  * @package forms

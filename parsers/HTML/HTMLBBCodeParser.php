@@ -1,10 +1,4 @@
 <?php
-
-/**
- * @package  sapphire
- * @subpackage misc
- */
-
 /* vim: set expandtab tabstop=4 shiftwidth=4: */
 // +----------------------------------------------------------------------+
 // | PHP Version 4                                                        |

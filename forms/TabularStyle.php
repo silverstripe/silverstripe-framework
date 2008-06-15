@@ -1,10 +1,4 @@
 <?php
-
-/**
- * @package forms
- * @subpackage transformations
- */
-
 /**
  * This is a form decorator (a class that wraps around a form) providing us with some functions
  * to display it in a Tabular style.

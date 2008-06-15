@@ -1,10 +1,4 @@
 <?php
-
-/**
- * @package sapphire
- * @subpackage view
- */
-
 /**
  * Requirements tracker, for javascript and css.
  * @todo Document the requirements tracker, and discuss it with the others.

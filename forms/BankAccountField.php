@@ -1,10 +1,4 @@
 <?php
-
-/**
- * @package forms
- * @subpackage fields-formattedinput
- */
-
 /**
  * Field for displaying bank account numbers. It separates the bank, branch, account-number and account-suffix.
  * @package forms

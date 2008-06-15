@@ -1,10 +1,4 @@
 <?php
-
-/**
- * @package forms
- * @subpackage actions
- */
-
 /**
  * Action that uses an image instead of a button
  * @package forms

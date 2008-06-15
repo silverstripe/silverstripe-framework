@@ -1,10 +1,4 @@
 <?php
-
-/**
- * @package forms
- * @subpackage fieldeditor
- */
-
 /**
  * EditableDropdownOption
  * Represents a single entry in an EditableRadioField

@@ -1,10 +1,4 @@
 <?php
-
-/**
- * @package sapphire
- * @subpackage model
- */
-
 /**
  * DataObjects that use the Hierachy decorator can be be organised as a hierachy, with children and parents.
  * The most obvious example of this is SiteTree.

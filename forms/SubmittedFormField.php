@@ -1,9 +1,4 @@
 <?php
-
-/**
- * @package cms
- */
-
 /**
  * Data received from a UserDefinedForm submission
  * @package cms

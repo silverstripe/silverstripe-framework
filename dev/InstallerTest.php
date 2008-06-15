@@ -1,14 +1,8 @@
 <?php
-
-/**
- * @package sapphire
- * @subpackage misc
- */
-
 /**
  * Simple controller that the installer uses to test that URL rewriting is working.
  * @package sapphire
- * @subpackage misc
+ * @subpackage testing
  */
 class InstallerTest extends Controller {
 

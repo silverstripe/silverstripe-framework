@@ -1,10 +1,4 @@
 <?php
-
-/**
- * @package sapphire
- * @subpackage control
- */
-
 /**
  * Handles all manipulation of the session.
  * 

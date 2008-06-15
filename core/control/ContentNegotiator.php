@@ -1,10 +1,5 @@
 <?php
 /**
- * @package sapphire
- * @subpackage control
- */
-
-/**
  * The content negotiator performs text/html or application/xhtml+xml switching.
  * It does this through the static function ContentNegotiator::process()
  * 

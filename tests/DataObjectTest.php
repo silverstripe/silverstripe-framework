@@ -1,12 +1,7 @@
 <?php
-
 /**
- * @package tests
- */
-
-/**
- * Tests for DataObject
- * @package tests
+ * @package sapphire
+ * @subpackage tests
  */
 class DataObjectTest extends SapphireTest {
 	static $fixture_file = 'sapphire/tests/DataObjectTest.yml';

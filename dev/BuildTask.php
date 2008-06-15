@@ -8,6 +8,8 @@
  * the $Disabled property on the subclass.
  * 
  * @todo move from sapphire/testing to sapphire/dev or sapphire/development?
+ * @package sapphire
+ * @subpackage dev
  */
 abstract class BuildTask {
 	

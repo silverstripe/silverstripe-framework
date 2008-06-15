@@ -1,9 +1,4 @@
 <?php
-
-/**
- * @package cms
- */
-
 /**
  * Basic data-object representing all pages within the site tree.
  * This data-object takes care of the heirachy.  All page types that live within the heirachy

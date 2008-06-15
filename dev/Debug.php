@@ -1,10 +1,4 @@
 <?php
-
-/**
- * @package sapphire
- * @subpackage core
- */
-
 /**
  * Supports debugging and core error handling.
  * 

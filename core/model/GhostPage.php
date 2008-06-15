@@ -1,9 +1,4 @@
 <?php
-
-/**
- * @package cms
- */
-
 /**
  * Ghost pages are placeholder pages that are used to facilitate the apparent support for
  * multiple parents.

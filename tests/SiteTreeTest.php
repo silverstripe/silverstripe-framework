@@ -1,11 +1,7 @@
 <?php
-
 /**
- * @package tests
- */
-
-/**
- * Tests for SiteTree
+ * @package sapphire
+ * @subpackage tests
  */
 class SiteTreeTest extends SapphireTest {
 	static $fixture_file = 'sapphire/tests/SiteTreeTest.yml';

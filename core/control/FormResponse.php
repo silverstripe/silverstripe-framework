@@ -1,10 +1,4 @@
 <?php
-
-/**
- * @package forms
- * @subpackage core
- */
-
 /**
  * This class collects all output that needs to be returned after an Form-Request to the client. It automatically determines
  * if it needs to send back javascript after an Ajax-Request or just redirect to another page (on a normal request).

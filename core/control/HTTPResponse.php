@@ -1,10 +1,4 @@
 <?php
-
-/**
- * @package sapphire
- * @subpackage control
- */
-
 /**
  * Represenets an HTTPResponse returned by a controller.
  *

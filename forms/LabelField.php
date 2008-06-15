@@ -1,10 +1,4 @@
 <?php
-
-/**
- * @package forms
- * @subpackage fields-dataless
- */
-
 /**
  * Simple label tag.
  * This can be used to add extra text in your forms.

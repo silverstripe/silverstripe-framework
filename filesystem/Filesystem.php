@@ -1,7 +1,6 @@
 <?php
 /**
- * A collection of static methods for manipulating the filesystem.
- 
+ * A collection of static methods for manipulating the filesystem. 
  * @package sapphire
  * @subpackage filesystem
  */

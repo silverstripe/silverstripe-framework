@@ -3,7 +3,9 @@
  * A migration task is a build task that is reversible.
  * 
  * Up and Down methods must be implemented.
- *
+ * 
+ * @package sapphire
+ * @subpackage dev
  */
 abstract class MigrationTask extends BuildTask {
 	

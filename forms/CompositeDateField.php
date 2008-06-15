@@ -1,10 +1,4 @@
 <?php
-
-/**
- * @package forms
- * @subpackage fields-datetime
- */
-
 /**
  * Date field that provides 3 dropdowns for entering a date
  * @package forms

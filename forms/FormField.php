@@ -1,10 +1,4 @@
 <?php
-
-/**
- * @package forms
- * @subpackage core
- */
-
 /**
  * Represents a field in a form.  
  * A FieldSet contains a number of FormField objects which make up the whole of a form.

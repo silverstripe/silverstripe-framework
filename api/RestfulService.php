@@ -1,10 +1,4 @@
 <?php
-
-/**
- * @package sapphire
- * @subpackage integration
- */
-
 /**
  * RestfulService class allows you to consume various RESTful APIs.
  * Through this you could connect and aggregate data of various web services.

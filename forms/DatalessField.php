@@ -1,10 +1,4 @@
 <?php
-
-/**
- * @package forms
- * @subpackage fields-dataless
- */
-
 /**
  * Abstract class for all fields without data.
  * Labels, headings and the like should extend from this.

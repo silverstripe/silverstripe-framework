@@ -1,10 +1,4 @@
 <?php
-
-/**
- * @package forms
- * @subpackage fields-structural
- */
-
 /**
  * SelectionGroup represents a number of fields that are selectable by a radio button that appears at
  * the beginning of each item.  Using CSS, you can configure the field to only display its contents if

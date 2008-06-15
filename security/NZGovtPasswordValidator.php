@@ -1,7 +1,8 @@
 <?php
-
 /**
  * This {@link PasswordValidator} implements the NZ E-Government Guidelines for passwords
+ * @package sapphire
+ * @subpackage security
  */
 class NZGovtPasswordValidator extends PasswordValidator {
 	function __construct() {

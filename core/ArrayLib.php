@@ -1,10 +1,4 @@
 <?php
-
-/**
- * @package sapphire
- * @subpackage misc
- */
-
 /**
  * Library of static methods for manipulating arrays.
  * @package sapphire

@@ -1,10 +1,4 @@
 <?php
-
-/**
- * @package sapphire
- * @subpackage filesystem
- */
-
 /**
  * This class handles the representation of a File within Sapphire
  * Note: The files are stored in the "/assets/" directory, but sapphire

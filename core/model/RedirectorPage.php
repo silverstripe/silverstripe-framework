@@ -1,10 +1,4 @@
 <?php
-
-/**
- * @package cms
- * @subpackage content
- */
-
 /**
  * A redirector page redirects when the page is visited.
  * @package cms

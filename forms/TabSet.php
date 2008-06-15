@@ -1,10 +1,5 @@
 <?php
 /**
- * @package forms
- * @subpackage fields-structural
- */
-
-/**
  * Defines a set of tabs in a form.
  * The tabs are build with our standard tabstrip javascript library.  By default, the HTML is
  * generated using FieldHolder.

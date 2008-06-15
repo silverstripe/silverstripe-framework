@@ -1,10 +1,4 @@
 <?php
-
-/**
- * @package forms
- * @subpackage validators
- */
-
 /**
  * Required Fields allows you to set which fields
  * need to be present before submitting the form

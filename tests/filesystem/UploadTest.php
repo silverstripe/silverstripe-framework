@@ -1,4 +1,8 @@
 <?php
+/**
+ * @package sapphire
+ * @subpackage tests
+ */
 class UploadTest extends SapphireTest {
 	static $fixture_file = 'sapphire/tests/filesystem/UploadTest.yml';
 

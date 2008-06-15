@@ -1,10 +1,4 @@
 <?php
-
-/**
- * @package sapphire
- * @subpackage model
- */
-
 if(!class_exists('Datetime')) {
 	/**
 	 * @package sapphire

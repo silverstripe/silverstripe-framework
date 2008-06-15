@@ -18,6 +18,9 @@
  *     $this->assertExactMatchBySelector("#MyForm_ID p.error", array("That email address is invalid."));
  *  }	
  * </code>
+ * 
+ * @package sapphire
+ * @subpackage testing
  */
 class FunctionalTest extends SapphireTest {
 	/**

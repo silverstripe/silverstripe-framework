@@ -1,10 +1,4 @@
 <?php
-
-/**
- * @package sapphire
- * @subpackage misc
- */
-
 /**
  * Parses text in a variety of ways.
  * 

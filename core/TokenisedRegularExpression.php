@@ -3,6 +3,8 @@
 /**
  * A tokenised regular expression is a parser, similar to a regular expression, that acts on tokens rather than characters.
  * This is a crucial component of the ManifestBuilder.
+ * @package sapphire
+ * @subpackage core
  */ 
 class TokenisedRegularExpression extends Object {
 	/**

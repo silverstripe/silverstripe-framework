@@ -1,10 +1,4 @@
 <?php
-
-/**
- * @package forms
- * @subpackage fields-dataless
- */
-
 /**
  * This field lets you put an arbitrary piece of HTML into your forms.
  * If there's not much behaviour around the HTML, it might not be worth going to the effort of

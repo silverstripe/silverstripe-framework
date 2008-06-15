@@ -1,10 +1,5 @@
 <?php
 /**
- * @package sapphire
- * @subpackage model
- */
-
-/**
  * This is a special kind of DataObjectSet used to represent the items linked to in a 1-many or many-many
  * join.  It provides add and remove methods that will update the database.
  * @package sapphire

@@ -1,5 +1,8 @@
 <?php
-
+/**
+ * @package sapphire
+ * @subpackage tests
+ */
 class ObjectTest extends SapphireTest {
 	
 	function testHasmethodBehaviour() {

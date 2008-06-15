@@ -1,4 +1,8 @@
 <?php
+/**
+ * @package sapphire
+ * @subpackage tests
+ */
 class DirectorTest extends SapphireTest {
 	
 	public function testFileExists() {

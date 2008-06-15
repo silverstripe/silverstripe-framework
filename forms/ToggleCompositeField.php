@@ -1,10 +1,4 @@
 <?php
-
-/**
- * @package forms
- * @subpackage fields-structural
- */
-
 /**
  * Allows visibility of a group of fields to be toggled using '+' and '-' icons
  * @package forms

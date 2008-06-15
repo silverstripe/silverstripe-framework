@@ -1,10 +1,4 @@
 <?php
-
-/**
- * @package forms
- * @subpackage validators
- */
-
 /**
  * Custom javascript validation
  * @package forms

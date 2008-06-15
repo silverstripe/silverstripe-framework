@@ -1,10 +1,4 @@
 <?php
-
-/**
- * @package forms
- * @subpackage fields-formattedinput
- */
-
 /**
  * Field for displaying NZ GST numbers (usually 8-9 digits in the format ##-###-### or ##-###-####).
  * @package forms

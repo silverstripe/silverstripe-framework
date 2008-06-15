@@ -1,10 +1,4 @@
 <?php
-
-/**
- * @package sapphire
- * @subpackage core
- */
-
 /**
  * Provides introspection information about the class tree.
  * It's a cached wrapper around the built-in class functions.  Sapphire uses class introspection heavily

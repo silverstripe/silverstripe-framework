@@ -1,10 +1,4 @@
 <?php
-
-/**
- * @package sapphire
- * @subpackage misc
- */
-
 /**
  * Library of conversion functions, implemented as static methods.
  *

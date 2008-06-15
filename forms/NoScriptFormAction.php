@@ -1,10 +1,4 @@
 <?php
-
-/**
- * @package forms
- * @subpackage actions
- */
-
 /**
  * Action that will only be shown if javascript is disabled.
  * @package forms

@@ -1,10 +1,4 @@
 <?php
-
-/**
- * @package forms
- * @subpackage fieldeditor
- */
-
 /**
  * EditableEmailField
  * Allow users to define a validating editable email field for a UserDefinedForm

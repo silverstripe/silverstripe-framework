@@ -1,10 +1,4 @@
 <?php
-
-/**
- * @package forms
- * @subpackage fields-datetime
- */
-
 /**
  * Displays a date field with day, month and year boxes, with a calendar to select
  * the date

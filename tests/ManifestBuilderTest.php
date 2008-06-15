@@ -1,5 +1,8 @@
 <?php
-
+/**
+ * @package sapphire
+ * @subpackage tests
+ */
 class ManifestBuilderTest extends SapphireTest {
 	function testManifest() {
 		$baseFolder = TEMP_FOLDER . '/manifest-test';

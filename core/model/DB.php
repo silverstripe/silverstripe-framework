@@ -1,10 +1,4 @@
 <?php
-
-/**
- * @package sapphire
- * @subpackage model
- */
-
 /**
  * Global database interface, complete with static methods.
  * Use this class for interacting with the database.

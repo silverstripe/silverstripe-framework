@@ -1,10 +1,4 @@
 <?php
-
-/**
- * @package forms
- * @subpackage fields-formattedinput
- */
-
 /**
  * CreditCard field, contains validation and formspec for creditcard fields.
  * @package forms

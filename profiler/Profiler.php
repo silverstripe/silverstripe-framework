@@ -1,10 +1,4 @@
 <?php
-
-/**
- * @package sapphire
- * @subpackage misc
- */
-
 /********************************************************************************\
  * Copyright (C) Carl Taylor (cjtaylor@adepteo.com)                             *
  * Copyright (C) Torben Nehmer (torben@nehmer.net) for Code Cleanup             *

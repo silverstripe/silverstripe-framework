@@ -1,10 +1,4 @@
 <?php
-
-/**
- * @package sapphire
- * @subpackage control
- */
-
 /**
  * The most common kind of controller; effectively a controller linked to a {@link DataObject}.
  *

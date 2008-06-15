@@ -1,9 +1,4 @@
 <?php
-
-/**
- * @package cms
- */
-
 /**
  * The Notifications class allows you to create email notifications for various events.
  * It lets your scripts generate a number of notifications, and delay sending of the emails until

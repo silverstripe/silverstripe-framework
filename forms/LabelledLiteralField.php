@@ -1,10 +1,4 @@
 <?php
-
-/**
- * @package forms
- * @subpackage fields-dataless
- */
-
 /**
  * It's a LiteralField ... with a Label
  * @package forms

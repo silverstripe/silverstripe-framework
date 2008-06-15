@@ -1,10 +1,4 @@
 <?php
-
-/**
- * @package forms
- * @subpackage fields-relational
- */
-
 /**
  * RelatedDataEditor puts a "sub-form" into a form that lets you edit a record on the other side of a
  * one-to-many relationship.  For example, you could be editing a workshop, and you want to provide fields

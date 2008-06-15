@@ -1,10 +1,4 @@
 <?php
-
-/**
- * @package forms
- * @subpackage validators
- */
-
 /**
  * This validation class handles all form and custom form validation through
  * the use of Required fields.

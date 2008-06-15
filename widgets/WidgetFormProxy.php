@@ -1,5 +1,8 @@
 <?php
-
+/**
+ * @package sapphire
+ * @subpackage widgets
+ */
 class WidgetFormProxy extends Controller {
 	function getFormOwner() {
 		$widget = DataObject::get_by_id("Widget", $this->urlParams['ID']);

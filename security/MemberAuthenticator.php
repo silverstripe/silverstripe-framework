@@ -1,11 +1,4 @@
 <?php
-
-/**
- * @package sapphire
- * @subpackage security
- * @author Markus Lanthaler <markus@silverstripe.com>
- */
-
 /**
  * Authenticator for the default "member" method
  *

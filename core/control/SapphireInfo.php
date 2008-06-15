@@ -1,7 +1,8 @@
 <?php
-
 /**
  * Returns information about the current site instance.
+ * @package sapphire
+ * @subpackage control
  */
 class SapphireInfo extends Controller {
 	function Version() {

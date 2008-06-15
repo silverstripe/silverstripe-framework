@@ -1,10 +1,4 @@
 <?php
-
-/**
- * @package sapphire
- * @subpackage cron
- */
-
 /**
  * Classes that must be run daily extend this class
  * @todo Improve documentation

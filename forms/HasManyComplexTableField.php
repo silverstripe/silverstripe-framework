@@ -1,10 +1,4 @@
 <?php
-
-/**
- * @package forms
- * @subpackage fields-relational
- */
-
 /**
  * ComplexTableField designed to edit a has_many join.
  * @package forms

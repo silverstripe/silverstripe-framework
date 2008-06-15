@@ -1,10 +1,4 @@
 <?php
-
-/**
- * @package sapphire
- * @subpackage search
- */
-
 /**
  * Standard basic search form
  * @package sapphire

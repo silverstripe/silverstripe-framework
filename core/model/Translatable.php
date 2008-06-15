@@ -1,10 +1,4 @@
 <?php
-
-/**
- * @package sapphire
- * @subpackage misc
- */
-
 /**
  * The {Translatable} decorator allows your DataObjects to have versions in different languages,
  * defining which fields are can be translated.

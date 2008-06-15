@@ -1,11 +1,4 @@
 <?php
-
-/**
- * @package sapphire
- * @subpackage model
- */
-
-
 /**
  * Plug-ins for additional functionality in your DataObjects
  *

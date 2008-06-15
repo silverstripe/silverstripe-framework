@@ -1,10 +1,4 @@
 <?php
-
-/**
- * @package sapphire
- * @subpackage control
- */
-
 /**
  * Base controller class.
  * Controllers are the cornerstone of all site functionality in Sapphire.  The {@link Director}

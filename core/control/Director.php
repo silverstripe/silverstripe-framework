@@ -1,10 +1,4 @@
 <?php
-
-/**
- * @package sapphire
- * @subpackage control
- */
-
 /**
  * Director is responsible for processing URLs, and providing environment information.
  * 

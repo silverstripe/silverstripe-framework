@@ -1,10 +1,5 @@
 <?php
 /**
- * @package sapphire
- * @subpackage dev
- */
-
-/**
  * A basic HTML wrapper for stylish rendering of a developement info view.
  * Used to output error messages, and test results.
  * 

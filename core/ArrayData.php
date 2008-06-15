@@ -1,10 +1,4 @@
 <?php
-
-/**
- * @package sapphire
- * @subpackage view
- */
-
 /**
  * Lets you wrap a bunch of array data into a {@link ViewableData} object.
  *

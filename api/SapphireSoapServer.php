@@ -1,10 +1,4 @@
 <?php
-
-/**
- * @package sapphire
- * @subpackage integration
- */
-
 /**
  * Soap server class
  * @todo Improve documentation

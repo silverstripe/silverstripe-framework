@@ -1,10 +1,4 @@
 <?php
-
-/**
- * @package forms
- * @subpackage fields-dataless
- */
-
 /**
  * ReadonlyField with added toggle-capabilities - will preview the first sentence of the contained text-value,
  * and show the full content by a javascript-switch.

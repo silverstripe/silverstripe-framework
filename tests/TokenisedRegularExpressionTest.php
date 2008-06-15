@@ -1,5 +1,8 @@
 <?php
-
+/**
+ * @package sapphire
+ * @subpackage tests
+ */
 class TokenisedRegularExpressionTest extends SapphireTest {
 	function getTokens() {
 		return token_get_all(<<<PHP

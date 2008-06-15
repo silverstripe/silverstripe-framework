@@ -1,10 +1,4 @@
 <?php
-
-/**
- * @package sapphire
- * @subpackage model
- */
-
 /**
  * Object representing a SQL query.
  * The various parts of the SQL query can be manipulated individually.

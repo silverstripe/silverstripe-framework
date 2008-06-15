@@ -1,10 +1,4 @@
 <?php
-
-/**
- * @package forms
- * @subpackage fields-dataless
- */
-
 /**
  * Field that generates a heading tag.
  * This can be used to add extra text in your forms.

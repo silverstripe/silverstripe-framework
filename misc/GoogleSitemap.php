@@ -1,10 +1,4 @@
 <?php
-
-/**
- * @package sapphire
- * @subpackage misc
- */
-
 /**
  * Initial implementation of Sitemap support.
  * GoogleSitemap should handle requests to 'sitemap.xml'

@@ -1,10 +1,4 @@
 <?php
-
-/**
- * @package forms
- * @subpackage fields-formattedinput
- */
-
 /**
  * Text field that automatically checks that the value entered is unique for the given
  * set of fields in a given set of tables

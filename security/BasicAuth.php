@@ -1,10 +1,4 @@
 <?php
-
-/**
- * @package sapphire
- * @subpackage security
- */
-
 /**
  * Provides an interface to HTTP basic authentication.
  * @package sapphire

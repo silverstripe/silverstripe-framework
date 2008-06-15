@@ -23,6 +23,9 @@
  *  - DELETE /api/v1/(ClassName)/(ID)/(Relation)/(ForeignID) - remove the relationship between two database records, but don't actually delete the foreign object (NOT IMPLEMENTED YET)
  *
  *  - POST /api/v1/(ClassName)/(ID)/(MethodName) - executes a method on the given object (e.g, publish)
+ *
+ * @package sapphire
+ * @subpackage api
  */
 class RestfulServer extends Controller {
 	protected static $api_base = "api/v1/";

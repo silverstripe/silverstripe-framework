@@ -1,5 +1,8 @@
 <?php
-
+/**
+ * @package sapphire
+ * @subpackage tests
+ */
 class GroupTest extends SapphireTest {
 	static $fixture_file = 'sapphire/tests/security/GroupTest.yml';
 	
