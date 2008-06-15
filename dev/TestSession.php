@@ -94,9 +94,9 @@ class TestSession {
 	 * Get the last response as a SimplePage object
 	 */
 	function lastPage() {
-		require_once("testing/simpletest/http.php");
-		require_once("testing/simpletest/page.php");
-		require_once("testing/simpletest/form.php");
+		require_once("thirdparty/simpletest/http.php");
+		require_once("thirdparty/simpletest/page.php");
+		require_once("thirdparty/simpletest/form.php");
 
 		$builder = &new SimplePageBuilder();
 		$page = &$builder->parse(new TestSession_STResponseWrapper($this->lastResponse));
