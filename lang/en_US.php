@@ -172,6 +172,20 @@ $lang['en_US']['AssetAdmin']['UNUSEDFILESTAB'] = 'Unused files';
 $lang['en_US']['AssetAdmin']['UNUSEDFILESTITLE'] = 'Unused files';
 $lang['en_US']['AssetAdmin']['UNUSEDTHUMBNAILSTITLE'] = 'Unused thumbnails';
 $lang['en_US']['AssetAdmin']['DELETEUNUSEDTHUMBNAILS'] = 'Delete unused thumbnails';
+$lang['en_US']['AssetAdmin']['VIEWASSET'] = 'View Asset';
+$lang['en_US']['File']['NOFILESIZE'] = 'Filesize is zero bytes.';
+$lang['en_US']['File']['TOOLARGE'] = array(
+	'Filesize is too large, maximum %s allowed.',
+	
+					PR_MEDIUM,
+	'Argument 1: Filesize (e.g. 1MB)'
+);
+$lang['en_US']['File']['INVALIDEXTENSION'] = array(
+	'Extension is not allowed (valid: %s)',
+	
+					PR_MEDIUM,
+	'Argument 1: Comma-separated list of valid extensions'
+);
 $lang['en_US']['Form']['VALIDATIONNOTUNIQUE'] = 'The value entered is not unique';
 $lang['en_US']['BankAccountField']['VALIDATIONJS'] = 'Please enter a valid bank number';
 $lang['en_US']['Form']['VALIDATIONBANKACC'] = 'Please enter a valid bank number';
@@ -214,16 +228,6 @@ $lang['en_US']['DateField']['NODATESET'] = 'No date set';
 $lang['en_US']['DateField']['TODAY'] = 'today';
 $lang['en_US']['DateField']['NOTSET'] = 'not set';
 $lang['en_US']['Form']['SAVECHANGES'] = 'Save Changes';
-$lang['en_US']['EditableCheckbox']['ANY'] = 'Any';
-$lang['en_US']['EditableCheckbox']['SELECTED'] = 'Selected';
-$lang['en_US']['EditableCheckbox']['NOTSELECTED'] = 'Not selected';
-$lang['en_US']['EditableEmailField']['SENDCOPY'] = 'Send copy of submission to this address';
-$lang['en_US']['EditableFormField']['ENTERQUESTION'] = 'Enter Question';
-$lang['en_US']['EditableFormField']['REQUIRED'] = 'Required?';
-$lang['en_US']['EditableTextField']['TEXTBOXLENGTH'] = 'Length of text box';
-$lang['en_US']['EditableTextField']['TEXTLENGTH'] = 'Text length';
-$lang['en_US']['EditableTextField']['NUMBERROWS'] = 'Number of rows';
-$lang['en_US']['EditableTextField']['DEFAULTTEXT'] = 'Default Text';
 $lang['en_US']['EmailField']['VALIDATIONJS'] = 'Please enter an email address.';
 $lang['en_US']['EmailField']['VALIDATION'] = 'Please enter an email address.';
 $lang['en_US']['FileIframeField']['NOTEADDFILES'] = 'You can add files once you have saved for the first time.';
@@ -364,6 +368,16 @@ $lang['en_US']['DropdownField']['CHOOSE'] = array(
 $lang['en_US']['TreeSelectorField']['SAVE'] = 'save';
 $lang['en_US']['TreeSelectorField']['CANCEL'] = 'cancel';
 $lang['en_US']['TypeDropdown']['NONE'] = 'None';
+$lang['en_US']['EditableCheckbox']['ANY'] = 'Any';
+$lang['en_US']['EditableCheckbox']['SELECTED'] = 'Selected';
+$lang['en_US']['EditableCheckbox']['NOTSELECTED'] = 'Not selected';
+$lang['en_US']['EditableEmailField']['SENDCOPY'] = 'Send copy of submission to this address';
+$lang['en_US']['EditableFormField']['ENTERQUESTION'] = 'Enter Question';
+$lang['en_US']['EditableFormField']['REQUIRED'] = 'Required?';
+$lang['en_US']['EditableTextField']['TEXTBOXLENGTH'] = 'Length of text box';
+$lang['en_US']['EditableTextField']['TEXTLENGTH'] = 'Text length';
+$lang['en_US']['EditableTextField']['NUMBERROWS'] = 'Number of rows';
+$lang['en_US']['EditableTextField']['DEFAULTTEXT'] = 'Default Text';
 $lang['en_US']['FieldEditor']['EMAILSUBMISSION'] = 'Email submission to:';
 $lang['en_US']['FieldEditor']['EMAILONSUBMIT'] = 'Email form on submit:';
 $lang['en_US']['BBCodeParser']['BOLD'] = 'Bold Text';
@@ -416,6 +430,25 @@ $lang['en_US']['Member']['BUTTONCHANGEPASSWORD'] = 'Change Password';
 $lang['en_US']['Member']['ERRORPASSWORDNOTMATCH'] = 'Your current password does not match, please try again';
 $lang['en_US']['Member']['PASSWORDCHANGED'] = 'Your password has been changed, and a copy emailed to you.';
 $lang['en_US']['Member']['ERRORNEWPASSWORD'] = 'Your have entered your new password differently, try again';
+$lang['en_US']['SecurityAdmin']['MEMBERS'] = 'Members';
+$lang['en_US']['SecurityAdmin']['GROUPNAME'] = 'Group name';
+$lang['en_US']['SecurityAdmin']['PERMISSIONS'] = 'Permissions';
+$lang['en_US']['SecurityAdmin']['ADVANCEDONLY'] = 'This section is for advanced users only.
+							See <a href=\"http://doc.silverstripe.com/doku.php?id=permissions:codes\" target=\"_blank\">this page</a>
+							for more information.';
+$lang['en_US']['SecurityAdmin']['CODE'] = 'Code';
+$lang['en_US']['SecurityAdmin']['OPTIONALID'] = 'Optional ID';
+$lang['en_US']['Security']['IPADDRESSES'] = 'IP Addresses';
+$lang['en_US']['SecurityAdmin']['IPADDRESSESHELP'] = '<p>You can restrict this group to a particular 
+						IP address range.  Enter 1 range per line.  Ranges can be in any of the following 4 forms: <br />
+						203.96.152.12<br />
+						203.96.152/24<br />
+						203.96/16<br />
+						203/8<br /><br />If you enter one or more IP address ranges in this box, then members will only get
+						the rights of being in this group if they log on from one of the valid IP addresses.  It won\'t prevent
+						people from logging in.  This is because the same user might have to log in to access parts of the
+						system without IP address restrictions.';
+$lang['en_US']['SecurityAdmin']['VIEWUSER'] = 'View User';
 $lang['en_US']['Member']['FIRSTNAME'] = 'First Name';
 $lang['en_US']['Member']['SURNAME'] = 'Surname';
 $lang['en_US']['Member']['EMAIL'] = array(
@@ -461,6 +494,7 @@ $lang['en_US']['Member']['SUBJECTPASSWORDRESET'] = array(
 $lang['en_US']['Member']['EMAILPASSWORDINTRO'] = 'Here\'s your new password';
 $lang['en_US']['Member']['EMAILPASSWORDAPPENDIX'] = 'Your password has been changed. Please keep this email, for future reference.';
 $lang['en_US']['Member']['VALIDATIONMEMBEREXISTS'] = 'There already exists a member with this email';
+$lang['en_US']['Member']['ERRORLOCKEDOUT'] = 'Your account has been temporarily disabled because of too many failed attempts at logging in. Please try again in 20 minutes.';
 $lang['en_US']['Member']['ERRORWRONGCRED'] = 'That doesn\'t seem to be the right e-mail address or password. Please try again.';
 $lang['en_US']['MemberAuthenticator']['TITLE'] = 'E-mail &amp; Password';
 $lang['en_US']['Member']['BUTTONLOGINOTHER'] = 'Log in as someone else';
@@ -498,11 +532,6 @@ $lang['en_US']['Security']['ENCRYPTWITHOUTSALT'] = 'without using a salt to incr
 $lang['en_US']['Security']['ENCRYPTEDMEMBERS'] = 'Encrypted credentials for member &quot;';
 $lang['en_US']['Security']['ID'] = 'ID:';
 $lang['en_US']['Security']['EMAIL'] = 'E-Mail:';
-$lang['en_US']['LeftAndMain']['SITECONTENT'] = array(
-	'Site Content',
-	PR_HIGH,
-	'Menu title'
-);
 $lang['en_US']['ComplexTableField.ss']['SORTASC'] = 'Sort ascending';
 $lang['en_US']['ComplexTableField.ss']['SORTDESC'] = 'Sort descending';
 $lang['en_US']['ComplexTableField.ss']['ADDITEM'] = 'add';
@@ -615,7 +644,6 @@ $lang['en_US']['TableListField_PageControls.ss']['TO'] = 'to';
 $lang['en_US']['TableListField_PageControls.ss']['OF'] = 'of';
 $lang['en_US']['TableListField_PageControls.ss']['VIEWNEXT'] = 'View next';
 $lang['en_US']['RelationComplexTableField.ss']['ADD'] = 'Add';
-$lang['en_US']['RelationComplexTableField.ss']['ADD'] = 'add';
 $lang['en_US']['RelationComplexTableField.ss']['SHOW'] = 'show';
 $lang['en_US']['RelationComplexTableField.ss']['EDIT'] = 'edit';
 $lang['en_US']['RelationComplexTableField.ss']['DELETE'] = 'delete';
