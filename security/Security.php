@@ -67,6 +67,13 @@ class Security extends Controller {
 	public static $template_main = 'Page';
 	
 	/**
+	 * Default message set used in permission failures.
+	 *
+	 * @var array|string
+	 */
+	protected static $default_message_set = '';
+	
+	/**
 	 * Get location of word list file
 	 */
 	static function get_word_list() {
@@ -80,6 +87,15 @@ class Security extends Controller {
 	 */
 	static function set_word_list($wordListFile) {
 		Security::$wordlist = $wordListFile;
+	}
+	
+	/**
+	 * Set the default message set used in permissions failures.
+	 *
+	 * @param string|array $messageSet
+	 */
+	static function set_default_message_set($messageSet) {
+		self::$default_message_set = $messageSet;
 	}
 
 
@@ -110,21 +126,27 @@ class Security extends Controller {
 	static function permissionFailure($controller = null, $messageSet = null) {
 		// Prepare the messageSet provided
 		if(!$messageSet) {
-			$messageSet = array(
-				'default' => _t(
-					'Security.NOTEPAGESECURED', 
-					"That page is secured. Enter your credentials below and we will send you right along."
-				),
-				'alreadyLoggedIn' => _t(
-					'Security.ALREADYLOGGEDIN', 
-					"You don't have access to this page.  If you have another account that can access that page, you can log in below."
-				),
-				'logInAgain' => _t(
-					'Security.LOGGEDOUT',
-					"You have been logged out.  If you would like to log in again, enter your credentials below."
-				),
-			);
-		} else if(!is_array($messageSet)) {
+			if(self::$default_message_set) {
+				$messageSet = self::$default_message_set;
+			} else {
+				$messageSet = array(
+					'default' => _t(
+						'Security.NOTEPAGESECURED', 
+						"That page is secured. Enter your credentials below and we will send you right along."
+					),
+					'alreadyLoggedIn' => _t(
+						'Security.ALREADYLOGGEDIN', 
+						"You don't have access to this page.  If you have another account that can access that page, you can log in below."
+					),
+					'logInAgain' => _t(
+						'Security.LOGGEDOUT',
+						"You have been logged out.  If you would like to log in again, enter your credentials below."
+					)
+				);
+			}
+		}
+		
+		if(!is_array($messageSet)) {
 			$messageSet = array('default' => $messageSet);
 		}
 
