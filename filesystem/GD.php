@@ -6,7 +6,9 @@
  */
 class GD extends Object {
 	protected $gd, $width, $height;
-	protected $quality = 75;
+	protected $quality;
+	
+	protected static $default_quality = 75;
 	
 	function __construct($filename = null) {
 		// If we're working with image resampling, things could take a while.  Bump up the time-limit
@@ -23,12 +25,24 @@ class GD extends Object {
 				case 3: $this->setGD(imagecreatefrompng($filename)); break;
 			}
 		}
+		
+		$this->quality = self::$default_quality;
 		parent::__construct();
 	}
 	protected function setGD($gd) {
 		$this->gd = $gd;
 		$this->width = imagesx($gd);
 		$this->height = imagesy($gd);
+	}
+	
+	/**
+	 * Set the default image quality.
+	 * @param quality int A number from 0 to 100, 100 being the best quality.
+	 */
+	static function set_default_quality($quality) {
+		if(is_numeric($quality) && (int) $quality >= 0 && (int) $quality <= 100) {
+			self::$default_quality = (int) $quality;
+		}
 	}
 	
 	/**
@@ -129,7 +143,7 @@ class GD extends Object {
 	 * Rotates image by given angle.
 	 * 
 	 * @param angle 
-	 
+	 *
 	 * @return GD 
 	*/ 
 	
@@ -152,7 +166,7 @@ class GD extends Object {
      * using built-in function. Used when imagerotate function is not available(i.e. Ubuntu)
      * 
      * @param angle 
-     
+     *
      * @return GD 
     */ 
 	
@@ -196,7 +210,7 @@ class GD extends Object {
 	 * @param left x position of left upper corner of crop rectangle
 	 * @param width rectangle width
 	 * @param height rectangle height
-	 
+	 *
 	 * @return GD  
 	*/ 
 	
@@ -211,7 +225,7 @@ class GD extends Object {
 	
     /**
 	 * Method return width of image.
-	 
+	 *
 	 * @return integer width.
 	*/ 
 	function getWidth() {
@@ -220,7 +234,7 @@ class GD extends Object {
 	
 	/**
 	 * Method return height of image.
-	 
+	 *
 	 * @return integer height 
 	*/ 
 	
