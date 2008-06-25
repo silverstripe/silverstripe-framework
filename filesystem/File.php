@@ -380,8 +380,11 @@ class File extends DataObject {
 	}
 
 	function getFilename() {
-		if($this->getField('Name')) return $this->getField('Filename');
-		else return 'assets/';
+		if($this->getField('Filename')) {
+			return $this->getField('Filename');
+		} else {
+			return 'assets/';
+		}
 	}
 
 	function setFilename($val) {
