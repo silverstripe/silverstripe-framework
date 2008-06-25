@@ -65,10 +65,14 @@ class SSHTMLBBCodeParser_Filter_Extended extends SSHTMLBBCodeParser_Filter
                                                 'htmlclose' => 'q',
                                                 'allowed'   => 'all',
                                                 'attributes'=> array('quote' =>'cite=%2$s%1$s%2$s')),
-                                'code' => array('htmlopen'  => 'pre',
-                                                'htmlclose' => 'pre',
+                                'code' => array('htmlopen'  => 'div class="codesnippet"',
+                                                'htmlclose' => 'div',
                                                 'allowed'   => 'all',
-                                                'attributes'=> array()),
+                                                'attributes' => array()),
+                                'php' => array('htmlopen'  => 'div class="codesnippet"',
+                                                'htmlclose' => 'div',
+                                                'allowed'   => 'all',
+                                                'attributes' => array()),
                                 'h1' => array('htmlopen'  => 'h1',
                                                 'htmlclose' => 'h1',
                                                 'allowed'   => 'all',
@@ -96,7 +100,9 @@ class SSHTMLBBCodeParser_Filter_Extended extends SSHTMLBBCodeParser_Filter
 
     );
 
-
+	function _preparse() {
+        $this->_preparsed = str_replace("\t", "&nbsp;&nbsp;&nbsp;", $this->_text);
+	}
 }
 
 ?>
