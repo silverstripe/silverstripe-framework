@@ -124,30 +124,33 @@ class EditableCheckboxGroupField extends EditableFormField {
 		return $checkboxSet;
 	}
 	
-	function getValueFromData( $data ) {
-		if( empty( $data[$this->Name] ) ) {
+	function getValueFromData($data) {
+		if(empty($data[$this->Name])) {
 			return "";
 		}
 		
 		$entries = $data[$this->Name];
 		
-		if( !is_array( $data[$this->Name] ) ) {
-			$entries = array( $data[$this->Name] );
+		if(!is_array($data[$this->Name])) {
+			$entries = array($data[$this->Name]);
 		}
 			
-		$selectedOptions = DataObject::get( 'EditableCheckboxOption', "ParentID={$this->ID} AND ID IN (".implode(',',$entries).")" );
-		foreach( $selectedOptions as $selected ) {
-			if( !$result )
-				$result = $selected->ID;
-			else
-				$result .= "," . $selected->ID;
+		$selectedOptions = DataObject::get('EditableCheckboxOption', "ParentID={$this->ID} AND ID IN (" . implode(',', $entries) . ")");
+		foreach($selectedOptions as $selected) {
+			if(!$result) {
+				$result = $selected->Title;
+			} else {
+				$result .= "," . $selected->Title;
+			}
 		}
+		
 		return $result;
 	}
 		
-		function TemplateOption() {
-			$option = new EditableCheckboxOption();
-			return $option->EditSegment();
-		}
+	function TemplateOption() {
+		$option = new EditableCheckboxOption();
+		return $option->EditSegment();
 	}
+}
+
 ?>
