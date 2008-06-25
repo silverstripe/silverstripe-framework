@@ -25,6 +25,8 @@ class ComplexRequiredFields extends RequiredFields{
 	 * which is generated at the header of each page 
 	 */
 	function javascript() {
+		$code = '';
+		
 		foreach($this->form->Fields() as $field){
 			//if the field type has some special specific specification for validation of itself
 			$valid = $field->jsValidation();
