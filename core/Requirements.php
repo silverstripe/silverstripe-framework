@@ -182,7 +182,7 @@ class Requirements {
 		if(isset($_GET['debug_profile'])) Profiler::mark("Requirements::includeInHTML");
 		
 		if(strpos($content, '</head') !== false && (Requirements::$javascript || Requirements::$css || Requirements::$customScript || Requirements::$customHeadTags)) {
-			$prefix = "";
+			$prefix = Director::absoluteBaseURL();
 			$requirements = '';
 	
 			foreach(array_diff_key(self::$javascript,self::$blocked) as $file => $dummy) {
