@@ -106,15 +106,20 @@ class CheckboxSetField extends OptionsetField {
 	}
 	
 	/**
-	* @desc 
-	*/
+	 * Save the current value of this CheckboxSetField into a DataObject.
+	 * If the field it is saving to is a has_many or many_many relationship,
+	 * it is saved by setByIDList(), otherwise it creates a comma separated
+	 * list for a standard DB text/varchar field.
+	 *
+	 * @param DataObject $record The record to save into
+	 */
 	function saveInto(DataObject $record) {
 		$fieldname = $this->name ;
 		
 		if($fieldname && $record && ($record->has_many($fieldname) || $record->many_many($fieldname))) {
 			$record->$fieldname()->setByIDList($this->value);
-		} else if($fieldname && $record && $record->hasField($fieldname)) {
-			if($this->value){
+		} elseif($fieldname && $record) {
+			if($this->value) {
 				$this->value = str_replace(",", "{comma}", $this->value);
 				$record->$fieldname = implode(",", $this->value);
 			} else {
