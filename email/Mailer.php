@@ -9,6 +9,8 @@
  * The default Mailer class will use PHP's mail() fun
  * However, it 
  * One Email::set_mailer();
+ * 
+ * @TODO complete the description above
  */
 class Mailer extends Object {
 	/**
