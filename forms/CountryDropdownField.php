@@ -6,8 +6,11 @@
  * @subpackage fields-relational
  */
 class CountryDropdownField extends DropdownField {
-	function __construct($name, $title) {
-		parent::__construct($name, $title, Geoip::getCountryDropDown());
+	function __construct($name, $title, $source = null, $value = "") {
+		if(!is_array($source)) {
+			$source = Geoip::getCountryDropDown();
+		}
+		parent::__construct($name, $title, $source);
 	}
 	
 	function Field() {
