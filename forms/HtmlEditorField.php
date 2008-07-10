@@ -450,6 +450,10 @@ class HtmlEditorField_control extends ViewableData {
 	
 	function Type() { return substr($this->class,strrpos($this->class,'_')+1); }
 	function Command() { return $this->command; }
+
+	function MceRoot() {
+		return MCE_ROOT;
+	}
 }
 
 /**
