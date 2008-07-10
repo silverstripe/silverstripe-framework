@@ -744,7 +744,7 @@ class Member extends DataObject {
 	public function map($filter = "", $sort = "", $blank="") {
 		$ret = new SQLMap(singleton('Member')->extendedSQL($filter, $sort));
 		if($blank) {
-			$blankMember = new Member();
+			$blankMember = Object::create('Member');
 			$blankMember->Surname = $blank;
 			$blankMember->ID = 0;
 
