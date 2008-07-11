@@ -26,6 +26,7 @@
  * 
  * Currently, only Friendly, Fatal, and Emailer handlers are implemented.
  * 
+ * @todo make sure these doc comments are synced with tickets in trac 
  * @todo port header/footer wrapping code to external reporter class
  * @todo add support for user defined config: Debug::die_on_notice(true | false)
  * @todo add appropriate handling for E_NOTICE and E_USER_NOTICE levels
