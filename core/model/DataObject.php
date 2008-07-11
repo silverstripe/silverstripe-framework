@@ -951,7 +951,7 @@ class DataObject extends ViewableData implements DataObjectInterface {
 				
 				$records = $query->execute();
 				$result = $this->buildDataObjectSet($records, "ComponentSet", $query, $componentBaseClass);
-
+				if($result) $result->parseQueryLimit($query); // for pagination support
 				if(!$result) {
 					$result = new ComponentSet();
 				}
