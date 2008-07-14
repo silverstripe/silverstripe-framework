@@ -439,32 +439,33 @@ class SiteTree extends DataObject {
 		return implode(self::$breadcrumbs_delimiter, array_reverse($parts));
 	}
 
-
+	/**
+	 * Make this page a child of another page.
+	 * 
+	 * If the parent page does not exist, resolve it to a valid ID
+	 * before updating this page's reference.
+	 *
+	 * @param SiteTree|int $item Either the parent object, or the parent ID
+	 */
+	public function setParent($item) {
+		if(is_object($item)) {
+			if (!$item->exists()) $item->write();
+			$this->setField("ParentID", $item->ID);
+		} else {
+			$this->setField("ParentID", $item);
+		}
+	}
+ 	
 	/**
 	 * Get the parent of this page.
 	 *
 	 * @return SiteTree Parent of this page.
 	 */
 	public function getParent() {
-		if($this->getField("ParentID"))
-			return DataObject::get_one("SiteTree",
-																 "`SiteTree`.ID = " . $this->getField("ParentID"));
-	}
-
-
-	/**
-	 * Make this page a child of another page.
-	 *
-	 * @param SiteTree|int $item Either the parent object, or the parent ID
-	 */
-	public function setParent($item) {
-		if(is_object($item)) {
-			$this->setField("ParentID", $item->ID);
-		} else {
-			$this->setField("ParentID", $item);
+		if ($this->getField("ParentID")) {
+			return DataObject::get_one("SiteTree", "`SiteTree`.ID = " . $this->getField("ParentID"));
 		}
 	}
-
 
 	/**
 	 * Return a string of the form "parent - page" or

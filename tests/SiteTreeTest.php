@@ -42,12 +42,27 @@ class SiteTreeTest extends SapphireTest {
 		$this->assertEquals($obj->ID, $createdID);
 	}
 	
+	function testParentNodeCachedInMemory() {
+		$parent = new SiteTree();
+     	$parent->Title = 'Section Title';
+     	$child = new SiteTree();
+     	$child->Title = 'Page Title';
+		$child->setParent($parent);
+		
+		$this->assertType("SiteTree", $child->Parent);
+		$this->assertEquals("Section Title", $child->Parent->Title);
+	}
 	
-	/**
-	 * Test that saving changes creates a new version with the correct data in it.
-	 */
+	function testParentModelReturnType() {
+		$parent = new PageNode();
+		$child = new PageNode();
+
+		$child->setParent($parent);
+		$this->assertType('PageNode', $child->Parent);
+	}
 	
-	/**
-	 * Test that publishing an unsaved page will save the changes before publishing
-	 */
 }
+
+class PageNode extends SiteTree { }
+
+?>
