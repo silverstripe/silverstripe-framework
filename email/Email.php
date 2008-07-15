@@ -321,12 +321,19 @@ class Email extends ViewableData {
 		}
 
 		if(self::$cc_all_emails_to) {
-			if(trim($headers['Cc'])) $headers['Cc'] .= ', ';
-			$headers['Cc'] .= self::$cc_all_emails_to;		
+			if(!empty($headers['Cc']) && trim($headers['Cc'])) {
+				$headers['Cc'] .= ', ' . self::$cc_all_emails_to;		
+			} else {
+				$headers['Cc'] = self::$cc_all_emails_to;
+			}
 		}
+		
 		if(self::$bcc_all_emails_to) {
-			if(trim($headers['Bcc'])) $headers['Bcc'] .= ', ';
-			$headers['Bcc'] .= self::$bcc_all_emails_to;		
+			if(!empty($headers['Bcc']) && trim($headers['Bcc'])) {
+				$headers['Bcc'] .= ', ' . self::$bcc_all_emails_to;		
+			} else {
+				$headers['Cc'] = self::$bcc_all_emails_to;
+			}
 		}
        
 	    return self::mailer()->sendHTML($to, $this->from, $subject, $this->body, $this->attachments, $headers, $this->plaintext_body);
