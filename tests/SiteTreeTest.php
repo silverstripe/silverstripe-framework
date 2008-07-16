@@ -54,15 +54,15 @@ class SiteTreeTest extends SapphireTest {
 	}
 	
 	function testParentModelReturnType() {
-		$parent = new PageNode();
-		$child = new PageNode();
+		$parent = new SiteTreeTest_PageNode();
+		$child = new SiteTreeTest_PageNode();
 
 		$child->setParent($parent);
-		$this->assertType('PageNode', $child->Parent);
+		$this->assertType('SiteTreeTest_PageNode', $child->Parent);
 	}
 	
 }
 
-class PageNode extends SiteTree { }
+class SiteTreeTest_PageNode extends SiteTree implements TestOnly { }
 
 ?>
