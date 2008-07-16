@@ -355,6 +355,7 @@ HTML
 		$join = '';
 		$filter = '';
 		$sort = '';
+		$orclause = '';
 		
 		if($this->filter){
 			$i=0;
