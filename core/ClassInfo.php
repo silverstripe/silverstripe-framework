@@ -66,6 +66,8 @@ class ClassInfo {
 		global $_ALL_CLASSES;
 		if (is_object($class)) $class = get_class($class);
 		
+		$dataClasses = array();
+		
 		if(!$_ALL_CLASSES['parents'][$class]) user_error("ClassInfo::dataClassesFor() no parents for $class", E_USER_WARNING);
 		foreach($_ALL_CLASSES['parents'][$class] as $subclass) {
 			if(isset($_ALL_CLASSES['hastable'][$subclass])){
