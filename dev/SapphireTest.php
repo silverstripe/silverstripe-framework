@@ -5,9 +5,7 @@
  */
 
 
-
-/**
- */
+require_once 'TestRunner.php';
 if(hasPhpUnit()) {
 require_once 'PHPUnit/Framework.php';
 }
