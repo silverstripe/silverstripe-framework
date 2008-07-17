@@ -1083,8 +1083,9 @@ class DataObject extends ViewableData implements DataObjectInterface {
 			if(in_array($class, array('ViewableData', 'Object', 'DataObject'))) continue;
 
 			if($component) {
+				$manyMany = singleton($class)->stat('many_many');
 				// Try many_many
-				$candidate = eval("return isset({$class}::\$many_many[\$component]) ? {$class}::\$many_many[\$component] : null;");
+				$candidate = (isset($manyMany[$component])) ? $manyMany[$component] : null;
 				if($candidate) {
 					$parentField = $class . "ID";
 					$childField = ($class == $candidate) ? "ChildID" : $candidate . "ID";
@@ -1092,12 +1093,13 @@ class DataObject extends ViewableData implements DataObjectInterface {
 				}
 
 				// Try belongs_many_many
-				$candidate = eval("return isset({$class}::\$belongs_many_many[\$component]) ? {$class}::\$belongs_many_many[\$component] : null;");
+				$belongsManyMany = singleton($class)->stat('belongs_many_many');
+				$candidate = (isset($belongsManyMany[$component])) ? $belongsManyMany[$component] : null;
 				if($candidate) {
 					$childField = $candidate . "ID";
 
 					// We need to find the inverse component name
-					$otherManyMany = eval("return {$candidate}::\$many_many;");
+					$otherManyMany = singleton($candidate)->stat('many_many');
 					if(!$otherManyMany) {
 						Debug::message("Inverse component of $candidate not found");
 					}
