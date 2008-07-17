@@ -6,13 +6,35 @@
  * @subpackage view
  */
 class Requirements {
+
 	private static $javascript = array();
+
 	private static $css = array();
+
 	private static $customScript = array();
+
 	private static $customCSS = array();
+
 	private static $customHeadTags = "";
+
 	private static $disabled = array();
+
 	private static $blocked = array();
+	
+	/**
+	 * See {@link combine_files()}.
+	 * 
+	 * @var array $files_to_combine
+	 */
+	public static $files_to_combine = array();
+	
+	/**
+	 * Using the JSMin library to minify any
+	 * javascript file passed to {@link combine_files()}.
+	 *
+	 * @var boolean
+	 */
+	public static $combine_js_with_jsmin = true;
 	
 	/**
 	 * Register the given javascript file as required.
@@ -175,16 +197,26 @@ class Requirements {
 	
 	/**
 	 * Update the given HTML content with the appropriate include tags for the registered
-	 * requirements.
+	 * requirements. Needs to receive a valid HTML/XHTML template in the $content parameter,
+	 * including a <head> tag. The requirements will insert before the closing <head> tag automatically.
+	 *
 	 * @todo Calculate $prefix properly
+	 * 
+	 * @param string $templateFilePath Absolute path for the *.ss template file
+	 * @param string $content HTML content that has already been parsed from the $templateFilePath through {@link SSViewer}.
+	 * @return string HTML content thats augumented with the requirements before the closing <head> tag.
 	 */
-	static function includeInHTML($templateFile, $content) {
+	static function includeInHTML($templateFilePath, $content) {
 		if(isset($_GET['debug_profile'])) Profiler::mark("Requirements::includeInHTML");
 		
 		if(strpos($content, '</head') !== false && (Requirements::$javascript || Requirements::$css || Requirements::$customScript || Requirements::$customHeadTags)) {
 			$prefix = Director::absoluteBaseURL();
 			$requirements = '';
-	
+			$jsRequirements = '';
+			
+			// Combine files - updates Requirements::$javascript and Requirements::$css
+			self::process_combined_includes();
+			
 			foreach(array_diff_key(self::$javascript,self::$blocked) as $file => $dummy) {
 				if(substr($file,0,7) == 'http://' || Director::fileExists($file)) {
 					$requirements .= "<script type=\"text/javascript\" src=\"$prefix$file\"></script>\n";
@@ -198,6 +230,9 @@ class Requirements {
 					$requirements .= "\n//]]>\n</script>\n";
 				}
 			}
+			
+			$jsRequirements=$requirements;
+			
 			foreach(array_diff_key(self::$css,self::$blocked) as $file => $params) {					
 				if(Director::fileExists($file)) {
 					$media = (isset($params['media']) && !empty($params['media'])) ? " media=\"{$params['media']}\"" : "";
@@ -218,6 +253,139 @@ class Requirements {
 			return $content;
 		}
 	}
+	
+	/**
+	 * Concatenate several css or javascript files into a single dynamically generated
+	 * file (stored in {@link Director::baseFolder()}). This increases performance
+	 * by fewer HTTP requests.
+	 * 
+	 * The combined file is regenerated
+	 * based on every file modification time. Optionally a rebuild can be triggered
+	 * by appending ?flush=1 to the URL.
+	 * If all files to be combined are javascript, we use the external JSMin library
+	 * to minify the javascript. This can be controlled by {@link $combine_js_with_jsmin}.
+	 * 
+	 * All combined files will have a comment on the start of each concatenated file
+	 * denoting their original position. For easier debugging, we recommend to only
+	 * minify javascript if not in development mode ({@link Director::isDev()}).
+	 * 
+	 * CAUTION: You're responsible for ensuring that the load order for combined files
+	 * is retained - otherwise combining javascript files can lead to functional errors
+	 * in the javascript logic, and combining css can lead to wrong styling inheritance.
+	 * Depending on the javascript logic, you also have to ensure that files are not included
+	 * in more than one combine_files() call.
+	 *
+	 * Example for combined JavaScript:
+	 * <code>
+	 * Requirements::combine_files(
+	 *  'foobar.js',
+	 *  array(
+	 * 		'mysite/javascript/foo.js',
+	 * 		'mysite/javascript/bar.js',
+	 * 	)
+	 * );
+	 * </code>
+	 *
+	 * Example for combined CSS:
+	 * <code>
+	 * Requirements::combine_files(
+	 *  'foobar.css',
+	 * 	array(
+	 * 		'mysite/javascript/foo.css',
+	 * 		'mysite/javascript/bar.css',
+	 * 	)
+	 * );
+	 * </code>
+	 *
+	 * @see http://code.google.com/p/jsmin-php/
+	 *
+	 * @param string $combinedFileName Filename of the combined file (will be stored in {@link Director::baseFolder()} by default)
+	 * @param array $files Array of filenames relative to the webroot
+	 */
+	static function combine_files($combinedFileName, $files){
+		self::$files_to_combine[$combinedFileName] = $files;
+	}
+	
+	/**
+	 * See {@link combine_files()}.
+ 	 */
+	static function process_combined_includes() {
+		// Make a map of files that could be potentially combined
+		$combinerCheck = array();
+		foreach(self::$files_to_combine as $combinedFile => $sourceItems) {
+			foreach($sourceItems as $sourceItem) {
+				if(isset($combinerCheck[$sourceItem]) && $combinerCheck[$sourceItem] != $combinedFile){ 
+					user_error("Requirements::process_combined_includes - file '$sourceItem' appears in two combined files:" .	" '{$combinerCheck[$sourceItem]}' and '$combinedFile'", E_USER_WARNING);
+				}
+				$combinerCheck[$sourceItem] = $combinedFile;
+				
+			}
+		}
+		
+		// Figure out which ones apply to this pageview
+		$combinedFiles = array();
+		$newJSRequirements = array();
+		$newCSSRequirements = array();
+		foreach(Requirements::$javascript as $file => $dummy) {
+			if(isset($combinerCheck[$file])) {
+				$newJSRequirements[$combinerCheck[$file]] = true;
+				$combinedFiles[$combinerCheck[$file]] = true;
+			} else {
+				$newJSRequirements[$file] = true;
+			}
+		}
+       
+		foreach(Requirements::$css as $file => $params) {
+			if(isset($combinerCheck[$file])) {
+				$newCSSRequirements[$combinerCheck[$file]] = true;
+				$combinedFiles[$combinerCheck[$file]] = true;
+			} else {
+				$newCSSRequirements[$file] = $params;
+			}
+		}
+      
+		Requirements::$javascript = $newJSRequirements;
+		Requirements::$css = $newCSSRequirements;
+
+		// Process the combined files
+		if($combinedFiles) {
+			$base = Director::baseFolder() . '/';
+			foreach($combinedFiles as $combinedFile => $dummy) {
+				$fileList = self::$files_to_combine[$combinedFile];
+
+				 // Determine if we need to build the combined include
+				if(file_exists($base . $combinedFile) && !isset($_GET['flush'])) {
+					$srcLastMod = 0;
+					foreach($fileList as $file) {
+						$srcLastMod = max(filemtime($base . $file), $srcLastMod);
+					}
+					$refresh = $srcLastMod > filemtime($base . $combinedFile);
+				} else {
+					$refresh = true;
+				}
+
+				// Rebuild, if necessary
+				if($refresh) {
+					$combinedData = "";
+					foreach($fileList as $file) {
+						$fileContent = file_get_contents($base . $file);
+						if(stripos($file, '.js') && self::$combine_js_with_jsmin) {
+							$fileContent = JSMin::minify($fileContent);
+						}
+						$combinedData .= "/****** FILE: $file *****/\n" . $fileContent . "\n";
+					}
+					if(!file_exists(dirname($base . $combinedFile))) 
+						mkdir(dirname($base . $combinedFile), Filesystem::$folder_create_mask, true);
+						
+					$fh = fopen($base . $combinedFile, 'w');
+					fwrite($fh, $combinedData);
+					fclose($fh);
+				}
+			}
+     	}
+		
+     }
+
 	
 	static function get_custom_scripts() {
 		$requirements = "";
