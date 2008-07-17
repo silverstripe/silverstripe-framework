@@ -95,14 +95,14 @@ JS;
 			$valid = ($field->validate($this) && $valid);
 		}
 		if($this->required) {
-			foreach($this->required as $field) {
-				$fieldObj = $fields->dataFieldByName($field);
-				if($fieldObj && !$data[$field]) {
+			foreach($this->required as $fieldName) { 
+				$formField = $fields->dataFieldByName($fieldName); 
+				if($formField && !$data[$fieldName]) {
 					$this->validationError(
-						$field,
+						$fieldName,
 						sprintf(
 							_t('Form.FIELDISREQUIRED'),
-							strip_tags($fieldObj->Title())
+							strip_tags($formField->Title()) 
 						),
 						"required"
 					);

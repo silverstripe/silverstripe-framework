@@ -32,7 +32,7 @@ class CustomRequiredFields extends RequiredFields{
 		if(is_array($this->required)){
 
 			foreach($this->required as $field) {
-				if(is_array($field) && $field['js']){
+				if(is_array($field) && isset($field['js'])){
 					$code .= $field['js'] . "\n";
 				}else if($fields->dataFieldByName($field)) {
 					$code .= "						require('$field');\n";
@@ -56,15 +56,17 @@ class CustomRequiredFields extends RequiredFields{
 			$valid = ($field->validate($this) && $valid);
 		}
 		if($this->required){
-			foreach($this->required as $key => $field) {
-				if(is_array($field) && $field['php']){
-					eval($field['php']);
-				}else if($fields->dataFieldByName($field)) {
+                        foreach($this->required as $key => $fieldName) {
+                                $formField = $fields->dataFieldByName($fieldName);
+				if(is_array($fieldName) && isset($fieldName['php'])){
+					eval($fieldName['php']);
+				}else if($formField) {
 					// if an error is found, the form is returned.
-					if(!$data[$field] || preg_match('/^\s*$/', $data[$field])) {
+					if(!$data[$fieldName] || preg_match('/^\s*$/', $data[$fieldName])) {
 						$this->validationError(
-							$field,
-							sprintf(_t('Form.FIELDISREQUIRED', "%s is required"), $field),
+							$fieldName,
+                                                        sprintf(_t('Form.FIELDISREQUIRED', "%s is required"),
+                                                                $formField->Title()),
 							"required"
 						);
 						return false;
