@@ -35,7 +35,7 @@ class ArrayData extends ViewableData {
 	}
 	
 	public function getField($f) {
-		if(is_array($this->array[$f])) {
+		if((is_object($this->array[$f]) && !$this->array[$f] instanceof ArrayData) || (is_array($this->array[$f]) && ArrayLib::is_associative($this->array[$f]))) {
 			return new ArrayData($this->array[$f]);
 		} else {
 			return $this->array[$f];
@@ -49,13 +49,11 @@ class ArrayData extends ViewableData {
 	/**
 	 * Converts an object with simple properties to 
 	 * an associative array.
-	 * 
-	 * @todo Allow for recursive creation of DataObjectSets when property value is an object/array
 	 *
 	 * @param obj $obj
 	 * @return array
 	 */
-	static function object_to_array($obj) {
+	protected static function object_to_array($obj) {
 		$arr = array();
 		foreach($obj as $k=>$v) {
 			$arr[$k] = $v;
