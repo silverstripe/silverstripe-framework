@@ -7,26 +7,71 @@
  */
 class Requirements {
 
-	private static $javascript = array();
+	/**
+	 * Paths to all required .js files relative to the webroot.
+	 * 
+	 * @var array $javascript
+	 */
+	protected static $javascript = array();
 
-	private static $css = array();
+	/**
+	 * Paths to all required .css files relative to the webroot.
+	 * 
+	 * @var array $javascript
+	 */
+	protected static $css = array();
 
-	private static $customScript = array();
+	/**
+	 * All custom javascript code that is inserted
+	 * directly at the bottom of the HTML <head> tag.
+	 *
+	 * @var array $customScript
+	 */
+	protected static $customScript = array();
 
-	private static $customCSS = array();
+	/**
+	 * All custom CSS rules which are inserted
+	 * directly at the bottom of the HTML <head> tag. 
+	 *
+	 * @var array $customCSS
+	 */
+	protected static $customCSS = array();
 
-	private static $customHeadTags = "";
+	/**
+	 * All custom HTML markup which is added before
+	 * the closing <head> tag, e.g. additional metatags.
+	 * This is preferred to entering tags directly into 
+	 */
+	protected static $customHeadTags = array();
 
-	private static $disabled = array();
+	/**
+	 * Remembers the filepaths of all cleared Requirements
+	 * through {@link clear()}.
+	 * 
+	 * @usedby {@link restore()}
+	 *
+	 * @var array $disabled
+	 */
+	protected static $disabled = array();
 
-	private static $blocked = array();
+	/**
+	 * The filepaths (relative to webroot) or
+	 * uniquenessIDs of any included requirements
+	 * which should be blocked when executing {@link inlcudeInHTML()}.
+	 * This is useful to e.g. prevent core classes to modifying
+	 * Requirements without subclassing the entire functionality.
+	 * Use {@link unblock()} or {@link unblock_all()} to revert changes.
+	 * 
+	 * @var array $blocked
+	 */
+	protected static $blocked = array();
 	
 	/**
 	 * See {@link combine_files()}.
 	 * 
-	 * @var array $files_to_combine
+	 * @var array $combine_files
 	 */
-	public static $files_to_combine = array();
+	public static $combine_files = array();
 	
 	/**
 	 * Using the JSMin library to minify any
@@ -72,10 +117,17 @@ class Requirements {
 	}
 	
 	/**
-	 * Add the following custom code to the <head> section of the page
+	 * Add the following custom code to the <head> section of the page.
+	 *
+	 * @param string $html
+	 * @param string $uniquenessID
 	 */
-	static function insertHeadTags($tags) {
-		Requirements::$customHeadTags .= $tags . "\n";
+	static function insertHeadTags($html, $uniquenessID = null) {
+		if($uniquenessID)
+			Requirements::$customHeadTags[$uniquenessID] = $html;
+		else {
+			Requirements::$customHeadTags[] = $html;		
+		}
 	}
 	 
 	
@@ -154,6 +206,7 @@ class Requirements {
 			Requirements::$customScript = array();
 			Requirements::$customCSS = array();
 		}
+		
 	}
 	
 	/**
@@ -175,7 +228,7 @@ class Requirements {
 	 * @param string $fileOrID
 	 */
 	static function unblock($fileOrID) {
-		unset(self::$blocked[$fileOrID]);
+		if(isset(self::$blocked[$fileOrID])) unset(self::$blocked[$fileOrID]);
 	}
 
 	/**
@@ -209,49 +262,52 @@ class Requirements {
 	static function includeInHTML($templateFilePath, $content) {
 		if(isset($_GET['debug_profile'])) Profiler::mark("Requirements::includeInHTML");
 		
-		if(strpos($content, '</head') !== false && (Requirements::$javascript || Requirements::$css || Requirements::$customScript || Requirements::$customHeadTags)) {
-			$prefix = Director::absoluteBaseURL();
-			$requirements = '';
-			$jsRequirements = '';
-			
-			// Combine files - updates Requirements::$javascript and Requirements::$css
-			self::process_combined_includes();
-			
-			foreach(array_diff_key(self::$javascript,self::$blocked) as $file => $dummy) {
-				if(substr($file,0,7) == 'http://' || Director::fileExists($file)) {
-					$requirements .= "<script type=\"text/javascript\" src=\"$prefix$file\"></script>\n";
-				}
-			}
-			
-			if(self::$customScript) {
-				foreach(array_diff_key(self::$customScript,self::$blocked) as $script) {
-					$requirements .= "<script type=\"text/javascript\">\n//<![CDATA[\n";
-					$requirements .= "$script\n";
-					$requirements .= "\n//]]>\n</script>\n";
-				}
-			}
-			
-			$jsRequirements=$requirements;
-			
-			foreach(array_diff_key(self::$css,self::$blocked) as $file => $params) {					
-				if(Director::fileExists($file)) {
-					$media = (isset($params['media']) && !empty($params['media'])) ? " media=\"{$params['media']}\"" : "";
-					$requirements .= "<link rel=\"stylesheet\" type=\"text/css\"{$media} href=\"$prefix$file\" />\n";
-				}
-			}
-			foreach(array_diff_key(self::$customCSS,self::$blocked) as $css) {
-				$requirements .= "<style type=\"text/css\">\n$css\n</style>\n";
-			}
-			
-			$requirements .= self::$customHeadTags;
-	
-			if(isset($_GET['debug_profile'])) Profiler::unmark("Requirements::includeInHTML");
-			return eregi_replace("(</head[^>]*>)", $requirements . "\\1", $content);
-			
-		} else {
-			if(isset($_GET['debug_profile'])) Profiler::unmark("Requirements::includeInHTML");
-			return $content;
+		if(strpos($content, '</head') === false) {
+			user_error('Requirements::includeInHTML(): No closing <head> tag found, can\'t insert Requirements', E_USER_NOTICE);
+			return false;
 		}
+		
+		$prefix = Director::absoluteBaseURL();
+		$requirements = '';
+		$jsRequirements = '';
+		
+		// Combine files - updates Requirements::$javascript and Requirements::$css
+		// to remove duplicate entries
+		self::process_combined_files();
+		
+		foreach(array_diff_key(self::$javascript,self::$blocked) as $file => $dummy) {
+			if(substr($file,0,7) == 'http://' || Director::fileExists($file)) {
+				$requirements .= "<script type=\"text/javascript\" src=\"$prefix$file\"></script>\n";
+			}
+		}
+		
+		if(self::$customScript) {
+			foreach(array_diff_key(self::$customScript,self::$blocked) as $script) {
+				$requirements .= "<script type=\"text/javascript\">\n//<![CDATA[\n";
+				$requirements .= "$script\n";
+				$requirements .= "\n//]]>\n</script>\n";
+			}
+		}
+		
+		$jsRequirements = $requirements;
+		
+		foreach(array_diff_key(self::$css,self::$blocked) as $file => $params) {					
+			if(Director::fileExists($file)) {
+				$media = (isset($params['media']) && !empty($params['media'])) ? " media=\"{$params['media']}\"" : "";
+				$requirements .= "<link rel=\"stylesheet\" type=\"text/css\"{$media} href=\"$prefix$file\" />\n";
+			}
+		}
+		foreach(array_diff_key(self::$customCSS,self::$blocked) as $css) {
+			$requirements .= "<style type=\"text/css\">\n$css\n</style>\n";
+		}
+		
+		foreach(array_diff_key(self::$customHeadTags,self::$blocked) as $customHeadTag) {
+			$requirements .= "$customHeadTag\n";
+		}
+
+		if(isset($_GET['debug_profile'])) Profiler::unmark("Requirements::includeInHTML");
+		
+		return eregi_replace("(</head[^>]*>)", $requirements . "\\1", $content);
 	}
 	
 	/**
@@ -274,6 +330,8 @@ class Requirements {
 	 * in the javascript logic, and combining css can lead to wrong styling inheritance.
 	 * Depending on the javascript logic, you also have to ensure that files are not included
 	 * in more than one combine_files() call.
+	 * Best practice is to include every javascript file in exactly *one* combine_files()
+	 * directive to avoid the issues mentioned above - this is enforced by this function.
 	 *
 	 * Example for combined JavaScript:
 	 * <code>
@@ -298,24 +356,58 @@ class Requirements {
 	 * </code>
 	 *
 	 * @see http://code.google.com/p/jsmin-php/
-	 *
+	 * 
+	 * @todo Should we enforce unique inclusion of files, or leave it to the developer? Can auto-detection cause breaks?
+	 * 
 	 * @param string $combinedFileName Filename of the combined file (will be stored in {@link Director::baseFolder()} by default)
 	 * @param array $files Array of filenames relative to the webroot
 	 */
-	static function combine_files($combinedFileName, $files){
-		self::$files_to_combine[$combinedFileName] = $files;
+	static function combine_files($combinedFileName, $files) {
+		// duplicate check
+		foreach(self::$combine_files as $_combinedFileName => $_files) {
+			$duplicates = array_intersect($_files, $files);
+			if($duplicates) {
+				user_error("Requirements::combine_files(): Already included files " . implode(',', $duplicates) . " in combined file '{$_combinedFileName}'", E_USER_NOTICE);
+				return false;
+			}
+		}
+		
+		self::$combine_files[$combinedFileName] = $files;
+	}
+	
+	/**
+	 * @return array
+	 */
+	static function get_combine_files() {
+		return self::$combine_files;
+	}
+	
+	/**
+	 * Deletes all dynamically generated combined files
+	 * from the filesystem. 
+	 * 
+	 * @param string $combinedFileName If left blank, all combined files are deleted.
+	 */
+	static function clear_combined_files($combinedFileName = null) {
+		$combinedFiles = ($combinedFileName) ? array($combinedFileName => null) : self::$combine_files;
+		foreach($combinedFiles as $combinedFile => $sourceItems) {
+			$filePath = Director::baseFolder() . '/' . $combinedFile;
+			if(file_exists($filePath)) {
+				unlink($filePath);
+			}
+		}
 	}
 	
 	/**
 	 * See {@link combine_files()}.
  	 */
-	static function process_combined_includes() {
+	static function process_combined_files() {
 		// Make a map of files that could be potentially combined
 		$combinerCheck = array();
-		foreach(self::$files_to_combine as $combinedFile => $sourceItems) {
+		foreach(self::$combine_files as $combinedFile => $sourceItems) {
 			foreach($sourceItems as $sourceItem) {
 				if(isset($combinerCheck[$sourceItem]) && $combinerCheck[$sourceItem] != $combinedFile){ 
-					user_error("Requirements::process_combined_includes - file '$sourceItem' appears in two combined files:" .	" '{$combinerCheck[$sourceItem]}' and '$combinedFile'", E_USER_WARNING);
+					user_error("Requirements::process_combined_files - file '$sourceItem' appears in two combined files:" .	" '{$combinerCheck[$sourceItem]}' and '$combinedFile'", E_USER_WARNING);
 				}
 				$combinerCheck[$sourceItem] = $combinedFile;
 				
@@ -344,46 +436,49 @@ class Requirements {
 			}
 		}
       
+		// @todo Alters the original information, which means you can't call this
+		// method repeatedly - it will behave different on the second call!
 		Requirements::$javascript = $newJSRequirements;
 		Requirements::$css = $newCSSRequirements;
 
 		// Process the combined files
-		if($combinedFiles) {
-			$base = Director::baseFolder() . '/';
-			foreach($combinedFiles as $combinedFile => $dummy) {
-				$fileList = self::$files_to_combine[$combinedFile];
+		$base = Director::baseFolder() . '/';
+		foreach(array_diff_key($combinedFiles,self::$blocked) as $combinedFile => $dummy) {
+			$fileList = self::$combine_files[$combinedFile];
 
-				 // Determine if we need to build the combined include
-				if(file_exists($base . $combinedFile) && !isset($_GET['flush'])) {
-					$srcLastMod = 0;
-					foreach($fileList as $file) {
-						$srcLastMod = max(filemtime($base . $file), $srcLastMod);
-					}
-					$refresh = $srcLastMod > filemtime($base . $combinedFile);
-				} else {
-					$refresh = true;
+			 // Determine if we need to build the combined include
+			if(file_exists($base . $combinedFile) && !isset($_GET['flush'])) {
+				// file exists, check modification date of every contained file
+				$srcLastMod = 0;
+				foreach($fileList as $file) {
+					$srcLastMod = max(filemtime($base . $file), $srcLastMod);
 				}
-
-				// Rebuild, if necessary
-				if($refresh) {
-					$combinedData = "";
-					foreach($fileList as $file) {
-						$fileContent = file_get_contents($base . $file);
-						if(stripos($file, '.js') && self::$combine_js_with_jsmin) {
-							$fileContent = JSMin::minify($fileContent);
-						}
-						$combinedData .= "/****** FILE: $file *****/\n" . $fileContent . "\n";
-					}
-					if(!file_exists(dirname($base . $combinedFile))) 
-						mkdir(dirname($base . $combinedFile), Filesystem::$folder_create_mask, true);
-						
-					$fh = fopen($base . $combinedFile, 'w');
-					fwrite($fh, $combinedData);
-					fclose($fh);
-				}
+				$refresh = $srcLastMod > filemtime($base . $combinedFile);
+			} else {
+				// file doesn't exist, or refresh was explicitly required
+				$refresh = true;
 			}
-     	}
-		
+
+			if(!$refresh) continue;
+
+			$combinedData = "";
+			foreach(array_diff($fileList,self::$blocked) as $file) {
+				$fileContent = file_get_contents($base . $file);
+				// if we have a javascript file and jsmin is enabled, minify the content
+				if(stripos($file, '.js') && self::$combine_js_with_jsmin) {
+					$fileContent = JSMin::minify($fileContent);
+				}
+				// write a header comment for each file for easier identification and debugging
+				$combinedData .= "/****** FILE: $file *****/\n" . $fileContent . "\n";
+			}
+			if(!file_exists(dirname($base . $combinedFile))) {
+				Filesytem::makeFolder(dirname($base . $combinedFile));
+			}
+			$fh = fopen($base . $combinedFile, 'w');
+			fwrite($fh, $combinedData);
+			fclose($fh);
+			unset($fh);
+		}
      }
 
 	
@@ -405,6 +500,7 @@ class Requirements {
 		Debug::show(Requirements::$customCSS);
 		Debug::show(Requirements::$customScript);
 		Debug::show(Requirements::$customHeadTags);
+		Debug::show(Requirements::$combine_files);
 	}
 }
 
