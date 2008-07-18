@@ -110,7 +110,8 @@ class Controller extends ViewableData {
 		if(!$this->action) $this->action = 'index';
 		
 		// Check security on the controller
-		if(!$this->checkAccessAction($this->action)) {
+		// run & init are manually disabled, because they create infinite loops and other dodgy situations
+		if(!$this->checkAccessAction($this->action) || in_array(strtolower($this->action), array('run', 'init'))) {
 			user_error("Disallowed action: '$this->action' on controller '$this->class'", E_USER_ERROR);
 		}
 
