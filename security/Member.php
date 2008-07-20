@@ -505,7 +505,9 @@ class Member extends DataObject {
 			}
 		}
 		
-		if(Director::isLive() &&
+		// We don't send emails out on dev/tests sites to prevent accidentally spamming users.
+		// However, if TestMailer is in use this isn't a risk.
+		if((Director::isLive() || Email::mailer() instanceof TestMailer) &&
 			isset($this->changed['Password']) && $this->changed['Password'] && $this->record['Password'] && 
 			Member::$notify_password_change) $this->sendInfo('changePassword');
 		
