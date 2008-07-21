@@ -77,7 +77,7 @@ class SecurityTest extends SapphireTest {
 
 		// (We fake this by re-setting LockedOutUntil)
 		$member = DataObject::get_by_id("Member", $this->idFromFixture('Member', 'test'));
-		$member->LockedOutUntil = date('Y-m-d h:i:s', time() - 30);
+		$member->LockedOutUntil = date('Y-m-d H:i:s', time() - 30);
 		$member->write();
 		
 		$this->doTestLoginForm('sam@silverstripe.com' , '1nitialPassword', $session);
