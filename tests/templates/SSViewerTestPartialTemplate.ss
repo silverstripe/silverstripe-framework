@@ -1,0 +1,1 @@
+Test partial template: $Var

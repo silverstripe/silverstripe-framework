@@ -263,8 +263,8 @@ class Requirements {
 		if(isset($_GET['debug_profile'])) Profiler::mark("Requirements::includeInHTML");
 		
 		if(strpos($content, '</head') === false) {
-			user_error('Requirements::includeInHTML(): No closing <head> tag found, can\'t insert Requirements', E_USER_NOTICE);
-			return false;
+			if(isset($_GET['debug_profile'])) Profiler::unmark("Requirements::includeInHTML"); 
+			return $content;
 		}
 		
 		$prefix = Director::absoluteBaseURL();
