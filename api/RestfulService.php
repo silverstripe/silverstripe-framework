@@ -58,24 +58,27 @@ class RestfulService extends ViewableData {
 	 * Connects to the RESTful service and gets its response.
 	 * @deprecated Use {@link request()} instead.
  	 */
-	function connect($subURL){
-		$url = $this->constructURL() . $subURL; //url for the request
-		
-		//check for file exists in cache		
-		//set the cache directory
-		$cachedir=TEMP_FOLDER; //default silverstrip-cache
+	function connect($subURL = ""){
+ 	
+		// url for the request
+		$url = $this->constructURL() . $subURL; 
 			
+		// set the cache directory
+		$cachedir=TEMP_FOLDER; // default silverstrip-cache
 		$cache_file = md5($url); //encoded name of cache file
 		$cache_path = $cachedir."/$cache_file";
-				
-		if( !isset($_GET['flush']) && ( @file_exists("$cache_path") && ((@filemtime($cache_path) + $this->cache_expire) > ( time() )))){
+		
+		// check for file exists in cache		
+		if( !isset($_GET['flush']) && ( @file_exists("$cache_path") && ((@filemtime($cache_path) + $this->cache_expire) > ( time() )))) {
 			$this->rawXML = file_get_contents($cache_path);
+			return $this->rawXML;
+		} else {
+			// not available in cache fetch from server
 			
-		} else {//not available in cache fetch from server
-			
+			$statusOK = false;
 			$ch = curl_init();
 			$timeout = 5;
-			$useragent = "SilverStripe/2.2";
+			$useragent = 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.7.5) Gecko/20041107 Firefox/1.0';
 			curl_setopt($ch, CURLOPT_URL, $url);
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 			curl_setopt($ch, CURLOPT_USERAGENT, $useragent);
@@ -86,61 +89,56 @@ class RestfulService extends ViewableData {
 			if($this->authUsername) curl_setopt($ch, CURLOPT_USERPWD, "$this->authUsername:$this->authPassword");
 		
 			$this->rawXML = curl_exec($ch);
+			
 			if($this->rawXML === false) {
-				$curlError = curl_error($ch);
-				// Problem verifying the server SSL certificate; just ignore it as it's not mandatory
-				if(strpos($curlError,'14090086') !== false) {
-					curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-					$this->rawXML = curl_exec($ch);
-					$curlError = curl_error($ch);
-				}
-				
-				if($this->rawXML === false) {
-					user_error("Curl Error:" . $curlError, E_USER_WARNING);
-					return;
-				}
+				user_error("Curl Error:" . curl_error($ch), E_USER_WARNING);
+				return NULL;
 			}
 			
 			$statusCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 			curl_close($ch);
 			
 			// Success
-			if($statusCode >= 200 && $statusCode < 300) return $this->rawXML;
+			if($statusCode >= 200 && $statusCode < 300) {
+				// fill output with xml and continue
+				$statusOK = true;
+			} else {
+				// Failure: throw error and return NULL
+				switch($statusCode) {
+					case 401: 
+						user_error("Bad username/password given to RestfulService, url $url", E_USER_WARNING);
+						return NULL;
 
-			// Failure
-			switch($statusCode) {
-				case 401: 
-					user_error("Bad username/password given to RestfulService, url $url", E_USER_WARNING);
-					break;
-
-				default: 
-					user_error("Error code $statusCode from url $url", E_USER_WARNING);
-					break;
+					default: 
+						user_error("Error code $statusCode from url $url", E_USER_WARNING);
+						return NULL;
+				}
 			}
 			
-		}
+			// Try using file_get_contents if cURL is not installed in your system.
+			// $this->rawXML = file_get_contents($url);
 		
-		//Try using file_get_contents if cURL is not installed in your system.
-		//$this->rawXML = file_get_contents($url);
-		
-		//results returned - from cache / live
-		if($this->rawXML != ""){
-			//save the response in cache
-			$fp = @fopen($cache_path,"w+");
-			@fwrite($fp,$this->rawXML);
-			@fclose($fp);
+			// results returned - from cache / live
+			if($statusOK && $this->rawXML != "") {
+				//save the response in cache
+				$fp = @fopen($cache_path,"w+");
+				@fwrite($fp,$this->rawXML);
+				@fclose($fp);
 					
-			if($this->checkErrors == true) {
-				return $this->errorCatch($this->rawXML);
+				if($this->checkErrors == true) {
+					return $this->errorCatch($this->rawXML);
+				} else {
+					return $this->rawXML;
+				}
+				
+			// I think this following else can actually be removed :P
+			} else {
+				user_error("Invalid Response (maybe your calling to wrong URL or server unavailable)", E_USER_WARNING);
+				return NULL;
 			}
-			else {
-				return $this->rawXML;
-			}
-		} else {
-			user_error("Invalid Response (maybe your calling to wrong URL or server unavailable)", E_USER_ERROR);
-		}
+		}	
 	}
-	
+
 	/**
 	 * Makes a request to the RESTful server, and return a {@link RestfulService_Response} object for parsing of the result.
 	 * @todo Better POST, PUT, DELETE, and HEAD support
