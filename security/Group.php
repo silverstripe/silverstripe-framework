@@ -77,7 +77,7 @@ class Group extends DataObject {
 
 				new Tab(_t('Security.IPADDRESSES', 'IP Addresses'),
 					new LiteralField("", _t('SecurityAdmin.IPADDRESSESHELP',"<p>You can restrict this group to a particular 
-						IP address range.  Enter 1 range per line.  Ranges can be in any of the following 4 forms: <br />
+						IP address range (one range per line). <br />Ranges can be in any of the following forms: <br />
 						203.96.152.12<br />
 						203.96.152/24<br />
 						203.96/16<br />
