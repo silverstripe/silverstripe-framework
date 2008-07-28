@@ -1,4 +1,5 @@
-<div id="$id" class="$Classes">
+<div id="$id" class="$Classes field">
+  <div class="middleColumn">
 	<% include TableListField_PageControls %>
 	<table class="data">
 		<thead>
@@ -89,5 +90,6 @@
 		<% if Can(export) %>
 			<a href="$ExportLink" target="_blank"><% _t('CSVEXPORT', 'Export to CSV' ) %></a>
 		<% end_if %>
+	</div>
 	</div>
 </div>

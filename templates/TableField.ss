@@ -1,4 +1,5 @@
-<div id="$id" class="$Classes">
+<div id="$id" class="$Classes field">
+  <div class="middleColumn">
 	<% include TableListField_PageControls %>
 	<% if Message %>
 	<p id="{$id}_error" class="message $MessageType">$Message</p>
@@ -64,4 +65,5 @@
 	<% if Message %>
 	<span class="message $MessageType">$Message</span>
 	<% end_if %>
+	</div>
 </div>

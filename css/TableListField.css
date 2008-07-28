@@ -83,6 +83,10 @@ table.CMSList tfoot td {
 	padding:3px;
 }
 
+.TableListField table.data tfoot .actions {
+   float: none;
+}
+
 .TableListField table.data tfoot tr.addtogrouprow input {
 	width: 94%;
 }
@@ -92,7 +96,8 @@ table.CMSList tfoot td {
 	width: 98%;
 }
 
-table.data tbody td input {
+table.data tbody td input,
+table.data tbody td textarea {
 	border:0 !important;
 }
 
@@ -138,6 +143,10 @@ table.CMSList tbody td.current td {
 	background: none;
 	padding: 0;
 	margin-bottom: 0;
+}
+
+.right form .TableListField td {
+   background: #fff;
 }
 
 .TableListField div.utility {
