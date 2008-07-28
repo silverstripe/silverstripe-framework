@@ -633,6 +633,7 @@ class TableField_Item extends TableListField_Item {
 		if($this->item && $this->data) {
 			$form = $this->data;
 			$this->fieldset = $form->Fields();
+			$this->fieldset->removeByName('SecurityID');
 			if($this->fieldset) {
 				$i=0;
 				foreach($this->fieldset as $field) {
