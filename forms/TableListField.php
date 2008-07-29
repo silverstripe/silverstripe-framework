@@ -407,7 +407,7 @@ JS
 	 * Configure this table to open a popup window
 	 */
 	function setClick_PopupLoad($urlBase) {
-		$this->clickAction = "var w = window.open(baseHref() + '$urlBase' + this.id.replace('record-',''), 'popup'); w.focus();";
+		$this->clickAction = "var w = window.open(baseHref() + '$urlBase' + this.id.replace(/.*-(\d*)$/,'$1'), 'popup'); w.focus();";
 	}
 	
 	function performReadonlyTransformation() {
