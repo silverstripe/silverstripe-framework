@@ -340,79 +340,79 @@ class TableField extends TableListField {
 	 * Called on save, it creates the appropriate objects and writes them
 	 * to the database.
 	 */
-	function saveData($dataObjects,$ExistingValues = true){
-	    $savedObj = array();
-	    $fieldset = $this->FieldSetForRow();
+	function saveData($dataObjects,$ExistingValues = true) {
+      $savedObj = array();
+      $fieldset = $this->FieldSetForRow();
 	    
-	    // add hiddenfields
-	    if($this->extraData) {
-				foreach($this->extraData as $fieldName => $fieldValue) {
-					$fieldset->push(new HiddenField($fieldName));
-				}
+      // add hiddenfields
+      if($this->extraData) {
+         foreach($this->extraData as $fieldName => $fieldValue) {
+				$fieldset->push(new HiddenField($fieldName));
 			}
+       }
 		
-	    $form = new Form(null, null, $fieldset, new FieldSet());
+       $form = new Form(null, null, $fieldset, new FieldSet());
 
-			if($dataObjects) {
-				foreach ($dataObjects as $objectid => $fieldValues) {
-	        // we have to "sort" new data first, and process it in a seperate saveData-call (see setValue())
-	        if($objectid === "new") {
-	        	continue;
-	        }
+       if($dataObjects) {
+			foreach ($dataObjects as $objectid => $fieldValues) {
+            // we have to "sort" new data first, and process it in a seperate saveData-call (see setValue())
+           if($objectid === "new") continue;
 
 	        // extra data was creating fields, but
 	        if($this->extraData) {
-	        	$fieldValues = array_merge( $this->extraData, $fieldValues );
+              $fieldValues = array_merge( $this->extraData, $fieldValues );
 	        }
-	        
+        
 	        $hasData = false;
 	        $obj = new $this->sourceClass();
-					
-					if($ExistingValues) {
-						$obj->ID = $objectid;
-					}
-					
-					// Legacy: Use the filter as a predefined relationship-ID 
-					if(!empty($this->filterField) && intval($this->sourceFilter) > 0) {
-						$filterField = $this->filterField;
-						$obj->$filterField = $this->sourceFilter;
-					}
-					
-					// Determine if there is changed data for saving
-					$dataFields = array();
-					
-					foreach($fieldValues as $type => $value) {
-						if(is_array($this->extraData)){ // if the field is an actual datafield (not a preset hiddenfield)
-							if(!in_array($type, array_keys($this->extraData))){
-								$dataFields[$type] = $value;
-							}
-						}else{  // all fields are real 
-							$dataFields[$type] = $value;
-						}					
-					}
 				
-					$dataValues = ArrayLib::array_values_recursive($dataFields);
-				
-					foreach($dataValues as $value) {
-						if(!empty($value)) {
-							$hasData = true;
-						}
-					}
+           if($ExistingValues) {
+					$obj->ID = $objectid;
+           }
 
-					// save
-					if($hasData) {
-						$form->loadDataFrom($fieldValues, true);
-						$form->saveInto($obj);
-										
-						$objectid = $obj->write();
-						
-						$savedObj[$objectid] = "Updated";
-					}
-	
+				// Legacy: Use the filter as a predefined relationship-ID 
+				if(!empty($this->filterField) && intval($this->sourceFilter) > 0) {
+					$filterField = $this->filterField;
+					$obj->$filterField = $this->sourceFilter;
 				}
-				return $savedObj;
+			
+				// Determine if there is changed data for saving
+				$dataFields = array();
+			
+				foreach($fieldValues as $type => $value) {
+					if(is_array($this->extraData)){ // if the field is an actual datafield (not a preset hiddenfield)
+						if(!in_array($type, array_keys($this->extraData))) {
+							$dataFields[$type] = $value;
+						}
+					} else {  // all fields are real 
+						$dataFields[$type] = $value;
+					}					
+				}
+		
+				$dataValues = ArrayLib::array_values_recursive($dataFields);
+		
+				foreach($dataValues as $value) {
+					if(!empty($value)) {
+						$hasData = true;
+					}
+				}
+
+				// save
+				if($hasData) {
+					$form->loadDataFrom($fieldValues, true);
+					$form->saveInto($obj);
+								
+					$objectid = $obj->write();
+				
+					$savedObj[$objectid] = "Updated";
+				}
+
 			}
-	}
+		   return $savedObj;
+	   } else {
+	      return false;
+	   }
+   }
 	
 	/** 
 	 * organises the data in the appropriate manner for saving
@@ -664,7 +664,7 @@ class TableField_Item extends TableListField_Item {
 					$field->Name = $combinedFieldName;
 					$field->setValue($field->dataValue());
 					$field->addExtraClass('col'.$i);
-					$field->setForm($this->Parent()->getForm());
+					$field->setForm($this->data); 
 
 					// transformation
 					if(isset($this->parent->transformationConditions[$origFieldName])) {
