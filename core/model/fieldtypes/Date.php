@@ -33,6 +33,10 @@ class Date extends DBField {
 		if($this->value) return date('d/m/Y', strtotime($this->value));
 	}
 	
+	function NiceUS() {
+		if($this->value) return date('m/d/Y', strtotime($this->value));
+	}
+	
 	/** 
 	 * Returns the year from the given date
 	 */
