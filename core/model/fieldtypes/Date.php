@@ -235,6 +235,10 @@ class Date extends DBField {
 			return date("Y-m-d", mktime(0,0,0,$fmonth,$fday,$fyear-1));
 		}
 	}
+	
+	public function scaffoldFormField($title = null) {
+		return new DateField($this->name, $title);
+	}
 }
 
 ?>

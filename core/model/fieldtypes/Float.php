@@ -12,6 +12,10 @@ class Float extends DBField {
 	
 	function Nice() {
 		return number_format($this->value, 2);
-	}	
+	}
+	
+	public function scaffoldFormField($title = null) {
+		return new NumericField($this->name, $title);
+	}
 }
 ?>

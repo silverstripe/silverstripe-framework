@@ -3,6 +3,7 @@
  * Single field in the database.
  * Every field from the database is represented as a sub-class of DBField.  In addition to supporting
  * the creation of the field in the database,
+ * 
  * @package sapphire
  * @subpackage model
  */
@@ -100,6 +101,38 @@ abstract class DBField extends ViewableData {
 		} else {
 			user_error("DBField::saveInto() Called on a nameless '" . get_class($this) . "' object", E_USER_ERROR);
 		}
+	}
+	
+	/**
+	 * Returns a FormField instance used as a default
+	 * for form scaffolding.
+	 *
+	 * @usedby {@link SearchContext}
+	 * @usedby {@link ModelAdmin}
+	 * @usedby {@link DataObject::scaffoldFormFields()}
+	 * 
+	 * @param string $title Optional. Localized title of the generated instance
+	 * @return FormField
+	 */
+	public function scaffoldFormField($title = null) {
+		$field = new TextField($this->name, $title);
+		
+		return $field;
+	}
+	
+	/**
+	 * Returns a FormField instance used as a default
+	 * for searchform scaffolding.
+	 *
+	 * @usedby {@link SearchContext}
+	 * @usedby {@link ModelAdmin}
+	 * @usedby {@link DataObject::scaffoldFormFields()}
+	 * 
+	 * @param string $title Optional. Localized title of the generated instance
+	 * @return FormField
+	 */
+	public function scaffoldSearchField($title = null) {
+		return $this->scaffoldFormField($title);
 	}
 	
 	/**

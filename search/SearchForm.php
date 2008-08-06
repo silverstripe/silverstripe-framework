@@ -1,6 +1,9 @@
 <?php
 /**
- * Standard basic search form
+ * Standard basic search form which conducts a fulltext search on all {@link SiteTree}
+ * objects. 
+ * 
+ * @see Use {@link ModelController} and {@link SearchContext} for a more generic search implementation based around {@link DataObject}
  * @package sapphire
  * @subpackage search
  */

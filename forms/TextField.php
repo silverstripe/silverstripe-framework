@@ -34,5 +34,7 @@ class TextField extends FormField {
 		if(!$this->value) $this->value = $this->Title();
 		return $this->Field();
 	}
+	
+	
 }
 ?>

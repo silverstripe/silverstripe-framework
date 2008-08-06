@@ -7,7 +7,14 @@
  * @subpackage model
  */
 class HTMLVarchar extends Varchar {
-
+	
+	public function scaffoldFormField($title = null) {
+		return new HTMLOneLineField($this->name, $title);
+	}
+	
+	public function scaffoldSearchField($title = null) {
+		return new TextField($this->name, $title);
+	}
 
 }
 

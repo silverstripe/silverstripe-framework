@@ -35,6 +35,10 @@ class Boolean extends DBField {
 			user_error("DBField::saveInto() Called on a nameless '$this->class' object", E_USER_ERROR);
 		}
 	}
+	
+	public function scaffoldFormField($title = null) {
+		return new CheckboxField($this->name, $title);
+	}
 }
 
 ?>

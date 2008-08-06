@@ -35,7 +35,11 @@ class Decimal extends DBField {
 		} else {
 			user_error("DBField::saveInto() Called on a nameless '" . get_class($this) . "' object", E_USER_ERROR);
 		}
-	}	
+	}
+	
+	public function scaffoldFormField($title = null) {
+		return new NumericField($this->name, $title);
+	}
 }
 
 ?>

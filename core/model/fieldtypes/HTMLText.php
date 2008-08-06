@@ -64,6 +64,14 @@ class HTMLText extends Text {
 		
 		return $summary;
 	}
+	
+	public function scaffoldFormField($title = null) {
+		return new HTMLEditorField($this->name, $title);
+	}
+	
+	public function scaffoldSearchField($title = null) {
+		return new TextField($this->name, $title);
+	}
 
 }
 

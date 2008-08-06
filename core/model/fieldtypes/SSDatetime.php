@@ -34,9 +34,8 @@ class SSDatetime extends Date {
 		return date('Y-m-d%20H:i:s', strtotime($this->value));
 	}
 	
-	function __construct( $name ) {
-		// Debug::show( 'Created SSDatetime: ' . $name );
-		parent::__construct( $name );
+	public function scaffoldFormField($title = null) {
+		return new PopupDateTimeField($this->name, $title);
 	}
 }
 

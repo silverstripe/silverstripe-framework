@@ -1124,6 +1124,80 @@ class DataObject extends ViewableData implements DataObjectInterface {
 		}
 		return isset($items) ? $items : null;
 	}
+	
+	/**
+	 * Generates a SearchContext to be used for building and processing
+	 * a generic search form for properties on this object.
+	 * 
+	 * @usedby {@link ModelAdmin}
+	 * @return SearchContext
+	 */
+	public function getDefaultSearchContext() {
+		$c = new SearchContext($this->class);
+		
+		return $c;
+	}
+	
+	/**
+	 * Determine which properties on the DataObject are
+	 * searchable, and map them to their default {@link FormField}
+	 * representations. Useful for scaffolding a searchform for {@link ModelAdmin}.
+	 *
+	 * @usedby {@link SearchContext}
+	 * @return FieldSet
+	 */
+	public function scaffoldSearchFields() {
+		$fields = new FieldSet();
+		foreach($this->databaseFields() as $fieldName => $fieldType) {
+			// @todo Pass localized title
+			$fields->push($this->dbObject($fieldName)->scaffoldSearchField());
+		}
+		
+		return $fields;
+	}
+
+	/**
+	 * Scaffold a simple edit form for all properties on this dataobject,
+	 * based on default {@link FormField} mapping in {@link DBField::scaffoldFormField()}
+	 *
+	 * @uses {@link DBField::scaffoldFormField()}
+	 * @return FieldSet
+	 */
+	public function scaffoldFormFields() {
+		$fields = new FieldSet();
+		foreach($this->databaseFields() as $fieldName => $fieldType) {
+			// @todo Pass localized title
+			$fields->push($this->dbObject($fieldName)->scaffoldFormField());
+		}
+		
+		return $fields;
+	}
+	
+	/**
+	 * Centerpiece of every data administration interface in Silverstripe,
+	 * which returns a {@link FieldSet} suitable for a {@link Form} object.
+	 * If not overloaded, we're using {@link scaffoldFormFields()} to automatically
+	 * generate this set.
+	 * 
+	 * <example>
+	 * class MyCustomClass extends DataObject {
+	 * 	static $db = array('CustomProperty'=>'Boolean');
+	 *  
+	 * 	public function getCMSFields() {
+	 * 		$fields = parent::getCMSFields();
+	 * 		$fields->push(new CheckboxField('CustomProperty'));
+	 *		return $fields;
+	 *	}
+	 * }
+	 * </example>
+	 * 
+	 * @see Good example of complex FormField building: {@link SiteTree::getCMSFields()}
+	 * 
+	 * @return FieldSet
+	 */
+	public function getCMSFields() {
+		return $this->scaffoldFormFields();
+	}
 
 	/**
 	 * Checks if the given fields have been filled out.
