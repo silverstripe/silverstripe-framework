@@ -37,7 +37,7 @@
 				<% if Markable %><th width="18">&nbsp;</th><% end_if %>
 				<td><i>$SummaryTitle</i></td>
 				<% control SummaryFields %>
-					<td<% if Function %> class="$Function"<% end_if %>>&nbsp;</td>
+					<td<% if Function %> class="$Function"<% end_if %>>$SummaryValue</td>
 				<% end_control %>
 				<% if Can(show) %><td width="18">&nbsp;</td><% end_if %>
 				<% if Can(edit) %><td width="18">&nbsp;</td><% end_if %>
