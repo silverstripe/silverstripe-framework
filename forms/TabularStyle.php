@@ -5,15 +5,17 @@
  * @package forms
  * @subpackage transformations
  */
-class TabularStyle extends Form {
+class TabularStyle extends ViewableData {
 	protected $form;
 
 	/**
 	 * Represent the given form in a tabular style
 	 * @param form The form to decorate.
 	 */
-	function __construct(Form $form) {
+	function __construct($form) {
 		$this->form = $form;
+		$this->failover = $form;
+		parent::__construct();
 	}
 	
 	/**
@@ -42,7 +44,7 @@ class TabularStyle extends Form {
 
 	function CellActions() {
 		$actions = "";
-		foreach($this->form->actions as $action) {
+		foreach($this->form->Actions() as $action) {
 			$actions .= $action->Field();
 		}
 		return $actions;

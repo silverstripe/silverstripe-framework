@@ -7,6 +7,7 @@
  */
 class FormAction extends FormField {
 	protected $extraData;
+	protected $action;
 	
 	/**
 	 * Create a new action button.
@@ -20,7 +21,8 @@ class FormAction extends FormField {
 	function __construct($action, $title = "", $form = null, $extraData = null, $extraClass = '') {
 		$this->extraData = $extraData;
 		$this->extraClass = ' '.$extraClass;
-		parent::__construct("action_$action", $title, null, $form);
+		$this->action = "action_$action";
+		parent::__construct($this->action, $title, null, $form);
 	}
 	static function create($action, $title = "", $extraData = null, $extraClass = null) {
 		return new FormAction($action, $title, null, $extraData, $extraClass);
@@ -29,6 +31,14 @@ class FormAction extends FormField {
 	function actionName() {
 		return substr($this->name,7);
 	}
+	
+	/**
+	 * Set the full action name, including action_
+	 * This provides an opportunity to replace it with something else
+	 */
+	function setFullAction($fullAction) {
+		$this->action = $fullAction;
+	}
 
 	function extraData() {
 		return $this->extraData;
@@ -36,7 +46,7 @@ class FormAction extends FormField {
 	
 	function Field() {
 		$titleAttr = $this->description ? "title=\"" . Convert::raw2att($this->description) . "\"" : '';
-		return "<input class=\"action " . $this->extraClass() . "\" id=\"" . $this->id() . "\" type=\"submit\" name=\"{$this->name}\" value=\"" . $this->attrTitle() . "\" $titleAttr />\n";
+		return "<input class=\"action " . $this->extraClass() . "\" id=\"" . $this->id() . "\" type=\"submit\" name=\"$this->action\" value=\"" . $this->attrTitle() . "\" $titleAttr />\n";
 	}
 	
 	/**

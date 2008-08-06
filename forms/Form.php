@@ -405,6 +405,13 @@ class Form extends ViewableData {
 	}
 	
 	/**
+	 * Returns this form's controller
+	 */
+	function Controller() {
+		return $this->controller;
+	}
+	
+	/**
 	 * @return string
 	 */
 	function Name() {
@@ -412,12 +419,12 @@ class Form extends ViewableData {
 	}
 	
 	/**
-	 * Returns the field referenced by $_GET[fieldName].
-	 * Used for embedding entire extra helper forms inside complex field types (such as ComplexTableField)
-	 * @return FormField The field referenced by $_GET[fieldName]
+	 * Returns an object where there is a method with the same name as each data field on the form.
+	 * That method will return the field itself.
+	 * It means that you can execute $firstNameField = $form->FieldMap()->FirstName(), which can be handy
 	 */
-	function ReferencedField() {
-		return $this->dataFieldByName($_GET['fieldName']);
+	function FieldMap() {
+		return new Form_FieldMap($this);
 	}
 
 	/**
@@ -852,5 +859,18 @@ class Form extends ViewableData {
 	function testAjaxSubmission($action, $data) {
 		$data['ajax'] = 1;
 		return $this->testSubmission($action, $data);
+	}
+}
+
+class Form_FieldMap extends Object {
+	protected $form;
+	
+	function __construct($form) {
+		$this->form = $form;
+		parent::__construct();
+	}
+	
+	function __call($method, $args = null) {
+		return $this->form->dataFieldByName($method);
 	}
 }

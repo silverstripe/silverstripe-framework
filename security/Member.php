@@ -128,7 +128,9 @@ class Member extends DataObject {
 	 * quirky problems (such as using the Windmill 0.3.6 proxy).
 	 */
 	static function session_regenerate_id() {
-		if(!headers_sent()) session_regenerate_id(true);
+		$file = ""; $line = "";
+		if (!headers_sent($file, $line)) session_regenerate_id(true);
+		else user_error("Content already sent at line $line in $file, can't call session_regenerate_id", E_USER_WARNING);
 	}
 	
 	/**

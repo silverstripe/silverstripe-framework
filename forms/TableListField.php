@@ -958,13 +958,6 @@ JS
 	}
 
 	/**
-	 * Returns a link by which we can access this form
-	 */
-	function FormObjectLink($formName) {
-		return $this->form->FormAction() . ".ReferencedField.$formName&fieldName={$this->Name()}";
-	}
-	
-	/**
 	 * @return Int
 	 */
 	function sourceID() {
