@@ -1,5 +1,10 @@
 <?php
 /**
+ * @package sapphire
+ * @subpackage model
+ */
+
+/**
  * Represents a single year field.
  * 
  * @package sapphire
@@ -8,7 +13,7 @@
 class Year extends DBField {
 	
 	function requireField() {
-		DB::requireField($this->tableName, $this->name, "year(4)");
+		DB::requireField($this->tableName, $this->name, "year");
 	}
 	
 	public function scaffoldFormField($title = null) {
@@ -17,19 +22,9 @@ class Year extends DBField {
 		return $selectBox;
 	}
 	
-	/**
-	 * Returns a list of default options that can
-	 * be used to populate a select box, or compare against
-	 * input values. Starts by default at the current year,
-	 * and counts back to 1900.
-	 *
-	 * @param int $start starting date to count down from
-	 * @param int $end end date to count down to
-	 * @return array
-	 */
-	private function getDefaultOptions($start=false, $end=false) {
-		if (!$start) $start = (int)date('Y');
-		if (!$end) $end = 1900;
+	private function getDefaultOptions() {
+		$start = (int)date('Y');
+		$end = 1900;
 		$years = array();
 		for($i=$start;$i>=$end;$i--) {
 			$years[] = $i;

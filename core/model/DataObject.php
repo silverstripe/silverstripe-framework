@@ -1182,7 +1182,7 @@ class DataObject extends ViewableData implements DataObjectInterface {
 	 * generate this set.
 	 * 
 	 * <example>
-	 * class MyCustomClass extends DataObject {
+	 * klass MyCustomClass extends DataObject {
 	 * 	static $db = array('CustomProperty'=>'Boolean');
 	 *  
 	 * 	public function getCMSFields() {
