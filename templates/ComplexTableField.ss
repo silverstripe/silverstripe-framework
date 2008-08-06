@@ -1,4 +1,4 @@
-<div id="$id" class="$Classes field">
+<div id="$id" class="$CSSClasses field">
   <div class="middleColumn">
 	<% include TableListField_PageControls %>
 	<table class="data">
@@ -37,7 +37,7 @@
 				<% if Markable %><th width="18">&nbsp;</th><% end_if %>
 				<td><i>$SummaryTitle</i></td>
 				<% control SummaryFields %>
-					<td<% if Function %> class="$Function"<% end_if %>>$SummaryValue</td>
+					<td<% if Function %> class="$Function"<% end_if %>>&nbsp;</td>
 				<% end_control %>
 				<% if Can(show) %><td width="18">&nbsp;</td><% end_if %>
 				<% if Can(edit) %><td width="18">&nbsp;</td><% end_if %>

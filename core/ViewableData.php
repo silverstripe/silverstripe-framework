@@ -828,6 +828,38 @@ class ViewableData extends Object implements IteratorAggregate {
 		}
 	}
 	
+	/**
+	 * Get part of class ancestry for css-class-usage.
+	 * Avoids having to subclass just to built templates with new css-classes,
+	 * and allows for versatile css inheritance and overrides.
+	 * 
+	 * <example>
+	 * <body class="$CSSClasses">
+	 * </example>
+	 * 
+	 * @uses {@link ClassInfo}
+	 * 
+	 * @param string Classname to stop traversing upwards the ancestry (Default: ViewableData)
+	 * @return string space-separated attribute encoded classes
+	 */	
+	function CSSClasses($stopAtClass = false) {
+		global $_ALL_CLASSES;
+		if(!$stopAtClass) $stopAtClass = 'ViewableData';
+		
+		$classes = array();
+		$classAnchestry = ClassInfo::ancestry($this->class);
+		$viewableDataAnchestry = ClassInfo::ancestry($stopAtClass);
+	  	foreach($classAnchestry as $anchestor) {
+				if(!in_array($anchestor, $viewableDataAnchestry)) $classes[] = $anchestor;
+		}
+		
+		// optionally add template identifier
+		if(isset($this->template) && $this->template != $this->class) {
+			$classes[] = $this->template;
+		}
+
+		return Convert::raw2att(implode(" ", $classes));
+	}
 
 
 	/**
@@ -835,7 +867,8 @@ class ViewableData extends Object implements IteratorAggregate {
 	 * @var mixed
 	 */
 	public static $casting = array(
-		'BaseHref' => 'Varchar'
+		'BaseHref' => 'Varchar',
+		'CSSClasses' => 'Varchar',
 	);
 	
 	/**

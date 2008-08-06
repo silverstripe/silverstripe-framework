@@ -1,4 +1,4 @@
-<div id="$id" class="$Classes field">
+<div id="$id" class="$CSSClasses field">
   <div class="middleColumn">
 	<% include TableListField_PageControls %>
 	<% if Message %>

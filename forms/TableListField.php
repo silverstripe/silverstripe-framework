@@ -975,29 +975,6 @@ JS
 		return $idField->Value();
 	}
 
-	/**
-	 * Get part of class ancestry for css-class-usage.
-	 * Avoids having to subclass just to built templates with new css-classes.
-	 */	
-	function Classes() {
-		global $_ALL_CLASSES;
-		
-		$items = array();
-		$parents = $_ALL_CLASSES['parents'][$this->class];
-	  	foreach($parents as $parent) {
-			if(!in_array($parent,$_ALL_CLASSES['parents']["TableListField"])) {
-				$items[] = $parent;
-			}
-		}
-		$items[] = $this->class;
-		if($this->template != $this->class) {
-			$items[] = $this->template;
-		}
-
-		return implode(" ", $items) . ' ' . $this->extraClass();
-	}
-	
-	 
 	 
 	 
 	/**
