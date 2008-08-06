@@ -387,20 +387,50 @@ class Object {
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// EXTENSION METHODS
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	/**
+	 * Invokes a method on the object itself, or proxied through a decorator.
+	 * 
+	 * This method breaks the normal rules of inheritance, and aggregates everything
+	 * in the returned result. If the invoked methods return void, they are still recorded as
+	 * empty array keys.
+	 * 
+	 * @todo find a better way of integrating inheritance rules
+	 *
+	 * @param unknown_type $funcName
+	 * @param unknown_type $arg
+	 */
+	public function invokeWithExtensions($funcName, $arg=null) {
+		$results = array();
+		if (method_exists($this, $funcName)) {
+			$results[] = $this->$funcName($arg);
+		}
+		$extras = $this->extend($funcName, $arg);
+		if ($extras) {
+			return array_merge($results, $extras);
+		} else {
+			return $results;	
+		}
+	}
 	
 	/**
-	 * Run the given function on all of this object's extensions
+	 * Run the given function on all of this object's extensions. Note that this method
+	 * originally returned void, so if you wanted to return results, you're hosed.
+	 * 
+	 * Currently returns an array, with an index resulting every time the function is called.
 	 * 
 	 * @param string $funcName The name of the function.
 	 * @param mixed $arg An Argument to be passed to each of the extension functions.
 	 */
-	public function extend($funcName, &$arg) {
+	public function extend($funcName, &$arg=null) {
 		if($this->extension_instances) {
+			$return = array();
 			foreach($this->extension_instances as $extension) {
 				if($extension->hasMethod($funcName)) {
-					$extension->$funcName($arg);
+					$return[] = $extension->$funcName($arg);
 				}
 			}
+			return $return;
 		}
 	}
 	

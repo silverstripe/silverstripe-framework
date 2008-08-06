@@ -18,7 +18,7 @@ class DropdownField extends FormField {
 	 * @param $emptyString mixed Add an empty selection on to of the {source}-Array 
 	 * 	(can also be boolean, which results in an empty string)
 	 */
-	function __construct($name, $title = "", $source = array(), $value = "", $form = null, $emptyString = null) {
+	function __construct($name, $title = null, $source = array(), $value = "", $form = null, $emptyString = null) {
 		if(is_string($emptyString)) {
 			$source = is_array($source) ? array(""=>$emptyString) + $source : array(""=>$emptyString);
 		} elseif($emptyString === true) {
@@ -26,7 +26,7 @@ class DropdownField extends FormField {
 		}
 		$this->source = $source;
 	
-		parent::__construct($name, $title, $value, $form);
+		parent::__construct($name, ($title===null) ? $name : $title, $value, $form);
 	}
 	
 	/**

@@ -148,6 +148,32 @@ class SearchContext extends Object {
 		$this->filters = $filters;
 	}
 	
+	function clearEmptySearchFields($value) {
+		return ($value != '');
+	}
+	
+	/**
+	 * Placeholder, until I figure out the rest of the SQLQuery stuff
+	 * and link the $searchable_fields array to the SearchContext
+	 */
+	public function getResultSet($fields) {
+		$filter = "";
+		$current = 1;
+		$fields = array_filter($fields, array($this,'clearEmptySearchFields'));
+		$length = count($fields);
+		foreach($fields as $key=>$val) {
+			if ($val != '') {
+				$filter .= "`$key`='$val'";
+			} else {
+				$length--;
+			}
+			if ($current < $length) {
+				$filter .= " AND ";
+			}
+			$current++;
+		}
+		return DataObject::get($this->modelClass, $filter);
+	}
 	
 }
 ?>

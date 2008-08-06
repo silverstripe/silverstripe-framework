@@ -129,7 +129,7 @@ class FieldSet extends DataObjectSet {
 	 */
 	protected function findOrMakeTab($tabName) {
 		$parts = explode('.',$tabName);
-
+		
 		// We could have made this recursive, but I've chosen to keep all the logic code within FieldSet rather than add it to TabSet and Tab too.
 		$currentPointer = $this;
 		foreach($parts as $part) {
@@ -138,7 +138,7 @@ class FieldSet extends DataObjectSet {
 			// Create any missing tabs
 			if(!$currentPointer) {
 				if(is_a($parentPointer,'TabSet')) {
-					$currentPointer = new Tab($part);
+					$currentPointer = new Tab($tabName);
 					$parentPointer->push($currentPointer);
 				} else {
 					user_error("FieldSet::addFieldToTab() Tried to add a tab to a " . $parentPointer->class . " object - '$part' didn't exist.", E_USER_ERROR);

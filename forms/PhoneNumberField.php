@@ -11,14 +11,14 @@ class PhoneNumberField extends FormField {
 	protected $countryCode;
 	protected $ext;
 	
-	public function __construct( $name, $title, $value = '', $extension = null, 
+	public function __construct( $name, $title = null, $value = '', $extension = null, 
 		$areaCode = null, $countryCode = null, $form = null ) {
 		
 		$this->areaCode = $areaCode;
 		$this->ext = $extension;
 		$this->countryCode = $countryCode;
 		
-		parent::__construct( $name, $title, $value, $form );
+		parent::__construct( $name, ($title===null) ? $name : $title, $value, $form );
 	}
 	
 	public function Field() {
@@ -81,6 +81,8 @@ class PhoneNumberField extends FormField {
 			array_shift( $parts );
 			$parts = array_pad($parts, 4, false);
 		}
+			
+		if(sizeof($parts) < 4) $parts[] = '';
 			
 		return $parts;
 	}

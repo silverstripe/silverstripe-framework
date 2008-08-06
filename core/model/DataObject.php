@@ -1148,11 +1148,18 @@ class DataObject extends ViewableData implements DataObjectInterface {
 	 */
 	public function scaffoldSearchFields() {
 		$fields = new FieldSet();
-		foreach($this->databaseFields() as $fieldName => $fieldType) {
+		foreach($this->searchableFields() as $fieldName => $fieldType) {
 			// @todo Pass localized title
 			$fields->push($this->dbObject($fieldName)->scaffoldSearchField());
 		}
-		
+		$extras = $this->invokeWithExtensions('extraSearchFields');
+		if ($extras) {
+			foreach($extras as $result) {
+				foreach($result as $fieldName => $fieldType) {
+					$fields->push(new $fieldType($fieldName));
+				}
+			}
+		}
 		return $fields;
 	}
 
@@ -1165,9 +1172,13 @@ class DataObject extends ViewableData implements DataObjectInterface {
 	 */
 	public function scaffoldFormFields() {
 		$fields = new FieldSet();
-		foreach($this->databaseFields() as $fieldName => $fieldType) {
+		
+		foreach($this->inheritedDatabaseFields() as $fieldName => $fieldType) {
+			
 			// @todo Pass localized title
-			$fields->addFieldToTab('Root.Main', $this->dbObject($fieldName)->scaffoldFormField());
+			// commented out, to be less of a pain in the ass
+			//$fields->addFieldToTab('Root.Main', $this->dbObject($fieldName)->scaffoldFormField());
+			$fields->push($this->dbObject($fieldName)->scaffoldFormField());
 		}
 		
 		// @todo Add relation tabs
@@ -1952,7 +1963,57 @@ class DataObject extends ViewableData implements DataObjectInterface {
 
 		return $def;
 	}
-
+	
+	/**
+	 * Returns fields bu traversing the class heirachy in a bottom-up direction.
+	 * 
+	 * Needed to avoid getCMSFields being empty when customDatabaseFields overlooks
+	 * the inheritance chain of the $db array, where a child data object has no $db array,
+	 * but still needs to know the properties of its parent. This should be merged into databaseFields or
+	 * customDatabaseFields.
+	 * 
+	 * @todo integrate with pre-existing crap
+	 */
+	public function inheritedDatabaseFields() {
+		$fields = array();
+		$currentObj = $this;
+		while(get_class($currentObj) != 'DataObject') {
+			$fields = array_merge($fields, $currentObj->customDatabaseFields());
+			$currentObj = singleton($currentObj->parentClass());
+		}
+		return $fields;
+	}
+	
+	/**
+	 * Get the default searchable fields for this object,
+	 * excluding any fields that are specifically overriden
+	 * in the data object itself.
+	 * 
+	 * @todo rename $searchable to $excluded
+	 * @todo overcomplicated, should be simpler way of looking up whether specific fields are supposed to be searchable or not
+	 */
+	public function searchableFields() {
+		$parents = ClassInfo::dataClassesFor($this);
+		$fields = array();
+		$searchable = array();
+		foreach($parents as $class) {
+			$fields = array_merge($fields, singleton($class)->stat('db'));
+			$obj = singleton($class);
+			$results = $obj->invokeWithExtensions('excludeFromSearch');
+			if ($results) {
+				foreach($results as $result) {
+					if (is_array($result)) {
+						$searchable = array_merge($searchable, $result);
+					}
+				}
+			}
+		}
+		foreach($searchable as $field) {
+			unset($fields[$field]);
+		}
+		return $fields;
+	}
+	
     /**
     * @return boolean True if the object is in the database
     */
@@ -2082,7 +2143,8 @@ class DataObject extends ViewableData implements DataObjectInterface {
 	 * @var string
 	 */
 	public static $default_sort = null;
+	
 }
 
-
 ?>
+
