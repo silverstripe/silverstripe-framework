@@ -136,6 +136,18 @@ abstract class DBField extends ViewableData {
 	}
 	
 	/**
+	 * @todo documentation
+	 * 
+	 * @todo figure out how we pass configuration parameters to
+	 * search filters
+	 *
+	 * @return SearchFilter
+	 */
+	public function defaultSearchFilter() {
+		return new ExactMatchSearchFilter();
+	}
+	
+	/**
 	 * Add the field to the underlying database.
 	 */
 	abstract function requireField();

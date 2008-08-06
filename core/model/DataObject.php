@@ -1167,8 +1167,10 @@ class DataObject extends ViewableData implements DataObjectInterface {
 		$fields = new FieldSet();
 		foreach($this->databaseFields() as $fieldName => $fieldType) {
 			// @todo Pass localized title
-			$fields->push($this->dbObject($fieldName)->scaffoldFormField());
+			$fields->addFieldToTab('Root.Main', $this->dbObject($fieldName)->scaffoldFormField());
 		}
+		
+		// @todo Add relation tabs
 		
 		return $fields;
 	}
