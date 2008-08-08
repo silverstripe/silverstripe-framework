@@ -156,6 +156,8 @@ class SQLQuery extends Object {
 	/**
 	 * Return the number of rows in this query if the limit were removed.  Useful in paged data sets.
 	 * @return int
+	 * 
+	 * TODO Respect HAVING and GROUPBY, which can affect the result-count
 	 */
 	function unlimitedRowCount( $column = "*" ) {
 		$clone = clone $this;
