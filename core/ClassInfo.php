@@ -132,7 +132,7 @@ class ClassInfo {
 		$items = $_ALL_CLASSES['parents'][$class];
 		$items[$class] = $class;
 		if($onlyWithTables) foreach($items as $item) {
-			if(!$_ALL_CLASSES['hastable'][$item]) unset($items[$item]);
+			if(!isset($_ALL_CLASSES['hastable'][$item]) || !$_ALL_CLASSES['hastable'][$item]) unset($items[$item]);
 		}
 		return $items;
 	}
