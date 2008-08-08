@@ -1172,7 +1172,12 @@ class ViewableData_Iterator implements Iterator {
 	 * Get the next object.
 	 */
 	public function next() {
-		return $this->show = false;
+		if($this->show) {
+			$this->show = false;
+			return $this->viewableData;
+		} else {
+			return null;
+		}
 	}
 	
 	/** 
