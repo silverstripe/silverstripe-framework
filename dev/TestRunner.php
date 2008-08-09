@@ -58,6 +58,7 @@ class TestRunner extends Controller {
 	 * Run all test classes
 	 */
 	function all() {
+		die("here");
 		if(hasPhpUnit()) {
 			$tests = ClassInfo::subclassesFor('SapphireTest');
 			array_shift($tests);
