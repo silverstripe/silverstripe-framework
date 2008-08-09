@@ -34,8 +34,9 @@
 								<a href="$PopupNextLink"><% _t('NEXT', 'Next') %><img src="cms/images/pagination/record-next.png" /></a>
 							</td>
 						<% end_if %>
-					</td>
-				<% end_if %>
+					</tr>
+				</table>
 			<% end_if %>
+		<% end_if %>
 	</body>
 </html>

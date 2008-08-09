@@ -616,6 +616,7 @@ class DataObject extends ViewableData implements DataObjectInterface {
 						foreach($this->record as $fieldName => $fieldValue) {
 							if(isset($this->changed[$fieldName]) && $this->changed[$fieldName] && $fieldType = $classSingleton->fieldExists($fieldName)) {
 								$fieldObj = $this->obj($fieldName);
+								$fieldObj->setValue($this->record[$fieldName], $this->record);
 								if(!isset($manipulation[$class])) $manipulation[$class] = array();
 								if($fieldObj) $fieldObj->writeToManipulation($manipulation[$class]);
 							}

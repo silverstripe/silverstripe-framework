@@ -40,7 +40,7 @@ class ComplexTableField extends TableListField {
 	/**
 	 * @var string Classname of the parent-relation to correctly link new records.
 	 */
-	protected $parentClass;
+	public $parentClass;
 
 	/**
 	 * @var string Database column name for the used relation (e.g. FamilyID
@@ -71,7 +71,7 @@ class ComplexTableField extends TableListField {
 	 *
 	 * @var string
 	 */
-	protected $templatePopup = "ComplexTableField_popup";
+	public $templatePopup = "ComplexTableField_popup";
 
 	/**
 	 * Classname for each row/item
@@ -110,6 +110,20 @@ class ComplexTableField extends TableListField {
 	 * @var boolean
 	 */
 	protected $relationAutoSetting = true;
+
+
+	static $url_handlers = array(
+		'item/$ID' => 'handleItem',
+	);
+
+	function handleItem($request) {
+		return new ComplexTableField_ItemRequest($this, $request->param('ID'));
+	}
+	
+	function getViewer() {
+		return new SSViewer('ComplexTableField');
+	}
+
 	
 	/**
 	 * See class comments
@@ -208,6 +222,10 @@ JS;
 
 		return $this->sourceItems;
 	}
+	
+	function sourceClass() {
+		return $this->sourceClass;
+	}
 
 	/**
 	 * @return DataObjectSet
@@ -240,107 +258,6 @@ JS;
 	}
 
 	/**
-	 * Renders view, edit and add, depending on the given information.
-	 * The form needs several parameters to function independently of its "parent-form", some derived from the context into a hidden-field,
-	 * some derived from the parent context (which is not accessible here) and delivered by GET:
-	 * ID, Identifier of the currently edited record (only if record is loaded).
-	 * <parentIDName>, Link back to the correct parent record (e.g. "parentID").
-	 * parentClass, Link back to correct container-class (the parent-record might have many 'has-one'-relationships)
-	 * CAUTION: "ID" in the DetailForm would be the "childID" in the overview table.
-	 * 
-	 * @param int $childID
-	 */
-	function DetailForm($childID = null) {
-
-		// Get all the requests
-		$ID = isset($_REQUEST['ctf']['ID']) ? Convert::raw2xml($_REQUEST['ctf']['ID']) : null;
-		if(!isset($childID)) $childID = isset($_REQUEST['ctf']['childID']) ? Convert::raw2xml($_REQUEST['ctf']['childID']) : null;
-		$childClass = Convert::raw2xml($_REQUEST['fieldName']);
-		$this->methodName = isset($_REQUEST['methodName']) ? $_REQUEST['methodName'] : null;
-
-		// used to discover fields if requested and for population of field
-		if(is_numeric($childID)) {
- 			// we have to use the basedataclass, otherwise we might exclude other subclasses 
- 			$childData = DataObject::get_by_id(ClassInfo::baseDataClass($this->sourceClass), $childID); 
-		}
-		
-		// If the fieldset is passed, use it, else use the formfields returned
-		// from the object via a string method call.
-		if(is_a($this->detailFormFields,"Fieldset")){
-			$detailFields = clone $this->detailFormFields;
-		} else if( isset( $childData ) && is_string($this->detailFormFields)){
-			$functioncall = $this->detailFormFields;
-			if($childData->hasMethod($functioncall)){
-				$detailFields = $childData->$functioncall();
-			}
-		} elseif(! isset( $childData ) || $this->methodName == 'add') {
-			$SNG_sourceClass = singleton($this->sourceClass);
-			if(is_numeric($ID) && $this->getParentClass()) {
-				// make sure the relation-link is existing, even if we just add the sourceClass
-				// and didn't save it
-				$parentIDName = $this->getParentIdName( $this->getParentClass(), $this->sourceClass );
-				$SNG_sourceClass->$parentIDName = $ID;
-			}
-			$functioncall = $this->detailFormFields;
-			if($SNG_sourceClass->hasMethod($functioncall)){
-				$detailFields = $SNG_sourceClass->$functioncall();
-			}
-			else
-				$detailFields = $SNG_sourceClass->getCMSFields();
-		} else {
-			$detailFields = $childData->getCMSFields();
-		}
-		
-		if($this->getParentClass()) {
-			$parentIdName = $this->getParentIdName($this->getParentClass(), $this->sourceClass);
-			if(!$parentIdName) {
-				user_error("ComplexTableField::DetailForm() Cannot automatically 
-					determine 'has-one'-relationship to parent, 
-					please use setParentClass() to set it manually", 
-				E_USER_WARNING);
-				return;
-			}
-			// add relational fields
-			$detailFields->push(new HiddenField("ctf[parentClass]"," ",$this->getParentClass()));
-			
-			if( $this->relationAutoSetting )
-				$detailFields->push(new HiddenField("$parentIdName"," ",$ID));
-		} 
-
-		// the ID field confuses the Controller-logic in finding the right view for ReferencedField
-		$detailFields->removeByName('ID');
-
-		// only add childID if we're not adding a record		
-		if($this->methodName != 'add') {
-			$detailFields->push(new HiddenField("ctf[childID]","",$childID));
-		}
-
-		// add a namespaced ID instead thats "converted" by saveComplexTableField()
-		$detailFields->push(new HiddenField("ctf[ClassName]","",$this->sourceClass));
-
-		$readonly = ($this->methodName == "show");
-
-		// if no custom validator is set, and there's on present on the object (e.g. Member), use it
-		if(!isset($this->detailFormValidator) && singleton($this->sourceClass)->hasMethod('getValidator')) {
-			$this->detailFormValidator = singleton($this->sourceClass)->getValidator();
-		}
-
-		$form = Object::create($this->popupClass,$this, "DetailForm", $detailFields, $this->sourceClass, $readonly, $this->detailFormValidator);
-	
-		if (is_numeric($childID)) {
-			if ($this->methodName == "show" || $this->methodName == "edit") {
-				$form->loadDataFrom($childData);
-			}
-		}
-
-		if ($this->methodName == "show") {
-			$form->makeReadonly();
-		}
-
-		return $form;
-	}
-
-	/**
 	 * @param $validator Validator
 	 */
 	function setDetailFormValidator( Validator $validator ) {
@@ -355,67 +272,6 @@ JS;
 	 */
 	function ajax_render() {
 		return $this->renderWith($this->template);
-	}
-
-	/**
-	 * Just a hook, processed in {DetailForm()}
-	 *
-	 * @return String
-	 */
-	function show() {
-		if($this->Can('show') !== true) {
-			return false;
-		}
-
-		$this->methodName = "edit";
-
-		$this->sourceItems = $this->sourceItems();
-
-		$this->pageSize = 1;
-		
-		if(isset($_REQUEST['ctf'][$this->Name()]['start']) && is_numeric($_REQUEST['ctf'][$this->Name()]['start'])) {
-			$this->unpagedSourceItems->setPageLimits($_REQUEST['ctf'][$this->Name()]['start'], $this->pageSize, $this->totalCount);
-		}
-
-		echo $this->renderWith($this->templatePopup);
-	}
-
-	/**
-	 * Just a hook, processed in {DetailForm()}
-	 *
-	 * @return String
-	 */
-	function edit() {
-		if($this->Can('edit') !== true) {
-			return false;
-		}
-
-		$this->methodName = "edit";
-
-		$this->sourceItems = $this->sourceItems();
-
-		$this->pageSize = 1;
-
-		if(is_numeric($_REQUEST['ctf']['start'])) {
-			$this->unpagedSourceItems->setPageLimits($_REQUEST['ctf']['start'], $this->pageSize, $this->totalCount);
-		}
-
-		echo $this->renderWith($this->templatePopup);
-	}
-
-	/**
-	 * Just a hook, processed in {DetailForm()}
-	 *
-	 * @return String
-	 */
-	function add() {
-		if($this->Can('add') !== true) {
-			return false;
-		}
-
-		$this->methodName = "add";
-
-		echo $this->renderWith($this->templatePopup);
 	}
 
 	/**
@@ -449,11 +305,290 @@ JS;
 		return ($idField->Value()) ? $idField->Value() : (isset($_REQUEST['ctf']['ID']) ? $_REQUEST['ctf']['ID'] : null); 
  	} 
 	 
+
+
+	function AddLink() {
+		return $this->Link() . '/add';
+	}
+
 	/**
-	 * #################################
-	 *           Pagination
-	 * #################################
+	 * @return FieldSet
 	 */
+	function createFieldSet() {
+		$fieldset = new FieldSet();
+		foreach($this->fieldTypes as $key => $fieldType){
+			$fieldset->push(new $fieldType($key));
+		}
+		return $fieldset;
+	}
+
+	/**
+	 * Determines on which relation-class the DetailForm is saved
+	 * by looking at the surrounding form-record.
+	 *
+	 * @return String
+	 */
+	function getParentClass() {
+		if($this->parentClass === false) {
+			// purposely set parent-relation to false
+			return false;
+		} elseif(!empty($this->parentClass)) {
+			return $this->parentClass;
+		} else {
+			return $this->form->getRecord()->ClassName;
+		}
+	}
+
+	/**
+	 * (Optional) Setter for a correct parent-relation-class.
+	 * Defaults to the record loaded into the surrounding form as a fallback.
+	 * Caution: Please use the classname, not the actual column-name in the database.
+	 *
+	 * @param $className string
+	 */
+	function setParentClass($className) {
+		$this->parentClass = $className;
+	}
+
+	/**
+	 * Returns the db-fieldname of the currently used has_one-relationship.
+	 */
+	function getParentIdName( $parentClass, $childClass ) {
+		return $this->getParentIdNameRelation( $childClass, $parentClass, 'has_one' );
+	}
+	
+	/**
+	 * Manually overwrites the parent-ID relations.
+	 * @see setParentClass()
+	 * 
+	 * @param String $str Example: FamilyID (when one Individual has_one Family)
+	 */
+	function setParentIdName($str) {
+		$this->parentIdName = $str;
+	}
+	
+	/**
+	 * Returns the db-fieldname of the currently used relationship.
+	 */
+	function getParentIdNameRelation( $parentClass, $childClass, $relation ){
+		if($this->parentIdName) return $this->parentIdName; 
+		
+		$relations = singleton( $parentClass )->$relation();
+		$classes = ClassInfo::ancestry( $childClass );
+		foreach( $relations as $k => $v ) {
+			if( $v == $childClass )
+				return $k . 'ID';
+			else if( array_key_exists( $v, $classes ) )
+				return $classes[ $v ] . 'ID';
+		}
+		return false;
+	}
+
+	function setTemplatePopup($template) {
+		$this->templatePopup = $template;
+	}
+}
+
+/**
+ * @todo Tie this into ComplexTableField_Item better.
+ */
+class ComplexTableField_ItemRequest extends RequestHandlingData {
+	protected $ctf;
+	protected $itemID;
+	protected $methodName;
+	
+	static $url_handlers = array(
+		'$Action!' => '$Action',
+		'' => 'index',
+	);
+	
+	function Link() {
+		return $this->ctf->Link() . '/item/' . $this->itemID;
+	}
+	
+	function __construct($ctf, $itemID) {
+		$this->ctf = $ctf;
+		$this->itemID = $itemID;
+	}
+	
+	function index() {
+		return $this->show();
+	}
+
+	/**
+	 * Just a hook, processed in {DetailForm()}
+	 *
+	 * @return String
+	 */
+	function show() {
+		if($this->ctf->Can('show') !== true) {
+			return false;
+		}
+
+		$this->methodName = "show";
+		/*
+		$this->sourceItems = $this->ctg->sourceItems();
+
+		$this->pageSize = 1;
+		
+		if(isset($_REQUEST['ctf'][$this->Name()]['start']) && is_numeric($_REQUEST['ctf'][$this->Name()]['start'])) {
+			$this->unpagedSourceItems->setPageLimits($_REQUEST['ctf'][$this->Name()]['start'], $this->pageSize, $this->totalCount);
+		}
+		*/	
+
+		echo $this->renderWith($this->ctf->templatePopup);
+	}
+
+	/**
+	 * Just a hook, processed in {DetailForm()}
+	 *
+	 * @return String
+	 */
+	function edit() {
+		if($this->ctf->Can('edit') !== true) {
+			return false;
+		}
+
+		$this->methodName = "edit";
+		/*
+		$this->sourceItems = $this->sourceItems();
+
+		$this->pageSize = 1;
+
+		if(is_numeric($_REQUEST['ctf']['start'])) {
+			$this->unpagedSourceItems->setPageLimits($_REQUEST['ctf']['start'], $this->pageSize, $this->totalCount);
+		}
+		*/
+
+		echo $this->renderWith($this->ctf->templatePopup);
+	}
+
+	/**
+	 * Just a hook, processed in {DetailForm()}
+	 *
+	 * @return String
+	 */
+	function add() {
+		if($this->Can('add') !== true) {
+			return false;
+		}
+
+		$this->methodName = "add";
+
+		echo $this->renderWith($this->templatePopup);
+	}
+
+	///////////////////////////////////////////////////////////////////////////////////////////////////
+
+	/**
+	 * Return the data object being manipulated
+	 */
+	function obj() {
+		// used to discover fields if requested and for population of field
+		if(is_numeric($this->itemID)) {
+ 			// we have to use the basedataclass, otherwise we might exclude other subclasses 
+ 			return DataObject::get_by_id(ClassInfo::baseDataClass($this->ctf->sourceClass()), $this->itemID); 
+		}
+		
+	}
+
+	/**
+	 * Renders view, edit and add, depending on the given information.
+	 * The form needs several parameters to function independently of its "parent-form", some derived from the context into a hidden-field,
+	 * some derived from the parent context (which is not accessible here) and delivered by GET:
+	 * ID, Identifier of the currently edited record (only if record is loaded).
+	 * <parentIDName>, Link back to the correct parent record (e.g. "parentID").
+	 * parentClass, Link back to correct container-class (the parent-record might have many 'has-one'-relationships)
+	 * CAUTION: "ID" in the DetailForm would be the "childID" in the overview table.
+	 * 
+	 * @param int $childID
+	 */
+	function DetailForm($childID = null) {
+		$childData = $this->obj();
+
+		// If the fieldset is passed, use it, else use the formfields returned
+		// from the object via a string method call.
+		if(is_a($this->ctf->detailFormFields,"Fieldset")){
+			$detailFields = $this->detailFormFields;
+
+		} else if( isset( $childData ) && is_string($this->ctf->detailFormFields)){
+			$functioncall = $this->ctf->detailFormFields;
+			if($childData->hasMethod($functioncall)){
+				$detailFields = $childData->$functioncall();
+			}
+			
+		} elseif(! isset( $childData ) || $this->methodName == 'add') {
+			$SNG_sourceClass = singleton($this->ctf->sourceClass());
+			if($childData && is_numeric($childData->ID) && $this->ctf->getParentClass()) {
+				// make sure the relation-link is existing, even if we just add the sourceClass
+				// and didn't save it
+				$parentIDName = $this->ctf->getParentIdName( $this->getParentClass(), $this->sourceClass() );
+				$SNG_sourceClass->$parentIDName = $childData->ID;
+			}
+			$functioncall = $this->detailFormFields;
+			if($SNG_sourceClass->hasMethod($functioncall)){
+				$detailFields = $SNG_sourceClass->$functioncall();
+			}
+			else
+				$detailFields = $SNG_sourceClass->getCMSFields();
+		} else {
+			$detailFields = $childData->getCMSFields();
+		}
+		
+		if($this->ctf->getParentClass()) {
+			$parentIdName = $this->ctf->getParentIdName($this->ctf->getParentClass(), $this->ctf->sourceClass());
+			/*
+			if(!$parentIdName) {
+				user_error("ComplexTableField::DetailForm() Cannot automatically 
+					determine 'has-one'-relationship to parent class " . $this->ctf->getParentClass() .  ",
+					please use setParentClass() to set it manually", 
+				E_USER_WARNING);
+				return;
+			}
+			*/
+			
+			if($parentIdName) {
+				// add relational fields
+				$detailFields->push(new HiddenField("ctf[parentClass]"," ",$this->ctf->getParentClass()));
+			
+				if( $this->relationAutoSetting )
+					$detailFields->push(new HiddenField("$parentIdName"," ",$childData->ID));
+			}
+		} 
+
+		// the ID field confuses the Controller-logic in finding the right view for ReferencedField
+		$detailFields->removeByName('ID');
+
+		// only add childID if we're not adding a record		
+		if($this->methodName != 'add') {
+			$detailFields->push(new HiddenField("ctf[childID]","",$childData->ID));
+		}
+
+		// add a namespaced ID instead thats "converted" by saveComplexTableField()
+		$detailFields->push(new HiddenField("ctf[ClassName]","",$this->ctf->sourceClass()));
+
+		$readonly = ($this->methodName == "show");
+
+		// if no custom validator is set, and there's on present on the object (e.g. Member), use it
+		if(!isset($this->ctf->detailFormValidator) && singleton($this->ctf->sourceClass())->hasMethod('getValidator')) {
+			$this->ctf->detailFormValidator = singleton($this->ctf->sourceClass())->getValidator();
+		}
+
+		$form = Object::create($this->ctf->popupClass,$this, "DetailForm", $detailFields, $this->ctf->detailFormValidator, $readonly, $childData);
+	
+		if (is_numeric($childData->ID)) {
+			if ($this->methodName == "show" || $this->methodName == "edit") {
+				$form->loadDataFrom($childData);
+			}
+		}
+
+		if ($this->methodName == "show") {
+			$form->makeReadonly();
+		}
+
+		return $form;
+	}
+	
 	function PopupBaseLink() {
 		$link = $this->FormAction() . "&action_callfieldmethod&fieldName={$this->Name()}";
 		if(!strpos($link,'ctf[ID]')) {
@@ -560,49 +695,8 @@ JS;
 
 		return implode(" ", $items);
 	}
+}
 
-	function AddLink() {
-		return Convert::raw2att("{$this->PopupBaseLink()}&methodName=add");
-	}
-
-	/**
-	 * @return FieldSet
-	 */
-	function createFieldSet() {
-		$fieldset = new FieldSet();
-		foreach($this->fieldTypes as $key => $fieldType){
-			$fieldset->push(new $fieldType($key));
-		}
-		return $fieldset;
-	}
-
-	/**
-	 * Determines on which relation-class the DetailForm is saved
-	 * by looking at the surrounding form-record.
-	 *
-	 * @return String
-	 */
-	function getParentClass() {
-		if($this->parentClass === false) {
-			// purposely set parent-relation to false
-			return false;
-		} elseif(!empty($this->parentClass)) {
-			return $this->parentClass;
-		} else {
-			return $this->form->getRecord()->ClassName;
-		}
-	}
-
-	/**
-	 * (Optional) Setter for a correct parent-relation-class.
-	 * Defaults to the record loaded into the surrounding form as a fallback.
-	 * Caution: Please use the classname, not the actual column-name in the database.
-	 *
-	 * @param $className string
-	 */
-	function setParentClass($className) {
-		$this->parentClass = $className;
-	}
 
 	/**
 	 * Returns the db-fieldname of the currently used has_one-relationship.
@@ -659,20 +753,20 @@ class ComplexTableField_Item extends TableListField_Item {
 		parent::__construct($item, $parent);
 	}
 
-	function PopupBaseLink() {
-		return $this->parent->FormAction() . "&action_callfieldmethod&fieldName={$this->parent->Name()}&ctf[childID]={$this->item->ID}&ctf[ID]={$this->parent->sourceID()}&ctf[start]={$this->start}";
+	function Link() {
+		return $this->parent->Link() . '/item/' . $this->item->ID;
 	}
 
 	function EditLink() {
-		return Convert::raw2att($this->PopupBaseLink() . "&methodName=edit");
+		return $this->Link() . "/edit";
 	}
 
 	function ShowLink() {
-		return Convert::raw2att($this->PopupBaseLink() . "&methodName=show");
+		return $this->Link() . "/show";
 	}
 
 	function DeleteLink() {
-		return Convert::raw2att($this->PopupBaseLink() . "&methodName=delete");
+		return $this->Link() . "/delete";
 	}
 }
 
@@ -687,8 +781,10 @@ class ComplexTableField_Item extends TableListField_Item {
  */
 class ComplexTableField_Popup extends Form {
 	protected $sourceClass;
+	protected $dataObject;
 
-	function __construct($controller, $name, $field, $sourceClass, $readonly=false, $validator = null) {
+	function __construct($controller, $name, $fields, $validator, $readonly, $dataObject) {
+		$this->dataObject = $dataObject;
 
 		/**
 		 * WARNING: DO NOT CHANGE THE ORDER OF THESE JS FILES
@@ -715,9 +811,8 @@ class ComplexTableField_Popup extends Form {
 		Requirements::javascript("sapphire/javascript/ComplexTableField.js");
 		Requirements::javascript("sapphire/javascript/ComplexTableField_popup.js");
 
-		$this->sourceClass = $sourceClass;
-		if(singleton($sourceClass)->hasMethod('getRequirementsForPopup')){
-			singleton($sourceClass)->getRequirementsForPopup();
+ 		if($this->dataObject->hasMethod('getRequirementsForPopup')) {
+			$this->data->getRequirementsForPopup();
 		}
 		
 		$actions = new FieldSet();	
@@ -728,7 +823,7 @@ class ComplexTableField_Popup extends Form {
 			$saveAction->addExtraClass('save');
 		}
 		
-		parent::__construct($controller, $name, $field, $actions, $validator);
+		parent::__construct($controller, $name, $fields, $actions, $validator);
 	}
 
 	function FieldHolder() {
@@ -748,22 +843,15 @@ class ComplexTableField_Popup extends Form {
 	 *
 	 * @see {Form::ReferencedField}).
 	 */
-	function saveComplexTableField() {
-		if(isset($_REQUEST['ctf']['childID']) && is_numeric($_REQUEST['ctf']['childID'])) {
-			$childObject = DataObject::get_by_id($this->sourceClass, $_REQUEST['ctf']['childID']);
-		} else {
-			$childObject = new $this->sourceClass();
-			$this->fields->removeByName('ID');
-		}
-
-		$this->saveInto($childObject);
-		$childObject->write();
+	function saveComplexTableField($params) {
+		$this->saveInto($this->dataObject);
+		$this->dataObject->write();
 
 		// if ajax-call in an iframe, update window
 		if(Director::is_ajax()) {
 			// Newly saved objects need their ID reflected in the reloaded form to avoid double saving 
-			$form = $this->controller->DetailForm($childObject->ID);
-			$form->loadDataFrom($childObject);
+			$form = $this->controller->DetailForm();
+			//$form->loadDataFrom($this->dataObject);
 			FormResponse::update_dom_id($form->FormName(), $form->formHtmlContent(), true, 'update');
 			return FormResponse::respond();
 		} else {

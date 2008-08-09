@@ -140,7 +140,6 @@ if(substr($url,0,strlen($baseURL)) == $baseURL) $url = substr($url,strlen($baseU
 
 // Direct away - this is the "main" function, that hands control to the appropriate controller
 if(isset($_GET['debug_profile'])) Profiler::unmark('main.php init');
-
 Director::direct($url);
 
 if(isset($_GET['debug_profile'])) {

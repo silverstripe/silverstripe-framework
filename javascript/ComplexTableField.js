@@ -72,6 +72,8 @@ ComplexTableField.prototype = {
 			popupLink = _popupLink;
 			table = _table;
 		} else {
+			alert(this.innerHTML);
+			
 			// if clicked item is an input-element, don't trigger popup
 			var el = Event.element(e);
 			var input = Event.findElement(e,"input");
@@ -110,10 +112,6 @@ ComplexTableField.prototype = {
 			}
 		}
 		
-		if($('SecurityID')) {
-			popupLink = popupLink + '&SecurityID=' + $('SecurityID').value;
-		}
-
 		GB_OpenerObj = this;
 		// use same url to refresh the table after saving the popup, but use a generic rendering method
 		GB_RefreshLink = popupLink;
@@ -121,6 +119,7 @@ ComplexTableField.prototype = {
 		// dont include pagination index
 		GB_RefreshLink = GB_RefreshLink.replace(/ctf\[start\][^&]*/,"");
 		GB_RefreshLink += '&forcehtml=1';
+
 		if(this.GB_Caption) {
 			var title = this.GB_Caption;
 		} else {

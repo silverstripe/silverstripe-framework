@@ -58,6 +58,7 @@ ComplexTableFieldPopupForm.prototype = {
 
 		// don't update when validation is present and failed
 		if(!this.validate || (this.validate && !hasHadFormError())) {
+			alert("GB:" + parent.parent.GB_RefreshLink);
 			new parent.parent.Ajax.Request(
 				parent.parent.GB_RefreshLink,
 				{

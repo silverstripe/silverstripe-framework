@@ -19,7 +19,7 @@
 
 // Default director
 Director::addRules(10, array(
-	'Security' => 'Security',
+	'Security//$Action/$ID/$OtherID' => 'Security',
 	//'Security/$Action/$ID' => 'Security',
 	'db/$Action' => 'DatabaseAdmin',
 	'$Controller' => array(

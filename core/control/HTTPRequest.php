@@ -8,7 +8,7 @@
  * match() to get the information that they need out of the URL.  This is generally handled by 
  * {@link RequestHandlingData::handleRequest()}.
  */
-class HTTPRequest extends Object {
+class HTTPRequest extends Object implements ArrayAccess {
 	/**
 	 * The non-extension parts of the URL, separated by "/"
 	 */
@@ -52,6 +52,39 @@ class HTTPRequest extends Object {
 		if(isset($this->postVars[$name])) return $this->postVars[$name];
 		if(isset($this->getVars[$name])) return $this->getVars[$name];
 	}
+	
+	/**
+	 * Enables the existence of a key-value pair in the request to be checked using
+	 * array syntax, so isset($request['title']) will check for $_POST['title'] and $_GET['title]
+	 *
+	 * @param unknown_type $offset
+	 * @return boolean
+	 */
+	function offsetExists($offset) {
+		if(isset($this->postVars[$offset])) return true;
+		if(isset($this->getVars[$offset])) return true;
+		return false;
+	}
+	
+	/**
+	 * Access a request variable using array syntax. eg: $request['title'] instead of $request->postVar('title')
+	 *
+	 * @param unknown_type $offset
+	 * @return unknown
+	 */
+	function offsetGet($offset) {
+		return $this->requestVar($offset);
+	}
+	
+	/**
+	 * @ignore
+	 */
+	function offsetSet($offset, $value) {}
+	
+	/**
+	 * @ignore
+	 */
+	function offsetUnset($offset) {}
 
 	/**
 	 * Construct a HTTPRequest from a URL relative to the site root.
@@ -159,7 +192,7 @@ class HTTPRequest extends Object {
 		// Load the arguments that actually have a value into $this->allParams
 		// This ensures that previous values aren't overridden with blanks
 		foreach($arguments as $k => $v) {
-			if($v) $this->allParams[$k] = $v;
+			if($v || !isset($this->allParams[$k])) $this->allParams[$k] = $v;
 		}
 		
 		return $arguments;

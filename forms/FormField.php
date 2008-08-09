@@ -61,6 +61,13 @@ class FormField extends RequestHandlingData {
 	}
 	
 	/**
+	 * Return a Link to this field
+	 */
+	function Link() {
+		return $this->form->FormAction() . '/field/' . $this->name;
+	}
+	
+	/**
 	 * Returns the HTML ID of the field - used in the template by label tags.
 	 * The ID is generated as FormName_FieldName.  All Field functions should ensure
 	 * that this ID is included in the field.

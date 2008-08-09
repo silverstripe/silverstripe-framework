@@ -7,23 +7,18 @@
  */
 class RootURLController extends Controller {
 	protected static $is_at_root = false;
-
-	public function run($requestParams) {
-		self::$is_at_root = true;
-		
-		$this->pushCurrent();
-		$controller = new ModelAsController();
-		$controller->setUrlParams(array(
-			'URLSegment' => self::get_homepage_urlsegment(),
-			'Action' => '',
-		));
-
-		$result = $controller->run($requestParams);
-		
-		$this->popCurrent();
-		return $result;
-	}
 	
+	public function handleRequest($request) {
+		self::$is_at_root = true;
+
+		$controller = new ModelAsController();
+		
+		$request = new HTTPRequest("GET", self::get_homepage_urlsegment().'/', $request->getVars(), $request->postVars());
+		$request->match('$URLSegment//$Action');
+			
+		return $controller->handleRequest($request);
+	}
+
 	/**
 	 * Return the URL segment for the current HTTP_HOST value
 	 */

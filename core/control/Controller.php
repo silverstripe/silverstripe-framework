@@ -39,7 +39,7 @@ class Controller extends RequestHandlingData {
 	 * Default URL handlers - (Action)/(ID)/(OtherID)
 	 */
 	static $url_handlers = array(
-		'$Action/$ID/$OtherID' => 'handleAction',
+		'$Action//$ID/$OtherID' => 'handleAction',
 	);
 	
 	static $allowed_actions = array(

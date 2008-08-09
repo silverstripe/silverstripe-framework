@@ -269,7 +269,7 @@ class Security extends Controller {
 		$tmpPage->URLSegment = "Security";
 		$tmpPage->ID = -1; // Set the page ID to -1 so we dont get the top level pages as its children
 
-		$controller = new Page_Controller($this->urlParams, $this->urlTokeniser, $tmpPage);
+		$controller = new Page_Controller($tmpPage);
 		$controller->init();
 		//Controller::$currentController = $controller;
 

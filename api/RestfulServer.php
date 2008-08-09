@@ -24,24 +24,29 @@
  *
  *  - POST /api/v1/(ClassName)/(ID)/(MethodName) - executes a method on the given object (e.g, publish)
  *
+ * @todo Finish RestfulServer_Item and RestfulServer_List implementation and re-enable $url_handlers
+ * 
  * @package sapphire
  * @subpackage api
  */
 class RestfulServer extends Controller {
 	static $url_handlers = array(
-		'$ClassName/#ID' => 'handleItem',
-		'$ClassName' => 'handleList',
+		'$ClassName/$ID/$Relation' => 'handleAction'
+		#'$ClassName/#ID' => 'handleItem',
+		#'$ClassName' => 'handleList',
 	);
 
 	protected static $api_base = "api/v1/";
 
-	function handleItem($params) {
-		return new RestfulServer_Item(DataObject::get_by_id($params["ClassName"], $params["ID"]));
+	/*
+	function handleItem($request) {
+		return new RestfulServer_Item(DataObject::get_by_id($request->param("ClassName"), $request->param("ID")));
 	}
 
-	function handleList($params) {
-		return new RestfulServer_List(DataObject::get($params["ClassName"],""));
+	function handleList($request) {
+		return new RestfulServer_List(DataObject::get($request->param("ClassName"),""));
 	}
+	*/
 	
 	/**
 	 * This handler acts as the switchboard for the controller.
@@ -49,7 +54,7 @@ class RestfulServer extends Controller {
 	 */
 	function index() {
 		ContentNegotiator::disable();
-
+		
 		$requestMethod = $_SERVER['REQUEST_METHOD'];
 		
 		if(!isset($this->urlParams['ClassName'])) return $this->notFound();
@@ -112,6 +117,12 @@ class RestfulServer extends Controller {
 	 * 
 	 *   - static $api_access must be set. This enables the API on a class by class basis
 	 *   - $obj->canView() must return true. This lets you implement record-level security
+	 * 
+	 * @param String $className
+	 * @param Int $id
+	 * @param String $relation
+	 * @param String $contentType
+	 * @return String The serialized representation of the requested object(s) - usually XML or JSON.
 	 */
 	protected function getHandler($className, $id, $relation, $contentType) {
 		if($id) {
@@ -156,7 +167,11 @@ class RestfulServer extends Controller {
 	}
 	
 	/**
-	 * Generate an XML representation of the given DataObject.
+	 * Generate an XML representation of the given {@link DataObject}.
+	 * 
+	 * @param DataObject $obj
+	 * @param $includeHeader Include <?xml ...?> header (Default: true)
+	 * @return String XML
 	 */
 	protected function dataObjectAsXML(DataObject $obj, $includeHeader = true) {
 		$className = $obj->class;
@@ -212,22 +227,30 @@ class RestfulServer extends Controller {
 	}
 
 	/**
-	 * Generate an XML representation of the given DataObject.
+	 * Generate an XML representation of the given {@link DataObjectSet}.
+	 * 
+	 * @param DataObjectSet $set
+	 * @return String XML
 	 */
 	protected function dataObjectSetAsXML(DataObjectSet $set) {
 		$className = $set->class;
 		
-		$json = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<$className>\n";
+		$xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<$className>\n";
 		foreach($set as $item) {
-			if($item->canView()) $json .= $this->dataObjectAsXML($item, false);
+			if($item->canView()) $xml .= $this->dataObjectAsXML($item, false);
 		}
-		$json .= "</$className>";
+		$xml .= "</$className>";
 		
-		return $json;
+		return $xml;
 	}
 	
 	/**
-	 * Generate an XML representation of the given DataObject.
+	 * Generate an JSON representation of the given {@link DataObject}.
+	 * 
+	 * @see http://json.org
+	 * 
+	 * @param DataObject $obj
+	 * @return String JSON
 	 */
 	protected function dataObjectAsJSON(DataObject $obj) {
 		$className = $obj->class;
@@ -278,7 +301,10 @@ class RestfulServer extends Controller {
 	}	
 
 	/**
-	 * Generate an XML representation of the given DataObject.
+	 * Generate an JSON representation of the given {@link DataObjectSet}.
+	 * 
+	 * @param DataObjectSet $set
+	 * @return String JSON
 	 */
 	protected function dataObjectSetAsJSON(DataObjectSet $set) {
 		$jsonParts = array();
@@ -346,8 +372,8 @@ class RestfulServer_List {
 		$this->list = $list;
 	}
 	
-	function handleItem($params) {
-		return new RestulServer_Item($this->list->getById($params['ID']));
+	function handleItem($request) {
+		return new RestulServer_Item($this->list->getById($request->param('ID')));
 	}
 }
 
@@ -363,11 +389,11 @@ class RestfulServer_Item {
 		$this->item = $item;
 	}
 	
-	function handleRelation($params) {
-		$funcName = $params['Relation'];
+	function handleRelation($request) {
+		$funcName = $request('Relation');
 		$relation = $this->item->$funcName();
 
 		if($relation instanceof DataObjectSet) return new RestfulServer_List($relation);
-		else return new RestfulServer_Item($relation)l
+		else return new RestfulServer_Item($relation);
 	}
 }

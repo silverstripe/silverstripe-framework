@@ -284,11 +284,11 @@ class RestfulService extends ViewableData {
 			$childElements = $xml->{$collection}->{$element};
 		
 		if($childElements){
-		foreach($childElements as $child){
-			$data = array();
-			$this->getRecurseValues($child,$data);			
-			$output->push(new ArrayData($data));
-		}
+			foreach($childElements as $child){
+				$data = array();
+				$this->getRecurseValues($child,$data);			
+				$output->push(new ArrayData($data));
+			}
 		}
 		return $output;
 	}

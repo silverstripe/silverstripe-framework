@@ -117,6 +117,7 @@ class Form extends RequestHandlingData {
 	}
 	
 	static $url_handlers = array(
+		'field/$FieldName!' => 'handleField',
 		'POST ' => 'httpSubmission',
 		'GET ' => 'httpSubmission',
 	);
@@ -126,7 +127,6 @@ class Form extends RequestHandlingData {
 	 */
 	function httpSubmission($request) {
 		$vars = $request->requestVars();
-		
 		if(isset($funcName)) {
 			Form::set_current_action($funcName);
 		}
@@ -170,7 +170,7 @@ class Form extends RequestHandlingData {
 				break;
 			}
 		}
-
+		
 		// If the action wasnt' set, choose the default on the form.
 		if(!isset($funcName) && $defaultAction = $this->defaultAction()){
 			$funcName = $defaultAction->actionName();
@@ -188,6 +188,13 @@ class Form extends RequestHandlingData {
 		} else {
 			return $this->$funcName($vars, $this);
 		}
+	}
+	
+	/**
+	 * Handle a field request
+	 */
+	function handleField($request) {
+		return $this->dataFieldByName($request->param('FieldName'));
 	}
 
 	/**
@@ -461,8 +468,10 @@ class Form extends RequestHandlingData {
 	function FormAction() {
 		if($this->controller->hasMethod("FormObjectLink")) {
 			return $this->controller->FormObjectLink($this->name);
-		} else {
-			return $this->controller->Link() . $this->name;
+		} else { 
+			$link = $this->controller->Link();
+			if(substr($link,-1) != '/') $link .= '/';
+			return $link . $this->name;
 		}
 	}
 
