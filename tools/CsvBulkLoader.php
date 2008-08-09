@@ -63,12 +63,18 @@ class CsvBulkLoader extends BulkLoader {
 
 	protected function processRecord($record, $preview = false) {
 		$class = $this->objectClass;
-		$obj = new $class();
+		
+		// find existing object, or create new one
+		$existingObj = $this->findExistingObject($record);
+		$obj = ($existingObj) ? $existingObj : new $class(); 
 		
 		// first run: find/create any relations and store them on the object
 		// we can't combine runs, as other columns might rely on the relation being present
 		$relations = array();
+
 		foreach($record as $key => $val) {
+			//if($this->isNullValue($val)) continue;
+			// checking for existing relations
 			if(isset($this->relationCallbacks[$key])) {
 				// trigger custom search method for finding a relation based on the given value
 				// and write it back to the relation (or create a new object)
@@ -81,6 +87,7 @@ class CsvBulkLoader extends BulkLoader {
 				}
 				$obj->setComponent($relationName, $relationObj);
 				$obj->{"{$relationName}ID"} = $relationObj->ID;
+				$obj->write();
 			} elseif(strpos($key, '.') !== false) {
 				// we have a relation column with dot notation
 				list($relationName,$columnName) = split('\.', $key);
@@ -88,7 +95,9 @@ class CsvBulkLoader extends BulkLoader {
 				$obj->setComponent($relationName, $relationObj);
 				$relationObj->write();
 				$obj->{"{$relationName}ID"} = $relationObj->ID;
+				$obj->write();
 			}
+			
 			$obj->flushCache(); // avoid relation caching confusion
 		}
 		$id = ($preview) ? 0 : $obj->write();
@@ -105,9 +114,9 @@ class CsvBulkLoader extends BulkLoader {
 				$relationObj->{$columnName} = $val;
 				$relationObj->write();
 				$obj->flushCache(); // avoid relation caching confusion
-			} elseif($obj->hasField($key)) {
+			} elseif($obj->hasField($key) || $obj->hasMethod($key)) {
 				// plain old value setter
-				$obj->{$key} = $val;
+				if(!$this->isNullValue($val, $key)) $obj->{$key} = $val;
 			}
 		}
 		$id = ($preview) ? 0 : $obj->write();
@@ -115,6 +124,7 @@ class CsvBulkLoader extends BulkLoader {
 		$message = '';
 		
 		// memory usage
+		unset($existingObj);
 		unset($obj);
 		
 		return new ArrayData(array(
@@ -122,6 +132,32 @@ class CsvBulkLoader extends BulkLoader {
 			'action' => $action,
 			'message' => $message
 		));
+	}
+	
+	/**
+	 * Find an existing objects based on one or more uniqueness
+	 * columns specified via {@link self::$duplicateChecks}
+	 *
+	 * @param array $record CSV data column
+	 * @return unknown
+	 */
+	public function findExistingObject($record) {
+		// checking for existing records (only if not already found)
+		foreach($this->duplicateChecks as $fieldName => $duplicateCheck) {
+			if(is_string($duplicateCheck)) {
+				$SQL_fieldName = Convert::raw2sql($duplicateCheck); 
+				$SQL_fieldValue = $record[$this->columnMap[$fieldName]];
+				$existingRecord = DataObject::get_one($this->objectClass, "`$SQL_fieldName` = '{$SQL_fieldValue}'");
+				if($existingRecord) return $existingRecord;
+			} elseif(is_array($duplicateCheck) && isset($duplicateCheck['callback'])) {
+				$existingRecord = singleton($this->objectClass)->{$duplicateCheck['callback']}($val, $record);
+				if($existingRecord) return $existingRecord;
+			} else {
+				user_error('CsvBulkLoader:processRecord: Wrong format for $duplicateChecks', E_USER_ERROR);
+			}
+		}
+		
+		return false;
 	}
 	
 	

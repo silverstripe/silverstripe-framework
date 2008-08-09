@@ -66,7 +66,7 @@ abstract class BulkLoader extends ViewableData {
 	 *
 	 * @var array
 	 */
-	public $columnMap;
+	public $columnMap = array();
 	
 	/**
 	 * Find a has_one relation based on a specific column value.
@@ -84,10 +84,35 @@ abstract class BulkLoader extends ViewableData {
 	 *
 	 * @var array
 	 */
-	public $relationCallbacks;
+	public $relationCallbacks = array();
+	
+	/**
+	 * Specifies how to determine duplicates based on one or more provided fields
+	 * in the imported data, matching to properties on the used {@link DataObject} class.
+	 * Alternatively the array values can contain a callback method (see example for
+	 * implementation details).
+	 * If multiple checks are specified, the first one "wins".
+	 * 
+	 *  <code>
+	 * <?php
+	 * array(
+	 * 		'customernumber' => 'ID',
+	 * 		'phonenumber' => array(
+	 * 			'callback' => 'getByImportedPhoneNumber'
+	 * 		)
+	 * );
+	 * ?>
+	 * </code>
+	 *
+	 * @var array
+	 */
+	public $duplicateChecks = array();
 	
 	function __construct($objectClass) {
 		$this->objectClass = $objectClass;
+		
+		ini_set('max_execution_time', 3600);
+		ini_set('memory_limit', '512M');
 	}
 	
 	/*
@@ -148,6 +173,21 @@ abstract class BulkLoader extends ViewableData {
 	 */
 	public function Title() {
 		return ($title = $this->stat('title')) ? $title : $this->class;
+	}
+	
+	/**
+	 * Determines if a specific field is null.
+	 * Can be useful for unusual "empty" flags in the file,
+	 * e.g. a "(not set)" value.
+	 * The usual {@link DBField::isNull()} checks apply when writing the {@link DataObject},
+	 * so this is mainly a customization method.
+	 *
+	 * @param mixed $val
+	 * @param string $field Name of the field as specified in the array-values for {@link self::$columnMap}.
+	 * @return boolean
+	 */
+	protected function isNullValue($val, $fieldName = null) {
+		return (empty($val));
 	}
 	
 }

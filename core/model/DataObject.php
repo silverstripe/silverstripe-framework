@@ -1207,8 +1207,6 @@ class DataObject extends ViewableData implements DataObjectInterface {
 		$fields->push(new HeaderField($this->singular_name()));
 		foreach($this->db() as $fieldName => $fieldType) {
 			// @todo Pass localized title
-			// commented out, to be less of a pain in the ass
-			//$fields->addFieldToTab('Root.Main', $this->dbObject($fieldName)->scaffoldFormField());
 			$fields->push($this->dbObject($fieldName)->scaffoldFormField());
 		}
 		foreach($this->has_one() as $relationship => $component) {
@@ -1227,13 +1225,6 @@ class DataObject extends ViewableData implements DataObjectInterface {
 	protected function addScaffoldRelationFields($fieldSet) {
 		
 		if($this->has_many()) {
-			// Refactor the fields that we have been given into a tab, "Main", in a tabset
-			$oldFields = $fieldSet;
-			$fieldSet = new FieldSet(
-				new TabSet("Root", new Tab("Main"))
-			);
-			foreach($oldFields as $field) $fieldSet->addFieldToTab("Root.Main", $field);
-			
 			// Add each relation as a separate tab
 			foreach($this->has_many() as $relationship => $component) {
 				$relationshipFields = singleton($component)->summary_fields();
@@ -1267,12 +1258,17 @@ class DataObject extends ViewableData implements DataObjectInterface {
 	 * @return FieldSet
 	 */
 	public function getCMSFields() {
-		$fields = $this->scaffoldFormFields();
+		$fieldSet = new FieldSet(new TabSet("Root", new Tab("Main")));
+		
+		$baseFields = $this->scaffoldFormFields();
+		foreach($baseFields as $field) $fieldSet->addFieldToTab("Root.Main", $field);
+		
 		// If we don't have an ID, then relation fields don't work
 		if($this->ID) {
-			$fields = $this->addScaffoldRelationFields($fields);
+			$fieldSet = $this->addScaffoldRelationFields($fieldSet);
 		}
-		return $fields;
+		
+		return $fieldSet;
 	}
 
 	/**
@@ -1385,7 +1381,7 @@ class DataObject extends ViewableData implements DataObjectInterface {
 					// Only existing fields
 					$this->fieldExists($fieldName)
 					// Catches "0"==NULL
-					&& (isset($this->record[$fieldName]) && (intval($val) != intval($this->record[$fieldName])))
+					&& (isset($this->record[$fieldName]) && is_numeric($val) && (intval($val) != intval($this->record[$fieldName])))
 					// Main non type-based check
 					&& (isset($this->record[$fieldName]) && $this->record[$fieldName] != $val)
 				) {

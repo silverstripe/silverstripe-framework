@@ -111,6 +111,34 @@ class CsvBulkLoaderTest extends SapphireTest {
 		fclose($file);
 	}
 	
+	/**
+	 * Test import with custom identifiers by importing the data.
+	 * 
+	 * @todo Test duplicateCheck callbacks
+	 */
+	function testLoadWithIdentifiers() {
+		// first load
+		$loader = new CsvBulkLoader('CsvBulkLoaderTest_Player');
+		$filepath = Director::baseFolder() . '/sapphire/tests/CsvBulkLoaderTest_PlayersWithId.csv';
+		$loader->duplicateChecks = array(
+			'ExternalIdentifier' => 'ExternalIdentifier' 
+		);
+		$results = $loader->load($filepath);
+		
+		$player = DataObject::get_by_id('CsvBulkLoaderTest_Player', 1);
+		$this->assertEquals($player->FirstName, 'John');
+		$this->assertEquals($player->Biography, 'He\'s a good guy', 'test updating of duplicate imports within the same import works');
+
+		// load with updated data
+		$filepath = Director::baseFolder() . '/sapphire/tests/CsvBulkLoaderTest_PlayersWithIdUpdated.csv';
+		$results = $loader->load($filepath);
+		
+		$player = DataObject::get_by_id('CsvBulkLoaderTest_Player', 1);
+		$this->assertEquals($player->FirstName, 'JohnUpdated', 'Test updating of existing records works');
+		$this->assertEquals($player->Biography, 'He\'s a good guy', 'Test retaining of previous information on duplicate when overwriting with blank field');
+		
+	}
+	
 	protected function getLineCount(&$file) {
 		$i = 0;
 		while(fgets($file) !== false) $i++;
@@ -139,6 +167,7 @@ class CsvBulkLoaderTest_Player extends DataObject implements TestOnly {
 		'FirstName' => 'Varchar(255)',
 		'Biography' => 'HTMLText',
 		'Birthday' => 'Date',
+		'ExternalIdentifier' => 'Varchar(255)', // used for uniqueness checks on passed property
 	);
 	
 	static $has_one = array(

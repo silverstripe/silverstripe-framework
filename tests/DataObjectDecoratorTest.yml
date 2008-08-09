@@ -1,0 +1,25 @@
+PageComment:
+   comment1:
+      Name: Joe
+      Comment: This is a test comment
+   comment2:
+      Name: Jane
+      Comment: This is another test comment
+   comment3:
+      Name: Bob
+      Comment: Another comment
+   comment4:
+      Name: Bob
+      Comment: Second comment by Bob
+
+Page:
+   home:
+      Title: Home
+      Comments: =>PageComment.comment1,=>PageComment.comment2
+   page1:
+      Title: First Page
+      Content: <p>Some test content</p>
+      Comments: =>PageComment.comment3,=>PageComment.comment4 
+   page2:
+      Title: Second Page
+

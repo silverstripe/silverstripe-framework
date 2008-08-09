@@ -122,6 +122,8 @@ class RestfulServer extends Controller {
 	 * @return String The serialized representation of the requested object(s) - usually XML or JSON.
 	 */
 	protected function getHandler($className, $id, $relation, $formatter) {
+		$limit = (int)$this->request->getVar('limit');
+		
 		if($id) {
 			$obj = DataObject::get_by_id($className, $id);
 			if(!$obj) {
@@ -133,7 +135,7 @@ class RestfulServer extends Controller {
 			}
 			
 			if($relation) {
-				if($obj->hasMethod($relation)) $obj = $obj->$relation();
+				if($obj->hasMethod($relation)) $obj = $obj->$relation('', '', '', $limit);
 				else return $this->notFound();
 			} 
 			

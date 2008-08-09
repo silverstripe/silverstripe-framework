@@ -123,6 +123,8 @@ class SearchContext extends Object {
 		$baseTable = $this->applyBaseTable();
 		$query->from($baseTable);
 		
+		if($limit) $query->limit = (!empty($start)) ? "{$start},{$limit}" : $limit; 
+		
 		// SRM: This stuff is copied from DataObject, 
 		if($this->modelClass != $baseTable) {
 			$classNames = ClassInfo::subclassesFor($this->modelClass);
