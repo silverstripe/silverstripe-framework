@@ -865,7 +865,6 @@ class ViewableData extends Object implements IteratorAggregate {
 		return Convert::raw2att(implode(" ", $classes));
 	}
 
-
 	/**
 	 * Object-casting information for class methods
 	 * @var mixed

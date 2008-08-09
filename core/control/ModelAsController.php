@@ -8,13 +8,14 @@
  */
 class ModelAsController extends Controller implements NestedController {
 	
-	public function run($requestParams) {
+	public function handleRequest($request) {
 		$this->pushCurrent();
+		$this->urlParams = $request->allParams();
 		
 		$this->init();
 		$nested = $this->getNestedController();
 		if(is_object($nested)) {
-			$result = $nested->run($requestParams);
+			$result = $nested->handleRequest($requestParams);
 		} else {
 			$result = $nested;
 		}
@@ -55,7 +56,6 @@ class ModelAsController extends Controller implements NestedController {
 				} else {
 					$controller = $child;
 				}
-				$controller->setURLParams($this->urlParams);
 			
 				return $controller;
 			} else {

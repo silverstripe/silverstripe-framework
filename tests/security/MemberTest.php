@@ -21,7 +21,7 @@ class MemberTest extends SapphireTest {
 
 		$member->Password = "test3";
 		$member->write();
-		
+
 		$passwords = DataObject::get("MemberPassword", "MemberID = $member->ID", "Created DESC, ID DESC")->getIterator();
 		$this->assertNotNull($passwords);
 		$record = $passwords->rewind();

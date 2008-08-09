@@ -15,7 +15,7 @@
  * @package forms
  * @subpackage core
  */
-class Form extends ViewableData {
+class Form extends RequestHandlingData {
 	
 	public static $backup_post_data = false;
 	
@@ -113,6 +113,80 @@ class Form extends ViewableData {
 
 		if(isset($errorInfo['message']) && isset($errorInfo['type'])) {
 			$this->setMessage($errorInfo['message'],$errorInfo['type']);
+		}
+	}
+	
+	static $url_handlers = array(
+		'POST ' => 'httpSubmission',
+		'GET ' => 'httpSubmission',
+	);
+	
+	/**
+	 * Handle a form submission.  GET and POST requests behave identically
+	 */
+	function httpSubmission($request) {
+		$vars = $request->requestVars();
+		
+		if(isset($funcName)) {
+			Form::set_current_action($funcName);
+		}
+		
+		// Populate the form
+		$this->loadDataFrom($vars, true);
+		
+		// Validate the form
+		if(!$this->validate()) {
+			if(Director::is_ajax()) {
+				return FormResponse::respond();
+			} else {
+				Director::redirectBack();
+				return;
+			}
+		}
+
+		// Protection against CSRF attacks
+		if($this->securityTokenEnabled()) {
+			$securityID = Session::get('SecurityID');
+
+			if(!$securityID || !isset($vars['SecurityID']) || $securityID != $vars['SecurityID']) {
+				$this->httpError(400, "SecurityID doesn't match, possible CRSF attack.");
+			}
+		}
+		
+		// Determine the action button clicked
+		$funcName = null;
+		foreach($vars as $paramName => $paramVal) {
+			if(substr($paramName,0,7) == 'action_') {
+				// Break off querystring arguments included in the action
+				if(strpos($paramName,'?') !== false) {
+					list($paramName, $paramVars) = explode('?', $paramName, 2);
+					$newRequestParams = array();
+					parse_str($paramVars, $newRequestParams);
+					$vars = array_merge((array)$vars, (array)$newRequestParams);
+				}
+				
+				// Cleanup action_, _x and _y from image fields
+				$funcName = preg_replace(array('/^action_/','/_x$|_y$/'),'',$paramName);
+				break;
+			}
+		}
+
+		// If the action wasnt' set, choose the default on the form.
+		if(!isset($funcName) && $defaultAction = $this->defaultAction()){
+			$funcName = $defaultAction->actionName();
+		}
+			
+		if(isset($funcName)) {
+			$this->setButtonClicked($funcName);
+		}
+
+		// First, try a handler method on the controller
+		if($this->controller->hasMethod($funcName)) {
+			return $this->controller->$funcName($vars, $this);
+
+		// Otherwise, try a handler method on the form object
+		} else {
+			return $this->$funcName($vars, $this);
 		}
 	}
 
@@ -385,15 +459,10 @@ class Form extends ViewableData {
 	 * @return string 
 	 */
 	function FormAction() {
-		// "get" form needs ?executeForm added as a hidden field
-		if($this->formMethod == 'post') {
-			if($this->controller->hasMethod("FormObjectLink")) {
-				return $this->controller->FormObjectLink($this->name);
-			} else {
-				return $this->controller->Link() . "?executeForm=" . $this->name;
-			}
+		if($this->controller->hasMethod("FormObjectLink")) {
+			return $this->controller->FormObjectLink($this->name);
 		} else {
-			return $this->controller->Link();
+			return $this->controller->Link() . $this->name;
 		}
 	}
 
@@ -509,7 +578,7 @@ class Form extends ViewableData {
 	 * This includes form validation, if it fails, we redirect back
 	 * to the form with appropriate error messages
 	 */
-	 function beforeProcessing(){
+	 function validate(){
 		if($this->validator){
 			$errors = $this->validator->validate();
 
@@ -526,7 +595,6 @@ class Form extends ViewableData {
 							Convert::raw2js($error['messageType'])
 						));
 					}
-					echo FormResponse::respond();
 					return false;
 				} else {
 					$data = $this->getData();
@@ -541,7 +609,6 @@ class Form extends ViewableData {
 						'data' => $data,
 					));
 
-					Director::redirectBack();
 				}
 				return false;
 			}

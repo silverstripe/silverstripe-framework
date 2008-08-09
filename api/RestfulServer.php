@@ -28,7 +28,20 @@
  * @subpackage api
  */
 class RestfulServer extends Controller {
+	static $url_handlers = array(
+		'$ClassName/#ID' => 'handleItem',
+		'$ClassName' => 'handleList',
+	);
+
 	protected static $api_base = "api/v1/";
+
+	function handleItem($params) {
+		return new RestfulServer_Item(DataObject::get_by_id($params["ClassName"], $params["ID"]));
+	}
+
+	function handleList($params) {
+		return new RestfulServer_List(DataObject::get($params["ClassName"],""));
+	}
 	
 	/**
 	 * This handler acts as the switchboard for the controller.
@@ -318,4 +331,43 @@ class RestfulServer extends Controller {
 		return "That object wasn't found";
 	}
 	
+}
+
+
+/**
+ * Restful server handler for a DataObjectSet
+ */
+class RestfulServer_List {
+	static $url_handlers = array(
+		'#ID' => 'handleItem',
+	);
+
+	function __construct($list) {
+		$this->list = $list;
+	}
+	
+	function handleItem($params) {
+		return new RestulServer_Item($this->list->getById($params['ID']));
+	}
+}
+
+/**
+ * Restful server handler for a single DataObject
+ */
+class RestfulServer_Item {
+	static $url_handlers = array(
+		'$Relation' => 'handleRelation',
+	);
+
+	function __construct($item) {
+		$this->item = $item;
+	}
+	
+	function handleRelation($params) {
+		$funcName = $params['Relation'];
+		$relation = $this->item->$funcName();
+
+		if($relation instanceof DataObjectSet) return new RestfulServer_List($relation);
+		else return new RestfulServer_Item($relation)l
+	}
 }

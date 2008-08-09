@@ -71,41 +71,51 @@ class Director {
 	/**
 	 * Process the given URL, creating the appropriate controller and executing it.
 	 * 
-	 * This method will:
-	 *  - iterate over all of the rules given in {@link Director::addRules()}, and find the first one that matches.
-	 *  - instantiate the {@link Controller} object required by that rule, and call {@link Controller::setURLParams()} to give the URL paramters to the controller.
-	 *  - link the Controller's session to PHP's main session, using {@link Controller::setSession()}.
-	 *  - call {@link Controller::run()} on that controller
-	 *  - save the Controller's session back into PHP's main session.
-	 *  - output the response to the browser, using {@link HTTPResponse::output()}.
+	 * Request processing is handled as folows:
+	 *  - Director::direct() creates a new HTTPResponse object and passes this to Director::handleRequest().
+	 *  - Director::handleRequest($request) checks each of the Director rules and identifies a controller to handle this 
+	 *    request.
+	 *  - Controller::handleRequest($request) is then called.  This will find a rule to handle the URL, and call the rule
+	 *    handling method.
+	 *  - RequestHandlingData::handleRequest($request) is recursively called whenever a rule handling method returns a
+	 *    RequestHandlingData object.
+	 *
+	 * In addition to request processing, Director will manage the session, and perform the output of the actual response
+	 * to the browser.
 	 * 
 	 * @param $url String, the URL the user is visiting, without the querystring.
-	 * @uses getControllerForURL() rule-lookup logic is handled by this.
+	 * @uses handleRequest() rule-lookup logic is handled by this.
 	 * @uses Controller::run() Controller::run() handles the page logic for a Director::direct() call.
 	 */
 	function direct($url) {
-		if(isset($_GET['debug_profile'])) Profiler::mark("Director","direct");
-		$controllerObj = Director::getControllerForURL($url);
-		
-		if(is_string($controllerObj) && substr($controllerObj,0,9) == 'redirect:') {
-			$response = new HTTPResponse();
-			$response->redirect(substr($controllerObj, 9));
-			$response->output();
-		} else if($controllerObj) {
-			// Load the session into the controller
-			$controllerObj->setSession(new Session($_SESSION));
-		
-			$response = $controllerObj->run(array_merge((array)$_GET, (array)$_POST, (array)$_FILES));
-			
-			
-			$controllerObj->getSession()->inst_save();
+		$req = new HTTPRequest($_SERVER['REQUEST_METHOD'], $url, $_GET, array_merge((array)$_POST, (array)$_FILES));
 
-			if(isset($_GET['debug_profile'])) Profiler::mark("Outputting to browser");
+		// Load the session into the controller
+		$session = new Session($_SESSION);
+		$result = Director::handleRequest($req, $session);
+		$session->inst_save();
+
+		// Return code for a redirection request
+		if(is_string($result) && substr($result,0,9) == 'redirect:') {
+			$response = new HTTPResponse();
+			$response->redirect(substr($result, 9));
 			$response->output();
-			if(isset($_GET['debug_profile'])) Profiler::unmark("Outputting to browser");
+
+		// Handle a controller
+		} else if($result) {
+			if($result instanceof HTTPResponse) {
+				$response = $result;
+				
+			} else {
+				$response = new HTTPResponse();
+				$response->setBody($result);
+			}
+
+			$response->output();
+
+			//$controllerObj->getSession()->inst_save();
 			
 		}
-		if(isset($_GET['debug_profile'])) Profiler::unmark("Director","direct");
 	}
 	
 	/**
@@ -114,117 +124,79 @@ class Director {
 	 * This method is the counterpart of Director::direct() that is used in functional testing.  It will execute the URL given,
 	 * 
 	 * @param $url The URL to visit
-	 * @param $post The $_POST & $_FILES variables
+	 * @param $postVars The $_POST & $_FILES variables
 	 * @param $session The {@link Session} object representing the current session.  By passing the same object to multiple
 	 * calls of Director::test(), you can simulate a peristed session.
+	 * @param $httpMethod The HTTP method, such as GET or POST.  It will default to POST if postVars is set, GET otherwise
 	 * 
 	 * @uses getControllerForURL() The rule-lookup logic is handled by this.
 	 * @uses Controller::run() Controller::run() handles the page logic for a Director::direct() call.
 	 */
-	function test($url, $post = null, $session = null) {
+	function test($url, $postVars = null, $session = null, $httpMethod = null) {
+		if(!$httpMethod) $httpMethod = $postVars ? "POST" : "GET";
+		
         $getVars = array();
 		if(strpos($url,'?') !== false) {
 			list($url, $getVarsEncoded) = explode('?', $url, 2);
             parse_str($getVarsEncoded, $getVars);
 		}
 
-		$existingRequestVars = $_REQUEST;
-		$existingGetVars = $_GET;
-		$existingPostVars = $_POST;
-		$existingSessionVars = $_SESSION;
-
-		$_REQUEST = $existingRequestVars;
-		$_GET = $existingGetVars;
-		$_POST = $existingPostVars;
-		$_SESSION = $existingSessionVars;		
-
-		$_REQUEST = array_merge((array)$getVars, (array)$post);
-		$_GET = (array)$getVars;
-		$_POST = (array)$post;
-		$_SESSION = $session ? $session->inst_getAll() : array(); 
+		if(!$session) $session = new Session(null);
 		
-		$controllerObj = Director::getControllerForURL($url);
+		$req = new HTTPRequest($httpMethod, $url, $getVars, $postVars);
+		$result = Director::handleRequest($req, $session);
 		
-		// Load the session into the controller
-		$controllerObj->setSession($session ? $session : new Session(null));
-
-		if(is_string($controllerObj) && substr($controllerObj,0,9) == 'redirect:') {
-			user_error("Redirection not implemented in Director::test", E_USER_ERROR);
-			
-		} else if($controllerObj) {
-			$response = $controllerObj->run( array_merge($getVars, (array)$post) );
-			$_REQUEST = $existingRequestVars;
-			$_GET = $existingGetVars;
-			$_POST = $existingPostVars;
-			$_SESSION = $existingSessionVars;
-			return $response;
-		}
+		return $result;
 	}
 		
-		
 	/**
-	 * Returns the controller that should be used to handle the given URL.
-	 * @todo More information about director rules.
+	 * Handle an HTTP request, defined with a HTTPRequest object.
 	 */
-	static function getControllerForURL($url) {
-		if(isset($_GET['debug_profile'])) Profiler::mark("Director","getControllerForURL");
-		$url = preg_replace( array( '/\/+/','/^\//', '/\/$/'),array('/','',''),$url);
-		$urlParts = split('/+', $url);
-
+	protected static function handleRequest(HTTPRequest $request, Session $session) {
 		krsort(Director::$rules);
 
 		if(isset($_REQUEST['debug'])) Debug::show(Director::$rules);
-
 		foreach(Director::$rules as $priority => $rules) {
-			foreach($rules as $pattern => $controller) {
-				$patternParts = explode('/', $pattern);
-				$matched = true;
-				$arguments = array();
-				foreach($patternParts as $i => $part) {
-					$part = trim($part);
-					if(isset($part[0]) && $part[0] == '$') {
-						$arguments[substr($part,1)] = isset($urlParts[$i]) ? $urlParts[$i] : null;
-						if($part == '$Controller' && !class_exists($arguments['Controller'])) {
-							$matched = false;
-							break;
-						}
-
-					} else if(!isset($urlParts[$i]) || $urlParts[$i] != $part) {
-						$matched = false;
-						break;
-					}
+			foreach($rules as $pattern => $controllerOptions) {
+				if(is_string($controllerOptions)) {
+					if(substr($controllerOptions,0,2) == '->') $controllerOptions = array('Redirect' => substr($controllerOptions,2));
+					else $controllerOptions = array('Controller' => $controllerOptions);
 				}
-				if($matched) {
-
-					if(substr($controller,0,2) == '->') {
-						if(isset($_REQUEST['debug']) && $_REQUEST['debug'] == 1) Debug::message("Redirecting to $controller");
-
-						if(isset($_GET['debug_profile'])) Profiler::unmark("Director","getControllerForURL");
-						
-						return "redirect:" . Director::absoluteURL(substr($controller,2), true);
+				
+				if(($arguments = $request->match($pattern, true)) !== false) {
+					// controllerOptions provide some default arguments
+					$arguments = array_merge($controllerOptions, $arguments);
+					
+					// Find the controller name
+					if(isset($arguments['Controller'])) $controller = $arguments['Controller'];
+					
+					// Pop additional tokens from the tokeniser if necessary
+					if(isset($controllerOptions['_PopTokeniser'])) {
+						$request->shift($controllerOptions['_PopTokeniser']);
+					}
+					
+					// Handle redirections
+					if(isset($arguments['Redirect'])) {
+						return "redirect:" . Director::absoluteURL($arguments['Redirect'], true);
 
 					} else {
-						if(isset($arguments['Controller']) && $controller == "*") {
-							$controller = $arguments['Controller'];
-						}
-
-						if(isset($_REQUEST['debug'])) Debug::message("Using controller $controller");
+						/*
 						if(isset($arguments['Action'])) {
 							$arguments['Action'] = str_replace('-','',$arguments['Action']);
 						}
+						
 						if(isset($arguments['Action']) && ClassInfo::exists($controller.'_'.$arguments['Action']))
 							$controller = $controller.'_'.$arguments['Action'];
-
-						Director::$urlParams = $arguments;
-						$controllerObj = new $controller();
-
-						$controllerObj->setURLParams($arguments);
+						*/
 
 						if(isset($arguments['URLSegment'])) self::$urlSegment = $arguments['URLSegment'] . "/";
-
-						if(isset($_GET['debug_profile'])) Profiler::unmark("Director","getControllerForURL");
 						
-						return $controllerObj;
+						Director::$urlParams = $arguments;
+						
+						$controllerObj = new $controller();
+						$controllerObj->setSession($session);
+
+						return $controllerObj->handleRequest($request);
 					}
 				}
 			}

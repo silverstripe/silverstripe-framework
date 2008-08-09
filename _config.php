@@ -17,6 +17,26 @@
  * @subpackage core
  */
 
+// Default director
+Director::addRules(10, array(
+	'Security' => 'Security',
+	//'Security/$Action/$ID' => 'Security',
+	'db/$Action' => 'DatabaseAdmin',
+	'$Controller' => array(
+	),
+	'images/$Action/$Class/$ID/$Field' => 'Image_Uploader',
+	'' => 'RootURLController',
+	'sitemap.xml' => 'GoogleSitemap',
+	'api/v1' => 'RestfulServer',
+));
+
+Director::addRules(1, array(
+	'$URLSegment/$Action/$ID/$OtherID' => array(
+		'_PopTokeniser' => 1,
+		'Controller' => 'ModelAsController',
+	),
+));
+
 /**
  * PHP 5.2 has a namespace conflict with our datetime class,
  * for legacy support, we use this overload method.

@@ -28,7 +28,6 @@ class ContentController extends Controller {
 	public function __construct($dataRecord) {
 		$this->dataRecord = $dataRecord;
 		$this->failover = $this->dataRecord;
-
 		parent::__construct();
 	}
 

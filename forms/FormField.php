@@ -7,7 +7,7 @@
  * @package forms
  * @subpackage core
  */
-class FormField extends ViewableData {
+class FormField extends RequestHandlingData {
 	protected $form;
 	protected $name, $title, $value ,$message, $messageType, $extraClass;
 	

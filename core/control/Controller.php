@@ -9,27 +9,12 @@
  * @package sapphire
  * @subpackage control
  */
-class Controller extends ViewableData {
-	
+class Controller extends RequestHandlingData {
 	/**
-	 * Define a list of actions that are allowed to be called on this controller.
-	 * The variable should be an array of action names. This sample shows the different values that it can contain:
-	 *
-	 * <code>
-	 * array(
-	 *		'someaction', // someaction can be accessed by anyone, any time
-	 *		'otheraction' => true, // So can otheraction
-	 *		'restrictedaction' => 'ADMIN', // restrictedaction can only be people with ADMIN privilege
-	 *		'complexaction' '->canComplexAction' // complexaction can only be accessed if $this->canComplexAction() returns true
-	 *	);
-	 * </code>
+	 * An array of arguments extracted from the URL 
 	 */
-	static $allowed_actions = null;
-	
 	protected $urlParams;
-	
 	protected $requestParams;
-	
 	protected $action;
 	
 	/**
@@ -50,6 +35,90 @@ class Controller extends ViewableData {
 	 */
 	protected $response;
 	
+	/**
+	 * Default URL handlers - (Action)/(ID)/(OtherID)
+	 */
+	static $url_handlers = array(
+		'$Action/$ID/$OtherID' => 'handleAction',
+	);
+	
+	static $allowed_actions = array(
+		'handleAction',
+		'handleIndex',
+	);
+	
+	/**
+	 * Handles HTTP requests.
+	 * @param $request The {@link HTTPRequest} object that is responsible for distributing request parsing.
+	 */
+	function handleRequest($request) {
+		$this->pushCurrent();
+		$this->urlParams = $request->allParams();
+		$this->response = new HTTPResponse();
+
+		// Init
+		$this->baseInitCalled = false;	
+		$this->init();
+		if(!$this->baseInitCalled) user_error("init() method on class '$this->class' doesn't call Controller::init().  Make sure that you have parent::init() included.", E_USER_WARNING);
+
+		// If we had a redirection or something, halt processing.
+		if($this->response->isFinished()) {
+			$this->popCurrent();
+			return $this->response;
+		}
+
+		$body = parent::handleRequest($request);
+		if($body instanceof HTTPResponse) {
+			$this->response = $body;
+			
+		} else {
+			if(is_object($body)) $body = $body->getViewer($request->latestParam('Action'))->process($body);
+			$this->response->setBody($body);
+		}
+
+
+		ContentNegotiator::process($this->response);
+		HTTP::add_cache_headers($this->response);
+
+		$this->popCurrent();
+		return $this->response;
+	}
+
+	/**
+	 * Controller's default action handler.  It will call the method named in $Action, if that method exists.
+	 * If $Action isn't given, it will use "index" as a default.
+	 */
+	function handleAction($request) {
+		// urlParams, requestParams, and action are set for backward compatability 
+		$this->urlParams = array_merge($this->urlParams, $request->latestParams());
+		$this->action = str_replace("-","_",$request->param('Action'));
+		$this->requestParams = $request->requestVars();
+		if(!$this->action) $this->action = 'index';
+		$methodName = $this->action;
+		
+		// run & init are manually disabled, because they create infinite loops and other dodgy situations 
+		if(!$this->checkAccessAction($this->action) || in_array(strtolower($this->action), array('run', 'init'))) {
+			if($this->hasMethod($methodName)) {
+				$result = $this->$methodName($request);
+			
+				// Method returns an array, that is used to customise the object before rendering with a template
+				if(is_array($result)) {
+					return $this->getViewer($this->action)->process($this->customise($result));
+				
+				// Method returns a string / object, in which case we just return that
+				} else {
+					return $result;
+				}
+			
+			// There is no method, in which case we just render this object using a (possibly alternate) template
+			} else {
+				return $this->getViewer($this->action)->process($this);
+			}
+		} else {
+			return $this->httpError(403, "Action '$this->action' isn't allowed on class $this->class");
+		}
+	}
+
 	function setURLParams($urlParams) {
 		$this->urlParams = $urlParams;
 	}
@@ -99,185 +168,6 @@ class Controller extends ViewableData {
 	 * @param array $requestParams GET and POST variables.
 	 * @return HTTPResponse The response that this controller produces, including HTTP headers such as redirection info
 	 */
-	function run($requestParams) {
-		if(isset($_GET['debug_profile'])) Profiler::mark("Controller", "run");		
-		$this->pushCurrent();
-
-		$this->response = new HTTPResponse();
-		$this->requestParams = $requestParams;
-
-		$this->action = isset($this->urlParams['Action']) ? str_replace("-","_",$this->urlParams['Action']) : "";
-		if(!$this->action) $this->action = 'index';
-		
-		// Check security on the controller
-		// run & init are manually disabled, because they create infinite loops and other dodgy situations
-		if(!$this->checkAccessAction($this->action) || in_array(strtolower($this->action), array('run', 'init'))) {
-			user_error("Disallowed action: '$this->action' on controller '$this->class'", E_USER_ERROR);
-		}
-
-		// Init
-		$this->baseInitCalled = false;
-		$this->init();
-		if(!$this->baseInitCalled) user_error("init() method on class '$this->class' doesn't call Controller::init().  Make sure that you have parent::init() included.", E_USER_WARNING);
-
-		// If we had a redirection or something, halt processing.
-		if($this->response->isFinished()) {
-			$this->popCurrent();
-			return $this->response;
-		}
-		
-		// Look at the action variables for forms
-		$funcName = null;
-		foreach($this->requestParams as $paramName => $paramVal) {
-			if(substr($paramName,0,7) == 'action_') {
-				// Cleanup action_, _x and _y from image fields
-				$funcName = preg_replace(array('/^action_/','/_x$|_y$/'),'',$paramName);
-				break;
-			}
-		}
-
-		// Form handler
-		if(isset($this->requestParams['executeForm']) && is_string($this->requestParams['executeForm'])) {
-			if(isset($funcName)) {
-				Form::set_current_action($funcName);
-			}
-			
-			$formOwner = $this->getFormOwner();
-			
-			// Create the form object
-			$form = $formOwner;
-
-			$formObjParts = explode('.', $this->requestParams['executeForm']);
-			foreach($formObjParts as $formMethod){
-				if(isset($_GET['debug_profile'])) Profiler::mark("Calling $formMethod", "on $form->class");
-				$form = $form->$formMethod();
-				if(isset($_GET['debug_profile'])) Profiler::unmark("Calling $formMethod", "on $form->class");
-				if(!$form) break; //user_error("Form method '" . $this->requestParams['executeForm'] . "' returns null in controller class '$this->class' ($_SERVER[REQUEST_URI])", E_USER_ERROR);
-			}
-
-
-			// Populate the form
-			if(isset($_GET['debug_profile'])) Profiler::mark("Controller", "populate form");
-			if($form){
-				$form->loadDataFrom($this->requestParams, true);
-				// disregard validation if a single field is called
-				
-				
-				if(!isset($_REQUEST['action_callfieldmethod'])) {
-					$valid = $form->beforeProcessing();
-					if(!$valid) {
-						$this->popCurrent();
-						return $this->response;
-					}
-				}else{
-					$fieldcaller = $form->dataFieldByName($requestParams['fieldName']); 
- 					if(is_a($fieldcaller, "TableListField")){ 
- 						if($fieldcaller->hasMethod('php')){
-							$valid = $fieldcaller->php($requestParams);
-							if(!$valid) exit();
- 						}
-					}
-				}
-				
-				// If the action wasnt' set, choose the default on the form.
-				if(!isset($funcName) && $defaultAction = $form->defaultAction()){
-					$funcName = $defaultAction->actionName();
-				}
-				
-				if(isset($funcName)) {
-					$form->setButtonClicked($funcName);
-				}
-				
-			}else{
-				 user_error("No form (" . Session::get('CMSMain.currentPage') . ") returned by $formOwner->class->$_REQUEST[executeForm]", E_USER_WARNING);	
-			}
-			if(isset($_GET['debug_profile'])) Profiler::unmark("Controller", "populate form");		
-			
-			if(!isset($funcName)) {
-				user_error("No action button has been clicked in this form executon, and no default has been allowed", E_USER_ERROR);
-			}
-			
-			// Protection against CSRF attacks
-			if($form->securityTokenEnabled()) {
-				$securityID = Session::get('SecurityID');
-
-				if(!$securityID || !isset($this->requestParams['SecurityID']) || $securityID != $this->requestParams['SecurityID']) {
-					// Don't show error on live sites, as spammers create a million of these
-					if(!Director::isLive()) {
-						trigger_error("Security ID doesn't match, possible CRSF attack.", E_USER_ERROR);
-					} else {
-						die();
-					}
-				}
-			}
-
-
-			// First, try a handler method on the controller
-			if($this->hasMethod($funcName) || !$form) {
-				if(isset($_GET['debug_controller'])){
-					Debug::show("Found function $funcName on the controller");
-				}
-
-				if(isset($_GET['debug_profile'])) Profiler::mark("$this->class::$funcName (controller action)");
-				$result = $this->$funcName($this->requestParams, $form);
-				if(isset($_GET['debug_profile'])) Profiler::unmark("$this->class::$funcName (controller action)");
-				
-			} else if(isset($formOwner) && $formOwner->hasMethod($funcName)) {
-				$result = $formOwner->$funcName($this->requestParams, $form);
-
-			// Otherwise, try a handler method on the form object
-			} else {
-				if(isset($_GET['debug_controller'])) {
-					Debug::show("Found function $funcName on the form object");
-				}
-
-				if(isset($_GET['debug_profile'])) Profiler::mark("$form->class::$funcName (form action)");
-				$result = $form->$funcName($this->requestParams, $form);
-				if(isset($_GET['debug_profile'])) Profiler::unmark("$form->class::$funcName (form action)");
-			}
-
-		// Normal action
-		} else {
-			if(!isset($funcName)) $funcName = $this->action;
-
-			if($this->hasMethod($funcName)) {
-				if(isset($_GET['debug_controller'])) Debug::show("Found function $funcName on the $this->class controller");
-
-				if(isset($_GET['debug_profile'])) Profiler::mark("$this->class::$funcName (controller action)");		
-				
-				$result = $this->$funcName($this->urlParams);
-				if(isset($_GET['debug_profile'])) Profiler::unmark("$this->class::$funcName (controller action)");
-
-			} else {
-				if(isset($_GET['debug_controller'])) Debug::show("Running default action for $funcName on the $this->class controller" );
-				if(isset($_GET['debug_profile'])) Profiler::mark("Controller::defaultAction($funcName)");
-				$result = $this->defaultAction($funcName, $this->urlParams);
-				if(isset($_GET['debug_profile'])) Profiler::unmark("Controller::defaultAction($funcName)");
-			}
-		}
-
-		// If your controller function returns an array, then add that data to the
-		// default template
-
-		if(is_array($result)) {
-			$extended = $this->customise($result);
-			$viewer = $this->getViewer($funcName);
-
-			$result = $viewer->process($extended);
-		}
-
-		$this->response->setBody($result);
-	
-		if($result) ContentNegotiator::process($this->response);
-		
-		// Set up HTTP cache headers
-		HTTP::add_cache_headers($this->response);
-
-		if(isset($_GET['debug_profile'])) Profiler::unmark("Controller", "run");
-		
-		$this->popCurrent();
-		return $this->response;
-	}
 	
 	/**
 	 * Return the object that is going to own a form that's being processed, and handle its execution.
@@ -551,56 +441,6 @@ class Controller extends ViewableData {
 			(isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] == "XMLHttpRequest")
 		);
 	}
-	
-	/**
-	 * Check that the given action is allowed to be called on this controller.
-	 * This method is called by run() and makes use of {@link self::$allowed_actions}.
-	 */
-	function checkAccessAction($action) {
-		$action = strtolower($action);
-		
-		// Collate self::$allowed_actions from this class and all parent classes
-		$access = null;
-		$className = $this->class;
-		while($className != 'Controller') {
-			// Merge any non-null parts onto $access.
-			$accessPart = eval("return $className::\$allowed_actions;");
-			if($accessPart !== null) $access = array_merge((array)$access, $accessPart);
-			
-			// Build an array of parts for checking if part[0] == part[1], which means that this class doesn't directly define it.
-			$accessParts[] = $accessPart;
-			
-			$className = get_parent_class($className);
-		}
-		
-		// Add $allowed_actions from extensions
-		if($this->extension_instances) {
-			foreach($this->extension_instances as $inst) {
-				$accessPart = $inst->stat('allowed_actions');
-				if($accessPart !== null) $access = array_merge((array)$access, $accessPart);
-			}
-		}
-		
-		if($access === null || (isset($accessParts[1]) && $accessParts[0] === $accessParts[1])) {
-			// user_error("Deprecated: please define static \$allowed_actions on your Controllers for security purposes", E_USER_NOTICE);
-			return true;
-		}
-		
-		if($action == 'index') return true;
-		
-		if(isset($access[$action])) {
-			$test = $access[$action];
-			if($test === true) return true;
-			if(substr($test,0,2) == '->') {
-				$funcName = substr($test,2);
-				return $this->$funcName();
-			}
-			if(Permission::check($test)) return true;
-		} else if((($key = array_search($action, $access)) !== false) && is_numeric($key)) {
-			return true;
-		}
-		return false;
-	} 
 	
 }
 
