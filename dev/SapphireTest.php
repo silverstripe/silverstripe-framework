@@ -110,12 +110,13 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 							$parsedItems[] = $this->parseFixtureVal($item);
 						}
 						$obj->write();
-						if($obj->many_many($fieldName)) {
-							$obj->getManyManyComponents($fieldName)->setByIDList($parsedItems);
-						} else {
+						if($obj->has_many($fieldName)) {
 							$obj->getComponents($fieldName)->setByIDList($parsedItems);
+						} elseif($obj->many_many($fieldName)) {
+							$obj->getManyManyComponents($fieldName)->setByIDList($parsedItems);
 						}
-						
+					} elseif($obj->has_one($fieldName)) {
+						$obj->{$fieldName . 'ID'} = $this->parseFixtureVal($fieldVal);
 					} else {
 						$obj->$fieldName = $this->parseFixtureVal($fieldVal);
 					}

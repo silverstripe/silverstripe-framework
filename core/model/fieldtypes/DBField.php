@@ -217,12 +217,13 @@ abstract class DBField extends ViewableData {
 	 * @todo documentation
 	 * 
 	 * @todo figure out how we pass configuration parameters to
-	 * search filters
+	 * search filters (note: parameter hack now in place to pass in the required full path - using $this->name won't work)
 	 *
 	 * @return SearchFilter
 	 */
-	public function defaultSearchFilter() {
-		return new PartialMatchFilter($this->name);
+	public function defaultSearchFilter($name = false) {
+		$name = ($name) ? $name : $this->name;
+		return new PartialMatchFilter($name);
 	}
 	
 	/**

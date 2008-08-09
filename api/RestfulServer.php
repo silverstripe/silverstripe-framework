@@ -46,6 +46,34 @@ class RestfulServer extends Controller {
 
 	protected static $api_base = "api/v1/";
 
+	/**
+	 * If no extension is given in the request, resolve to this extension
+	 * (and subsequently the {@link self::$default_mimetype}.
+	 *
+	 * @var string
+	 */
+	protected static $default_extension = "xml";
+	
+	/**
+	 * If no extension is given, resolve the request to this mimetype.
+	 *
+	 * @var string
+	 */
+	protected static $default_mimetype = "text/xml";
+	
+	/**
+	 * Maps common extensions to their mimetype representations.
+	 *
+	 * @var array
+	 */
+	protected static $mimetype_map = array(
+		'xml' => 'text/xml',
+		'json' => 'text/json',
+		'js' => 'text/json',
+		'xhtml' => 'text/html',
+		'html' => 'text/html',
+	);
+	
 	/*
 	function handleItem($request) {
 		return new RestfulServer_Item(DataObject::get_by_id($request->param("ClassName"), $request->param("ID")));
@@ -62,39 +90,22 @@ class RestfulServer extends Controller {
 	 */
 	function index() {
 		ContentNegotiator::disable();
+		
 		$requestMethod = $_SERVER['REQUEST_METHOD'];
 		if(!isset($this->urlParams['ClassName'])) return $this->notFound();
 		$className = $this->urlParams['ClassName'];
 		$id = (isset($this->urlParams['ID'])) ? $this->urlParams['ID'] : null;
 		$relation = (isset($this->urlParams['Relation'])) ? $this->urlParams['Relation'] : null;
 		
-		$extension = $this->request->getExtension();
-		
-		// Determine mime-type from extension
-		$contentMap = array(
-			'xml' => 'text/xml',
-			'json' => 'text/json',
-			'js' => 'text/json',
-			'xhtml' => 'text/html',
-			'html' => 'text/html',
-		);
-		$contentType = isset($contentMap[$extension]) ? $contentMap[$extension] : 'text/xml';
-		
-		if(!$extension) $extension = "xml";
-		$formatter = DataFormatter::for_extension($extension); //$this->dataFormatterFromMime($contentType);
-		if($customFields = $this->request->getVar('fields')) $formatter->setCustomFields(explode(',',$customFields));
-		$relationDepth = $this->request->getVar('relationdepth');
-		if(is_numeric($relationDepth)) $formatter->relationDepth = (int)$relationDepth;
-		
 		switch($requestMethod) {
 			case 'GET':
-				return $this->getHandler($className, $id, $relation, $formatter);
+				return $this->getHandler($className, $id, $relation);
 			
 			case 'PUT':
-				return $this->putHandler($className, $id, $relation, $formatter);
+				return $this->putHandler($className, $id, $relation);
 			
 			case 'DELETE':
-				return $this->deleteHandler($className, $id, $relation, $formatter);
+				return $this->deleteHandler($className, $id, $relation);
 			
 			case 'POST':
 		}
@@ -129,10 +140,9 @@ class RestfulServer extends Controller {
 	 * @param String $className
 	 * @param Int $id
 	 * @param String $relation
-	 * @param String $contentType
 	 * @return String The serialized representation of the requested object(s) - usually XML or JSON.
 	 */
-	protected function getHandler($className, $id, $relation, $formatter) {
+	protected function getHandler($className, $id, $relation) {
 		$sort = array(
 			'sort' => $this->request->getVar('sort'),
 			'dir' => $this->request->getVar('dir')
@@ -141,6 +151,8 @@ class RestfulServer extends Controller {
 			'start' => $this->request->getVar('start'),
 			'limit' => $this->request->getVar('limit')
 		);
+		
+		$formatter = $this->getDataFormatter();
 
 		if($id) {
 			$obj = DataObject::get_by_id($className, $id);
@@ -208,6 +220,21 @@ class RestfulServer extends Controller {
 		return singleton($className)->buildDataObjectSet($query->execute());
 	}
 
+	protected function getDataFormatter() {
+		$extension = $this->request->getExtension();
+		
+		// Determine mime-type from extension
+		$contentType = isset(self::$mimetype_map[$extension]) ? self::$mimetype_map[$extension] : self::$default_mimetype;
+		
+		if(!$extension) $extension = self::$default_extension;
+		$formatter = DataFormatter::for_extension($extension); //$this->dataFormatterFromMime($contentType);
+		if($customFields = $this->request->getVar('fields')) $formatter->setCustomFields(explode(',',$customFields));
+		$relationDepth = $this->request->getVar('relationdepth');
+		if(is_numeric($relationDepth)) $formatter->relationDepth = (int)$relationDepth;
+		
+		return $formatter;		
+	}
+	
 	/**
 	 * Handler for object delete
 	 */

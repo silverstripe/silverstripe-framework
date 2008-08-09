@@ -142,7 +142,16 @@ class SQLQuery extends Object {
 	 */
 	public function leftJoin($table, $onPredicate) {
 		$this->from[] = "LEFT JOIN $table ON $onPredicate";
-		
+		return $this;
+	}
+	
+	/**
+	 * Add an INNER JOIN criteria to the FROM clause.
+	 * 
+	 * @return SQLQuery This instance 
+	 */
+	public function innerJoin($table, $onPredicate) {
+		$this->from[] = "INNER JOIN $table ON $onPredicate";
 		return $this;
 	}
 	

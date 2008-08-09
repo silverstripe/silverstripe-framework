@@ -21,6 +21,9 @@ class Group extends DataObject {
 	static $has_one = array(
 		"Parent" => "SiteTree",
 	);
+	static $has_many = array(
+		"Permissions" => "Permission",
+	);
 	static $many_many = array(
 		"Members" => "Member",
 	);

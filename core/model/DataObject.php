@@ -1310,16 +1310,11 @@ class DataObject extends ViewableData implements DataObjectInterface {
 	public function scaffoldSearchFields() {
 		$fields = new FieldSet();
 		foreach($this->searchable_fields() as $fieldName => $fieldType) {
-			if (is_int($fieldName)) $fieldName = $fieldType;
 			$field = $this->relObject($fieldName)->scaffoldSearchField();
 			if (strstr($fieldName, '.')) {
 				$field->setName(str_replace('.', '__', $fieldName));
-				$parts = explode('.', $fieldName);
-				//$label = $parts[count($parts)-2] . $parts[count($parts)-1];
-				$field->setTitle($this->toLabel($parts[count($parts)-2]));
-			} else {
-				$field->setTitle($this->toLabel($fieldName));
 			}
+			$field->setTitle($this->searchable_fields_labels($fieldName));
 			$fields->push($field);
 		}
 		return $fields;
@@ -1646,7 +1641,7 @@ class DataObject extends ViewableData implements DataObjectInterface {
 	 * @return boolean
 	 */
 	public function canView($member = null) {
-		return true;
+		return Permission::check('ADMIN');
 	}
 
 	/**
@@ -1654,7 +1649,7 @@ class DataObject extends ViewableData implements DataObjectInterface {
 	 * @return boolean
 	 */
 	public function canEdit($member = null) {
-		return true;
+		return Permission::check('ADMIN');
 	}
 
 	/**
@@ -1662,7 +1657,7 @@ class DataObject extends ViewableData implements DataObjectInterface {
 	 * @return boolean
 	 */
 	public function canDelete($member = null) {
-		return true;
+		return Permission::check('ADMIN');
 	}
 	
 	/**
@@ -1672,7 +1667,7 @@ class DataObject extends ViewableData implements DataObjectInterface {
 	 * @return boolean
 	 */
 	public function canCreate($member = null) {
-		return true;
+		return Permission::check('ADMIN');
 	}
 	
 	/**
@@ -2290,10 +2285,65 @@ class DataObject extends ViewableData implements DataObjectInterface {
 		$fields = $this->stat('searchable_fields');
 		if (!$fields) {
 			$fields = array_fill_keys(array_keys($this->summaryFields()), 'TextField');
+		} else {
+			// rewrite array, if it is using shorthand syntax
+			$rewrite = array();
+			foreach($fields as $name => $type) {
+				if (is_int($name)) $rewrite[$type] = 'TextField';
+				else $rewrite[$name] = $type;
+			}
+			$fields = $rewrite;
 		}
 		return $fields;
 	}
-
+	
+	/**
+	 * Get any user defined searchable fields labels that
+	 * exist. Allows overriding of default field names in the form
+	 * interface actually presented to the user.
+	 * 
+	 * The reason for keeping this separate from searchable_fields,
+	 * which would be a logical place for this functionality, is to 
+	 * avoid bloating and complicating the configuration array. Currently
+	 * much of this system is based on sensible defaults, and this property
+	 * would generally only be set in the case of more complex relationships
+	 * between data object being required in the search interface.
+	 * 
+	 * Generates labels based on name of the field itself, if no static property exists.
+	 * 
+	 * @todo fix bad code
+	 * 
+	 * @param $fieldName name of the field to retrieve
+	 * @return array of all element labels if no argument given
+	 * @return string of label if field
+	 */
+	public function searchable_fields_labels($fieldName=false) {
+		$labels = $this->stat('searchable_fields_labels');
+		if (is_array($labels)) {
+			if ($fieldName) {
+				if (isset($labels[$fieldName])) {
+					return $labels[$fieldName];
+				}
+			} else {
+				return $labels;
+			}
+		} else {
+			$fields = array_keys($this->searchable_fields());
+			$labels = array_combine($fields, $fields);
+			if ($fieldName) {
+				if (strstr($fieldName, '.')) {
+					$parts = explode('.', $fieldName);
+					$label = $parts[count($parts)-2] . ' ' . $parts[count($parts)-1];
+					return $this->toLabel($label);
+				} else {
+					return $this->toLabel($fieldName);
+				}
+			} else {
+				return $labels;
+			}	
+		}
+	}
+	
 	/**
 	 * Get the default summary fields for this object.
 	 *
@@ -2353,7 +2403,7 @@ class DataObject extends ViewableData implements DataObjectInterface {
 					if (is_subclass_of($type, 'SearchFilter')) {
 						$filters[$name] = new $type($name);
 					} else {
-						$filters[$name] = $this->relObject($name)->defaultSearchFilter();
+						$filters[$name] = $this->relObject($name)->defaultSearchFilter($name);
 					}
 				}
 			}
@@ -2540,6 +2590,12 @@ class DataObject extends ViewableData implements DataObjectInterface {
 	 */
 	public static $searchable_fields = null;
 
+	/**
+	 * User defined labels for searchable_fields, used to override
+	 * default display in the search form.
+	 */
+	public static $searchable_fields_labels = null;
+	
 	/**
 	 * Provides a default list of fields to be used by a 'summary'
 	 * view of this object.

@@ -136,7 +136,6 @@ class SearchContext extends Object {
 		$SQL_sort = (!empty($sort)) ? Convert::raw2sql($sort) : singleton($this->modelClass)->stat('default_sort');		
 		$query->orderby($SQL_sort);
 		
-		
 		foreach($searchParams as $key => $value) {
 			if ($value != '0') {
 				$key = str_replace('__', '.', $key);
@@ -148,7 +147,6 @@ class SearchContext extends Object {
 				}
 			}
 		}
-		
 		return $query;
 	}
 
@@ -164,6 +162,7 @@ class SearchContext extends Object {
 	 */
 	public function getResults($searchParams, $sort = false, $limit = false) {
 		$searchParams = array_filter($searchParams, array($this,'clearEmptySearchFields'));
+		
 		$query = $this->getQuery($searchParams, $sort, $limit);
 		
 		// use if a raw SQL query is needed
@@ -187,27 +186,7 @@ class SearchContext extends Object {
 	function clearEmptySearchFields($value) {
 		return ($value != '');
 	}
-	
-	/**
-	 * @todo documentation
-	 * @todo implementation
-	 *
-	 * @param array $searchFilters
-	 * @param SQLQuery $query
-	 */
-	protected function processFilters(SQLQuery $query, $searchParams) {
-		/*$conditions = array();
-		foreach($this->filters as $field => $filter) {
-			if (strstr($field, '.')) {
-				$path = explode('.', $field);
-			} else {
-				$conditions[] = $filter->apply($searchParams[$field]);
-			}
-		}
-		$query->where = $conditions;
-		return $query;*/
-	}
-	
+		
 	/**
 	 * Accessor for the filter attached to a named field.
 	 *
@@ -231,6 +210,11 @@ class SearchContext extends Object {
 		return $this->filters;
 	}
 	
+	/**
+	 * Overwrite the current search context filter map.
+	 *
+	 * @param array $filters
+	 */
 	public function setFilters($filters) {
 		$this->filters = $filters;
 	}	

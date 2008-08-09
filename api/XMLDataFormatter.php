@@ -30,10 +30,11 @@ class XMLDataFormatter extends DataFormatter {
 	
 		$json = "<$className href=\"$objHref.xml\">\n";
 		foreach($this->getFieldsForObj($obj) as $fieldName => $fieldType) {
-			if(is_subclass_of($obj->$fieldName, 'Object') && $obj->hasMethod('toXML')) {
-				$json .= $obj->$fieldName->toXML();
+			$fieldValue = $obj->$fieldName;
+			if(is_object($fieldValue) && is_subclass_of($fieldValue, 'Object') && $fieldValue->hasMethod('toXML')) {
+				$json .= $fieldValue->toXML();
 			} else {
-				$json .= "<$fieldName>" . Convert::raw2xml($obj->$fieldName) . "</$fieldName>\n";
+				$json .= "<$fieldName>" . Convert::raw2xml($fieldValue) . "</$fieldName>\n";
 			}
 		}
 	
