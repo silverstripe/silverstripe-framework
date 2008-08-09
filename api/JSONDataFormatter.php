@@ -23,10 +23,10 @@ class JSONDataFormatter extends DataFormatter {
 		
 		$json = "{\n  className : \"$className\",\n";
 		foreach($this->getFieldsForObj($obj) as $fieldName => $fieldType) {
-			if(is_object($obj->$fieldName)) {
+			if(is_subclass_of($obj->$fieldName, 'Object') && $obj->hasMethod('toJSON')) {
 				$jsonParts[] = "$fieldName : " . $obj->$fieldName->toJSON();
 			} else {
-				$jsonParts[] = "$fieldName : \"" . Convert::raw2js($obj->$fieldName) . "\"";
+				$jsonParts[] = "$fieldName : \"" . Convert::raw2json($obj->$fieldName) . "\"";
 			}
 		}
 

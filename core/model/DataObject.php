@@ -1843,7 +1843,8 @@ class DataObject extends ViewableData implements DataObjectInterface {
 
 				// Add SQL for multi-value fields
 				$SNG = singleton($tableClass);
-				foreach($SNG->databaseFields() as $k => $v) {
+				$databaseFields = $SNG->databaseFields();
+				if($databaseFields) foreach($databaseFields as $k => $v) {
 					if(!in_array($k, array('ClassName', 'LastEdited', 'Created'))) {
 						if(ClassInfo::classImplements($v, 'CompositeDBField')) {
 							$SNG->obj($k)->addToQuery($query);

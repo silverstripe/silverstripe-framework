@@ -69,6 +69,26 @@ class Convert extends Object {
 		}
 	}
 	
+	/**
+	 * Uses the PHP5.2 native json_encode function if available,
+	 * otherwise falls back to the Services_JSON class.
+	 * 
+	 * @see http://pear.php.net/pepr/pepr-proposal-show.php?id=198
+	 *
+	 * @param mixed $val
+	 * @return string JSON safe string
+	 */
+	static function raw2json($val) {
+		if(function_exists('json_econde')) {
+			return json_encode($val);	
+		} else {
+			require_once(Director::baseFolder() . '/sapphire/misc/json/JSON.php');			
+			$json = new Services_JSON();
+			return $json->encode($val);
+		}
+	}
+	
+	
 	// TODO Possible security risk: doesn't support arrays with more than one level - should be called recursively
 	static function raw2sql($val) {
 		if(is_array($val)) {
