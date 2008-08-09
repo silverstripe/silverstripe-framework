@@ -5,9 +5,9 @@
  * 
  * You can configure column-handling, 
  * 
- * @todo Allow updating of existing records based on user-specified unique criteria/callbacks (e.g. database ID)
  * @todo Add support for adding/editing has_many relations.
  * @todo Add support for deep chaining of relation properties (e.g. Player.Team.Stats.GoalCount)
+ * @todo Character conversion
  * 
  * @see http://rfc.net/rfc4180.html
  * @package cms
@@ -40,6 +40,9 @@ abstract class BulkLoader extends ViewableData {
 	 * 
 	 * The column count should match the count of array elements,
 	 * fill with NULL values if you want to skip certain columns.
+	 *
+	 * You can also combine {@link $hasHeaderRow} = true and {@link $columnMap}
+	 * and omit the NULL values in your map.
 	 * 
 	 * Supports one-level chaining of has_one relations and properties with dot notation
 	 * (e.g. Team.Title). The first part has to match a has_one relation name
@@ -129,11 +132,13 @@ abstract class BulkLoader extends ViewableData {
 	 * Useful to analyze the input and give the users a chance to influence
 	 * it through a UI.
 	 *
+	 * @todo Implement preview()
+	 *
 	 * @param string $filepath Absolute path to the file we're importing
 	 * @return array See {@link self::processAll()}
 	 */
 	public function preview($filepath) {
-		return $this->processAll($filepath, true);
+		user_error("BulkLoader::preview(): Not implemented", E_USER_ERROR);
 	}
 	
 	/**
@@ -154,10 +159,11 @@ abstract class BulkLoader extends ViewableData {
 	 * Process a single record from the file.
 	 * 
 	 * @param array $record An map of the data, keyed by the header field defined in {@link self::$columnMap}
+	 * @param array $columnMap
 	 * @param boolean $preview
 	 * @return ArrayData @see self::processAll()
 	 */
-	abstract protected function processRecord($record, $preview = false);
+	abstract protected function processRecord($record, $columnMap, $preview = false);
 	
 	/**
 	 * Return a FieldSet containing all the options for this form; this
@@ -173,6 +179,38 @@ abstract class BulkLoader extends ViewableData {
 	 */
 	public function Title() {
 		return ($title = $this->stat('title')) ? $title : $this->class;
+	}
+	
+	/**
+	 * Get a specification of all available columns and relations on the used model.
+	 * Useful for generation of spec documents for technical end users.
+	 * 
+	 * Return Format:
+	 * <example>
+	 * array(
+	 *   'fields' => array('myFieldName'=>'myDescription'), 
+	 *   'relations' => array('myRelationName'=>'myDescription'), 
+	 * )
+	 * </example>
+	 *
+	 * @todo Mix in custom column mappings
+	 * @usedby {@link ModelAdmin}
+	 *
+	 * @return array
+	 **/
+	public function getImportSpec() {
+		$spec = array();
+
+		// get database columns (fieldlabels include fieldname as a key)
+		$spec['fields'] = (array)singleton($this->objectClass)->fieldLabels();
+		
+		$has_ones = singleton($this->objectClass)->has_one();
+		$has_manys = singleton($this->objectClass)->has_many();
+		$many_manys = singleton($this->objectClass)->many_many();
+		
+		$spec['relations'] = (array)$has_ones + (array)$has_manys + (array)$many_manys;
+		
+		return $spec;
 	}
 	
 	/**

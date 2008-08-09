@@ -1,6 +1,8 @@
 <?php
 /**
  * @package tests
+ *
+ * @todo Test with columnn headers and custom mappings
  */
 class CsvBulkLoaderTest extends SapphireTest {
 	static $fixture_file = 'sapphire/tests/CsvBulkLoaderTest.yml';
