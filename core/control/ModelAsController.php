@@ -15,7 +15,7 @@ class ModelAsController extends Controller implements NestedController {
 		$this->init();
 		$nested = $this->getNestedController();
 		if(is_object($nested)) {
-			$result = $nested->handleRequest($requestParams);
+			$result = $nested->handleRequest($request);
 		} else {
 			$result = $nested;
 		}
