@@ -590,7 +590,7 @@ class Form extends ViewableData {
 				if($o || !isset($object[$name . '_unchanged'])) {
 					// Second check was the original check: save the value if we have one
 					if(isset($val) || $loadBlanks) {
-						$field->setValue($val);
+						$field->setValue($val, $object);
 					}
 				}
 			}

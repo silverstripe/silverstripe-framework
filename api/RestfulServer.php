@@ -38,8 +38,10 @@ class RestfulServer extends Controller {
 		ContentNegotiator::disable();
 
 		$requestMethod = $_SERVER['REQUEST_METHOD'];
+		
+		if(!isset($this->urlParams['ClassName'])) return $this->notFound();
 		$className = $this->urlParams['ClassName'];
-		$id = $this->urlParams['ID'];
+		$id = (isset($this->urlParams['ID'])) ? $this->urlParams['ID'] : null;
 		
 		switch($requestMethod) {
 			case 'GET':

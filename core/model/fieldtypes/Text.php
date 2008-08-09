@@ -13,6 +13,10 @@ class Text extends DBField {
 		DB::requireField($this->tableName, $this->name, "mediumtext character set utf8 collate utf8_general_ci");
 	}
 	
+	function hasValue() {
+		return ($this->value || $this->value == '0');
+	}
+	
 	//useed for search results show only limited contents
 	function LimitWordCount($numWords = 26) {
 		$this->value = Convert::xml2raw($this->value);

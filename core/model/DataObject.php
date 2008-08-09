@@ -601,12 +601,15 @@ class DataObject extends ViewableData implements DataObjectInterface {
 				}
 
 				// Divvy up field saving into a number of database manipulations
+				$manipulation = array();
 				if(isset($ancestry) && is_array($ancestry)) {
 					foreach($ancestry as $idx => $class) {
 						$classSingleton = singleton($class);
-						foreach($this->record as $fieldName => $value) {
+						foreach($this->record as $fieldName => $fieldValue) {
 							if(isset($this->changed[$fieldName]) && $this->changed[$fieldName] && $fieldType = $classSingleton->fieldExists($fieldName)) {
-								$manipulation[$class]['fields'][$fieldName] = $value ? ("'" . addslashes($value) . "'") : singleton($fieldType)->nullValue();
+								$fieldObj = $this->obj($fieldName);
+								if(!isset($manipulation[$class])) $manipulation[$class] = array();
+								if($fieldObj) $fieldObj->writeToManipulation($manipulation[$class]);
 							}
 						}
 
@@ -1487,7 +1490,7 @@ class DataObject extends ViewableData implements DataObjectInterface {
 		$constructor = $helperPair['castingHelper'];
 
 		if($obj = eval($constructor)) {
-			$obj->setVal($this->$fieldName);
+			$obj->setVal($this->$fieldName, $this->record);
 		}
 
 		return $obj;
@@ -1562,6 +1565,11 @@ class DataObject extends ViewableData implements DataObjectInterface {
 			foreach($tableClasses as $tableClass) {
 				$query->from[$tableClass] = "LEFT JOIN `$tableClass` ON `$tableClass`.ID = `$baseClass`.ID";
 				$query->select[] = "`$tableClass`.*";
+				// ask each $db field on the specific table for alterations to the query 
+				$uninheritedDbFields = singleton($tableClass)->uninherited('db',true);
+				if($uninheritedDbFields) foreach($uninheritedDbFields as $fieldName => $fieldType) {
+					singleton($tableClass)->obj($fieldName)->addToQuery($query);
+				}
 			}
 		}
 		$query->select[] = "`$baseClass`.ID";

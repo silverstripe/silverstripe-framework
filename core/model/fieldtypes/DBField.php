@@ -38,13 +38,61 @@ abstract class DBField extends ViewableData {
 		return $dbField;
 	}
 	
-	function setVal($value) {
+	function setVal($value, $record = null) {
 		return $this->setValue($value);
 	}
 	
-	function setValue($value) {
+	/**
+	 * Set the value on the field.
+	 * Optionally takes the whole record as an argument,
+	 * to pick other values.
+	 *
+	 * @param mixed $value
+	 * @param array $record
+	 */
+	function setValue($value, $record = null) {
 		$this->value = $value;
 	}
+	
+	/**
+	 * Determines if the field has a value which
+	 * is not considered to be 'null' in
+	 * a database context.
+	 * 
+	 * @return boolean
+	 */
+	function hasValue() {
+		return ($this->value);
+	}
+	
+	/**
+	 * Prepare the current field for usage in a 
+	 * database-manipulation (works on a manipulation reference).
+	 * 
+	 * Make value safe for insertion into
+	 * a SQL SET statement by applying addslashes() - 
+	 * can also be used to apply
+	 * special SQL-commands to the raw value
+	 * (e.g. for GIS functionality).
+	 * 
+	 * @param array $manipulation
+	 */
+	function writeToManipulation(&$manipulation) {
+		$manipulation['fields'][$this->name] = $this->hasValue() ? "'" . addslashes($this->value) . "'" : $this->nullValue();
+	}
+	
+	/**
+	 * Add custom query parameters for this field,
+	 * mostly SELECT statements for multi-value fields. 
+	 * 
+	 * By default, the ORM layer does a
+	 * SELECT <tablename>.* which
+	 * gets you the default representations
+	 * of all columns.
+	 *
+	 * @param Query $query
+	 */
+	function addToQuery(&$query) {}
 	
 	function setTable($tableName) {
 		$this->tableName = $tableName;

@@ -334,7 +334,11 @@ class ViewableData extends Object implements IteratorAggregate {
 				
 				if($constructor) {
 					$fieldObj = eval($constructor);
-					$fieldObj->setVal($val);
+					if($this->hasMethod('getAllFields')) {
+						$fieldObj->setVal($val, $this->getAllFields());
+					} else {
+						$fieldObj->setVal($val);
+					}
 				}
 			}
 

@@ -5,6 +5,7 @@
  * @subpackage model
  */
 class Varchar extends DBField {
+	
 	protected $size;
 	
 	function __construct($name, $size = 50) {
@@ -14,6 +15,11 @@ class Varchar extends DBField {
 	function requireField() {
 		DB::requireField($this->tableName, $this->name, "varchar($this->size) character set utf8 collate utf8_general_ci");
 	}
+	
+	function hasValue() {
+		return ($this->value || $this->value == '0');
+	}
+	
 	/**
 	 * Return the first letter of the string followed by a .
 	 */
