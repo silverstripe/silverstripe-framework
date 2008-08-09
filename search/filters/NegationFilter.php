@@ -13,7 +13,7 @@
 class NegationFilter extends SearchFilter {
 	
 	public function apply(SQLQuery $query) {
-		return $query->where("{$this->name} != '{$this->value}'");
+		return $query->where("{$this->name} != '{$this->getValue()}'");
 	}
 	
 }

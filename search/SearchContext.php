@@ -166,8 +166,6 @@ class SearchContext extends Object {
 		$searchParams = array_filter($searchParams, array($this,'clearEmptySearchFields'));
 		$query = $this->getQuery($searchParams, $sort, $limit);
 		
-		//Debug::dump($query->sql());
-		
 		// use if a raw SQL query is needed
 		$results = new DataObjectSet();
 		foreach($query->execute() as $row) {
@@ -198,7 +196,7 @@ class SearchContext extends Object {
 	 * @param SQLQuery $query
 	 */
 	protected function processFilters(SQLQuery $query, $searchParams) {
-		$conditions = array();
+		/*$conditions = array();
 		foreach($this->filters as $field => $filter) {
 			if (strstr($field, '.')) {
 				$path = explode('.', $field);
@@ -207,7 +205,7 @@ class SearchContext extends Object {
 			}
 		}
 		$query->where = $conditions;
-		return $query;
+		return $query;*/
 	}
 	
 	/**
@@ -253,32 +251,6 @@ class SearchContext extends Object {
 	 */
 	public function setFields($fields) {
 		$this->fields = $fields;
-	}
-	
-	/**
-	 * Placeholder, until I figure out the rest of the SQLQuery stuff
-	 * and link the $searchable_fields array to the SearchContext
-	 * 
-	 * @deprecated in favor of getResults
-	 */
-	public function getResultSet($fields) {
-		$filter = "";
-		$current = 1;
-		$fields = array_filter($fields, array($this,'clearEmptySearchFields'));
-		$length = count($fields);
-		foreach($fields as $key=>$val) {
-			// Array values come from more complex fields - for now let's just disable searching on them
-			if (!is_array($val) && $val != '') {
-				$filter .= "`$key`='$val'";
-			} else {
-				$length--;
-			}
-			if ($current < $length) {
-				$filter .= " AND ";
-			}
-			$current++;
-		}
-		return DataObject::get($this->modelClass, $filter);
 	}
 	
 }

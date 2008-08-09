@@ -50,6 +50,10 @@ class TestRunner extends Controller {
 		if (!self::$default_reporter) self::set_reporter('SapphireDebugReporter'); 
 	}
 	
+	public function Link() {
+		return Controller::join_links(Director::absoluteBaseURL(), 'dev/tests/');
+	}
+	
 	/**
 	 * Run all test classes
 	 */
@@ -69,10 +73,19 @@ class TestRunner extends Controller {
 	 * Browse all enabled test cases in the environment
 	 */
 	function browse() {
+		self::$default_reporter->writeHeader();
+		echo '<div class="info">';
+		echo '<h1>Available Tests</h1>';
+		echo '</div>';
+		echo '<div class="trace">';
 		$tests = ClassInfo::subclassesFor('SapphireTest');
+		echo "<h3><a href=\"" . $this->Link() . "all\">Run all " . count($tests) . " tests</a></h3>";
+		echo "<br />";
 		foreach ($tests as $test) {
-			echo "<h3><a href=\"$test\">$test</a></h3>";
+			echo "<h3><a href=\"" . $this->Link() . "$test\">Run $test</a></h3>";
 		}
+		echo '</div>';
+		self::$default_reporter->writeFooter();
 	}
 	
 	function coverage() {
@@ -109,7 +122,6 @@ class TestRunner extends Controller {
 				echo "<p>Running test cases: " . implode(", ", $classList) . "</p>";
 			} else {
 				echo "<h1>{$classList[0]}</h1>";
-				echo "<p>Running test case:</p>";
 			}
 			echo "</div>";
 			echo '<div class="trace">';

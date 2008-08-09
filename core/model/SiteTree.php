@@ -612,6 +612,7 @@ class SiteTree extends DataObject {
 	 * It can be overloaded to customise the security model for an
 	 * application.
 	 *
+	 * @param Member $member
 	 * @return boolean True if the current user can delete this page.
 	 */
 	public function canDelete($member = null) {
@@ -637,6 +638,7 @@ class SiteTree extends DataObject {
 	 * It can be overloaded to customise the security model for an
 	 * application.
 	 *
+	 * @param Member $member
 	 * @return boolean True if the current user can create pages on this
 	 *                 class.
 	 */
@@ -663,6 +665,7 @@ class SiteTree extends DataObject {
 	 * It can be overloaded to customise the security model for an
 	 * application.
 	 *
+	 * @param Member $member
 	 * @return boolean True if the current user can edit this page.
 	 */
 	public function canEdit($member = null) {
@@ -693,6 +696,7 @@ class SiteTree extends DataObject {
 	 * It can be overloaded to customise the security model for an
 	 * application.
 	 *
+	 * @param Member $member
 	 * @return boolean True if the current user can publish this page.
 	 */
 	public function canPublish($member = null) {

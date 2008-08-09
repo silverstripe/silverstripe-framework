@@ -743,35 +743,6 @@ class TableField_Item extends TableListField_Item {
 		return $content;
 	}
 	
-	function Can($mode) {
-		return $this->parent->Can($mode);
-	}
-	
-	function Parent() {
-		return $this->parent;
-	}
-	
-	/**
-	 * Create the base link for the call below.
-	 */
-	function BaseLink() {
-		$parent = $this->parent;
-		$action = $parent->FormAction();
-		if(substr($action, -1, 1) !== '&'){
-			$action = $action."&";
-		} 
-		$action = str_replace('&', '&amp;', $action);
-
-		return $action . "action_callfieldmethod=1&amp;fieldName=". $parent->Name() . "&amp;childID=" . $this->ID;
-	}
-	/**
-	 * Runs the delete() method on the Tablefield parent.
-	 * Allows the deletion of objects via ajax
-	 */
-	function DeleteLink() {
-		return $this->BaseLink() . "&amp;methodName=delete";
-	}
-
 }
 
 ?>

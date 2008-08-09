@@ -1,5 +1,10 @@
 <?php
 /**
+ * @package sapphire
+ * @subpackage search
+ */
+
+/**
  * Matches textual content with a LIKE '%keyword%' construct.
  *
  * @package sapphire
@@ -9,7 +14,7 @@ class PartialMatchFilter extends SearchFilter {
 	
 	public function apply(SQLQuery $query) {
 		$query = $this->applyRelation($query);
-		return $query->where("{$this->getName()} LIKE '%{$this->value}%'");
+		return $query->where("{$this->getName()} LIKE '%{$this->getValue()}%'");
 	}
 	
 }

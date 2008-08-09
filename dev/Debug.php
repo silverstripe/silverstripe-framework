@@ -107,10 +107,11 @@ class Debug {
 	 * @param mixed $val
 	 */
 	static function dump($val) {
-		echo '<pre style="background-color:#ccc;padding:5px;">';
+		echo '<pre style="background-color:#ccc;padding:5px;font-size:14px;line-height:18px;">';
 		$caller = Debug::caller();
-		echo "<span style=\"font-size: 60%\">Line $caller[line] of " . basename($caller['file']) . "</span>\n";
-		print_r($val);
+		echo "<span style=\"font-size: 12px;color:#666;\">Line $caller[line] of " . basename($caller['file']) . ":</span>\n";
+		if (is_string($val)) print_r(wordwrap($val, 100));
+		else print_r($val);
 		echo '</pre>';
 	}
 
@@ -260,7 +261,7 @@ class Debug {
 			echo "ERROR:Error $errno: $errstr\n At l$errline in $errfile\n";
 			Debug::backtrace();
 		} else {
-			$reporter = new DebugReporter();
+			$reporter = new SapphireDebugReporter();
 			$reporter->writeHeader();
 			echo '<div class="info">';
 			echo "<h1>" . strip_tags($errstr) . "</h1>";
@@ -588,8 +589,9 @@ class SapphireDebugReporter implements DebugReporter {
 		echo 'pre { margin-left:18px; }';
 		echo 'pre span { color:#999;}';
 		echo 'pre .error { color:#f00; }';
-		echo '.pass { padding:2px 20px 2px 40px; color:#006600; background:#E2F9E3 url('.Director::absoluteBaseURL() .'cms/images/alert-good.gif) no-repeat scroll 7px 50%; border:1px solid #8DD38D; }';
-		echo '.fail { padding:2px 20px 2px 40px; color:#C80700; background:#FFE9E9 url('.Director::absoluteBaseURL() .'cms/images/alert-bad.gif) no-repeat scroll 7px 50%; }';	
+		echo '.pass { margin-top:18px; padding:2px 20px 2px 40px; color:#006600; background:#E2F9E3 url('.Director::absoluteBaseURL() .'cms/images/alert-good.gif) no-repeat scroll 7px 50%; border:1px solid #8DD38D; }';
+		echo '.fail { margin-top:18px; padding:2px 20px 2px 40px; color:#C80700; background:#FFE9E9 url('.Director::absoluteBaseURL() .'cms/images/alert-bad.gif) no-repeat scroll 7px 50%; border:1px solid #C80700; }';	
+		echo '.failure span { color:#C80700; font-weight:bold; }';
 		echo '</style></head>';
 		echo '<body>';
 		echo '<div class="header"><img src="'. Director::absoluteBaseURL() .'cms/images/mainmenu/logo.gif" width="26" height="23"></div>';

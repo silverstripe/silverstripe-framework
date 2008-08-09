@@ -1,5 +1,10 @@
 <?php
 /**
+ * @package sapphire
+ * @subpackage search
+ */
+
+/**
  * Filters by full-text matching on the given field.
  *
  * Full-text indexes are only available with MyISAM tables. The following column types are
@@ -23,7 +28,8 @@
 class FulltextFilter extends SearchFilter {
 
 	public function apply(SQLQuery $query) {
-		return "";
+		$query->where("MATCH ({$this->getName()} AGAINST ('{$this->getValue()}')");
+		return $query;
 	}
 
 }

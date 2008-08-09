@@ -101,6 +101,8 @@ class SearchContextTest extends SapphireTest {
 			"PartialMatch" => "partially",
 			"Negation" => "undisclosed",
 			"CollectionMatch" => "ExistingCollectionValue,NonExistingCollectionValue,4,Inline'Quotes'",
+			"StartsWith" => "12345",
+			"EndsWith" => "ijkl"
 		);
 		
 		$results = $context->getResults($params);
@@ -209,8 +211,10 @@ class SearchContextTest_AllFilterTypes extends DataObject implements TestOnly {
 		"PartialMatch" => "Text",
 		"Negation" => "Text",
 		"SubstringMatch" => "Text",
-		"HiddenValue" => "Text",
 		"CollectionMatch" => "Text",
+		"StartsWith" => "Text",
+		"EndsWith" => "Text",
+		"HiddenValue" => "Text"
 	);
 	
 	static $searchable_fields = array(
@@ -219,6 +223,8 @@ class SearchContextTest_AllFilterTypes extends DataObject implements TestOnly {
 		"Negation" => "NegationFilter",
 		"SubstringMatch" => "SubstringFilter",
 		"CollectionMatch" => "CollectionFilter",
+		"StartsWith" => "StartsWithFilter",
+		"EndsWith" => "EndsWithFilter"
 	);
 	
 }

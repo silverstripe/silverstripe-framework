@@ -63,3 +63,5 @@ SearchContextTest_AllFilterTypes:
         Negation: Shouldnt match me
         HiddenValue: Filtered value
         CollectionMatch: ExistingCollectionValue
+        StartsWith: 12345-6789
+        EndsWith: abcd-efgh-ijkl

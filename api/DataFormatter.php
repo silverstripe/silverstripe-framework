@@ -28,6 +28,15 @@ abstract class DataFormatter extends Object {
 	public $relationDepth = 1;
 	
 	/**
+	 * Allows overriding of the fields which are rendered for the
+	 * processed dataobjects. By default, this includes all
+	 * fields in {@link DataObject::inheritedDatabaseFields()}.
+	 *
+	 * @var array
+	 */
+	protected $customFields = null;
+	
+	/**
 	 * Get a DataFormatter object suitable for handling the given file extension
 	 */
 	static function for_extension($extension) {
@@ -46,6 +55,50 @@ abstract class DataFormatter extends Object {
 		}
 	}
 	
+	/**
+	 * @param array $fields
+	 */
+	public function setCustomFields($fields) {
+		$this->customFields = $fields;
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getCustomFields() {
+		return $this->customFields;
+	}
+	
+	/**
+	 * Returns all fields on the object which should be shown
+	 * in the output. Can be customised through {@link self::setCustomFields()}.
+	 *
+	 * @todo Allow for custom getters on the processed object (currently filtered through inheritedDatabaseFields)
+	 * @todo Field level permission checks
+	 * 
+	 * @param DataObject $obj
+	 * @return array
+	 */
+	protected function getFieldsForObj($obj) {
+		$dbFields = array();
+		
+		// if custom fields are specified, only select these
+		if($this->customFields) {
+			foreach($this->customFields as $fieldName) {
+				// @todo Possible security risk by making methods accessible - implement field-level security
+				if($obj->hasField($fieldName) || $obj->hasMethod("get{$fieldName}")) $dbFields[$fieldName] = $fieldName; 
+			}
+		} else {
+			// by default, all database fields are selected
+			$dbFields = $obj->inheritedDatabaseFields();
+		}
+		
+		// add default required fields
+		$dbFields = array_merge($dbFields, array('ID'=>'Int'));
+		
+		return $dbFields;
+	}
+	
 	/** 
 	 * Return an array of the extensions that this data formatter supports
 	 */
@@ -54,13 +107,11 @@ abstract class DataFormatter extends Object {
 	
 	/**
 	 * Convert a single data object to this format.  Return a string.
-	 * @todo Add parameters for things like selecting output columns
 	 */
 	abstract function convertDataObject(DataObjectInterface $do);
 
 	/**
 	 * Convert a data object set to this format.  Return a string.
-	 * @todo Add parameters for things like selecting output columns
 	 */
 	abstract function convertDataObjectSet(DataObjectSet $set);
 		

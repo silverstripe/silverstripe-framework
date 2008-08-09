@@ -23,11 +23,19 @@
  *  - DELETE /api/v1/(ClassName)/(ID)/(Relation)/(ForeignID) - remove the relationship between two database records, but don't actually delete the foreign object (NOT IMPLEMENTED YET)
  *
  *  - POST /api/v1/(ClassName)/(ID)/(MethodName) - executes a method on the given object (e.g, publish)
- *
- * @todo Finish RestfulServer_Item and RestfulServer_List implementation and re-enable $url_handlers
  * 
- * @package sapphire
- * @subpackage api
+ * You can trigger searches based on the fields specified on {@link DataObject::searchable_fields} and passed
+ * through {@link DataObject::getDefaultSearchContext()}. Just add a key-value pair with the search-term
+ * to the url, e.g. /api/v1/(ClassName)/?Title=mytitle 
+ * 
+ * Other url-modifiers:
+ * - &limit=<numeric>: Limit the result set
+ * - &relationdepth=<numeric>: Displays links to existing has-one and has-many relationships to a certain depth (Default: 1)
+ * - &fields=<string>: Comma-separated list of fields on the output object (defaults to all database-columns)
+ * 
+ * @todo Finish RestfulServer_Item and RestfulServer_List implementation and re-enable $url_handlers
+ * @todo Make SearchContext specification customizeable for each class
+ * @todo Allow for range-searches (e.g. on Created column)
  */
 class RestfulServer extends Controller {
 	static $url_handlers = array(
@@ -74,6 +82,9 @@ class RestfulServer extends Controller {
 		
 		if(!$extension) $extension = "xml";
 		$formatter = DataFormatter::for_extension($extension); //$this->dataFormatterFromMime($contentType);
+		if($customFields = $this->request->getVar('fields')) $formatter->setCustomFields(explode(',',$customFields));
+		$relationDepth = $this->request->getVar('relationdepth');
+		if(is_numeric($relationDepth)) $formatter->relationDepth = (int)$relationDepth;
 		
 		switch($requestMethod) {
 			case 'GET':
@@ -169,7 +180,7 @@ class RestfulServer extends Controller {
 			// show empty serialized result when no records are present
 			if(!$obj) $obj = new DataObjectSet();
 		}
-
+		
 		if($obj instanceof DataObjectSet) return $formatter->convertDataObjectSet($obj);
 		else return $formatter->convertDataObject($obj);
 	}

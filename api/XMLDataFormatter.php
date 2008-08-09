@@ -29,8 +29,7 @@ class XMLDataFormatter extends DataFormatter {
 		$objHref = Director::absoluteURL(self::$api_base . "$obj->class/$obj->ID");
 	
 		$json = "<$className href=\"$objHref.xml\">\n";
-		$dbFields = array_merge($obj->inheritedDatabaseFields(), array('ID'=>'Int'));
-		foreach($dbFields as $fieldName => $fieldType) {
+		foreach($this->getFieldsForObj($obj) as $fieldName => $fieldType) {
 			if(is_object($obj->$fieldName)) {
 				$json .= $obj->$fieldName->toXML();
 			} else {

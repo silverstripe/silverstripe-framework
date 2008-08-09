@@ -1261,7 +1261,7 @@ class DataObject extends ViewableData implements DataObjectInterface {
 					// We need to find the inverse component name
 					$otherManyMany = singleton($candidate)->stat('many_many');
 					if(!$otherManyMany) {
-						Debug::message("Inverse component of $candidate not found");
+						user_error("Inverse component of $candidate not found ({$this->class})", E_USER_ERROR);
 					}
 
 					foreach($otherManyMany as $inverseComponentName => $candidateClass) {
@@ -1641,6 +1641,40 @@ class DataObject extends ViewableData implements DataObjectInterface {
 		}
 	}
 
+	/**
+	 * @param Member $member
+	 * @return boolean
+	 */
+	public function canView($member = null) {
+		return true;
+	}
+
+	/**
+	 * @param Member $member
+	 * @return boolean
+	 */
+	public function canEdit($member = null) {
+		return true;
+	}
+
+	/**
+	 * @param Member $member
+	 * @return boolean
+	 */
+	public function canDelete($member = null) {
+		return true;
+	}
+	
+	/**
+	 * @todo Should canCreate be a static method?
+	 * 
+	 * @param Member $member
+	 * @return boolean
+	 */
+	public function canCreate($member = null) {
+		return true;
+	}
+	
 	/**
 	 * Debugging used by Debug::show()
 	 *

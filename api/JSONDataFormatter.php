@@ -22,8 +22,7 @@ class JSONDataFormatter extends DataFormatter {
 		$id = $obj->ID;
 		
 		$json = "{\n  className : \"$className\",\n";
-		$dbFields = array_merge($obj->inheritedDatabaseFields(), array('ID'=>'Int'));
-		foreach($dbFields as $fieldName => $fieldType) {
+		foreach($this->getFieldsForObj($obj) as $fieldName => $fieldType) {
 			if(is_object($obj->$fieldName)) {
 				$jsonParts[] = "$fieldName : " . $obj->$fieldName->toJSON();
 			} else {

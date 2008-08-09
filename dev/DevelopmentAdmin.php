@@ -17,7 +17,7 @@ class DevelopmentAdmin extends Controller {
 	);
 	
 	function index() {
-		$renderer = new DebugView();
+		$renderer = new SapphireDebugReporter();
 		$renderer->writeHeader();
 		echo <<<HTML
 			<div class="info"><h1>Sapphire Development Tools</h1></div>

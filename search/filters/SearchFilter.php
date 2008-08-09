@@ -1,5 +1,10 @@
 <?php
 /**
+ * @package sapphire
+ * @subpackage search
+ */
+
+/**
  * @todo documentation
  *
  * @package sapphire
@@ -17,12 +22,48 @@ abstract class SearchFilter extends Object {
 		$this->value = $value;
 	}
 	
+	/**
+	 * Called by constructor to convert a string pathname into
+	 * a well defined relationship sequence.
+	 *
+	 * @param unknown_type $name
+	 */
+	protected function addRelation($name) {
+		if (strstr($name, '.')) {
+			$parts = explode('.', $name);
+			$this->name = array_pop($parts);
+			$this->relation = $parts;
+		} else {
+			$this->name = $name;
+		}
+	}
+	
+	/**
+	 * Set the root model class to be selected by this
+	 * search query.
+	 *
+	 * @param string $className
+	 */	
+	public function setModel($className) {
+		$this->model = $className;
+	}
+	
+	/**
+	 * Set the current value to be filtered on.
+	 *
+	 * @param string $value
+	 */
 	public function setValue($value) {
 		$this->value = $value;
 	}
 	
-	public function setModel($className) {
-		$this->model = $className;
+	/**
+	 * Accessor for the current value to be filtered on.
+	 *
+	 * @return string
+	 */
+	public function getValue() {
+		return $this->value;
 	}
 	
 	/**
@@ -42,16 +83,6 @@ abstract class SearchFilter extends Object {
 		return $candidateClass . "." . $this->name;
 	}
 	
-	protected function addRelation($name) {
-		if (strstr($name, '.')) {
-			$parts = explode('.', $name);
-			$this->name = array_pop($parts);
-			$this->relation = $parts;
-		} else {
-			$this->name = $name;
-		}
-	}
-	
 	/**
 	 * Applies multiple-table inheritance to straight joins on the data objects
 	 *
@@ -66,11 +97,10 @@ abstract class SearchFilter extends Object {
 	/**
 	 * Traverse the relationship fields, and add the table
 	 * mappings to the query object state.
-	 *
-	 * @todo move join specific crap into SQLQuery
 	 * 
-	 * @param unknown_type $query
-	 * @return unknown
+	 * @todo try to make this implicitly triggered so it doesn't have to be manually called in child filters
+	 * @param SQLQuery $query
+	 * @return SQLQuery
 	 */
 	protected function applyRelation($query) {
 		if (is_array($this->relation)) {
@@ -84,6 +114,8 @@ abstract class SearchFilter extends Object {
 					$model = singleton($component);
 					$this->applyJoin($query, $model, $component);
 					$this->model = $component;
+				} elseif ($component = $model->many_many($rel)) {
+					Debug::dump("Many-Many traversals not implemented");
 				}
 			}
 		}
@@ -94,6 +126,7 @@ abstract class SearchFilter extends Object {
 	 * Apply filter criteria to a SQL query.
 	 *
 	 * @param SQLQuery $query
+	 * @return SQLQuery
 	 */
 	abstract public function apply(SQLQuery $query);
 	

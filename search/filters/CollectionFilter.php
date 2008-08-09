@@ -1,17 +1,20 @@
 <?php
 /**
+ * @package sapphire
+ * @subpackage search
+ */
+
+/**
  * Checks if a value is in a given set.
  * SQL syntax used: Column IN ('val1','val2')
  * 
  * @todo Add negation (NOT IN)6
- * 
- * @author Silverstripe Ltd., Ingo Schommer (<firstname>@silverstripe.com) 
  */
 class CollectionFilter extends SearchFilter {
 	
 	public function apply(SQLQuery $query) {
 		$query = $this->applyRelation($query);
-		$values = explode(',',$this->value);
+		$values = explode(',',$this->getValue());
 		if(!$values) return false;
 		
 		for($i=0; $i<count($values); $i++) {

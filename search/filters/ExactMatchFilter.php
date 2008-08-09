@@ -1,6 +1,11 @@
 <?php
 /**
- * Matches textual content with a columnname = 'keyword' construct
+ * @package sapphire
+ * @subpackage search
+ */
+
+/**
+ * Selects textual content with an exact match between columnname and keyword.
  *
  * @todo case sensitivity switch
  * @todo documentation
@@ -17,7 +22,7 @@ class ExactMatchFilter extends SearchFilter {
 	 */
 	public function apply(SQLQuery $query) {
 		$query = $this->applyRelation($query);
-		return $query->where("{$this->getName()} = '{$this->value}'");
+		return $query->where("{$this->getName()} = '{$this->getValue()}'");
 	}
 	
 }
