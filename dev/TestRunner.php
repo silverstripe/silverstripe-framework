@@ -31,8 +31,8 @@ class TestRunner extends Controller {
 	private static $default_reporter;
 	
 	static $url_handlers = array(
-		'' => 'index',
-		'$TestCase' => 'only'
+		'' => 'browse',
+		'$TestCase' => 'only',
 	);
 	
 	/**
@@ -53,7 +53,7 @@ class TestRunner extends Controller {
 	/**
 	 * Run all test classes
 	 */
-	function index() {
+	function all() {
 		if(hasPhpUnit()) {
 			$tests = ClassInfo::subclassesFor('SapphireTest');
 			array_shift($tests);
@@ -62,6 +62,16 @@ class TestRunner extends Controller {
 			$this->runTests($tests);
 		} else {
 			echo "Please install PHPUnit using pear";
+		}
+	}
+	
+	/**
+	 * Browse all enabled test cases in the environment
+	 */
+	function browse() {
+		$tests = ClassInfo::subclassesFor('SapphireTest');
+		foreach ($tests as $test) {
+			echo "<h3><a href=\"$test\">$test</a></h3>";
 		}
 	}
 	
@@ -86,7 +96,7 @@ class TestRunner extends Controller {
 		if(class_exists($className)) {
 			$this->runTests(array($className));
 		} else {
-			echo "Class '$className' not found";
+			if ($className == 'all') $this->all();
 		}
 	}
 
@@ -94,11 +104,15 @@ class TestRunner extends Controller {
 		if(!Director::is_cli()) {
 			self::$default_reporter->writeHeader();
 			echo '<div class="info">';
-			echo "<h1>Sapphire PHPUnit Test Runner</h1>";
-			echo "<p>Using the following subclasses of SapphireTest for testing: " . implode(", ", $classList) . "</p>";
+			if (count($classList) > 1) { 
+				echo "<h1>Sapphire Tests</h1>";
+				echo "<p>Running test cases: " . implode(", ", $classList) . "</p>";
+			} else {
+				echo "<h1>{$classList[0]}</h1>";
+				echo "<p>Running test case:</p>";
+			}
 			echo "</div>";
 			echo '<div class="trace">';
-			echo "<pre>";
 		} else {
 			echo "Sapphire PHPUnit Test Runner\n";
 			echo "Using the following subclasses of SapphireTest for testing: " . implode(", ", $classList) . "\n\n";
@@ -114,17 +128,22 @@ class TestRunner extends Controller {
 			$suite->addTest(new PHPUnit_Framework_TestSuite($className));
 		}
 
+		$reporter = new SapphireTestReporter();
+		$results = new PHPUnit_Framework_TestResult();		
+		$results->addListener($reporter);
+
 		/*, array("reportDirectory" => "/Users/sminnee/phpunit-report")*/
 		if($coverage) {
-			$testResult = PHPUnit_TextUI_TestRunner::run($suite, array("reportDirectory" => "../assets/coverage-report"));
-		} else {
-			$testResult = PHPUnit_TextUI_TestRunner::run($suite);
-		}
-		
-		if($coverage) {
+			$suite->run($results);
+			//$testResult = PHPUnit_TextUI_TestRunner::run($suite, array("reportDirectory" => "../assets/coverage-report"));
 			$coverageURL = Director::absoluteURL('assets/coverage-report');
 			echo "<p><a href=\"$coverageURL\">Coverage report available here</a></p>";
+		} else {
+			$suite->run($results);
+			//$testResult = PHPUnit_TextUI_TestRunner::run($suite);
 		}
+		
+		$reporter->writeResults();
 		
 		if(!Director::is_cli()) echo '</div>';
 		

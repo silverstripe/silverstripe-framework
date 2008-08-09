@@ -162,12 +162,12 @@ class RestfulServer extends Controller {
 			} 
 			
 		} else {
-			$obj = $this->search($className, $this->request->getVars(), $sort, $limit);
-			// show empty serialized result when no records are present
-			if(!$obj) $obj = new DataObjectSet();
 			if(!singleton($className)->stat('api_access')) {
 				return $this->permissionFailure();
 			}
+			$obj = $this->search($className, $this->request->getVars(), $sort, $limit);
+			// show empty serialized result when no records are present
+			if(!$obj) $obj = new DataObjectSet();
 		}
 
 		if($obj instanceof DataObjectSet) return $formatter->convertDataObjectSet($obj);
@@ -187,9 +187,13 @@ class RestfulServer extends Controller {
 	 * @return DataObjectSet
 	 */
 	protected function search($className, $params = null, $sort = null, $limit = null, $existingQuery = null) {
-		$searchContext = singleton($className)->getDefaultSearchContext();
+		if(singleton($className)->hasMethod('getRestfulSearchContext')) {
+			$searchContext = singleton($className)->{'getRestfulSearchContext'}();
+		} else {
+			$searchContext = singleton($className)->getDefaultSearchContext();
+		}
 		$query = $searchContext->getQuery($params, $sort, $limit, $existingQuery);
-		
+
 		return singleton($className)->buildDataObjectSet($query->execute());
 	}
 

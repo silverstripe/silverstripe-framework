@@ -1081,8 +1081,9 @@ class DataObject extends ViewableData implements DataObjectInterface {
 		if ($this->many_many()) {	
 			foreach($this->many_many() as $relationship => $component) {
 				$relationshipFields = singleton($component)->summary_fields();
+				$filterWhere = $this->getManyManyFilter($relationship, $component);
 				$filterJoin = $this->getManyManyJoin($relationship, $component);
-				$tableField =  new ComplexTableField($this, $relationship, $component, $relationshipFields, "getCMSFields", '', '', $filterJoin);
+				$tableField =  new ComplexTableField($this, $relationship, $component, $relationshipFields, "getCMSFields", $filterWhere, '', $filterJoin);
 				$tableField->popupClass = "ScaffoldingComplexTableField_Popup";
 				$fieldSet->addFieldToTab("Root.$relationship", $tableField);
 			}
@@ -1110,6 +1111,12 @@ class DataObject extends ViewableData implements DataObjectInterface {
 		} else {
 			return "LEFT JOIN `$table` ON (`$componentField` = `$componentClass`.`ID` AND `$parentField` = '{$this->ID}')";
 		}
+	}
+	
+	function getManyManyFilter($componentName, $baseTable) {
+		list($parentClass, $componentClass, $parentField, $componentField, $table) = $this->many_many($componentName);
+		
+		return "`$table`.`$parentField` = '{$this->ID}'";
 	}
 
 	/**

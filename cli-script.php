@@ -49,7 +49,10 @@ if( preg_match( '/(test\.totallydigital\.co\.nz|dev\.totallydigital\.co\.nz\/tes
 } else {
 	echo "Error: could not determine server configuration {$_SERVER['SCRIPT_FILENAME']}\n";
 	exit();	
-}	
+}
+
+// set request method (doesn't allow POST through cli)
+$_SERVER['REQUEST_METHOD'] = "GET";	
 
 $baseURL = dirname( dirname( $_SERVER['SCRIPT_NAME'] ) );
 

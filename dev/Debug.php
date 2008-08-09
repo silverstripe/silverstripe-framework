@@ -135,12 +135,17 @@ class Debug {
 		if(!Director::isLive()) {
 			$caller = Debug::caller();
 			$file = basename($caller['file']);
-			echo "<p style=\"background-color: white; color: black; width: 95%; margin: 0.5em; padding: 0.3em; border: 1px #CCC solid\">\n";
-			if($showHeader) echo "<b>Debug (line $caller[line] of $file):</b>\n ";
-			echo Convert::raw2xml(trim($message)) . "</p>\n";
+			if(Director::is_cli()) {
+				if($showHeader) echo "Debug (line $caller[line] of $file):\n ";
+				echo trim($message) . "\n";
+			} else {
+				echo "<p style=\"background-color: white; color: black; width: 95%; margin: 0.5em; padding: 0.3em; border: 1px #CCC solid\">\n";
+				if($showHeader) echo "<b>Debug (line $caller[line] of $file):</b>\n ";
+				echo Convert::raw2xml(trim($message)) . "</p>\n";
+			}
 		}
 	}
-
+	
 	/**
 	 * Load an error handler
 	 * 
@@ -208,26 +213,31 @@ class Debug {
 			echo "<p>Line <strong>$errline</strong> in <strong>$errfile</strong></p>";
 			echo '</div>';
 			echo '<div class="trace"><h3>Source</h3>';
-			$lines = file($errfile);
-			$offset = $errline-10;
-			$lines = array_slice($lines, $offset, 16);
-			echo '<pre>';
-			$offset++;
-			foreach($lines as $line) {
-				$line = htmlentities($line);
-				if ($offset == $errline) {
-					echo "<span>$offset</span> <span class=\"error\">$line</span>";
-				} else {
-					echo "<span>$offset</span> $line";
-				}
-				$offset++;
-			}
+			Debug::showLines($errfile, $errline);
 			echo '</pre><h3>Trace</h3>';
 			Debug::backtrace();
 			echo '</div>';
 			$reporter->writeFooter();
 			die();
 		}
+	}
+	
+	static function showLines($errfile, $errline) {
+		$lines = file($errfile);
+		$offset = $errline-10;
+		$lines = array_slice($lines, $offset, 16);
+		echo '<pre>';
+		$offset++;
+		foreach($lines as $line) {
+			$line = htmlentities($line);
+			if ($offset == $errline) {
+				echo "<span>$offset</span> <span class=\"error\">$line</span>";
+			} else {
+				echo "<span>$offset</span> $line";
+			}
+			$offset++;
+		}
+		echo '</pre>';		
 	}
 
 	static function emailError($emailAddress, $errno, $errstr, $errfile, $errline, $errcontext, $errorType = "Error") {

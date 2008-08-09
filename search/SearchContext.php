@@ -125,11 +125,10 @@ class SearchContext extends Object {
 	
 		if($existingQuery) {
 			$query = $existingQuery;
-			$query->select = array_merge($query->select,$fields);
 		} else {
 			$query = $model->buildSQL();
-			$query->select($fields);			
 		}
+		$query->select = array_merge($query->select,$fields);
 		
 		$SQL_limit = Convert::raw2sql($limit);
 		$query->limit($SQL_limit);

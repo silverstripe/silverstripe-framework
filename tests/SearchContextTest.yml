@@ -62,3 +62,4 @@ SearchContextTest_AllFilterTypes:
         PartialMatch: Match me partially
         Negation: Shouldnt match me
         HiddenValue: Filtered value
+        CollectionMatch: ExistingCollectionValue
