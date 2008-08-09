@@ -18,8 +18,9 @@ class TypeDropdown extends DropdownField {
 		
 		$optionArray = array( '0' => _t('TypeDropdown.NONE', 'None') );
 		
-		foreach( $options as $option )
+		if($options) foreach($options as $option) {
 			$optionArray[$option->ID] = $option->Title;
+		}
 			
 		parent::__construct( $name, $title, $optionArray, $value, $form );
 	}
