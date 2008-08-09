@@ -1,0 +1,40 @@
+# Check for an argument
+if [ $1 = "" ]; then
+	echo "Sapphire Sake
+
+Usage: $0 (command-url) (params)
+Executes a Sapphire command"
+	exit 1
+fi
+
+# Special case for "sake installsake"
+if [ "$1" = "installsake" ]; then
+	echo "Installing sake to /usr/bin..."
+	cp $0 /usr/bin
+	exit 0
+fi
+
+# Find the PHP binary
+for candidatephp in php5 php; do
+	if [ -f `which $candidatephp` ]; then
+		php=`which $candidatephp`
+		break
+	fi
+done
+
+if [ "$php" = "" ]; then
+	echo "Can't find any php binary"
+	exit 2
+fi
+
+if [ -d ./sapphire ]; then
+	$php ./sapphire/cli-script.php $1 $2
+	exit 0
+fi
+
+if [ -f ./cli-script.php ]; then
+	$php ./cli-script.php $1 $2
+	exit 0
+fi
+
+echo "Can't find ./sapphire/cli-script.php or ./cli-script.php"

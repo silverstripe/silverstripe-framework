@@ -32,10 +32,7 @@ Director::addRules(10, array(
 ));
 
 Director::addRules(1, array(
-	'$URLSegment/$Action/$ID/$OtherID' => array(
-		'_PopTokeniser' => 1,
-		'Controller' => 'ModelAsController',
-	),
+	'$URLSegment//$Action/$ID/$OtherID' => 'ModelAsController',
 ));
 
 /**

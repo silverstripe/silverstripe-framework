@@ -1,6 +1,10 @@
 #!/usr/bin/php5
 <?php
 
+if(isset($_SERVER['HTTP_HOST'])) {
+	echo "cli-script.php can't be run from a web request, you have to run it on the command-line.";
+	die();
+}
 
 /**
  * File similar to main.php designed for command-line scripts
@@ -98,7 +102,7 @@ require_once(MANIFEST_FILE);
 
 if(isset($_GET['debugmanifest'])) Debug::show(file_get_contents(MANIFEST_FILE));
 
-if(!isset(Director::$environment_type)) Director::set_environment_type($envType);
+if(!isset(Director::$environment_type) && $envType) Director::set_environment_type($envType);
 
 // Load error handlers
 Debug::loadErrorHandlers();

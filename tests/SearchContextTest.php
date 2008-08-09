@@ -7,15 +7,14 @@ class SearchContextTest extends SapphireTest {
 		$person = singleton('SearchContextTest_Person');
 		$context = $person->getDefaultSearchContext();
 		
-		$results = $context->getResultSet(array('Name'=>''));
+		$results = $context->getResults(array('Name'=>''));
 		$this->assertEquals(5, $results->Count());
 		
-		$results = $context->getResultSet(array('EyeColor'=>'green'));
+		$results = $context->getResults(array('EyeColor'=>'green'));
 		$this->assertEquals(2, $results->Count());
 		
-		$results = $context->getResultSet(array('EyeColor'=>'green', 'HairColor'=>'black'));
+		$results = $context->getResults(array('EyeColor'=>'green', 'HairColor'=>'black'));
 		$this->assertEquals(1, $results->Count());
-		
 	}
 	
 	function testSummaryIncludesDefaultFieldsIfNotDefined() {
@@ -58,26 +57,26 @@ class SearchContextTest extends SapphireTest {
 	}
 	
 	function testUserDefinedFiltersAppearInSearchContext() {
-		//$company = singleton('SearchContextTest_Company');
-		//$context = $company->getDefaultSearchContext();
+		$company = singleton('SearchContextTest_Company');
+		$context = $company->getDefaultSearchContext();
 				 
-		/*$this->assertEquals(
+		$this->assertEquals(
 			array(
 				"Name" => new PartialMatchFilter("Name"),
 		 		"Industry" => new ExactMatchFilter("Industry"),
 		 		"AnnualProfit" => new PartialMatchFilter("AnnualProfit")
 			),
 			$context->getFilters()
-		);*/
+		);
 	}
 	
 	function testRelationshipObjectsLinkedInSearch() {
-		//$project = singleton('SearchContextTest_Project');
-		//$context = $project->getDefaultSearchContext();
+		$project = singleton('SearchContextTest_Project');
+		$context = $project->getDefaultSearchContext();
 		
-		//$query = array("Name"=>"Blog Website");
+		$query = array("Name"=>"Blog Website");
 		
-		//$results = $context->getQuery($query);
+		$results = $context->getQuery($query);
 	}
 	
 	function testCanGenerateQueryUsingAllFilterTypes() {
@@ -194,13 +193,15 @@ class SearchContextTest_AllFilterTypes extends DataObject implements TestOnly {
 		"ExactMatch" => "Text",
 		"PartialMatch" => "Text",
 		"Negation" => "Text",
-		"HiddenValue" => "Text"
+		"SubstringMatch" => "Text",
+		"HiddenValue" => "Text",
 	);
 	
 	static $searchable_fields = array(
 		"ExactMatch" => "ExactMatchFilter",
 		"PartialMatch" => "PartialMatchFilter",
-		"Negation" => "NegationFilter"
+		"Negation" => "NegationFilter",
+		"SubstringMatch" => "SubstringFilter"
 	);
 	
 }

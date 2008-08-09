@@ -109,6 +109,7 @@ class SSViewer extends Object {
 	 */
 	public function dontRewriteHashlinks() {
 		$this->rewriteHashlinks = false;
+		self::$options['rewriteHashlinks'] = false;
 		return $this;
 	}
 	

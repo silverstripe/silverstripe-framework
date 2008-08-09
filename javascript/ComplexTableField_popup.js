@@ -4,11 +4,12 @@ ComplexTableFieldPopupForm.prototype = {
 	errorMessage: "Error talking to server",
 	
 	initialize: function() {
-		Behaviour.register({
-			"form#ComplexTableField_Popup_DetailForm .Actions input.action": {
-				onclick: this.submitForm.bind(this)
-			}
-		});
+		var rules = {};
+		rules["#" + this.id + " .Actions input.action"] = {
+			'onclick' : this.submitForm.bind(this)
+		};
+		
+		Behaviour.register(rules);
 	},
 	
 	loadNewPage : function(content) {
@@ -33,7 +34,6 @@ ComplexTableFieldPopupForm.prototype = {
 				submitButton.disabled = true;
 				Element.addClassName(submitButton,'loading');
 			}
-
 			new parent.parent.Ajax.Request(
 				theForm.getAttribute("action"),
 				{
@@ -58,7 +58,6 @@ ComplexTableFieldPopupForm.prototype = {
 
 		// don't update when validation is present and failed
 		if(!this.validate || (this.validate && !hasHadFormError())) {
-			alert("GB:" + parent.parent.GB_RefreshLink);
 			new parent.parent.Ajax.Request(
 				parent.parent.GB_RefreshLink,
 				{
@@ -113,8 +112,9 @@ ComplexTableFieldPopupForm.prototype = {
 		}
 		
 		// causes IE6 to go nuts
-		//this.GB_hide();
+		this.GB_hide();
 		
 	}
 }
-ComplexTableFieldPopupForm.applyTo('form#ComplexTableField_Popup_DetailForm');
+ComplexTableFieldPopupForm.applyTo('#ComplexTableField_Popup_DetailForm');
+ComplexTableFieldPopupForm.applyTo('#ComplexTableField_Popup_AddForm');

@@ -222,7 +222,7 @@ JS
 
 			// sorting links (only if we have a form to refresh with)
 			if($this->form) {
-				$sortLink = $this->BaseLink();
+				$sortLink = $this->Link();
 				$sortLink = HTTP::setGetVar("ctf[{$this->Name()}][sort]", $fieldName, $sortLink);
 				if(isset($_REQUEST['ctf'][$this->Name()]['dir'])) {
 					$XML_sort = (isset($_REQUEST['ctf'][$this->Name()]['dir'])) ? Convert::raw2xml($_REQUEST['ctf'][$this->Name()]['dir']) : null;
@@ -644,7 +644,7 @@ JS
 			return null;
 		}
 		
-		return $this->BaseLink() . "&ctf[{$this->Name()}][start]={$start}{$this->filterString()}";
+		return $this->Link() . "/ajax_refresh?ctf[{$this->Name()}][start]={$start}{$this->filterString()}";
 	}
 	
 	function PrevLink() {
@@ -656,7 +656,7 @@ JS
 		
 		$start = ($_REQUEST['ctf'][$this->Name()]['start'] - $this->pageSize < 0)  ? 0 : $_REQUEST['ctf'][$this->Name()]['start'] - $this->pageSize;
 		
-		return $this->BaseLink() . "&ctf[{$this->Name()}][start]=$start{$this->filterString()}";
+		return $this->Link() . "/ajax_refresh?ctf[{$this->Name()}][start]=$start{$this->filterString()}";
 	}
 	
 	function NextLink() {
@@ -665,7 +665,7 @@ JS
 		if($currentStart >= $start-1) {
 			return null;
 		}
-		return $this->BaseLink() . "&ctf[{$this->Name()}][start]={$start}{$this->filterString()}";
+		return $this->Link() . "/ajax_refresh?ctf[{$this->Name()}][start]={$start}{$this->filterString()}";
 	}
 	
 	function LastLink() {
@@ -678,7 +678,7 @@ JS
 			return null;
 		}
 		
-		return $this->BaseLink() . "&ctf[{$this->Name()}][start]=$start{$this->filterString()}";
+		return $this->Link() . "/ajax_refresh?ctf[{$this->Name()}][start]=$start{$this->filterString()}";
 	}
 	
 	function FirstItem() {
@@ -815,7 +815,7 @@ JS
 	 * We need to instanciate this button manually as a normal button has no means of adding inline onclick-behaviour.
 	 */
 	function ExportLink() {
-		return Director::absoluteURL($this->FormAction()) . "&action_callfieldmethod&fieldName={$this->Name()}&methodName=export";
+		return Controller::join_links($this->Link(), 'export');
 	}
 
 	function printall() {
@@ -832,7 +832,7 @@ JS
 	}
 
 	function PrintLink() {
-		$link = Director::absoluteURL($this->FormAction()) . "&action_callfieldmethod&fieldName={$this->Name()}&methodName=printall";
+		$link = Controller::join_links($this->Link(), 'printall');
 		if(isset($_REQUEST['ctf'][$this->Name()]['sort'])) {
 			$link = HTTP::setGetVar("ctf[{$this->Name()}][sort]",Convert::raw2xml($_REQUEST['ctf'][$this->Name()]['sort']), $link);
 		}
@@ -913,50 +913,12 @@ JS
 	function setTemplate($template) {
 		$this->template = $template;
 	}
-	
-	function BaseLink() {
-		return $this->FormAction() . "&action_callfieldmethod&fieldName={$this->Name()}&ctf[ID]={$this->sourceID()}&methodName=ajax_refresh&SecurityID=" . Session::get('SecurityID');
-	}
-	
-	/**
-	 * Returns the action of the surrounding form - needed to maintain context on subsequent calls.
-	 * It is only needed to embed this field into a form if you want to use more than "display-functionality".
-	 * We try to mirror the existing GET-properties to achieve the same application-state.
-	 * 
-	 * @return String
-	 */
-	function FormAction() {
-		$params = $_GET;
-		
-		// we don't want this to be overriding our new actions
-		unset($params['executeForm']); 
-		unset($params['fieldName']); 
-		unset($params['url']);
-		unset($params['methodName']);
-		unset($params['forcehtml']);
-		// TODO Refactor
-		unset($params['ctf']);
-		$params['ctf'][$this->Name()]['search'] = (isset($_REQUEST['ctf'][$this->Name()]['search'])) ? $_REQUEST['ctf'][$this->Name()]['search'] : null;
-		$params['SecurityID'] = Session::get('SecurityID');
-		
-		// unset all actions (otherwise they override action_callfieldmethod)
-		foreach($params as $paramKey => $paramVal) {
-			if(strpos($paramKey, 'action_') === 0) {
-				unset($params[$paramKey]);
-			}
-		} 
-		
-		
-		try {
-			$link = $this->form->FormAction();
-			$link .= (!strpos($link,'?')) ? '?' : '&'; 
-			$link .= urldecode (http_build_query($params));
-		} catch(Exception $e) {
-			user_error('Please embed this field into a form if you want to use actions such as "add", "edit" or "delete"', E_USER_ERROR);
-		}
-		return $link;
-	}
 
+	function BaseLink() {
+		user_error("TableListField::BaseLink() deprecated, use Link() instead", E_USER_NOTICE);
+		return $this->Link();
+	}
+	
 	/**
 	 * @return Int
 	 */
@@ -1069,11 +1031,15 @@ class TableListField_Item extends ViewableData {
 	}
 
 	function BaseLink() {
-		return $this->parent->FormAction() . "&action_callfieldmethod&fieldName={$this->parent->Name()}&ctf[childID]={$this->item->ID}";
+		user_error("TableListField_Item::BaseLink() deprecated, use Link() instead", E_USER_NOTICE);
+		return $this->Link() . '/ajax_refresh';
+	}
+	function Link() {
+		return Controller::join_links($this->parent->Link() . "item/" . $this->item->ID);
 	}
 
 	function DeleteLink() {
-		return $this->BaseLink() . "&methodName=delete";
+		return Controller::join_links($this->Link(), "delete");
 	}
 	
 	function MarkingCheckbox() {

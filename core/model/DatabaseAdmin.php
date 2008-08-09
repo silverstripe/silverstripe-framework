@@ -75,7 +75,7 @@ class DatabaseAdmin extends Controller {
 	 * Updates the database schema, creating tables & fields as necessary.
 	 */
 	function build() {
-		if(Director::isLive() && Security::database_is_ready() && (!Member::currentUser() || !Member::currentUser()->isAdmin())) {
+		if(Director::isLive() && Security::database_is_ready() && !Director::is_cli() && (!Member::currentUser() || !Member::currentUser()->isAdmin())) {
 			Security::permissionFailure($this,
 				"This page is secured and you need administrator rights to access it. " .
 				"Enter your credentials below and we will send you right along.");

@@ -814,6 +814,15 @@ class Form extends RequestHandlingData {
 	}
 
 	/**
+	 * Return a rendered version of this form, suitable for ajax post-back.
+	 * It triggers slightly different behaviour, such as disabling the rewriting of # links
+	 */
+	function forAjaxTemplate() {
+		$view = new SSViewer("Form");
+		return $view->dontRewriteHashlinks()->process($this);
+	}
+
+	/**
 	 * Returns an HTML rendition of this form, without the <form> tag itself.
 	 * Attaches 3 extra hidden files, _form_action, _form_name, _form_method, and _form_enctype.  These are
 	 * the attributes of the form.  These fields can be used to send the form to Ajax.

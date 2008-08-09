@@ -53,6 +53,9 @@ class ComplexTableField extends TableListField {
 	 */
 	protected $permissions = array(
 		"add",
+		"edit",
+		"show",
+		"delete",
 		//"export",
 	);
 	
@@ -213,7 +216,6 @@ JS;
 		}
 				
 		$this->sourceItems = DataObject::get($this->sourceClass, $this->sourceFilter, $sort, $this->sourceJoin, $limitClause);
-
 		$this->unpagedSourceItems = DataObject::get($this->sourceClass, $this->sourceFilter, $sort, $this->sourceJoin);
 
 		$this->totalCount = ($this->unpagedSourceItems) ? $this->unpagedSourceItems->TotalItems() : null;
@@ -436,8 +438,11 @@ JS;
 				// add relational fields
 				$detailFields->push(new HiddenField("ctf[parentClass]"," ",$this->getParentClass()));
 			
-				if( $this->relationAutoSetting )
-					$detailFields->push(new HiddenField("$parentIdName"," ",$childData->ID));
+				if( $this->relationAutoSetting ) {
+					// Hack for model admin: model admin will have included a dropdown for the relation itself
+					$detailFields->removeByName($parentIdName);
+					$detailFields->push(new HiddenField("$parentIdName"," ",$this->sourceID()));
+				}
 			}
 		} 
 		
@@ -485,18 +490,17 @@ JS;
 	 *
 	 * @see {Form::ReferencedField}).
 	 */
-	function saveComplexTableField($params) {
+	function saveComplexTableField($data, $form, $params) {
 		$className = $this->sourceClass();
 		$childData = new $className();
-
-		$this->saveInto($childData);
+		$form->saveInto($childData);
 		$childData->write();
 
 		// if ajax-call in an iframe, update window
 		if(Director::is_ajax()) {
 			// Newly saved objects need their ID reflected in the reloaded form to avoid double saving 
-			$form = $this->controller->DetailForm();
-			//$form->loadDataFrom($this->dataObject);
+			$childRequestHandler = new ComplexTableField_ItemRequest($this, $childData->ID);
+			$form = $childRequestHandler->DetailForm();
 			FormResponse::update_dom_id($form->FormName(), $form->formHtmlContent(), true, 'update');
 			return FormResponse::respond();
 		} else {
@@ -542,18 +546,20 @@ class ComplexTableField_ItemRequest extends RequestHandlingData {
 		}
 
 		$this->methodName = "show";
-		/*
-		$this->sourceItems = $this->ctg->sourceItems();
-
-		$this->pageSize = 1;
-		
-		if(isset($_REQUEST['ctf'][$this->Name()]['start']) && is_numeric($_REQUEST['ctf'][$this->Name()]['start'])) {
-			$this->unpagedSourceItems->setPageLimits($_REQUEST['ctf'][$this->Name()]['start'], $this->pageSize, $this->totalCount);
-		}
-		*/	
-
 		echo $this->renderWith($this->ctf->templatePopup);
 	}
+	
+	/**
+	 * Returns a 1-element data object set that can be used for pagination.
+	 */
+	/* this doesn't actually work :-(
+	function Paginator() { 
+		$paginatingSet = new DataObjectSet(array($this->dataObj()));
+		$start = isset($_REQUEST['ctf']['start']) ? $_REQUEST['ctf']['start'] : 0;
+		$paginatingSet->setPageLimits($start, 1, $this->ctf->TotalCount());
+		return $paginatingSet;
+	}
+	*/
 
 	/**
 	 * Just a hook, processed in {DetailForm()}
@@ -566,17 +572,15 @@ class ComplexTableField_ItemRequest extends RequestHandlingData {
 		}
 
 		$this->methodName = "edit";
-		/*
-		$this->sourceItems = $this->sourceItems();
-
-		$this->pageSize = 1;
-
-		if(is_numeric($_REQUEST['ctf']['start'])) {
-			$this->unpagedSourceItems->setPageLimits($_REQUEST['ctf']['start'], $this->pageSize, $this->totalCount);
-		}
-		*/
-
 		echo $this->renderWith($this->ctf->templatePopup);
+	}
+
+	function delete() {
+		if($this->ctf->Can('delete') !== true) {
+			return false;
+		}
+
+		$this->dataObj()->delete();
 	}
 
 	///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -584,7 +588,7 @@ class ComplexTableField_ItemRequest extends RequestHandlingData {
 	/**
 	 * Return the data object being manipulated
 	 */
-	function obj() {
+	function dataObj() {
 		// used to discover fields if requested and for population of field
 		if(is_numeric($this->itemID)) {
  			// we have to use the basedataclass, otherwise we might exclude other subclasses 
@@ -605,7 +609,7 @@ class ComplexTableField_ItemRequest extends RequestHandlingData {
 	 * @param int $childID
 	 */
 	function DetailForm($childID = null) {
-		$childData = $this->obj();
+		$childData = $this->dataObj();
 		
 		$fields = $this->ctf->getFieldsFor($childData);
 		$validator = $this->ctf->getValidatorFor($childData);
@@ -631,13 +635,13 @@ class ComplexTableField_ItemRequest extends RequestHandlingData {
 	 * @see {Form::ReferencedField}).
 	 */
 	function saveComplexTableField($data, $form, $request) {
-		$form->saveInto($this->obj());
-		$this->obj()->write();
+		$form->saveInto($this->dataObj());
+		$this->dataObj()->write();
 
 		// if ajax-call in an iframe, update window
 		if(Director::is_ajax()) {
 			// Newly saved objects need their ID reflected in the reloaded form to avoid double saving 
-			$form = $this->controller->DetailForm();
+			$form = $this->DetailForm();
 			//$form->loadDataFrom($this->dataObject);
 			FormResponse::update_dom_id($form->FormName(), $form->formHtmlContent(), true, 'update');
 			return FormResponse::respond();
@@ -647,58 +651,52 @@ class ComplexTableField_ItemRequest extends RequestHandlingData {
 		}
 	}
 	
-	function PopupBaseLink() {
-		$link = $this->FormAction() . "&action_callfieldmethod&fieldName={$this->Name()}";
-		if(!strpos($link,'ctf[ID]')) {
-			$link = str_replace('&amp;','&',HTTP::setGetVar('ctf[ID]',$this->sourceID(),$link));
-		}
-		return $link;
-	}
-
 	function PopupCurrentItem() {
 		return $_REQUEST['ctf']['start']+1;
 	}
-
+	
 	function PopupFirstLink() {
-		if(!is_numeric($_REQUEST['ctf']['start']) || $_REQUEST['ctf']['start'] == 0) {
+		$this->ctf->LinkToItem();
+		
+		if(!isset($_REQUEST['ctf']['start']) || !is_numeric($_REQUEST['ctf']['start']) || $_REQUEST['ctf']['start'] == 0) {
 			return null;
 		}
 
 		$item = $this->unpagedSourceItems->First();
 		$start = 0;
-		return Convert::raw2att($this->PopupBaseLink() . "&methodName={$_REQUEST['methodName']}&ctf[childID]={$item->ID}&ctf[start]={$start}");
+		return Controller::join_links($this->Link(), "$this->methodName?ctf[start]={$start}");
 	}
 
 	function PopupLastLink() {
-		if(!is_numeric($_REQUEST['ctf']['start']) || $_REQUEST['ctf']['start'] == $this->totalCount-1) {
+		if(!isset($_REQUEST['ctf']['start']) || !is_numeric($_REQUEST['ctf']['start']) || $_REQUEST['ctf']['start'] == $this->totalCount-1) {
 			return null;
 		}
 
 		$item = $this->unpagedSourceItems->Last();
 		$start = $this->totalCount - 1;
-		return Convert::raw2att($this->PopupBaseLink() . "&methodName={$_REQUEST['methodName']}&ctf[childID]={$item->ID}&ctf[start]={$start}");
+		return Controller::join_links($this->Link(), "$this->methodName?ctf[start]={$start}");
 	}
 
 	function PopupNextLink() {
-		if(!is_numeric($_REQUEST['ctf']['start']) || $_REQUEST['ctf']['start'] == $this->totalCount-1) {
+		if(!isset($_REQUEST['ctf']['start']) || !is_numeric($_REQUEST['ctf']['start']) || $_REQUEST['ctf']['start'] == $this->totalCount-1) {
 			return null;
 		}
 
 		$item = $this->unpagedSourceItems->getIterator()->getOffset($_REQUEST['ctf']['start'] + 1);
 
 		$start = $_REQUEST['ctf']['start'] + 1;
-		return Convert::raw2att($this->PopupBaseLink() . "&methodName={$_REQUEST['methodName']}&ctf[childID]={$item->ID}&ctf[start]={$start}");
+		return Controller::join_links($this->Link(), "$this->methodName?ctf[start]={$start}");
 	}
 
 	function PopupPrevLink() {
-		if(!is_numeric($_REQUEST['ctf']['start']) || $_REQUEST['ctf']['start'] == 0) {
+		if(!isset($_REQUEST['ctf']['start']) || !is_numeric($_REQUEST['ctf']['start']) || $_REQUEST['ctf']['start'] == 0) {
 			return null;
 		}
 
 		$item = $this->unpagedSourceItems->getIterator()->getOffset($_REQUEST['ctf']['start'] - 1);
 
 		$start = $_REQUEST['ctf']['start'] - 1;
-		return Convert::raw2att($this->PopupBaseLink() . "&methodName={$_REQUEST['methodName']}&ctf[childID]={$item->ID}&ctf[start]={$start}");
+		return Controller::join_links($this->Link(), "$this->methodName?ctf[start]={$start}");
 	}
 	
 	/**
@@ -722,7 +720,7 @@ class ComplexTableField_ItemRequest extends RequestHandlingData {
 		for($i = $offset;$i <= $offset + $this->pageSize && $i <= $this->totalCount;$i++) {
             $start = $i - 1;
 			$item = $this->unpagedSourceItems->getIterator()->getOffset($i-1);
-			$links['link'] = Convert::raw2att($this->PopupBaseLink() . "&methodName={$_REQUEST['methodName']}&ctf[childID]={$item->ID}&ctf[start]={$start}");
+			$links['link'] = Controller::join_links($this->Link() . "$this->methodName?ctf[start]={$start}");
             $links['number'] = $i;
             $links['active'] = $i == $currentItem ? false : true;
             $result->push(new ArrayData($links)); 	
@@ -730,6 +728,9 @@ class ComplexTableField_ItemRequest extends RequestHandlingData {
         return $result;
 	}
 
+	function ShowPagination() {
+		return false;
+	}
 
 
 	/**
@@ -885,10 +886,6 @@ class ComplexTableField_Popup extends Form {
 
 	function FieldHolder() {
 		return $this->renderWith('ComplexTableField_Form');
-	}
-
-	function ShowPagination() {
-		return $this->controller->ShowPagination();
 	}
 }
 

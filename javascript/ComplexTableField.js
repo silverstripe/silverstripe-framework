@@ -92,7 +92,7 @@ ComplexTableField.prototype = {
 				var table = Event.findElement(e,"table");
 				if(Event.element(e).nodeName == "IMG") {
 					link = Event.findElement(e,"a");
-					popupLink = link.href+"&ajax=1";
+					popupLink = link.href+"?ajax=1";
 				} else {
 					el = Event.findElement(e,"tr");
 					var link = $$("a",el)[0];
@@ -112,16 +112,13 @@ ComplexTableField.prototype = {
 		
 		GB_OpenerObj = this;
 		// use same url to refresh the table after saving the popup, but use a generic rendering method
-		GB_RefreshLink = popupLink;
-		GB_RefreshLink = GB_RefreshLink.replace(/(methodName=)[^&]*/,"$1ajax_refresh");
-		// dont include pagination index
-		GB_RefreshLink = GB_RefreshLink.replace(/ctf\[start\][^&]*/,"");
-		GB_RefreshLink += '&forcehtml=1';
+		GB_RefreshLink = this.getAttribute('href');
 
 		if(this.GB_Caption) {
 			var title = this.GB_Caption;
 		} else {
-			type = popupLink.match(/methodName=([^&]*)/);
+			// Getting the title from the URL is pretty ugly, but it works for now
+			type = popupLink.match(/[0-9]+\/([^\/?&]*)([?&]|$)/);
 			var title = (type && type[1]) ? type[1].ucfirst() : "";
 		}
 		

@@ -91,7 +91,8 @@ class SearchContext extends Object {
 		foreach($searchParams as $key => $value) {
 			$filter = $this->getFilter($key);
 			if ($filter) {
-				$query->where[] = $filter->apply($value);
+				$filter->setValue($value);
+				$filter->apply($query);
 			}
 		}
 		return $query;
@@ -108,6 +109,7 @@ class SearchContext extends Object {
 	 * @return DataObjectSet
 	 */
 	public function getResults($searchParams, $start = false, $limit = false) {
+		$searchParams = array_filter($searchParams, array($this,'clearEmptySearchFields'));
 		$query = $this->getQuery($searchParams, $start, $limit);
 		//
 		// use if a raw SQL query is needed
@@ -121,6 +123,17 @@ class SearchContext extends Object {
 		return DataObject::get($this->modelClass, $query->getFilter(), "", "", $limit);
 	}
 
+	/**
+	 * Callback map function to filter fields with empty values from
+	 * being included in the search expression.
+	 *
+	 * @param unknown_type $value
+	 * @return boolean
+	 */
+	function clearEmptySearchFields($value) {
+		return ($value != '');
+	}
+	
 	/**
 	 * @todo documentation
 	 * @todo implementation
@@ -138,8 +151,15 @@ class SearchContext extends Object {
 			}
 		}
 		$query->where = $conditions;
+		return $query;
 	}
 	
+	/**
+	 * Accessor for the filter attached to a named field.
+	 *
+	 * @param string $name
+	 * @return SearchFilter
+	 */
 	public function getFilter($name) {
 		if (isset($this->filters[$name])) {
 			return $this->filters[$name];
@@ -148,29 +168,42 @@ class SearchContext extends Object {
 		}
 	}
 	
-	public function getFields() {
-		return $this->fields; 
-	}
-	
-	public function setFields($fields) {
-		$this->fields = $fields;
-	}
-
+	/**
+	 * Get the map of filters in the current search context.
+	 *
+	 * @return array
+	 */
 	public function getFilters() {
 		return $this->filters;
 	}
 	
 	public function setFilters($filters) {
 		$this->filters = $filters;
+	}	
+	
+	/**
+	 * Get the list of searchable fields in the current search context.
+	 *
+	 * @return array
+	 */
+	public function getFields() {
+		return $this->fields; 
 	}
 	
-	function clearEmptySearchFields($value) {
-		return ($value != '');
+	/**
+	 * Apply a list of searchable fields to the current search context.
+	 *
+	 * @param array $fields
+	 */
+	public function setFields($fields) {
+		$this->fields = $fields;
 	}
 	
 	/**
 	 * Placeholder, until I figure out the rest of the SQLQuery stuff
 	 * and link the $searchable_fields array to the SearchContext
+	 * 
+	 * @deprecated in favor of getResults
 	 */
 	public function getResultSet($fields) {
 		$filter = "";

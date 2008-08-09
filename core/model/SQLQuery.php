@@ -68,6 +68,7 @@ class SQLQuery extends Object {
 	
 	/**
 	 * Construct a new SQLQuery.
+	 * 
 	 * @param array $select An array of fields to select.
 	 * @param array $from An array of join clauses. The first one should be just the table name.
 	 * @param array $where An array of filters, to be inserted into the WHERE clause.
@@ -76,7 +77,7 @@ class SQLQuery extends Object {
 	 * @param array $having An array of having clauses.
 	 * @param string $limit A LIMIT clause.
 	 */
-	function __construct($select = array(), $from = array(), $where = "", $orderby = "", $groupby = "", $having = "", $limit = "") {
+	function __construct($select = "*", $from = array(), $where = "", $orderby = "", $groupby = "", $having = "", $limit = "") {
 		if($select) $this->select = is_array($select) ? $select : array($select);
 		if($from) $this->from = is_array($from) ? $from : array(str_replace('`','',$from) => $from);
 		if($where) $this->where = is_array($where) ? $where : array($where);
@@ -87,7 +88,76 @@ class SQLQuery extends Object {
 
 		parent::__construct();
 	}
-
+	
+	/**
+	 * Specify the list of columns to be selected by the query.
+	 *
+	 * <code>
+	 *  // pass fields to select as single parameter array
+	 *  $query->select(array("Col1","Col2"))->from("MyTable");
+	 * 
+	 *  // pass fields to select as multiple parameters
+	 *  $query->select("Col1", "Col2")->from("MyTable");
+	 * </code>
+	 * 
+	 * @param mixed $fields
+	 * @return SQLQuery
+	 */
+	public function select($fields) {
+		if (func_num_args() > 1) {
+			$this->select = func_get_args();
+		} else {
+			$this->select = is_array($fields) ? $fields : array($fields);
+		}
+		return $this;
+	}
+	
+	/**
+	 * Specify the target table to select from.
+	 * 
+	 * <code>
+	 *  $query->from("MyTable"); // SELECT * FROM MyTable
+	 * </code>
+	 *
+	 * @param string $table
+	 * @return SQLQuery
+	 */
+	public function from($table) {
+		$this->from[] = $table;
+		return $this;
+	}
+	
+	/**
+	 * Apply a predicate filter to the where clause.
+	 * 
+	 * Accepts a variable length of arguments, which represent
+	 * different ways of formatting a predicate in a where clause:
+	 * 
+	 * <code>
+	 *  // the entire predicate as a single string
+	 *  $query->where("Column = 'Value'");
+	 * 
+	 *  // an exact match predicate with a key value pair
+	 *  $query->where("Column", "Value");
+	 * 
+	 *  // a predicate with user defined operator
+	 *  $query->where("Column", "!=", "Value");
+	 * </code>
+	 * 
+	 */
+	public function where() {
+		$args = func_get_args();
+		if (func_num_args() == 3) {
+			$filter = "{$args[0]} {$args[1]} '{$args[2]}'";
+		} elseif (func_num_args() == 2) {
+			$filter = "{$args[0]} = '{$args[1]}'";
+		} else {
+			$filter = $args[0];
+		}
+		$this->where[] = $filter;
+		return $this;
+	}
+	
 	/**
 	 * Use the disjunctive operator 'OR' to join filter expressions in the WHERE clause.
 	 */
@@ -147,19 +217,21 @@ class SQLQuery extends Object {
 	 * @return string
 	 */
 	function getFilter() {
-		return implode(") {$this->connective} (" , $this->where);
+		return ($this->where) ? implode(") {$this->connective} (" , $this->where) : '';
 	}
 	
 	/**
 	 * Generate the SQL statement for this query.
+	 * 
 	 * @return string
 	 */
 	function sql() {
+		if (!$this->from) return '';
 		$distinct = $this->distinct ? "DISTINCT " : "";
-		if($this->select) {
+		if($this->delete) {
+			$text = "DELETE ";
+		} else if($this->select) {
 			$text = "SELECT $distinct" . implode(", ", $this->select);
-		} else {
-			if($this->delete) $text = "DELETE ";
 		}
 		$text .= " FROM " . implode(" ", $this->from);
 		
@@ -170,6 +242,15 @@ class SQLQuery extends Object {
 		if($this->limit) $text .= " LIMIT " . $this->limit;
 		
 		return $text;
+	}
+	
+	/**
+	 * Return the generated SQL string for this query
+	 * 
+	 * @return string
+	 */
+	function __toString() {
+		return $this->sql();
 	}
 	
 	/**

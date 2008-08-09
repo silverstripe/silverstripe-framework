@@ -1206,7 +1206,7 @@ class DataObject extends ViewableData implements DataObjectInterface {
 			$model = singleton($component);
 			$records = DataObject::get($component);
 			$collect = ($model->hasMethod('customSelectOption')) ? 'customSelectOption' : current($model->summary_fields());
-			$options = $records->filter_map('ID', $collect);
+			$options = $records ? $records->filter_map('ID', $collect) : array();
 			$fields->push(new DropdownField($relationship.'ID', $relationship, $options));	
 		}		
 		return $fields;
@@ -1216,9 +1216,21 @@ class DataObject extends ViewableData implements DataObjectInterface {
 	 * Add the scaffold-generated relation fields to the given field set
 	 */
 	protected function addScaffoldRelationFields($fieldSet) {
-		foreach($this->has_many() as $relationship => $component) {
-			$relationshipFields = array_keys($this->searchable_fields());
-			$fieldSet->push(new ComplexTableField($this, $relationship, $component, $relationshipFields));
+		
+		if($this->has_many()) {
+			// Refactor the fields that we have been given into a tab, "Main", in a tabset
+			$oldFields = $fieldSet;
+			$fieldSet = new FieldSet(
+				new TabSet("Root", new Tab("Main"))
+			);
+			foreach($oldFields as $field) $fieldSet->addFieldToTab("Root.Main", $field);
+			
+			// Add each relation as a separate tab
+			foreach($this->has_many() as $relationship => $component) {
+				$relationshipFields = singleton($component)->summary_fields();
+				$foreignKey = $this->getComponentJoinField($relationship);
+				$fieldSet->addFieldToTab("Root.$relationship", new ComplexTableField($this, $relationship, $component, $relationshipFields, "getCMSFields", "$foreignKey = $this->ID"));
+			}
 		}
 		return $fieldSet;
 	}
@@ -1249,7 +1261,7 @@ class DataObject extends ViewableData implements DataObjectInterface {
 		$fields = $this->scaffoldFormFields();
 		// If we don't have an ID, then relation fields don't work
 		if($this->ID) {
-			$this->addScaffoldRelationFields($fields);
+			$fields = $this->addScaffoldRelationFields($fields);
 		}
 		return $fields;
 	}
@@ -2085,7 +2097,7 @@ class DataObject extends ViewableData implements DataObjectInterface {
 	public function searchable_fields() {
 		$fields = $this->stat('searchable_fields');
 		if (!$fields) {
-			$fields = array_fill_keys($this->summary_fields(), 'TextField');
+			$fields = array_fill_keys(array_keys($this->summary_fields()), 'TextField');
 		}
 		return $fields;
 	}
@@ -2101,11 +2113,19 @@ class DataObject extends ViewableData implements DataObjectInterface {
 		$fields = $this->stat('summary_fields');
 		if (!$fields) {
 			$fields = array();
-			if ($this->hasField('Name')) $fields[] = 'Name';
-			if ($this->hasField('Title')) $fields[] = 'Title';
-			if ($this->hasField('Description')) $fields[] = 'Description';
-			if ($this->hasField('Firstname')) $fields[] = 'Firstname';
+			if ($this->hasField('Name')) $fields['Name'] = 'Name';
+			if ($this->hasField('Title')) $fields['Title'] = 'Title';
+			if ($this->hasField('Description')) $fields['Description'] = 'Description';
+			if ($this->hasField('Firstname')) $fields['Firstname'] = 'Firstname';
 		}
+		
+		// Final fail-over, just list all the fields :-S
+		if(!$fields) {
+			foreach(array_keys($this->db()) as $field) {
+				$fields[$field] = $field;
+			}
+		}
+			
 		return $fields;
 	}
 	
@@ -2128,7 +2148,7 @@ class DataObject extends ViewableData implements DataObjectInterface {
 			} else {
 				if (is_array($type)) {
 					 $filter = current($type);
-					 $filters[$name] = new $filter();
+					 $filters[$name] = new $filter($name);
 				} else {
 					if (is_subclass_of($type, 'SearchFilter')) {
 						$filters[$name] = new $type($name);
