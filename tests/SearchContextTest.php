@@ -74,9 +74,22 @@ class SearchContextTest extends SapphireTest {
 		$project = singleton('SearchContextTest_Project');
 		$context = $project->getDefaultSearchContext();
 		
-		$query = array("Name"=>"Blog Website");
+		$params = array("Name"=>"Blog Website", "Actions__SolutionArea"=>"technical");
 		
-		$results = $context->getQuery($query);
+		$results = $context->getResults($params);
+		
+		$this->assertEquals(1, $results->Count());
+		
+		Debug::dump(DB::query("select * from SearchContextTest_Deadline")->next());
+		
+		$project = $results->First();
+		
+		$this->assertType('SearchContextTest_Project', $project);
+		$this->assertEquals("Blog Website", $project->Name);
+		$this->assertEquals(2, $project->Actions()->Count());
+		$this->assertEquals("Get RSS feeds working", $project->Actions()->First()->Description);
+		Debug::dump($project->Deadline()->CompletionDate);
+		//$this->assertEquals()
 	}
 	
 	function testCanGenerateQueryUsingAllFilterTypes() {
@@ -157,7 +170,8 @@ class SearchContextTest_Project extends DataObject implements TestOnly {
 	
 	static $searchable_fields = array(
 		"Name" => "PartialMatchFilter",
-		"Actions.SolutionArea" => "ExactMatchFilter"
+		"Actions.SolutionArea" => "ExactMatchFilter",
+		"Actions.Description" => "PartialMatchFilter"
 	);
 	
 }
@@ -182,7 +196,7 @@ class SearchContextTest_Action extends DataObject implements TestOnly {
 	);
 	
 	static $has_one = array(
-		"Project" => "SearchContextTest_Project"	
+		"Project" => "SearchContextTest_Project"
 	);
 	
 }

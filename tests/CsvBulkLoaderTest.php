@@ -1,0 +1,172 @@
+<?php
+/**
+ * @package tests
+ */
+class CsvBulkLoaderTest extends SapphireTest {
+	static $fixture_file = 'sapphire/tests/CsvBulkLoaderTest.yml';
+
+	/**
+	 * Test plain import with column auto-detection
+	 */
+	function testLoad() {
+		$loader = new CsvBulkLoader('CsvBulkLoaderTest_Player');
+		$filepath = Director::baseFolder() . '/sapphire/tests/CsvBulkLoaderTest_PlayersWithHeader.csv';
+		$file = fopen($filepath, 'r');
+		$compareCount = $this->getLineCount($file);
+		fgetcsv($file); // pop header row
+		$compareRow = fgetcsv($file);
+		$results = $loader->load($filepath);
+
+		// Test that right amount of columns was imported
+		$this->assertEquals($results->Count(), $compareCount-1, 'Test correct count of imported data');
+		
+		// Test that columns were correctly imported
+		$obj = DataObject::get_by_id('CsvBulkLoaderTest_Player', $results->First()->id);
+		$this->assertEquals($compareRow[0], $obj->FirstName);
+		$this->assertEquals($compareRow[1], $obj->Biography);
+		$date = DBField::create('Date', $compareRow[2])->RAW();
+		$this->assertEquals($date, $obj->Birthday);
+		
+		fclose($file);
+	}
+
+	/**
+	 * Test import with manual column mapping
+	 */
+	function testLoadWithColumnMap() {
+		$loader = new CsvBulkLoader('CsvBulkLoaderTest_Player');
+		$filepath = Director::baseFolder() . '/sapphire/tests/CsvBulkLoaderTest_Players.csv';
+		$file = fopen($filepath, 'r');
+		$compareCount = $this->getLineCount($file);
+		$compareRow = fgetcsv($file);
+		$loader->columnMap = array(
+			'FirstName',
+			'Biography',
+			null, // ignored column
+			'Birthday'
+		);
+		$results = $loader->load($filepath);
+
+		// Test that right amount of columns was imported
+		$this->assertEquals($results->Count(), $compareCount, 'Test correct count of imported data');
+		
+		// Test that columns were correctly imported
+		$obj = DataObject::get_by_id('CsvBulkLoaderTest_Player', $results->First()->id);
+		$this->assertEquals($compareRow[0], $obj->FirstName);
+		$this->assertEquals($compareRow[1], $obj->Biography);
+		$date = DBField::create('Date', $compareRow[3])->RAW();
+		$this->assertEquals($date, $obj->Birthday);
+		
+		fclose($file);
+	}
+
+	/**
+	 * Test import with manual column mapping and custom column names
+	 */
+	function testLoadWithCustomHeaderAndRelation() {
+		$loader = new CsvBulkLoader('CsvBulkLoaderTest_Player');
+		$filepath = Director::baseFolder() . '/sapphire/tests/CsvBulkLoaderTest_PlayersWithCustomHeaderAndRelation.csv';
+		$file = fopen($filepath, 'r');
+		$compareCount = $this->getLineCount($file);
+		fgetcsv($file); // pop header row
+		$compareRow = fgetcsv($file);
+		$loader->columnMap = array(
+			'first name' => 'FirstName',
+			'bio' => 'Biography',
+			'bday' => 'Birthday',
+			'teamtitle' => 'Team.Title', // test existing relation
+			'teamsize' => 'Team.TeamSize', // test existing relation
+			'salary' => 'Contract.Amount' // test relation creation
+		);
+		$loader->hasHeaderRow = true;
+		$loader->relationCallbacks = array(
+			'Team.Title' => array(
+				'relationname' => 'Team',
+				'callback' => 'getTeamByTitle'
+			),
+			// contract should be automatically discovered
+		);
+		$results = $loader->load($filepath);
+		
+		// Test that right amount of columns was imported
+		$this->assertEquals($results->Count(), $compareCount-1, 'Test correct count of imported data');
+		
+		// Test of augumenting existing relation (created by fixture)
+		$testTeam = DataObject::get_one('CsvBulkLoaderTest_Team', null, null, 'Created DESC');
+		$this->assertEquals('20', $testTeam->TeamSize, 'Augumenting existing has_one relation works');
+		
+		// Test of creating relation
+		$testContract = DataObject::get_one('CsvBulkLoaderTest_PlayerContract');
+		$testPlayer = DataObject::get_by_id('CsvBulkLoaderTest_Player', $results->First()->id);
+		$this->assertEquals($testPlayer->ContractID, $testContract->ID, 'Creating new has_one relation works');
+		
+		// Test nested setting of relation properties
+		$contractAmount = DBField::create('Currency', $compareRow[5])->RAW();
+		$testPlayer = DataObject::get_by_id('CsvBulkLoaderTest_Player', $results->First()->id);
+		$this->assertEquals($testPlayer->Contract()->Amount, $contractAmount, 'Setting nested values in a relation works');
+		
+		// Test that columns were correctly imported
+		$obj = DataObject::get_by_id('CsvBulkLoaderTest_Player', $results->First()->id);
+		
+		fclose($file);
+	}
+	
+	protected function getLineCount(&$file) {
+		$i = 0;
+		while(fgets($file) !== false) $i++;
+		rewind($file);
+		return $i;
+	}
+	
+}
+
+class CsvBulkLoaderTest_Team extends DataObject implements TestOnly {
+	
+	static $db = array(
+		'Title' => 'Varchar(255)',
+		'TeamSize' => 'Int',
+	);	
+	
+	static $has_many = array(
+		'Players' => 'CsvBulkLoaderTest_Player',
+	);
+	
+}
+
+class CsvBulkLoaderTest_Player extends DataObject implements TestOnly {
+	
+	static $db = array(
+		'FirstName' => 'Varchar(255)',
+		'Biography' => 'HTMLText',
+		'Birthday' => 'Date',
+	);
+	
+	static $has_one = array(
+		'Team' => 'CsvBulkLoaderTest_Team',
+		'Contract' => 'CsvBulkLoaderTest_PlayerContract'
+	);
+	
+	public function getTeamByTitle($title) {
+		$SQL_title = Convert::raw2sql($title);
+		return DataObject::get_one('CsvBulkLoaderTest_Team', "Title = '{$SQL_title}'");
+	}
+	
+	/**
+	 * Custom setter for "Birthday" property when passed/imported
+	 * in different format.
+	 *
+	 * @param string $val
+	 * @param array $record
+	 */
+	public function setUSBirthday($val, $record) {
+		$this->Birthday = preg_replace('/^([0-9]{1,2})\/([0-9]{1,2})\/([0-90-9]{2,4})/', '\\3-\\1-\\2', $val);
+	}
+}
+
+class CsvBulkLoaderTest_PlayerContract extends DataObject implements TestOnly {
+	static $db = array(
+		'Amount' => 'Currency',
+	);
+}
+
+?>

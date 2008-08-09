@@ -133,6 +133,13 @@ class SQLQuery extends Object {
 	}
 	
 	/**
+	 * Add a LEFT JOIN criteria to the FROM clause. 
+	 */
+	public function leftJoin($table, $onPredicate) {
+		$this->from[] = "LEFT JOIN $table ON $onPredicate";
+	}
+	
+	/**
 	 * Apply a predicate filter to the where clause.
 	 * 
 	 * Accepts a variable length of arguments, which represent

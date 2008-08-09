@@ -16,7 +16,8 @@ class ExactMatchFilter extends SearchFilter {
 	 * @return unknown
 	 */
 	public function apply(SQLQuery $query) {
-		return $query->where("{$this->name} = '{$this->value}'");
+		$query = $this->applyRelation($query);
+		return $query->where("{$this->getName()} = '{$this->value}'");
 	}
 	
 }

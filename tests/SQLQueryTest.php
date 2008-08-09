@@ -14,7 +14,7 @@ class SQLQueryTest extends SapphireTest {
 		$query->from[] = "MyTable";
 		$this->assertEquals("SELECT * FROM MyTable", $query->sql());
 		$query->from[] = "MyJoin";
-		$this->assertEquals("SELECT * FROM MyTable, MyJoin", $query->sql());
+		$this->assertEquals("SELECT * FROM MyTable MyJoin", $query->sql());
 	}
 	
 	function testSelectFromUserSpecifiedFields() {

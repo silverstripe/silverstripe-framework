@@ -25,32 +25,36 @@ SearchContextTest_Person:
         HairColor: black
         EyeColor: green
 
+SearchContextTest_Action:
+    action1:
+        Description: Get search context working
+        SolutionArea: technical
+    action2:
+        Description: Get relationship editor working
+        SolutionArea: design
+    action3:
+        Description: Get RSS feeds working
+        SolutionArea: technical
+    action4:
+        Description: New logotype
+        SolutionArea: design
+
+
 SearchContextTest_Deadline:
     deadline1:
         CompletionDate: 2008-05-29 09:00:00
     deadline2:
-        CompletionDate: 2008-05-29 09:00:00
-
-SearchContextTest_Action:
-    action1:
-        Description: Get search context working
-        SolutionArea: backend
-    action2:
-        Description: Get relationship editor working
-        SolutionArea: frontend
-    action3:
-        Description: Get RSS feeds working
-        SolutionArea: technical
+        CompletionDate: 2008-05-20 09:00:00
 
 SearchContextTest_Project:
     project1:
         Name: CRM Application
-        Deadline: =>SearchContextTest_Deadline.deadline1
+        DeadlineID: =>SearchContextTest_Deadline.deadline1
         Actions: =>SearchContextTest_Action.action1,=>SearchContextTest_Action.action2
     project2:
         Name: Blog Website
-        Deadline: =>SearchContextTest_Deadline.deadline2
-        Actions: =>SearchContextTest_Action.action3
+        DeadlineID: =>SearchContextTest_Deadline.deadline2
+        Actions: =>SearchContextTest_Action.action3,=>SearchContextTest_Action.action4
 
 SearchContextTest_AllFilterTypes:
     filter1:

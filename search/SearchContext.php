@@ -68,13 +68,42 @@ class SearchContext extends Object {
 	/**
 	 * Returns scaffolded search fields for UI.
 	 *
-	 * @todo is this necessary in the SearchContext? - ModelAdmin could unwrap this and just use DataObject::scaffoldSearchFields
 	 * @return FieldSet
 	 */
 	public function getSearchFields() {
 		// $this->fields is causing weirdness, so we ignore for now, using the default scaffolding
 		//return ($this->fields) ? $this->fields : singleton($this->modelClass)->scaffoldSearchFields();
 		return singleton($this->modelClass)->scaffoldSearchFields();
+	}
+	
+	/**
+	 * @todo fix hack
+	 */
+	protected function applyBaseTableFields() {
+		$classes = ClassInfo::dataClassesFor($this->modelClass);
+		//Debug::dump($classes);
+		//die();
+		$fields = array($classes[0].'.*', $this->modelClass.'.*');
+		//$fields = array_keys($model->db());
+		$fields[] = $classes[0].'.ClassName AS RecordClassName';
+		return $fields;
+	}
+
+	/**
+	 * @todo fix hack
+	 */
+	protected function applyBaseTable() {
+		$classes = ClassInfo::dataClassesFor($this->modelClass);
+		return $classes[0];
+	}
+	
+	/**
+	 * @todo only works for one level deep of inheritance
+	 * @todo fix hack
+	 */
+	protected function applyBaseTableJoin($query) {
+		$classes = ClassInfo::dataClassesFor($this->modelClass);
+		if (count($classes) > 1) $query->leftJoin($classes[1], "{$classes[1]}.ID = {$classes[0]}.ID");
 	}
 	
 	/**
@@ -86,13 +115,32 @@ class SearchContext extends Object {
 	 */
 	public function getQuery($searchParams, $start = false, $limit = false) {
 		$model = singleton($this->modelClass);
-		$fields = array_keys($model->db());
-		$query = new SQLQuery($fields, $this->modelClass);
+		
+		$fields = $this->applyBaseTableFields($model);
+	
+		$query = new SQLQuery($fields);
+		
+		$baseTable = $this->applyBaseTable();
+		$query->from($baseTable);
+		
+		// SRM: This stuff is copied from DataObject, 
+		if($this->modelClass != $baseTable) {
+			$classNames = ClassInfo::subclassesFor($this->modelClass);
+			$query->where[] = "`$baseTable`.ClassName IN ('" . implode("','", $classNames) . "')";
+		}
+		
+
+		$this->applyBaseTableJoin($query);
+		
 		foreach($searchParams as $key => $value) {
-			$filter = $this->getFilter($key);
-			if ($filter) {
-				$filter->setValue($value);
-				$filter->apply($query);
+			if ($value != '0') {
+				$key = str_replace('__', '.', $key);
+				$filter = $this->getFilter($key);
+				if ($filter) {
+					$filter->setModel($this->modelClass);
+					$filter->setValue($value);
+					$filter->apply($query);
+				}
 			}
 		}
 		return $query;
@@ -111,16 +159,16 @@ class SearchContext extends Object {
 	public function getResults($searchParams, $start = false, $limit = false) {
 		$searchParams = array_filter($searchParams, array($this,'clearEmptySearchFields'));
 		$query = $this->getQuery($searchParams, $start, $limit);
-		//
+
 		// use if a raw SQL query is needed
-		//$results = new DataObjectSet();
-		//foreach($query->execute() as $row) {
-		//	$className = $row['ClassName'];
-		//	$results->push(new $className($row));
-		//}
-		//return $results;
+		$results = new DataObjectSet();
+		foreach($query->execute() as $row) {
+			$className = $row['RecordClassName'];
+			$results->push(new $className($row));
+		}
+		return $results;
 		//
-		return DataObject::get($this->modelClass, $query->getFilter(), "", "", $limit);
+		//return DataObject::get($this->modelClass, $query->getFilter(), "", "", $limit);
 	}
 
 	/**

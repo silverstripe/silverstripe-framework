@@ -1,0 +1,5 @@
+"FirstName","Biography","Birthday"
+"John","He's a good guy","31/01/1988"
+"Jane","She is awesome.\nSo awesome that she gets multiple rows and \"escaped\" strings in her biography","31/01/1982"
+"Jamie","Pretty old\, with an escaped comma","31/01/1882"
+"Järg","Unicode FTW","31/06/1982"
