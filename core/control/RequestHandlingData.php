@@ -23,6 +23,8 @@
  * {@link RequestHandlingData::handleRequest()} is where this behaviour is implemented.
  */
 class RequestHandlingData extends ViewableData {
+	protected $request = null;
+	
 	/**
 	 * The default URL handling rules.  This specifies that the next component of the URL corresponds to a method to
 	 * be called on this RequestHandlingData object.
@@ -68,10 +70,12 @@ class RequestHandlingData extends ViewableData {
 	 * @uses HTTPRequest
 	 */
 	function handleRequest($request) {
+		$this->request = $request;
+		
 		foreach($this->stat('url_handlers') as $rule => $action) {
-			if(isset($_GET['debug_request'])) Debug::message("Testing '$rule' with '" . $request->remaining() . "' on $this->class");
+			if(isset($_REQUEST['debug_request'])) Debug::message("Testing '$rule' with '" . $request->remaining() . "' on $this->class");
 			if($params = $request->match($rule, true)) {
-				if(isset($_GET['debug_request'])) Debug::message("Rule '$rule' matched on $this->class");
+				if(isset($_REQUEST['debug_request'])) Debug::message("Rule '$rule' matched on $this->class");
 				
 				// Actions can reference URL parameters, eg, '$Action/$ID/$OtherID' => '$Action',
 				if($action[0] == '$') $action = $params[substr($action,1)];

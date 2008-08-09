@@ -442,6 +442,21 @@ class Controller extends RequestHandlingData {
 		);
 	}
 	
+	/**
+	 * Joins two link segments together, putting a slash between them if necessary.
+	 * Use this for building the results of Link() methods.
+	 */
+	static function join_links() {
+		$args = func_get_args();
+		
+		$result = array_shift($args);
+		foreach($args as $arg) {
+			if(substr($result,-1) != '/' && $arg[0] != '/') $result .= "/$arg";
+			else $result .= $arg;
+		}
+		
+		return $result;
+	}
 }
 
 ?>

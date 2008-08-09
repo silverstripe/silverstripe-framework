@@ -75,6 +75,12 @@ class SearchContext extends Object {
 		parent::__construct();
 	}
 
+	/**
+	 * Returns scaffolded search fields for UI.
+	 *
+	 * @todo is this necessary in the SearchContext? - ModelAdmin could unwrap this and just use DataObject::scaffoldSearchFields
+	 * @return FieldSet
+	 */
 	public function getSearchFields() {
 		return ($this->fields) ? $this->fields : singleton($this->modelClass)->scaffoldSearchFields();
 	}
@@ -140,7 +146,7 @@ class SearchContext extends Object {
 	}
 
 	public function getFilters() {
-		return $this->fields; 
+		return $this->fields;
 	}
 	
 	public function setFilters($filters) {

@@ -1,0 +1,28 @@
+PersonBubble:
+    person1:
+        Name: James
+        Email: james@example.com
+        HairColor: brown
+        EyeColor: brown
+    person2:
+        Name: John
+        Email: john@example.com
+        HairColor: blond
+        EyeColor: blue
+    person3:
+        Name: Jane
+        Email: jane@example.com
+        HairColor: brown
+        EyeColor: green
+    person4:
+        Name: Hemi
+        Email: hemi@example.com
+        HairColor: black
+        EyeColor: brown
+    person5:
+        Name: Sara
+        Email: sara@example.com
+        HairColor: black
+        EyeColor: green
+
+        

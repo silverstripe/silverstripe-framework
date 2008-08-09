@@ -616,9 +616,14 @@ class DataObject extends ViewableData implements DataObjectInterface {
 						foreach($this->record as $fieldName => $fieldValue) {
 							if(isset($this->changed[$fieldName]) && $this->changed[$fieldName] && $fieldType = $classSingleton->fieldExists($fieldName)) {
 								$fieldObj = $this->obj($fieldName);
-								$fieldObj->setValue($this->record[$fieldName], $this->record);
 								if(!isset($manipulation[$class])) $manipulation[$class] = array();
-								if($fieldObj) $fieldObj->writeToManipulation($manipulation[$class]);
+
+								// if database column doesn't correlate to a DBField instance, set up a default Varchar DBField 
+								// (used mainly for has_one/has_many)
+								if(!$fieldObj) $fieldObj = DBField::create('Varchar', $this->record[$fieldName], $fieldName);
+								
+								$fieldObj->setValue($this->record[$fieldName], $this->record);
+								$fieldObj->writeToManipulation($manipulation[$class]);
 							}
 						}
 
@@ -1051,7 +1056,7 @@ class DataObject extends ViewableData implements DataObjectInterface {
 					return $candidate;
 				}
 			} else {
-				eval("\$items = array_merge((array){$class}::\$db, (array)\$items);");
+				eval("\$items = array_merge((array)\$items, (array){$class}::\$db);");
 			}
 		}
 
@@ -1192,18 +1197,28 @@ class DataObject extends ViewableData implements DataObjectInterface {
 	 */
 	public function scaffoldFormFields() {
 		$fields = new FieldSet();
-		
+		$fields->push(new HeaderField($this->singular_name()));
 		foreach($this->db() as $fieldName => $fieldType) {
 			// @todo Pass localized title
 			// commented out, to be less of a pain in the ass
 			//$fields->addFieldToTab('Root.Main', $this->dbObject($fieldName)->scaffoldFormField());
 			$fields->push($this->dbObject($fieldName)->scaffoldFormField());
-		}
-		
-		// @todo Add relation tabs
-		
+		}		
 		return $fields;
 	}
+
+	/**
+	 * Add the scaffold-generated relation fields to the given field set
+	 */
+	protected function addScaffoldRelationFields($fieldSet) {
+		foreach($this->has_many() as $relationship => $component) {
+			$relationshipFields = array_keys($this->searchableFields());
+			$fieldSet->push(new ComplexTableField($this, $relationship, $component, $relationshipFields));
+		}
+		return $fieldSet;
+	}
+
+
 	
 	/**
 	 * Centerpiece of every data administration interface in Silverstripe,
@@ -1228,7 +1243,12 @@ class DataObject extends ViewableData implements DataObjectInterface {
 	 * @return FieldSet
 	 */
 	public function getCMSFields() {
-		return $this->scaffoldFormFields();
+		$fields = $this->scaffoldFormFields();
+		// If we don't have an ID, then relation fields don't work
+		if($this->ID) {
+			$this->addScaffoldRelationFields($fields);
+		}
+		return $fields;
 	}
 
 	/**

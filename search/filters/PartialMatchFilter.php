@@ -5,7 +5,7 @@
  * @package sapphire
  * @subpackage search
  */
-class PartialMatchSearchFilter extends SearchFilter {
+class PartialMatchFilter extends SearchFilter {
 	
 }
 ?>

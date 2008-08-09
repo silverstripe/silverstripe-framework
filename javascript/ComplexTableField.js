@@ -72,8 +72,6 @@ ComplexTableField.prototype = {
 			popupLink = _popupLink;
 			table = _table;
 		} else {
-			alert(this.innerHTML);
-			
 			// if clicked item is an input-element, don't trigger popup
 			var el = Event.element(e);
 			var input = Event.findElement(e,"input");

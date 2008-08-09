@@ -32,6 +32,22 @@ class HTTPRequest extends Object implements ArrayAccess {
 	
 	protected $unshiftedButParsedParts = 0;
 	
+	function isGET() {
+		return $this->httpMethod == 'GET';
+	}
+	
+	function isPOST() {
+		return $this->httpMethod == 'POST';
+	}
+	
+	function isPUT() {
+		return $this->httpMethod == 'PUT';
+	}
+
+	function isDELETE() {
+		return $this->httpMethod == 'DELETE';
+	}	
+	
 	function getVars() {
 		return $this->getVars;
 	}
@@ -51,6 +67,10 @@ class HTTPRequest extends Object implements ArrayAccess {
 	function requestVar($name) {
 		if(isset($this->postVars[$name])) return $this->postVars[$name];
 		if(isset($this->getVars[$name])) return $this->getVars[$name];
+	}
+	
+	function getExtension() {
+		return $this->extension;
 	}
 	
 	/**
@@ -195,6 +215,7 @@ class HTTPRequest extends Object implements ArrayAccess {
 			if($v || !isset($this->allParams[$k])) $this->allParams[$k] = $v;
 		}
 		
+		if($arguments === array()) $arguments['_matched'] = true;
 		return $arguments;
 	}
 	
@@ -222,9 +243,8 @@ class HTTPRequest extends Object implements ArrayAccess {
 	}
 	
 	/**
-	 * Returns true if the give pattern is an empty pattern - that is, one that only matches completely parsed
-	 * URLs.  It will also return true if this is a completely parsed URL and the pattern contains only variable
-	 * references.
+	 * Returns true if this is a URL that will match without shifting off any of the URL.
+	 * This is used by the request handler to prevent infinite parsing loops.
 	 */
 	function isEmptyPattern($pattern) {
 		if(preg_match('/^([A-Za-z]+) +(.*)$/', $pattern, $matches)) {
@@ -232,10 +252,6 @@ class HTTPRequest extends Object implements ArrayAccess {
 		}
 		
 		if(trim($pattern) == "") return true;
-		
-		if(!$this->dirParts) {
-			return preg_replace('/\$[A-Za-z][A-Za-z0-9]*(\/|$)/','',$pattern) == "";
-		}
 	}
 	
 	/**
@@ -253,6 +269,5 @@ class HTTPRequest extends Object implements ArrayAccess {
 	 */
 	function allParsed() {
 		return sizeof($this->dirParts) <= $this->unshiftedButParsedParts;
-		
 	}
 }

@@ -123,6 +123,20 @@ class DataObjectTest extends SapphireTest {
 		$comment = DataObject::get_one('PageComment', '', true, 'Name DESC');
 		$this->assertTrue($comment->Name == 'Joe');
 	}
+
+	/**
+	 * Test writing of database columns which don't correlate to a DBField,
+	 * e.g. all relation fields on has_one/has_many like "ParentID". 
+	 *
+	 */
+	function testWritePropertyWithoutDBField() {
+		$page = $this->objFromFixture('Page', 'page1');
+		$page->ParentID = 99;
+		$page->write();
+		// reload the page from the database
+		$savedPage = DataObject::get_by_id('Page', $page->ID);
+		$this->assertTrue($savedPage->ParentID == 99);
+	}
 	
 	/**
 	 * Test has many relationships

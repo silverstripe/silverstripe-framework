@@ -5,7 +5,7 @@
  * @package sapphire
  * @subpackage search
  */
-class FulltextSearchFilter extends SearchFilter {
+class FulltextFilter extends SearchFilter {
 	
 }
 ?>

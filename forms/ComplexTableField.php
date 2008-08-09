@@ -53,9 +53,6 @@ class ComplexTableField extends TableListField {
 	 */
 	protected $permissions = array(
 		"add",
-		"edit",
-		"show",
-		"delete",
 		//"export",
 	);
 	
@@ -114,6 +111,7 @@ class ComplexTableField extends TableListField {
 
 	static $url_handlers = array(
 		'item/$ID' => 'handleItem',
+		'$Action!' => '$Action',
 	);
 
 	function handleItem($request) {
@@ -387,6 +385,124 @@ JS;
 	function setTemplatePopup($template) {
 		$this->templatePopup = $template;
 	}
+
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	function getFieldsFor($childData) {
+		// Add the relation value to related records
+		if(!$childData->ID && $this->getParentClass()) {
+			// make sure the relation-link is existing, even if we just add the sourceClass and didn't save it
+			$parentIDName = $this->getParentIdName( $this->getParentClass(), $this->sourceClass() );
+			$childData->$parentIDName = $childData->ID;
+		}
+
+		// If the fieldset is passed, use it
+		if(is_a($this->detailFormFields,"Fieldset")) {
+			$detailFields = $this->detailFormFields;
+
+		// Else use the formfields returned from the object via a string method call.
+		} else {
+			if(!is_string($this->detailFormFields)) $this->detailFormFields = "getCMSFields";
+			$functioncall = $this->detailFormFields;
+			if(!$childData->hasMethod($functioncall)) $functioncall = "getCMSFields";
+			
+			$detailFields = $childData->$functioncall();
+		}
+
+		// the ID field confuses the Controller-logic in finding the right view for ReferencedField
+		$detailFields->removeByName('ID');
+
+		// only add childID if we're not adding a record		
+		if($childData->ID) {
+			$detailFields->push(new HiddenField("ctf[childID]","",$childData->ID));
+		}
+
+		// add a namespaced ID instead thats "converted" by saveComplexTableField()
+		$detailFields->push(new HiddenField("ctf[ClassName]","",$this->sourceClass()));
+
+		if($this->getParentClass()) {
+			$parentIdName = $this->getParentIdName($this->getParentClass(), $this->sourceClass());
+			/*
+			if(!$parentIdName) {
+				user_error("ComplexTableField::DetailForm() Cannot automatically 
+					determine 'has-one'-relationship to parent class " . $this->ctf->getParentClass() .  ",
+					please use setParentClass() to set it manually", 
+				E_USER_WARNING);
+				return;
+			}
+			*/
+			
+			if($parentIdName) {
+				// add relational fields
+				$detailFields->push(new HiddenField("ctf[parentClass]"," ",$this->getParentClass()));
+			
+				if( $this->relationAutoSetting )
+					$detailFields->push(new HiddenField("$parentIdName"," ",$childData->ID));
+			}
+		} 
+		
+		return $detailFields;
+	}
+
+	function getValidatorFor($childData) {
+		// if no custom validator is set, and there's on present on the object (e.g. Member), use it
+		if(!isset($this->detailFormValidator) && $childData->hasMethod('getValidator')) {
+			$this->detailFormValidator = $childData->getValidator();
+		}
+		return $this->detailFormValidator;
+	}
+	
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	function add() {
+		if(!$this->can('add')) return;
+		
+		return $this->customise(array(
+			'DetailForm' => $this->AddForm(),
+		))->renderWith($this->templatePopup);
+	}
+
+	function AddForm($childID = null) {
+		$className = $this->sourceClass();
+		$childData = new $className();
+		
+		$fields = $this->getFieldsFor($childData);
+		$validator = $this->getValidatorFor($childData);
+
+		$form = Object::create(
+				$this->popupClass,
+				$this, "AddForm", 
+				$fields, $validator, false, $childData);
+
+		return $form;
+	}
+
+	/**
+	 * Use the URL-Parameter "action_saveComplexTableField"
+	 * to provide a clue to the main controller if the main form has to be rendered,
+	 * even if there is no action relevant for the main controller (to provide the instance of ComplexTableField
+	 * which in turn saves the record.
+	 *
+	 * @see {Form::ReferencedField}).
+	 */
+	function saveComplexTableField($params) {
+		$className = $this->sourceClass();
+		$childData = new $className();
+
+		$this->saveInto($childData);
+		$childData->write();
+
+		// if ajax-call in an iframe, update window
+		if(Director::is_ajax()) {
+			// Newly saved objects need their ID reflected in the reloaded form to avoid double saving 
+			$form = $this->controller->DetailForm();
+			//$form->loadDataFrom($this->dataObject);
+			FormResponse::update_dom_id($form->FormName(), $form->formHtmlContent(), true, 'update');
+			return FormResponse::respond();
+		} else {
+			Director::redirectBack();
+		}
+	}
 }
 
 /**
@@ -463,21 +579,6 @@ class ComplexTableField_ItemRequest extends RequestHandlingData {
 		echo $this->renderWith($this->ctf->templatePopup);
 	}
 
-	/**
-	 * Just a hook, processed in {DetailForm()}
-	 *
-	 * @return String
-	 */
-	function add() {
-		if($this->Can('add') !== true) {
-			return false;
-		}
-
-		$this->methodName = "add";
-
-		echo $this->renderWith($this->templatePopup);
-	}
-
 	///////////////////////////////////////////////////////////////////////////////////////////////////
 
 	/**
@@ -505,88 +606,45 @@ class ComplexTableField_ItemRequest extends RequestHandlingData {
 	 */
 	function DetailForm($childID = null) {
 		$childData = $this->obj();
-
-		// If the fieldset is passed, use it, else use the formfields returned
-		// from the object via a string method call.
-		if(is_a($this->ctf->detailFormFields,"Fieldset")){
-			$detailFields = $this->detailFormFields;
-
-		} else if( isset( $childData ) && is_string($this->ctf->detailFormFields)){
-			$functioncall = $this->ctf->detailFormFields;
-			if($childData->hasMethod($functioncall)){
-				$detailFields = $childData->$functioncall();
-			}
-			
-		} elseif(! isset( $childData ) || $this->methodName == 'add') {
-			$SNG_sourceClass = singleton($this->ctf->sourceClass());
-			if($childData && is_numeric($childData->ID) && $this->ctf->getParentClass()) {
-				// make sure the relation-link is existing, even if we just add the sourceClass
-				// and didn't save it
-				$parentIDName = $this->ctf->getParentIdName( $this->getParentClass(), $this->sourceClass() );
-				$SNG_sourceClass->$parentIDName = $childData->ID;
-			}
-			$functioncall = $this->detailFormFields;
-			if($SNG_sourceClass->hasMethod($functioncall)){
-				$detailFields = $SNG_sourceClass->$functioncall();
-			}
-			else
-				$detailFields = $SNG_sourceClass->getCMSFields();
-		} else {
-			$detailFields = $childData->getCMSFields();
-		}
 		
-		if($this->ctf->getParentClass()) {
-			$parentIdName = $this->ctf->getParentIdName($this->ctf->getParentClass(), $this->ctf->sourceClass());
-			/*
-			if(!$parentIdName) {
-				user_error("ComplexTableField::DetailForm() Cannot automatically 
-					determine 'has-one'-relationship to parent class " . $this->ctf->getParentClass() .  ",
-					please use setParentClass() to set it manually", 
-				E_USER_WARNING);
-				return;
-			}
-			*/
-			
-			if($parentIdName) {
-				// add relational fields
-				$detailFields->push(new HiddenField("ctf[parentClass]"," ",$this->ctf->getParentClass()));
-			
-				if( $this->relationAutoSetting )
-					$detailFields->push(new HiddenField("$parentIdName"," ",$childData->ID));
-			}
-		} 
-
-		// the ID field confuses the Controller-logic in finding the right view for ReferencedField
-		$detailFields->removeByName('ID');
-
-		// only add childID if we're not adding a record		
-		if($this->methodName != 'add') {
-			$detailFields->push(new HiddenField("ctf[childID]","",$childData->ID));
-		}
-
-		// add a namespaced ID instead thats "converted" by saveComplexTableField()
-		$detailFields->push(new HiddenField("ctf[ClassName]","",$this->ctf->sourceClass()));
-
+		$fields = $this->ctf->getFieldsFor($childData);
+		$validator = $this->ctf->getValidatorFor($childData);
 		$readonly = ($this->methodName == "show");
 
-		// if no custom validator is set, and there's on present on the object (e.g. Member), use it
-		if(!isset($this->ctf->detailFormValidator) && singleton($this->ctf->sourceClass())->hasMethod('getValidator')) {
-			$this->ctf->detailFormValidator = singleton($this->ctf->sourceClass())->getValidator();
-		}
-
-		$form = Object::create($this->ctf->popupClass,$this, "DetailForm", $detailFields, $this->ctf->detailFormValidator, $readonly, $childData);
+		$form = Object::create(
+				$this->ctf->popupClass,
+				$this, "DetailForm", 
+				$fields, $validator, $readonly, $childData);
 	
-		if (is_numeric($childData->ID)) {
-			if ($this->methodName == "show" || $this->methodName == "edit") {
-				$form->loadDataFrom($childData);
-			}
-		}
-
-		if ($this->methodName == "show") {
-			$form->makeReadonly();
-		}
+		$form->loadDataFrom($childData);
+		if ($readonly) $form->makeReadonly();
 
 		return $form;
+	}
+
+	/**
+	 * Use the URL-Parameter "action_saveComplexTableField"
+	 * to provide a clue to the main controller if the main form has to be rendered,
+	 * even if there is no action relevant for the main controller (to provide the instance of ComplexTableField
+	 * which in turn saves the record.
+	 *
+	 * @see {Form::ReferencedField}).
+	 */
+	function saveComplexTableField($data, $form, $request) {
+		$form->saveInto($this->obj());
+		$this->obj()->write();
+
+		// if ajax-call in an iframe, update window
+		if(Director::is_ajax()) {
+			// Newly saved objects need their ID reflected in the reloaded form to avoid double saving 
+			$form = $this->controller->DetailForm();
+			//$form->loadDataFrom($this->dataObject);
+			FormResponse::update_dom_id($form->FormName(), $form->formHtmlContent(), true, 'update');
+			return FormResponse::respond();
+			
+		} else {
+			Director::redirectBack();
+		}
 	}
 	
 	function PopupBaseLink() {
@@ -790,7 +848,6 @@ class ComplexTableField_Popup extends Form {
 		 * WARNING: DO NOT CHANGE THE ORDER OF THESE JS FILES
 		 * Some have special requirements.
 		 */
-		Requirements::clear();
 		//Requirements::css('cms/css/layout.css');
 		Requirements::css('jsparty/tabstrip/tabstrip.css');
 		Requirements::css('sapphire/css/Form.css');
@@ -812,7 +869,7 @@ class ComplexTableField_Popup extends Form {
 		Requirements::javascript("sapphire/javascript/ComplexTableField_popup.js");
 
  		if($this->dataObject->hasMethod('getRequirementsForPopup')) {
-			$this->data->getRequirementsForPopup();
+			$this->dataObject->getRequirementsForPopup();
 		}
 		
 		$actions = new FieldSet();	
@@ -833,31 +890,6 @@ class ComplexTableField_Popup extends Form {
 	function ShowPagination() {
 		return $this->controller->ShowPagination();
 	}
-
-
-	/**
-	 * Use the URL-Parameter "action_saveComplexTableField"
-	 * to provide a clue to the main controller if the main form has to be rendered,
-	 * even if there is no action relevant for the main controller (to provide the instance of ComplexTableField
-	 * which in turn saves the record.
-	 *
-	 * @see {Form::ReferencedField}).
-	 */
-	function saveComplexTableField($params) {
-		$this->saveInto($this->dataObject);
-		$this->dataObject->write();
-
-		// if ajax-call in an iframe, update window
-		if(Director::is_ajax()) {
-			// Newly saved objects need their ID reflected in the reloaded form to avoid double saving 
-			$form = $this->controller->DetailForm();
-			//$form->loadDataFrom($this->dataObject);
-			FormResponse::update_dom_id($form->FormName(), $form->formHtmlContent(), true, 'update');
-			return FormResponse::respond();
-		} else {
-			Director::redirectBack();
-		}
-	}
-
 }
+
 ?>

@@ -465,16 +465,6 @@ HTML;
 		user_error('FormField::setExtraClass() is deprecated. Use FormField::addExtraClass() instead.', E_USER_NOTICE);
 		$this->extraClasses[] = $extraClass;
 	}
-
-
-	/**
-	 * This returns a link used to specify a controller in a form action.
-	 * This lets us use FormFields as controllers.
-	 */
-	function FormObjectLink($formName) {
-		return $this->form->Controller()->Link() . "?executeController=" . $this->form->Name() . ".FieldMap." . $this->Name() . "&executeForm=" . $formName;
-	}
-	
 }
 
 ?>

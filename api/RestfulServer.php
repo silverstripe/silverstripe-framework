@@ -54,20 +54,14 @@ class RestfulServer extends Controller {
 	 */
 	function index() {
 		ContentNegotiator::disable();
-		
 		$requestMethod = $_SERVER['REQUEST_METHOD'];
-		
 		if(!isset($this->urlParams['ClassName'])) return $this->notFound();
 		$className = $this->urlParams['ClassName'];
 		$id = (isset($this->urlParams['ID'])) ? $this->urlParams['ID'] : null;
 		$relation = (isset($this->urlParams['Relation'])) ? $this->urlParams['Relation'] : null;
 		
-		// This is a little clumsy and should be improved with the new TokenisedURL that's coming
-		if(strpos($relation,'.') !== false) list($relation, $extension) = explode('.', $relation, 2);
-		else if(strpos($id,'.') !== false) list($id, $extension) = explode('.', $id, 2);
-		else if(strpos($className,'.') !== false) list($className, $extension) = explode('.', $className, 2);
-		else $extension = null;
-
+		$extension = $this->request->getExtension();
+		
 		// Determine mime-type from extension
 		$contentMap = array(
 			'xml' => 'text/xml',
@@ -77,7 +71,7 @@ class RestfulServer extends Controller {
 			'html' => 'text/html',
 		);
 		$contentType = isset($contentMap[$extension]) ? $contentMap[$extension] : 'text/xml';
-		
+
 		switch($requestMethod) {
 			case 'GET':
 				return $this->getHandler($className, $id, $relation, $contentType);
@@ -142,6 +136,8 @@ class RestfulServer extends Controller {
 			
 		} else {
 			$obj = DataObject::get($className, "");
+			// show empty serialized result when no records are present
+			if(!$obj) $obj = new DataObjectSet();
 			if(!singleton($className)->stat('api_access')) {
 				return $this->permissionFailure();
 			}

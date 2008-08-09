@@ -182,11 +182,11 @@ class Form extends RequestHandlingData {
 
 		// First, try a handler method on the controller
 		if($this->controller->hasMethod($funcName)) {
-			return $this->controller->$funcName($vars, $this);
+			return $this->controller->$funcName($vars, $this, $request);
 
 		// Otherwise, try a handler method on the form object
 		} else {
-			return $this->$funcName($vars, $this);
+			return $this->$funcName($vars, $this, $request);
 		}
 	}
 	
@@ -456,7 +456,6 @@ class Form extends RequestHandlingData {
 	 */
 	function setFormMethod($method) {
 		$this->formMethod = strtolower($method);
-		if($this->formMethod == 'get') $this->fields->push(new HiddenField('executeForm', '', $this->name));
 	}
 	
 	/**
@@ -466,20 +465,46 @@ class Form extends RequestHandlingData {
 	 * @return string 
 	 */
 	function FormAction() {
-		if($this->controller->hasMethod("FormObjectLink")) {
+		if ($this->formActionPath) {
+			return $this->formActionPath;
+		} elseif($this->controller->hasMethod("FormObjectLink")) {
 			return $this->controller->FormObjectLink($this->name);
-		} else { 
-			$link = $this->controller->Link();
-			if(substr($link,-1) != '/') $link .= '/';
-			return $link . $this->name;
+		} else {
+			return Controller::join_links($this->controller->Link(), $this->name);
 		}
 	}
+	
+	/** @ignore */
+	private $formActionPath = false;
+	
+	/**
+	 * Set the form action attribute to a custom URL.
+	 * 
+	 * Note: For "normal" forms, you shouldn't need to use this method.  It is recommended only for situations where you have
+	 * two relatively distinct parts of the system trying to communicate via a form post.
+	 */
+	function setFormAction($path) {
+		$this->formActionPath = $path;
+	}
 
+	/**
+	 * @ignore
+	 */
+	private $htmlID = null;
+	
 	/**
 	 * Returns the name of the form
 	 */
 	function FormName() {
-		return $this->class . '_' . str_replace('.', '', $this->name);
+		if($this->htmlID) return $this->htmlID;
+		else return $this->class . '_' . str_replace('.','',$this->name);
+	}
+
+	/**
+	 * Set the HTML ID attribute of the form
+	 */
+	function setHTMLID($id) {
+		$this->htmlID = $id;
 	}
 	
 	/**
@@ -920,7 +945,6 @@ class Form extends RequestHandlingData {
 	 */
 	function testSubmission($action, $data) {
 		$data['action_' . $action] = true;
-		$data['executeForm'] = $this->name;
         
         return Director::test($this->FormAction(), $data, Controller::curr()->getSession());
 		

@@ -8,7 +8,7 @@
  * @package sapphire
  * @subpackage search
  */
-class ExactMatchSearchFilter extends SearchFilter {
+class ExactMatchFilter extends SearchFilter {
 	
 }
 ?>
