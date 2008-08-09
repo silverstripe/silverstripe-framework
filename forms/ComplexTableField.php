@@ -896,7 +896,7 @@ class ScaffoldingComplexTableField_Popup extends Form {
 	protected $dataObject;
 	
 	public static $allowed_actions = array(
-		'filter', 'record', 'httpSubmission', 'handleAction'
+		'filter', 'record', 'httpSubmission', 'handleAction', 'handleField'
 	);
 
 	function __construct($controller, $name, $fields, $validator, $readonly, $dataObject) {

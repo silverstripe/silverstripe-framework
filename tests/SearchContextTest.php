@@ -19,15 +19,15 @@ class SearchContextTest extends SapphireTest {
 	
 	function testSummaryIncludesDefaultFieldsIfNotDefined() {
 		$person = singleton('SearchContextTest_Person');
-		$this->assertContains('Name', $person->summary_fields());
+		$this->assertContains('Name', $person->summaryFields());
 		
 		$book = singleton('SearchContextTest_Book');
-		$this->assertContains('Title', $book->summary_fields());
+		$this->assertContains('Title', $book->summaryFields());
 	}
 	
 	function testAccessDefinedSummaryFields() {
 		$company = singleton('SearchContextTest_Company');
-		$this->assertContains('Industry', $company->summary_fields());
+		$this->assertContains('Industry', $company->summaryFields());
 	}
 	
 	function testPartialMatchUsedByDefaultWhenNotExplicitlySet() {

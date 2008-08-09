@@ -12,6 +12,7 @@ class Varchar extends DBField {
 		$this->size = $size ? $size : 50;
 		parent::__construct($name);
 	}
+	
 	function requireField() {
 		DB::requireField($this->tableName, $this->name, "varchar($this->size) character set utf8 collate utf8_general_ci");
 	}

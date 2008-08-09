@@ -561,12 +561,12 @@ interface DebugReporter {
 	/**
 	 * Render HTML markup for the header/top segment of debug report.
 	 */
-	abstract function writeHeader();
+	function writeHeader();
 	
 	/**
 	 * Render HTML markup for the footer and closing tags of debug report.
 	 */
-	abstract function writeFooter();
+	function writeFooter();
 	
 }
 
@@ -576,7 +576,7 @@ interface DebugReporter {
  */
 class SapphireDebugReporter implements DebugReporter {
 	
-	function writeHeader() {
+	public function writeHeader() {
 		echo '<!DOCTYPE html><html><head><title>'. $_SERVER['REQUEST_METHOD'] . ' ' .$_SERVER['REQUEST_URI'] .'</title>';
 		echo '<style type="text/css">';
 		echo 'body { background-color:#eee; margin:0; padding:0; font-family:Helvetica,Arial,sans-serif; }';
@@ -595,7 +595,7 @@ class SapphireDebugReporter implements DebugReporter {
 		echo '<div class="header"><img src="'. Director::absoluteBaseURL() .'cms/images/mainmenu/logo.gif" width="26" height="23"></div>';
 	}
 	
-	function writeFooter() {
+	public function writeFooter() {
 		echo "</body></html>";		
 	}
 	

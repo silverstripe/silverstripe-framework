@@ -1061,7 +1061,7 @@ class DataObject extends ViewableData implements DataObjectInterface {
 	 * Add the scaffold-generated relation fields to the given field set
 	 */
 	protected function addScaffoldRelationFields($fieldSet) {
-		if ($this->has_many() || $this->_many_many()) {
+		if ($this->has_many() || $this->many_many()) {
 			$oldFields = $fieldSet;
 			$fieldSet = new FieldSet(
 				new TabSet("Root", new Tab("Main"))
@@ -1070,22 +1070,42 @@ class DataObject extends ViewableData implements DataObjectInterface {
 				$fieldSet->addFieldToTab("Root.Main", $field);
 			}
 		}
+		
 		if($this->has_many()) {
 			// Add each relation as a separate tab
 			foreach($this->has_many() as $relationship => $component) {
-				$relationshipFields = singleton($component)->summary_fields();
+				$relationshipFields = singleton($component)->summaryFields();
 				$foreignKey = $this->getComponentJoinField($relationship);
-				$fieldSet->addFieldToTab("Root.$relationship", new ComplexTableField($this, $relationship, $component, $relationshipFields, "getCMSFields", "$foreignKey = $this->ID"));
+				$ctf = new ComplexTableField(
+					$this, 
+					$relationship, 
+					$component, 
+					$relationshipFields, 
+					"getCMSFields", 
+					"$foreignKey = $this->ID"
+				);
+				$ctf->setPermissions(TableListField::permissions_for_object($component));
+				$fieldSet->addFieldToTab("Root.$relationship", $ctf);
 			}
 		}
 		if ($this->many_many()) {	
 			foreach($this->many_many() as $relationship => $component) {
-				$relationshipFields = singleton($component)->summary_fields();
+				$relationshipFields = singleton($component)->summaryFields();
 				$filterWhere = $this->getManyManyFilter($relationship, $component);
 				$filterJoin = $this->getManyManyJoin($relationship, $component);
-				$tableField =  new ComplexTableField($this, $relationship, $component, $relationshipFields, "getCMSFields", $filterWhere, '', $filterJoin);
-				$tableField->popupClass = "ScaffoldingComplexTableField_Popup";
-				$fieldSet->addFieldToTab("Root.$relationship", $tableField);
+				$ctf =  new ComplexTableField(
+					$this, 
+					$relationship, 
+					$component, 
+					$relationshipFields, 
+					"getCMSFields", 
+					$filterWhere, 
+					'', 
+					$filterJoin
+				);
+				$ctf->setPermissions(TableListField::permissions_for_object($component));
+				$ctf->popupClass = "ScaffoldingComplexTableField_Popup";
+				$fieldSet->addFieldToTab("Root.$relationship", $ctf);
 			}
 		}
 		return $fieldSet;
@@ -1319,21 +1339,28 @@ class DataObject extends ViewableData implements DataObjectInterface {
 	 * based on default {@link FormField} mapping in {@link DBField::scaffoldFormField()}
 	 *
 	 * @uses {@link DBField::scaffoldFormField()}
+	 * @param array $fieldClasses Optional mapping of fieldnames to subclasses of {@link DBField}
 	 * @return FieldSet
 	 */
-	public function scaffoldFormFields() {
+	public function scaffoldFormFields($fieldClasses = null) {
 		$fields = new FieldSet();
 		$fields->push(new HeaderField($this->singular_name()));
 		foreach($this->db() as $fieldName => $fieldType) {
 			// @todo Pass localized title
 			// commented out, to be less of a pain in the ass
 			//$fields->addFieldToTab('Root.Main', $this->dbObject($fieldName)->scaffoldFormField());
-			$fields->push($this->dbObject($fieldName)->scaffoldFormField());
+			if(isset($fieldClasses[$fieldName])) {
+				$fieldClass = $fieldClasses[$fieldName];
+				$fieldObject = new $fieldClass($fieldName);
+			} else {
+				$fieldObject = $this->dbObject($fieldName)->scaffoldFormField(); 
+			}
+			$fields->push($fieldObject);
 		}
 		foreach($this->has_one() as $relationship => $component) {
 			$model = singleton($component);
 			$records = DataObject::get($component);
-			$collect = ($model->hasMethod('customSelectOption')) ? 'customSelectOption' : current($model->summary_fields());
+			$collect = ($model->hasMethod('customSelectOption')) ? 'customSelectOption' : current($model->summaryFields());
 			$options = $records ? $records->filter_map('ID', $collect) : array();
 			$fields->push(new DropdownField($relationship.'ID', $relationship, $options));
 		}
@@ -2227,7 +2254,7 @@ class DataObject extends ViewableData implements DataObjectInterface {
 	public function searchable_fields() {
 		$fields = $this->stat('searchable_fields');
 		if (!$fields) {
-			$fields = array_fill_keys(array_keys($this->summary_fields()), 'TextField');
+			$fields = array_fill_keys(array_keys($this->summaryFields()), 'TextField');
 		}
 		return $fields;
 	}
@@ -2239,10 +2266,18 @@ class DataObject extends ViewableData implements DataObjectInterface {
 	 *
 	 * @return array
 	 */
-	public function summary_fields() {
+	public function summaryFields() {
 		$fields = $this->stat('summary_fields');
+		
+		// if fields were passed in numeric array,
+		// convert to an associative array
+		if($fields && array_key_exists(0, $fields)) {
+			$fields = array_combine(array_values($fields), array_values($fields));
+		}
+		
 		if (!$fields) {
 			$fields = array();
+			// try to scaffold a couple of usual suspects
 			if ($this->hasField('Name')) $fields['Name'] = 'Name';
 			if ($this->hasField('Title')) $fields['Title'] = 'Title';
 			if ($this->hasField('Description')) $fields['Description'] = 'Description';

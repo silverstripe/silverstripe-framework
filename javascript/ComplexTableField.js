@@ -17,6 +17,9 @@ ComplexTableField.prototype = {
 		rules['#'+this.id+' table.data tbody td'] = {onclick: this.openPopup.bind(this)};
 		
 		Behaviour.register(rules);
+		
+		// HACK If already in a popup, we can't allow add (doesn't save existing relation correctly)
+		if(window != top) $$('#'+this.id+' table.data a.addlink').each(function(el) {Element.hide(el);});
 	},
 	
 	/**
@@ -66,6 +69,10 @@ ComplexTableField.prototype = {
 	 * @param href, table Optional dom object (use for external triggering without an event)
 	 */
 	openPopup: function(e, _popupLink, _table) {
+		// If already in a popup, simply open the link instead
+		// of opening a nested lightwindow
+		if(window != top) return true;
+		
 		var el,type;
 		var popupLink = "";
 		if(_popupLink) {

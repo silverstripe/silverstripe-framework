@@ -47,7 +47,7 @@ class TestRunner extends Controller {
 	
 	function init() {
 		parent::init();
-		if (!self::$default_reporter) self::set_reporter('DebugView');
+		if (!self::$default_reporter) self::set_reporter('SapphireDebugReporter'); 
 	}
 	
 	/**

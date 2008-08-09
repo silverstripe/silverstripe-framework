@@ -291,6 +291,8 @@ JS
 		$SQL_limit = ($this->pageSize) ? "{$this->pageSize}" : "0";
 		if(isset($_REQUEST['ctf'][$this->Name()]['start']) && is_numeric($_REQUEST['ctf'][$this->Name()]['start'])) {
 			$SQL_start = (isset($_REQUEST['ctf'][$this->Name()]['start'])) ? intval($_REQUEST['ctf'][$this->Name()]['start']) : "0";
+		} else {
+			$SQL_start = 0;
 		}
 		if(isset($this->customSourceItems)) {
 			if($this->customSourceItems) {
@@ -929,6 +931,29 @@ JS
 		}
 		return $idField->Value();
 	}
+	
+	/**
+	 * Helper method to determine permissions for a scaffolded
+	 * TableListField (or subclasses) - currently used in {@link ModelAdmin} and {@link DataObject->scaffoldFormFields()}.
+	 * Returns true for each permission that doesn't have an explicit getter.
+	 * 
+	 * @todo Temporary method, implement directly in FormField subclasses with object-level permissions.
+	 *
+	 * @param string $class
+	 * @param numeric $id
+	 * @return array
+	 */
+	public static function permissions_for_object($class, $id = null) {
+		$permissions = array();
+		$obj = ($id) ? DataObject::get_by_id($class, $id) : singleton($class);
+		
+		if(!$obj->hasMethod('canView') || $obj->canView()) $permissions[] = 'show';
+		if(!$obj->hasMethod('canEdit') || $obj->canEdit()) $permissions[] = 'edit';
+		if(!$obj->hasMethod('canDelete') || $obj->canDelete()) $permissions[] = 'delete';
+		if(!$obj->hasMethod('canCreate') || $obj->canCreate()) $permissions[] = 'add';
+		
+		return $permissions;
+	}
 
 	 
 	 
@@ -1075,6 +1100,7 @@ class TableListField_Item extends ViewableData {
 	function IsReadOnly() {
 		return $this->parent->Can('delete');
 	}
+	
 }
 
 ?>

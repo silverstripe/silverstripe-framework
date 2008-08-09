@@ -66,7 +66,7 @@ class HTMLText extends Text {
 	}
 	
 	public function scaffoldFormField($title = null) {
-		return new HTMLEditorField($this->name, $title);
+		return new HtmlEditorField($this->name, $title);
 	}
 	
 	public function scaffoldSearchField($title = null) {
