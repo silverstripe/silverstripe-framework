@@ -14,7 +14,7 @@ ComplexTableFieldPopupForm.prototype = {
 	
 	loadNewPage : function(content) {
 		this.innerHTML = content;
-	}
+	},
 	
 	submitForm : function(e) {
 		// if custom validation implementation (extend class to implement)
