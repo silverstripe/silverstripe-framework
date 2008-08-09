@@ -1,4 +1,10 @@
 <?php
+
+/**
+ * @package sapphire
+ * @subpackage core
+ */
+
 /**
  * Supports debugging and core error handling.
  * 
@@ -26,7 +32,6 @@
  * 
  * Currently, only Friendly, Fatal, and Emailer handlers are implemented.
  * 
- * @todo make sure these doc comments are synced with tickets in trac 
  * @todo port header/footer wrapping code to external reporter class
  * @todo add support for user defined config: Debug::die_on_notice(true | false)
  * @todo add appropriate handling for E_NOTICE and E_USER_NOTICE levels
@@ -82,6 +87,11 @@ class Debug {
 		ob_end_clean();
 	}  
 	
+	/**
+	 * Close out the show dumper
+	 *
+	 * @param mixed $val
+	 */
 	static function endshow($val) {
 		if(!Director::isLive()) {
 			$caller = Debug::caller();
@@ -91,12 +101,25 @@ class Debug {
 		}
 	}
 	
+	/**
+	 * Quick dump of a variable.
+	 *
+	 * @param mixed $val
+	 */
 	static function dump($val) {
 		echo '<pre style="background-color:#ccc;padding:5px;">';
+		$caller = Debug::caller();
+		echo "<span style=\"font-size: 60%\">Line $caller[line] of " . basename($caller['file']) . "</span>\n";
 		print_r($val);
 		echo '</pre>';
 	}
 
+	/**
+	 * ??
+	 *
+	 * @param unknown_type $val
+	 * @return unknown
+	 */
 	static function text($val) {
 		if(is_object($val)) {
 			if(method_exists($val, 'hasMethod')) {
@@ -145,18 +168,25 @@ class Debug {
 			}
 		}
 	}
-	
+
 	/**
-	 * Load an error handler
+	 * Load error handlers into environment
 	 */
 	static function loadErrorHandlers() {
-		Debug::loadFatalErrorHandler();
-
 		//set_error_handler('errorHandler', (E_ALL ^ E_NOTICE) ^ E_USER_NOTICE);
 		set_error_handler('errorHandler', E_ALL);
 		set_exception_handler('exceptionHandler');
 	}
 
+	/**
+	 * Handle a non-fatal warning error thrown by PHP interpreter.
+	 *
+	 * @param unknown_type $errno
+	 * @param unknown_type $errstr
+	 * @param unknown_type $errfile
+	 * @param unknown_type $errline
+	 * @param unknown_type $errcontext
+	 */
 	static function warningHandler($errno, $errstr, $errfile, $errline, $errcontext) {
 	  if(error_reporting() == 0) return;
 		if(self::$send_warnings_to) self::emailError(self::$send_warnings_to, $errno, $errstr, $errfile, $errline, $errcontext, "Warning");
@@ -166,6 +196,17 @@ class Debug {
 		}
 	}
 
+	/**
+	 * Handle a fatal error, depending on the mode of the site (ie: Dev, Test, or Live).
+	 * 
+	 * Runtime execution dies immediately once the error is generated.
+	 *
+	 * @param unknown_type $errno
+	 * @param unknown_type $errstr
+	 * @param unknown_type $errfile
+	 * @param unknown_type $errline
+	 * @param unknown_type $errcontext
+	 */
 	static function fatalHandler($errno, $errstr, $errfile, $errline, $errcontext) {
 		if(self::$send_errors_to) self::emailError(self::$send_errors_to, $errno, $errstr, $errfile, $errline, $errcontext, "Error");
 
@@ -177,6 +218,17 @@ class Debug {
 		}
 		die();
 	}
+	
+	/**
+	 * Render a user-facing error page, using the default HTML error template
+	 * if it exists.
+	 *
+	 * @param unknown_type $errno
+	 * @param unknown_type $errstr
+	 * @param unknown_type $errfile
+	 * @param unknown_type $errline
+	 * @param unknown_type $errcontext
+	 */
 	static function friendlyError($errno, $errstr, $errfile, $errline, $errcontext) {
 		header("HTTP/1.0 500 Internal server error");
 
@@ -192,13 +244,23 @@ class Debug {
 		}
 	}
 
+	/**
+	 * Render a developer facing error page, showing the stack trace and details
+	 * of the code where the error occured.
+	 *
+	 * @param unknown_type $errno
+	 * @param unknown_type $errstr
+	 * @param unknown_type $errfile
+	 * @param unknown_type $errline
+	 * @param unknown_type $errcontext
+	 */
 	static function showError($errno, $errstr, $errfile, $errline, $errcontext) {
 		if(!headers_sent()) header("HTTP/1.0 500 Internal server error");
 		if(Director::is_ajax()) {
 			echo "ERROR:Error $errno: $errstr\n At l$errline in $errfile\n";
 			Debug::backtrace();
 		} else {
-			$reporter = new DebugView();
+			$reporter = new DebugReporter();
 			$reporter->writeHeader();
 			echo '<div class="info">';
 			echo "<h1>" . strip_tags($errstr) . "</h1>";
@@ -207,7 +269,7 @@ class Debug {
 			echo '</div>';
 			echo '<div class="trace"><h3>Source</h3>';
 			Debug::showLines($errfile, $errline);
-			echo '</pre><h3>Trace</h3>';
+			echo '<h3>Trace</h3>';
 			Debug::backtrace();
 			echo '</div>';
 			$reporter->writeFooter();
@@ -215,6 +277,13 @@ class Debug {
 		}
 	}
 	
+	/**
+	 * Utility method to render a snippet of PHP source code, from selected file
+	 * and highlighting the given line number.
+	 *
+	 * @param string $errfile
+	 * @param int $errline
+	 */
 	static function showLines($errfile, $errline) {
 		$lines = file($errfile);
 		$offset = $errline-10;
@@ -233,6 +302,17 @@ class Debug {
 		echo '</pre>';		
 	}
 
+	/**
+	 * Dispatch an email notification message when an error is triggered. 
+	 *
+	 * @param unknown_type $emailAddress
+	 * @param unknown_type $errno
+	 * @param unknown_type $errstr
+	 * @param unknown_type $errfile
+	 * @param unknown_type $errline
+	 * @param unknown_type $errcontext
+	 * @param unknown_type $errorType
+	 */
 	static function emailError($emailAddress, $errno, $errstr, $errfile, $errline, $errcontext, $errorType = "Error") {
 		if(strtolower($errorType) == 'warning') {
 			$colour = "orange";
@@ -315,6 +395,13 @@ class Debug {
 		return $caller;
 	}
 	
+	/**
+	 * Render or return a backtrace from the given scope.
+	 *
+	 * @param unknown_type $returnVal
+	 * @param unknown_type $ignoreAjax
+	 * @return unknown
+	 */
 	static function backtrace($returnVal = false, $ignoreAjax = false) {
 
 		$bt = debug_backtrace();
@@ -421,7 +508,12 @@ class Debug {
 		die();
 	}
 }
-
+/**
+ * Generic callback, to catch uncaught exceptions when they bubble up to the top of the call chain.
+ * 
+ * @ignore 
+ * @param unknown_type $exception
+ */
 function exceptionHandler($exception) {
 	$errno = E_USER_ERROR;
 	$type = get_class($exception);
@@ -432,6 +524,17 @@ function exceptionHandler($exception) {
 	Debug::fatalHandler($errno, $message, $file, $line, $context);
 }
 
+/**
+ * Generic callback to catch standard PHP runtime errors thrown by the interpreter
+ * or manually triggered with the user_error function.
+ * 
+ * @ignore 
+ * @param unknown_type $errno
+ * @param unknown_type $errstr
+ * @param unknown_type $errfile
+ * @param unknown_type $errline
+ * @param unknown_type $errcontext
+ */
 function errorHandler($errno, $errstr, $errfile, $errline, $errcontext) {
 	switch($errno) {
 		case E_ERROR:
@@ -451,10 +554,27 @@ function errorHandler($errno, $errstr, $errfile, $errline, $errcontext) {
 }
 
 /**
- * Interface for rendering a debug info report.
- * 
+ * Interface for stylish rendering of a debug info report.
  */
-class DebugReporter {
+interface DebugReporter {
+	
+	/**
+	 * Render HTML markup for the header/top segment of debug report.
+	 */
+	abstract function writeHeader();
+	
+	/**
+	 * Render HTML markup for the footer and closing tags of debug report.
+	 */
+	abstract function writeFooter();
+	
+}
+
+/**
+ * Concrete class to render a Sapphire specific wrapper design
+ * for developer errors, task runner, and test runner.
+ */
+class SapphireDebugReporter implements DebugReporter {
 	
 	function writeHeader() {
 		echo '<!DOCTYPE html><html><head><title>'. $_SERVER['REQUEST_METHOD'] . ' ' .$_SERVER['REQUEST_URI'] .'</title>';
