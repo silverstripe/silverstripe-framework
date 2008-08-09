@@ -2,6 +2,11 @@
 /**
  * Object representing a SQL query.
  * The various parts of the SQL query can be manipulated individually.
+ * 
+ * Caution: Only supports SELECT (default) and DELETE at the moment.
+ * 
+ * @todo Add support for INSERT and UPDATE queries
+ * 
  * @package sapphire
  * @subpackage model
  */
