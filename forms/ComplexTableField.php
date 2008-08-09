@@ -754,7 +754,6 @@ class ComplexTableField_ItemRequest extends RequestHandlingData {
 
 		return implode(" ", $items);
 	}
-}
 
 
 	/**
