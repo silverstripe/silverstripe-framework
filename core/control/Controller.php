@@ -97,7 +97,7 @@ class Controller extends RequestHandlingData {
 		$methodName = $this->action;
 		
 		// run & init are manually disabled, because they create infinite loops and other dodgy situations 
-		if(!$this->checkAccessAction($this->action) || in_array(strtolower($this->action), array('run', 'init'))) {
+		if($this->checkAccessAction($this->action) && !in_array(strtolower($this->action), array('run', 'init'))) {
 			if($this->hasMethod($methodName)) {
 				$result = $this->$methodName($request);
 			
