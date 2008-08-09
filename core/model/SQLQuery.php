@@ -15,19 +15,19 @@ class SQLQuery extends Object {
 	 * An array of fields to select.
 	 * @var array
 	 */
-	public $select;
+	public $select = array();
 	
 	/**
 	 * An array of join clauses. The first one is just the table name.
 	 * @var array
 	 */
-	public $from;
+	public $from = array();
 	
 	/**
 	 * An array of filters.
 	 * @var array
 	 */
-	public $where;
+	public $where = array();
 	
 	/**
 	 * An ORDER BY clause.
@@ -39,13 +39,13 @@ class SQLQuery extends Object {
 	 * An array of fields to group by.
 	 * @var array
 	 */
-	public $groupby;
+	public $groupby = array();
 	
 	/**
 	 * An array of having clauses.
 	 * @var array
 	 */
-	public $having;
+	public $having = array();
 	
 	/**
 	 * A limit clause.
@@ -57,13 +57,13 @@ class SQLQuery extends Object {
 	 * If this is true DISTINCT will be added to the SQL.
 	 * @var boolean
 	 */
-	public $distinct;
+	public $distinct = false;
 	
 	/**
 	 * If this is true, this statement will delete rather than select.
 	 * @var boolean
 	 */
-	public $delete;
+	public $delete = false;
 	
 	/**
 	 * The logical connective used to join WHERE clauses. Defaults to AND.
@@ -83,13 +83,14 @@ class SQLQuery extends Object {
 	 * @param string $limit A LIMIT clause.
 	 */
 	function __construct($select = "*", $from = array(), $where = "", $orderby = "", $groupby = "", $having = "", $limit = "") {
-		if($select) $this->select = is_array($select) ? $select : array($select);
-		if($from) $this->from = is_array($from) ? $from : array(str_replace('`','',$from) => $from);
-		if($where) $this->where = is_array($where) ? $where : array($where);
-		$this->orderby = $orderby;
-		if($groupby) $this->groupby = is_array($groupby) ? $groupby : array($groupby);
-		if($having) $this->having = is_array($having) ? $having : array($having);
-		$this->limit = $limit;
+		$this->select($select);
+		// @todo 
+		$this->from = is_array($from) ? $from : array(str_replace('`','',$from) => $from);
+		$this->where($where);
+		$this->orderby($orderby);
+		$this->groupby($groupby);
+		$this->having($having);
+		$this->limit($limit);
 
 		parent::__construct();
 	}
@@ -114,6 +115,7 @@ class SQLQuery extends Object {
 		} else {
 			$this->select = is_array($fields) ? $fields : array($fields);
 		}
+		
 		return $this;
 	}
 	
@@ -125,18 +127,147 @@ class SQLQuery extends Object {
 	 * </code>
 	 *
 	 * @param string $table
-	 * @return SQLQuery
+	 * @return SQLQuery This instance
 	 */
 	public function from($table) {
 		$this->from[] = $table;
+		
 		return $this;
 	}
 	
 	/**
-	 * Add a LEFT JOIN criteria to the FROM clause. 
+	 * Add a LEFT JOIN criteria to the FROM clause.
+	 * 
+	 * @return SQLQuery This instance 
 	 */
 	public function leftJoin($table, $onPredicate) {
 		$this->from[] = "LEFT JOIN $table ON $onPredicate";
+		
+		return $this;
+	}
+	
+	/**
+	 * Pass LIMIT clause either as SQL snippet or in array format.
+	 *
+	 * @param string|array $limit
+	 * @return SQLQuery This instance
+	 */
+	public function limit($limit) {
+		// Pass limit as array or SQL string value
+		if(is_array($limit)) {
+			if(!array_key_exists('limit',$limit)) user_error('SQLQuery::limit(): Wrong format for $limit', E_USER_ERROR);
+			
+			if(isset($limit['start']) && is_numeric($limit['start']) && isset($limit['limit']) && is_numeric($limit['limit'])) {
+				// @todo MySQL specific LIMIT syntax
+				$combinedLimit = (int)$limit['start'] . ',' . (int)$limit['limit'];
+			} elseif(isset($limit['limit']) && is_numeric($limit['limit'])) {
+				$combinedLimit = (int)$limit['limit'];
+			} else {
+				$combinedLimit = false;
+			}
+		} else {
+			$combinedLimit = $limit;
+		}
+		
+		if(!empty($combinedLimit)) $this->limit = $combinedLimit;
+		
+		return $this;
+	}
+	
+	/**
+	 * Pass ORDER BY clause either as SQL snippet or in array format.
+	 *
+	 * @todo Implement passing of multiple orderby pairs in nested array syntax,
+	 * 	e.g. array(array('sort'=>'A','dir'=>'asc'),array('sort'=>'B'))
+	 * 
+	 * @param string|array $orderby
+	 * @return SQLQuery This instance
+	 */
+	public function orderby($orderby) {
+		// if passed as an array, assume two array values with column and direction (asc|desc) 
+		if(is_array($orderby)) {
+			if(!array_key_exists('sort', $orderby)) user_error('SQLQuery::orderby(): Wrong format for $orderby array', E_USER_ERROR);
+
+			if(isset($orderby['sort']) && !empty($orderby['sort']) && isset($orderby['dir']) && !empty($orderby['dir'])) {
+				$combinedOrderby = "`" . Convert::raw2sql($orderby['sort']) . "` " . Convert::raw2sql(strtoupper($orderby['dir']));
+			} elseif(isset($orderby['sort']) && !empty($orderby['sort'])) {
+				$combinedOrderby = "`" . Convert::raw2sql($orderby['sort']) . "`";
+			} else {
+				$combinedOrderby = false;
+			}
+		} else {
+			$combinedOrderby = $orderby;
+		}
+		
+		// If sort contains a function call, let's move the sort clause into a separate selected field.
+		// Some versions of MySQL choke if you have a group function referenced directly in the ORDER BY
+		if($combinedOrderby && strpos($combinedOrderby,'(') !== false) {
+			// Sort can be "Col1 DESC|ASC, Col2 DESC|ASC", we need to handle that
+			$sortParts = explode(",", $combinedOrderby);
+				
+			// If you have select if(X,A,B),C then the array will return 'if(X','A','B)','C'.
+			// Turn this into 'if(X,A,B)','C' by counting brackets
+			while(list($i,$sortPart) = each($sortParts)) {
+				while(substr_count($sortPart,'(') > substr_count($sortPart,')')) {
+					list($i,$nextSortPart) = each($sortParts);
+					if($i === null) break;
+					$sortPart .= ',' . $nextSortPart;
+				}
+				$lumpedSortParts[] = $sortPart;
+			}
+				
+			foreach($lumpedSortParts as $i => $sortPart) {
+				$sortPart = trim($sortPart);
+				if(substr(strtolower($sortPart),-5) == ' desc') {
+					$select[] = substr($sortPart,0,-5) . " AS _SortColumn{$i}";
+					$newSorts[] = "_SortColumn{$i} DESC";
+				} else if(substr(strtolower($sortPart),-4) == ' asc') {
+					$select[] = substr($sortPart,0,-4) . " AS _SortColumn{$i}";
+					$newSorts[] = "_SortColumn{$i} ASC";
+				} else {
+					$select[] = "$sortPart AS _SortColumn{$i}";
+					$newSorts[] = "_SortColumn{$i} ASC";
+				}
+			}
+				
+			$combinedOrderby =  implode(", ", $newSorts);
+		}
+		
+		if(!empty($combinedOrderby)) $this->orderby = $combinedOrderby;
+		
+		return $this;
+	}
+	
+	/**
+	 * Add a GROUP BY clause.
+	 *
+	 * @param string|array $groupby
+	 * @return SQLQuery
+	 */
+	public function groupby($groupby) {
+		if(is_array($groupby)) {
+			$this->groupby = array_merge($this->groupby, $groupby);  
+		} elseif(!empty($groupby)) {
+			$this->groupby[] = $groupby;
+		}
+		
+		return $this;
+	}
+
+	/**
+	 * Add a HAVING clause.
+	 *
+	 * @param string|array $having
+	 * @return SQLQuery
+	 */
+	public function having($having) {
+		if(is_array($having)) {
+			$this->having = array_merge($this->having, $having);  
+		} elseif(!empty($having)) {
+			$this->having[] = $having;
+		}
+		
+		return $this;
 	}
 	
 	/**
@@ -166,7 +297,13 @@ class SQLQuery extends Object {
 		} else {
 			$filter = $args[0];
 		}
-		$this->where[] = $filter;
+		
+		if(is_array($filter)) {
+			$this->where = array_merge($this->where,$filter);
+		} elseif(!empty($filter)) {
+			$this->where[] = $filter;
+		}
+		
 		return $this;
 	}
 	
@@ -246,7 +383,7 @@ class SQLQuery extends Object {
 			$text = "SELECT $distinct" . implode(", ", $this->select);
 		}
 		$text .= " FROM " . implode(" ", $this->from);
-		
+
 		if($this->where) $text .= " WHERE (" . $this->getFilter(). ")";
 		if($this->groupby) $text .= " GROUP BY " . implode(", ", $this->groupby);
 		if($this->having) $text .= " HAVING ( " . implode(" ) AND ( ", $this->having) . " )";

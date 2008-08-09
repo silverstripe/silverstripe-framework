@@ -22,7 +22,7 @@ class JSONDataFormatter extends DataFormatter {
 		$id = $obj->ID;
 		
 		$json = "{\n  className : \"$className\",\n";
-		$dbFields = array_merge($obj->databaseFields(), array('ID'=>'Int'));
+		$dbFields = array_merge($obj->inheritedDatabaseFields(), array('ID'=>'Int'));
 		foreach($dbFields as $fieldName => $fieldType) {
 			if(is_object($obj->$fieldName)) {
 				$jsonParts[] = "$fieldName : " . $obj->$fieldName->toJSON();
@@ -31,36 +31,38 @@ class JSONDataFormatter extends DataFormatter {
 			}
 		}
 
-		foreach($obj->has_one() as $relName => $relClass) {
-			$fieldName = $relName . 'ID';
-			if($obj->$fieldName) {
-				$href = Director::absoluteURL(self::$api_base . "$relClass/" . $obj->$fieldName);
-			} else {
-				$href = Director::absoluteURL(self::$api_base . "$className/$id/$relName");
+		if($this->relationDepth > 0) {
+			foreach($obj->has_one() as $relName => $relClass) {
+				$fieldName = $relName . 'ID';
+				if($obj->$fieldName) {
+					$href = Director::absoluteURL(self::$api_base . "$relClass/" . $obj->$fieldName);
+				} else {
+					$href = Director::absoluteURL(self::$api_base . "$className/$id/$relName");
+				}
+				$jsonParts[] = "$relName : { className : \"$relClass\", href : \"$href.json\", id : \"{$obj->$fieldName}\" }";
 			}
-			$jsonParts[] = "$relName : { className : \"$relClass\", href : \"$href.json\", id : \"{$obj->$fieldName}\" }";
-		}
-
-		foreach($obj->has_many() as $relName => $relClass) {
-			$jsonInnerParts = array();
-			$items = $obj->$relName();
-			foreach($items as $item) {
-				//$href = Director::absoluteURL(self::$api_base . "$className/$id/$relName/$item->ID");
-				$href = Director::absoluteURL(self::$api_base . "$relClass/$item->ID");
-				$jsonInnerParts[] = "{ className : \"$relClass\", href : \"$href.json\", id : \"{$obj->$fieldName}\" }";
+	
+			foreach($obj->has_many() as $relName => $relClass) {
+				$jsonInnerParts = array();
+				$items = $obj->$relName();
+				foreach($items as $item) {
+					//$href = Director::absoluteURL(self::$api_base . "$className/$id/$relName/$item->ID");
+					$href = Director::absoluteURL(self::$api_base . "$relClass/$item->ID");
+					$jsonInnerParts[] = "{ className : \"$relClass\", href : \"$href.json\", id : \"{$obj->$fieldName}\" }";
+				}
+				$jsonParts[] = "$relName : [\n    " . implode(",\n    ", $jsonInnerParts) . "  \n  ]";
 			}
-			$jsonParts[] = "$relName : [\n    " . implode(",\n    ", $jsonInnerParts) . "  \n  ]";
-		}
-
-		foreach($obj->many_many() as $relName => $relClass) {
-			$jsonInnerParts = array();
-			$items = $obj->$relName();
-			foreach($items as $item) {
-				//$href = Director::absoluteURL(self::$api_base . "$className/$id/$relName/$item->ID");
-				$href = Director::absoluteURL(self::$api_base . "$relClass/$item->ID");
-				$jsonInnerParts[] = "    { className : \"$relClass\", href : \"$href.json\", id : \"{$obj->$fieldName}\" }";
+	
+			foreach($obj->many_many() as $relName => $relClass) {
+				$jsonInnerParts = array();
+				$items = $obj->$relName();
+				foreach($items as $item) {
+					//$href = Director::absoluteURL(self::$api_base . "$className/$id/$relName/$item->ID");
+					$href = Director::absoluteURL(self::$api_base . "$relClass/$item->ID");
+					$jsonInnerParts[] = "    { className : \"$relClass\", href : \"$href.json\", id : \"{$obj->$fieldName}\" }";
+				}
+				$jsonParts[] = "$relName : [\n    " . implode(",\n    ", $jsonInnerParts) . "\n  ]";
 			}
-			$jsonParts[] = "$relName : [\n    " . implode(",\n    ", $jsonInnerParts) . "\n  ]";
 		}
 		
 		return "{\n  " . implode(",\n  ", $jsonParts) . "\n}";	}

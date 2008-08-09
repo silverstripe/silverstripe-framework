@@ -888,4 +888,70 @@ class ComplexTableField_Popup extends Form {
 	}
 }
 
+/**
+ * Used by ModelAdmin scaffolding, to manage many-many relationships.
+ */
+class ScaffoldingComplexTableField_Popup extends Form {
+	protected $sourceClass;
+	protected $dataObject;
+
+	function __construct($controller, $name, $fields, $validator, $readonly, $dataObject) {
+		$this->dataObject = $dataObject;
+
+		/**
+		 * WARNING: DO NOT CHANGE THE ORDER OF THESE JS FILES
+		 * Some have special requirements.
+		 */
+		//Requirements::css('cms/css/layout.css');
+		Requirements::css('jsparty/tabstrip/tabstrip.css');
+		Requirements::css('sapphire/css/Form.css');
+		Requirements::css('sapphire/css/ComplexTableField_popup.css');
+		Requirements::css('cms/css/typography.css');
+		Requirements::css('cms/css/cms_right.css');
+		Requirements::css('jsparty/jquery/plugins/autocomplete/jquery.ui.autocomplete.css');
+		Requirements::javascript("jsparty/prototype.js");
+		Requirements::javascript("jsparty/behaviour.js");
+		Requirements::javascript("jsparty/prototype_improvements.js");
+		Requirements::javascript("jsparty/loader.js");
+		Requirements::javascript("jsparty/tabstrip/tabstrip.js");
+		Requirements::javascript("jsparty/scriptaculous/scriptaculous.js");
+		Requirements::javascript("jsparty/scriptaculous/controls.js");
+		Requirements::javascript("jsparty/layout_helpers.js");
+		Requirements::javascript("cms/javascript/LeftAndMain.js");
+		Requirements::javascript("cms/javascript/LeftAndMain_right.js");
+		Requirements::javascript("sapphire/javascript/TableField.js");
+		Requirements::javascript("sapphire/javascript/ComplexTableField.js");
+		Requirements::javascript("sapphire/javascript/ComplexTableField_popup.js");
+		// jQuery requirements (how many of these are actually needed?)
+		Requirements::javascript('jsparty/jquery/jquery.js');
+		Requirements::javascript('jsparty/jquery/plugins/livequery/jquery.livequery.js');
+		Requirements::javascript('jsparty/jquery/ui/ui.core.js');
+		Requirements::javascript('jsparty/jquery/ui/ui.tabs.js');
+		Requirements::javascript('jsparty/jquery/plugins/form/jquery.form.js');
+		Requirements::javascript('jsparty/jquery/plugins/dimensions/jquery.dimensions.js');
+		Requirements::javascript('jsparty/jquery/plugins/autocomplete/jquery.ui.autocomplete.js');
+		Requirements::javascript('sapphire/javascript/ScaffoldComplexTableField.js');
+		Requirements::javascript('cms/javascript/ModelAdmin.js');
+		
+ 		if($this->dataObject->hasMethod('getRequirementsForPopup')) {
+			$this->dataObject->getRequirementsForPopup();
+		}
+		
+		$actions = new FieldSet();	
+		if(!$readonly) {
+			$actions->push(
+				$saveAction = new FormAction("saveComplexTableField", "Save")
+			);	
+			$saveAction->addExtraClass('save');
+		}
+		
+		parent::__construct($controller, $name, $fields, $actions, $validator);
+	}
+
+	function FieldHolder() {
+		return $this->renderWith('ComplexTableField_Form');
+	}
+
+}
+
 ?>

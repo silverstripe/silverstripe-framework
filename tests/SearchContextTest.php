@@ -30,15 +30,15 @@ class SearchContextTest extends SapphireTest {
 		$this->assertContains('Industry', $company->summary_fields());
 	}
 	
-	function testExactMatchUsedByDefaultWhenNotExplicitlySet() {
+	function testPartialMatchUsedByDefaultWhenNotExplicitlySet() {
 		 $person = singleton('SearchContextTest_Person');
 		 $context = $person->getDefaultSearchContext();
 		 
 		 $this->assertEquals(
 		 	array(
-		 		"Name" => new ExactMatchFilter("Name"),
-		 		"HairColor" => new ExactMatchFilter("HairColor"),
-		 		"EyeColor" => new ExactMatchFilter("EyeColor")
+		 		"Name" => new PartialMatchFilter("Name"),
+		 		"HairColor" => new PartialMatchFilter("HairColor"),
+		 		"EyeColor" => new PartialMatchFilter("EyeColor")
 		 	),
 		 	$context->getFilters()
 		 );
@@ -50,7 +50,7 @@ class SearchContextTest extends SapphireTest {
 		
 		 $this->assertEquals(
 		 	array(
-		 		"Title" => new ExactMatchFilter("Title")
+		 		"Title" => new PartialMatchFilter("Title")
 		 	),
 		 	$context->getFilters()
 		 );	 
@@ -63,7 +63,7 @@ class SearchContextTest extends SapphireTest {
 		$this->assertEquals(
 			array(
 				"Name" => new PartialMatchFilter("Name"),
-		 		"Industry" => new ExactMatchFilter("Industry"),
+		 		"Industry" => new PartialMatchFilter("Industry"),
 		 		"AnnualProfit" => new PartialMatchFilter("AnnualProfit")
 			),
 			$context->getFilters()
@@ -80,7 +80,7 @@ class SearchContextTest extends SapphireTest {
 		
 		$this->assertEquals(1, $results->Count());
 		
-		Debug::dump(DB::query("select * from SearchContextTest_Deadline")->next());
+		//Debug::dump(DB::query("select * from SearchContextTest_Deadline")->next());
 		
 		$project = $results->First();
 		
@@ -88,7 +88,7 @@ class SearchContextTest extends SapphireTest {
 		$this->assertEquals("Blog Website", $project->Name);
 		$this->assertEquals(2, $project->Actions()->Count());
 		$this->assertEquals("Get RSS feeds working", $project->Actions()->First()->Description);
-		Debug::dump($project->Deadline()->CompletionDate);
+		//Debug::dump($project->Deadline()->CompletionDate);
 		//$this->assertEquals()
 	}
 	

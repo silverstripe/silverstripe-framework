@@ -55,18 +55,70 @@ class SQLQueryTest extends SapphireTest {
 	
 	function testSelectWithPredicateFilters() {
 		$query = new SQLQuery();
-		$query->select(array("Name"))->from("MyTable");
+		$query->select(array("Name"))->from("SQLQueryTest_DO");
+
 		$match = new ExactMatchFilter("Name", "Value");
+		$match->setModel('SQLQueryTest_DO');
 		$match->apply($query);
+
 		$match = new PartialMatchFilter("Meta", "Value");
+		$match->setModel('SQLQueryTest_DO');
 		$match->apply($query);
-		$this->assertEquals("SELECT Name FROM MyTable WHERE (Name = 'Value') AND (Meta LIKE '%Value%')", $query->sql());
+
+		$this->assertEquals("SELECT Name FROM SQLQueryTest_DO WHERE (SQLQueryTest_DO.Name = 'Value') AND (SQLQueryTest_DO.Meta LIKE '%Value%')", $query->sql());
 	}
 	
 	function testSelectWithLimitClause() {
-		// not implemented
+		// numeric limit
+		$query = new SQLQuery();
+		$query->from[] = "MyTable";
+		$query->limit("99");
+		$this->assertEquals("SELECT * FROM MyTable LIMIT 99", $query->sql());
+		
+		// array limit
+		$query = new SQLQuery();
+		$query->from[] = "MyTable";
+		$query->limit(array('limit'=>99));
+		$this->assertEquals("SELECT * FROM MyTable LIMIT 99", $query->sql());
+
+		// array limit with start (MySQL specific)
+		$query = new SQLQuery();
+		$query->from[] = "MyTable";
+		$query->limit(array('limit'=>99, 'start'=>97));
+		$this->assertEquals("SELECT * FROM MyTable LIMIT 97,99", $query->sql());
 	}
 	
+	function testSelectWithOrderbyClause() {
+		// numeric limit
+		$query = new SQLQuery();
+		$query->from[] = "MyTable";
+		$query->orderby('MyName ASC');
+		// can't escape as we don't know if ASC or DESC is appended
+		$this->assertEquals("SELECT * FROM MyTable ORDER BY MyName ASC", $query->sql());
+		
+		// array limit
+		$query = new SQLQuery();
+		$query->from[] = "MyTable";
+		$query->orderby(array('sort'=>'MyName'));
+		$this->assertEquals("SELECT * FROM MyTable ORDER BY `MyName`", $query->sql());
+
+		// array limit with start (MySQL specific)
+		$query = new SQLQuery();
+		$query->from[] = "MyTable";
+		$query->orderby(array('sort'=>'MyName','dir'=>'desc'));
+		$this->assertEquals("SELECT * FROM MyTable ORDER BY `MyName` DESC", $query->sql());
+	}
+	
+	function testSelectWithComplexOrderbyClause() {
+		// @todo Test "ORDER BY RANDOM() ASC,MyName DESC" etc.
+	}
+}
+
+class SQLQueryTest_DO extends DataObject implements TestOnly {
+	static $db = array(
+		"Name" => "Varchar",
+		"Meta" => "Varchar",
+	);
 }
 
 ?>

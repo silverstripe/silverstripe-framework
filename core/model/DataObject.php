@@ -828,7 +828,7 @@ class DataObject extends ViewableData implements DataObjectInterface {
 			user_error("DataObject::getComponent(): Unknown 1-to-1 component '$componentName' on class '$this->class'", E_USER_ERROR);
 		}
 	}
-
+	
 	/**
 	 * A cache used by component getting classes
 	 * @var array
@@ -840,9 +840,9 @@ class DataObject extends ViewableData implements DataObjectInterface {
 	 *
 	 * @param string $componentName Name of the component
 	 * @param string $filter A filter to be inserted into the WHERE clause
-	 * @param string $sort A sort expression to be inserted into the ORDER BY clause. If omitted, the static field $default_sort on the component class will be used.
+	 * @param string|array $sort A sort expression to be inserted into the ORDER BY clause. If omitted, the static field $default_sort on the component class will be used.
 	 * @param string $join A single join clause. This can be used for filtering, only 1 instance of each DataObject will be returned.
-	 * @param string $limit A limit expression to be inserted into the LIMIT clause
+	 * @param string|array $limit A limit expression to be inserted into the LIMIT clause
 	 *
 	 * @return ComponentSet The components of the one-to-many relationship.
 	 */
@@ -861,14 +861,9 @@ class DataObject extends ViewableData implements DataObjectInterface {
 		$joinField = $this->getComponentJoinField($componentName);
 
 		if($this->isInDB()) { //Check to see whether we should query the db
-			$componentObj = singleton($componentClass);
-			$id = $this->getField("ID");
-				
-			// get filter
-			$combinedFilter = "$joinField = '$id'";
-			if($filter) $combinedFilter .= " AND {$filter}";
-				
-			$result = $componentObj->instance_get($combinedFilter, $sort, $join, $limit, "ComponentSet");
+			$query = $this->getComponentsQuery($componentName, $filter, $sort, $join, $limit);
+			$result = $this->buildDataObjectSet($query->execute(), 'ComponentSet', $query, $componentClass);
+			if($result) $result->parseQueryLimit($query);
 		}
 
 		if(!$result) {
@@ -882,6 +877,37 @@ class DataObject extends ViewableData implements DataObjectInterface {
 
 		return $result;
 	}
+	
+	/**
+	 * Get the query object for a $has_many Component.
+	 * 
+	 * Use {@link DataObjectSet->setComponentInfo()} to attach metadata to the
+	 * resultset you're building with this query.
+	 * Use {@link DataObject->buildDataObjectSet()} to build a set out of the {@link SQLQuery}
+	 * object, and pass "ComponentSet" as a $containerClass.
+	 *
+	 * @param string $componentName
+	 * @param string $filter
+	 * @param string|array $sort
+	 * @param string $join
+	 * @param string|array $limit
+	 * @return SQLQuery
+	 */
+	public function getComponentsQuery($componentName, $filter = "", $sort = "", $join = "", $limit = "") {
+		if(!$componentClass = $this->has_many($componentName)) {
+			user_error("DataObject::getComponentsQuery(): Unknown 1-to-many component '$componentName' on class '$this->class'", E_USER_ERROR);
+		}
+
+		$joinField = $this->getComponentJoinField($componentName);
+		
+		$id = $this->getField("ID");
+			
+		// get filter
+		$combinedFilter = "$joinField = '$id'";
+		if($filter) $combinedFilter .= " AND {$filter}";
+			
+		return singleton($componentClass)->extendedSQL($combinedFilter, $sort, $limit, $join);
+	}
 
 	/**
 	 * Tries to find the db-key for storing a relation (defaults to "ParentID" if no relation is found).
@@ -893,7 +919,7 @@ class DataObject extends ViewableData implements DataObjectInterface {
 	 */
 	public function getComponentJoinField($componentName) {
 		if(!$componentClass = $this->has_many($componentName)) {
-			user_error("DataObject::getComsponents(): Unknown 1-to-many component '$componentName' on class '$this->class'", E_USER_ERROR);
+			user_error("DataObject::getComponents(): Unknown 1-to-many component '$componentName' on class '$this->class'", E_USER_ERROR);
 		}
 		$componentObj = singleton($componentClass);
 
@@ -947,24 +973,14 @@ class DataObject extends ViewableData implements DataObjectInterface {
 
 		list($parentClass, $componentClass, $parentField, $componentField, $table) = $this->many_many($componentName);
 
+		// Join expression is done on SiteTree.ID even if we link to Page; it helps work around
+		// database inconsistencies
+		$componentBaseClass = ClassInfo::baseDataClass($componentClass);
+		
 		if($this->ID && is_numeric($this->ID)) {
+			
 			if($componentClass) {
-				$componentObj = singleton($componentClass);
-
-				// Join expression is done on SiteTree.ID even if we link to Page; it helps work around
-				// database inconsistencies
-				$componentBaseClass = ClassInfo::baseDataClass($componentClass);
-
-				$query = $componentObj->extendedSQL(
-					"`$table`.$parentField = $this->ID", // filter 
-				$sort,
-				$limit,
-					"INNER JOIN `$table` ON `$table`.$componentField = `$componentBaseClass`.ID" // join
-				);
-				array_unshift($query->select, "`$table`.*");
-
-				if($filter) $query->where[] = $filter;
-				if($join) $query->from[] = $join;
+				$query = $this->getManyManyComponentsQuery($componentName, $filter, $sort, $join, $limit);
 
 				$records = $query->execute();
 				$result = $this->buildDataObjectSet($records, "ComponentSet", $query, $componentBaseClass);
@@ -986,6 +1002,43 @@ class DataObject extends ViewableData implements DataObjectInterface {
 
 		return $result;
 	}
+	
+	/**
+	 * Get the query object for a $many_many Component.
+	 * Use {@link DataObjectSet->setComponentInfo()} to attach metadata to the
+	 * resultset you're building with this query.
+	 * Use {@link DataObject->buildDataObjectSet()} to build a set out of the {@link SQLQuery}
+	 * object, and pass "ComponentSet" as a $containerClass.
+	 *
+	 * @param string $componentName
+	 * @param string $filter
+	 * @param string|array $sort
+	 * @param string $join
+	 * @param string|array $limit
+	 * @return SQLQuery
+	 */
+	public function getManyManyComponentsQuery($componentName, $filter = "", $sort = "", $join = "", $limit = "") {
+		list($parentClass, $componentClass, $parentField, $componentField, $table) = $this->many_many($componentName);
+		
+		$componentObj = singleton($componentClass);
+
+		// Join expression is done on SiteTree.ID even if we link to Page; it helps work around
+		// database inconsistencies
+		$componentBaseClass = ClassInfo::baseDataClass($componentClass);
+
+		$query = $componentObj->extendedSQL(
+			"`$table`.$parentField = $this->ID", // filter 
+			$sort,
+			$limit,
+			"INNER JOIN `$table` ON `$table`.$componentField = `$componentBaseClass`.ID" // join
+		);
+		array_unshift($query->select, "`$table`.*");
+
+		if($filter) $query->where[] = $filter;
+		if($join) $query->from[] = $join;
+		
+		return $query;
+	}
 
 	/**
 	 * Creates an empty component for the given one-one or one-many relationship
@@ -1001,6 +1054,61 @@ class DataObject extends ViewableData implements DataObjectInterface {
 
 		} else {
 			user_error("DataObject::createComponent(): Unknown 1-to-1 or 1-to-many component '$componentName' on class '$this->class'", E_USER_ERROR);
+		}
+	}
+
+	/**
+	 * Add the scaffold-generated relation fields to the given field set
+	 */
+	protected function addScaffoldRelationFields($fieldSet) {
+		if ($this->has_many() || $this->_many_many()) {
+			$oldFields = $fieldSet;
+			$fieldSet = new FieldSet(
+				new TabSet("Root", new Tab("Main"))
+			);
+			foreach($oldFields as $field) {
+				$fieldSet->addFieldToTab("Root.Main", $field);
+			}
+		}
+		if($this->has_many()) {
+			// Add each relation as a separate tab
+			foreach($this->has_many() as $relationship => $component) {
+				$relationshipFields = singleton($component)->summary_fields();
+				$foreignKey = $this->getComponentJoinField($relationship);
+				$fieldSet->addFieldToTab("Root.$relationship", new ComplexTableField($this, $relationship, $component, $relationshipFields, "getCMSFields", "$foreignKey = $this->ID"));
+			}
+		}
+		if ($this->many_many()) {	
+			foreach($this->many_many() as $relationship => $component) {
+				$relationshipFields = singleton($component)->summary_fields();
+				$filterJoin = $this->getManyManyJoin($relationship, $component);
+				$tableField =  new ComplexTableField($this, $relationship, $component, $relationshipFields, "getCMSFields", '', '', $filterJoin);
+				$tableField->popupClass = "ScaffoldingComplexTableField_Popup";
+				$fieldSet->addFieldToTab("Root.$relationship", $tableField);
+			}
+		}
+		return $fieldSet;
+	}
+
+	/**
+	 * Pull out a join clause for a many-many relationship.
+	 *
+	 * @param string $componentName The many_many or belongs_many_many relation to join to.
+	 * @param string $baseTable The classtable that will already be included in the SQL query to which this join will be added.
+	 * @return string SQL join clause
+	 */
+	function getManyManyJoin($componentName, $baseTable) {
+		if(!$componentClass = $this->many_many($componentName)) {
+			user_error("DataObject::getComponents(): Unknown many-to-many component '$componentName' on class '$this->class'", E_USER_ERROR);
+		}
+		$classes = array_reverse(ClassInfo::ancestry($this->class));
+
+		list($parentClass, $componentClass, $parentField, $componentField, $table) = $this->many_many($componentName);
+		
+		if($baseTable == $parentClass) {
+			return "LEFT JOIN `$table` ON (`$parentField` = `$parentClass`.`ID` AND `$componentField` = '{$this->ID}')";
+		} else {
+			return "LEFT JOIN `$table` ON (`$componentField` = `$componentClass`.`ID` AND `$parentField` = '{$this->ID}')";
 		}
 	}
 
@@ -1223,29 +1331,6 @@ class DataObject extends ViewableData implements DataObjectInterface {
 			$fields->push(new DropdownField($relationship.'ID', $relationship, $options));
 		}
 		return $fields;
-	}
-
-	/**
-	 * Add the scaffold-generated relation fields to the given field set
-	 */
-	protected function addScaffoldRelationFields($fieldSet) {
-
-		if($this->has_many()) {
-			// Refactor the fields that we have been given into a tab, "Main", in a tabset
-			$oldFields = $fieldSet;
-			$fieldSet = new FieldSet(
-			new TabSet("Root", new Tab("Main"))
-			);
-			foreach($oldFields as $field) $fieldSet->addFieldToTab("Root.Main", $field);
-				
-			// Add each relation as a separate tab
-			foreach($this->has_many() as $relationship => $component) {
-				$relationshipFields = singleton($component)->summary_fields();
-				$foreignKey = $this->getComponentJoinField($relationship);
-				$fieldSet->addFieldToTab("Root.$relationship", new ComplexTableField($this, $relationship, $component, $relationshipFields, "getCMSFields", "$foreignKey = $this->ID"));
-			}
-		}
-		return $fieldSet;
 	}
 
 	/**
@@ -1643,8 +1728,8 @@ class DataObject extends ViewableData implements DataObjectInterface {
 	 * Build a {@link SQLQuery} object to perform the given query.
 	 *
 	 * @param string $filter A filter to be inserted into the WHERE clause.
-	 * @param string $sort A sort expression to be inserted into the ORDER BY clause. If omitted, self::$default_sort will be used.
-	 * @param string $limit A limit expression to be inserted into the LIMIT clause.
+	 * @param string|array $sort A sort expression to be inserted into the ORDER BY clause. If omitted, self::$default_sort will be used.
+	 * @param string|array $limit A limit expression to be inserted into the LIMIT clause.
 	 * @param string $join A single join clause. This can be used for filtering, only 1 instance of each DataObject will be returned.
 	 * @param boolean $restictClasses Restrict results to only objects of either this class of a subclass of this class
 	 * @param string $having A filter to be inserted into the HAVING clause.
@@ -1666,43 +1751,13 @@ class DataObject extends ViewableData implements DataObjectInterface {
 		$baseClass = array_shift($tableClasses);
 		$select = array("`$baseClass`.*");
 
-		// If sort contains a function call, let's move the sort clause into a separate selected field.
-		// Some versions of MySQL choke if you have a group function referenced directly in the ORDER BY
-		if($sort && strpos($sort,'(') !== false) {
-			// Sort can be "Col1 DESC|ASC, Col2 DESC|ASC", we need to handle that
-			$sortParts = explode(",", $sort);
-				
-			// If you have select if(X,A,B),C then the array will return 'if(X','A','B)','C'.
-			// Turn this into 'if(X,A,B)','C' by counting brackets
-			while(list($i,$sortPart) = each($sortParts)) {
-				while(substr_count($sortPart,'(') > substr_count($sortPart,')')) {
-					list($i,$nextSortPart) = each($sortParts);
-					if($i === null) break;
-					$sortPart .= ',' . $nextSortPart;
-				}
-				$lumpedSortParts[] = $sortPart;
-			}
-				
-			foreach($lumpedSortParts as $i => $sortPart) {
-				$sortPart = trim($sortPart);
-				if(substr(strtolower($sortPart),-5) == ' desc') {
-					$select[] = substr($sortPart,0,-5) . " AS _SortColumn{$i}";
-					$newSorts[] = "_SortColumn{$i} DESC";
-				} else if(substr(strtolower($sortPart),-4) == ' asc') {
-					$select[] = substr($sortPart,0,-4) . " AS _SortColumn{$i}";
-					$newSorts[] = "_SortColumn{$i} ASC";
-				} else {
-					$select[] = "$sortPart AS _SortColumn{$i}";
-					$newSorts[] = "_SortColumn{$i} ASC";
-				}
-			}
-				
-			$sort =  implode(", ", $newSorts);
-		}
-
 		// Build our intial query
-		$query = new SQLQuery($select, "`$baseClass`", $filter, $sort);
-
+		$query = new SQLQuery($select);
+		$query->from("`$baseClass`");
+		$query->where($filter);
+		$query->orderby($sort);
+		$query->limit($limit);
+		
 		// Add SQL for multi-value fields on the base table
 		$databaseFields = $this->databaseFields();
 		if($databaseFields) foreach($databaseFields as $k => $v) {
@@ -1712,7 +1767,6 @@ class DataObject extends ViewableData implements DataObjectInterface {
 				}
 			}
 		}
-
 		// Join all the tables
 		if($tableClasses) {
 			foreach($tableClasses as $tableClass) {
@@ -1752,10 +1806,6 @@ class DataObject extends ViewableData implements DataObjectInterface {
 			$query->where[] = "`$baseClass`.ClassName IN ('" . implode("','", $classNames) . "')";
 		}
 
-		if($limit) {
-			$query->limit = $limit;
-		}
-
 		if($having) {
 			$query->having[] = $having;
 		}
@@ -1772,8 +1822,8 @@ class DataObject extends ViewableData implements DataObjectInterface {
 	 * Like {@link buildSQL}, but applies the extension modifications.
 	 *
 	 * @param string $filter A filter to be inserted into the WHERE clause.
-	 * @param string $sort A sort expression to be inserted into the ORDER BY clause. If omitted, self::$default_sort will be used.
-	 * @param string $limit A limit expression to be inserted into the LIMIT clause.
+	 * @param string|array $sort A sort expression to be inserted into the ORDER BY clause. If omitted, self::$default_sort will be used.
+	 * @param string|array $limit A limit expression to be inserted into the LIMIT clause.
 	 * @param string $join A single join clause. This can be used for filtering, only 1 instance of each DataObject will be returned.
 	 * @param string $having A filter to be inserted into the HAVING clause.
 	 *
@@ -1808,9 +1858,9 @@ class DataObject extends ViewableData implements DataObjectInterface {
 	 *
 	 * @param string $callerClass The class of objects to be returned
 	 * @param string $filter A filter to be inserted into the WHERE clause.
-	 * @param string $sort A sort expression to be inserted into the ORDER BY clause.  If omitted, self::$default_sort will be used.
+	 * @param string|array $sort A sort expression to be inserted into the ORDER BY clause.  If omitted, self::$default_sort will be used.
 	 * @param string $join A single join clause.  This can be used for filtering, only 1 instance of each DataObject will be returned.
-	 * @param string $limit A limit expression to be inserted into the LIMIT clause.
+	 * @param string|array $limit A limit expression to be inserted into the LIMIT clause.
 	 * @param string $containerClass The container class to return the results in.
 	 *
 	 * @return mixed The objects matching the filter, in the class specified by $containerClass
@@ -2153,7 +2203,7 @@ class DataObject extends ViewableData implements DataObjectInterface {
 		$fields = array();
 		$currentObj = $this;
 		while(get_class($currentObj) != 'DataObject') {
-			$fields = array_merge($fields, $currentObj->customDatabaseFields());
+			$fields = array_merge($fields, (array)$currentObj->customDatabaseFields());
 			$currentObj = singleton($currentObj->parentClass());
 		}
 		return $fields;

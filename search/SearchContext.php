@@ -77,19 +77,20 @@ class SearchContext extends Object {
 	}
 	
 	/**
+	 * @refactor move to SQLQuery
 	 * @todo fix hack
 	 */
 	protected function applyBaseTableFields() {
 		$classes = ClassInfo::dataClassesFor($this->modelClass);
-		//Debug::dump($classes);
-		//die();
-		$fields = array($classes[0].'.*', $this->modelClass.'.*');
+		$fields = array($this->modelClass.'.*');
+		if($this->modelClass != $classes[0]) $fields[] = $classes[0].'.*';
 		//$fields = array_keys($model->db());
 		$fields[] = $classes[0].'.ClassName AS RecordClassName';
 		return $fields;
 	}
 
 	/**
+	 * @refactor move to SQLQuery
 	 * @todo fix hack
 	 */
 	protected function applyBaseTable() {
@@ -100,6 +101,7 @@ class SearchContext extends Object {
 	/**
 	 * @todo only works for one level deep of inheritance
 	 * @todo fix hack
+	 * @deprecated - remove me! 
 	 */
 	protected function applyBaseTableJoin($query) {
 		$classes = ClassInfo::dataClassesFor($this->modelClass);
@@ -111,28 +113,30 @@ class SearchContext extends Object {
 	 * list of query parameters.
 	 *
 	 * @param array $searchParams
+	 * @param string|array $sort Database column to sort on. Falls back to {@link DataObject::$default_sort} if not provided.
+	 * @param string|array $limit 
+	 * @param SQLQuery $existingQuery
 	 * @return SQLQuery
 	 */
-	public function getQuery($searchParams, $start = false, $limit = false) {
+	public function getQuery($searchParams, $sort = false, $limit = false, $existingQuery = null) {
 		$model = singleton($this->modelClass);
 		
 		$fields = $this->applyBaseTableFields($model);
 	
-		$query = new SQLQuery($fields);
-		
-		$baseTable = $this->applyBaseTable();
-		$query->from($baseTable);
-		
-		if($limit) $query->limit = (!empty($start)) ? "{$start},{$limit}" : $limit; 
-		
-		// SRM: This stuff is copied from DataObject, 
-		if($this->modelClass != $baseTable) {
-			$classNames = ClassInfo::subclassesFor($this->modelClass);
-			$query->where[] = "`$baseTable`.ClassName IN ('" . implode("','", $classNames) . "')";
+		if($existingQuery) {
+			$query = $existingQuery;
+			$query->select = array_merge($query->select,$fields);
+		} else {
+			$query = $model->buildSQL();
+			$query->select($fields);			
 		}
 		
-
-		$this->applyBaseTableJoin($query);
+		$SQL_limit = Convert::raw2sql($limit);
+		$query->limit($SQL_limit);
+		
+		$SQL_sort = (!empty($sort)) ? Convert::raw2sql($sort) : singleton($this->modelClass)->stat('default_sort');		
+		$query->orderby($SQL_sort);
+		
 		
 		foreach($searchParams as $key => $value) {
 			if ($value != '0') {
@@ -145,6 +149,7 @@ class SearchContext extends Object {
 				}
 			}
 		}
+		
 		return $query;
 	}
 
@@ -154,14 +159,16 @@ class SearchContext extends Object {
 	 * @todo rearrange start and limit params to reflect DataObject
 	 * 
 	 * @param array $searchParams
-	 * @param int $start
-	 * @param int $limit
+	 * @param string|array $sort
+	 * @param string|array $limit
 	 * @return DataObjectSet
 	 */
-	public function getResults($searchParams, $start = false, $limit = false) {
+	public function getResults($searchParams, $sort = false, $limit = false) {
 		$searchParams = array_filter($searchParams, array($this,'clearEmptySearchFields'));
-		$query = $this->getQuery($searchParams, $start, $limit);
-
+		$query = $this->getQuery($searchParams, $sort, $limit);
+		
+		//Debug::dump($query->sql());
+		
 		// use if a raw SQL query is needed
 		$results = new DataObjectSet();
 		foreach($query->execute() as $row) {

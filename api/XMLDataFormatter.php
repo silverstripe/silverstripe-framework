@@ -29,7 +29,7 @@ class XMLDataFormatter extends DataFormatter {
 		$objHref = Director::absoluteURL(self::$api_base . "$obj->class/$obj->ID");
 	
 		$json = "<$className href=\"$objHref.xml\">\n";
-		$dbFields = array_merge($obj->databaseFields(), array('ID'=>'Int'));
+		$dbFields = array_merge($obj->inheritedDatabaseFields(), array('ID'=>'Int'));
 		foreach($dbFields as $fieldName => $fieldType) {
 			if(is_object($obj->$fieldName)) {
 				$json .= $obj->$fieldName->toXML();
@@ -38,36 +38,37 @@ class XMLDataFormatter extends DataFormatter {
 			}
 		}
 	
-
-		foreach($obj->has_one() as $relName => $relClass) {
-			$fieldName = $relName . 'ID';
-			if($obj->$fieldName) {
-				$href = Director::absoluteURL(self::$api_base . "$relClass/" . $obj->$fieldName);
-			} else {
-				$href = Director::absoluteURL(self::$api_base . "$className/$id/$relName");
+		if($this->relationDepth > 0) {
+			foreach($obj->has_one() as $relName => $relClass) {
+				$fieldName = $relName . 'ID';
+				if($obj->$fieldName) {
+					$href = Director::absoluteURL(self::$api_base . "$relClass/" . $obj->$fieldName);
+				} else {
+					$href = Director::absoluteURL(self::$api_base . "$className/$id/$relName");
+				}
+				$json .= "<$relName linktype=\"has_one\" href=\"$href.xml\" id=\"{$obj->$fieldName}\" />\n";
 			}
-			$json .= "<$relName linktype=\"has_one\" href=\"$href.xml\" id=\"{$obj->$fieldName}\" />\n";
-		}
-
-		foreach($obj->has_many() as $relName => $relClass) {
-			$json .= "<$relName linktype=\"has_many\" href=\"$objHref/$relName.xml\">\n";
-			$items = $obj->$relName();
-			foreach($items as $item) {
-				//$href = Director::absoluteURL(self::$api_base . "$className/$id/$relName/$item->ID");
-				$href = Director::absoluteURL(self::$api_base . "$relClass/$item->ID");
-				$json .= "<$relClass href=\"$href.xml\" id=\"{$item->ID}\" />\n";
+	
+			foreach($obj->has_many() as $relName => $relClass) {
+				$json .= "<$relName linktype=\"has_many\" href=\"$objHref/$relName.xml\">\n";
+				$items = $obj->$relName();
+				foreach($items as $item) {
+					//$href = Director::absoluteURL(self::$api_base . "$className/$id/$relName/$item->ID");
+					$href = Director::absoluteURL(self::$api_base . "$relClass/$item->ID");
+					$json .= "<$relClass href=\"$href.xml\" id=\"{$item->ID}\" />\n";
+				}
+				$json .= "</$relName>\n";
 			}
-			$json .= "</$relName>\n";
-		}
-
-		foreach($obj->many_many() as $relName => $relClass) {
-			$json .= "<$relName linktype=\"many_many\" href=\"$objHref/$relName.xml\">\n";
-			$items = $obj->$relName();
-			foreach($items as $item) {
-				$href = Director::absoluteURL(self::$api_base . "$relClass/$item->ID");
-				$json .= "<$relClass href=\"$href.xml\" id=\"{$item->ID}\" />\n";
+	
+			foreach($obj->many_many() as $relName => $relClass) {
+				$json .= "<$relName linktype=\"many_many\" href=\"$objHref/$relName.xml\">\n";
+				$items = $obj->$relName();
+				foreach($items as $item) {
+					$href = Director::absoluteURL(self::$api_base . "$relClass/$item->ID");
+					$json .= "<$relClass href=\"$href.xml\" id=\"{$item->ID}\" />\n";
+				}
+				$json .= "</$relName>\n";
 			}
-			$json .= "</$relName>\n";
 		}
 
 		$json .= "</$className>";

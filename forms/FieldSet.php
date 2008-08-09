@@ -139,7 +139,7 @@ class FieldSet extends DataObjectSet {
 			// Create any missing tabs
 			if(!$currentPointer) {
 				if(is_a($parentPointer,'TabSet')) {
-					$currentPointer = new Tab($tabName);
+					$currentPointer = new Tab($part);
 					$parentPointer->push($currentPointer);
 				} else {
 					user_error("FieldSet::addFieldToTab() Tried to add a tab to a " . $parentPointer->class . " object - '$part' didn't exist.", E_USER_ERROR);

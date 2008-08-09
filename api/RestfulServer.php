@@ -122,8 +122,15 @@ class RestfulServer extends Controller {
 	 * @return String The serialized representation of the requested object(s) - usually XML or JSON.
 	 */
 	protected function getHandler($className, $id, $relation, $formatter) {
-		$limit = (int)$this->request->getVar('limit');
-		
+		$sort = array(
+			'sort' => $this->request->getVar('sort'),
+			'dir' => $this->request->getVar('dir')
+		);
+		$limit = array(
+			'start' => $this->request->getVar('start'),
+			'limit' => $this->request->getVar('limit')
+		);
+
 		if($id) {
 			$obj = DataObject::get_by_id($className, $id);
 			if(!$obj) {
@@ -135,12 +142,27 @@ class RestfulServer extends Controller {
 			}
 			
 			if($relation) {
-				if($obj->hasMethod($relation)) $obj = $obj->$relation('', '', '', $limit);
-				else return $this->notFound();
+				if($relationClass = $obj->many_many($relation)) {
+					$query = $obj->getManyManyComponentsQuery($relation);
+				} elseif($relationClass = $obj->has_many($relation)) {
+					$query = $obj->getComponentsQuery($relation);
+				} elseif($relationClass = $obj->has_one($relation)) {
+					$query = null;
+				} elseif($obj->hasMethod("{$relation}Query")) {
+					// @todo HACK Switch to ComponentSet->getQuery() once we implement it (and lazy loading)
+					$query = $obj->{"{$relation}Query"}(null, $sort, null, $limit);
+					$relationClass = $obj->{"{$relation}Class"}();
+				} else {
+					return $this->notFound();
+				}
+				
+				// get all results
+				$obj = $this->search($relationClass, $this->request->getVars(), $sort, $limit, $query);
+				if(!$obj) $obj = new DataObjectSet();
 			} 
 			
 		} else {
-			$obj = DataObject::get($className, "");
+			$obj = $this->search($className, $this->request->getVars(), $sort, $limit);
 			// show empty serialized result when no records are present
 			if(!$obj) $obj = new DataObjectSet();
 			if(!singleton($className)->stat('api_access')) {
@@ -150,6 +172,25 @@ class RestfulServer extends Controller {
 
 		if($obj instanceof DataObjectSet) return $formatter->convertDataObjectSet($obj);
 		else return $formatter->convertDataObject($obj);
+	}
+	
+	/**
+	 * Uses the default {@link SearchContext} specified through
+	 * {@link DataObject::getDefaultSearchContext()} to augument
+	 * an existing query object (mostly a component query from {@link DataObject})
+	 * with search clauses. 
+	 * 
+	 * @todo Allow specifying of different searchcontext getters on model-by-model basis
+	 *
+	 * @param string $className
+	 * @param array $params
+	 * @return DataObjectSet
+	 */
+	protected function search($className, $params = null, $sort = null, $limit = null, $existingQuery = null) {
+		$searchContext = singleton($className)->getDefaultSearchContext();
+		$query = $searchContext->getQuery($params, $sort, $limit, $existingQuery);
+		
+		return singleton($className)->buildDataObjectSet($query->execute());
 	}
 
 	/**
@@ -194,7 +235,6 @@ class RestfulServer extends Controller {
 	}
 	
 }
-
 
 /**
  * Restful server handler for a DataObjectSet
