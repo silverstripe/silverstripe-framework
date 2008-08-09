@@ -10,5 +10,14 @@
  */
 class ExactMatchFilter extends SearchFilter {
 	
+	/**
+	 * Applies an exact match (equals) on a field value.
+	 *
+	 * @return unknown
+	 */
+	public function apply($value) {
+		return "{$this->name}='$value'";
+	}
+	
 }
 ?>

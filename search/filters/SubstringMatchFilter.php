@@ -6,7 +6,10 @@
  * @subpackage search
  */
 class SubstringMatchFilter extends SearchFilter {
-	
+
+	public function apply($value) {
+		return "";
+	}
 	
 }
 

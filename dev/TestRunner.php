@@ -30,6 +30,11 @@ class TestRunner extends Controller {
 	/** @ignore */
 	private static $default_reporter;
 	
+	static $url_handlers = array(
+		'' => 'index',
+		'$TestCase' => 'only'
+	);
+	
 	/**
 	 * Override the default reporter with a custom configured subclass.
 	 *
@@ -76,15 +81,13 @@ class TestRunner extends Controller {
 	/**
 	 * Run only a single test class
 	 */
-	function only() {
-		$className = $this->urlParams['ID'];
+	function only($request) {
+		$className = $request->param('TestCase');
 		if(class_exists($className)) {
 			$this->runTests(array($className));
 		} else {
 			echo "Class '$className' not found";
-			
 		}
-		
 	}
 
 	function runTests($classList, $coverage = false) {

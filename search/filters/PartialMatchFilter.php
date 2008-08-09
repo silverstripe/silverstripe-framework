@@ -7,5 +7,9 @@
  */
 class PartialMatchFilter extends SearchFilter {
 	
+	public function apply($value) {
+		return "{$this->name} LIKE '%$value%'";
+	}
+	
 }
 ?>

@@ -1,4 +1,4 @@
-PersonBubble:
+SearchContextTest_Person:
     person1:
         Name: James
         Email: james@example.com
@@ -25,4 +25,36 @@ PersonBubble:
         HairColor: black
         EyeColor: green
 
-        
+SearchContextTest_Deadline:
+    deadline1:
+        CompletionDate: 2008-05-29 09:00:00
+    deadline2:
+        CompletionDate: 2008-05-29 09:00:00
+
+SearchContextTest_Action:
+    action1:
+        Description: Get search context working
+        SolutionArea: backend
+    action2:
+        Description: Get relationship editor working
+        SolutionArea: frontend
+    action3:
+        Description: Get RSS feeds working
+        SolutionArea: technical
+
+SearchContextTest_Project:
+    project1:
+        Name: CRM Application
+        Deadline: =>SearchContextTest_Deadline.deadline1
+        Actions: =>SearchContextTest_Action.action1,=>SearchContextTest_Action.action2
+    project2:
+        Name: Blog Website
+        Deadline: =>SearchContextTest_Deadline.deadline2
+        Actions: =>SearchContextTest_Action.action3
+
+SearchContextTest_AllFilterTypes:
+    filter1:
+        ExactMatch: Match me exactly
+        PartialMatch: Match me partially
+        Negation: Shouldnt match me
+        HiddenValue: Filtered value

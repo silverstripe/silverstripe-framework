@@ -596,6 +596,21 @@ class DataObjectSet extends ViewableData implements IteratorAggregate {
 		}
 		return $map;
 	}
+	
+	/**
+	 * Temporary filter method for filtering a list based on multiple fields of the DataObject.
+	 * 
+	 * Question: should any args be passed to the filter function?
+	 * 
+	 * @todo deprecate toDropdownMap() and map_multiple(), rename this method to map()
+	 */
+	public function filter_map($key, $value) {
+		$map = array();
+		foreach($this->items as $object) {
+			$map[$object->$key] = ($object->hasMethod($value)) ? $object->$value() : $object->$value;
+		}
+		return $map;
+	}
     
     /**
      * Find an item in this list where the field $key is equal to $value

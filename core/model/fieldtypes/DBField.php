@@ -222,7 +222,7 @@ abstract class DBField extends ViewableData {
 	 * @return SearchFilter
 	 */
 	public function defaultSearchFilter() {
-		return new ExactMatchSearchFilter();
+		return new ExactMatchFilter($this->name);
 	}
 	
 	/**

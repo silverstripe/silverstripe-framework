@@ -1158,33 +1158,31 @@ class DataObject extends ViewableData implements DataObjectInterface {
 	 * @return SearchContext
 	 */
 	public function getDefaultSearchContext() {
-		$c = new SearchContext($this->class);
-		
-		return $c;
+		return new SearchContext($this->class, $this->searchable_fields(), $this->defaultSearchFilters());
 	}
 	
 	/**
 	 * Determine which properties on the DataObject are
 	 * searchable, and map them to their default {@link FormField}
-	 * representations. Useful for scaffolding a searchform for {@link ModelAdmin}.
+	 * representations. Used for scaffolding a searchform for {@link ModelAdmin}.
 	 *
 	 * @usedby {@link SearchContext}
 	 * @return FieldSet
 	 */
 	public function scaffoldSearchFields() {
 		$fields = new FieldSet();
-		foreach($this->searchableFields() as $fieldName => $fieldType) {
+		foreach($this->searchable_fields() as $fieldName => $fieldType) {
 			// @todo Pass localized title
 			$fields->push($this->dbObject($fieldName)->scaffoldSearchField());
-		}
-		$extras = $this->invokeWithExtensions('extraSearchFields');
+		}		
+		/*$extras = $this->invokeWithExtensions('extraSearchFields');
 		if ($extras) {
 			foreach($extras as $result) {
 				foreach($result as $fieldName => $fieldType) {
 					$fields->push(new $fieldType($fieldName));
 				}
 			}
-		}
+		}*/
 		return $fields;
 	}
 
@@ -1203,6 +1201,13 @@ class DataObject extends ViewableData implements DataObjectInterface {
 			// commented out, to be less of a pain in the ass
 			//$fields->addFieldToTab('Root.Main', $this->dbObject($fieldName)->scaffoldFormField());
 			$fields->push($this->dbObject($fieldName)->scaffoldFormField());
+		}
+		foreach($this->has_one() as $relationship => $component) {
+			$model = singleton($component);
+			$records = DataObject::get($component);
+			$collect = ($model->hasMethod('customSelectOption')) ? 'customSelectOption' : current($model->summary_fields());
+			$options = $records->filter_map('ID', $collect);
+			$fields->push(new DropdownField($relationship.'ID', $relationship, $options));	
 		}		
 		return $fields;
 	}
@@ -1212,13 +1217,11 @@ class DataObject extends ViewableData implements DataObjectInterface {
 	 */
 	protected function addScaffoldRelationFields($fieldSet) {
 		foreach($this->has_many() as $relationship => $component) {
-			$relationshipFields = array_keys($this->searchableFields());
+			$relationshipFields = array_keys($this->searchable_fields());
 			$fieldSet->push(new ComplexTableField($this, $relationship, $component, $relationshipFields));
 		}
 		return $fieldSet;
 	}
-
-
 	
 	/**
 	 * Centerpiece of every data administration interface in Silverstripe,
@@ -2059,7 +2062,7 @@ class DataObject extends ViewableData implements DataObjectInterface {
 	 * but still needs to know the properties of its parent. This should be merged into databaseFields or
 	 * customDatabaseFields.
 	 * 
-	 * @todo integrate with pre-existing crap
+	 * @todo review whether this is still needed after recent API changes
 	 */
 	public function inheritedDatabaseFields() {
 		$fields = array();
@@ -2073,32 +2076,69 @@ class DataObject extends ViewableData implements DataObjectInterface {
 	
 	/**
 	 * Get the default searchable fields for this object,
-	 * excluding any fields that are specifically overriden
-	 * in the data object itself.
+	 * as defined in the $searchable_fields list. If searchable
+	 * fields are not defined on the data object, uses a default
+	 * selection of summary fields.
 	 * 
-	 * @todo rename $searchable to $excluded
-	 * @todo overcomplicated, should be simpler way of looking up whether specific fields are supposed to be searchable or not
+	 * @return array
 	 */
-	public function searchableFields() {
-		$parents = ClassInfo::dataClassesFor($this);
-		$fields = array();
-		$searchable = array();
-		foreach($parents as $class) {
-			$fields = array_merge($fields, singleton($class)->stat('db'));
-			$obj = singleton($class);
-			$results = $obj->invokeWithExtensions('excludeFromSearch');
-			if ($results) {
-				foreach($results as $result) {
-					if (is_array($result)) {
-						$searchable = array_merge($searchable, $result);
+	public function searchable_fields() {
+		$fields = $this->stat('searchable_fields');
+		if (!$fields) {
+			$fields = array_fill_keys($this->summary_fields(), 'TextField');
+		}
+		return $fields;
+	}
+	
+	/**
+	 * Get the default summary fields for this object.
+	 * 
+	 * @todo use the translation apparatus to return a default field selection for the language
+	 * 
+	 * @return array
+	 */
+	public function summary_fields() {
+		$fields = $this->stat('summary_fields');
+		if (!$fields) {
+			$fields = array();
+			if ($this->hasField('Name')) $fields[] = 'Name';
+			if ($this->hasField('Title')) $fields[] = 'Title';
+			if ($this->hasField('Description')) $fields[] = 'Description';
+			if ($this->hasField('Firstname')) $fields[] = 'Firstname';
+		}
+		return $fields;
+	}
+	
+	/**
+	 * Defines a default list of filters for the search context.
+	 * 
+	 * If a filter class mapping is defined on the data object,
+	 * it is constructed here. Otherwise, the default filter specified in
+	 * {@link DBField} is used.
+	 * 
+	 * @todo error handling/type checking for valid FormField and SearchFilter subclasses?
+	 * 
+	 * @return array
+	 */
+	public function defaultSearchFilters() {
+		$filters = array();
+		foreach($this->searchable_fields() as $name => $type) {
+			if (is_int($name)) {
+				$filters[$type] = $this->dbObject($type)->defaultSearchFilter();
+			} else {
+				if (is_array($type)) {
+					 $filter = current($type);
+					 $filters[$name] = new $filter();
+				} else {
+					if (is_subclass_of($type, 'SearchFilter')) {
+						$filters[$name] = new $type($name);
+					} else {
+						$filters[$name] = $this->dbObject($name)->defaultSearchFilter();
 					}
 				}
 			}
 		}
-		foreach($searchable as $field) {
-			unset($fields[$field]);
-		}
-		return $fields;
+		return $filters;
 	}
 	
     /**
@@ -2126,6 +2166,9 @@ class DataObject extends ViewableData implements DataObjectInterface {
 		return self::$context_obj;
 	}
 
+	/**
+	 * @ignore
+	 */
 	protected static $context_obj = null;
 	
 	
@@ -2230,6 +2273,44 @@ class DataObject extends ViewableData implements DataObjectInterface {
 	 * @var string
 	 */
 	public static $default_sort = null;
+	
+	/**
+	 * Default list of fields that can be scaffolded by the ModelAdmin
+	 * search interface.
+	 * 
+	 * Defining a basic set of searchable fields:
+	 * <code>
+	 *   static $searchable_fields = array("Name", "Email");
+	 * </code>
+	 * 
+	 * Overriding the default form fields, with a custom defined field:
+	 * <code>
+	 * 	static $searchable_fields = array(
+	 * 	   "Name" => "TextField"
+	 *  );
+	 * </code>
+	 * 
+	 * Overriding the default filter, with a custom defined filter:
+	 * <code>
+	 * 	static $searchable_fields = array(
+	 * 	   "Name" => "PartialMatchFilter"
+	 *  );
+	 * </code>
+	 * 
+	 * Overriding the default form field and filter:
+	 * <code>
+	 * 	static $searchable_fields = array(
+	 * 	   "Name" => array("TextField" => "PartialMatchFilter")
+	 *  );
+	 * </code> 
+	 */
+	public static $searchable_fields = null;
+
+	/**
+	 * Provides a default list of fields to be used by a 'summary'
+	 * view of this object.
+	 */
+	public static $summary_fields = null;
 	
 }
 

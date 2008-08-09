@@ -12,7 +12,8 @@ class DevelopmentAdmin extends Controller {
 	
 	static $url_handlers = array(
 		'' => 'index',
-		'$Action' => '$Action'
+		'$Action' => '$Action',
+		'$Action//$Action/$ID' => 'handleAction',
 	);
 	
 	function index() {
@@ -31,16 +32,14 @@ HTML;
 		$renderer->writeFooter();
 	}
 	
-	function tests() {
-		if(isset($this->urlParams['NestedAction'])) {
-			Director::redirect("TestRunner/only/" . $this->urlParams['NestedAction']);
-		} else {
-			Director::redirect("TestRunner/");
-		}
+	function tests($request) {
+		$controller = new TestRunner();
+		return $controller->handleRequest($request);
 	}
 	
-	function tasks($request) {
-		return new TaskRunner();
+	function tasks() {
+		$controller = new TaskRunner();
+		return $controller->handleRequest($request);
 	}
 	
 }

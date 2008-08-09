@@ -96,7 +96,7 @@ class ErrorPage extends Page {
 		// Run the page
 		Requirements::clear();
 		$controller = new ErrorPage_Controller($this);
-		$errorContent = $controller->run( array() )->getBody();
+		$errorContent = $controller->handleRequest(new HTTPRequest('GET',''))->getBody();
 		
 		if(!file_exists("../assets")) {
 			mkdir("../assets", 02775);

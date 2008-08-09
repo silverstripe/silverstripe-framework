@@ -56,17 +56,7 @@ class SearchContext extends Object {
 	 * @var array
 	protected $params;
 	 */
-	
-	/**
-	 * Require either all search filters to be evaluated to true,
-	 * or just a single one.
-	 *
-	 * @todo Not Implemented
-	 * @var string
-	 */
-	protected $booleanSearchType = 'AND';
-	
-	
+		
 	function __construct($modelClass, $fields = null, $filters = null) {
 		$this->modelClass = $modelClass;
 		$this->fields = $fields;
@@ -74,7 +64,7 @@ class SearchContext extends Object {
 		
 		parent::__construct();
 	}
-
+		
 	/**
 	 * Returns scaffolded search fields for UI.
 	 *
@@ -82,43 +72,53 @@ class SearchContext extends Object {
 	 * @return FieldSet
 	 */
 	public function getSearchFields() {
-		return ($this->fields) ? $this->fields : singleton($this->modelClass)->scaffoldSearchFields();
+		// $this->fields is causing weirdness, so we ignore for now, using the default scaffolding
+		//return ($this->fields) ? $this->fields : singleton($this->modelClass)->scaffoldSearchFields();
+		return singleton($this->modelClass)->scaffoldSearchFields();
 	}
 	
 	/**
-	 * Get the query object augumented with all clauses from
-	 * the connected {@link SearchFilter}s
-	 * 
-	 * @todo query generation
+	 * Returns a SQL object representing the search context for the given
+	 * list of query parameters.
 	 *
 	 * @param array $searchParams
 	 * @return SQLQuery
 	 */
-	public function getQuery($searchParams) {
-		$q = new SQLQuery("*", $this->modelClass);
-		$this->processFilters($q);
-		return $q;
+	public function getQuery($searchParams, $start = false, $limit = false) {
+		$model = singleton($this->modelClass);
+		$fields = array_keys($model->db());
+		$query = new SQLQuery($fields, $this->modelClass);
+		foreach($searchParams as $key => $value) {
+			$filter = $this->getFilter($key);
+			if ($filter) {
+				$query->where[] = $filter->apply($value);
+			}
+		}
+		return $query;
 	}
 
 	/**
-	 * Light wrapper around {@link getQuery()}.
+	 * Returns a result set from the given search parameters.
 	 *
+	 * @todo rearrange start and limit params to reflect DataObject
+	 * 
 	 * @param array $searchParams
 	 * @param int $start
 	 * @param int $limit
 	 * @return DataObjectSet
 	 */
 	public function getResults($searchParams, $start = false, $limit = false) {
-		$q = $this->getQuery($searchParams);
-		//$q->limit = $start ? "$start, $limit" : $limit;
-		$output = new DataObjectSet();
-		foreach($q->execute() as $row) {
-			$className = $row['RecordClassName'];
-			$output->push(new $className($row));
-		}
-		
-		// do the setting of start/limit on the dataobjectset
-		return $output;
+		$query = $this->getQuery($searchParams, $start, $limit);
+		//
+		// use if a raw SQL query is needed
+		//$results = new DataObjectSet();
+		//foreach($query->execute() as $row) {
+		//	$className = $row['ClassName'];
+		//	$results->push(new $className($row));
+		//}
+		//return $results;
+		//
+		return DataObject::get($this->modelClass, $query->getFilter(), "", "", $limit);
 	}
 
 	/**
@@ -128,14 +128,25 @@ class SearchContext extends Object {
 	 * @param array $searchFilters
 	 * @param SQLQuery $query
 	 */
-	protected function processFilters($searchFilters, SQLQuery &$query) {
-		foreach($this->filters as $filter) {
-			$filter->updateQuery($searchFilters, $tableName, $query);
+	protected function processFilters(SQLQuery $query, $searchParams) {
+		$conditions = array();
+		foreach($this->filters as $field => $filter) {
+			if (strstr($field, '.')) {
+				$path = explode('.', $field);
+			} else {
+				$conditions[] = $filter->apply($searchParams[$field]);
+			}
 		}
+		$query->where = $conditions;
 	}
 	
-	// ############ Getters/Setters ###########
-	
+	public function getFilter($name) {
+		if (isset($this->filters[$name])) {
+			return $this->filters[$name];
+		} else {
+			return null;
+		}
+	}
 	
 	public function getFields() {
 		return $this->fields; 
@@ -146,7 +157,7 @@ class SearchContext extends Object {
 	}
 
 	public function getFilters() {
-		return $this->fields;
+		return $this->filters;
 	}
 	
 	public function setFilters($filters) {

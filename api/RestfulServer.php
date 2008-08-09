@@ -169,7 +169,7 @@ class RestfulServer extends Controller {
 	 * @param $includeHeader Include <?xml ...?> header (Default: true)
 	 * @return String XML
 	 */
-	protected function dataObjectAsXML(DataObject $obj, $includeHeader = true) {
+	public function dataObjectAsXML(DataObject $obj, $includeHeader = true) {
 		$className = $obj->class;
 		$id = $obj->ID;
 		$objHref = Director::absoluteURL(self::$api_base . "$obj->class/$obj->ID");
@@ -177,7 +177,8 @@ class RestfulServer extends Controller {
 		$json = "";
 		if($includeHeader) $json .= "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
 		$json .= "<$className href=\"$objHref.xml\">\n";
-		foreach($obj->db() as $fieldName => $fieldType) {
+		$dbFields = array_merge($obj->databaseFields(), array('ID'=>'Int'));
+		foreach($dbFields as $fieldName => $fieldType) {
 			if(is_object($obj->$fieldName)) {
 				$json .= $obj->$fieldName->toXML();
 			} else {
@@ -228,7 +229,7 @@ class RestfulServer extends Controller {
 	 * @param DataObjectSet $set
 	 * @return String XML
 	 */
-	protected function dataObjectSetAsXML(DataObjectSet $set) {
+	public function dataObjectSetAsXML(DataObjectSet $set) {
 		$className = $set->class;
 		
 		$xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<$className>\n";
@@ -248,12 +249,13 @@ class RestfulServer extends Controller {
 	 * @param DataObject $obj
 	 * @return String JSON
 	 */
-	protected function dataObjectAsJSON(DataObject $obj) {
+	public function dataObjectAsJSON(DataObject $obj) {
 		$className = $obj->class;
 		$id = $obj->ID;
 		
 		$json = "{\n  className : \"$className\",\n";
-		foreach($obj->db() as $fieldName => $fieldType) {
+		$dbFields = array_merge($obj->databaseFields(), array('ID'=>'Int'));
+		foreach($dbFields as $fieldName => $fieldType) {
 			if(is_object($obj->$fieldName)) {
 				$jsonParts[] = "$fieldName : " . $obj->$fieldName->toJSON();
 			} else {
@@ -302,7 +304,7 @@ class RestfulServer extends Controller {
 	 * @param DataObjectSet $set
 	 * @return String JSON
 	 */
-	protected function dataObjectSetAsJSON(DataObjectSet $set) {
+	public function dataObjectSetAsJSON(DataObjectSet $set) {
 		$jsonParts = array();
 		foreach($set as $item) {
 			if($item->canView()) $jsonParts[] = $this->dataObjectAsJSON($item);

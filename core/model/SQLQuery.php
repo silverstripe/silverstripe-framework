@@ -61,6 +61,12 @@ class SQLQuery extends Object {
 	public $delete;
 	
 	/**
+	 * The logical connective used to join WHERE clauses. Defaults to AND.
+	 * @var string
+	 */
+	private $connective = 'AND';
+	
+	/**
 	 * Construct a new SQLQuery.
 	 * @param array $select An array of fields to select.
 	 * @param array $from An array of join clauses. The first one should be just the table name.
@@ -80,6 +86,20 @@ class SQLQuery extends Object {
 		$this->limit = $limit;
 
 		parent::__construct();
+	}
+
+	/**
+	 * Use the disjunctive operator 'OR' to join filter expressions in the WHERE clause.
+	 */
+	public function useDisjunction() {
+		$this->connective = 'OR';
+	}
+
+	/**
+	 * Use the conjunctive operator 'AND' to join filter expressions in the WHERE clause.
+	 */
+	public function useConjunction() {
+		$this->connective = 'AND';
 	}
 	
 	/**
@@ -122,6 +142,15 @@ class SQLQuery extends Object {
 	}
 
 	/**
+	 * Return an SQL WHERE clause to filter a SELECT query.
+	 *
+	 * @return string
+	 */
+	function getFilter() {
+		return implode(") {$this->connective} (" , $this->where);
+	}
+	
+	/**
 	 * Generate the SQL statement for this query.
 	 * @return string
 	 */
@@ -134,7 +163,7 @@ class SQLQuery extends Object {
 		}
 		$text .= " FROM " . implode(" ", $this->from);
 		
-		if($this->where) $text .= " WHERE (" . implode(") AND (" , $this->where) . ")";
+		if($this->where) $text .= " WHERE (" . $this->getFilter(). ")";
 		if($this->groupby) $text .= " GROUP BY " . implode(", ", $this->groupby);
 		if($this->having) $text .= " HAVING ( " . implode(" ) AND ( ", $this->having) . " )";
 		if($this->orderby) $text .= " ORDER BY " . $this->orderby;
