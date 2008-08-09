@@ -557,6 +557,14 @@ class DataObject extends ViewableData implements DataObjectInterface {
 
 		if(($this->ID && is_numeric($this->ID)) && !$forceInsert) {
 			$dbCommand = 'update';
+
+			// Update the changed array with references to changed obj-fields
+			foreach($this->record as $k => $v) {
+				if(is_object($v) && $v->isChanged()) {
+					$this->changed[$k] = true;
+				}
+			}
+
 		} else{
 			$dbCommand = 'insert';
 
@@ -1022,7 +1030,7 @@ class DataObject extends ViewableData implements DataObjectInterface {
 	 *
 	 * @return array The database fields
 	 */
-	public function db() {
+	public function db($component = null) {
 		$classes = ClassInfo::ancestry($this);
 		$good = false;
 		$items = array();
@@ -1035,7 +1043,15 @@ class DataObject extends ViewableData implements DataObjectInterface {
 				}
 				continue;
 			}
-			eval("\$items = array_merge((array){$class}::\$db, (array)\$items);");
+
+			if($component) {
+				$candidate = eval("return isset({$class}::\$db[\$component]) ? {$class}::\$db[\$component] : null;");
+				if($candidate) {
+					return $candidate;
+				}
+			} else {
+				eval("\$items = array_merge((array){$class}::\$db, (array)\$items);");
+			}
 		}
 
 		return $items;
@@ -1176,8 +1192,7 @@ class DataObject extends ViewableData implements DataObjectInterface {
 	public function scaffoldFormFields() {
 		$fields = new FieldSet();
 		
-		foreach($this->inheritedDatabaseFields() as $fieldName => $fieldType) {
-			
+		foreach($this->db() as $fieldName => $fieldType) {
 			// @todo Pass localized title
 			// commented out, to be less of a pain in the ass
 			//$fields->addFieldToTab('Root.Main', $this->dbObject($fieldName)->scaffoldFormField());
@@ -1243,6 +1258,22 @@ class DataObject extends ViewableData implements DataObjectInterface {
 	 * @return mixed The field value
 	 */
 	protected function getField($field) {
+		// If we already have an object in $this->record, then we should just return that
+		if(isset($this->record[$field]) && is_object($this->record[$field]))  return $this->record[$field];
+		
+		// Otherwise, we need to determine if this is a complex field
+		$fieldClass = $this->db($field);
+		if($fieldClass && ClassInfo::classImplements($fieldClass, 'CompositeDBField')) {
+			$helperPair = $this->castingHelperPair($field);
+			$constructor = $helperPair['castingHelper'];
+			$fieldName = $field;
+			$fieldObj = eval($constructor);
+			if(isset($this->record[$field])) $fieldObj->setValue($this->record[$field], $this->record);
+			$this->record[$field] = $fieldObj;
+			
+			return $this->record[$field];
+		}
+		
 		return isset($this->record[$field]) ? $this->record[$field] : null;
 	}
 
@@ -1293,28 +1324,36 @@ class DataObject extends ViewableData implements DataObjectInterface {
 	 * @param mixed $val New field value
 	 */
 	function setField($fieldName, $val) {
-		$defaults = $this->stat('defaults');
-		// if a field is not existing or has strictly changed
-		if(!isset($this->record[$fieldName]) || $this->record[$fieldName] !== $val) {
-			// TODO Add check for php-level defaults which are not set in the db
-			// TODO Add check for hidden input-fields (readonly) which are not set in the db
-			if(
-				// Only existing fields
-				$this->fieldExists($fieldName)
-				// Catches "0"==NULL
-				&& (isset($this->record[$fieldName]) && (intval($val) != intval($this->record[$fieldName])))
-				// Main non type-based check
-				&& (isset($this->record[$fieldName]) && $this->record[$fieldName] != $val)
-			) {
-				// Non-strict check fails, so value really changed, e.g. "abc" != "cde"
-				$this->changed[$fieldName] = 2;
-			} else {
-				// Record change-level 1 if only the type changed, e.g. 0 !== NULL
-				$this->changed[$fieldName] = 1;
-			}
-
-			// value is always saved back when strict check succeeds
+		// Situation 1: Passing a DBField
+		if($val instanceof DBField) {
+			$val->Name = $fieldName;
 			$this->record[$fieldName] = $val;
+			
+		// Situation 2: Passing a literal
+		} else {
+			$defaults = $this->stat('defaults');
+			// if a field is not existing or has strictly changed
+			if(!isset($this->record[$fieldName]) || $this->record[$fieldName] !== $val) {
+				// TODO Add check for php-level defaults which are not set in the db
+				// TODO Add check for hidden input-fields (readonly) which are not set in the db
+				if(
+					// Only existing fields
+					$this->fieldExists($fieldName)
+					// Catches "0"==NULL
+					&& (isset($this->record[$fieldName]) && (intval($val) != intval($this->record[$fieldName])))
+					// Main non type-based check
+					&& (isset($this->record[$fieldName]) && $this->record[$fieldName] != $val)
+				) {
+					// Non-strict check fails, so value really changed, e.g. "abc" != "cde"
+					$this->changed[$fieldName] = 2;
+				} else {
+					// Record change-level 1 if only the type changed, e.g. 0 !== NULL
+					$this->changed[$fieldName] = 1;
+				}
+
+				// value is always saved back when strict check succeeds
+				$this->record[$fieldName] = $val;
+			}
 		}
 	}
 
@@ -1334,7 +1373,7 @@ class DataObject extends ViewableData implements DataObjectInterface {
 		$castingHelper = $this->castingHelper($fieldName);
 		if($castingHelper) {
 			$fieldObj = eval($castingHelper);
-			$fieldObj->setVal($val);
+			$fieldObj->setValue($val);
 			$fieldObj->saveInto($this);
 		} else {
 			$this->$fieldName = $val;
@@ -1349,7 +1388,7 @@ class DataObject extends ViewableData implements DataObjectInterface {
 	 * @return boolean True if the given field exists
 	 */
 	public function hasField($field) {
-		return array_key_exists($field, $this->record);
+		return array_key_exists($field, $this->record) || $this->fieldExists($field);
 	}
 
 	/**
@@ -1486,14 +1525,17 @@ class DataObject extends ViewableData implements DataObjectInterface {
 	 * @return DBField The field as a DBField object
 	 */
 	public function dbObject($fieldName) {
+		return $this->obj($fieldName);
+		/*
 		$helperPair = $this->castingHelperPair($fieldName);
 		$constructor = $helperPair['castingHelper'];
 
 		if($obj = eval($constructor)) {
-			$obj->setVal($this->$fieldName, $this->record);
+			$obj->setValue($this->$fieldName, $this->record);
 		}
 
 		return $obj;
+		*/
 	}
 
 	/**
@@ -1560,18 +1602,34 @@ class DataObject extends ViewableData implements DataObjectInterface {
 		// Build our intial query
 		$query = new SQLQuery($select, "`$baseClass`", $filter, $sort);
 
+		// Add SQL for multi-value fields on the base table
+		$databaseFields = $this->databaseFields();
+		if($databaseFields) foreach($databaseFields as $k => $v) {
+			if(!in_array($k, array('ClassName', 'LastEdited', 'Created'))) {
+				if(ClassInfo::classImplements($v, 'CompositeDBField')) {
+					$this->obj($k)->addToQuery($query);
+				}
+			}
+		}
+		
 		// Join all the tables
 		if($tableClasses) {
 			foreach($tableClasses as $tableClass) {
 				$query->from[$tableClass] = "LEFT JOIN `$tableClass` ON `$tableClass`.ID = `$baseClass`.ID";
 				$query->select[] = "`$tableClass`.*";
-				// ask each $db field on the specific table for alterations to the query 
-				$uninheritedDbFields = singleton($tableClass)->uninherited('db',true);
-				if($uninheritedDbFields) foreach($uninheritedDbFields as $fieldName => $fieldType) {
-					singleton($tableClass)->obj($fieldName)->addToQuery($query);
+
+				// Add SQL for multi-value fields
+				$SNG = singleton($tableClass);
+				foreach($SNG->databaseFields() as $k => $v) {
+					if(!in_array($k, array('ClassName', 'LastEdited', 'Created'))) {
+						if(ClassInfo::classImplements($v, 'CompositeDBField')) {
+							$SNG->obj($k)->addToQuery($query);
+						}
+					}
 				}
 			}
 		}
+
 		$query->select[] = "`$baseClass`.ID";
 		$query->select[] = "if(`$baseClass`.ClassName,`$baseClass`.ClassName,'$baseClass') AS RecordClassName";
 

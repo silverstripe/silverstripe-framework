@@ -145,5 +145,13 @@ class ClassInfo {
 	    global $_ALL_CLASSES;
 		return (isset($_ALL_CLASSES['implementors'][$interfaceName])) ? $_ALL_CLASSES['implementors'][$interfaceName] : false;
 	}
+
+	/**
+	 * Returns true if the given class implements the given interface
+	 */
+	static function classImplements($className, $interfaceName) {
+	    global $_ALL_CLASSES;
+		return isset($_ALL_CLASSES['implementors'][$interfaceName]) ? in_array($className, $_ALL_CLASSES['implementors'][$interfaceName]) : false;
+	}
 }
 ?>

@@ -42,16 +42,33 @@ class RestfulServer extends Controller {
 		if(!isset($this->urlParams['ClassName'])) return $this->notFound();
 		$className = $this->urlParams['ClassName'];
 		$id = (isset($this->urlParams['ID'])) ? $this->urlParams['ID'] : null;
+		$relation = (isset($this->urlParams['Relation'])) ? $this->urlParams['Relation'] : null;
+		
+		// This is a little clumsy and should be improved with the new TokenisedURL that's coming
+		if(strpos($relation,'.') !== false) list($relation, $extension) = explode('.', $relation, 2);
+		else if(strpos($id,'.') !== false) list($id, $extension) = explode('.', $id, 2);
+		else if(strpos($className,'.') !== false) list($className, $extension) = explode('.', $className, 2);
+		else $extension = null;
+
+		// Determine mime-type from extension
+		$contentMap = array(
+			'xml' => 'text/xml',
+			'json' => 'text/json',
+			'js' => 'text/json',
+			'xhtml' => 'text/html',
+			'html' => 'text/html',
+		);
+		$contentType = isset($contentMap[$extension]) ? $contentMap[$extension] : 'text/xml';
 		
 		switch($requestMethod) {
 			case 'GET':
-				return $this->getHandler($className, $id);
+				return $this->getHandler($className, $id, $relation, $contentType);
 			
 			case 'PUT':
-				return $this->putHandler($className, $id);
+				return $this->putHandler($className, $id, $relation, $contentType);
 			
 			case 'DELETE':
-				return $this->deleteHandler($className, $id);
+				return $this->deleteHandler($className, $id, $relation, $contentType);
 			
 			case 'POST':
 		}
@@ -83,46 +100,67 @@ class RestfulServer extends Controller {
 	 *   - static $api_access must be set. This enables the API on a class by class basis
 	 *   - $obj->canView() must return true. This lets you implement record-level security
 	 */
-	protected function getHandler($className, $id) {
-		$obj = DataObject::get_by_id($className, $id);
-		if(!$obj) {
-			return $this->notFound();
-		}
-		
-		// TO DO - inspect that Accept header as well.  $_GET['accept'] can still be checked, as it's handy for debugging
-		$contentType = isset($_GET['accept']) ? $_GET['accept'] : 'text/xml';
-		
-		if($obj->stat('api_access') && $obj->canView()) {
-			switch($contentType) {
-				case "text/xml":
-					$this->getResponse()->addHeader("Content-type", "text/xml");
-					return $this->dataObjectAsXML($obj);
-
-				case "text/json":
-					$this->getResponse()->addHeader("Content-type", "text/json");
-					return $this->dataObjectAsJSON($obj);
-
-				case "text/html":
-				case "application/xhtml+xml":
-					$this->getResponse()->addHeader("Content-type", "text/json");
-					return $this->dataObjectAsXHTML($obj);
+	protected function getHandler($className, $id, $relation, $contentType) {
+		if($id) {
+			$obj = DataObject::get_by_id($className, $id);
+			if(!$obj) {
+				return $this->notFound();
 			}
+			
+			if(!$obj->stat('api_access') || !$obj->canView()) {
+				return $this->permissionFailure();
+			}
+			
+			if($relation) {
+				if($obj->hasMethod($relation)) $obj = $obj->$relation();
+				else return $this->notFound();
+			} 
+			
 		} else {
-			return $this->permissionFailure();
+			$obj = DataObject::get($className, "");
+			if(!singleton($className)->stat('api_access')) {
+				return $this->permissionFailure();
+			}
+		}
+						
+		// TO DO - inspect that Accept header as well.  $_GET['accept'] can still be checked, as it's handy for debugging
+		switch($contentType) {
+			case "text/xml":
+				$this->getResponse()->addHeader("Content-type", "text/xml");
+				if($obj instanceof DataObjectSet) return $this->dataObjectSetAsXML($obj);
+				else return $this->dataObjectAsXML($obj);
+
+			case "text/json":
+				//$this->getResponse()->addHeader("Content-type", "text/json");
+				if($obj instanceof DataObjectSet) return $this->dataObjectSetAsJSON($obj);
+				else return $this->dataObjectAsJSON($obj);
+
+			case "text/html":
+			case "application/xhtml+xml":
+				if($obj instanceof DataObjectSet) return $this->dataObjectSetAsXHTML($obj);
+				else return $this->dataObjectAsXHTML($obj);
 		}
 	}
 	
 	/**
 	 * Generate an XML representation of the given DataObject.
 	 */
-	protected function dataObjectAsXML(DataObject $obj) {
+	protected function dataObjectAsXML(DataObject $obj, $includeHeader = true) {
 		$className = $obj->class;
 		$id = $obj->ID;
+		$objHref = Director::absoluteURL(self::$api_base . "$obj->class/$obj->ID");
 		
-		$json = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<$className>\n";
+		$json = "";
+		if($includeHeader) $json .= "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
+		$json .= "<$className href=\"$objHref.xml\">\n";
 		foreach($obj->db() as $fieldName => $fieldType) {
-			$json .= "<$fieldName>" . Convert::raw2xml($obj->$fieldName) . "</$fieldName>\n";
+			if(is_object($obj->$fieldName)) {
+				$json .= $obj->$fieldName->toXML();
+			} else {
+				$json .= "<$fieldName>" . Convert::raw2xml($obj->$fieldName) . "</$fieldName>\n";
+			}
 		}
+		
 
 		foreach($obj->has_one() as $relName => $relClass) {
 			$fieldName = $relName . 'ID';
@@ -131,27 +169,26 @@ class RestfulServer extends Controller {
 			} else {
 				$href = Director::absoluteURL(self::$api_base . "$className/$id/$relName");
 			}
-			$json .= "<$relName linktype=\"has_one\" href=\"$href\" id=\"{$obj->$fieldName}\" />\n";
+			$json .= "<$relName linktype=\"has_one\" href=\"$href.xml\" id=\"{$obj->$fieldName}\" />\n";
 		}
 
 		foreach($obj->has_many() as $relName => $relClass) {
-			$json .= "<$relName linktype=\"has_many\">\n";
+			$json .= "<$relName linktype=\"has_many\" href=\"$objHref/$relName.xml\">\n";
 			$items = $obj->$relName();
 			foreach($items as $item) {
 				//$href = Director::absoluteURL(self::$api_base . "$className/$id/$relName/$item->ID");
 				$href = Director::absoluteURL(self::$api_base . "$relClass/$item->ID");
-				$json .= "<$relClass href=\"$href\" id=\"{$item->ID}\" />\n";
+				$json .= "<$relClass href=\"$href.xml\" id=\"{$item->ID}\" />\n";
 			}
 			$json .= "</$relName>\n";
 		}
 
 		foreach($obj->many_many() as $relName => $relClass) {
-			$json .= "<$relName linktype=\"many_many\">\n";
+			$json .= "<$relName linktype=\"many_many\" href=\"$objHref/$relName.xml\">\n";
 			$items = $obj->$relName();
 			foreach($items as $item) {
-				//$href = Director::absoluteURL(self::$api_base . "$className/$id/$relName/$item->ID");
 				$href = Director::absoluteURL(self::$api_base . "$relClass/$item->ID");
-				$json .= "<$relClass href=\"$href\" id=\"{$item->ID}\" />\n";
+				$json .= "<$relClass href=\"$href.xml\" id=\"{$item->ID}\" />\n";
 			}
 			$json .= "</$relName>\n";
 		}
@@ -161,6 +198,20 @@ class RestfulServer extends Controller {
 		return $json;
 	}
 
+	/**
+	 * Generate an XML representation of the given DataObject.
+	 */
+	protected function dataObjectSetAsXML(DataObjectSet $set) {
+		$className = $set->class;
+		
+		$json = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<$className>\n";
+		foreach($set as $item) {
+			if($item->canView()) $json .= $this->dataObjectAsXML($item, false);
+		}
+		$json .= "</$className>";
+		
+		return $json;
+	}
 	
 	/**
 	 * Generate an XML representation of the given DataObject.
@@ -171,7 +222,11 @@ class RestfulServer extends Controller {
 		
 		$json = "{\n  className : \"$className\",\n";
 		foreach($obj->db() as $fieldName => $fieldType) {
-			$jsonParts[] = "$fieldName : \"" . Convert::raw2js($obj->$fieldName) . "\"";
+			if(is_object($obj->$fieldName)) {
+				$jsonParts[] = "$fieldName : " . $obj->$fieldName->toJSON();
+			} else {
+				$jsonParts[] = "$fieldName : \"" . Convert::raw2js($obj->$fieldName) . "\"";
+			}
 		}
 
 		foreach($obj->has_one() as $relName => $relClass) {
@@ -181,7 +236,7 @@ class RestfulServer extends Controller {
 			} else {
 				$href = Director::absoluteURL(self::$api_base . "$className/$id/$relName");
 			}
-			$jsonParts[] = "$relName : { className : \"$relClass\", href : \"$href\", id : \"{$obj->$fieldName}\" }";
+			$jsonParts[] = "$relName : { className : \"$relClass\", href : \"$href.json\", id : \"{$obj->$fieldName}\" }";
 		}
 
 		foreach($obj->has_many() as $relName => $relClass) {
@@ -190,7 +245,7 @@ class RestfulServer extends Controller {
 			foreach($items as $item) {
 				//$href = Director::absoluteURL(self::$api_base . "$className/$id/$relName/$item->ID");
 				$href = Director::absoluteURL(self::$api_base . "$relClass/$item->ID");
-				$jsonInnerParts[] = "{ className : \"$relClass\", href : \"$href\", id : \"{$obj->$fieldName}\" }";
+				$jsonInnerParts[] = "{ className : \"$relClass\", href : \"$href.json\", id : \"{$obj->$fieldName}\" }";
 			}
 			$jsonParts[] = "$relName : [\n    " . implode(",\n    ", $jsonInnerParts) . "  \n  ]";
 		}
@@ -201,13 +256,26 @@ class RestfulServer extends Controller {
 			foreach($items as $item) {
 				//$href = Director::absoluteURL(self::$api_base . "$className/$id/$relName/$item->ID");
 				$href = Director::absoluteURL(self::$api_base . "$relClass/$item->ID");
-				$jsonInnerParts[] = "    { className : \"$relClass\", href : \"$href\", id : \"{$obj->$fieldName}\" }";
+				$jsonInnerParts[] = "    { className : \"$relClass\", href : \"$href.json\", id : \"{$obj->$fieldName}\" }";
 			}
 			$jsonParts[] = "$relName : [\n    " . implode(",\n    ", $jsonInnerParts) . "\n  ]";
 		}
 		
 		return "{\n  " . implode(",\n  ", $jsonParts) . "\n}";
 	}	
+
+	/**
+	 * Generate an XML representation of the given DataObject.
+	 */
+	protected function dataObjectSetAsJSON(DataObjectSet $set) {
+		$jsonParts = array();
+		foreach($set as $item) {
+			if($item->canView()) $jsonParts[] = $this->dataObjectAsJSON($item);
+		}
+		return "[\n" . implode(",\n", $jsonParts) . "\n]";
+	}
+
+
 	/**
 	 * Handler for object delete
 	 */

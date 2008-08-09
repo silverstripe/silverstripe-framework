@@ -91,7 +91,6 @@ class SearchContext extends Object {
 	public function getQuery($searchParams) {
 		$q = new SQLQuery("*", $this->modelClass);
 		$this->processFilters($q);
-		
 		return $q;
 	}
 
@@ -162,7 +161,8 @@ class SearchContext extends Object {
 		$fields = array_filter($fields, array($this,'clearEmptySearchFields'));
 		$length = count($fields);
 		foreach($fields as $key=>$val) {
-			if ($val != '') {
+			// Array values come from more complex fields - for now let's just disable searching on them
+			if (!is_array($val) && $val != '') {
 				$filter .= "`$key`='$val'";
 			} else {
 				$length--;

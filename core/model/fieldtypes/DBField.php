@@ -1,8 +1,14 @@
 <?php
 /**
  * Single field in the database.
- * Every field from the database is represented as a sub-class of DBField.  In addition to supporting
- * the creation of the field in the database,
+ * Every field from the database is represented as a sub-class of DBField.
+ * 
+ * <h2>Multi-value DBField objects</h2>
+ * Sometimes you will want to make DBField classes that don't have a 1-1 match to database fields.  To do this, there are a
+ * number of fields for you to overload.
+ *  - Overload {@link writeToManipulation} to add the appropriate references to the INSERT or UPDATE command
+ *  - Overload {@link addToQuery} to add the appropriate items to a SELECT query's field list
+ *  - Add appropriate accessor methods 
  * 
  * @package sapphire
  * @subpackage model
@@ -38,8 +44,30 @@ abstract class DBField extends ViewableData {
 		return $dbField;
 	}
 	
+	/**
+	 * @deprecated
+	 */
 	function setVal($value, $record = null) {
-		return $this->setValue($value);
+		return $this->setValue($value, $record);
+	}
+
+	/**
+	 * Set the name of this field.
+	 * The name should never be altered, but it if was never given a name in the first place you can set a name.
+	 * If you try an alter the name a warning will be thrown. 
+	 */
+	function setName($name) {
+		if($this->name) {
+			user_error("DBField::setName() shouldn't be called once a DBField already has a name.  It's partially immutable - it shouldn't be altered after it's given a value.", E_USER_WARNING);
+		}
+		$this->name = $name;
+	}
+	
+	/**
+	 * Returns the name of this field
+	 */
+	function getName() {
+		return $this->name;
 	}
 	
 	/**
@@ -92,7 +120,9 @@ abstract class DBField extends ViewableData {
 	 *
 	 * @param Query $query
 	 */
-	function addToQuery(&$query) {}
+	function addToQuery(&$query) {
+		
+	}
 	
 	function setTable($tableName) {
 		$this->tableName = $tableName;
