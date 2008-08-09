@@ -6,8 +6,18 @@ class XMLDataFormatter extends DataFormatter {
 	 */
 	static $api_base = "api/v1/";
 	
+	protected $outputContentType = 'text/xml';
+	
 	public function supportedExtensions() {
-		return array('xml');
+		return array(
+			'xml'
+		);
+	}
+	
+	public function supportedMimeTypes() {
+		return array(
+			'text/xml',
+		);
 	}
 
 	/**
@@ -48,7 +58,7 @@ class XMLDataFormatter extends DataFormatter {
 				}
 				$json .= "<$relName linktype=\"has_one\" href=\"$href.xml\" id=\"{$obj->$fieldName}\" />\n";
 			}
-	
+
 			foreach($obj->has_many() as $relName => $relClass) {
 				$json .= "<$relName linktype=\"has_many\" href=\"$objHref/$relName.xml\">\n";
 				$items = $obj->$relName();
@@ -93,5 +103,9 @@ class XMLDataFormatter extends DataFormatter {
 		$xml .= "</$className>";
 	
 		return $xml;
+	}
+	
+	public function convertStringToArray($strData) {
+		return Convert::xml2array($strData);
 	}
 }

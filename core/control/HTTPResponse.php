@@ -57,13 +57,25 @@ class HTTPResponse extends Object {
 	);
 	
 	protected $statusCode = 200;
+	
+	/**
+	 * HTTP Headers like "Content-Type: text/xml"
+	 *
+	 * @see http://en.wikipedia.org/wiki/List_of_HTTP_headers
+	 * @var array
+	 */
 	protected $headers = array();
+	
+	/**
+	 * @var string
+	 */
 	protected $body = null;
 	
 	function setStatusCode($code) {
 		if(isset(self::$status_codes[$code])) $this->statusCode = $code;
 		else user_error("Unrecognised HTTP status code '$code'", E_USER_WARNING);
 	}
+	
 	function getStatusCode() {
 		return $this->statusCode;
 	}
@@ -71,19 +83,25 @@ class HTTPResponse extends Object {
 	function setBody($body) {
 		$this->body = $body;
 	}
+	
 	function getBody() {
 		return $this->body;
 	}
 	
 	/**
-	 * Add a HTTP header to the response, replacing any header of the same name
+	 * Add a HTTP header to the response, replacing any header of the same name.
+	 * 
+	 * @param string $header Example: "Content-Type"
+	 * @param string $value Example: "text/xml" 
 	 */
 	function addHeader($header, $value) {
 		$this->headers[$header] = $value;
 	}
 	
 	/**
-	 * Return the HTTP header of the given name
+	 * Return the HTTP header of the given name.
+	 * 
+	 * @param string $header
 	 * @returns string
 	 */
 	function getHeader($header) {
@@ -92,6 +110,23 @@ class HTTPResponse extends Object {
 		} else {
 			return null;
 		}
+	}
+	
+	/**
+	 * @return array
+	 */
+	function getHeaders() {
+		return $this->headers;
+	}
+	
+	/**
+	 * Remove an existing HTTP header by its name,
+	 * e.g. "Content-Type".
+	 *
+	 * @param unknown_type $header
+	 */
+	function removeHeader($header) {
+		if(isset($this->headers[$header])) unset($this->headers[$header]);
 	}
 	
 	function redirect($dest, $code=302) {

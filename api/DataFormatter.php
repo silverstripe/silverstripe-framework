@@ -37,7 +37,19 @@ abstract class DataFormatter extends Object {
 	protected $customFields = null;
 	
 	/**
-	 * Get a DataFormatter object suitable for handling the given file extension
+	 * Specifies the mimetype in which all strings
+	 * returned from the convert*() methods should be used,
+	 * e.g. "text/xml".
+	 *
+	 * @var string
+	 */
+	protected $outputContentType = null;
+	
+	/**
+	 * Get a DataFormatter object suitable for handling the given file extension.
+	 * 
+	 * @string $extension
+	 * @return DataFormatter
 	 */
 	static function for_extension($extension) {
 		$classes = ClassInfo::subclassesFor("DataFormatter");
@@ -56,6 +68,58 @@ abstract class DataFormatter extends Object {
 	}
 	
 	/**
+	 * Get formatter for the first matching extension.
+	 *
+	 * @param array $extensions
+	 * @return DataFormatter
+	 */
+	static function for_extensions($extensions) {
+		foreach($extensions as $extension) {
+			if($formatter = self::for_extension($extension)) return $formatter;
+		}
+		
+		return false;
+	}
+
+	/**
+	 * Get a DataFormatter object suitable for handling the given mimetype.
+	 * 
+	 * @string $mimeType
+	 * @return DataFormatter
+	 */
+	static function for_mimetype($mimeType) {
+		$classes = ClassInfo::subclassesFor("DataFormatter");
+		array_shift($classes);
+		$sortedClasses = array();
+		foreach($classes as $class) {
+			$sortedClasses[$class] = singleton($class)->stat('priority');
+		}
+		arsort($sortedClasses);
+		foreach($sortedClasses as $className => $priority) {
+			$formatter = singleton($className);
+			if(in_array($mimeType, $formatter->supportedMimeTypes())) {
+				return $formatter;
+			}
+		}
+	}
+	
+	/**
+	 * Get formatter for the first matching mimetype.
+	 * Useful for HTTP Accept headers which can contain
+	 * multiple comma-separated mimetypes.
+	 *
+	 * @param array $mimetypes
+	 * @return DataFormatter
+	 */
+	static function for_mimetypes($mimetypes) {
+		foreach($mimetypes as $mimetype) {
+			if($formatter = self::for_mimetype($mimetype)) return $formatter;
+		}
+		
+		return false;
+	}
+	
+	/**
 	 * @param array $fields
 	 */
 	public function setCustomFields($fields) {
@@ -67,6 +131,10 @@ abstract class DataFormatter extends Object {
 	 */
 	public function getCustomFields() {
 		return $this->customFields;
+	}
+	
+	public function getOutputContentType() {
+		return $this->outputContentType;
 	}
 	
 	/**
@@ -104,6 +172,8 @@ abstract class DataFormatter extends Object {
 	 */
 	abstract function supportedExtensions();
 	
+	abstract function supportedMimeTypes();
+	
 	
 	/**
 	 * Convert a single data object to this format.  Return a string.
@@ -114,5 +184,12 @@ abstract class DataFormatter extends Object {
 	 * Convert a data object set to this format.  Return a string.
 	 */
 	abstract function convertDataObjectSet(DataObjectSet $set);
+	
+	/**
+	 * @param string $strData HTTP Payload as string
+	 */
+	public function convertStringToArray($strData) {
+		user_error('DataFormatter::convertStringToArray not implemented on subclass', E_USER_ERROR);
+	}
 		
 }

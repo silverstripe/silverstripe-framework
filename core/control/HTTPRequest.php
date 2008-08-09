@@ -7,6 +7,9 @@
  * The intention is that a single HTTPRequest object can be passed from one object to another, each object calling
  * match() to get the information that they need out of the URL.  This is generally handled by 
  * {@link RequestHandlingData::handleRequest()}.
+ * 
+ * @todo Accept X_HTTP_METHOD_OVERRIDE http header and $_REQUEST['_method'] to override request types (useful for webclients
+ *   not supporting PUT and DELETE)
  */
 class HTTPRequest extends Object implements ArrayAccess {
 	/**
@@ -20,14 +23,31 @@ class HTTPRequest extends Object implements ArrayAccess {
 	protected $extension;
 	
 	/**
-	 * The HTTP method
+	 * The HTTP method: GET/PUT/POST/DELETE/HEAD
 	 */
 	protected $httpMethod;
 	
 	protected $getVars = array();
+	
 	protected $postVars = array();
+
+	/**
+	 * HTTP Headers like "Content-Type: text/xml"
+	 *
+	 * @see http://en.wikipedia.org/wiki/List_of_HTTP_headers
+	 * @var array
+	 */
+	protected $headers = array();
+	
+	/**
+	 * Raw HTTP body, used by PUT and POST requests.
+	 *
+	 * @var string
+	 */
+	protected $body;
 	
 	protected $allParams = array();
+	
 	protected $latestParams = array();
 	
 	protected $unshiftedButParsedParts = 0;
@@ -47,6 +67,14 @@ class HTTPRequest extends Object implements ArrayAccess {
 	function isDELETE() {
 		return $this->httpMethod == 'DELETE';
 	}	
+	
+	function setBody($body) {
+		$this->body = $body;
+	}
+	
+	function getBody() {
+		return $this->body;
+	}
 	
 	function getVars() {
 		return $this->getVars;
@@ -71,6 +99,42 @@ class HTTPRequest extends Object implements ArrayAccess {
 	
 	function getExtension() {
 		return $this->extension;
+	}
+	
+	/**
+	 * Add a HTTP header to the response, replacing any header of the same name.
+	 * 
+	 * @param string $header Example: "Content-Type"
+	 * @param string $value Example: "text/xml" 
+	 */
+	function addHeader($header, $value) {
+		$this->headers[$header] = $value;
+	}
+	
+	/**
+	 * @return array
+	 */
+	function getHeaders() {
+		return $this->headers;
+	}
+	
+	/**
+	 * Remove an existing HTTP header
+	 *
+	 * @param string $header
+	 */
+	function getHeader($header) {
+		return (isset($this->headers[$header])) ? $this->headers[$header] : null;			
+	}
+	
+	/**
+	 * Remove an existing HTTP header by its name,
+	 * e.g. "Content-Type".
+	 *
+	 * @param string $header
+	 */
+	function removeHeader($header) {
+		if(isset($this->headers[$header])) unset($this->headers[$header]);
 	}
 	
 	/**
@@ -109,7 +173,7 @@ class HTTPRequest extends Object implements ArrayAccess {
 	/**
 	 * Construct a HTTPRequest from a URL relative to the site root.
 	 */
-	function __construct($httpMethod, $url, $getVars = array(), $postVars = array()) {
+	function __construct($httpMethod, $url, $getVars = array(), $postVars = array(), $body = null) {
 		$this->httpMethod = $httpMethod;
 		
 		$url = preg_replace(array('/\/+/','/^\//', '/\/$/'),array('/','',''), $url);
@@ -123,6 +187,7 @@ class HTTPRequest extends Object implements ArrayAccess {
 		
 		$this->getVars = (array)$getVars;
 		$this->postVars = (array)$postVars;
+		$this->body = $body;
 		
 		parent::__construct();
 	}

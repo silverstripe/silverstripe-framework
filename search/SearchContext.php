@@ -88,25 +88,6 @@ class SearchContext extends Object {
 		$fields[] = $classes[0].'.ClassName AS RecordClassName';
 		return $fields;
 	}
-
-	/**
-	 * @refactor move to SQLQuery
-	 * @todo fix hack
-	 */
-	protected function applyBaseTable() {
-		$classes = ClassInfo::dataClassesFor($this->modelClass);
-		return $classes[0];
-	}
-	
-	/**
-	 * @todo only works for one level deep of inheritance
-	 * @todo fix hack
-	 * @deprecated - remove me! 
-	 */
-	protected function applyBaseTableJoin($query) {
-		$classes = ClassInfo::dataClassesFor($this->modelClass);
-		if (count($classes) > 1) $query->leftJoin($classes[1], "{$classes[1]}.ID = {$classes[0]}.ID");
-	}
 	
 	/**
 	 * Returns a SQL object representing the search context for the given
@@ -132,7 +113,7 @@ class SearchContext extends Object {
 		
 		$SQL_limit = Convert::raw2sql($limit);
 		$query->limit($SQL_limit);
-		
+
 		$SQL_sort = (!empty($sort)) ? Convert::raw2sql($sort) : singleton($this->modelClass)->stat('default_sort');		
 		$query->orderby($SQL_sort);
 		
@@ -164,6 +145,8 @@ class SearchContext extends Object {
 		$searchParams = array_filter($searchParams, array($this,'clearEmptySearchFields'));
 		
 		$query = $this->getQuery($searchParams, $sort, $limit);
+		
+		$sql = $query->sql();
 		
 		// use if a raw SQL query is needed
 		$results = new DataObjectSet();

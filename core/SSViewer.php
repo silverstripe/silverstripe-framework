@@ -98,10 +98,12 @@ class SSViewer extends Object {
 		'rewriteHashlinks' => true,
 	);
     
-	protected static $topLevel = null;
-  public static function topLevel() {
-     return SSViewer::$topLevel;
-  }
+	protected static $topLevel = array();
+	public static function topLevel() {
+		if(SSViewer::$topLevel) {
+			return SSViewer::$topLevel[sizeof(SSViewer::$topLevel)-1];
+		}
+	}
 	
 	/**
 	 * Call this to disable rewriting of <a href="#xxx"> links.  This is useful in Ajax applications.
@@ -138,7 +140,7 @@ class SSViewer extends Object {
 	 */
 	 
 	public function process($item) {
-		SSViewer::$topLevel = $item;
+		SSViewer::$topLevel[] = $item;
         
 		if(isset($this->chosenTemplates['main'])) {
 			$template = $this->chosenTemplates['main'];
@@ -194,7 +196,7 @@ class SSViewer extends Object {
 		$output = $val;		
 		$output = Requirements::includeInHTML($template, $output);
 		
-		SSViewer::$topLevel = null;
+		array_pop(SSViewer::$topLevel);
 
 		if(isset($_GET['debug_profile'])) Profiler::unmark("SSViewer::process", " for $template");
 		

@@ -79,7 +79,7 @@ class Convert extends Object {
 	 * @return string JSON safe string
 	 */
 	static function raw2json($val) {
-		if(function_exists('json_econde')) {
+		if(function_exists('json_encode')) {
 			return json_encode($val);	
 		} else {
 			require_once(Director::baseFolder() . '/sapphire/misc/json/JSON.php');			
@@ -152,8 +152,44 @@ class Convert extends Object {
 		return self::raw2sql(self::js2raw($val));
 	}
 	
+	/**
+	 * Uses the PHP5.2 native json_decode function if available,
+	 * otherwise falls back to the Services_JSON class.
+	 * 
+	 * @see http://pear.php.net/pepr/pepr-proposal-show.php?id=198
+	 *
+	 * @param string $val
+	 * @return mixed JSON safe string
+	 */
+	static function json2obj($val) {
+		//if(function_exists('json_decode')) {
+		//	return json_decode($val);	
+		//} else {
+			require_once(Director::baseFolder() . '/sapphire/misc/json/JSON.php');			
+			$json = new Services_JSON();
+			return $json->decode($val);
+		//}
+	}
+
+	static function json2array($val) {
+		$json = self::json2obj($val);
+		$arr = array();
+		foreach($json as $k => $v) {
+			$arr[$k] = $v;
+		}
+		return $arr;
+	}
+	
+	
 	static function xml2array($val) {
-		return preg_split( '/\s*(<[^>]+>)|\s\s*/', $val, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY );
+		$xml = new SimpleXMLElement($val);
+		$arr = array();
+		foreach($xml->children() as $k => $v) {
+			// @todo Convert recursively
+			$arr[$k] = (string)$v;
+		}
+		return $arr;
+		//return preg_split( '/\s*(<[^>]+>)|\s\s*/', $val, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY );
 	}
 
 	static function array2json( $array ) {

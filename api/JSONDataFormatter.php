@@ -6,8 +6,20 @@ class JSONDataFormatter extends DataFormatter {
 	 */
 	static $api_base = "api/v1/";
 	
+	protected $outputContentType = 'application/json';
+	
 	public function supportedExtensions() {
-		return array('json', 'js');
+		return array(
+			'json', 
+			'js'
+		);
+	}
+
+	public function supportedMimeTypes() {
+		return array(
+			'application/json', 
+			'text/x-json'
+		);
 	}
 	
 	/**
@@ -80,4 +92,9 @@ class JSONDataFormatter extends DataFormatter {
 		}
 		return "[\n" . implode(",\n", $jsonParts) . "\n]";
 	}
+	
+	public function convertStringToArray($strData) {
+		return Convert::json2array($strData);
+	}
+	
 }

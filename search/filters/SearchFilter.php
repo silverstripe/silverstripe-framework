@@ -84,17 +84,6 @@ abstract class SearchFilter extends Object {
 	}
 	
 	/**
-	 * Applies multiple-table inheritance to straight joins on the data objects
-	 *
-	 * @todo Should this be applied in SQLQuery->from instead? !!! 
-	 * 
-	 * @return void
-	 */
-	protected function applyJoin($query, $model, $component) {
-		$query->leftJoin($component, "{$this->model}.ID = $component.{$model->getReverseAssociation($this->model)}ID");
-	}
-	
-	/**
 	 * Traverse the relationship fields, and add the table
 	 * mappings to the query object state.
 	 * 
@@ -106,16 +95,22 @@ abstract class SearchFilter extends Object {
 		if (is_array($this->relation)) {
 			$model = singleton($this->model);
 			foreach($this->relation as $rel) {
-				if ($component = $model->has_one($rel)) {
-					$model = singleton($component);
-					$this->applyJoin($query, $model, $component);
+				if ($component = $model->has_one($rel)) {	
+					$foreignKey = $model->getReverseAssociation($component);
+					$query->leftJoin($component, "$component.ID = {$this->model}.{$foreignKey}ID");
 					$this->model = $component;
+					
 				} elseif ($component = $model->has_many($rel)) {
+					$ancestry = $model->getClassAncestry();
 					$model = singleton($component);
-					$this->applyJoin($query, $model, $component);
+					$foreignKey = $model->getReverseAssociation($ancestry[0]);
+					$foreignKey = ($foreignKey) ? $foreignKey : $ancestry[0];
+					$query->leftJoin($component, "$component.{$foreignKey}ID = {$this->model}.ID");
+					
 					$this->model = $component;
+					
 				} elseif ($component = $model->many_many($rel)) {
-					Debug::dump("Many-Many traversals not implemented");
+					throw new Exception("Many-Many traversals not implemented");
 				}
 			}
 		}

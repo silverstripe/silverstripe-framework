@@ -88,7 +88,17 @@ class Director {
 	 * @uses Controller::run() Controller::run() handles the page logic for a Director::direct() call.
 	 */
 	function direct($url) {
-		$req = new HTTPRequest($_SERVER['REQUEST_METHOD'], $url, $_GET, array_merge((array)$_POST, (array)$_FILES));
+		$req = new HTTPRequest(
+			$_SERVER['REQUEST_METHOD'], 
+			$url, 
+			$_GET, 
+			array_merge((array)$_POST, (array)$_FILES),
+			@file_get_contents('php://input')
+		);
+		
+		// @todo find better way to extract HTTP headers
+		if(isset($_SERVER['HTTP_ACCEPT'])) $req->addHeader("Accept", $_SERVER['HTTP_ACCEPT']);
+		if(isset($_SERVER['CONTENT_TYPE'])) $req->addHeader("Content-Type", $_SERVER['CONTENT_TYPE']);
 
 		// Load the session into the controller
 		$session = new Session($_SESSION);
@@ -123,16 +133,19 @@ class Director {
 	 * 
 	 * This method is the counterpart of Director::direct() that is used in functional testing.  It will execute the URL given,
 	 * 
-	 * @param $url The URL to visit
-	 * @param $postVars The $_POST & $_FILES variables
-	 * @param $session The {@link Session} object representing the current session.  By passing the same object to multiple
+	 * @param string $url The URL to visit
+	 * @param array $postVars The $_POST & $_FILES variables
+	 * @param Session $session The {@link Session} object representing the current session.  By passing the same object to multiple
 	 * calls of Director::test(), you can simulate a peristed session.
-	 * @param $httpMethod The HTTP method, such as GET or POST.  It will default to POST if postVars is set, GET otherwise
+	 * @param string $httpMethod The HTTP method, such as GET or POST.  It will default to POST if postVars is set, GET otherwise
+	 * @param string $body The HTTP body
+	 * @param array $headers HTTP headers with key-value pairs
+	 * @return HTTPResponse
 	 * 
 	 * @uses getControllerForURL() The rule-lookup logic is handled by this.
 	 * @uses Controller::run() Controller::run() handles the page logic for a Director::direct() call.
 	 */
-	function test($url, $postVars = null, $session = null, $httpMethod = null) {
+	function test($url, $postVars = null, $session = null, $httpMethod = null, $body = null, $headers = null) {
 		if(!$httpMethod) $httpMethod = $postVars ? "POST" : "GET";
 		
         $getVars = array();
@@ -142,8 +155,8 @@ class Director {
 		}
 
 		if(!$session) $session = new Session(null);
-		
-		$req = new HTTPRequest($httpMethod, $url, $getVars, $postVars);
+		$req = new HTTPRequest($httpMethod, $url, $getVars, $postVars, $body);
+		if($headers) foreach($headers as $k => $v) $req->addHeader($k, $v);
 		$result = Director::handleRequest($req, $session);
 		
 		return $result;
