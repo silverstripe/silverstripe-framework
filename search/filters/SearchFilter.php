@@ -67,10 +67,20 @@ abstract class SearchFilter extends Object {
 	}
 	
 	/**
-	 * Normalizes the field name to table mapping.
+	 * The original name of the field.
 	 *
+	 * @return string
 	 */
-	protected function getName() {
+	public function getName() {
+		return $this->name;
+	}
+	
+	/**
+	 * Normalizes the field name to table mapping.
+	 * 
+	 * @return string
+	 */
+	protected function getDbName() {
 		// SRM: This code finds the table where the field named $this->name lives
 		// Todo: move to somewhere more appropriate, such as DataMapper, the magical class-to-be?
 		$candidateClass = $this->model;
@@ -97,20 +107,22 @@ abstract class SearchFilter extends Object {
 			foreach($this->relation as $rel) {
 				if ($component = $model->has_one($rel)) {	
 					$foreignKey = $model->getReverseAssociation($component);
-					$query->leftJoin($component, "$component.ID = {$this->model}.{$foreignKey}ID");
+					$query->leftJoin($component, "`$component`.`ID` = `{$this->model}`.`{$foreignKey}ID`");
 					$this->model = $component;
-					
 				} elseif ($component = $model->has_many($rel)) {
 					$ancestry = $model->getClassAncestry();
 					$model = singleton($component);
 					$foreignKey = $model->getReverseAssociation($ancestry[0]);
 					$foreignKey = ($foreignKey) ? $foreignKey : $ancestry[0];
-					$query->leftJoin($component, "$component.{$foreignKey}ID = {$this->model}.ID");
-					
+					$query->leftJoin($component, "`$component`.`{$foreignKey}ID` = `{$this->model}`.`ID`");
 					$this->model = $component;
-					
 				} elseif ($component = $model->many_many($rel)) {
-					throw new Exception("Many-Many traversals not implemented");
+					list($parentClass, $componentClass, $parentField, $componentField, $relationTable) = $component;
+					$parentBaseClass = ClassInfo::baseDataClass($parentClass);
+					$componentBaseClass = ClassInfo::baseDataClass($componentClass);
+					$query->innerJoin($relationTable, "`$relationTable`.`$parentField` = `$parentBaseClass`.`ID`");
+					$query->leftJoin($componentClass, "`$relationTable`.`$componentField` = `$componentClass`.`ID`");
+					$this->model = $componentClass;
 				}
 			}
 		}

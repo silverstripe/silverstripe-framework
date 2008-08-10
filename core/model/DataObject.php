@@ -109,6 +109,7 @@ class DataObject extends ViewableData implements DataObjectInterface {
 		$this->extension_instances = null;
 		$this->components = null;
 		$this->destroyed = true;
+		$this->flushCache();
 	}
 
 	/**

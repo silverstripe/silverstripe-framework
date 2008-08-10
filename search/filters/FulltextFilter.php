@@ -28,7 +28,7 @@
 class FulltextFilter extends SearchFilter {
 
 	public function apply(SQLQuery $query) {
-		$query->where("MATCH ({$this->getName()} AGAINST ('{$this->getValue()}')");
+		$query->where("MATCH ({$this->getDbName()} AGAINST ('{$this->getValue()}')");
 		return $query;
 	}
 

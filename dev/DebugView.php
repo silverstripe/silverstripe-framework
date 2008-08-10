@@ -14,6 +14,26 @@
 class DebugView {
 
 	/**
+	 * Generate breadcrumb links to the URL path being displayed
+	 *
+	 * @return string
+	 */
+	public function Breadcrumbs() {
+		$basePath = str_replace(Director::protocolAndHost(), '', Director::absoluteBaseURL());
+		$parts = explode('/', str_replace($basePath, '', $_SERVER['REQUEST_URI']));
+		$base = Director::absoluteBaseURL();
+		$path = "";
+		$pathPart = "";
+		foreach($parts as $part) {
+			if ($part != '') {
+				$pathPart .= "$part/";
+				$path .= "<a href=\"$base$pathPart\">$part</a>&rarr;&nbsp;";
+			}
+		}
+		return $path;
+	}	
+	
+	/**
 	 * Render HTML header for development views
 	 */
 	public function writeHeader() {
@@ -34,6 +54,24 @@ class DebugView {
 		echo '</style></head>';
 		echo '<body>';
 		echo '<div class="header"><img src="'. Director::absoluteBaseURL() .'cms/images/mainmenu/logo.gif" width="26" height="23"></div>';
+	}
+	
+	/**
+	 * Render the information header for the view
+	 * 
+	 * @param string $title
+	 * @param string $title
+	 */
+	public function writeInfo($title, $subtitle, $description=false) {
+		echo '<div class="info">';
+		echo "<h1>$title</h1>";
+		echo "<h3>$subtitle</h3>";
+		if ($description) {
+			echo "<p>$description</p>";
+		} else {
+			echo $this->Breadcrumbs();
+		}
+		echo '</div>';
 	}
 	
 	/**

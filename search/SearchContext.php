@@ -52,15 +52,12 @@ class SearchContext extends Object {
 	 * Usually these values come from a submitted searchform
 	 * in the form of a $_REQUEST object.
 	 * CAUTION: All values should be treated as insecure client input.
-	 *
-	 * @var array
-	protected $params;
 	 */
 		
 	function __construct($modelClass, $fields = null, $filters = null) {
 		$this->modelClass = $modelClass;
-		$this->fields = $fields;
-		$this->filters = $filters;
+		$this->fields = ($fields) ? $fields : new FieldSet();
+		$this->filters = ($filters) ? $filters : array();
 		
 		parent::__construct();
 	}
@@ -116,7 +113,6 @@ class SearchContext extends Object {
 
 		$SQL_sort = (!empty($sort)) ? Convert::raw2sql($sort) : singleton($this->modelClass)->stat('default_sort');		
 		$query->orderby($SQL_sort);
-		
 		foreach($searchParams as $key => $value) {
 			if ($value != '0') {
 				$key = str_replace('__', '.', $key);
@@ -128,6 +124,7 @@ class SearchContext extends Object {
 				}
 			}
 		}
+
 		return $query;
 	}
 
@@ -203,9 +200,27 @@ class SearchContext extends Object {
 	}	
 	
 	/**
+	 * Adds a instance of {@link SearchFilter}.
+	 *
+	 * @param SearchFilter $filter
+	 */
+	public function addFilter($filter) {
+		$this->filters[$filter->getName()] = $filter;
+	}
+	
+	/**
+	 * Removes a filter by name.
+	 *
+	 * @param string $name
+	 */
+	public function removeFilterByName($name) {
+		unset($this->filters[$name]);
+	}
+	
+	/**
 	 * Get the list of searchable fields in the current search context.
 	 *
-	 * @return array
+	 * @return FieldSet
 	 */
 	public function getFields() {
 		return $this->fields; 
@@ -214,10 +229,28 @@ class SearchContext extends Object {
 	/**
 	 * Apply a list of searchable fields to the current search context.
 	 *
-	 * @param array $fields
+	 * @param FieldSet $fields
 	 */
 	public function setFields($fields) {
 		$this->fields = $fields;
+	}
+	
+	/**
+	 * Adds a new {@link FormField} instance.
+	 *
+	 * @param FormField $field
+	 */
+	public function addField($field) {
+		$this->fields->push($field);
+	}
+	
+	/**
+	 * Removes an existing formfield instance by its name.
+	 *
+	 * @param string $fieldName
+	 */
+	public function removeFieldByName($fieldName) {
+		$this->fields->removeByName($fieldName);
 	}
 	
 }

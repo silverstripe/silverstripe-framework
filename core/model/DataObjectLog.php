@@ -8,6 +8,12 @@
  */
 class DataObjectLog extends Object {
 	/**
+	 * This must be set to true for the DataObjectLog to work
+	 */
+	static $enabled = false;
+	
+	
+	/**
 	 * The DataObjects that have been added to the database in this session.
 	 * @var array
 	 */
@@ -29,7 +35,9 @@ class DataObjectLog extends Object {
 	 * @param DataObject $object
 	 */
 	static function addedObject($object) {
-		self::$added[$object->class][] = $object;
+		if(self::$enabled) {
+			self::$added[$object->class][] = $object;
+		}
 	}
 	
 	/**
@@ -37,7 +45,9 @@ class DataObjectLog extends Object {
 	 * @param DataObject $object
 	 */
 	static function deletedObject($object) {
-		self::$deleted[$object->class][] = $object;	
+		if(self::$enabled) {
+			self::$deleted[$object->class][] = $object;	
+		}
 	}
 	
 	/**
@@ -45,7 +55,9 @@ class DataObjectLog extends Object {
 	 * @param DataObject $object
 	 */
 	static function changedObject($object) {
-		self::$changed[$object->class][] = $object;
+		if(self::$enabled) {
+			self::$changed[$object->class][] = $object;
+		}
 	}
 	
 	/**

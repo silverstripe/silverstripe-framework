@@ -1,0 +1,22 @@
+pre {
+	border: 1px #777 solid;
+	background-color: #CCC;
+	color: #333;
+	margin: 0.5em 2em;
+	padding: 1em;
+	line-height: 120%;
+}
+
+pre strong {
+	background-color: #FFC;
+	color: #000;
+	padding: 2px;
+}
+
+.T_VARIABLE {
+	
+}
+
+.T_NEW {
+	
+}

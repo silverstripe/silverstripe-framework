@@ -293,7 +293,10 @@ class Form extends RequestHandlingData {
 				Session::set('SecurityID', $securityID);
 			}
 			
-			$extraFields->push(new HiddenField('SecurityID', '', $securityID));
+			$securityField = new HiddenField('SecurityID', '', $securityID);
+			$securityField->setForm($this);
+			$extraFields->push($securityField);
+			$this->securityTokenAdded = true;
 		}
 		
 		return $extraFields;

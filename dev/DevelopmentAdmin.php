@@ -17,15 +17,16 @@ class DevelopmentAdmin extends Controller {
 	);
 	
 	function index() {
-		$renderer = new SapphireDebugReporter();
+		$renderer = new DebugView();
 		$renderer->writeHeader();
+		$renderer->writeInfo("Sapphire Development Tools", Director::absoluteBaseURL());
 		echo <<<HTML
-			<div class="info"><h1>Sapphire Development Tools</h1></div>
 			<div class="options">
 			<ul>
 				<li><a href="tests">/dev/tests: See a list of unit tests to run</a></li>
 				<li><a href="tasks">/dev/tasks: See a list of build tasks to run</a></li>
-				<li><a href="db/build?flush=1">/db/build?flush=1: Rebuild the database</a></li>
+				<li><a href="viewcode">/dev/viewcode: Read source code in a literate programming style</a></li>
+				<li><a href="../db/build?flush=1">/db/build?flush=1: Rebuild the database</a></li>
 			</ul>
 			</div>
 HTML;
@@ -39,6 +40,11 @@ HTML;
 	
 	function tasks() {
 		$controller = new TaskRunner();
+		return $controller->handleRequest($request);
+	}
+	
+	function viewcode($request) {
+		$controller = new CodeViewer();
 		return $controller->handleRequest($request);
 	}
 	

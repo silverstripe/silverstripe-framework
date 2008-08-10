@@ -22,6 +22,8 @@ class OptionsetField extends DropdownField {
 	/**
 	 * Create a UL tag containing sets of radio buttons and labels.  The IDs are set to
 	 * FieldID_ItemKey, where ItemKey is the key with all non-alphanumerics removed.
+	 * 
+	 * @todo Should use CheckboxField FieldHolder rather than constructing own markup.
 	 */
 	function Field() {
 		$options = '';
@@ -41,7 +43,7 @@ class OptionsetField extends DropdownField {
 			$extraClass .= " val" . preg_replace('/[^a-zA-Z0-9\-\_]/','_', $key);
 			$disabled = $this->disabled ? 'disabled="disabled"' : '';
 			
-			$options .= "<li class=\"".$extraClass."\"><input id=\"$itemID\" name=\"$this->name\" type=\"radio\" value=\"$key\"$checked $disabled/> <label for=\"$itemID\">$value</label></li>\n";
+			$options .= "<li class=\"".$extraClass."\"><input id=\"$itemID\" name=\"$this->name\" type=\"radio\" value=\"$key\"$checked $disabled class=\"radio\" /> <label for=\"$itemID\">$value</label></li>\n";
 		}
 		$id = $this->id();
 		return "<ul id=\"$id\" class=\"optionset {$this->extraClass()}\">\n$options</ul>\n";

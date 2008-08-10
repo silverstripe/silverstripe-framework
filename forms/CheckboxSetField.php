@@ -19,7 +19,9 @@ class CheckboxSetField extends OptionsetField {
 	}
   
   	/**
-  	* Object handles arrays and dosets being passed by reference
+  	* Object handles arrays and dosets being passed by reference.
+  	* 
+  	* @todo Should use CheckboxField FieldHolder rather than constructing own markup.
   	*/
 	function Field() {
 		$values = $this->value;
@@ -94,7 +96,7 @@ class CheckboxSetField extends OptionsetField {
 			
 			$this->disabled ? $disabled = " disabled=\"disabled\"" : $disabled = "";
 			
-			$options .= "<li class=\"$extraClass\"><input id=\"$itemID\" name=\"$this->name[]\" type=\"checkbox\" value=\"$key\"$checked $disabled /> <label for=\"$itemID\">$value</label></li>\n"; 
+			$options .= "<li class=\"$extraClass\"><input id=\"$itemID\" name=\"$this->name[]\" type=\"checkbox\" value=\"$key\"$checked $disabled class=\"checkbox\" /> <label for=\"$itemID\">$value</label></li>\n"; 
 		}
 		
 		

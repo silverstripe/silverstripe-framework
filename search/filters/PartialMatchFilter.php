@@ -14,7 +14,7 @@ class PartialMatchFilter extends SearchFilter {
 	
 	public function apply(SQLQuery $query) {
 		$query = $this->applyRelation($query);
-		return $query->where("{$this->getName()} LIKE '%{$this->getValue()}%'");
+		return $query->where("{$this->getDbName()} LIKE '%{$this->getValue()}%'");
 	}
 	
 }

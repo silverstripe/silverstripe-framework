@@ -25,7 +25,7 @@ class StartsWithFilter extends SearchFilter {
 	 */
 	public function apply(SQLQuery $query) {
 		$query = $this->applyRelation($query);		
-		$query->where("LOCATE('{$this->getValue()}', {$this->getName()}) = 1");
+		$query->where("LOCATE('{$this->getValue()}', {$this->getDbName()}) = 1");
 	}
 	
 }

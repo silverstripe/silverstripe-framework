@@ -312,7 +312,7 @@ class FormField extends RequestHandlingData {
 		$rightTitleBlock = (!empty($RightTitle)) ? "<label class=\"right\" for=\"{$this->id()}\">$RightTitle</label>" : "";
 
 		return <<<HTML
-<div id="$Name" class="field $Type $extraClass">$titleBlock<span class="middleColumn">$Field</span>$rightTitleBlock$messageBlock</div>
+<div id="$Name" class="field $Type $extraClass">$titleBlock<div class="middleColumn">$Field</div>$rightTitleBlock$messageBlock</div>
 HTML;
 	}
 

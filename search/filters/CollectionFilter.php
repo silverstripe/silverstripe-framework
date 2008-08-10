@@ -25,7 +25,7 @@ class CollectionFilter extends SearchFilter {
 			}
 		}
 		$SQL_valueStr = "'" . implode("','", $values) . "'";
-		return $query->where("{$this->getName()} IN ({$SQL_valueStr})");
+		return $query->where("{$this->getDbName()} IN ({$SQL_valueStr})");
 	}
 	
 }

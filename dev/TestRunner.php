@@ -47,7 +47,7 @@ class TestRunner extends Controller {
 	
 	function init() {
 		parent::init();
-		if (!self::$default_reporter) self::set_reporter('SapphireDebugReporter'); 
+		if (!self::$default_reporter) self::set_reporter('DebugView');
 	}
 	
 	public function Link() {
@@ -115,32 +115,14 @@ class TestRunner extends Controller {
 	}
 
 	function runTests($classList, $coverage = false) {
-		if(!Director::is_cli()) {
-			self::$default_reporter->writeHeader();
-			echo '<div class="info">';
-			if (count($classList) > 1) { 
-				echo "<h1>Sapphire Tests</h1>";
-				echo "<p>Running test cases: " . implode(", ", $classList) . "</p>";
-			} else {
-				echo "<h1>{$classList[0]}</h1>";
-			}
-			echo "</div>";
-			echo '<div class="trace">';
-		} else {
-			echo "Sapphire PHPUnit Test Runner\n";
-			echo "Using the following subclasses of SapphireTest for testing: " . implode(", ", $classList) . "\n\n";
-		}
-		
-		// Remove our error handler so that PHP can use its own
-		//restore_error_handler();	
-		
+		// run tests before outputting anything to the client
 		$suite = new PHPUnit_Framework_TestSuite();
 		foreach($classList as $className) {
 			// Ensure that the autoloader pulls in the test class, as PHPUnit won't know how to do this.
 			class_exists($className);
 			$suite->addTest(new PHPUnit_Framework_TestSuite($className));
 		}
-
+		/*, array("reportDirectory" => "/Users/sminnee/phpunit-report")*/
 		$reporter = new SapphireTestReporter();
 		$results = new PHPUnit_Framework_TestResult();		
 		$results->addListener($reporter);
@@ -156,6 +138,13 @@ class TestRunner extends Controller {
 			//$testResult = PHPUnit_TextUI_TestRunner::run($suite);
 		}
 		
+		self::$default_reporter->writeHeader();
+		if (count($classList) > 1) { 
+			self::$default_reporter->writeInfo("All Tests", "Running test cases: " . implode(", ", $classList) .")");
+		} else {
+			self::$default_reporter->writeInfo($classList[0], "");
+		}
+		echo '<div class="trace">';
 		$reporter->writeResults();
 		
 		if(!Director::is_cli()) echo '</div>';

@@ -26,7 +26,7 @@ class WithinRangeFilter extends SearchFilter {
 	}
 	
 	function apply(SQLQuery $query) {
-		$query->where("{$this->getName()} >= {$this->min} AND {$this->getName()} <= {$this->max}");
+		$query->where("{$this->getDbName()} >= {$this->min} AND {$this->getDbName()} <= {$this->max}");
 	}
 	
 }

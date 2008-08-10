@@ -22,7 +22,7 @@ class ExactMatchFilter extends SearchFilter {
 	 */
 	public function apply(SQLQuery $query) {
 		$query = $this->applyRelation($query);
-		return $query->where("{$this->getName()} = '{$this->getValue()}'");
+		return $query->where("{$this->getDbName()} = '{$this->getValue()}'");
 	}
 	
 }
