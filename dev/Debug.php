@@ -171,6 +171,29 @@ class Debug {
 	}
 
 	/**
+	 * Log to a standard text file output.
+	 *
+	 * @param $message string to output
+	 */
+	static function log($message) {
+		$file = dirname(__FILE__).'/../../debug.log';
+		$now = date('r');
+		$oldcontent = file_get_contents($file);
+		$content = $oldcontent . "\n\n== $now ==\n$message\n";
+		file_put_contents($file, $content);
+	}
+	
+	private static $warning_pos = 220;
+	
+	static function warning($notice) {
+		echo '<div style="background-color:#ccc;border:3px solid #999;position:absolute;right:0;bottom:'.self::$warning_pos.'px;">';
+		echo '<h6>Warning:</h6>';
+		echo '<p>'.$notice.'</p>';
+		echo '</div>';
+		self::$warning_pos = self::$warning_pos-50;
+	}
+
+	/**
 	 * Load error handlers into environment
 	 */
 	static function loadErrorHandlers() {
