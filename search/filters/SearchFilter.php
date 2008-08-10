@@ -103,18 +103,20 @@ abstract class SearchFilter extends Object {
 	 */
 	protected function applyRelation($query) {
 		if (is_array($this->relation)) {
-			$model = singleton($this->model);
 			foreach($this->relation as $rel) {
+				$model = singleton($this->model);
 				if ($component = $model->has_one($rel)) {	
-					$foreignKey = $model->getReverseAssociation($component);
-					$query->leftJoin($component, "`$component`.`ID` = `{$this->model}`.`{$foreignKey}ID`");
+					if(!$query->isJoinedTo($component)) {
+						$foreignKey = $model->getReverseAssociation($component);
+						$query->leftJoin($component, "`$component`.`ID` = `{$this->model}`.`{$foreignKey}ID`");
+					}
 					$this->model = $component;
 				} elseif ($component = $model->has_many($rel)) {
-					$ancestry = $model->getClassAncestry();
-					$model = singleton($component);
-					$foreignKey = $model->getReverseAssociation($ancestry[0]);
-					$foreignKey = ($foreignKey) ? $foreignKey : $ancestry[0];
-					$query->leftJoin($component, "`$component`.`{$foreignKey}ID` = `{$this->model}`.`ID`");
+					if(!$query->isJoinedTo($component)) {
+					 	$ancestry = $model->getClassAncestry();
+						$foreignKey = $model->getComponentJoinField($rel);
+						$query->leftJoin($component, "`$component`.`{$foreignKey}` = `{$ancestry[0]}`.`ID`");
+					}
 					$this->model = $component;
 				} elseif ($component = $model->many_many($rel)) {
 					list($parentClass, $componentClass, $parentField, $componentField, $relationTable) = $component;

@@ -80,6 +80,10 @@ class YamlFixture extends Object {
 	protected $fixtureDictionary;
 	
 	function __construct($fixtureFile) {
+		if(!file_exists(Director::baseFolder().'/'. $fixtureFile)) {
+			user_error('YamlFixture::__construct(): Fixture path "' . $fixtureFile . '" not found', E_USER_ERROR);
+		}
+		
 		$this->fixtureFile = $fixtureFile;
 	}
 	
@@ -118,9 +122,7 @@ class YamlFixture extends Object {
 	function saveIntoDatabase() {
 		$parser = new Spyc();
 		$fixtureContent = $parser->load(Director::baseFolder().'/'.$this->fixtureFile);
-		
 		$this->fixtureDictionary = array();
-		
 		foreach($fixtureContent as $dataClass => $items) {
 			foreach($items as $identifier => $fields) {
 				$obj = new $dataClass();

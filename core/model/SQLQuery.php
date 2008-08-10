@@ -141,7 +141,7 @@ class SQLQuery extends Object {
 	 * @return SQLQuery This instance 
 	 */
 	public function leftJoin($table, $onPredicate) {
-		$this->from[] = "LEFT JOIN $table ON $onPredicate";
+		$this->from[$table] = "LEFT JOIN $table ON $onPredicate";
 		return $this;
 	}
 	
@@ -151,8 +151,15 @@ class SQLQuery extends Object {
 	 * @return SQLQuery This instance 
 	 */
 	public function innerJoin($table, $onPredicate) {
-		$this->from[] = "INNER JOIN $table ON $onPredicate";
+		$this->from[$table] = "INNER JOIN $table ON $onPredicate";
 		return $this;
+	}
+	
+	/**
+	 * Returns true if we are already joining to the given table alias
+	 */
+	public function isJoinedTo($tableAlias) {
+		return isset($this->from[$tableAlias]);
 	}
 	
 	/**

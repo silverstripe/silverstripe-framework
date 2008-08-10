@@ -17,7 +17,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	 * 
 	 * @var string
 	 */
-	protected static $fixture_file = null;
+	static $fixture_file = null;
 	
 	protected $originalMailer;
 	

@@ -68,9 +68,9 @@ class SearchContext extends Object {
 	 * @return FieldSet
 	 */
 	public function getSearchFields() {
+		return ($this->fields) ? $this->fields : singleton($this->modelClass)->scaffoldSearchFields();
 		// $this->fields is causing weirdness, so we ignore for now, using the default scaffolding
-		//return ($this->fields) ? $this->fields : singleton($this->modelClass)->scaffoldSearchFields();
-		return singleton($this->modelClass)->scaffoldSearchFields();
+		//return singleton($this->modelClass)->scaffoldSearchFields();
 	}
 	
 	/**
@@ -142,8 +142,6 @@ class SearchContext extends Object {
 		$searchParams = array_filter($searchParams, array($this,'clearEmptySearchFields'));
 		
 		$query = $this->getQuery($searchParams, $sort, $limit);
-		
-		$sql = $query->sql();
 		
 		// use if a raw SQL query is needed
 		$results = new DataObjectSet();

@@ -15,7 +15,7 @@ if [ "$1" = "installsake" ]; then
 fi
 
 # Find the PHP binary
-for candidatephp in "php5 php"; do
+for candidatephp in php5 php; do
 	if [ -f `which $candidatephp` ]; then
 		php=`which $candidatephp`
 		break

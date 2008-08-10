@@ -77,20 +77,22 @@ class CodeViewer extends Controller {
 	protected $classComment, $methodComment;
 
 	function saveClassComment($token) {
-		$this->classComment = $this->prettyComment($token);
+		$this->classComment = $this->parseComment($token);
 	}
 	function saveMethodComment($token) {
-		$this->methodComment = $this->prettyComment($token);
+		$this->methodComment = $this->parseComment($token);
 	}
 
 	function createClass($token) {
 		$this->currentClass = array(
-			"description" => $this->classComment
+			"description" => $this->classComment['pretty'],
+			"heading" => isset($this->classComment['heading']) ? $this->classComment['heading'] : null,
 		);
 		$ths->classComment = null;
 	}
 	function setClassName($token) {
 		$this->currentClass['name'] = $token[1];
+		if(!$this->currentClass['heading']) $this->currentClass['heading'] = $token[1];
 	}
 	function completeClass($token) {
 		$this->classes[] = $this->currentClass;
@@ -99,12 +101,14 @@ class CodeViewer extends Controller {
 	function createMethod($token) {
 		$this->currentMethod = array();
 		$this->currentMethod['content'] = "<pre>";
-		$this->currentMethod['description'] = $this->methodComment;
+		$this->currentMethod['description'] = $this->methodComment['pretty'];
+		$this->currentMethod['heading'] = isset($this->methodComment['heading']) ? $this->methodComment['heading'] : null;
 		$this->methodComment = null;
 
 	}
 	function setMethodName($token) {
 		$this->currentMethod['name'] = $token[1];
+		if(!$this->currentMethod['heading']) $this->currentMethod['heading'] = $token[1];
 	}
 	function appendMethodComment($token) {
 		if(substr($token[1],0,2) == '/*') {
@@ -122,6 +126,24 @@ class CodeViewer extends Controller {
 		$comment = htmlentities($comment);
 		$comment = str_replace("\n\n", "</p><p>", $comment);
 		return "<p>$comment</p>";
+	}
+
+	function parseComment($token) {
+		$parsed = array();		
+
+		$comment = preg_replace('/^\/\*/','',$token[1]);
+		$comment = preg_replace('/\*\/$/','',$comment);
+		$comment = preg_replace('/(^|\n)[\t ]*\* */m',"\n",$comment);
+		
+		foreach(array('heading','nav') as $var) {
+			if(preg_match('/@' . $var . '\s+([^\n]+)\n/', $comment, $matches)) {
+				$parsed[$var] = $matches[1];
+				$comment = preg_replace('/@' . $var . '\s+([^\n]+)\n/','', $comment);
+			}
+		}
+		
+		$parsed['pretty'] = "<p>" . str_replace("\n\n", "</p><p>", htmlentities($comment)). "</p>";
+		return $parsed;
 	}
 	
 	protected $isNewLine = true;
@@ -271,12 +293,12 @@ class CodeViewer extends Controller {
 		$subclasses = ClassInfo::subclassesFor('SapphireTest');
 		foreach($this->classes as $classDef) {
 			if(true ||in_array($classDef['name'], $subclasses)) {
-				echo "<h1>$classDef[name]</h1>";
+				echo "<h1>$classDef[heading]</h1>";
 				echo "<div style=\"font-weight: bold\">$classDef[description]</div>";
 				if(isset($classDef['methods'])) foreach($classDef['methods'] as $method) {
 					if(true || substr($method['name'],0,4) == 'test') {
 						//$title = ucfirst(strtolower(preg_replace('/([a-z])([A-Z])/', '$1 $2', substr($method['name'], 4))));
-						$title = $method['name'];
+						$title = $method['heading'];
 
 						echo "<h2>$title</h2>";
 						echo "<div style=\"font-weight: bold\">$method[description]</div>";

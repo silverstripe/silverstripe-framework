@@ -1299,9 +1299,13 @@ class DataObject extends ViewableData implements DataObjectInterface {
 	 * @return SearchContext
 	 */
 	public function getDefaultSearchContext() {
-		return new SearchContext($this->class, new FieldSet($this->searchable_fields()), $this->defaultSearchFilters());
+		return new SearchContext(
+			$this->class, 
+			$this->scaffoldSearchFields(), 
+			$this->defaultSearchFilters()
+		);
 	}
-
+	
 	/**
 	 * Determine which properties on the DataObject are
 	 * searchable, and map them to their default {@link FormField}
@@ -1315,31 +1319,35 @@ class DataObject extends ViewableData implements DataObjectInterface {
 	 */
 	public function scaffoldSearchFields() {
 		$fields = new FieldSet();
-		foreach($this->searchable_fields() as $fieldName => $fieldType) {
-			$field = $this->relObject($fieldName)->scaffoldSearchField();
+		foreach($this->searchableFields() as $fieldName => $spec) {
+			
+			// If we explicitly set a field, then construct that
+			if(isset($spec['field'])) {
+				$fieldClass = $spec['field'];
+				$field = new $fieldClass($fieldName);
+				
+			// Otherwise, use the database field's scaffolder
+			} else {
+				$field = $this->relObject($fieldName)->scaffoldSearchField();
+			}
+
 			if (strstr($fieldName, '.')) {
 				$field->setName(str_replace('.', '__', $fieldName));
 			}
-			$field->setTitle($this->searchable_fields_labels($fieldName));
+			$field->setTitle($spec['title']);
+
 			$fields->push($field);
 		}
 		return $fields;
 	}
 
 	/**
-	 * CamelCase to sentence case label transform
-	 *
-	 * @todo move into utility class (String::toLabel)
-	 */
-	function toLabel($string) {
-		return preg_replace("/([a-z]+)([A-Z])/","$1 $2", $string);
-	}
-
-	/**
 	 * Scaffold a simple edit form for all properties on this dataobject,
-	 * based on default {@link FormField} mapping in {@link DBField::scaffoldFormField()}
+	 * based on default {@link FormField} mapping in {@link DBField::scaffoldFormField()}.
+	 * Field labels/titles will be auto generated from {@link DataObject::fieldLabels()}.
 	 *
 	 * @uses {@link DBField::scaffoldFormField()}
+	 * @uses {@link DataObject::fieldLabels()}
 	 * @param array $fieldClasses Optional mapping of fieldnames to subclasses of {@link DBField}
 	 * @return FieldSet
 	 */
@@ -1356,6 +1364,7 @@ class DataObject extends ViewableData implements DataObjectInterface {
 			} else {
 				$fieldObject = $this->dbObject($fieldName)->scaffoldFormField();
 			}
+			$fieldObject->setTitle($this->fieldLabels($fieldName));
 			$fields->push($fieldObject);
 		}
 		foreach($this->has_one() as $relationship => $component) {
@@ -1769,7 +1778,7 @@ class DataObject extends ViewableData implements DataObjectInterface {
 		$object = $component->dbObject($fieldName);
 
 		if (!($object instanceof DBField)) {
-			user_error("Unable to traverse to related object field [$fieldPath]", E_USER_ERROR);
+			user_error("Unable to traverse to related object field [$fieldPath] on [$this->class]", E_USER_ERROR);
 		}
 		return $object;
 	}
@@ -2291,29 +2300,49 @@ class DataObject extends ViewableData implements DataObjectInterface {
 	 *
 	 * @return array
 	 */
-	public function searchable_fields() {
+	public function searchableFields() {
+		// can have mixed format, need to make consistent in most verbose form
 		$fields = $this->stat('searchable_fields');
-
-		// if fields were passed in numeric array,
-		// convert to an associative array
-		if($fields && array_key_exists(0, $fields)) {
-			$fields = array_fill_keys(array_values($fields), 'TextField');
-		}
-
-		if (!$fields) {
-			$fields = array_fill_keys(array_keys($this->summaryFields()), 'TextField');
-		} else {
-			// rewrite array, if it is using shorthand syntax
-			$rewrite = array();
-			foreach($fields as $name => $type) {
-				if (is_int($name)) $rewrite[$type] = 'TextField';
-				else $rewrite[$name] = $type;
+		$labels = $this->fieldLabels();
+		
+		// fallback to summary fields
+		if(!$fields) $fields = array_keys($this->summaryFields());
+		
+		// rewrite array, if it is using shorthand syntax
+		$rewrite = array();
+		foreach($fields as $name => $specOrName) {
+			$identifer = (is_int($name)) ? $specOrName : $name;
+			if(is_int($name)) {
+				// Format: array('MyFieldName')
+				$rewrite[$identifer] = array();
+			} elseif(is_array($specOrName)) {
+				// Format: array('MyFieldName' => array(
+				//   'filter => 'ExactMatchFilter',
+				//   'field' => 'NumericField', // optional
+				//   'title' => 'My Title', // optiona.
+				// )
+				$rewrite[$identifer] = array_merge(
+					array('filter' => $this->relObject($identifer)->stat('default_search_filter_class')),
+					(array)$specOrName
+				);
+			} else {
+				// Format: array('MyFieldName' => 'ExactMatchFilter')
+				$rewrite[$identifer] = array(
+					'filter' => $specOrName,
+				);
 			}
-			$fields = $rewrite;
+			if(!isset($rewrite[$identifer]['title'])) {
+				$rewrite[$identifer]['title'] = (isset($labels[$identifer])) ? $labels[$identifer] : FormField::name_to_label($identifer);
+			}
+			if(!isset($rewrite[$identifer]['filter'])) {
+				$rewrite[$identifer]['filter'] = 'PartialMatchFilter';
+			}
 		}
+		$fields = $rewrite;
+
 		return $fields;
 	}
-
+	
 	/**
 	 * Get any user defined searchable fields labels that
 	 * exist. Allows overriding of default field names in the form
@@ -2329,28 +2358,20 @@ class DataObject extends ViewableData implements DataObjectInterface {
 	 * Generates labels based on name of the field itself, if no static property 
 	 * {@link self::searchable_fields_labels} exists.
 	 *
-	 * @todo fix bad code
-	 *
 	 * @param $fieldName name of the field to retrieve
 	 * @return array of all element labels if no argument given
 	 * @return string of label if field
 	 */
-	public function searchable_fields_labels($fieldName=false) {
-		$custom_labels = $this->stat('searchable_fields_labels');
-
-		$fields = array_keys($this->searchable_fields());
-		$labels = array_combine($fields, $fields);
-		if(is_array($custom_labels)) $labels = array_merge($labels, $custom_labels);
-		if ($fieldName) {
-			if(array_key_exists($fieldName, $labels)) {
-				return $labels[$fieldName];
-			} elseif (strstr($fieldName, '.')) {
-				$parts = explode('.', $fieldName);
-				$label = $parts[count($parts)-2] . ' ' . $parts[count($parts)-1];
-				return $this->toLabel($label);
-			} else {
-				return $this->toLabel($fieldName);
-			}
+	public function fieldLabels($fieldName = false) {
+		$customLabels = $this->stat('field_labels');
+		$autoLabels = array();
+		foreach($this->databaseFields() as $name => $type) {
+			$autoLabels[$name] = FormField::name_to_label($name);
+		}
+		$labels = array_merge((array)$autoLabels, (array)$customLabels);
+		
+		if($fieldName) {
+			return (isset($labels[$fieldName])) ? $labels[$fieldName] : FormField::name_to_label($fieldName); 
 		} else {
 			return $labels;
 		}
@@ -2404,21 +2425,9 @@ class DataObject extends ViewableData implements DataObjectInterface {
 	 */
 	public function defaultSearchFilters() {
 		$filters = array();
-		foreach($this->searchable_fields() as $name => $type) {
-			if (is_int($name)) {
-				$filters[$type] = $this->relObject($type)->defaultSearchFilter();
-			} else {
-				if(is_array($type)) {
-					$filter = current($type);
-					$filters[$name] = new $filter($name);
-				} else {
-					if(is_subclass_of($type, 'SearchFilter')) {
-						$filters[$name] = new $type($name);
-					} else {
-						$filters[$name] = $this->relObject($name)->defaultSearchFilter($name);
-					}
-				}
-			}
+		foreach($this->searchableFields() as $name => $spec) {
+			$filterClass = $spec['filter'];
+			$filters[$name] = new $filterClass($name);
 		}
 		return $filters;
 	}
@@ -2574,29 +2583,32 @@ class DataObject extends ViewableData implements DataObjectInterface {
 	 * Default list of fields that can be scaffolded by the ModelAdmin
 	 * search interface.
 	 *
-	 * Defining a basic set of searchable fields:
-	 * <code>
-	 *   static $searchable_fields = array("Name", "Email");
-	 * </code>
-	 *
-	 * Overriding the default form fields, with a custom defined field:
-	 * <code>
-	 * 	static $searchable_fields = array(
-	 * 	   "Name" => "TextField"
-	 *  );
-	 * </code>
-	 *
 	 * Overriding the default filter, with a custom defined filter:
 	 * <code>
 	 * 	static $searchable_fields = array(
 	 * 	   "Name" => "PartialMatchFilter"
 	 *  );
 	 * </code>
-	 *
-	 * Overriding the default form field and filter:
+	 * 
+	 * Overriding the default form fields, with a custom defined field.
+	 * The 'filter' parameter will be generated from {@link DBField::$default_search_filter_class}.
+	 * The 'title' parameter will be generated from {@link DataObject->fieldLabels()}.
 	 * <code>
 	 * 	static $searchable_fields = array(
-	 * 	   "Name" => array("TextField" => "PartialMatchFilter")
+	 * 	   "Name" => array(
+	 * 			"field" => "TextField"
+	 * 		)
+	 *  );
+	 * </code>
+	 *
+	 * Overriding the default form field, filter and title:
+	 * <code>
+	 * 	static $searchable_fields = array(
+	 * 	   "Organisation.ZipCode" => array(
+	 * 			"field" => "TextField", 
+	 * 			"filter" => "PartialMatchFilter",
+	 * 			"title" => 'Organisation ZIP'
+	 * 		)
 	 *  );
 	 * </code>
 	 */
@@ -2606,7 +2618,7 @@ class DataObject extends ViewableData implements DataObjectInterface {
 	 * User defined labels for searchable_fields, used to override
 	 * default display in the search form.
 	 */
-	public static $searchable_fields_labels = null;
+	public static $field_labels = null;
 
 	/**
 	 * Provides a default list of fields to be used by a 'summary'

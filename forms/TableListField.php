@@ -220,6 +220,7 @@ JS
 	}
 	
 	function Headings() {
+		$headings = array();
 		foreach($this->fieldList as $fieldName => $fieldTitle) {
 			$isSorted = (isset($_REQUEST['ctf'][$this->Name()]['sort']) && $fieldName == $_REQUEST['ctf'][$this->Name()]['sort']);
 			// we can't allow sorting with partial summaries (groupByField)
@@ -313,10 +314,10 @@ JS
 			
 			// we don't limit when doing certain actions
 			if(!isset($_REQUEST['methodName']) || !in_array($_REQUEST['methodName'],array('printall','export'))) {
-				$dataQuery->limit = $SQL_limit;
-				if(isset($SQL_start)) {
-					$dataQuery->limit .= " OFFSET {$SQL_start}";
-				}
+				$dataQuery->limit(array(
+					'limit' => $SQL_limit,
+					'start' => (isset($SQL_start)) ? $SQL_start : null 
+				));
 			}
 
 			// get data

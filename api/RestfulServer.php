@@ -38,6 +38,12 @@
  * @todo Make SearchContext specification customizeable for each class
  * @todo Allow for range-searches (e.g. on Created column)
  * @todo Allow other authentication methods (currently only HTTP BasicAuth)
+ * @todo Filter relation listings by $api_access and canView() permissions
+ * @todo Exclude relations when "fields" are specified through URL (they should be explicitly requested in this case)
+ * @todo Custom filters per DataObject subclass, e.g. to disallow showing unpublished pages in SiteTree/Versioned/Hierarchy
+ * @todo URL parameter namespacing for search-fields, limit, fields, add_fields (might all be valid dataobject properties)
+ *       e.g. you wouldn't be able to search for a "limit" property on your subclass as its overlayed with the search logic
+ * @todo i18n integration (e.g. Page/1.xml?lang=de_DE)
  */
 class RestfulServer extends Controller {
 	static $url_handlers = array(
@@ -151,7 +157,7 @@ class RestfulServer extends Controller {
 			$obj = DataObject::get_by_id($className, $id);
 			if(!$obj) return $this->notFound();
 			if(!$obj->canView()) return $this->permissionFailure();
-			
+
 			if($relation) {
 				if($relationClass = $obj->many_many($relation)) {
 					$query = $obj->getManyManyComponentsQuery($relation);
@@ -166,7 +172,7 @@ class RestfulServer extends Controller {
 				} else {
 					return $this->notFound();
 				}
-				
+
 				// get all results
 				$obj = $this->search($relationClass, $this->request->getVars(), $sort, $limit, $query);
 				if(!$obj) $obj = new DataObjectSet();

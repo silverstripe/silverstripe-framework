@@ -320,6 +320,64 @@ class FieldSet extends DataObjectSet {
 	function makeReadonly() {
 		return $this->transform(new ReadonlyTransformation());
 	}
+
+	/**
+	 * Transform the named field into a readonly feld.
+	 */
+	function makeFieldReadonly($fieldName) {
+		// Iterate on items, looking for the applicable field
+		foreach($this->items as $i => $field) {
+			// Once it's found, use FormField::transform to turn the field into a readonly version of itself.
+			if($field->Name() == $fieldName) {
+				$this->items[$i] = $field->transform(new ReadonlyTransformation());
+				
+				// Clear an internal cache
+				$this->sequentialSet = null;
+			
+				// A true results indicates that the field was foudn
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	/**
+	 * Change the order of fields in this FieldSet by specifying an ordered list of field names.
+	 * This works well in conjunction with SilverStripe's scaffolding functions: take the scaffold, and
+	 * shuffle the fields around to the order that you want.
+	 * 
+	 * Please note that any tabs or other dataless fields will be clobbered by this operation.
+	 *
+	 * Field names can be given as an array, or just as a list of arguments.
+	 */
+	function changeFieldOrder($fieldNames) {
+		// Field names can be given as an array, or just as a list of arguments.
+		if(!is_array($fieldNames)) $fieldNames = func_get_args();
+		
+		// Build a map of fields indexed by their name.  This will make the 2nd step much easier.
+		$fieldMap = array();
+		foreach($this->dataFields() as $field) $fieldMap[$field->Name()] = $field;
+		
+		// Iterate through the ordered list	of names, building a new array to be put into $this->items.
+		// While we're doing this, empty out $fieldMap so that we can keep track of leftovers.
+		// Unrecognised field names are okay; just ignore them
+		$fields = array();
+		foreach($fieldNames as $fieldName) {
+			if(isset($fieldMap[$fieldName])) {
+				$fields[] = $fieldMap[$fieldName];
+				unset($fieldMap[$fieldName]);
+			}
+		}
+		
+		// Add the leftover fields to the end of the list.
+		$fields = $fields + array_values($fieldMap);
+		
+		// Update our internal $this->items parameter.
+		$this->items = $fields;
+		
+		// Re-set an internal cache
+		$this->sequentialSet = null;
+	}
 	
 }
 

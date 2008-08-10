@@ -1,12 +1,12 @@
 <?php
 
 class SearchContextTest extends SapphireTest {
-	static $fixture_file = 'sapphire/tests/SearchContextTest.yml';
 	
+	static $fixture_file = 'sapphire/tests/SearchContextTest.yml';
+
 	function testResultSetFilterReturnsExpectedCount() {
 		$person = singleton('SearchContextTest_Person');
 		$context = $person->getDefaultSearchContext();
-		
 		$results = $context->getResults(array('Name'=>''));
 		$this->assertEquals(5, $results->Count());
 		
@@ -69,6 +69,20 @@ class SearchContextTest extends SapphireTest {
 			$context->getFilters()
 		);
 	}
+
+	function testUserDefinedFieldsAppearInSearchContext() {
+		$company = singleton('SearchContextTest_Company');
+		$context = $company->getDefaultSearchContext();
+		$fields = $context->getFields();
+		$this->assertEquals(
+			new FieldSet(
+				new TextField("Name", 'Name'),
+		 		new TextareaField("Industry", 'Industry'),
+		 		new NumericField("AnnualProfit", 'The Almighty Annual Profit')
+			),
+			$context->getFields()
+		);
+	}
 	
 	function testRelationshipObjectsLinkedInSearch() {
 		$project = singleton('SearchContextTest_Project');
@@ -80,16 +94,12 @@ class SearchContextTest extends SapphireTest {
 		
 		$this->assertEquals(1, $results->Count());
 		
-		//Debug::dump(DB::query("select * from SearchContextTest_Deadline")->next());
-		
 		$project = $results->First();
 		
 		$this->assertType('SearchContextTest_Project', $project);
 		$this->assertEquals("Blog Website", $project->Name);
 		$this->assertEquals(2, $project->Actions()->Count());
 		$this->assertEquals("Get RSS feeds working", $project->Actions()->First()->Description);
-		//Debug::dump($project->Deadline()->CompletionDate);
-		//$this->assertEquals()
 	}
 	
 	function testCanGenerateQueryUsingAllFilterTypes() {
@@ -151,8 +161,14 @@ class SearchContextTest_Company extends DataObject implements TestOnly {
 	
 	static $searchable_fields = array(
 		"Name" => "PartialMatchFilter",
-		"Industry" => "TextareaField",
-		"AnnualProfit" => array("NumericField" => "PartialMatchFilter")
+		"Industry" => array(
+			'field' => "TextareaField"
+		),
+		"AnnualProfit" => array(
+			'field' => "NumericField",
+			'filter' => "PartialMatchFilter",
+			'title' => 'The Almighty Annual Profit'
+		)
 	);
 	
 }
@@ -222,7 +238,7 @@ class SearchContextTest_AllFilterTypes extends DataObject implements TestOnly {
 		"PartialMatch" => "PartialMatchFilter",
 		"Negation" => "NegationFilter",
 		"SubstringMatch" => "SubstringFilter",
-		"CollectionMatch" => "CollectionFilter",
+		"CollectionMatch" => "ExactMatchMultiFilter",
 		"StartsWith" => "StartsWithFilter",
 		"EndsWith" => "EndsWithFilter"
 	);

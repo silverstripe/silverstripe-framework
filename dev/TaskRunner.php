@@ -20,11 +20,15 @@ class TaskRunner extends Controller {
 	}
 	
 	function runTask($request) {
-		echo "<h1>Running task...</h1>";
 		$TaskName = $request->param('TaskName');
-		if (class_exists($TaskName)) {
+		if (class_exists($TaskName) && is_subclass_of($TaskName, 'BuildTask')) {
+			if(Director::is_cli()) echo "Running task '$TaskName'...\n\n";
+			else echo "<h1>Running task '$TaskName'...</h1>\n";
+
 			$task = new $TaskName();
 			if (!$task->isDisabled()) $task->run($request);
+		} else {
+			echo "Build task '$TaskName' not found.";
 		}
 	}
 	

@@ -13,6 +13,8 @@ class PrimaryKey extends Int {
 	 * @var DataObject 
 	 */
 	protected $object;
+
+	protected static $default_search_filter_class = 'ExactMatchMultiFilter';
 	
 	function __construct($name, $object) {
 		$this->object = $object;
@@ -21,7 +23,11 @@ class PrimaryKey extends Int {
 	
 	public function scaffoldFormField($title = null) {
 		$objs = DataObject::get($this->object->class);
-		$map = ($objs) ? $objs->toDropdownMap() : false;
+
+		$first = $objs->First();
+		$titleField = isset($first->Title) ? "Title" : "Name";
+
+		$map = ($objs) ? $objs->toDropdownMap("ID", $titleField) : false;
 		
 		return new DropdownField($this->name, $title, $map, null, null, ' ');
 	}

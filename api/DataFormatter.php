@@ -45,6 +45,15 @@ abstract class DataFormatter extends Object {
 	protected $customAddFields = null;
 	
 	/**
+	 * Fields which should be expicitly excluded from the export.
+	 * Comes in handy for field-level permissions.
+	 * Will overrule both {@link $customAddFields} and {@link $customFields}
+	 * 
+	 * @var array
+	 */
+	protected $removeFields = null;
+	
+	/**
 	 * Specifies the mimetype in which all strings
 	 * returned from the convert*() methods should be used,
 	 * e.g. "text/xml".
@@ -155,6 +164,20 @@ abstract class DataFormatter extends Object {
 		return $this->customAddFields;
 	}
 	
+	/**
+	 * @param array $fields
+	 */
+	public function setRemoveFields($fields) {
+		$this->removeFields = $fields;
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getRemoveFields() {
+		return $this->removeFields;
+	}
+	
 	public function getOutputContentType() {
 		return $this->outputContentType;
 	}
@@ -192,6 +215,11 @@ abstract class DataFormatter extends Object {
 		
 		// add default required fields
 		$dbFields = array_merge($dbFields, array('ID'=>'Int'));
+		
+		// @todo Requires PHP 5.1+
+		if($this->removeFields) {
+			$dbFields = array_diff_key($dbFields, array_combine($this->removeFields,$this->removeFields));
+		}
 		
 		return $dbFields;
 	}
