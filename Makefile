@@ -10,7 +10,7 @@ URL=`./cli-script.php SapphireInfo/baseurl`
 test: phpunit
 
 phpunit:
-	php5 ./cli-script.php TestRunner flush=1
+	php5 ./cli-script.php dev/tests/all flush=1
 
 windmill:
 	functest ../cms/tests/test_windmill url=${URL}admin browser=firefox

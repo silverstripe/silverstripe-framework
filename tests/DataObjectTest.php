@@ -14,25 +14,25 @@ class DataObjectTest extends SapphireTest {
 	function testDelete() {
 		// Test deleting using delete() on the DataObject
 		// Get the first page
-		$page = $this->objFromFixture('Page', 'page1');
+		$page = $this->fixture->objFromFixture('Page', 'page1');
 		// Check the page exists before deleting
 		$this->assertTrue(is_object($page) && $page->exists());
 		// Delete the page
 		$page->delete();
 		// Check that page does not exist after deleting
-		$page = $this->objFromFixture('Page', 'page1');
+		$page = $this->fixture->objFromFixture('Page', 'page1');
 		$this->assertTrue(!$page || !$page->exists());
 		
 		
 		// Test deleting using DataObject::delete_by_id()
 		// Get the second page
-		$page2 = $this->objFromFixture('Page', 'page2');
+		$page2 = $this->fixture->objFromFixture('Page', 'page2');
 		// Check the page exists before deleting
 		$this->assertTrue(is_object($page2) && $page2->exists());
 		// Delete the page
 		DataObject::delete_by_id('Page', $page2->ID);
 		// Check that page does not exist after deleting
-		$page2 = $this->objFromFixture('Page', 'page2');
+		$page2 = $this->fixture->objFromFixture('Page', 'page2');
 		$this->assertTrue(!$page2 || !$page2->exists());
 	}
 	
@@ -91,7 +91,7 @@ class DataObjectTest extends SapphireTest {
 		
 		
 		// Test get_by_id()
-		$homepage = $this->objFromFixture('Page', 'home');
+		$homepage = $this->fixture->objFromFixture('Page', 'home');
 		$page = DataObject::get_by_id('Page', $homepage->ID);
 		$this->assertTrue($page->Title == 'Home');
 		
@@ -130,7 +130,7 @@ class DataObjectTest extends SapphireTest {
 	 *
 	 */
 	function testWritePropertyWithoutDBField() {
-		$page = $this->objFromFixture('Page', 'page1');
+		$page = $this->fixture->objFromFixture('Page', 'page1');
 		$page->ParentID = 99;
 		$page->write();
 		// reload the page from the database
@@ -144,7 +144,7 @@ class DataObjectTest extends SapphireTest {
 	 *   - Test the IDs on the DataObjects are set correctly
 	 */
 	function testHasManyRelationships() {
-		$page = $this->objFromFixture('Page', 'home');
+		$page = $this->fixture->objFromFixture('Page', 'home');
 		
 		// Test getComponents() gets the ComponentSet of the other side of the relation
 		$this->assertTrue($page->getComponents('Comments')->Count() == 2);

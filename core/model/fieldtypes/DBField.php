@@ -22,6 +22,13 @@ abstract class DBField extends ViewableData {
 	protected $name;
 	
 	/**
+	 * Subclass of {@link SearchFilter} for usage in {@link defaultSearchFilter()}.
+	 *
+	 * @var string
+	 */
+	protected static $default_search_filter_class = 'PartialMatchFilter';
+	
+	/**
 	 * @var $default mixed Default-value in the database.
 	 * Might be overridden on DataObject-level, but still useful for setting defaults on
 	 * already existing records after a db-build.
@@ -223,7 +230,8 @@ abstract class DBField extends ViewableData {
 	 */
 	public function defaultSearchFilter($name = false) {
 		$name = ($name) ? $name : $this->name;
-		return new PartialMatchFilter($name);
+		$filterClass = $this->stat('default_search_filter_class');
+		return new $filterClass($name);
 	}
 	
 	/**

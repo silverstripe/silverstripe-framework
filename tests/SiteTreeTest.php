@@ -26,7 +26,7 @@ class SiteTreeTest extends SapphireTest {
 		);
 		
 		foreach($expectedURLs as $fixture => $urlSegment) {
-			$obj = $this->objFromFixture('Page', $fixture);
+			$obj = $this->fixture->objFromFixture('Page', $fixture);
 			$this->assertEquals($urlSegment, $obj->URLSegment);
 		}
 	}
@@ -35,7 +35,7 @@ class SiteTreeTest extends SapphireTest {
 	 * Test that publication copies data to SiteTree_Live
 	 */
 	function testPublishCopiesToLiveTable() {
-		$obj = $this->objFromFixture('Page','about');
+		$obj = $this->fixture->objFromFixture('Page','about');
 		$obj->publish('Stage', 'Live');
 		
 		$createdID = DB::query("SELECT ID FROM SiteTree_Live WHERE URLSegment = '$obj->URLSegment'")->value();

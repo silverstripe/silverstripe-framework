@@ -454,6 +454,29 @@ HTML;
 		}
 	}
 	
+	/**
+	 * Takes a fieldname and converts camelcase to spaced
+	 * words. Also resolves combined fieldnames with dot syntax
+	 * to spaced words.
+	 * 
+	 * @example 'TotalAmount' will return 'Total Amount'
+	 * @example 'Organisation.ZipCode' will return 'Organisation Zip Code'
+	 *
+	 * @param string $fieldName
+	 * @return string
+	 */
+	public function name_to_label($fieldName) {
+		if(strpos('.', $fieldName) !== false) {
+			$parts = explode('.', $fieldName);
+			$label = $parts[count($parts)-2] . ' ' . $parts[count($parts)-1];
+		} else {
+			$label = $fieldName;
+		}
+		$label = preg_replace("/([a-z]+)([A-Z])/","$1 $2", $label);
+		
+		return $label;
+	}
+	
 	// ###################
 	// DEPRECATED
 	// ###################

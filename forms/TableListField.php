@@ -176,6 +176,11 @@ class TableListField extends FormField {
 	 */
 	public $groupByField = null;
 	
+	/**
+	 * @var array
+	 */
+	protected $extraLinkParams;
+	
 	function __construct($name, $sourceClass, $fieldList = null, $sourceFilter = null, 
 		$sourceSort = null, $sourceJoin = null) {
 
@@ -603,11 +608,7 @@ JS
 	function getPermissions($arr) {
 		return $this->permissions;
 	}
-	
-	
-	
-	
-	
+
 	/**
 	 * #################################
 	 *           Pagination
@@ -639,14 +640,29 @@ JS
 		return $_REQUEST['ctf'][$this->Name()]['start'];
 	}
 	
+	/**
+	 * @param array
+	 */
+	function setExtraLinkParams($params){
+		$this->extraLinkParams = $params;
+	}
+	
+	/**
+	 * @return array
+	 */
+	function getExtraLinkParams(){
+		return $this->extraLinkParams;
+	}
+	
 	function FirstLink() {
 		$start = 0;
 		
 		if(!isset($_REQUEST['ctf'][$this->Name()]['start']) || !is_numeric($_REQUEST['ctf'][$this->Name()]['start']) || $_REQUEST['ctf'][$this->Name()]['start'] == 0) {
 			return null;
 		}
-		
-		return $this->Link() . "/ajax_refresh?ctf[{$this->Name()}][start]={$start}{$this->filterString()}";
+		$link = $this->Link() . "/ajax_refresh?ctf[{$this->Name()}][start]={$start}";
+		if($this->extraLinkParams) $link .= "&" . http_build_query($this->extraLinkParams);
+		return $link;
 	}
 	
 	function PrevLink() {
@@ -658,7 +674,9 @@ JS
 		
 		$start = ($_REQUEST['ctf'][$this->Name()]['start'] - $this->pageSize < 0)  ? 0 : $_REQUEST['ctf'][$this->Name()]['start'] - $this->pageSize;
 		
-		return $this->Link() . "/ajax_refresh?ctf[{$this->Name()}][start]=$start{$this->filterString()}";
+		$link = $this->Link() . "/ajax_refresh?ctf[{$this->Name()}][start]={$start}";
+		if($this->extraLinkParams) $link .= "&" . http_build_query($this->extraLinkParams);
+		return $link;
 	}
 	
 	function NextLink() {
@@ -667,20 +685,22 @@ JS
 		if($currentStart >= $start-1) {
 			return null;
 		}
-		return $this->Link() . "/ajax_refresh?ctf[{$this->Name()}][start]={$start}{$this->filterString()}";
+		$link = $this->Link() . "/ajax_refresh?ctf[{$this->Name()}][start]={$start}";
+		if($this->extraLinkParams) $link .= "&" . http_build_query($this->extraLinkParams);
+		return $link;
 	}
 	
 	function LastLink() {
 		$pageSize = ($this->TotalCount() % $this->pageSize > 0) ? $this->TotalCount() % $this->pageSize : $this->pageSize;
-		$start = $this->totalCount - $pageSize;
-		
-		
+		$start = $this->TotalCount() - $pageSize;
 		// Check if there is only one page, or if we are on last page
-		if($this->totalCount <= $pageSize || (isset($_REQUEST['ctf'][$this->Name()]['start']) &&  $_REQUEST['ctf'][$this->Name()]['start'] >= $start)) {
+		if($this->TotalCount() <= $pageSize || (isset($_REQUEST['ctf'][$this->Name()]['start']) &&  $_REQUEST['ctf'][$this->Name()]['start'] >= $start)) {
 			return null;
 		}
 		
-		return $this->Link() . "/ajax_refresh?ctf[{$this->Name()}][start]=$start{$this->filterString()}";
+		$link = $this->Link() . "/ajax_refresh?ctf[{$this->Name()}][start]={$start}";
+		if($this->extraLinkParams) $link .= "&" . http_build_query($this->extraLinkParams);
+		return $link;
 	}
 	
 	function FirstItem() {
@@ -739,7 +759,7 @@ JS
 	  * 
 	  * @return String URL-parameters
 	  */
-	 function filterString() {
+	function filterString() {
 		
 	}
 	
@@ -1004,9 +1024,9 @@ class TableListField_Item extends ViewableData {
 					$relationMethod = $fieldNameParts[$j];
 					$idField = $relationMethod . 'ID';
 					if($j == sizeof($fieldNameParts)-1) {
-						$value = $tmpItem->$relationMethod;
+						if($tmpItem) $value = $tmpItem->$relationMethod;
 					} else {
-						$tmpItem = $tmpItem->$relationMethod();
+						if($tmpItem) $tmpItem = $tmpItem->$relationMethod();
 					}
 				}
 			}

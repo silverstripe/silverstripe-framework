@@ -113,7 +113,7 @@ TableListField.prototype = {
 		new Ajax.Request( 
 			el.href, 
 			{
-				postBody: 'update=1',
+				postBody: 'update=1&paginate=1',
 				onComplete: Ajax.Evaluator,
 				onFailure: this.ajaxErrorHandler.bind(this)
 			}

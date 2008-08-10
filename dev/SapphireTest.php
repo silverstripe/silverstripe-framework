@@ -1,10 +1,4 @@
 <?php
-/**
- * @package sapphire
- * @subpackage testing
- */
-
-
 require_once 'TestRunner.php';
 if(hasPhpUnit()) {
 require_once 'PHPUnit/Framework.php';
@@ -13,17 +7,26 @@ require_once 'PHPUnit/Framework.php';
 /**
  * Test case class for the Sapphire framework.
  * Sapphire unit testing is based on PHPUnit, but provides a number of hooks into our data model that make it easier to work with.
+ * 
  * @package sapphire
  * @subpackage testing
  */
 class SapphireTest extends PHPUnit_Framework_TestCase {
 	/**
-	 * Path to fixture data for this test run
+	 * Path to fixture data for this test run.
+	 * 
+	 * @var string
 	 */
 	protected static $fixture_file = null;
 	
 	protected $originalMailer;
+	
 	protected $mailer;
+	
+	/**
+	 * @var YamlFixture
+	 */
+	protected $fixture; 
 	
 	function setUp() {
 		$className = get_class($this);
@@ -47,10 +50,9 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 
 			$dbadmin = new DatabaseAdmin();
 			$dbadmin->doBuild(true, false, true);
-
-			// Load the fixture into the database
-			$className = get_class($this);
-			$this->loadFixture($fixtureFile);
+		
+			$this->fixture = new YamlFixture($fixtureFile);
+			$this->fixture->saveIntoDatabase();
 		}
 		
 		// Set up email
@@ -100,51 +102,8 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 		$parser = new Spyc();
 		$fixtureContent = $parser->load(Director::baseFolder().'/'.$fixtureFile);
 		
-		$this->fixtureDictionary = array();
-		
-		foreach($fixtureContent as $dataClass => $items) {
-			foreach($items as $identifier => $fields) {
-				$obj = new $dataClass();
-				foreach($fields as $fieldName => $fieldVal) {
-					if($obj->many_many($fieldName) || $obj->has_many($fieldName)) {
-						$parsedItems = array();
-						$items = split(' *, *',trim($fieldVal));
-						foreach($items as $item) {
-							$parsedItems[] = $this->parseFixtureVal($item);
-						}
-						$obj->write();
-						if($obj->has_many($fieldName)) {
-							$obj->getComponents($fieldName)->setByIDList($parsedItems);
-						} elseif($obj->many_many($fieldName)) {
-							$obj->getManyManyComponents($fieldName)->setByIDList($parsedItems);
-						}
-					} elseif($obj->has_one($fieldName)) {
-						$obj->{$fieldName . 'ID'} = $this->parseFixtureVal($fieldVal);
-					} else {
-						$obj->$fieldName = $this->parseFixtureVal($fieldVal);
-					}
-				}
-				$obj->write();
-				
-				// Populate the dictionary with the ID
-				$this->fixtureDictionary[$dataClass][$identifier] = $obj->ID;
-			}
-		}
-	}
-	
-	/**
-	 * Parse a value from a fixture file.  If it starts with => it will get an ID from the fixture dictionary
-	 */
-	protected function parseFixtureVal($fieldVal) {
-		// Parse a dictionary reference - used to set foreign keys
-		if(substr($fieldVal,0,2) == '=>') {
-			list($a, $b) = explode('.', substr($fieldVal,2), 2);
-			return $this->fixtureDictionary[$a][$b];
-
-		// Regular field value setting
-		} else {
-			return $fieldVal;
-		}
+		$this->fixture = new YamlFixture($fixtureFile);
+		$this->fixture->saveIntoDatabase();
 	}
 	
 	function tearDown() {

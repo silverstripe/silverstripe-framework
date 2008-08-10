@@ -376,7 +376,7 @@ class DataObject extends ViewableData implements DataObjectInterface {
 		foreach($rightData as $key=>$rightVal) {
 			// don't merge conflicting values if priority is 'left'
 			if($priority == 'left' && $leftObj->{$key} !== $rightObj->{$key}) continue;
-				
+
 			// don't overwrite existing left values with empty right values (if $overwriteWithEmpty is set)
 			if($priority == 'right' && !$overwriteWithEmpty && empty($rightObj->{$key})) continue;
 
@@ -623,7 +623,12 @@ class DataObject extends ViewableData implements DataObjectInterface {
 								// (used mainly for has_one/has_many)
 								if(!$fieldObj) $fieldObj = DBField::create('Varchar', $this->record[$fieldName], $fieldName);
 
-								$fieldObj->setValue($this->record[$fieldName], $this->record);
+								// CompositeDBFields handle their own value storage; regular fields need to be
+								// re-populated from the database
+								if(!$fieldObj instanceof CompositeDBField) {
+									$fieldObj->setValue($this->record[$fieldName], $this->record);
+								}
+								
 								$fieldObj->writeToManipulation($manipulation[$class]);
 							}
 						}
@@ -829,7 +834,7 @@ class DataObject extends ViewableData implements DataObjectInterface {
 			user_error("DataObject::getComponent(): Unknown 1-to-1 component '$componentName' on class '$this->class'", E_USER_ERROR);
 		}
 	}
-	
+
 	/**
 	 * A cache used by component getting classes
 	 * @var array
@@ -878,10 +883,10 @@ class DataObject extends ViewableData implements DataObjectInterface {
 
 		return $result;
 	}
-	
+
 	/**
 	 * Get the query object for a $has_many Component.
-	 * 
+	 *
 	 * Use {@link DataObjectSet->setComponentInfo()} to attach metadata to the
 	 * resultset you're building with this query.
 	 * Use {@link DataObject->buildDataObjectSet()} to build a set out of the {@link SQLQuery}
@@ -900,7 +905,7 @@ class DataObject extends ViewableData implements DataObjectInterface {
 		}
 
 		$joinField = $this->getComponentJoinField($componentName);
-		
+
 		$id = $this->getField("ID");
 			
 		// get filter
@@ -977,9 +982,9 @@ class DataObject extends ViewableData implements DataObjectInterface {
 		// Join expression is done on SiteTree.ID even if we link to Page; it helps work around
 		// database inconsistencies
 		$componentBaseClass = ClassInfo::baseDataClass($componentClass);
-		
+
 		if($this->ID && is_numeric($this->ID)) {
-			
+				
 			if($componentClass) {
 				$query = $this->getManyManyComponentsQuery($componentName, $filter, $sort, $join, $limit);
 
@@ -1003,7 +1008,7 @@ class DataObject extends ViewableData implements DataObjectInterface {
 
 		return $result;
 	}
-	
+
 	/**
 	 * Get the query object for a $many_many Component.
 	 * Use {@link DataObjectSet->setComponentInfo()} to attach metadata to the
@@ -1020,7 +1025,7 @@ class DataObject extends ViewableData implements DataObjectInterface {
 	 */
 	public function getManyManyComponentsQuery($componentName, $filter = "", $sort = "", $join = "", $limit = "") {
 		list($parentClass, $componentClass, $parentField, $componentField, $table) = $this->many_many($componentName);
-		
+
 		$componentObj = singleton($componentClass);
 
 		// Join expression is done on SiteTree.ID even if we link to Page; it helps work around
@@ -1037,7 +1042,7 @@ class DataObject extends ViewableData implements DataObjectInterface {
 
 		if($filter) $query->where[] = $filter;
 		if($join) $query->from[] = $join;
-		
+
 		return $query;
 	}
 
@@ -1065,23 +1070,23 @@ class DataObject extends ViewableData implements DataObjectInterface {
 		if ($this->has_many() || $this->many_many()) {
 			$oldFields = $fieldSet;
 			$fieldSet = new FieldSet(
-				new TabSet("Root", new Tab("Main"))
+			new TabSet("Root", new Tab("Main"))
 			);
 			foreach($oldFields as $field) {
 				$fieldSet->addFieldToTab("Root.Main", $field);
 			}
 		}
-		
+
 		if($this->has_many()) {
 			// Add each relation as a separate tab
 			foreach($this->has_many() as $relationship => $component) {
 				$relationshipFields = singleton($component)->summaryFields();
 				$foreignKey = $this->getComponentJoinField($relationship);
 				$ctf = new ComplexTableField(
-					$this, 
-					$relationship, 
-					$component, 
-					$relationshipFields, 
+				$this,
+				$relationship,
+				$component,
+				$relationshipFields,
 					"getCMSFields", 
 					"$foreignKey = $this->ID"
 				);
@@ -1089,18 +1094,18 @@ class DataObject extends ViewableData implements DataObjectInterface {
 				$fieldSet->addFieldToTab("Root.$relationship", $ctf);
 			}
 		}
-		if ($this->many_many()) {	
+		if ($this->many_many()) {
 			foreach($this->many_many() as $relationship => $component) {
 				$relationshipFields = singleton($component)->summaryFields();
 				$filterWhere = $this->getManyManyFilter($relationship, $component);
 				$filterJoin = $this->getManyManyJoin($relationship, $component);
 				$ctf =  new ComplexTableField(
-					$this, 
-					$relationship, 
-					$component, 
-					$relationshipFields, 
+					$this,
+					$relationship,
+					$component,
+					$relationshipFields,
 					"getCMSFields", 
-					$filterWhere, 
+					$filterWhere,
 					'', 
 					$filterJoin
 				);
@@ -1126,17 +1131,17 @@ class DataObject extends ViewableData implements DataObjectInterface {
 		$classes = array_reverse(ClassInfo::ancestry($this->class));
 
 		list($parentClass, $componentClass, $parentField, $componentField, $table) = $this->many_many($componentName);
-		
+
 		if($baseTable == $parentClass) {
 			return "LEFT JOIN `$table` ON (`$parentField` = `$parentClass`.`ID` AND `$componentField` = '{$this->ID}')";
 		} else {
 			return "LEFT JOIN `$table` ON (`$componentField` = `$componentClass`.`ID` AND `$parentField` = '{$this->ID}')";
 		}
 	}
-	
+
 	function getManyManyFilter($componentName, $baseTable) {
 		list($parentClass, $componentClass, $parentField, $componentField, $table) = $this->many_many($componentName);
-		
+
 		return "`$table`.`$parentField` = '{$this->ID}'";
 	}
 
@@ -1294,14 +1299,14 @@ class DataObject extends ViewableData implements DataObjectInterface {
 	 * @return SearchContext
 	 */
 	public function getDefaultSearchContext() {
-		return new SearchContext($this->class, $this->searchable_fields(), $this->defaultSearchFilters());
+		return new SearchContext($this->class, new FieldSet($this->searchable_fields()), $this->defaultSearchFilters());
 	}
 
 	/**
 	 * Determine which properties on the DataObject are
 	 * searchable, and map them to their default {@link FormField}
 	 * representations. Used for scaffolding a searchform for {@link ModelAdmin}.
-	 * 
+	 *
 	 * Some additional logic is included for switching field labels, based on
 	 * how generic or specific the field type is.
 	 *
@@ -1349,7 +1354,7 @@ class DataObject extends ViewableData implements DataObjectInterface {
 				$fieldClass = $fieldClasses[$fieldName];
 				$fieldObject = new $fieldClass($fieldName);
 			} else {
-				$fieldObject = $this->dbObject($fieldName)->scaffoldFormField(); 
+				$fieldObject = $this->dbObject($fieldName)->scaffoldFormField();
 			}
 			$fields->push($fieldObject);
 		}
@@ -1434,7 +1439,7 @@ class DataObject extends ViewableData implements DataObjectInterface {
 			$fieldObj = eval($constructor);
 			if(isset($this->record[$field])) $fieldObj->setValue($this->record[$field], $this->record);
 			$this->record[$field] = $fieldObj;
-				
+
 			return $this->record[$field];
 		}
 
@@ -1492,7 +1497,7 @@ class DataObject extends ViewableData implements DataObjectInterface {
 		if($val instanceof DBField) {
 			$val->Name = $fieldName;
 			$this->record[$fieldName] = $val;
-				
+
 			// Situation 2: Passing a literal
 		} else {
 			$defaults = $this->stat('defaults');
@@ -1660,17 +1665,17 @@ class DataObject extends ViewableData implements DataObjectInterface {
 	public function canDelete($member = null) {
 		return Permission::check('ADMIN');
 	}
-	
+
 	/**
 	 * @todo Should canCreate be a static method?
-	 * 
+	 *
 	 * @param Member $member
 	 * @return boolean
 	 */
 	public function canCreate($member = null) {
 		return Permission::check('ADMIN');
 	}
-	
+
 	/**
 	 * Debugging used by Debug::show()
 	 *
@@ -1723,7 +1728,11 @@ class DataObject extends ViewableData implements DataObjectInterface {
 	 * @return DBField The field as a DBField object
 	 */
 	public function dbObject($fieldName) {
-		return $this->obj($fieldName);
+		if($fieldName == 'ID') {
+			return new PrimaryKey($fieldName, $this);
+		} else {
+			return $this->obj($fieldName);
+		}
 		/*
 		 $helperPair = $this->castingHelperPair($fieldName);
 		 $constructor = $helperPair['castingHelper'];
@@ -1744,9 +1753,7 @@ class DataObject extends ViewableData implements DataObjectInterface {
 	 * @return DBField
 	 */
 	public function relObject($fieldPath) {
-		//Debug::message("relObject:$fieldPath");
 		$parts = explode('.', $fieldPath);
-		//Debug::dump($parts);
 		$fieldName = array_pop($parts);
 		$component = $this;
 		foreach($parts as $relation) {
@@ -1754,30 +1761,30 @@ class DataObject extends ViewableData implements DataObjectInterface {
 				$component = singleton($rel);
 			} elseif ($rel = $component->has_many($relation)) {
 				$component = singleton($rel);
-				//Debug::dump($component);
 			} elseif ($rel = $component->many_many($relation)) {
-				//Debug::dump($rel);
 				$component = singleton($rel[1]);
-				//Debug::dump($component);
 			}
 		}
+
 		$object = $component->dbObject($fieldName);
-		//Debug::message("$component->class.$fieldName");
-		//Debug::show($component);
-		//Debug::message("$component->class.$fieldName == $object->class");
 
 		if (!($object instanceof DBField)) {
 			user_error("Unable to traverse to related object field [$fieldPath]", E_USER_ERROR);
-			//Debug::dump($object);
 		}
 		return $object;
 	}
 
 	/**
-	 * Temporary hack to return an association name, based on class, toget around the mangle
+	 * Temporary hack to return an association name, based on class, to get around the mangle
 	 * of having to deal with reverse lookup of relationships to determine autogenerated foreign keys.
+	 * 
+	 * @return String
 	 */
-	public function getReverseAssociation($className) {		
+	public function getReverseAssociation($className) {
+		if (is_array($this->many_many())) {
+			$many_many = array_flip($this->many_many());
+			if (array_key_exists($className, $many_many)) return $many_many[$className];
+		}
 		if (is_array($this->has_many())) {
 			$has_many = array_flip($this->has_many());
 			if (array_key_exists($className, $has_many)) return $has_many[$className];
@@ -1786,6 +1793,8 @@ class DataObject extends ViewableData implements DataObjectInterface {
 			$has_one = array_flip($this->has_one());
 			if (array_key_exists($className, $has_one)) return $has_one[$className];
 		}
+		
+		return false;
 	}
 
 	/**
@@ -1821,7 +1830,7 @@ class DataObject extends ViewableData implements DataObjectInterface {
 		$query->where($filter);
 		$query->orderby($sort);
 		$query->limit($limit);
-		
+
 		// Add SQL for multi-value fields on the base table
 		$databaseFields = $this->databaseFields();
 		if($databaseFields) foreach($databaseFields as $k => $v) {
@@ -2284,6 +2293,13 @@ class DataObject extends ViewableData implements DataObjectInterface {
 	 */
 	public function searchable_fields() {
 		$fields = $this->stat('searchable_fields');
+
+		// if fields were passed in numeric array,
+		// convert to an associative array
+		if($fields && array_key_exists(0, $fields)) {
+			$fields = array_fill_keys(array_values($fields), 'TextField');
+		}
+
 		if (!$fields) {
 			$fields = array_fill_keys(array_keys($this->summaryFields()), 'TextField');
 		} else {
@@ -2297,54 +2313,49 @@ class DataObject extends ViewableData implements DataObjectInterface {
 		}
 		return $fields;
 	}
-	
+
 	/**
 	 * Get any user defined searchable fields labels that
 	 * exist. Allows overriding of default field names in the form
 	 * interface actually presented to the user.
-	 * 
+	 *
 	 * The reason for keeping this separate from searchable_fields,
-	 * which would be a logical place for this functionality, is to 
+	 * which would be a logical place for this functionality, is to
 	 * avoid bloating and complicating the configuration array. Currently
 	 * much of this system is based on sensible defaults, and this property
 	 * would generally only be set in the case of more complex relationships
 	 * between data object being required in the search interface.
-	 * 
-	 * Generates labels based on name of the field itself, if no static property exists.
-	 * 
+	 *
+	 * Generates labels based on name of the field itself, if no static property 
+	 * {@link self::searchable_fields_labels} exists.
+	 *
 	 * @todo fix bad code
-	 * 
+	 *
 	 * @param $fieldName name of the field to retrieve
 	 * @return array of all element labels if no argument given
 	 * @return string of label if field
 	 */
 	public function searchable_fields_labels($fieldName=false) {
-		$labels = $this->stat('searchable_fields_labels');
-		if (is_array($labels)) {
-			if ($fieldName) {
-				if (isset($labels[$fieldName])) {
-					return $labels[$fieldName];
-				}
+		$custom_labels = $this->stat('searchable_fields_labels');
+
+		$fields = array_keys($this->searchable_fields());
+		$labels = array_combine($fields, $fields);
+		if(is_array($custom_labels)) $labels = array_merge($labels, $custom_labels);
+		if ($fieldName) {
+			if(array_key_exists($fieldName, $labels)) {
+				return $labels[$fieldName];
+			} elseif (strstr($fieldName, '.')) {
+				$parts = explode('.', $fieldName);
+				$label = $parts[count($parts)-2] . ' ' . $parts[count($parts)-1];
+				return $this->toLabel($label);
 			} else {
-				return $labels;
+				return $this->toLabel($fieldName);
 			}
 		} else {
-			$fields = array_keys($this->searchable_fields());
-			$labels = array_combine($fields, $fields);
-			if ($fieldName) {
-				if (strstr($fieldName, '.')) {
-					$parts = explode('.', $fieldName);
-					$label = $parts[count($parts)-2] . ' ' . $parts[count($parts)-1];
-					return $this->toLabel($label);
-				} else {
-					return $this->toLabel($fieldName);
-				}
-			} else {
-				return $labels;
-			}	
+			return $labels;
 		}
 	}
-	
+
 	/**
 	 * Get the default summary fields for this object.
 	 *
@@ -2354,13 +2365,13 @@ class DataObject extends ViewableData implements DataObjectInterface {
 	 */
 	public function summaryFields() {
 		$fields = $this->stat('summary_fields');
-		
+
 		// if fields were passed in numeric array,
 		// convert to an associative array
 		if($fields && array_key_exists(0, $fields)) {
 			$fields = array_combine(array_values($fields), array_values($fields));
 		}
-		
+
 		if (!$fields) {
 			$fields = array();
 			// try to scaffold a couple of usual suspects
@@ -2397,11 +2408,11 @@ class DataObject extends ViewableData implements DataObjectInterface {
 			if (is_int($name)) {
 				$filters[$type] = $this->relObject($type)->defaultSearchFilter();
 			} else {
-				if (is_array($type)) {
+				if(is_array($type)) {
 					$filter = current($type);
 					$filters[$name] = new $filter($name);
 				} else {
-					if (is_subclass_of($type, 'SearchFilter')) {
+					if(is_subclass_of($type, 'SearchFilter')) {
 						$filters[$name] = new $type($name);
 					} else {
 						$filters[$name] = $this->relObject($name)->defaultSearchFilter($name);
@@ -2596,7 +2607,7 @@ class DataObject extends ViewableData implements DataObjectInterface {
 	 * default display in the search form.
 	 */
 	public static $searchable_fields_labels = null;
-	
+
 	/**
 	 * Provides a default list of fields to be used by a 'summary'
 	 * view of this object.
