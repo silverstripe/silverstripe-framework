@@ -48,14 +48,16 @@ class SSViewer extends Object {
 				if(strpos($template,'/') !== false) list($templateFolder, $template) = explode('/', $template, 2);
 				else $templateFolder = null;
 				
+				// Base templates
+				if(isset($_TEMPLATE_MANIFEST[$template])) {
+					$this->chosenTemplates = array_merge($_TEMPLATE_MANIFEST[$template], $this->chosenTemplates);
+					unset($this->chosenTemplates['themes']);
+				}
+				
 				// Use the theme template if available
 				if(self::$current_theme && isset($_TEMPLATE_MANIFEST[$template]['themes'][self::$current_theme])) {
 					$this->chosenTemplates = array_merge($_TEMPLATE_MANIFEST[$template]['themes'][self::$current_theme], 
 						$this->chosenTemplates);
-
-				} else if(isset($_TEMPLATE_MANIFEST[$template])) {
-					$this->chosenTemplates = array_merge($_TEMPLATE_MANIFEST[$template], $this->chosenTemplates);
-					unset($this->chosenTemplates['themes']);
 				}
 				
 				if($templateFolder) {

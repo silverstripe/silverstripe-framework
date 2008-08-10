@@ -35,6 +35,14 @@ abstract class DataFormatter extends Object {
 	 * @var array
 	 */
 	protected $customFields = null;
+
+	/**
+	 * Allows addition of fields
+	 * (e.g. custom getters on a DataObject)
+	 *
+	 * @var array
+	 */
+	protected $customAddFields = null;
 	
 	/**
 	 * Specifies the mimetype in which all strings
@@ -132,6 +140,20 @@ abstract class DataFormatter extends Object {
 	public function getCustomFields() {
 		return $this->customFields;
 	}
+
+	/**
+	 * @param array $fields
+	 */
+	public function setCustomAddFields($fields) {
+		$this->customAddFields = $fields;
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getCustomAddFields() {
+		return $this->customAddFields;
+	}
 	
 	public function getOutputContentType() {
 		return $this->outputContentType;
@@ -159,6 +181,13 @@ abstract class DataFormatter extends Object {
 		} else {
 			// by default, all database fields are selected
 			$dbFields = $obj->inheritedDatabaseFields();
+		}
+		
+		if($this->customAddFields) {
+			foreach($this->customAddFields as $fieldName) {
+				// @todo Possible security risk by making methods accessible - implement field-level security
+				if($obj->hasField($fieldName) || $obj->hasMethod("get{$fieldName}")) $dbFields[$fieldName] = $fieldName; 
+			}
 		}
 		
 		// add default required fields

@@ -45,6 +45,10 @@ class Enum extends DBField {
 		DB::requireField($this->tableName, $this->name, "enum('" . implode("','", $this->enum) . "') character set utf8 collate utf8_general_ci default '{$this->default}'");
 	}
 	
+
+	public function scaffoldFormField($title = null) {
+		return $this->formField($title);
+	}
 	
 	/**
 	 * Return a dropdown field suitable for editing this field 

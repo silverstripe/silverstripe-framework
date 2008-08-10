@@ -231,6 +231,7 @@ class RestfulServer extends Controller {
 		}
 		
 		// set custom fields
+		if($customAddFields = $this->request->getVar('add_fields')) $formatter->setCustomAddFields(explode(',',$customAddFields));
 		if($customFields = $this->request->getVar('fields')) $formatter->setCustomFields(explode(',',$customFields));
 
 		// set relation depth

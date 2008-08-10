@@ -90,7 +90,10 @@ class Controller extends RequestHandlingData {
 	 */
 	function handleAction($request) {
 		// urlParams, requestParams, and action are set for backward compatability 
-		$this->urlParams = array_merge($this->urlParams, $request->latestParams());
+		foreach($request->latestParams() as $k => $v) {
+			if($v || !isset($this->urlParams[$k])) $this->urlParams[$k] = $v;
+		}
+
 		$this->action = str_replace("-","_",$request->param('Action'));
 		$this->requestParams = $request->requestVars();
 		if(!$this->action) $this->action = 'index';

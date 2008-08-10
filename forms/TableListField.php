@@ -176,10 +176,10 @@ class TableListField extends FormField {
 	 */
 	public $groupByField = null;
 	
-	function __construct($name, $sourceClass, $fieldList, $sourceFilter = null, 
+	function __construct($name, $sourceClass, $fieldList = null, $sourceFilter = null, 
 		$sourceSort = null, $sourceJoin = null) {
 
-		$this->fieldList = $fieldList;
+		$this->fieldList = ($fieldList) ? $fieldList : singleton($sourceClass)->summaryFields();
 		$this->sourceClass = $sourceClass;
 		$this->sourceFilter = $sourceFilter;
 		$this->sourceSort = $sourceSort;

@@ -138,7 +138,7 @@ class ComplexTableField extends TableListField {
 	 * @param string $sourceSort
 	 * @param string $sourceJoin
 	 */
-	function __construct($controller, $name, $sourceClass, $fieldList, $detailFormFields = null, $sourceFilter = "", $sourceSort = "", $sourceJoin = "") {
+	function __construct($controller, $name, $sourceClass, $fieldList = null, $detailFormFields = null, $sourceFilter = "", $sourceSort = "", $sourceJoin = "") {
 		$this->detailFormFields = $detailFormFields;
 		$this->controller = $controller;
 		$this->pageSize = 10;

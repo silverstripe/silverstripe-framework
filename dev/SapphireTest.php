@@ -17,7 +17,10 @@ require_once 'PHPUnit/Framework.php';
  * @subpackage testing
  */
 class SapphireTest extends PHPUnit_Framework_TestCase {
-	static $fixture_file = null;
+	/**
+	 * Path to fixture data for this test run
+	 */
+	protected static $fixture_file = null;
 	
 	protected $originalMailer;
 	protected $mailer;

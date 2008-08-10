@@ -87,7 +87,7 @@ class TableField extends TableListField {
 	 */
 	public $showAddRow = true;
 
-	function __construct($name, $sourceClass, $fieldList, $fieldTypes, $filterField = null, 
+	function __construct($name, $sourceClass, $fieldList = null, $fieldTypes, $filterField = null, 
 						$sourceFilter = null, $editExisting = true, $sourceSort = null, $sourceJoin = null) {
 		
 		$this->fieldTypes = $fieldTypes;
