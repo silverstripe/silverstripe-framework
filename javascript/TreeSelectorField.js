@@ -36,7 +36,7 @@ TreeDropdownField.prototype = {
 	},
 	
 	helperURLBase: function() {
-		return this.ownerForm().action + '&action_callfieldmethod=1&fieldName=' + this.inputTag.name + '&ajax=1' + ($('SecurityID') ? '&SecurityID=' + $('SecurityID').value : '');
+		return this.ownerForm().action + '/field/' + this.inputTag.name + '/';
 	},
 	ownerForm: function() {
 		var f =this.parentNode;
@@ -129,7 +129,8 @@ TreeDropdownField.prototype = {
 	},
 	
 	ajaxGetTree: function(after) {
-		var ajaxURL = this.helperURLBase() + '&methodName=gettree&forceValues=' + this.inputTag.value;
+		var ajaxURL = this.helperURLBase() + 'gettree?forceValues=' + this.inputTag.value;
+		ajaxURL += $('SecurityID') ? '&SecurityID=' + $('SecurityID').value : '';
 		new Ajax.Request(ajaxURL, {
 			method : 'get', 
 			onSuccess : after,
@@ -174,7 +175,10 @@ TreeDropdownField.prototype = {
 		var ul = this.treeNodeHolder();
 		ul.innerHTML = 'loading...';
 		
-		new Ajax.Request(this.options.dropdownField.helperURLBase() + '&methodName=getsubtree&SubtreeRootID=' + this.getIdx(), {
+		var ajaxURL = this.options.dropdownField.helperURLBase() + 'getsubtree?&SubtreeRootID=' + this.getIdx();
+		ajaxURL += $('SecurityID') ? '&SecurityID=' + $('SecurityID').value : '';
+		
+		new Ajax.Request(ajaxURL, {
 			onSuccess : this.installSubtree.bind(this),
 			onFailure : function(response) { errorMessage('error loading subtree', response); }
 		});

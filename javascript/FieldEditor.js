@@ -495,7 +495,7 @@ Behaviour.register(
 			
 
 			urlForFieldMethod: function(methodName) {
-				return this.ownerForm().action + '&action_callfieldmethod=1&fieldName=' + 'Fields' + '&ajax=1&methodName=' + methodName + '&NewID=' + this.numNewFields; 
+				return this.ownerForm().action + '/field/Fields/' + methodName + '?NewID=' + this.numNewFields; 
 			},
 			ownerForm: function() {
 				var f = this.parentNode;

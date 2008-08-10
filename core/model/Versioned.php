@@ -48,6 +48,14 @@ class Versioned extends DataObjectDecorator {
 		$this->liveStage = array_pop($stages);
 	}
 	
+	function extraDbFields() {
+		return array(
+			'has_many' => array(
+				'Versions' => 'SiteTree',
+			)
+		);
+	}
+	
 	function augmentSQL(SQLQuery &$query) {
 		// Get the content at a specific date
 		if($date = Versioned::$reading_archived_date) {
@@ -425,6 +433,10 @@ class Versioned extends DataObjectDecorator {
 		// We test for equality - if one of the versions doesn't exist, this will be false
 		$stagesAreEqual = DB::query("SELECT if(`$table1`.Version=`$table2`.Version,1,0) FROM `$table1` INNER JOIN `$table2` ON `$table1`.ID = `$table2`.ID AND `$table1`.ID = {$this->owner->ID}")->value();
 		return !$stagesAreEqual;
+	}
+	
+	function Versions($filter = "") {
+		return $this->allVersions($filter);
 	}
 	
 	/**

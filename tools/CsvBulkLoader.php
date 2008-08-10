@@ -60,6 +60,7 @@ class CsvBulkLoader extends BulkLoader {
 		}
 
 		$rowIndex = 0;
+		$rowIndex = 0;
 		while (($row = fgetcsv($file, 0, $this->delimiter, $this->enclosure)) !== FALSE) {
 			$rowIndex++;
 			

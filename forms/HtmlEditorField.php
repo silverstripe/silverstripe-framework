@@ -256,7 +256,7 @@ function HtmlEditorField_dataValue_processImage($parts) {
  * @package forms
  * @subpackage fields-formattedinput
  */
-class HtmlEditorField_Toolbar extends ViewableData {
+class HtmlEditorField_Toolbar extends RequestHandlingData {
 	protected $controller, $name;
 	
 	function __construct($controller, $name) {
@@ -347,7 +347,7 @@ class HtmlEditorField_Toolbar extends ViewableData {
 	function LinkForm() {
 		$form = new Form(
 			$this->controller,
-			"{$this->name}.LinkForm", 
+			"{$this->name}/LinkForm", 
 			new FieldSet(
 				new LiteralField('Heading', '<h2><img src="cms/images/closeicon.gif" alt="'._t('HtmlEditorField.CLOSE', 'close').'" title="'._t('HtmlEditorField.CLOSE', 'close').'" />'._t('HtmlEditorField.LINK', 'Link').'</h2>'),
 				new OptionsetField("LinkType", _t('HtmlEditorField.LINKTO', "Link to"), 
@@ -379,7 +379,7 @@ class HtmlEditorField_Toolbar extends ViewableData {
 	function ImageForm() {
 		$form = new Form(
 			$this->controller,
-			"{$this->name}.ImageForm", 
+			"{$this->name}/ImageForm", 
 			new FieldSet(
 				new LiteralField('Heading', '<h2><img src="cms/images/closeicon.gif" alt="'._t('HtmlEditorField.CLOSE', 'close').'" title="'._t('HtmlEditorField.CLOSE', 'close').'" />'._t('HtmlEditorField.IMAGE', 'Image').'</h2>'),
 				new TreeDropdownField("FolderID", _t('HtmlEditorField.FOLDER', "Folder"), "Folder"),
@@ -419,7 +419,7 @@ class HtmlEditorField_Toolbar extends ViewableData {
 	function FlashForm() {
 		$form = new Form(
 			$this->controller,
-			"{$this->name}.FlashForm", 
+			"{$this->name}/FlashForm", 
 			new FieldSet(
 				new LiteralField('Heading', '<h2><img src="cms/images/closeicon.gif" alt="'._t('HtmlEditorField.CLOSE', 'close').'" title="'._t('HtmlEditorField.CLOSE', 'close').'" />'._t('HtmlEditorField.FLASH', 'Flash').'</h2>'),
 				new TreeDropdownField("FolderID", _t('HtmlEditorField.FOLDER'), "Folder"),

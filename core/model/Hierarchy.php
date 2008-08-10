@@ -17,6 +17,16 @@ class Hierarchy extends DataObjectDecorator {
 	
 	function augmentWrite(&$manipulation) {
 	}
+	
+	function extraDbFields() {
+		return array(
+			'has_many' => array(
+				'Children' => 'SiteTree',
+				'StageChildren' => 'SiteTree',
+				'LiveChildren' => 'SiteTree',
+			)
+		);
+	}
 
 	/**
 	 * Returns the children of this DataObject as an XHTML UL. This will be called recursively on each child,

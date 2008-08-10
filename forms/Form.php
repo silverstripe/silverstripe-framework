@@ -501,7 +501,7 @@ class Form extends RequestHandlingData {
 	 */
 	function FormName() {
 		if($this->htmlID) return $this->htmlID;
-		else return $this->class . '_' . str_replace('.','',$this->name);
+		else return $this->class . '_' . str_replace(array('.','/'),'',$this->name);
 	}
 
 	/**

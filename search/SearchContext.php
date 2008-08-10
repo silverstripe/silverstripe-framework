@@ -79,7 +79,7 @@ class SearchContext extends Object {
 	 */
 	protected function applyBaseTableFields() {
 		$classes = ClassInfo::dataClassesFor($this->modelClass);
-		$fields = array($this->modelClass.'.*');
+		$fields = array(ClassInfo::baseDataClass($this->modelClass).'.*');
 		if($this->modelClass != $classes[0]) $fields[] = $classes[0].'.*';
 		//$fields = array_keys($model->db());
 		$fields[] = $classes[0].'.ClassName AS RecordClassName';
@@ -107,14 +107,14 @@ class SearchContext extends Object {
 			$query = $model->buildSQL();
 		}
 		$query->select = array_merge($query->select,$fields);
-		
+
 		$SQL_limit = Convert::raw2sql($limit);
 		$query->limit($SQL_limit);
 
 		$SQL_sort = (!empty($sort)) ? Convert::raw2sql($sort) : singleton($this->modelClass)->stat('default_sort');		
 		$query->orderby($SQL_sort);
 		foreach($searchParams as $key => $value) {
-			if ($value != '0') {
+			//if ($value != '0') {
 				$key = str_replace('__', '.', $key);
 				$filter = $this->getFilter($key);
 				if ($filter) {
@@ -122,7 +122,7 @@ class SearchContext extends Object {
 					$filter->setValue($value);
 					$filter->apply($query);
 				}
-			}
+			//}
 		}
 
 		return $query;

@@ -179,6 +179,10 @@ class SiteTree extends DataObject {
 	 * @var string
 	 */
 	public static $breadcrumbs_delimiter = " &raquo; ";
+	
+	static $searchable_fields = array(
+		'Title',
+	);
 
 
 	/**
@@ -738,8 +742,11 @@ class SiteTree extends DataObject {
 
 	/**
 	 * Return the title, description, keywords and language metatags.
+	 * 
+	 * @todo Make generator tag dynamically determine version number (currently defaults to "2.0")
+	 * @todo Move <title> tag in separate getter for easier customization and more obvious usage
+	 * 
 	 * @param boolean|string $includeTitle Show default <title>-tag, set to false for custom templating
-	 *
 	 * @param boolean $includeTitle Show default <title>-tag, set to false for
 	 *                              custom templating
 	 * @return string The XHTML metatags
