@@ -166,6 +166,14 @@ class TableListField extends FormField {
 	public $fieldFormatting = array();
 	
 	/**
+	 * @var array Specify custom escape for the fields, e.g. to escape all accurance of "\r", "\r\n" and "\n" of the field 
+	 * value, we need to set this field as array("\r"=>"", "\r\n"=>"", "\n"=>"") ;
+	 * Example: setFieldEscape(array("\""=>"\"\"","\r"=>"", "\r\n"=>"", "\n"=>"") is needed for exporting the table to a .csv 
+	 * file
+	 */
+	public $fieldEscape = array();
+	
+	/**
 	 * @var string
 	 */
 	public $exportButtonLabel = 'Export as CSV';
@@ -312,7 +320,7 @@ JS
 			// get query
 			$dataQuery = $this->getQuery();
 			
-			// we don't limit when doing certain actions
+			// we don't limit when doing certain actions        T
 			if(!isset($_REQUEST['methodName']) || !in_array($_REQUEST['methodName'],array('printall','export'))) {
 				$dataQuery->limit(array(
 					'limit' => $SQL_limit,
@@ -335,9 +343,9 @@ JS
 	function Items() {
 		$fieldItems = new DataObjectSet();
 		if($items = $this->sourceItems()) foreach($items as $item) {
+			$fieldItem = new TableListField_Item($item, $this);
 			if($item) $fieldItems->push(new TableListField_Item($item, $this));
 		}
-
 		return $fieldItems;
 	}
 	
@@ -740,7 +748,6 @@ JS
 			$record = $records->nextRecord();
 			$this->totalCount = $record['TotalCount'];
 		}
-
 		return $this->totalCount;
 	}
 	
@@ -783,6 +790,13 @@ JS
 	}
 	
 	/**
+	 * Get the CSV separator character.  Defaults to ,
+	 */
+	function getCsvSeparator() {
+		return $this->csvSeparator;
+	}
+	
+	/**
 	 * Remove the header row from the CSV export
 	 */
 	function removeCsvHeader() {
@@ -812,21 +826,32 @@ JS
 		// get data
 		$dataQuery = $this->getCsvQuery();
 		$records = $dataQuery->execute();
+		
 		$sourceClass = $this->sourceClass;
 		$dataobject = new $sourceClass();
 		$items = $dataobject->buildDataObjectSet($records, 'DataObjectSet');
 		
-		if($items) {
-			foreach($items as $item) {
-				$columnData = array();
-				foreach($csvColumns as $columnName => $columnTitle) {
-					$tmpColumnData = "\"" . str_replace("\"", "\"\"", $item->$columnName) . "\"";
-					$tmpColumnData = str_replace(array("\r", "\n"), "", $tmpColumnData);
-					$columnData[] = $tmpColumnData;
-				}
-				$fileData .= implode($separator, $columnData);
-				$fileData .= "\n";
+		$fieldItems = new DataObjectSet();
+		
+		if($items&&$items->count()) foreach($items as $item) {
+			$fieldItem = new TableListField_Item($item, $this);
+			if($item) $fieldItems->push(new TableListField_Item($item, $this));
+		}
+		
+		$this->setFieldFormatting(array());
+		$this->setFieldEscape(array(
+			"\""=>"\"\"",
+			"\r\n"=>"", 
+			"\r"=>"",
+			"\n"=>"",
+		));
+
+		if($fieldItems) {
+
+			foreach($fieldItems as $fieldItem) {
+				$fileData .= $fieldItem->renderwith("TableListField_Item_export");
 			}
+
 			HTTP::sendFileToBrowser($fileData, $fileName);
 		} else {
 			user_error("No records found", E_USER_ERROR);
@@ -838,7 +863,9 @@ JS
 	 * We need to instanciate this button manually as a normal button has no means of adding inline onclick-behaviour.
 	 */
 	function ExportLink() {
-		return Controller::join_links($this->Link(), 'export');
+		$exportLink = Controller::join_links($this->Link(), 'export');
+		if($this->extraLinkParams) $exportLink .= "?" . http_build_query($this->extraLinkParams);
+		return $exportLink;
 	}
 
 	function printall() {
@@ -902,6 +929,10 @@ JS
 
 	function setFieldFormatting($formatting) {
 		$this->fieldFormatting = $formatting;
+	}
+	
+	function setFieldEscape($escape){
+		$this->fieldEscape = $escape;
 	}
 	
 	/**
@@ -1057,14 +1088,21 @@ class TableListField_Item extends ViewableData {
 				$format = str_replace('__VAL__', '$value', $format);
 				eval('$value = "' . $format . '";');
 			}
+			
+			//escape
+			if($escape = $this->parent->fieldEscape){
+				foreach($escape as $search => $replace){
+					$value = str_replace($search, $replace, $value);
+				}
+			}
 						
 			$fields[] = new ArrayData(array(
 				"Name" => $fieldName, 
 				"Title" => $fieldTitle,
 				"Value" => $value,
+				"CsvSeparator" => $this->parent->getCsvSeparator(),
 			));
 		}
-		
 		return new DataObjectSet($fields);
 	}
 	
