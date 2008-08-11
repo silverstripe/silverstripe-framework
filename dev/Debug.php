@@ -480,7 +480,7 @@ class Debug {
 		$bt = debug_backtrace();
 		
 		// Ingore functions that are plumbing of the error handler
-		$ignoredFunctions = array('DebugView::writeTrace', 'CliDebugView::writeTrace', 'Debug::emailError','Debug::warningHandler','Debug::fatalHandler','errorHandler','Debug::showError','Debug::backtrace', 'exceptionHandler');
+		$ignoredFunctions = array('DebugView->writeTrace', 'CliDebugView->writeTrace', 'Debug::emailError','Debug::warningHandler','Debug::fatalHandler','errorHandler','Debug::showError','Debug::backtrace', 'exceptionHandler');
 		while( $bt && in_array(self::full_func_name($bt[0]), $ignoredFunctions) ) {
 			array_shift($bt);
 		}
