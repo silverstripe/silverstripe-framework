@@ -263,7 +263,7 @@ class SapphireTestReporter implements PHPUnit_Framework_TestListener {
 			foreach($suite['tests'] as $test) {
 				$testCount++;
 				($test['status'] == 1) ? $passCount++ : $failCount++;
-				if ($test['status'] == -1) {
+				if ($test['status'] != 1) {
 					echo "<div class=\"failure\"><span>&otimes; ". $this->testNameToPhrase($test['name']) ."</span><br>";
 					echo "<pre>".htmlentities($test['message'])."</pre><br>";
 					echo "<code>In line {$test['exception']['line']} of {$test['exception']['file']}</code></div>";
