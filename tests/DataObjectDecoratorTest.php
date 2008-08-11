@@ -3,7 +3,6 @@ class DataObjectDecoratorTest extends SapphireTest {
 	static $fixture_file = 'sapphire/tests/DataObjectTest.yml';
 	
 	function testOneToManyAssociationWithDecorator() {
-		/*
 		// Fails in RestfulServerTest
 		// Error: Object::__call() Method 'RelatedObjects' not found in class 'RestfulServerTest_Comment' 
 		$contact = new DataObjectDecoratorTest_Member();
@@ -30,7 +29,6 @@ class DataObjectDecoratorTest extends SapphireTest {
 		$this->assertEquals("Lorem ipsum dolor", $contact->RelatedObjects()->First()->FieldOne);
 		$this->assertEquals("Random notes", $contact->RelatedObjects()->First()->FieldTwo);
 		$contact->delete();
-		*/
 	}
 	
 }
@@ -72,5 +70,5 @@ class DataObjectDecoratorTest_RelatedObject extends DataObject implements TestOn
 	
 }
 
-//DataObject::add_extension('DataObjectDecoratorTest_Member', 'DataObjectDecoratorTest_ContactRole');
+DataObject::add_extension('DataObjectDecoratorTest_Member', 'DataObjectDecoratorTest_ContactRole');
 ?>
