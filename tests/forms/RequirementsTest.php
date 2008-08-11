@@ -16,9 +16,9 @@ class RequirementsTest extends SapphireTest {
 		$combinedFilePath = Director::baseFolder() . '/' . 'bc.js';
 		
 		$html = Requirements::includeInHTML(false, self::$html_template);
-		
+
 		/* COMBINED JAVASCRIPT FILE IS INCLUDED IN HTML HEADER */
-		$this->assertTrue((bool)preg_match('/src=".*\/bc\.js"/', $html), 'combined javascript file is included in html header');
+		$this->assertTrue((bool)preg_match('/src=".*\/bc\.js/', $html), 'combined javascript file is included in html header');
 		
 		/* COMBINED JAVASCRIPT FILE EXISTS */
 		$this->assertTrue(file_exists($combinedFilePath), 'combined javascript file exists');
@@ -28,11 +28,11 @@ class RequirementsTest extends SapphireTest {
 		$this->assertTrue((strpos(file_get_contents($combinedFilePath), "alert('c')") !== false), 'combined javascript has correct content');
 		
 		/* COMBINED FILES ARE NOT INCLUDED TWICE */
-		$this->assertFalse((bool)preg_match('/src=".*\/b\.js"/', $html), 'combined files are not included twice');
-		$this->assertFalse((bool)preg_match('/src=".*\/c\.js"/', $html), 'combined files are not included twice');
+		$this->assertFalse((bool)preg_match('/src=".*\/b\.js/', $html), 'combined files are not included twice');
+		$this->assertFalse((bool)preg_match('/src=".*\/c\.js/', $html), 'combined files are not included twice');
 		
 		/* NORMAL REQUIREMENTS ARE STILL INCLUDED */
-		$this->assertTrue((bool)preg_match('/src=".*\/a\.js"/', $html), 'normal requirements are still included');
+		$this->assertTrue((bool)preg_match('/src=".*\/a\.js/', $html), 'normal requirements are still included');
 
 		Requirements::clear_combined_files('bc.js');
 	}
@@ -46,7 +46,7 @@ class RequirementsTest extends SapphireTest {
 		Requirements::clear_combined_files('bc.js');
 		clearstatcache(); // needed to get accurate file_exists() results
 		$html = Requirements::includeInHTML(false, self::$html_template);
-		$this->assertFalse((bool)preg_match('/src=".*\/bc\.js"/', $html), 'blocked combined files are not included ');
+		$this->assertFalse((bool)preg_match('/src=".*\/bc\.js/', $html), 'blocked combined files are not included ');
 		Requirements::unblock('bc.js');
 
 		/* BLOCKED UNCOMBINED FILES ARE NOT INCLUDED */
