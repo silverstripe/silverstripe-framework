@@ -45,6 +45,13 @@ class FunctionalTest extends SapphireTest {
 	private $originalTheme = null;
 	
 	/**
+	 * If this is true, then 30x Location headers will be automatically followed.
+	 * If not, then you will have to manaully call $this->mainSession->followRedirection() to follow them.  However, this will let you inspect
+	 * the intermediary headers
+	 */
+	protected $autoFollowRedirection = true;
+	
+	/**
 	 * Returns the {@link Session} object for this test
 	 */
 	function session() {
@@ -83,7 +90,7 @@ class FunctionalTest extends SapphireTest {
 	function get($url) {
 		$this->cssParser = null;
 		$response = $this->mainSession->get($url);
-		if(is_object($response) && $response->getHeader('Location')) $response = $this->mainSession->followRedirection();
+		if($this->autoFollowRedirection && is_object($response) && $response->getHeader('Location')) $response = $this->mainSession->followRedirection();
 		return $response;
 	}
 
@@ -93,7 +100,7 @@ class FunctionalTest extends SapphireTest {
 	function post($url, $data) {
 		$this->cssParser = null;
 		$response = $this->mainSession->post($url, $data);
-		if(is_object($response) && $response->getHeader('Location')) $response = $this->mainSession->followRedirection();
+		if($this->autoFollowRedirection && is_object($response) && $response->getHeader('Location')) $response = $this->mainSession->followRedirection();
 		return $response;
 	}
 	
@@ -104,7 +111,7 @@ class FunctionalTest extends SapphireTest {
 	function submitForm($formID, $button = null, $data = array()) {
 		$this->cssParser = null;
 		$response = $this->mainSession->submitForm($formID, $button, $data);
-		if(is_object($response) && $response->getHeader('Location')) $response = $this->mainSession->followRedirection();
+		if($this->autoFollowRedirection && is_object($response) && $response->getHeader('Location')) $response = $this->mainSession->followRedirection();
 		return $response;
 	}
 	
