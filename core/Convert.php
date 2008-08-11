@@ -82,7 +82,7 @@ class Convert extends Object {
 		if(function_exists('json_encode')) {
 			return json_encode($val);	
 		} else {
-			require_once(Director::baseFolder() . '/sapphire/misc/json/JSON.php');			
+			require_once(Director::baseFolder() . '/sapphire/thirdparty/json/JSON.php');			
 			$json = new Services_JSON();
 			return $json->encode($val);
 		}
@@ -165,7 +165,7 @@ class Convert extends Object {
 		//if(function_exists('json_decode')) {
 		//	return json_decode($val);	
 		//} else {
-			require_once(Director::baseFolder() . '/sapphire/misc/json/JSON.php');			
+			require_once(Director::baseFolder() . '/sapphire/thirdparty/json/JSON.php');			
 			$json = new Services_JSON();
 			return $json->decode($val);
 		//}
