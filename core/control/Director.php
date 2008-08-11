@@ -164,6 +164,8 @@ class Director {
 		
 	/**
 	 * Handle an HTTP request, defined with a HTTPRequest object.
+	 *
+	 * @return HTTPResponse|string
 	 */
 	protected static function handleRequest(HTTPRequest $request, Session $session) {
 		krsort(Director::$rules);
@@ -452,10 +454,12 @@ class Director {
 	 * Returns the Absolute URL of the site root, embedding the current basic-auth credentials into the URL.
 	 */
 	 static function absoluteBaseURLWithAuth() {
-	 	if($_SERVER['PHP_AUTH_USER'])
-			$login = "$_SERVER[PHP_AUTH_USER]:$_SERVER[PHP_AUTH_PW]@";
-
-	 	if($_SERVER['SSL']) $s = "s";
+		$s = "";
+		$login = "";
+		
+	 	if(isset($_SERVER['PHP_AUTH_USER'])) $login = "$_SERVER[PHP_AUTH_USER]:$_SERVER[PHP_AUTH_PW]@";
+	 	if(isset($_SERVER['SSL']) && $_SERVER['SSL'] != 'Off') $s = "s";
+		
 	 	return "http$s://" . $login .  $_SERVER['HTTP_HOST'] . Director::baseURL();
 	 }
 

@@ -68,6 +68,7 @@ class RequestHandlingData extends ViewableData {
 	 * @param $params The parameters taken from the parsed URL of the parent url handler
 	 * @param $request The {@link HTTPRequest} object that is reponsible for distributing URL parsing
 	 * @uses HTTPRequest
+	 * @return HTTPResponse|RequestHandlingData|string|array
 	 */
 	function handleRequest($request) {
 		$this->request = $request;

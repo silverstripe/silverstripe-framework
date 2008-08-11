@@ -154,6 +154,94 @@ class DataObjectTest extends SapphireTest {
 			$this->assertTrue($comment->ParentID == $page->ID);
 		}
 	}
+	
+	/**
+	 * @todo Test removeMany() and addMany() on $many_many relationships
+	 */
+	function testManyManyRelationships() {
+	   $player1 = $this->fixture->objFromFixture('DataObjectTest_Player', 'player1');
+	   $player2 = $this->fixture->objFromFixture('DataObjectTest_Player', 'player2');
+	   $team1 = $this->fixture->objFromFixture('DataObjectTest_Team', 'team1');
+	   $team2 = $this->fixture->objFromFixture('DataObjectTest_Team', 'team2');
+	   
+	   // Test adding single DataObject by reference
+	   $player1->Teams()->add($team1);
+	   $player1->flushCache();
+	   $compareTeams = new ComponentSet($team1);
+	   $this->assertEquals(
+	      $player1->Teams()->column('ID'),
+	      $compareTeams->column('ID'),
+	      "Adding single record as DataObject to many_many"
+	   );
+	   
+	   // test removing single DataObject by reference
+	   $player1->Teams()->remove($team1);
+	   $player1->flushCache();
+	   $compareTeams = new ComponentSet();
+	   $this->assertEquals(
+	      $player1->Teams()->column('ID'),
+	      $compareTeams->column('ID'),
+	      "Removing single record as DataObject from many_many"
+	   );
+	   
+	   // test adding single DataObject by ID
+	   $player1->Teams()->add($team1->ID);
+	   $player1->flushCache();
+	   $compareTeams = new ComponentSet($team1);
+	   $this->assertEquals(
+	      $player1->Teams()->column('ID'),
+	      $compareTeams->column('ID'),
+	      "Adding single record as ID to many_many"
+	   );
+	   
+	   // test removing single DataObject by ID
+	   $player1->Teams()->remove($team1->ID);
+	   $player1->flushCache();
+	   $compareTeams = new ComponentSet();
+	   $this->assertEquals(
+	      $player1->Teams()->column('ID'),
+	      $compareTeams->column('ID'),
+	      "Removing single record as ID from many_many"
+	   );
+	}
+	
+	/**
+	 * @todo Extend type change tests (e.g. '0'==NULL)
+	 */
+	function testChangedFields() {
+		$page = $this->fixture->objFromFixture('Page', 'home');
+		$page->Title = 'Home-Changed';
+		$page->ShowInMenus = true;
+
+		$this->assertEquals(
+			$page->getChangedFields(false, 1),
+			array(
+				'Title' => array(
+					'before' => 'Home',
+					'after' => 'Home-Changed',
+					'level' => 2
+				),
+				'ShowInMenus' => array(
+					'before' => 1,
+					'after' => true,
+					'level' => 1
+				)
+			),
+			'Changed fields are correctly detected with strict type changes (level=1)'
+		);
+		
+		$this->assertEquals(
+			$page->getChangedFields(false, 2),
+			array(
+				'Title' => array(
+					'before'=>'Home',
+					'after'=>'Home-Changed',
+					'level' => 2
+				)
+			),
+			'Changed fields are correctly detected while ignoring type changes (level=2)'
+		);
+	}
 }
 
 ?>

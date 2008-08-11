@@ -119,7 +119,11 @@ class CheckboxSetField extends OptionsetField {
 		$fieldname = $this->name ;
 		
 		if($fieldname && $record && ($record->has_many($fieldname) || $record->many_many($fieldname))) {
-			$record->$fieldname()->setByIDList($this->value);
+			$idList = array();
+			foreach($this->value as $id => $bool) {
+			   if($bool) $idList[] = $id;
+			}
+			$record->$fieldname()->setByIDList($idList);
 		} elseif($fieldname && $record) {
 			if($this->value) {
 				$this->value = str_replace(",", "{comma}", $this->value);
@@ -127,6 +131,20 @@ class CheckboxSetField extends OptionsetField {
 			} else {
 				$record->$fieldname = '';
 			}
+		}
+	}
+	
+	/**
+	 * Return the CheckboxSetField value, as an array of the selected item keys
+	 */
+	function dataValue() {
+		if($this->value){
+			// Filter items to those who aren't 0
+			$filtered = array();
+			foreach($this->value as $item) if($item) $filtered[] = str_replace(",", "{comma}", $item); 
+			return implode(",", $filtered);
+		} else {
+			return '';
 		}
 	}
 	

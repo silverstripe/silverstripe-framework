@@ -28,6 +28,7 @@ Director::addRules(10, array(
 	'' => 'RootURLController',
 	'sitemap.xml' => 'GoogleSitemap',
 	'api/v1' => 'RestfulServer',
+	'soap/v1' => 'SOAPModelAccess',
 	'dev' => 'DevelopmentAdmin'
 ));
 

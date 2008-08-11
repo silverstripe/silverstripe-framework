@@ -23,3 +23,15 @@ Page:
    page2:
       Title: Second Page
 
+DataObjectTest_Team:
+   team1:
+      Title: Team 1
+   team2:
+      Title: Team 2
+      
+DataObjectTest_Player:
+   player1:
+      FirstName: Player 1
+   player2:
+      FirstName: Player 2
+      Teams: =>DataObjectTest_Team.team1,=>DataObjectTest_Team.team2

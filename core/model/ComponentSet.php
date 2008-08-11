@@ -157,36 +157,31 @@ class ComponentSet extends DataObjectSet {
 	function setByIDList($idList) {
 		$has = array();
 		// Index current data
-		if($this->items) {
-			foreach( $this->items as $item )
-				$has[$item->ID] = true;
+		if($this->items) foreach($this->items as $item) {
+		   $has[$item->ID] = true;
 		}
 		
 		// Keep track of items to delete
-		if( isset( $has ) )	
-			$itemsToDelete = $has;
+		$itemsToDelete = $has;
 		
-		if($idList){
-			foreach($idList as $id) {
-				if( isset( $itemsToDelete ) )
-					$itemsToDelete[$id] = false;
-				if( ! isset( $has ) || ( $id && ! isset( $has[$id] ) ) )
-					$this->add($id);
-			}
+		// add items in the list
+		// $id is the database ID of the record
+		if($idList) foreach($idList as $id) {
+			$itemsToDelete[$id] = false;
+			if($id && !isset($has[$id])) $this->add($id);
 		}
-		// Delete any unmentionedItems
-		if( isset( $itemsToDelete ) ) {
-			foreach($itemsToDelete as $id => $actuallyDelete) {
-				if($actuallyDelete) $removeList[] = $id;
-			}
-			
-			if( isset( $removeList ) )
-				$this->removeMany($removeList);
+
+		// delete items not in the list
+		$removeList = array();
+		foreach($itemsToDelete as $id => $actuallyDelete) {
+			if($actuallyDelete) $removeList[] = $id;
 		}
+		$this->removeMany($removeList);
 	}
 	
 	/**
 	 * Remove an item from this set.
+	 *
 	 * @param DataObject|string|int $item Item to remove, either as a DataObject or as the ID.
 	 */
 	function remove($item) {
@@ -226,20 +221,19 @@ class ComponentSet extends DataObjectSet {
 	
 	/**
 	 * Remove many items from this set.
-	 * @param array $itemList The items to remove.
+	 Ü
+	 * @param array $itemList The items to remove, as a numerical array with IDs or as a DataObjectSet
 	 */
 	function removeMany($itemList) {
+		if(!count($itemList)) return false;
+		
 		if($this->type == '1-to-many') {
-			if(isset($itemList)) {
-				foreach($itemList as $item) $this->remove($item);
-			}
+			foreach($itemList as $item) $this->remove($item);
 		} else {
-			if(isset($itemList)) {
-				$itemCSV = implode(", ", $itemList);
-				$parentField = $this->ownerClass . 'ID';
-				$childField = ($this->childClass == $this->ownerClass) ? "ChildID" : ($this->childClass . 'ID');
-				DB::query("DELETE FROM `$this->tableName` WHERE $parentField = {$this->ownerObj->ID} AND $childField IN ($itemCSV)");
-			}
+			$itemCSV = implode(", ", $itemList);
+			$parentField = $this->ownerClass . 'ID';
+			$childField = ($this->childClass == $this->ownerClass) ? "ChildID" : ($this->childClass . 'ID');
+			DB::query("DELETE FROM `$this->tableName` WHERE $parentField = {$this->ownerObj->ID} AND $childField IN ($itemCSV)");
 		}
 	}
 	

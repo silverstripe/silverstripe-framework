@@ -141,7 +141,7 @@ class SQLQuery extends Object {
 	 * @return SQLQuery This instance 
 	 */
 	public function leftJoin($table, $onPredicate) {
-		$this->from[$table] = "LEFT JOIN $table ON $onPredicate";
+		$this->from[$table] = "LEFT JOIN `$table` ON $onPredicate";
 		return $this;
 	}
 	

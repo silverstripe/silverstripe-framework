@@ -1,0 +1,38 @@
+SoapModelAccessTest_Comment:
+   comment1:
+      Name: Joe
+      Comment: This is a test comment
+Member:
+   editor:
+      FirstName: Editor
+      Email: editor@test.com
+      Password: editor
+   user:
+      FirstName: User
+      Email: user@test.com
+      Password: user
+Group:
+   editorgroup:
+      Title: Editors
+      Code: editors
+      Members: =>Member.editor
+   usergroup:
+      Title: Users
+      Code: users
+      Members: =>Member.user
+Permission:
+   perm1:
+      Code: CREATE_Comment
+      Group: =>Group.usergroup
+   perm3:
+      Code: EDIT_Comment
+      Group: =>Group.editorgroup
+   perm4:
+      Code: DELETE_Comment
+      Group: =>Group.editorgroup
+   perm5:
+      Code: CREATE_Comment
+      Group: =>Group.editorgroup
+SoapModelAccessTest_Page:
+   page1:
+       Title: Testpage without API Access

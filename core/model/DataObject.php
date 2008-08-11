@@ -1803,7 +1803,7 @@ class DataObject extends ViewableData implements DataObjectInterface {
 
 		$object = $component->dbObject($fieldName);
 
-		if (!($object instanceof DBField)) {
+		if (!($object instanceof DBField) && !($object instanceof ComponentSet)) {
 			user_error("Unable to traverse to related object field [$fieldPath] on [$this->class]", E_USER_ERROR);
 		}
 		return $object;
@@ -2057,7 +2057,7 @@ class DataObject extends ViewableData implements DataObjectInterface {
 	}
 
 	/**
-	 * Flush the cached results for get_one()
+	 * Flush the cached results for all relations (has_one, has_many, many_many)
 	 */
 	public function flushCache() {
 		if($this->class == 'DataObject') {
@@ -2073,6 +2073,8 @@ class DataObject extends ViewableData implements DataObjectInterface {
 			// if(DataObject::$cache_get_one[$class]) foreach(DataObject::$cache_get_one[$class] as $obj) if($obj) $obj->destroy();
 			DataObject::$cache_get_one[$class] = null;
 		}
+		
+		$this->componentCache = array();
 	}
 
 	/**
@@ -2450,6 +2452,10 @@ class DataObject extends ViewableData implements DataObjectInterface {
 		$filters = array();
 		foreach($this->searchableFields() as $name => $spec) {
 			$filterClass = $spec['filter'];
+			// if $filterClass is not set a name of any subclass of SearchFilter than assing 'PartiailMatchFilter' to it
+			if (!is_subclass_of($filterClass, 'SearchFilter')) {
+				$filterClass = 'PartialMatchFilter';
+			}
 			$filters[$name] = new $filterClass($name);
 		}
 		return $filters;

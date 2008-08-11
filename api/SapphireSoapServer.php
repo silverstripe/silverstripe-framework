@@ -9,6 +9,7 @@ class SapphireSoapServer extends Controller {
 	static $methods = array();
 	static $xsd_types = array(
 		'int' => 'xsd:int',
+		'boolean' => 'xsd:boolean',
 		'string' => 'xsd:string',
 		'binary' => 'xsd:base64Binary',
 	);
@@ -20,7 +21,7 @@ class SapphireSoapServer extends Controller {
 	}
 	
 	function getWSDLURL() {
-		return Director::absoluteBaseURLWithAuth() . $this->class . "/wsdl";
+		return Director::absoluteBaseURLWithAuth() . $this->Link() . "wsdl";
 	}
 	
 	function Methods() {
