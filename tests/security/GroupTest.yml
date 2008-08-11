@@ -1,5 +1,25 @@
 Group:
-    group1:
-        Title: Group 1
-    group2:
-        Title: Group 2
+   admingroup:
+      Code: admingroup
+   parentgroup:
+      Code: parentgroup
+   childgroup:
+      Code: childgroup
+      Parent: =>Group.parentgroup
+   group1:
+      Title: Group 1
+   group2:
+      Title: Group 2
+GroupTest_Member:
+   admin:
+      FirstName: Admin
+      Groups: =>Group.admingroup
+   parentgroupuser:
+      FirstName: Parent Group User
+      Groups: =>Group.parentgroup
+   childgroupuser:
+      FirstName: Child Group User
+      Groups: =>Group.childgroup
+   allgroupuser:
+      FirstName: All Group User
+      Groups: =>Group.admingroup,=>Group.parentgroup,=>Group.childgroup
