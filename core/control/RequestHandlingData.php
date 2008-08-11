@@ -177,4 +177,13 @@ class RequestHandlingData extends ViewableData {
 		$r->setStatuscode($errorCode);
 		return $r;
 	}
+	
+	/**
+	 * Returns the HTTPRequest object that this controller is using.
+	 *
+	 * @return HTTPRequest
+	 */
+	function getRequest() {
+		return $this->request;
+	}
 }

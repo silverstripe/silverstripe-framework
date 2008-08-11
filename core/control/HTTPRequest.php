@@ -335,4 +335,22 @@ class HTTPRequest extends Object implements ArrayAccess {
 	function allParsed() {
 		return sizeof($this->dirParts) <= $this->unshiftedButParsedParts;
 	}
+	
+	/**
+	 * Returns the client IP address which
+	 * originated this request.
+	 *
+	 * @return string
+	 */
+	function getIP() {
+		if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
+	  		//check ip from share internet
+			return $_SERVER['HTTP_CLIENT_IP'];
+		} elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+	  		//to check ip is pass from proxy
+			return  $_SERVER['HTTP_X_FORWARDED_FOR'];
+		} else {
+			return $_SERVER['REMOTE_ADDR'];
+		}
+	}
 }

@@ -599,7 +599,7 @@ class DataObject extends ViewableData implements DataObjectInterface {
 					
 				// New records have their insert into the base data table done first, so that they can pass the
 				// generated primary key on to the rest of the manipulation
-				if(!$this->record['ID'] && isset($ancestry[0])) {
+				if((!isset($this->record['ID']) || !$this->record['ID']) && isset($ancestry[0])) {
 					$baseTable = $ancestry[0];
 
 					DB::query("INSERT INTO `{$baseTable}` SET Created = NOW()");
@@ -2212,17 +2212,14 @@ class DataObject extends ViewableData implements DataObjectInterface {
 		$defaultRecords = $this->stat('default_records');
 
 		if(!empty($defaultRecords)) {
-			// Populate with default data if table is empty
-			$baseClass = ClassInfo::baseDataClass($this->class);
-			if($baseClass) {
-				$hasData = (DB::query("SELECT ID FROM `{$baseClass}`")->value());
-				if(!$hasData) {
-					foreach($defaultRecords as $record) {
-						$obj = new $baseClass($record);
-						$obj->write();
-					}
-					Database::alteration_message("Added default records to $baseClass table","created");
+			$hasData = DataObject::get_one($this->class);
+			if(!$hasData) {
+				$className = $this->class;
+				foreach($defaultRecords as $record) {
+					$obj = new $className($record);
+					$obj->write();
 				}
+				Database::alteration_message("Added default records to $className table","created");
 			}
 		}
 

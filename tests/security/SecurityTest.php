@@ -128,6 +128,42 @@ class SecurityTest extends SapphireTest {
 		$member2 = DataObject::get_by_id("Member", $this->idFromFixture('Member', 'noexpiry'));
 		$this->assertNotNull($member2->LockedOutUntil);
 	}
+	
+	function testUnsuccessfulLoginAttempts() {
+		Security::set_login_recording(true);
+		
+		/* UNSUCCESSFUL ATTEMPTS WITH WRONG PASSWORD FOR EXISTING USER ARE LOGGED */
+		$this->get('Security/login');
+		$this->doTestLoginFormFunctional('sam@silverstripe.com', 'wrongpassword');
+		$attempt = DataObject::get_one('LoginAttempt', 'Email = "sam@silverstripe.com"');
+		$this->assertTrue(is_object($attempt));
+		$member = DataObject::get_one('Member', 'Email = "sam@silverstripe.com"');
+		$this->assertEquals($attempt->Status, 'Failure');
+		$this->assertEquals($attempt->Email, 'sam@silverstripe.com');
+		$this->assertEquals($attempt->Member(), $member);
+		
+		/* UNSUCCESSFUL ATTEMPTS WITH NONEXISTING USER ARE LOGGED */
+		$this->get('Security/login');
+		$this->doTestLoginFormFunctional('wronguser@silverstripe.com', 'wrongpassword');
+		$attempt = DataObject::get_one('LoginAttempt', 'Email = "wronguser@silverstripe.com"');
+		$this->assertTrue(is_object($attempt));
+		$this->assertEquals($attempt->Status, 'Failure');
+		$this->assertEquals($attempt->Email, 'wronguser@silverstripe.com');
+	}
+	
+	function testSuccessfulLoginAttempts() {
+		Security::set_login_recording(true);
+		
+		/* SUCCESSFUL ATTEMPTS ARE LOGGED */
+		$this->get('Security/login');
+		$this->doTestLoginFormFunctional('sam@silverstripe.com', '1nitialPassword');
+		$attempt = DataObject::get_one('LoginAttempt', 'Email = "sam@silverstripe.com"');
+		$member = DataObject::get_one('Member', 'Email = "sam@silverstripe.com"');
+		$this->assertTrue(is_object($attempt));
+		$this->assertEquals($attempt->Status, 'Success');
+		$this->assertEquals($attempt->Email, 'sam@silverstripe.com');
+		$this->assertEquals($attempt->Member(), $member);
+	}
 
 	/**
 	 * Execute a log-in form using Director::test().
@@ -145,10 +181,29 @@ class SecurityTest extends SapphireTest {
 	}
 	
 	/**
+	 * Execute a log-in form using Director::test().
+	 * Helper method for the tests above
+	 */
+	function doTestLoginFormFunctional($email, $password) {
+		$this->submitForm(
+			"MemberLoginForm_LoginForm", 
+			null,
+			array(
+				'Email' => $email, 
+				'Password' => $password, 
+				'AuthenticationMethod' => 'MemberAuthenticator',
+				'action_dologin' => 1,
+				'BackURL' => 'test/link'
+			)
+		); 
+	}
+	
+	/**
 	 * Get the error message on the login form
 	 */
 	function loginErrorMessage($session) {
 		return $session->inst_get('FormInfo.MemberLoginForm_LoginForm.formError.message');
-	}
+	}	
 	
 }
+?>

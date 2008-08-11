@@ -34,6 +34,23 @@ class MemberAuthenticator extends Authenticator {
 			$member = null;
 		}
 	}
+	
+	// Optionally record every login attempt as a {@link LoginAttempt} object
+	if(Security::login_recording()) {
+		$attempt = new LoginAttempt();
+		if($member) {
+			// successful login (member is existing with matching password)
+			$attempt->MemberID = $member->ID;
+			$attempt->Status = 'Success';
+		} else {
+			// failed login - we're trying to see if a user exists with this email (disregarding wrong passwords)
+			$existingMember = DataObject::get_one("Member", "Email = '$SQL_user'");
+			if($existingMember) $attempt->MemberID = $existingMember->ID;
+			$attempt->Status = 'Failure';
+		}
+		$attempt->Email = $RAW_data['Email'];
+		$attempt->write();
+	}
 
     if($member) {
 		Session::clear("BackURL");

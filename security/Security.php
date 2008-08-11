@@ -81,6 +81,14 @@ class Security extends Controller {
 	}
 	
 	/**
+	 * Enable or disable recording of login attempts
+	 * through the {@link LoginRecord} object.
+	 * 
+	 * @var boolean $login_recording
+	 */
+	protected static $login_recording = false;
+	
+	/**
 	 * Set location of word list file
 	 * 
 	 * @param string $wordListFile Location of word list file
@@ -895,6 +903,23 @@ class Security extends Controller {
 			ClassInfo::hasTable('Permission') &&
 			(($permissionFields = DB::fieldList('Permission')) && isset($permissionFields['Type'])) &&
 			(($memberFields = DB::fieldList('Member')) && isset($memberFields['RememberLoginToken']));
+	}
+	
+	/**
+	 * Enable or disable recording of login attempts
+	 * through the {@link LoginRecord} object.
+	 * 
+	 * @param boolean $bool
+	 */
+	public static function set_login_recording($bool) {
+		self::$login_recording = (bool)$bool;
+	}
+	
+	/**
+	 * @return boolean
+	 */
+	public static function login_recording() {
+		return self::$login_recording;
 	}
 
 }

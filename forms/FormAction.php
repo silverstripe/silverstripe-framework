@@ -6,8 +6,18 @@
  * @subpackage actions
  */
 class FormAction extends FormField {
+
 	protected $extraData;
+
 	protected $action;
+	
+	/**
+	 * Enables the use of <button> instead of <input>
+	 * in {@link Field()} - for more customizeable styling.
+	 * 
+	 * @var boolean $useButtonTag
+	 */
+	public $useButtonTag = false;
 	
 	/**
 	 * Create a new action button.
@@ -46,7 +56,12 @@ class FormAction extends FormField {
 	
 	function Field() {
 		$titleAttr = $this->description ? "title=\"" . Convert::raw2att($this->description) . "\"" : '';
-		return "<input class=\"action " . $this->extraClass() . "\" id=\"" . $this->id() . "\" type=\"submit\" name=\"$this->action\" value=\"" . $this->attrTitle() . "\" $titleAttr />\n";
+		if($this->useButtonTag) {
+			return "<button class=\"action " . $this->extraClass() . "\" id=\"" . $this->id() . "\" type=\"submit\" name=\"$this->action\" $titleAttr />" . $this->attrTitle() . "</button>\n";
+		} else {
+			return "<input class=\"action " . $this->extraClass() . "\" id=\"" . $this->id() . "\" type=\"submit\" name=\"$this->action\" value=\"" . $this->attrTitle() . "\" $titleAttr />\n";
+		}
+		
 	}
 	
 	/**
