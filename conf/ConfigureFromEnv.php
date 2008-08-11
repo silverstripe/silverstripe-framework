@@ -59,3 +59,7 @@ if(defined('SS_DEFAULT_ADMIN_USERNAME')) {
 	if(!defined('SS_DEFAULT_ADMIN_PASSWORD')) user_error("SS_DEFAULT_ADMIN_PASSWORD must be defined in your _ss_environment.php, if SS_DEFAULT_ADMIN_USERNAME is defined.  See http://doc.silverstripe.com/doku.php?id=environment-management for more infomration", E_USER_ERROR);
 	Security::setDefaultAdmin(SS_DEFAULT_ADMIN_USERNAME, SS_DEFAULT_ADMIN_PASSWORD);
 }
+
+if(defined('SS_ERROR_LOG')) {
+	Debug::log_errors_to(SS_ERROR_LOG);
+}
