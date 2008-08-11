@@ -110,7 +110,24 @@ class ComplexTableField extends TableListField {
 	 * @var boolean
 	 */
 	protected $relationAutoSetting = true;
-
+	
+	public $actions = array(
+		'show' => array(
+			'label' => 'Show',
+			'icon' => 'cms/images/show.png',
+			'class' => 'popuplink showlink',
+		),
+		'edit' => array(
+			'label' => 'Edit',
+			'icon' => 'cms/images/edit.gif', 
+			'class' => 'popuplink editlink',
+		),
+		'delete' => array(
+			'label' => 'Delete',
+			'icon' => 'cms/images/delete.gif', 
+			'class' => 'popuplink deletelink',
+		),
+	);
 
 	static $url_handlers = array(
 		'item/$ID' => 'handleItem',
@@ -792,6 +809,14 @@ class ComplexTableField_Item extends TableListField_Item {
 
 	function DeleteLink() {
 		return $this->Link() . "/delete";
+	}
+	
+	/**
+	 * @param String $action
+	 * @return boolean
+	 */
+	function IsDefaultAction($action) {
+		return ($action == $this->parent->defaultAction);
 	}
 }
 

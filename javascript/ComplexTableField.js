@@ -13,10 +13,28 @@ ComplexTableField.prototype = {
 		rules['#'+this.id+' table.data a.popuplink'] = {onclick: this.openPopup.bind(this)};
 		rules['#'+this.id+' table.data tbody td'] = {onclick: this.openPopup.bind(this)};
 		
+		// invoke row action-link based on default-action set in classname
+		if(defaultAction) {
+			rules['#'+this.id+' table.data tbody td'] = {
+				onclick: function(e) {
+					var link = $$('.'+defaultAction, Event.element(e).parentNode)[0].getAttribute('href');
+					this.openPopup(null, link);
+					return false;
+				}.bind(this)
+			};
+		}
 		Behaviour.register(rules);
 		
 		// HACK If already in a popup, we can't allow add (doesn't save existing relation correctly)
 		if(window != top) $$('#'+this.id+' table.data a.addlink').each(function(el) {Element.hide(el);});
+	},
+	
+	getDefaultAction: function() {
+		// try to get link class from <td class="action default"><a href="...
+		var links = $$('#'+this.id+' table.data tbody .default a');
+		// fall back to first given link
+		if(!links || !links[0]) links = $$('#'+this.id+' table.data tbody .action a');
+		return (links && links[0]) ? $A(Element.classNames(links[0])).last() : false;
 	},
 	
 	/**

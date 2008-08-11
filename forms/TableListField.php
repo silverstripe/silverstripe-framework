@@ -79,6 +79,8 @@ class TableListField extends FormField {
 	 */
 	public $Markable;
 	
+	public $MarkableTitle = null;
+	
 	/**
 	 * @var $readOnly boolean Deprecated, please use $permssions instead
 	 */
@@ -86,12 +88,36 @@ class TableListField extends FormField {
 	
 	/**
 	 * @var $permissions array Influence output without having to subclass the template.
+	 * See $actions for adding your custom actions/permissions.
 	 */
 	protected $permissions = array(
 		//"print",
 		//"export",
 		"delete"
 	);
+	
+	/**
+	 * @var $actions array Action that can be performed on a single row-entry.
+	 * Has to correspond to a method in a TableListField-class (or subclass).
+	 * Actions can be disabled through $permissions.
+	 * Format (key is used for the methodname and CSS-class): 
+	 * array(
+	 * 	'delete' => array('label' => 'Delete', 'icon' => 'cms/images/delete.gif')
+	 * )
+	 */
+	public $actions = array(
+		'delete' => array(
+			'label' => 'Delete',
+			'icon' => 'cms/images/delete.gif',
+			'class' => 'deletelink' 
+		)
+	);
+	
+	/**
+	 * @var $defaultAction String Action being executed when clicking on table-row (defaults to "show").
+	 * Mostly needed in ComplexTableField-subclass.
+	 */
+	public $defaultAction = '';
 	
 	/**
 	 * @var $customQuery Specify custom query, e.g. for complicated having/groupby-constructs.
@@ -295,6 +321,23 @@ JS
 		$sql = $query->sql();
 		$SQL_fieldName = Convert::raw2sql($fieldName);
 		return (in_array($SQL_fieldName,$query->select) || stripos($sql,"AS {$SQL_fieldName}"));
+	}
+	
+	/**
+	 * Dummy function to get number of actions originally generated in
+	 * TableListField_Item.
+	 * 
+	 * @return DataObjectSet
+	 */
+	function Actions() {
+		$allowedActions = new DataObjectSet();
+		foreach($this->actions as $actionName => $actionSettings) {
+			if($this->Can($actionName)) {
+				$allowedActions->push(new ViewableData());
+			}
+		}
+		
+		return $allowedActions;
 	}
 	
 	/**
