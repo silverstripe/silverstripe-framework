@@ -20,13 +20,14 @@ class DevelopmentAdmin extends Controller {
 		$renderer = new DebugView();
 		$renderer->writeHeader();
 		$renderer->writeInfo("Sapphire Development Tools", Director::absoluteBaseURL());
+		$base = Director::baseURL();
 		echo <<<HTML
 			<div class="options">
 			<ul>
-				<li><a href="tests">/dev/tests: See a list of unit tests to run</a></li>
-				<li><a href="tasks">/dev/tasks: See a list of build tasks to run</a></li>
-				<li><a href="viewcode">/dev/viewcode: Read source code in a literate programming style</a></li>
-				<li><a href="../db/build?flush=1">/db/build?flush=1: Rebuild the database</a></li>
+				<li><a href="{$base}dev/tests">/dev/tests: See a list of unit tests to run</a></li>
+				<li><a href="{$base}dev/tasks">/dev/tasks: See a list of build tasks to run</a></li>
+				<li><a href="{$base}dev/viewcode">/dev/viewcode: Read source code in a literate programming style</a></li>
+				<li><a href="{$base}db/build?flush=1">/db/build?flush=1: Rebuild the database</a></li>
 			</ul>
 			</div>
 HTML;
@@ -34,20 +35,20 @@ HTML;
 	}
 	
 	function tests($request) {
-		$controller = new TestRunner();
-		return $controller->handleRequest($request);
+		return new TestRunner();
 	}
 	
 	function tasks() {
-		$controller = new TaskRunner();
-		return $controller->handleRequest($request);
+		return new TaskRunner();
+	}
+	
+	function errors() {
+		Director::redirect("Debug_");
 	}
 	
 	function viewcode($request) {
-		$controller = new CodeViewer();
-		return $controller->handleRequest($request);
+		return new CodeViewer();
 	}
-	
 }
 
 ?>

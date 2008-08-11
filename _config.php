@@ -21,10 +21,9 @@
 Director::addRules(10, array(
 	'Security//$Action/$ID/$OtherID' => 'Security',
 	//'Security/$Action/$ID' => 'Security',
-	'db/$Action' => 'DatabaseAdmin',
-	'$Controller' => array(
-	),
-	'images/$Action/$Class/$ID/$Field' => 'Image_Uploader',
+	'db//$Action' => 'DatabaseAdmin',
+	'$Controller//$Action/$ID/$OtherID' => '*',
+	'images//$Action/$Class/$ID/$Field' => 'Image_Uploader',
 	'' => 'RootURLController',
 	'sitemap.xml' => 'GoogleSitemap',
 	'api/v1' => 'RestfulServer',
@@ -92,21 +91,6 @@ Security::set_password_encryption_algorithm('sha1', true);
 define('EMAIL_BOUNCEHANDLER_KEY', '1aaaf8fb60ea253dbf6efa71baaacbb3');
 
 
-// Default director
-Director::addRules(10, array(
-	'Security/$Action/$ID' => 'Security',
-	'db/$Action' => 'DatabaseAdmin',
-	'$Controller/$Action/$ID/$OtherID' => '*',
-	'images/$Action/$Class/$ID/$Field' => 'Image_Uploader',
-	'' => 'RootURLController',
-	'sitemap.xml' => 'GoogleSitemap',
-	'api/v1/$ClassName/$ID/$Relation' => 'RestfulServer',
-	'dev/$Action/$NestedAction' => 'DevelopmentAdmin'
-));
-
-Director::addRules(1, array(
-	'$URLSegment/$Action/$ID/$OtherID' => 'ModelAsController',
-));
 
 
 ?>
