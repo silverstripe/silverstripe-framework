@@ -60,7 +60,7 @@ class ChangePasswordForm extends Form {
 
 		if(!$member) {
 			if(Session::get('AutoLoginHash')) {
-				$member = Member::member_from_autologin(Session::get('AutoLoginHash'));
+				$member = Member::member_from_autologinhash(Session::get('AutoLoginHash'));
 			}
 
 			// The user is not logged in and no valid auto login hash is available
