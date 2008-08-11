@@ -82,6 +82,21 @@ class Requirements {
 	public static $combine_js_with_jsmin = true;
 	
 	/**
+	 * Put all javascript includes at the bottom of the template
+	 * before the closing <body> tag instead of the <head> tag.
+	 * This means script downloads won't block other HTTP-requests,
+	 * which can be a performance improvement.
+	 * Caution: Doesn't work when modifying the DOM from those external
+	 * scripts without listening to window.onload/document.ready
+	 * (e.g. toplevel document.write() calls).
+	 *
+	 * @see http://developer.yahoo.com/performance/rules.html#js_bottom
+	 *
+	 * @var boolean
+	 */
+	public static $write_js_to_body = false;
+	
+	/**
 	 * Register the given javascript file as required.
 	 * Filenames should be relative to the base, eg, 'sapphire/javascript/loader.js'
 	 */
@@ -277,7 +292,9 @@ class Requirements {
 					$jsRequirements .= "<script type=\"text/javascript\" src=\"$prefix$file$mtimesuffix\"></script>\n";
 				}
 			}
-			 
+			
+			// add all inline javascript *after* including external files which
+			// they might rely on
 			if(self::$customScript) {
 				foreach(array_diff_key(self::$customScript,self::$blocked) as $script) { 
 					$jsRequirements .= "<script type=\"text/javascript\">\n//<![CDATA[\n";
@@ -302,28 +319,33 @@ class Requirements {
 				$requirements .= "$customHeadTag\n"; 
 			}
 	
-			if(isset($_GET['debug_profile'])) Profiler::unmark("Requirements::includeInHTML");
-
-
-			// We put script tags into the body, for performance.
-			// If your template already has script tags in the body, then we put our script tags at the top of the body.
-			// Otherwise, we put it at the bottom.
-			$p1 = strripos($content, '<script');
-			$p2 = stripos($content, '<body');
-			if($p1 !== false && $p1 > $p2) {
-				user_error("You have a script tag in the body, moving requirements to top of <body> for compatibilty.  I recommend removing the script tag from your template's body.", E_USER_NOTICE);
-				$content = eregi_replace("(<body[^>]*>)", "\\1" . $jsRequirements, $content);
+			if(self::$write_js_to_body) {
+				// Remove all newlines from code to preserve layout
+				$jsRequirements = preg_replace('/>\n*/', '>', $jsRequirements);
+				
+				// We put script tags into the body, for performance.
+				// If your template already has script tags in the body, then we put our script tags at the top of the body.
+				// Otherwise, we put it at the bottom.
+				$p1 = strripos($content, '<script');
+				$p2 = stripos($content, '<body');
+				if($p1 !== false && $p1 > $p2) {
+					user_error("You have a script tag in the body, moving requirements to top of <body> for compatibilty.  I recommend removing the script tag from your template's body.", E_USER_NOTICE);
+					$content = eregi_replace("(<body[^>]*>)", "\\1" . $jsRequirements, $content);
+				} else {
+					$content = eregi_replace("(</body[^>]*>)", $jsRequirements . "\\1", $content);
+				}
+				
+				// Put CSS at the bottom of the head			
+				$content = eregi_replace("(</head[^>]*>)", $requirements . "\\1", $content);
 			} else {
-				$content = eregi_replace("(</body[^>]*>)", $jsRequirements . "\\1", $content);
+				$content = eregi_replace("(</head[^>]*>)", $requirements . "\\1", $content);
+				$content = eregi_replace("(</head[^>]*>)", $jsRequirements . "\\1", $content);
 			}
-			
-			// Put CSS at the bottom of the head			
-			return eregi_replace("(</head[^>]*>)", $requirements . "\\1", $content);
-			
-		} else {
-			if(isset($_GET['debug_profile'])) Profiler::unmark("Requirements::includeInHTML");
-			return $content;
-		}
+		} 
+		
+		if(isset($_GET['debug_profile'])) Profiler::unmark("Requirements::includeInHTML");
+		
+		return $content;
 	}
 	
 	/**
