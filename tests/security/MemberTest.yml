@@ -1,18 +1,18 @@
 Member:
-    test:
-        FirstName: Test
-        Surname: User
-        Email: sam@silverstripe.com
-        Password: 1nitialPassword
-        PasswordExpiry: 2030-01-01
-    expiredpassword:
-        FirstName: Test
-        Surname: User
-        Email: expired@silverstripe.com
-        Password: 1nitialPassword
-        PasswordExpiry: 2006-01-01
-    noexpiry:
-        FirstName: Test
-        Surname: User
-        Email: noexpiry@silverstripe.com
-        Password: 1nitialPassword
+   test:
+      FirstName: Test
+      Surname: User
+      Email: sam@silverstripe.com
+      Password: 1nitialPassword
+      PasswordExpiry: 2030-01-01
+   expiredpassword:
+      FirstName: Test
+      Surname: User
+      Email: expired@silverstripe.com
+      Password: 1nitialPassword
+      PasswordExpiry: 2006-01-01
+   noexpiry:
+      FirstName: Test
+      Surname: User
+      Email: noexpiry@silverstripe.com
+      Password: 1nitialPassword

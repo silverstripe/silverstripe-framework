@@ -13,6 +13,7 @@ class MemberTest extends SapphireTest {
 		Member::set_password_validator(null);
 
 		$member = $this->objFromFixture('Member', 'test');
+		$this->assertNotNull($member);
 		$member->Password = "test1";
 		$member->write();
 
@@ -45,6 +46,7 @@ class MemberTest extends SapphireTest {
 		$this->clearEmails();
 
 		$member = $this->objFromFixture('Member', 'test');
+		$this->assertNotNull($member);
 		$valid = $member->changePassword('32asDF##$$%%');
 		$this->assertTrue($valid->valid());
 		/*
@@ -60,6 +62,7 @@ class MemberTest extends SapphireTest {
 	 */
 	function testValidatePassword() {
 		$member = $this->objFromFixture('Member', 'test');
+		$this->assertNotNull($member);
 		
 		Member::set_password_validator(new NZGovtPasswordValidator());
 
@@ -143,6 +146,7 @@ class MemberTest extends SapphireTest {
 		Member::set_password_expiry(90);
 		
 		$member = $this->objFromFixture('Member', 'test');
+		$this->assertNotNull($member);
 		$valid = $member->changePassword("Xx?1234234");
 		$this->assertTrue($valid->valid());
 		
@@ -158,6 +162,7 @@ class MemberTest extends SapphireTest {
 	
 	function testIsPasswordExpired() {
 		$member = $this->objFromFixture('Member', 'test');
+		$this->assertNotNull($member);
 		$this->assertFalse($member->isPasswordExpired());
 
 		$member = $this->objFromFixture('Member', 'noexpiry');
