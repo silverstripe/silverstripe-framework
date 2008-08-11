@@ -80,9 +80,30 @@ class SiteTreeTest extends SapphireTest {
 		$this->assertEquals("V1", $checkSiteTree->Title);
 	}
 	
-	/**
-	 * Test that saving changes creates a new version with the correct data in it.
-	 */
+	function testChidrenOfRootAreTopLevelPages() {
+		$pages = DataObject::get("SiteTree");
+		foreach($pages as $page) $page->publish('Stage', 'Live');
+		unset($pages);
+		
+		/* If we create a new SiteTree object with ID = 0 */
+		$obj = new SiteTree();
+		/* Then its children should be the top-level pages */
+		$stageChildren = $obj->stageChildren()->toDropDownMap('ID','Title');
+		$liveChildren = $obj->liveChildren()->toDropDownMap('ID','Title');
+		$allChildren = $obj->AllChildrenIncludingDeleted()->toDropDownMap('ID','Title');
+		
+		$this->assertContains('Home', $stageChildren);
+		$this->assertContains('Products', $stageChildren);
+		$this->assertNotContains('Staff', $stageChildren);
+
+		$this->assertContains('Home', $liveChildren);
+		$this->assertContains('Products', $liveChildren);
+		$this->assertNotContains('Staff', $liveChildren);
+
+		$this->assertContains('Home', $allChildren);
+		$this->assertContains('Products', $allChildren);
+		$this->assertNotContains('Staff', $allChildren);
+	}
 	
 }
 
