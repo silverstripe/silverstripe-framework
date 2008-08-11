@@ -153,11 +153,29 @@ class Director {
 			list($url, $getVarsEncoded) = explode('?', $url, 2);
             parse_str($getVarsEncoded, $getVars);
 		}
-
 		if(!$session) $session = new Session(null);
+
+		// Back up the current values of the superglobals
+		$existingRequestVars = $_REQUEST; 
+		$existingGetVars = $_GET; 
+		$existingPostVars = $_POST; 
+		$existingSessionVars = $_SESSION; 
+
+		// Replace the superglobals with appropriate test values
+		$_REQUEST = array_merge((array)$getVars, (array)$post); 
+		$_GET = (array)$getVars; 
+		$_POST = (array)$post; 
+		$_SESSION = $session ? $session->inst_getAll() : array();
+
 		$req = new HTTPRequest($httpMethod, $url, $getVars, $postVars, $body);
 		if($headers) foreach($headers as $k => $v) $req->addHeader($k, $v);
 		$result = Director::handleRequest($req, $session);
+
+		// Restore the superglobals
+		$_REQUEST = $existingRequestVars; 
+		$_GET = $existingGetVars; 
+		$_POST = $existingPostVars; 
+		$_SESSION = $existingSessionVars;                
 		
 		return $result;
 	}
