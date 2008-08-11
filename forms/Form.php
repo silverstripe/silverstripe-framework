@@ -63,6 +63,14 @@ class Form extends RequestHandlingData {
 	protected $messageType;
 	
 	protected $security = true;
+	
+	/**
+	 * HACK This is a temporary hack to allow multiple calls to includeJavascriptValidation on
+	 * the validator (if one is present).
+	 *
+	 * @var boolean
+	 */
+	public $jsValidationIncluded = false;
 
 	/**
 	 * Create a new form, with the given fields an action buttons.
@@ -412,7 +420,7 @@ class Form extends RequestHandlingData {
 		// Forms shouldn't be cached, cos their error messages won't be shown
 		HTTP::set_cache_age(0);
 
-		if($this->validator) $this->validator->includeJavascriptValidation();
+		if($this->validator && !$this->jsValidationIncluded) $this->validator->includeJavascriptValidation();
 		if($this->target) $target = " target=\"".$this->target."\"";
     	else $target = "";
 
@@ -832,6 +840,10 @@ class Form extends RequestHandlingData {
 	 * the attributes of the form.  These fields can be used to send the form to Ajax.
 	 */
 	function formHtmlContent() {
+		// Call FormAttributes to force inclusion of custom client-side validation of fields
+		// because it won't be included by the template
+		if($this->validator && !$this->jsValidationIncluded) $this->validator->includeJavascriptValidation();
+		
 		$this->IncludeFormTag = false;
 		$content = $this->forTemplate();
 		$this->IncludeFormTag = true;

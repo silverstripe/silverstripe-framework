@@ -122,6 +122,8 @@ Behaviour.apply('#$formID');
 JS;
 
 	Requirements::customScript($js);
+	// HACK Notify the form that the validators client-side validation code has already been included
+	if($this->form) $this->form->jsValidationIncluded = true;
 	}
 	
 	/**
