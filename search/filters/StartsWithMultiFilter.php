@@ -13,17 +13,19 @@
 class StartsWithMultiFilter extends SearchFilter {
 	
 	public function apply(SQLQuery $query) {
-		if($this->getValue()) {
-			$query = $this->applyRelation($query);
-			$values = explode(',',$this->getValue());
+		$query = $this->applyRelation($query);
+		$values = explode(',', $this->getValue());
 		
-			foreach($values as $value) {
-				$SQL_value = Convert::raw2sql(str_replace("'", '', $value));
-				$matches[] = "{$this->getDbName()} LIKE '$SQL_value%'";
-			}
-			return $query->where(implode(" OR ", $matches));
+		foreach($values as $value) {
+			$SQL_value = Convert::raw2sql(str_replace("'", '', $value));
+			$matches[] = "{$this->getDbName()} LIKE '$SQL_value%'";
 		}
+		
+		return $query->where(implode(" OR ", $matches));
 	}
 	
+	public function isEmpty() {
+		return $this->getValue() == null || $this->getValue() == '';
+	}
 }
 ?>

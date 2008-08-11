@@ -105,7 +105,7 @@ require_once(MANIFEST_FILE);
 
 if(isset($_GET['debugmanifest'])) Debug::show(file_get_contents(MANIFEST_FILE));
 
-if(!isset(Director::$environment_type) && $envType) Director::set_environment_type($envType);
+//if(!isset(Director::$environment_type) && $envType) Director::set_environment_type($envType);
 
 // Load error handlers
 Debug::loadErrorHandlers();

@@ -28,5 +28,8 @@ class StartsWithFilter extends SearchFilter {
 		$query->where("LOCATE('{$this->getValue()}', {$this->getDbName()}) = 1");
 	}
 	
+	public function isEmpty() {
+		return $this->getValue() == null || $this->getValue() == '';
+	}
 }
 ?>

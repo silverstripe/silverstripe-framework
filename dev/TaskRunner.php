@@ -12,11 +12,17 @@ class TaskRunner extends Controller {
 	
 	function index() {
 		$tasks = ClassInfo::subclassesFor('BuildTask');
-		echo "<ul>";
-		foreach($tasks as $task) {
-			echo "<li><a href=\"$task\">$task</a></li>";
+		if(Director::is_cli()) {
+			echo "Tasks available:\n\n";
+			foreach($tasks as $task) echo " * $task: sake dev/tasks/$task\n";
+		} else {
+			echo "<h1>Tasks available</h1>\n";
+			echo "<ul>";
+			foreach($tasks as $task) {
+				echo "<li><a href=\"$task\">$task</a></li>\n";
+			}
+			echo "</ul>";
 		}
-		echo "</ul>";
 	}
 	
 	function runTask($request) {
@@ -29,6 +35,8 @@ class TaskRunner extends Controller {
 			if (!$task->isDisabled()) $task->run($request);
 		} else {
 			echo "Build task '$TaskName' not found.";
+			if(class_exists($TaskName)) echo "  It isn't a subclass of BuildTask.";
+			echo "\n";
 		}
 	}
 	

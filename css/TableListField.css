@@ -23,6 +23,10 @@ table.CMSList td {
 	border-style:none;
 }
 
+.TableListField table.data td.nolabel{
+	display: none;
+}
+
 table.TableField th, 
 table.TableListField th, 
 .TableListField table.data th, 
@@ -114,7 +118,7 @@ table.CMSList tbody td.checkbox {
 table.TableField tbody tr.over td, 
 .TableListField table.data tbody tr.over td, 
 table.CMSList tbody td.over td{
-	background-color: #FFC;
+	background-color: #FF6600;
 }
 
 table.TableField tbody tr.current td, 

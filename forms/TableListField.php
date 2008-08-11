@@ -1045,6 +1045,8 @@ class TableListField_Item extends ViewableData {
 	function Fields() {
 		$list = $this->parent->FieldList();
 		foreach($list as $fieldName => $fieldTitle) {
+			$value = "";
+
 			// This supports simple FieldName syntax
 			if(strpos($fieldName,'.') === false) {
 				$value = ($this->item->val($fieldName)) ? $this->item->val($fieldName) : $this->item->$fieldName;

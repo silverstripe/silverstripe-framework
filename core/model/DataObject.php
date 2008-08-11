@@ -2630,7 +2630,7 @@ class DataObject extends ViewableData implements DataObjectInterface {
 	 * User defined permissions for search result table by ModelAdmin to act on.
 	 * Such as print search
 	 */
-	public static $results_permissions = null;
+	public static $results_permissions = array();
 
 }
 

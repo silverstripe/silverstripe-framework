@@ -90,7 +90,14 @@ class JSONDataFormatter extends DataFormatter {
 		foreach($set as $item) {
 			if($item->canView()) $jsonParts[] = $this->convertDataObject($item);
 		}
-		return "[\n" . implode(",\n", $jsonParts) . "\n]";
+		$json = "{\n";
+		$json .= 'totalSize: ';
+		$json .= (is_numeric($this->totalSize)) ? $this->totalSize : 'null';
+		$json .= ",\n";
+		$json .= "items: [\n" . implode(",\n", $jsonParts) . "\n]\n";
+		$json .= "}\n";
+
+		return $json;
 	}
 	
 	public function convertStringToArray($strData) {

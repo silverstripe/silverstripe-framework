@@ -32,5 +32,8 @@ class FulltextFilter extends SearchFilter {
 		return $query;
 	}
 
+	public function isEmpty() {
+		return $this->getValue() == null || $this->getValue() == '';
+	}
 }
 ?>

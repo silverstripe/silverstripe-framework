@@ -11,7 +11,12 @@
  * This is loaded into the TEMP_FOLDER define on start up
  */
 function getTempFolder() {
-	$cachefolder = "silverstripe-cache" . str_replace(array("/",":", "\\"),"-", substr($_SERVER['SCRIPT_FILENAME'], 0, strlen($_SERVER['SCRIPT_FILENAME']) - strlen('/sapphire/main.php')));
+	if(preg_match('/^(.*)\/sapphire\/[^\/]+$/', $_SERVER['SCRIPT_FILENAME'], $matches)) {
+		$cachefolder = "silverstripe-cache" . str_replace(array(' ',"/",":", "\\"),"-", $matches[1]);
+	} else {
+		$cachefolder = "silverstripe-cache";
+	}
+	
 	$ssTmp = dirname(dirname($_SERVER['SCRIPT_FILENAME'])) . "/silverstripe-cache";
     if(@file_exists($ssTmp)) {
     	return $ssTmp;

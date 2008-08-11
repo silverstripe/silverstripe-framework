@@ -139,5 +139,19 @@ abstract class SearchFilter extends Object {
 	 */
 	abstract public function apply(SQLQuery $query);
 	
+	/**
+	 * Determines if a field has a value,
+	 * and that the filter should be applied.
+	 * Relies on the field being populated with
+	 * {@link setValue()}
+	 * 
+	 * @usedby SearchContext
+	 * 
+	 * @return boolean
+	 */
+	public function isEmpty() {
+		return false;
+	}
+	
 }
 ?>

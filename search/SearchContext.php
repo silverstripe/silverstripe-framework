@@ -114,18 +114,14 @@ class SearchContext extends Object {
 		$SQL_sort = (!empty($sort)) ? Convert::raw2sql($sort) : singleton($this->modelClass)->stat('default_sort');		
 		$query->orderby($SQL_sort);
 		foreach($searchParams as $key => $value) {
-			 /*We add $value!='' here to not include a filter like this: $fieldname like '%%', which abviously filter out some
-				records with the $fieldname set to null. and this is not the search intention.
-			*/
-			if ($value != '0'&&$value!='') {
-				$key = str_replace('__', '.', $key);
-				$filter = $this->getFilter($key);
-				if ($filter) {
-					$filter->setModel($this->modelClass);
-					$filter->setValue($value);
+			$key = str_replace('__', '.', $key);
+			if($filter = $this->getFilter($key)) {
+				$filter->setModel($this->modelClass);
+				$filter->setValue($value);
+				if(! $filter->isEmpty()) {
 					$filter->apply($query);
 				}
-			//}
+			}
 		}
 
 		return $query;

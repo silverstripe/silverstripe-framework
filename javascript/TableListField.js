@@ -272,5 +272,5 @@ TableListRecord.prototype = {
 	}
 }
 
-//TableListRecord.applyTo('div.TableListField tr');
+TableListRecord.applyTo('div.TableListField tr');
 TableListField.applyTo('div.TableListField');

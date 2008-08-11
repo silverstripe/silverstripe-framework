@@ -63,6 +63,16 @@ abstract class DataFormatter extends Object {
 	protected $outputContentType = null;
 	
 	/**
+	 * Used to set totalSize properties on the output
+	 * of {@link convertDataObjectSet()}, shows the
+	 * total number of records without the "limit" and "offset"
+	 * GET parameters. Useful to implement pagination.
+	 * 
+	 * @var int
+	 */
+	protected $totalSize;
+	
+	/**
 	 * Get a DataFormatter object suitable for handling the given file extension.
 	 * 
 	 * @string $extension
@@ -180,6 +190,20 @@ abstract class DataFormatter extends Object {
 	
 	public function getOutputContentType() {
 		return $this->outputContentType;
+	}
+	
+	/**
+	 * @param int $size
+	 */
+	public function setTotalSize($size) {
+		$this->totalSize = (int)$size;
+	}
+	
+	/**
+	 * @return int
+	 */
+	public function getTotalSize() {
+		return $this->totalSize;
 	}
 	
 	/**

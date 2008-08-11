@@ -80,6 +80,13 @@ class HTTPResponse extends Object {
 		return $this->statusCode;
 	}
 	
+	/**
+	 * Returns true if this HTTP response is in error
+	 */
+	function isError() {
+		return $this->statusCode && ($this->statusCode < 200 || $this->statusCode > 399);
+	}
+	
 	function setBody($body) {
 		$this->body = $body;
 	}

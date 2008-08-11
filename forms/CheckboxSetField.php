@@ -96,7 +96,7 @@ class CheckboxSetField extends OptionsetField {
 			
 			$this->disabled ? $disabled = " disabled=\"disabled\"" : $disabled = "";
 			
-			$options .= "<li class=\"$extraClass\"><input id=\"$itemID\" name=\"$this->name[]\" type=\"checkbox\" value=\"$key\"$checked $disabled class=\"checkbox\" /> <label for=\"$itemID\">$value</label></li>\n"; 
+			$options .= "<li class=\"$extraClass\"><input id=\"$itemID\" name=\"$this->name[$key]\" type=\"checkbox\" value=\"$key\"$checked $disabled class=\"checkbox\" /> <label for=\"$itemID\">$value</label></li>\n"; 
 		}
 		
 		

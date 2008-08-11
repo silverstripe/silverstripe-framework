@@ -96,7 +96,8 @@ class XMLDataFormatter extends DataFormatter {
 		Controller::curr()->getResponse()->addHeader("Content-type", "text/xml");
 		$className = $set->class;
 	
-		$xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<$className>\n";
+		$xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
+		$xml .= (is_numeric($this->totalSize)) ? "<$className totalSize=\"{$this->totalSize}\">\n" : "<$className>\n";
 		foreach($set as $item) {
 			if($item->canView()) $xml .= $this->convertDataObjectWithoutHeader($item);
 		}

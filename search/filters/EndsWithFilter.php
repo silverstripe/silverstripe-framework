@@ -28,5 +28,8 @@ class EndsWithFilter extends SearchFilter {
 		$query->where($this->getDbName(), "RLIKE", "{$this->getValue()}$");
 	}
 	
+	public function isEmpty() {
+		return $this->getValue() == null || $this->getValue() == '';
+	}
 }
 ?>
