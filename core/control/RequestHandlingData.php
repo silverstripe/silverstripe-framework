@@ -82,6 +82,12 @@ class RequestHandlingData extends ViewableData {
 				if($action[0] == '$') $action = $params[substr($action,1)];
 				
 				if($this->checkAccessAction($action)) {
+					if(!$action) {
+						if(isset($_REQUEST['debug_request'])) Debug::message("Action not set; using default action method name 'index'");
+						$action = "index";
+					} else if(!is_string($action)) {
+						user_error("Non-string method name: " . var_export($action, true), E_USER_ERROR);
+					} 
 					$result = $this->$action($request);
 				} else {
 					return $this->httpError(403, "Action '$action' isn't allowed on class $this->class");

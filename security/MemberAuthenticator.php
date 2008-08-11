@@ -48,6 +48,11 @@ class MemberAuthenticator extends Authenticator {
 			if($existingMember) $attempt->MemberID = $existingMember->ID;
 			$attempt->Status = 'Failure';
 		}
+		if(is_array($RAW_data['Email'])) {
+			user_error("Bad email passed to MemberAuthenticator::authenticate(): $RAW_data[Email]", E_USER_WARNING);
+			return false;
+		}
+		
 		$attempt->Email = $RAW_data['Email'];
 		$attempt->IP = Controller::curr()->getRequest()->getIP();
 		$attempt->write();

@@ -2417,6 +2417,7 @@ class DataObject extends ViewableData implements DataObjectInterface {
 	public function fieldLabels($fieldName = false) {
 		$customLabels = $this->stat('field_labels');
 		$autoLabels = array();
+		if($this->databaseFields()){
 		foreach($this->databaseFields() as $name => $type) {
 			$autoLabels[$name] = FormField::name_to_label($name);
 		}
@@ -2426,7 +2427,7 @@ class DataObject extends ViewableData implements DataObjectInterface {
 			return (isset($labels[$fieldName])) ? $labels[$fieldName] : FormField::name_to_label($fieldName); 
 		} else {
 			return $labels;
-		}
+		}}
 	}
 
 	/**

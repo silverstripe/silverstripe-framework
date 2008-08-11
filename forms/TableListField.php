@@ -221,6 +221,10 @@ class TableListField extends FormField {
 		Requirements::css('sapphire/css/TableListField.css');
 	}
 	
+	function index() {
+		return $this->FieldHolder();
+	}
+	
 	function FieldHolder() {
 		
 		if($this->clickAction) {

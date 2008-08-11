@@ -14,7 +14,20 @@ class ExactMatchMultiFilter extends SearchFilter {
 	
 	public function apply(SQLQuery $query) {
 		$query = $this->applyRelation($query);
-		$values = explode(',',$this->getValue());
+		
+		// hack
+		// PREVIOUS $values = explode(',',$this->getValue());
+		$values = array();
+		if (is_string($this->getValue())) {
+			$values = explode(',',$this->getValue());
+		}
+		else {
+			foreach($this->getValue() as $v) {
+				$values[] = $v;
+			}
+		}
+		
+		
 		if(! $values) return false;
 		for($i = 0; $i < count($values); $i++) {
 			if(! is_numeric($values[$i])) {

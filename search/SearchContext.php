@@ -85,10 +85,10 @@ class SearchContext extends Object {
 	 */
 	protected function applyBaseTableFields() {
 		$classes = ClassInfo::dataClassesFor($this->modelClass);
-		$fields = array(ClassInfo::baseDataClass($this->modelClass).'.*');
-		if($this->modelClass != $classes[0]) $fields[] = $classes[0].'.*';
+		$fields = array("`".ClassInfo::baseDataClass($this->modelClass).'`.*');
+		if($this->modelClass != $classes[0]) $fields[] = '`'.$classes[0].'`.*';
 		//$fields = array_keys($model->db());
-		$fields[] = $classes[0].'.ClassName AS RecordClassName';
+		$fields[] = '`'.$classes[0].'`.ClassName AS RecordClassName';
 		return $fields;
 	}
 	
@@ -112,6 +112,7 @@ class SearchContext extends Object {
 		} else {
 			$query = $model->buildSQL();
 		}
+
 		$query->select = array_merge($query->select,$fields);
 
 		$SQL_limit = Convert::raw2sql($limit);
@@ -119,7 +120,17 @@ class SearchContext extends Object {
 
 		$SQL_sort = (!empty($sort)) ? Convert::raw2sql($sort) : singleton($this->modelClass)->stat('default_sort');		
 		$query->orderby($SQL_sort);
-		foreach($searchParams as $key => $value) {
+		
+		// hack to work with $searchParems when it's an Object 
+		$searchParamArray = array();
+		if (is_object($searchParams)) {
+			$searchParamArray = $searchParams->getVars();
+		} else 
+		{
+			$searchParamArray = $searchParams;
+		}
+		
+ 		foreach($searchParamArray as $key => $value) {
 			$key = str_replace('__', '.', $key);
 			if($filter = $this->getFilter($key)) {
 				$filter->setModel($this->modelClass);
@@ -130,8 +141,9 @@ class SearchContext extends Object {
 			}
 		}
 		
+		
 		$query->connective = $this->connective;
-
+		
 		return $query;
 	}
 

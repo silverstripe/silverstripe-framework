@@ -100,8 +100,8 @@ class HtmlEditorField extends TextareaField {
 		
 		$content = preg_replace('/mce_real_src="[^"]+"/i', "", $content);
 		
-		$content = eregi_replace('width=([0-9]+)','width="\\1"',$content);
-		$content = eregi_replace('height=([0-9]+)','height="\\1"',$content);
+		$content = eregi_replace('(<img[^>]* )width=([0-9]+)( [^>]*>|>)','\\1width="\\2"\\3',$content);
+		$content = eregi_replace('(<img[^>]* )height=([0-9]+)( [^>]*>|>)','\\1height="\\2"\\3',$content);
 		$content = eregi_replace('src="([^\?]*)\?r=[0-9]+"','src="\\1"',$content);
 		$content = eregi_replace('mce_src="([^\?]*)\?r=[0-9]+"','mce_src="\\1"',$content);
 		

@@ -130,9 +130,10 @@ class SOAPModelAccess extends SapphireSoapServer {
 
 		$response = Director::test(
 			$this->buildRestfulURL($class, $id, $relation, 'xml'),
-			$data,
+			array(),
 			null,
-			($id) ? 'PUT' : 'POST'
+			($id) ? 'PUT' : 'POST',
+			$data
 		);
 
 		return ($response->isError()) ? $this->getErrorMessage($response) : $response->getBody();
@@ -154,9 +155,10 @@ class SOAPModelAccess extends SapphireSoapServer {
 		
 		$response = Director::test(
 			$this->buildRestfulURL($class, $id, $relation, 'json'),
-			$data,
+			array(),
 			null,
-			($id) ? 'PUT' : 'POST'
+			($id) ? 'PUT' : 'POST',
+			$data
 		);
 		
 		return ($response->isError()) ? $this->getErrorMessage($response) : $response->getBody();
@@ -216,8 +218,8 @@ class SOAPModelAccess extends SapphireSoapServer {
 	 * @param string $password Plaintext password
 	 */
 	protected function authenticate($username, $password) {
-		$_SERVER['PHP_AUTH_USER'] = $username;
-		$_SERVER['PHP_AUTH_PW'] = $password;
+		if(is_string($username)) $_SERVER['PHP_AUTH_USER'] = $username;
+		if(is_string($password)) $_SERVER['PHP_AUTH_PW'] = $password;
 	}
 	
 	/**

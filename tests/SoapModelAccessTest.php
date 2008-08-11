@@ -11,9 +11,17 @@
 class SoapModelAccessTest extends SapphireTest {
 	
 	static $fixture_file = 'sapphire/tests/SoapModelAccessTest.yml';
-/*
+
+	public function getTestSoapConnection() {
+		// We can't actually test the SOAP server itself because there's not currently a way of putting it into "test mode"
+		return new SOAPModelAccess();
+		
+		// One day, we should build this facility and then return something more like the item below:
+		// return new SoapClient(Director::absoluteBaseURL() . 'soap/v1/wsdl');
+	}
+
 	public function testApiAccess() {
-		$c = new SoapClient(Director::absoluteBaseURL() . 'soap/v1/wsdl');
+		$c = $this->getTestSoapConnection();
 		$soapResponse = $c->getXML(
 			"SoapModelAccessTest_Comment", 
 			1,
@@ -22,8 +30,7 @@ class SoapModelAccessTest extends SapphireTest {
 			'editor@test.com',
 			'editor'
 		);
-		var_dump($soapResponse);
-		die();
+
 		$responseArr = Convert::xml2array($soapResponse);
 		$this->assertEquals($responseArr['ID'], 1);
 		$this->assertEquals($responseArr['Name'], 'Joe');
@@ -31,56 +38,67 @@ class SoapModelAccessTest extends SapphireTest {
 	
 	public function testAuthenticatedPUT() {
 		// test wrong details
-		$c = new SoapClient(Director::absoluteBaseURL() . 'soap/v1/wsdl');
-		$soapResponse = $c->getXML(
+		$c = $this->getTestSoapConnection();
+
+		$updateXML = <<<XML
+<?xml version="1.0" encoding="UTF-8"?>
+		<SoapModelAccessTest_Comment>
+			<ID>1</ID>
+			<Name>Jimmy</Name>
+		</SoapModelAccessTest_Comment>			
+XML;
+
+		$soapResponse = $c->putXML(
 			"SoapModelAccessTest_Comment", 
 			1,
 			null,
-			array(
-				'Name' => 'Updated Name'
-			),
+			$updateXML,
 			'editor@test.com',
 			'wrongpassword'
 		);
-		$this->assertEquals(
-			$soapResponse,
-			'<error type="authentication" code="403">Forbidden</error>'
-		);
+		$this->assertEquals('<error type="authentication" code="403">Forbidden</error>', $soapResponse);
 		
-		// test correct details
-		$c = new SoapClient(Director::absoluteBaseURL() . 'soap/v1/wsdl');
-		$soapResponse = $c->getXML(
+		// Check that the details weren't saved
+		$c = $this->getTestSoapConnection();
+		$soapResponse = $c->getXML("SoapModelAccessTest_Comment", 1, null, 'editor@test.com', 'editor');
+		$responseArr = Convert::xml2array($soapResponse);
+		$this->assertEquals(1, $responseArr['ID']);
+		$this->assertEquals('Joe', $responseArr['Name']);
+
+		// Now do an update with the right password
+		$soapResponse = $c->putXML(
 			"SoapModelAccessTest_Comment", 
 			1,
 			null,
-			array(
-				'Name' => 'Updated Name'
-			),
+			$updateXML,
 			'editor@test.com',
 			'editor'
 		);
+
+		// Check that the details were saved
+		$c = $this->getTestSoapConnection();
+		$soapResponse = $c->getXML("SoapModelAccessTest_Comment", 1, null, 'editor@test.com', 'editor');
 		$responseArr = Convert::xml2array($soapResponse);
-		$this->assertEquals($responseArr['ID'], 1);
-		$this->assertEquals($responseArr['Name'], 'Updated Name');
+		$this->assertEquals(1, $responseArr['ID']);
+		$this->assertEquals('Jimmy', $responseArr['Name']);
 	}
 	
 	public function testAuthenticatedPOST() {
-		$c = new SoapClient(Director::absoluteBaseURL() . 'soap/v1/wsdl');
+		/*
+		$c = $this->getTestSoapConnection();
 		$soapResponse = $c->getXML(
 			"SoapModelAccessTest_Comment", 
 			null,
 			null,
-			array(
-				'Name' => 'Created Name'
-			),
 			'editor@test.com',
 			'editor'
 		);
+		Debug::message($soapResponse);
 		$responseArr = Convert::xml2array($soapResponse);
+		Debug::show($responseArr);
 		$this->assertEquals($responseArr['Name'], 'Created Name');
+		*/
 	}
-	*/
-		
 }
 
 /**
