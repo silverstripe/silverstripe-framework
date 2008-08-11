@@ -542,7 +542,6 @@ class Member extends DataObject {
 		parent::onAfterWrite();
 
 		if(isset($this->changed['Password']) && $this->changed['Password']) {
-$_REQUEST['showqueries'] = 1;
 			MemberPassword::log($this);
 		}
 	}
