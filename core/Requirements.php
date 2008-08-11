@@ -436,12 +436,11 @@ class Requirements {
 	}
 	
 	/**
-	 * Deletes all dynamically generated combined files
-	 * from the filesystem. 
+	 * Deletes all dynamically generated combined files from the filesystem. 
 	 * 
 	 * @param string $combinedFileName If left blank, all combined files are deleted.
 	 */
-	static function clear_combined_files($combinedFileName = null) {
+	static function delete_combined_files($combinedFileName = null) {
 		$combinedFiles = ($combinedFileName) ? array($combinedFileName => null) : self::$combine_files;
 		foreach($combinedFiles as $combinedFile => $sourceItems) {
 			$filePath = Director::baseFolder() . '/' . $combinedFile;
@@ -449,6 +448,13 @@ class Requirements {
 				unlink($filePath);
 			}
 		}
+	}
+	
+	/**
+	 * Re-sets the combined files definition
+	 */
+	static function clear_combined_files() {
+		self::$combine_files = array();
 	}
 	
 	/**

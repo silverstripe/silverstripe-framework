@@ -60,7 +60,7 @@ class RequirementsTest extends SapphireTest {
 		/* NORMAL REQUIREMENTS ARE STILL INCLUDED */
 		$this->assertTrue((bool)preg_match('/src=".*\/a\.js/', $html), 'normal requirements are still included');
 
-		Requirements::clear_combined_files('bc.js');
+		Requirements::delete_combined_files('bc.js');
 	}
 	
 	function testBlockedCombinedJavascript() {
@@ -69,7 +69,7 @@ class RequirementsTest extends SapphireTest {
 		/* BLOCKED COMBINED FILES ARE NOT INCLUDED */
 		$this->setupCombinedRequirements();
 		Requirements::block('bc.js');
-		Requirements::clear_combined_files('bc.js');
+		Requirements::delete_combined_files('bc.js');
 
 		clearstatcache(); // needed to get accurate file_exists() results
 		$html = Requirements::includeInHTML(false, self::$html_template);
@@ -82,7 +82,7 @@ class RequirementsTest extends SapphireTest {
 		// original arrays grml...
 		$this->setupCombinedRequirements();
 		Requirements::block('sapphire/tests/forms/b.js');
-		Requirements::clear_combined_files('bc.js');
+		Requirements::delete_combined_files('bc.js');
 		clearstatcache(); // needed to get accurate file_exists() results
 		$html = Requirements::includeInHTML(false, self::$html_template);
 		$this->assertFalse((strpos(file_get_contents($combinedFilePath), "alert('b')") !== false), 'blocked uncombined files are not included');
@@ -91,13 +91,16 @@ class RequirementsTest extends SapphireTest {
 		/* A SINGLE FILE CAN'T BE INCLUDED IN TWO COMBINED FILES */
 		$this->setupCombinedRequirements();
 		clearstatcache(); // needed to get accurate file_exists() results
-		Requirements::combine_files(
+
+		// This throws a notice-level error, so we prefix with @
+		@Requirements::combine_files(
 			'ac.js',
 			array(
 				'sapphire/tests/forms/a.js',
 				'sapphire/tests/forms/c.js'
 			)
 		);
+
 		$combinedFiles = Requirements::get_combine_files();
 		$this->assertEquals(
 			array_keys($combinedFiles),
@@ -105,7 +108,7 @@ class RequirementsTest extends SapphireTest {
 			"A single file can't be included in two combined files"
 		);
 		
-		Requirements::clear_combined_files('bc.js');
+		Requirements::delete_combined_files('bc.js');
 	}
 	
 	/**
@@ -118,7 +121,8 @@ class RequirementsTest extends SapphireTest {
 		Requirements::clear();
 		
 		// clearing all previously generated requirements (just in case)
-		Requirements::clear_combined_files('bc.js');
+		Requirements::clear_combined_files();
+		Requirements::delete_combined_files('bc.js');
 		
 		// require files normally (e.g. called from a FormField instance)
 		Requirements::javascript('sapphire/tests/forms/a.js');
@@ -133,7 +137,6 @@ class RequirementsTest extends SapphireTest {
 				'sapphire/tests/forms/c.js'
 			)
 		);
-
 	}
 	
 }
