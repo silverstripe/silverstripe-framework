@@ -5,7 +5,7 @@
  * @package sapphire
  * @subpackage tests
  */
-class SecurityTest extends SapphireTest {
+class SecurityTest extends FunctionalTest {
 	static $fixture_file = 'sapphire/tests/security/MemberTest.yml';
 	
 	
