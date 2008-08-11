@@ -57,18 +57,16 @@ class FieldGroup extends CompositeField {
 	 * it is easier to overwrite the <div class="field"> behaviour in a more specific class
 	 */
 	function Field() {
-		$subfieldParam = $this->subfieldParam;
-		
 		$fs = $this->FieldSet();
     	$spaceZebra = isset($this->zebra) ? " $this->zebra" : '';
     	$idAtt = isset($this->id) ? " id=\"{$this->id}\"" : '';
-		$content = "<span class=\"fieldgroup$spaceZebra\"$idAtt>";
+		$content = "<div class=\"fieldgroup$spaceZebra\"$idAtt>";
 		foreach($fs as $subfield) {
-	      $childZebra = (!isset($childZebra) || $childZebra == "odd") ? "even" : "odd";
-	      if($subfield->hasMethod('setZebra')) $subfield->setZebra($childZebra);
-			$content .= $subfield->$subfieldParam() . " ";
+			$childZebra = (!isset($childZebra) || $childZebra == "odd") ? "even" : "odd";
+			if($subfield->hasMethod('setZebra')) $subfield->setZebra($childZebra);
+			$content .= "<div class=\"fieldgroupField\">" . $subfield->{$this->subfieldParam}() . "</div>";
 		}
-		$content .= "</span>";
+		$content .= "</div>";
 		return $content;
 	}
 	

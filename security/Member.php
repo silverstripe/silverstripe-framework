@@ -699,7 +699,7 @@ $_REQUEST['showqueries'] = 1;
 	public function Groups() {
 		$groups = $this->getManyManyComponents("Groups");
 
-		$unsecure = DataObject::get("Group_Unsecure", "");
+		$unsecure = DataObject::get("Group_Unsecure");
 		if($unsecure) {
 			foreach($unsecure as $unsecureItem) {
 				$groups->push($unsecureItem);

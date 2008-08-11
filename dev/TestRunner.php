@@ -58,7 +58,6 @@ class TestRunner extends Controller {
 	 * Run all test classes
 	 */
 	function all() {
-		die("here");
 		if(hasPhpUnit()) {
 			$tests = ClassInfo::subclassesFor('SapphireTest');
 			array_shift($tests);
@@ -127,10 +126,8 @@ class TestRunner extends Controller {
 		$results = new PHPUnit_Framework_TestResult();		
 		$results->addListener($reporter);
 
-		/*, array("reportDirectory" => "/Users/sminnee/phpunit-report")*/
 		if($coverage) {
 			$suite->run($results);
-			//$testResult = PHPUnit_TextUI_TestRunner::run($suite, array("reportDirectory" => "../assets/coverage-report"));
 			$coverageURL = Director::absoluteURL('assets/coverage-report');
 			echo "<p><a href=\"$coverageURL\">Coverage report available here</a></p>";
 		} else {
