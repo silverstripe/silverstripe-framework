@@ -119,6 +119,7 @@ DB::connect($databaseConfig);
 // Get the request URL
 // $baseURL = dirname(dirname($_SERVER[SCRIPT_NAME]));
 $url = $_SERVER['argv'][1];
+$_SERVER['REQUEST_URI'] = "/$url";
 
 if(isset($_SERVER['argv'][2])) {
 	parse_str($_SERVER['argv'][2], $_GET);
