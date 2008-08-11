@@ -2069,7 +2069,11 @@ class DataObject extends ViewableData implements DataObjectInterface {
 	 */
 	public static function get_one($callerClass, $filter = "", $cache = true, $orderby = "") {
 		$sum = md5("{$filter}_{$orderby}");
-		if(!$cache || !isset(DataObject::$cache_get_one[$callerClass][$sum]) || !DataObject::$cache_get_one[$callerClass][$sum] || DataObject::$cache_get_one[$callerClass][$sum]->destroyed) {
+		// Flush destroyed items out of the cache
+		if($cache && isset(DataObject::$cache_get_one[$callerClass][$sum]) && DataObject::$cache_get_one[$callerClass][$sum] instanceof DataObject && DataObject::$cache_get_one[$callerClass][$sum]->destroyed) {
+			DataObject::$cache_get_one[$callerClass][$sum] = false;
+		}
+		if(!$cache || !isset(DataObject::$cache_get_one[$callerClass][$sum])) {
 			$item = singleton($callerClass)->instance_get_one($filter, $orderby);
 			if($cache) {
 				DataObject::$cache_get_one[$callerClass][$sum] = $item;
@@ -2090,13 +2094,11 @@ class DataObject extends ViewableData implements DataObjectInterface {
 			return;
 		}
 
+		if(!self::$cache_get_one) return;
+
 		$classes = ClassInfo::ancestry($this->class);
 		foreach($classes as $class) {
-			// If someone else has called get_one and flushCache() is called, then that object will be destroyed.
-			// Not very friendly.  We need a better way of dealing with PHP's garbage collection limitations.
-			// Until then, this line is being commented out.
-			// if(DataObject::$cache_get_one[$class]) foreach(DataObject::$cache_get_one[$class] as $obj) if($obj) $obj->destroy();
-			DataObject::$cache_get_one[$class] = null;
+			if(isset(self::$cache_get_one[$class])) unset(self::$cache_get_one[$class]);
 		}
 		
 		$this->componentCache = array();
