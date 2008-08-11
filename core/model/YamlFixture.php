@@ -92,7 +92,7 @@ class YamlFixture extends Object {
 	 * @param $className The data class, as specified in your fixture file.  Parent classes won't work
 	 * @param $identifier The identifier string, as provided in your fixture file
 	 */
-	protected function idFromFixture($className, $identifier) {
+	public function idFromFixture($className, $identifier) {
 		return $this->fixtureDictionary[$className][$identifier];
 	}
 	
@@ -101,7 +101,7 @@ class YamlFixture extends Object {
 	 * 
 	 * @return A map of fixture-identifier => object-id
 	 */
-	protected function allFixtureIDs($className) {
+	public function allFixtureIDs($className) {
 		return $this->fixtureDictionary[$className];
 	}
 
@@ -111,7 +111,7 @@ class YamlFixture extends Object {
 	 * @param $className The data class, as specified in your fixture file.  Parent classes won't work
 	 * @param $identifier The identifier string, as provided in your fixture file
 	 */
-	protected function objFromFixture($className, $identifier) {
+	public function objFromFixture($className, $identifier) {
 		return DataObject::get_by_id($className, $this->idFromFixture($className, $identifier));
 	}
 	
@@ -119,7 +119,7 @@ class YamlFixture extends Object {
 	 * Load a YAML fixture file into the database.
 	 * Once loaded, you can use idFromFixture() and objFromFixture() to get items from the fixture
 	 */
-	function saveIntoDatabase() {
+	public function saveIntoDatabase() {
 		$parser = new Spyc();
 		$fixtureContent = $parser->load(Director::baseFolder().'/'.$this->fixtureFile);
 		$this->fixtureDictionary = array();
