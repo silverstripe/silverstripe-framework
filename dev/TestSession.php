@@ -18,6 +18,7 @@ class TestSession {
 	 */
 	function get($url) {
 		$this->lastResponse = Director::test($url, null, $this->session);
+		if(!$this->lastResponse) user_error("Director::test($url) returned null", E_USER_WARNING);
 		return $this->lastResponse;
 	}
 
@@ -26,6 +27,7 @@ class TestSession {
 	 */
 	function post($url, $data) {
 		$this->lastResponse = Director::test($url, $data, $this->session);
+		if(!$this->lastResponse) user_error("Director::test($url) returned null", E_USER_WARNING);
 		return $this->lastResponse;
 	}
 	
@@ -35,20 +37,25 @@ class TestSession {
 	 */
 	function submitForm($formID, $button = null, $data = array()) {
 		$page = $this->lastPage();
-		$form = $page->getFormById($formID);
+		if($page) {
+			$form = $page->getFormById($formID);
 
-		foreach($data as $k => $v) {
-			$form->setField(new SimpleByName($k), $v);
+			foreach($data as $k => $v) {
+				$form->setField(new SimpleByName($k), $v);
+			}
+
+			if($button) $submission = $form->submitButton(new SimpleByName($button));
+			else $submission = $form->submit();
+
+			$url = Director::makeRelative($form->getAction()->asString());
+
+			$postVars = array();
+			parse_str($submission->_encode(), $postVars);
+			return $this->post($url, $postVars);
+			
+		} else {
+			user_error("TestSession::submitForm called when there is no form loaded.  Visit the page with the form first", E_USER_WARNING);
 		}
-
-		if($button) $submission = $form->submitButton(new SimpleByName($button));
-		else $submission = $form->submit();
-
-		$url = Director::makeRelative($form->getAction()->asString());
-		
-		$postVars = array();
-		parse_str($submission->_encode(), $postVars);
-		return $this->post($url, $postVars);
 	}
 	
 	/**
@@ -99,11 +106,13 @@ class TestSession {
 		require_once("thirdparty/simpletest/form.php");
 
 		$builder = &new SimplePageBuilder();
-		$page = &$builder->parse(new TestSession_STResponseWrapper($this->lastResponse));
-		$builder->free();
-		unset($builder);
+		if($this->lastResponse) {
+			$page = &$builder->parse(new TestSession_STResponseWrapper($this->lastResponse));
+			$builder->free();
+			unset($builder);
 		
-		return $page;
+			return $page;
+		}
 	}
 	
 	/**
