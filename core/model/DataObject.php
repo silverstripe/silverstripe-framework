@@ -2490,20 +2490,6 @@ class DataObject extends ViewableData implements DataObjectInterface {
 	}
 
 	/**
-	 * Replace named fields in a relationship with actual path to data objects.
-	 *
-	 * @param string $path
-	 * @return SearchFilter
-	 */
-	protected function mapRelationshipObjects($path) {
-		$path = explode('.', $path);
-		$fieldName = array_pop($path);
-		foreach($path as $relation) {
-			//
-		}
-	}
-
-	/**
 	 * @return boolean True if the object is in the database
 	 */
 	public function isInDB() {
