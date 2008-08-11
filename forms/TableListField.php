@@ -444,7 +444,7 @@ JS
 	
 	function performReadonlyTransformation() {
 		$this->setShowPagination(false);
-		$this->setPermissions(array());
+		$this->setPermissions(array('show'));
 		$this->IsReadOnly = true;
 		$this->addExtraClass( 'readonly' );
 		return $this;
