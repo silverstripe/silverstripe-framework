@@ -61,6 +61,29 @@ class SiteTreeTest extends SapphireTest {
 		$this->assertType('SiteTreeTest_PageNode', $child->Parent);
 	}
 	
+	/**
+	 * Confirm that DataObject::get_one() gets records from SiteTree_Live
+	 */
+	function testGetOneFromLive() {
+		$s = new SiteTree();
+		$s->Title = "V1";
+		$s->URLSegment = "get-one-test-page";
+		$s->write();
+		$s->publish("Stage", "Live");
+		$s->Title = "V2";
+		$s->write();
+		
+		$oldStage = Versioned::current_stage();
+		Versioned::reading_stage('Live');
+		
+		$checkSiteTree = DataObject::get_one("SiteTree", "URLSegment = 'get-one-test-page'");
+		$this->assertEquals("V1", $checkSiteTree->Title);
+	}
+	
+	/**
+	 * Test that saving changes creates a new version with the correct data in it.
+	 */
+	
 }
 
 class SiteTreeTest_PageNode extends SiteTree implements TestOnly { }

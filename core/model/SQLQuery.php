@@ -130,7 +130,7 @@ class SQLQuery extends Object {
 	 * @return SQLQuery This instance
 	 */
 	public function from($table) {
-		$this->from[] = $table;
+		$this->from[str_replace('`','',$table)] = $table;
 		
 		return $this;
 	}
