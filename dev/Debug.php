@@ -59,6 +59,15 @@ class Debug {
 	protected static $send_warnings_to;
 	
 	/**
+	 * String indicating the file where errors are logged.
+	 * Filename is relative to the site root.
+	 * The named file will have a terse log sent to it, and the full log (an 
+	 * encoded file containing backtraces and things) will go to a file of a similar
+	 * name, but with the suffix ".full" added.
+	 */
+	protected static $log_errors_to = null;
+	
+	/**
 	 * Show the contents of val in a debug-friendly way.
 	 * Debug::show() is intended to be equivalent to dprintr()
 	 */
@@ -214,6 +223,7 @@ class Debug {
 	static function warningHandler($errno, $errstr, $errfile, $errline, $errcontext) {
 	  if(error_reporting() == 0) return;
 		if(self::$send_warnings_to) self::emailError(self::$send_warnings_to, $errno, $errstr, $errfile, $errline, $errcontext, "Warning");
+		self::log_error_if_necessary( $errno, $errstr, $errfile, $errline, $errcontext, "Warning");
 
 		if(Director::isDev()) {
 		  self::showError($errno, $errstr, $errfile, $errline, $errcontext);
@@ -233,14 +243,15 @@ class Debug {
 	 */
 	static function fatalHandler($errno, $errstr, $errfile, $errline, $errcontext) {
 		if(self::$send_errors_to) self::emailError(self::$send_errors_to, $errno, $errstr, $errfile, $errline, $errcontext, "Error");
-
-		if(Director::isDev()) {
+		self::log_error_if_necessary( $errno, $errstr, $errfile, $errline, $errcontext, "Error");
+		
+		if(Director::isDev() || Director::is_cli()) {
 			Debug::showError($errno, $errstr, $errfile, $errline, $errcontext);
 
 		} else {
 			Debug::friendlyError($errno, $errstr, $errfile, $errline, $errcontext);
 		}
-		die();
+		exit(1);
 	}
 	
 	/**
@@ -267,6 +278,14 @@ class Debug {
 			}
 		}
 	}
+	
+	/**
+	 * Create an instance of an appropriate DebugView object.
+	 */
+	static function create_debug_view() {
+		if(Director::is_cli()) return new CliDebugView();
+		else return new DebugView();
+	}
 
 	/**
 	 * Render a developer facing error page, showing the stack trace and details
@@ -284,17 +303,23 @@ class Debug {
 			echo "ERROR:Error $errno: $errstr\n At l$errline in $errfile\n";
 			Debug::backtrace();
 		} else {
-			$reporter = new DebugView();
-			$reporter->writeHeader();
-			$reporter->writeInfo(strip_tags($errstr), $_SERVER['REQUEST_METHOD'] . " " .$_SERVER['REQUEST_URI'],
-								 "Line <strong>$errline</strong> in <strong>$errfile</strong>");
-			echo '<div class="trace"><h3>Source</h3>';
-			Debug::showLines($errfile, $errline);
-			echo '<h3>Trace</h3>';
-			Debug::backtrace();
-			echo '</div>';
+			$reporter = self::create_debug_view();
+			
+			// Coupling alert: This relies on knowledge of how the director gets its URL, it could be improved.
+			$httpRequest = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : $_REQUEST['url'];
+			if(isset($_SERVER['REQUEST_METHOD'])) $httpRequest = $_SERVER['REQUEST_METHOD'] . ' ' . $httpRequest;
+
+			$reporter->writeHeader($httpRequest);
+			$reporter->writeError($httpRequest, $errno, $errstr, $errfile, $errline, $errcontext);
+
+			$lines = file($errfile);
+			$offset = $errline-10;
+			$lines = array_slice($lines, $offset, 16, true);
+			$reporter->writeSourceFragment($lines, $errline);
+
+			$reporter->writeTrace($lines);
 			$reporter->writeFooter();
-			die();
+			exit(1);
 		}
 	}
 	
@@ -358,6 +383,26 @@ class Debug {
 	}
 	
 	/**
+	 * Log the given error, if self::$log_errors is set.
+	 */
+	protected static function log_error_if_necessary($errno, $errstr, $errfile, $errline, $errcontext, $errtype) {
+		if(self::$log_errors_to) {
+			$shortFile = "../" . self::$log_errors_to;
+			$fullFile = $shortFile . '.full';
+
+			$relfile = Director::makeRelative($errfile);
+			if($relfile[0] == '/') $relfile = substr($relfile,1);
+
+			$urlSuffix = "";
+			if(isset($_SERVER['HTTP_HOST']) && $_SERVER['HTTP_HOST'] && isset($_SERVER['REQUEST_URI'])) {
+				$urlSuffix = " (http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI])";
+			}
+			
+			error_log('[' . date('d-M-Y h:i:s') . "] $errtype at $relfile line $errline: $errstr$urlSuffix\n", 3, $shortFile);
+		}
+	}
+	
+	/**
 	 * @param string $server IP-Address or domain
 	 */
 	static function set_custom_smtp_server($server) {
@@ -396,6 +441,14 @@ class Debug {
 	static function get_send_warnings_to() {
 		return self::$send_warnings_to;
 	}
+	
+	/**
+	 * Call this to enable logging of errors.
+	 */
+	static function log_errors_to($logFile = ".sserrors") {
+		self::$log_errors_to = $logFile;
+	}
+	
 
 	/**
 	 * Deprecated.  Send live errors and warnings to the given address.
@@ -424,20 +477,20 @@ class Debug {
 	 * @return unknown
 	 */
 	static function backtrace($returnVal = false, $ignoreAjax = false) {
-
 		$bt = debug_backtrace();
-
+		
 		// Ingore functions that are plumbing of the error handler
-		$ignoredFunctions = array('Debug::emailError','Debug::warningHandler','Debug::fatalHandler','errorHandler','Debug::showError','Debug::backtrace', 'exceptionHandler');
+		$ignoredFunctions = array('DebugView::writeTrace', 'CliDebugView::writeTrace', 'Debug::emailError','Debug::warningHandler','Debug::fatalHandler','errorHandler','Debug::showError','Debug::backtrace', 'exceptionHandler');
 		while( $bt && in_array(self::full_func_name($bt[0]), $ignoredFunctions) ) {
 			array_shift($bt);
 		}
 		
 		$result = "<ul>";
 		foreach($bt as $item) {
-			if(Director::is_ajax() && !$ignoreAjax) {
+			if(Director::is_cli() || (Director::is_ajax() && !$ignoreAjax)) {
 				$result .= self::full_func_name($item,true) . "\n";
-				$result .= "line $item[line] of " . basename($item['file']) . "\n\n";
+				if(isset($item['line']) && isset($item['file'])) $result .= "line $item[line] of " . basename($item['file']) . "\n";
+				$result .= "\n";
 			} else {
 				if ($item['function'] == 'user_error') {
 					$name = $item['args'][0];
@@ -573,5 +626,3 @@ function errorHandler($errno, $errstr, $errfile, $errline, $errcontext) {
 			
 	}
 }
-
-?>

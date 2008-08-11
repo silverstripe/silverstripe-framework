@@ -80,7 +80,44 @@ class DebugView {
 	public function writeFooter() {
 		echo "</body></html>";		
 	}	
+
+	/**
+	 * Write information about the error to the screen
+	 */
+	public function writeError($httpRequest, $errno, $errstr, $errfile, $errline, $errcontext) {
+		echo '<div class="info">';
+		echo "<h1>" . strip_tags($errstr) . "</h1>";
+		echo "<h3>$httpRequest</h3>";
+		echo "<p>Line <strong>$errline</strong> in <strong>$errfile</strong></p>";
+		echo '</div>';
+	}
+
+	/**
+	 * Write a fragment of the a source file
+	 * @param $lines An array of file lines; the keys should be the original line numbers
+	 */
+	function writeSourceFragment($lines, $errline) {
+		echo '<div class="trace"><h3>Source</h3>';
+		echo '<pre>';
+		foreach($lines as $offset => $line) {
+			$line = htmlentities($line);
+			if ($offset == $errline) {
+				echo "<span>$offset</span> <span class=\"error\">$line</span>";
+			} else {
+				echo "<span>$offset</span> $line";
+			}
+		}
+		echo '</pre>';
+	}
 	
+	/**
+	 * Write a backtrace
+	 */
+	function writeTrace() {
+		echo '<h3>Trace</h3>';
+		Debug::backtrace();
+		echo '</div>';
+	}
 }
 
 ?>
