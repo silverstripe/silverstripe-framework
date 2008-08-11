@@ -73,7 +73,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	 * @param $identifier The identifier string, as provided in your fixture file
 	 */
 	protected function idFromFixture($className, $identifier) {
-		return $this->fixtureDictionary[$className][$identifier];
+		return $this->fixture->idFromFixture($className, $identifier);
 	}
 	
 	/**
@@ -81,7 +81,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	 * @return A map of fixture-identifier => object-id
 	 */
 	protected function allFixtureIDs($className) {
-		return $this->fixtureDictionary[$className];
+		return $this->fixture->allFixtureIDs($className);
 	}
 
 	/**
@@ -90,7 +90,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	 * @param $identifier The identifier string, as provided in your fixture file
 	 */
 	protected function objFromFixture($className, $identifier) {
-		return DataObject::get_by_id($className, $this->idFromFixture($className, $identifier));
+		return $this->fixture->objFromFixture($className, $identifier);
 	}
 	
 	/**

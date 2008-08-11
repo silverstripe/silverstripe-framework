@@ -112,7 +112,8 @@ class YamlFixture extends Object {
 	 * @param $identifier The identifier string, as provided in your fixture file
 	 */
 	public function objFromFixture($className, $identifier) {
-		return DataObject::get_by_id($className, $this->idFromFixture($className, $identifier));
+		$id = $this->idFromFixture($className, $identifier);
+		if($id) return DataObject::get_by_id($className, $id);
 	}
 	
 	/**
