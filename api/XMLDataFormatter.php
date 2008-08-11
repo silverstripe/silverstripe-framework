@@ -17,6 +17,7 @@ class XMLDataFormatter extends DataFormatter {
 	public function supportedMimeTypes() {
 		return array(
 			'text/xml',
+			'application/xml',
 		);
 	}
 

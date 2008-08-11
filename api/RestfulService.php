@@ -58,7 +58,7 @@ class RestfulService extends ViewableData {
 	 * Connects to the RESTful service and gets its response.
 	 * @deprecated Use {@link request()} instead.
  	 */
-	function connect($subURL = ""){
+	public function connect($subURL = ""){
  	
 		// url for the request
 		$url = $this->constructURL() . $subURL; 
@@ -148,7 +148,7 @@ class RestfulService extends ViewableData {
 	 *
 	 * This is a replacement of {@link connect()}.
 	 */
-	function request($subURL, $method = "GET", $data = null, $headers = null) {
+	public function request($subURL, $method = "GET", $data = null, $headers = null) {
 		$url = $this->baseURL . $subURL; //url for the request
 		$method = strtoupper($method);
 		
@@ -218,7 +218,7 @@ class RestfulService extends ViewableData {
  	* @param string $element The element we need to extract the attributes.
  	*/
 	
-	function getAttributes($xml, $collection=NULL, $element=NULL){
+	public function getAttributes($xml, $collection=NULL, $element=NULL){
 		$xml = new SimpleXMLElement($xml);
 		$output = new DataObjectSet();
 		
@@ -249,21 +249,22 @@ class RestfulService extends ViewableData {
  	* @param string $attr The name of the attribute
  	*/
 	
-	function getAttribute($xml, $collection=NULL, $element=NULL, $attr){
-	$xml = new SimpleXMLElement($xml);
-	$attr_value = "";
+	public function getAttribute($xml, $collection=NULL, $element=NULL, $attr){
+		$xml = new SimpleXMLElement($xml);
+		$attr_value = "";
 	
-	if($collection)
+		if($collection)
 			$childElements = $xml->{$collection};
 		if($element)
 			$childElements = $xml->{$collection}->{$element};
-		
+	
 		if($childElements)
 			$attr_value = (string) $childElements[$attr];
-		
+	
 		return Convert::raw2xml($attr_value);
 		
 	}
+		
 	
 	/**
  	* Gets set of node values as an array. 
@@ -273,7 +274,7 @@ class RestfulService extends ViewableData {
  	* @param string $element The element we need to extract the node values.
  	*/
 	
-	function getValues($xml, $collection=NULL, $element=NULL){
+	public function getValues($xml, $collection=NULL, $element=NULL){
 		$xml = new SimpleXMLElement($xml);
 		$output = new DataObjectSet();
 		

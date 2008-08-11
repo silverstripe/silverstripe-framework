@@ -235,13 +235,13 @@ class SQLQuery extends Object {
 			foreach($lumpedSortParts as $i => $sortPart) {
 				$sortPart = trim($sortPart);
 				if(substr(strtolower($sortPart),-5) == ' desc') {
-					$select[] = substr($sortPart,0,-5) . " AS _SortColumn{$i}";
+					$this->select[] = substr($sortPart,0,-5) . " AS _SortColumn{$i}";
 					$newSorts[] = "_SortColumn{$i} DESC";
 				} else if(substr(strtolower($sortPart),-4) == ' asc') {
-					$select[] = substr($sortPart,0,-4) . " AS _SortColumn{$i}";
+					$this->select[] = substr($sortPart,0,-4) . " AS _SortColumn{$i}";
 					$newSorts[] = "_SortColumn{$i} ASC";
 				} else {
-					$select[] = "$sortPart AS _SortColumn{$i}";
+					$this->select[] = "$sortPart AS _SortColumn{$i}";
 					$newSorts[] = "_SortColumn{$i} ASC";
 				}
 			}

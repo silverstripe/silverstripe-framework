@@ -353,4 +353,20 @@ class HTTPRequest extends Object implements ArrayAccess {
 			return $_SERVER['REMOTE_ADDR'];
 		}
 	}
+	
+	/**
+	 * Returns all mimetypes from the HTTP "Accept" header
+	 * as an array.
+	 * 
+	 * @param boolean $includeQuality Don't strip away optional "quality indicators", e.g. "application/xml;q=0.9" (Default: false)
+	 * @return array
+	 */
+	function getAcceptMimetypes($includeQuality = false) {
+	   $mimetypes = array();
+	   $mimetypesWithQuality = explode(',',$this->getHeader('Accept'));
+	   foreach($mimetypesWithQuality as $mimetypeWithQuality) {
+	      $mimetypes[] = ($includeQuality) ? $mimetypeWithQuality : preg_replace('/;.*/', '', $mimetypeWithQuality);
+	   }
+	   return $mimetypes;
+	}
 }

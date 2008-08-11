@@ -1,4 +1,4 @@
-<div id="$id" class="$CSSClasses field" href="$Link">
+<div id="$id" class="$CSSClasses field" href="$CurrentLink">
   <div class="middleColumn">
 	<% include TableListField_PageControls %>
 	<table class="data">

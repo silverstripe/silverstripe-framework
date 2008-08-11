@@ -69,10 +69,15 @@ class Controller extends RequestHandlingData {
 
 		$body = parent::handleRequest($request);
 		if($body instanceof HTTPResponse) {
+			if(isset($_REQUEST['debug_request'])) Debug::message("Request handler returned HTTPResponse object to $this->class controller; returning it without modification.");
 			$this->response = $body;
 			
 		} else {
-			if(is_object($body)) $body = $body->getViewer($request->latestParam('Action'))->process($body);
+			if(is_object($body)) {
+				if(isset($_REQUEST['debug_request'])) Debug::message("Request handler $body->class object to $this->class controller;, rendering with template returned by $body->class::getViewer()");
+			   $body = $body->getViewer($request->latestParam('Action'))->process($body);
+			}
+			
 			$this->response->setBody($body);
 		}
 

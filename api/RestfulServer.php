@@ -225,12 +225,13 @@ class RestfulServer extends Controller {
 		$extension = $this->request->getExtension();
 		$contentType = $this->request->getHeader('Content-Type');
 		$accept = $this->request->getHeader('Accept');
+		$mimetypes = $this->request->getAcceptMimetypes();
 
 		// get formatter
 		if(!empty($extension)) {
 			$formatter = DataFormatter::for_extension($extension);
 		}elseif($includeAcceptHeader && !empty($accept) && $accept != '*/*') {
-			$formatter = DataFormatter::for_mimetypes(explode(',',$accept));
+			$formatter = DataFormatter::for_mimetypes($mimetypes);
 		} elseif(!empty($contentType)) {
 			$formatter = DataFormatter::for_mimetype($contentType);
 		} else {

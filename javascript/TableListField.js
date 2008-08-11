@@ -126,12 +126,13 @@ TableListField.prototype = {
 		} else {
 			var el = $(this.id);
 		}
-		new Ajax.Updater( 
-			$(this.id),
+
+		new Ajax.Request( 
 			el.getAttribute('href'), 
 			{
 				postBody: 'update=1',
-				onComplete: function() {
+				onComplete: function(response) {
+					Element.replace(this.id, response.responseText)
 					Behaviour.apply($(this.id))
 				}.bind(this)
 			}

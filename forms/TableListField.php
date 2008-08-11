@@ -982,7 +982,20 @@ JS
 	function setTemplate($template) {
 		$this->template = $template;
 	}
+	
+	function CurrentLink() {
+		$link = $this->Link();
+		
+		if(isset($_REQUEST['ctf'][$this->Name()]['start']) && is_numeric($_REQUEST['ctf'][$this->Name()]['start'])) {
+			$start = ($_REQUEST['ctf'][$this->Name()]['start'] < 0)  ? 0 : $_REQUEST['ctf'][$this->Name()]['start'];
+			$link .= "/?ctf[{$this->Name()}][start]={$start}";
+		}
 
+		if($this->extraLinkParams) $link .= "&" . http_build_query($this->extraLinkParams);
+		
+		return $link;
+	}
+	
 	function BaseLink() {
 		user_error("TableListField::BaseLink() deprecated, use Link() instead", E_USER_NOTICE);
 		return $this->Link();
@@ -1130,13 +1143,14 @@ class TableListField_Item extends ViewableData {
 	function Can($mode) {
 		return $this->parent->Can($mode);
 	}
+	
+	function Link() {
+      return Controller::join_links($this->parent->Link() . "item/" . $this->item->ID);
+   }
 
 	function BaseLink() {
 		user_error("TableListField_Item::BaseLink() deprecated, use Link() instead", E_USER_NOTICE);
 		return $this->Link() . '/ajax_refresh';
-	}
-	function Link() {
-		return Controller::join_links($this->parent->Link() . "item/" . $this->item->ID);
 	}
 
 	function DeleteLink() {

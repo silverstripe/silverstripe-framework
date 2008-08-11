@@ -122,7 +122,7 @@ class ComplexTableField extends TableListField {
 	}
 	
 	function getViewer() {
-		return new SSViewer('ComplexTableField');
+		return new SSViewer($this->template);
 	}
 
 	

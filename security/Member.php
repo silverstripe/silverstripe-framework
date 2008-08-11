@@ -61,9 +61,9 @@ class Member extends DataObject {
 	 * (LIKE, FULLTEXT) and default FormFields to construct a searchform.
 	 */
 	static $searchable_fields = array(
-		'FirstName' => true,
-		'Surname' => true,
-		'Email' => true,
+		'FirstName',
+		'Surname',
+		'Email',
 	);
 	
 	

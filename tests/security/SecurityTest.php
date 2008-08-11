@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Test the security class, including log-in form, change password form, etc
  *
