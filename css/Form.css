@@ -61,6 +61,15 @@ form .indicator.block {
 	display: inline;
 }
 
+/* Emulating link styling for actions requiring lesser attention, e.g. "cancel" FormActions */
+form button.minorAction {
+	background: none;
+	padding: 0;
+	border: 0;
+	color: #0074C6; /* same for "a" tag in cms/css/typography.css */
+	text-decoration: underline;
+}
+
 
 /**
  * Composite Fields - raw concatenation of fields for programmatic purposes.

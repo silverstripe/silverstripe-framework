@@ -8,6 +8,10 @@
  * Security::set_login_recording(true);
  * </code>
  * 
+ * Caution: Please make sure that enabling logging
+ * complies with your privacy standards. We're logging
+ * username and IP.
+ * 
  * @package sapphire
  * @subpackage security
  */
@@ -16,6 +20,7 @@ class LoginAttempt extends DataObject {
 	static $db = array(
 		'Email' => 'Varchar(255)', 
 		'Status' => "Enum('Success,Failure')", 
+		'IP' => 'Varchar(255)', 
 	);
 	
 	static $has_one = array(

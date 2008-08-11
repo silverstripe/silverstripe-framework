@@ -1,4 +1,10 @@
 <?php
+
+/**
+ * @package forms
+ * @subpackage fields-relational
+ */
+
 /**
  * Form field that embeds a list into a form, such as a member list or a file list.
  * 
@@ -118,6 +124,20 @@ class TableListField extends FormField {
 	 */
 	protected $csvHasHeader = true;
 	
+	/**
+	 * @var array Specify custom escape for the fields.
+	 *
+	 * <code>
+	 * array("\""=>"\"\"","\r"=>"", "\r\n"=>"", "\n"=>"")
+	 * </code>
+	 */
+	public $csvFieldEscape = array(
+		"\""=>"\"\"",
+		"\r\n"=>"", 
+		"\r"=>"",
+		"\n"=>"",
+	);
+	
 	
 	/**
 	 * @var int Shows total count regardless or pagination
@@ -164,14 +184,6 @@ class TableListField extends FormField {
 	 * Example:	"myFieldName" => '<a href=\"custom-admin/$ID\">$ID</a>'
 	 */
 	public $fieldFormatting = array();
-	
-	/**
-	 * @var array Specify custom escape for the fields, e.g. to escape all accurance of "\r", "\r\n" and "\n" of the field 
-	 * value, we need to set this field as array("\r"=>"", "\r\n"=>"", "\n"=>"") ;
-	 * Example: setFieldEscape(array("\""=>"\"\"","\r"=>"", "\r\n"=>"", "\n"=>"") is needed for exporting the table to a .csv 
-	 * file
-	 */
-	public $fieldEscape = array();
 	
 	/**
 	 * @var string
@@ -829,29 +841,33 @@ JS
 		
 		$sourceClass = $this->sourceClass;
 		$dataobject = new $sourceClass();
+		
+		// @todo Will create a large unpaginated dataobjectset based on how many records are in table (performance issue)
 		$items = $dataobject->buildDataObjectSet($records, 'DataObjectSet');
 		
 		$fieldItems = new DataObjectSet();
-		
-		if($items&&$items->count()) foreach($items as $item) {
-			$fieldItem = new TableListField_Item($item, $this);
+		if($items && $items->count()) foreach($items as $item) {
+			// create a TableListField_Item to support resolving of
+			// relation-fields in dot notation via TableListField_Item->Fields()
 			if($item) $fieldItems->push(new TableListField_Item($item, $this));
 		}
 		
+		// temporary override to adjust TableListField_Item behaviour
 		$this->setFieldFormatting(array());
-		$this->setFieldEscape(array(
-			"\""=>"\"\"",
-			"\r\n"=>"", 
-			"\r"=>"",
-			"\n"=>"",
-		));
+		$this->fieldList = $csvColumns;
 
 		if($fieldItems) {
-
 			foreach($fieldItems as $fieldItem) {
-				$fileData .= $fieldItem->renderwith("TableListField_Item_export");
+				$fields = $fieldItem->Fields();
+				foreach($fields as $field) {
+					$fileData .= "\"" . $field->Value . "\"";
+					if($field->Last()) {
+						$fileData .= "\n";
+					} else {
+						$fileData .= $this->csvSeparator;
+					}
+				}
 			}
-
 			HTTP::sendFileToBrowser($fileData, $fileName);
 		} else {
 			user_error("No records found", E_USER_ERROR);
@@ -929,10 +945,6 @@ JS
 
 	function setFieldFormatting($formatting) {
 		$this->fieldFormatting = $formatting;
-	}
-	
-	function setFieldEscape($escape){
-		$this->fieldEscape = $escape;
 	}
 	
 	/**

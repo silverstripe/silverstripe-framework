@@ -49,6 +49,7 @@ class MemberAuthenticator extends Authenticator {
 			$attempt->Status = 'Failure';
 		}
 		$attempt->Email = $RAW_data['Email'];
+		$attempt->IP = Controller::curr()->getRequest()->getIP();
 		$attempt->write();
 	}
 
