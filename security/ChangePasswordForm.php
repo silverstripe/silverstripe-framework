@@ -22,7 +22,7 @@ class ChangePasswordForm extends Form {
 	function __construct($controller, $name, $fields = null, $actions = null) {
 		if(!$fields) {
 			$fields = new FieldSet();
-			if(Member::currentUser() && (!isset($_REQUEST['h']) || !Member::autoLoginHash($_REQUEST['h']))) {
+			if(Member::currentUser() && (!isset($_REQUEST['h']) || !Member::member_from_autologin($_REQUEST['h']))) {
 				$fields->push(new EncryptField("OldPassword",_t('Member.YOUROLDPASSWORD', "Your old password")));
 			}
 
@@ -60,7 +60,7 @@ class ChangePasswordForm extends Form {
 
 		if(!$member) {
 			if(Session::get('AutoLoginHash')) {
-				$member = Member::autoLoginHash(Session::get('AutoLoginHash'));
+				$member = Member::member_from_autologin(Session::get('AutoLoginHash'));
 			}
 
 			// The user is not logged in and no valid auto login hash is available

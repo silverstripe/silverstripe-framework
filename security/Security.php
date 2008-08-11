@@ -453,7 +453,7 @@ class Security extends Controller {
 		$controller = new Page_Controller($tmpPage);
 		$controller->init();
 
-		if(isset($_REQUEST['h']) && Member::autoLoginHash($_REQUEST['h'])) {
+		if(isset($_REQUEST['h']) && Member::member_from_autologinhash($_REQUEST['h'])) {
 			// The auto login hash is valid, store it for the change password form
 			Session::set('AutoLoginHash', $_REQUEST['h']);
 

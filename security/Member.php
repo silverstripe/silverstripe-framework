@@ -271,7 +271,7 @@ class Member extends DataObject {
 	 *
 	 * @param bool $login Should the member be logged in?
 	 */
-	static function autoLoginHash($RAW_hash, $login = false) {
+	static function member_from_autologinhash($RAW_hash, $login = false) {
 		$SQL_hash = Convert::raw2sql($RAW_hash);
 
 		$member = DataObject::get_one('Member',"`AutoLoginHash`='" . $SQL_hash .
