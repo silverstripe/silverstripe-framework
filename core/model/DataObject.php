@@ -1393,8 +1393,6 @@ class DataObject extends ViewableData implements DataObjectInterface {
 		$fields->push(new HeaderField($this->singular_name()));
 		foreach($this->db() as $fieldName => $fieldType) {
 			// @todo Pass localized title
-			// commented out, to be less of a pain in the ass
-			//$fields->addFieldToTab('Root.Main', $this->dbObject($fieldName)->scaffoldFormField());
 			if(isset($fieldClasses[$fieldName])) {
 				$fieldClass = $fieldClasses[$fieldName];
 				$fieldObject = new $fieldClass($fieldName);
