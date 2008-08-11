@@ -121,6 +121,10 @@ class TestRunner extends Controller {
 			class_exists($className);
 			$suite->addTest(new PHPUnit_Framework_TestSuite($className));
 		}
+
+		// Remove the error handler so that PHPUnit can add its own
+		restore_error_handler();
+
 		/*, array("reportDirectory" => "/Users/sminnee/phpunit-report")*/
 		$reporter = new SapphireTestReporter();
 		$results = new PHPUnit_Framework_TestResult();		
