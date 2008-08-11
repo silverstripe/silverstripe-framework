@@ -162,15 +162,15 @@ class Director {
 		$existingSessionVars = $_SESSION; 
 
 		// Replace the superglobals with appropriate test values
-		$_REQUEST = array_merge((array)$getVars, (array)$post); 
+		$_REQUEST = array_merge((array)$getVars, (array)$postVars); 
 		$_GET = (array)$getVars; 
-		$_POST = (array)$post; 
+		$_POST = (array)$postVars; 
 		$_SESSION = $session ? $session->inst_getAll() : array();
 
 		$req = new HTTPRequest($httpMethod, $url, $getVars, $postVars, $body);
 		if($headers) foreach($headers as $k => $v) $req->addHeader($k, $v);
 		$result = Director::handleRequest($req, $session);
-
+		
 		// Restore the superglobals
 		$_REQUEST = $existingRequestVars; 
 		$_GET = $existingGetVars; 
