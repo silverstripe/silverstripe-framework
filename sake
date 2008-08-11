@@ -16,7 +16,7 @@ fi
 
 # Find the PHP binary
 for candidatephp in php5 php; do
-	if [ -f `which $candidatephp` ]; then
+	if [ `which $candidatephp` -a -f `which $candidatephp` ]; then
 		php=`which $candidatephp`
 		break
 	fi
@@ -29,12 +29,12 @@ fi
 
 if [ -d ./sapphire ]; then
 	$php ./sapphire/cli-script.php $1 $2
-	exit 0
+	exit $?
 fi
 
 if [ -f ./cli-script.php ]; then
 	$php ./cli-script.php $1 $2
-	exit 0
+	exit $?
 fi
 
 echo "Can't find ./sapphire/cli-script.php or ./cli-script.php"
