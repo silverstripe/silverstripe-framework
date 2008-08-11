@@ -51,7 +51,9 @@ class Controller extends RequestHandlingData {
 	 * Handles HTTP requests.
 	 * @param $request The {@link HTTPRequest} object that is responsible for distributing request parsing.
 	 */
-	function handleRequest($request) {
+	function handleRequest(HTTPRequest $request) {
+		if(!$request) user_error("Controller::handleRequest() not passed a request!", E_USER_ERROR);
+		
 		$this->pushCurrent();
 		$this->urlParams = $request->allParams();
 		$this->response = new HTTPResponse();
