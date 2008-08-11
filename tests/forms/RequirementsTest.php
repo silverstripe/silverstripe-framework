@@ -10,6 +10,32 @@ class RequirementsTest extends SapphireTest {
 	
 	static $html_template = '<html><head></head><body></body></html>';
 	
+	function testExternalUrls() {
+		Requirements::javascript('http://www.mydomain.com/test.js');
+		Requirements::javascript('https://www.mysecuredomain.com/test.js');
+		Requirements::css('http://www.mydomain.com/test.css');
+		Requirements::css('https://www.mysecuredomain.com/test.css');
+		
+		$html = Requirements::includeInHTML(false, self::$html_template);
+		
+		$this->assertTrue(
+			(strpos($html, 'http://www.mydomain.com/test.js') !== false),
+			'Load external javascript URL'
+		);
+		$this->assertTrue(
+			(strpos($html, 'https://www.mysecuredomain.com/test.js') !== false), 
+			'Load external secure javascript URL'
+		);
+		$this->assertTrue(
+			(strpos($html, 'http://www.mydomain.com/test.css') !== false), 
+			'Load external CSS URL'
+		);
+		$this->assertTrue(
+			(strpos($html, 'https://www.mysecuredomain.com/test.css') !== false), 
+			'Load external secure CSS URL'
+		);
+	}
+	
 	function testCombinedJavascript() {
 		$this->setupCombinedRequirements();
 		
@@ -39,13 +65,15 @@ class RequirementsTest extends SapphireTest {
 	
 	function testBlockedCombinedJavascript() {
 		$combinedFilePath = Director::baseFolder() . '/' . 'bc.js';
-		
+
 		/* BLOCKED COMBINED FILES ARE NOT INCLUDED */
 		$this->setupCombinedRequirements();
 		Requirements::block('bc.js');
 		Requirements::clear_combined_files('bc.js');
+
 		clearstatcache(); // needed to get accurate file_exists() results
 		$html = Requirements::includeInHTML(false, self::$html_template);
+
 		$this->assertFalse((bool)preg_match('/src=".*\/bc\.js/', $html), 'blocked combined files are not included ');
 		Requirements::unblock('bc.js');
 
@@ -73,7 +101,8 @@ class RequirementsTest extends SapphireTest {
 		$combinedFiles = Requirements::get_combine_files();
 		$this->assertEquals(
 			array_keys($combinedFiles),
-			array('bc.js')
+			array('bc.js'),
+			"A single file can't be included in two combined files"
 		);
 		
 		Requirements::clear_combined_files('bc.js');
@@ -104,6 +133,7 @@ class RequirementsTest extends SapphireTest {
 				'sapphire/tests/forms/c.js'
 			)
 		);
+
 	}
 	
 }

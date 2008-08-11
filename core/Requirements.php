@@ -278,7 +278,6 @@ class Requirements {
 		if(isset($_GET['debug_profile'])) Profiler::mark("Requirements::includeInHTML");
 		
 		if(strpos($content, '</head') !== false && (Requirements::$javascript || Requirements::$css || Requirements::$customScript || Requirements::$customHeadTags)) {
-			$prefix = Director::absoluteBaseURL();
 			$requirements = '';
 			$jsRequirements = '';
 			
@@ -286,10 +285,9 @@ class Requirements {
  			self::process_combined_files(); 
 	
 			foreach(array_diff_key(self::$javascript,self::$blocked) as $file => $dummy) { 
-				if(substr($file,0,7) == 'http://' || Director::fileExists($file)) {
-					if(Director::fileExists($file)) $mtimesuffix = "?m=" . filemtime(Director::baseFolder() . '/' . $file);
-					else $mtimesuffix = '';
-					$jsRequirements .= "<script type=\"text/javascript\" src=\"$prefix$file$mtimesuffix\"></script>\n";
+				$path = self::path_for_file($file);
+				if($path) {
+					$jsRequirements .= "<script type=\"text/javascript\" src=\"$path\"></script>\n";
 				}
 			}
 			
@@ -304,11 +302,10 @@ class Requirements {
 			}
 			
 			foreach(array_diff_key(self::$css,self::$blocked) as $file => $params) {  					
-				if(Director::fileExists($file)) {
+				$path = self::path_for_file($file);
+				if($path) {
 					$media = (isset($params['media']) && !empty($params['media'])) ? " media=\"{$params['media']}\"" : "";
-					if(Director::fileExists($file)) $mtimesuffix = "?m=" . filemtime(Director::baseFolder() . '/' .$file);
-					else $mtimesuffix = '';
-					$requirements .= "<link rel=\"stylesheet\" type=\"text/css\"{$media} href=\"$prefix$file$mtimesuffix\" />\n";
+					$requirements .= "<link rel=\"stylesheet\" type=\"text/css\"{$media} href=\"$path\" />\n";
 				}
 			}
 			foreach(array_diff_key(self::$customCSS,self::$blocked) as $css) { 
@@ -346,6 +343,24 @@ class Requirements {
 		if(isset($_GET['debug_profile'])) Profiler::unmark("Requirements::includeInHTML");
 		
 		return $content;
+	}
+	
+	/**
+	 * 
+	 *
+	 * @param string $fileOrUrl
+	 * @return string|boolean 
+	 */
+	protected static function path_for_file($fileOrUrl) {
+		if(preg_match('/^http[s]?/', $fileOrUrl)) {
+			return $fileOrUrl;
+		} elseif(Director::fileExists($fileOrUrl)) {
+			$prefix = Director::absoluteBaseURL();
+			$mtimesuffix = "?m=" . filemtime(Director::baseFolder() . '/' . $fileOrUrl);
+			return "{$prefix}{$fileOrUrl}{$mtimesuffix}";
+		} else {
+			return false;
+		}
 	}
 	
 	/**
