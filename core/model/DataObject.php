@@ -1349,8 +1349,19 @@ class DataObject extends ViewableData implements DataObjectInterface {
 			
 			// If we explicitly set a field, then construct that
 			if(isset($spec['field'])) {
-				$fieldClass = $spec['field'];
-				$field = new $fieldClass($fieldName);
+				// If it's a string, use it as a class name and construct
+				if(is_string($spec['field'])) {
+					$fieldClass = $spec['field'];
+					$field = new $fieldClass($fieldName);
+					
+				// If it's a FormField object, then just use that object directly.
+				} else if($spec['field'] instanceof FormField) {
+					$field = $spec['field'];
+					
+				// Otherwise we have a bug
+				} else {
+					user_error("Bad value for searchable_fields, 'field' value: " . var_export($spec['field'], true), E_USER_WARNING);
+				}
 				
 			// Otherwise, use the database field's scaffolder
 			} else {
@@ -1497,10 +1508,20 @@ class DataObject extends ViewableData implements DataObjectInterface {
 	 * Level 2 is more lenient, it will onlr return real data changes, for example a change from 0 to null
 	 * would not be included.
 	 *
+	 * Example return:
+	 * <code>
+	 * array(
+	 *   'Title' = array('before' => 'Home', 'after' => 'Home-Changed', 'level' => 2)
+	 * )
+	 * </code>
+	 *
 	 * @param boolean $databaseFieldsOnly Get only database fields that have changed
 	 * @param int $changeLevel The strictness of what is defined as change
+	 * @return array
 	 */
 	public function getChangedFields($databaseFieldsOnly = false, $changeLevel = 1) {
+		$changedFields = array();
+		
 		if($databaseFieldsOnly) {
 			$customDatabaseFields = $this->customDatabaseFields();
 			$fields = array_intersect_key($this->changed, $customDatabaseFields);
@@ -1516,8 +1537,17 @@ class DataObject extends ViewableData implements DataObjectInterface {
 				}
 			}
 		}
+		
+		foreach($fields as $name => $level) {
+			if(!isset($this->original[$name])) continue;
+			$changedFields[$name] = array(
+				'before' => $this->original[$name],
+				'after' => $this->record[$name],
+				'level' => $level
+			);
+		}
 
-		return $fields;
+		return $changedFields;
 	}
 
 	/**
@@ -1540,13 +1570,10 @@ class DataObject extends ViewableData implements DataObjectInterface {
 			if(!isset($this->record[$fieldName]) || $this->record[$fieldName] !== $val) {
 				// TODO Add check for php-level defaults which are not set in the db
 				// TODO Add check for hidden input-fields (readonly) which are not set in the db
+
 				if(
-				// Only existing fields
-				$this->fieldExists($fieldName)
-				// Catches "0"==NULL
-				&& (isset($this->record[$fieldName]) && (intval($val) != intval($this->record[$fieldName])))
-				// Main non type-based check
-				&& (isset($this->record[$fieldName]) && $this->record[$fieldName] != $val)
+					// Main non type-based check
+					(isset($this->record[$fieldName]) && $this->record[$fieldName] != $val)
 				) {
 					// Non-strict check fails, so value really changed, e.g. "abc" != "cde"
 					$this->changed[$fieldName] = 2;
