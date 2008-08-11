@@ -507,6 +507,17 @@ class Permission extends DataObject {
 		return self::$declared_permissions_list;
 	}
 
+	/**
+	 * Look up the human-readable title for the permission as defined by <code>Permission::declare_permissions</code>
+	 * 
+	 * @param $perm Permission code
+	 * @return Label for the given permission, or the permission itself if the label doesn't exist
+	 */
+	public static function get_label_for_permission($perm) {
+		$list = self::get_declared_permissions_list();
+		if(array_key_exists($perm, $list)) return $list[$perm];
+		return $perm;
+	}
 
 	/**
 	 * Recursively traverse the nested list of declared permissions and create

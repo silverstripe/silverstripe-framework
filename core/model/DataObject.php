@@ -285,6 +285,32 @@ class DataObject extends ViewableData implements DataObjectInterface {
 		$name = $this->plural_name();
 		return _t($this->class.'.PLURALNAME', $name);
 	}
+	
+	/**
+	 * Standard implementation of a title/label for a specific
+	 * record. Tries to find properties 'Title' or 'Name',
+	 * and falls back to the 'ID'. Useful to provide
+	 * user-friendly identification of a record, e.g. in errormessages
+	 * or UI-selections.
+	 * 
+	 * Overload this method to have a more specialized implementation,
+	 * e.g. for an Address record this could be:
+	 * <code>
+	 * public function getTitle() {
+	 *   return "{$this->StreetNumber} {$this->StreetName} {$this->City}";
+	 * }
+	 * </code>
+	 *
+	 * @usedby {@link DataObjectSet->toDropDownMap()}
+	 *
+	 * @return string
+	 */
+	public function getTitle() {
+		if($this->hasField('Title')) return $this->getField('Title');
+		if($this->hasField('Name')) return $this->getField('Name');
+		
+		return "#{$this->ID}";
+	}
 
 	/**
 	 * Returns the associated database record - in this case, the object itself.
@@ -2492,6 +2518,7 @@ class DataObject extends ViewableData implements DataObjectInterface {
 	public static $casting = array(
 		"LastEdited" => "Datetime",
 		"Created" => "Datetime",
+		"Title" => 'Text',
 	);
 
 	/**

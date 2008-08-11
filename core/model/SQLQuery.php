@@ -69,7 +69,7 @@ class SQLQuery extends Object {
 	 * The logical connective used to join WHERE clauses. Defaults to AND.
 	 * @var string
 	 */
-	private $connective = 'AND';
+	public $connective = 'AND';
 	
 	/**
 	 * Construct a new SQLQuery.

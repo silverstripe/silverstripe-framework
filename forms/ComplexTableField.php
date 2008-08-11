@@ -252,7 +252,7 @@ JS;
 	 * @return Boolean
 	 */
 	function IsAddMode() {
-		return ($this->methodName == "add");
+		return ($this->methodName == "add" || $this->request->param('Action') == 'AddForm');
 	}
 	
 	function sourceID() { 
@@ -457,17 +457,20 @@ JS;
 		$childData = new $className();
 		$form->saveInto($childData);
 		$childData->write();
+		
+		$closeLink = sprintf(
+			'<small><a href="' . $_SERVER['HTTP_REFERER'] . '" onclick="javascript:window.top.GB_hide(); return false;">(%s)</a></small>',
+			_t('ComplexTableField.CLOSEPOPUP', 'Close Popup')
+		);
+		$message = sprintf(
+			_t('ComplexTableField.SUCCESSADD', 'Added %s %s %s'),
+			$childData->singular_name(),
+			'<a href="' . $this->Link() . '">' . $childData->Title . '</a>',
+			$closeLink
+		);
+		$form->sessionMessage($message, 'good');
 
-		// if ajax-call in an iframe, update window
-		if(Director::is_ajax()) {
-			// Newly saved objects need their ID reflected in the reloaded form to avoid double saving 
-			$childRequestHandler = new ComplexTableField_ItemRequest($this, $childData->ID);
-			$form = $childRequestHandler->DetailForm();
-			FormResponse::update_dom_id($form->FormName(), $form->formHtmlContent(), true, 'update');
-			return FormResponse::respond();
-		} else {
-			Director::redirectBack();
-		}
+		Director::redirectBack();
 	}
 }
 
@@ -599,18 +602,20 @@ class ComplexTableField_ItemRequest extends RequestHandlingData {
 	function saveComplexTableField($data, $form, $request) {
 		$form->saveInto($this->dataObj());
 		$this->dataObj()->write();
+		
+		$closeLink = sprintf(
+			'<small><a href="' . $_SERVER['HTTP_REFERER'] . '" onclick="javascript:window.top.GB_hide(); return false;">(%s)</a></small>',
+			_t('ComplexTableField.CLOSEPOPUP', 'Close Popup')
+		);
+		$message = sprintf(
+			_t('ComplexTableField.SUCCESSEDIT', 'Saved %s %s %s'),
+			$this->dataObj()->singular_name(),
+			'<a href="' . $this->Link() . '">"' . $this->dataObj()->Title . '"</a>',
+			$closeLink
+		);
+		$form->sessionMessage($message, 'good');
 
-		// if ajax-call in an iframe, update window
-		if(Director::is_ajax()) {
-			// Newly saved objects need their ID reflected in the reloaded form to avoid double saving 
-			$form = $this->DetailForm();
-			//$form->loadDataFrom($this->dataObject);
-			FormResponse::update_dom_id($form->FormName(), $form->formHtmlContent(), true, 'update');
-			return FormResponse::respond();
-			
-		} else {
-			Director::redirectBack();
-		}
+		Director::redirectBack();
 	}
 	
 	function PopupCurrentItem() {

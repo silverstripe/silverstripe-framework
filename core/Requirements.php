@@ -259,55 +259,71 @@ class Requirements {
 	 * @param string $content HTML content that has already been parsed from the $templateFilePath through {@link SSViewer}.
 	 * @return string HTML content thats augumented with the requirements before the closing <head> tag.
 	 */
-	static function includeInHTML($templateFilePath, $content) {
+	static function includeInHTML($templateFile, $content) {
 		if(isset($_GET['debug_profile'])) Profiler::mark("Requirements::includeInHTML");
 		
-		if(strpos($content, '</head') === false) {
-			if(isset($_GET['debug_profile'])) Profiler::unmark("Requirements::includeInHTML"); 
+		if(strpos($content, '</head') !== false && (Requirements::$javascript || Requirements::$css || Requirements::$customScript || Requirements::$customHeadTags)) {
+			$prefix = Director::absoluteBaseURL();
+			$requirements = '';
+			$jsRequirements = '';
+			
+			// Combine files - updates Requirements::$javascript and Requirements::$css 
+ 			self::process_combined_files(); 
+	
+			foreach(array_diff_key(self::$javascript,self::$blocked) as $file => $dummy) { 
+				if(substr($file,0,7) == 'http://' || Director::fileExists($file)) {
+					if(Director::fileExists($file)) $mtimesuffix = "?m=" . filemtime(Director::baseFolder() . '/' . $file);
+					else $mtimesuffix = '';
+					$jsRequirements .= "<script type=\"text/javascript\" src=\"$prefix$file$mtimesuffix\"></script>\n";
+				}
+			}
+			 
+			if(self::$customScript) {
+				foreach(array_diff_key(self::$customScript,self::$blocked) as $script) { 
+					$jsRequirements .= "<script type=\"text/javascript\">\n//<![CDATA[\n";
+					$jsRequirements .= "$script\n";
+					$jsRequirements .= "\n//]]>\n</script>\n";
+				}
+			}
+			
+			foreach(array_diff_key(self::$css,self::$blocked) as $file => $params) {  					
+				if(Director::fileExists($file)) {
+					$media = (isset($params['media']) && !empty($params['media'])) ? " media=\"{$params['media']}\"" : "";
+					if(Director::fileExists($file)) $mtimesuffix = "?m=" . filemtime(Director::baseFolder() . '/' .$file);
+					else $mtimesuffix = '';
+					$requirements .= "<link rel=\"stylesheet\" type=\"text/css\"{$media} href=\"$prefix$file$mtimesuffix\" />\n";
+				}
+			}
+			foreach(array_diff_key(self::$customCSS,self::$blocked) as $css) { 
+				$requirements .= "<style type=\"text/css\">\n$css\n</style>\n";
+			}
+			
+			foreach(array_diff_key(self::$customHeadTags,self::$blocked) as $customHeadTag) { 
+				$requirements .= "$customHeadTag\n"; 
+			}
+	
+			if(isset($_GET['debug_profile'])) Profiler::unmark("Requirements::includeInHTML");
+
+
+			// We put script tags into the body, for performance.
+			// If your template already has script tags in the body, then we put our script tags at the top of the body.
+			// Otherwise, we put it at the bottom.
+			$p1 = strripos($content, '<script');
+			$p2 = stripos($content, '<body');
+			if($p1 !== false && $p1 > $p2) {
+				user_error("You have a script tag in the body, moving requirements to top of <body> for compatibilty.  I recommend removing the script tag from your template's body.", E_USER_NOTICE);
+				$content = eregi_replace("(<body[^>]*>)", "\\1" . $jsRequirements, $content);
+			} else {
+				$content = eregi_replace("(</body[^>]*>)", $jsRequirements . "\\1", $content);
+			}
+			
+			// Put CSS at the bottom of the head			
+			return eregi_replace("(</head[^>]*>)", $requirements . "\\1", $content);
+			
+		} else {
+			if(isset($_GET['debug_profile'])) Profiler::unmark("Requirements::includeInHTML");
 			return $content;
 		}
-		
-		$prefix = Director::absoluteBaseURL();
-		$requirements = '';
-		$jsRequirements = '';
-		
-		// Combine files - updates Requirements::$javascript and Requirements::$css
-		// to remove duplicate entries
-		self::process_combined_files();
-		
-		foreach(array_diff_key(self::$javascript,self::$blocked) as $file => $dummy) {
-			if(substr($file,0,7) == 'http://' || Director::fileExists($file)) {
-				$requirements .= "<script type=\"text/javascript\" src=\"$prefix$file\"></script>\n";
-			}
-		}
-		
-		if(self::$customScript) {
-			foreach(array_diff_key(self::$customScript,self::$blocked) as $script) {
-				$requirements .= "<script type=\"text/javascript\">\n//<![CDATA[\n";
-				$requirements .= "$script\n";
-				$requirements .= "\n//]]>\n</script>\n";
-			}
-		}
-		
-		$jsRequirements = $requirements;
-		
-		foreach(array_diff_key(self::$css,self::$blocked) as $file => $params) {					
-			if(Director::fileExists($file)) {
-				$media = (isset($params['media']) && !empty($params['media'])) ? " media=\"{$params['media']}\"" : "";
-				$requirements .= "<link rel=\"stylesheet\" type=\"text/css\"{$media} href=\"$prefix$file\" />\n";
-			}
-		}
-		foreach(array_diff_key(self::$customCSS,self::$blocked) as $css) {
-			$requirements .= "<style type=\"text/css\">\n$css\n</style>\n";
-		}
-		
-		foreach(array_diff_key(self::$customHeadTags,self::$blocked) as $customHeadTag) {
-			$requirements .= "$customHeadTag\n";
-		}
-
-		if(isset($_GET['debug_profile'])) Profiler::unmark("Requirements::includeInHTML");
-		
-		return eregi_replace("(</head[^>]*>)", $requirements . "\\1", $content);
 	}
 	
 	/**

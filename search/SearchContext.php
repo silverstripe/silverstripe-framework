@@ -47,6 +47,12 @@ class SearchContext extends Object {
 	protected $filters;
 	
 	/**
+	 * The logical connective used to join WHERE clauses. Defaults to AND.
+	 * @var string
+	 */
+	public $connective = 'AND';
+	
+	/**
 	 * A key value pair of values that should be searched for.
 	 * The keys should match the field names specified in {@link self::$fields}.
 	 * Usually these values come from a submitted searchform
@@ -123,6 +129,8 @@ class SearchContext extends Object {
 				}
 			}
 		}
+		
+		$query->connective = $this->connective;
 
 		return $query;
 	}

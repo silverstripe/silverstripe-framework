@@ -32,7 +32,7 @@ class CheckboxSetField extends OptionsetField {
 			if(!$values && $record && $record->hasMethod($this->name)) {
 				$funcName = $this->name;
 				$join = $record->$funcName();
-				foreach($join as $joinItem) $values[] = $joinItem->ID;
+				if($join) foreach($join as $joinItem) $values[] = $joinItem->ID;
 			}
 		}
 		$source = $this->source;

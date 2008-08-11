@@ -8,61 +8,15 @@ ComplexTableField.prototype = {
 	popupWidth: 560,
 	popupHeight: 390,
 	
-	deleteConfirmMessage: "Are you sure you want to delete this record?",
-	
 	initialize: function() {
 		var rules = {};
 		rules['#'+this.id+' table.data a.popuplink'] = {onclick: this.openPopup.bind(this)};
-		rules['#'+this.id+' table.data a.deletelink'] = {onclick: this.deleteRecord.bind(this)};
 		rules['#'+this.id+' table.data tbody td'] = {onclick: this.openPopup.bind(this)};
 		
 		Behaviour.register(rules);
 		
 		// HACK If already in a popup, we can't allow add (doesn't save existing relation correctly)
 		if(window != top) $$('#'+this.id+' table.data a.addlink').each(function(el) {Element.hide(el);});
-	},
-	
-	/**
-	 * Deletes the given dataobject record via an ajax request
-	 * to complextablefield->Delete()
-	 * @param {Object} e
-	 */
-	deleteRecord: function(e) {
-		var img = Event.element(e);
-		var link = Event.findElement(e,"a");
-		var row = Event.findElement(e,"tr");
-		
-		// TODO ajaxErrorHandler and loading-image are dependent on cms, but formfield is in sapphire
-		var confirmed = (this.deleteConfirmMessage != undefined) ? confirm(this.deleteConfirmMessage) : true;
-		if(confirmed)
-		{
-			img.setAttribute("src",'cms/images/network-save.gif'); // TODO doesn't work
-			new Ajax.Request(
-				link.getAttribute("href"),
-				{
-					method: 'post', 
-					postBody: 'forceajax=1' + ($('SecurityID') ? '&SecurityID=' + $('SecurityID').value : ''),
-					onComplete: function(){
-						Effect.Fade(
-							row,
-							{
-								afterFinish: function(obj) {
-									// remove row from DOM
-									obj.element.parentNode.removeChild(obj.element);
-									// recalculate summary if needed (assumes that TableListField.js is present)
-									// TODO Proper inheritance
-									if(this._summarise) this._summarise();
-									// custom callback
-									if(this.callback_deleteRecord) this.callback_deleteRecord(e);
-								}.bind(this)
-							}
-						);
-					}.bind(this),
-					onFailure: this.ajaxErrorHandler
-				}
-			);
-		}
-		Event.stop(e);
 	},
 	
 	/**
@@ -117,10 +71,6 @@ ComplexTableField.prototype = {
 			}
 		}
 		
-		GB_OpenerObj = this;
-		// use same url to refresh the table after saving the popup, but use a generic rendering method
-		GB_RefreshLink = this.getAttribute('href');
-
 		if(this.GB_Caption) {
 			var title = this.GB_Caption;
 		} else {
@@ -129,7 +79,17 @@ ComplexTableField.prototype = {
 			var title = (type && type[1]) ? type[1].ucfirst() : "";
 		}
 		
-		GB_show(title, popupLink, this.popupHeight, this.popupWidth);
+		// reset internal greybox callbacks, they are not properly unregistered
+		// and fire multiple times on each subsequent popup close action otherwise
+		if(GB_ONLY_ONE) GB_ONLY_ONE.callback_fn = [];
+		
+		GB_show(
+			title, 
+			popupLink, 
+			this.popupHeight, 
+			this.popupWidth,
+			this.refresh.bind(this)
+		);
 		
 		if(e) {
 			Event.stop(e);

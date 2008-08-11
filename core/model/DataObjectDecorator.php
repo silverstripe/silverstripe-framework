@@ -62,6 +62,14 @@ abstract class DataObjectDecorator extends Extension {
 	 */
 	function augmentDatabase() {
 	}
+	
+	/**
+	 * Augment a write-record request.
+	 *
+	 * @param SQLQuery $manipulation Query to augment.
+	 */
+	function augmentWrite(&$manipulation) {
+	}
 
 
 	/**

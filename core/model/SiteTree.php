@@ -182,6 +182,7 @@ class SiteTree extends DataObject {
 	
 	static $searchable_fields = array(
 		'Title',
+		'Content',
 	);
 
 

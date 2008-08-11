@@ -13,7 +13,7 @@ TableListField.prototype = {
 		};
 		
 		rules['#'+this.id+' th a'] = {
-			onclick: this.paginate.bind(this)
+			onclick: this.refresh.bind(this)
 		};
 		
 		rules['#'+this.id+' th'] = {
@@ -31,7 +31,7 @@ TableListField.prototype = {
 			}
 		};
 		
-		rules['#'+this.id+' div.PageControls a'] = {onclick: this.paginate.bind(this)};
+		rules['#'+this.id+' div.PageControls a'] = {onclick: this.refresh.bind(this)};
 		
 		rules['#'+this.id+' table.data tr td.markingcheckbox'] = {
 			onclick : function(e) {
@@ -71,7 +71,9 @@ TableListField.prototype = {
 	},
 	
 	/**
-	 * TODO Evaluate server-status before visually deleting (might have caused an error)
+	 * Deletes the given dataobject record via an ajax request
+	 * to complextablefield->Delete()
+	 * @param {Object} e
 	 */
 	deleteRecord: function(e) {
 		var img = Event.element(e);
@@ -82,16 +84,29 @@ TableListField.prototype = {
 		var confirmed = (this.deleteConfirmMessage != undefined) ? confirm(this.deleteConfirmMessage) : true;
 		if(confirmed)
 		{
-			img.setAttribute("src",'cms/images/network-save.gif'); // TODO doesn't work in Firefox1.5+
+			img.setAttribute("src",'cms/images/network-save.gif'); // TODO doesn't work
 			new Ajax.Request(
 				link.getAttribute("href"),
 				{
 					method: 'post', 
 					postBody: 'forceajax=1' + ($('SecurityID') ? '&SecurityID=' + $('SecurityID').value : ''),
 					onComplete: function(){
-						Effect.Fade(row);
+						Effect.Fade(
+							row,
+							{
+								afterFinish: function(obj) {
+									// remove row from DOM
+									obj.element.parentNode.removeChild(obj.element);
+									// recalculate summary if needed (assumes that TableListField.js is present)
+									// TODO Proper inheritance
+									if(this._summarise) this._summarise();
+									// custom callback
+									if(this.callback_deleteRecord) this.callback_deleteRecord(e);
+								}.bind(this)
+							}
+						);
 					}.bind(this),
-					onFailure: this.ajaxErrorHandler.bind(this)
+					onFailure: this.ajaxErrorHandler
 				}
 			);
 		}
@@ -104,22 +119,25 @@ TableListField.prototype = {
 		this._summarise();
 	},
 	
-	paginate: function(e) {
-		var el = Event.element(e);
-		
-		if(el.nodeName != "a") {
-			var el = Event.findElement(e,"a");
+	refresh: function(e) {
+		if(e) {
+			var el = Event.element(e);
+			if(el.nodeName != "a") el = Event.findElement(e,"a");
+		} else {
+			var el = $(this.id);
 		}
-		new Ajax.Request( 
-			el.href, 
+		new Ajax.Updater( 
+			$(this.id),
+			el.getAttribute('href'), 
 			{
 				postBody: 'update=1',
-				onComplete: Ajax.Evaluator,
-				onFailure: this.ajaxErrorHandler.bind(this)
+				onComplete: function() {
+					Behaviour.apply($(this.id))
+				}.bind(this)
 			}
 		);
 		
-		Event.stop(e);
+		if(e) Event.stop(e);
 		return false;
 	},
 	

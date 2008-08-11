@@ -681,7 +681,7 @@ JS
 		if(!isset($_REQUEST['ctf'][$this->Name()]['start']) || !is_numeric($_REQUEST['ctf'][$this->Name()]['start']) || $_REQUEST['ctf'][$this->Name()]['start'] == 0) {
 			return null;
 		}
-		$link = $this->Link() . "/ajax_refresh?ctf[{$this->Name()}][start]={$start}";
+		$link = $this->Link() . "/?ctf[{$this->Name()}][start]={$start}";
 		if($this->extraLinkParams) $link .= "&" . http_build_query($this->extraLinkParams);
 		return $link;
 	}
@@ -695,7 +695,7 @@ JS
 		
 		$start = ($_REQUEST['ctf'][$this->Name()]['start'] - $this->pageSize < 0)  ? 0 : $_REQUEST['ctf'][$this->Name()]['start'] - $this->pageSize;
 		
-		$link = $this->Link() . "/ajax_refresh?ctf[{$this->Name()}][start]={$start}";
+		$link = $this->Link() . "/?ctf[{$this->Name()}][start]={$start}";
 		if($this->extraLinkParams) $link .= "&" . http_build_query($this->extraLinkParams);
 		return $link;
 	}
@@ -706,7 +706,7 @@ JS
 		if($currentStart >= $start-1) {
 			return null;
 		}
-		$link = $this->Link() . "/ajax_refresh?ctf[{$this->Name()}][start]={$start}";
+		$link = $this->Link() . "/?ctf[{$this->Name()}][start]={$start}";
 		if($this->extraLinkParams) $link .= "&" . http_build_query($this->extraLinkParams);
 		return $link;
 	}
@@ -719,7 +719,7 @@ JS
 			return null;
 		}
 		
-		$link = $this->Link() . "/ajax_refresh?ctf[{$this->Name()}][start]={$start}";
+		$link = $this->Link() . "/?ctf[{$this->Name()}][start]={$start}";
 		if($this->extraLinkParams) $link .= "&" . http_build_query($this->extraLinkParams);
 		return $link;
 	}
@@ -928,6 +928,9 @@ JS
 		
 	}
 	
+	/**
+	 * @deprecated Please use the standard URL through Link() which gives you the FieldHolder
+	 */
 	function ajax_refresh() {
 		// compute sourceItems here instead of Items() to ensure that
 		// pagination and filters are respected on template accessors
