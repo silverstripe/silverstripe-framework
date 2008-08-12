@@ -782,6 +782,16 @@ class ViewableData extends Object implements IteratorAggregate {
   }
 	
 	/**
+	 * Returns wether the current request is triggered
+	 * by an XMLHTTPRequest object.
+	 *
+	 * @return bool
+	 */
+	function IsAjax() {
+		return Director::is_ajax();
+	}
+
+	/**
 	 * Return a Debugger object.
 	 * This is set up like so that you can put $Debug.Content into your template to get debugging
 	 * information about $Content.
