@@ -207,7 +207,7 @@ class Debug {
 	 */
 	static function loadErrorHandlers() {
 		//set_error_handler('errorHandler', (E_ALL ^ E_NOTICE) ^ E_USER_NOTICE);
-		set_error_handler('errorHandler', E_ALL);
+		set_error_handler('errorHandler', error_reporting());
 		set_exception_handler('exceptionHandler');
 	}
 
