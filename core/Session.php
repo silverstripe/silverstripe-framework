@@ -15,6 +15,38 @@
  * @subpackage control
  */
 class Session {
+	
+	/**
+	 * @var $timeout Set session timeout
+	 */
+	static protected $timeout = 0;
+	
+	static protected $session_ips = array();
+	
+	/**
+	 * Provide an <code>array</code> of rules specifing timeouts for IPv4 address ranges or
+	 * individual IPv4 addresses. The key is an IP address or range and the value is the time
+	 * until the session expires in seconds. For example:
+	 * 
+	 * Session::set_timeout_ips(array(
+	 * 		'127.0.0.1' => 36000	
+	 * ));
+	 * 
+	 * Any user connecting from 127.0.0.1 (localhost) will have their session expired after 10 hours.
+	 *
+	 * Session::set_timeout is used to set the timeout value for any users whose address is not in the given IP range.
+	 * 
+	 * @param array $session_ips Array of IPv4 rules.
+	 */
+	public static function set_timeout_ips($session_ips) {
+		if(!is_array($session_ips)) {
+			user_error("Session::set_timeout_ips expects an array as its argument", E_USER_NOTICE);
+			self::$session_ips = array();
+		} else {
+			self::$session_ips = $session_ips;
+		}
+	}
+	
 	public static function set($name, $val) {
 		return Controller::curr()->getSession()->inst_set($name, $val);
 	}
@@ -158,10 +190,42 @@ class Session {
 	}
 
 	public static function start() {
+		self::load_config();
+		
 		if(!session_id() && !headers_sent()) {
-			session_set_cookie_params(0, Director::baseURL());
+			session_set_cookie_params(self::$timeout, Director::baseURL());
 			session_start();
 		}
+	}
+	
+	/**
+	 * Use the Session::$session_ips array to set timeouts based on IP address or IP address
+	 * range.
+	 * 
+	 * Note: The use of _sessions.php is deprecated.
+	 */
+	public static function load_config() {
+		foreach(self::$session_ips as $sessionIP => $timeout) {
+			if(preg_match('/^([0-9.]+)\s?-\s?([0-9.]+)$/', $sessionIP, $ips)) {
+				$minIP = ip2long($ips[1]);
+				$maxIP = ip2long($ips[2]);
+				$clientIP = ip2long($_SERVER['REMOTE_ADDR']);
+				
+				if($minIP <= $clientIP && $clientIP <= $maxIP) {
+					return self::set_timeout($timeout);
+				}
+			}
+			// TODO - Net masks or something
+		}
+	}
+	
+	/**
+	 * Enter description here...
+	 *
+	 * @param int $timeout Time until a session expires in seconds. Defaults to expire when browser is closed.
+	 */
+	public static function set_timeout($timeout) {
+		self::$timeout = intval($timeout);
 	}
 }
 
