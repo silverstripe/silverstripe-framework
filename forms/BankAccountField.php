@@ -10,6 +10,12 @@ class BankAccountField extends FormField {
 	protected $branchCode;
 	
 	/**
+	 * @var array $valueArr Stores value in associative array-format, with:
+	 * BankCode, BranchCode, AccountNumber, AccountSuffix
+	 */
+	protected $valueArr = array();
+	
+	/**
 	 * HACK Proper requiring of compositefields would involve serious restructuring.
 	 */
 	public $isRequired = false;
@@ -24,6 +30,9 @@ class BankAccountField extends FormField {
 		$this->bankCode = $bankCode;
 		$this->branchCode = $branchCode;
 		
+		// needs to be passed through setValue() to populate $valueArr
+		if($value) $this->setValue($value);
+		
 		parent::__construct($name, $title, $value, $form);
 	}
 	
@@ -31,13 +40,8 @@ class BankAccountField extends FormField {
 		$field = new FieldGroup($this->name);
 		$field->setID("{$this->name}_Holder");
 		
-		$valueArr = array();
-		list(
-			$valueArr['BankCode'], 
-			$valueArr['BranchCode'], 
-			$valueArr['AccountNumber'], 
-			$valueArr['AccountSuffix']
-		) = explode(" ",$this->value);
+		$valueArr = $this->valueArray;
+		
 		$valueArr = self::convert_format_nz($valueArr);
 		
 		$field->push($n1 = new NumericField($this->name.'[BankCode]', '', $valueArr['BankCode'], 2));
@@ -56,8 +60,51 @@ class BankAccountField extends FormField {
 	
 	public function setValue($value) {
 		$this->value = self::join_bank_number($value);
+		
+		$this->valueArr = array();
+		list(
+			$this->valueArr['BankCode'], 
+			$this->valueArr['BranchCode'], 
+			$this->valueArr['AccountNumber'], 
+			$this->valueArr['AccountSuffix']
+		) = explode(" ",$this->value);
 	}
 	
+/**
+	 * @return string
+	 */
+	function getBankCode() {
+		return $this->valueArr['BankCode'];
+	}
+	
+	/**
+	 * @return string
+	 */
+	function getBranchCode() {
+		return $this->valueArr['BranchCode'];
+	}
+	
+	/**
+	 * @return string
+	 */
+	function getAccountNumber() {
+		return $this->valueArr['AccountNumber'];
+	}
+	
+	/**
+	 * @return string
+	 */
+	function getAccountSuffix() {
+		return $this->valueArr['AccountSuffix'];
+	}
+	
+	/**
+	 * Makes sure the number is a string with spaces instead of hyphens,
+	 * and adjusts to new format (2-4-8-3) by using conver_format_nz().
+	 * 
+	 * @param mixed $value String- or Array-representation of full bank-account-number.
+	 * @return string
+	 */
 	public static function join_bank_number($value) {
 		if(is_array($value)) {
 			$value = self::convert_format_nz($value);
