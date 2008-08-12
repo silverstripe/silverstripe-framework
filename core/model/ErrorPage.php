@@ -85,9 +85,6 @@ class ErrorPage extends Page {
 	 * @param boolean $createNewVersion Set this to true to create a new version number.  By default, the existing version number will be copied over.
 	 */
 	function publish($fromStage, $toStage, $createNewVersion = false) {
-		// Temporarily log out when producing this page
-		$loggedInMember = Member::currentUser();
-		Session::clear("loggedInAs");
 		$alc_enc = isset($_COOKIE['alc_enc']) ? $_COOKIE['alc_enc'] : null;
 		Cookie::set('alc_enc', null);
 		
@@ -111,7 +108,6 @@ class ErrorPage extends Page {
 		Versioned::reading_stage($oldStage);
 
 		// Log back in
-		if($loggedInMember) Session::set("loggedInAs", $loggedInMember->ID);
 		if(isset($alc_enc)) Cookie::set('alc_enc', $alc_enc);
 		
 		return $this->extension_instances['Versioned']->publish($fromStage, $toStage, $createNewVersion);

@@ -127,8 +127,10 @@ class ClassInfo {
 	 */
 	static function ancestry($class, $onlyWithTables = false) {
 		global $_ALL_CLASSES;
-		
-		if(!is_string($class)) $class = $class->class;
+
+		if(is_object($class)) $class = $class->class;
+		else if(!is_string($class)) user_error("Bad class value " . var_export($class, true) . " passed to ClassInfo::ancestry()", E_USER_WARNING);
+
 		$items = $_ALL_CLASSES['parents'][$class];
 		$items[$class] = $class;
 		if($onlyWithTables) foreach($items as $item) {

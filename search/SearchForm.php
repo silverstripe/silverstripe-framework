@@ -33,7 +33,9 @@ class SearchForm extends Form {
 		// Hayden: Sorry if I've got it mixed up, but on the results or not found pages, the
 		// RelativeLink seems to be empty and it packs a sad
 		$formController = isset($_GET['formController']) ? $_GET['formController'] : null;		
-		if( !$formController ) $formController = $controller->RelativeLink();
+		if( !$formController ) {
+			$formController = $controller->RelativeLink();
+		}
 			
 		$fields->push(new HiddenField("formController", null, $formController));
 		// $fields->push(new HiddenField("formController", null, $controller->RelativeLink()));

@@ -601,7 +601,7 @@ class Member extends DataObject {
 	 *       only right name for this?
 	 * @todo Is {@link Group}::CanCMSAdmin not deprecated?
 	 */
-	function _isAdmin() {
+	function isAdmin() {
 		if($groups = $this->Groups()) {
 			foreach($groups as $group) {
 				if($group->CanCMSAdmin)
@@ -611,27 +611,24 @@ class Member extends DataObject {
 
 		return Permission::check('ADMIN');
 	}
-
-
-	/**
-	 * Check if the user is an administrator
-	 *
-	 * Alias for {@link _isAdmin()} because the method is used in both ways
-	 * all over the framework.
-	 *
-	 * @return Returns TRUE if this user is an administrator.
-	 * @see _isAdmin()
-	 */
-	public function isAdmin() {
-		return $this->_isAdmin();
+	
+	function _isAdmin() {
+		user_error("Deprecated.  Use isAdmin() instead", E_USER_NOTICE);
+		return $this->isAdmin();
 	}
-	function _isCMSUser() {
+
+	function isCMSUser() {
 		if($groups = $this->Groups()) {
 			foreach($groups as $group) {
 				if($group->CanCMS)
 					return true;
 			}
 		}
+	}
+
+	function _isCMSUser() {
+		user_error("Deprecated.  Use isCMSUser() instead", E_USER_NOTICE);
+		return $this->isCMSUser();
 	}
 
 

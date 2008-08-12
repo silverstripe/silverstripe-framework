@@ -91,7 +91,8 @@ class SiteTree extends DataObject {
 
   static $indexes = array(
     "SearchFields" => "fulltext (Title, MenuTitle, Content, MetaTitle, MetaDescription, MetaKeywords)",
-    "TitleSearchFields" => "fulltext (Title)"
+    "TitleSearchFields" => "fulltext (Title)",
+	"URLSegment" => true,
 	);
 
 	static $has_many = array(
@@ -361,7 +362,12 @@ class SiteTree extends DataObject {
 	 *
 	 * @var int
 	 */
-	protected static $currentPageID;
+	private static $currentPageID;
+	
+	/**
+	 * Records the URL segment that was used to set the current page ID
+	 */
+	private static $currentPageIDSetFromURLSegment;
 
 
 	/**
@@ -369,8 +375,10 @@ class SiteTree extends DataObject {
 	 * the cached answers.
 	 */
 	protected function prepareCurrentAndSection() {
-		if(!self::$currentPageID) {
+		if(!self::$currentPageID || Director::urlParam('URLSegment') != self::$currentPageIDSetFromURLSegment) {
 			self::$currentPageID = Director::currentPage() ? Director::currentPage()->ID : null;
+			self::$currentPageIDSetFromURLSegment = Director::urlParam('URLSegment');
+			
 			if(!isset(self::$currentPageID)) {
 				self::$currentPageID = -1;
 				$nextID = (Director::currentPage() && isset(Director::currentPage()->Parent->ID))
@@ -1220,6 +1228,7 @@ class SiteTree extends DataObject {
 		return $fields;
 	}
 
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	/**
 	 * Get the actions available in the CMS for this page - eg Save, Publish.
@@ -1250,6 +1259,34 @@ class SiteTree extends DataObject {
 			$actions[] = new FormAction('publish', _t('SiteTree.BUTTONSAVEPUBLISH', 'Save & Publish'));
 
 		return new DataObjectSet($actions);
+	}
+	
+	/**
+	 * Publish this page
+	 */
+	function doPublish() {
+		$original = Versioned::get_one_by_stage("SiteTree", "Live", "`SiteTree`.`ID` = $this->ID");
+
+		// Handle activities undertaken by decorators
+		$this->extend('onBeforePublish', $original);
+		
+		$this->AssignedToID = 0;
+		$this->RequestedByID = 0;
+		$this->Status = "Published";
+		//$this->PublishedByID = Member::currentUser()->ID;
+		$this->write();
+		$this->publish("Stage", "Live");
+		
+		GoogleSitemap::ping();
+
+		// Fix the sort order for this page's siblings
+		DB::query("UPDATE SiteTree_Live
+			INNER JOIN SiteTree ON SiteTree_Live.ID = SiteTree.ID
+			SET SiteTree_Live.Sort = SiteTree.Sort
+			WHERE SiteTree_Live.ParentID = " . sprintf('%d', $this->ParentID));
+
+		// Handle activities undertaken by decorators
+		$this->extend('onAfterPublish', $original);
 	}
 
 

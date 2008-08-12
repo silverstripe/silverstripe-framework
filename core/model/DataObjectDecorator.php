@@ -33,6 +33,9 @@ abstract class DataObjectDecorator extends Extension {
 	 * @todo Rename to "loadExtraStaticFields", as it decorates more than database related fields.
 	 */
 	function loadExtraDBFields() {
+		// Don't apply DB fields if the parent object has this extension too
+		if(singleton(get_parent_class($this->owner))->extInstance($this->class)) return;
+	
 		$fields = $this->extraDBFields();
 		$className = $this->owner->class;
 

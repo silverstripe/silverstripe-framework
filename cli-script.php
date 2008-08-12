@@ -92,9 +92,7 @@ if(isset($_FILE_TO_URL_MAPPING)) {
 		}
 		$testPath = dirname($testPath);
 	}
-	
 }
-
 
 
 if(ManifestBuilder::staleManifest()){

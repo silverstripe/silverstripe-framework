@@ -161,7 +161,7 @@ class DatabaseAdmin extends Controller {
 		array_shift($dataClasses);
 
 		if(!$quiet) {
-			echo '<p><b>Creating database tables</b></p>';
+			echo '\n<p><b>Creating database tables</b></p>\n\n';
 		}
 
 		$conn->beginSchemaUpdate();
@@ -169,7 +169,7 @@ class DatabaseAdmin extends Controller {
 			$SNG = singleton($dataClass);
 			if($testMode || !($SNG instanceof TestOnly)) {
 				if(!$quiet) {
-					echo "<li>$dataClass</li>";
+					echo "<li>$dataClass</li>\n";
 				}
 				$SNG->requireTable();
 			}
@@ -180,7 +180,7 @@ class DatabaseAdmin extends Controller {
 
 		if($populate) {
 			if(!$quiet) {
-				echo '<p><b>Creating database records</b></p>';
+				echo '\n<p><b>Creating database records</b></p>\n\n';
 			}
 
 			foreach($dataClasses as $dataClass) {
@@ -188,7 +188,7 @@ class DatabaseAdmin extends Controller {
 
 				if(strpos($dataClass,'Test_') === false) {
 					if(!$quiet) {
-						echo "<li>$dataClass</li>";
+						echo "<li>$dataClass</li>\n";
 					}
 
 					singleton($dataClass)->requireDefaultRecords();

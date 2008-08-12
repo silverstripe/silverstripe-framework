@@ -87,8 +87,8 @@ function getClassFile($className) {
 function singleton($className) {
 	static $_SINGLETONS;
 	if(!isset($className)) user_error("singleton() Called without a class", E_USER_ERROR);
-    if(!class_exists($className)) user_error("Bad class to singleton() - $className", E_USER_ERROR);
 	if(!isset($_SINGLETONS[$className])) {
+	    if(!class_exists($className)) user_error("Bad class to singleton() - $className", E_USER_ERROR);
 		$_SINGLETONS[$className] = Object::strong_create($className,null, true);
 		if(!$_SINGLETONS[$className]) user_error("singleton() Unknown class '$className'", E_USER_ERROR);
 	}

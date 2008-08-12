@@ -79,7 +79,7 @@ class ViewableData extends Object implements IteratorAggregate {
 				$trimmedName = substr($methodName,1);
 				$this->createMethod($trimmedName, "return \$obj->cachedCall('$methodName', '$trimmedName', \$args);");
 			}
-		}		
+		}
 		parent::defineMethods();
 	}
 	
@@ -206,8 +206,7 @@ class ViewableData extends Object implements IteratorAggregate {
 	 * @param array
 	 */
 	public function buildCastingHelperCache(&$cache) {
-		$class = $this->class;
-
+		$class = $this->class ? $this->class : get_class($this);
 		$classes = ClassInfo::ancestry($class);
 
 		foreach($classes as $componentClass) {

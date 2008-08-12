@@ -22,8 +22,10 @@ class Filesystem extends Object {
 	
 	/**
 	 * Remove a directory and all subdirectories and files
+	 * @param $contentsOnly If this is true then the contents of the folder will be removed but not the folder itself
 	 */
-	static function removeFolder($folder) {
+	static function removeFolder( $folder, $contentsOnly = false ) {
+		
 		// remove a file encountered by a recursive call.
 		if( !is_dir( $folder ) || is_link($folder) )
 			unlink( $folder );
@@ -36,7 +38,8 @@ class Filesystem extends Object {
 					self::removeFolder( $folder.'/'.$file );
 			
 			closedir($dir);
-			rmdir($folder);
+			
+			if(!$contentsOnly) rmdir($folder);
 		}
 	}
 	

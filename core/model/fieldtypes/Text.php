@@ -159,7 +159,7 @@ class Text extends DBField {
 	* Caution: Not XML/HTML-safe - does not respect closing tags.
 	*/
 	function BigSummary($maxWords = 50, $plain = 1) {
-		
+		$result = "";
 		// get first sentence?
 		// this needs to be more robust
 		if($plain) $data = Convert::xml2raw( $this->value, true );

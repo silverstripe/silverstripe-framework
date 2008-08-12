@@ -11,6 +11,9 @@ abstract class CliController extends Controller {
     }
   
     function index() {
+		// Always re-compile the manifest (?flush=1)
+        ManifestBuilder::compileManifest();
+
         foreach( ClassInfo::subclassesFor( $this->class ) as $subclass ) {
         	echo $subclass;
         

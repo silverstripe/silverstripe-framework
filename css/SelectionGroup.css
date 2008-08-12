@@ -11,6 +11,8 @@
 	width: 20px;
 	float : left;
 
+	height:100px;
+	overflow-y:scroll;
 }
 
 .SelectionGroup li div.field {

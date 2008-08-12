@@ -72,6 +72,16 @@ class DB {
 	 */
 	static function query($sql, $errorLevel = E_USER_ERROR) {
 		DB::$lastQuery = $sql;
+		/* debug helper for query efficiency
+		if(substr(strtolower($sql),0,6) == 'select') {
+			$product = 1;
+			foreach(DB::$globalConn->query("explain " . $sql, $errorLevel) as $explainRow) {
+				if($explainRow['rows']) $product *= $explainRow['rows'];
+			}
+			if($product > 100)
+			Debug::message("Cartesian product $product for SQL: $sql");
+		} */
+		
 		return DB::$globalConn->query($sql, $errorLevel);
 	}
 

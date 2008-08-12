@@ -408,6 +408,7 @@ class Hierarchy extends DataObjectDecorator {
 						}
 					}
 					
+					DataObject::disable_subclass_access();
 					if(isset($idxStageChildren)) {
 						$foundInLive = Versioned::get_by_stage( $baseClass, 'Live', "`{$baseClass}`.`ID` IN (" . implode(",", array_keys($idxStageChildren)) . ")", "" );
 					}
@@ -415,6 +416,7 @@ class Hierarchy extends DataObjectDecorator {
 					if(isset($idxLiveChildren)) {
 						$foundInStage = Versioned::get_by_stage( $baseClass, 'Stage', "`{$baseClass}`.`ID` IN (" . implode(",", array_keys($idxLiveChildren)) . ")", "" );
 					}
+					DataObject::enable_subclass_access();
 					
 					if(isset($foundInLive)) {
 						foreach($foundInLive as $child) {

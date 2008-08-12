@@ -167,7 +167,7 @@ class TableField extends TableListField {
 				// Load the data in to a temporary form (for correct field types)
 				$fieldset = $this->FieldSetForRow();
 				if($fieldset){
-					$form = new Form(null, null, $fieldset, new FieldSet());
+					$form = new Form($this, null, $fieldset, new FieldSet());
 					$form->loadDataFrom($item);
 	 				// Add the item to our new DataObjectSet, with a wrapper class.
 					$output->push(new TableField_Item($item, $this, $form, $this->fieldTypes));
@@ -351,7 +351,7 @@ class TableField extends TableListField {
 			}
        }
 		
-       $form = new Form(null, null, $fieldset, new FieldSet());
+	    $form = new Form($this, null, $fieldset, new FieldSet());
 
        if($dataObjects) {
 			foreach ($dataObjects as $objectid => $fieldValues) {

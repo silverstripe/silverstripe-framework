@@ -679,13 +679,13 @@ class DataObject extends ViewableData implements DataObjectInterface {
 					}
 				}
 
-
 				$this->extend('augmentWrite', $manipulation);
 				// New records have their insert into the base data table done first, so that they can pass the
 				// generated ID on to the rest of the manipulation
 				if(isset($isNewRecord) && $isNewRecord && isset($manipulation[$baseTable])) {
 					$manipulation[$baseTable]['command'] = 'update';
 				}
+
 				DB::manipulate($manipulation);
 
 				if(isset($isNewRecord) && $isNewRecord) {
@@ -1901,7 +1901,7 @@ class DataObject extends ViewableData implements DataObjectInterface {
 			}
 		}
 		// Join all the tables
-		if($tableClasses) {
+		if($tableClasses && self::$subclass_access) {
 			foreach($tableClasses as $tableClass) {
 				$query->from[$tableClass] = "LEFT JOIN `$tableClass` ON `$tableClass`.ID = `$baseClass`.ID";
 				$query->select[] = "`$tableClass`.*";
@@ -2519,7 +2519,21 @@ class DataObject extends ViewableData implements DataObjectInterface {
 	 */
 	protected static $context_obj = null;
 
-
+	/*
+	 * @ignore
+	 */
+	private static $subclass_access = true; 
+	
+	/**
+	 * Temporarily disable subclass access in data object qeur
+	 */
+	static function disable_subclass_access() {
+		self::$subclass_access = false;
+	}
+	static function enable_subclass_access() {
+		self::$subclass_access = true;
+	}
+	
 	//-------------------------------------------------------------------------------------------//
 
 	/**

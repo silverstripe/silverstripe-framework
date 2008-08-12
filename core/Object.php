@@ -146,11 +146,15 @@ class Object {
 	 * Returns true if the given method exists.
 	 */
 	public function hasMethod($methodName) {
+		if(method_exists($this, $methodName)) return true;
+
 		$methodName = strtolower($methodName);
 		if(!isset($this->class)) $this->class = get_class($this);
+		/*
 		if(!isset(Object::$builtInMethods['_set'][$this->class])) $this->buildMethodList();
 
 		if(isset(Object::$builtInMethods[$this->class][$methodName])) return true;
+		*/
 		if(isset(Object::$extraMethods[$this->class][$methodName])) return true;
 		return false;
 	}
@@ -257,7 +261,7 @@ class Object {
 			$methodNames[strtolower($name)] = $name;
 		}
 		Object::$builtInMethods[$this->class] = $methodNames;
-		Object::$builtInMethods['_set'][$this->class] = true	;
+		Object::$builtInMethods['_set'][$this->class] = true;
 	}
 
 	/**
@@ -442,7 +446,9 @@ class Object {
 	 * @return DataObjectDecorator The instance of the extension
 	 */
 	public function extInstance($name) {
-		return $this->extension_instances[$name];
+		if(isset($this->extension_instances[$name])) {
+			return $this->extension_instances[$name];
+		}
 	}
 	
 	/**

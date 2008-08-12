@@ -293,6 +293,11 @@ class Director {
 		}
 
 		$s = (isset($_SERVER['SSL']) || isset($_SERVER['HTTPS'])) ? 's' : '';
+		
+		if(!isset($_SERVER['HTTP_HOST'])) {
+			user_error("Director::protocolAndHost() lacks sufficient information - HTTP_HOST not set.", E_USER_WARNING);
+		}
+		
 		return "http$s://" . $_SERVER['HTTP_HOST'];
 	}
 

@@ -6,7 +6,7 @@
  */
 
 /**
- * This class represents a set of {@link ViewableData} subclasses (mostly {@link DataObject} or {@link ArrayData}.
+ * This class represents a set of {@link ViewableData} subclasses (mostly {@link DataObject} or {@link ArrayData}).
  * It is used by the ORM-layer of Silverstripe to return query-results from {@link SQLQuery}.
  * @package sapphire
  * @subpackage model
@@ -436,8 +436,10 @@ class DataObjectSet extends ViewableData implements IteratorAggregate {
 	 * @param DataObjectSet $anotherSet Set to mege onto this set.
 	 */
 	public function merge($anotherSet){
-		foreach($anotherSet->items as $item){
-			$this->push($item);
+		if($anotherSet) {
+			foreach($anotherSet->items as $item){
+				$this->push($item);
+			}	
 		}
 	}
 
@@ -573,7 +575,8 @@ class DataObjectSet extends ViewableData implements IteratorAggregate {
 	* @return array
 	 */
 	public function map($key = "ID", $value = "Title", $includeBlank=null) {
-
+		$map = array();
+		
 		/* Don't do this, add this locally.
 		 * Reasons: 1: In some case this blank value don't/mustn't present.
 		 						2: In some case, this balnk value should be customised, such as (Select from below)

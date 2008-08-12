@@ -81,7 +81,6 @@ class Form extends RequestHandlingData {
 	 * @param actions All of the action buttons in the form - a {@link FieldSet} of {@link FormAction} objects
 	 */
 	function __construct($controller, $name, FieldSet $fields, FieldSet $actions, $validator = null) {
-		
 		parent::__construct();
 
 		foreach($fields as $field) $field->setForm($this);
@@ -91,6 +90,8 @@ class Form extends RequestHandlingData {
 		$this->actions = $actions;
 		$this->controller = $controller;
 		$this->name = $name;
+		
+		if(!$this->controller) user_error("$this->class form created without a controller", E_USER_ERROR);
 
 		// Form validation
 		if($validator) {
@@ -122,6 +123,8 @@ class Form extends RequestHandlingData {
 		if(isset($errorInfo['message']) && isset($errorInfo['type'])) {
 			$this->setMessage($errorInfo['message'],$errorInfo['type']);
 		}
+		
+		$this->security = self::$default_security;
 	}
 	
 	static $url_handlers = array(
@@ -908,6 +911,16 @@ class Form extends RequestHandlingData {
 	 */
 	function disableSecurityToken() {
 		$this->security = false;
+	}
+	
+	
+	private static $default_security = true;
+	
+	/**
+	 * Disable security tokens for every form on this site.
+	 */
+	static function disable_all_security_tokens() {
+		self::$default_security = false;
 	}
 	
 	/**
