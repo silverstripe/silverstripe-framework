@@ -227,6 +227,9 @@ class Session {
 	public static function set_timeout($timeout) {
 		self::$timeout = intval($timeout);
 	}
+	
+	public static function get_timeout() {
+		return self::$timeout;
+	}
 }
-
 ?>
