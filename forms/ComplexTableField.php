@@ -111,6 +111,8 @@ class ComplexTableField extends TableListField {
 	 */
 	protected $relationAutoSetting = true;
 	
+	public $defaultAction = 'show';
+	
 	public $actions = array(
 		'show' => array(
 			'label' => 'Show',
