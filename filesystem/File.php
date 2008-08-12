@@ -356,7 +356,15 @@ class File extends DataObject {
 	}
 
 	function getFullPath() {
-		return Director::baseFolder() . '/' . $this->getFilename();
+		$baseFolder = Director::baseFolder();
+		
+		if(strpos($this->getFilename(), $baseFolder) === 0) {
+			// if path is absolute already, just return
+			return $this->getFilename();
+		} else {
+			// otherwise assume silverstripe-basefolder
+			return Director::baseFolder() . '/' . $this->getFilename();
+		}
 	}
 
 	function getRelativePath() {
