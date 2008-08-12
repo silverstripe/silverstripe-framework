@@ -587,10 +587,7 @@ JS
 				
 				// Optional casting, Format: array('MyFieldName'=>array('sum','Currency->Nice'))
 				if(isset($casting)) {
-					$fieldTypeParts = explode('->', $casting);
-					$castingFieldType = $fieldTypeParts[0];	
-					$castingMethod = $fieldTypeParts[1];
-					$summaryValue = DBField::create($castingFieldType, $summaryValue)->$castingMethod();
+					$summaryValue = $this->getCastedValue($summaryValue, $casting); 
 				}
 			} else {
 				$summaryValue = null;
@@ -1082,7 +1079,32 @@ JS
 		return $permissions;
 	}
 
-	 
+	/**
+	 * @param $value
+	 * 
+	 */
+	function getCastedValue($value, $castingDefinition) {
+		if(is_array($castingDefinition)) {
+			$castingParams = $castingDefinition;
+			array_shift($castingParams);
+			$castingDefinition = array_shift($castingDefinition);
+		} else {
+			$castingParams = array();
+		}
+		if(strpos($castingDefinition,'->') === false) {
+			$castingFieldType = $castingDefinition;
+			$castingField = DBField::create($castingFieldType, $value);
+			$value = call_user_func_array(array($castingField,'XML'),$castingParams);
+		} else {
+			$fieldTypeParts = explode('->', $castingDefinition);
+			$castingFieldType = $fieldTypeParts[0];	
+			$castingMethod = $fieldTypeParts[1];
+			$castingField = DBField::create($castingFieldType, $value);
+			$value = call_user_func_array(array($castingField,$castingMethod),$castingParams);
+		}
+		
+		return $value;
+	}	 
 	 
 	/**
 	 * #########################
@@ -1141,20 +1163,7 @@ class TableListField_Item extends ViewableData {
 			}
 			// casting
 			if(array_key_exists($fieldName, $this->parent->fieldCasting)) {
-				$fieldType = $this->parent->fieldCasting[$fieldName];
-				if(strpos($fieldType,'->') === false) {
-					$castingFieldType = $fieldType;
-					$castingField = new $castingFieldType($fieldName);
-					$castingField->setValue($value);
-					$value = $castingField->XML();
-				} else {
-					$fieldTypeParts = explode('->', $fieldType);
-					$castingFieldType = $fieldTypeParts[0];	
-					$castingMethod = $fieldTypeParts[1];
-					$castingField = new $castingFieldType($fieldName);
-					$castingField->setValue($value);
-					$value = $castingField->$castingMethod();
-				}
+				$value = $this->parent->getCastedValue($value, $this->parent->fieldCasting[$fieldName]);
 			}
 
 			// formatting
