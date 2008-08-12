@@ -14,7 +14,7 @@ ComplexTableField.prototype = {
 		rules['#'+this.id+' table.data tbody td'] = {onclick: this.openPopup.bind(this)};
 		
 		// invoke row action-link based on default-action set in classname
-		if(defaultAction) {
+		if(typeof defaultAction != 'undefined' && defaultAction) {
 			rules['#'+this.id+' table.data tbody td'] = {
 				onclick: function(e) {
 					var link = $$('.'+defaultAction, Event.element(e).parentNode)[0].getAttribute('href');
