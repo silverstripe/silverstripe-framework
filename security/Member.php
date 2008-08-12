@@ -235,6 +235,8 @@ class Member extends DataObject {
 		Session::clear("loggedInAs");
 		self::session_regenerate_id();
 
+		$this->extend('memberLoggedOut');
+
 		$this->RememberLoginToken = null;
 		Cookie::set('alc_enc', null);
 		Cookie::forceExpiry('alc_enc');
