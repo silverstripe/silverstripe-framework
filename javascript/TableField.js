@@ -37,7 +37,7 @@ Object.extend(TableField.prototype,{
 			onclick: this.addRow.bind(this)
 		};
 		
-		Behaviour.register('TableField',rules);
+		Behaviour.register('TableField_'+this.id,rules);
 	},
 	
 	/**
