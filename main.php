@@ -89,7 +89,6 @@ if ($memory < (32 * 1024 * 1024)) {
 }
 
 
-require_once("core/ManifestBuilder.php");
 require_once("core/ClassInfo.php");
 require_once('core/Object.php');
 require_once('core/control/Director.php');
@@ -113,6 +112,7 @@ if (isset($_GET['url'])) {
 	if ($_GET) $_REQUEST = array_merge((array)$_REQUEST, (array)$_GET);
 }
 
+require_once("core/ManifestBuilder.php");
 if (ManifestBuilder::staleManifest()) {
 	ManifestBuilder::compileManifest();
 }

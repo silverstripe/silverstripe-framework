@@ -2,7 +2,7 @@
 /**
  * Define a constant for the name of the manifest file
  */
-define("MANIFEST_FILE", TEMP_FOLDER . "/manifest-" . str_replace('.php','',basename($_SERVER['SCRIPT_FILENAME'])));
+if(!defined('MANIFEST_FILE')) define("MANIFEST_FILE", TEMP_FOLDER . "/manifest-" . str_replace('.php','',basename($_SERVER['SCRIPT_FILENAME'])));
 
 /**
  * The ManifestBuilder class generates the manifest file and keeps it fresh.
