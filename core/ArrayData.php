@@ -35,7 +35,7 @@ class ArrayData extends ViewableData {
 	}
 	
 	public function getField($f) {
-		if((is_object($this->array[$f]) && !$this->array[$f] instanceof ArrayData) || (is_array($this->array[$f]) && ArrayLib::is_associative($this->array[$f]))) {
+		if((is_object($this->array[$f]) && !$this->array[$f] instanceof ViewableData) || (is_array($this->array[$f]) && ArrayLib::is_associative($this->array[$f]))) {
 			return new ArrayData($this->array[$f]);
 		} else {
 			return $this->array[$f];
@@ -66,6 +66,7 @@ class ArrayData extends ViewableData {
 	 * This is pretty crude, but it helps diagnose error situations
 	 */
 	function forTemplate() {
+		return "(ArrayData)";
 		return var_export($this->array, true);
 	}
 	
