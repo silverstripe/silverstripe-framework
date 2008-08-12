@@ -59,6 +59,10 @@ abstract class Authenticator extends Object {
    */
   public abstract static function get_name();
 
+  public static function register($authenticator) {
+	self::register_authenticator($authenticator);	
+  }
+
 
   /**
    * Register a new authenticator
@@ -89,6 +93,10 @@ abstract class Authenticator extends Object {
     }
 
     return true;
+  }
+  
+  public static function unregister($authenticator) {
+  	self::unregister_authenticator($authenticator);
   }
   
 	/**
