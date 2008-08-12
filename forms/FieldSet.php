@@ -15,6 +15,7 @@ class FieldSet extends DataObjectSet {
 	 * @var array
 	 */
 	protected $sequentialSet;
+	protected $sequentialSaveableSet;
 	
 	/**
 	 * Return a sequential set of all fields that have data.  This excludes wrapper composite fields
@@ -24,12 +25,22 @@ class FieldSet extends DataObjectSet {
 		if(!$this->sequentialSet) $this->collateDataFields($this->sequentialSet);
 		return $this->sequentialSet;
 	}
-
-	protected function collateDataFields(&$list) {
+	
+	public function saveableFields() {
+		if(!$this->sequentialSaveableSet) $this->collateDataFields($this->sequentialSaveableSet, true);
+		return $this->sequentialSaveableSet;
+	}
+	
+	protected function collateDataFields(&$list, $saveableOnly = false) {
 		foreach($this as $field) {
+			if($field->isComposite()) $field->collateDataFields($list, $saveableOnly);
 
-			if($field->isComposite()) $field->collateDataFields($list);
-			if($field->hasData()) {
+			if($saveableOnly) {
+				$isIncluded =  ($field->hasData() && !$field->isReadonly() && !$field->isDisabled());
+			} else {
+				$isIncluded =  ($field->hasData());
+			}
+			if($isIncluded) {
 				$name = $field->Name();
 				if(isset($list[$name])) {
 					$errSuffix = "";

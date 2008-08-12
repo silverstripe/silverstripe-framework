@@ -488,8 +488,8 @@ JS
 	function performReadonlyTransformation() {
 		$this->setShowPagination(false);
 		$this->setPermissions(array('show'));
-		$this->IsReadOnly = true;
 		$this->addExtraClass( 'readonly' );
+		$this->setReadonly(true);
 		return $this;
 	}
 	
@@ -654,11 +654,11 @@ JS
 	 * Template accessor for Permissions
 	 */
 	function Can($mode) {
-		if($mode == 'add' && $this->IsReadOnly) {
+		if($mode == 'add' && $this->isReadonly()) {
 			return false;
-		} else if($mode == 'delete' && $this->IsReadOnly) {
+		} else if($mode == 'delete' && $this->isReadonly()) {
 			return false;
-		} else if($mode == 'edit' && $this->IsReadOnly) {
+		} else if($mode == 'edit' && $this->isReadonly()) {
 			return false;
 		} else {
 			return (in_array($mode, $this->permissions));
@@ -1207,7 +1207,7 @@ class TableListField_Item extends ViewableData {
 	function MarkingCheckbox() {
 		$name = $this->parent->Name() . '[]';
 		
-		if($this->parent->IsReadOnly || !$this->Can('edit'))
+		if($this->parent->isReadonly())
 			return "<input class=\"checkbox\" type=\"checkbox\" name=\"$name\" value=\"{$this->item->ID}\" disabled=\"disabled\" />";
 		else
 			return "<input class=\"checkbox\" type=\"checkbox\" name=\"$name\" value=\"{$this->item->ID}\" />";
@@ -1234,7 +1234,7 @@ class TableListField_Item extends ViewableData {
 	/**
 	 * Legacy: Please use permissions instead
 	 */
-	function IsReadOnly() {
+	function isReadonly() {
 		return $this->parent->Can('delete');
 	}
 	

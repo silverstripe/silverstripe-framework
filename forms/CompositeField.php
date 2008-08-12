@@ -100,11 +100,16 @@ class CompositeField extends FormField {
 	 * Add all of the non-composite fields contained within this field to the list.
 	 * Sequentialisation is used when connecting the form to its data source
 	 */
-	public function collateDataFields(&$list) {
+	public function collateDataFields(&$list, $saveableOnly = false) {
 		foreach($this->children as $field) {
 			if(is_object($field)) {
-				if($field->isComposite()) $field->collateDataFields($list);
-				if($field->hasData()) {
+				if($field->isComposite()) $field->collateDataFields($list, $saveableOnly);
+				if($saveableOnly) {
+					$isIncluded =  ($field->hasData() && !$field->isReadonly() && !$field->isDisabled());
+				} else {
+					$isIncluded =  ($field->hasData());
+				}
+				if($isIncluded) {
 					$name = $field->Name();
 					if($name) {
 						$formName = (isset($this->form)) ? $this->form->FormName() : '(unknown form)';

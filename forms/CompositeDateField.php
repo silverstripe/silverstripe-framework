@@ -148,10 +148,14 @@ JS;
  * @subpackage fields-datetime
  */
 class CompositeDateField_Disabled extends DateField {
+	
+	protected $disabled = true;
+	
 	function setValue($val) {
 		if($val && $val != "0000-00-00") $this->value = date('d/m/Y', strtotime($val));
 		else $this->value = _t('Form.DATENOTSET', "(No date set)");
 	}
+	
 	function Field() {
 		if($this->value) {
 			$df = new Date($this->name);
@@ -163,6 +167,7 @@ class CompositeDateField_Disabled extends DateField {
 		
 		return "<span class=\"readonly\" id=\"" . $this->id() . "\">$val</span>";
 	}
+	
 	function Type() {
 		return "date_disabled readonly";
 	}

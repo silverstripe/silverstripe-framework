@@ -7,6 +7,8 @@
  */
 class LookupField extends DropdownField {
 
+	protected $readonly = true;
+	
 	/**
 	 * Returns a readonly span containing the correct value.
 	 */
@@ -40,9 +42,11 @@ class LookupField extends DropdownField {
 			"\">$mappedValue</span><input type=\"hidden\" name=\"" . $this->name .
 			"\" value=\"" . $valforInput . "\" />";
 	}
+	
 	function performReadonlyTransformation() {
 		return $this;
 	}
+
 	function Type() { 
 		return "lookup readonly";
 	}

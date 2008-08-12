@@ -5,6 +5,9 @@
  * @subpackage fields-basic
  */
 class CheckboxFieldDisabled extends CheckboxField {
+	
+	protected $disabled = true;
+	
 	/**
 	 * Returns a single checkbox field - used by templates.
 	 */

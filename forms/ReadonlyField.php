@@ -6,6 +6,8 @@
  */
 class ReadonlyField extends FormField {
 
+	protected $readonly = true;
+
 	function performReadonlyTransformation() {
 		return $this;
 	}

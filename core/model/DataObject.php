@@ -32,6 +32,12 @@ class DataObject extends ViewableData implements DataObjectInterface {
 	 */
 	protected $components;
 
+	/**
+	 * DEPRECATED
+	 *
+	 * @var array List of fields and their old values before the last write.
+	 */
+	protected $lastWriteFields;
 
 	/**
 	 * True if this DataObject has been destroyed.
@@ -57,7 +63,6 @@ class DataObject extends ViewableData implements DataObjectInterface {
 	 * @todo Define the options that can be set here
 	 */
 	static $api_access = false;
-
 
 	/**
 	 * Construct a new DataObject.

@@ -59,6 +59,7 @@ class OptionsetField extends DropdownField {
 		$items = $this->source;
 		$field = new LookupField($this->name,$this->title ? $this->title : "" ,$items,$this->value);
 		$field->setForm($this->form);
+		$field->setReadonly(true);
 		return $field;
 	}
 	

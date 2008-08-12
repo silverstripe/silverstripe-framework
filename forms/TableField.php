@@ -311,11 +311,13 @@ class TableField extends TableListField {
 	
 	function performReadonlyTransformation() {
 		$this->permissions = array('show');
+		$this->setReadonly(true);
 		return $this;
 	}
 
 	function performDisabledTransformation() {
 		$this->permissions = array('show');
+		$this->setDisabled(true);
 		return $this;
 	}
 	

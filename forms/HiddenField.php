@@ -16,6 +16,7 @@ class HiddenField extends FormField {
 		return $this->Field();
 	}
 	function performReadonlyTransformation() {
+		$this->setReadonly(true);
 		return $this;
 	}
 	

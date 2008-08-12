@@ -132,6 +132,7 @@ HTML;
 		$field = new LookupField($this->name, $this->title, $source);
 		$field->setValue($this->value);
 		$field->setForm($this->form);
+		$field->setReadonly(true);
 		return $field;
 	}
 	

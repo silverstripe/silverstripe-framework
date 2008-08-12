@@ -62,6 +62,8 @@ class TimeField extends TextField {
  */
 class TimeField_Readonly extends TimeField {
 	
+	protected $readonly = true;
+	
 	function Field() {
 		if( $this->value )
 			$val = $this->attrValue();

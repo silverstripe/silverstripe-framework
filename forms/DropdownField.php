@@ -68,6 +68,7 @@ class DropdownField extends FormField {
 		$field = new LookupField($this->name, $this->title, $this->source);
 		$field->setValue($this->value);
 		$field->setForm($this->form);
+		$field->setReadonly(true);
 		return $field;
 	}
 	

@@ -53,6 +53,9 @@ class InlineFormAction extends FormField {
  * @subpackage actions
  */
 class InlineFormAction_ReadOnly extends FormField {
+	
+	protected $readonly = true;
+	
 	function Field() {
 		return "<input type=\"submit\" name=\"action_{$this->name}\" value=\"{$this->title}\" id=\"{$this->id()}\" disabled=\"disabled\" class=\"action$extraClass\" />";
 	}	

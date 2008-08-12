@@ -43,6 +43,16 @@ class FormField extends RequestHandlingData {
 	protected $tabIndex;
 	
 	/**
+	 * @var $readonly boolean
+	 */
+	protected $readonly = false;
+
+	/**
+	 * @var $disabled boolean
+	 */
+	protected $disabled = false;
+	
+	/**
 	 * Create a new field.
 	 * @param name The internal field name, passed to forms.
 	 * @param title The field label.
@@ -352,8 +362,36 @@ HTML;
 	 */
 	function hasData() { return true; }
 
+	/**
+	 * @return boolean
+	 */
 	function isReadonly() { 
-		return !in_array($this->class, array("ReadonlyField","FormField","LookupField")); 
+		return $this->readonly; 
+	}
+
+	/**
+	 * Sets readonly-flag on form-field. Please use performReadonlyTransformation()
+	 * to actually transform this instance.
+	 * @param $bool boolean Setting "false" has no effect on the field-state.
+	 */
+	function setReadonly($bool) { 
+		$this->readonly = $bool; 
+	}
+	
+	/**
+	 * @return boolean
+	 */
+	function isDisabled() { 
+		return $this->disabled; 
+	}
+
+	/**
+	 * Sets disabed-flag on form-field. Please use performDisabledTransformation()
+	 * to actually transform this instance.
+	 * @param $bool boolean Setting "false" has no effect on the field-state.
+	 */
+	function setDisabled($bool) { 
+		$this->disabled = $bool; 
 	}
 	
 	/**

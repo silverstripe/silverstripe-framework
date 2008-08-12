@@ -739,7 +739,7 @@ class Form extends RequestHandlingData {
 	 * It will make use of setCastedField() to do this.
 	 */
 	function saveInto(DataObjectInterface $dataObject) {
-		$dataFields = $this->fields->dataFields();
+		$dataFields = $this->fields->saveableFields();
 		$lastField = null;
 
 		if($dataFields) foreach($dataFields as $field) {

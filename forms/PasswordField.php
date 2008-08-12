@@ -44,6 +44,7 @@ class PasswordField extends FormField {
 
 		$field = new ReadonlyField($this->name, $this->title ? $this->title : '', $stars);
 		$field->setForm($this->form);
+		$field->setReadonly(true);
 		return $field;
 	}
 }

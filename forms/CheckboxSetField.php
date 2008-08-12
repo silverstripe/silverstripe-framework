@@ -148,6 +148,11 @@ class CheckboxSetField extends OptionsetField {
 		}
 	}
 	
+	function performDisabledTransformation() {
+		$this->setDisabled(true);
+		return $this;
+	}
+	
 	/**
 	* Makes a pretty readonly field
 	*/

@@ -30,6 +30,7 @@ class DateField extends TextField {
 	function performReadonlyTransformation() {
 		$field = new DateField_Disabled($this->name, $this->title, $this->value);
 		$field->setForm($this->form);
+		$field->readonly = true;
 		return $field;
 	}
 	
@@ -89,6 +90,8 @@ JS;
  * @subpackage fields-datetime
  */
 class DateField_Disabled extends DateField {
+	
+	protected $disabled = true;
 	
 	function setValue($val) {
 		if($val && $val != "0000-00-00") $this->value = date('d/m/Y', strtotime($val));
