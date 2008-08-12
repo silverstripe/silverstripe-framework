@@ -66,7 +66,6 @@ class ArrayData extends ViewableData {
 	 * This is pretty crude, but it helps diagnose error situations
 	 */
 	function forTemplate() {
-		return "(ArrayData)";
 		return var_export($this->array, true);
 	}
 	
