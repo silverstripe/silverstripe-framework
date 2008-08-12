@@ -31,6 +31,13 @@ class FormResponse {
 	 * @var $rules array
 	 */
 	static protected $rules = array();
+
+	/**
+	 * @var $behaviour_apply_rules array Separated from $rules because
+	 * we need to apply all behaviour at the very end of the evaluated script
+	 * to make sure we include all possible Behaviour.register()-calls.
+	 */
+	static protected $behaviour_apply_rules = array();
 	
 	/**
 	 * @var $non_ajax_content string
@@ -227,9 +234,9 @@ class FormResponse {
 		}
 		if($reapplyBehaviour) {
 			if(isset($uniquenessID)) {
-				self::$rules[$uniquenessID] .= "Behaviour.apply('{$JS_domID}', true);";
+				self::$behaviour_apply_rules[$uniquenessID] .= "Behaviour.apply('{$JS_domID}', true);";
 			} else {
-				self::$rules[] .= "Behaviour.apply('{$JS_domID}', true);";
+				self::$behaviour_apply_rules[] = "Behaviour.apply('{$JS_domID}', true);";
 			}
 		}
 	}
@@ -249,9 +256,13 @@ class FormResponse {
 			}
 		}
 		if(!empty($msg)) self::$rules[] = $msg;
+		
 
 		$js .= implode("\n", self::$rules);
 		$js .= Requirements::get_custom_scripts();
+
+		// make sure behaviour is applied AFTER all registers are collected
+		$js .= implode("\n", self::$behaviour_apply_rules);
 		
 		return $js;
 	}
