@@ -368,10 +368,10 @@ JS
 			$SQL_start = 0;
 		}
 		if(isset($this->customSourceItems)) {
-			if($this->customSourceItems) {
+			if($this->showPagination && $this->pageSize) {
 				$items = $this->customSourceItems->getRange($SQL_start, $SQL_limit);
 			} else {
-				$items = false;
+				$items = $this->customSourceItems;
 			}
 		} elseif(isset($this->cachedSourceItems)) {
 			$items = $this->cachedSourceItems;
