@@ -14,6 +14,14 @@ class Float extends DBField {
 		return number_format($this->value, 2);
 	}
 	
+	function Round($precision = 3) {
+		return round($this->value, $precision);
+	}
+
+	function NiceRound($precision = 3) {
+		return number_format(round($this->value, $precision), $precision);
+	}
+	
 	public function scaffoldFormField($title = null) {
 		return new NumericField($this->name, $title);
 	}
