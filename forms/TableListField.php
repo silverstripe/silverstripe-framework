@@ -427,7 +427,7 @@ JS
 
 			$SNG = singleton($this->sourceClass);
 			foreach($this->FieldList() as $k=>$title){
-				if(!$SNG->hasField($k) && !$SNG->hasMethod('get' . $k) && !strpos($k, "."))
+				if(!$SNG->hasField($k) && !$SNG->hasMethod('get' . $k) && !$SNG->hasMethod($k) && !strpos($k, "."))
 					$query->select[] = $k;
 			}
 		}
