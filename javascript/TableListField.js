@@ -64,7 +64,7 @@ TableListField.prototype = {
 			};
 		}
 		
-		Behaviour.register(rules);
+		Behaviour.register('TableListField',rules);
 		if(summaryCols) {
 			//this._getSummaryDefs(summaryCols);
 		}
