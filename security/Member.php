@@ -814,8 +814,18 @@ class Member extends DataObject {
 	 */
 	public static function mapInCMSGroups($groups = null) {
 		if(!$groups || $groups->Count() == 0) {
+			$perms = array('ADMIN', 'CMS_ACCESS_AssetAdmin');
+			
+			$cmsPerms = singleton('CMSMain')->providePermissions();
+			
+			if(!empty($cmsPerms)) {
+				$perms = array_unique(array_merge($perms, array_keys($cmsPerms)));
+			}
+			
+			$SQL_perms = "'" . array_join(Convert::raw2sql($perms), "', '") . "'";
+			
 			$groups = DataObject::get('Group', "", "",
-				"INNER JOIN `Permission` ON `Permission`.GroupID = `Group`.ID AND `Permission`.Code IN ('ADMIN', 'CMS_ACCESS_AssetAdmin')");
+				"INNER JOIN `Permission` ON `Permission`.GroupID = `Group`.ID AND `Permission`.Code IN ($SQL_perms)");
 		}
 
 		$groupIDList = array();
