@@ -207,10 +207,12 @@ class Session {
 	public static function load_config() {
 		foreach(self::$session_ips as $sessionIP => $timeout) {
 			if(preg_match('/^([0-9.]+)\s?-\s?([0-9.]+)$/', $sessionIP, $ips)) {
-				$minIP = ip2long($ips[1]);
-				$maxIP = ip2long($ips[2]);
+				$startIP = ip2long($ips[1]);
+				$endIP = ip2long($ips[2]);
 				$clientIP = ip2long($_SERVER['REMOTE_ADDR']);
-				
+				$minIP = min($startIP, $endIP);
+				$maxIP = max($startIP, $endIP);
+					
 				if($minIP <= $clientIP && $clientIP <= $maxIP) {
 					return self::set_timeout($timeout);
 				}
