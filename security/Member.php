@@ -193,6 +193,9 @@ class Member extends DataObject {
 		$this->LockedOutUntil = null;
 
 		$this->write();
+		
+		// Audit logging hook
+		$this->extend('memberLoggedIn');
 	}
 
 
@@ -223,6 +226,9 @@ class Member extends DataObject {
 
 				$member->NumVisit++;
 				$member->write();
+				
+				// Audit logging hook
+				$this->extend('memberAutoLoggedIn');
 			}
 		}
 	}
@@ -242,6 +248,9 @@ class Member extends DataObject {
 		Cookie::forceExpiry('alc_enc');
 
 		$this->write();
+		
+		// Audit logging hook
+		$this->extend('memberLoggedOut');
 	}
 
 

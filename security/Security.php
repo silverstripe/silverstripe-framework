@@ -183,6 +183,12 @@ class Security extends Controller {
 
 		Session::set("BackURL", $_SERVER['REQUEST_URI']);
 		
+		// TODO AccessLogEntry needs an extension to handle permission denied errors
+		// Audit logging hook
+		if($controller) $controller->extend('permissionDenied', $member);
+		
+		// AccessLogEntry::create("Permission to access {$name} denied");
+		
 		if(Director::is_ajax()) {
 			die('NOTLOGGEDIN:');
 		} else {

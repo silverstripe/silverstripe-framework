@@ -36,16 +36,31 @@ class MemberAuthenticator extends Authenticator {
 	}
 	
 	// Optionally record every login attempt as a {@link LoginAttempt} object
+	/**
+	 * TODO We could handle this with an extension
+	 */
 	if(Security::login_recording()) {
 		$attempt = new LoginAttempt();
 		if($member) {
 			// successful login (member is existing with matching password)
 			$attempt->MemberID = $member->ID;
 			$attempt->Status = 'Success';
+			
+			// Audit logging hook
+			$member->extend('authenticated');
 		} else {
 			// failed login - we're trying to see if a user exists with this email (disregarding wrong passwords)
 			$existingMember = DataObject::get_one("Member", "Email = '$SQL_user'");
-			if($existingMember) $attempt->MemberID = $existingMember->ID;
+			if($existingMember) {
+				$attempt->MemberID = $existingMember->ID;
+				
+				// Audit logging hook
+				$existingMember->extend('authenticationFailed');
+			} else {
+				
+				// Audit logging hook
+				$this->extend('authenticationFailedUnknownUser', $RAW_data);
+			}
 			$attempt->Status = 'Failure';
 		}
 		if(is_array($RAW_data['Email'])) {

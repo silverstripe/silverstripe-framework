@@ -163,6 +163,7 @@ class MemberLoginForm extends LoginForm {
 			return $member;
 
 		} else {
+			$this->extend('authenticationFailed', $data);
 			return null;
 		}
 	}
