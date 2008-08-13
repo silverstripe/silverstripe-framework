@@ -13,6 +13,37 @@
  */
 class DebugView {
 
+	protected static $error_types = array(
+		E_USER_ERROR => array(
+			'title' => 'User Error',
+			'class' => 'error'
+		),
+		E_CORE_ERROR => array(
+			'title' => 'Core Error',
+			'class' => 'error'
+		),
+		E_NOTICE => array(
+			'title' => 'Notice',
+			'class' => 'notice'
+		),
+		E_CORE_ERROR => array(
+			'title' => 'Core Error',
+			'class' => 'error'
+		),
+		E_WARNING => array(
+			'title' => 'Warning',
+			'class' => 'warning'
+		),
+		E_CORE_WARNING => array(
+			'title' => 'Core Warning',
+			'class' => 'warning'
+		),
+		E_USER_WARNING => array(
+			'title' => 'Warning',
+			'class' => 'warning'
+		)
+	);
+
 	/**
 	 * Generate breadcrumb links to the URL path being displayed
 	 *
@@ -85,8 +116,9 @@ class DebugView {
 	 * Write information about the error to the screen
 	 */
 	public function writeError($httpRequest, $errno, $errstr, $errfile, $errline, $errcontext) {
-		echo '<div class="info">';
-		echo "<h1>" . strip_tags($errstr) . "</h1>";
+		$errorType = self::$error_types[$errno];
+		echo '<div class="info ' . $errorType['class'] . '">';
+		echo "<h1>[" . $errorType['title'] . '] ' . strip_tags($errstr) . "</h1>";
 		echo "<h3>$httpRequest</h3>";
 		echo "<p>Line <strong>$errline</strong> in <strong>$errfile</strong></p>";
 		echo '</div>';

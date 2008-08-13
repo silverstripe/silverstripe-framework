@@ -27,7 +27,8 @@ class CliDebugView extends DebugView {
 	 * Write information about the error to the screen
 	 */
 	public function writeError($httpRequest, $errno, $errstr, $errfile, $errline, $errcontext) {
-		echo "ERROR: $errstr\nIN $httpRequest\n";
+		$errorType = self::$error_types[$errno];
+		echo "ERROR [" . $errorType['title'] . "]: $errstr\nIN $httpRequest\n";
 		echo "Line $errline in $errfile\n\n";
 	}
 
