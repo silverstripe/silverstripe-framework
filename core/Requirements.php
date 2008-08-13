@@ -220,7 +220,7 @@ class Requirements {
 			Requirements::$css = array();
 			Requirements::$customScript = array();
 			Requirements::$customCSS = array();
-			Requirements::$customHeadTags = "";
+			Requirements::$customHeadTags = array();
 		}
 		
 	}
