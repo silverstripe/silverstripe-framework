@@ -95,10 +95,12 @@ require_once('core/control/Director.php');
 require_once('filesystem/Filesystem.php');
 require_once("core/Session.php");
 
+/*
  // If this is a dev site, enable php error reporting
 if (Director::isDev()) {
 	error_reporting(E_ALL);
 }
+*/
 
 Session::start();
 
