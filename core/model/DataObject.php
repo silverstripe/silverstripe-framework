@@ -2396,6 +2396,8 @@ class DataObject extends ViewableData implements DataObjectInterface {
 			}
 		}
 		$fields = $rewrite;
+		
+		$this->extend('updateSearchableFields', $fields);
 
 		return $fields;
 	}

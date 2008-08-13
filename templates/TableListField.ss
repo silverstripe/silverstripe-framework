@@ -75,7 +75,7 @@
 	</table>
 	<div class="utility">
 		<% control Utility %>
-			<span class="item"><a href="$Link" target="_blank">$Title</a></span>
+			<span class="item"><a href="$Link">$Title</a></span>
 		<% end_control %>
 	</div>
 </div>

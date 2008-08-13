@@ -105,6 +105,8 @@ class Group extends DataObject {
 
 		$fields->push($idField = new HiddenField("ID"));
 		
+		$this->extend('updateCMSFields', $fields);
+		
 		return $fields;
 	}
 	
