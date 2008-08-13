@@ -128,6 +128,9 @@ class Member extends DataObject {
 	 * quirky problems (such as using the Windmill 0.3.6 proxy).
 	 */
 	static function session_regenerate_id() {
+		// This can be called via CLI during testing.
+		if(Director::is_cli()) return;
+		
 		$file = ""; $line = "";
 		if (!headers_sent($file, $line)) session_regenerate_id(true);
 		else user_error("Content already sent at line $line in $file, can't call session_regenerate_id", E_USER_WARNING);
@@ -716,8 +719,7 @@ class Member extends DataObject {
 		$groupIDs = $groups->column();
 		$collatedGroups = array();
 		foreach($groups as $group) {
-			$collatedGroups = array_merge((array)$collatedGroups,
-																		$group->collateAncestorIDs());
+			$collatedGroups = array_merge((array)$collatedGroups, $group->collateAncestorIDs());
 		}
 
 		$table = "Group_Members";
@@ -729,8 +731,9 @@ class Member extends DataObject {
 			$result = new ComponentSet();
 			
 			// Only include groups where allowedIPAddress() returns true
+			$ip = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : null;
 			foreach($unfilteredGroups as $group) {
-				if($group->allowedIPAddress($_SERVER['REMOTE_ADDR'])) $result->push($group);
+				if($group->allowedIPAddress($ip)) $result->push($group);
 			}
 		} else {
 			$result = new Member_GroupSet();
