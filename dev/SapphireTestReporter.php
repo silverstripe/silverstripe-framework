@@ -152,6 +152,7 @@ class SapphireTestReporter implements PHPUnit_Framework_TestListener {
 		$this->currentTest['status'] = TEST_FAILURE;
 		$this->currentTest['message'] = $e->toString();
 		$this->currentTest['exception'] = $this->getTestException($test, $e);
+		$this->currentTest['trace'] = $e->getTrace();
 	}
 	
 	/**
@@ -168,6 +169,7 @@ class SapphireTestReporter implements PHPUnit_Framework_TestListener {
 		$this->currentTest['status'] = TEST_ERROR;
 		$this->currentTest['message'] = $e->getMessage();
 		$this->currentTest['exception'] = $this->getTestException($test, $e);
+		$this->currentTest['trace'] = $e->getTrace();
 	}
 	
 	/**
@@ -184,6 +186,7 @@ class SapphireTestReporter implements PHPUnit_Framework_TestListener {
 		$this->currentTest['status'] = TEST_INCOMPLETE;
 		$this->currentTest['message'] = $e->toString();
 		$this->currentTest['exception'] = $this->getTestException($test, $e);
+		$this->currentTest['trace'] = $e->getTrace();
 	}
     
 	/**
@@ -266,7 +269,8 @@ class SapphireTestReporter implements PHPUnit_Framework_TestListener {
 				if ($test['status'] != 1) {
 					echo "<div class=\"failure\"><span>&otimes; ". $this->testNameToPhrase($test['name']) ."</span><br>";
 					echo "<pre>".htmlentities($test['message'])."</pre><br>";
-					echo "<code>In line {$test['exception']['line']} of {$test['exception']['file']}</code></div>";
+					echo Debug::get_rendered_backtrace($test['trace']);
+					echo "</div>";
 				}
 			}
 		}

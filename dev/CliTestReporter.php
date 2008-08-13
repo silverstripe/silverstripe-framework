@@ -34,6 +34,8 @@ class CliTestReporter extends SapphireTestReporter {
 		if ($test['status'] != 1) {
 			echo $this->testNameToPhrase($test['name']) . "\n". $test['message'] . "\n";
 			echo "In line {$test['exception']['line']} of {$test['exception']['file']}" . "\n\n";
+			echo Debug::get_rendered_backtrace($test['trace'], true);
+			echo "\n--------------------\n";
 		}
 	}
 	
