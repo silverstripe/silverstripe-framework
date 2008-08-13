@@ -314,6 +314,11 @@ class Debug {
 			$reporter->writeError($httpRequest, $errno, $errstr, $errfile, $errline, $errcontext);
 
 			$lines = file($errfile);
+
+			// Make the array 1-based
+			array_unshift($lines,"");
+			unset($lines[0]);
+
 			$offset = $errline-10;
 			$lines = array_slice($lines, $offset, 16, true);
 			$reporter->writeSourceFragment($lines, $errline);
