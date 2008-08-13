@@ -99,7 +99,7 @@ class MemberLoginForm extends LoginForm {
 					Session::set('BackURL', $backURL);
 				}
 
-				$cp = new ChangePasswordForm(null, 'ChangePasswordForm');
+				$cp = new ChangePasswordForm($this->controller, 'ChangePasswordForm');
 				$cp->sessionMessage('Your password has expired.  Please choose a new one.', 'good');
 				
 				Director::redirect('Security/changepassword');
