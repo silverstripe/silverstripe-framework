@@ -114,6 +114,8 @@ class TestRunner extends Controller {
 	}
 
 	function runTests($classList, $coverage = false) {
+		$this->setUp();
+		
 		// run tests before outputting anything to the client
 		$suite = new PHPUnit_Framework_TestSuite();
 		foreach($classList as $className) {
@@ -158,8 +160,18 @@ class TestRunner extends Controller {
 		
 		if(!Director::is_cli()) self::$default_reporter->writeFooter();
 		
+		$this->tearDown();
+		
 		// Todo: we should figure out how to pass this data back through Director more cleanly
 		if(Director::is_cli() && ($results->failureCount() + $results->errorCount()) > 0) exit(2);
+	}
+	
+	function setUp() {
+		SapphireTest::create_temp_db();
+	}
+	
+	function tearDown() {
+		SapphireTest::kill_temp_db();
 	}
 }
 

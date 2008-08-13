@@ -34,22 +34,19 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 		
 		// Set up fixture
 		if($fixtureFile) {
-			// Create a temporary database
-			$dbConn = DB::getConn();
-			$dbname = 'tmpdb' . rand(1000000,9999999);
-			while(!$dbname || $dbConn->databaseExists($dbname)) {
-				$dbname = 'tmpdb' . rand(1000000,9999999);
+			if(substr(DB::getConn()->currentDatabase(),0,5) != 'tmpdb') {
+				echo "Re-creating temp database... ";
+				self::create_temp_db();
+				echo "done.\n";
 			}
-			$dbConn->selectDatabase($dbname);
-		
+
 			// This code is a bit misplaced; we want some way of the whole session being reinitialised...
 			Versioned::reading_stage(null);
 
-			$dbConn->createDatabase();
 			singleton('DataObject')->flushCache();
 
 			$dbadmin = new DatabaseAdmin();
-			$dbadmin->doBuild(true, false, true);
+			$dbadmin->clearAllData();
 		
 			$this->fixture = new YamlFixture($fixtureFile);
 			$this->fixture->saveIntoDatabase();
@@ -107,16 +104,6 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	}
 	
 	function tearDown() {
-		// Delete our temporary database
-		$dbConn = DB::getConn();
-		if($dbConn && substr($dbConn->currentDatabase(),0,5) == 'tmpdb') {
-			$dbName = $dbConn->currentDatabase();
-			if($dbName && DB::query("SHOW DATABASES LIKE '$dbName'")->value()) {
-				// echo "Deleted temp database " . $dbConn->currentDatabase() . "\n";
-				$dbConn->dropDatabase();
-			}
-		}
-		
 		// Restore email configuration
 		Email::set_mailer($this->originalMailer);
 		$this->originalMailer = null;
@@ -168,6 +155,33 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
                 "Failed asserting that an email was sent$infoParts."
             );
 		}
+	}
+	
+	static function kill_temp_db() {
+		// Delete our temporary database
+		$dbConn = DB::getConn();
+		if($dbConn && substr($dbConn->currentDatabase(),0,5) == 'tmpdb') {
+			$dbName = $dbConn->currentDatabase();
+			if($dbName && DB::query("SHOW DATABASES LIKE '$dbName'")->value()) {
+				// echo "Deleted temp database " . $dbConn->currentDatabase() . "\n";
+				$dbConn->dropDatabase();
+			}
+		}
+	}
+	
+	static function create_temp_db() {
+		// Create a temporary database
+		$dbConn = DB::getConn();
+		$dbname = 'tmpdb' . rand(1000000,9999999);
+		while(!$dbname || $dbConn->databaseExists($dbname)) {
+			$dbname = 'tmpdb' . rand(1000000,9999999);
+		}
+		
+		$dbConn->selectDatabase($dbname);
+		$dbConn->createDatabase();
+
+		$dbadmin = new DatabaseAdmin();
+		$dbadmin->doBuild(true, false, true);
 	}
 }
 

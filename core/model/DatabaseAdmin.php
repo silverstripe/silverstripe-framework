@@ -203,6 +203,16 @@ class DatabaseAdmin extends Controller {
 			echo "OK";
 		}
 	}
+	
+	/**
+	 * Clear all data out of the database
+	 */
+	function clearAllData() {
+		$tables = DB::query("SHOW TABLES")->column();
+		foreach($tables as $table) {
+			DB::query("TRUNCATE `$table`");
+		}
+	}
 
 
 	/**
