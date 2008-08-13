@@ -47,7 +47,7 @@ class TestRunner extends Controller {
 	
 	function init() {
 		parent::init();
-		if (!self::$default_reporter) self::set_reporter('DebugView');
+		if (!self::$default_reporter) self::set_reporter(Director::is_cli() ? 'CliDebugView' : 'DebugView');
 	}
 	
 	public function Link() {
@@ -126,7 +126,16 @@ class TestRunner extends Controller {
 		restore_error_handler();
 
 		/*, array("reportDirectory" => "/Users/sminnee/phpunit-report")*/
-		$reporter = new SapphireTestReporter();
+		if(Director::is_cli()) $reporter = new CliTestReporter();
+		else $reporter = new SapphireTestReporter();
+
+		self::$default_reporter->writeHeader("Sapphire Test Runner");
+		if (count($classList) > 1) { 
+			self::$default_reporter->writeInfo("All Tests", "Running test cases: " . implode(", ", $classList));
+		} else {
+			self::$default_reporter->writeInfo($classList[0], "");
+		}
+		
 		$results = new PHPUnit_Framework_TestResult();		
 		$results->addListener($reporter);
 
@@ -139,12 +148,6 @@ class TestRunner extends Controller {
 			//$testResult = PHPUnit_TextUI_TestRunner::run($suite);
 		}
 		
-		self::$default_reporter->writeHeader();
-		if (count($classList) > 1) { 
-			self::$default_reporter->writeInfo("All Tests", "Running test cases: " . implode(", ", $classList) .")");
-		} else {
-			self::$default_reporter->writeInfo($classList[0], "");
-		}
 		echo '<div class="trace">';
 		$reporter->writeResults();
 		
@@ -154,8 +157,9 @@ class TestRunner extends Controller {
 		Debug::loadErrorHandlers();
 		
 		if(!Director::is_cli()) self::$default_reporter->writeFooter();
+		
 		// Todo: we should figure out how to pass this data back through Director more cleanly
-		if(Director::is_cli() && ($testResult->failureCount() + $testResult->errorCount()) > 0) exit(2);
+		if(Director::is_cli() && ($results->failureCount() + $results->errorCount()) > 0) exit(2);
 	}
 }
 

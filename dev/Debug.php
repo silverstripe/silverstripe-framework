@@ -75,7 +75,7 @@ class Debug {
 		if(!Director::isLive()) {
 			if($showHeader) {
 				$caller = Debug::caller();
-				if(Director::is_ajax())
+				if(Director::is_ajax() || Director::is_cli())
 					echo "Debug ($caller[class]$caller[type]$caller[function]() in line $caller[line] of " . basename($caller['file']) . ")\n";
 				else 
 					echo "<div style=\"background-color: white; text-align: left;\">\n<hr>\n<h3>Debug <span style=\"font-size: 65%\">($caller[class]$caller[type]$caller[function]() \n<span style=\"font-weight:normal\">in line</span> $caller[line] \n<span style=\"font-weight:normal\">of</span> " . basename($caller['file']) . ")</span>\n</h3>\n";
@@ -83,7 +83,8 @@ class Debug {
 			
 			echo Debug::text($val);
 	
-			if(!Director::is_ajax()) echo "</div>";
+			if(!Director::is_ajax() && !Director::is_cli()) echo "</div>";
+			else echo "\n\n";
 		}
 
 	}
@@ -153,7 +154,7 @@ class Debug {
 		} else if (is_object($val)) {
 			$val = var_export($val, true);
 		} else {
-			if(true || !Director::is_ajax()) {
+			if(!Director::is_cli() && !Director::is_ajax()) {
 				$val = "<pre style=\"font-family: Courier new\">" . htmlentities($val) . "</pre>\n";
 			}
 		}

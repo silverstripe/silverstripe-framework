@@ -51,6 +51,19 @@ class CliDebugView extends DebugView {
 	function writeTrace() {
 		Debug::backtrace();
 	}
+
+	/**
+	 * Render the information header for the view
+	 * 
+	 * @param string $title
+	 * @param string $title
+	 */
+	public function writeInfo($title, $subtitle, $description=false) {
+		echo wordwrap(strtoupper($title),100) . "\n";
+		echo wordwrap($subtitle,100) . "\n";
+		echo str_repeat('-',min(100,max(strlen($title),strlen($subtitle)))) . "\n";
+		echo wordwrap($description,100) . "\n\n";
+	}
 	
 }
 

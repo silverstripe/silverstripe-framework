@@ -42,27 +42,27 @@ class SapphireTestReporter implements PHPUnit_Framework_TestListener {
 	 * Holds array of suites and total number of tests run
 	 * @var array
 	 */	
-	private $suiteResults;
+	protected $suiteResults;
 	/**
 	 * Holds data of current suite that is been run
 	 * @var array
 	 */
-	private $currentSuite;
+	protected $currentSuite;
 	/**
 	 * Holds data of current test that is been run
 	 * @var array
 	 */
-	private $currentTest;
+	protected $currentTest;
 	/**
 	 * Whether PEAR Benchmark_Timer is available for timing
 	 * @var boolean
 	 */
-	private $hasTimer;
+	protected $hasTimer;
 	/**
 	 * Holds the PEAR Benchmark_Timer object
 	 * @var obj Benchmark_Timer
 	 */
-	private $timer;
+	protected $timer;
 	
 	/**
 	 * Constructor, checks to see availability of PEAR Benchmark_Timer and
@@ -277,7 +277,7 @@ class SapphireTestReporter implements PHPUnit_Framework_TestListener {
 		
 	}
 	
-	private function testNameToPhrase($name) {
+	protected function testNameToPhrase($name) {
 		return ucfirst(preg_replace("/([a-z])([A-Z])/", "$1 $2", $name));
 	}
 	
