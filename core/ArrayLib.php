@@ -23,6 +23,7 @@ class ArrayLib extends Object {
 	 * @return array
 	 */
 	static function valuekey($arr) {
+		$newArr = array();
 		foreach($arr as $val) {
 			$newArr[$val] = $val;
 		}
