@@ -59,7 +59,7 @@ class MemberAuthenticator extends Authenticator {
 			} else {
 				
 				// Audit logging hook
-				$this->extend('authenticationFailedUnknownUser', $RAW_data);
+				singleton('Member')->extend('authenticationFailedUnknownUser', $RAW_data);
 			}
 			$attempt->Status = 'Failure';
 		}
