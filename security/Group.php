@@ -281,6 +281,8 @@ class Group extends DataObject {
 	 */
 	function allowedIPAddress($ip) {
 		if(!$this->IPRestrictions) return true;
+		if(!$ip) return false;
+		
 		$ipPatterns = explode("\n", $this->IPRestrictions);
 		foreach($ipPatterns as $ipPattern) {
 			$ipPattern = trim($ipPattern);
