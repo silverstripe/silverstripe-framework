@@ -17,7 +17,7 @@ class CSSContentParser extends Object {
 	
 	function __construct($content) {
 		$CLI_content = escapeshellarg($content);
-		$tidy = `echo $CLI_content | tidy -n -q -utf8 -asxhtml`;
+		$tidy = `echo $CLI_content | tidy -n -q -utf8 -asxhtml 2> /dev/null`;
 		$tidy = str_replace('xmlns="http://www.w3.org/1999/xhtml"','',$tidy);
 		$tidy = str_replace('&#160;','',$tidy);
 		$this->simpleXML = new SimpleXMLElement($tidy);
