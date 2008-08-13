@@ -95,12 +95,12 @@ require_once('core/control/Director.php');
 require_once('filesystem/Filesystem.php');
 require_once("core/Session.php");
 
-/*
- // If this is a dev site, enable php error reporting
+// If this is a dev site, enable php error reporting
+// This is necessary to force developers to acknowledge and fix
+// notice level errors (you can override this directive in your _config.php)
 if (Director::isDev()) {
 	error_reporting(E_ALL);
 }
-*/
 
 Session::start();
 

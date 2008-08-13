@@ -204,10 +204,10 @@ class Debug {
 	}
 
 	/**
-	 * Load error handlers into environment
+	 * Load error handlers into environment.
+	 * Caution: The error levels default to E_ALL is the site is in dev-mode (set in main.php).
 	 */
 	static function loadErrorHandlers() {
-		//set_error_handler('errorHandler', (E_ALL ^ E_NOTICE) ^ E_USER_NOTICE);
 		set_error_handler('errorHandler', error_reporting());
 		set_exception_handler('exceptionHandler');
 	}
@@ -615,6 +615,7 @@ function exceptionHandler($exception) {
 /**
  * Generic callback to catch standard PHP runtime errors thrown by the interpreter
  * or manually triggered with the user_error function.
+ * Caution: The error levels default to E_ALL is the site is in dev-mode (set in main.php).
  * 
  * @ignore 
  * @param unknown_type $errno
