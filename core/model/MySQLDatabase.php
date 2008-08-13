@@ -368,11 +368,12 @@ class MySQLDatabase extends Database {
 	 * @return array
 	 */
 	public function tableList() {
+		$tables = array();
 		foreach($this->query("SHOW TABLES") as $record) {
 			$table = strtolower(reset($record));
 			$tables[$table] = $table;
 		}
-		return isset($tables) ? $tables : null;
+		return $tables;
 	}
 	
 	/**
