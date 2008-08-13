@@ -479,7 +479,20 @@ class Debug {
 	 */
 	static function backtrace($returnVal = false, $ignoreAjax = false) {
 		$bt = debug_backtrace();
+		$result = self::get_rendered_backtrace($bt, Director::is_cli() || (Director::is_ajax() && !$ignoreAjax));
+		if ($returnVal) {
+			return $result;
+		} else {
+			echo $result;
+		}
+	}
 		
+	/**
+	 * Render a backtrace array into an appropriate plain-text or HTML string.
+	 * @param $bt The trace array, as returned by debug_backtrace() or Exception::getTrace().
+	 * @param $plainText Set to false for HTML output, or true for plain-text output
+	 */
+	static function get_rendered_backtrace($bt, $plainText = false) {
 		// Ingore functions that are plumbing of the error handler
 		$ignoredFunctions = array('DebugView->writeTrace', 'CliDebugView->writeTrace', 'Debug::emailError','Debug::warningHandler','Debug::fatalHandler','errorHandler','Debug::showError','Debug::backtrace', 'exceptionHandler');
 		while( $bt && in_array(self::full_func_name($bt[0]), $ignoredFunctions) ) {
@@ -488,7 +501,7 @@ class Debug {
 		
 		$result = "<ul>";
 		foreach($bt as $item) {
-			if(Director::is_cli() || (Director::is_ajax() && !$ignoreAjax)) {
+			if($plainText) {
 				$result .= self::full_func_name($item,true) . "\n";
 				if(isset($item['line']) && isset($item['file'])) $result .= "line $item[line] of " . basename($item['file']) . "\n";
 				$result .= "\n";
@@ -505,12 +518,7 @@ class Debug {
 			}
 		}
 		$result .= "</ul>";
-
-		if ($returnVal) {
-			return $result;
-		} else {
-			echo $result;
-		}
+		return $result;
 	}
 	
 	/**
