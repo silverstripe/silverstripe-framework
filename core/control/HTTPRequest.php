@@ -349,7 +349,7 @@ class HTTPRequest extends Object implements ArrayAccess {
 		} elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
 	  		//to check ip is pass from proxy
 			return  $_SERVER['HTTP_X_FORWARDED_FOR'];
-		} else {
+		} elseif(isset($_SERVER['REMOTE_ADDR'])) {
 			return $_SERVER['REMOTE_ADDR'];
 		}
 	}
