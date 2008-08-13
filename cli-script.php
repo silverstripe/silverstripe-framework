@@ -15,7 +15,10 @@ if(isset($_SERVER['HTTP_HOST'])) {
  * @subpackage core
  */
 
-if(isset($_SERVER['argv'][2])) $_SERVER['HTTP_HOST'] = $_SERVER['argv'][2];
+if(isset($_SERVER['argv'][2])) {
+	parse_str($_SERVER['argv'][2], $_GET);
+	$_REQUEST = $_GET;
+}
 
 $_SERVER['SCRIPT_FILENAME'] = __FILE__;
 chdir(dirname($_SERVER['SCRIPT_FILENAME']));
@@ -118,11 +121,6 @@ DB::connect($databaseConfig);
 // $baseURL = dirname(dirname($_SERVER[SCRIPT_NAME]));
 $url = $_SERVER['argv'][1];
 $_SERVER['REQUEST_URI'] = "/$url";
-
-if(isset($_SERVER['argv'][2])) {
-	parse_str($_SERVER['argv'][2], $_GET);
-	$_REQUEST = $_GET;
-}
 
 // Direct away - this is the "main" function, that hands control to the apporopriate controllerx
 Director::direct($url);
