@@ -120,7 +120,7 @@ class CheckboxSetField extends OptionsetField {
 		
 		if($fieldname && $record && ($record->has_many($fieldname) || $record->many_many($fieldname))) {
 			$idList = array();
-			foreach($this->value as $id => $bool) {
+			if($this->value) foreach($this->value as $id => $bool) {
 			   if($bool) $idList[] = $id;
 			}
 			$record->$fieldname()->setByIDList($idList);
