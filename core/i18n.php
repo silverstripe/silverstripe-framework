@@ -573,6 +573,7 @@ class i18n extends Controller {
 		'lt' => array('Lithuanian', 'lietuvi&#353;kai'),
 		'lmo' => array('Lombard', 'Lombardo'),
 		'mk' => array('Macedonian', '&#1084;&#1072;&#1082;&#1077;&#1076;&#1086;&#1085;&#1089;&#1082;&#1080;'),
+		'mi' => array('Maori', 'Maori'),
 		'ms' => array('Malay', 'Bahasa melayu'),
 		'mt' => array('Maltese', 'Malti'),
 		'mr' => array('Marathi', '&#2350;&#2352;&#2366;&#2336;&#2368;'),
