@@ -333,7 +333,7 @@ class Geoip extends Object {
 	 */
 	static function visitor_country() {
 		if( ereg('^dev(\\.|$)', $_SERVER['HTTP_HOST']) && isset($_GET['country'])) return $_GET['country'];
-			else return Geoip::ip2country($_SERVER['REMOTE_ADDR'], true);
+		else if(isset($_SERVER['REMOTE_ADDR'])) return Geoip::ip2country($_SERVER['REMOTE_ADDR'], true);
 	}
 	
 	/** 
