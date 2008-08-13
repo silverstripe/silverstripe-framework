@@ -35,9 +35,9 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 		// Set up fixture
 		if($fixtureFile) {
 			if(substr(DB::getConn()->currentDatabase(),0,5) != 'tmpdb') {
-				echo "Re-creating temp database... ";
+				//echo "Re-creating temp database... ";
 				self::create_temp_db();
-				echo "done.\n";
+				//echo "done.\n";
 			}
 
 			// This code is a bit misplaced; we want some way of the whole session being reinitialised...
