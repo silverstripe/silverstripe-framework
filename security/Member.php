@@ -133,7 +133,6 @@ class Member extends DataObject {
 		
 		$file = ""; $line = "";
 		if (!headers_sent($file, $line)) session_regenerate_id(true);
-		else user_error("Content already sent at line $line in $file, can't call session_regenerate_id", E_USER_WARNING);
 	}
 	
 	/**
