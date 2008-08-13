@@ -361,7 +361,7 @@ JS
 	}
 	
 	function sourceItems() {
-		$SQL_limit = ($this->showPagination && $this->pageSize) ? "{$this->pageSize}" : "0";
+		$SQL_limit = ($this->showPagination && $this->pageSize) ? "{$this->pageSize}" : null;
 		if(isset($_REQUEST['ctf'][$this->Name()]['start']) && is_numeric($_REQUEST['ctf'][$this->Name()]['start'])) {
 			$SQL_start = (isset($_REQUEST['ctf'][$this->Name()]['start'])) ? intval($_REQUEST['ctf'][$this->Name()]['start']) : "0";
 		} else {
