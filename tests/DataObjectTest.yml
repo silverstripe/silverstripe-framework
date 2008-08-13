@@ -11,6 +11,18 @@ PageComment:
    comment4:
       Name: Bob
       Comment: Second comment by Bob
+   comment5:
+      Name: Ernie
+      Comment: This is a test comment
+   comment6:
+      Name: Jimmy
+      Comment: This is another test comment
+   comment7:
+      Name: Dean
+      Comment: Another comment
+   comment8:
+      Name: Dean
+      Comment: Second comment by Dean
 
 Page:
    home:

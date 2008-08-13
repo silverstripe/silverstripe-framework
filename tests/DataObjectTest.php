@@ -54,74 +54,74 @@ class DataObjectTest extends SapphireTest {
 	function testGet() {
 		// Test getting all records of a DataObject
 		$comments = DataObject::get('PageComment');
-		$this->assertTrue($comments->Count() == 4);
+		$this->assertEquals(8, $comments->Count());
 		
 		// Test WHERE clause
 		$comments = DataObject::get('PageComment', 'Name="Bob"');
-		$this->assertTrue($comments->Count() == 2);
+		$this->assertEquals(2, $comments->Count());
 		foreach($comments as $comment) {
-			$this->assertTrue($comment->Name == 'Bob');
+			$this->assertEquals('Bob', $comment->Name);
 		}
 		
 		// Test sorting
 		$comments = DataObject::get('PageComment', '', 'Name ASC');
-		$this->assertTrue($comments->Count() == 4);
-		$this->assertTrue($comments->First()->Name == 'Bob');
+		$this->assertEquals(8, $comments->Count());
+		$this->assertEquals('Bob', $comments->First()->Name);
 		$comments = DataObject::get('PageComment', '', 'Name DESC');
-		$this->assertTrue($comments->Count() == 4);
-		$this->assertTrue($comments->First()->Name == 'Joe');
+		$this->assertEquals(8, $comments->Count());
+		$this->assertEquals('Joe', $comments->First()->Name);
 		
 		// Test join
 		$comments = DataObject::get('PageComment', '`SiteTree`.Title="First Page"', '', 'INNER JOIN SiteTree ON PageComment.ParentID = SiteTree.ID');
-		$this->assertTrue($comments->Count() == 2);
-		$this->assertTrue($comments->First()->Name == 'Bob');
-		$this->assertTrue($comments->Last()->Name == 'Bob');
+		$this->assertEquals(2, $comments->Count());
+		$this->assertEquals('Bob', $comments->First()->Name);
+		$this->assertEquals('Bob', $comments->Last()->Name);
 		
 		// Test limit
 		$comments = DataObject::get('PageComment', '', 'Name ASC', '', '1,2');
-		$this->assertTrue($comments->Count() == 2);
-		$this->assertTrue($comments->First()->Name == 'Bob');
-		$this->assertTrue($comments->Last()->Name == 'Jane');
+		$this->assertEquals(2, $comments->Count());
+		$this->assertEquals('Bob', $comments->First()->Name);
+		$this->assertEquals('Dean', $comments->Last()->Name);
 		
 		// Test container class
 		$comments = DataObject::get('PageComment', '', '', '', '', 'DataObjectSet');
-		$this->assertTrue(get_class($comments) == 'DataObjectSet');
+		$this->assertEquals('DataObjectSet', get_class($comments));
 		$comments = DataObject::get('PageComment', '', '', '', '', 'ComponentSet');
-		$this->assertTrue(get_class($comments) == 'ComponentSet');
+		$this->assertEquals('ComponentSet', get_class($comments));
 		
 		
 		// Test get_by_id()
-		$homepage = $this->fixture->objFromFixture('Page', 'home');
-		$page = DataObject::get_by_id('Page', $homepage->ID);
-		$this->assertTrue($page->Title == 'Home');
+		$homepageID = $this->idFromFixture('Page', 'home');
+		$page = DataObject::get_by_id('Page', $homepageID);
+		$this->assertEquals('Home', $page->Title);
 		
 		// Test get_by_url()
 		$page = DataObject::get_by_url('home');
-		$this->assertTrue($page->ID == $homepage->ID);
+		$this->assertEquals($homepageID, $page->ID);
 		
 		// Test get_one() without caching
 		$comment1 = DataObject::get_one('PageComment', 'Name="Joe"', false);
 		$comment1->Comment = "Something Else";
 		$comment2 = DataObject::get_one('PageComment', 'Name="Joe"', false);
-		$this->assertTrue($comment1->Comment != $comment2->Comment);
+		$this->assertNotEquals($comment1->Comment, $comment2->Comment);
 		
 		// Test get_one() with caching
 		$comment1 = DataObject::get_one('PageComment', 'Name="Jane"', true);
 		$comment1->Comment = "Something Else";
 		$comment2 = DataObject::get_one('PageComment', 'Name="Jane"', true);
-		$this->assertTrue((string)$comment1->Comment == (string)$comment2->Comment);
+		$this->assertEquals((string)$comment1->Comment, (string)$comment2->Comment);
 		
 		// Test get_one() with order by without caching
 		$comment = DataObject::get_one('PageComment', '', false, 'Name ASC');
-		$this->assertTrue($comment->Name == 'Bob');
+		$this->assertEquals('Bob', $comment->Name);
 		$comment = DataObject::get_one('PageComment', '', false, 'Name DESC');
-		$this->assertTrue($comment->Name == 'Joe');
+		$this->assertEquals('Joe', $comment->Name);
 		
 		// Test get_one() with order by with caching
 		$comment = DataObject::get_one('PageComment', '', true, 'Name ASC');
-		$this->assertTrue($comment->Name == 'Bob');
+		$this->assertEquals('Bob', $comment->Name);
 		$comment = DataObject::get_one('PageComment', '', true, 'Name DESC');
-		$this->assertTrue($comment->Name == 'Joe');
+		$this->assertEquals('Joe', $comment->Name);
 	}
 
 	/**
@@ -241,6 +241,26 @@ class DataObjectTest extends SapphireTest {
 			),
 			'Changed fields are correctly detected while ignoring type changes (level=2)'
 		);
+	}
+	
+	function testRandomSort() {
+		/* If we perforn the same regularly sorted query twice, it should return the same results */
+		$itemsA = DataObject::get("PageComment", "", "ID");
+		foreach($itemsA as $item) $keysA[] = $item->ID;
+
+		$itemsB = DataObject::get("PageComment", "", "ID");
+		foreach($itemsB as $item) $keysB[] = $item->ID;
+		
+		$this->assertEquals($keysA, $keysB);
+		
+		/* If we perform the same random query twice, it shouldn't return the same results */
+		$itemsA = DataObject::get("PageComment", "", "RAND()");
+		foreach($itemsA as $item) $keysA[] = $item->ID;
+
+		$itemsB = DataObject::get("PageComment", "", "RAND()");
+		foreach($itemsB as $item) $keysB[] = $item->ID;
+		
+		$this->assertNotEquals($keysA, $keysB);
 	}
 }
 
