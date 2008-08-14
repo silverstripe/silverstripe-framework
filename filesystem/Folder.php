@@ -85,11 +85,14 @@ class Folder extends File {
 			$childName = addslashes($childName);
 			// Note, we do this in the database rather than object-model; otherwise we get all sorts of problems about deleting files
 			$children = DB::query("SELECT ID FROM `File` WHERE Name = '$childName' AND ParentID = $parentID")->column();
-			
-			$keptChild = array_shift($children);
-			foreach($children as $removedChild) {
-				DB::query("UPDATE `File` SET ParentID = $keptChild WHERE ParentID = $removedChild");
-				DB::query("DELETE FROM `File` WHERE ID = $removedChild");
+			if($children) {
+				$keptChild = array_shift($children);
+				foreach($children as $removedChild) {
+					DB::query("UPDATE `File` SET ParentID = $keptChild WHERE ParentID = $removedChild");
+					DB::query("DELETE FROM `File` WHERE ID = $removedChild");
+				}
+			} else {
+				user_error("Inconsistent database issue: SELECT ID FROM `File` WHERE Name = '$childName' AND ParentID = $parentID should have returned data", E_USER_WARNING);
 			}
 		}
 
