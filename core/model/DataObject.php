@@ -2690,12 +2690,6 @@ class DataObject extends ViewableData implements DataObjectInterface {
 	 * view of this object.
 	 */
 	public static $summary_fields = null;
-	
-	/**
-	 * User defined permissions for search result table by ModelAdmin to act on.
-	 * Such as print search
-	 */
-	public static $results_permissions = array();
 
 }
 
