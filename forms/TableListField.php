@@ -1226,8 +1226,14 @@ class TableListField_Item extends ViewableData {
 	}
 	
 	function Link() {
-      return Controller::join_links($this->parent->Link() . "item/" . $this->item->ID);
-   }
+ 		if($this->parent->getForm()) {
+			return Controller::join_links($this->parent->Link() . "item/" . $this->item->ID);
+		} else {
+			// allow for instanciation of this FormField outside of a controller/form
+			// context (e.g. for unit tests)
+			return false;
+		}
+	}
 
 	function BaseLink() {
 		user_error("TableListField_Item::BaseLink() deprecated, use Link() instead", E_USER_NOTICE);
