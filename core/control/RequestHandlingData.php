@@ -76,7 +76,9 @@ class RequestHandlingData extends ViewableData {
 		foreach($this->stat('url_handlers') as $rule => $action) {
 			if(isset($_REQUEST['debug_request'])) Debug::message("Testing '$rule' with '" . $request->remaining() . "' on $this->class");
 			if($params = $request->match($rule, true)) {
-				if(isset($_REQUEST['debug_request'])) Debug::message("Rule '$rule' matched to action '$action' on $this->class");
+				if(isset($_REQUEST['debug_request'])) {
+					Debug::message("Rule '$rule' matched to action '$action' on $this->class.  Latest request params: " . var_export($request->latestParams(), true));
+				}
 				
 				// Actions can reference URL parameters, eg, '$Action/$ID/$OtherID' => '$Action',
 				if($action[0] == '$') $action = $params[substr($action,1)];

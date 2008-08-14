@@ -39,6 +39,7 @@ class SSViewer extends Object {
 			$this->chosenTemplates['main'] = $templateList;
 		} else {
 			if(!is_array($templateList)) $templateList = array($templateList);
+			if(isset($_GET['debug_request'])) Debug::message("Selecting templates from the following list: " . implode(", ", $templateList));
 		
 			$this->chosenTemplates = array();
 			global $_TEMPLATE_MANIFEST;
@@ -49,22 +50,27 @@ class SSViewer extends Object {
 				else $templateFolder = null;
 				
 				// Base templates
-				if(isset($_TEMPLATE_MANIFEST[$template])) {
+				if(isset($_TEMPLATE_MANIFEST[$template]) && (array_keys($_TEMPLATE_MANIFEST[$template]) != array('themes'))) {
 					$this->chosenTemplates = array_merge($_TEMPLATE_MANIFEST[$template], $this->chosenTemplates);
+					if(isset($_GET['debug_request'])) Debug::message("Found template '$template' from main template archive, containing the following items: " . var_export($_TEMPLATE_MANIFEST[$template], true));
 					unset($this->chosenTemplates['themes']);
 				}
 				
 				// Use the theme template if available
 				if(self::$current_theme && isset($_TEMPLATE_MANIFEST[$template]['themes'][self::$current_theme])) {
+					if(isset($_GET['debug_request'])) Debug::message("Found template '$template' from main theme '" . self::$current_theme . "': " . var_export($_TEMPLATE_MANIFEST[$template]['themes'][self::$current_theme], true));
 					$this->chosenTemplates = array_merge($_TEMPLATE_MANIFEST[$template]['themes'][self::$current_theme], 
 						$this->chosenTemplates);
 				}
-				
+
 				if($templateFolder) {
 					$this->chosenTemplates['main'] = $this->chosenTemplates[$templateFolder];
 					unset($this->chosenTemplates[$templateFolder]);
 				}
 			}
+
+			if(isset($_GET['debug_request'])) Debug::message("Final template selections made: " . var_export($this->chosenTemplates, true));
+
 		}
 
 		if(!$this->chosenTemplates) user_error("None of these templates can be found: ". implode(".ss, ", $templateList) . ".ss", E_USER_WARNING);

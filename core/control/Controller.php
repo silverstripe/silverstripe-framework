@@ -105,7 +105,7 @@ class Controller extends RequestHandlingData {
 		$this->requestParams = $request->requestVars();
 		if(!$this->action) $this->action = 'index';
 		$methodName = $this->action;
-		
+
 		// run & init are manually disabled, because they create infinite loops and other dodgy situations 
 		if($this->checkAccessAction($this->action) && !in_array(strtolower($this->action), array('run', 'init'))) {
 			if($this->hasMethod($methodName)) {
@@ -227,18 +227,21 @@ class Controller extends RequestHandlingData {
 			$templates = $this->template;
 		} else {
 			$parentClass = $this->class;
+			if($action && $action != 'index') {
+				$parentClass = $this->class;
+				while($parentClass != "Controller") {
+					$templates[] = strtok($parentClass,'_') . '_' . $action;
+					$parentClass = get_parent_class($parentClass);
+				}
+			}
+			$parentClass = $this->class;
 			while($parentClass != "Controller") {
-				$templateName = $parentClass;
-				if(($pos = strpos($templateName,'_')) !== false) $templateName = substr($templateName, 0, $pos);
-
-				if($action && $action != "index") $templates[] = $templateName . '_' . $action;
-				$templates[] = $templateName;
-
+				$templates[] = strtok($parentClass,'_');
 				$parentClass = get_parent_class($parentClass);
 			}
+
 			$templates = array_unique($templates);
 		}
-		if(isset($_GET['showtemplate'])) Debug::show($templates);
 		return new SSViewer($templates);
 	}
   
