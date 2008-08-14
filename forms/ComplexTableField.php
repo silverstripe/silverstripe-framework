@@ -556,6 +556,7 @@ class ComplexTableField_ItemRequest extends RequestHandlingData {
 		}
 
 		$this->methodName = "edit";
+
 		echo $this->renderWith($this->ctf->templatePopup);
 	}
 
