@@ -48,19 +48,19 @@ class SSViewer extends Object {
 			foreach($templateList as $template) {
 				if(strpos($template,'/') !== false) list($templateFolder, $template) = explode('/', $template, 2);
 				else $templateFolder = null;
+
+				// Use the theme template if available
+				if(self::$current_theme && isset($_TEMPLATE_MANIFEST[$template]['themes'][self::$current_theme])) {
+					if(isset($_GET['debug_request'])) Debug::message("Found template '$template' from main theme '" . self::$current_theme . "': " . var_export($_TEMPLATE_MANIFEST[$template]['themes'][self::$current_theme], true));
+					$this->chosenTemplates = array_merge($_TEMPLATE_MANIFEST[$template]['themes'][self::$current_theme], 
+						$this->chosenTemplates);
+				}
 				
 				// Base templates
 				if(isset($_TEMPLATE_MANIFEST[$template]) && (array_keys($_TEMPLATE_MANIFEST[$template]) != array('themes'))) {
 					$this->chosenTemplates = array_merge($_TEMPLATE_MANIFEST[$template], $this->chosenTemplates);
 					if(isset($_GET['debug_request'])) Debug::message("Found template '$template' from main template archive, containing the following items: " . var_export($_TEMPLATE_MANIFEST[$template], true));
 					unset($this->chosenTemplates['themes']);
-				}
-				
-				// Use the theme template if available
-				if(self::$current_theme && isset($_TEMPLATE_MANIFEST[$template]['themes'][self::$current_theme])) {
-					if(isset($_GET['debug_request'])) Debug::message("Found template '$template' from main theme '" . self::$current_theme . "': " . var_export($_TEMPLATE_MANIFEST[$template]['themes'][self::$current_theme], true));
-					$this->chosenTemplates = array_merge($_TEMPLATE_MANIFEST[$template]['themes'][self::$current_theme], 
-						$this->chosenTemplates);
 				}
 
 				if($templateFolder) {
