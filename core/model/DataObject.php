@@ -2424,8 +2424,8 @@ class DataObject extends ViewableData implements DataObjectInterface {
 	public function fieldLabels($fieldName = false) {
 		$customLabels = $this->stat('field_labels');
 		$autoLabels = array();
-		if($this->databaseFields()){
-		foreach($this->databaseFields() as $name => $type) {
+		if($this->inheritedDatabaseFields()){
+		foreach($this->inheritedDatabaseFields() as $name => $type) {
 			$autoLabels[$name] = FormField::name_to_label($name);
 		}
 		$labels = array_merge((array)$autoLabels, (array)$customLabels);
