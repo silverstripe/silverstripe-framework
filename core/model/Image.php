@@ -453,6 +453,11 @@ class Image_Saver extends DBField {
  * @subpackage filesystem
  */
 class Image_Uploader extends Controller {
+	static $url_handlers = array(
+		'$Action!/$Class!/$ID!/$Field!/$FormName!' => '$FormName',
+		'$Action/$Class/$ID/$Field' => 'handleAction',
+	);
+	
 	/**
 	 * Ensures the css is loaded for the iframe.
 	 */

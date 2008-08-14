@@ -10,11 +10,16 @@
 .SelectionGroup li input {
 	width: 20px;
 	float : left;
-
-	height:100px;
-	overflow-y:scroll;
 }
 
+.mainblock.allassets ul {
+   padding: 0 0 0 10px;
+   height:100px;
+   overflow-y:scroll;
+}	
+.mainblock.allassets ul li {
+   width: 150px;
+}
 .SelectionGroup li div.field {
 	display: none;
 	font-size: 1em;

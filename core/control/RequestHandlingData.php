@@ -76,6 +76,9 @@ class RequestHandlingData extends ViewableData {
 		foreach($this->stat('url_handlers') as $rule => $action) {
 			if(isset($_REQUEST['debug_request'])) Debug::message("Testing '$rule' with '" . $request->remaining() . "' on $this->class");
 			if($params = $request->match($rule, true)) {
+				// FIXME: This unnecessary coupling was added to fix a bug in Image_Uploader.
+				if($this instanceof Controller) $this->urlParams = $request->allParams();
+				
 				if(isset($_REQUEST['debug_request'])) {
 					Debug::message("Rule '$rule' matched to action '$action' on $this->class.  Latest request params: " . var_export($request->latestParams(), true));
 				}

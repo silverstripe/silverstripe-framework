@@ -23,7 +23,7 @@ Director::addRules(10, array(
 	//'Security/$Action/$ID' => 'Security',
 	'db//$Action' => 'DatabaseAdmin',
 	'$Controller//$Action/$ID/$OtherID' => '*',
-	'images//$Action/$Class/$ID/$Field' => 'Image_Uploader',
+	'images' => 'Image_Uploader',
 	'' => 'RootURLController',
 	'sitemap.xml' => 'GoogleSitemap',
 	'api/v1' => 'RestfulServer',
