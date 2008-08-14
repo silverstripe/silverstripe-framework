@@ -230,7 +230,7 @@ class Member extends DataObject {
 				$member->write();
 				
 				// Audit logging hook
-				$this->extend('memberAutoLoggedIn');
+				$member->extend('memberAutoLoggedIn');
 			}
 		}
 	}
