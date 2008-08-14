@@ -336,7 +336,7 @@ JS
 				$allowedActions->push(new ViewableData());
 			}
 		}
-		
+
 		return $allowedActions;
 	}
 	
@@ -1200,6 +1200,31 @@ class TableListField_Item extends ViewableData {
 		return $this->parent->Can($mode);
 	}
 	
+	/**
+	 * Returns all row-based actions not disallowed through permissions.
+	 * See TableListField->Action for a similiar dummy-function to work
+	 * around template-inheritance issues.
+	 * 
+	 * @return DataObjectSet
+	 */
+	function Actions() {
+		$allowedActions = new DataObjectSet();
+		foreach($this->parent->actions as $actionName => $actionSettings) {
+			if($this->parent->Can($actionName)) {
+				$allowedActions->push(new ArrayData(array(
+					'Name' => $actionName,
+					'Link' => $this->{ucfirst($actionName).'Link'}(),
+					'Icon' => $actionSettings['icon'],
+					'Label' => $actionSettings['label'],
+					'Class' => $actionSettings['class'],
+					'Default' => ($actionName == $this->parent->defaultAction),
+				)));
+			}
+		}
+		
+		return $allowedActions;
+	}
+	
 	function Link() {
       return Controller::join_links($this->parent->Link() . "item/" . $this->item->ID);
    }
@@ -1239,7 +1264,7 @@ class TableListField_Item extends ViewableData {
 		
 		return (count($classes) > 0) ? " " . implode(" ", $classes) : false;
 	}
-	
+		
 	/**
 	 * Legacy: Please use permissions instead
 	 */
