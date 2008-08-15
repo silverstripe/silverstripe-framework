@@ -262,6 +262,32 @@ class DataObjectTest extends SapphireTest {
 		
 		$this->assertNotEquals($keysA, $keysB);
 	}
+	
+	function testWriteSavesToHasOneRelations() {
+		/* DataObject::write() should save to a has_one relationship if you set a field called (relname)ID */
+		$team = new DataObjectTest_Team();
+		$captainID = $this->idFromFixture('DataObjectTest_Player', 'player1');
+		$team->CaptainID = $captainID;
+		$team->write();
+		$this->assertEquals($captainID, DB::query("SELECT CaptainID FROM DataObjectTest_Team WHERE ID = $team->ID")->value());
+		
+		/* After giving it a value, you should also be able to set it back to null */
+		$team->CaptainID = '';
+		$team->write();
+		$this->assertEquals(0, DB::query("SELECT CaptainID FROM DataObjectTest_Team WHERE ID = $team->ID")->value());
+
+		/* You should also be able to save a blank to it when it's first created */
+		$team = new DataObjectTest_Team();
+		$team->CaptainID = '';
+		$team->write();
+		$this->assertEquals(0, DB::query("SELECT CaptainID FROM DataObjectTest_Team WHERE ID = $team->ID")->value());
+		
+		/* Ditto for existing records without a value */
+		$existingTeam = $this->objFromFixture('DataObjectTest_Team', 'team1');
+		$existingTeam->CaptainID = '';
+		$existingTeam->write();
+		$this->assertEquals(0, DB::query("SELECT CaptainID FROM DataObjectTest_Team WHERE ID = $existingTeam->ID")->value());
+	}
 }
 
 class DataObjectTest_Player extends Member implements TestOnly {
@@ -273,15 +299,19 @@ class DataObjectTest_Player extends Member implements TestOnly {
 }
 
 class DataObjectTest_Team extends DataObject implements TestOnly {
-   
-   static $db = array(
-      'Title' => 'Text', 
-   );
-   
-   static $many_many = array(
-      'Players' => 'DataObjectTest_Player'
-   );
-   
+
+	static $db = array(
+		'Title' => 'Text', 
+	);
+
+	static $has_one = array(
+		"Captain" => 'DataObjectTest_Player',
+	);
+
+	static $many_many = array(
+		'Players' => 'DataObjectTest_Player'
+	);
+
 }
 
 ?>

@@ -104,6 +104,20 @@ class SiteTreeTest extends SapphireTest {
 		$this->assertContains('Products', $allChildren);
 		$this->assertNotContains('Staff', $allChildren);
 	}
+
+	function testCanSaveBlankToHasOneRelations() {
+		/* DataObject::write() should save to a has_one relationship if you set a field called (relname)ID */
+		$page = new SiteTree();
+		$parentID = $this->idFromFixture('Page', 'home');
+		$page->ParentID = $parentID;
+		$page->write();
+		$this->assertEquals($parentID, DB::query("SELECT ParentID FROM SiteTree WHERE ID = $page->ID")->value());
+
+		/* You should then be able to save a null/0/'' value to the relation */
+		$page->ParentID = null;
+		$page->write();
+		$this->assertEquals(0, DB::query("SELECT ParentID FROM SiteTree WHERE ID = $page->ID")->value());
+	}
 	
 }
 

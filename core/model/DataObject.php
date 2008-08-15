@@ -650,9 +650,16 @@ class DataObject extends ViewableData implements DataObjectInterface {
 								$fieldObj = $this->obj($fieldName);
 								if(!isset($manipulation[$class])) $manipulation[$class] = array();
 
-								// if database column doesn't correlate to a DBField instance, set up a default Varchar DBField
-								// (used mainly for has_one/has_many)
-								if(!$fieldObj) $fieldObj = DBField::create('Varchar', $this->record[$fieldName], $fieldName);
+								// if database column doesn't correlate to a DBField instance...
+								if(!$fieldObj) {
+									// Set up a default Int field for relations
+									if(preg_match('/ID$/', $fieldName) && $this->has_one(substr($fieldName,0,-2))) {
+										$fieldObj = DBField::create('Int', $this->record[$fieldName], $fieldName);
+									// Otherwise set up a default Varchar field
+									} else {
+										$fieldObj = DBField::create('Varchar', $this->record[$fieldName], $fieldName);
+									}
+								}
 
 								// CompositeDBFields handle their own value storage; regular fields need to be
 								// re-populated from the database
