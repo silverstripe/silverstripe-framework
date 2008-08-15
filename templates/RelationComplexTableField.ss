@@ -1,4 +1,4 @@
-<div id="$id" class="$Classes">
+<div id="$id" class="$CSSClasses">
 	<% include TableListField_PageControls %>
 	<table class="data">
 		<thead>
