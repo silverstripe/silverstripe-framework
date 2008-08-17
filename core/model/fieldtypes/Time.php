@@ -27,7 +27,7 @@ class Time extends DBField {
 	}
 
 	
-	function 12Hour( $parts ) {
+	function TwelveHour( $parts ) {
 		$hour = $parts[1];
 		$min = $parts[2];
 		$half = $parts[3];
