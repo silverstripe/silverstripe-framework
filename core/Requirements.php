@@ -526,6 +526,7 @@ class Requirements {
 				$fileContent = file_get_contents($base . $file);
 				// if we have a javascript file and jsmin is enabled, minify the content
 				if(stripos($file, '.js') && self::$combine_js_with_jsmin) {
+					require_once('thirdparty/jsmin/JSMin.php');
 					$fileContent = JSMin::minify($fileContent);
 				}
 				// write a header comment for each file for easier identification and debugging
