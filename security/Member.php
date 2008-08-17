@@ -367,6 +367,11 @@ class Member extends DataObject {
 	 * "newsletterSubscriptions"
 	 */
 	function saveNewsletterSubscriptions($groups){
+		if(!class_exists('NewsletterType')) {
+			user_error("Member::saveNewsletterSubscriptions() called without the newsletter module available", E_USER_WARNING);
+			return;
+		}
+
     	$checkboxsetfield = new CheckboxSetField(
 			"NewsletterSubscriptions",
 			"",
@@ -377,6 +382,11 @@ class Member extends DataObject {
 	}
 	
 	function removeAllNewsletterSubscriptions(){
+		if(!class_exists('NewsletterType')) {
+			user_error("Member::removeAllNewsletterSubscriptions() called without the newsletter module available", E_USER_WARNING);
+			return;
+		}
+		
 		$groups = $this->Groups();
 		$groupIDs = $groups->getIDList();
 		$newsletterTypes = DataObject::get("NewsletterType");
@@ -918,6 +928,11 @@ class Member extends DataObject {
 	 *                                       from
 	 */
 	function unsubscribeFromNewsletter(NewsletterType $newsletterType) {
+		if(!class_exists('NewsletterType')) {
+			user_error("Member::unsubscribeFromNewsletter() called without the newsletter module available", E_USER_WARNING);
+			return;
+		}
+
 		// record today's date in unsubscriptions
 		// this is a little bit redundant
 		$unsubscribeRecord = new Member_UnsubscribeRecord();
@@ -1381,6 +1396,11 @@ class Member_UnsubscribeRecord extends DataObject {
 	 * @param int|NewsletterType $newsletterType Newsletter type object or ID
 	 */
 	function unsubscribe($member, $newsletterType) {
+		if(!class_exists('NewsletterType')) {
+			user_error("Member_UnsubscribeRecord::unsubscribe() called without the newsletter module available", E_USER_WARNING);
+			return;
+		}
+
 		// $this->UnsubscribeDate()->setVal( 'now' );
 		$this->MemberID = (is_numeric($member))
 			? $member
