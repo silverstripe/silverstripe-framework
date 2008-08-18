@@ -834,7 +834,7 @@ class Member extends DataObject {
 				$perms = array_unique(array_merge($perms, array_keys($cmsPerms)));
 			}
 			
-			$SQL_perms = "'" . array_join(Convert::raw2sql($perms), "', '") . "'";
+			$SQL_perms = "'" . implode("', '", Convert::raw2sql($perms)) . "'";
 			
 			$groups = DataObject::get('Group', "", "",
 				"INNER JOIN `Permission` ON `Permission`.GroupID = `Group`.ID AND `Permission`.Code IN ($SQL_perms)");
