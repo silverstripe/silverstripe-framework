@@ -904,8 +904,10 @@ JS
 			foreach($fieldItems as $fieldItem) {
 				$fields = $fieldItem->Fields();
 				foreach($fields as $field) {
-					// replace <br/ > with newline for csv 
+					// replace <br/ >s with newlines for csv 
 					$field->Value = str_replace('<br />', "\n", $field->Value);
+					// remove double quotes
+					$field->Value = str_replace('"', "", $field->Value);
 					$fileData .= "\"" . $field->Value . "\"";
 					if($field->Last()) {
 						$fileData .= "\n";
