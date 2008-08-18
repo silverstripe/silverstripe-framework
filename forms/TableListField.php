@@ -904,6 +904,8 @@ JS
 			foreach($fieldItems as $fieldItem) {
 				$fields = $fieldItem->Fields();
 				foreach($fields as $field) {
+					// replace <br/ > with newline for csv 
+					$field->Value = str_replace('<br />', "\n", $field->Value);
 					$fileData .= "\"" . $field->Value . "\"";
 					if($field->Last()) {
 						$fileData .= "\n";
@@ -911,6 +913,7 @@ JS
 						$fileData .= $this->csvSeparator;
 					}
 				}
+				
 			}
 			HTTP::sendFileToBrowser($fileData, $fileName);
 		} else {
