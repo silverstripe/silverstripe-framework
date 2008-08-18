@@ -16,10 +16,47 @@
 abstract class Validator extends Object {
 	protected $form;
 	protected $errors;
+	
+	/**
+	 * Static for default value of $this->javascriptValidationHandler.
+	 * Set with Validator::set_javascript_validation_handler();
+	 */
+	protected static $javascript_validation_handler = null;
+	
+	/**
+	 * Handler for javascript validation.  Can be "prototype" or "none"
+	 */
+	protected $javascriptValidationHandler = "prototype";
+	
+	/**
+	 * Call this function to set the javascript validation handler for all valdiation on your site.
+	 * This could be called from _config.php to set site-wide javascript validation, or from ContentController::init()
+	 * to affect only the front-end site.
+	 *
+	 * @param $handler A string representing the handler to use: 'prototype' or 'none'.
+	 * @todo Add 'jquery' as a handler option.
+	 */
+	public function set_javascript_validation_handler($handler = 'prototype') {
+		self::$javascript_validation_handler = $handler;
+	}
 
+	/**
+	 * Disable JavaScript validation for this validator
+	 */
+	public function setJavascriptValidationHandler($handler) {
+		if($handler == 'prototype' || $handler == 'none') {
+			$this->javascriptValidationHandler = $handler;
+		} else {
+			user_error("Validator::setJavascriptValidationHandler() passed bad handler '$handler'", E_USER_WARNING);
+		}
+	}
+	
 	public function __construct() {
-		Requirements::javascript('sapphire/javascript/Validator.js');
+		if(self::$javascript_validation_handler) $this->setJavascriptValidationHandler(self::$javascript_validation_handler);
 		
+		if($this->javascriptValidationHandler) {
+			Requirements::javascript('sapphire/javascript/Validator.js');
+		}
 		parent::__construct();
 	}
 	
@@ -72,14 +109,15 @@ abstract class Validator extends Object {
 	}
 	
 	function includeJavascriptValidation() {
-		Requirements::javascript("jsparty/prototype.js");
-		Requirements::javascript("jsparty/behaviour.js");
-		Requirements::javascript("jsparty/prototype_improvements.js");
-		Requirements::javascript("sapphire/javascript/Validator.js");
-
-		$code = $this->javascript();
-		$formID = $this->form->FormName();
-		$js = <<<JS
+		if($this->javascriptValidationHandler == 'prototype') {
+			Requirements::javascript("jsparty/prototype.js");
+			Requirements::javascript("jsparty/behaviour.js");
+			Requirements::javascript("jsparty/prototype_improvements.js");
+			Requirements::javascript("sapphire/javascript/Validator.js");
+		
+			$code = $this->javascript();
+			$formID = $this->form->FormName();
+			$js = <<<JS
 Behaviour.register({
 	'#$formID': {
 		validate : function(fromAnOnBlur) {
@@ -121,9 +159,10 @@ Behaviour.register({
 Behaviour.apply('#$formID');	
 JS;
 
-	Requirements::customScript($js);
-	// HACK Notify the form that the validators client-side validation code has already been included
-	if($this->form) $this->form->jsValidationIncluded = true;
+			Requirements::customScript($js);
+			// HACK Notify the form that the validators client-side validation code has already been included
+			if($this->form) $this->form->jsValidationIncluded = true;
+		}
 	}
 	
 	/**
