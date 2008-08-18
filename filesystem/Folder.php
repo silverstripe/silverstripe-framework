@@ -11,6 +11,13 @@ class Folder extends File {
 		"CanEdit" => "Group"
 	);
 	
+	/**
+	 * @todo: DataObject::CanEdit() is a permission checking function; the CanEdit relation should be renamed to Editors or something
+	 */
+	function CanEdit() {
+		return $this->getManyManyComponents('CanEdit');
+	}
+	
 	/*
 	 * Find the given folder or create it, recursively.
 	 * 
