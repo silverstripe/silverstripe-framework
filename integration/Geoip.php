@@ -297,7 +297,8 @@ class Geoip extends Object {
 			}
 			
 			if ($result == false) {
-				user_error("ip2country($address): geoiplookup executable returned nothing.", E_USER_NOTICE);
+				// don't return any error - @see http://open.silverstripe.com/ticket/1458
+				//user_error("ip2country($address): geoiplookup executable returned nothing.", E_USER_NOTICE);
 				return false;
 			}
 			
