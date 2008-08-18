@@ -1171,9 +1171,9 @@ class DataObject extends ViewableData implements DataObjectInterface {
 		list($parentClass, $componentClass, $parentField, $componentField, $table) = $this->many_many($componentName);
 
 		if($baseTable == $parentClass) {
-			return "LEFT JOIN `$table` ON (`$parentField` = `$parentClass`.`ID` AND `$componentField` = '{$this->ID}')";
+			return "LEFT JOIN `$table` ON (`$table`.`$parentField` = `$parentClass`.`ID` AND `$table`.`$componentField` = '{$this->ID}')";
 		} else {
-			return "LEFT JOIN `$table` ON (`$componentField` = `$componentClass`.`ID` AND `$parentField` = '{$this->ID}')";
+			return "LEFT JOIN `$table` ON (`$table`.`$componentField` = `$componentClass`.`ID` AND `$table`.`$parentField` = '{$this->ID}')";
 		}
 	}
 
