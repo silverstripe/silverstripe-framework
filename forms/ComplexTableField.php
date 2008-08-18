@@ -30,7 +30,14 @@
  */
 class ComplexTableField extends TableListField {
 
-	protected $detailFormFields, $viewAction, $sourceJoin, $sourceItems, $unpagedSourceItems;
+	/**
+	 * Determines the fields of the detail pop-up form.  It can take many forms:
+	 *  - A FieldSet object: Use that field set directly.
+	 *  - A method name, eg, 'getCMSFields': Call that method on the child object to get the fields.
+	 */
+	protected $detailFormFields;
+	
+	protected $viewAction, $sourceJoin, $sourceItems, $unpagedSourceItems;
 
 	/**
 	 * @var Controller
@@ -371,17 +378,20 @@ JS;
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	function getFieldsFor($childData) {
-		// Add the relation value to related records
-		if(!$childData->ID && $this->getParentClass()) {
-			// make sure the relation-link is existing, even if we just add the sourceClass and didn't save it
-			$parentIDName = $this->getParentIdName( $this->getParentClass(), $this->sourceClass() );
-			$childData->$parentIDName = $childData->ID;
-		}
-
+	/**
+	 * Return the object-specific fields for the given record, to be shown in the detail pop-up
+	 * 
+	 * This won't include all the CTF-specific 'plumbing; this method is called by self::getFieldsFor()
+	 * and the result is then processed further to get the actual FieldSet for the form.
+	 *
+	 * The default implementation of this processes the value of $this->detailFormFields; consequently, if you want to 
+	 * set the value of the fields to something that $this->detailFormFields doesn't allow, you can do so by overloading
+	 * this method.
+	 */
+	function getCustomFieldsFor($childData) {
 		// If the fieldset is passed, use it
 		if(is_a($this->detailFormFields,"Fieldset")) {
-			$detailFields = $this->detailFormFields;
+			return $this->detailFormFields;
 
 		// Else use the formfields returned from the object via a string method call.
 		} else {
@@ -389,8 +399,19 @@ JS;
 			$functioncall = $this->detailFormFields;
 			if(!$childData->hasMethod($functioncall)) $functioncall = "getCMSFields";
 			
-			$detailFields = $childData->$functioncall();
+			return $childData->$functioncall();
 		}
+	}
+
+	function getFieldsFor($childData) {
+		// Add the relation value to related records
+		if(!$childData->ID && $this->getParentClass()) {
+			// make sure the relation-link is existing, even if we just add the sourceClass and didn't save it
+			$parentIDName = $this->getParentIdName( $this->getParentClass(), $this->sourceClass() );
+			$childData->$parentIDName = $childData->ID;
+		}
+		
+		$detailFields = $this->getCustomFieldsFor($childData);
 
 		// the ID field confuses the Controller-logic in finding the right view for ReferencedField
 		$detailFields->removeByName('ID');
