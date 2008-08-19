@@ -259,7 +259,7 @@ class HTTP {
 
 	}
 
-	protected static $cache_age = 86400, $modification_date = null;
+	protected static $cache_age = 0, $modification_date = null;
 	protected static $etag = null;
 
 	/**
