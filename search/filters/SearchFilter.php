@@ -80,7 +80,7 @@ abstract class SearchFilter extends Object {
 	 * 
 	 * @return string
 	 */
-	protected function getDbName() {
+	function getDbName() {
 		// SRM: This code finds the table where the field named $this->name lives
 		// Todo: move to somewhere more appropriate, such as DataMapper, the magical class-to-be?
 		$candidateClass = $this->model;
@@ -101,7 +101,7 @@ abstract class SearchFilter extends Object {
 	 * @param SQLQuery $query
 	 * @return SQLQuery
 	 */
-	protected function applyRelation($query) {
+	function applyRelation($query) {
 		if (is_array($this->relation)) {
 			foreach($this->relation as $rel) {
 				$model = singleton($this->model);
