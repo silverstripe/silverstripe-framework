@@ -458,15 +458,23 @@ class Controller extends RequestHandlingData {
 	/**
 	 * Joins two link segments together, putting a slash between them if necessary.
 	 * Use this for building the results of Link() methods.
+	 *
+	 * If either of the links have query strings, then they will be combined and put at the end of the resulting url.
 	 */
 	static function join_links() {
 		$args = func_get_args();
-		
-		$result = array_shift($args);
+		$result = "";
+		$querystrings = array();
 		foreach($args as $arg) {
-			if(substr($result,-1) != '/' && $arg[0] != '/') $result .= "/$arg";
+			if(strpos($arg,'?') !== false) {
+				list($arg, $suffix) = explode('?',$arg,2);
+				$querystrings[] = $suffix;
+			}
+			if($result && substr($result,-1) != '/' && $arg[0] != '/') $result .= "/$arg";
 			else $result .= $arg;
 		}
+		
+		if($querystrings) $result .= '?' . implode('&', $querystrings);
 		
 		return $result;
 	}
