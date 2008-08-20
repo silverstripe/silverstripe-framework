@@ -6,7 +6,7 @@
 class ManifestBuilderTest extends SapphireTest {
 	function testManifest() {
 		$baseFolder = TEMP_FOLDER . '/manifest-test';
-		$manifestInfo = ManifestBuilder::get_manifest_info($baseFolder);
+		$manifestInfo = ManifestBuilder::get_manifest_info($baseFolder, DB::getConn()->tableList());
 		
 		$this->assertEquals("$baseFolder/sapphire/MyClass.php", $manifestInfo['globals']['_CLASS_MANIFEST']['MyClass']);
 		$this->assertEquals("$baseFolder/sapphire/subdir/SubDirClass.php", $manifestInfo['globals']['_CLASS_MANIFEST']['SubDirClass']);
@@ -33,7 +33,7 @@ class ManifestBuilderTest extends SapphireTest {
 	
 	function testManifestIgnoresClassesInComments() {
 		$baseFolder = TEMP_FOLDER . '/manifest-test';
-		$manifestInfo = ManifestBuilder::get_manifest_info($baseFolder);
+		$manifestInfo = ManifestBuilder::get_manifest_info($baseFolder, DB::getConn()->tableList());
 		
 		/* Our fixture defines the class MyClass_InComment inside a comment, so it shouldn't be included in the class manifest. */
 		$this->assertNotContains('MyClass_InComment', array_keys($manifestInfo['globals']['_CLASS_MANIFEST']));
@@ -50,7 +50,7 @@ class ManifestBuilderTest extends SapphireTest {
 
 	function testManifestIgnoresClassesInStrings() {
 		$baseFolder = TEMP_FOLDER . '/manifest-test';
-		$manifestInfo = ManifestBuilder::get_manifest_info($baseFolder);
+		$manifestInfo = ManifestBuilder::get_manifest_info($baseFolder, DB::getConn()->tableList());
 		
 		/* If a class defintion is listed in a single quote string, then it shouldn't be inlcuded.  Here we have put a class definition for  MyClass_InSingleQuoteString inside a single-quoted string */
 		$this->assertNotContains('MyClass_InSingleQuoteString', array_keys($manifestInfo['globals']['_CLASS_MANIFEST']));

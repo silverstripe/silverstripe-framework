@@ -82,9 +82,18 @@ class ManifestBuilder {
 		$baseDir = dirname($_SERVER['SCRIPT_FILENAME']) . "/..";
 		$baseDir = ereg_replace("/[^/]+/\\.\\.", "", $baseDir);
 		$baseDir = preg_replace("/\\\\/", "/", $baseDir);
-		
-		$manifest = self::generate_php_file(self::get_manifest_info($baseDir));
-		
+
+		$manifestInfo = self::get_manifest_info($baseDir);
+
+		// Connect to the database and get the database config
+		global $databaseConfig;
+		DB::connect($databaseConfig);
+		if(DB::isActive()) {
+			$tableList = DB::getConn()->tableList();
+			self::update_db_tables($tableList, $manifest['globals']['_ALL_CLASSES']);
+		}
+
+		$manifest = self::generate_php_file($manifestInfo);
 		if($fh = fopen(MANIFEST_FILE, "w")) {
 			fwrite($fh, $manifest);
 			fclose($fh);
@@ -112,8 +121,9 @@ class ManifestBuilder {
 	
 	/**
 	 * Return an array containing information for the manifest
+	 * @param $baseDir A
 	 */
-	static function get_manifest_info($baseDir) {
+	static function get_manifest_info($baseDir, $tableList = null) {
 		// locate and include the exclude files
 		$topLevel = scandir($baseDir);
 		foreach($topLevel as $file) {
@@ -156,7 +166,6 @@ class ManifestBuilder {
 		$_CLASS_MANIFEST = $classManifest;
 
 		// _config.php manifest
-		global $databaseConfig;
 		$topLevel = scandir($baseDir);
 		foreach($topLevel as $filename) {
 			if($filename[0] == '.') continue;
@@ -203,10 +212,8 @@ class ManifestBuilder {
 		$manifestInfo["globals"]["_TEMPLATE_MANIFEST"] = $templateManifest;
 		$manifestInfo["globals"]["_CSS_MANIFEST"] = $cssManifest;
 
-		DB::connect($databaseConfig);
-
 		// Database manifest
-		$allClasses = ManifestBuilder::allClasses($classManifest);
+		$allClasses = ManifestBuilder::allClasses($classManifest, $tableList);
 
 		$manifestInfo["globals"]["_ALL_CLASSES"] = $allClasses;
 
@@ -317,11 +324,14 @@ class ManifestBuilder {
 	 * Include everything, so that actually *all* classes are available and
 	 * build a map of classes and their subclasses and the information if
 	 * the class has a database table
+	 * 
+	 * @param $classManifest An array of all Sapphire classes; keys are class names and values are filenames
+	 * @param $tables An array of the tables that exist in the database
 	 *
 	 * @return array Returns an array that holds all class relevant
 	 *               information.
 	 */
-	private static function allClasses($classManifest) {
+	private static function allClasses($classManifest, $tables = null) {
 		self::$classArray = array();
 		self::$extendsArray = array();
 		self::$implementsArray = array();
@@ -332,8 +342,6 @@ class ManifestBuilder {
 			if($b != 'cli-script.php' && $b != 'main.php')
 				self::parse_file($file);
 		}
-
-		$tables = DB::isActive() ? DB::getConn()->tableList() : array();
 
 		$allClasses["parents"] = self::find_parents();
 		$allClasses["children"] = self::find_children();
@@ -526,19 +534,22 @@ class ManifestBuilder {
 	/**
 	 * Updates the active table list in the class info in the manifest, but leaves everything else as-is.
 	 * Much quicker to run than compileManifest :-)
+	 * 
+	 * @param $tableList The list of tables to load into the manifest
+	 * @param $allClassesArray The $_ALL_CLASSES array that should be updated
 	 */
-	static function update_db_tables() {
-		global $_ALL_CLASSES;
-		$_ALL_CLASSES['hastable'] = array();
+	static function update_db_tables($tableList, &$allClassesArray) {
+		if(!isset($allClassesArray['exists'])) return;
+		
+		$allClassesArray['hastable'] = array();
 
-		$tables = DB::getConn()->tableList();
+		$tables = array();
+		foreach($tableList as $table) $tables[$table] = true;
 
 		// We need to iterate through the full class lists, because the table names come out in lowercase
-		foreach($_ALL_CLASSES['exists'] as $class) {
-			if(isset($tables[strtolower($class)])) $_ALL_CLASSES['hastable'][$class] = $class;
+		foreach($allClassesArray['exists'] as $class) {
+			if(isset($tables[strtolower($class)])) $allClassesArray['hastable'][$class] = $class;
 		}
-
-		self::write_manifest();
 	}
 
 	/**
