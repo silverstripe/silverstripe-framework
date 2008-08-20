@@ -32,7 +32,7 @@ class CompositeField extends FormField {
 			$children = is_array(func_get_args()) ? func_get_args() : array();
 			$this->children = new FieldSet($children); 
 		}
-				
+		
 		Object::__construct();
 	}
 
@@ -49,6 +49,14 @@ class CompositeField extends FormField {
 	
 	public function Field() {
 		return $this->FieldHolder();
+	}
+	
+	/**
+	 * Accessor method for $this->children
+	 * @return FieldSet
+	 */
+	public function getChildren() {
+		return $this->children;
 	}
 
 	/**
