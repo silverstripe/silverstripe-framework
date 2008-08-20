@@ -135,6 +135,14 @@ class FieldSet extends DataObjectSet {
 		foreach($fields as $field) $tab->push($field);
 	}	
 	
+	/**
+	 * Replace a single field with another.
+	 *
+	 * @param string $fieldName The name of the field to replace
+	 * @param FormField $newField The field object to replace with
+	 * @return boolean TRUE field was successfully replaced
+	 * 					 FALSE field wasn't found, nothing changed
+	 */
 	public function replaceField($fieldName, $newField) {
 		if($this->sequentialSet) $this->sequentialSet = null;
 		foreach($this->items as $i => $field) {
