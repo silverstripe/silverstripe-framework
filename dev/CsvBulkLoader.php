@@ -37,7 +37,8 @@ class CsvBulkLoader extends BulkLoader {
 		$file = fopen($filepath, 'r');
 		if(!$file) return false;
 		
-		$return = new DataObjectSet();
+		//$return = new DataObjectSet();
+		$numRecords = 0;
 
 		if($this->hasHeaderRow && $this->columnMap) {
 			$columnRow = fgetcsv($file, 0, $this->delimiter, $this->enclosure);
@@ -82,13 +83,13 @@ class CsvBulkLoader extends BulkLoader {
 	
 				$indexedRow[$origColumnName] = $row[count($indexedRow)];
 			}
-
-			$return->push($this->processRecord($indexedRow, $columnMap));
+			$numRecords++;
+			//$return->push($this->processRecord($indexedRow, $columnMap));
 		}
 		
 		fclose($file);
 		
-		return $return;
+		return $numRecords;
 	}
 	
 	protected function processRecord($record, $columnMap, $preview = false) {
