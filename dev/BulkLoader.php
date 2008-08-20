@@ -146,7 +146,8 @@ abstract class BulkLoader extends ViewableData {
 	 * 
 	 * @param string $filepath Absolute path to the file we're importing (with UTF8 content)
 	 * @param boolean $preview If true, we'll just output a summary of changes but not actually do anything
-	 * @return array Information about the import process, with each row matching a created or updated DataObject.
+	 * @return int Number of affected records
+	 * It used to return this, but it was never used and memory inefficient. array Information about the import process, with each row matching a created or updated DataObject.
 	 * 	Array structure:
 	 *  - 'id': Database id of the created or updated record
 	 *  - 'action': Performed action ('create', 'update') 
