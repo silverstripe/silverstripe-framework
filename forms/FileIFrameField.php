@@ -10,7 +10,7 @@ class FileIFrameField extends FileField {
 	public function Field() {
 		$data = $this->form->getRecord();
 		
-		if($data->ID && is_numeric($data->ID)) {
+		if($data && $data->ID && is_numeric($data->ID)) {
 			$idxField = $this->name . 'ID';
 			$hiddenField =  "<input type=\"hidden\" id=\"" . $this->id() . "\" name=\"$idxField\" value=\"" . $this->attrValue() . "\" />";
 			
