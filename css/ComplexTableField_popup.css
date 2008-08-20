@@ -1,10 +1,7 @@
-html,
-body {
+html,body {
+	overflow:auto !important; 
 	background: #fff !important; 
 }
-	html {
-		overflow: auto; 
-	}
 
 .ComplexTableField_popup {
 	background: #fff;	
