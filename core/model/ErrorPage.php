@@ -11,6 +11,7 @@ class ErrorPage extends Page {
 
 	static $defaults = array(
 		"ShowInMenus" => 0,
+		"ShowInSearch" => 0
 	);
 	
 	/**
