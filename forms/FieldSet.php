@@ -86,6 +86,23 @@ class FieldSet extends DataObjectSet {
 	}
 	
 	/**
+	 * Removes a number of fields from a Tab/TabSet within this FieldSet.
+	 *
+	 * @param string $tabName The name of the Tab or TabSet field
+	 * @param array $fields A list of fields, e.g. array('Name', 'Email')
+	 */
+	public function removeFieldsFromTab($tabName, $fields) {
+		// This is a cache that must be flushed
+		$this->sequentialSet = null;
+
+		// Find the tab
+		$tab = $this->findOrMakeTab($tabName);
+		
+		// Add the fields to the end of this set
+		foreach($fields as $field) $tab->removeByName($field);
+	}
+	
+	/**
 	 * Remove a field from this fieldset by name.
 	 * It musn't be buried in a composite field.--- changed
 	 * It could be buried in a composite field now. --- 5/09/2006
