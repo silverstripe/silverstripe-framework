@@ -29,7 +29,7 @@ class TableListField extends FormField {
 
 	protected $sourceClass;
 
-	protected $sourceFilter = array();
+	protected $sourceFilter = "";
 	
 	protected $sourceSort = "";
 	
