@@ -359,7 +359,7 @@ class HtmlEditorField_Toolbar extends RequestHandlingData {
 						"file" => _t('HtmlEditorField.LINKFILE', "Download a file"),			
 					)
 				),
-				new TreeDropdownField("internal", _t('HtmlEditorField.PAGE', "Page"), "SiteTree", "URLSegment"),
+				new TreeDropdownField("internal", _t('HtmlEditorField.PAGE', "Page"), "SiteTree", "URLSegment", "MenuTitle"),
 				new TextField("external", _t('HtmlEditorField.URL', "URL"), 'http://'),
 				new EmailField("email", _t('HtmlEditorField.EMAIL', "Email address")),
 				new TreeDropdownField("file",_t('HtmlEditorField.FILE', "File"),"File", "Filename"),
