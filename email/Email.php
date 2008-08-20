@@ -332,7 +332,7 @@ class Email extends ViewableData {
 			if(!empty($headers['Bcc']) && trim($headers['Bcc'])) {
 				$headers['Bcc'] .= ', ' . self::$bcc_all_emails_to;		
 			} else {
-				$headers['Cc'] = self::$bcc_all_emails_to;
+				$headers['Bcc'] = self::$bcc_all_emails_to;
 			}
 		}
        

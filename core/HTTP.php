@@ -236,7 +236,7 @@ class HTTP {
 	 * @param string $port
 	 * @return string Raw HTTP-result including headers
 	 */
-	static function sendPostRequest($host, $path, $data, $name = null, $query = '', $port = 80) {
+	static function sendPostRequest($host, $path, $data, $name = null, $query = '', $port = 80, $getResponse = true) {
 		$socket = fsockopen($host, $port, $errno, $error);
 
 		if(!$socket)
@@ -244,6 +244,8 @@ class HTTP {
 
 		if(self::$userName && self::$password)
 			$auth = "Authorization: Basic " . base64_encode(self::$userName . ':' . self::$password) . "\r\n";
+		else
+			$auth = '';
 
 		if($query)
 			$query = '?' . $query;
@@ -253,9 +255,11 @@ class HTTP {
 		$request .= $dataStr . "\r\n\r\n";
 
 		fwrite($socket, $request);
-		$response = stream_get_contents($socket);
 		
-		return $response;
+		if($getResponse){
+			$response = stream_get_contents($socket);
+			return $response;
+		}
 
 	}
 

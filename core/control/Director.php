@@ -437,16 +437,7 @@ class Director {
 	}
 
 	/**
-	 * Given a filesystem reference relative to the site root, return the full filesystem path
-	 */
-	/**
-	 * Cleans up a given file-path
-	 * 
-	 * @param string $file
-	 * @return string
-	 */
-	/**
-	 * Cleans up a given file-path
+	 * Given a filesystem reference relative to the site root, return the full file-system path.
 	 * 
 	 * @param string $file
 	 * @return string
@@ -660,7 +651,7 @@ class Director {
 		// Use ?isDev=1 to get development access on the live server
 		if(isset($_GET['isDev'])) {
 			if(ClassInfo::ready()) {
-				BasicAuth::requireLogin("SilverStripe developer access.  Use your  CMS login", "ADMIN");
+				BasicAuth::requireLogin("SilverStripe developer access.  Use your CMS login", "ADMIN");
 				$_SESSION['isDev'] = $_GET['isDev'];
 			} else {
 				return true;

@@ -441,7 +441,7 @@ HTML;
 	function createTag($tag, $attributes, $content = null) {
 		$preparedAttributes = '';
 		foreach($attributes as $k => $v) {
-			if(!empty($v)) $preparedAttributes .= " $k=\"" . Convert::raw2att($v) . "\"";
+			if(!empty($v) || $v === '0') $preparedAttributes .= " $k=\"" . Convert::raw2att($v) . "\"";
 		}
 
 		if($content) return "<$tag$preparedAttributes>$content</$tag>";
