@@ -483,7 +483,11 @@ JS;
 
 		return $form;
 	}
-
+	
+	function setRelationAutoSetting($value) {
+		$this->relationAutoSetting = $value;
+	}
+	
 	/**
 	 * Use the URL-Parameter "action_saveComplexTableField"
 	 * to provide a clue to the main controller if the main form has to be rendered,
