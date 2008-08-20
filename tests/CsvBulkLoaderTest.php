@@ -20,14 +20,13 @@ class CsvBulkLoaderTest extends SapphireTest {
 		$results = $loader->load($filepath);
 
 		// Test that right amount of columns was imported
-		$this->assertEquals($results->Count(), $compareCount-1, 'Test correct count of imported data');
+		$this->assertEquals($results, $compareCount-1, 'Test correct count of imported data');
 		
 		// Test that columns were correctly imported
-		$obj = DataObject::get_by_id('CsvBulkLoaderTest_Player', $results->First()->id);
-		$this->assertEquals($compareRow[0], $obj->FirstName);
-		$this->assertEquals($compareRow[1], $obj->Biography);
-		$date = DBField::create('Date', $compareRow[2])->RAW();
-		$this->assertEquals($date, $obj->Birthday);
+		$obj = Dataobject::get_one("CsvBulkLoaderTest_Player", "FirstName = 'John'");
+		$this->assertNotNull($obj);
+		$this->assertEquals("He's a good guy", $obj->Biography);
+		$this->assertEquals("1988-01-31", $obj->Birthday);
 		
 		fclose($file);
 	}
@@ -50,14 +49,13 @@ class CsvBulkLoaderTest extends SapphireTest {
 		$results = $loader->load($filepath);
 
 		// Test that right amount of columns was imported
-		$this->assertEquals($results->Count(), $compareCount, 'Test correct count of imported data');
+		$this->assertEquals($results, $compareCount, 'Test correct count of imported data');
 		
 		// Test that columns were correctly imported
-		$obj = DataObject::get_by_id('CsvBulkLoaderTest_Player', $results->First()->id);
-		$this->assertEquals($compareRow[0], $obj->FirstName);
-		$this->assertEquals($compareRow[1], $obj->Biography);
-		$date = DBField::create('Date', $compareRow[3])->RAW();
-		$this->assertEquals($date, $obj->Birthday);
+		$obj = Dataobject::get_one("CsvBulkLoaderTest_Player", "FirstName = 'John'");
+		$this->assertNotNull($obj);
+		$this->assertEquals("He's a good guy", $obj->Biography);
+		$this->assertEquals("1988-01-31", $obj->Birthday);
 		
 		fclose($file);
 	}
@@ -91,7 +89,7 @@ class CsvBulkLoaderTest extends SapphireTest {
 		$results = $loader->load($filepath);
 		
 		// Test that right amount of columns was imported
-		$this->assertEquals($results->Count(), $compareCount-1, 'Test correct count of imported data');
+		$this->assertEquals($results, $compareCount-1, 'Test correct count of imported data');
 		
 		// Test of augumenting existing relation (created by fixture)
 		$testTeam = DataObject::get_one('CsvBulkLoaderTest_Team', null, null, 'Created DESC');
@@ -99,16 +97,12 @@ class CsvBulkLoaderTest extends SapphireTest {
 		
 		// Test of creating relation
 		$testContract = DataObject::get_one('CsvBulkLoaderTest_PlayerContract');
-		$testPlayer = DataObject::get_by_id('CsvBulkLoaderTest_Player', $results->First()->id);
+		$testPlayer = Dataobject::get_one("CsvBulkLoaderTest_Player", "FirstName = 'John'");
 		$this->assertEquals($testPlayer->ContractID, $testContract->ID, 'Creating new has_one relation works');
 		
 		// Test nested setting of relation properties
 		$contractAmount = DBField::create('Currency', $compareRow[5])->RAW();
-		$testPlayer = DataObject::get_by_id('CsvBulkLoaderTest_Player', $results->First()->id);
 		$this->assertEquals($testPlayer->Contract()->Amount, $contractAmount, 'Setting nested values in a relation works');
-		
-		// Test that columns were correctly imported
-		$obj = DataObject::get_by_id('CsvBulkLoaderTest_Player', $results->First()->id);
 		
 		fclose($file);
 	}
