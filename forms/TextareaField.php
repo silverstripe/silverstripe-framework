@@ -16,7 +16,7 @@ class TextareaField extends FormField {
 	 * @param $value The current value
 	 * @param $form The parent form.  Auto-set when the field is placed in a form.
 	 */
-	function __construct($name, $title = "", $rows = 5, $cols = 20, $value = "", $form = null) {
+	function __construct($name, $title = null, $rows = 5, $cols = 20, $value = "", $form = null) {
 		$this->rows = $rows;
 		$this->cols = $cols;
 		parent::__construct($name, $title, $value, $form);
