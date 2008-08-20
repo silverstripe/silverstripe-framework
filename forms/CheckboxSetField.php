@@ -186,7 +186,7 @@ class CheckboxSetField extends OptionsetField {
 				foreach($items as $item){
 					if(is_array($item)) {
 						$data[] = $item['Title'];
-					} else if(is_array($this->source)&&$this->source[$item]) {
+					} else if(is_array($this->source) && !empty($this->source[$item])) {
 						$data[] = $this->source[$item];
 					} else if(is_a($this->source, "ComponentSet")){
 						//added for editable checkboxset. 
