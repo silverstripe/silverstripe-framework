@@ -84,7 +84,8 @@ class CsvBulkLoader extends BulkLoader {
 				$indexedRow[$origColumnName] = $row[count($indexedRow)];
 			}
 			$numRecords++;
-			//$return->push($this->processRecord($indexedRow, $columnMap));
+			$this->processRecord($indexedRow, $columnMap);
+			//$return->push();
 		}
 		
 		fclose($file);
