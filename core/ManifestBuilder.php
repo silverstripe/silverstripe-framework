@@ -90,7 +90,7 @@ class ManifestBuilder {
 		DB::connect($databaseConfig);
 		if(DB::isActive()) {
 			$tableList = DB::getConn()->tableList();
-			self::update_db_tables($tableList, $manifest['globals']['_ALL_CLASSES']);
+			self::update_db_tables($tableList, $manifestInfo['globals']['_ALL_CLASSES']);
 		}
 
 		$manifest = self::generate_php_file($manifestInfo);
