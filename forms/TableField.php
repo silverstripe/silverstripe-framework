@@ -14,8 +14,8 @@
  * @param $sourceClass string The source class of this field
  * @param $fieldList array An array of field headings of Fieldname => Heading Text (eg. heading1)
  * @param $fieldTypes array An array of field types of fieldname => fieldType (eg. formfield). Do not use for extra data/hiddenfields.
- * @param $filterField string DEPRECATED The actual limiting filter, eg. 1 (please use $sourceFilter in the form "ParentID = 1" instead) 
- * @param $sourceFilter string The filter you wish to limit the objects by
+ * @param $filterField string The field to filter by.  Give the filter value in $sourceFilter.  The value will automatically be set on new records.
+ * @param $sourceFilter string If $filterField has a value, then this is the value to filter by.  Otherwise, it is a SQL filter expression.
  * @param $editExisting boolean (Note: Has to stay on this position for legacy reasons)
  * @param $sourceSort string
  * @param $sourceJoin string
@@ -94,7 +94,8 @@ class TableField extends TableListField {
 		$this->filterField = $filterField;
 		
 		$this->editExisting = $editExisting;
-		parent::__construct($name, $sourceClass, $fieldList, $sourceFilter, $sourceSort, $sourceJoin);
+		
+		parent::__construct($name, $sourceClass, $fieldList, $filterField ? "$filterField = $sourceFilter" : $sourceFilter, $sourceSort, $sourceJoin);
 
 		Requirements::javascript('sapphire/javascript/TableField.js');
 	}
@@ -138,18 +139,11 @@ class TableField extends TableListField {
 		} elseif($this->cachedSourceItems) {
 			$items = $this->cachedSourceItems;
 		} else {
-			if(!empty($this->filterField) && intval($this->sourceFilter) > 0) {
-				// Legacy: If a filterField is specified and the sourceFilter is a valid ID (old format)
-				$SQL_filter = Convert::raw2sql($this->sourceFilter);
-				$SQL_filterField = $this->filterField;
-				$items = DataObject::get($this->sourceClass,"`$SQL_filterField` = '$SQL_filter'", $this->sourceSort, $this->sourceJoin);
-			} else {
-				// get query
-				$dataQuery = $this->getQuery();
-				// get data
-				$records = $dataQuery->execute();
-				$items = singleton($this->sourceClass)->buildDataObjectSet($records);
-			}
+			// get query
+			$dataQuery = $this->getQuery();
+			// get data
+			$records = $dataQuery->execute();
+			$items = singleton($this->sourceClass)->buildDataObjectSet($records);
 		}
 
 		return $items;
@@ -373,7 +367,7 @@ class TableField extends TableListField {
            }
 
 				// Legacy: Use the filter as a predefined relationship-ID 
-				if(!empty($this->filterField) && intval($this->sourceFilter) > 0) {
+				if(!empty($this->filterField) && $this->sourceFilter) {
 					$filterField = $this->filterField;
 					$obj->$filterField = $this->sourceFilter;
 				}

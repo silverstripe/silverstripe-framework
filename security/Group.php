@@ -73,8 +73,8 @@ class Group extends DataObject {
 							"Code" => "PermissionDropdownField",
 							"Arg" => "TextField",
 						),
-						null,
-						"GroupID = {$this->ID}"
+						"GroupID",
+						$this->ID
 					)
 				),
 
