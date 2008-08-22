@@ -35,6 +35,18 @@ class TableField extends TableListField {
 	protected $fieldList;
 	
 	/**
+	 * A "Field = Value" filter can be specified by setting $this->filterField and $this->filterValue.  This has the advantage of auto-populating
+	 * new records
+	 */
+	protected $filterField = null;
+
+	/**
+	 * A "Field = Value" filter can be specified by setting $this->filterField and $this->filterValue.  This has the advantage of auto-populating
+	 * new records
+	 */
+	protected $filterValue = null;
+	
+	/**
 	 * @var $fieldTypes FieldSet
 	 * Caution: Use {@setExtraData()} instead of manually adding HiddenFields if you want to 
 	 * preset relations or other default data.
@@ -94,8 +106,13 @@ class TableField extends TableListField {
 		$this->filterField = $filterField;
 		
 		$this->editExisting = $editExisting;
-		
-		parent::__construct($name, $sourceClass, $fieldList, $filterField ? "$filterField = $sourceFilter" : $sourceFilter, $sourceSort, $sourceJoin);
+
+		// If we specify filterField, then an implicit source filter of "filterField = sourceFilter" is used.
+		if($filterField) {
+			$this->filterValue = $sourceFilter;
+			$sourceFilter = "`$filterField` = '" . Convert::raw2sql($sourceFilter) . "'";
+		}
+		parent::__construct($name, $sourceClass, $fieldList, $sourceFilter, $sourceSort, $sourceJoin);
 
 		Requirements::javascript('sapphire/javascript/TableField.js');
 	}
@@ -367,9 +384,9 @@ class TableField extends TableListField {
            }
 
 				// Legacy: Use the filter as a predefined relationship-ID 
-				if(!empty($this->filterField) && $this->sourceFilter) {
+				if($this->filterField && $this->filterValue) {
 					$filterField = $this->filterField;
-					$obj->$filterField = $this->sourceFilter;
+					$obj->$filterField = $this->filterValue;
 				}
 			
 				// Determine if there is changed data for saving
