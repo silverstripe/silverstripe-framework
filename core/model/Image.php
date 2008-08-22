@@ -172,7 +172,7 @@ class Image extends File {
 	}
 	
 	public function SetHeight($height) {
-		return $this->getFormattedImage('SetWidth', $height);
+		return $this->getFormattedImage('SetHeight', $height);
 	}
 	
 	public function SetSize($width, $height) {
