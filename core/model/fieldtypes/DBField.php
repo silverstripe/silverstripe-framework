@@ -169,6 +169,14 @@ abstract class DBField extends ViewableData {
 	}
 	
 	/**
+	 * Converts the current value for this Enum DBField to lowercase.
+	 * @return string
+	 */
+	function LowerCase() {
+		return Convert::raw2xml(strtolower($this->value));
+	}	
+	
+	/**
 	 * Returns the value to be set in the database to blank this field.
 	 * Usually it's a choice between null, 0, and ''
 	 */

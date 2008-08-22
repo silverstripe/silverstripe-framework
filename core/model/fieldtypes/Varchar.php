@@ -48,10 +48,6 @@ class Varchar extends DBField {
 		return $this->raw2HTML();
 	}*/
 	
-	function LowerCase() {
-		return Convert::raw2xml(strtolower($this->value));
-	}
-	
 	function LimitCharacters($limit = 20, $add = "...") {
 		$value = trim($this->value);
 		return (strlen($value) > $limit) ? substr($value, 0, $limit) . $add : $value;
