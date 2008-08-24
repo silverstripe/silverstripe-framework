@@ -183,13 +183,27 @@ class Convert extends Object {
 	
 	static function xml2array($val) {
 		$xml = new SimpleXMLElement($val);
-		$arr = array();
-		foreach($xml->children() as $k => $v) {
-			// @todo Convert recursively
-			$arr[$k] = (string)$v;
-		}
-		return $arr;
-		//return preg_split( '/\s*(<[^>]+>)|\s\s*/', $val, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY );
+		return self::recursiveXMLToArray($xml);
+	}
+	
+	static function recursiveXMLToArray($xml) {
+		if (get_class($xml) == 'SimpleXMLElement') {
+	       $attributes = $xml->attributes();
+	       foreach($attributes as $k=>$v) {
+	           if ($v) $a[$k] = (string) $v;
+	       }
+	       $x = $xml;
+	       $xml = get_object_vars($xml);
+	   }
+	   if (is_array($xml)) {
+	       if (count($xml) == 0) return (string) $x; // for CDATA
+	       foreach($xml as $key=>$value) {
+	           $r[$key] = self::recursiveXMLToArray($value);
+	       }
+	       if (isset($a)) $r['@'] = $a;    // Attributes
+	       return $r;
+	   }
+	   return (string) $xml;
 	}
 
 	static function array2json( $array ) {
