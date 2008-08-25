@@ -1,12 +1,10 @@
 <?php
 
 /**
- * @package tests
- */
-
-/**
  * Tests for FieldSet
- * @package tests
+ * 
+ * @package sapphire
+ * @subpackage tests
  * 
  * @TODO test for {@link FieldSet->insertBeforeRecursive()}.
  * 
