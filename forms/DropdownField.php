@@ -10,17 +10,6 @@ class DropdownField extends FormField {
 	
 	/**
 	 * Creates a new dropdown field.
-	 * 
- 	 * $source parameter can be a two dimensional array; creating <optgroup> elements
- 	 * as needed for the first level of the array, and <option> elements for the second
- 	 * level.
- 	 * 
- 	 * If the source array is of a single dimension, then the dropdown just contains
- 	 * <option> tags as required for each of the items in the source.
- 	 * 
- 	 * Returns a <select> tag containing all the appropriate <option> and <optgroup>
- 	 * as required from the source.
-	 * 
 	 * @param $name The field name
 	 * @param $title The field title
 	 * @param $source An map of the dropdown items
@@ -46,31 +35,15 @@ class DropdownField extends FormField {
 	function Field() {
 		$classAttr = '';
 		$options = '';
-		
 		if($extraClass = trim($this->extraClass())) {
 			$classAttr = "class=\"$extraClass\"";
 		}
-		
-		if($this->source) {
-			foreach($this->source as $value => $title) {
-				if(is_array($title)) {	// Nested array, create an optgroup
-					$options .= "<optgroup label=\"$value\">";
-					foreach($title as $value2 => $title2) {
-						$selected = $value2 == $this->value ? " selected=\"selected\"" : "";
-						if($selected && $this->value != 0) {
-							$this->isSelected = true;
-						}
-						$options .= "<option$selected value=\"$value2\">$title2</option>";
-					}
-					$options .= "</optgroup>";
-				} else { // Fall back to the standard dropdown field
-					$selected = $value == $this->value ? " selected=\"selected\"" : "";
-					if($selected && $this->value != 0) {
-						$this->isSelected = true;
-					}
-					$options .= "<option$selected value=\"$value\">$title</option>";
-				}
+		if($this->source) foreach($this->source as $value => $title) {
+			$selected = $value == $this->value ? " selected=\"selected\"" : "";
+			if($selected && $this->value != 0) {
+				$this->isSelected = true;
 			}
+			$options .= "<option$selected value=\"$value\">$title</option>";
 		}
 	
 		$id = $this->id();
