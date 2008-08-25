@@ -133,16 +133,16 @@ class FieldSetTest extends SapphireTest {
 		$tab = new Tab('Root');
 		$fields->push($tab);
 		
-		/* We add a field object to the FieldSet */
+		/* A field gets added to the set */
 		$fields->addFieldToTab('Root', new TextField('Country'));
 
-		/* We have the same object we added to the tab, as the one we get back from it */
+		/* We have the same object as the one we pushed */
 		$this->assertSame($fields->dataFieldByName('Country'), $tab->fieldByName('Country'));
 		
-		/* We replace the "Country" field object with an "Email" field object */
+		/* The field called Country is replaced by the field called Email */
 		$fields->replaceField('Country', new EmailField('Email'));
 		
-		/* We'll be left with one (1) field inside the tab */
+		/* We have 1 field inside our tab */
 		$this->assertEquals(1, $tab->Fields()->Count());		
 	}
 	
@@ -152,7 +152,7 @@ class FieldSetTest extends SapphireTest {
 	function testNestedTabsFindingFieldByName() {
 		$fields = new FieldSet();
 		
-		// Create 2 nested TabSet objects, and two Tab objects inside the nested TabSet
+		/* 2 tabs get created within a TabSet inside our set */
 		$tab = new TabSet('Root',
 			new TabSet('Content',
 				$mainTab = new Tab('Main'),
@@ -161,19 +161,19 @@ class FieldSetTest extends SapphireTest {
 		);
 		$fields->push($tab);
 
-		// Create a field inside each of the Tab objects
+		/* Some fields get added to the 2 tabs we just created */
 		$fields->addFieldToTab('Root.Content.Main', new TextField('Country'));
 		$fields->addFieldToTab('Root.Content.Others', new TextField('Email'));
 		
-		// Ensure the field object in the FieldSet is not null
+		/* The fields we just added actually exists in the set */
 		$this->assertNotNull($fields->dataFieldByName('Country'));
 		$this->assertNotNull($fields->dataFieldByName('Email'));
 		
-		// Ensure the field objects inside the Tab objects are not null
+		/* The fields we just added actually exist in the tabs */
 		$this->assertNotNull($mainTab->fieldByName('Country'));
 		$this->assertNotNull($otherTab->fieldByName('Email'));
 		
-		// Ensure that there is only 1 field in each tab
+		/* We have 1 field for each of the tabs */
 		$this->assertEquals(1, $mainTab->Fields()->Count());
 		$this->assertEquals(1, $otherTab->Fields()->Count());
 	}
@@ -186,18 +186,16 @@ class FieldSetTest extends SapphireTest {
 	function testPushFieldToSet() {
 		$fields = new FieldSet();
 		
-		// Ensure that there are no fields in the set at this time
-		$this->assertEquals(0, $fields->Count());
-		
-		// Push a field into this set
+		/* A field named Country is added to the set */
 		$fields->push(new TextField('Country'));
 		
-		// Ensure that there is only 1 field in the set
+		/* We only have 1 field in the set */
 		$this->assertEquals(1, $fields->Count());
 		
+		/* Another field called Email is added to the set */
 		$fields->push(new EmailField('Email'));
 		
-		// Ensure that there are 2 fields in the set
+		/* There are now 2 fields in the set */
 		$this->assertEquals(2, $fields->Count());
 	}
 
@@ -209,24 +207,24 @@ class FieldSetTest extends SapphireTest {
 	function testInsertBeforeFieldToSet() {
 		$fields = new FieldSet();
 		
-		// Push some field objects into the FieldSet object
+		/* 3 fields are added to the set */
 		$fields->push(new TextField('Country'));
 		$fields->push(new TextField('Email'));
 		$fields->push(new TextField('FirstName'));
 		
-		// Ensure that there are 3 fields in the FieldSet
+		/* We now have 3 fields in the set */
 		$this->assertEquals(3, $fields->Count());
 		
-		// Insert a new field object before the "FirstName" field in the set
+		/* We insert another field called Title before the FirstName field */
 		$fields->insertBefore(new TextField('Title'), 'FirstName');
 		
-		// Check the field was actually inserted into the FieldSet
+		/* The field we just added actually exists in the set */
 		$this->assertNotNull($fields->dataFieldByName('Title'));
 		
-		// Ensure that there are now 4 fields in the FieldSet
+		/* We now have 4 fields in the set */
 		$this->assertEquals(4, $fields->Count());
 		
-		// Check the position of the "Title" field that we inserted
+		/* The position of the Title field is at number 3 */
 		$this->assertEquals(3, $fields->fieldByName('Title')->Pos());
 	}
 	
@@ -236,24 +234,24 @@ class FieldSetTest extends SapphireTest {
 	function testInsertAfterFieldToSet() {
 		$fields = new FieldSet();
 		
-		// Push some field objects into the FieldSet object
+		/* 3 fields are added to the set */
 		$fields->push(new TextField('Country'));
 		$fields->push(new TextField('Email'));
 		$fields->push(new TextField('FirstName'));
 		
-		// Ensure that there are 3 fields in the FieldSet
+		/* We now have 3 fields in the set */
 		$this->assertEquals(3, $fields->Count());
 		
-		// Insert a new field object before the "FirstName" field in the set
+		/* A field called Title is inserted after the Country field */
 		$fields->insertAfter(new TextField('Title'), 'Country');
 		
-		// Check the field was actually inserted into the FieldSet
+		/* The field we just added actually exists in the set */
 		$this->assertNotNull($fields->dataFieldByName('Title'));
 		
-		// Ensure that there are now 4 fields in the FieldSet
+		/* We now have 4 fields in the FieldSet */
 		$this->assertEquals(4, $fields->Count());
 		
-		// Check the position of the "Title" field that we inserted
+		/* The position of the Title field should be at number 2 */
 		$this->assertEquals(2, $fields->fieldByName('Title')->Pos());
 	}
 	
