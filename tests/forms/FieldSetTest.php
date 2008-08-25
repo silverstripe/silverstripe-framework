@@ -23,8 +23,7 @@
  * @TODO test for {@link FieldSet->dataFields()}.
  * 
  * @TODO test for {@link FieldSet->findOrMakeTab()}.
- * 
- * @TODO test for {@link FieldSet->removeByName()}.
+ *
  */
 class FieldSetTest extends SapphireTest {
 
@@ -60,7 +59,7 @@ class FieldSetTest extends SapphireTest {
 	/**
 	 * Test removing a single field from a tab in a set.
 	 */
-	function testRemoveFieldFromTab() {
+	function testRemoveSingleFieldFromTab() {
 		$fields = new FieldSet();
 		$tab = new Tab('Root');
 		$fields->push($tab);
@@ -79,9 +78,57 @@ class FieldSetTest extends SapphireTest {
 	}
 	
 	/**
+	 * Test removing an array of fields from a tab in a set.
+	 */
+	function testRemoveMultipleFieldsFromTab() {
+		$fields = new FieldSet();
+		$tab = new Tab('Root');
+		$fields->push($tab);
+		
+		/* We add an array of fields, using addFieldsToTab() */
+		$fields->addFieldsToTab('Root', array(
+			new TextField('Name', 'Your name'),
+			new EmailField('Email', 'Email address'),
+			new NumericField('Number', 'Insert a number')
+		));
+		
+		/* We have 3 fields inside the tab, which we just created */
+		$this->assertEquals(3, $tab->Fields()->Count());
+		
+		/* We remove the 3 fields from the tab */
+		$fields->removeFieldsFromTab('Root', array(
+			'Name',
+			'Email',
+			'Number'
+		));
+		
+		/* We have no fields in the tab now */
+		$this->assertEquals(0, $tab->Fields()->Count());
+	}
+	
+	/**
+	 * Test removing a field from a set by it's name.
+	 */
+	function testRemoveFieldByName() {
+		$fields = new FieldSet();
+		
+		/* First of all, we add a field into our FieldSet object */
+		$fields->push(new TextField('Name', 'Your name'));
+		
+		/* We have 1 field in our set now */
+		$this->assertEquals(1, $fields->Count());
+		
+		/* Then, we call up removeByName() to take it out again */
+		$fields->removeByName('Name');
+		
+		/* We have 0 fields in our set now, as we've just removed the one we added */
+		$this->assertEquals(0, $fields->Count());
+	}
+	
+	/**
 	 * Test replacing a field with another one.
 	 */
-	function testReplacingAField() {
+	function testReplaceField() {
 		$fields = new FieldSet();
 		$tab = new Tab('Root');
 		$fields->push($tab);
