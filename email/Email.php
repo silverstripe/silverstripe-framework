@@ -423,6 +423,9 @@ class Email extends ViewableData {
 
 /**
  * Implements an email template that can be populated.
+ * 
+ * @deprecated - Please use Email_Template instead!
+ * 
  * @package sapphire
  * @subpackage email
  */
