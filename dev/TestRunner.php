@@ -17,6 +17,7 @@ function hasPhpUnit() {
  */
 if(hasPhpUnit()) {
 require_once 'PHPUnit/Framework.php';
+require_once 'PHPUnit/Util/Report.php';
 require_once 'PHPUnit/TextUI/TestRunner.php';
 }
 
@@ -32,6 +33,7 @@ class TestRunner extends Controller {
 	
 	static $url_handlers = array(
 		'' => 'browse',
+		'coverage' => 'coverage',
 		'$TestCase' => 'only',
 	);
 	
@@ -80,7 +82,8 @@ class TestRunner extends Controller {
 		echo '<div class="trace">';
 		$tests = ClassInfo::subclassesFor('SapphireTest');
 		echo "<h3><a href=\"" . $this->Link() . "all\">Run all " . count($tests) . " tests</a></h3>";
-		echo "<br />";
+		echo "<h3><a href=\"" . $this->Link() . "coverage\">Runs all tests and make test coverage report</a></h3>";
+		echo "<hr />";
 		foreach ($tests as $test) {
 			echo "<h3><a href=\"" . $this->Link() . "$test\">Run $test</a></h3>";
 		}
@@ -142,12 +145,19 @@ class TestRunner extends Controller {
 		$results->addListener($reporter);
 
 		if($coverage) {
+			$results->collectCodeCoverageInformation(true);
 			$suite->run($results);
-			$coverageURL = Director::absoluteURL('assets/coverage-report');
-			echo "<p><a href=\"$coverageURL\">Coverage report available here</a></p>";
+
+			if(!file_exists('../assets/coverage-report')) mkdir('../assets/coverage-report');
+			PHPUnit_Util_Report::render($results, '../assets/coverage-report/');
+			$coverageApp = Director::baseURL() . 'assets/coverage-report/' . preg_replace('/[^A-Za-z0-9]/','_',preg_replace('/(\/$)|(^\/)/','',Director::baseFolder())) . '.html';
+			$coverageTemplates = Director::baseURL() . 'assets/coverage-report/' . preg_replace('/[^A-Za-z0-9]/','_',preg_replace('/(\/$)|(^\/)/','',realpath(TEMP_FOLDER))) . '.html';
+			echo "<p>Coverage reports available here:<ul>
+				<li><a href=\"$coverageApp\">Coverage report of the application</a></li>
+				<li><a href=\"$coverageTemplates\">Coverage report of the templates</a></li>
+			</ul>";
 		} else {
 			$suite->run($results);
-			//$testResult = PHPUnit_TextUI_TestRunner::run($suite);
 		}
 		
 		echo '<div class="trace">';
