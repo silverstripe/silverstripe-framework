@@ -1,0 +1,14 @@
+File:
+   asdf:
+      Filename: assets/asdfjkl.txt
+   gif:
+      Filename: assets/asdfjkl.gif
+   pdf:
+      Filename: assets/asdfjkl.pdf
+   setfromname:
+      Name: asdfjkl.png
+      ParentID: 0
+
+Folder:
+   subfolder:
+      Name: subfolder
