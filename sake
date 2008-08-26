@@ -7,11 +7,16 @@ Executes a Sapphire command"
 	exit 1
 fi
 
-# Special case for "sake installsake"
-if [ "$1" = "installsake" ]; then
-	echo "Installing sake to /usr/bin..."
-	cp $0 /usr/bin
-	exit 0
+# Set $sapphire and $base
+if [ -d ./sapphire ]; then
+	sapphire=./sapphire
+	base=.
+elif [ -f ./cli-script.php ]; then
+	sapphire=.
+	base=..
+else
+	echo "Can't find ./sapphire/cli-script.php or ./cli-script.php"
+	exit 1
 fi
 
 # Find the PHP binary
@@ -21,20 +26,67 @@ for candidatephp in php5 php; do
 		break
 	fi
 done
-
 if [ "$php" = "" ]; then
 	echo "Can't find any php binary"
 	exit 2
 fi
 
-if [ -d ./sapphire ]; then
-	$php ./sapphire/cli-script.php $1 $2
-	exit $?
+################################################################################################
+## Installation to /usr/bin
+
+if [ "$1" = "installsake" ]; then
+	echo "Installing sake to /usr/bin..."
+	cp $0 /usr/bin
+	exit 0
 fi
 
-if [ -f ./cli-script.php ]; then
-	$php ./cli-script.php $1 $2
-	exit $?
+################################################################################################
+## Process control
+
+if [ "$1" = "-start" ]; then
+	if [ "`which daemon`" = "" ]; then
+		echo "You need to install the 'daemon' tool.  In debian, go 'sudo apt-get install daemon'"
+		exit 1
+	fi
+
+	if [ ! -f $base/$2.pid ]; then
+		echo "Starting service $2 $3"
+		touch $base/$2.pid
+		pidfile=`realpath $base/$2.pid`
+		
+		outlog=$base/$2.log
+		errlog=$base/$2.err
+
+		echo "Logging to $outlog"
+		
+		sake=`realpath $0`
+		base=`realpath $base`
+
+		# TODO: Give a globally unique processname by including the projectname as well		
+		processname=$2
+
+		daemon -n $processname -r -D $base --pidfile=$pidfile --stdout=$outlog --stderr=$errlog $sake $2 $3
+	else
+		echo "Service $2 seems to already be running"
+	fi
+		exit 0
 fi
 
-echo "Can't find ./sapphire/cli-script.php or ./cli-script.php"
+if [ "$1" = "-stop" ]; then
+	pidfile=$base/$2.pid
+	if [ -f $pidfile ]; then
+		echo "Stopping service $2"
+		
+		# TODO: This is a bad way of killing the process
+		kill -KILL `cat $pidfile`
+		unlink $pidfile
+	else
+		echo "Service $2 doesn't seem to be running."
+	fi
+	exit 0
+fi
+
+################################################################################################
+## Basic execution
+
+$php $sapphire/cli-script.php $1 $2
