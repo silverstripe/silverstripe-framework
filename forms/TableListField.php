@@ -670,7 +670,7 @@ JS
 	/**
 	 * @return array
 	 */
-	function getPermissions($arr) {
+	function getPermissions() {
 		return $this->permissions;
 	}
 
@@ -707,8 +707,10 @@ JS
 	
 	/**
 	 * @param array
+	 * @deprecated Put the query string onto your form's link instead :-)
 	 */
 	function setExtraLinkParams($params){
+		user_error("TableListField::setExtraLinkParams() deprecated - put the query string onto your form's FormAction instead; it will be handed down to all field with special handlers", E_USER_NOTICE);
 		$this->extraLinkParams = $params;
 	}
 	
@@ -725,7 +727,7 @@ JS
 		if(!isset($_REQUEST['ctf'][$this->Name()]['start']) || !is_numeric($_REQUEST['ctf'][$this->Name()]['start']) || $_REQUEST['ctf'][$this->Name()]['start'] == 0) {
 			return null;
 		}
-		$link = $this->Link() . "/?ctf[{$this->Name()}][start]={$start}";
+		$link = Controller::join_links($this->Link(), "ajax_refresh?ctf[{$this->Name()}][start]={$start}");
 		if($this->extraLinkParams) $link .= "&" . http_build_query($this->extraLinkParams);
 		return $link;
 	}
@@ -739,18 +741,19 @@ JS
 		
 		$start = ($_REQUEST['ctf'][$this->Name()]['start'] - $this->pageSize < 0)  ? 0 : $_REQUEST['ctf'][$this->Name()]['start'] - $this->pageSize;
 		
-		$link = $this->Link() . "/?ctf[{$this->Name()}][start]={$start}";
+		$link = Controller::join_links($this->Link(), "ajax_refresh?ctf[{$this->Name()}][start]={$start}");
 		if($this->extraLinkParams) $link .= "&" . http_build_query($this->extraLinkParams);
 		return $link;
 	}
 	
+
 	function NextLink() {
 		$currentStart = isset($_REQUEST['ctf'][$this->Name()]['start']) ? $_REQUEST['ctf'][$this->Name()]['start'] : 0;
 		$start = ($currentStart + $this->pageSize < $this->TotalCount()) ? $currentStart + $this->pageSize : $this->TotalCount() % $this->pageSize > 0;
 		if($currentStart >= $start-1) {
 			return null;
 		}
-		$link = $this->Link() . "/?ctf[{$this->Name()}][start]={$start}";
+		$link = Controller::join_links($this->Link(), "ajax_refresh?ctf[{$this->Name()}][start]={$start}");
 		if($this->extraLinkParams) $link .= "&" . http_build_query($this->extraLinkParams);
 		return $link;
 	}
@@ -763,7 +766,7 @@ JS
 			return null;
 		}
 		
-		$link = $this->Link() . "/?ctf[{$this->Name()}][start]={$start}";
+		$link = Controller::join_links($this->Link(), "ajax_refresh?ctf[{$this->Name()}][start]={$start}");
 		if($this->extraLinkParams) $link .= "&" . http_build_query($this->extraLinkParams);
 		return $link;
 	}
@@ -866,12 +869,10 @@ JS
 	 * @todo Make relation-syntax available (at the moment you'll have to use custom sql) 
 	 */
 	function export() {
-		
 		$now = Date("d-m-Y-H-i");
 		$fileName = "export-$now.csv";
 		$separator = $this->csvSeparator;
 		$csvColumns = ($this->fieldListCsv) ? $this->fieldListCsv : $this->fieldList;
-
 		$fileData = "";
 		
 		if($this->csvHasHeader) {
@@ -929,6 +930,7 @@ JS
 	 */
 	function ExportLink() {
 		$exportLink = Controller::join_links($this->Link(), 'export');
+		
 		if($this->extraLinkParams) $exportLink .= "?" . http_build_query($this->extraLinkParams);
 		return $exportLink;
 	}
@@ -984,9 +986,9 @@ JS
 		// compute sourceItems here instead of Items() to ensure that
 		// pagination and filters are respected on template accessors
 		//$this->sourceItems();
-		
-		$response = $this->renderWith($this->template);
-		FormResponse::update_dom_id($this->id(), $response);
+
+		$response = $this->renderWith($this->template);echo($response);die('here');
+		FormResponse::update_dom_id($this->id(), $response, 1);
 		FormResponse::set_non_ajax_content($response);
 		return FormResponse::respond();
 	}

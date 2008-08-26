@@ -66,6 +66,12 @@ class Member extends DataObject {
 		'Email',
 	);
 	
+	static $summary_fields = array(
+		'FirstName',
+		'Surname',
+		'Email',
+	);
+	
 	
 	/**
 	 * {@link PasswordValidator} object for validating user's password

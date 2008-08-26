@@ -138,7 +138,7 @@ class CheckboxSetField extends OptionsetField {
 	 * Return the CheckboxSetField value, as an array of the selected item keys
 	 */
 	function dataValue() {
-		if($this->value){
+		if($this->value&&is_array($this->value)){
 			// Filter items to those who aren't 0
 			$filtered = array();
 			foreach($this->value as $item) if($item) $filtered[] = str_replace(",", "{comma}", $item); 

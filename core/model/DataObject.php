@@ -2466,16 +2466,17 @@ class DataObject extends ViewableData implements DataObjectInterface {
 			if ($this->hasField('Name')) $fields['Name'] = 'Name';
 			if ($this->hasField('Title')) $fields['Title'] = 'Title';
 			if ($this->hasField('Description')) $fields['Description'] = 'Description';
-			if ($this->hasField('Firstname')) $fields['Firstname'] = 'Firstname';
+			if ($this->hasField('FirstName')) $fields['FirstName'] = 'First Name';
 		}
-
+		$this->extend("updateSummaryFields", $fields);
+		
 		// Final fail-over, just list all the fields :-S
 		if(!$fields) {
 			foreach(array_keys($this->db()) as $field) {
 				$fields[$field] = $field;
 			}
 		}
-			
+
 		return $fields;
 	}
 
