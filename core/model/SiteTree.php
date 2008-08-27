@@ -1149,8 +1149,12 @@ class SiteTree extends DataObject {
 
 		if($this->canPublish())
 			$actions[] = new FormAction('publish', _t('SiteTree.BUTTONSAVEPUBLISH', 'Save & Publish'));
+			
+		$actions = new FieldSet($actions);
+			
+		$this->extend('updateCMSActions', $actions);
 
-		return new DataObjectSet($actions);
+		return $actions;
 	}
 
 
