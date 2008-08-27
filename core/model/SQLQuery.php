@@ -435,6 +435,17 @@ class SQLQuery extends Object {
 		return DB::query($this->sql());
 	}
 	
+	/**
+	 * Checks whether this query is for a specific ID in a table
+	 *
+	 * @return boolean
+	 */
+	function filtersOnID() {
+		return ($query->where && count($query->where) == 1 && 
+			(strpos($query->where[0], ".`ID` = ") || strpos($query->where[0], ".ID = ") || strpos($query->where[0], "ID = ") )
+		);
+	}
+	
 	/// VARIOUS TRANSFORMATIONS BELOW
 	
 	/**
