@@ -5,12 +5,12 @@
 # Most users should simply visit the site root in your web browser.
 #
 #
-URL=`./cli-script.php SapphireInfo/baseurl`
+URL=`php5 ./cli-script.php SapphireInfo/baseurl`
 
-test: phpunit
+test: phpunit windmill
 
 phpunit:
 	php5 ./cli-script.php dev/tests/all flush=1
 
 windmill:
-	functest ../cms/tests/test_windmill url=${URL}admin browser=firefox
+	functest ../cms/tests/test_windmill url=${URL}dev/tests/startsession browser=firefox
