@@ -987,7 +987,7 @@ JS
 		// pagination and filters are respected on template accessors
 		//$this->sourceItems();
 
-		$response = $this->renderWith($this->template);echo($response);die('here');
+		$response = $this->renderWith($this->template);
 		FormResponse::update_dom_id($this->id(), $response, 1);
 		FormResponse::set_non_ajax_content($response);
 		return FormResponse::respond();
