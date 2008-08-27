@@ -163,10 +163,18 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 		}
 	}
 	
+	/**
+	 * Returns true if we are currently using a temporary database
+	 */
+	static function using_temp_db() {
+		$dbConn = DB::getConn();
+		return $dbConn && (substr($dbConn->currentDatabase(),0,5) == 'tmpdb');
+	}
+	
 	static function kill_temp_db() {
 		// Delete our temporary database
-		$dbConn = DB::getConn();
-		if($dbConn && substr($dbConn->currentDatabase(),0,5) == 'tmpdb') {
+		if(self::using_temp_db()) {
+			$dbConn = DB::getConn();
 			$dbName = $dbConn->currentDatabase();
 			if($dbName && DB::query("SHOW DATABASES LIKE '$dbName'")->value()) {
 				// echo "Deleted temp database " . $dbConn->currentDatabase() . "\n";
@@ -188,6 +196,8 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 
 		$dbadmin = new DatabaseAdmin();
 		$dbadmin->doBuild(true, false, true);
+		
+		return $dbname;
 	}
 }
 

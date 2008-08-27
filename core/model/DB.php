@@ -35,6 +35,15 @@ class DB {
 	static function getConn() {
 		return DB::$globalConn;
 	}
+	
+	/**
+	 * Set an alternative database to use for this browser session.
+	 * This is useful when using testing systems other than SapphireTest; for example, Windmill.
+	 * Set it to null to revert to the main database.
+	 */
+	static function set_alternative_database_name($dbname) {
+		$_SESSION["alternativeDatabaseName"] = $dbname;
+	}
 
 	/**
 	 * Connect to a database.
@@ -43,6 +52,9 @@ class DB {
 	 * @param array $database A map of options. The 'type' is the name of the subclass of Database to use. For the rest of the options, see the specific class.
 	 */
 	static function connect($databaseConfig) {
+		// This is used by TestRunner::startsession() to test up a test session using an alt
+		if(isset($_SESSION["alternativeDatabaseName"]) && $dbname = $_SESSION["alternativeDatabaseName"]) $databaseConfig['database'] = $dbname;
+		
 		if(!isset($databaseConfig['type']) || empty($databaseConfig['type'])) {
 			user_error("DB::connect: Not passed a valid database config", E_USER_ERROR);
 		}
