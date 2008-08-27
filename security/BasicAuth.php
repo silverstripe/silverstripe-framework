@@ -7,12 +7,10 @@
 class BasicAuth extends Object {
 	
 	/**
-	 * Used on test-environments by default,
-	 * but can be explicitly disabled.
-	 *
+	 * Site-wide basic auth is disabled by default but can be enabled as needed in _config.php by calling BasicAuth::enable()
 	 * @var boolean
 	 */
-	static protected $disabled;
+	static protected $enabled = false;
 
 	/**
 	 * Require basic authentication.  Will request a username and password if none is given.
@@ -23,7 +21,7 @@ class BasicAuth extends Object {
 	 * @return Member $member 
 	 */
 	static function requireLogin($realm, $permissionCode) {
-		if(self::$disabled) return true;
+		if(!self::$enabled) return true;
 		if(!Security::database_is_ready() || Director::is_cli()) return true;
 		
 		
@@ -66,7 +64,10 @@ class BasicAuth extends Object {
 		return $member;
 	}
 	
+	static function enable() {
+		self::$enabled = true;
+	}
 	static function disable() {
-		self::$disabled = true;
+		self::$enabled = false;
 	}
 }
