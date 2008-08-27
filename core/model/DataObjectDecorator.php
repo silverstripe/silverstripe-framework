@@ -105,6 +105,24 @@ abstract class DataObjectDecorator extends Extension {
 	 */
 	function updateCMSFields(FieldSet &$fields) {
 	}
+	
+	/**
+	 * this function is used to provide modifications to the summary fields in CMS
+	 * by the decorator
+	 * By default, the summaryField() of its owner will merge more fields defined in the decorator's
+	 * $extra_fields['summary_fields']
+	 */
+	function updateSummaryFields(&$fields){
+		$extra_fields = $this->extraDBFields();
+		$summary_fields = $extra_fields['summary_fields'];
+		if($summary_fields)$fields = array_merge($fields, $summary_fields);
+	}
+	
+	function updateSummaryFieldsExcludeExtra(&$fields){
+		$extra_fields = $this->extraDBFields();
+		$summary_fields = $extra_fields['summary_fields'];
+		if($summary_fields)$fields = array_merge($fields, $summary_fields);
+	}
 }
 
 ?>

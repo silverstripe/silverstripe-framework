@@ -2451,7 +2451,8 @@ class DataObject extends ViewableData implements DataObjectInterface {
 	 *
 	 * @return array
 	 */
-	public function summaryFields() {
+	public function summaryFields(){
+
 		$fields = $this->stat('summary_fields');
 
 		// if fields were passed in numeric array,
@@ -2476,7 +2477,6 @@ class DataObject extends ViewableData implements DataObjectInterface {
 				$fields[$field] = $field;
 			}
 		}
-
 		return $fields;
 	}
 
