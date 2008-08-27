@@ -642,7 +642,6 @@ class Translatable extends DataObjectDecorator {
 			$fields->removeByName('action_rollback');
 			$fields->removeByName('action_unpublish');
 			$fields->removeByName('action_deletefromlive');
-			Debug::show($fields);
 		}
 	}
 
