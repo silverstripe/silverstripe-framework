@@ -7,7 +7,7 @@
 #
 URL=`php5 ./cli-script.php SapphireInfo/baseurl`
 
-test: phpunit windmill
+test: phpunit
 
 phpunit:
 	php5 ./cli-script.php dev/tests/all flush=1
