@@ -34,6 +34,8 @@ class CsvBulkLoader extends BulkLoader {
 	public $hasHeaderRow = false;
 	
 	protected function processAll($filepath, $preview = false) {
+		ini_set('auto_detect_line_endings',1);
+		
 		$file = fopen($filepath, 'r');
 		if(!$file) return false;
 		
