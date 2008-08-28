@@ -256,9 +256,11 @@ JS;
 	 * Returns the content of this formfield without surrounding layout. Triggered by Javascript
 	 * to update content after a DetailForm-save-action.
 	 *
+	 * @deprecated Use the field link itself, instead - Form/fields/TableFieldName
 	 * @return String
 	 */
 	function ajax_render() {
+		user_error("Deprecated; access the field's root link instead", E_USER_NOTICE);
 		return $this->renderWith($this->template);
 	}
 

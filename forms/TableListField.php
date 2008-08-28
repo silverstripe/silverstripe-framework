@@ -727,7 +727,7 @@ JS
 		if(!isset($_REQUEST['ctf'][$this->Name()]['start']) || !is_numeric($_REQUEST['ctf'][$this->Name()]['start']) || $_REQUEST['ctf'][$this->Name()]['start'] == 0) {
 			return null;
 		}
-		$link = Controller::join_links($this->Link(), "ajax_refresh?ctf[{$this->Name()}][start]={$start}");
+		$link = Controller::join_links($this->Link(), "?ctf[{$this->Name()}][start]={$start}");
 		if($this->extraLinkParams) $link .= "&" . http_build_query($this->extraLinkParams);
 		return $link;
 	}
@@ -741,7 +741,7 @@ JS
 		
 		$start = ($_REQUEST['ctf'][$this->Name()]['start'] - $this->pageSize < 0)  ? 0 : $_REQUEST['ctf'][$this->Name()]['start'] - $this->pageSize;
 		
-		$link = Controller::join_links($this->Link(), "ajax_refresh?ctf[{$this->Name()}][start]={$start}");
+		$link = Controller::join_links($this->Link(), "?ctf[{$this->Name()}][start]={$start}");
 		if($this->extraLinkParams) $link .= "&" . http_build_query($this->extraLinkParams);
 		return $link;
 	}
@@ -753,7 +753,7 @@ JS
 		if($currentStart >= $start-1) {
 			return null;
 		}
-		$link = Controller::join_links($this->Link(), "ajax_refresh?ctf[{$this->Name()}][start]={$start}");
+		$link = Controller::join_links($this->Link(), "?ctf[{$this->Name()}][start]={$start}");
 		if($this->extraLinkParams) $link .= "&" . http_build_query($this->extraLinkParams);
 		return $link;
 	}
@@ -766,7 +766,7 @@ JS
 			return null;
 		}
 		
-		$link = Controller::join_links($this->Link(), "ajax_refresh?ctf[{$this->Name()}][start]={$start}");
+		$link = Controller::join_links($this->Link(), "?ctf[{$this->Name()}][start]={$start}");
 		if($this->extraLinkParams) $link .= "&" . http_build_query($this->extraLinkParams);
 		return $link;
 	}
@@ -980,7 +980,8 @@ JS
 	}
 	
 	/**
-	 * @deprecated Please use the standard URL through Link() which gives you the FieldHolder
+	 * Returns the content of the TableListField as a piece of FormResponse javascript
+	 * @deprecated Please use the standard URL through Link() which gives you the FieldHolder as an HTML fragment.
 	 */
 	function ajax_refresh() {
 		// compute sourceItems here instead of Items() to ensure that
@@ -1244,7 +1245,7 @@ class TableListField_Item extends ViewableData {
 
 	function BaseLink() {
 		user_error("TableListField_Item::BaseLink() deprecated, use Link() instead", E_USER_NOTICE);
-		return $this->Link() . '/ajax_refresh';
+		return $this->Link();
 	}
 
 	function DeleteLink() {
