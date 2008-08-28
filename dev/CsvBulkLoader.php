@@ -87,7 +87,6 @@ class CsvBulkLoader extends BulkLoader {
 			}
 			$numRecords++;
 			$this->processRecord($indexedRow, $columnMap);
-			//$return->push();
 		}
 		
 		fclose($file);
