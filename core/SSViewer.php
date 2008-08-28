@@ -7,6 +7,7 @@
  *
  * Compiled templates are cached.  If you put ?flush=1 on your URL, it will force the template to be recompiled.  This
  * is a hack; the system should really detect when a page needs re-fetching.
+ *
  * @todo Fix the broken caching.
  * @package sapphire
  * @subpackage view
@@ -35,6 +36,9 @@ class SSViewer extends Object {
 	 * Pass the SilverStripe template to be used
 	 */
 	public function __construct($templateList) {
+		if (isset($_GET['flush']) && $_GET['flush'] == 'all') {
+			$this->flushTemplateCache();
+		}
 		if(substr((string) $templateList,-3) == '.ss') {
 			$this->chosenTemplates['main'] = $templateList;
 		} else {
@@ -43,7 +47,6 @@ class SSViewer extends Object {
 		
 			$this->chosenTemplates = array();
 			global $_TEMPLATE_MANIFEST;
-			// if($_REQUEST['showtemplate']) Debug::show($_TEMPLATE_MANIFEST);
 
 			foreach($templateList as $template) {
 				if(strpos($template,'/') !== false) list($templateFolder, $template) = explode('/', $template, 2);
@@ -139,23 +142,45 @@ class SSViewer extends Object {
 			return isset($_TEMPLATE_MANIFEST[$identifier]['main']) ? $_TEMPLATE_MANIFEST[$identifier]['main'] : null;
 		}
 	}
+	
+	/**
+	 * @return string content of template
+	 */
 	public static function getTemplateContent($identifier) {
 		return file_get_contents(SSViewer::getTemplateFile($identifier));
 	}
 	
 	/**
+	 * @ignore
+	 */
+	static private $flushed = false;
+	
+	/**
+	 * Clears all parsed template files in the cache folder.
+	 *
+	 * Can only be called once per request (there may be multiple SSViewer instances).
+	 */
+	private function flushTemplateCache() {
+		if (!self::$flushed) {
+			$dir = dir(TEMP_FOLDER);
+			while (false !== ($file = $dir->read())) {
+				if (strstr($file, '.cache')) { unlink(TEMP_FOLDER.'/'.$file); }
+			}
+			self::$flushed = true;
+		}
+	}
+	
+	/**
 	 * The process() method handles the "meat" of the template processing.
 	 */
-	 
 	public function process($item) {
 		SSViewer::$topLevel[] = $item;
-        
+
 		if(isset($this->chosenTemplates['main'])) {
 			$template = $this->chosenTemplates['main'];
 		} else {
 			$template = $this->chosenTemplates[ reset($dummy = array_keys($this->chosenTemplates)) ];
 		}
-
 		
 		if(isset($_GET['debug_profile'])) Profiler::mark("SSViewer::process", " for $template");
 		$cacheFile = TEMP_FOLDER . "/.cache" . str_replace(array('\\','/',':'),'.',realpath($template));
@@ -173,7 +198,7 @@ class SSViewer extends Object {
 			fclose($fh);
 
 			if(isset($_GET['debug_profile'])) Profiler::unmark("SSViewer::process - compile", " for $template");
-		}	
+		}
 	
 		
 		if(isset($_GET['showtemplate']) && !Director::isLive()) {
