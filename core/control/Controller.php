@@ -470,8 +470,10 @@ class Controller extends RequestHandlingData {
 				list($arg, $suffix) = explode('?',$arg,2);
 				$querystrings[] = $suffix;
 			}
-			if($result && substr($result,-1) != '/' && $arg[0] != '/') $result .= "/$arg";
-			else $result .= $arg;
+			if($arg) {
+				if($result && substr($result,-1) != '/' && $arg[0] != '/') $result .= "/$arg";
+				else $result .= $arg;
+			}
 		}
 		
 		if($querystrings) $result .= '?' . implode('&', $querystrings);

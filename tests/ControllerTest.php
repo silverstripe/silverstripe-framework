@@ -36,6 +36,32 @@ class ControllerTest extends SapphireTest {
 		$response = Director::test("ControllerTest_SecuredController/adminonly");
 		$this->assertEquals(403, $response->getStatusCode());
 	}
+	
+	/**
+	 * Test Controller::join_links()
+	 */
+	function testJoinLinks() {
+		/* Controller::join_links() will reliably join two URL-segments together so that they will be appropriately parsed by the URL parser */
+		$this->assertEquals("admin/crm/MyForm", Controller::join_links("admin/crm", "MyForm"));
+		$this->assertEquals("admin/crm/MyForm", Controller::join_links("admin/crm/", "MyForm"));
+
+		/* It will also handle appropriate combination of querystring variables */
+		$this->assertEquals("admin/crm/MyForm?flush=1", Controller::join_links("admin/crm/?flush=1", "MyForm"));
+		$this->assertEquals("admin/crm/MyForm?flush=1", Controller::join_links("admin/crm/", "MyForm?flush=1"));
+		$this->assertEquals("admin/crm/MyForm?field=1&other=1", Controller::join_links("admin/crm/?field=1", "MyForm?other=1"));
+		
+		/* It can handle arbitrary numbers of components, and will ignore empty ones */
+		$this->assertEquals("admin/crm/MyForm/", Controller::join_links("admin/", "crm", "", "MyForm/"));
+		$this->assertEquals("admin/crm/MyForm/?a=1&b=2", Controller::join_links("admin/?a=1", "crm", "", "MyForm/?b=2"));
+		
+		/* It can also be used to attach additional get variables to a link */
+		$this->assertEquals("admin/crm?flush=1", Controller::join_links("admin/crm", "?flush=1"));
+		$this->assertEquals("admin/crm?existing=1&flush=1", Controller::join_links("admin/crm?existing=1", "?flush=1"));
+		$this->assertEquals("admin/crm/MyForm?a=1&b=2&c=3", Controller::join_links("?a=1", "admin/crm", "?b=2", "MyForm?c=3"));
+		
+		/* Note, however, that it doesn't deal with duplicates very well. */
+		$this->assertEquals("admin/crm?flush=1&flush=1", Controller::join_links("admin/crm?flush=1", "?flush=1"));
+	}
 }
 
 /**
