@@ -113,9 +113,7 @@ abstract class BulkLoader extends ViewableData {
 	
 	function __construct($objectClass) {
 		$this->objectClass = $objectClass;
-		
-		ini_set('max_execution_time', 3600);
-		ini_set('memory_limit', '512M');
+		parent::__construct();
 	}
 	
 	/*
@@ -124,6 +122,8 @@ abstract class BulkLoader extends ViewableData {
 	 * @return array See {@link self::processAll()}
 	 */
 	public function load($filepath) {
+		ini_set('max_execution_time', 3600);
+		ini_set('memory_limit', '512M');
 		return $this->processAll($filepath);
 	}
 	
