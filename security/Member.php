@@ -70,7 +70,6 @@ class Member extends DataObject {
 		'FirstName',
 		'Surname',
 		'Email',
-		'Created',
 	);
 	
 	
