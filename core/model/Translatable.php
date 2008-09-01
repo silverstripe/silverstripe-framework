@@ -630,21 +630,6 @@ class Translatable extends DataObjectDecorator {
 		}
 	}
 
-	/**
-	 * Update the actions available in the CMS.
-	 * In particular, this removes all publication functionality when editing a translated page (because it's b0rked).
-	 */
-	function updateCMSActions(FieldSet &$fields) {
-		if (! $this->stat('enabled')) return false;
-
-		if(!self::is_default_lang()) {
-			$fields->removeByName('action_publish');
-			$fields->removeByName('action_rollback');
-			$fields->removeByName('action_unpublish');
-			$fields->removeByName('action_deletefromlive');
-		}
-	}
-
 	protected function duplicateOrReplaceFields(&$fields) {
 		$tasks = array(
 			'dup' => array(),
