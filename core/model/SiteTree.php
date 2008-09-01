@@ -1246,7 +1246,6 @@ class SiteTree extends DataObject {
 		}
 
 		if($this->stagesDiffer('Stage', 'Live')) {
-
 			if($this->isPublished() && $this->canEdit())	{
 				$rollback = FormAction::create('rollback', _t('SiteTree.BUTTONCANCELDRAFT', 'Cancel draft changes'), 'delete');
 				$rollback->describe(_t('SiteTree.BUTTONCANCELDRAFTDESC', "Delete your draft and revert to the currently published page"));
@@ -1255,9 +1254,13 @@ class SiteTree extends DataObject {
 			}
 		}
 
-		if($this->canPublish())
+		if($this->canPublish()) {
 			$actions[] = new FormAction('publish', _t('SiteTree.BUTTONSAVEPUBLISH', 'Save & Publish'));
-
+		}
+		
+		// getCMSActions() can be extended with updateCmsActions() on a decorator
+		$this->extend('updateCMSActions', $actions);
+		
 		return new DataObjectSet($actions);
 	}
 	
