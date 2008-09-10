@@ -308,6 +308,10 @@ class ViewableData extends Object implements IteratorAggregate {
 			$identifier = $fieldName;
 		}
 		
+		// Fix for PHP 5.3 - $args cannot be null
+		if(is_null($args))
+			$args=Array();
+		
 		if(isset($this->_object_cache[$identifier])) {
 			$fieldObj = $this->_object_cache[$identifier];
 		} else {
@@ -389,6 +393,10 @@ class ViewableData extends Object implements IteratorAggregate {
 				return $this->_xml_cache[$identifier];
 			}
 		}
+		
+		// Fix for PHP 5.3 - $args cannot be null
+		if(is_null($args))
+			$args=Array();
 		
 		// This will happen when cachedCall was called on an object; don't bother re-calling the method, just
 		// do the conversion step below				
@@ -528,6 +536,10 @@ class ViewableData extends Object implements IteratorAggregate {
 			}
 		}
 		
+		// Fix for PHP 5.3 - $args cannot be null
+		if(is_null($args))
+			$args=Array();
+				
 		if(isset($this->_natural_cache[$identifier])) {
 			if(isset($_GET['debug_profile'])) {
 				Profiler::unmark("template($funcName)", " on $this->class");
