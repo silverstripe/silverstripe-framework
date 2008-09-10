@@ -10,7 +10,7 @@ class Filesystem extends Object {
 	
 	public static $folder_create_mask = 02775;
 	
-	protected protected static $cache_folderModTime;
+	protected static $cache_folderModTime;
 	
 	/**
 	 * Create a folder, recursively
