@@ -25,5 +25,20 @@ class Float extends DBField {
 	public function scaffoldFormField($title = null) {
 		return new NumericField($this->name, $title);
 	}
+
+	/**
+	 * Return an encoding of the given value suitable for inclusion in a SQL statement.
+	 * If necessary, this should include quotes.
+	 */
+	function prepValueForDB($value) {
+		if($value === true) {
+			return 1;
+		} if(!$value || !is_numeric($value)) {
+			return "0";
+		} else {
+			return addslashes($value);
+		}
+	}
+	
 }
 ?>

@@ -101,19 +101,35 @@ abstract class DBField extends ViewableData {
 	}
 	
 	/**
+	 * Return an encoding of the given value suitable
+	 * for inclusion in a SQL statement. If necessary,
+	 * this should include quotes.
+	 * 
+	 * @param $value mixed The value to check
+	 * @return string The encoded value
+	 */
+	function prepValueForDB($value) {
+		if($value === null || $value === "" || $value === false) {
+			return "null";
+		} else {
+			return "'" . addslashes($value) . "'";
+		}
+	}	
+	
+	/**
 	 * Prepare the current field for usage in a 
 	 * database-manipulation (works on a manipulation reference).
 	 * 
 	 * Make value safe for insertion into
 	 * a SQL SET statement by applying addslashes() - 
-	 * can also be used to apply
-	 * special SQL-commands to the raw value
-	 * (e.g. for GIS functionality).
+	 * can also be used to apply special SQL-commands
+	 * to the raw value (e.g. for GIS functionality).
+	 * {@see prepValueForDB}
 	 * 
 	 * @param array $manipulation
 	 */
 	function writeToManipulation(&$manipulation) {
-		$manipulation['fields'][$this->name] = $this->hasValue() ? "'" . addslashes($this->value) . "'" : $this->nullValue();
+		$manipulation['fields'][$this->name] = $this->hasValue() ? $this->prepValueForDB($this->value) : $this->nullValue();
 	}
 	
 	/**
@@ -256,5 +272,6 @@ abstract class DBField extends ViewableData {
 </ul>
 DBG;
 	}
+	
 }
 ?>
