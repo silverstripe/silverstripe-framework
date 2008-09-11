@@ -149,16 +149,13 @@ class CompositeField extends FormField {
 	 * Add a new child field to the end of the set.
 	 */
 	public function push(FormField $field) {
-		//$this->rootFieldSet()->removeByName($field->Name());
 		$this->children->push($field);
 	}
 	public function insertBefore($field, $insertBefore) {
-		//$this->rootFieldSet()->removeByName($field->Name());
 		return $this->children->insertBefore($field, $insertBefore);
 	}
 
 	public function insertBeforeRecursive($field, $insertBefore, $level = 0) {
-		//$this->rootFieldSet()->removeByName($field->Name());
 		return $this->children->insertBeforeRecursive($field, $insertBefore, $level+1);
 	}
 	public function removeByName($fieldName) {
@@ -167,6 +164,11 @@ class CompositeField extends FormField {
 
 	public function replaceField($fieldName, $newField) {
 		return $this->children->replaceField($fieldName, $newField);
+	}
+
+	function rootFieldSet() {
+		if(is_object($this->containerFieldSet)) return $this->containerFieldSet->rootFieldSet();
+		else return $this->children;
 	}
 	
 	/**

@@ -531,7 +531,6 @@ HTML;
 	}
 	
 	function rootFieldSet() {
-		return $this->containerFieldSet->rootFieldSet();
 		if(is_object($this->containerFieldSet)) return $this->containerFieldSet->rootFieldSet();
 		else user_error("rootFieldSet() called on $this->class object without a containerFieldSet", E_USER_ERROR);
 	}
