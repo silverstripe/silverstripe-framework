@@ -17,6 +17,18 @@ class FieldSet extends DataObjectSet {
 	protected $sequentialSet;
 	protected $sequentialSaveableSet;
 	
+	public function __construct($items = null) {
+		// if the first parameter is not an array, or we have more than one parameter, collate all parameters to an array
+		// otherwise use the passed array
+		$itemsArr = (!is_array($items) || count(func_get_args()) > 1) ? func_get_args() : $items;
+		parent::__construct($itemsArr);
+		
+		foreach($this->items as $item) {
+			$item->setContainerFieldSet($this);
+		}
+		
+	}
+	
 	/**
 	 * Return a sequential set of all fields that have data.  This excludes wrapper composite fields
 	 * as well as heading / help text fields.
@@ -56,10 +68,11 @@ class FieldSet extends DataObjectSet {
 	/**
 	 * Add an extra field to a tab within this fieldset.
 	 * This is most commonly used when overloading getCMSFields()
-	 * @param tabName The name of the tab or tabset.  Subtabs can be referred to as TabSet.Tab or TabSet.Tab.Subtab.
+	 * 
+	 * @param string $tabName The name of the tab or tabset.  Subtabs can be referred to as TabSet.Tab or TabSet.Tab.Subtab.
 	 * This function will create any missing tabs.
-	 * @param field The {@link FormField} object to add to the end of that tab.
-	 * @param insertBefore The name of the field to insert before.  Optional.
+	 * @param FormField $field The {@link FormField} object to add to the end of that tab.
+	 * @param string $insertBefore The name of the field to insert before.  Optional.
 	 */
 	public function addFieldToTab($tabName, $field, $insertBefore = null) {
 		// This is a cache that must be flushed
@@ -67,14 +80,43 @@ class FieldSet extends DataObjectSet {
 
 		// Find the tab
 		$tab = $this->findOrMakeTab($tabName);
-		
+
 		// Add the field to the end of this set
 		if($insertBefore) $tab->insertBefore($field, $insertBefore);
 		else $tab->push($field);
 	}
+	
+	/**
+	 * Add a number of extra fields to a tab within this fieldset.
+	 * This is most commonly used when overloading getCMSFields()
+	 * 
+	 * @param string $tabName The name of the tab or tabset.  Subtabs can be referred to as TabSet.Tab or TabSet.Tab.Subtab.
+	 * This function will create any missing tabs.
+	 * @param array $fields An array of {@link FormField} objects.
+	 */
+	public function addFieldsToTab($tabName, $fields) {
+		$this->sequentialSet = null;
+
+		// Find the tab
+		$tab = $this->findOrMakeTab($tabName);
+		
+		// Add the fields to the end of this set
+		foreach($fields as $field) {
+			// Check if a field by the same name exists in this tab
+			if($tab->fieldByName($field->Name())) {
+				// It exists, so we need to replace the old one
+				$this->replaceField($field->Name(), $field);
+			} else {
+				$tab->push($field);
+			}
+		}
+	}	
 
 	/**
 	 * Remove the given field from the given tab in the field.
+	 * 
+	 * @param string $tabName The name of the tab
+	 * @param string $fieldName The name of the field
 	 */
 	public function removeFieldFromTab($tabName, $fieldName) {
 		// This is a cache that must be flushed
@@ -103,37 +145,20 @@ class FieldSet extends DataObjectSet {
 	}
 	
 	/**
-	 * Remove a field from this fieldset by name.
-	 * It musn't be buried in a composite field.--- changed
-	 * It could be buried in a composite field now. --- 5/09/2006
+	 * Remove a field from this FieldSet by Name.
+	 * The field could also be inside a CompositeField.
+	 * 
+	 * @param string $fieldName The name of the field
 	 */
 	public function removeByName($fieldName) {
 		foreach($this->items as $i => $child) {
 			if(is_object($child) && ($child->Name() == $fieldName || $child->Title() == $fieldName)) {
-				// unset($this->items[$i]);
 				array_splice( $this->items, $i, 1 );
 				break;
 			}	else if($child->isComposite()) $child->removeByName($fieldName);
 			
 		}
 	}
-	
-	/**
-	 * Add a number of extra fields to a tab within this fieldset.
-	 * This is most commonly used when overloading getCMSFields()
-	 * @param tabName The name of the tab or tabset.  Subtabs can be referred to as TabSet.Tab or TabSet.Tab.Subtab.
-	 * This function will create any missing tabs.
-	 * @param fields An array of {@link FormField} objects.
-	 */
-	public function addFieldsToTab($tabName, $fields) {
-		$this->sequentialSet = null;
-
-		// Find the tab
-		$tab = $this->findOrMakeTab($tabName);
-		
-		// Add the fields to the end of this set
-		foreach($fields as $field) $tab->push($field);
-	}	
 	
 	/**
 	 * Replace a single field with another.
@@ -159,9 +184,9 @@ class FieldSet extends DataObjectSet {
 		return false;
 	}
 	
-	
 	/**
 	 * Returns the specified tab object, creating it if necessary.
+	 * 
 	 * @param tabName The tab to return, in the form "Tab.Subtab.Subsubtab"
 	 */
 	protected function findOrMakeTab($tabName) {
@@ -174,7 +199,7 @@ class FieldSet extends DataObjectSet {
 			$currentPointer = $currentPointer->fieldByName($part);
 			// Create any missing tabs
 			if(!$currentPointer) {
-				if(is_a($parentPointer,'TabSet')) {
+				if(is_a($parentPointer, 'TabSet')) {
 					$currentPointer = new Tab($part);
 					$parentPointer->push($currentPointer);
 				} else {
@@ -184,7 +209,6 @@ class FieldSet extends DataObjectSet {
 		}
 		
 		return $currentPointer;
-  
 	}
 
 	/**
@@ -220,7 +244,8 @@ class FieldSet extends DataObjectSet {
 	 * @param string $name Name of the field to insert before
 	 */
 	public function insertBefore($item, $name) {
-		if($this->sequentialSet) $this->sequentialSet = null;
+		$this->beforeInsert($item);
+		$item->setContainerFieldSet($this);
 		
 		$i = 0;
 		foreach($this->items as $child) {
@@ -244,7 +269,9 @@ class FieldSet extends DataObjectSet {
 	 * @param int $level For internal use only, should not be passed
 	 */
 	public function insertBeforeRecursive($item, $name, $level = 0) {
-		if($this->sequentialSet) $this->sequentialSet = null;
+		$this->beforeInsert($item);
+		$item->setContainerFieldSet($this);
+		
 		$i = 0;
 		foreach($this->items as $child) {
 			if($name == $child->Name() || $name == $child->id) {
@@ -271,7 +298,8 @@ class FieldSet extends DataObjectSet {
 	 * @param string $name Name of the field to insert after
 	 */
 	public function insertAfter($item, $name) {
-		if($this->sequentialSet) $this->sequentialSet = null;
+		$this->beforeInsert($item);
+		$item->setContainerFieldSet($this);
 		
 		$i = 0;
 		foreach($this->items as $child) {
@@ -291,14 +319,24 @@ class FieldSet extends DataObjectSet {
 	 * @param string $key An option array key (field name)
 	 */
 	public function push($item, $key = null) {
-		if($this->sequentialSet) $this->sequentialSet = null;
+		$this->beforeInsert($item);
+		$item->setContainerFieldSet($this);
 		return parent::push($item, $key = null);
 	}
 
 	/**
+	 * Handler method called before the FieldSet is going to be manipulated.
+	 */
+	function beforeInsert($item) {
+		if($this->sequentialSet) $this->sequentialSet = null;
+		$this->rootFieldSet()->removeByName($item->Name());
+	}
+		
+	
+	/**
 	 * Set the Form instance for this FieldSet.
 	 *
-	 * @param Form $form
+	 * @param Form $form The form to set this FieldSet to
 	 */
 	public function setForm($form) {
 		foreach($this as $field) $field->setForm($form);
@@ -306,7 +344,8 @@ class FieldSet extends DataObjectSet {
 	
 	/**
 	 * Load the given data into this form.
-	 * @param data An map of data to load into the FieldSet.
+	 * 
+	 * @param data An map of data to load into the FieldSet
 	 */
 	public function setValues($data) {
 		foreach($this->dataFields() as $field) {
@@ -346,6 +385,18 @@ class FieldSet extends DataObjectSet {
 			$newFields->push($field->transform($trans));
 		}
 		return $newFields;
+	}
+
+	/**
+	 * Returns the root field set that this belongs to
+	 */
+	function rootFieldSet() {
+		if($this->containerField) return $this->containerField->rootFieldSet();
+		else return $this;
+	}
+	
+	function setContainerField($field) {
+		$this->containerField = $field;
 	}
 	
 	/**

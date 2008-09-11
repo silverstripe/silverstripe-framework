@@ -143,6 +143,26 @@ class FieldSetTest extends SapphireTest {
 		/* We have 1 field inside our tab */
 		$this->assertEquals(1, $tab->Fields()->Count());		
 	}
+
+	function testReplaceAFieldInADifferentTab() {
+		/* A FieldSet gets created with a TabSet and some field objects */
+		$fieldSet = new FieldSet(
+			new TabSet('Root', $main = new Tab('Main',
+				new TextField('A'),
+				new TextField('B')
+			), $other = new Tab('Other',
+				new TextField('C'),
+				new TextField('D')
+			))
+		);		
+		
+		/* The field "A" gets added to the FieldSet we just created created */
+		$fieldSet->addFieldToTab('Root.Other', $newA = new TextField('A', 'New Title'));
+		
+		/* The field named "A" has been removed from the Main tab to make way for our new field named "A" in Other tab. */
+		$this->assertEquals(1, $main->Fields()->Count());
+		$this->assertEquals(3, $other->Fields()->Count());
+	}
 	
 	/**
 	 * Test finding a field that's inside a tabset, within another tab.
@@ -252,9 +272,71 @@ class FieldSetTest extends SapphireTest {
 		/* The position of the Title field should be at number 2 */
 		$this->assertEquals(2, $fields->fieldByName('Title')->Pos());
 	}
+
+	function testRootFieldSet() {
+		/* Given a nested set of FormField, CompositeField, and FieldSet objects */
+		$fieldSet = new FieldSet(
+			$root = new TabSet("Root", 
+				$main = new Tab("Main",
+					$a = new TextField("A"),
+					$b = new TextField("B")
+				)
+			)
+		);
+		
+		/* rootFieldSet() should always evaluate to the same object: the topmost fieldset */		
+		$this->assertSame($fieldSet, $fieldSet->rootFieldSet());
+		$this->assertSame($fieldSet, $root->rootFieldSet());
+		$this->assertSame($fieldSet, $main->rootFieldSet());
+		$this->assertSame($fieldSet, $a->rootFieldSet());
+		$this->assertSame($fieldSet, $b->rootFieldSet());
+		
+		/* If we push additional fields, they should also have the same rootFieldSet() */
+		$root->push($other = new Tab("Other"));
+		$other->push($c = new TextField("C"));
+		$root->push($third = new Tab("Third", $d = new TextField("D")));
+
+		$this->assertSame($fieldSet, $other->rootFieldSet());
+		$this->assertSame($fieldSet, $third->rootFieldSet());
+		$this->assertSame($fieldSet, $c->rootFieldSet());
+		$this->assertSame($fieldSet, $d->rootFieldSet());
+	}
+	
+	function testAddingDuplicateReplacesOldField() {
+		/* Given a nested set of FormField, CompositeField, and FieldSet objects */
+		$fieldSet = new FieldSet(
+			$root = new TabSet("Root", 
+				$main = new Tab("Main",
+					$a = new TextField("A"),
+					$b = new TextField("B")
+				)
+			)
+		);
+		
+		/* Adding new fields of the same names should replace the original fields */
+		$newA = new TextField("A", "New A");
+		$newB = new TextField("B", "New B");
+		
+		$fieldSet->addFieldToTab("Root.Main", $newA);
+		$fieldSet->addFieldToTab("Root.Other", $newB);
+
+		$this->assertSame($newA, $fieldSet->dataFieldByName("A"));
+		$this->assertSame($newB, $fieldSet->dataFieldByName("B"));
+		$this->assertEquals(1, $main->Fields()->Count());
+		
+		/* Pushing fields on the end of the field set should remove them from the tab */
+		$thirdA = new TextField("A", "Third A");
+		$thirdB = new TextField("B", "Third B");
+		$fieldSet->push($thirdA);
+		$fieldSet->push($thirdB);
+
+		$this->assertSame($thirdA, $fieldSet->fieldByName("A"));
+		$this->assertSame($thirdB, $fieldSet->fieldByName("B"));
+		
+		$this->assertEquals(0, $main->Fields()->Count());
+	}
 	
 	/**
-	 * @TODO test pushing a field replacing an existing one. (duplicate)
 	 * @TODO the same as above with insertBefore() and insertAfter()
 	 */
 	

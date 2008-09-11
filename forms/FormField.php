@@ -41,6 +41,12 @@ class FormField extends RequestHandlingData {
 	 * @var int
 	 */
 	protected $tabIndex;
+
+	/**
+	 * Stores a reference to the FieldSet that contains this object.
+	 * @var FieldSet
+	 */ 
+	protected $containerFieldSet;
 	
 	/**
 	 * @var $readonly boolean
@@ -513,6 +519,21 @@ HTML;
 		$label = preg_replace("/([a-z]+)([A-Z])/","$1 $2", $label);
 		
 		return $label;
+	}
+	
+	/**
+	 * Set the fieldset that contains this field. 
+	 *
+	 * @param FieldSet $containerFieldSet
+	 */ 
+	function setContainerFieldSet($containerFieldSet) {
+		$this->containerFieldSet = $containerFieldSet;
+	}
+	
+	function rootFieldSet() {
+		return $this->containerFieldSet->rootFieldSet();
+		if(is_object($this->containerFieldSet)) return $this->containerFieldSet->rootFieldSet();
+		else user_error("rootFieldSet() called on $this->class object without a containerFieldSet", E_USER_ERROR);
 	}
 	
 	// ###################
