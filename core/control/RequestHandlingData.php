@@ -165,6 +165,11 @@ class RequestHandlingData extends ViewableData {
 		
 		if($action == 'index') return true;
 		
+		// Make checkAccessAction case-insensitive
+		$action = strtolower($action);
+		foreach($access as $k => $v) $newAccess[strtolower($k)] = strtolower($v);
+		$access = $newAccess;
+				
 		if(isset($access[$action])) {
 			$test = $access[$action];
 			if($test === true) return true;

@@ -115,6 +115,13 @@ class RequestHandlingTest_Form extends Form {
 		"GET " => "handleGet",
 	);
 	
+	// These are a different case from those in url_handlers to confirm that it's all case-insensitive
+	static $allowed_actions = array(
+		'handlesubmission',
+		'handlefield',
+		'handleget',
+	);
+	
 	function handleField($request) {
 		return $this->dataFieldByName($request->param('FieldName'));
 	}
@@ -137,6 +144,13 @@ class RequestHandlingTest_FormField extends FormField {
 		"POST " => "handleInPlaceEdit",
 		'' => 'handleField',
 		'$Action' => '$Action',
+	);
+
+	// These contain uppercase letters to test that allowed_actions doesn't need to be all lowercase
+	static $allowed_actions = array(
+		'TEST',
+		'handleField',
+		'handleInPLACEEDIT',
 	);
 	
 	function test() {
