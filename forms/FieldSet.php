@@ -149,14 +149,19 @@ class FieldSet extends DataObjectSet {
 	 * The field could also be inside a CompositeField.
 	 * 
 	 * @param string $fieldName The name of the field
+	 * @param boolean $dataFieldOnly If this is true, then a field will only
+	 * be removed if it's a data field.  Dataless fields, such as tabs, will
+	 * be left as-is.
 	 */
-	public function removeByName($fieldName) {
+	public function removeByName($fieldName, $dataFieldOnly = false) {
 		foreach($this->items as $i => $child) {
-			if(is_object($child) && ($child->Name() == $fieldName || $child->Title() == $fieldName)) {
+			if(is_object($child) && ($child->Name() == $fieldName || $child->Title() == $fieldName) && (!$dataFieldOnly || $child->hasData())) {
+				if($child->class == 'Tab' && !$dataFieldOnly) Debug::backtrace();
 				array_splice( $this->items, $i, 1 );
 				break;
-			}	else if($child->isComposite()) $child->removeByName($fieldName);
-			
+			} else if($child->isComposite()) {
+				$child->removeByName($fieldName, $dataFieldOnly);
+			}
 		}
 	}
 	
@@ -329,7 +334,7 @@ class FieldSet extends DataObjectSet {
 	 */
 	function beforeInsert($item) {
 		if($this->sequentialSet) $this->sequentialSet = null;
-		$this->rootFieldSet()->removeByName($item->Name());
+		$this->rootFieldSet()->removeByName($item->Name(), true);
 	}
 		
 	

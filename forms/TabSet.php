@@ -10,6 +10,7 @@ class TabSet extends CompositeField {
 	public function __construct($id) {
 		$tabs = func_get_args();
 		$this->id = array_shift($tabs);
+		$this->name = $this->id;
 		$this->title = $this->id;
 		
 		foreach($tabs as $tab) $tab->setTabSet($this);
@@ -81,8 +82,8 @@ class TabSet extends CompositeField {
 		return $level;
 	}
 	
-	public function removeByName( $tabName ) {
-		parent::removeByName( $tabName );
+	public function removeByName( $tabName, $dataFieldOnly = false ) {
+		parent::removeByName( $tabName, $dataFieldOnly );
 	}
 }
 ?>

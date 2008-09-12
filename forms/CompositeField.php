@@ -158,8 +158,19 @@ class CompositeField extends FormField {
 	public function insertBeforeRecursive($field, $insertBefore, $level = 0) {
 		return $this->children->insertBeforeRecursive($field, $insertBefore, $level+1);
 	}
-	public function removeByName($fieldName) {
-		$this->children->removeByName($fieldName);
+
+
+	/**
+	 * Remove a field from this CompositeField by Name.
+	 * The field could also be inside a CompositeField.
+	 * 
+	 * @param string $fieldName The name of the field
+	 * @param boolean $dataFieldOnly If this is true, then a field will only
+	 * be removed if it's a data field.  Dataless fields, such as tabs, will
+	 * be left as-is.
+	 */
+	public function removeByName($fieldName, $dataFieldOnly = false) {
+		$this->children->removeByName($fieldName, $dataFieldOnly);
 	}
 
 	public function replaceField($fieldName, $newField) {

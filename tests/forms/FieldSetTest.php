@@ -344,9 +344,27 @@ class FieldSetTest extends SapphireTest {
 				)
 			)
 		);
-		
+
+		/* Add a field to a non-existent tab, and it will be created */
 		$fieldSet->addFieldToTab("Root.Other", $b = new TextField("B"));
+		$this->assertNotNull($fieldSet->fieldByName('Root')->fieldByName('Other'));
 		$this->assertSame($b, $fieldSet->fieldByName('Root')->fieldByName('Other')->Fields()->First());
+	}
+
+	function testAddingFieldToATabWithTheSameNameAsTheField() {
+		$fieldSet = new FieldSet(
+			$root = new TabSet("Root", 
+				$main = new Tab("Main",
+					$a = new TextField("A")
+				)
+			)
+		);
+
+		/* If you have a tab with the same name as the field, then technically it's a duplicate. However, it's allowed because
+		tab isn't a data field.  Only duplicate data fields are problematic */
+		$fieldSet->addFieldToTab("Root.MyName", $myName = new TextField("MyName"));
+		$this->assertNotNull($fieldSet->fieldByName('Root')->fieldByName('MyName'));
+		$this->assertSame($myName, $fieldSet->fieldByName('Root')->fieldByName('MyName')->Fields()->First());
 	}
 	
 	/**
