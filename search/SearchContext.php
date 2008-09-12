@@ -143,6 +143,7 @@ class SearchContext extends Object {
 		
 		
 		$query->connective = $this->connective;
+		$query->distinct = true;
 		
 		return $query;
 	}
