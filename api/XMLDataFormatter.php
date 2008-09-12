@@ -42,6 +42,8 @@ class XMLDataFormatter extends DataFormatter {
 		$json = "<$className href=\"$objHref.xml\">\n";
 		foreach($this->getFieldsForObj($obj) as $fieldName => $fieldType) {
 			$fieldValue = $obj->$fieldName;
+			if(!mb_check_encoding($fieldValue,'utf-8')) $fieldValue = "(data is badly encoded)";
+			
 			if(is_object($fieldValue) && is_subclass_of($fieldValue, 'Object') && $fieldValue->hasMethod('toXML')) {
 				$json .= $fieldValue->toXML();
 			} else {

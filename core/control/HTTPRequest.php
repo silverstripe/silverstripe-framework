@@ -67,6 +67,10 @@ class HTTPRequest extends Object implements ArrayAccess {
 	function isDELETE() {
 		return $this->httpMethod == 'DELETE';
 	}	
+
+	function isHEAD() {
+		return $this->httpMethod == 'HEAD';
+	}	
 	
 	function setBody($body) {
 		$this->body = $body;

@@ -1025,7 +1025,6 @@ class DataObject extends ViewableData implements DataObjectInterface {
 				
 			if($componentClass) {
 				$query = $this->getManyManyComponentsQuery($componentName, $filter, $sort, $join, $limit);
-
 				$records = $query->execute();
 				$result = $this->buildDataObjectSet($records, "ComponentSet", $query, $componentBaseClass);
 				if($result) $result->parseQueryLimit($query); // for pagination support
@@ -1077,6 +1076,22 @@ class DataObject extends ViewableData implements DataObjectInterface {
 			"INNER JOIN `$table` ON `$table`.$componentField = `$componentBaseClass`.ID" // join
 		);
 		array_unshift($query->select, "`$table`.*");
+
+		// FIXME: We were having database crashing troubles with GIS content being accessed from with the link
+		// tracking join.  In order to fix it, we're altering the query just for this many-many relation.
+		// The more long-term fix to this is to let developers specify which data columns they are actually interested
+		// in, and thereby optimise the query in a more loosely coupled fashion.
+		if($table == "SiteTree_LinkTracking") {
+			$filteredSelect = array();
+			foreach($query->select as $item) {
+				if(strpos($item,'SiteTree') !== false) $filteredSelect[] = $item;
+			}
+			$query->select = $filteredSelect;
+			$query->from = array(
+				"SiteTree" => $query->from["SiteTree"],
+				$query->from[0],
+			);
+		}
 
 		if($filter) $query->where[] = $filter;
 		if($join) $query->from[] = $join;
@@ -1548,7 +1563,7 @@ class DataObject extends ViewableData implements DataObjectInterface {
 			}
 		}
 		
-		foreach($fields as $name => $level) {
+		if ($fields) foreach($fields as $name => $level) {
 			if(!isset($this->original[$name])) continue;
 			$changedFields[$name] = array(
 				'before' => $this->original[$name],

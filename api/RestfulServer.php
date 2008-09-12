@@ -98,7 +98,7 @@ class RestfulServer extends Controller {
 		$member = $this->authenticate();
 
 		// handle different HTTP verbs
-		if($this->request->isGET()) return $this->getHandler($className, $id, $relation);
+		if($this->request->isGET() || $this->request->isHEAD()) return $this->getHandler($className, $id, $relation);
 		if($this->request->isPOST()) return $this->postHandler($className, $id, $relation);
 		if($this->request->isPUT()) return $this->putHandler($className, $id, $relation);
 		if($this->request->isDELETE()) return $this->deleteHandler($className, $id, $relation);
@@ -186,6 +186,9 @@ class RestfulServer extends Controller {
 		if($obj instanceof DataObjectSet) {
 			$responseFormatter->setTotalSize($query->unlimitedRowCount());
 			return $responseFormatter->convertDataObjectSet($obj);
+		} else if(!$obj) {
+			$responseFormatter->setTotalSize(0);
+			return $responseFormatter->convertDataObjectSet(new DataObjectSet());
 		} else {
 			return $responseFormatter->convertDataObject($obj);
 		}
@@ -394,22 +397,22 @@ class RestfulServer extends Controller {
 	 * @return SQLQuery|boolean
 	 */
 	protected function getObjectRelationQuery($obj, $params, $sort, $limit, $relationName) {
-		if($relationClass = $obj->many_many($relationName)) {
+		if($obj->hasMethod("{$relationName}Query")) {
+			// @todo HACK Switch to ComponentSet->getQuery() once we implement it (and lazy loading)
+			$query = $obj->{"{$relationName}Query"}(null, $sort, null, $limit);
+			$relationClass = $obj->{"{$relationName}Class"}();
+		} elseif($relationClass = $obj->many_many($relationName)) {
 			$query = $obj->getManyManyComponentsQuery($relationName);
 		} elseif($relationClass = $obj->has_many($relationName)) {
 			$query = $obj->getComponentsQuery($relationName);
 		} elseif($relationClass = $obj->has_one($relationName)) {
 			$query = null;
-		} elseif($obj->hasMethod("{$relation}Query")) {
-			// @todo HACK Switch to ComponentSet->getQuery() once we implement it (and lazy loading)
-			$query = $obj->{"{$relation}Query"}(null, $sort, null, $limit);
-			$relationClass = $obj->{"{$relation}Class"}();
 		} else {
 			return false;
 		}
 
 		// get all results
- 		return $this->getSearchQuery($relationClass, $params, $sort, $limit);
+ 		return $this->getSearchQuery($relationClass, $params, $sort, $limit, $query);
 	}
 	
 	protected function permissionFailure() {
