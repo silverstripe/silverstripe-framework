@@ -57,6 +57,7 @@ class HTTPResponse extends Object {
 	);
 	
 	protected $statusCode = 200;
+	protected $statusDescription = "OK";
 	
 	/**
 	 * HTTP Headers like "Content-Type: text/xml"
@@ -71,9 +72,24 @@ class HTTPResponse extends Object {
 	 */
 	protected $body = null;
 	
-	function setStatusCode($code) {
+	/**
+	 * Create a new HTTP response
+	 * @param $body The body of the response
+	 * @param $statusCode The numeric status code - 200, 404, etc
+	 * @param $statusDescription The text to be given alongside the status code.  This can be accessed by javascript
+	 */
+	function __construct($body = null, $statusCode = null, $statusDescription = null) {
+		parent::__construct();
+		$this->body = $body;
+		if($statusCode) $this->setStatusCode($statusCode, $statusDescription);
+	}
+	
+	function setStatusCode($code, $description = null) {
 		if(isset(self::$status_codes[$code])) $this->statusCode = $code;
 		else user_error("Unrecognised HTTP status code '$code'", E_USER_WARNING);
+		
+		if($description) $this->statusDescription = $description;
+		else $this->statusDescription = self::$status_codes[$code];
 	}
 	
 	function getStatusCode() {
@@ -84,11 +100,7 @@ class HTTPResponse extends Object {
 	 * @return string Description for a HTTP status code
 	 */
 	function getStatusDescription() {
-		if(isset(self::$status_codes[$this->statusCode])) {
-			return self::$status_codes[$this->statusCode];
-		} else {
-			return false;
-		}
+		return $this->statusDescription;
 	}
 	
 	/**
@@ -165,7 +177,7 @@ class HTTPResponse extends Object {
 			<script type=\"text/javascript\">setTimeout('window.location.href = \"$url\"', 50);</script>";
 		} else {
 			if(!headers_sent()) {
-				header("HTTP/1.1 $this->statusCode " . self::$status_codes[$this->statusCode]);
+				header("HTTP/1.1 $this->statusCode " . $this->getStatusDescription());
 				foreach($this->headers as $header => $value) {
 					header("$header: $value");
 				}

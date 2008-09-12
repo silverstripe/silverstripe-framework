@@ -227,7 +227,7 @@ class Debug {
 		self::log_error_if_necessary( $errno, $errstr, $errfile, $errline, $errcontext, "Warning");
 
 		if(Director::isDev()) {
-		  self::showError($errno, $errstr, $errfile, $errline, $errcontext);
+		  self::showError($errno, $errstr, $errfile, $errline, $errcontext, "Warning");
 		}
 	}
 
@@ -247,7 +247,7 @@ class Debug {
 		self::log_error_if_necessary( $errno, $errstr, $errfile, $errline, $errcontext, "Error");
 		
 		if(Director::isDev() || Director::is_cli()) {
-			Debug::showError($errno, $errstr, $errfile, $errline, $errcontext);
+			Debug::showError($errno, $errstr, $errfile, $errline, $errcontext, "Error");
 
 		} else {
 			Debug::friendlyError($errno, $errstr, $errfile, $errline, $errcontext);
@@ -266,7 +266,7 @@ class Debug {
 	 * @param unknown_type $errcontext
 	 */
 	static function friendlyError($errno, $errstr, $errfile, $errline, $errcontext) {
-		header("HTTP/1.0 500 Internal server error");
+		header("HTTP/1.0 500 There has been an error");
 
 		if(Director::is_ajax()) {
 			echo "There has been an error";
@@ -298,8 +298,12 @@ class Debug {
 	 * @param unknown_type $errline
 	 * @param unknown_type $errcontext
 	 */
-	static function showError($errno, $errstr, $errfile, $errline, $errcontext) {
-		if(!headers_sent()) header("HTTP/1.0 500 Internal server error");
+	static function showError($errno, $errstr, $errfile, $errline, $errcontext, $errtype) {
+		if(!headers_sent()) {
+			$errText = "$errtype: \"$errstr\" at line $errline of $errfile";
+			$errText = str_replace(array("\n","\r")," ",$errText);
+			header("HTTP/1.0 500 $errText");
+		}
 		if(Director::is_ajax()) {
 			echo "ERROR:Error $errno: $errstr\n At l$errline in $errfile\n";
 			Debug::backtrace();
