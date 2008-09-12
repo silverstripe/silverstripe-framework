@@ -179,16 +179,16 @@ class ConfirmedPasswordField extends FormField {
 		
 		if(($this->minLength || $this->maxLength)) {
 			if($this->minLength && $this->maxLength) {
-				$limit = "{$this->minLength},{$this->maxLength}";
+				$limit = "{{$this->minLength},{$this->maxLength}}";
 				$errorMsg = sprintf(_t('ConfirmedPasswordField.BETWEEN', 'Passwords must be %s to %s characters long.'), $this->minLength, $this->maxLength);
 			} elseif($this->minLength) {
-				$limit = "{$this->minLength}";
+				$limit = "{{$this->minLength}}.*";
 				$errorMsg = sprintf(_t('ConfirmedPasswordField.ATLEAST', 'Passwords must be at least %s characters long.'), $this->minLength);
 			} elseif($this->maxLength) {
-				$limit = "0,{$this->maxLength}";
+				$limit = "{0,{$this->maxLength}}";
 				$errorMsg = sprintf(_t('ConfirmedPasswordField.MAXIMUM', 'Passwords must be at most %s characters long.'), $this->maxLength);
 			}
-			$limitRegex = '/^.{' . $limit . '}$/';
+			$limitRegex = '/^.' . $limit . '$/';
 			$jsTests .= "
 			if(passEl.value && !passEl.value.match({$limitRegex})) {
 				validationError(confEl, \"{$errorMsg}\", \"error\");
@@ -279,16 +279,16 @@ JS;
 		// lengths
 		if(($this->minLength || $this->maxLength)) {
 			if($this->minLength && $this->maxLength) {
-				$limit = "{$this->minLength},{$this->maxLength}";
+				$limit = "{{$this->minLength},{$this->maxLength}}";
 				$errorMsg = sprintf(_t('ConfirmedPasswordField.BETWEEN', 'Passwords must be %s to %s characters long.'), $this->minLength, $this->maxLength);
 			} elseif($this->minLength) {
-				$limit = "{$this->minLength}";
+				$limit = "{{$this->minLength}}.*";
 				$errorMsg = sprintf(_t('ConfirmedPasswordField.ATLEAST', 'Passwords must be at least %s characters long.'), $this->minLength);
 			} elseif($this->maxLength) {
-				$limit = "0,{$this->maxLength}";
+				$limit = "{0,{$this->maxLength}}";
 				$errorMsg = sprintf(_t('ConfirmedPasswordField.MAXIMUM', 'Passwords must be at most %s characters long.'), $this->maxLength);
 			}
-			$limitRegex = '/^.{' . $limit . '}$/';
+			$limitRegex = '/^.' . $limit . '$/';
 			if(!empty($value) && !preg_match($limitRegex,$value)) {
 				$validator->validationError('Password', $errorMsg, 
 					"validation", 
