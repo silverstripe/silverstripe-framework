@@ -58,7 +58,7 @@ class File extends DataObject {
 	}
 
 	function TreeTitle() {
-		return $this->Title;
+		return $this->Name;
 	}
 
 	/**
