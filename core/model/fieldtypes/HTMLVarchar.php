@@ -9,7 +9,7 @@
 class HTMLVarchar extends Varchar {
 	
 	public function scaffoldFormField($title = null) {
-		return new HTMLOneLineField($this->name, $title);
+		return new HtmlOneLineField($this->name, $title);
 	}
 	
 	public function scaffoldSearchField($title = null) {
