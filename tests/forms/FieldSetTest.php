@@ -335,6 +335,19 @@ class FieldSetTest extends SapphireTest {
 		
 		$this->assertEquals(0, $main->Fields()->Count());
 	}
+
+	function testAddingFieldToNonExistentTabCreatesThatTab() {
+		$fieldSet = new FieldSet(
+			$root = new TabSet("Root", 
+				$main = new Tab("Main",
+					$a = new TextField("A")
+				)
+			)
+		);
+		
+		$fieldSet->addFieldToTab("Root.Other", $b = new TextField("B"));
+		$this->assertSame($b, $fieldSet->fieldByName('Root')->fieldByName('Other')->Fields()->First());
+	}
 	
 	/**
 	 * @TODO the same as above with insertBefore() and insertAfter()
