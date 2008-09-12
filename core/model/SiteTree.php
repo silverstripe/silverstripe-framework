@@ -783,6 +783,8 @@ class SiteTree extends DataObject {
 			$tags .= $this->ExtraMeta . "\n";
 		} 
 		$tags .= "<meta http-equiv=\"Content-Language\" content=\"". Translatable::current_lang() ."\"/>\n";
+		
+		$this->extend('updateMetaTags', $tags);
 
 		return $tags;
 	}
