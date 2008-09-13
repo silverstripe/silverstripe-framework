@@ -138,6 +138,14 @@ table.CMSList tbody td.current td {
 	background: none;
 }
 
+/**
+ * Show a loading indication on a TableListField row
+ */
+.TableListField tr.loading td.first {
+    padding-left: 22px;
+    background: url(../../cms/images/network-save.gif) 3px 2px no-repeat;
+}
+
 .right form .TableField span.readonly {
 	border: 0;
 	background: none;
