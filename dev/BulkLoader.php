@@ -119,7 +119,7 @@ abstract class BulkLoader extends ViewableData {
 	/*
 	 * Load the given file via {@link self::processAll()} and {@link self::processRecord()}.
 	 *  
-	 * @return array See {@link self::processAll()}
+	 * @return BulkLoader_Result See {@link self::processAll()}
 	 */
 	public function load($filepath) {
 		ini_set('max_execution_time', 3600);
@@ -146,12 +146,8 @@ abstract class BulkLoader extends ViewableData {
 	 * 
 	 * @param string $filepath Absolute path to the file we're importing (with UTF8 content)
 	 * @param boolean $preview If true, we'll just output a summary of changes but not actually do anything
-	 * @return int Number of affected records
-	 * It used to return this, but it was never used and memory inefficient. array Information about the import process, with each row matching a created or updated DataObject.
-	 * 	Array structure:
-	 *  - 'id': Database id of the created or updated record
-	 *  - 'action': Performed action ('create', 'update') 
-	 *  - 'message': free-text string that can optionally provide some more information about what changes have
+	 * @return BulkLoader_Result A collection of objects which are either created, updated or deleted.
+	 * 'message': free-text string that can optionally provide some more information about what changes have
 	 */
 	abstract protected function processAll($filepath, $preview = false);
 	
@@ -161,10 +157,10 @@ abstract class BulkLoader extends ViewableData {
 	 * 
 	 * @param array $record An map of the data, keyed by the header field defined in {@link self::$columnMap}
 	 * @param array $columnMap
+	 * @param $result BulkLoader_Result (passed as reference)
 	 * @param boolean $preview
-	 * @return ArrayData @see self::processAll()
 	 */
-	abstract protected function processRecord($record, $columnMap, $preview = false);
+	abstract protected function processRecord($record, $columnMap, &$result, $preview = false);
 	
 	/**
 	 * Return a FieldSet containing all the options for this form; this
@@ -229,5 +225,148 @@ abstract class BulkLoader extends ViewableData {
 		return (empty($val));
 	}
 	
+}
+
+/**
+ * Encapsulates the result of a {@link BulkLoader} import
+ * (usually through the {@link BulkLoader->processAll()} method).
+ * 
+ * @todo Refactor to support lazy-loaded DataObjectSets once they are implemented.
+ *
+ * @package cms
+ * @subpackage bulkloading
+ * @author Ingo Schommer, Silverstripe Ltd. (<firstname>@silverstripe.com)
+ */
+class BulkLoader_Result extends Object {
+	
+	/**
+	 * @var array Stores a map of ID and ClassNames
+	 * which can be reconstructed to DataObjects.
+	 * As imports can get large we just store enough
+	 * information to reconstruct the objects on demand.
+	 * Optionally includes a status message specific to
+	 * the import of this object. This information is stored
+	 * in a custom object property "_BulkLoaderMessage".
+	 *
+	 * @example array(array('ID'=>1, 'ClassName'=>'Member', 'Message'=>'Updated existing record based on ParentID relation'))
+	 */   
+	protected $created = array();
+   
+	/**
+	 * @var array (see {@link $created})
+	 */
+	protected $updated = array();
+   
+	/**
+	 * @var array (see {@link $created})
+	 */
+	protected $deleted = array();
+   
+	/**
+	 * Returns the count of all objects which were
+	 * created or updated.
+	 *
+	 * @return int
+	 */
+	public function Count() {
+		return count($this->created) + count($this->updated);
+	}
+	
+	/**
+	 * @return int
+	 */
+	public function CreatedCount() {
+		return count($this->created);
+	}
+	
+	/**
+	 * @return int
+	 */
+	public function UpdatedCount() {
+		return count($this->updated);
+	}
+	
+	/**
+	 * @return int
+	 */
+	public function DeletedCount() {
+		return count($this->deleted);
+	}
+	
+	/**
+	 * Returns all created objects. Each object might
+	 * contain specific importer feedback in the "_BulkLoaderMessage" property.
+	 *
+	 * @return DataObjectSet
+	 */
+	public function Created() {
+		return $this->mapToDataObjectSet($this->created);
+	}
+	
+	/**
+	 * @return DataObjectSet
+	 */
+	public function Updated() {
+		return $this->mapToDataObjectSet($this->updated);
+	}
+	
+	/**
+	 * @return DataObjectSet
+	 */
+	public function Deleted() {
+		return $this->mapToDataObjectSet($this->deleted);
+	}
+	
+	/**
+	 * @param $obj DataObject
+	 * @param $message string
+	 */
+	public function addCreated($obj, $message = null) {
+		$this->created[] = array(
+			'ID' => $obj->ID,
+			'ClassName' => $obj->class,
+			'Message' => $message
+		);
+	}
+	
+	/**
+	 * @param $obj DataObject
+	 * @param $message string
+	 */
+	public function addUpdated($obj, $message = null) {
+		$this->updated[] = array(
+			'ID' => $obj->ID,
+			'ClassName' => $obj->class,
+			'Message' => $message
+		);
+	}
+	
+	/**
+	 * @param $obj DataObject
+	 * @param $message string
+	 */
+	public function addDeleted($obj, $message = null) {
+		$this->deleted[] = array(
+			'ID' => $obj->ID,
+			'ClassName' => $obj->class,
+			'Message' => $message
+		);
+	}
+	
+	/**
+	 * @param $arr Array containing ID and ClassName maps
+	 * @return DataObjectSet
+	 */
+	protected function mapToDataObjectSet($arr) {
+		$set = new DataObjectSet();
+		foreach($arr as $arrItem) {
+			$obj = DataObject::get_by_id($arrItem['ClassName'], $arrItem['ID']);
+			$obj->_BulkLoaderMessage = $arrItem['Message'];
+			if($obj) $set->push($obj);
+		}
+		
+		return $set;
+	}
+   
 }
 ?>

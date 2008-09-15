@@ -20,7 +20,7 @@ class CsvBulkLoaderTest extends SapphireTest {
 		$results = $loader->load($filepath);
 
 		// Test that right amount of columns was imported
-		$this->assertEquals($results, $compareCount-1, 'Test correct count of imported data');
+		$this->assertEquals($results->Count(), $compareCount-1, 'Test correct count of imported data');
 		
 		// Test that columns were correctly imported
 		$obj = Dataobject::get_one("CsvBulkLoaderTest_Player", "FirstName = 'John'");
@@ -49,7 +49,7 @@ class CsvBulkLoaderTest extends SapphireTest {
 		$results = $loader->load($filepath);
 
 		// Test that right amount of columns was imported
-		$this->assertEquals($results, $compareCount, 'Test correct count of imported data');
+		$this->assertEquals($results->Count(), $compareCount, 'Test correct count of imported data');
 		
 		// Test that columns were correctly imported
 		$obj = Dataobject::get_one("CsvBulkLoaderTest_Player", "FirstName = 'John'");
@@ -89,7 +89,7 @@ class CsvBulkLoaderTest extends SapphireTest {
 		$results = $loader->load($filepath);
 		
 		// Test that right amount of columns was imported
-		$this->assertEquals($results, $compareCount-1, 'Test correct count of imported data');
+		$this->assertEquals($results->Count(), $compareCount-1, 'Test correct count of imported data');
 		
 		// Test of augumenting existing relation (created by fixture)
 		$testTeam = DataObject::get_one('CsvBulkLoaderTest_Team', null, null, 'Created DESC');

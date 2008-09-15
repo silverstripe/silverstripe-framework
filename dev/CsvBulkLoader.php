@@ -7,6 +7,8 @@
  * @package cms
  * @subpackage bulkloading
  * @author Ingo Schommer, Silverstripe Ltd. (<firstname>@silverstripe.com)
+ * 
+ * @todo Support for deleting existing records not matched in the import (through relation checks)
  */
 class CsvBulkLoader extends BulkLoader {
 	
@@ -39,8 +41,7 @@ class CsvBulkLoader extends BulkLoader {
 		$file = fopen($filepath, 'r');
 		if(!$file) return false;
 		
-		//$return = new DataObjectSet();
-		$numRecords = 0;
+		$results = new BulkLoader_Result();
 
 		if($this->hasHeaderRow && $this->columnMap) {
 			$columnRow = fgetcsv($file, 0, $this->delimiter, $this->enclosure);
@@ -85,16 +86,19 @@ class CsvBulkLoader extends BulkLoader {
 	
 				$indexedRow[$origColumnName] = $row[count($indexedRow)];
 			}
-			$numRecords++;
-			$this->processRecord($indexedRow, $columnMap);
+
+			$this->processRecord($indexedRow, $columnMap, $results);
 		}
 		
 		fclose($file);
 		
-		return $numRecords;
+		return $results;
 	}
 	
-	protected function processRecord($record, $columnMap, $preview = false) {
+	/**
+	 * @todo Better messages for relation checks and duplicate detection
+	 */
+	protected function processRecord($record, $columnMap, &$results, $preview = false) {
 		$class = $this->objectClass;
 		
 		// find existing object, or create new one
@@ -159,19 +163,23 @@ class CsvBulkLoader extends BulkLoader {
 				$obj->{$fieldName} = $val;
 			}
 		}
+		
+		// write record
 		$id = ($preview) ? 0 : $obj->write();
-		$action = 'create';
+		
+		// @todo better message support
 		$message = '';
+		
+		// save to results
+		if($existingObj) {
+			$results->addUpdated($obj, $message);
+		} else {
+			$results->addCreated($obj, $message);
+		}
 		
 		// memory usage
 		unset($existingObj);
 		unset($obj);
-		
-		return new ArrayData(array(
-			'id' => $id,
-			'action' => $action,
-			'message' => $message
-		));
 	}
 	
 	/**
