@@ -13,7 +13,8 @@ class LookupField extends DropdownField {
 	 * Returns a readonly span containing the correct value.
 	 */
 	function Field() {
-		if(trim($this->value)) {
+		
+		if(trim($this->value) || $this->value === '0') {
 			$this->value = trim($this->value);
 			if(is_array($this->source)) {
 				$mappedValue = isset($this->source[$this->value]) ? $this->source[$this->value] : null;
