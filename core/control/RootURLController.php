@@ -12,6 +12,7 @@ class RootURLController extends Controller {
 		self::$is_at_root = true;
 
 		$controller = new ModelAsController();
+		$controller->pushCurrent();
 		
 		$request = new HTTPRequest("GET", self::get_homepage_urlsegment().'/', $request->getVars(), $request->postVars());
 		$request->match('$URLSegment//$Action');
