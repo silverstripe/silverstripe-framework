@@ -81,23 +81,24 @@ class FileField extends FormField {
 	}
 
 	public function Field() {
-		return 
-			$this->createTag("input", 
-				array(
-					"type" => "file", 
-					"name" => $this->name, 
-					"id" => $this->id(),
-					"tabindex" => $this->getTabIndex()
-				)
-			) . 
-			$this->createTag("input", 
-		   		array(
-		   			"type" => "hidden", 
-		   			"name" => "MAX_FILE_SIZE", 
-		   			"value" => $this->getAllowedMaxFileSize(),
-					"tabindex" => $this->getTabIndex()
-		   		)
-		   	);
+		return $this->createTag(
+			'input', 
+			array(
+				"type" => "file", 
+				"name" => $this->name, 
+				"id" => $this->id(),
+				"tabindex" => $this->getTabIndex()
+			)
+		) . 
+		$this->createTag(
+			'input', 
+		  	array(
+		  		"type" => "hidden", 
+		  		"name" => "MAX_FILE_SIZE", 
+		  		"value" => $this->getAllowedMaxFileSize(),
+				"tabindex" => $this->getTabIndex()
+		  	)
+		);
 	}
 	
 	public function saveInto(DataObject $record) {
