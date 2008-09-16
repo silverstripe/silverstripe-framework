@@ -233,6 +233,7 @@ class HTTPRequest extends Object implements ArrayAccess {
 			$pattern = str_replace('//', '/', $pattern);
 			$patternParts = explode('/', $pattern);
 			
+			
 		} else {
 			$patternParts = explode('/', $pattern);
 			$shiftCount = sizeof($patternParts);
@@ -240,10 +241,9 @@ class HTTPRequest extends Object implements ArrayAccess {
 
 		$matched = true;
 		$arguments = array();
-
 		foreach($patternParts as $i => $part) {
 			$part = trim($part);
-			
+
 			// Match a variable
 			if(isset($part[0]) && $part[0] == '$') {
 				// A variable ending in ! is required
@@ -262,7 +262,11 @@ class HTTPRequest extends Object implements ArrayAccess {
 				if($part == '$Controller' && !class_exists($arguments['Controller'])) {
 					return false;
 				}
-			
+				
+			// Literal parts with extension
+			} else if(isset($this->dirParts[$i]) && $this->dirParts[$i] . '.' . $this->extension == $part) {
+				continue;
+				
 			// Literal parts must always be there
 			} else if(!isset($this->dirParts[$i]) || $this->dirParts[$i] != $part) {
 				return false;

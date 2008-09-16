@@ -56,6 +56,16 @@ class RequestHandlingTest extends SapphireTest {
 		$response = Director::test("testBadBase/TestForm/fields/MyField");
 		$this->assertNotEquals("MyField requested", $response->getBody());
 	}
+	
+	function testBaseWithExtension() {
+		/* Rules with an extension always default to the index() action */
+		$response = Director::test("testBaseWithExtension/virtualfile.xml");
+		$this->assertEquals("This is the controller", $response->getBody());
+		
+		/* Without the extension, the methodname should be matched */
+		$response = Director::test("testBaseWithExtension/virtualfile");
+		$this->assertEquals("This is the virtualfile method", $response->getBody());
+	}
 }
 
 /**
@@ -73,6 +83,12 @@ Director::addRules(50, array(
 	// By default, the entire URL will be shifted off.  This creates a bit of backward-incompatability, but makes the
 	// URL rules much more explicit.
 	'testBadBase/$Action/$ID/$OtherID' => "RequestHandlingTest_Controller",
+	
+	// Rules with an extension always default to the index() action
+	'testBaseWithExtension/virtualfile.xml' => "RequestHandlingTest_Controller",
+	
+	// Without the extension, the methodname should be matched
+	'testBaseWithExtension//$Action/$ID/$OtherID' => "RequestHandlingTest_Controller",
 ));
 
 /**
@@ -94,6 +110,10 @@ class RequestHandlingTest_Controller extends Controller {
 
 	function legacymethod($request) {
 		return "\$this->urlParams can be used, for backward compatibility: " . $this->urlParams['ID'] . ', ' . $this->urlParams['OtherID'];
+	}
+	
+	function virtualfile($request) {
+		return "This is the virtualfile method";
 	}
 	
 	function TestForm() {
