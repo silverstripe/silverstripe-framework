@@ -28,6 +28,9 @@
  * 
  * @todo Check for correct XHTML doctype in xhtml()
  * @todo Allow for other HTML4 doctypes (e.g. Transitional) in html()
+ * @todo Make content replacement and doctype setting two separately configurable behaviours - some
+ * devs might know what they're doing and don't want contentnegotiator messing with their HTML4 doctypes,
+ * but still find it useful to have self-closing tags removed.
  */
 class ContentNegotiator {
 	protected static $encoding = 'utf-8';
