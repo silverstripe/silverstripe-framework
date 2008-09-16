@@ -423,7 +423,7 @@ abstract class Database extends Object {
 	 * @param int $errorLevel The level of the error to throw.
 	 */
 	function databaseError($msg, $errorLevel = E_USER_ERROR) {
-		user_error("DATABASE ERROR: $msg", $errorLevel);
+		user_error($msg, $errorLevel);
 	}
 	
 	/**

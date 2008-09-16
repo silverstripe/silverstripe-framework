@@ -284,7 +284,7 @@ class Debug {
 	 * Create an instance of an appropriate DebugView object.
 	 */
 	static function create_debug_view() {
-		if(Director::is_cli()) return new CliDebugView();
+		if(Director::is_cli() || Director::is_ajax()) return new CliDebugView();
 		else return new DebugView();
 	}
 
@@ -304,33 +304,32 @@ class Debug {
 			$errText = str_replace(array("\n","\r")," ",$errText);
 			header("HTTP/1.0 500 $errText");
 		}
-		if(Director::is_ajax()) {
-			echo "ERROR:Error $errno: $errstr\n At l$errline in $errfile\n";
-			Debug::backtrace();
-		} else {
-			$reporter = self::create_debug_view();
-			
-			// Coupling alert: This relies on knowledge of how the director gets its URL, it could be improved.
-			$httpRequest = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : $_REQUEST['url'];
-			if(isset($_SERVER['REQUEST_METHOD'])) $httpRequest = $_SERVER['REQUEST_METHOD'] . ' ' . $httpRequest;
+		
+		// Legacy error handling for customized prototype.js Ajax.Base.responseIsSuccess()
+		// if(Director::is_ajax()) echo "ERROR:\n";
+		
+		$reporter = self::create_debug_view();
+		
+		// Coupling alert: This relies on knowledge of how the director gets its URL, it could be improved.
+		$httpRequest = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : $_REQUEST['url'];
+		if(isset($_SERVER['REQUEST_METHOD'])) $httpRequest = $_SERVER['REQUEST_METHOD'] . ' ' . $httpRequest;
 
-			$reporter->writeHeader($httpRequest);
-			$reporter->writeError($httpRequest, $errno, $errstr, $errfile, $errline, $errcontext);
+		$reporter->writeHeader($httpRequest);
+		$reporter->writeError($httpRequest, $errno, $errstr, $errfile, $errline, $errcontext);
 
-			$lines = file($errfile);
+		$lines = file($errfile);
 
-			// Make the array 1-based
-			array_unshift($lines,"");
-			unset($lines[0]);
+		// Make the array 1-based
+		array_unshift($lines,"");
+		unset($lines[0]);
 
-			$offset = $errline-10;
-			$lines = array_slice($lines, $offset, 16, true);
-			$reporter->writeSourceFragment($lines, $errline);
+		$offset = $errline-10;
+		$lines = array_slice($lines, $offset, 16, true);
+		$reporter->writeSourceFragment($lines, $errline);
 
-			$reporter->writeTrace($lines);
-			$reporter->writeFooter();
-			exit(1);
-		}
+		$reporter->writeTrace($lines);
+		$reporter->writeFooter();
+		exit(1);
 	}
 	
 	/**

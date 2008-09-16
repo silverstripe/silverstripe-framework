@@ -385,6 +385,16 @@ class MySQLDatabase extends Database {
 	public function affectedRows() {
 		return mysql_affected_rows($this->dbConn);
 	}
+	
+	function databaseError($msg, $errorLevel = E_USER_ERROR) {
+		// try to extract and format query
+		if(preg_match('/Couldn\'t run query: ([^\|]*)\|\s*(.*)/', $msg, $matches)) {
+			$formatter = new SQLFormatter();
+			$msg = "Couldn't run query: \n" . $formatter->formatPlain($matches[1]) . "\n\n" . $matches[2];
+		}
+		
+		user_error($msg, $errorLevel);
+	}
 }
 
 /**
