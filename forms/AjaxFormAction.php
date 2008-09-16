@@ -18,13 +18,14 @@ class AjaxFormAction extends FormAction {
 		$this->ajaxAction = $ajaxAction ? $ajaxAction : $action;
 		parent::__construct($action, $title, $form);
 	}
+	
 	function Field() {
 		return $this->createTag('input', array(
 			'class' => "ajaxAction-$this->ajaxAction action",
 			'id' => $this->id(),
 			'type' => 'submit',
 			'value' => $this->title,
-			'tabindex' => $this->getTabIndexHTML()
+			'tabindex' => $this->getTabIndex()
 		));
 	}
 	

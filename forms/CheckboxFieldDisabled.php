@@ -17,7 +17,7 @@ class CheckboxFieldDisabled extends CheckboxField {
 			'class' => $this->extraClass() . " text",
 			'id' => $this->id(),
 			'name' => $this->Name(),
-			'tabindex' => $this->getTabIndexHTML(),
+			'tabindex' => $this->getTabIndex(),
 			'checked' => ($this->value) ? 'checked' : false,
 			'disabled' => 'disabled' 
 		);

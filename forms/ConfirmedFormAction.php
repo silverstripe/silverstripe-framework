@@ -19,6 +19,7 @@ class ConfirmedFormAction extends FormAction {
 		$this->confirmation = $confirmation;
 		parent::__construct($action, $title, $form);
 	}
+	
 	function Field() {
 		$attributes = array(
 			'type' => 'submit',
@@ -26,7 +27,7 @@ class ConfirmedFormAction extends FormAction {
 			'id' => $this->id(),
 			'name' => $this->Name(),
 			'value' => $this->attrTitle(),
-			'tabindex' => $this->getTabIndexHTML(),
+			'tabindex' => $this->getTabIndex(),
 			'onclick' => "return confirm('$this->confirmation');"
 		);
 		

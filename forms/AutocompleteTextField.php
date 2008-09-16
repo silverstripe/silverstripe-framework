@@ -26,7 +26,7 @@ class AutocompleteTextField extends TextField {
 			'id' => $this->id(),
 			'name' => $this->name,
 			'value' => $this->Value(),
-			'tabindex' => $this->getTabIndexHTML(),
+			'tabindex' => $this->getTabIndex(),
 			'size' => $this->maxLength ? min( $this->maxLength, 30 ) : 30 
 		); 	
 		if($this->maxLength) $attributes['maxlength'] = $this->maxLength;
