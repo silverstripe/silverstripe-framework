@@ -8,7 +8,21 @@
  * @subpackage misc
  */
 class GoogleSitemap extends Controller {
+	
+	/**
+	 * @var boolean
+	 */
+	protected static $enabled = true;
+	
+	/**
+	 * @var DataObjectSet
+	 */
 	protected $Pages;
+	
+	/**
+	 * @var boolean
+	 */
+	protected static $pings = true;
 	
 	public function Items() {
 		$this->Pages = Versioned::get_by_stage('SiteTree', 'Live');
@@ -59,7 +73,12 @@ class GoogleSitemap extends Controller {
 		return $newPages;
 	}
 	
+	/**
+	 * @return string Response text
+	 */
 	static function ping() {
+		if(!self::$enabled) return false;
+		
 		//Don't ping if the site has disabled it, or if the site is in dev mode
 		if(!GoogleSitemap::$pings || Director::isDev())
 			return;
@@ -72,25 +91,37 @@ class GoogleSitemap extends Controller {
 		return $response;
 	}
 	
-	protected static $pings = true;
+	public static function enable_google_notification() {
+		self::$pings = true;
+	}
 	
 	/**
-	 * Disables pings to google when the sitemap changes
-	 * To use this, in your _config.php file simply include the line
-	 * GoogleSitemap::DisableGoogleNotification();
+	 * Disables pings to google when the sitemap changes.
 	 */
-	static function DisableGoogleNotification() {
+	public static function disable_google_notification() {
 		self::$pings = false;
 	}
 	
-	
 	function index($url) {
-		// We need to override the default content-type
-		ContentNegotiator::disable();
-		header('Content-type: application/xml; charset="utf-8"');
-		
-		// But we want to still render.
-		return array();
+		if(self::$enabled) {
+			// We need to override the default content-type
+			ContentNegotiator::disable();
+			header('Content-type: application/xml; charset="utf-8"');
+
+			// But we want to still render.
+			return array();
+		} else {
+			return new HTTPResponse('Not allowed', 405);
+		}
+
+	}
+	
+	public static function enable() {
+		self::$enabled = true;
+	}
+	
+	public static function disable() {
+		self::$enabled = false;
 	}
 }
 ?>
