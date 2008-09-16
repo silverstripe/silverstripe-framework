@@ -1,11 +1,33 @@
 <?php
 /**
- * The content negotiator performs text/html or application/xhtml+xml switching.
- * It does this through the static function ContentNegotiator::process()
+ * The content negotiator performs "text/html" or "application/xhtml+xml" switching.
+ * It does this through the static function ContentNegotiator::process().
+ * By default, ContentNegotiator will comply to the Accept headers the clients
+ * sends along with the HTTP request, which is most likely "application/xhtml+xml"
+ * (see "Order of selection" below).
  * 
- * @todo Improve documentation
+ * IMPORTANT: This conversion happens by default to all template output unless
+ * explicitly disabled through ContentNegotiator::disable().
+ *
+ * Order of selection between html or xhtml is as follows:
+ * - if PHP has already sent the HTTP headers, default to "html" (we can't send HTTP Content-Type headers any longer)
+ * - if a GET variable ?forceFormat is set, it takes precedence (for testing purposes)
+ * - if the user agent is detected as W3C Validator we always deliver "xhtml"
+ * - if an HTTP Accept header is sent from the client, we respect its order (this is the most common case)
+ * - if none of the above matches, fallback is "html"
+ * 
+ * ContentNegotiator doesn't enable you to send content as a true XML document
+ * through the "text/xml" or "application/xhtml+xml" Content-Type.
+ * Please see http://webkit.org/blog/68/understanding-html-xml-and-xhtml/ for further information.
+ * 
  * @package sapphire
  * @subpackage control
+ * @see http://doc.silverstripe.com/doku.php?id=xhtml-support
+ * @see http://doc.silverstripe.com/doku.php?id=contentnegotiator
+ * @see http://doc.silverstripe.com/doku.php?id=html
+ * 
+ * @todo Check for correct XHTML doctype in xhtml()
+ * @todo Allow for other HTML4 doctypes (e.g. Transitional) in html()
  */
 class ContentNegotiator {
 	protected static $encoding = 'utf-8';
@@ -17,6 +39,7 @@ class ContentNegotiator {
 	static function set_encoding($encoding) {
 		self::$encoding = $encoding;
 	}
+	
 	/**
 	 * Return the character encoding set bhy ContentNegotiator::set_encoding().  It's recommended that all classes that need to
 	 * specify the character set make use of this function.
@@ -25,7 +48,9 @@ class ContentNegotiator {
 	    return self::$encoding;
 	}
 	
-	
+	/**
+	 * @usedby Controller->handleRequest()
+	 */
 	static function process(HTTPResponse $response) {
 		if(self::$disabled) return;
 
@@ -69,6 +94,16 @@ class ContentNegotiator {
 		$negotiator->$chosenFormat( $response );
 	}
 
+	/**
+	 * Only sends the HTTP Content-Type as "application/xhtml+xml"
+	 * if the template starts with the typical "<?xml" Pragma.
+	 * Assumes that a correct doctype is set, and doesn't change or append to it.
+	 * Replaces a few common tags and entities with their XHTML representations (<br>, <img>, &nbsp;).
+	 *
+	 * @param $response HTTPResponse
+	 * @return string
+	 * @todo More flexible tag and entity parsing through regular expressions or tag definition lists
+	 */
 	function xhtml(HTTPResponse $response) {
 		$content = $response->getBody();
 		
@@ -87,6 +122,14 @@ class ContentNegotiator {
 			return $this->html($response);
 		}
 	}
+	
+	/*
+	 * Sends HTTP Content-Type as "text/html", and replaces existing doctypes with
+	 * HTML4.01 Strict.
+	 * Replaces self-closing tags like <img /> with unclosed solitary tags like <img>.
+	 * Replaces all occurrences of "application/xhtml+xml" with "text/html" in the template.
+	 * Removes "xmlns" attributes and any <?xml> Pragmas.
+	 */
 	function html(HTTPResponse $response) {
 		$response->addHeader("Content-type", "text/html; charset=" . self::$encoding);
 		$response->addHeader("Vary", "Accept");
