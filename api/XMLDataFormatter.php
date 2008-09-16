@@ -28,19 +28,22 @@ class XMLDataFormatter extends DataFormatter {
 	 * @param $includeHeader Include <?xml ...?> header (Default: true)
 	 * @return String XML
 	 */
-	public function convertDataObject(DataObjectInterface $obj) {
+	public function convertDataObject(DataObjectInterface $obj, $fields = null) {
 		Controller::curr()->getResponse()->addHeader("Content-type", "text/xml");
-		return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" . $this->convertDataObjectWithoutHeader($obj);
+		return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" . $this->convertDataObjectWithoutHeader($obj, $fields);
 	}
 		
 		
-	public function convertDataObjectWithoutHeader(DataObject $obj) {
+	public function convertDataObjectWithoutHeader(DataObject $obj, $fields = null) {
 		$className = $obj->class;
 		$id = $obj->ID;
 		$objHref = Director::absoluteURL(self::$api_base . "$obj->class/$obj->ID");
 	
 		$json = "<$className href=\"$objHref.xml\">\n";
 		foreach($this->getFieldsForObj($obj) as $fieldName => $fieldType) {
+			// Field filtering
+			if($fields && !in_array($fieldName, $fields)) continue;
+			
 			$fieldValue = $obj->$fieldName;
 			if(!mb_check_encoding($fieldValue,'utf-8')) $fieldValue = "(data is badly encoded)";
 			
@@ -53,6 +56,9 @@ class XMLDataFormatter extends DataFormatter {
 	
 		if($this->relationDepth > 0) {
 			foreach($obj->has_one() as $relName => $relClass) {
+				// Field filtering
+				if($fields && !in_array($relName, $fields)) continue;
+
 				$fieldName = $relName . 'ID';
 				if($obj->$fieldName) {
 					$href = Director::absoluteURL(self::$api_base . "$relClass/" . $obj->$fieldName);
@@ -63,6 +69,9 @@ class XMLDataFormatter extends DataFormatter {
 			}
 
 			foreach($obj->has_many() as $relName => $relClass) {
+				// Field filtering
+				if($fields && !in_array($relName, $fields)) continue;
+
 				$json .= "<$relName linktype=\"has_many\" href=\"$objHref/$relName.xml\">\n";
 				$items = $obj->$relName();
 				foreach($items as $item) {
@@ -74,6 +83,9 @@ class XMLDataFormatter extends DataFormatter {
 			}
 	
 			foreach($obj->many_many() as $relName => $relClass) {
+				// Field filtering
+				if($fields && !in_array($relName, $fields)) continue;
+
 				$json .= "<$relName linktype=\"many_many\" href=\"$objHref/$relName.xml\">\n";
 				$items = $obj->$relName();
 				foreach($items as $item) {
@@ -95,14 +107,14 @@ class XMLDataFormatter extends DataFormatter {
 	 * @param DataObjectSet $set
 	 * @return String XML
 	 */
-	public function convertDataObjectSet(DataObjectSet $set) {
+	public function convertDataObjectSet(DataObjectSet $set, $fields = null) {
 		Controller::curr()->getResponse()->addHeader("Content-type", "text/xml");
 		$className = $set->class;
 	
 		$xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
 		$xml .= (is_numeric($this->totalSize)) ? "<$className totalSize=\"{$this->totalSize}\">\n" : "<$className>\n";
 		foreach($set as $item) {
-			if($item->canView()) $xml .= $this->convertDataObjectWithoutHeader($item);
+			if($item->canView()) $xml .= $this->convertDataObjectWithoutHeader($item, $fields);
 		}
 		$xml .= "</$className>";
 	

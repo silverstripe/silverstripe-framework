@@ -29,12 +29,15 @@ class JSONDataFormatter extends DataFormatter {
 	 * @param $includeHeader Include <?xml ...?> header (Default: true)
 	 * @return String XML
 	 */
-	public function convertDataObject(DataObjectInterface $obj) {
+	public function convertDataObject(DataObjectInterface $obj, $fields = null) {
 		$className = $obj->class;
 		$id = $obj->ID;
 		
 		$json = "{\n  className : \"$className\",\n";
 		foreach($this->getFieldsForObj($obj) as $fieldName => $fieldType) {
+			// Field filtering
+			if($fields && !in_array($fieldName, $fields)) continue;
+
 			$fieldValue = $obj->$fieldName;
 			if(is_object($fieldValue) && is_subclass_of($fieldValue, 'Object') && $fieldValue->hasMethod('toJSON')) {
 				$jsonParts[] = "$fieldName : " . $fieldValue->toJSON();
@@ -45,6 +48,9 @@ class JSONDataFormatter extends DataFormatter {
 
 		if($this->relationDepth > 0) {
 			foreach($obj->has_one() as $relName => $relClass) {
+				// Field filtering
+				if($fields && !in_array($relName, $fields)) continue;
+
 				$fieldName = $relName . 'ID';
 				if($obj->$fieldName) {
 					$href = Director::absoluteURL(self::$api_base . "$relClass/" . $obj->$fieldName);
@@ -55,6 +61,9 @@ class JSONDataFormatter extends DataFormatter {
 			}
 	
 			foreach($obj->has_many() as $relName => $relClass) {
+				// Field filtering
+				if($fields && !in_array($relName, $fields)) continue;
+
 				$jsonInnerParts = array();
 				$items = $obj->$relName();
 				foreach($items as $item) {
@@ -66,6 +75,9 @@ class JSONDataFormatter extends DataFormatter {
 			}
 	
 			foreach($obj->many_many() as $relName => $relClass) {
+				// Field filtering
+				if($fields && !in_array($relName, $fields)) continue;
+
 				$jsonInnerParts = array();
 				$items = $obj->$relName();
 				foreach($items as $item) {
@@ -85,10 +97,10 @@ class JSONDataFormatter extends DataFormatter {
 	 * @param DataObjectSet $set
 	 * @return String XML
 	 */
-	public function convertDataObjectSet(DataObjectSet $set) {
+	public function convertDataObjectSet(DataObjectSet $set, $fields = null) {
 		$jsonParts = array();
 		foreach($set as $item) {
-			if($item->canView()) $jsonParts[] = $this->convertDataObject($item);
+			if($item->canView()) $jsonParts[] = $this->convertDataObject($item, $fields);
 		}
 		$json = "{\n";
 		$json .= 'totalSize: ';

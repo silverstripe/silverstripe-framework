@@ -182,15 +182,18 @@ class RestfulServer extends Controller {
 		}
 		
 		$this->getResponse()->addHeader('Content-Type', $responseFormatter->getOutputContentType());
+		
+		$rawFields = $this->request->getVar('fields');
+		$fields = $rawFields ? explode(',', $rawFields) : null;
 
 		if($obj instanceof DataObjectSet) {
 			$responseFormatter->setTotalSize($query->unlimitedRowCount());
-			return $responseFormatter->convertDataObjectSet($obj);
+			return $responseFormatter->convertDataObjectSet($obj, $fields);
 		} else if(!$obj) {
 			$responseFormatter->setTotalSize(0);
-			return $responseFormatter->convertDataObjectSet(new DataObjectSet());
+			return $responseFormatter->convertDataObjectSet(new DataObjectSet(), $fields);
 		} else {
-			return $responseFormatter->convertDataObject($obj);
+			return $responseFormatter->convertDataObject($obj, $fields);
 		}
 	}
 	
