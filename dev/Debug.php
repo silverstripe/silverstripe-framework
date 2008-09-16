@@ -303,6 +303,9 @@ class Debug {
 			$errText = "$errtype: \"$errstr\" at line $errline of $errfile";
 			$errText = str_replace(array("\n","\r")," ",$errText);
 			header("HTTP/1.0 500 $errText");
+			
+			// if error is displayed through ajax with CliDebugView, use plaintext output
+			if(Director::is_ajax()) header('Content-Type: text/plain');
 		}
 		
 		// Legacy error handling for customized prototype.js Ajax.Base.responseIsSuccess()
