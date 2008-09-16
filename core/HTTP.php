@@ -200,7 +200,9 @@ class HTTP {
 	}
 
 	/**
-	 * Send an HTTP request to the host
+	 * Send an HTTP request to the host.
+	 *
+	 * @return String Response text
 	 */
 	static function sendRequest( $host, $path, $query, $port = 80 ) {
 		$socket = fsockopen( $host, $port, $errno, $error );
