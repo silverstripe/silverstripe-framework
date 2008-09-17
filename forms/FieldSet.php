@@ -156,7 +156,7 @@ class FieldSet extends DataObjectSet {
 	public function removeByName($fieldName, $dataFieldOnly = false) {
 		foreach($this->items as $i => $child) {
 			if(is_object($child) && ($child->Name() == $fieldName || $child->Title() == $fieldName) && (!$dataFieldOnly || $child->hasData())) {
-				if($child->class == 'Tab' && !$dataFieldOnly) Debug::backtrace();
+				//if($child->class == 'Tab' && !$dataFieldOnly) Debug::backtrace();
 				array_splice( $this->items, $i, 1 );
 				break;
 			} else if($child->isComposite()) {
