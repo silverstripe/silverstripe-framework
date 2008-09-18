@@ -147,6 +147,13 @@ class Member extends DataObject {
 	static function set_password_validator($pv) {
 		self::$password_validator = $pv;
 	}
+	
+	/**
+	 * Returns the current {@link PasswordValidator}
+	 */
+	static function password_validator() {
+		return self::$password_validator;
+	}
 
 	/**
 	 * Set the number of days that a password should be valid for.

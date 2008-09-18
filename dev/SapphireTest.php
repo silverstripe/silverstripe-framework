@@ -20,6 +20,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	static $fixture_file = null;
 	
 	protected $originalMailer;
+	protected $originalMemberPasswordValidator;
 	
 	protected $mailer;
 	
@@ -29,6 +30,10 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	protected $fixture; 
 	
 	function setUp() {
+		// Remove password validation
+		$this->originalMemberPasswordValidator = Member::password_validator();
+		Member::set_password_validator(null);
+
 		$className = get_class($this);
 		$fixtureFile = eval("return {$className}::\$fixture_file;");
 		
@@ -114,6 +119,9 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 		Email::set_mailer($this->originalMailer);
 		$this->originalMailer = null;
 		$this->mailer = null;
+
+		// Restore password validation
+		Member::set_password_validator($this->originalMemberPasswordValidator);
 	}
 	
 	/**
