@@ -110,9 +110,9 @@ class CheckboxSetField extends OptionsetField {
 	/**
 	 * Load a value into this CheckboxSetField
 	 */
-	function setValue($value, $obj) {
+	function setValue($value, $obj = null) {
 		// If we're not passed a value directly, we can look for it in a relation method on the object passed as a second arg
-		if(!$value && $obj instanceof DataObject && $obj->hasMethod($this->name)) {
+		if(!$value && $obj && $obj instanceof DataObject && $obj->hasMethod($this->name)) {
 			$funcName = $this->name;
 			$selected = $obj->$funcName();
 			$value = $selected->toDropdownMap('ID','ID');
