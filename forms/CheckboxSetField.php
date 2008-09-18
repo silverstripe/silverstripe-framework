@@ -108,6 +108,20 @@ class CheckboxSetField extends OptionsetField {
 	}
 	
 	/**
+	 * Load a value into this CheckboxSetField
+	 */
+	function setValue($value, $obj) {
+		// If we're not passed a value directly, we can look for it in a relation method on the object passed as a second arg
+		if(!$value && $obj instanceof DataObject && $obj->hasMethod($this->name)) {
+			$funcName = $this->name;
+			$selected = $obj->$funcName();
+			$value = $selected->toDropdownMap('ID','ID');
+		}
+
+		parent::setValue($value, $obj);
+	}
+	
+	/**
 	 * Save the current value of this CheckboxSetField into a DataObject.
 	 * If the field it is saving to is a has_many or many_many relationship,
 	 * it is saved by setByIDList(), otherwise it creates a comma separated
