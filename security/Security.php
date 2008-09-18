@@ -410,7 +410,7 @@ class Security extends Controller {
 	 *
 	 * @return string Returns the "password sent" page as HTML code.
 	 */
-	public function passwordsent() {
+	public function passwordsent($request) {
 		Requirements::javascript('jsparty/behaviour.js');
 		Requirements::javascript('jsparty/loader.js');
 		Requirements::javascript('jsparty/prototype.js');
@@ -423,7 +423,7 @@ class Security extends Controller {
 		$controller = new Page_Controller($tmpPage);
 		$controller->init();
 
-		$email = Convert::raw2xml($this->urlParams['ID']);
+		$email = Convert::raw2xml($request->getVar('email'));
 		$customisedController = $controller->customise(array(
 			'Title' => sprintf(_t('Security.PASSWORDSENTHEADER', "Password reset link sent to '%s'"), $email),
 			'Content' =>

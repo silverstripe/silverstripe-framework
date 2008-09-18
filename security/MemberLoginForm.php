@@ -187,7 +187,7 @@ class MemberLoginForm extends LoginForm {
 			$member->sendInfo('forgotPassword', array('PasswordResetLink' =>
 				Security::getPasswordResetLink($member->AutoLoginHash)));
 
-			Director::redirect('Security/passwordsent/' . urlencode($data['Email']));
+			Director::redirect('Security/passwordsent/?email=' . urlencode($data['Email']));
 
 		} else if($data['Email']) {
 			$this->sessionMessage(
