@@ -6,6 +6,8 @@
  * @subpackage fields-relational
  */
 class CountryDropdownField extends DropdownField {
+	protected $defaultToVisitorCountry = true;
+	
 	function __construct($name, $title, $source = null, $value = "", $form=null, $emptyString="--select--") {
 		if(!is_array($source)) {
 			$source = Geoip::getCountryDropDown();
@@ -13,8 +15,12 @@ class CountryDropdownField extends DropdownField {
 		parent::__construct($name, $title, $source, $value, $form, $emptyString);
 	}
 	
+	function defaultToVisitorCountry($val) {
+		$this->defaultToVisitorCountry = $val;
+	}
+	
 	function Field() {
-		if(!$this->value || !$this->source[$this->value]) $this->value = Geoip::visitor_country();
+		if($this->defaultToVisitorCountry && !$this->value || !$this->source[$this->value]) $this->value = Geoip::visitor_country();
 		return parent::Field();
 	}
 }
