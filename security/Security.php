@@ -927,6 +927,26 @@ class Security extends Controller {
 	public static function login_recording() {
 		return self::$login_recording;
 	}
+	
+	protected static $default_login_dest = "";
+	
+	/**
+	 * Set the default login dest
+	 * This is the URL that users will be redirected to after they log in,
+	 * if they haven't logged in en route to access a secured page.
+	 * 
+	 * By default, this is set to the homepage
+	 */
+	public static function set_default_login_dest($dest) {
+		self::$default_login_dest = $dest;
+	}
+
+	/**
+	 * Get the default login dest
+	 */
+	public static function default_login_dest() {
+		return self::$default_login_dest;
+	}
 
 }
 

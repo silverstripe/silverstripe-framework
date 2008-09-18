@@ -109,7 +109,7 @@ class MemberLoginForm extends LoginForm {
 				Session::clear("BackURL");
 				Director::redirect($backURL);
 			} else {
-				Director::redirectBack();
+				Director::redirect(Security::default_login_dest());
 			}
 		} else {
 			Session::set('SessionForms.MemberLoginForm.Email', $data['Email']);
