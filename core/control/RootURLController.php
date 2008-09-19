@@ -17,7 +17,9 @@ class RootURLController extends Controller {
 		$request = new HTTPRequest("GET", self::get_homepage_urlsegment().'/', $request->getVars(), $request->postVars());
 		$request->match('$URLSegment//$Action');
 			
-		return $controller->handleRequest($request);
+		$result = $controller->handleRequest($request);
+		$controller->popCurrent();
+		return $result;
 	}
 
 	/**
