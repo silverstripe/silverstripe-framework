@@ -17,7 +17,7 @@ class Requirements {
 	/**
 	 * Paths to all required .css files relative to the webroot.
 	 * 
-	 * @var array $javascript
+	 * @var array $css
 	 */
 	protected static $css = array();
 
@@ -386,6 +386,8 @@ class Requirements {
 	 * in more than one combine_files() call.
 	 * Best practice is to include every javascript file in exactly *one* combine_files()
 	 * directive to avoid the issues mentioned above - this is enforced by this function.
+	 * 
+	 * CAUTION: Combining CSS Files discards any "media" information.
 	 *
 	 * Example for combined JavaScript:
 	 * <code>
