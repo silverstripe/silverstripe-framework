@@ -3,9 +3,6 @@
 /**
  * Sapphire's generic RESTful server.
  * 
- * NOTE: This is an alpha module and its API is currently very volatile.  It functions, but it might change radically
- * before the next release!
- * 
  * This class gives your application a RESTful API for free.  All you have to do is define static $api_access = true on
  * the appropriate DataObjects.  You will need to ensure that all of your data manipulation and security is defined in
  * your model layer (ie, the DataObject classes) and not in your Controllers.  This is the recommended design for Sapphire
@@ -26,15 +23,30 @@
  * 
  * You can trigger searches based on the fields specified on {@link DataObject::searchable_fields} and passed
  * through {@link DataObject::getDefaultSearchContext()}. Just add a key-value pair with the search-term
- * to the url, e.g. /api/v1/(ClassName)/?Title=mytitle 
+ * to the url, e.g. /api/v1/(ClassName)/?Title=mytitle.
  * 
  * Other url-modifiers:
  * - &limit=<numeric>: Limit the result set
  * - &relationdepth=<numeric>: Displays links to existing has-one and has-many relationships to a certain depth (Default: 1)
- * - &fields=<string>: Comma-separated list of fields on the output object (defaults to all database-columns)
+ * - &fields=<string>: Comma-separated list of fields on the output object (defaults to all database-columns).
+ *   Handy to limit output for bandwidth and performance reasons.
+ * - &sort=<myfield>&dir=<asc|desc>
+ * - &add_fields=<string>: Comma-separated list of additional fields, for example dynamic getters.
+ *
+ * Access control is implemented through the usual Member system with Basicauth authentication only.
+ * By default, you have to bear the ADMIN permission to retrieve or send any data.
+ *
+ * You should override the following built-in methods to customize permission control on a
+ * class- and object-level:
+ * - {@link DataObject::canView()}
+ * - {@link DataObject::canEdit()}
+ * - {@link DataObject::canDelete()}
+ * - {@link DataObject::canCreate()}
+ * See {@link DataObject} documentation for further details.
  * 
  * @todo Finish RestfulServer_Item and RestfulServer_List implementation and re-enable $url_handlers
  * @todo Implement PUT/POST/DELETE for relations
+ * @todo Access-Control for relations (you might be allowed to view Members and Groups, but not their relation with each other)
  * @todo Make SearchContext specification customizeable for each class
  * @todo Allow for range-searches (e.g. on Created column)
  * @todo Allow other authentication methods (currently only HTTP BasicAuth)
@@ -44,6 +56,7 @@
  * @todo URL parameter namespacing for search-fields, limit, fields, add_fields (might all be valid dataobject properties)
  *       e.g. you wouldn't be able to search for a "limit" property on your subclass as its overlayed with the search logic
  * @todo i18n integration (e.g. Page/1.xml?lang=de_DE)
+ * @todo Access to decoratable methods/relations like SiteTree/1/Versions or SiteTree/1/Version/22
  */
 class RestfulServer extends Controller {
 	static $url_handlers = array(
