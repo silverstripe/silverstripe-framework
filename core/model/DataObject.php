@@ -1,6 +1,61 @@
 <?php
 /**
  * A single database record & abstract class for the data-access-model.
+ *
+ * Object-level access control by {@link Permission}. Permission codes are arbitrary
+ * strings which can be selected on a group-by-group basis.
+ * 
+ * <code>
+ * class Article extends DataObject implements PermissionProvider {
+ * 	static $api_access = true;
+ * 	
+ * 	public function canView($member = false) {
+ * 		return Permission::check('ARTICLE_VIEW');
+ * 	}
+ * 	public function canEdit($member = false) {
+ * 		return Permission::check('ARTICLE_EDIT');
+ * 	}
+ * 	public function canDelete() {
+ * 		return Permission::check('ARTICLE_DELETE');
+ * 	}
+ * 	public function canCreate() {
+ * 		return Permission::check('ARTICLE_CREATE');
+ * 	}
+ * 	public function providePermissions() {
+ * 		return array(
+ * 			'ARTICLE_VIEW' => 'Read an article object',
+ * 			'ARTICLE_EDIT' => 'Edit an article object',
+ * 			'ARTICLE_DELETE' => 'Delete an article object',
+ * 			'ARTICLE_CREATE' => 'Create an article object',
+ * 		);
+ * 	}
+ * }
+ * </code> 
+ *
+ * Object-level access control by {@link Group} membership: 
+ * <code>
+ * class Article extends DataObject {
+ * 	static $api_access = true;
+ * 	
+ * 	public function canView($member = false) {
+ * 		if(!$member) $member = Member::currentUser();
+ *		return $member->inGroup('Subscribers');
+ * 	}
+ * 	public function canEdit($member = false) {
+ * 		if(!$member) $member = Member::currentUser();
+ *		return $member->inGroup('Editors');
+ * 	}
+ * 	public function canDelete($member = false) {
+ * 		if(!$member) $member = Member::currentUser();
+ *		return $member->inGroup('Editors');
+ * 	}
+ * 	public function canCreate($member = false) {
+ * 		if(!$member) $member = Member::currentUser();
+ *		return $member->inGroup('Editors');
+ * 	}
+ * }
+ * </code>
+ * 
  * @package sapphire
  * @subpackage model
  */
@@ -1734,7 +1789,7 @@ class DataObject extends ViewableData implements DataObjectInterface {
 	 * @return boolean
 	 */
 	public function canView($member = null) {
-		return Permission::check('ADMIN');
+		return Permission::check('ADMIN', 'any', $member);
 	}
 
 	/**
@@ -1742,7 +1797,7 @@ class DataObject extends ViewableData implements DataObjectInterface {
 	 * @return boolean
 	 */
 	public function canEdit($member = null) {
-		return Permission::check('ADMIN');
+		return Permission::check('ADMIN', 'any', $member);
 	}
 
 	/**
@@ -1750,7 +1805,7 @@ class DataObject extends ViewableData implements DataObjectInterface {
 	 * @return boolean
 	 */
 	public function canDelete($member = null) {
-		return Permission::check('ADMIN');
+		return Permission::check('ADMIN', 'any', $member);
 	}
 
 	/**
@@ -1760,7 +1815,7 @@ class DataObject extends ViewableData implements DataObjectInterface {
 	 * @return boolean
 	 */
 	public function canCreate($member = null) {
-		return Permission::check('ADMIN');
+		return Permission::check('ADMIN', 'any', $member);;
 	}
 
 	/**
