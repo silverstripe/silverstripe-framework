@@ -601,33 +601,29 @@ class Member extends DataObject {
 	/**
 	 * Check if the member is in the given group
 	 *
-	 * @param int $groupID ID of the group to check
-	 * @return bool Returns TRUE if the member is in the given group,
-	 *              otherwise FALSE.
+	 * @param int|Group|string $group Group instance, Group Code or ID
+	 * @return bool Returns TRUE if the member is in the given group, otherwise FALSE.
 	 */
-
-	public function inGroup($groupID) {
-		foreach($this->Groups() as $group) {
-			if($groupID == $group->ID)
+	public function inGroup($group) {
+		if(is_numeric($group)) {
+			$groupCheckObj = DataObject::get_by_id('Group', $group);
+		} elseif(is_string($group)) {
+			$SQL_group = Convert::raw2sql($group);
+			$groupCheckObj = DataObject::get_one('Group', "Code = '{$SQL_group}'");
+		} elseif(is_a('Group', $group)) {
+			$groupCheckObj = $group;
+		} else {
+			user_error('Member::inGroup(): Wrong format for $group parameter', E_USER_ERROR);
+		}
+		
+		foreach($this->Groups() as $groupCandidateObj) {
+			if($groupCandidateObj->ID == $groupCheckObj->ID)
 				return true;
 			}
 
 		return false;
 	}
 	
-	/**
-	 * Alias for {@link inGroup}
-	 *
-	 * @param int $groupID ID of the group to check
-	 * @return bool Returns TRUE if the member is in the given group,
-	 *              otherwise FALSE.
-	 * @see inGroup()
-	 */
-	public function isInGroup($groupID) {
-    return $this->inGroup($groupID);
-	}
-
-
 	/**
 	 * Returns true if this user is an administrator.
 	 * Administrators have access to everything.  The lucky bastards! ;-)
@@ -1023,6 +1019,13 @@ class Member extends DataObject {
 				$this->write();
 			}
 		}
+	}
+	
+	/**
+	 * @deprecated 2.3 Use inGroup()
+	 */
+	public function isInGroup($groupID) {
+		user_error('Member::isInGroup() is deprecated. Please use inGroup() instead.', E_USER_NOTICE);
 	}
 }
 

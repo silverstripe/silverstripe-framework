@@ -588,7 +588,7 @@ class SiteTree extends DataObject {
 		if(((!$this->Viewers) || ($this->Viewers == 'Anyone') ||
 						($this->Viewers == 'LoggedInUsers' && $member) ||
 						($this->Viewers == 'OnlyTheseUsers' && $member &&
-						 $member->isInGroup($this->ViewersGroup))) == false)
+						 $member->inGroup($this->ViewersGroup))) == false)
 					return false;
 		return true;
 	}
@@ -696,7 +696,7 @@ class SiteTree extends DataObject {
 		if((Permission::check('CMS_ACCESS_CMSMain') &&
 						(($this->Editors == 'LoggedInUsers' && $member) ||
 					  ($this->Editors == 'OnlyTheseUsers' && $member &&
-						$member->isInGroup($this->EditorsGroup)))) == false)
+						$member->inGroup($this->EditorsGroup)))) == false)
 					return false;
 		
 		return true;
