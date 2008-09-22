@@ -4,13 +4,11 @@ UniqueFormField.prototype = {
 		// check that the value is not in use, and matches the pattern
 		var suggested = this.value;
 		
-		while( this.restrictedValues[suggested] || suggested == null ) {
-			alert(this.restrictedMessage);
-			
-			suggested = prompt('The following might be a suitable URL segment for the page. Alternatively, you can modify it.', this.suggestNewValue() );
+		if( this.restrictedValues[suggested] || suggested == null ) {
+			suggested = this.suggestNewValue();
+			statusMessage("Changed value to " + suggested + ".  " + this.restrictedMessage);
+    		this.value = suggested;
 		}
-		
-		this.value = suggested;
 	},
 	suggestNewValue: function() {
 		var parts = this.value.match( /(.*)(\d+)$/ );
@@ -107,17 +105,19 @@ UniqueRestrictedTextField.prototype = {
 			var suggestedValue = this.restrictedValues[suggested];
 		}
 		
-		while( suggested == null || suggested.length == 0 || suggestedValue || suggested.match( this.charRegex ) ) {
+		if( suggested == null || suggested.length == 0 || suggestedValue || suggested.match( this.charRegex ) ) {
+		    var message;
 			if( suggested == null )
-				alert('You will need to enter a new value for this field');
+				message = 'You will need to enter a new value for this field';
 			else if( suggested.length == 0 )
-				alert('This field cannot be left empty');
+				message = 'This field cannot be left empty';
 			else if( suggestedValue )
-				alert(this.restrictedMessage);
+				message = this.restrictedMessage;
 			else
-				alert(this.charMessage);
-			
-			suggested = prompt('The following might be a suitable URL segment for the page. Alternatively, you can modify it.', this.suggestNewValue() );
+				message = this.charMessage;
+
+			suggested = this.suggestNewValue();
+			statusMessage("Changed value to " + suggested + ".  " + message);
 		}
 		
 		this.value = suggested;
