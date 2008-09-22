@@ -85,7 +85,7 @@ class Permission extends DataObject {
 	 * @param string $code Code of the permission to check
 	 * @param string $arg Optional argument (e.g. a permissions for a specific
 	 *                    page)
-	 * @param int $memberID Optional member ID. If set to NULL, the permssion
+	 * @param int|Member $member Optional member instance or ID. If set to NULL, the permssion
 	 *                      will be checked for the current user
 	 * @param bool $strict Use "strict" checking (which means a permission
 	 *                     will be granted if the key does not exist at all)?
@@ -94,15 +94,15 @@ class Permission extends DataObject {
 	 *                  disabled, TRUE will be returned if the permission does
 	 *                  not exist at all.
 	 */
-	public static function check($code, $arg = "any", $memberID = null, $strict = true) {
-		if(!$memberID) {
+	public static function check($code, $arg = "any", $member = null, $strict = true) {
+		if(!$member) {
 			if(!Member::currentUser()) {
 				return false;
 			}
-			$memberID = Member::currentUserID();
+			$member = Member::currentUser();
 		}
 
-		return self::checkMember($memberID, $code, $arg, $strict);
+		return self::checkMember($member, $code, $arg, $strict);
 	}
 
 
