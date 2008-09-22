@@ -1,10 +1,4 @@
 <?php
-
-/**
- * @package sapphire
- * @subpackage core
- */
-
 /**
  * Supports debugging and core error handling.
  * 
@@ -90,7 +84,9 @@ class Debug {
 	}
 	
 	/**
-	 * Emails the contents of the output buffer
+	 * Emails the contents of the output buffer.
+	 * 
+	 * @deprecated Use custom code instead.
 	 */
 	static function mailBuffer( $email, $subject ) {
 		mail( $email, $subject, ob_get_contents() );
@@ -191,16 +187,6 @@ class Debug {
 		$oldcontent = file_get_contents($file);
 		$content = $oldcontent . "\n\n== $now ==\n$message\n";
 		file_put_contents($file, $content);
-	}
-	
-	private static $warning_pos = 220;
-	
-	static function warning($notice) {
-		echo '<div style="background-color:#ccc;border:3px solid #999;position:absolute;right:0;bottom:'.self::$warning_pos.'px;">';
-		echo '<h6>Warning:</h6>';
-		echo '<p>'.$notice.'</p>';
-		echo '</div>';
-		self::$warning_pos = self::$warning_pos-50;
 	}
 
 	/**
@@ -362,14 +348,16 @@ class Debug {
 
 	/**
 	 * Dispatch an email notification message when an error is triggered. 
+	 * Uses the native PHP mail() function.
 	 *
-	 * @param unknown_type $emailAddress
-	 * @param unknown_type $errno
-	 * @param unknown_type $errstr
-	 * @param unknown_type $errfile
-	 * @param unknown_type $errline
-	 * @param unknown_type $errcontext
-	 * @param unknown_type $errorType
+	 * @param string $emailAddress
+	 * @param string $errno
+	 * @param string $errstr
+	 * @param string $errfile
+	 * @param int $errline
+	 * @param string $errcontext
+	 * @param string $errorType "warning" or "error"
+	 * @return boolean
 	 */
 	static function emailError($emailAddress, $errno, $errstr, $errfile, $errline, $errcontext, $errorType = "Error") {
 		if(strtolower($errorType) == 'warning') {
@@ -385,17 +373,22 @@ class Debug {
 		$data .= "</div>\n";
 
 		// override smtp-server if needed			
-		if(self::$custom_smtp_server) {
-			ini_set("SMTP", self::$custom_smtp_server);			
-		}
+		if(self::$custom_smtp_server) ini_set("SMTP", self::$custom_smtp_server);			
 
 		$relfile = Director::makeRelative($errfile);
 		if($relfile[0] == '/') $relfile = substr($relfile,1);
-		mail($emailAddress, "$errorType at $relfile line $errline (http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI])", $data, "Content-type: text/html\nFrom: errors@silverstripe.com");
+		
+		return mail($emailAddress, "$errorType at $relfile line $errline (http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI])", $data, "Content-type: text/html\nFrom: errors@silverstripe.com");
 	}
 	
 	/**
 	 * Log the given error, if self::$log_errors is set.
+	 * Uses the native error_log() funtion in PHP.
+	 * 
+	 * Format: [d-M-Y h:i:s] <type> at <file> line <line>: <errormessage> <url>
+	 * 
+	 * @todo Detect script path for CLI errors
+	 * @todo Log detailed errors to full file
 	 */
 	protected static function log_error_if_necessary($errno, $errstr, $errfile, $errline, $errcontext, $errtype) {
 		if(self::$log_errors_to) {
@@ -432,8 +425,9 @@ class Debug {
 	 * Send errors to the given email address.
 	 * Can be used like so:
 	 * if(Director::isLive()) Debug::send_errors_to("sam@silverstripe.com");
-	 * @param emailAddress The email address to send them to
-	 * @param sendWarnings Set to true to send warnings as well as errors.
+	 *
+	 * @param string $emailAddress The email address to send errors to
+	 * @param string $sendWarnings Set to true to send warnings as well as errors (Default: true)
 	 */
 	static function send_errors_to($emailAddress, $sendWarnings = true) {
 		self::$send_errors_to = $emailAddress;
@@ -445,6 +439,13 @@ class Debug {
 	 */
 	static function get_send_errors_to() {
 		return self::$send_errors_to;
+	}
+	
+	/**
+	 * @param string $emailAddress
+	 */
+	static function send_warnings_to($emailAddress) {
+		self::$send_warnings_to = $emailAddress;
 	}
 
 	/**
@@ -602,11 +603,21 @@ class Debug {
 		die();
 	}
 }
+
+
+
+
+
+
+
+
+
+
 /**
  * Generic callback, to catch uncaught exceptions when they bubble up to the top of the call chain.
  * 
  * @ignore 
- * @param unknown_type $exception
+ * @param Exception $exception
  */
 function exceptionHandler($exception) {
 	$errno = E_USER_ERROR;
@@ -624,11 +635,11 @@ function exceptionHandler($exception) {
  * Caution: The error levels default to E_ALL is the site is in dev-mode (set in main.php).
  * 
  * @ignore 
- * @param unknown_type $errno
- * @param unknown_type $errstr
- * @param unknown_type $errfile
- * @param unknown_type $errline
- * @param unknown_type $errcontext
+ * @param int $errno
+ * @param string $errstr
+ * @param string $errfile
+ * @param int $errline
+ * @param string $errcontext
  */
 function errorHandler($errno, $errstr, $errfile, $errline, $errcontext) {
 	switch($errno) {
