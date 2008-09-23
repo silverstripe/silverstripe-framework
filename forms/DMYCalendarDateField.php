@@ -20,29 +20,34 @@ class DMYCalendarDateField extends CalendarDateField {
 		$id = $this->id();
 		$val = $this->attrValue();
 		
+		$day = $month = $year = null;
+		
 		if( preg_match( '/^\d{2}\/\d{2}\/\d{4}$/', $val ) ) {
 			$dateArray = explode( '/', $val );
-			
 			$val = $dateArray[2] . '-' . $dateArray[1] . '-' . $dateArray[0];
 		}
 		
-		$dateArray = explode( '-', $val );
+		if($val) {
+			$dateArray = explode( '-', $val );
+			$day = $dateArray[2];
+			$month = $dateArray[1];
+			$year = $dateArray[0];
+		} 
 		
-		$day = $dateArray[2];
-		$month = $dateArray[1];
-		$year = $dateArray[0];
-		
-		preg_match('/(.*)[(.+)]$/', $this->name, $fieldNameParts );
-		
-		$fieldNamePrefix = $fieldNameParts[1];
-		$fieldName = $fieldNameParts[2];
+		if(preg_match('/(.*)[(.+)]$/', $this->name, $fieldNameParts)) {
+			$fieldNamePrefix = $fieldNameParts[1];
+			$fieldName = $fieldNameParts[2];
+		} else {
+			$fieldNamePrefix = $this->name;
+			$fieldName = $this->name;
+		}
 		
 		return <<<HTML
 			<div class="dmycalendardate">
 				<input type="hidden" id="$id" name="{$this->name}" value="$val" />
-				<input type="text" id="$id-day" class="day numeric" name="{$fieldNamePrefix}[{$fieldName}-Day]" value="$day" maxlength="2"$tabIndex0 />/
-				<input type="text" id="$id-month" class="month numeric" name="{$fieldNamePrefix}[{$fieldName}-Month]" value="$month" maxlength="2"$tabIndex1 />/
-				<input type="text" id="$id-year" class="year numeric" name="{$fieldNamePrefix}[{$fieldName}-Year]" value="$year" maxlength="4"$tabIndex2 />
+				<input type="text" id="$id-day" class="day numeric" name="{$fieldNamePrefix}[Day]" value="$day" maxlength="2" />/
+				<input type="text" id="$id-month" class="month numeric" name="{$fieldNamePrefix}[Month]" value="$month" maxlength="2" />/
+				<input type="text" id="$id-year" class="year numeric" name="{$fieldNamePrefix}[Year]" value="$year" maxlength="4" />
 				<div class="calendarpopup" id="{$id}-calendar"></div>
 			</div>
 HTML;

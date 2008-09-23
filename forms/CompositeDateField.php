@@ -7,7 +7,8 @@
 class CompositeDateField extends DateField {
 
 	function __construct($name, $title, $value = null, $yearRange = null){
-		list($year,$month, $date) = explode('-', $value);
+		$year = $month = $date = null;
+		if($value) list($year,$month, $date) = explode('-', $value);
 		
 		$this->dateDropdown = new DropdownField($name."[date]", "",
 			array('NotSet' => '('._t('CompositeDateField.DAY', 'Day').')',
@@ -32,7 +33,7 @@ class CompositeDateField extends DateField {
 		);
 		
 		if($yearRange == null){
-			$this->customiseYearDropDown($name, "1995-2006", $year);
+			$this->customiseYearDropDown($name, "1995-2012", $year);
 		}else{
 			$this->customiseYearDropDown($name, $yearRange, $year);
 		}	

@@ -34,12 +34,15 @@ class DMYDateField extends CalendarDateField {
 			
 			$val = $dateArray[2] . '-' . $dateArray[1] . '-' . $dateArray[0];
 		}
+
+		$day = $month = $year = null;
+		if($val) {
+			$dateArray = explode( '-', $val );
 		
-		$dateArray = explode( '-', $val );
-		
-		$day = $dateArray[2];
-		$month = $dateArray[1];
-		$year = $dateArray[0];
+			$day = $dateArray[2];
+			$month = $dateArray[1];
+			$year = $dateArray[0];
+		}
 		
 		$fieldName = $this->name;
 		

@@ -8,7 +8,7 @@
 class DateField extends TextField {
 	
 	function setValue($val) {
-		if($val && preg_match('/^([\d]{2,4})-([\d]{1,2})-([\d]{1,2})/', $val)) {
+		if(is_string($val) && preg_match('/^([\d]{2,4})-([\d]{1,2})-([\d]{1,2})/', $val)) {
 			$this->value = preg_replace('/^([\d]{2,4})-([\d]{1,2})-([\d]{1,2})/','\\3/\\2/\\1', $val);
 		} else {
 			$this->value = $val;
@@ -17,7 +17,11 @@ class DateField extends TextField {
 	
 	function dataValue() {
 		if(is_array($this->value)) {
-			return $this->value['Year'] . '-' . $this->value['Month'] . '-' . $this->value['Day'];
+			if(isset($this->value['Year']) && isset($this->value['Month']) && isset($this->value['Day'])) {
+				return $this->value['Year'] . '-' . $this->value['Month'] . '-' . $this->value['Day'];
+			} else {
+				user_error("Bad DateField value " . var_export($this->value,true), E_USER_WARNING);
+			}
 		} elseif(preg_match('/^([\d]{1,2})\/([\d]{1,2})\/([\d]{2,4})/', $this->value, $parts)) {
 			return "$parts[3]-$parts[2]-$parts[1]";
 		} elseif(!empty($this->value)) {
