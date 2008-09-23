@@ -21,10 +21,19 @@ class CliTestReporter extends SapphireTestReporter {
 			}
 		}
 		$result = ($failCount > 0) ? 'fail' : 'pass';
-		echo "$testCount tests run: $passCount passes, $failCount fails, and 0 exceptions\n\n";
+		echo "\n\n$testCount tests run: $passCount passes, $failCount fails, and 0 exceptions\n\n";
 	}
 	
 	public function endTest( PHPUnit_Framework_Test $test, $time) {
+		// Status indicator, a la PHPUnit
+		switch($this->currentTest['status']) {
+			case TEST_FAILURE: echo "F"; break;
+			case TEST_ERROR: echo "E"; break;
+			case TEST_INCOMPLETE: echo "I"; break;
+			case TEST_SUCCESS: echo "."; break;
+			default: echo "?"; break;
+		}
+		
 		parent::endTest($test, $time);
 		$this->writeTest($this->currentTest);
 	}

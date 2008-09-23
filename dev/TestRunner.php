@@ -162,7 +162,7 @@ class TestRunner extends Controller {
 			$suite->run($results);
 		}
 		
-		echo '<div class="trace">';
+		if(!Director::is_cli()) echo '<div class="trace">';
 		$reporter->writeResults();
 		
 		if(!Director::is_cli()) echo '</div>';
