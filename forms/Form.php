@@ -337,12 +337,21 @@ class Form extends ViewableData {
 		if($this->formMethod == 'get') $this->fields->push(new HiddenField('executeForm', '', $this->name));
 	}
 	
+	protected $formAction = null;
+	
+	function setFormAction($link) {
+		$this->formAction = $link;
+	}
+	
 	/**
 	 * Return the form's action attribute.
 	 * This is build by adding an executeForm get variable to the parent controller's Link() value
 	 * @return string The
 	 */
 	function FormAction() {
+		// Custom override
+		if($this->formAction) return $this->formAction;
+		
 		// "get" form needs ?executeForm added as a hidden field
 		if($this->formMethod == 'post') {
 			if($this->controller->hasMethod("FormObjectLink")) {
@@ -375,7 +384,9 @@ class Form extends ViewableData {
 	 * @return FormField The field referenced by $_GET[fieldName]
 	 */
 	function ReferencedField() {
-		return $this->dataFieldByName($_GET['fieldName']);
+		$field = $this->dataFieldByName($_GET['fieldName']);
+		if(!$field) user_error("Field '" . $_GET['fieldName'] . "' not found in this form", E_USER_WARNING);
+		return $field;
 	}
 
 	/**
