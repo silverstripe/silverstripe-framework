@@ -592,7 +592,7 @@ class DataObject extends ViewableData implements DataObjectInterface {
 
 			if($defaults) foreach($defaults as $fieldName => $fieldValue) {
 				// SRM 2007-03-06: Stricter check
-				if(!isset($this->$fieldName)) {
+				if(!isset($this->$fieldName) || $this->$fieldName === null) {
 					$this->$fieldName = $fieldValue;
 				}
 				// Set many-many defaults with an array of ids
