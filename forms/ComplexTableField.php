@@ -180,6 +180,24 @@ class ComplexTableField extends TableListField {
 		
 	}
 
+	/**
+	 * Return the record filter for this table.
+	 * It will automatically add a relation filter if relationAutoSetting is true, and it can determine an appropriate
+	 * filter.
+	 */
+	function sourceFilter() {
+		$sourceFilter = parent::sourceFilter();
+		if($this->relationAutoSetting
+			 	&& $this->getParentClass() 
+				&& ($filterKey = $this->getParentIdName($this->getParentClass(), $this->sourceClass()))
+				&& ($filterValue = $this->sourceID()) ) {
+					
+			$newFilter = "`$filterKey` = '" . Convert::raw2sql($filterValue) . "'";
+			$sourceFilter = $sourceFilter ? "($sourceFilter) AND ($newFilter)" : $newFilter;
+		}
+		return $sourceFilter;
+	}
+
 	function isComposite() {
 		return false;
 	}
@@ -486,6 +504,15 @@ JS;
 		return $form;
 	}
 	
+	/**
+	 * By default, a ComplexTableField will assume that the field name is the name of a has-many relation on the object being
+	 * edited.  It will identify the foreign key in the object being listed, and filter on that column, as well as auto-setting
+	 * that column for newly created records.
+	 * 
+	 * Calling $this->setRelationAutoSetting(false) will disable this functionality.
+	 *
+	 * @param boolean $value Should the relation auto-setting functionality be enabled?
+	 */
 	function setRelationAutoSetting($value) {
 		$this->relationAutoSetting = $value;
 	}

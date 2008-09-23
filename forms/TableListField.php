@@ -247,6 +247,13 @@ class TableListField extends FormField {
 		Requirements::css('sapphire/css/TableListField.css');
 	}
 	
+	/**
+	 * Get the filter
+	 */
+	function sourceFilter() {
+		return $this->sourceFilter;
+	}
+	
 	function index() {
 		return $this->FieldHolder();
 	}
@@ -421,7 +428,7 @@ JS
 			$query->select[] = "{$baseClass}.ClassName AS ClassName";
 			$query->select[] = "{$baseClass}.ClassName AS RecordClassName";
 		} else {
-			$query = singleton($this->sourceClass)->extendedSQL($this->sourceFilter, $this->sourceSort, null, $this->sourceJoin);
+			$query = singleton($this->sourceClass)->extendedSQL($this->sourceFilter(), $this->sourceSort, null, $this->sourceJoin);
 
 			// Add more selected fields if they are from joined table.
 
@@ -456,7 +463,7 @@ JS
 			$query->select[] = "{$baseClass}.ClassName AS ClassName";
 			$query->select[] = "{$baseClass}.ClassName AS RecordClassName";
 		} else {
-			$query = singleton($this->sourceClass)->extendedSQL($this->sourceFilter, $this->sourceSort, null, $this->sourceJoin);
+			$query = singleton($this->sourceClass)->extendedSQL($this->sourceFilter(), $this->sourceSort, null, $this->sourceJoin);
 			
 			// Add more selected fields if they are from joined table.
 			foreach($this->FieldList() as $k=>$title){
