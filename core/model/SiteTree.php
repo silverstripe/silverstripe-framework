@@ -998,13 +998,15 @@ class SiteTree extends DataObject {
 	 * the site tree, so it must be calculated dynamically.
 	 */
 	function getPriority() {		
-		if($this->getField('Priority') === null) {
+		if(!$this->getField('Priority')) {
 			$parentStack = $this->parentStack();
 			$numParents = is_array($parentStack) ? count($parentStack) - 1: 0;
 			return max(0.1, 1.0 - ($numParents / 10));
+		} else if($this->getField('Priority') == -1) {
+			return 0;
+		} else {
+			return $this->getField('Priority');
 		}
-			
-		return $this->getField('Priority');
 	}
 
 	/**
@@ -1085,7 +1087,8 @@ class SiteTree extends DataObject {
 
 
 		$pagePriorities = array(
-			'0.0' => _t('SiteTree.PRIORITYNOTINDEXED', "Not indexed"),
+			'' => _t('SiteTree.PRIORITYAUTOSET','Auto-set based on page depth'),
+			'-1' => _t('SiteTree.PRIORITYNOTINDEXED', "Not indexed"), // We set this to -ve one because a blank value implies auto-generation of Priority
 			'1.0' => '1 - ' . _t('SiteTree.PRIORITYMOSTIMPORTANT', "Most important"),
 			'0.9' => '2',
 			'0.8' => '3',
