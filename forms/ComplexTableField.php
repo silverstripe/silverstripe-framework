@@ -342,7 +342,7 @@ JS;
 			return false;
 		} elseif(!empty($this->parentClass)) {
 			return $this->parentClass;
-		} else {
+		} elseif($this->form && $this->form->getRecord()) {
 			return $this->form->getRecord()->ClassName;
 		}
 	}
