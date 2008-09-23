@@ -713,11 +713,7 @@ class Image_Uploader extends Controller {
 			$imageClass = $owner->has_one($data['Field']);
 		
 			// If we can't find the relationship, assume its an Image.
-			if( !$imageClass) {
-				if(!is_subclass_of( $imageClass, 'Image' )){
-					$imageClass = 'Image';	
-				}
-			}
+			if( !$imageClass) $imageClass = 'Image';	
 			
 			// Assuming its a decendant of File
 			$image = new $imageClass();
