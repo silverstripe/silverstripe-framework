@@ -353,8 +353,7 @@ class Security extends Controller {
 		$member = BasicAuth::requireLogin("SilverStripe login", 'ADMIN');
 		$member->LogIn();
 	}
-
-
+	
 	/**
 	 * Show the "lost password" page
 	 *
@@ -504,6 +503,14 @@ class Security extends Controller {
 
 		//Controller::$currentController = $controller;
 		return $customisedController->renderWith($this->stat('template_main'));
+	}
+	
+	/**
+	 * Security/ping can be visited with ajax to keep a session alive.
+	 * This is used in the CMS.
+	 */
+	function ping() {
+		return 1;
 	}
 
 
