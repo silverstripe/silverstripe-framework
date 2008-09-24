@@ -386,8 +386,6 @@ JS;
 		foreach( $relations as $k => $v ) {
 			if( $v == $childClass )
 				return $k . 'ID';
-			else if( array_key_exists( $v, $classes ) )
-				return $classes[ $v ] . 'ID';
 		}
 		return false;
 	}
