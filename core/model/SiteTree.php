@@ -767,7 +767,7 @@ class SiteTree extends DataObject {
 				? $this->MetaTitle
 				: $this->Title) . "</title>\n";
 		}
-		$tags .= "<meta name=\"generator\" http-equiv=\"generator\" content=\"SilverStripe 2.0 - http://www.silverstripe.com\" />\n";
+		$tags .= "<meta name=\"generator\" http-equiv=\"generator\" content=\"SilverStripe - http://www.silverstripe.com\" />\n";
 
 		$charset = ContentNegotiator::get_encoding();
 		$tags .= "<meta http-equiv=\"Content-type\" content=\"text/html; charset=$charset\" />\n";
