@@ -150,12 +150,10 @@ class Security extends Controller {
 		Session::set("Security.Message.message", $message);
 		Session::set("Security.Message.type", 'warning');
 
-		Session::set("BackURL", $_SERVER['REQUEST_URI']);
-		
 		if(Director::is_ajax()) {
 			die('NOTLOGGEDIN:');
 		} else {
-			Director::redirect("Security/login");
+			Director::redirect("Security/login?BackURL=" . urlencode($_SERVER['REQUEST_URI']));
 		}
 		return;
 	}
