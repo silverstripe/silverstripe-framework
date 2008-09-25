@@ -15,8 +15,29 @@ if(isset($_SERVER['HTTP_HOST'])) {
  * @subpackage core
  */
 
+/**
+ * Process arguments and load them into the $_GET and $_REQUEST arrays
+ * For example,
+ * sake my/url somearg otherarg key=val --otherkey=val third=val&fourth=val
+ *
+ * Will result int he following get data:
+ *   args => array('somearg', 'otherarg'),
+ *   key => val
+ *   otherkey => val
+ *   third => val
+ *   fourth => val
+ */
 if(isset($_SERVER['argv'][2])) {
-	parse_str($_SERVER['argv'][2], $_GET);
+    $args = array_slice($_SERVER['argv'],2);
+    $_GET = array();
+    foreach($args as $arg) {
+       if(strpos($arg,'=') == false) {
+           $_GET['args'][] = $arg;
+       } else {
+           $newItems = parse_str( (substr($arg,0,2) == '--') ? substr($arg,2) : $arg );
+           $_GET = array_merge($_GET, $newItems);
+       }
+    }
 	$_REQUEST = $_GET;
 }
 

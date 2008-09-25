@@ -89,4 +89,4 @@ fi
 ################################################################################################
 ## Basic execution
 
-$php $sapphire/cli-script.php $1 $2
+$php $sapphire/cli-script.php ${*}
