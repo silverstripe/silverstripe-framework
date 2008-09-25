@@ -87,6 +87,9 @@ class DatabaseAdmin extends Controller {
 			set_time_limit(600);
 		}
 
+		// Get all our classes
+		ManifestBuilder::compileManifest();
+
 		$this->doBuild(isset($_REQUEST['quiet']) || isset($_REQUEST['from_installer']));
 	}
 
@@ -129,8 +132,6 @@ class DatabaseAdmin extends Controller {
 	 * @param boolean $populate Populate the database, as well as setting up its schema
 	 */
 	function doBuild($quiet = false, $populate = true, $testMode = false) {
-		$conn = DB::getConn();
-
 		if($quiet) {
 			DB::quiet();
 		} else {
@@ -152,10 +153,6 @@ class DatabaseAdmin extends Controller {
 			// ManifestBuilder::compileManifest();
 		}
 
-		// Get all our classes
-		// ManifestBuilder::compileManifest();
-		// ManifestBuilder::includeEverything();
-
 		// Build the database.  Most of the hard work is handled by DataObject
 		$dataClasses = ClassInfo::subclassesFor('DataObject');
 		array_shift($dataClasses);
@@ -165,6 +162,7 @@ class DatabaseAdmin extends Controller {
 			else echo "\n<p><b>Creating database tables</b></p>\n\n";
 		}
 
+		$conn = DB::getConn();
 		$conn->beginSchemaUpdate();
 		foreach($dataClasses as $dataClass) {
 			$SNG = singleton($dataClass);

@@ -7,6 +7,7 @@ class ManifestBuilderTest extends SapphireTest {
 	function testManifest() {
 		$baseFolder = TEMP_FOLDER . '/manifest-test';
 		$manifestInfo = ManifestBuilder::get_manifest_info($baseFolder, DB::getConn()->tableList());
+		global $project;
 		
 		$this->assertEquals("$baseFolder/sapphire/MyClass.php", $manifestInfo['globals']['_CLASS_MANIFEST']['MyClass']);
 		$this->assertEquals("$baseFolder/sapphire/subdir/SubDirClass.php", $manifestInfo['globals']['_CLASS_MANIFEST']['SubDirClass']);
@@ -33,8 +34,10 @@ class ManifestBuilderTest extends SapphireTest {
 	
 	function testManifestIgnoresClassesInComments() {
 		$baseFolder = TEMP_FOLDER . '/manifest-test';
+		global $project;
+
 		$manifestInfo = ManifestBuilder::get_manifest_info($baseFolder, DB::getConn()->tableList());
-		
+
 		/* Our fixture defines the class MyClass_InComment inside a comment, so it shouldn't be included in the class manifest. */
 		$this->assertNotContains('MyClass_InComment', array_keys($manifestInfo['globals']['_CLASS_MANIFEST']));
 		$this->assertNotContains('MyClass_InComment', array_keys($manifestInfo['globals']['_ALL_CLASSES']['exists']));
@@ -51,7 +54,7 @@ class ManifestBuilderTest extends SapphireTest {
 	function testManifestIgnoresClassesInStrings() {
 		$baseFolder = TEMP_FOLDER . '/manifest-test';
 		$manifestInfo = ManifestBuilder::get_manifest_info($baseFolder, DB::getConn()->tableList());
-		
+
 		/* If a class defintion is listed in a single quote string, then it shouldn't be inlcuded.  Here we have put a class definition for  MyClass_InSingleQuoteString inside a single-quoted string */
 		$this->assertNotContains('MyClass_InSingleQuoteString', array_keys($manifestInfo['globals']['_CLASS_MANIFEST']));
 		$this->assertNotContains('MyClass_InSingleQuoteString', array_keys($manifestInfo['globals']['_ALL_CLASSES']['exists']));
@@ -73,6 +76,7 @@ class ManifestBuilderTest extends SapphireTest {
 
 	
 	protected $originalClassManifest, $originalProject, $originalAllClasses;
+	protected static $test_fixture_project;
 
 	function setUp() {
 		// Trick the auto-loder into loading this class before we muck with the manifest
@@ -108,13 +112,23 @@ class ManifestBuilderTest extends SapphireTest {
 		}
 
 		global $_CLASS_MANIFEST, $_ALL_CLASSES, $project;
+		
 		$this->originalAllClasses = $_ALL_CLASSES;
 		$this->originalClassManifest = $_CLASS_MANIFEST;
 		$this->originalProject = $project;
+
+		// Because it's difficult to run multiple tests on a piece of code that uses require_once, we keep a copy of the
+		// $project value.
+		if(self::$test_fixture_project) $project = self::$test_fixture_project;
+		
+		global $project;
 	}
 
 	function tearDown() { 
 		global $_CLASS_MANIFEST, $_ALL_CLASSES, $project;
+
+		if(!self::$test_fixture_project) self::$test_fixture_project = $project;
+		
 		$project = $this->originalProject;
 		$_CLASS_MANIFEST = $this->originalClassManifest;
 		$_ALL_CLASSES = $this->originalAllClasses;

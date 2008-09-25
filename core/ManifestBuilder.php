@@ -175,7 +175,7 @@ class ManifestBuilder {
 				$manifestInfo["require_once"][] = "$baseDir/$filename/_config.php";
 				// Include this so that we're set up for connecting to the database
 				// in the rest of the manifest builder
-				require("$baseDir/$filename/_config.php");
+				require_once("$baseDir/$filename/_config.php");
 			}
 		}
 
