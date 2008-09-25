@@ -2,7 +2,7 @@
 
 /**
  * Base class for URL access to development tools. Currently supports the
- * TestRunner and TaskRunner.
+ * ; and TaskRunner.
  *
  * @todo documentation for how to add new unit tests and tasks
  * @package sapphire
@@ -24,10 +24,10 @@ class DevelopmentAdmin extends Controller {
 		echo <<<HTML
 			<div class="options">
 			<ul>
-				<li><a href="{$base}dev/tests">/dev/tests: See a list of unit tests to run</a></li>
-				<li><a href="{$base}dev/tasks">/dev/tasks: See a list of build tasks to run</a></li>
-				<li><a href="{$base}dev/viewcode">/dev/viewcode: Read source code in a literate programming style</a></li>
-				<li><a href="{$base}db/build?flush=1">/db/build?flush=1: Rebuild the database</a></li>
+				<li style="margin-bottom: 1em"><a href="{$base}dev/build"><b>/dev/build:</b> Build/rebuild this environment (formerly db/build).  Call this whenever you have updated your project sources</a></li>
+				<li><a href="{$base}dev/tests"><b>/dev/tests:</b> See a list of unit tests to run</a></li>
+				<li><a href="{$base}dev/tasks"><b>/dev/tasks:</b> See a list of build tasks to run</a></li>
+				<li><a href="{$base}dev/viewcode"><b>/dev/viewcode:</b> Read source code in a literate programming style</a></li>
 			</ul>
 			</div>
 HTML;
@@ -40,6 +40,19 @@ HTML;
 	
 	function tasks() {
 		return new TaskRunner();
+	}
+	
+	function build() {
+		$renderer = new DebugView();
+		$renderer->writeHeader();
+		$renderer->writeInfo("Environment <i>re</i>Builder (formerly db/build)", Director::absoluteBaseURL());
+		echo "<div style=\"margin: 0 2em\">";
+
+		$da = new DatabaseAdmin();
+		$da->build();
+		
+		echo "</div>";
+		$renderer->writeFooter();
 	}
 	
 	function errors() {
