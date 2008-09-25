@@ -162,13 +162,6 @@ class File extends DataObject {
 		return $upload->isError();
 	}
 
-	/*
-	 * Help to load the content of different type of files to File Table Content Field
-	 */
-	function test() {
-		Debug::show(get_defined_functions());
-	}
-
 	/**
 	 * Delete the database record (recursively for folders) without touching the filesystem
 	 */
