@@ -1512,7 +1512,7 @@ class DataObject extends ViewableData implements DataObjectInterface {
 	 * }
 	 * </example>
 	 *
-	 * @see Good example of complex FormField building: {@link SiteTree::getCMSFields()}
+	 * @see Good example of complex FormField building: SiteTree::getCMSFields()
 	 *
 	 * @return FieldSet
 	 */
