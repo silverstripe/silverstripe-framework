@@ -862,7 +862,7 @@ class ViewableData extends Object implements IteratorAggregate {
 	 * <body class="$CSSClasses">
 	 * </example>
 	 * 
-	 * @uses {@link ClassInfo}
+	 * @uses ClassInfo
 	 * 
 	 * @param string Classname to stop traversing upwards the ancestry (Default: ViewableData)
 	 * @return string space-separated attribute encoded classes
