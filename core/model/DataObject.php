@@ -1465,8 +1465,8 @@ class DataObject extends ViewableData implements DataObjectInterface {
 	 * based on default {@link FormField} mapping in {@link DBField::scaffoldFormField()}.
 	 * Field labels/titles will be auto generated from {@link DataObject::fieldLabels()}.
 	 *
-	 * @uses {@link DBField::scaffoldFormField()}
-	 * @uses {@link DataObject::fieldLabels()}
+	 * @uses DBField::scaffoldFormField()
+	 * @uses DataObject::fieldLabels()
 	 * @param array $fieldClasses Optional mapping of fieldnames to subclasses of {@link DBField}
 	 * @return FieldSet
 	 */
