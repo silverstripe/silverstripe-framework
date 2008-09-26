@@ -3,7 +3,7 @@
  * Standard basic search form which conducts a fulltext search on all {@link SiteTree}
  * objects. 
  * 
- * @see Use {@link ModelController} and {@link SearchContext} for a more generic search implementation based around {@link DataObject}
+ * @see Use ModelController and SearchContext for a more generic search implementation based around DataObject
  * @package sapphire
  * @subpackage search
  */
