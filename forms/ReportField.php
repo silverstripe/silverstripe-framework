@@ -85,7 +85,7 @@ class ReportField extends FormField{
 
 
 	function FieldHolder() {
-		Requirements::javascript("sapphire/javascript/ReportField.js");
+		Requirements::javascript(SAPPHIRE_DIR . "/javascript/ReportField.js");
 
 		$headerHTML = $this->columnheaders();
 		$dataCellHTML = $this->datacells();

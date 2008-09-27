@@ -130,16 +130,15 @@ class Image extends File {
 			return;
 		}
 		
-		$base = dirname(dirname($_SERVER['SCRIPT_FILENAME']));
 		$class = $this->class;
 
 		// Create a folder		
-		if(!file_exists("$base/assets")) {
-			mkdir("$base/assets", Filesystem::$folder_create_mask);
+		if(!file_exists(ASSETS_PATH)) {
+			mkdir(ASSETS_PATH, Filesystem::$folder_create_mask);
 		}
 		
-		if(!file_exists("$base/assets/$class")) {
-			mkdir("$base/assets/$class", Filesystem::$folder_create_mask);
+		if(!file_exists(ASSETS_PATH . "/$class")) {
+			mkdir(ASSETS_PATH . "/$class", Filesystem::$folder_create_mask);
 		}
 
 		// Generate default filename
@@ -150,16 +149,16 @@ class Image extends File {
 			$file = "file.jpg";
 		}
 		
-		$file = "assets/$class/$file";
+		$file = ASSETS_PATH . "/$class/$file";
 		
-		while(file_exists("$base/$file")) {
+		while(file_exists(BASE_PATH . "/$file")) {
 			$i = $i ? ($i+1) : 2;
 			$oldFile = $file;
 			$file = ereg_replace('[0-9]*(\.[^.]+$)',$i . '\\1', $file);
 			if($oldFile == $file && $i > 2) user_error("Couldn't fix $file with $i", E_USER_ERROR);
 		}
 		
-		if(file_exists($tmpFile['tmp_name']) && copy($tmpFile['tmp_name'], "$base/$file")) {
+		if(file_exists($tmpFile['tmp_name']) && copy($tmpFile['tmp_name'], BASE_PATH . "/$file")) {
 			// Remove the old images
 
 			$this->deleteFormattedImages();
@@ -272,7 +271,7 @@ class Image extends File {
 	 * @return string
 	 */
 	function cacheFilename($format, $arg1 = null, $arg2 = null) {
-		$folder = $this->ParentID ? $this->Parent()->Filename : "assets/";
+		$folder = $this->ParentID ? $this->Parent()->Filename : ASSETS_DIR . "/";
 		
 		$format = $format.$arg1.$arg2;
 		
@@ -480,7 +479,7 @@ class Image_Uploader extends Controller {
 	function iframe() {
 		if(!Permission::check('CMS_ACCESS_CMSMain')) Security::permissionFailure($this);
 		
-		Requirements::css("cms/css/Image_iframe.css");
+		Requirements::css(CMS_DIR . "/css/Image_iframe.css");
 		return array();
 	}
 	
@@ -774,7 +773,7 @@ class Image_Uploader extends Controller {
 		foreach($images as $image) {
 			if(($className = $image['ClassName']) && $image['Filename']) {
 				echo "<li>Importing $image[Filename]";
-				$folderName = str_replace('assets/','',dirname($image['Filename']));
+				$folderName = str_replace(ASSETS_DIR . '/','',dirname($image['Filename']));
 				$name = basename($image['Filename']);
 				$folderObj = Folder::findOrMake($folderName);
 				$fileObj = new $className();

@@ -11,8 +11,8 @@ class DropdownTimeField extends TimeField {
 	}
 	
 	static function Requirements() {
-		Requirements::javascript( 'sapphire/javascript/DropdownTimeField.js' );
-		Requirements::css( 'sapphire/css/DropdownTimeField.css' );
+		Requirements::javascript( SAPPHIRE_DIR . '/javascript/DropdownTimeField.js' );
+		Requirements::css( SAPPHIRE_DIR . '/css/DropdownTimeField.css' );
 	}
 	
 	static function HTMLField( $id, $name, $val ) {

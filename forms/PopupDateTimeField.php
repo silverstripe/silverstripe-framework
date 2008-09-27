@@ -8,7 +8,7 @@ class PopupDateTimeField extends CalendarDateField {
 	
 	function Field() {
 		
-		Requirements::css( 'sapphire/css/PopupDateTimeField.css' );
+		Requirements::css( SAPPHIRE_DIR . '/css/PopupDateTimeField.css' );
 		
 		$field = parent::Field();
 		

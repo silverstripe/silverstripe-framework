@@ -17,12 +17,12 @@ class DMYDateField extends CalendarDateField {
 	}
 	
 	function Field() {
-		Requirements::javascript("jsparty/calendar/calendar.js");
-		Requirements::javascript("jsparty/calendar/lang/calendar-en.js");
-		Requirements::javascript("jsparty/calendar/calendar-setup.js");
-		Requirements::css("sapphire/css/CalendarDateField.css");
-		Requirements::css("jsparty/calendar/calendar-win2k-1.css");
-		Requirements::javascript("sapphire/javascript/CalendarDateField.js");
+		Requirements::javascript(THIRDPARTY_DIR . "/calendar/calendar.js");
+		Requirements::javascript(THIRDPARTY_DIR . "/calendar/lang/calendar-en.js");
+		Requirements::javascript(THIRDPARTY_DIR . "/calendar/calendar-setup.js");
+		Requirements::css(SAPPHIRE_DIR . "/css/CalendarDateField.css");
+		Requirements::css(THIRDPARTY_DIR . "/calendar/calendar-win2k-1.css");
+		Requirements::javascript(SAPPHIRE_DIR . "/javascript/CalendarDateField.js");
 
 		$field = DateField::Field();
 

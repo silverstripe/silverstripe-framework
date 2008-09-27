@@ -13,7 +13,7 @@ class TreeSelectorField extends FormField {
 	}
 	
 	function Field() {
-		Requirements::javascript("sapphire/javascript/TreeSelectorField.js");
+		Requirements::javascript(SAPPHIRE_DIR . "/javascript/TreeSelectorField.js");
 		
 		$fieldName = $this->name;
 		if($this->form) {

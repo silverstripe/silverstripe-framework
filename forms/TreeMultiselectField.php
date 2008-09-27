@@ -29,7 +29,7 @@ class TreeMultiselectField extends TreeDropdownField {
 	function Field() {
 		$value = '';
 		$itemList = '';
-		Requirements::javascript("sapphire/javascript/TreeSelectorField.js");
+		Requirements::javascript(SAPPHIRE_DIR . "/javascript/TreeSelectorField.js");
 		
 		$items = $this->getItems();
 		if($items) {

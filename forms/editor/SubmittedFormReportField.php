@@ -14,7 +14,7 @@ class SubmittedFormReportField extends FormField {
 	}
 	
 	function Field() {
-		Requirements::css("sapphire/css/SubmittedFormReportField.css");
+		Requirements::css(SAPPHIRE_DIR . "/css/SubmittedFormReportField.css");
 		
 		return $this->renderWith("SubmittedFormReportField");
 	}

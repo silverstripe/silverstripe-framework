@@ -45,7 +45,7 @@ class RedirectorPage extends Page {
 	}
 	
 	function getCMSFields() {
-		Requirements::javascript("sapphire/javascript/RedirectorPage.js");
+		Requirements::javascript(SAPPHIRE_DIR . "/javascript/RedirectorPage.js");
 		
     	$fields = new FieldSet(
 			new TabSet("Root",

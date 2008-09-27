@@ -17,7 +17,7 @@ function getTempFolder() {
 		$cachefolder = "silverstripe-cache";
 	}
 	
-	$ssTmp = dirname(dirname($_SERVER['SCRIPT_FILENAME'])) . "/silverstripe-cache";
+	$ssTmp = BASE_PATH . "/silverstripe-cache";
     if(@file_exists($ssTmp)) {
     	return $ssTmp;
     }
@@ -38,7 +38,7 @@ function getTempFolder() {
     	@$worked = mkdir($ssTmp);
     }
     if(!$worked) {
-    	$ssTmp = dirname(dirname($_SERVER['SCRIPT_FILENAME'])) . "/silverstripe-cache";
+    	$ssTmp = BASE_PATH . "/silverstripe-cache";
     	$worked = true;
     	if(!@file_exists($ssTmp)) {
     		@$worked = mkdir($ssTmp);

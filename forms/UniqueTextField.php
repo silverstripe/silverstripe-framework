@@ -23,7 +23,7 @@ class UniqueTextField extends TextField {
 	}
 	 
 	function Field() {
-		Requirements::javascript("sapphire/javascript/UniqueFields.js");
+		Requirements::javascript(SAPPHIRE_DIR . "/javascript/UniqueFields.js");
 		
 		/*		
 		$restrictedValues = array();

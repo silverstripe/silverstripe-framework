@@ -239,12 +239,12 @@ class TableListField extends FormField {
 
 		parent::__construct($name);
 		
-		Requirements::javascript('jsparty/prototype.js');
-		Requirements::javascript('jsparty/behaviour.js');
-		Requirements::javascript('jsparty/prototype_improvements.js');
-		Requirements::javascript('jsparty/scriptaculous/effects.js');
-		Requirements::javascript('sapphire/javascript/TableListField.js');
-		Requirements::css('sapphire/css/TableListField.css');
+		Requirements::javascript(THIRDPARTY_DIR . 'jsparty/prototype.js');
+		Requirements::javascript(THIRDPARTY_DIR . 'jsparty/behaviour.js');
+		Requirements::javascript(THIRDPARTY_DIR . 'jsparty/prototype_improvements.js');
+		Requirements::javascript(THIRDPARTY_DIR . 'jsparty/scriptaculous/effects.js');
+		Requirements::javascript(SAPPHIRE_DIR . '/javascript/TableListField.js');
+		Requirements::css(SAPPHIRE_DIR . '/css/TableListField.css');
 	}
 	
 	/**
@@ -944,9 +944,9 @@ JS
 
 	function printall() {
 		Requirements::clear();
-		Requirements::css('cms/css/typography.css');
-		Requirements::css('cms/css/cms_right.css');
-		Requirements::css('sapphire/css/TableListField_print.css');
+		Requirements::css(CMS_DIR . '/css/typography.css');
+		Requirements::css(CMS_DIR . '/css/cms_right.css');
+		Requirements::css(SAPPHIRE_DIR . '/css/TableListField_print.css');
 		$vd = new ViewableData();
 		return $vd->customise(array(
 			'Content' => $this->customise(array(

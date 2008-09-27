@@ -22,7 +22,7 @@ class SelectionGroup extends CompositeField {
 		
 		parent::__construct($items);
 		
-		Requirements::css('sapphire/css/SelectionGroup.css');
+		Requirements::css(SAPPHIRE_DIR . '/css/SelectionGroup.css');
 	}
 	
 	/**
@@ -78,10 +78,10 @@ class SelectionGroup extends CompositeField {
 	}
 	
 	function FieldHolder() {
-		Requirements::javascript('jsparty/prototype.js');
-		Requirements::javascript('jsparty/behaviour.js');
-		Requirements::javascript('jsparty/prototype_improvements.js');
-		Requirements::javascript('sapphire/javascript/SelectionGroup.js');
+		Requirements::javascript(THIRDPARTY_DIR . '/prototype.js');
+		Requirements::javascript(THIRDPARTY_DIR . '/behaviour.js');
+		Requirements::javascript(THIRDPARTY_DIR . '/prototype_improvements.js');
+		Requirements::javascript(SAPPHIRE_DIR . '/javascript/SelectionGroup.js');
 		
 		
 		return $this->renderWith("SelectionGroup");

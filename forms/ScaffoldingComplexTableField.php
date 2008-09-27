@@ -20,36 +20,36 @@ class ScaffoldingComplexTableField_Popup extends Form {
 		 * WARNING: DO NOT CHANGE THE ORDER OF THESE JS FILES
 		 * Some have special requirements.
 		 */
-		//Requirements::css('cms/css/layout.css');
-		Requirements::css('jsparty/tabstrip/tabstrip.css');
-		Requirements::css('sapphire/css/Form.css');
-		Requirements::css('sapphire/css/ComplexTableField_popup.css');
-		Requirements::css('cms/css/typography.css');
-		Requirements::css('cms/css/cms_right.css');
-		Requirements::css('jsparty/jquery/plugins/autocomplete/jquery.ui.autocomplete.css');
-		Requirements::javascript("jsparty/prototype.js");
-		Requirements::javascript("jsparty/behaviour.js");
-		Requirements::javascript("jsparty/prototype_improvements.js");
-		Requirements::javascript("jsparty/loader.js");
-		Requirements::javascript("jsparty/tabstrip/tabstrip.js");
-		Requirements::javascript("jsparty/scriptaculous/scriptaculous.js");
-		Requirements::javascript("jsparty/scriptaculous/controls.js");
-		Requirements::javascript("jsparty/layout_helpers.js");
-		Requirements::javascript("cms/javascript/LeftAndMain.js");
-		Requirements::javascript("cms/javascript/LeftAndMain_right.js");
-		Requirements::javascript("sapphire/javascript/TableField.js");
-		Requirements::javascript("sapphire/javascript/ComplexTableField.js");
-		Requirements::javascript("sapphire/javascript/ComplexTableField_popup.js");
+		//Requirements::css(CMS_DIR . 'css/layout.css');
+		Requirements::css(THIRDPARTY_DIR . '/tabstrip/tabstrip.css');
+		Requirements::css(SAPPHIRE_DIR . '/css/Form.css');
+		Requirements::css(SAPPHIRE_DIR . '/css/ComplexTableField_popup.css');
+		Requirements::css(CMS_DIR . '/css/typography.css');
+		Requirements::css(CMS_DIR . '/css/cms_right.css');
+		Requirements::css(THIRDPARTY_DIR . '/jquery/plugins/autocomplete/jquery.ui.autocomplete.css');
+		Requirements::javascript(THIRDPARTY_DIR . "/prototype.js");
+		Requirements::javascript(THIRDPARTY_DIR . "/behaviour.js");
+		Requirements::javascript(THIRDPARTY_DIR . "/prototype_improvements.js");
+		Requirements::javascript(THIRDPARTY_DIR . "/loader.js");
+		Requirements::javascript(THIRDPARTY_DIR . "/tabstrip/tabstrip.js");
+		Requirements::javascript(THIRDPARTY_DIR . "/scriptaculous/scriptaculous.js");
+		Requirements::javascript(THIRDPARTY_DIR . "/scriptaculous/controls.js");
+		Requirements::javascript(THIRDPARTY_DIR . "/layout_helpers.js");
+		Requirements::javascript(CMS_DIR . "/javascript/LeftAndMain.js");
+		Requirements::javascript(CMS_DIR . "/javascript/LeftAndMain_right.js");
+		Requirements::javascript(SAPPHIRE_DIR . "/javascript/TableField.js");
+		Requirements::javascript(SAPPHIRE_DIR . "/javascript/ComplexTableField.js");
+		Requirements::javascript(SAPPHIRE_DIR . "/javascript/ComplexTableField_popup.js");
 		// jQuery requirements (how many of these are actually needed?)
-		Requirements::javascript('jsparty/jquery/jquery.js');
-		Requirements::javascript('jsparty/jquery/plugins/livequery/jquery.livequery.js');
-		Requirements::javascript('jsparty/jquery/ui/ui.core.js');
-		Requirements::javascript('jsparty/jquery/ui/ui.tabs.js');
-		Requirements::javascript('jsparty/jquery/plugins/form/jquery.form.js');
-		Requirements::javascript('jsparty/jquery/plugins/dimensions/jquery.dimensions.js');
-		Requirements::javascript('jsparty/jquery/plugins/autocomplete/jquery.ui.autocomplete.js');
-		Requirements::javascript('sapphire/javascript/ScaffoldComplexTableField.js');
-		Requirements::javascript('cms/javascript/ModelAdmin.js');
+		Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
+		Requirements::javascript(THIRDPARTY_DIR . '/jquery/plugins/livequery/jquery.livequery.js');
+		Requirements::javascript(THIRDPARTY_DIR . '/jquery/ui/ui.core.js');
+		Requirements::javascript(THIRDPARTY_DIR . '/jquery/ui/ui.tabs.js');
+		Requirements::javascript(THIRDPARTY_DIR . '/jquery/plugins/form/jquery.form.js');
+		Requirements::javascript(THIRDPARTY_DIR . '/jquery/plugins/dimensions/jquery.dimensions.js');
+		Requirements::javascript(THIRDPARTY_DIR . '/jquery/plugins/autocomplete/jquery.ui.autocomplete.js');
+		Requirements::javascript(SAPPHIRE_DIR . '/javascript/ScaffoldComplexTableField.js');
+		Requirements::javascript(CMS_DIR . '/javascript/ModelAdmin.js');
 		
  		if($this->dataObject->hasMethod('getRequirementsForPopup')) {
 			$this->dataObject->getRequirementsForPopup();

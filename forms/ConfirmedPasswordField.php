@@ -86,10 +86,10 @@ class ConfirmedPasswordField extends FormField {
 	}
 	
 	function Field() {
-		Requirements::javascript('jsparty/prototype.js');
-		Requirements::javascript('jsparty/behaviour.js');
-		Requirements::javascript('jsparty/prototype_improvements.js');
-		Requirements::javascript('sapphire/javascript/ConfirmedPasswordField.js');
+		Requirements::javascript(THIRDPARTY_DIR . '/prototype.js');
+		Requirements::javascript(THIRDPARTY_DIR . '/behaviour.js');
+		Requirements::javascript(THIRDPARTY_DIR . '/prototype_improvements.js');
+		Requirements::javascript(SAPPHIRE_DIR . '/javascript/ConfirmedPasswordField.js');
 		
 		$content = '';
 		

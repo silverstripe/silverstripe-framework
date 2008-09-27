@@ -134,15 +134,15 @@ class File extends DataObject {
 	 */
 	function Icon() {
 		$ext = $this->Extension;
-		if(!Director::fileExists("sapphire/images/app_icons/{$ext}_32.gif")) {
+		if(!Director::fileExists(SAPPHIRE_DIR . "/images/app_icons/{$ext}_32.gif")) {
 			$ext = $this->appCategory();
 		}
 
-		if(!Director::fileExists("sapphire/images/app_icons/{$ext}_32.gif")) {
+		if(!Director::fileExists(SAPPHIRE_DIR . "/images/app_icons/{$ext}_32.gif")) {
 			$ext = "generic";
 		}
 
-		return "sapphire/images/app_icons/{$ext}_32.gif";
+		return SAPPHIRE_DIR . "/images/app_icons/{$ext}_32.gif";
 	}
 
 	/**
@@ -366,13 +366,13 @@ class File extends DataObject {
 			$p = DataObject::get_one('Folder', "ID={$this->ParentID}");
 
 			if($p->ID) return $p->getRelativePath() . $this->getField("Name");
-			else return "assets/" . $this->getField("Name");
+			else return ASSETS_DIR . "/" . $this->getField("Name");
 
 		} else if($this->getField("Name")) {
-			return "assets/" . $this->getField("Name");
+			return ASSETS_DIR . "/" . $this->getField("Name");
 
 		} else {
-			return "assets";
+			return ASSETS_DIR;
 		}
 	}
 
@@ -384,7 +384,7 @@ class File extends DataObject {
 		if($this->getField('Filename')) {
 			return $this->getField('Filename');
 		} else {
-			return 'assets/';
+			return ASSETS_DIR . '/';
 		}
 	}
 

@@ -135,7 +135,7 @@ class ManifestBuilderTest extends SapphireTest {
 
 		// Kill the folder after we're done
 		$baseFolder = TEMP_FOLDER . '/manifest-test/';
-		Filesystem::removeFolder($baseFolder);
+		//Filesystem::removeFolder($baseFolder);
 	}
 	
 }

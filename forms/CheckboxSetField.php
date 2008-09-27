@@ -15,7 +15,7 @@ class CheckboxSetField extends OptionsetField {
 	function __construct($name, $title = "", $source = array(), $value = "", $form = null) {
 		parent::__construct($name, $title, $source, $value, $form);
 		
-		Requirements::css('sapphire/css/CheckboxSetField.css');
+		Requirements::css(SAPPHIRE_DIR . '/css/CheckboxSetField.css');
 	}
   
   	/**

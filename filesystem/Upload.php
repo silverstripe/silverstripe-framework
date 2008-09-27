@@ -97,11 +97,11 @@ class Upload extends Controller {
 		$parentFolder = Folder::findOrMake($folderPath);
 
 		// Create a folder for uploading.
-		if(!file_exists("$base/assets")){
-			mkdir("$base/assets", Filesystem::$folder_create_mask);
+		if(!file_exists(ASSETS_PATH)){
+			mkdir(ASSETS_PATH, Filesystem::$folder_create_mask);
 		}
-		if(!file_exists("$base/assets/" . $folderPath)){
-			mkdir("$base/assets/" . $folderPath, Filesystem::$folder_create_mask);
+		if(!file_exists(ASSETS_PATH . "/" . $folderPath)){
+			mkdir(ASSETS_PATH . "/" . $folderPath, Filesystem::$folder_create_mask);
 		}
 
 		// Generate default filename
@@ -110,7 +110,7 @@ class Upload extends Controller {
 		$fileName = ereg_replace('-+', '-',$fileName);
 		$fileName = basename($fileName);
 
-		$relativeFilePath = "assets/" . $folderPath . "/$fileName";
+		$relativeFilePath = ASSETS_DIR . "/" . $folderPath . "/$fileName";
 		
 		// if filename already exists, version the filename (e.g. test.gif to test1.gif)
 		while(file_exists("$base/$relativeFilePath")) {

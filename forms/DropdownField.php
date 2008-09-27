@@ -109,10 +109,10 @@ class DropdownField_WithAdd extends DropdownField {
 	function Field() {
 		
 		//Add these js file so that the DropdownField_WithAdd can work alone (in a webpage, rather than CMS).
-		Requirements::javascript('jsparty/prototype.js');
-		Requirements::javascript('jsparty/behaviour.js');
-		Requirements::javascript('jsparty/prototype_improvements.js');
-		Requirements::Javascript("sapphire/javascript/DropdownField_WithAdd.js");
+		Requirements::javascript(THIRDPARTY_DIR . 'jsparty/prototype.js');
+		Requirements::javascript(THIRDPARTY_DIR . 'jsparty/behaviour.js');
+		Requirements::javascript(THIRDPARTY_DIR . 'jsparty/prototype_improvements.js');
+		Requirements::Javascript(SAPPHIRE_DIR . "/javascript/DropdownField_WithAdd.js");
 
 		$dropdown = parent::Field();
 		if($this->addLink) $addLink = <<<HTML

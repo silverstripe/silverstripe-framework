@@ -96,11 +96,11 @@ class ErrorPage extends Page {
 		$controller = new ErrorPage_Controller($this);
 		$errorContent = $controller->handleRequest(new HTTPRequest('GET',''))->getBody();
 		
-		if(!file_exists("../assets")) {
-			mkdir("../assets", 02775);
+		if(!file_exists(ASSETS_PATH)) {
+			mkdir(ASSETS_PATH, 02775);
 		}
 
-		if($fh = fopen("../assets/error-$this->ErrorCode.html", "w")) {
+		if($fh = fopen(ASSETS_PATH . "/error-$this->ErrorCode.html", "w")) {
 			fwrite($fh, $errorContent);
 			fclose($fh);
 		}

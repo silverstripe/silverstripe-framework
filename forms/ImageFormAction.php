@@ -22,9 +22,9 @@ class ImageFormAction extends FormAction {
 		parent::__construct($action, $title, $form);
 	}
 	function Field() {
-		Requirements::javascript('jsparty/prototype.js');
-		Requirements::javascript('jsparty/behaviour.js');
-		Requirements::javascript('sapphire/javascript/ImageFormAction.js');
+		Requirements::javascript(THIRDPARTY_DIR . '/prototype.js');
+		Requirements::javascript(THIRDPARTY_DIR . '/behaviour.js');
+		Requirements::javascript(SAPPHIRE_DIR . '/javascript/ImageFormAction.js');
 		
 		$classClause = '';
 		if($this->className) $classClause = $this->className . ' ';

@@ -296,14 +296,14 @@ class Security extends Controller {
 		// only display tabs when more than one authenticator is provided
 		// to save bandwidth and reduce the amount of custom styling needed 
 		if(count($forms) > 1) {
-			Requirements::javascript("jsparty/loader.js");
-			Requirements::javascript("jsparty/prototype.js");
-			Requirements::javascript("jsparty/behaviour.js");
-			Requirements::javascript("jsparty/prototype_improvements.js");
-			Requirements::javascript("jsparty/tabstrip/tabstrip.js");
-			Requirements::javascript("jsparty/scriptaculous/effects.js");
-			Requirements::css("jsparty/tabstrip/tabstrip.css");
-			Requirements::css("sapphire/css/Form.css");
+			Requirements::javascript(THIRDPARTY_DIR . "/loader.js");
+			Requirements::javascript(THIRDPARTY_DIR . "/prototype.js");
+			Requirements::javascript(THIRDPARTY_DIR . "/behaviour.js");
+			Requirements::javascript(THIRDPARTY_DIR . "/prototype_improvements.js");
+			Requirements::javascript(THIRDPARTY_DIR . "/tabstrip/tabstrip.js");
+			Requirements::javascript(THIRDPARTY_DIR . "/scriptaculous/effects.js");
+			Requirements::css(THIRDPARTY_DIR . "/tabstrip/tabstrip.css");
+			Requirements::css(SAPPHIRE_DIR . "/css/Form.css");
 			
 			// Needed because the <base href=".."> in the template makes problems
 			// with the tabstrip library otherwise
@@ -360,11 +360,11 @@ class Security extends Controller {
 	 * @return string Returns the "lost password" page as HTML code.
 	 */
 	public function lostpassword() {
-		Requirements::javascript('jsparty/prototype.js');
-		Requirements::javascript('jsparty/behaviour.js');
-		Requirements::javascript('jsparty/loader.js');
-		Requirements::javascript('jsparty/prototype_improvements.js');
-		Requirements::javascript('jsparty/scriptaculous/effects.js');
+		Requirements::javascript(THIRDPARTY_DIR . 'jsparty/prototype.js');
+		Requirements::javascript(THIRDPARTY_DIR . 'jsparty/behaviour.js');
+		Requirements::javascript(THIRDPARTY_DIR . 'jsparty/loader.js');
+		Requirements::javascript(THIRDPARTY_DIR . 'jsparty/prototype_improvements.js');
+		Requirements::javascript(THIRDPARTY_DIR . 'jsparty/scriptaculous/effects.js');
 
 		$tmpPage = new Page();
 		$tmpPage->Title = _t('Security.LOSTPASSWORDHEADER', 'Lost Password');
@@ -410,11 +410,11 @@ class Security extends Controller {
 	 * @return string Returns the "password sent" page as HTML code.
 	 */
 	public function passwordsent($request) {
-		Requirements::javascript('jsparty/behaviour.js');
-		Requirements::javascript('jsparty/loader.js');
-		Requirements::javascript('jsparty/prototype.js');
-		Requirements::javascript('jsparty/prototype_improvements.js');
-		Requirements::javascript('jsparty/scriptaculous/effects.js');
+		Requirements::javascript(THIRDPARTY_DIR . 'jsparty/behaviour.js');
+		Requirements::javascript(THIRDPARTY_DIR . 'jsparty/loader.js');
+		Requirements::javascript(THIRDPARTY_DIR . 'jsparty/prototype.js');
+		Requirements::javascript(THIRDPARTY_DIR . 'jsparty/prototype_improvements.js');
+		Requirements::javascript(THIRDPARTY_DIR . 'jsparty/scriptaculous/effects.js');
 
 		$tmpPage = new Page();
 		$tmpPage->Title = _t('Security.LOSTPASSWORDHEADER');

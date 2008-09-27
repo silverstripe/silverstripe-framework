@@ -21,10 +21,10 @@ class ToggleCompositeField extends CompositeField {
 	}
 	
 	public function FieldHolder() {
-		Requirements::javascript("jsparty/prototype.js");
-		Requirements::javascript("jsparty/behaviour.js");
-		Requirements::javascript("jsparty/prototype_improvements.js");
-		Requirements::javascript("sapphire/javascript/ToggleCompositeField.js");
+		Requirements::javascript(THIRDPARTY_DIR . "/prototype.js");
+		Requirements::javascript(THIRDPARTY_DIR . "/behaviour.js");
+		Requirements::javascript(THIRDPARTY_DIR . "/prototype_improvements.js");
+		Requirements::javascript(SAPPHIRE_DIR . "/javascript/ToggleCompositeField.js");
 		
 		return $this->renderWith("ToggleCompositeField");
 	}	

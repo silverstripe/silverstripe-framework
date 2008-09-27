@@ -150,10 +150,10 @@ class TestRunner extends Controller {
 			$results->collectCodeCoverageInformation(true);
 			$suite->run($results);
 
-			if(!file_exists('../assets/coverage-report')) mkdir('../assets/coverage-report');
-			PHPUnit_Util_Report::render($results, '../assets/coverage-report/');
-			$coverageApp = Director::baseURL() . 'assets/coverage-report/' . preg_replace('/[^A-Za-z0-9]/','_',preg_replace('/(\/$)|(^\/)/','',Director::baseFolder())) . '.html';
-			$coverageTemplates = Director::baseURL() . 'assets/coverage-report/' . preg_replace('/[^A-Za-z0-9]/','_',preg_replace('/(\/$)|(^\/)/','',realpath(TEMP_FOLDER))) . '.html';
+			if(!file_exists(ASSETS_PATH . '/coverage-report')) mkdir(ASSETS_PATH . '/coverage-report');
+			PHPUnit_Util_Report::render($results, ASSETS_PATH . '/coverage-report/');
+			$coverageApp = ASSETS_PATH . '/coverage-report/' . preg_replace('/[^A-Za-z0-9]/','_',preg_replace('/(\/$)|(^\/)/','',Director::baseFolder())) . '.html';
+			$coverageTemplates = ASSETS_PATH . '/coverage-report/' . preg_replace('/[^A-Za-z0-9]/','_',preg_replace('/(\/$)|(^\/)/','',realpath(TEMP_FOLDER))) . '.html';
 			echo "<p>Coverage reports available here:<ul>
 				<li><a href=\"$coverageApp\">Coverage report of the application</a></li>
 				<li><a href=\"$coverageTemplates\">Coverage report of the templates</a></li>

@@ -14,7 +14,7 @@ class RestrictedTextField extends TextField {
 	}
 	
 	function Field() {
-		Requirements::javascript( 'sapphire/javascript/UniqueFields.js' );
+		Requirements::javascript( SAPPHIRE_DIR . '/javascript/UniqueFields.js' );
 		
 		if($this->maxLength){
 			$field = "<input class=\"text restricted\" type=\"text\" id=\"" . $this->id() . "\" name=\"{$this->name}\" value=\"" . $this->attrValue() . "\" maxlength=\"$this->maxLength\" />";

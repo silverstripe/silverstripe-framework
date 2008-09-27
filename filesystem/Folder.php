@@ -218,7 +218,7 @@ class Folder extends File {
 			return;
 		}
 		
-		$base = dirname(dirname($_SERVER['SCRIPT_FILENAME']));
+		$base = BASE_PATH;
 		// $parentFolder = Folder::findOrMake("Uploads");
 
 		// Generate default filename

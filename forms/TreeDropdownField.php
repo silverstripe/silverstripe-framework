@@ -21,7 +21,7 @@ class TreeDropdownField extends FormField {
 		$this->keyField = $keyField;
 		$this->labelField = $labelField;
 		
-		Requirements::css('sapphire/css/TreeDropdownField.css');
+		Requirements::css(SAPPHIRE_DIR . '/css/TreeDropdownField.css');
 		
 		parent::__construct($name, $title);
 	}
@@ -37,9 +37,9 @@ class TreeDropdownField extends FormField {
 	}
 	
 	function Field() {
-		Requirements::javascript("jsparty/tree/tree.js");
-		Requirements::css("jsparty/tree/tree.css");
-		Requirements::javascript("sapphire/javascript/TreeSelectorField.js");
+		Requirements::javascript(THIRDPARTY_DIR . "/tree/tree.js");
+		Requirements::css(THIRDPARTY_DIR . "/tree/tree.css");
+		Requirements::javascript(SAPPHIRE_DIR . "/javascript/TreeSelectorField.js");
 		
 		if($this->value) {
 			$record = DataObject::get_by_id($this->sourceObject, $this->value);

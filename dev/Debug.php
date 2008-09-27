@@ -258,8 +258,8 @@ class Debug {
 			echo "There has been an error";
 
 		} else {
-			if(file_exists('../assets/error-500.html')) {
-				include('../assets/error-500.html');
+			if(file_exists(ASSETS_PATH . '/error-500.html')) {
+				include(ASSETS_PATH . '/error-500.html');
 			} else {
 				echo "<h1>Error</h1><p>The website server has not been able to respond to your request.</p>\n";
 			}

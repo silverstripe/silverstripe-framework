@@ -1020,7 +1020,7 @@ class SiteTree extends DataObject {
 	 */
 	function getCMSFields() {
 		require_once("forms/Form.php");
-		Requirements::javascript("cms/javascript/SitetreeAccess.js");
+		Requirements::javascript(CMS_DIR . "/javascript/SitetreeAccess.js");
 
 		// Backlink report
 		if($this->hasMethod('BackLinkTracking')) {

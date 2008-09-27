@@ -26,8 +26,8 @@ class FieldEditor extends FormField {
 	}
 	
 	function Fields() {
-		Requirements::css("sapphire/css/FieldEditor.css");
-		Requirements::javascript("sapphire/javascript/FieldEditor.js");
+		Requirements::css(SAPPHIRE_DIR . "/css/FieldEditor.css");
+		Requirements::javascript(SAPPHIRE_DIR . "/javascript/FieldEditor.js");
 		
 		$relationName = $this->name;
 		

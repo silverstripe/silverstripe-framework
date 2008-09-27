@@ -26,7 +26,7 @@ class InlineFormAction extends FormField {
 	
 	function Field() {
 		if($this->includeDefaultJS) {
-			Requirements::javascriptTemplate('sapphire/javascript/InlineFormAction.js',array('ID'=>$this->id()));
+			Requirements::javascriptTemplate(SAPPHIRE_DIR . '/javascript/InlineFormAction.js',array('ID'=>$this->id()));
 		}
 		
 		return "<input type=\"submit\" name=\"action_{$this->name}\" value=\"{$this->title}\" id=\"{$this->id()}\" class=\"action{$this->extraClass}\" />";

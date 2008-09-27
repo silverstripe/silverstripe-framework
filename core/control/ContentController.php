@@ -184,10 +184,10 @@ class ContentController extends Controller {
 		$member = Member::currentUser();
 
 		if(Director::isDev() || Permission::check('CMS_ACCESS_CMSMain')) {
-			Requirements::css('sapphire/css/SilverStripeNavigator.css');
+			Requirements::css(SAPPHIRE_DIR . '/css/SilverStripeNavigator.css');
 
-			Requirements::javascript('jsparty/behaviour.js');
-			// Requirements::javascript('jsparty/prototype.js');
+			Requirements::javascript(THIRDPARTY_DIR . '/behaviour.js');
+			// Requirements::javascript(THIRDPARTY_DIR . 'jsparty/prototype.js');
 			Requirements::customScript(<<<JS
 				Behaviour.register({
 					'#switchView a' :  {
@@ -278,7 +278,7 @@ HTML;
 		// On live sites we should still see the archived message
 		} else {
 			if($date = Versioned::current_archived_date()) {
-				Requirements::css('sapphire/css/SilverStripeNavigator.css');
+				Requirements::css(SAPPHIRE_DIR . '/css/SilverStripeNavigator.css');
 				$dateObj = Object::create('Datetime', $date, null);
 				// $dateObj->setVal($date);
 				return "<div id=\"SilverStripeNavigatorMessage\">Archived site from<br>" . $dateObj->Nice() . "</div>";

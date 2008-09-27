@@ -45,6 +45,24 @@ $_SERVER['SCRIPT_FILENAME'] = __FILE__;
 chdir(dirname($_SERVER['SCRIPT_FILENAME']));
 
 /**
+ * Define system paths
+ */
+define('BASE_PATH', dirname(dirname($_SERVER['SCRIPT_FILENAME'])));
+define('BASE_URL', dirname(dirname($_SERVER['SCRIPT_NAME'])));
+define('MODULES_DIR', 'modules');
+define('MODULES_PATH', BASE_PATH . '/' . MODULES_DIR);
+define('THIRDPARTY_DIR', 'jsparty');
+define('THIRDPARTY_PATH', BASE_PATH . '/' . THIRDPARTY_DIR);
+define('THEMES_DIR', 'themes');
+define('THEMES_PATH', BASE_PATH . '/' . THEMES_DIR);
+define('SAPPHIRE_DIR', 'sapphire');
+define('SAPPHIRE_PATH', BASE_PATH . '/' . SAPPHIRE_DIR);
+define('CMS_DIR', 'cms');
+define('CMS_PATH', BASE_PATH . '/' . CMS_DIR);
+define('ASSETS_DIR', 'assets');
+define('ASSETS_PATH', BASE_PATH . '/' . ASSETS_DIR);
+
+/**
  * Include Sapphire's core code
  */
 require_once("core/Core.php");
@@ -91,8 +109,6 @@ if( preg_match( '/(test\.totallydigital\.co\.nz|dev\.totallydigital\.co\.nz\/tes
 
 // set request method (doesn't allow POST through cli)
 $_SERVER['REQUEST_METHOD'] = "GET";	
-
-$baseURL = dirname( dirname( $_SERVER['SCRIPT_NAME'] ) );
 
 if($_REQUEST && get_magic_quotes_gpc()) {
 	stripslashes_recursively($_REQUEST);
@@ -153,7 +169,6 @@ DB::connect($databaseConfig);
 
 
 // Get the request URL
-// $baseURL = dirname(dirname($_SERVER[SCRIPT_NAME]));
 $url = $_SERVER['argv'][1];
 $_SERVER['REQUEST_URI'] = "/$url";
 

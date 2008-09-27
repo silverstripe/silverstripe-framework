@@ -55,7 +55,7 @@ abstract class Validator extends Object {
 		if(self::$javascript_validation_handler) $this->setJavascriptValidationHandler(self::$javascript_validation_handler);
 		
 		if($this->javascriptValidationHandler) {
-			Requirements::javascript('sapphire/javascript/Validator.js');
+			Requirements::javascript(SAPPHIRE_DIR . '/javascript/Validator.js');
 		}
 		parent::__construct();
 	}
@@ -110,10 +110,10 @@ abstract class Validator extends Object {
 	
 	function includeJavascriptValidation() {
 		if($this->javascriptValidationHandler == 'prototype') {
-			Requirements::javascript("jsparty/prototype.js");
-			Requirements::javascript("jsparty/behaviour.js");
-			Requirements::javascript("jsparty/prototype_improvements.js");
-			Requirements::javascript("sapphire/javascript/Validator.js");
+			Requirements::javascript(THIRDPARTY_DIR . "/prototype.js");
+			Requirements::javascript(THIRDPARTY_DIR . "/behaviour.js");
+			Requirements::javascript(THIRDPARTY_DIR . "/prototype_improvements.js");
+			Requirements::javascript(SAPPHIRE_DIR . "/javascript/Validator.js");
 		
 			$code = $this->javascript();
 			$formID = $this->form->FormName();

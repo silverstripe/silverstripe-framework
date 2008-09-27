@@ -272,7 +272,9 @@ class Director {
 	 * @todo Document how relativeToSiteBase works
 	 */
 	static function absoluteURL($url, $relativeToSiteBase = false) {
-		if(strpos($url,'/') === false && !$relativeToSiteBase) $url = dirname($_SERVER['REQUEST_URI'] . 'x') . '/' . $url;
+		if(strpos($url,'/') === false && !$relativeToSiteBase && !self::$alternateBaseURL) {
+			$url = dirname($_SERVER['REQUEST_URI'] . 'x') . '/' . $url;
+		}
 
 	 	if(substr($url,0,4) != "http") {
 	 		if($url[0] != "/") $url = Director::baseURL()  . $url;
@@ -374,12 +376,14 @@ class Director {
 
 	/**
 	 * Returns the root URL for the site.
-	 * It will be automatically calculated unless it is overridden with {@link setBaseURL()}.
+	 * It will be automatically determined from the current script URL 
+	 * unless it is overridden with {@link setBaseURL()}.
 	 */
 	static function baseURL() {
-		if(self::$alternateBaseURL) return self::$alternateBaseURL;
-		else {
-			$base = dirname(dirname($_SERVER['SCRIPT_NAME']));
+		if(self::$alternateBaseURL) {
+			return self::$alternateBaseURL;
+		} else {
+			$base = BASE_URL;
 			if($base == '/' || $base == '/.' || $base == '\\') return '/';
 			else return $base . '/';
 		}
@@ -388,6 +392,7 @@ class Director {
 	/**
 	 * Sets the root URL for the website.
 	 * If the site isn't accessible from the URL you provide, weird things will happen.
+	 * Set to false if you want to undo the base url override.
 	 */
 	static function setBaseURL($baseURL) {
 		self::$alternateBaseURL = $baseURL;
@@ -399,7 +404,7 @@ class Director {
 	 */
 	static function baseFolder() {
 		if(self::$alternateBaseFolder) return self::$alternateBaseFolder;
-		else return dirname(dirname($_SERVER['SCRIPT_FILENAME']));
+		else return BASE_PATH;
 	}
 
 	/**
@@ -466,6 +471,8 @@ class Director {
 	 
 	/**
 	 * Returns the Absolute URL of the site root, embedding the current basic-auth credentials into the URL.
+	 * 
+	 * @todo allow override by self::$alternateBaseURL
 	 */
 	 static function absoluteBaseURLWithAuth() {
 		$s = "";
@@ -484,6 +491,8 @@ class Director {
 	 * <code>
 	 * if(Director::isLive()) Director::forceSSL();
 	 * </code>
+	 * 
+	 * @todo allow override by self::$alternateBaseURL
 	 */
 	static function forceSSL() {
 		if(!isset($_SERVER['HTTPS']) && !Director::isDev()) {
@@ -496,6 +505,8 @@ class Director {
 
 	/**
 	 * Force a redirect to a domain starting with "www."
+	 * 
+	 * @todo allow override by self::$alternateBaseURL
 	 */
 	static function forceWWW() {
 		if(!Director::isDev() && !Director::isTest() && strpos( $_SERVER['SERVER_NAME'], 'www') !== 0 ){

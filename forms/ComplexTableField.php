@@ -169,12 +169,12 @@ class ComplexTableField extends TableListField {
 		$this->controller = $controller;
 		$this->pageSize = 10;
 
-		Requirements::javascript("jsparty/greybox/AmiJS.js");
-		Requirements::javascript("jsparty/greybox/greybox.js");
-		Requirements::javascript('sapphire/javascript/TableListField.js');
-		Requirements::javascript("sapphire/javascript/ComplexTableField.js");
-		Requirements::css("jsparty/greybox/greybox.css");
-		Requirements::css("sapphire/css/ComplexTableField.css");
+		Requirements::javascript(THIRDPARTY_DIR . "/greybox/AmiJS.js");
+		Requirements::javascript(THIRDPARTY_DIR . "/greybox/greybox.js");
+		Requirements::javascript(SAPPHIRE_DIR . '/javascript/TableListField.js');
+		Requirements::javascript(SAPPHIRE_DIR . "/javascript/ComplexTableField.js");
+		Requirements::css(THIRDPARTY_DIR . "/greybox/greybox.css");
+		Requirements::css(SAPPHIRE_DIR . "/css/ComplexTableField.css");
 		
 		parent::__construct($name, $sourceClass, $fieldList, $sourceFilter, $sourceSort, $sourceJoin);
 		
@@ -895,25 +895,25 @@ class ComplexTableField_Popup extends Form {
 		 * WARNING: DO NOT CHANGE THE ORDER OF THESE JS FILES
 		 * Some have special requirements.
 		 */
-		//Requirements::css('cms/css/layout.css');
-		Requirements::css('jsparty/tabstrip/tabstrip.css');
-		Requirements::css('sapphire/css/Form.css');
-		Requirements::css('sapphire/css/ComplexTableField_popup.css');
-		Requirements::css('cms/css/typography.css');
-		Requirements::css('cms/css/cms_right.css');
-		Requirements::javascript("jsparty/prototype.js");
-		Requirements::javascript("jsparty/behaviour.js");
-		Requirements::javascript("jsparty/prototype_improvements.js");
-		Requirements::javascript("jsparty/loader.js");
-		Requirements::javascript("jsparty/tabstrip/tabstrip.js");
-		Requirements::javascript("jsparty/scriptaculous/scriptaculous.js");
-		Requirements::javascript("jsparty/scriptaculous/controls.js");
-		Requirements::javascript("jsparty/layout_helpers.js");
-		Requirements::javascript("cms/javascript/LeftAndMain.js");
-		Requirements::javascript("cms/javascript/LeftAndMain_right.js");
-		Requirements::javascript("sapphire/javascript/TableField.js");
-		Requirements::javascript("sapphire/javascript/ComplexTableField.js");
-		Requirements::javascript("sapphire/javascript/ComplexTableField_popup.js");
+		//Requirements::css(CMS_DIR . '/css/layout.css');
+		Requirements::css(THIRDPARTY_DIR . '/tabstrip/tabstrip.css');
+		Requirements::css(SAPPHIRE_DIR . '/css/Form.css');
+		Requirements::css(SAPPHIRE_DIR . '/css/ComplexTableField_popup.css');
+		Requirements::css(CMS_DIR . '/css/typography.css');
+		Requirements::css(CMS_DIR . '/css/cms_right.css');
+		Requirements::javascript(THIRDPARTY_DIR . "/prototype.js");
+		Requirements::javascript(THIRDPARTY_DIR . "/behaviour.js");
+		Requirements::javascript(THIRDPARTY_DIR . "/prototype_improvements.js");
+		Requirements::javascript(THIRDPARTY_DIR . "/loader.js");
+		Requirements::javascript(THIRDPARTY_DIR . "/tabstrip/tabstrip.js");
+		Requirements::javascript(THIRDPARTY_DIR . "/scriptaculous/scriptaculous.js");
+		Requirements::javascript(THIRDPARTY_DIR . "/scriptaculous/controls.js");
+		Requirements::javascript(THIRDPARTY_DIR . "/layout_helpers.js");
+		Requirements::javascript(CMS_DIR . "/javascript/LeftAndMain.js");
+		Requirements::javascript(CMS_DIR . "/javascript/LeftAndMain_right.js");
+		Requirements::javascript(SAPPHIRE_DIR . "/javascript/TableField.js");
+		Requirements::javascript(SAPPHIRE_DIR . "/javascript/ComplexTableField.js");
+		Requirements::javascript(SAPPHIRE_DIR . "/javascript/ComplexTableField_popup.js");
 
  		if($this->dataObject->hasMethod('getRequirementsForPopup')) {
 			$this->dataObject->getRequirementsForPopup();

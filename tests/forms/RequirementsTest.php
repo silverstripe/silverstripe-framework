@@ -125,16 +125,16 @@ class RequirementsTest extends SapphireTest {
 		Requirements::delete_combined_files('bc.js');
 		
 		// require files normally (e.g. called from a FormField instance)
-		Requirements::javascript('sapphire/tests/forms/a.js');
-		Requirements::javascript('sapphire/tests/forms/b.js');
-		Requirements::javascript('sapphire/tests/forms/c.js');
+		Requirements::javascript(SAPPHIRE_DIR . '/tests/forms/a.js');
+		Requirements::javascript(SAPPHIRE_DIR . '/tests/forms/b.js');
+		Requirements::javascript(SAPPHIRE_DIR . '/tests/forms/c.js');
 		
 		// require two of those files as combined includes
 		Requirements::combine_files(
 			'bc.js',
 			array(
-				'sapphire/tests/forms/b.js',
-				'sapphire/tests/forms/c.js'
+				SAPPHIRE_DIR . '/tests/forms/b.js',
+				SAPPHIRE_DIR . '/tests/forms/c.js'
 			)
 		);
 	}

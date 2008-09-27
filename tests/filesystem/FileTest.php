@@ -8,8 +8,8 @@ class FileTest extends SapphireTest {
 	
 	function testLinkAndRelativeLink() {
 		$file = $this->objFromFixture('File', 'asdf');
-		$this->assertEquals('assets/asdfjkl.txt', $file->RelativeLink());
-		$this->assertEquals(Director::baseURL() . 'assets/asdfjkl.txt', $file->Link());
+		$this->assertEquals(ASSETS_DIR . '/asdfjkl.txt', $file->RelativeLink());
+		$this->assertEquals(Director::baseURL() . ASSETS_DIR . '/asdfjkl.txt', $file->Link());
 	}
 	
 	function testNameAndTitleGeneration() {
@@ -20,7 +20,7 @@ class FileTest extends SapphireTest {
 		
 		/* However, if Name is set instead of Filename, then Title is set */
 		$file = $this->objFromFixture('File', 'setfromname');
-		$this->assertEquals('assets/asdfjkl.png', $file->Filename);
+		$this->assertEquals(ASSETS_DIR . '/asdfjkl.png', $file->Filename);
 		$this->assertEquals('asdfjkl', $file->Title);
 	}
 	
@@ -30,27 +30,27 @@ class FileTest extends SapphireTest {
 		/* If you alter the Name attribute of a file, then the filesystem is also affected */
 		$file->Name = 'asdfjkl2.txt';
 		clearstatcache();
-		$this->assertFileNotExists("../assets/asdfjkl.txt");
-		$this->assertFileExists("../assets/asdfjkl2.txt");
+		$this->assertFileNotExists(ASSETS_PATH . "/asdfjkl.txt");
+		$this->assertFileExists(ASSETS_PATH . "/asdfjkl2.txt");
 		/* The Filename field is also updated */
-		$this->assertEquals('assets/asdfjkl2.txt', $file->Filename);
+		$this->assertEquals(ASSETS_DIR . '/asdfjkl2.txt', $file->Filename);
 
 		/* However, if you alter the Filename attribute, the the filesystem isn't affected.  Altering Filename directly isn't
 		recommended */
-		$file->Filename = 'assets/asdfjkl3.txt';
+		$file->Filename = ASSETS_DIR . '/asdfjkl3.txt';
 		clearstatcache();
-		$this->assertFileExists("../assets/asdfjkl2.txt");
-		$this->assertFileNotExists("../assets/asdfjkl3.txt");
+		$this->assertFileExists(ASSETS_PATH . "/asdfjkl2.txt");
+		$this->assertFileNotExists(ASSETS_PATH . "/asdfjkl3.txt");
 		
-		$file->Filename = 'assets/asdfjkl2.txt';
+		$file->Filename = ASSETS_DIR . '/asdfjkl2.txt';
 		$file->write();
 		
 		/* Instead, altering Name and ParentID is the recommended way of changing the name and location of a file */
 		$file->ParentID = $this->idFromFixture('Folder', 'subfolder');
 		clearstatcache();
-		$this->assertFileExists("../assets/subfolder/asdfjkl2.txt");
-		$this->assertFileNotExists("../assets/asdfjkl2.txt");
-		$this->assertEquals('assets/subfolder/asdfjkl2.txt', $file->Filename);
+		$this->assertFileExists(ASSETS_PATH . "/subfolder/asdfjkl2.txt");
+		$this->assertFileNotExists(ASSETS_PATH . "/asdfjkl2.txt");
+		$this->assertEquals(ASSETS_DIR . '/subfolder/asdfjkl2.txt', $file->Filename);
 		$file->write();
 		
 	}
