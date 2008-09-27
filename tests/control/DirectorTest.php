@@ -2,6 +2,8 @@
 /**
  * @package sapphire
  * @subpackage tests
+ * 
+ * @todo test Director::alternateBaseFolder()
  */
 class DirectorTest extends SapphireTest {
 	
@@ -24,6 +26,25 @@ class DirectorTest extends SapphireTest {
 		
 		unlink($tempFilePath);
 	}
-	
+	/*
+	public function testAlternativeBaseURL() {
+		// relative base URLs
+		Director::setBaseURL('/relativebase');
+		$this->assertEquals(Director::baseURL(), '/relativebase');
+		$this->assertEquals(Director::absoluteBaseURL(), BASE_URL . '/relativebase');
+		$this->assertEquals(Director::absoluteURL('subfolder'), $origBaseURL . '/relativebase/subfolder');
+		
+		// absolute base URLs
+		Director::setBaseURL('http://www.example.org');
+		$this->assertEquals(Director::baseURL(), 'http://www.example.org');
+		$this->assertEquals(Director::absoluteBaseURL(), 'http://www.example.org');
+		$this->assertEquals(Director::absoluteURL('subfolder'), 'http://www.example.org/subfolder');
+		
+		Director::setBaseURL(false);
+		$this->assertEquals(Director::baseURL(), BASE_URL);
+		$this->assertEquals(Director::absoluteBaseURL(BASE_URL), BASE_URL);
+		$this->assertEquals(Director::absoluteURL('subfolder'), BASE_URL . '/subfolder');
+	}
+	*/
 }
 ?>
