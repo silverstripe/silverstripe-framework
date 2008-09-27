@@ -53,15 +53,6 @@ function getTempFolder() {
     return $ssTmp;
 }
 
-
-/**
- * Define the temporary folder if it wasn't defined yet
- */
-if(!defined('TEMP_FOLDER')) {
-	define('TEMP_FOLDER', getTempFolder());
-}
-
-
 /**
  * Sapphire class autoloader.  Requires the ManifestBuilder to work.
  * $_CLASS_MANIFEST must have been loaded up by ManifestBuilder for this to successfully load
@@ -106,13 +97,6 @@ function stripslashes_recursively(&$array) {
 		else $array[$k] = stripslashes($v);
 	}
 }
-
-/**
- * Priorities definition. These constants are used in calls to _t() as an optional argument
- */
-define('PR_HIGH',100);
-define('PR_MEDIUM',50);
-define('PR_LOW',10);
 
 /**
  * This is the main translator function. Returns the string defined by $class and $entity according to the currently set locale

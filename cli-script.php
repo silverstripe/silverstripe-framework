@@ -49,6 +49,20 @@ chdir(dirname($_SERVER['SCRIPT_FILENAME']));
  */
 require_once("core/Core.php");
 
+/**
+ * Define the temporary folder if it wasn't defined yet
+ */
+if(!defined('TEMP_FOLDER')) {
+	define('TEMP_FOLDER', getTempFolder());
+}
+
+/**
+ * Priorities definition. These constants are used in calls to _t() as an optional argument
+ */
+define('PR_HIGH',100);
+define('PR_MEDIUM',50);
+define('PR_LOW',10);
+
 header("Content-type: text/html; charset=\"utf-8\"");
 if(function_exists('mb_http_output')) {
 	mb_http_output('UTF-8');
