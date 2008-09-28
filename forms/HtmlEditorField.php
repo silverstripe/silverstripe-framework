@@ -26,7 +26,7 @@ class HtmlEditorField extends TextareaField {
 	 */
 	function Field() {
 		Requirements::javascript(MCE_ROOT . "tiny_mce_src.js");
-		Requirements::javascript("jsparty/tiny_mce_improvements.js");
+		Requirements::javascript(THIRDPARTY_DIR . "/tiny_mce_improvements.js");
 
 		// Don't allow unclosed tags - they will break the whole application ;-)		
 		$cleanVal = $this->value;

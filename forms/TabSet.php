@@ -28,12 +28,12 @@ class TabSet extends CompositeField {
 	 * The HTML is a standardised format, containing a &lt;ul;
 	 */
 	public function FieldHolder() {
-		Requirements::javascript("jsparty/loader.js");
-		Requirements::javascript("jsparty/prototype.js");
-		Requirements::javascript("jsparty/behaviour.js");
-		Requirements::javascript("jsparty/prototype_improvements.js");
-		Requirements::javascript("jsparty/tabstrip/tabstrip.js");
-		Requirements::css("jsparty/tabstrip/tabstrip.css");
+		Requirements::javascript(THIRDPARTY_DIR . "/loader.js");
+		Requirements::javascript(THIRDPARTY_DIR . "/prototype.js");
+		Requirements::javascript(THIRDPARTY_DIR . "/behaviour.js");
+		Requirements::javascript(THIRDPARTY_DIR . "/prototype_improvements.js");
+		Requirements::javascript(THIRDPARTY_DIR . "/tabstrip/tabstrip.js");
+		Requirements::css(THIRDPARTY_DIR . "/tabstrip/tabstrip.css");
 		
 		return $this->renderWith("TabSetFieldHolder");
 	}
