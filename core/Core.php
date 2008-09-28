@@ -7,6 +7,13 @@
  */
 
 /**
+ * Define the temporary folder if it wasn't defined yet
+ */
+if(!defined('TEMP_FOLDER')) {
+	define('TEMP_FOLDER', getTempFolder());
+}
+
+/**
  * Returns the temporary folder that sapphire/silverstripe should use for its cache files
  * This is loaded into the TEMP_FOLDER define on start up
  */

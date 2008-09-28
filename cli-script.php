@@ -68,13 +68,6 @@ define('ASSETS_PATH', BASE_PATH . '/' . ASSETS_DIR);
 require_once("core/Core.php");
 
 /**
- * Define the temporary folder if it wasn't defined yet
- */
-if(!defined('TEMP_FOLDER')) {
-	define('TEMP_FOLDER', getTempFolder());
-}
-
-/**
  * Priorities definition. These constants are used in calls to _t() as an optional argument
  */
 define('PR_HIGH',100);
