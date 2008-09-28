@@ -56,26 +56,38 @@ class ManifestBuilder {
 	);
 	
 	/**
-	 * Returns true if the manifest file should be regenerated
+	 * @var int $cache_expiry_mins Specifies the time (in minutes) until a rebuild
+	 *   of the manifest cache is forced.
+	 * @usedby self::staleManifest()
+	 */
+	public static $cache_expiry_mins = 60;
+	
+	/**
+	 * Returns true if the manifest file should be regenerated,
+	 * by asserting one of the following conditions:
+	 * - Manifest cache file doesn't exist
+	 * - The modification time of the webroot folder is newer than the cache file
+	 * - The cache file is older than {@link self::$cache_expiry_mins}
+	 * - A cache rebuild is forced by the "?flush=1" URL parameter
+	 * 
+	 * Checked on every request handled by SilverStripe in main.php or cli-script.php.
 	 *
-	 * @return bool Returns TRUE if the manifest file should be regenerated,
-	 *              otherwise FALSE.
+	 * @return bool Returns TRUE if the manifest file should be regenerated, otherwise FALSE.
 	 */
 	static function staleManifest() {
-		/*if(Director::isDev() || Director::isTest())
-			$lastEdited = Filesystem::folderModTime(".", array('ss','php'));
-		else*/
-			$lastEdited = filemtime("../");
+		$lastEdited = filemtime(BASE_PATH);
 
-		return !file_exists(MANIFEST_FILE)
+		return (
+			!file_exists(MANIFEST_FILE)
 			|| (filemtime(MANIFEST_FILE) < $lastEdited)
-			|| (filemtime(MANIFEST_FILE) < time() - 3600)
-			|| isset($_GET['buildmanifest']) || isset($_GET['flush']);
+			|| (filemtime(MANIFEST_FILE) < time() - 60 * self::$cache_expiry_mins)
+			|| isset($_GET['flush'])
+		);
 	}
 
 
 	/**
-	 * Generates a new manifest file and saves it to {@link MANIFEST_FILE}
+	 * Generates a new manifest file and saves it to {@link MANIFEST_FILE}.
 	 */
 	static function compileManifest() {
 		// Config manifest
