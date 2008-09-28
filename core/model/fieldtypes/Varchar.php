@@ -28,6 +28,9 @@ class Varchar extends DBField {
 		if($this->value) return $this->value[0] . '.';
 	}
 	
+	/**
+	 * @deprecated 2.3 Use ATT_val()
+	 */
 	function Attr() {
 		return Convert::raw2att($this->value);
 	}
