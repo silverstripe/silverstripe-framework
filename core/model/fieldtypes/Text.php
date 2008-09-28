@@ -39,10 +39,6 @@ class Text extends DBField {
 		return str_replace(array('&','<','>','"'), array('&amp;','&lt;','&gt;','&quot;'), $this->value);
 	}
 	
-	function Att() {
-		return Convert::raw2att($this->value);
-	}
-	
 	function AbsoluteLinks() {
 		return HTTP::absoluteURLs($this->value);
 	}
