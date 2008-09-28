@@ -119,7 +119,7 @@ class RedirectorPage_Controller extends Page_Controller {
 		} else {
 			$linkTo = DataObject::get_by_id("SiteTree", $this->LinkToID);
 			if($linkTo) {
-				Director::redirect($linkTo->Link());
+				Director::redirect($linkTo->Link(), 301);
 			} else {
 				echo "<p>" . _t('RedirectorPage.HASBEENSETUP') . "</p>";
 			}
