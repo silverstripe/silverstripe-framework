@@ -1,6 +1,10 @@
 <?php
 /**
- * A field that will upload attached images.
+ * A field that will upload attached images within the CMS through an iframe.
+ * If you want to upload images without iframes, see {@link SimpleImageField}.
+ *
+ * @uses Image_Upload
+ * 
  * @package forms
  * @subpackage fields-files
  */

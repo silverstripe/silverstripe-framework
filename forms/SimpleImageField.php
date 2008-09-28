@@ -1,7 +1,8 @@
 <?php
 /**
  * SimpleImageField provides an easy way of uploading images to Image has_one relationships.
- * Unlike ImageField, it doesn't use an iframe.
+ * Unlike {@link ImageField}, it doesn't use an iframe.
+ * 
  * @package forms
  * @subpackage fields-files
  */

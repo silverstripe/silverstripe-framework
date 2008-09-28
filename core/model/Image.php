@@ -464,6 +464,15 @@ class Image_Saver extends DBField {
 
 /**
  * Uploader support for the uploading anything which is a File or subclass of File, eg Image.
+ * Is connected to the URL routing "/image" through sapphire/_config.php,
+ * and used by all iframe-based upload-fields in the CMS.
+ *
+ * @usedby FileIframeField
+ * @usedby ImageField
+ * @todo Refactor to using FileIframeField and ImageField as a controller for the upload,
+ *   rather than something totally disconnected from the original Form and FormField
+ *   context. Without the original context its impossible to control permissions etc.
+ *
  * @package sapphire
  * @subpackage filesystem
  */

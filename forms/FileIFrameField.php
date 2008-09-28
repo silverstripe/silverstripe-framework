@@ -1,6 +1,9 @@
 <?php 
 /**
- * A field that will upload files to a page for use within the CMS.
+ * A field that will upload files to a page for use within the CMS through an iframe.
+ * If you want to upload files without an iframe, use {@link FileField}.
+ *
+ * @used Image_Upload
  * 
  * @package forms
  * @subpackage fields-files
