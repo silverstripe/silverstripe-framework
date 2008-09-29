@@ -47,34 +47,9 @@ foreach ($envFiles as $envFile) {
 }
 
 /**
- * Define system paths
- */
-define('BASE_PATH', dirname(dirname($_SERVER['SCRIPT_FILENAME'])));
-define('BASE_URL', dirname(dirname($_SERVER['SCRIPT_NAME'])));
-define('MODULES_DIR', 'modules');
-define('MODULES_PATH', BASE_PATH . '/' . MODULES_DIR);
-define('THIRDPARTY_DIR', 'jsparty');
-define('THIRDPARTY_PATH', BASE_PATH . '/' . THIRDPARTY_DIR);
-define('THEMES_DIR', 'themes');
-define('THEMES_PATH', BASE_PATH . '/' . THEMES_DIR);
-define('SAPPHIRE_DIR', 'sapphire');
-define('SAPPHIRE_PATH', BASE_PATH . '/' . SAPPHIRE_DIR);
-define('CMS_DIR', 'cms');
-define('CMS_PATH', BASE_PATH . '/' . CMS_DIR);
-define('ASSETS_DIR', 'assets');
-define('ASSETS_PATH', BASE_PATH . '/' . ASSETS_DIR);
-
-/**
  * Include Sapphire's core code
  */
 require_once("core/Core.php");
-
-/**
- * Priorities definition. These constants are used in calls to _t() as an optional argument
- */
-define('PR_HIGH',100);
-define('PR_MEDIUM',50);
-define('PR_LOW',10);
 
 header("Content-type: text/html; charset=\"utf-8\"");
 if (function_exists('mb_http_output')) {
