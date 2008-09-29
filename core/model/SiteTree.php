@@ -592,31 +592,6 @@ class SiteTree extends DataObject {
 					return false;
 		return true;
 	}
-	
-	/**
-	 * This function should return true if the current user can view this
-	 * page.
-	 *
-	 * It can be overloaded to customise the security model for an
-	 * application.
-	 *
-	 * @return boolean True if the current user can view this page.
-	 */
-	public function canView_page($member = null) {
-		if(!isset($member)) {
-			$member = Member::currentUser();
-		}
-		if($member && $member->isAdmin()) {
-			return true;
-		}
-		
-		$args = array($member, true);
-		$this->extend('alternateCanView_page', $args);
-		if($args[1] == false) return false;
-		
-		return $this->canView($member);
-	}
-
 
 	/**
 	 * This function should return true if the current user can delete this
