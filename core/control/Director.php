@@ -276,7 +276,8 @@ class Director {
 
 	 	if(substr($url,0,4) != "http") {
 	 		if($url[0] != "/") $url = Director::baseURL()  . $url;
-			$url = self::protocolAndHost() . $url;
+			// Sometimes baseURL() can return a full URL instead of just a path
+			if(substr($url,0,4) != "http") $url = self::protocolAndHost() . $url;
 		}
 
 		return $url;
@@ -289,7 +290,7 @@ class Director {
 	 */
 	static function protocolAndHost() {
 		if(self::$alternateBaseURL) {
-			if(preg_match('/^(http[^:]*:\/\/[^\/]+)\//', self::$alternateBaseURL, $matches)) {
+			if(preg_match('/^(http[^:]*:\/\/[^\/]+)(\/|$)/', self::$alternateBaseURL, $matches)) {
 				return $matches[1];
 			}
 		}

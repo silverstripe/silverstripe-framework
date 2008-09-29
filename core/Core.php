@@ -1,10 +1,90 @@
 <?php
 /**
- * This file contains several methods that control the core behaviour of Sapphire.
+ * This file is the Sapphire bootstrap.  It will get your environment ready to call Director::direct().
  *
+ * It takes care of:
+ *  - Including _ss_environment.php
+ *  - Normalisation of $_SERVER values
+ *  - Initialisation of TEMP_FOLDER, BASE_URL, BASE_PATH, and other SilverStripe defines
+ *  - Checking of PHP memory limit
+ *  - Including all the files needed to get the manifest built
+ *  - Building and including the manifest
+ * 
+ * @todo This file currently contains a lot of bits and pieces, and its various responsibilities should probably be
+ * moved into different subsystems.
+ * @todo A lot of this stuff is very order-independent; for example, the require_once calls have to happen after the defines.'
+ * This could be decoupled.
  * @package sapphire
  * @subpackage core
  */
+
+///////////////////////////////////////////////////////////////////////////////
+// ENVIRONMENT CONFIG
+
+/**
+ * Include _ss_environment.php files
+ */
+$envFiles = array('../_ss_environment.php', '../../_ss_environment.php', '../../../_ss_environment.php');
+foreach($envFiles as $envFile) {
+	if(file_exists($envFile)) {
+		include($envFile);
+		break;
+	}
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// GLOBALS AND DEFINE SETTING
+
+/**
+ * A blank HTTP_HOST value is used to detect command-line execution.
+ * We update the $_SERVER variable to contain data consistent with the rest of the application.
+ */
+if(!isset($_SERVER['HTTP_HOST'])) {
+	// HTTP_HOST, REQUEST_PORT, SCRIPT_NAME, and PHP_SELF
+	if(isset($_FILE_TO_URL_MAPPING)) {
+		$fullPath = $testPath = $_SERVER['SCRIPT_FILENAME'];
+		while($testPath && $testPath != "/") {
+			if(isset($_FILE_TO_URL_MAPPING[$testPath])) {
+				$url = $_FILE_TO_URL_MAPPING[$testPath] . substr($fullPath,strlen($testPath));
+				$_SERVER['HTTP_HOST'] = parse_url($url, PHP_URL_HOST);
+				$_SERVER['SCRIPT_NAME'] = $_SERVER['PHP_SELF'] = parse_url($url, PHP_URL_PATH);
+				$_SERVER['REQUEST_PORT'] = parse_url($url, PHP_URL_PORT);
+			    break;
+			}
+			$testPath = dirname($testPath);
+		}
+	}
+	
+	// Everything else
+	$serverDefaults = array(
+		'SERVER_PROTOCOL' => 'HTTP/1.1',
+		'HTTP_ACCEPT' => 'text/plain;q=0.5',
+		'HTTP_ACCEPT_LANGUAGE' => '*;q=0.5',
+		'HTTP_ACCEPT_ENCODING' => '',
+		'HTTP_ACCEPT_CHARSET' => 'ISO-8859-1;q=0.5',
+		'SERVER_SIGNATURE' => 'Command-line PHP/' . phpversion(),
+		'SERVER_SOFTWARE' => 'PHP/' . phpversion(),
+		'SERVER_ADDR' => '127.0.0.1',
+		'REMOTE_ADDR' => '127.0.0.1',
+		'REQUEST_METHOD' => 'GET',
+	);
+	
+	$_SERVER = array_merge($serverDefaults, $_SERVER);
+	
+/**
+ * If we have an HTTP_HOST value, then we're being called from the webserver and there are some things that
+ * need checking
+ */
+} else {
+	/**
+	 * Fix magic quotes setting
+	 */
+	if (get_magic_quotes_gpc()) {
+		if($_REQUEST) stripslashes_recursively($_REQUEST);
+		if($_GET) stripslashes_recursively($_GET);
+		if($_POST) stripslashes_recursively($_POST);
+	}
+}
 
 /**
  * Define system paths
@@ -37,6 +117,69 @@ if(!defined('TEMP_FOLDER')) {
 define('PR_HIGH',100);
 define('PR_MEDIUM',50);
 define('PR_LOW',10);
+
+/**
+ * Ensure we have enough memory
+ */
+$memString = ini_get("memory_limit");
+switch(strtolower(substr($memString, -1))) {
+case "k":
+	$memory = round(substr($memString, 0, -1)*1024);
+	break;
+case "m":
+	$memory = round(substr($memString, 0, -1)*1024*1024);
+	break;
+case "g":
+	$memory = round(substr($memString, 0, -1)*1024*1024*1024);
+	break;
+default:
+	$memory = round($memString);
+}
+
+// Check we have at least 32M
+if ($memory < (32 * 1024 * 1024)) {
+	// Increase memory limit
+	ini_set('memory_limit', '32M');
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// INCLUDES
+
+require_once("core/ManifestBuilder.php");
+require_once("core/ClassInfo.php");
+require_once('core/Object.php');
+require_once('core/control/Director.php');
+require_once('filesystem/Filesystem.php');
+require_once("core/Session.php");
+
+///////////////////////////////////////////////////////////////////////////////
+// MANIFEST
+
+/**
+ * Build the manifest
+ */
+if(ManifestBuilder::staleManifest()){
+	ManifestBuilder::compileManifest();
+}		
+
+require_once(MANIFEST_FILE);
+
+/**
+ * ?debugmanifest=1 hook
+ */
+if(isset($_GET['debugmanifest'])) Debug::show(file_get_contents(MANIFEST_FILE));
+
+
+///////////////////////////////////////////////////////////////////////////////
+// POST-MANIFEST COMMANDS
+
+/**
+ * Load error handlers
+ */
+Debug::loadErrorHandlers();
+
+///////////////////////////////////////////////////////////////////////////////
+// HELPER FUNCTIONS
 
 /**
  * Returns the temporary folder that sapphire/silverstripe should use for its cache files

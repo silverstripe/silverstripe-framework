@@ -26,25 +26,25 @@ class DirectorTest extends SapphireTest {
 		
 		unlink($tempFilePath);
 	}
-	/*
+
 	public function testAlternativeBaseURL() {
-		// relative base URLs
-		Director::setBaseURL('/relativebase');
-		$this->assertEquals(Director::baseURL(), '/relativebase');
-		$this->assertEquals(Director::absoluteBaseURL(), BASE_URL . '/relativebase');
-		$this->assertEquals(Director::absoluteURL('subfolder'), $origBaseURL . '/relativebase/subfolder');
-		
-		// absolute base URLs
-		Director::setBaseURL('http://www.example.org');
-		$this->assertEquals(Director::baseURL(), 'http://www.example.org');
-		$this->assertEquals(Director::absoluteBaseURL(), 'http://www.example.org');
-		$this->assertEquals(Director::absoluteURL('subfolder'), 'http://www.example.org/subfolder');
-		
+		// relative base URLs - you should end them in a /
+		Director::setBaseURL('/relativebase/');
+		$this->assertEquals('/relativebase/', Director::baseURL());
+		$this->assertEquals(Director::protocolAndHost() . '/relativebase/', Director::absoluteBaseURL());
+		$this->assertEquals(Director::protocolAndHost() . '/relativebase/subfolder/test', Director::absoluteURL('subfolder/test'));
+
+		// absolute base URLs - you should end them in a /
+		Director::setBaseURL('http://www.example.org/');
+		$this->assertEquals('http://www.example.org/', Director::baseURL());
+		$this->assertEquals('http://www.example.org/', Director::absoluteBaseURL());
+		$this->assertEquals('http://www.example.org/subfolder/test', Director::absoluteURL('subfolder/test'));
+
+		// Setting it to false restores functionality
 		Director::setBaseURL(false);
-		$this->assertEquals(Director::baseURL(), BASE_URL);
-		$this->assertEquals(Director::absoluteBaseURL(BASE_URL), BASE_URL);
-		$this->assertEquals(Director::absoluteURL('subfolder'), BASE_URL . '/subfolder');
+		$this->assertEquals(BASE_URL.'/', Director::baseURL());
+		$this->assertEquals(Director::protocolAndHost().BASE_URL.'/', Director::absoluteBaseURL(BASE_URL));
+		$this->assertEquals(Director::protocolAndHost().BASE_URL . '/subfolder/test', Director::absoluteURL('subfolder/test'));
 	}
-	*/
 }
 ?>
