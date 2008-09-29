@@ -360,11 +360,11 @@ class Security extends Controller {
 	 * @return string Returns the "lost password" page as HTML code.
 	 */
 	public function lostpassword() {
-		Requirements::javascript(THIRDPARTY_DIR . 'jsparty/prototype.js');
-		Requirements::javascript(THIRDPARTY_DIR . 'jsparty/behaviour.js');
-		Requirements::javascript(THIRDPARTY_DIR . 'jsparty/loader.js');
-		Requirements::javascript(THIRDPARTY_DIR . 'jsparty/prototype_improvements.js');
-		Requirements::javascript(THIRDPARTY_DIR . 'jsparty/scriptaculous/effects.js');
+		Requirements::javascript(THIRDPARTY_DIR . '/prototype.js');
+		Requirements::javascript(THIRDPARTY_DIR . '/behaviour.js');
+		Requirements::javascript(THIRDPARTY_DIR . '/loader.js');
+		Requirements::javascript(THIRDPARTY_DIR . '/prototype_improvements.js');
+		Requirements::javascript(THIRDPARTY_DIR . '/scriptaculous/effects.js');
 
 		$tmpPage = new Page();
 		$tmpPage->Title = _t('Security.LOSTPASSWORDHEADER', 'Lost Password');
@@ -410,11 +410,11 @@ class Security extends Controller {
 	 * @return string Returns the "password sent" page as HTML code.
 	 */
 	public function passwordsent($request) {
-		Requirements::javascript(THIRDPARTY_DIR . 'jsparty/behaviour.js');
-		Requirements::javascript(THIRDPARTY_DIR . 'jsparty/loader.js');
-		Requirements::javascript(THIRDPARTY_DIR . 'jsparty/prototype.js');
-		Requirements::javascript(THIRDPARTY_DIR . 'jsparty/prototype_improvements.js');
-		Requirements::javascript(THIRDPARTY_DIR . 'jsparty/scriptaculous/effects.js');
+		Requirements::javascript(THIRDPARTY_DIR . '/behaviour.js');
+		Requirements::javascript(THIRDPARTY_DIR . '/loader.js');
+		Requirements::javascript(THIRDPARTY_DIR . '/prototype.js');
+		Requirements::javascript(THIRDPARTY_DIR . '/prototype_improvements.js');
+		Requirements::javascript(THIRDPARTY_DIR . '/scriptaculous/effects.js');
 
 		$tmpPage = new Page();
 		$tmpPage->Title = _t('Security.LOSTPASSWORDHEADER');

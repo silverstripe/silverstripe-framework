@@ -239,10 +239,10 @@ class TableListField extends FormField {
 
 		parent::__construct($name);
 		
-		Requirements::javascript(THIRDPARTY_DIR . 'jsparty/prototype.js');
-		Requirements::javascript(THIRDPARTY_DIR . 'jsparty/behaviour.js');
-		Requirements::javascript(THIRDPARTY_DIR . 'jsparty/prototype_improvements.js');
-		Requirements::javascript(THIRDPARTY_DIR . 'jsparty/scriptaculous/effects.js');
+		Requirements::javascript(THIRDPARTY_DIR . '/prototype.js');
+		Requirements::javascript(THIRDPARTY_DIR . '/behaviour.js');
+		Requirements::javascript(THIRDPARTY_DIR . '/prototype_improvements.js');
+		Requirements::javascript(THIRDPARTY_DIR . '/scriptaculous/effects.js');
 		Requirements::javascript(SAPPHIRE_DIR . '/javascript/TableListField.js');
 		Requirements::css(SAPPHIRE_DIR . '/css/TableListField.css');
 	}
