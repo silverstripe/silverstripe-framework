@@ -284,6 +284,8 @@ class Director {
 
 	/**
 	 * Returns the part of the URL, 'http://www.mysite.com'.
+	 * 
+	 * @return boolean|string The domain from the PHP enviroment. Returns FALSE is this environment variable isn't set.
 	 */
 	static function protocolAndHost() {
 		if(self::$alternateBaseURL) {
@@ -294,11 +296,13 @@ class Director {
 
 		$s = (isset($_SERVER['SSL']) || isset($_SERVER['HTTPS'])) ? 's' : '';
 		
-		if(!isset($_SERVER['HTTP_HOST'])) {
+		if(isset($_SERVER['HTTP_HOST'])) {
+			return "http$s://" . $_SERVER['HTTP_HOST'];
+		} else {
 			user_error("Director::protocolAndHost() lacks sufficient information - HTTP_HOST not set.", E_USER_WARNING);
+			return false;
+			
 		}
-		
-		return "http$s://" . $_SERVER['HTTP_HOST'];
 	}
 
 
