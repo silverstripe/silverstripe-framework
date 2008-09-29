@@ -30,26 +30,36 @@ class DropdownField extends FormField {
 	}
 	
 	/**
-	 * Returns a <select> tag containing all the appropriate <option> tags
+	 * Returns a <select> tag containing all the appropriate <option> tags.
+	 * Makes use of {@link FormField->createTag()} to generate the <select>
+	 * tag and option elements inside is as the content of the <select>.
+	 * 
+	 * @return string HTML tag for this dropdown field
 	 */
 	function Field() {
-		$classAttr = '';
 		$options = '';
-		if($extraClass = trim($this->extraClass())) {
-			$classAttr = "class=\"$extraClass\"";
-		}
+
 		if($this->source) foreach($this->source as $value => $title) {
-			$selected = $value == $this->value ? " selected=\"selected\"" : "";
+			$selected = $value == $this->value ? 'selected' : null;
 			if($selected && $this->value != 0) {
 				$this->isSelected = true;
 			}
-			$options .= "<option$selected value=\"$value\">$title</option>";
+			
+			$options .= $this->createTag('option', array(
+				'selected' => $selected,
+				'value' => $value
+			), $title);
 		}
 	
-		$id = $this->id();
-		$disabled = $this->disabled ? " disabled=\"disabled\"" : "";
+		$attributes = array(
+			'class' => trim($this->extraClass()) ? $this->extraClass() : null,
+			'id' => $this->id(),
+			'name' => $this->name,
+			'disabled' => $this->disabled ? 'disabled' : null,
+			'tabindex' => $this->getTabIndex()
+		);
 		
-		return "<select $classAttr $disabled name=\"$this->name\" id=\"$id\"" . $this->getTabIndexHTML() . ">$options</select>";
+		return $this->createTag('select', $attributes, $options);
 	}
 	
 	function isSelected(){
