@@ -503,14 +503,13 @@ class Director {
 	 * Force a redirect to a domain starting with "www."
 	 */
 	static function forceWWW() {
-		if(!Director::isDev() && !Director::isTest() && strpos($_SERVER['SERVER_NAME'], 'www') !== 0) {
-			if(!empty($_SERVER['HTTPS'])) {
-				$destURL = str_replace('https://', 'https://www.', Director::absoluteURL($_SERVER['REQUEST_URI']));
-			} else {
-				$destURL = str_replace('http://', 'http://www.', Director::absoluteURL($_SERVER['REQUEST_URI']));
-			}
+		if(!Director::isDev() && !Director::isTest() && strpos( $_SERVER['SERVER_NAME'], 'www') !== 0 ){
+			if( $_SERVER['HTTPS'] )
+				$destURL = str_replace('https://','https://www.',Director::absoluteURL($_SERVER['REQUEST_URI']));
+			else
+				$destURL = str_replace('http://','http://www.',Director::absoluteURL($_SERVER['REQUEST_URI']));
 
-			header("Location: $destURL", true, 301);
+			header("Location: $destURL");
 			die("<h1>Your browser is not accepting header redirects</h1><p>Please <a href=\"$destURL\">click here</a>");
 		}
 	}
