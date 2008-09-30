@@ -19,14 +19,14 @@ class ConfirmedPasswordField extends FormField {
 	 *
 	 * @var int
 	 */
-	public $minLength = 6;
+	public $minLength = null;
 	
 	/**
 	 * Maximum character length of the password.
 	 *
 	 * @var int
 	 */
-	public $maxLength = 20;
+	public $maxLength = null;
 	
 	/**
 	 * Enforces at least one digit and one alphanumeric
