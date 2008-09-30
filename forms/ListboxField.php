@@ -27,8 +27,11 @@ class ListboxField extends DropdownField {
 	 * Returns a <select> tag containing all the appropriate <option> tags
 	 */
 	function Field() {
+		$size = '';
+		$multiple = '';
+		
 		if($this->size) $size = "size=\"$this->size\"";
-			
+		
 		if($this->multiple) {
 			$multiple = "multiple=\"multiple\"";
 			$this->name .= '[]';
