@@ -289,6 +289,9 @@ class DataObjectTest extends SapphireTest {
 		$this->assertEquals(0, DB::query("SELECT CaptainID FROM DataObjectTest_Team WHERE ID = $existingTeam->ID")->value());
 	}
 	
+	/**
+	 * @todo Re-enable all test cases for field existence after behaviour has been fixed
+	 */
 	function testFieldExistence() {
 		$teamInstance = $this->objFromFixture('DataObjectTest_Team', 'team1');
 		$teamSingleton = singleton('DataObjectTest_Team');
@@ -344,6 +347,9 @@ class DataObjectTest extends SapphireTest {
 	
 	}
 	
+	/**
+	 * @todo Re-enable all test cases for field inheritance aggregation after behaviour has been fixed
+	 */	
 	function testFieldInheritance() {
 		$teamInstance = $this->objFromFixture('DataObjectTest_Team', 'team1');
 		$subteamInstance = $this->objFromFixture('DataObjectTest_SubTeam', 'subteam1');
