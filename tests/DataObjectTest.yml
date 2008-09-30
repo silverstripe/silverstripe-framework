@@ -47,3 +47,6 @@ DataObjectTest_Player:
    player2:
       FirstName: Player 2
       Teams: =>DataObjectTest_Team.team1,=>DataObjectTest_Team.team2
+DataObjectTest_SubTeam:
+   subteam1:
+      Title: Subteam 1

@@ -45,7 +45,9 @@ abstract class DataObjectDecorator extends Extension {
 					eval("$className::\$$relationType = array_merge((array){$className}::\$$relationType, (array)\$fields);");
 					$this->owner->set_stat($relationType, eval("return $className::\$$relationType;"));
 				}
-				$this->owner->set_uninherited('fieldExists', null); 
+				
+				// clear previously set caches from DataObject->hasOwnTableDatabaseField()
+				$this->owner->set_uninherited('_cache_hasOwnTableDatabaseField', null);
 			}
 		}
 	}

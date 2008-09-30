@@ -288,6 +288,126 @@ class DataObjectTest extends SapphireTest {
 		$existingTeam->write();
 		$this->assertEquals(0, DB::query("SELECT CaptainID FROM DataObjectTest_Team WHERE ID = $existingTeam->ID")->value());
 	}
+	
+	function testFieldExistence() {
+		$teamInstance = $this->objFromFixture('DataObjectTest_Team', 'team1');
+		$teamSingleton = singleton('DataObjectTest_Team');
+		
+		$subteamInstance = $this->objFromFixture('DataObjectTest_SubTeam', 'subteam1');
+		$subteamSingleton = singleton('DataObjectTest_SubTeam');
+		
+		/* hasField() singleton checks */
+		$this->assertTrue($teamSingleton->hasField('ID'), 'hasField() finds built-in fields in singletons');
+		$this->assertTrue($teamSingleton->hasField('Title'), 'hasField() finds custom fields in singletons');
+		
+		/* hasField() instance checks */
+		$this->assertFalse($teamInstance->hasField('NonExistingField'), 'hasField() doesnt find non-existing fields in instances');
+		$this->assertTrue($teamInstance->hasField('ID'), 'hasField() finds built-in fields in instances');
+		$this->assertTrue($teamInstance->hasField('Created'), 'hasField() finds built-in fields in instances');
+		$this->assertTrue($teamInstance->hasField('DatabaseField'), 'hasField() finds custom fields in instances');
+		//$this->assertFalse($teamInstance->hasField('SubclassDatabaseField'), 'hasField() doesnt find subclass fields in parentclass instances');
+		//$this->assertTrue($teamInstance->hasField('DynamicField'), 'hasField() finds dynamic getters in instances');
+		$this->assertTrue($teamInstance->hasField('HasOneRelationshipID'), 'hasField() finds foreign keys in instances');
+		$this->assertTrue($teamInstance->hasField('DecoratedDatabaseField'), 'hasField() finds decorated fields in instances');
+		$this->assertTrue($teamInstance->hasField('DecoratedHasOneRelationshipID'), 'hasField() finds decorated foreign keys in instances');
+		//$this->assertTrue($teamInstance->hasField('DecoratedDynamicField'), 'hasField() includes decorated dynamic getters in instances');
+		
+		/* hasField() subclass checks */
+		$this->assertTrue($subteamInstance->hasField('ID'), 'hasField() finds built-in fields in subclass instances');
+		$this->assertTrue($subteamInstance->hasField('Created'), 'hasField() finds built-in fields in subclass instances');
+		$this->assertTrue($subteamInstance->hasField('DatabaseField'), 'hasField() finds custom fields in subclass instances');
+		$this->assertTrue($subteamInstance->hasField('SubclassDatabaseField'), 'hasField() finds custom fields in subclass instances');
+		//$this->assertTrue($subteamInstance->hasField('DynamicField'), 'hasField() finds dynamic getters in subclass instances');
+		$this->assertTrue($subteamInstance->hasField('HasOneRelationshipID'), 'hasField() finds foreign keys in subclass instances');
+		$this->assertTrue($subteamInstance->hasField('DecoratedDatabaseField'), 'hasField() finds decorated fields in subclass instances');
+		$this->assertTrue($subteamInstance->hasField('DecoratedHasOneRelationshipID'), 'hasField() finds decorated foreign keys in subclass instances');
+		
+		/* hasDatabaseField() singleton checks */
+		//$this->assertTrue($teamSingleton->hasDatabaseField('ID'), 'hasDatabaseField() finds built-in fields in singletons');
+		$this->assertTrue($teamSingleton->hasDatabaseField('Title'), 'hasDatabaseField() finds custom fields in singletons');
+		
+		/* hasDatabaseField() instance checks */
+		$this->assertFalse($teamInstance->hasDatabaseField('NonExistingField'), 'hasDatabaseField() doesnt find non-existing fields in instances');
+		//$this->assertTrue($teamInstance->hasDatabaseField('ID'), 'hasDatabaseField() finds built-in fields in instances');
+		$this->assertTrue($teamInstance->hasDatabaseField('Created'), 'hasDatabaseField() finds built-in fields in instances');
+		$this->assertTrue($teamInstance->hasDatabaseField('DatabaseField'), 'hasDatabaseField() finds custom fields in instances');
+		$this->assertFalse($teamInstance->hasDatabaseField('SubclassDatabaseField'), 'hasDatabaseField() doesnt find subclass fields in parentclass instances');
+		//$this->assertFalse($teamInstance->hasDatabaseField('DynamicField'), 'hasDatabaseField() doesnt dynamic getters in instances');
+		$this->assertTrue($teamInstance->hasDatabaseField('HasOneRelationshipID'), 'hasDatabaseField() finds foreign keys in instances');
+		$this->assertTrue($teamInstance->hasDatabaseField('DecoratedDatabaseField'), 'hasDatabaseField() finds decorated fields in instances');
+		$this->assertTrue($teamInstance->hasDatabaseField('DecoratedHasOneRelationshipID'), 'hasDatabaseField() finds decorated foreign keys in instances');
+		$this->assertFalse($teamInstance->hasDatabaseField('DecoratedDynamicField'), 'hasDatabaseField() doesnt include decorated dynamic getters in instances');
+		
+		/* hasDatabaseField() subclass checks */
+		$this->assertTrue($subteamInstance->hasField('DatabaseField'), 'hasField() finds custom fields in subclass instances');
+		$this->assertTrue($subteamInstance->hasField('SubclassDatabaseField'), 'hasField() finds custom fields in subclass instances');
+	
+	}
+	
+	function testFieldInheritance() {
+		$teamInstance = $this->objFromFixture('DataObjectTest_Team', 'team1');
+		$subteamInstance = $this->objFromFixture('DataObjectTest_SubTeam', 'subteam1');
+		
+		$this->assertEquals(
+			array_keys($teamInstance->inheritedDatabaseFields()),
+			array(
+				//'ID',
+				//'ClassName',
+				//'Created',
+				//'LastEdited',
+				'Title',
+				'DatabaseField',
+				'DecoratedDatabaseField',
+				'CaptainID',
+				'HasOneRelationshipID',
+				'DecoratedHasOneRelationshipID'
+			),
+			'inheritedDatabaseFields() contains all fields defined on instance, including base fields, decorated fields and foreign keys'
+		);
+		
+		$this->assertEquals(
+			array_keys($teamInstance->databaseFields()),
+			array(
+				//'ID',
+				'ClassName',
+				'Created',
+				'LastEdited',
+				'Title',
+				'DatabaseField',
+				'DecoratedDatabaseField',
+				'CaptainID',
+				'HasOneRelationshipID',
+				'DecoratedHasOneRelationshipID'
+			),
+			'databaseFields() contains only fields defined on instance, including base fields, decorated fields and foreign keys'
+		);
+		
+		$this->assertEquals(
+			array_keys($subteamInstance->inheritedDatabaseFields()),
+			array(
+				//'ID',
+				//'ClassName',
+				//'Created',
+				//'LastEdited',
+				'SubclassDatabaseField',
+				'Title',
+				'DatabaseField',
+				'DecoratedDatabaseField',
+				'CaptainID',
+				'HasOneRelationshipID',
+				'DecoratedHasOneRelationshipID',
+			),
+			'inheritedDatabaseFields() on subclass contains all fields defined on instance, including base fields, decorated fields and foreign keys'
+		);
+		
+		$this->assertEquals(
+			array_keys($subteamInstance->databaseFields()),
+			array(
+				'SubclassDatabaseField',
+			),
+			'databaseFields() on subclass contains only fields defined on instance'
+		);
+	}
 }
 
 class DataObjectTest_Player extends Member implements TestOnly {
@@ -302,16 +422,49 @@ class DataObjectTest_Team extends DataObject implements TestOnly {
 
 	static $db = array(
 		'Title' => 'Text', 
+		'DatabaseField' => 'Text'
 	);
 
 	static $has_one = array(
 		"Captain" => 'DataObjectTest_Player',
+		'HasOneRelationship' => 'DataObjectTest_Player',
 	);
 
 	static $many_many = array(
 		'Players' => 'DataObjectTest_Player'
 	);
+	
+	function getDynamicField() {
+		return 'dynamicfield';
+	}
 
 }
+
+class DataObjectTest_SubTeam extends DataObjectTest_Team implements TestOnly {
+	static $db = array(
+		'SubclassDatabaseField' => 'Text'
+	);
+}
+
+class DataObjectTest_Team_Decorator extends DataObjectDecorator implements TestOnly {
+	
+	function extraDBFields() {
+		return array(
+			'db' => array(
+				'DecoratedDatabaseField' => 'Text'
+			),
+			'has_one' => array(
+				'DecoratedHasOneRelationship' => 'DataObjectTest_Player'
+			)
+		);
+	}
+	
+	function getDecoratedDynamicField() {
+		return "decorated dynamic field";
+	}
+	
+}
+
+DataObject::add_extension('DataObjectTest_Team', 'DataObjectTest_Team_Decorator');
 
 ?>

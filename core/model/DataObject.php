@@ -701,7 +701,7 @@ class DataObject extends ViewableData implements DataObjectInterface {
 					foreach($ancestry as $idx => $class) {
 						$classSingleton = singleton($class);
 						foreach($this->record as $fieldName => $fieldValue) {
-							if(isset($this->changed[$fieldName]) && $this->changed[$fieldName] && $fieldType = $classSingleton->fieldExists($fieldName)) {
+							if(isset($this->changed[$fieldName]) && $this->changed[$fieldName] && $fieldType = $classSingleton->hasOwnTableDatabaseField($fieldName)) {
 								$fieldObj = $this->obj($fieldName);
 								if(!isset($manipulation[$class])) $manipulation[$class] = array();
 
@@ -1699,7 +1699,7 @@ class DataObject extends ViewableData implements DataObjectInterface {
 	 * @return boolean True if the given field exists
 	 */
 	public function hasField($field) {
-		return array_key_exists($field, $this->record) || $this->fieldExists($field);
+		return array_key_exists($field, $this->record) || $this->hasOwnTableDatabaseField($field);
 	}
 
 	/**
@@ -1711,6 +1711,46 @@ class DataObject extends ViewableData implements DataObjectInterface {
 	 */
 	public function hasDatabaseField($field) {
 		return array_key_exists($field, $this->databaseFields());
+	}
+	
+	/**
+	 * Returns the field type of the given field, if it belongs to this class, and not a parent.
+	 * Note that the field type will not include constructor arguments in round brackets, only the classname.
+	 *
+	 * @param string $field Name of the field
+	 * @return string The field type of the given field
+	 */
+	public function hasOwnTableDatabaseField($field) {
+		// Add base fields which are not defined in static $db
+		if($field == "ID") return "Int";
+		if($field == "ClassName" && get_parent_class($this) == "DataObject") return "Enum";
+		if($field == "LastEdited" && get_parent_class($this) == "DataObject") return "Datetime";
+		if($field == "Created" && get_parent_class($this) == "DataObject") return "Datetime";
+
+		// Add fields from Versioned decorator
+		if($field == "Version") return $this->hasExtension('Versioned') ? "Int" : false;
+		
+		// get cached fieldmap
+		$fieldMap = $this->uninherited('_cache_hasOwnTableDatabaseField');
+		
+		// if no fieldmap is cached, get all fields
+		if(!$fieldMap) {
+			// all $db fields on this specific class (no parents)
+			$fieldMap = $this->uninherited('db', true);
+			
+			// all has_one relations on this specific class,
+			// add foreign key
+			$hasOne = $this->uninherited('has_one', true);
+			if($hasOne) foreach($hasOne as $fieldName => $fieldSchema) {
+				$fieldMap[$fieldName . 'ID'] = "Int";
+			}
+			
+			// set cached fieldmap
+			$this->set_uninherited('_cache_hasOwnTableDatabaseField', $fieldMap);
+		}
+
+		// Remove string-based "constructor-arguments" from the DBField definition
+		return isset($fieldMap[$field]) ? strtok($fieldMap[$field],'(') : null;
 	}
 
 	/**
@@ -1833,32 +1873,13 @@ class DataObject extends ViewableData implements DataObjectInterface {
 	}
 
 	/**
-	 * Returns the field type of the given field, if it belongs to this class, and not a parent.
-	 * Can be used to detect whether the given field exists.
-	 * Note that the field type will not include constructor arguments; only the classname.
+	 * @deprecated 2.3 (For external use) Please use hasField(), hasDatabaseField(), hasOwnTableDatabaseField() instead
 	 *
 	 * @param string $field Name of the field
-	 *
 	 * @return string The field type of the given field
 	 */
 	public function fieldExists($field) {
-		if($field == "ID") return "Int";
-		if($field == "ClassName" && get_parent_class($this) == "DataObject") return "Enum";
-		if($field == "LastEdited" && get_parent_class($this) == "DataObject") return "Datetime";
-		if($field == "Created" && get_parent_class($this) == "DataObject") return "Datetime";
-
-		if($field == "Version") return $this->hasExtension('Versioned') ? "Int" : false;
-		$fieldMap = $this->uninherited('fieldExists');
-		if(!$fieldMap) {
-			$fieldMap = $this->uninherited('db', true);
-			$has = $this->uninherited('has_one', true);
-			if($has) foreach($has as $fieldName => $fieldSchema) {
-				$fieldMap[$fieldName . 'ID'] = "Int";
-			}
-			$this->set_uninherited('fieldExists', $fieldMap);
-		}
-
-		return isset($fieldMap[$field]) ? strtok($fieldMap[$field],'(') : null;
+		return $this->hasOwnTableDatabaseField($field);
 	}
 
 	/**
@@ -2057,6 +2078,7 @@ class DataObject extends ViewableData implements DataObjectInterface {
 	 *  - name: value
 	 *  - name: value
 	 *
+	 * @deprecated 2.3 Use custom code
 	 * @return string The fields as an HTML unordered list
 	 */
 	function listOfFields() {
@@ -2390,7 +2412,10 @@ class DataObject extends ViewableData implements DataObjectInterface {
 	}
 
 	/**
-	 * Get the custom database fields for this object, from self::$db and self::$has_one
+	 * Get the custom database fields for this object, from self::$db and self::$has_one,
+	 * but not built-in fields like ID, ClassName, Created, LastEdited.
+	 * 
+	 * @return array
 	 */
 	public function customDatabaseFields() {
 		$db = $this->uninherited('db',true);
@@ -2437,15 +2462,22 @@ class DataObject extends ViewableData implements DataObjectInterface {
 	public function searchableFields() {
 		// can have mixed format, need to make consistent in most verbose form
 		$fields = $this->stat('searchable_fields');
+		
 		$labels = $this->fieldLabels();
 		
 		// fallback to summary fields
 		if(!$fields) $fields = array_keys($this->summaryFields());
 		
+		// we need to make sure the format is unified before
+		// augumenting fields, so decorators can apply consistent checks
+		// but also after augumenting fields, because the decorator
+		// might use the shorthand notation as well
+
 		// rewrite array, if it is using shorthand syntax
 		$rewrite = array();
 		foreach($fields as $name => $specOrName) {
 			$identifer = (is_int($name)) ? $specOrName : $name;
+
 			if(is_int($name)) {
 				// Format: array('MyFieldName')
 				$rewrite[$identifer] = array();
@@ -2454,7 +2486,7 @@ class DataObject extends ViewableData implements DataObjectInterface {
 				//   'filter => 'ExactMatchFilter',
 				//   'field' => 'NumericField', // optional
 				//   'title' => 'My Title', // optiona.
-				// )
+				// ))
 				$rewrite[$identifer] = array_merge(
 					array('filter' => $this->relObject($identifer)->stat('default_search_filter_class')),
 					(array)$specOrName
@@ -2472,8 +2504,10 @@ class DataObject extends ViewableData implements DataObjectInterface {
 				$rewrite[$identifer]['filter'] = 'PartialMatchFilter';
 			}
 		}
+
 		$fields = $rewrite;
 		
+		// apply DataObjectDecorators if present
 		$this->extend('updateSearchableFields', $fields);
 
 		return $fields;
