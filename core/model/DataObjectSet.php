@@ -402,7 +402,7 @@ class DataObjectSet extends ViewableData implements IteratorAggregate {
 	}
 
     /**
-	* @deprecated Use merge()
+	* @deprecated Use merge() or push()
     */
 	public function append(DataObjectSet $doset){
 		user_error('DataObjectSet::append() is deprecated. Use DataObjectSet::merge() instead.', E_USER_NOTICE);
