@@ -45,10 +45,14 @@ class DropdownField extends FormField {
 				$this->isSelected = true;
 			}
 			
-			$options .= $this->createTag('option', array(
-				'selected' => $selected,
-				'value' => $value
-			), $title);
+			$options .= $this->createTag(
+				'option',
+				array(
+					'selected' => $selected,
+					'value' => $value
+				),
+				$title
+			);
 		}
 	
 		$attributes = array(
