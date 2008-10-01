@@ -141,12 +141,13 @@ class ManifestBuilder {
 		foreach($topLevel as $file) {
 			if($file[0] == '.') continue
 			
+			$fullPath = '';
 			$fullPath = $baseDir . '/' . $file;
 
-			if(@is_dir($fullPath . '/') && file_exists($fullPath . '/_exclude.php'))
+			if(@is_dir($fullPath . '/') && file_exists($fullPath . '/_exclude.php')) {
 				require_once($fullPath . '/_exclude.php');
+			}
 		}
-
 
 		// Class manifest
 		$classManifest = array();
