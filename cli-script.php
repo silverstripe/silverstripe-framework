@@ -43,7 +43,8 @@ if(isset($_SERVER['argv'][2])) {
        if(strpos($arg,'=') == false) {
            $_GET['args'][] = $arg;
        } else {
-           $newItems = parse_str( (substr($arg,0,2) == '--') ? substr($arg,2) : $arg );
+           $newItems = array();
+           parse_str( (substr($arg,0,2) == '--') ? substr($arg,2) : $arg, $newItems );
            $_GET = array_merge($_GET, $newItems);
        }
     }
