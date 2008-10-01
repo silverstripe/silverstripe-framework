@@ -1,6 +1,11 @@
 <?php
 /**
  * ErrorPage holds the content for the page of an error response.
+ * Renders the page on each publish action into a static HTML file
+ * within the assets directory, after the naming convention
+ * /assets/error-<statuscode>.html.
+ * This enables us to show errors even if PHP experiences a recoverable error.
+ * ErrorPages
  * 
  * @package cms
  * @usedby Debug::friendlyError()
