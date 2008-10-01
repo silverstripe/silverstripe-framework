@@ -1,13 +1,28 @@
 <?php
 /**
- * SimpleImageField provides an easy way of uploading images to Image has_one relationships.
+ * SimpleImageField provides an easy way of uploading images to {@link Image} has_one relationships.
+ * These relationships are auto-detected if you name the field accordingly.
  * Unlike {@link ImageField}, it doesn't use an iframe.
+ * 
+ * Restricts the upload size to 2MB by default, and only allows upload
+ * of files with the extension 'jpg', 'gif' or 'png'.
+ * 
+ * Example Usage:
+ * <code>
+ * class Article extends DataObject {
+ * 	static $has_one = array('MyImage' => 'Image');
+ * }
+ * // use in your form constructor etc.
+ * $myField = new SimpleImageField('MyImage');
+ * </code>
  * 
  * @package forms
  * @subpackage fields-files
  */
 class SimpleImageField extends FileField {
   
+	public $allowedExtensions = array('jpg','gif','png');
+
 	function Field() {
 	    $record = $this->form->getRecord();
 	    $fieldName = $this->name;
