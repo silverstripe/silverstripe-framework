@@ -342,7 +342,18 @@ class Email extends ViewableData {
 		
 		return $result;
 	}
-	
+
+	/**
+	 * Used as a default sender address in the {@link Email} class
+	 * unless overwritten. Also shown to users on live environments
+	 * as a contact address on system error pages.
+	 * 
+	 * @usedby Email->send()
+	 * @usedby Email->sendPlain()
+	 * @usedby Debug->friendlyError()
+	 * 
+	 * @param string $newEmail
+	 */
 	public static function setAdminEmail( $newEmail ) {
 		self::$admin_email_address = $newEmail;
 	}
@@ -419,6 +430,34 @@ class Email extends ViewableData {
 
         return preg_match("!^$addr_spec$!", $email) ? 1 : 0;
     }
+
+	/**
+	 * Encode an email-address to protect it from spambots.
+	 * At the moment only simple string substitutions,
+	 * which are not 100% safe from email harvesting.
+	 * 
+	 * @todo Integrate javascript-based solution
+	 * 
+	 * @param string $email Email-address
+	 * @param string $method Method for obfuscating/encoding the address
+	 *  - 'visible': Simple string substitution ('@' to '[at]', '.' to '[dot], '-' to [dash])
+	 *  - 'hex': Hexadecimal URL-Encoding - useful for mailto: links
+	 * @return string
+	 */
+	public static function obfuscate($email, $method = 'visible') {
+		switch($method) {
+			case 'visible' :
+				$obfuscated = array('@' => ' [at] ', '.' => ' [dot] ', '-' => ' [dash] ');
+				return strtr($email, $obfuscated);
+			case 'hex' :
+				$encoded = '';
+				for ($x=0; $x < strlen($email); $x++) $encoded .= '&#x' . bin2hex($email{$x}).';';
+				return $encoded;
+			default:
+				user_error('Email::obfuscate(): Unknown obfuscation method', E_USER_NOTICE);
+				return $email;
+		}
+	}
 }
 
 /**
