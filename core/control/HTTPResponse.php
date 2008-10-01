@@ -183,7 +183,12 @@ class HTTPResponse extends Object {
 				}
 			}
 			
-			echo $this->body;
+			if(Director::isLive() && $this->isError()) {
+				Debug::friendlyError($this->statusCode, $this->getStatusDescription());
+			} else {
+				echo $this->body;
+			}
+			
 		}
 	}
 	

@@ -229,6 +229,7 @@ class Debug {
 	 * @param unknown_type $errcontext
 	 */
 	static function fatalHandler($errno, $errstr, $errfile, $errline, $errcontext) {
+
 		if(self::$send_errors_to) self::emailError(self::$send_errors_to, $errno, $errstr, $errfile, $errline, $errcontext, "Error");
 		self::log_error_if_necessary( $errno, $errstr, $errfile, $errline, $errcontext, "Error");
 		
@@ -236,32 +237,47 @@ class Debug {
 			Debug::showError($errno, $errstr, $errfile, $errline, $errcontext, "Error");
 
 		} else {
-			Debug::friendlyError($errno, $errstr, $errfile, $errline, $errcontext);
+			Debug::friendlyError();
 		}
 		exit(1);
 	}
 	
 	/**
 	 * Render a user-facing error page, using the default HTML error template
-	 * if it exists.
+	 * rendered by {@link ErrorPage} if it exists. Doesn't use the standard {@link HTTPResponse} class
+	 * the keep dependencies minimal. 
+	 * 
+	 * @uses ErrorPage
 	 *
-	 * @param unknown_type $errno
-	 * @param unknown_type $errstr
-	 * @param unknown_type $errfile
-	 * @param unknown_type $errline
-	 * @param unknown_type $errcontext
+	 * @param int $statusCode HTTP Status Code (Default: 500)
+	 * @param string $friendlyErrorMessage User-focused error message. Should not contain code pointers or "tech-speak".
+	 *    Used in the HTTP Header and ajax responses.
+	 * @param string $friendlyErrorDetail Detailed user-focused message. Is just used if no {@link ErrorPage} is found
+	 *    for this specific status code.
+	 * @return string HTML error message for non-ajax requests, plaintext for ajax-request.
 	 */
-	static function friendlyError($errno, $errstr, $errfile, $errline, $errcontext) {
-		header("HTTP/1.0 500 There has been an error");
+	static function friendlyError($statusCode = 500, $friendlyErrorMessage = null, $friendlyErrorDetail = null) {
+		if(!$friendlyErrorMessage) $friendlyErrorMessage = 'There has been an error';
+		if(!$friendlyErrorDetail) $friendlyErrorDetail = 'The website server has not been able to respond to your request.';
+
+		if(!headers_sent()) header($_SERVER['SERVER_PROTOCOL'] . " $statusCode $friendlyErrorMessage");
 
 		if(Director::is_ajax()) {
-			echo "There has been an error";
-
+			echo $friendlyErrorMessage;
 		} else {
-			if(file_exists(ASSETS_PATH . '/error-500.html')) {
-				include(ASSETS_PATH . '/error-500.html');
+			if(file_exists(ASSETS_PATH . "/error-$statusCode.html")) {
+				echo file_get_contents(ASSETS_PATH . "/error-$statusCode.html");
 			} else {
-				echo "<h1>Error</h1><p>The website server has not been able to respond to your request.</p>\n";
+				$renderer = new DebugView();
+				$renderer->writeHeader();
+				$renderer->writeInfo("Website Error", $friendlyErrorMessage, $friendlyErrorDetail);
+				
+				if(Email::getAdminEmail()) {
+					$mailto = Email::obfuscate(Email::getAdminEmail());
+					$renderer->writeParagraph('Contact an administrator: ' . $mailto . '');
+				}
+
+				$renderer->writeFooter();
 			}
 		}
 	}
@@ -288,7 +304,7 @@ class Debug {
 		if(!headers_sent()) {
 			$errText = "$errtype: \"$errstr\" at line $errline of $errfile";
 			$errText = str_replace(array("\n","\r")," ",$errText);
-			header("HTTP/1.0 500 $errText");
+			if(!headers_sent()) header($_SERVER['SERVER_PROTOCOL'] . " 500 $errText");
 			
 			// if error is displayed through ajax with CliDebugView, use plaintext output
 			if(Director::is_ajax()) header('Content-Type: text/plain');
@@ -598,7 +614,7 @@ class Debug {
 		$_SESSION['Security']['Message']['message'] = "You need to login with developer access to make use of debugging tools.";
 		$_SESSION['Security']['Message']['type'] =  'warning';
 		$_SESSION['BackURL'] = $_SERVER['REQUEST_URI'];
-		header("HTTP/1.1 302 Found");
+		header($_SERVER['SERVER_PROTOCOL'] . " 302 Found");
 		header("Location: " . Director::baseURL() . "Security/login");
 		die();
 	}

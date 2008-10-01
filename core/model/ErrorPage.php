@@ -1,7 +1,9 @@
 <?php
 /**
  * ErrorPage holds the content for the page of an error response.
+ * 
  * @package cms
+ * @usedby Debug::friendlyError()
  */
 class ErrorPage extends Page {
 

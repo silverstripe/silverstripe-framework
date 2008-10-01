@@ -150,6 +150,13 @@ class DebugView {
 		Debug::backtrace();
 		echo '</div>';
 	}
+	
+	/**
+	 * @param string $text
+	 */
+	function writeParagraph($text) {
+		echo '<p class="info">' . $text . '</p>';
+	}
 }
 
 ?>
