@@ -289,6 +289,20 @@ class DataObjectTest extends SapphireTest {
 		$this->assertEquals(0, DB::query("SELECT CaptainID FROM DataObjectTest_Team WHERE ID = $existingTeam->ID")->value());
 	}
 	
+	function testFieldNamesThatMatchMethodNamesWork() {
+		/* Check that a field name that corresponds to a method on DataObject will still work */
+		$obj = new DataObjectTest_FunnyFieldNames();
+		$obj->Data = "value1";
+		$obj->DbObject = "value2";
+		$obj->Duplicate = "value3";
+		$obj->write();
+
+		$this->assertNotNull($obj->ID);
+		$this->assertEquals('value1', DB::query("SELECT Data FROM DataObjectTest_FunnyFieldNames WHERE ID = $obj->ID")->value());
+		$this->assertEquals('value2', DB::query("SELECT DbObject FROM DataObjectTest_FunnyFieldNames WHERE ID = $obj->ID")->value());
+		$this->assertEquals('value3', DB::query("SELECT Duplicate FROM DataObjectTest_FunnyFieldNames WHERE ID = $obj->ID")->value());
+	}
+	
 	/**
 	 * @todo Re-enable all test cases for field existence after behaviour has been fixed
 	 */
@@ -444,6 +458,14 @@ class DataObjectTest_Team extends DataObject implements TestOnly {
 		return 'dynamicfield';
 	}
 
+}
+
+class DataObjectTest_FunnyFieldNames extends DataObject implements TestOnly {
+	static $db = array(
+		'Data' => 'Text',
+		'Duplicate' => 'Text',
+		'DbObject' => 'Text',
+	);
 }
 
 class DataObjectTest_SubTeam extends DataObjectTest_Team implements TestOnly {
