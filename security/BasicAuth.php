@@ -39,7 +39,7 @@ class BasicAuth extends Object {
 		// If we've failed the authentication mechanism, then show the login form
 		if(!isset($authenticated)) {
 			header("WWW-Authenticate: Basic realm=\"$realm\"");
-			header('HTTP/1.0 401 Unauthorized');
+			header($_SERVER['SERVER_PROTOCOL'] . ' 401 Unauthorized');
 
 			if(isset($_SERVER['PHP_AUTH_USER'])) {
 				echo _t('BasicAuth.ERRORNOTREC', "That username / password isn't recognised");
@@ -52,7 +52,7 @@ class BasicAuth extends Object {
 		
 		if(!Permission::checkMember($member->ID, $permissionCode)) {
 			header("WWW-Authenticate: Basic realm=\"$realm\"");
-			header('HTTP/1.0 401 Unauthorized');
+			header($_SERVER['SERVER_PROTOCOL'] . ' 401 Unauthorized');
 
 			if(isset($_SERVER['PHP_AUTH_USER'])) {
 				echo _t('BasicAuth.ERRORNOTADMIN', "That user is not an administrator.");
