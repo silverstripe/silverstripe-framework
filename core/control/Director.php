@@ -620,6 +620,23 @@ class Director {
 			self::$environment_type = $et;
 		}
 	}
+	
+	/**
+	 * Can also be checked with {@link Director::isDev()}, {@link Director::isTest()}, and {@link Director::isLive()}.
+	 * 
+	 * @return string 'dev', 'test' or 'live'
+	 */
+	static function get_environment_type() {
+		if(Director::isLive()) {
+			return 'live';
+		} elseif(Director::isTest()) {
+			return 'test';
+		} elseif(Director::isDev()) {
+			return 'dev';
+		} else {
+			return false;
+		}
+	}
 
 	/**
 	 * Specify HTTP_HOST values that are development environments.
