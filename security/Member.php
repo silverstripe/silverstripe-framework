@@ -545,9 +545,15 @@ class Member extends DataObject {
 		
 		// We don't send emails out on dev/tests sites to prevent accidentally spamming users.
 		// However, if TestMailer is in use this isn't a risk.
-		if((Director::isLive() || Email::mailer() instanceof TestMailer) &&
-			isset($this->changed['Password']) && $this->changed['Password'] && $this->record['Password'] && 
-			Member::$notify_password_change) $this->sendInfo('changePassword');
+		if(
+			(Director::isLive() || Email::mailer() instanceof TestMailer) 
+			&& isset($this->changed['Password']) 
+			&& $this->changed['Password'] 
+			&& $this->record['Password'] 
+			&& Member::$notify_password_change
+		) {
+			$this->sendInfo('changePassword');
+		}
 		
 		// The test on $this->ID is used for when records are initially created
 		if(!$this->ID || (isset($this->changed['Password']) && $this->changed['Password'])) {
