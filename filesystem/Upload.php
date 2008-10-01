@@ -294,7 +294,7 @@ class Upload extends Controller {
 	 */
 	public function isValidExtension($tmpFile) {
 		$pathInfo = pathinfo($tmpFile['name']);
-		return (!count($this->allowedExtensions) || array_key_exists(strtolower($pathInfo['extension']), $this->allowedExtensions));
+		return (!count($this->allowedExtensions) || in_array(strtolower($pathInfo['extension']), $this->allowedExtensions));
 	}
 	
 	
