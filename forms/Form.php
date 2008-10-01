@@ -11,6 +11,12 @@
  * can be passed using the URL or get variables.  These restrictions are in place so that we can
  * recreate the form object upon form submission, without the use of a session, which would be too
  * resource-intensive.
+ * 
+ * You will need to create at least one method for processing the submission (through {@link FormAction}).
+ * This method will be passed two parameters: the raw request data, and the form object.
+ * Usually you want to save data into a {@link DataObject} by using {@link saveInto()}.
+ * If you want to process the submitted data in any way, please use {@link getData()} rather than
+ * the raw request data.
  *
  * @package forms
  * @subpackage core
@@ -135,7 +141,10 @@ class Form extends RequestHandlingData {
 	);
 	
 	/**
-	 * Handle a form submission.  GET and POST requests behave identically
+	 * Handle a form submission.  GET and POST requests behave identically.
+	 * Populates the form with {@link loadDataFrom()}, calls {@link validate()},
+	 * and only triggers the requested form action/method
+	 * if the form is valid.
 	 */
 	function httpSubmission($request) {
 		$vars = $request->requestVars();
@@ -625,7 +634,11 @@ class Form extends RequestHandlingData {
 	/**
 	 * Processing that occurs before a form is executed.
 	 * This includes form validation, if it fails, we redirect back
-	 * to the form with appropriate error messages
+	 * to the form with appropriate error messages.
+	 * Triggered through {@link httpSubmission()} which is triggered
+	 * @usedby Form->httpSubmission()
+	 * 
+	 * @todo Replace hardcoded exclude fields like CreditCardNumber with hook to specify sensitive fields in model
 	 */
 	 function validate(){
 		if($this->validator){
@@ -757,7 +770,14 @@ class Form extends RequestHandlingData {
 	}
 	
 	/**
-	 * Get the data from this form
+	 * Get the submitted data from this form through
+	 * {@link FieldSet->dataFields()}, which filters out
+	 * any form-specific data like form-actions.
+	 * Calls {@link FormField->dataValue()} on each field,
+	 * which returns a value suitable for insertion into a DataObject
+	 * property.
+	 * 
+	 * @return array
 	 */
 	function getData() {
 		$dataFields = $this->fields->dataFields();
@@ -771,15 +791,27 @@ class Form extends RequestHandlingData {
 		return $data;
 	}
 
+	/**
+	 * @deprecated 2.3 Use resetField()
+	 */
 	function resetData($fieldName, $fieldValue){
+		return $this->resetField($fieldName, $fieldValue);
+	}
+	
+	/**
+	 * Resets a specific field to its passed default value.
+	 * Does NOT clear out all submitted data in the form.
+	 * 
+	 * @param string $fieldName
+	 * @param mixed $fieldValue
+	 */
+	function resetField($fieldName, $fieldValue = null) {
 		$dataFields = $this->fields->dataFields();
-		if($dataFields){
-			foreach($dataFields as $field) {
-				if($field->Name()==$fieldName) {
-					$field = $field->setValue($fieldValue);
-				}
+		if($dataFields) foreach($dataFields as $field) {
+			if($field->Name()==$fieldName) {
+				$field = $field->setValue($fieldValue);
 			}
-		}		
+		}
 	}
 	
 	/**
