@@ -37,21 +37,21 @@ class ListboxField extends DropdownField {
 			$this->name .= '[]';
 		}
 		
+		$options = "";
+		
 		// We have an array of values
 		if(is_array($this->value)){
 			// Loop through and figure out which values were selected.
 					
 			foreach($this->source as $value => $title) {
-
 				// Loop through the array of values to find out if this value is selected.
+				$selected = "";
 				foreach($this->value as $v){
-					if($value == $v){
+					if($value == $v) {
 						$selected = " selected=\"selected\"";
 						break;
-					}else{
-						$selected = "";
-					}	
-				}				
+					}
+				}
 				$options .= "<option$selected value=\"$value\">$title</option>\n";
 			}
 		}else{
