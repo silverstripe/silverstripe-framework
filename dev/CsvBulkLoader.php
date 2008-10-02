@@ -6,7 +6,7 @@
  * @see http://rfc.net/rfc4180.html
  * @package cms
  * @subpackage bulkloading
- * @author Ingo Schommer, Silverstripe Ltd. (ingo@silverstripe.com)
+ * @author Ingo Schommer, Silverstripe Ltd. (<myfirstname>@silverstripe.com)
  * 
  * @todo Support for deleting existing records not matched in the import (through relation checks)
  */
