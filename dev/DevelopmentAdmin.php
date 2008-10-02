@@ -20,12 +20,17 @@ class DevelopmentAdmin extends Controller {
 		$actions = array(
 			"build" => "Build/rebuild this environment (formerly db/build).  Call this whenever you have updated your project sources",
 			"tests" => "See a list of unit tests to run",
+			"tests/all" => "Run all tests",
+			"modules/add" => "Add a module, for example, 'sake dev/modules/add ecommerce'",
 			"tasks" => "See a list of build tasks to run",
 			"viewcode" => "Read source code in a literate programming style",
 		);
 		
 		// Web mode
 		if(!Director::is_cli()) {
+			// This action is sake-only right now.
+			unset($actions["modules/add"]);
+			
 			$renderer = new DebugView();
 			$renderer->writeHeader();
 			$renderer->writeInfo("Sapphire Development Tools", Director::absoluteBaseURL());
@@ -55,6 +60,10 @@ class DevelopmentAdmin extends Controller {
 	
 	function tasks() {
 		return new TaskRunner();
+	}
+	
+	function modules() {
+		return new ModuleManager();
 	}
 	
 	function build() {
