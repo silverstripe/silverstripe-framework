@@ -928,7 +928,8 @@ class Member extends DataObject {
 					i18n::get_existing_translations(), 
 					$locale
 				),
-				$password
+				$password,
+				new TreeMultiselectField("Groups", _t("Member.SECURITYGROUPS", "Security groups"))
 			);
 
 		$this->extend('updateCMSFields', $fields);
