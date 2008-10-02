@@ -250,7 +250,10 @@ class Text extends DBField {
 	}
 	
 	/**
-	 * Allows a sub-class of TextParser to be rendered. @see TextParser for implementation details.
+	 * Allows a sub-class of TextParser to be rendered.
+	 * 
+	 * @see TextParser for implementation details.
+	 * @return string
 	 */
 	function Parse($parser = "TextParser") {
 		if($parser == "TextParser" || is_subclass_of($parser, "TextParser")) {

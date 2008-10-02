@@ -521,7 +521,7 @@ JS;
 	 * even if there is no action relevant for the main controller (to provide the instance of ComplexTableField
 	 * which in turn saves the record.
 	 *
-	 * @see {Form::ReferencedField}).
+	 * @see Form::ReferencedField
 	 */
 	function saveComplexTableField($data, $form, $params) {
 		$className = $this->sourceClass();
@@ -669,7 +669,7 @@ class ComplexTableField_ItemRequest extends RequestHandlingData {
 	 * even if there is no action relevant for the main controller (to provide the instance of ComplexTableField
 	 * which in turn saves the record.
 	 *
-	 * @see {Form::ReferencedField}).
+	 * @see Form::ReferencedField
 	 */
 	function saveComplexTableField($data, $form, $request) {
 		$form->saveInto($this->dataObj());

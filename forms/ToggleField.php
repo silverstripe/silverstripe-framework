@@ -21,7 +21,8 @@ class ToggleField extends ReadonlyField {
 	public $labelLess;
 	
 	/**
-	 * @var $truncateMethod string (FirstSentence|FirstParagraph) @see {Text}
+	 * @see Text
+	 * @var $truncateMethod string (FirstSentence|FirstParagraph)
 	 */
 	public $truncateMethod = 'FirstSentence';
 	

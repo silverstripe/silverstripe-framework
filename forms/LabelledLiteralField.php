@@ -8,7 +8,8 @@
  * @deprecated If you need to have a label for your literal field, just put the
  * HTML into a LiteralField, or use a custom form template to separate your
  * presentation/content from the data fields.
- * {@see http://doc.silverstripe.com/doku.php?id=form#using_a_custom_template}
+ * 
+ * @see http://doc.silverstripe.com/doku.php?id=form#using_a_custom_template
  */
 class LabelledLiteralField extends LiteralField {
 	
