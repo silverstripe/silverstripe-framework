@@ -242,7 +242,7 @@ JS
 				"Name" => $fieldName, 
 				"Title" => $fieldTitle,
 				"IsSortable" => $isSortable,
-				"SortLink" => Convert::raw2xml($sortLink),
+				"SortLink" => $sortLink,
 				"SortBy" => $isSorted,
 				"SortDirection" => (isset($_REQUEST['ctf'][$this->Name()]['dir'])) ? $_REQUEST['ctf'][$this->Name()]['dir'] : null 
 			));
@@ -921,7 +921,14 @@ JS
 	}
 	
 	function BaseLink() {
-		return $this->FormAction() . "&action_callfieldmethod&fieldName={$this->Name()}&ctf[ID]={$this->sourceID()}&methodName=ajax_refresh&SecurityID=" . Session::get('SecurityID');
+		$link = $this->FormAction() . "&action_callfieldmethod&fieldName={$this->Name()}&ctf[ID]={$this->sourceID()}&methodName=ajax_refresh&SecurityID=" . Session::get('SecurityID');
+		if(isset($_REQUEST['ctf'][$this->Name()]['sort'])) {
+			$link = HTTP::setGetVar("ctf[{$this->Name()}][sort]", $_REQUEST['ctf'][$this->Name()]['sort']);
+		}
+		if(isset($_REQUEST['ctf'][$this->Name()]['dir'])) {
+			$link = HTTP::setGetVar("ctf[{$this->Name()}][dir]", $_REQUEST['ctf'][$this->Name()]['dir']);
+		}
+		return str_replace('&amp;','&',$link);
 	}
 	
 	/**
