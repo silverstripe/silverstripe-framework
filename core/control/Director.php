@@ -431,7 +431,7 @@ class Director {
 		$url = ereg_replace('([^:])//','\\1/',$url);
 
 		// Only bother comparing the URL to the absolute version if $url looks like a URL.
-		if(preg_match('/^http[^:]+:\/\//',$url)) {
+		if(preg_match('/^http[^:]*:\/\//',$url)) {
 			$base1 = self::absoluteBaseURL();
 			if(substr($url,0,strlen($base1)) == $base1) return substr($url,strlen($base1));
 		}
