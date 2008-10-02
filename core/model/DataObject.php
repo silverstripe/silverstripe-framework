@@ -1909,8 +1909,12 @@ class DataObject extends ViewableData implements DataObjectInterface {
 	 * @return DBField The field as a DBField object
 	 */
 	public function dbObject($fieldName) {
+		// If we have a CompositeDBField object in $this->record, then return that
+		if(isset($this->record[$fieldName]) && is_object($this->record[$fieldName])) {
+			return $this->record[$fieldName];
+			
 		// Special case for ID field
-		if($fieldName == 'ID') {
+		} else if($fieldName == 'ID') {
 			return new PrimaryKey($fieldName, $this);
 			
 		// General casting information for items in $db or $casting
