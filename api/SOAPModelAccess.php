@@ -1,4 +1,4 @@
-<?
+<?php
 /**
  * Basic SOAP Server to access and modify DataObject instances.
  * You can enable SOAP access on a DataObject by setting {@link DataObject::$api_access} to true.
