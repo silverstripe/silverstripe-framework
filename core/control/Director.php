@@ -300,7 +300,14 @@ class Director {
 		if(isset($_SERVER['HTTP_HOST'])) {
 			return "http$s://" . $_SERVER['HTTP_HOST'];
 		} else {
-			user_error("Director::protocolAndHost() lacks sufficient information - HTTP_HOST not set.", E_USER_WARNING);
+			global $_FILE_TO_URL_MAPPING;
+			if(Director::is_cli() && isset($_FILE_TO_URL_MAPPING)) $errorSuggestion = '  You probably want to define '.
+				'an entry in $_FILE_TO_URL_MAPPING that covers "' . Director::baseFolder() . '"';
+			else if(Director::is_cli()) $errorSuggestion = '  You probably want to define $_FILE_TO_URL_MAPPING in '.
+				'your _ss_environment.php as instructed on the "sake" page of the doc.silverstripe.com wiki';
+			else $errorSuggestion = "";
+			
+			user_error("Director::protocolAndHost() lacks sufficient information - HTTP_HOST not set.$errorSuggestion", E_USER_WARNING);
 			return false;
 			
 		}
@@ -420,16 +427,20 @@ class Director {
 	 * This is useful when turning a URL into a filesystem reference, or vice versa.
 	 */
 	static function makeRelative($url) {
-		$base1 = self::absoluteBaseURL();
-		$base2 = self::baseFolder();
-		$base3 = self::baseURL();
-
 		// Allow for the accidental inclusion of a // in the URL
 		$url = ereg_replace('([^:])//','\\1/',$url);
 
-		if(substr($url,0,strlen($base1)) == $base1) return substr($url,strlen($base1));
-		else if(substr($url,0,strlen($base2)) == $base2) return substr($url,strlen($base2));
-		else if(substr($url,0,strlen($base3)) == $base3) return substr($url,strlen($base3));
+		// Only bother comparing the URL to the absolute version if $url looks like a URL.
+		if(preg_match('/^http[^:]+:\/\//',$url)) {
+			$base1 = self::absoluteBaseURL();
+			if(substr($url,0,strlen($base1)) == $base1) return substr($url,strlen($base1));
+		}
+		
+		$base2 = self::baseFolder();
+		if(substr($url,0,strlen($base2)) == $base2) return substr($url,strlen($base2));
+
+		$base3 = self::baseURL();
+		if(substr($url,0,strlen($base3)) == $base3) return substr($url,strlen($base3));
 		
 		return $url;
 	}
