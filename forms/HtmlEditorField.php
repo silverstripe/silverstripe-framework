@@ -281,14 +281,14 @@ class HtmlEditorField_Toolbar extends RequestHandlingData {
 			)),*/
 			new HtmlEditorField_dropdown("FormatBlock", "formatSelect", array(
 				"<p>" => _t('HtmlEditorField.FORMATP', "Paragraph", PR_MEDIUM, '<p> tag'),
-				"<address>" => _t('HtmlEditorField.FORMATADDR', "Address", PR_MEDIUM, '<address> tag'),
-				"<pre>" => "Preformatted",_t('HtmlEditorField.FORMATADDR', "Address", PR_MEDIUM, '<address> tag'),
 				"<h1>" => _t('HtmlEditorField.FORMATH1', "Heading 1", PR_MEDIUM, '<h1> tag'),
 				"<h2>" => _t('HtmlEditorField.FORMATH2', "Heading 2", PR_MEDIUM, '<h2> tag'),
 				"<h3>" => _t('HtmlEditorField.FORMATH3', "Heading 3", PR_MEDIUM, '<h3> tag'),
 				"<h4>" => _t('HtmlEditorField.FORMATH4', "Heading 4", PR_MEDIUM, '<h4> tag'),
 				"<h5>" => _t('HtmlEditorField.FORMATH5', "Heading 5", PR_MEDIUM, '<h5> tag'),
 				"<h6>" => _t('HtmlEditorField.FORMATH6', "Heading 6", PR_MEDIUM, '<h6> tag'),
+				"<address>" => _t('HtmlEditorField.FORMATADDR', "Address", PR_MEDIUM, '<address> tag'),
+				"<pre>" => _t('HtmlEditorField.FORMATPRE', "Preformatted", PR_MEDIUM, '<pre> tag'),
 			)),
 			new HtmlEditorField_separator(),
 			new HtmlEditorField_button("InsertUnorderedList","bullist",_t('HtmlEditorField.BULLETLIST', "Bullet-point list")),
