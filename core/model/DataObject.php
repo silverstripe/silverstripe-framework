@@ -45,14 +45,8 @@
  * 		if(!$member) $member = Member::currentUser();
  *		return $member->inGroup('Editors');
  * 	}
- * 	public function canDelete($member = false) {
- * 		if(!$member) $member = Member::currentUser();
- *		return $member->inGroup('Editors');
- * 	}
- * 	public function canCreate($member = false) {
- * 		if(!$member) $member = Member::currentUser();
- *		return $member->inGroup('Editors');
- * 	}
+ * 	
+ * 	// ...
  * }
  * </code>
  * 
@@ -394,7 +388,7 @@ class DataObject extends ViewableData implements DataObjectInterface {
 	/**
 	 * Update a number of fields on this object, given a map of the desired changes.
 	 * 
-	 * The field names can be simple names, or you can use a dot syntax to access relations.
+	 * The field names can be simple names, or you can use a dot syntax to access $has_one relations.
 	 * For example, array("Author.FirstName" => "Jim") will set $this->Author()->FirstName to "Jim".
 	 * 
 	 * update() doesn't write the main object, but if you use the dot syntax, it will write() 
@@ -410,9 +404,23 @@ class DataObject extends ViewableData implements DataObjectInterface {
 				$fieldName = array_pop($relations);
 				$relObj = $this;
 				foreach($relations as $i=>$relation) {
-					$relObj = $relObj->$relation();
-					// If the intermediate relationship objects have been created, then write them
-					if($i<sizeof($relation)-1 && !$relObj->ID) $relObj->write();
+					// no support for has_many or many_many relationships,
+					// as the updater wouldn't know which object to write to (or create)
+					if($relObj->has_one($relation)) {
+						$relObj = $relObj->$relation();
+						
+						// If the intermediate relationship objects have been created, then write them
+						if($i<sizeof($relation)-1 && !$relObj->ID) $relObj->write();
+					} else {
+						user_error(
+							"DataObject::update(): Can't traverse relationship '$relation'," .  
+							"it has to be a has_one relationship returning a single DataObject", 
+							E_USER_NOTICE
+						);
+						// unset relation object so we don't write properties to the wrong object
+						unset($relObj);
+						break;
+					}
 				}
 				if($relObj) {
 					$relObj->$fieldName = $v;
