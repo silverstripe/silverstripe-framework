@@ -406,7 +406,7 @@ class DataObject extends ViewableData implements DataObjectInterface {
 				foreach($relations as $i=>$relation) {
 					// no support for has_many or many_many relationships,
 					// as the updater wouldn't know which object to write to (or create)
-					if($relObj->has_one($relation)) {
+					if($relObj->$relation() instanceof DataObject) {
 						$relObj = $relObj->$relation();
 						
 						// If the intermediate relationship objects have been created, then write them
@@ -414,7 +414,7 @@ class DataObject extends ViewableData implements DataObjectInterface {
 					} else {
 						user_error(
 							"DataObject::update(): Can't traverse relationship '$relation'," .  
-							"it has to be a has_one relationship returning a single DataObject", 
+							"it has to be a has_one relationship or return a single DataObject", 
 							E_USER_NOTICE
 						);
 						// unset relation object so we don't write properties to the wrong object
@@ -422,6 +422,7 @@ class DataObject extends ViewableData implements DataObjectInterface {
 						break;
 					}
 				}
+
 				if($relObj) {
 					$relObj->$fieldName = $v;
 					$relObj->write();
