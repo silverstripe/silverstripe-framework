@@ -5,6 +5,17 @@
  * @subpackage control
  */
 class SapphireInfo extends Controller {
+	static $allowed_actions = array(
+		'baseurl',
+		'version',
+		'environmenttype',
+	);
+	
+	function init() {
+		parent::init();
+		if(!Director::is_cli() && !Permission::check('ADMIN')) return Security::permissionFailure();
+	}
+	
 	function Version() {
 		$sapphireVersionFile = file_get_contents('../sapphire/silverstripe_version');
 
