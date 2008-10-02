@@ -60,14 +60,15 @@ class BankAccountField extends FormField {
 	
 	public function setValue($value) {
 		$this->value = self::join_bank_number($value);
-		
-		$this->valueArr = array();
-		list(
-			$this->valueArr['BankCode'], 
-			$this->valueArr['BranchCode'], 
-			$this->valueArr['AccountNumber'], 
-			$this->valueArr['AccountSuffix']
-		) = explode(" ",$this->value);
+		if($this->value) {
+			$this->valueArr = array();
+			list(
+				$this->valueArr['BankCode'], 
+				$this->valueArr['BranchCode'], 
+				$this->valueArr['AccountNumber'], 
+				$this->valueArr['AccountSuffix']
+			) = explode(" ",$this->value);
+		}
 	}
 	
 /**
@@ -108,6 +109,7 @@ class BankAccountField extends FormField {
 	public static function join_bank_number($value) {
 		if(is_array($value)) {
 			$value = self::convert_format_nz($value);
+			$completeNumber = "";
 			if($value['BankCode']) {
 				$completeNumber .= $value['BankCode'] . " ";
 			}
