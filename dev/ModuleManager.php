@@ -25,6 +25,8 @@ class ModuleManager extends RequestHandlingData {
 	 * Usage: sake dev/modules/add ecommerce forum/tags/0.1
 	 */
 	function add() {
+		if(!Director::is_cli()) return new HTTPResponse('ModuleManager only currently works in command-line mode.', 403);
+
 		if(isset($_GET['args'])) {
 			$modules = $_GET['args'];
 			foreach($modules as $module) {
