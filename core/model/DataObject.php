@@ -392,18 +392,41 @@ class DataObject extends ViewableData implements DataObjectInterface {
 	}
 
 	/**
-	 * Pass a number of field changes in a map.
-	 * Doesn't write to the database. To write the data,
-	 * use the write() method.
+	 * Update a number of fields on this object, given a map of the desired changes.
+	 * 
+	 * The field names can be simple names, or you can use a dot syntax to access relations.
+	 * For example, array("Author.FirstName" => "Jim") will set $this->Author()->FirstName to "Jim".
+	 * 
+	 * update() doesn't write the main object, but if you use the dot syntax, it will write() 
+	 * the related objects that it alters.
 	 *
 	 * @param array $data A map of field name to data values to update.
 	 */
 	public function update($data) {
 		foreach($data as $k => $v) {
-			$this->$k = $v;
+			// Implement dot syntax for updates
+			if(strpos($k,'.') !== false) {
+				$relations = explode('.', $k);
+				$fieldName = array_pop($relations);
+				$relObj = $this;
+				foreach($relations as $i=>$relation) {
+					$relObj = $relObj->$relation();
+					// If the intermediate relationship objects have been created, then write them
+					if($i<sizeof($relation)-1 && !$relObj->ID) $relObj->write();
+				}
+				if($relObj) {
+					$relObj->$fieldName = $v;
+					$relObj->write();
+					$relObj->flushCache();
+				} else {
+					user_error("Couldn't follow dot syntax '$k' on '$this->class' object", E_USER_WARNING);
+				}
+			} else {
+				$this->$k = $v;
+			}
 		}
 	}
-
+	
 	/**
 	 * Pass changes as a map, and try to
 	 * get automatic casting for these fields.
@@ -1644,7 +1667,6 @@ class DataObject extends ViewableData implements DataObjectInterface {
 			if(!isset($this->record[$fieldName]) || $this->record[$fieldName] !== $val) {
 				// TODO Add check for php-level defaults which are not set in the db
 				// TODO Add check for hidden input-fields (readonly) which are not set in the db
-
 				if(
 					// Main non type-based check
 					(isset($this->record[$fieldName]) && $this->record[$fieldName] != $val)

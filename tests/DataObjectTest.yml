@@ -42,6 +42,13 @@ DataObjectTest_Team:
       Title: Team 2
       
 DataObjectTest_Player:
+   captain1:
+      FirstName: Captain 1
+      FavouriteTeam: =>DataObjectTest_Team.team1
+      Teams: =>DataObjectTest_Team.team1
+   captain2:
+      FirstName: Captain 2
+      Teams: =>DataObjectTest_Team.team2
    player1:
       FirstName: Player 1
    player2:

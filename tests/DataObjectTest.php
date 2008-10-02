@@ -289,6 +289,17 @@ class DataObjectTest extends SapphireTest {
 		$this->assertEquals(0, DB::query("SELECT CaptainID FROM DataObjectTest_Team WHERE ID = $existingTeam->ID")->value());
 	}
 	
+	function testCanAccessHasOneObjectsAsMethods() {
+		/* If you have a has_one relation 'Captain' on $obj, and you set the $obj->CaptainID = (ID), then the object itself should
+		 * be accessible as $obj->Captain() */
+		$team = $this->objFromFixture('DataObjectTest_Team', 'team1');
+		$captainID = $this->idFromFixture('DataObjectTest_Player', 'captain1');
+		
+		$team->CaptainID = $captainID;
+		$this->assertNotNull($team->Captain());
+		$this->assertEquals($captainID, $team->Captain()->ID);
+	}
+	
 	function testFieldNamesThatMatchMethodNamesWork() {
 		/* Check that a field name that corresponds to a method on DataObject will still work */
 		$obj = new DataObjectTest_FunnyFieldNames();
@@ -428,13 +439,42 @@ class DataObjectTest extends SapphireTest {
 			'databaseFields() on subclass contains only fields defined on instance'
 		);
 	}
+	
+	function testDataObjectUpdate() {
+		/* update() calls can use the dot syntax to reference has_one relations and other methods that return objects */
+		$team1 = $this->objFromFixture('DataObjectTest_Team', 'team1');
+		$team1->CaptainID = $this->idFromFixture('DataObjectTest_Player', 'captain1');
+		
+		$team1->update(array(
+			'DatabaseField' => 'Something',
+			'Captain.FirstName' => 'Jim',
+			'Captain.Email' => 'jim@example.com',
+			'Captain.FavouriteTeam.Title' => 'New and improved team 1',
+		));
+		
+		/* Test the simple case of updating fields on the object itself */
+		$this->assertEquals('Something', $team1->DatabaseField);
+
+		/* Setting Captain.Email and Captain.FirstName will have updated DataObjectTest_Captain.captain1 in the database.  Although update()
+		 * doesn't usually write, it does write related records automatically. */
+		$captain1 = $this->objFromFixture('DataObjectTest_Player', 'captain1');
+		$this->assertEquals('Jim', $captain1->FirstName);
+		$this->assertEquals('jim@example.com', $captain1->Email);
+		
+		/* Jim's favourite team is team 1; we need to reload the object to the the change that setting Captain.FavouriteTeam.Title made */
+		$reloadedTeam1 = $this->objFromFixture('DataObjectTest_Team', 'team1');
+		$this->assertEquals('New and improved team 1', $reloadedTeam1->Title);
+	}
 }
 
 class DataObjectTest_Player extends Member implements TestOnly {
-   
-   static $belongs_many_many = array(
-      'Teams' => 'DataObjectTest_Team'
-   );
+	static $has_one = array(
+		'FavouriteTeam' => 'DataObjectTest_Team',
+	);
+
+	static $belongs_many_many = array(
+		'Teams' => 'DataObjectTest_Team'
+	);
    
 }
 
