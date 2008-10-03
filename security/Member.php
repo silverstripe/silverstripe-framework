@@ -910,28 +910,56 @@ class Member extends DataObject {
 	 *                  editing this member.
 	 */
 	public function getCMSFields() {
-		$locale = ($this->Locale) ? $this->Locale : i18n::get_locale();
+		$fields = parent::scaffoldFormFields();
 		
 		$password = new ConfirmedPasswordField('Password', 'Password');
 		$password->setCanBeEmpty(true);
+		$fields->replaceField('Password', $password);
 		
-		$fields = new FieldSet(
-				//new TextField("Salutation", "Title"),
-				new HeaderField(_t('Member.PERSONALDETAILS', "Personal Details", PR_MEDIUM, 'Headline for formfields')),
-				new TextField("FirstName", _t('Member.FIRSTNAME')),
-				new TextField("Surname", _t('Member.SURNAME')),
-				new HeaderField(_t('Member.USERDETAILS', "User Details", PR_MEDIUM, 'Headline for formfields')),
-				new TextField("Email", _t('Member.EMAIL')),
-				new DropdownField(
-					"Locale", 
-					_t('Member.INTERFACELANG', "Interface Language", PR_MEDIUM, 'Language of the CMS'), 
-					i18n::get_existing_translations(), 
-					$locale
-				),
-				$password,
-				new TreeMultiselectField("Groups", _t("Member.SECURITYGROUPS", "Security groups"))
-			);
-
+		$fields->insertBefore(
+			new HeaderField(_t('Member.PERSONALDETAILS', "Personal Details", PR_MEDIUM, 'Headline for formfields')),
+			'FirstName'
+		);
+		
+		$fields->insertBefore(
+			new HeaderField(_t('Member.USERDETAILS', "User Details", PR_MEDIUM, 'Headline for formfields')),
+			'Email'
+		);
+		
+		$locale = ($this->Locale) ? $this->Locale : i18n::get_locale();
+		$fields->replaceField('Locale', new DropdownField(
+			"Locale", 
+			_t('Member.INTERFACELANG', "Interface Language", PR_MEDIUM, 'Language of the CMS'), 
+			i18n::get_existing_translations(), 
+			$locale
+		));
+		
+		$fields->insertAfter(
+			new TreeMultiselectField("Groups", _t("Member.SECURITYGROUPS", "Security groups")),
+			'Locale'
+		);
+		
+		$fields->removeByName('Bounced');
+		$fields->removeByName('RememberLoginToken');
+		$fields->removeByName('AutoLoginHash');
+		$fields->removeByName('AutoLoginExpired');
+		$fields->removeByName('PasswordEncryption');
+		$fields->removeByName('PasswordExpiry');
+		$fields->removeByName('LockedOutUntil');
+		$fields->removeByName('Salt');
+		$fields->removeByName('NumVisit');
+		$fields->removeByName('LastVisited');
+		
+		if($this->ID) {
+			$fields = $this->addScaffoldRelationFields($fields);
+		}
+		
+		$fields->removeByName('Subscriptions');
+		$fields->removeByName('UnsubscribedRecords');
+		// Groups relation will get us into logical conflicts because
+		// Members are displayed within  group edit form in SecurityAdmin
+		$fields->removeByName('Groups');
+		
 		$this->extend('updateCMSFields', $fields);
 
 		return $fields;
