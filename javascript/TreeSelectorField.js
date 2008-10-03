@@ -58,7 +58,7 @@ TreeDropdownField.prototype = {
 			}
 			
 			this.itemTree.className = 'tree_holder';
-			this.itemTree.innerHTML = "loading...";
+			this.itemTree.innerHTML = ss.i18n._t('LOADING');
 			this.appendChild(this.itemTree);
 		}
 	},
@@ -177,7 +177,7 @@ TreeDropdownField.prototype = {
 	ajaxExpansion: function() {
 		this.addNodeClass('loading');
 		var ul = this.treeNodeHolder();
-		ul.innerHTML = 'loading...';
+		ul.innerHTML = ss.i18n._t('LOADING');
 		
 		var ajaxURL = this.options.dropdownField.helperURLBase() + 'getsubtree?&SubtreeRootID=' + this.getIdx();
 		ajaxURL += $('SecurityID') ? '&SecurityID=' + $('SecurityID').value : '';

@@ -114,6 +114,7 @@ class TableField extends TableListField {
 		}
 		parent::__construct($name, $sourceClass, $fieldList, $sourceFilter, $sourceSort, $sourceJoin);
 
+		Requirements::javascript(SAPPHIRE_DIR . "/javascript/i18n.js");
 		Requirements::javascript(SAPPHIRE_DIR . '/javascript/TableField.js');
 	}
 	

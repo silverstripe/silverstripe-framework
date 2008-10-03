@@ -20,7 +20,6 @@ Effect.FadeOut = function(element,callback) {
 TableField = Class.create();
 Object.extend(TableField.prototype,{
 	
-	deleteConfirmMessage: "Are you sure you want to delete this record?",
 	newRowID: 1,
 	
 	/**
@@ -77,7 +76,7 @@ Object.extend(TableField.prototype,{
 		}
 	
 		// TODO ajaxErrorHandler and loading-image are dependent on cms, but formfield is in sapphire
-		var confirmed = (this.deleteConfirmMessage != undefined) ? confirm(this.deleteConfirmMessage) : true;
+		var confirmed = confirm(ss.i18n._t('TABLEFIELD.DELETECONFIRMMESSAGE'));
 		if(confirmed){
 			img.setAttribute("src",'cms/images/network-save.gif'); // TODO doesn't work
 			new Ajax.Request(

@@ -6,7 +6,11 @@ UniqueFormField.prototype = {
 		
 		if( this.restrictedValues[suggested] || suggested == null ) {
 			suggested = this.suggestNewValue();
-			statusMessage("Changed value to " + suggested + ".  " + this.restrictedMessage);
+			statusMessage(ss.i18n.sprintf(
+				ss.i18n._t('UNIQUEFIELD.SUGGESTED'),
+				suggested,
+				this.restrictedMessage
+			));
     		this.value = suggested;
 		}
 	},
@@ -108,16 +112,20 @@ UniqueRestrictedTextField.prototype = {
 		if( suggested == null || suggested.length == 0 || suggestedValue || suggested.match( this.charRegex ) ) {
 		    var message;
 			if( suggested == null )
-				message = 'You will need to enter a new value for this field';
+				message = ss.i18n._t('UNIQUEFIELD.ENTERNEWVALUE');
 			else if( suggested.length == 0 )
-				message = 'This field cannot be left empty';
+				message = ss.i18n._t('UNIQUEFIELD.CANNOTLEAVEEMPTY');
 			else if( suggestedValue )
 				message = this.restrictedMessage;
 			else
 				message = this.charMessage;
 
 			suggested = this.suggestNewValue();
-			statusMessage("Changed value to " + suggested + ".  " + message);
+			statusMessage(ss.i18n.sprintf(
+				ss.i18n._t('UNIQUEFIELD.SUGGESTED'),
+				suggested,
+				message
+			));
 		}
 		
 		this.value = suggested;
@@ -143,7 +151,10 @@ RestrictedTextField.prototype = {
 		
 		for( var index = 0; index < this.restrictedChars.length; index++ ) {
 			if( lastChar == this.restrictedChars.charAt(index) ) {
-				alert( "The character '" + lastChar + "' cannot be used in this field" );
+				alert(ss.i18n.sprintf(
+					ss.i18n._t('RESTRICTEDTEXTFIELD.CHARCANTBEUSED'),
+					lastChar
+				));
 				this.value = this.value.substring( 0, this.value.length - 1 );
 			}
 		}

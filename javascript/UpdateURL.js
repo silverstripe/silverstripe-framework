@@ -10,9 +10,19 @@ Behaviour.register({
 			var urlSegmentField = $('Form_EditForm_URLSegment');
 			var newSuggestion = urlSegmentField.suggestNewValue( this.value.toLowerCase() );
 			var isNew = urlSegmentField.value.indexOf("new") == 0;
+			var confirmMessage = ss.i18n.sprintf(
+				ss.i18n._t('UPDATEURL.CONFIRM'),
+				newSuggestion,
+				urlSegmentField.value
+			);
 			
-			if( newSuggestion == urlSegmentField.value || isNew || confirm( 'Would you like me to change the URL to:\n\n' + newSuggestion + '/\n\nClick Ok to change the URL, click Cancel to leave it as:\n\n' + urlSegmentField.value ) )
+			if( 
+				newSuggestion == urlSegmentField.value 
+				|| isNew 
+				|| confirm(confirmMessage)
+			) {
 				urlSegmentField.value = newSuggestion;
+			}
 			// If you type in Page name, the Navigation Label and Meta Title should automatically update the first time
 			// @todo: Change file name from UpdateURL to something more geneneric since we now do more than update the URL.
 			if($('Form_EditForm_MetaTitle') && $('Form_EditForm_MenuTitle').value.indexOf("New") == 0 ) {

@@ -83,11 +83,19 @@ HasManyFileFieldUploadButton.prototype = {
 	},
 	
 	uploadFileQueuedCallback: function(file,queueLength) {
-		this.parentNode.parentNode.uploadMessage.innerHTML = "Uploading..." + this.upload.getFilesToUpload();    
+		var message = ss.i18n.sprintf(
+			ss.i18n._t('HASMANYFILEFIELD.UPLOADING'), 
+			this.upload.getFilesToUpload()
+		);
+		this.parentNode.parentNode.uploadMessage.innerHTML = message;    
 	},
 	
 	uploadFileCompleteCallback: function(file,serverData) {
-		this.parentNode.parentNode.uploadMessage.innerHTML = 'Uploading ... ' + this.upload.getFilesUploaded() + "/" + this.upload.getFilesToUpload();
+		var message = ss.i18n.sprintf(
+			ss.i18n._t('HASMANYFILEFIELD.UPLOADING'), 
+			this.upload.getFilesUploaded() + "/" + this.upload.getFilesToUpload()
+		);
+		this.parentNode.parentNode.uploadMessage.innerHTML = message;
 		idregex = /\/\* IDs: ([0-9,]+) \*\//;
 		ids = serverData.match(idregex);
 		fileid = ids[1];

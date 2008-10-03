@@ -1,8 +1,6 @@
 TableListField = Class.create();
 TableListField.prototype = {
 	
-	deleteConfirmMessage: "Are you sure you want to delete this record?",
-	
 	errorMessage: "Error talking to server",
 	
 	initialize: function() {
@@ -81,7 +79,7 @@ TableListField.prototype = {
 		var row = Event.findElement(e,"tr");
 		
 		// TODO ajaxErrorHandler and loading-image are dependent on cms, but formfield is in sapphire
-		var confirmed = (this.deleteConfirmMessage != undefined) ? confirm(this.deleteConfirmMessage) : true;
+		var confirmed = confirm(ss.i18n._t('TABLEFIELD.DELETECONFIRMMESSAGE'));
 		if(confirmed)
 		{
 			img.setAttribute("src",'cms/images/network-save.gif'); // TODO doesn't work

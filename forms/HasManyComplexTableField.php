@@ -27,6 +27,9 @@ class HasManyComplexTableField extends ComplexTableField {
 		$this->Markable = true;
 		
 		$this->joinField = $this->getParentIdName($this->controller->ClassName, $this->sourceClass);
+		
+		Requirements::javascript(SAPPHIRE_DIR . "/javascript/i18n.js");
+		Requirements::javascript(SAPPHIRE_DIR . "/javascript/HasManyFileField.js");
 	}
 	
 	function getQuery($limitClause = null) {
