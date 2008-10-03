@@ -187,12 +187,19 @@ class ComplexTableField extends TableListField {
 	 */
 	function sourceFilter() {
 		$sourceFilter = parent::sourceFilter();
+		
 		if($this->relationAutoSetting
 			 	&& $this->getParentClass() 
 				&& ($filterKey = $this->getParentIdName($this->getParentClass(), $this->sourceClass()))
 				&& ($filterValue = $this->sourceID()) ) {
 					
 			$newFilter = "`$filterKey` = '" . Convert::raw2sql($filterValue) . "'";
+
+			if($sourceFilter && is_array($sourceFilter)) {
+				// Note that the brackets below are taken into account when building this
+				$sourceFilter = implode(") AND (", $sourceFilter);
+			}
+
 			$sourceFilter = $sourceFilter ? "($sourceFilter) AND ($newFilter)" : $newFilter;
 		}
 		return $sourceFilter;

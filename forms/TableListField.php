@@ -926,7 +926,7 @@ JS
 				}
 				
 			}
-			HTTP::sendFileToBrowser($fileData, $fileName);
+			return HTTPRequest::send_file($fileData, $fileName);
 		} else {
 			user_error("No records found", E_USER_ERROR);
 		}
