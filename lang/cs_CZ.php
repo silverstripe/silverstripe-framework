@@ -80,7 +80,6 @@ $lang['cs_CZ']['HtmlEditorField']['BUTTONALIGNJUSTIFY'] = 'Do bloku';
 $lang['cs_CZ']['HtmlEditorField']['BUTTONALIGNLEFT'] = 'Zarovnat vlevo';
 $lang['cs_CZ']['HtmlEditorField']['BUTTONALIGNRIGHT'] = 'Zarovnat vpravo';
 $lang['cs_CZ']['HtmlEditorField']['BUTTONBOLD'] = 'Tučné (Ctrl+B)';
-$lang['cs_CZ']['HtmlEditorField']['BUTTONCANCEL'] = 'Zrušit';
 $lang['cs_CZ']['HtmlEditorField']['BUTTONEDITIMAGE'] = 'Upravit obrázek';
 $lang['cs_CZ']['HtmlEditorField']['BUTTONINSERTFLASH'] = 'Vložit flashový objekt';
 $lang['cs_CZ']['HtmlEditorField']['BUTTONINSERTIMAGE'] = 'Vložit obrázek';

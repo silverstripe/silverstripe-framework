@@ -80,7 +80,6 @@ $lang['zh_TW']['HtmlEditorField']['BUTTONALIGNJUSTIFY'] = '整齊';
 $lang['zh_TW']['HtmlEditorField']['BUTTONALIGNLEFT'] = '靠左對齊';
 $lang['zh_TW']['HtmlEditorField']['BUTTONALIGNRIGHT'] = '靠右對齊';
 $lang['zh_TW']['HtmlEditorField']['BUTTONBOLD'] = '粗體 (Ctrl+B)';
-$lang['zh_TW']['HtmlEditorField']['BUTTONCANCEL'] = '取消';
 $lang['zh_TW']['HtmlEditorField']['BUTTONEDITIMAGE'] = '編輯圖片';
 $lang['zh_TW']['HtmlEditorField']['BUTTONINSERTFLASH'] = '插入Flash';
 $lang['zh_TW']['HtmlEditorField']['BUTTONINSERTIMAGE'] = '插入圖片';

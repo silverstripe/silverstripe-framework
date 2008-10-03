@@ -80,7 +80,6 @@ $lang['pt_BR']['HtmlEditorField']['BUTTONALIGNJUSTIFY'] = 'Justificado';
 $lang['pt_BR']['HtmlEditorField']['BUTTONALIGNLEFT'] = 'Alinhar à esquerda';
 $lang['pt_BR']['HtmlEditorField']['BUTTONALIGNRIGHT'] = 'Alinhar à direita';
 $lang['pt_BR']['HtmlEditorField']['BUTTONBOLD'] = 'Negrito (Ctrl+B)';
-$lang['pt_BR']['HtmlEditorField']['BUTTONCANCEL'] = 'Cancelar';
 $lang['pt_BR']['HtmlEditorField']['BUTTONEDITIMAGE'] = 'Alterar imagem';
 $lang['pt_BR']['HtmlEditorField']['BUTTONINSERTFLASH'] = 'Inserir Flash';
 $lang['pt_BR']['HtmlEditorField']['BUTTONINSERTIMAGE'] = 'Inserir imagem';

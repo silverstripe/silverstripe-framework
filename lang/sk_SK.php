@@ -80,7 +80,6 @@ $lang['sk_SK']['HtmlEditorField']['BUTTONALIGNJUSTIFY'] = 'Zarovnať podľa okra
 $lang['sk_SK']['HtmlEditorField']['BUTTONALIGNLEFT'] = 'Zarovnať vľavo';
 $lang['sk_SK']['HtmlEditorField']['BUTTONALIGNRIGHT'] = 'Zarovnať doprava';
 $lang['sk_SK']['HtmlEditorField']['BUTTONBOLD'] = 'Tučné (Ctrl+B)';
-$lang['sk_SK']['HtmlEditorField']['BUTTONCANCEL'] = 'Zrušiť';
 $lang['sk_SK']['HtmlEditorField']['BUTTONEDITIMAGE'] = 'Upraviť obrázok';
 $lang['sk_SK']['HtmlEditorField']['BUTTONINSERTFLASH'] = 'Vložiť Flash';
 $lang['sk_SK']['HtmlEditorField']['BUTTONINSERTIMAGE'] = 'Vložiť obrázok';

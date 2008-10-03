@@ -80,7 +80,6 @@ $lang['hu_HU']['HtmlEditorField']['BUTTONALIGNJUSTIFY'] = 'Sorkozárt';
 $lang['hu_HU']['HtmlEditorField']['BUTTONALIGNLEFT'] = 'Balra igazítás';
 $lang['hu_HU']['HtmlEditorField']['BUTTONALIGNRIGHT'] = 'Jobbra igazítás';
 $lang['hu_HU']['HtmlEditorField']['BUTTONBOLD'] = 'Félkövér (Ctrl+B)';
-$lang['hu_HU']['HtmlEditorField']['BUTTONCANCEL'] = 'Mégse';
 $lang['hu_HU']['HtmlEditorField']['BUTTONEDITIMAGE'] = 'Kép szerkesztése';
 $lang['hu_HU']['HtmlEditorField']['BUTTONINSERTFLASH'] = 'Flash beszúrása';
 $lang['hu_HU']['HtmlEditorField']['BUTTONINSERTIMAGE'] = 'Kép beszúrása';
