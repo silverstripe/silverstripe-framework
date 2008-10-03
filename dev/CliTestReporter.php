@@ -34,6 +34,10 @@ class CliTestReporter extends SapphireTestReporter {
 			default: echo "?"; break;
 		}
 		
+		static $colCount = 0;
+		$colCount++;
+		if($colCount % 80 == 0) echo " - $colCount\n";
+
 		parent::endTest($test, $time);
 		$this->writeTest($this->currentTest);
 	}
