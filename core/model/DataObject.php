@@ -1201,11 +1201,10 @@ class DataObject extends ViewableData implements DataObjectInterface {
 	 * Add the scaffold-generated relation fields to the given field set
 	 */
 	protected function addScaffoldRelationFields($fieldSet) {
-		if ($this->has_many() || $this->many_many()) {
+		// make sure we have a tabset
+		if($this->has_many() || $this->many_many()) {
 			$oldFields = $fieldSet;
-			$fieldSet = new FieldSet(
-			new TabSet("Root", new Tab("Main"))
-			);
+			$fieldSet = new FieldSet(new TabSet("Root", new Tab("Main")));
 			foreach($oldFields as $field) {
 				$fieldSet->addFieldToTab("Root.Main", $field);
 			}
@@ -1508,7 +1507,7 @@ class DataObject extends ViewableData implements DataObjectInterface {
 			} else {
 				$fieldObject = $this->dbObject($fieldName)->scaffoldFormField();
 			}
-			$fieldObject->setTitle($this->fieldLabels($fieldName));
+			$fieldObject->setTitle($this->fieldLabel($fieldName));
 			$fields->push($fieldObject);
 		}
 		foreach($this->has_one() as $relationship => $component) {
@@ -1519,6 +1518,31 @@ class DataObject extends ViewableData implements DataObjectInterface {
 			$fields->push(new DropdownField($relationship.'ID', $relationship, $options));
 		}
 		return $fields;
+	}
+	
+	/**
+	 * Returns automatically generated fields useable within the CMS.
+	 * Does not include relations, you can add them by using
+	 * {@link addScaffoldRelationFields()}. Call {@link getCMSFields()}
+	 * to get all fields including relational tables and decorated
+	 * fields in a TabSet.
+	 * 
+	 * @uses getCMSFields()
+	 * 
+	 * @return FieldSet Tabbed fields
+	 */
+	public function scaffoldCMSFields() {
+		$untabbedFields = $this->scaffoldFormFields();
+		
+		// make sure we have a tabset
+		if(!$untabbedFields->hasTabSet()) {
+			$tabbedFields = new FieldSet(new TabSet("Root", new Tab("Main")));
+			foreach($untabbedFields as $field) {
+				$tabbedFields->addFieldToTab("Root.Main", $field);
+			}
+		}
+		
+		return $tabbedFields;
 	}
 
 	/**
@@ -1545,16 +1569,17 @@ class DataObject extends ViewableData implements DataObjectInterface {
 	 * @return FieldSet Returns a TabSet for usage within the CMS - don't use for frontend forms.
 	 */
 	public function getCMSFields() {
-		$fields = $this->scaffoldFormFields();
+		// should be a plain FieldSet without tabs
+		$tabbedFields = $this->scaffoldCMSFields();
 		
 		// If we don't have an ID, then relation fields don't work
 		if($this->ID) {
-			$fields = $this->addScaffoldRelationFields($fields);
+			$this->addScaffoldRelationFields($tabbedFields);
 		}
 		
-		$this->extend('updateCMSFields', $fields);
+		$this->extend('updateCMSFields', $tabbedFields);
 		
-		return $fields;
+		return $tabbedFields;
 	}
 	
 
@@ -2579,26 +2604,39 @@ class DataObject extends ViewableData implements DataObjectInterface {
 	 * between data object being required in the search interface.
 	 *
 	 * Generates labels based on name of the field itself, if no static property 
-	 * {@link self::searchable_fields_labels} exists.
+	 * {@link self::field_labels} exists.
 	 *
-	 * @param $fieldName name of the field to retrieve
+	 * @uses $field_labels
+	 * @uses FormField::name_to_label()
+	 * 
 	 * @return array of all element labels if no argument given
 	 * @return string of label if field
 	 */
-	public function fieldLabels($fieldName = false) {
+	public function fieldLabels() {
 		$customLabels = $this->stat('field_labels');
 		$autoLabels = array();
 		if($this->inheritedDatabaseFields()){
-		foreach($this->inheritedDatabaseFields() as $name => $type) {
-			$autoLabels[$name] = FormField::name_to_label($name);
+			foreach($this->inheritedDatabaseFields() as $name => $type) {
+				$autoLabels[$name] = FormField::name_to_label($name);
+			}
 		}
-		$labels = array_merge((array)$autoLabels, (array)$customLabels);
 		
-		if($fieldName) {
-			return (isset($labels[$fieldName])) ? $labels[$fieldName] : FormField::name_to_label($fieldName); 
-		} else {
-			return $labels;
-		}}
+		return array_merge((array)$autoLabels, (array)$customLabels);
+	}
+	
+	/**
+	 * Get a human-readable label for a single field,
+	 * see {@link fieldLabels()} for more details.
+	 * 
+	 * @uses fieldLabels()
+	 * @uses FormField::name_to_label()
+	 * 
+	 * @param string $name Name of the field
+	 * @return string Label of the field
+	 */
+	public function fieldLabel($name) {
+		$labels = $this->fieldLabels();
+		return (isset($labels[$name])) ? $labels[$name] : FormField::name_to_label($name);
 	}
 
 	/**
