@@ -802,6 +802,13 @@ class ViewableData extends Object implements IteratorAggregate {
 	function IsAjax() {
 		return Director::is_ajax();
 	}
+	
+	/**
+	 * @return string Locale configured in environment settings or user profile (e.g. 'en_US')
+	 */
+	function i18nLocale() {
+		return i18n::get_locale();
+	}
 
 	/**
 	 * Return a Debugger object.
