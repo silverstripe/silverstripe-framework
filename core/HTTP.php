@@ -133,27 +133,9 @@ class HTTP {
 	 * exits() after the call, so that no further output is given
 	 */
 	static function sendFileToBrowser($fileData, $fileName, $mimeType = false) {
-		if(!$mimeType) $mimeType = self::getMimeType($fileName);
-		$ext = strtolower(substr($fileName,strrpos($fileName,'.')+1));
-		$inlineExtensions = array('pdf','png','jpg','jpe','gif','swf','htm','html','txt','text','avi','wmv','mov','mpe','mpg','mp3','mpeg');
-
-		if(in_array($ext, $inlineExtensions)) $inline = true;
-
-		header("Content-Type: $mimeType; name=\"" . addslashes($fileName) . "\"");
-		//header("Content-Type: $mimeType" );
-		// Downloadable
-		//if(!$inline)
-			$dispHeader = "Content-disposition: attachment; filename=" . addslashes($fileName) . "";
-
-		// Debug::message('CD: ' . strlen( $dispHeader ) );
-
-
-		header( $dispHeader );
-		header("Content-Length: " . strlen($fileData));
-
-		echo $fileData;
-
-		exit();
+		user_error("HTTP::sendFileToBrowser() deprecated; return a HTTPResponse::send_file() object instead", E_USER_NOTICE);
+		HTTPRequest::send_file($fileData, $fileName, $mimeType)->output();
+		exit(0);
 	}
 
 	/*

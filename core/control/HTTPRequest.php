@@ -197,6 +197,20 @@ class HTTPRequest extends Object implements ArrayAccess {
 	}
 	
 	/**
+	 * Construct an HTTPResponse that will deliver a file to the client
+	 */
+	static function send_file($fileData, $fileName, $mimeType = null) {
+		if(!$mimeType) $mimeType = HTTP::getMimeType($fileName);
+
+		$response = new HTTPResponse($fileData);
+		$response->addHeader("Content-Type", "$mimeType; name=\"" . addslashes($fileName) . "\"");
+		$response->addHeader("Content-disposition", "attachment; filename=" . addslashes($fileName));
+		$response->addHeader("Content-Length", strlen($fileData));
+		
+		return $response;
+	}
+	
+	/**
 	 * Matches a URL pattern
 	 * The pattern can contain a number of segments, separted by / (and an extension indicated by a .)
 	 * 
