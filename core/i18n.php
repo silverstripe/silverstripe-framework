@@ -19,6 +19,8 @@
  *
  * Please see the {Translatable} DataObjectDecorator for managing translations of database-content.
  *
+ * @see http://www.w3.org/TR/i18n-html-tech-lang
+ *
  * @author Bernat Foj Capell <bernat@silverstripe.com>
  * @package sapphire
  * @subpackage misc
