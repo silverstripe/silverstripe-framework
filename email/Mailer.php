@@ -124,14 +124,14 @@ function htmlEmail($to, $from, $subject, $htmlContent, $attachedFiles = false, $
 	$headers["From"] 		= validEmailAddr($from);
 
 	// Messages with the X-SilverStripeMessageID header can be tracked
-	if(isset($customheaders["X-SilverStripeMessageID"]) && defined('BOUNCE_EMAIL')) {
-		$bounceAddress = BOUNCE_EMAIL;
-		// Get the human name from the from address, if there is one
-		if(ereg('^([^<>]+)<([^<>])> *$', $from, $parts))
-			$bounceAddress = "$parts[1]<$bounceAddress>";
-	} else {
-		$bounceAddress = $from;
-	}
+    if(isset($customheaders["X-SilverStripeMessageID"]) && defined('BOUNCE_EMAIL')) {
+            $bounceAddress = BOUNCE_EMAIL;
+    } else {
+            $bounceAddress = $from;
+    }
+
+    // Strip the human name from the bounce address
+    if(ereg('^([^<>]*)<([^<>]+)> *$', $bounceAddress, $parts)) $bounceAddress = $parts[2];	
 	
 	// $headers["Sender"] 		= $from;
 	$headers["X-Mailer"]	= X_MAILER;
