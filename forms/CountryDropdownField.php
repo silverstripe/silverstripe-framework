@@ -20,7 +20,7 @@ class CountryDropdownField extends DropdownField {
 	}
 	
 	function Field() {
-		if($this->defaultToVisitorCountry && !$this->value || !$this->source[$this->value]) $this->value = Geoip::visitor_country();
+		if($this->defaultToVisitorCountry && !$this->value || !isset($this->source[$this->value])) $this->value = Geoip::visitor_country();
 		return parent::Field();
 	}
 }
