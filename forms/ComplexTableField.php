@@ -310,14 +310,15 @@ JS;
 	
 	function sourceID() { 
 		$idField = $this->form->dataFieldByName('ID'); 
-		if(!$idField) { 
-			user_error("ComplexTableField needs a formfield named 'ID' to be present", E_USER_ERROR); 
-		} 
+
+		// disabled as it conflicts with scaffolded formfields, and not strictly necessary
+		// if(!$idField) user_error("ComplexTableField needs a formfield named 'ID' to be present", E_USER_ERROR); 
+
 		// because action_callfieldmethod never actually loads data into the form,
 		// we can't rely on $idField being populated, and fall back to the request-params.
 		// this is a workaround for a bug where each subsequent popup-call didn't have ID
 		// of the parent set, and so didn't properly save the relation
-		return ($idField->Value()) ? $idField->Value() : (isset($_REQUEST['ctf']['ID']) ? $_REQUEST['ctf']['ID'] : null); 
+		return ($idField) ? $idField->Value() : (isset($_REQUEST['ctf']['ID']) ? $_REQUEST['ctf']['ID'] : null); 
  	} 
 	 
 
@@ -654,7 +655,7 @@ class ComplexTableField_ItemRequest extends RequestHandlingData {
 	 */
 	function DetailForm($childID = null) {
 		$childData = $this->dataObj();
-		
+
 		$fields = $this->ctf->getFieldsFor($childData);
 		$validator = $this->ctf->getValidatorFor($childData);
 		$readonly = ($this->methodName == "show");
