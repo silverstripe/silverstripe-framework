@@ -2606,12 +2606,9 @@ class DataObject extends ViewableData implements DataObjectInterface {
 		}
 		$this->extend("updateSummaryFields", $fields);
 		
-		// Final fail-over, just list all the fields :-S
-		if(!$fields) {
-			foreach(array_keys($this->db()) as $field) {
-				$fields[$field] = $field;
-			}
-		}
+		// Final fail-over, just list ID field
+		if(!$fields) $fields['ID'] = 'ID';
+		
 		return $fields;
 	}
 
