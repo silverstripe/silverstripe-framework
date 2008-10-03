@@ -964,6 +964,18 @@ class Member extends DataObject {
 
 		return $fields;
 	}
+	
+	function fieldLabels() {
+		$labels = parent::fieldLabels();
+		
+		$labels['FirstName'] = _t('Member.FIRSTNAME');
+		$labels['Surname'] = _t('Member.SURNAME');
+		$labels['Email'] = _t('Member.EMAIL');
+		$labels['FirstName'] = _t('Member.FIRSTNAME');
+		$labels['FirstName'] = _t('Member.FIRSTNAME');
+		
+		return $labels;
+	}
 
 	/**
 	 * Unsubscribe from newsletter
