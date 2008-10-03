@@ -89,6 +89,18 @@ class FieldSetTest extends SapphireTest {
 		$this->assertEquals($tab1, $fields->fieldByName('Root')->fieldByName('Tab1'));
 	}
 	
+	function testHasTabSet() {
+		$untabbedFields = new FieldSet(
+			new TextField('Field1')
+		);
+		$this->assertFalse($untabbedFields->hasTabSet());
+		
+		$tabbedFields = new FieldSet(new TabSet(
+			new Tab('Tab1')
+		));
+		$this->assertTrue($tabbedFields->hasTabSet());
+	}
+	
 	/**
 	 * Test removing an array of fields from a tab in a set.
 	 */

@@ -199,6 +199,19 @@ class FieldSet extends DataObjectSet {
 	}
 	
 	/**
+	 * @return boolean
+	 */
+	public function hasTabSet() {
+		foreach($this->items as $i => $field) {
+			if(is_object($field) && $field instanceof TabSet) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	/**
 	 * Returns the specified tab object, creating it if necessary.
 	 * 
 	 * @param tabName The tab to return, in the form "Tab.Subtab.Subsubtab"
