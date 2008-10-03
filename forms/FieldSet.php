@@ -15,7 +15,16 @@ class FieldSet extends DataObjectSet {
 	 * @var array
 	 */
 	protected $sequentialSet;
+	
+	/**
+	 * @var array
+	 */
 	protected $sequentialSaveableSet;
+	
+	/**
+	 * @todo Documentation
+	 */
+	protected $containerField;
 	
 	public function __construct($items = null) {
 		// if the first parameter is not an array, or we have more than one parameter, collate all parameters to an array
@@ -148,7 +157,7 @@ class FieldSet extends DataObjectSet {
 	 * Remove a field from this FieldSet by Name.
 	 * The field could also be inside a CompositeField.
 	 * 
-	 * @param string $fieldName The name of the field
+	 * @param string $fieldName The name of the field or tab
 	 * @param boolean $dataFieldOnly If this is true, then a field will only
 	 * be removed if it's a data field.  Dataless fields, such as tabs, will
 	 * be left as-is.
