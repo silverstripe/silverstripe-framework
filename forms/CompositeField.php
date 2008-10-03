@@ -7,7 +7,12 @@
  * @subpackage fields-structural
  */
 class CompositeField extends FormField {
+	
+	/**
+	 * @var FieldSet
+	 */
 	protected $children;
+	
 	/**
 	 * Set to true when this field is a readonly field
 	 */
