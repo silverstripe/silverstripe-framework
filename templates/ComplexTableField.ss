@@ -44,7 +44,9 @@
 			<tr>
 				<% if Markable %><td width="18">&nbsp;</td><% end_if %>
 				<td colspan="$ItemCount">
-					<a class="popuplink addlink" href="$AddLink" alt="add"><img src="cms/images/add.gif" alt="<% _t('ADDITEM', 'add') %>" /><% _t('ADDITEM', 'Add', PR_MEDIUM, 'Add [name]') %> $Title</a>
+					<a class="popuplink addlink" href="$AddLink" alt="add"><img src="cms/images/add.gif" alt="<% _t('ADDITEM', 'add') %>" />
+						<% sprintf(_t('ADDITEM', 'Add %s', PR_MEDIUM, 'Add [name]'),$Title) %>
+					</a>
 				</td>
 				<% control Actions %><td width="18">&nbsp;</td><% end_control %>
 			</tr>
