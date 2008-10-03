@@ -27,7 +27,8 @@ class CsvBulkLoader extends BulkLoader {
 	public $enclosure = '"';
 	
 	/**
-	 * Identifies if the loaded file has a header row.
+	 * Identifies if the 
+	 *  has a header row.
 	 * If a {@link self::$columnMap} is passed, we assume
 	 * the file has no headerrow, unless explicitly noted.
 	 *
@@ -36,67 +37,26 @@ class CsvBulkLoader extends BulkLoader {
 	public $hasHeaderRow = false;
 	
 	protected function processAll($filepath, $preview = false) {
-		ini_set('auto_detect_line_endings',1);
-		
-		$file = fopen($filepath, 'r');
-		if(!$file) return false;
-		
 		$results = new BulkLoader_Result();
-
-		if($this->hasHeaderRow && $this->columnMap) {
-			$columnRow = fgetcsv($file, 0, $this->delimiter, $this->enclosure);
-			$columnMap = array();
-			foreach($columnRow as $k => $origColumnName) {
-				$origColumnName = trim($origColumnName);
-				if(isset($this->columnMap[$origColumnName])) {
-					$columnMap[$origColumnName] = $this->columnMap[$origColumnName];
-				} else {
-					$columnMap[$origColumnName] = null;
-				}
-				
-			}
-		} elseif($this->columnMap) {
-			$columnMap = $this->columnMap;
-		} else {
-			// assuming that first row is column naming if no columnmap is passed
-			$columnRow = fgetcsv($file, 0, $this->delimiter, $this->enclosure);
-			$columnMap = array_combine($columnRow, $columnRow);
-		}
-
-		$rowIndex = 0;
-		$rowIndex = 0;
-		while (($row = fgetcsv($file, 0, $this->delimiter, $this->enclosure)) !== FALSE) {
-			$rowIndex++;
-			
-			/*
-			// the columnMap should have the same amount of columns as each record row
-			if(count(array_keys($columnMap)) == count(array_values($row))) {
-				user_error("CsvBulkLoader::processAll(): Columns in row {$rowIndex} don't match the \$columnMap", E_USER_WARNING);
-			}
-			*/
-			
-			$indexedRow = array();
-			foreach($columnMap as $origColumnName => $fieldName) {
-				// in case the row has less fields than the columnmap,
-				// ignore the "leftover" mappings
-				if(!isset($row[count($indexedRow)])) {
-						user_error("CsvBulkLoader::processAll(): Columns in row {$rowIndex} don't match the \$columnMap", E_USER_NOTICE);
-					continue;
-				}
-	
-				$indexedRow[$origColumnName] = $row[count($indexedRow)];
-			}
-
-			$this->processRecord($indexedRow, $columnMap, $results);
+		
+		$csv = new CSVParser($filepath, $this->delimiter, $this->enclosure);
+		
+		// ColumnMap has two uses, depending on whether hasHeaderRow is set
+		if($this->columnMap) {
+			if($this->hasHeaderRow) $csv->mapColumns($this->columnMap);
+			else $csv->provideHeaderRow($this->columnMap);
 		}
 		
-		fclose($file);
+		foreach($csv as $row) {
+			$this->processRecord($row, array(), $results, $preview);
+		}
 		
 		return $results;
 	}
 	
 	/**
 	 * @todo Better messages for relation checks and duplicate detection
+	 * Note that columnMap isn't used
 	 */
 	protected function processRecord($record, $columnMap, &$results, $preview = false) {
 		$class = $this->objectClass;
@@ -108,9 +68,7 @@ class CsvBulkLoader extends BulkLoader {
 		// first run: find/create any relations and store them on the object
 		// we can't combine runs, as other columns might rely on the relation being present
 		$relations = array();
-		foreach($record as $origColumnName => $val) {
-			$fieldName = $columnMap[$origColumnName];
-			
+		foreach($record as $fieldName => $val) {
 			// don't bother querying of value is not set
 			if($this->isNullValue($val)) continue;
 			
@@ -128,6 +86,7 @@ class CsvBulkLoader extends BulkLoader {
 				$obj->setComponent($relationName, $relationObj);
 				$obj->{"{$relationName}ID"} = $relationObj->ID;
 				$obj->write();
+				
 			} elseif(strpos($fieldName, '.') !== false) {
 				// we have a relation column with dot notation
 				list($relationName,$columnName) = split('\.', $fieldName);
@@ -143,24 +102,13 @@ class CsvBulkLoader extends BulkLoader {
 		$id = ($preview) ? 0 : $obj->write();
 
 		// second run: save data
-		foreach($record as $origColumnName => $val) {
-			$fieldName = $columnMap[$origColumnName];
-
+		foreach($record as $fieldName => $val) {
 			if($this->isNullValue($val, $fieldName)) continue;
 
 			if($obj->hasMethod("import{$fieldName}")) {
 				$obj->{"import{$fieldName}"}($val, $record);
-			} elseif(strpos($fieldName, '.') !== false) {
-				// we have a relation column
-				list($relationName,$columnName) = split('\.', $fieldName);
-				$relationObj = $obj->getComponent($relationName);
-				$relationObj->{$columnName} = $val;
-				$relationObj->write();
-				$obj->flushCache(); // avoid relation caching confusion
-			//} elseif($obj->hasField($fieldName) || $obj->hasMethod($fieldName)) {
 			} else {
-				// plain old value setter
-				$obj->{$fieldName} = $val;
+				$obj->update(array($fieldName => $val));
 			}
 		}
 		
@@ -187,10 +135,9 @@ class CsvBulkLoader extends BulkLoader {
 	 * columns specified via {@link self::$duplicateChecks}
 	 *
 	 * @param array $record CSV data column
-	 * @param array $columnMap
 	 * @return unknown
 	 */
-	public function findExistingObject($record, $columnMap) {
+	public function findExistingObject($record) {
 		// checking for existing records (only if not already found)
 		foreach($this->duplicateChecks as $fieldName => $duplicateCheck) {
 			if(is_string($duplicateCheck)) {

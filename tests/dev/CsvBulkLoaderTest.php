@@ -5,14 +5,14 @@
  * @todo Test with columnn headers and custom mappings
  */
 class CsvBulkLoaderTest extends SapphireTest {
-	static $fixture_file = 'sapphire/tests/CsvBulkLoaderTest.yml';
+	static $fixture_file = 'sapphire/tests/dev/CsvBulkLoaderTest.yml';
 
 	/**
 	 * Test plain import with column auto-detection
 	 */
 	function testLoad() {
 		$loader = new CsvBulkLoader('CsvBulkLoaderTest_Player');
-		$filepath = Director::baseFolder() . '/sapphire/tests/CsvBulkLoaderTest_PlayersWithHeader.csv';
+		$filepath = Director::baseFolder() . '/sapphire/tests/dev/CsvBulkLoaderTest_PlayersWithHeader.csv';
 		$file = fopen($filepath, 'r');
 		$compareCount = $this->getLineCount($file);
 		fgetcsv($file); // pop header row
@@ -20,7 +20,7 @@ class CsvBulkLoaderTest extends SapphireTest {
 		$results = $loader->load($filepath);
 
 		// Test that right amount of columns was imported
-		$this->assertEquals($results->Count(), $compareCount-1, 'Test correct count of imported data');
+		$this->assertEquals(4, $results->Count(), 'Test correct count of imported data');
 		
 		// Test that columns were correctly imported
 		$obj = Dataobject::get_one("CsvBulkLoaderTest_Player", "FirstName = 'John'");
@@ -36,7 +36,7 @@ class CsvBulkLoaderTest extends SapphireTest {
 	 */
 	function testLoadWithColumnMap() {
 		$loader = new CsvBulkLoader('CsvBulkLoaderTest_Player');
-		$filepath = Director::baseFolder() . '/sapphire/tests/CsvBulkLoaderTest_Players.csv';
+		$filepath = Director::baseFolder() . '/sapphire/tests/dev/CsvBulkLoaderTest_Players.csv';
 		$file = fopen($filepath, 'r');
 		$compareCount = $this->getLineCount($file);
 		$compareRow = fgetcsv($file);
@@ -49,7 +49,7 @@ class CsvBulkLoaderTest extends SapphireTest {
 		$results = $loader->load($filepath);
 
 		// Test that right amount of columns was imported
-		$this->assertEquals($results->Count(), $compareCount, 'Test correct count of imported data');
+		$this->assertEquals(4, $results->Count(), 'Test correct count of imported data');
 		
 		// Test that columns were correctly imported
 		$obj = Dataobject::get_one("CsvBulkLoaderTest_Player", "FirstName = 'John'");
@@ -65,7 +65,7 @@ class CsvBulkLoaderTest extends SapphireTest {
 	 */
 	function testLoadWithCustomHeaderAndRelation() {
 		$loader = new CsvBulkLoader('CsvBulkLoaderTest_Player');
-		$filepath = Director::baseFolder() . '/sapphire/tests/CsvBulkLoaderTest_PlayersWithCustomHeaderAndRelation.csv';
+		$filepath = Director::baseFolder() . '/sapphire/tests/dev/CsvBulkLoaderTest_PlayersWithCustomHeaderAndRelation.csv';
 		$file = fopen($filepath, 'r');
 		$compareCount = $this->getLineCount($file);
 		fgetcsv($file); // pop header row
@@ -89,7 +89,7 @@ class CsvBulkLoaderTest extends SapphireTest {
 		$results = $loader->load($filepath);
 		
 		// Test that right amount of columns was imported
-		$this->assertEquals($results->Count(), $compareCount-1, 'Test correct count of imported data');
+		$this->assertEquals(1, $results->Count(), 'Test correct count of imported data');
 		
 		// Test of augumenting existing relation (created by fixture)
 		$testTeam = DataObject::get_one('CsvBulkLoaderTest_Team', null, null, 'Created DESC');
@@ -115,7 +115,7 @@ class CsvBulkLoaderTest extends SapphireTest {
 	function testLoadWithIdentifiers() {
 		// first load
 		$loader = new CsvBulkLoader('CsvBulkLoaderTest_Player');
-		$filepath = Director::baseFolder() . '/sapphire/tests/CsvBulkLoaderTest_PlayersWithId.csv';
+		$filepath = Director::baseFolder() . '/sapphire/tests/dev/CsvBulkLoaderTest_PlayersWithId.csv';
 		$loader->duplicateChecks = array(
 			'ExternalIdentifier' => 'ExternalIdentifier' 
 		);
@@ -126,7 +126,7 @@ class CsvBulkLoaderTest extends SapphireTest {
 		$this->assertEquals($player->Biography, 'He\'s a good guy', 'test updating of duplicate imports within the same import works');
 
 		// load with updated data
-		$filepath = Director::baseFolder() . '/sapphire/tests/CsvBulkLoaderTest_PlayersWithIdUpdated.csv';
+		$filepath = Director::baseFolder() . '/sapphire/tests/dev/CsvBulkLoaderTest_PlayersWithIdUpdated.csv';
 		$results = $loader->load($filepath);
 		
 		$player = DataObject::get_by_id('CsvBulkLoaderTest_Player', 1);
