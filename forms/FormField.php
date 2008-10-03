@@ -450,7 +450,7 @@ HTML;
 			if(!empty($v) || $v === '0') $preparedAttributes .= " $k=\"" . Convert::raw2att($v) . "\"";
 		}
 
-		if($content) return "<$tag$preparedAttributes>$content</$tag>";
+		if($content || $tag != 'input') return "<$tag$preparedAttributes>$content</$tag>";
 		else return "<$tag$preparedAttributes />";
 	}
 	
