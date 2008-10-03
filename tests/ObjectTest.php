@@ -59,6 +59,20 @@ class ObjectTest extends SapphireTest {
 		}
 		
 	}
+	
+	function testSingletonCreation() {
+		$myObject = singleton('ObjectTest_MyObject');
+		$this->assertEquals($myObject->class, 'ObjectTest_MyObject', 'singletons are creating a correct class instance');
+		$this->assertEquals(get_class($myObject), 'ObjectTest_MyObject', 'singletons are creating a correct class instance');
+		
+		$mySubObject = singleton('ObjectTest_MySubObject');
+		$this->assertEquals($mySubObject->class, 'ObjectTest_MySubObject', 'singletons are creating a correct subclass instance');
+		$this->assertEquals(get_class($mySubObject), 'ObjectTest_MySubObject', 'singletons are creating a correct subclass instance');
+		
+		$myFirstObject = singleton('ObjectTest_MyObject');
+		$mySecondObject = singleton('ObjectTest_MyObject');
+		$this->assertTrue($myFirstObject === $mySecondObject, 'singletons are using the same object on subsequent calls');
+	}
 }
 
 class ObjectTest_T1A extends Object {
@@ -112,4 +126,12 @@ class ObjectTest_T2 extends Object {
 		return true;
 	}
 	
+}
+
+class ObjectTest_MyObject extends Object {
+	public $title = 'my object';
+}
+
+class ObjectTest_MySubObject extends ObjectTest_MyObject {
+	public $title = 'my subobject';
 }
