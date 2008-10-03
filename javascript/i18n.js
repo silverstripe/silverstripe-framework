@@ -1,12 +1,183 @@
-/**
- * Misc helpers
- */
-var i18n = Class.create();
-i18n = {
-	
-}
+if(typeof(ss) == 'undefined') ss = {};
 
-var _t = function() {
+/*
+ * Lightweight clientside i18n implementation.
+ * Caution: Only available after DOM loaded because we need to detect the language
+ * 
+ * Based on jQuery i18n plugin: 1.0.0  Feb-10-2008
+ * @requires jQuery v1.1 or later
+ *
+ * Examples at: http://recurser.com/articles/2008/02/21/jquery-i18n-translation-plugin/
+ * Dual licensed under the MIT and GPL licenses:
+ *   http://www.opensource.org/licenses/mit-license.php
+ *   http://www.gnu.org/licenses/gpl.html
+ *
+ * Based on 'javascript i18n that almost doesn't suck' by markos
+ * http://markos.gaivo.net/blog/?p=100
+ */
+ss.i18n = Class.create();
+ss.i18n = {
 	
+	currentLocale: null,
 	
-}
+	defaultLocale: 'en_US',
+	
+	lang: {},
+	
+	init: function() {
+		this.currentLocale = this.detectLocale();
+	},
+	
+	/**
+	 * set_locale()
+	 * Set locale in long format, e.g. "de_AT" for Austrian German.
+	 * @param string locale
+	 */
+	setLocale: function(locale) {
+		this.currentLocale = locale;
+	},
+	
+	/**
+	 * getLocale()
+	 * Get locale in long format. Falls back to i18n.defaut_locale.
+	 * @return string
+	 */
+	getLocale: function() {
+		return (this.currentLocale) ? this.currentLocale : this.defaultLocale;
+	},
+	
+	/**
+	 * _()
+	 * The actual translation function. Looks the given string up in the 
+	 * dictionary and returns the translation if one exists. If a translation 
+	 * is not found, returns the original word
+	 *
+	 * @param string entity
+	 * @param string fallbackString
+	 * @param int priority (not used)
+	 * @param string context Give translators context for the string
+	 * @return string : Translated word
+	 *
+	 */
+		_t: function (entity, fallbackString, priority, context) {
+			if (this.lang && this.lang[this.getLocale()] && this.lang[this.getLocale()][entity]) {
+				return this.lang[this.getLocale()][entity];
+			} else if (this.lang && this.lang[this.defaultLocale] && this.lang[this.defaultLocale][entity]) {
+				return this.lang[this.defaultLocale][entity];
+			} else if(fallbackString) {
+				return fallbackString;
+			} else {
+				return '';
+			}
+		},
+		
+		addDictionary: function(locale, dict) {
+			if(typeof(this.lang[locale])) {
+				this.lang[locale] = dict;
+			} else {
+				this.lang[locale] += dict;
+			}
+		},
+	
+	/**
+	 * stripStr()
+	 *
+	 * @param string str : The string to strip
+	 * @return string result : Stripped string
+	 *
+	 */
+	 	stripStr: function(str) {
+			return str.replace(/^\s*/, "").replace(/\s*$/, "");
+		},
+	
+	/**
+	 * stripStrML()
+	 *
+	 * @param string str : The multi-line string to strip
+	 * @return string result : Stripped string
+	 *
+	 */
+		stripStrML: function(str) {
+			// Split because m flag doesn't exist before JS1.5 and we need to
+			// strip newlines anyway
+			var parts = str.split('\n');
+			for (var i=0; i<parts.length; i++)
+				parts[i] = stripStr(parts[i]);
+	
+			// Don't join with empty strings, because it "concats" words
+			// And strip again
+			return stripStr(parts.join(" "));
+		},
+
+	/*
+	 * printf()
+	 * C-printf like function, which substitutes %s with parameters
+	 * given in list. %%s is used to escape %s.
+	 *
+	 * Doesn't work in IE5.0 (splice)
+	 *
+	 * @param string S : string to perform printf on.
+	 * @param string L : Array of arguments for printf()
+	 */
+		printf: function(S) {
+			if (arguments.length == 1) return S;
+
+			var nS = "";
+			var tS = S.split("%s");
+			
+			var args = [];
+			for (var i=1, len = arguments.length; i <len; ++i) {
+				args.push(arguments[i]);
+			};
+
+			for(var i=0; i<args.length; i++) {
+				if (tS[i].lastIndexOf('%') == tS[i].length-1 && i != args.length-1)
+					tS[i] += "s"+tS.splice(i+1,1)[0];
+				nS += tS[i] + args[i];
+			}
+			return nS + tS[tS.length-1];
+		},
+		
+		/**
+		 * Detect document language settings by looking at <meta> tags.
+		 * If no match is found, returns this.defaultLocale.
+		 * 
+		 * @todo get by <html lang=''> - needs modification of SSViewer
+		 * 
+		 * @return string Locale in mixed lowercase/uppercase format suitable
+		 * for usage in ss.i18n.lang arrays (e.g. 'en_US').
+		 */
+		detectLocale: function() {
+			var rawLocale;
+			var detectedLocale;
+		
+			// get by meta
+			$$('meta').each(function(el) {
+				if(el.attributes['http-equiv'] && el.attributes['http-equiv'].nodeValue.toLowerCase() == 'content-language') {
+					rawLocale = el.attributes['content'].nodeValue;
+				}
+			});
+			// fallback to default locale
+			if(!rawLocale) rawLocale = this.defaultLocale;
+			
+			var rawLocaleParts = rawLocale.match(/([^-|_]*)[-|_](.*)/);
+			// get locale (e.g. 'en_US') from common name (e.g. 'en')
+			// by looking at ss.i18n.lang tables
+			if(rawLocale.length == 2) {
+				for(compareLocale in ss.i18n.lang) {
+					if(compareLocale.substr(0,2).toLowerCase() == rawLocale.toLowerCase()) {
+						detectedLocale = compareLocale;
+						break;
+					}
+				}
+			} else if(rawLocaleParts) {
+				detectedLocale = rawLocaleParts[1].toLowerCase() + '_' + rawLocaleParts[2].toUpperCase();
+			}
+			
+			return detectedLocale;
+		}
+};
+
+Event.observe(window, "load", function() {
+	ss.i18n.init();
+});

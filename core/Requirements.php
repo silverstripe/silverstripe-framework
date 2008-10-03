@@ -284,6 +284,9 @@ class Requirements {
 			
 			// Combine files - updates Requirements::$javascript and Requirements::$css 
  			self::process_combined_files(); 
+
+			// 
+			self::process_i18n_javascript(); 
 	
 			foreach(array_diff_key(self::$javascript,self::$blocked) as $file => $dummy) { 
 				$path = self::path_for_file($file);
@@ -344,6 +347,35 @@ class Requirements {
 		if(isset($_GET['debug_profile'])) Profiler::unmark("Requirements::includeInHTML");
 		
 		return $content;
+	}
+	
+	/**
+	 * Automatically includes the necessary lang-files from the module
+	 * according to the locale set in {@link i18n::$current_locale}.
+	 * Assumes that a subfolder /javascript exists relative to the included
+	 * javascript file, with a file named after the locale - 
+	 * so usually <mymodule>/javascript/lang/en_US.js.
+	 * 
+	 * Caution: Assumes the manual inclusion of sapphire/javascript/i18n.js
+	 * before 
+	 */
+	protected static function process_i18n_javascript() {
+		foreach(array_diff_key(self::$javascript,self::$blocked) as $file => $dummy) { 
+			if(preg_match('/^http[s]?/', $file)) continue;
+			
+			$absolutePath = Director::baseFolder() . '/' . $file;
+			$absoluteLangPath = dirname($absolutePath) . '/lang/' . i18n::get_locale() . '.js';
+			$absoluteDefaultLangPath = dirname($absolutePath) . '/lang/' . i18n::default_locale() . '.js';
+			foreach(array($absoluteDefaultLangPath, $absoluteLangPath) as $path) {
+				if(Director::fileExists($path)) {
+					$langFile = Director::makeRelative($path);
+					// Remove rogue leading slashes from Director::makeRelative()
+					$langFile = preg_replace('/^\//', '', $langFile);
+					self::$javascript[$langFile] = true;
+				}	
+			}
+		}
+
 	}
 	
 	/**
