@@ -1525,7 +1525,8 @@ class DataObject extends ViewableData implements DataObjectInterface {
 	 * Centerpiece of every data administration interface in Silverstripe,
 	 * which returns a {@link FieldSet} suitable for a {@link Form} object.
 	 * If not overloaded, we're using {@link scaffoldFormFields()} to automatically
-	 * generate this set.
+	 * generate this set. To customize, overload this method in a subclass
+	 * or decorate onto it by using {@link DataObjectDecorator->updateCMSFields()}.
 	 *
 	 * <example>
 	 * klass MyCustomClass extends DataObject {
@@ -1533,7 +1534,7 @@ class DataObject extends ViewableData implements DataObjectInterface {
 	 *
 	 * 	public function getCMSFields() {
 	 * 		$fields = parent::getCMSFields();
-	 * 		$fields->push(new CheckboxField('CustomProperty'));
+	 * 		$fields->addFieldToTab('Root.Content',new CheckboxField('CustomProperty'));
 	 *		return $fields;
 	 *	}
 	 * }
@@ -1541,14 +1542,34 @@ class DataObject extends ViewableData implements DataObjectInterface {
 	 *
 	 * @see Good example of complex FormField building: SiteTree::getCMSFields()
 	 *
-	 * @return FieldSet
+	 * @return FieldSet Returns a TabSet for usage within the CMS - don't use for frontend forms.
 	 */
 	public function getCMSFields() {
 		$fields = $this->scaffoldFormFields();
+		
 		// If we don't have an ID, then relation fields don't work
 		if($this->ID) {
 			$fields = $this->addScaffoldRelationFields($fields);
 		}
+		
+		$this->extend('updateCMSFields', $fields);
+		
+		return $fields;
+	}
+	
+
+	/**
+	 * Used for simple frontend forms without relation editing
+	 * or {@link TabSet} behaviour. Uses {@link scaffoldFormFields()}
+	 * by default. To customize, either overload this method in your
+	 * subclass, or decorate it by {@link DataObjectDecorator->updateFormFields()}.
+	 *
+	 * @return FieldSet Always returns a simple field collection without TabSet.
+	 */
+	public function getFormFields() {
+		$fields = $this->scaffoldFormFields();
+		$this->extend('updateFormFields', $fields);
+	
 		return $fields;
 	}
 
