@@ -1498,7 +1498,6 @@ class DataObject extends ViewableData implements DataObjectInterface {
 	 */
 	public function scaffoldFormFields($fieldClasses = null) {
 		$fields = new FieldSet();
-		$fields->push(new HeaderField($this->singular_name()));
 		foreach($this->db() as $fieldName => $fieldType) {
 			// @todo Pass localized title
 			if(isset($fieldClasses[$fieldName])) {
@@ -1513,9 +1512,9 @@ class DataObject extends ViewableData implements DataObjectInterface {
 		foreach($this->has_one() as $relationship => $component) {
 			$model = singleton($component);
 			$records = DataObject::get($component);
-			$collect = ($model->hasMethod('customSelectOption')) ? 'customSelectOption' : current($model->summaryFields());
+			$collect = ($model->hasMethod('customSelectOption')) ? 'customSelectOption' : 'Title';
 			$options = $records ? $records->filter_map('ID', $collect) : array();
-			$fields->push(new DropdownField($relationship.'ID', $relationship, $options));
+			$fields->push(new DropdownField($relationship.'ID', $this->fieldLabel($relationship), $options));
 		}
 		return $fields;
 	}
