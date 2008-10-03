@@ -75,6 +75,20 @@ class FieldSetTest extends SapphireTest {
 		$this->assertEquals(0, $tab->Fields()->Count());
 	}
 	
+	function testRemoveTab() {
+		$fields = new FieldSet(new TabSet(
+			'Root',
+			$tab1 = new Tab('Tab1'),
+			$tab2 = new Tab('Tab2'),
+			$tab3 = new Tab('Tab3')
+		));
+		
+		$fields->removeByName('Tab2');
+		$this->assertNull($fields->fieldByName('Root')->fieldByName('Tab2'));
+		
+		$this->assertEquals($tab1, $fields->fieldByName('Root')->fieldByName('Tab1'));
+	}
+	
 	/**
 	 * Test removing an array of fields from a tab in a set.
 	 */
