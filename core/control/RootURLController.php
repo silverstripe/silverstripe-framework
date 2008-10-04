@@ -10,15 +10,16 @@ class RootURLController extends Controller {
 	
 	public function handleRequest($request) {
 		self::$is_at_root = true;
+		$this->pushCurrent();
 
 		$controller = new ModelAsController();
-		$controller->pushCurrent();
 		
 		$request = new HTTPRequest("GET", self::get_homepage_urlsegment().'/', $request->getVars(), $request->postVars());
 		$request->match('$URLSegment//$Action');
 			
 		$result = $controller->handleRequest($request);
-		$controller->popCurrent();
+
+		$this->popCurrent();
 		return $result;
 	}
 
