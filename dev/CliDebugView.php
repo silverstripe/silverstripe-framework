@@ -14,7 +14,7 @@ class CliDebugView extends DebugView {
 	/**
 	 * Render HTML header for development views
 	 */
-	public function writeHeader($httpRequest) {
+	public function writeHeader($httpRequest = null) {
 	}
 	
 	/**
@@ -28,8 +28,8 @@ class CliDebugView extends DebugView {
 	 */
 	public function writeError($httpRequest, $errno, $errstr, $errfile, $errline, $errcontext) {
 		$errorType = self::$error_types[$errno];
-		echo "ERROR [" . $errorType['title'] . "]: $errstr\nIN $httpRequest\n";
-		echo "Line $errline in $errfile\n\n";
+		echo SSCli::text("ERROR [" . $errorType['title'] . "]: $errstr\nIN $httpRequest\n", "red", null, true);
+		echo SSCli::text("Line $errline in $errfile\n\n", "red");
 	}
 
 	/**

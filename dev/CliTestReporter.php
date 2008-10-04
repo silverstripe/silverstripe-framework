@@ -20,18 +20,24 @@ class CliTestReporter extends SapphireTestReporter {
 				($test['status'] == 1) ? $passCount++ : $failCount++;
 			}
 		}
-		$result = ($failCount > 0) ? 'fail' : 'pass';
-		echo "\n\n$testCount tests run: $passCount passes, $failCount fails, and 0 exceptions\n\n";
+		
+		echo "\n\n";
+		if ($failCount == 0) {
+			echo SSCli::text(" ALL TESTS PASS ", "white", "green");
+		}  else {
+			echo SSCli::text(" AT LEAST ONE FAILURE ", "white", "red");
+		}
+		echo "\n\n$testCount tests run: " . SSCli::text("$passCount passes", $passCount > 0 ? "green" : null) . ", ". SSCli::text("$failCount fails", $failCount > 0 ? "red" : null) . ", and 0 exceptions\n\n";
 	}
 	
 	public function endTest( PHPUnit_Framework_Test $test, $time) {
 		// Status indicator, a la PHPUnit
 		switch($this->currentTest['status']) {
-			case TEST_FAILURE: echo "F"; break;
-			case TEST_ERROR: echo "E"; break;
-			case TEST_INCOMPLETE: echo "I"; break;
-			case TEST_SUCCESS: echo "."; break;
-			default: echo "?"; break;
+			case TEST_FAILURE: echo SSCli::text("F","red", null, true); break;
+			case TEST_ERROR: echo SSCli::text("E","red", null, true); break;
+			case TEST_INCOMPLETE: echo SSCli::text("I","yellow"); break;
+			case TEST_SUCCESS: echo SSCli::text(".","green"); break;
+			default: echo SSCli::text("?", "yellow"); break;
 		}
 		
 		static $colCount = 0;
@@ -45,8 +51,8 @@ class CliTestReporter extends SapphireTestReporter {
 	
 	protected function writeTest($test) {
 		if ($test['status'] != 1) {
-			echo $this->testNameToPhrase($test['name']) . "\n". $test['message'] . "\n";
-			echo "In line {$test['exception']['line']} of {$test['exception']['file']}" . "\n\n";
+			echo "\n\n" . SSCli::text($this->testNameToPhrase($test['name']) . "\n". $test['message'] . "\n", 'red', null, true);
+			echo SSCli::text("In line {$test['exception']['line']} of {$test['exception']['file']}" . "\n\n", 'red	');
 			echo Debug::get_rendered_backtrace($test['trace'], true);
 			echo "\n--------------------\n";
 		}
