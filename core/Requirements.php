@@ -355,11 +355,14 @@ class Requirements {
 	 * Assumes that a subfolder /javascript exists relative to the included
 	 * javascript file, with a file named after the locale - 
 	 * so usually <mymodule>/javascript/lang/en_US.js.
-	 * 
-	 * Caution: Assumes the manual inclusion of sapphire/javascript/i18n.js
-	 * before 
 	 */
 	protected static function process_i18n_javascript() {
+		// ensure to include the i18n base library
+		if(!isset(self::$javascript[SAPPHIRE_DIR . '/javascript/i18n.js'])) {
+			self::$javascript[SAPPHIRE_DIR . '/javascript/i18n.js'] = true;
+		}
+		
+		// include the specific locale and the master locale for each module
 		foreach(array_diff_key(self::$javascript,self::$blocked) as $file => $dummy) { 
 			if(preg_match('/^http[s]?/', $file)) continue;
 			
