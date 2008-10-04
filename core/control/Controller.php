@@ -49,6 +49,10 @@ class Controller extends RequestHandlingData {
 	
 	/**
 	 * Handles HTTP requests.
+	 * 
+	 * If you are going to overload handleRequest, make sure that you start the method with $this->pushCurrent()
+	 * and end the method with $this->popCurrent().  Failure to do this will create weird session errors.
+	 * 
 	 * @param $request The {@link HTTPRequest} object that is responsible for distributing request parsing.
 	 */
 	function handleRequest(HTTPRequest $request) {
