@@ -15,7 +15,11 @@ class SmallerThanFilter extends SearchFilter {
 	public function apply(SQLQuery $query) {
 		if($this->getValue()) {
 			$query = $this->applyRelation($query);
-			return $query->where("{$this->getDbName()} < '{$this->getValue()}'");
+			return $query->where(sprintf(
+				"%s < '%s'",
+				$this->getDbName(),
+				Convert::raw2sql($this->getValue())
+			));
 		}
 	}
 	

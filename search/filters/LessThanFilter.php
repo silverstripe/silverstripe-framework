@@ -14,7 +14,11 @@ class LessThanFilter extends SearchFilter {
 	 */
 	public function apply(SQLQuery $query) {
 		$query = $this->applyRelation($query);
-		return $query->where("{$this->getDbName()} < '{$this->getValue()}'");
+		return $query->where(sprintf(
+			"%s < '%s'",
+			$this->getDbName(),
+			Convert::raw2sql($this->getValue())
+		));
 	}
 	
 	public function isEmpty() {

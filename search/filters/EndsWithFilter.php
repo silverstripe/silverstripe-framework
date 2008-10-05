@@ -25,7 +25,11 @@ class EndsWithFilter extends SearchFilter {
 	 */
 	public function apply(SQLQuery $query) {
 		$query = $this->applyRelation($query);
-		$query->where($this->getDbName(), "RLIKE", "{$this->getValue()}$");
+		$query->where(
+			$this->getDbName(), 
+			"RLIKE", 
+			sprintf("%s$",Convert::raw2sql($this->getValue()))
+		);
 	}
 	
 	public function isEmpty() {

@@ -59,6 +59,7 @@ abstract class SearchFilter extends Object {
 	
 	/**
 	 * Accessor for the current value to be filtered on.
+	 * Caution: Data is not escaped.
 	 *
 	 * @return string
 	 */

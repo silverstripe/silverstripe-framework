@@ -25,7 +25,11 @@ class StartsWithFilter extends SearchFilter {
 	 */
 	public function apply(SQLQuery $query) {
 		$query = $this->applyRelation($query);		
-		$query->where("LOCATE('{$this->getValue()}', {$this->getDbName()}) = 1");
+		$query->where(sprintf(
+			"LOCATE('%s', %s) = 1",
+			Convert::raw2sql($this->getValue()),
+			$this->getDbName()
+		));
 	}
 	
 	public function isEmpty() {

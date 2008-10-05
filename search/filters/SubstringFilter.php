@@ -13,7 +13,11 @@
 class SubstringFilter extends SearchFilter {
 
 	public function apply(SQLQuery $query) {
-		return $query->where("LOCATE('{$this->getValue()}', {$this->getDbName()}) != 0");
+		return $query->where(sprintf(
+			"LOCATE('%s', %s) != 0",
+			Convert::raw2sql($this->getValue()),
+			$this->getDbName()
+		));
 	}
 
 	public function isEmpty() {

@@ -17,8 +17,10 @@ class StartsWithMultiFilter extends SearchFilter {
 		$values = explode(',', $this->getValue());
 		
 		foreach($values as $value) {
-			$SQL_value = Convert::raw2sql(str_replace("'", '', $value));
-			$matches[] = "{$this->getDbName()} LIKE '$SQL_value%'";
+			$matches[] = sprintf("%s LIKE '%s%%'",
+				$this->getDbName(),
+				Convert::raw2sql(str_replace("'", '', $value))
+			);
 		}
 		
 		return $query->where(implode(" OR ", $matches));
