@@ -66,6 +66,12 @@ class RequestHandlingTest extends SapphireTest {
 		$response = Director::test("testBaseWithExtension/virtualfile");
 		$this->assertEquals("This is the virtualfile method", $response->getBody());
 	}
+	
+	function testNestedBase() {
+		/* Nested base should leave out the two parts and correctly map arguments */
+		$response = Director::test("testParentBase/testChildBase/method/1/2");
+		$this->assertEquals("This is a method on the controller: 1, 2", $response->getBody());
+	}
 }
 
 /**
@@ -89,6 +95,9 @@ Director::addRules(50, array(
 	
 	// Without the extension, the methodname should be matched
 	'testBaseWithExtension//$Action/$ID/$OtherID' => "RequestHandlingTest_Controller",
+	
+	// Test nested base
+	'testParentBase/testChildBase//$Action/$ID/$OtherID' => "RequestHandlingTest_Controller",
 ));
 
 /**
