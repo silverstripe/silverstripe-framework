@@ -1449,14 +1449,22 @@ class DataObject extends ViewableData implements DataObjectInterface {
 	 * how generic or specific the field type is.
 	 *
 	 * @usedby {@link SearchContext}
+	 * 
+	 * @param array $restrictFields
+	 * @param array $fieldClasses 
 	 * @return FieldSet
 	 */
-	public function scaffoldSearchFields() {
+	public function scaffoldSearchFields($restrictFields = null, $fieldClasses = null) {
 		$fields = new FieldSet();
 		foreach($this->searchableFields() as $fieldName => $spec) {
+			if($restrictFields && !in_array($fieldName, $restrictFields)) continue;
 			
+			// If a custom fieldclass is provided as a string, use it
+			if($fieldClasses && isset($fieldClasses[$fieldName])) {
+				$fieldClass = $fieldClasses[$fieldName];
+				$field = new $fieldClass($fieldName);
 			// If we explicitly set a field, then construct that
-			if(isset($spec['field'])) {
+			} else if(isset($spec['field'])) {
 				// If it's a string, use it as a class name and construct
 				if(is_string($spec['field'])) {
 					$fieldClass = $spec['field'];
@@ -1493,12 +1501,16 @@ class DataObject extends ViewableData implements DataObjectInterface {
 	 *
 	 * @uses DBField::scaffoldFormField()
 	 * @uses DataObject::fieldLabels()
+	 * 
+	 * @param
 	 * @param array $fieldClasses Optional mapping of fieldnames to subclasses of {@link DBField}
 	 * @return FieldSet
 	 */
-	public function scaffoldFormFields($fieldClasses = null) {
+	public function scaffoldFormFields($restrictFields = null, $fieldClasses = null) {
 		$fields = new FieldSet();
 		foreach($this->db() as $fieldName => $fieldType) {
+			if($restrictFields && !in_array($fieldName, $restrictFields)) continue;
+			
 			// @todo Pass localized title
 			if(isset($fieldClasses[$fieldName])) {
 				$fieldClass = $fieldClasses[$fieldName];
@@ -1510,6 +1522,8 @@ class DataObject extends ViewableData implements DataObjectInterface {
 			$fields->push($fieldObject);
 		}
 		foreach($this->has_one() as $relationship => $component) {
+			if($restrictFields && !in_array($relationship, $restrictFields)) continue;
+			
 			$model = singleton($component);
 			$records = DataObject::get($component);
 			$collect = ($model->hasMethod('customSelectOption')) ? 'customSelectOption' : 'Title';
@@ -1530,8 +1544,8 @@ class DataObject extends ViewableData implements DataObjectInterface {
 	 * 
 	 * @return FieldSet Tabbed fields
 	 */
-	public function scaffoldCMSFields() {
-		$untabbedFields = $this->scaffoldFormFields();
+	public function scaffoldCMSFields($restrictFields = null, $fieldClasses = null) {
+		$untabbedFields = $this->scaffoldFormFields($restrictFields, $fieldClasses);
 		
 		// make sure we have a tabset
 		if(!$untabbedFields->hasTabSet()) {
