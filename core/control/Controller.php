@@ -248,6 +248,24 @@ class Controller extends RequestHandlingData {
 		}
 		return new SSViewer($templates);
 	}
+	
+	/**
+	 * Render the current controller with the templates determined
+	 * by {@link getViewer()}.
+	 * 
+	 * @param array $params Key-value array for custom template variables (Optional)
+	 * @return string Parsed template content 
+	 */
+	function render($params = null) {
+		$template = $this->getViewer($this->getAction());
+	
+		// if the object is already customised (e.g. through Controller->run()), use it
+		$obj = ($this->customisedObj) ? $this->customisedObj : $this;
+	
+		if($params) $obj = $this->customise($params);
+	
+		return $template->process($obj);
+	}
   
 	/**
 	 * Call this to disable basic authentication on test sites.
