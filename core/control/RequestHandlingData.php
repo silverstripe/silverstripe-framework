@@ -5,20 +5,23 @@
  * 
  * Any RequestHandlingData object can be made responsible for handling its own segment of the URL namespace.
  * The {@link Director} begins the URL parsing process; it will parse the beginning of the URL to identify which
- * controller is being used.  It will then call handleRequest on that Controller, passing it the parameters that it
- * parsed from the URL, and the HTTPRequest that contains the remainder of the URL to be parsed.
+ * controller is being used.  It will then call {@link handleRequest()} on that Controller, passing it the parameters that it
+ * parsed from the URL, and the {@link HTTPRequest} that contains the remainder of the URL to be parsed.
+ *
+ * You can use ?debug_request=1 to view information about the different components and rule matches for a specific URL.
  *
  * In Sapphire, URL parsing is distributed throughout the object graph.  For example, suppose that we have a search form
- * that contains a {@link TreeMultiSelectField}, Groups.  We want to use ajax to load segments of this tree as they are needed
+ * that contains a {@link TreeMultiSelectField} named "Groups".  We want to use ajax to load segments of this tree as they are needed
  * rather than downloading the tree right at the beginning.  We could use this URL to get the tree segment that appears underneath
- * Group #36:
- * 
- * admin/crm/SearchForm/fields/Groups/treesegment/36
- * 
+ * Group #36: "admin/crm/SearchForm/field/Groups/treesegment/36"
  *  - Director will determine that admin/crm is controlled by a new ModelAdmin object, and pass control to that.
+ *    Matching Director Rule: "admin/crm" => "ModelAdmin" (defined in mysite/_config.php)
  *  - ModelAdmin will determine that SearchForm is controlled by a Form object returned by $this->SearchForm(), and pass control to that.
- *  - Form will determine that fields/Groups is controlled by the Groups field, a TreeMultiselectField, and pass control to that.
+ *    Matching $url_handlers: "$Action" => "$Action" (defined in RequestHandlingData class)
+ *  - Form will determine that field/Groups is controlled by the Groups field, a TreeMultiselectField, and pass control to that.
+ *    Matching $url_handlers: 'field/$FieldName!' => 'handleField' (defined in Form class)
  *  - TreeMultiselectField will determine that treesegment/36 is handled by its treesegment() method.  This method will return an HTML fragment that is output to the screen.
+ *    Matching $url_handlers: "$Action/$ID" => "handleItem" (defined in TreeMultiSelectField class)
  *
  * {@link RequestHandlingData::handleRequest()} is where this behaviour is implemented.
  */
@@ -68,6 +71,7 @@ class RequestHandlingData extends ViewableData {
 	 * @param $params The parameters taken from the parsed URL of the parent url handler
 	 * @param $request The {@link HTTPRequest} object that is reponsible for distributing URL parsing
 	 * @uses HTTPRequest
+	 * @uses HTTPRequest->match()
 	 * @return HTTPResponse|RequestHandlingData|string|array
 	 */
 	function handleRequest($request) {

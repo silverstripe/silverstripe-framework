@@ -10,13 +10,19 @@
  * 
  * @todo Accept X_HTTP_METHOD_OVERRIDE http header and $_REQUEST['_method'] to override request types (useful for webclients
  *   not supporting PUT and DELETE)
+ * 
+ * @package sapphire
+ * @subpackage control
  */
 class HTTPRequest extends Object implements ArrayAccess {
+
 	/**
-	 * The non-extension parts of the URL, separated by "/"
+	 * The non-extension parts of the URL, separated by "/".
+	 * All elements of the URL are loaded in here,
+	 * and subsequently popped out of the array by {@link shift()}.
 	 */
 	protected $dirParts;
-
+	
 	/**
 	 * The URL extension
 	 */
@@ -27,8 +33,14 @@ class HTTPRequest extends Object implements ArrayAccess {
 	 */
 	protected $httpMethod;
 	
+	/**
+	 * @var array $getVars Contains alls HTTP GET parameters passed into this request.
+	 */
 	protected $getVars = array();
 	
+	/**
+	 * @var array $postVars Contains alls HTTP POST parameters passed into this request.
+	 */
 	protected $postVars = array();
 
 	/**
@@ -46,8 +58,22 @@ class HTTPRequest extends Object implements ArrayAccess {
 	 */
 	protected $body;
 	
+	/**
+	 * @var array $allParams Contains an assiciative array of all
+	 * arguments matched in all calls to {@link RequestHandlingData->handleRequest()}.
+	 * Its a "historical record" thats specific to the current call of
+	 * {@link handleRequest()}, and only complete once the last call is made.
+	 */
 	protected $allParams = array();
 	
+	/**
+	 * @var array $latestParams Contains an associative array of all
+	 * arguments matched in the current call from {@link RequestHandlingData->handleRequest()},
+	 * as denoted with a "$"-prefix in the $url_handler definitions.
+	 * Contains different states throughout its lifespan, so just useful
+	 * while processed in {@link RequestHandlingData} and to get the last
+	 * processes arguments.
+	 */
 	protected $latestParams = array();
 	
 	protected $unshiftedButParsedParts = 0;
@@ -86,6 +112,14 @@ class HTTPRequest extends Object implements ArrayAccess {
 	function postVars() {
 		return $this->postVars;
 	}
+	
+	/**
+	 * Returns all combined HTTP GET and POST parameters
+	 * passed into this request. If a parameter with the same
+	 * name exists in both arrays, the POST value is returned.
+	 * 
+	 * @return array
+	 */
 	function requestVars() {
 		return array_merge($this->getVars, $this->postVars);
 	}
@@ -93,14 +127,24 @@ class HTTPRequest extends Object implements ArrayAccess {
 	function getVar($name) {
 		if(isset($this->getVars[$name])) return $this->getVars[$name];
 	}
+	
 	function postVar($name) {
 		if(isset($this->postVars[$name])) return $this->postVars[$name];
 	}
+	
 	function requestVar($name) {
 		if(isset($this->postVars[$name])) return $this->postVars[$name];
 		if(isset($this->getVars[$name])) return $this->getVars[$name];
 	}
 	
+	/**
+	 * Returns a possible file extension found in parsing the URL
+	 * as denoted by a "."-character near the end of the URL.
+	 * Doesn't necessarily have to belong to an existing file,
+	 * for example used for {@link RestfulServer} content-type-switching.
+	 * 
+	 * @return string
+	 */
 	function getExtension() {
 		return $this->extension;
 	}
@@ -285,15 +329,16 @@ class HTTPRequest extends Object implements ArrayAccess {
 			} else if(!isset($this->dirParts[$i]) || $this->dirParts[$i] != $part) {
 				return false;
 			}
+			
 		}
-		
+
 		if($shiftOnSuccess) {
 			$this->shift($shiftCount);
 			// We keep track of pattern parts that we looked at but didn't shift off.
 			// This lets us say that we have *parsed* the whole URL even when we haven't *shifted* it all
 			$this->unshiftedButParsedParts = sizeof($patternParts) - $shiftCount;
 		}
-		
+
 		$this->latestParams = $arguments;
 		
 		// Load the arguments that actually have a value into $this->allParams
@@ -318,6 +363,14 @@ class HTTPRequest extends Object implements ArrayAccess {
 		else
 			return null;
 	}
+	
+	/**
+	 * Finds a named URL parameter (denoted by "$"-prefix in $url_handlers)
+	 * from the full URL.
+	 * 
+	 * @param string $name
+	 * @return string Value of the URL parameter (if found)
+	 */
 	function param($name) {
 		if(isset($this->allParams[$name]))
 			return $this->allParams[$name];
@@ -325,6 +378,13 @@ class HTTPRequest extends Object implements ArrayAccess {
 			return null;
 	}
 	
+	/**
+	 * Returns the unparsed part of the original URL
+	 * separated by commas. This is used by {@link RequestHandlingData->handleRequest()}
+	 * to determine if further URL processing is necessary.
+	 * 
+	 * @return string Partial URL
+	 */
 	function remaining() {
 		return implode("/", $this->dirParts);
 	}
