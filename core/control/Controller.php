@@ -31,9 +31,16 @@ class Controller extends RequestHandlingData {
 	protected $basicAuthEnabled = true;
 
 	/**
-	 * The HTTPResponse object that the controller returns
+	 * @var HTTPResponse $response The response object that the controller returns.
+	 * Set in {@link handleRequest()}.
 	 */
 	protected $response;
+	
+	/**
+	 * @var HTTPRequest $request The request object that the controller was called with.
+	 * Set in {@link handleRequest()}. Useful to generate the {}
+	 */
+	protected $request;
 	
 	/**
 	 * Default URL handlers - (Action)/(ID)/(OtherID)
@@ -60,6 +67,7 @@ class Controller extends RequestHandlingData {
 		
 		$this->pushCurrent();
 		$this->urlParams = $request->allParams();
+		$this->request = $request;
 		$this->response = new HTTPResponse();
 
 		// Init
@@ -150,6 +158,16 @@ class Controller extends RequestHandlingData {
 	 */
 	function getResponse() {
 		return $this->response;
+	}
+	
+	/**
+	 * Get the request with which this controller was called (if any).
+	 * Usually set in {@link handleRequest()}.
+	 *
+	 * @return HTTPRequest
+	 */
+	function getRequest() {
+		return $this->request;
 	}
 
 	protected $baseInitCalled = false;
