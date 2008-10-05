@@ -10,11 +10,26 @@
  * @subpackage control
  */
 class Controller extends RequestHandlingData {
+
 	/**
-	 * An array of arguments extracted from the URL 
+	 * @var array $urlParams An array of arguments extracted from the URL 
 	 */
 	protected $urlParams;
+	
+	/**
+	 * @var array $requestParams Contains all GET and POST parameters
+	 * passed to the current {@link HTTPRequest}.
+	 * @uses HTTPRequest->requestVars()
+	 */
 	protected $requestParams;
+	
+	/**
+	 * @var string $action The URL part matched on the current controller as
+	 * determined by the "$Action" part of the {@link $url_handlers} definition.
+	 * Should correlate to a public method on this controller.
+	 * Used in {@link render()} and {@link getViewer()} to determine
+	 * action-specific templates.
+	 */
 	protected $action;
 	
 	/**

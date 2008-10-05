@@ -17,9 +17,10 @@
 class HTTPRequest extends Object implements ArrayAccess {
 
 	/**
-	 * The non-extension parts of the URL, separated by "/".
+	 * The non-extension parts of the passed URL as an array, originally exploded by the "/" separator.
 	 * All elements of the URL are loaded in here,
 	 * and subsequently popped out of the array by {@link shift()}.
+	 * Only use this structure for internal request handling purposes.
 	 */
 	protected $dirParts;
 	
