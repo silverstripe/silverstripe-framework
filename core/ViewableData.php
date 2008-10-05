@@ -759,7 +759,7 @@ class ViewableData extends Object implements IteratorAggregate {
 	 * @param string|array|SSViewer The template.
 	 * @return string
 	 */
-	function renderWith($template) {
+	function renderWith($template, $params = null) {
 		if(!is_object($template)) {
 			$template = new SSViewer($template);
 		}
@@ -767,6 +767,8 @@ class ViewableData extends Object implements IteratorAggregate {
 		
 		// if the object is already customised (e.g. through Controller->run()), use it
 		$obj = ($this->customisedObj) ? $this->customisedObj : $this;
+		
+		if($params) $obj = $this->customise($params);
 		
 		if(is_a($template,'SSViewer')) {
 			return $template->process($obj);
