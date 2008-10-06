@@ -21,20 +21,22 @@ abstract class CollectionController extends Controller {
 
 	static $url_handlers = array(
 		'' => 'index',
-		'$Action' => 'handleAction',
+		'$Action' => 'handleActionOrID',
 	);
 	
-	static $page_size = 20;
+	public static $page_size = 20;
 	
-	static $allowed_actions = array('index','search', 'SearchForm', 'ResultsForm');
+	static $allowed_actions = array('index','search','add','AddForm','SearchForm','ResultsForm');
 
 	/**
 	 * @param string $parentController
 	 * @param string $modelClass
 	 */
 	function __construct($parentController = null, $modelClass = null) {
-		if($parentController) $this->parentController = $parent;
+		if($parentController) $this->parentController = $parentController;
 		if($modelClass) $this->modelClass = $modelClass;
+		
+		parent::__construct();
 	}
 	
 	function init() {
@@ -51,7 +53,38 @@ abstract class CollectionController extends Controller {
 	 * @return unknown
 	 */
 	function Link() {
-		die("not implemented yet");
+		if($this->parentController) {
+			return Controller::join_links($this->parentController->Link(), "$this->modelClass");
+		} else {
+			return Controller::join_links("$this->modelClass");
+		}
+	}
+	
+	/**
+	 * Delegate to different control flow, depending on whether the
+	 * URL parameter is a number (record id) or string (action).
+	 * 
+	 * @param unknown_type $request
+	 * @return unknown
+	 */
+	function handleActionOrID($request) {
+		if (is_numeric($request->param('Action'))) {
+			return $this->handleID($request);
+		} else {
+			return $this->handleAction($request);
+		}
+	}
+	
+	/**
+	 * Delegate to the RecordController if a valid numeric ID appears in the URL
+	 * segment.
+	 *
+	 * @param HTTPRequest $request
+	 * @return RecordController
+	 */
+	function handleID($request) {
+		$class = $this->recordControllerClass;
+		return new $class($this, $request);
 	}
 
 	/**
@@ -61,20 +94,6 @@ abstract class CollectionController extends Controller {
 	 */
 	function getModelClass() {
 		return $this->modelClass;
-	}
-
-	/**
-	 * Delegate to the {@link RecordController} if a valid numeric ID appears in the URL
-	 * segment.
-	 *
-	 * @param HTTPRequest $request
-	 * @return RecordController
-	 */
-	function record($request) {
-		if(!$this->recordControllerClass) return $this->httpError(403);
-		
-		$class = $this->recordControllerClass;
-		return new $class($this, $this->modelClass);
 	}
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -146,6 +165,74 @@ abstract class CollectionController extends Controller {
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+
+	/**
+	 * Create a new model record.
+	 *
+	 * @param unknown_type $request
+	 * @return unknown
+	 */
+	function add($request) {
+		if(!singleton($this->modelClass)->canCreate(Member::currentUser())) {
+			return $this->httpError(403);
+		}
+		
+		return $this->render(array(
+			'Form' => $this->AddForm(),
+			'SearchForm' => false
+		));
+	}
+
+	/**
+	 * Returns a form for editing the attached model
+	 */
+	public function AddForm() {
+		$newRecord = new $this->modelClass();
+		if($newRecord->hasMethod('getAddFormFields')) {
+			$fields = $newRecord->getAddFormFields();
+		} else {
+			$fields = $newRecord->getFormFields();
+		}
+
+		$validator = ($newRecord->hasMethod('getValidator')) ? $newRecord->getValidator() : null;
+
+		$actions = new FieldSet(new FormAction("doAdd", "Add"));
+
+		$form = new Form($this, "AddForm", $fields, $actions, $validator);
+
+		return $form;
+	}	
+
+	function doAdd($data, $form, $request) {
+		if(!singleton($this->modelClass)->canCreate(Member::currentUser())) {
+			return $this->httpError(403);
+		}
+		
+		$className = $this->modelClass;
+		$model = new $className();
+		// We write before saveInto, since this will let us save has-many and many-many relationships :-)
+		$model->write();
+		$form->saveInto($model);
+		$model->write();
+		
+		/*
+		$form->sessionMessage(
+			_t('RecordController.SAVESUCCESS','Saved record'),
+			'good'
+		);
+		*/
+
+		if($this->canDetailView()) {
+			Director::redirect(Controller::join_links($this->Link(), $model->ID , 'edit'));
+		} else {
+			Director::redirectBack();
+		}
+		
+	}
+
+
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 	/**
 	 * @return string
 	 */
@@ -167,6 +254,29 @@ abstract class CollectionController extends Controller {
 	 */
 	public function canDetailView() {
 		return true;
+	}
+	
+	/**
+	 * If a parentcontroller exists, use its main template,
+	 * and mix in specific collectioncontroller subtemplates.
+	 */
+	function getViewer($action) {
+		if($this->parentController) {
+			$viewer = $this->parentController->getViewer($action);
+			$parentClass = $this->class;
+			$layoutTemplate = null;
+			while($parentClass != "Controller" && !$layoutTemplate) {
+				$templates[] = strtok($parentClass,'_') . '_' . $action;
+				$parentClass = get_parent_class($parentClass);
+				$layoutTemplate = SSViewer::getTemplateFileByType($parentClass, 'Layout');
+			}
+
+			if($layoutTemplate)	$viewer->setTemplateFile('Layout', $layoutTemplate);
+
+			return $viewer;
+		} else {
+			return parent::getViewer($action);
+		}
 	}
 }
 ?>

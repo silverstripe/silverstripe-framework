@@ -4,27 +4,18 @@
  * @subpackage control
  */
 class RecordController extends Controller {
-
-	protected $modelClass;
-	
+	protected $parentController;
 	protected $currentRecord;
 	
-	static $allowed_actions = array('add','edit', 'view', 'EditForm', 'ViewForm');
+	static $allowed_actions = array('edit','view','delete','EditForm','ViewForm','DeleteForm');
 	
-	static $url_handlers = array(
-		'' => 'index',
-		'add' => 'add',
-		'AddForm' => 'AddForm',
-		'$ID/$Action' => 'handleAction',
-	);
-	
-	/**
-	 * @param string $parentController
-	 * @param string $modelClass
-	 */
-	function __construct($parentController = null, $modelClass = null) {
-		if($parentController) $this->parentController = $parentController;
-		if($modelClass) $this->modelClass = $modelClass;
+	function __construct($parentController, $request) {
+		$this->parentController = $parentController;
+		$modelName = $parentController->getModelClass();
+		
+		if(is_numeric($request->latestParam('Action'))) {
+			$this->currentRecord = DataObject::get_by_id($this->modelClass, $request->latestParam('Action'));
+		}
 		
 		parent::__construct();
 	}
@@ -37,20 +28,12 @@ class RecordController extends Controller {
 		Requirements::themedCSS('form');
 	}
 	
-	function handleAction($request) {
-		if(is_numeric($request->latestParam('ID'))) {
-			$this->currentRecord = DataObject::get_by_id($this->modelClass, $request->latestParam('ID'));
-		}
-		
-		return parent::handleAction($request);
-	}
-	
 	/**
 	 * Link fragment - appends the current record ID to the URL.
 	 *
 	 */
 	function Link() {
-		die("not implemented yet");
+		return Controller::join_links($this->parentController->Link(), "/{$this->currentRecord->ID}");
 	}
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -71,7 +54,8 @@ class RecordController extends Controller {
 		}
 		
 		return $this->render(array(
-			'Form' => $this->EditForm()
+			'Form' => $this->EditForm(),
+			'ExtraForm' => $this->DeleteForm()
 		));
 	}
 
@@ -85,17 +69,26 @@ class RecordController extends Controller {
 		$validator = ($this->currentRecord->hasMethod('getValidator')) ? $this->currentRecord->getValidator() : null;
 		
 		$actions = new FieldSet(
-			new FormAction("doSave", "Save")
+			new FormAction("doEdit", "Save")
 		);
-		
-		if($this->currentRecord->canDelete(Member::currentUser())) {
-			$actions->push($deleteAction = new FormAction('doDelete', 'Delete'));
-			$deleteAction->addExtraClass('delete');
-		}
 		
 		$form = new Form($this, "EditForm", $fields, $actions, $validator);
 		$form->loadDataFrom($this->currentRecord);
 
+		return $form;
+	}
+	
+	public function DeleteForm() {
+		if(!$this->currentRecord->canDelete(Member::currentUser())) {
+			return false;
+		}
+		
+		$form = new Form($this, 
+			"DeleteForm", 
+			new FieldSet(), 
+			new FieldSet(new ConfirmedFormAction('doDelete', 'Delete')) 
+		);
+		
 		return $form;
 	}
 
@@ -107,7 +100,7 @@ class RecordController extends Controller {
 	 * @param HTTPRequest $request
 	 * @return mixed
 	 */
-	function doSave($data, $form, $request) {
+	function doEdit($data, $form, $request) {
 		if(!$this->currentRecord->canEdit(Member::currentUser())) {
 			return $this->httpError(403);
 		}
@@ -152,7 +145,7 @@ class RecordController extends Controller {
 		if(!$this->currentRecord) {
 			return $this->httpError(404);
 		}
-		if(!$this->currentRecord->canDelete(Member::currentUser())) {
+		if(!$this->currentRecord->canView(Member::currentUser())) {
 			return $this->httpError(403);
 		}
 
@@ -174,60 +167,6 @@ class RecordController extends Controller {
 		return $form;
 	}
 	
-	////////////////////////////////////////////////////////////////////////////////////////////////////////
-	
-	
-	/**
-	 * Create a new model record.
-	 *
-	 * @param unknown_type $request
-	 * @return unknown
-	 */
-	function add($request) {
-		if(!singleton($this->modelClass)->canCreate(Member::currentUser())) {
-			return $this->httpError(403);
-		}
-		
-		return $this->render(array(
-			'Form' => $this->AddForm()
-		));
-	}
-
-	/**
-	 * Returns a form for editing the attached model
-	 */
-	public function AddForm() {
-		$newRecord = new $this->modelClass();
-		if($newRecord->hasMethod('getAddFormFields')) {
-			$fields = $newRecord->getAddFormFields();
-		} else {
-			$fields = $newRecord->getFormFields();
-		}
-
-		$validator = ($newRecord->hasMethod('getValidator')) ? $newRecord->getValidator() : null;
-
-		$actions = new FieldSet(new FormAction("doAdd", "Add"));
-
-		$form = new Form($this, "AddForm", $fields, $actions, $validator);
-
-		return $form;
-	}	
-
-	function doAdd($data, $form, $request) {
-		if(!singleton($this->modelClass)->canCreate(Member::currentUser())) {
-			return $this->httpError(403);
-		}
-		
-		$className = $this->modelClass;
-		$model = new $className();
-		// We write before saveInto, since this will let us save has-many and many-many relationships :-)
-		$model->write();
-		$form->saveInto($model);
-		$model->write();
-
-		Director::redirect(Controller::join_links($this->Link(), $model->ID , 'edit'));
-	}
-	
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
@@ -243,6 +182,29 @@ class RecordController extends Controller {
 	 */
 	public function ModelNamePlural() {
 		return singleton($this->modelClass)->i18n_plural_name();
+	}
+	
+	/**
+	 * If a parentcontroller exists, use its main template,
+	 * and mix in specific collectioncontroller subtemplates.
+	 */
+	function getViewer($action) {
+		if($this->parentController) {
+			$viewer = $this->parentController->getViewer($action);
+			$parentClass = $this->class;
+			$layoutTemplate = null;
+			while($parentClass != "Controller" && !$layoutTemplate) {
+				$templates[] = strtok($parentClass,'_') . '_' . $action;
+				$parentClass = get_parent_class($parentClass);
+				$layoutTemplate = SSViewer::getTemplateFileByType($parentClass, 'Layout');
+			}
+
+			if($layoutTemplate)	$viewer->setTemplateFile('Layout', $layoutTemplate);
+
+			return $viewer;
+		} else {
+			return parent::getViewer($action);
+		}
 	}
 }
 ?>

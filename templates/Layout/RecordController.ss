@@ -4,6 +4,8 @@
 		<h2>$Title</h2>
 	
 		$Form
+		
+		$ExtraForm
 	
 		</div>
 </div>
