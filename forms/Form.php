@@ -319,6 +319,13 @@ class Form extends RequestHandlingData {
 			$this->securityTokenAdded = true;
 		}
 		
+		// add the "real" HTTP method if necessary (for PUT, DELETE and HEAD)
+		if($this->FormMethod() != $this->FormHttpMethod()) {
+			$methodField = new HiddenField('_method', '', $this->FormHttpMethod());
+			$methodField->setForm($this);
+			$extraFields->push($methodField);
+		}
+		
 		return $extraFields;
 	}
 	
@@ -465,16 +472,37 @@ class Form extends RequestHandlingData {
 	}
 	
 	/**
-	 * Returns the form method.
+	 * Returns the real HTTP method for the form:
+	 * GET, POST, PUT, DELETE or HEAD.
+	 * As most browsers only support GET and POST in
+	 * form submissions, all other HTTP methods are
+	 * added as a hidden field "_method" that
+	 * gets evaluated in {@link Director::direct()}.
+	 * See {@link FormMethod()} to get a HTTP method
+	 * for safe insertion into a <form> tag.
 	 * 
-	 * @return string 'get' or 'post'
+	 * @return string HTTP method
 	 */
-	function FormMethod() {
+	function FormHttpMethod() {
 		return $this->formMethod;
 	}
 	
 	/**
-	 * Set the form method - get or post
+	 * Returns the form method to be used in the <form> tag.
+	 * See {@link FormHttpMethod()} to get the "real" method.
+	 * 
+	 * @return string Form tag compatbile HTTP method: 'get' or 'post'
+	 */
+	function FormMethod() {
+		if(in_array($this->formMethod,array('get','post'))) {
+			return $this->formMethod;
+		} else {
+			return 'post';
+		}
+	}
+	
+	/**
+	 * Set the form method: GET, POST, PUT, DELETE.
 	 * 
 	 * @param $method string
 	 */

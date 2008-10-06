@@ -15,4 +15,88 @@ class HTTPRequestTest extends SapphireTest {
 		$this->assertEquals(array("_matched" => true), $request->match('add', true));
 	}
 	
+	public function testHttpMethodOverrides() {
+		$request = new HTTPRequest(
+			'GET',
+			'admin/crm'
+		);
+		$this->assertTrue(
+			$request->isGET(),
+			'GET with no method override'
+		);
+
+		$request = new HTTPRequest(
+			'POST',
+			'admin/crm'
+		);
+		$this->assertTrue(
+			$request->isPOST(),
+			'POST with no method override'
+		);
+
+		$request = new HTTPRequest(
+			'GET',
+			'admin/crm',
+			array('_method' => 'DELETE')
+		);
+		$this->assertTrue(
+			$request->isGET(),
+			'GET with invalid POST method override'
+		);
+		
+		$request = new HTTPRequest(
+			'POST',
+			'admin/crm',
+			array(),
+			array('_method' => 'DELETE')
+		);
+		$this->assertTrue(
+			$request->isDELETE(),
+			'POST with valid method override to DELETE'
+		);
+		
+		$request = new HTTPRequest(
+			'POST',
+			'admin/crm',
+			array(),
+			array('_method' => 'put')
+		);
+		$this->assertTrue(
+			$request->isPUT(),
+			'POST with valid method override to PUT'
+		);
+		
+		$request = new HTTPRequest(
+			'POST',
+			'admin/crm',
+			array(),
+			array('_method' => 'head')
+		);
+		$this->assertTrue(
+			$request->isHEAD(),
+			'POST with valid method override to HEAD '
+		);
+		
+		$request = new HTTPRequest(
+			'POST',
+			'admin/crm',
+			array(),
+			array('_method' => 'head')
+		);
+		$this->assertTrue(
+			$request->isHEAD(),
+			'POST with valid method override to HEAD'
+		);
+		
+		$request = new HTTPRequest(
+			'POST',
+			'admin/crm',
+			array('_method' => 'head')
+		);
+		$this->assertTrue(
+			$request->isPOST(),
+			'POST with invalid method override by GET parameters to HEAD'
+		);
+	}
+	
 }

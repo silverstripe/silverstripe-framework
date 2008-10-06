@@ -89,7 +89,7 @@ class Director {
 	 */
 	function direct($url) {
 		$req = new HTTPRequest(
-			$_SERVER['REQUEST_METHOD'], 
+			(isset($_SERVER['X-HTTP-Method-Override'])) ? $_SERVER['X-HTTP-Method-Override'] : $_SERVER['REQUEST_METHOD'],
 			$url, 
 			$_GET, 
 			array_merge((array)$_POST, (array)$_FILES),
@@ -137,7 +137,8 @@ class Director {
 	 * @param array $postVars The $_POST & $_FILES variables
 	 * @param Session $session The {@link Session} object representing the current session.  By passing the same object to multiple
 	 * calls of Director::test(), you can simulate a peristed session.
-	 * @param string $httpMethod The HTTP method, such as GET or POST.  It will default to POST if postVars is set, GET otherwise
+	 * @param string $httpMethod The HTTP method, such as GET or POST.  It will default to POST if postVars is set, GET otherwise.
+	 *  Overwritten by $postVars['_method'] if present.
 	 * @param string $body The HTTP body
 	 * @param array $headers HTTP headers with key-value pairs
 	 * @return HTTPResponse

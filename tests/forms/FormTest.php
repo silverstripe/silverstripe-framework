@@ -3,7 +3,7 @@
  * @package sapphire
  * @subpackage tests
  */
-class FormTest extends SapphireTest {
+class FormTest extends FunctionalTest {
 	
 	public function testLoadDataFromRequest() {
 		$form = new Form(
@@ -43,6 +43,39 @@ class FormTest extends SapphireTest {
 		$this->assertEquals($fields->fieldByName('namespace[key2]')->Value(), 'val2');
 		$this->assertEquals($fields->fieldByName('namespace[key3][key4]')->Value(), 'val4');
 		$this->assertEquals($fields->fieldByName('othernamespace[key5][key6][key7]')->Value(), 'val7');
+	}
+	
+	public function testFormMethodOverride() {
+		$form = $this->getStubForm();
+		$form->setFormMethod('GET');
+		$this->assertNull($form->dataFieldByName('_method'));
+		
+		$form = $this->getStubForm();
+		$form->setFormMethod('PUT');
+		$this->assertEquals($form->dataFieldByName('_method')->Value(), 'put',
+			'PUT override in forms has PUT in hiddenfield'
+		);
+		$this->assertEquals($form->FormMethod(), 'post',
+			'PUT override in forms has POST in <form> tag'
+		);
+		
+		$form = $this->getStubForm();
+		$form->setFormMethod('DELETE');
+		$this->assertEquals($form->dataFieldByName('_method')->Value(), 'delete',
+			'PUT override in forms has PUT in hiddenfield'
+		);
+		$this->assertEquals($form->FormMethod(), 'post',
+			'PUT override in forms has POST in <form> tag'
+		);
+	}
+	
+	protected function getStubForm() {
+		return new Form(
+			new Controller(),
+			'Form',
+			new FieldSet(new TextField('key1')),
+			new FieldSet()
+		);
 	}
 	
 }

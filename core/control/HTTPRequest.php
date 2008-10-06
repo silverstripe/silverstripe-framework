@@ -25,12 +25,12 @@ class HTTPRequest extends Object implements ArrayAccess {
 	protected $dirParts;
 	
 	/**
-	 * The URL extension
+	 * @var string $extension The URL extension (if present)
 	 */
 	protected $extension;
 	
 	/**
-	 * The HTTP method: GET/PUT/POST/DELETE/HEAD
+	 * @var string $httpMethod The HTTP method in all uppercase: GET/PUT/POST/DELETE/HEAD
 	 */
 	protected $httpMethod;
 	
@@ -63,14 +63,14 @@ class HTTPRequest extends Object implements ArrayAccess {
 	 * @var array $allParams Contains an assiciative array of all
 	 * arguments matched in all calls to {@link RequestHandlingData->handleRequest()}.
 	 * Its a "historical record" thats specific to the current call of
-	 * {@link handleRequest()}, and only complete once the last call is made.
+	 * {@link handleRequest()}, and is only complete once the "last call" to that method is made.
 	 */
 	protected $allParams = array();
 	
 	/**
 	 * @var array $latestParams Contains an associative array of all
 	 * arguments matched in the current call from {@link RequestHandlingData->handleRequest()},
-	 * as denoted with a "$"-prefix in the $url_handler definitions.
+	 * as denoted with a "$"-prefix in the $url_handlers definitions.
 	 * Contains different states throughout its lifespan, so just useful
 	 * while processed in {@link RequestHandlingData} and to get the last
 	 * processes arguments.
@@ -223,7 +223,7 @@ class HTTPRequest extends Object implements ArrayAccess {
 	 * Construct a HTTPRequest from a URL relative to the site root.
 	 */
 	function __construct($httpMethod, $url, $getVars = array(), $postVars = array(), $body = null) {
-		$this->httpMethod = $httpMethod;
+		$this->httpMethod = strtoupper(self::detect_method($httpMethod, $postVars));
 		
 		$url = preg_replace(array('/\/+/','/^\//', '/\/$/'),array('/','',''), $url);
 		
@@ -347,7 +347,7 @@ class HTTPRequest extends Object implements ArrayAccess {
 		foreach($arguments as $k => $v) {
 			if($v || !isset($this->allParams[$k])) $this->allParams[$k] = $v;
 		}
-		
+
 		if($arguments === array()) $arguments['_matched'] = true;
 		return $arguments;
 	}
@@ -410,7 +410,7 @@ class HTTPRequest extends Object implements ArrayAccess {
 		if($count == 1) return array_shift($this->dirParts);
 		else for($i=0;$i<$count;$i++) $return[] = array_shift($this->dirParts);
 	}
-	
+
 	/**
 	 * Returns true if the URL has been completely parsed.
 	 * This will respect parsed but unshifted directory parts.
@@ -451,5 +451,39 @@ class HTTPRequest extends Object implements ArrayAccess {
 	      $mimetypes[] = ($includeQuality) ? $mimetypeWithQuality : preg_replace('/;.*/', '', $mimetypeWithQuality);
 	   }
 	   return $mimetypes;
+	}
+	
+	/**
+	 * @return string HTTP method (all uppercase)
+	 */
+	public function httpMethod() {
+		return $this->httpMethod;
+	}
+	
+	/**
+	 * Gets the "real" HTTP method for a request.
+	 * 
+	 * Used to work around browser limitations of form
+	 * submissions to GET and POST, by overriding the HTTP method
+	 * with a POST parameter called "_method" for PUT, DELETE, HEAD.
+	 * Using GET for the "_method" override is not supported,
+	 * as GET should never carry out state changes.
+	 * Alternatively you can use a custom HTTP header 'X-HTTP-Method-Override'
+	 * to override the original method in {@link Director::direct()}. 
+	 * The '_method' POST parameter overrules the custom HTTP header.
+	 *
+	 * @param string $origMethod Original HTTP method from the browser request
+	 * @param array $postVars
+	 * @return string HTTP method (all uppercase)
+	 */
+	public static function detect_method($origMethod, $postVars) {
+		if(isset($postVars['_method'])) {
+			if(!in_array(strtoupper($postVars['_method']), array('GET','POST','PUT','DELETE','HEAD'))) {
+				user_error('Director::direct(): Invalid "_method" parameter', E_USER_ERROR);
+			}
+			return strtoupper($postVars['_method']);
+		} else {
+			return $origMethod;
+		}
 	}
 }
