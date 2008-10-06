@@ -7,15 +7,62 @@
  *
  * Compiled templates are cached.  If you put ?flush=1 on your URL, it will force the template to be recompiled.  This
  * is a hack; the system should really detect when a page needs re-fetching.
+ * 
+ * Works with the global $_TEMPLATE_MANIFEST which is compiled by {@link ManifestBuilder->getTemplateManifest()}.
+ * This associative array lists all template filepaths by "identifier", meaning the name
+ * of the template without its path or extension.
+ * 
+ * Example:
+ * <code>
+ * array(
+ *  'LeftAndMain' => 
+ *  array (
+ * 	'main' => '/my/system/path/cms/templates/LeftAndMain.ss',
+ *  ),
+ * 'CMSMain_left' => 
+ *   array (
+ *     'Includes' => '/my/system/path/cms/templates/Includes/CMSMain_left.ss',
+ *   ),
+ * 'Page' => 
+ *   array (
+ *     'themes' => 
+ *     array (
+ *       'blackcandy' => 
+ *       array (
+ *         'Layout' => '/my/system/path/themes/blackcandy/templates/Layout/Page.ss',
+ *         'main' => '/my/system/path/themes/blackcandy/templates/Page.ss',
+ *       ),
+ *       'blue' => 
+ *       array (
+ *         'Layout' => '/my/system/path/themes/mysite/templates/Layout/Page.ss',
+ *         'main' => '/my/system/path/themes/mysite/templates/Page.ss',
+ *       ),
+ *     ),
+ *   ),
+ *   // ...
+ * )
+ * </code>
  *
  * @todo Fix the broken caching.
  * @package sapphire
  * @subpackage view
  */
 class SSViewer extends Object {
-	private $chosenTemplates;
+	
+	/**
+	 * @var array $chosenTemplates Associative array for the different
+	 * template containers: "main" and "Layout".
+	 */
+	private $chosenTemplates = array();
+	
+	/**
+	 * @var boolean
+	 */
 	protected $rewriteHashlinks = true;
 	
+	/**
+	 * @var string
+	 */
 	protected static $current_theme = null;
 	
 	/**
@@ -25,44 +72,65 @@ class SSViewer extends Object {
 		return new SSViewer_FromString($content);
 	}
 	
+	/**
+	 * @param string $theme
+	 */
 	static function set_theme($theme) {
 		self::$current_theme = $theme;
 	}
+	
+	/**
+	 * @return string 
+	 */
 	static function current_theme() {
 		return self::$current_theme;
 	}
 	
 	/**
-	 * Pass the SilverStripe template to be used
+	 * Pass the SilverStripe template to be used.
+	 * 
+	 * @param string|array $templateList
+	 *   If passed as a string with .ss extension, used as the "main" template
 	 */
 	public function __construct($templateList) {
+		global $_TEMPLATE_MANIFEST;
+		
+		// flush template manifest cache if requested
 		if (isset($_GET['flush']) && $_GET['flush'] == 'all') {
 			$this->flushTemplateCache();
 		}
+		
 		if(substr((string) $templateList,-3) == '.ss') {
 			$this->chosenTemplates['main'] = $templateList;
 		} else {
 			if(!is_array($templateList)) $templateList = array($templateList);
+			
 			if(isset($_GET['debug_request'])) Debug::message("Selecting templates from the following list: " . implode(", ", $templateList));
-		
-			$this->chosenTemplates = array();
-			global $_TEMPLATE_MANIFEST;
 
 			foreach($templateList as $template) {
+				// if passed as a partial directory (e.g. "Layout/Page"), split into folder and template components
 				if(strpos($template,'/') !== false) list($templateFolder, $template) = explode('/', $template, 2);
 				else $templateFolder = null;
 
 				// Use the theme template if available
 				if(self::$current_theme && isset($_TEMPLATE_MANIFEST[$template]['themes'][self::$current_theme])) {
+					$this->chosenTemplates = array_merge(
+						$_TEMPLATE_MANIFEST[$template]['themes'][self::$current_theme], 
+						$this->chosenTemplates
+					);
+					
 					if(isset($_GET['debug_request'])) Debug::message("Found template '$template' from main theme '" . self::$current_theme . "': " . var_export($_TEMPLATE_MANIFEST[$template]['themes'][self::$current_theme], true));
-					$this->chosenTemplates = array_merge($_TEMPLATE_MANIFEST[$template]['themes'][self::$current_theme], 
-						$this->chosenTemplates);
 				}
 				
-				// Base templates
+				// Fall back to unthemed base templates
 				if(isset($_TEMPLATE_MANIFEST[$template]) && (array_keys($_TEMPLATE_MANIFEST[$template]) != array('themes'))) {
-					$this->chosenTemplates = array_merge($_TEMPLATE_MANIFEST[$template], $this->chosenTemplates);
+					$this->chosenTemplates = array_merge(
+						$_TEMPLATE_MANIFEST[$template], 
+						$this->chosenTemplates
+					);
+					
 					if(isset($_GET['debug_request'])) Debug::message("Found template '$template' from main template archive, containing the following items: " . var_export($_TEMPLATE_MANIFEST[$template], true));
+					
 					unset($this->chosenTemplates['themes']);
 				}
 
@@ -130,20 +198,51 @@ class SSViewer extends Object {
 		return $this->chosenTemplates;
 	}
 	
+	/**
+	 * Searches for a template name in the current theme:
+	 * - themes/mytheme/templates
+	 * - themes/mytheme/templates/Includes
+	 * Falls back to unthemed template files.
+	 * 
+	 * Caution: Doesn't search in any /Layout folders.
+	 * 
+	 * @param string $identifier A template name without '.ss' extension or path.
+	 * @return string Full system path to a template file
+	 */
 	public static function getTemplateFile($identifier) {
 		global $_TEMPLATE_MANIFEST;
-		if(self::$current_theme && isset($_TEMPLATE_MANIFEST[$identifier]['themes'][self::$current_theme]['Includes'])) {
-			return $_TEMPLATE_MANIFEST[$identifier]['themes'][self::$current_theme]['Includes'];
-		} else if(isset($_TEMPLATE_MANIFEST[$identifier]['Includes'])){
-			return $_TEMPLATE_MANIFEST[$identifier]['Includes'];
-		} else if(self::$current_theme && isset($_TEMPLATE_MANIFEST[$identifier]['themes'][self::$current_theme]['main'])) {
-			return $_TEMPLATE_MANIFEST[$identifier]['themes'][self::$current_theme]['main'];
+		
+		$includeTemplateFile = self::getTemplateFileByType($identifier, 'Includes');
+		if($includeTemplateFile) return $includeTemplateFile;
+		
+		$mainTemplateFile = self::getTemplateFileByType($identifier, 'main');
+		if($mainTemplateFile) return $mainTemplateFile;
+		
+		return false;
+	}
+	
+	/**
+	 * @param string $identifier A template name without '.ss' extension or path
+	 * @param string $type The template type, either "main", "Includes" or "Layout"
+	 * @return string Full system path to a template file
+	 */
+	public static function getTemplateFileByType($identifier, $type) {
+		global $_TEMPLATE_MANIFEST;
+		if(self::$current_theme && isset($_TEMPLATE_MANIFEST[$identifier]['themes'][self::$current_theme][$type])) {
+			return $_TEMPLATE_MANIFEST[$identifier]['themes'][self::$current_theme][$type];
+		} else if(isset($_TEMPLATE_MANIFEST[$identifier][$type])){
+			return $_TEMPLATE_MANIFEST[$identifier][$type];
 		} else {
-			return isset($_TEMPLATE_MANIFEST[$identifier]['main']) ? $_TEMPLATE_MANIFEST[$identifier]['main'] : null;
+			return false;
 		}
 	}
 	
 	/**
+	 * Used by <% include Identifier %> statements to get the full
+	 * unparsed content of a template file.
+	 * 
+	 * @uses getTemplateFile()
+	 * @param string $identifier A template name without '.ss' extension or path.
 	 * @return string content of template
 	 */
 	public static function getTemplateContent($identifier) {
@@ -369,6 +468,14 @@ class SSViewer extends Object {
 	 */
 	public function templates() {
 		return $this->chosenTemplates;
+	}
+	
+	/**
+	 * @param string $type "Layout" or "main"
+	 * @param string $file Full system path to the template file
+	 */
+	public function setTemplateFile($type, $file) {
+		$this->chosenTemplates[$type] = $file;
 	}
 }
 

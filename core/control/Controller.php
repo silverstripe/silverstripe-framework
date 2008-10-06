@@ -263,6 +263,7 @@ class Controller extends RequestHandlingData {
 		}	else if($this->template) {
 			$templates = $this->template;
 		} else {
+			// Add action-specific templates for inheritance chain
 			$parentClass = $this->class;
 			if($action && $action != 'index') {
 				$parentClass = $this->class;
@@ -271,12 +272,14 @@ class Controller extends RequestHandlingData {
 					$parentClass = get_parent_class($parentClass);
 				}
 			}
+			// Add controller templates for inheritance chain
 			$parentClass = $this->class;
 			while($parentClass != "Controller") {
 				$templates[] = strtok($parentClass,'_');
 				$parentClass = get_parent_class($parentClass);
 			}
 
+			// remove duplicates
 			$templates = array_unique($templates);
 		}
 		return new SSViewer($templates);
