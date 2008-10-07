@@ -3,7 +3,7 @@
 class CSVParserTest extends SapphireTest {
 	function testParsingWithHeaders() {
 		/* By default, a CSV file will be interpreted as having headers */
-		$csv = new CSVParser('sapphire/tests/dev/CSVBulkLoaderTest_PlayersWithHeader.csv');
+		$csv = new CSVParser('sapphire/tests/dev/CsvBulkLoaderTest_PlayersWithHeader.csv');
 		
 		$firstNames = $birthdays = $biographies = array();
 		foreach($csv as $record) {
@@ -25,7 +25,7 @@ class CSVParserTest extends SapphireTest {
 
 	function testParsingWithHeadersAndColumnMap() {
 		/* By default, a CSV file will be interpreted as having headers */
-		$csv = new CSVParser('sapphire/tests/dev/CSVBulkLoaderTest_PlayersWithHeader.csv');
+		$csv = new CSVParser('sapphire/tests/dev/CsvBulkLoaderTest_PlayersWithHeader.csv');
 		
 		/* We can set up column remapping.  The keys are case-insensitive. */
 		$csv->mapColumns(array(
@@ -53,7 +53,7 @@ class CSVParserTest extends SapphireTest {
 
 	function testParsingWithExplicitHeaderRow() {
 		/* If your CSV file doesn't have a header row */
-		$csv = new CSVParser('sapphire/tests/dev/CSVBulkLoaderTest_PlayersWithHeader.csv');
+		$csv = new CSVParser('sapphire/tests/dev/CsvBulkLoaderTest_PlayersWithHeader.csv');
 		
 		$csv->provideHeaderRow(array('__fn','__bio','__bd'));
 		
