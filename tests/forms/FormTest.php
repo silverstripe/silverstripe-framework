@@ -5,7 +5,7 @@
  */
 class FormTest extends FunctionalTest {
 	
-	static $fixture_file = 'sapphire/tests/Forms/FormTest.yml';
+	static $fixture_file = 'sapphire/tests/forms/FormTest.yml';
 	
 	public function testLoadDataFromRequest() {
 		$form = new Form(
