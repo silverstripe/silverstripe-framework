@@ -47,6 +47,31 @@ class FormTest extends FunctionalTest {
 		$this->assertEquals($fields->fieldByName('othernamespace[key5][key6][key7]')->Value(), 'val7');
 	}
 	
+	public function testLoadDataFromUnchangedHandling() {
+		$form = new Form(
+			new Controller(),
+			'Form',
+			new FieldSet(
+				new TextField('key1'),
+				new TextField('key2')
+			),
+			new FieldSet()
+		);
+		$form->loadDataFrom(array(
+			'key1' => 'save',
+			'key2' => 'dontsave',
+			'key2_unchanged' => '1'
+		));
+		$this->assertEquals(
+			$form->getData(), 
+			array(
+				'key1' => 'save',
+				'key2' => null,
+			),
+			'loadDataFrom() doesnt save a field if a matching "<fieldname>_unchanged" flag is set'
+		);
+	}
+	
 	public function testLoadDataFromObject() {
 		$form = new Form(
 			new Controller(),
