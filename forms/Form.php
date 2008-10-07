@@ -730,7 +730,6 @@ class Form extends RequestHandlingData {
 	 * @param array|DataObject $data
 	 * @param boolean $loadBlanks Load blank values into the form, overwriting any existing values.
 	 */
-
 	function loadDataFrom($data, $loadBlanks = false) {
 		if(!is_object($data) && !is_array($data)) {
 			user_error("Form::loadDataFrom() not passed an array or an object", E_USER_WARNING);
@@ -772,24 +771,10 @@ class Form extends RequestHandlingData {
 	}
 
 	/**
-	 * Load data from the given object.
-	 * It will call $object->MyField to get the value of MyField.
-	 * If you passed an array, it will call $object[MyField].
+	 * @deprecated 2.3 Use loadDataFrom()
 	 */
-	function loadNonBlankDataFrom($object) {
-		$this->record = $object;
-		if(is_object($object)) $o = true;
-		else if(is_array($object)) $o = false;
-		else {
-			user_error("Form::loadDataFrom() not passed an array or an object", E_USER_WARNING);
-			return;
-		}
-		$dataFields = $this->fields->dataFields();
-		if($dataFields) foreach($dataFields as $field) {
-			$name = $field->Name();
-			$val = $o ? $object->$name : (isset($object[$name]) ? $object[$name] : null);
-			if($name && $val) $field->setValue($val);
-		}
+	function loadNonBlankDataFrom($data) {
+		return $this->loadDataFrom($data);
 	}
 	
 	/**
