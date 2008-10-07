@@ -24,7 +24,7 @@
 class Form extends RequestHandlingData {
 	
 	/**
-	 * Accessed by Form.ss; modified by formHtmlContent.
+	 * @var boolean $includeFormTag Accessed by Form.ss; modified by {@link formHtmlContent()}.
 	 * A performance enhancement over the generate-the-form-tag-and-then-remove-it code that was there previously
 	 */
 	public $IncludeFormTag = true;
@@ -43,6 +43,9 @@ class Form extends RequestHandlingData {
 	
 	protected static $current_action;
 	
+	/**
+	 * @var Dataobject $record Populated by {@link loadDataFrom()} or {@link loadNonBlankDataFrom()}.
+	 */
 	protected $record;
 
 	/**
@@ -456,7 +459,8 @@ class Form extends RequestHandlingData {
 
 	/**
 	 * Returns the encoding type of the form.
-	 * This will be either multipart/form-data - if there are field fields - or application/x-www-form-urlencoded
+	 * This will be either "multipart/form-data"" if there are any {@link FileField} instances,
+	 * otherwise "application/x-www-form-urlencoded"
 	 * 
 	 * @return string The encoding mime type
 	 */
@@ -650,7 +654,9 @@ class Form extends RequestHandlingData {
 	}
 
 	/**
-	 * Returns the DataObject that has given this form its data.
+	 * Returns the DataObject that has given this form its data
+	 * through {@link loadDataFrom()} or {@link loadNonBlankDataFrom()}.
+	 * 
 	 * @return DataObject
 	 */
 	function getRecord() {
