@@ -5,6 +5,8 @@
  */
 class FormTest extends FunctionalTest {
 	
+	static $fixture_file = 'sapphire/tests/Forms/FormTest.yml';
+	
 	public function testLoadDataFromRequest() {
 		$form = new Form(
 			new Controller(),
@@ -45,6 +47,61 @@ class FormTest extends FunctionalTest {
 		$this->assertEquals($fields->fieldByName('othernamespace[key5][key6][key7]')->Value(), 'val7');
 	}
 	
+	public function testLoadDataFromObject() {
+		$form = new Form(
+			new Controller(),
+			'Form',
+			new FieldSet(
+				new HeaderField('My Player'),
+				new TextField('Name'), // appears in both Player and Team
+				new TextareaField('Biography'),
+				new DateField('Birthday'),
+				new NumericField('BirthdayYear') // dynamic property
+				//new CheckboxSetField('Teams') // relation editing
+			),
+			new FieldSet()
+		);
+		
+		$captain1 = $this->objFromFixture('FormTest_Player', 'captain1');
+		$form->loadDataFrom($captain1);
+		$this->assertEquals(
+			$form->getData(), 
+			array(
+				'Name' => 'Captain 1',
+				'Biography' => 'Bio 1',
+				'Birthday' => '1982-01-01', 
+				'BirthdayYear' => '1982', 
+			),
+			'LoadDataFrom() loads simple fields and dynamic getters'
+		);
+
+		$captain2 = $this->objFromFixture('FormTest_Player', 'captain2');
+		$form->loadDataFrom($captain2);
+		$this->assertEquals(
+			$form->getData(), 
+			array(
+				'Name' => 'Captain 2',
+				'Biography' => 'Bio 1',
+				'Birthday' => '1982-01-01', 
+				'BirthdayYear' => '1982', 
+			),
+			'LoadNonBlankDataFrom() loads only fields with values, and doesnt overwrite existing values'
+		);
+		
+		$captain2 = $this->objFromFixture('FormTest_Player', 'captain2');
+		$form->loadDataFrom($captain2, true);
+		$this->assertEquals(
+			$form->getData(), 
+			array(
+				'Name' => 'Captain 2',
+				'Biography' => '',
+				'Birthday' => '', 
+				'BirthdayYear' => 0, 
+			),
+			'LoadDataFrom() overwrites existing with blank values on subsequent calls'
+		);
+	}
+	
 	public function testFormMethodOverride() {
 		$form = $this->getStubForm();
 		$form->setFormMethod('GET');
@@ -78,5 +135,37 @@ class FormTest extends FunctionalTest {
 		);
 	}
 	
+}
+
+class FormTest_Player extends DataObject implements TestOnly {
+	static $db = array(
+		'Name' => 'Varchar',
+		'Biography' => 'Text',
+		'Birthday' => 'Date'
+	);
+	
+	static $belongs_many_many = array(
+		'Teams' => 'FormTest_Team'
+	);
+	
+	static $has_one = array(
+		'FavouriteTeam' => 'FormTest_Team', 
+	);
+	
+	public function getBirthdayYear() {
+		return ($this->Birthday) ? date('Y', strtotime($this->Birthday)) : null;
+	}
+	
+}
+
+class FormTest_Team extends DataObject implements TestOnly {
+	static $db = array(
+		'Name' => 'Varchar',
+		'Region' => 'Varchar',
+	);
+	
+	static $many_many = array(
+		'Players' => 'FormTest_Player'
+	);
 }
 ?>
