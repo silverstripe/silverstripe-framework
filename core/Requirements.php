@@ -358,7 +358,11 @@ class Requirements {
 	 */
 	protected static function process_i18n_javascript() {
 		// ensure to include the i18n base library
-		if(!isset(self::$javascript[SAPPHIRE_DIR . '/javascript/i18n.js'])) {
+		if(
+			count(array_diff_key(self::$javascript,self::$blocked)) 
+			&& !isset(self::$javascript[SAPPHIRE_DIR . '/javascript/i18n.js'])
+		) {
+			self::$javascript[THIRDPARTY_DIR . '/prototype.js'] = true;
 			self::$javascript[SAPPHIRE_DIR . '/javascript/i18n.js'] = true;
 		}
 		
