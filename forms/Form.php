@@ -711,49 +711,62 @@ class Form extends RequestHandlingData {
 	}
 
 	/**
-	 * Load data from the given object.
+	 * Load data from the given DataObject or array.
 	 * It will call $object->MyField to get the value of MyField.
-	 * If you passed an array, it will call $object[MyField]
-	 * @param object Either an object or an array to get the data from.
-	 * @param forceChanges Load blank values into the form.
+	 * If you passed an array, it will call $object[MyField].
+	 * Doesn't save into dataless FormFields ({@link DatalessField}),
+	 * as determined by {@link FieldSet->dataFields()}.
+	 * 
+	 * By default, if a field isn't set (as determined by isset()),
+	 * its value will not be saved to the field, retaining
+	 * potential existing values.
+	 * 
+	 * Passed data should not be escaped, and is saved to the FormField instances unescaped.
+	 * Escaping happens automatically on saving the data through {@link saveInto()}.
+	 * 
+	 * @uses FieldSet->dataFields()
+	 * @uses FormField->setValue()
+	 * 
+	 * @param array|DataObject $data
+	 * @param boolean $loadBlanks Load blank values into the form, overwriting any existing values.
 	 */
 
-	function loadDataFrom($object, $loadBlanks = false) {
-		if(is_object($object)) {
-			$o = true;
-			$this->record = $object;
-		} else if(is_array($object)) {
-			$o = false;
-		} else {
+	function loadDataFrom($data, $loadBlanks = false) {
+		if(!is_object($data) && !is_array($data)) {
 			user_error("Form::loadDataFrom() not passed an array or an object", E_USER_WARNING);
-			return;
+			return false;
 		}
 
+		// if an object is passed, save it for historical reference through {@link getRecord()}
+		if(is_object($data)) $this->record = $data;
+
+		// dont include fields without data
 		$dataFields = $this->fields->dataFields();
 		if($dataFields) foreach($dataFields as $field) {
 			$name = $field->Name();
-			if($name) {
-				if($o) {
-					// this was failing with the field named 'Name'
-					$val = $object->__get($name);
-				} else {
-					if(strpos($name,'[') && is_array($object) && !isset($object[$name])) {
-						// if field is in array-notation, we need to resolve the array-structure PHP creates from query-strings
-						preg_match('/' . addcslashes($name,'[]') . '=([^&]*)/', urldecode(http_build_query($object)), $matches);
-						$val = isset($matches[1]) ? $matches[1] : null;
-					} else {
-						// else we assume its a simple key-string
-						$val = isset($object[$name]) ? $object[$name] : null;
-					}
-				}
+			
+			// First check looks for (fieldname)_unchanged, an indicator that we shouldn't overwrite the field value
+			if(is_array($data) && isset($data[$name . '_unchanged'])) continue;
+			
+			// get value in different formats
+			if(is_object($data)) {
+				// try to get object property
+				$val = $data->__get($name);
+			} else if(strpos($name,'[') && is_array($data) && !isset($data[$name])) {
+				// if field is in array-notation, we need to resolve the array-structure PHP creates from query-strings
+				preg_match('/' . addcslashes($name,'[]') . '=([^&]*)/', urldecode(http_build_query($data)), $matches);
+				$val = isset($matches[1]) ? $matches[1] : null;
+			} elseif(is_array($data) && isset($data[$name])) {
+				// else we assume its a simple keyed array
+				$val = $data[$name];
+			} else {
+				$val = null;
+			}
 
-				// First check looks for (fieldname)_unchanged, an indicator that we shouldn't overwrite the field value
-				if($o || !isset($object[$name . '_unchanged'])) {
-					// Second check was the original check: save the value if we have one
-					if(isset($val) || $loadBlanks) {
-						$field->setValue($val, $object);
-					}
-				}
+			// save to the field if either a value is given, or loading of blank/undefined values is forced
+			if(isset($val) || $loadBlanks) {
+				// pass original data as well so composite fields can act on the additional information
+				$field->setValue($val, $data);
 			}
 		}
 	}
@@ -761,7 +774,7 @@ class Form extends RequestHandlingData {
 	/**
 	 * Load data from the given object.
 	 * It will call $object->MyField to get the value of MyField.
-	 * If you passed an array, it will call $object[MyField]
+	 * If you passed an array, it will call $object[MyField].
 	 */
 	function loadNonBlankDataFrom($object) {
 		$this->record = $object;
