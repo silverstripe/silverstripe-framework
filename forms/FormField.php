@@ -447,7 +447,8 @@ HTML;
 	function createTag($tag, $attributes, $content = null) {
 		$preparedAttributes = '';
 		foreach($attributes as $k => $v) {
-			if(!empty($v) || $v === '0') $preparedAttributes .= " $k=\"" . Convert::raw2att($v) . "\"";
+			// Note: as indicated by the $k == value item here; the decisions over what to include in the attributes can sometimes get finicky
+			if(!empty($v) || $v === '0' || $k == 'value') $preparedAttributes .= " $k=\"" . Convert::raw2att($v) . "\"";
 		}
 
 		if($content || $tag != 'input') return "<$tag$preparedAttributes>$content</$tag>";
