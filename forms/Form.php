@@ -23,8 +23,6 @@
  */
 class Form extends RequestHandlingData {
 	
-	public static $backup_post_data = false;
-	
 	/**
 	 * Accessed by Form.ss; modified by formHtmlContent.
 	 * A performance enhancement over the generate-the-form-tag-and-then-remove-it code that was there previously
