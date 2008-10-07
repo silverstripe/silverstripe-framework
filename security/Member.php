@@ -1073,6 +1073,7 @@ class Member extends DataObject {
 	 */
 	public function isInGroup($groupID) {
 		user_error('Member::isInGroup() is deprecated. Please use inGroup() instead.', E_USER_NOTICE);
+		return $this->inGroup($groupID);
 	}
 }
 
