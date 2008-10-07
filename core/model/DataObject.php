@@ -1202,7 +1202,7 @@ class DataObject extends ViewableData implements DataObjectInterface {
 	 */
 	protected function addScaffoldRelationFields($fieldSet) {
 		// make sure we have a tabset
-		if($this->has_many() || $this->many_many()) {
+		if(($this->has_many() || $this->many_many()) && !$fieldSet->fieldByName('Root')) {
 			$oldFields = $fieldSet;
 			$fieldSet = new FieldSet(new TabSet("Root", new Tab("Main")));
 			foreach($oldFields as $field) {
@@ -1587,7 +1587,7 @@ class DataObject extends ViewableData implements DataObjectInterface {
 		
 		// If we don't have an ID, then relation fields don't work
 		if($this->ID) {
-			$this->addScaffoldRelationFields($tabbedFields);
+			$tabbedFields = $this->addScaffoldRelationFields($tabbedFields);
 		}
 		
 		$this->extend('updateCMSFields', $tabbedFields);
