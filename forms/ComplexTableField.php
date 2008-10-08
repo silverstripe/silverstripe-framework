@@ -503,9 +503,14 @@ JS;
 		$validator = $this->getValidatorFor($childData);
 
 		$form = Object::create(
-				$this->popupClass,
-				$this, "AddForm", 
-				$fields, $validator, false, $childData);
+			$this->popupClass,
+			$this,
+			'AddForm',
+			$fields,
+			$validator,
+			false,
+			$childData
+		);
 
 		return $form;
 	}
