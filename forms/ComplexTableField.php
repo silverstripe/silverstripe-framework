@@ -118,6 +118,12 @@ class ComplexTableField extends TableListField {
 	 */
 	protected $relationAutoSetting = true;
 	
+	/**
+	 * Default size for the popup box
+	 */
+	protected $popupWidth = 560;
+	protected $popupHeight = 390;
+	
 	public $defaultAction = 'show';
 	
 	public $actions = array(
@@ -151,6 +157,18 @@ class ComplexTableField extends TableListField {
 		return new SSViewer($this->template);
 	}
 
+	function setPopupSize($width, $height) {
+		$width = (int)$width;
+		$height = (int)$height;
+		
+		if($width < 0 || $height < 0) {
+			user_error("setPopupSize expects non-negative arguments.", E_USER_WARNING);
+			return;
+		}
+		
+		$this->popupWidth = $width;
+		$this->popupHeight = $height;
+	}
 	
 	/**
 	 * See class comments
@@ -642,7 +660,7 @@ class ComplexTableField_ItemRequest extends RequestHandlingData {
 		// used to discover fields if requested and for population of field
 		if(is_numeric($this->itemID)) {
  			// we have to use the basedataclass, otherwise we might exclude other subclasses 
- 			return DataObject::get_by_id(ClassInfo::baseDataClass($this->ctf->sourceClass()), $this->itemID); 
+ 			return DataObject::get_by_id(ClassInfo::baseDataClass(Object::getCustomClass($this->ctf->sourceClass())), $this->itemID); 
 		}
 		
 	}
