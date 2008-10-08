@@ -25,11 +25,23 @@ class HasManyComplexTableField extends ComplexTableField {
 		parent::__construct($controller, $name, $sourceClass, $fieldList, $detailFormFields, $sourceFilter, $sourceSort, $sourceJoin);
 
 		$this->Markable = true;
-		
-		$this->joinField = $this->getParentIdName($this->controller->ClassName, $this->sourceClass);
+
+		if($controllerClass = $this->controllerClass()) {
+			$this->joinField = $this->getParentIdName($controllerClass, $this->sourceClass);
+		} else {
+			user_error("Can't figure out the data class of $controller", E_USER_WARNING);
+		}
 		
 		Requirements::javascript(SAPPHIRE_DIR . "/javascript/i18n.js");
 		Requirements::javascript(SAPPHIRE_DIR . "/javascript/HasManyFileField.js");
+	}
+	
+	/**
+	 * Try to determine the DataObject that this field is built on top of
+	 */
+	function controllerClass() {
+		if($this->controller instanceof DataObject) return $this->controller->class;
+		elseif($this->controller instanceof ContentController) return $this->controller->data()->class;
 	}
 	
 	function getQuery($limitClause = null) {

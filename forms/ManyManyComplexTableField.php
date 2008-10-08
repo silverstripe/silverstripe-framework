@@ -14,7 +14,7 @@ class ManyManyComplexTableField extends HasManyComplexTableField {
 
 		parent::__construct($controller, $name, $sourceClass, $fieldList, $detailFormFields, $sourceFilter, $sourceSort, $sourceJoin);
 		
-		$classes = array_reverse(ClassInfo::ancestry($this->controller->ClassName));
+		$classes = array_reverse(ClassInfo::ancestry($this->controllerClass()));
 		foreach($classes as $class) {
 			$singleton = singleton($class);
 			$manyManyRelations = $singleton->uninherited('many_many', true);
@@ -59,7 +59,7 @@ class ManyManyComplexTableField extends HasManyComplexTableField {
 				if(! $SNG->hasField($k) && ! $SNG->hasMethod('get' . $k))
 					$query->select[] = $k;
 			}
-			$parent = $this->controller->ClassName;
+			$parent = $this->controllerClass();
 			$query->select[] = "IF(`{$this->manyManyParentClass}ID` IS NULL, '0', '1') AS Checked";
 		}
 		return clone $query;
