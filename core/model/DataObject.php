@@ -663,7 +663,7 @@ class DataObject extends ViewableData implements DataObjectInterface {
 		
 		$valid = $this->validate();
 		if(!$valid->valid()) {
-			user_error("Validation error writing a $this->class object: " . $valid->message() . ".  Object not written.", E_USER_WARNING);
+			throw new ValidationException($valid, "Validation error writing a $this->class object: " . $valid->message() . ".  Object not written.", E_USER_WARNING);
 			return false;
 		}
 		
