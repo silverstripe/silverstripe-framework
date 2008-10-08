@@ -69,7 +69,7 @@ class MySQLDatabase extends Database {
 	 */
 	public function getVersion() {
 		if(!$this->mysqlVersion) {
-			$this->mysqlVersion = (float)$this->query("SELECT VERSION()")->value();
+			$this->mysqlVersion = (float)substr(trim(ereg_replace("([A-Za-z-])", "", $this->query("SELECT VERSION()")->value())), 0, 3);
 		}
 		return $this->mysqlVersion;
 	}
