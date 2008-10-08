@@ -6,6 +6,8 @@
  */
 class MemberLoginForm extends LoginForm {
 
+	protected $authenticator_class = 'MemberAuthenticator';
+	
 	/**
 	 * Constructor
 	 *
@@ -22,11 +24,13 @@ class MemberLoginForm extends LoginForm {
 	 * @param bool $checkCurrentUser If set to TRUE, it will be checked if a
 	 *                               the user is currently logged in, and if
 	 *                               so, only a logout button will be rendered
+	 * @param string $authenticatorClassName Name of the authenticator class that this form uses.
 	 */
 	function __construct($controller, $name, $fields = null, $actions = null,
 											 $checkCurrentUser = true) {
 
-		$this->authenticator_class = 'MemberAuthenticator';
+		// This is now set on the class directly to make it easier to create subclasses
+		// $this->authenticator_class = $authenticatorClassName;
 
 		$customCSS = project() . '/css/member_login.css';
 		if(Director::fileExists($customCSS)) {
@@ -48,10 +52,16 @@ class MemberLoginForm extends LoginForm {
 					new HiddenField("AuthenticationMethod", null, $this->authenticator_class, $this),
 					new TextField("Email", _t('Member.EMAIL'),
 						Session::get('SessionForms.MemberLoginForm.Email'), null, $this),
-					new EncryptField("Password", _t('Member.PASSWORD'), null, $this),
-					new CheckboxField("Remember", _t('Member.REMEMBERME', "Remember me next time?"),
-						Session::get('SessionForms.MemberLoginForm.Remember'), $this)
+					new EncryptField("Password", _t('Member.PASSWORD'), null, $this)
 				);
+				if(Security::$autologin_enabled) {
+					$fields->push(new CheckboxField(
+						"Remember", 
+						_t('Member.REMEMBERME', "Remember me next time?"),
+						Session::get('SessionForms.MemberLoginForm.Remember'), 
+						$this
+					));
+				}
 			}
 			if(!$actions) {
 				$actions = new FieldSet(
@@ -109,7 +119,7 @@ class MemberLoginForm extends LoginForm {
 				Session::clear("BackURL");
 				Director::redirect($backURL);
 			} else {
-				Director::redirect(Security::default_login_dest());
+				Director::redirectBack();
 			}
 		} else {
 			Session::set('SessionForms.MemberLoginForm.Email', $data['Email']);
@@ -187,7 +197,7 @@ class MemberLoginForm extends LoginForm {
 			$member->sendInfo('forgotPassword', array('PasswordResetLink' =>
 				Security::getPasswordResetLink($member->AutoLoginHash)));
 
-			Director::redirect('Security/passwordsent/?email=' . urlencode($data['Email']));
+			Director::redirect('Security/passwordsent/' . urlencode($data['Email']));
 
 		} else if($data['Email']) {
 			$this->sessionMessage(

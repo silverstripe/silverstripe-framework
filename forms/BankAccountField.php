@@ -40,7 +40,7 @@ class BankAccountField extends FormField {
 		$field = new FieldGroup($this->name);
 		$field->setID("{$this->name}_Holder");
 		
-		$valueArr = $this->valueArray;
+		$valueArr = $this->valueArr;
 		
 		$valueArr = self::convert_format_nz($valueArr);
 		

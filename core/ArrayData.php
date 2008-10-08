@@ -23,7 +23,7 @@ class ArrayData extends ViewableData {
 	public function __construct($array) {
 		if(is_object($array)) {
 			$this->array = self::object_to_array($array);
-		} elseif(is_array($array) && ArrayLib::is_associative($array)) {
+		} elseif(is_array($array) && (ArrayLib::is_associative($array) || count($array) === 0)) {
 			$this->array = $array;
 		} else {
 			$this->array = $array;

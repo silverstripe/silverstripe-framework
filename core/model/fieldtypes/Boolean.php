@@ -23,6 +23,10 @@ class Boolean extends DBField {
 	function Nice() {
 		return ($this->value) ? "yes" : "no";
 	}
+	
+	function NiceAsBoolean() {
+		return ($this->value) ? "true" : "false";
+	}
 
 	/**
 	 * Saves this field to the given data object.

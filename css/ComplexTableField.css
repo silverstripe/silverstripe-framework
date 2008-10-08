@@ -24,27 +24,6 @@
 .ComplexTableField {
 	margin-bottom: 10px;
 }
-.ComplexTableField .PageControls {
-	margin: 5px 0;
-	text-align:center;
-	display:block;
-	margin-bottom: 5px;
-	background:#ebeadb;
-	border: 1px #cbc7b7 solid;
-}
-.ComplexTableField .PageControls * {
-		display:inline;
-		vertical-align: middle;
-		font-weight: bold;
-}
-.ComplexTableField .PageControls .Last{
-	float:right; display:block;
-	width:40px; text-align:right;
-}
-.ComplexTableField .PageControls .First{
-	float:left; display:block;
-	width:40px; text-align:left;
-}
 
 .ComplexTableField tbody td {
 	cursor: pointer;

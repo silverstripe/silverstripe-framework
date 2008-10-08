@@ -44,8 +44,7 @@ class Convert extends Object {
 			
 		} else {
 			$val = str_replace(array('&','"',"'",'<','>'),array('&amp;','&quot;','&#39;','&lt;','&gt;'),$val);
-			$val = preg_replace('^[a-zA-Z0-9\-_]','_', $val);
-			$val = preg_replace('^[0-9]*','', $val); //
+			$val = preg_replace('/[^a-zA-Z0-9\-_]*/','', $val);
 			return $val;
 		}
 	}

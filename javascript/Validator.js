@@ -102,6 +102,7 @@ function require(fieldName,cachedError) {
 		}
 
 		var baseEl;
+		var fieldHolder = el;
 
 		// Sometimes require events are triggered of
 		// associative elements like labels ;-p
@@ -155,7 +156,8 @@ function require(fieldName,cachedError) {
 
 		} else {
 			if(!hasHadFormError()) {
-				clearErrorMessage(baseEl.parentNode);
+				if(baseEl) fieldHolder = baseEl.parentNode;
+				clearErrorMessage(fieldHolder);
 			}
 			return true;
 		}
@@ -195,6 +197,12 @@ function findParentLabel(el) {
 					return findParentLabel(el.parentNode);
 				}
 			} else {
+				// Try to find a label with a for value of this field.
+				if(el.id) {
+					var labels = $$('label[for=' + el.id + ']');
+					if(labels && labels.length > 0) return labels[0].innerHTML;
+				}
+			
 				return findParentLabel(el.parentNode);
 			}
 		}

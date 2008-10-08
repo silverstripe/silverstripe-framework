@@ -1,9 +1,9 @@
-<div id="$id" class="$CSSClasses TableField field">
+<div id="$id" class="$CSSClasses field">
 	<% if Print %><% else %><% include TableListField_PageControls %><% end_if %>
 	<table class="data">
 		<thead>
 			<tr>
-			<% if Markable %><th width="16">&nbsp;</th><% end_if %>
+			<% if Markable %><th width="16"><% if MarkableTitle %>$MarkableTitle<% else %>&nbsp;<% end_if %></th><% end_if %>
 			<% if Print %>
 				<% control Headings %>
 				<th class="$Name">

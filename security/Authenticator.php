@@ -16,7 +16,7 @@ abstract class Authenticator extends Object {
    *
    * @var array
    */
-  private static $authenticators = array();
+  private static $authenticators = array('MemberAuthenticator');
   
   /**
    * Used to influence the order of authenticators on the login-screen
@@ -24,7 +24,7 @@ abstract class Authenticator extends Object {
    * 
    * @var string
    */
-  private static $default_authenticator = '';
+  private static $default_authenticator = 'MemberAuthenticator';
 
 
   /**
@@ -107,7 +107,9 @@ abstract class Authenticator extends Object {
 	 */
 	public static function unregister_authenticator($authenticator) {
 		if(call_user_func(array($authenticator, 'on_unregister')) === true) {
-        	unset(self::$authenticators[$authenticator]);
+        	if(in_array($authenticator, self::$authenticators)) {
+        		unset(self::$authenticators[array_search($authenticator, self::$authenticators)]);
+        	}
 		};
 	}
 

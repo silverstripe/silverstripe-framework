@@ -10,6 +10,33 @@ class SecurityTest extends FunctionalTest {
 	
 	protected $autoFollowRedirection = false;
 	
+	protected $priorAuthenticators = array();
+	
+	protected $priorDefaultAuthenticator = null;
+	
+	function setUp() {
+		// This test assumes that MemberAuthenticator is present and the default
+		$this->priorAuthenticators = Authenticator::get_authenticators();
+		$this->priorDefaultAuthenticator = Authenticator::get_default_authenticator();
+		
+		Authenticator::register('MemberAuthenticator');
+		Authenticator::set_default_authenticator('MemberAuthenticator');
+		
+		parent::setUp();
+	}
+	
+	function tearDown() {
+		// Restore selected authenticator
+		
+		// MemberAuthenticator might not actually be present
+		if(!in_array('MemberAuthenticator', $this->priorAuthenticators)) {
+			Authenticator::unregister('MemberAuthenticator');
+		}
+		Authenticator::set_default_authenticator($this->priorDefaultAuthenticator);
+		
+		parent::tearDown();
+	}
+	
 	/**
 	 * Test that the login form redirects to the change password form after logging in with an expired password
 	 */

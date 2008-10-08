@@ -20,3 +20,7 @@ TableListFieldTest_Obj:
       B: b5
       C: c5
       
+TableListFieldTest_CsvExport:
+   exportone:
+      A: "\"A field, with a comma\""
+      B: A second field

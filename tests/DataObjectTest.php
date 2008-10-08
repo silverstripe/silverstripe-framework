@@ -241,6 +241,20 @@ class DataObjectTest extends SapphireTest {
 			),
 			'Changed fields are correctly detected while ignoring type changes (level=2)'
 		);
+		
+		$newPage = new Page();
+		$newPage->Title = "New Page Title";
+		$this->assertEquals(
+			$newPage->getChangedFields(false, 2),
+			array(
+				'Title' => array(
+					'before' => null,
+					'after' => 'New Page Title',
+					'level' => 2
+				)
+			),
+			'Initialised fields are correctly detected as full changes'
+		);
 	}
 	
 	function testRandomSort() {

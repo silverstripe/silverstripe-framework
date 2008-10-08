@@ -370,7 +370,7 @@ class TableField extends TableListField {
        if($dataObjects) {
 			foreach ($dataObjects as $objectid => $fieldValues) {
             // we have to "sort" new data first, and process it in a seperate saveData-call (see setValue())
-           if($objectid === "new") continue;
+           	if($objectid === "new") continue;
 
 	        // extra data was creating fields, but
 	        if($this->extraData) {
@@ -381,7 +381,7 @@ class TableField extends TableListField {
 	        $obj = new $this->sourceClass();
 				
            if($ExistingValues) {
-					$obj->ID = $objectid;
+				$obj = DataObject::get_by_id($this->sourceClass, $objectid);
            }
 
 				// Legacy: Use the filter as a predefined relationship-ID 
@@ -553,7 +553,10 @@ JS;
 		if($data['methodName'] != 'delete'){
 			$fields = $this->FieldSet();
 			$fields = new FieldSet($fields);
-			
+			foreach($fields as $field){
+				$valid = $field->validate($this) && $valid;
+			}
+			return $valid;
 		}else{
 			return $valid;
 		}

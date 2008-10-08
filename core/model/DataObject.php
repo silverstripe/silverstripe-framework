@@ -1705,10 +1705,9 @@ class DataObject extends ViewableData implements DataObjectInterface {
 		}
 		
 		if ($fields) foreach($fields as $name => $level) {
-			if(!isset($this->original[$name])) continue;
 			$changedFields[$name] = array(
-				'before' => $this->original[$name],
-				'after' => $this->record[$name],
+				'before' => array_key_exists($name, $this->original) ? $this->original[$name] : null,
+				'after' => array_key_exists($name, $this->record) ? $this->record[$name] : null,
 				'level' => $level
 			);
 		}
@@ -1733,18 +1732,15 @@ class DataObject extends ViewableData implements DataObjectInterface {
 		} else {
 			$defaults = $this->stat('defaults');
 			// if a field is not existing or has strictly changed
-			if(!isset($this->record[$fieldName]) || $this->record[$fieldName] !== $val) {
+			if(!array_key_exists($fieldName, $this->record) || $this->record[$fieldName] !== $val) {
 				// TODO Add check for php-level defaults which are not set in the db
 				// TODO Add check for hidden input-fields (readonly) which are not set in the db
-				if(
-					// Main non type-based check
-					(isset($this->record[$fieldName]) && $this->record[$fieldName] != $val)
-				) {
-					// Non-strict check fails, so value really changed, e.g. "abc" != "cde"
+				// At the very least, the type has changed
+				$this->changed[$fieldName] = 1;
+				
+				if(!array_key_exists($fieldName, $this->record) || $this->record[$fieldName] != $val) {
+					// Value has changed as well, not just the type
 					$this->changed[$fieldName] = 2;
-				} else {
-					// Record change-level 1 if only the type changed, e.g. 0 !== NULL
-					$this->changed[$fieldName] = 1;
 				}
 
 				// value is always saved back when strict check succeeds

@@ -38,9 +38,8 @@ class DateField extends TextField {
 		return $field;
 	}
 	
-	function jsValidation($formID = null)
-	{
-		if(!$formID)$formID = $this->form->FormName(); 
+	function jsValidation() {
+		$formID = $this->form->FormName(); 
 		$error = _t('DateField.VALIDATIONJS', 'Please enter a valid date format (DD/MM/YYYY).');
 		$jsFunc =<<<JS
 Behaviour.register({
@@ -77,7 +76,7 @@ JS;
 		{
 			$validator->validationError(
 				$this->name, 
-				_t('DateField.VALIDDATEFORMAT', "Please enter a valid  date format (DD/MM/YYYY)."), 
+				_t('DateField.VALIDDATEFORMAT', "Please enter a valid date format (DD/MM/YYYY)."), 
 				"validation", 
 				false
 			);
@@ -129,6 +128,10 @@ class DateField_Disabled extends DateField {
 
 	function php() {
 		return true;
+	}
+	
+	function validate($validator) {
+		return true;	
 	}
 }
 ?>

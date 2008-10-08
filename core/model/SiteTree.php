@@ -424,27 +424,31 @@ class SiteTree extends DataObject {
 
 
 	/**
-	 * Return a breadcrumb trail to this page.
+	 * Return a breadcrumb trail to this page. Excludes "hidden" pages
+	 * (with ShowInMenus=0).
 	 *
 	 * @param int $maxDepth The maximum depth to traverse.
 	 * @param boolean $unlinked Do not make page names links
 	 * @param string $stopAtPageType ClassName of a page to stop the upwards traversal.
+	 * @param boolean $showHidden Include pages marked with the attribute ShowInMenus = 0 
 	 * @return string The breadcrumb trail.
 	 */
-	public function Breadcrumbs($maxDepth = 20, $unlinked = false,
-															$stopAtPageType = false) {
+	public function Breadcrumbs($maxDepth = 20, $unlinked = false, $stopAtPageType = false, $showHidden = false) {
 		$page = $this;
 		$parts = array();
 		$i = 0;
-		while(($page && (sizeof($parts) < $maxDepth))	||
-					($stopAtPageType && $page->ClassName != $stopAtPageType)) {
-			if($page->ShowInMenus || ($page->ID == $this->ID)) {
-				if($page->URLSegment == 'home') {
-					$hasHome = true;
+		while(
+			$page  
+ 			&& (!$maxDepth || sizeof($parts) < $maxDepth) 
+ 			&& ($stopAtPageType && $page->ClassName != $stopAtPageType)
+ 		) {
+			if($showHidden || $page->ShowInMenus || ($page->ID == $this->ID)) { 
+				if($page->URLSegment == 'home') $hasHome = true;
+				if(($page->ID == $this->ID) || $unlinked) {
+				 	$parts[] = Convert::raw2xml($page->Title);
+				} else {
+					$parts[] = ("<a href=\"" . $page->Link() . "\">" . Convert::raw2xml($page->Title) . "</a>"); 
 				}
-				$parts[] = (($page->ID == $this->ID) || $unlinked)
-					? Convert::raw2xml($page->Title)
-					: ("<a href=\"" . $page->Link() . "\">" . Convert::raw2xml($page->Title) . "</a>");
 			}
 			$page = $page->Parent;
 		}

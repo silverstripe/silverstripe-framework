@@ -4,13 +4,16 @@ GB_RefreshLink = "";
 ComplexTableField = Class.create();
 ComplexTableField.prototype = {
 	
-	// TODO adjust dynamically
-	popupWidth: 560,
-	popupHeight: 390,
+	// These are defaults used if setPopupSize encounters errors
+	defaultPopupWidth: 560,
+	defaultPopupHeight: 390,
 	
 	initialize: function() {
 		var rules = {};
 		rules['#'+this.id+' table.data a.popuplink'] = {onclick: this.openPopup.bind(this)};
+		
+		// Assume that the delete link uses the deleteRecord method
+		rules['#'+this.id+' table.data a.deletelink'] = {onclick: this.deleteRecord.bind(this)};
 		rules['#'+this.id+' table.data tbody td'] = {onclick: this.openPopup.bind(this)};
 		
 		// invoke row action-link based on default-action set in classname
@@ -25,8 +28,20 @@ ComplexTableField.prototype = {
 		}
 		Behaviour.register('ComplexTableField_'+this.id,rules);
 		
+		this.setPopupSize();
+		
 		// HACK If already in a popup, we can't allow add (doesn't save existing relation correctly)
 		if(window != top) $$('#'+this.id+' table.data a.addlink').each(function(el) {Element.hide(el);});
+	},
+	
+	setPopupSize: function() {
+		try {
+			this.popupHeight = parseInt($(this.id + '_PopupHeight').value);
+			this.popupWidth = parseInt($(this.id + '_PopupWidth').value);
+		} catch (ex) {
+			this.popupHeight = this.defaultPopupHeight;
+			this.popupWidth = this.defaultPopupWidth;
+		}
 	},
 	
 	getDefaultAction: function() {
@@ -44,6 +59,8 @@ ComplexTableField.prototype = {
 		// If already in a popup, simply open the link instead
 		// of opening a nested lightwindow
 		if(window != top) return true;
+		
+		this.setPopupSize();
 		
 		var el,type;
 		var popupLink = "";

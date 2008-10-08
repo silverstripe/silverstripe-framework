@@ -53,6 +53,14 @@ class Security extends Controller {
 	protected static $useSalt = true;
 	
 	/**
+	 * Showing "Remember me"-checkbox 
+	 * on loginform, and saving encrypted credentials to a cookie. 
+ 	 *  
+	 * @var bool 
+	 */ 
+	public static $autologin_enabled = true;
+	
+	/**
 	 * Location of word list to use for generating passwords
 	 * 
 	 * @var string
@@ -207,8 +215,7 @@ class Security extends Controller {
 
 			$authenticators = Authenticator::get_authenticators();
 			if(in_array($authenticator, $authenticators)) {
-				return call_user_func(array($authenticator, 'get_login_form'),
-															$this);
+				return call_user_func(array($authenticator, 'get_login_form'), $this);
 			}
 		}
 

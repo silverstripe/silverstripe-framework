@@ -11,6 +11,11 @@ class TableListFieldTest extends SapphireTest {
 			"D" => "Col D",
 			"E" => "Col E",
 		));
+		// A TableListField must be inside a form for its links to be generated
+		$form = new Form(new TableListFieldTest_TestController(), "TestForm", new FieldSet(
+			$table
+		), new FieldSet());
+		
 		$result = $table->FieldHolder();
 
 		// Do a quick check to ensure that some of the D() and getE() values got through
@@ -28,6 +33,11 @@ class TableListFieldTest extends SapphireTest {
 			"D" => "Col D",
 			"E" => "Col E",
 		));
+		// A TableListField must be inside a form for its links to be generated
+		$form = new Form(new TableListFieldTest_TestController(), "TestForm", new FieldSet(
+			$table
+		), new FieldSet());
+
 		$items = $table->sourceItems();
 		$this->assertNotNull($items);
 		
@@ -44,6 +54,11 @@ class TableListFieldTest extends SapphireTest {
 			"D" => "Col D",
 			"E" => "Col E",
 		));
+		// A TableListField must be inside a form for its links to be generated
+		$form = new Form(new TableListFieldTest_TestController(), "TestForm", new FieldSet(
+			$table
+		), new FieldSet());
+
 		$table->ShowPagination = true;
 		$table->PageSize = 2;
 		
@@ -63,6 +78,11 @@ class TableListFieldTest extends SapphireTest {
 			"D" => "Col D",
 			"E" => "Col E",
 		));
+		// A TableListField must be inside a form for its links to be generated
+		$form = new Form(new TableListFieldTest_TestController(), "TestForm", new FieldSet(
+			$table
+		), new FieldSet());
+
 		$table->ShowPagination = true;
 		$table->PageSize = 2;
 		$_REQUEST['ctf']['Tester']['start'] = 2;
@@ -72,6 +92,46 @@ class TableListFieldTest extends SapphireTest {
 
 		$itemMap = $items->toDropdownMap("ID", "A") ;
 		$this->assertEquals(array(3 => "a3", 4 => "a4"), $itemMap);
+	}
+	
+	function testCsvExport() {
+		$table = new TableListField("Tester", "TableListFieldTest_CsvExport", array(
+			"A" => "Col A",
+			"B" => "Col B"
+		));
+		
+		$form = new Form(new TableListFieldTest_TestController(), "TestForm", new FieldSet(
+			$table
+		), new FieldSet());
+		
+		$csvResponse = $table->export();
+		
+		$csvOutput = $csvResponse->getBody();
+		
+		$this->assertNotEquals($csvOutput, false);
+		
+		// Create a temporary file and write the CSV to it.
+		$csvFileName = tempnam(TEMP_FOLDER, 'csv-export');
+		$csvFile = fopen($csvFileName, 'w');
+		fwrite($csvFile, $csvOutput);
+		fclose($csvFile);
+		
+		$csvFile = fopen($csvFileName, 'r');
+		$csvRow = fgetcsv($csvFile);
+		$this->assertEquals(
+			$csvRow,
+			array('Col A', 'Col B')
+		);
+		
+		$csvRow = fgetcsv($csvFile);
+		$this->assertEquals(
+			$csvRow,
+			array('"A field, with a comma"', 'A second field')
+		);
+		
+		fclose($csvFile);
+		
+		unlink($csvFileName);
 	}
 }
 
@@ -89,5 +149,17 @@ class TableListFieldTest_Obj extends DataObject implements TestOnly {
 	function getE() {
 		return $this->A . '-e';
 	}
-   
+}
+
+class TableListFieldTest_CsvExport extends DataObject implements TestOnly {
+	static $db = array(
+		"A" => "Varchar",
+		"B" => "Varchar"
+	);
+}
+
+class TableListFieldTest_TestController extends Controller {
+	function Link() {
+		return "TableListFieldTest_TestController/";
+	}
 }

@@ -211,6 +211,8 @@ class TableListField extends FormField {
 	 */
 	public $fieldFormatting = array();
 	
+	public $csvFieldFormatting = array();
+	
 	/**
 	 * @var string
 	 */
@@ -226,6 +228,8 @@ class TableListField extends FormField {
 	 * @var array
 	 */
 	protected $extraLinkParams;
+	
+	protected $__cachedQuery;
 	
 	function __construct($name, $sourceClass, $fieldList = null, $sourceFilter = null, 
 		$sourceSort = null, $sourceJoin = null) {
@@ -257,6 +261,19 @@ class TableListField extends FormField {
 	
 	function index() {
 		return $this->FieldHolder();
+	}
+	
+	static $url_handlers = array(
+		'item/$ID' => 'handleItem',
+		'$Action!' => '$Action',
+	);
+
+	function sourceClass() {
+		return $this->sourceClass;
+	}
+	
+	function handleItem($request) {
+		return new TableListField_ItemRequest($this, $request->param('ID'));
 	}
 	
 	function FieldHolder() {
@@ -321,7 +338,7 @@ JS
 			return false;
 		}
 		
-		if($this->__cachedSQL) {
+		if($this->__cachedQuery) {
 			$query = $this->__cachedQuery;
 		} else {
 			$query = $this->__cachedQuery = $this->getQuery();
@@ -423,7 +440,7 @@ JS
 	 */
 	function getQuery() {
 		if($this->customQuery) {
-			$query = $this->customQuery;
+			$query = clone $this->customQuery;
 			$baseClass = ClassInfo::baseDataClass($this->sourceClass);
 			$query->select[] = "{$baseClass}.ID AS ID";
 			$query->select[] = "{$baseClass}.ClassName AS ClassName";
@@ -448,7 +465,7 @@ JS
 				$query->orderby = $SQL_sort;
 			}
 		}
-		return clone $query;
+		return $query;
 	}
 
 	function getCsvQuery() {
@@ -605,6 +622,8 @@ JS
 			$summaryFields[] = new ArrayData(array(
 				'Function' => $function,
 				'SummaryValue' => $summaryValue,
+				'Name' => DBField::create('Varchar', $fieldName),
+				'Title' => DBField::create('Varchar', $fieldTitle),
 			));
 		}
 		return new DataObjectSet($summaryFields);
@@ -879,6 +898,7 @@ JS
 	function export() {
 		$now = Date("d-m-Y-H-i");
 		$fileName = "export-$now.csv";
+		
 		$separator = $this->csvSeparator;
 		$csvColumns = ($this->fieldListCsv) ? $this->fieldListCsv : $this->fieldList;
 		$fileData = "";
@@ -889,14 +909,15 @@ JS
 		}
 
 		// get data
-		$dataQuery = $this->getCsvQuery();
-		$records = $dataQuery->execute();
-		
-		$sourceClass = $this->sourceClass;
-		$dataobject = new $sourceClass();
-		
-		// @todo Will create a large unpaginated dataobjectset based on how many records are in table (performance issue)
-		$items = $dataobject->buildDataObjectSet($records, 'DataObjectSet');
+		if(isset($this->customSourceItems)){
+			$items = $this->customSourceItems;
+		}else{
+			$dataQuery = $this->getCsvQuery();
+			$records = $dataQuery->execute();
+			$sourceClass = $this->sourceClass;
+			$dataobject = new $sourceClass();
+			$items = $dataobject->buildDataObjectSet($records, 'DataObjectSet');
+		}
 		
 		$fieldItems = new DataObjectSet();
 		if($items && $items->count()) foreach($items as $item) {
@@ -911,26 +932,31 @@ JS
 
 		if($fieldItems) {
 			foreach($fieldItems as $fieldItem) {
+				$columnData = array();
 				$fields = $fieldItem->Fields();
 				foreach($fields as $field) {
-					// replace <br/ >s with newlines for csv 
-					$field->Value = str_replace('<br />', "\n", $field->Value);
-					// remove double quotes
-					$field->Value = str_replace('"', "", $field->Value);
-					$fileData .= "\"" . $field->Value . "\"";
-					if($field->Last()) {
-						$fileData .= "\n";
-					} else {
-						$fileData .= $this->csvSeparator;
+					
+					$value = $field->Value;
+					
+					// TODO This should be replaced with casting
+					if(array_key_exists($field->Name, $this->csvFieldFormatting)) {
+						$format = str_replace('$value', "__VAL__", $this->csvFieldFormatting[$columnName]);
+						$format = preg_replace('/\$([A-Za-z0-9-_]+)/','$item->$1', $format);
+						$format = str_replace('__VAL__', '$value', $format);
+						eval('$value = "' . $format . '";');
 					}
+					
+					$value = str_replace(array("\r", "\n"), "\n", $value);
+					$tmpColumnData = "\"" . str_replace("\"", "\"\"", $value) . "\"";
+					$columnData[] = $tmpColumnData;
 				}
-				
+				$fileData .= implode($separator, $columnData);
+				$fileData .= "\n";
 			}
 			return HTTPRequest::send_file($fileData, $fileName);
 		} else {
 			user_error("No records found", E_USER_ERROR);
 		}
-
 	}
 	
 	/**
@@ -948,12 +974,20 @@ JS
 		Requirements::css(CMS_DIR . '/css/typography.css');
 		Requirements::css(CMS_DIR . '/css/cms_right.css');
 		Requirements::css(SAPPHIRE_DIR . '/css/TableListField_print.css');
-		$vd = new ViewableData();
-		return $vd->customise(array(
-			'Content' => $this->customise(array(
-				'Print' => true
-			))->renderWith($this->template)
-		))->renderWith('TableListField_printable');
+		
+		unset($this->cachedSourceItems);
+		$oldShowPagination = $this->showPagination;
+		$this->showPagination = false;
+		$oldLimit = ini_get('max_execution_time');
+		set_time_limit(0);
+		
+		
+		$result = $this->renderWith(array($this->template . '_printable', 'TableListField_printable'));
+		
+		$this->showPagination = $oldShowPagination;
+		set_time_limit($oldLimit);
+		
+		return $result;
 	}
 
 	function PrintLink() {
@@ -1010,6 +1044,10 @@ JS
 		$this->fieldFormatting = $formatting;
 	}
 	
+	function setCSVFieldFormatting($formatting) {
+		$this->csvFieldFormatting = $formatting;
+	}
+	
 	/**
 	 * @return String
 	 */
@@ -1024,19 +1062,19 @@ JS
 	  // adding this to TODO probably add a method to the classes
 	  // to return they're translated string
 	  // added by ruibarreiros @ 27/11/2007
-		return singleton($this->sourceClass)->singular_name();
+		return $this->sourceClass ? singleton($this->sourceClass)->singular_name() : $this->Name();
 	}
 	
 	function NameSingular() {
 	  // same as Title()
 	  // added by ruibarreiros @ 27/11/2007
-	        return singleton($this->sourceClass)->singular_name();
+	  return $this->sourceClass ? singleton($this->sourceClass)->singular_name() : $this->Name();
 	}
 
 	function NamePlural() {
 	  // same as Title()
 	  // added by ruibarreiros @ 27/11/2007
-		return singleton($this->sourceClass)->plural_name();
+		return $this->sourceClass ? singleton($this->sourceClass)->plural_name() : $this->Name();
 	} 
 	
 	function setTemplate($template) {
@@ -1216,6 +1254,16 @@ class TableListField_Item extends ViewableData {
 		return $this->parent->Can($mode);
 	}
 	
+	function Link() {
+ 		if($this->parent->getForm()) {
+			return Controller::join_links($this->parent->Link() . "item/" . $this->item->ID);
+		} else {
+			// allow for instanciation of this FormField outside of a controller/form
+			// context (e.g. for unit tests)
+			return false;
+		}
+	}
+
 	/**
 	 * Returns all row-based actions not disallowed through permissions.
 	 * See TableListField->Action for a similiar dummy-function to work
@@ -1240,17 +1288,7 @@ class TableListField_Item extends ViewableData {
 		
 		return $allowedActions;
 	}
-	
-	function Link() {
- 		if($this->parent->getForm()) {
-			return Controller::join_links($this->parent->Link() . "item/" . $this->item->ID);
-		} else {
-			// allow for instanciation of this FormField outside of a controller/form
-			// context (e.g. for unit tests)
-			return false;
-		}
-	}
-
+   
 	function BaseLink() {
 		user_error("TableListField_Item::BaseLink() deprecated, use Link() instead", E_USER_NOTICE);
 		return $this->Link();
@@ -1293,7 +1331,78 @@ class TableListField_Item extends ViewableData {
 	function isReadonly() {
 		return $this->parent->Can('delete');
 	}
-	
 }
 
+class TableListField_ItemRequest extends RequestHandlingData {
+	protected $ctf;
+	protected $itemID;
+	protected $methodName;
+	
+	static $url_handlers = array(
+		'$Action!' => '$Action',
+		'' => 'index',
+	);
+	
+	function Link() {
+		return $this->ctf->Link() . '/item/' . $this->itemID;
+	}
+	
+	function __construct($ctf, $itemID) {
+		$this->ctf = $ctf;
+		$this->itemID = $itemID;
+	}
+
+	function delete() {
+		if($this->ctf->Can('delete') !== true) {
+			return false;
+		}
+
+		$this->dataObj()->delete();
+	}
+
+	///////////////////////////////////////////////////////////////////////////////////////////////////
+
+	/**
+	 * Return the data object being manipulated
+	 */
+	function dataObj() {
+		// used to discover fields if requested and for population of field
+		if(is_numeric($this->itemID)) {
+ 			// we have to use the basedataclass, otherwise we might exclude other subclasses 
+ 			return DataObject::get_by_id(ClassInfo::baseDataClass(Object::getCustomClass($this->ctf->sourceClass())), $this->itemID); 
+		}
+		
+	}
+
+	/**
+	 * Returns the db-fieldname of the currently used has_one-relationship.
+	 */
+	function getParentIdName( $parentClass, $childClass ) {
+		return $this->getParentIdNameRelation( $childClass, $parentClass, 'has_one' );
+	}
+	
+	/**
+	 * Manually overwrites the parent-ID relations.
+	 * @see setParentClass()
+	 * 
+	 * @param String $str Example: FamilyID (when one Individual has_one Family)
+	 */
+	function setParentIdName($str) {
+		$this->parentIdName = $str;
+	}
+	
+	/**
+	 * Returns the db-fieldname of the currently used relationship.
+	 */
+	function getParentIdNameRelation($parentClass, $childClass, $relation) {
+		if($this->parentIdName) return $this->parentIdName; 
+		
+		$relations = singleton($parentClass)->$relation();
+		$classes = ClassInfo::ancestry($childClass);
+		foreach($relations as $k => $v) {
+			if(array_key_exists($v, $classes)) return $k . 'ID';
+		}
+		return false;
+	}
+}
 ?>

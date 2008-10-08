@@ -171,6 +171,33 @@ form .TableField .message {
 	width: auto;
 }
 
+.TableListField .PageControls {
+	margin: 5px 0;
+	text-align:center;
+	display:block;
+	margin-bottom: 5px;
+	background:#ebeadb;
+	border: 1px #cbc7b7 solid;
+	position: relative;
+}
+.TableListField .PageControls * {
+		display:inline;
+		vertical-align: middle;
+		font-weight: bold;
+}
+.TableListField .PageControls .Last{ 
+	display: block;
+	width: 40px; 
+	text-align: right;
+	position: absolute;
+	right: 0px;
+	top: 0px;
+}
+.TableListField .PageControls .First{
+	float:left; display:block;
+	width:40px; text-align:left;
+}
+
 
 #Pagination {
     margin-top: 10px;

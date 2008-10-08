@@ -29,7 +29,7 @@ class CompositeField extends FormField {
 	protected $columnCount = null;
 	
 	public function __construct($children = null) {
-		if(is_a($children, 'FieldSet')) {
+		if($children instanceof FieldSet) {
 			$this->children = $children;
 		} elseif(is_array($children)) {
 			$this->children = new FieldSet($children); 
@@ -239,7 +239,7 @@ class CompositeField extends FormField {
 		
 		$valid = true;
 		foreach($this->children as $idx => $child){
-			$valid = ($child->validate($validator) && $valid);
+			$valid = ($child && $child->validate($validator) && $valid);
 		}
 		
 		return $valid;
