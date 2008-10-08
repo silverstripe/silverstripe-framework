@@ -2,7 +2,10 @@
 
 global $lang;
 
-$lang['en_US']['ContentController']['DRAFT_SITE_ACCESS_RESTRICTION'] = 'You must log in with your CMS password in order to view the draft or archived content.  <a href="%s">Click here to go back to the published site.</a>';
+$lang['en_US']['RecordController']['SAVESUCCESS'] = 'Saved record';
+$lang['en_US']['ContentController']['DRAFT_SITE_ACCESS_RESTRICTION'] = 'You must log in with your CMS password in order to view the draft or archived content.  <a href=\"%s\">Click here to go back to the published site.</a>';
+$lang['en_US']['RecordController']['SAVESUCCESS'] = 'Saved record';
+$lang['en_US']['RecordController']['DELETESUCCESS'] = 'Successfully deleted record';
 $lang['en_US']['ErrorPage']['DEFAULTERRORPAGETITLE'] = 'Page not found';
 $lang['en_US']['ErrorPage']['DEFAULTERRORPAGECONTENT'] = '<p>Sorry, it seems you were trying to access a page that doesn\'t exist.</p><p>Please check the spelling of the URL you were trying to access and try again.</p>';
 $lang['en_US']['ErrorPage']['CODE'] = 'Error code';
@@ -52,6 +55,8 @@ $lang['en_US']['ImageUploader']['DELETE'] = array(
 	'Delete file/image'
 );
 $lang['en_US']['ImageUploader']['REALLYDELETE'] = 'Do you really want to remove this %s?';
+$lang['en_US']['SiteTree']['VALIDATIONURLSEGMENT1'] = 'Another page is using that URL. URL must be unique for each page';
+$lang['en_US']['SiteTree']['VALIDATIONURLSEGMENT2'] = 'URLs can only be made up of letters, digits and hyphens.';
 $lang['en_US']['RedirectorPage']['HEADER'] = 'This page will redirect users to another page';
 $lang['en_US']['RedirectorPage']['REDIRECTTO'] = 'Redirect to';
 $lang['en_US']['RedirectorPage']['REDIRECTTOPAGE'] = 'A page on your website';
@@ -72,6 +77,7 @@ $lang['en_US']['SiteTree']['NOBACKLINKS'] = 'This page hasn\'t been linked to fr
 $lang['en_US']['SiteTree']['TOPLEVEL'] = 'Site Content (Top Level)';
 $lang['en_US']['SiteTree']['APPEARSVIRTUALPAGES'] = 'This content also appears on the virtual pages in the %s sections.';
 $lang['en_US']['SiteTree']['HASBROKENLINKS'] = 'This page has broken links.';
+$lang['en_US']['SiteTree']['PRIORITYAUTOSET'] = 'Auto-set based on page depth';
 $lang['en_US']['SiteTree']['PRIORITYNOTINDEXED'] = 'Not indexed';
 $lang['en_US']['SiteTree']['PRIORITYMOSTIMPORTANT'] = 'Most important';
 $lang['en_US']['SiteTree']['PRIORITYLEASTIMPORTANT'] = 'Least important';
@@ -189,6 +195,9 @@ $lang['en_US']['File']['INVALIDEXTENSION'] = array(
 $lang['en_US']['Form']['VALIDATIONNOTUNIQUE'] = 'The value entered is not unique';
 $lang['en_US']['BankAccountField']['VALIDATIONJS'] = 'Please enter a valid bank number';
 $lang['en_US']['Form']['VALIDATIONBANKACC'] = 'Please enter a valid bank number';
+$lang['en_US']['ComplexTableField']['CLOSEPOPUP'] = 'Close Popup';
+$lang['en_US']['ComplexTableField']['SUCCESSADD'] = 'Added %s %s %s';
+$lang['en_US']['ComplexTableField']['SUCCESSEDIT'] = 'Saved %s %s %s';
 $lang['en_US']['CompositeDateField']['DAY'] = 'Day';
 $lang['en_US']['CompositeDateField']['MONTH'] = 'Month';
 $lang['en_US']['CompositeDateField']['VALIDATIONJS1'] = 'Please ensure you have set the';
@@ -222,7 +231,7 @@ $lang['en_US']['CurrencyField']['CURRENCYSYMBOL'] = '$';
 $lang['en_US']['Form']['FIELDISREQUIRED'] = '%s is required';
 $lang['en_US']['DMYDateField']['VALIDDATEFORMAT'] = 'Please enter a valid  date format (DD-MM-YYYY).';
 $lang['en_US']['DateField']['VALIDATIONJS'] = 'Please enter a valid date format (DD/MM/YYYY).';
-$lang['en_US']['DateField']['VALIDDATEFORMAT'] = 'Please enter a valid  date format (DD/MM/YYYY).';
+$lang['en_US']['DateField']['VALIDDATEFORMAT'] = 'Please enter a valid date format (DD/MM/YYYY).';
 $lang['en_US']['DateField']['NODATESET'] = 'No date set';
 $lang['en_US']['DateField']['TODAY'] = 'today';
 $lang['en_US']['DateField']['NOTSET'] = 'not set';
@@ -247,11 +256,6 @@ $lang['en_US']['HtmlEditorField']['FORMATP'] = array(
 	'Paragraph',
 	 PR_MEDIUM,
 	'<p> tag'
-);
-$lang['en_US']['HtmlEditorField']['FORMATADDR'] = array(
-	'Address',
-	 PR_MEDIUM,
-	'<address> tag'
 );
 $lang['en_US']['HtmlEditorField']['FORMATH1'] = array(
 	'Heading 1',
@@ -282,6 +286,16 @@ $lang['en_US']['HtmlEditorField']['FORMATH6'] = array(
 	'Heading 6',
 	 PR_MEDIUM,
 	'<h6> tag'
+);
+$lang['en_US']['HtmlEditorField']['FORMATADDR'] = array(
+	'Address',
+	 PR_MEDIUM,
+	'<address> tag'
+);
+$lang['en_US']['HtmlEditorField']['FORMATPRE'] = array(
+	'Preformatted',
+	 PR_MEDIUM,
+	'<pre> tag'
 );
 $lang['en_US']['HtmlEditorField']['BULLETLIST'] = 'Bullet-point list';
 $lang['en_US']['HtmlEditorField']['OL'] = 'Numbered list';
@@ -357,7 +371,6 @@ $lang['en_US']['SimpleImageField']['NOUPLOAD'] = 'No Image Uploaded';
 $lang['en_US']['TableField']['ISREQUIRED'] = 'In %s \'%s\' is required.';
 $lang['en_US']['TableListField']['CSVEXPORT'] = 'Export to CSV';
 $lang['en_US']['TableListField']['PRINT'] = 'Print';
-$lang['en_US']['TableListField']['VREXPORT'] = 'Export to Vertical Response';
 $lang['en_US']['ToggleField']['MORE'] = 'more';
 $lang['en_US']['ToggleField']['LESS'] = 'less';
 $lang['en_US']['DropdownField']['CHOOSE'] = array(
@@ -368,18 +381,6 @@ $lang['en_US']['DropdownField']['CHOOSE'] = array(
 $lang['en_US']['TreeSelectorField']['SAVE'] = 'save';
 $lang['en_US']['TreeSelectorField']['CANCEL'] = 'cancel';
 $lang['en_US']['TypeDropdown']['NONE'] = 'None';
-$lang['en_US']['EditableCheckbox']['ANY'] = 'Any';
-$lang['en_US']['EditableCheckbox']['SELECTED'] = 'Selected';
-$lang['en_US']['EditableCheckbox']['NOTSELECTED'] = 'Not selected';
-$lang['en_US']['EditableEmailField']['SENDCOPY'] = 'Send copy of submission to this address';
-$lang['en_US']['EditableFormField']['ENTERQUESTION'] = 'Enter Question';
-$lang['en_US']['EditableFormField']['REQUIRED'] = 'Required?';
-$lang['en_US']['EditableTextField']['TEXTBOXLENGTH'] = 'Length of text box';
-$lang['en_US']['EditableTextField']['TEXTLENGTH'] = 'Text length';
-$lang['en_US']['EditableTextField']['NUMBERROWS'] = 'Number of rows';
-$lang['en_US']['EditableTextField']['DEFAULTTEXT'] = 'Default Text';
-$lang['en_US']['FieldEditor']['EMAILSUBMISSION'] = 'Email submission to:';
-$lang['en_US']['FieldEditor']['EMAILONSUBMIT'] = 'Email form on submit:';
 $lang['en_US']['BBCodeParser']['BOLD'] = 'Bold Text';
 $lang['en_US']['BBCodeParser']['BOLDEXAMPLE'] = 'Bold';
 $lang['en_US']['BBCodeParser']['ITALIC'] = 'Italic Text';
@@ -440,7 +441,7 @@ $lang['en_US']['SecurityAdmin']['CODE'] = 'Code';
 $lang['en_US']['SecurityAdmin']['OPTIONALID'] = 'Optional ID';
 $lang['en_US']['Security']['IPADDRESSES'] = 'IP Addresses';
 $lang['en_US']['SecurityAdmin']['IPADDRESSESHELP'] = '<p>You can restrict this group to a particular 
-						IP address range.  Enter 1 range per line.  Ranges can be in any of the following 4 forms: <br />
+						IP address range (one range per line). <br />Ranges can be in any of the following forms: <br />
 						203.96.152.12<br />
 						203.96.152/24<br />
 						203.96/16<br />
@@ -472,6 +473,7 @@ $lang['en_US']['Member']['INTERFACELANG'] = array(
 	 PR_MEDIUM,
 	'Language of the CMS'
 );
+$lang['en_US']['Member']['SECURITYGROUPS'] = 'Security groups';
 $lang['en_US']['Member']['EMAILSIGNUPSUBJECT'] = 'Thanks for signing up';
 $lang['en_US']['Member']['GREETING'] = 'Welcome';
 $lang['en_US']['Member']['EMAILSIGNUPINTRO1'] = 'Thanks for signing up to become a new member, your details are listed below for future reference.';
@@ -510,8 +512,8 @@ $lang['en_US']['Security']['ALREADYLOGGEDIN'] = 'You don\'t have access to this 
 $lang['en_US']['Security']['LOGGEDOUT'] = 'You have been logged out.  If you would like to log in again, enter your credentials below.';
 $lang['en_US']['Security']['LOGIN'] = 'Log in';
 $lang['en_US']['Security']['LOSTPASSWORDHEADER'] = 'Lost Password';
-$lang['en_US']['Security']['NOTERESETPASSWORD'] = 'Enter your email address to be sent a password reset link.';
-$lang['en_US']['Security']['BUTTONSEND'] = 'Send Password Reset Link';
+$lang['en_US']['Security']['NOTERESETPASSWORD'] = 'Enter your e-mail address and we will send you a link with which you can reset your password';
+$lang['en_US']['Security']['BUTTONSEND'] = 'Send me the password reset link';
 $lang['en_US']['Security']['PASSWORDSENTHEADER'] = 'Password reset link sent to \'%s\'';
 $lang['en_US']['Security']['PASSWORDSENTTEXT'] = 'Thank you! The password reset link has been sent to \'%s\'.';
 $lang['en_US']['Security']['CHANGEPASSWORDHEADER'] = 'Change your password';
@@ -532,110 +534,27 @@ $lang['en_US']['Security']['ENCRYPTWITHOUTSALT'] = 'without using a salt to incr
 $lang['en_US']['Security']['ENCRYPTEDMEMBERS'] = 'Encrypted credentials for member &quot;';
 $lang['en_US']['Security']['ID'] = 'ID:';
 $lang['en_US']['Security']['EMAIL'] = 'E-Mail:';
+$lang['en_US']['SecurityAdmin']['CODE'] = 'Code';
+$lang['en_US']['SecurityAdmin']['OPTIONALID'] = 'Optional ID';
+$lang['en_US']['CollectionController.ss']['SEARCH'] = 'Search';
+$lang['en_US']['CollectionController.ss']['ADDNEWRECORD'] = 'Add new record';
 $lang['en_US']['ComplexTableField.ss']['SORTASC'] = 'Sort ascending';
 $lang['en_US']['ComplexTableField.ss']['SORTDESC'] = 'Sort descending';
 $lang['en_US']['ComplexTableField.ss']['ADDITEM'] = 'add';
 $lang['en_US']['ComplexTableField.ss']['ADDITEM'] = array(
-	'Add',
+	'Add %s',
 	 PR_MEDIUM,
 	'Add [name]'
 );
-$lang['en_US']['ComplexTableField.ss']['SHOW'] = 'show';
-$lang['en_US']['ComplexTableField.ss']['EDIT'] = 'edit';
-$lang['en_US']['ComplexTableField.ss']['DELETEROW'] = 'Delete this row';
-$lang['en_US']['ComplexTableField.ss']['DELETE'] = 'delete';
 $lang['en_US']['ComplexTableField.ss']['NOITEMSFOUND'] = 'No items found';
+$lang['en_US']['ComplexTableField.ss']['CSVEXPORT'] = 'Export to CSV';
 $lang['en_US']['ComplexTableField_popup.ss']['PREVIOUS'] = 'Previous';
 $lang['en_US']['ComplexTableField_popup.ss']['NEXT'] = 'Next';
-$lang['en_US']['EditableCheckbox.ss']['LOCKED'] = 'This field cannot be modified';
-$lang['en_US']['EditableCheckbox.ss']['DRAG'] = 'Drag to rearrange order of fields';
-$lang['en_US']['EditableCheckbox.ss']['CHECKBOX'] = 'Checkbox field';
-$lang['en_US']['EditableCheckbox.ss']['MORE'] = 'More options';
-$lang['en_US']['EditableCheckbox.ss']['DELETE'] = 'Delete this field';
-$lang['en_US']['EditableCheckboxGroupField.ss']['LOCKED'] = 'These fields cannot be modified';
-$lang['en_US']['EditableCheckboxGroupField.ss']['DRAG'] = 'Drag to rearrange order of fields';
-$lang['en_US']['EditableCheckboxGroupField.ss']['CHECKBOXGROUP'] = 'Checkbox group';
-$lang['en_US']['EditableCheckboxGroupField.ss']['MORE'] = 'More options';
-$lang['en_US']['EditableCheckboxGroupField.ss']['DELETE'] = 'Delete this field';
-$lang['en_US']['EditableCheckboxGroupField.ss']['REQUIRED'] = 'This field is required for this form and cannot be deleted';
-$lang['en_US']['EditableCheckboxGroupField.ss']['ADD'] = 'Add option to field';
-$lang['en_US']['EditableCheckboxGroupField.ss']['ADD'] = 'Add new option';
-$lang['en_US']['EditableCheckboxOption.ss']['DRAG'] = 'Drag to rearrange order of options';
-$lang['en_US']['EditableCheckboxOption.ss']['DELETE'] = 'Remove this option';
-$lang['en_US']['EditableCheckboxOption.ss']['LOCKED'] = 'These fields cannot be modified';
-$lang['en_US']['EditableDateField.ss']['DRAG'] = 'Drag to rearrange order of fields';
-$lang['en_US']['EditableDateField.ss']['DATE'] = 'Date Field';
-$lang['en_US']['EditableDateField.ss']['MORE'] = 'More options';
-$lang['en_US']['EditableDateField.ss']['DELETE'] = 'Delete this field';
-$lang['en_US']['EditableDropdown.ss']['LOCKED'] = 'These fields cannot be modified';
-$lang['en_US']['EditableDropdown.ss']['DRAG'] = 'Drag to rearrange order of fields';
-$lang['en_US']['EditableDropdown.ss']['DROPDOWN'] = 'Dropdown box';
-$lang['en_US']['EditableDropdown.ss']['MORE'] = 'More options';
-$lang['en_US']['EditableDropdown.ss']['DELETE'] = 'Delete this field';
-$lang['en_US']['EditableDropdown.ss']['REQUIRED'] = 'This field is required for this form and cannot be deleted';
-$lang['en_US']['EditableDropdown.ss']['ADD'] = 'Add option to field';
-$lang['en_US']['EditableDropdown.ss']['ADD'] = 'Add new option';
-$lang['en_US']['EditableDropdownOption.ss']['DRAG'] = 'Drag to rearrange order of options';
-$lang['en_US']['EditableDropdownOption.ss']['DELETE'] = 'Remove this option';
-$lang['en_US']['EditableDropdownOption.ss']['LOCKED'] = 'These fields cannot be modified';
-$lang['en_US']['EditableEmailField.ss']['DRAG'] = 'Drag to rearrange order of fields';
-$lang['en_US']['EditableEmailField.ss']['EMAIL'] = 'Email address field';
-$lang['en_US']['EditableEmailField.ss']['MORE'] = 'More options';
-$lang['en_US']['EditableEmailField.ss']['DELETE'] = 'Delete this field';
-$lang['en_US']['EditableEmailField.ss']['REQUIRED'] = 'This field is required for this form and cannot be deleted';
-$lang['en_US']['EditableFileField.ss']['DRAG'] = 'Drag to rearrange order of fields';
-$lang['en_US']['EditableFileField.ss']['FILE'] = 'File upload field';
-$lang['en_US']['EditableFileField.ss']['MORE'] = 'More options';
-$lang['en_US']['EditableFileField.ss']['DELETE'] = 'Delete this field';
-$lang['en_US']['EditableFormField.ss']['LOCKED'] = 'These fields cannot be modified';
-$lang['en_US']['EditableFormField.ss']['DRAG'] = 'Drag to rearrange order of fields';
-$lang['en_US']['EditableFormField.ss']['MORE'] = 'More options';
-$lang['en_US']['EditableFormField.ss']['DELETE'] = 'Delete this field';
-$lang['en_US']['EditableFormField.ss']['REQUIRED'] = 'This field is required for this form and cannot be deleted';
-$lang['en_US']['EditableFormFieldOption.ss']['LOCKED'] = 'These fields cannot be modified';
-$lang['en_US']['EditableFormFieldOption.ss']['DRAG'] = 'Drag to rearrange order of fields';
-$lang['en_US']['EditableFormFieldOption.ss']['DELETE'] = 'Remove this option';
-$lang['en_US']['EditableFormHeading.ss']['DRAG'] = 'Drag to rearrange order of fields';
-$lang['en_US']['EditableFormHeading.ss']['HEADING'] = 'Heading field';
-$lang['en_US']['EditableFormHeading.ss']['MORE'] = 'More options';
-$lang['en_US']['EditableFormHeading.ss']['DELETE'] = 'Delete this field';
-$lang['en_US']['EditableRadioField.ss']['LOCKED'] = 'These fields cannot be modified';
-$lang['en_US']['EditableRadioField.ss']['DRAG'] = 'Drag to rearrange order of fields';
-$lang['en_US']['EditableRadioField.ss']['SET'] = 'Radio button set';
-$lang['en_US']['EditableRadioField.ss']['MORE'] = 'More options';
-$lang['en_US']['EditableRadioField.ss']['DELETE'] = 'Delete this field';
-$lang['en_US']['EditableRadioField.ss']['REQUIRED'] = 'This field is required for this form and cannot be deleted';
-$lang['en_US']['EditableRadioField.ss']['ADD'] = 'Add option to field';
-$lang['en_US']['EditableRadioField.ss']['ADD'] = 'Add new option';
-$lang['en_US']['EditableRadioOption.ss']['DRAG'] = 'Drag to rearrange order of options';
-$lang['en_US']['EditableRadioOption.ss']['DELETE'] = 'Remove this option';
-$lang['en_US']['EditableRadioOption.ss']['LOCKED'] = 'These fields cannot be modified';
-$lang['en_US']['EditableTextField.ss']['DRAG'] = 'Drag to rearrange order of fields';
-$lang['en_US']['EditableTextField.ss']['TEXTFIELD'] = 'Text Field';
-$lang['en_US']['EditableTextField.ss']['MORE'] = 'More options';
-$lang['en_US']['EditableTextField.ss']['DELETE'] = 'Delete this field';
-$lang['en_US']['FieldEditor.ss']['ADD'] = 'Add';
-$lang['en_US']['FieldEditor.ss']['TEXTTITLE'] = 'Add text field';
-$lang['en_US']['FieldEditor.ss']['TEXT'] = 'Text';
-$lang['en_US']['FieldEditor.ss']['CHECKBOXTITLE'] = 'Add checkbox';
-$lang['en_US']['FieldEditor.ss']['CHECKBOX'] = 'Checkbox';
-$lang['en_US']['FieldEditor.ss']['DROPDOWNTITLE'] = 'Add dropdown';
-$lang['en_US']['FieldEditor.ss']['DROPDOWN'] = 'Dropdown';
-$lang['en_US']['FieldEditor.ss']['RADIOSETTITLE'] = 'Add radio button set';
-$lang['en_US']['FieldEditor.ss']['RADIOSET'] = 'Radio';
-$lang['en_US']['FieldEditor.ss']['EMAILTITLE'] = 'Add email field';
-$lang['en_US']['FieldEditor.ss']['EMAIL'] = 'Email';
-$lang['en_US']['FieldEditor.ss']['FORMHEADINGTITLE'] = 'Add form heading';
-$lang['en_US']['FieldEditor.ss']['FORMHEADING'] = 'Heading';
-$lang['en_US']['FieldEditor.ss']['DATETITLE'] = 'Add date heading';
-$lang['en_US']['FieldEditor.ss']['DATE'] = 'Date';
-$lang['en_US']['FieldEditor.ss']['FILETITLE'] = 'Add file upload field';
-$lang['en_US']['FieldEditor.ss']['FILE'] = 'File';
-$lang['en_US']['FieldEditor.ss']['CHECKBOXGROUPTITLE'] = 'Add checkbox group field';
-$lang['en_US']['FieldEditor.ss']['CHECKBOXGROUP'] = 'Checkboxes';
-$lang['en_US']['FieldEditor.ss']['MEMBERTITLE'] = 'Add member list field';
-$lang['en_US']['FieldEditor.ss']['MEMBER'] = 'Member List';
 $lang['en_US']['Image_iframe.ss']['TITLE'] = 'Image Uploading Iframe';
+$lang['en_US']['CollectionController_Results.ss']['RESULTS'] = 'Results';
+$lang['en_US']['CollectionController_Results.ss']['NORESULTSFOUND'] = 'No records found';
+$lang['en_US']['CollectionController_Results.ss']['PREV'] = 'Prev';
+$lang['en_US']['CollectionController_Results.ss']['NEXT'] = 'Next';
 $lang['en_US']['TableListField_PageControls.ss']['VIEWFIRST'] = 'View first';
 $lang['en_US']['TableListField_PageControls.ss']['VIEWPREVIOUS'] = 'View previous';
 $lang['en_US']['TableListField_PageControls.ss']['DISPLAYING'] = 'Displaying';
@@ -648,7 +567,7 @@ $lang['en_US']['RelationComplexTableField.ss']['SHOW'] = 'show';
 $lang['en_US']['RelationComplexTableField.ss']['EDIT'] = 'edit';
 $lang['en_US']['RelationComplexTableField.ss']['DELETE'] = 'delete';
 $lang['en_US']['RelationComplexTableField.ss']['NOTFOUND'] = 'No items found';
-$lang['en_US']['SubmittedFormReportField.ss']['SUBMITTED'] = 'Submitted at';
+$lang['en_US']['RelationComplexTableField.ss']['CSVEXPORT'] = 'Export to CSV';
 $lang['en_US']['TableField.ss']['ADD'] = 'Add a new row';
 $lang['en_US']['TableField.ss']['CSVEXPORT'] = 'Export to CSV';
 $lang['en_US']['ToggleCompositeField.ss']['SHOW'] = 'Show';
@@ -660,8 +579,10 @@ $lang['en_US']['ChangePasswordEmail.ss']['CHANGEPASSWORDTEXT1'] = array(
 	'for a url'
 );
 $lang['en_US']['ChangePasswordEmail.ss']['CHANGEPASSWORDTEXT2'] = 'You can now use the following credentials to log in:';
+$lang['en_US']['ChangePasswordEmail.ss']['EMAIL'] = 'Email';
+$lang['en_US']['ChangePasswordEmail.ss']['PASSWORD'] = 'Password';
 $lang['en_US']['ForgotPasswordEmail.ss']['HELLO'] = 'Hi';
-$lang['en_US']['ForgotPasswordEmail.ss']['TEXT1'] = 'Here\'s is your';
+$lang['en_US']['ForgotPasswordEmail.ss']['TEXT1'] = 'Here is your';
 $lang['en_US']['ForgotPasswordEmail.ss']['TEXT2'] = 'password reset link';
 $lang['en_US']['ForgotPasswordEmail.ss']['TEXT3'] = 'for';
 
