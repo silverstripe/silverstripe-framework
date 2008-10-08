@@ -55,6 +55,9 @@ $lang['hr_HR']['EmailField']['VALIDATION'] = 'Upišite email adresu';
 $lang['hr_HR']['ErrorPage']['CODE'] = 'Error code';
 $lang['hr_HR']['FileIframeField']['NOTEADDFILES'] = 'You can add files once you have saved for the first time.';
 $lang['hr_HR']['ForgotPasswordEmail.ss']['HELLO'] = 'Pozdrav';
+$lang['hr_HR']['ForgotPasswordEmail.ss']['TEXT1'] = 'Ovdje je vaš';
+$lang['hr_HR']['ForgotPasswordEmail.ss']['TEXT2'] = 'link za resetiranje zaporke';
+$lang['hr_HR']['ForgotPasswordEmail.ss']['TEXT3'] = 'za';
 $lang['hr_HR']['Form']['DATENOTSET'] = '(Datum nije postavljen)';
 $lang['hr_HR']['Form']['FIELDISREQUIRED'] = '%s je obavezan';
 $lang['hr_HR']['Form']['LANGAOTHER'] = 'Drugi jezici';
@@ -198,18 +201,36 @@ $lang['hr_HR']['RedirectorPage']['REDIRECTTO'] = 'Preusmjeri na';
 $lang['hr_HR']['RedirectorPage']['REDIRECTTOEXTERNAL'] = 'Drugi web';
 $lang['hr_HR']['RedirectorPage']['REDIRECTTOPAGE'] = 'Stranicu na Vašom webu';
 $lang['hr_HR']['RedirectorPage']['YOURPAGE'] = 'Stranica na Vašem webu';
+$lang['hr_HR']['RelationComplexTableField.ss']['ADD'] = 'Dodaj';
+$lang['hr_HR']['RelationComplexTableField.ss']['DELETE'] = 'izbriši';
+$lang['hr_HR']['RelationComplexTableField.ss']['EDIT'] = 'ažuriraj';
+$lang['hr_HR']['RelationComplexTableField.ss']['NOTFOUND'] = 'Nije pronađeno';
+$lang['hr_HR']['RelationComplexTableField.ss']['SHOW'] = 'prikaži';
 $lang['hr_HR']['Security']['ALREADYLOGGEDIN'] = 'Nemate pristup na ovu stranicu. Imate li drugi korisnički račun, koristite njega';
 $lang['hr_HR']['Security']['BUTTONSEND'] = 'Pošalji mi link za reset lozinke';
 $lang['hr_HR']['Security']['CHANGEPASSWORDBELOW'] = 'Svoju lozinku možete promjeniti ovdje';
 $lang['hr_HR']['Security']['CHANGEPASSWORDHEADER'] = 'Promjeni lozinku';
+$lang['hr_HR']['Security']['ENCDISABLED1'] = 'Enkripcija zaporke je isključena!';
 $lang['hr_HR']['Security']['ENTERNEWPASSWORD'] = 'Upišite novu lozinku';
 $lang['hr_HR']['Security']['ERRORPASSWORDPERMISSION'] = 'Morate biti prijavljeni kako bi ste promjenili lozinku';
+$lang['hr_HR']['Security']['IPADDRESSES'] = 'IP adresa';
 $lang['hr_HR']['Security']['LOGGEDOUT'] = 'Odlogirani ste. Želite li se ponovno logirati, upišite podatke';
+$lang['hr_HR']['Security']['LOGIN'] = 'Logiraj se';
 $lang['hr_HR']['Security']['LOSTPASSWORDHEADER'] = 'Izgubljena lozinka';
 $lang['hr_HR']['Security']['NOTEPAGESECURED'] = 'Stranica je osigurana. Upišite svoje podatke i poslat ćemo Vam.';
 $lang['hr_HR']['Security']['NOTERESETPASSWORD'] = 'Upišite vaš e-mail i polati ćemo Vam link na kojem možete dobiti novu lozinku';
 $lang['hr_HR']['Security']['PASSWORDSENTHEADER'] = 'Link je poslan na \'%s\'';
 $lang['hr_HR']['Security']['PASSWORDSENTTEXT'] = 'Hvala Vam! Link na reset lozinke je poslan na \'%s\'.';
+$lang['hr_HR']['Security']['PERMFAILURE'] = 'Ova stranica je zaštićena i trebate imati administratorska prava da bi ste joj mogli pristupiti. Unesite svoje pristupne podatke, a mi ćemo vas odmah prosijediti dalje.';
+$lang['hr_HR']['SecurityAdmin']['IPADDRESSESHELP'] = '<p>Možete ograničiti ovu grupu na određen raspon IP adresa. Unesite 1 raspon po retku. Rasponi IP adresa mogu biti u bilo kojem od ovih 4 formi: <br />
+203.96.152.12<br />
+203.96.152/24<br />
+203.96/16<br />
+203/8<br />
+<br />
+Ukoliko unesete jednu ili više IP adresa u ovaj box, tada će članovi imati pravo pristupiti grupi ukoliko se logiraju sa neke od dozvoljenih IIP adresa. To neće spriječiti da se ljudi logiraju. To je zato da se koristnik može logirati u dijelove sustava na koje se ne odnosi restrikcija u IP adresama.</p>';
+$lang['hr_HR']['SecurityAdmin']['OPTIONALID'] = 'Opcionalni ID';
+$lang['hr_HR']['SecurityAdmin']['VIEWUSER'] = 'Pogledaj korisnika';
 $lang['hr_HR']['SimpleImageField']['NOUPLOAD'] = 'Nema uploadanih slika';
 $lang['hr_HR']['SiteTree']['ACCESSANYONE'] = 'Svi';
 $lang['hr_HR']['SiteTree']['ACCESSHEADER'] = 'Tko može pregledavati ovu stranicu?';
@@ -266,7 +287,15 @@ $lang['hr_HR']['SiteTree']['URL'] = 'URL';
 $lang['hr_HR']['SiteTree']['VALIDATIONURLSEGMENT1'] = 'Ovaj URL se već koristi. URL mora biti jedinstvaen';
 $lang['hr_HR']['SiteTree']['VALIDATIONURLSEGMENT2'] = 'URL smije sadržavati samo slova, brojeve i crtice';
 $lang['hr_HR']['TableField']['ISREQUIRED'] = 'U %s \'%s\' je obavezan';
+$lang['hr_HR']['TableField.ss']['ADD'] = 'Dodaj novi redak';
 $lang['hr_HR']['TableField.ss']['CSVEXPORT'] = 'Izvezi u CSV';
+$lang['hr_HR']['TableListField_PageControls.ss']['DISPLAYING'] = 'Prikazujem';
+$lang['hr_HR']['TableListField_PageControls.ss']['OF'] = 'od';
+$lang['hr_HR']['TableListField_PageControls.ss']['TO'] = 'do';
+$lang['hr_HR']['TableListField_PageControls.ss']['VIEWFIRST'] = 'Pogledaj prvi';
+$lang['hr_HR']['TableListField_PageControls.ss']['VIEWLAST'] = 'Pogledaj zadnji';
+$lang['hr_HR']['TableListField_PageControls.ss']['VIEWNEXT'] = 'Pogledaj slijedeći';
+$lang['hr_HR']['TableListField_PageControls.ss']['VIEWPREVIOUS'] = 'Pogledaj prethodni';
 $lang['hr_HR']['ToggleCompositeField.ss']['HIDE'] = 'Sakrij';
 $lang['hr_HR']['ToggleCompositeField.ss']['SHOW'] = 'Pokaži';
 $lang['hr_HR']['ToggleField']['LESS'] = 'manje';

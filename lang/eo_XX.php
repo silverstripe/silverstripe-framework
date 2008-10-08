@@ -58,7 +58,6 @@ $lang['eo_XX']['DateField']['VALIDDATEFORMAT'] = 'Plaĉi al eniri validan daton 
 $lang['eo_XX']['DropdownField']['CHOOSE'] = '(Elektu)';
 $lang['eo_XX']['EmailField']['VALIDATION'] = 'Plaĉi al eniri retpoŝtan mesaĝon trakt.';
 $lang['eo_XX']['ErrorPage']['CODE'] = 'Eraro kodo';
-$lang['eo_XX']['FieldEditor.ss']['DATE'] = 'Dato';
 $lang['eo_XX']['FileIframeField']['NOTEADDFILES'] = 'Vi povas almeti dosierojn ek inte savita unuafoje.';
 $lang['eo_XX']['ForgotPasswordEmail.ss']['HELLO'] = 'Saluton';
 $lang['eo_XX']['Form']['DATENOTSET'] = '(Ne dato fiksis)';
