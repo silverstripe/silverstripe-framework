@@ -175,7 +175,7 @@ class FieldSet extends DataObjectSet {
 	}
 	
 	/**
-	 * Replace a single field with another.
+	 * Replace a single field with another.  Ignores dataless fields such as Tabs and TabSets
 	 *
 	 * @param string $fieldName The name of the field to replace
 	 * @param FormField $newField The field object to replace with
@@ -186,7 +186,7 @@ class FieldSet extends DataObjectSet {
 		if($this->sequentialSet) $this->sequentialSet = null;
 		foreach($this->items as $i => $field) {
 			if(is_object($field)) {
-				if($field->Name() == $fieldName) {
+				if($field->Name() == $fieldName && $field->hasData()) {
 					$this->items[$i] = $newField;
 					return true;
 				
@@ -230,7 +230,7 @@ class FieldSet extends DataObjectSet {
 					$currentPointer = new Tab($part);
 					$parentPointer->push($currentPointer);
 				} else {
-					user_error("FieldSet::addFieldToTab() Tried to add a tab to a " . $parentPointer->class . " object - '$part' didn't exist.", E_USER_ERROR);
+					user_error("FieldSet::addFieldToTab() Tried to add a tab to object '{$parentPointer->class}.{$parentPointer->Name()}' - '$part' didn't exist.", E_USER_ERROR);
 				}
 			}
 		}
