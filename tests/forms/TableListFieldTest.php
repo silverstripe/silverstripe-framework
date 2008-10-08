@@ -94,6 +94,24 @@ class TableListFieldTest extends SapphireTest {
 		$this->assertEquals(array(3 => "a3", 4 => "a4"), $itemMap);
 	}
 	
+	/**
+	 * Get that visiting the field's URL returns the content of the field.
+	 * This capability is used by ajax
+	 */
+	function testAjaxRefreshing() {
+		$controller = new TableListFieldTest_TestController();
+		$table = $controller->TestForm()->Fields()->First();
+
+		$ajaxResponse = Director::test($table->Link())->getBody();
+
+		// Check that the column headings have been rendered
+        $this->assertRegExp('/<th[^>]*>\s*Col A\s*<\/th>/', $ajaxResponse);
+        $this->assertRegExp('/<th[^>]*>\s*Col B\s*<\/th>/', $ajaxResponse);
+        $this->assertRegExp('/<th[^>]*>\s*Col C\s*<\/th>/', $ajaxResponse);
+        $this->assertRegExp('/<th[^>]*>\s*Col D\s*<\/th>/', $ajaxResponse);
+        $this->assertRegExp('/<th[^>]*>\s*Col E\s*<\/th>/', $ajaxResponse);
+	}
+	
 	function testCsvExport() {
 		$table = new TableListField("Tester", "TableListFieldTest_CsvExport", array(
 			"A" => "Col A",
@@ -161,5 +179,19 @@ class TableListFieldTest_CsvExport extends DataObject implements TestOnly {
 class TableListFieldTest_TestController extends Controller {
 	function Link() {
 		return "TableListFieldTest_TestController/";
+	}
+	function TestForm() {
+		$table = new TableListField("Table", "TableListFieldTest_Obj", array(
+			"A" => "Col A",
+			"B" => "Col B",
+			"C" => "Col C",
+			"D" => "Col D",
+			"E" => "Col E",
+		));
+
+		// A TableListField must be inside a form for its links to be generated
+		return new Form($this, "TestForm", new FieldSet(
+			$table
+		), new FieldSet());
 	}
 }

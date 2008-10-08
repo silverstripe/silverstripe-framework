@@ -262,10 +262,10 @@ class TableListField extends FormField {
 	function index() {
 		return $this->FieldHolder();
 	}
-	
+
 	static $url_handlers = array(
 		'item/$ID' => 'handleItem',
-		'$Action!' => '$Action',
+		'$Action' => '$Action',
 	);
 
 	function sourceClass() {
