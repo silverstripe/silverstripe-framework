@@ -111,21 +111,24 @@ class RedirectorPage_Controller extends Page_Controller {
 		if($this->RedirectionType == 'External') {
 			if($this->ExternalURL) {
 				Director::redirect($this->ExternalURL);
-			} else {
-				echo "<p>" .
-					_t('RedirectorPage.HASBEENSETUP', 'A redirector page has been set up without anywhere to redirect to.') .
-					"</p>";
 			}
 		} else {
 			$linkTo = DataObject::get_by_id("SiteTree", $this->LinkToID);
 			if($linkTo) {
 				Director::redirect($linkTo->Link(), 301);
-			} else {
-				echo "<p>" . _t('RedirectorPage.HASBEENSETUP') . "</p>";
 			}
 		}
 		
 		parent::init();
+	}
+	
+	/**
+	 * If we ever get this far, it means that the redirection failed.
+	 */
+	function index() {
+		return "<p>" .
+			_t('RedirectorPage.HASBEENSETUP', 'A redirector page has been set up without anywhere to redirect to.') .
+			"</p>";
 	}
 }
 ?>
