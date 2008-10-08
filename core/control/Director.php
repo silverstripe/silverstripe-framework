@@ -147,6 +147,10 @@ class Director {
 	 * @uses Controller::run() Controller::run() handles the page logic for a Director::direct() call.
 	 */
 	function test($url, $postVars = null, $session = null, $httpMethod = null, $body = null, $headers = null) {
+		// These are needed so that calling Director::test() doesnt muck with whoever is calling it.
+		// Really, it's some inapproriate coupling and should be resolved by making less use of statics
+		$oldStage = Versioned::current_stage();
+		
 		if(!$httpMethod) $httpMethod = $postVars ? "POST" : "GET";
 		
         $getVars = array();
@@ -177,6 +181,10 @@ class Director {
 		$_GET = $existingGetVars; 
 		$_POST = $existingPostVars; 
 		$_SESSION = $existingSessionVars;                
+
+		// These are needed so that calling Director::test() doesnt muck with whoever is calling it.
+		// Really, it's some inapproriate coupling and should be resolved by making less use of statics
+		Versioned::reading_stage($oldStage);
 		
 		return $result;
 	}
