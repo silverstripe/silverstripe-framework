@@ -121,6 +121,9 @@ class SiteTreeTest extends SapphireTest {
 	
 }
 
-class SiteTreeTest_PageNode extends SiteTree implements TestOnly { }
+// We make these extend page since that's what all page types are expected to do
+class SiteTreeTest_PageNode extends Page implements TestOnly { }
+class SiteTreeTest_PageNode_Controller extends Page_Controller implements TestOnly { 
+}
 
 ?>
