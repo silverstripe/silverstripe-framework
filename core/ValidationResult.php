@@ -23,7 +23,7 @@ class ValidationResult extends Object {
 	 * By default, it is a successful result.	Call $this->error() to record errors.
 	 */
 	function __construct($valid = true, $message = null) {
-		$this->isValid = true;
+		$this->isValid = $valid;
 		if($message) $this->errorList[] = $message;
 	}
 	
