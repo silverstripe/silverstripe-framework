@@ -910,7 +910,8 @@ class Member extends DataObject {
 	 *                  editing this member.
 	 */
 	public function getCMSFields() {
-		$fields = parent::scaffoldCMSFields();
+		$mainFields = parent::scaffoldCMSFields();
+		$fields = $mainFields->fieldByName("Root")->fieldByName("Main")->Children;
 		
 		$password = new ConfirmedPasswordField('Password', 'Password');
 		$password->setCanBeEmpty(true);
@@ -960,9 +961,9 @@ class Member extends DataObject {
 		// Members are displayed within  group edit form in SecurityAdmin
 		$fields->removeByName('Groups');
 		
-		$this->extend('updateCMSFields', $fields);
+		$this->extend('updateCMSFields', $mainFields);
 
-		return $fields;
+		return $mainFields;
 	}
 	
 	function fieldLabels() {
