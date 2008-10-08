@@ -52,6 +52,11 @@ Session::start();
 // Apache rewrite rules use this
 if (isset($_GET['url'])) {
 	$url = $_GET['url'];
+	// IIS includes get variables in url
+	$i = strpos($url, '?');
+	if($i !== false) {
+		$url = substr($url, 0, $i);
+	}
 	
 // Lighttpd uses this
 } else {
