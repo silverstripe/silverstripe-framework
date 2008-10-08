@@ -72,11 +72,8 @@ ss.i18n = {
 		},
 		
 		addDictionary: function(locale, dict) {
-			if(typeof(this.lang[locale])) {
-				this.lang[locale] = dict;
-			} else {
-				this.lang[locale] += dict;
-			}
+			if(!this.lang[locale]) this.lang[locale] = $H();
+			this.lang[locale] = $H(this.lang[locale]).merge(dict);
 		},
 	
 	/**
