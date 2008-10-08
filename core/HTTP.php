@@ -26,7 +26,7 @@ class HTTP {
 
 		$urlBase = substr($_SERVER['PHP_SELF'], 0, -(strlen($_SERVER['SCRIPT_FILENAME']) - $commonLength));
 		$url = $urlBase . substr($filename, $commonLength);
-		$protocol = $_SERVER['HTTPS'] ? "https" : "http";
+		$protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off') ? "https" : "http";
 		return "$protocol://". $_SERVER['HTTP_HOST'] . $url;
 
 		// Count the number of extra folders the script is in.

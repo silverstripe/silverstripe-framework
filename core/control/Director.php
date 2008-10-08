@@ -304,7 +304,7 @@ class Director {
 			}
 		}
 
-		$s = (isset($_SERVER['SSL']) || isset($_SERVER['HTTPS'])) ? 's' : '';
+		$s = (isset($_SERVER['SSL']) || (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off')) ? 's' : '';
 		
 		if(isset($_SERVER['HTTP_HOST'])) {
 			return "http$s://" . $_SERVER['HTTP_HOST'];
@@ -511,7 +511,7 @@ class Director {
 	 * </code>
 	 */
 	static function forceSSL() {
-		if(!isset($_SERVER['HTTPS']) && !Director::isDev()) {
+		if((!isset($_SERVER['HTTPS']) || $_SERVER['HTTPS'] == 'off') && !Director::isDev()) {
 			$destURL = str_replace('http:', 'https:', Director::absoluteURL($_SERVER['REQUEST_URI']));
 
 			header("Location: $destURL", true, 301);
@@ -524,7 +524,7 @@ class Director {
 	 */
 	static function forceWWW() {
 		if(!Director::isDev() && !Director::isTest() && strpos($_SERVER['SERVER_NAME'], 'www') !== 0) {
-			if(!empty($_SERVER['HTTPS'])) {
+			if(isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off') {
 				$destURL = str_replace('https://', 'https://www.', Director::absoluteURL($_SERVER['REQUEST_URI']));
 			} else {
 				$destURL = str_replace('http://', 'http://www.', Director::absoluteURL($_SERVER['REQUEST_URI']));
