@@ -1732,13 +1732,13 @@ class DataObject extends ViewableData implements DataObjectInterface {
 		} else {
 			$defaults = $this->stat('defaults');
 			// if a field is not existing or has strictly changed
-			if(!array_key_exists($fieldName, $this->record) || $this->record[$fieldName] !== $val) {
+			if(!isset($this->record[$fieldName]) || $this->record[$fieldName] !== $val) {
 				// TODO Add check for php-level defaults which are not set in the db
 				// TODO Add check for hidden input-fields (readonly) which are not set in the db
 				// At the very least, the type has changed
 				$this->changed[$fieldName] = 1;
 				
-				if(!array_key_exists($fieldName, $this->record) || $this->record[$fieldName] != $val) {
+				if(!isset($this->record[$fieldName]) || $this->record[$fieldName] != $val) {
 					// Value has changed as well, not just the type
 					$this->changed[$fieldName] = 2;
 				}
