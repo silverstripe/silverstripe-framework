@@ -1252,6 +1252,7 @@ class SiteTree extends DataObject {
 	 */
 	function doPublish() {
 		$original = Versioned::get_one_by_stage("SiteTree", "Live", "`SiteTree`.`ID` = $this->ID");
+		if(!$original) $original = new SiteTree();
 
 		// Handle activities undertaken by decorators
 		$this->extend('onBeforePublish', $original);
