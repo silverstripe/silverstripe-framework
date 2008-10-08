@@ -910,7 +910,7 @@ class Member extends DataObject {
 	 *                  editing this member.
 	 */
 	public function getCMSFields() {
-		$fields = parent::scaffoldFormFields();
+		$fields = parent::scaffoldCMSFields();
 		
 		$password = new ConfirmedPasswordField('Password', 'Password');
 		$password->setCanBeEmpty(true);
