@@ -655,6 +655,7 @@ class DataObject extends ViewableData implements DataObjectInterface {
 	 * 					(Default: false)
 	 *
 	 * @return int The ID of the record
+	 * @throws ValidationException Exception that can be caught and handled by the calling function
 	 */
 	public function write($showDebug = false, $forceInsert = false, $forceWrite = false, $writeComponents = false) {
 		$firstWrite = false;
