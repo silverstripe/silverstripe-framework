@@ -21,6 +21,8 @@
 ///////////////////////////////////////////////////////////////////////////////
 // ENVIRONMENT CONFIG
 
+error_reporting(E_ALL);
+
 /**
  * Include _ss_environment.php files
  */
@@ -169,7 +171,12 @@ require_once(MANIFEST_FILE);
  */
 if(isset($_GET['debugmanifest'])) Debug::show(file_get_contents(MANIFEST_FILE));
 
-
+// If this is a dev site, enable php error reporting
+// This is necessary to force developers to acknowledge and fix
+// notice level errors (you can override this directive in your _config.php)
+if (Director::isLive()) {
+	error_reporting(E_ALL ^ E_NOTICE);
+}
 ///////////////////////////////////////////////////////////////////////////////
 // POST-MANIFEST COMMANDS
 

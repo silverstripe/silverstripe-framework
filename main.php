@@ -47,13 +47,6 @@ if (function_exists('mb_http_output')) {
 	mb_internal_encoding('UTF-8');
 }
 
-// If this is a dev site, enable php error reporting
-// This is necessary to force developers to acknowledge and fix
-// notice level errors (you can override this directive in your _config.php)
-if (Director::isDev()) {
-	error_reporting(E_ALL);
-}
-
 Session::start();
 
 // Apache rewrite rules use this
