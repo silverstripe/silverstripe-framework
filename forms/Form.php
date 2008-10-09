@@ -434,7 +434,7 @@ class Form extends ViewableData {
 	 */
 	function sessionMessage($message, $type) {
 		Session::set("FormInfo.{$this->FormName()}.formError.message", $message);
-		Session::set("'FormInfo.{$this->FormName()}.formError.type", $type);
+		Session::set("FormInfo.{$this->FormName()}.formError.type", $type);
 	}
 
 	static function messageForForm( $formName, $message, $type ) {
