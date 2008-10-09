@@ -82,17 +82,16 @@ class FormTest extends FunctionalTest {
 				new TextareaField('Biography'),
 				new DateField('Birthday'),
 				new NumericField('BirthdayYear') // dynamic property
-				//new CheckboxSetField('Teams') // relation editing
 			),
 			new FieldSet()
 		);
 		
-		$captain1 = $this->objFromFixture('FormTest_Player', 'captain1');
-		$form->loadDataFrom($captain1);
+		$captainWithDetails = $this->objFromFixture('FormTest_Player', 'captainWithDetails');
+		$form->loadDataFrom($captainWithDetails);
 		$this->assertEquals(
 			$form->getData(), 
 			array(
-				'Name' => 'Captain 1',
+				'Name' => 'Captain Details',
 				'Biography' => 'Bio 1',
 				'Birthday' => '1982-01-01', 
 				'BirthdayYear' => '1982', 
@@ -100,30 +99,66 @@ class FormTest extends FunctionalTest {
 			'LoadDataFrom() loads simple fields and dynamic getters'
 		);
 
-		$captain2 = $this->objFromFixture('FormTest_Player', 'captain2');
-		$form->loadDataFrom($captain2);
+		$captainNoDetails = $this->objFromFixture('FormTest_Player', 'captainNoDetails');
+		$form->loadDataFrom($captainNoDetails);
 		$this->assertEquals(
 			$form->getData(), 
 			array(
-				'Name' => 'Captain 2',
-				'Biography' => 'Bio 1',
-				'Birthday' => '1982-01-01', 
-				'BirthdayYear' => '1982', 
+				'Name' => 'Captain No Details',
+				'Biography' => null,
+				'Birthday' => null, 
+				'BirthdayYear' => 0, 
 			),
 			'LoadNonBlankDataFrom() loads only fields with values, and doesnt overwrite existing values'
 		);
+	}
+	
+	public function testLoadDataFromClearMissingFields() {
+		$form = new Form(
+			new Controller(),
+			'Form',
+			new FieldSet(
+				new HeaderField('My Player'),
+				new TextField('Name'), // appears in both Player and Team
+				new TextareaField('Biography'),
+				new DateField('Birthday'),
+				new NumericField('BirthdayYear'), // dynamic property
+				$unrelatedField = new TextField('UnrelatedFormField')
+				//new CheckboxSetField('Teams') // relation editing
+			),
+			new FieldSet()
+		);
+		$unrelatedField->setValue("random value");
 		
-		$captain2 = $this->objFromFixture('FormTest_Player', 'captain2');
-		$form->loadDataFrom($captain2, true);
+		$captainWithDetails = $this->objFromFixture('FormTest_Player', 'captainWithDetails');
+		$captainNoDetails = $this->objFromFixture('FormTest_Player', 'captainNoDetails');
+		$form->loadDataFrom($captainWithDetails);
 		$this->assertEquals(
 			$form->getData(), 
 			array(
-				'Name' => 'Captain 2',
+				'Name' => 'Captain Details',
+				'Biography' => 'Bio 1',
+				'Birthday' => '1982-01-01', 
+				'BirthdayYear' => '1982',
+				'UnrelatedFormField' => 'random value',
+			),
+			'LoadDataFrom() doesnt overwrite fields not found in the object'
+		);
+		
+		$captainWithDetails = $this->objFromFixture('FormTest_Player', 'captainNoDetails');
+		$team2 = $this->objFromFixture('FormTest_Team', 'team2');
+		$form->loadDataFrom($captainWithDetails);
+		$form->loadDataFrom($team2, true);
+		$this->assertEquals(
+			$form->getData(), 
+			array(
+				'Name' => 'Team 2',
 				'Biography' => '',
 				'Birthday' => '', 
 				'BirthdayYear' => 0, 
+				'UnrelatedFormField' => null,
 			),
-			'LoadDataFrom() overwrites existing with blank values on subsequent calls'
+			'LoadDataFrom() overwrites fields not found in the object with $clearMissingFields=true'
 		);
 	}
 	
