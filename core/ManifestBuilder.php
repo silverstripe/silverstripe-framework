@@ -178,6 +178,13 @@ class ManifestBuilder {
 		global $_CLASS_MANIFEST;
 		$_CLASS_MANIFEST = $classManifest;
 
+		// Load in a temporary all-classes array for using while building the manifest
+		// @todo Manifestbuilder is tightly convoluted and gets really hard to debug.  We have catch-22s betweeen
+		// db connection, value of project(), and ClassInfo responses...  It needs to be untangled.
+		global $_ALL_CLASSES;
+		$allClasses = ManifestBuilder::allClasses($classManifest, array());
+		$_ALL_CLASSES = $allClasses;
+		
 		// _config.php manifest
 		$topLevel = scandir($baseDir);
 		foreach($topLevel as $filename) {
