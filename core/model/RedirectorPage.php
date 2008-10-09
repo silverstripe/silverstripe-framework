@@ -33,13 +33,54 @@ class RedirectorPage extends Page {
 		}		
 	}
 	
+	/**
+	 * Return the the link that should be used for this redirector page, in navigation, etc.
+	 * If the redirectorpage has been appropriately configured, then it will return the redirection
+	 * destination, to prevent unnecessary 30x redirections.  However, if it's misconfigured, then
+	 * it will return a link to itself, which will then display an error message. 
+	 */
 	function Link() {
+		if($link = $this->redirectionLink()) return $link;
+		else return $this->regularLink();
+	}
+	
+	/**
+	 * Return the normal link directly to this page.  Once you visit this link, a 30x redirection
+	 * will take you to your final destination.
+	 */
+	function regularLink() {
+		return parent::Link();
+	}
+	
+	/**
+	 * Return the link that we should redirect to.
+	 * Only return a value if there is a legal redirection destination.
+	 */
+	function redirectionLink() {
 		if($this->RedirectionType == 'External') {
-			return Convert::raw2att($this->ExternalURL);
+			if($this->ExternalURL) {
+				return Convert::raw2att($this->ExternalURL);
+			}
+			
 		} else {
 			$linkTo = $this->LinkToID ? DataObject::get_by_id("SiteTree", $this->LinkToID) : null;
+
 			if($linkTo) {
-				return $linkTo->Link();
+				// We shouldn't point to ourselves - that would create an infinite loop!  Return null since we have a
+				// bad configuration
+				if($this->ID == $linkTo->ID) {
+					return null;
+			
+				// If we're linking to another redirectorpage then just return the URLSegment, to prevent a cycle of redirector
+				// pages from causing an infinite loop.  Instead, they will cause a 30x redirection loop in the browser, but
+				// this can be handled sufficiently gracefully by the browser.
+				} elseif($linkTo instanceof RedirectorPage) {
+					return $linkTo->regularLink();
+
+				// For all other pages, just return the link of the page.
+				} else {
+					return $linkTo->Link();
+				}
 			}
 		}
 	}
@@ -108,17 +149,10 @@ class RedirectorPage extends Page {
  */
 class RedirectorPage_Controller extends Page_Controller {
 	function init() {
-		if($this->RedirectionType == 'External') {
-			if($this->ExternalURL) {
-				Director::redirect($this->ExternalURL);
-			}
-		} else {
-			$linkTo = DataObject::get_by_id("SiteTree", $this->LinkToID);
-			if($linkTo) {
-				Director::redirect($linkTo->Link(), 301);
-			}
+		if($link = $this->redirectionLink()) {
+			Director::redirect($link, 301);
 		}
-		
+
 		parent::init();
 	}
 	
@@ -126,9 +160,11 @@ class RedirectorPage_Controller extends Page_Controller {
 	 * If we ever get this far, it means that the redirection failed.
 	 */
 	function index() {
-		return "<p>" .
+		return array(
+			"Content" => "<p>" .
 			_t('RedirectorPage.HASBEENSETUP', 'A redirector page has been set up without anywhere to redirect to.') .
-			"</p>";
+			"</p>"
+		);
 	}
 }
 ?>
