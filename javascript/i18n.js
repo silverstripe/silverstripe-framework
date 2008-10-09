@@ -15,7 +15,6 @@ if(typeof(ss) == 'undefined') ss = {};
  * Based on 'javascript i18n that almost doesn't suck' by markos
  * http://markos.gaivo.net/blog/?p=100
  */
-ss.i18n = Class.create();
 ss.i18n = {
 	
 	currentLocale: null,
@@ -149,11 +148,13 @@ ss.i18n = {
 			var detectedLocale;
 		
 			// get by meta
-			$$('meta').each(function(el) {
-				if(el.attributes['http-equiv'] && el.attributes['http-equiv'].nodeValue.toLowerCase() == 'content-language') {
-					rawLocale = el.attributes['content'].nodeValue;
+			var metas = document.getElementsByTagName('meta');
+			for(var i=0; i<metas.length; i++) {
+				if(metas[i].attributes['http-equiv'] && metas[i].attributes['http-equiv'].nodeValue.toLowerCase() == 'content-language') {
+					rawLocale = metas[i].attributes['content'].nodeValue;
 				}
-			});
+			}
+
 			// fallback to default locale
 			if(!rawLocale) rawLocale = this.defaultLocale;
 			
@@ -172,9 +173,28 @@ ss.i18n = {
 			}
 			
 			return detectedLocale;
+		},
+		
+		/**
+		 * Attach an event listener to the given object.
+		 * Modeled after behaviour.js, but externalized
+		 * to keep the i18n library standalone for now.
+		 */
+		addEvent: function(obj, evType, fn, useCapture){
+			if (obj.addEventListener){
+				obj.addEventListener(evType, fn, useCapture);
+				return true;
+			} else if (obj.attachEvent){
+				var r = obj.attachEvent("on"+evType, fn);
+				return r;
+			} else {
+				alert("Handler could not be attached");
+			}
 		}
 };
 
-Event.observe(window, "load", function() {
+
+
+ss.i18n.addEvent(window, "load", function() {
 	ss.i18n.init();
 });
