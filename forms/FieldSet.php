@@ -240,15 +240,30 @@ class FieldSet extends DataObjectSet {
 
 	/**
 	 * Returns a named field.
+	 * You can use dot syntax to get fields from child composite fields
 	 * 
 	 * @todo Implement similiarly to dataFieldByName() to support nested sets - or merge with dataFields()
 	 */
 	public function fieldByName($name) {
+		if(strpos($name,'.') !== false)	list($name, $remainder) = explode('.',$name,2);
+		else $remainder = null;
+		
 		foreach($this->items as $child) {
-			if($name == $child->Name() || $name == $child->id) return $child;
+			if($name == $child->Name() || $name == $child->id) {
+				if($remainder) {
+					if($child->isComposite()) {
+						return $child->fieldByName($remainder);
+					} else {
+						user_error("Trying to get field '$remainder' from non-composite field $child->class.$name", E_USER_WARNING);
+						return null;
+					}
+				} else {
+					return $child;
+				}
+			}
 		}
 	}
-
+	
 	/**
 	 * Returns a named field in a sequential set.
 	 * Use this if you're using nested FormFields.
