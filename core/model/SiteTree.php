@@ -440,7 +440,7 @@ class SiteTree extends DataObject {
 		while(
 			$page  
  			&& (!$maxDepth || sizeof($parts) < $maxDepth) 
- 			&& ($stopAtPageType && $page->ClassName != $stopAtPageType)
+ 			&& (!$stopAtPageType || $page->ClassName != $stopAtPageType)
  		) {
 			if($showHidden || $page->ShowInMenus || ($page->ID == $this->ID)) { 
 				if($page->URLSegment == 'home') $hasHome = true;
