@@ -121,7 +121,11 @@ class YamlFixture extends Object {
 	
 	/**
 	 * Load a YAML fixture file into the database.
-	 * Once loaded, you can use idFromFixture() and objFromFixture() to get items from the fixture
+	 * Once loaded, you can use idFromFixture() and objFromFixture() to get items from the fixture.
+	 * 
+	 * Caution: In order to support reflexive relations which need a valid object ID,
+	 * the record is written twice: first after populating all non-relational fields,
+	 * then again after populating all relations (has_one, has_many, many_many).
 	 */
 	public function saveIntoDatabase() {
 		$parser = new Spyc();
@@ -130,12 +134,18 @@ class YamlFixture extends Object {
 		foreach($fixtureContent as $dataClass => $items) {
 			foreach($items as $identifier => $fields) {
 				$obj = new $dataClass();
-				$obj->write();
 				
 				// Populate the dictionary with the ID
+				foreach($fields as $fieldName => $fieldVal) {
+					if($obj->many_many($fieldName) || $obj->has_many($fieldName) || $obj->has_one($fieldName)) continue;
+					$obj->$fieldName = $this->parseFixtureVal($fieldVal);
+				}
+				$obj->write();
+				
 				// has to happen before relations in case a class is referring to itself
 				$this->fixtureDictionary[$dataClass][$identifier] = $obj->ID;
 				
+				// Populate all relations
 				foreach($fields as $fieldName => $fieldVal) {
 					if($obj->many_many($fieldName) || $obj->has_many($fieldName)) {
 						$parsedItems = array();
@@ -151,8 +161,6 @@ class YamlFixture extends Object {
 						}
 					} elseif($obj->has_one($fieldName)) {
 						$obj->{$fieldName . 'ID'} = $this->parseFixtureVal($fieldVal);
-					} else {
-						$obj->$fieldName = $this->parseFixtureVal($fieldVal);
 					}
 				}
 				$obj->write();
