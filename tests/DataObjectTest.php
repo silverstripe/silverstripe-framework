@@ -348,7 +348,7 @@ class DataObjectTest extends SapphireTest {
 		$this->assertTrue($teamInstance->hasField('Created'), 'hasField() finds built-in fields in instances');
 		$this->assertTrue($teamInstance->hasField('DatabaseField'), 'hasField() finds custom fields in instances');
 		//$this->assertFalse($teamInstance->hasField('SubclassDatabaseField'), 'hasField() doesnt find subclass fields in parentclass instances');
-		//$this->assertTrue($teamInstance->hasField('DynamicField'), 'hasField() finds dynamic getters in instances');
+		$this->assertTrue($teamInstance->hasField('DynamicField'), 'hasField() finds dynamic getters in instances');
 		$this->assertTrue($teamInstance->hasField('HasOneRelationshipID'), 'hasField() finds foreign keys in instances');
 		$this->assertTrue($teamInstance->hasField('DecoratedDatabaseField'), 'hasField() finds decorated fields in instances');
 		$this->assertTrue($teamInstance->hasField('DecoratedHasOneRelationshipID'), 'hasField() finds decorated foreign keys in instances');
@@ -359,7 +359,7 @@ class DataObjectTest extends SapphireTest {
 		$this->assertTrue($subteamInstance->hasField('Created'), 'hasField() finds built-in fields in subclass instances');
 		$this->assertTrue($subteamInstance->hasField('DatabaseField'), 'hasField() finds custom fields in subclass instances');
 		$this->assertTrue($subteamInstance->hasField('SubclassDatabaseField'), 'hasField() finds custom fields in subclass instances');
-		//$this->assertTrue($subteamInstance->hasField('DynamicField'), 'hasField() finds dynamic getters in subclass instances');
+		$this->assertTrue($subteamInstance->hasField('DynamicField'), 'hasField() finds dynamic getters in subclass instances');
 		$this->assertTrue($subteamInstance->hasField('HasOneRelationshipID'), 'hasField() finds foreign keys in subclass instances');
 		$this->assertTrue($subteamInstance->hasField('DecoratedDatabaseField'), 'hasField() finds decorated fields in subclass instances');
 		$this->assertTrue($subteamInstance->hasField('DecoratedHasOneRelationshipID'), 'hasField() finds decorated foreign keys in subclass instances');

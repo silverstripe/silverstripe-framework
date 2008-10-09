@@ -1217,10 +1217,10 @@ class DataObject extends ViewableData implements DataObjectInterface {
 				$relationshipFields = singleton($component)->summaryFields();
 				$foreignKey = $this->getComponentJoinField($relationship);
 				$ctf = new ComplexTableField(
-				$this,
-				$relationship,
-				$component,
-				$relationshipFields,
+					$this,
+					$relationship,
+					$component,
+					$relationshipFields,
 					"getCMSFields", 
 					"$foreignKey = $this->ID"
 				);
@@ -1775,13 +1775,14 @@ class DataObject extends ViewableData implements DataObjectInterface {
 
 	/**
 	 * Returns true if the given field exists
+	 * in a database column on any of the objects tables,
+	 * or as a dynamic getter with get<fieldName>().
 	 *
 	 * @param string $field Name of the field
-	 *
 	 * @return boolean True if the given field exists
 	 */
 	public function hasField($field) {
-		return array_key_exists($field, $this->record) || $this->hasOwnTableDatabaseField($field);
+		return array_key_exists($field, $this->record) || $this->hasDatabaseField($field) || $this->hasMethod("get{$field}");
 	}
 
 	/**
