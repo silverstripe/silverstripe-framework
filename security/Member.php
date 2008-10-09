@@ -910,46 +910,47 @@ class Member extends DataObject {
 	 *                  editing this member.
 	 */
 	public function getCMSFields() {
-		$mainFields = parent::scaffoldCMSFields();
-		$fields = $mainFields->fieldByName("Root")->fieldByName("Main")->Children;
+		$fields = parent::scaffoldCMSFields();
+		
+		$mainFields = $fields->fieldByName("Root")->fieldByName("Main")->Children;
 		
 		$password = new ConfirmedPasswordField('Password', 'Password');
 		$password->setCanBeEmpty(true);
-		$fields->replaceField('Password', $password);
+		$mainFields->replaceField('Password', $password);
 		
-		$fields->insertBefore(
+		$mainFields->insertBefore(
 			new HeaderField(_t('Member.PERSONALDETAILS', "Personal Details", PR_MEDIUM, 'Headline for formfields')),
 			'FirstName'
 		);
 		
-		$fields->insertBefore(
+		$mainFields->insertBefore(
 			new HeaderField(_t('Member.USERDETAILS', "User Details", PR_MEDIUM, 'Headline for formfields')),
 			'Email'
 		);
 		
 		$locale = ($this->Locale) ? $this->Locale : i18n::get_locale();
-		$fields->replaceField('Locale', new DropdownField(
+		$mainFields->replaceField('Locale', new DropdownField(
 			"Locale", 
 			_t('Member.INTERFACELANG', "Interface Language", PR_MEDIUM, 'Language of the CMS'), 
 			i18n::get_existing_translations(), 
 			$locale
 		));
 		
-		$fields->insertAfter(
+		$mainFields->insertAfter(
 			new TreeMultiselectField("Groups", _t("Member.SECURITYGROUPS", "Security groups")),
 			'Locale'
 		);
 		
-		$fields->removeByName('Bounced');
-		$fields->removeByName('RememberLoginToken');
-		$fields->removeByName('AutoLoginHash');
-		$fields->removeByName('AutoLoginExpired');
-		$fields->removeByName('PasswordEncryption');
-		$fields->removeByName('PasswordExpiry');
-		$fields->removeByName('LockedOutUntil');
-		$fields->removeByName('Salt');
-		$fields->removeByName('NumVisit');
-		$fields->removeByName('LastVisited');
+		$mainFields->removeByName('Bounced');
+		$mainFields->removeByName('RememberLoginToken');
+		$mainFields->removeByName('AutoLoginHash');
+		$mainFields->removeByName('AutoLoginExpired');
+		$mainFields->removeByName('PasswordEncryption');
+		$mainFields->removeByName('PasswordExpiry');
+		$mainFields->removeByName('LockedOutUntil');
+		$mainFields->removeByName('Salt');
+		$mainFields->removeByName('NumVisit');
+		$mainFields->removeByName('LastVisited');
 		
 		if($this->ID) {
 			$fields = $this->addScaffoldRelationFields($fields);
@@ -961,9 +962,9 @@ class Member extends DataObject {
 		// Members are displayed within  group edit form in SecurityAdmin
 		$fields->removeByName('Groups');
 		
-		$this->extend('updateCMSFields', $mainFields);
+		$this->extend('updateCMSFields', $fields);
 
-		return $mainFields;
+		return $fields;
 	}
 	
 	function fieldLabels() {
