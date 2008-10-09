@@ -2,6 +2,9 @@
 /**
  * Ghost pages are placeholder pages that are used to facilitate the apparent support for
  * multiple parents.
+ * 
+ * @deprecated 2.3 Use VirtualPage
+ * 
  * @package cms
  */
 class GhostPage extends SiteTree implements HiddenClass {
