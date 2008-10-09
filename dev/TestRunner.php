@@ -111,10 +111,10 @@ class TestRunner extends Controller {
 	 */
 	function only($request) {
 		$className = $request->param('TestCase');
-		if(!$className || !ClassInfo::exists($className) || !(singleton($className) instanceof SapphireTest)) {
-			user_error("TestRunner::only(): Invalid TestCase '$className', cannot find matching class", E_USER_ERROR);
-		}
 		if(class_exists($className)) {
+			if(!(singleton($className) instanceof SapphireTest)) {
+				user_error("TestRunner::only(): Invalid TestCase '$className', cannot find matching class", E_USER_ERROR);
+			}
 			$this->runTests(array($className));
 		} else {
 			if ($className == 'all') $this->all();
@@ -219,6 +219,7 @@ HTML;
 				}
 
 				$dbname = SapphireTest::create_temp_db();
+
 				DB::set_alternative_database_name($dbname);
 			
 				$fixture = new YamlFixture($_GET['fixture']);
