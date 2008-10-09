@@ -5,6 +5,10 @@
  * Support less-trivial output stuff such as colours (on xterm-color)
  */
 class SSCli extends Object {
+	static function supports_colour() {
+		return posix_isatty(STDOUT);
+	}
+	
 	/**
 	 * Return text encoded for CLI output, optionally coloured
 	 * @param string $fgColour The foreground colour - black, red, green, yellow, blue, magenta, cyan, white.  Null is default.
@@ -12,7 +16,7 @@ class SSCli extends Object {
 	 * @param string $bold A boolean variable - bold or not.
 	 */
 	static function text($text, $fgColour = null, $bgColour = null, $bold = false) {
-		if(!isset($_SERVER['TERM']) || $_SERVER['TERM'] != 'xterm-color') return $text;
+		if(!self::supports_colour()) return $text;
 
 		$colours = array(
 			'black' => 0,
