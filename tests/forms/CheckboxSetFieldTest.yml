@@ -1,0 +1,22 @@
+CheckboxSetFieldTest_Tag:
+   tag1:
+      Title: Tag 1
+   tag2:
+      Title: Tag 2
+CheckboxSetFieldTest_Article:
+   articlewithouttags:
+      Content: Article 1
+   articlewithtags:
+      Content: Article 2
+      Tags: =>CheckboxSetFieldTest_Tag.tag1,=>CheckboxSetFieldTest_Tag.tag2
+CheckboxSetFieldTest_Tag:
+   tag1:
+      Title: Tag 1
+   tag2:
+      Title: Tag 2
+CheckboxSetFieldTest_Article:
+   articlewithouttags:
+      Content: Article 1
+   articlewithtags:
+      Content: Article 2
+      Tags: =>CheckboxSetFieldTest_Tag.tag1,=>CheckboxSetFieldTest_Tag.tag2
