@@ -434,6 +434,7 @@ class Permission extends DataObject {
 
 		if($classes) foreach($classes as $class) {
 			$SNG = singleton($class);
+			if($SNG instanceof TestOnly) continue;
 			$someCodes = $SNG->providePermissions();
 			if($someCodes) foreach($someCodes as $k => $v) {
 				$allCodes[$k] = $v;
