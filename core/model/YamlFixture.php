@@ -130,6 +130,12 @@ class YamlFixture extends Object {
 		foreach($fixtureContent as $dataClass => $items) {
 			foreach($items as $identifier => $fields) {
 				$obj = new $dataClass();
+				$obj->write();
+				
+				// Populate the dictionary with the ID
+				// has to happen before relations in case a class is referring to itself
+				$this->fixtureDictionary[$dataClass][$identifier] = $obj->ID;
+				
 				foreach($fields as $fieldName => $fieldVal) {
 					if($obj->many_many($fieldName) || $obj->has_many($fieldName)) {
 						$parsedItems = array();
@@ -150,9 +156,6 @@ class YamlFixture extends Object {
 					}
 				}
 				$obj->write();
-				
-				// Populate the dictionary with the ID
-				$this->fixtureDictionary[$dataClass][$identifier] = $obj->ID;
 			}
 		}
 	}
