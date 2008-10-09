@@ -230,7 +230,8 @@ class FieldSet extends DataObjectSet {
 					$currentPointer = new Tab($part);
 					$parentPointer->push($currentPointer);
 				} else {
-					user_error("FieldSet::addFieldToTab() Tried to add a tab to object '{$parentPointer->class}.{$parentPointer->Name()}' - '$part' didn't exist.", E_USER_ERROR);
+					$withName = ($parentPointer->hasMethod('Name')) ? " named {$parentPointer->Name()}" : null;
+					user_error("FieldSet::addFieldToTab() Tried to add a tab to object '{$parentPointer->class}{$withName}' - '$part' didn't exist.", E_USER_ERROR);
 				}
 			}
 		}
