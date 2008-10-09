@@ -59,8 +59,28 @@ class CheckboxSetFieldTest extends SapphireTest {
 		);	
 	}
 	
-	function testLoadDataFrom() {
-		
+	function testLoadDataFromObject() {
+		$article = $this->fixture->objFromFixture('CheckboxSetFieldTest_Article', 'articlewithouttags');
+		$articleWithTags = $this->fixture->objFromFixture('CheckboxSetFieldTest_Article', 'articlewithtags');
+		$tag1 = $this->fixture->objFromFixture('CheckboxSetFieldTest_Tag', 'tag1');
+		$tag2 = $this->fixture->objFromFixture('CheckboxSetFieldTest_Tag', 'tag2');
+
+		$field = new CheckboxSetField("Tags", "Test field", DataObject::get("CheckboxSetFieldTest_Tag")->map());
+		$form = new Form(
+			new Controller(), 
+			'Form',
+			new FieldSet($field),
+			new FieldSet()
+		);
+		$form->loadDataFrom($articleWithTags);
+		$this->assertEquals(
+			array(
+				$tag1->ID => $tag1->ID,
+				$tag2->ID => $tag2->ID
+			),
+			$field->Value(),
+			'CheckboxSetField properly loads data from a manymany relationship in an object through Form->loadDataFrom()'
+		);
 	}
 }
 
