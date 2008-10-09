@@ -1256,7 +1256,7 @@ class TableListField_Item extends ViewableData {
 	
 	function Link() {
  		if($this->parent->getForm()) {
-			return Controller::join_links($this->parent->Link() . "item/" . $this->item->ID);
+			return Controller::join_links($this->parent->Link() . '/item/' . $this->item->ID);
 		} else {
 			// allow for instanciation of this FormField outside of a controller/form
 			// context (e.g. for unit tests)
