@@ -34,7 +34,7 @@ class XMLDataFormatter extends DataFormatter {
 	}
 		
 		
-	public function convertDataObjectWithoutHeader(DataObject $obj, $fields = null) {
+	public function convertDataObjectWithoutHeader(DataObject $obj, $fields = null, $relations = null) {
 		$className = $obj->class;
 		$id = $obj->ID;
 		$objHref = Director::absoluteURL(self::$api_base . "$obj->class/$obj->ID");
@@ -58,6 +58,7 @@ class XMLDataFormatter extends DataFormatter {
 			foreach($obj->has_one() as $relName => $relClass) {
 				// Field filtering
 				if($fields && !in_array($relName, $fields)) continue;
+				if($this->customRelations && !in_array($relName, $this->customRelations)) continue;
 
 				$fieldName = $relName . 'ID';
 				if($obj->$fieldName) {
@@ -71,6 +72,7 @@ class XMLDataFormatter extends DataFormatter {
 			foreach($obj->has_many() as $relName => $relClass) {
 				// Field filtering
 				if($fields && !in_array($relName, $fields)) continue;
+				if($this->customRelations && !in_array($relName, $this->customRelations)) continue;
 
 				$json .= "<$relName linktype=\"has_many\" href=\"$objHref/$relName.xml\">\n";
 				$items = $obj->$relName();
@@ -85,6 +87,7 @@ class XMLDataFormatter extends DataFormatter {
 			foreach($obj->many_many() as $relName => $relClass) {
 				// Field filtering
 				if($fields && !in_array($relName, $fields)) continue;
+				if($this->customRelations && !in_array($relName, $this->customRelations)) continue;
 
 				$json .= "<$relName linktype=\"many_many\" href=\"$objHref/$relName.xml\">\n";
 				$items = $obj->$relName();

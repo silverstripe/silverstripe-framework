@@ -82,6 +82,12 @@ class RestfulServer extends Controller {
 	 */
 	protected static $default_mimetype = "text/xml";
 	
+	/**
+	 * @uses authenticate()
+	 * @var Member
+	 */
+	protected $member;
+	
 	/*
 	function handleItem($request) {
 		return new RestfulServer_Item(DataObject::get_by_id($request->param("ClassName"), $request->param("ID")));
@@ -108,7 +114,7 @@ class RestfulServer extends Controller {
 		if(!singleton($className)->stat('api_access')) return $this->permissionFailure();
 		
 		// authenticate through HTTP BasicAuth
-		$member = $this->authenticate();
+		$this->member = $this->authenticate();
 
 		// handle different HTTP verbs
 		if($this->request->isGET() || $this->request->isHEAD()) return $this->getHandler($className, $id, $relation);
@@ -256,10 +262,13 @@ class RestfulServer extends Controller {
 		} else {
 			$formatter = DataFormatter::for_extension(self::$default_extension);
 		}
+
+		if(!$formatter) return false;
 		
 		// set custom fields
 		if($customAddFields = $this->request->getVar('add_fields')) $formatter->setCustomAddFields(explode(',',$customAddFields));
 		if($customFields = $this->request->getVar('fields')) $formatter->setCustomFields(explode(',',$customFields));
+		$formatter->setCustomRelations($this->getAllowedRelations($this->urlParams['ClassName']));
 
 		// set relation depth
 		$relationDepth = $this->request->getVar('relationdepth');
@@ -468,6 +477,26 @@ class RestfulServer extends Controller {
 		} else {
 			return false;
 		}
+	}
+	
+	/**
+	 * Return only relations which have $api_access enabled.
+	 * @todo Respect field level permissions once they are available in core
+	 * 
+	 * @param string $class
+	 * @param Member $member
+	 * @return array
+	 */
+	protected function getAllowedRelations($class, $member = null) {
+		$allowedRelations = array();
+		$obj = singleton($class);
+		$relations = (array)$obj->has_one() + (array)$obj->has_many() + (array)$obj->many_many();
+		if($relations) foreach($relations as $relName => $relClass) {
+			if(singleton($relClass)->stat('api_access')) {
+				$allowedRelations[] = $relName;
+			}
+		}
+		return $allowedRelations;
 	}
 	
 }

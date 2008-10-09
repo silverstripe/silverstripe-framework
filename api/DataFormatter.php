@@ -45,6 +45,15 @@ abstract class DataFormatter extends Object {
 	protected $customAddFields = null;
 	
 	/**
+	 * Allows to limit or add relations.
+	 * Only use in combination with {@link $relationDepth}.
+	 * By default, all relations will be shown.
+	 * 
+	 * @var array
+	 */
+	protected $customRelations = null;
+	
+	/**
 	 * Fields which should be expicitly excluded from the export.
 	 * Comes in handy for field-level permissions.
 	 * Will overrule both {@link $customAddFields} and {@link $customFields}
@@ -165,6 +174,20 @@ abstract class DataFormatter extends Object {
 	 */
 	public function setCustomAddFields($fields) {
 		$this->customAddFields = $fields;
+	}
+	
+	/**
+	 * @param array $relations
+	 */
+	public function setCustomRelations($relations) {
+		$this->customRelations = $relations;
+	}
+	
+	/**
+	 * @return array
+	 */
+	public function getCustomRelations() {
+		return $this->customRelations;
 	}
 
 	/**

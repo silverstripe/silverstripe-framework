@@ -29,7 +29,7 @@ class JSONDataFormatter extends DataFormatter {
 	 * @param $includeHeader Include <?xml ...?> header (Default: true)
 	 * @return String XML
 	 */
-	public function convertDataObject(DataObjectInterface $obj, $fields = null) {
+	public function convertDataObject(DataObjectInterface $obj, $fields = null, $relations = null) {
 		$className = $obj->class;
 		$id = $obj->ID;
 		
@@ -50,6 +50,7 @@ class JSONDataFormatter extends DataFormatter {
 			foreach($obj->has_one() as $relName => $relClass) {
 				// Field filtering
 				if($fields && !in_array($relName, $fields)) continue;
+				if($this->customRelations && !in_array($relName, $this->customRelations)) continue;
 
 				$fieldName = $relName . 'ID';
 				if($obj->$fieldName) {
@@ -63,6 +64,7 @@ class JSONDataFormatter extends DataFormatter {
 			foreach($obj->has_many() as $relName => $relClass) {
 				// Field filtering
 				if($fields && !in_array($relName, $fields)) continue;
+				if($this->customRelations && !in_array($relName, $this->customRelations)) continue;
 
 				$jsonInnerParts = array();
 				$items = $obj->$relName();
@@ -77,6 +79,7 @@ class JSONDataFormatter extends DataFormatter {
 			foreach($obj->many_many() as $relName => $relClass) {
 				// Field filtering
 				if($fields && !in_array($relName, $fields)) continue;
+				if($this->customRelations && !in_array($relName, $this->customRelations)) continue;
 
 				$jsonInnerParts = array();
 				$items = $obj->$relName();
