@@ -2496,7 +2496,7 @@ class DataObject extends ViewableData implements DataObjectInterface {
 
 			// Child table
 		} else {
-			return $this->customDatabaseFields();
+			return (array)$this->customDatabaseFields();
 		}
 	}
 
@@ -2517,7 +2517,7 @@ class DataObject extends ViewableData implements DataObjectInterface {
 			}
 		}
 
-		return $def;
+		return (array)$def;
 	}
 
 	/**
@@ -2537,7 +2537,7 @@ class DataObject extends ViewableData implements DataObjectInterface {
 			$fields = array_merge($fields, (array)$currentObj->customDatabaseFields());
 			$currentObj = singleton($currentObj->parentClass());
 		}
-		return $fields;
+		return (array)$fields;
 	}
 
 	/**
