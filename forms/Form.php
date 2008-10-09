@@ -728,9 +728,12 @@ class Form extends RequestHandlingData {
 	 * @uses FormField->setValue()
 	 * 
 	 * @param array|DataObject $data
-	 * @param boolean $loadBlanks Load blank values into the form, overwriting any existing values.
+	 * @param boolean $clearMissingFields By default, fields which don't match
+	 *  a property or array-key of the passed {@link $data} argument are "left alone",
+	 *  meaning they retain any previous values (if present). If this flag is set to true,
+	 *  those fields are overwritten with null regardless if they have a match in {@link $data}.
 	 */
-	function loadDataFrom($data, $loadBlanks = false) {
+	function loadDataFrom($data, $clearMissingFields = false) {
 		if(!is_object($data) && !is_array($data)) {
 			user_error("Form::loadDataFrom() not passed an array or an object", E_USER_WARNING);
 			return false;
@@ -748,14 +751,26 @@ class Form extends RequestHandlingData {
 			if(is_array($data) && isset($data[$name . '_unchanged'])) continue;
 			
 			// get value in different formats
-			if(is_object($data)) {
-				// try to get object property
+			$hasObjectValue = false;
+			if(
+				is_object($data) 
+				&& (
+					isset($data->$name)
+					|| $data->hasMethod($name)
+					|| ($data->hasMethod('hasField') && $data->hasField($name))
+				)
+			) {
+				// We don't actually call the method because it might be slow.  
+				// In a later release, relation methods will just return references to the query that should be executed, 
+				// and so we will be able to safely pass the return value of the 
+				// relation method to the first argument of setValue
 				$val = $data->__get($name);
+				$hasObjectValue = true;
 			} else if(strpos($name,'[') && is_array($data) && !isset($data[$name])) {
 				// if field is in array-notation, we need to resolve the array-structure PHP creates from query-strings
 				preg_match('/' . addcslashes($name,'[]') . '=([^&]*)/', urldecode(http_build_query($data)), $matches);
 				$val = isset($matches[1]) ? $matches[1] : null;
-			} elseif(is_array($data) && isset($data[$name])) {
+			} elseif(is_array($data) && array_key_exists($name, $data)) {
 				// else we assume its a simple keyed array
 				$val = $data[$name];
 			} else {
@@ -763,7 +778,7 @@ class Form extends RequestHandlingData {
 			}
 
 			// save to the field if either a value is given, or loading of blank/undefined values is forced
-			if(isset($val) || $loadBlanks) {
+			if(isset($val) || $hasObjectValue || $clearMissingFields) {
 				// pass original data as well so composite fields can act on the additional information
 				$field->setValue($val, $data);
 			}
