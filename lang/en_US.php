@@ -2,10 +2,7 @@
 
 global $lang;
 
-$lang['en_US']['RecordController']['SAVESUCCESS'] = 'Saved record';
 $lang['en_US']['ContentController']['DRAFT_SITE_ACCESS_RESTRICTION'] = 'You must log in with your CMS password in order to view the draft or archived content.  <a href=\"%s\">Click here to go back to the published site.</a>';
-$lang['en_US']['RecordController']['SAVESUCCESS'] = 'Saved record';
-$lang['en_US']['RecordController']['DELETESUCCESS'] = 'Successfully deleted record';
 $lang['en_US']['ErrorPage']['DEFAULTERRORPAGETITLE'] = 'Page not found';
 $lang['en_US']['ErrorPage']['DEFAULTERRORPAGECONTENT'] = '<p>Sorry, it seems you were trying to access a page that doesn\'t exist.</p><p>Please check the spelling of the URL you were trying to access and try again.</p>';
 $lang['en_US']['ErrorPage']['CODE'] = 'Error code';
@@ -536,8 +533,6 @@ $lang['en_US']['Security']['ID'] = 'ID:';
 $lang['en_US']['Security']['EMAIL'] = 'E-Mail:';
 $lang['en_US']['SecurityAdmin']['CODE'] = 'Code';
 $lang['en_US']['SecurityAdmin']['OPTIONALID'] = 'Optional ID';
-$lang['en_US']['CollectionController.ss']['SEARCH'] = 'Search';
-$lang['en_US']['CollectionController.ss']['ADDNEWRECORD'] = 'Add new record';
 $lang['en_US']['ComplexTableField.ss']['SORTASC'] = 'Sort ascending';
 $lang['en_US']['ComplexTableField.ss']['SORTDESC'] = 'Sort descending';
 $lang['en_US']['ComplexTableField.ss']['ADDITEM'] = 'add';
