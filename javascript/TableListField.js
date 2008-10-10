@@ -41,7 +41,10 @@ TableListField.prototype = {
 		// TODO Breaks with nested divs
 		var summaryCols = $$('tfoot tr.summary td', this);
 		this._summaryDefs = [];
-		if(summaryCols) {
+		
+		//if(summaryCols) {
+		//should check summaryCols.length, cos summaryCols will be alway an array, though its length could be 0.
+		if(summaryCols.length) {
 			rules['#'+this.id+' table.data tbody input'] = {
 				onchange: function(e) {
 					if (!e) e = window.event; // stupid IE
@@ -63,7 +66,10 @@ TableListField.prototype = {
 		}
 		
 		Behaviour.register('TableListField_'+this.id,rules);
-		if(summaryCols) {
+		
+		//if(summaryCols) {
+		//should check summaryCols.length, cos summaryCols will be alway an array, though its length could be 0.
+		if(summaryCols.length) {
 			//this._getSummaryDefs(summaryCols);
 		}
 	},
