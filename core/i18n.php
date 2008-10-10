@@ -1012,7 +1012,7 @@ class i18n extends Controller {
 				foreach($includers as $includertpl => $allincluded) 
 					foreach($allincluded as $included)
 						// we will only add code if the included template has localizable strings
-						if(isset($lang['en_US']["$included.ss"])) {
+						if(isset($lang[self::$default_locale]["$included.ss"])) {
 							$module = self::get_owner_module("$included.ss");
 							
 							/* if the module of the included template is not the same as the includer's one
@@ -1021,8 +1021,8 @@ class i18n extends Controller {
 							if ($module != $tplmodule) $modulestoinclude[$module] = $included;
 							
 							// Give the includer name to the included strings in order to be used from the includer template
-							$stringsCode .= "\$lang['en_US']['$includertpl'] = " .
-									"array_merge(\$lang['en_US']['$includertpl'], \$lang['en_US']['$included.ss']);\n";
+							$stringsCode .= "\$lang['" . self::$default_locale . "']['$includertpl'] = " .
+									"array_merge(\$lang['" . self::$default_locale . "']['$includertpl'], \$lang['" . self::$default_locale . "']['$included.ss']);\n";
 						}
 				
 				// Include a template for every needed module (the module language file will then be autoloaded)
@@ -1042,17 +1042,17 @@ class i18n extends Controller {
 				}
 				
 				// Open the English file and write the Master String Table
-				if($fh = fopen($langFolder . '/en_US.php', "w")) {
+				if($fh = fopen($langFolder . '/' . self::$default_locale . '.php', "w")) {
 					fwrite($fh, "<?php\n\nglobal \$lang;\n\n" . $mst . "\n?>");			
 					fclose($fh);
 					if(Director::is_cli()) {
-						echo "Created file: $langFolder/en_US.php\n";
+						echo "Created file: $langFolder/" . self::$default_locale . ".php\n";
 					} else {
-						echo "Created file: $langFolder/en_US.php<br />";
+						echo "Created file: $langFolder/" . self::$default_locale . ".php<br />";
 					}
 		
 				} else {
-					user_error("Cannot write language file! Please check permissions of $langFolder/en_US.php", E_USER_ERROR);
+					user_error("Cannot write language file! Please check permissions of $langFolder/" . self::$default_locale . ".php", E_USER_ERROR);
 				}
 			}
 
@@ -1093,7 +1093,7 @@ class i18n extends Controller {
 				echo "Warning! Redeclaring entity $entity in file $file (previously declared in {$callMap["$class--$entity"]})<br>";
 
 			if (substr($regs[2],0,1) == '"') $regs[2] = addcslashes($regs[2],'\'');
-			$mst .= '$lang[\'en_US\'][\'' . $class . '\'][\'' . $entity . '\'] = ';
+			$mst .= '$lang[\'' . self::$default_locale . '\'][\'' . $class . '\'][\'' . $entity . '\'] = ';
 			if ($regs[5]) {
 				$mst .= "array(\n\t'" . substr($regs[2],1,-1) . "',\n\t" . substr($regs[5],1);
 				if ($regs[7]) {
@@ -1142,7 +1142,7 @@ class i18n extends Controller {
 				echo "Warning! Redeclaring entity $entity in file $file (previously declared in {$callMap["$index--$entity"]})<br>";
 
 			if (substr($regs[2],0,1) == '"') $regs[2] = addcslashes($regs[2],'\'');
-			$mst .= '$lang[\'en_US\'][\'' . $index . '\'][\'' . $entity . '\'] = ';
+			$mst .= '$lang[\'' . self::$default_locale . '\'][\'' . $index . '\'][\'' . $entity . '\'] = ';
 			if ($regs[5]) {
 				$mst .= "array(\n\t'" . substr($regs[2],1,-1) . "',\n\t" . substr($regs[5],1);
 				if ($regs[7]) {
@@ -1258,9 +1258,9 @@ class i18n extends Controller {
 		
 		if (file_exists($file = Director::getAbsFile("$module/lang/". self::get_locale() . '.php'))) {
 			include_once($file);
-		} else if (self::get_locale() != 'en_US') {
+		} else if (self::get_locale() != self::$default_locale) {
 		        $old = self::get_locale();
-			self::set_locale('en_US');
+			self::set_locale(self::$default_locale);
 			self::include_by_class($class);
 			self::set_locale($old);
 
