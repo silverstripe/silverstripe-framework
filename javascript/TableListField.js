@@ -42,9 +42,8 @@ TableListField.prototype = {
 		var summaryCols = $$('tfoot tr.summary td', this);
 		this._summaryDefs = [];
 		
-		//if(summaryCols) {
-		//should check summaryCols.length, cos summaryCols will be alway an array, though its length could be 0.
-		if(summaryCols.length) {
+		//should check summaryCols.length, because summaryCols will always be an array, though its length could be 0.
+		if(summaryCols && summaryCols.length) {
 			rules['#'+this.id+' table.data tbody input'] = {
 				onchange: function(e) {
 					if (!e) e = window.event; // stupid IE
@@ -67,11 +66,11 @@ TableListField.prototype = {
 		
 		Behaviour.register('TableListField_'+this.id,rules);
 		
-		//if(summaryCols) {
-		//should check summaryCols.length, cos summaryCols will be alway an array, though its length could be 0.
+		/*
 		if(summaryCols.length) {
-			//this._getSummaryDefs(summaryCols);
+			this._getSummaryDefs(summaryCols);
 		}
+		*/
 	},
 	
 	/**
