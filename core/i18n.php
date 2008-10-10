@@ -16,6 +16,11 @@
  * Caution: Does not apply any character-set conversion, it is assumed that all content
  * is stored and represented in UTF-8 (Unicode). Please make sure your files are created with the correct
  * character-set, and your HTML-templates render UTF-8.
+ * 
+ * Caution: The language file has to be stored in the same module path as the "filename namespaces"
+ * on the entities. So an entity stored in $lang['en_US']['AssetAdmin']['DETAILSTAB'] has to
+ * in the language file cms/lang/en_US.php, as the referenced file (AssetAdmin.php) is stored
+ * in the "cms" module.
  *
  * Please see the {Translatable} DataObjectDecorator for managing translations of database-content.
  *
