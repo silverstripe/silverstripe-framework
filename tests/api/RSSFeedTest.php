@@ -6,7 +6,6 @@
 class RSSFeedTest extends SapphireTest {
 	
 	function testRSSFeed() {
-		/*
 		$list = new DataObjectSet();
 		$list->push(new RSSFeedTest_ItemA());
 		$list->push(new RSSFeedTest_ItemB());
@@ -46,7 +45,6 @@ class RSSFeedTest extends SapphireTest {
 		$this->assertContains('<description>ItemC AltContent</description>', $content);
 		
 		$_SERVER = $origServer;
-		*/
 	}
 	
 }
