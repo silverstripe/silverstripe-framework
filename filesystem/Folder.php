@@ -361,15 +361,15 @@ class Folder extends File {
 			$this,
 			"Files",
 			"File", 
-			array("Title" => _t('AssetAdmin.TITLE', "Title"), "LinkedURL" => _t('AssetAdmin.FILENAME', "Filename")), 
+			array("Title" => _t('Folder.TITLE', "Title"), "LinkedURL" => _t('Folder.FILENAME', "Filename")), 
 			""
 		);
 		$fileList->setFolder($this);
-		$fileList->setPopupCaption(_t('AssetAdmin.VIEWEDITASSET', "View/Edit Asset"));
+		$fileList->setPopupCaption(_t('Folder.VIEWEDITASSET', "View/Edit Asset"));
 
 		$nameField = ($this->ID && $this->ID != "root") ? new TextField("Name", "Folder Name") : new HiddenField("Name");
 		if( $this->userCanEdit() ) {
-			$deleteButton = new InlineFormAction('deletemarked',_t('AssetAdmin.DELSELECTED','Delete selected files'), 'delete');
+			$deleteButton = new InlineFormAction('deletemarked',_t('Folder.DELSELECTED','Delete selected files'), 'delete');
 			$deleteButton->includeDefaultJS(false);
 		} else {
 			$deleteButton = new HiddenField('deletemarked');
@@ -378,34 +378,34 @@ class Folder extends File {
 		$fields = new FieldSet(
 			new HiddenField("Title"),
 			new TabSet("Root", 
-				new Tab(_t('AssetAdmin.FILESTAB', "Files"),
+				new Tab("Files", _t('Folder.FILESTAB', "Files"),
 					$nameField,
 					$fileList,
 					$deleteButton,
 					new HiddenField("FileIDs"),
 					new HiddenField("DestFolderID")
 				),
-				new Tab(_t('AssetAdmin.DETAILSTAB', "Details"), 
-					new ReadonlyField("URL", _t('AssetAdmin.URL', 'URL')),
-					new ReadonlyField("ClassName", _t('AssetAdmin.TYPE','Type')),
-					new ReadonlyField("Created", _t('AssetAdmin.CREATED','First Uploaded')),
-					new ReadonlyField("LastEdited", _t('AssetAdmin.LASTEDITED','Last Updated'))
+				new Tab("Details", _t('Folder.DETAILSTAB', "Details"), 
+					new ReadonlyField("URL", _t('Folder.URL', 'URL')),
+					new ReadonlyField("ClassName", _t('Folder.TYPE','Type')),
+					new ReadonlyField("Created", _t('Folder.CREATED','First Uploaded')),
+					new ReadonlyField("LastEdited", _t('Folder.LASTEDITED','Last Updated'))
 				),
-				new Tab(_t('AssetAdmin.UPLOADTAB', "Upload"),
+				new Tab("Upload", _t('Folder.UPLOADTAB', "Upload"),
 					new LiteralField("UploadIframe",
 						$this->getUploadIframe()
 					)
 				),
-				new Tab(_t('AssetAdmin.UNUSEDFILESTAB', "Unused files"),
+				new Tab("UnusedFiles", _t('Folder.UNUSEDFILESTAB', "Unused files"),
 				    new LiteralField("UnusedAssets",
-	                    "<div id=\"UnusedAssets\"><h2>"._t('AssetAdmin.UNUSEDFILESTITLE', 'Unused files')."</h2>"
+	                    "<div id=\"UnusedAssets\"><h2>"._t('Folder.UNUSEDFILESTITLE', 'Unused files')."</h2>"
 	                ),
 				    $this->getAssetList(),
 				    new LiteralField("UnusedThumbnails",
 	                   "</div>
 	                        <div id=\"UnusedThumbnails\">
-	                            <h2>"._t('AssetAdmin.UNUSEDTHUMBNAILSTITLE', 'Unused thumbnails')."</h2>
-	                            <button class=\"action\">"._t('AssetAdmin.DELETEUNUSEDTHUMBNAILS', 'Delete unused thumbnails')."</button>
+	                            <h2>"._t('Folder.UNUSEDTHUMBNAILSTITLE', 'Unused thumbnails')."</h2>
+	                            <button class=\"action\">"._t('Folder.DELETEUNUSEDTHUMBNAILS', 'Delete unused thumbnails')."</button>
 	                        </div>"
 	                )     
 	            )
@@ -429,11 +429,11 @@ class Folder extends File {
             $this,
             "AssetList",
             "File", 
-			array("Title" => _t('AssetAdmin.TITLE', "Title"), "LinkedURL" => _t('AssetAdmin.FILENAME', "Filename")), 
+			array("Title" => _t('Folder.TITLE', "Title"), "LinkedURL" => _t('Folder.FILENAME', "Filename")), 
             "",
             $where
         );
-		$assetList->setPopupCaption(_t('AssetAdmin.VIEWASSET', "View Asset"));
+		$assetList->setPopupCaption(_t('Folder.VIEWASSET', "View Asset"));
         $assetList->setPermissions(array("show","delete"));
         $assetList->Markable = false;
         return $assetList;

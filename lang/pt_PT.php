@@ -16,15 +16,6 @@ if(array_key_exists('pt_PT', $lang) && is_array($lang['pt_PT'])) {
 	$lang['pt_PT'] = $lang['en_US'];
 }
 
-$lang['pt_PT']['AssetAdmin']['DELSELECTED'] = 'Apagar os ficheiros seleccionados';
-$lang['pt_PT']['AssetAdmin']['DETAILSTAB'] = 'Detalhes';
-$lang['pt_PT']['AssetAdmin']['FILENAME'] = 'Nome do Ficheiro';
-$lang['pt_PT']['AssetAdmin']['FILESTAB'] = 'Ficheiros';
-$lang['pt_PT']['AssetAdmin']['TITLE'] = 'Título';
-$lang['pt_PT']['AssetAdmin']['TYPE'] = 'Tipo';
-$lang['pt_PT']['AssetAdmin']['UNUSEDFILESTAB'] = 'Ficheiros não utilizados';
-$lang['pt_PT']['AssetAdmin']['UNUSEDFILESTITLE'] = 'Ficheiros não utilizados';
-$lang['pt_PT']['AssetAdmin']['UPLOADTAB'] = 'Enviar';
 $lang['pt_PT']['BankAccountField']['VALIDATIONJS'] = 'Por favor introduza um número de conta bancária válido.';
 $lang['pt_PT']['BasicAuth']['ENTERINFO'] = 'Por favor insira um nome de utilizador e password.';
 $lang['pt_PT']['BasicAuth']['ERRORNOTADMIN'] = 'Esse utilizador não é um administrador.';
@@ -112,6 +103,15 @@ $lang['pt_PT']['ErrorPage']['DEFAULTERRORPAGECONTENT'] = '<p>A página a que ten
 $lang['pt_PT']['ErrorPage']['DEFAULTERRORPAGETITLE'] = 'Página não encontrada';
 $lang['pt_PT']['File']['NOFILESIZE'] = 'O tamanho do ficheiro é de 0 bytes.';
 $lang['pt_PT']['FileIframeField']['NOTEADDFILES'] = 'Pode adicionar ficheiros assim que seja gravado pela primeira vez.';
+$lang['pt_PT']['Folder']['DELSELECTED'] = 'Apagar os ficheiros seleccionados';
+$lang['pt_PT']['Folder']['DETAILSTAB'] = 'Detalhes';
+$lang['pt_PT']['Folder']['FILENAME'] = 'Nome do Ficheiro';
+$lang['pt_PT']['Folder']['FILESTAB'] = 'Ficheiros';
+$lang['pt_PT']['Folder']['TITLE'] = 'Título';
+$lang['pt_PT']['Folder']['TYPE'] = 'Tipo';
+$lang['pt_PT']['Folder']['UNUSEDFILESTAB'] = 'Ficheiros não utilizados';
+$lang['pt_PT']['Folder']['UNUSEDFILESTITLE'] = 'Ficheiros não utilizados';
+$lang['pt_PT']['Folder']['UPLOADTAB'] = 'Enviar';
 $lang['pt_PT']['ForgotPasswordEmail.ss']['HELLO'] = 'Olá';
 $lang['pt_PT']['ForgotPasswordEmail.ss']['TEXT1'] = 'Este é o seu';
 $lang['pt_PT']['ForgotPasswordEmail.ss']['TEXT2'] = 'link para alterar password';

@@ -17,9 +17,6 @@ if(array_key_exists('eo_XX', $lang) && is_array($lang['eo_XX'])) {
 }
 
 $lang['eo_XX']['AdvancedSearchForm']['GO'] = 'Ek';
-$lang['eo_XX']['AssetAdmin']['DETAILSTAB'] = 'Detaloj';
-$lang['eo_XX']['AssetAdmin']['FILENAME'] = 'Nomo de dosieron';
-$lang['eo_XX']['AssetAdmin']['URL'] = 'URL';
 $lang['eo_XX']['BasicAuth']['ENTERINFO'] = 'Plaĉi eniri salutnomon kaj pasvorto.';
 $lang['eo_XX']['BasicAuth']['ERRORNOTADMIN'] = 'Kiu uzanto ne administranto.';
 $lang['eo_XX']['BasicAuth']['ERRORNOTREC'] = 'Kiuj salutnomo / pasvorto ne rekon';
@@ -59,6 +56,9 @@ $lang['eo_XX']['DropdownField']['CHOOSE'] = '(Elektu)';
 $lang['eo_XX']['EmailField']['VALIDATION'] = 'Plaĉi al eniri retpoŝtan mesaĝon trakt.';
 $lang['eo_XX']['ErrorPage']['CODE'] = 'Eraro kodo';
 $lang['eo_XX']['FileIframeField']['NOTEADDFILES'] = 'Vi povas almeti dosierojn ek inte savita unuafoje.';
+$lang['eo_XX']['Folder']['DETAILSTAB'] = 'Detaloj';
+$lang['eo_XX']['Folder']['FILENAME'] = 'Nomo de dosieron';
+$lang['eo_XX']['Folder']['URL'] = 'URL';
 $lang['eo_XX']['ForgotPasswordEmail.ss']['HELLO'] = 'Saluton';
 $lang['eo_XX']['Form']['DATENOTSET'] = '(Ne dato fiksis)';
 $lang['eo_XX']['Form']['FIELDISREQUIRED'] = '%s estas postulita';
