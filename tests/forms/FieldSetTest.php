@@ -95,9 +95,11 @@ class FieldSetTest extends SapphireTest {
 		);
 		$this->assertFalse($untabbedFields->hasTabSet());
 		
-		$tabbedFields = new FieldSet(new TabSet(
-			new Tab('Tab1')
-		));
+		$tabbedFields = new FieldSet(
+			new TabSet('Root',
+				new Tab('Tab1')
+			)
+		);
 		$this->assertTrue($tabbedFields->hasTabSet());
 	}
 	
@@ -220,6 +222,44 @@ class FieldSetTest extends SapphireTest {
 		/* We have 1 field for each of the tabs */
 		$this->assertEquals(1, $mainTab->Fields()->Count());
 		$this->assertEquals(1, $otherTab->Fields()->Count());
+	}
+	
+	function testTabTitles() {
+		$set = new FieldSet(
+			$rootTabSet = new TabSet('Root',
+				$tabSetWithoutTitle = new TabSet('TabSetWithoutTitle'),
+				$tabSetWithTitle = new TabSet('TabSetWithTitle', 'My TabSet Title',
+					new Tab('ExistingChildTab')
+				)
+			)
+		);
+		
+		$this->assertEquals(
+			$tabSetWithTitle->Title(),
+			'My TabSet Title',
+			'Automatic conversion of tab identifiers through findOrMakeTab() with FormField::name_to_label()'
+		);
+		
+		$tabWithoutTitle = $set->findOrMakeTab('Root.TabWithoutTitle');
+		$this->assertEquals(
+			$tabWithoutTitle->Title(),
+			'Tab Without Title',
+			'Automatic conversion of tab identifiers through findOrMakeTab() with FormField::name_to_label()'
+		);
+		
+		$tabWithTitle = $set->findOrMakeTab('Root.TabWithTitle', 'My Tab with Title');
+		$this->assertEquals(
+			$tabWithTitle->Title(),
+			'My Tab with Title',
+			'Setting of simple tab titles through findOrMakeTab()'
+		);
+		
+		$childTabWithTitle = $set->findOrMakeTab('Root.TabSetWithoutTitle.NewChildTab', 'My Child Tab Title');
+		$this->assertEquals(
+			$childTabWithTitle->Title(),
+			'My Child Tab Title',
+			'Setting of nested tab titles through findOrMakeTab() works on last child tab'
+		);
 	}
 	
 	/**

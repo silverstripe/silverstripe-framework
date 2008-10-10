@@ -7,15 +7,36 @@
  * @subpackage fields-structural
  */
 class TabSet extends CompositeField {
-	public function __construct($id) {
-		$tabs = func_get_args();
-		$this->id = array_shift($tabs);
-		$this->name = $this->id;
-		$this->title = $this->id;
+	
+	/**
+	 * @param string $name Identifier
+	 * @param string $title (Optional) Natural language title of the tabset
+	 * @param Tab|TabSet $unknown All further parameters are inserted as children into the TabSet
+	 */
+	public function __construct($name) {
+		$args = func_get_args();
 		
-		foreach($tabs as $tab) $tab->setTabSet($this);
+		$name = array_shift($args);
+		if(!is_string($name)) user_error('TabSet::__construct(): $name parameter to a valid string', E_USER_ERROR);
+		$this->name = $name;
 		
-		parent::__construct($tabs);
+		$this->id = $name;
+		
+		// Legacy handling: only assume second parameter as title if its a string,
+		// otherwise it might be a formfield instance
+		if(isset($args[0]) && is_string($args[0])) {
+			$title = array_shift($args);
+		}
+		$this->title = (isset($title)) ? $title : FormField::name_to_label($name);
+		
+		if($args) foreach($args as $tab) {
+			$isValidArg = (is_object($tab) && (!($tab instanceof Tab) || !($tab instanceof TabSet)));
+			if(!$isValidArg) user_error('TabSet::__construct(): Parameter not a valid Tab instance', E_USER_ERROR);
+			
+			$tab->setTabSet($this);
+		}
+		
+		parent::__construct($args);
 	}
 	
 	public function id() {

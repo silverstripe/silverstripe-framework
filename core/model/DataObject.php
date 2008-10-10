@@ -1214,6 +1214,7 @@ class DataObject extends ViewableData implements DataObjectInterface {
 		if($this->has_many()) {
 			// Add each relation as a separate tab
 			foreach($this->has_many() as $relationship => $component) {
+				$relationTab = $fieldSet->findOrMakeTab("Root.$relationship", $this->fieldLabel($relationship));
 				$relationshipFields = singleton($component)->summaryFields();
 				$foreignKey = $this->getComponentJoinField($relationship);
 				$ctf = new ComplexTableField(
@@ -1230,6 +1231,7 @@ class DataObject extends ViewableData implements DataObjectInterface {
 		}
 		if ($this->many_many()) {
 			foreach($this->many_many() as $relationship => $component) {
+				$relationTab = $fieldSet->findOrMakeTab("Root.$relationship", $this->fieldLabel($relationship));
 				$relationshipFields = singleton($component)->summaryFields();
 				$filterWhere = $this->getManyManyFilter($relationship, $component);
 				$filterJoin = $this->getManyManyJoin($relationship, $component);
