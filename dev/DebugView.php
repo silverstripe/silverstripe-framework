@@ -51,17 +51,18 @@ class DebugView {
 	 */
 	public function Breadcrumbs() {
 		$basePath = str_replace(Director::protocolAndHost(), '', Director::absoluteBaseURL());
-		$parts = explode('/', str_replace($basePath, '', $_SERVER['REQUEST_URI']));
+		$relPath = parse_url(str_replace($basePath, '', $_SERVER['REQUEST_URI']), PHP_URL_PATH);
+		$parts = explode('/', $relPath);
 		$base = Director::absoluteBaseURL();
-		$path = "";
 		$pathPart = "";
+		$pathLinks = array();
 		foreach($parts as $part) {
 			if ($part != '') {
 				$pathPart .= "$part/";
-				$path .= "<a href=\"$base$pathPart\">$part</a>&rarr;&nbsp;";
+				$pathLinks[] = "<a href=\"$base$pathPart\">$part</a>";
 			}
 		}
-		return $path;
+		return implode('&rarr;&nbsp;', $pathLinks);
 	}	
 	
 	/**
