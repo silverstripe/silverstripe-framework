@@ -281,7 +281,7 @@ function stripslashes_recursively(&$array) {
 }
 
 /**
- * This is the main translator function. Returns the string defined by $class and $entity according to the currently set locale
+ * This is the main translator function. Returns the string defined by $class and $entity according to the currently set locale.
  *
  * @param string $entity Entity that identifies the string. It must be in the form "Namespace.Entity" where Namespace will be usually
  * 						 the class name where this string is used and Entity identifies the string inside the namespace.
@@ -301,7 +301,7 @@ function _t($entity, $string = "", $priority = 40, $context = "") {
 	$realEntity = array_pop($entityParts);
 	$class = implode('.',$entityParts);
 	if(!isset($lang[$locale][$class])) i18n::include_by_class($class);
-	$transEntity = isset($lang[i18n::get_locale()][$class][$realEntity]) ? $lang[i18n::get_locale()][$class][$realEntity] : $string;
+	$transEntity = isset($lang[$locale][$class][$realEntity]) ? $lang[$locale][$class][$realEntity] : $string;
 	return (is_array($transEntity) ? $transEntity[0] : $transEntity);
 }
 
