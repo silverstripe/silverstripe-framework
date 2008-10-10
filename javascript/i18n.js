@@ -115,7 +115,7 @@ ss.i18n = {
 	 * @param string S : string to perform printf on.
 	 * @param string L : Array of arguments for printf()
 	 */
-		printf: function(S) {
+		sprintf: function(S) {
 			if (arguments.length == 1) return S;
 
 			var nS = "";
