@@ -511,7 +511,7 @@ HTML;
 	 * @return string
 	 */
 	public function name_to_label($fieldName) {
-		if(strpos('.', $fieldName) !== false) {
+		if(strpos($fieldName, '.') !== false) {
 			$parts = explode('.', $fieldName);
 			$label = $parts[count($parts)-2] . ' ' . $parts[count($parts)-1];
 		} else {
