@@ -460,16 +460,27 @@ class Director {
 	static function getAbsURL($url) {
 		return Director::baseURL() . $url;
 	}
-
+	
+	/**
+	 * Returns true if a given path is absolute. Works under both *nix and windows
+	 * systems
+	 *
+	 * @param string $path
+	 * @return bool
+	 */
+	public static function is_absolute($path) {
+		if($path[0] == '/' || $path[0] == '\\') return true;
+		return preg_match('/^[a-zA-Z]:[\\\\\/]/', $path) == 1;
+	}
+	
 	/**
 	 * Given a filesystem reference relative to the site root, return the full file-system path.
 	 * 
 	 * @param string $file
 	 * @return string
 	 */
-	static function getAbsFile($file) {
-		if($file[0] == '/') return $file;
-		return Director::baseFolder() . '/' . $file;
+	public static function getAbsFile($file) {
+		return self::is_absolute($file) ? $file : Director::baseFolder() . '/' . $file;
 	}
 	
 	/**

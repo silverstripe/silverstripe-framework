@@ -46,5 +46,27 @@ class DirectorTest extends SapphireTest {
 		$this->assertEquals(Director::protocolAndHost().BASE_URL.'/', Director::absoluteBaseURL(BASE_URL));
 		$this->assertEquals(Director::protocolAndHost().BASE_URL . '/subfolder/test', Director::absoluteURL('subfolder/test'));
 	}
+	
+	/**
+	 * Tests that {@link Director::is_absolute()} works under different environment types
+	 */
+	public function testIsAbsolute() {
+		$expected = array (
+			'C:/something' => true,
+			'd:\\'         => true,
+			'e/'           => false,
+			's:/directory' => true,
+			'/var/www'     => true,
+			'\\Something'  => true,
+			'something/c:' => false,
+			'folder'       => false,
+			'a/c:/'        => false
+		);
+		
+		foreach($expected as $path => $result) {
+			$this->assertEquals(Director::is_absolute($path), $result, "Test result for $path");
+		}
+	}
+	
 }
 ?>
