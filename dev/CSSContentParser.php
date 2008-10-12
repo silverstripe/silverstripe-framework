@@ -9,6 +9,10 @@
  * It was built to facilitate testing using PHPUnit and contains a number of assert methods that will throw PHPUnit
  * assertion exception when applicable.
  * 
+ * Tries to use the PHP Tidy extension (http://php.net/tidy),
+ * and falls back to the "tidy" CLI tool. If none of those exists,
+ * the string is parsed directly without sanitization.
+ * 
  * @package sapphire
  * @subpackage core
  */
@@ -16,10 +20,33 @@ class CSSContentParser extends Object {
 	protected $simpleXML = null;
 	
 	function __construct($content) {
-		$CLI_content = escapeshellarg($content);
-		$tidy = `echo $CLI_content | tidy -n -q -utf8 -asxhtml 2> /dev/null`;
-		$tidy = str_replace('xmlns="http://www.w3.org/1999/xhtml"','',$tidy);
-		$tidy = str_replace('&#160;','',$tidy);
+		if(extension_loaded('tidy')) {
+			// using the tiny php extension
+			$tidy = new Tidy();
+			$tidy->parseString(
+				$content, 
+				array(
+					'output-xhtml' => true,
+					'numeric-entities' => true,
+				), 
+				'utf8'
+			);
+			$tidy->cleanRepair();
+			$tidy = str_replace('xmlns="http://www.w3.org/1999/xhtml"','',$tidy);
+			$tidy = str_replace('&#160;','',$tidy);
+		} elseif(`which tidy`) {
+			// using tiny through cli
+			$CLI_content = escapeshellarg($content);
+			$tidy = `echo $CLI_content | tidy -n -q -utf8 -asxhtml 2> /dev/null`;
+			$tidy = str_replace('xmlns="http://www.w3.org/1999/xhtml"','',$tidy);
+			$tidy = str_replace('&#160;','',$tidy);
+		} else {
+			// no tidy library found, hence no sanitizing
+			$tidy = $content;
+		}
+		
+		
+		
 		$this->simpleXML = new SimpleXMLElement($tidy);
 	}
 		
