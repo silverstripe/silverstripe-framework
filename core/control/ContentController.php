@@ -103,7 +103,7 @@ class ContentController extends Controller {
 		if($this->URLSegment != 'Security' && !Session::get('unsecuredDraftSite') && (Versioned::current_archived_date() || (Versioned::current_stage() && Versioned::current_stage() != 'Live'))) {
 			if(!Permission::check('CMS_ACCESS_CMSMain')) {
 				$link = $this->Link();
-				$message = _t("ContentController.DRAFT_SITE_ACCESS_RESTRICTION", "You must log in with your CMS password in order to view the draft or archived content.  <a href=\"%s\">Click here to go back to the published site.</a>");
+				$message = _t("ContentController.DRAFT_SITE_ACCESS_RESTRICTION", 'You must log in with your CMS password in order to view the draft or archived content.  <a href="%s">Click here to go back to the published site.</a>');
 				Security::permissionFailure($this, sprintf($message, "$link?stage=Live"));
 				return;
 			}
