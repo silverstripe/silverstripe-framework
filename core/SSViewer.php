@@ -354,7 +354,11 @@ class SSViewer extends Object {
 		// $val, $val.property, $val(param), etc.
 		$replacements = array(
 			'/\$Iteration/' =>  '<?= {dlr}key ?>',
+			'/{\\$([A-Za-z_][A-Za-z0-9_]*)\\(([^),]+), *([^),]+)\\)\\.([A-Za-z0-9_]+)\\.([A-Za-z0-9_]+)}/' => '<?= {dlr}item->obj("\\1",array("\\2","\\3"),true)->obj("\\4",null,true)->XML_val("\\5",null,true) ?>',
+			'/{\\$([A-Za-z_][A-Za-z0-9_]*)\\(([^),]+), *([^),]+)\\)\\.([A-Za-z0-9_]+)}/' => '<?= {dlr}item->obj("\\1",array("\\2","\\3"),true)->XML_val("\\4",null,true) ?>',
 			'/{\\$([A-Za-z_][A-Za-z0-9_]*)\\(([^),]+), *([^),]+)\\)}/' => '<?= {dlr}item->XML_val("\\1",array("\\2","\\3"),true) ?>',
+			'/{\\$([A-Za-z_][A-Za-z0-9_]*)\\(([^),]+)\\)\\.([A-Za-z0-9_]+)\\.([A-Za-z0-9_]+)}/' => '<?= {dlr}item->obj("\\1",array("\\2"),true)->obj("\\3",null,true)->XML_val("\\4",null,true) ?>',
+			'/{\\$([A-Za-z_][A-Za-z0-9_]*)\\(([^),]+)\\)\\.([A-Za-z0-9_]+)}/' => '<?= {dlr}item->obj("\\1",array("\\2"),true)->XML_val("\\3",null,true) ?>',
 			'/{\\$([A-Za-z_][A-Za-z0-9_]*)\\(([^),]+)\\)}/' => '<?= {dlr}item->XML_val("\\1",array("\\2"),true) ?>',
 			'/{\\$([A-Za-z_][A-Za-z0-9_]*)\\.([A-Za-z0-9_]+)\\.([A-Za-z0-9_]+)}/' => '<?= {dlr}item->obj("\\1",null,true)->obj("\\2",null,true)->XML_val("\\3",null,true) ?>',
 			'/{\\$([A-Za-z_][A-Za-z0-9_]*)\\.([A-Za-z0-9_]+)}/' => '<?= {dlr}item->obj("\\1",null,true)->XML_val("\\2",null,true) ?>',
@@ -362,7 +366,11 @@ class SSViewer extends Object {
 
 			'/\\$([A-Za-z_][A-Za-z0-9_]*)\\.([A-Za-z0-9_]+)\\(([^),]+)\\)([^A-Za-z0-9]|$)/' => '<?= {dlr}item->obj("\\1")->XML_val("\\2",array("\\3"),true) ?>\\4',
 
+			'/\\$([A-Za-z_][A-Za-z0-9_]*)\\(([^),]+), *([^),]+)\\)\\.([A-Za-z0-9_]+)\\.([A-Za-z0-9_]+)([^A-Za-z0-9]|$)/' => '<?= {dlr}item->obj("\\1",array("\\2","\\3"),true)->obj("\\4",null,true)->XML_val("\\5",null,true) ?>\\6',
+			'/\\$([A-Za-z_][A-Za-z0-9_]*)\\(([^),]+), *([^),]+)\\)\\.([A-Za-z0-9_]+)([^A-Za-z0-9]|$)/' => '<?= {dlr}item->obj("\\1",array("\\2","\\3"),true)->XML_val("\\4",null,true) ?>\\5',
 			'/\\$([A-Za-z_][A-Za-z0-9_]*)\\(([^),]+), *([^),]+)\\)([^A-Za-z0-9]|$)/' => '<?= {dlr}item->XML_val("\\1",array("\\2","\\3"),true) ?>\\4',
+			'/\\$([A-Za-z_][A-Za-z0-9_]*)\\(([^),]+)\\)\\.([A-Za-z0-9_]+)\\.([A-Za-z0-9_]+)([^A-Za-z0-9]|$)/' => '<?= {dlr}item->obj("\\1",array("\\2"),true)->obj("\\3",null,true)->XML_val("\\4",null,true) ?>\\5',
+			'/\\$([A-Za-z_][A-Za-z0-9_]*)\\(([^),]+)\\)\\.([A-Za-z0-9_]+)([^A-Za-z0-9]|$)/' => '<?= {dlr}item->obj("\\1",array("\\2"),true)->XML_val("\\3",null,true) ?>\\4',
 			'/\\$([A-Za-z_][A-Za-z0-9_]*)\\(([^),]+)\\)([^A-Za-z0-9]|$)/' => '<?= {dlr}item->XML_val("\\1",array("\\2"),true) ?>\\3',
 			'/\\$([A-Za-z_][A-Za-z0-9_]*)\\.([A-Za-z0-9_]+)\\.([A-Za-z0-9_]+)([^A-Za-z0-9]|$)/' => '<?= {dlr}item->obj("\\1",null,true)->obj("\\2",null,true)->XML_val("\\3",null,true) ?>\\4',
 			'/\\$([A-Za-z_][A-Za-z0-9_]*)\\.([A-Za-z0-9_]+)([^A-Za-z0-9]|$)/' => '<?= {dlr}item->obj("\\1",null,true)->XML_val("\\2",null,true) ?>\\3',
