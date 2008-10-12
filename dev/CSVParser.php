@@ -70,7 +70,7 @@ class CSVParser extends Object implements Iterator {
 	 * @param $enclosure The character for quoting or enclosing columns
 	 */
 	function __construct($filename, $delimiter = ",", $enclosure = '"') {
-		if($filename['0'] != '/') $filename = Director::baseFolder() . '/' . $filename;
+		$filename = Director::getAbsFile($filename);
 		$this->filename = $filename;
 		$tis->delimiter = ",";
 		$this->enclosure = '"';
