@@ -178,7 +178,7 @@ class DatabaseAdmin extends Controller {
 		
 		global $_ALL_CLASSES;
 		ManifestBuilder::update_db_tables(DB::getConn()->tableList(), $_ALL_CLASSES);
-		ManifestBuilder::write_manifest();
+		if(!$testMode) ManifestBuilder::write_manifest();
 
 		if($populate) {
 			if(!$quiet) {
