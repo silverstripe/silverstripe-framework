@@ -236,7 +236,7 @@ class Date extends DBField {
 		}
 	}
 	
-	public function scaffoldFormField($title = null) {
+	public function scaffoldFormField($title = null, $params = null) {
 		return new DateField($this->name, $title);
 	}
 }

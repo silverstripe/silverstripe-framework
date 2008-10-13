@@ -34,7 +34,7 @@ class SSDatetime extends Date {
 		return date('Y-m-d%20H:i:s', strtotime($this->value));
 	}
 	
-	public function scaffoldFormField($title = null) {
+	public function scaffoldFormField($title = null, $params = null) {
 		return new PopupDateTimeField($this->name, $title);
 	}
 }

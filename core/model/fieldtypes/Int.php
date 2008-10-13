@@ -38,7 +38,7 @@ class Int extends DBField {
 		return sprintf( '%d', $this->value );
 	}
 	
-	public function scaffoldFormField($title = null) {
+	public function scaffoldFormField($title = null, $params = null) {
 		return new NumericField($this->name, $title);
 	}
 	

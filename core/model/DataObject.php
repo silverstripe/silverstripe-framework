@@ -1199,61 +1199,6 @@ class DataObject extends ViewableData implements DataObjectInterface {
 	}
 
 	/**
-	 * Add the scaffold-generated relation fields to the given field set
-	 */
-	protected function addScaffoldRelationFields($fieldSet) {
-		// make sure we have a tabset
-		if(($this->has_many() || $this->many_many()) && !$fieldSet->fieldByName('Root')) {
-			$oldFields = $fieldSet;
-			$fieldSet = new FieldSet(new TabSet("Root", new Tab("Main")));
-			foreach($oldFields as $field) {
-				$fieldSet->addFieldToTab("Root.Main", $field);
-			}
-		}
-
-		if($this->has_many()) {
-			// Add each relation as a separate tab
-			foreach($this->has_many() as $relationship => $component) {
-				$relationTab = $fieldSet->findOrMakeTab("Root.$relationship", $this->fieldLabel($relationship));
-				$relationshipFields = singleton($component)->summaryFields();
-				$foreignKey = $this->getComponentJoinField($relationship);
-				$ctf = new ComplexTableField(
-					$this,
-					$relationship,
-					$component,
-					$relationshipFields,
-					"getCMSFields", 
-					"$foreignKey = $this->ID"
-				);
-				$ctf->setPermissions(TableListField::permissions_for_object($component));
-				$fieldSet->addFieldToTab("Root.$relationship", $ctf);
-			}
-		}
-		if ($this->many_many()) {
-			foreach($this->many_many() as $relationship => $component) {
-				$relationTab = $fieldSet->findOrMakeTab("Root.$relationship", $this->fieldLabel($relationship));
-				$relationshipFields = singleton($component)->summaryFields();
-				$filterWhere = $this->getManyManyFilter($relationship, $component);
-				$filterJoin = $this->getManyManyJoin($relationship, $component);
-				$ctf =  new ComplexTableField(
-					$this,
-					$relationship,
-					$component,
-					$relationshipFields,
-					"getCMSFields", 
-					$filterWhere,
-					'', 
-					$filterJoin
-				);
-				$ctf->setPermissions(TableListField::permissions_for_object($component));
-				$ctf->popupClass = "ScaffoldingComplexTableField_Popup";
-				$fieldSet->addFieldToTab("Root.$relationship", $ctf);
-			}
-		}
-		return $fieldSet;
-	}
-
-	/**
 	 * Pull out a join clause for a many-many relationship.
 	 *
 	 * @param string $componentName The many_many or belongs_many_many relation to join to.
@@ -1453,18 +1398,26 @@ class DataObject extends ViewableData implements DataObjectInterface {
 	 *
 	 * @usedby {@link SearchContext}
 	 * 
-	 * @param array $restrictFields
-	 * @param array $fieldClasses 
+	 * @param array $_params
+	 * 	'fieldClasses': Associative array of field names as keys and FormField classes as values
+	 * 	'restrictFields': Numeric array of a field name whitelist
 	 * @return FieldSet
 	 */
-	public function scaffoldSearchFields($restrictFields = null, $fieldClasses = null) {
+	public function scaffoldSearchFields($_params = null) {
+		$params = array_merge(
+			array(
+				'fieldClasses' => false,
+				'restrictFields' => false
+			),
+			(array)$_params
+		);
 		$fields = new FieldSet();
 		foreach($this->searchableFields() as $fieldName => $spec) {
-			if($restrictFields && !in_array($fieldName, $restrictFields)) continue;
+			if($params['restrictFields'] && !in_array($fieldName, $params['restrictFields'])) continue;
 			
 			// If a custom fieldclass is provided as a string, use it
-			if($fieldClasses && isset($fieldClasses[$fieldName])) {
-				$fieldClass = $fieldClasses[$fieldName];
+			if($params['fieldClasses'] && isset($params['fieldClasses'][$fieldName])) {
+				$fieldClass = $params['fieldClasses'][$fieldName];
 				$field = new $fieldClass($fieldName);
 			// If we explicitly set a field, then construct that
 			} else if(isset($spec['field'])) {
@@ -1502,65 +1455,33 @@ class DataObject extends ViewableData implements DataObjectInterface {
 	 * based on default {@link FormField} mapping in {@link DBField::scaffoldFormField()}.
 	 * Field labels/titles will be auto generated from {@link DataObject::fieldLabels()}.
 	 *
-	 * @uses DBField::scaffoldFormField()
-	 * @uses DataObject::fieldLabels()
+	 * @uses FormScaffolder
 	 * 
-	 * @param
-	 * @param array $fieldClasses Optional mapping of fieldnames to subclasses of {@link DBField}
+	 * @param array $_params Associative array passing through properties to {@link FormScaffolder}.
 	 * @return FieldSet
 	 */
-	public function scaffoldFormFields($restrictFields = null, $fieldClasses = null) {
-		$fields = new FieldSet();
-		foreach($this->db() as $fieldName => $fieldType) {
-			if($restrictFields && !in_array($fieldName, $restrictFields)) continue;
-			
-			// @todo Pass localized title
-			if(isset($fieldClasses[$fieldName])) {
-				$fieldClass = $fieldClasses[$fieldName];
-				$fieldObject = new $fieldClass($fieldName);
-			} else {
-				$fieldObject = $this->dbObject($fieldName)->scaffoldFormField();
-			}
-			$fieldObject->setTitle($this->fieldLabel($fieldName));
-			$fields->push($fieldObject);
-		}
-		foreach($this->has_one() as $relationship => $component) {
-			if($restrictFields && !in_array($relationship, $restrictFields)) continue;
-			
-			$model = singleton($component);
-			$records = DataObject::get($component);
-			$collect = ($model->hasMethod('customSelectOption')) ? 'customSelectOption' : 'Title';
-			$options = $records ? $records->filter_map('ID', $collect) : array();
-			$fields->push(new DropdownField($relationship.'ID', $this->fieldLabel($relationship), $options));
-		}
-		return $fields;
+	public function scaffoldFormFields($_params = null) {
+		$params = array_merge(
+			array(
+				'tabbed' => false,
+				'includeRelations' => false,
+				'restrictFields' => false,
+				'fieldClasses' => false,
+				'ajaxSafe' => false
+			),
+			(array)$_params
+		);
+		
+		$fs = new FormScaffolder($this);
+		$fs->tabbed = $params['tabbed'];
+		$fs->includeRelations = $params['includeRelations'];
+		$fs->restrictFields = $params['restrictFields'];
+		$fs->fieldClasses = $params['fieldClasses'];
+		$fs->ajaxSafe = $params['ajaxSafe'];
+		
+		return $fs->getFieldSet();
 	}
 	
-	/**
-	 * Returns automatically generated fields useable within the CMS.
-	 * Does not include relations, you can add them by using
-	 * {@link addScaffoldRelationFields()}. Call {@link getCMSFields()}
-	 * to get all fields including relational tables and decorated
-	 * fields in a TabSet.
-	 * 
-	 * @uses getCMSFields()
-	 * 
-	 * @return FieldSet Tabbed fields
-	 */
-	public function scaffoldCMSFields($restrictFields = null, $fieldClasses = null) {
-		$untabbedFields = $this->scaffoldFormFields($restrictFields, $fieldClasses);
-		
-		// make sure we have a tabset
-		if(!$untabbedFields->hasTabSet()) {
-			$tabbedFields = new FieldSet(new TabSet("Root", new Tab("Main")));
-			foreach($untabbedFields as $field) {
-				$tabbedFields->addFieldToTab("Root.Main", $field);
-			}
-		}
-		
-		return $tabbedFields;
-	}
-
 	/**
 	 * Centerpiece of every data administration interface in Silverstripe,
 	 * which returns a {@link FieldSet} suitable for a {@link Form} object.
@@ -1582,36 +1503,40 @@ class DataObject extends ViewableData implements DataObjectInterface {
 	 *
 	 * @see Good example of complex FormField building: SiteTree::getCMSFields()
 	 *
+	 * @param array $params See {@link scaffoldFormFields()}
 	 * @return FieldSet Returns a TabSet for usage within the CMS - don't use for frontend forms.
 	 */
-	public function getCMSFields() {
-		// should be a plain FieldSet without tabs
-		$tabbedFields = $this->scaffoldCMSFields();
-		
-		// If we don't have an ID, then relation fields don't work
-		if($this->ID) {
-			$tabbedFields = $this->addScaffoldRelationFields($tabbedFields);
-		}
+	public function getCMSFields($params = null) {
+		$tabbedFields = $this->scaffoldFormFields(array_merge(
+			array(
+				'includeRelations' => true,
+				'tabbed' => true,
+				'ajaxSafe' => true
+			),
+			(array)$params
+		));
 		
 		$this->extend('updateCMSFields', $tabbedFields);
 		
 		return $tabbedFields;
 	}
 	
-
 	/**
 	 * Used for simple frontend forms without relation editing
 	 * or {@link TabSet} behaviour. Uses {@link scaffoldFormFields()}
 	 * by default. To customize, either overload this method in your
 	 * subclass, or decorate it by {@link DataObjectDecorator->updateFormFields()}.
+	 * 
+	 * @todo Decide on naming for "website|frontend|site|page" and stick with it in the API
 	 *
+	 * @param array $params See {@link scaffoldFormFields()}
 	 * @return FieldSet Always returns a simple field collection without TabSet.
 	 */
-	public function getFormFields() {
-		$fields = $this->scaffoldFormFields();
-		$this->extend('updateFormFields', $fields);
+	public function getFrontEndFields($params = null) {
+		$untabbedFields = $this->scaffoldFormFields($params);
+		$this->extend('updateFormFields', $untabbedFields);
 	
-		return $fields;
+		return $untabbedFields;
 	}
 
 	/**
@@ -1827,7 +1752,7 @@ class DataObject extends ViewableData implements DataObjectInterface {
 			// add foreign key
 			$hasOne = $this->uninherited('has_one', true);
 			if($hasOne) foreach($hasOne as $fieldName => $fieldSchema) {
-				$fieldMap[$fieldName . 'ID'] = "Int";
+				$fieldMap[$fieldName . 'ID'] = "ForeignKey";
 			}
 			
 			// set cached fieldmap
@@ -1995,7 +1920,8 @@ class DataObject extends ViewableData implements DataObjectInterface {
 			
 		// Special case for has_one relationships
 		} else if(preg_match('/ID$/', $fieldName) && $this->has_one(substr($fieldName,0,-2))) {
-			return DBField::create('Int', $this->record[$fieldName], $fieldName);
+			$val = (isset($this->record[$fieldName])) ? $this->record[$fieldName] : null;
+			return DBField::create('ForeignKey', $val, $fieldName, $this);
 		}
 	}
 
@@ -2515,7 +2441,7 @@ class DataObject extends ViewableData implements DataObjectInterface {
 		$def = $db;
 		if($has_one) {
 			foreach($has_one as $field => $joinTo) {
-				$def[$field . 'ID'] = "Int";
+				$def[$field . 'ID'] = "ForeignKey";
 			}
 		}
 

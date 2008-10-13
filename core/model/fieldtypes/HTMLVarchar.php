@@ -8,7 +8,7 @@
  */
 class HTMLVarchar extends Varchar {
 	
-	public function scaffoldFormField($title = null) {
+	public function scaffoldFormField($title = null, $params = null) {
 		return new HtmlOneLineField($this->name, $title);
 	}
 	

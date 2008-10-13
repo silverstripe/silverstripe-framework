@@ -16,7 +16,7 @@ class Year extends DBField {
 		DB::requireField($this->tableName, $this->name, "year(4)");
 	}
 	
-	public function scaffoldFormField($title = null) {
+	public function scaffoldFormField($title = null, $params = null) {
 		$selectBox = new DropdownField($this->name, $title);
 		$selectBox->setSource($this->getDefaultOptions());
 		return $selectBox;

@@ -46,7 +46,7 @@ class Enum extends DBField {
 	}
 	
 
-	public function scaffoldFormField($title = null) {
+	public function scaffoldFormField($title = null, $params = null) {
 		return $this->formField($title);
 	}
 	

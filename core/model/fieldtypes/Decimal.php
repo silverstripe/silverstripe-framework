@@ -37,7 +37,7 @@ class Decimal extends DBField {
 		}
 	}
 	
-	public function scaffoldFormField($title = null) {
+	public function scaffoldFormField($title = null, $params = null) {
 		return new NumericField($this->name, $title);
 	}
 

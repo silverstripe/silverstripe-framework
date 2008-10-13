@@ -21,7 +21,7 @@ class PrimaryKey extends Int {
 		parent::__construct($name);
 	}
 	
-	public function scaffoldFormField($title = null) {
+	public function scaffoldFormField($title = null, $params = null) {
 		$objs = DataObject::get($this->object->class);
 
 		$titleField = (singleton($this->object->class)->hasField('Title')) ? "Title" : "Name";

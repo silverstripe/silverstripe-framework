@@ -39,7 +39,7 @@ class Time extends DBField {
 		DB::requireField($this->tableName, $this->name, "time");
 	}
 	
-	public function scaffoldFormField($title = null) {
+	public function scaffoldFormField($title = null, $params = null) {
 			return new TimeField($this->name, $title);
 		}
 }

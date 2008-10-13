@@ -45,8 +45,8 @@ abstract class DBField extends ViewableData {
 	 * Create a DBField object that's not bound to any particular field.
 	 * Useful for accessing the classes behaviour for other parts of your code.
 	 */
-	static function create($className, $value, $name = null) {
-		$dbField = Object::create($className, $name);
+	static function create($className, $value, $name = null, $object = null) {
+		$dbField = Object::create($className, $name, $object);
 		$dbField->setValue($value);
 		return $dbField;
 	}

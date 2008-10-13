@@ -40,7 +40,7 @@ if(!class_exists('Datetime')) {
 			DB::requireField($this->tableName, $this->name, "datetime");
 		}
 		
-		public function scaffoldFormField($title = null) {
+		public function scaffoldFormField($title = null, $params = null) {
 			return new PopupDateTimeField($this->name, $title);
 		}
 	}
