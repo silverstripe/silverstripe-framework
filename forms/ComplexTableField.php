@@ -118,6 +118,12 @@ class ComplexTableField extends TableListField {
 	protected $relationAutoSetting = true;
 	
 	/**
+	 * Set the method for saving changes to items in the detail pop-up.
+	 * By default, this is write, which just saves the changes to the database.
+	 */
+	public $itemWriteMethod = "write";
+	
+	/**
 	 * See class comments
 	 *
 	 * @param ContentController $controller
@@ -766,7 +772,10 @@ class ComplexTableField_Popup extends Form {
 		}
 
 		$this->saveInto($childObject);
-		$childObject->write();
+		
+		$funcName = $this->controller->itemWriteMethod;
+		if(!$funcName) $funcName = "write";
+		$childObject->$funcName();
 
 		// if ajax-call in an iframe, update window
 		if(Director::is_ajax()) {
