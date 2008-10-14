@@ -8,6 +8,11 @@
 class TestSession {
 	private $session;
 	private $lastResponse;
+	
+	/**
+	 * @var string $lastUrl Fake HTTP Referer Tracking, set in {@link get()} and {@link post()}.
+	 */
+	private $lastUrl;
 
 	function __construct() {
 		$this->session = new Session(array());
@@ -15,18 +20,24 @@ class TestSession {
 	
 	/**
 	 * Submit a get request
+	 * @uses Director::test()
 	 */
 	function get($url) {
-		$this->lastResponse = Director::test($url, null, $this->session);
+		$headers = ($this->lastUrl) ? array('Referer'=>$this->lastUrl) : null;
+		$this->lastResponse = Director::test($url, null, $this->session, null, null, $headers);
+		$this->lastUrl = $url;
 		if(!$this->lastResponse) user_error("Director::test($url) returned null", E_USER_WARNING);
 		return $this->lastResponse;
 	}
 
 	/**
 	 * Submit a post request
+	 * @uses Director::test()
 	 */
-	function post($url, $data) {
-		$this->lastResponse = Director::test($url, $data, $this->session);
+	function post($url, $data, $headers = null) {
+		$headers = ($this->lastUrl) ? array('Referer'=>$this->lastUrl) : null;
+		$this->lastResponse = Director::test($url, $data, $this->session, null, null, $headers);
+		$this->lastUrl = $url;
 		if(!$this->lastResponse) user_error("Director::test($url) returned null", E_USER_WARNING);
 		return $this->lastResponse;
 	}

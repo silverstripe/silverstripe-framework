@@ -99,6 +99,7 @@ class Director {
 		// @todo find better way to extract HTTP headers
 		if(isset($_SERVER['HTTP_ACCEPT'])) $req->addHeader("Accept", $_SERVER['HTTP_ACCEPT']);
 		if(isset($_SERVER['CONTENT_TYPE'])) $req->addHeader("Content-Type", $_SERVER['CONTENT_TYPE']);
+		if(isset($_SERVER['HTTP_REFERER'])) $req->addHeader("Referer", $_SERVER['HTTP_REFERER']);
 
 		// Load the session into the controller
 		$session = new Session($_SESSION);
@@ -180,7 +181,7 @@ class Director {
 		$_REQUEST = $existingRequestVars; 
 		$_GET = $existingGetVars; 
 		$_POST = $existingPostVars; 
-		$_SESSION = $existingSessionVars;                
+		$_SESSION = $existingSessionVars;   
 
 		// These are needed so that calling Director::test() doesnt muck with whoever is calling it.
 		// Really, it's some inapproriate coupling and should be resolved by making less use of statics
@@ -216,7 +217,7 @@ class Director {
 					if(isset($controllerOptions['_PopTokeniser'])) {
 						$request->shift($controllerOptions['_PopTokeniser']);
 					}
-					
+
 					// Handle redirections
 					if(isset($arguments['Redirect'])) {
 						return "redirect:" . Director::absoluteURL($arguments['Redirect'], true);
@@ -355,26 +356,11 @@ class Director {
 		return Controller::curr()->getResponse()->getStatusCode();
 	}
 
-	/*
-	 * Redirect back
-	 *
-	 * Uses either the HTTP_REFERER or a manually set request-variable called
-	 * _REDIRECT_BACK_URL.
-	 * This variable is needed in scenarios where not HTTP-Referer is sent (
-	 * e.g when calling a page by location.href in IE).
-	 * If none of the two variables is available, it will redirect to the base
-	 * URL (see {@link baseURL()}).
+	/**
+	 * @deprecated 2.3 Use Controller->redirectBack()
 	 */
 	static function redirectBack() {
-		$url = self::baseURL();
-
-		if(isset($_REQUEST['_REDIRECT_BACK_URL'])) {
-			$url = $_REQUEST['_REDIRECT_BACK_URL'];
-		} else if(isset($_SERVER['HTTP_REFERER'])) {
-			$url = $_SERVER['HTTP_REFERER'];
-		}
-
-		Director::redirect($url);
+		Controller::curr()->redirectBack();
 	}
 
 	/**

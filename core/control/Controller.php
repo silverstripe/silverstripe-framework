@@ -480,6 +480,27 @@ class Controller extends RequestHandlingData {
 	}
 	
 	/**
+	 * Redirect back. Uses either the HTTP_REFERER or a manually set request-variable called
+	 * _REDIRECT_BACK_URL.
+	 * This variable is needed in scenarios where not HTTP-Referer is sent (
+	 * e.g when calling a page by location.href in IE).
+	 * If none of the two variables is available, it will redirect to the base
+	 * URL (see {@link Director::baseURL()}).
+	 * @uses redirect()
+	 */
+	function redirectBack() {
+		if($this->request->requestVar('_REDIRECT_BACK_URL')) {
+			$url = $this->request->requestVar('_REDIRECT_BACK_URL');
+		} else if($this->request->getHeader('Referer')) {
+			$url = $this->request->getHeader('Referer');
+		} else {
+			$url = Director::baseURL();
+		}
+
+		$this->redirect($url);
+	}
+	
+	/**
 	 * Tests whether a redirection has been requested.
 	 * @return string If redirect() has been called, it will return the URL redirected to.  Otherwise, it will return null;
 	 */
