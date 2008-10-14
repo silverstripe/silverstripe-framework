@@ -186,6 +186,54 @@ class FormTest extends FunctionalTest {
 		);
 	}
 	
+	function testSessionValidationMessage() {
+		$this->get('FormTest_Controller');
+		
+		$response = $this->submitForm(
+			'Form_Form',
+			null,
+			array(
+				'Email' => 'invalid',
+				// leaving out "Required" field
+			)
+		);
+		$this->assertPartialMatchBySelector(
+			'#Email span.message',
+			array(
+				_t('EmailField.VALIDATION', "Please enter an email address.")
+			),
+			'Formfield validation shows note on field if invalid'
+		);
+		$this->assertPartialMatchBySelector(
+			'#SomeRequiredField span.required',
+			array(
+				sprintf(_t('Form.FIELDISREQUIRED'),'"SomeRequiredField"')
+			),
+			'Required fields show a notification on field when left blank'
+		);
+		
+	}
+	
+	function testSessionSuccessMessage() {
+		$this->get('FormTest_Controller');
+		
+		$response = $this->submitForm(
+			'Form_Form',
+			null,
+			array(
+				'Email' => 'test@test.com',
+				'SomeRequiredField' => 'test',
+			)
+		);
+		$this->assertPartialMatchBySelector(
+			'#Form_Form_error',
+			array(
+				'Test save was successful'
+			),
+			'Form->sessionMessage() shows up after reloading the form'
+		);
+	}
+	
 	protected function getStubForm() {
 		return new Form(
 			new Controller(),
@@ -228,4 +276,45 @@ class FormTest_Team extends DataObject implements TestOnly {
 		'Players' => 'FormTest_Player'
 	);
 }
+
+class FormTest_Controller extends Controller {
+	static $url_handlers = array(
+		'$Action//$ID/$OtherID' => "handleAction",
+	);
+
+	protected $template = 'BlankPage';
+	
+	function Link() {
+		return Controller::join_links('FormTest_Controller', $this->request->latestParam('Action'), $this->request->latestParam('ID'));
+	}
+	
+	function Form() {
+		$form = new Form(
+			$this,
+			'Form',
+			new FieldSet(
+				new EmailField('Email'),
+				new TextField('SomeRequiredField'),
+				new CheckboxSetField('Boxes', null, array('1'=>'one','2'=>'two'))
+			),
+			new FieldSet(
+				new FormAction('doSubmit')
+			),
+			new RequiredFields(
+				'Email',
+				'SomeRequiredField'
+			)
+		);
+		return $form;
+	}
+	
+	function doSubmit($data, $form, $request) {
+		$form->sessionMessage('Test save was successful', 'good');
+		return $this->redirectBack();
+	}
+}
+
+Director::addRules(50, array(
+	'FormTest_Controller' => "FormTest_Controller",
+));
 ?>
