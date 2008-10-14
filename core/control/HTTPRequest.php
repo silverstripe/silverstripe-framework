@@ -236,11 +236,11 @@ class HTTPRequest extends Object implements ArrayAccess {
 	 */
 	function __construct($httpMethod, $url, $getVars = array(), $postVars = array(), $body = null) {
 		$this->httpMethod = strtoupper(self::detect_method($httpMethod, $postVars));
+		$this->url = $url;
 		
-		$this->url = preg_replace(array('/\/+/','/^\//', '/\/$/'),array('/','',''), $url);
-		
-		if(preg_match('/^(.*)\.([A-Za-z][A-Za-z0-9]*)$/', $url, $matches)) {
-			$url = $matches[1];
+		$this->url = preg_replace(array('/\/+/','/^\//', '/\/$/'),array('/','',''), $this->url);
+		if(preg_match('/^(.*)\.([A-Za-z][A-Za-z0-9]*)$/', $this->url, $matches)) {
+			$this->url = $matches[1];
 			$this->extension = $matches[2];
 		}
 		if($this->url) $this->dirParts = split('/+', $this->url);
