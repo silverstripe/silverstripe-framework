@@ -27,13 +27,13 @@ class ForeignKey extends Int {
 		$hasOneClass = $this->object->has_one($relationName);
 
 		if($hasOneClass && singleton($hasOneClass) instanceof Image) {
-			if(isset($params['ajax']) && $params['ajax']) {
+			if(isset($params['ajaxSafe']) && $params['ajaxSafe']) {
 				$field = new ImageField($relationName, $title, $this->value);
 			} else {
 				$field = new SimpleImageField($relationName, $title, $this->value);
 			}
 		} elseif($hasOneClass && singleton($hasOneClass) instanceof File) {
-			if(isset($params['ajax']) && $params['ajax']) {
+			if(isset($params['ajaxSafe']) && $params['ajaxSafe']) {
 				$field = new FileIframeField($relationName, $title, $this->value);
 			} else {
 				$field = new FileField($relationName, $title, $this->value);
