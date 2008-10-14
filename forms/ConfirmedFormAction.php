@@ -12,11 +12,16 @@ class ConfirmedFormAction extends FormAction {
 	 * Create a new action button.
 	 * @param action The method to call when the button is clicked
 	 * @param title The label on the button
-	 * @param confirmation The message to display in the confirmation box?
+	 * @param confirmation The message to display in the confirmation box
 	 * @param form The parent form, auto-set when the field is placed inside a form 
 	 */
-	function __construct($action, $title = "", $confirmation = "Are you sure?", $form = null) {
-		$this->confirmation = $confirmation;
+	function __construct($action, $title = "", $confirmation = null, $form = null) {
+		if($confirmation) {
+			$this->confirmation = $confirmation;
+		} else {
+			$this->confirmation = _t('ConfirmedFormAction.CONFIRMATION', "Are you sure?", PR_MEDIUM, 'Confirmation popup before executing the form action');
+		}
+		
 		parent::__construct($action, $title, $form);
 	}
 	

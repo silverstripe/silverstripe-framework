@@ -461,5 +461,5 @@ $lang['de_DE']['TypeDropdown']['NONE'] = 'Keine';
 $lang['de_DE']['VirtualPage']['CHOOSE'] = 'Wählen Sie eine Seite auf die Sie verweisen möchten';
 $lang['de_DE']['VirtualPage']['EDITCONTENT'] = 'drücken Sie hier um den Inhalt abzuändern';
 $lang['de_DE']['VirtualPage']['HEADER'] = 'Dies ist eine virtuelle Seite';
-
+$lang['de_DE']['ConfirmedFormAction']['CONFIRMATION'] = 'Sind Sie sicher?';
 ?>

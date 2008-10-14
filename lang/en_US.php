@@ -205,6 +205,11 @@ $lang['en_US']['CompositeDateField']['YEARJS'] = 'year';
 $lang['en_US']['Form']['VALIDATIONALLDATEVALUES'] = 'Please ensure you have set all date values';
 $lang['en_US']['Form']['DATENOTSET'] = '(No date set)';
 $lang['en_US']['Form']['NOTSET'] = '(not set)';
+$lang['en_US']['ConfirmedFormAction']['CONFIRMATION'] = array(
+	'Are you sure?',
+	 PR_MEDIUM,
+	'Confirmation popup before executing the form action'
+);
 $lang['en_US']['Member']['CONFIRMPASSWORD'] = 'Confirm Password';
 $lang['en_US']['ConfirmedPasswordField']['HAVETOMATCH'] = 'Passwords have to match.';
 $lang['en_US']['ConfirmedPasswordField']['NOEMPTY'] = 'Passwords can\'t be empty.';
@@ -531,6 +536,7 @@ $lang['en_US']['Security']['ENCRYPTWITHOUTSALT'] = 'without using a salt to incr
 $lang['en_US']['Security']['ENCRYPTEDMEMBERS'] = 'Encrypted credentials for member &quot;';
 $lang['en_US']['Security']['ID'] = 'ID:';
 $lang['en_US']['Security']['EMAIL'] = 'E-Mail:';
+$lang['en_US']['EmailField']['VALIDATION'] = 'Please enter an email address.';
 $lang['en_US']['SecurityAdmin']['CODE'] = 'Code';
 $lang['en_US']['SecurityAdmin']['OPTIONALID'] = 'Optional ID';
 $lang['en_US']['ComplexTableField.ss']['SORTASC'] = 'Sort ascending';
