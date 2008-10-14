@@ -32,8 +32,17 @@ class SimpleImageField extends FileField {
 	    	$imageField = "";
 	    }
 	    	
-	    $html = "<div class=\"simpleimage\">";
-	    $html .= $this->createTag("input", 
+		$html = "<div class=\"simpleimage\">";
+		if($imageField && $imageField->exists()) {
+			$html .= '<div class="thumbnail">';
+			if($imageField->hasMethod('Thumbnail') && $imageField->Thumbnail()) {
+	      		$html .= "<img src=\"".$imageField->Thumbnail()->URL()."\" />";
+			} else if($imageField->CMSThumbnail()) {
+				$html .= "<img src=\"".$imageField->CMSThumbnail()->URL()."\" />";
+			}
+			$html .= '</div>';
+		}
+		$html .= $this->createTag("input", 
 			array(
 				"type" => "file", 
 				"name" => $this->name, 
@@ -42,25 +51,16 @@ class SimpleImageField extends FileField {
 			)
 		);
 		$html .= $this->createTag("input", 
-	   		array(
-	   			"type" => "hidden", 
-	   			"name" => "MAX_FILE_SIZE", 
-	   			"value" => $this->getAllowedMaxFileSize(),
+			array(
+				"type" => "hidden", 
+				"name" => "MAX_FILE_SIZE", 
+				"value" => $this->getAllowedMaxFileSize(),
 				"tabindex" => $this->getTabIndex()
-	   		)
-	   	);
-	    
-	   	if($imageField && $imageField->exists()) {
-	      if($imageField->hasMethod('Thumbnail') && $imageField->Thumbnail()) {
-	      	$html .= "<img src=\"".$imageField->Thumbnail()->URL()."\" />";
-	      } else if($imageField->CMSThumbnail()) {
-			$html .= "<img src=\"".$imageField->CMSThumbnail()->URL()."\" />";
-	      }
-	    }
-	    
-	    $html .= "</div>";
-	    
-	    return $html;
+			)
+		);
+		$html .= "</div>";
+		
+		return $html;
 	}
   
 	/**
