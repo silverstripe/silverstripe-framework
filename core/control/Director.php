@@ -151,7 +151,7 @@ class Director {
 		// Really, it's some inapproriate coupling and should be resolved by making less use of statics
 		$oldStage = Versioned::current_stage();
 		
-		if(!$httpMethod) $httpMethod = $postVars ? "POST" : "GET";
+		if(!$httpMethod) $httpMethod = ($postVars || is_array($postVars)) ? "POST" : "GET";
 		
         $getVars = array();
 		if(strpos($url,'?') !== false) {
