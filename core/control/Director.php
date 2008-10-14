@@ -527,7 +527,7 @@ class Director {
 				$destURL = str_replace('http://', 'http://www.', Director::absoluteURL($_SERVER['REQUEST_URI']));
 			}
 
-			header("Location: $destURL");
+			header("Location: $destURL", true, 301);
 			die("<h1>Your browser is not accepting header redirects</h1><p>Please <a href=\"$destURL\">click here</a>");
 		}
 	}
