@@ -567,7 +567,7 @@ JS;
 		$message = sprintf(
 			_t('ComplexTableField.SUCCESSADD', 'Added %s %s %s'),
 			$childData->singular_name(),
-			'<a href="' . $this->Link() . '">' . $childData->Title . '</a>',
+			'<a href="' . $this->Link() . '/item/' . $childData->ID . '/edit">' . $childData->Title . '</a>',
 			$closeLink
 		);
 		$form->sessionMessage($message, 'good');
