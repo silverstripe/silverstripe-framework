@@ -910,7 +910,7 @@ class Member extends DataObject {
 	 *                  editing this member.
 	 */
 	public function getCMSFields() {
-		$fields = parent::scaffoldCMSFields();
+		$fields = parent::getCMSFields();
 		
 		$mainFields = $fields->fieldByName("Root")->fieldByName("Main")->Children;
 		
@@ -951,11 +951,7 @@ class Member extends DataObject {
 		$mainFields->removeByName('Salt');
 		$mainFields->removeByName('NumVisit');
 		$mainFields->removeByName('LastVisited');
-		
-		if($this->ID) {
-			$fields = $this->addScaffoldRelationFields($fields);
-		}
-		
+	
 		$fields->removeByName('Subscriptions');
 		$fields->removeByName('UnsubscribedRecords');
 		// Groups relation will get us into logical conflicts because
