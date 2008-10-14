@@ -17,6 +17,11 @@
 class HTTPRequest extends Object implements ArrayAccess {
 
 	/**
+	 * @var string $url
+	 */
+	protected $url;
+
+	/**
 	 * The non-extension parts of the passed URL as an array, originally exploded by the "/" separator.
 	 * All elements of the URL are loaded in here,
 	 * and subsequently popped out of the array by {@link shift()}.
@@ -187,6 +192,13 @@ class HTTPRequest extends Object implements ArrayAccess {
 	}
 	
 	/**
+	 * @return string
+	 */
+	function getURL() {
+		return $this->url;
+	}
+	
+	/**
 	 * Enables the existence of a key-value pair in the request to be checked using
 	 * array syntax, so isset($request['title']) will check for $_POST['title'] and $_GET['title]
 	 *
@@ -225,13 +237,13 @@ class HTTPRequest extends Object implements ArrayAccess {
 	function __construct($httpMethod, $url, $getVars = array(), $postVars = array(), $body = null) {
 		$this->httpMethod = strtoupper(self::detect_method($httpMethod, $postVars));
 		
-		$url = preg_replace(array('/\/+/','/^\//', '/\/$/'),array('/','',''), $url);
+		$this->url = preg_replace(array('/\/+/','/^\//', '/\/$/'),array('/','',''), $url);
 		
 		if(preg_match('/^(.*)\.([A-Za-z][A-Za-z0-9]*)$/', $url, $matches)) {
 			$url = $matches[1];
 			$this->extension = $matches[2];
 		}
-		if($url) $this->dirParts = split('/+', $url);
+		if($this->url) $this->dirParts = split('/+', $this->url);
 		else $this->dirParts = array();
 		
 		$this->getVars = (array)$getVars;
