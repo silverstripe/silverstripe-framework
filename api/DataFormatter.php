@@ -96,7 +96,7 @@ abstract class DataFormatter extends Object {
 		}
 		arsort($sortedClasses);
 		foreach($sortedClasses as $className => $priority) {
-			$formatter = singleton($className);
+			$formatter = new $className();
 			if(in_array($extension, $formatter->supportedExtensions())) {
 				return $formatter;
 			}
@@ -132,7 +132,7 @@ abstract class DataFormatter extends Object {
 		}
 		arsort($sortedClasses);
 		foreach($sortedClasses as $className => $priority) {
-			$formatter = singleton($className);
+			$formatter = new $className();
 			if(in_array($mimeType, $formatter->supportedMimeTypes())) {
 				return $formatter;
 			}
