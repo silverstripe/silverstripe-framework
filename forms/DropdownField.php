@@ -93,7 +93,7 @@ class DropdownField extends FormField {
 			'disabled' => $this->disabled ? 'disabled' : null,
 			'tabindex' => $this->getTabIndex()
 		);
-		
+
 		return $this->createTag('select', $attributes, $options);
 	}
 	
@@ -110,10 +110,10 @@ class DropdownField extends FormField {
 	 * @return array
 	 */
 	function getSource() {
-		if($this->getHasEmptyDefault()) {
+		if(is_array($this->source) && $this->getHasEmptyDefault()) {
 			return array(""=>$this->emptyString) + (array)$this->source;
 		} else {
-			return (array)$this->source;
+			return $this->source;
 		}
 	}
   
