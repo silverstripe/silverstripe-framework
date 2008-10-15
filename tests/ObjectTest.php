@@ -2,6 +2,10 @@
 /**
  * @package sapphire
  * @subpackage tests
+ * 
+ * @todo tests for addStaticVars()
+ * @todo tests for setting statics which are not defined on the object as built-in PHP statics
+ * @todo tests for setting statics through decorators (#2387)
  */
 class ObjectTest extends SapphireTest {
 	
