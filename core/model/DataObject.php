@@ -2360,7 +2360,7 @@ class DataObject extends ViewableData implements DataObjectInterface {
 					"{$this->class}ID" => "Int",
 				(($this->class == $childClass) ? "ChildID" : "{$childClass}ID") => "Int",
 				);
-				if($extras[$relationship]) {
+				if(isset($extras[$relationship])) {
 					$manymanyFields = array_merge($manymanyFields, $extras[$relationship]);
 				}
 
