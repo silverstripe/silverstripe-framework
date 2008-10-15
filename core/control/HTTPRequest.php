@@ -84,6 +84,28 @@ class HTTPRequest extends Object implements ArrayAccess {
 	
 	protected $unshiftedButParsedParts = 0;
 	
+	/**
+	 * Construct a HTTPRequest from a URL relative to the site root.
+	 */
+	function __construct($httpMethod, $url, $getVars = array(), $postVars = array(), $body = null) {
+		$this->httpMethod = strtoupper(self::detect_method($httpMethod, $postVars));
+		$this->url = $url;
+		
+		$this->url = preg_replace(array('/\/+/','/^\//', '/\/$/'),array('/','',''), $this->url);
+		if(preg_match('/^(.*)\.([A-Za-z][A-Za-z0-9]*)$/', $this->url, $matches)) {
+			$this->url = $matches[1];
+			$this->extension = $matches[2];
+		}
+		if($this->url) $this->dirParts = split('/+', $this->url);
+		else $this->dirParts = array();
+		
+		$this->getVars = (array)$getVars;
+		$this->postVars = (array)$postVars;
+		$this->body = $body;
+		
+		parent::__construct();
+	}
+	
 	function isGET() {
 		return $this->httpMethod == 'GET';
 	}
@@ -230,28 +252,6 @@ class HTTPRequest extends Object implements ArrayAccess {
 	 * @ignore
 	 */
 	function offsetUnset($offset) {}
-
-	/**
-	 * Construct a HTTPRequest from a URL relative to the site root.
-	 */
-	function __construct($httpMethod, $url, $getVars = array(), $postVars = array(), $body = null) {
-		$this->httpMethod = strtoupper(self::detect_method($httpMethod, $postVars));
-		$this->url = $url;
-		
-		$this->url = preg_replace(array('/\/+/','/^\//', '/\/$/'),array('/','',''), $this->url);
-		if(preg_match('/^(.*)\.([A-Za-z][A-Za-z0-9]*)$/', $this->url, $matches)) {
-			$this->url = $matches[1];
-			$this->extension = $matches[2];
-		}
-		if($this->url) $this->dirParts = split('/+', $this->url);
-		else $this->dirParts = array();
-		
-		$this->getVars = (array)$getVars;
-		$this->postVars = (array)$postVars;
-		$this->body = $body;
-		
-		parent::__construct();
-	}
 	
 	/**
 	 * Construct an HTTPResponse that will deliver a file to the client
