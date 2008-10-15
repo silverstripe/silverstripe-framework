@@ -70,20 +70,22 @@ class DropdownField extends FormField {
 		$options = '';
 
 		$source = $this->getSource();
-		foreach($source as $value => $title) {
-			$selected = ($value == $this->value) ? 'selected' : null;
-			if($selected && $this->value != 0) {
-				$this->isSelected = true;
+		if($source) {
+			foreach($source as $value => $title) {
+				$selected = ($value == $this->value) ? 'selected' : null;
+				if($selected && $this->value != 0) {
+					$this->isSelected = true;
+				}
+				
+				$options .= $this->createTag(
+					'option',
+					array(
+						'selected' => $selected,
+						'value' => $value
+					),
+					$title
+				);
 			}
-			
-			$options .= $this->createTag(
-				'option',
-				array(
-					'selected' => $selected,
-					'value' => $value
-				),
-				$title
-			);
 		}
 	
 		$attributes = array(
