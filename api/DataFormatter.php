@@ -243,7 +243,7 @@ abstract class DataFormatter extends Object {
 		$dbFields = array();
 		
 		// if custom fields are specified, only select these
-		if($this->customFields) {
+		if(is_array($this->customFields)) {
 			foreach($this->customFields as $fieldName) {
 				// @todo Possible security risk by making methods accessible - implement field-level security
 				if($obj->hasField($fieldName) || $obj->hasMethod("get{$fieldName}")) $dbFields[$fieldName] = $fieldName; 
@@ -252,8 +252,8 @@ abstract class DataFormatter extends Object {
 			// by default, all database fields are selected
 			$dbFields = $obj->inheritedDatabaseFields();
 		}
-		
-		if($this->customAddFields) {
+
+		if(is_array($this->customAddFields)) {
 			foreach($this->customAddFields as $fieldName) {
 				// @todo Possible security risk by making methods accessible - implement field-level security
 				if($obj->hasField($fieldName) || $obj->hasMethod("get{$fieldName}")) $dbFields[$fieldName] = $fieldName; 
@@ -264,10 +264,10 @@ abstract class DataFormatter extends Object {
 		$dbFields = array_merge($dbFields, array('ID'=>'Int'));
 		
 		// @todo Requires PHP 5.1+
-		if($this->removeFields) {
+		if(is_array($this->removeFields)) {
 			$dbFields = array_diff_key($dbFields, array_combine($this->removeFields,$this->removeFields));
 		}
-		
+
 		return $dbFields;
 	}
 	
