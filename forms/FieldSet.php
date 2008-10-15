@@ -163,6 +163,10 @@ class FieldSet extends DataObjectSet {
 	 * be left as-is.
 	 */
 	public function removeByName($fieldName, $dataFieldOnly = false) {
+		if(!$fieldName) {
+			user_error('FieldSet::removeByName() was called with a blank field name.', E_USER_WARNING);
+		}
+		
 		foreach($this->items as $i => $child) {
 			if(is_object($child) && ($child->Name() == $fieldName || $child->Title() == $fieldName) && (!$dataFieldOnly || $child->hasData())) {
 				//if($child->class == 'Tab' && !$dataFieldOnly) Debug::backtrace();
@@ -385,7 +389,7 @@ class FieldSet extends DataObjectSet {
 	 */
 	function beforeInsert($item) {
 		if($this->sequentialSet) $this->sequentialSet = null;
-		$this->rootFieldSet()->removeByName($item->Name(), true);
+		if($item->Name()) $this->rootFieldSet()->removeByName($item->Name(), true);
 	}
 		
 	

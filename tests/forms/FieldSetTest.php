@@ -281,6 +281,14 @@ class FieldSetTest extends SapphireTest {
 		
 		/* There are now 2 fields in the set */
 		$this->assertEquals(2, $fields->Count());
+		
+		// Test that pushing a composite field without a name onto the set works
+		// See ticket #2932
+		$fields->push(new CompositeField(
+			new TextField('Test1'),
+			new TextField('Test2')
+		));
+		$this->assertEquals(3, $fields->Count());
 	}
 
 	/**
