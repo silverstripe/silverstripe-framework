@@ -71,7 +71,23 @@ class BankAccountField extends FormField {
 		}
 	}
 	
-/**
+	/**
+	 * Checks for a valid array structure.
+	 *
+	 * @param array $arr
+	 * @return boolean
+	 */
+	protected static function is_valid_array_structure($arr) {
+		return (
+			is_array($arr)
+			&& array_key_exists('BankCode', $arr)
+			&& array_key_exists('BranchCode', $arr)
+			&& array_key_exists('AccountNumber', $arr)
+			&& array_key_exists('AccountSuffix', $arr)
+		);
+	}
+	
+	/**
 	 * @return string
 	 */
 	function getBankCode() {
@@ -217,8 +233,10 @@ JS;
 				$valueArr['AccountNumber'], 
 				$valueArr['AccountSuffix']
 			) = explode(" ",$value);
-		} else {
+		} elseif(self::is_valid_array_structure($value)) {
 			$valueArr = $value;
+		} else {
+			return false;
 		}
 		
 		if(strlen(trim($valueArr['AccountNumber'])) == 7) {
