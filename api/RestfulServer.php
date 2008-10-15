@@ -1,6 +1,8 @@
 <?php
-
 /**
+ * @package sapphire
+ * @subpackage api
+ *
  * Sapphire's generic RESTful server.
  * 
  * This class gives your application a RESTful API for free.  All you have to do is define static $api_access = true on
@@ -8,6 +10,27 @@
  * your model layer (ie, the DataObject classes) and not in your Controllers.  This is the recommended design for Sapphire
  * applications.
  * 
+ * Example DataObject with simple api access, giving full access to all object properties and relations,
+ * unless explicitly controlled through model permissions.
+ * <code>
+ * class Article extends DataObject {
+ * 	static $db = array('Title'=>'Text','Published'=>'Boolean');
+ * 	static $api_access = true;
+ * }
+ * </code>
+ *
+ * * Example DataObject with advanced api access, limiting viewing and editing to Title attribute only:
+ * <code>
+ * class Article extends DataObject {
+ * 	static $db = array('Title'=>'Text','Published'=>'Boolean');
+ * 	static $api_access = array(
+ * 		'view' => array('Title'),
+ * 		'edit' => array('Title'),
+ * 	);
+ * }
+ * </code>
+ * 
+ * Supported operations:
  *  - GET /api/v1/(ClassName)/(ID) - gets a database record
  *  - GET /api/v1/(ClassName)/(ID)/(Relation) - get all of the records linked to this database record by the given reatlion
  *  - GET /api/v1/(ClassName)?(Field)=(Val)&(Field)=(Val) - searches for matching database records
@@ -57,6 +80,7 @@
  *       e.g. you wouldn't be able to search for a "limit" property on your subclass as its overlayed with the search logic
  * @todo i18n integration (e.g. Page/1.xml?lang=de_DE)
  * @todo Access to decoratable methods/relations like SiteTree/1/Versions or SiteTree/1/Version/22
+ * @todo Respect $api_access array notation in search contexts
  */
 class RestfulServer extends Controller {
 	static $url_handlers = array(
@@ -111,8 +135,9 @@ class RestfulServer extends Controller {
 		$relation = (isset($this->urlParams['Relation'])) ? $this->urlParams['Relation'] : null;
 		
 		// if api access is disabled, don't proceed
-		if(!singleton($className)->stat('api_access')) return $this->permissionFailure();
-		
+		$apiAccess = singleton($className)->stat('api_access');
+		if(!$apiAccess) return $this->permissionFailure();
+
 		// authenticate through HTTP BasicAuth
 		$this->member = $this->authenticate();
 
@@ -269,6 +294,22 @@ class RestfulServer extends Controller {
 		if($customAddFields = $this->request->getVar('add_fields')) $formatter->setCustomAddFields(explode(',',$customAddFields));
 		if($customFields = $this->request->getVar('fields')) $formatter->setCustomFields(explode(',',$customFields));
 		$formatter->setCustomRelations($this->getAllowedRelations($this->urlParams['ClassName']));
+		
+		$apiAccess = singleton($this->urlParams['ClassName'])->stat('api_access');
+		if(is_array($apiAccess)) {
+			$formatter->setCustomAddFields(array_intersect((array)$formatter->getCustomAddFields(), (array)$apiAccess['view']));
+			if($formatter->getCustomFields()) {
+				$formatter->setCustomFields(array_intersect((array)$formatter->getCustomFields(), (array)$apiAccess['view']));
+			} else {
+				$formatter->setCustomFields((array)$apiAccess['view']);
+			}
+			if($formatter->getCustomRelations()) {
+				$formatter->setCustomRelations(array_intersect((array)$formatter->getCustomRelations(), (array)$apiAccess['view']));
+			} else {
+				$formatter->setCustomRelations((array)$apiAccess['view']);
+			}
+			
+		}
 
 		// set relation depth
 		$relationDepth = $this->request->getVar('relationdepth');
@@ -379,6 +420,11 @@ class RestfulServer extends Controller {
 		// @todo Disallow editing of certain keys in database
 		$data = array_diff_key($data, array('ID','Created'));
 		
+		$apiAccess = singleton($this->urlParams['ClassName'])->stat('api_access');
+		if(is_array($apiAccess) && isset($apiAccess['edit'])) {
+			$data = array_intersect_key($data, array_combine($apiAccess['edit'],$apiAccess['edit']));
+		}
+
 		$obj->update($data);
 		$obj->write();
 		
