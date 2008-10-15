@@ -43,7 +43,7 @@ class ListboxField extends DropdownField {
 		if(is_array($this->value)){
 			// Loop through and figure out which values were selected.
 					
-			foreach($this->source as $value => $title) {
+			foreach($this->getSource() as $value => $title) {
 				// Loop through the array of values to find out if this value is selected.
 				$selected = "";
 				foreach($this->value as $v){
@@ -56,11 +56,9 @@ class ListboxField extends DropdownField {
 			}
 		}else{
 			// Listbox was based a singlular value, so treat it like a dropdown.
-			if($this->source){
-				foreach($this->source as $value => $title) {
-					$selected = $value == $this->value ? " selected=\"selected\"" : ""; 
-					$options .= "<option$selected value=\"$value\">$title</option>";
-				}
+			foreach($this->getSource() as $value => $title) {
+				$selected = $value == $this->value ? " selected=\"selected\"" : ""; 
+				$options .= "<option$selected value=\"$value\">$title</option>";
 			}
 		}
 		

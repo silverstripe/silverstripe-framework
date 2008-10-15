@@ -28,7 +28,8 @@ class OptionsetField extends DropdownField {
 	function Field() {
 		$options = '';
 		$odd = 0;
-		foreach($this->source as $key => $value) {
+		$source = $this->getSource();
+		foreach($source as $key => $value) {
 			$itemID = $this->id() . "_" . ereg_replace('[^a-zA-Z0-9]+','',$key);
 		
 			if($key == $this->value/* || $useValue */) {
@@ -56,7 +57,7 @@ class OptionsetField extends DropdownField {
 	
 	function performReadonlyTransformation() {
 		// Source and values are DataObject sets.
-		$items = $this->source;
+		$items = $this->getSource();
 		$field = new LookupField($this->name,$this->title ? $this->title : "" ,$items,$this->value);
 		$field->setForm($this->form);
 		$field->setReadonly(true);

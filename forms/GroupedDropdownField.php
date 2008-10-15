@@ -22,19 +22,18 @@ class GroupedDropdownField extends DropdownField {
 		if($extraClass = trim($this->extraClass())) {
 			$classAttr = "class=\"$extraClass\"";
 		}
-		if($this->source) {
-			foreach($this->source as $value => $title) {
-				if(is_array($title)) {
-					$options .= "<optgroup label=\"$value\">";
-					foreach($title as $value2 => $title2) {
-						$selected = $value2 == $this->value ? " selected=\"selected\"" : "";
-						$options .= "<option$selected value=\"$value2\">$title2</option>";
-					}
-					$options .= "</optgroup>";
-				} else { // Fall back to the standard dropdown field
-					$selected = $value == $this->value ? " selected=\"selected\"" : "";
-					$options .= "<option$selected value=\"$value\">$title</option>";
+		
+		foreach($this->getSource() as $value => $title) {
+			if(is_array($title)) {
+				$options .= "<optgroup label=\"$value\">";
+				foreach($title as $value2 => $title2) {
+					$selected = $value2 == $this->value ? " selected=\"selected\"" : "";
+					$options .= "<option$selected value=\"$value2\">$title2</option>";
 				}
+				$options .= "</optgroup>";
+			} else { // Fall back to the standard dropdown field
+				$selected = $value == $this->value ? " selected=\"selected\"" : "";
+				$options .= "<option$selected value=\"$value\">$title</option>";
 			}
 		}
 

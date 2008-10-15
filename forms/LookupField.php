@@ -16,16 +16,15 @@ class LookupField extends DropdownField {
 		
 		if(trim($this->value) || $this->value === '0') {
 			$this->value = trim($this->value);
-			if(is_array($this->source)) {
-				$mappedValue = isset($this->source[$this->value]) ? $this->source[$this->value] : null;
-			} else {
-				$mappedValue = $this->source->getItem($this->value);
+			$source = $this->getSource();
+			if(is_array($source)) {
+				$mappedValue = isset($source[$this->value]) ? $source[$this->value] : null;
+			} elseif($source instanceof SQLMap) {
+				$mappedValue = $source->getItem($this->value);
 			}
 		}
 		
-		if(!isset($mappedValue)) {
-			$mappedValue = "<i>(none)</i>";
-		}
+		if(!isset($mappedValue)) $mappedValue = "<i>(none)</i>";
 
 		if($this->value) {
 			$val = $this->dontEscape
@@ -35,9 +34,7 @@ class LookupField extends DropdownField {
 			$val = '<i>(none)</i>';
 		}
 
-		$valforInput = $this->value
-			? Convert::raw2att($val)
-			: "";
+		$valforInput = $this->value ? Convert::raw2att($val) : "";
 
 		return "<span class=\"readonly\" id=\"" . $this->id() .
 			"\">$mappedValue</span><input type=\"hidden\" name=\"" . $this->name .
@@ -50,6 +47,13 @@ class LookupField extends DropdownField {
 
 	function Type() { 
 		return "lookup readonly";
+	}
+	
+	/**
+	 * Override parent behaviour by not merging arrays.
+	 */
+	function getSource() {
+		return $this->source;
 	}
 }
 
