@@ -73,6 +73,105 @@ class ObjectTest extends SapphireTest {
 		$mySecondObject = singleton('ObjectTest_MyObject');
 		$this->assertTrue($myFirstObject === $mySecondObject, 'singletons are using the same object on subsequent calls');
 	}
+	
+	function testStaticGetterMethod() {
+		static $_SINGLETONS;
+		$_SINGLETONS= null;
+		
+		$obj = singleton('ObjectTest_MyObject');
+		$this->assertEquals(
+			ObjectTest_MyObject::$mystaticProperty,
+			$obj->stat('mystaticProperty'),
+			'Uninherited statics through stat() on a singleton behave the same as built-in PHP statics'
+		);
+		/*
+		$this->assertNull(
+			$obj->stat('mystaticSubProperty'),
+			'Statics through stat() on a singleton dont inherit statics from child classes'
+		);
+		*/
+	}
+	
+	function testStaticInheritanceGetters() {
+		static $_SINGLETONS;
+		$_SINGLETONS = null;
+		
+		$obj = singleton('ObjectTest_MyObject');
+		$subObj = singleton('ObjectTest_MyObject');
+		$this->assertEquals(
+			$subObj->stat('mystaticProperty'),
+			'MyObject',
+			'Statics defined on a parent class are available through stat() on a subclass'
+		);
+		/*
+		$this->assertEquals(
+			$subObj->uninherited('mystaticProperty'),
+			'MySubObject',
+			'Statics re-defined on a subclass are available through uninherited()'
+		);
+		*/
+	}
+	
+	function testStaticInheritanceSetters() {
+		static $_SINGLETONS;
+		$_SINGLETONS = null;
+		
+		$obj = singleton('ObjectTest_MyObject');
+		$subObj = singleton('ObjectTest_MyObject');
+		$subObj->set_uninherited('mystaticProperty', 'MySubObject_changed');
+		$this->assertEquals(
+			$obj->stat('mystaticProperty'),
+			'MyObject',
+			'Statics set on a subclass with set_uninherited() dont influence parent class'
+		);
+		/*
+		$this->assertEquals(
+			$subObj->stat('mystaticProperty'),
+			'MySubObject_changed',
+			'Statics set on a subclass with set_uninherited() are changed on subclass when using stat()'
+		);
+		*/
+		$this->assertEquals(
+			$subObj->uninherited('mystaticProperty'),
+			'MySubObject_changed',
+			'Statics set on a subclass with set_uninherited() are changed on subclass when using uninherited()'
+		);
+	}
+	
+	function testStaticSettingOnSingletons() {
+		static $_SINGLETONS;
+		$_SINGLETONS = null;
+		
+		$singleton1 = singleton('ObjectTest_MyObject');
+		$singleton2 = singleton('ObjectTest_MyObject');
+		$singleton1->set_stat('mystaticProperty', 'changed');
+		$this->assertEquals(
+			$singleton2->stat('mystaticProperty'),
+			'changed',
+			'Statics setting is populated throughout singletons without explicitly clearing cache'
+		);
+	}
+	
+	function testStaticSettingOnInstances() {
+		static $_SINGLETONS;
+		$_SINGLETONS = null;
+		
+		$instance1 = new ObjectTest_MyObject();
+		$instance2 = new ObjectTest_MyObject();
+		$instance1->set_stat('mystaticProperty', 'changed');
+		$this->assertEquals(
+			$instance2->stat('mystaticProperty'),
+			'changed',
+			'Statics setting through set_stat() is populated throughout instances without explicitly clearing cache'
+		);
+		/*
+		$this->assertEquals(
+			ObjectTest_MyObject::$mystaticProperty,
+			'changed',
+			'Statics setting through set_stat() reflects on PHP built-in statics on the class'
+		);
+		*/
+	}
 }
 
 class ObjectTest_T1A extends Object {
@@ -130,8 +229,13 @@ class ObjectTest_T2 extends Object {
 
 class ObjectTest_MyObject extends Object {
 	public $title = 'my object';
+	static $mystaticProperty = "MyObject";
+	static $mystaticArray = array('one');
 }
 
 class ObjectTest_MySubObject extends ObjectTest_MyObject {
 	public $title = 'my subobject';
+	static $mystaticProperty = "MySubObject";
+	static $mystaticSubProperty = "MySubObject";
+	static $mystaticArray = array('two');
 }
