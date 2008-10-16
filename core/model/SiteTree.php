@@ -1275,7 +1275,47 @@ class SiteTree extends DataObject {
 		// Handle activities undertaken by decorators
 		$this->extend('onAfterPublish', $original);
 	}
+	
+	/**
+	 * Unpublish this page - remove it from the live site
+	 */
+	function doUnpublish() {
+		// Call delete on a cloned object so that this one doesn't lose its ID
+		$this->flushCache();
+		$clone = DataObject::get_by_id("SiteTree", $this->ID);
+		$clone->deleteFromStage('Live');
 
+		$this->Status = "Unpublished";
+		$this->write();
+
+		GoogleSitemap::ping();
+	}
+	
+	/**
+	 * Roll the draft version of this page to match the published page
+	 * @param $version Either the string 'Live' or a version number
+	 */
+	function doRollbackTo($version) {
+		$this->publish($version, "Stage", true);
+		$this->AssignedToID = 0;
+		$this->RequestedByID = 0;
+		$this->Status = "Saved (update)";
+		$this->writeWithoutVersion();
+	}
+	
+	/**
+	 * Revert the draft changes: replace the draft content with the content on live
+	 */
+	function doRevertToLive() {
+		$this->publish("Live", "Stage", false);
+
+		// Use a clone to get the updates made by $this->publish
+		$clone = DataObject::get_by_id("SiteTree", $this->ID);
+		$clone->AssignedToID = 0;
+		$clone->RequestedByID = 0;
+		$clone->Status = "Published";
+		$clone->writeWithoutVersion();
+	}
 
 	/**
 	 * Check if this page is new - that is, if it has yet to have been written
