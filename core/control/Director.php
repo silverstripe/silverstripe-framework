@@ -364,15 +364,8 @@ class Director {
 	}
 
 	/**
-	 * @deprecated This seems like a bit of a hack; is it used anywhere?
-	 */
-	static function currentURLSegment() {
-		return Director::$urlSegment;
-	}
-
-	/**
 	 * Returns a URL to composed of the given segments - usually controller, action, parameter
-	 * @deprecated This function has little value.  Just craft links yourself.
+	 * @deprecated 2.3 Use Controller::join_links()
 	 */
 	static function link() {
 		$parts = func_get_args();
@@ -438,13 +431,6 @@ class Director {
 		if(substr($url,0,strlen($base3)) == $base3) return substr($url,strlen($base3));
 		
 		return $url;
-	}
-
-	/**
-	 * @deprecated This method's behaviour isn't very useful or consistent.
-	 */
-	static function getAbsURL($url) {
-		return Director::baseURL() . $url;
 	}
 	
 	/**
@@ -731,30 +717,5 @@ class Director {
 		return false;
 	}
 
-	/**
-	 * @deprecated use isDev() instead
-	 */
-	function isDevMode() {
-		user_error('Director::isDevMode() is deprecated. Use Director::isDev() instead.', E_USER_NOTICE);
-		return self::isDev();
-	}
-	
-	/**
-	 * @deprecated use isTest() instead
-	 */
-	function isTestMode() {
-		user_error('Director::isTestMode() is deprecated. Use Director::isTest() instead.', E_USER_NOTICE);
-		return self::isTest();
-	}
-	
-	/**
-	 * @deprecated use isLive() instead
-	 */
-	function isLiveMode() {
-		user_error('Director::isLiveMode() is deprecated. Use Director::isLive() instead.', E_USER_NOTICE);
-		return self::isLive();
-	}
-
 }
-
 ?>
