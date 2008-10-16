@@ -84,16 +84,6 @@ class Debug {
 	}
 	
 	/**
-	 * Emails the contents of the output buffer.
-	 * 
-	 * @deprecated Use custom code instead.
-	 */
-	static function mailBuffer( $email, $subject ) {
-		mail( $email, $subject, ob_get_contents() );
-		ob_end_clean();
-	}  
-	
-	/**
 	 * Close out the show dumper
 	 *
 	 * @param mixed $val
@@ -481,7 +471,7 @@ class Debug {
 
 	/**
 	 * Deprecated.  Send live errors and warnings to the given address.
-	 * @deprecated Use send_errors_to() instead.
+	 * @deprecated 2.3 Use send_errors_to() instead.
 	 */
 	static function sendLiveErrorsTo($emailAddress) {
 		user_error('Debug::sendLiveErrorsTo() is deprecated. Use Debug::send_errors_to() instead.', E_USER_NOTICE);
