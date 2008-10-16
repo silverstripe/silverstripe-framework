@@ -6,21 +6,41 @@
  * @subpackage fields-dataless
  */
 class HeaderField extends DatalessField {
-	protected $headingLevel, $allowHTML;
 	
-	function __construct($title, $headingLevel = 2, $allowHTML = false, $form = null) {
+	/**
+	 * @var int $headingLevel The level of the <h1> to <h6> HTML tag. Default: 2
+	 */
+	protected $headingLevel = 2;
+	
+	function __construct($name, $title, $headingLevel = 2, $allowHTML = false, $form = null) {
+		// legacy handling for old parameters: $title, $heading, ...
+		// instead of new handling: $name, $title, $heading, ...
+		$args = func_get_args();
+		if(!isset($args[1]) || is_numeric($args[1])) {
+			$title = (isset($args[0])) ? $args[0] : null;
+			$name = $title; // this means i18nized fields won't be easily accessible through fieldByName()
+			$headingLevel = (isset($args[1])) ? $args[1] : null;
+			$allowHTML = (isset($args[2])) ? $args[2] : null;
+			$form = (isset($args[3])) ? $args[3] : null;
+		} 
+		
 		$this->headingLevel = $headingLevel;
 		$this->allowHTML = $allowHTML;
-
-		parent::__construct(null, $title, null, $form);
+		
+		parent::__construct($name, $title, null, $form);
 	}
+	
 	function Field() {
-		$XML_title = ($this->allowHTML) ? $this->title : Convert::raw2xml($this->title);
-		
-		// extraclass
-		$XML_class = ($this->extraClass()) ? " class=\"{$this->extraClass()}\"" : '';  
-		
-		return "<h{$this->headingLevel}{$XML_class}>$XML_title</h$this->headingLevel>";
+		$attributes = array(
+			'class' => $this->extraClass(),
+			'id' => $this->id(),
+			'name' => $this->Name(),
+		);
+		return $this->createTag(
+			"h{$this->headingLevel}",
+			$attributes,
+			($this->getAllowHTML() ? $this->title : Convert::raw2xml($this->title))
+		);
 	}
 }
 ?>

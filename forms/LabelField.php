@@ -6,27 +6,46 @@
  * @subpackage fields-dataless
  */
 class LabelField extends DatalessField {
-	protected $className;
-	protected $allowHTML;
 	
 	/**
-	 * Create a new label.
-	 * @param title The label itslef
-	 * @param class An HTML class to apply to the label.
+	 * @param string $name
+	 * @param string $title
+	 * @param string $className (Deprecated: use addExtraClass())
+	 * @param bool $allowHTML (Deprecated: use setAllowHTML())
+	 * @param Form $form
 	 */
-	function __construct($title, $className = "", $allowHTML = false, $form = null) {
-		$this->className = $className;
+	function __construct($name, $title, $className = null, $allowHTML = false, $form = null) {
+		// legacy handling for old parameters: $title, $heading, ...
+		// instead of new handling: $name, $title, $heading, ...
+		$args = func_get_args();
+		if(!isset($args[1])) {
+			$title = (isset($args[0])) ? $args[0] : null;
+			$name = $title;
+			$classname = (isset($args[1])) ? $args[1] : null;
+			$allowHTML = (isset($args[2])) ? $args[2] : null;
+			$form = (isset($args[3])) ? $args[3] : null;
+		} 
+		
+		$this->headingLevel = $headingLevel;
 		$this->allowHTML = $allowHTML;
-
-		parent::__construct(null, $title, null, $form);
+		
+		parent::__construct($name, $title, null, $form);
 	}
 	
 	/**
 	 * Returns a label containing the title, and an HTML class if given.
 	 */
 	function Field() {
-		$classClause = $this->className ? " class=\"$this->className\"" : '';
-		return "<label$classClause>" . ($this->allowHTML ? $this->title : htmlentities($this->title)) . "</label>";
+		$attributes = array(
+			'class' => $this->extraClass(),
+			'id' => $this->id(),
+			'name' => $this->Name(),
+		);
+		return $this->createTag(
+			'label',
+			$attributes,
+			($this->getAllowHTML() ? $this->title : htmlentities($this->title))
+		);
 	}
 }
 ?>
