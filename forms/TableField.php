@@ -235,7 +235,7 @@ class TableField extends TableListField {
 								if($fieldset){
 									$newitem[ID] = "new".$k;
 									foreach($newitem as $k => $v){
-										if($this->extraData&&array_key_exists($k, $this->extraData)){
+										if($this->extraData && array_key_exists($k, $this->extraData)){
 											unset($newitem[$k]);
 										}
 									}
@@ -757,6 +757,12 @@ class TableField_Item extends TableListField_Item {
 		return $content;
 	}
 	
+	/**
+	 * Get the flag isAddRow of this item, 
+	 * to indicate if the item is that blank last row in the table which is not in the database
+	 * 
+	 * @return boolean
+	 */
 	function IsAddRow(){
 		return $this->isAddRow;
 	}
