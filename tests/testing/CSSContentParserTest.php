@@ -26,7 +26,7 @@ class CSSContentParserTest extends SapphireTest {
 		</div>
 		<p>test</p>
 	</body>
-</html>"
+</html>
 HTML
 );
 
