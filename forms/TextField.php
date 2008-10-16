@@ -37,22 +37,4 @@ class TextField extends FormField {
 	
 	
 }
-
-class TextField_Disabled extends TextField{
-	function Field() {
-		$attributes = array(
-			'type' => 'text',
-			'class' => $this->extraClass() . ' text',
-			'id' => $this->id(),
-			'name' => $this->Name(),
-			'value' => $this->Value(),
-			'tabindex' => $this->getTabIndex(),
-			'maxlength' => ($this->maxLength) ? $this->maxLength : null,
-			'size' => ($this->maxLength) ? min( $this->maxLength, 30 ) : null,
-			'disabled' => 'disabled'
-		);
-		
-		return $this->createTag('input', $attributes);
-	}
-}
 ?>
