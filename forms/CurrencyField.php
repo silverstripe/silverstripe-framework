@@ -26,7 +26,9 @@ class CurrencyField extends TextField {
 	 */
 	function performReadonlyTransformation() {
 		
-		return new CurrencyField_Readonly($this->name, $this->title, $this->value);
+		$field = new CurrencyField_Readonly($this->name, $this->title, $this->value);
+		$field -> addExtraClass($this->extraClass());
+		return $field;
 		
 		/*
 		$this is-a object and cant be passed as_a string of the first parameter of formfield constructor.
@@ -91,7 +93,7 @@ class CurrencyField_Readonly extends ReadonlyField{
 		        $val = '<i>'._t('CurrencyField.CURRENCYSYMBOL', '$').'0.00</i>';
 		}
 		$valforInput = $this->value ? Convert::raw2att($val) : "";
-		return "<span class=\"readonly\" id=\"" . $this->id() . "\">$val</span><input type=\"hidden\" name=\"".$this->name."\" value=\"".$valforInput."\" />";
+		return "<span class=\"readonly ".$this->extraClass()."\" id=\"" . $this->id() . "\">$val</span><input type=\"hidden\" name=\"".$this->name."\" value=\"".$valforInput."\" />";
 	}
 	/**
 	 * This already is a readonly field.
@@ -100,6 +102,29 @@ class CurrencyField_Readonly extends ReadonlyField{
 		return $this;
 	}
 	
+}
+
+/**
+ * Readonly version of a {@link CurrencyField}.
+ * @package forms
+ * @subpackage fields-formattedinput
+ */
+class CurrencyField_Disabled extends CurrencyField{
+	
+	/**
+	 * overloaded to display the correctly formated value for this datatype 
+	 */
+	function Field() {
+		if($this->value){
+			$val = $this->dontEscape ? ($this->reserveNL?Convert::raw2xml($this->value):$this->value) : Convert::raw2xml($this->value);
+			$val = _t('CurrencyField.CURRENCYSYMBOL', '$') . number_format(preg_replace('/[^0-9.]/',"",$val), 2);
+			
+		}else {
+		        $val = '<i>'._t('CurrencyField.CURRENCYSYMBOL', '$').'0.00</i>';
+		}
+		$valforInput = $this->value ? Convert::raw2att($val) : "";
+		return "<input class=\"text\" type=\"text\" disabled=\"disabled\" name=\"".$this->name."\" value=\"".$valforInput."\" />";
+	}
 }
 
 ?>
