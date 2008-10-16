@@ -18,7 +18,7 @@ Effect.FadeOut = function(element,callback) {
 }
  
 TableField = Class.create();
-Object.extend(TableField.prototype,{
+TableField.prototype = {
 	
 	newRowID: 1,
 	
@@ -70,7 +70,6 @@ Object.extend(TableField.prototype,{
 						fields[i].value = '';
 					}
 			}
-				
 			Event.stop(e);
 			return false;
 		}
@@ -200,7 +199,7 @@ Object.extend(TableField.prototype,{
 			}
 		}
 	}
-});
+}
 TableField.applyTo('div.TableField');
 if(typeof ajaxErrorHandler == 'undefined'){
 	ajaxErrorHandler = function(response) {
