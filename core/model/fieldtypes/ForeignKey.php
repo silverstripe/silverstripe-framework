@@ -1,6 +1,10 @@
 <?php
 /**
  * A special type Int field used for foreign keys in has_one relationships.
+ * @uses ImageField
+ * @uses SimpleImageField
+ * @uses FileIframeField
+ * @uses DropdownField
  * 
  * @param string $name
  * @param DataOject $object The object that the foreign key is stored on (should have a relation with $name) 
