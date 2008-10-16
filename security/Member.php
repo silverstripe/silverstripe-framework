@@ -13,15 +13,15 @@ class Member extends DataObject {
 		'Password' => "Varchar(64)", // support for up to SHA256!
 		'RememberLoginToken' => "Varchar(50)",
 		'NumVisit' => "Int",
-		'LastVisited' => 'Datetime',
+		'LastVisited' => 'SSDatetime',
 		'Bounced' => 'Boolean', // Note: This does not seem to be used anywhere.
 		'AutoLoginHash' => 'Varchar(30)',
-		'AutoLoginExpired' => 'Datetime',
+		'AutoLoginExpired' => 'SSDatetime',
 		'BlacklistedEmail' => 'Boolean',
 		'PasswordEncryption' => "Enum('none', 'none')",
 		'Salt' => 'Varchar(50)',
 		'PasswordExpiry' => 'Date',
-		'LockedOutUntil' => 'Datetime',
+		'LockedOutUntil' => 'SSDatetime',
 		'Locale' => 'Varchar(6)',
 	);
 

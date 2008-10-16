@@ -592,7 +592,7 @@ class Email_BounceHandler extends Controller {
 class Email_BounceRecord extends DataObject {
     static $db = array(
         'BounceEmail' => 'Varchar',
-        'BounceTime' => 'Datetime',
+        'BounceTime' => 'SSDatetime',
         'BounceMessage' => 'Varchar'
     );
     

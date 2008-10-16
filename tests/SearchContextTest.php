@@ -198,7 +198,7 @@ class SearchContextTest_Project extends DataObject implements TestOnly {
 class SearchContextTest_Deadline extends DataObject implements TestOnly {
 	
 	static $db = array(
-		"CompletionDate" => "Datetime"
+		"CompletionDate" => "SSDatetime"
 	);
 	
 	static $has_one = array(

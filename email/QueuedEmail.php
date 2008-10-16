@@ -7,7 +7,7 @@
 class QueuedEmail extends DataObject {
 	
 	static $db = array(
-		'Send' => 'Datetime',
+		'Send' => 'SSDatetime',
 		'Subject' => 'Varchar',
 		'From' => 'Varchar',
 		'Content' => 'Text'

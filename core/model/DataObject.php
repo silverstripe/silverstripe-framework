@@ -1718,8 +1718,8 @@ class DataObject extends ViewableData implements DataObjectInterface {
 		// Add base fields which are not defined in static $db
 		if($field == "ID") return "Int";
 		if($field == "ClassName" && get_parent_class($this) == "DataObject") return "Enum";
-		if($field == "LastEdited" && get_parent_class($this) == "DataObject") return "Datetime";
-		if($field == "Created" && get_parent_class($this) == "DataObject") return "Datetime";
+		if($field == "LastEdited" && get_parent_class($this) == "DataObject") return "SSDatetime";
+		if($field == "Created" && get_parent_class($this) == "DataObject") return "SSDatetime";
 
 		// Add fields from Versioned decorator
 		if($field == "Version") return $this->hasExtension('Versioned') ? "Int" : false;
@@ -2398,8 +2398,8 @@ class DataObject extends ViewableData implements DataObjectInterface {
 			return array_merge(
 			array(
 					"ClassName" => "Enum('" . implode(", ", $childClasses) . "')",
-					"Created" => "Datetime",
-					"LastEdited" => "Datetime",
+					"Created" => "SSDatetime",
+					"LastEdited" => "SSDatetime",
 			),
 			(array)$this->customDatabaseFields()
 			);
@@ -2678,8 +2678,8 @@ class DataObject extends ViewableData implements DataObjectInterface {
 	 * @var array
 	 */
 	public static $casting = array(
-		"LastEdited" => "Datetime",
-		"Created" => "Datetime",
+		"LastEdited" => "SSDatetime",
+		"Created" => "SSDatetime",
 		"Title" => 'Text',
 	);
 

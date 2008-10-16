@@ -115,8 +115,8 @@ class SiteTree extends DataObject {
 
 	static $casting = array(
 		"Breadcrumbs" => "HTMLText",
-		"LastEdited" => "Datetime",
-		"Created" => "Datetime",
+		"LastEdited" => "SSDatetime",
+		"Created" => "SSDatetime",
 	);
 
 	static $defaults = array(

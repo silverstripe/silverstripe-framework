@@ -38,8 +38,8 @@ class GoogleSitemap extends Controller {
 					// The one field that isn't easy to deal with in the template is
 					// Change frequency, so we set that here.
 					$properties = $page->toMap();
-					$created = new Datetime($properties['Created']);
-					$now = new Datetime();
+					$created = new SSDatetime($properties['Created']);
+					$now = new SSDatetime();
 					$versions = $properties['Version'];
 					$timediff = $now->format('U') - $created->format('U');
 			
