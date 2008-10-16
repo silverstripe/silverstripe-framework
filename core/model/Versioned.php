@@ -568,26 +568,41 @@ class Versioned extends DataObjectDecorator {
 	
 	/**
 	 * Get a singleton instance of a class in the given stage.
+	 * 
 	 * @param string $class The name of the class.
 	 * @param string $stage The name of the stage.
 	 * @param string $filter A filter to be inserted into the WHERE clause.
+	 * @param boolean $cache Use caching.
+	 * @param string $orderby A sort expression to be inserted into the ORDER BY clause.
 	 * @return DataObject
 	 */
-	static function get_one_by_stage($class, $stage, $filter = '') {
+	static function get_one_by_stage($class, $stage, $filter = '', $cache = true, $orderby = '') {
 		$oldStage = Versioned::$reading_stage;
 		Versioned::$reading_stage = $stage;
 		singleton($class)->flushCache();
-		$result = DataObject::get_one($class, $filter);
+		$result = DataObject::get_one($class, $filter, $cache, $orderby);
 		singleton($class)->flushCache();
 
 		Versioned::$reading_stage = $oldStage;
 		return $result;
 	}
 	
-	static function get_by_stage($class, $stage, $filter = '', $sort = '') {
+	/**
+	 * Get a set of class instances by the given stage.
+	 * 
+	 * @param string $class The name of the class.
+	 * @param string $stage The name of the stage.
+	 * @param string $filter A filter to be inserted into the WHERE clause.
+	 * @param string $sort A sort expression to be inserted into the ORDER BY clause.
+	 * @param string $join A join expression, such as LEFT JOIN or INNER JOIN
+	 * @param int $limit A limit on the number of records returned from the database.
+	 * @param string $containerClass The container class for the result set (default is DataObjectSet)
+	 * @return DataObjectSet
+	 */
+	static function get_by_stage($class, $stage, $filter = '', $sort = '', $join = '', $limit = '', $containerClass = 'DataObjectSet') {
 		$oldStage = Versioned::$reading_stage;
 		Versioned::$reading_stage = $stage;
-		$result = DataObject::get($class, $filter, $sort);
+		$result = DataObject::get($class, $filter, $sort, $join, $limit, $containerClass);
 		Versioned::$reading_stage = $oldStage;
 		return $result;
 	}
