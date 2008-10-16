@@ -57,7 +57,7 @@ class FormAction extends FormField {
 	
 	/**
 	 * Create a submit input, or button tag
-	 * using {@link Form->createTag()} functionality.
+	 * using {@link FormField->createTag()} functionality.
 	 * 
 	 * @return HTML code for the input OR button element
 	 */
