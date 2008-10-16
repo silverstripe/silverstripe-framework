@@ -274,12 +274,6 @@ class DatabaseAdmin extends Controller {
 		}
 	}
 
-
-	/**
-	 * This method does nothing at the moment...
-	 */
-	function makeURL() {}
 }
-
 
 ?>
