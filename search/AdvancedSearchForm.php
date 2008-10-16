@@ -13,14 +13,14 @@ class AdvancedSearchForm extends SearchForm {
 		if(!$fields) {
 			$fields = new FieldSet(
 				$searchBy = new CompositeField(
-					new HeaderField(_t('AdvancedSearchForm.SEARCHBY', 'SEARCH BY')),
+					new HeaderField('SearchByHeader',_t('AdvancedSearchForm.SEARCHBY', 'SEARCH BY')),
 					new TextField("+", _t('AdvancedSearchForm.ALLWORDS', 'All Words')),
 					new TextField("quote", _t('AdvancedSearchForm.EXACT', 'Exact Phrase')),
 					new TextField("any", _t('AdvancedSearchForm.ATLEAST', 'At Least One Of the Words')),
 					new TextField("-", _t('AdvancedSearchForm.WITHOUT', 'Without the Words'))
 				),
 				$sortBy = new CompositeField(
-					new HeaderField(_t('AdvancedSearchForm.SORTBY', 'SORT RESULTS BY')),
+					new HeaderField('SortByHeader',_t('AdvancedSearchForm.SORTBY', 'SORT RESULTS BY')),
 					new OptionsetField("sortby", "",
 						array(
 						        'Relevance' => _t('AdvancedSearchForm.RELEVANCE', 'Relevance'),
@@ -31,7 +31,7 @@ class AdvancedSearchForm extends SearchForm {
 					)
 				),
 				$chooseDate = new CompositeField(
-					new HeaderField(_t('AdvancedSearchForm.LASTUPDATEDHEADER', 'LAST UPDATED')),
+					new HeaderField('LastUpdatedHeader',_t('AdvancedSearchForm.LASTUPDATEDHEADER', 'LAST UPDATED')),
 					new CompositeDateField("From", _t('AdvancedSearchForm.FROM', 'From')),
 					new CompositeDateField("To", _t('AdvancedSearchForm.TO', 'To'))
 				)					

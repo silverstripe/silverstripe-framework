@@ -77,7 +77,7 @@ class FormTest extends FunctionalTest {
 			new Controller(),
 			'Form',
 			new FieldSet(
-				new HeaderField('My Player'),
+				new HeaderField('MyPlayerHeader','My Player'),
 				new TextField('Name'), // appears in both Player and Team
 				new TextareaField('Biography'),
 				new DateField('Birthday'),
@@ -118,7 +118,7 @@ class FormTest extends FunctionalTest {
 			new Controller(),
 			'Form',
 			new FieldSet(
-				new HeaderField('My Player'),
+				new HeaderField('MyPlayerHeader','My Player'),
 				new TextField('Name'), // appears in both Player and Team
 				new TextareaField('Biography'),
 				new DateField('Birthday'),

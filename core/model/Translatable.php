@@ -614,7 +614,7 @@ class Translatable extends DataObjectDecorator {
 			$fields->addFieldsToTab(
 				'Root',
 				new Tab(_t('Translatable.TRANSLATIONS', 'Translations'),
-					new HeaderField(_t('Translatable.CREATE', 'Create new translation'), 2),
+					new HeaderField('CreateTransHeader',_t('Translatable.CREATE', 'Create new translation'), 2),
 					$langDropdown = new LanguageDropdownField("NewTransLang", _t('Translatable.NEWLANGUAGE', 'New language'), $alreadyTranslatedLangs),
 					$createButton = new InlineFormAction('createtranslation',_t('Translatable.CREATEBUTTON', 'Create'))
 				)
@@ -623,7 +623,7 @@ class Translatable extends DataObjectDecorator {
 				$fields->addFieldsToTab(
 					'Root.Translations',
 					new FieldSet(
-						new HeaderField(_t('Translatable.EXISTING', 'Existing translations:'), 3),
+						new HeaderField('ExistingTransHeader',_t('Translatable.EXISTING', 'Existing translations:'), 3),
 						new LiteralField('existingtrans',implode(', ',$alreadyTranslatedLangs))
 					)
 				);

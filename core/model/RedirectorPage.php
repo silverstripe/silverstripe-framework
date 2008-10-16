@@ -94,7 +94,7 @@ class RedirectorPage extends Page {
 					new TextField("Title", _t('SiteTree.PAGETITLE')),
 					new TextField("MenuTitle", _t('SiteTree.MENUTITLE')),
 					new FieldGroup(_t('SiteTree.URL'),
-						new LabelField(Director::absoluteBaseURL()),
+						new LabelField('BaseUrlLabel',Director::absoluteBaseURL()),
 						new UniqueRestrictedTextField("URLSegment",
 							"URLSegment",
 							"SiteTree",
@@ -107,9 +107,9 @@ class RedirectorPage extends Page {
 							"",
 							50
 						),
-						new LabelField("/")
+						new LabelField('TrailingSlashLabel',"/")
 					),
-					new HeaderField(_t('RedirectorPage.HEADER', "This page will redirect users to another page")),
+					new HeaderField('RedirectorDescHeader',_t('RedirectorPage.HEADER', "This page will redirect users to another page")),
 					new OptionsetField(
 						"RedirectionType", 
 						_t('RedirectorPage.REDIRECTTO', "Redirect to"), 

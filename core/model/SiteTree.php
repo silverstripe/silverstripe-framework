@@ -1057,7 +1057,7 @@ class SiteTree extends DataObject {
 					),
 					$tabMeta = new Tab('Meta-data',
 						new FieldGroup(_t('SiteTree.URL', "URL"),
-							new LabelField(Director::absoluteBaseURL()),
+							new LabelField('BaseUrlLabel',Director::absoluteBaseURL()),
 							new UniqueRestrictedTextField("URLSegment",
 								"URLSegment",
 								"SiteTree",
@@ -1070,9 +1070,9 @@ class SiteTree extends DataObject {
 								"",
 								50
 							),
-							new LabelField("/")
+							new LabelField('TrailingSlashLabel',"/")
 						),
-						new HeaderField(_t('SiteTree.METAHEADER', "Search Engine Meta-tags")),
+						new HeaderField('MetaTagsHeader',_t('SiteTree.METAHEADER', "Search Engine Meta-tags")),
 						new TextField("MetaTitle", _t('SiteTree.METATITLE', "Title")),
 						new TextareaField("MetaDescription", _t('SiteTree.METADESC', "Description")),
 						new TextareaField("MetaKeywords", _t('SiteTree.METAKEYWORDS', "Keywords")),
@@ -1132,7 +1132,7 @@ class SiteTree extends DataObject {
 					)
 				),
 				$tabAccess = new Tab('Access',
-					new HeaderField(_t('SiteTree.ACCESSHEADER', "Who can view this page on my site?"), 2),
+					new HeaderField('WhoCanViewHeader',_t('SiteTree.ACCESSHEADER', "Who can view this page on my site?"), 2),
 					new OptionsetField(
 						"Viewers", 
 						"",
@@ -1143,7 +1143,7 @@ class SiteTree extends DataObject {
 						)
 					),
 					new DropdownField("ViewersGroup", _t('SiteTree.GROUP', "Group"), Group::map()),
-					new HeaderField(_t('SiteTree.EDITHEADER', "Who can edit this inside the CMS?"), 2),
+					new HeaderField('WhoCanEditHeader',_t('SiteTree.EDITHEADER', "Who can edit this inside the CMS?"), 2),
 					new OptionsetField(
 						"Editors", 
 						"",

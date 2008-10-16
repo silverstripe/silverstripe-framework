@@ -816,12 +816,12 @@ class Member extends DataObject {
 		$mainFields->replaceField('Password', $password);
 		
 		$mainFields->insertBefore(
-			new HeaderField(_t('Member.PERSONALDETAILS', "Personal Details", PR_MEDIUM, 'Headline for formfields')),
+			new HeaderField('MemberDetailsHeader',_t('Member.PERSONALDETAILS', "Personal Details", PR_MEDIUM, 'Headline for formfields')),
 			'FirstName'
 		);
 		
 		$mainFields->insertBefore(
-			new HeaderField(_t('Member.USERDETAILS', "User Details", PR_MEDIUM, 'Headline for formfields')),
+			new HeaderField('MemberUserDetailsHeader',_t('Member.USERDETAILS', "User Details", PR_MEDIUM, 'Headline for formfields')),
 			'Email'
 		);
 		

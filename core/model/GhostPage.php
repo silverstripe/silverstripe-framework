@@ -17,7 +17,7 @@ class GhostPage extends SiteTree implements HiddenClass {
 			return $this->LinkedPage()->getCMSFields($val);
 		} else {
 			return new FieldSet(
-				new LabelField(_t('GhostPage.NOLINKED', "This ghost page has no linked page."))
+				new LabelField('GhostPageNoLinkedLabel',_t('GhostPage.NOLINKED', "This ghost page has no linked page."))
 			);
 		}
 	}

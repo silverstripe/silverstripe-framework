@@ -574,7 +574,7 @@ class Image_Uploader extends Controller {
 				new HiddenField("Class", null, $this->urlParams['Class']),
 				new HiddenField("ID", null, $this->urlParams['ID']),
 				new HiddenField("Field", null, $this->urlParams['Field']),
-				new HeaderField($title),
+				new HeaderField('EditImageHeader',$title),
 				new SelectionGroup("ImageSource", array(
 					"new//$fromYourPC" => new FieldGroup("",
 						new FileField("Upload","")

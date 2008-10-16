@@ -76,7 +76,7 @@ class VirtualPage extends Page {
 		
 		// Add fields to the tab
 		$fields->addFieldToTab("Root.Content.Main", 
-			new HeaderField(_t('VirtualPage.HEADER', "This is a virtual page")), 
+			new HeaderField('VirtualPageHeader',_t('VirtualPage.HEADER', "This is a virtual page")), 
 			"Title"
 		);
 		$fields->addFieldToTab("Root.Content.Main", $copyContentFromField, "Title");
@@ -85,7 +85,11 @@ class VirtualPage extends Page {
 		if($this->CopyContentFromID) {
 			$linkToContent = "<a class=\"cmsEditlink\" href=\"admin/show/$this->CopyContentFromID\">" . 
 				_t('VirtualPage.EDITCONTENT', 'click here to edit the content') . "</a>";
-			$fields->addFieldToTab("Root.Content.Main", new LabelField($linkToContent, null, true), "Title");
+			$fields->addFieldToTab("Root.Content.Main", 
+				$linkToContentLabelField = new LabelField('VirtualPageContentLinkLabel', $linkToContent), 
+				"Title"
+			);
+			$linkToContentLabelField->setAllowHTML(true);
 		}
 	
 		return $fields;
