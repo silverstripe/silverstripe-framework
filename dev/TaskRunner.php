@@ -11,33 +11,71 @@ class TaskRunner extends Controller {
 	);
 	
 	function index() {
-		$tasks = ClassInfo::subclassesFor('BuildTask');
-		if(Director::is_cli()) {
-			echo "Tasks available:\n\n";
-			foreach($tasks as $task) echo " * $task: sake dev/tasks/$task\n";
-		} else {
-			echo "<h1>Tasks available</h1>\n";
+		$tasks = $this->getTasks();
+
+		// Web mode
+		if(!Director::is_cli()) {
+			$renderer = new DebugView();
+			$renderer->writeHeader();
+			$renderer->writeInfo("Sapphire Development Tools: Tasks", Director::absoluteBaseURL());
+			$base = Director::baseURL();
+
 			echo "<ul>";
 			foreach($tasks as $task) {
-				echo "<li><a href=\"$task\">$task</a></li>\n";
+				echo "<li>";
+				echo "<a href=\"" . $task['class'] . "\">" . $task['title'] . "</a><br />";
+				echo "<span class=\"description\">" . $task['description'] . "</span>";
+				echo "</li>\n";
 			}
 			echo "</ul>";
+
+			$renderer->writeFooter();
+		// CLI mode
+		} else {
+			echo "SAPPHIRE DEVELOPMENT TOOLS: Tasks\n--------------------------\n\n";
+			foreach($tasks as $task) {
+				echo " * $task: sake dev/tasks/" . $task['class'] . "\n";
+			}
 		}
 	}
 	
 	function runTask($request) {
-		$TaskName = $request->param('TaskName');
-		if (class_exists($TaskName) && is_subclass_of($TaskName, 'BuildTask')) {
-			if(Director::is_cli()) echo "Running task '$TaskName'...\n\n";
-			else echo "<h1>Running task '$TaskName'...</h1>\n";
+		$taskName = $request->param('TaskName');
+		if (class_exists($taskName) && is_subclass_of($taskName, 'BuildTask')) {
+			$title = singleton($taskName)->getTitle();
+			if(Director::is_cli()) echo "Running task '$title'...\n\n";
+			else echo "<h1>Running task '$title'...</h1>\n";
 
-			$task = new $TaskName();
-			if (!$task->isDisabled()) $task->run($request);
+			$task = new $taskName();
+			if ($task->isEnabled()) $task->run($request);
 		} else {
-			echo "Build task '$TaskName' not found.";
-			if(class_exists($TaskName)) echo "  It isn't a subclass of BuildTask.";
+			echo "Build task '$taskName' not found.";
+			if(class_exists($taskName)) echo "  It isn't a subclass of BuildTask.";
 			echo "\n";
 		}
+	}
+	
+	/**
+	 * @return array Array of associative arrays for each task (Keys: 'class', 'title', 'description')
+	 */
+	protected function getTasks() {
+		$availableTasks = array();
+		
+		$taskClasses = ClassInfo::subclassesFor('BuildTask');
+		// remove the base class
+		array_shift($taskClasses);
+		
+		if($taskClasses) foreach($taskClasses as $class) {
+			if(!singleton($class)->isEnabled()) continue;
+			$desc = (Director::is_cli()) ? Convert::html2raw(singleton($class)->getDescription()) : singleton($class)->getDescription();
+			$availableTasks[] = array(
+				'class' => $class,
+				'title' => singleton($class)->getTitle(),
+				'description' => $desc,
+			);
+		}
+		
+		return $availableTasks;
 	}
 	
 }

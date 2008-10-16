@@ -11,12 +11,44 @@
  * @package sapphire
  * @subpackage dev
  */
-abstract class BuildTask {
+abstract class BuildTask extends Object {
+	
+	/**
+	 * @var bool $enabled If set to FALSE, keep it from showing in the list
+	 * and from being executable through URL or CLI.
+	 */
+	protected $enabled = true;
+	
+	/**
+	 * @var string $title Shown in the overview on the {@link TaskRunner}
+	 * HTML or CLI interface. Should be short and concise, no HTML allowed.
+	 */
+	protected $title;
+	
+	/**
+	 * @var string $description Describe the implications the task has,
+	 * and the changes it makes. Accepts HTML formatting.
+	 */
+	protected $description = 'No description available';
 	
 	abstract function run($request);
 	
-	public function isDisabled() {
-		return (property_exists($this, 'Disabled')) ? true : false;
+	public function isEnabled() {
+		return $this->enabled;
+	}
+	
+	/**
+	 * @return string
+	 */
+	public function getTitle() {
+		return ($this->title) ? $this->title : $this->class;
+	}
+	
+	/**
+	 * @return string HTML formatted description
+	 */
+	public function getDescription() {
+		return $this->description;
 	}
 	
 }
