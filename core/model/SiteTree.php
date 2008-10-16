@@ -1342,7 +1342,7 @@ class SiteTree extends DataObject {
 	 *
 	 * @return array
 	 */
-	function getClassDropdown() {
+	protected function getClassDropdown() {
 		$classes = ClassInfo::getValidSubClasses('SiteTree');
 		array_shift($classes);
 
