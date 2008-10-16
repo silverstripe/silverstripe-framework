@@ -8,7 +8,7 @@
  */
 class RestfulServerTest extends SapphireTest {
 	
-	static $fixture_file = 'cms/tests/RestfulServerTest.yml';
+	static $fixture_file = 'sapphire/tests/api/RestfulServerTest.yml';
 
 	public function testApiAccess() {
 		// normal GET should succeed with $api_access enabled
