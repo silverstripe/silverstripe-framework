@@ -166,6 +166,9 @@ class ContentController extends Controller {
 		return $this->getMenu($level);
 	}
 
+	/**
+	 * @deprecated 2.3 Use $this->Level(2)->URLSegment
+	 */
 	public function Section2() {
 		return $this->Level(2)->URLSegment;
 	}

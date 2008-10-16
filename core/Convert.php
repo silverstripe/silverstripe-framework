@@ -22,7 +22,6 @@
  * @subpackage misc
  */
 class Convert extends Object {
-	// Convert raw to other formats
 	
 	static function raw2att($val) {
 		if(is_array($val)) {
@@ -36,6 +35,7 @@ class Convert extends Object {
 	
 	/**
 	 * @see http://www.w3.org/TR/REC-html40/types.html#type-cdata
+	 * @uses raw2att
 	 */
 	static function raw2htmlatt($val) {
 		if(is_array($val)) {
@@ -73,6 +73,8 @@ class Convert extends Object {
 	 * otherwise falls back to the Services_JSON class.
 	 * 
 	 * @see http://pear.php.net/pepr/pepr-proposal-show.php?id=198
+	 * @uses Director::baseFolder()
+	 * @uses Services_JSON
 	 *
 	 * @param mixed $val
 	 * @return string JSON safe string
@@ -88,7 +90,6 @@ class Convert extends Object {
 	}
 	
 	
-	// TODO Possible security risk: doesn't support arrays with more than one level - should be called recursively
 	static function raw2sql($val) {
 		if(is_array($val)) {
 			foreach($val as $k => $v) $val[$k] = self::raw2sql($v);
@@ -101,6 +102,7 @@ class Convert extends Object {
 
 	/**
 	 * Convert XML to raw text
+	 * @uses html2raw()
 	 * @todo Currently &#xxx; entries are stripped; they should be converted
 	 */
 	static function xml2raw($val) {
@@ -131,7 +133,9 @@ class Convert extends Object {
 		return self::raw2sql(self::xml2raw($val));
 	}
 	
-	// Convert JS to other formats
+	/**
+	 * Convert JS to other formats
+	 */
 	static function js2raw($val) {
 		if(is_array($val)) {
 			foreach($val as $k => $v) $val[$k] = self::js2raw($v);
@@ -147,6 +151,7 @@ class Convert extends Object {
 	static function js2att($val) {		
 		return self::raw2att(self::js2raw($val));
 	}
+	
 	static function js2sql($val) {		
 		return self::raw2sql(self::js2raw($val));
 	}
@@ -170,6 +175,9 @@ class Convert extends Object {
 		//}
 	}
 
+	/**
+	 * @uses json2obj
+	 */
 	static function json2array($val) {
 		$json = self::json2obj($val);
 		$arr = array();
@@ -179,13 +187,15 @@ class Convert extends Object {
 		return $arr;
 	}
 	
-	
+	/**
+	 * @uses recursiveXMLToArray()
+	 */
 	static function xml2array($val) {
 		$xml = new SimpleXMLElement($val);
 		return self::recursiveXMLToArray($xml);
 	}
 	
-	static function recursiveXMLToArray($xml) {
+	protected static function recursiveXMLToArray($xml) {
 		if (get_class($xml) == 'SimpleXMLElement') {
 	       $attributes = $xml->attributes();
 	       foreach($attributes as $k=>$v) {
@@ -210,8 +220,6 @@ class Convert extends Object {
 			return json_encode($array);
 		}
 		$result = array();
-		
-		// Debug::show($array);
 		
 		foreach( $array as $key => $value )
 			if( is_array( $value ) )
