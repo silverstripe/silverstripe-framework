@@ -276,8 +276,6 @@ class ComponentSet extends DataObjectSet {
 	/**
 	 * Returns information about this set in HTML format for debugging.
 	 * 
-	 * @deprecated 
-	 * 
 	 * @return string
 	 */
 	function debug() {
