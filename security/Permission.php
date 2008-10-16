@@ -320,7 +320,7 @@ class Permission extends DataObject {
 		parent::requireDefaultRecords();
 
 		// Add default content if blank
-		if(!DB::query("SELECT ID FROM Permission")->value()) {
+		if(!DB::query("SELECT ID FROM Permission")->value() && array_key_exists('CanCMSAdmin', DB::fieldList('Group'))) {
 			$admins = DB::query("SELECT ID FROM `Group` WHERE CanCMSAdmin = 1")
 				->column();
 
