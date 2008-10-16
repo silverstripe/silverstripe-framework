@@ -184,7 +184,7 @@ class RSSFeed extends ViewableData {
 		}
 
 		$body = $this->feedContent();
-		HTTP::add_cache_headers($body);
+		HTTP::add_cache_headers();
 		header("Content-type: text/xml");
 		echo $body;
 	}
