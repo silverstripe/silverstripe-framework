@@ -361,7 +361,7 @@ class ViewableData extends Object implements IteratorAggregate {
 	
 	/**
 	 * Return the value (non-object) version of the given field/method.
-	 * @deprecated
+	 * @deprecated ViewableData->val() is deprecated, use XML_val() instead
 	 */
 	public function val($fieldName, $args = null) {
 		return $this->XML_val($fieldName, $args);

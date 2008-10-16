@@ -391,14 +391,14 @@ class Image extends File {
 	// ###################
 	
 	/**
-	 * @deprecated
+	 * @deprecated Use getTag() instead
 	 */
 	function Tag() {
 		return $this->getTag();
 	}
 	
 	/**
-	 * @deprecated
+	 * @deprecated Use getURL() instead
 	 */
 	function URL() {
 		return $this->getURL();
