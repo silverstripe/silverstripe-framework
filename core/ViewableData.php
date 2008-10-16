@@ -888,7 +888,7 @@ class ViewableData extends Object implements IteratorAggregate {
 		}
 		
 		// optionally add template identifier
-		if(isset($this->template) && $this->template != $this->class) {
+		if(isset($this->template) && !in_array($this->template, $classes)) {
 			$classes[] = $this->template;
 		}
 
