@@ -439,30 +439,6 @@ class Image_Cached extends Image {
 }
 
 /**
- * A db field type designed to help save images.
- * @deprecated Use a has_one relationship pointing to the file table instead.
- * @package sapphire
- * @subpackage filesystem
- */
-class Image_Saver extends DBField {
-	function saveInto($record) {
-		$image = $record->getComponent($this->name);
-		if(!$image) {
-			$image = $record->createComponent($this->name);
-		}
-		if($image) {
-			$image->loadUploaded($this->value);
-		} else {
-			user_error("ImageSaver::saveInto() Image field '$this->name' note found", E_USER_ERROR);
-		}
-	}
-	
-	function requireField() {
-		return null;
-	}
-}
-
-/**
  * Uploader support for the uploading anything which is a File or subclass of File, eg Image.
  * Is connected to the URL routing "/image" through sapphire/_config.php,
  * and used by all iframe-based upload-fields in the CMS.
@@ -767,49 +743,6 @@ class Image_Uploader extends Controller {
 			$num += $numDeleted;
 		}
 		echo $num . ' formatted images from ' . $numItems . ' items flushed';
-	}
-
-
-	/**
-	 * Transfer all the content from the Image table into the File table.
-	 * @deprecated This function is only used to migrate content from old databases.
-	 */
-	function transferlegacycontent() {
-		if(!Permission::check('ADMIN')) Security::permissionFailure($this);
-		
-		$images = DB::query("SELECT * FROM _obsolete_Image");
-		echo "<h3>Transferring images</h3>";
-		foreach($images as $image) {
-			if(($className = $image['ClassName']) && $image['Filename']) {
-				echo "<li>Importing $image[Filename]";
-				$folderName = str_replace(ASSETS_DIR . '/','',dirname($image['Filename']));
-				$name = basename($image['Filename']);
-				$folderObj = Folder::findOrMake($folderName);
-				$fileObj = new $className();
-				$fileObj->Name = $name;
-				$fileObj->ParentID = $folderObj->ID;
-				$fileObj->write();
-				$fileObj->destroy();
-								
-				echo " as $fileObj->ID";
-				
-				list($baseClass,$fieldName) = explode('_',$className,2);
-				
-				//if($baseClass == 'News') $baseClass = 'NewsHolder';
-				//if($baseClass == 'FAQ') $baseClass = 'FaqHolder';
-				
-				$parentObj = DataObject::get_by_id($baseClass, $image['ParentID']);
-				if($parentObj && $fieldName) {
-					$fieldName .= "ID";
-					echo "<li>$parentObj->class.$parentObj->ID.$fieldName = $fileObj->ID";
-					$parentObj->$fieldName = $fileObj->ID;
-					$parentObj->write();
-					$parentObj->destroy();
-				}
-
-				// echo " and linking to $baseClass.$image[ParentID]->$fieldName";
-			}
-		}
 	}
 }
 
