@@ -97,7 +97,7 @@ class SSViewer extends Object {
 		
 		// flush template manifest cache if requested
 		if (isset($_GET['flush']) && $_GET['flush'] == 'all') {
-			$this->flushTemplateCache();
+			self::flush_template_cache();
 		}
 		
 		if(substr((string) $templateList,-3) == '.ss') {
@@ -259,7 +259,7 @@ class SSViewer extends Object {
 	 *
 	 * Can only be called once per request (there may be multiple SSViewer instances).
 	 */
-	private function flushTemplateCache() {
+	static function flush_template_cache() {
 		if (!self::$flushed) {
 			$dir = dir(TEMP_FOLDER);
 			while (false !== ($file = $dir->read())) {

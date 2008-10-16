@@ -247,6 +247,7 @@ HTML;
 	
 	function setUp() {
 		SapphireTest::create_temp_db();
+		SSViewer::flush_template_cache();
 	}
 	
 	function tearDown() {
