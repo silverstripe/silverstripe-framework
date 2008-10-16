@@ -273,40 +273,70 @@ class HTTP {
 	}
 
 	/**
-	 * Add the appropriate caching headers to the response
+	 * Add the appropriate caching headers to the response, including If-Modified-Since / 304 handling.
 	 *
-	 * @param string The reponse body
+	 * @param HTTPResponse The HTTPResponse object to augment.  Omitted the argument or passing a string is deprecated; in these
+	 * cases, the headers are output directly.
 	 */
 	static function add_cache_headers($body = null) {
+		// Validate argument
+		if(!($body instanceof HTTPResponse)) {
+			user_error("HTTP::add_cache_headers() must be passed an HTTPResponse object", E_USER_WARNING);
+			$body = null;
+		}
+		
 		// Development sites have frequently changing templates; this can get stuffed up by the code
 		// below.
 		if(Director::isDev()) return;
+		
+		// The headers have been sent and we don't have an HTTPResponse object to attach things to; no point in us trying.
+		if(headers_sent() && !$body) return;
+		
+		// Popuplate $responseHeaders with all the headers that we want to build 
+		$responseHeaders = array();
+		if(function_exists('apache_request_headers')) {
+			$requestHeaders = apache_request_headers();
+			if(isset($requestHeaders['X-Requested-With']) && $requestHeaders['X-Requested-With'] == 'XMLHttpRequest') self::$cache_age = 0;
+			// bdc: now we must check for DUMB IE6:
+			if(isset($requestHeaders['x-requested-with']) && $requestHeaders['x-requested-with'] == 'XMLHttpRequest') self::$cache_age = 0;
+		}
 
-		if(!headers_sent()) {
-			if(function_exists('apache_request_headers')) {
-				$headers = apache_request_headers();
-				if(isset($headers['X-Requested-With']) && $headers['X-Requested-With'] == 'XMLHttpRequest') self::$cache_age = 0;
-            // bdc: now we must check for DUMB IE6:
-            if(isset($headers['x-requested-with']) && $headers['x-requested-with'] == 'XMLHttpRequest') self::$cache_age = 0;
+		if(self::$cache_age > 0) {
+			$responseHeaders["Cache-Control"] = "max-age=" . self::$cache_age . ", must-revalidate";
+			$responseHeaders["Pragma"] = "";
+		} else {
+			$responseHeaders["Cache-Control"] = "no-cache, max-age=0, must-revalidate";
+		}
+
+		if(self::$modification_date && self::$cache_age > 0) {
+			$responseHeaders["Last-Modified"] =self::gmt_date(self::$modification_date);
+
+			// 304 response detection
+			if(isset($_SERVER['HTTP_IF_MODIFIED_SINCE'])) {
+				$ifModifiedSince = strtotime(stripslashes($_SERVER['HTTP_IF_MODIFIED_SINCE']));
+				if($ifModifiedSince >= self::$modification_date) {
+					if($body) {
+						$body->setStatusCode(304);
+						$body->setBody('');
+					} else {
+						header('HTTP/1.0 304 Not Modified');
+						die();
+					}
+				}
 			}
 
-			if(self::$cache_age > 0) {
-				header("Cache-Control: max-age=" . self::$cache_age . ", must-revalidate");
-				header("Pragma:");
-			} else {
-				header("Cache-Control: no-cache, max-age=0, must-revalidate");
-			}
+			$expires = time() + self::$cache_age;
+			$responseHeaders["Expires"] = self::gmt_date($expires);
+		}
 
-			if(self::$modification_date && self::$cache_age > 0) {
-				header("Last-Modified: " . self::gmt_date(self::$modification_date));
-
-				$expires = 2 * time() - self::$modification_date;
-				header("Expires: " . self::gmt_date($expires));
-			}
-
-			if(self::$etag) {
-				header('ETag: ' . self::$etag);
-			}
+		if(self::$etag) {
+			$responseHeaders['ETag'] = self::$etag;
+		}
+		
+		// Now that we've generated them, either output them or attach them to the HTTPResponse as appropriate
+		foreach($responseHeaders as $k => $v) {
+			if($body) $body->addHeader($k, $v);
+			else header("$k: $v");
 		}
 	}
 
