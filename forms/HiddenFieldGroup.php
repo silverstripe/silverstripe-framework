@@ -5,6 +5,7 @@
  * 
  * Note: the child fields within a field group aren't rendered using DefaultFieldHolder.  Instead,
  * SmallFieldHolder() is called, which just prefixes $Field with a <label> tag, if the Title is set.
+ * @deprecated 2.3
  * @package forms
  * @subpackage fields-structural
  */

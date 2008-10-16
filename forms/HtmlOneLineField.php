@@ -7,7 +7,7 @@
  * Caution: Only works within the CMS with a global tinymce-menubar, see {@link CMSMain}
  * 
  * @subpackage fields-formattedinput
- * @deprecated It's not clear that this field works properly.  Just use {@link HtmlEditorField}.
+ * @deprecated 2.3 It's not clear that this field works properly.  Just use {@link HtmlEditorField}.
  */
 class HtmlOneLineField extends TextField {
 	/**

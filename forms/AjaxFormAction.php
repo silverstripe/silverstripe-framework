@@ -1,6 +1,7 @@
 <?php
 /**
  * Action button with Ajax/JavaScript overloading.
+ * @deprecated 2.3
  * @package forms
  * @subpackage actions
  */
