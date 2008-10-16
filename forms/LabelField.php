@@ -26,7 +26,6 @@ class LabelField extends DatalessField {
 			$form = (isset($args[3])) ? $args[3] : null;
 		} 
 		
-		$this->headingLevel = $headingLevel;
 		$this->allowHTML = $allowHTML;
 		
 		parent::__construct($name, $title, null, $form);
