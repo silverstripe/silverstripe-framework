@@ -27,16 +27,16 @@ class Member extends DataObject {
 
 	static $belongs_many_many = array(
 		"Groups" => "Group",
-
 	);
 
-	static $has_one = array();
-	
 	static $has_many = array(
 		'UnsubscribedRecords' => 'Member_UnsubscribeRecord'
 	);
 	
+	static $has_one = array();
+	
 	static $many_many = array();
+	
 	static $many_many_extraFields = array();
 
 	static $default_sort = "Surname, FirstName";
@@ -45,7 +45,6 @@ class Member extends DataObject {
 		'Email' => true,
 		'AutoLoginHash' => 'unique (AutoLoginHash)'
 	);
-
 
 	static $notify_password_change = false;
 	
@@ -70,14 +69,12 @@ class Member extends DataObject {
 		'FirstName',
 		'Surname',
 		'Email',
-	);
-	
+	);	
 	
 	/**
 	 * {@link PasswordValidator} object for validating user's password
 	 */
 	protected static $password_validator = null;
-	
 	
 	/**
 	 * The number of days that a password should be valid for.
@@ -104,7 +101,6 @@ class Member extends DataObject {
 			implode("', '", array_map("addslashes", Security::get_encryption_algorithms())) .
 			"'), 'none')";
 	}
-
 
 	/**
 	 * Check if the passed password matches the stored one
@@ -213,7 +209,6 @@ class Member extends DataObject {
 		$this->extend('memberLoggedIn');
 	}
 
-
 	/**
 	 * Log the user in if the "remember login" cookie is set
 	 *
@@ -247,7 +242,6 @@ class Member extends DataObject {
 			}
 		}
 	}
-
 
 	/**
 	 * Logs this member out.
@@ -290,7 +284,6 @@ class Member extends DataObject {
 
 		$this->write();
 	}
-
 
 	/**
 	 * Return the member for the auto login hash
@@ -632,43 +625,16 @@ class Member extends DataObject {
 	
 	/**
 	 * Returns true if this user is an administrator.
-	 * Administrators have access to everything.  The lucky bastards! ;-)
+	 * Administrators have access to everything.
+	 * 
+	 * @TODO Should this function really exist? Is not {@link isAdmin()} the
+	 *       only right name for this?
 	 * 
 	 * @return Returns TRUE if this user is an administrator.
-	 * @todo Should this function really exists? Is not {@link isAdmin()} the
-	 *       only right name for this?
-	 * @todo Is {@link Group}::CanCMSAdmin not deprecated?
 	 */
 	function isAdmin() {
-		if($groups = $this->Groups()) {
-			foreach($groups as $group) {
-				if($group->CanCMSAdmin)
-					return true;
-			}
-		}
-
 		return Permission::check('ADMIN');
 	}
-	
-	function _isAdmin() {
-		user_error("Deprecated.  Use isAdmin() instead", E_USER_NOTICE);
-		return $this->isAdmin();
-	}
-
-	function isCMSUser() {
-		if($groups = $this->Groups()) {
-			foreach($groups as $group) {
-				if($group->CanCMS)
-					return true;
-			}
-		}
-	}
-
-	function _isCMSUser() {
-		user_error("Deprecated.  Use isCMSUser() instead", E_USER_NOTICE);
-		return $this->isCMSUser();
-	}
-
 
 	//------------------- HELPER METHODS -----------------------------------//
 

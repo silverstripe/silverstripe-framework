@@ -1,6 +1,7 @@
 <?php
 /**
  * A security group.
+ * 
  * @package sapphire
  * @subpackage security
  */
@@ -10,18 +11,19 @@ class Group extends DataObject {
 		"Title" => "Varchar",
 		"Description" => "Text",
 		"Code" => "Varchar",
-		"CanCMS" => "Boolean",
-		"CanCMSAdmin" => "Boolean",
 		"Locked" => "Boolean",
 		"Sort" => "Int",
 		"IPRestrictions" => "Text",
 	);
+	
 	static $has_one = array(
 		"Parent" => "SiteTree",
 	);
+	
 	static $has_many = array(
 		"Permissions" => "Permission",
 	);
+	
 	static $many_many = array(
 		"Members" => "Member",
 	);
@@ -108,10 +110,6 @@ class Group extends DataObject {
 		return $fields;
 	}
 	
-	static function getAdminGroups() {
-		return DataObject::get('Group',"CanCMSAdmin=1");
-	}
-	
 	/**
 	 * Add a member to a group.
 	 *
@@ -128,6 +126,8 @@ class Group extends DataObject {
 	
 	/**
 	 * Overloaded getter.
+	 *
+	 * @TODO Where is this used, why is this overloaded?
 	 * 
 	 * @param $limit string SQL
 	 * @param $offset int
