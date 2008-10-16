@@ -537,17 +537,5 @@ HTML;
 		else user_error("rootFieldSet() called on $this->class object without a containerFieldSet", E_USER_ERROR);
 	}
 	
-	// ###################
-	// DEPRECATED
-	// ###################
-	
-	/**
-	 * @deprecated please use addExtraClass
-	 */
-	function setExtraClass($extraClass) {
-		user_error('FormField::setExtraClass() is deprecated. Use FormField::addExtraClass() instead.', E_USER_NOTICE);
-		$this->extraClasses[] = $extraClass;
-	}
 }
-
 ?>
