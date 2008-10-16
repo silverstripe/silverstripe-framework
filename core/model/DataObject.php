@@ -82,13 +82,6 @@ class DataObject extends ViewableData implements DataObjectInterface {
 	protected $components;
 
 	/**
-	 * DEPRECATED
-	 *
-	 * @var array List of fields and their old values before the last write.
-	 */
-	protected $lastWriteFields;
-
-	/**
 	 * True if this DataObject has been destroyed.
 	 * @var boolean
 	 */
@@ -824,15 +817,6 @@ class DataObject extends ViewableData implements DataObjectInterface {
 		foreach($this->components as $component) {
 			$component->write(false, false, false, $recursive);
 		}
-	}
-	
-	/**
-	 * Gets all fields that written in the last write()-call
-	 * 
-	 * @return array
-	 */
-	public function getLastWriteFields() {
-		return $this->lastWriteFields;
 	}
 	
 	/**
