@@ -1042,10 +1042,11 @@ class i18n extends Object {
 	 */
 	static function include_by_class($class) {
 		$module = self::get_owner_module($class);
+
 		if(!$module) user_error("i18n::include_by_class: Class {$class} not found", E_USER_WARNING);
 		
 		if (file_exists($file = Director::getAbsFile("$module/lang/". self::get_locale() . '.php'))) {
-			include_once($file);
+			include($file);
 		} else if (self::get_locale() != self::$default_locale) {
 		        $old = self::get_locale();
 			self::set_locale(self::$default_locale);
