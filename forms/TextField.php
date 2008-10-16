@@ -40,7 +40,7 @@ class TextField extends FormField {
 
 class TextField_Disabled extends TextField{
 	function Field() {
-		$attributes = $attributes = array(
+		$attributes = array(
 			'type' => 'text',
 			'class' => $this->extraClass() . ' text',
 			'id' => $this->id(),
