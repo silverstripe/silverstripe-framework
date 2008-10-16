@@ -299,7 +299,7 @@ class FormField extends RequestHandlingData {
 		if($this->value) $val = $this->dontEscape ? ($this->reserveNL?Convert::raw2xml($this->value):$this->value) : Convert::raw2xml($this->value);
 		else $val = '<i>('._t('FormField.NONE', 'none').')</i>';
 		$valforInput = $this->value ? Convert::raw2att($val) : "";
-		return "<span class=\"readonly\" id=\"" . $this->id() . "\">$val</span>\n<input type=\"hidden\" name=\"".$this->name."\" value=\"".$valforInput."\"" . $this->getTabIndexHTML() . " />";
+		return "<span class=\"readonly ".$this->extraClass()."\" id=\"" . $this->id() . "\">$val</span>\n<input type=\"hidden\" name=\"".$this->name."\" value=\"".$valforInput."\"" . $this->getTabIndexHTML() . " />";
 	}
 	/**
 	 * Returns a "Field Holder" for this field - used by templates.
@@ -405,6 +405,7 @@ HTML;
 	 */
 	function performReadonlyTransformation() {
 		$field = new ReadonlyField($this->name, $this->title, $this->value);
+		$field->addExtraClass($this->extraClass());
 		$field->setForm($this->form);
 		return $field;
 	}
