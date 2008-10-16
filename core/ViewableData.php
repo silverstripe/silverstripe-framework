@@ -114,7 +114,7 @@ class ViewableData extends Object implements IteratorAggregate {
 
 	/**
 	 * Setter overloader.
-	 * Allows default setting of fields in $this->setVal(), or mediation via a 
+	 * Allows default setting of fields in $this->setValue(), or mediation via a 
 	 * getParamName() method.
 	 * @param string $field The field name.
 	 * @param mixed $val The field value.
@@ -338,9 +338,9 @@ class ViewableData extends Object implements IteratorAggregate {
 				if($constructor) {
 					$fieldObj = eval($constructor);
 					if($this->hasMethod('getAllFields')) {
-						$fieldObj->setVal($val, $this->getAllFields());
+						$fieldObj->setValue($val, $this->getAllFields());
 					} else {
-						$fieldObj->setVal($val);
+						$fieldObj->setValue($val);
 					}
 				}
 			}

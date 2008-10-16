@@ -52,13 +52,6 @@ abstract class DBField extends ViewableData {
 	}
 	
 	/**
-	 * @deprecated
-	 */
-	function setVal($value, $record = null) {
-		return $this->setValue($value, $record);
-	}
-
-	/**
 	 * Set the name of this field.
 	 * The name should never be altered, but it if was never given a name in the first place you can set a name.
 	 * If you try an alter the name a warning will be thrown. 

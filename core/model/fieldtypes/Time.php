@@ -6,7 +6,7 @@
  */
 class Time extends DBField {
 
-	function setVal($value) {
+	function setValue($value) {
 		
 		if($value) {
 			if(preg_match( '/(\d{1,2})[:.](\d{2})([ap]m)/', $value, $match )) $this->_12Hour( $match );
@@ -15,7 +15,7 @@ class Time extends DBField {
 	}
 	
 	function setValue($value) {
-		return $this->setVal( $value );
+		return $this->setValue( $value );
 	}
 
 	function Nice() {
