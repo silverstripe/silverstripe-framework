@@ -915,46 +915,6 @@ class SiteTree extends DataObject {
 		return $t;
 	}
 
-
-	function makelinksunique() {
-		$badURLs = "'" . implode("', '", DB::query("SELECT URLSegment, count(*) FROM SiteTree GROUP BY URLSegment HAVING count(*) > 1")->column()) . "'";
-		$pages = DataObject::get("SiteTree", "URLSegment IN ($badURLs)");
-
-		foreach($pages as $page) {
-			echo "<li>$page->Title: ";
-			$urlSegment = $page->URLSegment;
-			$page->write();
-			if($urlSegment != $page->URLSegment) {
-				echo sprintf(_t('SiteTree.LINKSCHANGEDTO', " changed %s -> %s"), $urlSegment, $page->URLSegment);
-			}
-			else {
-				echo sprintf(_t('SiteTree.LINKSALREADYUNIQUE', " %s is already unique"), $urlSegment);
-			}
-			die();
-		}
-	}
-
-
-	function makelinksuniquequick() {
-		$badURLs = "'" . implode("', '", DB::query("SELECT URLSegment, count(*) FROM SiteTree GROUP BY URLSegment HAVING count(*) > 1")->column()) . "'";
-		$pages = DB::query("SELECT *, SiteTree.ID FROM SiteTree LEFT JOIN Page ON Page.ID = SiteTree.ID WHERE  URLSegment IN ($badURLs)");
-
-		foreach($pages as $page) {
-			echo "<li>$page[Title]: ";
-			$urlSegment = $page['URLSegment'];
-			$newURLSegment = $urlSegment . '-' . $page['ID'];
-			DB::query("UPDATE SiteTree SET URLSegment = '$newURLSegment' WHERE ID = $page[ID]");
-			if($urlSegment != $newURLSegment) {
-				echo sprintf(_t('SiteTree.LINKSCHANGEDTO'), $urlSegment, $newURLSegment);
-			}
-			else {
-				echo sprintf(_t('SiteTree.LINKSALREADYUNIQUE'), $urlSegment);
-			}
-		}
-		echo "<p>done";
-	}
-
-
 	/**
 	 * Replace a URL in html content with a new URL.
 	 * @param string $old The old URL
