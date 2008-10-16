@@ -280,7 +280,7 @@ class HTTP {
 	 */
 	static function add_cache_headers($body = null) {
 		// Validate argument
-		if(!($body instanceof HTTPResponse)) {
+		if($body && !($body instanceof HTTPResponse)) {
 			user_error("HTTP::add_cache_headers() must be passed an HTTPResponse object", E_USER_WARNING);
 			$body = null;
 		}
