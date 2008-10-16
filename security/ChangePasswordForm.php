@@ -23,11 +23,11 @@ class ChangePasswordForm extends Form {
 		if(!$fields) {
 			$fields = new FieldSet();
 			if(Member::currentUser() && (!isset($_REQUEST['h']) || !Member::member_from_autologin($_REQUEST['h']))) {
-				$fields->push(new EncryptField("OldPassword",_t('Member.YOUROLDPASSWORD', "Your old password")));
+				$fields->push(new PasswordField("OldPassword",_t('Member.YOUROLDPASSWORD', "Your old password")));
 			}
 
-			$fields->push(new EncryptField("NewPassword1", _t('Member.NEWPASSWORD', "New Password")));
-			$fields->push(new EncryptField("NewPassword2", _t('Member.CONFIRMNEWPASSWORD', "Confirm New Password")));
+			$fields->push(new PasswordField("NewPassword1", _t('Member.NEWPASSWORD', "New Password")));
+			$fields->push(new PasswordField("NewPassword2", _t('Member.CONFIRMNEWPASSWORD', "Confirm New Password")));
 		}
 		if(!$actions) {
 			$actions = new FieldSet(
