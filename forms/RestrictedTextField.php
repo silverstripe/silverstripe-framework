@@ -1,6 +1,7 @@
 <?php
 /**
  * A Text field that cannot contain certain characters
+ * @deprecated 2.3
  * @package forms
  * @subpackage fields-formatted
  */

@@ -2,6 +2,7 @@
 /**
  * Displays complex reports based on the list of tables and fields provided to
  * the object.
+ * @deprecated 2.3 Use TableListField
  * @package forms
  * @subpackage fields-reports
  */
@@ -321,6 +322,7 @@ HTML;
 /**
  * Assisting class. Determines whether or not a column is hidden.
  * Not so helpful here, but we could overload it in other classes.
+ * @deprecated 2.3 Use TableListField
  * @package forms
  * @subpackage fields-reports
  */
@@ -350,6 +352,7 @@ class ReportField_SimpleFilter extends Object {
 /**
  * This class instantiates an instance of the report field and receives ajax requests
  * to the report field.
+ * @deprecated 2.3 Use TableListField
  * @package forms
  * @subpackage fields-reports
  */
