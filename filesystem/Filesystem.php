@@ -43,21 +43,6 @@ class Filesystem extends Object {
 		}
 	}
 	
-	 
-	public function moverootfilesto() {
-		if(!Permission::check('ADMIN')) Security::permissionFailure($this);
-		
-		if($folder = $this->urlParams['ID']) {
-			$newParent = Folder::findOrMake($folder);
-			$files = DataObject::get("File", "ClassName != 'Folder' AND ParentID = 0");
-			foreach($files as $file) {
-				echo "<li>" , $file->RelativePath;
-				$file->ParentID = $newParent->ID;
-				echo " -> " , $file->RelativePath;
-			}
-		}
-	}
-
 	/**
 	 * Cleanup function to reset all the Filename fields.  Visit File/fixfiles to call.
 	 */
