@@ -188,26 +188,36 @@ class MemberLoginForm extends LoginForm {
 	 */
 	function forgotPassword($data) {
 		$SQL_data = Convert::raw2sql($data);
+		$SQL_email = $SQL_data['Email'];
+		$member = DataObject::get_one('Member', "Email = '{$SQL_email}'");
 
-		if(($data['Email']) && ($member = DataObject::get_one("Member",
-				"Member.Email = '$SQL_data[Email]'"))) {
-
+		if($member) {
 			$member->generateAutologinHash();
 
-			$member->sendInfo('forgotPassword', array('PasswordResetLink' =>
-				Security::getPasswordResetLink($member->AutoLoginHash)));
+			$member->sendInfo(
+				'forgotPassword',
+				array(
+					'PasswordResetLink' => Security::getPasswordResetLink($member->AutoLoginHash)
+				)
+			);
 
 			Director::redirect('Security/passwordsent/' . urlencode($data['Email']));
-
-		} else if($data['Email']) {
+		} elseif($data['Email']) {
 			$this->sessionMessage(
-				_t('Member.ERRORSIGNUP', "Sorry, but I don't recognise the e-mail address. Maybe you need " .
-					"to sign up, or perhaps you used another e-mail address?"),
-				"bad");
+				_t('Member.ERRORSIGNUP', 'Sorry, but I don\'t recognise the e-mail address. Maybe you need ' .
+					'to sign up, or perhaps you used another e-mail address?'
+				),
+				'bad'
+			);
+			
 			Director::redirectBack();
-
 		} else {
-			Director::redirect("Security/lostpassword");
+			$this->sessionMessage(
+				_t('Member.ENTEREMAIL', 'Please enter an email address to get a password reset link.'),
+				'bad'
+			);
+			
+			Director::redirect('Security/lostpassword');
 		}
 	}
 
