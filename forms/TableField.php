@@ -192,7 +192,6 @@ class TableField extends TableListField {
 				$output->push(new TableField_Item(null, $this, null, $this->fieldTypes, true));
 			}
 		}
-
 		return $output;
 	}
 	
@@ -236,7 +235,7 @@ class TableField extends TableListField {
 								if($fieldset){
 									$newitem[ID] = "new".$k;
 									foreach($newitem as $k => $v){
-										if(array_key_exists($k, $this->extraData)){
+										if($this->extraData&&array_key_exists($k, $this->extraData)){
 											unset($newitem[$k]);
 										}
 									}
@@ -692,7 +691,6 @@ class TableField_Item extends TableListField_Item {
 						if($ruleApplies) {
 							$field = $field->$transformation();
 						}
-						
 					}
 					
 					// formatting
@@ -737,7 +735,6 @@ class TableField_Item extends TableListField_Item {
 				$i++;
 			}
 		}
-		
 		return new DataObjectSet($this->fields);
 	}
 	
@@ -758,6 +755,10 @@ class TableField_Item extends TableListField_Item {
 		}
 
 		return $content;
+	}
+	
+	function IsAddRow(){
+		return $this->isAddRow;
 	}
 	
 }
