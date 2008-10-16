@@ -635,18 +635,13 @@ class Member extends DataObject {
 	 */
 	public function Groups() {
 		$groups = $this->getManyManyComponents("Groups");
-
-		$unsecure = DataObject::get("Group_Unsecure");
-		if($unsecure) {
-			foreach($unsecure as $unsecureItem) {
-				$groups->push($unsecureItem);
-			}
-		}
-
 		$groupIDs = $groups->column();
 		$collatedGroups = array();
-		foreach($groups as $group) {
-			$collatedGroups = array_merge((array)$collatedGroups, $group->collateAncestorIDs());
+
+		if($groups) {
+			foreach($groups as $group) {
+				$collatedGroups = array_merge((array)$collatedGroups, $group->collateAncestorIDs());
+			}
 		}
 
 		$table = "Group_Members";
@@ -666,8 +661,7 @@ class Member extends DataObject {
 			$result = new Member_GroupSet();
 		}
 
-		$result->setComponentInfo("many-to-many", $this, "Member", $table,
-															"Group");
+		$result->setComponentInfo("many-to-many", $this, "Member", $table, "Group");
 
 		return $result;
 	}

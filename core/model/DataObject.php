@@ -1794,8 +1794,6 @@ class DataObject extends ViewableData implements DataObjectInterface {
 				if(!isset($permissionCache[$memberID][$perm])) {
 					if($member->ID) {
 						$groups = $member->Groups();
-					} else {
-						$groups = DataObject::get("Group_Unsecure", "");
 					}
 
 					$groupList = implode(', ', $groups->column("ID"));

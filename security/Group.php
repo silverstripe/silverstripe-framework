@@ -298,11 +298,4 @@ class Group extends DataObject {
 	}
 }
 
-/**
- * A group representing everyone, including users not logged in.
- * @package sapphire
- * @subpackage security
- */
-class Group_Unsecure extends Group {
-}
 ?>
