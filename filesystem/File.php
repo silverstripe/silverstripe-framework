@@ -413,19 +413,31 @@ class File extends DataObject {
 		return strtolower(substr($filename,strrpos($filename,'.')+1));
 	}
 	
+	/**
+	 * Return the type of file for the given extension
+	 * on the current file name.
+	 *
+	 * @return string
+	 */
 	function getFileType() {
 		$types = array(
-			'gif' => 'GIF Image - good for diagrams',
-			'jpg' => 'JPEG Image - good for photos',
-			'jpeg' => 'JPEG Image - good for photos',
-			'png' => 'PNG Image - good general-purpose format',
-			'doc' => 'Word Document',
-			'xls' => 'Excel Spreadsheet',
+			'gif' => 'GIF image - good for diagrams',
+			'jpg' => 'JPEG image - good for photos',
+			'jpeg' => 'JPEG image - good for photos',
+			'png' => 'PNG image - good general-purpose format',
+			'doc' => 'Word document',
+			'xls' => 'Excel spreadsheet',
 			'zip' => 'ZIP compressed file',
 			'gz' => 'GZIP compressed file',
-			'dmg' => 'Apple Disk Image',
+			'dmg' => 'Apple disk image',
 			'pdf' => 'Adobe Acrobat PDF file',
+			'mp3' => 'MP3 audio file',
+			'wav' => 'WAV audo file',
+			'avi' => 'AVI video file',
+			'mpg' => 'MPEG video file',
+			'mpeg' => 'MPEG video file'
 		);
+		
 		$ext = $this->getExtension();
 		
 		return isset($types[$ext]) ? $types[$ext] : 'unknown';
