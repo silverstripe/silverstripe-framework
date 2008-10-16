@@ -30,7 +30,7 @@
  * @package sapphire
  * @subpackage misc
  */
-class i18n extends Controller {
+class i18n extends Object {
 	
 	/**
 	 * This static variable is used to store the current defined locale.
@@ -843,7 +843,9 @@ class i18n extends Controller {
 				$moduleLocales = scandir($langDir);
 				foreach($moduleLocales as $moduleLocale) {
 					if(preg_match('/(.*)\.php$/',$moduleLocale, $matches)) {
-						$locales[$matches[1]] = self::$all_locales[$matches[1]];				
+						if(isset($matches[1]) && isset(self::$all_locales[$matches[1]])) {
+							$locales[$matches[1]] = self::$all_locales[$matches[1]];
+						}
 					}
 				} 
 			}
@@ -952,220 +954,6 @@ class i18n extends Controller {
 	}
 
 	/**
-	 * Build the module's master string table
-	 *
-	 * @param string $baseDir Silverstripe's base directory
-	 * @param string $module Module's name
-	 * @return string Generated master string table
-	 */
-	protected static function process_module($baseDir, $module) {	
-    	
-    	// Only search for calls in folder with a _config.php file (which means they are modules)  
-		if(is_dir("$baseDir/$module") && is_file("$baseDir/$module/_config.php") && substr($module,0,1) != '.') {  
-
-			$mst = '';
-			// Search for calls in code files if these exists
-			if(is_dir("$baseDir/$module/code")) {
-				$fileList = array();
-				self::get_files_rec("$baseDir/$module/code", $fileList);
-				foreach($fileList as $file) {
-					$mst .= self::report_calls_code($file);
-				}
-			} else if('sapphire' == $module) {
-				// sapphire doesn't have the usual module structure, so we'll scan all subfolders
-				$fileList = array();
-				self::get_files_rec("$baseDir/$module", $fileList);
-				foreach($fileList as $file) {
-					if('.ss' != substr($file,-3)) $mst .= self::report_calls_code($file);
-				}
-			}
-			
-			// Search for calls in template files if these exists
-			if(is_dir("$baseDir/$module/templates")) {
-				$fileList = array();
-				$includedtpl[$module] = array();
-				self::get_files_rec("$baseDir/$module/templates", $fileList);
-				foreach($fileList as $index => $file) {
-					$mst .= self::report_calls_tpl($index, $file, $includedtpl[$module]);
-				}
-			}
-			
-			return $mst;
-			
-		} else return false;
-	}
-
-	/**
-	 * Write the master string table of every processed module
-	 *
-	 * @param string $baseDir Silverstripe's base directory
-	 * @param array $allmst Module's master string tables
-	 * @param array $includedtpl Templates included by other templates
-	 */
-	protected static function write_mst($baseDir, $allmst, $includedtpl) {
-			
-			// Evaluate the constructed mst
-			foreach($allmst as $mst) eval($mst);
-
-			// Resolve template dependencies
-			foreach($includedtpl as $tplmodule => $includers) {
-				// Variable initialization
-				$stringsCode = '';
-				$moduleCode = '';
-				$modulestoinclude = array();
-				
-				foreach($includers as $includertpl => $allincluded) 
-					foreach($allincluded as $included)
-						// we will only add code if the included template has localizable strings
-						if(isset($lang[self::$default_locale]["$included.ss"])) {
-							$module = self::get_owner_module("$included.ss");
-							
-							/* if the module of the included template is not the same as the includer's one
-							 * we will need to load the first one in order to have these included strings in memory
-							 */
-							if ($module != $tplmodule) $modulestoinclude[$module] = $included;
-							
-							// Give the includer name to the included strings in order to be used from the includer template
-							$stringsCode .= "\$lang['" . self::$default_locale . "']['$includertpl'] = " .
-									"array_merge(\$lang['" . self::$default_locale . "']['$includertpl'], \$lang['" . self::$default_locale . "']['$included.ss']);\n";
-						}
-				
-				// Include a template for every needed module (the module language file will then be autoloaded)
-				foreach($modulestoinclude as $tpltoinclude) $moduleCode .= "self::include_by_class('$tpltoinclude.ss');\n";
-				
-				// Add the extra code to the existing module mst
-				if ($stringsCode) $allmst[$tplmodule] .= "\n$moduleCode$stringsCode";
-			}
-			
-			// Write each module language file
-			foreach($allmst as $module => $mst) {
-				// Create folder for lang files
-				$langFolder = $baseDir . '/' . $module . '/lang';
-				if(!file_exists($baseDir. '/' . $module . '/lang')) {
-					mkdir($langFolder, Filesystem::$folder_create_mask);
-					touch($baseDir. '/' . $module . '/lang/_manifest_exclude');
-				}
-				
-				// Open the English file and write the Master String Table
-				if($fh = fopen($langFolder . '/' . self::$default_locale . '.php', "w")) {
-					fwrite($fh, "<?php\n\nglobal \$lang;\n\n" . $mst . "\n?>");			
-					fclose($fh);
-					if(Director::is_cli()) {
-						echo "Created file: $langFolder/" . self::$default_locale . ".php\n";
-					} else {
-						echo "Created file: $langFolder/" . self::$default_locale . ".php<br />";
-					}
-		
-				} else {
-					user_error("Cannot write language file! Please check permissions of $langFolder/" . self::$default_locale . ".php", E_USER_ERROR);
-				}
-			}
-
-	}
-
-	/**
-	 * Helper function that searches for potential files to be parsed
-	 * 
-	 * @param string $folder base directory to scan (will scan recursively)
-	 * @param array $fileList Array where potential files will be added to
-	 */
-	protected static function get_files_rec($folder, &$fileList) {
-		$items = scandir($folder);
-		if($items) foreach($items as $item) {
-			if(substr($item,0,1) == '.') continue;
-			if(substr($item,-4) == '.php') $fileList[substr($item,0,-4)] = "$folder/$item";
-			else if(substr($item,-3) == '.ss') $fileList[$item] = "$folder/$item";
-			else if(is_dir("$folder/$item")) self::get_files_rec("$folder/$item", $fileList);
-		}
-	}
-	
-	/**
-	 * Look for calls to the underscore function in php files and build our MST 
-	 * 
-	 * @param string $file Path to the file to be parsed
-	 * @return string Built Master String Table from this file
-	 */
-	protected static function report_calls_code($file) {
-		static $callMap;
-		$content = file_get_contents($file);
-		$mst = '';
-		while (ereg('_t[[:space:]]*\([[:space:]]*("[^"]*"|\\\'[^\']*\\\')[[:space:]]*,[[:space:]]*("([^"]|\\\")*"|\'([^\']|\\\\\')*\')([[:space:]]*,[[:space:]]*[^,)]*)?([[:space:]]*,[[:space:]]*("([^"]|\\\")*"|\'([^\']|\\\\\')*\'))?[[:space:]]*\)', $content, $regs)) {
-			$entityParts = explode('.',substr($regs[1],1,-1));
-			$entity = array_pop($entityParts);
-			$class = implode('.',$entityParts);
-			
-			if (isset($callMap["$class--$entity"])) 
-				echo "Warning! Redeclaring entity $entity in file $file (previously declared in {$callMap["$class--$entity"]})<br>";
-
-			if (substr($regs[2],0,1) == '"') $regs[2] = addcslashes($regs[2],'\'');
-			$mst .= '$lang[\'' . self::$default_locale . '\'][\'' . $class . '\'][\'' . $entity . '\'] = ';
-			if ($regs[5]) {
-				$mst .= "array(\n\t'" . substr($regs[2],1,-1) . "',\n\t" . substr($regs[5],1);
-				if ($regs[7]) {
-					if (substr($regs[7],0,1) == '"') $regs[7] = addcslashes($regs[7],'\'');
-					$mst .= ",\n\t'" . substr($regs[7],1,-1) . '\''; 
-				}
-				$mst .= "\n);";
-			} else $mst .= '\'' . substr($regs[2],1,-1) . '\';';
-			$mst .= "\n";
-			$content = str_replace($regs[0],"",$content);
-
-			$callMap["$class--$entity"] = $file;
-		}
-		
-		return $mst;
-	}
-
-	/**
-	 * Look for calls to the underscore function in template files and build our MST 
-	 * Template version - no "class" argument
-	 * 
-	 * @param string $index Index used to namespace strings 
-	 * @param string $file Path to the file to be parsed
-	 * @param string $included List of explicitly included templates
-	 * @return string Built Master String Table from this file
-	 */
-	protected static function report_calls_tpl($index, $file, &$included) {
-		static $callMap;
-		$content = file_get_contents($file);
-		
-		// Search for included templates
-		preg_match_all('/<' . '% include +([A-Za-z0-9_]+) +%' . '>/', $content, $inc, PREG_SET_ORDER);
-		foreach ($inc as $template) {
-			if (!isset($included[$index])) $included[$index] = array();
-			array_push($included[$index], $template[1]);
-		}
-
-		$mst = '';
-		while (ereg('_t[[:space:]]*\([[:space:]]*("[^"]*"|\\\'[^\']*\\\')[[:space:]]*,[[:space:]]*("([^"]|\\\")*"|\'([^\']|\\\\\')*\')([[:space:]]*,[[:space:]]*[^,)]*)?([[:space:]]*,[[:space:]]*("([^"]|\\\")*"|\'([^\']|\\\\\')*\'))?[[:space:]]*\)',$content,$regs)) {
-
-			$entityParts = explode('.',substr($regs[1],1,-1));
-			$entity = array_pop($entityParts);
-
-			// Entity redeclaration check
-			if (isset($callMap["$index--$entity"])) 
-				echo "Warning! Redeclaring entity $entity in file $file (previously declared in {$callMap["$index--$entity"]})<br>";
-
-			if (substr($regs[2],0,1) == '"') $regs[2] = addcslashes($regs[2],'\'');
-			$mst .= '$lang[\'' . self::$default_locale . '\'][\'' . $index . '\'][\'' . $entity . '\'] = ';
-			if ($regs[5]) {
-				$mst .= "array(\n\t'" . substr($regs[2],1,-1) . "',\n\t" . substr($regs[5],1);
-				if ($regs[7]) {
-					if (substr($regs[7],0,1) == '"') $regs[7] = addcslashes($regs[7],'\'\\');
-					$mst .= ",\n\t'" . substr($regs[7],1,-1) . '\''; 
-				}
-				$mst .= "\n);";
-			} else $mst .= '\'' . substr($regs[2],1,-1) . '\';';
-			$mst .= "\n";
-			$content = str_replace($regs[0],"",$content);
-
-			$callMap["$index--$entity"] = $file;
-		}
-		
-		return $mst;
-	}
-
-	/**
 	 * Set the current locale
 	 * See http://unicode.org/cldr/data/diff/supplemental/languages_and_territories.html for a list of possible locales
 	 * 
@@ -1220,11 +1008,6 @@ class i18n extends Controller {
 		Translatable::disable();
 	}
 
-	/**
- 	 * Include a locale file determined by module name and locale 
- 	 * 
- 	 * @param string $module Module that contains the locale file
-	
 	/**
 	 * Include a locale file determined by module name and locale 
 	 * 
@@ -1286,52 +1069,6 @@ class i18n extends Controller {
 			$object->delete();
 		}
 		echo "Language {$this->urlParams['ID']} successfully removed";
-	}
-
-
-	/**
-	 * This is the main method to build the master string tables with the original strings.
-	 * It will search for existent modules that use the i18n feature, parse the _t() calls
-	 * and write the resultant files in the lang folder of each module.
-	 */	
-	public function textcollector() {
-		// allows textcollector to run in CLI without admin-check
-		if(!Permission::check("ADMIN") && !Director::is_cli()) {
-			user_error("You must be an admin or use CLI-mode to enable text collector", E_USER_ERROR);
-		}
-		
-		if(Director::is_cli()) {
-			echo "Collecting text...\n";
-		} else {
-			echo "Collecting text...<br /><br />";
-		}
-		
-		//Calculate base directory
-		$baseDir = Director::baseFolder();
-
-		// A master string tables array (one mst per module)
-		$mst = array();
-		// A list of included templates dependencies
-		$includedtpl = array();
-
-		//Search for and process existent modules, or use the passed one instead
-		if (!isset($_GET['module'])) {
-			$topLevel = scandir($baseDir);
-			foreach($topLevel as $module) {
-				// we store the master string tables 
-				$processed = self::process_module($baseDir, $module, $includedtpl);
-				if ($processed) $mst[$module] = $processed;
-			}
-		} else {
-			$module = basename($_GET['module']);
-			$processed = self::process_module($baseDir, $_GET['module'], $includedtpl);
-			if ($processed) $mst[$module] = $processed;
-		}
-		
-		// Write the generated master string tables
-		self::write_mst($baseDir, $mst, $includedtpl);
-		
-		echo "Done!\n";
 	}
 	
 }

@@ -1,0 +1,32 @@
+<?php
+/**
+ * @package sapphire
+ * @subpackage tasks
+ */
+class i18nTextCollectorTask extends BuildTask {
+	
+	protected $title = "i18n Textcollector Task";
+	
+	protected $description = "
+		Traverses through files in order to collect the 'entity master tables'
+		stored in each module.
+	";
+	
+	function init() {
+		if(!Director::is_cli() && !Director::isDev() && !Permission::check("ADMIN")) Security::permissionFailure();
+		parent::init();
+	}
+	
+	/**
+	 * This is the main method to build the master string tables with the original strings.
+	 * It will search for existent modules that use the i18n feature, parse the _t() calls
+	 * and write the resultant files in the lang folder of each module.
+	 * 
+	 * @uses DataObject->collectI18nStatics()
+	 */	
+	public function run($request) {
+		$c = new i18nTextCollector($request->getVar('module'));
+		return $c->run();
+	}
+}
+?>
