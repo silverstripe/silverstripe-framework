@@ -66,7 +66,7 @@ class FileTest extends SapphireTest {
 	
 	function testFileType() {
 		$file = $this->objFromFixture('File', 'gif');
-		$this->assertEquals("GIF Image - good for diagrams", $file->FileType);
+		$this->assertEquals("GIF image - good for diagrams", $file->FileType);
 
 		$file = $this->objFromFixture('File', 'pdf');
 		$this->assertEquals("Adobe Acrobat PDF file", $file->FileType);
