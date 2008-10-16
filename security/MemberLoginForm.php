@@ -65,8 +65,8 @@ class MemberLoginForm extends LoginForm {
 			}
 			if(!$actions) {
 				$actions = new FieldSet(
-					new FormAction("dologin", _t('Member.BUTTONLOGIN', "Log in")),
-					new FormAction("forgotPassword", _t('Member.BUTTONLOSTPASSWORD', "I've lost my password"))
+					new FormAction('dologin', _t('Member.BUTTONLOGIN', "Log in")),
+					new LiteralField('forgotPassword', '<p><a href="Security/lostpassword">' . _t('Member.BUTTONLOSTPASSWORD', "I've lost my password") . '</a></p>')
 				);
 			}
 		}
