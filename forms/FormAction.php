@@ -55,14 +55,35 @@ class FormAction extends FormField {
 		return $this->extraData;
 	}
 	
+	/**
+	 * Create a submit input, or button tag
+	 * using {@link Form->createTag()} functionality.
+	 * 
+	 * @return HTML code for the input OR button element
+	 */
 	function Field() {
-		$titleAttr = $this->description ? "title=\"" . Convert::raw2att($this->description) . "\"" : '';
 		if($this->useButtonTag) {
-			return "<button class=\"action " . $this->extraClass() . "\" id=\"" . $this->id() . "\" type=\"submit\" name=\"$this->action\" $titleAttr />" . $this->attrTitle() . "</button>\n";
+			$attributes = array(
+				'class' => 'action' . ($this->extraClass() ? (' ' . $this->extraClass()) : ''),
+				'id' => $this->id(),
+				'type' => 'submit',
+				'name' => $this->action
+			);
+			
+			return $this->createTag('button', $attributes, $this->attrTitle());
 		} else {
-			return "<input class=\"action " . $this->extraClass() . "\" id=\"" . $this->id() . "\" type=\"submit\" name=\"$this->action\" value=\"" . $this->attrTitle() . "\" $titleAttr />\n";
+			$attributes = array(
+				'class' => 'action' . ($this->extraClass() ? (' ' . $this->extraClass()) : ''),
+				'id' => $this->id(),
+				'type' => 'submit',
+				'name' => $this->action,
+				'value' => $this->attrTitle()
+			);
+
+			if($this->description) $attributes['title'] = Convert::raw2att($this->description);
+			
+			return $this->createTag('input', $attributes);
 		}
-		
 	}
 	
 	/**
