@@ -34,7 +34,7 @@
  *  - GET /api/v1/(ClassName)/(ID) - gets a database record
  *  - GET /api/v1/(ClassName)/(ID)/(Relation) - get all of the records linked to this database record by the given reatlion
  *  - GET /api/v1/(ClassName)?(Field)=(Val)&(Field)=(Val) - searches for matching database records
- * 
+ *  - POST /api/v1/(ClassName) - create a new database record
  *  - PUT /api/v1/(ClassName)/(ID) - updates a database record
  *  - PUT /api/v1/(ClassName)/(ID)/(Relation) - updates a relation, replacing the existing record(s) (NOT IMPLEMENTED YET)
  *  - POST /api/v1/(ClassName)/(ID)/(Relation) - updates a relation, appending to the existing record(s) (NOT IMPLEMENTED YET)
@@ -66,6 +66,9 @@
  * - {@link DataObject::canDelete()}
  * - {@link DataObject::canCreate()}
  * See {@link DataObject} documentation for further details.
+ * 
+ * You can specify the character-encoding for any input on the HTTP Content-Type.
+ * At the moment, only UTF-8 is supported. All output is made in UTF-8 regardless of Accept headers.
  * 
  * @todo Finish RestfulServer_Item and RestfulServer_List implementation and re-enable $url_handlers
  * @todo Implement PUT/POST/DELETE for relations
@@ -273,7 +276,9 @@ class RestfulServer extends Controller {
 	 */
 	protected function getDataFormatter($includeAcceptHeader = false) {
 		$extension = $this->request->getExtension();
-		$contentType = $this->request->getHeader('Content-Type');
+		$contentTypeWithEncoding = $this->request->getHeader('Content-Type');
+		preg_match('/([^;]*)/',$contentTypeWithEncoding, $contentTypeMatches);
+		$contentType = $contentTypeMatches[0];
 		$accept = $this->request->getHeader('Accept');
 		$mimetypes = $this->request->getAcceptMimetypes();
 
@@ -372,6 +377,11 @@ class RestfulServer extends Controller {
 	 * rather than a "Conflict" message.
 	 */
 	protected function postHandler($className, $id) {
+		if($id) {
+			$this->response->setStatusCode(409);
+			return 'Conflict';
+		}
+		
 		if(!singleton($className)->canCreate()) return $this->permissionFailure();
 		$obj = new $className();
 		
