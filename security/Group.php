@@ -5,8 +5,6 @@
  * @subpackage security
  */
 class Group extends DataObject {
-	// This breaks too many things for upgraded sites
-	// static $default_sort = "Sort";
 	
 	static $db = array(
 		"Title" => "Varchar",
