@@ -12,7 +12,7 @@ class HeaderField extends DatalessField {
 	 */
 	protected $headingLevel = 2;
 	
-	function __construct($name, $title, $headingLevel = 2, $allowHTML = false, $form = null) {
+	function __construct($name, $title = null, $headingLevel = 2, $allowHTML = false, $form = null) {
 		// legacy handling for old parameters: $title, $heading, ...
 		// instead of new handling: $name, $title, $heading, ...
 		$args = func_get_args();
