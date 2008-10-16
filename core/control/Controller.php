@@ -337,15 +337,6 @@ class Controller extends RequestHandlingData {
 	}
 
 	/**
-	 * @deprecated use Controller::curr() instead
-	 * @returns Controller
-	 */
-	public static function currentController() {
-		user_error('Controller::currentController() is deprecated. Use Controller::curr() instead.', E_USER_NOTICE);
-		return self::curr();
-	}
-	
-	/**
 	 * Returns the current controller
 	 * @returns Controller
 	 */
@@ -371,7 +362,6 @@ class Controller extends RequestHandlingData {
 	 * @param member The member whose permissions need checking.  Defaults to the currently logged
 	 * in user.
 	 * @return boolean
-	 * @deprecated I don't believe that the system has widespread use/support of this.
 	 */
 	function can($perm, $member = null) {
 		if(!$member) $member = Member::currentUser();
@@ -391,16 +381,8 @@ class Controller extends RequestHandlingData {
 	 */
 	function Now() {
 		$d = new Date(null);
-		$d->setVal(date("Y-m-d h:i:s"));
+		$d->setValue(date("Y-m-d h:i:s"));
 		return $d;
-	}
-
-	/**
-	 * Returns a link to any other page
-	 * @deprecated It's unclear what value this has; construct a link manually or use your own custom link-gen functions.
-	 */
-	function LinkTo($a, $b) {
-		return Director::baseURL() . $a . '/' . $b;
 	}
 
 	/**
