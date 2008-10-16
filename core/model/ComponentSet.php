@@ -221,7 +221,6 @@ class ComponentSet extends DataObjectSet {
 	
 	/**
 	 * Remove many items from this set.
-	 Ü
 	 * @param array $itemList The items to remove, as a numerical array with IDs or as a DataObjectSet
 	 */
 	function removeMany($itemList) {
@@ -239,6 +238,7 @@ class ComponentSet extends DataObjectSet {
 	
 	/**
 	 * Remove all items that match the SQL filter.
+	 * @deprecated 2.3 Not flexible enough, use custom code
 	 * @param string $filter Filter to be inserted into the WHERE clause
 	 */
 	function removeByFilter($filter) {
