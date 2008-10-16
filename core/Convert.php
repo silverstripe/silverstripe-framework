@@ -347,55 +347,6 @@ class Convert extends Object {
 			$data
 		);
 	}
-	
-	////////////////////////////////////////////////////////////////////////////////////////////////
-	// Deprecated
-
-	/**
-	 * Converts the given val from a raw string into HTML.
-	 * has support for multibyte charaters.
-	 *
-	 * @param  $val the string you wish to convert
-	 * @return the HTML version of the string
-	 * @deprecated
-	 */
-	static function raw2html($val) {
-		user_error("Convert::raw2html is deprecated.  Used Convert::raw2xml instead", E_USER_NOTICE);
-		return self::raw2xml($val);
-	}
-	
-	/**
-	 * @deprecated
-	 */
-	static function html2plain($val){
-		user_error("html2plain is deprecated.  Use xml2raw instead.", E_USER_NOTICE);
-		return self::html2raw($val);
-	}
-	
-	/**
-	 * @deprecated
-	 */
-	static function html2text($val, $preserveLinks = false) {
-		user_error("html2text is deprecated.  Use xml2raw instead.", E_USER_NOTICE);
-		return self::html2raw($val);
-	}
-	
-	/**
-	 * @deprecated
-	 */
-	static function raw2reserveNL($val){
-		user_error("Convert::raw2reserveNL is deprecated.  Used Convert::raw2xml instead", E_USER_NOTICE);
-		return self::raw2xml($val);
-	}
-	
-	/**
-	 * @deprecated
-	 */
-	static function raw2attr($val) {
-		user_error("raw2attr is deprecated.  Use raw2att instead.", E_USER_WARNING);
-		return self::raw2att($val);
-	}
-
 
 }
 
