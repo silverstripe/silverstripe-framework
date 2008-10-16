@@ -490,12 +490,6 @@ class Folder extends File {
 		</iframe>
 HTML;
 	}
-	/**
-	 * Since this is a folder, we don't have any content as such.
-	 */
-	function loadContent() {
-		return;
-	}
 	
 }
 
