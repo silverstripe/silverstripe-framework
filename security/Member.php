@@ -29,10 +29,6 @@ class Member extends DataObject {
 		"Groups" => "Group",
 	);
 
-	static $has_many = array(
-		'UnsubscribedRecords' => 'Member_UnsubscribeRecord'
-	);
-	
 	static $has_one = array();
 	
 	static $many_many = array();
@@ -351,65 +347,6 @@ class Member extends DataObject {
 		return $fields;
 	}
 
-
-	/**
-	 * Factory method for the member validator
-	 *
-	 * @return Member_Validator Returns an instance of a
-	 *                          {@link Member_Validator} object.
-	 */
-	function getNewsletterSubscriptions(){
-		$groups =  $this->Groups()->toDropDownMap("ID","ID");
-		return $groups;
-	}
-	
-	/**
-	 * This does some cunning and automatically save the newsletter subscriptions
-	 * by adding and removing the member from the appropriate
-	 * groups based on a checkboxset field.
-	 * This function is called by the form handler
-	 * whenever form->saveInto($member); is called with an 
-	 * checkboxsetfield in the data with the name
-	 * "newsletterSubscriptions"
-	 */
-	function saveNewsletterSubscriptions($groups){
-		if(!class_exists('NewsletterType')) {
-			user_error("Member::saveNewsletterSubscriptions() called without the newsletter module available", E_USER_WARNING);
-			return;
-		}
-
-    	$checkboxsetfield = new CheckboxSetField(
-			"NewsletterSubscriptions",
-			"",
-			$sourceitems = DataObject::get("NewsletterType")->toDropDownMap("GroupID","Title"),
-			$selectedgroups = $groups
-		);
-		return $this->Groups()->setByCheckboxSetField($checkboxsetfield);
-	}
-	
-	function removeAllNewsletterSubscriptions(){
-		if(!class_exists('NewsletterType')) {
-			user_error("Member::removeAllNewsletterSubscriptions() called without the newsletter module available", E_USER_WARNING);
-			return;
-		}
-		
-		$groups = $this->Groups();
-		$groupIDs = $groups->getIDList();
-		$newsletterTypes = DataObject::get("NewsletterType");
-		if($newsletterTypes&&$newsletterTypes->count()){
-			foreach($newsletterTypes as $type){
-				$newsletterGroupIDs[] = $type->GroupID;
-			}
-		}
-		if($newsletterGroupIDs) {
-			foreach($newsletterGroupIDs as $newsletterGroupID){
-				if($groupIDs&&in_array($newsletterGroupID, $groupIDs)){
-					$groups->remove($newsletterGroupID);
-				}
-			}
-		}
-	}
-	
 	function getValidator() {
 		return new Member_Validator();
 	}
@@ -941,25 +878,6 @@ class Member extends DataObject {
 		return $labels;
 	}
 
-	/**
-	 * Unsubscribe from newsletter
-	 *
-	 * @param NewsletterType $newsletterType Newsletter type to unsubscribe
-	 *                                       from
-	 */
-	function unsubscribeFromNewsletter(NewsletterType $newsletterType) {
-		if(!class_exists('NewsletterType')) {
-			user_error("Member::unsubscribeFromNewsletter() called without the newsletter module available", E_USER_WARNING);
-			return;
-		}
-
-		// record today's date in unsubscriptions
-		// this is a little bit redundant
-		$unsubscribeRecord = new Member_UnsubscribeRecord();
-		$unsubscribeRecord->unsubscribe($this, $newsletterType);
-		$this->Groups()->remove($newsletterType->GroupID);
-	}
-
 	function requireDefaultRecords() {
 		parent::requireDefaultRecords();
 		
@@ -1399,71 +1317,6 @@ class Member_ForgotPasswordEmail extends Email {
     	$this->subject = _t('Member.SUBJECTPASSWORDRESET', "Your password reset link", PR_MEDIUM, 'Email subject');
     }
 }
-
-
-
-/**
- * Record to keep track of which records a member has unsubscribed from and when.
- * @package sapphire
- * @subpackage security
- * @todo Check if that email stuff ($from, $to, $subject, $body) is needed
- *       here! (Markus)
- */
-class Member_UnsubscribeRecord extends DataObject {
-
-	static $has_one = array(
-		'NewsletterType' => 'NewsletterType',
-		'Member' => 'Member'
-	);
-
-
-	/**
-	 * Unsubscribe the member from a specific newsletter type
-	 *
-	 * @param int|Member $member Member object or ID
-	 * @param int|NewsletterType $newsletterType Newsletter type object or ID
-	 */
-	function unsubscribe($member, $newsletterType) {
-		if(!class_exists('NewsletterType')) {
-			user_error("Member_UnsubscribeRecord::unsubscribe() called without the newsletter module available", E_USER_WARNING);
-			return;
-		}
-
-		// $this->UnsubscribeDate()->setVal( 'now' );
-		$this->MemberID = (is_numeric($member))
-			? $member
-			: $member->ID;
-
-		$this->NewsletterTypeID = (is_numeric($newsletterType))
-			? $newsletterType
-			: $newsletterType->ID;
-
-		$this->write();
-	}
-
-
-	protected
-		$from = '',  // setting a blank from address uses the site's default administrator email
-		$to = '$Email',
-		$subject = '',
-		$body = '';
-			
-		function __construct($record = null, $isSingleton = false) {
-			$this->subject = _t('Member.SUBJECTPASSWORDCHANGED');
-			
-			$this->body = '
-				<h1>' . _t('Member.EMAILPASSWORDINTRO', "Here's your new password") . '</h1>
-				<p>
-					<strong>' . _t('Member.EMAIL') . ':</strong> $Email<br />
-					<strong>' . _t('Member.PASSWORD') . ':</strong> $Password
-				</p>
-				<p>' . _t('Member.EMAILPASSWORDAPPENDIX', 'Your password has been changed. Please keep this email, for future reference.') . '</p>';
-				
-			parent::__construct($record, $isSingleton);
-		}
-}
-
-
 
 /**
  * Member Validator
