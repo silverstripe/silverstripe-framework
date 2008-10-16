@@ -123,18 +123,31 @@ class Convert extends Object {
 			}
 		}
 	}
+	
+	/**
+	 * @deprecated 2.3 Functionality too ambiguous - not sure if its converting
+	 * xml trees to js objects, xml properties to json, ...
+	 */
 	static function xml2js($val) {		
 		return self::raw2js(self::html2raw($val));
 	}
+	
+	/**
+	 * @deprecated 2.3 use raw2att()
+	 */
 	static function xml2att($val) {		
 		return self::raw2att(self::xml2raw($val));
 	}
+	
+	/**
+	 * @deprecated 2.3 Use raw2sql()
+	 */
 	static function xml2sql($val) {		
 		return self::raw2sql(self::xml2raw($val));
 	}
 	
 	/**
-	 * Convert JS to other formats
+	 * @deprecated 2.3
 	 */
 	static function js2raw($val) {
 		if(is_array($val)) {
@@ -145,13 +158,24 @@ class Convert extends Object {
 			return str_replace(array('\"','\n','\r'), array('"',"\n","\r"), $val);
 		}
 	}
+	
+	/**
+	 * @deprecated 2.3 Use raw2xml()
+	 */
 	static function js2xml($val) {		
 		return self::raw2xml(self::js2raw($val));
 	}
+	
+	/**
+	 * @deprecated 2.3 Use raw2att()
+	 */
 	static function js2att($val) {		
 		return self::raw2att(self::js2raw($val));
 	}
 	
+	/**
+	 * @deprecated 2.3 Use raw2sql()
+	 */
 	static function js2sql($val) {		
 		return self::raw2sql(self::js2raw($val));
 	}
