@@ -70,6 +70,30 @@ class Controller extends RequestHandlingData {
 	);
 	
 	/**
+	 * Initialisation function that is run before any action on the controller is called.
+	 * 
+	 * @uses BasicAuth::requireLogin()
+	 */
+	function init() {
+		// Test and development sites should be secured, via basic-auth
+		if(ClassInfo::hasTable("Group") && ClassInfo::hasTable("Member") && Director::isTest() && $this->basicAuthEnabled) {
+			BasicAuth::requireLogin("SilverStripe test website.  Use your  CMS login", "ADMIN");
+		}		
+		
+		//
+		Cookie::set("PastVisitor", true);
+
+		// ClassInfo::hasTable() called to ensure that we're not in a very-first-setup stage
+		if(ClassInfo::hasTable("Group") && ClassInfo::hasTable("Member") && ($member = Member::currentUser())) {
+			Cookie::set("PastMember", true);
+			DB::query("UPDATE Member SET LastVisited = NOW() WHERE ID = $member->ID", null);
+		}
+		
+		// This is used to test that subordinate controllers are actually calling parent::init() - a common bug
+		$this->baseInitCalled = true;
+	}
+	
+	/**
 	 * Handles HTTP requests.
 	 * 
 	 * If you are going to overload handleRequest, make sure that you start the method with $this->pushCurrent()
@@ -310,30 +334,6 @@ class Controller extends RequestHandlingData {
 	 */
 	function disableBasicAuth() {
 		$this->basicAuthEnabled = false;
-	}
-	
-	/**
-	 * Initialisation function that is run before any action on the controller is called.
-	 * 
-	 * @uses BasicAuth::requireLogin()
-	 */
-	function init() {
-		// Test and development sites should be secured, via basic-auth
-		if(ClassInfo::hasTable("Group") && ClassInfo::hasTable("Member") && Director::isTest() && $this->basicAuthEnabled) {
-			BasicAuth::requireLogin("SilverStripe test website.  Use your  CMS login", "ADMIN");
-		}		
-		
-		//
-		Cookie::set("PastVisitor", true);
-
-		// ClassInfo::hasTable() called to ensure that we're not in a very-first-setup stage
-		if(ClassInfo::hasTable("Group") && ClassInfo::hasTable("Member") && ($member = Member::currentUser())) {
-			Cookie::set("PastMember", true);
-			DB::query("UPDATE Member SET LastVisited = NOW() WHERE ID = $member->ID", null);
-		}
-		
-		// This is used to test that subordinate controllers are actually calling parent::init() - a common bug
-		$this->baseInitCalled = true;
 	}
 
 	/**
