@@ -121,11 +121,15 @@ class Director {
 				$response = new HTTPResponse();
 				$response->setBody($result);
 			}
-
-			$response->output();
+			
+			// ?debug_memory=1 will output the number of bytes of memory used for this request
+			if(isset($_REQUEST['debug_memory']) && $_REQUEST['debug_memory']) {
+				echo number_format(memory_get_peak_usage(),0);
+			} else {
+				$response->output();
+			}
 
 			//$controllerObj->getSession()->inst_save();
-			
 		}
 	}
 	
