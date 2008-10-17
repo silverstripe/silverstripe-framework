@@ -498,8 +498,7 @@ class Security extends Controller {
 					array('Content' =>
 						sprintf(
 							_t('Security.NOTERESETLINKINVALID',
-								"<p>The password reset link is invalid or expired.</p>\n" .
-								'<p>You can request a new one <a href="%s">here</a> or change your password after you <a href="%s">logged in</a>.</p>'
+								'<p>The password reset link is invalid or expired.</p><p>You can request a new one <a href="%s">here</a> or change your password after you <a href="%s">logged in</a>.</p>'
 							),
 							$this->Link('lostpassword'),
 							$this->link('login')
