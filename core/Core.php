@@ -281,28 +281,10 @@ function stripslashes_recursively(&$array) {
 }
 
 /**
- * This is the main translator function. Returns the string defined by $class and $entity according to the currently set locale.
- *
- * @param string $entity Entity that identifies the string. It must be in the form "Namespace.Entity" where Namespace will be usually
- * 						 the class name where this string is used and Entity identifies the string inside the namespace.
- * @param string $string The original string itself. In a usual call this is a mandatory parameter, but if you are reusing a string which
- *				 has already been "declared" (using another call to this function, with the same class and entity), you can omit it.
- * @param string $priority Optional parameter to set a translation priority. If a string is widely used, should have a high priority (PR_HIGH),
- * 				    in this way translators will be able to prioritise this strings. If a string is rarely shown, you should use PR_LOW.
- *				    You can use PR_MEDIUM as well. Leaving this field blank will be interpretated as a "normal" priority (less than PR_MEDIUM).
- * @param string $context If the string can be difficult to translate by any reason, you can help translators with some more info using this param
- *
- * @return string The translated string, according to the currently set locale {@link i18n::set_locale()}
+ * @see i18n::_t()
  */
 function _t($entity, $string = "", $priority = 40, $context = "") {
-	global $lang;
-	$locale = i18n::get_locale();
-	$entityParts = explode('.',$entity);
-	$realEntity = array_pop($entityParts);
-	$class = implode('.',$entityParts);
-	if(!isset($lang[$locale][$class])) i18n::include_by_class($class);
-	$transEntity = isset($lang[$locale][$class][$realEntity]) ? $lang[$locale][$class][$realEntity] : $string;
-	return (is_array($transEntity) ? $transEntity[0] : $transEntity);
+	return i18n::_t($entity, $string, $priority, $context);
 }
 
 
