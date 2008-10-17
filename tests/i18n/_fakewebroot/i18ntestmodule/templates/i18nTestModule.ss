@@ -1,0 +1,1 @@
+<% _t('i18nTestModule.MAINTEMPLATE',"Main Template")%>
