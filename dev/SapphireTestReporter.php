@@ -64,6 +64,13 @@ class SapphireTestReporter implements PHPUnit_Framework_TestListener {
 	 */
 	protected $timer;
 	
+	protected $startTestTime;
+	
+	/**
+	 * An array of all the test speeds
+	 */
+	protected $testSpeeds = array();
+	
 	/**
 	 * Constructor, checks to see availability of PEAR Benchmark_Timer and
 	 * sets up basic properties
@@ -125,6 +132,8 @@ class SapphireTestReporter implements PHPUnit_Framework_TestListener {
 	 * @return void
 	 */
 	public function startTest(PHPUnit_Framework_Test $test) {
+		$this->startTestTime = microtime(true);
+		
 		if($test instanceof PHPUnit_Framework_TestCase) {
 			$this->currentTest = array(
 				'name'        => preg_replace('(\(.*\))', '', $test->toString()), // the name of the test (without the suite name)
@@ -208,6 +217,9 @@ class SapphireTestReporter implements PHPUnit_Framework_TestListener {
 	 * @return void
 	 */
 	public function endTest( PHPUnit_Framework_Test $test, $time) {
+		$testDuration = microtime(true) - $this->startTestTime;
+		$this->testSpeeds[$this->currentSuite['suite']->getName() . '.' . $this->currentTest['name']] = $testDuration;
+
 		if($this->hasTimer) {
 			$this->timer->stop();
 			$this->currentTest['timeElapsed'] = $this->timer->timeElapsed();

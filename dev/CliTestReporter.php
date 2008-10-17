@@ -29,6 +29,24 @@ class CliTestReporter extends SapphireTestReporter {
 		}
 		echo "\n\n$testCount tests run: " . SSCli::text("$passCount passes", $passCount > 0 ? "green" : null) . ", ". SSCli::text("$failCount fails", $failCount > 0 ? "red" : null) . ", and 0 exceptions\n";
 		echo "Maximum memory usage: " . number_format(memory_get_peak_usage(), 0) . "\n\n";
+
+		$totalTime = array_sum($this->testSpeeds);
+		echo "Total time: " . round($totalTime,3) . " seconds\n";
+		
+		// Use sake dev/tests/all --showslow to show slow tests
+		if((isset($_GET['args']) && is_array($_GET['args']) && in_array('--showslow', $_GET['args'])) || isset($_GET['showslow'])) {
+			$avgSpeed = round(array_sum($this->testSpeeds) / count($this->testSpeeds), 3);
+			echo "Slow tests (more than twice the average $avgSpeed seconds):\n";
+
+			arsort($this->testSpeeds);
+			foreach($this->testSpeeds as $k => $v) {
+				// Ignore below-average speeds
+				if($v < $avgSpeed*2) break;
+
+				echo " - $k: " . round($v,3) . "\n";
+			}
+		}
+		echo "\n";
 	}
 	
 	public function endTest( PHPUnit_Framework_Test $test, $time) {
