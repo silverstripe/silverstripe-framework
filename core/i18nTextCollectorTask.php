@@ -25,8 +25,8 @@ class i18nTextCollectorTask extends BuildTask {
 	 * @uses DataObject->collectI18nStatics()
 	 */	
 	public function run($request) {
-		$c = new i18nTextCollector($request->getVar('module'));
-		return $c->run();
+		$c = new i18nTextCollector();
+		return $c->run($request->getVar('module'));
 	}
 }
 ?>
