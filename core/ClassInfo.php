@@ -155,5 +155,24 @@ class ClassInfo {
 	    global $_ALL_CLASSES;
 		return isset($_ALL_CLASSES['implementors'][$interfaceName]) ? in_array($className, $_ALL_CLASSES['implementors'][$interfaceName]) : false;
 	}
+	
+	/**
+	 * Get all classes contained in a file.
+	 * @uses ManifestBuilder
+	 * 
+	 * @param string $filePath Path to a PHP file (absolute or relative to webroot)
+	 * @return array
+	 */
+	static function classes_for_file($filePath) {
+		$absFilePath = Director::getAbsFile($filePath);
+		global $_CLASS_MANIFEST;
+		
+		$matchedClasses = array();
+		foreach($_CLASS_MANIFEST as $class => $compareFilePath) {
+			if($absFilePath == $compareFilePath) $matchedClasses[] = $class;
+		}
+		
+		return $matchedClasses;
+	}
 }
 ?>
