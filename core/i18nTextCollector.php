@@ -83,7 +83,7 @@ class i18nTextCollector extends Object {
 		// Search for calls in code files if these exists
 		if(is_dir("$this->basePath/$module/code")) {
 			$fileList = $this->getFilesRecursive("$this->basePath/$module/code");
-			} else if('sapphire' == $module) {
+		} else if($module == 'sapphire') {
 			// sapphire doesn't have the usual module structure, so we'll scan all subfolders
 			$fileList = $this->getFilesRecursive("$this->basePath/$module");
 		}
@@ -92,7 +92,7 @@ class i18nTextCollector extends Object {
 			if(substr($filePath,-3) == 'php') {
 				$content = file_get_contents($filePath);
 				$entitiesArr = array_merge($entitiesArr,(array)$this->collectFromCode($content, $module));
-				//$entitiesArr = array_merge($entitiesArr, (array)$this->collectFromStatics($filePath, $module));
+				$entitiesArr = array_merge($entitiesArr, (array)$this->collectFromStatics($filePath, $module));
 			}
 		}
 		
@@ -108,7 +108,7 @@ class i18nTextCollector extends Object {
 		}
 
 		// sort for easier lookup and comparison with translated files
-		asort($entitiesArr);
+		ksort($entitiesArr);
 
 		return $entitiesArr;
 	}
@@ -117,15 +117,15 @@ class i18nTextCollector extends Object {
 	 * Write the master string table of every processed module
 	 */
 	protected function writeMasterStringFile($entitiesByModule) {
-		$php = '';
-		
 		// Write each module language file
 		if($entitiesByModule) foreach($entitiesByModule as $module => $entities) {
+			$php = '';
+			
 			// Create folder for lang files
 			$langFolder = $this->baseSavePath . '/' . $module . '/lang';
-			if(!file_exists($this->baseSavePath. '/' . $module . '/lang')) {
+			if(!file_exists($langFolder)) {
 				Filesystem::makeFolder($langFolder, Filesystem::$folder_create_mask);
-				touch($this->baseSavePath. '/' . $module . '/lang/_manifest_exclude');
+				touch($langFolder . '/_manifest_exclude');
 			}
 
 			// Open the English file and write the Master String Table
@@ -161,7 +161,11 @@ class i18nTextCollector extends Object {
 	protected function getFilesRecursive($folder, &$fileList = null) {
 		if(!$fileList) $fileList = array();
 		$items = scandir($folder);
-		if($items) foreach($items as $item) {
+		$isValidFolder = (
+			!in_array('_manifest_exclude', $items)
+			&& !preg_match('/\/tests$/', $folder)
+		);
+		if($items && $isValidFolder) foreach($items as $item) {
 			if(substr($item,0,1) == '.') continue;
 			if(substr($item,-4) == '.php') $fileList[substr($item,0,-4)] = "$folder/$item";
 			else if(substr($item,-3) == '.ss') $fileList[$item] = "$folder/$item";
@@ -185,6 +189,8 @@ class i18nTextCollector extends Object {
 			// remove parsed content to continue while() loop
 			$content = str_replace($regs[0],"",$content);
 		}
+		
+		ksort($entitiesArr);
 		
 		return $entitiesArr;
 	}
@@ -215,6 +221,8 @@ class i18nTextCollector extends Object {
 			// remove parsed content to continue while() loop
 			$content = str_replace($regs[0],"",$content);
 		}
+		
+		ksort($entitiesArr);
 		
 		return $entitiesArr;
 	}
@@ -310,6 +318,8 @@ class i18nTextCollector extends Object {
 				$entitiesArr = array_merge($entitiesArr,(array)$obj->provideI18nStatics());
 			}
 		}
+		
+		ksort($entitiesArr);
 		
 		return $entitiesArr;
 	}

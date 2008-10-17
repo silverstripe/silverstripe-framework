@@ -38,6 +38,10 @@ class i18nTextCollectorTest extends SapphireTest {
 		$_TEMPLATE_MANIFEST['i18nTestModuleInclude.ss'] = array(
 			'Includes' => Director::baseFolder() . $this->alternateBasePath . 'i18ntestmodule/templates/Includes/i18nTestModuleInclude.ss',
 		);
+		$_TEMPLATE_MANIFEST['i18nTestModule.ss'] = array(
+			'main' => Director::baseFolder() . $this->alternateBasePath . 'i18ntestmodule/templates/i18nTestModule.ss',
+			'Layout' => Director::baseFolder() . $this->alternateBasePath . 'i18ntestmodule/templates/Layout/i18nTestModule.ss',
+		);
 	}
 	
 	function tearDown() {
@@ -285,21 +289,14 @@ PHP;
 	function testCollectFromIncludedTemplates() {
 		$c = new i18nTextCollector();
 		
-		$html = <<<SS
-<% _t("MainTemplate.MAINVALUE", 'Main Value'); %>
-<% if Bar %>
-<% include i18nTextCollectorTest_Include %>
-<% end_if %>
-lonely _t() call that should be ignored
-SS;
+		$templateFilePath = $this->alternateBasePath . 'i18ntestmodule/templates/Layout/i18nTestModule.ss';
+		$html = file_get_contents($templateFilePath);
 		$this->assertEquals(
 			$c->collectFromTemplate($html, 'mymodule', 'RandomNamespace'),
 			array(
-				'i18nTextCollectorTest_NestedInclude.ss.NESTEDINCLUDE' => array('Nested Include Value', null, null),
-				'Test.NESTEDINCLUDEWITHNAMESPACE' => array('Nested Include Value with namespace', null, null),
-				'i18nTextCollectorTest_Include.ss.INCLUDENONAMESPACE' => array('Include Value', null, null),
-				'Test.INCLUDEWITHNAMESPACE' => array('Include Value with namespace', null, null),
-				'MainTemplate.MAINVALUE' => array('Main Value', null, null),
+				'i18nTestModule.WITHNAMESPACE' => array('Include Entity with Namespace', null, null),
+				'i18nTestModuleInclude.ss.NONAMESPACE' => array('Include Entity without Namespace', null, null),
+				'i18nTestModule.LAYOUTTEMPLATE' => array('Layout Template', null, null),
 			)
 		);
 	}
@@ -309,8 +306,9 @@ SS;
 		$c->basePath = $this->alternateBasePath;
 		$c->baseSavePath = $this->alternateBaseSavePath;
 		
-		$c->run('i18ntestmodule');
+		$c->run();
 		
+		// i18ntestmodule
 		$moduleLangFile = "{$this->alternateBaseSavePath}/i18ntestmodule/lang/" . $c->getDefaultLocale() . '.php';
 		$this->assertTrue(
 			file_exists($moduleLangFile),
@@ -328,10 +326,32 @@ global \$lang;
 	PR_LOW,
 	'Comment for entity'
 );
-\$lang['en_US']['i18nTestModule']['WITHNAMESPACE'] = 'Include Entity with Namespace';
-\$lang['en_US']['i18nTestModuleInclude.ss']['NONAMESPACE'] = 'Include Entity without Namespace';
 \$lang['en_US']['i18nTestModule']['MAINTEMPLATE'] = 'Main Template';
 \$lang['en_US']['i18nTestModule']['OTHERENTITY'] = 'Other Entity';
+\$lang['en_US']['i18nTestModule']['WITHNAMESPACE'] = 'Include Entity with Namespace';
+\$lang['en_US']['i18nTestModuleInclude.ss']['NONAMESPACE'] = 'Include Entity without Namespace';
+
+?>
+PHP;
+		$this->assertEquals(
+			file_get_contents($moduleLangFile),
+			$compareContent
+		);
+		
+		// i18nothermodule
+		$moduleLangFile = "{$this->alternateBaseSavePath}/i18nothermodule/lang/" . $c->getDefaultLocale() . '.php';
+		$this->assertTrue(
+			file_exists($moduleLangFile),
+			'Master language file can be written to modules /lang folder'
+		);
+	
+		$compareContent = <<<PHP
+<?php
+
+global \$lang;
+
+\$lang['en_US']['i18nOtherModule']['ENTITY'] = 'Other Module Entity';
+\$lang['en_US']['i18nOtherModule']['MAINTEMPLATE'] = 'Main Template Other Module';
 
 ?>
 PHP;
