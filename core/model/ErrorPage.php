@@ -7,8 +7,9 @@
  * This enables us to show errors even if PHP experiences a recoverable error.
  * ErrorPages
  * 
+ * @see Debug::friendlyError()
+ * 
  * @package cms
- * @usedby Debug::friendlyError()
  */
 class ErrorPage extends Page {
 
@@ -22,24 +23,24 @@ class ErrorPage extends Page {
 	);
 	
 	/**
-	 * Ensures that there is always a 404 page.
+	 * Ensures that there is always a 404 page
+	 * by checking if there's an instance of
+	 * ErrorPage with a 404 error code. If there
+	 * is not, one is created when the DB is built.
 	 */
 	function requireDefaultRecords() {
 		parent::requireDefaultRecords();
 
-		if(!DataObject::get_one("ErrorPage", "ErrorCode = '404'")) {
+		if(!DataObject::get_one('ErrorPage', "ErrorCode = '404'")) {
 			$errorpage = new ErrorPage();
 			$errorpage->ErrorCode = 404;
 			$errorpage->Title = _t('ErrorPage.DEFAULTERRORPAGETITLE', 'Page not found');
-			$errorpage->URLSegment = "page-not-found";
-			$errorpage->ShowInMenus = false;
+			$errorpage->URLSegment = 'page-not-found';
 			$errorpage->Content = _t('ErrorPage.DEFAULTERRORPAGECONTENT', '<p>Sorry, it seems you were trying to access a page that doesn\'t exist.</p><p>Please check the spelling of the URL you were trying to access and try again.</p>');
-			$errorpage->Status = "New page";
+			$errorpage->Status = 'New page';
 			$errorpage->write();
-			// Don't publish, as the manifest may not be built yet
-			// $errorpage->publish("Stage", "Live");
 			
-			Database::alteration_message("404 page created","created");
+			Database::alteration_message('404 page created', 'created');
 		}
 	}
 
