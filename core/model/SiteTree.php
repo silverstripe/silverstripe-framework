@@ -1198,7 +1198,7 @@ class SiteTree extends DataObject {
 		}
 
 		if($this->canPublish()) {
-			$actions[] = new FormAction('publish', _t('SiteTree.BUTTONSAVEPUBLISH', 'Save & Publish'));
+			$actions[] = new FormAction('publish', _t('SiteTree.BUTTONSAVEPUBLISH', 'Save and Publish'));
 		}
 		
 		// getCMSActions() can be extended with updateCmsActions() on a decorator
