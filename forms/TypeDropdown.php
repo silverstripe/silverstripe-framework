@@ -5,7 +5,9 @@
  * @package forms
  * @subpackage fields-relational
  *
- * @deprecated 2.3 Misleading naming
+ * @deprecated 2.3 Misleading naming, and having an entire class dedicated
+ * to just setting the source mapping for a DropdownField is overkill. Just
+ * use a standard DropdownField instead.
  */
 class TypeDropdown extends DropdownField {
 	
