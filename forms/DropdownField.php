@@ -92,9 +92,10 @@ class DropdownField extends FormField {
 			'class' => trim($this->extraClass()) ? $this->extraClass() : null,
 			'id' => $this->id(),
 			'name' => $this->name,
-			'disabled' => $this->disabled ? 'disabled' : null,
 			'tabindex' => $this->getTabIndex()
 		);
+		
+		if($this->disabled) $attributes['disabled'] = 'disabled';
 
 		return $this->createTag('select', $attributes, $options);
 	}
