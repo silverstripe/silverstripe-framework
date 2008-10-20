@@ -44,7 +44,12 @@ class TextareaField extends FormField {
 				'readonly' => 'readonly'
 			);
 			
-			return $this->createTag('span', $attributes, ($this->value ? $this->value : '<i>(not set)</i>'));
+			return $this->createTag(
+				'span',
+				$attributes,
+				($this->value ? $this->value : '<i>(' . _t('FormField.NONE', 'none') . ')</i>'
+			));
+			
 		} else {
 			$attributes = array(
 				'id' => $this->id(),
