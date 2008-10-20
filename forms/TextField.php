@@ -27,6 +27,8 @@ class TextField extends FormField {
 			'size' => ($this->maxLength) ? min( $this->maxLength, 30 ) : null 
 		);
 		
+		if($this->disabled) $attributes['disabled'] = 'disabled';
+		
 		return $this->createTag('input', $attributes);
 	}
 	
