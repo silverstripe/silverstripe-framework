@@ -165,6 +165,7 @@ class i18nTextCollector extends Object {
 			!in_array('_manifest_exclude', $items)
 			&& !preg_match('/\/tests$/', $folder)
 		);
+
 		if($items && $isValidFolder) foreach($items as $item) {
 			if(substr($item,0,1) == '.') continue;
 			if(substr($item,-4) == '.php') $fileList[substr($item,0,-4)] = "$folder/$item";
@@ -308,14 +309,14 @@ class i18nTextCollector extends Object {
 		return $php;
 	}
 	
-	protected function collectFromStatics($filePath) {
+	function collectFromStatics($filePath) {
 		$entitiesArr = array();
 		
 		$classes = ClassInfo::classes_for_file($filePath);
 		if($classes) foreach($classes as $class) {
-			if(class_exists($class) && method_exists($class, 'provideI18nStatics')) {
+			if(class_exists($class) && method_exists($class, 'i18nCollectStatics')) {
 				$obj = singleton($class);
-				$entitiesArr = array_merge($entitiesArr,(array)$obj->provideI18nStatics());
+				$entitiesArr = array_merge($entitiesArr,(array)$obj->i18nCollectStatics());
 			}
 		}
 		
