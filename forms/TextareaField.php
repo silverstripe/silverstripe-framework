@@ -34,7 +34,7 @@ class TextareaField extends FormField {
 	 * 
 	 * @return HTML code for the textarea OR span element
 	 */
-	function Field() {		
+	function Field() {
 		if($this->readonly) {
 			$attributes = array(
 				'id' => $this->id(),
