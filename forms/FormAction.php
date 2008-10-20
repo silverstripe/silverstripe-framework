@@ -80,7 +80,7 @@ class FormAction extends FormField {
 				'value' => $this->attrTitle()
 			);
 
-			if($this->description) $attributes['title'] = Convert::raw2att($this->description);
+			if($this->description) $attributes['title'] = $this->description;
 			
 			return $this->createTag('input', $attributes);
 		}
