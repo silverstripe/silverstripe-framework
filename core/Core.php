@@ -29,7 +29,7 @@ error_reporting(E_ALL);
 $envFiles = array('../_ss_environment.php', '../../_ss_environment.php', '../../../_ss_environment.php');
 foreach($envFiles as $envFile) {
 	if(file_exists($envFile)) {
-		include($envFile);
+		include_once($envFile);
 		break;
 	}
 }
