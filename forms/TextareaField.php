@@ -1,6 +1,10 @@
 <?php
 /**
- * Multi-line text area.
+ * TextareaField creates a multi-line text field,
+ * allowing more data to be entered than a standard
+ * text field. It creates the <textarea> tag in the
+ * form HTML.
+ * 
  * @package forms
  * @subpackage fields-basic
  */
@@ -8,7 +12,8 @@ class TextareaField extends FormField {
 	protected $rows, $cols, $disabled = false, $readonly = false;
 	
 	/**
-	 * Create a new multi-line text area field.
+	 * Create a new textarea field.
+	 * 
 	 * @param $name Field name
 	 * @param $title Field title
 	 * @param $rows The number of rows
@@ -23,26 +28,35 @@ class TextareaField extends FormField {
 	}
 	
 	/**
-	 * Returns a <textarea> tag - used in templates.
+	 * Create the <textarea> or <span> HTML tag with the
+	 * attributes for this instance of TextareaField. This
+	 * makes use of {@link FormField->createTag()} functionality.
+	 * 
+	 * @return HTML code for the textarea OR span element
 	 */
-	function Field() {
-		$classAttr = '';
-		if( $this->readonly ) {
-			$classAttr .= 'class="readonly';
-			if( $extraClass = trim( $this->extraClass() ) )
-				$classAttr .= " $extraClass";
-			$classAttr .= '"';
+	function Field() {		
+		if($this->readonly) {
+			$attributes = array(
+				'id' => $this->id(),
+				'class' => 'readonly' . (trim($this->extraClass()) ? (' ' . trim($this->extraClass())) : ''),
+				'name' => $this->name,
+				'readonly' => 'readonly'
+			);
+			
+			return $this->createTag('span', $attributes, ($this->value ? $this->value : '<i>(not set)</i>'));
+		} else {
+			$attributes = array(
+				'id' => $this->id(),
+				'class' => (trim($this->extraClass()) ? trim($this->extraClass()) : ''),
+				'name' => $this->name,
+				'rows' => $this->rows,
+				'cols' => $this->cols
+			);
+			
+			if($this->disabled) $attributes['disabled'] = 'disabled';
+			
+			return $this->createTag('textarea', $attributes, $this->value);
 		}
-		else if( $extraClass = trim( $this->extraClass() ) )
-			$classAttr .= 'class="' . $extraClass . '"';
-		
-		$disabled = $this->disabled ? " disabled=\"disabled\"" : "";
-		$readonly = $this->readonly ? " readonly=\"readonly\"" : "";
-		
-		if( $this->readonly )
-			return "<span $disabled$readonly $classAttr id=\"" . $this->id() . "\" name=\"{$this->name}\" rows=\"{$this->rows}\" cols=\"{$this->cols}\">" . ( $this->value ? Convert::raw2att( $this->value ) : '<i>(not set)</i>' ) . "</span>";
-		else
-			return "<textarea $disabled$readonly $classAttr id=\"" . $this->id() . "\" name=\"{$this->name}\" rows=\"{$this->rows}\" cols=\"{$this->cols}\">".Convert::raw2att($this->value)."</textarea>";
 	}
 	
 	/**
