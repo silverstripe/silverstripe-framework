@@ -43,7 +43,7 @@ class i18nTextCollector extends Object {
 	 * @uses DataObject->collectI18nStatics()
 	 */	
 	public function run($restrictToModule = null) {
-		Debug::message("Collecting text...", false);
+		//Debug::message("Collecting text...", false);
 		
 		// A master string tables array (one mst per module)
 		$entitiesByModule = array();
@@ -67,7 +67,7 @@ class i18nTextCollector extends Object {
 		// Write the generated master string tables
 		$this->writeMasterStringFile($entitiesByModule);
 		
-		Debug::message("Done!", false);
+		//Debug::message("Done!", false);
 	}
 	
 	/**
@@ -78,7 +78,7 @@ class i18nTextCollector extends Object {
 	protected function processModule($module) {	
 		$entitiesArr = array();
 
-		Debug::message("Processing Module '{$module}'", false);
+		//Debug::message("Processing Module '{$module}'", false);
 
 		// Search for calls in code files if these exists
 		if(is_dir("$this->basePath/$module/code")) {
