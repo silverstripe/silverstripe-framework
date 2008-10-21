@@ -38,7 +38,7 @@ class TextareaField extends FormField {
 		if($this->readonly) {
 			$attributes = array(
 				'id' => $this->id(),
-				'class' => 'readonly' . (trim($this->extraClass()) ? (' ' . $this->extraClass()) : ''),
+				'class' => 'readonly' . ($this->extraClass() ? $this->extraClass() : ''),
 				'name' => $this->name,
 				'tabindex' => $this->getTabIndex(),
 				'readonly' => 'readonly'
@@ -53,7 +53,7 @@ class TextareaField extends FormField {
 		} else {
 			$attributes = array(
 				'id' => $this->id(),
-				'class' => (trim($this->extraClass()) ? $this->extraClass() : ''),
+				'class' => ($this->extraClass() ? $this->extraClass() : ''),
 				'name' => $this->name,
 				'rows' => $this->rows,
 				'cols' => $this->cols

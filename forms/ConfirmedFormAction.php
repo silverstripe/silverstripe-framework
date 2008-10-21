@@ -28,7 +28,7 @@ class ConfirmedFormAction extends FormAction {
 	function Field() {
 		$attributes = array(
 			'type' => 'submit',
-			'class' => $this->extraClass(),
+			'class' => ($this->extraClass() ? $this->extraClass() : ''),
 			'id' => $this->id(),
 			'name' => $this->Name(),
 			'value' => $this->attrTitle(),

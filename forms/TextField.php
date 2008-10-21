@@ -18,7 +18,7 @@ class TextField extends FormField {
 	function Field() {
 		$attributes = array(
 			'type' => 'text',
-			'class' => $this->extraClass() . ' text',
+			'class' => 'text' . ($this->extraClass() ? $this->extraClass() : ''),
 			'id' => $this->id(),
 			'name' => $this->Name(),
 			'value' => $this->Value(),

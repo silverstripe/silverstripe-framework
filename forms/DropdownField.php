@@ -89,7 +89,7 @@ class DropdownField extends FormField {
 		}
 	
 		$attributes = array(
-			'class' => trim($this->extraClass()) ? $this->extraClass() : null,
+			'class' => ($this->extraClass() ? $this->extraClass() : ''),
 			'id' => $this->id(),
 			'name' => $this->name,
 			'tabindex' => $this->getTabIndex()

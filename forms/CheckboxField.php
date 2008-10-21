@@ -16,7 +16,7 @@ class CheckboxField extends FormField {
 	function Field() {
 		$attributes = array(
 			'type' => 'checkbox',
-			'class' => $this->extraClass(),
+			'class' => ($this->extraClass() ? $this->extraClass() : ''),
 			'id' => $this->id(),
 			'name' => $this->Name(),
 			'value' => 1,
@@ -117,7 +117,7 @@ class CheckboxField_Disabled extends CheckboxField {
 	function Field() {
 		$attributes = array(
 			'type' => 'checkbox',
-			'class' => $this->extraClass() . " text",
+			'class' => 'text' . ($this->extraClass() ? $this->extraClass() : ''),
 			'id' => $this->id(),
 			'name' => $this->Name(),
 			'tabindex' => $this->getTabIndex(),

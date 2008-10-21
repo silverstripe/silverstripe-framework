@@ -64,7 +64,7 @@ class FormAction extends FormField {
 	function Field() {
 		if($this->useButtonTag) {
 			$attributes = array(
-				'class' => 'action' . ($this->extraClass() ? (' ' . $this->extraClass()) : ''),
+				'class' => 'action' . ($this->extraClass() ? $this->extraClass() : ''),
 				'id' => $this->id(),
 				'type' => 'submit',
 				'name' => $this->action
@@ -73,7 +73,7 @@ class FormAction extends FormField {
 			return $this->createTag('button', $attributes, $this->attrTitle());
 		} else {
 			$attributes = array(
-				'class' => 'action' . ($this->extraClass() ? (' ' . $this->extraClass()) : ''),
+				'class' => 'action' . ($this->extraClass() ? $this->extraClass() : ''),
 				'id' => $this->id(),
 				'type' => 'submit',
 				'name' => $this->action,

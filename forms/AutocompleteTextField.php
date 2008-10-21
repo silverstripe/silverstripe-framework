@@ -21,7 +21,7 @@ class AutocompleteTextField extends TextField {
 	function Field() {
 		// Requirements::javascript(SAPPHIRE_DIR . '/javascript/AutocompleteTextField.js');
 		$attributes = array(
-			'class' => "{$this->class} text " . $this->extraClass(),
+			'class' => "{$this->class} text" . ($this->extraClass() ? $this->extraClass() : ''),
 			'type' => 'text',
 			'id' => $this->id(),
 			'name' => $this->name,
