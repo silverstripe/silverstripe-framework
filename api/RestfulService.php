@@ -65,6 +65,14 @@ class RestfulService extends ViewableData {
 	 */
 	public function request($subURL = '', $method = "GET", $data = null, $headers = null) {
 		$url = $this->baseURL . $subURL; //url for the request
+		if($this->queryString) {
+			if(strpos($url, '?') !== false) {
+				$url .= '&' . $this->queryString;
+			} else {
+				$url .= '?' . $this->queryString;
+			}
+		}
+		$url = str_replace(' ', '%20', $url); // spaces should be encoded
 		$method = strtoupper($method);
 		
 		assert(in_array($method, array('GET','POST','PUT','DELETE','HEAD','OPTIONS')));
@@ -95,10 +103,15 @@ class RestfulService extends ViewableData {
 		if($this->customHeaders) {
 			$headers = array_merge((array)$this->customHeaders, (array)$headers);
 		}
-
+		
 		if($headers) curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 		if($this->authUsername) curl_setopt($ch, CURLOPT_USERPWD, "$this->authUsername:$this->authPassword");
-	
+		
+		if($method == 'POST') {
+			curl_setopt($ch, CURLOPT_POST, 1);
+			curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+		}
+		
 		$responseBody = curl_exec($ch);
 		
 		if($responseBody === false) {
