@@ -44,6 +44,8 @@
 			<tr>
 				<% if Markable %><td width="18">&nbsp;</td><% end_if %>
 				<td colspan="$ItemCount">
+					<input type="hidden" id="{$id}_PopupHeight" value="$PopupHeight" disabled="disabled">
+					<input type="hidden" id="{$id}_PopupWidth" value="$PopupWidth" disabled="disabled">
 					<a class="popuplink addlink" href="$AddLink" alt="add"><img src="cms/images/add.gif" alt="<% _t('ADDITEM', 'add') %>" />
 						<% sprintf(_t('ADDITEM', 'Add %s', PR_MEDIUM, 'Add [name]'),$Title) %>
 					</a>

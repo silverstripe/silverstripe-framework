@@ -170,6 +170,14 @@ class ComplexTableField extends TableListField {
 		$this->popupHeight = $height;
 	}
 	
+	function PopupWidth() {
+		return $this->popupWidth;
+	}
+	       
+	function PopupHeight() {
+		return $this->popupHeight;
+	}
+	
 	/**
 	 * See class comments
 	 *
