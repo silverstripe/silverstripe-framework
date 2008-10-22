@@ -13,7 +13,10 @@
 class CompositeDateField extends DateField {
 
 	function __construct($name, $title, $value = null, $yearRange = null){
-		list($year,$month, $date) = explode('-', $value);
+		$exploded = explode('-', $value); 
+		$year = isset($exploded[0]) ? $exploded[0] : null; 
+		$month = isset($exploded[1]) ? $exploded[1] : null; 
+		$date = isset($exploded[2]) ? $exploded[2] : null; 
 		
 		$this->dateDropdown = new DropdownField($name."[date]", "",
 			array('NotSet' => '('._t('CompositeDateField.DAY', 'Day').')',
