@@ -14,7 +14,7 @@
 class CountryDropdownField extends DropdownField {
 	function __construct($name, $title, $value = '') {
 		if(!$value) {
-			$value = Geop::visitor_country();
+			$value = Geoip::visitor_country();
 		}
 		
 		parent::__construct($name, $title, Geoip::getCountryDropDown(), $value);
