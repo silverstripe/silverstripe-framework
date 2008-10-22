@@ -573,7 +573,7 @@ class DataObjectSet extends ViewableData implements IteratorAggregate {
 	* @return array
 	 */
 	public function map($key = "ID", $value = "Title", $includeBlank=null) {
-
+		$map = array();
 		/* Don't do this, add this locally.
 		 * Reasons: 1: In some case this blank value don't/mustn't present.
 		 						2: In some case, this balnk value should be customised, such as (Select from below)
