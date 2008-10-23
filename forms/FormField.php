@@ -296,10 +296,25 @@ class FormField extends RequestHandlingData {
 	 * Our base FormField class just returns a span containing the value.  This should be overridden!
 	 */
 	function Field() {
-		if($this->value) $val = $this->dontEscape ? ($this->reserveNL?Convert::raw2xml($this->value):$this->value) : Convert::raw2xml($this->value);
-		else $val = '<i>('._t('FormField.NONE', 'none').')</i>';
-		$valforInput = $this->value ? Convert::raw2att($val) : "";
-		return "<span class=\"readonly ".$this->extraClass()."\" id=\"" . $this->id() . "\">$val</span>\n<input type=\"hidden\" name=\"".$this->name."\" value=\"".$valforInput."\"" . $this->getTabIndexHTML() . " />";
+		if($this->value) $value = $this->dontEscape ? ($this->reserveNL ? Convert::raw2xml($this->value) : $this->value) : Convert::raw2xml($this->value);
+		else $value = '<i>(' . _t('FormField.NONE', 'none') . ')</i>';
+	
+		$attributes = array(
+			'id' => $this->id(),
+			'class' => 'readonly' . ($this->extraClass() ? $this->extraClass() : '')
+		);
+		
+		$hiddenAttributes = array(
+			'type' => 'hidden',
+			'name' => $this->name,
+			'value' => $this->value,
+			'tabindex' => $this->getTabIndex()
+		);
+		
+		$containerSpan = $this->createTag('span', $attributes, $value);
+		$hiddenInput = $this->createTag('input', $hiddenAttributes);
+		
+		return $containerSpan . "\n" . $hiddenInput;
 	}
 	/**
 	 * Returns a "Field Holder" for this field - used by templates.
