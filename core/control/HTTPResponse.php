@@ -108,7 +108,7 @@ class HTTPResponse extends Object {
 			<script type=\"text/javascript\">setTimeout('window.location.href = \"$url\"', 50);</script>";
 		} else {
 			if(!headers_sent()) {
-				header("HTTP/1.1 $this->statusCode " . self::$status_codes[$this->statusCode]);
+				header($_SERVER['SERVER_PROTOCOL'] . " $this->statusCode " . self::$status_codes[$this->statusCode]); 
 				foreach($this->headers as $header => $value) {
 					header("$header: $value");
 				}
