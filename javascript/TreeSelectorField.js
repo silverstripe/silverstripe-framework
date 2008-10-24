@@ -99,7 +99,7 @@ TreeDropdownField.prototype = {
 			}
 			
 			// This iframe stretching doesn't work with the greybox
-			if(this.iframeObj.id == 'GB_frame') return;
+			if(this.iframeObj && this.iframeObj.id == 'GB_frame') return;
 			
 			var desiredHeight = Position.cumulativeOffset(this.itemTree)[1] + this.itemTree.offsetHeight + 2;
 			if(this.iframeObj && desiredHeight > this.iframeObj.offsetHeight) {
