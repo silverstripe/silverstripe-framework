@@ -419,8 +419,10 @@ class Security extends Controller {
 
 
 	/**
-	 * Show the "password sent" page
+	 * Show the "password sent" page, after a user has requested
+	 * to reset their password.
 	 *
+	 * @param HTTPRequest $request The HTTPRequest for this action. 
 	 * @return string Returns the "password sent" page as HTML code.
 	 */
 	public function passwordsent($request) {
@@ -436,7 +438,8 @@ class Security extends Controller {
 		$controller = new Page_Controller($tmpPage);
 		$controller->init();
 
-		$email = Convert::raw2xml($request->getVar('email'));
+		$email = Convert::raw2xml($request->param('ID'));
+		
 		$customisedController = $controller->customise(array(
 			'Title' => sprintf(_t('Security.PASSWORDSENTHEADER', "Password reset link sent to '%s'"), $email),
 			'Content' =>
