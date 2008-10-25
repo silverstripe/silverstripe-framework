@@ -132,6 +132,7 @@ class ContentController extends Controller {
 
 	/**
 	 * Returns a fixed navigation menu of the given level.
+	 * @return DataObjectSet
 	 */
 	public function getMenu($level = 1) {
 		if($level == 1) {
@@ -140,11 +141,14 @@ class ContentController extends Controller {
 		} else {
 			$parent = $this->data();
 			$stack = array($parent);
-			while($parent = $parent->Parent)
-				array_unshift($stack, $parent);
 			
-			if(isset($stack[$level-2]))
-				$result = $stack[$level-2]->Children();
+			if($parent) {
+				while($parent = $parent->Parent) {
+					array_unshift($stack, $parent);
+				}
+			}
+			
+			if(isset($stack[$level-2])) $result = $stack[$level-2]->Children();
 		}
 
 		$visible = array();
@@ -293,7 +297,7 @@ HTML;
 	 * Returns a page comment system
 	 */
 	function PageComments() {
-		if($this->data()->ProvideComments) {
+		if($this->data() && $this->data()->ProvideComments) {
 			return new PageCommentInterface($this, 'PageComments', $this->data());
 		} else {
 			if(isset($_REQUEST['executeForm']) && $_REQUEST['executeForm'] == 'PageComments.PostCommentForm') {
