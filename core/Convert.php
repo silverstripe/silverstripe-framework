@@ -347,8 +347,9 @@ class Convert extends Object {
 		
 	
 		// Replace HTML entities
-		$data = preg_replace("/&#([0-9]+);/e", 'chr(\1)', $data);
-		$data = str_replace(array("&lt;","&gt;","&amp;","&nbsp;"), array("<", ">", "&", " "), $data);
+		//$data = preg_replace("/&#([0-9]+);/e", 'chr(\1)', $data);
+		//$data = str_replace(array("&lt;","&gt;","&amp;","&nbsp;"), array("<", ">", "&", " "), $data);
+		$data = html_entity_decode($data, ENT_COMPAT , 'UTF-8');
 		// Remove all tags (but optionally keep links)
 		
 		// strip_tags seemed to be restricting the length of the output
