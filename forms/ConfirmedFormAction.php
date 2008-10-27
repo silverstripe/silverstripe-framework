@@ -2,6 +2,11 @@
 /**
  * Action button with confirmation text.
  * These button are useful for things like delete buttons.
+ *
+ * @deprecated 2.3 Instead of using ConfirmedFormAction, just
+ * apply a simple javascript event handler to your standard
+ * FormAction form fields.
+ *
  * @package forms
  * @subpackage actions
  */
