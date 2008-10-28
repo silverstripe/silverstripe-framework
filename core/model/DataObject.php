@@ -2541,8 +2541,10 @@ class DataObject extends ViewableData implements DataObjectInterface {
 				$autoLabels[$name] = FormField::name_to_label($name);
 			}
 		}
-		
-		return array_merge((array)$autoLabels, (array)$customLabels);
+		$labels = array_merge((array)$autoLabels, (array)$customLabels);
+		$this->extend('updateFieldLabels', $labels);
+
+		return $labels;
 	}
 	
 	/**

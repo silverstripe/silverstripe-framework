@@ -137,6 +137,20 @@ abstract class DataObjectDecorator extends Extension {
 		}
 	}
 	
+	/**
+	 * this function is used to provide modifications to the fields labels in CMS
+	 * by the decorator
+	 * By default, the fieldLabels() of its owner will merge more fields defined in the decorator's
+	 * $extra_fields['field_labels']
+	 */
+	function updateFieldLabels(&$lables){
+		$extra_fields = $this->extraDBFields();
+		if(isset($extra_fields['field_labels'])){
+			$field_labels = $extra_fields['field_labels'];
+			if($field_labels) $lables = array_merge($lables, $field_labels);
+		}
+	}
+	
 	function updateSummaryFieldsExcludeExtra(&$fields){
 		$extra_fields = $this->extraDBFields();
 		if(isset($extra_fields['summary_fields'])){
