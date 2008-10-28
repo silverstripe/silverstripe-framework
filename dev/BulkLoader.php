@@ -261,6 +261,13 @@ class BulkLoader_Result extends Object {
 	 * @var array (see {@link $created})
 	 */
 	protected $deleted = array();
+	
+	/**
+	 * Stores the last change.
+	 * It is in the same format as {@link $created} but with an additional key, "ChangeType", which will be set to
+	 * one of 3 strings: "created", "updated", or "deleted"
+	 */
+	protected $lastChange = array();
    
 	/**
 	 * Returns the count of all objects which were
@@ -318,15 +325,25 @@ class BulkLoader_Result extends Object {
 	}
 	
 	/**
+	 * Returns the last change.
+	 * It is in the same format as {@link $created} but with an additional key, "ChangeType", which will be set to
+	 * one of 3 strings: "created", "updated", or "deleted"
+	 */
+	public function LastChange() {
+		return $this->lastChange;
+	}
+	
+	/**
 	 * @param $obj DataObject
 	 * @param $message string
 	 */
 	public function addCreated($obj, $message = null) {
-		$this->created[] = array(
+		$this->created[] = $this->lastChange = array(
 			'ID' => $obj->ID,
 			'ClassName' => $obj->class,
 			'Message' => $message
 		);
+		$this->lastChange['ChangeType'] = 'created';
 	}
 	
 	/**
@@ -334,11 +351,12 @@ class BulkLoader_Result extends Object {
 	 * @param $message string
 	 */
 	public function addUpdated($obj, $message = null) {
-		$this->updated[] = array(
+		$this->updated[] = $this->lastChange = array(
 			'ID' => $obj->ID,
 			'ClassName' => $obj->class,
 			'Message' => $message
 		);
+		$this->lastChange['ChangeType'] = 'updated';
 	}
 	
 	/**
@@ -346,11 +364,12 @@ class BulkLoader_Result extends Object {
 	 * @param $message string
 	 */
 	public function addDeleted($obj, $message = null) {
-		$this->deleted[] = array(
+		$this->deleted[] = $this->lastChange = array(
 			'ID' => $obj->ID,
 			'ClassName' => $obj->class,
 			'Message' => $message
 		);
+		$this->lastChange['ChangeType'] = 'deleted';
 	}
 	
 	/**
