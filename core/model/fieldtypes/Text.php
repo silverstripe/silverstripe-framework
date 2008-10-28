@@ -266,6 +266,10 @@ class Text extends DBField {
 			return Convert::raw2xml($this->value);
 		}
 	}
+	
+	public function scaffoldFormField($title = null, $params = null) {
+		return new TextareaField($this->name, $title);
+	}
 }
 
 ?>
