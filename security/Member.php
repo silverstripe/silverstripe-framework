@@ -868,7 +868,7 @@ class Member extends DataObject {
 		$labels['Email'] = _t('Member.EMAIL');
 		$labels['FirstName'] = _t('Member.FIRSTNAME');
 		$labels['FirstName'] = _t('Member.FIRSTNAME');
-		
+		$this->extend('updateFieldLabels', $labels);
 		return $labels;
 	}
 
