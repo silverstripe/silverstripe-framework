@@ -27,14 +27,10 @@ class CsvBulkLoader extends BulkLoader {
 	public $enclosure = '"';
 	
 	/**
-	 * Identifies if the 
-	 *  has a header row.
-	 * If a {@link self::$columnMap} is passed, we assume
-	 * the file has no headerrow, unless explicitly noted.
-	 *
+	 * Identifies if the has a header row.
 	 * @var boolean
 	 */
-	public $hasHeaderRow = false;
+	public $hasHeaderRow = true;
 	
 	protected function processAll($filepath, $preview = false) {
 		$results = new BulkLoader_Result();
