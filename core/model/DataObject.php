@@ -685,7 +685,7 @@ class DataObject extends ViewableData implements DataObjectInterface {
 			foreach($this->record as $k => $v) {
 				$this->changed[$k] = 2;
 			}
-
+			
 			$firstWrite = true;
 		}
 
@@ -697,7 +697,7 @@ class DataObject extends ViewableData implements DataObjectInterface {
 			}
 
 			// Look for some changes to make
-			unset($this->changed['ID']);
+			if(!$forceInsert) unset($this->changed['ID']);
 
 			$hasChanges = false;
 			foreach($this->changed as $fieldName => $changed) {
@@ -706,7 +706,7 @@ class DataObject extends ViewableData implements DataObjectInterface {
 					break;
 				}
 			}
-
+			
 			if($hasChanges || $forceWrite || !$this->record['ID']) {
 					
 				// New records have their insert into the base data table done first, so that they can pass the

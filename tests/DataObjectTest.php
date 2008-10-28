@@ -503,6 +503,28 @@ class DataObjectTest extends SapphireTest {
 			$this->assertTrue(false, "Validated object threw an unexpected exception of type " . get_class($exception) . " from DataObject::write: " . $exception->getMessage());
 		}
 	}
+	
+	public function testSubclassCreation() {
+		/* Creating a new object of a subclass should set the ClassName field correctly */
+		$obj = new DataObjectTest_SubTeam();
+		$obj->write();
+		$this->assertEquals("DataObjectTest_SubTeam", DB::query("SELECT ClassName FROM DataObjectTest_Team WHERE ID = $obj->ID")->value());
+	}
+	
+	public function testForceInsert() {	
+		/* If you set an ID on an object and pass forceInsert = true, then the object should be correctly created */
+		$obj = new DataObjectTest_SubTeam();
+		$obj->ID = 1001;
+		$obj->Title = 'asdfasdf';
+		$obj->SubclassDatabaseField = 'asdfasdf';
+		$obj->write(false, true);
+
+		$this->assertEquals("DataObjectTest_SubTeam", DB::query("SELECT ClassName FROM DataObjectTest_Team WHERE ID = $obj->ID")->value());
+
+		/* Check that it actually saves to the database with the correct ID */
+		$this->assertEquals("1001", DB::query("SELECT ID FROM DataObjectTest_SubTeam WHERE SubclassDatabaseField = 'asdfasdf'")->value());
+		$this->assertEquals("1001", DB::query("SELECT ID FROM DataObjectTest_Team WHERE Title = 'asdfasdf'")->value());
+	}
 }
 
 class DataObjectTest_Player extends Member implements TestOnly {
