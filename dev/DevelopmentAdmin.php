@@ -21,6 +21,8 @@ class DevelopmentAdmin extends Controller {
 			"build" => "Build/rebuild this environment (formerly db/build).  Call this whenever you have updated your project sources",
 			"tests" => "See a list of unit tests to run",
 			"tests/all" => "Run all tests",
+			"jstests" => "See a list of JavaScript tests to run",
+			"jstests/all" => "Run all JavaScript tests",
 			"modules/add" => "Add a module, for example, 'sake dev/modules/add ecommerce'",
 			"tasks" => "See a list of build tasks to run",
 			"viewcode" => "Read source code in a literate programming style",
@@ -56,6 +58,10 @@ class DevelopmentAdmin extends Controller {
 	
 	function tests($request) {
 		return new TestRunner();
+	}
+	
+	function jstests($request) {
+		return new JSTestRunner();
 	}
 	
 	function tasks() {
