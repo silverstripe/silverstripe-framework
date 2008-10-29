@@ -1,0 +1,67 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<script src="http://code.jquery.com/jquery-latest.js"></script>
+	<script src="../../javascript/i18n.js"></script>
+ 	<link rel="stylesheet" href="http://dev.jquery.com/view/trunk/qunit/testsuite.css" type="text/css" media="screen" />
+
+	<!-- Needed for testing purposes -->
+	<meta http-equiv="Content-Language" content="de">
+
+	<script>
+	$(document).ready(function(){
+		test("test dictionary setting", function() {
+			ss.i18n.addDictionary('en_US', {'entity1': "Entity One"});
+			same(
+				ss.i18n.getDictionary('en_US'),
+				{'entity1': "Entity One"},
+				'New dictionary can be set'
+			);
+			ss.i18n.addDictionary('en_US', {'entity2': "Entity Two"});
+			same(
+				ss.i18n.getDictionary('en_US'),
+				{'entity1': "Entity One", 'entity2': "Entity Two"},
+				'Entites can be added to an existing dictionary'
+			);
+		});
+		test("test entity translation", function() {
+			ss.i18n.addDictionary('en_US', {'entity1': "Entity One",'untranslated': "Untranslated"});
+			ss.i18n.addDictionary('de_DE', {'entity1': "Entity Eins"});
+			ss.i18n.setLocale('de_DE');
+			equals(
+				ss.i18n._t('entity1'),
+				'Entity Eins',
+				'Entities can be translated through _t()'
+			);
+			equals(
+				ss.i18n._t('untranslated'),
+				'Untranslated',
+				'Untranslated entities fall back to default locale'
+			);
+		});
+		test("test locale detection", function() {
+			ss.i18n.setLocale('en_US');
+			// set in <meta> header
+			equals(
+				ss.i18n.detectLocale(),
+				'de_DE',
+				'Locale can be detected through <meta> tags'
+			);
+		});
+	});
+  </script>
+  
+</head>
+<body>
+  
+<script type="text/javascript" src="http://jqueryjs.googlecode.com/svn/trunk/qunit/testrunner.js"></script>
+ <h1>i18nTest</h1>
+ <h2 id="banner"></h2>
+ <h2 id="userAgent"></h2>
+
+ <ol id="tests"></ol>
+
+ <div id="main"></div>
+ 
+</body>
+</html>

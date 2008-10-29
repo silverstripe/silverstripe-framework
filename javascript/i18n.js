@@ -70,9 +70,28 @@ ss.i18n = {
 			}
 		},
 		
+		/**
+		 * Add entities to a dictionary. If a dictionary doesn't
+		 * exist for this locale, its automatically created.
+		 * Existing entities are overwritten.
+		 * 
+		 * @param string locale
+		 * @param Object dict
+		 */
 		addDictionary: function(locale, dict) {
-			if(!this.lang[locale]) this.lang[locale] = $H();
-			this.lang[locale] = $H(this.lang[locale]).merge(dict);
+			if(!this.lang[locale]) this.lang[locale] = {};
+			for(entity in dict) {
+				this.lang[locale][entity] = dict[entity];
+			}
+		},
+		
+		/**
+		 * Get dictionary for a specific locale.
+		 * 
+		 * @param string locale
+		 */
+		getDictionary: function(locale) {
+			return this.lang[locale];
 		},
 	
 	/**
