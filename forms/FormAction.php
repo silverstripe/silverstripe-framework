@@ -80,7 +80,7 @@ class FormAction extends FormField {
 				'value' => $this->attrTitle()
 			);
 
-			if($this->description) $attributes['title'] = $this->description;
+			$attributes['title'] = ($this->description) ? $this->description : $this->attrTitle();
 			
 			return $this->createTag('input', $attributes);
 		}
