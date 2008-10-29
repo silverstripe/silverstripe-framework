@@ -292,8 +292,7 @@ class DataObject extends ViewableData implements DataObjectInterface {
 	 *
 	 * @return string User friendly translated singular name of this DataObject
 	 */
-	function i18n_singular_name()
-	{
+	function i18n_singular_name() {
 		$name = (!empty($this->add_action)) ? $this->add_action : $this->singular_name();
 		return _t($this->class.'.SINGULARNAME', $name);
 	}
@@ -2818,6 +2817,60 @@ class DataObject extends ViewableData implements DataObjectInterface {
 	 * view of this object.
 	 */
 	public static $summary_fields = null;
+	
+	/**
+	 * Collect all static properties on the object
+	 * which contain natural language, and need to be translated.
+	 * The full entity name is composed from the class name and a custom identifier.
+	 * 
+	 * @return array A numerical array which contains one or more entities in array-form.
+	 * Each numeric entity array contains the "arguments" for a _t() call as array values:
+	 * $entity, $string, $priority, $context.
+	 */
+	public function provideI18nEntities() {
+		$entities = array();
+		
+		$db = $this->uninherited('db', true);
+		if($db) foreach($db as $name => $type) {
+			$entities["{$this->class}.db_{$name}"] = array(
+				$name,
+				PR_MEDIUM,
+				'Name of the object property, mainly used for automatically generating forms'
+			);
+		}
+
+		$has_many = $this->uninherited('has_many', true);
+		if($has_many) foreach($has_many as $name => $class) {
+			$entities["{$this->class}.has_many_{$name}"] = array(
+				$name,
+				PR_MEDIUM,
+				'Name of an object relation, mainly used for automatically generating forms'
+			);
+		}
+		
+		$many_many = $this->uninherited('many_many', true);
+		if($many_many) foreach($many_many as $name => $class) {
+			$entities["{$this->class}.many_many_{$name}"] = array(
+				$name,
+				PR_MEDIUM,
+				'Name of an object relation, mainly used for automatically generating forms'
+			);
+		}
+		
+		$entities["{$this->class}.SINGULARNAME"] = array(
+			$this->uninherited('singular_name', true),
+			PR_MEDIUM,
+			'Singular name of the object, used in dropdowns and to generally identify a single object in the interface'
+		);
+		
+		$entities["{$this->class}.PLURALNAME"] = array(
+			$this->uninherited('plural_name', true),
+			PR_MEDIUM,
+			'Pural name of the object, used in dropdowns and to generally identify a collection of this object in the interface'
+		);
+		
+		return $entities;
+	}
 
 }
 

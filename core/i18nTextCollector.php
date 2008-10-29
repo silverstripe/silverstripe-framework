@@ -92,7 +92,7 @@ class i18nTextCollector extends Object {
 			if(substr($filePath,-3) == 'php') {
 				$content = file_get_contents($filePath);
 				$entitiesArr = array_merge($entitiesArr,(array)$this->collectFromCode($content, $module));
-				$entitiesArr = array_merge($entitiesArr, (array)$this->collectFromStatics($filePath, $module));
+				$entitiesArr = array_merge($entitiesArr, (array)$this->collectFromEntityProviders($filePath, $module));
 			}
 		}
 		
@@ -144,7 +144,7 @@ class i18nTextCollector extends Object {
 				fwrite($fh, "<?php\n\nglobal \$lang;\n\n" . $php . "\n?>");			
 				fclose($fh);
 				
-				Debug::message("Created file: $langFolder/" . $this->defaultLocale . ".php", false);
+				//Debug::message("Created file: $langFolder/" . $this->defaultLocale . ".php", false);
 			} else {
 				user_error("Cannot write language file! Please check permissions of $langFolder/" . $this->defaultLocale . ".php", E_USER_ERROR);
 			}
@@ -247,6 +247,13 @@ class i18nTextCollector extends Object {
 			$namespace = $_namespace;
 		}
 		
+		// If a dollar sign is used in the entity name,
+		// we can't resolve without running the method,
+		// and skip the processing. This is mostly used for
+		// dynamically translating static properties, e.g. looping
+		// through $db, which are detected by {@link collectFromEntityProviders}.
+		if(strpos('$', $entity) !== FALSE) return false;
+		
 		// remove wrapping quotes
 		$value = ($regs[2]) ? substr($regs[2],1,-1) : null;
 
@@ -309,14 +316,14 @@ class i18nTextCollector extends Object {
 		return $php;
 	}
 	
-	function collectFromStatics($filePath) {
+	function collectFromEntityProviders($filePath) {
 		$entitiesArr = array();
 		
 		$classes = ClassInfo::classes_for_file($filePath);
 		if($classes) foreach($classes as $class) {
-			if(class_exists($class) && method_exists($class, 'i18nCollectStatics')) {
+			if(class_exists($class) && method_exists($class, 'provideI18nEntities')) {
 				$obj = singleton($class);
-				$entitiesArr = array_merge($entitiesArr,(array)$obj->i18nCollectStatics());
+				$entitiesArr = array_merge($entitiesArr,(array)$obj->provideI18nEntities());
 			}
 		}
 		

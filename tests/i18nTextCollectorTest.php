@@ -21,26 +21,26 @@ class i18nTextCollectorTest extends SapphireTest {
 	function setUp() {
 		parent::setUp();
 		
-		$this->alternateBasePath = Director::baseFolder() . "/sapphire/tests/i18n/_fakewebroot/";
+		$this->alternateBasePath = Director::baseFolder() . "/sapphire/tests/i18n/_fakewebroot";
 		$this->alternateBaseSavePath = TEMP_FOLDER . '/i18nTextCollectorTest_webroot';
 		FileSystem::makeFolder($this->alternateBaseSavePath);
 		
 		// SSViewer and ManifestBuilder don't support different webroots, hence we set the paths manually
 		global $_CLASS_MANIFEST;
-		$_CLASS_MANIFEST['i18nTestModule'] = Director::baseFolder() . $this->alternateBasePath . 'i18ntestmodule/code/i18nTestModule.php';
-		$_CLASS_MANIFEST['i18nTestModule_Addition'] = Director::baseFolder() . $this->alternateBasePath . 'i18ntestmodule/code/i18nTestModule.php';
-		
+		$_CLASS_MANIFEST['i18nTestModule'] = $this->alternateBasePath . '/i18ntestmodule/code/i18nTestModule.php';
+		$_CLASS_MANIFEST['i18nTestModule_Addition'] = $this->alternateBasePath . '/i18ntestmodule/code/i18nTestModule.php';
+
 		global $_TEMPLATE_MANIFEST;
 		$_TEMPLATE_MANIFEST['i18nTestModule.ss'] = array(
-			'main' => Director::baseFolder() . $this->alternateBasePath . 'i18ntestmodule/templates/i18nTestModule.ss',
-			'Layout' => Director::baseFolder() . $this->alternateBasePath . 'i18ntestmodule/templates/Layout/i18nTestModule.ss',
+			'main' => $this->alternateBasePath . '/i18ntestmodule/templates/i18nTestModule.ss',
+			'Layout' => $this->alternateBasePath . '/i18ntestmodule/templates/Layout/i18nTestModule.ss',
 		);
 		$_TEMPLATE_MANIFEST['i18nTestModuleInclude.ss'] = array(
-			'Includes' => Director::baseFolder() . $this->alternateBasePath . 'i18ntestmodule/templates/Includes/i18nTestModuleInclude.ss',
+			'Includes' => $this->alternateBasePath . '/i18ntestmodule/templates/Includes/i18nTestModuleInclude.ss',
 		);
 		$_TEMPLATE_MANIFEST['i18nTestModule.ss'] = array(
-			'main' => Director::baseFolder() . $this->alternateBasePath . 'i18ntestmodule/templates/i18nTestModule.ss',
-			'Layout' => Director::baseFolder() . $this->alternateBasePath . 'i18ntestmodule/templates/Layout/i18nTestModule.ss',
+			'main' => $this->alternateBasePath . '/i18ntestmodule/templates/i18nTestModule.ss',
+			'Layout' => $this->alternateBasePath . '/i18ntestmodule/templates/Layout/i18nTestModule.ss',
 		);
 	}
 	
@@ -289,7 +289,7 @@ PHP;
 	function testCollectFromIncludedTemplates() {
 		$c = new i18nTextCollector();
 		
-		$templateFilePath = $this->alternateBasePath . 'i18ntestmodule/templates/Layout/i18nTestModule.ss';
+		$templateFilePath = $this->alternateBasePath . '/i18ntestmodule/templates/Layout/i18nTestModule.ss';
 		$html = file_get_contents($templateFilePath);
 		$this->assertEquals(
 			$c->collectFromTemplate($html, 'mymodule', 'RandomNamespace'),
@@ -360,5 +360,55 @@ PHP;
 			$compareContent
 		);
 	}
+	
+	function testCollectFromEntityProvidersInCustomObject() {
+		$c = new i18nTextCollector();
+		
+		$filePath = Director::baseFolder() . '/sapphire/tests/i18n/i18nTextCollectorTestMyObject.php';
+		$matches = $c->collectFromEntityProviders($filePath);
+		$this->assertEquals(
+			array_keys($matches),
+			array(
+				'i18nTextCollectorTestMyObject.PLURALNAME',
+				'i18nTextCollectorTestMyObject.SINGULARNAME',
+				'i18nTextCollectorTestMyObject.db_FirstProperty',
+				'i18nTextCollectorTestMyObject.db_SecondProperty',
+				'i18nTextCollectorTestMyObject.has_many_Relation',
+			)
+		);
+		$this->assertEquals(
+			'FirstProperty',
+			$matches['i18nTextCollectorTestMyObject.db_FirstProperty'][0]
+		);
+		$this->assertEquals(
+			'My Object',
+			$matches['i18nTextCollectorTestMyObject.SINGULARNAME'][0]
+		);
+	}
+	
+	function testCollectFromEntityProvidersInCustomSubClass() {
+		$c = new i18nTextCollector();
+		
+		$filePath = Director::baseFolder() . '/sapphire/tests/i18n/i18nTextCollectorTestMySubObject.php';
+		$matches = $c->collectFromEntityProviders($filePath);
+		$this->assertEquals(
+			array_keys($matches),
+			array(
+				'i18nTextCollectorTestMySubObject.PLURALNAME',
+				'i18nTextCollectorTestMySubObject.SINGULARNAME',
+				'i18nTextCollectorTestMySubObject.db_SubProperty',
+				'i18nTextCollectorTestMySubObject.has_many_SubRelation',
+			)
+		);
+		$this->assertEquals(
+			'SubProperty',
+			$matches['i18nTextCollectorTestMySubObject.db_SubProperty'][0]
+		);
+		$this->assertEquals(
+			'My Sub Object',
+			$matches['i18nTextCollectorTestMySubObject.SINGULARNAME'][0]
+		);
+	}
+
 }
 ?>
