@@ -15,7 +15,7 @@ class HtmlEditorField extends TextareaField {
 	/**
 	 * Construct a new HtmlEditor field
 	 */
-	function __construct($name, $title = "", $rows = 15, $cols = 20, $value = "", $form = null) {
+	function __construct($name, $title = "", $rows = 30, $cols = 20, $value = "", $form = null) {
 		parent::__construct($name, $title, $rows, $cols, $value, $form);
 		$this->extraClass = 'typography';
 	}
