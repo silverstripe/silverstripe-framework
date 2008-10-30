@@ -865,7 +865,10 @@ class SiteTree extends DataObject {
 			'';
 
 		$count = 1;
-		while(class_exists($this->URLSegment) || DataObject::get_one("SiteTree", "URLSegment = '$this->URLSegment' $idFilter")) {
+		while (
+			(class_exists($this->URLSegment) && is_subclass_of($this->URLSegment, 'RequestHandlingData')) ||
+			DataObject::get_one("SiteTree", "URLSegment = '$this->URLSegment' $idFilter")
+		) {
 			$count++;
 			$this->URLSegment = ereg_replace('-[0-9]+$','', $this->URLSegment) . "-$count";
 		}

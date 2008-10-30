@@ -23,6 +23,10 @@ Page:
         Title: Another Product
     contact:
         Title: Contact Us
+    object:
+        Title: Object
+    controller:
+        Title: Controller
         
 ErrorPage:
     404:

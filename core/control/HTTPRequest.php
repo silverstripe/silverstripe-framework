@@ -330,7 +330,7 @@ class HTTPRequest extends Object implements ArrayAccess {
 				if($varRequired && !isset($this->dirParts[$i])) return false;
 				
 				$arguments[$varName] = isset($this->dirParts[$i]) ? $this->dirParts[$i] : null;
-				if($part == '$Controller' && !class_exists($arguments['Controller'])) {
+				if($part == '$Controller' && (!class_exists($arguments['Controller']) || !is_subclass_of($arguments['Controller'], 'RequestHandlingData'))) {
 					return false;
 				}
 				

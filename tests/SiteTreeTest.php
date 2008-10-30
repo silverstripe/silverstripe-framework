@@ -12,6 +12,7 @@ class SiteTreeTest extends SapphireTest {
 	 *  - Turns things into lowercase-hyphen-format
 	 *  - Generates from Title by default, unless URLSegment is explicitly set
 	 *  - Resolves duplicates by appending a number
+	 *  - renames classes with a class name conflict
 	 */
 	function testURLGeneration() {
 		$expectedURLs = array(
@@ -23,6 +24,8 @@ class SiteTreeTest extends SapphireTest {
 			'product2' => 'another-product',
 			'product3' => 'another-product-2',
 			'product4' => 'another-product-3',
+			'object'   => 'object',
+			'controller' => 'controller-2'
 		);
 		
 		foreach($expectedURLs as $fixture => $urlSegment) {

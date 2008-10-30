@@ -2632,7 +2632,7 @@ class DataObject extends ViewableData implements DataObjectInterface {
 	 * which could cause horrible bugs.
 	 */
 	public static function set_context_obj($obj) {
-		if($obj && self::$context_obj) user_error("Dataobject::set_context_obj called when there is already a context.", E_USER_WARNING);
+		if($obj && self::$context_obj) user_error("Dataobject::set_context_obj passed " . $obj->class . "." . $obj->ID . " when there is already a context: " . self::$context_obj->class . '.' . self::$context_obj->ID, E_USER_WARNING);
 		self::$context_obj = $obj;
 	}
 
