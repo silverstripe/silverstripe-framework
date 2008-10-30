@@ -72,6 +72,16 @@ class RequestHandlingTest extends SapphireTest {
 		$response = Director::test("testParentBase/testChildBase/method/1/2");
 		$this->assertEquals("This is a method on the controller: 1, 2", $response->getBody());
 	}
+	
+	function testInheritedUrlHandlers() {
+		/* $url_handlers can be defined on any class, and */
+		$response = Director::test("testGoodBase1/TestForm/fields/SubclassedField/something");
+		$this->assertEquals("customSomething", $response->getBody());
+
+		/* However, if the subclass' url_handlers don't match, then the parent class' url_handlers will be used */
+		$response = Director::test("testGoodBase1/TestForm/fields/SubclassedField");
+		$this->assertEquals("SubclassedField requested", $response->getBody());
+	}
 }
 
 /**
@@ -127,7 +137,8 @@ class RequestHandlingTest_Controller extends Controller {
 	
 	function TestForm() {
 		return new RequestHandlingTest_Form($this, "TestForm", new FieldSet(
-			new RequestHandlingTest_FormField("MyField")
+			new RequestHandlingTest_FormField("MyField"),
+			new RequestHandlingTest_SubclassedFormField("SubclassedField")
 		), new FieldSet(
 			new FormAction("myAction")
 		));
@@ -192,6 +203,22 @@ class RequestHandlingTest_FormField extends FormField {
 	
 	function handleInPlaceEdit($request) {
 		return "$this->name posted, update to " . $request->postVar($this->name);
+	}
+}
+
+
+/**
+ * Form field for the test
+ */
+class RequestHandlingTest_SubclassedFormField extends RequestHandlingTest_FormField {
+	// We have some url_handlers defined that override RequestHandlingTest_FormField handlers.
+	// We will confirm that the url_handlers inherit.
+	static $url_handlers = array(
+		'something' => 'customSomething',
+	);
+
+	function customSomething() {
+		return "customSomething";
 	}
 }
 

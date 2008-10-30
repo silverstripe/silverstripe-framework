@@ -77,58 +77,68 @@ class RequestHandler extends ViewableData {
 	function handleRequest($request) {
 		$this->request = $request;
 		
-		foreach($this->stat('url_handlers') as $rule => $action) {
-			if(isset($_REQUEST['debug_request'])) Debug::message("Testing '$rule' with '" . $request->remaining() . "' on $this->class");
-			if($params = $request->match($rule, true)) {
-				// FIXME: This unnecessary coupling was added to fix a bug in Image_Uploader.
-				if($this instanceof Controller) $this->urlParams = $request->allParams();
+		// $handlerClass is used to step up the class hierarchy to implement url_handlers inheritance
+		$handlerClass = $this->class;
+		// We stop after RequestHandler; in other words, at ViewableData
+		while($handlerClass != 'ViewableData') {
+			// Todo: ajshort's stat rewriting could be useful here.
+			$urlHandlers = eval("return $handlerClass::\$url_handlers;");
+			
+			if($urlHandlers) foreach($urlHandlers as $rule => $action) {
+				if(isset($_REQUEST['debug_request'])) Debug::message("Testing '$rule' with '" . $request->remaining() . "' on $this->class");
+				if($params = $request->match($rule, true)) {
+					// FIXME: This unnecessary coupling was added to fix a bug in Image_Uploader.
+					if($this instanceof Controller) $this->urlParams = $request->allParams();
 				
-				if(isset($_REQUEST['debug_request'])) {
-					Debug::message("Rule '$rule' matched to action '$action' on $this->class.  Latest request params: " . var_export($request->latestParams(), true));
-				}
+					if(isset($_REQUEST['debug_request'])) {
+						Debug::message("Rule '$rule' matched to action '$action' on $this->class.  Latest request params: " . var_export($request->latestParams(), true));
+					}
 				
-				// Actions can reference URL parameters, eg, '$Action/$ID/$OtherID' => '$Action',
-				if($action[0] == '$') $action = $params[substr($action,1)];
+					// Actions can reference URL parameters, eg, '$Action/$ID/$OtherID' => '$Action',
+					if($action[0] == '$') $action = $params[substr($action,1)];
 				
-				if($this->checkAccessAction($action)) {
-					if(!$action) {
-						if(isset($_REQUEST['debug_request'])) Debug::message("Action not set; using default action method name 'index'");
-						$action = "index";
-					} else if(!is_string($action)) {
-						user_error("Non-string method name: " . var_export($action, true), E_USER_ERROR);
-					} 
-					$result = $this->$action($request);
-				} else {
-					return $this->httpError(403, "Action '$action' isn't allowed on class $this->class");
-				}
+					if($this->checkAccessAction($action)) {
+						if(!$action) {
+							if(isset($_REQUEST['debug_request'])) Debug::message("Action not set; using default action method name 'index'");
+							$action = "index";
+						} else if(!is_string($action)) {
+							user_error("Non-string method name: " . var_export($action, true), E_USER_ERROR);
+						} 
+						$result = $this->$action($request);
+					} else {
+						return $this->httpError(403, "Action '$action' isn't allowed on class $this->class");
+					}
 				
-				if($result instanceof HTTPResponse && $result->isError()) {
-					if(isset($_REQUEST['debug_request'])) Debug::message("Rule resulted in HTTP error; breaking");
-					return $result;
-				}
+					if($result instanceof HTTPResponse && $result->isError()) {
+						if(isset($_REQUEST['debug_request'])) Debug::message("Rule resulted in HTTP error; breaking");
+						return $result;
+					}
 				
-				// If we return a RequestHandler, call handleRequest() on that, even if there is no more URL to parse.
-				// It might have its own handler.  However, we only do this if we haven't just parsed an empty rule ourselves,
-				// to prevent infinite loops
-				if(!$request->isEmptyPattern($rule) && is_object($result) && $result instanceof RequestHandler) {
-					$returnValue = $result->handleRequest($request);
+					// If we return a RequestHandler, call handleRequest() on that, even if there is no more URL to parse.
+					// It might have its own handler.  However, we only do this if we haven't just parsed an empty rule ourselves,
+					// to prevent infinite loops
+					if(!$request->isEmptyPattern($rule) && is_object($result) && $result instanceof RequestHandler) {
+						$returnValue = $result->handleRequest($request);
 
-					// Array results can be used to handle 
-					if(is_array($returnValue)) $returnValue = $this->customise($returnValue);
+						// Array results can be used to handle 
+						if(is_array($returnValue)) $returnValue = $this->customise($returnValue);
 					
-					return $returnValue;
+						return $returnValue;
 						
-				// If we return some other data, and all the URL is parsed, then return that
-				} else if($request->allParsed()) {
-					return $result;
+					// If we return some other data, and all the URL is parsed, then return that
+					} else if($request->allParsed()) {
+						return $result;
 					
-				// But if we have more content on the URL and we don't know what to do with it, return an error.
-				} else {
-					return $this->httpError(400, "I can't handle sub-URLs of a $this->class object.");
-				}
+					// But if we have more content on the URL and we don't know what to do with it, return an error.
+					} else {
+						return $this->httpError(400, "I can't handle sub-URLs of a $this->class object.");
+					}
 				
-				break;
+					return $this;
+				}
 			}
+			
+			$handlerClass = get_parent_class($handlerClass);
 		}
 		
 		// If nothing matches, return this object
