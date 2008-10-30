@@ -7,7 +7,7 @@
  * @package forms
  * @subpackage core
  */
-class FormField extends RequestHandlingData {
+class FormField extends RequestHandler {
 	protected $form;
 	protected $name, $title, $value ,$message, $messageType, $extraClass;
 	

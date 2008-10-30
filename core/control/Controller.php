@@ -9,7 +9,7 @@
  * @package sapphire
  * @subpackage control
  */
-class Controller extends RequestHandlingData {
+class Controller extends RequestHandler {
 
 	/**
 	 * @var array $urlParams An array of arguments extracted from the URL 

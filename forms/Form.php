@@ -21,7 +21,7 @@
  * @package forms
  * @subpackage core
  */
-class Form extends RequestHandlingData {
+class Form extends RequestHandler {
 	
 	/**
 	 * @var boolean $includeFormTag Accessed by Form.ss; modified by {@link formHtmlContent()}.

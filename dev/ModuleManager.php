@@ -11,7 +11,7 @@
  * cd /my/project/
  * sake dev/modules/add ecommerce
  */
-class ModuleManager extends RequestHandlingData {
+class ModuleManager extends RequestHandler {
 	protected $moduleBase = "http://svn.silverstripe.com/open/modules/";
 	
 	static $allowed_actions = array(

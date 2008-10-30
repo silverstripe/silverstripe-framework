@@ -77,8 +77,8 @@ class Director {
 	 *    request.
 	 *  - Controller::handleRequest($request) is then called.  This will find a rule to handle the URL, and call the rule
 	 *    handling method.
-	 *  - RequestHandlingData::handleRequest($request) is recursively called whenever a rule handling method returns a
-	 *    RequestHandlingData object.
+	 *  - RequestHandler::handleRequest($request) is recursively called whenever a rule handling method returns a
+	 *    RequestHandler object.
 	 *
 	 * In addition to request processing, Director will manage the session, and perform the output of the actual response
 	 * to the browser.

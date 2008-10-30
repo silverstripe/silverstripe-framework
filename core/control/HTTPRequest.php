@@ -2,11 +2,11 @@
 
 /**
  * Represents a HTTP-request, including a URL that is tokenised for parsing, and a request method (GET/POST/PUT/DELETE).
- * This is used by {@link RequestHandlingData} objects to decide what to do.
+ * This is used by {@link RequestHandler} objects to decide what to do.
  * 
  * The intention is that a single HTTPRequest object can be passed from one object to another, each object calling
  * match() to get the information that they need out of the URL.  This is generally handled by 
- * {@link RequestHandlingData::handleRequest()}.
+ * {@link RequestHandler::handleRequest()}.
  * 
  * @todo Accept X_HTTP_METHOD_OVERRIDE http header and $_REQUEST['_method'] to override request types (useful for webclients
  *   not supporting PUT and DELETE)
@@ -66,7 +66,7 @@ class HTTPRequest extends Object implements ArrayAccess {
 	
 	/**
 	 * @var array $allParams Contains an assiciative array of all
-	 * arguments matched in all calls to {@link RequestHandlingData->handleRequest()}.
+	 * arguments matched in all calls to {@link RequestHandler->handleRequest()}.
 	 * Its a "historical record" thats specific to the current call of
 	 * {@link handleRequest()}, and is only complete once the "last call" to that method is made.
 	 */
@@ -74,10 +74,10 @@ class HTTPRequest extends Object implements ArrayAccess {
 	
 	/**
 	 * @var array $latestParams Contains an associative array of all
-	 * arguments matched in the current call from {@link RequestHandlingData->handleRequest()},
+	 * arguments matched in the current call from {@link RequestHandler->handleRequest()},
 	 * as denoted with a "$"-prefix in the $url_handlers definitions.
 	 * Contains different states throughout its lifespan, so just useful
-	 * while processed in {@link RequestHandlingData} and to get the last
+	 * while processed in {@link RequestHandler} and to get the last
 	 * processes arguments.
 	 */
 	protected $latestParams = array();
@@ -330,7 +330,7 @@ class HTTPRequest extends Object implements ArrayAccess {
 				if($varRequired && !isset($this->dirParts[$i])) return false;
 				
 				$arguments[$varName] = isset($this->dirParts[$i]) ? $this->dirParts[$i] : null;
-				if($part == '$Controller' && (!class_exists($arguments['Controller']) || !is_subclass_of($arguments['Controller'], 'RequestHandlingData'))) {
+				if($part == '$Controller' && (!class_exists($arguments['Controller']) || !is_subclass_of($arguments['Controller'], 'RequestHandler'))) {
 					return false;
 				}
 				
@@ -393,7 +393,7 @@ class HTTPRequest extends Object implements ArrayAccess {
 	
 	/**
 	 * Returns the unparsed part of the original URL
-	 * separated by commas. This is used by {@link RequestHandlingData->handleRequest()}
+	 * separated by commas. This is used by {@link RequestHandler->handleRequest()}
 	 * to determine if further URL processing is necessary.
 	 * 
 	 * @return string Partial URL

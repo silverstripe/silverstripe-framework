@@ -3,7 +3,7 @@
 /**
  * This class is the base class of any Sapphire object that can be used to handle HTTP requests.
  * 
- * Any RequestHandlingData object can be made responsible for handling its own segment of the URL namespace.
+ * Any RequestHandler object can be made responsible for handling its own segment of the URL namespace.
  * The {@link Director} begins the URL parsing process; it will parse the beginning of the URL to identify which
  * controller is being used.  It will then call {@link handleRequest()} on that Controller, passing it the parameters that it
  * parsed from the URL, and the {@link HTTPRequest} that contains the remainder of the URL to be parsed.
@@ -17,15 +17,15 @@
  *  - Director will determine that admin/crm is controlled by a new ModelAdmin object, and pass control to that.
  *    Matching Director Rule: "admin/crm" => "ModelAdmin" (defined in mysite/_config.php)
  *  - ModelAdmin will determine that SearchForm is controlled by a Form object returned by $this->SearchForm(), and pass control to that.
- *    Matching $url_handlers: "$Action" => "$Action" (defined in RequestHandlingData class)
+ *    Matching $url_handlers: "$Action" => "$Action" (defined in RequestHandler class)
  *  - Form will determine that field/Groups is controlled by the Groups field, a TreeMultiselectField, and pass control to that.
  *    Matching $url_handlers: 'field/$FieldName!' => 'handleField' (defined in Form class)
  *  - TreeMultiselectField will determine that treesegment/36 is handled by its treesegment() method.  This method will return an HTML fragment that is output to the screen.
  *    Matching $url_handlers: "$Action/$ID" => "handleItem" (defined in TreeMultiSelectField class)
  *
- * {@link RequestHandlingData::handleRequest()} is where this behaviour is implemented.
+ * {@link RequestHandler::handleRequest()} is where this behaviour is implemented.
  */
-class RequestHandlingData extends ViewableData {
+class RequestHandler extends ViewableData {
 	protected $request = null;
 	
 	/**
@@ -72,7 +72,7 @@ class RequestHandlingData extends ViewableData {
 	 * @param $request The {@link HTTPRequest} object that is reponsible for distributing URL parsing
 	 * @uses HTTPRequest
 	 * @uses HTTPRequest->match()
-	 * @return HTTPResponse|RequestHandlingData|string|array
+	 * @return HTTPResponse|RequestHandler|string|array
 	 */
 	function handleRequest($request) {
 		$this->request = $request;
@@ -107,10 +107,10 @@ class RequestHandlingData extends ViewableData {
 					return $result;
 				}
 				
-				// If we return a RequestHandlingData, call handleRequest() on that, even if there is no more URL to parse.
+				// If we return a RequestHandler, call handleRequest() on that, even if there is no more URL to parse.
 				// It might have its own handler.  However, we only do this if we haven't just parsed an empty rule ourselves,
 				// to prevent infinite loops
-				if(!$request->isEmptyPattern($rule) && is_object($result) && $result instanceof RequestHandlingData) {
+				if(!$request->isEmptyPattern($rule) && is_object($result) && $result instanceof RequestHandler) {
 					$returnValue = $result->handleRequest($request);
 
 					// Array results can be used to handle 
@@ -143,7 +143,7 @@ class RequestHandlingData extends ViewableData {
 		// Collate self::$allowed_actions from this class and all parent classes
 		$access = null;
 		$className = $this->class;
-		while($className != 'RequestHandlingData') {
+		while($className != 'RequestHandler') {
 			// Merge any non-null parts onto $access.
 			$accessPart = eval("return $className::\$allowed_actions;");
 			if($accessPart !== null) $access = array_merge((array)$access, $accessPart);

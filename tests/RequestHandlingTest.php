@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Tests for RequestHandlingData and HTTPRequest.
+ * Tests for RequestHandler and HTTPRequest.
  * We've set up a simple URL handling model based on 
  */
 class RequestHandlingTest extends SapphireTest {

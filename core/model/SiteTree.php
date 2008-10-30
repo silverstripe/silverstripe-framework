@@ -866,7 +866,7 @@ class SiteTree extends DataObject {
 
 		$count = 1;
 		while (
-			(class_exists($this->URLSegment) && is_subclass_of($this->URLSegment, 'RequestHandlingData')) ||
+			(class_exists($this->URLSegment) && is_subclass_of($this->URLSegment, 'RequestHandler')) ||
 			DataObject::get_one("SiteTree", "URLSegment = '$this->URLSegment' $idFilter")
 		) {
 			$count++;

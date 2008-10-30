@@ -256,7 +256,7 @@ function HtmlEditorField_dataValue_processImage($parts) {
  * @package forms
  * @subpackage fields-formattedinput
  */
-class HtmlEditorField_Toolbar extends RequestHandlingData {
+class HtmlEditorField_Toolbar extends RequestHandler {
 	protected $controller, $name;
 	
 	function __construct($controller, $name) {

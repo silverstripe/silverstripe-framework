@@ -587,7 +587,7 @@ JS;
 /**
  * @todo Tie this into ComplexTableField_Item better.
  */
-class ComplexTableField_ItemRequest extends RequestHandlingData {
+class ComplexTableField_ItemRequest extends RequestHandler {
 	protected $ctf;
 	protected $itemID;
 	protected $methodName;

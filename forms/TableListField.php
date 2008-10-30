@@ -1333,7 +1333,7 @@ class TableListField_Item extends ViewableData {
 	}
 }
 
-class TableListField_ItemRequest extends RequestHandlingData {
+class TableListField_ItemRequest extends RequestHandler {
 	protected $ctf;
 	protected $itemID;
 	protected $methodName;
