@@ -60,9 +60,11 @@ Behaviour.register({
 });
 JS;
 
-		Requirements::customScript($jsFunc, 'func_validateCurrency');
+		Requirements::customScript($jsFunc, 'func_validateCurrency_' .$formID);
 
-		return "\$('$formID').validateCurrency('$this->name');";
+		return <<<JS
+		if(\$('$formID')) \$('$formID').validateCurrency('$this->name');
+JS;
 	}
 
 	function validate($validator) {

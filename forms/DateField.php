@@ -57,15 +57,17 @@ Behaviour.register({
 	}
 });
 JS;
-		Requirements :: customScript($jsFunc, 'func_validateDate');
+		Requirements :: customScript($jsFunc, 'func_validateDate_'.$formID);
 		
 //		return "\$('$formID').validateDate('$this->name');";
 		return <<<JS
-if(typeof fromAnOnBlur != 'undefined'){
-	if(fromAnOnBlur.name == '$this->name')
-		$('$formID').validateDate('$this->name');
-}else{
-	$('$formID').validateDate('$this->name');
+if(\$('$formID')){
+	if(typeof fromAnOnBlur != 'undefined'){
+		if(fromAnOnBlur.name == '$this->name')
+			\$('$formID').validateDate('$this->name');
+	}else{
+		\$('$formID').validateDate('$this->name');
+	}
 }
 JS;
 	}
