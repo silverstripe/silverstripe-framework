@@ -76,7 +76,7 @@ class SearchContextTest extends SapphireTest {
 		$fields = $context->getFields();
 		$this->assertEquals(
 			new FieldSet(
-				new TextField("Name", 'Name'),
+				new TextareaField("Name", 'Name'),
 		 		new TextareaField("Industry", 'Industry'),
 		 		new NumericField("AnnualProfit", 'The Almighty Annual Profit')
 			),
