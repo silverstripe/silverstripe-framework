@@ -82,6 +82,29 @@ class RequestHandlingTest extends SapphireTest {
 		$response = Director::test("testGoodBase1/TestForm/fields/SubclassedField");
 		$this->assertEquals("SubclassedField requested", $response->getBody());
 	}
+	
+	function testDisallowedExtendedActions() {
+		/* Actions on magic methods are only accessible if explicitly allowed on the controller. */
+		$response = Director::test("testGoodBase1/extendedMethod");
+		$this->assertEquals(403, $response->getStatusCode());
+		
+		/* Actions on an extension are allowed because they specifically provided appropriate allowed_actions items */
+		$response = Director::test("testGoodBase1/otherExtendedMethod");
+		$this->assertEquals("otherExtendedMethod", $response->getBody());
+
+		/* The failoverMethod action wasn't explicitly listed and so isnt' allowed */
+		$response = Director::test("testGoodBase1/failoverMethod");
+		$this->assertEquals(403, $response->getStatusCode());
+		
+		/* However, on RequestHandlingTest_AllowedController it has been explicitly allowed */
+		$response = Director::test("RequestHandlingTest_AllowedController/failoverMethod");
+		$this->assertEquals("failoverMethod", $response->getBody());
+
+		/* The action on the extension has also been explicitly allowed even though it wasn't on the extension */
+		$response = Director::test("RequestHandlingTest_AllowedController/extendedMethod");
+		$this->assertEquals("extendedMethod", $response->getBody());
+		
+	}
 }
 
 /**
@@ -118,6 +141,16 @@ class RequestHandlingTest_Controller extends Controller {
 		// The double-slash is need here to ensure that 
 		'$Action//$ID/$OtherID' => "handleAction",
 	);
+
+	static $extensions = array(
+		'RequestHandlingTest_ControllerExtension',
+		'RequestHandlingTest_AllowedControllerExtension',
+	);
+	
+	function __construct() {
+		$this->failover = new RequestHandlingTest_ControllerFailover();
+		parent::__construct();
+	}
 	
 	function index($request) {
 		return "This is the controller";
@@ -142,6 +175,63 @@ class RequestHandlingTest_Controller extends Controller {
 		), new FieldSet(
 			new FormAction("myAction")
 		));
+	}
+}
+
+/**
+ * Simple extension for the test controller
+ */
+class RequestHandlingTest_ControllerExtension extends Extension {
+	function extendedMethod() {
+		return "extendedMethod";
+	}
+}
+
+/**
+ * Controller for the test
+ */
+class RequestHandlingTest_AllowedController extends Controller {
+	static $url_handlers = array(
+		// The double-slash is need here to ensure that 
+		'$Action//$ID/$OtherID' => "handleAction",
+	);
+	
+	static $allowed_actions = array(
+		'failoverMethod', // part of the failover object
+		'extendedMethod', // part of the RequestHandlingTest_ControllerExtension object
+	);
+
+	static $extensions = array(
+		'RequestHandlingTest_ControllerExtension',
+		'RequestHandlingTest_AllowedControllerExtension',
+	);
+	
+	function __construct() {
+		$this->failover = new RequestHandlingTest_ControllerFailover();
+		parent::__construct();
+	}
+	
+	function index($request) {
+		return "This is the controller";
+	}
+}
+
+/**
+ * Simple extension for the test controller - with allowed_actions define
+ */
+class RequestHandlingTest_AllowedControllerExtension extends Extension {
+	static $allowed_actions = array(
+		'otherExtendedMethod'
+	);
+	
+	function otherExtendedMethod() {
+		return "otherExtendedMethod";
+	}
+}
+
+class RequestHandlingTest_ControllerFailover extends ViewableData {
+	function failoverMethod() {
+		return "failoverMethod";
 	}
 }
 
@@ -216,9 +306,9 @@ class RequestHandlingTest_SubclassedFormField extends RequestHandlingTest_FormFi
 	static $url_handlers = array(
 		'something' => 'customSomething',
 	);
+	
 
 	function customSomething() {
 		return "customSomething";
 	}
 }
-
