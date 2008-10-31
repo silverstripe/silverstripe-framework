@@ -558,24 +558,29 @@ class Controller extends ViewableData {
 			}
 		}
 		
-		if($access === null || (isset($accessParts[1]) && $accessParts[0] === $accessParts[1])) {
-			// user_error("Deprecated: please define static \$allowed_actions on your Controllers for security purposes", E_USER_NOTICE);
-			return true;
-		}
-		
 		if($action == 'index') return true;
 		
-		if(isset($access[$action])) {
-			$test = $access[$action];
-			if($test === true) return true;
-			if(substr($test,0,2) == '->') {
-				$funcName = substr($test,2);
-				return $this->$funcName();
+		if($access) {
+			if(isset($access[$action])) {
+				$test = $access[$action];
+				if($test === true) return true;
+				if(substr($test,0,2) == '->') {
+					$funcName = substr($test,2);
+					return $this->$funcName();
+				}
+				if(Permission::check($test)) return true;
+			} else if((($key = array_search($action, $access)) !== false) && is_numeric($key)) {
+				return true;
 			}
-			if(Permission::check($test)) return true;
-		} else if((($key = array_search($action, $access)) !== false) && is_numeric($key)) {
-			return true;
 		}
+
+		if($access === null || (isset($accessParts[1]) && $accessParts[0] === $accessParts[1])) {
+			// If no allowed_actions are provided, then we should only let through actions that aren't handled by magic methods
+			// we test this by calling the unmagic method_exists and comparing it to the magic $this->hasMethod().  This will
+			// still let through actions that are handled by templates.
+			return method_exists($this, $action) || !$this->hasMethod($action);
+		}
+
 		return false;
 	} 
 	
