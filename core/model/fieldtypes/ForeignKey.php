@@ -3,7 +3,7 @@
  * A special type Int field used for foreign keys in has_one relationships.
  * @uses ImageField
  * @uses SimpleImageField
- * @uses FileIframeField
+ * @uses FileIFrameField
  * @uses DropdownField
  * 
  * @param string $name
@@ -38,7 +38,7 @@ class ForeignKey extends Int {
 			}
 		} elseif($hasOneClass && singleton($hasOneClass) instanceof File) {
 			if(isset($params['ajaxSafe']) && $params['ajaxSafe']) {
-				$field = new FileIframeField($relationName, $title, $this->value);
+				$field = new FileIFrameField($relationName, $title, $this->value);
 			} else {
 				$field = new FileField($relationName, $title, $this->value);
 			}

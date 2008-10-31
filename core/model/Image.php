@@ -443,9 +443,9 @@ class Image_Cached extends Image {
  * Is connected to the URL routing "/image" through sapphire/_config.php,
  * and used by all iframe-based upload-fields in the CMS.
  *
- * @usedby FileIframeField
+ * @usedby FileIFrameField
  * @usedby ImageField
- * @todo Refactor to using FileIframeField and ImageField as a controller for the upload,
+ * @todo Refactor to using FileIFrameField and ImageField as a controller for the upload,
  *   rather than something totally disconnected from the original Form and FormField
  *   context. Without the original context its impossible to control permissions etc.
  *

@@ -26,7 +26,7 @@ class FileIFrameField extends FileField {
 			return $iframe . $hiddenField;
 			
 		} else {
-			$this->value = _t('FileIframeField.NOTEADDFILES', 'You can add files once you have saved for the first time.');
+			$this->value = _t('FileIFrameField.NOTEADDFILES', 'You can add files once you have saved for the first time.');
 			return FormField::Field();
 		}
 	}

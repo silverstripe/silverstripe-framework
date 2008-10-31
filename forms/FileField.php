@@ -7,7 +7,7 @@
  * Please set a validator on the form-object to get feedback
  * about imposed filesize/extension restrictions.
  * 
- * CAUTION: Doesn't work in the CMS due to ajax submission, please use {@link FileIframeField} instead.
+ * CAUTION: Doesn't work in the CMS due to ajax submission, please use {@link FileIFrameField} instead.
  * 
  * @package forms
  * @subpackage fields-files
