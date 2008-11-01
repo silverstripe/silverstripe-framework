@@ -149,7 +149,7 @@ class JSTestRunner extends Controller {
 				continue;
 			}
 
-			$testDir = "$baseDir/$moduleFileOrFolder/javascript/tests";
+			$testDir = "$baseDir/$moduleFileOrFolder/tests/javascript";
 			if(@is_dir($testDir)) {
 				$tests = scandir($testDir);
 				foreach($tests as $testFile) {
