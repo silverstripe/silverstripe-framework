@@ -53,7 +53,7 @@
  * @package sapphire
  * @subpackage model
  */
-class DataObject extends ViewableData implements DataObjectInterface {
+class DataObject extends ViewableData implements DataObjectInterface,i18nEntityProvider {
 	/**
 	 * Data stored in this objects database record. An array indexed
 	 * by fieldname.

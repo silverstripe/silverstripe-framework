@@ -1,9 +1,29 @@
 <?php
 /**
+ * SilverStripe-variant of the "gettext" tool:
+ * Parses the string content of all PHP-files and SilverStripe templates
+ * for ocurrences of the _t() translation method. Also uses the {@link i18nEntityProvider}
+ * interface to get dynamically defined entities by executing the 
+ * {@link provideI18nEntities()} method on all implementors of this interface.
+ * 
+ * Collects all found entities (and their natural language text for the default locale)
+ * into language-files for each module in an array notation. Creates or overwrites these files,
+ * e.g. sapphire/lang/en_US.php.
+ * 
+ * The collector needs to be run whenever you make new translatable
+ * entities available. Please don't alter the arrays in language tables manually.
+ * 
+ * Usage through URL: http://localhost/dev/tasks/i18nTextCollector
+ * Usage through URL (module-specific): http://localhost/dev/tasks/i18nTextCollector/?module=mymodule
+ * Usage on CLI: sake dev/tasks/i18nTextCollector
+ * Usage on CLI (module-specific): sake dev/tasks/i18nTextCollector module=mymodule
+ * 
  * @author Bernat Foj Capell <bernat@silverstripe.com>
  * @author Ingo Schommer <FIRSTNAME@silverstripe.com>
  * @package sapphire
- * @subpackage misc
+ * @subpackage i18n
+ * @uses i18nEntityProvider
+ * @uses i18n
  */
 class i18nTextCollector extends Object {
 	
@@ -321,7 +341,9 @@ class i18nTextCollector extends Object {
 		
 		$classes = ClassInfo::classes_for_file($filePath);
 		if($classes) foreach($classes as $class) {
-			if(class_exists($class) && method_exists($class, 'provideI18nEntities')) {
+			// Not all classes can be instanciated without mandatory arguments,
+			// so entity collection doesn't work for all SilverStripe classes currently
+			if(class_exists($class) && in_array('i18nEntityProvider', class_implements(new $class))) {
 				$obj = singleton($class);
 				$entitiesArr = array_merge($entitiesArr,(array)$obj->provideI18nEntities());
 			}
