@@ -46,6 +46,7 @@ class CsvBulkLoaderTest extends SapphireTest {
 			null, // ignored column
 			'Birthday'
 		);
+		$loader->hasHeaderRow = false;
 		$results = $loader->load($filepath);
 
 		// Test that right amount of columns was imported
