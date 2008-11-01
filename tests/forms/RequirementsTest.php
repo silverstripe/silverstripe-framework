@@ -39,12 +39,12 @@ class RequirementsTest extends SapphireTest {
 	function testCombinedJavascript() {
 		$this->setupCombinedRequirements();
 		
-		$combinedFilePath = Director::baseFolder() . '/' . 'bc.js';
+		$combinedFilePath = Director::baseFolder() . '/' . 'RequirementsTest_bc.js';
 		
 		$html = Requirements::includeInHTML(false, self::$html_template);
 
 		/* COMBINED JAVASCRIPT FILE IS INCLUDED IN HTML HEADER */
-		$this->assertTrue((bool)preg_match('/src=".*\/bc\.js/', $html), 'combined javascript file is included in html header');
+		$this->assertTrue((bool)preg_match('/src=".*\/RequirementsTest_bc\.js/', $html), 'combined javascript file is included in html header');
 		
 		/* COMBINED JAVASCRIPT FILE EXISTS */
 		$this->assertTrue(file_exists($combinedFilePath), 'combined javascript file exists');
@@ -54,39 +54,39 @@ class RequirementsTest extends SapphireTest {
 		$this->assertTrue((strpos(file_get_contents($combinedFilePath), "alert('c')") !== false), 'combined javascript has correct content');
 		
 		/* COMBINED FILES ARE NOT INCLUDED TWICE */
-		$this->assertFalse((bool)preg_match('/src=".*\/b\.js/', $html), 'combined files are not included twice');
-		$this->assertFalse((bool)preg_match('/src=".*\/c\.js/', $html), 'combined files are not included twice');
+		$this->assertFalse((bool)preg_match('/src=".*\/RequirementsTest_b\.js/', $html), 'combined files are not included twice');
+		$this->assertFalse((bool)preg_match('/src=".*\/RequirementsTest_c\.js/', $html), 'combined files are not included twice');
 		
 		/* NORMAL REQUIREMENTS ARE STILL INCLUDED */
-		$this->assertTrue((bool)preg_match('/src=".*\/a\.js/', $html), 'normal requirements are still included');
+		$this->assertTrue((bool)preg_match('/src=".*\/RequirementsTest_a\.js/', $html), 'normal requirements are still included');
 
-		Requirements::delete_combined_files('bc.js');
+		Requirements::delete_combined_files('RequirementsTest_bc.js');
 	}
 	
 	function testBlockedCombinedJavascript() {
-		$combinedFilePath = Director::baseFolder() . '/' . 'bc.js';
+		$combinedFilePath = Director::baseFolder() . '/' . 'RequirementsTest_bc.js';
 
 		/* BLOCKED COMBINED FILES ARE NOT INCLUDED */
 		$this->setupCombinedRequirements();
-		Requirements::block('bc.js');
-		Requirements::delete_combined_files('bc.js');
+		Requirements::block('RequirementsTest_bc.js');
+		Requirements::delete_combined_files('RequirementsTest_bc.js');
 
 		clearstatcache(); // needed to get accurate file_exists() results
 		$html = Requirements::includeInHTML(false, self::$html_template);
 
-		$this->assertFalse((bool)preg_match('/src=".*\/bc\.js/', $html), 'blocked combined files are not included ');
-		Requirements::unblock('bc.js');
+		$this->assertFalse((bool)preg_match('/src=".*\/RequirementsTest_bc\.js/', $html), 'blocked combined files are not included ');
+		Requirements::unblock('RequirementsTest_bc.js');
 
 		/* BLOCKED UNCOMBINED FILES ARE NOT INCLUDED */
 		// need to re-add requirements, as Requirements::process_combined_includes() alters the
 		// original arrays grml...
 		$this->setupCombinedRequirements();
-		Requirements::block('sapphire/tests/forms/b.js');
-		Requirements::delete_combined_files('bc.js');
+		Requirements::block('sapphire/tests/forms/RequirementsTest_b.js');
+		Requirements::delete_combined_files('RequirementsTest_bc.js');
 		clearstatcache(); // needed to get accurate file_exists() results
 		$html = Requirements::includeInHTML(false, self::$html_template);
 		$this->assertFalse((strpos(file_get_contents($combinedFilePath), "alert('b')") !== false), 'blocked uncombined files are not included');
-		Requirements::unblock('b.js');
+		Requirements::unblock('RequirementsTest_b.js');
 		
 		/* A SINGLE FILE CAN'T BE INCLUDED IN TWO COMBINED FILES */
 		$this->setupCombinedRequirements();
@@ -94,21 +94,21 @@ class RequirementsTest extends SapphireTest {
 
 		// This throws a notice-level error, so we prefix with @
 		@Requirements::combine_files(
-			'ac.js',
+			'RequirementsTest_ac.js',
 			array(
-				'sapphire/tests/forms/a.js',
-				'sapphire/tests/forms/c.js'
+				'sapphire/tests/forms/RequirementsTest_a.js',
+				'sapphire/tests/forms/RequirementsTest_c.js'
 			)
 		);
 
 		$combinedFiles = Requirements::get_combine_files();
 		$this->assertEquals(
 			array_keys($combinedFiles),
-			array('bc.js'),
+			array('RequirementsTest_bc.js'),
 			"A single file can't be included in two combined files"
 		);
 		
-		Requirements::delete_combined_files('bc.js');
+		Requirements::delete_combined_files('RequirementsTest_bc.js');
 	}
 	
 	/**
@@ -122,19 +122,19 @@ class RequirementsTest extends SapphireTest {
 		
 		// clearing all previously generated requirements (just in case)
 		Requirements::clear_combined_files();
-		Requirements::delete_combined_files('bc.js');
+		Requirements::delete_combined_files('RequirementsTest_bc.js');
 		
 		// require files normally (e.g. called from a FormField instance)
-		Requirements::javascript(SAPPHIRE_DIR . '/tests/forms/a.js');
-		Requirements::javascript(SAPPHIRE_DIR . '/tests/forms/b.js');
-		Requirements::javascript(SAPPHIRE_DIR . '/tests/forms/c.js');
+		Requirements::javascript(SAPPHIRE_DIR . '/tests/forms/RequirementsTest_a.js');
+		Requirements::javascript(SAPPHIRE_DIR . '/tests/forms/RequirementsTest_b.js');
+		Requirements::javascript(SAPPHIRE_DIR . '/tests/forms/RequirementsTest_c.js');
 		
 		// require two of those files as combined includes
 		Requirements::combine_files(
-			'bc.js',
+			'RequirementsTest_bc.js',
 			array(
-				SAPPHIRE_DIR . '/tests/forms/b.js',
-				SAPPHIRE_DIR . '/tests/forms/c.js'
+				SAPPHIRE_DIR . '/tests/forms/RequirementsTest_b.js',
+				SAPPHIRE_DIR . '/tests/forms/RequirementsTest_c.js'
 			)
 		);
 	}
