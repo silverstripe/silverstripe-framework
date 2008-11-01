@@ -29,10 +29,12 @@ class i18nTextCollectorTest extends SapphireTest {
 		global $_CLASS_MANIFEST;
 		$_CLASS_MANIFEST['i18nTestModule'] = $this->alternateBasePath . '/i18ntestmodule/code/i18nTestModule.php';
 		$_CLASS_MANIFEST['i18nTestModule_Addition'] = $this->alternateBasePath . '/i18ntestmodule/code/i18nTestModule.php';
+		$_CLASS_MANIFEST['i18nTestModuleDecorator'] = $this->alternateBasePath . '/i18nothermodule/code/i18nTestModuleDecorator.php';
 		
 		global $_ALL_CLASSES;
-		$_ALL_CLASSES['parents']['i18nTestModule'] = array('Object'=>'Object');
+		$_ALL_CLASSES['parents']['i18nTestModule'] = array('DataObject'=>'DataObject','Object'=>'Object');
 		$_ALL_CLASSES['parents']['i18nTestModule_Addition'] = array('Object'=>'Object');
+		$_ALL_CLASSES['parents']['i18nTestModuleDecorator'] = array('DataObjectDecorator'=>'DataObjectDecorator','Object'=>'Object');
 
 		global $_TEMPLATE_MANIFEST;
 		$_TEMPLATE_MANIFEST['i18nTestModule.ss'] = array(
@@ -450,6 +452,29 @@ PHP;
 		$this->assertEquals(
 			'My Sub Object',
 			$matches['i18nTextCollectorTestMySubObject.SINGULARNAME'][0]
+		);
+	}
+	
+	function testCollectDecoratedFields() {
+		$c = new i18nTextCollector();
+		$c->basePath = $this->alternateBasePath;
+		$c->baseSavePath = $this->alternateBaseSavePath;
+		$c->run();
+		
+		$moduleLangFile = "{$this->alternateBaseSavePath}/i18ntestmodule/lang/" . $c->getDefaultLocale() . '.php';
+		$moduleLangFileContent = file_get_contents($moduleLangFile);
+		$this->assertNotContains(
+			"\$lang['en_US']['i18nTestModuleDecorator']['db_MyExtraField'] = 'MyExtraField';",
+			$moduleLangFileContent,
+			'Decorated fields are not stored in the module of the decorated file if the decorator is located in another module'
+		);
+		
+		$otherModuleLangFile = "{$this->alternateBaseSavePath}/i18nothermodule/lang/" . $c->getDefaultLocale() . '.php';
+		$otherModuleLangFileContent = file_get_contents($otherModuleLangFile);
+		$this->assertContains(
+			"\$lang['en_US']['i18nTestModuleDecorator']['db_MyExtraField'] = 'MyExtraField';",
+			$otherModuleLangFileContent,
+			'Decorated fields are stored in the module in which the decorator is placed'
 		);
 	}
 

@@ -1,12 +1,10 @@
 <?php
 class i18nOtherModule extends Object {
-	function __construct() {
+	function mymethod() {
 		_t(
 			'i18nOtherModule.ENTITY', 
 			'Other Module Entity', 
 		);
-		
-		parent::__construct();
 	}
 }
 ?>

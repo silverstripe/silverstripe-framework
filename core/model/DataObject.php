@@ -2843,7 +2843,7 @@ class DataObject extends ViewableData implements DataObjectInterface,i18nEntityP
 	public function provideI18nEntities() {
 		$entities = array();
 		
-		$db = $this->uninherited('db', true);
+		$db = eval("return {$this->class}::\$db;");
 		if($db) foreach($db as $name => $type) {
 			$entities["{$this->class}.db_{$name}"] = array(
 				$name,
@@ -2852,7 +2852,7 @@ class DataObject extends ViewableData implements DataObjectInterface,i18nEntityP
 			);
 		}
 
-		$has_many = $this->uninherited('has_many', true);
+		$has_many = eval("return {$this->class}::\$has_many;");
 		if($has_many) foreach($has_many as $name => $class) {
 			$entities["{$this->class}.has_many_{$name}"] = array(
 				$name,
@@ -2861,7 +2861,7 @@ class DataObject extends ViewableData implements DataObjectInterface,i18nEntityP
 			);
 		}
 		
-		$many_many = $this->uninherited('many_many', true);
+		$many_many = eval("return {$this->class}::\$many_many;");
 		if($many_many) foreach($many_many as $name => $class) {
 			$entities["{$this->class}.many_many_{$name}"] = array(
 				$name,

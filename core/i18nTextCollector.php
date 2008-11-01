@@ -188,6 +188,9 @@ class i18nTextCollector extends Object {
 		return $entitiesArr;
 	}
 	
+	/**
+	 * @uses i18nEntityProvider
+	 */
 	function collectFromEntityProviders($filePath) {
 		$entitiesArr = array();
 		

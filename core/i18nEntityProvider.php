@@ -12,6 +12,7 @@
  * 
  * @package sapphire
  * @subpackage i18n
+ * @uses i18nTextCollector->collectFromEntityProviders()
  */
 interface i18nEntityProvider {
 	

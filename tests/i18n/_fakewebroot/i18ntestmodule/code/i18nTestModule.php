@@ -1,5 +1,10 @@
 <?php
-class i18nTestModule extends Object {
+class i18nTestModule extends DataObject implements TestOnly {
+	
+	static $db = array(
+		'MyField' => 'Varchar', 
+	);
+	
 	function myMethod() {
 		_t(
 			'i18nTestModule.ENTITY', 
