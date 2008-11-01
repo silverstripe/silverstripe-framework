@@ -1,5 +1,4 @@
 <?php
-
 /**
  * This is part of the developer tools, and is responsible for installing and uninstalling modules.
  *
@@ -10,6 +9,9 @@
  *
  * cd /my/project/
  * sake dev/modules/add ecommerce
+ * 
+ * @package sapphire
+ * @subpackage dev
  */
 class ModuleManager extends RequestHandler {
 	protected $moduleBase = "http://svn.silverstripe.com/open/modules/";
