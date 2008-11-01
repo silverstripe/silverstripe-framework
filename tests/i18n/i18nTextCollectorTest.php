@@ -352,49 +352,55 @@ PHP;
 			'Master language file can be written to modules /lang folder'
 		);
 		
-		$compareContent = <<<PHP
-<?php
-
-global \$lang;
-
-\$lang['en_US']['i18nTestModule']['ADDITION'] = 'Addition';
-\$lang['en_US']['i18nTestModule']['ENTITY'] = array(
-	'Entity with "Double Quotes"',
+		$moduleLangFileContent = file_get_contents($moduleLangFile);
+		
+		$this->assertContains(
+			"\$lang['en_US']['i18nTestModule']['ADDITION'] = 'Addition';",
+			$moduleLangFileContent
+		);
+		$this->assertContains(
+			"\$lang['en_US']['i18nTestModule']['ENTITY'] = array(
+	'Entity with \"Double Quotes\"',
 	PR_LOW,
 	'Comment for entity'
-);
-\$lang['en_US']['i18nTestModule']['MAINTEMPLATE'] = 'Main Template';
-\$lang['en_US']['i18nTestModule']['OTHERENTITY'] = 'Other Entity';
-\$lang['en_US']['i18nTestModule']['WITHNAMESPACE'] = 'Include Entity with Namespace';
-\$lang['en_US']['i18nTestModuleInclude.ss']['NONAMESPACE'] = 'Include Entity without Namespace';
-
-?>
-PHP;
-		$this->assertEquals(
-			file_get_contents($moduleLangFile),
-			$compareContent
+);",
+			$moduleLangFileContent
+		);
+		$this->assertContains(
+			"\$lang['en_US']['i18nTestModule']['MAINTEMPLATE'] = 'Main Template';",
+			$moduleLangFileContent
+		);
+		$this->assertContains(
+			"\$lang['en_US']['i18nTestModule']['OTHERENTITY'] = 'Other Entity';",
+			$moduleLangFileContent
+		);
+		$this->assertContains(
+			"\$lang['en_US']['i18nTestModule']['WITHNAMESPACE'] = 'Include Entity with Namespace';",
+			$moduleLangFileContent
+		);
+		$this->assertContains(
+			"\$lang['en_US']['i18nTestModule']['db_MyField']",
+			$moduleLangFileContent
+		);
+		$this->assertContains(
+			"\$lang['en_US']['i18nTestModuleInclude.ss']['NONAMESPACE'] = 'Include Entity without Namespace';",
+			$moduleLangFileContent
 		);
 		
 		// i18nothermodule
-		$moduleLangFile = "{$this->alternateBaseSavePath}/i18nothermodule/lang/" . $c->getDefaultLocale() . '.php';
+		$otherModuleLangFile = "{$this->alternateBaseSavePath}/i18nothermodule/lang/" . $c->getDefaultLocale() . '.php';
 		$this->assertTrue(
-			file_exists($moduleLangFile),
+			file_exists($otherModuleLangFile),
 			'Master language file can be written to modules /lang folder'
 		);
-	
-		$compareContent = <<<PHP
-<?php
-
-global \$lang;
-
-\$lang['en_US']['i18nOtherModule']['ENTITY'] = 'Other Module Entity';
-\$lang['en_US']['i18nOtherModule']['MAINTEMPLATE'] = 'Main Template Other Module';
-
-?>
-PHP;
-		$this->assertEquals(
-			file_get_contents($moduleLangFile),
-			$compareContent
+		$otherModuleLangFileContent = file_get_contents($otherModuleLangFile);
+		$this->assertContains(
+			"\$lang['en_US']['i18nOtherModule']['ENTITY'] = 'Other Module Entity';",
+			$otherModuleLangFileContent
+		);
+		$this->assertContains(
+			"\$lang['en_US']['i18nOtherModule']['MAINTEMPLATE'] = 'Main Template Other Module';",
+			$otherModuleLangFileContent
 		);
 	}
 	
