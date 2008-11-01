@@ -134,68 +134,6 @@ class i18nTextCollector extends Object {
 
 		return $entitiesArr;
 	}
-
-	/**
-	 * Write the master string table of every processed module
-	 */
-	protected function writeMasterStringFile($entitiesByModule) {
-		// Write each module language file
-		if($entitiesByModule) foreach($entitiesByModule as $module => $entities) {
-			$php = '';
-			
-			// Create folder for lang files
-			$langFolder = $this->baseSavePath . '/' . $module . '/lang';
-			if(!file_exists($langFolder)) {
-				Filesystem::makeFolder($langFolder, Filesystem::$folder_create_mask);
-				touch($langFolder . '/_manifest_exclude');
-			}
-
-			// Open the English file and write the Master String Table
-			if($fh = fopen($langFolder . '/' . $this->defaultLocale . '.php', "w")) {
-				if($entities) foreach($entities as $fullName => $spec) {
-					$php .= $this->langArrayCodeForEntitySpec($fullName, $spec);
-				}
-				
-				// test for valid PHP syntax by eval'ing it
-				try{
-					//eval($php);
-				} catch(Exception $e) {
-					user_error('i18nTextCollector->writeMasterStringFile(): Invalid PHP language file. Error: ' . $e->toString(), E_USER_ERROR);
-				}
-				
-				fwrite($fh, "<?php\n\nglobal \$lang;\n\n" . $php . "\n?>");			
-				fclose($fh);
-				
-				//Debug::message("Created file: $langFolder/" . $this->defaultLocale . ".php", false);
-			} else {
-				user_error("Cannot write language file! Please check permissions of $langFolder/" . $this->defaultLocale . ".php", E_USER_ERROR);
-			}
-		}
-
-	}
-	
-	/**
-	 * Helper function that searches for potential files to be parsed
-	 * 
-	 * @param string $folder base directory to scan (will scan recursively)
-	 * @param array $fileList Array where potential files will be added to
-	 */
-	protected function getFilesRecursive($folder, &$fileList = null) {
-		if(!$fileList) $fileList = array();
-		$items = scandir($folder);
-		$isValidFolder = (
-			!in_array('_manifest_exclude', $items)
-			&& !preg_match('/\/tests$/', $folder)
-		);
-
-		if($items && $isValidFolder) foreach($items as $item) {
-			if(substr($item,0,1) == '.') continue;
-			if(substr($item,-4) == '.php') $fileList[substr($item,0,-4)] = "$folder/$item";
-			else if(substr($item,-3) == '.ss') $fileList[$item] = "$folder/$item";
-			else if(is_dir("$folder/$item")) $this->getFilesRecursive("$folder/$item", $fileList);
-		}
-		return $fileList;
-	}
 	
 	public function collectFromCode($content, $module) {
 		$entitiesArr = array();
@@ -243,6 +181,25 @@ class i18nTextCollector extends Object {
 			$entitiesArr = array_merge($entitiesArr,(array)$this->entitySpecFromRegexMatches($regs, $fileName));
 			// remove parsed content to continue while() loop
 			$content = str_replace($regs[0],"",$content);
+		}
+		
+		ksort($entitiesArr);
+		
+		return $entitiesArr;
+	}
+	
+	function collectFromEntityProviders($filePath) {
+		$entitiesArr = array();
+		
+		$classes = ClassInfo::classes_for_file($filePath);
+		if($classes) foreach($classes as $class) {
+			// Not all classes can be instanciated without mandatory arguments,
+			// so entity collection doesn't work for all SilverStripe classes currently
+			// Requires PHP 5.1+
+			if(class_exists($class) && in_array('i18nEntityProvider', class_implements($class))) {
+				$obj = singleton($class);
+				$entitiesArr = array_merge($entitiesArr,(array)$obj->provideI18nEntities());
+			}
 		}
 		
 		ksort($entitiesArr);
@@ -338,23 +295,66 @@ class i18nTextCollector extends Object {
 		return $php;
 	}
 	
-	function collectFromEntityProviders($filePath) {
-		$entitiesArr = array();
-		
-		$classes = ClassInfo::classes_for_file($filePath);
-		if($classes) foreach($classes as $class) {
-			// Not all classes can be instanciated without mandatory arguments,
-			// so entity collection doesn't work for all SilverStripe classes currently
-			// Requires PHP 5.1+
-			if(class_exists($class) && in_array('i18nEntityProvider', class_implements($class))) {
-				$obj = singleton($class);
-				$entitiesArr = array_merge($entitiesArr,(array)$obj->provideI18nEntities());
+	/**
+	 * Write the master string table of every processed module
+	 */
+	protected function writeMasterStringFile($entitiesByModule) {
+		// Write each module language file
+		if($entitiesByModule) foreach($entitiesByModule as $module => $entities) {
+			$php = '';
+			
+			// Create folder for lang files
+			$langFolder = $this->baseSavePath . '/' . $module . '/lang';
+			if(!file_exists($langFolder)) {
+				Filesystem::makeFolder($langFolder, Filesystem::$folder_create_mask);
+				touch($langFolder . '/_manifest_exclude');
+			}
+
+			// Open the English file and write the Master String Table
+			if($fh = fopen($langFolder . '/' . $this->defaultLocale . '.php', "w")) {
+				if($entities) foreach($entities as $fullName => $spec) {
+					$php .= $this->langArrayCodeForEntitySpec($fullName, $spec);
+				}
+				
+				// test for valid PHP syntax by eval'ing it
+				try{
+					//eval($php);
+				} catch(Exception $e) {
+					user_error('i18nTextCollector->writeMasterStringFile(): Invalid PHP language file. Error: ' . $e->toString(), E_USER_ERROR);
+				}
+				
+				fwrite($fh, "<?php\n\nglobal \$lang;\n\n" . $php . "\n?>");			
+				fclose($fh);
+				
+				//Debug::message("Created file: $langFolder/" . $this->defaultLocale . ".php", false);
+			} else {
+				user_error("Cannot write language file! Please check permissions of $langFolder/" . $this->defaultLocale . ".php", E_USER_ERROR);
 			}
 		}
-		
-		ksort($entitiesArr);
-		
-		return $entitiesArr;
+
+	}
+	
+	/**
+	 * Helper function that searches for potential files to be parsed
+	 * 
+	 * @param string $folder base directory to scan (will scan recursively)
+	 * @param array $fileList Array where potential files will be added to
+	 */
+	protected function getFilesRecursive($folder, &$fileList = null) {
+		if(!$fileList) $fileList = array();
+		$items = scandir($folder);
+		$isValidFolder = (
+			!in_array('_manifest_exclude', $items)
+			&& !preg_match('/\/tests$/', $folder)
+		);
+
+		if($items && $isValidFolder) foreach($items as $item) {
+			if(substr($item,0,1) == '.') continue;
+			if(substr($item,-4) == '.php') $fileList[substr($item,0,-4)] = "$folder/$item";
+			else if(substr($item,-3) == '.ss') $fileList[$item] = "$folder/$item";
+			else if(is_dir("$folder/$item")) $this->getFilesRecursive("$folder/$item", $fileList);
+		}
+		return $fileList;
 	}
 	
 	public function getDefaultLocale() {
