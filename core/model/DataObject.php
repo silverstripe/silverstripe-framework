@@ -2535,11 +2535,24 @@ class DataObject extends ViewableData implements DataObjectInterface {
 	public function fieldLabels() {
 		$customLabels = $this->stat('field_labels');
 		$autoLabels = array();
-		if($this->inheritedDatabaseFields()){
-			foreach($this->inheritedDatabaseFields() as $name => $type) {
-				$autoLabels[$name] = FormField::name_to_label($name);
-			}
-		}
+		
+		// get all translated static properties as defined in i18nCollectStatics()
+		$ancestry = ClassInfo::ancestry($this->class);
+		$ancestry = array_reverse($ancestry);
+		if($ancestry) foreach($ancestry as $ancestorClass) {
+			if($ancestorClass == 'ViewableData') break;
+			$types = array(
+				'db' => (array)singleton($ancestorClass)->uninherited('db', true),
+				'has_one' => (array)singleton($ancestorClass)->uninherited('has_one', true),
+				'has_many' => (array)singleton($ancestorClass)->uninherited('has_many', true),
+				'many_many' => (array)singleton($ancestorClass)->uninherited('many_many', true)
+			);
+			foreach($types as $type => $attrs) {
+				foreach($attrs as $name => $spec)
+				$autoLabels[$name] = _t("{$ancestorClass}.{$type}_{$name}",FormField::name_to_label($name));
+ 			}
+ 		}
+
 		$labels = array_merge((array)$autoLabels, (array)$customLabels);
 		$this->extend('updateFieldLabels', $labels);
 
@@ -2858,13 +2871,13 @@ class DataObject extends ViewableData implements DataObjectInterface {
 		}
 		
 		$entities["{$this->class}.SINGULARNAME"] = array(
-			$this->uninherited('singular_name', true),
+			$this->singular_name(),
 			PR_MEDIUM,
 			'Singular name of the object, used in dropdowns and to generally identify a single object in the interface'
 		);
-		
+
 		$entities["{$this->class}.PLURALNAME"] = array(
-			$this->uninherited('plural_name', true),
+			$this->plural_name(),
 			PR_MEDIUM,
 			'Pural name of the object, used in dropdowns and to generally identify a collection of this object in the interface'
 		);
