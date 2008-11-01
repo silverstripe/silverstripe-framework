@@ -29,6 +29,10 @@ class i18nTextCollectorTest extends SapphireTest {
 		global $_CLASS_MANIFEST;
 		$_CLASS_MANIFEST['i18nTestModule'] = $this->alternateBasePath . '/i18ntestmodule/code/i18nTestModule.php';
 		$_CLASS_MANIFEST['i18nTestModule_Addition'] = $this->alternateBasePath . '/i18ntestmodule/code/i18nTestModule.php';
+		
+		global $_ALL_CLASSES;
+		$_ALL_CLASSES['parents']['i18nTestModule'] = array('Object'=>'Object');
+		$_ALL_CLASSES['parents']['i18nTestModule_Addition'] = array('Object'=>'Object');
 
 		global $_TEMPLATE_MANIFEST;
 		$_TEMPLATE_MANIFEST['i18nTestModule.ss'] = array(
