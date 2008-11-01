@@ -17,6 +17,8 @@
  * Usage through URL (module-specific): http://localhost/dev/tasks/i18nTextCollector/?module=mymodule
  * Usage on CLI: sake dev/tasks/i18nTextCollector
  * Usage on CLI (module-specific): sake dev/tasks/i18nTextCollector module=mymodule
+ *
+ * Requires PHP 5.1+ due to class_implements() limitations
  * 
  * @author Bernat Foj Capell <bernat@silverstripe.com>
  * @author Ingo Schommer <FIRSTNAME@silverstripe.com>
@@ -343,7 +345,8 @@ class i18nTextCollector extends Object {
 		if($classes) foreach($classes as $class) {
 			// Not all classes can be instanciated without mandatory arguments,
 			// so entity collection doesn't work for all SilverStripe classes currently
-			if(class_exists($class) && in_array('i18nEntityProvider', class_implements(new $class))) {
+			// Requires PHP 5.1+
+			if(class_exists($class) && in_array('i18nEntityProvider', class_implements($class))) {
 				$obj = singleton($class);
 				$entitiesArr = array_merge($entitiesArr,(array)$obj->provideI18nEntities());
 			}
