@@ -150,14 +150,7 @@ abstract class DataObjectDecorator extends Extension {
 			if($field_labels) $lables = array_merge($lables, $field_labels);
 		}
 	}
-	
-	function updateSummaryFieldsExcludeExtra(&$fields){
-		$extra_fields = $this->extraDBFields();
-		if(isset($extra_fields['summary_fields'])){
-			$summary_fields = $extra_fields['summary_fields'];
-			if($summary_fields)$fields = array_merge($fields, $summary_fields);
-		}
-	}
+
 }
 
 ?>
