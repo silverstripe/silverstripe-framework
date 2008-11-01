@@ -311,14 +311,15 @@ class i18nTextCollector extends Object {
 			}
 
 			// Open the English file and write the Master String Table
-			if($fh = fopen($langFolder . '/' . $this->defaultLocale . '.php', "w")) {
+			$langFile = $langFolder . '/' . $this->defaultLocale . '.php';
+			if($fh = fopen($langFile, "w")) {
 				if($entities) foreach($entities as $fullName => $spec) {
 					$php .= $this->langArrayCodeForEntitySpec($fullName, $spec);
 				}
 				
 				// test for valid PHP syntax by eval'ing it
 				try{
-					//eval($php);
+					eval($php);
 				} catch(Exception $e) {
 					user_error('i18nTextCollector->writeMasterStringFile(): Invalid PHP language file. Error: ' . $e->toString(), E_USER_ERROR);
 				}
