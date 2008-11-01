@@ -239,6 +239,39 @@ PHP;
 		);
 	}
 	
+	
+	function testNewlinesInEntityValues() {
+		$c = new i18nTextCollector();
+
+		$php = <<<PHP
+_t(
+'Test.NEWLINESINGLEQUOTE',
+'Line 1
+Line 2'
+);
+PHP;
+		$this->assertEquals(
+			$c->collectFromCode($php, 'mymodule'),
+			array(
+				'Test.NEWLINESINGLEQUOTE' => array("Line 1\nLine 2",null,null)
+			)
+		);
+
+		$php = <<<PHP
+_t(
+'Test.NEWLINEDOUBLEQUOTE',
+"Line 1
+Line 2"
+);
+PHP;
+		$this->assertEquals(
+			$c->collectFromCode($php, 'mymodule'),
+			array(
+				'Test.NEWLINEDOUBLEQUOTE' => array("Line 1\nLine 2",null,null)
+			)
+		);
+	}
+	
 	/**
 	 * Input for langArrayCodeForEntitySpec() should be suitable for insertion
 	 * into single-quoted strings, so needs to be escaped already.
