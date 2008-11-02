@@ -9,6 +9,21 @@
 class Object {
 	
 	/**
+	 * @var string $class
+	 */
+	public $class;
+	
+	/**
+	 * @var array $statics
+	 */
+	protected static $statics = array();
+	
+	/**
+	 * @var array $static_cached
+	 */
+	protected static $static_cached = array();
+	
+	/**
 	 * This DataObjects extensions, eg Versioned.
 	 * @var array
 	 */
@@ -27,18 +42,40 @@ class Object {
 	 */
 	public static $extensions = null;
 
+	/**
+	 * @var array $extraStatics
+	 */
 	protected static $extraStatics = array();
+	
+	/**
+	 * @var array $classConstructed
+	 */
 	protected static $classConstructed = array();
 
+	/**
+	 * @var array $extraMethods
+	 */
 	protected static $extraMethods = array();
+	
+	/**
+	 * @var array $builtInMethods
+	 */
 	protected static $builtInMethods = array();
 
     /**
-    * Use the class in the value instead of the class in the key
+    * @var array $custom_classes Use the class in the value instead of the class in the key
     */
     private static $custom_classes = array();
+
+	/**
+	 * @var array $strong_classes
+	 */
 	private static $strong_classes = array();
-    
+	
+	/**
+	 * @var array $uninherited_statics
+	 */
+	private static $uninherited_statics = array();
 
 	function __construct() {
 		$this->class = get_class($this);	
@@ -55,6 +92,45 @@ class Object {
 		if(!isset(Object::$classConstructed[$this->class])) {
 			$this->defineMethods();
 			Object::$classConstructed[$this->class] = true;
+		}
+	}
+	
+	/**
+	 * Calls a method.
+	 * Extra methods can be hooked to a class using
+	 */
+	public function __call($methodName, $args) {
+		$lowerMethodName = strtolower($methodName);
+		if(isset(Object::$extraMethods[$this->class][$lowerMethodName])) {
+			$config = Object::$extraMethods[$this->class][$lowerMethodName];
+			if(isset($config['parameterName'])) {
+				if(isset($config['arrayIndex'])) $obj = $this->{$config['parameterName']}[$config['arrayIndex']];
+				else $obj = $this->{$config['parameterName']};
+
+				if($obj) {
+					return call_user_func_array(array(&$obj, $methodName), $args);
+				} else {
+					if($this->destroyed) user_error("Attempted to call $methodName on destroyed '$this->class' object", E_USER_ERROR);
+					else user_error("'$this->class' object doesn't have a parameter $config[parameterName]($config[arrayIndex]) to pass control to.  Perhaps this object has been mistakenly destroyed?", E_USER_WARNING);
+				}
+
+			} else if(isset($config['wrap'])) {
+				array_unshift($args, $config['methodName']);
+				return call_user_func_array(array(&$this, $config['wrap']), $args);
+
+			} else if(isset($config['function'])) {
+				$function = $config['function'];
+				return $function($this, $args);
+
+			} else if($config['function_str']) {
+				$function = Object::$extraMethods[$this->class][strtolower($methodName)]['function'] = create_function('$obj, $args', $config['function_str']);
+				return $function($this, $args);
+
+			} else {
+				user_error("Object::__call() Method '$methodName' in class '$this->class' an invalid format: " . var_export(Object::$extraMethods[$this->class][$methodName],true), E_USER_ERROR);
+			}
+		} else {
+			user_error("Object::__call() Method '$methodName' not found in class '$this->class'", E_USER_ERROR);
 		}
 	}
 
@@ -132,16 +208,6 @@ class Object {
         return new $classToCreate( $arg0, $arg1, $arg2, $arg3, $arg4, $arg5, $arg6, $arg7, $arg8 );
 	}
 
-
-	/**
-	 * Returns true if this object "exists", i.e., has a sensible value.
-	 * Overload this in subclasses.
-	 * For example, an empty DataObject record could return false.
-	 */
-	public function exists() {
-		return true;
-	}
-
 	/**
 	 * Returns true if the given method exists.
 	 */
@@ -157,45 +223,6 @@ class Object {
 		*/
 		if(isset(Object::$extraMethods[$this->class][$methodName])) return true;
 		return false;
-	}
-
-	/**
-	 * Calls a method.
-	 * Extra methods can be hooked to a class using
-	 */
-	public function __call($methodName, $args) {
-		$lowerMethodName = strtolower($methodName);
-		if(isset(Object::$extraMethods[$this->class][$lowerMethodName])) {
-			$config = Object::$extraMethods[$this->class][$lowerMethodName];
-			if(isset($config['parameterName'])) {
-				if(isset($config['arrayIndex'])) $obj = $this->{$config['parameterName']}[$config['arrayIndex']];
-				else $obj = $this->{$config['parameterName']};
-
-				if($obj) {
-					return call_user_func_array(array(&$obj, $methodName), $args);
-				} else {
-					if($this->destroyed) user_error("Attempted to call $methodName on destroyed '$this->class' object", E_USER_ERROR);
-					else user_error("'$this->class' object doesn't have a parameter $config[parameterName]($config[arrayIndex]) to pass control to.  Perhaps this object has been mistakenly destroyed?", E_USER_WARNING);
-				}
-
-			} else if(isset($config['wrap'])) {
-				array_unshift($args, $config['methodName']);
-				return call_user_func_array(array(&$this, $config['wrap']), $args);
-
-			} else if(isset($config['function'])) {
-				$function = $config['function'];
-				return $function($this, $args);
-
-			} else if($config['function_str']) {
-				$function = Object::$extraMethods[$this->class][strtolower($methodName)]['function'] = create_function('$obj, $args', $config['function_str']);
-				return $function($this, $args);
-
-			} else {
-				user_error("Object::__call() Method '$methodName' in class '$this->class' an invalid format: " . var_export(Object::$extraMethods[$this->class][$methodName],true), E_USER_ERROR);
-			}
-		} else {
-			user_error("Object::__call() Method '$methodName' not found in class '$this->class'", E_USER_ERROR);
-		}
 	}
 
 	/**
@@ -300,14 +327,6 @@ class Object {
 			Object::$extraStatics[$class] = array_merge_recursive($ar1, $ar2);
 		}
 	}
-	
-	function parentClass() {
-		return get_parent_class($this);
-	}
-	
-	function is_a($class) {
-		return is_a($this, $class);
-	}
 
 	/**
 	 * Set an uninherited static variable
@@ -342,10 +361,6 @@ class Object {
 		return isset(Object::$uninherited_statics[$this->class][$name]) ? Object::$uninherited_statics[$this->class][$name] : null;
 	}
 
-
-	protected static $statics = array();
-	protected static $static_cached = array();
-
 	/**
 	 * Get a static variable.
 	 * 
@@ -379,9 +394,31 @@ class Object {
 		Object::$statics[$this->class][$name] = $val;
 		Object::$static_cached[$this->class][$name] = true;
 	}
+	
+	/**
+	 * Returns true if this object "exists", i.e., has a sensible value.
+	 * Overload this in subclasses.
+	 * For example, an empty DataObject record could return false.
+	 *
+	 * @return boolean
+	 */
+	public function exists() {
+		return true;
+	}
 
-	public $class;
-	private static $uninherited_statics = array();
+	function parentClass() {
+		return get_parent_class($this);
+	}
+	
+	/**
+	 * Wrapper for PHP's is_a()
+	 * 
+	 * @param string $class
+	 * @return boolean
+	 */
+	function is_a($class) {
+		return is_a($this, $class);
+	}
 
 	public function __toString() {
 		return $this->class;
