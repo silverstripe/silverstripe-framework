@@ -1,10 +1,4 @@
 <?php
-
-/**
- * @package sapphire
- * @subpackage model
- */
-
 /**
  * This class represents a set of {@link ViewableData} subclasses (mostly {@link DataObject} or {@link ArrayData}).
  * It is used by the ORM-layer of Silverstripe to return query-results from {@link SQLQuery}.
@@ -111,25 +105,6 @@ class DataObjectSet extends ViewableData implements IteratorAggregate {
 			$output[] = $outputRow;
 		}
 		return $output;
-	}
-
-	/**
-	 * Consolidate the DataObjectSet into XHTML
-	 * The string will contain the field values of the specified fields.
-	 * @return string
-	 */
-	public function consolidateString() {
-		$fieldList = func_get_args();
-		$data = $this->consolidate($fieldList);
-
-		$result = "<p>array (<br >";
-		foreach($data as $record) {
-			$result .= " &nbsp; &nbsp; array( ";
-			foreach($record as $field) $result .= " '" . htmlentities(addslashes($field)) . "',";
-			$result .= "), <br />";
-		}
-		$result .= ")</p>";
-		return $result;
 	}
 	
 	/**
