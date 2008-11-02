@@ -200,6 +200,9 @@ class i18nTextCollector extends Object {
 			// so entity collection doesn't work for all SilverStripe classes currently
 			// Requires PHP 5.1+
 			if(class_exists($class) && in_array('i18nEntityProvider', class_implements($class))) {
+				$reflectionClass = new ReflectionClass($class);
+				if($reflectionClass->isAbstract()) continue;
+				
 				$obj = singleton($class);
 				$entitiesArr = array_merge($entitiesArr,(array)$obj->provideI18nEntities());
 			}
