@@ -866,9 +866,14 @@ class Member extends DataObject {
 		$labels['FirstName'] = _t('Member.FIRSTNAME');
 		$labels['Surname'] = _t('Member.SURNAME');
 		$labels['Email'] = _t('Member.EMAIL');
-		$labels['FirstName'] = _t('Member.FIRSTNAME');
-		$labels['FirstName'] = _t('Member.FIRSTNAME');
-		$this->extend('updateFieldLabels', $labels);
+		$labels['Password'] = _t('Member.db_Password', 'Password');
+		$labels['NumVisit'] = _t('Member.db_NumVisit', 'Number of Visits');
+		$labels['LastVisited'] = _t('Member.db_LastVisited', 'Last Visited Date');
+		$labels['PasswordExpiry'] = _t('Member.db_PasswordExpiry', 'Password Expiry Date', PR_MEDIUM, 'Password expiry date');
+		$labels['LockedOutUntil'] = _t('Member.db_LockedOutUntil', 'Locked out until', PR_MEDIUM, 'Security related date');
+		$labels['Locale'] = _t('Member.db_Locale', 'Interface Locale');
+		$labels['Groups'] = _t('Member.belongs_many_many_Groups', 'Groups', PR_MEDIUM, 'Security Groups this member belongs to');
+		
 		return $labels;
 	}
 

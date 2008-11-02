@@ -52,7 +52,7 @@ class ErrorPage extends Page {
 			"Root.Content.Main", 
 			new DropdownField(
 				"ErrorCode",
-				_t('ErrorPage.CODE', "Error code"),
+				$this->fieldLabel('ErrorCode'),
 				array(
 					400 => _t('ErrorPage.400', '400 - Bad Request'),
 					401 => _t('ErrorPage.401', '401 - Unauthorized'),
@@ -120,6 +120,13 @@ class ErrorPage extends Page {
 		if(isset($alc_enc)) Cookie::set('alc_enc', $alc_enc);
 		
 		return $this->extension_instances['Versioned']->publish($fromStage, $toStage, $createNewVersion);
+	}
+	
+	function fieldLabels() {
+		$labels = parent::fieldLabels();
+		$labels['ErrorCode'] = _t('ErrorPage.CODE', "Error code");
+		
+		return $labels;
 	}
 }
 

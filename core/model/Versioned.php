@@ -713,6 +713,10 @@ class Versioned extends DataObjectDecorator {
 	
 	protected static $reading_stage = null;
 	protected static $reading_archived_date = null;
+	
+	function updateFieldLabels(&$labels) {
+		$labels['Versions'] = _t('Versioned.has_many_Versions', 'Versions', PR_MEDIUM, 'Past Versions of this page');
+	}
 }
 
 /**

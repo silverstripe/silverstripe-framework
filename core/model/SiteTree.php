@@ -1059,14 +1059,14 @@ class SiteTree extends DataObject {
 			new TabSet("Root",
 				$tabContent = new TabSet('Content',
 					$tabMain = new Tab('Main',
-						new TextField("Title", _t('SiteTree.PAGETITLE', "Page name")),
+						new TextField("Title", $this->fieldLabel('Title')),
 						/*new UniqueTextField("Title",
 								"Title",
 								"SiteTree",
 								"Another page is using that name. Page names should be unique.",
 								"Page Name"
 						),*/
-						new TextField("MenuTitle", _t('SiteTree.MENUTITLE', "Navigation label")),
+						new TextField("MenuTitle", $this->fieldLabel('MenuTitle')),
 						new HtmlEditorField("Content", _t('SiteTree.HTMLEDITORTITLE', "Content", PR_MEDIUM, 'HTML editor title'))
 					),
 					$tabMeta = new Tab('Meta-data',
@@ -1086,15 +1086,15 @@ class SiteTree extends DataObject {
 							),
 							new LabelField('TrailingSlashLabel',"/")
 						),
-						new HeaderField('MetaTagsHeader',_t('SiteTree.METAHEADER', "Search Engine Meta-tags")),
-						new TextField("MetaTitle", _t('SiteTree.METATITLE', "Title")),
-						new TextareaField("MetaDescription", _t('SiteTree.METADESC', "Description")),
-						new TextareaField("MetaKeywords", _t('SiteTree.METAKEYWORDS', "Keywords")),
+						new HeaderField('MetaTagsHeader',$this->fieldLabel('MetaTagsHeader')),
+						new TextField("MetaTitle", $this->fieldLabel('MetaTitle')),
+						new TextareaField("MetaDescription", $this->fieldLabel('MetaDescription')),
+						new TextareaField("MetaKeywords", $this->fieldLabel('MetaKeywords')),
 						new ToggleCompositeField(
 							'AdvancedOptions',
 							_t('SiteTree.METAADVANCEDHEADER', "Advanced Options..."),
 							array( 
-								new TextareaField("ExtraMeta",_t('SiteTree.METAEXTRA', "Custom Meta Tags")), 
+								new TextareaField("ExtraMeta",$this->fieldLabel('ExtraMeta')), 
 								new LiteralField(
 									"", 
 									"<p>" .
@@ -1107,7 +1107,7 @@ class SiteTree extends DataObject {
 									) .
 									"</p>"
 								), 
-								new DropdownField("Priority", _t('SiteTree.METAPAGEPRIO', "Page Priority"), $pagePriorities)
+								new DropdownField("Priority", $this->fieldLabel('Priority'), $pagePriorities)
 							), 
  							true 
 						)
@@ -1116,13 +1116,13 @@ class SiteTree extends DataObject {
 				$tabBehaviour = new Tab('Behaviour',
 					new DropdownField(
 						"ClassName", 
-						_t('SiteTree.PAGETYPE', "Page type", PR_MEDIUM, 'Classname of a page object'), 
+						$this->fieldLabel('ClassName'), 
 						$this->getClassDropdown()
 					),
-					new CheckboxField("ShowInMenus", _t('SiteTree.SHOWINMENUS', "Show in menus?")),
-					new CheckboxField("ShowInSearch", _t('SiteTree.SHOWINSEARCH', "Show in search?")),
+					new CheckboxField("ShowInMenus", $this->fieldLabel('ShowInMenus')),
+					new CheckboxField("ShowInSearch", $this->fieldLabel('ShowInSearch')),
 					/*, new TreeMultiselectField("MultipleParents", "Page appears within", "SiteTree")*/
-					new CheckboxField("ProvideComments", _t('SiteTree.ALLOWCOMMENTS', "Allow comments on this page?")),
+					new CheckboxField("ProvideComments", $this->fieldLabel('ProvideComments')),
 					new LiteralField(
 						"", 
 						"<p>" . 
@@ -1156,7 +1156,7 @@ class SiteTree extends DataObject {
 							"OnlyTheseUsers" => _t('SiteTree.ACCESSONLYTHESE', "Only these people (choose from list)")
 						)
 					),
-					new DropdownField("ViewersGroup", _t('SiteTree.GROUP', "Group"), Group::map()),
+					new DropdownField("ViewersGroup", $this->fieldLabel('ViewersGroup'), Group::map()),
 					new HeaderField('WhoCanEditHeader',_t('SiteTree.EDITHEADER', "Who can edit this inside the CMS?"), 2),
 					new OptionsetField(
 						"Editors", 
@@ -1166,7 +1166,7 @@ class SiteTree extends DataObject {
 							"OnlyTheseUsers" => _t('SiteTree.EDITONLYTHESE', "Only these people (choose from list)")
 						)
 					),
-					new DropdownField("EditorsGroup", _t('SiteTree.GROUP'), Group::map())
+					new DropdownField("EditorsGroup", $this->fieldLabel('EditorsGroup'), Group::map())
 				)
 			)
 			//new NamedLabelField("Status", $message, "pageStatusMessage", true)
@@ -1183,6 +1183,38 @@ class SiteTree extends DataObject {
 		$this->extend('updateCMSFields', $fields);
 
 		return $fields;
+	}
+	
+	function fieldLabels() {
+		$labels = parent::fieldLabels();
+		
+		$labels['Title'] = _t('SiteTree.PAGETITLE', "Page name");
+		$labels['MenuTitle'] = _t('SiteTree.MENUTITLE', "Navigation label");
+		$labels['MetaTagsHeader'] = _t('SiteTree.METAHEADER', "Search Engine Meta-tags");
+		$labels['MetaTitle'] = _t('SiteTree.METATITLE', "Title");
+		$labels['MetaDescription'] = _t('SiteTree.METADESC', "Description");
+		$labels['MetaKeywords'] = _t('SiteTree.METAKEYWORDS', "Keywords");
+		$labels['ExtraMeta'] = _t('SiteTree.METAEXTRA', "Custom Meta Tags");
+		$labels['Priority'] = _t('SiteTree.METAPAGEPRIO', "Page Priority");
+		$labels['ClassName'] = _t('SiteTree.PAGETYPE', "Page type", PR_MEDIUM, 'Classname of a page object');
+		$labels['ShowInMenus'] =_t('SiteTree.SHOWINMENUS', "Show in menus?");
+		$labels['ShowInSearch'] = _t('SiteTree.SHOWINSEARCH', "Show in search?");
+		$labels['ProvideComments'] = _t('SiteTree.ALLOWCOMMENTS', "Allow comments on this page?");
+		$labels['ViewersGroup'] = _t('SiteTree.GROUP', "Group");
+		$labels['EditorsGroup'] = _t('SiteTree.GROUP');
+		$labels['URLSegment'] = _t('SiteTree.URLSegment', 'URL Segment', PR_MEDIUM, 'URL for this page');
+		$labels['Content'] = _t('SiteTree.Content', 'Content', PR_MEDIUM, 'Main HTML Content for a page');
+		$labels['HomepageForDomain'] = _t('SiteTree.HomepageForDomain', 'Hompage for this domain');
+		$labels['Viewers'] = _t('SiteTree.Viewers', 'Viewers Group');
+		$labels['Editors'] = _t('SiteTree.Editors', 'Editors Group');
+		$labels['ToDo'] = _t('SiteTree.ToDo', 'Todo Notes');
+		$labels['Parent'] = _t('SiteTree.has_one_Parent', 'Parent Page', PR_MEDIUM, 'The parent page in the site hierarchy');
+		$labels['Comments'] = _t('SiteTree.Comments', 'Comments');
+		$labels['LinkTracking'] = _t('SiteTree.many_many_LinkTracking', 'Link Tracking');
+		$labels['ImageTracking'] = _t('SiteTree.many_many_ImageTracking', 'Image Tracking');
+		$labels['BackLinkTracking'] = _t('SiteTree.many_many_BackLinkTracking', 'Backlink Tracking');
+				
+		return $labels;
 	}
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////

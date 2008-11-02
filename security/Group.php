@@ -41,7 +41,7 @@ class Group extends DataObject {
 		$fields = new FieldSet(
 			new TabSet("Root",
 				new Tab(_t('SecurityAdmin.MEMBERS', 'Members'),
-					new TextField("Title", _t('SecurityAdmin.GROUPNAME', 'Group name')),
+					new TextField("Title", $this->fieldLabel('Title')),
 					$memberList = new MemberTableField(
 						$this,
 						"Members",
@@ -108,6 +108,21 @@ class Group extends DataObject {
 		$this->extend('updateCMSFields', $fields);
 		
 		return $fields;
+	}
+	
+	function fieldLabels() {
+		$labels = parent::fieldLabels();
+		$labels['Title'] = _t('SecurityAdmin.GROUPNAME', 'Group name');
+		$labels['Description'] = _t('Group.Description', 'Description');
+		$labels['Code'] = _t('Group.Code', 'Group Code', PR_MEDIUM, 'Programmatical code identifying a group');
+		$labels['Locked'] = _t('Group.Locked', 'Locked?', PR_MEDIUM, 'Group is locked in the security administration area');
+		$labels['Sort'] = _t('Group.Sort', 'Sort Order');
+		$labels['IPRestrictions'] = _t('Group.IPRestrictions', 'IP Address Restrictions');
+		$labels['Parent'] = _t('Group.Parent', 'Parent Group', PR_MEDIUM, 'One group has one parent group');
+		$labels['Permissions'] = _t('Group.has_many_Permissions', 'Permissions', PR_MEDIUM, 'One group has many permissions');
+		$labels['Members'] = _t('Group.many_many_Members', 'Members', PR_MEDIUM, 'One group has many members');
+		
+		return $labels;
 	}
 	
 	/**

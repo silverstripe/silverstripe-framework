@@ -91,8 +91,8 @@ class RedirectorPage extends Page {
     	$fields = new FieldSet(
 			new TabSet("Root",
 				$tabContent = new Tab("Content",
-					new TextField("Title", _t('SiteTree.PAGETITLE')),
-					new TextField("MenuTitle", _t('SiteTree.MENUTITLE')),
+					new TextField("Title", $this->fieldLabel('Title')),
+					new TextField("MenuTitle", $this->fieldLabel('MenuTitle')),
 					new FieldGroup(_t('SiteTree.URL'),
 						new LabelField('BaseUrlLabel',Director::absoluteBaseURL()),
 						new UniqueRestrictedTextField("URLSegment",
@@ -128,9 +128,9 @@ class RedirectorPage extends Page {
 					new TextareaField("MetaDescription", _t('SiteTree.METADESC'))
 				),
 				$tabBehaviour = new Tab("Behaviour",
-					new DropdownField("ClassName", _t('SiteTree.PAGETYPE'), $this->getClassDropdown()),
-					new CheckboxField("ShowInMenus", _t('SiteTree.SHOWINMENUS')),
-					new CheckboxField("ShowInSearch", _t('SiteTree.SHOWINSEARCH'))
+					new DropdownField("ClassName",$this->fieldLabel('ClassName'), $this->getClassDropdown()),
+					new CheckboxField("ShowInMenus", $this->fieldLabel('ShowInMenus')),
+					new CheckboxField("ShowInSearch", $this->fieldLabel('ShowInSearch'))
 				)
 			)
 		);

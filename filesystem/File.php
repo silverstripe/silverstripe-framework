@@ -530,6 +530,18 @@ class File extends DataObject {
 		self::$cache_file_fields = null;
 	}
 	
+	function fieldLabels() {
+		$labels = parent::fieldLabels();
+		$labels['Name'] = _t('File.Name', 'Name');
+		$labels['Title'] = _t('File.Title', 'Title');
+		$labels['Filename'] = _t('File.Filename', 'Filename');
+		$labels['Filename'] = _t('File.Filename', 'Filename');
+		$labels['Content'] = _t('File.Content', 'Content');
+		$labels['Sort'] = _t('File.Sort', 'Sort Order');
+		
+		return $labels;
+	}
+	
 }
 
 ?>

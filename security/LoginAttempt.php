@@ -27,5 +27,14 @@ class LoginAttempt extends DataObject {
 		'Member' => 'Member', // only linked if the member actually exists
 	);
 	
+	function fieldLabels() {
+		$labels = parent::fieldLabels();
+		$labels['Email'] = _t('LoginAttempt.Email', 'Email Address');
+		$labels['Status'] = _t('LoginAttempt.Status', 'Status');
+		$labels['IP'] = _t('LoginAttempt.IP', 'IP Address');
+		
+		return $labels;
+	}
+	
 }
 ?>
