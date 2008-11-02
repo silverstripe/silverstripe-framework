@@ -169,17 +169,15 @@ $lang['en_US']['ErrorPage']['SINGULARNAME'] = array(
 	50,
 	'Singular name of the object, used in dropdowns and to generally identify a single object in the interface'
 );
-$lang['en_US']['ErrorPage']['db_ErrorCode'] = array(
-	'ErrorCode',
-	50,
-	'Name of the object property, mainly used for automatically generating forms'
-);
+$lang['en_US']['File']['Content'] = 'Content';
+$lang['en_US']['File']['Filename'] = 'Filename';
 $lang['en_US']['File']['INVALIDEXTENSION'] = array(
 	'Extension is not allowed (valid: %s)',
 	PR_MEDIUM,
 	'Argument 1: Comma-separated list of valid extensions'
 );
 $lang['en_US']['File']['NOFILESIZE'] = 'Filesize is zero bytes.';
+$lang['en_US']['File']['Name'] = 'Name';
 $lang['en_US']['File']['PLURALNAME'] = array(
 	'Files',
 	50,
@@ -190,56 +188,13 @@ $lang['en_US']['File']['SINGULARNAME'] = array(
 	50,
 	'Singular name of the object, used in dropdowns and to generally identify a single object in the interface'
 );
+$lang['en_US']['File']['Sort'] = 'Sort Order';
 $lang['en_US']['File']['TOOLARGE'] = array(
 	'Filesize is too large, maximum %s allowed.',
 	PR_MEDIUM,
 	'Argument 1: Filesize (e.g. 1MB)'
 );
-$lang['en_US']['File']['db_Content'] = array(
-	'Content',
-	50,
-	'Name of the object property, mainly used for automatically generating forms'
-);
-$lang['en_US']['File']['db_Embed'] = array(
-	'Embed',
-	50,
-	'Name of the object property, mainly used for automatically generating forms'
-);
-$lang['en_US']['File']['db_Filename'] = array(
-	'Filename',
-	50,
-	'Name of the object property, mainly used for automatically generating forms'
-);
-$lang['en_US']['File']['db_LimitDimensions'] = array(
-	'LimitDimensions',
-	50,
-	'Name of the object property, mainly used for automatically generating forms'
-);
-$lang['en_US']['File']['db_Name'] = array(
-	'Name',
-	50,
-	'Name of the object property, mainly used for automatically generating forms'
-);
-$lang['en_US']['File']['db_PopupHeight'] = array(
-	'PopupHeight',
-	50,
-	'Name of the object property, mainly used for automatically generating forms'
-);
-$lang['en_US']['File']['db_PopupWidth'] = array(
-	'PopupWidth',
-	50,
-	'Name of the object property, mainly used for automatically generating forms'
-);
-$lang['en_US']['File']['db_Sort'] = array(
-	'Sort',
-	50,
-	'Name of the object property, mainly used for automatically generating forms'
-);
-$lang['en_US']['File']['db_Title'] = array(
-	'Title',
-	50,
-	'Name of the object property, mainly used for automatically generating forms'
-);
+$lang['en_US']['File']['Title'] = 'Title';
 $lang['en_US']['FileIFrameField']['NOTEADDFILES'] = 'You can add files once you have saved for the first time.';
 $lang['en_US']['Folder']['CREATED'] = 'First Uploaded';
 $lang['en_US']['Folder']['DELETEUNUSEDTHUMBNAILS'] = 'Delete unused thumbnails';
@@ -267,16 +222,6 @@ $lang['en_US']['Folder']['UPLOADTAB'] = 'Upload';
 $lang['en_US']['Folder']['URL'] = 'URL';
 $lang['en_US']['Folder']['VIEWASSET'] = 'View Asset';
 $lang['en_US']['Folder']['VIEWEDITASSET'] = 'View/Edit Asset';
-$lang['en_US']['Folder']['many_many_CanEdit'] = array(
-	'CanEdit',
-	50,
-	'Name of an object relation, mainly used for automatically generating forms'
-);
-$lang['en_US']['Folder']['many_many_CanUse'] = array(
-	'CanUse',
-	50,
-	'Name of an object relation, mainly used for automatically generating forms'
-);
 $lang['en_US']['ForgotPasswordEmail.ss']['HELLO'] = 'Hi';
 $lang['en_US']['ForgotPasswordEmail.ss']['TEXT1'] = 'Here is your';
 $lang['en_US']['ForgotPasswordEmail.ss']['TEXT2'] = 'password reset link';
@@ -310,55 +255,43 @@ $lang['en_US']['GhostPage']['SINGULARNAME'] = array(
 	50,
 	'Singular name of the object, used in dropdowns and to generally identify a single object in the interface'
 );
+$lang['en_US']['Group']['Code'] = array(
+	'Group Code',
+	PR_MEDIUM,
+	'Programmatical code identifying a group'
+);
+$lang['en_US']['Group']['Description'] = 'Description';
+$lang['en_US']['Group']['IPRestrictions'] = 'IP Address Restrictions';
+$lang['en_US']['Group']['Locked'] = array(
+	'Locked?',
+	PR_MEDIUM,
+	'Group is locked in the security administration area'
+);
 $lang['en_US']['Group']['PLURALNAME'] = array(
 	'Groups',
 	50,
 	'Pural name of the object, used in dropdowns and to generally identify a collection of this object in the interface'
+);
+$lang['en_US']['Group']['Parent'] = array(
+	'Parent Group',
+	PR_MEDIUM,
+	'One group has one parent group'
 );
 $lang['en_US']['Group']['SINGULARNAME'] = array(
 	'Group',
 	50,
 	'Singular name of the object, used in dropdowns and to generally identify a single object in the interface'
 );
-$lang['en_US']['Group']['db_Code'] = array(
-	'Code',
-	50,
-	'Name of the object property, mainly used for automatically generating forms'
-);
-$lang['en_US']['Group']['db_Description'] = array(
-	'Description',
-	50,
-	'Name of the object property, mainly used for automatically generating forms'
-);
-$lang['en_US']['Group']['db_IPRestrictions'] = array(
-	'IPRestrictions',
-	50,
-	'Name of the object property, mainly used for automatically generating forms'
-);
-$lang['en_US']['Group']['db_Locked'] = array(
-	'Locked',
-	50,
-	'Name of the object property, mainly used for automatically generating forms'
-);
-$lang['en_US']['Group']['db_Sort'] = array(
-	'Sort',
-	50,
-	'Name of the object property, mainly used for automatically generating forms'
-);
-$lang['en_US']['Group']['db_Title'] = array(
-	'Title',
-	50,
-	'Name of the object property, mainly used for automatically generating forms'
-);
+$lang['en_US']['Group']['Sort'] = 'Sort Order';
 $lang['en_US']['Group']['has_many_Permissions'] = array(
 	'Permissions',
-	50,
-	'Name of an object relation, mainly used for automatically generating forms'
+	PR_MEDIUM,
+	'One group has many permissions'
 );
 $lang['en_US']['Group']['many_many_Members'] = array(
 	'Members',
-	50,
-	'Name of an object relation, mainly used for automatically generating forms'
+	PR_MEDIUM,
+	'One group has many members'
 );
 $lang['en_US']['HtmlEditorField']['ALTTEXT'] = 'Description';
 $lang['en_US']['HtmlEditorField']['ANCHOR'] = 'Insert/edit anchor';
@@ -507,6 +440,8 @@ $lang['en_US']['ImageUploader']['REPLACE'] = array(
 	'Replace file/image'
 );
 $lang['en_US']['Image_iframe.ss']['TITLE'] = 'Image Uploading Iframe';
+$lang['en_US']['LoginAttempt']['Email'] = 'Email Address';
+$lang['en_US']['LoginAttempt']['IP'] = 'IP Address';
 $lang['en_US']['LoginAttempt']['PLURALNAME'] = array(
 	'Login Attempts',
 	50,
@@ -517,21 +452,7 @@ $lang['en_US']['LoginAttempt']['SINGULARNAME'] = array(
 	50,
 	'Singular name of the object, used in dropdowns and to generally identify a single object in the interface'
 );
-$lang['en_US']['LoginAttempt']['db_Email'] = array(
-	'Email',
-	50,
-	'Name of the object property, mainly used for automatically generating forms'
-);
-$lang['en_US']['LoginAttempt']['db_IP'] = array(
-	'IP',
-	50,
-	'Name of the object property, mainly used for automatically generating forms'
-);
-$lang['en_US']['LoginAttempt']['db_Status'] = array(
-	'Status',
-	50,
-	'Name of the object property, mainly used for automatically generating forms'
-);
+$lang['en_US']['LoginAttempt']['Status'] = 'Status';
 $lang['en_US']['Member']['ADDRESS'] = 'Address';
 $lang['en_US']['Member']['BUTTONCHANGEPASSWORD'] = 'Change Password';
 $lang['en_US']['Member']['BUTTONLOGIN'] = 'Log in';
@@ -603,175 +524,24 @@ $lang['en_US']['Member']['USERDETAILS'] = array(
 $lang['en_US']['Member']['VALIDATIONMEMBEREXISTS'] = 'There already exists a member with this email';
 $lang['en_US']['Member']['WELCOMEBACK'] = 'Welcome Back, %s';
 $lang['en_US']['Member']['YOUROLDPASSWORD'] = 'Your old password';
-$lang['en_US']['Member']['db_Address'] = array(
-	'Address',
-	50,
-	'Name of the object property, mainly used for automatically generating forms'
+$lang['en_US']['Member']['belongs_many_many_Groups'] = array(
+	'Groups',
+	PR_MEDIUM,
+	'Security Groups this member belongs to'
 );
-$lang['en_US']['Member']['db_AddressLine2'] = array(
-	'AddressLine2',
-	50,
-	'Name of the object property, mainly used for automatically generating forms'
-);
-$lang['en_US']['Member']['db_AutoLoginExpired'] = array(
-	'AutoLoginExpired',
-	50,
-	'Name of the object property, mainly used for automatically generating forms'
-);
-$lang['en_US']['Member']['db_AutoLoginHash'] = array(
-	'AutoLoginHash',
-	50,
-	'Name of the object property, mainly used for automatically generating forms'
-);
-$lang['en_US']['Member']['db_BlacklistedEmail'] = array(
-	'BlacklistedEmail',
-	50,
-	'Name of the object property, mainly used for automatically generating forms'
-);
-$lang['en_US']['Member']['db_Bounced'] = array(
-	'Bounced',
-	50,
-	'Name of the object property, mainly used for automatically generating forms'
-);
-$lang['en_US']['Member']['db_City'] = array(
-	'City',
-	50,
-	'Name of the object property, mainly used for automatically generating forms'
-);
-$lang['en_US']['Member']['db_Country'] = array(
-	'Country',
-	50,
-	'Name of the object property, mainly used for automatically generating forms'
-);
-$lang['en_US']['Member']['db_CountryPublic'] = array(
-	'CountryPublic',
-	50,
-	'Name of the object property, mainly used for automatically generating forms'
-);
-$lang['en_US']['Member']['db_Email'] = array(
-	'Email',
-	50,
-	'Name of the object property, mainly used for automatically generating forms'
-);
-$lang['en_US']['Member']['db_EmailPublic'] = array(
-	'EmailPublic',
-	50,
-	'Name of the object property, mainly used for automatically generating forms'
-);
-$lang['en_US']['Member']['db_FirstName'] = array(
-	'FirstName',
-	50,
-	'Name of the object property, mainly used for automatically generating forms'
-);
-$lang['en_US']['Member']['db_FirstNamePublic'] = array(
-	'FirstNamePublic',
-	50,
-	'Name of the object property, mainly used for automatically generating forms'
-);
-$lang['en_US']['Member']['db_ForumRank'] = array(
-	'ForumRank',
-	50,
-	'Name of the object property, mainly used for automatically generating forms'
-);
-$lang['en_US']['Member']['db_HomePhone'] = array(
-	'HomePhone',
-	50,
-	'Name of the object property, mainly used for automatically generating forms'
-);
-$lang['en_US']['Member']['db_IdentityURL'] = array(
-	'IdentityURL',
-	50,
-	'Name of the object property, mainly used for automatically generating forms'
-);
-$lang['en_US']['Member']['db_LastViewed'] = array(
-	'LastViewed',
-	50,
-	'Name of the object property, mainly used for automatically generating forms'
-);
-$lang['en_US']['Member']['db_LastVisited'] = array(
-	'LastVisited',
-	50,
-	'Name of the object property, mainly used for automatically generating forms'
-);
-$lang['en_US']['Member']['db_Locale'] = array(
-	'Locale',
-	50,
-	'Name of the object property, mainly used for automatically generating forms'
-);
+$lang['en_US']['Member']['db_LastVisited'] = 'Last Visited Date';
+$lang['en_US']['Member']['db_Locale'] = 'Interface Locale';
 $lang['en_US']['Member']['db_LockedOutUntil'] = array(
-	'LockedOutUntil',
-	50,
-	'Name of the object property, mainly used for automatically generating forms'
+	'Locked out until',
+	PR_MEDIUM,
+	'Security related date'
 );
-$lang['en_US']['Member']['db_MobilePhone'] = array(
-	'MobilePhone',
-	50,
-	'Name of the object property, mainly used for automatically generating forms'
-);
-$lang['en_US']['Member']['db_Nickname'] = array(
-	'Nickname',
-	50,
-	'Name of the object property, mainly used for automatically generating forms'
-);
-$lang['en_US']['Member']['db_Notes'] = array(
-	'Notes',
-	50,
-	'Name of the object property, mainly used for automatically generating forms'
-);
-$lang['en_US']['Member']['db_NumVisit'] = array(
-	'NumVisit',
-	50,
-	'Name of the object property, mainly used for automatically generating forms'
-);
-$lang['en_US']['Member']['db_Occupation'] = array(
-	'Occupation',
-	50,
-	'Name of the object property, mainly used for automatically generating forms'
-);
-$lang['en_US']['Member']['db_OccupationPublic'] = array(
-	'OccupationPublic',
-	50,
-	'Name of the object property, mainly used for automatically generating forms'
-);
-$lang['en_US']['Member']['db_Password'] = array(
-	'Password',
-	50,
-	'Name of the object property, mainly used for automatically generating forms'
-);
-$lang['en_US']['Member']['db_PasswordEncryption'] = array(
-	'PasswordEncryption',
-	50,
-	'Name of the object property, mainly used for automatically generating forms'
-);
+$lang['en_US']['Member']['db_NumVisit'] = 'Number of Visits';
+$lang['en_US']['Member']['db_Password'] = 'Password';
 $lang['en_US']['Member']['db_PasswordExpiry'] = array(
-	'PasswordExpiry',
-	50,
-	'Name of the object property, mainly used for automatically generating forms'
-);
-$lang['en_US']['Member']['db_RememberLoginToken'] = array(
-	'RememberLoginToken',
-	50,
-	'Name of the object property, mainly used for automatically generating forms'
-);
-$lang['en_US']['Member']['db_Salt'] = array(
-	'Salt',
-	50,
-	'Name of the object property, mainly used for automatically generating forms'
-);
-$lang['en_US']['Member']['db_Signature'] = array(
-	'Signature',
-	50,
-	'Name of the object property, mainly used for automatically generating forms'
-);
-$lang['en_US']['Member']['db_Surname'] = array(
-	'Surname',
-	50,
-	'Name of the object property, mainly used for automatically generating forms'
-);
-$lang['en_US']['Member']['db_SurnamePublic'] = array(
-	'SurnamePublic',
-	50,
-	'Name of the object property, mainly used for automatically generating forms'
+	'Password Expiry Date',
+	PR_MEDIUM,
+	'Password expiry date'
 );
 $lang['en_US']['MemberAuthenticator']['TITLE'] = 'E-mail &amp; Password';
 $lang['en_US']['MemberPassword']['PLURALNAME'] = array(
@@ -783,21 +553,6 @@ $lang['en_US']['MemberPassword']['SINGULARNAME'] = array(
 	'Member Password',
 	50,
 	'Singular name of the object, used in dropdowns and to generally identify a single object in the interface'
-);
-$lang['en_US']['MemberPassword']['db_Password'] = array(
-	'Password',
-	50,
-	'Name of the object property, mainly used for automatically generating forms'
-);
-$lang['en_US']['MemberPassword']['db_PasswordEncryption'] = array(
-	'PasswordEncryption',
-	50,
-	'Name of the object property, mainly used for automatically generating forms'
-);
-$lang['en_US']['MemberPassword']['db_Salt'] = array(
-	'Salt',
-	50,
-	'Name of the object property, mainly used for automatically generating forms'
 );
 $lang['en_US']['NumericField']['VALIDATION'] = '\'%s\' is not a number, only numbers can be accepted for this field';
 $lang['en_US']['NumericField']['VALIDATIONJS'] = 'is not a number, only numbers can be accepted for this field';
@@ -813,21 +568,6 @@ $lang['en_US']['Permission']['SINGULARNAME'] = array(
 	50,
 	'Singular name of the object, used in dropdowns and to generally identify a single object in the interface'
 );
-$lang['en_US']['Permission']['db_Arg'] = array(
-	'Arg',
-	50,
-	'Name of the object property, mainly used for automatically generating forms'
-);
-$lang['en_US']['Permission']['db_Code'] = array(
-	'Code',
-	50,
-	'Name of the object property, mainly used for automatically generating forms'
-);
-$lang['en_US']['Permission']['db_Type'] = array(
-	'Type',
-	50,
-	'Name of the object property, mainly used for automatically generating forms'
-);
 $lang['en_US']['PhoneNumberField']['VALIDATION'] = 'Please enter a valid phone number';
 $lang['en_US']['QueuedEmail']['PLURALNAME'] = array(
 	'Queued Emails',
@@ -838,26 +578,6 @@ $lang['en_US']['QueuedEmail']['SINGULARNAME'] = array(
 	'Queued Email',
 	50,
 	'Singular name of the object, used in dropdowns and to generally identify a single object in the interface'
-);
-$lang['en_US']['QueuedEmail']['db_Content'] = array(
-	'Content',
-	50,
-	'Name of the object property, mainly used for automatically generating forms'
-);
-$lang['en_US']['QueuedEmail']['db_From'] = array(
-	'From',
-	50,
-	'Name of the object property, mainly used for automatically generating forms'
-);
-$lang['en_US']['QueuedEmail']['db_Send'] = array(
-	'Send',
-	50,
-	'Name of the object property, mainly used for automatically generating forms'
-);
-$lang['en_US']['QueuedEmail']['db_Subject'] = array(
-	'Subject',
-	50,
-	'Name of the object property, mainly used for automatically generating forms'
 );
 $lang['en_US']['RedirectorPage']['HASBEENSETUP'] = 'A redirector page has been set up without anywhere to redirect to.';
 $lang['en_US']['RedirectorPage']['HEADER'] = 'This page will redirect users to another page';
@@ -876,16 +596,6 @@ $lang['en_US']['RedirectorPage']['SINGULARNAME'] = array(
 	'Singular name of the object, used in dropdowns and to generally identify a single object in the interface'
 );
 $lang['en_US']['RedirectorPage']['YOURPAGE'] = 'Page on your website';
-$lang['en_US']['RedirectorPage']['db_ExternalURL'] = array(
-	'ExternalURL',
-	50,
-	'Name of the object property, mainly used for automatically generating forms'
-);
-$lang['en_US']['RedirectorPage']['db_RedirectionType'] = array(
-	'RedirectionType',
-	50,
-	'Name of the object property, mainly used for automatically generating forms'
-);
 $lang['en_US']['RelationComplexTableField.ss']['ADD'] = 'Add';
 $lang['en_US']['RelationComplexTableField.ss']['CSVEXPORT'] = 'Export to CSV';
 $lang['en_US']['RelationComplexTableField.ss']['DELETE'] = 'delete';
@@ -957,6 +667,12 @@ $lang['en_US']['SiteTree']['BUTTONUNPUBLISHDESC'] = 'Remove this page from the p
 $lang['en_US']['SiteTree']['CHANGETO'] = 'Change to';
 $lang['en_US']['SiteTree']['CURRENT'] = 'current';
 $lang['en_US']['SiteTree']['CURRENTLY'] = 'Currently';
+$lang['en_US']['SiteTree']['Comments'] = 'Comments';
+$lang['en_US']['SiteTree']['Content'] = array(
+	'Content',
+	PR_MEDIUM,
+	'Main HTML Content for a page'
+);
 $lang['en_US']['SiteTree']['DEFAULTABOUTCONTENT'] = '<p>You can fill this page out with your own content, or delete it and create your own pages.<br /></p>';
 $lang['en_US']['SiteTree']['DEFAULTABOUTTITLE'] = 'About Us';
 $lang['en_US']['SiteTree']['DEFAULTCONTACTCONTENT'] = '<p>You can fill this page out with your own content, or delete it and create your own pages.<br /></p>';
@@ -966,6 +682,7 @@ $lang['en_US']['SiteTree']['DEFAULTHOMETITLE'] = 'Home';
 $lang['en_US']['SiteTree']['EDITANYONE'] = 'Anyone who can log-in to the CMS';
 $lang['en_US']['SiteTree']['EDITHEADER'] = 'Who can edit this inside the CMS?';
 $lang['en_US']['SiteTree']['EDITONLYTHESE'] = 'Only these people (choose from list)';
+$lang['en_US']['SiteTree']['Editors'] = 'Editors Group';
 $lang['en_US']['SiteTree']['GROUP'] = 'Group';
 $lang['en_US']['SiteTree']['HASBROKENLINKS'] = 'This page has broken links.';
 $lang['en_US']['SiteTree']['HOMEPAGEFORDOMAIN'] = array(
@@ -978,6 +695,7 @@ $lang['en_US']['SiteTree']['HTMLEDITORTITLE'] = array(
 	PR_MEDIUM,
 	'HTML editor title'
 );
+$lang['en_US']['SiteTree']['HomepageForDomain'] = 'Hompage for this domain';
 $lang['en_US']['SiteTree']['MENUTITLE'] = 'Navigation label';
 $lang['en_US']['SiteTree']['METAADVANCEDHEADER'] = 'Advanced Options...';
 $lang['en_US']['SiteTree']['METADESC'] = 'Description';
@@ -1024,154 +742,24 @@ $lang['en_US']['SiteTree']['TABMETA'] = 'Meta-data';
 $lang['en_US']['SiteTree']['TABREPORTS'] = 'Reports';
 $lang['en_US']['SiteTree']['TODOHELP'] = '<p>You can use this to keep track of work that needs to be done to the content of your site.  To see all your pages with to do information, open the \'Site Reports\' window on the left and select \'To Do\'</p>';
 $lang['en_US']['SiteTree']['TOPLEVEL'] = 'Site Content (Top Level)';
+$lang['en_US']['SiteTree']['ToDo'] = 'Todo Notes';
 $lang['en_US']['SiteTree']['URL'] = 'URL';
+$lang['en_US']['SiteTree']['URLSegment'] = array(
+	'URL Segment',
+	PR_MEDIUM,
+	'URL for this page'
+);
 $lang['en_US']['SiteTree']['VALIDATIONURLSEGMENT1'] = 'Another page is using that URL. URL must be unique for each page';
 $lang['en_US']['SiteTree']['VALIDATIONURLSEGMENT2'] = 'URLs can only be made up of letters, digits and hyphens.';
-$lang['en_US']['SiteTree']['db_Content'] = array(
-	'Content',
-	50,
-	'Name of the object property, mainly used for automatically generating forms'
+$lang['en_US']['SiteTree']['Viewers'] = 'Viewers Group';
+$lang['en_US']['SiteTree']['has_one_Parent'] = array(
+	'Parent Page',
+	PR_MEDIUM,
+	'The parent page in the site hierarchy'
 );
-$lang['en_US']['SiteTree']['db_Editors'] = array(
-	'Editors',
-	50,
-	'Name of the object property, mainly used for automatically generating forms'
-);
-$lang['en_US']['SiteTree']['db_EditorsGroup'] = array(
-	'EditorsGroup',
-	50,
-	'Name of the object property, mainly used for automatically generating forms'
-);
-$lang['en_US']['SiteTree']['db_ExtraMeta'] = array(
-	'ExtraMeta',
-	50,
-	'Name of the object property, mainly used for automatically generating forms'
-);
-$lang['en_US']['SiteTree']['db_HasBrokenFile'] = array(
-	'HasBrokenFile',
-	50,
-	'Name of the object property, mainly used for automatically generating forms'
-);
-$lang['en_US']['SiteTree']['db_HasBrokenLink'] = array(
-	'HasBrokenLink',
-	50,
-	'Name of the object property, mainly used for automatically generating forms'
-);
-$lang['en_US']['SiteTree']['db_HomepageForDomain'] = array(
-	'HomepageForDomain',
-	50,
-	'Name of the object property, mainly used for automatically generating forms'
-);
-$lang['en_US']['SiteTree']['db_LegacyURL'] = array(
-	'LegacyURL',
-	50,
-	'Name of the object property, mainly used for automatically generating forms'
-);
-$lang['en_US']['SiteTree']['db_MenuTitle'] = array(
-	'MenuTitle',
-	50,
-	'Name of the object property, mainly used for automatically generating forms'
-);
-$lang['en_US']['SiteTree']['db_MetaDescription'] = array(
-	'MetaDescription',
-	50,
-	'Name of the object property, mainly used for automatically generating forms'
-);
-$lang['en_US']['SiteTree']['db_MetaKeywords'] = array(
-	'MetaKeywords',
-	50,
-	'Name of the object property, mainly used for automatically generating forms'
-);
-$lang['en_US']['SiteTree']['db_MetaTitle'] = array(
-	'MetaTitle',
-	50,
-	'Name of the object property, mainly used for automatically generating forms'
-);
-$lang['en_US']['SiteTree']['db_Priority'] = array(
-	'Priority',
-	50,
-	'Name of the object property, mainly used for automatically generating forms'
-);
-$lang['en_US']['SiteTree']['db_ProvideComments'] = array(
-	'ProvideComments',
-	50,
-	'Name of the object property, mainly used for automatically generating forms'
-);
-$lang['en_US']['SiteTree']['db_ReportClass'] = array(
-	'ReportClass',
-	50,
-	'Name of the object property, mainly used for automatically generating forms'
-);
-$lang['en_US']['SiteTree']['db_ShareIcons'] = array(
-	'ShareIcons',
-	50,
-	'Name of the object property, mainly used for automatically generating forms'
-);
-$lang['en_US']['SiteTree']['db_ShowInMenus'] = array(
-	'ShowInMenus',
-	50,
-	'Name of the object property, mainly used for automatically generating forms'
-);
-$lang['en_US']['SiteTree']['db_ShowInSearch'] = array(
-	'ShowInSearch',
-	50,
-	'Name of the object property, mainly used for automatically generating forms'
-);
-$lang['en_US']['SiteTree']['db_Sort'] = array(
-	'Sort',
-	50,
-	'Name of the object property, mainly used for automatically generating forms'
-);
-$lang['en_US']['SiteTree']['db_Status'] = array(
-	'Status',
-	50,
-	'Name of the object property, mainly used for automatically generating forms'
-);
-$lang['en_US']['SiteTree']['db_Title'] = array(
-	'Title',
-	50,
-	'Name of the object property, mainly used for automatically generating forms'
-);
-$lang['en_US']['SiteTree']['db_ToDo'] = array(
-	'ToDo',
-	50,
-	'Name of the object property, mainly used for automatically generating forms'
-);
-$lang['en_US']['SiteTree']['db_URLSegment'] = array(
-	'URLSegment',
-	50,
-	'Name of the object property, mainly used for automatically generating forms'
-);
-$lang['en_US']['SiteTree']['db_Viewers'] = array(
-	'Viewers',
-	50,
-	'Name of the object property, mainly used for automatically generating forms'
-);
-$lang['en_US']['SiteTree']['db_ViewersGroup'] = array(
-	'ViewersGroup',
-	50,
-	'Name of the object property, mainly used for automatically generating forms'
-);
-$lang['en_US']['SiteTree']['has_many_Comments'] = array(
-	'Comments',
-	50,
-	'Name of an object relation, mainly used for automatically generating forms'
-);
-$lang['en_US']['SiteTree']['has_many_Versions'] = array(
-	'Versions',
-	50,
-	'Name of an object relation, mainly used for automatically generating forms'
-);
-$lang['en_US']['SiteTree']['many_many_ImageTracking'] = array(
-	'ImageTracking',
-	50,
-	'Name of an object relation, mainly used for automatically generating forms'
-);
-$lang['en_US']['SiteTree']['many_many_LinkTracking'] = array(
-	'LinkTracking',
-	50,
-	'Name of an object relation, mainly used for automatically generating forms'
-);
+$lang['en_US']['SiteTree']['many_many_BackLinkTracking'] = 'Backlink Tracking';
+$lang['en_US']['SiteTree']['many_many_ImageTracking'] = 'Image Tracking';
+$lang['en_US']['SiteTree']['many_many_LinkTracking'] = 'Link Tracking';
 $lang['en_US']['TableField']['ISREQUIRED'] = 'In %s \'%s\' is required.';
 $lang['en_US']['TableField.ss']['ADD'] = 'Add a new row';
 $lang['en_US']['TableField.ss']['CSVEXPORT'] = 'Export to CSV';
@@ -1196,6 +784,11 @@ $lang['en_US']['Translatable']['TRANSLATIONS'] = 'Translations';
 $lang['en_US']['TreeSelectorField']['CANCEL'] = 'cancel';
 $lang['en_US']['TreeSelectorField']['SAVE'] = 'save';
 $lang['en_US']['TypeDropdown']['NONE'] = 'None';
+$lang['en_US']['Versioned']['has_many_Versions'] = array(
+	'Versions',
+	PR_MEDIUM,
+	'Past Versions of this page'
+);
 $lang['en_US']['VirtualPage']['CHOOSE'] = 'Choose a page to link to';
 $lang['en_US']['VirtualPage']['EDITCONTENT'] = 'click here to edit the content';
 $lang['en_US']['VirtualPage']['HEADER'] = 'This is a virtual page';
@@ -1209,11 +802,6 @@ $lang['en_US']['VirtualPage']['SINGULARNAME'] = array(
 	50,
 	'Singular name of the object, used in dropdowns and to generally identify a single object in the interface'
 );
-$lang['en_US']['VirtualPage']['db_VersionID'] = array(
-	'VersionID',
-	50,
-	'Name of the object property, mainly used for automatically generating forms'
-);
 $lang['en_US']['Widget']['PLURALNAME'] = array(
 	'Widgets',
 	50,
@@ -1224,16 +812,6 @@ $lang['en_US']['Widget']['SINGULARNAME'] = array(
 	50,
 	'Singular name of the object, used in dropdowns and to generally identify a single object in the interface'
 );
-$lang['en_US']['Widget']['db_ParentID'] = array(
-	'ParentID',
-	50,
-	'Name of the object property, mainly used for automatically generating forms'
-);
-$lang['en_US']['Widget']['db_Sort'] = array(
-	'Sort',
-	50,
-	'Name of the object property, mainly used for automatically generating forms'
-);
 $lang['en_US']['WidgetArea']['PLURALNAME'] = array(
 	'Widget Areas',
 	50,
@@ -1243,11 +821,6 @@ $lang['en_US']['WidgetArea']['SINGULARNAME'] = array(
 	'Widget Area',
 	50,
 	'Singular name of the object, used in dropdowns and to generally identify a single object in the interface'
-);
-$lang['en_US']['WidgetArea']['has_many_Widgets'] = array(
-	'Widgets',
-	50,
-	'Name of an object relation, mainly used for automatically generating forms'
 );
 
 ?>
