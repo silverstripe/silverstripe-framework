@@ -88,24 +88,6 @@ class DataObjectSet extends ViewableData implements IteratorAggregate {
 		}
 		parent::__construct();
 	}
-
-	/**
-	 * Consolidate the DataObjectSet into an array of arrays
-	 * The array will contain the field values of the specified fields
-	 * @param array|string $args,... The field names, either as an array, or as multiple strings.
-	 * @return array
-	 */
-	public function consolidate($args) {
-		$fieldList = is_array($args) ? $args : func_get_args();
-		foreach($this as $record) {
-			$outputRow = null;
-			foreach($fieldList as $field) {
-				$outputRow[] = $record->$field;
-			}
-			$output[] = $outputRow;
-		}
-		return $output;
-	}
 	
 	/**
 	 * Destory all of the DataObjects in this set.
