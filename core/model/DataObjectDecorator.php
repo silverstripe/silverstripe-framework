@@ -155,10 +155,10 @@ abstract class DataObjectDecorator extends Extension implements i18nEntityProvid
 		$entities = array();
 		$fields = $this->extraDBFields();
 		$translatableAttributes = array('db','has_one','has_many','many_many');
-		foreach($fields as $att => $spec) {
+		if($fields) foreach($fields as $att => $spec) {
 			if(!in_array($att, $translatableAttributes)) continue;
 			
-			foreach($spec as $name => $type) {
+			if($spec) foreach($spec as $name => $type) {
 				$entities["{$this->class}.{$att}_{$name}"] = array($name);
 			}
 		}
