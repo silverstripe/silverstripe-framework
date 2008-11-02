@@ -2543,6 +2543,7 @@ class DataObject extends ViewableData implements DataObjectInterface,i18nEntityP
  		}
 
 		$labels = array_merge((array)$autoLabels, (array)$customLabels);
+		
 		$this->extend('updateFieldLabels', $labels);
 
 		return $labels;
@@ -2831,33 +2832,6 @@ class DataObject extends ViewableData implements DataObjectInterface,i18nEntityP
 	 */
 	public function provideI18nEntities() {
 		$entities = array();
-		
-		$db = eval("return {$this->class}::\$db;");
-		if($db) foreach($db as $name => $type) {
-			$entities["{$this->class}.db_{$name}"] = array(
-				$name,
-				PR_MEDIUM,
-				'Name of the object property, mainly used for automatically generating forms'
-			);
-		}
-
-		$has_many = eval("return {$this->class}::\$has_many;");
-		if($has_many) foreach($has_many as $name => $class) {
-			$entities["{$this->class}.has_many_{$name}"] = array(
-				$name,
-				PR_MEDIUM,
-				'Name of an object relation, mainly used for automatically generating forms'
-			);
-		}
-		
-		$many_many = eval("return {$this->class}::\$many_many;");
-		if($many_many) foreach($many_many as $name => $class) {
-			$entities["{$this->class}.many_many_{$name}"] = array(
-				$name,
-				PR_MEDIUM,
-				'Name of an object relation, mainly used for automatically generating forms'
-			);
-		}
 		
 		$entities["{$this->class}.SINGULARNAME"] = array(
 			$this->singular_name(),

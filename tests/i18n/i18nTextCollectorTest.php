@@ -381,10 +381,6 @@ PHP;
 			$moduleLangFileContent
 		);
 		$this->assertContains(
-			"\$lang['en_US']['i18nTestModule']['db_MyField']",
-			$moduleLangFileContent
-		);
-		$this->assertContains(
 			"\$lang['en_US']['i18nTestModuleInclude.ss']['NONAMESPACE'] = 'Include Entity without Namespace';",
 			$moduleLangFileContent
 		);
@@ -416,75 +412,11 @@ PHP;
 			array(
 				'i18nTextCollectorTestMyObject.PLURALNAME',
 				'i18nTextCollectorTestMyObject.SINGULARNAME',
-				'i18nTextCollectorTestMyObject.db_FirstProperty',
-				'i18nTextCollectorTestMyObject.db_SecondProperty',
-				'i18nTextCollectorTestMyObject.has_many_Relation',
 			)
-		);
-		$this->assertEquals(
-			'FirstProperty',
-			$matches['i18nTextCollectorTestMyObject.db_FirstProperty'][0]
 		);
 		$this->assertEquals(
 			'My Object',
 			$matches['i18nTextCollectorTestMyObject.SINGULARNAME'][0]
-		);
-	}
-	
-	function testCollectFromEntityProvidersInCustomSubClass() {
-		$c = new i18nTextCollector();
-		
-		$filePath = Director::baseFolder() . '/sapphire/tests/i18n/i18nTextCollectorTestMySubObject.php';
-		$matches = $c->collectFromEntityProviders($filePath);
-		$this->assertEquals(
-			array_keys($matches),
-			array(
-				'i18nTextCollectorTestMySubObject.PLURALNAME',
-				'i18nTextCollectorTestMySubObject.SINGULARNAME',
-				'i18nTextCollectorTestMySubObject.db_SubProperty',
-				'i18nTextCollectorTestMySubObject.has_many_SubRelation',
-			)
-		);
-		$this->assertEquals(
-			'SubProperty',
-			$matches['i18nTextCollectorTestMySubObject.db_SubProperty'][0]
-		);
-		$this->assertEquals(
-			'My Sub Object',
-			$matches['i18nTextCollectorTestMySubObject.SINGULARNAME'][0]
-		);
-	}
-	
-	function testCollectDecoratedFields() {
-		$c = new i18nTextCollector();
-		$c->basePath = $this->alternateBasePath;
-		$c->baseSavePath = $this->alternateBaseSavePath;
-		$c->run();
-		
-		$moduleLangFile = "{$this->alternateBaseSavePath}/i18ntestmodule/lang/" . $c->getDefaultLocale() . '.php';
-		$moduleLangFileContent = file_get_contents($moduleLangFile);
-		$this->assertNotContains(
-			"\$lang['en_US']['i18nTestModuleDecorator']['db_MyExtraField'] = 'MyExtraField';",
-			$moduleLangFileContent,
-			'Decorated fields are not stored in the module of the decorated file if the decorator is located in another module'
-		);
-		$this->assertNotContains(
-			"\$lang['en_US']['i18nTestModuleDecorator']['has_one_Page'] = 'Page';",
-			$moduleLangFileContent,
-			'Decorated fields are not stored in the module of the decorated file if the decorator is located in another module'
-		);
-		
-		$otherModuleLangFile = "{$this->alternateBaseSavePath}/i18nothermodule/lang/" . $c->getDefaultLocale() . '.php';
-		$otherModuleLangFileContent = file_get_contents($otherModuleLangFile);
-		$this->assertContains(
-			"\$lang['en_US']['i18nTestModuleDecorator']['db_MyExtraField'] = 'MyExtraField';",
-			$otherModuleLangFileContent,
-			'Decorated fields are stored in the module in which the decorator is placed'
-		);
-		$this->assertContains(
-			"\$lang['en_US']['i18nTestModuleDecorator']['has_one_Page'] = 'Page';",
-			$otherModuleLangFileContent,
-			'Decorated fields are stored in the module in which the decorator is placed'
 		);
 	}
 

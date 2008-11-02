@@ -6,7 +6,7 @@
  * @package sapphire
  * @subpackage model
  */
-abstract class DataObjectDecorator extends Extension implements i18nEntityProvider {
+abstract class DataObjectDecorator extends Extension {
 
 	/**
 	 * Statics on a {@link DataObject} subclass
@@ -161,21 +161,6 @@ abstract class DataObjectDecorator extends Extension implements i18nEntityProvid
 			$field_labels = $extra_fields['field_labels'];
 			if($field_labels) $lables = array_merge($lables, $field_labels);
 		}
-	}
-	
-	function provideI18nEntities() {
-		$entities = array();
-		$fields = $this->extraStatics();
-		$translatableAttributes = array('db','has_one','has_many','many_many');
-		if($fields) foreach($fields as $att => $spec) {
-			if(!in_array($att, $translatableAttributes)) continue;
-			
-			if($spec) foreach($spec as $name => $type) {
-				$entities["{$this->class}.{$att}_{$name}"] = array($name);
-			}
-		}
-
-		return $entities;
 	}
 
 }

@@ -16,36 +16,15 @@ class i18nTest extends SapphireTest {
 		i18n::set_locale('de_DE');
 		$obj = new i18nTest_DataObject();
 		
-		$lang['en_US']['i18nTest_DataObject']['db_MyProperty'] = 'MyProperty';
-		$lang['de_DE']['i18nTest_DataObject']['db_MyProperty'] = 'Mein Attribut';
+		$lang['en_US']['i18nTest_DataObject']['MyProperty'] = 'MyProperty';
+		$lang['de_DE']['i18nTest_DataObject']['MyProperty'] = 'Mein Attribut';
 
 		$this->assertEquals(
 			$obj->fieldLabel('MyProperty'),
 			'Mein Attribut'
 		);
 		
-		$lang['en_US']['i18nTest_DataObject']['has_one_HasOneRelation'] = 'HasOneRelation';
-		$lang['de_DE']['i18nTest_DataObject']['has_one_HasOneRelation'] = 'Eins zu eins';
-		$this->assertEquals(
-			$obj->fieldLabel('HasOneRelation'),
-			'Eins zu eins'
-		);
-		
-		$lang['en_US']['i18nTest_DataObject']['has_many_HasManyRelation'] = 'HasManyRelation';
-		$lang['de_DE']['i18nTest_DataObject']['has_many_HasManyRelation'] = 'Viel zu eins';
-		$this->assertEquals(
-			$obj->fieldLabel('HasManyRelation'),
-			'Viel zu eins'
-		);
-		
-		$lang['en_US']['i18nTest_DataObject']['many_many_ManyManyRelation'] = 'ManyManyRelation';
-		$lang['de_DE']['i18nTest_DataObject']['many_many_ManyManyRelation'] = 'Viel zu viel';
-		$this->assertEquals(
-			$obj->fieldLabel('ManyManyRelation'),
-			'Viel zu viel'
-		);
-		
-		$lang['en_US']['i18nTest_DataObject']['db_MyUntranslatedProperty'] = 'MyUntranslatedProperty';
+		$lang['en_US']['i18nTest_DataObject']['MyUntranslatedProperty'] = 'MyUntranslatedProperty';
 		$this->assertEquals(
 			$obj->fieldLabel('MyUntranslatedProperty'),
 			'My Untranslated Property'
@@ -105,6 +84,13 @@ class i18nTest_DataObject extends DataObject implements TestOnly {
 	static $many_many = array(
 		'ManyManyRelation' => 'Member'
 	);
+	
+	function fieldLabels() {
+		$labels = parent::fieldLabels();
+		$labels['MyProperty'] = _t('i18nTest_DataObject.MyProperty', 'My Property');
+		
+		return $labels;
+	}
 	
 }
 
