@@ -270,6 +270,10 @@ class Text extends DBField {
 	public function scaffoldFormField($title = null, $params = null) {
 		return new TextareaField($this->name, $title);
 	}
+	
+	public function scaffoldSearchField($title = null, $params = null) {
+		return new TextField($this->name, $title);
+	}
 }
 
 ?>
