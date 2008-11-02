@@ -1,19 +1,6 @@
 <?php
-
-/**
- * Database Administration
- *
- * @package sapphire
- * @subpackage model
- */
-
-
-/**
- * Include the DB class
- */
+// Include the DB class
 require_once("core/model/DB.php");
-
-
 
 /**
  * DatabaseAdmin class
