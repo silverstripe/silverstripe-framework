@@ -917,6 +917,17 @@ class SiteTree extends DataObject {
 		}
 		return $t;
 	}
+	
+	/**
+	 * Return the SiteTree object with the given URL segment.
+	 *
+	 * @param string $urlSegment The URL segment, eg 'home'
+	 *
+	 * @return SiteTree The object with the given URL segment
+	 */
+	public static function get_by_url($urlSegment) {
+		return DataObject::get_one("SiteTree", "URLSegment = '" . addslashes((string) $urlSegment) . "'");
+	}
 
 	/**
 	 * Replace a URL in html content with a new URL.

@@ -96,7 +96,7 @@ class DataObjectTest extends SapphireTest {
 		$this->assertEquals('Home', $page->Title);
 		
 		// Test get_by_url()
-		$page = DataObject::get_by_url('home');
+		$page = SiteTree::get_by_url('home');
 		$this->assertEquals($homepageID, $page->ID);
 		
 		// Test get_one() without caching

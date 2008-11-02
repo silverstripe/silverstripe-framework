@@ -2243,17 +2243,6 @@ class DataObject extends ViewableData implements DataObjectInterface,i18nEntityP
 	}
 
 	/**
-	 * Return the SiteTree object with the given URL segment.
-	 *
-	 * @param string $urlSegment The URL segment, eg 'home'
-	 *
-	 * @return SiteTree The object with the given URL segment
-	 */
-	public static function get_by_url($urlSegment) {
-		return DataObject::get_one("SiteTree", "URLSegment = '" . addslashes((string) $urlSegment) . "'");
-	}
-
-	/**
 	 * Return the given element, searching by ID
 	 *
 	 * @param string $callerClass The class of the object to be returned
