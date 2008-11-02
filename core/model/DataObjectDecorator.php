@@ -28,15 +28,13 @@ abstract class DataObjectDecorator extends Extension implements i18nEntityProvid
 	);
 	
 	/**
-	 * Load the extra database fields defined in extraDBFields.
-	 * 
-	 * @todo Rename to "loadExtraStaticFields", as it decorates more than database related fields.
+	 * Load the extra database fields defined in extraStatics.
 	 */
-	function loadExtraDBFields() {
+	function loadExtraStatics() {
 		// Don't apply DB fields if the parent object has this extension too
 		if(singleton(get_parent_class($this->owner))->extInstance($this->class)) return;
 	
-		$fields = $this->extraDBFields();
+		$fields = $this->extraStatics();
 		$className = $this->owner->class;
 
 		if($fields) {
@@ -50,6 +48,13 @@ abstract class DataObjectDecorator extends Extension implements i18nEntityProvid
 				$this->owner->set_uninherited('_cache_hasOwnTableDatabaseField', null);
 			}
 		}
+	}
+	
+	/**
+	 * @deprecated 2.3 Use loadExtraStatics()
+	 */
+	function loadExtraDBFields() {
+		return $this->loadExtraStatics();
 	}
 
 
@@ -92,6 +97,13 @@ abstract class DataObjectDecorator extends Extension implements i18nEntityProvid
 	 * @return array Returns a map where the keys are db, has_one, etc, and
 	 *               the values are additional fields/relations to be defined.
 	 */
+	function extraStatics() {
+		return $this->extraDBFields();
+	}
+	
+	/**
+	 * @deprecated 2.3 Use extraStatics()
+	 */
 	function extraDBFields() {
 		return array();
 	}
@@ -130,7 +142,7 @@ abstract class DataObjectDecorator extends Extension implements i18nEntityProvid
 	 * $extra_fields['summary_fields']
 	 */
 	function updateSummaryFields(&$fields){
-		$extra_fields = $this->extraDBFields();
+		$extra_fields = $this->extraStatics();
 		if(isset($extra_fields['summary_fields'])){
 			$summary_fields = $extra_fields['summary_fields'];
 			if($summary_fields) $fields = array_merge($fields, $summary_fields);
@@ -144,7 +156,7 @@ abstract class DataObjectDecorator extends Extension implements i18nEntityProvid
 	 * $extra_fields['field_labels']
 	 */
 	function updateFieldLabels(&$lables){
-		$extra_fields = $this->extraDBFields();
+		$extra_fields = $this->extraStatics();
 		if(isset($extra_fields['field_labels'])){
 			$field_labels = $extra_fields['field_labels'];
 			if($field_labels) $lables = array_merge($lables, $field_labels);
@@ -153,7 +165,7 @@ abstract class DataObjectDecorator extends Extension implements i18nEntityProvid
 	
 	function provideI18nEntities() {
 		$entities = array();
-		$fields = $this->extraDBFields();
+		$fields = $this->extraStatics();
 		$translatableAttributes = array('db','has_one','has_many','many_many');
 		if($fields) foreach($fields as $att => $spec) {
 			if(!in_array($att, $translatableAttributes)) continue;

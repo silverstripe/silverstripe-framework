@@ -44,7 +44,7 @@ class DataObjectDecoratorTest_Member extends DataObject implements TestOnly {
 
 class DataObjectDecoratorTest_ContactRole extends DataObjectDecorator implements TestOnly {
 	
-	function extraDBFields() {
+	function extraStatics() {
 		return array(
 			'db' => array(
 				'Website' => 'Text',

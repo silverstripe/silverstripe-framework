@@ -48,7 +48,7 @@ class Versioned extends DataObjectDecorator {
 		$this->liveStage = array_pop($stages);
 	}
 	
-	function extraDbFields() {
+	function extraStatics() {
 		return array(
 			'has_many' => array(
 				'Versions' => 'SiteTree',

@@ -576,7 +576,7 @@ class DataObjectTest_SubTeam extends DataObjectTest_Team implements TestOnly {
 
 class DataObjectTest_Team_Decorator extends DataObjectDecorator implements TestOnly {
 	
-	function extraDBFields() {
+	function extraStatics() {
 		return array(
 			'db' => array(
 				'DecoratedDatabaseField' => 'Text'

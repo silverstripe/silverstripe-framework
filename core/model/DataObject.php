@@ -216,7 +216,7 @@ class DataObject extends ViewableData implements DataObjectInterface,i18nEntityP
 
 		// Define the extra db fields
 		if($this->extension_instances) foreach($this->extension_instances as $i => $instance) {
-			$instance->loadExtraDBFields();
+			$instance->loadExtraStatics();
 		}
 
 		// Set up accessors for joined items
