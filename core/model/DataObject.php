@@ -1526,8 +1526,8 @@ class DataObject extends ViewableData implements DataObjectInterface,i18nEntityP
 	 * Checks if the given fields have been filled out.
 	 * Pass this method a number of field names, it will return true if they all have values.
 	 *
+	 * @deprecated 2.3 Use custom code
 	 * @param array|string $args,... The field names may be passed either as an array, or as multiple parameters.
-	 *
 	 * @return boolean True if all fields have values, otherwise false
 	 */
 	public function filledOut($args) {
