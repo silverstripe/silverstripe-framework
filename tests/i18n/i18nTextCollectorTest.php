@@ -468,11 +468,21 @@ PHP;
 			$moduleLangFileContent,
 			'Decorated fields are not stored in the module of the decorated file if the decorator is located in another module'
 		);
+		$this->assertNotContains(
+			"\$lang['en_US']['i18nTestModuleDecorator']['has_one_Page'] = 'Page';",
+			$moduleLangFileContent,
+			'Decorated fields are not stored in the module of the decorated file if the decorator is located in another module'
+		);
 		
 		$otherModuleLangFile = "{$this->alternateBaseSavePath}/i18nothermodule/lang/" . $c->getDefaultLocale() . '.php';
 		$otherModuleLangFileContent = file_get_contents($otherModuleLangFile);
 		$this->assertContains(
 			"\$lang['en_US']['i18nTestModuleDecorator']['db_MyExtraField'] = 'MyExtraField';",
+			$otherModuleLangFileContent,
+			'Decorated fields are stored in the module in which the decorator is placed'
+		);
+		$this->assertContains(
+			"\$lang['en_US']['i18nTestModuleDecorator']['has_one_Page'] = 'Page';",
 			$otherModuleLangFileContent,
 			'Decorated fields are stored in the module in which the decorator is placed'
 		);
