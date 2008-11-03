@@ -84,22 +84,20 @@ TableField.prototype = {
 					method: 'post', 
 					postBody: 'ajax=1' + ($('SecurityID') ? '&SecurityID=' + $('SecurityID').value : ''),
 					onComplete: function(response){
-						if(response.responseText == "1"){
-							Effect.Fade(
-								row,
-								{
-									afterFinish: function(obj) {
-										// remove row from DOM
-										obj.element.parentNode.removeChild(obj.element);
-										// recalculate summary if needed (assumes that TableListField.js is present)
-										// TODO Proper inheritance
-										if(this._summarise) this._summarise();
-										// custom callback
-										if(this.callback_deleteRecord) this.callback_deleteRecord(e);
-									}.bind(this)
-								}
-							);							
-						}
+						Effect.Fade(
+							row,
+							{
+								afterFinish: function(obj) {
+									// remove row from DOM
+									obj.element.parentNode.removeChild(obj.element);
+									// recalculate summary if needed (assumes that TableListField.js is present)
+									// TODO Proper inheritance
+									if(this._summarise) this._summarise();
+									// custom callback
+									if(this.callback_deleteRecord) this.callback_deleteRecord(e);
+								}.bind(this)
+							}
+						);
 					}.bind(this),
 					onFailure: ajaxErrorHandler
 				}
