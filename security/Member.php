@@ -527,7 +527,7 @@ class Member extends DataObject {
 	 * @return bool Returns TRUE if the member is in one of the given groups, otherwise FALSE.
 	 */
 	public function inGroups($groups, $strict = false) {
-		foreach($groups as $group) {
+		if($groups) foreach($groups as $group) {
 			if($this->inGroup($group, $strict)) return true;
 		}
 		
@@ -555,7 +555,7 @@ class Member extends DataObject {
 		}
 		
 		$groupCandidateObjs = ($strict) ? $this->getManyManyComponents("Groups") : $this->Groups();
-		foreach($groupCandidateObjs as $groupCandidateObj) {
+		if($groupCandidateObjs) foreach($groupCandidateObjs as $groupCandidateObj) {
 			if($groupCandidateObj->ID == $groupCheckObj->ID) return true;
 		}
 
