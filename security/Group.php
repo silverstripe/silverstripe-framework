@@ -199,15 +199,18 @@ class Group extends DataObject {
 	
 	/**
 	 * Return a set of this record's "family" of IDs - the IDs of
-	 * this record and all its descendants
+	 * this record and all its descendants.
+	 * @return array
 	 */
 	public function collateFamilyIDs() {
+		$familyIDs = array();
 		$chunkToAdd = array(array("ID" => $this->ID));
 		
 		while($chunkToAdd) {
 			$idList = null;
 			foreach($chunkToAdd as $item) {
-				$idList[] = $family[] = $item['ID'];
+				$idList[] = $item['ID'];
+				$familyIDs[] = $item['ID'];
 			}
 			$idList = implode(',',$idList);
 			
@@ -218,7 +221,7 @@ class Group extends DataObject {
 			if(!$chunkToAdd->numRecords()) $chunkToAdd = null;
 		}
 		
-		return $family;
+		return $familyIDs;
 	}
 	
 	/**
