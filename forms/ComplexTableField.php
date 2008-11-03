@@ -824,13 +824,19 @@ class ComplexTableField_ItemRequest extends RequestHandler {
 		global $_ALL_CLASSES;
 
 		$items = array();
-		$parents = $_ALL_CLASSES['parents'][$this->class];
-		foreach($parents as $parent) {
-			if(!in_array($parent,$_ALL_CLASSES['parents']["TableListField"])) $items[] = $parent . "_Popup";
+		$parents = isset($_ALL_CLASSES['parents'][$this->class]) ? $_ALL_CLASSES['parents'][$this->class] : null;
+		
+		if($parents) {
+			foreach($parents as $parent) {
+				if(!in_array($parent, $_ALL_CLASSES['parents']['TableListField'])) {
+					$items[] = $parent . '_Popup';
+				}
+			}
 		}
-		$items[] = $this->class . "_Popup";
+		
+		$items[] = $this->class . '_Popup';
 
-		return implode(" ", $items);
+		return implode(' ', $items);
 	}
 
 
