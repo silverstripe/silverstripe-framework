@@ -140,66 +140,67 @@ class Security extends Controller {
 	 *                                                       access the item.
 	 */
 	static function permissionFailure($controller = null, $messageSet = null) {
-		// Prepare the messageSet provided
-		if(!$messageSet) {
-			if(self::$default_message_set) {
-				$messageSet = self::$default_message_set;
-			} else {
-				$messageSet = array(
-					'default' => _t(
-						'Security.NOTEPAGESECURED', 
-						"That page is secured. Enter your credentials below and we will send you right along."
-					),
-					'alreadyLoggedIn' => _t(
-						'Security.ALREADYLOGGEDIN', 
-						"You don't have access to this page.  If you have another account that can access that page, you can log in below."
-					),
-					'logInAgain' => _t(
-						'Security.LOGGEDOUT',
-						"You have been logged out.  If you would like to log in again, enter your credentials below."
-					)
-				);
-			}
-		}
-		
-		if(!is_array($messageSet)) {
-			$messageSet = array('default' => $messageSet);
-		}
-
-		// Work out the right message to show
-		if(Member::currentUserID()) {
-			// user_error( 'PermFailure with member', E_USER_ERROR );
-
-			$message = isset($messageSet['alreadyLoggedIn'])
-										? $messageSet['alreadyLoggedIn']
-										: $messageSet['default'];
-
-			if($member = Member::currentUser())
-				$member->logout();
-
-		} else if(substr(Director::history(),0,15) == 'Security/logout') {
-			$message = $messageSet['logInAgain']
-										? $messageSet['logInAgain']
-										: $messageSet['default'];
-
-		} else {
-			$message = $messageSet['default'];
-		}
-
-		Session::set("Security.Message.message", $message);
-		Session::set("Security.Message.type", 'warning');
-
-		Session::set("BackURL", $_SERVER['REQUEST_URI']);
-		
-		// TODO AccessLogEntry needs an extension to handle permission denied errors
-		// Audit logging hook
-		if($controller) $controller->extend('permissionDenied', $member);
-		
-		// AccessLogEntry::create("Permission to access {$name} denied");
-		
 		if(Director::is_ajax()) {
-			die('NOTLOGGEDIN:');
+			$response = ($controller) ? $controller->getResponse() : new HTTPResponse();
+			$response->setStatusCode(403);
+			$response->setBody('NOTLOGGEDIN:');
+			return $response;
 		} else {
+			// Prepare the messageSet provided
+			if(!$messageSet) {
+				if(self::$default_message_set) {
+					$messageSet = self::$default_message_set;
+				} else {
+					$messageSet = array(
+						'default' => _t(
+							'Security.NOTEPAGESECURED', 
+							"That page is secured. Enter your credentials below and we will send you right along."
+						),
+						'alreadyLoggedIn' => _t(
+							'Security.ALREADYLOGGEDIN', 
+							"You don't have access to this page.  If you have another account that can access that page, you can log in below."
+						),
+						'logInAgain' => _t(
+							'Security.LOGGEDOUT',
+							"You have been logged out.  If you would like to log in again, enter your credentials below."
+						)
+					);
+				}
+			}
+
+			if(!is_array($messageSet)) {
+				$messageSet = array('default' => $messageSet);
+			}
+
+			// Work out the right message to show
+			if(Member::currentUserID()) {
+				// user_error( 'PermFailure with member', E_USER_ERROR );
+
+				$message = isset($messageSet['alreadyLoggedIn'])
+											? $messageSet['alreadyLoggedIn']
+											: $messageSet['default'];
+
+				if($member = Member::currentUser())
+					$member->logout();
+
+			} else if(substr(Director::history(),0,15) == 'Security/logout') {
+				$message = $messageSet['logInAgain']
+											? $messageSet['logInAgain']
+											: $messageSet['default'];
+
+			} else {
+				$message = $messageSet['default'];
+			}
+
+			Session::set("Security.Message.message", $message);
+			Session::set("Security.Message.type", 'warning');
+
+			Session::set("BackURL", $_SERVER['REQUEST_URI']);
+
+			// TODO AccessLogEntry needs an extension to handle permission denied errors
+			// Audit logging hook
+			if($controller) $controller->extend('permissionDenied', $member);
+			
 			Director::redirect("Security/login");
 		}
 		return;
