@@ -22,7 +22,7 @@ class ChangePasswordForm extends Form {
 	function __construct($controller, $name, $fields = null, $actions = null) {
 		if(!$fields) {
 			$fields = new FieldSet();
-			if(Member::currentUser() && (!isset($_REQUEST['h']) || !Member::member_from_autologin($_REQUEST['h']))) {
+			if(Member::currentUser() && (!isset($_REQUEST['h']) || !Member::member_from_autologinhash($_REQUEST['h']))) {
 				$fields->push(new PasswordField("OldPassword",_t('Member.YOUROLDPASSWORD', "Your old password")));
 			}
 
@@ -47,7 +47,7 @@ class ChangePasswordForm extends Form {
 	function doChangePassword(array $data) {
 		if($member = Member::currentUser()) {
 			// The user was logged in, check the current password
-			if($member->checkPassword($data['OldPassword']) == false) {
+			if(isset($data['OldPassword']) && $member->checkPassword($data['OldPassword']) == false) {
 				$this->clearMessage();
 				$this->sessionMessage(
 					_t('Member.ERRORPASSWORDNOTMATCH', "Your current password does not match, please try again"), 
