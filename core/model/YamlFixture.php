@@ -134,13 +134,21 @@ class YamlFixture extends Object {
 		foreach($fixtureContent as $dataClass => $items) {
 			foreach($items as $identifier => $fields) {
 				$obj = new $dataClass();
+				
+				// If an ID is explicitly passed, then we'll sort out the initial write straight away
+				// This is just in case field setters triggered by the population code in the next block
+				// Call $this->write().  (For example, in FileTest)
+				if(isset($fields['ID'])) {
+					$obj->ID = $fields['ID'];
+					$obj->write(false, true);
+				}
+				
 				// Populate the dictionary with the ID
 				foreach($fields as $fieldName => $fieldVal) {
 					if($obj->many_many($fieldName) || $obj->has_many($fieldName) || $obj->has_one($fieldName)) continue;
 					$obj->$fieldName = $this->parseFixtureVal($fieldVal);
 				}
-				
-				$obj->write(false, true);
+				$obj->write();
 				
 				// has to happen before relations in case a class is referring to itself
 				$this->fixtureDictionary[$dataClass][$identifier] = $obj->ID;
