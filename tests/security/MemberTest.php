@@ -182,4 +182,78 @@ class MemberTest extends SapphireTest {
 		$this->assertFalse($member->isPasswordExpired());
 		
 	}
+	
+	function testInGroups() {
+		$staffmember = $this->objFromFixture('Member', 'staffmember');
+		$managementmember = $this->objFromFixture('Member', 'managementmember');
+		$accountingmember = $this->objFromFixture('Member', 'accountingmember');
+		$ceomember = $this->objFromFixture('Member', 'ceomember');
+		
+		$staffgroup = $this->objFromFixture('Group', 'staffgroup');
+		$managementgroup = $this->objFromFixture('Group', 'managementgroup');
+		$accountinggroup = $this->objFromFixture('Group', 'accountinggroup');
+		$ceogroup = $this->objFromFixture('Group', 'ceogroup');
+		
+		$this->assertTrue(
+			$staffmember->inGroups(array($staffgroup, $managementgroup)),
+			'inGroups() succeeds if a membership is detected on one of many passed groups'
+		);
+		$this->assertFalse(
+			$staffmember->inGroups(array($ceogroup, $managementgroup)),
+			'inGroups() fails if a membership is detected on none of the passed groups'
+		);
+		$this->assertFalse(
+			$ceomember->inGroups(array($staffgroup, $managementgroup), true),
+			'inGroups() fails if no direct membership is detected on any of the passed groups (in strict mode)'
+		);
+	}
+	
+	function testInGroup() {
+		$staffmember = $this->objFromFixture('Member', 'staffmember');
+		$managementmember = $this->objFromFixture('Member', 'managementmember');
+		$accountingmember = $this->objFromFixture('Member', 'accountingmember');
+		$ceomember = $this->objFromFixture('Member', 'ceomember');
+		
+		$staffgroup = $this->objFromFixture('Group', 'staffgroup');
+		$managementgroup = $this->objFromFixture('Group', 'managementgroup');
+		$accountinggroup = $this->objFromFixture('Group', 'accountinggroup');
+		$ceogroup = $this->objFromFixture('Group', 'ceogroup');
+		
+		$this->assertTrue(
+			$staffmember->inGroup($staffgroup),
+			'Direct group membership is detected'
+		);
+		$this->assertTrue(
+			$managementmember->inGroup($staffgroup),
+			'Users of child group are members of a direct parent group (if not in strict mode)'
+		);
+		$this->assertTrue(
+			$accountingmember->inGroup($staffgroup),
+			'Users of child group are members of a direct parent group (if not in strict mode)'
+		);
+		$this->assertTrue(
+			$ceomember->inGroup($staffgroup),
+			'Users of indirect grandchild group are members of a parent group (if not in strict mode)'
+		);
+		$this->assertTrue(
+			$ceomember->inGroup($ceogroup, true),
+			'Direct group membership is dected (if in strict mode)'
+		);
+		$this->assertFalse(
+			$ceomember->inGroup($staffgroup, true),
+			'Users of child group are not members of a direct parent group (if in strict mode)'
+		);
+		$this->assertFalse(
+			$staffmember->inGroup($managementgroup),
+			'Users of parent group are not members of a direct child group'
+		);
+		$this->assertFalse(
+			$staffmember->inGroup($ceogroup),
+			'Users of parent group are not members of an indirect grandchild group'
+		);
+		$this->assertFalse(
+			$accountingmember->inGroup($managementgroup),
+			'Users of group are not members of any siblings'
+		);
+	}
 }

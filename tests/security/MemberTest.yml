@@ -1,3 +1,19 @@
+Group:
+   staffgroup:
+      Title: staffgroup
+      Code: staffgroup
+   managementgroup:
+      Title: managementgroup
+      Code: managementgroup
+      Parent: =>Group.staffgroup
+   accountinggroup:
+      Title: accountinggroup
+      Code: accountinggroup
+      Parent: =>Group.staffgroup
+   ceogroup:
+      Title: ceogroup
+      Code: ceogroup
+      Parent: =>Group.managementgroup
 Member:
    test:
       FirstName: Test
@@ -16,3 +32,15 @@ Member:
       Surname: User
       Email: noexpiry@silverstripe.com
       Password: 1nitialPassword
+   staffmember:
+      Email: staffmember@test.com
+      Groups: =>Group.staffgroup
+   managementmember:
+      Email: managementmember@test.com
+      Groups: =>Group.managementgroup
+   accountingmember:
+      Email: accountingmember@test.com
+      Groups: =>Group.accountinggroup
+   ceomember:
+      Email: ceomember@test.com
+      Groups: =>Group.ceogroup

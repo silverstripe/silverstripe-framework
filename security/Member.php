@@ -520,42 +520,44 @@ class Member extends DataObject {
 
 
 	/**
-	 * Check if the member is in one of the given groups
+	 * Check if the member is in one of the given groups.
 	 *
-	 * @param array $groups Groups to check
-	 * @return bool Returns TRUE if the member is in one of the given groups,
-	 *              otherwise FALSE.
+	 * @param array|DataObjectSet $groups Collection of {@link Group} DataObjects to check
+	 * @param boolean $strict Only determine direct group membership if set to true (Default: false)
+	 * @return bool Returns TRUE if the member is in one of the given groups, otherwise FALSE.
 	 */
-	public function inGroups(array $groups) {
-		foreach($this->Groups() as $group)
-			$memberGroups[] = $group->Title;
-
-		return count(array_intersect($memberGroups, $groups)) > 0;
+	public function inGroups($groups, $strict = false) {
+		foreach($groups as $group) {
+			if($this->inGroup($group, $strict)) return true;
+		}
+		
+		return false;
 	}
 
 
 	/**
-	 * Check if the member is in the given group
+	 * Check if the member is in the given group or any parent groups.
 	 *
 	 * @param int|Group|string $group Group instance, Group Code or ID
+	 * @param boolean $strict Only determine direct group membership if set to TRUE (Default: FALSE)
 	 * @return bool Returns TRUE if the member is in the given group, otherwise FALSE.
 	 */
-	public function inGroup($group) {
+	public function inGroup($group, $strict = false) {
 		if(is_numeric($group)) {
 			$groupCheckObj = DataObject::get_by_id('Group', $group);
 		} elseif(is_string($group)) {
 			$SQL_group = Convert::raw2sql($group);
 			$groupCheckObj = DataObject::get_one('Group', "Code = '{$SQL_group}'");
-		} elseif(is_a('Group', $group)) {
+		} elseif($group instanceof Group) {
 			$groupCheckObj = $group;
 		} else {
 			user_error('Member::inGroup(): Wrong format for $group parameter', E_USER_ERROR);
 		}
 		
-		foreach($this->Groups() as $groupCandidateObj) {
-			if($groupCandidateObj->ID == $groupCheckObj->ID)
-				return true;
-			}
+		$groupCandidateObjs = ($strict) ? $this->getManyManyComponents("Groups") : $this->Groups();
+		foreach($groupCandidateObjs as $groupCandidateObj) {
+			if($groupCandidateObj->ID == $groupCheckObj->ID) return true;
+		}
 
 		return false;
 	}
