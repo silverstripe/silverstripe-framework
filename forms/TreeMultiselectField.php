@@ -58,6 +58,8 @@ HTML;
 	function saveInto(DataObject $record) {
 		// Detect whether this field has actually been updated
 		if($this->value !== 'unchanged') {
+			$items = array();
+			
 			$fieldName = $this->name;
 			$saveDest = $record->$fieldName();
 			if(!$saveDest) user_error("TreeMultiselectField::saveInto() Field '$fieldName' not found on $record->class.$record->ID", E_USER_ERROR);
@@ -82,6 +84,8 @@ HTML;
 	 * Changes this field to the readonly field.
 	 */
 	function performReadonlyTransformation() {
+		$titleArray = array();
+		$titleList = array();
 		if($items = $this->getItems()) {
 			foreach($items as $item) $titleArray[] = $item->Title;
 			if($titleArray) $titleList = implode(", ", $titleArray);
