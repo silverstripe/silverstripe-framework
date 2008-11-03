@@ -27,7 +27,7 @@ class CliTestReporter extends SapphireTestReporter {
 		}  else {
 			echo SSCli::text(" AT LEAST ONE FAILURE ", "white", "red");
 		}
-		echo "\n\n$testCount tests run: " . SSCli::text("$passCount passes", $passCount > 0 ? "green" : null) . ", ". SSCli::text("$failCount fails", $failCount > 0 ? "red" : null) . ", and 0 exceptions\n";
+		echo "\n\n$testCount tests run: " . SSCli::text("$passCount passes", null) . ", ". SSCli::text("$failCount fails", null) . ", and 0 exceptions\n";
 		echo "Maximum memory usage: " . number_format(memory_get_peak_usage(), 0) . "\n\n";
 
 		$totalTime = array_sum($this->testSpeeds);
