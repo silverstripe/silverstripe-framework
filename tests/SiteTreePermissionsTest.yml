@@ -1,0 +1,60 @@
+Permission:
+   cmsmain1:
+      Code: CMS_ACCESS_CMSMain
+   cmsmain2:
+      Code: CMS_ACCESS_CMSMain
+Group:
+   subadmingroup:
+      Title: Create, edit and delete pages
+      Code: subadmingroup
+      Permissions: =>Permission.cmsmain1
+   editorgroup:
+      Title: Edit existing pages
+      Code: editorgroup
+      Permissions: =>Permission.cmsmain2
+   websiteusers:
+      Title: View certain restricted pages
+Member:
+   subadmin:
+      Email: subadmin@test.com
+      Password: test
+      Groups: =>Group.subadmingroup
+   editor:
+      Email: editor@test.com
+      Password: test
+      Groups: =>Group.editorgroup
+   websiteuser:
+      Email: websiteuser@test.com
+      Password: test
+      Groups: =>Group.websiteusers
+Page:
+   restrictedViewLoggedInUsers:
+      CanViewType: LoggedInUsers
+   restrictedViewOnlyWebsiteUsers:
+      CanViewType: OnlyTheseUsers
+      ViewerGroups: =>Group.websiteusers
+   restrictedViewOnlySubadminGroup:
+      CanViewType: OnlyTheseUsers
+      ViewerGroups: =>Group.subadmingroup
+   restrictedEditLoggedInUsers:
+      CanEditType: LoggedInUsers
+   restrictedEditOnlySubadminGroup:
+      CanEditType: OnlyTheseUsers
+      EditorGroups: =>Group.subadmingroup
+   parent_restrictedViewOnlySubadminGroup:
+      CanViewType: OnlyTheseUsers
+      ViewerGroups: =>Group.subadmingroup
+   child_restrictedViewOnlySubadminGroup:
+      CanViewType: Inherit
+      Parent: =>Page.parent_restrictedViewOnlySubadminGroup
+   parent_restrictedEditOnlySubadminGroup:
+      CanEditType: OnlyTheseUsers
+      EditorGroups: =>Group.subadmingroup
+   child_restrictedEditOnlySubadminGroup:
+      CanEditType: Inherit
+      Parent: =>Page.parent_restrictedEditOnlySubadminGroup
+   deleteTestParentPage:
+      CanEditType: Inherit
+   deleteTestChildPage:
+      CanEditType: OnlyTheseUsers
+      EditorGroups: =>Group.subadmingroup

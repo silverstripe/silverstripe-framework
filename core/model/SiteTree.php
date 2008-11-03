@@ -80,10 +80,8 @@ class SiteTree extends DataObject {
 		"ReportClass" => "Varchar",
 		"Priority" => "Float",
 
-		"Viewers" => "Enum('Anyone, LoggedInUsers, OnlyTheseUsers', 'Anyone')",
-		"Editors" => "Enum('LoggedInUsers, OnlyTheseUsers', 'LoggedInUsers')",
-		"ViewersGroup" => "Int",
-		"EditorsGroup" => "Int",
+		"CanViewType" => "Enum('Anyone, LoggedInUsers, OnlyTheseUsers, Inherit', 'Anyone')",
+		"CanEditType" => "Enum('LoggedInUsers, OnlyTheseUsers, Inherit', 'LoggedInUsers')",
 		
 		// Simple task tracking
 		"ToDo" => "Text",
@@ -101,7 +99,9 @@ class SiteTree extends DataObject {
 
 	static $many_many = array(
 		"LinkTracking" => "SiteTree",
-		"ImageTracking" => "File"
+		"ImageTracking" => "File",
+		"ViewerGroups" => "Group",
+		"EditorGroups" => "Group",
 	);
 
 	static $belongs_many_many = array(
@@ -123,9 +123,8 @@ class SiteTree extends DataObject {
 		"ShowInMenus" => 1,
 		"ShowInSearch" => 1,
 		"Status" => "New page",
-		"CanCreateChildren" => array(10),
-		"Viewers" => "Anyone",
-		"Editors" => "LoggedInUsers"
+		"CanViewType" => "Anyone",
+		"CanEditType" => "LoggedInUsers"
 	);
 
 	static $has_one = array(
@@ -545,10 +544,17 @@ class SiteTree extends DataObject {
 
 	/**
 	 * This function should return true if the current user can add children
-	 * to this page.
-	 *
-	 * It can be overloaded to customise the security model for an
+	 * to this page. It can be overloaded to customise the security model for an
 	 * application.
+	 * 
+	 * Denies permission if any of the following conditions is TRUE:
+	 * - alternateCanAddChildren() on a decorator returns FALSE
+	 * - canEdit() is not granted
+	 * - There are no classes defined in {@link $allowed_children}
+	 * 
+	 * @uses alternateCanAddChildren()
+	 * @uses canEdit()
+	 * @uses $allowed_children
 	 *
 	 * @return boolean True if the current user can add children.
 	 */
@@ -570,54 +576,90 @@ class SiteTree extends DataObject {
 
 	/**
 	 * This function should return true if the current user can view this
-	 * page.
-	 *
-	 * It can be overloaded to customise the security model for an
+	 * page. It can be overloaded to customise the security model for an
 	 * application.
+	 * 
+	 * Denies permission if any of the following conditions is TRUE:
+	 * - alternateCanView() on any decorator returns FALSE
+	 * - "CanViewType" directive is set to "Inherit" and any parent page return false for canView()
+	 * - "CanViewType" directive is set to "LoggedInUsers" and no user is logged in
+	 * - "CanViewType" directive is set to "OnlyTheseUsers" and user is not in the given groups
+	 *
+	 * @uses alternateCanView()
+	 * @uses ViewerGroups()
 	 *
 	 * @return boolean True if the current user can view this page.
 	 */
 	public function canView($member = null) {
-		if(!isset($member)) {
-			$member = Member::currentUser();
-		}
-		if($member && $member->isAdmin()) {
-			return true;
-		}
+		if(!isset($member)) $member = Member::currentUser();
+
+		// admin override
+		if($member && $member->isAdmin()) return true;
 		
+		// decorated access checks
 		$args = array($member, true);
 		$this->extend('alternateCanView', $args);
 		if($args[1] == false) return false;
 		
-		if(((!$this->Viewers) || ($this->Viewers == 'Anyone') ||
-						($this->Viewers == 'LoggedInUsers' && $member) ||
-						($this->Viewers == 'OnlyTheseUsers' && $member &&
-						 $member->inGroup($this->ViewersGroup))) == false)
-					return false;
-		return true;
+		// check for empty spec
+		if(
+			!$this->CanViewType || $this->CanViewType == 'Anyone'
+		) return true;
+
+		// check for inherit
+		if(
+			$this->CanViewType == 'Inherit' && $this->Parent()
+		) return $this->Parent()->canView($member);
+
+		// check for any logged-in users
+		if(
+			$this->CanViewType == 'LoggedInUsers' 
+			&& Member::currentUser()
+		) return true;
+		
+		// check for specific groups
+		if(
+			$this->CanViewType == 'OnlyTheseUsers' 
+			&& $member 
+			&& $member->inGroups($this->ViewerGroups())
+		) return true;
+		
+		return false;
 	}
 
 	/**
 	 * This function should return true if the current user can delete this
-	 * page.
-	 *
-	 * It can be overloaded to customise the security model for an
+	 * page. It can be overloaded to customise the security model for an
 	 * application.
+	 * 
+	 * Denies permission if any of the following conditions is TRUE:
+	 * - alternateCanDelete() returns FALSE on any decorator
+	 * - canEdit() returns FALSE
+	 * - any descendant page returns FALSE for canDelete()
+	 * 
+	 * @todo Check if all children can be deleted as well
+	 * @uses alternateCanDelete()
+	 * @uses canEdit()
 	 *
 	 * @param Member $member
 	 * @return boolean True if the current user can delete this page.
 	 */
 	public function canDelete($member = null) {
-		if(!isset($member)) {
-			$member = Member::currentUser();
-		}
-		if($member && $member->isAdmin()) {
-			return true;
-		}
+		if(!isset($member)) $member = Member::currentUser();
+		
+		if($member && $member->isAdmin()) return true;
 		
 		$args = array($member, true);
 		$this->extend('alternateCanDelete', $args);
 		if($args[1] == false) return false;
+		
+		// if page can't be edited, don't grant delete permissions
+		if(!$this->canEdit()) return false;
+		
+		$children = $this->AllChildren();
+		if($children) foreach($children as $child) {
+			if(!$child->canDelete()) return false;
+		}
 		
 		return $this->stat('can_create') != false;
 	}
@@ -625,22 +667,25 @@ class SiteTree extends DataObject {
 
 	/**
 	 * This function should return true if the current user can create new
-	 * pages of this class.
-	 *
-	 * It can be overloaded to customise the security model for an
+	 * pages of this class. It can be overloaded to customise the security model for an
 	 * application.
+	 * 
+	 * Denies permission if any of the following conditions is TRUE:
+	 * - alternateCanCreate() returns FALSE on any decorator
+	 * - $can_create is set to FALSE and the site is not in "dev mode"
+	 * 
+	 * Use {@link canAddChildren()} to control behaviour of creating children under this page.
+	 * 
+	 * @uses alternateCanCreate()
+	 * @uses $can_create
 	 *
 	 * @param Member $member
-	 * @return boolean True if the current user can create pages on this
-	 *                 class.
+	 * @return boolean True if the current user can create pages on this class.
 	 */
 	public function canCreate($member = null) {
-		if(!isset($member)) {
-			$member = Member::currentUser();
-		}
-		if($member && $member->isAdmin()) {
-			return true;
-		}
+		if(!isset($member)) $member = Member::currentUser();
+
+		if($member && $member->isAdmin()) return true;
 		
 		$args = array($member, true);
 		$this->extend('alternateCanCreate', $args);
@@ -652,52 +697,81 @@ class SiteTree extends DataObject {
 
 	/**
 	 * This function should return true if the current user can edit this
-	 * page.
-	 *
-	 * It can be overloaded to customise the security model for an
+	 * page. It can be overloaded to customise the security model for an
 	 * application.
+	 * 
+	 * Denies permission if any of the following conditions is TRUE:
+	 * - alternateCanEdit() on any decorator returns FALSE
+	 * - canView() return false
+	 * - "CanEditType" directive is set to "Inherit" and any parent page return false for canEdit()
+	 * - "CanEditType" directive is set to "LoggedInUsers" and no user is logged in or doesn't have the CMS_Access_CMSMAIN permission code
+	 * - "CanEditType" directive is set to "OnlyTheseUsers" and user is not in the given groups
+	 * 
+	 * @uses alternateCanEdit()
+	 * @uses canView()
+	 * @uses EditorGroups()
 	 *
 	 * @param Member $member
 	 * @return boolean True if the current user can edit this page.
 	 */
 	public function canEdit($member = null) {
-		if(!isset($member)) {
-			$member = Member::currentUser();
-		}
-		if($member && $member->isAdmin()) {
-			return true;
-		}
+		if(!isset($member)) $member = Member::currentUser();
+
+		// admin override
+		if($member && $member->isAdmin()) return true;
 		
+		// decorated access checks
 		$args = array($member, true);
 		$this->extend('alternateCanEdit', $args);
 		if($args[1] == false) return false;
 		
-		if((Permission::check('CMS_ACCESS_CMSMain') &&
-						(($this->Editors == 'LoggedInUsers' && $member) ||
-					  ($this->Editors == 'OnlyTheseUsers' && $member &&
-						$member->inGroup($this->EditorsGroup)))) == false)
-					return false;
+		// if page can't be viewed, don't grant edit permissions
+		if(!$this->canView()) return false;
+
+		// check for empty spec
+		if(
+			!$this->CanEditType || $this->CanEditType == 'Anyone'
+		) return true;
 		
-		return true;
+		// check for inherit
+		if(
+			$this->CanEditType == 'Inherit' && $this->Parent()
+		) return $this->Parent()->canEdit($member);
+
+		// check for any logged-in users
+		if(
+			$this->CanEditType == 'LoggedInUsers' 
+			&& Permission::checkMember($member, 'CMS_ACCESS_CMSMain')
+		) return true;
+		
+		// check for specific groups
+		if(
+			$this->CanEditType == 'OnlyTheseUsers' 
+			&& $member 
+			&& $member->inGroups($this->EditorGroups())
+		) return true;
+		
+		return false;
 	}
 
 	/**
 	 * This function should return true if the current user can publish this
-	 * page.
-	 *
-	 * It can be overloaded to customise the security model for an
+	 * page. It can be overloaded to customise the security model for an
 	 * application.
+	 * 
+	 * Denies permission if any of the following conditions is TRUE:
+	 * - alternateCanPublish() on any decorator returns FALSE
+	 * - canEdit() returns FALSE
+	 * 
+	 * @uses alternateCanPublish()
 	 *
 	 * @param Member $member
 	 * @return boolean True if the current user can publish this page.
 	 */
 	public function canPublish($member = null) {
-		if(!isset($member)) {
-			$member = Member::currentUser();
-		}
-		if($member && $member->isAdmin()) {
-			return true;
-		}
+		if(!isset($member)) $member = Member::currentUser();
+
+		if($member && $member->isAdmin()) return true;
 		
 		$args = array($member, true);
 		$this->extend('alternateCanPublish', $args);
@@ -1146,31 +1220,35 @@ class SiteTree extends DataObject {
 					)
 				),
 				$tabAccess = new Tab('Access',
-					new HeaderField('WhoCanViewHeader',_t('SiteTree.ACCESSHEADER', "Who can view this page on my site?"), 2),
-					new OptionsetField(
-						"Viewers", 
-						"",
-						array(
-							"Anyone" => _t('SiteTree.ACCESSANYONE', "Anyone"),
-							"LoggedInUsers" => _t('SiteTree.ACCESSLOGGEDIN', "Logged-in users"),
-							"OnlyTheseUsers" => _t('SiteTree.ACCESSONLYTHESE', "Only these people (choose from list)")
-						)
+					new HeaderField('WhoCanViewHeader',_t('SiteTree.ACCESSHEADER', "Who can view this page?"), 2),
+					$viewersOptionsField = new OptionsetField(
+						"CanViewType", 
+						""
 					),
-					new DropdownField("ViewersGroup", $this->fieldLabel('ViewersGroup'), Group::map()),
-					new HeaderField('WhoCanEditHeader',_t('SiteTree.EDITHEADER', "Who can edit this inside the CMS?"), 2),
-					new OptionsetField(
-						"Editors", 
-						"",
-						array(
-							"LoggedInUsers" => _t('SiteTree.EDITANYONE', "Anyone who can log-in to the CMS"),
-							"OnlyTheseUsers" => _t('SiteTree.EDITONLYTHESE', "Only these people (choose from list)")
-						)
+					new TreeMultiselectField("ViewerGroups", $this->fieldLabel('ViewerGroups')),
+					new HeaderField('WhoCanEditHeader',_t('SiteTree.EDITHEADER', "Who can edit this page?"), 2),
+					$editorsOptionsField = new OptionsetField(
+						"CanEditType", 
+						""
 					),
-					new DropdownField("EditorsGroup", $this->fieldLabel('EditorsGroup'), Group::map())
+					new TreeMultiselectField("EditorGroups", $this->fieldLabel('EditorGroups'))
 				)
 			)
 			//new NamedLabelField("Status", $message, "pageStatusMessage", true)
 		);
+		
+		$viewersOptionsSource = array();
+		if($this->Parent()->ID) $viewersOptionsSource["Inherit"] = _t('SiteTree.INHERIT', "Inherit from parent page");
+		$viewersOptionsSource["Anyone"] = _t('SiteTree.ACCESSANYONE', "Anyone");
+		$viewersOptionsSource["LoggedInUsers"] = _t('SiteTree.ACCESSLOGGEDIN', "Logged-in users");
+		$viewersOptionsSource["OnlyTheseUsers"] = _t('SiteTree.ACCESSONLYTHESE', "Only these people (choose from list)");
+		$viewersOptionsField->setSource($viewersOptionsSource);
+		
+		$editorsOptionsSource = array();
+		if($this->Parent()->ID) $editorsOptionsSource["Inherit"] = _t('SiteTree.INHERIT', "Inherit from parent page");
+		$editorsOptionsSource["LoggedInUsers"] = _t('SiteTree.EDITANYONE', "Anyone who can log-in to the CMS");
+		$editorsOptionsSource["OnlyTheseUsers"] = _t('SiteTree.EDITONLYTHESE', "Only these people (choose from list)");
+		$editorsOptionsField->setSource($editorsOptionsSource);
 		
 		$tabContent->setTitle(_t('SiteTree.TABCONTENT', "Content"));
 		$tabMain->setTitle(_t('SiteTree.TABMAIN', "Main"));
@@ -1205,8 +1283,8 @@ class SiteTree extends DataObject {
 		$labels['URLSegment'] = _t('SiteTree.URLSegment', 'URL Segment', PR_MEDIUM, 'URL for this page');
 		$labels['Content'] = _t('SiteTree.Content', 'Content', PR_MEDIUM, 'Main HTML Content for a page');
 		$labels['HomepageForDomain'] = _t('SiteTree.HomepageForDomain', 'Hompage for this domain');
-		$labels['Viewers'] = _t('SiteTree.Viewers', 'Viewers Group');
-		$labels['Editors'] = _t('SiteTree.Editors', 'Editors Group');
+		$labels['CanViewType'] = _t('SiteTree.Viewers', 'Viewers Groups');
+		$labels['CanEditType'] = _t('SiteTree.Editors', 'Editors Groups');
 		$labels['ToDo'] = _t('SiteTree.ToDo', 'Todo Notes');
 		$labels['Parent'] = _t('SiteTree.has_one_Parent', 'Parent Page', PR_MEDIUM, 'The parent page in the site hierarchy');
 		$labels['Comments'] = _t('SiteTree.Comments', 'Comments');
