@@ -341,79 +341,98 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 	}
 	
 	/**
-	 * Returns the form which the Link button returns. 
-	 * The link functions below are shown and hidden via javascript
+	 * Return a {@link Form} instance allowing a user to
+	 * add links in the TinyMCE content editor.
+	 *  
+	 * @return Form
 	 */
 	function LinkForm() {
 		$form = new Form(
 			$this->controller,
 			"{$this->name}/LinkForm", 
 			new FieldSet(
-				new LiteralField('Heading', '<h2><img src="cms/images/closeicon.gif" alt="'._t('HtmlEditorField.CLOSE', 'close').'" title="'._t('HtmlEditorField.CLOSE', 'close').'" />'._t('HtmlEditorField.LINK', 'Link').'</h2>'),
-				new OptionsetField("LinkType", _t('HtmlEditorField.LINKTO', "Link to"), 
+				new LiteralField('Heading', '<h2><img src="cms/images/closeicon.gif" alt="' . _t('HtmlEditorField.CLOSE', 'close').'" title="' . _t('HtmlEditorField.CLOSE', 'close') . '" />' . _t('HtmlEditorField.LINK', 'Link') . '</h2>'),
+				new OptionsetField(
+					'LinkType',
+					_t('HtmlEditorField.LINKTO', 'Link to'), 
 					array(
-						"internal" => _t('HtmlEditorField.LINKINTERNAL',"Page on the site"),
-						"external" => _t('HtmlEditorField.LINKEXTERNAL',"Another website"),
-						"anchor" => _t('HtmlEditorField.LINKANCHOR',"Anchor on this page"),
-						"email" => _t('HtmlEditorField.LINKEMAIL', "Email address"),
-						"file" => _t('HtmlEditorField.LINKFILE', "Download a file"),			
+						'internal' => _t('HtmlEditorField.LINKINTERNAL', 'Page on the site'),
+						'external' => _t('HtmlEditorField.LINKEXTERNAL', 'Another website'),
+						'anchor' => _t('HtmlEditorField.LINKANCHOR', 'Anchor on this page'),
+						'email' => _t('HtmlEditorField.LINKEMAIL', 'Email address'),
+						'file' => _t('HtmlEditorField.LINKFILE', 'Download a file'),			
 					)
 				),
-				new TreeDropdownField("internal", _t('HtmlEditorField.PAGE', "Page"), "SiteTree", "URLSegment", "MenuTitle"),
-				new TextField("external", _t('HtmlEditorField.URL', "URL"), 'http://'),
-				new EmailField("email", _t('HtmlEditorField.EMAIL', "Email address")),
-				new TreeDropdownField("file",_t('HtmlEditorField.FILE', "File"),"File", "Filename"),
-				new TextField("Anchor", _t('HtmlEditorField.ANCHORVALUE', "Anchor")),
-				new TextField("LinkText", _t('HtmlEditorField.LINKTEXT', "Link text")),
-				new TextField("Description", _t('HtmlEditorField.LINKDESCR', "Link description")),
-				new CheckboxField("TargetBlank", _t('HtmlEditorField.LINKOPENNEWWIN', "Open link in a new window?"))
+				new TreeDropdownField('internal', _t('HtmlEditorField.PAGE', "Page"), 'SiteTree', 'URLSegment', 'MenuTitle'),
+				new TextField('external', _t('HtmlEditorField.URL', 'URL'), 'http://'),
+				new EmailField('email', _t('HtmlEditorField.EMAIL', 'Email address')),
+				new TreeDropdownField('file', _t('HtmlEditorField.FILE', 'File'), 'File', 'Filename'),
+				new TextField('Anchor', _t('HtmlEditorField.ANCHORVALUE', 'Anchor')),
+				new TextField('LinkText', _t('HtmlEditorField.LINKTEXT', 'Link text')),
+				new TextField('Description', _t('HtmlEditorField.LINKDESCR', 'Link description')),
+				new CheckboxField('TargetBlank', _t('HtmlEditorField.LINKOPENNEWWIN', 'Open link in a new window?'))
 			),
 			new FieldSet(
-				new FormAction("insert", _t('HtmlEditorField.BUTTONINSERTLINK', "Insert link")),
-				new FormAction("remove", _t('HtmlEditorField.BUTTONREMOVELINK', "Remove link"))
+				new FormAction('insert', _t('HtmlEditorField.BUTTONINSERTLINK', 'Insert link')),
+				new FormAction('remove', _t('HtmlEditorField.BUTTONREMOVELINK', 'Remove link'))
 			)
 		);
+		
 		$form->loadDataFrom($this);
+		
 		return $form;
 	}
 
+	/**
+	 * Return a {@link Form} instance allowing a user to
+	 * add images to the TinyMCE content editor.
+	 *  
+	 * @return Form
+	 */
 	function ImageForm() {
 		$form = new Form(
 			$this->controller,
-			"{$this->name}/ImageForm", 
+			"{$this->name}/ImageForm",
 			new FieldSet(
-				new LiteralField('Heading', '<h2><img src="cms/images/closeicon.gif" alt="'._t('HtmlEditorField.CLOSE', 'close').'" title="'._t('HtmlEditorField.CLOSE', 'close').'" />'._t('HtmlEditorField.IMAGE', 'Image').'</h2>'),
-				new TreeDropdownField("FolderID", _t('HtmlEditorField.FOLDER', "Folder"), "Folder"),
+				new LiteralField('Heading', '<h2><img src="cms/images/closeicon.gif" alt="' . _t('HtmlEditorField.CLOSE', 'close') . '" title="' . _t('HtmlEditorField.CLOSE', 'close') . '" />' . _t('HtmlEditorField.IMAGE', 'Image') . '</h2>'),
+				new TreeDropdownField('FolderID', _t('HtmlEditorField.FOLDER', 'Folder'), 'Folder'),
 				new LiteralField('AddFolderOrUpload',
-				'<div style="clear:both;"></div><div id="AddFolderGroup" style="display:inline">
-	                 <a style="" href="#" id="AddFolder" class="link">' . _t('HtmlEditorField.CREATEFOLDER','create folder') . '</a>
-	                 <input style="display: none;margin-left: 2px;width: 94px;" id="NewFolderName" class="addFolder" type="text">
-	                 <a style="display: none;" href="#" id="FolderOk" class="link addFolder">' . _t('HtmlEditorField.OK','ok') . '</a>
-	                 <a style="display: none;" href="#" id="FolderCancel" class="link addFolder">' . _t('HtmlEditorField.FOLDERCANCEL','cancel') . '</a>
-                 </div><div id="PipeSeparator" style="display:inline">|</div>
-                 <div id="UploadGroup" class="group" style="display: inline;margin-top:2px;">
-                    <a href="#" id="UploadFiles" class="link">' . _t('HtmlEditorField.UPLOAD','upload') . '</a>
-                 </div>
-                '),
-				new ThumbnailStripField("Image", "FolderID", "getimages"),
-				new TextField("AltText", _t('HtmlEditorField.ALTTEXT', "Description"), "", 80),
-				new DropdownField("CSSClass", _t('HtmlEditorField.CSSCLASS', "Alignment / style"), array(
-					"left" => _t('HtmlEditorField.CSSCLASSLEFT', "On the left, with text wrapping around."),
-					"leftAlone" => _t('HtmlEditorField.CSSCLASSLEFTALONE', "On the left, on its own."),
-					"right" => _t('HtmlEditorField.CSSCLASSRIGHT', "On the right, with text wrapping around."),
-					"center" => _t('HtmlEditorField.CSSCLASSCENTER', "Centered, on its own."),
-				)),
-				new FieldGroup(_t('HtmlEditorField.IMAGEDIMENSIONS', "Dimensions"),
-					new TextField("Width", _t('HtmlEditorField.IMAGEWIDTHPX', "Width"), 100),
-					new TextField("Height", "x " . _t('HtmlEditorField.IMAGEHEIGHTPX', "Height"), 100)
+					'<div style="clear:both;"></div><div id="AddFolderGroup" style="display:inline">
+						<a style="" href="#" id="AddFolder" class="link">' . _t('HtmlEditorField.CREATEFOLDER','create folder') . '</a>
+						<input style="display: none; margin-left: 2px; width: 94px;" id="NewFolderName" class="addFolder" type="text">
+						<a style="display: none;" href="#" id="FolderOk" class="link addFolder">' . _t('HtmlEditorField.OK','ok') . '</a>
+						<a style="display: none;" href="#" id="FolderCancel" class="link addFolder">' . _t('HtmlEditorField.FOLDERCANCEL','cancel') . '</a>
+					</div>
+					<div id="PipeSeparator" style="display:inline">|</div>
+					<div id="UploadGroup" class="group" style="display: inline; margin-top: 2px;">
+						<a href="#" id="UploadFiles" class="link">' . _t('HtmlEditorField.UPLOAD','upload') . '</a>
+					</div>'
+				),
+				new ThumbnailStripField('Image', 'FolderID', 'getimages'),
+				new TextField('AltText', _t('HtmlEditorField.ALTTEXT', 'Description'), '', 80),
+				new DropdownField(
+					'CSSClass',
+					_t('HtmlEditorField.CSSCLASS', 'Alignment / style'),
+					array(
+						'left' => _t('HtmlEditorField.CSSCLASSLEFT', 'On the left, with text wrapping around.'),
+						'leftAlone' => _t('HtmlEditorField.CSSCLASSLEFTALONE', 'On the left, on its own.'),
+						'right' => _t('HtmlEditorField.CSSCLASSRIGHT', 'On the right, with text wrapping around.'),
+						'center' => _t('HtmlEditorField.CSSCLASSCENTER', 'Centered, on its own.'),
+					)
+				),
+				new FieldGroup(_t('HtmlEditorField.IMAGEDIMENSIONS', 'Dimensions'),
+					new TextField('Width', _t('HtmlEditorField.IMAGEWIDTHPX', 'Width'), 100),
+					new TextField('Height', "x " . _t('HtmlEditorField.IMAGEHEIGHTPX', 'Height'), 100)
 				)
 			),
 			new FieldSet(
-				new FormAction("insertimage", _t('HtmlEditorField.BUTTONINSERTIMAGE', 'Insert image')),
-				new FormAction("editimage", _t('HtmlEditorField.BUTTONEDITIMAGE', 'Edit image'))
+				new FormAction('insertimage', _t('HtmlEditorField.BUTTONINSERTIMAGE', 'Insert image')),
+				new FormAction('editimage', _t('HtmlEditorField.BUTTONEDITIMAGE', 'Edit image'))
 			)
 		);
+		
 		$form->loadDataFrom($this);
+		
 		return $form;
 	}
 
