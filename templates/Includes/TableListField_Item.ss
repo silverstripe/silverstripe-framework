@@ -4,6 +4,6 @@
 						<td class="field-$Title.HTMLATT">$Value</td>
 						<% end_control %>
 						<% if Can(delete) %>
-							<td width="16"><a class="deletelink" href="$DeleteLink"><img src="cms/images/delete.gif" alt="<% _t('Form.DELETE') %>" /></a></td>
+							<td width="16"><a class="deletelink" href="$DeleteLink"><img src="cms/images/delete.gif" alt="<% _t('DELETE') %>" /></a></td>
 						<% end_if %>
 					</tr>
