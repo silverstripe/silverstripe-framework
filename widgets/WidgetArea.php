@@ -12,7 +12,7 @@ class WidgetArea extends DataObject {
 	);
 	
 	function forTemplate() {
-		return $this->renderWith("WidgetArea");
+		return $this->renderWith($this->class); 
 	}
 }
 

@@ -7,8 +7,11 @@
  */
 class Widget extends DataObject {
 	static $db = array(
-		"ParentID" => "Int",
 		"Sort" => "Int"
+	);
+	
+	static $has_one = array(
+		"Parent" => "WidgetArea",
 	);
 		
 	static $default_sort = "Sort";
