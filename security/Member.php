@@ -566,13 +566,11 @@ class Member extends DataObject {
 	 * Returns true if this user is an administrator.
 	 * Administrators have access to everything.
 	 * 
-	 * @TODO Should this function really exist? Is not {@link isAdmin()} the
-	 *       only right name for this?
-	 * 
+	 * @deprecated Use Permission::check('ADMIN') instead
 	 * @return Returns TRUE if this user is an administrator.
 	 */
 	function isAdmin() {
-		return Permission::check('ADMIN');
+		return Permission::checkMember($this, 'ADMIN');
 	}
 
 	//------------------- HELPER METHODS -----------------------------------//

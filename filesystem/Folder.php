@@ -46,8 +46,7 @@ class Folder extends File {
 	}
 	
 	function userCanUse() {
-		if( Member::currentUser()->isAdmin() )
-			return true;
+		if(Permission::check("ADMIN")) return true;
 		
 		$useGroups = $this->CanUse();	
 		
@@ -62,8 +61,7 @@ class Folder extends File {
 	}
 	
 	function userCanEdit() {
-		if( Member::currentUser()->isAdmin() )
-			return true;
+		if(Permission::check("ADMIN")) return true;
 			
 		$useGroups = $this->CanEdit();	
 		

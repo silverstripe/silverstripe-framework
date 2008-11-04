@@ -1761,9 +1761,7 @@ class DataObject extends ViewableData implements DataObjectInterface,i18nEntityP
 		if(!isset($member)) {
 			$member = Member::currentUser();
 		}
-		if($member && $member->isAdmin()) {
-			return true;
-		}
+		if(Permission::checkMember($member, "ADMIN")) return true;
 
 		if($this->many_many('Can' . $perm)) {
 			if($this->ParentID && $this->SecurityType == 'Inherit') {

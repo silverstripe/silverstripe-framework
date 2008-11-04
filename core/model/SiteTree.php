@@ -523,9 +523,7 @@ class SiteTree extends DataObject {
 		if(!isset($member)) {
 			$member = Member::currentUser();
 		}
-		if($member && $member->isAdmin()) {
-			return true;
-		}
+		if(Permission::checkMember($member, "ADMIN")) return true;
 		
 		if(method_exists($this, 'can' . ucfirst($perm))) {
 			$method = 'can' . ucfirst($perm);
@@ -562,9 +560,7 @@ class SiteTree extends DataObject {
 		if(!isset($member)) {
 			$member = Member::currentUser();
 		}
-		if($member && $member->isAdmin()) {
-			return true;
-		}
+		if(Permission::checkMember($member, "ADMIN")) return true;
 		
 		$args = array($member, true);
 		$this->extend('alternateCanAddChildren', $args);
@@ -594,7 +590,7 @@ class SiteTree extends DataObject {
 		if(!isset($member)) $member = Member::currentUser();
 
 		// admin override
-		if($member && $member->isAdmin()) return true;
+		if(Permission::checkMember($member, "ADMIN")) return true;
 		
 		// decorated access checks
 		$args = array($member, true);
@@ -647,7 +643,7 @@ class SiteTree extends DataObject {
 	public function canDelete($member = null) {
 		if(!isset($member)) $member = Member::currentUser();
 		
-		if($member && $member->isAdmin()) return true;
+		if(Permission::checkMember($member, "ADMIN")) return true;
 		
 		$args = array($member, true);
 		$this->extend('alternateCanDelete', $args);
@@ -685,7 +681,7 @@ class SiteTree extends DataObject {
 	public function canCreate($member = null) {
 		if(!isset($member)) $member = Member::currentUser();
 
-		if($member && $member->isAdmin()) return true;
+		if(Permission::checkMember($member, "ADMIN")) return true;
 		
 		$args = array($member, true);
 		$this->extend('alternateCanCreate', $args);
