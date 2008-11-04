@@ -604,6 +604,8 @@ class ComplexTableField_ItemRequest extends RequestHandler {
 	function __construct($ctf, $itemID) {
 		$this->ctf = $ctf;
 		$this->itemID = $itemID;
+		
+		parent::__construct();
 	}
 	
 	function index() {
