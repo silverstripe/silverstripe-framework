@@ -35,7 +35,7 @@ abstract class DBField extends ViewableData {
 	 */
 	protected $defaultVal;
 	
-	function __construct($name) {
+	function __construct($name = null) {
 		$this->name = $name;
 		
 		parent::__construct();

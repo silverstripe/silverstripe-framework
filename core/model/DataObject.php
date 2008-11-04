@@ -629,6 +629,8 @@ class DataObject extends ViewableData implements DataObjectInterface,i18nEntityP
 				break;
 			}
 		}
+		
+		$this->extend('augmentPopulateDefaults');
 	}
 
 	/**

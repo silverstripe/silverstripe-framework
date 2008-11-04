@@ -81,8 +81,8 @@ class SiteTree extends DataObject {
 		"Priority" => "Float",
 
 		"CanViewType" => "Enum('Anyone, LoggedInUsers, OnlyTheseUsers, Inherit', 'Anyone')",
-		"CanEditType" => "Enum('LoggedInUsers, OnlyTheseUsers, Inherit', 'LoggedInUsers')",
-		
+		"CanEditType" => "Enum('LoggedInUsers, OnlyTheseUsers, Inherit', 'OnlyTheseUsers')",
+
 		// Simple task tracking
 		"ToDo" => "Text",
 	);
@@ -124,7 +124,7 @@ class SiteTree extends DataObject {
 		"ShowInSearch" => 1,
 		"Status" => "New page",
 		"CanViewType" => "Anyone",
-		"CanEditType" => "LoggedInUsers"
+		"CanEditType" => "OnlyTheseUsers"
 	);
 
 	static $has_one = array(
@@ -185,7 +185,6 @@ class SiteTree extends DataObject {
 		'Content',
 	);
 
-
 	/**
 	 * Get the URL for this page.
 	 *
@@ -196,7 +195,8 @@ class SiteTree extends DataObject {
 		if($action == "index") {
 			$action = "";
 		}
-		return Director::baseURL() . $this->URLSegment . "/$action";
+		if($this->URLSegment == 'home' && !$action) return Director::baseURL();
+		else return Director::baseURL() . $this->URLSegment . "/$action";
 	}
 	
 
@@ -715,10 +715,8 @@ class SiteTree extends DataObject {
 	 * @return boolean True if the current user can edit this page.
 	 */
 	public function canEdit($member = null) {
-		if(!isset($member)) $member = Member::currentUser();
-
-		// admin override
-		if($member && $member->isAdmin()) return true;
+		if(Permission::checkMember($member, "ADMIN")) return true;
+		if(!$member) $member = Member::currentUser();
 		
 		// decorated access checks
 		$args = array($member, true);
@@ -769,14 +767,12 @@ class SiteTree extends DataObject {
 	 * @return boolean True if the current user can publish this page.
 	 */
 	public function canPublish($member = null) {
-		if(!isset($member)) $member = Member::currentUser();
+		// If we have a result, then that means at least one decorator specified alternateCanPublish
+		// Allow the permission check only if *all* voting decorators allow it.
+		$results = $this->extend('alternateCanPublish', $member);
+		if(is_array($results)) return min($results);
 
-		if($member && $member->isAdmin()) return true;
-		
-		$args = array($member, true);
-		$this->extend('alternateCanPublish', $args);
-		if($args[1] == false) return false;
-		
+		// Normal case
 		return $this->canEdit();
 	}
 
