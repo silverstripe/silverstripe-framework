@@ -77,10 +77,10 @@ class FormAction extends FormField {
 				'id' => $this->id(),
 				'type' => 'submit',
 				'name' => $this->action,
-				'value' => $this->attrTitle()
+				'value' => ($this->dontEscape) ? $this->Title() : $this->attrTitle()
 			);
 
-			$attributes['title'] = ($this->description) ? $this->description : $this->attrTitle();
+			$attributes['title'] = ($this->description) ? $this->description : ($this->dontEscape) ? $this->Title() : $this->attrTitle();
 			
 			return $this->createTag('input', $attributes);
 		}
