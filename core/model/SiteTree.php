@@ -713,7 +713,7 @@ class SiteTree extends DataObject {
 	public function canEdit($member = null) {
 		if(Permission::checkMember($member, "ADMIN")) return true;
 		if(!$member) $member = Member::currentUser();
-		
+
 		// decorated access checks
 		$args = array($member, true);
 		$this->extend('alternateCanEdit', $args);
@@ -765,8 +765,9 @@ class SiteTree extends DataObject {
 	public function canPublish($member = null) {
 		// If we have a result, then that means at least one decorator specified alternateCanPublish
 		// Allow the permission check only if *all* voting decorators allow it.
+		if(!$member) $member = Member::currentUser();
 		$results = $this->extend('alternateCanPublish', $member);
-		if(is_array($results)) return min($results);
+		if($results && is_array($results)) return min($results);
 
 		// Normal case
 		return $this->canEdit();
