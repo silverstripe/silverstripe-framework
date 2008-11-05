@@ -43,7 +43,7 @@ class TreeDropdownField extends FormField {
 		
 		if($this->value) {
 			$record = DataObject::get_by_id($this->sourceObject, $this->value);
-			$title = $record->Title;
+			$title = ($record) ? $record->Title : '';
 		} else {
 			$title = _t('DropdownField.CHOOSE', "(Choose)", PR_MEDIUM, 'Start-value of a dropdown');
 		}
