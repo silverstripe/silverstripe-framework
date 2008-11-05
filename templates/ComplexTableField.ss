@@ -87,7 +87,7 @@
 	</table>
 	<div class="utility">
 		<% if Can(export) %>
-			$ExportButton
+			<a href="$ExportLink" target="_blank"><% _t('CSVEXPORT', 'Export to CSV' ) %></a>
 		<% end_if %>
 	</div>
 </div>
