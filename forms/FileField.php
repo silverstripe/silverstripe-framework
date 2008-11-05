@@ -115,7 +115,7 @@ class FileField extends FormField {
 		
 		$this->upload->setAllowedExtensions($this->allowedExtensions);
 		$this->upload->setAllowedMaxFileSize($this->allowedMaxFileSize);
-		$this->upload->loadIntoFile($_FILES[$this->name], $file);
+		$this->upload->loadIntoFile($_FILES[$this->name], $file, $this->folderName);
 		if($this->upload->isError()) return false;
 		
 		$file = $this->upload->getFile();

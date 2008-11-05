@@ -145,10 +145,10 @@ class Upload extends Controller {
 	 * @param File $file
 	 * @return Boolean
 	 */
-	public function loadIntoFile($tmpFile, $file) {
+	public function loadIntoFile($tmpFile, $file, $folderPath = false) {
 		$this->file = $file;
 		
-		return $this->load($tmpFile);
+		return $this->load($tmpFile, $folderPath);
 	}
 	
 	/**
