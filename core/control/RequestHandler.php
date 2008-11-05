@@ -78,9 +78,9 @@ class RequestHandler extends ViewableData {
 		$this->request = $request;
 		
 		// $handlerClass is used to step up the class hierarchy to implement url_handlers inheritance
-		$handlerClass = $this->class;
+		$handlerClass = ($this->class) ? $this->class : get_class($this);
 		// We stop after RequestHandler; in other words, at ViewableData
-		while($handlerClass != 'ViewableData') {
+		while($handlerClass && $handlerClass != 'ViewableData') {
 			// Todo: ajshort's stat rewriting could be useful here.
 			$urlHandlers = eval("return $handlerClass::\$url_handlers;");
 			
@@ -152,11 +152,11 @@ class RequestHandler extends ViewableData {
 	function checkAccessAction($action) {
 		// Collate self::$allowed_actions from this class and all parent classes
 		$access = null;
-		$className = $this->class;
-		while($className != 'RequestHandler') {
+		$className = ($this->class) ? $this->class : get_class($this);
+		while($className && $className != 'RequestHandler') {
 			// Merge any non-null parts onto $access.
-			$accessPart = eval("return $className::\$allowed_actions;");
-			if($accessPart !== null) $access = array_merge((array)$access, $accessPart);
+			$accessPart = eval("return $className::\$allowed_actions;");		
+			if($accessPart != null) $access = array_merge((array)$access, $accessPart);
 			
 			// Build an array of parts for checking if part[0] == part[1], which means that this class doesn't directly define it.
 			$accessParts[] = $accessPart;

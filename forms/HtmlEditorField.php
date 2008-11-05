@@ -260,6 +260,8 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 	protected $controller, $name;
 	
 	function __construct($controller, $name) {
+		parent::__construct();
+		
 		$this->controller = $controller;
 		$this->name = $name;
 	}
