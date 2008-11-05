@@ -65,8 +65,6 @@ class SQLQuery extends Object {
 	 */
 	public $delete = false;
 	
-	private $replacements = array();
-	
 	/**
 	 * The logical connective used to join WHERE clauses. Defaults to AND.
 	 * @var string
@@ -354,8 +352,6 @@ class SQLQuery extends Object {
 	 * @param string $new The new text.
 	 */
 	function replaceText($old, $new) {
-		$this->replacements[] = array($old, $new);
-		/*		
 		if($this->select) foreach($this->select as $i => $item)
 			$this->select[$i] = str_replace($old, $new, $item);
 
@@ -378,7 +374,6 @@ class SQLQuery extends Object {
 			foreach($this->having as $i => $item)
 				$this->having[$i] = str_replace($old, $new, $item);
 		}
-		*/
 	}
 
 	/**
@@ -410,10 +405,6 @@ class SQLQuery extends Object {
 		if($this->having) $text .= " HAVING ( " . implode(" ) AND ( ", $this->having) . " )";
 		if($this->orderby) $text .= " ORDER BY " . $this->orderby;
 		if($this->limit) $text .= " LIMIT " . $this->limit;
-		
-		foreach($this->replacements as $replacement) {
-			$text = str_replace($replacement[0], $replacement[1], $text);
-		}
 		
 		return $text;
 	}
