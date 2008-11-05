@@ -741,7 +741,7 @@ class Security extends Controller {
 									 'salt' => null,
 									 'algorithm' => 'none');
 
-		} elseif((self::$encryptPasswords == false) || ($algorithm == 'none')) {
+		} elseif((!$algorithm && self::$encryptPasswords == false) || ($algorithm == 'none')) {
 			// The password should not be encrypted
 			return array('password' => substr($password, 0, 64),
 									 'salt' => null,

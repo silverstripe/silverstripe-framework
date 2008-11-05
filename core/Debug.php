@@ -279,7 +279,7 @@ class Debug {
 		foreach($bt as $item) {
 			if(Director::is_ajax() && !$ignoreAjax) {
 				$result .= self::full_func_name($item,true) . "\n";
-				$result .= "line $item[line] of " . basename($item['file']) . "\n\n";
+				if(isset($item['line']) && isset($item['file'])) $result .= "line $item[line] of " . basename($item['file']) . "\n\n";
 			} else {
 				$result .= "<p><b>" . self::full_func_name($item,true) . "</b>\n<br />\n";
 				$result .= isset($item['line']) ? "line $item[line] of " : '';

@@ -143,15 +143,28 @@ class ManifestBuilder {
 			if(@is_dir("$baseDir/$filename/") &&
 					 file_exists("$baseDir/$filename/_config.php") &&
 					 !file_exists("$baseDir/$filename/_manifest_exclude")) {
-				$manifest .= "require_once(\"$baseDir/$filename/_config.php\");\n";
 				// Include this so that we're set up for connecting to the database
 				// in the rest of the manifest builder
 				require_once("$baseDir/$filename/_config.php");
 			}
 		}
 
-		if(!project())
+		
+		foreach($topLevel as $filename) {
+			if($filename[0] == '.') continue;
+			if(project() && project() == $filename) continue;
+			if(@is_dir("$baseDir/$filename/") &&
+					 file_exists("$baseDir/$filename/_config.php") &&
+					 !file_exists("$baseDir/$filename/_manifest_exclude")) {	
+				$manifest .= "require_once(\"$baseDir/$filename/_config.php\");\n";
+			}
+		}
+		
+		if(!project()) {
 			user_error("\$project isn't set", E_USER_WARNING);
+		} else {
+			$manifest .= "require_once(\"$baseDir/" . project() . "/_config.php\");\n"; 
+		}
 
 		// Template & CSS manifest
 		$templateManifest = array();
@@ -494,9 +507,15 @@ class ManifestBuilder {
 
 		foreach($topLevel as $filename) {
 			if($filename[0] == '.') continue;
+			if(project() && $filename == project()) continue;
 			if(@is_dir("$baseDir/$filename/") && file_exists("$baseDir/$filename/_config.php")) {
 				$manifest .= "require_once(\"$baseDir/$filename/_config.php\");\n";
 			}
+		}
+		
+		// Include the project _config.php last, so it can override setting in module _config.phps
+		if(project()) {
+			$manifest .= "require_once(\"$baseDir/" . project() ."/_config.php\");\n";
 		}
 
 		$manifest .= "\$_TEMPLATE_MANIFEST = " . var_export($_TEMPLATE_MANIFEST, true) . ";\n";

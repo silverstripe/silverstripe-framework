@@ -304,18 +304,11 @@ JS;
 		}
 		
 		if($this->getParentClass()) {
-			$parentIdName = $this->getParentIdName($this->getParentClass(), $this->sourceClass);
-			if(!$parentIdName) {
-				user_error("ComplexTableField::DetailForm() Cannot automatically 
-					determine 'has-one'-relationship to parent, 
-					please use setParentClass() to set it manually", 
-				E_USER_WARNING);
-				return;
-			}
 			// add relational fields
 			$detailFields->push(new HiddenField("ctf[parentClass]"," ",$this->getParentClass()));
 			
-			if( $this->relationAutoSetting )
+			$parentIdName = $this->getParentIdName($this->getParentClass(), $this->sourceClass);
+			if( $parentIdName && $this->relationAutoSetting )
 				$detailFields->push(new HiddenField("$parentIdName"," ",$ID));
 		} 
 
@@ -326,6 +319,8 @@ JS;
 		if($this->methodName != 'add') {
 			$detailFields->push(new HiddenField("ctf[childID]","",$childID));
 		}
+
+		$detailFields->push(new HiddenField("ctf[ID]","",$ID));
 
 		// add a namespaced ID instead thats "converted" by saveComplexTableField()
 		$detailFields->push(new HiddenField("ctf[ClassName]","",$this->sourceClass));
@@ -408,7 +403,7 @@ JS;
 
 		$this->pageSize = 1;
 
-		if(is_numeric($_REQUEST['ctf']['start'])) {
+		if(isset($_REQUEST['ctf']['start']) && is_numeric($_REQUEST['ctf']['start'])) {
 			$this->unpagedSourceItems->setPageLimits($_REQUEST['ctf']['start'], $this->pageSize, $this->totalCount);
 		}
 
@@ -475,11 +470,11 @@ JS;
 	}
 
 	function PopupCurrentItem() {
-		return $_REQUEST['ctf']['start']+1;
+		if(isset($_REQUEST['ctf']['start'])) return $_REQUEST['ctf']['start']+1;
 	}
 
 	function PopupFirstLink() {
-		if(!is_numeric($_REQUEST['ctf']['start']) || $_REQUEST['ctf']['start'] == 0) {
+		if(!isset($_REQUEST['ctf']['start']) || !is_numeric($_REQUEST['ctf']['start']) || $_REQUEST['ctf']['start'] == 0) {
 			return null;
 		}
 
@@ -489,7 +484,7 @@ JS;
 	}
 
 	function PopupLastLink() {
-		if(!is_numeric($_REQUEST['ctf']['start']) || $_REQUEST['ctf']['start'] == $this->totalCount-1) {
+		if(!isset($_REQUEST['ctf']['start']) || !is_numeric($_REQUEST['ctf']['start']) || $_REQUEST['ctf']['start'] == $this->totalCount-1) {
 			return null;
 		}
 
@@ -499,7 +494,7 @@ JS;
 	}
 
 	function PopupNextLink() {
-		if(!is_numeric($_REQUEST['ctf']['start']) || $_REQUEST['ctf']['start'] == $this->totalCount-1) {
+		if(!isset($_REQUEST['ctf']['start']) || !is_numeric($_REQUEST['ctf']['start']) || $_REQUEST['ctf']['start'] == $this->totalCount-1) {
 			return null;
 		}
 
@@ -510,7 +505,7 @@ JS;
 	}
 
 	function PopupPrevLink() {
-		if(!is_numeric($_REQUEST['ctf']['start']) || $_REQUEST['ctf']['start'] == 0) {
+		if(!isset($_REQUEST['ctf']['start']) || !is_numeric($_REQUEST['ctf']['start']) || $_REQUEST['ctf']['start'] == 0) {
 			return null;
 		}
 
