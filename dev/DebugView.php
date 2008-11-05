@@ -96,8 +96,8 @@ class DebugView {
 	 */
 	public function writeInfo($title, $subtitle, $description=false) {
 		echo '<div class="info">';
-		echo "<h1>$title</h1>";
-		echo "<h3>$subtitle</h3>";
+		echo "<h1>" . Convert::raw2xml($title) . "</h1>";
+		echo "<h3>" . Convert::raw2xml($subtitle) . "</h3>";
 		if ($description) {
 			echo "<p>$description</p>";
 		} else {

@@ -532,9 +532,9 @@ class Debug {
 				} else {
 					$name = self::full_func_name($item,true);
 				}
-				$result .= "<li><b>" . $name . "</b>\n<br />\n";
+				$result .= "<li><b>" . htmlentities($name) . "</b>\n<br />\n";
 				$result .= isset($item['line']) ? "Line $item[line] of " : '';
-				$result .=  isset($item['file']) ? basename($item['file']) : ''; 
+				$result .=  isset($item['file']) ? htmlentities(basename($item['file'])) : ''; 
 				$result .= "</li>\n";
 			}
 		}
