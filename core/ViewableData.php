@@ -671,7 +671,7 @@ class ViewableData extends Object implements IteratorAggregate {
 	 * @return boolean
 	 */
 	function Odd() {
-		return !$this->iteratorPos % 2;
+		return !$this->Even();
 	}
 	
 	/**
