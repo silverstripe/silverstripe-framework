@@ -96,7 +96,7 @@ class ManifestBuilder {
 		$manifestInfo = self::get_manifest_info(BASE_PATH, array("tests"));
 
 		$manifest = self::generate_php_file($manifestInfo);
-		if(false || $fh = fopen(MANIFEST_FILE, "w")) {
+		if($fh = fopen(MANIFEST_FILE, "w")) {
 			fwrite($fh, $manifest);
 			fclose($fh);
 		} else {
