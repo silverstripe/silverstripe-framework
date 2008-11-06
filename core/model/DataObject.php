@@ -1551,7 +1551,7 @@ class DataObject extends ViewableData implements DataObjectInterface,i18nEntityP
 	 *
 	 * @return mixed The field value
 	 */
-	protected function getField($field) {
+	public function getField($field) {
 		// If we already have an object in $this->record, then we should just return that
 		if(isset($this->record[$field]) && is_object($this->record[$field]))  return $this->record[$field];
 
