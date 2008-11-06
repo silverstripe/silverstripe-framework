@@ -8,15 +8,7 @@
  * @subpackage core
  */
 class ClassInfo {
-	/**
-	 * Returns true if the manifest has actually been built.
-	 */	 
-	static function ready() {
-		global $_ALL_CLASSES;
-		return $_ALL_CLASSES && $_ALL_CLASSES['hastable'];
-	}
-	
-	/**
+		/**
 	 * @todo Improve documentation
 	 */
 	static function allClasses() {
@@ -33,11 +25,11 @@ class ClassInfo {
 	}
 
 	/**
-	 * @todo Improve documentation
+	 * @todo Move this to Database or DB
 	 */
 	static function hasTable($class) {
-		global $_ALL_CLASSES;
-		return isset($_ALL_CLASSES['hastable'][$class]) ? $_ALL_CLASSES['hastable'][$class] : null;
+		$SQL_table = Convert::raw2sql($class);
+		return (bool)(DB::query("SHOW TABLES LIKE '$SQL_table'")->value());
 	}
 	
 	/**
@@ -60,6 +52,7 @@ class ClassInfo {
 	 * to those with DB tables
 	 * 
 	 * @param mixed $class string of the classname or instance of the class
+	 * @todo Move this into data object
 	 * @return array
 	 */
 	static function dataClassesFor($class) {
@@ -70,20 +63,15 @@ class ClassInfo {
 		
 		if(!$_ALL_CLASSES['parents'][$class]) user_error("ClassInfo::dataClassesFor() no parents for $class", E_USER_WARNING);
 		foreach($_ALL_CLASSES['parents'][$class] as $subclass) {
-			if(isset($_ALL_CLASSES['hastable'][$subclass])){
-				$dataClasses[] = $subclass;
-			}
+			if(DataObject::has_own_table($subclass)) $dataClasses[] = $subclass;
 		}
 		
-		if(isset($_ALL_CLASSES['hastable'][$class])) $dataClasses[] = $class;
+		if(DataObject::has_own_table($class)) $dataClasses[] = $class;
 
 		if(isset($_ALL_CLASSES['children'][$class]))
 		foreach($_ALL_CLASSES['children'][$class] as $subclass)
 		{
-			if(isset($_ALL_CLASSES['hastable'][$subclass]))
-			{
-				$dataClasses[] = $subclass;
-			}
+			if(DataObject::has_own_table($subclass)) $dataClasses[] = $subclass;
 		}
 			
 		return $dataClasses;
@@ -134,7 +122,7 @@ class ClassInfo {
 		$items = $_ALL_CLASSES['parents'][$class];
 		$items[$class] = $class;
 		if($onlyWithTables) foreach($items as $item) {
-			if(!isset($_ALL_CLASSES['hastable'][$item]) || !$_ALL_CLASSES['hastable'][$item]) unset($items[$item]);
+			if(!DataObject::has_own_table($item)) unset($items[$item]);
 		}
 		return $items;
 	}
@@ -174,5 +162,17 @@ class ClassInfo {
 		
 		return $matchedClasses;
 	}
+	
+	/////////////////////////////////////////////////////////////////////////////
+	// DEPRECATED
+	
+	/**
+	 * @deprecated Use Security::database_is_ready() instead.
+	 */
+	static function ready() {
+		user_error("ClassInfo::ready() deprectaed - use Security::database_is_ready()", E_USER_NOTICE);
+		return Security::database_is_ready();
+	}
+	
 }
 ?>

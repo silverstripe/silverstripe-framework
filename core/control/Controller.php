@@ -76,15 +76,16 @@ class Controller extends RequestHandler {
 	 */
 	function init() {
 		// Test and development sites should be secured, via basic-auth
-		if(ClassInfo::hasTable("Group") && ClassInfo::hasTable("Member") && Director::isTest() && $this->basicAuthEnabled) {
+		if(Director::isTest() && $this->basicAuthEnabled && Security::database_is_ready()) {
 			BasicAuth::requireLogin("SilverStripe test website.  Use your  CMS login", "ADMIN");
 		}		
 		
 		//
 		Cookie::set("PastVisitor", true);
 
-		// ClassInfo::hasTable() called to ensure that we're not in a very-first-setup stage
-		if(ClassInfo::hasTable("Group") && ClassInfo::hasTable("Member") && ($member = Member::currentUser())) {
+		// Directly access the session variable just in case the Group or Member tables don't yet exist
+		if(Session::get('loggedInAs')) {
+			$member = Member::currentUser();
 			Cookie::set("PastMember", true);
 			DB::query("UPDATE Member SET LastVisited = NOW() WHERE ID = $member->ID", null);
 		}

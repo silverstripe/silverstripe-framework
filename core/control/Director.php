@@ -546,7 +546,8 @@ class Director {
 	 * @return boolean
 	 */
 	public static function is_cli() {
-		return preg_match('/cli-script\.php/', $_SERVER['SCRIPT_NAME']);
+		return (!isset($_SERVER['HTTP_HOST']) && preg_match('/install\.php/', $_SERVER['SCRIPT_NAME'])) 
+			|| preg_match('/cli-script\.php/', $_SERVER['SCRIPT_NAME']);
 	}
 
 	////////////////////////////////////////////////////////////////////////////////////////////
@@ -680,7 +681,7 @@ class Director {
 
 		// Use ?isDev=1 to get development access on the live server
 		if(isset($_GET['isDev'])) {
-			if(ClassInfo::ready()) {
+			if(Security::database_is_ready()) {
 				BasicAuth::requireLogin("SilverStripe developer access.  Use your CMS login", "ADMIN");
 				$_SESSION['isDev'] = $_GET['isDev'];
 			} else {

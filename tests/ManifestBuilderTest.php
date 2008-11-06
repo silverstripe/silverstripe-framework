@@ -6,7 +6,7 @@
 class ManifestBuilderTest extends SapphireTest {
 	function testManifest() {
 		$baseFolder = TEMP_FOLDER . '/manifest-test';
-		$manifestInfo = ManifestBuilder::get_manifest_info($baseFolder, DB::getConn()->tableList());
+		$manifestInfo = ManifestBuilder::get_manifest_info($baseFolder);
 		global $project;
 		
 		$this->assertEquals("$baseFolder/sapphire/MyClass.php", $manifestInfo['globals']['_CLASS_MANIFEST']['MyClass']);
@@ -36,42 +36,37 @@ class ManifestBuilderTest extends SapphireTest {
 		$baseFolder = TEMP_FOLDER . '/manifest-test';
 		global $project;
 
-		$manifestInfo = ManifestBuilder::get_manifest_info($baseFolder, DB::getConn()->tableList());
+		$manifestInfo = ManifestBuilder::get_manifest_info($baseFolder);
 
 		/* Our fixture defines the class MyClass_InComment inside a comment, so it shouldn't be included in the class manifest. */
 		$this->assertNotContains('MyClass_InComment', array_keys($manifestInfo['globals']['_CLASS_MANIFEST']));
 		$this->assertNotContains('MyClass_InComment', array_keys($manifestInfo['globals']['_ALL_CLASSES']['exists']));
 		$this->assertNotContains('MyClass_InComment', array_keys($manifestInfo['globals']['_ALL_CLASSES']['parents']));
-		$this->assertNotContains('MyClass_InComment', array_keys($manifestInfo['globals']['_ALL_CLASSES']['hastable']));
 
 		/* Our fixture defines the class MyClass_InSlashSlashComment inside a //-style comment, so it shouldn't be included in the class manifest. */
 		$this->assertNotContains('MyClass_InSlashSlashComment', array_keys($manifestInfo['globals']['_CLASS_MANIFEST']));
 		$this->assertNotContains('MyClass_InSlashSlashComment', array_keys($manifestInfo['globals']['_ALL_CLASSES']['exists']));
 		$this->assertNotContains('MyClass_InSlashSlashComment', array_keys($manifestInfo['globals']['_ALL_CLASSES']['parents']));
-		$this->assertNotContains('MyClass_InSlashSlashComment', array_keys($manifestInfo['globals']['_ALL_CLASSES']['hastable']));
 	}
 
 	function testManifestIgnoresClassesInStrings() {
 		$baseFolder = TEMP_FOLDER . '/manifest-test';
-		$manifestInfo = ManifestBuilder::get_manifest_info($baseFolder, DB::getConn()->tableList());
+		$manifestInfo = ManifestBuilder::get_manifest_info($baseFolder);
 
 		/* If a class defintion is listed in a single quote string, then it shouldn't be inlcuded.  Here we have put a class definition for  MyClass_InSingleQuoteString inside a single-quoted string */
 		$this->assertNotContains('MyClass_InSingleQuoteString', array_keys($manifestInfo['globals']['_CLASS_MANIFEST']));
 		$this->assertNotContains('MyClass_InSingleQuoteString', array_keys($manifestInfo['globals']['_ALL_CLASSES']['exists']));
 		$this->assertNotContains('MyClass_InSingleQuoteString', array_keys($manifestInfo['globals']['_ALL_CLASSES']['parents']));
-		$this->assertNotContains('MyClass_InSingleQuoteString', array_keys($manifestInfo['globals']['_ALL_CLASSES']['hastable']));
 
 		/* Ditto for double quotes.  Here we have put a class definition for MyClass_InDoubleQuoteString inside a double-quoted string.  */
 		$this->assertNotContains('MyClass_InDoubleQuoteString', array_keys($manifestInfo['globals']['_CLASS_MANIFEST']));
 		$this->assertNotContains('MyClass_InDoubleQuoteString', array_keys($manifestInfo['globals']['_ALL_CLASSES']['exists']));
 		$this->assertNotContains('MyClass_InDoubleQuoteString', array_keys($manifestInfo['globals']['_ALL_CLASSES']['parents']));
-		$this->assertNotContains('MyClass_InDoubleQuoteString', array_keys($manifestInfo['globals']['_ALL_CLASSES']['hastable']));
 
 		/* Finally, we need to ensure that class definitions inside heredoc strings aren't included.  Here, we have defined the class MyClass_InHeredocString inside a heredoc string. */
 		$this->assertNotContains('MyClass_InHeredocString', array_keys($manifestInfo['globals']['_CLASS_MANIFEST']));
 		$this->assertNotContains('MyClass_InHeredocString', array_keys($manifestInfo['globals']['_ALL_CLASSES']['exists']));
 		$this->assertNotContains('MyClass_InHeredocString', array_keys($manifestInfo['globals']['_ALL_CLASSES']['parents']));
-		$this->assertNotContains('MyClass_InHeredocString', array_keys($manifestInfo['globals']['_ALL_CLASSES']['hastable']));
 	}
 
 	

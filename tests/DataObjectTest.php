@@ -525,6 +525,24 @@ class DataObjectTest extends SapphireTest {
 		$this->assertEquals("1001", DB::query("SELECT ID FROM DataObjectTest_SubTeam WHERE SubclassDatabaseField = 'asdfasdf'")->value());
 		$this->assertEquals("1001", DB::query("SELECT ID FROM DataObjectTest_Team WHERE Title = 'asdfasdf'")->value());
 	}
+	
+	public function TestHasOwnTable() {
+		/* Test DataObject::has_own_table() returns true if the object has $has_one or $db values */
+		$this->assertTrue(DataObject::has_own_table("DataObjectTest_Player"));
+		$this->assertTrue(DataObject::has_own_table("DataObjectTest_Team"));
+		$this->assertTrue(DataObject::has_own_table("DataObjectTest_FunnyFieldNames"));
+
+		/* Root DataObject that always have a table, even if they lack both $db and $has_one */
+		$this->assertTrue(DataObject::has_own_table("DataObjectTest_FieldlessTable"));
+
+		/* Subclasses without $db or $has_one don't have a table */
+		$this->assertFalse(DataObject::has_own_table("DataObjectTest_FieldlessSubTable"));
+
+		/* Return false if you don't pass it a subclass of DataObject */
+		$this->assertFalse(DataObject::has_own_table("DataObject"));
+		$this->assertFalse(DataObject::has_own_table("ViewableData"));
+		$this->assertFalse(DataObject::has_own_table("ThisIsntADataObject"));
+	}
 }
 
 class DataObjectTest_Player extends Member implements TestOnly {
@@ -573,6 +591,13 @@ class DataObjectTest_SubTeam extends DataObjectTest_Team implements TestOnly {
 		'SubclassDatabaseField' => 'Text'
 	);
 }
+
+class DataObjectTest_FieldlessTable extends DataObject implements TestOnly {
+}
+
+class DataObjectTest_FieldlessSubTable extends DataObjectTest_Team implements TestOnly {
+}
+
 
 class DataObjectTest_Team_Decorator extends DataObjectDecorator implements TestOnly {
 	

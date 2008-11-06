@@ -158,13 +158,9 @@ require_once("core/Session.php");
 // MANIFEST
 
 /**
- * Build the manifest
+ * Include the manifest
  */
-if(ManifestBuilder::staleManifest()){
-	ManifestBuilder::compileManifest();
-}		
-
-require_once(MANIFEST_FILE);
+ManifestBuilder::include_manifest();
 
 /**
  * ?debugmanifest=1 hook

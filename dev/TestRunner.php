@@ -51,6 +51,7 @@ class TestRunner extends Controller {
 	
 	function init() {
 		parent::init();
+		ManifestBuilder::load_test_manifest();
 		if (!self::$default_reporter) self::set_reporter(Director::is_cli() ? 'CliDebugView' : 'DebugView');
 	}
 	
@@ -95,7 +96,7 @@ class TestRunner extends Controller {
 	
 	function coverage() {
 		if(hasPhpUnit()) {
-			ManifestBuilder::includeEverything();
+			ManifestBuilder::load_all_classes();
 			$tests = ClassInfo::subclassesFor('SapphireTest');
 			array_shift($tests);
 			unset($tests['FunctionalTest']);

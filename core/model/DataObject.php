@@ -693,7 +693,7 @@ class DataObject extends ViewableData implements DataObjectInterface,i18nEntityP
 		// No changes made
 		if($this->changed) {
 			foreach($this->getClassAncestry() as $ancestor) {
-				if(ClassInfo::hasTable($ancestor))
+				if(self::has_own_table($ancestor))
 				$ancestry[] = $ancestor;
 			}
 
@@ -758,7 +758,7 @@ class DataObject extends ViewableData implements DataObjectInterface,i18nEntityP
 						}
 
 						// In cases where there are no fields, this 'stub' will get picked up on
-						if(ClassInfo::hasTable($class)) {
+						if(self::has_own_table($class)) {
 							$manipulation[$class]['command'] = $dbCommand;
 							$manipulation[$class]['id'] = $this->record['ID'];
 						} else {
@@ -846,7 +846,7 @@ class DataObject extends ViewableData implements DataObjectInterface,i18nEntityP
 			user_error("$this->class has a broken onBeforeDelete() function.  Make sure that you call parent::onBeforeDelete().", E_USER_ERROR);
 		}
 		foreach($this->getClassAncestry() as $ancestor) {
-			if(ClassInfo::hastable($ancestor)) {
+			if(self::has_own_table($ancestor)) {
 				$sql = new SQLQuery();
 				$sql->delete = true;
 				$sql->from[$ancestor] = "`$ancestor`";
@@ -1747,6 +1747,26 @@ class DataObject extends ViewableData implements DataObjectInterface,i18nEntityP
 		// Remove string-based "constructor-arguments" from the DBField definition
 		return isset($fieldMap[$field]) ? strtok($fieldMap[$field],'(') : null;
 	}
+
+	/**
+	 * Returns true if given class has its own table.
+	 * Uses the rules for whether the table should exist rather than actually looking in the database.
+	 */
+	public function has_own_table($dataClass) {
+		if(!is_subclass_of($dataClass,'DataObject')) return false;
+		if(!isset(self::$cache_has_own_table[$dataClass])) {
+			if(get_parent_class($dataClass) == 'DataObject') {
+				self::$cache_has_own_table[$dataClass] = true;
+			} else {
+				$sng = singleton($dataClass);
+				self::$cache_has_own_table[$dataClass] = $sng->uninherited('db',true) || $sng->uninherited('has_one',true);
+			}
+		}
+		return self::$cache_has_own_table[$dataClass];
+	}
+	
+	private static $cache_has_own_table = array();
+	
 
 	/**
 	 * Returns true if the member is allowed to do the given action.
