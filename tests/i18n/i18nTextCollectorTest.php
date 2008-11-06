@@ -330,13 +330,49 @@ PHP;
 		
 		$templateFilePath = $this->alternateBasePath . '/i18ntestmodule/templates/Layout/i18nTestModule.ss';
 		$html = file_get_contents($templateFilePath);
+		$matches = $c->collectFromTemplate($html, 'mymodule', 'RandomNamespace');
+		
+		/*
+		$this->assertArrayHasKey('i18nTestModule.ss.LAYOUTTEMPLATENONAMESPACE', $matches);
 		$this->assertEquals(
-			$c->collectFromTemplate($html, 'mymodule', 'RandomNamespace'),
-			array(
-				'i18nTestModule.WITHNAMESPACE' => array('Include Entity with Namespace', null, null),
-				'i18nTestModuleInclude.ss.NONAMESPACE' => array('Include Entity without Namespace', null, null),
-				'i18nTestModule.LAYOUTTEMPLATE' => array('Layout Template', null, null),
-			)
+			$matches['i18nTestModule.ss.LAYOUTTEMPLATENONAMESPACE'],
+			array('Layout Template no namespace', null, null)
+		);
+		*/
+		$this->assertArrayHasKey('RandomNamespace.SPRINTFNONAMESPACE', $matches);
+		$this->assertEquals(
+			$matches['RandomNamespace.SPRINTFNONAMESPACE'],
+			array('My replacement no namespace: %s', null, null)
+		);
+		$this->assertArrayHasKey('i18nTestModule.LAYOUTTEMPLATE', $matches);
+		$this->assertEquals(
+			$matches['i18nTestModule.LAYOUTTEMPLATE'],
+			array('Layout Template', null, null)
+		);
+		$this->assertArrayHasKey('i18nTestModule.SPRINTFNAMESPACE', $matches);
+		$this->assertEquals(
+			$matches['i18nTestModule.SPRINTFNAMESPACE'],
+			array('My replacement: %s', null, null)
+		);
+		$this->assertArrayHasKey('i18nTestModule.WITHNAMESPACE', $matches);
+		$this->assertEquals(
+			$matches['i18nTestModule.WITHNAMESPACE'],
+			array('Include Entity with Namespace', null, null)
+		);
+		$this->assertArrayHasKey('i18nTestModuleInclude.ss.NONAMESPACE', $matches);
+		$this->assertEquals(
+			$matches['i18nTestModuleInclude.ss.NONAMESPACE'],
+			array('Include Entity without Namespace', null, null)
+		);
+		$this->assertArrayHasKey('i18nTestModuleInclude.ss.SPRINTFINCLUDENAMESPACE', $matches);
+		$this->assertEquals(
+			$matches['i18nTestModuleInclude.ss.SPRINTFINCLUDENAMESPACE'],
+			array('My include replacement: %s', null, null)
+		);
+		$this->assertArrayHasKey('i18nTestModuleInclude.ss.SPRINTFINCLUDENONAMESPACE', $matches);
+		$this->assertEquals(
+			$matches['i18nTestModuleInclude.ss.SPRINTFINCLUDENONAMESPACE'],
+			array('My include replacement no namespace: %s', null, null)
 		);
 	}
 	

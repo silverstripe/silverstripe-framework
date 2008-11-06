@@ -1,8 +1,24 @@
 <?php
 /**
  * Base-class for storage and retrieval of translated entities.
- * Most common use is translation of the CMS-interface through the _t()-method
- * (in controller/model) and the <% _t() %> template variable.
+ * 
+ * Usage PHP:
+ * <code>
+ * _t('MyNamespace.MYENTITY', 'My default natural language value');
+ * _t('MyNamespace.MYENTITY', 'My default natural language value', PR_MEDIUM, 'My explanatory context');
+ * sprintf(_t('MyNamespace.MYENTITY', 'Counting %s things'), 42);
+ * </code>
+ * 
+ * Usage Templates:
+ * <code>
+ * <% _t('MyNamespace.MYENTITY', 'My default natural language value') %>
+ * <% sprintf(_t('MyNamespace.MYENTITY','Counting %s things'),$ThingsCount) %>
+ * </code>
+ *
+ * Usage Javascript (see sapphire/javascript/i18n.js):
+ * <code>
+ * ss.i18n._t('MyEntity.MyNamespace','My default natural language value');
+ * </code>
  * 
  * File-based i18n-translations always have a "locale" (e.g. 'en_US').
  * Common language names (e.g. 'en') are mainly used in {Translatable} for

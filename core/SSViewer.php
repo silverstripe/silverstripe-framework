@@ -433,14 +433,20 @@ class SSViewer extends Object {
 		$content = ereg_replace('<' . '% +else +%' . '>', '<? } else { ?>', $content);
 		$content = ereg_replace('<' . '% +end_if +%' . '>', '<? }  ?>', $content);
 
-		// i18n
+		// i18n - get filename of currently parsed template
+		// CAUTION: No spaces allowed between arguments for all i18n calls!
 		ereg('.*[\/](.*)',$template,$path);
-		$content = ereg_replace('<' . '% +_t\((\'([^\']*)\'|"([^"]*)")(([^)]|\)[^ ]|\) +[^% ])*)\) +%' . '>', '<?= _t(\''. $path[1] . '.\\2\\3\'\\4) ?>', $content);
-
-		// i18n - sprintf => "sprintf(_t(...),$argument)"
-		// CAUTION: No spaces allowed between arguments!
-		$content = ereg_replace('<' . '% +sprintf\(_t\((\'([^\']*)\'|"([^"]*)")(([^)]|\)[^ ]|\) +[^% ])*)\),\<\?= +([^\?]*) +\?\>) +%' . '>', '<?= sprintf(_t(\''. $path[1] . '.\\2\\3\'\\4),\\6) ?>', $content);
 		
+		// i18n _t(...) - with entity only (no dots in namespace), meaning the current template filename will be added as a namespace
+		$content = ereg_replace('<' . '% +_t\((\'([^\.\']*)\'|"([^\."]*)")(([^)]|\)[^ ]|\) +[^% ])*)\) +%' . '>', '<?= _t(\''. $path[1] . '.\\2\\3\'\\4) ?>', $content);
+		// i18n _t(...)
+		$content = ereg_replace('<' . '% +_t\((\'([^\']*)\'|"([^"]*)")(([^)]|\)[^ ]|\) +[^% ])*)\) +%' . '>', '<?= _t(\'\\2\\3\'\\4) ?>', $content);
+
+		// i18n sprintf(_t(...),$argument) with entity only (no dots in namespace), meaning the current template filename will be added as a namespace
+		$content = ereg_replace('<' . '% +sprintf\(_t\((\'([^\.\']*)\'|"([^\."]*)")(([^)]|\)[^ ]|\) +[^% ])*)\),\<\?= +([^\?]*) +\?\>) +%' . '>', '<?= sprintf(_t(\''. $path[1] . '.\\2\\3\'\\4),\\6) ?>', $content);
+		// i18n sprintf(_t(...),$argument)
+		$content = ereg_replace('<' . '% +sprintf\(_t\((\'([^\']*)\'|"([^"]*)")(([^)]|\)[^ ]|\) +[^% ])*)\),\<\?= +([^\?]*) +\?\>) +%' . '>', '<?= sprintf(_t(\'\\2\\3\'\\4),\\6) ?>', $content);
+
 		// </base> isnt valid html? !? 
 		$content = ereg_replace('<' . '% +base_tag +%' . '>', '<base href="<?= Director::absoluteBaseURL(); ?>" />', $content);
 
