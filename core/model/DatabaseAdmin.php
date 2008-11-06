@@ -75,7 +75,8 @@ class DatabaseAdmin extends Controller {
 		}
 
 		// Get all our classes
-		ManifestBuilder::compileManifest();
+		ManifestBuilder::create_manifest_file();
+		require(MANIFEST_FILE);
 
 		$this->doBuild(isset($_REQUEST['quiet']) || isset($_REQUEST['from_installer']));
 	}

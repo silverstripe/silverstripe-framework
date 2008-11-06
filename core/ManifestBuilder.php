@@ -91,17 +91,16 @@ class ManifestBuilder {
 	/**
 	 * Generates a new manifest file and saves it to {@link MANIFEST_FILE}.
 	 */
-	private static function create_manifest_file() {
+	static function create_manifest_file() {
 		// Build the manifest, ignoring the tests/ folders
 		$manifestInfo = self::get_manifest_info(BASE_PATH, array("tests"));
 
 		$manifest = self::generate_php_file($manifestInfo);
-		if($fh = fopen(MANIFEST_FILE, "w")) {
+		if(false || $fh = fopen(MANIFEST_FILE, "w")) {
 			fwrite($fh, $manifest);
 			fclose($fh);
 		} else {
-			die("Cannot write manifest file! Check permissions of " .
-					MANIFEST_FILE);
+			user_error("Cannot write manifest file! Check permissions of " . MANIFEST_FILE, E_USER_ERROR);
 		}
 	}
 	
