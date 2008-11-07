@@ -398,7 +398,7 @@ class Requirements_Backend {
 	 * @param file The template file to load.
 	 * @param vars The array of variables to load.  These variables are loaded via string search & replace.
 	 */
-	static function javascriptTemplate($file, $vars, $uniquenessID = null) {
+	function javascriptTemplate($file, $vars, $uniquenessID = null) {
 		$script = file_get_contents(Director::getAbsFile($file));
 		foreach($vars as $k => $v) {
 			$search[] = '$' . $k;
@@ -422,7 +422,7 @@ class Requirements_Backend {
 	}
 	
 	function get_css() {
-		return array_diff_key($this->css,$this->blocked));
+		return array_diff_key($this->css,$this->blocked);
 	}
 	
 	/**
@@ -810,7 +810,7 @@ class Requirements_Backend {
 		}
   }
   
-  static function get_custom_scripts() {
+  function get_custom_scripts() {
 		$requirements = "";
 		
 		if($this->customScript) {
