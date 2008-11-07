@@ -459,19 +459,24 @@ class Object {
 	 * originally returned void, so if you wanted to return results, you're hosed.
 	 * 
 	 * Currently returns an array, with an index resulting every time the function is called.
+	 * Only adds returns if they're not NULL, to avoid bogus results from methods just
+	 * defined on the parent decorator. This is important for permission-checks through
+	 * extend, as they use min() to determine if any of the returns is FALSE.
+	 * As min() doesn't do type checking, an included NULL return would fail the permission checks.
 	 * 
 	 * @param string $funcName The name of the function.
 	 * @param mixed $arg An Argument to be passed to each of the extension functions.
 	 */
 	public function extend($funcName, &$arg=null) {
 		if($this->extension_instances) {
-			$return = array();
+			$returnArr = array();
 			foreach($this->extension_instances as $extension) {
 				if($extension->hasMethod($funcName)) {
-					$return[] = $extension->$funcName($arg);
+					$return = $extension->$funcName($arg);
+					if($return !== NULL) $returnArr[] = $return;
 				}
 			}
-			return $return;
+			return $returnArr;
 		}
 	}
 	
