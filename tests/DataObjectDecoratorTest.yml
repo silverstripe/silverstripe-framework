@@ -11,7 +11,6 @@ PageComment:
    comment4:
       Name: Bob
       Comment: Second comment by Bob
-
 Page:
    home:
       Title: Home
@@ -22,4 +21,18 @@ Page:
       Comments: =>PageComment.comment3,=>PageComment.comment4 
    page2:
       Title: Second Page
-
+Permission:
+   adminpermission:
+      Code: ADMIN
+Group:
+   admingroup:
+      Permissions: =>Permission.adminpermission
+Member:
+   admin:
+      Email: admin@test.com
+      Groups: =>Group.admingroup
+   websiteuser:
+      Email: websiteuser@test.com
+DataObjectDecoratorTest_MyObject:
+   object1:
+      Title: Object 1

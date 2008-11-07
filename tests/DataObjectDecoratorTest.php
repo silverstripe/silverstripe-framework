@@ -1,6 +1,6 @@
 <?php
 class DataObjectDecoratorTest extends SapphireTest {
-	static $fixture_file = 'sapphire/tests/DataObjectTest.yml';
+	static $fixture_file = 'sapphire/tests/DataObjectDecoratorTest.yml';
 	
 	function testOneToManyAssociationWithDecorator() {
 		// Fails in RestfulServerTest
@@ -31,6 +31,31 @@ class DataObjectDecoratorTest extends SapphireTest {
 		$contact->delete();
 	}
 	
+	function testPermissionDecoration() {
+		// testing behaviour in isolation, too many sideeffects and other checks
+		// in SiteTree->can*() methods to test one single feature reliably with them
+
+		$obj = $this->objFromFixture('DataObjectDecoratorTest_MyObject', 'object1');
+		$websiteuser = $this->objFromFixture('Member', 'websiteuser');
+		$admin = $this->objFromFixture('Member', 'admin');
+		
+		$this->assertFalse(
+			$obj->canOne($websiteuser),
+			'Both decorators return true, but original method returns false'
+		);
+
+		$this->assertFalse(
+			$obj->canTwo($websiteuser),
+			'One decorator returns false, original returns true, but decorator takes precedence'
+		);
+		
+		$this->assertTrue(
+			$obj->canThree($admin),
+			'Undefined decorator methods returning NULL dont influence the original method'
+		);
+
+	}
+	
 }
 
 class DataObjectDecoratorTest_Member extends DataObject implements TestOnly {
@@ -55,6 +80,7 @@ class DataObjectDecoratorTest_ContactRole extends DataObjectDecorator implements
 			)
 		);
 	}
+	
 }
 
 class DataObjectDecoratorTest_RelatedObject extends DataObject implements TestOnly {
@@ -71,4 +97,68 @@ class DataObjectDecoratorTest_RelatedObject extends DataObject implements TestOn
 }
 
 DataObject::add_extension('DataObjectDecoratorTest_Member', 'DataObjectDecoratorTest_ContactRole');
+
+class DataObjectDecoratorTest_MyObject extends DataObject implements TestOnly {
+	
+	static $db = array(
+		'Title' => 'Varchar', 
+	);
+	
+	function canOne($member = null) {
+		// decorated access checks
+		$results = $this->extend('canOne', $member);
+		if($results && is_array($results)) if(!min($results)) return false;
+		
+		return false;
+	}
+	
+	function canTwo($member = null) {
+		// decorated access checks
+		$results = $this->extend('canTwo', $member);
+		if($results && is_array($results)) if(!min($results)) return false;
+		
+		return true;
+	}
+	
+	function canThree($member = null) {
+		// decorated access checks
+		$results = $this->extend('canThree', $member);
+		if($results && is_array($results)) if(!min($results)) return false;
+		
+		return true;
+	}
+}
+
+class DataObjectDecoratorTest_Ext1 extends DataObjectDecorator implements TestOnly {
+	
+	function canOne($member = null) {
+		return true;
+	}
+	
+	function canTwo($member = null) {
+		return false;
+	}
+	
+	function canThree($member = null) {
+	}
+	
+}
+
+class DataObjectDecoratorTest_Ext2 extends DataObjectDecorator implements TestOnly {
+	
+	function canOne($member = null) {
+		return true;
+	}
+	
+	function canTwo($member = null) {
+		return true;
+	}
+	
+	function canThree($member = null) {
+	}
+	
+}
+
+DataObject::add_extension('DataObjectDecoratorTest_MyObject', 'DataObjectDecoratorTest_Ext1');
+DataObject::add_extension('DataObjectDecoratorTest_MyObject', 'DataObjectDecoratorTest_Ext2');
 ?>

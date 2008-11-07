@@ -562,12 +562,18 @@ class DataObject extends ViewableData implements DataObjectInterface,i18nEntityP
 	 * database.  Don't forget to call parent::onBeforeWrite(), though!
 	 *
 	 * This called after {@link $this->validate()}, so you can be sure that your data is valid.
+	 * 
+	 * @uses DataObjectDecorator->onBeforeWrite()
 	 */
 	protected function onBeforeWrite() {
 		$this->brokenOnWrite = false;
 
+		// DEPRECATED 2.3: use onBeforeWrite()
 		$dummy = null;
 		$this->extend('augmentBeforeWrite', $dummy);
+		
+		$dummy = null;
+		$this->extend('onBeforeWrite', $dummy);
 	}
 
 	/**
@@ -575,10 +581,16 @@ class DataObject extends ViewableData implements DataObjectInterface,i18nEntityP
 	 * You can overload this to act upon changes made to the data after it is written.
 	 * $this->changed will have a record
 	 * database.  Don't forget to call parent::onAfterWrite(), though!
+	 *
+	 * @uses DataObjectDecorator->onAfterWrite()
 	 */
 	protected function onAfterWrite() {
+		// DEPRECATED 2.3: use onAfterWrite()
 		$dummy = null;
 		$this->extend('augmentAfterWrite', $dummy);
+		
+		$dummy = null;
+		$this->extend('onAfterWrite', $dummy);
 	}
 
 	/**
@@ -591,9 +603,18 @@ class DataObject extends ViewableData implements DataObjectInterface,i18nEntityP
 	 * Event handler called before deleting from the database.
 	 * You can overload this to clean up or otherwise process data before delete this
 	 * record.  Don't forget to call parent::onBeforeDelete(), though!
+	 *
+	 * @uses DataObjectDecorator->onBeforeDelete()
 	 */
 	protected function onBeforeDelete() {
 		$this->brokenOnDelete = false;
+		
+		$dummy = null;
+		$this->extend('onBeforeDelete', $dummy);
+	}
+	
+	protected function onAfterDelete() {
+		$this->extend('onAfterDelete');
 	}
 
 	/**
@@ -606,6 +627,8 @@ class DataObject extends ViewableData implements DataObjectInterface,i18nEntityP
 	 * Load the default values in from the self::$defaults array.
 	 * Will traverse the defaults of the current class and all its parent classes.
 	 * Called by the constructor when creating new records.
+	 * 
+	 *  @uses DataObjectDecorator->populateDefaults()
 	 */
 	public function populateDefaults() {
 		$classes = array_reverse(ClassInfo::ancestry($this));
@@ -630,7 +653,10 @@ class DataObject extends ViewableData implements DataObjectInterface,i18nEntityP
 			}
 		}
 		
+		// DEPRECATED 2.3: use populateDefaults()
 		$this->extend('augmentPopulateDefaults');
+		
+		$this->extend('populateDefaults');
 	}
 
 	/**
@@ -640,6 +666,8 @@ class DataObject extends ViewableData implements DataObjectInterface,i18nEntityP
 	 *  - $this->onBeforeWrite() gets called beforehand.
 	 *  - Extensions such as Versioned will ammend the database-write to ensure that a version is saved.
 	 *  - Calls to {@link DataObjectLog} can be used to see everything that's been changed.
+	 * 
+	 *  @uses DataObjectDecorator->augmentWrite()
 	 *
 	 * @param boolean $showDebug Show debugging information
 	 * @param boolean $forceInsert Run INSERT command rather than UPDATE, even if record already exists
@@ -768,6 +796,7 @@ class DataObject extends ViewableData implements DataObjectInterface,i18nEntityP
 				}
 
 				$this->extend('augmentWrite', $manipulation);
+				
 				// New records have their insert into the base data table done first, so that they can pass the
 				// generated ID on to the rest of the manipulation
 				if(isset($isNewRecord) && $isNewRecord && isset($manipulation[$baseTable])) {
@@ -838,6 +867,7 @@ class DataObject extends ViewableData implements DataObjectInterface,i18nEntityP
 	 * Delete this data object.
 	 * $this->onBeforeDelete() gets called.
 	 * Note that in Versioned objects, both Stage and Live will be deleted.
+	 *  @uses DataObjectDecorator->augmentSQL()
 	 */
 	public function delete() {
 		$this->brokenOnDelete = true;
@@ -845,6 +875,7 @@ class DataObject extends ViewableData implements DataObjectInterface,i18nEntityP
 		if($this->brokenOnDelete) {
 			user_error("$this->class has a broken onBeforeDelete() function.  Make sure that you call parent::onBeforeDelete().", E_USER_ERROR);
 		}
+		
 		foreach($this->getClassAncestry() as $ancestor) {
 			if(self::has_own_table($ancestor)) {
 				$sql = new SQLQuery();
@@ -855,6 +886,8 @@ class DataObject extends ViewableData implements DataObjectInterface,i18nEntityP
 				$sql->execute();
 			}
 		}
+		
+		$this->onAfterDelete();
 
 		$this->OldID = $this->ID;
 		$this->ID = 0;
@@ -2075,13 +2108,14 @@ class DataObject extends ViewableData implements DataObjectInterface,i18nEntityP
 
 	/**
 	 * Like {@link buildSQL}, but applies the extension modifications.
+	 * 
+	 * @uses DataObjectDecorator->augmentSQL()
 	 *
 	 * @param string $filter A filter to be inserted into the WHERE clause.
 	 * @param string|array $sort A sort expression to be inserted into the ORDER BY clause. If omitted, self::$default_sort will be used.
 	 * @param string|array $limit A limit expression to be inserted into the LIMIT clause.
 	 * @param string $join A single join clause. This can be used for filtering, only 1 instance of each DataObject will be returned.
 	 * @param string $having A filter to be inserted into the HAVING clause.
-	 *
 	 * @return SQLQuery Query built
 	 */
 	public function extendedSQL($filter = "", $sort = "", $limit = "", $join = "", $having = ""){
@@ -2228,10 +2262,11 @@ class DataObject extends ViewableData implements DataObjectInterface,i18nEntityP
 
 	/**
 	 * Does the hard work for get_one()
+	 * 
+	 * @uses DataObjectDecorator->augmentSQL()
 	 *
 	 * @param string $filter A filter to be inserted into the WHERE clause
 	 * @param string $orderby A sort expression to be inserted into the ORDER BY clause.
-	 *
 	 * @return DataObject The first item matching the query
 	 */
 	public function instance_get_one($filter, $orderby = null) {
@@ -2329,6 +2364,8 @@ class DataObject extends ViewableData implements DataObjectInterface,i18nEntityP
 
 	/**
 	 * Check the database schema and update it as necessary.
+	 * 
+	 * @uses DataObjectDecorator->augmentDatabase()
 	 */
 	public function requireTable() {
 		// Only build the table if we've actually got fields
@@ -2373,6 +2410,8 @@ class DataObject extends ViewableData implements DataObjectInterface,i18nEntityP
 	 * database is built, after the database tables have all been created. Overload
 	 * this to add default records when the database is built, but make sure you
 	 * call parent::requireDefaultRecords().
+	 * 
+	 * @uses DataObjectDecorator->requireDefaultRecords()
 	 */
 	public function requireDefaultRecords() {
 		$defaultRecords = $this->stat('default_records');
@@ -2389,8 +2428,11 @@ class DataObject extends ViewableData implements DataObjectInterface,i18nEntityP
 			}
 		}
 
-		// Let any extentions make their own database default data
+		// DEPRECATED 2.3: Use requireDefaultRecords()
 		$this->extend('augmentDefaultRecords', $dummy);
+		
+		// Let any extentions make their own database default data
+		$this->extend('requireDefaultRecords', $dummy);
 	}
 
 	/**
@@ -2476,8 +2518,8 @@ class DataObject extends ViewableData implements DataObjectInterface,i18nEntityP
 		if(!$fields) $fields = array_keys($this->summaryFields());
 		
 		// we need to make sure the format is unified before
-		// augumenting fields, so decorators can apply consistent checks
-		// but also after augumenting fields, because the decorator
+		// augmenting fields, so decorators can apply consistent checks
+		// but also after augmenting fields, because the decorator
 		// might use the shorthand notation as well
 
 		// rewrite array, if it is using shorthand syntax

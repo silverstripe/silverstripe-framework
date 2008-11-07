@@ -80,7 +80,36 @@ abstract class DataObjectDecorator extends Extension {
 	 */
 	function augmentWrite(&$manipulation) {
 	}
+	
+	function onBeforeWrite() {
+	}
+	
+	function onAfterWrite() {
+	}
+	
+	function onBeforeDelete() {
+	}
+	
+	function onAfterDelete() {
+	}
+	
+	function requireDefaultRecords() {
+	}
 
+	function populateDefaults() {
+	}
+	
+	function can($member) {
+	}
+	
+	function canEdit($member) {
+	}
+	
+	function canDelete($member) {
+	}
+	
+	function canCreate($member) {
+	}
 
 	/**
 	 * Define extra database fields
@@ -108,7 +137,6 @@ abstract class DataObjectDecorator extends Extension {
 		return array();
 	}
 
-
 	/**
 	 * This function is used to provide modifications to the form in the CMS
 	 * by the decorator. By default, no changes are made.
@@ -133,6 +161,9 @@ abstract class DataObjectDecorator extends Extension {
 	 * @param FieldSet $fields FieldSet without TabSet nesting
 	 */
 	function updateFormFields(FieldSet &$fields) {
+	}
+	
+	function updateCMSActions(FieldSet &$actions) {
 	}
 	
 	/**

@@ -503,12 +503,12 @@ class SiteTree extends DataObject {
 
 	/**
 	 * This function should return true if the current user can add children
-	 * to this page.
-	 *
-	 * It can be overloaded to customise the security model for an
+	 * to this page. It can be overloaded to customise the security model for an
 	 * application.
 	 *
 	 * Returns true if the member is allowed to do the given action.
+	 *
+	 * @uses DataObjectDecorator->can()
 	 *
 	 * @param string $perm The permission to be checked, such as 'View'.
 	 * @param Member $member The member whose permissions need checking.
@@ -520,9 +520,8 @@ class SiteTree extends DataObject {
 	 * @todo Check we get a endless recursion if we use parent::can()
 	 */
 	function can($perm, $member = null) {
-		if(!isset($member)) {
-			$member = Member::currentUser();
-		}
+		if(!isset($member)) $member = Member::currentUser();
+
 		if(Permission::checkMember($member, "ADMIN")) return true;
 		
 		if(method_exists($this, 'can' . ucfirst($perm))) {
@@ -530,13 +529,14 @@ class SiteTree extends DataObject {
 			return $this->$method($member);
 		}
 		
-		$args = array($perm, $member, true);
-		$this->extend('alternateCan', $args);
-		if($args[2] == false) return false;
+		// DEPRECATED 2.3: Use can()
+		$results = $this->extend('alternateCan', $member);
+		if($results && is_array($results)) if(!min($results)) return false;
+		
+		$results = $this->extend('can', $member);
+		if($results && is_array($results)) if(!min($results)) return false;
 
 		return true;
-
-		//return parent::can($perm, $member);
 	}
 
 
@@ -550,7 +550,7 @@ class SiteTree extends DataObject {
 	 * - canEdit() is not granted
 	 * - There are no classes defined in {@link $allowed_children}
 	 * 
-	 * @uses alternateCanAddChildren()
+	 * @uses DataObjectDecorator->canAddChildren()
 	 * @uses canEdit()
 	 * @uses $allowed_children
 	 *
@@ -562,9 +562,12 @@ class SiteTree extends DataObject {
 		}
 		if(Permission::checkMember($member, "ADMIN")) return true;
 		
-		$args = array($member, true);
-		$this->extend('alternateCanAddChildren', $args);
-		if($args[1] == false) return false;
+		// DEPRECATED 2.3: use canAddChildren() instead
+		$results = $this->extend('alternateCanAddChildren', $member);
+		if($results && is_array($results)) if(!min($results)) return false;
+		
+		$results = $this->extend('canAddChildren', $member);
+		if($results && is_array($results)) if(!min($results)) return false;
 		
 		return $this->canEdit() && $this->stat('allowed_children') != 'none';
 	}
@@ -576,12 +579,12 @@ class SiteTree extends DataObject {
 	 * application.
 	 * 
 	 * Denies permission if any of the following conditions is TRUE:
-	 * - alternateCanView() on any decorator returns FALSE
+	 * - canView() on any decorator returns FALSE
 	 * - "CanViewType" directive is set to "Inherit" and any parent page return false for canView()
 	 * - "CanViewType" directive is set to "LoggedInUsers" and no user is logged in
 	 * - "CanViewType" directive is set to "OnlyTheseUsers" and user is not in the given groups
 	 *
-	 * @uses alternateCanView()
+	 * @uses DataObjectDecorator->canView()
 	 * @uses ViewerGroups()
 	 *
 	 * @return boolean True if the current user can view this page.
@@ -592,10 +595,13 @@ class SiteTree extends DataObject {
 		// admin override
 		if(Permission::checkMember($member, "ADMIN")) return true;
 		
+		// DEPRECATED 2.3: use canView() instead
+		$results = $this->extend('alternateCanView', $member);
+		if($results && is_array($results)) if(!min($results)) return false;
+		
 		// decorated access checks
-		$args = array($member, true);
-		$this->extend('alternateCanView', $args);
-		if($args[1] == false) return false;
+		$results = $this->extend('canView', $member);
+		if($results && is_array($results)) if(!min($results)) return false;
 		
 		// check for empty spec
 		if(
@@ -629,12 +635,11 @@ class SiteTree extends DataObject {
 	 * application.
 	 * 
 	 * Denies permission if any of the following conditions is TRUE:
-	 * - alternateCanDelete() returns FALSE on any decorator
+	 * - canDelete() returns FALSE on any decorator
 	 * - canEdit() returns FALSE
 	 * - any descendant page returns FALSE for canDelete()
 	 * 
-	 * @todo Check if all children can be deleted as well
-	 * @uses alternateCanDelete()
+	 * @uses canDelete()
 	 * @uses canEdit()
 	 *
 	 * @param Member $member
@@ -645,9 +650,13 @@ class SiteTree extends DataObject {
 		
 		if(Permission::checkMember($member, "ADMIN")) return true;
 		
-		$args = array($member, true);
-		$this->extend('alternateCanDelete', $args);
-		if($args[1] == false) return false;
+		// DEPRECATED 2.3: use canDelete() instead
+		$results = $this->extend('alternateCanDelete', $member);
+		if($results && is_array($results)) if(!min($results)) return false;
+		
+		// decorated access checks
+		$results = $this->extend('canDelete', $member);
+		if($results && is_array($results)) if(!min($results)) return false;
 		
 		// if page can't be edited, don't grant delete permissions
 		if(!$this->canEdit()) return false;
@@ -667,12 +676,11 @@ class SiteTree extends DataObject {
 	 * application.
 	 * 
 	 * Denies permission if any of the following conditions is TRUE:
-	 * - alternateCanCreate() returns FALSE on any decorator
+	 * - canCreate() returns FALSE on any decorator
 	 * - $can_create is set to FALSE and the site is not in "dev mode"
 	 * 
 	 * Use {@link canAddChildren()} to control behaviour of creating children under this page.
 	 * 
-	 * @uses alternateCanCreate()
 	 * @uses $can_create
 	 *
 	 * @param Member $member
@@ -683,9 +691,13 @@ class SiteTree extends DataObject {
 
 		if(Permission::checkMember($member, "ADMIN")) return true;
 		
-		$args = array($member, true);
-		$this->extend('alternateCanCreate', $args);
-		if($args[1] == false) return false;
+		// DEPRECATED 2.3: use canCreate() instead
+		$results = $this->extend('alternateCanCreate', $member);
+		if($results && is_array($results)) if(!min($results)) return false;
+		
+		// decorated permission checks
+		$results = $this->extend('canCreate', $member);
+		if($results && is_array($results)) if(!min($results)) return false;
 		
 		return $this->stat('can_create') != false || Director::isDev();
 	}
@@ -697,13 +709,12 @@ class SiteTree extends DataObject {
 	 * application.
 	 * 
 	 * Denies permission if any of the following conditions is TRUE:
-	 * - alternateCanEdit() on any decorator returns FALSE
+	 * - canEdit() on any decorator returns FALSE
 	 * - canView() return false
 	 * - "CanEditType" directive is set to "Inherit" and any parent page return false for canEdit()
 	 * - "CanEditType" directive is set to "LoggedInUsers" and no user is logged in or doesn't have the CMS_Access_CMSMAIN permission code
 	 * - "CanEditType" directive is set to "OnlyTheseUsers" and user is not in the given groups
 	 * 
-	 * @uses alternateCanEdit()
 	 * @uses canView()
 	 * @uses EditorGroups()
 	 *
@@ -711,13 +722,17 @@ class SiteTree extends DataObject {
 	 * @return boolean True if the current user can edit this page.
 	 */
 	public function canEdit($member = null) {
-		if(Permission::checkMember($member, "ADMIN")) return true;
 		if(!$member) $member = Member::currentUser();
+		
+		if(Permission::checkMember($member, "ADMIN")) return true;
 
+		// DEPRECATED 2.3: use canEdit() instead
+		$results = $this->extend('alternateCanEdit', $member);
+		if($results && is_array($results)) if(!min($results)) return false;
+		
 		// decorated access checks
-		$args = array($member, true);
-		$this->extend('alternateCanEdit', $args);
-		if($args[1] == false) return false;
+		$results = $this->extend('canEdit', $member);
+		if($results && is_array($results)) if(!min($results)) return false;
 		
 		// if page can't be viewed, don't grant edit permissions
 		if(!$this->canView()) return false;
@@ -754,20 +769,27 @@ class SiteTree extends DataObject {
 	 * application.
 	 * 
 	 * Denies permission if any of the following conditions is TRUE:
-	 * - alternateCanPublish() on any decorator returns FALSE
+	 * - canPublish() on any decorator returns FALSE
 	 * - canEdit() returns FALSE
 	 * 
-	 * @uses alternateCanPublish()
+	 * @uses DataObjectDecorator->canPublish()
 	 *
 	 * @param Member $member
 	 * @return boolean True if the current user can publish this page.
 	 */
 	public function canPublish($member = null) {
+		if(!$member) $member = Member::currentUser();
+		
+		if(Permission::checkMember($member, "ADMIN")) return true;
+		
+		// DEPRECATED 2.3: use canPublish() instead
+		$results = $this->extend('alternateCanPublish', $member);
+		if($results && is_array($results)) if(!min($results)) return false;
+		
 		// If we have a result, then that means at least one decorator specified alternateCanPublish
 		// Allow the permission check only if *all* voting decorators allow it.
-		if(!$member) $member = Member::currentUser();
-		$results = $this->extend('alternateCanPublish', $member);
-		if($results && is_array($results)) return min($results);
+		$results = $this->extend('canPublish', $member);
+		if($results && is_array($results)) if(!min($results)) return false;
 
 		// Normal case
 		return $this->canEdit();
@@ -830,7 +852,10 @@ class SiteTree extends DataObject {
 		} 
 		$tags .= "<meta http-equiv=\"Content-Language\" content=\"". Translatable::current_lang() ."\"/>\n";
 		
+		// DEPRECATED 2.3: Use MetaTags
 		$this->extend('updateMetaTags', $tags);
+		
+		$this->extend('MetaTags', $tags);
 
 		return $tags;
 	}
