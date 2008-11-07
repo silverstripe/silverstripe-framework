@@ -83,6 +83,61 @@ class File extends DataObject {
 		}
 	}
 	
+	/**
+	 * @todo Enforce on filesystem URL level via mod_rewrite
+	 * 
+	 * @return boolean
+	 */
+	function canView($member = null) {
+		if(!$member) $member = Member::currentUser();
+		
+		$results = $this->extend('canView', $member);
+		if($results && is_array($results)) if(!min($results)) return false;
+		
+		return true;
+	}
+	
+	/**
+	 * Returns true if the following conditions are met:
+	 * - CMS_ACCESS_AssetAdmin
+	 * 
+	 * @todo Decouple from CMS view access
+	 * 
+	 * @return boolean
+	 */
+	function canEdit($member = null) {
+		if(!$member) $member = Member::currentUser();
+		
+		$results = $this->extend('canEdit', $member);
+		if($results && is_array($results)) if(!min($results)) return false;
+		
+		return Permission::checkMember($member, 'CMS_ACCESS_AssetAdmin');
+	}
+	
+	/**
+	 * @return boolean
+	 */
+	function canCreate($member = null) {
+		if(!$member) $member = Member::currentUser();
+		
+		$results = $this->extend('canCreate', $member);
+		if($results && is_array($results)) if(!min($results)) return false;
+		
+		return $this->canEdit($member);
+	}
+	
+	/**
+	 * @return boolean
+	 */
+	function canDelete($member = null) {
+		if(!$member) $member = Member::currentUser();
+		
+		$results = $this->extend('canDelete', $member);
+		if($results && is_array($results)) if(!min($results)) return false;
+		
+		return $this->canEdit($member);
+	}
+	
 	/*
 	 * Find the given file
 	 */
@@ -515,13 +570,6 @@ class File extends DataObject {
 		if($ret) $ret->parseQueryLimit($query);
 	
 		return $ret;
-	}
-
-	/**
-	 * Stub, overridden by Folder
-	 */
-	function userCanEdit() {
-		return false;
 	}
 	
 	public function flushCache() {

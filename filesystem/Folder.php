@@ -6,18 +6,6 @@
  */
 class Folder extends File {
 	
-	static $many_many = array(
-		"CanUse" => "Group",
-		"CanEdit" => "Group"
-	);
-	
-	/**
-	 * @todo: DataObject::CanEdit() is a permission checking function; the CanEdit relation should be renamed to Editors or something
-	 */
-	function CanEdit() {
-		return $this->getManyManyComponents('CanEdit');
-	}
-	
 	/*
 	 * Find the given folder or create it, recursively.
 	 * 
@@ -44,37 +32,6 @@ class Folder extends File {
 		}
 		return $item;
 	}
-	
-	function userCanUse() {
-		if(Permission::check("ADMIN")) return true;
-		
-		$useGroups = $this->CanUse();	
-		
-		if( !$useGroups || $useGroups->Count() == 0 )
-			return true;
-			
-		foreach( $useGroups as $useGroup )
-			if( Member::currentUser()->inGroup( $useGroup->ID ) )
-				return true;
-				
-		return false;		
-	}
-	
-	function userCanEdit() {
-		if(Permission::check("ADMIN")) return true;
-			
-		$useGroups = $this->CanEdit();	
-		
-		if( !$useGroups || $useGroups->Count() == 0 )
-			return true;
-			
-		foreach( $useGroups as $useGroup )
-			if( Member::currentUser()->inGroup( $useGroup->ID ) )
-				return true;
-				
-		return false;	
-	}
-
 	
 	/**
 	 * Syncronise the file database with the actual content of the assets folder
@@ -366,7 +323,7 @@ class Folder extends File {
 		$fileList->setPopupCaption(_t('Folder.VIEWEDITASSET', "View/Edit Asset"));
 
 		$nameField = ($this->ID && $this->ID != "root") ? new TextField("Name", "Folder Name") : new HiddenField("Name");
-		if( $this->userCanEdit() ) {
+		if( $this->canEdit() ) {
 			$deleteButton = new InlineFormAction('deletemarked',_t('Folder.DELSELECTED','Delete selected files'), 'delete');
 			$deleteButton->includeDefaultJS(false);
 		} else {
