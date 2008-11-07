@@ -274,7 +274,7 @@ class TableField extends TableListField {
 
 			$savedObj = $this->saveData($dataObjects, $this->editExisting);
 			if($savedObj && isset($newFields)) {
-				$savedObj += $this->saveData($newFields,false);
+				$savedObj = $this->saveData($newFields,false);
 			} else if(isset($newFields)) {
 				$savedObj = $this->saveData($newFields,false);
 			}
