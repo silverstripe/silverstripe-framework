@@ -380,7 +380,7 @@ class ManifestBuilder {
 		$extends = "";
 		$class="";
 
-		if(!$file) die("ManifestBuilder::parse_file(): Couldn't open $filename", E_USER_ERROR);
+		if(!$file) user_error("ManifestBuilder::parse_file(): Couldn't open $filename", E_USER_ERROR);
 		
 		// We cache the parse results of each file, since only a few files will have changed between flushings
 		// And, although it's accurate, TokenisedRegularExpression isn't particularly fast
