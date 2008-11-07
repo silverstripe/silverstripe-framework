@@ -139,5 +139,32 @@ class RequirementsTest extends SapphireTest {
 		);
 	}
 	
+	function testRequirementsBackend() {
+		$requirements = new Requirements_Backend();
+		$requirements->javascript(SAPPHIRE_DIR . '/tests/forms/a.js');
+		
+		$this->assertTrue(count($requirements->get_javascript()) == 1, "There should be only 1 file included in required javascript.");
+		$this->assertTrue(in_array(SAPPHIRE_DIR . '/tests/forms/a.js', $requirements->get_javascript()), "/test/forms/a.js should be included in required javascript.");
+		
+		$requirements->javascript(SAPPHIRE_DIR . '/tests/forms/b.js');
+		$this->assertTrue(count($requirements->get_javascript()) == 2, "There should be 2 files included in required javascript.");
+		
+		$requirements->block(SAPPHIRE_DIR . '/tests/forms/a.js');
+		$this->assertTrue(count($requirements->get_javascript()) == 1, "There should be only 1 file included in required javascript.");
+		$this->assertFalse(in_array(SAPPHIRE_DIR . '/tests/forms/a.js', $requirements->get_javascript()), "/test/forms/a.js should not be included in required javascript after it has been blocked.");
+		$this->assertTrue(in_array(SAPPHIRE_DIR . '/tests/forms/b.js', $requirements->get_javascript()), "/test/forms/b.js should be included in required javascript.");
+		
+		$requirements->css(SAPPHIRE_DIR . '/tests/forms/a.css');
+		$this->assertTrue(count($requirements->get_css()) == 1, "There should be only 1 file included in required css.");
+		$this->assertArrayHasKey(SAPPHIRE_DIR . '/tests/forms/a.css', $requirements->get_css(), "/tests/forms/a.css should be in required css.");
+		
+		$requirements->block(SAPPHIRE_DIR . '/tests/forms/a.css');
+		$this->assertTrue(count($requirements->get_css()) == 0, "There should be nothing in required css after file has been blocked.");
+		
+		
+		
+	}
+	
+	
 }
 ?>
