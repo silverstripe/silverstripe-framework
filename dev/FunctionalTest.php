@@ -132,15 +132,19 @@ class FunctionalTest extends SapphireTest {
 	
 	/**
 	 * Assert that the most recently queried page contains a number of content tags specified by a CSS selector.
-	 * 
 	 * The given CSS selector will be applied to the HTML of the most recent page.  The content of every matching tag
-	 * will be examined.
-	 * 
-	 * The assertion fails if one of the expectedMatches fails to appear.
+	 * will be examined. The assertion fails if one of the expectedMatches fails to appear.
 	 *
 	 * Note: &nbsp; characters are stripped from the content; make sure that your assertions take this into account.
+	 * 
+	 * @param string $selector A basic CSS selector, e.g. 'li.jobs h3'
+	 * @param array|string $expectedMatches The content of at least one of the matched tags
+	 * @throws PHPUnit_Framework_AssertionFailedError
+	 * @return boolean
 	 */
 	function assertPartialMatchBySelector($selector, $expectedMatches) {
+		if(is_string($expectedMatches)) $expectedMatches = array($expectedMatches);
+		
 		$items = $this->cssParser()->getBySelector($selector);
 
 		$actuals = array();
@@ -152,23 +156,28 @@ class FunctionalTest extends SapphireTest {
 		            "Failed asserting the CSS selector '$selector' has an exact match to the expected elements:\n'" . implode("'\n'", $expectedMatches) . "'\n\n" 
 					. "Instead the following elements were found:\n'" . implode("'\n'", array_keys($actuals)) . "'"
 		        );
-				return;
+				return false;
 			}
-
 		}
+		
+		return true;
 	}
 
 	/**
 	 * Assert that the most recently queried page contains a number of content tags specified by a CSS selector.
-	 * 
 	 * The given CSS selector will be applied to the HTML of the most recent page.  The full HTML of every matching tag
-	 * will be examined.
-	 * 
-	 * The assertion fails if one of the expectedMatches fails to appear.
+	 * will be examined. The assertion fails if one of the expectedMatches fails to appear.
 	 *
 	 * Note: &nbsp; characters are stripped from the content; make sure that your assertions take this into account.
+	 * 
+	 * @param string $selector A basic CSS selector, e.g. 'li.jobs h3'
+	 * @param array|string $expectedMatches The content of *all* matching tags as an array
+	 * @throws PHPUnit_Framework_AssertionFailedError
+	 * @return boolean
 	 */
 	function assertExactMatchBySelector($selector, $expectedMatches) {
+		if(is_string($expectedMatches)) $expectedMatches = array($expectedMatches);
+		
 		$items = $this->cssParser()->getBySelector($selector);
 
 		$actuals = array();
@@ -179,20 +188,27 @@ class FunctionalTest extends SapphireTest {
 	            "Failed asserting the CSS selector '$selector' has an exact match to the expected elements:\n'" . implode("'\n'", $expectedMatches) . "'\n\n" 
 				. "Instead the following elements were found:\n'" . implode("'\n'", $actuals) . "'"
 	        );
+			return false;
 		}
+		
+		return true;
 	}
 
 	/**
 	 * Assert that the most recently queried page contains a number of content tags specified by a CSS selector.
-	 * 
 	 * The given CSS selector will be applied to the HTML of the most recent page.  The content of every matching tag
-	 * will be examined.
-	 * 
-	 * The assertion fails if one of the expectedMatches fails to appear.
+	 * will be examined. The assertion fails if one of the expectedMatches fails to appear.
 	 *
 	 * Note: &nbsp; characters are stripped from the content; make sure that your assertions take this into account.
+	 *
+	 * @param string $selector A basic CSS selector, e.g. 'li.jobs h3'
+	 * @param array|string $expectedMatches The content of at least one of the matched tags
+	 * @throws PHPUnit_Framework_AssertionFailedError
+	 * @return boolean
 	 */
 	function assertPartialHTMLMatchBySelector($selector, $expectedMatches) {
+		if(is_string($expectedMatches)) $expectedMatches = array($expectedMatches);
+		
 		$items = $this->cssParser()->getBySelector($selector);
 
 		$actuals = array();
@@ -204,21 +220,24 @@ class FunctionalTest extends SapphireTest {
 		            "Failed asserting the CSS selector '$selector' has an exact match to the expected elements:\n'" . implode("'\n'", $expectedMatches) . "'\n\n" 
 					. "Instead the following elements were found:\n'" . implode("'\n'", array_keys($actuals)) . "'"
 		        );
-				return;
+				return false;
 			}
-
 		}
+		
+		return true;
 	}
 
 	/**
 	 * Assert that the most recently queried page contains a number of content tags specified by a CSS selector.
-	 * 
 	 * The given CSS selector will be applied to the HTML of the most recent page.  The full HTML of every matching tag
-	 * will be examined.
-	 * 
-	 * The assertion fails if one of the expectedMatches fails to appear.
+	 * will be examined. The assertion fails if one of the expectedMatches fails to appear.
 	 *
 	 * Note: &nbsp; characters are stripped from the content; make sure that your assertions take this into account.
+	 * 
+	 * @param string $selector A basic CSS selector, e.g. 'li.jobs h3'
+	 * @param array|string $expectedMatches The content of *all* matched tags as an array
+	 * @throws PHPUnit_Framework_AssertionFailedError
+	 * @return boolean
 	 */
 	function assertExactHTMLMatchBySelector($selector, $expectedMatches) {
 		$items = $this->cssParser()->getBySelector($selector);
