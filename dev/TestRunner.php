@@ -79,18 +79,27 @@ class TestRunner extends Controller {
 	 */
 	function browse() {
 		self::$default_reporter->writeHeader();
-		echo '<div class="info">';
-		echo '<h1>Available Tests</h1>';
-		echo '</div>';
-		echo '<div class="trace">';
-		$tests = ClassInfo::subclassesFor('SapphireTest');
-		echo "<h3><a href=\"" . $this->Link() . "all\">Run all " . count($tests) . " tests</a></h3>";
-		echo "<h3><a href=\"" . $this->Link() . "coverage\">Runs all tests and make test coverage report</a></h3>";
-		echo "<hr />";
-		foreach ($tests as $test) {
-			echo "<h3><a href=\"" . $this->Link() . "$test\">Run $test</a></h3>";
+		self::$default_reporter->writeInfo('Available Tests', false);
+		if(Director::is_cli()) {
+			$tests = ClassInfo::subclassesFor('SapphireTest');
+			$relativeLink = Director::makeRelative($this->Link());
+			echo "sake {$relativeLink}all: Run all " . count($tests) . " tests\n";
+			echo "sake {$relativeLink}coverage: Runs all tests and make test coverage report\n";
+			foreach ($tests as $test) {
+				echo "sake {$relativeLink}$test: Run $test\n";
+			}
+		} else {
+			echo '<div class="trace">';
+			$tests = ClassInfo::subclassesFor('SapphireTest');
+			echo "<h3><a href=\"" . $this->Link() . "all\">Run all " . count($tests) . " tests</a></h3>";
+			echo "<h3><a href=\"" . $this->Link() . "coverage\">Runs all tests and make test coverage report</a></h3>";
+			echo "<hr />";
+			foreach ($tests as $test) {
+				echo "<h3><a href=\"" . $this->Link() . "$test\">Run $test</a></h3>";
+			}
+			echo '</div>';
 		}
-		echo '</div>';
+		
 		self::$default_reporter->writeFooter();
 	}
 	
