@@ -8,9 +8,16 @@
 class RootURLController extends Controller {
 	protected static $is_at_root = false;
 	
+	public function init() {
+		Director::set_site_mode('site');
+		parent::init();
+	}
+	
 	public function handleRequest($request) {
 		self::$is_at_root = true;
 		$this->pushCurrent();
+		
+		$this->init();
 
 		$controller = new ModelAsController();
 		
