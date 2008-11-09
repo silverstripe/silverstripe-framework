@@ -300,7 +300,7 @@ class Director {
 	/**
 	 * Returns the part of the URL, 'http://www.mysite.com'.
 	 * 
-	 * @return boolean|string The domain from the PHP enviroment. Returns FALSE is this environment variable isn't set.
+	 * @return boolean|string The domain from the PHP environment. Returns FALSE is this environment variable isn't set.
 	 */
 	static function protocolAndHost() {
 		if(self::$alternateBaseURL) {
