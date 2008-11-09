@@ -104,6 +104,11 @@ class MemberLoginForm extends LoginForm {
 				Session::clear("BackURL");
 				Director::redirect($backURL);
 			} else {
+				Session::set("Security.Message.message", 
+					sprintf(_t('Member.WELCOMEBACK', "Welcome Back, %s"), $firstname)
+				);
+				Session::set("Security.Message.type", "good");
+
 				Director::redirectBack();
 			}
 		} else {
@@ -151,11 +156,6 @@ class MemberLoginForm extends LoginForm {
 	public function performLogin($data) {
 		if($member = MemberAuthenticator::authenticate($data, $this)) {
 			$firstname = Convert::raw2xml($member->FirstName);
-			Session::set("Security.Message.message", 
-				sprintf(_t('Member.WELCOMEBACK', "Welcome Back, %s"), $firstname)
-			);
-			Session::set("Security.Message.type", "good");
-
 			$member->LogIn(isset($data['Remember']));
 			return $member;
 

@@ -324,6 +324,8 @@ class Security extends Controller {
 				"Content" => $content,
 			));
 		}
+		
+		Session::clear('Security.Message');
 
 		// custom processing
 		if(SSViewer::hasTemplate("Security_login")) {
