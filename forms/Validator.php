@@ -108,7 +108,12 @@ Behaviour.register({
 		},
 		onblur : function() {
 			if(this.old_onblur()) {
-				return $('$formID').validate(this);
+				// Don't perform instant validation for CalendarDateField fields; it creates usability wierdness.
+				if(this.parentNode.className.indexOf('calendardate') == -1 || this.value) {
+					return $('$formID').validate(this);
+				} else {
+					return true;
+				}
 			}
 		}
 	},
