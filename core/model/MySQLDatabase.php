@@ -255,6 +255,20 @@ class MySQLDatabase extends Database {
 		$this->query("ALTER TABLE `$tableName` CHANGE `$fieldName` `$fieldName` $fieldSpec");
 	}
 	
+	/**
+	 * Change the database column name of the given field.
+	 * 
+	 * @param string $tableName The name of the tbale the field is in.
+	 * @param string $oldName The name of the field to change.
+	 * @param string $newName The new name of the field
+	 */
+	public function renameField($tableName, $oldName, $newName) {
+		$fieldList = $this->fieldList($tableName);
+		if(array_key_exists($oldName, $fieldList)) {
+			$this->query("ALTER TABLE `$tableName` CHANGE `$oldName` `$newName` " . $fieldList[$oldName]);
+		}
+	}
+	
 	public function fieldList($table) {
 		$fields = DB::query("SHOW FULL FIELDS IN `$table`");
 		foreach($fields as $field) {

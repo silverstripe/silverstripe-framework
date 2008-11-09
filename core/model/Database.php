@@ -86,6 +86,15 @@ abstract class Database extends Object {
 	 * @param string $spec The field specification, eg 'INTEGER NOT NULL'
 	 */
 	abstract function createField($table, $field, $spec);
+	
+	/**
+	 * Change the database column name of the given field.
+	 * 
+	 * @param string $tableName The name of the tbale the field is in.
+	 * @param string $oldName The name of the field to change.
+	 * @param string $newName The new name of the field
+	 */
+	abstract function renameField($tableName, $oldName, $newName);
 
 	/**
 	 * Get a list of all the fields for the given table.
@@ -342,6 +351,24 @@ abstract class Database extends Object {
 			Database::alteration_message("Field $table.$field: changed to $spec <i style=\"color: #AAA\">(from {$this->fieldList[$table][$field]})</i>","changed");
 		}
 		Profiler::unmark('requireField');
+	}
+	
+	/**
+	 * If the given field exists, move it out of the way by renaming it to _obsolete_(fieldname).
+	 * 
+	 * @param string $table
+	 * @param string $fieldName
+	 */
+	function dontRequireField($table, $fieldName) {
+		$fieldList = $this->fieldList($table);
+		if(array_key_exists($fieldName, $fieldList)) {
+			$suffix = '';
+			while(isset($fieldList[strtolower("_obsolete_{$fieldName}$suffix")])) {
+				$suffix = $suffix ? ($suffix+1) : 2;
+			}
+			$this->renameField($table, $fieldName, "_obsolete_{$fieldName}$suffix");
+			Database::alteration_message("Field $table.$fieldName: renamed to $table._obsolete_{$fieldName}$suffix","obsolete");
+		}
 	}
 
 	/**
