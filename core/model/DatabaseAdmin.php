@@ -137,6 +137,11 @@ class DatabaseAdmin extends Controller {
 			$username = $parameters['username'];
 			$password = $parameters['password'];
 			$database = $parameters['database'];
+
+			if(!$database) {
+				user_error("No database name given; please give a value for \$databaseConfig['database']", E_USER_ERROR);
+			}
+
 			DB::createDatabase($connect, $username, $password, $database);
 			// ManifestBuilder::compileManifest();
 		}

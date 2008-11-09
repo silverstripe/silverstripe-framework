@@ -28,8 +28,12 @@ class ClassInfo {
 	 * @todo Move this to Database or DB
 	 */
 	static function hasTable($class) {
-		$SQL_table = Convert::raw2sql($class);
-		return (bool)(DB::query("SHOW TABLES LIKE '$SQL_table'")->value());
+		if(DB::isActive()) {
+			$SQL_table = Convert::raw2sql($class);
+			return (bool)(DB::query("SHOW TABLES LIKE '$SQL_table'")->value());
+		} else {
+			return false;
+		}
 	}
 	
 	/**
