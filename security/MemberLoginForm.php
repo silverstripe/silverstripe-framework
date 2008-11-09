@@ -109,17 +109,19 @@ class MemberLoginForm extends LoginForm {
 		} else {
 			Session::set('SessionForms.MemberLoginForm.Email', $data['Email']);
 			Session::set('SessionForms.MemberLoginForm.Remember', isset($data['Remember']));
-			
-			if(isset($_REQUEST['BackURL']) && $backURL = $_REQUEST['BackURL']) {
-				Session::set('BackURL', $backURL);
-			}
+
+			if(isset($_REQUEST['BackURL'])) $backURL = $_REQUEST['BackURL'];
+			else $backURL = null;
+
+			if($backURL) Session::set('BackURL', $backURL);
 			
 			if($badLoginURL = Session::get("BadLoginURL")) {
 				Director::redirect($badLoginURL);
 			} else {
 				// Show the right tab on failed login
-				Director::redirect(Director::absoluteURL(Security::Link("login")) .
-													 '#' . $this->FormName() .'_tab');
+				$loginLink = Director::absoluteURL(Security::Link("login"));
+				if($backURL) $loginLink .= '?BackURL=' . urlencode($backURL);
+				Director::redirect($loginLink . '#' . $this->FormName() .'_tab');
 			}
 		}
 	}
