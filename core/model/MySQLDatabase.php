@@ -252,23 +252,7 @@ class MySQLDatabase extends Database {
 	 * @param string $fieldSpec The new field specification
 	 */
 	public function alterField($tableName, $fieldName, $fieldSpec) {
-		// This wee function was built for MoT.  It will preserve the binary format of the content,
-		// but change the character set
-		/*
-		$changes = $this->query("SELECT ID, `$fieldName` FROM `$tableName`")->map();
-		*/
-
 		$this->query("ALTER TABLE `$tableName` CHANGE `$fieldName` `$fieldName` $fieldSpec");
-
-		// This wee function was built for MoT.  It will preserve the binary format of the content,
-		// but change the character set
-		/*
-		echo "<li>Fixing " . sizeof($changes) . " page's contnet";
-		foreach($changes as $id => $text) {
-			$SQL_text = Convert::raw2sql($text);
-			$this->query("UPDATE `$tableName` SET `$fieldName` = '$SQL_text' WHERE ID = '$id'");
-		}
-		*/
 	}
 	
 	public function fieldList($table) {
