@@ -887,6 +887,7 @@ class SiteTree extends DataObject {
 	function requireDefaultRecords() {
 		parent::requireDefaultRecords();
 		
+		// default pages
 		if($this->class == 'SiteTree') {
 			if(!DataObject::get_one("SiteTree", "URLSegment = 'home'")) {
 				$homepage = new Page();
@@ -920,6 +921,17 @@ class SiteTree extends DataObject {
 				$contactus->publish("Stage", "Live");
 
 				$contactus->flushCache();
+			}
+		}
+		
+		// schema migration
+		// @todo Move to migration task once infrastructure is implemented
+		if($this->class == 'SiteTree') {
+			$conn = DB::getConn();
+			// only execute command if fields haven't been renamed to _obsolete_<fieldname> already by the task
+			if(array_key_exists('Viewers', $conn->fieldList('SiteTree'))) {
+				$task = new UpgradeSiteTreePermissionSchemaTask();
+				$task->run(new HTTPRequest('GET','/'));
 			}
 		}
 	}

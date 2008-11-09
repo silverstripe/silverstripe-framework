@@ -20,16 +20,12 @@ class UpgradeSiteTreePermissionSchemaTask extends BuildTask {
 	
 	function run($request) {
 		// transfer values for changed column name
-		DB::query("UPDATE SiteTree SET CanViewType = Viewers;");
-		DB::query("UPDATE SiteTree_Live SET CanViewType = Viewers;");
-		DB::query("UPDATE SiteTree_versions SET CanViewType = Viewers;");
-		Debug::message('Moved SiteTree->Viewers to SiteTree->CanViewType');
-		
-		// transfer values for changed column name
-		DB::query("UPDATE SiteTree SET CanEditType = Editors;");
-		DB::query("UPDATE SiteTree_Live SET CanEditType = Editors;");
-		DB::query("UPDATE SiteTree_versions SET CanEditType = Editors;");
-		Debug::message('Moved SiteTree->Editors to SiteTree->CanEditType');
+		foreach(array('SiteTree','SiteTree_Live','SiteTree_versions') as $table) {
+			DB::query("UPDATE `{$table}` SET CanViewType = Viewers;");
+			DB::query("UPDATE `{$table}` SET CanEditType = Editors;");
+		}
+		//Debug::message('Moved SiteTree->Viewers to SiteTree->CanViewType');
+		//Debug::message('Moved SiteTree->Editors to SiteTree->CanEditType');
 		
 		// convert has_many to many_many
 		$pageIDs = DB::query("SELECT ID FROM SiteTree")->column('ID');
@@ -41,8 +37,15 @@ class UpgradeSiteTreePermissionSchemaTask extends BuildTask {
 			$page->destroy();
 			unset($page);
 		}
-		Debug::message('SiteTree->ViewersGroup to SiteTree->ViewerGroups (has_one to many_many)');
-		Debug::message('SiteTree->EditorsGroup to SiteTree->EditorGroups (has_one to many_many)');
+		//Debug::message('SiteTree->ViewersGroup to SiteTree->ViewerGroups (has_one to many_many)');
+		//Debug::message('SiteTree->EditorsGroup to SiteTree->EditorGroups (has_one to many_many)');
+		
+		// rename legacy columns
+		foreach(array('SiteTree','SiteTree_Live','SiteTree_versions') as $table) {
+			foreach(array('Viewers','Editors','ViewersGroup','EditorsGroup') as $field) {
+				 DB::getConn()->dontRequireField($table, $field);
+			}	
+		}
 	}
 }
 ?>
