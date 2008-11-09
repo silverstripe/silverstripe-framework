@@ -69,6 +69,7 @@ if(!isset($_SERVER['HTTP_HOST'])) {
 		'SERVER_ADDR' => '127.0.0.1',
 		'REMOTE_ADDR' => '127.0.0.1',
 		'REQUEST_METHOD' => 'GET',
+		'HTTP_USER_AGENT' => 'CLI',
 	);
 	
 	$_SERVER = array_merge($serverDefaults, $_SERVER);
