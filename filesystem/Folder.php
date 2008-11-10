@@ -33,8 +33,6 @@ class Folder extends File {
 		}
 		return $item;
 	}
-// To Make SSP Gallery structure work	
-//	$item->Title = $part;
 	
 	/**
 	 * Syncronise the file database with the actual content of the assets folder
