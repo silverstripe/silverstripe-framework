@@ -645,7 +645,7 @@ class Translatable extends DataObjectDecorator {
 			}
 			else if(($fieldname = $field->Name()) && array_key_exists($fieldname,$this->original_values)) {
 				// Get a copy of the original field to show the untranslated value
-				if(is_subclass_of($field->class,'TextareaField')) {
+				if($field instanceof TextareaField) {
 					$nonEditableField = new ToggleField($fieldname,$field->Title(),'','+','-');
 					$nonEditableField->labelMore = '+';
 					$nonEditableField->labelLess = '-';
