@@ -458,6 +458,21 @@ class Image_Uploader extends Controller {
 		'$Action/$Class/$ID/$Field' => 'handleAction',
 	);
 	
+	function init() {
+		// set language
+		$member = Member::currentUser();
+		if(!empty($member->Locale)) {
+			i18n::set_locale($member->Locale);
+		}
+		
+		// set reading lang
+		if(Translatable::is_enabled() && !Director::is_ajax()) {
+			Translatable::choose_site_lang(array_keys(i18n::get_existing_content_languages('SiteTree')));
+		}
+		
+		parent::init();
+	}
+	
 	/**
 	 * Ensures the css is loaded for the iframe.
 	 */
