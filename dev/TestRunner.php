@@ -132,6 +132,8 @@ class TestRunner extends Controller {
 	}
 
 	function runTests($classList, $coverage = false) {
+		ini_set('max_execution_time', 0);		
+		
 		$this->setUp();
 		
 		// run tests before outputting anything to the client
