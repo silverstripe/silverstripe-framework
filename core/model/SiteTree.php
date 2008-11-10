@@ -184,6 +184,11 @@ class SiteTree extends DataObject {
 		'Title',
 		'Content',
 	);
+	
+	/**
+	 * This controls whether of not extendCMSFields() is called by getCMSFields.
+	 */
+	private static $runCMSFieldsExtensions = true;
 
 	/**
 	 * Get the URL for this page.
@@ -1287,8 +1292,10 @@ class SiteTree extends DataObject {
 		$tabReports->setTitle(_t('SiteTree.TABREPORTS', "Reports"));
 		$tabAccess->setTitle(_t('SiteTree.TABACCESS', "Access"));
 		$tabBacklinks->setTitle(_t('SiteTree.TABBACKLINKS', "BackLinks"));
-
-		$this->extend('updateCMSFields', $fields);
+		
+		if(self::$runCMSFieldsExtensions) {
+			$this->extend('updateCMSFields', $fields);
+		}
 
 		return $fields;
 	}
@@ -1698,6 +1705,24 @@ class SiteTree extends DataObject {
 		$classes .= $this->markingClasses();
 
 		return $classes;
+	}
+	
+	/**
+	 * Stops extendCMSFields() being called on getCMSFields().
+	 * This is useful when you need access to fields added by subclasses
+	 * of SiteTree in a decorator. Call before calling parent::getCMSFields(),
+	 * and reenable afterwards.
+	 */
+	public static function disableCMSFieldsExtensions() {
+		self::$runCMSFieldsExtensions = false;
+	}
+	
+	/**
+	 * Reenables extendCMSFields() being called on getCMSFields() after
+	 * it has been disabled by disableCMSFieldsExtensions().
+	 */
+	public static function enableCMSFieldsExtensions() {
+		self::$runCMSFieldsExtensions = true;
 	}
 
 }

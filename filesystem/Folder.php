@@ -25,6 +25,7 @@ class Folder extends File {
 				$item = new Folder();
 				$item->ParentID = $parentID;
 				$item->Name = $part;
+				$item->Title = $part;
 				$item->write();
 				if(!file_exists($item->getFullPath())) mkdir($item->getFullPath(),Filesystem::$folder_create_mask);
 			}
@@ -32,6 +33,8 @@ class Folder extends File {
 		}
 		return $item;
 	}
+// To Make SSP Gallery structure work	
+//	$item->Title = $part;
 	
 	/**
 	 * Syncronise the file database with the actual content of the assets folder

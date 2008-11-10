@@ -274,14 +274,14 @@ class TableField extends TableListField {
 			// Sort into proper array
 			$this->value = ArrayLib::invert($this->value);
 			$dataObjects = $this->sortData($this->value, $record->ID);
-			if($dataObjects['new']) {
+			if(isset($dataObjects['new']) && $dataObjects['new']) {
 				$newFields = $this->sortData($dataObjects['new'], $record->ID);
 			}
 
 			$savedObj = $this->saveData($dataObjects, $this->editExisting);
-			if($savedObj && $newFields) {
-				$savedObj += $this->saveData($newFields,false);
-			} else if($newFields) {
+			if($savedObj && isset($newFields)) {
+				$savedObj = $this->saveData($newFields,false);
+			} else if(isset($newFields)) {
 				$savedObj = $this->saveData($newFields,false);
 			}
 			$items = $this->sourceItems();

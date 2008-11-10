@@ -67,6 +67,7 @@ class Text extends DBField {
 	 * @param int $sentCount The amount of sentences you want.
 	 */
 	function LimitSentences($sentCount = 2) {
+		$output = '';
 		$data = Convert::xml2raw($this->value);
 		$sentences = explode('.', $data);
 		if(count($sentences) == 1) {
