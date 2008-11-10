@@ -67,6 +67,8 @@ class SSViewer extends Object {
 	
 	/**
 	 * Create a template from a string instead of a .ss file
+	 * 
+	 * @return SSViewer
 	 */
 	static function fromString($content) {
 		return new SSViewer_FromString($content);
@@ -452,6 +454,10 @@ class SSViewer extends Object {
 
 		$content = ereg_replace('<' . '% +current_page +%' . '>', '<?= $_SERVER[SCRIPT_URL] ?>', $content);
 		
+		// add all requirements to the $requirements array
+		preg_match_all('/<% require ([a-zA-Z]+)\(([^\)]+)\) %>/', $content, $requirements);
+		$content = preg_replace('/<% require .* %>/', null, $content);
+		
 		// legacy
 		$content = ereg_replace('<!-- +if +([A-Za-z0-9_]+) +-->', '<? if($item->cachedCall("\\1")) { ?>', $content);
 		$content = ereg_replace('<!-- +else +-->', '<? } else { ?>', $content);
@@ -467,13 +473,17 @@ class SSViewer extends Object {
 		$content = str_replace('<?=',"\nSSVIEWER;\n\$val .= ", $content);
 		$content = str_replace('<?',"\nSSVIEWER;\n", $content);
 		$content = str_replace('?>',";\n \$val .= <<<SSVIEWER\n", $content);
-
-		$content = "<?php \$val .= <<<SSVIEWER\n" . $content . "\nSSVIEWER;\n ?>";
-
+		
+		$output  = "<?php\n";
+		for($i = 0; $i < count($requirements[0]); $i++) {
+			$output .= 'Requirements::' . $requirements[1][$i] . '(\'' . $requirements[2][$i] . "');\n";
+		}
+		$output .= '$val .= <<<SSVIEWER' . "\n" . $content . "\nSSVIEWER;\n"; 
+		
 		// Protect xml header @sam why is this run twice ?
-		$content = ereg_replace('<##xml([^>]+)##>', '<' . '?xml\\1?' . '>', $content);
+		$output = ereg_replace('<##xml([^>]+)##>', '<' . '?xml\\1?' . '>', $output);
 	
-		return $content;
+		return $output;
 	}
 
 	/**
