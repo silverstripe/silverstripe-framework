@@ -21,7 +21,7 @@ class SSViewerTest extends SapphireTest {
 		$requirements->expects($this->once())->method('javascript')->with($jsFile);
 		$requirements->expects($this->once())->method('css')->with($cssFile);
 		
-		Requirements::set_backend($requirements);;
+		Requirements::set_backend($requirements);
 		
 		$data = new ArrayData(array());
 		

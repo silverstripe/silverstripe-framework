@@ -21,6 +21,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	
 	protected $originalMailer;
 	protected $originalMemberPasswordValidator;
+	protected $originalRequirements;
 	
 	protected $mailer;
 	
@@ -32,6 +33,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	function setUp() {
 		// Remove password validation
 		$this->originalMemberPasswordValidator = Member::password_validator();
+		$this->originalRequirements = Requirements::backend();
 		Member::set_password_validator(null);
 
 		$className = get_class($this);
@@ -122,6 +124,9 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 
 		// Restore password validation
 		Member::set_password_validator($this->originalMemberPasswordValidator);
+		
+		// Restore requirements
+		Requirements::set_backend($this->originalRequirements);
 	}
 	
 	/**

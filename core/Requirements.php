@@ -13,7 +13,7 @@ class Requirements {
 	 * @var Requirements
 	 */
 	private static $backend = null;
-	protected static function backend() {
+	public static function backend() {
 		if(!self::$backend) {
 			self::$backend = new Requirements_Backend();
 
