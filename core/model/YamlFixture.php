@@ -132,47 +132,78 @@ class YamlFixture extends Object {
 		$fixtureContent = $parser->load(Director::baseFolder().'/'.$this->fixtureFile);
 		$this->fixtureDictionary = array();
 		foreach($fixtureContent as $dataClass => $items) {
-			foreach($items as $identifier => $fields) {
-				$obj = new $dataClass();
-				
-				// If an ID is explicitly passed, then we'll sort out the initial write straight away
-				// This is just in case field setters triggered by the population code in the next block
-				// Call $this->write().  (For example, in FileTest)
-				if(isset($fields['ID'])) {
-					$obj->ID = $fields['ID'];
-					$obj->write(false, true);
-				}
-				
-				// Populate the dictionary with the ID
-				foreach($fields as $fieldName => $fieldVal) {
-					if($obj->many_many($fieldName) || $obj->has_many($fieldName) || $obj->has_one($fieldName)) continue;
-					$obj->$fieldName = $this->parseFixtureVal($fieldVal);
-				}
-				$obj->write();
-				
-				// has to happen before relations in case a class is referring to itself
-				$this->fixtureDictionary[$dataClass][$identifier] = $obj->ID;
-				
-				// Populate all relations
-				foreach($fields as $fieldName => $fieldVal) {
-					if($obj->many_many($fieldName) || $obj->has_many($fieldName)) {
-						$parsedItems = array();
-						$items = split(' *, *',trim($fieldVal));
-						foreach($items as $item) {
-							$parsedItems[] = $this->parseFixtureVal($item);
-						}
-						$obj->write();
-						if($obj->has_many($fieldName)) {
-							$obj->getComponents($fieldName)->setByIDList($parsedItems);
-						} elseif($obj->many_many($fieldName)) {
-							$obj->getManyManyComponents($fieldName)->setByIDList($parsedItems);
-						}
-					} elseif($obj->has_one($fieldName)) {
-						$obj->{$fieldName . 'ID'} = $this->parseFixtureVal($fieldVal);
-					}
-				}
-				$obj->write();
+			if(ClassInfo::exists($dataClass)) {
+				$this->writeDataObject($dataClass, $items);
+			} else {
+				$this->writeSQL($dataClass, $items);
 			}
+		}
+	}
+	
+	/**
+	 * Writes the fixture into the database using DataObjects
+	 *
+	 * @param string $dataClass
+	 * @param array $items
+	 */
+	protected function writeDataObject($dataClass, $items) {
+		foreach($items as $identifier => $fields) {
+			$obj = new $dataClass();
+			
+			// If an ID is explicitly passed, then we'll sort out the initial write straight away
+			// This is just in case field setters triggered by the population code in the next block
+			// Call $this->write().  (For example, in FileTest)
+			if(isset($fields['ID'])) {
+				$obj->ID = $fields['ID'];
+				$obj->write(false, true);
+			}
+			
+			// Populate the dictionary with the ID
+			foreach($fields as $fieldName => $fieldVal) {
+				if($obj->many_many($fieldName) || $obj->has_many($fieldName) || $obj->has_one($fieldName)) continue;
+				$obj->$fieldName = $this->parseFixtureVal($fieldVal);
+			}
+			$obj->write();
+			
+			// has to happen before relations in case a class is referring to itself
+			$this->fixtureDictionary[$dataClass][$identifier] = $obj->ID;
+			
+			// Populate all relations
+			foreach($fields as $fieldName => $fieldVal) {
+				if($obj->many_many($fieldName) || $obj->has_many($fieldName)) {
+					$parsedItems = array();
+					$items = split(' *, *',trim($fieldVal));
+					foreach($items as $item) {
+						$parsedItems[] = $this->parseFixtureVal($item);
+					}
+					$obj->write();
+					if($obj->has_many($fieldName)) {
+						$obj->getComponents($fieldName)->setByIDList($parsedItems);
+					} elseif($obj->many_many($fieldName)) {
+						$obj->getManyManyComponents($fieldName)->setByIDList($parsedItems);
+					}
+				} elseif($obj->has_one($fieldName)) {
+					$obj->{$fieldName . 'ID'} = $this->parseFixtureVal($fieldVal);
+				}
+			}
+			$obj->write();
+		}
+	}
+	
+	/**
+	 * Writes the fixture into the database directly using a database manipulation
+	 *
+	 * @param string $table
+	 * @param array $items
+	 */
+	protected function writeSQL($table, $items) {
+		foreach($items as $identifier => $fields) {
+			$manipulation = array($table => array("fields" => array(), "command" => "insert")); 
+			foreach($fields as $fieldName=> $fieldVal) { 
+				$manipulation[$table]["fields"][$fieldName] = "'".$this->parseFixtureVal($fieldVal)."'"; 
+			}
+			DB::manipulate($manipulation);
+			$this->fixtureDictionary[$table][$identifier] = DB::getGeneratedID($table);
 		}
 	}
 	
@@ -191,4 +222,3 @@ class YamlFixture extends Object {
 		}
 	}
 }
-?>

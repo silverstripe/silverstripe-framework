@@ -1,0 +1,23 @@
+YamlFixtureTest_DataObject:
+  testobject1:
+    Name: TestObject1
+  testobject2:
+    Name: TestObject2
+YamlFixtureTest_DataObjectRelation:
+  relation1:
+    Name: Relation1
+  relation2:
+    Name: Relation2
+YamlFixtureTest_DataObject_ManyMany:
+  manymany1:
+    YamlFixtureTest_DataObjectID: =>YamlFixtureTest_DataObject.testobject1
+    YamlFixtureTest_DataObjectRelationID: =>YamlFixtureTest_DataObjectRelation.relation1
+  manymany2:
+    YamlFixtureTest_DataObjectID: =>YamlFixtureTest_DataObject.testobject1
+    YamlFixtureTest_DataObjectRelationID: =>YamlFixtureTest_DataObjectRelation.relation2
+  manymany3:
+    YamlFixtureTest_DataObjectID: =>YamlFixtureTest_DataObject.testobject2
+    YamlFixtureTest_DataObjectRelationID: =>YamlFixtureTest_DataObjectRelation.relation1
+  manymany4:
+    YamlFixtureTest_DataObjectID: =>YamlFixtureTest_DataObject.testobject2
+    YamlFixtureTest_DataObjectRelationID: =>YamlFixtureTest_DataObjectRelation.relation2
