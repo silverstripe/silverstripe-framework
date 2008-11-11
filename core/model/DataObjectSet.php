@@ -739,7 +739,7 @@ class DataObjectSet extends ViewableData implements IteratorAggregate {
 	 * @return string
 	 */
 	public function debug() {
-		$val = "<h2>dataobject set</h2><ul>";
+		$val = "<h2>" . $this->class . "</h2><ul>";
 		foreach($this as $item) {
 			$val .= "<li style=\"list-style-type: disc; margin-left: 20px\">" . Debug::text($item) . "</li>";
 		}
