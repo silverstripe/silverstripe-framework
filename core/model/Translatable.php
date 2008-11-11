@@ -662,7 +662,7 @@ class Translatable extends DataObjectDecorator {
 				if (array_search($fieldname,$this->translatableFields) !== false) {
 					// Duplicate the field
 					if ($field->Title()) $nonEditableField->setTitle('Original');
-					$nonEditableField_holder->insertBeforeRecursive($field, $fieldname.'_original');				
+					$nonEditableField_holder->insertBefore($field, $fieldname.'_original');				
 					$tasks['dup'][$fieldname] = $nonEditableField_holder;
 				}
 			}
