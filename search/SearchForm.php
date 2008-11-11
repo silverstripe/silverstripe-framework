@@ -11,35 +11,29 @@ class SearchForm extends Form {
 	
 	protected $showInSearchTurnOn;
 	
-	/**
-	 * the constructor of a Simple/basic SearchForm
-	 */
 	function __construct($controller, $name, $fields = null, $actions = null, $showInSearchTurnOn = true) {
 		$this->showInSearchTurnOn = $showInSearchTurnOn;
-	
+		
 		if(!$fields) {
-		        $fields = new FieldSet(new TextField("Search", _t('SearchForm.SEARCH', 'Search')));
+			$fields = new FieldSet(
+				new TextField('Search', _t('SearchForm.SEARCH', 'Search')
+			));
 		}
+		
 		if(!$actions) {
 			$actions = new FieldSet(
 				new FormAction("getResults", _t('SearchForm.GO', 'Go'))
 			);
 		}
 		
-		// TODO:: This is a iiccky yucky hack. controller link isnt avaliable here for some wierd reason
-		//if(($controllerlink = $controller->RelativeLink())== "/") $controllerLink = 'home';
-
 		// We need this because it's a get form.  It can't go in the action value
 		// Hayden: Sorry if I've got it mixed up, but on the results or not found pages, the
 		// RelativeLink seems to be empty and it packs a sad
 		$formController = isset($_GET['formController']) ? $_GET['formController'] : null;		
-		if( !$formController ) {
-			$formController = $controller->RelativeLink();
-		}
-			
-		$fields->push(new HiddenField("formController", null, $formController));
-		// $fields->push(new HiddenField("formController", null, $controller->RelativeLink()));
-		$fields->push(new HiddenField("executeForm", null, $name));
+		if(!$formController) $formController = $controller->RelativeLink();
+		
+		$fields->push(new HiddenField('formController', null, $formController));
+		$fields->push(new HiddenField('executeForm', null, $name));
 		
 		parent::__construct($controller, $name, $fields, $actions);
 		
@@ -50,21 +44,11 @@ class SearchForm extends Form {
 		return "get";
 	}
 	
-	/**
-	 * Return the attributes of the form tag - used by the templates
-	 */
-	 
-	public function FormAction() {
-		$link = $this->controller->Link();
-		
-		if( $link{strlen($link)-1} != "/" )
-			$link .= '/';
-			
-		return $link . 'results';
-	}
-
 	public function forTemplate(){
-		return $this->renderWith(array("SearchForm","Form"));
+		return $this->renderWith(array(
+			'SearchForm',
+			'Form'
+		));
 	}
 
 	/**
@@ -95,8 +79,6 @@ class SearchForm extends Form {
 			$sortBy = "Relevance DESC";
 		}		
 	}
-	
-	
 
 	function addStarsToKeywords($keywords) {
 		if(!trim($keywords)) return "";
@@ -170,11 +152,7 @@ class SearchForm extends Form {
 		$fullQuery = $queryContent->sql() . " UNION " . $queryFiles->sql() . " ORDER BY $sortBy LIMIT $limit";
 		$totalCount = $queryContent->unlimitedRowCount() + $queryFiles->unlimitedRowCount();
 	
-		// die($fullQuery);
-		// Debug::show($fullQuery);
-		
 		$records = DB::query($fullQuery);
-		
 
 		foreach($records as $record)
 			$objects[] = new $record['ClassName']($record);
@@ -184,20 +162,8 @@ class SearchForm extends Form {
 		
 		$doSet->setPageLimits($start, $numPerPage, $totalCount);
 		return $doSet;
-
-
-		/*
-	 	$keywords = preg_replace_callback('/("[^"]+")(\040or\040)("[^"]+")/', $orProcessor, $keywords);
-	 	$keywords = preg_replace_callback('/([^ ]+)(\040or\040)([^ ]+)/', $orProcessor, $keywords);
-
-		$limit = (int)$_GET['start'] . ", " . $numPerPage;
-	
-	 	$ret = DataObject::get("SiteTree", "MATCH (Title, MenuTitle, Content, MetaTitle, MetaDescription, MetaKeywords) "
-	 				."AGAINST ('$keywords' IN BOOLEAN MODE) AND `ShowInSearch` = 1","Title","", $limit);
-	 				
-	 	return $ret;
-		*/
 	}
+	
 	public function getSearchQuery() {
 		return Convert::raw2xml($_REQUEST['Search']);
 	}
