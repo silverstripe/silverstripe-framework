@@ -156,14 +156,28 @@ class CompositeField extends FormField {
 	public function push(FormField $field) {
 		$this->children->push($field);
 	}
+	
+	/**
+	 * @uses FieldSet->insertBefore()
+	 */
 	public function insertBefore($field, $insertBefore) {
+		$ret = $this->children->insertBefore($field, $insertBefore);
+		$this->sequentialSet = null;
+		return $ret;
+	}
+
+	/**
+	 * @deprecated 2.3 Use insertBefore
+	 */
+	public function insertBeforeRecursive($field, $insertBefore) {
 		return $this->children->insertBefore($field, $insertBefore);
 	}
 
-	public function insertBeforeRecursive($field, $insertBefore, $level = 0) {
-		return $this->children->insertBeforeRecursive($field, $insertBefore, $level+1);
+	public function insertAfter($field, $insertAfter) {
+		$ret = $this->children->insertAfter($field, $insertAfter);
+		$this->sequentialSet = null;
+		return $ret;
 	}
-
 
 	/**
 	 * Remove a field from this CompositeField by Name.
@@ -224,6 +238,26 @@ class CompositeField extends FormField {
 
 	function IsReadonly() {
 		return $this->readonly;
+	}
+	
+	/**
+	 * Find the numerical position of a field within
+	 * the children collection. Doesn't work recursively.
+	 * 
+	 * @param string|FormField
+	 * @return Position in children collection (first position starts with 0). Returns FALSE if the field can't be found.
+	 */
+	function fieldPosition($field) {
+		if(is_string($field)) $field = $this->fieldByName($field);
+		if(!$field) return false;
+		
+		$i = 0;
+		foreach($this->children as $child) {
+			if($child->Name() == $field->Name()) return $i;
+			$i++;
+		}
+		
+		return false;
 	}
 
 	function debug() {

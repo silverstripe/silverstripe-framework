@@ -6,21 +6,16 @@
  * @package sapphire
  * @subpackage tests
  * 
- * @TODO test for {@link FieldSet->insertBeforeRecursive()}.
- * 
- * @TODO test for {@link FieldSet->setValues()}. Need to check
- * that the values that were set are the correct ones given back.
- *
- * @TODO test for {@link FieldSet->transform()} and {@link FieldSet->makeReadonly()}.
- * Need to ensure that it correctly transforms the FieldSet object.
- *
- * @TODO test for {@link FieldSet->HiddenFields()}. Need to check
- * the fields returned are the correct HiddenField objects for a
- * given FieldSet instance.
- * 
- * @TODO test for {@link FieldSet->dataFields()}.
- * 
- * @TODO test for {@link FieldSet->findOrMakeTab()}.
+ * @todo test for {@link FieldSet->setValues()}. Need to check
+ * 	that the values that were set are the correct ones given back.
+ * @todo test for {@link FieldSet->transform()} and {@link FieldSet->makeReadonly()}.
+ *  Need to ensure that it correctly transforms the FieldSet object.
+ * @todo test for {@link FieldSet->HiddenFields()}. Need to check
+ * 	the fields returned are the correct HiddenField objects for a
+ * 	given FieldSet instance.
+ * @todo test for {@link FieldSet->dataFields()}.
+ * @todo test for {@link FieldSet->findOrMakeTab()}.
+ * @todo the same as above with insertBefore() and insertAfter()
  *
  */
 class FieldSetTest extends SapphireTest {
@@ -441,10 +436,239 @@ class FieldSetTest extends SapphireTest {
 		$this->assertSame($myName, $fieldSet->fieldByName('Root')->fieldByName('MyName')->Fields()->First());
 	}
 	
-	/**
-	 * @TODO the same as above with insertBefore() and insertAfter()
-	 */
+	function testInsertBeforeWithNestedCompositeFields() {
+		$fieldSet = new FieldSet(
+			new TextField('A_pre'),
+			new TextField('A'),
+			new TextField('A_post'),
+			$compositeA = new CompositeField(
+				new TextField('B_pre'),
+				new TextField('B'),
+				new TextField('B_post'),
+				$compositeB = new CompositeField(
+					new TextField('C_pre'),
+					new TextField('C'),
+					new TextField('C_post')
+				)
+			)
+		);
+		
+		$fieldSet->insertBefore(
+			$A_insertbefore = new TextField('A_insertbefore'),
+			'A'
+		);
+		$this->assertSame(
+			$A_insertbefore,
+			$fieldSet->dataFieldByName('A_insertbefore'),
+			'Field on toplevel fieldset can be inserted'
+		);
+		
+		$fieldSet->insertBefore(
+			$B_insertbefore = new TextField('B_insertbefore'),
+			'B'
+		);
+		$this->assertSame(
+			$fieldSet->dataFieldByName('B_insertbefore'),
+			$B_insertbefore,
+			'Field on one nesting level fieldset can be inserted'
+		);
+		
+		$fieldSet->insertBefore(
+			$C_insertbefore = new TextField('C_insertbefore'),
+			'C'
+		);
+		$this->assertSame(
+			$fieldSet->dataFieldByName('C_insertbefore'),
+			$C_insertbefore,
+			'Field on two nesting levels fieldset can be inserted'
+		);
+	}
 	
-}
+	/**
+	 * @todo check actual placement of fields
+	 */
+	function testInsertBeforeWithNestedTabsets() {
+		$fieldSetA = new FieldSet(
+			$tabSetA = new TabSet('TabSet_A',
+				$tabA1 = new Tab('Tab_A1',
+					new TextField('A_pre'),
+					new TextField('A'),
+					new TextField('A_post')
+				),
+				$tabB1 = new Tab('Tab_B1',
+					new TextField('B')
+				)
+			)
+		);
+		$tabSetA->insertBefore(
+			$A_insertbefore = new TextField('A_insertbefore'),
+			'A'
+		);
+		$this->assertEquals(
+			$fieldSetA->dataFieldByName('A_insertbefore'),
+			$A_insertbefore,
+			'Field on toplevel tab can be inserted'
+		);
+		
+		$this->assertEquals(0, $tabA1->fieldPosition('A_pre'));
+		$this->assertEquals(1, $tabA1->fieldPosition('A_insertbefore'));
+		$this->assertEquals(2, $tabA1->fieldPosition('A'));
+		$this->assertEquals(3, $tabA1->fieldPosition('A_post'));
 
+		$fieldSetB = new FieldSet(
+			new TabSet('TabSet_A',
+				$tabsetB = new TabSet('TabSet_B',
+					$tabB1 = new Tab('Tab_B1',
+						new TextField('C')
+					),
+					$tabB2 = new Tab('Tab_B2',
+						new TextField('B_pre'),
+						new TextField('B'),
+						new TextField('B_post')
+					)
+				)
+			)
+		);
+		$fieldSetB->insertBefore(
+			$B_insertbefore = new TextField('B_insertbefore'),
+			'B'
+		);
+		$this->assertSame(
+			$fieldSetB->dataFieldByName('B_insertbefore'),
+			$B_insertbefore,
+			'Field on nested tab can be inserted'
+		);
+		$this->assertEquals(0, $tabB2->fieldPosition('B_pre'));
+		$this->assertEquals(1, $tabB2->fieldPosition('B_insertbefore'));
+		$this->assertEquals(2, $tabB2->fieldPosition('B'));
+		$this->assertEquals(3, $tabB2->fieldPosition('B_post'));
+	}
+	
+	function testInsertAfterWithNestedCompositeFields() {
+		$fieldSet = new FieldSet(
+			new TextField('A_pre'),
+			new TextField('A'),
+			new TextField('A_post'),
+			$compositeA = new CompositeField(
+				new TextField('B_pre'),
+				new TextField('B'),
+				new TextField('B_post'),
+				$compositeB = new CompositeField(
+					new TextField('C_pre'),
+					new TextField('C'),
+					new TextField('C_post')
+				)
+			)
+		);
+		
+		$fieldSet->insertAfter(
+			$A_insertafter = new TextField('A_insertafter'),
+			'A'
+		);
+		$this->assertSame(
+			$A_insertafter,
+			$fieldSet->dataFieldByName('A_insertafter'),
+			'Field on toplevel fieldset can be inserted after'
+		);
+		
+		$fieldSet->insertAfter(
+			$B_insertafter = new TextField('B_insertafter'),
+			'B'
+		);
+		$this->assertSame(
+			$fieldSet->dataFieldByName('B_insertafter'),
+			$B_insertafter,
+			'Field on one nesting level fieldset can be inserted after'
+		);
+		
+		$fieldSet->insertAfter(
+			$C_insertafter = new TextField('C_insertafter'),
+			'C'
+		);
+		$this->assertSame(
+			$fieldSet->dataFieldByName('C_insertafter'),
+			$C_insertafter,
+			'Field on two nesting levels fieldset can be inserted after'
+		);
+	}
+	
+	/**
+	 * @todo check actual placement of fields
+	 */
+	function testInsertAfterWithNestedTabsets() {
+		$fieldSetA = new FieldSet(
+			$tabSetA = new TabSet('TabSet_A',
+				$tabA1 = new Tab('Tab_A1',
+					new TextField('A_pre'),
+					new TextField('A'),
+					new TextField('A_post')
+				),
+				$tabB1 = new Tab('Tab_B1',
+					new TextField('B')
+				)
+			)
+		);
+		$tabSetA->insertAfter(
+			$A_insertafter = new TextField('A_insertafter'),
+			'A'
+		);
+		$this->assertEquals(
+			$fieldSetA->dataFieldByName('A_insertafter'),
+			$A_insertafter,
+			'Field on toplevel tab can be inserted after'
+		);
+		$this->assertEquals(0, $tabA1->fieldPosition('A_pre'));
+		$this->assertEquals(1, $tabA1->fieldPosition('A'));
+		$this->assertEquals(2, $tabA1->fieldPosition('A_insertafter'));
+		$this->assertEquals(3, $tabA1->fieldPosition('A_post'));
+
+		$fieldSetB = new FieldSet(
+			new TabSet('TabSet_A',
+				$tabsetB = new TabSet('TabSet_B',
+					$tabB1 = new Tab('Tab_B1',
+						new TextField('C')
+					),
+					$tabB2 = new Tab('Tab_B2',
+						new TextField('B_pre'),
+						new TextField('B'),
+						new TextField('B_post')
+					)
+				)
+			)
+		);
+		$fieldSetB->insertAfter(
+			$B_insertafter = new TextField('B_insertafter'),
+			'B'
+		);
+		$this->assertSame(
+			$fieldSetB->dataFieldByName('B_insertafter'),
+			$B_insertafter,
+			'Field on nested tab can be inserted after'
+		);
+		$this->assertEquals(0, $tabB2->fieldPosition('B_pre'));
+		$this->assertEquals(1, $tabB2->fieldPosition('B'));
+		$this->assertEquals(2, $tabB2->fieldPosition('B_insertafter'));
+		$this->assertEquals(3, $tabB2->fieldPosition('B_post'));
+	}
+	
+	function testFieldPosition() {
+		$set = new FieldSet(
+			new TextField('A'),
+			new TextField('B'),
+			new TextField('C')
+		);
+		
+		$this->assertEquals(0, $set->fieldPosition('A'));
+		$this->assertEquals(1, $set->fieldPosition('B'));
+		$this->assertEquals(2, $set->fieldPosition('C'));
+		
+		$set->insertBefore(new TextField('AB'), 'B');
+		$this->assertEquals(0, $set->fieldPosition('A'));
+		$this->assertEquals(1, $set->fieldPosition('AB'));
+		$this->assertEquals(2, $set->fieldPosition('B'));
+		$this->assertEquals(3, $set->fieldPosition('C'));
+		
+		unset($set);
+	}
+}
 ?>

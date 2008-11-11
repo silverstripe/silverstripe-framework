@@ -169,7 +169,6 @@ class FieldSet extends DataObjectSet {
 		
 		foreach($this->items as $i => $child) {
 			if(is_object($child) && ($child->Name() == $fieldName || $child->Title() == $fieldName) && (!$dataFieldOnly || $child->hasData())) {
-				//if($child->class == 'Tab' && !$dataFieldOnly) Debug::backtrace();
 				array_splice( $this->items, $i, 1 );
 				break;
 			} else if($child->isComposite()) {
@@ -304,51 +303,29 @@ class FieldSet extends DataObjectSet {
 	 * @param string $name Name of the field to insert before
 	 */
 	public function insertBefore($item, $name) {
-		$this->beforeInsert($item);
+		$this->onBeforeInsert($item);
 		$item->setContainerFieldSet($this);
 		
 		$i = 0;
 		foreach($this->items as $child) {
 			if($name == $child->Name() || $name == $child->id) {
 				array_splice($this->items, $i, 0, array($item));
-			
-				return;
+				return $item;
+			} elseif($child->isComposite()) {
+				$ret = $child->insertBefore($item, $name);
+				if($ret) return $ret;
 			}
 			$i++;
 		}
-		$this->items[] = $item;
+		
+		return false;
 	}
 
 	/**
-	 * Inserts an item before the item with name $name
-	 * It can be buried in a composite field
-	 * If no item with name $name is found, $item is inserted at the end of the FieldSet
-	 *
-	 * @param FormField $item The item to be inserted
-	 * @param string $name The name of the item that $item should be before
-	 * @param int $level For internal use only, should not be passed
+	 * @deprecated 2.3 Use insertBefore()
 	 */
 	public function insertBeforeRecursive($item, $name, $level = 0) {
-		$this->beforeInsert($item);
-		$item->setContainerFieldSet($this);
-		
-		$i = 0;
-		foreach($this->items as $child) {
-			if($name == $child->Name() || $name == $child->id) {
-				array_splice($this->items, $i, 0, array($item));
-			
-				return $level;
-			} else if($child->isComposite()) {
-				if($level = $child->insertBeforeRecursive($item,$name,$level+1)) return $level;
-			}
-			
-			$i++;
-		}
-		if ($level === 0) {
-		$this->items[] = $item;
-			return 0;
-		}
-		return false;
+		return $this->insertBefore($item, $name);
 	}
 	
 	/**
@@ -358,18 +335,22 @@ class FieldSet extends DataObjectSet {
 	 * @param string $name Name of the field to insert after
 	 */
 	public function insertAfter($item, $name) {
-		$this->beforeInsert($item);
+		$this->onBeforeInsert($item);
 		$item->setContainerFieldSet($this);
 		
 		$i = 0;
 		foreach($this->items as $child) {
 			if($name == $child->Name() || $name == $child->id) {
-				array_splice($this->items, $i + 1, 0, array($item));
-				return;
+				array_splice($this->items, $i+1, 0, array($item));
+				return $item;
+			} elseif($child->isComposite()) {
+				$ret = $child->insertAfter($item, $name);
+				if($ret) return $ret;
 			}
 			$i++;
 		}
-		$this->items[] = $item;
+		
+		return false;
 	}
 	
 	/**
@@ -379,7 +360,7 @@ class FieldSet extends DataObjectSet {
 	 * @param string $key An option array key (field name)
 	 */
 	public function push($item, $key = null) {
-		$this->beforeInsert($item);
+		$this->onBeforeInsert($item);
 		$item->setContainerFieldSet($this);
 		return parent::push($item, $key = null);
 	}
@@ -387,7 +368,7 @@ class FieldSet extends DataObjectSet {
 	/**
 	 * Handler method called before the FieldSet is going to be manipulated.
 	 */
-	function beforeInsert($item) {
+	protected function onBeforeInsert($item) {
 		if($this->sequentialSet) $this->sequentialSet = null;
 		if($item->Name()) $this->rootFieldSet()->removeByName($item->Name(), true);
 	}
@@ -495,7 +476,7 @@ class FieldSet extends DataObjectSet {
 	 * 
 	 * Please note that any tabs or other dataless fields will be clobbered by this operation.
 	 *
-	 * Field names can be given as an array, or just as a list of arguments.
+	 * @param array $fieldNames Field names can be given as an array, or just as a list of arguments.
 	 */
 	function changeFieldOrder($fieldNames) {
 		// Field names can be given as an array, or just as a list of arguments.
@@ -524,6 +505,25 @@ class FieldSet extends DataObjectSet {
 		
 		// Re-set an internal cache
 		$this->sequentialSet = null;
+	}
+	
+	/**
+	 * Find the numerical position of a field within
+	 * the children collection. Doesn't work recursively.
+	 * 
+	 * @param string|FormField
+	 * @return Position in children collection (first position starts with 0). Returns FALSE if the field can't be found.
+	 */
+	function fieldPosition($field) {
+		if(is_string($field)) $field = $this->fieldByName($field);
+		
+		$i = 0;
+		foreach($this->dataFields() as $child) {
+			if($child == $field) return $i;
+			$i++;
+		}
+		
+		return false;
 	}
 	
 }

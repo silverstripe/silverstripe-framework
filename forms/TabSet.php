@@ -92,15 +92,23 @@ class TabSet extends CompositeField {
 		parent::push($field);
 		$field->setTabSet($this);
 	}
+	
+	/**
+	 * Inserts a field before a particular field in a FieldSet.
+	 *
+	 * @param FormField $item The form field to insert
+	 * @param string $name Name of the field to insert before
+	 */
 	public function insertBefore($field, $insertBefore) {
 		parent::insertBefore($field, $insertBefore);
-		$field->setTabSet($this);
+		if($field instanceof Tab) $field->setTabSet($this);
+		$this->sequentialSet = null;
 	}
 	
-	public function insertBeforeRecursive($field, $insertBefore, $level) {
-		$level = parent::insertBeforeRecursive($field, $insertBefore, $level+1);
-		if ($level === 0) $field->setTabSet($this);
-		return $level;
+	public function insertAfter($field, $insertAfter) {
+		parent::insertAfter($field, $insertAfter);
+		if($field instanceof Tab) $field->setTabSet($this);
+		$this->sequentialSet = null;
 	}
 	
 	public function removeByName( $tabName, $dataFieldOnly = false ) {
