@@ -753,6 +753,10 @@ class Requirements_Backend {
 	 *
 	 */
 	function process_combined_files() {
+		if(Director::isDev()) {
+			return;
+		}
+		
 		// Make a map of files that could be potentially combined
 		$combinerCheck = array();
 		foreach($this->combine_files as $combinedFile => $sourceItems) {
@@ -818,6 +822,8 @@ class Requirements_Backend {
 				// if we have a javascript file and jsmin is enabled, minify the content
 				if(stripos($file, '.js') && $this->combine_js_with_jsmin) {
 					require_once('thirdparty/jsmin/JSMin.php');
+					
+					set_time_limit(0);
 					$fileContent = JSMin::minify($fileContent);
 				}
 				// write a header comment for each file for easier identification and debugging
