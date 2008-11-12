@@ -115,19 +115,19 @@
 			}
 		},
 
-		requireCss : function(styleUrl){
+		requireCss : function(styleUrl, media){
+		    if(media == null) media = 'all';
 
 			if(document.createStyleSheet){
-				document.createStyleSheet($.requireConfig.routeCss + styleUrl);
-			}
-			else {
-
+				var ss = document.createStyleSheet($.requireConfig.routeCss + styleUrl);
+				ss.style.media = media;
+				
+			} else {
 				var styleTag = document.createElement('link');
-
 				$(styleTag).attr({
 					href	: $.requireConfig.routeCss + styleUrl,
 					type	: 'text/css',
-					media 	: 'screen',
+					media 	: media,
 					rel		: 'stylesheet'
 				}).appendTo($('head').get(0));
 
@@ -159,38 +159,7 @@
 	    // We remove the success handler and take care of calling it outselves within _ondemandComplete
 	    s.success = null;
         s.complete = function(xml, status) {
-            var i;
-            // CSS
-            if(xml.getResponseHeader('X-Include-CSS')) {
-                var cssIncludes = xml.getResponseHeader('X-Include-CSS').split(',');
-                for(i=0;i<cssIncludes.length;i++) {
-                    $.requireCss(cssIncludes[i]);
-                }
-            }
-
-            // JavaScript
-            if(xml.getResponseHeader('X-Include-JS')) {
-                var jsIncludes = xml.getResponseHeader('X-Include-JS').split(',');
-                var newIncludes = [];
-                for(i=0;i<jsIncludes.length;i++) {
-                    if(!$.isJsLoaded(jsIncludes[i])) {
-                        newIncludes.push(jsIncludes[i]);
-                    }
-                }
-            }
-            
-            // We make an array of the includes that are actually new, and attach the callback to the last one
-            // They are placed in a queue and will be included in order.  This means that the callback will 
-            // be able to execute script in the new includes (such as a livequery update)
-            if(newIncludes.length > 0) {
-                for(i=0;i<jsIncludes.length;i++) {
-                    $.requireJs(jsIncludes[i], (i == jsIncludes.length-1) ? function() { _ondemandComplete(xml, status); } : null);
-                }
-                
-            // If there aren't any new includes, then we can just call the callbacks ourselves                
-            } else {
-                _ondemandComplete(xml, status);
-            }
+            processOnDemandHeaders(xml);
         }
         
         _originalAjax(s);
@@ -203,18 +172,32 @@
  * once we get rid of all uses of prototype, we can remove this
  */
 function prototypeOnDemandHandler(xml, callback) {
-    var i;
-    var newIncludes = [];
+    processOnDemandHandlers(xml, callback);
+}
 
+
+/**
+ * Process the X-Include-CSS and X-Include-JS headers provided by the Requirements class
+ */
+function processOnDemandHandlers(xml, _ondemandComplete) {
+    var i;
     // CSS
     if(xml.getResponseHeader('X-Include-CSS')) {
         var cssIncludes = xml.getResponseHeader('X-Include-CSS').split(',');
         for(i=0;i<cssIncludes.length;i++) {
-            jQuery.requireCss(cssIncludes[i]);
+            // Syntax 1: "URL:##:media"
+            if(cssIncludes[i].match(/^(.*):##:(.*)$/)) {
+                jQuery.requireCss(RegExp.$1, RegExp.$2);
+
+            // Syntax 2: "URL"
+            } else {
+                jQuery.requireCss(cssIncludes[i]);
+            }
         }
     }
 
     // JavaScript
+    var newIncludes = [];
     if(xml.getResponseHeader('X-Include-JS')) {
         var jsIncludes = xml.getResponseHeader('X-Include-JS').split(',');
         for(i=0;i<jsIncludes.length;i++) {
@@ -223,17 +206,17 @@ function prototypeOnDemandHandler(xml, callback) {
             }
         }
     }
-
+    
     // We make an array of the includes that are actually new, and attach the callback to the last one
     // They are placed in a queue and will be included in order.  This means that the callback will 
     // be able to execute script in the new includes (such as a livequery update)
     if(newIncludes.length > 0) {
         for(i=0;i<jsIncludes.length;i++) {
-            jQuery.requireJs(jsIncludes[i], (i == jsIncludes.length-1) ? callback : null);
+            jQuery.requireJs(jsIncludes[i], (i == jsIncludes.length-1) ? function() { _ondemandComplete(xml, status); } : null);
         }
-
+        
     // If there aren't any new includes, then we can just call the callbacks ourselves                
     } else {
-        callback();
+        _ondemandComplete(xml, status);
     }
 }

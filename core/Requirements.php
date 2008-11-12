@@ -593,7 +593,7 @@ class Requirements_Backend {
 
 		foreach(array_diff_key($this->css,$this->blocked) as $file => $params) {  					
 			$path = $this->path_for_file($file);
-			if($path) $cssRequirements[] = $path;
+			if($path) $cssRequirements[] = isset($params['media']) ? "$path:##:$params[media]" : $path;
 		}
 
 		$response->addHeader('X-Include-CSS', implode(',', $cssRequirements));
