@@ -120,7 +120,7 @@
 
 			if(document.createStyleSheet){
 				var ss = document.createStyleSheet($.requireConfig.routeCss + styleUrl);
-				ss.style.media = media;
+				ss.media = media;
 				
 			} else {
 				var styleTag = document.createElement('link');
