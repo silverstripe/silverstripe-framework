@@ -1177,14 +1177,11 @@ class Member_ProfileForm extends Form {
 	
 	function __construct($controller, $name, $member) {
 		Requirements::clear();
-		Requirements::css(THIRDPARTY_DIR . '/tabstrip/tabstrip.css');
 		Requirements::css(CMS_DIR . '/css/typography.css');
 		Requirements::css(CMS_DIR . '/css/cms_right.css');
 		Requirements::javascript(THIRDPARTY_DIR . "/prototype.js");
 		Requirements::javascript(THIRDPARTY_DIR . "/behaviour.js");
 		Requirements::javascript(THIRDPARTY_DIR . "/prototype_improvements.js");
-		Requirements::javascript(THIRDPARTY_DIR . "/loader.js");
-		Requirements::javascript(THIRDPARTY_DIR . "/tabstrip/tabstrip.js");
 		Requirements::javascript(THIRDPARTY_DIR . "/scriptaculous/scriptaculous.js");
 		Requirements::javascript(THIRDPARTY_DIR . "/scriptaculous/controls.js");
 		Requirements::javascript(THIRDPARTY_DIR . "/layout_helpers.js");

@@ -308,9 +308,7 @@ class Security extends Controller {
 			Requirements::javascript(THIRDPARTY_DIR . "/prototype.js");
 			Requirements::javascript(THIRDPARTY_DIR . "/behaviour.js");
 			Requirements::javascript(THIRDPARTY_DIR . "/prototype_improvements.js");
-			Requirements::javascript(THIRDPARTY_DIR . "/tabstrip/tabstrip.js");
 			Requirements::javascript(THIRDPARTY_DIR . "/scriptaculous/effects.js");
-			Requirements::css(THIRDPARTY_DIR . "/tabstrip/tabstrip.css");
 			Requirements::css(SAPPHIRE_DIR . "/css/Form.css");
 			
 			// Needed because the <base href=".."> in the template makes problems

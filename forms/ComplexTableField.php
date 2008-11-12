@@ -943,7 +943,6 @@ class ComplexTableField_Popup extends Form {
 		 * Some have special requirements.
 		 */
 		//Requirements::css(CMS_DIR . '/css/layout.css');
-		Requirements::css(THIRDPARTY_DIR . '/tabstrip/tabstrip.css');
 		Requirements::css(SAPPHIRE_DIR . '/css/Form.css');
 		Requirements::css(SAPPHIRE_DIR . '/css/ComplexTableField_popup.css');
 		Requirements::css(CMS_DIR . '/css/typography.css');
@@ -951,8 +950,6 @@ class ComplexTableField_Popup extends Form {
 		Requirements::javascript(THIRDPARTY_DIR . "/prototype.js");
 		Requirements::javascript(THIRDPARTY_DIR . "/behaviour.js");
 		Requirements::javascript(THIRDPARTY_DIR . "/prototype_improvements.js");
-		Requirements::javascript(THIRDPARTY_DIR . "/loader.js");
-		Requirements::javascript(THIRDPARTY_DIR . "/tabstrip/tabstrip.js");
 		Requirements::javascript(THIRDPARTY_DIR . "/scriptaculous/scriptaculous.js");
 		Requirements::javascript(THIRDPARTY_DIR . "/scriptaculous/controls.js");
 		Requirements::javascript(THIRDPARTY_DIR . "/layout_helpers.js");
