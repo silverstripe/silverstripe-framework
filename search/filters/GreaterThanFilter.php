@@ -17,7 +17,7 @@ class GreaterThanFilter extends SearchFilter {
 		return $query->where(sprintf(
 			"%s > '%s'",
 			$this->getDbName(),
-			Convert::raw2sql($this->getValue())
+			Convert::raw2sql($this->getDbFormattedValue())
 		));
 	}
 	

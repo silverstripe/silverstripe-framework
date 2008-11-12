@@ -95,6 +95,20 @@ abstract class SearchFilter extends Object {
 	}
 	
 	/**
+	 * Return the value of the field as processed by the DBField class
+	 *
+	 * @return string
+	 */
+	function getDbFormattedValue() {
+		// SRM: This code finds the table where the field named $this->name lives
+		// Todo: move to somewhere more appropriate, such as DataMapper, the magical class-to-be?
+		$candidateClass = $this->model;
+		$dbField = singleton($this->model)->dbObject($this->name);
+		$dbField->setValue($this->value);
+		return $dbField->RAW();
+	}
+	
+	/**
 	 * Traverse the relationship fields, and add the table
 	 * mappings to the query object state.
 	 * 
