@@ -82,7 +82,7 @@ class SelectionGroup extends CompositeField {
 		Requirements::javascript(THIRDPARTY_DIR . '/behaviour.js');
 		Requirements::javascript(THIRDPARTY_DIR . '/prototype_improvements.js');
 		Requirements::javascript(SAPPHIRE_DIR . '/javascript/SelectionGroup.js');
-		
+		Requirements::css(SAPPHIRE_DIR . '/css/SelectionGroup.css');
 		
 		return $this->renderWith("SelectionGroup");
 	}

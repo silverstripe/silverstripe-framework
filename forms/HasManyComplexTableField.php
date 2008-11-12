@@ -32,8 +32,14 @@ class HasManyComplexTableField extends ComplexTableField {
 			user_error("Can't figure out the data class of $controller", E_USER_WARNING);
 		}
 		
+	}
+	
+	function Field() {
 		Requirements::javascript(SAPPHIRE_DIR . "/javascript/i18n.js");
 		Requirements::javascript(SAPPHIRE_DIR . "/javascript/HasManyFileField.js");
+		Requirements::javascript(SAPPHIRE_DIR . '/javascript/RelationComplexTableField.js');
+		Requirements::css(SAPPHIRE_DIR . '/css/HasManyFileField.css');
+		return parent::Field();
 	}
 	
 	/**

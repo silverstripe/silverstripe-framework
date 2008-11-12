@@ -15,7 +15,7 @@ class HtmlEditorField extends TextareaField {
 	/**
 	 * Construct a new HtmlEditor field
 	 */
-	function __construct($name, $title = "", $rows = 30, $cols = 20, $value = "", $form = null) {
+	function __construct($name, $title = "", $rows = 20, $cols = 20, $value = "", $form = null) {
 		parent::__construct($name, $title, $rows, $cols, $value, $form);
 		$this->extraClass = 'typography';
 	}
@@ -27,6 +27,10 @@ class HtmlEditorField extends TextareaField {
 	function Field() {
 		Requirements::javascript(MCE_ROOT . "tiny_mce_src.js");
 		Requirements::javascript(THIRDPARTY_DIR . "/tiny_mce_improvements.js");
+		Requirements::css('cms/css/TinyMCEImageEnhancement.css');
+		Requirements::javascript('jsparty/SWFUpload/SWFUpload.js');
+		Requirements::javascript('cms/javascript/Upload.js');
+		Requirements::javascript('cms/javascript/TinyMCEImageEnhancement.js');
 
 		// Don't allow unclosed tags - they will break the whole application ;-)		
 		$cleanVal = $this->value;
@@ -392,6 +396,9 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 	 * @return Form
 	 */
 	function ImageForm() {
+		Requirements::javascript(THIRDPARTY_DIR . '/SWFUpload/SWFUpload.js');
+		Requirements::javascript(CMS_DIR . '/javascript/Upload.js');
+
 		$form = new Form(
 			$this->controller,
 			"{$this->name}/ImageForm",
@@ -439,6 +446,9 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 	}
 
 	function FlashForm() {
+		Requirements::javascript(THIRDPARTY_DIR . '/SWFUpload/SWFUpload.js');
+		Requirements::javascript(CMS_DIR . '/javascript/Upload.js');
+
 		$form = new Form(
 			$this->controller,
 			"{$this->name}/FlashForm", 

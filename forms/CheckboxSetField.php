@@ -12,18 +12,14 @@ class CheckboxSetField extends OptionsetField {
 		
 	protected $disabled = false;
 	
-	function __construct($name, $title = "", $source = array(), $value = "", $form = null) {
-		parent::__construct($name, $title, $source, $value, $form);
-		
-		Requirements::css(SAPPHIRE_DIR . '/css/CheckboxSetField.css');
-	}
-  
   	/**
   	* Object handles arrays and dosets being passed by reference.
   	* 
   	* @todo Should use CheckboxField FieldHolder rather than constructing own markup.
   	*/
 	function Field() {
+		Requirements::css(SAPPHIRE_DIR . '/css/CheckboxSetField.css');
+
 		$values = $this->value;
 		
 		// Get values from the join, if available

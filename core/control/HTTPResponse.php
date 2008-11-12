@@ -169,6 +169,11 @@ class HTTPResponse extends Object {
 	 * Send this HTTPReponse to the browser
 	 */
 	function output() {
+		// Attach appropriate X-Include-JavaScript and X-Include-CSS headers
+		if(Director::is_ajax()) {
+			Requirements::include_in_response($this);
+		}
+		
 		if(in_array($this->statusCode, self::$redirect_codes) && headers_sent($file, $line)) {
 			$url = $this->headers['Location'];
 			echo

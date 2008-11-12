@@ -174,6 +174,10 @@ class Requirements {
 		return self::backend()->includeInHTML($templateFile, $content);
 	}
 	
+	static function include_in_response(HTTPResponse $response) {
+		return self::backend()->include_in_response($response);
+	}
+	
 	/**
 	 * Automatically includes the necessary lang-files from the module.
 	 * 
@@ -333,7 +337,7 @@ class Requirements_Backend {
 	 *
 	 * @var boolean
 	 */
-	public $write_js_to_body = false;
+	public $write_js_to_body = true;
 	
 	/**
 	 * Register the given javascript file as required.
@@ -510,10 +514,8 @@ class Requirements_Backend {
 			$jsRequirements = '';
 			
 			// Combine files - updates $this->javascript and $this->css 
- 			$this->process_combined_files(); 
-
-			// 
 			$this->process_i18n_javascript(); 
+ 			$this->process_combined_files(); 
 	
 			foreach(array_diff_key($this->javascript,$this->blocked) as $file => $dummy) { 
 				$path = self::path_for_file($file);
@@ -574,6 +576,27 @@ class Requirements_Backend {
 		if(isset($_GET['debug_profile'])) Profiler::unmark("Requirements::includeInHTML");
 		
 		return $content;
+	}
+
+	/**
+	 * Attach requirements inclusion to X-Include-JS and X-Include-CSS headers on the HTTP response
+	 */
+	function include_in_response(HTTPResponse $response) {
+		$this->process_combined_files(); 
+
+		foreach(array_diff_key($this->javascript,$this->blocked) as $file => $dummy) { 
+			$path = $this->path_for_file($file);
+			if($path) $jsRequirements[] = $path;
+		}
+
+		$response->addHeader('X-Include-JS', implode(',', $jsRequirements));
+
+		foreach(array_diff_key($this->css,$this->blocked) as $file => $params) {  					
+			$path = $this->path_for_file($file);
+			if($path) $cssRequirements[] = $path;
+		}
+
+		$response->addHeader('X-Include-CSS', implode(',', $cssRequirements));
 	}
 	
 		/**
@@ -720,7 +743,7 @@ class Requirements_Backend {
 		}
 	}
 	
-		function clear_combined_files() {
+	function clear_combined_files() {
 		$this->combine_files = array();
 	}
 	
@@ -798,7 +821,7 @@ class Requirements_Backend {
 					$fileContent = JSMin::minify($fileContent);
 				}
 				// write a header comment for each file for easier identification and debugging
-				$combinedData .= "/****** FILE: $file *****/\n" . $fileContent . "\n";
+				$combinedData .= "/****** FILE: $file *****/\n" . $fileContent . "\n;\n";
 			}
 			if(!file_exists(dirname($base . $combinedFile))) {
 				Filesytem::makeFolder(dirname($base . $combinedFile));
