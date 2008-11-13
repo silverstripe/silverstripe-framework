@@ -793,11 +793,6 @@ class Requirements_Backend {
 			}
 		}
       
-		// @todo Alters the original information, which means you can't call this
-		// method repeatedly - it will behave different on the second call!
-		$this->javascript = $newJSRequirements;
-		$this->css = $newCSSRequirements;
-
 		// Process the combined files
 		$base = Director::baseFolder() . '/';
 		foreach(array_diff_key($combinedFiles,$this->blocked) as $combinedFile => $dummy) {
@@ -834,11 +829,35 @@ class Requirements_Backend {
 			if(!file_exists(dirname($base . $combinedFile))) {
 				Filesytem::makeFolder(dirname($base . $combinedFile));
 			}
+			
+			$successfulWrite = false;
 			$fh = fopen($base . $combinedFile, 'w');
-			fwrite($fh, $combinedData);
-			fclose($fh);
-			unset($fh);
+			if($fh) {
+				if(fwrite($fh, $combinedData) == strlen($combinedData)) $successfulWrite = true;
+				fclose($fh);
+				unset($fh);
+			}
+			
+			// Unsuccessful write - just include the regular JS files, rather than the combined one
+			if(!$successfulWrite) {
+				user_error("Requirements_Backend::process_combined_files(): Couldn't create '$base$combinedFile'", E_USER_WARNING);
+				$keyedFileList = array();
+				foreach($fileList as $file) $keyedFileList[$file] = true;
+				$combinedPos = array_search($combinedFile, array_keys($newJSRequirements));
+				if($combinedPos) {
+					$newJSRequirements = array_merge(
+						array_slice($newJSRequirements, 0, $combinedPos),
+						$keyedFileList,
+						array_slice($newJSRequirements, $combinedPos+1)
+					);
+				}
+			}
 		}
+
+		// @todo Alters the original information, which means you can't call this
+		// method repeatedly - it will behave different on the second call!
+		$this->javascript = $newJSRequirements;
+		$this->css = $newCSSRequirements;
   }
   
   function get_custom_scripts() {
