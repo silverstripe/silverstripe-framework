@@ -417,6 +417,7 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 						<a href="#" id="UploadFiles" class="link">' . _t('HtmlEditorField.UPLOAD','upload') . '</a>
 					</div>'
 				),
+				new TextField('getimagesSearch', _t('HtmlEditorField.SEARCHFILENAME', 'Search by file name')),
 				new ThumbnailStripField('Image', 'FolderID', 'getimages'),
 				new TextField('AltText', _t('HtmlEditorField.ALTTEXT', 'Description'), '', 80),
 				new DropdownField(
@@ -455,6 +456,7 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 			new FieldSet(
 				new LiteralField('Heading', '<h2><img src="cms/images/closeicon.gif" alt="'._t('HtmlEditorField.CLOSE', 'close').'" title="'._t('HtmlEditorField.CLOSE', 'close').'" />'._t('HtmlEditorField.FLASH', 'Flash').'</h2>'),
 				new TreeDropdownField("FolderID", _t('HtmlEditorField.FOLDER'), "Folder"),
+				new TextField('getflashSearch', _t('HtmlEditorField.SEARCHFILENAME', 'Search by file name')),
 				new ThumbnailStripField("Flash", "FolderID", "getflash"),
 				new FieldGroup(_t('HtmlEditorField.IMAGEDIMENSIONS', "Dimensions"),
 					new TextField("Width", _t('HtmlEditorField.IMAGEWIDTHPX', "Width"), 100),
