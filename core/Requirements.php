@@ -584,6 +584,7 @@ class Requirements_Backend {
 	function include_in_response(HTTPResponse $response) {
 		$this->process_combined_files(); 
 		$jsRequirements = array();
+		$cssRequirements = array();
 
 		foreach(array_diff_key($this->javascript, $this->blocked) as $file => $dummy) { 
 			$path = $this->path_for_file($file);
