@@ -96,6 +96,8 @@ class Text extends DBField {
 	 */
 	function FirstSentence() {
 		$data = Convert::xml2raw( $this->value );
+		if( !$data ) return "";
+		
 		
 		$sentences = explode( '.', $data );
 		
