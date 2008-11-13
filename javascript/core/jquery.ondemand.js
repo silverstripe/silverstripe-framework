@@ -148,7 +148,8 @@
         var _dataType = s.dataType;
 
         // This replaces the usual ajax success & complete handlers.  They are called after any on demand JS is loaded.
-        var _ondemandComplete = function(xml, status) {
+        var _ondemandComplete = function(xml) {
+            var status = jQuery.httpSuccess(xml) ? 'success' : 'error';
             if(status == 'success') {
                 data = jQuery.httpData(xml, _dataType);
                 if(_success) _success(data, status, xml);
@@ -159,9 +160,9 @@
 	    // We remove the success handler and take care of calling it outselves within _ondemandComplete
 	    s.success = null;
         s.complete = function(xml, status) {
-            processOnDemandHeaders(xml);
+            processOnDemandHeaders(xml, _ondemandComplete);
         }
-        
+
         _originalAjax(s);
     }
 
@@ -212,7 +213,7 @@ function processOnDemandHeaders(xml, _ondemandComplete) {
     // be able to execute script in the new includes (such as a livequery update)
     if(newIncludes.length > 0) {
         for(i=0;i<jsIncludes.length;i++) {
-            jQuery.requireJs(jsIncludes[i], (i == jsIncludes.length-1) ? function() { _ondemandComplete(xml, status); } : null);
+            jQuery.requireJs(jsIncludes[i], (i == jsIncludes.length-1) ? function() { _ondemandComplete(xml); } : null);
         }
         
     // If there aren't any new includes, then we can just call the callbacks ourselves                
