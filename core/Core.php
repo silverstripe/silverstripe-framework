@@ -139,10 +139,10 @@ default:
 	$memory = round($memString);
 }
 
-// Check we have at least 32M
-if ($memory < (32 * 1024 * 1024)) {
+// Check we have at least 64M
+if ($memory < (64 * 1024 * 1024)) {
 	// Increase memory limit
-	ini_set('memory_limit', '32M');
+	ini_set('memory_limit', '64M');
 }
 
 ///////////////////////////////////////////////////////////////////////////////
