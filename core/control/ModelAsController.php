@@ -13,11 +13,10 @@ class ModelAsController extends Controller implements NestedController {
 		$this->urlParams = $request->allParams();
 		
 		$this->init();
-		$nested = $this->getNestedController();
-		if(is_object($nested)) {
-			$result = $nested->handleRequest($request);
-		} else {
-			$result = $nested;
+		$result = $this->getNestedController();
+		
+		if(is_object($result) && $result instanceOf RequestHandler) {
+			$result = $result->handleRequest($request);
 		}
 		
 		$this->popCurrent();
@@ -39,6 +38,20 @@ class ModelAsController extends Controller implements NestedController {
 				$child = DataObject::get_one("SiteTree", "URLSegment = '$SQL_URLSegment'", false);
 			}
 			if(!$child) {
+				if($child = $this->findOldPage($SQL_URLSegment)) {
+					$url = Controller::join_links(
+						Director::baseURL(),
+						$child->URLSegment,
+						$this->urlParams['Action'],
+						$this->urlParams['ID'],
+						$this->urlParams['OtherID']
+					);
+					
+					$response = new HTTPResponse();
+					$response->redirect($url, 301);
+					return $response;
+				}
+				
 				$child = $this->get404Page();
 			}
 		
@@ -65,6 +78,23 @@ class ModelAsController extends Controller implements NestedController {
 		} else {
 			user_error("ModelAsController not geting a URLSegment.  It looks like the site isn't redirecting to home", E_USER_ERROR);
 		}
+	}
+	
+	protected function findOldPage($urlSegment) {
+		$versionedQuery = new SQLQuery (
+			'RecordID', 'SiteTree_versions',
+			"`WasPublished` = 1 AND `URLSegment` = '$urlSegment'",
+			'`LastEdited` DESC, `WasPublished`',
+			null, null, 1
+		);
+		
+		$result = $versionedQuery->execute();
+		
+		if($result->numRecords() == 1 && $redirectPage = $result->nextRecord()) {
+			if($redirectObj = DataObject::get_by_id('SiteTree', $redirectPage['RecordID'])) return $redirectObj;
+		}
+		
+		return false;
 	}
 	
 	protected function get404Page() {
