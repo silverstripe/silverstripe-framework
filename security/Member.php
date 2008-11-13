@@ -30,7 +30,7 @@ class Member extends DataObject {
 	);
 
 	static $has_one = array();
-	
+	static $has_many = array();
 	static $many_many = array();
 	
 	static $many_many_extraFields = array();
