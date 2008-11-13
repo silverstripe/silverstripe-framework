@@ -172,14 +172,14 @@
  * once we get rid of all uses of prototype, we can remove this
  */
 function prototypeOnDemandHandler(xml, callback) {
-    processOnDemandHandlers(xml, callback);
+    processOnDemandHeaders(xml, callback);
 }
 
 
 /**
  * Process the X-Include-CSS and X-Include-JS headers provided by the Requirements class
  */
-function processOnDemandHandlers(xml, _ondemandComplete) {
+function processOnDemandHeaders(xml, _ondemandComplete) {
     var i;
     // CSS
     if(xml.getResponseHeader('X-Include-CSS')) {
