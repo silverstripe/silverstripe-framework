@@ -124,8 +124,9 @@ HTML;
 
 	function performReadonlyTransformation() {
 		$fieldName = $this->labelField;
+		$value = ($this->getByKey($this->value)) ? $this->getByKey($this->value)->$fieldName : '';
 		$source = array(
-			$this->value => $this->getByKey($this->value)->$fieldName
+			$this->value => $value
 		);
 		$field = new LookupField($this->name, $this->title, $source);
 		$field->setValue($this->value);
