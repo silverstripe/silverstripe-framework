@@ -132,7 +132,8 @@ class DB {
 	 * @return boolean
 	 */
 	static function isActive() {
-		return DB::$globalConn->isActive();
+		if(DB::$globalConn) return DB::$globalConn->isActive();
+		else return false;
 	}
 
 	/**
