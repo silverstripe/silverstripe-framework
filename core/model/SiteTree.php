@@ -1702,6 +1702,9 @@ class SiteTree extends DataObject {
 
 		if(!$this->canEdit() && !$this->canAddChildren()) 
 			$classes .= " disabled";
+
+		if(!$this->ShowInMenus) 
+			$classes .= " notinmenu";
 		
 		$classes .= $this->markingClasses();
 
