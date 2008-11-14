@@ -80,8 +80,8 @@ class SiteTree extends DataObject {
 		"ReportClass" => "Varchar",
 		"Priority" => "Float",
 
-		"CanViewType" => "Enum('Anyone, LoggedInUsers, OnlyTheseUsers, Inherit', 'Anyone')",
-		"CanEditType" => "Enum('LoggedInUsers, OnlyTheseUsers, Inherit', 'OnlyTheseUsers')",
+		"CanViewType" => "Enum('Anyone, LoggedInUsers, OnlyTheseUsers, Inherit', 'Inherit')",
+		"CanEditType" => "Enum('LoggedInUsers, OnlyTheseUsers, Inherit', 'Inherit')",
 
 		// Simple task tracking
 		"ToDo" => "Text",
@@ -123,8 +123,8 @@ class SiteTree extends DataObject {
 		"ShowInMenus" => 1,
 		"ShowInSearch" => 1,
 		"Status" => "New page",
-		"CanViewType" => "Anyone",
-		"CanEditType" => "OnlyTheseUsers"
+		"CanViewType" => "Inherit",
+		"CanEditType" => "Inherit"
 	);
 
 	static $has_one = array(
