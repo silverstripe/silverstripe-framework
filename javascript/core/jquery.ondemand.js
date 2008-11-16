@@ -22,18 +22,24 @@
 		
 		
 		// Added by SRM: Initialise the loaded_list with the scripts included on first load
-		initialiseJSLoadedList : function() {
+		initialiseItemLoadedList : function() {
 		    if(this.loaded_list == null) {
 		        $this = this;
-		        $this.loaded_list = [];
+		        $this.loaded_list = {};
 		        $('script').each(function() {
 		            if($(this).attr('src')) $this.loaded_list[ $(this).attr('src') ] = 1;
+		        });
+		        $('link[@rel="stylesheet"]').each(function() {
+		            if($(this).attr('href')) $this.loaded_list[ $(this).attr('href') ] = 1;
 		        });
 		    }
 	    },
 	    
-	    isJsLoaded : function(scriptUrl) {
-			this.initialiseJSLoadedList();
+	    /**
+	     * Returns true if the given CSS or JS script has already been loaded
+	     */
+	    isItemLoaded : function(scriptUrl) {
+			this.initialiseItemLoadedList();
 	        return this.loaded_list[scriptUrl] != undefined;
 	    },
 
@@ -60,7 +66,7 @@
 
 			this.pending = _request;
 			
-			this.initialiseJSLoadedList();
+			this.initialiseItemLoadedList();
 
 			if (this.loaded_list[this.pending.url] != undefined) {		// if required file exists  (by PGA)
 				this.requestComplete();									// => request complete
@@ -118,6 +124,9 @@
 		requireCss : function(styleUrl, media){
 		    if(media == null) media = 'all';
 
+		    // Don't double up on loading scripts
+		    if(this.isItemLoaded(styleUrl)) return;
+
 			if(document.createStyleSheet){
 				var ss = document.createStyleSheet($.requireConfig.routeCss + styleUrl);
 				ss.media = media;
@@ -130,8 +139,9 @@
 					media 	: media,
 					rel		: 'stylesheet'
 				}).appendTo($('head').get(0));
-
 			}
+			
+			this.loaded_list[styleUrl] = 1;
 
 		}
 
@@ -202,7 +212,7 @@ function processOnDemandHeaders(xml, _ondemandComplete) {
     if(xml.getResponseHeader('X-Include-JS')) {
         var jsIncludes = xml.getResponseHeader('X-Include-JS').split(',');
         for(i=0;i<jsIncludes.length;i++) {
-            if(!jQuery.isJsLoaded(jsIncludes[i])) {
+            if(!jQuery.isItemLoaded(jsIncludes[i])) {
                 newIncludes.push(jsIncludes[i]);
             }
         }
