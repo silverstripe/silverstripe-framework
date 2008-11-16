@@ -1250,7 +1250,13 @@ class DataObject extends ViewableData implements DataObjectInterface,i18nEntityP
 					return $candidate;
 				}
 			} else {
-				eval("\$items = isset(\$items) ? array_merge((array){$class}::\$has_one, (array)\$items) : (array){$class}::\$has_one;");
+				$newItems = eval("return (array){$class}::\$has_one;");
+				// Validate the data
+				foreach($newItems as $k => $v) {
+					if(!is_string($k) || is_numeric($k) || !is_string($v)) user_error("$class::\$has_one has a bad entry: " 
+						. var_export($k,true). " => " . var_export($v,true) . ".  Each map key should be a relationship name, and the map value should be the data class to join to.", E_USER_ERROR);
+				}
+				$items = isset($items) ? array_merge($newItems, (array)$items) : $newItems;
 			}
 		}
 		return isset($items) ? $items : null;
@@ -1282,7 +1288,13 @@ class DataObject extends ViewableData implements DataObjectInterface,i18nEntityP
 					return $candidate;
 				}
 			} else {
-				eval("\$items = array_merge((array)\$items, (array){$class}::\$db);");
+				$newItems = eval("return (array){$class}::\$db;");
+				// Validate the data
+				foreach($newItems as $k => $v) {
+					if(!is_string($k) || is_numeric($k) || !is_string($v)) user_error("$class::\$db has a bad entry: " 
+						. var_export($k,true). " => " . var_export($v,true) . ".  Each map key should be a property name, and the map value should be the property type.", E_USER_ERROR);
+				}
+				$items = isset($items) ? array_merge($newItems, (array)$items) : $newItems;
 			}
 		}
 
@@ -1310,7 +1322,13 @@ class DataObject extends ViewableData implements DataObjectInterface,i18nEntityP
 					return $candidate;
 				}
 			} else {
-				eval("\$items = isset(\$items) ? array_merge((array){$class}::\$has_many, (array)\$items) : (array){$class}::\$has_many;");
+				$newItems = eval("return (array){$class}::\$has_many;");
+				// Validate the data
+				foreach($newItems as $k => $v) {
+					if(!is_string($k) || is_numeric($k) || !is_string($v)) user_error("$class::\$has_many has a bad entry: " 
+						. var_export($k,true). " => " . var_export($v,true) . ".  Each map key should be a relationship name, and the map value should be the data class to join to.", E_USER_ERROR);
+				}
+				$items = isset($items) ? array_merge($newItems, (array)$items) : $newItems;
 			}
 		}
 
@@ -1369,10 +1387,25 @@ class DataObject extends ViewableData implements DataObjectInterface,i18nEntityP
 					user_error("Orphaned \$belongs_many_many value for $this->class.$component", E_USER_ERROR);
 				}
 			} else {
-				eval("\$items = isset(\$items) ? array_merge((array){$class}::\$many_many, (array)\$items) : (array){$class}::\$many_many;");
-				eval("\$items = array_merge((array){$class}::\$belongs_many_many, (array)\$items);");
+				$newItems = eval("return (array){$class}::\$many_many;");
+				// Validate the data
+				foreach($newItems as $k => $v) {
+					if(!is_string($k) || is_numeric($k) || !is_string($v)) user_error("$class::\$many_many has a bad entry: " 
+						. var_export($k,true). " => " . var_export($v,true) . ".  Each map key should be a relationship name, and the map value should be the data class to join to.", E_USER_ERROR);
+				}
+				$items = isset($items) ? array_merge($newItems, $items) : $newItems;
+
+				$newItems = eval("return (array){$class}::\$belongs_many_many;");
+				// Validate the data
+				foreach($newItems as $k => $v) {
+					if(!is_string($k) || is_numeric($k) || !is_string($v)) user_error("$class::\$belongs_many_many has a bad entry: " 
+						. var_export($k,true). " => " . var_export($v,true) . ".  Each map key should be a relationship name, and the map value should be the data class to join to.", E_USER_ERROR);
+				}
+
+				$items = isset($items) ? array_merge($newItems, $items) : $newItems;
 			}
 		}
+		
 		return isset($items) ? $items : null;
 	}
 
