@@ -314,7 +314,12 @@ class Security extends Controller {
 			// Needed because the <base href=".."> in the template makes problems
 			// with the tabstrip library otherwise
 			$link_base = Director::absoluteURL($this->Link("login"));
-
+			
+			Requirements::javascript(THIRDPARTY_DIR . "/jquery/jquery.js");
+			Requirements::javascript(THIRDPARTY_DIR . '/jquery/plugins/livequery/jquery.livequery.js');
+			Requirements::javascript(THIRDPARTY_DIR . "/tabstrip/tabstrip.js");
+			Requirements::css(THIRDPARTY_DIR . "/tabstrip/tabstrip.css");
+			
 			$content = '<div id="Form_EditForm">';
 			$content .= '<ul class="tabstrip">';
 			$content_forms = '';
