@@ -105,6 +105,7 @@ class HTTP {
 
 	static function findByTagAndAttribute($content, $attribs) {
 		$regExps = array();
+		$content = '';
 		
 		foreach($attribs as $tag => $attrib) {
 			if(!is_numeric($tag)) $tagPrefix = "$tag ";
