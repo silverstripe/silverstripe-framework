@@ -15,14 +15,14 @@ class GD extends Object {
 		if(ini_get("safe_mode") != "1") {
 			set_time_limit(300);
 		}
-		
+
 		if($filename) {
 			// We use getimagesize instead of extension checking, because sometimes extensions are wrong.
 			list($width, $height, $type, $attr) = getimagesize($filename);
 			switch($type) {
-				case 1: $this->setGD(imagecreatefromgif($filename)); break;
-				case 2: $this->setGD(imagecreatefromjpeg($filename)); break;
-				case 3: $this->setGD(imagecreatefrompng($filename)); break;
+				case 1: if(function_exists('imagecreatefromgif')) $this->setGD(imagecreatefromgif($filename)); break;
+				case 2: if(function_exists('imagecreatefromjpeg')) $this->setGD(imagecreatefromjpeg($filename)); break;
+				case 3: if(function_exists('imagecreatefrompng')) $this->setGD(imagecreatefrompng($filename)); break;
 			}
 		}
 		
