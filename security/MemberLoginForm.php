@@ -119,6 +119,7 @@ class MemberLoginForm extends LoginForm {
 				Session::clear("BackURL");
 				Director::redirect($backURL);
 			} else {
+				$member=Member::CurrentUser();
 				$firstname = Convert::raw2xml($member->FirstName);
 				Session::set("Security.Message.message",  
 				        sprintf(_t('Member.WELCOMEBACK', "Welcome Back, %s"), $firstname) 
