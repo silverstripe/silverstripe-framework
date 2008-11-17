@@ -1518,6 +1518,8 @@ class SiteTree extends DataObject {
 				$result[$class] = ($class == $this->class)
 				  ? _t('SiteTree.CURRENTLY', 'Currently').' '.$addAction
 				  : _t('SiteTree.CHANGETO', 'Change to').' '.$addAction;
+				$currentAddAction = null;
+				$currentClass = null;
 			}
 		}
 		
