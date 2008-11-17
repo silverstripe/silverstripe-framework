@@ -2209,7 +2209,7 @@ class DataObject extends ViewableData implements DataObjectInterface,i18nEntityP
 	 */
 	function buildDataObjectSet($records, $containerClass = "DataObjectSet", $query = null, $baseClass = null) {
 		foreach($records as $record) {
-			if(!$record['RecordClassName']) {
+			if(empty($record['RecordClassName'])) {
 				$record['RecordClassName'] = $record['ClassName'];
 			}
 			if(class_exists($record['RecordClassName'])) {
