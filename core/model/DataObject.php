@@ -352,8 +352,8 @@ class DataObject extends ViewableData implements DataObjectInterface,i18nEntityP
 	 * @return string
 	 */
 	public function getTitle() {
-		if($this->hasField('Title')) return $this->getField('Title');
-		if($this->hasField('Name')) return $this->getField('Name');
+		if($this->hasDatabaseField('Title')) return $this->getField('Title');
+		if($this->hasDatabaseField('Name')) return $this->getField('Name');
 		
 		return "#{$this->ID}";
 	}
@@ -1756,7 +1756,7 @@ class DataObject extends ViewableData implements DataObjectInterface,i18nEntityP
 	 * @return boolean
 	 */
 	public function hasDatabaseField($field) {
-		return array_key_exists($field, $this->databaseFields());
+		return array_key_exists($field, $this->inheritedDatabaseFields());
 	}
 	
 	/**

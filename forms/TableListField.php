@@ -465,6 +465,7 @@ JS
 				$query->orderby = $SQL_sort;
 			}
 		}
+		
 		return $query;
 	}
 
@@ -1256,7 +1257,9 @@ class TableListField_Item extends ViewableData {
 	
 	function Link() {
  		if($this->parent->getForm()) {
-			return Controller::join_links($this->parent->Link() . '/item/' . $this->item->ID);
+			$parentUrlParts = parse_url($this->parent->Link());
+			$queryPart = (isset($parentUrlParts['query'])) ? '?' . $parentUrlParts['query'] : null;
+			return Controller::join_links($parentUrlParts['path'], 'item', $this->item->ID, $queryPart);
 		} else {
 			// allow for instanciation of this FormField outside of a controller/form
 			// context (e.g. for unit tests)
