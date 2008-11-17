@@ -963,7 +963,7 @@ class ViewableData_Customised extends ViewableData {
 	}
 	
 	
-	function XML_val($fieldName, $args = null) {
+	function XML_val($fieldName, $args = null, $cache = false) {
 		if(isset($this->extraData[$fieldName])) {
 			if(isset($_GET['debug_profile'])) {
 				Profiler::mark("template($fieldName)", " on $this->class object");
@@ -981,7 +981,7 @@ class ViewableData_Customised extends ViewableData {
 			
 			return $val;
 		} else {
-			return $this->obj->XML_val($fieldName, $args);
+			return $this->obj->XML_val($fieldName, $args, $cache);
 		}
 	}
 	
