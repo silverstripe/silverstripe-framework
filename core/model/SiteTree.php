@@ -609,15 +609,14 @@ class SiteTree extends DataObject {
 		if($results && is_array($results)) if(!min($results)) return false;
 		
 		// check for empty spec
-		if(
-			!$this->CanViewType || $this->CanViewType == 'Anyone'
-		) return true;
+		if(!$this->CanViewType || $this->CanViewType == 'Anyone') return true;
 
 		// check for inherit
-		if(
-			$this->CanViewType == 'Inherit' && $this->Parent()
-		) return $this->Parent()->canView($member);
-
+		if($this->CanViewType == 'Inherit') {
+			if($this->ParentID) return $this->Parent()->canView($member);
+			else return true;
+		}
+		
 		// check for any logged-in users
 		if(
 			$this->CanViewType == 'LoggedInUsers' 
@@ -743,14 +742,13 @@ class SiteTree extends DataObject {
 		if(!$this->canView()) return false;
 
 		// check for empty spec
-		if(
-			!$this->CanEditType || $this->CanEditType == 'Anyone'
-		) return true;
+		if(!$this->CanEditType || $this->CanEditType == 'Anyone') return true;
 		
 		// check for inherit
-		if(
-			$this->CanEditType == 'Inherit' && $this->Parent()
-		) return $this->Parent()->canEdit($member);
+		if($this->CanEditType == 'Inherit') {
+			if($this->ParentID) return $this->Parent()->canEdit($member);
+			else return Permission::checkMember("CMS_ACCESS_CMSMain");
+		}
 
 		// check for any logged-in users
 		if(
