@@ -136,6 +136,20 @@ class CsvBulkLoaderTest extends SapphireTest {
 		
 	}
 	
+	function testLoadWithCustomImportMethods() {
+		$loader = new CsvBulkLoaderTest_CustomLoader('CsvBulkLoaderTest_Player');
+		$filepath = Director::baseFolder() . '/sapphire/tests/dev/CsvBulkLoaderTest_PlayersWithHeader.csv';
+		$loader->columnMap = array(
+			'FirstName' => '->importFirstName',
+			'Biography' => 'Biography', 
+			'Birthday' => 'Birthday'
+		);
+		$results = $loader->load($filepath);
+		$player = DataObject::get_by_id('CsvBulkLoaderTest_Player', 1);
+		$this->assertEquals($player->FirstName, 'Customized John');
+		$this->assertEquals($player->Biography, "He's a good guy");
+	}
+	
 	protected function getLineCount(&$file) {
 		$i = 0;
 		while(fgets($file) !== false) $i++;
@@ -143,6 +157,12 @@ class CsvBulkLoaderTest extends SapphireTest {
 		return $i;
 	}
 	
+}
+
+class CsvBulkLoaderTest_CustomLoader extends CsvBulkLoader implements TestOnly {
+	function importFirstName(&$obj, $val, $record) {
+		$obj->FirstName = "Customized {$val}";
+	}
 }
 
 class CsvBulkLoaderTest_Team extends DataObject implements TestOnly {
@@ -184,7 +204,7 @@ class CsvBulkLoaderTest_Player extends DataObject implements TestOnly {
 	 * @param string $val
 	 * @param array $record
 	 */
-	public function setUSBirthday($val, $record) {
+	public function setUSBirthday($val, $record = null) {
 		$this->Birthday = preg_replace('/^([0-9]{1,2})\/([0-9]{1,2})\/([0-90-9]{2,4})/', '\\3-\\1-\\2', $val);
 	}
 }
