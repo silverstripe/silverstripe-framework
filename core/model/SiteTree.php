@@ -747,21 +747,14 @@ class SiteTree extends DataObject {
 		// check for inherit
 		if($this->CanEditType == 'Inherit') {
 			if($this->ParentID) return $this->Parent()->canEdit($member);
-			else return Permission::checkMember("CMS_ACCESS_CMSMain");
+			else return Permission::checkMember($member, 'CMS_ACCESS_CMSMain');
 		}
 
 		// check for any logged-in users
-		if(
-			$this->CanEditType == 'LoggedInUsers' 
-			&& Permission::checkMember($member, 'CMS_ACCESS_CMSMain')
-		) return true;
+		if($this->CanEditType == 'LoggedInUsers' && Permission::checkMember($member, 'CMS_ACCESS_CMSMain')) return true;
 		
 		// check for specific groups
-		if(
-			$this->CanEditType == 'OnlyTheseUsers' 
-			&& $member 
-			&& $member->inGroups($this->EditorGroups())
-		) return true;
+		if($this->CanEditType == 'OnlyTheseUsers' && $member && $member->inGroups($this->EditorGroups())) return true;
 		
 		return false;
 	}
