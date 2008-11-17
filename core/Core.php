@@ -29,6 +29,7 @@ error_reporting(E_ALL);
 $envFiles = array('../_ss_environment.php', '../../_ss_environment.php', '../../../_ss_environment.php');
 foreach($envFiles as $envFile) {
 	if(file_exists($envFile)) {
+		define('SS_ENVIRONMENT_FILE', $envFile);
 		include_once($envFile);
 		break;
 	}
@@ -257,6 +258,7 @@ function getClassFile($className) {
 function singleton($className) {
 	static $_SINGLETONS;
 	if(!isset($className)) user_error("singleton() Called without a class", E_USER_ERROR);
+	if(!is_string($className)) user_error("singleton() passed bad class_name: " . var_export($className,true), E_USER_ERROR);
 	if(!isset($_SINGLETONS[$className])) {
 	    if(!class_exists($className)) user_error("Bad class to singleton() - $className", E_USER_ERROR);
 		$_SINGLETONS[$className] = Object::strong_create($className,null, true);

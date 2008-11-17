@@ -78,6 +78,13 @@ if (isset($_GET['debug_profile'])) {
 // Connect to database
 require_once("core/model/DB.php");
 
+// Redirect to the installer if no database is selected
+if(!isset($databaseConfig) || !isset($databaseConfig['database']) || !$databaseConfig['database']) {
+	$installURL = dirname(dirname($_SERVER['SCRIPT_NAME'])) . '/install.php';
+	header("Location: $installURL");
+	die();
+}
+
 if (isset($_GET['debug_profile'])) Profiler::mark('DB::connect');
 DB::connect($databaseConfig);
 if (isset($_GET['debug_profile'])) Profiler::unmark('DB::connect');
