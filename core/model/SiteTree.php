@@ -80,8 +80,8 @@ class SiteTree extends DataObject {
 		"ReportClass" => "Varchar",
 		"Priority" => "Float",
 
-		"CanViewType" => "Enum('Anyone, LoggedInUsers, OnlyTheseUsers, Inherit', 'Anyone')",
-		"CanEditType" => "Enum('LoggedInUsers, OnlyTheseUsers, Inherit', 'OnlyTheseUsers')",
+		"CanViewType" => "Enum('Anyone, LoggedInUsers, OnlyTheseUsers, Inherit', 'Inherit')",
+		"CanEditType" => "Enum('LoggedInUsers, OnlyTheseUsers, Inherit', 'Inherit')",
 
 		// Simple task tracking
 		"ToDo" => "Text",
@@ -123,8 +123,8 @@ class SiteTree extends DataObject {
 		"ShowInMenus" => 1,
 		"ShowInSearch" => 1,
 		"Status" => "New page",
-		"CanViewType" => "Anyone",
-		"CanEditType" => "OnlyTheseUsers"
+		"CanViewType" => "Inherit",
+		"CanEditType" => "Inherit"
 	);
 
 	static $has_one = array(
@@ -609,15 +609,14 @@ class SiteTree extends DataObject {
 		if($results && is_array($results)) if(!min($results)) return false;
 		
 		// check for empty spec
-		if(
-			!$this->CanViewType || $this->CanViewType == 'Anyone'
-		) return true;
+		if(!$this->CanViewType || $this->CanViewType == 'Anyone') return true;
 
 		// check for inherit
-		if(
-			$this->CanViewType == 'Inherit' && $this->Parent()
-		) return $this->Parent()->canView($member);
-
+		if($this->CanViewType == 'Inherit') {
+			if($this->ParentID) return $this->Parent()->canView($member);
+			else return true;
+		}
+		
 		// check for any logged-in users
 		if(
 			$this->CanViewType == 'LoggedInUsers' 
@@ -743,27 +742,19 @@ class SiteTree extends DataObject {
 		if(!$this->canView()) return false;
 
 		// check for empty spec
-		if(
-			!$this->CanEditType || $this->CanEditType == 'Anyone'
-		) return true;
+		if(!$this->CanEditType || $this->CanEditType == 'Anyone') return true;
 		
 		// check for inherit
-		if(
-			$this->CanEditType == 'Inherit' && $this->Parent()
-		) return $this->Parent()->canEdit($member);
+		if($this->CanEditType == 'Inherit') {
+			if($this->ParentID) return $this->Parent()->canEdit($member);
+			else return Permission::checkMember($member, 'CMS_ACCESS_CMSMain');
+		}
 
 		// check for any logged-in users
-		if(
-			$this->CanEditType == 'LoggedInUsers' 
-			&& Permission::checkMember($member, 'CMS_ACCESS_CMSMain')
-		) return true;
+		if($this->CanEditType == 'LoggedInUsers' && Permission::checkMember($member, 'CMS_ACCESS_CMSMain')) return true;
 		
 		// check for specific groups
-		if(
-			$this->CanEditType == 'OnlyTheseUsers' 
-			&& $member 
-			&& $member->inGroups($this->EditorGroups())
-		) return true;
+		if($this->CanEditType == 'OnlyTheseUsers' && $member && $member->inGroups($this->EditorGroups())) return true;
 		
 		return false;
 	}
@@ -1527,6 +1518,8 @@ class SiteTree extends DataObject {
 				$result[$class] = ($class == $this->class)
 				  ? _t('SiteTree.CURRENTLY', 'Currently').' '.$addAction
 				  : _t('SiteTree.CHANGETO', 'Change to').' '.$addAction;
+				$currentAddAction = null;
+				$currentClass = null;
 			}
 		}
 		
@@ -1702,6 +1695,9 @@ class SiteTree extends DataObject {
 
 		if(!$this->canEdit() && !$this->canAddChildren()) 
 			$classes .= " disabled";
+
+		if(!$this->ShowInMenus) 
+			$classes .= " notinmenu";
 		
 		$classes .= $this->markingClasses();
 

@@ -343,18 +343,11 @@ class Object {
 		if($builtIn) {
 			$val = $this->stat($name);
 			$val2 = null;
-			try {
-				// The reflection doesn't work properly in 5.1.2
-				if(phpversion() == '5.1.2') {
-					$val2 = eval('return ' . get_parent_class($this) . "::\$$name;");
-				} else {
-					$reflection = new ReflectionClass(get_parent_class($this));
-					$property = $reflection->getProperty($name);
-					$val2 = $property->getValue();
-				}
-			} catch(Exception $exc) {
-				// do nothing.. the property doesn't exists!
-			}
+
+			// isset() can handle the case where a variable isn't defined; more reliable than reflection
+			$propertyName = get_parent_class($this) . "::\$$name";
+			$val2 = eval("return isset($propertyName) ? $propertyName : null;");
+
 			return ($val != $val2) ? $val : null;
 		}
 

@@ -55,6 +55,14 @@ class RestfulService extends ViewableData {
 	}
 	
 	/**
+	 * @deprecated Use RestfulService::request()
+	 */
+	public function connect($subURL = '') {
+		user_error("RestfulService::connect is deprecated; use RestfulService::request", E_USER_NOTICE);
+		return $this->request($subURL, 'GET');
+	}
+	
+	/**
 	 * Makes a request to the RESTful server, and return a {@link RestfulService_Response} object for parsing of the result.
 	 * @todo Better POST, PUT, DELETE, and HEAD support
 	 * @todo Caching of requests - probably only GET and HEAD requestst

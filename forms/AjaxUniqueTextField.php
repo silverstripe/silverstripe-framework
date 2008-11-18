@@ -79,7 +79,6 @@ Behaviour.register({
 				new Ajax.Request('{$url}?ajax=1&{$this->name}=' + encodeURIComponent(this.value), { 
 					method: 'get',
 					onSuccess: function(response) {
-						console.debug(this);
 						if(response.responseText == 'ok')
 							Element.removeClassName(this, 'inuse');
 						else {

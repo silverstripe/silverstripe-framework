@@ -75,7 +75,7 @@ class DevelopmentAdmin extends Controller {
 	function build() {
 		$renderer = new DebugView();
 		$renderer->writeHeader();
-		$renderer->writeInfo("Environment <i>re</i>Builder (formerly db/build)", Director::absoluteBaseURL());
+		$renderer->writeInfo("Environment Builder (formerly db/build)", Director::absoluteBaseURL());
 		echo "<div style=\"margin: 0 2em\">";
 
 		$da = new DatabaseAdmin();

@@ -677,8 +677,6 @@ class Director {
 	 * For information about environment types, see {@link Director::set_environment_type()}.
 	 */
 	static function isDev() {
-		if(self::$environment_type) return self::$environment_type == 'dev';
-
 		// Use ?isDev=1 to get development access on the live server
 		if(isset($_GET['isDev'])) {
 			if(Security::database_is_ready()) {
@@ -688,8 +686,10 @@ class Director {
 				return true;
 			}
 		}
-		
+
 		if(isset($_SESSION['isDev']) && $_SESSION['isDev']) return true;
+
+		if(self::$environment_type) return self::$environment_type == 'dev';
 		
 		// Check if we are running on one of the development servers
 		if(in_array($_SERVER['HTTP_HOST'], Director::$dev_servers))  {
@@ -710,6 +710,8 @@ class Director {
 	 * For information about environment types, see {@link Director::set_environment_type()}.
 	 */
 	static function isTest() {
+		if(self::isDev()) return false;
+		
 		if(self::$environment_type) {
 			return self::$environment_type == 'test';
 		}

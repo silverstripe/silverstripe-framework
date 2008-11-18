@@ -44,7 +44,7 @@ class CsvBulkLoader extends BulkLoader {
 		}
 		
 		foreach($csv as $row) {
-			$this->processRecord($row, array(), $results, $preview);
+			$this->processRecord($row, $this->columnMap, $results, $preview);
 		}
 		
 		return $results;
@@ -100,14 +100,16 @@ class CsvBulkLoader extends BulkLoader {
 		// second run: save data
 		foreach($record as $fieldName => $val) {
 			if($this->isNullValue($val, $fieldName)) continue;
-
-			if($obj->hasMethod("import{$fieldName}")) {
+			if(strpos($fieldName, '->') !== FALSE) {
+				$funcName = substr($fieldName, 2);
+				$this->$funcName($obj, $val, $record);
+			} else if($obj->hasMethod("import{$fieldName}")) {
 				$obj->{"import{$fieldName}"}($val, $record);
 			} else {
 				$obj->update(array($fieldName => $val));
 			}
 		}
-		
+
 		// write record
 		$id = ($preview) ? 0 : $obj->write();
 		

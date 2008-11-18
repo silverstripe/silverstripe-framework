@@ -129,17 +129,19 @@ TableListField.prototype = {
 		} else {
 			var el = $(this.id);
 		}
-
-		new Ajax.Request( 
-			el.getAttribute('href'), 
-			{
-				postBody: 'update=1',
-				onComplete: function(response) {
-					Element.replace(this.id, response.responseText)
-					Behaviour.apply($(this.id))
-				}.bind(this)
-			}
-		);
+		
+		if(el.getAttribute('href')) {
+    		new Ajax.Request( 
+    			el.getAttribute('href'), 
+    			{
+    				postBody: 'update=1',
+    				onComplete: function(response) {
+    					Element.replace(this.id, response.responseText)
+    					Behaviour.apply($(this.id))
+    				}.bind(this)
+    			}
+    		);
+		}
 		
 		if(e) Event.stop(e);
 		return false;
