@@ -1498,6 +1498,9 @@ class SiteTree extends DataObject {
 	protected function getClassDropdown() {
 		$classes = ClassInfo::getValidSubClasses('SiteTree');
 		array_shift($classes);
+		
+		$currentAddAction = null;
+		$currentClass = null;
 
 		foreach($classes as $class) {
 			$instance = singleton($class);
@@ -1518,8 +1521,6 @@ class SiteTree extends DataObject {
 				$result[$class] = ($class == $this->class)
 				  ? _t('SiteTree.CURRENTLY', 'Currently').' '.$addAction
 				  : _t('SiteTree.CHANGETO', 'Change to').' '.$addAction;
-				$currentAddAction = null;
-				$currentClass = null;
 			}
 		}
 		
