@@ -31,8 +31,8 @@ class UpgradeSiteTreePermissionSchemaTask extends BuildTask {
 		$pageIDs = DB::query("SELECT ID FROM SiteTree")->column('ID');
 		foreach($pageIDs as $pageID) {
 			$page = DataObject::get_by_id('SiteTree', $pageID);
-			if($page->ViewersGroup) $page->ViewerGroups()->add($page->ViewersGroup);
-			if($page->EditorsGroup) $page->EditorGroups()->add($page->EditorsGroup);
+			if($page->ViewersGroup && DataObject::get_by_id("Group", $page->ViewersGroup)) $page->ViewerGroups()->add($page->ViewersGroup);
+			if($page->EditorsGroup && DataObject::get_by_id("Group", $page->EditorsGroup)) $page->EditorGroups()->add($page->EditorsGroup);
 			
 			$page->destroy();
 			unset($page);
