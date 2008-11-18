@@ -89,6 +89,10 @@ class Translatable extends DataObjectDecorator {
 	 */
 	protected $original_values = null;
 
+	function getLang() {
+		$record = $this->owner->toMap();
+		return (isset($record["Lang"])) ? $record["Lang"] : Translatable::default_lang();
+	}
 
 	/**
 	 * Checks if a table given table exists in the db
@@ -268,6 +272,20 @@ class Translatable extends DataObjectDecorator {
 		return self::get_one_by_lang($class,self::default_lang(),"`$baseClass`.ID = $originalLangID");
 	}
 
+	function getTranslatedLangs() {
+		$class = ClassInfo::baseDataClass($this->owner->class); //Base Class
+		if($this->owner->hasExtension("Versioned")  && Versioned::current_stage() == "Live") {
+			$class = $class."_Live";
+		}
+		
+		$id = $this->owner->ID;
+		if(is_numeric($id)) {
+			$query = new SQLQuery('distinct Lang',"$class","(`$class`.OriginalID =$id)");
+			$langs = $query->execute()->column();
+		}
+		return ($langs) ? array_values($langs) : array();
+	}
+
 	/**
 	 * Get a list of languages in which a given element has been translated
 	 *
@@ -348,7 +366,7 @@ class Translatable extends DataObjectDecorator {
 	}
 
 	function augmentSQL(SQLQuery &$query) {
-		if (! $this->stat('enabled')) return false;
+		if (! $this->stat('enabled', true)) return false;
 		if((($lang = self::current_lang()) && !self::is_default_lang()) || self::$bypass) {
 			foreach($query->from as $table => $dummy) {
 				if(!isset($baseTable)) {
@@ -460,7 +478,7 @@ class Translatable extends DataObjectDecorator {
 	}
 
 	function augmentDatabase() {
-		if (! $this->stat('enabled')) return false;
+		if (! $this->stat('enabled', true)) return false;
 		self::set_reading_lang(self::default_lang());
 		$table = $this->owner->class;
 
@@ -508,7 +526,7 @@ class Translatable extends DataObjectDecorator {
 	 * @param SQLQuery $manipulation Query to augment.
 	 */
 	function augmentWrite(&$manipulation) { 
-		if (! $this->stat('enabled')) return false;
+		if (! $this->stat('enabled', true)) return false;
 		if(($lang = self::current_lang()) && !self::is_default_lang()) {
 			$tables = array_keys($manipulation);
 			foreach($tables as $table) {
@@ -564,57 +582,49 @@ class Translatable extends DataObjectDecorator {
 
 	//-----------------------------------------------------------------------------------------------//
 	
-	/**
-	 * Change the member dialog in the CMS
-	 *
-	 * This method updates the forms in the cms to allow the translations for 
-	 * the defined translatable fields.
-	 */
 	function updateCMSFields(FieldSet &$fields) {
-		if (! $this->stat('enabled')) return false;
-		$creating = false;
-		$baseClass = $this->owner->class;
-		while( ($p = get_parent_class($baseClass)) != "DataObject") $baseClass = $p;
-		$allFields = $this->owner->getAllFields();
-		if(!self::is_default_lang()) {
-			// Get the original version record, to show the original values
-			if (!is_numeric($allFields['ID'])) {
-				$originalLangID = Session::get($this->owner->ID . '_originalLangID');
-				$creating = true;
-			} else {
-				$originalLangID = $allFields['ID'];
-			}
-			$originalRecord = self::get_one_by_lang(
-					$this->owner->class, 
-					self::$default_lang, 
-					"`$baseClass`.ID = ".$originalLangID
-			);
-			$this->original_values = $originalRecord->getAllFields();
-			$alltasks = array( 'dup' => array());
-			foreach($fields as $field) {
-				if ($field->isComposite()) {
-					$innertasks = $this->duplicateOrReplaceFields($field->FieldSet());
-					// more efficient and safe than array_merge_recursive
-					$alltasks['dup'] = array_merge($alltasks['dup'],$innertasks['dup']);
-				} 
-			}
-			foreach ($alltasks['dup'] as $fieldname => $newfield) {
-				// Duplicate the field
-				$fields->replaceField($fieldname,$newfield);
+		if(!$this->stat('enabled', true)) return false;
+		
+		// add hidden fields for the used language and original record
+		$fields->push(new HiddenField("Lang", "Lang", $this->getLang()) );
+		$fields->push(new HiddenField("OriginalID", "OriginalID", $this->owner->OriginalID) );
+		
+		// if a language other than default language is used, we're in "translation mode",
+		// hence have to modify the original fields
+		$isTranslationMode = (Translatable::default_lang() != $this->getLang() && $this->getLang());
+		if($isTranslationMode) {
+			$originalLangID = Session::get($this->owner->ID . '_originalLangID');
+			
+			$translatableFieldNames = $this->getTranslatableFields();
+			$allDataFields = $fields->dataFields();
+			$transformation = new Translatable_Transformation(Translatable::get_original($this->owner->class, $this->owner->ID));
+			
+			// iterate through sequential list of all datafields in fieldset
+			// (fields are object references, so we can replace them with the translatable CompositeField)
+			foreach($allDataFields as $dataField) {
+				
+				if(in_array($dataField->Name(), $translatableFieldNames)) {
+					//var_dump($dataField->Name());
+					// if the field is translatable, perform transformation
+					$fields->replaceField($dataField->Name(), $transformation->transformFormField($dataField));
+				} else {
+					// else field shouldn't be editable in translation-mode, make readonly
+					$fields->replaceField($dataField->Name(), $dataField->performReadonlyTransformation());
+				}
 			}
 		} else {
-			$alreadyTranslatedLangs = null;
-			if (is_numeric($allFields['ID'])) {
-				$alreadyTranslatedLangs = self::get_langs_by_id($baseClass,$allFields['ID']);
-			}
-			if (!$alreadyTranslatedLangs) $alreadyTranslatedLangs = array();
+			// if we're not in "translation mode", show a dropdown to create a new translation.
+			// this action should just be possible when showing the default language,
+			// you can't create new translations from within a "translation mode" form.
+			
+			$alreadyTranslatedLangs = array();
 			foreach ($alreadyTranslatedLangs as $i => $langCode) {
 				$alreadyTranslatedLangs[$i] = i18n::get_language_name($langCode);
 			}
 			$fields->addFieldsToTab(
 				'Root',
 				new Tab(_t('Translatable.TRANSLATIONS', 'Translations'),
-					new HeaderField('CreateTransHeader',_t('Translatable.CREATE', 'Create new translation'), 2),
+					new HeaderField('CreateTransHeader', _t('Translatable.CREATE', 'Create new translation'), 2),
 					$langDropdown = new LanguageDropdownField("NewTransLang", _t('Translatable.NEWLANGUAGE', 'New language'), $alreadyTranslatedLangs),
 					$createButton = new InlineFormAction('createtranslation',_t('Translatable.CREATEBUTTON', 'Create'))
 				)
@@ -623,7 +633,7 @@ class Translatable extends DataObjectDecorator {
 				$fields->addFieldsToTab(
 					'Root.Translations',
 					new FieldSet(
-						new HeaderField('ExistingTransHeader',_t('Translatable.EXISTING', 'Existing translations:'), 3),
+						new HeaderField('ExistingTransHeader', _t('Translatable.EXISTING', 'Existing translations:'), 3),
 						new LiteralField('existingtrans',implode(', ',$alreadyTranslatedLangs))
 					)
 				);
@@ -632,42 +642,6 @@ class Translatable extends DataObjectDecorator {
 			$createButton->addExtraClass('createTranslationButton');
 			$createButton->includeDefaultJS(false);
 		}
-	}
-
-	protected function duplicateOrReplaceFields(&$fields) {
-		$tasks = array(
-			'dup' => array(),
-		);
-		foreach($fields as $field) {
-			if ($field->isComposite()) {
-				$innertasks = $this->duplicateOrReplaceFields($field->FieldSet());
-				$tasks['dup'] = array_merge($tasks['dup'],$innertasks['dup']);
-			}
-			else if(($fieldname = $field->Name()) && array_key_exists($fieldname,$this->original_values)) {
-				// Get a copy of the original field to show the untranslated value
-				if($field instanceof TextareaField) {
-					$nonEditableField = new ToggleField($fieldname,$field->Title(),'','+','-');
-					$nonEditableField->labelMore = '+';
-					$nonEditableField->labelLess = '-';
-				} else {
-					$nonEditableField = $field->performDisabledTransformation();
-				} 
-
-				$nonEditableField_holder = new CompositeField($nonEditableField);
-				$nonEditableField_holder->setName($fieldname.'_holder');
-				$nonEditableField_holder->addExtraClass('originallang_holder');
-				$nonEditableField->setValue($this->original_values[$fieldname]);
-				$nonEditableField->setName($fieldname.'_original');
-				$nonEditableField->addExtraClass('originallang');
-				if (array_search($fieldname,$this->translatableFields) !== false) {
-					// Duplicate the field
-					if ($field->Title()) $nonEditableField->setTitle('Original');
-					$nonEditableField_holder->insertBefore($field, $fieldname.'_original');				
-					$tasks['dup'][$fieldname] = $nonEditableField_holder;
-				}
-			}
-		}
-		return $tasks;
 	}
 	
 	/**
@@ -735,6 +709,17 @@ class Translatable extends DataObjectDecorator {
 		);
 		return $langFields;
 	}
+	
+	/**
+	 * Get the names of all translatable fields on this class
+	 * as a numeric array.
+	 * @todo Integrate with blacklist once branches/translatable is merged back.
+	 * 
+	 * @return array
+	 */
+	function getTranslatableFields() {
+		return $this->translatableFields;
+	}
 		
 	/**
 	 * Return the base table - the class that directly extends DataObject.
@@ -760,4 +745,72 @@ class Translatable extends DataObjectDecorator {
 	}
 		
 }
+
+/**
+ * Transform a formfield to a "translatable" representation,
+ * consisting of the original formfield plus a readonly-version
+ * of the original value, wrapped in a CompositeField.
+ * 
+ * @param DataObject $original Needs the original record as we populate the readonly formfield with the original value
+ * 
+ * @package sapphire
+ * @subpackage misc
+ */
+class Translatable_Transformation extends FormTransformation {
+	
+	/**
+	 * @var DataObject
+	 */
+	private $original = null;
+	
+	function __construct(DataObject $original) {
+		$this->original = $original;
+		parent::__construct();
+	}
+	
+	/**
+	 * Returns the original DataObject attached to the Transformation
+	 *
+	 * @return DataObject
+	 */
+	function getOriginal() {
+		return $this->original;
+	}
+	
+	/**
+	 * @todo transformTextareaField() not used at the moment
+	 */
+	function transformTextareaField(TextareaField $field) {
+		$nonEditableField = new ToggleField($fieldname,$field->Title(),'','+','-');
+		$nonEditableField->labelMore = '+';
+		$nonEditableField->labelLess = '-';
+		return $this->baseTransform($nonEditableField, $field);
+		
+		return $nonEditableField;
+	}
+	
+	function transformFormField(FormField $field) {
+		$newfield = $field->performReadOnlyTransformation();
+		return $this->baseTransform($newfield, $field);
+	}
+	
+	protected function baseTransform($nonEditableField, $originalField) {
+		$fieldname = $originalField->Name();
+		
+		$nonEditableField_holder = new CompositeField($nonEditableField);
+		$nonEditableField_holder->setName($fieldname.'_holder');
+		$nonEditableField_holder->addExtraClass('originallang_holder');
+		
+		$nonEditableField->setValue($this->original->$fieldname);
+		$nonEditableField->setName($fieldname.'_original');
+		$nonEditableField->addExtraClass('originallang');
+		$nonEditableField->setTitle('Original '.$originalField->Title());
+		
+		$nonEditableField_holder->insertBefore($originalField, $fieldname.'_original');
+		return $nonEditableField_holder;
+	}
+	
+	
+}
+
 ?>

@@ -1,0 +1,11 @@
+SiteTree:
+   home:
+      Title: Home
+      URLSegment: /home/
+      ShowInMenus: 
+      
+SiteTree_lang:
+   home:
+      OriginalLangID: =>SiteTree.home
+      Title: Home fr
+      Lang: fr
