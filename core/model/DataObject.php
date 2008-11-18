@@ -1756,6 +1756,18 @@ class DataObject extends ViewableData implements DataObjectInterface,i18nEntityP
 	 * @return boolean
 	 */
 	public function hasDatabaseField($field) {
+		$fixedFields = array(
+			'ID' => 'Int',
+			'ClassName' => 'Enum',
+			'LastEdited' => 'SSDatetime',
+			'Created' => 'SSDatetime',
+			// Add fields from Versioned decorator
+			'Version' => $this->hasExtension('Versioned') ? 'Int' : false,
+		);
+		
+		// Add base fields which are not defined in static $db
+		if(isset($fixedFields[$field])) return (bool)$fixedFields[$field];
+
 		return array_key_exists($field, $this->inheritedDatabaseFields());
 	}
 	
