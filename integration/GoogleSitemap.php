@@ -1,9 +1,21 @@
 <?php
-
 /**
  * Initial implementation of Sitemap support.
  * GoogleSitemap should handle requests to 'sitemap.xml'
- * the other two classes are used to render the sitemap
+ * the other two classes are used to render the sitemap.
+ * 
+ * You can notify ("ping") Google about a changed sitemap
+ * automatically whenever a new page is published or unpublished.
+ * By default, Google is not notified, and will pick up your new
+ * sitemap whenever the GoogleBot visits your website.
+ * 
+ * Enabling notification of Google after every publish (in your _config.php):
+ * <example
+ * GoogleSitemap::enable_google_notificaton();
+ * </example>
+ * 
+ * @see http://www.google.com/support/webmasters/bin/answer.py?hl=en&answer=34609
+ * 
  * @package sapphire
  * @subpackage misc
  */
@@ -22,7 +34,7 @@ class GoogleSitemap extends Controller {
 	/**
 	 * @var boolean
 	 */
-	protected static $pings = true;
+	protected static $google_notification_enabled = false;
 	
 	public function Items() {
 		$this->Pages = Versioned::get_by_stage('SiteTree', 'Live');
@@ -70,13 +82,21 @@ class GoogleSitemap extends Controller {
 	}
 	
 	/**
+	 * Notifies Google about changes to your sitemap.
+	 * Triggered automatically on every publish/unpublish of a page.
+	 * This behaviour is disabled by default, enable with:
+	 * GoogleSitemap::enable_google_notificaton();
+	 * 
+	 * If the site is in "dev-mode", no ping will be sent regardless wether
+	 * the Google notification is enabled.
+	 * 
 	 * @return string Response text
 	 */
 	static function ping() {
 		if(!self::$enabled) return false;
 		
 		//Don't ping if the site has disabled it, or if the site is in dev mode
-		if(!GoogleSitemap::$pings || Director::isDev())
+		if(!GoogleSitemap::$google_notification_enabled || Director::isDev())
 			return;
 			
 		$location = urlencode(Director::absoluteBaseURL() . '/sitemap.xml');
@@ -87,15 +107,18 @@ class GoogleSitemap extends Controller {
 		return $response;
 	}
 	
+	/**
+	 * Enable pings to google.com whenever sitemap changes.
+	 */
 	public static function enable_google_notification() {
-		self::$pings = true;
+		self::$google_notification_enabled = true;
 	}
 	
 	/**
 	 * Disables pings to google when the sitemap changes.
 	 */
 	public static function disable_google_notification() {
-		self::$pings = false;
+		self::$google_notification_enabled = false;
 	}
 	
 	function index($url) {
@@ -120,4 +143,19 @@ class GoogleSitemap extends Controller {
 		self::$enabled = false;
 	}
 }
+
+/**
+ * @package sapphire
+ * @subpackage misc
+ */
+class GoogleSitemapDecorator extends SiteTreeDecorator {
+	function onAfterPublish() {
+		GoogleSiteMap::ping();
+	}
+	function onAfterUnpublish() {
+		GoogleSiteMap::ping();
+	}
+}
+
+Object::add_extension('SiteTree', 'GoogleSitemapDecorator');
 ?>

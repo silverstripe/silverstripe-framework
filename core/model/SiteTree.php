@@ -555,7 +555,7 @@ class SiteTree extends DataObject {
 	 * - canEdit() is not granted
 	 * - There are no classes defined in {@link $allowed_children}
 	 * 
-	 * @uses DataObjectDecorator->canAddChildren()
+	 * @uses SiteTreeDecorator->canAddChildren()
 	 * @uses canEdit()
 	 * @uses $allowed_children
 	 *
@@ -644,6 +644,7 @@ class SiteTree extends DataObject {
 	 * - any descendant page returns FALSE for canDelete()
 	 * 
 	 * @uses canDelete()
+	 * @uses DataObjectDecorator->canDelete()
 	 * @uses canEdit()
 	 *
 	 * @param Member $member
@@ -686,6 +687,7 @@ class SiteTree extends DataObject {
 	 * Use {@link canAddChildren()} to control behaviour of creating children under this page.
 	 * 
 	 * @uses $can_create
+	 * @uses DataObjectDecorator->canCreate()
 	 *
 	 * @param Member $member
 	 * @return boolean True if the current user can create pages on this class.
@@ -721,6 +723,7 @@ class SiteTree extends DataObject {
 	 * 
 	 * @uses canView()
 	 * @uses EditorGroups()
+	 * @uses DataObjectDecorator->canEdit()
 	 *
 	 * @param Member $member
 	 * @return boolean True if the current user can edit this page.
@@ -768,7 +771,7 @@ class SiteTree extends DataObject {
 	 * - canPublish() on any decorator returns FALSE
 	 * - canEdit() returns FALSE
 	 * 
-	 * @uses DataObjectDecorator->canPublish()
+	 * @uses SiteTreeDecorator->canPublish()
 	 *
 	 * @param Member $member
 	 * @return boolean True if the current user can publish this page.
@@ -1361,7 +1364,10 @@ class SiteTree extends DataObject {
 	}
 	
 	/**
-	 * Publish this page
+	 * Publish this page.
+	 * 
+	 * @uses SiteTreeDecorator->onBeforePublish()
+	 * @uses SiteTreeDecorator->onAfterPublish()
 	 */
 	function doPublish() {
 		$original = Versioned::get_one_by_stage("SiteTree", "Live", "`SiteTree`.`ID` = $this->ID");
@@ -1376,8 +1382,6 @@ class SiteTree extends DataObject {
 		//$this->PublishedByID = Member::currentUser()->ID;
 		$this->write();
 		$this->publish("Stage", "Live");
-		
-		GoogleSitemap::ping();
 
 		// Fix the sort order for this page's siblings
 		DB::query("UPDATE SiteTree_Live
@@ -1391,8 +1395,13 @@ class SiteTree extends DataObject {
 	
 	/**
 	 * Unpublish this page - remove it from the live site
+	 * 
+	 * @uses SiteTreeDecorator->onBeforeUnpublish()
+	 * @uses SiteTreeDecorator->onAfterUnpublish()
 	 */
 	function doUnpublish() {
+		$this->extend('onBeforeUnpublish');
+		
 		// Call delete on a cloned object so that this one doesn't lose its ID
 		$this->flushCache();
 		$clone = DataObject::get_by_id("SiteTree", $this->ID);
@@ -1400,8 +1409,8 @@ class SiteTree extends DataObject {
 
 		$this->Status = "Unpublished";
 		$this->write();
-
-		GoogleSitemap::ping();
+		
+		$this->extend('onAfterUnpublish');
 	}
 	
 	/**
