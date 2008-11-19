@@ -161,8 +161,6 @@ Behaviour.register({
 		}
 	}
 });
-// TODO Performance-issue: Behaviour is possibly applied twice
-Behaviour.apply('#$formID');	
 JS;
 
 			Requirements::customScript($js);
