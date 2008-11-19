@@ -72,7 +72,7 @@ class ModelAsController extends Controller implements NestedController {
 			
 				return $controller;
 			} else {
-				return "The requested page couldn't be found.";
+				return new HTTPResponse("The requested page couldn't be found.",404);
 			}
 			
 		} else {
