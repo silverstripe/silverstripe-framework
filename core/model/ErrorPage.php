@@ -94,16 +94,11 @@ class ErrorPage extends Page {
 	 * @param boolean $createNewVersion Set this to true to create a new version number.  By default, the existing version number will be copied over.
 	 */
 	function publish($fromStage, $toStage, $createNewVersion = false) {
-		$alc_enc = isset($_COOKIE['alc_enc']) ? $_COOKIE['alc_enc'] : null;
-		Cookie::set('alc_enc', null);
-		
 		$oldStage = Versioned::current_stage();
 
 		// Run the page
-		Requirements::clear();
-		$controller = new ErrorPage_Controller($this);
-		$errorContent = $controller->handleRequest(new HTTPRequest('GET',''))->getBody();
-		Requirements::clear();
+		$response = Director::test($this->Link());
+		$errorContent = $response->getBody();
 		
 		if(!file_exists(ASSETS_PATH)) {
 			mkdir(ASSETS_PATH, 02775);
@@ -116,9 +111,6 @@ class ErrorPage extends Page {
 		
 		// Restore the version we're currently connected to.
 		Versioned::reading_stage($oldStage);
-
-		// Log back in
-		if(isset($alc_enc)) Cookie::set('alc_enc', $alc_enc);
 		
 		return $this->extension_instances['Versioned']->publish($fromStage, $toStage, $createNewVersion);
 	}

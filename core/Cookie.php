@@ -5,6 +5,8 @@
  * @subpackage misc
  */
 class Cookie extends Object {
+	static $report_errors = true;
+	
 	/**
 	 * Set a cookie variable
 	 * @param name The variable name
@@ -15,10 +17,10 @@ class Cookie extends Object {
 		if(!headers_sent($file, $line)) {
 			$expiry = $expiryDays > 0 ? time()+(86400*$expiryDays) : 0;
 			setcookie($name, $value, $expiry, Director::baseURL());
-			$_COOKIE[$name] = $value;
 		} else {
-			if(Director::isDev()) user_error("Cookie '$name' can't be set. The site started outputting was content at line $line in $file", E_USER_WARNING);
+			if(self::$report_errors) user_error("Cookie '$name' can't be set. The site started outputting was content at line $line in $file", E_USER_WARNING);
 		}
+		$_COOKIE[$name] = $value;
 	}
 	
 	/**
@@ -32,6 +34,13 @@ class Cookie extends Object {
 		if(!headers_sent($file, $line)) {
 			setcookie( $name, null, time() - 86400 );
 		}
+	}
+	
+	static function set_report_errors($reportErrors) {
+		self::$report_errors = $reportErrors;
+	}
+	static function report_errors() {
+		return self::$report_errors;
 	}
 }
 

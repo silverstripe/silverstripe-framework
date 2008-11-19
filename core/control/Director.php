@@ -170,12 +170,20 @@ class Director {
 		$existingGetVars = $_GET; 
 		$existingPostVars = $_POST; 
 		$existingSessionVars = $_SESSION; 
+		$existingCookies = $_COOKIE;
+		
+		$existingCookieReportErrors = Cookie::report_errors();
+		Cookie::set_report_errors(false);
+		
+		$existingRequirementsBackend = Requirements::backend();
+		Requirements::set_backend(new Requirements_Backend());
 
 		// Replace the superglobals with appropriate test values
 		$_REQUEST = array_merge((array)$getVars, (array)$postVars); 
 		$_GET = (array)$getVars; 
 		$_POST = (array)$postVars; 
 		$_SESSION = $session ? $session->inst_getAll() : array();
+		$_COOKIE = array();
 
 		$req = new HTTPRequest($httpMethod, $url, $getVars, $postVars, $body);
 		if($headers) foreach($headers as $k => $v) $req->addHeader($k, $v);
@@ -186,6 +194,9 @@ class Director {
 		$_GET = $existingGetVars; 
 		$_POST = $existingPostVars; 
 		$_SESSION = $existingSessionVars;   
+		$_COOKIE = $existingCookies;
+		Cookie::set_report_errors($existingCookieReportErrors); 
+		Requirements::set_backend($existingRequirementsBackend);
 
 		// These are needed so that calling Director::test() doesnt muck with whoever is calling it.
 		// Really, it's some inapproriate coupling and should be resolved by making less use of statics
