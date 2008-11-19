@@ -79,9 +79,6 @@ class Controller extends RequestHandler {
 		if(Director::isTest() && $this->basicAuthEnabled && Security::database_is_ready()) {
 			BasicAuth::requireLogin("SilverStripe test website.  Use your  CMS login", "ADMIN");
 		}		
-		
-		//
-		Cookie::set("PastVisitor", true);
 
 		// Directly access the session variable just in case the Group or Member tables don't yet exist
 		if(Session::get('loggedInAs') && Security::database_is_ready()) {
@@ -405,7 +402,8 @@ class Controller extends RequestHandler {
 	 * @return boolean
 	 */
 	function PastVisitor() {
-		return Cookie::get("PastVisitor") ? true : false;
+		user_error("Controller::PastVisitor() is deprecated", E_USER_NOTICE);
+		return false;
 	}
 
 	/**
