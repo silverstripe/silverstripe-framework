@@ -2050,7 +2050,11 @@ class DataObject extends ViewableData implements DataObjectInterface,i18nEntityP
 		// Get the tables to join to
 		$tableClasses = ClassInfo::dataClassesFor($this->class);
 		if(!$tableClasses) {
-			user_error("DataObject::buildSQL: Can't find data classes (classes linked to tables) for $this->class", E_USER_ERROR);
+			if(!ManifestBuilder::has_been_included()) {
+				user_error("DataObjects have been requested before the manifest is loaded. Please ensure you are not querying the database in _config.php.", E_USER_ERROR);
+			} else {
+				user_error("DataObject::buildSQL: Can't find data classes (classes linked to tables) for $this->class. Please ensure you run dev/build after creating a new DataObject.", E_USER_ERROR);
+			}
 		}
 
 		$baseClass = array_shift($tableClasses);
@@ -2190,6 +2194,10 @@ class DataObject extends ViewableData implements DataObjectInterface,i18nEntityP
 	 * @return mixed The objects matching the filter, in the class specified by $containerClass
 	 */
 	public function instance_get($filter = "", $sort = "", $join = "", $limit="", $containerClass = "DataObjectSet") {
+		if(!DB::isActive()) {
+			user_error("DataObjects have been requested before the database is ready. Please ensure your database connection details are correct, your database has been built, and that you are not trying to query the database in _config.php.", E_USER_ERROR);
+		}
+		
 		$query = $this->extendedSQL($filter, $sort, $limit, $join);
 		$records = $query->execute();
 
@@ -2288,6 +2296,10 @@ class DataObject extends ViewableData implements DataObjectInterface,i18nEntityP
 	 * @return DataObject The first item matching the query
 	 */
 	public function instance_get_one($filter, $orderby = null) {
+		if(!DB::isActive()) {
+			user_error("DataObjects have been requested before the database is ready. Please ensure your database connection details are correct, your database has been built, and that you are not trying to query the database in _config.php.", E_USER_ERROR);
+		}
+		
 		$query = $this->buildSQL($filter);
 		$query->limit = "1";
 		if($orderby) {
