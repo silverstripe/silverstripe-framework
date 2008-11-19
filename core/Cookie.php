@@ -13,10 +13,11 @@ class Cookie extends Object {
 	 */
 	static function set($name, $value, $expiryDays = 90) {
 		if(!headers_sent($file, $line)) {
-			setcookie($name, $value, time()+(86400*$expiryDays), Director::baseURL());
+			$expiry = $expiryDays > 0 ? time()+(86400*$expiryDays) : 0;
+			setcookie($name, $value, $expiry, Director::baseURL());
 			$_COOKIE[$name] = $value;
 		} else {
-			 // if(Director::isDevMode()) user_error("Cookie '$name' can't be set. The site started outputting was content at line $line in $file", E_USER_WARNING);
+			if(Director::isDev()) user_error("Cookie '$name' can't be set. The site started outputting was content at line $line in $file", E_USER_WARNING);
 		}
 	}
 	
