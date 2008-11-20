@@ -73,7 +73,11 @@ class CsvBulkLoader extends BulkLoader {
 				// trigger custom search method for finding a relation based on the given value
 				// and write it back to the relation (or create a new object)
 				$relationName = $this->relationCallbacks[$fieldName]['relationname'];
-				$relationObj = $obj->{$this->relationCallbacks[$fieldName]['callback']}($val, $record);
+				if($this->hasMethod($this->relationCallbacks[$fieldName]['callback'])) {
+					$relationObj = $this->{$this->relationCallbacks[$fieldName]['callback']}(&$obj, $val, $record);
+				} elseif($obj->hasMethod($this->relationCallbacks[$fieldName]['callback'])) {
+					$relationObj = $obj->{$this->relationCallbacks[$fieldName]['callback']}($val, $record);
+				}
 				if(!$relationObj || !$relationObj->exists()) {
 					$relationClass = $obj->has_one($relationName);
 					$relationObj = new $relationClass();
