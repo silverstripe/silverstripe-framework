@@ -515,11 +515,11 @@ class FieldSet extends DataObjectSet {
 	 * @return Position in children collection (first position starts with 0). Returns FALSE if the field can't be found.
 	 */
 	function fieldPosition($field) {
-		if(is_string($field)) $field = $this->fieldByName($field);
+		if(is_object($field)) $field = $field->Name();
 		
 		$i = 0;
 		foreach($this->dataFields() as $child) {
-			if($child == $field) return $i;
+			if($child->Name() == $field) return $i;
 			$i++;
 		}
 		
