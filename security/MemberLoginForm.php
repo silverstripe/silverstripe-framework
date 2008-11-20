@@ -115,16 +115,18 @@ class MemberLoginForm extends LoginForm {
 				Director::redirect('Security/changepassword');
 				
 				
-			} else if(isset($_REQUEST['BackURL']) && $backURL = $_REQUEST['BackURL']) {
+			} elseif(isset($_REQUEST['BackURL']) && $backURL = $_REQUEST['BackURL']) {
 				Session::clear("BackURL");
 				Director::redirect($backURL);
 			} else {
 				$member = Member::currentUser();
-				$firstname = Convert::raw2xml($member->FirstName);
-				Session::set("Security.Message.message",  
-				        sprintf(_t('Member.WELCOMEBACK', "Welcome Back, %s"), $firstname) 
-				); 
-				Session::set("Security.Message.type", "good");
+				if($member) {
+					$firstname = Convert::raw2xml($member->FirstName);
+					Session::set('Security.Message.message',
+						sprintf(_t('Member.WELCOMEBACK', "Welcome Back, %s"), $firstname) 
+					);
+					Session::set("Security.Message.type", "good");
+				}
 				Director::redirectBack();
 			}
 		} else {
