@@ -39,10 +39,15 @@ class ConfirmedPasswordField extends FormField {
 	public $canBeEmpty = false;
 	
 	/**
-	 * Hide the two password fields by default,
-	 * and provide a link instead that toggles them.
-	 *
-	 * @var boolean
+	 * If set to TRUE, the "password" and "confirm password"
+	 * formfields will be hidden via CSS and JavaScript by default,
+	 * and triggered by a link. An additional hidden field
+	 * determines if showing the fields has been triggered,
+	 * and just validates/saves the input in this case.
+	 * This behaviour works unobtrusively, without JavaScript enabled
+	 * the fields show, validate and save by default.
+	 * 
+	 * @param boolean $showOnClick
 	 */
 	protected $showOnClick = false;
 	
@@ -52,7 +57,7 @@ class ConfirmedPasswordField extends FormField {
 	 *
 	 * @var string
 	 */
-	public $showOnClickTitle = 'Change Password';
+	public $showOnClickTitle;
 	
 	/**
 	 * @param string $name
@@ -73,11 +78,12 @@ class ConfirmedPasswordField extends FormField {
 				(isset($titleConfirmField)) ? $titleConfirmField : _t('Member.CONFIRMPASSWORD', 'Confirm Password')
 			)
 		);
-
-		$this->showOnClick = $showOnClick;
-		if($this->showOnClick) {
+		
+		// has to be called in constructor because Field() isn't triggered upon saving the instance
+		if($showOnClick) {
 			$this->children->push(new HiddenField("{$name}[_PasswordFieldVisible]"));
 		}
+		$this->showOnClick = $showOnClick;
 		
 		// we have labels for the subfields
 		$title = false;
@@ -94,12 +100,22 @@ class ConfirmedPasswordField extends FormField {
 		$content = '';
 		
 		if($this->showOnClick) {
+			if($this->showOnClickTitle) {
+				$title = $this->showOnClickTitle;
+			} else {
+				$title = _t(
+					'ConfirmedPasswordField.SHOWONCLICKTITLE', 
+					'Change Password', 
+					PR_MEDIUM, 
+					'Label of the link which triggers display of the "change password" formfields'
+				);
+			}
 			
 			$content .= "<div class=\"showOnClick\">\n";
-			$content .= "<a href=\"#\"" . $this->getTabIndexHTML() . ">{$this->showOnClickTitle}</a>\n";
+			$content .= "<a href=\"#\"" . $this->getTabIndexHTML() . ">{$title}</a>\n";
 			$content .= "<div class=\"showOnClickContainer\">";
 		}
-		
+
 		foreach($this->children as $field) {
 			$content .= $field->FieldHolder();
 		}
@@ -119,6 +135,24 @@ class ConfirmedPasswordField extends FormField {
 	 */
 	function setCanBeEmpty($value) {
 		$this->canBeEmpty = (bool)$value;
+	}
+	
+	/**
+	 * The title on the link which triggers display of the
+	 * "password" and "confirm password" formfields.
+	 * Only used if {@link setShowOnClick()} is set to TRUE.
+	 * 
+	 * @param $title
+	 */
+	public function setShowOnClickTitle($title) {
+		$this->showOnClickTitle = $title;
+	}
+	
+	/**
+	 * @return string
+	 */
+	public function getShowOnClickTitle() {
+		return $this->showOnClickTitle;
 	}
 	
 	function setRightTitle($title) {
