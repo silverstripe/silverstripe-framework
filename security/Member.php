@@ -811,7 +811,13 @@ class Member extends DataObject {
 		
 		$mainFields = $fields->fieldByName("Root")->fieldByName("Main")->Children;
 		
-		$password = new ConfirmedPasswordField('Password', 'Password');
+		$password = new ConfirmedPasswordField(
+			'Password', 
+			'Password', 
+			null, 
+			null, 
+			true // showOnClick
+		);
 		$password->setCanBeEmpty(true);
 		$mainFields->replaceField('Password', $password);
 		
