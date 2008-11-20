@@ -703,7 +703,7 @@ class Director {
 		if(self::$environment_type) return self::$environment_type == 'dev';
 		
 		// Check if we are running on one of the development servers
-		if(in_array($_SERVER['HTTP_HOST'], Director::$dev_servers))  {
+		if(isset($_SERVER['HTTP_HOST']) && in_array($_SERVER['HTTP_HOST'], Director::$dev_servers))  {
 			return true;
 		}
 		/*
@@ -728,7 +728,7 @@ class Director {
 		}
 		
 		// Check if we are running on one of the test servers
-		if(in_array($_SERVER['HTTP_HOST'], Director::$test_servers))  {
+		if(isset($_SERVER['HTTP_HOST']) && in_array($_SERVER['HTTP_HOST'], Director::$test_servers))  {
 			return true;
 		}
 		
