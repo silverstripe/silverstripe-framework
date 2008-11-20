@@ -28,8 +28,6 @@ class VirtualPage extends Page {
 		$nonVirtualFields = array(
 			"SecurityTypeID",
 			"OwnerID",
-			"AssignedToID",
-			"RequestedByID",
 			"URLSegment",
 			"Sort",
 			"Status",
