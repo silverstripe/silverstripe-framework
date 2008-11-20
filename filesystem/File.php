@@ -480,6 +480,8 @@ class File extends DataObject {
 			'jpg' => 'JPEG image - good for photos',
 			'jpeg' => 'JPEG image - good for photos',
 			'png' => 'PNG image - good general-purpose format',
+			'ico' => 'Icon image',
+			'tiff' => 'Tagged image format',
 			'doc' => 'Word document',
 			'xls' => 'Excel spreadsheet',
 			'zip' => 'ZIP compressed file',
@@ -490,7 +492,11 @@ class File extends DataObject {
 			'wav' => 'WAV audo file',
 			'avi' => 'AVI video file',
 			'mpg' => 'MPEG video file',
-			'mpeg' => 'MPEG video file'
+			'mpeg' => 'MPEG video file',
+			'js' => 'Javascript file',
+			'css' => 'CSS file',
+			'html' => 'HTML file',
+			'htm' => 'HTML file'
 		);
 		
 		$ext = $this->getExtension();
