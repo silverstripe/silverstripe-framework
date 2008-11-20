@@ -251,13 +251,16 @@ class FormField extends RequestHandler {
 	 * Set the field value.
 	 * Returns $this.
 	 */
-	function setValue($value) { $this->value = $value; return $this; }
+	function setValue($value) {
+		$this->value = $value; return $this;
+	}
 	
 	/**
 	 * Set the field name
 	 */
-	function setName($name) { $this->name = $name; }
-	
+	function setName($name) {
+		$this->name = $name;
+	}
 	
 	/**
 	 * Set the container form.
