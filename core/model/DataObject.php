@@ -1558,6 +1558,19 @@ class DataObject extends ViewableData implements DataObjectInterface,i18nEntityP
 	}
 	
 	/**
+	 * need to be overload by solid dataobject, so that the customised actions of that dataobject,
+	 * including that dataobject's decorator customised actions could be added to the EditForm.
+	 * 
+	 * @return an Empty FieldSet(); need to be overload by solid subclass
+	 */
+	public function getCMSActions() {
+		$actions = new FieldSet();
+		$this->extend('updateCMSActions', $actions);
+		return $actions;
+	}
+	
+
+	/**
 	 * Used for simple frontend forms without relation editing
 	 * or {@link TabSet} behaviour. Uses {@link scaffoldFormFields()}
 	 * by default. To customize, either overload this method in your
