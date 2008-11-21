@@ -345,10 +345,28 @@ class SSViewer extends Object {
 	}
 
 	static function parseTemplateContent($content, $template="") {			
+		// Add template filename comments on dev sites
+		if(Director::isDev() && $template) {
+			// If this template is a full HTML page, then put the comments just inside the HTML tag to prevent any IE glitches
+			if(stripos($content, "<html") !== false) {
+				$content = preg_replace('/(<html[^>]*>)/i', "\\1<!-- template $template -->", $content);
+				$content = preg_replace('/(<\/html[^>]*>)/i', "\\1<!-- end template $template -->", $content);
+			} else {
+				$content = "<!-- template $template -->\n" . $content . "\n<!-- end template $template -->";
+			}
+		}
+		
 		while(true) {
 			$oldContent = $content;
+			
+			// Add include filename comments on dev sites
+			if(Director::isDev()) $replacementCode = 'return "<!-- include " . SSViewer::getTemplateFile($matches[1]) . "-->\n" 
+				. SSViewer::getTemplateContent($matches[1]) 
+				. "\n<!-- end include " . SSViewer::getTemplateFile($matches[1]) . "-->";';
+			else $replacementCode = 'return SSViewer::getTemplateContent($matches[1]);';
+			
 			$content = preg_replace_callback('/<' . '% include +([A-Za-z0-9_]+) +%' . '>/', create_function(
-				'$matches', 'return SSViewer::getTemplateContent($matches[1]);'
+				'$matches', $replacementCode
 				), $content);
 			if($oldContent == $content) break;
 		}
