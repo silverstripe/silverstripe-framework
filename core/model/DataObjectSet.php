@@ -663,7 +663,7 @@ class DataObjectSet extends ViewableData implements IteratorAggregate {
 	 * @param string $ulExtraAttributes Extra attributes
 	 * @return string
 	 */
-	protected function getChildrenAsUL($nestingLevels, $level = 0, $template = "<li id=\"record-\$ID\" class=\"\$EvenOdd\">\$Title", $ulExtraAttributes = null, &$itemCount = 0) {
+	public function getChildrenAsUL($nestingLevels, $level = 0, $template = "<li id=\"record-\$ID\" class=\"\$EvenOdd\">\$Title", $ulExtraAttributes = null, &$itemCount = 0) {
 		$output = "";
 		$hasNextLevel = false;
 		$ulExtraAttributes = " $ulExtraAttributes";
@@ -675,14 +675,16 @@ class DataObjectSet extends ViewableData implements IteratorAggregate {
 		$currentTemplate = (!empty($currentNestingLevel)) ? $currentNestingLevel['template'] : $template;
 		$myViewer = SSViewer::fromString($currentTemplate);
 
-		$childrenMethod = $nestingLevels[$level+1]['dataclass'];
-
+		if(isset($nestingLevels[$level+1]['dataclass'])){
+			$childrenMethod = $nestingLevels[$level+1]['dataclass'];if($level==1){print_r($childrenMethod);die;}
+		}
 		// sql-parts
-		$filter = ($nestingLevels[$level+1]['filter']) ? $nestingLevels[$level+1]['filter'] : null;
-		$sort = ($nestingLevels[$level+1]['sort']) ? $nestingLevels[$level+1]['sort'] : null;
-		$join = ($nestingLevels[$level+1]['join']) ? $nestingLevels[$level+1]['join'] : null;
-		$limit = ($nestingLevels[$level+1]['limit']) ? $nestingLevels[$level+1]['limit'] : null;
-		$having = ($nestingLevels[$level+1]['having']) ? $nestingLevels[$level+1]['having'] : null;
+
+		$filter = (isset($nestingLevels[$level+1]['filter'])) ? $nestingLevels[$level+1]['filter'] : null;
+		$sort = (isset($nestingLevels[$level+1]['sort'])) ? $nestingLevels[$level+1]['sort'] : null;
+		$join = (isset($nestingLevels[$level+1]['join'])) ? $nestingLevels[$level+1]['join'] : null;
+		$limit = (isset($nestingLevels[$level+1]['limit'])) ? $nestingLevels[$level+1]['limit'] : null;
+		$having = (isset($nestingLevels[$level+1]['having'])) ? $nestingLevels[$level+1]['having'] : null;
 
 		foreach($this as $parent) {
 			$evenOdd = ($itemCount % 2 == 0) ? "even" : "odd";
@@ -692,7 +694,7 @@ class DataObjectSet extends ViewableData implements IteratorAggregate {
 			// if no output is selected, fall back to the id to keep the item "clickable"
 			$output .= $template . "\n";
 
-			if($childrenMethod) {
+			if(isset($childrenMethod)) {
 				// workaround for missing groupby/having-parameters in instance_get
 				// get the dataobjects for the next level
 				$children = $parent->$childrenMethod($filter, $sort, $join, $limit, $having);

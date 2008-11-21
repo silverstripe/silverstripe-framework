@@ -508,6 +508,10 @@ class Object {
 			),
 		));
 	}
+
+	public static function remove_extension($className, $extensionName) {
+		Object::$extraStatics[$className]['extensions'] = array_diff(Object::$extraStatics[$className]['extensions'], array($extensionName));
+	}
 		
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// CACHE METHODS (added by simon_w (simon -at- simon -dot- geek -dot- nz))
