@@ -1370,8 +1370,6 @@ class SiteTree extends DataObject {
 		// Handle activities undertaken by decorators
 		$this->extend('onBeforePublish', $original);
 		
-		$this->AssignedToID = 0;
-		$this->RequestedByID = 0;
 		$this->Status = "Published";
 		//$this->PublishedByID = Member::currentUser()->ID;
 		$this->write();
@@ -1410,8 +1408,6 @@ class SiteTree extends DataObject {
 	 */
 	function doRollbackTo($version) {
 		$this->publish($version, "Stage", true);
-		$this->AssignedToID = 0;
-		$this->RequestedByID = 0;
 		$this->Status = "Saved (update)";
 		$this->writeWithoutVersion();
 	}
@@ -1424,8 +1420,6 @@ class SiteTree extends DataObject {
 
 		// Use a clone to get the updates made by $this->publish
 		$clone = DataObject::get_by_id("SiteTree", $this->ID);
-		$clone->AssignedToID = 0;
-		$clone->RequestedByID = 0;
 		$clone->Status = "Published";
 		$clone->writeWithoutVersion();
 	}
@@ -1443,11 +1437,9 @@ class SiteTree extends DataObject {
 		 * Changing the condition from empty($this->ID) to
 		 * !$this->ID && !$this->record['ID'] fixed this.
 		 */
-		if(empty($this->ID))
-			return true;
+		if(empty($this->ID)) return true;
 
-		if(is_numeric($this->ID))
-			return false;
+		if(is_numeric($this->ID)) return false;
 
 		return stripos($this->ID, 'new') === 0;
 	}

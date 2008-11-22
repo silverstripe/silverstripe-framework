@@ -9,8 +9,27 @@
  */
 class SearchForm extends Form {
 	
+	/**
+	 * @var boolean $showInSearchTurnOn
+	 * @deprecated 2.3 SiteTree->ShowInSearch should always be respected
+	 */
 	protected $showInSearchTurnOn;
 	
+	/**
+	 * @var int $numPerPage How many results are shown per page.
+	 * Relies on pagination being implemented in the search results template.
+	 */
+	protected $numPerPage = 10;
+	
+	/**
+	 * 
+	 * @param Controller $controller
+	 * @param string $name The name of the form (used in URL addressing)
+	 * @param FieldSet $fields Optional, defaults to a single field named "Search". Search logic needs to be customized
+	 *  if fields are added to the form.
+	 * @param FieldSet $actions Optional, defaults to a single field named "Go".
+	 * @param boolean $showInSearchTurnOn DEPRECATED 2.3
+	 */
 	function __construct($controller, $name, $fields = null, $actions = null, $showInSearchTurnOn = true) {
 		$this->showInSearchTurnOn = $showInSearchTurnOn;
 		
@@ -53,10 +72,17 @@ class SearchForm extends Form {
 
 	/**
 	 * Return dataObjectSet of the results using $_REQUEST to get info from form.
-	 * Wraps around {@link searchEngine()}
+	 * Wraps around {@link searchEngine()}.
+	 * 
+	 * @param int $numPerPage DEPRECATED 2.3 Use SearchForm->numPerPage
+	 * @param array $data Request data as an associative array. Should contain at least a key 'Search' with all searched keywords.
+	 * @return DataObjectSet
 	 */
-	public function getResults($numPerPage = 10){
-	 	$keywords = $_REQUEST['Search'];
+	public function getResults($numPerPage = null, $data = null){
+	 	// legacy usage: $data was defaulting to $_REQUEST, parameter not passed in doc.silverstripe.com tutorials
+		if(!isset($data)) $data = $_REQUEST;
+	
+		$keywords = $data['Search'];
 
 	 	$andProcessor = create_function('$matches','
 	 		return " +" . $matches[2] . " +" . $matches[4] . " ";
@@ -73,14 +99,20 @@ class SearchForm extends Form {
 		$keywords = $this->addStarsToKeywords($keywords);
 
 		if(strpos($keywords, '"') !== false || strpos($keywords, '+') !== false || strpos($keywords, '-') !== false || strpos($keywords, '*') !== false) {
-			return $this->searchEngine($keywords, $numPerPage, "Relevance DESC", "", true);
+			$results = $this->searchEngine($keywords, $numPerPage, "Relevance DESC", "", true);
 		} else {
-			return $this->searchEngine($keywords, $numPerPage);
-			$sortBy = "Relevance DESC";
-		}		
+			$results = $this->searchEngine($keywords, $numPerPage);
+		}
+		
+		// filter by permission
+		if($results) foreach($results as $result) {
+			if(!$result->canView()) $results->remove($result);
+		}
+		
+		return $results;
 	}
 
-	function addStarsToKeywords($keywords) {
+	protected function addStarsToKeywords($keywords) {
 		if(!trim($keywords)) return "";
 		// Add * to each keyword
 		$splitWords = split(" +" , trim($keywords));
@@ -97,13 +129,18 @@ class SearchForm extends Form {
 		}
 		return implode(" ", $newWords);
 	}
+	
+	
 		
 		
 	/**
 	 * The core search engine, used by this class and its subclasses to do fun stuff.
 	 * Searches both SiteTree and File.
+	 * 
+	 * @param string $keywords Keywords as a string.
 	 */
-	public function searchEngine($keywords, $numPerPage = 10, $sortBy = "Relevance DESC", $extraFilter = "", $booleanSearch = false, $alternativeFileFilter = "", $invertedMatch = false) {
+	public function searchEngine($keywords, $numPerPage = null, $sortBy = "Relevance DESC", $extraFilter = "", $booleanSearch = false, $alternativeFileFilter = "", $invertedMatch = false) {
+		if(!$numPerPage) $numPerPage = $this->numPerPage;
 		$fileFilter = '';	 	
 	 	$keywords = addslashes($keywords);
 	 	
@@ -139,14 +176,14 @@ class SearchForm extends Form {
 		$baseClass = reset($queryContent->from);
 		// There's no need to do all that joining
 		$queryContent->from = array(str_replace('`','',$baseClass) => $baseClass);
-		$queryContent->select = array("ClassName","$baseClass.ID","ParentID","Title","URLSegment","Content","LastEdited","Created","_utf8'' AS Filename", "_utf8'' AS Name", "$relevanceContent AS Relevance");
+		$queryContent->select = array("ClassName","$baseClass.ID","ParentID","Title","URLSegment","Content","LastEdited","Created","_utf8'' AS Filename", "_utf8'' AS Name", "$relevanceContent AS Relevance", "CanViewType");
 		$queryContent->orderby = null;
 
 		$queryFiles = singleton('File')->extendedSQL($notMatch . $matchFile . $fileFilter, "");
 		$baseClass = reset($queryFiles->from);
 		// There's no need to do all that joining
 		$queryFiles->from = array(str_replace('`','',$baseClass) => $baseClass);
-		$queryFiles->select = array("ClassName","$baseClass.ID","_utf8'' AS ParentID","Title","_utf8'' AS URLSegment","Content","LastEdited","Created","Filename","Name","$relevanceFile AS Relevance");
+		$queryFiles->select = array("ClassName","$baseClass.ID","_utf8'' AS ParentID","Title","_utf8'' AS URLSegment","Content","LastEdited","Created","Filename","Name","$relevanceFile AS Relevance","NULL AS CanViewType");
 		$queryFiles->orderby = null;
 		
 		$fullQuery = $queryContent->sql() . " UNION " . $queryFiles->sql() . " ORDER BY $sortBy LIMIT $limit";
@@ -164,8 +201,17 @@ class SearchForm extends Form {
 		return $doSet;
 	}
 	
-	public function getSearchQuery() {
-		return Convert::raw2xml($_REQUEST['Search']);
+	/**
+	 * Get the search query for display in a "You searched for ..." sentence.
+	 * 
+	 * @param array $data
+	 * @return string
+	 */
+	public function getSearchQuery($data = null) {
+		// legacy usage: $data was defaulting to $_REQUEST, parameter not passed in doc.silverstripe.com tutorials
+		if(!isset($data)) $data = $_REQUEST;
+		
+		return Convert::raw2xml($data['Search']);
 	}
 
 }

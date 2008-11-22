@@ -43,8 +43,8 @@ class ForeignKey extends Int {
 				$field = new FileField($relationName, $title, $this->value);
 			}
 		} else {
-			$objs = DataObject::get($this->object->class);
-			$titleField = (singleton($this->object->class)->hasField('Title')) ? "Title" : "Name";
+			$objs = DataObject::get($hasOneClass);
+			$titleField = (singleton($hasOneClass)->hasField('Title')) ? "Title" : "Name";
 			$map = ($objs) ? $objs->toDropdownMap("ID", $titleField) : false;
 			$field =  new DropdownField($this->name, $title, $map, null, null, ' ');
 		}

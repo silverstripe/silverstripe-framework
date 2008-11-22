@@ -520,6 +520,16 @@ class ManifestBuilder {
 	private static function get_children($class) {
 		return isset(self::$extendsArray[$class]) ? self::$extendsArray[$class] : array();
 	}
+	
+	/**
+	 * Returns if the Manifest has been included
+	 * 
+	 * @return Boolean
+	 */
+	static function has_been_included() {
+		global $_CLASS_MANIFEST, $_TEMPLATE_MANIFEST, $_CSS_MANIFEST, $_ALL_CLASSES;
+		return (bool)(empty($_CLASS_MANIFEST) && empty($_TEMPLATE_MANIFEST) && empty($_CSS_MANIFEST) && empty($_ALL_CLASSES));
+	}
 
 	/**
 	 * Returns a flat array with all children of a given class

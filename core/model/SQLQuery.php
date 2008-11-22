@@ -432,8 +432,8 @@ class SQLQuery extends Object {
 	 * @return boolean
 	 */
 	function filtersOnID() {
-		return ($query->where && count($query->where) == 1 && 
-			(strpos($query->where[0], ".`ID` = ") || strpos($query->where[0], ".ID = ") || strpos($query->where[0], "ID = ") )
+		return ($this->where && count($this->where) == 1 && 
+			(strpos($this->where[0], ".`ID` = ") || strpos($this->where[0], ".ID = ") || strpos($this->where[0], "ID = ") )
 		);
 	}
 	

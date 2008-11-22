@@ -755,7 +755,7 @@ class Requirements_Backend {
 	 *
 	 */
 	function process_combined_files() {
-		if(Director::isDev()) {
+		if(Director::isDev() && !SapphireTest::is_running_test()) {
 			return;
 		}
 		

@@ -1,0 +1,33 @@
+Group:
+   websiteusers:
+      Title: View certain restricted pages
+Member:
+   randomuser:
+      Email: randomuser@test.com
+      Password: test
+   websiteuser:
+      Email: websiteuser@test.com
+      Password: test
+      Groups: =>Group.websiteusers
+SiteTree:
+   searchformholder:
+      URLSegment: searchformholder
+      Title: searchformholder
+   publicPublishedPage:
+      Title: publicPublishedPage
+   publicUnpublishedPage:
+      Title: publicUnpublishedPage
+   restrictedViewLoggedInUsers:
+      CanViewType: LoggedInUsers
+      Title: restrictedViewLoggedInUsers
+   restrictedViewOnlyWebsiteUsers:
+      CanViewType: OnlyTheseUsers
+      ViewerGroups: =>Group.websiteusers
+      Title: restrictedViewOnlyWebsiteUsers
+   inheritRestrictedView:
+      CanViewType: Inherit
+      Parent: =>SiteTree.restrictedViewLoggedInUsers
+      Title: inheritRestrictedView
+   dontShowInSearchPage:
+      Title: dontShowInSearchPage
+      ShowInSearch: 0

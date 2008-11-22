@@ -22,8 +22,15 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	protected $originalMailer;
 	protected $originalMemberPasswordValidator;
 	protected $originalRequirements;
+	protected $originalIsRunningTest;
 	
 	protected $mailer;
+	
+	protected static $is_running_test = false;
+	
+	public static function is_running_test() {
+		return self::$is_running_test;
+	}
 	
 	/**
 	 * @var YamlFixture
@@ -31,10 +38,15 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	protected $fixture; 
 	
 	function setUp() {
+		// Mark test as being run
+		$this->originalIsRunningTest = self::$is_running_test;
+		self::$is_running_test = true;
+		
 		// Remove password validation
 		$this->originalMemberPasswordValidator = Member::password_validator();
 		$this->originalRequirements = Requirements::backend();
 		Member::set_password_validator(null);
+		Cookie::set_report_errors(false);
 
 		$className = get_class($this);
 		$fixtureFile = eval("return {$className}::\$fixture_file;");
@@ -127,6 +139,10 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 		
 		// Restore requirements
 		Requirements::set_backend($this->originalRequirements);
+
+		// Mark test as no longer being run - we use originalIsRunningTest to allow for nested SapphireTest calls
+		self::$is_running_test = $this->originalIsRunningTest;
+		$this->originalIsRunningTest = null;
 	}
 	
 	/**
