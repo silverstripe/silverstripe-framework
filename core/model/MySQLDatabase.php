@@ -38,6 +38,8 @@ class MySQLDatabase extends Database {
 		if(!$this->dbConn) {
 			$this->databaseError("Couldn't connect to MySQL database");
 		}
+		
+		$this->query("SET sql_mode = 'ANSI'");
 
 		parent::__construct();
 	}

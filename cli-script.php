@@ -55,6 +55,8 @@ if(isset($_SERVER['argv'][2])) {
  */
 require_once("core/Core.php");
 
+global $databcaseConfig;
+
 // We don't have a session in cli-script, but this prevents errors
 $_SESSION = null;
 

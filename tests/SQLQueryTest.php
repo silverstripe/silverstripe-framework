@@ -100,13 +100,13 @@ class SQLQueryTest extends SapphireTest {
 		$query = new SQLQuery();
 		$query->from[] = "MyTable";
 		$query->orderby(array('sort'=>'MyName'));
-		$this->assertEquals("SELECT * FROM MyTable ORDER BY `MyName`", $query->sql());
+		$this->assertEquals('SELECT * FROM MyTable ORDER BY "MyName"', $query->sql());
 
 		// array limit with start (MySQL specific)
 		$query = new SQLQuery();
 		$query->from[] = "MyTable";
 		$query->orderby(array('sort'=>'MyName','dir'=>'desc'));
-		$this->assertEquals("SELECT * FROM MyTable ORDER BY `MyName` DESC", $query->sql());
+		$this->assertEquals('SELECT * FROM MyTable ORDER BY "MyName" DESC', $query->sql());
 	}
 	
 	function testSelectWithComplexOrderbyClause() {

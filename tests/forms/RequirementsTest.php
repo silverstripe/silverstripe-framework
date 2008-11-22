@@ -44,6 +44,7 @@ class RequirementsTest extends SapphireTest {
 		$html = Requirements::includeInHTML(false, self::$html_template);
 
 		/* COMBINED JAVASCRIPT FILE IS INCLUDED IN HTML HEADER */
+		Debug::message($html);
 		$this->assertTrue((bool)preg_match('/src=".*\/RequirementsTest_bc\.js/', $html), 'combined javascript file is included in html header');
 		
 		/* COMBINED JAVASCRIPT FILE EXISTS */

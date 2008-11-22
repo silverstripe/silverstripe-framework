@@ -85,7 +85,7 @@ class SQLQuery extends Object {
 	function __construct($select = "*", $from = array(), $where = "", $orderby = "", $groupby = "", $having = "", $limit = "") {
 		$this->select($select);
 		// @todo 
-		$this->from = is_array($from) ? $from : array(str_replace('`','',$from) => $from);
+		$this->from = is_array($from) ? $from : array(str_replace(array('"','`'),'',$from) => $from);
 		$this->where($where);
 		$this->orderby($orderby);
 		$this->groupby($groupby);
@@ -130,7 +130,7 @@ class SQLQuery extends Object {
 	 * @return SQLQuery This instance
 	 */
 	public function from($table) {
-		$this->from[str_replace('`','',$table)] = $table;
+		$this->from[str_replace(array('"','`'),'',$table)] = $table;
 		
 		return $this;
 	}
@@ -141,7 +141,7 @@ class SQLQuery extends Object {
 	 * @return SQLQuery This instance 
 	 */
 	public function leftJoin($table, $onPredicate) {
-		$this->from[$table] = "LEFT JOIN `$table` ON $onPredicate";
+		$this->from[$table] = "LEFT JOIN \"$table\" ON $onPredicate";
 		return $this;
 	}
 	
@@ -205,9 +205,9 @@ class SQLQuery extends Object {
 			if(!array_key_exists('sort', $orderby)) user_error('SQLQuery::orderby(): Wrong format for $orderby array', E_USER_ERROR);
 
 			if(isset($orderby['sort']) && !empty($orderby['sort']) && isset($orderby['dir']) && !empty($orderby['dir'])) {
-				$combinedOrderby = "`" . Convert::raw2sql($orderby['sort']) . "` " . Convert::raw2sql(strtoupper($orderby['dir']));
+				$combinedOrderby = "\"" . Convert::raw2sql($orderby['sort']) . "\" " . Convert::raw2sql(strtoupper($orderby['dir']));
 			} elseif(isset($orderby['sort']) && !empty($orderby['sort'])) {
-				$combinedOrderby = "`" . Convert::raw2sql($orderby['sort']) . "`";
+				$combinedOrderby = "\"" . Convert::raw2sql($orderby['sort']) . "\"";
 			} else {
 				$combinedOrderby = false;
 			}
@@ -344,6 +344,7 @@ class SQLQuery extends Object {
 	 */
 	function renameTable($old, $new) {
 		$this->replaceText("`$old`", "`$new`");
+		$this->replaceText("\"$old\"", "\"$new\"");
 	}
 	
 	/**
@@ -433,7 +434,7 @@ class SQLQuery extends Object {
 	 */
 	function filtersOnID() {
 		return ($this->where && count($this->where) == 1 && 
-			(strpos($this->where[0], ".`ID` = ") || strpos($this->where[0], ".ID = ") || strpos($this->where[0], "ID = ") )
+			(strpos($query->where[0], ".\"ID\" = ") || strpos($query->where[0], ".`ID` = ") || strpos($query->where[0], ".ID = ") || strpos($query->where[0], "ID = ") )
 		);
 	}
 	

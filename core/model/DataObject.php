@@ -743,7 +743,7 @@ class DataObject extends ViewableData implements DataObjectInterface,i18nEntityP
 				if((!isset($this->record['ID']) || !$this->record['ID']) && isset($ancestry[0])) {
 					$baseTable = $ancestry[0];
 
-					DB::query("INSERT INTO `{$baseTable}` SET Created = NOW()");
+					DB::query("INSERT INTO \"{$baseTable}\" SET Created = NOW()");
 					$this->record['ID'] = DB::getGeneratedID($baseTable);
 					$this->changed['ID'] = 2;
 
@@ -880,7 +880,7 @@ class DataObject extends ViewableData implements DataObjectInterface,i18nEntityP
 			if(self::has_own_table($ancestor)) {
 				$sql = new SQLQuery();
 				$sql->delete = true;
-				$sql->from[$ancestor] = "`$ancestor`";
+				$sql->from[$ancestor] = "\"$ancestor\"";
 				$sql->where[] = "ID = $this->ID";
 				$this->extend('augmentSQL', $sql);
 				$sql->execute();
@@ -1171,12 +1171,12 @@ class DataObject extends ViewableData implements DataObjectInterface,i18nEntityP
 
 
 		$query = $componentObj->extendedSQL(
-			"`$table`.$parentField = $this->ID", // filter 
+			"\"$table\".$parentField = $this->ID", // filter 
 			$sort,
 			$limit,
-			"INNER JOIN `$table` ON `$table`.$componentField = `$componentBaseClass`.ID" // join
+			"INNER JOIN \"$table\" ON \"$table\".$componentField = \"$componentBaseClass\".ID" // join
 		);
-		array_unshift($query->select, "`$table`.*");
+		array_unshift($query->select, "\"$table\".*");
 
 		if($filter) $query->where[] = $filter;
 		if($join) $query->from[] = $join;
@@ -1218,16 +1218,16 @@ class DataObject extends ViewableData implements DataObjectInterface,i18nEntityP
 
 		$baseComponentClass = ClassInfo::baseDataClass($componentClass);
 		if($baseTable == $parentClass) {
-			return "LEFT JOIN `$table` ON (`$table`.`$parentField` = `$parentClass`.`ID` AND `$table`.`$componentField` = '{$this->ID}')";
+			return "LEFT JOIN \"$table\" ON (\"$table\".\"$parentField\" = \"$parentClass\".\"ID\" AND \"$table\".\"$componentField\" = '{$this->ID}')";
 		} else {
-			return "LEFT JOIN `$table` ON (`$table`.`$componentField` = `$baseComponentClass`.`ID` AND `$table`.`$parentField` = '{$this->ID}')";
+			return "LEFT JOIN \"$table\" ON (\"$table\".\"$componentField\" = \"$baseComponentClass\".\"ID\" AND \"$table\".\"$parentField\" = '{$this->ID}')";
 		}
 	}
 
 	function getManyManyFilter($componentName, $baseTable) {
 		list($parentClass, $componentClass, $parentField, $componentField, $table) = $this->many_many($componentName);
 
-		return "`$table`.`$parentField` = '{$this->ID}'";
+		return "\"$table\".\"$parentField\" = '{$this->ID}'";
 	}
 
 	/**
@@ -1865,17 +1865,17 @@ class DataObject extends ViewableData implements DataObjectInterface,i18nEntityP
 					$groupList = implode(', ', $groups->column("ID"));
 
 					$query = new SQLQuery(
-						"`Page_Can$perm`.PageID",
-					array("`Page_Can$perm`"),
+						"\"Page_Can$perm\".PageID",
+					array("\"Page_Can$perm\""),
 						"GroupID IN ($groupList)");
 
 					$permissionCache[$memberID][$perm] = $query->execute()->column();
 
 					if($perm == "View") {
-						$query = new SQLQuery("`SiteTree`.ID", array(
-							"`SiteTree`",
-							"LEFT JOIN `Page_CanView` ON `Page_CanView`.PageID = `SiteTree`.ID"
-							), "`Page_CanView`.PageID IS NULL");
+						$query = new SQLQuery("\"SiteTree\".ID", array(
+							"\"SiteTree\"",
+							"LEFT JOIN \"Page_CanView\" ON \"Page_CanView\".PageID = \"SiteTree\".ID"
+							), "\"Page_CanView\".PageID IS NULL");
 
 							$unsecuredPages = $query->execute()->column();
 							if($permissionCache[$memberID][$perm]) {
@@ -2070,11 +2070,11 @@ class DataObject extends ViewableData implements DataObjectInterface,i18nEntityP
 		}
 
 		$baseClass = array_shift($tableClasses);
-		$select = array("`$baseClass`.*");
+		$select = array("\"$baseClass\".*");
 
 		// Build our intial query
 		$query = new SQLQuery($select);
-		$query->from("`$baseClass`");
+		$query->from("\"$baseClass\"");
 		$query->where($filter);
 		$query->orderby($sort);
 		$query->limit($limit);
@@ -2091,8 +2091,8 @@ class DataObject extends ViewableData implements DataObjectInterface,i18nEntityP
 		// Join all the tables
 		if($tableClasses && self::$subclass_access) {
 			foreach($tableClasses as $tableClass) {
-				$query->from[$tableClass] = "LEFT JOIN `$tableClass` ON `$tableClass`.ID = `$baseClass`.ID";
-				$query->select[] = "`$tableClass`.*";
+				$query->from[$tableClass] = "LEFT JOIN \"$tableClass\" ON \"$tableClass\".ID = \"$baseClass\".ID";
+				$query->select[] = "\"$tableClass\".*";
 
 				// Add SQL for multi-value fields
 				$SNG = singleton($tableClass);
@@ -2107,8 +2107,8 @@ class DataObject extends ViewableData implements DataObjectInterface,i18nEntityP
 			}
 		}
 
-		$query->select[] = "`$baseClass`.ID";
-		$query->select[] = "if(`$baseClass`.ClassName,`$baseClass`.ClassName,'$baseClass') AS RecordClassName";
+		$query->select[] = "\"$baseClass\".ID";
+		$query->select[] = "if(\"$baseClass\".ClassName,\"$baseClass\".ClassName,'$baseClass') AS RecordClassName";
 
 		// Get the ClassName values to filter to
 		$classNames = ClassInfo::subclassesFor($this->class);
@@ -2125,7 +2125,7 @@ class DataObject extends ViewableData implements DataObjectInterface,i18nEntityP
 				user_error("DataObject::get() Can't find data sub-classes for '$callerClass'");
 			}
 
-			$query->where[] = "`$baseClass`.ClassName IN ('" . implode("','", $classNames) . "')";
+			$query->where[] = "\"$baseClass\".ClassName IN ('" . implode("','", $classNames) . "')";
 		}
 
 		if($having) {
@@ -2352,11 +2352,11 @@ class DataObject extends ViewableData implements DataObjectInterface,i18nEntityP
 			if(singleton($callerClass) instanceof DataObject) {
 				$tableClasses = ClassInfo::dataClassesFor($callerClass);
 				$baseClass = array_shift($tableClasses);
-				return DataObject::get_one($callerClass,"`$baseClass`.`ID` = $id");
+				return DataObject::get_one($callerClass,"\"$baseClass\".\"ID\" = $id");
 
 				// This simpler code will be used by non-DataObject classes that implement DataObjectInterface
 			} else {
-				return DataObject::get_one($callerClass,"`ID` = $id");
+				return DataObject::get_one($callerClass,"\"ID\" = $id");
 			}
 		} else {
 			user_error("DataObject::get_by_id passed a non-numeric ID #$id", E_USER_WARNING);
