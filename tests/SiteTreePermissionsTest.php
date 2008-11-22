@@ -12,12 +12,18 @@ class SiteTreePermissionsTest extends SapphireTest {
 	function testRestrictedViewLoggedInUsers() {
 		$page = $this->objFromFixture('Page', 'restrictedViewLoggedInUsers');
 		
+		/*
+		 NOTE: This isn't correct.  An "unauthed member" test needs to be done by setting the loggedInAs data in the session
+		 to zero and then confirming that a 403 response is returned.  Alternatively, the canView() method needs a well-defined
+		 way of asking "can a person who isn't logged in view this?" perhaps by passing the integer value 0 to the canView() method
+		 as opposed to leaving it omitted, which uses Member::currentUser() as the default.
 		$randomUnauthedMember = new Member();
 		$randomUnauthedMember->ID = 99;
 		$this->assertFalse(
 			$page->canView($randomUnauthedMember),
 			'Unauthenticated members cant view a page marked as "Viewable for any logged in users"'
 		);
+		 */
 		
 		$websiteuser = $this->objFromFixture('Member', 'websiteuser');
 		$websiteuser->logIn();
