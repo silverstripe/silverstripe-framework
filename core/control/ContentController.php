@@ -56,7 +56,7 @@ class ContentController extends Controller {
 	 */
 	public function ChildrenOf($parentRef) {
 		$SQL_parentRef = Convert::raw2sql($parentRef);
-		$parent = DataObject::get_one('SiteTree', "URLSegment = '$SQL_parentRef'");
+		$parent = DataObject::get_one('SiteTree', "\"URLSegment\" = '$SQL_parentRef'");
 
 		if(!$parent && is_numeric($parentRef)) $parent = DataObject::get_by_id('SiteTree', $SQL_parentRef);
 		if($parent) {
@@ -69,7 +69,7 @@ class ContentController extends Controller {
 
 	public function Page($url) {
 		$SQL_url = Convert::raw2sql($url);
-		return DataObject::get_one('SiteTree', "URLSegment = '$SQL_url'");
+		return DataObject::get_one('SiteTree', "\"URLSegment\" = '$SQL_url'");
 	}
 
 	public function init() {
@@ -136,7 +136,7 @@ class ContentController extends Controller {
 	 */
 	public function getMenu($level = 1) {
 		if($level == 1) {
-			$result = DataObject::get("SiteTree", "ShowInMenus = 1 AND ParentID = 0");
+			$result = DataObject::get("SiteTree", "\"ShowInMenus\" AND \"ParentID\" = 0");
 
 		} else {
 			$parent = $this->data();

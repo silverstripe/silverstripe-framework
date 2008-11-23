@@ -283,9 +283,9 @@ class Director {
 		if(isset(Director::$urlParams['URLSegment'])) {
 			$SQL_urlSegment = Convert::raw2sql(Director::$urlParams['URLSegment']);
 			if (Translatable::is_enabled()) {
-				return Translatable::get_one("SiteTree", "URLSegment = '$SQL_urlSegment'");
+				return Translatable::get_one("SiteTree", "\"URLSegment\" = '$SQL_urlSegment'");
 			} else {
-				return DataObject::get_one("SiteTree", "URLSegment = '$SQL_urlSegment'");
+				return DataObject::get_one("SiteTree", "\"URLSegment\" = '$SQL_urlSegment'");
 			}
 		} else {
 			return Controller::curr();

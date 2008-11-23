@@ -399,7 +399,7 @@ class SiteTree extends DataObject {
 			SiteTree::$currentSectionIDs = array();
 			while($nextID) {
 				self::$currentSectionIDs[] = $nextID;
-				$nextID = DB::query("SELECT ParentID FROM SiteTree WHERE ID = $nextID")->value();
+				$nextID = DB::query("SELECT \"ParentID\" FROM \"SiteTree\" WHERE \"ID\" = $nextID")->value();
 			}
 		}
 	}
@@ -885,7 +885,7 @@ class SiteTree extends DataObject {
 		
 		// default pages
 		if($this->class == 'SiteTree') {
-			if(!DataObject::get_one("SiteTree", "URLSegment = 'home'")) {
+			if(!DataObject::get_one("SiteTree", "\"URLSegment\" = 'home'")) {
 				$homepage = new Page();
 
 				$homepage->Title = _t('SiteTree.DEFAULTHOMETITLE', 'Home');
@@ -898,7 +898,7 @@ class SiteTree extends DataObject {
 				Database::alteration_message("Home page created","created");		
 			}
 
-			if(DB::query("SELECT COUNT(*) FROM SiteTree")->value() == 1) {
+			if(DB::query("SELECT COUNT(*) FROM \"SiteTree\"")->value() == 1) {
 				$aboutus = new Page();
 				$aboutus->Title = _t('SiteTree.DEFAULTABOUTTITLE', 'About Us');
 				$aboutus->Content = _t('SiteTree.DEFAULTABOUTCONTENT', '<p>You can fill this page out with your own content, or delete it and create your own pages.<br /></p>');
@@ -961,13 +961,13 @@ class SiteTree extends DataObject {
 		
 		// Ensure URLSegment is unique
 		$idFilter = ($this->ID)
-			? " AND \"SiteTree\".ID <> '$this->ID'" :
+			? " AND \"SiteTree\".\"ID\" <> '$this->ID'" :
 			'';
 
 		$count = 1;
 		while (
 			(class_exists($this->URLSegment) && is_subclass_of($this->URLSegment, 'RequestHandler')) ||
-			DataObject::get_one("SiteTree", "URLSegment = '$this->URLSegment' $idFilter")
+			DataObject::get_one("SiteTree", "\"URLSegment\" = '$this->URLSegment' $idFilter")
 		) {
 			$count++;
 			$this->URLSegment = ereg_replace('-[0-9]+$','', $this->URLSegment) . "-$count";
@@ -1026,7 +1026,7 @@ class SiteTree extends DataObject {
 	 * @return SiteTree The object with the given URL segment
 	 */
 	public static function get_by_url($urlSegment) {
-		return DataObject::get_one("SiteTree", "URLSegment = '" . addslashes((string) $urlSegment) . "'");
+		return DataObject::get_one("SiteTree", "\"URLSegment\" = '" . addslashes((string) $urlSegment) . "'");
 	}
 
 	/**
@@ -1099,7 +1099,7 @@ class SiteTree extends DataObject {
 		// Status / message
 		// Create a status message for multiple parents
 		if($this->ID && is_numeric($this->ID)) {
-			$linkedPages = DataObject::get("VirtualPage", "CopyContentFromID = $this->ID");
+			$linkedPages = DataObject::get("VirtualPage", "\"CopyContentFromID\" = $this->ID");
 		}
 
 		if(isset($linkedPages)) {
@@ -1454,7 +1454,7 @@ class SiteTree extends DataObject {
 		if($this->isNew())
 			return false;
 
-		return (DB::query("SELECT ID FROM \"SiteTree_Live\" WHERE ID = $this->ID")->value())
+		return (DB::query("SELECT \"ID\" FROM \"SiteTree_Live\" WHERE \"ID\" = $this->ID")->value())
 			? true
 			: false;
 	}
@@ -1494,6 +1494,7 @@ class SiteTree extends DataObject {
 		$currentAddAction = null;
 		$currentClass = null;
 
+		$result = array();
 		foreach($classes as $class) {
 			$instance = singleton($class);
 			if((($instance instanceof HiddenClass) || !$instance->canCreate()) && ($class != $this->class)) continue;
@@ -1624,9 +1625,9 @@ class SiteTree extends DataObject {
 		// If somthing
 		if(!$this->CheckedPublicationDifferences && $this->ID) {
 			$stageVersion =
-				DB::query("SELECT Version FROM SiteTree WHERE ID = $this->ID")->value();
+				DB::query("SELECT \"Version\" FROM \"SiteTree\" WHERE \"ID\" = $this->ID")->value();
 			$liveVersion =
-				DB::query("SELECT Version FROM SiteTree_Live WHERE ID = $this->ID")->value();
+				DB::query("SELECT \"Version\" FROM \"SiteTree_Live\" WHERE \"ID\" = $this->ID")->value();
 
 			if($stageVersion && !$liveVersion)
 				$this->AddedToStage = true;

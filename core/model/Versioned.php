@@ -268,7 +268,7 @@ class Versioned extends DataObjectDecorator {
 			
 			if(!isset($manipulation[$table]['fields']['Version'])) {
 				// Add any extra, unchanged fields to the version record.
-				$data = DB::query("SELECT * FROM $table WHERE ID = $id")->record();
+				$data = DB::query("SELECT * FROM \"$table\" WHERE \"ID\" = $id")->record();
 				if($data) foreach($data as $k => $v) {
 					if (!isset($newManipulation['fields'][$k])) $newManipulation['fields'][$k] = "'" . addslashes($v) . "'";
 				}
@@ -280,7 +280,7 @@ class Versioned extends DataObjectDecorator {
 				// Create a new version #
 				if (isset($version_table[$table])) $nextVersion = $version_table[$table];
 				else unset($nextVersion);
-				if($rid && !isset($nextVersion)) $nextVersion = DB::query("SELECT MAX(Version) + 1 FROM {$table}_versions WHERE RecordID = $rid")->value();
+				if($rid && !isset($nextVersion)) $nextVersion = DB::query("SELECT MAX(\"Version\") + 1 FROM \"{$table}_versions\" WHERE \"RecordID\" = $rid")->value();
 				
 				$newManipulation['fields']['Version'] = $nextVersion ? $nextVersion : 1;
 				$newManipulation['fields']['AuthorID'] = Member::currentUserID() ? Member::currentUserID() : 0;
@@ -371,7 +371,7 @@ class Versioned extends DataObjectDecorator {
 		
 		$table2 = $table1 . "_$this->liveStage";
 
-		return DB::query("SELECT $table1.Version = $table2.Version FROM $table1 INNER JOIN $table2 ON $table1.ID = $table2.ID WHERE $table1.ID = ".  $this->owner->ID)->value();
+		return DB::query("SELECT \"$table1\".\"Version\" = \"$table2\".\"Version\" FROM \"$table1\" INNER JOIN \"$table2\" ON \"$table1\".\"ID\" = \"$table2\".\"ID\" WHERE \"$table1\".\"ID\" = ".  $this->owner->ID)->value();
 	}
 	
 	/**
@@ -435,7 +435,7 @@ class Versioned extends DataObjectDecorator {
             
 		// We test for equality - if one of the versions doesn't exist, this will be false
 		//TODO: DB Abstraction: if statement here:
-		$stagesAreEqual = DB::query("SELECT if(\"$table1\".Version=\"$table2\".Version,1,0) FROM \"$table1\" INNER JOIN \"$table2\" ON \"$table1\".ID = \"$table2\".ID AND \"$table1\".ID = {$this->owner->ID}")->value();
+		$stagesAreEqual = DB::query("SELECT CASE WHEN \"$table1\".\"Version\"=\"$table2\".\"Version\" THEN 1 ELSE 0 END FROM \"$table1\" INNER JOIN \"$table2\" ON \"$table1\".\"ID\" = \"$table2\".\"ID\" AND \"$table1\".\"ID\" = {$this->owner->ID}")->value();
 		return !$stagesAreEqual;
 	}
 	

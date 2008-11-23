@@ -35,7 +35,7 @@ class Member extends DataObject {
 	
 	static $many_many_extraFields = array();
 
-	static $default_sort = "Surname, FirstName";
+	static $default_sort = '"Surname", "FirstName"';
 
 	static $indexes = array(
 		'Email' => true,
@@ -366,7 +366,7 @@ class Member extends DataObject {
 		}
 
 		if($id) {
-			return DataObject::get_one("Member", "Member.ID = $id");
+			return DataObject::get_one("Member", "\"Member\".\"ID\" = $id");
 		}
 	}
 
@@ -449,13 +449,13 @@ class Member extends DataObject {
 
 		if($this->Email) {
 			if($this->ID) {
-				$idClause = "AND \"Member\".ID <> $this->ID";
+				$idClause = "AND \"Member\".\"ID\" <> $this->ID";
 			} else {
 				$idClause = "";
 			}
 
 			$existingRecord = DataObject::get_one(
-				"Member", "Email = '" . addslashes($this->Email) . "' $idClause");
+				"Member", "\"Email\" = '" . addslashes($this->Email) . "' $idClause");
 
 			// Debug::message("Found an existing member for email $this->Email");
 
@@ -649,7 +649,7 @@ class Member extends DataObject {
 		if(count($collatedGroups) > 0) {
 			$collatedGroups = implode(", ", array_unique($collatedGroups));
 
-			$unfilteredGroups = singleton('Group')->instance_get("\"ID\" IN ($collatedGroups)", "ID", "", "", "Member_GroupSet");
+			$unfilteredGroups = singleton('Group')->instance_get("\"ID\" IN ($collatedGroups)", '"ID"', "", "", "Member_GroupSet");
 			$result = new ComponentSet();
 			
 			// Only include groups where allowedIPAddress() returns true
@@ -886,7 +886,7 @@ class Member extends DataObject {
 	function requireDefaultRecords() {
 		parent::requireDefaultRecords();
 		
-		if(!DB::query("SELECT * FROM Member")->value() && isset($_REQUEST['username']) && isset($_REQUEST['password'])) {
+		if(!DB::query("SELECT * FROM \"Member\"")->value() && isset($_REQUEST['username']) && isset($_REQUEST['password'])) {
 			Security::findAnAdministrator($_REQUEST['username'], $_REQUEST['password']);
 			Database::alteration_message("Added admin account","created");
 		}

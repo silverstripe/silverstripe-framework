@@ -27,7 +27,7 @@ class MemberAuthenticator extends Authenticator {
 	if(Security::check_default_admin($RAW_data['Email'], $RAW_data['Password'])) {
 		$member = Security::findAnAdministrator();
 	} else {
-		$member = DataObject::get_one("Member", "Email = '$SQL_user' AND Password IS NOT NULL");
+		$member = DataObject::get_one("Member", "\"Email\" = '$SQL_user' AND \"Password\" IS NOT NULL");
 		if($member && ($member->checkPassword($RAW_data['Password']) == false)) { 
 			if($member->isLockedOut()) $isLockedOut = true;
 			$member->registerFailedLogin();

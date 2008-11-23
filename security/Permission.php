@@ -141,11 +141,11 @@ class Permission extends DataObject {
 					$argClause = "";
 					break;
 				case "all":
-					$argClause = " AND Arg = -1";
+					$argClause = " AND \"Arg\" = -1";
 					break;
 				default:
 					if(is_numeric($arg)) {
-						$argClause = "AND Arg IN (-1, $arg) ";
+						$argClause = "AND \"Arg\" IN (-1, $arg) ";
 					} else {
 						user_error("Permission::checkMember: bad arg '$arg'",
 											E_USER_ERROR);
@@ -163,12 +163,12 @@ class Permission extends DataObject {
 
 			// Raw SQL for efficiency
 			$permission = DB::query("
-					SELECT ID
-					FROM Permission
+					SELECT \"ID\"
+					FROM \"Permission\"
 					WHERE (
-						Code IN ($SQL_codeList $adminFilter)
-						AND Type = " . self::GRANT_PERMISSION . "
-						AND GroupID IN ($groupCSV)
+						\"Code\" IN ($SQL_codeList $adminFilter)
+						AND \"Type\" = " . self::GRANT_PERMISSION . "
+						AND \"GroupID\" IN ($groupCSV)
 						$argClause
 					)
 				")->value();
@@ -181,10 +181,10 @@ class Permission extends DataObject {
 			if(!self::$strict_checking || !$strict) {
 				$hasPermission = DB::query("
 					SELECT COUNT(*) 
-					FROM Permission 
+					FROM \"Permission\"
 					WHERE (
-						(Code IN '$SQL_code')' 
-						AND (Type = " . self::GRANT_PERMISSION . ")
+						(\"Code\" IN '$SQL_code')' 
+						AND (\"Type\" = " . self::GRANT_PERMISSION . ")
 					)
 				")->value();
 				if(!$hasPermission) {
@@ -320,8 +320,8 @@ class Permission extends DataObject {
 		parent::requireDefaultRecords();
 
 		// Add default content if blank
-		if(!DB::query("SELECT ID FROM Permission")->value() && array_key_exists('CanCMSAdmin', DB::fieldList('Group'))) {
-			$admins = DB::query("SELECT ID FROM \"Group\" WHERE CanCMSAdmin = 1")
+		if(!DB::query("SELECT \"ID\" FROM \"Permission\"")->value() && array_key_exists('CanCMSAdmin', DB::fieldList('Group'))) {
+			$admins = DB::query("SELECT \"ID\" FROM \"Group\" WHERE \"CanCMSAdmin\" = 1")
 				->column();
 
 			if(isset($admins)) {
@@ -329,7 +329,7 @@ class Permission extends DataObject {
 					Permission::grant($admin, "ADMIN");
 			}
 
-			$authors = DB::query("SELECT ID FROM \"Group\" WHERE CanCMS = 1")
+			$authors = DB::query("SELECT \"ID\" FROM \"Group\" WHERE \"CanCMS\" = 1")
 				->column();
 			if(isset($authors)) {
 				foreach($authors as $author) {

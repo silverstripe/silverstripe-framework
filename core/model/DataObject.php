@@ -743,7 +743,7 @@ class DataObject extends ViewableData implements DataObjectInterface,i18nEntityP
 				if((!isset($this->record['ID']) || !$this->record['ID']) && isset($ancestry[0])) {
 					$baseTable = $ancestry[0];
 
-					DB::query("INSERT INTO \"{$baseTable}\" SET Created = NOW()");
+					DB::query("INSERT INTO \"{$baseTable}\" (\"Created\") VALUES (NOW())");
 					$this->record['ID'] = DB::getGeneratedID($baseTable);
 					$this->changed['ID'] = 2;
 
@@ -770,7 +770,6 @@ class DataObject extends ViewableData implements DataObjectInterface,i18nEntityP
 								if(!$fieldObj instanceof CompositeDBField) {
 									$fieldObj->setValue($this->record[$fieldName], $this->record);
 								}
-								
 								$fieldObj->writeToManipulation($manipulation[$class]);
 							}
 						}
@@ -1171,10 +1170,10 @@ class DataObject extends ViewableData implements DataObjectInterface,i18nEntityP
 
 
 		$query = $componentObj->extendedSQL(
-			"\"$table\".$parentField = $this->ID", // filter 
+			"\"$table\".\"$parentField\" = $this->ID", // filter 
 			$sort,
 			$limit,
-			"INNER JOIN \"$table\" ON \"$table\".$componentField = \"$componentBaseClass\".ID" // join
+			"INNER JOIN \"$table\" ON \"$table\".\"$componentField\" = \"$componentBaseClass\".\"ID\"" // join
 		);
 		array_unshift($query->select, "\"$table\".*");
 
@@ -1872,10 +1871,10 @@ class DataObject extends ViewableData implements DataObjectInterface,i18nEntityP
 					$permissionCache[$memberID][$perm] = $query->execute()->column();
 
 					if($perm == "View") {
-						$query = new SQLQuery("\"SiteTree\".ID", array(
+						$query = new SQLQuery("\"SiteTree\".\"ID\"", array(
 							"\"SiteTree\"",
-							"LEFT JOIN \"Page_CanView\" ON \"Page_CanView\".PageID = \"SiteTree\".ID"
-							), "\"Page_CanView\".PageID IS NULL");
+							"LEFT JOIN \"Page_CanView\" ON \"Page_CanView\".\"PageID\" = \"SiteTree\".\"ID\""
+							), "\"Page_CanView\".\"PageID\" IS NULL");
 
 							$unsecuredPages = $query->execute()->column();
 							if($permissionCache[$memberID][$perm]) {
@@ -2058,6 +2057,8 @@ class DataObject extends ViewableData implements DataObjectInterface,i18nEntityP
 		if(!$sort) {
 			$sort = $this->stat('default_sort');
 		}
+		// Add quoting to sort expression if it's a simple column name
+		if(preg_match('/^[A-Z][A-Z0-9_]*$/i', $sort)) $sort = "\"$sort\"";
 
 		// Get the tables to join to
 		$tableClasses = ClassInfo::dataClassesFor($this->class);
@@ -2091,7 +2092,7 @@ class DataObject extends ViewableData implements DataObjectInterface,i18nEntityP
 		// Join all the tables
 		if($tableClasses && self::$subclass_access) {
 			foreach($tableClasses as $tableClass) {
-				$query->from[$tableClass] = "LEFT JOIN \"$tableClass\" ON \"$tableClass\".ID = \"$baseClass\".ID";
+				$query->from[$tableClass] = "LEFT JOIN \"$tableClass\" ON \"$tableClass\".\"ID\" = \"$baseClass\".\"ID\"";
 				$query->select[] = "\"$tableClass\".*";
 
 				// Add SQL for multi-value fields
@@ -2108,8 +2109,8 @@ class DataObject extends ViewableData implements DataObjectInterface,i18nEntityP
 		}
 
 		//TODO: DB ABSTRACTION: IF STATEMENT:
-		$query->select[] = "\"$baseClass\".ID";
-		$query->select[] = "if(\"$baseClass\".ClassName,\"$baseClass\".ClassName,'$baseClass') AS RecordClassName";
+		$query->select[] = "\"$baseClass\".\"ID\"";
+		$query->select[] = "CASE WHEN \"$baseClass\".\"ClassName\" IS NOT NULL THEN \"$baseClass\".\"ClassName\" ELSE '$baseClass' END AS \"RecordClassName\"";
 
 		// Get the ClassName values to filter to
 		$classNames = ClassInfo::subclassesFor($this->class);
@@ -2126,7 +2127,7 @@ class DataObject extends ViewableData implements DataObjectInterface,i18nEntityP
 				user_error("DataObject::get() Can't find data sub-classes for '$callerClass'");
 			}
 
-			$query->where[] = "\"$baseClass\".ClassName IN ('" . implode("','", $classNames) . "')";
+			$query->where[] = "\"$baseClass\".\"ClassName\" IN ('" . implode("','", $classNames) . "')";
 		}
 
 		if($having) {
@@ -2135,7 +2136,14 @@ class DataObject extends ViewableData implements DataObjectInterface,i18nEntityP
 
 		if($join) {
 			$query->from[] = $join;
-			$query->groupby[] = reset($query->from) . ".ID";
+			if(DB::getConn() instanceof MySQLDatabase) {
+				// TODO: This needs to be resolved for all databases
+				$query->groupby[] = reset($query->from) . ".\"ID\"";
+				/* this needs to be fixed - this doesn't work when you add additional fields from other tables into the mix.
+				$fields = $this->databaseFields();
+				foreach(array_keys($fields) as $field) $query->groupby[] = "\"$field\"";
+				*/
+			}
 		}
 
 		return $query;

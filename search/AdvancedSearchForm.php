@@ -82,25 +82,25 @@ class AdvancedSearchForm extends SearchForm {
 	 		foreach($_REQUEST['OnlyShow'] as $section => $checked) {
 	 			$items = explode(",", $section);
 	 			foreach($items as $item) {
-	 				$page = DataObject::get_one('SiteTree', "URLSegment = '" . addslashes($item) . "'");
+	 				$page = DataObject::get_one('SiteTree', "\"URLSegment\" = '" . addslashes($item) . "'");
 	 				$pageList[] = $page->ID;
 	 				if(!$page) user_error("Can't find a page called '$item'", E_USER_WARNING);
 	 				$page->loadDescendantIDListInto($pageList);
 	 			}
 	 		}	
-	 		$contentFilter = "ID IN (" . implode(",", $pageList) . ")";
+	 		$contentFilter = "\"ID\" IN (" . implode(",", $pageList) . ")";
 	 		
 	 		// Find the files associated with those pages
-	 		$fileList = DB::query("SELECT FileID FROM Page_ImageTracking WHERE PageID IN (" . implode(",", $pageList) . ")")->column();
-	 		if($fileList) $fileFilter = "ID IN (" . implode(",", $fileList) . ")";
+	 		$fileList = DB::query("SELECT \"FileID\" FROM \"Page_ImageTracking\" WHERE \"PageID\" IN (" . implode(",", $pageList) . ")")->column();
+	 		if($fileList) $fileFilter = "\"ID\" IN (" . implode(",", $fileList) . ")";
 	 		else $fileFilter = " 1 = 2 ";
 	 	}
 	 	
 	 	if($data['From']) {
-	 		$filter .= ($filter?" AND":"") . " LastEdited >= '$data[From]'";
+	 		$filter .= ($filter?" AND":"") . " \"LastEdited\" >= '$data[From]'";
 	 	}
 	 	if($data['To']) {
-	 		$filter .= ($filter?" AND":"") . " LastEdited <= '$data[To]'";
+	 		$filter .= ($filter?" AND":"") . " \"LastEdited\" <= '$data[To]'";
 	 	}
 	 	
 	 	if($filter) {
@@ -110,9 +110,9 @@ class AdvancedSearchForm extends SearchForm {
 	 	
 	 	if($data['sortby']) {
 	 		$sorts = array(
-	 			'LastUpdated' => 'LastEdited DESC',
-	 			'PageTitle' => 'Title ASC',
-	 			'Relevance' => 'Relevance DESC',
+	 			'LastUpdated' => '"LastEdited" DESC',
+	 			'PageTitle' => '"Title" ASC',
+	 			'Relevance' => '"Relevance" DESC',
 	 		);
 	 		$sortBy = $sorts[$data['sortby']] ? $sorts[$data['sortby']] : $sorts['Relevance'];
 	 	}

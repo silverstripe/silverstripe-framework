@@ -283,24 +283,24 @@ class DataObjectTest extends SapphireTest {
 		$captainID = $this->idFromFixture('DataObjectTest_Player', 'player1');
 		$team->CaptainID = $captainID;
 		$team->write();
-		$this->assertEquals($captainID, DB::query("SELECT CaptainID FROM DataObjectTest_Team WHERE ID = $team->ID")->value());
+		$this->assertEquals($captainID, DB::query("SELECT CaptainID FROM DataObjectTest_Team WHERE \"ID\" = $team->ID")->value());
 		
 		/* After giving it a value, you should also be able to set it back to null */
 		$team->CaptainID = '';
 		$team->write();
-		$this->assertEquals(0, DB::query("SELECT CaptainID FROM DataObjectTest_Team WHERE ID = $team->ID")->value());
+		$this->assertEquals(0, DB::query("SELECT CaptainID FROM DataObjectTest_Team WHERE \"ID\" = $team->ID")->value());
 
 		/* You should also be able to save a blank to it when it's first created */
 		$team = new DataObjectTest_Team();
 		$team->CaptainID = '';
 		$team->write();
-		$this->assertEquals(0, DB::query("SELECT CaptainID FROM DataObjectTest_Team WHERE ID = $team->ID")->value());
+		$this->assertEquals(0, DB::query("SELECT CaptainID FROM DataObjectTest_Team WHERE \"ID\" = $team->ID")->value());
 		
 		/* Ditto for existing records without a value */
 		$existingTeam = $this->objFromFixture('DataObjectTest_Team', 'team1');
 		$existingTeam->CaptainID = '';
 		$existingTeam->write();
-		$this->assertEquals(0, DB::query("SELECT CaptainID FROM DataObjectTest_Team WHERE ID = $existingTeam->ID")->value());
+		$this->assertEquals(0, DB::query("SELECT CaptainID FROM DataObjectTest_Team WHERE \"ID\" = $existingTeam->ID")->value());
 	}
 	
 	function testCanAccessHasOneObjectsAsMethods() {
@@ -323,9 +323,9 @@ class DataObjectTest extends SapphireTest {
 		$obj->write();
 
 		$this->assertNotNull($obj->ID);
-		$this->assertEquals('value1', DB::query("SELECT Data FROM DataObjectTest_FunnyFieldNames WHERE ID = $obj->ID")->value());
-		$this->assertEquals('value2', DB::query("SELECT DbObject FROM DataObjectTest_FunnyFieldNames WHERE ID = $obj->ID")->value());
-		$this->assertEquals('value3', DB::query("SELECT Duplicate FROM DataObjectTest_FunnyFieldNames WHERE ID = $obj->ID")->value());
+		$this->assertEquals('value1', DB::query("SELECT Data FROM DataObjectTest_FunnyFieldNames WHERE \"ID\" = $obj->ID")->value());
+		$this->assertEquals('value2', DB::query("SELECT DbObject FROM DataObjectTest_FunnyFieldNames WHERE \"ID\" = $obj->ID")->value());
+		$this->assertEquals('value3', DB::query("SELECT Duplicate FROM DataObjectTest_FunnyFieldNames WHERE \"ID\" = $obj->ID")->value());
 	}
 	
 	/**
@@ -508,7 +508,7 @@ class DataObjectTest extends SapphireTest {
 		/* Creating a new object of a subclass should set the ClassName field correctly */
 		$obj = new DataObjectTest_SubTeam();
 		$obj->write();
-		$this->assertEquals("DataObjectTest_SubTeam", DB::query("SELECT ClassName FROM DataObjectTest_Team WHERE ID = $obj->ID")->value());
+		$this->assertEquals("DataObjectTest_SubTeam", DB::query("SELECT ClassName FROM DataObjectTest_Team WHERE \"ID\" = $obj->ID")->value());
 	}
 	
 	public function testForceInsert() {	
@@ -519,7 +519,7 @@ class DataObjectTest extends SapphireTest {
 		$obj->SubclassDatabaseField = 'asdfasdf';
 		$obj->write(false, true);
 
-		$this->assertEquals("DataObjectTest_SubTeam", DB::query("SELECT ClassName FROM DataObjectTest_Team WHERE ID = $obj->ID")->value());
+		$this->assertEquals("DataObjectTest_SubTeam", DB::query("SELECT ClassName FROM DataObjectTest_Team WHERE \"ID\" = $obj->ID")->value());
 
 		/* Check that it actually saves to the database with the correct ID */
 		$this->assertEquals("1001", DB::query("SELECT ID FROM DataObjectTest_SubTeam WHERE SubclassDatabaseField = 'asdfasdf'")->value());

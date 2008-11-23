@@ -50,7 +50,7 @@ class HtmlEditorField extends TextareaField {
 				$link = Director::makeRelative($link);
 				$broken = false;
 				if(ereg('^([A-Za-z0-9_\-]+)/?(#.*)?$', $link, $parts)) {
-					if(!DataObject::get_one("SiteTree", "URLSegment = '$parts[1]'", false)) {
+					if(!DataObject::get_one("SiteTree", "\"URLSegment\" = '$parts[1]'", false)) {
 						$broken = true;
 						// Prevents execution timeouts if a page has 50 identical broken links by only highlighting them once
 						$alreadyHighlighted[$parts[1]] = true;
@@ -120,7 +120,7 @@ class HtmlEditorField extends TextareaField {
 			$link = Director::makeRelative($link);
 			
 			if(preg_match( '/^([A-Za-z0-9_-]+)\/?(#.*)?$/', $link, $parts ) ) {
-				$candidatePage = DataObject::get_one("SiteTree", "URLSegment = '" . urldecode( $parts[1] ). "'", false);
+				$candidatePage = DataObject::get_one("SiteTree", "\"URLSegment\" = '" . urldecode( $parts[1] ). "'", false);
 				if($candidatePage) {
 					$linkedPages[] = $candidatePage->ID;
 					// This caused bugs in the publication script
@@ -154,7 +154,7 @@ class HtmlEditorField extends TextareaField {
 				
 		$fieldName = $this->name;
 		if($record->ID && $record->hasMethod('LinkTracking') && $linkTracking = $record->LinkTracking()) {
-			$linkTracking->removeByFilter("FieldName = '$fieldName'");
+			$linkTracking->removeByFilter("\"FieldName\" = '$fieldName'");
 			
 			if(isset($linkedPages)) foreach($linkedPages as $item) {
 				$linkTracking->add($item, array("FieldName" => $fieldName));
@@ -163,7 +163,7 @@ class HtmlEditorField extends TextareaField {
 			// $linkTracking->destroy();
 		}
 		if($record->ID && $record->hasMethod('ImageTracking') && $imageTracking = $record->ImageTracking()) {
-			$imageTracking->removeByFilter("FieldName = '$fieldName'");
+			$imageTracking->removeByFilter("\"FieldName\" = '$fieldName'");
 			if(isset($linkedFiles)) foreach($linkedFiles as $item) {
 				$imageTracking->add($item, array("FieldName" => $fieldName));
 			}

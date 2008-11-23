@@ -88,7 +88,7 @@ class SearchContext extends Object {
 		$fields = array("\"".ClassInfo::baseDataClass($this->modelClass).'".*');
 		if($this->modelClass != $classes[0]) $fields[] = '"'.$classes[0].'".*';
 		//$fields = array_keys($model->db());
-		$fields[] = '"'.$classes[0].'".ClassName AS RecordClassName';
+		$fields[] = '"'.$classes[0].'".ClassName AS "RecordClassName"';
 		return $fields;
 	}
 	

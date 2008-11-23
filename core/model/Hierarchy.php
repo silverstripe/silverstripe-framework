@@ -477,7 +477,7 @@ class Hierarchy extends DataObjectDecorator {
 	public function numChildren() {
 		$baseClass = ClassInfo::baseDataClass($this->owner->class);
 		// We build the query in an extension-friendly way.
-		$query = new SQLQuery("COUNT(*)","\"$baseClass\"","ParentID = " . (int)$this->owner->ID);
+		$query = new SQLQuery("COUNT(*)","\"$baseClass\"","\"ParentID\" = " . (int)$this->owner->ID);
 		$this->owner->extend('augmentSQL', $query);
 		return $query->execute()->value();
 	}
@@ -488,9 +488,9 @@ class Hierarchy extends DataObjectDecorator {
 	 * @return DataObjectSet
 	 */
 	public function stageChildren($showAll = false) {
-		$extraFilter = $showAll ? '' : " AND ShowInMenus = 1";
+		$extraFilter = $showAll ? '' : " AND \"ShowInMenus\"";
 		$baseClass = ClassInfo::baseDataClass($this->owner->class);
-		return DataObject::get($baseClass, "\"{$baseClass}\".\"ParentID\" = " . (int)$this->owner->ID . " AND \"{$baseClass}\".ID != " . (int)$this->owner->ID . $extraFilter, "");
+		return DataObject::get($baseClass, "\"{$baseClass}\".\"ParentID\" = " . (int)$this->owner->ID . " AND \"{$baseClass}\".\"ID\" != " . (int)$this->owner->ID . $extraFilter, "");
 	}
 
 	/**
@@ -499,9 +499,9 @@ class Hierarchy extends DataObjectDecorator {
 	 * @return DataObjectSet
 	 */
 	public function liveChildren($showAll = false) {
-		$extraFilter = $showAll ? '' : " AND ShowInMenus = 1";
+		$extraFilter = $showAll ? '' : " AND \"ShowInMenus\"";
 		$baseClass = ClassInfo::baseDataClass($this->owner->class);
-		return Versioned::get_by_stage($baseClass, "Live", "\"{$baseClass}\".\"ParentID\" = " . (int)$this->owner->ID . " AND \"{$baseClass}\".ID != " . (int)$this->owner->ID. $extraFilter, "");
+		return Versioned::get_by_stage($baseClass, "Live", "\"{$baseClass}\".\"ParentID\" = " . (int)$this->owner->ID . " AND \"{$baseClass}\".\"ID\" != " . (int)$this->owner->ID. $extraFilter, "");
 	}
 	
 	/**
@@ -511,7 +511,7 @@ class Hierarchy extends DataObjectDecorator {
 	public function getParent($filter = '') {
 		if($p = $this->owner->__get("ParentID")) {
 			$className = $this->owner->class;
-			$filter .= $filter?" AND ":""."\"$className\".ID = $p";
+			$filter .= $filter?" AND ":""."\"$className\".\"ID\" = $p";
 			return DataObject::get_one($className, $filter);
 		}
 	}

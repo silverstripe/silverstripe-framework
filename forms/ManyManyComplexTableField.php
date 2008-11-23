@@ -47,7 +47,7 @@ class ManyManyComplexTableField extends HasManyComplexTableField {
 			$query = $this->customQuery;
 			$query->select[] = "{$this->sourceClass}.ID AS ID";
 			$query->select[] = "{$this->sourceClass}.ClassName AS ClassName";
-			$query->select[] = "{$this->sourceClass}.ClassName AS RecordClassName";
+			$query->select[] = "{$this->sourceClass}.ClassName AS \"RecordClassName\"";
 		}
 		else {
 			$query = singleton($this->sourceClass)->extendedSQL($this->sourceFilter, $this->sourceSort, $limitClause, $this->sourceJoin);

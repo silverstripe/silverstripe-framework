@@ -253,7 +253,7 @@ class DatabaseAdmin extends Controller {
 						if(($record['ClassName'] != $subclass) &&
 							 (!is_subclass_of($record['ClassName'], $subclass)) &&
 							 ($recordExists[$subclass][$id])) {
-							$sql = "DELETE FROM \"$subclass\" WHERE ID = $record[ID]";
+							$sql = "DELETE FROM \"$subclass\" WHERE \"ID\" = $record[ID]";
 							echo "<li>$sql";
 							DB::query($sql);
 						}

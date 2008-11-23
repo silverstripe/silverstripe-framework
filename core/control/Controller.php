@@ -84,7 +84,7 @@ class Controller extends RequestHandler {
 		if(Session::get('loggedInAs') && Security::database_is_ready()) {
 			$member = Member::currentUser();
 			Cookie::set("PastMember", true);
-			DB::query("UPDATE Member SET LastVisited = NOW() WHERE ID = $member->ID", null);
+			DB::query("UPDATE \"Member\" SET \"LastVisited\" = NOW() WHERE \"ID\" = $member->ID", null);
 		}
 		
 		// This is used to test that subordinate controllers are actually calling parent::init() - a common bug

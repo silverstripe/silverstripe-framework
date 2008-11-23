@@ -114,12 +114,12 @@ class SiteTreeTest extends SapphireTest {
 		$parentID = $this->idFromFixture('Page', 'home');
 		$page->ParentID = $parentID;
 		$page->write();
-		$this->assertEquals($parentID, DB::query("SELECT ParentID FROM SiteTree WHERE ID = $page->ID")->value());
+		$this->assertEquals($parentID, DB::query("SELECT ParentID FROM SiteTree WHERE \"ID\" = $page->ID")->value());
 
 		/* You should then be able to save a null/0/'' value to the relation */
 		$page->ParentID = null;
 		$page->write();
-		$this->assertEquals(0, DB::query("SELECT ParentID FROM SiteTree WHERE ID = $page->ID")->value());
+		$this->assertEquals(0, DB::query("SELECT ParentID FROM SiteTree WHERE \"ID\" = $page->ID")->value());
 	}
 	
 }

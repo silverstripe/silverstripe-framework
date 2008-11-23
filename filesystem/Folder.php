@@ -52,7 +52,7 @@ class Folder extends File {
 				$keptChild = array_shift($children);
 				foreach($children as $removedChild) {
 					DB::query("UPDATE \"File\" SET ParentID = $keptChild WHERE ParentID = $removedChild");
-					DB::query("DELETE FROM \"File\" WHERE ID = $removedChild");
+					DB::query("DELETE FROM \"File\" WHERE \"ID\" = $removedChild");
 				}
 			} else {
 				user_error("Inconsistent database issue: SELECT ID FROM \"File\" WHERE Name = '$childName' AND ParentID = $parentID should have returned data", E_USER_WARNING);
@@ -93,7 +93,7 @@ class Folder extends File {
 					$child = $hasDbChild[$actualChild];
 					if( ($child->class != 'Folder' && is_dir($baseDir . $actualChild)) 
 					|| ($child->class == 'Folder' && !is_dir($baseDir . $actualChild)) ) {
-						DB::query("DELETE FROM \"File\" WHERE ID = $child->ID");
+						DB::query("DELETE FROM \"File\" WHERE \"ID\" = $child->ID");
 						unset($hasDbChild[$actualChild]);						
 					}
 				}
@@ -117,11 +117,11 @@ class Folder extends File {
 			
 			// Iterate through the unwanted children, removing them all
 			if(isset($unwantedDbChildren)) foreach($unwantedDbChildren as $unwantedDbChild) {
-				DB::query("DELETE FROM \"File\" WHERE ID = $unwantedDbChild->ID");
+				DB::query("DELETE FROM \"File\" WHERE \"ID\" = $unwantedDbChild->ID");
 				$deleted++;
 			}
 		} else {
-			DB::query("DELETE FROM \"File\" WHERE ID = $this->ID");
+			DB::query("DELETE FROM \"File\" WHERE \"ID\" = $this->ID");
 		}
 		
 		return array('added' => $added, 'deleted' => $deleted);
