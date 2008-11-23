@@ -45,25 +45,14 @@ class SearchForm extends Form {
 			);
 		}
 		
-		// We need this because it's a get form.  It can't go in the action value
-		// Hayden: Sorry if I've got it mixed up, but on the results or not found pages, the
-		// RelativeLink seems to be empty and it packs a sad
-		$formController = isset($_GET['formController']) ? $_GET['formController'] : null;		
-		if(!$formController) $formController = $controller->RelativeLink();
-		
-		$fields->push(new HiddenField('formController', null, $formController));
-		$fields->push(new HiddenField('executeForm', null, $name));
-		
 		parent::__construct($controller, $name, $fields, $actions);
+		
+		$this->setFormMethod('get');
 		
 		$this->disableSecurityToken();
 	}
 	
-	function FormMethod() {
-		return "get";
-	}
-	
-	public function forTemplate(){
+	public function forTemplate() {
 		return $this->renderWith(array(
 			'SearchForm',
 			'Form'
