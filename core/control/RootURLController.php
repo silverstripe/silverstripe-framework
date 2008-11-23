@@ -34,10 +34,15 @@ class RootURLController extends Controller {
 	 * Return the URL segment for the current HTTP_HOST value
 	 */
 	static function get_homepage_urlsegment() {
-		$host = $_SERVER['HTTP_HOST'];
-		$host = str_replace('www.','',$host);
-		$SQL_host = str_replace('.','\\.',Convert::raw2sql($host));
-        $homePageOBJ = DataObject::get_one("SiteTree", "HomepageForDomain REGEXP '(,|^) *$SQL_host *(,|\$)'");
+		// Temporarily restricted to MySQL database while testing db abstraction
+		if(DB::getConn() instanceof MySQLDatabase) {
+			$host = $_SERVER['HTTP_HOST'];
+			$host = str_replace('www.','',$host);
+			$SQL_host = str_replace('.','\\.',Convert::raw2sql($host));
+	        $homePageOBJ = DataObject::get_one("SiteTree", "HomepageForDomain REGEXP '(,|^) *$SQL_host *(,|\$)'");
+		} else {
+			$homePageOBJ = null;
+		}
 
 		if($homePageOBJ) {
 			return $homePageOBJ->URLSegment;
