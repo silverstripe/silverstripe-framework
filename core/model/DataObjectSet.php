@@ -180,7 +180,10 @@ class DataObjectSet extends ViewableData implements IteratorAggregate {
 	 */
 	public function parseQueryLimit(SQLQuery $query) {
 		if($query->limit) {
-			if(stripos($query->limit, 'OFFSET')) {
+			if(is_array($query->limit)) {
+				$length = $query->limit['limit'];
+				$start = $query->limit['start'];
+			} else if(stripos($query->limit, 'OFFSET')) {
 				list($length, $start) = split(" +OFFSET +", trim($query->limit));
 			} else {
 				$result = split(" *, *", trim($query->limit));
