@@ -219,7 +219,7 @@ class ComplexTableField extends TableListField {
 				&& ($filterKey = $this->getParentIdName($this->getParentClass(), $this->sourceClass()))
 				&& ($filterValue = $this->sourceID()) ) {
 					
-			$newFilter = "`$filterKey` = '" . Convert::raw2sql($filterValue) . "'";
+			$newFilter = "\"$filterKey\" = '" . Convert::raw2sql($filterValue) . "'";
 
 			if($sourceFilter && is_array($sourceFilter)) {
 				// Note that the brackets below are taken into account when building this

@@ -203,7 +203,7 @@ class DatabaseAdmin extends Controller {
 	function clearAllData() {
 		$tables = DB::query("SHOW TABLES")->column();
 		foreach($tables as $table) {
-			DB::query("TRUNCATE `$table`");
+			DB::query("TRUNCATE \"$table\"");
 		}
 	}
 
@@ -239,12 +239,12 @@ class DatabaseAdmin extends Controller {
 			}
 
 			if($subclasses) {
-				$records = DB::query("SELECT * FROM `$baseClass`");
+				$records = DB::query("SELECT * FROM \"$baseClass\"");
 
 
 				foreach($subclasses as $subclass) {
 					$recordExists[$subclass] =
-						DB::query("SELECT ID FROM `$subclass")->keyedColumn();
+						DB::query("SELECT ID FROM \"$subclass")->keyedColumn();
 				}
 
 				foreach($records as $record) {
@@ -253,7 +253,7 @@ class DatabaseAdmin extends Controller {
 						if(($record['ClassName'] != $subclass) &&
 							 (!is_subclass_of($record['ClassName'], $subclass)) &&
 							 ($recordExists[$subclass][$id])) {
-							$sql = "DELETE FROM `$subclass` WHERE ID = $record[ID]";
+							$sql = "DELETE FROM \"$subclass\" WHERE ID = $record[ID]";
 							echo "<li>$sql";
 							DB::query($sql);
 						}

@@ -110,7 +110,7 @@ class TableField extends TableListField {
 		// If we specify filterField, then an implicit source filter of "filterField = sourceFilter" is used.
 		if($filterField) {
 			$this->filterValue = $sourceFilter;
-			$sourceFilter = "`$filterField` = '" . Convert::raw2sql($sourceFilter) . "'";
+			$sourceFilter = "\"$filterField\" = '" . Convert::raw2sql($sourceFilter) . "'";
 		}
 		parent::__construct($name, $sourceClass, $fieldList, $sourceFilter, $sourceSort, $sourceJoin);
 

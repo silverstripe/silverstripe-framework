@@ -484,7 +484,7 @@ class SiteTree extends DataObject {
 	 */
 	public function getParent() {
 		if ($this->getField("ParentID")) {
-			return DataObject::get_one("SiteTree", "`SiteTree`.ID = " . $this->getField("ParentID"));
+			return DataObject::get_one("SiteTree", "\"SiteTree\".ID = " . $this->getField("ParentID"));
 		}
 	}
 
@@ -961,7 +961,7 @@ class SiteTree extends DataObject {
 		
 		// Ensure URLSegment is unique
 		$idFilter = ($this->ID)
-			? " AND `SiteTree`.ID <> '$this->ID'" :
+			? " AND \"SiteTree\".ID <> '$this->ID'" :
 			'';
 
 		$count = 1;
@@ -1364,7 +1364,7 @@ class SiteTree extends DataObject {
 	 * Publish this page
 	 */
 	function doPublish() {
-		$original = Versioned::get_one_by_stage("SiteTree", "Live", "`SiteTree`.`ID` = $this->ID");
+		$original = Versioned::get_one_by_stage("SiteTree", "Live", "\"SiteTree\".\"ID\" = $this->ID");
 		if(!$original) $original = new SiteTree();
 
 		// Handle activities undertaken by decorators
@@ -1454,7 +1454,7 @@ class SiteTree extends DataObject {
 		if($this->isNew())
 			return false;
 
-		return (DB::query("SELECT ID FROM `SiteTree_Live` WHERE ID = $this->ID")->value())
+		return (DB::query("SELECT ID FROM \"SiteTree_Live\" WHERE ID = $this->ID")->value())
 			? true
 			: false;
 	}

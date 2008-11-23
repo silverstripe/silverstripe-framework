@@ -282,7 +282,7 @@ class PDODatabase extends Database {
 	public function createTable($tableName, $fields = null, $indexes = null) {
 		$fieldSchemas = $indexSchemas = "";
 		if ($fields) {
-			foreach($fields as $k => $v) $fieldSchemas .= "`$k` $v,\n";
+			foreach($fields as $k => $v) $fieldSchemas .= "\"$k\" $v,\n";
 		}
 		
 		switch (self::getDatabaseServer()) {
@@ -363,11 +363,11 @@ class PDODatabase extends Database {
 	 */
 	public function checkAndRepairTable($tableName) {
 		if ($parameters['type'] == "mysql") {
-			if (!$this->runTableCheckCommand("CHECK TABLE `$tableName`")) {
+			if (!$this->runTableCheckCommand("CHECK TABLE \"$tableName\"")) {
 				if(!Database::$supressOutput) {
 					echo "<li style=\"color: orange\">Table $tableName: repaired</li>";
 				}
-				return $this->runTableCheckCommand("REPAIR TABLE `$tableName` USE_FRM");
+				return $this->runTableCheckCommand("REPAIR TABLE \"$tableName\" USE_FRM");
 			} else {
 				return true;
 			}

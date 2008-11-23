@@ -335,7 +335,7 @@ abstract class Database extends Object {
 					$default = explode('default ', $spec);
 					$default = $default[1];
 					if($default == "'SiteTree'") $default = "'Page'";
-					$query = "UPDATE `$table` SET $field=$default WHERE $field IN (";
+					$query = "UPDATE \"$table\" SET $field=$default WHERE $field IN (";
 					for($i=0;$i+1<count($holder);$i++) {
 						$query .= "'{$holder[$i]}', ";
 					}
@@ -384,7 +384,7 @@ abstract class Database extends Object {
 			if(isset($writeInfo['fields']) && $writeInfo['fields']) {
 				$fieldList = array();
 				foreach($writeInfo['fields'] as $fieldName => $fieldVal) {
-					$fieldList[] = "`$fieldName` = $fieldVal";
+					$fieldList[] = "\"$fieldName\" = $fieldVal";
 				}
 				$fieldList = implode(", ", $fieldList);
 				
@@ -394,7 +394,7 @@ abstract class Database extends Object {
 				
 				switch($writeInfo['command']) {
 					case "update":
-						$sql = "update `$table` SET $fieldList where $writeInfo[where]";
+						$sql = "update \"$table\" SET $fieldList where $writeInfo[where]";
 						$this->query($sql);
 
 						// If numAffectedRecord = 0, then we want to run instert instead
@@ -402,7 +402,7 @@ abstract class Database extends Object {
 							if(!isset($writeInfo['fields']['ID']) && isset($writeInfo['id'])) {
 								$fieldList .= ", ID = $writeInfo[id]";
 							}
-							$sql = "insert into `$table` SET $fieldList";
+							$sql = "insert into \"$table\" SET $fieldList";
 							$this->query($sql, null);
 						}
 						break;
@@ -412,7 +412,7 @@ abstract class Database extends Object {
 							$fieldList .= ", ID = $writeInfo[id]";
 						}
 						$fieldList = Database::replace_with_null($fieldList);
-						$sql = "insert into `$table` SET $fieldList";
+						$sql = "insert into \"$table\" SET $fieldList";
 						$this->query($sql);
 						break;
 

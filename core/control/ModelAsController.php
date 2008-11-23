@@ -83,8 +83,8 @@ class ModelAsController extends Controller implements NestedController {
 	protected function findOldPage($urlSegment) {
 		$versionedQuery = new SQLQuery (
 			'RecordID', 'SiteTree_versions',
-			"`WasPublished` = 1 AND `URLSegment` = '$urlSegment'",
-			'`LastEdited` DESC, `WasPublished`',
+			"\"WasPublished\" = 1 AND \"URLSegment\" = '$urlSegment'",
+			'"LastEdited" DESC, "WasPublished"',
 			null, null, 1
 		);
 		

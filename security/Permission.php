@@ -321,7 +321,7 @@ class Permission extends DataObject {
 
 		// Add default content if blank
 		if(!DB::query("SELECT ID FROM Permission")->value() && array_key_exists('CanCMSAdmin', DB::fieldList('Group'))) {
-			$admins = DB::query("SELECT ID FROM `Group` WHERE CanCMSAdmin = 1")
+			$admins = DB::query("SELECT ID FROM \"Group\" WHERE CanCMSAdmin = 1")
 				->column();
 
 			if(isset($admins)) {
@@ -329,7 +329,7 @@ class Permission extends DataObject {
 					Permission::grant($admin, "ADMIN");
 			}
 
-			$authors = DB::query("SELECT ID FROM `Group` WHERE CanCMS = 1")
+			$authors = DB::query("SELECT ID FROM \"Group\" WHERE CanCMS = 1")
 				->column();
 			if(isset($authors)) {
 				foreach($authors as $author) {
@@ -363,7 +363,7 @@ class Permission extends DataObject {
 			'Group', 
 			$SQL_filter, // filter
 			null, // limit
-			"LEFT JOIN `Permission` ON `Group`.`ID` = `Permission`.`GroupID`"
+			"LEFT JOIN \"Permission\" ON \"Group\".\"ID\" = \"Permission\".\"GroupID\""
 		);
 		if(!$toplevelGroups)
 			return false;
@@ -380,10 +380,10 @@ class Permission extends DataObject {
 
 		$members = DataObject::get(
 			Object::getCustomClass('Member'),
-			$_filter = "`Group`.ID IN (" . implode(",",$groupIDs) . ")",
+			$_filter = "\"Group\".ID IN (" . implode(",",$groupIDs) . ")",
 			$_sort = "",
-			$_join = "LEFT JOIN `Group_Members` ON `Member`.`ID` = `Group_Members`.`MemberID` " . 
-				"LEFT JOIN `Group` ON `Group_Members`.`GroupID` = `Group`.`ID` "
+			$_join = "LEFT JOIN \"Group_Members\" ON \"Member\".\"ID\" = \"Group_Members\".\"MemberID\" " . 
+				"LEFT JOIN \"Group\" ON \"Group_Members\".\"GroupID\" = \"Group\".\"ID\" "
 		);
 		return $members;
 	}

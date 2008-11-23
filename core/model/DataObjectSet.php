@@ -789,7 +789,7 @@ class DataObjectSet extends ViewableData implements IteratorAggregate {
 			$parentSet = array();
 
 			// get direct parents
-			$parents = DataObject::get( 'SiteTree', "`SiteTree`.`$parentField` IN( " . implode( ",", array_keys( $groupedSet ) ) . ")", $sortParents );	
+			$parents = DataObject::get( 'SiteTree', "\"SiteTree\".\"$parentField\" IN( " . implode( ",", array_keys( $groupedSet ) ) . ")", $sortParents );	
 			
 			// for each of these parents...
 			foreach($parents as $parent) {
@@ -815,7 +815,7 @@ class DataObjectSet extends ViewableData implements IteratorAggregate {
 				if(empty($parentStack)) {
 					$newParent = new DataObjectSet();
 				} else {
-				 	$newParent = DataObject::get_one( $groupClassName, "`SiteTree`.`$parentField` IN( " . implode( ",", $parentStack ) . ")" );		
+				 	$newParent = DataObject::get_one( $groupClassName, "\"SiteTree\".\"$parentField\" IN( " . implode( ",", $parentStack ) . ")" );		
 				}
 			
 				// change each of the descendant's association from the old parent to
@@ -839,7 +839,7 @@ class DataObjectSet extends ViewableData implements IteratorAggregate {
 			if(empty($requiredIDs)) {
 				$parentSet = new DataObjectSet();
 			} else {
-				$parentSet = DataObject::get( $groupClassName, "`$groupClassName`.`$parentField` IN( " . implode( ",", $requiredIDs ) . ")", $sortParents );	
+				$parentSet = DataObject::get( $groupClassName, "\"$groupClassName\".\"$parentField\" IN( " . implode( ",", $requiredIDs ) . ")", $sortParents );	
 			}
 			
 			$parentSet = $parentSet->toArray();

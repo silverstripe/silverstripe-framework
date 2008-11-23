@@ -560,10 +560,10 @@ class File extends DataObject {
 		// In short, we select everything except File.Content
 		$dataobject_select = array();
 		foreach($query->select as $item) {
-			if($item == "`File`.*") {
-				$fileColumns = DB::query("SHOW FIELDS IN `File`")->column();
+			if($item == "\"File\".*") {
+				$fileColumns = DB::query("SHOW FIELDS IN \"File\"")->column();
 				$columnsToAdd = array_diff($fileColumns, $excludeDbColumns);
-				foreach($columnsToAdd as $otherItem) $dataobject_select[] = '`File`.' . $otherItem;
+				foreach($columnsToAdd as $otherItem) $dataobject_select[] = '"File".' . $otherItem;
 			} else {
 				$dataobject_select[] = $item;
 			}

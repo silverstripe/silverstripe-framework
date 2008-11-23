@@ -182,7 +182,7 @@ HTML;
 
 
 	protected function getColumnsInTable( $table ) {
-		$result = DB::query( "SELECT * FROM `$table` LIMIT 1" );
+		$result = DB::query( "SELECT * FROM \"$table\" LIMIT 1" );
 		return array_keys( $result->next() );
 	}
 
@@ -229,7 +229,7 @@ HTML;
 			$joinKey = $this->primaryKeys[$className];
 
 			// get the all the extra fields.
-			$recordObj = DataObject::get_one( $className, "`$className`.`$joinKey`='$primaryKeyValue'" );
+			$recordObj = DataObject::get_one( $className, "\"$className\".\"$joinKey\"='$primaryKeyValue'" );
 
 			$completeRecord = $completeRecord + $this->joinFields( $recordObj, $fields );
 		}
@@ -264,7 +264,7 @@ HTML;
 
 		$tableColumns = array();
 		$selectFields = array();
-		$joins = array( "`{$this->primaryClass}`" );
+		$joins = array( "\"{$this->primaryClass}\"" );
 
 		foreach( $this->fields as $field ) {
 			if( $field{0} == '!' )
@@ -274,9 +274,9 @@ HTML;
 			$tableColumns[$table][] = $column;
 
 			if( $column == '*' )
-				$selectFields[] = "`$table`.*";
+				$selectFields[] = "\"$table\".*";
 			else
-				$selectFields[] = "`$table`.`$column` AS '$table.$column'";
+				$selectFields[] = "\"$table\".\"$column\" AS '$table.$column'";
 		}
 
 		foreach( array_keys( $tableColumns ) as $table ) {
@@ -284,7 +284,7 @@ HTML;
 			$primaryKey = $this->primaryKeys[$this->primaryClass];
 
 			if( $table != $this->primaryClass )
-				$joins[] = "LEFT JOIN `$table` ON `$table`.`$tableKey`=`{$this->primaryClass}`.`$primaryKey`";
+				$joins[] = "LEFT JOIN \"$table\" ON \"$table\".\"$tableKey\"=\"{$this->primaryClass}\".\"$primaryKey\"";
 		}
 
 		$query = new SQLQuery( $selectFields, $joins );

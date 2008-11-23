@@ -72,7 +72,7 @@ class DataObjectTest extends SapphireTest {
 		$this->assertEquals('Joe', $comments->First()->Name);
 		
 		// Test join
-		$comments = DataObject::get('PageComment', "`SiteTree`.Title='First Page'", '', 'INNER JOIN SiteTree ON PageComment.ParentID = SiteTree.ID');
+		$comments = DataObject::get('PageComment', "\"SiteTree\".Title='First Page'", '', 'INNER JOIN SiteTree ON PageComment.ParentID = SiteTree.ID');
 		$this->assertEquals(2, $comments->Count());
 		$this->assertEquals('Bob', $comments->First()->Name);
 		$this->assertEquals('Bob', $comments->Last()->Name);

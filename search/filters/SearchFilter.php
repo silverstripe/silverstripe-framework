@@ -123,22 +123,22 @@ abstract class SearchFilter extends Object {
 				if ($component = $model->has_one($rel)) {	
 					if(!$query->isJoinedTo($component)) {
 						$foreignKey = $model->getReverseAssociation($component);
-						$query->leftJoin($component, "`$component`.`ID` = `{$this->model}`.`{$foreignKey}ID`");
+						$query->leftJoin($component, "\"$component\".\"ID\" = \"{$this->model}\".\"{$foreignKey}ID\"");
 					}
 					$this->model = $component;
 				} elseif ($component = $model->has_many($rel)) {
 					if(!$query->isJoinedTo($component)) {
 					 	$ancestry = $model->getClassAncestry();
 						$foreignKey = $model->getComponentJoinField($rel);
-						$query->leftJoin($component, "`$component`.`{$foreignKey}` = `{$ancestry[0]}`.`ID`");
+						$query->leftJoin($component, "\"$component\".\"{$foreignKey}\" = \"{$ancestry[0]}\".\"ID\"");
 					}
 					$this->model = $component;
 				} elseif ($component = $model->many_many($rel)) {
 					list($parentClass, $componentClass, $parentField, $componentField, $relationTable) = $component;
 					$parentBaseClass = ClassInfo::baseDataClass($parentClass);
 					$componentBaseClass = ClassInfo::baseDataClass($componentClass);
-					$query->innerJoin($relationTable, "`$relationTable`.`$parentField` = `$parentBaseClass`.`ID`");
-					$query->leftJoin($componentClass, "`$relationTable`.`$componentField` = `$componentClass`.`ID`");
+					$query->innerJoin($relationTable, "\"$relationTable\".\"$parentField\" = \"$parentBaseClass\".\"ID\"");
+					$query->leftJoin($componentClass, "\"$relationTable\".\"$componentField\" = \"$componentClass\".\"ID\"");
 					$this->model = $componentClass;
 				}
 			}

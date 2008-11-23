@@ -273,7 +273,7 @@ class Member extends DataObject {
 		do {
 			$hash = substr(base_convert(md5(uniqid(mt_rand(), true)), 16, 36),
 										 0, 30);
-		} while(DataObject::get_one('Member', "`AutoLoginHash` = '$hash'"));
+		} while(DataObject::get_one('Member', "\"AutoLoginHash\" = '$hash'"));
 
 		$this->AutoLoginHash = $hash;
 		$this->AutoLoginExpired = date('Y-m-d', time() + (86400 * $lifetime));
@@ -289,8 +289,8 @@ class Member extends DataObject {
 	static function member_from_autologinhash($RAW_hash, $login = false) {
 		$SQL_hash = Convert::raw2sql($RAW_hash);
 
-		$member = DataObject::get_one('Member',"`AutoLoginHash`='" . $SQL_hash .
-																	"' AND `AutoLoginExpired` > NOW()");
+		$member = DataObject::get_one('Member',"\"AutoLoginHash\"='" . $SQL_hash .
+																	"' AND \"AutoLoginExpired\" > NOW()");
 
 		if($login && $member)
 			$member->logIn();
@@ -449,7 +449,7 @@ class Member extends DataObject {
 
 		if($this->Email) {
 			if($this->ID) {
-				$idClause = "AND `Member`.ID <> $this->ID";
+				$idClause = "AND \"Member\".ID <> $this->ID";
 			} else {
 				$idClause = "";
 			}
@@ -649,7 +649,7 @@ class Member extends DataObject {
 		if(count($collatedGroups) > 0) {
 			$collatedGroups = implode(", ", array_unique($collatedGroups));
 
-			$unfilteredGroups = singleton('Group')->instance_get("`ID` IN ($collatedGroups)", "ID", "", "", "Member_GroupSet");
+			$unfilteredGroups = singleton('Group')->instance_get("\"ID\" IN ($collatedGroups)", "ID", "", "", "Member_GroupSet");
 			$result = new ComponentSet();
 			
 			// Only include groups where allowedIPAddress() returns true
@@ -721,8 +721,8 @@ class Member extends DataObject {
 			return Member::map();
 
 		return new SQLMap(singleton('Member')->extendedSQL(
-			"`GroupID` IN (" . implode( ',', $groupIDList ) .
-			")", "Surname, FirstName", "", "INNER JOIN `Group_Members` ON `MemberID`=`Member`.`ID`"));
+			"\"GroupID\" IN (" . implode( ',', $groupIDList ) .
+			")", "Surname, FirstName", "", "INNER JOIN \"Group_Members\" ON \"MemberID\"=\"Member\".\"ID\""));
 	}
 
 
@@ -749,7 +749,7 @@ class Member extends DataObject {
 			$SQL_perms = "'" . implode("', '", Convert::raw2sql($perms)) . "'";
 			
 			$groups = DataObject::get('Group', "", "",
-				"INNER JOIN `Permission` ON `Permission`.GroupID = `Group`.ID AND `Permission`.Code IN ($SQL_perms)");
+				"INNER JOIN \"Permission\" ON \"Permission\".GroupID = \"Group\".ID AND \"Permission\".Code IN ($SQL_perms)");
 		}
 
 		$groupIDList = array();
@@ -765,12 +765,12 @@ class Member extends DataObject {
 			return Member::map();	*/
 
 		$filterClause = ($groupIDList)
-			? "`GroupID` IN (" . implode( ',', $groupIDList ) . ")"
+			? "\"GroupID\" IN (" . implode( ',', $groupIDList ) . ")"
 			: "";
 
 		return new SQLMap(singleton('Member')->extendedSQL($filterClause,
 			"Surname, FirstName", "",
-			"INNER JOIN `Group_Members` ON `MemberID`=`Member`.`ID` INNER JOIN `Group` ON `Group`.`ID`=`GroupID`"));
+			"INNER JOIN \"Group_Members\" ON \"MemberID\"=\"Member\".\"ID\" INNER JOIN \"Group\" ON \"Group\".\"ID\"=\"GroupID\""));
 	}
 
 

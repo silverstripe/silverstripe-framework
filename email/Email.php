@@ -519,7 +519,7 @@ class Email_BounceHandler extends Controller {
     	if(!$duplicateBounce) {
         $record = new Email_BounceRecord();
         
-        $member = DataObject::get_one( 'Member', "`Email`='$SQL_email'" );
+        $member = DataObject::get_one( 'Member', "\"Email\"='$SQL_email'" );
         
         if( $member ) {
             $record->MemberID = $member->ID;

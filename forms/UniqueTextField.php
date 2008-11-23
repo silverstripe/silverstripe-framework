@@ -34,14 +34,14 @@ class UniqueTextField extends TextField {
 		// if the restrictedFields and tables have been specified,
 		// then get the restricted values
 		if( !empty( $this->restrictedField ) && !empty( $this->restrictedTable ) ) {
-			$result = DB::query("SELECT `{$this->restrictedField}` FROM `{$this->restrictedTable}`");
+			$result = DB::query("SELECT \"{$this->restrictedField}\" FROM \"{$this->restrictedTable}\"");
 			
 			$count = 1;
 			
 			while( $restrictedValue = $result->nextRecord() )
 				$restrictedValues[$restrictedValue[$this->restrictedField]] = 1;
 				
-			$result = DB::query("SELECT `{$this->restrictedField}` FROM `{$this->restrictedTable}_Live`");
+			$result = DB::query("SELECT \"{$this->restrictedField}\" FROM \"{$this->restrictedTable}_Live\"");
 			
 			while( $restrictedValue = $result->nextRecord() )
 				$restrictedValues[$restrictedValue[$this->restrictedField]] = 1;	

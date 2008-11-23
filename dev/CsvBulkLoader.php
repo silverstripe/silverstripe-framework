@@ -149,7 +149,7 @@ class CsvBulkLoader extends BulkLoader {
 					//user_error("CsvBulkLoader:processRecord: Couldn't find duplicate identifier '{$fieldName}' in columns", E_USER_ERROR);
 				}
 				$SQL_fieldValue = $record[$fieldName];
-				$existingRecord = DataObject::get_one($this->objectClass, "`$SQL_fieldName` = '{$SQL_fieldValue}'");
+				$existingRecord = DataObject::get_one($this->objectClass, "\"$SQL_fieldName\" = '{$SQL_fieldValue}'");
 				if($existingRecord) return $existingRecord;
 			} elseif(is_array($duplicateCheck) && isset($duplicateCheck['callback'])) {
 				$existingRecord = singleton($this->objectClass)->{$duplicateCheck['callback']}($record[$fieldName], $record);

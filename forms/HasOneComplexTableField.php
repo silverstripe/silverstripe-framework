@@ -36,7 +36,7 @@ class HasOneComplexTableField extends HasManyComplexTableField {
 	}
 	
 	function isChildSet($childID) {
-		return DataObject::get($this->controllerClass(), '`' . $this->joinField . "` = '$childID'");
+		return DataObject::get($this->controllerClass(), '"' . $this->joinField . "\" = '$childID'");
 	}
 	
 	function ExtraData() {

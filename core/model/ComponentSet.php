@@ -128,14 +128,14 @@ class ComponentSet extends DataObjectSet {
 			$parentField = $this->ownerClass . 'ID';
 			$childField = ($this->childClass == $this->ownerClass) ? "ChildID" : ($this->childClass . 'ID');
 			
-			DB::query( "DELETE FROM `$this->tableName` WHERE $parentField = {$this->ownerObj->ID} AND $childField = {$item->ID}" );
+			DB::query( "DELETE FROM \"$this->tableName\" WHERE $parentField = {$this->ownerObj->ID} AND $childField = {$item->ID}" );
 			
 			$extraSQL = '';
 			if($extraFields) foreach($extraFields as $k => $v) {
 				$extraSQL .= ", $k = '" . addslashes($v) . "'";
 			}
 
-			DB::query("INSERT INTO `$this->tableName` SET $parentField = {$this->ownerObj->ID}, $childField = {$item->ID} $extraSQL");
+			DB::query("INSERT INTO \"$this->tableName\" SET $parentField = {$this->ownerObj->ID}, $childField = {$item->ID} $extraSQL");
 		}
 	}
     	
@@ -206,7 +206,7 @@ class ComponentSet extends DataObjectSet {
 			} else {
 				$parentField = $this->ownerClass . 'ID';
 				$childField = ($this->childClass == $this->ownerClass) ? "ChildID" : ($this->childClass . 'ID');
-				DB::query("DELETE FROM `$this->tableName` WHERE $parentField = {$this->ownerObj->ID} AND $childField = {$item->ID}");
+				DB::query("DELETE FROM \"$this->tableName\" WHERE $parentField = {$this->ownerObj->ID} AND $childField = {$item->ID}");
 			}
 		}
 		
@@ -232,7 +232,7 @@ class ComponentSet extends DataObjectSet {
 			$itemCSV = implode(", ", $itemList);
 			$parentField = $this->ownerClass . 'ID';
 			$childField = ($this->childClass == $this->ownerClass) ? "ChildID" : ($this->childClass . 'ID');
-			DB::query("DELETE FROM `$this->tableName` WHERE $parentField = {$this->ownerObj->ID} AND $childField IN ($itemCSV)");
+			DB::query("DELETE FROM \"$this->tableName\" WHERE $parentField = {$this->ownerObj->ID} AND $childField IN ($itemCSV)");
 		}
 	}
 	
@@ -243,7 +243,7 @@ class ComponentSet extends DataObjectSet {
 	 */
 	function removeByFilter($filter) {
 		$parentField = $this->ownerClass . 'ID';
-		DB::query("DELETE FROM `$this->tableName` WHERE $parentField = {$this->ownerObj->ID} AND $filter");
+		DB::query("DELETE FROM \"$this->tableName\" WHERE $parentField = {$this->ownerObj->ID} AND $filter");
 	}
 	
 	/**
@@ -252,7 +252,7 @@ class ComponentSet extends DataObjectSet {
 	function removeAll() {
 		if(!empty($this->tableName)) {
 			$parentField = $this->ownerClass . 'ID';
-			DB::query("DELETE FROM `$this->tableName` WHERE $parentField = {$this->ownerObj->ID}");
+			DB::query("DELETE FROM \"$this->tableName\" WHERE $parentField = {$this->ownerObj->ID}");
 		} else {
 			foreach($this->items as $item) {
 				$this->remove($item);

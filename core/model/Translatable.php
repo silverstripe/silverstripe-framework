@@ -225,7 +225,7 @@ class Translatable extends DataObjectDecorator {
 			$langsAvailable[] = self::default_lang();
 			$lang = self::choose_site_lang($langsAvailable);
 			if (isset($lang)) {
-				$transrecord = self::get_one_by_lang($callerClass, $lang, "`$callerClass`.ID = $record->ID");
+				$transrecord = self::get_one_by_lang($callerClass, $lang, "\"$callerClass\".ID = $record->ID");
 				if ($transrecord) {
 					self::set_reading_lang($lang);
 					$record = $transrecord;
@@ -265,7 +265,7 @@ class Translatable extends DataObjectDecorator {
 	static function get_original($class, $originalLangID) {
 		$baseClass = $class;
 		while( ($p = get_parent_class($baseClass)) != "DataObject") $baseClass = $p;
-		return self::get_one_by_lang($class,self::default_lang(),"`$baseClass`.ID = $originalLangID");
+		return self::get_one_by_lang($class,self::default_lang(),"\"$baseClass\".ID = $originalLangID");
 	}
 
 	/**
@@ -276,7 +276,7 @@ class Translatable extends DataObjectDecorator {
 	 * @return array List of languages
 	 */
 	static function get_langs_by_id($class, $id) {
-		$query = new SQLQuery('Lang',"{$class}_lang","(`{$class}_lang`.OriginalLangID =$id)");
+		$query = new SQLQuery('Lang',"{$class}_lang","(\"{$class}_lang\".OriginalLangID =$id)");
 		$langs = $query->execute()->column();
 		return ($langs) ? array_values($langs) : false;
 	}
@@ -360,8 +360,8 @@ class Translatable extends DataObjectDecorator {
 					if (stripos($query->sql(),'.ID')) {
 						// Every reference to ID is now OriginalLangID
 						$query->replaceText(".ID",".OriginalLangID");
-						$query->where = str_replace("`ID`", "`OriginalLangID`",$query->where);
-						$query->select[] = "`{$baseTable}_lang`.OriginalLangID AS ID";
+						$query->where = str_replace("\"ID\"", "\"OriginalLangID\"",$query->where);
+						$query->select[] = "\"{$baseTable}_lang\".OriginalLangID AS ID";
 					}
 					if ($query->where) foreach ($query->where as $i => $wherecl) {
 						if (substr($wherecl,0,4) == 'ID =')
@@ -371,18 +371,18 @@ class Translatable extends DataObjectDecorator {
 							$parts = explode(' AND ',$wherecl);
 							foreach ($parts as $j => $part) {
 								// Divide this clause between the left ($innerparts[1]) and right($innerparts[2]) part of the condition
-								ereg('(`?[[:alnum:]_-]*`?\.?`?[[:alnum:]_-]*`?)(.*)', $part, $innerparts);
+								ereg('(\"?[[:alnum:]_-]*\"?\.?\"?[[:alnum:]_-]*\"?)(.*)', $part, $innerparts);
 								if (strpos($innerparts[1],'.') === false)
 									//it may be ambiguous, so sometimes we will need to add the table
-									$parts[$j] = ($this->isInAugmentedTable($innerparts[1], $table) ? "`{$table}_lang`." : "")."$part";
+									$parts[$j] = ($this->isInAugmentedTable($innerparts[1], $table) ? "\"{$table}_lang\"." : "")."$part";
 								else {
 									/* if the table has been specified we have to determine if the original (without _lang) name has to be used
 									 * because we don't have the queried field in the augmented table (which usually means
 									 * that is not a translatable field)
 									 */
 									$clauseparts = explode('.',$innerparts[1]);
-									$originalTable = str_replace('`','',str_replace('_lang','',$clauseparts[0]));
-									$parts[$j] = ($this->isInAugmentedTable($clauseparts[1], $originalTable) ? "`{$originalTable}_lang`" : "`$originalTable`") 
+									$originalTable = str_replace('\"','',str_replace('_lang','',$clauseparts[0]));
+									$parts[$j] = ($this->isInAugmentedTable($clauseparts[1], $originalTable) ? "\"{$originalTable}_lang\"" : "\"$originalTable\"") 
 												  . ".{$clauseparts[1]}{$innerparts[2]}";
 								}
 							}
@@ -398,19 +398,19 @@ class Translatable extends DataObjectDecorator {
 					}
 					
 					// unless we are bypassing this query, add the language filter
-					if (!self::$bypass) $query->where[] = "`{$table}_lang`.Lang = '$lang'";
+					if (!self::$bypass) $query->where[] = "\"{$table}_lang\".Lang = '$lang'";
 					
 					// unless this is a deletion, the query is applied to the joined table
 					if (!$query->delete) {
-						$query->from[$table] = "INNER JOIN `$table`".
-													" ON `{$table}_lang`.OriginalLangID = `$table`.ID";
+						$query->from[$table] = "INNER JOIN \"$table\"".
+													" ON \"{$table}_lang\".OriginalLangID = \"$table\".ID";
 						/* if we are selecting fields (not doing counts for example) we need to select everything from
 						 * the original table (was renamed to _lang) since some fields that we require may be there
 						 */
-						if ($query->select[0][0] == '`') $query->select = array_merge(array("`$table`.*"),$query->select);
+						if ($query->select[0][0] == '\"') $query->select = array_merge(array("\"$table\".*"),$query->select);
 					} else unset($query->from[$table]);
 				} else {
-					$query->from[$table] = str_replace("`{$table}`.OriginalLangID","`{$table}`.ID",$query->from[$table]);
+					$query->from[$table] = str_replace("\"{$table}\".OriginalLangID","\"{$table}\".ID",$query->from[$table]);
 				}
 			}
 		}
@@ -424,7 +424,7 @@ class Translatable extends DataObjectDecorator {
 	 * @return boolean True if the clause can be applied to the augmented table
 	 */
 	function isInAugmentedTable($clause, $table) {
-		$clause = str_replace('`','',$clause);
+		$clause = str_replace('\"','',$clause);
 		$table = str_replace('_lang','',$table);
 		if (strpos($table,'_') !== false) return false;
 		$field = ereg_replace('[[:blank:]]*([[:alnum:]]*).*','\\1',$clause);
@@ -587,7 +587,7 @@ class Translatable extends DataObjectDecorator {
 			$originalRecord = self::get_one_by_lang(
 					$this->owner->class, 
 					self::$default_lang, 
-					"`$baseClass`.ID = ".$originalLangID
+					"\"$baseClass\".ID = ".$originalLangID
 			);
 			$this->original_values = $originalRecord->getAllFields();
 			$alltasks = array( 'dup' => array());

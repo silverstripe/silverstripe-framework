@@ -117,7 +117,7 @@ class MySQLDatabase extends Database {
 	 */
 	public function getNextID($table) {
 		user_error('getNextID is OBSOLETE (and will no longer work properly)', E_USER_WARNING);
-		$result = $this->query("SELECT MAX(ID)+1 FROM `$table`")->value();
+		$result = $this->query("SELECT MAX(ID)+1 FROM \"$table\"")->value();
 		return $result ? $result : 1;
 	}
 	
@@ -174,10 +174,10 @@ class MySQLDatabase extends Database {
 	
 	public function createTable($tableName, $fields = null, $indexes = null) {
 		$fieldSchemas = $indexSchemas = "";
-		if($fields) foreach($fields as $k => $v) $fieldSchemas .= "`$k` $v,\n";
+		if($fields) foreach($fields as $k => $v) $fieldSchemas .= "\"$k\" $v,\n";
 		if($indexes) foreach($indexes as $k => $v) $fieldSchemas .= $this->getIndexSqlDefinition($k, $v) . ",\n";
 		
-		$this->query("CREATE TABLE `$tableName` (
+		$this->query("CREATE TABLE \"$tableName\" (
 				ID int(11) not null auto_increment,
 				$fieldSchemas
 				$indexSchemas
@@ -196,20 +196,20 @@ class MySQLDatabase extends Database {
 	public function alterTable($tableName, $newFields = null, $newIndexes = null, $alteredFields = null, $alteredIndexes = null) {
 		$fieldSchemas = $indexSchemas = "";
 		
-		if($newFields) foreach($newFields as $k => $v) $alterList[] .= "ADD `$k` $v";
+		if($newFields) foreach($newFields as $k => $v) $alterList[] .= "ADD \"$k\" $v";
 		if($newIndexes) foreach($newIndexes as $k => $v) $alterList[] .= "ADD " . $this->getIndexSqlDefinition($k, $v);
-		if($alteredFields) foreach($alteredFields as $k => $v) $alterList[] .= "CHANGE `$k` `$k` $v";
+		if($alteredFields) foreach($alteredFields as $k => $v) $alterList[] .= "CHANGE \"$k\" \"$k\" $v";
 		if($alteredIndexes) foreach($alteredIndexes as $k => $v) {
-			$alterList[] .= "DROP INDEX `$k`";
+			$alterList[] .= "DROP INDEX \"$k\"";
 			$alterList[] .= "ADD ". $this->getIndexSqlDefinition($k, $v);
  		}
 		
 		$alterations = implode(",\n", $alterList);
-		$this->query("ALTER TABLE `$tableName` " . $alterations);
+		$this->query("ALTER TABLE \"$tableName\" " . $alterations);
 	}
 
 	public function renameTable($oldTableName, $newTableName) {
-		$this->query("ALTER TABLE `$oldTableName` RENAME `$newTableName`");
+		$this->query("ALTER TABLE \"$oldTableName\" RENAME \"$newTableName\"");
 	}
 	
 	
@@ -220,9 +220,9 @@ class MySQLDatabase extends Database {
 	 * @return boolean Return true if the table has integrity after the method is complete.
 	 */
 	public function checkAndRepairTable($tableName) {
-		if(!$this->runTableCheckCommand("CHECK TABLE `$tableName`")) {
+		if(!$this->runTableCheckCommand("CHECK TABLE \"$tableName\"")) {
 			Database::alteration_message("Table $tableName: repaired","repaired");
-			return $this->runTableCheckCommand("REPAIR TABLE `$tableName` USE_FRM");
+			return $this->runTableCheckCommand("REPAIR TABLE \"$tableName\" USE_FRM");
 		} else {
 			return true;
 		}
@@ -244,7 +244,7 @@ class MySQLDatabase extends Database {
 	}
 	
 	public function createField($tableName, $fieldName, $fieldSpec) {
-		$this->query("ALTER TABLE `$tableName` ADD `$fieldName` $fieldSpec");
+		$this->query("ALTER TABLE \"$tableName\" ADD \"$fieldName\" $fieldSpec");
 	}
 	
 	/**
@@ -254,7 +254,7 @@ class MySQLDatabase extends Database {
 	 * @param string $fieldSpec The new field specification
 	 */
 	public function alterField($tableName, $fieldName, $fieldSpec) {
-		$this->query("ALTER TABLE `$tableName` CHANGE `$fieldName` `$fieldName` $fieldSpec");
+		$this->query("ALTER TABLE \"$tableName\" CHANGE \"$fieldName\" \"$fieldName\" $fieldSpec");
 	}
 	
 	/**
@@ -267,12 +267,12 @@ class MySQLDatabase extends Database {
 	public function renameField($tableName, $oldName, $newName) {
 		$fieldList = $this->fieldList($tableName);
 		if(array_key_exists($oldName, $fieldList)) {
-			$this->query("ALTER TABLE `$tableName` CHANGE `$oldName` `$newName` " . $fieldList[$oldName]);
+			$this->query("ALTER TABLE \"$tableName\" CHANGE \"$oldName\" \"$newName\" " . $fieldList[$oldName]);
 		}
 	}
 	
 	public function fieldList($table) {
-		$fields = DB::query("SHOW FULL FIELDS IN `$table`");
+		$fields = DB::query("SHOW FULL FIELDS IN \"$table\"");
 		foreach($fields as $field) {
 			$fieldSpec = $field['Type'];
 			if(!$field['Null'] || $field['Null'] == 'NO') {
@@ -301,7 +301,7 @@ class MySQLDatabase extends Database {
 	 * @param string $indexSpec The specification of the index, see Database::requireIndex() for more details.
 	 */
 	public function createIndex($tableName, $indexName, $indexSpec) {
-		$this->query("ALTER TABLE `$tableName` ADD " . $this->getIndexSqlDefinition($indexName, $indexSpec));
+		$this->query("ALTER TABLE \"$tableName\" ADD " . $this->getIndexSqlDefinition($indexName, $indexSpec));
 	}
 	
 	protected function getIndexSqlDefinition($indexName, $indexSpec) {
@@ -311,7 +311,7 @@ class MySQLDatabase extends Database {
 	    if(!isset($indexType)) {
 			$indexType = "index";
 		}
-		return "$indexType `$indexName` $indexFields";
+		return "$indexType \"$indexName\" $indexFields";
 	}
 	
 	/**
@@ -332,8 +332,8 @@ class MySQLDatabase extends Database {
 	    	$indexType = "index";
 	    }
     
-		$this->query("ALTER TABLE `$tableName` DROP INDEX `$indexName`");
-		$this->query("ALTER TABLE `$tableName` ADD $indexType `$indexName` $indexFields");
+		$this->query("ALTER TABLE \"$tableName\" DROP INDEX \"$indexName\"");
+		$this->query("ALTER TABLE \"$tableName\" ADD $indexType \"$indexName\" $indexFields");
 	}
 	
 	/**
@@ -342,7 +342,7 @@ class MySQLDatabase extends Database {
 	 * @return array
 	 */
 	public function indexList($table) {
-		$indexes = DB::query("SHOW INDEXES IN `$table`");
+		$indexes = DB::query("SHOW INDEXES IN \"$table\"");
 		
 		foreach($indexes as $index) {
 			$groupedIndexes[$index['Key_name']]['fields'][$index['Seq_in_index']] = $index['Column_name'];

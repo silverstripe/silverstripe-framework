@@ -410,11 +410,11 @@ class Hierarchy extends DataObjectDecorator {
 					
 					DataObject::disable_subclass_access();
 					if(isset($idxStageChildren)) {
-						$foundInLive = Versioned::get_by_stage( $baseClass, 'Live', "`{$baseClass}`.`ID` IN (" . implode(",", array_keys($idxStageChildren)) . ")", "" );
+						$foundInLive = Versioned::get_by_stage( $baseClass, 'Live', "\"{$baseClass}\".\"ID\" IN (" . implode(",", array_keys($idxStageChildren)) . ")", "" );
 					}
 					
 					if(isset($idxLiveChildren)) {
-						$foundInStage = Versioned::get_by_stage( $baseClass, 'Stage', "`{$baseClass}`.`ID` IN (" . implode(",", array_keys($idxLiveChildren)) . ")", "" );
+						$foundInStage = Versioned::get_by_stage( $baseClass, 'Stage', "\"{$baseClass}\".\"ID\" IN (" . implode(",", array_keys($idxLiveChildren)) . ")", "" );
 					}
 					DataObject::enable_subclass_access();
 					
@@ -477,7 +477,7 @@ class Hierarchy extends DataObjectDecorator {
 	public function numChildren() {
 		$baseClass = ClassInfo::baseDataClass($this->owner->class);
 		// We build the query in an extension-friendly way.
-		$query = new SQLQuery("COUNT(*)","`$baseClass`","ParentID = " . (int)$this->owner->ID);
+		$query = new SQLQuery("COUNT(*)","\"$baseClass\"","ParentID = " . (int)$this->owner->ID);
 		$this->owner->extend('augmentSQL', $query);
 		return $query->execute()->value();
 	}
@@ -490,7 +490,7 @@ class Hierarchy extends DataObjectDecorator {
 	public function stageChildren($showAll = false) {
 		$extraFilter = $showAll ? '' : " AND ShowInMenus = 1";
 		$baseClass = ClassInfo::baseDataClass($this->owner->class);
-		return DataObject::get($baseClass, "`{$baseClass}`.`ParentID` = " . (int)$this->owner->ID . " AND `{$baseClass}`.ID != " . (int)$this->owner->ID . $extraFilter, "");
+		return DataObject::get($baseClass, "\"{$baseClass}\".\"ParentID\" = " . (int)$this->owner->ID . " AND \"{$baseClass}\".ID != " . (int)$this->owner->ID . $extraFilter, "");
 	}
 
 	/**
@@ -501,7 +501,7 @@ class Hierarchy extends DataObjectDecorator {
 	public function liveChildren($showAll = false) {
 		$extraFilter = $showAll ? '' : " AND ShowInMenus = 1";
 		$baseClass = ClassInfo::baseDataClass($this->owner->class);
-		return Versioned::get_by_stage($baseClass, "Live", "`{$baseClass}`.`ParentID` = " . (int)$this->owner->ID . " AND `{$baseClass}`.ID != " . (int)$this->owner->ID. $extraFilter, "");
+		return Versioned::get_by_stage($baseClass, "Live", "\"{$baseClass}\".\"ParentID\" = " . (int)$this->owner->ID . " AND \"{$baseClass}\".ID != " . (int)$this->owner->ID. $extraFilter, "");
 	}
 	
 	/**
@@ -511,7 +511,7 @@ class Hierarchy extends DataObjectDecorator {
 	public function getParent($filter = '') {
 		if($p = $this->owner->__get("ParentID")) {
 			$className = $this->owner->class;
-			$filter .= $filter?" AND ":""."`$className`.ID = $p";
+			$filter .= $filter?" AND ":""."\"$className\".ID = $p";
 			return DataObject::get_one($className, $filter);
 		}
 	}
@@ -552,11 +552,11 @@ class Hierarchy extends DataObjectDecorator {
 		if(!$afterNode || $afterNode->ParentID != $this->owner->ID) {
 			$children = $this->AllChildren();
 		} else {
-			$children = DataObject::get(ClassInfo::baseDataClass($this->owner->class), "`$baseClass`.`ParentID`={$this->owner->ID}" . ( ( $afterNode ) ? " AND `Sort` > " . sprintf( '%d', $afterNode->Sort ) : "" ), '`Sort` ASC');
+			$children = DataObject::get(ClassInfo::baseDataClass($this->owner->class), "\"$baseClass\".\"ParentID\"={$this->owner->ID}" . ( ( $afterNode ) ? " AND \"Sort\" > " . sprintf( '%d', $afterNode->Sort ) : "" ), '\"Sort\" ASC');
 		}
 		
 		// Try all the siblings of this node after the given node
-		/*if( $siblings = DataObject::get( ClassInfo::baseDataClass($this->owner->class), "`ParentID`={$this->owner->ParentID}" . ( $afterNode ) ? "`Sort` > {$afterNode->Sort}" : "" , '`Sort` ASC' ) )
+		/*if( $siblings = DataObject::get( ClassInfo::baseDataClass($this->owner->class), "\"ParentID\"={$this->owner->ParentID}" . ( $afterNode ) ? "\"Sort\" > {$afterNode->Sort}" : "" , '\"Sort\" ASC' ) )
 			$searchNodes->merge( $siblings );*/
 		
 		if($children) {

@@ -107,7 +107,7 @@ JS;
 	function validate( $validator ) {
 		
 		$result = DB::query(sprintf(
-			"SELECT COUNT(*) FROM `%s` WHERE `%s` = '%s'",
+			"SELECT COUNT(*) FROM \"%s\" WHERE \"%s\" = '%s'",
 			$this->restrictedTable,
 			$this->restrictedField,
 			Convert::raw2sql($this->value)

@@ -43,19 +43,19 @@ class Folder extends File {
 		$deleted = 0;
 
 		// First, merge any children that are duplicates
-		$duplicateChildrenNames = DB::query("SELECT Name FROM `File` WHERE ParentID = $parentID GROUP BY Name HAVING count(*) > 1")->column();
+		$duplicateChildrenNames = DB::query("SELECT Name FROM \"File\" WHERE ParentID = $parentID GROUP BY Name HAVING count(*) > 1")->column();
 		if($duplicateChildrenNames) foreach($duplicateChildrenNames as $childName) {
 			$childName = addslashes($childName);
 			// Note, we do this in the database rather than object-model; otherwise we get all sorts of problems about deleting files
-			$children = DB::query("SELECT ID FROM `File` WHERE Name = '$childName' AND ParentID = $parentID")->column();
+			$children = DB::query("SELECT ID FROM \"File\" WHERE Name = '$childName' AND ParentID = $parentID")->column();
 			if($children) {
 				$keptChild = array_shift($children);
 				foreach($children as $removedChild) {
-					DB::query("UPDATE `File` SET ParentID = $keptChild WHERE ParentID = $removedChild");
-					DB::query("DELETE FROM `File` WHERE ID = $removedChild");
+					DB::query("UPDATE \"File\" SET ParentID = $keptChild WHERE ParentID = $removedChild");
+					DB::query("DELETE FROM \"File\" WHERE ID = $removedChild");
 				}
 			} else {
-				user_error("Inconsistent database issue: SELECT ID FROM `File` WHERE Name = '$childName' AND ParentID = $parentID should have returned data", E_USER_WARNING);
+				user_error("Inconsistent database issue: SELECT ID FROM \"File\" WHERE Name = '$childName' AND ParentID = $parentID should have returned data", E_USER_WARNING);
 			}
 		}
 
@@ -93,7 +93,7 @@ class Folder extends File {
 					$child = $hasDbChild[$actualChild];
 					if( ($child->class != 'Folder' && is_dir($baseDir . $actualChild)) 
 					|| ($child->class == 'Folder' && !is_dir($baseDir . $actualChild)) ) {
-						DB::query("DELETE FROM `File` WHERE ID = $child->ID");
+						DB::query("DELETE FROM \"File\" WHERE ID = $child->ID");
 						unset($hasDbChild[$actualChild]);						
 					}
 				}
@@ -117,11 +117,11 @@ class Folder extends File {
 			
 			// Iterate through the unwanted children, removing them all
 			if(isset($unwantedDbChildren)) foreach($unwantedDbChildren as $unwantedDbChild) {
-				DB::query("DELETE FROM `File` WHERE ID = $unwantedDbChild->ID");
+				DB::query("DELETE FROM \"File\" WHERE ID = $unwantedDbChild->ID");
 				$deleted++;
 			}
 		} else {
-			DB::query("DELETE FROM `File` WHERE ID = $this->ID");
+			DB::query("DELETE FROM \"File\" WHERE ID = $this->ID");
 		}
 		
 		return array('added' => $added, 'deleted' => $deleted);
@@ -154,7 +154,7 @@ class Folder extends File {
 
 		$name = addslashes($name);
 		
-		DB::query("INSERT INTO `File` SET
+		DB::query("INSERT INTO \"File\" SET
 			ClassName = '$className', ParentID = $this->ID, OwnerID = $ownerID,
 			Name = '$name', Filename = '$filename', Created = NOW(), LastEdited = NOW(),
 			Title = '$name'");
@@ -433,7 +433,7 @@ class Folder extends File {
         }
         if($where == "") return "(ClassName = 'File' OR ClassName =  'Image')";
         $where = substr($where,0,strlen($where)-1);
-        $where = "`File`.ID NOT IN (" . $where . ") AND (ClassName = 'File' OR ClassName =  'Image')";
+        $where = "\"File\".ID NOT IN (" . $where . ") AND (ClassName = 'File' OR ClassName =  'Image')";
         return $where;
 	}
 

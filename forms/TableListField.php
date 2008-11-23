@@ -453,7 +453,7 @@ JS
 			$SNG = singleton($this->sourceClass);
 			foreach($this->FieldList() as $k=>$title){
 				if(!$SNG->hasField($k) && !$SNG->hasMethod('get' . $k) && !$SNG->hasMethod($k) && !strpos($k, "."))
-					$query->select[] = "`$k`";
+					$query->select[] = "\"$k\"";
 			}
 		}
 		
@@ -487,7 +487,7 @@ JS
 			// Add more selected fields if they are from joined table.
 			foreach($this->FieldList() as $k=>$title){
 				if(singleton($this->sourceClass)->hasDatabaseField($k))
-					$query->select[] = "`$k`";
+					$query->select[] = "\"$k\"";
 			}
 		}
 		return clone $query;

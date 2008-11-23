@@ -168,8 +168,8 @@ class Group extends DataObject {
 		// Get all of groups that this group contains
 		$groupFamily = implode(", ", $this->collateFamilyIDs());
 		
-		$filter[] = "`$table`.GroupID IN ($groupFamily)";
-		$join .= " INNER JOIN `$table` ON `$table`.MemberID = `Member`.ID" . Convert::raw2sql($join);
+		$filter[] = "\"$table\".GroupID IN ($groupFamily)";
+		$join .= " INNER JOIN \"$table\" ON \"$table\".MemberID = \"Member\".ID" . Convert::raw2sql($join);
 		
 		$result = singleton("Member")->instance_get(
 			$filter, 
@@ -248,7 +248,7 @@ class Group extends DataObject {
 	 * Override this so groups are ordered in the CMS
 	 */
 	public function stageChildren() {
-		return DataObject::get('Group', "`Group`.`ParentID` = " . (int)$this->ID . " AND `Group`.ID != " . (int)$this->ID, "Sort");
+		return DataObject::get('Group', "\"Group\".\"ParentID\" = " . (int)$this->ID . " AND \"Group\".ID != " . (int)$this->ID, "Sort");
 	}
 	
 	public function TreeTitle() {
