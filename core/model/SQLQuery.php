@@ -169,23 +169,7 @@ class SQLQuery extends Object {
 	 * @return SQLQuery This instance
 	 */
 	public function limit($limit) {
-		// Pass limit as array or SQL string value
-		if(is_array($limit)) {
-			if(!array_key_exists('limit',$limit)) user_error('SQLQuery::limit(): Wrong format for $limit', E_USER_ERROR);
-			
-			if(isset($limit['start']) && is_numeric($limit['start']) && isset($limit['limit']) && is_numeric($limit['limit'])) {
-				// @todo MySQL specific LIMIT syntax
-				$combinedLimit = (int)$limit['start'] . ',' . (int)$limit['limit'];
-			} elseif(isset($limit['limit']) && is_numeric($limit['limit'])) {
-				$combinedLimit = (int)$limit['limit'];
-			} else {
-				$combinedLimit = false;
-			}
-		} else {
-			$combinedLimit = $limit;
-		}
-		
-		if(!empty($combinedLimit)) $this->limit = $combinedLimit;
+		$this->limit = $limit;
 		
 		return $this;
 	}
@@ -392,22 +376,7 @@ class SQLQuery extends Object {
 	 * @return string
 	 */
 	function sql() {
-		if (!$this->from) return '';
-		$distinct = $this->distinct ? "DISTINCT " : "";
-		if($this->delete) {
-			$text = "DELETE ";
-		} else if($this->select) {
-			$text = "SELECT $distinct" . implode(", ", $this->select);
-		}
-		$text .= " FROM " . implode(" ", $this->from);
-
-		if($this->where) $text .= " WHERE (" . $this->getFilter(). ")";
-		if($this->groupby) $text .= " GROUP BY " . implode(", ", $this->groupby);
-		if($this->having) $text .= " HAVING ( " . implode(" ) AND ( ", $this->having) . " )";
-		if($this->orderby) $text .= " ORDER BY " . $this->orderby;
-		if($this->limit) $text .= " LIMIT " . $this->limit;
-		
-		return $text;
+		return DB::getConn()->sqlQueryToString($this);
 	}
 	
 	/**

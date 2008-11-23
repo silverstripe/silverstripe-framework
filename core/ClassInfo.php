@@ -29,8 +29,7 @@ class ClassInfo {
 	 */
 	static function hasTable($class) {
 		if(DB::isActive()) {
-			$SQL_table = Convert::raw2sql($class);
-			return (bool)(DB::query("SHOW TABLES LIKE '$SQL_table'")->value());
+			return DB::getConn()->hasTable($class);
 		} else {
 			return false;
 		}
@@ -40,14 +39,7 @@ class ClassInfo {
 	 * Returns the manifest of all classes which are present in the database.
 	 */
 	static function getValidSubClasses(){
-		// Get the enum of all page types from the SiteTree table
-		$classnameinfo = DB::query("DESCRIBE SiteTree ClassName")->first();
-		preg_match_all("/'[^,]+'/", $classnameinfo["Type"], $matches);
-		
-		foreach($matches[0] as $value) {
-			$classes[] = trim($value, "'");
-		}
-		return $classes;
+		return DB::getConn()->enumValuesForField("SiteTree", "ClassName");
 	}
 
 	/**

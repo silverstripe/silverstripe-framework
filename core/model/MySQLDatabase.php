@@ -539,6 +539,74 @@ class MySQLDatabase extends Database {
 		
 		return 'varchar(' . $values['precision'] . ') character set utf8 collate utf8_general_ci';
 	}
+	
+	/**
+	 * Returns true if the given table is exists in the current database 
+	 * NOTE: Experimental; introduced for db-abstraction and may changed before 2.4 is released.
+	 */
+	public function hasTable($table) {
+		$SQL_table = Convert::raw2sql($table);
+		return (bool)($this->query("SHOW TABLES LIKE '$SQL_table'")->value());
+	}
+
+	/**
+	 * Returns the values of the given enum field
+	 * NOTE: Experimental; introduced for db-abstraction and may changed before 2.4 is released.
+	 */
+	public function enumValuesForField($tableName, $fieldName) {
+		// Get the enum of all page types from the SiteTree table
+		$classnameinfo = DB::query("DESCRIBE \"$tableName\" \"$fieldName\"")->first();
+		preg_match_all("/'[^,]+'/", $classnameinfo["Type"], $matches);
+		
+		foreach($matches[0] as $value) {
+			$classes[] = trim($value, "'");
+		}
+		return $classes;
+	}
+	
+	/**
+	 * Convert a SQLQuery object into a SQL statement
+	 */
+	public function sqlQueryToString(SQLQuery $sqlQuery) {
+		if (!$sqlQuery->from) return '';
+		$distinct = $sqlQuery->distinct ? "DISTINCT " : "";
+		if($sqlQuery->delete) {
+			$text = "DELETE ";
+		} else if($sqlQuery->select) {
+			$text = "SELECT $distinct" . implode(", ", $sqlQuery->select);
+		}
+		$text .= " FROM " . implode(" ", $sqlQuery->from);
+
+		if($sqlQuery->where) $text .= " WHERE (" . $sqlQuery->getFilter(). ")";
+		if($sqlQuery->groupby) $text .= " GROUP BY " . implode(", ", $sqlQuery->groupby);
+		if($sqlQuery->having) $text .= " HAVING ( " . implode(" ) AND ( ", $sqlQuery->having) . " )";
+		if($sqlQuery->orderby) $text .= " ORDER BY " . $sqlQuery->orderby;
+
+		if($sqlQuery->limit) {
+			$limit = $sqlQuery->limit;
+			// Pass limit as array or SQL string value
+			if(is_array($limit)) {
+				if(!array_key_exists('limit',$limit)) user_error('SQLQuery::limit(): Wrong format for $limit', E_USER_ERROR);
+
+				if(isset($limit['start']) && is_numeric($limit['start']) && isset($limit['limit']) && is_numeric($limit['limit'])) {
+					// @todo MySQL specific LIMIT syntax
+					//$combinedLimit = (int)$limit['start'] . ',' . (int)$limit['limit'];
+					$combinedLimit = "$limit[limit] OFFSET $limit[start]";
+				} elseif(isset($limit['limit']) && is_numeric($limit['limit'])) {
+					$combinedLimit = (int)$limit['limit'];
+				} else {
+					$combinedLimit = false;
+				}
+				if(!empty($combinedLimit)) $this->limit = $combinedLimit;
+
+			} else {
+				$text .= " LIMIT " . $sqlQuery->limit;
+			}
+		}
+		
+		return $text;
+	}
+	
 }
 
 /**
