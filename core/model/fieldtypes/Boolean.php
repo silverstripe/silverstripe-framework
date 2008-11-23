@@ -18,10 +18,6 @@ class Boolean extends DBField {
 		DB::requireField($this->tableName, $this->name, $values);
 	}
 	
-	function nullValue() {
-		return 0;
-	}
-	
 	function Nice() {
 		return ($this->value) ? "yes" : "no";
 	}
@@ -41,7 +37,7 @@ class Boolean extends DBField {
 			user_error("DBField::saveInto() Called on a nameless '$this->class' object", E_USER_ERROR);
 		}
 	}
-	
+
 	public function scaffoldFormField($title = null, $params = null) {
 		return new CheckboxField($this->name, $title);
 	}
@@ -51,13 +47,17 @@ class Boolean extends DBField {
 	 * If necessary, this should include quotes.
 	 */
 	function prepValueForDB($value) {
-		if($value === true) {
-			return 1;
+		if($value === true || $value === 1) {
+			return "'1'";
 		} if(!$value || !is_numeric($value)) {
-			return "0";
+			return "'0'";
 		} else {
 			return addslashes($value);
 		}
+	}
+
+	function nullValue() {
+		return "'0'";
 	}
 	
 }
