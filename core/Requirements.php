@@ -131,8 +131,6 @@ class Requirements {
 	static function block($fileOrID) {
 		self::backend()->block($fileOrID);
 	}
-	
-
 
 	/**
 	 * Removes an item from the blocking-list.
@@ -243,6 +241,17 @@ class Requirements {
 		return self::backend()->get_custom_scripts();
 	}
 	
+	/**
+	 * Set whether you want to write the JS to the body of the page or 
+	 * in the head section 
+	 * 
+	 * @see {@link Requirements_Backend::set_write_js_to_body()}
+	 * @param boolean
+	 */
+	static function set_write_js_to_body($var) {
+		self::backend()->set_write_js_to_body($var);
+	}
+	
 	static function debug() {
 		return self::backend()->debug();
 	}
@@ -338,7 +347,16 @@ class Requirements_Backend {
 	 * @var boolean
 	 */
 	public $write_js_to_body = true;
-	
+
+	/**
+	 * Set whether you want the files written to the head or the body. It
+	 * writes to the body by default which can break some scripts
+	 *
+	 * @param boolean
+	 */
+	public function set_write_js_to_body($var) {
+		$this->write_js_to_body = $var;
+	}
 	/**
 	 * Register the given javascript file as required.
 	 * Filenames should be relative to the base, eg, 'sapphire/javascript/loader.js'
