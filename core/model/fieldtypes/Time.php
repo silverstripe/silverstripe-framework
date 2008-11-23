@@ -31,7 +31,9 @@ class Time extends DBField {
 	}
 
 	function requireField() {
-		DB::requireField($this->tableName, $this->name, "time");
+		$parts=Array('datatype'=>'time');
+		$values=Array('type'=>'time', 'parts'=>$parts);
+		DB::requireField($this->tableName, $this->name, $values);
 	}
 	
 	public function scaffoldFormField($title = null, $params = null) {

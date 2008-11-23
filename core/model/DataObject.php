@@ -2107,6 +2107,7 @@ class DataObject extends ViewableData implements DataObjectInterface,i18nEntityP
 			}
 		}
 
+		//TODO: DB ABSTRACTION: IF STATEMENT:
 		$query->select[] = "\"$baseClass\".ID";
 		$query->select[] = "if(\"$baseClass\".ClassName,\"$baseClass\".ClassName,'$baseClass') AS RecordClassName";
 

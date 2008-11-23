@@ -27,7 +27,9 @@ class SSDatetime extends Date {
 	}
 
 	function requireField() {
-		DB::requireField($this->tableName, $this->name, "datetime");
+		$parts=Array('datatype'=>'datetime');
+		$values=Array('type'=>'ssdatetime', 'parts'=>$parts);
+		DB::requireField($this->tableName, $this->name, $values);
 	}
 	
 	function URLDatetime() {

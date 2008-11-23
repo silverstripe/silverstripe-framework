@@ -10,7 +10,9 @@ class Text extends DBField {
 	);
 	
 	function requireField() {
-		DB::requireField($this->tableName, $this->name, "mediumtext character set utf8 collate utf8_general_ci");
+		$parts=Array('datatype'=>'mediumtext', 'character set'=>'utf8', 'collate'=>'utf8_general_ci');
+		$values=Array('type'=>'text', 'parts'=>$parts);
+		DB::requireField($this->tableName, $this->name, $values, $this->default);
 	}
 	
 	function hasValue() {

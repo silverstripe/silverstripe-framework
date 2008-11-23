@@ -14,7 +14,9 @@ class Varchar extends DBField {
 	}
 	
 	function requireField() {
-		DB::requireField($this->tableName, $this->name, "varchar($this->size) character set utf8 collate utf8_general_ci");
+		$parts=Array('datatype'=>'varchar', 'precision'=>$this->size, 'character set'=>'utf8', 'collate'=>'utf8_general_ci');
+		$values=Array('type'=>'varchar', 'parts'=>$parts);
+		DB::requireField($this->tableName, $this->name, $values);
 	}
 	
 	function hasValue() {

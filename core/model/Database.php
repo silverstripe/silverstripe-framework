@@ -296,6 +296,10 @@ abstract class Database extends Object {
 		$newTable = false;
 		
 		Profiler::mark('requireField');
+		
+		//Convert the $spec array into a database-specific string
+		$spec=DB::getConn()->$spec['type']($spec['parts']);
+				
 		// Collations didn't come in until MySQL 4.1.  Anything earlier will throw a syntax error if you try and use
 		// collations.
 		if(!$this->supportsCollations()) {

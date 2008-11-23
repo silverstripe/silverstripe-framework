@@ -175,7 +175,9 @@ class Date extends DBField {
 	}
 
 	function requireField() {
-		DB::requireField($this->tableName, $this->name, "date");
+		$parts=Array('datatype'=>'date');
+		$values=Array('type'=>'date', 'parts'=>$parts);
+		DB::requireField($this->tableName, $this->name, $values);
 	}
 	
 	function InPast() {

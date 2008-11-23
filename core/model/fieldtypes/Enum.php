@@ -42,8 +42,10 @@ class Enum extends DBField {
 	}
 	
 	function requireField(){
-		DB::requireField($this->tableName, $this->name, "enum('" . implode("','", $this->enum) . "') character set utf8 collate utf8_general_ci default '{$this->default}'");
-	}
+		$parts=Array('datatype'=>'enum', 'enums'=>$this->enum, 'character set'=>'utf8', 'collate'=> 'utf8_general_ci', 'default'=>$this->default);
+		$values=Array('type'=>'enum', 'parts'=>$parts);
+		DB::requireField($this->tableName, $this->name, $values);
+}
 	
 
 	public function scaffoldFormField($title = null, $params = null) {

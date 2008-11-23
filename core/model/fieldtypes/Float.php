@@ -7,7 +7,9 @@
 class Float extends DBField {
 	
 	function requireField() {
-		DB::requireField($this->tableName, $this->name, "float");
+		$parts=Array('datatype'=>'float');
+		$values=Array('type'=>'float', 'parts'=>$parts);
+		DB::requireField($this->tableName, $this->name, $values);
 	}
 	
 	function Nice() {

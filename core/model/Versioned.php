@@ -185,7 +185,10 @@ class Versioned extends DataObjectDecorator {
 					// Version fields on each root table (including Stage)
 					if(isset($rootTable)) {
 						$stageTable = ($stage == $this->defaultStage) ? $table : "{$table}_$stage";
-						DB::requireField($stageTable, "Version", "int(11) not null default '0'");
+						//DB::requireField($stageTable, "Version", "int(11) not null default '0'");
+						$parts=Array('datatype'=>'int', 'precision'=>11, 'null'=>'not null', 'default'=>(int)0);
+						$values=Array('type'=>'int', 'parts'=>$parts);
+						DB::requireField($stageTable, 'Version', $values);
 					}
 				}
 				
@@ -431,6 +434,7 @@ class Versioned extends DataObjectDecorator {
 		}
             
 		// We test for equality - if one of the versions doesn't exist, this will be false
+		//TODO: DB Abstraction: if statement here:
 		$stagesAreEqual = DB::query("SELECT if(\"$table1\".Version=\"$table2\".Version,1,0) FROM \"$table1\" INNER JOIN \"$table2\" ON \"$table1\".ID = \"$table2\".ID AND \"$table1\".ID = {$this->owner->ID}")->value();
 		return !$stagesAreEqual;
 	}

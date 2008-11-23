@@ -13,7 +13,9 @@ class Boolean extends DBField {
 	}
 	
 	function requireField() {
-		DB::requireField($this->tableName, $this->name, "tinyint(1) unsigned not null default '{$this->defaultVal}'");
+		$parts=Array('datatype'=>'tinyint', 'precision'=>1, 'sign'=>'unsigned', 'null'=>'not null', 'default'=>$this->defaultVal);
+		$values=Array('type'=>'boolean', 'parts'=>$parts);
+		DB::requireField($this->tableName, $this->name, $values);
 	}
 	
 	function nullValue() {

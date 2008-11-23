@@ -395,6 +395,150 @@ class MySQLDatabase extends Database {
 		
 		user_error($msg, $errorLevel);
 	}
+	
+	/**
+	 * Return a boolean type-formatted string
+	 * 
+	 * @params array $values Contains a tokenised list of info about this data type
+	 * @return string
+	 */
+	public function boolean($values){
+		//For reference, this is what typically gets passed to this function:
+		//$parts=Array('datatype'=>'tinyint', 'precision'=>1, 'sign'=>'unsigned', 'null'=>'not null', 'default'=>$this->default);
+		//DB::requireField($this->tableName, $this->name, "tinyint(1) unsigned not null default '{$this->defaultVal}'");
+		
+		return 'tinyint(1) unsigned not null default ' . (int)$values['default'];
+	}
+	
+	/**
+	 * Return a date type-formatted string
+	 * For MySQL, we simply return the word 'date', no other parameters are necessary
+	 * 
+	 * @params array $values Contains a tokenised list of info about this data type
+	 * @return string
+	 */
+	public function date($values){
+		//For reference, this is what typically gets passed to this function:
+		//$parts=Array('datatype'=>'date');
+		//DB::requireField($this->tableName, $this->name, "date");
+
+		return 'date';
+	}
+	
+	/**
+	 * Return a decimal type-formatted string
+	 * 
+	 * @params array $values Contains a tokenised list of info about this data type
+	 * @return string
+	 */
+	public function decimal($values){
+		//For reference, this is what typically gets passed to this function:
+		//$parts=Array('datatype'=>'decimal', 'precision'=>"$this->wholeSize,$this->decimalSize");
+		//DB::requireField($this->tableName, $this->name, "decimal($this->wholeSize,$this->decimalSize)");
+
+		return 'decimal(' . (int)$values['precision'] . ')';
+	}
+	
+	/**
+	 * Return a enum type-formatted string
+	 * 
+	 * @params array $values Contains a tokenised list of info about this data type
+	 * @return string
+	 */
+	public function enum($values){
+		//For reference, this is what typically gets passed to this function:
+		//$parts=Array('datatype'=>'enum', 'enums'=>$this->enum, 'character set'=>'utf8', 'collate'=> 'utf8_general_ci', 'default'=>$this->default);
+		//DB::requireField($this->tableName, $this->name, "enum('" . implode("','", $this->enum) . "') character set utf8 collate utf8_general_ci default '{$this->default}'");
+		
+		return 'enum(\'' . implode('\', \'', $values['enums']) . '\') character set utf8 collate utf8_general_ci default \'' . $values['default'] . '\'';
+	}
+	
+	/**
+	 * Return a float type-formatted string
+	 * For MySQL, we simply return the word 'date', no other parameters are necessary
+	 * 
+	 * @params array $values Contains a tokenised list of info about this data type
+	 * @return string
+	 */
+	public function float($values){
+		//For reference, this is what typically gets passed to this function:
+		//$parts=Array('datatype'=>'float');
+		//DB::requireField($this->tableName, $this->name, "float");
+		
+		return 'float';
+	}
+	
+	/**
+	 * Return a int type-formatted string
+	 * 
+	 * @params array $values Contains a tokenised list of info about this data type
+	 * @return string
+	 */
+	public function int($values){
+		//For reference, this is what typically gets passed to this function:
+		//$parts=Array('datatype'=>'int', 'precision'=>11, 'null'=>'not null', 'default'=>(int)$this->default);
+		//DB::requireField($this->tableName, $this->name, "int(11) not null default '{$this->defaultVal}'");
+
+		return 'int(11) not null default ' . (int)$values['default'];
+	}
+	
+	/**
+	 * Return a datetime type-formatted string
+	 * For MySQL, we simply return the word 'datetime', no other parameters are necessary
+	 * 
+	 * @params array $values Contains a tokenised list of info about this data type
+	 * @return string
+	 */
+	public function ssdatetime($values){
+		//For reference, this is what typically gets passed to this function:
+		//$parts=Array('datatype'=>'datetime');
+		//DB::requireField($this->tableName, $this->name, $values);
+
+		return 'datetime';
+	}
+	
+	/**
+	 * Return a text type-formatted string
+	 * 
+	 * @params array $values Contains a tokenised list of info about this data type
+	 * @return string
+	 */
+	public function text($values){
+		//For reference, this is what typically gets passed to this function:
+		//$parts=Array('datatype'=>'mediumtext', 'character set'=>'utf8', 'collate'=>'utf8_general_ci');
+		//DB::requireField($this->tableName, $this->name, "mediumtext character set utf8 collate utf8_general_ci");
+		
+		return 'mediumtext character set utf8 collate utf8_general_ci';
+	}
+	
+	/**
+	 * Return a time type-formatted string
+	 * For MySQL, we simply return the word 'time', no other parameters are necessary
+	 * 
+	 * @params array $values Contains a tokenised list of info about this data type
+	 * @return string
+	 */
+	public function time($values){
+		//For reference, this is what typically gets passed to this function:
+		//$parts=Array('datatype'=>'time');
+		//DB::requireField($this->tableName, $this->name, "time");
+		
+		return 'time';
+	}
+	
+	/**
+	 * Return a varchar type-formatted string
+	 * 
+	 * @params array $values Contains a tokenised list of info about this data type
+	 * @return string
+	 */
+	public function varchar($values){
+		//For reference, this is what typically gets passed to this function:
+		//$parts=Array('datatype'=>'varchar', 'precision'=>$this->size, 'character set'=>'utf8', 'collate'=>'utf8_general_ci');
+		//DB::requireField($this->tableName, $this->name, "varchar($this->size) character set utf8 collate utf8_general_ci");
+		
+		return 'varchar(' . $values['precision'] . ') character set utf8 collate utf8_general_ci';
+	}
 }
 
 /**
