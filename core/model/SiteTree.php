@@ -78,8 +78,6 @@ class SiteTree extends DataObject {
 		"HasBrokenLink" => "Boolean",
 		"Status" => "Varchar",
 		"ReportClass" => "Varchar",
-		"Priority" => "Float",
-
 		"CanViewType" => "Enum('Anyone, LoggedInUsers, OnlyTheseUsers, Inherit', 'Inherit')",
 		"CanEditType" => "Enum('LoggedInUsers, OnlyTheseUsers, Inherit', 'Inherit')",
 
@@ -87,10 +85,10 @@ class SiteTree extends DataObject {
 		"ToDo" => "Text",
 	);
 
-  static $indexes = array(
-    "SearchFields" => "fulltext (Title, MenuTitle, Content, MetaTitle, MetaDescription, MetaKeywords)",
-    "TitleSearchFields" => "fulltext (Title)",
-	"URLSegment" => true,
+	static $indexes = array(
+		"SearchFields" => "fulltext (Title, MenuTitle, Content, MetaTitle, MetaDescription, MetaKeywords)",
+		"TitleSearchFields" => "fulltext (Title)",
+		"URLSegment" => true,
 	);
 
 	static $has_many = array(
@@ -555,7 +553,7 @@ class SiteTree extends DataObject {
 	 * - canEdit() is not granted
 	 * - There are no classes defined in {@link $allowed_children}
 	 * 
-	 * @uses DataObjectDecorator->canAddChildren()
+	 * @uses SiteTreeDecorator->canAddChildren()
 	 * @uses canEdit()
 	 * @uses $allowed_children
 	 *
@@ -644,6 +642,7 @@ class SiteTree extends DataObject {
 	 * - any descendant page returns FALSE for canDelete()
 	 * 
 	 * @uses canDelete()
+	 * @uses DataObjectDecorator->canDelete()
 	 * @uses canEdit()
 	 *
 	 * @param Member $member
@@ -686,6 +685,7 @@ class SiteTree extends DataObject {
 	 * Use {@link canAddChildren()} to control behaviour of creating children under this page.
 	 * 
 	 * @uses $can_create
+	 * @uses DataObjectDecorator->canCreate()
 	 *
 	 * @param Member $member
 	 * @return boolean True if the current user can create pages on this class.
@@ -721,6 +721,7 @@ class SiteTree extends DataObject {
 	 * 
 	 * @uses canView()
 	 * @uses EditorGroups()
+	 * @uses DataObjectDecorator->canEdit()
 	 *
 	 * @param Member $member
 	 * @return boolean True if the current user can edit this page.
@@ -768,7 +769,7 @@ class SiteTree extends DataObject {
 	 * - canPublish() on any decorator returns FALSE
 	 * - canEdit() returns FALSE
 	 * 
-	 * @uses DataObjectDecorator->canPublish()
+	 * @uses SiteTreeDecorator->canPublish()
 	 *
 	 * @param Member $member
 	 * @return boolean True if the current user can publish this page.
@@ -988,12 +989,6 @@ class SiteTree extends DataObject {
 			}
 		}
 
-
-		// If priority is empty or invalid, set it to the default value
-		if(!is_numeric($this->Priority) ||
-			 (($this->Priority < 0) || ($this->Priority > 1)))
-			$this->Priority = self::$defaults['Priority'];
-
 		parent::onBeforeWrite();
 	}
 	
@@ -1042,22 +1037,6 @@ class SiteTree extends DataObject {
 				$field->rewriteLink($old, $new);
 				$field->saveInto($this);
 			}
-		}
-	}
-
-	/**
-	 * The default value of the priority field depends on the depth of the page in
-	 * the site tree, so it must be calculated dynamically.
-	 */
-	function getPriority() {		
-		if(!$this->getField('Priority')) {
-			$parentStack = $this->parentStack();
-			$numParents = is_array($parentStack) ? count($parentStack) - 1: 0;
-			return max(0.1, 1.0 - ($numParents / 10));
-		} else if($this->getField('Priority') == -1) {
-			return 0;
-		} else {
-			return $this->getField('Priority');
 		}
 	}
 
@@ -1137,22 +1116,6 @@ class SiteTree extends DataObject {
 		if(isset($statusMessage)) {
 			$message .= "NOTE: " . implode("<br />", $statusMessage);
 		}
-
-
-		$pagePriorities = array(
-			'' => _t('SiteTree.PRIORITYAUTOSET','Auto-set based on page depth'),
-			'-1' => _t('SiteTree.PRIORITYNOTINDEXED', "Not indexed"), // We set this to -ve one because a blank value implies auto-generation of Priority
-			'1.0' => '1 - ' . _t('SiteTree.PRIORITYMOSTIMPORTANT', "Most important"),
-			'0.9' => '2',
-			'0.8' => '3',
-			'0.7' => '4',
-			'0.6' => '5',
-			'0.5' => '6',
-			'0.4' => '7',
-			'0.3' => '8',
-			'0.2' => '9',
-			'0.1' => '10 - ' . _t('SiteTree.PRIORITYLEASTIMPORTANT', "Least important")
-		);
 		
 		// Lay out the fields
 		$fields = new FieldSet(
@@ -1190,27 +1153,7 @@ class SiteTree extends DataObject {
 						new TextField("MetaTitle", $this->fieldLabel('MetaTitle')),
 						new TextareaField("MetaDescription", $this->fieldLabel('MetaDescription')),
 						new TextareaField("MetaKeywords", $this->fieldLabel('MetaKeywords')),
-						new ToggleCompositeField(
-							'AdvancedOptions',
-							_t('SiteTree.METAADVANCEDHEADER', "Advanced Options..."),
-							array( 
-								new TextareaField("ExtraMeta",$this->fieldLabel('ExtraMeta')), 
-								new LiteralField(
-									"", 
-									"<p>" .
-									sprintf(
-										_t(
-											'SiteTree.METANOTEPRIORITY', 
-											"Manually specify a Google Sitemaps priority for this page (%s)"
-										),
-										'<a href="https://www.google.com/webmasters/tools/docs/en/protocol.html#prioritydef">?</a>'
-									) .
-									"</p>"
-								), 
-								new DropdownField("Priority", $this->fieldLabel('Priority'), $pagePriorities)
-							), 
- 							true 
-						)
+						new TextareaField("ExtraMeta",$this->fieldLabel('ExtraMeta'))
 					)
 				),
 				$tabBehaviour = new Tab('Behaviour',
@@ -1301,7 +1244,6 @@ class SiteTree extends DataObject {
 		$labels['MetaDescription'] = _t('SiteTree.METADESC', "Description");
 		$labels['MetaKeywords'] = _t('SiteTree.METAKEYWORDS', "Keywords");
 		$labels['ExtraMeta'] = _t('SiteTree.METAEXTRA', "Custom Meta Tags");
-		$labels['Priority'] = _t('SiteTree.METAPAGEPRIO', "Page Priority");
 		$labels['ClassName'] = _t('SiteTree.PAGETYPE', "Page type", PR_MEDIUM, 'Classname of a page object');
 		$labels['ShowInMenus'] =_t('SiteTree.SHOWINMENUS', "Show in menus?");
 		$labels['ShowInSearch'] = _t('SiteTree.SHOWINSEARCH', "Show in search?");
@@ -1360,7 +1302,10 @@ class SiteTree extends DataObject {
 	}
 	
 	/**
-	 * Publish this page
+	 * Publish this page.
+	 * 
+	 * @uses SiteTreeDecorator->onBeforePublish()
+	 * @uses SiteTreeDecorator->onAfterPublish()
 	 */
 	function doPublish() {
 		$original = Versioned::get_one_by_stage("SiteTree", "Live", "\"SiteTree\".\"ID\" = $this->ID");
@@ -1373,8 +1318,6 @@ class SiteTree extends DataObject {
 		//$this->PublishedByID = Member::currentUser()->ID;
 		$this->write();
 		$this->publish("Stage", "Live");
-		
-		GoogleSitemap::ping();
 
 		if(DB::getConn() instanceof MySQLDatabase) {
 			// Special syntax for MySQL (grr!)
@@ -1399,8 +1342,13 @@ class SiteTree extends DataObject {
 	
 	/**
 	 * Unpublish this page - remove it from the live site
+	 * 
+	 * @uses SiteTreeDecorator->onBeforeUnpublish()
+	 * @uses SiteTreeDecorator->onAfterUnpublish()
 	 */
 	function doUnpublish() {
+		$this->extend('onBeforeUnpublish');
+		
 		// Call delete on a cloned object so that this one doesn't lose its ID
 		$this->flushCache();
 		$clone = DataObject::get_by_id("SiteTree", $this->ID);
@@ -1408,8 +1356,8 @@ class SiteTree extends DataObject {
 
 		$this->Status = "Unpublished";
 		$this->write();
-
-		GoogleSitemap::ping();
+		
+		$this->extend('onAfterUnpublish');
 	}
 	
 	/**
