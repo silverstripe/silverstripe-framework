@@ -183,45 +183,6 @@ JS;
 	}
 
 	/**
-	 * Returns non-paginated items.
-	 * Please use Items() for pagination.
-	 * This function is called whenever a complete result-set is needed,
-	 * so even if a single record is displayed in a popup, we need the results
-	 * to make pagination work.
-	 *
-	 * @todo Merge with more efficient querying of TableListField
-	 */
-	function sourceItems() {
-		if($this->sourceItems) {
-			return $this->sourceItems;
-		}
-
-		$limitClause = "";
-		if($this->pageSize) {
-			$limitClause = "{$this->pageSize}";
-		} else {
-			$limitClause = "0";
-		}
-		if(isset($_REQUEST['ctf'][$this->Name()]['start']) && is_numeric($_REQUEST['ctf'][$this->Name()]['start'])) {
-			$SQL_start = intval($_REQUEST['ctf'][$this->Name()]['start']);
-			$limitClause .= " OFFSET {$SQL_start}";
-		}
-		
-		$sort = $this->sourceSort;
-		if(isset($_REQUEST['ctf'][$this->Name()]['sort'])) {
-			$sort = Convert::raw2sql($_REQUEST['ctf'][$this->Name()]['sort']);
-		}
-				
-		$this->sourceItems = DataObject::get($this->sourceClass, $this->sourceFilter, $sort, $this->sourceJoin, $limitClause);
-
-		$this->unpagedSourceItems = DataObject::get($this->sourceClass, $this->sourceFilter, $sort, $this->sourceJoin);
-
-		$this->totalCount = ($this->unpagedSourceItems) ? $this->unpagedSourceItems->TotalItems() : null;
-
-		return $this->sourceItems;
-	}
-
-	/**
 	 * @return DataObjectSet
 	 */
 	function Items() {
