@@ -381,7 +381,7 @@ class Translatable extends DataObjectDecorator {
 									 * that is not a translatable field)
 									 */
 									$clauseparts = explode('.',$innerparts[1]);
-									$originalTable = str_replace('\"','',str_replace('_lang','',$clauseparts[0]));
+									$originalTable = str_replace('"','',str_replace('_lang','',$clauseparts[0]));
 									$parts[$j] = ($this->isInAugmentedTable($clauseparts[1], $originalTable) ? "\"{$originalTable}_lang\"" : "\"$originalTable\"") 
 												  . ".{$clauseparts[1]}{$innerparts[2]}";
 								}
@@ -407,7 +407,7 @@ class Translatable extends DataObjectDecorator {
 						/* if we are selecting fields (not doing counts for example) we need to select everything from
 						 * the original table (was renamed to _lang) since some fields that we require may be there
 						 */
-						if ($query->select[0][0] == '\"') $query->select = array_merge(array("\"$table\".*"),$query->select);
+						if ($query->select[0][0] == '"') $query->select = array_merge(array("\"$table\".*"),$query->select);
 					} else unset($query->from[$table]);
 				} else {
 					$query->from[$table] = str_replace("\"{$table}\".OriginalLangID","\"{$table}\".ID",$query->from[$table]);

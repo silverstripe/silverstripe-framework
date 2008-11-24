@@ -6,24 +6,24 @@ class ControllerTest extends SapphireTest {
 	function testDefaultAction() {
 		/* For a controller with a template, the default action will simple run that template. */
 		$response = Director::test("ControllerTest_Controller/");
-		$this->assertEquals("This is the main template. Content is 'default content'.", $response->getBody());
+		$this->assertRegExp("/This is the main template. Content is 'default content'/", $response->getBody());
 	}
 	
 	function testMethodActions() {
 		/* The Action can refer to a method that is called on the object.  If a method returns an array, then it will be 
 		used to customise the template data */
 		$response = Director::test("ControllerTest_Controller/methodaction");
-		$this->assertEquals("This is the main template. Content is 'methodaction content'.", $response->getBody());
+		$this->assertRegExp("/This is the main template. Content is 'methodaction content'./", $response->getBody());
 		
 		/* If the method just returns a string, then that will be used as the response */
 		$response = Director::test("ControllerTest_Controller/stringaction");
-		$this->assertEquals("stringaction was called.", $response->getBody());
+		$this->assertRegExp("/stringaction was called./", $response->getBody());
 	}
 	
 	function testTemplateActions() {
 		/* If there is no method, it can be used to point to an alternative template. */
 		$response = Director::test("ControllerTest_Controller/templateaction");
-		$this->assertEquals("This is the template for templateaction. Content is 'default content'.", $response->getBody());
+		$this->assertRegExp("/This is the template for templateaction. Content is 'default content'./", $response->getBody());
 	}
 
 	function testAllowedActions() {

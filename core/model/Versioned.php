@@ -452,7 +452,7 @@ class Versioned extends DataObjectDecorator {
 		$query = $this->owner->extendedSQL($filter,"");
 
 		foreach($query->from as $table => $join) {
-			if($join[0] == '\"') $baseTable = str_replace('\"','',$join);
+			if($join[0] == '"') $baseTable = str_replace('"','',$join);
 			else if (substr($join,0,5) != 'INNER') $query->from[$table] = "LEFT JOIN \"$table\" ON \"$table\".RecordID = \"{$baseTable}_versions\".RecordID AND \"$table\".Version = \"{$baseTable}_versions\".Version";
 			$query->renameTable($table, $table . '_versions');
 		}
@@ -635,7 +635,7 @@ class Versioned extends DataObjectDecorator {
 	function buildVersionSQL($filter = "", $sort = "") {
 		$query = $this->owner->extendedSQL($filter,$sort);
 		foreach($query->from as $table => $join) {
-			if($join[0] == '\"') $baseTable = str_replace('\"','',$join);
+			if($join[0] == '"') $baseTable = str_replace('"','',$join);
 			else $query->from[$table] = "LEFT JOIN \"$table\" ON \"$table\".RecordID = \"{$baseTable}_versions\".RecordID AND \"$table\".Version = \"{$baseTable}_versions\".Version";
 			$query->renameTable($table, $table . '_versions');
 		}
@@ -646,7 +646,7 @@ class Versioned extends DataObjectDecorator {
 	static function build_version_sql($className, $filter = "", $sort = "") {
 		$query = singleton($className)->extendedSQL($filter,$sort);
 		foreach($query->from as $table => $join) {
-			if($join[0] == '\"') $baseTable = str_replace('"','',$join);
+			if($join[0] == '"') $baseTable = str_replace('"','',$join);
 			else $query->from[$table] = "LEFT JOIN \"$table\" ON \"$table\".RecordID = \"{$baseTable}_versions\".RecordID AND \"$table\".Version = \"{$baseTable}_versions\".Version";
 			$query->renameTable($table, $table . '_versions');
 		}

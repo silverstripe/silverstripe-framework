@@ -85,7 +85,7 @@ class SQLQueryTest extends SapphireTest {
 		$query = new SQLQuery();
 		$query->from[] = "MyTable";
 		$query->limit(array('limit'=>99, 'start'=>97));
-		$this->assertEquals("SELECT * FROM MyTable LIMIT 97,99", $query->sql());
+		$this->assertEquals("SELECT * FROM MyTable LIMIT 99 OFFSET 97", $query->sql());
 	}
 	
 	function testSelectWithOrderbyClause() {

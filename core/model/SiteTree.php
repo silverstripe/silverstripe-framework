@@ -1376,12 +1376,22 @@ class SiteTree extends DataObject {
 		
 		GoogleSitemap::ping();
 
-		// Fix the sort order for this page's siblings
-		DB::query("UPDATE \"SiteTree_Live\"
-			SET \"Sort\" = \"SiteTree\".\"Sort\"
-			FROM \"SiteTree\"
-			WHERE \"SiteTree_Live\".\"ID\" = \"SiteTree\".\"ID\"
-			AND \"SiteTree_Live\".\"ParentID\" = " . sprintf('%d', $this->ParentID) );
+		if(DB::getConn() instanceof MySQLDatabase) {
+			// Special syntax for MySQL (grr!)
+			// More ANSI-compliant syntax
+			DB::query("UPDATE \"SiteTree_Live\", \"SiteTree\"
+				SET \"SiteTree_Live\".\"Sort\" = \"SiteTree\".\"Sort\"
+				WHERE \"SiteTree_Live\".\"ID\" = \"SiteTree\".\"ID\"
+				AND \"SiteTree_Live\".\"ParentID\" = " . sprintf('%d', $this->ParentID) );
+			
+		} else {
+			// More ANSI-compliant syntax
+			DB::query("UPDATE \"SiteTree_Live\"
+				FROM \"SiteTree\"
+				SET \"Sort\" = \"SiteTree\".\"Sort\"
+				WHERE \"SiteTree_Live\".\"ID\" = \"SiteTree\".\"ID\"
+				AND \"SiteTree_Live\".\"ParentID\" = " . sprintf('%d', $this->ParentID) );
+		}
 
 		// Handle activities undertaken by decorators
 		$this->extend('onAfterPublish', $original);

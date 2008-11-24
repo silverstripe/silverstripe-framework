@@ -96,9 +96,7 @@ class ComponentSet extends DataObjectSet {
 			
 			$item = DataObject::get_by_id($this->childClass, $item);
 			
-			if(!isset($item)) {
-				return;
-			}
+			if(!$item) return;
 		}
 
 		// If we've already got a database object, then update the database

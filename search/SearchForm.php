@@ -176,17 +176,17 @@ class SearchForm extends Form {
 		$baseClass = reset($queryContent->from);
 		// There's no need to do all that joining
 		$queryContent->from = array(str_replace(array('`','"'),'',$baseClass) => $baseClass);
-		$queryContent->select = array("\"ClassName\"","\"$baseClass\".\"ID\"","\"ParentID\"","\"Title\"",
-			"\"URLSegment\"","\"Content\"","\"LastEdited\"","\"Created\"","_utf8'' AS \"Filename\"", 
-			"_utf8'' AS \"Name\"", "$relevanceContent AS \"Relevance\"", "\"CanViewType\"");
+		$queryContent->select = array("\"ClassName\"","$baseClass.\"ID\"","\"ParentID\"","\"Title\"",
+			"\"URLSegment\"","\"Content\"","\"LastEdited\"","\"Created\"","'' AS \"Filename\"", 
+			"'' AS \"Name\"", "$relevanceContent AS \"Relevance\"", "\"CanViewType\"");
 		$queryContent->orderby = null;
 
 		$queryFiles = singleton('File')->extendedSQL($notMatch . $matchFile . $fileFilter, "");
 		$baseClass = reset($queryFiles->from);
 		// There's no need to do all that joining
 		$queryFiles->from = array(str_replace(array('`','"'),'',$baseClass) => $baseClass);
-		$queryFiles->select = array("\"ClassName\"","\"$baseClass\".\"ID\"","_utf8'' AS \"ParentID\"","\"Title\"",
-			"_utf8'' AS \"URLSegment\"","\"Content\"","\"LastEdited\"","\"Created\"","\"Filename\"","\"Name\"",
+		$queryFiles->select = array("\"ClassName\"","$baseClass.\"ID\"","'' AS \"ParentID\"","\"Title\"",
+			"'' AS \"URLSegment\"","\"Content\"","\"LastEdited\"","\"Created\"","\"Filename\"","\"Name\"",
 			"$relevanceFile AS \"Relevance\"","NULL AS \"CanViewType\"");
 		$queryFiles->orderby = null;
 		

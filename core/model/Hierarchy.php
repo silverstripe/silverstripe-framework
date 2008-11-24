@@ -552,7 +552,7 @@ class Hierarchy extends DataObjectDecorator {
 		if(!$afterNode || $afterNode->ParentID != $this->owner->ID) {
 			$children = $this->AllChildren();
 		} else {
-			$children = DataObject::get(ClassInfo::baseDataClass($this->owner->class), "\"$baseClass\".\"ParentID\"={$this->owner->ID}" . ( ( $afterNode ) ? " AND \"Sort\" > " . sprintf( '%d', $afterNode->Sort ) : "" ), '\"Sort\" ASC');
+			$children = DataObject::get(ClassInfo::baseDataClass($this->owner->class), "\"$baseClass\".\"ParentID\"={$this->owner->ID}" . ( ( $afterNode ) ? " AND \"Sort\" > " . sprintf( '%d', $afterNode->Sort ) : "" ), '"Sort" ASC');
 		}
 		
 		// Try all the siblings of this node after the given node

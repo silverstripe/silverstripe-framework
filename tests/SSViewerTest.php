@@ -10,7 +10,7 @@ class SSViewerTest extends SapphireTest {
 		));
 		
 		$result = $data->renderWith("SSViewerTestPartialTemplate");
-		$this->assertEquals('Test partial template: var value', $result);
+		$this->assertEquals('Test partial template: var value', trim(preg_replace("/<!--.*-->/U",'',$result)));
 	}
 	
 	function testRequirements() {
@@ -41,6 +41,6 @@ SS
 );
 		$output = $viewer->process(new ArrayData(array()));
 		
-		$this->assertEquals("This is my templateThis is some contentThis is the final content", $output);
+		$this->assertEquals("This is my templateThis is some contentThis is the final content", preg_replace("/\n?<!--.*-->\n?/U",'',$output));
 	}
 }

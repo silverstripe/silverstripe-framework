@@ -32,16 +32,16 @@ class DBFieldTest extends SapphireTest {
 		$this->assertEquals('1', singleton('Decimal')->prepValueForDB('1'));
 
 		/* Boolean behaviour, asserting we have 0 */
-		$this->assertEquals('0', singleton('Boolean')->prepValueForDB(0));
-		$this->assertEquals('0', singleton('Boolean')->prepValueForDB(null));
-		$this->assertEquals('0', singleton('Boolean')->prepValueForDB(false));
-		$this->assertEquals('0', singleton('Boolean')->prepValueForDB(''));
-		$this->assertEquals('0', singleton('Boolean')->prepValueForDB('0'));
+		$this->assertEquals("'0'", singleton('Boolean')->prepValueForDB(0));
+		$this->assertEquals("'0'", singleton('Boolean')->prepValueForDB(null));
+		$this->assertEquals("'0'", singleton('Boolean')->prepValueForDB(false));
+		$this->assertEquals("'0'", singleton('Boolean')->prepValueForDB(''));
+		$this->assertEquals("'0'", singleton('Boolean')->prepValueForDB('0'));
 		
 		/* Boolean behaviour, asserting we have 1 */
-		$this->assertEquals('1', singleton('Boolean')->prepValueForDB(true));
-		$this->assertEquals('1', singleton('Boolean')->prepValueForDB(1));
-		$this->assertEquals('1', singleton('Boolean')->prepValueForDB('1'));
+		$this->assertEquals("'1'", singleton('Boolean')->prepValueForDB(true));
+		$this->assertEquals("'1'", singleton('Boolean')->prepValueForDB(1));
+		$this->assertEquals("'1'", singleton('Boolean')->prepValueForDB('1'));
 		
 		/* Varchar behaviour */
 		$this->assertEquals("'0'", singleton('Varchar')->prepValueForDB(0));
