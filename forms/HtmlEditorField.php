@@ -58,7 +58,7 @@ class HtmlEditorField extends TextareaField {
 				} else if($link[0] == '/') {
 					$broken = true;
 				} else if(ereg('^assets/',$link)) {
-					if(!DataObject::get_one("File", "Filename = '$link'", false)) {
+					if(!DataObject::get_one("File", "\"Filename\" = '$link'", false)) {
 						$broken = true;
 					}
 				}
@@ -132,7 +132,7 @@ class HtmlEditorField extends TextareaField {
 			} else if($link{0} == '/') {
 				$record->HasBrokenLink = 1;
 
-			} else if($candidateFile = DataObject::get_one("File", "Filename = '" . Convert::raw2sql(urldecode($link)) . "'", false)) {
+			} else if($candidateFile = DataObject::get_one("File", "\"Filename\" = '" . Convert::raw2sql(urldecode($link)) . "'", false)) {
 				$linkedFiles[] = $candidateFile->ID;
 				// $candidateFile->destroy();
 			}
@@ -145,7 +145,7 @@ class HtmlEditorField extends TextareaField {
 				
 				$image = Director::makeRelative($image);
 				if(substr($image,0,7) == 'assets/') {
-					$candidateImage = DataObject::get_one("File", "Filename = '$image'");
+					$candidateImage = DataObject::get_one("File", "\"Filename\" = '$image'");
 					if($candidateImage) $linkedFiles[] = $candidateImage->ID;
 					else $record->HasBrokenFile = 1;
 				}

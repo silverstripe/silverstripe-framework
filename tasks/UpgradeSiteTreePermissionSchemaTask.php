@@ -21,8 +21,8 @@ class UpgradeSiteTreePermissionSchemaTask extends BuildTask {
 	function run($request) {
 		// transfer values for changed column name
 		foreach(array('SiteTree','SiteTree_Live','SiteTree_versions') as $table) {
-			DB::query("UPDATE \"{$table}\" SET CanViewType = Viewers;");
-			DB::query("UPDATE \"{$table}\" SET CanEditType = Editors;");
+			DB::query("UPDATE \"{$table}\" SET \"CanViewType\" = 'Viewers';");
+			DB::query("UPDATE \"{$table}\" SET \"CanEditType\" = 'Editors';");
 		}
 		//Debug::message('Moved SiteTree->Viewers to SiteTree->CanViewType');
 		//Debug::message('Moved SiteTree->Editors to SiteTree->CanEditType');

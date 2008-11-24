@@ -583,16 +583,16 @@ class Debug {
 			
 			$memberID = $_SESSION['loggedInAs'];
 			
-			$groups = DB::query("SELECT GroupID from Group_Members WHERE MemberID=" . $memberID);
+			$groups = DB::query("SELECT \"GroupID\" from \"Group_Members\" WHERE \"MemberID\" = " . $memberID);
 			$groupCSV = implode($groups->column(), ',');
 			
 			$permission = DB::query("
-				SELECT ID
-				FROM Permission
+				SELECT \"ID\"
+				FROM \"Permission\"
 				WHERE (
-					Code = 'ADMIN'
-					AND Type = " . Permission::GRANT_PERMISSION . "
-					AND GroupID IN ($groupCSV)
+					\"Code\" = 'ADMIN'
+					AND \"Type\" = " . Permission::GRANT_PERMISSION . "
+					AND \"GroupID\" IN ($groupCSV)
 				)
 			")->value();
 			

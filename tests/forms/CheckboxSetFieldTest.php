@@ -14,10 +14,9 @@ class CheckboxSetFieldTest extends SapphireTest {
 		$field->saveInto($article);
 		
 		$this->assertNull(
-			DB::query("
-				SELECT * 
-				FROM CheckboxSetFieldTest_Article_Tags
-				WHERE CheckboxSetFieldTest_Article_Tags.CheckboxSetFieldTest_ArticleID = $article->ID
+			DB::query("SELECT * 
+				FROM \"CheckboxSetFieldTest_Article_Tags\"
+				WHERE \"CheckboxSetFieldTest_Article_Tags\".\"CheckboxSetFieldTest_ArticleID\" = $article->ID
 			")->value(),
 			'Nothing should go into manymany join table for a saved field without any ticked boxes'
 		);	
@@ -41,19 +40,17 @@ class CheckboxSetFieldTest extends SapphireTest {
 		
 		$this->assertEquals(
 			array($tag1->ID,$tag2->ID), 
-			DB::query("
-				SELECT CheckboxSetFieldTest_TagID 
-				FROM CheckboxSetFieldTest_Article_Tags
-				WHERE CheckboxSetFieldTest_Article_Tags.CheckboxSetFieldTest_ArticleID = $article->ID
+			DB::query("SELECT \"CheckboxSetFieldTest_TagID\"
+				FROM \"CheckboxSetFieldTest_Article_Tags\"
+				WHERE \"CheckboxSetFieldTest_Article_Tags\".\"CheckboxSetFieldTest_ArticleID\" = $article->ID
 			")->column(),
 			'Data shold be saved into CheckboxSetField manymany relation table on the "right end"'
 		);	
 		$this->assertEquals(
 			array($articleWithTags->ID,$article->ID), 
-			DB::query("
-				SELECT CheckboxSetFieldTest_ArticleID 
-				FROM CheckboxSetFieldTest_Article_Tags
-				WHERE CheckboxSetFieldTest_Article_Tags.CheckboxSetFieldTest_TagID = $tag1->ID
+			DB::query("SELECT \"CheckboxSetFieldTest_ArticleID\"
+				FROM \"CheckboxSetFieldTest_Article_Tags\"
+				WHERE \"CheckboxSetFieldTest_Article_Tags\".\"CheckboxSetFieldTest_TagID\" = $tag1->ID
 			")->column(),
 			'Data shold be saved into CheckboxSetField manymany relation table on the "left end"'
 		);	

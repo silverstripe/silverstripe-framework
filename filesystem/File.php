@@ -150,7 +150,7 @@ class File extends DataObject {
 
 		foreach($parts as $part) {
 			if($part == "assets" && !$parentID) continue;
-			$item = DataObject::get_one("File", "Name = '$part' AND ParentID = $parentID");
+			$item = DataObject::get_one("File", "\"Name\" = '$part' AND \"ParentID\" = $parentID");
 			if(!$item) break;
 			$parentID = $item->ID;
 		}
@@ -221,7 +221,7 @@ class File extends DataObject {
 	 * Delete the database record (recursively for folders) without touching the filesystem
 	 */
 	public function deleteDatabaseOnly() {
-		if(is_numeric($this->ID)) DB::query("DELETE FROM File WHERE \"ID\" = $this->ID");
+		if(is_numeric($this->ID)) DB::query("DELETE FROM \"File\" WHERE \"ID\" = $this->ID");
 	}
 
 	/**
@@ -287,7 +287,7 @@ class File extends DataObject {
 				$ext = "";
 			}
 			$suffix = 1;
-			while(DataObject::get_one("File", "Name = '" . addslashes($name) . "' AND ParentID = " . (int)$this->ParentID)) {
+			while(DataObject::get_one("File", "\"Name\" = '" . addslashes($name) . "' AND \"ParentID\" = " . (int)$this->ParentID)) {
 				$suffix++;
 				$name = "$base-$suffix$ext";
 			}
@@ -418,7 +418,7 @@ class File extends DataObject {
 	function getRelativePath() {
 
 		if($this->ParentID) {
-			$p = DataObject::get_one('Folder', "ID={$this->ParentID}");
+			$p = DataObject::get_one('Folder', "\"ID\"={$this->ParentID}");
 
 			if($p->ID) return $p->getRelativePath() . $this->getField("Name");
 			else return ASSETS_DIR . "/" . $this->getField("Name");
@@ -560,13 +560,15 @@ class File extends DataObject {
 		// In short, we select everything except File.Content
 		$dataobject_select = array();
 		foreach($query->select as $item) {
+			/*
 			if($item == "\"File\".*") {
 				$fileColumns = DB::query("SHOW FIELDS IN \"File\"")->column();
 				$columnsToAdd = array_diff($fileColumns, $excludeDbColumns);
 				foreach($columnsToAdd as $otherItem) $dataobject_select[] = '"File".' . $otherItem;
 			} else {
+			*/
 				$dataobject_select[] = $item;
-			}
+			//}
 		}
 
 		$query->select = $dataobject_select;

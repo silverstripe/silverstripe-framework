@@ -84,7 +84,7 @@ HTML;
 	 */
 	public function getsubtree() {
 		if($this->keyField == "ID") $obj = DataObject::get_by_id($this->sourceObject, $_REQUEST['SubtreeRootID']);
-		else $obj = DataObject::get_one($this->sourceObject, "$this->keyField = '$_REQUEST[SubtreeRootID]'");
+		else $obj = DataObject::get_one($this->sourceObject, "\"$this->keyField\" = '$_REQUEST[SubtreeRootID]'");
 
 		if(!$obj) user_error("Can't find database record $this->sourceObject with $this->keyField = $_REQUEST[SubtreeRootID]", E_USER_ERROR);
 		if($this->filterFunc) $obj->setMarkingFilterFunction($this->filterFunc);
@@ -103,7 +103,7 @@ HTML;
 		if($this->keyField == 'ID') {
 			return DataObject::get_by_id($this->sourceObject, $key);
 		} else {
-			return DataObject::get_one($this->sourceObject, "$this->keyField = '$key'");
+			return DataObject::get_one($this->sourceObject, "\"$this->keyField\" = '$key'");
 		}
 	}
 	

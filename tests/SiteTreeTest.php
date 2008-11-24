@@ -41,7 +41,7 @@ class SiteTreeTest extends SapphireTest {
 		$obj = $this->fixture->objFromFixture('Page','about');
 		$obj->publish('Stage', 'Live');
 		
-		$createdID = DB::query("SELECT ID FROM SiteTree_Live WHERE URLSegment = '$obj->URLSegment'")->value();
+		$createdID = DB::query("SELECT \"ID\" FROM \"SiteTree_Live\" WHERE \"URLSegment\" = '$obj->URLSegment'")->value();
 		$this->assertEquals($obj->ID, $createdID);
 	}
 	
@@ -79,7 +79,7 @@ class SiteTreeTest extends SapphireTest {
 		$oldStage = Versioned::current_stage();
 		Versioned::reading_stage('Live');
 		
-		$checkSiteTree = DataObject::get_one("SiteTree", "URLSegment = 'get-one-test-page'");
+		$checkSiteTree = DataObject::get_one("SiteTree", "\"URLSegment\" = 'get-one-test-page'");
 		$this->assertEquals("V1", $checkSiteTree->Title);
 	}
 	
@@ -114,12 +114,12 @@ class SiteTreeTest extends SapphireTest {
 		$parentID = $this->idFromFixture('Page', 'home');
 		$page->ParentID = $parentID;
 		$page->write();
-		$this->assertEquals($parentID, DB::query("SELECT ParentID FROM SiteTree WHERE \"ID\" = $page->ID")->value());
+		$this->assertEquals($parentID, DB::query("SELECT \"ParentID\" FROM \"SiteTree\" WHERE \"ID\" = $page->ID")->value());
 
 		/* You should then be able to save a null/0/'' value to the relation */
 		$page->ParentID = null;
 		$page->write();
-		$this->assertEquals(0, DB::query("SELECT ParentID FROM SiteTree WHERE \"ID\" = $page->ID")->value());
+		$this->assertEquals(0, DB::query("SELECT \"ParentID\" FROM \"SiteTree\" WHERE \"ID\" = $page->ID")->value());
 	}
 	
 }

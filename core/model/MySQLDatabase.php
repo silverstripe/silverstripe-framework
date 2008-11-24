@@ -590,7 +590,6 @@ class MySQLDatabase extends Database {
 
 				if(isset($limit['start']) && is_numeric($limit['start']) && isset($limit['limit']) && is_numeric($limit['limit'])) {
 					// @todo MySQL specific LIMIT syntax
-					//$combinedLimit = (int)$limit['start'] . ',' . (int)$limit['limit'];
 					$combinedLimit = "$limit[limit] OFFSET $limit[start]";
 				} elseif(isset($limit['limit']) && is_numeric($limit['limit'])) {
 					$combinedLimit = (int)$limit['limit'];

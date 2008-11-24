@@ -126,7 +126,7 @@ class ScaffoldingComplexTableField_Popup extends Form {
 		$type = $request->getVar('type');
 		$value = $request->getVar('value');
 		if ($type && $value) {
-			$record = DataObject::get_one($this->dataObject->class, "$type = '$value'");
+			$record = DataObject::get_one($this->dataObject->class, "\"$type\" = '$value'");
 			header("Content-Type: text/plain");
 			echo json_encode(array("record"=>$record->toMap()));
 		}

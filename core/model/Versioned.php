@@ -99,19 +99,20 @@ class Versioned extends DataObjectDecorator {
 	 * This is used by the versioning system to return database content on that date.
 	 * @param string $baseTable The base table.
 	 * @param string $date The date.
+	 * @todo Ensure that this is DB abstracted
 	 */
 	protected function requireArchiveTempTable($baseTable, $date) {
 		if(!isset(self::$createdArchiveTempTable[$baseTable])) {
 			self::$createdArchiveTempTable[$baseTable] = true;
 		
-			DB::query("CREATE TEMPORARY TABLE _Archive$baseTable (
-					RecordID INT NOT NULL PRIMARY KEY,
-					Version INT NOT NULL
+			DB::query("CREATE TEMPORARY TABLE \"_Archive$baseTable\" (
+					\"RecordID\" INT NOT NULL PRIMARY KEY,
+					\"Version\" INT NOT NULL
 				)");
-			DB::query("INSERT INTO _Archive$baseTable
-				SELECT RecordID, max(Version) FROM {$baseTable}_versions
-				WHERE LastEdited <= '$date'
-				GROUP BY RecordID");
+			DB::query("INSERT INTO \"_Archive$baseTable\"
+				SELECT \"RecordID\", max(\"Version\") FROM \"{$baseTable}_versions\"
+				WHERE \"LastEdited\" <= '$date'
+				GROUP BY \"RecordID\"");
 		}
 	}
 	/**
@@ -398,7 +399,7 @@ class Versioned extends DataObjectDecorator {
 			if(!$createNewVersion) $from->migrateVersion($from->Version);
 			
 			// Mark this version as having been published at some stage
-			DB::query("UPDATE \"{$extTable}_versions\" SET WasPublished = 1, PublisherID = $publisherID WHERE RecordID = $from->ID AND Version = $from->Version");
+			DB::query("UPDATE \"{$extTable}_versions\" SET \"WasPublished\" = '1', \"PublisherID\" = $publisherID WHERE \"RecordID\" = $from->ID AND \"Version\" = $from->Version");
 
 			$oldStage = Versioned::$reading_stage;
 			Versioned::$reading_stage = $toStage;

@@ -199,6 +199,7 @@ class DatabaseAdmin extends Controller {
 	
 	/**
 	 * Clear all data out of the database
+	 * @todo Move this code into Database class, for DB abstraction
 	 */
 	function clearAllData() {
 		$tables = DB::query("SHOW TABLES")->column();
@@ -244,7 +245,7 @@ class DatabaseAdmin extends Controller {
 
 				foreach($subclasses as $subclass) {
 					$recordExists[$subclass] =
-						DB::query("SELECT ID FROM \"$subclass")->keyedColumn();
+						DB::query("SELECT \"ID\" FROM \"$subclass\"")->keyedColumn();
 				}
 
 				foreach($records as $record) {

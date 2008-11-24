@@ -291,9 +291,9 @@ class SiteTree extends DataObject {
 	 * @return DataObjectSet Comments on this page.
 	 */
 	public function Comments() {
-		$spamfilter = isset($_GET['showspam']) ? '' : 'AND IsSpam=0';
-		$unmoderatedfilter = Permission::check('ADMIN') ? '' : 'AND NeedsModeration = 0';
-		$comments =  DataObject::get("PageComment", "ParentID = '" . Convert::raw2sql($this->ID) . "' $spamfilter $unmoderatedfilter", "Created DESC");
+		$spamfilter = isset($_GET['showspam']) ? '' : 'AND NOT "IsSpam"';
+		$unmoderatedfilter = Permission::check('ADMIN') ? '' : 'AND NOT "NeedsModeration"';
+		$comments =  DataObject::get("PageComment", "\"ParentID\" = '" . Convert::raw2sql($this->ID) . "' $spamfilter $unmoderatedfilter", "\"Created\" DESC");
 		
 		return $comments ? $comments : new DataObjectSet();
 	}
@@ -484,7 +484,7 @@ class SiteTree extends DataObject {
 	 */
 	public function getParent() {
 		if ($this->getField("ParentID")) {
-			return DataObject::get_one("SiteTree", "\"SiteTree\".ID = " . $this->getField("ParentID"));
+			return DataObject::get_one("SiteTree", "\"SiteTree\".\"ID\" = " . $this->getField("ParentID"));
 		}
 	}
 
@@ -937,8 +937,7 @@ class SiteTree extends DataObject {
 
 	protected function onBeforeWrite() {
 		if(!$this->Sort && $this->ParentID) {
-			$this->Sort = DB::query(
-				"SELECT MAX(Sort) + 1 FROM SiteTree WHERE ParentID = $this->ParentID")->value();
+			$this->Sort = DB::query("SELECT MAX(\"Sort\") + 1 FROM \"SiteTree\" WHERE \"ParentID\" = $this->ParentID")->value();
 		}
 
 		// Auto-set URLSegment
@@ -1378,10 +1377,11 @@ class SiteTree extends DataObject {
 		GoogleSitemap::ping();
 
 		// Fix the sort order for this page's siblings
-		DB::query("UPDATE SiteTree_Live
-			INNER JOIN SiteTree ON SiteTree_Live.ID = SiteTree.ID
-			SET SiteTree_Live.Sort = SiteTree.Sort
-			WHERE SiteTree_Live.ParentID = " . sprintf('%d', $this->ParentID));
+		DB::query("UPDATE \"SiteTree_Live\"
+			SET \"Sort\" = \"SiteTree\".\"Sort\"
+			FROM \"SiteTree\"
+			WHERE \"SiteTree_Live\".\"ID\" = \"SiteTree\".\"ID\"
+			AND \"SiteTree_Live\".\"ParentID\" = " . sprintf('%d', $this->ParentID) );
 
 		// Handle activities undertaken by decorators
 		$this->extend('onAfterPublish', $original);
@@ -1466,7 +1466,7 @@ class SiteTree extends DataObject {
 	function MultipleParents() {
 		$parents = new GhostPage_ComponentSet($this->Parent);
 		$parents->setOwner($this);
-		$ghostPages = DataObject::get("GhostPage", "LinkedPageID = '$this->ID'");
+		$ghostPages = DataObject::get("GhostPage", "\"LinkedPageID\" = '$this->ID'");
 
 		if($ghostPages) {
 			foreach($ghostPages as $ghostPage) {

@@ -200,6 +200,9 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 		return $dbConn && (substr($dbConn->currentDatabase(),0,5) == 'tmpdb');
 	}
 	
+	/**
+	 * @todo Make this db agnostic
+	 */
 	static function kill_temp_db() {
 		// Delete our temporary database
 		if(self::using_temp_db()) {
@@ -212,6 +215,9 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 		}
 	}
 	
+	/**
+	 * @todo Make this db agnostic
+	 */
 	static function create_temp_db() {
 		// Create a temporary database
 		$dbConn = DB::getConn();

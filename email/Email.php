@@ -514,7 +514,7 @@ class Email_BounceHandler extends Controller {
 	  	$SQL_email = Convert::raw2sql($email);
 	  	$SQL_bounceTime = Convert::raw2sql("$date $time");
 
-    	$duplicateBounce = DataObject::get_one("Email_BounceRecord", "BounceEmail = '$SQL_email' AND (BounceTime+INTERVAL 1 MINUTE) > '$SQL_bounceTime'");
+    	$duplicateBounce = DataObject::get_one("Email_BounceRecord", "\"BounceEmail\" = '$SQL_email' AND (\"BounceTime\"+INTERVAL 1 MINUTE) > '$SQL_bounceTime'");
     	
     	if(!$duplicateBounce) {
         $record = new Email_BounceRecord();
@@ -536,7 +536,7 @@ class Email_BounceHandler extends Controller {
 			$SQL_memberID = Convert::raw2sql($member->ID);
 			$SQL_newsletterID = Convert::raw2sql($newsletter_id_date_parts[0]);
 			// Log the bounce
-			$oldNewsletterSentRecipient = DataObject::get_one("Newsletter_SentRecipient", "MemberID = '$SQL_memberID' AND ParentID = '$SQL_newsletterID' AND Email = '$SQL_email'");
+			$oldNewsletterSentRecipient = DataObject::get_one("Newsletter_SentRecipient", "\"MemberID\" = '$SQL_memberID' AND \"ParentID\" = '$SQL_newsletterID' AND \"Email\" = '$SQL_email'");
     			// Update the Newsletter_SentRecipient record if it exists
     			if($oldNewsletterSentRecipient) {			
 				$oldNewsletterSentRecipient->Result = 'Bounced';

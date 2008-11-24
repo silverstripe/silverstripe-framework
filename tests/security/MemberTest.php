@@ -23,7 +23,7 @@ class MemberTest extends SapphireTest {
 		$member->Password = "test3";
 		$member->write();
 
-		$passwords = DataObject::get("MemberPassword", "MemberID = $member->ID", "Created DESC, ID DESC")->getIterator();
+		$passwords = DataObject::get("MemberPassword", "\"MemberID\" = $member->ID", "\"Created\" DESC, \"ID\" DESC")->getIterator();
 		$this->assertNotNull($passwords);
 		$record = $passwords->rewind();
 		$this->assertTrue($record->checkPassword('test3'), "Password test3 not found in MemberRecord");
@@ -82,7 +82,7 @@ class MemberTest extends SapphireTest {
 		$this->assertTrue($valid->valid());
 		
 		// Clear out the MemberPassword table to ensure that the system functions properly in that situation
-		DB::query("DELETE FROM MemberPassword");
+		DB::query("DELETE FROM \"MemberPassword\"");
 
 		// GOOD PASSWORDS
 		

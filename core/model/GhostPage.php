@@ -124,7 +124,7 @@ class GhostPage_ComponentSet extends ComponentSet {
 	function remove($item) {
 		$id = is_object($item) ? $item->ID : $item;
 
-		$ghosts = DataObject::get("GhostPage","ParentID = $id AND LinkedPageID = {$this->ownerObj->ID}");
+		$ghosts = DataObject::get("GhostPage","\"ParentID\" = $id AND \"LinkedPageID\" = {$this->ownerObj->ID}");
 		if($ghosts) {
 			foreach($ghosts as $ghost) {
 				$ghost->delete();

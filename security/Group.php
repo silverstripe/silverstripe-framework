@@ -133,7 +133,7 @@ class Group extends DataObject {
 	 * @param string $groupcode
 	 */
 	static function addToGroupByName($member, $groupcode) {
-		$group = DataObject::get_one('Group', "Code = '" . Convert::raw2sql($groupcode). "'");
+		$group = DataObject::get_one('Group', "\"Code\" = '" . Convert::raw2sql($groupcode). "'");
 		if($group) {
 			$member->Groups()->add($group);
 			$member->write();
@@ -158,9 +158,9 @@ class Group extends DataObject {
 		
 		if( is_numeric( $limit ) ) {
 			if( is_numeric( $offset ) )
-				$limit = "$offset, $limit";
+				$limit = "$limit OFFSET $offset";
 			else
-				$limit = "0, $limit";
+				$limit = "$limit OFFSET 0";
 		} else {
 			$limit = "";
 		}
@@ -248,7 +248,7 @@ class Group extends DataObject {
 	 * Override this so groups are ordered in the CMS
 	 */
 	public function stageChildren() {
-		return DataObject::get('Group', "\"Group\".\"ParentID\" = " . (int)$this->ID . " AND \"Group\".ID != " . (int)$this->ID, "Sort");
+		return DataObject::get('Group', "\"Group\".\"ParentID\" = " . (int)$this->ID . " AND \"Group\".\"ID\" != " . (int)$this->ID, '"Sort"');
 	}
 	
 	public function TreeTitle() {

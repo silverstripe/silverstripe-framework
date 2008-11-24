@@ -73,7 +73,7 @@ class PasswordValidator extends Object {
 		}
 		
 		if($this->historicalPasswordCount) {
-			$previousPasswords = DataObject::get("MemberPassword", "MemberID = $member->ID", "Created DESC, ID Desc", "", $this->historicalPasswordCount);
+			$previousPasswords = DataObject::get("MemberPassword", "\"MemberID\" = $member->ID", "\"Created\" DESC, \"ID\" Desc", "", $this->historicalPasswordCount);
 			if($previousPasswords) foreach($previousPasswords as $previousPasswords) {
 				if($previousPasswords->checkPassword($password)) {
 					$valid->error("You've already used that password in the past, please choose a new password", "PREVIOUS_PASSWORD");

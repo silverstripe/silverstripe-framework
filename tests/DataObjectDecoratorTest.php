@@ -23,7 +23,7 @@ class DataObjectDecoratorTest extends SapphireTest {
 		
 		unset($contact);
 		
-		$contact = DataObject::get_one("DataObjectDecoratorTest_Member", "Website='http://www.example.com'");
+		$contact = DataObject::get_one("DataObjectDecoratorTest_Member", "\"Website\"='http://www.example.com'");
 		
 		$this->assertType('DataObjectDecoratorTest_RelatedObject', $contact->RelatedObjects()->First());
 		$this->assertEquals("Lorem ipsum dolor", $contact->RelatedObjects()->First()->FieldOne);

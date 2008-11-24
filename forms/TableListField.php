@@ -442,8 +442,8 @@ JS
 		if($this->customQuery) {
 			$query = clone $this->customQuery;
 			$baseClass = ClassInfo::baseDataClass($this->sourceClass);
-			$query->select[] = "{$baseClass}.ID AS ID";
-			$query->select[] = "{$baseClass}.ClassName AS ClassName";
+			$query->select[] = "{$baseClass}.ID AS \"ID\"";
+			$query->select[] = "{$baseClass}.ClassName AS \"ClassName\"";
 			$query->select[] = "{$baseClass}.ClassName AS \"RecordClassName\"";
 		} else {
 			$query = singleton($this->sourceClass)->extendedSQL($this->sourceFilter(), $this->sourceSort, null, $this->sourceJoin);
@@ -830,7 +830,7 @@ JS
 		} else {
 			$countQuery->select = array();
 			$countQuery->groupby = array();
-			$countQuery->select[] = "COUNT(DISTINCT {$baseClass}.ID) AS TotalCount";
+			$countQuery->select[] = "COUNT(DISTINCT \"{$baseClass}\".\"ID\") AS \"TotalCount\"";
 			$records = $countQuery->execute();
 			$record = $records->nextRecord();
 			$this->totalCount = $record['TotalCount'];

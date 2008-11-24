@@ -20,7 +20,7 @@ class Folder extends File {
 		$parentID = 0;
 
 		foreach($parts as $part) {
-			$item = DataObject::get_one("Folder", "Name = '$part' AND ParentID = $parentID");
+			$item = DataObject::get_one("Folder", "\"Name\" = '$part' AND \"ParentID\" = $parentID");
 			if(!$item) {
 				$item = new Folder();
 				$item->ParentID = $parentID;
@@ -43,15 +43,15 @@ class Folder extends File {
 		$deleted = 0;
 
 		// First, merge any children that are duplicates
-		$duplicateChildrenNames = DB::query("SELECT Name FROM \"File\" WHERE ParentID = $parentID GROUP BY Name HAVING count(*) > 1")->column();
+		$duplicateChildrenNames = DB::query("SELECT \"Name\" FROM \"File\" WHERE \"ParentID\" = $parentID GROUP BY \"Name\" HAVING count(*) > 1")->column();
 		if($duplicateChildrenNames) foreach($duplicateChildrenNames as $childName) {
 			$childName = addslashes($childName);
 			// Note, we do this in the database rather than object-model; otherwise we get all sorts of problems about deleting files
-			$children = DB::query("SELECT ID FROM \"File\" WHERE Name = '$childName' AND ParentID = $parentID")->column();
+			$children = DB::query("SELECT \"ID\" FROM \"File\" WHERE \"Name\" = '$childName' AND \"ParentID\" = $parentID")->column();
 			if($children) {
 				$keptChild = array_shift($children);
 				foreach($children as $removedChild) {
-					DB::query("UPDATE \"File\" SET ParentID = $keptChild WHERE ParentID = $removedChild");
+					DB::query("UPDATE \"File\" SET \"ParentID\" = $keptChild WHERE \"ParentID\" = $removedChild");
 					DB::query("DELETE FROM \"File\" WHERE \"ID\" = $removedChild");
 				}
 			} else {
@@ -62,7 +62,7 @@ class Folder extends File {
 		
 		// Get index of database content
 		// We don't use DataObject so that things like subsites doesn't muck with this.
-		$dbChildren = DB::query("SELECT * FROM File WHERE ParentID = $parentID");
+		$dbChildren = DB::query("SELECT * FROM \"File\" WHERE \"ParentID\" = $parentID");
 		$hasDbChild = array();
 		if($dbChildren) {
 			foreach($dbChildren as $dbChild) {
@@ -154,10 +154,9 @@ class Folder extends File {
 
 		$name = addslashes($name);
 		
-		DB::query("INSERT INTO \"File\" SET
-			ClassName = '$className', ParentID = $this->ID, OwnerID = $ownerID,
-			Name = '$name', Filename = '$filename', Created = NOW(), LastEdited = NOW(),
-			Title = '$name'");
+		DB::query("INSERT INTO \"File\" 
+			(\"ClassName\", \"ParentID\", \"OwnerID\", \"Name\", \"Filename\", \"Created\", \"LastEdited\", \"Title\")
+			VALUES ('$className', $this->ID, $ownerID, '$name', '$filename', NOW(), NOW(), '$name')");
 			
 		return DB::getGeneratedID("File");
 	}
@@ -253,7 +252,7 @@ class Folder extends File {
 			if($a == "DataObject") $baseClass = -1;
 		}
 		
-		$g = DataObject::get($baseClass, "ParentID = " . $this->ID);
+		$g = DataObject::get($baseClass, "\"ParentID\" = " . $this->ID);
 		return $g;
 	}
 	
@@ -402,7 +401,7 @@ class Folder extends File {
      * @returns String where clause which will work as filter.
      */
 	protected function getUsedFilesList() {
-	    $result = DB::query("SELECT DISTINCT FileID FROM SiteTree_ImageTracking");
+	    $result = DB::query("SELECT DISTINCT \"FileID\" FROM \"SiteTree_ImageTracking\"");
         $usedFiles = array();
 	    $where = "";
         if($result->numRecords() > 0) {
@@ -431,9 +430,9 @@ class Folder extends File {
         foreach($usedFiles as $file) {
             $where .= $file->ID . ',';     
         }
-        if($where == "") return "(ClassName = 'File' OR ClassName =  'Image')";
+        if($where == "") return "(\"ClassName\" = 'File' OR \"ClassName\" =  'Image')";
         $where = substr($where,0,strlen($where)-1);
-        $where = "\"File\".ID NOT IN (" . $where . ") AND (ClassName = 'File' OR ClassName =  'Image')";
+        $where = "\"File\".\"ID\" NOT IN (" . $where . ") AND (\"ClassName\" = 'File' OR \"ClassName\" =  'Image')";
         return $where;
 	}
 

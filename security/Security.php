@@ -564,7 +564,7 @@ class Security extends Controller {
 				&& !empty(self::$default_username) && !empty(self::$default_password)) {
 			$member = self::findAnAdministrator();
 		} else {
-			$member = DataObject::get_one("Member", 	"Email = '$SQL_email' AND Password IS NOT NULL");
+			$member = DataObject::get_one("Member", 	"\"Email\" = '$SQL_email' AND \"Password\" IS NOT NULL");
 			if($member && ($member->checkPassword($RAW_password) == false)) {
 				$member = null;
 			}
@@ -896,7 +896,7 @@ class Security extends Controller {
 
 		// Are there members with a clear text password?
 		$members = DataObject::get("Member",
-			"PasswordEncryption = 'none' AND Password IS NOT NULL");
+			"\"PasswordEncryption\" = 'none' AND \"Password\" IS NOT NULL");
 
 		if(!$members) {
 		        print '<h1>'._t('Security.NOTHINGTOENCRYPT1', 'No passwords to encrypt')."</h1>\n";

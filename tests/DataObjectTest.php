@@ -57,28 +57,28 @@ class DataObjectTest extends SapphireTest {
 		$this->assertEquals(8, $comments->Count());
 		
 		// Test WHERE clause
-		$comments = DataObject::get('PageComment', "Name='Bob'");
+		$comments = DataObject::get('PageComment', "\"Name\"='Bob'");
 		$this->assertEquals(2, $comments->Count());
 		foreach($comments as $comment) {
 			$this->assertEquals('Bob', $comment->Name);
 		}
 		
 		// Test sorting
-		$comments = DataObject::get('PageComment', '', 'Name ASC');
+		$comments = DataObject::get('PageComment', '', '"Name" ASC');
 		$this->assertEquals(8, $comments->Count());
 		$this->assertEquals('Bob', $comments->First()->Name);
-		$comments = DataObject::get('PageComment', '', 'Name DESC');
+		$comments = DataObject::get('PageComment', '', '"Name" DESC');
 		$this->assertEquals(8, $comments->Count());
 		$this->assertEquals('Joe', $comments->First()->Name);
 		
 		// Test join
-		$comments = DataObject::get('PageComment', "\"SiteTree\".Title='First Page'", '', 'INNER JOIN SiteTree ON PageComment.ParentID = SiteTree.ID');
+		$comments = DataObject::get('PageComment', "\"SiteTree\".\"Title\"='First Page'", '', 'INNER JOIN "SiteTree" ON "PageComment"."ParentID" = "SiteTree"."ID"');
 		$this->assertEquals(2, $comments->Count());
 		$this->assertEquals('Bob', $comments->First()->Name);
 		$this->assertEquals('Bob', $comments->Last()->Name);
 		
 		// Test limit
-		$comments = DataObject::get('PageComment', '', 'Name ASC', '', '1,2');
+		$comments = DataObject::get('PageComment', '', '"Name" ASC', '', '1,2');
 		$this->assertEquals(2, $comments->Count());
 		$this->assertEquals('Bob', $comments->First()->Name);
 		$this->assertEquals('Dean', $comments->Last()->Name);
@@ -100,27 +100,27 @@ class DataObjectTest extends SapphireTest {
 		$this->assertEquals($homepageID, $page->ID);
 		
 		// Test get_one() without caching
-		$comment1 = DataObject::get_one('PageComment', "Name='Joe'", false);
+		$comment1 = DataObject::get_one('PageComment', "\"Name\"='Joe'", false);
 		$comment1->Comment = "Something Else";
-		$comment2 = DataObject::get_one('PageComment', "Name='Joe'", false);
+		$comment2 = DataObject::get_one('PageComment', "\"Name\"='Joe'", false);
 		$this->assertNotEquals($comment1->Comment, $comment2->Comment);
 		
 		// Test get_one() with caching
-		$comment1 = DataObject::get_one('PageComment', "Name='Jane'", true);
+		$comment1 = DataObject::get_one('PageComment', "\"Name\"='Jane'", true);
 		$comment1->Comment = "Something Else";
-		$comment2 = DataObject::get_one('PageComment', "Name='Jane'", true);
+		$comment2 = DataObject::get_one('PageComment', "\"Name\"='Jane'", true);
 		$this->assertEquals((string)$comment1->Comment, (string)$comment2->Comment);
 		
 		// Test get_one() with order by without caching
-		$comment = DataObject::get_one('PageComment', '', false, 'Name ASC');
+		$comment = DataObject::get_one('PageComment', '', false, '"Name" ASC');
 		$this->assertEquals('Bob', $comment->Name);
-		$comment = DataObject::get_one('PageComment', '', false, 'Name DESC');
+		$comment = DataObject::get_one('PageComment', '', false, '"Name" DESC');
 		$this->assertEquals('Joe', $comment->Name);
 		
 		// Test get_one() with order by with caching
-		$comment = DataObject::get_one('PageComment', '', true, 'Name ASC');
+		$comment = DataObject::get_one('PageComment', '', true, '"Name" ASC');
 		$this->assertEquals('Bob', $comment->Name);
-		$comment = DataObject::get_one('PageComment', '', true, 'Name DESC');
+		$comment = DataObject::get_one('PageComment', '', true, '"Name" DESC');
 		$this->assertEquals('Joe', $comment->Name);
 	}
 
@@ -283,24 +283,24 @@ class DataObjectTest extends SapphireTest {
 		$captainID = $this->idFromFixture('DataObjectTest_Player', 'player1');
 		$team->CaptainID = $captainID;
 		$team->write();
-		$this->assertEquals($captainID, DB::query("SELECT CaptainID FROM DataObjectTest_Team WHERE \"ID\" = $team->ID")->value());
+		$this->assertEquals($captainID, DB::query("SELECT \"CaptainID\" FROM \"DataObjectTest_Team\" WHERE \"ID\" = $team->ID")->value());
 		
 		/* After giving it a value, you should also be able to set it back to null */
 		$team->CaptainID = '';
 		$team->write();
-		$this->assertEquals(0, DB::query("SELECT CaptainID FROM DataObjectTest_Team WHERE \"ID\" = $team->ID")->value());
+		$this->assertEquals(0, DB::query("SELECT \"CaptainID\" FROM \"DataObjectTest_Team\" WHERE \"ID\" = $team->ID")->value());
 
 		/* You should also be able to save a blank to it when it's first created */
 		$team = new DataObjectTest_Team();
 		$team->CaptainID = '';
 		$team->write();
-		$this->assertEquals(0, DB::query("SELECT CaptainID FROM DataObjectTest_Team WHERE \"ID\" = $team->ID")->value());
+		$this->assertEquals(0, DB::query("SELECT \"CaptainID\" FROM \"DataObjectTest_Team\" WHERE \"ID\" = $team->ID")->value());
 		
 		/* Ditto for existing records without a value */
 		$existingTeam = $this->objFromFixture('DataObjectTest_Team', 'team1');
 		$existingTeam->CaptainID = '';
 		$existingTeam->write();
-		$this->assertEquals(0, DB::query("SELECT CaptainID FROM DataObjectTest_Team WHERE \"ID\" = $existingTeam->ID")->value());
+		$this->assertEquals(0, DB::query("SELECT \"CaptainID\" FROM \"DataObjectTest_Team\" WHERE \"ID\" = $existingTeam->ID")->value());
 	}
 	
 	function testCanAccessHasOneObjectsAsMethods() {
@@ -323,9 +323,9 @@ class DataObjectTest extends SapphireTest {
 		$obj->write();
 
 		$this->assertNotNull($obj->ID);
-		$this->assertEquals('value1', DB::query("SELECT Data FROM DataObjectTest_FunnyFieldNames WHERE \"ID\" = $obj->ID")->value());
-		$this->assertEquals('value2', DB::query("SELECT DbObject FROM DataObjectTest_FunnyFieldNames WHERE \"ID\" = $obj->ID")->value());
-		$this->assertEquals('value3', DB::query("SELECT Duplicate FROM DataObjectTest_FunnyFieldNames WHERE \"ID\" = $obj->ID")->value());
+		$this->assertEquals('value1', DB::query("SELECT \"Data\" FROM \"DataObjectTest_FunnyFieldNames\" WHERE \"ID\" = $obj->ID")->value());
+		$this->assertEquals('value2', DB::query("SELECT \"DbObject\" FROM \"DataObjectTest_FunnyFieldNames\" WHERE \"ID\" = $obj->ID")->value());
+		$this->assertEquals('value3', DB::query("SELECT \"Duplicate\" FROM \"DataObjectTest_FunnyFieldNames\" WHERE \"ID\" = $obj->ID")->value());
 	}
 	
 	/**
@@ -508,7 +508,7 @@ class DataObjectTest extends SapphireTest {
 		/* Creating a new object of a subclass should set the ClassName field correctly */
 		$obj = new DataObjectTest_SubTeam();
 		$obj->write();
-		$this->assertEquals("DataObjectTest_SubTeam", DB::query("SELECT ClassName FROM DataObjectTest_Team WHERE \"ID\" = $obj->ID")->value());
+		$this->assertEquals("DataObjectTest_SubTeam", DB::query("SELECT \"ClassName\" FROM \"DataObjectTest_Team\" WHERE \"ID\" = $obj->ID")->value());
 	}
 	
 	public function testForceInsert() {	
@@ -519,11 +519,11 @@ class DataObjectTest extends SapphireTest {
 		$obj->SubclassDatabaseField = 'asdfasdf';
 		$obj->write(false, true);
 
-		$this->assertEquals("DataObjectTest_SubTeam", DB::query("SELECT ClassName FROM DataObjectTest_Team WHERE \"ID\" = $obj->ID")->value());
+		$this->assertEquals("DataObjectTest_SubTeam", DB::query("SELECT \"ClassName\" FROM \"DataObjectTest_Team\" WHERE \"ID\" = $obj->ID")->value());
 
 		/* Check that it actually saves to the database with the correct ID */
-		$this->assertEquals("1001", DB::query("SELECT ID FROM DataObjectTest_SubTeam WHERE SubclassDatabaseField = 'asdfasdf'")->value());
-		$this->assertEquals("1001", DB::query("SELECT ID FROM DataObjectTest_Team WHERE Title = 'asdfasdf'")->value());
+		$this->assertEquals("1001", DB::query("SELECT \"ID\" FROM \"DataObjectTest_SubTeam\" WHERE \"SubclassDatabaseField\" = 'asdfasdf'")->value());
+		$this->assertEquals("1001", DB::query("SELECT \"ID\" FROM \"DataObjectTest_Team\" WHERE \"Title\" = 'asdfasdf'")->value());
 	}
 	
 	public function TestHasOwnTable() {

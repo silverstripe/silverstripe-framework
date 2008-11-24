@@ -216,7 +216,7 @@ class Member extends DataObject {
 			list($uid, $token) = explode(':', Cookie::get('alc_enc'), 2);
 			$SQL_uid = Convert::raw2sql($uid);
 
-			$member = DataObject::get_one("Member", "Member.ID = '$SQL_uid'");
+			$member = DataObject::get_one("Member", "\"Member\".\"ID\" = '$SQL_uid'");
 
 			if($member && $member->RememberLoginToken != $token) {
 				$member = null;
@@ -462,7 +462,7 @@ class Member extends DataObject {
 			if($existingRecord) {
 				$newID = $existingRecord->ID;
 				if($this->ID) {
-					DB::query("UPDATE Group_Members SET MemberID = $newID WHERE MemberID = $this->ID");
+					DB::query("UPDATE \"Group_Members\" SET \"MemberID\" = $newID WHERE \"MemberID\" = $this->ID");
 				}
 				$this->ID = $newID;
 				// Merge existing data into the local record
@@ -547,7 +547,7 @@ class Member extends DataObject {
 			$groupCheckObj = DataObject::get_by_id('Group', $group);
 		} elseif(is_string($group)) {
 			$SQL_group = Convert::raw2sql($group);
-			$groupCheckObj = DataObject::get_one('Group', "Code = '{$SQL_group}'");
+			$groupCheckObj = DataObject::get_one('Group', "\"Code\" = '{$SQL_group}'");
 		} elseif($group instanceof Group) {
 			$groupCheckObj = $group;
 		} else {
@@ -749,7 +749,7 @@ class Member extends DataObject {
 			$SQL_perms = "'" . implode("', '", Convert::raw2sql($perms)) . "'";
 			
 			$groups = DataObject::get('Group', "", "",
-				"INNER JOIN \"Permission\" ON \"Permission\".GroupID = \"Group\".ID AND \"Permission\".Code IN ($SQL_perms)");
+				"INNER JOIN \"Permission\" ON \"Permission\".\"GroupID\" = \"Group\".\"ID\" AND \"Permission\".\"Code\" IN ($SQL_perms)");
 		}
 
 		$groupIDList = array();
@@ -1104,7 +1104,7 @@ class Member_GroupSet extends ComponentSet {
 	 */
 	function getGroupsFromIDs($ids){
 		if($ids && count($ids) > 1) {
-			return DataObject::get("Group", "ID IN (" . implode(",", $ids) . ")");
+			return DataObject::get("Group", "\"ID\" IN (" . implode(",", $ids) . ")");
 		} else {
 			return DataObject::get_by_id("Group", $ids[0]);
 		}
@@ -1149,7 +1149,7 @@ class Member_GroupSet extends ComponentSet {
 	 */
 	protected function codenamesToGroups($codenames) {
 		$list = "'" . implode("', '", $codenames) . "'";
-		$output = DataObject::get("Group", "Code IN ($list)");
+		$output = DataObject::get("Group", "\"Code\" IN ($list)");
 
 		// Some are missing - throw warnings
 		if(!$output || ($output->Count() != sizeof($list))) {
@@ -1358,7 +1358,7 @@ class Member_Validator extends RequiredFields {
 		$valid = parent::php($data);
 
 		$member = DataObject::get_one('Member',
-			"Email = '". Convert::raw2sql($data['Email']) ."'");
+			"\"Email\" = '". Convert::raw2sql($data['Email']) ."'");
 
 		// if we are in a complex table field popup, use ctf[childID], else use
 		// ID

@@ -193,7 +193,7 @@ class MemberLoginForm extends LoginForm {
 	function forgotPassword($data) {
 		$SQL_data = Convert::raw2sql($data);
 		$SQL_email = $SQL_data['Email'];
-		$member = DataObject::get_one('Member', "Email = '{$SQL_email}'");
+		$member = DataObject::get_one('Member', "\"Email\" = '{$SQL_email}'");
 
 		if($member) {
 			$member->generateAutologinHash();

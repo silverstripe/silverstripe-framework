@@ -356,8 +356,8 @@ class Permission extends DataObject {
         
         $SQL_codeList = (is_array($code)) ? implode("','", Convert::raw2sql($code)) : Convert::raw2sql($code);
 
-		$SQL_filter = "Permission.Code IN ('" . $SQL_codeList . "') " .
-			"AND Permission.Type = " . self::GRANT_PERMISSION;
+		$SQL_filter = "\"Permission\".\"Code\" IN ('" . $SQL_codeList . "') " .
+			"AND \"Permission\".\"Type\" = " . self::GRANT_PERMISSION;
 		
 		$toplevelGroups = DataObject::get(
 			'Group', 
@@ -380,7 +380,7 @@ class Permission extends DataObject {
 
 		$members = DataObject::get(
 			Object::getCustomClass('Member'),
-			$_filter = "\"Group\".ID IN (" . implode(",",$groupIDs) . ")",
+			$_filter = "\"Group\".\"ID\" IN (" . implode(",",$groupIDs) . ")",
 			$_sort = "",
 			$_join = "LEFT JOIN \"Group_Members\" ON \"Member\".\"ID\" = \"Group_Members\".\"MemberID\" " . 
 				"LEFT JOIN \"Group\" ON \"Group_Members\".\"GroupID\" = \"Group\".\"ID\" "
@@ -401,9 +401,9 @@ class Permission extends DataObject {
 		
 		return DataObject::get(
 			'Group',
-			"Permission.Code IN ('$SQL_codes')",
+			"\"Permission\".\"Code\" IN ('$SQL_codes')",
 			"",
-			"LEFT JOIN Permission ON Group.ID = Permission.GroupID"
+			"LEFT JOIN \"Permission\" ON \"Group\".\"ID\" = \"Permission\".\"GroupID\""
 		);
 	}
 
@@ -441,7 +441,7 @@ class Permission extends DataObject {
 			}
 		}
 
-		$otherPerms = DB::query("SELECT DISTINCT Code From Permission")
+		$otherPerms = DB::query("SELECT DISTINCT \"Code\" From \"Permission\"")
 			->column();
 		if($otherPerms) foreach($otherPerms as $otherPerm) {
 			if(!array_key_exists($otherPerm, $allCodes))

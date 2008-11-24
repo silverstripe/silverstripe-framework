@@ -429,7 +429,7 @@ abstract class Database extends Object {
 
 					case "insert":
 						if(!isset($writeInfo['fields']['ID']) && isset($writeInfo['id'])) {
-							$columnList[] = "\"$ID\"";
+							$columnList[] = "\"ID\"";
 							$valueList[] = (int)$writeInfo['id'];
 						}
 						$columnList = implode(", ", $columnList);

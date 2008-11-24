@@ -107,7 +107,9 @@ class Filesystem extends Object {
 		singleton('Folder')->syncChildren();
 		$finished = false;
 		while(!$finished) {
-			$orphans = DB::query("SELECT C.ID FROM File AS C LEFT JOIN File AS P ON C.ParentID = P.ID WHERE P.ID IS NULL AND C.ParentID > 0");
+			$orphans = DB::query("SELECT \"C\".\"ID\" FROM \"File\" AS \"C\" 
+				LEFT JOIN \"File\" AS \"P\" ON \"C\".\"ParentID\" = \"P\".\"ID\" 
+				WHERE \"P\".\"ID\" IS NULL AND \"C\".\"ParentID\" > 0");
 			$finished = true;
 			if($orphans) foreach($orphans as $orphan) {
 				$finished = false;

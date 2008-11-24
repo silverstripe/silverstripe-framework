@@ -225,7 +225,7 @@ class Translatable extends DataObjectDecorator {
 			$langsAvailable[] = self::default_lang();
 			$lang = self::choose_site_lang($langsAvailable);
 			if (isset($lang)) {
-				$transrecord = self::get_one_by_lang($callerClass, $lang, "\"$callerClass\".ID = $record->ID");
+				$transrecord = self::get_one_by_lang($callerClass, $lang, "\"$callerClass\".\"ID\" = $record->ID");
 				if ($transrecord) {
 					self::set_reading_lang($lang);
 					$record = $transrecord;
@@ -524,13 +524,13 @@ class Translatable extends DataObjectDecorator {
 						// populate lang field
 						$manipulation["{$table}_lang"]['fields']['Lang'] = "'$lang'" ;
 						// get a valid id, pre-inserting
-						DB::query("INSERT INTO {$table}_lang SET Created = NOW(), Lang = '$lang'");
+						DB::query("INSERT INTO \"{$table}_lang\" (\"Created\", \"Lang\") VALUES (NOW(), '$lang')");
 						$manipulation["{$table}_lang"]['id'] = $manipulation["{$table}_lang"]['fields']['ID'] = DB::getGeneratedID("{$table}_lang");
 						$manipulation["{$table}_lang"]['command'] = 'update';
 						// we don't have to insert anything in $table if we are inserting in $table_lang
 						unset($manipulation[$table]);
 						// now dataobjects may create a record before the real write in the base table, so we have to delete it - 20/08/2007
-						if (is_numeric($fakeID)) DB::query("DELETE FROM $table WHERE ID=$fakeID");
+						if (is_numeric($fakeID)) DB::query("DELETE FROM \"$table\" WHERE \"ID\"=$fakeID");
 					}
 					else {
 						if (!isset($manipulation[$table]['fields']['OriginalLangID'])) {
@@ -545,7 +545,7 @@ class Translatable extends DataObjectDecorator {
 						} else {
 							$manipulation["{$table}_lang"]['where'] = "(Lang = '$lang') AND (OriginalLangID = $id)";
 						}
-						$realID = DB::query("SELECT ID FROM {$table}_lang WHERE (OriginalLangID = $id) AND (Lang = '$lang') LIMIT 1")->value();
+						$realID = DB::query("SELECT \"ID\" FROM \"{$table}_lang\" WHERE (\"OriginalLangID\" = $id) AND (\"Lang\" = '$lang') LIMIT 1")->value();
 						$manipulation["{$table}_lang"]['id'] = $realID;
 						$manipulation["{$table}_lang"]['RecordID'] = $manipulation["{$table}_lang"]['fields']['OriginalLangID'];
 						// we could be updating non-translatable fields at the same time, so these will remain
