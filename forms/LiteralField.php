@@ -42,8 +42,9 @@ class LiteralField extends DatalessField {
 	}
 
 	function performReadonlyTransformation() {
-		$this->setReadonly(true);
-		return $this;
+		$clone = clone $this;
+		$clone->setReadonly(true);
+		return $clone;
 	}
 }
 

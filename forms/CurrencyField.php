@@ -101,7 +101,7 @@ class CurrencyField_Readonly extends ReadonlyField{
 	 * This already is a readonly field.
 	 */
 	function performReadonlyTransformation() {
-		return $this;
+		return clone $this;
 	}
 	
 }
@@ -112,6 +112,8 @@ class CurrencyField_Readonly extends ReadonlyField{
  * @subpackage fields-formattedinput
  */
 class CurrencyField_Disabled extends CurrencyField{
+	
+	protected $disabled = true;
 	
 	/**
 	 * overloaded to display the correctly formated value for this datatype 

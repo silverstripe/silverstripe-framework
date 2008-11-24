@@ -82,8 +82,9 @@ HTML;
 	}
 	
 	function performDisabledTransformation() {
-		$this->disabled = true;
-		return $this;
+		$clone = clone $this;
+		$clone->setDisabled(true);
+		return $clone;
 	}
 }
 
@@ -94,7 +95,7 @@ HTML;
  */
 class CheckboxField_Readonly extends ReadonlyField {
 	function performReadonlyTransformation() {
-		return $this;
+		return clone $this;
 	}
 	
 	function setValue($val) {

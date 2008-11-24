@@ -64,6 +64,13 @@ class CompositeField extends FormField {
 	public function getChildren() {
 		return $this->children;
 	}
+	
+	/**
+	 * @param FieldSet $children
+	 */
+	public function setChildren($children) {
+		$this->children = $children;
+	}
 
 	/**
 	 * Returns the fields nested inside another DIV
@@ -207,14 +214,15 @@ class CompositeField extends FormField {
 	 */
 	public function performReadonlyTransformation() {
 		$newChildren = new FieldSet();
-		foreach($this->children as $idx => $child) {
+		$clone = clone $this;
+		foreach($clone->getChildren() as $idx => $child) {
 			if(is_object($child)) $child = $child->transform(new ReadonlyTransformation());
 			$newChildren->push($child, $idx);
 		}
 
-		$this->children = $newChildren;
-		$this->readonly = true;
-		return $this;
+		$clone->children = $newChildren;
+		$clone->readonly = true;
+		return $clone;
 	}
 
 	/**
@@ -223,17 +231,18 @@ class CompositeField extends FormField {
 	 */
 	public function performDisabledTransformation($trans) {
 		$newChildren = new FieldSet();
-		if($this->children) foreach($this->children as $idx => $child) {
+		$clone = clone $this;
+		if($clone->getChildren()) foreach($clone->getChildren() as $idx => $child) {
 			if(is_object($child)) {
 				$child = $child->transform($trans);
 			}
 			$newChildren->push($child, $idx);
 		}
 
-		$this->children = $newChildren;
-		$this->readonly = true;
+		$clone->children = $newChildren;
+		$clone->readonly = true;
 		
-		return $this;
+		return $clone;
 	}
 
 	function IsReadonly() {

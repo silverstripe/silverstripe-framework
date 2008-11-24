@@ -42,7 +42,8 @@ class LookupField extends DropdownField {
 	}
 	
 	function performReadonlyTransformation() {
-		return $this;
+		$clone = clone $this;
+		return $clone;
 	}
 
 	function Type() { 

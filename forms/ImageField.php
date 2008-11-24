@@ -53,8 +53,7 @@ class ImageField extends FileField {
 	 * Returns a readonly version of this field
 	 */
 	function performReadonlyTransformation() {
-		$field = new SimpleImageField_Disabled($this->name, $this->title,
-																					 $this->value);
+		$field = new SimpleImageField_Disabled($this->name, $this->title, $this->value);
 		$field->setForm($this->form);
 		return $field;
 	}

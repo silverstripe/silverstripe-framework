@@ -91,8 +91,9 @@ class FormAction extends FormField {
 	 * Globally disabled buttons would break the CMS.
 	 */
 	function performReadonlyTransformation() {
-		$this->setDisabled(true);
-		return $this;
+		$clone = clone $this;
+		$clone->setReadonly(true);
+		return $clone;
 	}
 	
 	function readonlyField() {

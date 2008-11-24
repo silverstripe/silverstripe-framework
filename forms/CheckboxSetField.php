@@ -159,8 +159,9 @@ class CheckboxSetField extends OptionsetField {
 	}
 	
 	function performDisabledTransformation() {
-		$this->setDisabled(true);
-		return $this;
+		$clone = clone $this;
+		$clone->setDisabled(true);
+		return $clone;
 	}
 	
 	/**
