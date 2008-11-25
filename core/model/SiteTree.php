@@ -1132,7 +1132,7 @@ class SiteTree extends DataObject {
 						new TextField("MenuTitle", $this->fieldLabel('MenuTitle')),
 						new HtmlEditorField("Content", _t('SiteTree.HTMLEDITORTITLE', "Content", PR_MEDIUM, 'HTML editor title'))
 					),
-					$tabMeta = new Tab('Meta-data',
+					$tabMeta = new Tab('Metadata',
 						new FieldGroup(_t('SiteTree.URL', "URL"),
 							new LabelField('BaseUrlLabel',Director::absoluteBaseURL()),
 							new UniqueRestrictedTextField("URLSegment",
@@ -1221,7 +1221,7 @@ class SiteTree extends DataObject {
 		
 		$tabContent->setTitle(_t('SiteTree.TABCONTENT', "Content"));
 		$tabMain->setTitle(_t('SiteTree.TABMAIN', "Main"));
-		$tabMeta->setTitle(_t('SiteTree.TABMETA', "Meta-data"));
+		$tabMeta->setTitle(_t('SiteTree.TABMETA', "Metadata"));
 		$tabBehaviour->setTitle(_t('SiteTree.TABBEHAVIOUR', "Behaviour"));
 		$tabReports->setTitle(_t('SiteTree.TABREPORTS', "Reports"));
 		$tabAccess->setTitle(_t('SiteTree.TABACCESS', "Access"));
