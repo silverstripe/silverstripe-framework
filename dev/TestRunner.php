@@ -91,6 +91,7 @@ class TestRunner extends Controller {
 		} else {
 			echo '<div class="trace">';
 			$tests = ClassInfo::subclassesFor('SapphireTest');
+			asort($tests);
 			echo "<h3><a href=\"" . $this->Link() . "all\">Run all " . count($tests) . " tests</a></h3>";
 			echo "<h3><a href=\"" . $this->Link() . "coverage\">Runs all tests and make test coverage report</a></h3>";
 			echo "<hr />";
