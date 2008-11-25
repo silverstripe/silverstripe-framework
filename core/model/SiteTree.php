@@ -560,9 +560,8 @@ class SiteTree extends DataObject {
 	 * @return boolean True if the current user can add children.
 	 */
 	public function canAddChildren($member = null) {
-		if(!isset($member)) {
-			$member = Member::currentUser();
-		}
+		if(!isset($member)) $member = Member::currentUser();
+		
 		if(Permission::checkMember($member, "ADMIN")) return true;
 		
 		// DEPRECATED 2.3: use canAddChildren() instead
