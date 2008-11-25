@@ -30,31 +30,42 @@ Member:
 Page:
    restrictedViewLoggedInUsers:
       CanViewType: LoggedInUsers
+      URLSegment: restrictedViewLoggedInUsers
    restrictedViewOnlyWebsiteUsers:
       CanViewType: OnlyTheseUsers
       ViewerGroups: =>Group.websiteusers
+      URLSegment: restrictedViewOnlyWebsiteUsers
    restrictedViewOnlySubadminGroup:
       CanViewType: OnlyTheseUsers
       ViewerGroups: =>Group.subadmingroup
+      URLSegment: restrictedViewOnlySubadminGroup
    restrictedEditLoggedInUsers:
       CanEditType: LoggedInUsers
+      URLSegment: restrictedEditLoggedInUsers
    restrictedEditOnlySubadminGroup:
       CanEditType: OnlyTheseUsers
       EditorGroups: =>Group.subadmingroup
+      URLSegment: restrictedEditOnlySubadminGroup
    parent_restrictedViewOnlySubadminGroup:
       CanViewType: OnlyTheseUsers
       ViewerGroups: =>Group.subadmingroup
+      URLSegment: parent-restrictedViewOnlySubadminGroup
    child_restrictedViewOnlySubadminGroup:
       CanViewType: Inherit
       Parent: =>Page.parent_restrictedViewOnlySubadminGroup
+      URLSegment: child-restrictedViewOnlySubadminGroup
    parent_restrictedEditOnlySubadminGroup:
       CanEditType: OnlyTheseUsers
       EditorGroups: =>Group.subadmingroup
+      URLSegment: parent-restrictedEditOnlySubadminGroup
    child_restrictedEditOnlySubadminGroup:
       CanEditType: Inherit
       Parent: =>Page.parent_restrictedEditOnlySubadminGroup
+      URLSegment: child-restrictedEditOnlySubadminGroup
    deleteTestParentPage:
       CanEditType: Inherit
+      URLSegment: deleteTestParentPage
    deleteTestChildPage:
       CanEditType: OnlyTheseUsers
       EditorGroups: =>Group.subadmingroup
+      URLSegment: deleteTestChildPage
