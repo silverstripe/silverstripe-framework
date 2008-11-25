@@ -892,10 +892,12 @@ class Member extends DataObject {
 		}
 	}
 	
-	function canEdit() {
-		if( $this->ID == Member::currentUserID() ) return true;
+	function canEdit($member = null) {
+		if(!$member && $member !== FALSE) $member = Member::currentUser();
 		
-		return Permission::check( 'ADMIN' );
+		if($this->ID == Member::currentUserID()) return true;
+		
+		return Permission::check('ADMIN');
 	}
 
 
