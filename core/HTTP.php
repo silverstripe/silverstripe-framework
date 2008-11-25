@@ -139,7 +139,7 @@ class HTTP {
 	 * @deprecated 2.3 Return a HTTPResponse::send_file() object instead
 	 */
 	static function sendFileToBrowser($fileData, $fileName, $mimeType = false) {
-		user_error("HTTP::sendFileToBrowser() deprecated; return a HTTPResponse::send_file() object instead", E_USER_NOTICE);
+		user_error("HTTP::sendFileToBrowser() deprecated; return a HTTPRequest::send_file() object instead", E_USER_NOTICE);
 		HTTPRequest::send_file($fileData, $fileName, $mimeType)->output();
 		exit(0);
 	}
