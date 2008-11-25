@@ -82,6 +82,9 @@ abstract class SearchFilter extends Object {
 	 * @return string
 	 */
 	function getDbName() {
+		// Special handler for "NULL" relations
+		if($this->name == "NULL") return $this->name;
+		
 		// SRM: This code finds the table where the field named $this->name lives
 		// Todo: move to somewhere more appropriate, such as DataMapper, the magical class-to-be?
 		$candidateClass = $this->model;
@@ -140,6 +143,24 @@ abstract class SearchFilter extends Object {
 					$query->innerJoin($relationTable, "`$relationTable`.`$parentField` = `$parentBaseClass`.`ID`");
 					$query->leftJoin($componentClass, "`$relationTable`.`$componentField` = `$componentClass`.`ID`");
 					$this->model = $componentClass;
+				
+				// Experimental support for user-defined relationships via a "(relName)Query" method
+				// This will likely be dropped in 2.4 for a system that makes use of Lazy Data Lists.
+				} elseif($model->hasMethod($rel.'Query')) {
+					// Get the query representing the join - it should have "$ID" in the filter
+					$newQuery = $model->{"{$rel}Query"}();
+					if($newQuery) {
+						// Get the table to join to
+						$newModel = str_replace('`','',array_shift($newQuery->from));
+						// Get the filter to use on the join
+					 	$ancestry = $model->getClassAncestry();
+						$newFilter = "(" . str_replace('$ID', "`{$ancestry[0]}`.`ID`" , implode(") AND (", $newQuery->where) ) . ")";
+						$query->leftJoin($newModel, $newFilter);
+						$this->model = $newModel;
+					} else {
+						$this->name = "NULL";
+						return;
+					}
 				}
 			}
 		}
