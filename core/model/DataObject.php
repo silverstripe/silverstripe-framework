@@ -2020,6 +2020,8 @@ class DataObject extends ViewableData implements DataObjectInterface,i18nEntityP
 				$component = singleton($rel);
 			} elseif ($rel = $component->many_many($relation)) {
 				$component = singleton($rel[1]);
+			} elseif($info = $this->castingHelperPair($relation)) {
+				$component = singleton($info['className']);
 			}
 		}
 
