@@ -82,7 +82,7 @@ class CheckboxSetField extends OptionsetField {
 			$odd = ($odd + 1) % 2;
 			$extraClass = $odd ? "odd" : "even";
 			$extraClass .= " val" . str_replace(' ','',$key);
-					
+			
 			$itemID = $this->id() . "_" . ereg_replace('[^a-zA-Z0-9]+','',$key);
 			
 			$checked ="";
@@ -95,8 +95,7 @@ class CheckboxSetField extends OptionsetField {
 			$options .= "<li class=\"$extraClass\"><input id=\"$itemID\" name=\"$this->name[$key]\" type=\"checkbox\" value=\"$key\"$checked $disabled class=\"checkbox\" /> <label for=\"$itemID\">$value</label></li>\n"; 
 		}
 		
-		
-		return "<ul id=\"{$this->id()}\" class=\"optionset\">\n$options</ul>\n"; 
+		return "<ul id=\"{$this->id()}\" class=\"optionset checkboxsetfield{$this->extraClass()}\">\n$options</ul>\n"; 
 	}
 	
 	function setDisabled($val) {

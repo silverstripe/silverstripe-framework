@@ -4,6 +4,14 @@ class CheckboxSetFieldTest extends SapphireTest {
 	
 	static $fixture_file = 'sapphire/tests/forms/CheckboxSetFieldTest.yml';
 	
+	function testAddExtraClass() {
+		/* CheckboxSetField has an extra class name and is in the HTML the field returns */
+		$cboxSetField = new CheckboxSetField('FeelingOk', 'Are you feeling ok?', array(0 => 'No', 1 => 'Yes'), '', null, '(Select one)');
+		$cboxSetField->addExtraClass('thisIsMyExtraClassForCheckboxSetField');
+		preg_match('/thisIsMyExtraClassForCheckboxSetField/', $cboxSetField->Field(), $matches);
+		$this->assertTrue($matches[0] == 'thisIsMyExtraClassForCheckboxSetField');
+	}
+	
 	function testSaveWithNothingSelected() {
 		$article = $this->fixture->objFromFixture('CheckboxSetFieldTest_Article', 'articlewithouttags');
 		
