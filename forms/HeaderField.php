@@ -19,7 +19,7 @@ class HeaderField extends DatalessField {
 		if(!isset($args[1]) || is_numeric($args[1])) {
 			$title = (isset($args[0])) ? $args[0] : null;
 			$name = $title; // this means i18nized fields won't be easily accessible through fieldByName()
-			$headingLevel = (isset($args[1])) ? $args[1] : null;
+			$headingLevel = (isset($args[1])) ? $args[1] : 2;
 			$allowHTML = (isset($args[2])) ? $args[2] : null;
 			$form = (isset($args[3])) ? $args[3] : null;
 		} 
