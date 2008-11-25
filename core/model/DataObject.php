@@ -2028,7 +2028,8 @@ class DataObject extends ViewableData implements DataObjectInterface,i18nEntityP
 		$object = $component->dbObject($fieldName);
 
 		if (!($object instanceof DBField) && !($object instanceof ComponentSet)) {
-			user_error("Unable to traverse to related object field [$fieldPath] on [$this->class]", E_USER_ERROR);
+			// Todo: come up with a broader range of exception objects to describe differnet kinds of errors programatically
+			throw new Exception("Unable to traverse to related object field [$fieldPath] on [$this->class]");
 		}
 		return $object;
 	}
