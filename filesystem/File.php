@@ -523,17 +523,17 @@ class File extends DataObject {
 	}
 
 	/**
-	 * returns the size in bytes with no extensions for calculations.
+	 * Return file size in bytes.
+	 * @return int
 	 */
 	function getAbsoluteSize(){
-		if(file_exists($this->getFullPath() )) {
+		if(file_exists($this->getFullPath())) {
 			$size = filesize($this->getFullPath());
 			return $size;
-		}else{
+		} else {
 			return 0;
 		}
 	}
-
 
 	/**
 	 * Select clause for DataObject::get('File') operations/
