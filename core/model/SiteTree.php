@@ -1300,7 +1300,7 @@ class SiteTree extends DataObject {
 			$actionsFieldset->push($action);
 		}
 		
-		// getCMSActions() can be extended with updateCmsActions() on a decorator
+		// getCMSActions() can be extended with updateCMSActions() on a decorator
 		$this->extend('updateCMSActions', $actionsFieldset);
 		
 		return $actionsFieldset;
