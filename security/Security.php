@@ -201,7 +201,7 @@ class Security extends Controller {
 			// Audit logging hook
 			if($controller) $controller->extend('permissionDenied', $member);
 			
-			Director::redirect("Security/login");
+			Director::redirect("Security/login", 403);
 		}
 		return;
 	}
