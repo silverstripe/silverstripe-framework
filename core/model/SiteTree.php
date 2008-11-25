@@ -1449,12 +1449,6 @@ class SiteTree extends DataObject {
 			$instance = singleton($class);
 			if((($instance instanceof HiddenClass) || !$instance->canCreate()) && ($class != $this->class)) continue;
 
-			/*
-			$addAction = $instance->uninherited('add_action', true);
-			if(!$addAction) {
-				$addAction = $instance->singular_name();
-			}
-			*/
 			$addAction = $instance->i18n_singular_name();
 
 			if($class == $this->class) {
