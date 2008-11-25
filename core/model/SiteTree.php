@@ -1296,8 +1296,13 @@ class SiteTree extends DataObject {
 			$actions[] = new FormAction('publish', _t('SiteTree.BUTTONSAVEPUBLISH', 'Save and Publish'));
 		}
 		
+		$actionsFieldset = new FieldSet();
+		if($actions) foreach($actions as $action) {
+			$actionsFieldset->push($action);
+		}
+		
 		// getCMSActions() can be extended with updateCmsActions() on a decorator
-		$this->extend('updateCMSActions', $actions);
+		$this->extend('updateCMSActions', $actionsFieldset);
 		
 		return new DataObjectSet($actions);
 	}
