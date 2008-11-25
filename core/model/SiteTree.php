@@ -1270,8 +1270,7 @@ class SiteTree extends DataObject {
 
 	/**
 	 * Get the actions available in the CMS for this page - eg Save, Publish.
-	 *
-	 * @return DataObjectSet The available actions for this page.
+	 * @return FieldSet The available actions for this page.
 	 */
 	function getCMSActions() {
 		$actions = array();
@@ -1304,7 +1303,7 @@ class SiteTree extends DataObject {
 		// getCMSActions() can be extended with updateCmsActions() on a decorator
 		$this->extend('updateCMSActions', $actionsFieldset);
 		
-		return new DataObjectSet($actions);
+		return $actionsFieldset;
 	}
 	
 	/**
