@@ -124,76 +124,77 @@ class Permission extends DataObject {
 		$perms_list = self::get_declared_permissions_list();
 		$memberID = (is_object($member)) ? $member->ID : $member; 
 
-		if(self::$declared_permissions && is_array($perms_list) &&
-				!in_array($code, $perms_list)) {
-			//user_error("Permission '$code' has not been declared. Use " .
-			//					 "Permission::declare_permissions() to add this permission",
-			//					 E_USER_WARNING);
+		/*
+		if(self::$declared_permissions && is_array($perms_list) && !in_array($code, $perms_list)) {
+			user_error(
+				"Permission '$code' has not been declared. Use " .
+				"Permission::declare_permissions() to add this permission",
+				E_USER_WARNING
+			);
 		}
-
+		*/
+		
 		$groupList = self::groupList($memberID);
-		if($groupList) {
-			$groupCSV = implode(", ", $groupList);
+		if(!$groupList) return false;
+		
+		$groupCSV = implode(", ", $groupList);
 
-			// Arg component
-			switch($arg) {
-				case "any":
-					$argClause = "";
-					break;
-				case "all":
-					$argClause = " AND Arg = -1";
-					break;
-				default:
-					if(is_numeric($arg)) {
-						$argClause = "AND Arg IN (-1, $arg) ";
-					} else {
-						user_error("Permission::checkMember: bad arg '$arg'",
-											E_USER_ERROR);
-					}
-			}
-			
-			if(is_array($code)) $SQL_codeList = "'" . implode("', '", Convert::raw2sql($code)) . "'";
-			else $SQL_codeList = "'" . Convert::raw2sql($code) . "'";
-			
-			$SQL_code = Convert::raw2sql($code);
-			
-			$adminFilter = (self::$admin_implies_all)
-				?  ",'ADMIN'"
-				: '';
-
-			// Raw SQL for efficiency
-			$permission = DB::query("
-					SELECT ID
-					FROM Permission
-					WHERE (
-						Code IN ($SQL_codeList $adminFilter)
-						AND Type = " . self::GRANT_PERMISSION . "
-						AND GroupID IN ($groupCSV)
-						$argClause
-					)
-				")->value();
-				
-			if($permission)
-				return $permission;
-
-
-			// Strict checking disabled?
-			if(!self::$strict_checking || !$strict) {
-				$hasPermission = DB::query("
-					SELECT COUNT(*) 
-					FROM Permission 
-					WHERE (
-						(Code IN '$SQL_code')' 
-						AND (Type = " . self::GRANT_PERMISSION . ")
-					)
-				")->value();
-				if(!$hasPermission) {
-					return true;
+		// Arg component
+		switch($arg) {
+			case "any":
+				$argClause = "";
+				break;
+			case "all":
+				$argClause = " AND Arg = -1";
+				break;
+			default:
+				if(is_numeric($arg)) {
+					$argClause = "AND Arg IN (-1, $arg) ";
+				} else {
+					user_error("Permission::checkMember: bad arg '$arg'", E_USER_ERROR);
 				}
-			}
-
-			return false;
 		}
+		
+		if(is_array($code)) {
+			$SQL_codeList = "'" . implode("', '", Convert::raw2sql($code)) . "'";
+		} else {
+			$SQL_codeList = "'" . Convert::raw2sql($code) . "'";
+		}
+		
+		$SQL_code = Convert::raw2sql($code);
+		
+		$adminFilter = (self::$admin_implies_all) ?  ",'ADMIN'" : '';
+
+		// Raw SQL for efficiency
+		$permission = DB::query("
+			SELECT ID
+			FROM Permission
+			WHERE (
+				Code IN ($SQL_codeList $adminFilter)
+				AND Type = " . self::GRANT_PERMISSION . "
+				AND GroupID IN ($groupCSV)
+				$argClause
+			)
+		")->value();
+		
+		if($permission) return $permission;
+
+
+		// Strict checking disabled?
+		if(!self::$strict_checking || !$strict) {
+			$hasPermission = DB::query("
+				SELECT COUNT(*) 
+				FROM Permission 
+				WHERE (
+					(Code IN '$SQL_code')' 
+					AND (Type = " . self::GRANT_PERMISSION . ")
+				)
+			")->value();
+			
+			if(!$hasPermission) return true;
+		}
+
+		return false;
 	}
 
 
