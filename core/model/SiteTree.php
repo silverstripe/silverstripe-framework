@@ -726,7 +726,7 @@ class SiteTree extends DataObject {
 	 */
 	public function canEdit($member = null) {
 		if(!$member && $member !== FALSE) $member = Member::currentUser();
-		
+
 		if(Permission::checkMember($member, "ADMIN")) return true;
 
 		// DEPRECATED 2.3: use canEdit() instead
@@ -746,7 +746,7 @@ class SiteTree extends DataObject {
 		// check for inherit
 		if($this->CanEditType == 'Inherit') {
 			if($this->ParentID) return $this->Parent()->canEdit($member);
-			else return Permission::checkMember($member, 'CMS_ACCESS_CMSMain');
+			else return (bool)Permission::checkMember($member, 'CMS_ACCESS_CMSMain');
 		}
 
 		// check for any logged-in users
@@ -787,7 +787,7 @@ class SiteTree extends DataObject {
 		if($results && is_array($results)) if(!min($results)) return false;
 
 		// Normal case
-		return $this->canEdit();
+		return $this->canEdit($member);
 	}
 
 	/**
