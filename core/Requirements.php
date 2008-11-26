@@ -845,7 +845,7 @@ class Requirements_Backend {
 				$combinedData .= "/****** FILE: $file *****/\n" . $fileContent . "\n;\n";
 			}
 			if(!file_exists(dirname($base . $combinedFile))) {
-				Filesytem::makeFolder(dirname($base . $combinedFile));
+				Filesystem::makeFolder(dirname($base . $combinedFile));
 			}
 			
 			$successfulWrite = false;
