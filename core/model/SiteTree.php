@@ -615,10 +615,9 @@ class SiteTree extends DataObject {
 		}
 		
 		// check for any logged-in users
-		if(
-			$this->CanViewType == 'LoggedInUsers' 
-			&& Member::currentUser()
-		) return true;
+		if($this->CanViewType == 'LoggedInUsers' && $member) {
+			return true;
+		}
 		
 		// check for specific groups
 		if(
@@ -690,7 +689,7 @@ class SiteTree extends DataObject {
 	 * @return boolean True if the current user can create pages on this class.
 	 */
 	public function canCreate($member = null) {
-		if(!$member) $member = Member::currentUser();
+		if(!$member && $member !== FALSE) $member = Member::currentUser();
 
 		if(Permission::checkMember($member, "ADMIN")) return true;
 		
@@ -722,11 +721,11 @@ class SiteTree extends DataObject {
 	 * @uses EditorGroups()
 	 * @uses DataObjectDecorator->canEdit()
 	 *
-	 * @param Member $member
+	 * @param Member $member Set to FALSE if you want to explicitly test permissions without a valid user (useful for unit tests)
 	 * @return boolean True if the current user can edit this page.
 	 */
 	public function canEdit($member = null) {
-		if(!$member) $member = Member::currentUser();
+		if(!$member && $member !== FALSE) $member = Member::currentUser();
 		
 		if(Permission::checkMember($member, "ADMIN")) return true;
 
@@ -774,7 +773,7 @@ class SiteTree extends DataObject {
 	 * @return boolean True if the current user can publish this page.
 	 */
 	public function canPublish($member = null) {
-		if(!$member) $member = Member::currentUser();
+		if(!$member && $member !== FALSE) $member = Member::currentUser();
 		
 		if(Permission::checkMember($member, "ADMIN")) return true;
 		
