@@ -74,7 +74,7 @@ class CsvBulkLoader extends BulkLoader {
 				// and write it back to the relation (or create a new object)
 				$relationName = $this->relationCallbacks[$fieldName]['relationname'];
 				if($this->hasMethod($this->relationCallbacks[$fieldName]['callback'])) {
-					$relationObj = $this->{$this->relationCallbacks[$fieldName]['callback']}(&$obj, $val, $record);
+					$relationObj = $this->{$this->relationCallbacks[$fieldName]['callback']}($obj, $val, $record);
 				} elseif($obj->hasMethod($this->relationCallbacks[$fieldName]['callback'])) {
 					$relationObj = $obj->{$this->relationCallbacks[$fieldName]['callback']}($val, $record);
 				}
