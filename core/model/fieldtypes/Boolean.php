@@ -47,12 +47,10 @@ class Boolean extends DBField {
 	 * If necessary, this should include quotes.
 	 */
 	function prepValueForDB($value) {
-		if($value === true || $value === 1 || $value === '1') {
+		if($value && strtolower($value) != 'f') {
 			return "'1'";
-		} if(!$value || !is_numeric($value)) {
-			return "'0'";
 		} else {
-			return addslashes($value);
+			return "'0'";
 		}
 	}
 
