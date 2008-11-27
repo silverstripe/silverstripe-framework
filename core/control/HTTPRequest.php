@@ -385,10 +385,8 @@ class HTTPRequest extends Object implements ArrayAccess {
 	 * @return string Value of the URL parameter (if found)
 	 */
 	function param($name) {
-		if(isset($this->allParams[$name]))
-			return $this->allParams[$name];
-		else
-			return null;
+		if(isset($this->allParams[$name])) return $this->allParams[$name];
+		else return null;
 	}
 	
 	/**
