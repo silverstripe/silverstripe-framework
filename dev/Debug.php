@@ -433,9 +433,9 @@ class Debug {
 	 * if(Director::isLive()) Debug::send_errors_to("sam@silverstripe.com");
 	 *
 	 * @param string $emailAddress The email address to send errors to
-	 * @param string $sendWarnings Set to true to send warnings as well as errors (Default: true)
+	 * @param string $sendWarnings Set to true to send warnings as well as errors (Default: false)
 	 */
-	static function send_errors_to($emailAddress, $sendWarnings = true) {
+	static function send_errors_to($emailAddress, $sendWarnings = false) {
 		self::$send_errors_to = $emailAddress;
 		self::$send_warnings_to = $sendWarnings ? $emailAddress : null;
 	}
