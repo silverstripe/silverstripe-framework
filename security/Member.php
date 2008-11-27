@@ -860,8 +860,6 @@ class Member extends DataObject {
 		// Groups relation will get us into logical conflicts because
 		// Members are displayed within  group edit form in SecurityAdmin
 		$fields->removeByName('Groups');
-		
-		$this->extend('updateCMSFields', $fields);
 
 		return $fields;
 	}
