@@ -53,8 +53,7 @@ class HTTPResponse extends Object {
 		303,
 		304,
 		305,
-		307,
-		403
+		307
 	);
 	
 	protected $statusCode = 200;
@@ -174,7 +173,7 @@ class HTTPResponse extends Object {
 		if(Director::is_ajax()) {
 			Requirements::include_in_response($this);
 		}
-		
+
 		if(in_array($this->statusCode, self::$redirect_codes) && headers_sent($file, $line)) {
 			$url = $this->headers['Location'];
 			echo

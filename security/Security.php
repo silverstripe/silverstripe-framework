@@ -200,8 +200,8 @@ class Security extends Controller {
 			// TODO AccessLogEntry needs an extension to handle permission denied errors
 			// Audit logging hook
 			if($controller) $controller->extend('permissionDenied', $member);
-			
-			Director::redirect("Security/login", 403);
+
+			Director::redirect("Security/login");
 		}
 		return;
 	}
