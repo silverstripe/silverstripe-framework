@@ -114,7 +114,7 @@ class ManifestBuilder {
 			$output .= "global \$$globalName;\n\$$globalName = " . var_export($globalVal, true) . ";\n\n";
 		}
 		foreach($manifestInfo['require_once'] as $requireItem) {
-			$output .= "require_once(\"$requireItem\");\n";
+			$output .= 'require_once("' . addslashes($requireItem) . "\");\n";
 		}
 		
 		return $output;
