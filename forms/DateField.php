@@ -99,8 +99,11 @@ class DateField_Disabled extends DateField {
 	protected $disabled = true;
 	
 	function setValue($val) {
-		if($val && $val != "0000-00-00") $this->value = date('d/m/Y', strtotime($val));
-		else $this->value = '('._t('DateField.NODATESET', 'No date set').')';
+		if(is_string($val) && preg_match('/^([\d]{2,4})-([\d]{1,2})-([\d]{1,2})/', $val)) {
+			$this->value = preg_replace('/^([\d]{2,4})-([\d]{1,2})-([\d]{1,2})/','\\3/\\2/\\1', $val);
+		} else {
+			$this->value = $val;
+		}
 	}
 	
 	function Field() {
