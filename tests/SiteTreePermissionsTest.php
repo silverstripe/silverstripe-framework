@@ -6,132 +6,190 @@
  * @todo Test canAddChildren()
  * @todo Test canCreate()
  */
-class SiteTreePermissionsTest extends SapphireTest {
+class SiteTreePermissionsTest extends FunctionalTest {
 	static $fixture_file = "sapphire/tests/SiteTreePermissionsTest.yml";
+	
+	function setUp() {
+		parent::setUp();
+		
+		$this->useDraftSite();
+		
+		// we're testing HTTP status codes before being redirected to login forms
+		$this->autoFollowRedirection = false;
+	}
 	
 	function testRestrictedViewLoggedInUsers() {
 		$page = $this->objFromFixture('Page', 'restrictedViewLoggedInUsers');
 		
-		$randomUnauthedMember = new Member();
-		$randomUnauthedMember->ID = 99;
+		// unauthenticated users
 		$this->assertFalse(
-			$page->canView($randomUnauthedMember),
+			$page->canView(FALSE),
 			'Unauthenticated members cant view a page marked as "Viewable for any logged in users"'
 		);
-		
+		$this->session()->inst_set('loggedInAs', null);
+		$response = $this->get($page->URLSegment);
+		$this->assertEquals(
+			$response->getStatusCode(),
+			403,
+			'Unauthenticated members cant view a page marked as "Viewable for any logged in users"'
+		);
+
+		// website users
 		$websiteuser = $this->objFromFixture('Member', 'websiteuser');
-		$websiteuser->logIn();
 		$this->assertTrue(
 			$page->canView($websiteuser),
 			'Authenticated members can view a page marked as "Viewable for any logged in users" even if they dont have access to the CMS'
 		);
-		
-		$websiteuser->logOut();
+		$this->session()->inst_set('loggedInAs', $websiteuser->ID);
+		$response = $this->get($page->URLSegment);
+		$this->assertEquals(
+			$response->getStatusCode(),
+			200,
+			'Authenticated members can view a page marked as "Viewable for any logged in users" even if they dont have access to the CMS'
+		);
+		$this->session()->inst_set('loggedInAs', null);
 	}
 	
 	function testRestrictedViewOnlyTheseUsers() {
 		$page = $this->objFromFixture('Page', 'restrictedViewOnlyWebsiteUsers');
 		
-		$randomUnauthedMember = new Member();
-		$randomUnauthedMember->ID = 99;
+		// unauthenticcated users
 		$this->assertFalse(
-			$page->canView($randomUnauthedMember),
+			$page->canView(FALSE),
+			'Unauthenticated members cant view a page marked as "Viewable by these groups"'
+		);
+		$this->session()->inst_set('loggedInAs', null);
+		$response = $this->get($page->URLSegment);
+		$this->assertEquals(
+			$response->getStatusCode(),
+			403,
 			'Unauthenticated members cant view a page marked as "Viewable by these groups"'
 		);
 		
+		// subadmin users
 		$subadminuser = $this->objFromFixture('Member', 'subadmin');
 		$this->assertFalse(
 			$page->canView($subadminuser),
 			'Authenticated members cant view a page marked as "Viewable by these groups" if theyre not in the listed groups'
 		);
+		$this->session()->inst_set('loggedInAs', $subadminuser->ID);
+		$response = $this->get($page->URLSegment);
+		$this->assertEquals(
+			$response->getStatusCode(),
+			403,
+			'Authenticated members cant view a page marked as "Viewable by these groups" if theyre not in the listed groups'
+		);
+		$this->session()->inst_set('loggedInAs', null);
 		
+		// website users
 		$websiteuser = $this->objFromFixture('Member', 'websiteuser');
 		$this->assertTrue(
 			$page->canView($websiteuser),
 			'Authenticated members can view a page marked as "Viewable by these groups" if theyre in the listed groups'
 		);
+		$this->session()->inst_set('loggedInAs', $websiteuser->ID);
+		$response = $this->get($page->URLSegment);
+		$this->assertEquals(
+			$response->getStatusCode(),
+			200,
+			'Authenticated members can view a page marked as "Viewable by these groups" if theyre in the listed groups'
+		);
+		$this->session()->inst_set('loggedInAs', null);
 	}
 	
 	function testRestrictedEditLoggedInUsers() {
 		$page = $this->objFromFixture('Page', 'restrictedEditLoggedInUsers');
 		
-		$randomUnauthedMember = new Member();
-		$randomUnauthedMember->ID = 99;
+		// unauthenticcated users
 		$this->assertFalse(
-			$page->canEdit($randomUnauthedMember),
+			$page->canEdit(FALSE),
 			'Unauthenticated members cant edit a page marked as "Editable by logged in users"'
 		);
 		
+		// website users
 		$websiteuser = $this->objFromFixture('Member', 'websiteuser');
 		$websiteuser->logIn();
 		$this->assertFalse(
 			$page->canEdit($websiteuser),
 			'Authenticated members cant edit a page marked as "Editable by logged in users" if they dont have cms permissions'
 		);
+		
+		// subadmin users
 		$subadminuser = $this->objFromFixture('Member', 'subadmin');
 		$this->assertTrue(
 			$page->canEdit($subadminuser),
 			'Authenticated members can edit a page marked as "Editable by logged in users" if they have cms permissions and belong to any of these groups'
 		);
-		
-		$websiteuser->logOut();
 	}
 	
 	function testRestrictedEditOnlySubadminGroup() {
 		$page = $this->objFromFixture('Page', 'restrictedEditOnlySubadminGroup');
 		
-		$randomUnauthedMember = new Member();
-		$randomUnauthedMember->ID = 99;
+		// unauthenticated users
 		$this->assertFalse(
-			$page->canEdit($randomUnauthedMember),
+			$page->canEdit(FALSE),
 			'Unauthenticated members cant edit a page marked as "Editable by these groups"'
 		);
 		
+		// subadmin users
 		$subadminuser = $this->objFromFixture('Member', 'subadmin');
 		$this->assertTrue(
 			$page->canEdit($subadminuser),
 			'Authenticated members can view a page marked as "Editable by these groups" if theyre in the listed groups'
 		);
 		
+		// website users
 		$websiteuser = $this->objFromFixture('Member', 'websiteuser');
-		$websiteuser->logIn();
 		$this->assertFalse(
 			$page->canEdit($websiteuser),
 			'Authenticated members cant edit a page marked as "Editable by these groups" if theyre not in the listed groups'
 		);
-		
-		$websiteuser->logOut();
 	}
 	
 	function testRestrictedViewInheritance() {
 		$parentPage = $this->objFromFixture('Page', 'parent_restrictedViewOnlySubadminGroup');
 		$childPage = $this->objFromFixture('Page', 'child_restrictedViewOnlySubadminGroup');
 
-		$randomUnauthedMember = new Member();
-		$randomUnauthedMember->ID = 99;
+		// unauthenticated users
 		$this->assertFalse(
-			$childPage->canView($randomUnauthedMember),
+			$childPage->canView(FALSE),
+			'Unauthenticated members cant view a page marked as "Viewable by these groups" by inherited permission'
+		);
+		$this->session()->inst_set('loggedInAs', null);
+		$response = $this->get($childPage->URLSegment);
+		$this->assertEquals(
+			$response->getStatusCode(),
+			403,
 			'Unauthenticated members cant view a page marked as "Viewable by these groups" by inherited permission'
 		);
 
+		// subadmin users
 		$subadminuser = $this->objFromFixture('Member', 'subadmin');
 		$this->assertTrue(
 			$childPage->canView($subadminuser),
 			'Authenticated members can view a page marked as "Viewable by these groups" if theyre in the listed groups by inherited permission'
 		);
+		$this->session()->inst_set('loggedInAs', $subadminuser->ID);
+		$response = $this->get($childPage->URLSegment);
+		$this->assertEquals(
+			$response->getStatusCode(),
+			200,
+			'Authenticated members can view a page marked as "Viewable by these groups" if theyre in the listed groups by inherited permission'
+		);
+		$this->session()->inst_set('loggedInAs', null);
 	}
 	
 	function testRestrictedEditInheritance() {
 		$parentPage = $this->objFromFixture('Page', 'parent_restrictedEditOnlySubadminGroup');
 		$childPage = $this->objFromFixture('Page', 'child_restrictedEditOnlySubadminGroup');
 
-		$randomUnauthedMember = new Member();
-		$randomUnauthedMember->ID = 99;
+		// unauthenticated users
 		$this->assertFalse(
-			$childPage->canEdit($randomUnauthedMember),
+			$childPage->canEdit(FALSE),
 			'Unauthenticated members cant edit a page marked as "Editable by these groups" by inherited permission'
 		);
 
+		// subadmin users
 		$subadminuser = $this->objFromFixture('Member', 'subadmin');
 		$this->assertTrue(
 			$childPage->canEdit($subadminuser),
@@ -143,14 +201,13 @@ class SiteTreePermissionsTest extends SapphireTest {
 		$parentPage = $this->objFromFixture('Page', 'deleteTestParentPage');
 		$childPage = $this->objFromFixture('Page', 'deleteTestChildPage');
 
-		$randomUnauthedMember = new Member();
-		$randomUnauthedMember->ID = 99;
+		// unauthenticated users
 		$this->assertFalse(
-			$parentPage->canDelete($randomUnauthedMember),
+			$parentPage->canDelete(FALSE),
 			'Unauthenticated members cant delete a page if it doesnt have delete permissions on any of its descendants'
 		);
 		$this->assertFalse(
-			$childPage->canDelete($randomUnauthedMember),
+			$childPage->canDelete(FALSE),
 			'Unauthenticated members cant delete a child page marked as "Editable by these groups"'
 		);
 	}
