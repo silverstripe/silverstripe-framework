@@ -53,7 +53,8 @@ class HTTPResponse extends Object {
 		303,
 		304,
 		305,
-		307
+		307,
+		403
 	);
 	
 	protected $statusCode = 200;
