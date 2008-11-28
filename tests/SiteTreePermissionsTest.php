@@ -30,7 +30,7 @@ class SiteTreePermissionsTest extends FunctionalTest {
 		$response = $this->get($page->URLSegment);
 		$this->assertEquals(
 			$response->getStatusCode(),
-			403,
+			302,
 			'Unauthenticated members cant view a page marked as "Viewable for any logged in users"'
 		);
 
@@ -62,7 +62,7 @@ class SiteTreePermissionsTest extends FunctionalTest {
 		$response = $this->get($page->URLSegment);
 		$this->assertEquals(
 			$response->getStatusCode(),
-			403,
+			302,
 			'Unauthenticated members cant view a page marked as "Viewable by these groups"'
 		);
 		
@@ -76,7 +76,7 @@ class SiteTreePermissionsTest extends FunctionalTest {
 		$response = $this->get($page->URLSegment);
 		$this->assertEquals(
 			$response->getStatusCode(),
-			403,
+			302,
 			'Authenticated members cant view a page marked as "Viewable by these groups" if theyre not in the listed groups'
 		);
 		$this->session()->inst_set('loggedInAs', null);
@@ -159,7 +159,7 @@ class SiteTreePermissionsTest extends FunctionalTest {
 		$response = $this->get($childPage->URLSegment);
 		$this->assertEquals(
 			$response->getStatusCode(),
-			403,
+			302,
 			'Unauthenticated members cant view a page marked as "Viewable by these groups" by inherited permission'
 		);
 
