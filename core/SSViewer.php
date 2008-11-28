@@ -373,6 +373,7 @@ class SSViewer extends Object {
 		
 		// $val, $val.property, $val(param), etc.
 		$replacements = array(
+			'/<%--.*--%>/U' =>  '',
 			'/\$Iteration/' =>  '<?= {dlr}key ?>',
 			'/{\\$([A-Za-z_][A-Za-z0-9_]*)\\(([^),]+), *([^),]+)\\)\\.([A-Za-z0-9_]+)\\.([A-Za-z0-9_]+)}/' => '<?= {dlr}item->obj("\\1",array("\\2","\\3"),true)->obj("\\4",null,true)->XML_val("\\5",null,true) ?>',
 			'/{\\$([A-Za-z_][A-Za-z0-9_]*)\\(([^),]+), *([^),]+)\\)\\.([A-Za-z0-9_]+)}/' => '<?= {dlr}item->obj("\\1",array("\\2","\\3"),true)->XML_val("\\4",null,true) ?>',

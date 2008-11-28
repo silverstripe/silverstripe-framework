@@ -10,7 +10,7 @@ class SSViewerTest extends SapphireTest {
 		));
 		
 		$result = $data->renderWith("SSViewerTestPartialTemplate");
-		$this->assertEquals('Test partial template: var value', $result);
+		$this->assertEquals('Test partial template: var value', trim(preg_replace("/<!--.*-->/U",'',$result)));
 	}
 	
 	function testRequirements() {
@@ -32,5 +32,15 @@ SS
 );
 		$template = $viewer->process($data);
 		$this->assertFalse((bool)trim($template), "Should be no content in this return.");
+	}
+	
+	function testComments() {
+		$viewer = SSViewer::fromString(<<<SS
+This is my template<%-- this is a comment --%>This is some content<%-- this is another comment --%>This is the final content
+SS
+);
+		$output = $viewer->process(new ArrayData(array()));
+		
+		$this->assertEquals("This is my templateThis is some contentThis is the final content", preg_replace("/\n?<!--.*-->\n?/U",'',$output));
 	}
 }
