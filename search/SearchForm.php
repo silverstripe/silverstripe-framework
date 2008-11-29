@@ -16,10 +16,15 @@ class SearchForm extends Form {
 	protected $showInSearchTurnOn;
 	
 	/**
-	 * @var int $numPerPage How many results are shown per page.
+	 * @deprecated 2.3 Use {@link $pageLength}.
+	 */
+	protected $numPerPage;
+	
+	/**
+	 * @var int $pageLength How many results are shown per page.
 	 * Relies on pagination being implemented in the search results template.
 	 */
-	protected $numPerPage = 10;
+	protected $pageLength = 10;
 	
 	/**
 	 * 
@@ -63,11 +68,11 @@ class SearchForm extends Form {
 	 * Return dataObjectSet of the results using $_REQUEST to get info from form.
 	 * Wraps around {@link searchEngine()}.
 	 * 
-	 * @param int $numPerPage DEPRECATED 2.3 Use SearchForm->numPerPage
+	 * @param int $pageLength DEPRECATED 2.3 Use SearchForm->pageLength
 	 * @param array $data Request data as an associative array. Should contain at least a key 'Search' with all searched keywords.
 	 * @return DataObjectSet
 	 */
-	public function getResults($numPerPage = null, $data = null){
+	public function getResults($pageLength = null, $data = null){
 	 	// legacy usage: $data was defaulting to $_REQUEST, parameter not passed in doc.silverstripe.com tutorials
 		if(!isset($data)) $data = $_REQUEST;
 	
@@ -88,9 +93,9 @@ class SearchForm extends Form {
 		$keywords = $this->addStarsToKeywords($keywords);
 
 		if(strpos($keywords, '"') !== false || strpos($keywords, '+') !== false || strpos($keywords, '-') !== false || strpos($keywords, '*') !== false) {
-			$results = $this->searchEngine($keywords, $numPerPage, "Relevance DESC", "", true);
+			$results = $this->searchEngine($keywords, $pageLength, "Relevance DESC", "", true);
 		} else {
-			$results = $this->searchEngine($keywords, $numPerPage);
+			$results = $this->searchEngine($keywords, $pageLength);
 		}
 		
 		// filter by permission
@@ -128,8 +133,8 @@ class SearchForm extends Form {
 	 * 
 	 * @param string $keywords Keywords as a string.
 	 */
-	public function searchEngine($keywords, $numPerPage = null, $sortBy = "Relevance DESC", $extraFilter = "", $booleanSearch = false, $alternativeFileFilter = "", $invertedMatch = false) {
-		if(!$numPerPage) $numPerPage = $this->numPerPage;
+	public function searchEngine($keywords, $pageLength = null, $sortBy = "Relevance DESC", $extraFilter = "", $booleanSearch = false, $alternativeFileFilter = "", $invertedMatch = false) {
+		if(!$pageLength) $pageLength = $this->pageLength;
 		$fileFilter = '';	 	
 	 	$keywords = addslashes($keywords);
 	 	
@@ -144,7 +149,7 @@ class SearchForm extends Form {
 	 	if($this->showInSearchTurnOn)	$extraFilter .= " AND showInSearch <> 0";
 
 		$start = isset($_GET['start']) ? (int)$_GET['start'] : 0;
-		$limit = $start . ", " . (int) $numPerPage;
+		$limit = $start . ", " . (int) $pageLength;
 		
 		$notMatch = $invertedMatch ? "NOT " : "";
 		if($keywords) {
@@ -186,7 +191,7 @@ class SearchForm extends Form {
 		if(isset($objects)) $doSet = new DataObjectSet($objects);
 		else $doSet = new DataObjectSet();
 		
-		$doSet->setPageLimits($start, $numPerPage, $totalCount);
+		$doSet->setPageLimits($start, $pageLength, $totalCount);
 		return $doSet;
 	}
 	
@@ -201,6 +206,23 @@ class SearchForm extends Form {
 		if(!isset($data)) $data = $_REQUEST;
 		
 		return Convert::raw2xml($data['Search']);
+	}
+	
+	/**
+	 * Set the maximum number of records shown on each page.
+	 * 
+	 * @param int $length
+	 */
+	public function setPageLength($length) {
+		$this->pageLength = $length;
+	}
+	
+	/**
+	 * @return int
+	 */
+	public function getPageLength() {
+		// legacy handling for deprecated $numPerPage
+		return (isset($this->numPerPage)) ? $this->numPerPage : $this->pageLength;
 	}
 
 }
