@@ -726,6 +726,7 @@ class SiteTree extends DataObject {
 	 */
 	public function canEdit($member = null) {
 		if(!$member && $member !== FALSE) $member = Member::currentUser();
+		//var_dump($member->Email);
 
 		if(Permission::checkMember($member, "ADMIN")) return true;
 
@@ -1271,37 +1272,54 @@ class SiteTree extends DataObject {
 	 * @return FieldSet The available actions for this page.
 	 */
 	function getCMSActions() {
-		$actions = array();
+		$actions = new FieldSet();
+
+		if($this->DeletedFromStage) {
+			if($this->can('CMSEdit')) {
+				// "restore"
+				$actions->push(new FormAction('revert',_t('CMSMain.RESTORE','Restore')));
+				
+				// "delete from live"
+				$actions->push(new FormAction('deletefromlive',_t('CMSMain.DELETEFP','Delete from the published site')));
+			}
+		} else {
+			if($this->canEdit()) {
+				// "delete"
+				$actions->push($deleteAction = new FormAction('delete',_t('CMSMain.DELETE','Delete from the draft site')));
+				$deleteAction->addExtraClass('delete');
+				
+				// "save"
+				$actions->push(new FormAction('save',_t('CMSMain.SAVE','Save')));
+			}
+		}
 
 		if($this->isPublished() && $this->canPublish()) {
+			// "unpublish"
 			$unpublish = FormAction::create('unpublish', _t('SiteTree.BUTTONUNPUBLISH', 'Unpublish'), 'delete');
 			$unpublish->describe(_t('SiteTree.BUTTONUNPUBLISHDESC', "Remove this page from the published site"));
 			$unpublish->addExtraClass('delete');
-			$actions[] = $unpublish;
+			$actions->push($unpublish);
 		}
 
 		if($this->stagesDiffer('Stage', 'Live')) {
 			if($this->isPublished() && $this->canEdit())	{
+				// "rollback"
 				$rollback = FormAction::create('rollback', _t('SiteTree.BUTTONCANCELDRAFT', 'Cancel draft changes'), 'delete');
 				$rollback->describe(_t('SiteTree.BUTTONCANCELDRAFTDESC', "Delete your draft and revert to the currently published page"));
 				$rollback->addExtraClass('delete');
-				$actions[] = $rollback;
+				$actions->push($rollback);
 			}
 		}
 
 		if($this->canPublish()) {
-			$actions[] = new FormAction('publish', _t('SiteTree.BUTTONSAVEPUBLISH', 'Save and Publish'));
-		}
-		
-		$actionsFieldset = new FieldSet();
-		if($actions) foreach($actions as $action) {
-			$actionsFieldset->push($action);
+			// "publish"
+			$actions->push(new FormAction('publish', _t('SiteTree.BUTTONSAVEPUBLISH', 'Save and Publish')));
 		}
 		
 		// getCMSActions() can be extended with updateCMSActions() on a decorator
-		$this->extend('updateCMSActions', $actionsFieldset);
+		$this->extend('updateCMSActions', $actions);
 		
-		return $actionsFieldset;
+		return $actions;
 	}
 	
 	/**
