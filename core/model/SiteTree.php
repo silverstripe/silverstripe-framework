@@ -1273,25 +1273,6 @@ class SiteTree extends DataObject {
 	function getCMSActions() {
 		$actions = new FieldSet();
 
-		if($this->DeletedFromStage) {
-			if($this->can('CMSEdit')) {
-				// "restore"
-				$actions->push(new FormAction('revert',_t('CMSMain.RESTORE','Restore')));
-				
-				// "delete from live"
-				$actions->push(new FormAction('deletefromlive',_t('CMSMain.DELETEFP','Delete from the published site')));
-			}
-		} else {
-			if($this->canEdit()) {
-				// "delete"
-				$actions->push($deleteAction = new FormAction('delete',_t('CMSMain.DELETE','Delete from the draft site')));
-				$deleteAction->addExtraClass('delete');
-				
-				// "save"
-				$actions->push(new FormAction('save',_t('CMSMain.SAVE','Save')));
-			}
-		}
-
 		if($this->isPublished() && $this->canPublish()) {
 			// "unpublish"
 			$unpublish = FormAction::create('unpublish', _t('SiteTree.BUTTONUNPUBLISH', 'Unpublish'), 'delete');
@@ -1310,11 +1291,30 @@ class SiteTree extends DataObject {
 			}
 		}
 
+		if($this->DeletedFromStage) {
+			if($this->can('CMSEdit')) {
+				// "restore"
+				$actions->push(new FormAction('revert',_t('CMSMain.RESTORE','Restore')));
+				
+				// "delete from live"
+				$actions->push(new FormAction('deletefromlive',_t('CMSMain.DELETEFP','Delete from the published site')));
+			}
+		} else {
+			if($this->canEdit()) {
+				// "delete"
+				$actions->push($deleteAction = new FormAction('delete',_t('CMSMain.DELETE','Delete from the draft site')));
+				$deleteAction->addExtraClass('delete');
+				
+				// "save"
+				$actions->push(new FormAction('save',_t('CMSMain.SAVE','Save')));
+			}
+		}
+		
 		if($this->canPublish()) {
 			// "publish"
 			$actions->push(new FormAction('publish', _t('SiteTree.BUTTONSAVEPUBLISH', 'Save and Publish')));
 		}
-		
+
 		// getCMSActions() can be extended with updateCMSActions() on a decorator
 		$this->extend('updateCMSActions', $actions);
 		
