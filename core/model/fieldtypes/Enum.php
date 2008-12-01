@@ -62,6 +62,12 @@ class Enum extends DBField {
 		return $field;		
 	}
 	
+	function scaffoldSearchField($title = null) {
+		$field = $this->formField($title);
+		$field->Source = array_merge(array("" => "(Any)"), $this->enumValues());
+		return $field;
+	}
+	
 	/**
 	 * Return the values of this enum, suitable for insertion into a dropdown field.
 	 */
