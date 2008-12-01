@@ -726,7 +726,6 @@ class SiteTree extends DataObject {
 	 */
 	public function canEdit($member = null) {
 		if(!$member && $member !== FALSE) $member = Member::currentUser();
-		//var_dump($member->Email);
 
 		if(Permission::checkMember($member, "ADMIN")) return true;
 
