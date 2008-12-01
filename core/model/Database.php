@@ -334,14 +334,12 @@ abstract class Database extends Object {
 			// Update any records where the enum is set to a legacy value to be set to the default.
 			// One hard-coded exception is SiteTree - the default for this is Page.
 			if(substr($spec, 0, 4) == "enum") {
-				$new = substr($spec, 5);
-				$old = substr($this->fieldList[$table][$field], 5);
-				$new = substr($new, 0, strpos($new, ')'));
-				$old = substr($old, 0, strpos($old, ')'));
-				$new = str_replace("'", '', $new);
-				$old = str_replace("'", '', $old);
-				$new = explode(',', $new);
-				$old = explode(',', $old);
+				$newStr = preg_replace("/(^enum\s*\(')|('$\).*)/i","",$spec);
+				$new = preg_split("/'\s*,\s*'/", $newStr);
+				
+				$oldStr = preg_replace("/(^enum\s*\(')|('$\).*)/i","",$this->fieldList[$table][$field]);
+				$old = preg_split("/'\s*,\s*'/", $newStr);
+
 				$holder = array();
 				foreach($old as $check) {
 					if(!in_array($check, $new)) {
