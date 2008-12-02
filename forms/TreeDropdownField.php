@@ -48,8 +48,11 @@ class TreeDropdownField extends FormField {
 		
 		$id = $this->id();
 		
+		$classes = "TreeDropdownField single";
+		if($this->extraClass()) $classes .= ' ' . $this->extraClass();
+		
 		return <<<HTML
-			<div  id="TreeDropdownField_$id" class="TreeDropdownField single"><input id="$id" type="hidden" name="$this->name" value="$this->value" /><span class="items">$title</span><a href="#" title="open" class="editLink">&nbsp;</a></div>		
+			<div  id="TreeDropdownField_$id" class="$classes"><input id="$id" type="hidden" name="$this->name" value="$this->value" /><span class="items">$title</span><a href="#" title="open" class="editLink">&nbsp;</a></div>		
 HTML;
 	}
 	
