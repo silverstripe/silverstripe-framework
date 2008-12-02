@@ -1227,6 +1227,13 @@ class Member_ProfileForm extends Form {
 		$form->saveInto($member);
 		$member->write();
 		
+		$closeLink = sprintf(
+			'<small><a href="' . $_SERVER['HTTP_REFERER'] . '" onclick="javascript:window.top.GB_hide(); return false;">(%s)</a></small>',
+			_t('ComplexTableField.CLOSEPOPUP', 'Close Popup')
+		);
+		$message = _t('Member.PROFILESAVESUCCESS', 'Successfully saved.') . ' ' . $closeLink;
+		$form->sessionMessage($message, 'good');
+		
 		Director::redirectBack();
 	}
 }
