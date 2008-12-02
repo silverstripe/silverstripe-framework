@@ -464,6 +464,23 @@ class Email extends ViewableData {
 }
 
 /**
+ * Implements an email template that can be populated.
+ * 
+ * @deprecated - Please use Email_Template instead!
+ * 
+ * @package sapphire
+ * @subpackage email
+ */
+class Email_Template extends Email {
+
+	public function __construct($from = null, $to = null, $subject = null, $body = null, $bounceHandlerURL = null, $cc = null, $bcc = null) {
+		parent::__construct($from, $to, $subject, $body, $bounceHandlerURL, $cc, $bcc);
+		user_error('Email_Template is deprecated. Please use Email instead.', E_USER_NOTICE);
+	}
+
+}
+
+/**
  * Base class that email bounce handlers extend
  * @package sapphire
  * @subpackage email
