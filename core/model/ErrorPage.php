@@ -97,7 +97,7 @@ class ErrorPage extends Page {
 		$oldStage = Versioned::current_stage();
 
 		// Run the page
-		$response = Director::test($this->Link());
+		$response = Director::test($this->URLSegment);
 		$errorContent = $response->getBody();
 		
 		if(!file_exists(ASSETS_PATH)) {
