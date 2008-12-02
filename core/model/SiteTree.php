@@ -525,7 +525,7 @@ class SiteTree extends DataObject {
 	function can($perm, $member = null) {
 		if(!$member && $member !== FALSE) $member = Member::currentUser();
 
-		if(Permission::checkMember($member, "ADMIN")) return true;
+		if($member && Permission::checkMember($member, "ADMIN")) return true;
 		
 		if(method_exists($this, 'can' . ucfirst($perm))) {
 			$method = 'can' . ucfirst($perm);
@@ -562,7 +562,7 @@ class SiteTree extends DataObject {
 	public function canAddChildren($member = null) {
 		if(!$member && $member !== FALSE) $member = Member::currentUser();
 
-		if(Permission::checkMember($member, "ADMIN")) return true;
+		if($member && Permission::checkMember($member, "ADMIN")) return true;
 		
 		// DEPRECATED 2.3: use canAddChildren() instead
 		$results = $this->extend('alternateCanAddChildren', $member);
@@ -571,7 +571,7 @@ class SiteTree extends DataObject {
 		$results = $this->extend('canAddChildren', $member);
 		if($results && is_array($results)) if(!min($results)) return false;
 		
-		return $this->canEdit() && $this->stat('allowed_children') != 'none';
+		return $this->canEdit($member) && $this->stat('allowed_children') != 'none';
 	}
 
 
@@ -595,7 +595,7 @@ class SiteTree extends DataObject {
 		if(!$member && $member !== FALSE) $member = Member::currentUser();
 
 		// admin override
-		if(Permission::checkMember($member, "ADMIN")) return true;
+		if($member && Permission::checkMember($member, "ADMIN")) return true;
 		
 		// DEPRECATED 2.3: use canView() instead
 		$results = $this->extend('alternateCanView', $member);
@@ -649,7 +649,7 @@ class SiteTree extends DataObject {
 	public function canDelete($member = null) {
 		if(!$member && $member !== FALSE) $member = Member::currentUser();
 		
-		if(Permission::checkMember($member, "ADMIN")) return true;
+		if($member && Permission::checkMember($member, "ADMIN")) return true;
 		
 		// DEPRECATED 2.3: use canDelete() instead
 		$results = $this->extend('alternateCanDelete', $member);
@@ -660,11 +660,11 @@ class SiteTree extends DataObject {
 		if($results && is_array($results)) if(!min($results)) return false;
 		
 		// if page can't be edited, don't grant delete permissions
-		if(!$this->canEdit()) return false;
+		if(!$this->canEdit($member)) return false;
 		
 		$children = $this->AllChildren();
 		if($children) foreach($children as $child) {
-			if(!$child->canDelete()) return false;
+			if(!$child->canDelete($member)) return false;
 		}
 		
 		return $this->stat('can_create') != false;
@@ -691,7 +691,7 @@ class SiteTree extends DataObject {
 	public function canCreate($member = null) {
 		if(!$member && $member !== FALSE) $member = Member::currentUser();
 
-		if(Permission::checkMember($member, "ADMIN")) return true;
+		if($member && Permission::checkMember($member, "ADMIN")) return true;
 		
 		// DEPRECATED 2.3: use canCreate() instead
 		$results = $this->extend('alternateCanCreate', $member);
@@ -727,7 +727,7 @@ class SiteTree extends DataObject {
 	public function canEdit($member = null) {
 		if(!$member && $member !== FALSE) $member = Member::currentUser();
 
-		if(Permission::checkMember($member, "ADMIN")) return true;
+		if($member && Permission::checkMember($member, "ADMIN")) return true;
 
 		// DEPRECATED 2.3: use canEdit() instead
 		$results = $this->extend('alternateCanEdit', $member);
@@ -738,7 +738,7 @@ class SiteTree extends DataObject {
 		if($results && is_array($results)) if(!min($results)) return false;
 		
 		// if page can't be viewed, don't grant edit permissions
-		if(!$this->canView()) return false;
+		if(!$this->canView($member)) return false;
 
 		// check for empty spec
 		if(!$this->CanEditType || $this->CanEditType == 'Anyone') return true;
@@ -746,11 +746,11 @@ class SiteTree extends DataObject {
 		// check for inherit
 		if($this->CanEditType == 'Inherit') {
 			if($this->ParentID) return $this->Parent()->canEdit($member);
-			else return (bool)Permission::checkMember($member, 'CMS_ACCESS_CMSMain');
+			else return $member && Permission::checkMember($member, 'CMS_ACCESS_CMSMain');
 		}
 
 		// check for any logged-in users
-		if($this->CanEditType == 'LoggedInUsers' && Permission::checkMember($member, 'CMS_ACCESS_CMSMain')) return true;
+		if($this->CanEditType == 'LoggedInUsers' && $member && Permission::checkMember($member, 'CMS_ACCESS_CMSMain')) return true;
 		
 		// check for specific groups
 		if($this->CanEditType == 'OnlyTheseUsers' && $member && $member->inGroups($this->EditorGroups())) return true;
@@ -775,7 +775,7 @@ class SiteTree extends DataObject {
 	public function canPublish($member = null) {
 		if(!$member && $member !== FALSE) $member = Member::currentUser();
 		
-		if(Permission::checkMember($member, "ADMIN")) return true;
+		if($member && Permission::checkMember($member, "ADMIN")) return true;
 		
 		// DEPRECATED 2.3: use canPublish() instead
 		$results = $this->extend('alternateCanPublish', $member);
