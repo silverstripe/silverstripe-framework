@@ -99,10 +99,13 @@ class VirtualPage extends Page {
 	function onBeforeWrite() {
 		// Don't do this stuff when we're publishing
 		if(!$this->extension_instances['Versioned']->migratingVersion) {
-	 		if(isset($this->changed['CopyContentFromID']) && $this->changed['CopyContentFromID'] 
-	 					&& $this->CopyContentFromID != 0 && $this->class == 'VirtualPage' ) {
-				$CopyContentFromID = $this->CopyContentFromID;
-				$source = DataObject::get_one("SiteTree","`SiteTree`.`ID`='$CopyContentFromID'");
+	 		if(
+				isset($this->changed['CopyContentFromID']) 
+				&& $this->changed['CopyContentFromID'] 
+	 			&& $this->CopyContentFromID != 0 
+				&& $this instanceof VirtualPage
+			) {;
+				$source = DataObject::get_one("SiteTree","`SiteTree`.`ID`='$this->CopyContentFromID'");
 				$this->copyFrom($source);
 				$this->URLSegment = $source->URLSegment . '-' . $this->ID;			
 			}
