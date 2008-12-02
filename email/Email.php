@@ -340,12 +340,10 @@ class Email extends ViewableData {
 				$headers['Bcc'] = self::$bcc_all_emails_to;
 			}
 		}
-       
-	    return self::mailer()->sendHTML($to, $this->from, $subject, $this->body, $this->attachments, $headers, $this->plaintext_body);
-
+       	
 		Requirements::restore();
 		
-		return $result;
+		return self::mailer()->sendHTML($to, $this->from, $subject, $this->body, $this->attachments, $headers, $this->plaintext_body);
 	}
 
 	/**
