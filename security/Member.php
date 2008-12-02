@@ -506,6 +506,11 @@ class Member extends DataObject {
 				}
 			}
 		}
+		
+		// save locale
+		if(!$this->Locale) {
+			$this->Locale = i18n::get_locale();
+		}
 
 		parent::onBeforeWrite();
 	}
