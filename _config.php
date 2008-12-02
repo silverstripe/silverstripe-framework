@@ -28,7 +28,8 @@ Director::addRules(10, array(
 	'sitemap.xml' => 'GoogleSitemap',
 	'api/v1' => 'RestfulServer',
 	'soap/v1' => 'SOAPModelAccess',
-	'dev' => 'DevelopmentAdmin'
+	'dev' => 'DevelopmentAdmin',
+	'interactive' => 'SapphireREPL',
 ));
 
 Director::addRules(1, array(
