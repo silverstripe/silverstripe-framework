@@ -1051,6 +1051,13 @@ JS
 	}
 	
 	/**
+	 * Edit the field list
+	 */
+	function setFieldList($fieldList) {
+		$this->fieldList = $fieldList;
+	}
+	
+	/**
 	 * @return String
 	 */
 	function Name() {
