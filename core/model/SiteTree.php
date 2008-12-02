@@ -523,7 +523,7 @@ class SiteTree extends DataObject {
 	 * @todo Check we get a endless recursion if we use parent::can()
 	 */
 	function can($perm, $member = null) {
-		if(!$member) $member = Member::currentUser();
+		if(!$member && $member !== FALSE) $member = Member::currentUser();
 
 		if(Permission::checkMember($member, "ADMIN")) return true;
 		
@@ -560,8 +560,8 @@ class SiteTree extends DataObject {
 	 * @return boolean True if the current user can add children.
 	 */
 	public function canAddChildren($member = null) {
-		if(!$member) $member = Member::currentUser();
-		
+		if(!$member && $member !== FALSE) $member = Member::currentUser();
+
 		if(Permission::checkMember($member, "ADMIN")) return true;
 		
 		// DEPRECATED 2.3: use canAddChildren() instead
@@ -592,7 +592,7 @@ class SiteTree extends DataObject {
 	 * @return boolean True if the current user can view this page.
 	 */
 	public function canView($member = null) {
-		if(!$member) $member = Member::currentUser();
+		if(!$member && $member !== FALSE) $member = Member::currentUser();
 
 		// admin override
 		if(Permission::checkMember($member, "ADMIN")) return true;
@@ -647,7 +647,7 @@ class SiteTree extends DataObject {
 	 * @return boolean True if the current user can delete this page.
 	 */
 	public function canDelete($member = null) {
-		if(!$member) $member = Member::currentUser();
+		if(!$member && $member !== FALSE) $member = Member::currentUser();
 		
 		if(Permission::checkMember($member, "ADMIN")) return true;
 		
