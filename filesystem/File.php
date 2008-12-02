@@ -17,6 +17,7 @@ class File extends DataObject {
 	static $plural_name = "Files";
 
 	static $db = array(
+		"LegacyID" => "Varchar(5)", // used for migration only
 		"Name" => "Varchar(255)",
 		"Title" => "Varchar(255)",
 		"Filename" => "Varchar(255)",
