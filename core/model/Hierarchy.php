@@ -510,9 +510,10 @@ class Hierarchy extends DataObjectDecorator {
 	 */
 	public function getParent($filter = '') {
 		if($p = $this->owner->__get("ParentID")) {
-			$className = $this->owner->class;
-			$filter .= $filter?" AND ":""."`$className`.ID = $p";
-			return DataObject::get_one($className, $filter);
+			$tableClasses = ClassInfo::dataClassesFor($this->owner->class);
+			$baseClass = array_shift($tableClasses);
+			$filter .= $filter?" AND ":""."`$baseClass`.ID = $p";
+			return DataObject::get_one($this->owner->class, $filter);
 		}
 	}
 
