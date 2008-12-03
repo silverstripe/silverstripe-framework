@@ -268,6 +268,34 @@ class CompositeField extends FormField {
 		
 		return false;
 	}
+	
+	/**
+	 * Transform the named field into a readonly feld.
+	 * 
+	 * @param string|FormField
+	 */
+	function makeFieldReadonly($field) {
+		$fieldName = ($field instanceof FormField) ? $field->Name() : $field;
+		
+		// Iterate on items, looking for the applicable field
+		foreach($this->children as $i => $item) {
+			if($item->isComposite()) {
+				$item->makeFieldReadonly($fieldName);
+			} else {
+				// Once it's found, use FormField::transform to turn the field into a readonly version of itself.
+				if($item->Name() == $fieldName) {
+					$this->children->replaceField($fieldName, $item->transform(new ReadonlyTransformation()));
+
+					// Clear an internal cache
+					$this->sequentialSet = null;
+
+					// A true results indicates that the field was foudn
+					return true;
+				}
+			}
+		}
+		return false;
+	}
 
 	function debug() {
 		$result = "$this->class ($this->name) <ul>";
