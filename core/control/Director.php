@@ -155,14 +155,15 @@ class Director {
 		// These are needed so that calling Director::test() doesnt muck with whoever is calling it.
 		// Really, it's some inapproriate coupling and should be resolved by making less use of statics
 		$oldStage = Versioned::current_stage();
+		$getVars = array();
 		
 		if(!$httpMethod) $httpMethod = ($postVars || is_array($postVars)) ? "POST" : "GET";
 		
-        $getVars = array();
-		if(strpos($url,'?') !== false) {
+		if(strpos($url, '?') !== false) {
 			list($url, $getVarsEncoded) = explode('?', $url, 2);
-            parse_str($getVarsEncoded, $getVars);
+			parse_str($getVarsEncoded, $getVars);
 		}
+		
 		if(!$session) $session = new Session(null);
 
 		// Back up the current values of the superglobals
