@@ -17,14 +17,6 @@ class SearchFormTest extends FunctionalTest {
 		
 		$holderPage = $this->objFromFixture('SiteTree', 'searchformholder');
 		$this->mockController = new ContentController($holderPage);
-		$this->mockController->setSession(new Session(Controller::curr()->getSession()));
-		$this->mockController->pushCurrent();
-	}
-	
-	function tearDown() {
-		$this->mockController->popCurrent();
-		
-		parent::tearDown();
 	}
 	
 	function testPublishedPagesMatchedByTitle() {
