@@ -25,7 +25,14 @@ class ContentController extends Controller {
 	 * The ContentController will take the URLSegment parameter from the URL and use that to look
 	 * up a SiteTree record.
 	 */
-	public function __construct($dataRecord) {
+	public function __construct($dataRecord = null) {
+		if(!$dataRecord) {
+			$dataRecord = new Page();
+			if($this->hasMethod("Title")) $dataRecord->Title = $this->Title();
+			$dataRecord->URLSegment = get_class($this);
+			$dataRecord->ID = -1;
+		}
+		
 		$this->dataRecord = $dataRecord;
 		$this->failover = $this->dataRecord;
 		parent::__construct();
