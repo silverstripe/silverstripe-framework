@@ -18,6 +18,36 @@ class SiteTreePermissionsTest extends FunctionalTest {
 		$this->autoFollowRedirection = false;
 	}
 	
+	function testAccessTabOnlyDisplaysWithGrantAccessPermissions() {
+		$page = $this->objFromFixture('Page', 'standardpage');
+		
+		$subadminuser = $this->objFromFixture('Member', 'subadmin');
+		$this->session()->inst_set('loggedInAs', $subadminuser->ID);
+		$fields = $page->getCMSFields();
+		$this->assertFalse(
+			$fields->dataFieldByName('CanViewType')->isReadonly(),
+			'Users with SITETREE_GRANT_ACCESS permission can change "view" permissions in cms fields'
+		);
+		$this->assertFalse(
+			$fields->dataFieldByName('CanEditType')->isReadonly(),
+			'Users with SITETREE_GRANT_ACCESS permission can change "edit" permissions in cms fields'
+		);
+		
+		$editoruser = $this->objFromFixture('Member', 'editor');
+		$this->session()->inst_set('loggedInAs', $editoruser->ID);
+		$fields = $page->getCMSFields();
+		$this->assertTrue(
+			$fields->dataFieldByName('CanViewType')->isReadonly(),
+			'Users without SITETREE_GRANT_ACCESS permission cannot change "view" permissions in cms fields'
+		);
+		$this->assertTrue(
+			$fields->dataFieldByName('CanEditType')->isReadonly(),
+			'Users without SITETREE_GRANT_ACCESS permission cannot change "edit" permissions in cms fields'
+		);
+		
+		$this->session()->inst_set('loggedInAs', null);
+	}
+	
 	function testRestrictedViewLoggedInUsers() {
 		$page = $this->objFromFixture('Page', 'restrictedViewLoggedInUsers');
 		

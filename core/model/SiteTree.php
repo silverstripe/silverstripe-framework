@@ -7,7 +7,7 @@
  * In addition, it contains a number of static methods for querying the site tree.
  * @package cms
  */
-class SiteTree extends DataObject {
+class SiteTree extends DataObject implements PermissionProvider {
 
 	/**
 	 * Indicates what kind of children this page type can have.
@@ -1193,17 +1193,24 @@ class SiteTree extends DataObject {
 						"CanViewType", 
 						""
 					),
-					new TreeMultiselectField("ViewerGroups", $this->fieldLabel('ViewerGroups')),
+					$viewerGroupsField = new TreeMultiselectField("ViewerGroups", $this->fieldLabel('ViewerGroups')),
 					new HeaderField('WhoCanEditHeader',_t('SiteTree.EDITHEADER', "Who can edit this page?"), 2),
 					$editorsOptionsField = new OptionsetField(
 						"CanEditType", 
 						""
 					),
-					new TreeMultiselectField("EditorGroups", $this->fieldLabel('EditorGroups'))
+					$editorGroupsField = new TreeMultiselectField("EditorGroups", $this->fieldLabel('EditorGroups'))
 				)
 			)
 			//new NamedLabelField("Status", $message, "pageStatusMessage", true)
 		);
+
+		if(!Permission::check('SITETREE_GRANT_ACCESS')) {
+			$fields->makeFieldReadonly($viewersOptionsField);
+			$fields->makeFieldReadonly($viewerGroupsField);
+			$fields->makeFieldReadonly($editorsOptionsField);
+			$fields->makeFieldReadonly($editorGroupsField);
+		}
 		
 		$viewersOptionsSource = array();
 		if($this->Parent()->ID || $this->CanViewType == 'Inherit') $viewersOptionsSource["Inherit"] = _t('SiteTree.INHERIT', "Inherit from parent page");
@@ -1227,7 +1234,7 @@ class SiteTree extends DataObject {
 		$tabBacklinks->setTitle(_t('SiteTree.TABBACKLINKS', "BackLinks"));
 		
 		if(self::$runCMSFieldsExtensions) {
-			$this->extend('updateCMSFields', $fields);
+			//$this->extend('updateCMSFields', $fields);
 		}
 
 		return $fields;
@@ -1674,6 +1681,15 @@ class SiteTree extends DataObject {
 	 */
 	public static function enableCMSFieldsExtensions() {
 		self::$runCMSFieldsExtensions = true;
+	}
+	
+	function providePermissions() {
+		return array(
+			'SITETREE_GRANT_ACCESS' => _t(
+				'SiteTree.PERMISSION_GRANTACCESS_DESCRIPTION',
+				'Control which groups can access or edit certain pages'
+			)
+		);
 	}
 
 }
