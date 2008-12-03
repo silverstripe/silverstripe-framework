@@ -76,7 +76,7 @@ class FunctionalTest extends SapphireTest {
 
 	function tearDown() {
 		parent::tearDown();
-		$this->mainSession = null;
+		unset($this->mainSession);
 
 		// Re-enable theme, if previously disabled
 		if($this->stat('disable_themes')) {

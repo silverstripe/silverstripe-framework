@@ -10,12 +10,26 @@ class TestSession {
 	private $lastResponse;
 	
 	/**
+	 * @param Controller $controller Necessary to use the mock session
+	 * created in {@link session} in the normal controller stack,
+	 * e.g. to overwrite Member::currentUser() with custom login data.
+	 */
+	protected $controller;
+	
+	/**
 	 * @var string $lastUrl Fake HTTP Referer Tracking, set in {@link get()} and {@link post()}.
 	 */
 	private $lastUrl;
 
 	function __construct() {
 		$this->session = new Session(array());
+		$this->controller = new Controller();
+		$this->controller->setSession($this->session);
+		$this->controller->pushCurrent();
+	}
+	
+	function __destruct() {
+		$this->controller->popCurrent();
 	}
 	
 	/**
