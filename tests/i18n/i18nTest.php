@@ -62,6 +62,8 @@ class i18nTest extends SapphireTest {
 		unset($_TEMPLATE_MANIFEST['i18nTestModuleInclude.ss']);
 		
 		i18n::set_locale('en_US');
+		
+		parent::tearDown();
 	}
 	
 	function testGetExistingTranslations() {

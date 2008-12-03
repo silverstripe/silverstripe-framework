@@ -33,6 +33,8 @@ class TranslatableTest extends FunctionalTest {
 		
 		self::kill_temp_db();
 		self::create_temp_db();
+		
+		parent::tearDown();
 	}
 	
 	function testUpdateCMSFieldsOnSiteTree() {
