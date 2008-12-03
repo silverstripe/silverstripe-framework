@@ -6,8 +6,10 @@ class SapphireREPL extends Controller {
 		
 		echo "Sapphire Interactive Command-line (REPL interface)\n\n";
 		while(true) {
-			echo "?> ";
+			echo SSCli::text("?> ", "cyan");
+			echo SSCli::start_colour("yellow");
 			$command = trim(fgets(STDIN, 4096));
+			echo SSCli::end_colour();
 			
 			// Simple processing
 			if(substr($command,-1) == ';') $command = substr($command,0,-1);

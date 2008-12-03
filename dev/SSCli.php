@@ -5,6 +5,9 @@
  * Support less-trivial output stuff such as colours (on xterm-color)
  */
 class SSCli extends Object {
+	/**
+	 * Returns true if the current STDOUT supports the use of colour control codes.
+	 */
 	static function supports_colour() {
 		if(!defined('STDOUT')) define('STDOUT', fopen("php://stdout","w"));
 		return @posix_isatty(STDOUT);
@@ -18,7 +21,27 @@ class SSCli extends Object {
 	 */
 	static function text($text, $fgColour = null, $bgColour = null, $bold = false) {
 		if(!self::supports_colour()) return $text;
+		
+		if($fgColour || $bgColour || $bold) {
+			$prefix = self::start_colour($fgColour, $bgColour, $bold);
+			$suffix = self::end_colour();
+		} else {
+			$prefix = $suffix = "";
+		}
+		
+		return $prefix . $text . $suffix;
+		
+		
+	}
 
+	/**
+	 * Send control codes for changing text to the given colour
+	 * @param string $fgColour The foreground colour - black, red, green, yellow, blue, magenta, cyan, white.  Null is default.
+	 * @param string $bgColour The foreground colour - black, red, green, yellow, blue, magenta, cyan, white.  Null is default.
+	 * @param string $bold A boolean variable - bold or not.
+	 */
+	static function start_colour($fgColour = null, $bgColour = null, $bold = false) {
+		if(!self::supports_colour()) return "";
 		$colours = array(
 			'black' => 0,
 			'red' => 1,
@@ -30,25 +53,26 @@ class SSCli extends Object {
 			'white' => 7,
 		);
 		
-		$prefix = $suffix = "";
+		$prefix = "";
 
-		if($fgColour || $bgColour || $bold) {
-			$suffix .= "\033[0m";
+		if($fgColour || $bold) {
+			if(!$fgColour) $fgColour = "white";
+			$prefix .= "\033[" . ($bold ? "1;" :"") . "3" . $colours[$fgColour] . "m";
+		}
+	
 
-			if($fgColour || $bold) {
-				if(!$fgColour) $fgColour = "white";
-				$prefix .= "\033[" . ($bold ? "1;" :"") . "3" . $colours[$fgColour] . "m";
-			}
-			
-
-			if($bgColour) {
-				$prefix .= "\033[4" . $colours[$bgColour] . "m";
-			}
+		if($bgColour) {
+			$prefix .= "\033[4" . $colours[$bgColour] . "m";
 		}
 		
-		return $prefix . $text . $suffix;
-		
-		
+		return $prefix;
+	}
+	
+	/**
+	 * Send control codes for returning to normal colour
+	 */
+	static function end_colour() {
+		return self::supports_colour() ? "\033[0m" : "";
 	}
 }
 
