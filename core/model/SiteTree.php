@@ -1234,7 +1234,7 @@ class SiteTree extends DataObject implements PermissionProvider {
 		$tabBacklinks->setTitle(_t('SiteTree.TABBACKLINKS', "BackLinks"));
 		
 		if(self::$runCMSFieldsExtensions) {
-			//$this->extend('updateCMSFields', $fields);
+			$this->extend('updateCMSFields', $fields);
 		}
 
 		return $fields;
