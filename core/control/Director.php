@@ -87,7 +87,7 @@ class Director {
 	 * @uses handleRequest() rule-lookup logic is handled by this.
 	 * @uses Controller::run() Controller::run() handles the page logic for a Director::direct() call.
 	 */
-	function direct($url) {
+	static function direct($url) {
 		$req = new HTTPRequest(
 			(isset($_SERVER['X-HTTP-Method-Override'])) ? $_SERVER['X-HTTP-Method-Override'] : $_SERVER['REQUEST_METHOD'],
 			$url, 
@@ -151,7 +151,7 @@ class Director {
 	 * @uses getControllerForURL() The rule-lookup logic is handled by this.
 	 * @uses Controller::run() Controller::run() handles the page logic for a Director::direct() call.
 	 */
-	function test($url, $postVars = null, $session = null, $httpMethod = null, $body = null, $headers = null) {
+	static function test($url, $postVars = null, $session = null, $httpMethod = null, $body = null, $headers = null) {
 		// These are needed so that calling Director::test() doesnt muck with whoever is calling it.
 		// Really, it's some inapproriate coupling and should be resolved by making less use of statics
 		$oldStage = Versioned::current_stage();
