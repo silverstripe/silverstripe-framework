@@ -97,7 +97,7 @@ class ErrorPage extends Page {
 		$oldStage = Versioned::current_stage();
 
 		// Run the page
-		$response = Director::test($this->Link());
+		$response = Director::test(Director::makeRelative($this->Link()));
 		$errorContent = $response->getBody();
 		
 		if(!file_exists(ASSETS_PATH)) {
@@ -130,6 +130,7 @@ class ErrorPage extends Page {
 class ErrorPage_Controller extends Page_Controller {
 	public function init() {
 		parent::init();
+		
 		Director::set_status_code($this->failover->ErrorCode ? $this->failover->ErrorCode : 404);
 	}
 }
