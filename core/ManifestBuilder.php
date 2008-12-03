@@ -62,7 +62,10 @@ class ManifestBuilder {
 		if(isset($_REQUEST['usetestmanifest'])) {
 			self::load_test_manifest();
 		} else {		
-			if(!file_exists(MANIFEST_FILE) || (filemtime(MANIFEST_FILE) < filemtime(BASE_PATH)) || isset($_GET['flush'])) {
+			// The dev/build reference is some coupling but it solves an annoying bug
+			if(!file_exists(MANIFEST_FILE) || (filemtime(MANIFEST_FILE) < filemtime(BASE_PATH)) 
+				|| isset($_GET['flush']) || (isset($_REQUEST['url']) && ($_REQUEST['url'] == 'dev/build' 
+				|| $_REQUEST['url'] == BASE_URL . '/dev/build'))) {
 				self::create_manifest_file();
 			}
 			require_once(MANIFEST_FILE);
