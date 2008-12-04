@@ -24,13 +24,53 @@ if(isset($_SERVER['SERVER_NAME'])) {
  * @subpackage email
  */
 class Email extends ViewableData {
-	protected $from, $to, $subject, $body, $plaintext_body, $cc, $bcc;
 	
+	/**
+	 * @param string $from Email-Address
+	 */
+	protected $from;
+	
+	/**
+	 * @param string $to Email-Address. Use comma-separation to pass multiple email-addresses.
+	 */
+	protected $to;
+	
+	/**
+	 * @param string $subject Subject of the email
+	 */
+	protected $subject;
+	
+	/**
+	 * @param string $body HTML content of the email.
+	 * Passed straight into {@link $ss_template} as $Body variable.
+	 */
+	protected $body;
+	
+	/**
+	 * @param string $plaintext_body Optional string for plaintext emails.
+	 * If not set, defaults to converting the HTML-body with {@link Convert::xml2raw()}.
+	 */
+	protected $plaintext_body;
+	
+	/**
+	 * @param string $cc
+	 */
+	protected $cc;
+	
+	/**
+	 * @param string $bcc
+	 */
+	protected $bcc;
+	
+	/**
+	 * @param Mailer $mailer Instance of a {@link Mailer} class.
+	 */
 	protected static $mailer;
 	
 	/**
-	 * Set the mailer.
-	 * This can be used to provide a mailer other than the default, for testing, for example.
+	 * This can be used to provide a mailer class other than the default, e.g. for testing.
+	 * 
+	 * @param Mailer $mailer
 	 */
 	static function set_mailer(Mailer $mailer) {
 		self::$mailer = $mailer;
@@ -38,6 +78,8 @@ class Email extends ViewableData {
 	
 	/**
 	 * Get the mailer.
+	 * 
+	 * @return Mailer
 	 */
 	static function mailer() {
 		if(!self::$mailer) self::$mailer = new Mailer();
@@ -45,23 +87,55 @@ class Email extends ViewableData {
 	}
 	
 	/**
-	 * A map of header-name -> header-value
+	 * @param array $customHeaders A map of header-name -> header-value
 	 */
 	protected $customHeaders;
 
+	/**
+	 * @param array $attachements Internal, use {@link attachFileFromString()} or {@link attachFile()}
+	 */
 	protected $attachments = array();
+	
+	/**
+	 * @param boolean $
+	 */
 	protected $parseVariables_done = false;
 	
+	/**
+	 * @param string $ss_template The name of the used template (without *.ss extension)
+	 */
 	protected $ss_template = "GenericEmail";
+	
+	/**
+	 * @param array $template_data Additional data available in a template.
+	 * Used in the same way than {@link ViewableData->customize()}.
+	 */
 	protected $template_data = null;
+	
+	/**
+	 * @param string $bounceHandlerURL
+	 */
     protected $bounceHandlerURL = null;
 	
     /**
-    * The default administrator email address. This will be set in the config on a site-by-site basis
-    */
+	 * @param sring $admin_email_address The default administrator email address. 
+	 * This will be set in the config on a site-by-site basis
+	*/
     static $admin_email_address = '';
+
+	/**
+	 * @param string $send_all_emails_to Email-Address
+	 */
 	protected static $send_all_emails_to = null;
+	
+	/**
+	 * @param string $bcc_all_emails_to Email-Address
+	 */
 	protected static $bcc_all_emails_to = null;
+	
+	/**
+	 * @param string $cc_all_emails_to Email-Address
+	 */
 	protected static $cc_all_emails_to = null;
     
 	/**
@@ -101,35 +175,61 @@ class Email extends ViewableData {
 		}
 	}
 
+	/**
+	 * @deprecated 2.3 Not used anywhere else
+	 */
 	public function setFormat($format) {
-		$this->format = $format;
+		user_error('Email->setFormat() is deprecated', E_USER_NOTICE);
 	}
 
 	public function Subject() {
 		return $this->subject;
 	}
+	
 	public function Body() {
 		return $this->body;
 	}
+	
 	public function To() {
 		return $this->to;
 	}
+	
 	public function From() {
 		return $this->from;
 	}
+	
 	public function Cc() {
 		return $this->cc;
 	}
+	
 	public function Bcc() {
 		return $this->bcc;
 	}
 	
-	public function setSubject($val) { $this->subject = $val; }
-	public function setBody($val) { $this->body = $val; }
-	public function setTo($val) { $this->to = $val; }
-	public function setFrom($val) { $this->from = $val; }
-	public function setCc($val) {$this->cc = $val;}
-	public function setBcc($val) {$this->bcc = $val;}
+	public function setSubject($val) { 
+		$this->subject = $val; 
+	}
+	
+	public function setBody($val) { 
+		$this->body = $val; 
+	}
+	
+	public function setTo($val) { 
+		$this->to = $val; 
+	}
+	
+	public function setFrom($val) { 
+		$this->from = $val; 
+	}
+	
+	public function setCc($val) {
+		$this->cc = $val;
+	}
+	
+	public function setBcc($val) {
+		$this->bcc = $val;
+	}
+	
 	/**
 	 * Add a custom header to this value.
 	 * Useful for implementing all those cool features that we didn't think of.
@@ -180,7 +280,7 @@ class Email extends ViewableData {
 	}
 	
 	/**
-	 * Used by SSViewer templates to detect if we're rendering an email template rather than a page template
+	 * Used by {@link SSViewer} templates to detect if we're rendering an email template rather than a page template
 	 */
 	public function IsEmail() {
 		return true;
