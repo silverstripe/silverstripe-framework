@@ -48,6 +48,15 @@
  * @subpackage view
  */
 class SSViewer extends Object {
+	protected static $source_file_comments = true;
+	
+	/**
+	 * Set whether HTML comments indicating the source .SS file used to render this page should be
+	 * included in the output.  This is enabled by default
+	 */
+	function set_source_file_comments($val) {
+		self::$source_file_comments = $val;
+	}
 	
 	/**
 	 * @var array $chosenTemplates Associative array for the different
@@ -346,7 +355,7 @@ class SSViewer extends Object {
 
 	static function parseTemplateContent($content, $template="") {			
 		// Add template filename comments on dev sites
-		if(Director::isDev() && $template) {
+		if(Director::isDev() && self::$source_file_comments && $template) {
 			// If this template is a full HTML page, then put the comments just inside the HTML tag to prevent any IE glitches
 			if(stripos($content, "<html") !== false) {
 				$content = preg_replace('/(<html[^>]*>)/i', "\\1<!-- template $template -->", $content);

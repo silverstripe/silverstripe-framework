@@ -35,6 +35,15 @@ TreeDropdownField.prototype = {
 		}
 	},
 	
+	refresh: function() {
+		this.createTreeNode();
+		
+		this.ajaxGetTree( (function(response) {
+			this.newTreeReady(response, false);
+			this.updateTreeLabel();
+		}).bind(this));
+	},
+	
 	helperURLBase: function() {
 		return this.ownerForm().action + '/field/' + this.inputTag.name + '/';
 	},

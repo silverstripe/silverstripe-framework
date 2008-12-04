@@ -72,6 +72,10 @@ class DevelopmentAdmin extends Controller {
 		return new ModuleManager();
 	}
 	
+	function viewmodel() {
+		return new ModelViewer();
+	}
+	
 	function build() {
 		$renderer = new DebugView();
 		$renderer->writeHeader();

@@ -506,6 +506,11 @@ class Member extends DataObject {
 				}
 			}
 		}
+		
+		// save locale
+		if(!$this->Locale) {
+			$this->Locale = i18n::get_locale();
+		}
 
 		parent::onBeforeWrite();
 	}
@@ -860,8 +865,6 @@ class Member extends DataObject {
 		// Groups relation will get us into logical conflicts because
 		// Members are displayed within  group edit form in SecurityAdmin
 		$fields->removeByName('Groups');
-		
-		$this->extend('updateCMSFields', $fields);
 
 		return $fields;
 	}
@@ -1225,6 +1228,13 @@ class Member_ProfileForm extends Form {
 		
 		$form->saveInto($member);
 		$member->write();
+		
+		$closeLink = sprintf(
+			'<small><a href="' . $_SERVER['HTTP_REFERER'] . '" onclick="javascript:window.top.GB_hide(); return false;">(%s)</a></small>',
+			_t('ComplexTableField.CLOSEPOPUP', 'Close Popup')
+		);
+		$message = _t('Member.PROFILESAVESUCCESS', 'Successfully saved.') . ' ' . $closeLink;
+		$form->sessionMessage($message, 'good');
 		
 		Director::redirectBack();
 	}

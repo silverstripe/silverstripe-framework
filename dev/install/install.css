@@ -1,0 +1,118 @@
+body {
+	text-align: center;
+}
+
+#Container * {
+	text-align: left;
+}
+ul#Themes{
+	list-style: none;
+	margin: 5px;
+}
+	ul#Themes li {
+		clear: both;
+		padding: 3px 0;
+	}
+	ul#Themes input {
+		float: left;
+		width: 10px;
+		height: 10px;
+	}
+	ul#Themes label {
+		margin: -2px 5px 0 15px;
+	}
+.good td {
+	color: green;
+}
+
+.warning td {
+	color: #ef7f24;
+}
+.testResults .error td {
+	border: 1px #CCC solid;
+	color: red;
+}
+
+p.error {
+	padding: 0.5em;
+	background-color: #ffe9e9;
+	border: 1px #ff8e8e solid;
+	color: #f03838;
+}
+p.warning {
+	padding: 0.5em;
+	background-color: #fef1e1;
+	border: 1px #ffc28b solid;
+	color: #cb6a1c;
+}
+	p.warning label {
+		display: inline;
+		margin-left: 5px;
+		color: #cb6a1c
+	}
+p.good {
+	padding: 0.5em;
+	background-color: #e2fee1;
+	border: 1px #43cb3e solid;
+	color: #359318;
+}
+p.error a,
+p.warning a,
+p.good a {
+	color: inherit;
+	text-decoration: underline;
+}
+p.error a:hover {
+	text-decoration: none;
+}
+span.middleColumn {
+	width: 312px;
+	margin-right: 0;
+	padding: 4px;
+}
+input.text, textarea, select {
+	padding: 2px;
+	border: 1px solid #A7A7A7;
+	color: #000;
+	font-size: 1.2em;
+	font-weight: bold;
+	width: 305px;
+}
+#stats {
+	float: left;
+	margin: 5px;
+}
+table.testResults {
+	border-collapse: collapse;
+	width: 100%;
+	margin: 10px 0;
+}
+#Layout h4 {
+	font-size: 2em;
+	clear: left;
+}
+.testResults td {
+	border: 1px #CCC solid;
+	width: 400px;
+	padding: 4px;
+}
+.clear {
+	clear: both;
+}
+p.mysql,
+p.adminAcc,
+p.devHelp {
+	padding-top: 20px;
+}
+p#mysql_credentials,
+p#AdminAccount,
+p#DevSites {
+	width: 330px;
+	margin-top: 0;
+	float: left;
+}
+#Layout input.action {
+	text-align: center;
+	width: 160px;
+	font-size: 1em;
+}

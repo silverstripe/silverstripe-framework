@@ -11,7 +11,7 @@ class RestrictedTextField extends TextField {
 
 	function __construct($name, $title = null, $value = "", $restrictedChars = "", $maxLength = null){
 		$this->restrictedChars = $restrictedChars;
-		parent::__construct($name, $title, $value, $form);	
+		parent::__construct($name, $title, $value);	
 	}
 	
 	function Field() {

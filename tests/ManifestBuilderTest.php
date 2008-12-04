@@ -74,6 +74,8 @@ class ManifestBuilderTest extends SapphireTest {
 	protected static $test_fixture_project;
 
 	function setUp() {
+		parent::setUp();
+		
 		// Trick the auto-loder into loading this class before we muck with the manifest
 		new TokenisedRegularExpression(null);
 		
@@ -131,6 +133,8 @@ class ManifestBuilderTest extends SapphireTest {
 		// Kill the folder after we're done
 		$baseFolder = TEMP_FOLDER . '/manifest-test/';
 		Filesystem::removeFolder($baseFolder);
+		
+		parent::tearDown();
 	}
 	
 }

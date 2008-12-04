@@ -24,10 +24,10 @@ class HeaderField extends DatalessField {
 			$form = (isset($args[3])) ? $args[3] : null;
 		} 
 		
-		$this->headingLevel = $headingLevel;
+		if($headingLevel) $this->headingLevel = $headingLevel;
 		$this->allowHTML = $allowHTML;
 		
-		parent::__construct($name, $title, null, $form);
+		parent::__construct($name, $title, null, $allowHTML, $form);
 	}
 	
 	function Field() {

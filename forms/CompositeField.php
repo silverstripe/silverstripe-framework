@@ -64,6 +64,13 @@ class CompositeField extends FormField {
 	public function getChildren() {
 		return $this->children;
 	}
+	
+	/**
+	 * @param FieldSet $children
+	 */
+	public function setChildren($children) {
+		$this->children = $children;
+	}
 
 	/**
 	 * Returns the fields nested inside another DIV
@@ -207,14 +214,15 @@ class CompositeField extends FormField {
 	 */
 	public function performReadonlyTransformation() {
 		$newChildren = new FieldSet();
-		foreach($this->children as $idx => $child) {
+		$clone = clone $this;
+		foreach($clone->getChildren() as $idx => $child) {
 			if(is_object($child)) $child = $child->transform(new ReadonlyTransformation());
 			$newChildren->push($child, $idx);
 		}
 
-		$this->children = $newChildren;
-		$this->readonly = true;
-		return $this;
+		$clone->children = $newChildren;
+		$clone->readonly = true;
+		return $clone;
 	}
 
 	/**
@@ -223,17 +231,18 @@ class CompositeField extends FormField {
 	 */
 	public function performDisabledTransformation($trans) {
 		$newChildren = new FieldSet();
-		if($this->children) foreach($this->children as $idx => $child) {
+		$clone = clone $this;
+		if($clone->getChildren()) foreach($clone->getChildren() as $idx => $child) {
 			if(is_object($child)) {
 				$child = $child->transform($trans);
 			}
 			$newChildren->push($child, $idx);
 		}
 
-		$this->children = $newChildren;
-		$this->readonly = true;
+		$clone->children = $newChildren;
+		$clone->readonly = true;
 		
-		return $this;
+		return $clone;
 	}
 
 	function IsReadonly() {
@@ -257,6 +266,34 @@ class CompositeField extends FormField {
 			$i++;
 		}
 		
+		return false;
+	}
+	
+	/**
+	 * Transform the named field into a readonly feld.
+	 * 
+	 * @param string|FormField
+	 */
+	function makeFieldReadonly($field) {
+		$fieldName = ($field instanceof FormField) ? $field->Name() : $field;
+		
+		// Iterate on items, looking for the applicable field
+		foreach($this->children as $i => $item) {
+			if($item->isComposite()) {
+				$item->makeFieldReadonly($fieldName);
+			} else {
+				// Once it's found, use FormField::transform to turn the field into a readonly version of itself.
+				if($item->Name() == $fieldName) {
+					$this->children->replaceField($fieldName, $item->transform(new ReadonlyTransformation()));
+
+					// Clear an internal cache
+					$this->sequentialSet = null;
+
+					// A true results indicates that the field was foudn
+					return true;
+				}
+			}
+		}
 		return false;
 	}
 

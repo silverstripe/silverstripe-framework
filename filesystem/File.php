@@ -49,6 +49,28 @@ class File extends DataObject {
 	 */
 	protected static $cache_file_fields = null;
 	
+	/**
+	 * Find a File object by the given filename.
+	 * @return mixed null if not found, File object of found file
+	 */
+	static function find($filename) {
+		// Get the base file if $filename points to a resampled file
+		$filename = ereg_replace('_resampled/[^-]+-','',$filename);
+
+		$parts = explode("/", $filename);
+		$parentID = 0;
+		$item = null;
+
+		foreach($parts as $part) {
+			if($part == "assets" && !$parentID) continue;
+			$item = DataObject::get_one("File", "\"Name\" = '$part' AND \"ParentID\" = $parentID");
+			if(!$item) break;
+			$parentID = $item->ID;
+		}
+		
+		return $item;
+	}
+	
 	function Link($action = null) {
 		return Director::baseURL() . $this->RelativeLink($action);
 	}
@@ -138,25 +160,6 @@ class File extends DataObject {
 		return $this->canEdit($member);
 	}
 	
-	/*
-	 * Find the given file
-	 */
-	static function find($filename) {
-		// Get the base file if $filename points to a resampled file
-		$filename = ereg_replace('_resampled/[^-]+-','',$filename);
-
-		$parts = explode("/",$filename);
-		$parentID = 0;
-
-		foreach($parts as $part) {
-			if($part == "assets" && !$parentID) continue;
-			$item = DataObject::get_one("File", "\"Name\" = '$part' AND \"ParentID\" = $parentID");
-			if(!$item) break;
-			$parentID = $item->ID;
-		}
-		return $item;
-	}
-
 	public function appCategory() {
 		$ext = $this->Extension;
 		switch($ext) {
@@ -523,23 +526,17 @@ class File extends DataObject {
 	}
 
 	/**
-	 * returns the size in bytes with no extensions for calculations.
+	 * Return file size in bytes.
+	 * @return int
 	 */
 	function getAbsoluteSize(){
-		if(file_exists($this->getFullPath() )) {
+		if(file_exists($this->getFullPath())) {
 			$size = filesize($this->getFullPath());
 			return $size;
-		}else{
+		} else {
 			return 0;
 		}
 	}
-
-
-	/**
-	 * Select clause for DataObject::get('File') operations/
-	 * Stores an array, suitable for a {@link SQLQuery} object.
-	 */
-	private static $dataobject_select;
 
 	/**
 	 * We've overridden the DataObject::get function for File so that the very large content field

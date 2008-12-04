@@ -53,7 +53,9 @@ class DatalessField extends FormField {
 	 * Returns a readonly version of this field
 	 */
 	function performReadonlyTransformation() {
-		return $this;
+		$clone = clone $this;
+		$clone->setReadonly(true);
+		return $clone;
 	}
 	
 	/**

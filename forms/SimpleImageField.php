@@ -80,7 +80,11 @@ class SimpleImageField extends FileField {
  * @subpackage fields-files
  */
 class SimpleImageField_Disabled extends FormField {
-		
+	
+	protected $disabled = true;
+	
+	protected $readonly = true;
+	
 	function Field() {
 		$record = $this->form->getRecord();
 	    $fieldName = $this->name;

@@ -1,4 +1,10 @@
 <?php
+
+/**
+ * @package forms
+ * @subpackage fields-formattedinput
+ */
+
 /**
  * Field for displaying phone numbers. It separates the number, the area code and optionally the country code
  * and extension.
@@ -18,16 +24,24 @@ class PhoneNumberField extends FormField {
 		$this->ext = $extension;
 		$this->countryCode = $countryCode;
 		
-		parent::__construct( $name, ($title===null) ? $name : $title, $value, $form );
+		parent::__construct( $name, $title, $value, $form );
 	}
 	
 	public function Field() {
 		$field = new FieldGroup( $this->name );
 		$field->setID("{$this->name}_Holder");
-		
+
+    
 		list( $countryCode, $areaCode, $phoneNumber, $extension ) = $this->parseValue();
 		
 		$hasTitle = false;
+
+        if ($this->value=="")
+        {
+            $countryCode=$this->countryCode;
+            $areaCode=$this->areaCode;
+            $extension=$this->ext;
+        }
 		
 		if( $this->countryCode !== null )
 			$field->push( new NumericField( $this->name.'[Country]', '+', $countryCode, 4 ) );
@@ -53,41 +67,42 @@ class PhoneNumberField extends FormField {
 	public static function joinPhoneNumber( $value ) {
 		if( is_array( $value ) ) {
 			$completeNumber = '';
-		
-			if( ! empty($value['Country']) )
+			if( isset($value['Country']) && $value['Country']!=null) {
 				$completeNumber .= '+' . $value['Country'];
-				
-			if( ! empty($value['Area']) )
+			}
+
+			if( isset($value['Area']) && $value['Area']!=null) {
 				$completeNumber .= '(' . $value['Area'] . ')';
+			}
 				
 			$completeNumber .= $value['Number'];
 			
-			if( ! empty($value['Extension']) )
+			if( isset($value['Extension']) && $value['Extension']!=null) {
 				$completeNumber .= '#' . $value['Extension'];
-				
+			}
+			
 			return $completeNumber;
 		} else
 			return $value;
 	}
 	
 	protected function parseValue() {
-		
-		if( !is_array( $this->value ) )
+		if( !is_array( $this->value ))        
 			preg_match( '/^(?:(?:\+(\d+))?\s*\((\d+)\))?\s*([0-9A-Za-z]*)\s*(?:[#]\s*(\d+))?$/', $this->value, $parts );
 		else
 			return array( '', '', $this->value, '' );
-		
-		if( is_array( $parts ) ) {	
-			array_shift( $parts );
-			$parts = array_pad($parts, 4, false);
+            
+		if(is_array($parts)) array_shift( $parts );
+
+		for ($x=0;$x<=3;$x++) {
+			if (!isset($parts[$x])) $parts[]='';
 		}
-			
-		if(sizeof($parts) < 4) $parts[] = '';
 			
 		return $parts;
 	}
 	
 	public function saveInto( $record ) {
+    
 		list( $countryCode, $areaCode, $phoneNumber, $extension ) = $this->parseValue();
 		$fieldName = $this->name;
 		
@@ -103,7 +118,7 @@ class PhoneNumberField extends FormField {
 		
 		if( $extension )
 			$completeNumber .= '#' . $extension;
-			
+
 		$record->$fieldName = $completeNumber;
 	}
 	

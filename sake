@@ -1,5 +1,5 @@
 # Check for an argument
-if [ $1 = "" ]; then
+if [ ${1:-""} = "" ]; then
 	echo "Sapphire Sake
 
 Usage: $0 (command-url) (params)

@@ -670,5 +670,20 @@ class FieldSetTest extends SapphireTest {
 		
 		unset($set);
 	}
+	
+	function testMakeFieldReadonly() {
+		$fieldSet = new FieldSet(
+			new TabSet('Root', new Tab('Main',
+				new TextField('A'),
+				new TextField('B')
+			)
+		));
+		
+		$fieldSet->makeFieldReadonly('A');
+		$this->assertTrue(
+			$fieldSet->dataFieldByName('A')->isReadonly(),
+			'Field nested inside a TabSet and FieldSet can be marked readonly by FieldSet->makeFieldReadonly()'
+		);
+	}
 }
 ?>

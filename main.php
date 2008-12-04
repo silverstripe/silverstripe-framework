@@ -1,5 +1,21 @@
 <?php
 
+/************************************************************************************
+ ************************************************************************************
+ **                                                                                **
+ **  If you can read this text in your browser then you don't have PHP installed.  **
+ **  Please install PHP 5.0 or higher, preferably PHP 5.2.                         **
+ **                                                                                **
+ ************************************************************************************
+ ************************************************************************************/
+
+$majorVersion = strtok(phpversion(),'.');
+if($majorVersion < 5) {
+	header("HTTP/1.1 500 Server Error");
+	echo str_replace('$PHPVersion', phpversion(), file_get_contents("dev/install/php5-required.html"));
+	die();
+}
+
 /**
  * Main file that handles every page request.
  *

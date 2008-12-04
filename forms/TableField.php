@@ -321,15 +321,17 @@ class TableField extends TableListField {
 	}
 	
 	function performReadonlyTransformation() {
-		$this->permissions = array('show');
-		$this->setReadonly(true);
-		return $this;
+		$clone = clone $this;
+		$clone->permissions = array('show');
+		$clone->setReadonly(true);
+		return $clone;
 	}
 
 	function performDisabledTransformation() {
-		$this->permissions = array('show');
-		$this->setDisabled(true);
-		return $this;
+		$clone = clone $this;
+		$clone->setPermissions(array('show'));
+		$clone->setDisabled(true);
+		return $clone;
 	}
 	
 	/**

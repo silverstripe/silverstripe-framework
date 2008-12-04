@@ -432,12 +432,13 @@ HTML;
 	 * Return a disabled version of this field
 	 */
 	function performDisabledTransformation() {
-		$disabledClassName = $this->class . '_Disabled';
+		$clone = clone $this;
+		$disabledClassName = $clone->class . '_Disabled';
 		if( ClassInfo::exists( $disabledClassName ) )
 			return new $disabledClassName( $this->name, $this->title, $this->value );
-		elseif($this->hasMethod('setDisabled')){
-			$this->setDisabled(true);
-			return $this;
+		elseif($clone->hasMethod('setDisabled')){
+			$clone->setDisabled(true);
+			return $clone;
 		}else{
 			return $this->performReadonlyTransformation();
 		}

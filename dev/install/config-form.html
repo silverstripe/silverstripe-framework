@@ -1,0 +1,173 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+	<head>
+		<title>SilverStripe CMS Installation</title>
+		<script type="text/js">
+			function show(id) {
+				document.getElementById(id).style.display = '';
+			}
+			function hide(id) {
+				document.getElementById(id).style.display = 'none';
+			}
+		</script>
+		<link rel="stylesheet" type="text/css" href="themes/blackcandy/css/layout.css" />
+		<link rel="stylesheet" type="text/css" href="themes/blackcandy/css/typography.css" />
+		<link rel="stylesheet" type="text/css" href="themes/blackcandy/css/form.css" />
+		<link rel="stylesheet" type="text/css" href="sapphire/dev/install/install.css" />
+		<link rel="shortcut icon" href="favicon.ico" />
+	</head>
+
+	<body>
+		<div id="BgContainer">
+			<div id="Container">
+				<div id="Header">
+					<h1>SilverStripe CMS Installation</h1>
+					<p>Version <?php echo $silverstripe_version; ?></p>
+				</div>
+				
+				<div id="Navigation">&nbsp;</div>
+				<div class="clear"><!-- --></div>
+				
+				<div id="Layout">
+					<div class="typography">
+						<h1>Welcome to SilverStripe</h1>
+						<p>Thanks for choosing to use SilverStripe!  Please follow the instructions below to get SilverStripe installed.</p>
+			
+						<form action="install.php" method="post">
+							<?php if(isset($hasErrorOtherThanDatabase)) { ?>
+								<p class="error">
+									You aren't currently able to install the software.  Please <a href="#requirements">see below</a> for details.<br />
+									If you are having problems meeting the requirements, see the <a href="http://doc.silverstripe.com/doku.php?id=server-requirements">server requirements wiki page</a>.
+								</p>
+							<?php } else { ?>
+								<?php if($req->hasWarnings()) { ?>
+									<p class="warning">
+										There are some issues that we recommend you look at before installing, however, you are still able to install the software.
+										Please see below for details.<br />
+										If you are having problems meeting the requirements, see the <a href="http://doc.silverstripe.com/doku.php?id=server-requirements">server requirements wiki page</a>.
+									</p>
+								<?php } else if(!$dbReq->hasErrors()) { ?>
+									<p class="good">
+										You're ready to install! &nbsp;&nbsp; 
+									</p>
+								<?php } ?>					
+								<p>
+									<b>Template to install:</b>
+								</p>
+								<ul id="Themes">
+									<li><input type="radio" name="template" value="blackcandy" id="BlackCandy" checked="checked" /><label for="BlackCandy">BlackCandy, default template ready to use.</label></li>
+									<li><input type="radio" name="template" value="tutorial" id="EmptyTemplate" /><label for="EmptyTemplate">Empty template, ready to begin the tutorial.</label></li>
+								</ul>
+								<p>You can change the template or download another from the SilverStripe website after installation.</p>
+			
+								<input type="checkbox" id="stats" name="stats" checked="checked"><label for="stats">Send information on my webserver to SilverStripe (this is only version information, used for statistical purposes)</label><br />
+								
+								
+								<?php if($alreadyInstalled) { ?>
+									<p class="warning">
+										<strong>Note:</strong> It seems as though SilverStripe is already installed here.  If you ask me to install, I will overwrite
+										the <strong>.htaccess</strong> and <strong>mysite/_config.php</strong> files. 
+										<br />
+									<input type="checkbox" id="ReIn" name="force_reinstall" onclick="document.getElementById('install_button').disabled = !this.checked" /><label for="ReIn">That's okay, please re-install SilverStripe and overwrite these files.</label>
+									</p>
+								<?php } ?>
+			
+								<p>
+									<?php if($alreadyInstalled) { ?>
+										<input id="install_button" type="submit" disabled="disabled" class="action" name="go" value="Install SilverStripe" onclick="document.getElementById('saving_top').style.display = ''; this.value = 'Installing SilverStripe...'" />
+									<?php } else { ?>
+										<input id="install_button" type="submit" class="action" name="go" value="Install SilverStripe" onclick="document.getElementById('saving_top').style.display = ''; this.value = 'Installing SilverStripe...'" />
+									<?php } ?>
+									
+									<span id="saving_top" style="display: none">
+										&nbsp;
+										<img src="cms/images/network-save.gif" />
+										(this will take a minute or so)
+									</span>
+								</p>
+							<?php } ?>
+			
+							<input type="hidden" name="database" value="MySQLDatabase" />
+							<h4>MySQL Database</h4>			
+							<?php if($dbReq->hasErrors()) { ?>
+								<p class="error"><!--  class="error" -->
+									These database details don't appear to be correct.  Please enter the correct details before installing.
+								</p>
+							<?php } else { ?>
+								<p class="good">
+									These database details look all good!
+								</p>
+							<?php } ?>
+			
+							<p id="mysql_credentials">
+								<label for="mysql_server">MySQL server:</label>
+								<span class="middleColumn"><input id="mysql_server" class="text" type="text" name="mysql[server]" value="<?php echo $databaseConfig['server']; ?>" /></span>
+								<label for="mysql_username">MySQL username:</label>
+								<span class="middleColumn"><input id="mysql_username" class="text" type="text" name="mysql[username]" value="<?php echo $databaseConfig['username']; ?>"  /></span>
+								<label for="mysql_password">MySQL password:</label>
+								<span class="middleColumn"><input id="mysql_password" class="text" type="password" name="mysql[password]" value="<?php echo $databaseConfig['password']; ?>" /></span>
+								<label for="mysql_database">MySQL database:</label>
+								<span class="middleColumn"><input id="mysql_database" class="text" type="text" name="mysql[database]" value="<?php echo $databaseConfig['database']; ?>" onchange="this.value = this.value.replace(/[^A-Za-z0-9_]+/g,'');" /></span>
+								<input type="submit" class="action" value="Re-check requirements" />
+							</p>
+							<p class="mysql">SilverStripe stores its content in a MySQL database.  Please provide the username and password to connect to the server here.  If this account has permission to create databases, then we will create the database for you; otherwise, you must give the name of a database that already exists.</p>
+							<div class="clear"><!--  --></div>
+							<h5>Details</h5>
+							<?php $dbReq->showTable("MySQL Configuration"); ?>
+			
+							<br />
+			
+							<h4>SilverStripe Administration Account</h4>
+			
+							<p id="AdminAccount">
+								<label for="admin_username">Administrator email:</label>
+								<span class="middleColumn"><input type="text" class="text" name="admin[username]" id="admin_username" value="<?php echo $adminConfig['username']; ?>" /></span>
+								<label for="admin_password">Administrator password:</label>
+								<span class="middleColumn"><input type="text" class="text" name="admin[password]" id="admin_password" value="<?php echo $adminConfig['password']; ?>" /></span>
+								<label for="admin_firstname">Administrator first name:</label>
+								<span class="middleColumn"><input type="text" class="text" name="admin[firstname]" id="admin_firstname" value="<?php echo $adminConfig['firstname']; ?>" /></span>
+								<label for="admin_surname">Administrator surname:</label>
+								<span class="middleColumn"><input type="text" class="text" name="admin[surname]" id="admin_surname" value="<?php echo $adminConfig['surname']; ?>" /></span>
+							</p>
+							<p class="adminAcc">
+								We will set up 1 administrator account for you automatically.  Enter the email address and password.  If you'd
+								rather log-in with a username instead of an email address, enter that instead.
+							</p>
+			
+							<br />
+							
+							<h4>Development Servers</h4>
+							<p id="DevSites">
+								<label for="devsites">Development servers:</label>
+								<span class="middleColumn"><textarea name="devsites" id="devsites" rows="5" />localhost
+127.0.0.1</textarea></span>
+							</p>
+							<p class="devHelp">
+								SilverStripe allows you to run a site in <a href="http://doc.silverstripe.com/doku.php?id=devmode">development mode</a>.
+								This shows all error messages in the web browser instead of emailing them to the administrator, and allows
+								the database to be built without logging in as administrator. Please enter the host/domain names for servers
+								you will be using for development.
+							</p>
+							
+							<br />
+							
+			
+							<h4 id="requirements">Requirements</h4>
+							<?php
+								$req->showTable();
+				?>
+			
+						</form>
+					</div>
+				</div>
+				
+				<div class="clear"><!-- --></div>
+			</div>
+			
+			<div id="Footer">
+				<div class="footerTop"><!-- --></div>
+				<p><a href="http://www.silverstripe.com">SilverStripe Open Source CMS</a> | Copyright &copy; 2008 SilverStripe Limited</p>
+			</div>
+		</div>
+	</body>
+</html>

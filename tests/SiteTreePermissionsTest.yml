@@ -3,11 +3,13 @@ Permission:
       Code: CMS_ACCESS_CMSMain
    cmsmain2:
       Code: CMS_ACCESS_CMSMain
+   grantaccess:
+      Code: SITETREE_GRANT_ACCESS
 Group:
    subadmingroup:
       Title: Create, edit and delete pages
       Code: subadmingroup
-      Permissions: =>Permission.cmsmain1
+      Permissions: =>Permission.cmsmain1,=>Permission.grantaccess
    editorgroup:
       Title: Edit existing pages
       Code: editorgroup
@@ -28,6 +30,8 @@ Member:
       Password: test
       Groups: =>Group.websiteusers
 Page:
+   standardpage:
+      URLSegment: standardpage
    restrictedViewLoggedInUsers:
       CanViewType: LoggedInUsers
       URLSegment: restrictedViewLoggedInUsers

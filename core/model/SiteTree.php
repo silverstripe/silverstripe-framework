@@ -7,7 +7,7 @@
  * In addition, it contains a number of static methods for querying the site tree.
  * @package cms
  */
-class SiteTree extends DataObject {
+class SiteTree extends DataObject implements PermissionProvider {
 
 	/**
 	 * Indicates what kind of children this page type can have.
@@ -525,7 +525,7 @@ class SiteTree extends DataObject {
 	function can($perm, $member = null) {
 		if(!$member && $member !== FALSE) $member = Member::currentUser();
 
-		if(Permission::checkMember($member, "ADMIN")) return true;
+		if($member && Permission::checkMember($member, "ADMIN")) return true;
 		
 		if(method_exists($this, 'can' . ucfirst($perm))) {
 			$method = 'can' . ucfirst($perm);
@@ -561,7 +561,7 @@ class SiteTree extends DataObject {
 	 */
 	public function canAddChildren($member = null) {
 		if(!$member && $member !== FALSE) $member = Member::currentUser();
-		if(Permission::checkMember($member, "ADMIN")) return true;
+		if($member && Permission::checkMember($member, "ADMIN")) return true;
 		
 		// DEPRECATED 2.3: use canAddChildren() instead
 		$results = $this->extend('alternateCanAddChildren', $member);
@@ -570,7 +570,7 @@ class SiteTree extends DataObject {
 		$results = $this->extend('canAddChildren', $member);
 		if($results && is_array($results)) if(!min($results)) return false;
 		
-		return $this->canEdit() && $this->stat('allowed_children') != 'none';
+		return $this->canEdit($member) && $this->stat('allowed_children') != 'none';
 	}
 
 
@@ -594,7 +594,7 @@ class SiteTree extends DataObject {
 		if(!$member && $member !== FALSE) $member = Member::currentUser();
 
 		// admin override
-		if(Permission::checkMember($member, "ADMIN")) return true;
+		if($member && Permission::checkMember($member, "ADMIN")) return true;
 		
 		// DEPRECATED 2.3: use canView() instead
 		$results = $this->extend('alternateCanView', $member);
@@ -648,7 +648,7 @@ class SiteTree extends DataObject {
 	public function canDelete($member = null) {
 		if(!$member && $member !== FALSE) $member = Member::currentUser();
 		
-		if(Permission::checkMember($member, "ADMIN")) return true;
+		if($member && Permission::checkMember($member, "ADMIN")) return true;
 		
 		// DEPRECATED 2.3: use canDelete() instead
 		$results = $this->extend('alternateCanDelete', $member);
@@ -659,11 +659,11 @@ class SiteTree extends DataObject {
 		if($results && is_array($results)) if(!min($results)) return false;
 		
 		// if page can't be edited, don't grant delete permissions
-		if(!$this->canEdit()) return false;
+		if(!$this->canEdit($member)) return false;
 		
 		$children = $this->AllChildren();
 		if($children) foreach($children as $child) {
-			if(!$child->canDelete()) return false;
+			if(!$child->canDelete($member)) return false;
 		}
 		
 		return $this->stat('can_create') != false;
@@ -690,7 +690,7 @@ class SiteTree extends DataObject {
 	public function canCreate($member = null) {
 		if(!$member && $member !== FALSE) $member = Member::currentUser();
 
-		if(Permission::checkMember($member, "ADMIN")) return true;
+		if($member && Permission::checkMember($member, "ADMIN")) return true;
 		
 		// DEPRECATED 2.3: use canCreate() instead
 		$results = $this->extend('alternateCanCreate', $member);
@@ -726,7 +726,7 @@ class SiteTree extends DataObject {
 	public function canEdit($member = null) {
 		if(!$member && $member !== FALSE) $member = Member::currentUser();
 		
-		if(Permission::checkMember($member, "ADMIN")) return true;
+		if($member && Permission::checkMember($member, "ADMIN")) return true;
 
 		// DEPRECATED 2.3: use canEdit() instead
 		$results = $this->extend('alternateCanEdit', $member);
@@ -737,7 +737,7 @@ class SiteTree extends DataObject {
 		if($results && is_array($results)) if(!min($results)) return false;
 		
 		// if page can't be viewed, don't grant edit permissions
-		if(!$this->canView()) return false;
+		if(!$this->canView($member)) return false;
 
 		// check for empty spec
 		if(!$this->CanEditType || $this->CanEditType == 'Anyone') return true;
@@ -745,11 +745,11 @@ class SiteTree extends DataObject {
 		// check for inherit
 		if($this->CanEditType == 'Inherit') {
 			if($this->ParentID) return $this->Parent()->canEdit($member);
-			else return Permission::checkMember($member, 'CMS_ACCESS_CMSMain');
+			else return ($member && Permission::checkMember($member, 'CMS_ACCESS_CMSMain'));
 		}
 
 		// check for any logged-in users
-		if($this->CanEditType == 'LoggedInUsers' && Permission::checkMember($member, 'CMS_ACCESS_CMSMain')) return true;
+		if($this->CanEditType == 'LoggedInUsers' && $member && Permission::checkMember($member, 'CMS_ACCESS_CMSMain')) return true;
 		
 		// check for specific groups
 		if($this->CanEditType == 'OnlyTheseUsers' && $member && $member->inGroups($this->EditorGroups())) return true;
@@ -774,7 +774,7 @@ class SiteTree extends DataObject {
 	public function canPublish($member = null) {
 		if(!$member && $member !== FALSE) $member = Member::currentUser();
 		
-		if(Permission::checkMember($member, "ADMIN")) return true;
+		if($member && Permission::checkMember($member, "ADMIN")) return true;
 		
 		// DEPRECATED 2.3: use canPublish() instead
 		$results = $this->extend('alternateCanPublish', $member);
@@ -786,7 +786,7 @@ class SiteTree extends DataObject {
 		if($results && is_array($results)) if(!min($results)) return false;
 
 		// Normal case
-		return $this->canEdit();
+		return $this->canEdit($member);
 	}
 
 	/**
@@ -1129,7 +1129,7 @@ class SiteTree extends DataObject {
 						new TextField("MenuTitle", $this->fieldLabel('MenuTitle')),
 						new HtmlEditorField("Content", _t('SiteTree.HTMLEDITORTITLE', "Content", PR_MEDIUM, 'HTML editor title'))
 					),
-					$tabMeta = new Tab('Meta-data',
+					$tabMeta = new Tab('Metadata',
 						new FieldGroup(_t('SiteTree.URL', "URL"),
 							new LabelField('BaseUrlLabel',Director::absoluteBaseURL()),
 							new UniqueRestrictedTextField("URLSegment",
@@ -1191,17 +1191,24 @@ class SiteTree extends DataObject {
 						"CanViewType", 
 						""
 					),
-					new TreeMultiselectField("ViewerGroups", $this->fieldLabel('ViewerGroups')),
+					$viewerGroupsField = new TreeMultiselectField("ViewerGroups", $this->fieldLabel('ViewerGroups')),
 					new HeaderField('WhoCanEditHeader',_t('SiteTree.EDITHEADER', "Who can edit this page?"), 2),
 					$editorsOptionsField = new OptionsetField(
 						"CanEditType", 
 						""
 					),
-					new TreeMultiselectField("EditorGroups", $this->fieldLabel('EditorGroups'))
+					$editorGroupsField = new TreeMultiselectField("EditorGroups", $this->fieldLabel('EditorGroups'))
 				)
 			)
 			//new NamedLabelField("Status", $message, "pageStatusMessage", true)
 		);
+
+		if(!Permission::check('SITETREE_GRANT_ACCESS')) {
+			$fields->makeFieldReadonly($viewersOptionsField);
+			$fields->makeFieldReadonly($viewerGroupsField);
+			$fields->makeFieldReadonly($editorsOptionsField);
+			$fields->makeFieldReadonly($editorGroupsField);
+		}
 		
 		$viewersOptionsSource = array();
 		if($this->Parent()->ID || $this->CanViewType == 'Inherit') $viewersOptionsSource["Inherit"] = _t('SiteTree.INHERIT', "Inherit from parent page");
@@ -1218,7 +1225,7 @@ class SiteTree extends DataObject {
 		
 		$tabContent->setTitle(_t('SiteTree.TABCONTENT', "Content"));
 		$tabMain->setTitle(_t('SiteTree.TABMAIN', "Main"));
-		$tabMeta->setTitle(_t('SiteTree.TABMETA', "Meta-data"));
+		$tabMeta->setTitle(_t('SiteTree.TABMETA', "Metadata"));
 		$tabBehaviour->setTitle(_t('SiteTree.TABBEHAVIOUR', "Behaviour"));
 		$tabReports->setTitle(_t('SiteTree.TABREPORTS', "Reports"));
 		$tabAccess->setTitle(_t('SiteTree.TABACCESS', "Access"));
@@ -1266,36 +1273,57 @@ class SiteTree extends DataObject {
 
 	/**
 	 * Get the actions available in the CMS for this page - eg Save, Publish.
-	 *
-	 * @return DataObjectSet The available actions for this page.
+	 * @return FieldSet The available actions for this page.
 	 */
 	function getCMSActions() {
-		$actions = array();
+		$actions = new FieldSet();
 
 		if($this->isPublished() && $this->canPublish()) {
+			// "unpublish"
 			$unpublish = FormAction::create('unpublish', _t('SiteTree.BUTTONUNPUBLISH', 'Unpublish'), 'delete');
 			$unpublish->describe(_t('SiteTree.BUTTONUNPUBLISHDESC', "Remove this page from the published site"));
 			$unpublish->addExtraClass('delete');
-			$actions[] = $unpublish;
+			$actions->push($unpublish);
 		}
 
 		if($this->stagesDiffer('Stage', 'Live')) {
 			if($this->isPublished() && $this->canEdit())	{
+				// "rollback"
 				$rollback = FormAction::create('rollback', _t('SiteTree.BUTTONCANCELDRAFT', 'Cancel draft changes'), 'delete');
 				$rollback->describe(_t('SiteTree.BUTTONCANCELDRAFTDESC', "Delete your draft and revert to the currently published page"));
 				$rollback->addExtraClass('delete');
-				$actions[] = $rollback;
+				$actions->push($rollback);
 			}
 		}
 
-		if($this->canPublish()) {
-			$actions[] = new FormAction('publish', _t('SiteTree.BUTTONSAVEPUBLISH', 'Save and Publish'));
+		if($this->DeletedFromStage) {
+			if($this->can('CMSEdit')) {
+				// "restore"
+				$actions->push(new FormAction('revert',_t('CMSMain.RESTORE','Restore')));
+				
+				// "delete from live"
+				$actions->push(new FormAction('deletefromlive',_t('CMSMain.DELETEFP','Delete from the published site')));
+			}
+		} else {
+			if($this->canEdit()) {
+				// "delete"
+				$actions->push($deleteAction = new FormAction('delete',_t('CMSMain.DELETE','Delete from the draft site')));
+				$deleteAction->addExtraClass('delete');
+				
+				// "save"
+				$actions->push(new FormAction('save',_t('CMSMain.SAVE','Save')));
+			}
 		}
 		
-		// getCMSActions() can be extended with updateCmsActions() on a decorator
+		if($this->canPublish()) {
+			// "publish"
+			$actions->push(new FormAction('publish', _t('SiteTree.BUTTONSAVEPUBLISH', 'Save and Publish')));
+		}
+
+		// getCMSActions() can be extended with updateCMSActions() on a decorator
 		$this->extend('updateCMSActions', $actions);
 		
-		return new DataObjectSet($actions);
+		return $actions;
 	}
 	
 	/**
@@ -1454,12 +1482,6 @@ class SiteTree extends DataObject {
 			$instance = singleton($class);
 			if((($instance instanceof HiddenClass) || !$instance->canCreate()) && ($class != $this->class)) continue;
 
-			/*
-			$addAction = $instance->uninherited('add_action', true);
-			if(!$addAction) {
-				$addAction = $instance->singular_name();
-			}
-			*/
 			$addAction = $instance->i18n_singular_name();
 
 			if($class == $this->class) {
@@ -1669,6 +1691,15 @@ class SiteTree extends DataObject {
 	 */
 	public static function enableCMSFieldsExtensions() {
 		self::$runCMSFieldsExtensions = true;
+	}
+	
+	function providePermissions() {
+		return array(
+			'SITETREE_GRANT_ACCESS' => _t(
+				'SiteTree.PERMISSION_GRANTACCESS_DESCRIPTION',
+				'Control which groups can access or edit certain pages'
+			)
+		);
 	}
 
 }

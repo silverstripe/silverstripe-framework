@@ -1566,6 +1566,19 @@ class DataObject extends ViewableData implements DataObjectInterface,i18nEntityP
 	}
 	
 	/**
+	 * need to be overload by solid dataobject, so that the customised actions of that dataobject,
+	 * including that dataobject's decorator customised actions could be added to the EditForm.
+	 * 
+	 * @return an Empty FieldSet(); need to be overload by solid subclass
+	 */
+	public function getCMSActions() {
+		$actions = new FieldSet();
+		$this->extend('updateCMSActions', $actions);
+		return $actions;
+	}
+	
+
+	/**
 	 * Used for simple frontend forms without relation editing
 	 * or {@link TabSet} behaviour. Uses {@link scaffoldFormFields()}
 	 * by default. To customize, either overload this method in your
@@ -2015,13 +2028,16 @@ class DataObject extends ViewableData implements DataObjectInterface,i18nEntityP
 				$component = singleton($rel);
 			} elseif ($rel = $component->many_many($relation)) {
 				$component = singleton($rel[1]);
+			} elseif($info = $this->castingHelperPair($relation)) {
+				$component = singleton($info['className']);
 			}
 		}
 
 		$object = $component->dbObject($fieldName);
 
 		if (!($object instanceof DBField) && !($object instanceof ComponentSet)) {
-			user_error("Unable to traverse to related object field [$fieldPath] on [$this->class]", E_USER_ERROR);
+			// Todo: come up with a broader range of exception objects to describe differnet kinds of errors programatically
+			throw new Exception("Unable to traverse to related object field [$fieldPath] on [$this->class]");
 		}
 		return $object;
 	}

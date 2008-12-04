@@ -71,9 +71,10 @@ class TextareaField extends FormField {
 	 * The element shouldn't be both disabled and readonly at the same time.
 	 */
 	function performReadonlyTransformation() {
-		$this->readonly = true;
-		$this->disabled = false;
-		return $this;
+		$clone = clone $this;
+		$clone->setReadonly(true);
+		$clone->setDisabled(false);
+		return $clone;
 	}
 	
 	/**
@@ -83,9 +84,10 @@ class TextareaField extends FormField {
 	 * The element shouldn't be both disabled and readonly at the same time.
 	 */
 	function performDisabledTransformation() {
-		$this->disabled = true;
-		$this->readonly = false;
-		return $this;
+		$clone = clone $this;
+		$clone->setDisabled(true);
+		$clone->setReadonly(false);
+		return $clone;
 	}
 	
 	function Type() {

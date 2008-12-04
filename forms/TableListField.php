@@ -512,11 +512,12 @@ JS
 	}
 	
 	function performReadonlyTransformation() {
-		$this->setShowPagination(false);
-		$this->setPermissions(array('show'));
-		$this->addExtraClass( 'readonly' );
-		$this->setReadonly(true);
-		return $this;
+		$clone = clone $this;
+		$clone->setShowPagination(false);
+		$clone->setPermissions(array('show'));
+		$clone->addExtraClass( 'readonly' );
+		$clone->setReadonly(true);
+		return $clone;
 	}
 	
 	/**
@@ -1047,6 +1048,13 @@ JS
 	
 	function setCSVFieldFormatting($formatting) {
 		$this->csvFieldFormatting = $formatting;
+	}
+	
+	/**
+	 * Edit the field list
+	 */
+	function setFieldList($fieldList) {
+		$this->fieldList = $fieldList;
 	}
 	
 	/**

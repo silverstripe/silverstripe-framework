@@ -31,16 +31,17 @@ class SelectionGroup extends CompositeField {
 	 */
 	public function performDisabledTransformation($trans) {
 		$newChildren = array();
-		if($this->children) foreach($this->children as $idx => $child) {
+		$clone = clone $this;
+		if($clone->children) foreach($clone->getChildren() as $idx => $child) {
 			if(is_object($child)) {
 				$child = $child->transform($trans);
 			}
 			$newChildren[$idx] = $child;
 		}
 
-		$this->children = new FieldSet($newChildren);
-		$this->readonly = true;
-		return $this;
+		$clone->setChildren(new FieldSet($newChildren));
+		$clone->setReadonly(true);
+		return $clone;
 	}
 	
 	function FieldSet() {

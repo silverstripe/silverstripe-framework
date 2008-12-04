@@ -60,6 +60,8 @@ class i18nTextCollectorTest extends SapphireTest {
 		global $_TEMPLATE_MANIFEST;
 		unset($_TEMPLATE_MANIFEST['i18nTestModule.ss']);
 		unset($_TEMPLATE_MANIFEST['i18nTestModuleInclude.ss']);
+		
+		parent::tearDown();
 	}
 	
 	function testCollectFromTemplateSimple() {

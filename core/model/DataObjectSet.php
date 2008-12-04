@@ -584,7 +584,7 @@ class DataObjectSet extends ViewableData implements IteratorAggregate {
 	public function column($value = "ID") {
 		$list = array();
 		foreach($this->items as $item ){
-			$list[] = $item->$value;
+			$list[] = ($item->hasMethod($value)) ? $item->$value() : $item->$value;
 		}
 		return $list;
 	}
