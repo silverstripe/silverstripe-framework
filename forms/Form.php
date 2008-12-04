@@ -63,6 +63,15 @@ class Form extends RequestHandler {
 	 */
 	protected $target;
 	
+	/**
+	 * Legend value, to be inserted into the 
+	 * <legend> element before the <fieldset>
+	 * in Form.ss template.
+	 *
+	 * @var string
+	 */
+	protected $legend;
+	
 	protected $buttonClickedFunc;
 	
 	protected $message;
@@ -456,7 +465,15 @@ class Form extends RequestHandler {
 	function setTarget($target) {
 		$this->target = $target;
 	}
-
+	
+	/**
+	 * Set the legend value to be inserted into
+	 * the <legend> element in the Form.ss template.
+	 */
+	function setLegend($legend) {
+		$this->legend = $legend;
+	}
+	
 	/**
 	 * Returns the encoding type of the form.
 	 * This will be either "multipart/form-data"" if there are any {@link FileField} instances,
@@ -661,6 +678,16 @@ class Form extends RequestHandler {
 	 */
 	function getRecord() {
 		return $this->record;
+	}
+	
+	/**
+	 * Get the legend value to be inserted into the
+	 * <legend> element in Form.ss
+	 *
+	 * @return string
+	 */
+	function getLegend() {
+		return $this->legend;
 	}
 
 	/**
