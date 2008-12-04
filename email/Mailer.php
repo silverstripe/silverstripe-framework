@@ -17,7 +17,7 @@ class Mailer extends Object {
 	 * Send a plain-text email
 	 */
 	function sendPlain($to, $from, $subject, $plainContent, $attachedFiles = false, $customheaders = false) {
-		return plaintextEmail($to, $from, $subject, $htmlContent, $attachedFiles, $customheaders);
+		return plaintextEmail($to, $from, $subject, $plainContent, $attachedFiles, $customheaders);
 	}
 	
 	/**
