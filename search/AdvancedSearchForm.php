@@ -134,5 +134,4 @@ class AdvancedSearchForm extends SearchForm {
 	
 }
 
-
 ?>

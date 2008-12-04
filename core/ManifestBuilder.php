@@ -550,5 +550,4 @@ class ManifestBuilder {
 	}
 }
 
-
 ?>

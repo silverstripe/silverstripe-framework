@@ -20,5 +20,5 @@ abstract class CliController extends Controller {
     }
     
     function process() {}       
-}  
+} 
 ?>

@@ -428,4 +428,3 @@ function loadMimeTypes() {
 	$global_mimetypes = $mimeData;
 	return $mimeData;
 }
-

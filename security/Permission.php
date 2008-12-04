@@ -611,5 +611,4 @@ class Permission_Group {
 	}
 }
 
-
 ?>

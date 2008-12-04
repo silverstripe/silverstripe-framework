@@ -227,5 +227,4 @@ class MemberLoginForm extends LoginForm {
 
 }
 
-
 ?>

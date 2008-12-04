@@ -84,7 +84,4 @@ Security::set_password_encryption_algorithm('sha1', true);
  */
 define('EMAIL_BOUNCEHANDLER_KEY', '1aaaf8fb60ea253dbf6efa71baaacbb3');
 
-
-
-
 ?>

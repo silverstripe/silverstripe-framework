@@ -393,5 +393,4 @@ class ReportField_Controller extends Controller {
 	}
 }
 
-
 ?>
