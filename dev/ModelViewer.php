@@ -5,6 +5,16 @@
  * Access at dev/viewmodel
  */
 class ModelViewer extends Controller {
+	static $url_handlers = array(
+		'$Module!' => 'handleModule',
+	);
+
+	protected $module = null;
+	
+	function handleModule($request) {
+		return new ModelViewer_Module($request->param('Module'));
+	}
+	
 	function init() {
 		parent::init();
 		if(!Permission::check("ADMIN")) Security::permissionFailure();
@@ -37,15 +47,16 @@ class ModelViewer extends Controller {
 			$modules[$model->Module]->push($model);
 		}
 		ksort($modules);
+		unset($modules['userforms']);
 		
-		if(isset($this->urlParams['Action']) && isset($modules[$this->urlParams['Action']])) {
-			$module = $this->urlParams['Action'];
-			$modules = array($module => $modules[$module]);
+		if($this->module) {
+			$modules = array($this->module => $modules[$this->module]);
 		}
 
 		$output = new DataObjectSet();
 		foreach($modules as $moduleName => $models) {
 			$output->push(new ArrayData(array(
+				'Link' => 'dev/viewcode/' . $moduleName,
 				'Name' => $moduleName,
 				'Models' => $models,
 			)));
@@ -53,7 +64,28 @@ class ModelViewer extends Controller {
 		
 		return $output;
 	}
+}
 
+class ModelViewer_Module extends ModelViewer {
+	static $url_handlers = array(
+		'graph' => 'graph',
+	);
+
+	/**
+	 * ModelViewer can be optionally constructed to restrict its output to a specific module
+	 */
+	function __construct($module = null) {
+		$this->module = $module;
+	}
+	
+	function graph() {
+		SSViewer::set_source_file_comments(false);
+		$dotContent = $this->renderWith("ModelViewer_dotsrc");
+		$CLI_dotContent = escapeshellarg($dotContent);
+		
+		header("Content-type: image/png");
+		echo `neato -Tpng:gd &> /dev/stdout`;
+	}
 }
 
 /**
@@ -87,13 +119,17 @@ class ModelViewer_Model extends ViewableData {
 	}
 	
 	function Fields() {
-		$db = singleton($this->className)->db();
 		$output = new DataObjectSet();
-		$output->push(new ModelViewer_Field('ID', 'PrimaryKey'));
-		$output->push(new ModelViewer_Field('Created', 'Datetime'));
-		$output->push(new ModelViewer_Field('LastEdited', 'Datetime'));
-		foreach($db as $k => $v) {
-			$output->push(new ModelViewer_Field($k, $v));
+		
+		$output->push(new ModelViewer_Field($this,'ID', 'PrimaryKey'));
+		if(!$this->ParentModel) {
+			$output->push(new ModelViewer_Field($this,'Created', 'Datetime'));
+			$output->push(new ModelViewer_Field($this,'LastEdited', 'Datetime'));
+		}
+
+		$db = singleton($this->className)->uninherited('db',true);
+		if($db) foreach($db as $k => $v) {
+			$output->push(new ModelViewer_Field($this, $k, $v));
 		}
 		return $output;		
 	}
@@ -102,9 +138,9 @@ class ModelViewer_Model extends ViewableData {
 		$output = new DataObjectSet();
 		
 		foreach(array('has_one','has_many','many_many') as $relType) {
-			$items = singleton($this->className)->$relType();
-			foreach($items as $k => $v) {
-				$output->push(new ModelViewer_Relation($k, $v, $relType));
+			$items = singleton($this->className)->uninherited($relType,true);
+			if($items) foreach($items as $k => $v) {
+				$output->push(new ModelViewer_Relation($this, $k, $v, $relType));
 			}
 		}
 		return $output;
@@ -112,18 +148,20 @@ class ModelViewer_Model extends ViewableData {
 }
 
 class ModelViewer_Field extends ViewableData {
-	public $Name, $Type;
+	public $Model, $Name, $Type;
 	
-	function __construct($name, $type) {
+	function __construct($model, $name, $type) {
+		$this->Model = $model;
 		$this->Name = $name;
 		$this->Type = $type;
 	}
 }
 
 class ModelViewer_Relation extends ViewableData {
-	public $Name, $RelationType, $RelatedClass;
+	public $Model, $Name, $RelationType, $RelatedClass;
 	
-	function __construct($name, $relatedClass, $relationType) {
+	function __construct($model, $name, $relatedClass, $relationType) {
+		$this->Model = $model;
 		$this->Name = $name;
 		$this->RelatedClass = $relatedClass;
 		$this->RelationType = $relationType;

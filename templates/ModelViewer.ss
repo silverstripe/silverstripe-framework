@@ -8,6 +8,8 @@
 
 		<% control Modules %>
 		<h1>Module $Name</h1>
+		
+		<img src="$Link/graph" />
         
         <% control Models %>
         <h2>$Name <% if ParentModel %> (subclass of $ParentModel)<% end_if %></h2>
