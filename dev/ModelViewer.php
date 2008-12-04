@@ -56,7 +56,7 @@ class ModelViewer extends Controller {
 		$output = new DataObjectSet();
 		foreach($modules as $moduleName => $models) {
 			$output->push(new ArrayData(array(
-				'Link' => 'dev/viewcode/' . $moduleName,
+				'Link' => 'dev/viewmodel/' . $moduleName,
 				'Name' => $moduleName,
 				'Models' => $models,
 			)));
@@ -83,8 +83,10 @@ class ModelViewer_Module extends ModelViewer {
 		$dotContent = $this->renderWith("ModelViewer_dotsrc");
 		$CLI_dotContent = escapeshellarg($dotContent);
 		
-		header("Content-type: image/png");
-		echo `neato -Tpng:gd &> /dev/stdout`;
+		$output= `echo $CLI_dotContent | neato -Tpng:gd &> /dev/stdout`;
+		if(substr($output,1,3) == 'PNG') header("Content-type: image/png");
+		else header("Content-type: text/plain");
+		echo $output;
 	}
 }
 

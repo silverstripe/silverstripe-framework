@@ -1,5 +1,6 @@
 <html>
     <head>
+	<% base_tag %>
         <title>Data Model</title>
     </head>
 
