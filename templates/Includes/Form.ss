@@ -6,6 +6,7 @@
 	<% else %>
 	<p id="{$FormName}_error" class="message $MessageType" style="display: none"></p>
 	<% end_if %>
+	
 	<fieldset>
 		<legend>$Legend</legend>
 		<% control Fields %>
@@ -14,11 +15,13 @@
 		<div class="clear"><!-- --></div>
 	</fieldset>
 
-<% if Actions %>
+	<% if Actions %>
 	<div class="Actions">
-		<% control Actions %>$Field<% end_control %>
+		<% control Actions %>
+			$Field
+		<% end_control %>
 	</div>
-<% end_if %>
+	<% end_if %>
 <% if IncludeFormTag %>
 </form>
 <% end_if %>
