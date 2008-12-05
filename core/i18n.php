@@ -974,15 +974,26 @@ class i18n extends Object {
 	 * Given a file name (a php class name, without the .php ext, or a template name, including the .ss extension)
 	 * this helper function determines the module where this file is located
 	 * 
-	 * @param string $name php class name or template file name
+	 * @param string $name php class name or template file name (including *.ss extension)
 	 * @return string Module where the file is located
 	 */
-	protected static function get_owner_module($name) {
-		if (substr($name,-3) == '.ss') {
+	public static function get_owner_module($name) {
+		// if $name is a template file
+		if(substr($name,-3) == '.ss') {
 			global $_TEMPLATE_MANIFEST;
-			$path = str_replace('\\','/',Director::makeRelative(current($_TEMPLATE_MANIFEST[substr($name,0,-3)])));
+			$templateManifest = $_TEMPLATE_MANIFEST[substr($name,0,-3)];
+			if(is_array($templateManifest) && isset($templateManifest['themes'])) {
+				$absolutePath = $templateManifest['themes'][SSViewer::current_theme()];
+			} else {
+				$absolutePath = $templateManifest;
+			}
+			
+			$path = str_replace('\\','/',Director::makeRelative(current($absolutePath)));
+			
 			ereg('/([^/]+)/',$path,$module);
-		} else {
+		} 
+		// $name is assumed to be a PHP class
+		else {
 			global $_CLASS_MANIFEST;
 			if(strpos($name,'_') !== false) $name = strtok($name,'_');
 			if(isset($_CLASS_MANIFEST[$name])) {
