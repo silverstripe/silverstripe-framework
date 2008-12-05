@@ -48,14 +48,27 @@
  * @subpackage view
  */
 class SSViewer extends Object {
+	
+	/**
+	 * @var boolean $source_file_comments
+	 */
 	protected static $source_file_comments = true;
 	
 	/**
 	 * Set whether HTML comments indicating the source .SS file used to render this page should be
 	 * included in the output.  This is enabled by default
+	 *
+	 * @param boolean $val
 	 */
 	function set_source_file_comments($val) {
 		self::$source_file_comments = $val;
+	}
+	
+	/**
+	 * @return boolean
+	 */
+	function get_source_file_comments() {
+		return self::$source_file_comments;
 	}
 	
 	/**
