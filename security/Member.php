@@ -197,7 +197,10 @@ class Member extends DataObject {
 			Session::set('Member.FailedLogins', $failedLogins);
 		}
 		
-		$this->LockedOutUntil = null;
+		// Don't set column if its not built yet (the login might be precursor to a /dev/build...)
+		if(array_key_exists('LockedOutUntil', DB::fieldList('Member'))) {
+			$this->LockedOutUntil = null;
+		}
 
 		$this->write();
 		
