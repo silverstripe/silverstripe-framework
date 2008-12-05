@@ -221,7 +221,9 @@ abstract class Database extends Object {
 		} else {
 			$this->checkAndRepairTable($table);
 		}
-			
+
+		$this->requireField($table, "ID", "int(11) not null auto_increment");
+
 		// Create custom fields
 		if($fieldSchema) {
 			foreach($fieldSchema as $fieldName => $fieldSpec) {
