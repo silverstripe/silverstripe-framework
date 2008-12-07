@@ -545,12 +545,20 @@ class Email extends ViewableData {
 	 * 
 	 * @param string $email Email-address
 	 * @param string $method Method for obfuscating/encoding the address
+	 *  - 'direction': Reverse the text and then use CSS to put the text direction back to normal
+	 * 	<style type="text/css">  
+	 *			span.codedirection { unicode-bidi:bidi-override; direction: rtl; }  
+	 *		</style>  
+	 *		<p><span class="codedirection">moc.etalllit@7raboofnavlis</span></p>
+	 * 
 	 *  - 'visible': Simple string substitution ('@' to '[at]', '.' to '[dot], '-' to [dash])
 	 *  - 'hex': Hexadecimal URL-Encoding - useful for mailto: links
 	 * @return string
 	 */
 	public static function obfuscate($email, $method = 'visible') {
 		switch($method) {
+			case 'direction' :
+				return strrev($email);
 			case 'visible' :
 				$obfuscated = array('@' => ' [at] ', '.' => ' [dot] ', '-' => ' [dash] ');
 				return strtr($email, $obfuscated);
