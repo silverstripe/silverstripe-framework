@@ -82,8 +82,7 @@ if (isset($_GET['url'])) {
 }
 
 // Fix glitches in URL generation
-if (substr($url, 0, strlen(BASE_URL)) == BASE_URL) $url = substr($url, strlen(BASE_URL));
-
+if (substr(strtolower($url), 0, strlen(BASE_URL)) == strtolower(BASE_URL)) $url = substr($url, strlen(BASE_URL));
 
 if (isset($_GET['debug_profile'])) {
 	Profiler::init();
