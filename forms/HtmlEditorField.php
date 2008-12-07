@@ -154,7 +154,7 @@ class HtmlEditorField extends TextareaField {
 				
 		$fieldName = $this->name;
 		if($record->ID && $record->hasMethod('LinkTracking') && $linkTracking = $record->LinkTracking()) {
-			$linkTracking->removeByFilter("FieldName = '$fieldName'");
+			$linkTracking->removeByFilter("\"FieldName\" = '$fieldName' AND \"SiteTreeID\" = $record->ID");
 			
 			if(isset($linkedPages)) foreach($linkedPages as $item) {
 				$linkTracking->add($item, array("FieldName" => $fieldName));
