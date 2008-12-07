@@ -460,7 +460,7 @@ JS;
 		if(!$childData->ID && $this->getParentClass()) {
 			// make sure the relation-link is existing, even if we just add the sourceClass and didn't save it
 			$parentIDName = $this->getParentIdName( $this->getParentClass(), $this->sourceClass() );
-			$childData->$parentIDName = $childData->ID;
+			$childData->$parentIDName = $this->sourceID();
 		}
 		
 		$detailFields = $this->getCustomFieldsFor($childData);
@@ -713,8 +713,10 @@ class ComplexTableField_ItemRequest extends RequestHandler {
 	 * @see Form::ReferencedField
 	 */
 	function saveComplexTableField($data, $form, $request) {
-		$form->saveInto($this->dataObj());
-		$this->dataObj()->write();
+		$dataObject = $this->dataObj();
+		
+		$form->saveInto($dataObject);
+		$dataObject->write();
 		
 		$closeLink = sprintf(
 			'<small><a href="' . $_SERVER['HTTP_REFERER'] . '" onclick="javascript:window.top.GB_hide(); return false;">(%s)</a></small>',
@@ -722,8 +724,8 @@ class ComplexTableField_ItemRequest extends RequestHandler {
 		);
 		$message = sprintf(
 			_t('ComplexTableField.SUCCESSEDIT', 'Saved %s %s %s'),
-			$this->dataObj()->singular_name(),
-			'<a href="' . $this->Link() . '">"' . $this->dataObj()->Title . '"</a>',
+			$dataObject->singular_name(),
+			'<a href="' . $this->Link() . '">"' . $dataObject->Title . '"</a>',
 			$closeLink
 		);
 		$form->sessionMessage($message, 'good');
