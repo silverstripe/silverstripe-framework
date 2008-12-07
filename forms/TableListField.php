@@ -942,7 +942,7 @@ JS
 					
 					// TODO This should be replaced with casting
 					if(array_key_exists($field->Name, $this->csvFieldFormatting)) {
-						$format = str_replace('$value', "__VAL__", $this->csvFieldFormatting[$columnName]);
+						$format = str_replace('$value', "__VAL__", $this->csvFieldFormatting[$field->Name]);
 						$format = preg_replace('/\$([A-Za-z0-9-_]+)/','$item->$1', $format);
 						$format = str_replace('__VAL__', '$value', $format);
 						eval('$value = "' . $format . '";');
