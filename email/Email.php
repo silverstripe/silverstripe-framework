@@ -384,6 +384,8 @@ class Email extends ViewableData {
 		if(trim($headers['Bcc'])) $headers['Bcc'] .= ', ';
 		$headers['Bcc'] .= self::$bcc_all_emails_to;		
 	}
+
+	Requirements::restore();
     
     return self::mailer()->sendPlain($to, $this->from, $subject, $this->body, $this->attachments, $headers);
   }
