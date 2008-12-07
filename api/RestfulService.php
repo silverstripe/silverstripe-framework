@@ -131,7 +131,7 @@ class RestfulService extends ViewableData {
 				$curlError = curl_error($ch);
 			}
 			
-			if($respnoseBody === false) {
+			if($responseBody === false) {
 				user_error("Curl Error:" . $curlError, E_USER_WARNING);
 				return;
 			}
