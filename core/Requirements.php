@@ -54,15 +54,16 @@ class Requirements {
 	}
 
 	/**
-	 * Add the CSS styling to the header of the page
+	 * Include custom CSS styling to the header of the page.
 	 * 
 	 * See {@link Requirements_Backend::customCSS()}
+	 * 
+	 * @param string $script CSS selectors as a string (without <style> tag enclosing selectors).
+	 * @param int $uniquenessID
 	 */
 	static function customCSS($script, $uniquenessID = null) {
 		self::backend()->custom($script, $uniquenessID);
 	}
-	
-
 	
 	/**
 	 * Add the following custom code to the <head> section of the page.
@@ -390,7 +391,12 @@ class Requirements_Backend {
 		$script .= "\n";
 	}
 	
-	
+	/**
+	 * Include custom CSS styling to the header of the page.
+	 *
+	 * @param string $script CSS selectors as a string (without <style> tag enclosing selectors).
+	 * @param int $uniquenessID
+	 */
 	function customCSS($script, $uniquenessID = null) {
 		if($uniquenessID)
 			$this->customCSS[$uniquenessID] = $script;
@@ -559,7 +565,7 @@ class Requirements_Backend {
 					$requirements .= "<link rel=\"stylesheet\" type=\"text/css\"{$media} href=\"$path\" />\n";
 				}
 			}
-			foreach(array_diff_key($this->customCSS,$this->blocked) as $css) { 
+			foreach(array_diff_key($this->customCSS, $this->blocked) as $css) { 
 				$requirements .= "<style type=\"text/css\">\n$css\n</style>\n";
 			}
 			
