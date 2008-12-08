@@ -553,7 +553,10 @@ class Email extends ViewableData {
 	public static function obfuscate($email, $method = 'visible') {
 		switch($method) {
 			case 'direction' :
-				Requirements::customCSS('span.codedirection { unicode-bidi: bidi-override; direction: rtl; }');
+				Requirements::customCSS(
+					'span.codedirection { unicode-bidi: bidi-override; direction: rtl; }',
+					'codedirectionCSS'
+				);
 				return '<span class="codedirection">' . strrev($email) . '</span>';
 			case 'visible' :
 				$obfuscated = array('@' => ' [at] ', '.' => ' [dot] ', '-' => ' [dash] ');
