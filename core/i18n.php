@@ -1096,6 +1096,7 @@ class i18n extends Object {
 		$module = self::get_owner_module($class);
 
 		if(!$module) user_error("i18n::include_by_class: Class {$class} not found", E_USER_WARNING);
+		$locale = self::get_locale();
 		
 		if (file_exists($file = Director::getAbsFile("$module/lang/". self::get_locale() . '.php'))) {
 			include($file);
@@ -1108,6 +1109,12 @@ class i18n extends Object {
 		} else if(file_exists(Director::getAbsFile("$module/lang"))) {
 			user_error("i18n::include_by_class: Locale file $file should exist", E_USER_WARNING);
 		}
+
+		// If the language file wasn't included for this class, include an empty array to prevent
+		// this method from being called again
+		global $lang;
+		if(!isset($lang[$locale][$class])) $lang[$locale][$class] = array();
+		
 	}
 	
 	//-----------------------------------------------------------------------------------------------//
