@@ -101,16 +101,36 @@ class ClassInfo {
 	
 	/**
 	 * Returns a list of classes that inherit from the given class.
+	 * The resulting array includes the base class passed
+	 * through the $class parameter as the first array value.
+	 * 
+	 * Example usage:
+	 * <example>
+	 * ClassInfo::subclassesFor('BaseClass');
+	 * 	array(
+	 * 	0 => 'BaseClass',
+	 * 	'ChildClass' => 'ChildClass',
+	 * 	'GrandChildClass' => 'GrandChildClass'
+	 * )
+	 * </example>
 	 * 
 	 * @param mixed $class string of the classname or instance of the class
-	 * @return array
+	 * @return array Names of all subclasses as an associative array.
 	 */
 	static function subclassesFor($class){
 		global $_ALL_CLASSES;
 		if (is_object($class)) $class = get_class($class);
+		
+		// get all classes from the manifest
 		$subclasses = isset($_ALL_CLASSES['children'][$class]) ? $_ALL_CLASSES['children'][$class] : null;
-		if(isset($subclasses)) array_unshift($subclasses, $class);
-		else $subclasses[$class] = $class;
+
+		// add the base class to the array
+		if(isset($subclasses)) {
+			array_unshift($subclasses, $class);
+		} else {
+			$subclasses[$class] = $class;
+		}
+		
 		return $subclasses;
 	}
 	
