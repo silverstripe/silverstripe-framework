@@ -546,11 +546,6 @@ class Email extends ViewableData {
 	 * @param string $email Email-address
 	 * @param string $method Method for obfuscating/encoding the address
 	 *  - 'direction': Reverse the text and then use CSS to put the text direction back to normal
-	 * 	<style type="text/css">  
-	 *			span.codedirection { unicode-bidi:bidi-override; direction: rtl; }  
-	 *		</style>  
-	 *		<p><span class="codedirection">moc.etalllit@7raboofnavlis</span></p>
-	 * 
 	 *  - 'visible': Simple string substitution ('@' to '[at]', '.' to '[dot], '-' to [dash])
 	 *  - 'hex': Hexadecimal URL-Encoding - useful for mailto: links
 	 * @return string
@@ -558,7 +553,8 @@ class Email extends ViewableData {
 	public static function obfuscate($email, $method = 'visible') {
 		switch($method) {
 			case 'direction' :
-				return strrev($email);
+				Requirements::customCSS('span.codedirection { unicode-bidi: bidi-override; direction: rtl; }');
+				return '<span class="codedirection">' . strrev($email) . '</span>';
 			case 'visible' :
 				$obfuscated = array('@' => ' [at] ', '.' => ' [dot] ', '-' => ' [dash] ');
 				return strtr($email, $obfuscated);
@@ -744,7 +740,7 @@ class Email_BlackList extends DataObject{
      * Helper function to see if the email being
      * sent has specifically been blocked.
      */
-    static function isBlocked($email){
+    static function isBlocked($email) {
     	$blockedEmails = DataObject::get("Email_BlackList")->toDropDownMap("ID","BlockedEmail");
     	if($blockedEmails){
 	    	if(in_array($email,$blockedEmails)){
