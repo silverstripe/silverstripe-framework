@@ -59,7 +59,7 @@ class Requirements {
 	 * See {@link Requirements_Backend::customCSS()}
 	 * 
 	 * @param string $script CSS selectors as a string (without <style> tag enclosing selectors).
-	 * @param int $uniquenessID
+	 * @param int $uniquenessID Group CSS by a unique ID as to avoid duplicate custom CSS in header
 	 */
 	static function customCSS($script, $uniquenessID = null) {
 		self::backend()->customCSS($script, $uniquenessID);
@@ -395,7 +395,7 @@ class Requirements_Backend {
 	 * Include custom CSS styling to the header of the page.
 	 *
 	 * @param string $script CSS selectors as a string (without <style> tag enclosing selectors).
-	 * @param int $uniquenessID
+	 * @param int $uniquenessID Group CSS by a unique ID as to avoid duplicate custom CSS in header
 	 */
 	function customCSS($script, $uniquenessID = null) {
 		if($uniquenessID)
@@ -404,7 +404,6 @@ class Requirements_Backend {
 			$this->customCSS[] = $script;		
 		}
 	}
-	
 	
 	/**
 	 * Add the following custom code to the <head> section of the page.
@@ -450,7 +449,7 @@ class Requirements_Backend {
 	}
 	
 	function get_css() {
-		return array_diff_key($this->css,$this->blocked);
+		return array_diff_key($this->css, $this->blocked);
 	}
 	
 	/**
