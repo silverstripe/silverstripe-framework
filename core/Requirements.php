@@ -62,7 +62,7 @@ class Requirements {
 	 * @param int $uniquenessID
 	 */
 	static function customCSS($script, $uniquenessID = null) {
-		self::backend()->custom($script, $uniquenessID);
+		self::backend()->customCSS($script, $uniquenessID);
 	}
 	
 	/**
