@@ -57,6 +57,11 @@ class DataObjectSet extends ViewableData implements IteratorAggregate {
 	protected $paginationGetVar = "start";
 	
 	/**
+	 * Used for pagination summary where the page numbers are removed
+	 */
+	protected $paginationSummaryChars = "---";
+	
+	/**
 	 * Create a new DataObjectSet. If you pass one or more arguments, it will try to convert them into {@link ArrayData} objects. 
 	 * @todo Does NOT automatically convert objects with complex datatypes (e.g. converting arrays within an objects to its own DataObjectSet)							
 	 * 
@@ -258,6 +263,60 @@ class DataObjectSet extends ViewableData implements IteratorAggregate {
 			$ret->push($thePage);
 		}
 		
+		return $ret;
+	}
+	
+	/*
+	 * Display a pagination with the number of pages specified
+	 * the number of pages will be calculated to odd number to make a visual balance in pagination
+	 * @param 	integer		number of pages to display
+	 * @return 	DataObjectSet
+	 */
+	public function PaginationSummary($pages = 0) {
+		$leftDots = $this->paginationSummaryChars;
+		$rightDots = $this->paginationSummaryChars;
+		
+		// convert number of pages to even number for offset calculation
+		 if ($pages % 2) $pages--;
+		
+		// find out the offset
+		$offset = floor($pages/2);
+		$current = $this->CurrentPage();
+		$totalPages = $this->TotalPages();
+		
+		$leftOffset = $current - ($offset);
+		if($leftOffset < 1) $leftOffset = 1;
+		if($leftOffset + $pages > $totalPages) $leftOffset = $totalPages - $pages;
+		
+		$ret = new DataObjectSet();
+		$totalPages = $this->TotalPages();
+		$current = $this->CurrentPage();
+
+		for($i=0; $i < $totalPages; $i++) {
+			$link = HTTP::setGetVar($this->paginationGetVar, $i*$this->pageLength);
+			$num = $i+1;
+			$currentBool = ($this->CurrentPage() == $i+1) ? true:false;
+			
+			if ($num < $leftOffset AND $num != 1 AND $num != $totalPages) {
+				$num = $leftDots;
+				$leftDots = ''; 
+				$link = null;
+			}
+			
+			if ($num > $leftOffset + $pages  AND $num != 1 AND $num != $totalPages) { 
+				$num = $rightDots;
+				$rightDots = ''; 
+				$link = null;
+			}
+			
+			$thePage = new ArrayData(array(
+					"PageNum" => $num,
+					"Link" => $link,
+					"CurrentBool" => $currentBool,
+					)
+			);
+			$ret->push($thePage);
+		}
 		return $ret;
 	}
 	
