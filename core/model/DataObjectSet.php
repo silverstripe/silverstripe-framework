@@ -58,6 +58,7 @@ class DataObjectSet extends ViewableData implements IteratorAggregate {
 	
 	/**
 	 * Used for pagination summary where the page numbers are removed
+	 * The value should have been &hellip; but it can't be check in ss template conditional statment
 	 */
 	protected $paginationSummaryChars = "---";
 	
@@ -273,6 +274,8 @@ class DataObjectSet extends ViewableData implements IteratorAggregate {
 	 * @return 	DataObjectSet
 	 */
 	public function PaginationSummary($pages = 0) {
+		if (!$pages) return $this->Pages();
+		
 		$leftDots = $this->paginationSummaryChars;
 		$rightDots = $this->paginationSummaryChars;
 		
