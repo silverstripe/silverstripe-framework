@@ -57,12 +57,6 @@ class DataObjectSet extends ViewableData implements IteratorAggregate {
 	protected $paginationGetVar = "start";
 	
 	/**
-	 * Used for pagination summary where the page numbers are removed
-	 * The value should have been &hellip; but it can't be check in ss template conditional statment
-	 */
-	protected $paginationSummaryChars = "---";
-	
-	/**
 	 * Create a new DataObjectSet. If you pass one or more arguments, it will try to convert them into {@link ArrayData} objects. 
 	 * @todo Does NOT automatically convert objects with complex datatypes (e.g. converting arrays within an objects to its own DataObjectSet)							
 	 * 
@@ -268,57 +262,77 @@ class DataObjectSet extends ViewableData implements IteratorAggregate {
 	}
 	
 	/*
-	 * Display a pagination with the number of pages specified
-	 * the number of pages will be calculated to odd number to make a visual balance in pagination
-	 * @param 	integer		number of pages to display
+	 * Display a summarized pagination which limits the number of pages shown
+	 * "around" the currently active page for visual balance.
+	 * In case more paginated pages have to be displayed, only 
+	 * 
+	 * Example: 25 pages total, currently on page 6, context of 4 pages
+	 * [prev] [1] ... [4] [5] [[6]] [7] [8] ... [25] [next]
+	 * 
+	 * Example template usage:
+	 * <code>
+	 * <% if MyPages.MoreThanOnePage %>
+	 * 	<% if MyPages.NotFirstPage %>
+	 * 		<a class="prev" href="$MyPages.PrevLink">Prev</a>
+	 * 	<% end_if %>
+	 *  <% control MyPages.PaginationSummary(4) %>
+	 * 		<% if CurrentBool %>
+	 * 			$PageNum
+	 * 		<% else %>
+	 * 			<% if Link %>
+	 * 				<a href="$Link">$PageNum</a>
+	 * 			<% else %>
+	 * 				...
+	 * 			<% end_if %>
+	 * 		<% end_if %>
+	 * 	<% end_control %>
+	 * 	<% if MyPages.NotLastPage %>
+	 * 		<a class="next" href="$MyPages.NextLink">Next</a>
+	 * 	<% end_if %>
+	 * <% end_if %>
+	 * </code>
+	 * 
+	 * @param integer $context Number of pages to display "around" the current page
 	 * @return 	DataObjectSet
 	 */
-	public function PaginationSummary($pages = 0) {
-		if (!$pages) return $this->Pages();
+	public function PaginationSummary($context = 4) {
+		$ret = new DataObjectSet();
 		
-		$leftDots = $this->paginationSummaryChars;
-		$rightDots = $this->paginationSummaryChars;
-		
+		if (!$context) return $this->Pages();
 		// convert number of pages to even number for offset calculation
-		 if ($pages % 2) $pages--;
+		 if($context % 2) $context--;
 		
 		// find out the offset
-		$offset = floor($pages/2);
+		$offset = floor($context/2);
 		$current = $this->CurrentPage();
 		$totalPages = $this->TotalPages();
 		
 		$leftOffset = $current - ($offset);
 		if($leftOffset < 1) $leftOffset = 1;
-		if($leftOffset + $pages > $totalPages) $leftOffset = $totalPages - $pages;
-		
-		$ret = new DataObjectSet();
-		$totalPages = $this->TotalPages();
-		$current = $this->CurrentPage();
+		if($leftOffset + $context > $totalPages) $leftOffset = $totalPages - $context;
 
 		for($i=0; $i < $totalPages; $i++) {
 			$link = HTTP::setGetVar($this->paginationGetVar, $i*$this->pageLength);
 			$num = $i+1;
-			$currentBool = ($this->CurrentPage() == $i+1) ? true:false;
-			
-			if ($num < $leftOffset AND $num != 1 AND $num != $totalPages) {
-				$num = $leftDots;
-				$leftDots = ''; 
-				$link = null;
-			}
-			
-			if ($num > $leftOffset + $pages  AND $num != 1 AND $num != $totalPages) { 
-				$num = $rightDots;
-				$rightDots = ''; 
-				$link = null;
-			}
-			
-			$thePage = new ArrayData(array(
-					"PageNum" => $num,
-					"Link" => $link,
-					"CurrentBool" => $currentBool,
+			$currentBool = ($current == $i+1) ? true:false;
+			if(
+				($num == $leftOffset-1 && $num != 1 && $num != $totalPages)
+				|| ($num == $leftOffset+$context+1 && $num != 1 && $num != $totalPages)
+			) {
+				$ret->push(new ArrayData(array(
+						"PageNum" => null,
+						"Link" => null,
+						"CurrentBool" => $currentBool,
 					)
-			);
-			$ret->push($thePage);
+				));
+			} else if($num == 1 || $num == $totalPages || in_array($num, range($current-$offset,$current+$offset))) { 
+				$ret->push(new ArrayData(array(
+						"PageNum" => $num,
+						"Link" => $link,
+						"CurrentBool" => $currentBool,
+					)
+				));
+			}
 		}
 		return $ret;
 	}
