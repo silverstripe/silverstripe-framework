@@ -646,6 +646,14 @@ class PDODatabase extends Database {
 		}
 		return isset($tables) ? $tables : null;
 	}
+	
+	public function hasTable($tableName) {
+		user_error("PDODatabase::hasTable() - Not implemented", E_USER_ERROR);
+	}
+	
+	public function enumValuesForField($tableName, $fieldName) {
+		user_error("PDODatabase::enumValuesForField() - Not implemented", E_USER_ERROR);
+	}
 
 	/**
 	 * Return the number of rows affected (DELETE, INSERT, or UPDATE) by the previous operation.
