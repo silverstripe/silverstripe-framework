@@ -383,7 +383,7 @@ class SSViewer extends Object {
 			$oldContent = $content;
 			
 			// Add include filename comments on dev sites
-			if(Director::isDev() && self::$source_file_comments && SSViewer::getTemplateFile($matches[1])) $replacementCode = 'return "<!-- include " . SSViewer::getTemplateFile($matches[1]) . "-->\n" 
+			if(Director::isDev() && self::$source_file_comments) $replacementCode = 'return "<!-- include " . SSViewer::getTemplateFile($matches[1]) . "-->\n" 
 				. SSViewer::getTemplateContent($matches[1]) 
 				. "\n<!-- end include " . SSViewer::getTemplateFile($matches[1]) . "-->";';
 			else $replacementCode = 'return SSViewer::getTemplateContent($matches[1]);';
