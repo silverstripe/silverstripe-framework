@@ -84,6 +84,16 @@ class i18nTextCollector extends Object {
 			
 			// we store the master string tables 
 			$entitiesByModule[$module] = $this->processModule($module);
+			
+			// extract all entities for "foreign" modules (fourth argument)
+			foreach($entitiesByModule[$module] as $fullName => $spec) {
+				if(isset($spec[3]) && $spec[3] != $module) {
+					$othermodule = $spec[3];
+					if(!isset($entitiesByModule[$othermodule])) $entitiesByModule[$othermodule] = array();
+					unset($spec[3]);
+					$entitiesByModule[$othermodule][$fullName] = $spec;
+				}
+			}
 		}
 		
 		// Write the generated master string tables
@@ -202,7 +212,7 @@ class i18nTextCollector extends Object {
 			if(class_exists($class) && in_array('i18nEntityProvider', class_implements($class))) {
 				$reflectionClass = new ReflectionClass($class);
 				if($reflectionClass->isAbstract()) continue;
-				
+
 				$obj = singleton($class);
 				$entitiesArr = array_merge($entitiesArr,(array)$obj->provideI18nEntities());
 			}
