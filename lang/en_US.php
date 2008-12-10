@@ -44,6 +44,10 @@ $lang['en_US']['BankAccountField']['VALIDATIONJS'] = 'Please enter a valid bank 
 $lang['en_US']['BasicAuth']['ENTERINFO'] = 'Please enter a username and password.';
 $lang['en_US']['BasicAuth']['ERRORNOTADMIN'] = 'That user is not an administrator.';
 $lang['en_US']['BasicAuth']['ERRORNOTREC'] = 'That username / password isn\'t recognised';
+$lang['en_US']['CMSMain']['DELETE'] = 'Delete from the draft site';
+$lang['en_US']['CMSMain']['DELETEFP'] = 'Delete from the published site';
+$lang['en_US']['CMSMain']['RESTORE'] = 'Restore';
+$lang['en_US']['CMSMain']['SAVE'] = 'Save';
 $lang['en_US']['ChangePasswordEmail.ss']['CHANGEPASSWORDTEXT1'] = array(
 	'You changed your password for',
 	PR_MEDIUM,
@@ -85,6 +89,11 @@ $lang['en_US']['ConfirmedPasswordField']['HAVETOMATCH'] = 'Passwords have to mat
 $lang['en_US']['ConfirmedPasswordField']['LEASTONE'] = 'Passwords must have at least one digit and one alphanumeric character.';
 $lang['en_US']['ConfirmedPasswordField']['MAXIMUM'] = 'Passwords must be at most %s characters long.';
 $lang['en_US']['ConfirmedPasswordField']['NOEMPTY'] = 'Passwords can\'t be empty.';
+$lang['en_US']['ConfirmedPasswordField']['SHOWONCLICKTITLE'] = array(
+	'Change Password',
+	PR_MEDIUM,
+	'Label of the link which triggers display of the "change password" formfields'
+);
 $lang['en_US']['ContentController']['DRAFT_SITE_ACCESS_RESTRICTION'] = 'You must log in with your CMS password in order to view the draft or archived content.  <a href="%s">Click here to go back to the published site.</a>';
 $lang['en_US']['Controller']['FILE'] = 'File';
 $lang['en_US']['Controller']['IMAGE'] = 'Image';
@@ -121,7 +130,6 @@ $lang['en_US']['Date']['SEC'] = ' sec';
 $lang['en_US']['Date']['SECS'] = ' secs';
 $lang['en_US']['Date']['YEAR'] = ' year';
 $lang['en_US']['Date']['YEARS'] = ' years';
-$lang['en_US']['DateField']['NODATESET'] = 'No date set';
 $lang['en_US']['DateField']['NOTSET'] = 'not set';
 $lang['en_US']['DateField']['TODAY'] = 'today';
 $lang['en_US']['DateField']['VALIDATIONJS'] = 'Please enter a valid date format (DD/MM/YYYY).';
@@ -402,6 +410,7 @@ $lang['en_US']['HtmlEditorField']['PASTE'] = 'Paste (Ctrl+V)';
 $lang['en_US']['HtmlEditorField']['PASTETEXT'] = 'Paste plain text';
 $lang['en_US']['HtmlEditorField']['PASTEWORD'] = 'Paste from Word';
 $lang['en_US']['HtmlEditorField']['REDO'] = 'Redo (Ctrl+Y)';
+$lang['en_US']['HtmlEditorField']['SEARCHFILENAME'] = 'Search by file name';
 $lang['en_US']['HtmlEditorField']['SELECTALL'] = 'Select All (Ctrl+A)';
 $lang['en_US']['HtmlEditorField']['UNDO'] = 'Undo (Ctrl+Z)';
 $lang['en_US']['HtmlEditorField']['UNLINK'] = 'Remove link';
@@ -498,6 +507,7 @@ $lang['en_US']['Member']['PLURALNAME'] = array(
 	50,
 	'Pural name of the object, used in dropdowns and to generally identify a collection of this object in the interface'
 );
+$lang['en_US']['Member']['PROFILESAVESUCCESS'] = 'Successfully saved.';
 $lang['en_US']['Member']['REMEMBERME'] = 'Remember me next time?';
 $lang['en_US']['Member']['SECURITYGROUPS'] = 'Security groups';
 $lang['en_US']['Member']['SINGULARNAME'] = array(
@@ -554,6 +564,8 @@ $lang['en_US']['MemberPassword']['SINGULARNAME'] = array(
 	50,
 	'Singular name of the object, used in dropdowns and to generally identify a single object in the interface'
 );
+$lang['en_US']['MyEntity']['MyNamespace'] = 'My default natural language value';
+$lang['en_US']['MyNamespace']['MYENTITY'] = 'Counting %s things';
 $lang['en_US']['NumericField']['VALIDATION'] = '\'%s\' is not a number, only numbers can be accepted for this field';
 $lang['en_US']['NumericField']['VALIDATIONJS'] = 'is not a number, only numbers can be accepted for this field';
 $lang['en_US']['Permission']['FULLADMINRIGHTS'] = 'Full administrative rights';
@@ -653,7 +665,7 @@ $lang['en_US']['SecurityAdmin']['PERMISSIONS'] = 'Permissions';
 $lang['en_US']['SecurityAdmin']['VIEWUSER'] = 'View User';
 $lang['en_US']['SimpleImageField']['NOUPLOAD'] = 'No Image Uploaded';
 $lang['en_US']['SiteTree']['ACCESSANYONE'] = 'Anyone';
-$lang['en_US']['SiteTree']['ACCESSHEADER'] = 'Who can view this page on my site?';
+$lang['en_US']['SiteTree']['ACCESSHEADER'] = 'Who can view this page?';
 $lang['en_US']['SiteTree']['ACCESSLOGGEDIN'] = 'Logged-in users';
 $lang['en_US']['SiteTree']['ACCESSONLYTHESE'] = 'Only these people (choose from list)';
 $lang['en_US']['SiteTree']['ADDEDTODRAFT'] = 'Added to draft site';
@@ -680,9 +692,9 @@ $lang['en_US']['SiteTree']['DEFAULTCONTACTTITLE'] = 'Contact Us';
 $lang['en_US']['SiteTree']['DEFAULTHOMECONTENT'] = '<p>Welcome to SilverStripe! This is the default homepage. You can edit this page by opening <a href="admin/">the CMS</a>. You can now access the <a href="http://doc.silverstripe.com">developer documentation</a>, or begin <a href="http://doc.silverstripe.com/doku.php?id=tutorials">the tutorials.</a></p>';
 $lang['en_US']['SiteTree']['DEFAULTHOMETITLE'] = 'Home';
 $lang['en_US']['SiteTree']['EDITANYONE'] = 'Anyone who can log-in to the CMS';
-$lang['en_US']['SiteTree']['EDITHEADER'] = 'Who can edit this inside the CMS?';
+$lang['en_US']['SiteTree']['EDITHEADER'] = 'Who can edit this page?';
 $lang['en_US']['SiteTree']['EDITONLYTHESE'] = 'Only these people (choose from list)';
-$lang['en_US']['SiteTree']['Editors'] = 'Editors Group';
+$lang['en_US']['SiteTree']['Editors'] = 'Editors Groups';
 $lang['en_US']['SiteTree']['GROUP'] = 'Group';
 $lang['en_US']['SiteTree']['HASBROKENLINKS'] = 'This page has broken links.';
 $lang['en_US']['SiteTree']['HOMEPAGEFORDOMAIN'] = array(
@@ -696,14 +708,12 @@ $lang['en_US']['SiteTree']['HTMLEDITORTITLE'] = array(
 	'HTML editor title'
 );
 $lang['en_US']['SiteTree']['HomepageForDomain'] = 'Hompage for this domain';
+$lang['en_US']['SiteTree']['INHERIT'] = 'Inherit from parent page';
 $lang['en_US']['SiteTree']['MENUTITLE'] = 'Navigation label';
-$lang['en_US']['SiteTree']['METAADVANCEDHEADER'] = 'Advanced Options...';
 $lang['en_US']['SiteTree']['METADESC'] = 'Description';
 $lang['en_US']['SiteTree']['METAEXTRA'] = 'Custom Meta Tags';
 $lang['en_US']['SiteTree']['METAHEADER'] = 'Search Engine Meta-tags';
 $lang['en_US']['SiteTree']['METAKEYWORDS'] = 'Keywords';
-$lang['en_US']['SiteTree']['METANOTEPRIORITY'] = 'Manually specify a Google Sitemaps priority for this page (%s)';
-$lang['en_US']['SiteTree']['METAPAGEPRIO'] = 'Page Priority';
 $lang['en_US']['SiteTree']['METATITLE'] = 'Title';
 $lang['en_US']['SiteTree']['MODIFIEDONDRAFT'] = 'Modified on draft site';
 $lang['en_US']['SiteTree']['NOBACKLINKS'] = 'This page hasn\'t been linked to from any pages.';
@@ -716,15 +726,12 @@ $lang['en_US']['SiteTree']['PAGETYPE'] = array(
 	PR_MEDIUM,
 	'Classname of a page object'
 );
+$lang['en_US']['SiteTree']['PERMISSION_GRANTACCESS_DESCRIPTION'] = 'Control which groups can access or edit certain pages';
 $lang['en_US']['SiteTree']['PLURALNAME'] = array(
 	'Site Tres',
 	50,
 	'Pural name of the object, used in dropdowns and to generally identify a collection of this object in the interface'
 );
-$lang['en_US']['SiteTree']['PRIORITYAUTOSET'] = 'Auto-set based on page depth';
-$lang['en_US']['SiteTree']['PRIORITYLEASTIMPORTANT'] = 'Least important';
-$lang['en_US']['SiteTree']['PRIORITYMOSTIMPORTANT'] = 'Most important';
-$lang['en_US']['SiteTree']['PRIORITYNOTINDEXED'] = 'Not indexed';
 $lang['en_US']['SiteTree']['REMOVEDFROMDRAFT'] = 'Removed from draft site';
 $lang['en_US']['SiteTree']['SHOWINMENUS'] = 'Show in menus?';
 $lang['en_US']['SiteTree']['SHOWINSEARCH'] = 'Show in search?';
@@ -751,7 +758,7 @@ $lang['en_US']['SiteTree']['URLSegment'] = array(
 );
 $lang['en_US']['SiteTree']['VALIDATIONURLSEGMENT1'] = 'Another page is using that URL. URL must be unique for each page';
 $lang['en_US']['SiteTree']['VALIDATIONURLSEGMENT2'] = 'URLs can only be made up of letters, digits and hyphens.';
-$lang['en_US']['SiteTree']['Viewers'] = 'Viewers Group';
+$lang['en_US']['SiteTree']['Viewers'] = 'Viewers Groups';
 $lang['en_US']['SiteTree']['has_one_Parent'] = array(
 	'Parent Page',
 	PR_MEDIUM,
