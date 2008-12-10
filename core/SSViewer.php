@@ -383,9 +383,9 @@ class SSViewer extends Object {
 			$oldContent = $content;
 			
 			// Add include filename comments on dev sites
-			if(Director::isDev() && self::$source_file_comments) $replacementCode = 'return "<!-- include " . SSViewer::getTemplateFile($matches[1]) . "-->\n" 
+			if(Director::isDev() && self::$source_file_comments) $replacementCode = 'return "<!-- include " . SSViewer::getTemplateFile($matches[1]) . " -->\n" 
 				. SSViewer::getTemplateContent($matches[1]) 
-				. "\n<!-- end include " . SSViewer::getTemplateFile($matches[1]) . "-->";';
+				. "\n<!-- end include " . SSViewer::getTemplateFile($matches[1]) . " -->";';
 			else $replacementCode = 'return SSViewer::getTemplateContent($matches[1]);';
 			
 			$content = preg_replace_callback('/<' . '% include +([A-Za-z0-9_]+) +%' . '>/', create_function(
