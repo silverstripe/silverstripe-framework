@@ -60,14 +60,14 @@ class SSViewer extends Object {
 	 *
 	 * @param boolean $val
 	 */
-	function set_source_file_comments($val) {
+	static function set_source_file_comments($val) {
 		self::$source_file_comments = $val;
 	}
 	
 	/**
 	 * @return boolean
 	 */
-	function get_source_file_comments() {
+	static function get_source_file_comments() {
 		return self::$source_file_comments;
 	}
 	
@@ -368,6 +368,7 @@ class SSViewer extends Object {
 
 	static function parseTemplateContent($content, $template="") {			
 		// Add template filename comments on dev sites
+
 		if(Director::isDev() && self::$source_file_comments && $template) {
 			// If this template is a full HTML page, then put the comments just inside the HTML tag to prevent any IE glitches
 			if(stripos($content, "<html") !== false) {
@@ -382,7 +383,7 @@ class SSViewer extends Object {
 			$oldContent = $content;
 			
 			// Add include filename comments on dev sites
-			if(Director::isDev()) $replacementCode = 'return "<!-- include " . SSViewer::getTemplateFile($matches[1]) . "-->\n" 
+			if(Director::isDev() && self::$source_file_comments && SSViewer::getTemplateFile($matches[1])) $replacementCode = 'return "<!-- include " . SSViewer::getTemplateFile($matches[1]) . "-->\n" 
 				. SSViewer::getTemplateContent($matches[1]) 
 				. "\n<!-- end include " . SSViewer::getTemplateFile($matches[1]) . "-->";';
 			else $replacementCode = 'return SSViewer::getTemplateContent($matches[1]);';
