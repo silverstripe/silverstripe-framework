@@ -265,7 +265,7 @@ class Versioned extends DataObjectDecorator {
 			
 			if(!isset($manipulation[$table]['fields']['Version'])) {
 				// Add any extra, unchanged fields to the version record.
-				$data = DB::query("SELECT * FROM $table WHERE ID = $id")->record();
+				$data = DB::query("SELECT * FROM `$table` WHERE ID = $id")->record();
 				if($data) foreach($data as $k => $v) {
 					if (!isset($newManipulation['fields'][$k])) $newManipulation['fields'][$k] = "'" . addslashes($v) . "'";
 				}
