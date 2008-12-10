@@ -92,6 +92,7 @@ class i18nTextCollector extends Object {
 					if(!isset($entitiesByModule[$othermodule])) $entitiesByModule[$othermodule] = array();
 					unset($spec[3]);
 					$entitiesByModule[$othermodule][$fullName] = $spec;
+					unset($entitiesByModule[$module][$fullName]);
 				}
 			}
 		}
