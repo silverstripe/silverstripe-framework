@@ -433,6 +433,13 @@ class PDODatabase extends Database {
 		}
 		$stmt->execute();
 	}
+	
+	/**
+	 * @todo implement renameField()
+	 */
+	public function renameField($tableName, $oldName, $newName) {
+		user_error('PDODatabase::renameField() - Not implemented', E_USER_ERROR);
+	}
 
 	/**
 	 * Create an index on a table.
