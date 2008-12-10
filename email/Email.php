@@ -262,6 +262,22 @@ class Email extends ViewableData {
 			$this->body;
 	}
 
+	/**
+	 * Set template name (without *.ss extension).
+	 * 
+	 * @param string $template
+	 */
+	public function setTemplate($template) {
+		$this->ss_template = $template;
+	}
+	
+	/**
+	 * @return string
+	 */
+	public function getTemplate() {
+		return $this->ss_template;
+	}
+
 	protected function templateData() {
 		if($this->template_data) {
 			return $this->template_data->customise(array(
