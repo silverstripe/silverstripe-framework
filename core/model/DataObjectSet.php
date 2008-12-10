@@ -292,20 +292,23 @@ class DataObjectSet extends ViewableData implements IteratorAggregate {
 	 * <% end_if %>
 	 * </code>
 	 * 
-	 * @param integer $context Number of pages to display "around" the current page
+	 * @param integer $context Number of pages to display "around" the current page. Number should be even,
+	 * 	because its halved to either side of the current page.
 	 * @return 	DataObjectSet
 	 */
 	public function PaginationSummary($context = 4) {
 		$ret = new DataObjectSet();
 		
-		if (!$context) return $this->Pages();
 		// convert number of pages to even number for offset calculation
-		 if($context % 2) $context--;
+		if($context % 2) $context--;
 		
 		// find out the offset
-		$offset = floor($context/2);
 		$current = $this->CurrentPage();
 		$totalPages = $this->TotalPages();
+		
+		// if the first or last page is shown, use all content on one side (either left or right of current page)
+		// otherwise half the number for usage "around" the current page
+		$offset = ($current == 1 || $current == $totalPages) ? $context : floor($context/2);
 		
 		$leftOffset = $current - ($offset);
 		if($leftOffset < 1) $leftOffset = 1;
