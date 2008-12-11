@@ -174,20 +174,12 @@ class Security extends Controller {
 
 			// Work out the right message to show
 			if(Member::currentUserID()) {
-				// user_error( 'PermFailure with member', E_USER_ERROR );
-
-				$message = isset($messageSet['alreadyLoggedIn'])
-											? $messageSet['alreadyLoggedIn']
-											: $messageSet['default'];
-
-				if($member = Member::currentUser())
-					$member->logout();
-
+				$message = isset($messageSet['alreadyLoggedIn']) ? $messageSet['alreadyLoggedIn'] : $messageSet['default'];
+				if($member = Member::currentUser()) {
+					$member->logOut();
+				}
 			} else if(substr(Director::history(),0,15) == 'Security/logout') {
-				$message = $messageSet['logInAgain']
-											? $messageSet['logInAgain']
-											: $messageSet['default'];
-
+				$message = $messageSet['logInAgain'] ? $messageSet['logInAgain'] : $messageSet['default'];
 			} else {
 				$message = $messageSet['default'];
 			}
