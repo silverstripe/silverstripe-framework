@@ -55,7 +55,7 @@ class ContentNegotiator {
 	 * @usedby Controller->handleRequest()
 	 */
 	static function process(HTTPResponse $response) {
-		if(self::$disabled) return;
+		if(!self::enabled_for($response)) return;
 
 		$mimes = array(
 			"xhtml" => "application/xhtml+xml",
@@ -138,19 +138,46 @@ class ContentNegotiator {
 		$response->addHeader("Vary", "Accept");
 
 		$content = $response->getBody();
+		$hasXMLHeader = (substr($content,0,5) == '<' . '?xml' );
 
 		$content = ereg_replace("<\\?xml[^>]+\\?>\n?",'',$content);
 		$content = str_replace(array('/>','xml:lang','application/xhtml+xml'),array('>','lang','text/html'), $content);
-		$content = ereg_replace('<!DOCTYPE[^>]+>', '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">', $content);
+		
+		// Only replace the doctype in templates with the xml header
+		if($hasXMLHeader) {
+			$content = ereg_replace('<!DOCTYPE[^>]+>', '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">', $content);
+		}
 		$content = ereg_replace('<html xmlns="[^"]+"','<html ', $content);
 		
 		$response->setBody($content);
 	}
 
-	protected static $disabled;
-	static function disable() {
-		self::$disabled = true;
+	protected static $enabled = false;
+	
+	/**
+	 * Enable content negotiation for all templates, not just those with the xml header.
+	 */
+	static function enable() {
+		self::$enabled = true;
 	}
+
+	/**
+	 * @deprecated in 2.3
+	 */
+	static function disable() {
+		self::$enabled = false;
+	}
+	
+	
+	/**
+	 * Returns true if negotation is enabled for the given response.
+	 * By default, negotiation is only enabled for pages that have the xml header.
+	 */
+	static function enabled_for($response) {
+		if(self::$enabled) return true;
+		else return (substr($response->getBody(),0,5) == '<' . '?xml');
+	}
+	
 }
 
 ?>
