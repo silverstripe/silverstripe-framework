@@ -208,7 +208,6 @@ class SearchForm extends Form {
 			$totalCount += $query->unlimitedRowCount();
 		}
 		$fullQuery = implode(" UNION ", $querySQLs) . " ORDER BY $sortBy LIMIT $limit";
-		Debug::message($fullQuery);
 
 		// Get records
 		$records = DB::query($fullQuery);
