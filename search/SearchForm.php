@@ -27,6 +27,11 @@ class SearchForm extends Form {
 	protected $pageLength = 10;
 	
 	/**
+	 * Classes to search
+	 */	
+	protected $classesToSearch = array("SiteTree", "File");
+	
+	/**
 	 * 
 	 * @param Controller $controller
 	 * @param string $name The name of the form (used in URL addressing)
@@ -62,6 +67,19 @@ class SearchForm extends Form {
 			'SearchForm',
 			'Form'
 		));
+	}
+
+	/**
+	 * Set the classes to search.
+	 * Currently you can only choose from "SiteTree" and "File", but a future version might improve this. 
+ 	 */
+	function classesToSearch($classes) {
+		$illegalClasses = array_diff($classes, array('SiteTree', 'File'));
+		if($illegalClasses) {
+			user_error("SearchForm::classesToSearch() passed illegal classes '" . implode("', '", $illegalClasses) . "'.  At this stage, only File and SiteTree are allowed", E_USER_WARNING);
+		}
+		$legalClasses = array_intersect($classes, array('SiteTree', 'File'));		
+		$this->classesToSearch = $legalClasses;
 	}
 
 	/**
@@ -137,52 +155,62 @@ class SearchForm extends Form {
 		if(!$pageLength) $pageLength = $this->pageLength;
 		$fileFilter = '';	 	
 	 	$keywords = addslashes($keywords);
+	
+		$extraFilters = array('SiteTree' => '', 'File' => '');
 	 	
 	 	if($booleanSearch) $boolean = "IN BOOLEAN MODE";
 	 	if($extraFilter) {
-	 		$extraFilter = " AND $extraFilter";
+	 		$extraFilters['SiteTree'] = " AND $extraFilter";
 	 		
-	 		if($alternativeFileFilter) $fileFilter = " AND $alternativeFileFilter";
-	 		else $fileFilter = $extraFilter;
+	 		if($alternativeFileFilter) $extraFilters['File'] = " AND $alternativeFileFilter";
+	 		else $extraFilters['File'] = $extraFilters['SiteTree'];
 	 	}
 	 	
-	 	if($this->showInSearchTurnOn)	$extraFilter .= " AND showInSearch <> 0";
+	 	if($this->showInSearchTurnOn)	$extraFilters['SiteTree'] .= " AND showInSearch <> 0";
 
 		$start = isset($_GET['start']) ? (int)$_GET['start'] : 0;
 		$limit = $start . ", " . (int) $pageLength;
 		
 		$notMatch = $invertedMatch ? "NOT " : "";
 		if($keywords) {
-			$matchContent = "MATCH (Title, MenuTitle, Content, MetaTitle, MetaDescription, MetaKeywords) AGAINST ('$keywords' $boolean)";
-			$matchFile = "MATCH (Filename, Title, Content) AGAINST ('$keywords' $boolean) AND ClassName = 'File'";
+			$match['SiteTree'] = "MATCH (Title, MenuTitle, Content, MetaTitle, MetaDescription, MetaKeywords) AGAINST ('$keywords' $boolean)";
+			$match['File'] = "MATCH (Filename, Title, Content) AGAINST ('$keywords' $boolean) AND ClassName = 'File'";
 	
 			// We make the relevance search by converting a boolean mode search into a normal one
 			$relevanceKeywords = str_replace(array('*','+','-'),'',$keywords);
-			$relevanceContent = "MATCH (Title) AGAINST ('$relevanceKeywords') + MATCH (Title, MenuTitle, Content, MetaTitle, MetaDescription, MetaKeywords) AGAINST ('$relevanceKeywords')";
-			$relevanceFile = "MATCH (Filename, Title, Content) AGAINST ('$relevanceKeywords')";
+			$relevance['SiteTree'] = "MATCH (Title) AGAINST ('$relevanceKeywords') + MATCH (Title, MenuTitle, Content, MetaTitle, MetaDescription, MetaKeywords) AGAINST ('$relevanceKeywords')";
+			$relevance['File'] = "MATCH (Filename, Title, Content) AGAINST ('$relevanceKeywords')";
 		} else {
-			$relevanceContent = $relevanceFile = 1;
-			$matchContent = $matchFile = "1 = 1";
+			$relevance['SiteTree'] = $relevance['File'] = 1;
+			$match['SiteTree'] = $match['File'] = "1 = 1";
+		}
+		
+		$select = array(
+			'SiteTree' => array("ClassName","`SiteTree`.ID","ParentID","Title","URLSegment","Content","LastEdited","Created","_utf8'' AS Filename", "_utf8'' AS Name", "$relevance[SiteTree] AS Relevance", "CanViewType"),
+			'File' => array("ClassName","`File`.ID","_utf8'' AS ParentID","Title","_utf8'' AS URLSegment","Content","LastEdited","Created","Filename","Name","$relevance[File] AS Relevance","NULL AS CanViewType"),
+		);
+		
+		// Process queries
+		foreach($this->classesToSearch as $class) {
+			$queries[$class] = singleton($class)->extendedSQL($notMatch . $match[$class] . $extraFilters[$class], "");
+			$baseClass = reset($queries[$class]->from);
+			// There's no need to do all that joining
+			$queries[$class]->from = array(str_replace('`','',$baseClass) => $baseClass);
+			$queries[$class]->select = $select[$class];
+			$queries[$class]->orderby = null;
 		}
 
-		$queryContent = singleton('SiteTree')->extendedSQL($notMatch . $matchContent . $extraFilter, "");
+		// Combine queries
+		$querySQLs = array();
+		$totalCount = 0;
+		foreach($queries as $query) {
+			$querySQLs[] = $query->sql();
+			$totalCount += $query->unlimitedRowCount();
+		}
+		$fullQuery = implode(" UNION ", $querySQLs) . " ORDER BY $sortBy LIMIT $limit";
+		Debug::message($fullQuery);
 
-		$baseClass = reset($queryContent->from);
-		// There's no need to do all that joining
-		$queryContent->from = array(str_replace('`','',$baseClass) => $baseClass);
-		$queryContent->select = array("ClassName","$baseClass.ID","ParentID","Title","URLSegment","Content","LastEdited","Created","_utf8'' AS Filename", "_utf8'' AS Name", "$relevanceContent AS Relevance", "CanViewType");
-		$queryContent->orderby = null;
-
-		$queryFiles = singleton('File')->extendedSQL($notMatch . $matchFile . $fileFilter, "");
-		$baseClass = reset($queryFiles->from);
-		// There's no need to do all that joining
-		$queryFiles->from = array(str_replace('`','',$baseClass) => $baseClass);
-		$queryFiles->select = array("ClassName","$baseClass.ID","_utf8'' AS ParentID","Title","_utf8'' AS URLSegment","Content","LastEdited","Created","Filename","Name","$relevanceFile AS Relevance","NULL AS CanViewType");
-		$queryFiles->orderby = null;
-		
-		$fullQuery = $queryContent->sql() . " UNION " . $queryFiles->sql() . " ORDER BY $sortBy LIMIT $limit";
-		$totalCount = $queryContent->unlimitedRowCount() + $queryFiles->unlimitedRowCount();
-	
+		// Get records
 		$records = DB::query($fullQuery);
 
 		foreach($records as $record)
