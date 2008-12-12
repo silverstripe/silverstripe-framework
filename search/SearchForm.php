@@ -184,18 +184,24 @@ class SearchForm extends Form {
 			$relevance['SiteTree'] = $relevance['File'] = 1;
 			$match['SiteTree'] = $match['File'] = "1 = 1";
 		}
+
+		// Generate initial queries and base table names
+		$baseClasses = array('SiteTree' => '', 'File' => '');
+		foreach($this->classesToSearch as $class) {
+			$queries[$class] = singleton($class)->extendedSQL($notMatch . $match[$class] . $extraFilters[$class], "");
+			$baseClasses[$class] = reset($queries[$class]->from);
+		}
 		
+		// Make column selection lists
 		$select = array(
-			'SiteTree' => array("ClassName","`SiteTree`.ID","ParentID","Title","URLSegment","Content","LastEdited","Created","_utf8'' AS Filename", "_utf8'' AS Name", "$relevance[SiteTree] AS Relevance", "CanViewType"),
-			'File' => array("ClassName","`File`.ID","_utf8'' AS ParentID","Title","_utf8'' AS URLSegment","Content","LastEdited","Created","Filename","Name","$relevance[File] AS Relevance","NULL AS CanViewType"),
+			'SiteTree' => array("ClassName","$baseClasses[SiteTree].ID","ParentID","Title","URLSegment","Content","LastEdited","Created","_utf8'' AS Filename", "_utf8'' AS Name", "$relevance[SiteTree] AS Relevance", "CanViewType"),
+			'File' => array("ClassName","$baseClasses[File].ID","_utf8'' AS ParentID","Title","_utf8'' AS URLSegment","Content","LastEdited","Created","Filename","Name","$relevance[File] AS Relevance","NULL AS CanViewType"),
 		);
 		
 		// Process queries
 		foreach($this->classesToSearch as $class) {
-			$queries[$class] = singleton($class)->extendedSQL($notMatch . $match[$class] . $extraFilters[$class], "");
-			$baseClass = reset($queries[$class]->from);
 			// There's no need to do all that joining
-			$queries[$class]->from = array(str_replace('`','',$baseClass) => $baseClass);
+			$queries[$class]->from = array(str_replace('`','',$baseClasses[$class]) => $baseClasses[$class]);
 			$queries[$class]->select = $select[$class];
 			$queries[$class]->orderby = null;
 		}
