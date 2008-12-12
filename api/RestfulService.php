@@ -9,11 +9,9 @@
 class RestfulService extends ViewableData {
 	protected $baseURL;
 	protected $queryString;
-	protected $rawXML;
 	protected $errorTag;
 	protected $checkErrors;
 	protected $cache_expire;
-	
 	protected $authUsername, $authPassword;
 	protected $customHeaders = array();
 	
@@ -59,7 +57,7 @@ class RestfulService extends ViewableData {
 	 */
 	public function connect($subURL = '') {
 		user_error("RestfulService::connect is deprecated; use RestfulService::request", E_USER_NOTICE);
-		return $this->request($subURL, 'GET');
+		return $this->request($subURL)->getBody();
 	}
 	
 	/**
@@ -72,7 +70,7 @@ class RestfulService extends ViewableData {
 	 * This is a replacement of {@link connect()}.
 	 */
 	public function request($subURL = '', $method = "GET", $data = null, $headers = null) {
-		$url = $this->baseURL . $subURL; //url for the request
+		$url = $this->baseURL . $subURL; // Url for the request
 		if($this->queryString) {
 			if(strpos($url, '?') !== false) {
 				$url .= '&' . $this->queryString;
@@ -80,68 +78,71 @@ class RestfulService extends ViewableData {
 				$url .= '?' . $this->queryString;
 			}
 		}
-		$url = str_replace(' ', '%20', $url); // spaces should be encoded
+		$url = str_replace(' ', '%20', $url); // Encode spaces
 		$method = strtoupper($method);
 		
 		assert(in_array($method, array('GET','POST','PUT','DELETE','HEAD','OPTIONS')));
 		
-		//check for file exists in cache		
-		//set the cache directory
+		$cachedir = TEMP_FOLDER;	// Default silverstripe cache
+		$cache_file = md5($url);	// Encoded name of cache file
+		$cache_path = $cachedir."/xmlresponse_$cache_file";
 		
-		/* we've disabled caching until we can figure out how to deal with storing responses
-		$cachedir=TEMP_FOLDER; //default silverstrip-cache
-		$cache_file = md5($url); //encoded name of cache file
-		$cache_path = $cachedir."/$cache_file";
+		Debug::message("REqeuste");
 				
-		if( !isset($_GET['flush']) && ( @file_exists("$cache_path") && ((@filemtime($cache_path) + $this->cache_expire) > ( time() )))){
-			$this->rawXML = file_get_contents($cache_path);
+		// Check for unexpired cached feed (unless flush is set)
+		if(!isset($_GET['flush']) && @file_exists($cache_path) && @filemtime($cache_path) + $this->cache_expire > time()) {
+			Debug::message("cached");
+			$store = file_get_contents($cache_path);
+			$response = unserialize($store);
 			
-		} else {//not available in cache fetch from server
-		*/
-		$ch = curl_init();
-		$timeout = 5;
-		$useragent = "SilverStripe/2.2";
-		curl_setopt($ch, CURLOPT_URL, $url);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-		curl_setopt($ch, CURLOPT_USERAGENT, $useragent);
-		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
-		curl_setopt($ch, CURLOPT_FOLLOWLOCATION,1);
-		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method);
+		} else {
+			$ch = curl_init();
+			$timeout = 5;
+			$useragent = "SilverStripe/2.2";
+			curl_setopt($ch, CURLOPT_URL, $url);
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+			curl_setopt($ch, CURLOPT_USERAGENT, $useragent);
+			curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
+			curl_setopt($ch, CURLOPT_FOLLOWLOCATION,1);
+			curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method);
 		
-		if($this->customHeaders) {
-			$headers = array_merge((array)$this->customHeaders, (array)$headers);
-		}
-		
-		if($headers) curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-		if($this->authUsername) curl_setopt($ch, CURLOPT_USERPWD, "$this->authUsername:$this->authPassword");
-		
-		if($method == 'POST') {
-			curl_setopt($ch, CURLOPT_POST, 1);
-			curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-		}
-		
-		$responseBody = curl_exec($ch);
-		
-		if($responseBody === false) {
-			$curlError = curl_error($ch);
-			// Problem verifying the server SSL certificate; just ignore it as it's not mandatory
-			if(strpos($curlError,'14090086') !== false) {
-				curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-				$responseBody = curl_exec($ch);
-				$curlError = curl_error($ch);
+			// Add headers
+			if($this->customHeaders) {
+				$headers = array_merge((array)$this->customHeaders, (array)$headers);
 			}
-			
-			if($responseBody === false) {
+		
+			if($headers) curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+		
+			// Add authentication
+			if($this->authUsername) curl_setopt($ch, CURLOPT_USERPWD, "$this->authUsername:$this->authPassword");
+		
+			// Add fields to POST requests
+			if($method == 'POST') {
+				curl_setopt($ch, CURLOPT_POST, 1);
+				curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+			}
+		
+			$responseBody = curl_exec($ch);
+		
+			curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+			$responseBody = curl_exec($ch);
+			$curlError = curl_error($ch);
+	
+			if($curlError) {
 				user_error("Curl Error:" . $curlError, E_USER_WARNING);
 				return;
 			}
+
+			$statusCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+			$response = new RestfulService_Response($responseBody, curl_getinfo($ch, CURLINFO_HTTP_CODE));
+		
+			curl_close($ch);
+
+			// Serialise response object and write to cache
+			$store = serialize($response);
+			file_put_contents($cache_path,$store);
 		}
 
-		$statusCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-		$response = new RestfulService_Response($responseBody, curl_getinfo($ch, CURLINFO_HTTP_CODE));
-		
-		curl_close($ch);
-		
 		return $response;
 	}
 	
