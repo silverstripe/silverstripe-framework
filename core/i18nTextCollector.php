@@ -93,7 +93,13 @@ class i18nTextCollector extends Object {
 			if(!$isValidModuleFolder) continue;
 			
 			// we store the master string tables 
-			$entitiesByModule[$module] = $this->processModule($module);
+			$processedEntities = $this->processModule($module);
+			if(isset($entitiesByModule[$module])) {
+				$entitiesByModule[$module] = array_merge_recursive($entitiesByModule[$module], $processedEntities);
+			} else {
+				$entitiesByModule[$module] = $processedEntities;
+			}
+			
 			
 			// extract all entities for "foreign" modules (fourth argument)
 			foreach($entitiesByModule[$module] as $fullName => $spec) {
@@ -106,7 +112,7 @@ class i18nTextCollector extends Object {
 				}
 			}
 		}
-		
+
 		// Write the generated master string tables
 		$this->writeMasterStringFile($entitiesByModule);
 		
