@@ -323,7 +323,7 @@ class Folder extends File {
 		$fileList->setFolder($this);
 		$fileList->setPopupCaption(_t('Folder.VIEWEDITASSET', "View/Edit Asset"));
 
-		$nameField = ($this->ID && $this->ID != "root") ? new TextField("Name", "Folder Name") : new HiddenField("Name");
+		$nameField = ($this->ID && $this->ID != "root") ? new TextField("Name", _t('Folder.TITLE')) : new HiddenField("Name");
 		if( $this->canEdit() ) {
 			$deleteButton = new InlineFormAction('deletemarked',_t('Folder.DELSELECTED','Delete selected files'), 'delete');
 			$deleteButton->includeDefaultJS(false);
