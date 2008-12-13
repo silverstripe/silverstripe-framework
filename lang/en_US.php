@@ -126,8 +126,6 @@ $lang['en_US']['DataObject']['SINGULARNAME'] = array(
 	50,
 	'Singular name of the object, used in dropdowns and to generally identify a single object in the interface'
 );
-$lang['en_US']['Date']['AGO'] = ' ago';
-$lang['en_US']['Date']['AWAY'] = ' away';
 $lang['en_US']['Date']['DAY'] = ' day';
 $lang['en_US']['Date']['DAYS'] = ' days';
 $lang['en_US']['Date']['HOUR'] = ' hour';
@@ -138,6 +136,16 @@ $lang['en_US']['Date']['MONTH'] = ' month';
 $lang['en_US']['Date']['MONTHS'] = ' months';
 $lang['en_US']['Date']['SEC'] = ' sec';
 $lang['en_US']['Date']['SECS'] = ' secs';
+$lang['en_US']['Date']['TIMEDIFFAGO'] = array(
+	'%s ago',
+	PR_MEDIUM,
+	'Natural language time difference, e.g. 2 hours ago'
+);
+$lang['en_US']['Date']['TIMEDIFFAWAY'] = array(
+	'%s away',
+	PR_MEDIUM,
+	'Natural language time difference, e.g. 2 hours away'
+);
 $lang['en_US']['Date']['YEAR'] = ' year';
 $lang['en_US']['Date']['YEARS'] = ' years';
 $lang['en_US']['DateField']['NOTSET'] = 'not set';

@@ -95,10 +95,27 @@ class Date extends DBField {
 	 */
 	function Ago() {
 		if($this->value) {
-			if(time() < strtotime($this->value)) $agoWord = _t("Date.AWAY", " away");
-			else $agoWord = _t("Date.AGO", " ago");
-
-			return $this->TimeDiff() . ' ' . $agoWord;
+			if(time() > strtotime($this->value)) {
+				return sprintf(
+					_t(
+						'Date.TIMEDIFFAGO',
+						"%s ago",
+						PR_MEDIUM,
+						'Natural language time difference, e.g. 2 hours ago'
+					),
+					$this->TimeDiff()
+				);
+			} else {
+				return sprintf(
+					_t(
+						'Date.TIMEDIFFAWAY',
+						"%s away",
+						PR_MEDIUM,
+						'Natural language time difference, e.g. 2 hours away'
+					),
+					$this->TimeDiff()
+				);
+			}
 		}
 	}
 
