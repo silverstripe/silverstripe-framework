@@ -126,27 +126,27 @@ class Date extends DBField {
 			
 			if($ago < 60) {
 				$span = $ago;
-				return ($span != 1) ? "{$span}"._t("Date.SECS", " secs") : "{$span}"._t("Date.SEC", " sec");
+				return ($span != 1) ? "{$span} "._t("Date.SECS", " secs") : "{$span} "._t("Date.SEC", " sec");
 			}
 			if($ago < 3600) {
 				$span = round($ago/60);
-				return ($span != 1) ? "{$span}"._t("Date.MINS", " mins") : "{$span}"._t("Date.MIN", " min");
+				return ($span != 1) ? "{$span} "._t("Date.MINS", " mins") : "{$span} "._t("Date.MIN", " min");
 			}
 			if($ago < 86400) {
 				$span = round($ago/3600);
-				return ($span != 1) ? "{$span}"._t("Date.HOURS", " hours") : "{$span}"._t("Date.HOUR", " hour");
+				return ($span != 1) ? "{$span} "._t("Date.HOURS", " hours") : "{$span} "._t("Date.HOUR", " hour");
 			}
 			if($ago < 86400*30) {
 				$span = round($ago/86400);
-				return ($span != 1) ? "{$span}"._t("Date.DAYS", " days") : "{$span}"._t("Date.DAY", " day");
+				return ($span != 1) ? "{$span} "._t("Date.DAYS", " days") : "{$span} "._t("Date.DAY", " day");
 			}
 			if($ago < 86400*365) {
 				$span = round($ago/86400/30);
-				return ($span != 1) ? "{$span}"._t("Date.MONTHS", " months") : "{$span}"._t("Date.MONTH", " month");
+				return ($span != 1) ? "{$span} "._t("Date.MONTHS", " months") : "{$span} "._t("Date.MONTH", " month");
 			}
 			if($ago > 86400*365) {
 				$span = round($ago/86400/365);
-				return ($span != 1) ? "{$span}"._t("Date.YEARS", " years") : "{$span}"._t("Date.YEAR", " year");
+				return ($span != 1) ? "{$span} "._t("Date.YEARS", " years") : "{$span} "._t("Date.YEAR", " year");
 			}
 		}
 	}
