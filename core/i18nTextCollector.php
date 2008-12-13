@@ -63,15 +63,25 @@ class i18nTextCollector extends Object {
 	 * and write the resultant files in the lang folder of each module.
 	 * 
 	 * @uses DataObject->collectI18nStatics()
+	 * 
+	 * @param array $restrictToModules
 	 */	
-	public function run($restrictToModule = null) {
+	public function run($restrictToModules = null) {
 		//Debug::message("Collecting text...", false);
+		
+		$modules = array();
 		
 		// A master string tables array (one mst per module)
 		$entitiesByModule = array();
 		
 		//Search for and process existent modules, or use the passed one instead
-		$modules = (isset($restrictToModule)) ? array(basename($restrictToModule)) : scandir($this->basePath);
+		if($restrictToModules && count($restrictToModules)) {
+			foreach($restrictToModules as $restrictToModule) {
+				$modules[] = basename($restrictToModule);
+			}
+		} else {
+			$modules = scandir($this->basePath);
+		}
 
 		foreach($modules as $module) {
 			// Only search for calls in folder with a _config.php file (which means they are modules)  
