@@ -7,7 +7,7 @@
  * In addition, it contains a number of static methods for querying the site tree.
  * @package cms
  */
-class SiteTree extends DataObject implements PermissionProvider {
+class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvider {
 
 	/**
 	 * Indicates what kind of children this page type can have.
@@ -1465,29 +1465,42 @@ class SiteTree extends DataObject implements PermissionProvider {
 		$classes = ClassInfo::getValidSubClasses('SiteTree');
 		array_shift($classes);
 		
-		$currentAddAction = null;
 		$currentClass = null;
 
 		foreach($classes as $class) {
 			$instance = singleton($class);
 			if((($instance instanceof HiddenClass) || !$instance->canCreate()) && ($class != $this->class)) continue;
 
-			$addAction = $instance->i18n_singular_name();
+			$pageTypeName = $instance->i18n_singular_name();
 
 			if($class == $this->class) {
 				$currentClass = $class;
-				$currentAddAction = $addAction;
+				$result[$class] = $pageTypeName;
 			} else {
-				$result[$class] = ($class == $this->class)
-				  ? _t('SiteTree.CURRENTLY', 'Currently').' '.$addAction
-				  : _t('SiteTree.CHANGETO', 'Change to').' '.$addAction;
+				$translation = _t(
+					'SiteTree.CHANGETO', 
+					'Change to "%s"', 
+					PR_MEDIUM,
+					"Pagetype selection dropdown with class names"
+				);
+				// @todo legacy fix to avoid empty classname dropdowns when translation doesn't include %s
+				if(strpos('%s', $translation) !== FALSE) {
+					$result[$class] = sprintf(
+						$translation, 
+						$pageTypeName
+					);
+				} else {
+					$result[$class] = "{$translation} \"{$pageTypeName}\"";
+				}
 			}
 		}
 		
 		// sort alphabetically, and put current on top
 		asort($result);
+		$currentPageTypeName = $result[$currentClass];
+		unset($result[$currentClass]);
 		$result = array_reverse($result);
-		$result[$currentClass] = $currentAddAction.' ('._t('SiteTree.CURRENT','current').')';
+		$result[$currentClass] = $currentPageTypeName;
 		$result = array_reverse($result);
 		
 		return $result;
@@ -1690,6 +1703,19 @@ class SiteTree extends DataObject implements PermissionProvider {
 				'Control which groups can access or edit certain pages'
 			)
 		);
+	}
+	
+	/**
+	 * Overloaded to also provide entities for 'Page' class which is usually
+	 * located in custom code, hence textcollector picks it up for the wrong folder.
+	 */
+	function provideI18nEntities() {
+		$entities = parent::provideI18nEntities();
+		
+		if(isset($entities['Page.SINGULARNAME'])) $entities['Page.SINGULARNAME'][3] = 'sapphire';
+		if(isset($entities['Page.PLURALNAME'])) $entities['Page.PLURALNAME'][3] = 'sapphire';		
+
+		return $entities;
 	}
 
 }
