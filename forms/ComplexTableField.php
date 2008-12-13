@@ -968,7 +968,10 @@ class ComplexTableField_Popup extends Form {
 		$actions = new FieldSet();	
 		if(!$readonly) {
 			$actions->push(
-				$saveAction = new FormAction("saveComplexTableField", "Save")
+				$saveAction = new FormAction(
+					"saveComplexTableField", 
+					_t('CMSMain.SAVE')
+				)
 			);	
 			$saveAction->addExtraClass('save');
 		}
