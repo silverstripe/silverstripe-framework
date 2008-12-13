@@ -1,11 +1,12 @@
-SiteTree:
+Page:
    home:
       Title: Home
-      URLSegment: /home/
+      URLSegment: home
       ShowInMenus: 
       
 SiteTree_lang:
    home:
-      OriginalLangID: =>SiteTree.home
+      OriginalLangID: =>Page.home
       Title: Home fr
       Lang: fr
+      ClassName: Page

@@ -38,7 +38,7 @@ class TranslatableTest extends FunctionalTest {
 	}
 	
 	function testUpdateCMSFieldsOnSiteTree() {
-		$pageOrigLang = $this->objFromFixture('SiteTree', 'home');
+		$pageOrigLang = $this->objFromFixture('Page', 'home');
 		
 		// first test with default language
 		$fields = $pageOrigLang->getCMSFields();
@@ -53,7 +53,7 @@ class TranslatableTest extends FunctionalTest {
 		);
 		
 		// then in "translation mode"
-		$pageTranslated = Translatable::get_one_by_lang('SiteTree',"fr", "ID = $pageOrigLang->ID");
+		$pageTranslated = Translatable::get_one_by_lang('Page',"fr", "ID = $pageOrigLang->ID");
 		$fields = $pageTranslated->getCMSFields();
 		$this->assertType(
 			'TextField', 
