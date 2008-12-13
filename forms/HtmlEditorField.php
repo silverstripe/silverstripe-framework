@@ -26,11 +26,7 @@ class HtmlEditorField extends TextareaField {
 	 */
 	function Field() {
 		Requirements::javascript(MCE_ROOT . "tiny_mce_src.js");
-		Requirements::javascript(THIRDPARTY_DIR . "/tiny_mce_improvements.js");
-		Requirements::css('cms/css/TinyMCEImageEnhancement.css');
-		Requirements::javascript('jsparty/SWFUpload/SWFUpload.js');
-		Requirements::javascript('cms/javascript/Upload.js');
-		Requirements::javascript('cms/javascript/TinyMCEImageEnhancement.js');
+		Requirements::javascript(SAPPHIRE_DIR . '/javascript/HtmlEditorField.js');
 
 		// Don't allow unclosed tags - they will break the whole application ;-)		
 		$cleanVal = $this->value;
@@ -353,6 +349,9 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 	 * @return Form
 	 */
 	function LinkForm() {
+		Requirements::javascript(THIRDPARTY_DIR . "/behaviour.js");
+		Requirements::javascript(THIRDPARTY_DIR . "/tiny_mce_improvements.js");
+
 		$form = new Form(
 			$this->controller,
 			"{$this->name}/LinkForm", 
@@ -396,6 +395,10 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 	 * @return Form
 	 */
 	function ImageForm() {
+		Requirements::javascript(THIRDPARTY_DIR . "/behaviour.js");
+		Requirements::javascript(THIRDPARTY_DIR . "/tiny_mce_improvements.js");
+		Requirements::css('cms/css/TinyMCEImageEnhancement.css');
+		Requirements::javascript('cms/javascript/TinyMCEImageEnhancement.js');
 		Requirements::javascript(THIRDPARTY_DIR . '/SWFUpload/SWFUpload.js');
 		Requirements::javascript(CMS_DIR . '/javascript/Upload.js');
 
@@ -447,6 +450,8 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 	}
 
 	function FlashForm() {
+		Requirements::javascript(THIRDPARTY_DIR . "/behaviour.js");
+		Requirements::javascript(THIRDPARTY_DIR . "/tiny_mce_improvements.js");
 		Requirements::javascript(THIRDPARTY_DIR . '/SWFUpload/SWFUpload.js');
 		Requirements::javascript(CMS_DIR . '/javascript/Upload.js');
 
