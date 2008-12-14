@@ -1483,8 +1483,9 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 					PR_MEDIUM,
 					"Pagetype selection dropdown with class names"
 				);
+
 				// @todo legacy fix to avoid empty classname dropdowns when translation doesn't include %s
-				if(strpos('%s', $translation) !== FALSE) {
+				if(strpos($translation, '%s') !== FALSE) {
 					$result[$class] = sprintf(
 						$translation, 
 						$pageTypeName
@@ -1492,6 +1493,14 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 				} else {
 					$result[$class] = "{$translation} \"{$pageTypeName}\"";
 				}
+			}
+
+			// if we're in translation mode, the link between the translated pagetype
+			// title and the actual classname might not be obvious, so we add it in parantheses
+			// Example: class "RedirectorPage" has the title "Weiterleitung" in German,
+			// so it shows up as "Weiterleitung (RedirectorPage)"
+			if(i18n::get_locale() != 'en_US') {
+				$result[$class] = $result[$class] .  " ({$class})";
 			}
 		}
 		
