@@ -107,6 +107,10 @@ class BBCodeParser extends TextParser {
 		$this->content = str_replace(array('&', '<', '>'), array('&amp;', '&lt;', '&gt;'), $this->content);
 		$this->content = SSHTMLBBCodeParser::staticQparse($this->content);
 		$this->content = "<p>".$this->content."</p>";
+
+		$this->content = preg_replace('/(<p[^>]*>)\s+/i', '\\1', $this->content);
+		$this->content = preg_replace('/\s+(<\/p[^>]*>)/i', '\\1', $this->content);
+
 		$this->content = preg_replace("/\n\s*\n/", "</p><p>", $this->content);
 		$this->content = str_replace("\n", "<br />", $this->content);
 		return $this->content;
