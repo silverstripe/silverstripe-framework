@@ -39,7 +39,7 @@ class XMLDataFormatter extends DataFormatter {
 		$id = $obj->ID;
 		$objHref = Director::absoluteURL(self::$api_base . "$obj->class/$obj->ID");
 	
-		$json = "<$className href=\"$objHref.xml\">\n";
+		$xml = "<$className href=\"$objHref.xml\">\n";
 		foreach($this->getFieldsForObj($obj) as $fieldName => $fieldType) {
 			// Field filtering
 			if($fields && !in_array($fieldName, $fields)) continue;
@@ -48,9 +48,9 @@ class XMLDataFormatter extends DataFormatter {
 			if(!mb_check_encoding($fieldValue,'utf-8')) $fieldValue = "(data is badly encoded)";
 			
 			if(is_object($fieldValue) && is_subclass_of($fieldValue, 'Object') && $fieldValue->hasMethod('toXML')) {
-				$json .= $fieldValue->toXML();
+				$xml .= $fieldValue->toXML();
 			} else {
-				$json .= "<$fieldName>" . Convert::raw2xml($fieldValue) . "</$fieldName>\n";
+				$xml .= "<$fieldName>" . Convert::raw2xml($fieldValue) . "</$fieldName>\n";
 			}
 		}
 	
@@ -66,7 +66,7 @@ class XMLDataFormatter extends DataFormatter {
 				} else {
 					$href = Director::absoluteURL(self::$api_base . "$className/$id/$relName");
 				}
-				$json .= "<$relName linktype=\"has_one\" href=\"$href.xml\" id=\"{$obj->$fieldName}\" />\n";
+				$xml .= "<$relName linktype=\"has_one\" href=\"$href.xml\" id=\"" . $obj->$fieldName . "\"></$relName>\n";
 			}
 
 			foreach($obj->has_many() as $relName => $relClass) {
@@ -74,14 +74,14 @@ class XMLDataFormatter extends DataFormatter {
 				if($fields && !in_array($relName, $fields)) continue;
 				if($this->customRelations && !in_array($relName, $this->customRelations)) continue;
 
-				$json .= "<$relName linktype=\"has_many\" href=\"$objHref/$relName.xml\">\n";
+				$xml .= "<$relName linktype=\"has_many\" href=\"$objHref/$relName.xml\">\n";
 				$items = $obj->$relName();
 				foreach($items as $item) {
 					//$href = Director::absoluteURL(self::$api_base . "$className/$id/$relName/$item->ID");
 					$href = Director::absoluteURL(self::$api_base . "$relClass/$item->ID");
-					$json .= "<$relClass href=\"$href.xml\" id=\"{$item->ID}\" />\n";
+					$xml .= "<$relClass href=\"$href.xml\" id=\"{$item->ID}\"></$relClass>\n";
 				}
-				$json .= "</$relName>\n";
+				$xml .= "</$relName>\n";
 			}
 	
 			foreach($obj->many_many() as $relName => $relClass) {
@@ -89,19 +89,19 @@ class XMLDataFormatter extends DataFormatter {
 				if($fields && !in_array($relName, $fields)) continue;
 				if($this->customRelations && !in_array($relName, $this->customRelations)) continue;
 
-				$json .= "<$relName linktype=\"many_many\" href=\"$objHref/$relName.xml\">\n";
+				$xml .= "<$relName linktype=\"many_many\" href=\"$objHref/$relName.xml\">\n";
 				$items = $obj->$relName();
 				foreach($items as $item) {
 					$href = Director::absoluteURL(self::$api_base . "$relClass/$item->ID");
-					$json .= "<$relClass href=\"$href.xml\" id=\"{$item->ID}\" />\n";
+					$xml .= "<$relClass href=\"$href.xml\" id=\"{$item->ID}\"></$relClass>\n";
 				}
-				$json .= "</$relName>\n";
+				$xml .= "</$relName>\n";
 			}
 		}
 
-		$json .= "</$className>";
-	
-		return $json;
+		$xml .= "</$className>";
+
+		return $xml;
 	}
 
 	/**
