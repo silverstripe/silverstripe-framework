@@ -16,7 +16,7 @@ class Date extends DBField {
 		if(ereg('^([0-9]+)/([0-9]+)/([0-9]+)$', $value, $parts)) 
 			$value = "$parts[2]/$parts[1]/$parts[3]";
 
-		if($value) $this->value = date('Y-m-d', strtotime($value));
+		if($value && is_string($value)) $this->value = date('Y-m-d', strtotime($value));
 		else $value = null;
 	}
 
