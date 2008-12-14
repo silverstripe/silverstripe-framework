@@ -70,6 +70,26 @@ class RestfulServerTest extends SapphireTest {
 		unset($_SERVER['PHP_AUTH_USER']);
 		unset($_SERVER['PHP_AUTH_PW']);
 	}
+	
+	public function testGETRelationshipsXML() {
+		$author1 = $this->objFromFixture('RestfulServerTest_Author', 'author1');
+		$rating1 = $this->objFromFixture('RestfulServerTest_AuthorRating', 'rating1');
+		$rating2 = $this->objFromFixture('RestfulServerTest_AuthorRating', 'rating2');
+		
+		// @todo should be set up by fixtures, doesn't work for some reason...
+		$author1->Ratings()->add($rating1);
+		$author1->Ratings()->add($rating2);
+		
+		$url = "/api/v1/RestfulServerTest_Author/" . $author1->ID;
+		$response = Director::test($url, null, null, 'GET');
+		$this->assertEquals($response->getStatusCode(), 200);
+
+		$responseArr = Convert::xml2array($response->getBody());
+		$ratingsArr = $responseArr['Ratings']['RestfulServerTest_AuthorRating'];
+		$this->assertEquals(count($ratingsArr), 2);
+		$this->assertEquals($ratingsArr[0]['@attributes']['id'], $rating1->ID);
+		$this->assertEquals($ratingsArr[1]['@attributes']['id'], $rating2->ID);
+	}
 
 	public function testPUTWithFormEncoded() {
 		$_SERVER['PHP_AUTH_USER'] = 'editor@test.com';
@@ -366,6 +386,10 @@ class RestfulServerTest_Author extends DataObject implements TestOnly {
 	static $has_many = array(
 		'Ratings' => 'RestfulServerTest_AuthorRating', 
 	);
+	
+	public function canView($member = null) {
+		return true;
+	}
 }
 
 class RestfulServerTest_AuthorRating extends DataObject implements TestOnly {

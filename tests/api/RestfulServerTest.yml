@@ -1,7 +1,3 @@
-RestfulServerTest_Comment:
-   comment1:
-      Name: Joe
-      Comment: This is a test comment
 Member:
    editor:
       FirstName: Editor
@@ -39,6 +35,11 @@ Permission:
 RestfulServerTest_Page:
    page1:
        Title: Testpage without API Access
+RestfulServerTest_Comment:
+   comment1:
+      Name: Joe
+      Comment: This is a test comment
+      Page: =>RestfulServerTest_Page.page1
 RestfulServerTest_Author:
    author1:
       FirstName: Author 1
@@ -47,6 +48,9 @@ RestfulServerTest_AuthorRating:
       Rating: 3
       WriteProtectedField: Dont overwrite me
       SecretField: Dont look at me!
+      Author: =>RestfulServerTest_Author.author1
+   rating2:
+      Rating: 5
       Author: =>RestfulServerTest_Author.author1
 RestfulServerTest_SecretThing:
    thing1:
