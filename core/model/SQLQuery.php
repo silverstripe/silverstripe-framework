@@ -445,7 +445,16 @@ class SQLQuery extends Object {
 	 * 
 	 * TODO Respect HAVING and GROUPBY, which can affect the result-count
 	 */
-	function unlimitedRowCount( $column = "*" ) {
+	function unlimitedRowCount( $column = null) {
+		// Choose a default column
+		if($column == null) {
+			if($this->groupby) {
+				$column = 'DISTINCT ' . implode(", ", $this->groupby);
+			} else {
+				$column = '*';
+			}
+		}
+		
 		$clone = clone $this;
 		$clone->select = array("count($column)");
 		$clone->limit = null;
