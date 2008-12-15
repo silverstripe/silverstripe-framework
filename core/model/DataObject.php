@@ -2332,6 +2332,15 @@ class DataObject extends ViewableData implements DataObjectInterface,i18nEntityP
 		$this->componentCache = array();
 	}
 
+	static function flush_and_destroy_cache() {
+		if(self::$cache_get_one) foreach(self::$cache_get_one as $class => $items) {
+			if(is_array($items)) foreach($items as $item) {
+				if($item) $item->destroy();
+			}
+		}
+		self::$cache_get_one = array();
+	}
+
 	/**
 	 * Does the hard work for get_one()
 	 * 

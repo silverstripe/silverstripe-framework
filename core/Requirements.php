@@ -479,12 +479,14 @@ class Requirements_Backend {
 			$this->disabled['css'] = $this->css;
 			$this->disabled['customScript'] = $this->customScript;
 			$this->disabled['customCSS'] = $this->customCSS;
+			Requirements::$disabled['customHeadTags'] = Requirements::$customHeadTags;
 		
 			$this->javascript = array();
 			$this->css = array();
 			$this->customScript = array();
 			$this->customCSS = array();
 			$this->customHeadTags = array();
+			Requirements::$customHeadTags = "";
 		}
 	}
 	
@@ -511,6 +513,7 @@ class Requirements_Backend {
 		$this->css = $this->disabled['css'];
 		$this->customScript = $this->disabled['customScript'];
 		$this->customCSS = $this->disabled['customCSS'];
+		Requirements::$customHeadTags = Requirements::$disabled['customHeadTags'];
 	}
 	
 	/**
