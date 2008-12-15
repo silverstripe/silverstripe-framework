@@ -479,14 +479,14 @@ class Requirements_Backend {
 			$this->disabled['css'] = $this->css;
 			$this->disabled['customScript'] = $this->customScript;
 			$this->disabled['customCSS'] = $this->customCSS;
-			Requirements::$disabled['customHeadTags'] = Requirements::$customHeadTags;
+			$this->disabled['customHeadTags'] = $this->customHeadTags;
 		
 			$this->javascript = array();
 			$this->css = array();
 			$this->customScript = array();
 			$this->customCSS = array();
 			$this->customHeadTags = array();
-			Requirements::$customHeadTags = "";
+			$this->customHeadTags = "";
 		}
 	}
 	
