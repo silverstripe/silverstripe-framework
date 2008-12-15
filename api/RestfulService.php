@@ -87,8 +87,6 @@ class RestfulService extends ViewableData {
 		$cache_file = md5($url);	// Encoded name of cache file
 		$cache_path = $cachedir."/xmlresponse_$cache_file";
 		
-		Debug::message("REqeuste");
-				
 		// Check for unexpired cached feed (unless flush is set)
 		if(!isset($_GET['flush']) && @file_exists($cache_path) && @filemtime($cache_path) + $this->cache_expire > time()) {
 			Debug::message("cached");
@@ -165,14 +163,13 @@ class RestfulService extends ViewableData {
 			$childElements = $xml->{$collection}->{$element};
 		
 		if($childElements){
-		foreach($childElements as $child){
-		$data = array();
-			foreach($child->attributes() as $key => $value){
-				$data["$key"] = Convert::raw2xml($value);
+			foreach($childElements as $child){
+				$data = array();
+				foreach($child->attributes() as $key => $value){
+					$data["$key"] = Convert::raw2xml($value);
+				}
+				$output->push(new ArrayData($data));
 			}
-			
-			$output->push(new ArrayData($data));
-		}
 		}
 		return $output;
 		
