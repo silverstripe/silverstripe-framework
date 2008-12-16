@@ -52,8 +52,8 @@ class Text extends DBField {
 	
 	/**
 	 * Limit this field's content by a number of characters.
-	 * Caution: This can be harmful on HTML, it can potentially
-	 * malform your HTML if it limits halfway through a tag.
+	 * CAUTION: Does not take into account HTML tags, so it
+	 * has the potential to return malformed HTML.
 	 *
 	 * @param int $limit Number of characters to limit by
 	 * @param string $add Ellipsis to add to the end of limited string
