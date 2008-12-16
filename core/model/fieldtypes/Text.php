@@ -17,16 +17,23 @@ class Text extends DBField {
 		return ($this->value || $this->value == '0');
 	}
 	
-	//useed for search results show only limited contents
-	function LimitWordCount($numWords = 26) {
+	/**
+	 * Limit this field's content by a number of words.
+	 * CAUTION: This is not XML safe. Please use
+	 * {@link LimitWordCountXML()} instead.
+	 *
+	 * @param int $numWords Number of words to limit by
+	 * @return string
+	 */
+	function LimitWordCount($numWords = 26, $add = '...') {
 		$this->value = Convert::xml2raw($this->value);
-		$ret = explode(" ", $this->value, $numWords);
+		$ret = explode(' ', $this->value, $numWords);
 		
-		if( Count($ret) < $numWords-1 ){
-			$ret=$this->value;
-		}else{
+		if(count($ret) < $numWords - 1) {
+			$ret = $this->value;
+		} else {
 			array_pop($ret);
-			$ret=implode(" ", $ret)."...";
+			$ret = implode(' ', $ret) . $add;
 		}
 		
 		return $ret;
@@ -43,11 +50,24 @@ class Text extends DBField {
 		return HTTP::absoluteURLs($this->value);
 	}
 	
+	/**
+	 * Limit this field's content by a number of characters.
+	 * Caution: This can be harmful on HTML, it can potentially
+	 * malform your HTML if it limits halfway through a tag.
+	 *
+	 * @param int $limit Number of characters to limit by
+	 * @param string $add Ellipsis to add to the end of limited string
+	 * @return string
+	 */
 	function LimitCharacters($limit = 20, $add = "...") {
 		$value = trim($this->value);
 		return (strlen($value) > $limit) ? substr($value, 0, $limit) . $add : $value;
 	}
 	
+	/**
+	 * @deprecated. Please use {@link LimitWordCount()}
+	 * or {@link LimitWordCountXML()} instead.
+	 */
 	function LimitWordCountPlainText($numWords = 26) {
 		$ret = $this->LimitWordCount( $numWords );
 		// Use LimitWordCountXML() instead!
@@ -55,11 +75,17 @@ class Text extends DBField {
 		return $ret;
 	}
 	
-	function LimitWordCountXML( $numWords = 26 ) {
-		$ret = $this->LimitWordCount( $numWords );
-		$ret = Convert::raw2xml($ret);
-		
-		return $ret;
+	/**
+	 * Limit the number of words of the current field's
+	 * content. This is XML safe, so characters like &
+	 * are converted to &amp;
+	 *
+	 * @param int $numWords Number of words to limit by
+	 * @return string
+	 */
+	function LimitWordCountXML($numWords = 26) {
+		$ret = $this->LimitWordCount($numWords);
+		return Convert::raw2xml($ret);
 	}
 
 	/**
