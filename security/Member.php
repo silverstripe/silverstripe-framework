@@ -821,12 +821,13 @@ class Member extends DataObject {
 		
 		$password = new ConfirmedPasswordField(
 			'Password', 
-			'Password', 
+			null, 
 			null, 
 			null, 
 			true // showOnClick
 		);
 		$password->setCanBeEmpty(true);
+		if(!$this->ID) $password->showOnClick = false;
 		$mainFields->replaceField('Password', $password);
 		
 		$mainFields->insertBefore(
@@ -862,6 +863,7 @@ class Member extends DataObject {
 		$mainFields->removeByName('Salt');
 		$mainFields->removeByName('NumVisit');
 		$mainFields->removeByName('LastVisited');
+		$mainFields->removeByName('BlacklistedEmail');
 	
 		$fields->removeByName('Subscriptions');
 		$fields->removeByName('UnsubscribedRecords');
