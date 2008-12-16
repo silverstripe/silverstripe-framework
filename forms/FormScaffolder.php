@@ -67,8 +67,10 @@ class FormScaffolder extends Object {
 		$fields = new FieldSet();
 		
 		// tabbed or untabbed
-		if($this->tabbed) $fields->push(new TabSet("Root", $mainTab = new Tab("Main")));
-		$mainTab->setTitle(_t('SiteTree.TABMAIN', "Main"));
+		if($this->tabbed) {
+			$fields->push(new TabSet("Root", $mainTab = new Tab("Main")));
+			$mainTab->setTitle(_t('SiteTree.TABMAIN', "Main"));
+		}
 		
 		// add database fields
 		foreach($this->obj->db() as $fieldName => $fieldType) {
