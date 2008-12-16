@@ -202,6 +202,22 @@ class FieldSet extends DataObjectSet {
 	}
 	
 	/**
+	 * Rename the title of a particular field name in this set.
+	 *
+	 * @param string $fieldName Name of field to rename title of
+	 * @param string $newFieldTitle New title of field
+	 * @return boolean
+	 */
+	function renameField($fieldName, $newFieldTitle) {
+		$field = $this->dataFieldByName($fieldName);
+		if(!$field) return false;
+		
+		$field->setTitle($newFieldTitle);
+		
+		return $field->Title() == $newFieldTitle;
+	}
+	
+	/**
 	 * @return boolean
 	 */
 	public function hasTabSet() {

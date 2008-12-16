@@ -166,6 +166,24 @@ class FieldSetTest extends SapphireTest {
 		/* We have 1 field inside our tab */
 		$this->assertEquals(1, $tab->Fields()->Count());		
 	}
+	
+	function testRenameField() {
+		$fields = new FieldSet();
+		$nameField = new TextField('Name', 'Before title');
+		$fields->push($nameField);
+		
+		/* The title of the field object is the same as what we put in */
+		$this->assertSame('Before title', $nameField->Title());
+		
+		/* The field gets renamed to a different title */
+		$fields->renameField('Name', 'After title');
+		
+		/* The title of the field object is the title we renamed to, this
+			includes the original object we created ($nameField), and getting
+			the field back out of the set */
+		$this->assertSame('After title', $nameField->Title());
+		$this->assertSame('After title', $fields->dataFieldByName('Name')->Title());
+	}
 
 	function testReplaceAFieldInADifferentTab() {
 		/* A FieldSet gets created with a TabSet and some field objects */
