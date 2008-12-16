@@ -33,9 +33,9 @@ class ModelAsController extends Controller implements NestedController {
 		if($this->urlParams['URLSegment']) {
 			$SQL_URLSegment = Convert::raw2sql($this->urlParams['URLSegment']);
 			if (Translatable::is_enabled()) {
-				$child = Translatable::get_one("SiteTree", "SiteTree.\"URLSegment\" = '$SQL_URLSegment'", false);
+				$child = Translatable::get_one("SiteTree", "\"SiteTree\".\"URLSegment\" = '$SQL_URLSegment'", false);
 			} else {
-				$child = DataObject::get_one("SiteTree", "SiteTree.\"URLSegment\" = '$SQL_URLSegment'", false);
+				$child = DataObject::get_one("SiteTree", "\"SiteTree\".\"URLSegment\" = '$SQL_URLSegment'", false);
 			}
 			if(!$child) {
 				if($child = $this->findOldPage($SQL_URLSegment)) {
