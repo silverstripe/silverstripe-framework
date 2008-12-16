@@ -81,10 +81,11 @@ class Text extends DBField {
 	 * are converted to &amp;
 	 *
 	 * @param int $numWords Number of words to limit by
+	 * @param string $add Ellipsis to add to the end of truncated string
 	 * @return string
 	 */
-	function LimitWordCountXML($numWords = 26) {
-		$ret = $this->LimitWordCount($numWords);
+	function LimitWordCountXML($numWords = 26, $add = '...') {
+		$ret = $this->LimitWordCount($numWords, $add);
 		return Convert::raw2xml($ret);
 	}
 
