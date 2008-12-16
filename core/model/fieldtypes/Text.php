@@ -23,13 +23,14 @@ class Text extends DBField {
 	 * {@link LimitWordCountXML()} instead.
 	 *
 	 * @param int $numWords Number of words to limit by
+	 * @param string $add Ellipsis to add to the end of truncated string
 	 * @return string
 	 */
 	function LimitWordCount($numWords = 26, $add = '...') {
 		$this->value = Convert::xml2raw($this->value);
-		$ret = explode(' ', $this->value, $numWords);
+		$ret = explode(' ', $this->value, $numWords + 1);
 		
-		if(count($ret) < $numWords - 1) {
+		if(count($ret) <= $numWords - 1) {
 			$ret = $this->value;
 		} else {
 			array_pop($ret);
@@ -56,7 +57,7 @@ class Text extends DBField {
 	 * has the potential to return malformed HTML.
 	 *
 	 * @param int $limit Number of characters to limit by
-	 * @param string $add Ellipsis to add to the end of limited string
+	 * @param string $add Ellipsis to add to the end of truncated string
 	 * @return string
 	 */
 	function LimitCharacters($limit = 20, $add = "...") {
