@@ -97,5 +97,8 @@ class CheckboxField_Readonly extends ReadonlyField {
 	function setValue($val) {
 		$this->value = ($val) ? 'Yes' : 'No';
 	}
+
+	function saveInto(DataObjectInterface $record) {
+	}
 }
 ?>
