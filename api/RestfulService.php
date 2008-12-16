@@ -89,7 +89,6 @@ class RestfulService extends ViewableData {
 		
 		// Check for unexpired cached feed (unless flush is set)
 		if(!isset($_GET['flush']) && @file_exists($cache_path) && @filemtime($cache_path) + $this->cache_expire > time()) {
-			Debug::message("cached");
 			$store = file_get_contents($cache_path);
 			$response = unserialize($store);
 			
