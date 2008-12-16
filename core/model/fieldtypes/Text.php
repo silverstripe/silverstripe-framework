@@ -67,7 +67,6 @@ class Text extends DBField {
 	
 	/**
 	 * @deprecated. Please use {@link LimitWordCount()}
-	 * or {@link LimitWordCountXML()} instead.
 	 */
 	function LimitWordCountPlainText($numWords = 26) {
 		$ret = $this->LimitWordCount( $numWords );
