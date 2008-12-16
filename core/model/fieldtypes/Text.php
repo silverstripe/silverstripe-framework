@@ -27,7 +27,7 @@ class Text extends DBField {
 	 * @return string
 	 */
 	function LimitWordCount($numWords = 26, $add = '...') {
-		$this->value = Convert::xml2raw($this->value);
+		$this->value = trim(Convert::xml2raw($this->value));
 		$ret = explode(' ', $this->value, $numWords + 1);
 		
 		if(count($ret) <= $numWords - 1) {
