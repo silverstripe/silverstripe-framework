@@ -35,9 +35,12 @@ class TextTest extends SapphireTest {
 	/**
 	 * Test {@link Text->LimitWordCountXML()}
 	 */
-	/*function testLimitWordCountXML() {
+	function testLimitWordCountXML() {
 		$cases = array(
-			// @todo add cases to test by
+			'<p>Stuff & stuff</p>' => 'Stuff &amp;...',
+			"Stuff\nBlah Blah Blah" => "Stuff<br />Blah Blah...",
+			"Stuff<Blah Blah" => "Stuff&lt;Blah Blah",
+			"Stuff>Blah Blah" => "Stuff&gt;Blah Blah"
 		);
 		
 		foreach($cases as $originalValue => $expectedValue) {
@@ -45,7 +48,7 @@ class TextTest extends SapphireTest {
 			$textObj->setValue($originalValue);
 			$this->assertEquals($expectedValue, $textObj->LimitWordCountXML(3));
 		}
-	}*/
+	}
 	
 }
 ?>
