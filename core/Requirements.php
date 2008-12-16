@@ -486,7 +486,6 @@ class Requirements_Backend {
 			$this->customScript = array();
 			$this->customCSS = array();
 			$this->customHeadTags = array();
-			$this->customHeadTags = "";
 		}
 	}
 	
