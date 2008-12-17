@@ -250,9 +250,6 @@ class Text extends DBField {
 	 * Perform context searching to give some context to searches, optionally
 	 * highlighting the search term.
 	 * 
-	 * @todo Would be useful for this to highlight each individual search keyword
-	 * instead of the entire search query.
-	 * 
 	 * @param int $characters Number of characters in the summary
 	 * @param boolean $string Supplied string ("keywords")
 	 * @param boolean $striphtml Strip HTML?
@@ -260,11 +257,8 @@ class Text extends DBField {
 	 * @return string
 	 */
 	function ContextSummary($characters = 500, $string = false, $striphtml = true, $highlight = true) {
-		if(!$string) {
-			// If no string is supplied, use the string from a SearchForm
-			$string = $_REQUEST['Search'];
-		}
-		
+		if(!$string) $string = $_REQUEST['Search'];	// Use the default "Search" request variable (from SearchForm)
+
 		// Remove HTML tags so we don't have to deal with matching tags
 		$text = $striphtml ? $this->NoHTML() : $this->value;
 		
@@ -281,13 +275,20 @@ class Text extends DBField {
 		
 		$summary = substr($text, $position, $characters);
 		
+		$stringPieces = explode(' ', $string);
+		
 		if($highlight) {
 			// Add a span around all occurences of the search term
 			$summary = str_ireplace($string, "<span class=\"highlight\">$string</span>", $summary);
+			
+			// Add a span around all key words from the search term as well
+			if($stringPieces) {
+				foreach($stringPieces as $stringPiece) {
+					$summary = str_ireplace($stringPiece, "<span class=\"highlight\">$stringPiece</span>", $summary);
+				}
+			}
 		}
 		
-		// trim it, because if we counted back and found a space then there will be an extra
-		// space at the front
 		return trim($summary);
 	}
 	
