@@ -253,9 +253,6 @@ class Text extends DBField {
 	 * @todo Would be useful for this to highlight each individual search keyword
 	 * instead of the entire search query.
 	 * 
-	 * @todo Allow selection of where the search query is coming from, instead of
-	 * hardcoding $_REQUEST['Search']
-	 *
 	 * @param int $characters Number of characters in the summary
 	 * @param boolean $string Supplied string ("keywords")
 	 * @param boolean $striphtml Strip HTML?
