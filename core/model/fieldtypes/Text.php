@@ -257,7 +257,7 @@ class Text extends DBField {
 	 * hardcoding $_REQUEST['Search']
 	 *
 	 * @param int $characters Number of characters in the summary
-	 * @param boolean $string
+	 * @param boolean $string Supplied string ("keywords")
 	 * @param boolean $striphtml Strip HTML?
 	 * @param boolean $highlight Add a highlight <span> element around search query?
 	 * @return string
