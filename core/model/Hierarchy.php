@@ -435,16 +435,6 @@ class Hierarchy extends DataObjectDecorator {
 					// First, go through the stage children.  They will all be listed but may be different colours
 					if($stageChildren) {
 						foreach($stageChildren as $child) {
-							// Not found on live = new page
-							if(!isset($idxFoundInLive[$child->ID]))  {
-								$child->AddedToStage = true;
-							
-							// Version different on live = edited page
-							} else if($idxFoundInLive[$child->ID]->Version != $child->Version) {
-								$child->ModifiedOnStage = true;
-							}
-	
-							$child->CheckedPublicationDifferences = true;
 							$this->allChildrenIncludingDeleted->push($child);
 						}
 					}
@@ -454,8 +444,6 @@ class Hierarchy extends DataObjectDecorator {
 						foreach($liveChildren as $child) {
 							// Not found on stage = deleted page.  Anything else is ignored
 							if(!isset($idxFoundInStage[$child->ID])) {
-								$child->DeletedFromStage = true;
-								$child->CheckedPublicationDifferences = true;
 								$this->allChildrenIncludingDeleted->push($child);
 							}
 						}
