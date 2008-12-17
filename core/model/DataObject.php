@@ -2329,6 +2329,8 @@ class DataObject extends ViewableData implements DataObjectInterface,i18nEntityP
 			if(isset(self::$cache_get_one[$class])) unset(self::$cache_get_one[$class]);
 		}
 		
+		$this->extend('flushCache');
+		
 		$this->componentCache = array();
 	}
 

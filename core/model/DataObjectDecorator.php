@@ -193,6 +193,12 @@ abstract class DataObjectDecorator extends Extension {
 			if($field_labels) $lables = array_merge($lables, $field_labels);
 		}
 	}
+	
+	/**
+	 * Clear any internal caches.
+	 */
+	function flushCache() {
+	}
 
 }
 
