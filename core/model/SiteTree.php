@@ -86,8 +86,8 @@ class SiteTree extends DataObject implements PermissionProvider {
 	);
 
 	static $indexes = array(
-		"SearchFields" => "fulltext (Title, MenuTitle, Content, MetaTitle, MetaDescription, MetaKeywords)",
-		"TitleSearchFields" => "fulltext (Title)",
+		"SearchFields" => Array('type'=>'fulltext', 'value'=>'Title, MenuTitle, Content, MetaTitle, MetaDescription, MetaKeywords'),
+		"TitleSearchFields" => Array('type'=>'fulltext', 'value'=>'Title'),
 		"URLSegment" => true,
 	);
 
@@ -1202,7 +1202,7 @@ class SiteTree extends DataObject implements PermissionProvider {
 			)
 			//new NamedLabelField("Status", $message, "pageStatusMessage", true)
 		);
-
+		
 		if(!Permission::check('SITETREE_GRANT_ACCESS')) {
 			$fields->makeFieldReadonly($viewersOptionsField);
 			$fields->makeFieldReadonly($viewerGroupsField);
@@ -1314,12 +1314,12 @@ class SiteTree extends DataObject implements PermissionProvider {
 				$actions->push(new FormAction('save',_t('CMSMain.SAVE','Save')));
 			}
 		}
-		
+
 		if($this->canPublish()) {
 			// "publish"
 			$actions->push(new FormAction('publish', _t('SiteTree.BUTTONSAVEPUBLISH', 'Save and Publish')));
 		}
-
+		
 		// getCMSActions() can be extended with updateCMSActions() on a decorator
 		$this->extend('updateCMSActions', $actions);
 		
@@ -1692,7 +1692,7 @@ class SiteTree extends DataObject implements PermissionProvider {
 	public static function enableCMSFieldsExtensions() {
 		self::$runCMSFieldsExtensions = true;
 	}
-	
+
 	function providePermissions() {
 		return array(
 			'SITETREE_GRANT_ACCESS' => _t(

@@ -278,10 +278,14 @@ abstract class Database extends Object {
 	function requireIndex($table, $index, $spec) {
 		$newTable = false;
 		
+		//DB Abstraction: remove this ===true option as a possibility?
 		if($spec === true) {
 			$spec = "($index)";
 		}
-		$spec = ereg_replace(" *, *",",",$spec);
+		
+		//Indexes specified as arrays cannot be checked with this line: (it flattens out the array)
+		if(!is_array($spec))
+			$spec = ereg_replace(" *, *",",",$spec);
 
 		if(!isset($this->tableList[strtolower($table)])) $newTable = true;
 
@@ -291,9 +295,10 @@ abstract class Database extends Object {
 		if($newTable || !isset($this->indexList[$table][$index])) {
 			$this->transCreateIndex($table, $index, $spec);
 			Database::alteration_message("Index $table.$index: created as $spec","created");
-		} else if($this->indexList[$table][$index] != $spec) {
+		} else if($this->indexList[$table][$index] != DB::getConn()->convertIndexSpec($spec)) {
 			$this->transAlterIndex($table, $index, $spec);
-			Database::alteration_message("Index $table.$index: changed to $spec <i style=\"color: #AAA\">(from {$this->indexList[$table][$index]})</i>","changed");			
+			$spec_msg=DB::getConn()->convertIndexSpec($spec);
+			Database::alteration_message("Index $table.$index: changed to $spec_msg <i style=\"color: #AAA\">(from {$this->indexList[$table][$index]})</i>","changed");			
 		}
 	}
 
@@ -329,7 +334,7 @@ abstract class Database extends Object {
 			$this->transCreateField($table, $field, $spec);
 			Profiler::unmark('createField');
 			Database::alteration_message("Field $table.$field: created as $spec","created");
-		} else if($this->fieldList[$table][$field] != $spec) {
+		} else if($this->fieldList[$table][$field] != DB::getConn()->convertIndexSpec($spec)) {
 			// If enums are being modified, then we need to fix existing data in the table.
 			// Update any records where the enum is set to a legacy value to be set to the default.
 			// One hard-coded exception is SiteTree - the default for this is Page.
@@ -363,7 +368,8 @@ abstract class Database extends Object {
 			Profiler::mark('alterField');
 			$this->transAlterField($table, $field, $spec);
 			Profiler::unmark('alterField');
-			Database::alteration_message("Field $table.$field: changed to $spec <i style=\"color: #AAA\">(from {$this->fieldList[$table][$field]})</i>","changed");
+			$spec_msg=DB::getConn()->convertIndexSpec($spec);
+			Database::alteration_message("Field $table.$field: changed to $spec_msg <i style=\"color: #AAA\">(from {$this->fieldList[$table][$field]})</i>","changed");
 		}
 		Profiler::unmark('requireField');
 	}

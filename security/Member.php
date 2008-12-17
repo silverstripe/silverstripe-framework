@@ -39,7 +39,8 @@ class Member extends DataObject {
 
 	static $indexes = array(
 		'Email' => true,
-		'AutoLoginHash' => 'unique (AutoLoginHash)'
+		//'AutoLoginHash' => 'unique (AutoLoginHash)'
+		'AutoLoginHash' => Array('type'=>'unique', 'value'=>'AutoLoginHash')
 	);
 
 	static $notify_password_change = false;

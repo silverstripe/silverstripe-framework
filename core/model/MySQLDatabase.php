@@ -285,7 +285,10 @@ class MySQLDatabase extends Database {
 			}
 			
 			if($field['Default'] || $field['Default'] === "0") {
-				$fieldSpec .= " default '" . addslashes($field['Default']) . "'";
+				if(is_numeric($field['Default']))
+					$fieldSpec .= " default " . addslashes($field['Default']);
+				else
+					$fieldSpec .= " default '" . addslashes($field['Default']) . "'";
 			}
 			if($field['Extra']) $fieldSpec .= " $field[Extra]";
 			
@@ -304,13 +307,39 @@ class MySQLDatabase extends Database {
 		$this->query("ALTER TABLE \"$tableName\" ADD " . $this->getIndexSqlDefinition($indexName, $indexSpec));
 	}
 	
+	/*
+	 * This takes the index spec which has been provided by a class (ie static $indexes = blah blah)
+	 * and turns it into a proper string.
+	 * Some indexes may be arrays, such as fulltext and unique indexes, and this allows database-specific
+	 * arrays to be created.
+	 */
+	public function convertIndexSpec($indexSpec){
+		if(is_array($indexSpec)){
+			//Here we create a db-specific version of whatever index we need to create.
+			switch($indexSpec['type']){
+				case 'fulltext':
+					$indexSpec='fulltext (' . str_replace(' ', '', $indexSpec['value']) . ')';
+					break;
+				case 'unique':
+					$indexSpec='unique (' . $indexSpec['value'] . ')';
+					break;
+			}
+		}
+		
+		return $indexSpec;
+	}
+	
 	protected function getIndexSqlDefinition($indexName, $indexSpec) {
-	    $indexSpec = trim($indexSpec);
+	
+		$indexSpec=$this->convertIndexSpec($indexSpec);
+		
+		$indexSpec = trim($indexSpec);
 	    if($indexSpec[0] != '(') list($indexType, $indexFields) = explode(' ',$indexSpec,2);
 	    else $indexFields = $indexSpec;
 	    if(!isset($indexType)) {
 			$indexType = "index";
 		}
+		
 		return "$indexType \"$indexName\" $indexFields";
 	}
 	
@@ -321,7 +350,10 @@ class MySQLDatabase extends Database {
 	 * @param string $indexSpec The specification of the index, see Database::requireIndex() for more details.
 	 */
 	public function alterIndex($tableName, $indexName, $indexSpec) {
-	    $indexSpec = trim($indexSpec);
+		
+		$indexSpec=$this->convertIndexSpec($indexSpec);
+		
+		$indexSpec = trim($indexSpec);
 	    if($indexSpec[0] != '(') {
 	    	list($indexType, $indexFields) = explode(' ',$indexSpec,2);
 	    } else {
@@ -450,7 +482,7 @@ class MySQLDatabase extends Database {
 		//$parts=Array('datatype'=>'enum', 'enums'=>$this->enum, 'character set'=>'utf8', 'collate'=> 'utf8_general_ci', 'default'=>$this->default);
 		//DB::requireField($this->tableName, $this->name, "enum('" . implode("','", $this->enum) . "') character set utf8 collate utf8_general_ci default '{$this->default}'");
 		
-		return 'enum(\'' . implode('\', \'', $values['enums']) . '\') character set utf8 collate utf8_general_ci default \'' . $values['default'] . '\'';
+		return 'enum(\'' . implode('\',\'', $values['enums']) . '\') character set utf8 collate utf8_general_ci default \'' . $values['default'] . '\'';
 	}
 	
 	/**
