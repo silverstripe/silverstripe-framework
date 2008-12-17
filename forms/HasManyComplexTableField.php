@@ -124,9 +124,11 @@ class HasManyComplexTableField extends ComplexTableField {
 	
 	function ExtraData() {
 		$items = array();
-		foreach($this->unpagedSourceItems as $item) {
-			if($item->{$this->joinField} == $this->controller->ID)
-				$items[] = $item->ID;
+		if($this->unpagedSourceItems) {
+			foreach($this->unpagedSourceItems as $item) {
+				if($item->{$this->joinField} == $this->controller->ID)
+					$items[] = $item->ID;
+			}
 		}
 		$list = implode(',', $items);
 		$inputId = $this->id() . '_' . $this->htmlListEndName;
