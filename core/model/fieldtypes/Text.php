@@ -246,6 +246,22 @@ class Text extends DBField {
 		}
 	}
 	
+	/**
+	 * Perform context searching to give some context to searches, optionally
+	 * highlighting the search term.
+	 * 
+	 * @todo Would be useful for this to highlight each individual search keyword
+	 * instead of the entire search query.
+	 * 
+	 * @todo Allow selection of where the search query is coming from, instead of
+	 * hardcoding $_REQUEST['Search']
+	 *
+	 * @param int $characters Number of characters in the summary
+	 * @param boolean $string
+	 * @param boolean $striphtml Strip HTML?
+	 * @param boolean $highlight Add a highlight <span> element around search query?
+	 * @return string
+	 */
 	function ContextSummary($characters = 500, $string = false, $striphtml = true, $highlight = true) {
 		if(!$string) {
 			// If no string is supplied, use the string from a SearchForm
@@ -260,7 +276,6 @@ class Text extends DBField {
 		
 		// We want to search string to be in the middle of our block to give it some context
 		$position = max(0, $position - ($characters / 2));
-		
 		
 		if($position > 0) {
 			// We don't want to start mid-word
