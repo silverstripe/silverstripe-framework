@@ -22,12 +22,8 @@ class PrimaryKey extends Int {
 	}
 	
 	public function scaffoldFormField($title = null, $params = null) {
-		$objs = DataObject::get($this->object->class);
-
-		$titleField = (singleton($this->object->class)->hasField('Title')) ? "Title" : "Name";
-
-		$map = ($objs) ? $objs->toDropdownMap("ID", $titleField) : false;
-		
+		$titleField = ($this->object->hasField('Title')) ? "Title" : "Name";
+		$map = new SQLMap($this->object->extendedSQL(), "ID", $titleField);
 		return new DropdownField($this->name, $title, $map, null, null, ' ');
 	}
 }

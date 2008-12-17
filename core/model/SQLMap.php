@@ -11,17 +11,22 @@ class SQLMap extends Object implements IteratorAggregate {
 	 * @var SQLQuery
 	 */
 	protected $query;
+	protected $keyField, $titleField;
 	
 	/**
 	 * Construct a SQLMap.
 	 * @param SQLQuery $query The query to generate this map. THis isn't executed until it's needed.
 	 */
-	public function __construct(SQLQuery $query) {
+	public function __construct(SQLQuery $query, $keyField = "ID", $titleField = "Title") {
 		if(!$query) {
 			user_error('SQLMap constructed with null query.', E_USER_ERROR);
 		}
 		
 		$this->query = $query;
+		$this->keyField = $keyField;
+		$this->titleField = $titleField;
+		
+		parent::__construct();
 	}
 	
 	/**
@@ -44,7 +49,7 @@ class SQLMap extends Object implements IteratorAggregate {
 	
 	public function getIterator() {
 		$this->genItems();
-		return new SQLMap_Iterator($this->items->getIterator());
+		return new SQLMap_Iterator($this->items->getIterator(), $this->keyField, $this->titleField);
 	}
 	
 	/**
@@ -80,9 +85,12 @@ class SQLMap extends Object implements IteratorAggregate {
 
 class SQLMap_Iterator extends Object implements Iterator {
 	protected $items;
+	protected $keyField, $titleField;
 	
-	function __construct(Iterator $items) {
+	function __construct(Iterator $items, $keyField, $titleField) {
 		$this->items = $items;
+		$this->keyField = $keyField;
+		$this->titleField = $titleField;
 	}
 
 	
@@ -90,20 +98,20 @@ class SQLMap_Iterator extends Object implements Iterator {
 	 * Iterator functions - necessary for foreach to work
 	 */
 	public function rewind() {
-		return $this->items->rewind() ? $this->items->rewind()->Title : null;
+		return $this->items->rewind() ? $this->items->rewind()->{$this->titleField} : null;
 	}
 	
 	public function current() {
-		return $this->items->current()->Title;
+		return $this->items->current()->{$this->titleField};
 	}
 	
 	public function key() {
-		return $this->items->current()->ID;
+		return $this->items->current()->{$this->keyField};
 	}
 	
 	public function next() {
 		$next = $this->items->next();
-		return isset($next->Title) ? $next->Title : null;
+		return isset($next->{$this->titleField}) ? $next->{$this->titleField} : null;
 	}
 	
 	public function valid() {
