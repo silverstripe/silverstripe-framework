@@ -471,6 +471,7 @@ class FieldSet extends DataObjectSet {
 	 * @param string|FormField
 	 */
 	function makeFieldReadonly($field) {
+		$fieldName = ($field instanceof FormField) ? $field->Name() : $field;
 		$srcField = $this->dataFieldByName($fieldName);
 		$this->replaceField($fieldName, $srcField->performReadonlyTransformation());
 	}
