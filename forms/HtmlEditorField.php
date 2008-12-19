@@ -420,16 +420,15 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 				new TextField('getimagesSearch', _t('HtmlEditorField.SEARCHFILENAME', 'Search by file name')),
 				new ThumbnailStripField('Image', 'FolderID', 'getimages'),
 				new TextField('AltText', _t('HtmlEditorField.ALTTEXT', 'Description'), '', 80),
-				new DropdownField(
-					'CSSClass',
-					_t('HtmlEditorField.CSSCLASS', 'Alignment / style'),
-					array(
-						'left' => _t('HtmlEditorField.CSSCLASSLEFT', 'On the left, with text wrapping around.'),
-						'leftAlone' => _t('HtmlEditorField.CSSCLASSLEFTALONE', 'On the left, on its own.'),
-						'right' => _t('HtmlEditorField.CSSCLASSRIGHT', 'On the right, with text wrapping around.'),
-						'center' => _t('HtmlEditorField.CSSCLASSCENTER', 'Centered, on its own.'),
-					)
-				),
+				new HiddenField('CSSClass', _t('HtmlEditorField.CSSCLASS', 'Alignment / style')),
+				new LiteralField('AlignmentStyle', '<div id="ImageAligmentStyle"><label>Alignment / style</label>'),
+				new LiteralField('AlignmentStyleLinks', '
+					<a id="ImageAligmentStyle_left" href="#">'. _t('HtmlEditorField.CSSCLASSLEFT', 'On the left, with text wrapping around.') .'</a> 
+					<a id="ImageAligmentStyle_leftAlone" href="#">'. _t('HtmlEditorField.CSSCLASSLEFTALONE', 'On the left, on its own.') .'</a>
+					<a id="ImageAligmentStyle_right" href="#">'. _t('HtmlEditorField.CSSCLASSRIGHT', 'On the right, with text wrapping around.') .'</a>
+					<a id="ImageAligmentStyle_center" href="#">'. _t('HtmlEditorField.CSSCLASSCENTER', 'Centered, on its own.') .'</a></div>
+					<div class="clear"></div>
+				'),
 				new FieldGroup(_t('HtmlEditorField.IMAGEDIMENSIONS', 'Dimensions'),
 					new TextField('Width', _t('HtmlEditorField.IMAGEWIDTHPX', 'Width'), 100),
 					new TextField('Height', "x " . _t('HtmlEditorField.IMAGEHEIGHTPX', 'Height'), 100)
