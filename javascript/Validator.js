@@ -1,7 +1,9 @@
 var _CURRENT_FORM;
+var _FIRST_ERRORED_FIELD = null;
 
 function initialiseForm(form, fromAnOnBlur) {
 	_CURRENT_FORM = form;
+	_FIRST_ERRORED_FIELD = null;
 
 	if(fromAnOnBlur) {
 		limitValidationErrorsTo(fromAnOnBlur);
@@ -15,6 +17,13 @@ function initialiseForm(form, fromAnOnBlur) {
 
 function hasHadFormError() {
 	return _HAS_HAD_FORM_ERROR || !_ERROR_CACHE;
+}
+
+function focusOnFirstErroredField() {
+    try {
+        _FIRST_ERRORED_FIELD.focus();
+    } catch(er) {
+    }
 }
 
 /**
@@ -251,6 +260,9 @@ function validationError(field,message, messageClass, cacheError) {
 	// Keep a reference to it
 	field.validationMessage = validationMessage;
 
+    // Keep a reference to the first errored field
+    if(field && !_FIRST_ERRORED_FIELD) _FIRST_ERRORED_FIELD = field;
+    
 	// Set the attributes
 	validationMessage.className = "message " + messageClass;
 	validationMessage.innerHTML = message;
