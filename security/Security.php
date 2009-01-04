@@ -407,6 +407,7 @@ class Security extends Controller {
 		$tmpPage = new Page();
 		$tmpPage->Title = _t('Security.LOSTPASSWORDHEADER');
 		$tmpPage->URLSegment = 'Security';
+		$tmpPage->ID = -1; // Set the page ID to -1 so we dont get the top level pages as its children
 		$controller = new Page_Controller($tmpPage);
 		$controller->init();
 
@@ -443,6 +444,7 @@ class Security extends Controller {
 		$tmpPage = new Page();
 		$tmpPage->Title = _t('Security.CHANGEPASSWORDHEADER', 'Change your password');
 		$tmpPage->URLSegment = 'Security';
+		$tmpPage->ID = -1; // Set the page ID to -1 so we dont get the top level pages as its children
 		$controller = new Page_Controller($tmpPage);
 		$controller->init();
 
