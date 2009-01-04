@@ -43,4 +43,40 @@ SS
 		
 		$this->assertEquals("This is my templateThis is some contentThis is the final content", preg_replace("/\n?<!--.*-->\n?/U",'',$output));
 	}
+	
+	function testObjectDotArguments() {
+		// one argument
+		$viewer = SSViewer::fromString(<<<SS
+\$TestObject.methodWithOneArgument(one)
+SS
+);
+		$obj = new SSViewerTest_ViewableData();
+		$this->assertEquals(
+			$viewer->process(new ArrayData(array('TestObject'=>$obj))),
+			"arg1:one",
+			"Object method calls in dot notation work with one argument"
+		);
+		
+		// two arguments
+		$viewer = SSViewer::fromString(<<<SS
+\$TestObject.methodWithTwoArguments(one,two)
+SS
+);
+		$obj = new SSViewerTest_ViewableData();
+		$this->assertEquals(
+			$viewer->process(new ArrayData(array('TestObject'=>$obj))),
+			"arg1:one,arg2:two",
+			"Object method calls in dot notation work with two arguments"
+		);
+	}
+}
+
+class SSViewerTest_ViewableData extends ViewableData implements TestOnly {
+	function methodWithOneArgument($arg1) {
+		return "arg1:{$arg1}";
+	}
+	
+	function methodWithTwoArguments($arg1, $arg2) {
+		return "arg1:{$arg1},arg2:{$arg2}";
+	}
 }
