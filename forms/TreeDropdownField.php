@@ -40,7 +40,7 @@ class TreeDropdownField extends FormField {
 		Requirements::javascript(SAPPHIRE_DIR . "/javascript/TreeSelectorField.js");
 		
 		if($this->value) {
-			$record = DataObject::get_by_id($this->sourceObject, $this->value);
+			$record = $this->getByKey($this->value);
 			$title = ($record) ? $record->Title : _t('DropdownField.CHOOSE', "(Choose)", PR_MEDIUM, 'Start-value of a dropdown');
 		} else {
 			$title = _t('DropdownField.CHOOSE', "(Choose)", PR_MEDIUM, 'Start-value of a dropdown');
@@ -86,8 +86,7 @@ HTML;
 	 * Return a subtree via Ajax
 	 */
 	public function getsubtree() {
-		if($this->keyField == "ID") $obj = DataObject::get_by_id($this->sourceObject, $_REQUEST['SubtreeRootID']);
-		else $obj = DataObject::get_one($this->sourceObject, "$this->keyField = '$_REQUEST[SubtreeRootID]'");
+		$obj = $this->getByKey($_REQUEST['SubtreeRootID']);
 
 		if(!$obj) user_error("Can't find database record $this->sourceObject with $this->keyField = $_REQUEST[SubtreeRootID]", E_USER_ERROR);
 		if($this->filterFunc) $obj->setMarkingFilterFunction($this->filterFunc);
@@ -99,14 +98,11 @@ HTML;
 	}
 	
 	public function getByKey($key) {
-		if(!is_numeric($key)) {
-			return false;
-		}
-		
 		if($this->keyField == 'ID') {
 			return DataObject::get_by_id($this->sourceObject, $key);
 		} else {
-			return DataObject::get_one($this->sourceObject, "$this->keyField = '$key'");
+			$SQL_key = Convert::raw2sql($key);
+			return DataObject::get_one($this->sourceObject, "$this->keyField = '$SQL_key'");
 		}
 	}
 	
@@ -114,8 +110,7 @@ HTML;
 	 * Return the stack of values to be traversed to find the given key in the database
 	 */
 	public function getstack() {
-		if($this->keyField == "ID") $page = DataObject::get_by_id($this->sourceObject, $_REQUEST['SubtreeRootID']);
-		else $page = $this->getByKey($_REQUEST['SubtreeRootID']);
+		$page = $this->getByKey($_REQUEST['SubtreeRootID']);
 		
 		while($page->ParentID) {
 			echo $ids[] = $page->ID;
