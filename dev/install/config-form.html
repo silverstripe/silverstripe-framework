@@ -107,7 +107,7 @@
 								<label for="mysql_password">MySQL password:</label>
 								<span class="middleColumn"><input id="mysql_password" class="text" type="password" name="mysql[password]" value="<?php echo $databaseConfig['password']; ?>" /></span>
 								<label for="mysql_database">MySQL database:</label>
-								<span class="middleColumn"><input id="mysql_database" class="text" type="text" name="mysql[database]" value="<?php echo $databaseConfig['database']; ?>" onchange="this.value = this.value.replace(/[^A-Za-z0-9_]+/g,'');" /></span>
+								<span class="middleColumn"><input id="mysql_database" class="text" type="text" name="mysql[database]" value="<?php echo $databaseConfig['database']; ?>" onchange="this.value = this.value.replace(/[\/\\:*?&quot;<>|. \t]+/g,'');" /></span>
 								<input type="submit" class="action" value="Re-check requirements" />
 							</p>
 							<p class="mysql">SilverStripe stores its content in a MySQL database.  Please provide the username and password to connect to the server here.  If this account has permission to create databases, then we will create the database for you; otherwise, you must give the name of a database that already exists.</p>

@@ -124,8 +124,8 @@ class MySQLDatabase extends Database {
 	}
 	
 	public function createDatabase() {
-		$this->query("CREATE DATABASE $this->database");
-		$this->query("USE $this->database");
+		$this->query("CREATE DATABASE `$this->database`");
+		$this->query("USE `$this->database`");
 
 		$this->tableList = $this->fieldList = $this->indexList = null;
 
