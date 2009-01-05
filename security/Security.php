@@ -925,11 +925,13 @@ class Security extends Controller {
 	 * @return bool
 	 */
 	public static function database_is_ready() {
-		return
-			ClassInfo::hasTable('Member') &&
-			ClassInfo::hasTable('Group') &&
-			ClassInfo::hasTable('Permission') &&
-			(($permissionFields = DB::fieldList('Permission')) && isset($permissionFields['Type'])) &&
+		$requiredTables = ClassInfo::dataClassesFor('Member');
+		$requiredTables[] = 'Group';
+		$requiredTables[] = 'Permission';
+		
+		foreach($requiredTables as $table) if(!ClassInfo::hasTable($table)) return false;
+		
+		return (($permissionFields = DB::fieldList('Permission')) && isset($permissionFields['Type'])) &&
 			(($memberFields = DB::fieldList('Member')) && isset($memberFields['RememberLoginToken']));
 	}
 	
