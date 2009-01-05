@@ -54,7 +54,7 @@ abstract class Validator extends Object {
 	public function __construct() {
 		if(self::$javascript_validation_handler) $this->setJavascriptValidationHandler(self::$javascript_validation_handler);
 		
-		if($this->javascriptValidationHandler) {
+		if($this->javascriptValidationHandler && $this->javascriptValidationHandler != 'none') {
 			Requirements::javascript(SAPPHIRE_DIR . '/javascript/Validator.js');
 		}
 		parent::__construct();
