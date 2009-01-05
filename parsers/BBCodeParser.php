@@ -16,7 +16,31 @@ unset($options);
  */
 class BBCodeParser extends TextParser {
 
+	/**
+	 * Set whether phrases starting with http:// or www. are automatically linked
+	 * @var Boolean
+	 */
 	protected static $autolinkUrls = true;
+	
+	/**
+	 * Set whether similies :), :(, :P are converted to images
+	 * @var Boolean
+	 */
+	protected static $allowSimilies = false;
+	 
+	/**
+	 * Set the location of the smiles folder. By default use the ones in sapphire
+	 * but this can be overridden by setting  BBCodeParser::set_icon_folder('themes/yourtheme/images/');
+	 * @var string
+	 */
+	protected static $smilies_location = 'sapphire/images/smilies';
+	
+	static function smilies_location() {
+		return BBCodeParser::$smilies_location;
+	}
+	static function set_icon_folder($path) {
+		BBCodeParser::$smilies_location = $path;
+	} 
 	
 	static function autolinkUrls() {
 		return (self::$autolinkUrls != null) ? true : false;
@@ -25,6 +49,15 @@ class BBCodeParser extends TextParser {
 	static function disable_autolink_urls($autolink = false) {
 		BBCodeParser::$autolinkUrls = $autolink;
 	}
+	
+	static function smiliesAllowed() {
+		return (self::$allowSimilies != null) ? true : false;
+	}
+	
+	static function enable_smilies() {
+		BBCodeParser::$allowSimilies = true;
+	}
+	
 	
 	static function usable_tags() {
 		return new DataObjectSet(
@@ -98,6 +131,12 @@ class BBCodeParser extends TextParser {
 		return $useabletags."</ul>";
 	}
 	
+	/**
+	 * Main BBCode parser method. This takes plain jane content and
+	 * runs it through so many filters 
+	 *
+	 * @return Text
+	 */
 	function parse() {
 		$this->content = str_replace(array('&', '<', '>'), array('&amp;', '&lt;', '&gt;'), $this->content);
 		$this->content = SSHTMLBBCodeParser::staticQparse($this->content);
@@ -108,6 +147,18 @@ class BBCodeParser extends TextParser {
 
 		$this->content = preg_replace("/\n\s*\n/", "</p><p>", $this->content);
 		$this->content = str_replace("\n", "<br />", $this->content);
+				
+		if(BBCodeParser::smiliesAllowed()) {
+			$smilies = array(
+				'#(?<!\w):D(?!\w)#i'         => " <img src='".BBCodeParser::smilies_location(). "/grin.gif'> ",
+				'#(?<!\w):\)(?!\w)#i'        => " <img src='".BBCodeParser::smilies_location(). "/smile.gif'> ",
+				'#(?<!\w):\((?!\w)#i'        => " <img src='".BBCodeParser::smilies_location(). "/sad.gif'> ",
+				'#(?<!\w):p(?!\w)#i'         => " <img src='".BBCodeParser::smilies_location(). "/tongue.gif'> ",
+			 	'#(?<!\w)8-\)(?!\w)#i'     => " <img src='".BBCodeParser::smilies_location(). "/cool.gif'> ",
+				'#(?<!\w):\^\)(?!\w)#i' => " <img src='".BBCodeParser::smilies_location(). "/confused.gif'> "
+			);
+			$this->content = preg_replace(array_keys($smilies), array_values($smilies), $this->content);
+		}
 		return $this->content;
 	}
 	
