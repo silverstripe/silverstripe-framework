@@ -52,7 +52,7 @@ class Director {
 	 * page.
 	 */
 	static function history($pagesBack = 1) {
-		return Session::get('history.' . sizeof(Session::get('history')) - $pagesBack - 1);
+		return Session::get('history.' . intval(sizeof(Session::get('history')) - $pagesBack - 1));
 	}
 
 
