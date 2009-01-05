@@ -421,17 +421,23 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 				new ThumbnailStripField('Image', 'FolderID', 'getimages'),
 				new TextField('AltText', _t('HtmlEditorField.ALTTEXT', 'Description'), '', 80),
 				new HiddenField('CSSClass', _t('HtmlEditorField.CSSCLASS', 'Alignment / style')),
-				new LiteralField('AlignmentStyle', '<div id="ImageAligmentStyle"><label>Alignment / style</label>'),
+				new LiteralField('AlignmentStyle', '<div id="ImageAligmentStyle" class="field text"><label>Alignment / style</label>'),
 				new LiteralField('AlignmentStyleLinks', '
-					<a id="ImageAligmentStyle_left" href="#">'. _t('HtmlEditorField.CSSCLASSLEFT', 'On the left, with text wrapping around.') .'</a> 
-					<a id="ImageAligmentStyle_leftAlone" href="#">'. _t('HtmlEditorField.CSSCLASSLEFTALONE', 'On the left, on its own.') .'</a>
-					<a id="ImageAligmentStyle_right" href="#">'. _t('HtmlEditorField.CSSCLASSRIGHT', 'On the right, with text wrapping around.') .'</a>
-					<a id="ImageAligmentStyle_center" href="#">'. _t('HtmlEditorField.CSSCLASSCENTER', 'Centered, on its own.') .'</a></div>
+					<div id="ImageAlignmentStyles_Wrapper">
+						<a id="ImageAligmentStyle_left" href="#" title="'._t('HtmlEditorField.CSSCLASSLEFT', 'On the left, with text wrapping around.').'">'. _t('HtmlEditorField.CSSCLASSLEFT', 'On the left, with text wrapping around.') .'</a> 
+						
+						<a id="ImageAligmentStyle_leftAlone" href="#" title="'._t('HtmlEditorField.CSSCLASSLEFTALONE', 'On the left, on its own.').'">'. _t('HtmlEditorField.CSSCLASSLEFTALONE', 'On the left, on its own.') .'</a>
+						
+						<a id="ImageAligmentStyle_right" href="#" title="'._t('HtmlEditorField.CSSCLASSRIGHT', 'On the right, with text wrapping around.').'">'. _t('HtmlEditorField.CSSCLASSRIGHT', 'On the right, with text wrapping around.') .'</a>
+						
+						<a id="ImageAligmentStyle_center" href="#" title="'._t('HtmlEditorField.CSSCLASSCENTER', 'Centered, on its own.').'">'. _t('HtmlEditorField.CSSCLASSCENTER', 'Centered, on its own.') .'</a>
+						</div>
+					</div>
 					<div class="clear"></div>
 				'),
 				new FieldGroup(_t('HtmlEditorField.IMAGEDIMENSIONS', 'Dimensions'),
 					new TextField('Width', _t('HtmlEditorField.IMAGEWIDTHPX', 'Width'), 100),
-					new TextField('Height', "x " . _t('HtmlEditorField.IMAGEHEIGHTPX', 'Height'), 100)
+					new TextField('Height', " x " . _t('HtmlEditorField.IMAGEHEIGHTPX', 'Height'), 100)
 				)
 			),
 			new FieldSet(
