@@ -59,21 +59,6 @@ set_include_path(get_include_path() . PATH_SEPARATOR . $path);
 define('MCE_ROOT', 'jsparty/tiny_mce2/');
 
 /**
- * Should passwords be encrypted (TRUE) or stored in clear text (FALSE)?
- */
-Security::encrypt_passwords(true);
-
-
-/**
- * Which algorithm should be used to encrypt? Should a salt be used to
- * increase the security?
- *
- * You can get a list of supported algorithms by calling
- * {@link Security::get_encryption_algorithms()}
- */
-Security::set_password_encryption_algorithm('sha1', true);
-
-/**
  * The secret key that needs to be sent along with pings to /Email_BounceHandler
  *
  * Change this to something different for increase security (you can
