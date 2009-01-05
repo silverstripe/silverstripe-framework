@@ -17,6 +17,13 @@
  * Usually you want to save data into a {@link DataObject} by using {@link saveInto()}.
  * If you want to process the submitted data in any way, please use {@link getData()} rather than
  * the raw request data.
+ * 
+ * Validation
+ * Each form needs some form of {@link Validator} to trigger the {@link FormField->validate()} methods for each field.
+ * You can't disable validator for security reasons, because crucial behaviour like extension checks for file uploads depend on it.
+ * The default validator is an instance of {@link RequiredFields}.
+ * If you want to enforce serverside-validation to be ignored for a specific {@link FormField},
+ * you need to subclass it.
  *
  * @package forms
  * @subpackage core
@@ -91,10 +98,11 @@ class Form extends RequestHandler {
 	/**
 	 * Create a new form, with the given fields an action buttons.
 	 * 
-	 * @param controller The parent controller, necessary to create the appropriate form action tag.
-	 * @param name The method on the controller that will return this form object.
-	 * @param fields All of the fields in the form - a {@link FieldSet} of {@link FormField} objects.
-	 * @param actions All of the action buttons in the form - a {@link FieldSet} of {@link FormAction} objects
+	 * @param Controller $controller The parent controller, necessary to create the appropriate form action tag.
+	 * @param String $name The method on the controller that will return this form object.
+	 * @param FieldSet $fields All of the fields in the form - a {@link FieldSet} of {@link FormField} objects.
+	 * @param FieldSet $actions All of the action buttons in the form - a {@link FieldSet} of {@link FormAction} objects
+	 * @param Validator $validator Override the default validator instance (Default: {@link RequiredFields})
 	 */
 	function __construct($controller, $name, FieldSet $fields, FieldSet $actions, $validator = null) {
 		parent::__construct();
@@ -110,10 +118,8 @@ class Form extends RequestHandler {
 		if(!$this->controller) user_error("$this->class form created without a controller", E_USER_ERROR);
 
 		// Form validation
-		if($validator) {
-			$this->validator = $validator;
-			$this->validator->setForm($this);
-		}
+		$this->validator = ($validator) ? $validator : new RequiredFields();
+		$this->validator->setForm($this);
 
 		// Form error controls
 		$errorInfo = Session::get("FormInfo.{$this->FormName()}");
