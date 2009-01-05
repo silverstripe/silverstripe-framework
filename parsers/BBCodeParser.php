@@ -150,12 +150,14 @@ class BBCodeParser extends TextParser {
 				
 		if(BBCodeParser::smiliesAllowed()) {
 			$smilies = array(
-				'#(?<!\w):D(?!\w)#i'         => " <img src='".BBCodeParser::smilies_location(). "/grin.gif'> ",
-				'#(?<!\w):\)(?!\w)#i'        => " <img src='".BBCodeParser::smilies_location(). "/smile.gif'> ",
-				'#(?<!\w):\((?!\w)#i'        => " <img src='".BBCodeParser::smilies_location(). "/sad.gif'> ",
-				'#(?<!\w):p(?!\w)#i'         => " <img src='".BBCodeParser::smilies_location(). "/tongue.gif'> ",
-			 	'#(?<!\w)8-\)(?!\w)#i'     => " <img src='".BBCodeParser::smilies_location(). "/cool.gif'> ",
-				'#(?<!\w):\^\)(?!\w)#i' => " <img src='".BBCodeParser::smilies_location(). "/confused.gif'> "
+				'#(?<!\w):D(?!\w)#i'         => " <img src='".BBCodeParser::smilies_location(). "/grin.gif'> ", // :D
+				'#(?<!\w):\)(?!\w)#i'        => " <img src='".BBCodeParser::smilies_location(). "/smile.gif'> ", // :)
+				'#(?<!\w):-\)(?!\w)#i'        => " <img src='".BBCodeParser::smilies_location(). "/smile.gif'> ", // :-)
+				'#(?<!\w):\((?!\w)#i'        => " <img src='".BBCodeParser::smilies_location(). "/sad.gif'> ", // :(
+				'#(?<!\w):-\((?!\w)#i'        => " <img src='".BBCodeParser::smilies_location(). "/sad.gif'> ", // :-(
+				'#(?<!\w):p(?!\w)#i'         => " <img src='".BBCodeParser::smilies_location(). "/tongue.gif'> ", // :p
+			 	'#(?<!\w)8-\)(?!\w)#i'     => " <img src='".BBCodeParser::smilies_location(). "/cool.gif'> ", // 8-)
+				'#(?<!\w):\^\)(?!\w)#i' => " <img src='".BBCodeParser::smilies_location(). "/confused.gif'> " // :^)
 			);
 			$this->content = preg_replace(array_keys($smilies), array_values($smilies), $this->content);
 		}
