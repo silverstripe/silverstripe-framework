@@ -73,16 +73,13 @@ class HTTP {
 		return $content;
 	}
 
-	static function setGetVar($varname, $varvalue, $currentURL = null) {
-		$currentURL = $currentURL ? $currentURL : $_SERVER['REQUEST_URI'];
-
-		$scriptbase = $currentURL;
-		$scriptbase = str_replace('&amp;','&',$scriptbase);
-
-		$scriptbase = ereg_replace("&$varname=[^&]*",'',$scriptbase);
-		$scriptbase = ereg_replace("\?$varname=[^&]*&",'?',$scriptbase);
-		$scriptbase = ereg_replace("\?$varname=[^&]*",'',$scriptbase);
-
+	public static function setGetVar($varname, $varvalue, $currentURL = null) {
+		$scriptbase = $currentURL ? $currentURL : $_SERVER['REQUEST_URI'];
+		
+		$scriptbase = str_replace('&amp;', '&', $scriptbase);
+		$scriptbase = preg_replace('/\?' . quotemeta($varname) . '=([^&]*)&/', '?', $scriptbase);
+		$scriptbase = preg_replace('/([\?&]+)' . quotemeta($varname) . '=([^&]*)/', null, $scriptbase);
+		
 		$suffix = '';
 		if(($hashPos = strpos($scriptbase,'#')) !== false) {
 			$suffix .= substr($scriptbase, $hashPos);
