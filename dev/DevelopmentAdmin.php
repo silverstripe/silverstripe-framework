@@ -16,6 +16,38 @@ class DevelopmentAdmin extends Controller {
 		'$Action//$Action/$ID' => 'handleAction',
 	);
 	
+	
+	function init() {
+		parent::init();
+		
+		// check for valid url mapping
+		// lacking this information can cause really nasty bugs,
+		// e.g. when running Director::test() from a FunctionalTest instance
+		global $_FILE_TO_URL_MAPPING;
+		if(Director::is_cli()) {
+			if(isset($_FILE_TO_URL_MAPPING)) {
+				$fullPath = $testPath = $_SERVER['SCRIPT_FILENAME'];
+				while($testPath && $testPath != "/") {
+					$matched = false;
+					if(isset($_FILE_TO_URL_MAPPING[$testPath])) {
+						$matched = true;
+					    break;
+					}
+					$testPath = dirname($testPath);
+				}
+				if(!$matched) {
+					echo 'Warning: You probably want to define '.
+						'an entry in $_FILE_TO_URL_MAPPING that covers "' . Director::baseFolder() . '"' . "\n";
+				}
+			}
+			else {
+				echo 'Warning: You probably want to define $_FILE_TO_URL_MAPPING in '.
+					'your _ss_environment.php as instructed on the "sake" page of the doc.silverstripe.com wiki' . "\n";
+			}
+		}
+		
+	}
+	
 	function index() {
 		$actions = array(
 			"build" => "Build/rebuild this environment (formerly db/build).  Call this whenever you have updated your project sources",

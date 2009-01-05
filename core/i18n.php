@@ -811,12 +811,22 @@ class i18n extends Object {
 	 */
 	static function _t($entity, $string = "", $priority = 40, $context = "") {
 		global $lang;
+		
+		// get current locale (either default or user preference)
 		$locale = i18n::get_locale();
+		
+		// parse $entity into its parts
 		$entityParts = explode('.',$entity);
 		$realEntity = array_pop($entityParts);
 		$class = implode('.',$entityParts);
-		if(!isset($lang[$locale][$class])) i18n::include_by_class($class);
+		
+		// if language table isn't loaded for this locale, get it for each of the modules
+		if(!isset($lang[$locale])) i18n::include_by_locale($locale);
+		
+		// fallback to the passed $string if no translation is present
 		$transEntity = isset($lang[$locale][$class][$realEntity]) ? $lang[$locale][$class][$realEntity] : $string;
+		
+		// entities can be stored in both array and literal values in the language tables
 		return (is_array($transEntity) ? $transEntity[0] : $transEntity);
 	}
 

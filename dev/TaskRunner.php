@@ -19,11 +19,12 @@ class TaskRunner extends Controller {
 			$renderer->writeHeader();
 			$renderer->writeInfo("Sapphire Development Tools: Tasks", Director::absoluteBaseURL());
 			$base = Director::baseURL();
-
+			if(strpos($base,-1) != '/') $base .= '/';
+			
 			echo "<ul>";
 			foreach($tasks as $task) {
 				echo "<li>";
-				echo "<a href=\"" . $task['class'] . "\">" . $task['title'] . "</a><br />";
+				echo "<a href=\"{$base}dev/tasks/" . $task['class'] . "\">" . $task['title'] . "</a><br />";
 				echo "<span class=\"description\">" . $task['description'] . "</span>";
 				echo "</li>\n";
 			}
@@ -48,6 +49,7 @@ class TaskRunner extends Controller {
 
 			$task = new $taskName();
 			if ($task->isEnabled()) $task->run($request);
+			else echo "<p>{$title} is disabled</p>";
 		} else {
 			echo "Build task '$taskName' not found.";
 			if(class_exists($taskName)) echo "  It isn't a subclass of BuildTask.";

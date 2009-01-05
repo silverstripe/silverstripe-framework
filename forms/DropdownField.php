@@ -71,6 +71,11 @@ class DropdownField extends FormField {
 
 		$source = $this->getSource();
 		if($source) {
+			// For SQLMap sources, the empty string needs to be added specially
+			if(is_object($source) && $this->emptyString) {
+				$options .= $this->createTag('option', array('value' => ''), $this->emptyString);
+			}
+			
 			foreach($source as $value => $title) {
 				$selected = ($value == $this->value) ? 'selected' : null;
 				if($selected && $this->value != 0) {

@@ -68,33 +68,24 @@ class HasManyComplexTableField extends ComplexTableField {
 	}
 	
 	function sourceItems() {
-		if($this->sourceItems)
-			return $this->sourceItems;
+		if($this->sourceItems) return $this->sourceItems;
 		
 		$limitClause = '';
-		if(isset($_REQUEST[ 'ctf' ][ $this->Name() ][ 'start' ]) && is_numeric($_REQUEST[ 'ctf' ][ $this->Name() ][ 'start' ]))
+		if(isset($_REQUEST['ctf'][$this->Name()]['start']) && is_numeric($_REQUEST['ctf'][$this->Name()]['start'])) {
 			$limitClause = $_REQUEST[ 'ctf' ][ $this->Name() ][ 'start' ] . ", $this->pageSize";
-		else
+		} else {
 			$limitClause = "0, $this->pageSize";
+		}
 		
 		$dataQuery = $this->getQuery($limitClause);
 		$records = $dataQuery->execute();
 		$items = new DataObjectSet();
-		foreach($records as $record) {
-			if(! get_class($record))
-				$record = new DataObject($record);
-			$items->push($record);
-		}
+
+		$sourceClass = $this->sourceClass; 
+		$dataobject = new $sourceClass(); 
+		$items = $dataobject->buildDataObjectSet($records, 'DataObjectSet'); 
 		
-		$dataQuery = $this->getQuery();
-		$records = $dataQuery->execute();
-		$unpagedItems = new DataObjectSet();
-		foreach($records as $record) {
-			if(! get_class($record))
-				$record = new DataObject($record);
-			$unpagedItems->push($record);
-		}
-		$this->unpagedSourceItems = $unpagedItems;
+		$this->unpagedSourceItems = $dataobject->buildDataObjectSet($records, 'DataObjectSet');
 		
 		$this->totalCount = ($this->unpagedSourceItems) ? $this->unpagedSourceItems->TotalItems() : null;
 		
@@ -133,9 +124,11 @@ class HasManyComplexTableField extends ComplexTableField {
 	
 	function ExtraData() {
 		$items = array();
-		foreach($this->unpagedSourceItems as $item) {
-			if($item->{$this->joinField} == $this->controller->ID)
-				$items[] = $item->ID;
+		if($this->unpagedSourceItems) {
+			foreach($this->unpagedSourceItems as $item) {
+				if($item->{$this->joinField} == $this->controller->ID)
+					$items[] = $item->ID;
+			}
 		}
 		$list = implode(',', $items);
 		$inputId = $this->id() . '_' . $this->htmlListEndName;

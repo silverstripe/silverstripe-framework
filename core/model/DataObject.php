@@ -711,7 +711,7 @@ class DataObject extends ViewableData implements DataObjectInterface,i18nEntityP
 
 			// Update the changed array with references to changed obj-fields
 			foreach($this->record as $k => $v) {
-				if(is_object($v) && $v->isChanged()) {
+				if(is_object($v) && method_exists($v, 'isChanged') && $v->isChanged()) {
 					$this->changed[$k] = true;
 				}
 			}
@@ -1302,7 +1302,7 @@ class DataObject extends ViewableData implements DataObjectInterface,i18nEntityP
 					if(!is_string($k) || is_numeric($k) || !is_string($v)) user_error("$class::\$db has a bad entry: " 
 						. var_export($k,true). " => " . var_export($v,true) . ".  Each map key should be a property name, and the map value should be the property type.", E_USER_ERROR);
 				}
-				$items = isset($items) ? array_merge($newItems, (array)$items) : $newItems;
+				$items = isset($items) ? array_merge((array)$items, $newItems) : $newItems;
 			}
 		}
 

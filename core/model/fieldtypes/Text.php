@@ -19,16 +19,24 @@ class Text extends DBField {
 		return ($this->value || $this->value == '0');
 	}
 	
-	//useed for search results show only limited contents
-	function LimitWordCount($numWords = 26) {
-		$this->value = Convert::xml2raw($this->value);
-		$ret = explode(" ", $this->value, $numWords);
+	/**
+	 * Limit this field's content by a number of words.
+	 * CAUTION: This is not XML safe. Please use
+	 * {@link LimitWordCountXML()} instead.
+	 *
+	 * @param int $numWords Number of words to limit by
+	 * @param string $add Ellipsis to add to the end of truncated string
+	 * @return string
+	 */
+	function LimitWordCount($numWords = 26, $add = '...') {
+		$this->value = trim(Convert::xml2raw($this->value));
+		$ret = explode(' ', $this->value, $numWords + 1);
 		
-		if( Count($ret) < $numWords-1 ){
-			$ret=$this->value;
-		}else{
+		if(count($ret) <= $numWords - 1) {
+			$ret = $this->value;
+		} else {
 			array_pop($ret);
-			$ret=implode(" ", $ret)."...";
+			$ret = implode(' ', $ret) . $add;
 		}
 		
 		return $ret;
@@ -45,11 +53,23 @@ class Text extends DBField {
 		return HTTP::absoluteURLs($this->value);
 	}
 	
+	/**
+	 * Limit this field's content by a number of characters.
+	 * CAUTION: Does not take into account HTML tags, so it
+	 * has the potential to return malformed HTML.
+	 *
+	 * @param int $limit Number of characters to limit by
+	 * @param string $add Ellipsis to add to the end of truncated string
+	 * @return string
+	 */
 	function LimitCharacters($limit = 20, $add = "...") {
 		$value = trim($this->value);
 		return (strlen($value) > $limit) ? substr($value, 0, $limit) . $add : $value;
 	}
 	
+	/**
+	 * @deprecated. Please use {@link LimitWordCount()}
+	 */
 	function LimitWordCountPlainText($numWords = 26) {
 		$ret = $this->LimitWordCount( $numWords );
 		// Use LimitWordCountXML() instead!
@@ -57,11 +77,18 @@ class Text extends DBField {
 		return $ret;
 	}
 	
-	function LimitWordCountXML( $numWords = 26 ) {
-		$ret = $this->LimitWordCount( $numWords );
-		$ret = Convert::raw2xml($ret);
-		
-		return $ret;
+	/**
+	 * Limit the number of words of the current field's
+	 * content. This is XML safe, so characters like &
+	 * are converted to &amp;
+	 *
+	 * @param int $numWords Number of words to limit by
+	 * @param string $add Ellipsis to add to the end of truncated string
+	 * @return string
+	 */
+	function LimitWordCountXML($numWords = 26, $add = '...') {
+		$ret = $this->LimitWordCount($numWords, $add);
+		return Convert::raw2xml($ret);
 	}
 
 	/**
@@ -221,12 +248,19 @@ class Text extends DBField {
 		}
 	}
 	
+	/**
+	 * Perform context searching to give some context to searches, optionally
+	 * highlighting the search term.
+	 * 
+	 * @param int $characters Number of characters in the summary
+	 * @param boolean $string Supplied string ("keywords")
+	 * @param boolean $striphtml Strip HTML?
+	 * @param boolean $highlight Add a highlight <span> element around search query?
+	 * @return string
+	 */
 	function ContextSummary($characters = 500, $string = false, $striphtml = true, $highlight = true) {
-		if(!$string) {
-			// If no string is supplied, use the string from a SearchForm
-			$string = $_REQUEST['Search'];
-		}
-		
+		if(!$string) $string = $_REQUEST['Search'];	// Use the default "Search" request variable (from SearchForm)
+
 		// Remove HTML tags so we don't have to deal with matching tags
 		$text = $striphtml ? $this->NoHTML() : $this->value;
 		
@@ -236,7 +270,6 @@ class Text extends DBField {
 		// We want to search string to be in the middle of our block to give it some context
 		$position = max(0, $position - ($characters / 2));
 		
-		
 		if($position > 0) {
 			// We don't want to start mid-word
 			$position = max((int) strrpos(substr($text, 0, $position), ' '), (int) strrpos(substr($text, 0, $position), "\n"));
@@ -244,13 +277,20 @@ class Text extends DBField {
 		
 		$summary = substr($text, $position, $characters);
 		
+		$stringPieces = explode(' ', $string);
+		
 		if($highlight) {
 			// Add a span around all occurences of the search term
 			$summary = str_ireplace($string, "<span class=\"highlight\">$string</span>", $summary);
+			
+			// Add a span around all key words from the search term as well
+			if($stringPieces) {
+				foreach($stringPieces as $stringPiece) {
+					$summary = str_ireplace($stringPiece, "<span class=\"highlight\">$stringPiece</span>", $summary);
+				}
+			}
 		}
 		
-		// trim it, because if we counted back and found a space then there will be an extra
-		// space at the front
 		return trim($summary);
 	}
 	

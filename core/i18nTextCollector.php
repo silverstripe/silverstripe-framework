@@ -63,15 +63,25 @@ class i18nTextCollector extends Object {
 	 * and write the resultant files in the lang folder of each module.
 	 * 
 	 * @uses DataObject->collectI18nStatics()
+	 * 
+	 * @param array $restrictToModules
 	 */	
-	public function run($restrictToModule = null) {
+	public function run($restrictToModules = null) {
 		//Debug::message("Collecting text...", false);
+		
+		$modules = array();
 		
 		// A master string tables array (one mst per module)
 		$entitiesByModule = array();
 		
 		//Search for and process existent modules, or use the passed one instead
-		$modules = (isset($restrictToModule)) ? array(basename($restrictToModule)) : scandir($this->basePath);
+		if($restrictToModules && count($restrictToModules)) {
+			foreach($restrictToModules as $restrictToModule) {
+				$modules[] = basename($restrictToModule);
+			}
+		} else {
+			$modules = scandir($this->basePath);
+		}
 
 		foreach($modules as $module) {
 			// Only search for calls in folder with a _config.php file (which means they are modules)  
@@ -83,9 +93,25 @@ class i18nTextCollector extends Object {
 			if(!$isValidModuleFolder) continue;
 			
 			// we store the master string tables 
-			$entitiesByModule[$module] = $this->processModule($module);
+			$processedEntities = $this->processModule($module);
+			if(isset($entitiesByModule[$module])) {
+				$entitiesByModule[$module] = array_merge_recursive($entitiesByModule[$module], $processedEntities);
+			} else {
+				$entitiesByModule[$module] = $processedEntities;
+			}
+			
+			// extract all entities for "foreign" modules (fourth argument)
+			foreach($entitiesByModule[$module] as $fullName => $spec) {
+				if(isset($spec[3]) && $spec[3] != $module) {
+					$othermodule = $spec[3];
+					if(!isset($entitiesByModule[$othermodule])) $entitiesByModule[$othermodule] = array();
+					unset($spec[3]);
+					$entitiesByModule[$othermodule][$fullName] = $spec;
+					unset($entitiesByModule[$module][$fullName]);
+				}
+			}
 		}
-		
+
 		// Write the generated master string tables
 		$this->writeMasterStringFile($entitiesByModule);
 		

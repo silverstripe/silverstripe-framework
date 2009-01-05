@@ -16,7 +16,7 @@ class Date extends DBField {
 		if(ereg('^([0-9]+)/([0-9]+)/([0-9]+)$', $value, $parts)) 
 			$value = "$parts[2]/$parts[1]/$parts[3]";
 
-		if($value) $this->value = date('Y-m-d', strtotime($value));
+		if($value && is_string($value)) $this->value = date('Y-m-d', strtotime($value));
 		else $value = null;
 	}
 
@@ -95,10 +95,27 @@ class Date extends DBField {
 	 */
 	function Ago() {
 		if($this->value) {
-			if(time() < strtotime($this->value)) $agoWord = _t("Date.AWAY", " away");
-			else $agoWord = _t("Date.AGO", " ago");
-
-			return $this->TimeDiff() . ' ' . $agoWord;
+			if(time() > strtotime($this->value)) {
+				return sprintf(
+					_t(
+						'Date.TIMEDIFFAGO',
+						"%s ago",
+						PR_MEDIUM,
+						'Natural language time difference, e.g. 2 hours ago'
+					),
+					$this->TimeDiff()
+				);
+			} else {
+				return sprintf(
+					_t(
+						'Date.TIMEDIFFAWAY',
+						"%s away",
+						PR_MEDIUM,
+						'Natural language time difference, e.g. 2 hours away'
+					),
+					$this->TimeDiff()
+				);
+			}
 		}
 	}
 
@@ -109,27 +126,27 @@ class Date extends DBField {
 			
 			if($ago < 60) {
 				$span = $ago;
-				return ($span != 1) ? "{$span}"._t("Date.SECS", " secs") : "{$span}"._t("Date.SEC", " sec");
+				return ($span != 1) ? "{$span} "._t("Date.SECS", " secs") : "{$span} "._t("Date.SEC", " sec");
 			}
 			if($ago < 3600) {
 				$span = round($ago/60);
-				return ($span != 1) ? "{$span}"._t("Date.MINS", " mins") : "{$span}"._t("Date.MIN", " min");
+				return ($span != 1) ? "{$span} "._t("Date.MINS", " mins") : "{$span} "._t("Date.MIN", " min");
 			}
 			if($ago < 86400) {
 				$span = round($ago/3600);
-				return ($span != 1) ? "{$span}"._t("Date.HOURS", " hours") : "{$span}"._t("Date.HOUR", " hour");
+				return ($span != 1) ? "{$span} "._t("Date.HOURS", " hours") : "{$span} "._t("Date.HOUR", " hour");
 			}
 			if($ago < 86400*30) {
 				$span = round($ago/86400);
-				return ($span != 1) ? "{$span}"._t("Date.DAYS", " days") : "{$span}"._t("Date.DAY", " day");
+				return ($span != 1) ? "{$span} "._t("Date.DAYS", " days") : "{$span} "._t("Date.DAY", " day");
 			}
 			if($ago < 86400*365) {
 				$span = round($ago/86400/30);
-				return ($span != 1) ? "{$span}"._t("Date.MONTHS", " months") : "{$span}"._t("Date.MONTH", " month");
+				return ($span != 1) ? "{$span} "._t("Date.MONTHS", " months") : "{$span} "._t("Date.MONTH", " month");
 			}
 			if($ago > 86400*365) {
 				$span = round($ago/86400/365);
-				return ($span != 1) ? "{$span}"._t("Date.YEARS", " years") : "{$span}"._t("Date.YEAR", " year");
+				return ($span != 1) ? "{$span} "._t("Date.YEARS", " years") : "{$span} "._t("Date.YEAR", " year");
 			}
 		}
 	}

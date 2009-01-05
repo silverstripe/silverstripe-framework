@@ -202,6 +202,22 @@ class FieldSet extends DataObjectSet {
 	}
 	
 	/**
+	 * Rename the title of a particular field name in this set.
+	 *
+	 * @param string $fieldName Name of field to rename title of
+	 * @param string $newFieldTitle New title of field
+	 * @return boolean
+	 */
+	function renameField($fieldName, $newFieldTitle) {
+		$field = $this->dataFieldByName($fieldName);
+		if(!$field) return false;
+		
+		$field->setTitle($newFieldTitle);
+		
+		return $field->Title() == $newFieldTitle;
+	}
+	
+	/**
 	 * @return boolean
 	 */
 	public function hasTabSet() {
@@ -456,25 +472,8 @@ class FieldSet extends DataObjectSet {
 	 */
 	function makeFieldReadonly($field) {
 		$fieldName = ($field instanceof FormField) ? $field->Name() : $field;
-		
-		// Iterate on items, looking for the applicable field
-		foreach($this->items as $i => $item) {
-			if($item->isComposite()) {
-				$item->makeFieldReadonly($fieldName);
-			} else {
-				// Once it's found, use FormField::transform to turn the field into a readonly version of itself.
-				if($item->Name() == $fieldName) {
-					$this->items[$i] = $item->transform(new ReadonlyTransformation());
-
-					// Clear an internal cache
-					$this->sequentialSet = null;
-
-					// A true results indicates that the field was foudn
-					return true;
-				}
-			}
-		}
-		return false;
+		$srcField = $this->dataFieldByName($fieldName);
+		$this->replaceField($fieldName, $srcField->performReadonlyTransformation());
 	}
 	
 	/**

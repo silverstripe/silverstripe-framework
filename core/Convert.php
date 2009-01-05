@@ -49,22 +49,33 @@ class Convert extends Object {
 		}
 	}
 	
-	static function raw2xml($val) {		
+	/**
+	 * Ensure that text is properly escaped for XML.
+	 *
+	 * @param array|string $val String to escape, or array of strings
+	 * @return array|string
+	 */
+	static function raw2xml($val) {
 		if(is_array($val)) {
 			foreach($val as $k => $v) $val[$k] = self::raw2xml($v);
 			return $val;
-			
 		} else {
 			return str_replace(array('&', '<', '>', "\n"), array('&amp;', '&lt;', '&gt;', '<br />'), $val);
 		}
 	}
+	
+	/**
+	 * Ensure that text is properly escaped for Javascript.
+	 *
+	 * @param array|string $val String to escape, or array of strings
+	 * @return array|string
+	 */
 	static function raw2js($val) {
 		if(is_array($val)) {
 			foreach($val as $k => $v) $val[$k] = self::raw2js($v);
 			return $val;
-			
 		} else {
-			return str_replace(array("\\", '"',"\n","\r", "'"), array("\\\\", '\"','\n','\r', "\\'"), $val);
+			return str_replace(array("\\", '"', "\n", "\r", "'"), array("\\\\", '\"', '\n', '\r', "\\'"), $val);
 		}
 	}
 	

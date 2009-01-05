@@ -2,6 +2,16 @@
 
 global $lang;
 
+$lang['en_US']['Page']['PLURALNAME'] = array(
+	'Pags',
+	50,
+	'Pural name of the object, used in dropdowns and to generally identify a collection of this object in the interface'
+);
+$lang['en_US']['Page']['SINGULARNAME'] = array(
+	'Page',
+	50,
+	'Singular name of the object, used in dropdowns and to generally identify a single object in the interface'
+);
 $lang['en_US']['AdvancedSearchForm']['ALLWORDS'] = 'All Words';
 $lang['en_US']['AdvancedSearchForm']['ATLEAST'] = 'At Least One Of the Words';
 $lang['en_US']['AdvancedSearchForm']['EXACT'] = 'Exact Phrase';
@@ -107,8 +117,6 @@ $lang['en_US']['DataObject']['SINGULARNAME'] = array(
 	50,
 	'Singular name of the object, used in dropdowns and to generally identify a single object in the interface'
 );
-$lang['en_US']['Date']['AGO'] = ' ago';
-$lang['en_US']['Date']['AWAY'] = ' away';
 $lang['en_US']['Date']['DAY'] = ' day';
 $lang['en_US']['Date']['DAYS'] = ' days';
 $lang['en_US']['Date']['HOUR'] = ' hour';
@@ -119,6 +127,16 @@ $lang['en_US']['Date']['MONTH'] = ' month';
 $lang['en_US']['Date']['MONTHS'] = ' months';
 $lang['en_US']['Date']['SEC'] = ' sec';
 $lang['en_US']['Date']['SECS'] = ' secs';
+$lang['en_US']['Date']['TIMEDIFFAGO'] = array(
+	'%s ago',
+	PR_MEDIUM,
+	'Natural language time difference, e.g. 2 hours ago'
+);
+$lang['en_US']['Date']['TIMEDIFFAWAY'] = array(
+	'%s away',
+	PR_MEDIUM,
+	'Natural language time difference, e.g. 2 hours away'
+);
 $lang['en_US']['Date']['YEAR'] = ' year';
 $lang['en_US']['Date']['YEARS'] = ' years';
 $lang['en_US']['DateField']['NODATESET'] = 'No date set';
@@ -664,9 +682,11 @@ $lang['en_US']['SiteTree']['BUTTONCANCELDRAFTDESC'] = 'Delete your draft and rev
 $lang['en_US']['SiteTree']['BUTTONSAVEPUBLISH'] = 'Save and Publish';
 $lang['en_US']['SiteTree']['BUTTONUNPUBLISH'] = 'Unpublish';
 $lang['en_US']['SiteTree']['BUTTONUNPUBLISHDESC'] = 'Remove this page from the published site';
-$lang['en_US']['SiteTree']['CHANGETO'] = 'Change to';
-$lang['en_US']['SiteTree']['CURRENT'] = 'current';
-$lang['en_US']['SiteTree']['CURRENTLY'] = 'Currently';
+$lang['en_US']['SiteTree']['CHANGETO'] = array(
+	'Change to "%s"',
+	PR_MEDIUM,
+	'Pagetype selection dropdown with class names'
+);
 $lang['en_US']['SiteTree']['Comments'] = 'Comments';
 $lang['en_US']['SiteTree']['Content'] = array(
 	'Content',

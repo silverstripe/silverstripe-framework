@@ -1,12 +1,6 @@
 <?php
 
 /**
- * @package sapphire
- * @subpackage misc
- */
-
-
-/**
  * Routines for DNS to country resolution
  * 
  *  - convert address (either ip or domainname) to country.
@@ -22,8 +16,9 @@ class Geoip extends Object {
 	
 	public static $default_country_code = false;
 
-	/** ISO 3166 Country Codes **/
 	/** 
+	 * ISO 3166 Country Codes
+	 * 
 	 * Includes additional codes for Europe,
 	 * Asia Pacific Region,Anonymous Proxies
 	 * & Satellite Provider.
@@ -275,52 +270,44 @@ class Geoip extends Object {
 		'ZR' => "Zaire",
 		'ZW' => "Zimbabwe"
 	);
-
 	
 	/** 
-	 * Returns the country code of the person given an IP
+	 * Returns the country code of the person given an IP.
+	 * 
 	 * @param address - The IP address of the user,
 	 * @param codeOnly - Returns just the code of the IP instead of array( $CountryCode => $CountryName)
 	 */
 	static function ip2country($address, $codeOnly = false) {	
 		
 		// Detect internal networks - this is us, so we're NZ
-		if(substr($address,0,7)=="192.168" || substr($address,0,4)=="127.") {
-			$code = "NZ";		
+		if(substr($address, 0, 7) == "192.168" || substr($address,0,4) == "127.") {
+			$code = 'NZ';
 		} else {
-			$cmd = "geoiplookup ".escapeshellarg($address);	
+			$cmd = 'geoiplookup ' . escapeshellarg($address);	
 			exec($cmd, $result, $code);	
 			// Note: At time of writing, $result is always zero for this program
 
-			if ($code == 127) {
-				return false;
-			}
-			
-			if ($result == false) {
-				// don't return any error - @see http://open.silverstripe.com/ticket/1458
-				//user_error("ip2country($address): geoiplookup executable returned nothing.", E_USER_NOTICE);
-				return false;
-			}
+			if($code == 127) return false;
+			if($result == false) return false;
 			
 			// Always returns one line of code, e.g. :
 			// Geoip Country Edition: GB, United Kingdom
 			// NZ
-			
 			$country = $result[0]; 		
 	
 			$start = strpos($country, ':');
-			if ($start) $start+=2;
+			if($start) $start += 2;
 			$code = substr($country, $start, 2); // skip space	
 		}
 
-		if ($code == 'IP' || $code == '--') {
-			 if (self::$default_country_code) $code = self::$default_country_code;
+		if($code == 'IP' || $code == '--') {
+			 if(self::$default_country_code) $code = self::$default_country_code;
 			 else return false;
 		}
 		
 		if(!$codeOnly) {
 			$name = substr($country, $start+4);
-			if (! $name) $name = CountryCode2Name($code);
+			if(!$name) $name = $this->countryCode2name($code);
 			
 			return array('code' => $code, 'name' => $name);
 		} else {
@@ -358,7 +345,7 @@ class Geoip extends Object {
 		foreach ($checks as $url => $expectedResponse) {
 			$response = ip2country($url);
 			
-			if (!$response && $expectedResponse) {
+			if(!$response && $expectedResponse) {
 				user_error("ip2country_check failed sanity check: ip2country($url) returned false. Expected code: '$expectedResponse'", E_USER_WARNING);
 				$status = false;
 			} elseif ($response != $expectedResponse) {
@@ -372,16 +359,10 @@ class Geoip extends Object {
 
 	/** 
 	 * Returns the country name from the appropriate code.
+	 * @return null|string String if country found, null if none found
 	 */
-	 static function countryCode2name($code) {
-		$name = Geoip::$iso_3166_countryCodes[ $code ];
-		if (! $name ) {
-			if (! $code )
-				trigger_error("countryCode2name() Failed to find a country name as no code was provided.", E_USER_WARNING);		
-			else
-				trigger_error("countryCode2name() Failed to find a country name matching the ISO 3166 code '$code'", E_USER_WARNING);
-		}
-		
+	static function countryCode2name($code) {
+		$name = isset(Geoip::$iso_3166_countryCodes[$code]) ? Geoip::$iso_3166_countryCodes[$code] : null;
 		return $name;
 	}
 

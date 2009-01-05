@@ -40,7 +40,7 @@ class RestfulServiceTest extends SapphireTest {
 	}
 	
 	function testPostData() {
-		$connection = new RestfulService(Director::absoluteBaseURL());
+		$connection = new RestfulService(Director::absoluteBaseURL(), 0);
 		$test1params = array(
 			'test1a' => mktime(),
 			'test1b' => mt_rand(),

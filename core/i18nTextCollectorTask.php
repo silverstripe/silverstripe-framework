@@ -26,7 +26,8 @@ class i18nTextCollectorTask extends BuildTask {
 	 */	
 	public function run($request) {
 		$c = new i18nTextCollector();
-		return $c->run($request->getVar('module'));
+		$restrictModules = ($request->getVar('module')) ? explode(',', $request->getVar('module')) : null;
+		return $c->run($restrictModules);
 	}
 }
 ?>

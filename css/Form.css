@@ -105,6 +105,10 @@ form button.minorAction {
 /**
  * Messages
  */
+form .message.notice {
+	background-color: #FCFFDF;
+	border-color: #FF9300;
+}
 form .message {
 	margin: 1em 0;
 	padding: 0.5em;

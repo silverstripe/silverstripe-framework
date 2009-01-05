@@ -76,9 +76,13 @@ if (isset($_GET['url'])) {
 	
 // Lighttpd uses this
 } else {
-	list($url, $query) = explode('?', $_SERVER['REQUEST_URI'], 2);
-	parse_str($query, $_GET);
-	if ($_GET) $_REQUEST = array_merge((array)$_REQUEST, (array)$_GET);
+	if(strpos($_SERVER['REQUEST_URI'],'?') !== false) {
+		list($url, $query) = explode('?', $_SERVER['REQUEST_URI'], 2);
+		parse_str($query, $_GET);
+		if ($_GET) $_REQUEST = array_merge((array)$_REQUEST, (array)$_GET);
+	} else {
+		$url = $_SERVER["REQUEST_URI"];
+	}
 }
 
 // Fix glitches in URL generation
@@ -96,7 +100,8 @@ require_once("core/model/DB.php");
 
 // Redirect to the installer if no database is selected
 if(!isset($databaseConfig) || !isset($databaseConfig['database']) || !$databaseConfig['database']) {
-	$installURL = dirname(dirname($_SERVER['SCRIPT_NAME'])) . '/install.php';
+	$s = (isset($_SERVER['SSL']) || (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off')) ? 's' : '';
+	$installURL = "http$s://" . $_SERVER['HTTP_HOST'] . dirname(dirname($_SERVER['SCRIPT_NAME'])) . '/install.php';
 	header("Location: $installURL");
 	die();
 }
