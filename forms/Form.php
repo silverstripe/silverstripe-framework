@@ -87,6 +87,11 @@ class Form extends RequestHandler {
 	 * @var boolean
 	 */
 	public $jsValidationIncluded = false;
+	
+	/**
+	 * @var $extraClasses array Extra CSS-classes for the formfield-container
+	 */
+	protected $extraClasses = array();
 
 	/**
 	 * Create a new form, with the given fields an action buttons.
@@ -442,19 +447,35 @@ class Form extends RequestHandler {
 	}
 
 	/**
-	 * Return the attributes of the form tag - used by the templates
+	 * Return the attributes of the form tag - used by the templates.
+	 * 
 	 * @return string The attribute string
 	 */
 	function FormAttributes() {
+		$attributes = array();
+		
 		// Forms shouldn't be cached, cos their error messages won't be shown
 		HTTP::set_cache_age(0);
 
+		// workaround to include javascript validation
 		if($this->validator && !$this->jsValidationIncluded) $this->validator->includeJavascriptValidation();
-		if($this->target) $target = " target=\"".$this->target."\"";
-    	else $target = "";
-
-    	return "id=\"" . $this->FormName() . "\" action=\"" . $this->FormAction()
-				. "\" method=\"" . $this->FormMethod() . "\" enctype=\"" . $this->FormEncType() . "\"$target";
+		
+		// compile attributes		
+		$attributes['id'] = $this->FormName();
+		$attributes['action'] = $this->FormAction();
+		$attributes['method'] = $this->FormMethod();
+		$attributes['enctype'] = $this->FormEncType();
+		if($this->target) $attributes['target'] = $this->target;
+		if($this->extraClass()) $attributes['class'] = $this->extraClass();
+		
+		// implode attributes into string
+		$preparedAttributes = '';
+		foreach($attributes as $k => $v) {
+			// Note: as indicated by the $k == value item here; the decisions over what to include in the attributes can sometimes get finicky
+			if(!empty($v) || $v === '0' || $k == 'value') $preparedAttributes .= " $k=\"" . Convert::raw2att($v) . "\"";
+		}
+		
+		return $preparedAttributes;
 	}
 
 	/**
@@ -1061,6 +1082,33 @@ class Form extends RequestHandler {
 	 */
 	static function set_current_action($action) {
 		self::$current_action = $action;
+	}
+	
+	/**
+	 * Compiles all CSS-classes. 
+	 * 
+	 * @return String CSS-classnames, separated by a space
+	 */
+	function extraClass() {
+		return implode($this->extraClasses, " ");
+	}
+	
+	/**
+	 * Add a CSS-class to the form-container.
+	 * 
+	 * @param $class String
+	 */
+	function addExtraClass($class) {
+		$this->extraClasses[$class] = $class;
+	}
+
+	/**
+	 * Remove a CSS-class from the form-container.
+	 * 
+	 * @param $class String
+	 */
+	function removeExtraClass($class) {
+		if(array_key_exists($class, $this->extraClasses)) unset($this->extraClasses[$class]);
 	}
 	
 	function debug() {
