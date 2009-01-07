@@ -1705,6 +1705,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	 */
 	function getIsDeletedFromStage() {
 		if(!$this->ID) return true;
+		if($this->isNew()) return false;
 		
 		$stageVersion = Versioned::get_versionnumber_by_stage('SiteTree', 'Stage', $this->ID);
 		$liveVersion = Versioned::get_versionnumber_by_stage('SiteTree', 'Live', $this->ID);
