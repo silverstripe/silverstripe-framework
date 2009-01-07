@@ -489,8 +489,8 @@ class DataObject extends ViewableData implements DataObjectInterface,i18nEntityP
 		}
 
 		// makes sure we don't merge data like ID or ClassName
-		$leftData = $leftObj->customDatabaseFields();
-		$rightData = $rightObj->customDatabaseFields();
+		$leftData = $leftObj->inheritedDatabaseFields();
+		$rightData = $rightObj->inheritedDatabaseFields();
 
 		foreach($rightData as $key=>$rightVal) {
 			// don't merge conflicting values if priority is 'left'

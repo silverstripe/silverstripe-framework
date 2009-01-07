@@ -543,6 +543,51 @@ class DataObjectTest extends SapphireTest {
 		$this->assertFalse(DataObject::has_own_table("ViewableData"));
 		$this->assertFalse(DataObject::has_own_table("ThisIsntADataObject"));
 	}
+	
+	public function testMerge() {
+		// test right merge of subclasses
+		$left = $this->objFromFixture('DataObjectTest_SubTeam', 'subteam1');
+		$right = $this->objFromFixture('DataObjectTest_SubTeam', 'subteam2_with_player_relation');
+		$leftOrigID = $left->ID;
+		$left->merge($right, 'right', false, false);
+		$this->assertEquals(
+			$left->Title,
+			'Subteam 2',
+			'merge() with "right" priority overwrites fields with existing values on subclasses'
+		);
+		$this->assertEquals(
+			$left->ID,
+			$leftOrigID,
+			'merge() with "right" priority doesnt overwrite database ID'
+		);
+		
+		// test overwriteWithEmpty flag on existing left values
+		$left = $this->objFromFixture('DataObjectTest_SubTeam', 'subteam2_with_player_relation');
+		$right = $this->objFromFixture('DataObjectTest_SubTeam', 'subteam3_with_empty_fields');
+		$left->merge($right, 'right', false, true);
+		$this->assertEquals(
+			$left->Title,
+			'Subteam 3', 
+			'merge() with $overwriteWithEmpty overwrites non-empty fields on left object'
+		);
+		
+		// test overwriteWithEmpty flag on empty left values
+		$left = $this->objFromFixture('DataObjectTest_SubTeam', 'subteam1');
+		$right = $this->objFromFixture('DataObjectTest_SubTeam', 'subteam2_with_player_relation'); // $SubclassDatabaseField is empty on here
+		$left->merge($right, 'right', false, true);
+		$this->assertEquals(
+			$left->SubclassDatabaseField,
+			NULL, 
+			'merge() with $overwriteWithEmpty overwrites empty fields on left object'
+		);
+		
+		// @todo test "left" priority flag
+		// @todo test includeRelations flag
+		// @todo test includeRelations in combination with overwriteWithEmpty
+		// @todo test has_one relations
+		// @todo test has_many and many_many relations
+	}
+
 }
 
 class DataObjectTest_Player extends Member implements TestOnly {
