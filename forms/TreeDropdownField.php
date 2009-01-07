@@ -65,7 +65,6 @@ HTML;
 		if($this->treeBaseID) $obj = DataObject::get_by_id($this->sourceObject, $this->treeBaseID);
 		else $obj = singleton($this->sourceObject);
 		
-		
 		if($this->filterFunc) $obj->setMarkingFilterFunction($this->filterFunc);
 		else if($this->sourceObject == 'Folder') $obj->setMarkingFilter('ClassName', 'Folder');
 		$obj->markPartialTree();
@@ -87,9 +86,10 @@ HTML;
 	 */
 	public function getsubtree() {
 		$obj = $this->getByKey($_REQUEST['SubtreeRootID']);
-
 		if(!$obj) user_error("Can't find database record $this->sourceObject with $this->keyField = $_REQUEST[SubtreeRootID]", E_USER_ERROR);
+
 		if($this->filterFunc) $obj->setMarkingFilterFunction($this->filterFunc);
+		else if($this->sourceObject == 'Folder') $obj->setMarkingFilter('ClassName', 'Folder');
 		$obj->markPartialTree();
 
 		$eval = '"<li id=\"selector-' . $this->name . '-$child->' . $this->keyField .  '\" class=\"$child->class" . $child->markingClasses() . "\"><a>" . $child->' . $this->labelField . ' . "</a>"';
