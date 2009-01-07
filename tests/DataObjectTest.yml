@@ -63,6 +63,6 @@ DataObjectTest_SubTeam:
    subteam2_with_player_relation:
       Title: Subteam 2
       SubclassDatabaseField: Subclassed 2
-      DecoratedHasOneRelationship: => DataObjectTest_Player.player1
+      DecoratedHasOneRelationship: =>DataObjectTest_Player.player1
    subteam3_with_empty_fields:
       Title: Subteam 3
