@@ -423,6 +423,7 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 				new TextField('getimagesSearch', _t('HtmlEditorField.SEARCHFILENAME', 'Search by file name')),
 				new ThumbnailStripField('Image', 'FolderID', 'getimages'),
 				new TextField('AltText', _t('HtmlEditorField.ALTTEXT', 'Description'), '', 80),
+				new CheckboxField('Caption', _t('HtmlEditorField.CAPTION', 'Include as Caption')),
 				new DropdownField(
 					'CSSClass',
 					_t('HtmlEditorField.CSSCLASS', 'Alignment / style'),
