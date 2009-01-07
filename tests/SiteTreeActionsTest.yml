@@ -1,0 +1,11 @@
+Permission:
+   cmsmain:
+      Code: CMS_ACCESS_CMSMain
+Group:
+   cmseditors:
+      Title: CMS Editors
+      Permissions: =>Permission.cmsmain
+Member:
+   cmseditor:
+      Email: cmseditor@test.com
+      Groups: =>Group.cmseditors
