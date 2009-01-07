@@ -73,16 +73,13 @@ class HTTP {
 		return $content;
 	}
 
-	static function setGetVar($varname, $varvalue, $currentURL = null) {
-		$currentURL = $currentURL ? $currentURL : $_SERVER['REQUEST_URI'];
-
-		$scriptbase = $currentURL;
-		$scriptbase = str_replace('&amp;','&',$scriptbase);
-
-		$scriptbase = ereg_replace("&$varname=[^&]*",'',$scriptbase);
-		$scriptbase = ereg_replace("\?$varname=[^&]*&",'?',$scriptbase);
-		$scriptbase = ereg_replace("\?$varname=[^&]*",'',$scriptbase);
-
+	public static function setGetVar($varname, $varvalue, $currentURL = null) {
+		$scriptbase = $currentURL ? $currentURL : $_SERVER['REQUEST_URI'];
+		
+		$scriptbase = str_replace('&amp;', '&', $scriptbase);
+		$scriptbase = preg_replace('/\?' . quotemeta($varname) . '=([^&]*)&/', '?', $scriptbase);
+		$scriptbase = preg_replace('/([\?&]+)' . quotemeta($varname) . '=([^&]*)/', null, $scriptbase);
+		
 		$suffix = '';
 		if(($hashPos = strpos($scriptbase,'#')) !== false) {
 			$suffix .= substr($scriptbase, $hashPos);
@@ -136,7 +133,7 @@ class HTTP {
 	 * Outputs appropriate header for downloading a file
 	 * exits() after the call, so that no further output is given.
 	 * 
-	 * @deprecated 2.3 Return a HTTPResponse::send_file() object instead
+	 * @deprecated 2.3 Return a HTTPRequest::send_file() object instead
 	 */
 	static function sendFileToBrowser($fileData, $fileName, $mimeType = false) {
 		user_error("HTTP::sendFileToBrowser() deprecated; return a HTTPRequest::send_file() object instead", E_USER_NOTICE);

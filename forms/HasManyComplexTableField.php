@@ -32,6 +32,7 @@ class HasManyComplexTableField extends ComplexTableField {
 
 		if($controllerClass = $this->controllerClass()) {
 			$this->joinField = $this->getParentIdName($controllerClass, $this->sourceClass);
+			if(!$this->joinField) user_error("Can't find a has_one relationship from '$this->sourceClass' to '$controllerClass'", E_USER_WARNING);
 		} else {
 			user_error("Can't figure out the data class of $controller", E_USER_WARNING);
 		}
@@ -147,6 +148,11 @@ class HasManyComplexTableField_Item extends ComplexTableField_Item {
 	
 	function MarkingCheckbox() {
 		$name = $this->parent->Name() . '[]';
+		
+		if(!$this->parent->joinField) {
+			user_error("joinField not set in HasManyComplexTableField '{$this->parent->name}'", E_USER_WARNING);
+			return null;
+		}
 		
 		$joinVal = $this->item->{$this->parent->joinField};
 		$parentID = $this->parent->getControllerID();

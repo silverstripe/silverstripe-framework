@@ -44,6 +44,13 @@ class DB {
 	static function set_alternative_database_name($dbname) {
 		$_SESSION["alternativeDatabaseName"] = $dbname;
 	}
+	
+	/**
+	 * Get the name of the database in use
+	 */
+	static function get_alternative_database_name() {
+		return $_SESSION["alternativeDatabaseName"];	
+	}
 
 	/**
 	 * Connect to a database.
