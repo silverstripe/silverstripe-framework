@@ -32,6 +32,14 @@ class Versioned extends DataObjectDecorator {
 	public $migratingVersion;
 	
 	/**
+	 * A cache used by get_versionnumber_by_stage().
+	 * Clear through {@link flushCache()}.
+	 * 
+	 * @var array
+	 */
+	protected static $cache_versionnumber;
+	
+	/**
 	 * Construct a new Versioned object.
 	 * @var array $stages The different stages the versioned object can be.
 	 * The first stage is consiedered the 'default' stage, the last stage is
@@ -588,6 +596,37 @@ class Versioned extends DataObjectDecorator {
 	}
 	
 	/**
+	 * Gets the current version number of a specific record.
+	 * 
+	 * @param string $class
+	 * @param string $stage
+	 * @param int $id
+	 * @param boolean $cache
+	 * @return int
+	 */
+	static function get_versionnumber_by_stage($class, $stage, $id, $cache = true) {
+		$baseClass = ClassInfo::baseDataClass($class);
+		$stageTable = ($stage == 'Stage') ? $baseClass : "{$baseClass}_{$stage}";
+
+		// cached call
+		if($cache && isset(self::$cache_versionnumber[$baseClass][$stage][$id])) {
+			return self::$cache_versionnumber[$baseClass][$stage][$id];
+		}
+		
+		// get version as performance-optimized SQL query (gets called for each page in the sitetree)
+		$version = DB::query("SELECT Version FROM `$stageTable` WHERE ID = $id")->value();
+		
+		// cache value (if required)
+		if($cache) {
+			if(!isset(self::$cache_versionnumber[$baseClass])) self::$cache_versionnumber[$baseClass] = array();
+			if(!isset(self::$cache_versionnumber[$baseClass][$stage])) self::$cache_versionnumber[$baseClass][$stage] = array();
+			self::$cache_versionnumber[$baseClass][$stage][$id] = $version;
+		}
+		
+		return $version;
+	}
+	
+	/**
 	 * Get a set of class instances by the given stage.
 	 * 
 	 * @param string $class The name of the class.
@@ -650,7 +689,9 @@ class Versioned extends DataObjectDecorator {
 	}
 	
 	/**
-	 * Return the latest version of the given page
+	 * Return the latest version of the given page.
+	 * 
+	 * @return DataObject
 	 */
 	static function get_latest_version($class, $id) {
 		$oldStage = Versioned::$reading_stage;
@@ -672,6 +713,9 @@ class Versioned extends DataObjectDecorator {
 		return new $className($record);
 	}
 	
+	/**
+	 * @return DataObject
+	 */
 	static function get_version($class, $id, $version) {
 		$oldStage = Versioned::$reading_stage;
 		Versioned::$reading_stage = null;
@@ -691,6 +735,9 @@ class Versioned extends DataObjectDecorator {
 		return new $className($record);
 	}
 
+	/**
+	 * @return DataObject
+	 */
 	static function get_all_versions($class, $id, $version) {
 		$baseTable = ClassInfo::baseDataClass($class);
 		$query = singleton($class)->buildVersionSQL("`{$baseTable}`.RecordID = $id AND `{$baseTable}`.Version = $version");
@@ -716,6 +763,10 @@ class Versioned extends DataObjectDecorator {
 	
 	function updateFieldLabels(&$labels) {
 		$labels['Versions'] = _t('Versioned.has_many_Versions', 'Versions', PR_MEDIUM, 'Past Versions of this page');
+	}
+	
+	function flushCache() {
+		self::$cache_versionnumber = array();
 	}
 }
 

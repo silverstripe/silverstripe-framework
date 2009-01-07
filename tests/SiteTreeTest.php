@@ -6,7 +6,6 @@
 class SiteTreeTest extends SapphireTest {
 	static $fixture_file = 'sapphire/tests/SiteTreeTest.yml';
 	
-	
 	/**
 	 * Test generation of the URLSegment values.
 	 *  - Turns things into lowercase-hyphen-format
@@ -122,6 +121,52 @@ class SiteTreeTest extends SapphireTest {
 		$this->assertEquals(0, DB::query("SELECT ParentID FROM SiteTree WHERE ID = $page->ID")->value());
 	}
 	
+	function testStageStates() {
+		// newly created page
+		$createdPage = new SiteTree();
+		$createdPage->write();
+		$this->assertFalse($createdPage->IsDeletedFromStage);
+		$this->assertTrue($createdPage->IsAddedToStage);
+		$this->assertTrue($createdPage->IsModifiedOnStage);
+		
+		// published page 
+		$publishedPage = new SiteTree();
+		$publishedPage->write();
+		$publishedPage->publish('Stage','Live');
+		$this->assertFalse($publishedPage->IsDeletedFromStage);
+		$this->assertFalse($publishedPage->IsAddedToStage);
+		$this->assertFalse($publishedPage->IsModifiedOnStage); 
+		
+		// published page, deleted from stage
+		$deletedFromDraftPage = new SiteTree();
+		$deletedFromDraftPage->write();
+		$deletedFromDraftPageID = $deletedFromDraftPage->ID;
+		$deletedFromDraftPage->publish('Stage','Live');
+		$deletedFromDraftPage->deleteFromStage('Stage');
+		$this->assertTrue($deletedFromDraftPage->IsDeletedFromStage);
+		$this->assertFalse($deletedFromDraftPage->IsAddedToStage);
+		$this->assertFalse($deletedFromDraftPage->IsModifiedOnStage);
+		
+		// published page, deleted from live
+		$deletedFromLivePage = new SiteTree();
+		$deletedFromLivePage->write();
+		$deletedFromLivePage->publish('Stage','Live');
+		$deletedFromLivePage->deleteFromStage('Stage');
+		$deletedFromLivePage->deleteFromStage('Live');
+		$this->assertTrue($deletedFromLivePage->IsDeletedFromStage);
+		$this->assertFalse($deletedFromLivePage->IsAddedToStage);
+		$this->assertFalse($deletedFromLivePage->IsModifiedOnStage);
+		
+		// published page, modified
+		$modifiedOnDraftPage = new SiteTree();
+		$modifiedOnDraftPage->write();
+		$modifiedOnDraftPage->publish('Stage','Live');
+		$modifiedOnDraftPage->Content = 'modified';
+		$modifiedOnDraftPage->write();
+		$this->assertFalse($modifiedOnDraftPage->IsDeletedFromStage);
+		$this->assertFalse($modifiedOnDraftPage->IsAddedToStage);
+		$this->assertTrue($modifiedOnDraftPage->IsModifiedOnStage);
+	}
 }
 
 // We make these extend page since that's what all page types are expected to do

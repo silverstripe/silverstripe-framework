@@ -305,7 +305,6 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	 */
 	 public function duplicate($doWrite = true) {
 		$page = parent::duplicate($doWrite);
-		$page->CheckedPublicationDifferences = $page->AddedToStage = true;
 		return $page;
 	}
 
@@ -991,7 +990,19 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		parent::onBeforeWrite();
 	}
 	
+	function onAfterWrite() {
+		// Need to flush cache to avoid outdated versionnumber references
+		$this->flushCache();
+		
+		parent::onAfterWrite();
+	}
 	
+	function onAfterDelete() {
+		// Need to flush cache to avoid outdated versionnumber references
+		$this->flushCache();
+		
+		parent::onAfterDelete();
+	}
 
 
 	/**
@@ -1280,7 +1291,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	function getCMSActions() {
 		$actions = new FieldSet();
 
-		if($this->isPublished() && $this->canPublish()) {
+		if($this->isPublished() && $this->canPublish() && !$this->IsDeletedFromStage) {
 			// "unpublish"
 			$unpublish = FormAction::create('unpublish', _t('SiteTree.BUTTONUNPUBLISH', 'Unpublish'), 'delete');
 			$unpublish->describe(_t('SiteTree.BUTTONUNPUBLISHDESC', "Remove this page from the published site"));
@@ -1288,7 +1299,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 			$actions->push($unpublish);
 		}
 
-		if($this->stagesDiffer('Stage', 'Live')) {
+		if($this->stagesDiffer('Stage', 'Live') && !$this->IsDeletedFromStage) {
 			if($this->isPublished() && $this->canEdit())	{
 				// "rollback"
 				$rollback = FormAction::create('rollback', _t('SiteTree.BUTTONCANCELDRAFT', 'Cancel draft changes'), 'delete');
@@ -1298,7 +1309,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 			}
 		}
 
-		if($this->DeletedFromStage) {
+		if($this->IsDeletedFromStage) {
 			if($this->can('CMSEdit')) {
 				// "restore"
 				$actions->push(new FormAction('revert',_t('CMSMain.RESTORE','Restore')));
@@ -1316,12 +1327,12 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 				$actions->push(new FormAction('save',_t('CMSMain.SAVE','Save')));
 			}
 		}
-		
-		if($this->canPublish()) {
+
+		if($this->canPublish() && !$this->IsDeletedFromStage) {
 			// "publish"
 			$actions->push(new FormAction('publish', _t('SiteTree.BUTTONSAVEPUBLISH', 'Save and Publish')));
 		}
-
+		
 		// getCMSActions() can be extended with updateCMSActions() on a decorator
 		$this->extend('updateCMSActions', $actions);
 		
@@ -1611,34 +1622,17 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	 * @return string
 	 */
 	function TreeTitle() {
-		// If somthing
-		if(!$this->CheckedPublicationDifferences && $this->ID) {
-			$stageVersion =
-				DB::query("SELECT Version FROM SiteTree WHERE ID = $this->ID")->value();
-			$liveVersion =
-				DB::query("SELECT Version FROM SiteTree_Live WHERE ID = $this->ID")->value();
-
-			if($stageVersion && !$liveVersion)
-				$this->AddedToStage = true;
-			else if(!$stageVersion && $liveVersion)
-				$this->DeletedFromStage = true;
-			else if($stageVersion != $liveVersion)
-				$this->ModifiedOnStage = true;
+		if($this->IsDeletedFromStage) {
+			$tag ="del title=\"" . _t('SiteTree.REMOVEDFROMDRAFT', 'Removed from draft site') . "\"";
+		} elseif($this->IsAddedToStage) {
+			$tag = "ins title=\"" . _t('SiteTree.ADDEDTODRAFT', 'Added to draft site') . "\"";
+		} elseif($this->IsModifiedOnStage) {
+			$tag = "span title=\"" . _t('SiteTree.MODIFIEDONDRAFT', 'Modified on draft site') . "\" class=\"modified\"";
+		} else {
+			$tag = '';
 		}
 
-		$tag =
-			($this->DeletedFromStage ? 
-				"del title=\"" . _t('SiteTree.REMOVEDFROMDRAFT', 'Removed from draft site') . "\"" :
-			($this->AddedToStage ? 
-				"ins title=\"" . _t('SiteTree.ADDEDTODRAFT', 'Added to draft site') . "\"" :
-			($this->ModifiedOnStage ? 
-				"span title=\"" . _t('SiteTree.MODIFIEDONDRAFT', 'Modified on draft site') . "\" class=\"modified\"" : "")));
-
-		if($tag) {
-			return "<$tag>" . $this->MenuTitle . "</" . strtok($tag,' ') . ">";
-		}	else {
-			return $this->MenuTitle;
-		}
+		return ($tag) ? "<$tag>" . $this->MenuTitle . "</" . strtok($tag,' ') . ">" : $this->MenuTitle;
 	}
 
 	/**
@@ -1685,6 +1679,54 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		$classes .= $this->markingClasses();
 
 		return $classes;
+	}
+	
+	/**
+	 * Compares current draft with live version,
+	 * and returns TRUE if no draft version of this page exists,
+	 * but the page is still published (after triggering "Delete from draft site" in the CMS).
+	 * 
+	 * @return boolean
+	 */
+	function getIsDeletedFromStage() {
+		// new unsaved pages could be deleted from stage
+		if(!$this->ID) return true;
+		
+		// new pages with a pseudo-id are regarded as deleted from stage as well
+		if(!is_numeric($this->ID)) return false;
+		
+		$stageVersion = Versioned::get_versionnumber_by_stage('SiteTree', 'Stage', $this->ID);
+		$liveVersion = Versioned::get_versionnumber_by_stage('SiteTree', 'Live', $this->ID);
+
+		return (!$stageVersion && $liveVersion);
+	}
+
+	/**
+	 * Compares current draft with live version,
+	 * and returns TRUE if these versions differ,
+	 * meaning there have been unpublished changes to the draft site.
+	 * 
+	 * @return boolean
+	 */
+	public function getIsModifiedOnStage() {
+		$stageVersion = Versioned::get_versionnumber_by_stage('SiteTree', 'Stage', $this->ID);
+		$liveVersion =	Versioned::get_versionnumber_by_stage('SiteTree', 'Live', $this->ID);
+
+		return ($stageVersion != $liveVersion);
+	}
+	
+	/**
+	 * Compares current draft with live version,
+	 * and returns true if no live version exists,
+	 * meaning the page was never published.
+	 * 
+	 * @return boolean
+	 */
+	public function getIsAddedToStage() {
+		$stageVersion = Versioned::get_versionnumber_by_stage('SiteTree', 'Stage', $this->ID);
+		$liveVersion =	Versioned::get_versionnumber_by_stage('SiteTree', 'Live', $this->ID);
+
+		return ($stageVersion && !$liveVersion);
 	}
 	
 	/**

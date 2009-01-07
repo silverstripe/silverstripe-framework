@@ -49,7 +49,6 @@ $lang['en_US']['BBCodeParser']['UNDERLINEEXAMPLE'] = 'Underlined';
 $lang['en_US']['BBCodeParser']['UNORDERED'] = 'Unordered list';
 $lang['en_US']['BBCodeParser']['UNORDEREDDESCRIPTION'] = 'Unordered list';
 $lang['en_US']['BBCodeParser']['UNORDEREDEXAMPLE1'] = 'unordered item 1';
-$lang['en_US']['BBCodeParser']['UNORDEREDEXAMPLE2'] = 'unordered item 2';
 $lang['en_US']['BankAccountField']['VALIDATIONJS'] = 'Please enter a valid bank number';
 $lang['en_US']['BasicAuth']['ENTERINFO'] = 'Please enter a username and password.';
 $lang['en_US']['BasicAuth']['ERRORNOTADMIN'] = 'That user is not an administrator.';
