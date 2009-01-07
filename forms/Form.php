@@ -122,29 +122,7 @@ class Form extends RequestHandler {
 		$this->validator->setForm($this);
 
 		// Form error controls
-		$errorInfo = Session::get("FormInfo.{$this->FormName()}");
-
-		if(isset($errorInfo['errors']) && is_array($errorInfo['errors'])){
-			foreach($errorInfo['errors'] as $error){
-				$field = $this->fields->dataFieldByName($error['fieldName']);
-
-				if(!$field){
-         	$errorInfo['message'] = $error['message'];
-					$errorInfo['type'] = $error['messageType'];
-				} else {
-					$field->setError($error['message'],$error['messageType']);
-				}
-			}
-
-			// load data in from previous submission upon error
-			if(isset($errorInfo['data']))
-				$this->loadDataFrom($errorInfo['data']);
-
-		}
-
-		if(isset($errorInfo['message']) && isset($errorInfo['type'])) {
-			$this->setMessage($errorInfo['message'],$errorInfo['type']);
-		}
+		$this->setupFormErrors();
 		
 		$this->security = self::$default_security;
 	}
@@ -155,6 +133,34 @@ class Form extends RequestHandler {
 		'POST ' => 'httpSubmission',
 		'GET ' => 'httpSubmission',
 	);
+	
+	/**
+	 * Set up current form errors in session to
+	 * the current form if appropriate.
+	 */
+	function setupFormErrors() {
+		$errorInfo = Session::get("FormInfo.{$this->FormName()}");
+
+		if(isset($errorInfo['errors']) && is_array($errorInfo['errors'])) {
+			foreach($errorInfo['errors'] as $error) {
+				$field = $this->fields->dataFieldByName($error['fieldName']);
+
+				if(!$field) {
+					$errorInfo['message'] = $error['message'];
+					$errorInfo['type'] = $error['messageType'];
+				} else {
+					$field->setError($error['message'], $error['messageType']);
+				}
+			}
+
+			// load data in from previous submission upon error
+			if(isset($errorInfo['data'])) $this->loadDataFrom($errorInfo['data']);
+		}
+
+		if(isset($errorInfo['message']) && isset($errorInfo['type'])) {
+			$this->setMessage($errorInfo['message'], $errorInfo['type']);
+		}
+	}
 	
 	/**
 	 * Handle a form submission.  GET and POST requests behave identically.
