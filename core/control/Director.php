@@ -159,6 +159,7 @@ class Director {
 		
 		if(!$httpMethod) $httpMethod = ($postVars || is_array($postVars)) ? "POST" : "GET";
 		
+		$urlWithQuerystring = $url;
 		if(strpos($url, '?') !== false) {
 			list($url, $getVarsEncoded) = explode('?', $url, 2);
 			parse_str($getVarsEncoded, $getVars);
@@ -172,11 +173,11 @@ class Director {
 		$existingPostVars = $_POST; 
 		$existingSessionVars = $_SESSION; 
 		$existingCookies = $_COOKIE;
-		
+		$existingServer = $_SERVER;
 		$existingCookieReportErrors = Cookie::report_errors();
-		Cookie::set_report_errors(false);
-		
 		$existingRequirementsBackend = Requirements::backend();
+
+		Cookie::set_report_errors(false);
 		Requirements::set_backend(new Requirements_Backend());
 
 		// Replace the superglobals with appropriate test values
@@ -185,6 +186,7 @@ class Director {
 		$_POST = (array)$postVars; 
 		$_SESSION = $session ? $session->inst_getAll() : array();
 		$_COOKIE = array();
+		$_SERVER['REQUEST_URI'] = Director::baseURL() . $urlWithQuerystring;
 
 		$req = new HTTPRequest($httpMethod, $url, $getVars, $postVars, $body);
 		if($headers) foreach($headers as $k => $v) $req->addHeader($k, $v);
@@ -196,6 +198,8 @@ class Director {
 		$_POST = $existingPostVars; 
 		$_SESSION = $existingSessionVars;   
 		$_COOKIE = $existingCookies;
+		$_SERVER = $existingServer;
+
 		Cookie::set_report_errors($existingCookieReportErrors); 
 		Requirements::set_backend($existingRequirementsBackend);
 
