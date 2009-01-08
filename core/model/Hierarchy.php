@@ -139,8 +139,8 @@ class Hierarchy extends DataObjectDecorator {
 	 * Mark all children of the given node that match the marking filter.
 	 * @param DataObject $node Parent node.
 	 */
-	public function markChildren($node) {
-		$children = $node->AllChildrenIncludingDeleted();
+	public function markChildren($node, $context = null) {
+		$children = $node->AllChildrenIncludingDeleted($context);
 		$node->markExpanded();
 		if($children) {
 			foreach($children as $child) {
@@ -492,6 +492,7 @@ class Hierarchy extends DataObjectDecorator {
 		$extraFilter = $showAll ? '' : " AND ShowInMenus = 1";
 		$baseClass = ClassInfo::baseDataClass($this->owner->class);
 		$staged = DataObject::get($baseClass, "`{$baseClass}`.`ParentID` = " . (int)$this->owner->ID . " AND `{$baseClass}`.ID != " . (int)$this->owner->ID . $extraFilter, "");
+		if(!$staged) $staged = new DataObjectSet();
 		$this->owner->extend("augmentStageChildren", $staged, $showAll);
 		return $staged;
 	}
