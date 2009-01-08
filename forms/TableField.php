@@ -233,7 +233,7 @@ class TableField extends TableListField {
 							foreach($newitems as $k => $newitem){
 								$fieldset = $this->FieldSetForRow();
 								if($fieldset){
-									$newitem[ID] = "new".$k;
+									$newitem['ID'] = "new".$k;
 									foreach($newitem as $k => $v){
 										if($this->extraData && array_key_exists($k, $this->extraData)){
 											unset($newitem[$k]);
@@ -563,7 +563,8 @@ JS;
 		}
 	}
 	
-	function validate($validator){
+	function validate($validator) {
+		$errorMessage = '';
 		$valid = true;
 		$fields = $this->SubmittedFieldSet($sourceItemsNew);
 		$fields = new FieldSet($fields);
