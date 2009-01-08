@@ -1710,6 +1710,9 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	 * @return boolean
 	 */
 	public function getIsModifiedOnStage() {
+		// new unsaved pages could be never be published
+		if($this->isNew()) return false;
+		
 		$stageVersion = Versioned::get_versionnumber_by_stage('SiteTree', 'Stage', $this->ID);
 		$liveVersion =	Versioned::get_versionnumber_by_stage('SiteTree', 'Live', $this->ID);
 
@@ -1724,6 +1727,9 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	 * @return boolean
 	 */
 	public function getIsAddedToStage() {
+		// new unsaved pages could be never be published
+		if($this->isNew()) return false;
+		
 		$stageVersion = Versioned::get_versionnumber_by_stage('SiteTree', 'Stage', $this->ID);
 		$liveVersion =	Versioned::get_versionnumber_by_stage('SiteTree', 'Live', $this->ID);
 
