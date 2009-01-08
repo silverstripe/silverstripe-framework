@@ -377,7 +377,6 @@ HTML
 			'index.php',
 			'install.php',
 			'rewritetest.php',
-			'check-php.php',
 			'config-form.css',
 			'config-form.html',
 			'index.html'
