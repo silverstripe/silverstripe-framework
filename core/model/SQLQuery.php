@@ -437,6 +437,17 @@ class SQLQuery extends Object {
 		);
 	}
 	
+	/**
+	 * Checks whether this query is filtering on a foreign key, ie finding a has_many relationship
+	 *
+	 * @return boolean
+	 */
+	function filtersOnFK() { 
+		return ($this->where &&
+		(strpos($this->where[0], "ID` = ") || (strpos($this->where[0], "ID = ") > 0))
+		);
+	}
+	
 	/// VARIOUS TRANSFORMATIONS BELOW
 	
 	/**
