@@ -17,7 +17,7 @@ class LanguageDropdownField extends GroupedDropdownField {
 	 */
 	function __construct($name, $title, $dontInclude = array(), $translatingClass = 'SiteTree', $list = 'Common-English' ) {
 		$usedlangs = array_diff(
-			i18n::get_existing_content_languages($translatingClass),
+			Translatable::get_existing_content_languages($translatingClass),
 			$dontInclude
 		);
 		// we accept in dontInclude both language codes and names, so another diff is required

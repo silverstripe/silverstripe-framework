@@ -854,26 +854,6 @@ class i18n extends Object {
 	}
 	
 	/**
-	 * Get a list of languages with at least one element translated in (including the default language)
-	 *
-	 * @param string $className Look for languages in elements of this class
-	 * @return array Map of languages in the form langCode => langName
-	 */
-	static function get_existing_content_languages($className = 'SiteTree', $where = '') {
-		if(!Translatable::is_enabled()) return false;
-		
-		$query = new SQLQuery('Lang',$className.'_lang',$where,"",'Lang');
-		$dbLangs = $query->execute()->column();
-		$langlist = array_merge((array)Translatable::default_lang(), (array)$dbLangs);
-		$returnMap = array();
-		$allCodes = array_merge(self::$all_locales, self::$common_languages);
-		foreach ($langlist as $langCode) {
-			$returnMap[$langCode] = (is_array($allCodes[$langCode]) ? $allCodes[$langCode][0] : $allCodes[$langCode]);
-		}
-		return $returnMap;
-	}
-	
-	/**
 	 * Searches the root-directory for module-directories
 	 * (identified by having a _config.php on their first directory-level).
 	 * Returns all found locales.

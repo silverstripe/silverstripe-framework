@@ -743,6 +743,27 @@ class Translatable extends DataObjectDecorator {
 		}
 		return $table;
 	}
+	
+	/**
+	 * Get a list of languages with at least one element translated in (including the default language)
+	 *
+	 * @param string $className Look for languages in elements of this class
+	 * @return array Map of languages in the form langCode => langName
+	 */
+	static function get_existing_content_languages($className = 'SiteTree', $where = '') {
+		if(!Translatable::is_enabled()) return false;
+		$baseTable = ClassInfo::baseDataClass($className);
+		$query = new SQLQuery('Distinct Lang',$baseTable,$where,"",'Lang');
+		$dbLangs = $query->execute()->column();
+		$langlist = array_merge((array)Translatable::default_lang(), (array)$dbLangs);
+		$returnMap = array();
+		$allCodes = array_merge(i18n::$all_locales, i18n::$common_languages);
+		foreach ($langlist as $langCode) {
+			if($langCode)
+				$returnMap[$langCode] = (is_array($allCodes[$langCode]) ? $allCodes[$langCode][0] : $allCodes[$langCode]);
+		}
+		return $returnMap;
+	}
 		
 }
 
