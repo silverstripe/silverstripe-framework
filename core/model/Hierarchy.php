@@ -69,13 +69,13 @@ class Hierarchy extends DataObjectDecorator {
 	 * @param int $minCount The minimum amount of nodes to mark.
 	 * @return int The actual number of nodes marked.
 	 */
-	public function markPartialTree($minCount = 30) {
+	public function markPartialTree($minCount = 30, $context = null) {
 		$this->markedNodes = array($this->owner->ID => $this->owner);
 		$this->owner->markUnexpanded();
 
 		// foreach can't handle an ever-growing $nodes list
 		while(list($id, $node) = each($this->markedNodes)) {
-			$this->markChildren($node);
+			$this->markChildren($node, $context);
 			
 			if($minCount && sizeof($this->markedNodes) >= $minCount) {
 				break;
