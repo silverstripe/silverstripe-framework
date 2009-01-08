@@ -293,8 +293,7 @@ class DataObject extends ViewableData implements DataObjectInterface,i18nEntityP
 	 * @return string User friendly translated singular name of this DataObject
 	 */
 	function i18n_singular_name() {
-		$name = (!empty($this->add_action)) ? $this->add_action : $this->singular_name();
-		return _t($this->class.'.SINGULARNAME', $name);
+		return _t($this->class.'.SINGULARNAME', $this->singular_name());
 	}
 
 	/**

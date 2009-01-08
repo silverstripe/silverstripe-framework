@@ -138,6 +138,8 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	/**
 	 * The text shown in the create page dropdown. If
 	 * this is not set, default to "Create a ClassName".
+	 * 
+	 * @deprecated 2.3 Use "<myclassname>.TITLE" in the i18n language tables instead
 	 * @var string
 	 */
 	static $add_action = null;
@@ -1761,6 +1763,12 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 				'Control which groups can access or edit certain pages'
 			)
 		);
+	}
+	
+	function i18n_singular_name() {
+		$addAction = $this->stat('add_action');
+		$name = (!empty($addAction)) ? $addAction : $this->singular_name();
+		return _t($this->class.'.SINGULARNAME', $name);
 	}
 	
 	/**
