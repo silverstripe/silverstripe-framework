@@ -33,7 +33,7 @@ class Hierarchy extends DataObjectDecorator {
 			$this->markingFinished();
 		}
 		
-		$children = $this->owner->AllChildrenIncludingDeleted();
+		$children = $this->owner->AllChildrenIncludingDeleted($extraArg);
 
 		if($children) {
 			if($attributes) {
@@ -381,7 +381,17 @@ class Hierarchy extends DataObjectDecorator {
 	 * Everything else has "SameOnStage" set, as an indicator that this information has been looked up.
 	 * @return DataObjectSet
 	 */
-	public function AllChildrenIncludingDeleted() {
+	public function AllChildrenIncludingDeleted($context = null) {
+		return $this->doAllChildrenIncludingDeleted($context);
+	}
+	
+	/**
+	 * @see AllChildrenIncludingDeleted
+	 *
+	 * @param unknown_type $context
+	 * @return DataObjectSet
+	 */
+	public function doAllChildrenIncludingDeleted($context = null) {
 		// Cache the allChildren data, so that future requests will return the references to the same
 		// object.  This allows the mark..() system to work appropriately.
 
@@ -390,6 +400,8 @@ class Hierarchy extends DataObjectDecorator {
 			if($baseClass) {
 				$stageChildren = $this->owner->stageChildren(true);
 				$this->allChildrenIncludingDeleted = $stageChildren;
+				
+				$this->owner->extend("augmentAllChildrenIncludingDeleted", $stageChildren, $context); 
 				
 				// Add live site content, if required.
 				if($this->owner->hasExtension('Versioned')) {
@@ -467,6 +479,7 @@ class Hierarchy extends DataObjectDecorator {
 		// We build the query in an extension-friendly way.
 		$query = new SQLQuery("COUNT(*)","`$baseClass`","ParentID = " . (int)$this->owner->ID);
 		$this->owner->extend('augmentSQL', $query);
+		$this->owner->extend('augmentNumChildrenCountQuery', $query); 
 		return $query->execute()->value();
 	}
 
@@ -478,7 +491,9 @@ class Hierarchy extends DataObjectDecorator {
 	public function stageChildren($showAll = false) {
 		$extraFilter = $showAll ? '' : " AND ShowInMenus = 1";
 		$baseClass = ClassInfo::baseDataClass($this->owner->class);
-		return DataObject::get($baseClass, "`{$baseClass}`.`ParentID` = " . (int)$this->owner->ID . " AND `{$baseClass}`.ID != " . (int)$this->owner->ID . $extraFilter, "");
+		$staged = DataObject::get($baseClass, "`{$baseClass}`.`ParentID` = " . (int)$this->owner->ID . " AND `{$baseClass}`.ID != " . (int)$this->owner->ID . $extraFilter, "");
+		$this->owner->extend("augmentStageChildren", $staged, $showAll);
+		return $staged;
 	}
 
 	/**
