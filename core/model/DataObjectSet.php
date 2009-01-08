@@ -458,6 +458,21 @@ class DataObjectSet extends ViewableData implements IteratorAggregate {
 	}
 	
 	/**
+	 * Replaces $itemOld with $itemNew
+	 *
+	 * @param DataObject $itemOld
+	 * @param DataObject $itemNew
+	 */	
+	public function replace($itemOld, $itemNew) {
+		foreach($this->items as $key => $item) {
+			if($item === $itemOld) {
+				$this->items[$key] = $itemNew;
+				return;
+			}
+		}
+	}
+	
+	/**
 	 * Merge another set onto the end of this set.
 	 * @param DataObjectSet $anotherSet Set to mege onto this set.
 	 */
