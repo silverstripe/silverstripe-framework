@@ -26,6 +26,15 @@ abstract class Extension extends Object {
 	function setOwner(Object $owner) {
 		$this->owner = $owner;
 	}
+	
+	/**
+	 * Returns the owner of this decorator
+	 *
+	 * @return Object
+	 */
+	public function getOwner() {
+		return $this->owner;
+	}
 }
 
 ?>
