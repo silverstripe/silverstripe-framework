@@ -460,12 +460,15 @@ class Object {
 	 * @param string $funcName The name of the function.
 	 * @param mixed $arg An Argument to be passed to each of the extension functions.
 	 */
-	public function extend($funcName, &$arg=null) {
+	public function extend($funcName, &$arg1=null, &$arg2=null, &$arg3=null, &$arg4=null, &$arg5=null, &$arg6=null, &$arg7=null) {
+		$arguments = func_get_args();
+		array_shift($arguments);
+		
 		if($this->extension_instances) {
 			$returnArr = array();
 			foreach($this->extension_instances as $extension) {
 				if($extension->hasMethod($funcName)) {
-					$return = $extension->$funcName($arg);
+					$return = $extension->$funcName($arg1, $arg2, $arg3, $arg4, $arg5, $arg6, $arg7);
 					if($return !== NULL) $returnArr[] = $return;
 				}
 			}
