@@ -753,7 +753,7 @@ class Translatable extends DataObjectDecorator {
 	static function get_existing_content_languages($className = 'SiteTree', $where = '') {
 		if(!Translatable::is_enabled()) return false;
 		$baseTable = ClassInfo::baseDataClass($className);
-		$query = new SQLQuery('Distinct Lang',$baseTable,$where,"",'Lang');
+		$query = new SQLQuery('Lang',$baseTable.'_lang',$where,"",'Lang');
 		$dbLangs = $query->execute()->column();
 		$langlist = array_merge((array)Translatable::default_lang(), (array)$dbLangs);
 		$returnMap = array();
