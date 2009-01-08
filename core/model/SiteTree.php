@@ -1691,6 +1691,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	function getIsDeletedFromStage() {
 		// new unsaved pages could be deleted from stage
 		if(!$this->ID) return true;
+		if($this->isNew()) return false;
 		
 		// new pages with a pseudo-id are regarded as deleted from stage as well
 		if(!is_numeric($this->ID)) return false;
