@@ -50,23 +50,23 @@ class MemberLoginForm extends LoginForm {
 			if(!$fields) {
 				$fields = new FieldSet(
 					new HiddenField("AuthenticationMethod", null, $this->authenticator_class, $this),
-					new TextField("Email", _t('Member.EMAIL'),
-						Session::get('SessionForms.MemberLoginForm.Email'), null, $this),
+					new TextField("Email", _t('Member.EMAIL'), Session::get('SessionForms.MemberLoginForm.Email'), null, $this),
 					new PasswordField("Password", _t('Member.PASSWORD'), null, $this)
 				);
 				if(Security::$autologin_enabled) {
 					$fields->push(new CheckboxField(
 						"Remember", 
-						_t('Member.REMEMBERME', "Remember me next time?"),
-						Session::get('SessionForms.MemberLoginForm.Remember'), 
-						$this
+						_t('Member.REMEMBERME', "Remember me next time?")
 					));
 				}
 			}
 			if(!$actions) {
 				$actions = new FieldSet(
 					new FormAction('dologin', _t('Member.BUTTONLOGIN', "Log in")),
-					new LiteralField('forgotPassword', '<p id="ForgotPassword"><a href="Security/lostpassword">' . _t('Member.BUTTONLOSTPASSWORD', "I've lost my password") . '</a></p>')
+					new LiteralField(
+						'forgotPassword',
+						'<p id="ForgotPassword"><a href="Security/lostpassword">' . _t('Member.BUTTONLOSTPASSWORD', "I've lost my password") . '</a></p>'
+					)
 				);
 			}
 		}
@@ -77,7 +77,6 @@ class MemberLoginForm extends LoginForm {
 
 		parent::__construct($controller, $name, $fields, $actions);
 	}
-
 
 	/**
 	 * Get message from session
@@ -113,8 +112,6 @@ class MemberLoginForm extends LoginForm {
 				$cp->sessionMessage('Your password has expired.  Please choose a new one.', 'good');
 				
 				Director::redirect('Security/changepassword');
-				
-				
 			} elseif(isset($_REQUEST['BackURL']) && $backURL = $_REQUEST['BackURL']) {
 				Session::clear("BackURL");
 				Director::redirect($backURL);
@@ -122,6 +119,14 @@ class MemberLoginForm extends LoginForm {
 				$member = Member::currentUser();
 				if($member) {
 					$firstname = Convert::raw2xml($member->FirstName);
+					
+					if(!empty($data['Remember'])) {
+						Session::set('SessionForms.MemberLoginForm.Remember', '1');
+						$member->logIn(true);
+					} else {
+						$member->logIn();
+					}
+					
 					Session::set('Security.Message.message',
 						sprintf(_t('Member.WELCOMEBACK', "Welcome Back, %s"), $firstname) 
 					);
