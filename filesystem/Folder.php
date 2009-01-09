@@ -211,7 +211,7 @@ class Folder extends File {
 	
 	
 	function onBeforeDelete() {
-		if($children = $this->AllChildren()) {
+		if($this->ID && ($children = $this->AllChildren())) {
 			foreach($children as $child) {
 				if(!$this->Filename || !$this->Name || !file_exists($this->getFullPath())) {
 					$child->setField('Name',null);
@@ -261,7 +261,7 @@ class Folder extends File {
 	 * Returns true if this folder has children
 	 */
 	public function hasChildren() {
-		return $this->myChildren() && $this->myChildren()->Count() > 0;	
+		return $this->ID && $this->myChildren() && $this->myChildren()->Count() > 0;	
 	}
 	
 	/**
@@ -270,7 +270,7 @@ class Folder extends File {
 	public function autosetFilename() {
 		parent::autosetFilename();
 
-		if($children = $this->AllChildren()) {
+		if($this->ID && ($children = $this->AllChildren())) {
 			$this->write();
 
 			foreach($children as $child) {
@@ -287,7 +287,7 @@ class Folder extends File {
 	protected function resetFilename($renamePhysicalFile = true) {
 		parent::resetFilename($renamePhysicalFile);
 
-		if($children = $this->AllChildren()) {
+		if($this->ID && ($children = $this->AllChildren())) {
 			$this->write();
 
 			foreach($children as $child) {
