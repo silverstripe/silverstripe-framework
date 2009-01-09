@@ -440,8 +440,7 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 				)
 			),
 			new FieldSet(
-				new FormAction('insertimage', _t('HtmlEditorField.BUTTONINSERTIMAGE', 'Insert image')),
-				new FormAction('editimage', _t('HtmlEditorField.BUTTONEDITIMAGE', 'Edit image'))
+				new FormAction('insertimage', _t('HtmlEditorField.BUTTONINSERTIMAGE', 'Insert image'))
 			)
 		);
 		
