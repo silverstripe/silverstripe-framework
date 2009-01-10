@@ -959,15 +959,12 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		
 		DataObject::set_context_obj($this);
 		
-		// Ensure URLSegment is unique
-		$idFilter = ($this->ID)
-			? " AND `SiteTree`.ID <> '$this->ID'" :
-			'';
+		$idFilter = ($this->ID) ? "`SiteTree`.ID <> '$this->ID'" : '';
 
 		$count = 1;
 		while (
 			(class_exists($this->URLSegment) && is_subclass_of($this->URLSegment, 'RequestHandler')) ||
-			DataObject::get_one("SiteTree", "URLSegment = '$this->URLSegment' $idFilter")
+			SiteTree::get_by_url($this->URLSegment, $idFilter)
 		) {
 			$count++;
 			$this->URLSegment = ereg_replace('-[0-9]+$','', $this->URLSegment) . "-$count";
@@ -1028,11 +1025,15 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	 * Return the SiteTree object with the given URL segment.
 	 *
 	 * @param string $urlSegment The URL segment, eg 'home'
-	 *
+	 * @param string $extraFilter
+	 * @param boolean $cache
+	 * @param string $orderby
 	 * @return SiteTree The object with the given URL segment
 	 */
-	public static function get_by_url($urlSegment) {
-		return DataObject::get_one("SiteTree", "URLSegment = '" . addslashes((string) $urlSegment) . "'");
+	public static function get_by_url($urlSegment, $extraFilter = "", $cache = true, $orderby = "") {
+		$filter = sprintf("`SiteTree`.URLSegment = '%s'", Convert::raw2sql($urlSegment));
+		if($extraFilter) $filter .= " AND $extraFilter";
+		return DataObject::get_one("SiteTree", $filter, $cache, $orderby);
 	}
 
 	/**
