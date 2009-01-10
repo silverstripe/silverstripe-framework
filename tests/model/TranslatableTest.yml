@@ -1,0 +1,21 @@
+Page:
+   home_en:
+      Title: Home
+      URLSegment: home
+      Lang: en
+   home_fr:
+      Title: Maison
+      URLSegment: home
+      Lang: fr
+      OriginalID: =>Page.home_en
+   parent:
+      Title: Parent
+      URLSegment: parent
+   child:
+      Title: Child
+      URLSegment: child
+      Parent: =>Page.parent
+   grandchild:
+      Title: Grantchild
+      URLSegment: grandchild
+      Parent: =>Page.child
