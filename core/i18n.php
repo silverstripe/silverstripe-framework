@@ -991,7 +991,6 @@ class i18n extends Object {
 	 * @param string $locale Locale to be set 
 	 */
 	static function set_locale($locale) {
-		if(strlen($locale) == 2) Debug::backtrace();
 		if ($locale) self::$current_locale = $locale;
 	}
 
