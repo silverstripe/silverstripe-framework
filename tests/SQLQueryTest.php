@@ -112,6 +112,88 @@ class SQLQueryTest extends SapphireTest {
 	function testSelectWithComplexOrderbyClause() {
 		// @todo Test "ORDER BY RANDOM() ASC,MyName DESC" etc.
 	}
+	
+	function testFiltersOnID() {
+		$query = new SQLQuery();
+		$query->where[] = "ID = 5";
+		$this->assertTrue(
+			$query->filtersOnID(),
+			"filtersOnID() is true with simple unquoted column name"
+		);
+		
+		$query = new SQLQuery();
+		$query->where[] = "ID=5";
+		$this->assertTrue(
+			$query->filtersOnID(),
+			"filtersOnID() is true with simple unquoted column name and no spaces in equals sign"
+		);
+		/*
+		$query = new SQLQuery();
+		$query->where[] = "Foo='Bar' AND ID=5";
+		$this->assertTrue(
+			$query->filtersOnID(),
+			"filtersOnID() is true with combined SQL statements"
+		);
+		*/
+		
+		$query = new SQLQuery();
+		$query->where[] = "Identifier = 5";
+		$this->assertFalse(
+			$query->filtersOnID(),
+			"filtersOnID() is false with custom column name (starting with 'id')"
+		);
+		
+		$query = new SQLQuery();
+		$query->where[] = "ParentID = 5";
+		$this->assertFalse(
+			$query->filtersOnID(),
+			"filtersOnID() is false with column name ending in 'ID'"
+		);
+		
+		$query = new SQLQuery();
+		$query->where[] = "MyTable.ID = 5";
+		$this->assertTrue(
+			$query->filtersOnID(),
+			"filtersOnID() is true with table and column name"
+		);
+		
+		$query = new SQLQuery();
+		$query->where[] = "MyTable.`ID`= 5";
+		$this->assertTrue(
+			$query->filtersOnID(),
+			"filtersOnID() is true with table and quoted column name "
+		);
+	}
+	
+	function testFiltersOnFK() {
+		$query = new SQLQuery();
+		$query->where[] = "ID = 5";
+		$this->assertFalse(
+			$query->filtersOnFK(),
+			"filtersOnFK() is true with simple unquoted column name"
+		);
+		
+		$query = new SQLQuery();
+		$query->where[] = "Identifier = 5";
+		$this->assertFalse(
+			$query->filtersOnFK(),
+			"filtersOnFK() is false with custom column name (starting with 'id')"
+		);
+		
+		$query = new SQLQuery();
+		$query->where[] = "MyTable.ParentID = 5";
+		$this->assertTrue(
+			$query->filtersOnFK(),
+			"filtersOnFK() is true with table and column name"
+		);
+		
+		$query = new SQLQuery();
+		$query->where[] = "MyTable.`ParentID`= 5";
+		$this->assertTrue(
+			$query->filtersOnFK(),
+			"filtersOnFK() is true with table and quoted column name "
+		);
+	}
 }
 
 class SQLQueryTest_DO extends DataObject implements TestOnly {

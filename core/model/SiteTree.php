@@ -138,6 +138,8 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	/**
 	 * The text shown in the create page dropdown. If
 	 * this is not set, default to "Create a ClassName".
+	 * 
+	 * @deprecated 2.3 Use "<myclassname>.TITLE" in the i18n language tables instead
 	 * @var string
 	 */
 	static $add_action = null;
@@ -956,14 +958,12 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		DataObject::set_context_obj($this);
 		
 		// Ensure URLSegment is unique
-		$idFilter = ($this->ID)
-			? " AND \"SiteTree\".\"ID\" <> '$this->ID'" :
-			'';
+		$idFilter = ($this->ID) ? "\"SiteTree\".\"ID\" <> '$this->ID'" : '';
 
 		$count = 1;
 		while (
 			(class_exists($this->URLSegment) && is_subclass_of($this->URLSegment, 'RequestHandler')) ||
-			DataObject::get_one("SiteTree", "\"URLSegment\" = '$this->URLSegment' $idFilter")
+			SiteTree::get_by_url($this->URLSegment, $idFilter)
 		) {
 			$count++;
 			$this->URLSegment = ereg_replace('-[0-9]+$','', $this->URLSegment) . "-$count";
@@ -1024,11 +1024,15 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	 * Return the SiteTree object with the given URL segment.
 	 *
 	 * @param string $urlSegment The URL segment, eg 'home'
-	 *
+	 * @param string $extraFilter
+	 * @param boolean $cache
+	 * @param string $orderby
 	 * @return SiteTree The object with the given URL segment
 	 */
-	public static function get_by_url($urlSegment) {
-		return DataObject::get_one("SiteTree", "\"URLSegment\" = '" . addslashes((string) $urlSegment) . "'");
+	public static function get_by_url($urlSegment, $extraFilter = "", $cache = true, $orderby = "") {
+		$filter = sprintf("\"URLSegment\" = '%s'", Convert::raw2sql($urlSegment));
+		if($extraFilter) $filter .= " AND $extraFilter";
+		return DataObject::get_one("SiteTree", $filter, $cache, $orderby);
 	}
 
 	/**
@@ -1721,6 +1725,9 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	 * @return boolean
 	 */
 	public function getIsModifiedOnStage() {
+		// new unsaved pages could be never be published
+		if($this->isNew()) return false;
+		
 		$stageVersion = Versioned::get_versionnumber_by_stage('SiteTree', 'Stage', $this->ID);
 		$liveVersion =	Versioned::get_versionnumber_by_stage('SiteTree', 'Live', $this->ID);
 
@@ -1735,6 +1742,9 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	 * @return boolean
 	 */
 	public function getIsAddedToStage() {
+		// new unsaved pages could be never be published
+		if($this->isNew()) return false;
+		
 		$stageVersion = Versioned::get_versionnumber_by_stage('SiteTree', 'Stage', $this->ID);
 		$liveVersion =	Versioned::get_versionnumber_by_stage('SiteTree', 'Live', $this->ID);
 
@@ -1766,6 +1776,12 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 				'Control which groups can access or edit certain pages'
 			)
 		);
+	}
+	
+	function i18n_singular_name() {
+		$addAction = $this->stat('add_action');
+		$name = (!empty($addAction)) ? $addAction : $this->singular_name();
+		return _t($this->class.'.SINGULARNAME', $name);
 	}
 	
 	/**

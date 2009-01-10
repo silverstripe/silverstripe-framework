@@ -40,7 +40,6 @@ class ManifestBuilder {
 		'cli-script.php',
 		'install.php',
 		'index.php',
-		'check-php.php',
 		'rewritetest.php',
 	);
 

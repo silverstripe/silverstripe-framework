@@ -302,8 +302,7 @@ class DataObject extends ViewableData implements DataObjectInterface,i18nEntityP
 	 * @return string User friendly translated singular name of this DataObject
 	 */
 	function i18n_singular_name() {
-		$name = (!empty($this->add_action)) ? $this->add_action : $this->singular_name();
-		return _t($this->class.'.SINGULARNAME', $name);
+		return _t($this->class.'.SINGULARNAME', $this->singular_name());
 	}
 
 	/**
@@ -2245,6 +2244,9 @@ class DataObject extends ViewableData implements DataObjectInterface,i18nEntityP
 		}
 		
 		$query = $this->extendedSQL($filter, $sort, $limit, $join);
+		
+		$this->extend('augmentSQL', $query);
+
 		$records = $query->execute();
 
 		$ret = $this->buildDataObjectSet($records, $containerClass, $query, $this->class);

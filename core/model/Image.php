@@ -6,6 +6,10 @@
  */
 class Image extends File {
 	
+	const ORIENTATION_SQUARE = 0;
+	const ORIENTATION_PORTRAIT = 1;
+	const ORIENTATION_LANDSCAPE = 2;
+	
 	static $casting = array(
 		'Tag' => 'HTMLText',
 	);
@@ -383,6 +387,21 @@ class Image extends File {
 		return $this->getDimensions(1);
 	}
 	
+	/**
+	 * Get the orientation of this image.
+	 * @return 	ORIENTATION_SQUARE | ORIENTATION_PORTRAIT | ORIENTATION_LANDSCAPE
+	 */
+	function getOrienation() {
+		$width = $this->getWidth();
+		$height = $this->getHeight();
+		if($width > $height) {
+			return self::ORIENTATION_LANDSCAPE;
+		} elseif($height > $width) {
+			return self::ORIENTATION_PORTRAIT;
+		} else {
+			return self::ORIENTATION_SQUARE;
+		}
+	}
 	
 	
 	
@@ -467,7 +486,7 @@ class Image_Uploader extends Controller {
 		
 		// set reading lang
 		if(Translatable::is_enabled() && !Director::is_ajax()) {
-			Translatable::choose_site_lang(array_keys(i18n::get_existing_content_languages('SiteTree')));
+			Translatable::choose_site_lang(array_keys(Translatable::get_existing_content_languages('SiteTree')));
 		}
 		
 		parent::init();

@@ -35,6 +35,9 @@ class ComplexTableField extends TableListField {
 	 *  - A FieldSet object: Use that field set directly.
 	 *  - A method name, eg, 'getCMSFields': Call that method on the child object to get the fields.
 	 */
+     
+    protected $addTitle;
+    
 	protected $detailFormFields;
 	
 	protected $viewAction, $sourceJoin, $sourceItems, $unpagedSourceItems;
@@ -301,6 +304,15 @@ JS;
 	 */
 	function setDetailFormValidator( Validator $validator ) {
 		$this->detailFormValidator = $validator;
+	}
+    
+    function setAddTitle($addTitle) {
+		if(is_string($addTitle))
+			$this->addTitle = $addTitle;
+	}
+    
+    function Title() {
+		return $this->addTitle ? $this->addTitle : parent::Title();
 	}
 	
 	/**

@@ -33,7 +33,7 @@ class Hierarchy extends DataObjectDecorator {
 			$this->markingFinished();
 		}
 		
-		$children = $this->owner->AllChildrenIncludingDeleted();
+		$children = $this->owner->AllChildrenIncludingDeleted($extraArg);
 
 		if($children) {
 			if($attributes) {
@@ -69,13 +69,13 @@ class Hierarchy extends DataObjectDecorator {
 	 * @param int $minCount The minimum amount of nodes to mark.
 	 * @return int The actual number of nodes marked.
 	 */
-	public function markPartialTree($minCount = 30) {
+	public function markPartialTree($minCount = 30, $context = null) {
 		$this->markedNodes = array($this->owner->ID => $this->owner);
 		$this->owner->markUnexpanded();
 
 		// foreach can't handle an ever-growing $nodes list
 		while(list($id, $node) = each($this->markedNodes)) {
-			$this->markChildren($node);
+			$this->markChildren($node, $context);
 			
 			if($minCount && sizeof($this->markedNodes) >= $minCount) {
 				break;
@@ -139,8 +139,8 @@ class Hierarchy extends DataObjectDecorator {
 	 * Mark all children of the given node that match the marking filter.
 	 * @param DataObject $node Parent node.
 	 */
-	public function markChildren($node) {
-		$children = $node->AllChildrenIncludingDeleted();
+	public function markChildren($node, $context = null) {
+		$children = $node->AllChildrenIncludingDeleted($context);
 		$node->markExpanded();
 		if($children) {
 			foreach($children as $child) {
@@ -381,7 +381,17 @@ class Hierarchy extends DataObjectDecorator {
 	 * Everything else has "SameOnStage" set, as an indicator that this information has been looked up.
 	 * @return DataObjectSet
 	 */
-	public function AllChildrenIncludingDeleted() {
+	public function AllChildrenIncludingDeleted($context = null) {
+		return $this->doAllChildrenIncludingDeleted($context);
+	}
+	
+	/**
+	 * @see AllChildrenIncludingDeleted
+	 *
+	 * @param unknown_type $context
+	 * @return DataObjectSet
+	 */
+	public function doAllChildrenIncludingDeleted($context = null) {
 		// Cache the allChildren data, so that future requests will return the references to the same
 		// object.  This allows the mark..() system to work appropriately.
 
@@ -390,6 +400,8 @@ class Hierarchy extends DataObjectDecorator {
 			if($baseClass) {
 				$stageChildren = $this->owner->stageChildren(true);
 				$this->allChildrenIncludingDeleted = $stageChildren;
+				
+				$this->owner->extend("augmentAllChildrenIncludingDeleted", $stageChildren, $context); 
 				
 				// Add live site content, if required.
 				if($this->owner->hasExtension('Versioned')) {
@@ -467,6 +479,7 @@ class Hierarchy extends DataObjectDecorator {
 		// We build the query in an extension-friendly way.
 		$query = new SQLQuery("COUNT(*)","\"$baseClass\"","\"ParentID\" = " . (int)$this->owner->ID);
 		$this->owner->extend('augmentSQL', $query);
+		$this->owner->extend('augmentNumChildrenCountQuery', $query); 
 		return $query->execute()->value();
 	}
 
@@ -478,7 +491,11 @@ class Hierarchy extends DataObjectDecorator {
 	public function stageChildren($showAll = false) {
 		$extraFilter = $showAll ? '' : " AND \"ShowInMenus\"";
 		$baseClass = ClassInfo::baseDataClass($this->owner->class);
-		return DataObject::get($baseClass, "\"{$baseClass}\".\"ParentID\" = " . (int)$this->owner->ID . " AND \"{$baseClass}\".\"ID\" != " . (int)$this->owner->ID . $extraFilter, "");
+		
+		$staged = DataObject::get($baseClass, "\"{$baseClass}\".\"ParentID\" = " . (int)$this->owner->ID . " AND \"{$baseClass}\".\"ID\" != " . (int)$this->owner->ID . $extraFilter, "");
+		if(!$staged) $staged = new DataObjectSet();
+		$this->owner->extend("augmentStageChildren", $staged, $showAll);
+		return $staged;
 	}
 
 	/**
