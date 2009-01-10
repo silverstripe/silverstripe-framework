@@ -428,23 +428,30 @@ class SQLQuery extends Object {
 	
 	/**
 	 * Checks whether this query is for a specific ID in a table
+	 * 
+	 * @todo Doesn't work with combined statements (e.g. "Foo='bar' AND ID=5")
 	 *
 	 * @return boolean
 	 */
 	function filtersOnID() {
-		return ($this->where && count($this->where) == 1 && 
-			(strpos($this->where[0], ".`ID` = ") || strpos($this->where[0], ".ID = ") || strpos($this->where[0], "ID = ") )
+		return (
+			$this->where 
+			&& count($this->where) == 1  
+			&& preg_match('/^(.*\.)?("|`)?ID("|`)?\s?=/', $this->where[0])
 		);
 	}
 	
 	/**
 	 * Checks whether this query is filtering on a foreign key, ie finding a has_many relationship
+	 * 
+	 * @todo Doesn't work with combined statements (e.g. "Foo='bar' AND ParentID=5")
 	 *
 	 * @return boolean
 	 */
 	function filtersOnFK() { 
-		return ($this->where &&
-		(strpos($this->where[0], "ID` = ") || (strpos($this->where[0], "ID = ") > 0))
+		return (
+			$this->where
+			&& preg_match('/^(.*\.)?("|`)?[a-zA-Z]+ID("|`)?\s?=/', $this->where[0])
 		);
 	}
 	
