@@ -169,8 +169,8 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 
 	static $extensions = array(
 		"Hierarchy",
+		"Versioned('Stage', 'Live')",
 		"Translatable('Title', 'MenuTitle', 'Content', 'URLSegment', 'MetaTitle', 'MetaDescription', 'MetaKeywords', 'Status')",
-		"Versioned('Stage', 'Live')"
 	);
 	
 	/**
@@ -1694,6 +1694,10 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 
 		if(!$this->ShowInMenus) 
 			$classes .= " notinmenu";
+			
+		//TODO: Add integration
+		if(Translatable::is_enabled() && $controller->Lang != Translatable::default_lang() && !$this->isTranslation())
+			$classes .= " untranslated ";
 		
 		$classes .= $this->markingClasses();
 

@@ -34,6 +34,12 @@ class ModelAsController extends Controller implements NestedController {
 			$SQL_URLSegment = Convert::raw2sql($this->urlParams['URLSegment']);
 			$child = SiteTree::get_by_url($SQL_URLSegment);
 			
+			// fallback to default language
+			// @todo Migrate into extension point and module
+			if(!$child && Translatable::is_enabled()) {
+				$child = Translatable::get_one_by_lang('SiteTree', Translatable::default_lang(), "URLSegment = '{$SQL_URLSegment}'");
+			}
+			
 			if(!$child) {
 				if($child = $this->findOldPage($SQL_URLSegment)) {
 					$url = Controller::join_links(
