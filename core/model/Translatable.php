@@ -253,6 +253,8 @@ class Translatable extends DataObjectDecorator {
 	}
 	
 	function getTranslatedLangs() {
+		$langs = array();
+		
 		$class = ClassInfo::baseDataClass($this->owner->class); //Base Class
 		if($this->owner->hasExtension("Versioned")  && Versioned::current_stage() == "Live") {
 			$class = $class."_Live";
@@ -427,7 +429,7 @@ class Translatable extends DataObjectDecorator {
 		if(!Translatable::is_enabled()) return;
 		
 		if($this->isTranslation()) {
-			$query->where[0] = '\"ParentID\" = '.$this->getOriginalPage()->ID;
+			$query->where[0] = '"ParentID" = '.$this->getOriginalPage()->ID;
 		}
 	}
 	
