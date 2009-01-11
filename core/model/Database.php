@@ -306,17 +306,23 @@ abstract class Database extends Object {
 	 * Generate the given field on the table, modifying whatever already exists as necessary.
 	 * @param string $table The table name.
 	 * @param string $field The field name.
-	 * @param string $spec The field specification.
+	 * @param array|string $spec The field specification. If passed in array syntax, the specific database
+	 * 	driver takes care of the ALTER TABLE syntax. If passed as a string, its assumed to
+	 * 	be prepared as a direct SQL framgment ready for insertion into ALTER TABLE. In this case you'll
+	 * 	need to take care of database abstraction in your DBField subclass.  
 	 */
 	function requireField($table, $field, $spec) {
 		$newTable = false;
-		
+
 		Profiler::mark('requireField');
 		
-		// TODO: This is tempororary
-		$spec['parts']['name'] = $field;
-		//Convert the $spec array into a database-specific string
-		$spec=DB::getConn()->$spec['type']($spec['parts']);
+		// backwards compatibility patch for pre 2.4 requireField() calls
+		if(!is_string($spec)) {
+			// TODO: This is tempororary
+			$spec['parts']['name'] = $field;
+			//Convert the $spec array into a database-specific string
+			$spec=DB::getConn()->$spec['type']($spec['parts']);
+		}
 				
 		// Collations didn't come in until MySQL 4.1.  Anything earlier will throw a syntax error if you try and use
 		// collations.
