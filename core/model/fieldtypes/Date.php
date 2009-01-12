@@ -197,8 +197,28 @@ class Date extends DBField {
 		DB::requireField($this->tableName, $this->name, $values);
 	}
 	
+	/**
+	 * Returns true if date is in the past.
+	 * @return boolean
+	 */
 	function InPast() {
-		return strtotime( $this->value ) < time();
+		return strtotime($this->value) < time();
+	}
+	
+	/**
+	 * Returns true if date is in the future.
+	 * @return boolean
+	 */
+	function InFuture() {
+		return strtotime($this->value) > time();
+	}
+	
+	/**
+	 * Returns true if date is today.
+	 * @return boolean
+	 */
+	function IsToday() {
+		return (date('Y-m-d', strtotime($this->value)) == date('Y-m-d', time()));
 	}
 
 	/**
