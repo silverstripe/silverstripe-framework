@@ -106,6 +106,16 @@ class Permission extends DataObject {
 	}
 
 
+	private static $cache_permissions = array();
+
+	/**
+	 * Flush the permission cache, for example if you have edited group membership or a permission record.
+	 * @todo Call this whenever Group_Members is added to or removed from
+	 */
+	public static function flush_permission_cache() {
+		self::$cache_permissions = array();
+	}
+
 	/**
 	 * Check that the given member has the given permission
 	 * @param int|Member memberID The ID of the member to check. Leave blank for the current member. 
@@ -124,6 +134,12 @@ class Permission extends DataObject {
 		$perms_list = self::get_declared_permissions_list();
 		$memberID = (is_object($member)) ? $member->ID : $member; 
 
+		// Simple cache.  This could be improved a lot by actually downloading all of the given user's permissions in one hit
+		$codeStr = is_array($code) ? implode(',',$code) : $code;
+		if($arg == 'any' && isset(self::$cache_permissions[$memberID][$codeStr])) {
+			return self::$cache_permissions[$memberID][$codeStr];
+		} 
+
 		/*
 		if(self::$declared_permissions && is_array($perms_list) && !in_array($code, $perms_list)) {
 			user_error(
@@ -133,6 +149,8 @@ class Permission extends DataObject {
 			);
 		}
 		*/
+		
+		
 		
 		$groupList = self::groupList($memberID);
 		if(!$groupList) return false;
@@ -177,7 +195,10 @@ class Permission extends DataObject {
 			)
 		")->value();
 		
-		if($permission) return $permission;
+		if($permission) {
+			self::$cache_permissions[$memberID][$codeStr] = $permission;
+			return $permission;
+		}
 
 
 		// Strict checking disabled?
@@ -191,9 +212,13 @@ class Permission extends DataObject {
 				)
 			")->value();
 			
-			if(!$hasPermission) return true;
+			if(!$hasPermission) {
+				self::$cache_permissions[$memberID][$codeStr] = true;
+				return true;
+			}
 		}
-
+		
+		self::$cache_permissions[$memberID][$codeStr] = false;
 		return false;
 	}
 
@@ -542,6 +567,13 @@ class Permission extends DataObject {
 				$list[$perm] = $value;
 			}
 		}
+	}
+	
+	public function onBeforeWrite() {
+		parent::onBeforeWrite();
+		
+		// Just in case we've altered someone's permissions
+		Permission::flush_permission_cache();
 	}
 }
 
