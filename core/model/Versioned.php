@@ -627,6 +627,27 @@ class Versioned extends DataObjectDecorator {
 	}
 	
 	/**
+	 * Pre-populate the cache for Versioned::get_versionnumber_by_stage() for a list of record IDs,
+	 * for more efficient database querying.  If $idList is null, then every page will be pre-cached.
+	 */
+	static function prepopulate_versionnumber_cache($class, $stage, $idList = null) {
+		$filter = "";
+		if($idList) {
+			// Validate the ID list
+			foreach($idList as $id) if(!is_numeric($id)) user_error("Bad ID passed to Versioned::prepopulate_versionnumber_cache() in \$idList: " . $id, E_USER_ERROR);
+			$filter = "WHERE ID IN(" .implode(", ", $idList) . ")";
+		}
+		
+		$baseClass = ClassInfo::baseDataClass($class);
+		$stageTable = ($stage == 'Stage') ? $baseClass : "{$baseClass}_{$stage}";
+
+		$versions = DB::query("SELECT ID, Version FROM `$stageTable` $filter")->map();
+		foreach($versions as $id => $version) {
+			self::$cache_versionnumber[$baseClass][$stage][$id] = $version;
+		}
+	}
+	
+	/**
 	 * Get a set of class instances by the given stage.
 	 * 
 	 * @param string $class The name of the class.
