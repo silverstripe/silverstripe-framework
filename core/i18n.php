@@ -967,7 +967,7 @@ class i18n extends Object {
 	 * @param string $name php class name or template file name
 	 * @return string Module where the file is located
 	 */
-	protected static function get_owner_module($name) {
+	public static function get_owner_module($name) {
 		if (substr($name,-3) == '.ss') {
 			global $_TEMPLATE_MANIFEST;
 			$path = str_replace('\\','/',Director::makeRelative(current($_TEMPLATE_MANIFEST[substr($name,0,-3)])));
