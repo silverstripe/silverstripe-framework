@@ -1,13 +1,13 @@
 Page:
-   home_en:
+   testpage_en:
       Title: Home
-      URLSegment: home
+      URLSegment: testpage
       Lang: en
-   home_fr:
+   testpage_fr:
       Title: Maison
-      URLSegment: home
+      URLSegment: testpage
       Lang: fr
-      OriginalID: =>Page.home_en
+      OriginalID: =>Page.testpage_en
    parent:
       Title: Parent
       URLSegment: parent
