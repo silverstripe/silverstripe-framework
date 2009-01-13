@@ -129,30 +129,14 @@ class Translatable extends DataObjectDecorator {
 			return self::$reading_lang;
 		}
 
-		if(
-			(isset($_GET['lang']) && !$langsAvailable) 
-			|| (isset($_GET['lang']) && in_array($_GET['lang'], $langsAvailable))
-		) {
+		if((isset($_GET['lang']) && !$langsAvailable) || (isset($_GET['lang']) && in_array($_GET['lang'], $langsAvailable))) {
 			// get from GET parameter
 			self::set_reading_lang($_GET['lang']);
-		/*
-		} elseif(isset($_COOKIE['lang.' . $siteMode]) && $siteMode && (!isset($langsAvailable) || in_array($_COOKIE['lang.' . $siteMode], $langsAvailable))) {
-			// get from namespaced cookie
-			self::set_reading_lang($_COOKIE[$siteMode . '.lang']);
-		} elseif(isset($_COOKIE['lang']) && (!isset($langsAvailable) || in_array($_COOKIE['lang'], $langsAvailable))) {
-			// get from generic cookie
-			self::set_reading_lang($_COOKIE['lang']);
-		} else if(Session::get('lang.' . $siteMode) && (!isset($langsAvailable) || in_array(Session::get('lang.' . $siteMode), $langsAvailable))) {
-			// get from namespaced session ('cms' or 'site') 
-			self::set_reading_lang(Session::get('lang.' . $siteMode));
-		} else if(Session::get('lang.global') && (!isset($langsAvailable) || in_array(Session::get('lang.global'), $langsAvailable))) {
-			// get from global session 
-			self::set_reading_lang(Session::get('lang.global'));
 		} else {
-			get default lang stored in class
 			self::set_reading_lang(self::default_lang());
-		*/
 		}
+		
+		
 		self::$language_decided = true;
 		return self::$reading_lang; 
 	}
