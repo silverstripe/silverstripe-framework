@@ -12,6 +12,8 @@ class GhostPage extends SiteTree implements HiddenClass {
 		"LinkedPage" => "SiteTree",
 	);
 	
+	static $db = array();
+	
 	function getCMSFields($val) {
 		if($this->getField('LinkedPageID')) {
 			return $this->LinkedPage()->getCMSFields($val);
