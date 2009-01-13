@@ -40,7 +40,7 @@ table.CMSList thead th {
 	height : 24px;
 	border-right : 1px solid #aca899;
 	border-left : 1px solid #ffffff;
-	padding-left : 5px;
+	padding:0 5px;
 }
 
 table.TableField thead th span, 
