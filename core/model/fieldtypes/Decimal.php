@@ -25,7 +25,7 @@ class Decimal extends DBField {
 	}
 	
 	function requireField() {
-		DB::requireField($this->tableName, $this->name, "decimal($this->wholeSize,$this->decimalSize)");
+		DB::requireField($this->tableName, $this->name, "decimal($this->wholeSize,$this->decimalSize) not null");
 	}
 	
 	function saveInto($dataObject) {
