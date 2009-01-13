@@ -1067,26 +1067,6 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		Requirements::javascript(CMS_DIR . "/javascript/SitetreeAccess.js");
 		Requirements::javascript(SAPPHIRE_DIR . '/javascript/UpdateURL.js');
 
-		// Backlink report
-		if($this->hasMethod('BackLinkTracking')) {
-			$links = $this->BackLinkTracking();
-
-			if($links->exists()) {
-				foreach($links as $link) {
-					$backlinks[] = "<li><a class=\"cmsEditlink\" href=\"admin/show/$link->ID\">" .
-						$link->Breadcrumbs(null,true) . "</a></li>";
-				}
-				$backlinks = "<div style=\"clear:left\">
-					" . _t('SiteTree.PAGESLINKING', 'The following pages link to this page:') . 
-					"<ul>" . implode("",$backlinks) . "</ul></div>";
-			}
-		}
-
-		if(!isset($backlinks)) {
-			$backlinks = "<p>" . _t('SiteTree.NOBACKLINKS', 'This page hasn\'t been linked to from any pages.') . "</p>";
-		}
-
-
 		// Status / message
 		// Create a status message for multiple parents
 		if($this->ID && is_numeric($this->ID)) {
@@ -1128,6 +1108,32 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		$message = "STATUS: $this->Status<br />";
 		if(isset($statusMessage)) {
 			$message .= "NOTE: " . implode("<br />", $statusMessage);
+		}
+		
+		$backLinksNote = '';
+		$backLinksTable = new LiteralField('BackLinksNote', '<p>' . _t('NOBACKLINKEDPAGES', 'There are no pages linked to this page.') . '</p>');
+		
+		// Create a table for showing pages linked to this one
+		if($this->BackLinkTracking() && $this->BackLinkTracking()->Count() > 0) {
+			$backLinksNote = new LiteralField('BackLinksNote', '<p>' . _t('SiteTree.PAGESLINKING', 'The following pages link to this page:') . '</p>');
+			$backLinksTable = new TableListField(
+				'BackLinkTracking',
+				'SiteTree',
+				array(
+					'ID' => 'ID',
+					'Title' => 'Title'
+				),
+				'ChildID = ' . $this->ID,
+				'',
+				'LEFT JOIN SiteTree_LinkTracking ON SiteTree.ID = SiteTree_LinkTracking.SiteTreeID'
+			);
+			$backLinksTable->setFieldFormatting(array(
+				'Title' => '<a href=\"admin/show/$ID\">$Title</a>'
+			));
+			$backLinksTable->setPermissions(array(
+				'show',
+				'export'
+			));
 		}
 		
 		// Lay out the fields
@@ -1197,8 +1203,9 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 					new TextareaField("ToDo", "")
 				),
 				$tabReports = new TabSet('Reports',
-					$tabBacklinks =new Tab('Backlinks',
-						new LiteralField("Backlinks", $backlinks)
+					$tabBacklinks = new Tab('Backlinks',
+						$backLinksNote,
+						$backLinksTable
 					)
 				),
 				$tabAccess = new Tab('Access',
