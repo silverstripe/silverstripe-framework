@@ -63,7 +63,6 @@ $lang['bg_BG']['ChangePasswordEmail.ss']['CHANGEPASSWORDTEXT2'] = 'Вече мо
 $lang['bg_BG']['ChangePasswordEmail.ss']['EMAIL'] = 'Email';
 $lang['bg_BG']['ChangePasswordEmail.ss']['HELLO'] = 'Здравей!';
 $lang['bg_BG']['ChangePasswordEmail.ss']['PASSWORD'] = 'Парола';
-$lang['bg_BG']['CollectionController.ss']['SEARCH'] = 'Търсене';
 $lang['bg_BG']['CollectionController_Results.ss']['NEXT'] = 'Следващо';
 $lang['bg_BG']['CollectionController_Results.ss']['PREV'] = 'Предишно';
 $lang['bg_BG']['CollectionController_Results.ss']['RESULTS'] = 'Резултати';

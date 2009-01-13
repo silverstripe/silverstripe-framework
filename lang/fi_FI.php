@@ -58,7 +58,6 @@ $lang['fi_FI']['ChangePasswordEmail.ss']['CHANGEPASSWORDTEXT2'] = 'Kirjautuakses
 $lang['fi_FI']['ChangePasswordEmail.ss']['EMAIL'] = 'Sähköposti';
 $lang['fi_FI']['ChangePasswordEmail.ss']['HELLO'] = 'Hei';
 $lang['fi_FI']['ChangePasswordEmail.ss']['PASSWORD'] = 'Salasana';
-$lang['fi_FI']['CollectionController.ss']['ADDNEWRECORD'] = 'Lisää uusi tietue';
 $lang['fi_FI']['CollectionController_Results.ss']['RESULTS'] = 'Tulokset';
 $lang['fi_FI']['ComplexTableField.ss']['ADDITEM'] = 'Lisää';
 $lang['fi_FI']['ComplexTableField.ss']['NOITEMSFOUND'] = 'Kohteita ei löytynyt';
