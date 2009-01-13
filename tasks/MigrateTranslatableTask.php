@@ -13,6 +13,8 @@ class MigrateTranslatableTask extends BuildTask {
 	function run($request) {
 		$ids = array();
 		
+		//$_REQUEST['showqueries'] = 1;
+		
 		foreach(array('Stage', 'Live') as $stage) {
 			echo "<h2>Migrating stage $stage</h2>";
 			echo "<ul>";
@@ -29,7 +31,7 @@ class MigrateTranslatableTask extends BuildTask {
 			
 				// Get the untranslated page
 				$original = Versioned::get_one_by_stage($oldtrans['ClassName'], $stage, '`SiteTree`.ID = ' .  $oldtrans['OriginalLangID']);
-			
+				
 				// Clone the original, and set it up as a translation
 				$newtrans = $original->duplicate(false);
 				$newtrans->OriginalID = $original->ID;
@@ -57,9 +59,13 @@ class MigrateTranslatableTask extends BuildTask {
 					}
 			
 				}
-			
+				
+				
 				// Write the new translation to the database
-				$newtrans->writeToStage($stage);
+				$sitelang = Translatable::current_lang();
+				Translatable::set_reading_lang($newtrans->Lang); 
+				$newtrans->writeToStage($stage, true);
+				Translatable::set_reading_lang($sitelang);
 				
 				if($stage == 'Stage') {
 					$ids[$original->ID] = $newtrans->ID;
