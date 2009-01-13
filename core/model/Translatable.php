@@ -1,9 +1,9 @@
 <?php
 /**
- * The {Translatable} decorator allows your DataObjects to have versions in different languages,
+ * The Translatable decorator allows your DataObjects to have versions in different languages,
  * defining which fields are can be translated.
  * 
- * Common language names (e.g. 'en') are used in {Translatable} for
+ * Common language names (e.g. 'en') are used in Translatable for
  * database-entities. On the other hand, the file-based i18n-translations 
  * always have a "locale" (e.g. 'en_US').
  * 
@@ -18,10 +18,10 @@
  * is stored and represented in UTF-8 (Unicode). Please make sure your database and
  * HTML-templates adjust to this.
  * 
- * Caution: Further decorations of DataObject might conflict with this implementation,
- * e.g. when overriding the get_one()-calls (which are already extended by {Translatable}).
- * 
  * @author Bernat Foj Capell <bernat@silverstripe.com>
+ * @author Michael Gall <michael (at) wakeless (dot) net>
+ * @author Ingo Schommer <ingo (at) silverstripe (dot) com>
+ * 
  * @package sapphire
  * @subpackage misc
  */
@@ -159,6 +159,9 @@ class Translatable extends DataObjectDecorator {
 		
 	/**
 	 * Get the current reading language.
+	 * This value has to be set before the schema is built with translatable enabled,
+	 * any changes after this can cause unintended side-effects.
+	 * 
 	 * @return string
 	 */
 	static function default_lang() {
@@ -252,6 +255,12 @@ class Translatable extends DataObjectDecorator {
 		return self::get_one_by_lang($class,self::default_lang(),"\"$baseClass\".\"ID\" = $originalLangID");
 	}
 	
+	/**
+	 * Gets all translations for this specific page.
+	 * Doesn't include the original language code ({@link Translatable::default_lang()}).
+	 * 
+	 * @return array Numeric array of all language codes, sorted alphabetically.
+	 */
 	function getTranslatedLangs() {
 		$langs = array();
 		
@@ -265,7 +274,13 @@ class Translatable extends DataObjectDecorator {
 			$query = new SQLQuery('distinct Lang',"$class","(\"$class\".\"OriginalID\" =$id)");
 			$langs = $query->execute()->column();
 		}
-		return ($langs) ? array_values($langs) : array();
+		if($langs) {
+			$langCodes = array_values($langs);
+			sort($langCodes);
+			return $langCodes;
+		} else {
+			return array();
+		};
 	}
 
 	/**
@@ -359,7 +374,7 @@ class Translatable extends DataObjectDecorator {
 		$this->translatableFields = array_keys($this->owner->inheritedDatabaseFields());
 	}
 	
-	function extraDBFields() {
+	function extraStatics() {
 		if(!Translatable::is_enabled()) return;
 		
 		if(get_class($this->owner) == ClassInfo::baseDataClass(get_class($this->owner))) {
@@ -410,19 +425,6 @@ class Translatable extends DataObjectDecorator {
 			}
 			$query->where[] = $qry; 
 		}
-	}
-	
-	/**
-	 * Determine if the DataObject has any own translatable field (not inherited).
-	 * @return boolean
-	 */
-	function hasOwnTranslatableFields() {
-		$ownFields = $this->owner->stat('db');
-		if ($ownFields == singleton($this->owner->parentClass())->stat('db'))return false;
-		foreach ((array)$this->translatableFields as $translatableField) {
-			if (isset($ownFields[$translatableField])) return true;
-		}
-		return false;
 	}
 	
 	function augmentNumChildrenCountQuery(SQLQuery $query) {
@@ -478,8 +480,6 @@ class Translatable extends DataObjectDecorator {
 	 */
 	function isVersionedTable($table) {
 		return false;
-		// Every _lang table wants Versioned support
-		return ($this->owner->databaseFields() && $this->hasOwnTranslatableFields());
 	}
 
 	function contentcontrollerInit($controller) {
@@ -538,7 +538,7 @@ class Translatable extends DataObjectDecorator {
 		// used in CMSMain->init() to set language state when reading/writing record
 		$fields->push(new HiddenField("Lang", "Lang", $this->getLang()) );
 		$fields->push(new HiddenField("OriginalID", "OriginalID", $this->owner->OriginalID) );
-		
+
 		// if a language other than default language is used, we're in "translation mode",
 		// hence have to modify the original fields
 		$creating = false;
@@ -567,6 +567,17 @@ class Translatable extends DataObjectDecorator {
 					$fields->replaceField($dataField->Name(), $dataField->performReadonlyTransformation());
 				}
 			}
+		} elseif($this->owner->isNew()) {
+			$fields->addFieldsToTab(
+				'Root',
+				new Tab(_t('Translatable.TRANSLATIONS', 'Translations'),
+					new LiteralField('SaveBeforeCreatingTranslationNote',
+						sprintf('<p class="message">%s</p>',
+							_t('Translatable.NOTICENEWPAGE', 'Please save this page before creating a translation')
+						)
+					)
+				)
+			);
 		} else {
 			// if we're not in "translation mode", show a dropdown to create a new translation.
 			// this action should just be possible when showing the default language,
@@ -589,8 +600,9 @@ class Translatable extends DataObjectDecorator {
 				);
 				$existingTransHTML = '<ul>';
 				foreach($alreadyTranslatedLangs as $i => $langCode) {
+					$existingTranslation = $this->owner->getTranslation($langCode);
 					$existingTransHTML .= sprintf('<li><a href="%s">%s</a></li>',
-						sprintf('admin/show/%d/?lang=%s', $this->owner->ID, $langCode),
+						sprintf('admin/show/%d/?lang=%s', $existingTranslation->ID, $langCode),
 						i18n::get_language_name($langCode)
 					);
 				}
@@ -619,39 +631,6 @@ class Translatable extends DataObjectDecorator {
 	function fieldsInExtraTables($table){
 		return array('db'=>null,'indexes'=>null);
 	}
-			
-	/**
-	 * Get a list of fields in the {$table}_lang table
-	 *
-	 * @param string $table Table name
-	 * @return array
-	 */
-	function allFieldsInTable($table){
-
-		$fields = singleton($table)->databaseFields();
-		//Calculate the required fields
-		foreach ($fields as $field => $type) {
-			if (array_search($field,$this->translatableFields) === false) unset($fields[$field]);
-		}
-		$metaFields = array_diff((array)singleton('DataObject')->databaseFields(), (array)$this->owner->customDatabaseFields());
-					
-		$langFields = array_merge(
-			array(
-				"ID",
-				"LastEdited",
-				"Created",
-				"ClassName",
-				"Version",
-				"WasPublished",
-				"Lang",
-				"OriginalLangID"
-			),
-			$this->translatableFields,
-			array_keys($fields),
-			array_keys($metaFields)
-		);
-		return $langFields;
-	}
 	
 	/**
 	 * Get the names of all translatable fields on this class
@@ -678,7 +657,15 @@ class Translatable extends DataObjectDecorator {
 		return $table;
 	}
 	
-	function getTranslation($lang, $create=true) {
+	/**
+	 * Gets an existing translation based on the language code.
+	 * Use {@link hasTranslation()} as a quicker alternative to check
+	 * for an existing translation without getting the actual object.
+	 * 
+	 * @param String $lang
+	 * @return DataObject Translated object
+	 */
+	function getTranslation($lang) {
 		if($this->owner->exists() && !$this->owner->isTranslation()) {
 			$orig = Translatable::current_lang();
 			$this->owner->flushCache();
@@ -694,18 +681,41 @@ class Translatable extends DataObjectDecorator {
 
 			Translatable::set_reading_lang($orig);
 			
-			if($create && !$translation) {
-				$class = $this->owner->class;
-				$translation = new $class;
-				$translation->update($this->owner->toMap());
-				$translation->ID = 0;
-				$translation->setOriginalPage($this->owner->ID);
-				$translation->Lang = $lang;
-			}
 			return $translation;
 		}
 	}
 	
+	/**
+	 * Creates a new translation for the owner object of this decorator.
+	 * Checks {@link getTranslation()} to return an existing translation
+	 * instead of creating a duplicate. Writes the record to the database before
+	 * returning it.
+	 * 
+	 * @param string $lang
+	 * @return DataObject The translated object
+	 */
+	function createTranslation($lang) {
+		$existingTranslation = $this->getTranslation($lang);
+		if($existingTranslation) return $existingTranslation;
+		
+		$class = $this->owner->class;
+		$newTranslation = new $class;
+		$newTranslation->update($this->owner->toMap());
+		$newTranslation->ID = 0;
+		$newTranslation->setOriginalPage($this->owner->ID);
+		$newTranslation->Lang = $lang;
+		$newTranslation->write();
+		
+		return $newTranslation;
+	}
+	
+	/**
+	 * Returns TRUE if the current record has a translation in this language.
+	 * Use {@link getTranslation()} to get the actual translated record from
+	 * the database.
+	 * 
+	 * @return boolean
+	 */
 	function hasTranslation($lang) {
 		return ($this->owner->exists()) && (array_search($lang, $this->getTranslatedLangs()) !== false);
 	}
