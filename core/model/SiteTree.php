@@ -935,20 +935,20 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	//------------------------------------------------------------------------------------//
 
 	protected function onBeforeWrite() {
+		// If Sort hasn't been set, make this page come after it's siblings
 		if(!$this->Sort && $this->ParentID) {
 			$this->Sort = DB::query("SELECT MAX(\"Sort\") + 1 FROM \"SiteTree\" WHERE \"ParentID\" = $this->ParentID")->value();
 		}
 
-		// Auto-set URLSegment
-		if((!$this->URLSegment || $this->URLSegment == 'new-page') &&
-			 $this->Title) {
+		// If there is no URLSegment set, generate one from Title
+		if((!$this->URLSegment || $this->URLSegment == 'new-page') && $this->Title) {
 			$this->URLSegment = $this->generateURLSegment($this->Title);
-
-		// Keep it clean
-		} else if(isset($this->changed['URLSegment']) &&
-							$this->changed['URLSegment']) {
+		} else if(isset($this->changed['URLSegment']) && $this->changed['URLSegment']) {
+			// Make sure the URLSegment is valid for use in a URL
 			$segment = ereg_replace('[^A-Za-z0-9]+','-',$this->URLSegment);
 			$segment = ereg_replace('-+','-',$segment);
+			
+			// If after sanitising there is no URLSegment, give it a reasonable default
 			if(!$segment) {
 				$segment = "page-$this->ID";
 			}
@@ -958,13 +958,14 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		DataObject::set_context_obj($this);
 		
 		// Ensure URLSegment is unique
-		$idFilter = ($this->ID) ? "\"SiteTree\".\"ID\" <> '$this->ID'" : '';
-
 		$count = 1;
-		while (
-			(class_exists($this->URLSegment) && is_subclass_of($this->URLSegment, 'RequestHandler')) ||
-			SiteTree::get_by_url($this->URLSegment, $idFilter)
-		) {
+		$otherpage = false;
+		while((class_exists($this->URLSegment) && is_subclass_of($this->URLSegment, 'RequestHandler')) || $otherpage = SiteTree::get_by_url($this->URLSegment)) {
+			if($otherpage && $otherpage->ID == $this->ID) {
+				break;
+			}
+			
+			$otherpage = false;
 			$count++;
 			$this->URLSegment = ereg_replace('-[0-9]+$','', $this->URLSegment) . "-$count";
 		}
@@ -977,8 +978,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 				$links = $this->BackLinkTracking();
 				if($links) {
 					foreach($links as $link) {
-						$link->rewriteLink($this->original['URLSegment'] . '/',
-															 $this->URLSegment . '/');
+						$link->rewriteLink($this->original['URLSegment'] . '/', $this->URLSegment . '/');
 						$link->write();
 					}
 				}
