@@ -20,10 +20,11 @@ class TranslatableTest extends FunctionalTest {
 		Translatable::enable();
 		Translatable::set_default_lang("en");
 		
-		// needs to recreate the database schema with *_lang tables
+		// needs to recreate the database schema with language properties
 		self::kill_temp_db();
 		// refresh the decorated statics - different fields in $db with Translatable enabled
 		singleton('SiteTree')->loadExtraStatics();
+		singleton('TranslatableDataObject')->loadExtraStatics();
 		$dbname = self::create_temp_db();
 		DB::set_alternative_database_name($dbname);
 		
@@ -39,6 +40,39 @@ class TranslatableTest extends FunctionalTest {
 		self::create_temp_db();
 		
 		parent::tearDown();
+	}
+	
+	function testSiteTreeHierarchyTranslation() {
+		//$parentPage = $this->objFromFixture();
+	}
+	
+	function testTranslatablePropertiesOnDataObject() {
+		$origObj = $this->objFromFixture('TranslatableDataObject', 'testobject_en');
+		$translatedObj = $origObj->createTranslation('fr');
+		$translatedObj->TranslatableProperty = 'Fr';
+		$translatedObj->TranslatableDecoratedProperty = 'Fr';
+		$translatedObj->write();
+		
+		$this->assertEquals(
+			$origObj->TranslatableProperty,
+			'En',
+			'Creating a translation doesnt affect database field on original object'
+		);
+		$this->assertEquals(
+			$origObj->TranslatableDecoratedProperty,
+			'En',
+			'Creating a translation doesnt affect decorated database field on original object'
+		);
+		$this->assertEquals(
+			$translatedObj->TranslatableProperty,
+			'Fr',
+			'Translated object saves database field independently of original object'
+		);
+		$this->assertEquals(
+			$translatedObj->TranslatableDecoratedProperty,
+			'Fr',
+			'Translated object saves decorated database field independently of original object'
+		);
 	}
 	
 	function testCreateTranslationOnSiteTree() {
@@ -74,9 +108,9 @@ class TranslatableTest extends FunctionalTest {
 	
 	function testGetTranslationOnSiteTree() {
 		$origPage = $this->objFromFixture('Page', 'testpage_en');
-		$translatedPage = $this->objFromFixture('Page', 'testpage_fr');
-		
+		$translatedPage = $origPage->createTranslation('fr');
 		$getTranslationPage = $origPage->getTranslation('fr');
+
 		$this->assertNotNull($getTranslationPage);
 		$this->assertEquals($getTranslationPage->ID, $translatedPage->ID);
 	}
@@ -103,7 +137,6 @@ class TranslatableTest extends FunctionalTest {
 				'af',
 				'de', 
 				//'en', // default language is not included
-				'fr', // already in the fixtures
 			),
 			'Language codes are returned specifically for the queried page through getTranslatedLangs()'
 		);
@@ -117,12 +150,11 @@ class TranslatableTest extends FunctionalTest {
 			'even if translations for other pages exist in the database'
 		);
 	}
-	
+
 	function testTranslationCanHaveSameURLSegment() {
 		$origPage = $this->objFromFixture('Page', 'testpage_en');
 		$translatedPage = $origPage->createTranslation('de');
 		$translatedPage->URLSegment = 'testpage';
-		$translatedPage->publish('Stage', 'Live');
 		
 		$this->assertEquals($origPage->URLSegment, $translatedPage->URLSegment);
 	}
@@ -143,7 +175,7 @@ class TranslatableTest extends FunctionalTest {
 		);
 		
 		// then in "translation mode"
-		$pageTranslated = $this->objFromFixture('Page', 'testpage_fr');
+		$pageTranslated = $pageOrigLang->createTranslation('fr');
 		$fields = $pageTranslated->getCMSFields();
 		$this->assertType(
 			'TextField', 
@@ -159,4 +191,27 @@ class TranslatableTest extends FunctionalTest {
 		
 	}
 }
+
+class TranslatableDataObject extends DataObject implements TestOnly {
+	static $extensions = array(
+		"Translatable",
+	);
+	
+	static $db = array(
+		'TranslatableProperty' => 'Text'
+	);
+}
+
+class TranslatableDataObjectDecorator extends DataObjectDecorator implements TestOnly {
+	
+	function extraStatics() {
+		return array(
+			'db' => array(
+				'TranslatableDecoratedProperty' => 'Text'
+			)
+		);
+	}
+}
+
+DataObject::add_extension('TranslatableDataObject', 'TranslatableDataObjectDecorator');
 ?>

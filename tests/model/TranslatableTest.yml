@@ -3,11 +3,6 @@ Page:
       Title: Home
       URLSegment: testpage
       Lang: en
-   testpage_fr:
-      Title: Maison
-      URLSegment: testpage
-      Lang: fr
-      OriginalID: =>Page.testpage_en
    parent:
       Title: Parent
       URLSegment: parent
@@ -19,3 +14,7 @@ Page:
       Title: Grantchild
       URLSegment: grandchild
       Parent: =>Page.child
+TranslatableDataObject:
+   testobject_en:
+      TranslatableProperty: En
+      TranslatableDecoratedProperty: En

@@ -98,17 +98,6 @@ class Translatable extends DataObjectDecorator {
 		$record = $this->owner->toMap();
 		return (isset($record["Lang"])) ? $record["Lang"] : Translatable::default_lang();
 	}
-
-	/**
-	 * Checks if a table given table exists in the db
-	 *
-	 * @param mixed $table Table name
-	 * @return boolean Returns true if $table exists.
-	 */
-	static function table_exists($table) {
-		if (!self::$tableList) self::$tableList = DB::tableList();
-		return isset(self::$tableList[strtolower($table)]);
-	}
 	
 	/**
 	 * Choose the language the site is currently on.
@@ -320,8 +309,9 @@ class Translatable extends DataObjectDecorator {
 	/**
 	 * Construct a new Translatable object.
 	 * @var array $translatableFields The different fields of the object that can be translated.
+	 * This is currently not implemented, all fields are marked translatable (see {@link setOwner()}).
 	 */
-	function __construct($translatableFields) {
+	function __construct($translatableFields = null) {
 		parent::__construct();
 
 		// @todo Disabled selection of translatable fields - we're setting all fields as translatable in setOwner()
@@ -360,7 +350,7 @@ class Translatable extends DataObjectDecorator {
 	
 	function extraStatics() {
 		if(!Translatable::is_enabled()) return;
-		
+
 		if(get_class($this->owner) == ClassInfo::baseDataClass(get_class($this->owner))) {
 			return array(
 				"db" => array(
