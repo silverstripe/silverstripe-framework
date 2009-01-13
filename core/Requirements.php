@@ -246,7 +246,7 @@ class Requirements {
 	 * Set whether you want to write the JS to the body of the page or 
 	 * in the head section 
 	 * 
-	 * @see {@link Requirements_Backend::set_write_js_to_body()}
+	 * @see Requirements_Backend::set_write_js_to_body()
 	 * @param boolean
 	 */
 	static function set_write_js_to_body($var) {
