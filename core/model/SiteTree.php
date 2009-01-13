@@ -1142,12 +1142,6 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 				$tabContent = new TabSet('Content',
 					$tabMain = new Tab('Main',
 						new TextField("Title", $this->fieldLabel('Title')),
-						/*new UniqueTextField("Title",
-								"Title",
-								"SiteTree",
-								"Another page is using that name. Page names should be unique.",
-								"Page Name"
-						),*/
 						new TextField("MenuTitle", $this->fieldLabel('MenuTitle')),
 						new HtmlEditorField("Content", _t('SiteTree.HTMLEDITORTITLE', "Content", PR_MEDIUM, 'HTML editor title'))
 					),
