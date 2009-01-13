@@ -40,6 +40,10 @@ class Decimal extends DBField {
 	public function scaffoldFormField($title = null, $params = null) {
 		return new NumericField($this->name, $title);
 	}
+		
+	public function nullValue() {
+		return "0.00";
+	}
 
 	/**
 	 * Return an encoding of the given value suitable for inclusion in a SQL statement.
