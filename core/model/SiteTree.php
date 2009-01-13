@@ -1120,7 +1120,6 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 				'BackLinkTracking',
 				'SiteTree',
 				array(
-					'ID' => 'ID',
 					'Title' => 'Title'
 				),
 				'ChildID = ' . $this->ID,
