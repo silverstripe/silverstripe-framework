@@ -100,10 +100,10 @@ class HtmlEditorField extends TextareaField {
 		
 		$content = preg_replace('/mce_real_src="[^"]+"/i', "", $content);
 		
-		$content = eregi_replace('(<img[^>]* )width=([0-9]+)( [^>]*>|>)','\\1width="\\2"\\3',$content);
-		$content = eregi_replace('(<img[^>]* )height=([0-9]+)( [^>]*>|>)','\\1height="\\2"\\3',$content);
-		$content = eregi_replace('src="([^\?]*)\?r=[0-9]+"','src="\\1"',$content);
-		$content = eregi_replace('mce_src="([^\?]*)\?r=[0-9]+"','mce_src="\\1"',$content);
+		$content = eregi_replace('(<img[^>]* )width=([0-9]+)( [^>]*>|>)','\\1width="\\2"\\3', $content);
+		$content = eregi_replace('(<img[^>]* )height=([0-9]+)( [^>]*>|>)','\\1height="\\2"\\3', $content);
+		$content = eregi_replace('src="([^\?]*)\?r=[0-9]+"','src="\\1"', $content);
+		$content = eregi_replace('mce_src="([^\?]*)\?r=[0-9]+"','mce_src="\\1"', $content);
 		
 		$content = preg_replace_callback('/(<img[^>]* )(width="|height="|src=")([^"]+)("[^>]* )(width="|height="|src=")([^"]+)("[^>]* )(width="|height="|src=")([^"]+)("[^>]*>)/i', "HtmlEditorField_dataValue_processImage", $content);
 		
@@ -111,11 +111,12 @@ class HtmlEditorField extends TextareaField {
 		if(!ereg("^[ \t\r\n]*<", $content)) $content = "<p>$content</p>";
 
 		$links = HTTP::getLinksIn($content);
+		$linkedPages = array();
 		
 		if($links) foreach($links as $link) {
 			$link = Director::makeRelative($link);
 			
-			if(preg_match( '/^([A-Za-z0-9_-]+)\/?(#.*)?$/', $link, $parts ) ) {
+			if(preg_match('/^([A-Za-z0-9_-]+)\/?(#.*)?$/', $link, $parts)) {
 				$candidatePage = DataObject::get_one("SiteTree", "URLSegment = '" . urldecode( $parts[1] ). "'", false);
 				if($candidatePage) {
 					$linkedPages[] = $candidatePage->ID;
@@ -135,10 +136,8 @@ class HtmlEditorField extends TextareaField {
 		}
 		
 		$images = HTTP::getImagesIn($content);
-		
-		if($images){
+		if($images) {
 			foreach($images as $image) {
-				
 				$image = Director::makeRelative($image);
 				if(substr($image,0,7) == 'assets/') {
 					$candidateImage = DataObject::get_one("File", "Filename = '$image'");
