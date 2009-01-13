@@ -102,12 +102,10 @@ class HTTP {
 
 	static function findByTagAndAttribute($content, $attribs) {
 		$regExps = array();
-		$content = '';
 		
 		foreach($attribs as $tag => $attrib) {
-			if(!is_numeric($tag)) $tagPrefix = "$tag ";
-			else $tagPrefix = "";
-
+			$tagPrefix = (is_numeric($tag)) ? '' : "$tag ";
+			
 			$regExps[] = "/(<{$tagPrefix}[^>]*$attrib *= *\")([^\"]*)(\")/ie";
 			$regExps[] = "/(<{$tagPrefix}[^>]*$attrib *= *')([^']*)(')/ie";
 			$regExps[] = "/(<{$tagPrefix}[^>]*$attrib *= *)([^\"' ]*)( )/ie";
@@ -125,6 +123,7 @@ class HTTP {
 	static function getLinksIn($content) {
 		return self::findByTagAndAttribute($content, array("a" => "href"));
 	}
+	
 	static function getImagesIn($content) {
 		return self::findByTagAndAttribute($content, array("img" => "src"));
 	}
