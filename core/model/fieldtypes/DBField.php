@@ -64,7 +64,8 @@ abstract class DBField extends ViewableData {
 	}
 	
 	/**
-	 * Returns the name of this field
+	 * Returns the name of this field.
+	 * @return string
 	 */
 	function getName() {
 		return $this->name;
