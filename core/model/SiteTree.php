@@ -191,6 +191,41 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	private static $runCMSFieldsExtensions = true;
 
 	/**
+	 * Return a subclass map of SiteTree
+	 * that shouldn't be hidden through
+	 * {@link SiteTree::$hide_ancestor}
+	 *
+	 * @return array
+	 */
+	public static function page_type_classes() {
+		$classes = ClassInfo::getValidSubClasses();
+		array_shift($classes);
+		$kill_ancestors = array();
+
+		// figure out if there are any classes we don't want to appear
+		foreach($classes as $class) {
+			$instance = singleton($class);
+
+			// do any of the progeny want to hide an ancestor?
+			if($ancestor_to_hide = $instance->stat('hide_ancestor')) {
+				// note for killing later
+				$kill_ancestors[] = $ancestor_to_hide;
+			}
+		}
+
+		// If any of the descendents don't want any of the elders to show up, cruelly render the elders surplus to requirements.
+		if($kill_ancestors) {
+			foreach ($kill_ancestors as $mark) {
+				// unset from $classes
+				$idx = array_search($mark, $classes);
+				unset($classes[$idx]);
+			}
+		}
+		
+		return $classes;
+	}
+	
+	/**
 	 * Get the URL for this page.
 	 *
 	 * @param string $action An action to include in the link
@@ -1476,9 +1511,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	 * @return array
 	 */
 	protected function getClassDropdown() {
-		$classes = ClassInfo::getValidSubClasses('SiteTree');
-		array_shift($classes);
-		
+		$classes = self::page_type_classes();
 		$currentClass = null;
 
 		foreach($classes as $class) {
