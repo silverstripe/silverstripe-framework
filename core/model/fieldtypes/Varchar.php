@@ -48,10 +48,6 @@ class Varchar extends DBField {
 		return str_replace("\n", '\par ', $this->value);
 	}
 	
-	/*function forTemplate() {
-		return $this->raw2HTML();
-	}*/
-	
 	function LimitCharacters($limit = 20, $add = "...") {
 		$value = trim($this->value);
 		return (strlen($value) > $limit) ? substr($value, 0, $limit) . $add : $value;
