@@ -387,7 +387,7 @@ class Translatable extends DataObjectDecorator {
 		$where = $query->where;
 		if (
 			$lang
-			&& !$query->filtersOnID() 
+			&& !$query->filtersOnID() // DataObject::get_by_id() should work independently of language
 			&& array_search($baseTable, array_keys($query->from)) !== false 
 			&& !$this->isTranslation() 
 			//&& !$query->filtersOnFK()
