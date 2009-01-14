@@ -522,10 +522,11 @@ abstract class Query extends Object implements Iterator {
 	 * @return array
 	 */
 	public function column() {
+		$column = array();
 		foreach($this as $record) {
 			$column[] = reset($record);
 		}
-		return isset($column) ? $column : null;
+		return $column;
 	}
 
 	/**
@@ -534,6 +535,7 @@ abstract class Query extends Object implements Iterator {
 	 * @return array
 	 */
 	public function keyedColumn() {
+		$column = array();
 		foreach($this as $record) {
 			$val = reset($record);
 			$column[$val] = $val;
