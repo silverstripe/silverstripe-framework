@@ -546,6 +546,7 @@ abstract class Query extends Object implements Iterator {
 	 * @return array
 	 */
 	public function map() {
+		$column = array();
 		foreach($this as $record) {
 			$key = reset($record);
 			$val = next($record);
