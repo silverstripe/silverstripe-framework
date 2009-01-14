@@ -7,7 +7,7 @@
  * database-entities. On the other hand, the file-based i18n-translations 
  * always have a "locale" (e.g. 'en_US').
  * 
- * You can enable {Translatabe} for any DataObject-subclass:
+ * You can enable {Translatable} for any DataObject-subclass:
  * <example>
  * static $extensions = array(
  * 	"Translatable('MyTranslatableVarchar', 'OtherTranslatableText')"
