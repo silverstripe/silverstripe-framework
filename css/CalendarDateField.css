@@ -18,10 +18,15 @@
 .calendarpopup {
 	position: absolute;
 	left: 9em;
+	_left: 1.3em;
 	top: -0.15em;
+	_top: 4em;
 	display: none;
 	z-index: 2;
 }
+
+
+
 .calendarpopup.focused {
 	display: block;
 }
