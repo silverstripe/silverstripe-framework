@@ -406,7 +406,7 @@ class SQLQuery extends Object {
 	function filtersOnID() {
 		return (
 			$this->where 
-			&& count($this->where) == 1  
+			//&& count($this->where) == 1  
 			&& preg_match('/^(.*\.)?("|`)?ID("|`)?\s?=/', $this->where[0])
 		);
 	}
