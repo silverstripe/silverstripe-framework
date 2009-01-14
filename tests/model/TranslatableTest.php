@@ -24,7 +24,7 @@ class TranslatableTest extends FunctionalTest {
 		self::kill_temp_db();
 		// refresh the decorated statics - different fields in $db with Translatable enabled
 		singleton('SiteTree')->loadExtraStatics();
-		singleton('TranslatableDataObject')->loadExtraStatics();
+		singleton('TranslatableTest_DataObject')->loadExtraStatics();
 		$dbname = self::create_temp_db();
 		DB::set_alternative_database_name($dbname);
 		
@@ -42,12 +42,8 @@ class TranslatableTest extends FunctionalTest {
 		parent::tearDown();
 	}
 	
-	function testSiteTreeHierarchyTranslation() {
-		//$parentPage = $this->objFromFixture();
-	}
-	
 	function testTranslatablePropertiesOnDataObject() {
-		$origObj = $this->objFromFixture('TranslatableDataObject', 'testobject_en');
+		$origObj = $this->objFromFixture('TranslatableTest_DataObject', 'testobject_en');
 		$translatedObj = $origObj->createTranslation('fr');
 		$translatedObj->TranslatableProperty = 'Fr';
 		$translatedObj->TranslatableDecoratedProperty = 'Fr';
@@ -190,9 +186,130 @@ class TranslatableTest extends FunctionalTest {
 		);
 		
 	}
+	
+	function testDataObjectGetWithReadingLanguage() {
+		$origTestPage = $this->objFromFixture('Page', 'testpage_en');
+		$otherTestPage = $this->objFromFixture('Page', 'othertestpage_en');
+		$translatedPage = $origTestPage->createTranslation('de');
+		
+		// test in default language
+		$resultPagesDefaultLang = DataObject::get(
+			'Page',
+			sprintf("\"SiteTree\".\"MenuTitle\" = '%s'", 'A Testpage')
+		);
+		$this->assertEquals($resultPagesDefaultLang->Count(), 2);
+		$this->assertContains($origTestPage->ID, $resultPagesDefaultLang->column('ID'));
+		$this->assertContains($otherTestPage->ID, $resultPagesDefaultLang->column('ID'));
+		$this->assertNotContains($translatedPage->ID, $resultPagesDefaultLang->column('ID'));
+		
+		// test in custom language
+		Translatable::set_reading_lang('de');
+		$resultPagesCustomLang = DataObject::get(
+			'Page',
+			sprintf("\"SiteTree\".\"MenuTitle\" = '%s'", 'A Testpage')
+		);
+		$this->assertEquals($resultPagesCustomLang->Count(), 1);
+		$this->assertNotContains($origTestPage->ID, $resultPagesCustomLang->column('ID'));
+		$this->assertNotContains($otherTestPage->ID, $resultPagesCustomLang->column('ID'));
+		// casting as a workaround for types not properly set on duplicated dataobjects from createTranslation()
+		$this->assertContains((string)$translatedPage->ID, $resultPagesCustomLang->column('ID'));
+		
+		Translatable::set_reading_lang('en');
+	}
+	
+	function testDataObjectGetByIdWithReadingLanguage() {
+		$origPage = $this->objFromFixture('Page', 'testpage_en');
+		$translatedPage = $origPage->createTranslation('de');
+		$compareOrigPage = DataObject::get_by_id('Page', $origPage->ID);
+		
+		$this->assertEquals(
+			$origPage->ID, 
+			$compareOrigPage->ID,
+			'DataObject::get_by_id() should work independently of the reading language'
+		);
+	}
+	
+	function testDataObjectGetOneWithReadingLanguage() {
+		$origPage = $this->objFromFixture('Page', 'testpage_en');
+		$translatedPage = $origPage->createTranslation('de');
+		
+		// running the same query twice with different 
+		Translatable::set_reading_lang('de');
+		$compareTranslatedPage = DataObject::get_one(
+			'Page', 
+			sprintf("\"SiteTree\".\"Title\" = '%s'", $translatedPage->Title)
+		);
+		$this->assertNotNull($compareTranslatedPage);
+		$this->assertEquals(
+			$translatedPage->ID, 
+			$compareTranslatedPage->ID,
+			"Translated page is found through get_one() when reading lang is not the default language"
+		);
+		
+		// reset language to default
+		Translatable::set_reading_lang('de');
+	}
+	
+	function testModifyTranslationWithDefaultReadingLang() {
+		$origPage = $this->objFromFixture('Page', 'testpage_en');
+		$translatedPage = $origPage->createTranslation('de');
+		
+		Translatable::set_reading_lang('en');
+		$translatedPage->Title = 'De Modified';
+		$translatedPage->write();
+		$savedTranslatedPage = $origPage->getTranslation('de');
+		$this->assertEquals(
+			$savedTranslatedPage->Title, 
+			'De Modified',
+			'Modifying a record in language which is not the reading language should still write the record correctly'
+		);
+		$this->assertEquals(
+			$origPage->Title, 
+			'Home',
+			'Modifying a record in language which is not the reading language does not modify the original record'
+		);
+	}
+	
+	function testSiteTreePublication() {
+		$origPage = $this->objFromFixture('Page', 'testpage_en');
+		$translatedPage = $origPage->createTranslation('de');
+		
+		Translatable::set_reading_lang('en');
+		$origPage->Title = 'En Modified';
+		$origPage->write();
+		// modifying a record in language which is not the reading language should still write the record correctly
+		$translatedPage->Title = 'De Modified';
+		$translatedPage->write();
+		$origPage->publish('Stage', 'Live');
+		$liveOrigPage = Versioned::get_one_by_stage('Page', 'Live', "\"SiteTree\".ID = {$origPage->ID}");
+		$this->assertEquals(
+			$liveOrigPage->Title, 
+			'En Modified',
+			'Publishing a record in its original language publshes correct properties'
+		);
+	}
+	
+	function testDeletingTranslationKeepsOriginal() {
+		$origPage = $this->objFromFixture('Page', 'testpage_en');
+		$translatedPage = $origPage->createTranslation('de');
+		$translatedPageID = $translatedPage->ID;
+		$translatedPage->delete();
+		
+		$translatedPage->flushCache();
+		$origPage->flushCache();
+
+		$this->assertFalse($origPage->getTranslation('de'));
+		$this->assertNotNull(DataObject::get_by_id('Page', $origPage->ID));
+	}
+	
+	/*
+	function testSiteTreeHierarchyTranslation() {
+		//$parentPage = $this->objFromFixture();
+	}
+	*/
 }
 
-class TranslatableDataObject extends DataObject implements TestOnly {
+class TranslatableTest_DataObject extends DataObject implements TestOnly {
 	static $extensions = array(
 		"Translatable",
 	);
@@ -202,7 +319,7 @@ class TranslatableDataObject extends DataObject implements TestOnly {
 	);
 }
 
-class TranslatableDataObjectDecorator extends DataObjectDecorator implements TestOnly {
+class TranslatableTest_Decorator extends DataObjectDecorator implements TestOnly {
 	
 	function extraStatics() {
 		return array(
@@ -213,5 +330,5 @@ class TranslatableDataObjectDecorator extends DataObjectDecorator implements Tes
 	}
 }
 
-DataObject::add_extension('TranslatableDataObject', 'TranslatableDataObjectDecorator');
+DataObject::add_extension('TranslatableTest_DataObject', 'TranslatableTest_Decorator');
 ?>

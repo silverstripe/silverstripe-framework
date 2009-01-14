@@ -1,7 +1,13 @@
 Page:
    testpage_en:
       Title: Home
+      MenuTitle: A Testpage
       URLSegment: testpage
+      Lang: en
+   othertestpage_en:
+      Title: Other Testpage
+      MenuTitle: A Testpage
+      URLSegment: othertestpage
       Lang: en
    parent:
       Title: Parent
@@ -14,7 +20,7 @@ Page:
       Title: Grantchild
       URLSegment: grandchild
       Parent: =>Page.child
-TranslatableDataObject:
+TranslatableTest_DataObject:
    testobject_en:
       TranslatableProperty: En
       TranslatableDecoratedProperty: En
