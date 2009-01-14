@@ -442,7 +442,7 @@ class Folder extends File {
 	 */
 	function getUploadIframe() {
 		return <<<HTML
-		<iframe name="AssetAdmin_upload" src="admin/assets/uploadiframe/{$this->ID}" id="AssetAdmin_upload" border="0" style="border-style: none; width: 100%; height: 200px">
+		<iframe name="AssetAdmin_upload" src="admin/assets/uploadiframe/{$this->ID}" id="AssetAdmin_upload" border="0" style="border-style none !important; width: 97%; min-height: 300px; height: 100%; height: expression(document.body.clientHeight) !important;">
 		</iframe>
 HTML;
 	}
