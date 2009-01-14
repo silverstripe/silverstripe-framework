@@ -894,6 +894,8 @@ JS
 	/**
 	 * Exports a given set of comma-separated IDs (from a previous search-query, stored in a HiddenField).
 	 * Uses {$csv_columns} if present, and falls back to {$result_columns}.
+	 * We move the most filedata generation code to the function {@link generateExportFileData()} so that a child class
+	 * could reuse the filedata generation code while overwrite export function.
 	 * 
 	 * @todo Make relation-syntax available (at the moment you'll have to use custom sql) 
 	 */
@@ -901,6 +903,19 @@ JS
 		$now = Date("d-m-Y-H-i");
 		$fileName = "export-$now.csv";
 		
+		if($fileData = $this->generateExportFileData($numColumns, $numRows)){
+			return HTTPRequest::send_file($fileData, $fileName);
+		}else{
+			user_error("No records found", E_USER_ERROR);
+		}
+	}
+	
+	/**
+	 * the function is to generate string that will be used as
+	 * the content of exported file
+	 */
+	
+	function generateExportFileData(&$numColumns, &$numRows){
 		$separator = $this->csvSeparator;
 		$csvColumns = ($this->fieldListCsv) ? $this->fieldListCsv : $this->fieldList;
 		$fileData = "";
@@ -955,9 +970,12 @@ JS
 				$fileData .= implode($separator, $columnData);
 				$fileData .= "\n";
 			}
-			return HTTPRequest::send_file($fileData, $fileName);
+			
+			$numColumns = count($columnData);
+			$numRows = $fieldItems->count();
+			return $fileData;
 		} else {
-			user_error("No records found", E_USER_ERROR);
+			return null;
 		}
 	}
 	
