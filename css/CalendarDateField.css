@@ -9,6 +9,10 @@
 	width: 200px;
 }
 
+#SiteTreeFilterDate {
+	width: 68px;
+}
+
 .calendardate img {
 	position: relative;
 	top: 2px;
