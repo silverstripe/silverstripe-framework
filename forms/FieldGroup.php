@@ -83,7 +83,22 @@ class FieldGroup extends CompositeField {
  	}
   
 	function FieldHolder() {
-		return FormField::FieldHolder();
+		$Title = $this->XML_val('Title');
+		$Message = $this->XML_val('Message');
+		$MessageType = $this->XML_val('MessageType');
+		$RightTitle = $this->XML_val('RightTitle');
+		$Type = $this->XML_val('Type');
+		$extraClass = $this->XML_val('extraClass');
+		$Name = $this->XML_val('Name');
+		$Field = $this->XML_val('Field');
+		
+		$titleBlock = (!empty($Title)) ? "<label class=\"left\">$Title</label>" : "";
+		$messageBlock = (!empty($Message)) ? "<span class=\"message $MessageType\">$Message</span>" : "";
+		$rightTitleBlock = (!empty($RightTitle)) ? "<label class=\"right\">$RightTitle</label>" : "";
+
+		return <<<HTML
+<div id="$Name" class="field $Type $extraClass">$titleBlock<div class="middleColumn">$Field</div>$rightTitleBlock$messageBlock</div>
+HTML;
 	}
 	
 	function Message() {
