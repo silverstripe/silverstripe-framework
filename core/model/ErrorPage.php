@@ -113,6 +113,17 @@ class ErrorPage extends Page {
 		if($fh) {
 			fwrite($fh, $errorContent);
 			fclose($fh);
+		} else {
+			$fileErrorText = sprintf(
+				_t(
+					"ErrorPage.ERRORFILEPROBLEM",
+					"Error opening file \"%s\" for writing. Please check file permissions."
+				),
+				$errorFile
+			);
+			FormResponse::status_message($fileErrorText, 'bad');
+			FormResponse::respond();
+			return;
 		}
 		
 		// Restore the version we're currently connected to.
