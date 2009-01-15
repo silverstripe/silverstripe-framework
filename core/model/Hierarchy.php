@@ -323,7 +323,7 @@ class Hierarchy extends DataObjectDecorator {
 	 * @var array $idList Array to put results in.
 	 */
 	public function loadDescendantIDListInto(&$idList) {
-		if($children = $this->AllChildren()) {
+		if($children = $this->_cache_allChildren()) {
 			foreach($children as $child) {
 				if(in_array($child->ID, $idList)) {
 					continue;
@@ -338,18 +338,13 @@ class Hierarchy extends DataObjectDecorator {
 	 * Cached result for AllChildren().
 	 * @var DataObjectSet
 	 */
-	protected $allChildren;
+	protected $_cache_allChildren;
 	
 	/**
 	 * Cached result for AllChildrenIncludingDeleted().
 	 * @var DataObjectSet
 	 */
-	protected $allChildrenIncludingDeleted;
-	
-	/**
-	 * Cached result for Children().
-	 */
-	protected $children;
+	protected $_cache_allChildrenIncludingDeleted;
 	
 	/**
 	 * Get the children for this DataObject.
@@ -366,11 +361,11 @@ class Hierarchy extends DataObjectDecorator {
 	public function AllChildren() {
 		// Cache the allChildren data, so that future requests will return the references to the same
 		// object.  This allows the mark..() system to work appropriately.
-		if(!$this->allChildren) {
-			$this->allChildren = $this->owner->stageChildren(true);
+		if(!$this->_cache_allChildren) {
+			$this->_cache_allChildren = $this->owner->stageChildren(true);
 		}
 		
-		return $this->allChildren;
+		return $this->_cache_allChildren;
 	}
 
 	/**
@@ -395,11 +390,11 @@ class Hierarchy extends DataObjectDecorator {
 		// Cache the allChildren data, so that future requests will return the references to the same
 		// object.  This allows the mark..() system to work appropriately.
 
-		if(!$this->allChildrenIncludingDeleted) {
+		if(!$this->_cache_allChildrenIncludingDeleted) {
 			$baseClass = ClassInfo::baseDataClass($this->owner->class);
 			if($baseClass) {
 				$stageChildren = $this->owner->stageChildren(true);
-				$this->allChildrenIncludingDeleted = $stageChildren;
+				$this->_cache_allChildrenIncludingDeleted = $stageChildren;
 				
 				$this->owner->extend("augmentAllChildrenIncludingDeleted", $stageChildren, $context); 
 				
@@ -442,12 +437,12 @@ class Hierarchy extends DataObjectDecorator {
 						}
 					}
 					
-					$this->allChildrenIncludingDeleted = new DataObjectSet();
+					$this->_cache_allChildrenIncludingDeleted = new DataObjectSet();
 					
 					// First, go through the stage children.  They will all be listed but may be different colours
 					if($stageChildren) {
 						foreach($stageChildren as $child) {
-							$this->allChildrenIncludingDeleted->push($child);
+							$this->_cache_allChildrenIncludingDeleted->push($child);
 						}
 					}
 					
@@ -456,7 +451,7 @@ class Hierarchy extends DataObjectDecorator {
 						foreach($liveChildren as $child) {
 							// Not found on stage = deleted page.  Anything else is ignored
 							if(!isset($idxFoundInStage[$child->ID])) {
-								$this->allChildrenIncludingDeleted->push($child);
+								$this->_cache_allChildrenIncludingDeleted->push($child);
 							}
 						}
 					}
@@ -467,7 +462,7 @@ class Hierarchy extends DataObjectDecorator {
 			}
 		}
 		
-		return $this->allChildrenIncludingDeleted;
+		return $this->_cache_allChildrenIncludingDeleted;
 	}
 
 	/**
@@ -556,7 +551,7 @@ class Hierarchy extends DataObjectDecorator {
 		// child as the root of the search. This will stop the recursive call from searching backwards.
 		// If afterNode is given, then only search for the nodes after 
 		if(!$afterNode || $afterNode->ParentID != $this->owner->ID) {
-			$children = $this->AllChildren();
+			$children = $this->_cache_allChildren();
 		} else {
 			$children = DataObject::get(ClassInfo::baseDataClass($this->owner->class), "\"$baseClass\".\"ParentID\"={$this->owner->ID}" . ( ( $afterNode ) ? " AND \"Sort\" > " . sprintf( '%d', $afterNode->Sort ) : "" ), '"Sort" ASC');
 		}
@@ -583,6 +578,11 @@ class Hierarchy extends DataObjectDecorator {
 		}
 		
 		return null;
+	}
+	
+	function flushCache() {
+		$this->_cache_allChildrenIncludingDeleted = null;
+		$this->_cache_allChildren = null;
 	}
 }
 
