@@ -848,11 +848,6 @@ class Member extends DataObject {
 			$locale
 		));
 		
-		$mainFields->insertAfter(
-			new TreeMultiselectField("Groups", _t("Member.SECURITYGROUPS", "Security groups")),
-			'Locale'
-		);
-		
 		$mainFields->removeByName('Bounced');
 		$mainFields->removeByName('RememberLoginToken');
 		$mainFields->removeByName('AutoLoginHash');
