@@ -100,11 +100,17 @@ class ErrorPage extends Page {
 		$response = Director::test(Director::makeRelative($this->Link()));
 		$errorContent = $response->getBody();
 		
+		// Check we have an assets base directory, creating if it we don't
 		if(!file_exists(ASSETS_PATH)) {
 			mkdir(ASSETS_PATH, 02775);
 		}
 
-		if($fh = fopen(ASSETS_PATH . "/error-$this->ErrorCode.html", "w")) {
+		// Path to the error file in the file store
+		$errorFile = ASSETS_PATH . "/error-$this->ErrorCode.html";
+
+		// Attempt to open the file, writing it if it doesn't exist
+		$fh = @fopen($errorFile, "w");
+		if($fh) {
 			fwrite($fh, $errorContent);
 			fclose($fh);
 		}
