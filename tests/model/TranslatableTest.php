@@ -42,35 +42,6 @@ class TranslatableTest extends FunctionalTest {
 		parent::tearDown();
 	}
 	
-	function testTranslatablePropertiesOnDataObject() {
-		$origObj = $this->objFromFixture('TranslatableTest_DataObject', 'testobject_en');
-		$translatedObj = $origObj->createTranslation('fr');
-		$translatedObj->TranslatableProperty = 'Fr';
-		$translatedObj->TranslatableDecoratedProperty = 'Fr';
-		$translatedObj->write();
-		
-		$this->assertEquals(
-			$origObj->TranslatableProperty,
-			'En',
-			'Creating a translation doesnt affect database field on original object'
-		);
-		$this->assertEquals(
-			$origObj->TranslatableDecoratedProperty,
-			'En',
-			'Creating a translation doesnt affect decorated database field on original object'
-		);
-		$this->assertEquals(
-			$translatedObj->TranslatableProperty,
-			'Fr',
-			'Translated object saves database field independently of original object'
-		);
-		$this->assertEquals(
-			$translatedObj->TranslatableDecoratedProperty,
-			'Fr',
-			'Translated object saves decorated database field independently of original object'
-		);
-	}
-	
 	function testCreateTranslationOnSiteTree() {
 		$origPage = $this->objFromFixture('Page', 'testpage_en');
 		$translatedPage = $origPage->createTranslation('de');
@@ -302,11 +273,169 @@ class TranslatableTest extends FunctionalTest {
 		$this->assertNotNull(DataObject::get_by_id('Page', $origPage->ID));
 	}
 	
-	/*
-	function testSiteTreeHierarchyTranslation() {
-		//$parentPage = $this->objFromFixture();
+	function testHierarchyAllChildrenIncludingDeleted() {
+		$parentPage = $this->objFromFixture('Page', 'parent');
+		$translatedParentPage = $parentPage->createTranslation('de');
+		$child1Page = $this->objFromFixture('Page', 'child1');
+		$child1Page->publish('Stage', 'Live');
+		$child1PageOrigID = $child1Page->ID;
+		$child1Page->delete();
+		$child2Page = $this->objFromFixture('Page', 'child2');
+		$child3Page = $this->objFromFixture('Page', 'child3');
+		$grandchildPage = $this->objFromFixture('Page', 'grandchild');
+		
+		$child1PageTranslated = $child1Page->createTranslation('de');
+		$child1PageTranslated->publish('Stage', 'Live');
+		$child1PageTranslatedOrigID = $child1PageTranslated->ID;
+		$child1PageTranslated->delete();
+		$child2PageTranslated = $child2Page->createTranslation('de');
+		
+		Translatable::set_reading_lang('en');
+		$this->assertEquals(
+			$parentPage->AllChildrenIncludingDeleted()->column('ID'),
+			array(
+				$child2Page->ID,
+				$child3Page->ID,
+				$child1PageOrigID
+			),
+			"Showing AllChildrenIncludingDeleted() in default language doesnt show deleted children in other languages"
+		);
+
+		$parentPage->flushCache();
+		Translatable::set_reading_lang('de');
+		$this->assertEquals(
+			$parentPage->AllChildrenIncludingDeleted()->column('ID'),
+			array(
+				$child2Page->ID,
+				$child3Page->ID,
+				$child1PageOrigID
+			),
+			"Showing AllChildrenIncludingDeleted() in translation mode with parent page in default language shows children in default language"
+		);
+		$this->assertEquals(
+			$translatedParentPage->AllChildrenIncludingDeleted()->column('ID'),
+			array(
+				$child2PageTranslated->ID,
+				$child1PageTranslatedOrigID,
+			),
+			"Showing AllChildrenIncludingDeleted() in translation mode with translated parent page shows only translated children"
+		);
+		
+		// reset language
+		Translatable::set_reading_lang('en');
 	}
-	*/
+	
+	function testHierarchyChildren() {
+		$parentPage = $this->objFromFixture('Page', 'parent');
+		$child1Page = $this->objFromFixture('Page', 'child1');
+		$child2Page = $this->objFromFixture('Page', 'child2');
+		$child3Page = $this->objFromFixture('Page', 'child3');
+		$grandchildPage = $this->objFromFixture('Page', 'grandchild');
+		
+		$child1PageTranslated = $child1Page->createTranslation('de');
+		
+		Translatable::set_reading_lang('en');
+		$this->assertEquals(
+			$parentPage->Children()->column('ID'),
+			array(
+				$child1Page->ID, 
+				$child2Page->ID,
+				$child3Page->ID
+			),
+			"Showing Children() in default language doesnt show children in other languages"
+		);
+		
+		Translatable::set_reading_lang('de');
+		$parentPage->flushCache();
+		$this->assertEquals(
+			$parentPage->Children()->column('ID'),
+			array($child1PageTranslated->ID),
+			"Showing Children() in translation mode doesnt show children in default languages"
+		);
+		
+		// reset language
+		Translatable::set_reading_lang('en');
+	}
+	
+	function testHierarchyLiveStageChildren() {
+		$parentPage = $this->objFromFixture('Page', 'parent');
+		$child1Page = $this->objFromFixture('Page', 'child1');
+		$child1Page->publish('Stage', 'Live');
+		$child2Page = $this->objFromFixture('Page', 'child2');
+		$child3Page = $this->objFromFixture('Page', 'child3');
+		$grandchildPage = $this->objFromFixture('Page', 'grandchild');
+		
+		$child1PageTranslated = $child1Page->createTranslation('de');
+		$child1PageTranslated->publish('Stage', 'Live');
+		$child2PageTranslated = $child2Page->createTranslation('de');
+		
+		Translatable::set_reading_lang('en');
+		$this->assertEquals(
+			$parentPage->liveChildren()->column('ID'),
+			array(
+				$child1Page->ID
+			),
+			"Showing liveChildren() in default language doesnt show children in other languages"
+		);
+		$this->assertEquals(
+			$parentPage->stageChildren()->column('ID'),
+			array(
+				$child1Page->ID, 
+				$child2Page->ID,
+				$child3Page->ID
+			),
+			"Showing stageChildren() in default language doesnt show children in other languages"
+		);
+		
+		Translatable::set_reading_lang('de');
+		$parentPage->flushCache();
+		$this->assertEquals(
+			$parentPage->liveChildren()->column('ID'),
+			array($child1PageTranslated->ID),
+			"Showing liveChildren() in translation mode doesnt show children in default languages"
+		);
+		$this->assertEquals(
+			$parentPage->stageChildren()->column('ID'),
+			array(
+				$child2PageTranslated->ID,
+				$child1PageTranslated->ID,
+			),
+			"Showing stageChildren() in translation mode doesnt show children in default languages"
+		);
+		
+		// reset language
+		Translatable::set_reading_lang('en');
+	}
+	
+	function testTranslatablePropertiesOnDataObject() {
+		$origObj = $this->objFromFixture('TranslatableTest_DataObject', 'testobject_en');
+		$translatedObj = $origObj->createTranslation('fr');
+		$translatedObj->TranslatableProperty = 'Fr';
+		$translatedObj->TranslatableDecoratedProperty = 'Fr';
+		$translatedObj->write();
+		
+		$this->assertEquals(
+			$origObj->TranslatableProperty,
+			'En',
+			'Creating a translation doesnt affect database field on original object'
+		);
+		$this->assertEquals(
+			$origObj->TranslatableDecoratedProperty,
+			'En',
+			'Creating a translation doesnt affect decorated database field on original object'
+		);
+		$this->assertEquals(
+			$translatedObj->TranslatableProperty,
+			'Fr',
+			'Translated object saves database field independently of original object'
+		);
+		$this->assertEquals(
+			$translatedObj->TranslatableDecoratedProperty,
+			'Fr',
+			'Translated object saves decorated database field independently of original object'
+		);
+	}
+
 }
 
 class TranslatableTest_DataObject extends DataObject implements TestOnly {

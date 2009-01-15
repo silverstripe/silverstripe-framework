@@ -326,10 +326,12 @@ class Translatable extends DataObjectDecorator {
 		// split the method into two calls, and overwrite the wrapper AllChildrenIncludingDeleted()
 		// Has to be executed even with Translatable disabled, as it overwrites the method with same name
 		// on Hierarchy class, and routes through to Hierarchy->doAllChildrenIncludingDeleted() instead.
+		// Caution: There's an additional method for augmentAllChildrenIncludingDeleted()
 		$this->createMethod("AllChildrenIncludingDeleted",
 			"
 			\$context = (isset(\$args[0])) ? \$args[0] : null;
-			if(\$context && \$obj->getLang() == \$context->Lang && \$obj->isTranslation()) { 
+			\$lang = (\$context) ? \$context : Translatable::current_lang();
+			if(\$obj->getLang() == \$lang && \$obj->isTranslation()) { 
 				// if the language matches the context (e.g. CMSMain), and object is translated,
 				// then call method on original language instead
 				return \$obj->getOwner()->getOriginalPage()->doAllChildrenIncludingDeleted(\$context);
@@ -702,25 +704,39 @@ class Translatable extends DataObjectDecorator {
 		}
 	}
 	
-	function augmentAllChildrenIncludingDeleted(DataObjectSet $children, $context = null) {
+	/**
+	 * If called with default language, doesn't affect the results.
+	 * Otherwise (called in translation mode) the method tries to find translations
+	 * for each page in its original language and replace the original.
+	 * The result will contain a mixture of translated and untranslated pages.
+	 * 
+	 * Caution: We also create a method AllChildrenIncludingDeleted() dynamically in the class constructor.
+	 * 
+	 * @param DataObjectSet $untranslatedChildren
+	 * @param Object $context
+	 */
+	function augmentAllChildrenIncludingDeleted(DataObjectSet $untranslatedChildren, $context = null) {
 		if(!Translatable::is_enabled()) return false;
 
 		$find = array();
 		$replace = array();
 		
 		// @todo check usage of $context
-		if($context && $context->Lang /*&& $this->owner->Lang != $context->Lang */&& $context->Lang != Translatable::default_lang()) {
-			if($children) {
-				foreach($children as $child) {
-					if($child->hasTranslation($context->Lang)) {
-						$trans = $child->getTranslation($context->Lang);
-						$find[] = $child;
-						$replace[] = $trans;
+		$lang = ($context) ? $context->Lang : Translatable::current_lang();
+		if($lang != Translatable::default_lang()) {
+			if($untranslatedChildren) {
+				foreach($untranslatedChildren as $untranslatedChild) {
+					// replace original language with translation (if one is present for this language)
+					if($untranslatedChild->hasTranslation($lang)) {
+						$translatedChild = $untranslatedChild->getTranslation($lang);
+						$find[] = $untranslatedChild;
+						$replace[] = $translatedChild;
 					}
 				}
 				foreach($find as $i => $found) {
-					$children->replace($found, $replace[$i]);
+					$untranslatedChildren->replace($found, $replace[$i]);
 				}
+				// at this point the set contains a mixture of translated and untranslated pages
 			}
 		}
 		
