@@ -273,58 +273,6 @@ class TranslatableTest extends FunctionalTest {
 		$this->assertNotNull(DataObject::get_by_id('Page', $origPage->ID));
 	}
 	
-	function testHierarchyAllChildrenIncludingDeleted() {
-		$parentPage = $this->objFromFixture('Page', 'parent');
-		$translatedParentPage = $parentPage->createTranslation('de');
-		$child1Page = $this->objFromFixture('Page', 'child1');
-		$child1Page->publish('Stage', 'Live');
-		$child1PageOrigID = $child1Page->ID;
-		$child1Page->delete();
-		$child2Page = $this->objFromFixture('Page', 'child2');
-		$child3Page = $this->objFromFixture('Page', 'child3');
-		$grandchildPage = $this->objFromFixture('Page', 'grandchild');
-		
-		$child1PageTranslated = $child1Page->createTranslation('de');
-		$child1PageTranslated->publish('Stage', 'Live');
-		$child1PageTranslatedOrigID = $child1PageTranslated->ID;
-		$child1PageTranslated->delete();
-		$child2PageTranslated = $child2Page->createTranslation('de');
-		
-		Translatable::set_reading_lang('en');
-		$this->assertEquals(
-			$parentPage->AllChildrenIncludingDeleted()->column('ID'),
-			array(
-				$child2Page->ID,
-				$child3Page->ID,
-				$child1PageOrigID
-			),
-			"Showing AllChildrenIncludingDeleted() in default language doesnt show deleted children in other languages"
-		);
-
-		$parentPage->flushCache();
-		Translatable::set_reading_lang('de');
-		$this->assertEquals(
-			$parentPage->AllChildrenIncludingDeleted()->column('ID'),
-			array(
-				$child2Page->ID,
-				$child3Page->ID,
-				$child1PageOrigID
-			),
-			"Showing AllChildrenIncludingDeleted() in translation mode with parent page in default language shows children in default language"
-		);
-		$this->assertEquals(
-			$translatedParentPage->AllChildrenIncludingDeleted()->column('ID'),
-			array(
-				$child2PageTranslated->ID,
-				$child1PageTranslatedOrigID,
-			),
-			"Showing AllChildrenIncludingDeleted() in translation mode with translated parent page shows only translated children"
-		);
-		
-		// reset language
-		Translatable::set_reading_lang('en');
-	}
-	
 	function testHierarchyChildren() {
 		$parentPage = $this->objFromFixture('Page', 'parent');
 		$child1Page = $this->objFromFixture('Page', 'child1');
@@ -435,7 +383,83 @@ class TranslatableTest extends FunctionalTest {
 			'Translated object saves decorated database field independently of original object'
 		);
 	}
+	
+	function testCreateTranslationTranslatesUntranslatedParents() {
+		$parentPage = $this->objFromFixture('Page', 'parent');
+		$child1Page = $this->objFromFixture('Page', 'child1');
+		$child1PageOrigID = $child1Page->ID;
+		$grandchildPage = $this->objFromFixture('Page', 'grandchild');
+		
+		$this->assertFalse($grandchildPage->hasTranslation('de'));
+		$this->assertFalse($child1Page->hasTranslation('de'));
+		$this->assertFalse($parentPage->hasTranslation('de'));
+		
+		$translatedGrandChildPage = $grandchildPage->createTranslation('de');
+		$this->assertTrue($grandchildPage->hasTranslation('de'));
+		$this->assertTrue($child1Page->hasTranslation('de'));
+		$this->assertTrue($parentPage->hasTranslation('de'));
+	}
 
+	function testHierarchyAllChildrenIncludingDeleted() {
+		$parentPage = $this->objFromFixture('Page', 'parent');
+		$translatedParentPage = $parentPage->createTranslation('de');
+		$child1Page = $this->objFromFixture('Page', 'child1');
+		$child1Page->publish('Stage', 'Live');
+		$child1PageOrigID = $child1Page->ID;
+		$child1Page->delete();
+		$child2Page = $this->objFromFixture('Page', 'child2');
+		$child3Page = $this->objFromFixture('Page', 'child3');
+		$grandchildPage = $this->objFromFixture('Page', 'grandchild');
+		
+		$child1PageTranslated = $child1Page->createTranslation('de');
+		$child1PageTranslated->publish('Stage', 'Live');
+		$child1PageTranslatedOrigID = $child1PageTranslated->ID;
+		$child1PageTranslated->delete();
+		$child2PageTranslated = $child2Page->createTranslation('de');
+		
+		// on original parent in default language
+		Translatable::set_reading_lang('en');
+		SiteTree::flush_and_destroy_cache();
+		$parentPage = $this->objFromFixture('Page', 'parent');
+		$this->assertEquals(
+			$parentPage->AllChildrenIncludingDeleted()->column('ID'),
+			array(
+				$child2Page->ID,
+				$child3Page->ID,
+				$child1PageOrigID // $child1Page was deleted, so the original record doesn't have the ID set
+			),
+			"Showing AllChildrenIncludingDeleted() in default language doesnt show deleted children in other languages"
+		);
+
+		// on original parent in translation mode
+		Translatable::set_reading_lang('de');
+		SiteTree::flush_and_destroy_cache();
+		$parentPage = $this->objFromFixture('Page', 'parent');
+		$this->assertEquals(
+			$parentPage->AllChildrenIncludingDeleted()->column('ID'),
+			array(
+				$child2PageTranslated->ID,
+				$child1PageTranslatedOrigID,
+			),
+			"Showing AllChildrenIncludingDeleted() in translation mode with parent page in default language shows children in default language"
+		);
+		
+		// on translated page in translation mode
+		SiteTree::flush_and_destroy_cache();
+		$parentPage = $this->objFromFixture('Page', 'parent');
+		$translatedParentPage = $parentPage->getTranslation('de');
+		$this->assertEquals(
+			$translatedParentPage->AllChildrenIncludingDeleted()->column('ID'),
+			array(
+				$child2PageTranslated->ID,
+				$child1PageTranslatedOrigID,
+			),
+			"Showing AllChildrenIncludingDeleted() in translation mode with translated parent page shows only translated children"
+		);
+		
+		// reset language
+		Translatable::set_reading_lang('en');
+	}
 }
 
 class TranslatableTest_DataObject extends DataObject implements TestOnly {

@@ -95,8 +95,7 @@ class Translatable extends DataObjectDecorator {
 	 * so we fall back to {@link Translatable::default_lang()}.
 	 */
 	function getLang() {
-		$record = $this->owner->toMap();
-		return (isset($record["Lang"])) ? $record["Lang"] : Translatable::default_lang();
+		return ($this->owner->getField('Lang')) ? $this->owner->getField('Lang') : Translatable::default_lang();
 	}
 	
 	/**
@@ -242,7 +241,8 @@ class Translatable extends DataObjectDecorator {
 			$class = $class."_Live";
 		}
 		
-		$id = $this->owner->ID;
+		// if called on a translation, we use $OriginalID, otherwise use $id
+		$id = ($this->owner->Lang && $this->owner->Lang != Translatable::default_lang()) ? $this->owner->OriginalID : $this->owner->ID;
 		if(is_numeric($id)) {
 			$query = new SQLQuery('distinct Lang',"$class","(\"$class\".\"OriginalID\" =$id)");
 			$langs = $query->execute()->column();
@@ -327,20 +327,7 @@ class Translatable extends DataObjectDecorator {
 		// Has to be executed even with Translatable disabled, as it overwrites the method with same name
 		// on Hierarchy class, and routes through to Hierarchy->doAllChildrenIncludingDeleted() instead.
 		// Caution: There's an additional method for augmentAllChildrenIncludingDeleted()
-		$this->createMethod("AllChildrenIncludingDeleted",
-			"
-			\$context = (isset(\$args[0])) ? \$args[0] : null;
-			\$lang = (\$context) ? \$context : Translatable::current_lang();
-			if(\$obj->getLang() == \$lang && \$obj->isTranslation()) { 
-				// if the language matches the context (e.g. CMSMain), and object is translated,
-				// then call method on original language instead
-				return \$obj->getOwner()->getOriginalPage()->doAllChildrenIncludingDeleted(\$context);
-			} else if(\$obj->getOwner()->hasExtension('Hierarchy') ) {
-				return \$obj->getOwner()->extInstance('Hierarchy')->doAllChildrenIncludingDeleted(\$context);
-			} else {
-				return null;
-			}"
-		);
+	
 	}
 	
 	function setOwner(Object $owner) {
@@ -387,7 +374,7 @@ class Translatable extends DataObjectDecorator {
 		$lang = Translatable::current_lang();
 		$baseTable = ClassInfo::baseDataClass($this->owner->class);
 		$where = $query->where;
-		if (
+		if(
 			$lang
 			&& !$query->filtersOnID() // DataObject::get_by_id() should work independently of language
 			&& array_search($baseTable, array_keys($query->from)) !== false 
@@ -440,11 +427,7 @@ class Translatable extends DataObjectDecorator {
 	}
 	
 	function isTranslation() {
-		if($this->getLang() && ($this->getLang() != Translatable::default_lang()) && $this->owner->exists()) {
-			return true;
-		} else {
-			return false;
-		}
+		return ($this->owner->Lang && ($this->owner->Lang != Translatable::default_lang())/* && $this->owner->exists()*/);
 	}
 	
 	/**
@@ -474,6 +457,42 @@ class Translatable extends DataObjectDecorator {
 		if(!Translatable::is_enabled()) return;
 		
 		$this->contentcontrollerInit($controller);
+	}
+
+	/**
+	 * Recursively creates translations for parent pages in this language
+	 * if they aren't existing already. This is a necessity to make
+	 * nested pages accessible in a translated CMS page tree.
+	 * It would be more userfriendly to grey out untranslated pages,
+	 * but this involves complicated special cases in AllChildrenIncludingDeleted().
+	 */
+	function onBeforeWrite() {
+		if(!Translatable::is_enabled()) return;	
+
+		// Caution: This logic is very sensitve to eternal loops when translation status isn't determined properly
+		if(
+			!$this->owner->ID 
+			&& $this->isTranslation()
+			&& $this->owner->ParentID 
+			&& !$this->owner->Parent()->hasTranslation($this->owner->Lang)
+		) {
+			$this->owner->Parent()->createTranslation($this->owner->Lang);
+		}
+		
+		if(!$this->owner->ID && $this->isTranslation()) {
+			$SQL_URLSegment = Convert::raw2sql($this->owner->URLSegment);
+			$existingOriginalPage = Translatable::get_one_by_lang('SiteTree', Translatable::default_lang(), "URLSegment = '{$SQL_URLSegment}'");
+			if($existingOriginalPage) $this->owner->URLSegment .= "-{$this->owner->Lang}";
+		}
+	}
+	
+	function alternateGetByUrl($urlSegment, $extraFilter, $cache = null, $orderby = null) {
+		$SQL_URLSegment = Convert::raw2sql($urlSegment);
+		Translatable::disable();
+		$record = DataObject::get_one('SiteTree', "URLSegment = '{$SQL_URLSegment}'");
+		Translatable::enable();
+		
+		return $record;
 	}
 
 	function augmentWrite(&$manipulation) {
@@ -512,7 +531,7 @@ class Translatable extends DataObjectDecorator {
 		if(!Translatable::is_enabled()) return;
 		
 		// used in CMSMain->init() to set language state when reading/writing record
-		$fields->push(new HiddenField("Lang", "Lang", $this->getLang()) );
+		$fields->push(new HiddenField("Lang", "Lang", $this->owner->Lang) );
 		$fields->push(new HiddenField("OriginalID", "OriginalID", $this->owner->OriginalID) );
 
 		// if a language other than default language is used, we're in "translation mode",
@@ -521,7 +540,7 @@ class Translatable extends DataObjectDecorator {
 		$baseClass = $this->owner->class;
 		$allFields = $fields->toArray();
 		while( ($p = get_parent_class($baseClass)) != "DataObject") $baseClass = $p;
-		$isTranslationMode = (Translatable::default_lang() != $this->getLang() && $this->getLang());
+		$isTranslationMode = (Translatable::default_lang() != $this->owner->Lang && $this->owner->Lang);
 
 		if($isTranslationMode) {
 			$originalLangID = Session::get($this->owner->ID . '_originalLangID');
@@ -534,7 +553,7 @@ class Translatable extends DataObjectDecorator {
 			// iterate through sequential list of all datafields in fieldset
 			// (fields are object references, so we can replace them with the translatable CompositeField)
 			foreach($allDataFields as $dataField) {
-				
+				if($dataField instanceof HiddenField) continue;
 				if(in_array($dataField->Name(), $translatableFieldNames)) {
 					// if the field is translatable, perform transformation
 					$fields->replaceField($dataField->Name(), $transformation->transformFormField($dataField));
@@ -543,6 +562,22 @@ class Translatable extends DataObjectDecorator {
 					$fields->replaceField($dataField->Name(), $dataField->performReadonlyTransformation());
 				}
 			}
+			
+			// add link back to original page
+			$originalRecordLink = sprintf(
+				_t('Translatable.ORIGINALLINK', 'Show original page in %s', PR_MEDIUM, 'Show in specific language'),
+				i18n::get_language_name(Translatable::default_lang())
+			);
+			$originalRecordHTML = sprintf('<p><a href="%s">%s</a></p>',
+				sprintf('admin/show/%d/?lang=%s', $originalRecord->ID, Translatable::default_lang()),
+				$originalRecordLink
+			);
+			$fields->addFieldsToTab(
+				'Root',
+				new Tab(_t('Translatable.TRANSLATIONS', 'Translations'),
+					new LiteralField('OriginalTranslationLink', $originalRecordHTML)
+				)
+			);
 		} elseif($this->owner->isNew()) {
 			$fields->addFieldsToTab(
 				'Root',
@@ -678,7 +713,8 @@ class Translatable extends DataObjectDecorator {
 		$newTranslation = new $class;
 		$newTranslation->update($this->owner->toMap());
 		$newTranslation->ID = 0;
-		$newTranslation->setOriginalPage($this->owner->ID);
+		$originalID = ($this->isTranslation()) ? $this->owner->OriginalID : $this->owner->ID;
+		$newTranslation->setOriginalPage($originalID);
 		$newTranslation->Lang = $lang;
 		$newTranslation->write();
 		
@@ -693,15 +729,29 @@ class Translatable extends DataObjectDecorator {
 	 * @return boolean
 	 */
 	function hasTranslation($lang) {
-		return ($this->owner->exists()) && (array_search($lang, $this->getTranslatedLangs()) !== false);
+		return (array_search($lang, $this->getTranslatedLangs()) !== false);
 	}
-	
+
+	/*
 	function augmentStageChildren(DataObjectSet $children, $showall = false) {
 		if(!Translatable::is_enabled()) return;
-		
+
 		if($this->isTranslation()) {
 			$children->merge($this->getOriginalPage()->stageChildren($showall));
 		}
+	}
+	*/
+	
+	function AllChildrenIncludingDeleted($context = null) {
+		// if method is called on translated page, we have to get the children from the original.
+		// otherwise it assumes the wrong ParentID connection
+		if($this->owner->isTranslation()) {
+			$children = $this->owner->getOriginalPage()->doAllChildrenIncludingDeleted($context);
+		} else {
+			$children = $this->owner->doAllChildrenIncludingDeleted($context);
+		}
+		
+		return $children;
 	}
 	
 	/**
@@ -715,32 +765,32 @@ class Translatable extends DataObjectDecorator {
 	 * @param DataObjectSet $untranslatedChildren
 	 * @param Object $context
 	 */
-	function augmentAllChildrenIncludingDeleted(DataObjectSet $untranslatedChildren, $context = null) {
+	/*
+	function augmentAllChildrenIncludingDeleted(DataObjectSet $children, $context) {
 		if(!Translatable::is_enabled()) return false;
-
 		$find = array();
 		$replace = array();
 		
-		// @todo check usage of $context
-		$lang = ($context) ? $context->Lang : Translatable::current_lang();
-		if($lang != Translatable::default_lang()) {
-			if($untranslatedChildren) {
-				foreach($untranslatedChildren as $untranslatedChild) {
-					// replace original language with translation (if one is present for this language)
-					if($untranslatedChild->hasTranslation($lang)) {
-						$translatedChild = $untranslatedChild->getTranslation($lang);
-						$find[] = $untranslatedChild;
-						$replace[] = $translatedChild;
+		if($context && $context->Lang && $context->Lang != Translatable::default_lang()) {
+			
+			if($children) {
+				foreach($children as $child) {
+					if($child->hasTranslation($context->Lang)) {
+						$trans = $child->getTranslation($context->Lang);
+						if($trans) {
+							$find[] = $child;
+							$replace[] = $trans;
+						}
 					}
 				}
 				foreach($find as $i => $found) {
-					$untranslatedChildren->replace($found, $replace[$i]);
+					$children->replace($found, $replace[$i]);
 				}
-				// at this point the set contains a mixture of translated and untranslated pages
 			}
-		}
-		
+			
+		}	
 	}
+	*/
 	
 	/**
 	 * Get a list of languages with at least one element translated in (including the default language)
