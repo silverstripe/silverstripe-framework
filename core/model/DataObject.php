@@ -1573,7 +1573,7 @@ class DataObject extends ViewableData implements DataObjectInterface,i18nEntityP
 	 * Used for simple frontend forms without relation editing
 	 * or {@link TabSet} behaviour. Uses {@link scaffoldFormFields()}
 	 * by default. To customize, either overload this method in your
-	 * subclass, or decorate it by {@link DataObjectDecorator->updateFormFields()}.
+	 * subclass, or decorate it by {@link DataObjectDecorator->updateFrontEndFields()}.
 	 * 
 	 * @todo Decide on naming for "website|frontend|site|page" and stick with it in the API
 	 *
