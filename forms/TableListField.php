@@ -910,25 +910,21 @@ JS
 		}
 	}
 	
-	/**
-	 * the function is to generate string that will be used as
-	 * the content of exported file
-	 */
-	
-	function generateExportFileData(&$numColumns, &$numRows){
+	function generateExportFileData(&$numColumns, &$numRows) {
 		$separator = $this->csvSeparator;
 		$csvColumns = ($this->fieldListCsv) ? $this->fieldListCsv : $this->fieldList;
-		$fileData = "";
+		$fileData = '';
+		$columnData = array();
+		$fieldItems = new DataObjectSet();
 		
 		if($this->csvHasHeader) {
-			$fileData .= "\"" . implode("\"{$separator}\"",array_values($csvColumns)) . "\"";
+			$fileData .= "\"" . implode("\"{$separator}\"", array_values($csvColumns)) . "\"";
 			$fileData .= "\n";
 		}
 
-		// get data
-		if(isset($this->customSourceItems)){
+		if(isset($this->customSourceItems)) {
 			$items = $this->customSourceItems;
-		}else{
+		} else {
 			$dataQuery = $this->getCsvQuery();
 			$records = $dataQuery->execute();
 			$sourceClass = $this->sourceClass;
@@ -936,7 +932,6 @@ JS
 			$items = $dataobject->buildDataObjectSet($records, 'DataObjectSet');
 		}
 		
-		$fieldItems = new DataObjectSet();
 		if($items && $items->count()) foreach($items as $item) {
 			// create a TableListField_Item to support resolving of
 			// relation-fields in dot notation via TableListField_Item->Fields()
@@ -949,10 +944,8 @@ JS
 
 		if($fieldItems) {
 			foreach($fieldItems as $fieldItem) {
-				$columnData = array();
 				$fields = $fieldItem->Fields();
-				foreach($fields as $field) {
-					
+				if($fields) foreach($fields as $field) {
 					$value = $field->Value;
 					
 					// TODO This should be replaced with casting
