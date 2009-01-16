@@ -387,9 +387,11 @@ class Hierarchy extends DataObjectDecorator {
 	 * @return DataObjectSet
 	 */
 	public function doAllChildrenIncludingDeleted($context = null) {
+		$idxStageChildren = array();
+		$idxLiveChildren = array();
+		
 		// Cache the allChildren data, so that future requests will return the references to the same
 		// object.  This allows the mark..() system to work appropriately.
-
 		if(!$this->_cache_allChildrenIncludingDeleted) {
 			$baseClass = ClassInfo::baseDataClass($this->owner->class);
 			if($baseClass) {
@@ -416,11 +418,11 @@ class Hierarchy extends DataObjectDecorator {
 					}
 					
 					DataObject::disable_subclass_access();
-					if(isset($idxStageChildren)) {
+					if($idxStageChildren) {
 						$foundInLive = Versioned::get_by_stage( $baseClass, 'Live', "\"{$baseClass}\".\"ID\" IN (" . implode(",", array_keys($idxStageChildren)) . ")", "" );
 					}
 					
-					if(isset($idxLiveChildren)) {
+					if($idxLiveChildren) {
 						$foundInStage = Versioned::get_by_stage( $baseClass, 'Stage', "\"{$baseClass}\".\"ID\" IN (" . implode(",", array_keys($idxLiveChildren)) . ")", "" );
 					}
 					DataObject::enable_subclass_access();
