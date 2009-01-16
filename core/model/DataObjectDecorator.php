@@ -57,7 +57,6 @@ abstract class DataObjectDecorator extends Extension {
 		return $this->loadExtraStatics();
 	}
 
-
 	/**
 	 * Edit the given query object to support queries for this extension
 	 *
@@ -65,7 +64,6 @@ abstract class DataObjectDecorator extends Extension {
 	 */
 	function augmentSQL(SQLQuery &$query) {
 	}
-
 
 	/**
 	 * Update the database schema as required by this extension.
@@ -164,6 +162,12 @@ abstract class DataObjectDecorator extends Extension {
 	function updateFrontEndFields(FieldSet &$fields) {
 	}
 	
+	/**
+	 * This is used to provide modifications to the form actions
+	 * used in the CMS. {@link DataObject->getCMSActions()}.
+	 *
+	 * @param FieldSet $actions FieldSet
+	 */
 	function updateCMSActions(FieldSet &$actions) {
 	}
 	
@@ -202,5 +206,4 @@ abstract class DataObjectDecorator extends Extension {
 	}
 
 }
-
 ?>
