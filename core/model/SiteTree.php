@@ -1032,7 +1032,16 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	public static function get_by_url($urlSegment, $extraFilter = "", $cache = true, $orderby = "") {
 		$filter = sprintf("\"URLSegment\" = '%s'", Convert::raw2sql($urlSegment));
 		if($extraFilter) $filter .= " AND $extraFilter";
-		return DataObject::get_one("SiteTree", $filter, $cache, $orderby);
+		$matchedPage = DataObject::get_one("SiteTree", $filter, $cache, $orderby);
+		if($matchedPage) {
+			return $matchedPage;
+		} else {
+			$alternativeMatches = singleton('SiteTree')->extend('alternateGetByUrl', $urlSegment, $extraFilter, $cache, $orderby);
+			if($alternativeMatches) foreach($alternativeMatches as $alternativeMatch) {
+				if($alternativeMatch) return $alternativeMatch;
+			} 
+			return false;
+		} 
 	}
 
 	/**
