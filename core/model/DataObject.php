@@ -1582,7 +1582,7 @@ class DataObject extends ViewableData implements DataObjectInterface,i18nEntityP
 	 */
 	public function getFrontEndFields($params = null) {
 		$untabbedFields = $this->scaffoldFormFields($params);
-		$this->extend('updateFormFields', $untabbedFields);
+		$this->extend('updateFrontEndFields', $untabbedFields);
 	
 		return $untabbedFields;
 	}

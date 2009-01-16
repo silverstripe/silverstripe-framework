@@ -139,7 +139,8 @@ abstract class DataObjectDecorator extends Extension {
 
 	/**
 	 * This function is used to provide modifications to the form in the CMS
-	 * by the decorator. By default, no changes are made.
+	 * by the decorator. By default, no changes are made. {@link DataObject->getCMSFields()}.
+	 * 
 	 * Please consider using {@link updateFormFields()} to globally add
 	 * formfields to the record. The method {@link updateCMSFields()}
 	 * should just be used to add or modify tabs, or fields which
@@ -153,14 +154,14 @@ abstract class DataObjectDecorator extends Extension {
 	}
 	
 	/**
-	 * This function is used to provide modifications to the form in the CMS
-	 * by the decorator.
+	 * This function is used to provide modifications to the form used
+	 * for front end forms. {@link DataObject->getFrontEndFields()}
 	 * 
 	 * Caution: Use {@link FieldSet->push()} to add fields.
 	 *
 	 * @param FieldSet $fields FieldSet without TabSet nesting
 	 */
-	function updateFormFields(FieldSet &$fields) {
+	function updateFrontEndFields(FieldSet &$fields) {
 	}
 	
 	function updateCMSActions(FieldSet &$actions) {
