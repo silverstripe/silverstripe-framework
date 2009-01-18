@@ -495,6 +495,7 @@ class Translatable extends DataObjectDecorator {
 		return $record;
 	}
 
+	/*
 	function augmentWrite(&$manipulation) {
 		if(!Translatable::is_enabled()) return;
 		
@@ -505,7 +506,7 @@ class Translatable extends DataObjectDecorator {
 		$newManip = array();
 		foreach($manipulation as $table => $manip) {
 			if(strpos($table, "_versions") !== false) continue;
-			/*
+			
 			foreach($this->fieldBlackList as $blackField) {
 				if(isset($manip["fields"][$blackField])) {
 					if($this->isTranslation()) {
@@ -520,10 +521,10 @@ class Translatable extends DataObjectDecorator {
 					}
 				}
 			}
-			*/
 		}
 		DB::manipulate($newManip);	
 	}
+	*/
 
 	//-----------------------------------------------------------------------------------------------//
 	
