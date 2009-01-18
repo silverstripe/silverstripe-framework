@@ -20,8 +20,9 @@ class LanguageDropdownField extends GroupedDropdownField {
 			Translatable::get_existing_content_languages($translatingClass),
 			$dontInclude
 		);
+
 		// we accept in dontInclude both language codes and names, so another diff is required
-		$usedlangs = array_diff(
+		$usedlangs = array_diff_key(
 			$usedlangs,
 			array_flip($dontInclude)
 		);
