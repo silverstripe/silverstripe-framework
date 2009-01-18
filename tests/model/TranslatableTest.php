@@ -41,23 +41,7 @@ class TranslatableTest extends FunctionalTest {
 		
 		parent::tearDown();
 	}
-	
-	function testCreateTranslationOnSiteTree() {
-		$origPage = $this->objFromFixture('Page', 'testpage_en');
-		$translatedPage = $origPage->createTranslation('de');
 		
-		$this->assertEquals($translatedPage->Lang, 'de');
-		$this->assertNotEquals($translatedPage->ID, $origPage->ID);
-		$this->assertEquals($translatedPage->OriginalID, $origPage->ID);
-		
-		$subsequentTranslatedPage = $origPage->createTranslation('de');
-		$this->assertEquals(
-			$translatedPage->ID,
-			$subsequentTranslatedPage->ID,
-			'Subsequent calls to createTranslation() dont cause new records in database'
-		);
-	}
-	
 	function testGetOriginalPage() {
 		$origPage = $this->objFromFixture('Page', 'testpage_en');
 		$translatedPage = $origPage->createTranslation('de');
@@ -355,6 +339,40 @@ class TranslatableTest extends FunctionalTest {
 		Translatable::set_reading_lang('en');
 	}
 	
+	function testTranslatablePropertiesOnSiteTree() {
+		$origObj = $this->objFromFixture('TranslatableTest_Page', 'testpage_en');
+		$translatedObj = $origObj->createTranslation('fr');
+		$translatedObj->TranslatableProperty = 'Fr';
+		$translatedObj->write();
+		
+		$this->assertEquals(
+			$origObj->TranslatableProperty,
+			'En',
+			'Creating a translation doesnt affect database field on original object'
+		);
+		$this->assertEquals(
+			$translatedObj->TranslatableProperty,
+			'Fr',
+			'Translated object saves database field independently of original object'
+		);
+	}
+	
+	function testCreateTranslationOnSiteTree() {
+		$origPage = $this->objFromFixture('Page', 'testpage_en');
+		$translatedPage = $origPage->createTranslation('de');
+
+		$this->assertEquals($translatedPage->Lang, 'de');
+		$this->assertNotEquals($translatedPage->ID, $origPage->ID);
+		$this->assertEquals($translatedPage->OriginalID, $origPage->ID);
+
+		$subsequentTranslatedPage = $origPage->createTranslation('de');
+		$this->assertEquals(
+			$translatedPage->ID,
+			$subsequentTranslatedPage->ID,
+			'Subsequent calls to createTranslation() dont cause new records in database'
+		);
+	}
+	
 	function testTranslatablePropertiesOnDataObject() {
 		$origObj = $this->objFromFixture('TranslatableTest_DataObject', 'testobject_en');
 		$translatedObj = $origObj->createTranslation('fr');
@@ -481,6 +499,15 @@ class TranslatableTest_Decorator extends DataObjectDecorator implements TestOnly
 			)
 		);
 	}
+}
+
+class TranslatableTest_Page extends Page implements TestOnly {
+	// static $extensions is inherited from SiteTree,
+	// we don't need to explicitly specify the fields
+	
+	static $db = array(
+		'TranslatableProperty' => 'Text'
+	);
 }
 
 DataObject::add_extension('TranslatableTest_DataObject', 'TranslatableTest_Decorator');

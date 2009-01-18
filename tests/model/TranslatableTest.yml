@@ -32,3 +32,8 @@ TranslatableTest_DataObject:
    testobject_en:
       TranslatableProperty: En
       TranslatableDecoratedProperty: En
+TranslatableTest_Page:
+   testpage_en:
+      Title: En
+      TranslatableProperty: En
+      URLSegment: testpage-en
