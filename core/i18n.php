@@ -560,6 +560,7 @@ class i18n extends Object {
 		'zh-min-nan' => array('Chinese (Min Nan)', '&#21488;&#35486;'),
 		'hr' => array('Croatian', 'Hrvatski'),
 		'cs' => array('Czech', '&#x010D;e&#353;tina'),
+		'cy' => array('Welsh', 'Welsh/Cymraeg'),
 		'da' => array('Danish', 'dansk'),
 		'nl' => array('Dutch',  'Nederlands'),
 		'en' => array('English', 'English'),
