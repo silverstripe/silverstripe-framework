@@ -8,7 +8,7 @@ table.CMSList {
 	width : 100%;
 }
 
-/* HACK Preventing IE6 from showing double borders */
+/* Preventing IE6 from showing double borders */
 body>div table.TableField, 
 body>div table.TableListField, 
 body>div .TableListField table.data, 
@@ -40,7 +40,7 @@ table.CMSList thead th {
 	height : 24px;
 	border-right : 1px solid #aca899;
 	border-left : 1px solid #ffffff;
-	padding:0 5px;
+	padding-left : 5px;
 }
 
 table.TableField thead th span, 
@@ -113,6 +113,7 @@ table.CMSList tbody td.checkbox {
 
 table.TableField tbody tr.over td, 
 .TableListField table.data tbody tr.over td, 
+.TableListField table.data tbody tr.over td input,
 table.CMSList tbody td.over td{
 	background-color: #FFCC66;
 }
