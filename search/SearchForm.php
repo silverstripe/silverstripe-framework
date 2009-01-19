@@ -150,14 +150,15 @@ class SearchForm extends Form {
 	public function searchEngine($keywords, $pageLength = null, $sortBy = "Relevance DESC", $extraFilter = "", $booleanSearch = false, $alternativeFileFilter = "", $invertedMatch = false) {
 		if(!$pageLength) $pageLength = $this->pageLength;
 		$fileFilter = '';	 	
-	 	$keywords = addslashes($keywords);
-	 	
+		
+	 	$keywords = Convert::raw2sql($keywords);
+		$htmlEntityKeywords = htmlentities($keywords);
+
 	 	if($booleanSearch) $boolean = "IN BOOLEAN MODE";
+	
 	 	if($extraFilter) {
-	 		$extraFilter = " AND $extraFilter";
-	 		
-	 		if($alternativeFileFilter) $fileFilter = " AND $alternativeFileFilter";
-	 		else $fileFilter = $extraFilter;
+	 		$extraFilter = " AND $extraFilter"; 		
+	 		$fileFilter = ($alternativeFileFilter) ? " AND $alternativeFileFilter" : $extraFilter;
 	 	}
 	 	
 	 	if($this->showInSearchTurnOn)	$extraFilter .= " AND showInSearch <> 0";
@@ -167,12 +168,20 @@ class SearchForm extends Form {
 		
 		$notMatch = $invertedMatch ? "NOT " : "";
 		if($keywords) {
-			$matchContent = "MATCH (Title, MenuTitle, Content, MetaTitle, MetaDescription, MetaKeywords) AGAINST ('$keywords' $boolean)";
+			$matchContent = "
+				MATCH (Title, MenuTitle, MetaTitle, MetaDescription, MetaKeywords) AGAINST ('$keywords' $boolean)
+				+ MATCH (Content) AGAINST ('$htmlEntityKeywords' $boolean)
+			";
 			$matchFile = "MATCH (Filename, Title, Content) AGAINST ('$keywords' $boolean) AND ClassName = 'File'";
 	
 			// We make the relevance search by converting a boolean mode search into a normal one
 			$relevanceKeywords = str_replace(array('*','+','-'),'',$keywords);
-			$relevanceContent = "MATCH (Title) AGAINST ('$relevanceKeywords') + MATCH (Title, MenuTitle, Content, MetaTitle, MetaDescription, MetaKeywords) AGAINST ('$relevanceKeywords')";
+			$htmlEntityRelevanceKeywords = str_replace(array('*','+','-'),'',$htmlEntityKeywords);
+			$relevanceContent = "
+				MATCH (Title) AGAINST ('$relevanceKeywords') 
+				+ MATCH(Content) AGAINST ('$htmlEntityRelevanceKeywords')
+				+ MATCH (Title, MenuTitle, Content, MetaTitle, MetaDescription, MetaKeywords) AGAINST ('$relevanceKeywords')
+			";
 			$relevanceFile = "MATCH (Filename, Title, Content) AGAINST ('$relevanceKeywords')";
 		} else {
 			$relevanceContent = $relevanceFile = 1;

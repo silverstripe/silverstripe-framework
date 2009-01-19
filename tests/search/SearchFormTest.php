@@ -18,7 +18,7 @@ class SearchFormTest extends FunctionalTest {
 		$holderPage = $this->objFromFixture('SiteTree', 'searchformholder');
 		$this->mockController = new ContentController($holderPage);
 	}
-	
+
 	function testPublishedPagesMatchedByTitle() {
 		$sf = new SearchForm($this->mockController, 'SearchForm');
 
@@ -132,6 +132,27 @@ class SearchFormTest extends FunctionalTest {
 			$page->ID,
 			$results->column('ID'),
 			'Page with "Show in Search" disabled doesnt show'
+		);
+	}
+
+	function testSearchTitleAndContentWithSpecialCharacters() {
+		$sf = new SearchForm($this->mockController, 'SearchForm');
+		
+		$pageWithSpecialChars = $this->objFromFixture('SiteTree', 'pageWithSpecialChars');
+		$pageWithSpecialChars->publish('Stage', 'Live');
+		
+		$results = $sf->getResults(null, array('Search'=>'Brötchen'));
+		$this->assertContains(
+			$pageWithSpecialChars->ID,
+			$results->column('ID'),
+			'Published pages with umlauts in title are found'
+		);
+		
+		$results = $sf->getResults(null, array('Search'=>'Bäcker'));
+		$this->assertContains(
+			$pageWithSpecialChars->ID,
+			$results->column('ID'),
+			'Published pages with htmlencoded umlauts in content are found'
 		);
 	}
 }

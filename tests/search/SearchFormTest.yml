@@ -31,3 +31,6 @@ SiteTree:
    dontShowInSearchPage:
       Title: dontShowInSearchPage
       ShowInSearch: 0
+   pageWithSpecialChars:
+      Title: Brötchen
+      Content: Frisch vom B&auml;cker
