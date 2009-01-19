@@ -255,7 +255,8 @@ class Debug {
 		if(Director::is_ajax()) {
 			echo $friendlyErrorMessage;
 		} else {
-			if(file_exists(ASSETS_PATH . "/error-$statusCode.html")) {
+			$errorFilePath = ErrorPage::get_filepath_for_errorcode($statusCode, Translatable::current_lang());
+			if(file_exists($errorfilePath)) {
 				echo file_get_contents(ASSETS_PATH . "/error-$statusCode.html");
 			} else {
 				$renderer = new DebugView();
