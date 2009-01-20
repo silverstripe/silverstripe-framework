@@ -137,6 +137,11 @@ class RestfulServer extends Controller {
 		$id = (isset($this->urlParams['ID'])) ? $this->urlParams['ID'] : null;
 		$relation = (isset($this->urlParams['Relation'])) ? $this->urlParams['Relation'] : null;
 		
+		// Check input formats
+		if(!class_exists($className)) return $this->notFound();
+		if($id && !is_numeric($id)) return $this->notFound();
+		if($relation && !preg_match('/^[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*$/', $relation)) return $this->notFound();
+		
 		// if api access is disabled, don't proceed
 		$apiAccess = singleton($className)->stat('api_access');
 		if(!$apiAccess) return $this->permissionFailure();
