@@ -18,7 +18,7 @@ class ViewableData extends Object implements IteratorAggregate {
 	 * @var int
 	 */
 	protected $iteratorPos;
-	
+
 	/**
 	 * Total number of items in the iterator.
 	 * @var int

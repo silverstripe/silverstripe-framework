@@ -13,7 +13,12 @@ class Widget extends DataObject {
 	static $has_one = array(
 		"Parent" => "WidgetArea",
 	);
-		
+	
+	static $has_many = array();
+	static $many_many = array();
+	static $belongs_many_many = array();
+	static $defaults = array();
+	
 	static $default_sort = "Sort";
 	
 	static $title = "Widget Title";

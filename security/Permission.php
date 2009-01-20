@@ -22,6 +22,11 @@ class Permission extends DataObject {
 	static $defaults = array(
 		"Type" => 1
 	);
+	static $has_many = array();
+	
+	static $many_many = array();
+	
+	static $belongs_many_many = array();
 
 	/**
 	 * This is the value to use for the "Type" field if a permission should be

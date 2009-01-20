@@ -12,8 +12,14 @@ class MemberPassword extends DataObject {
 	);
 	
 	static $has_one = array(
-		'Member' => 'Member',
+		'Member' => 'Member'
 	);
+	
+	static $has_many = array();
+	
+	static $many_many = array();
+	
+	static $belongs_many_many = array();
 	
 	/**
 	 * Log a password change from the given member.

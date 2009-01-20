@@ -33,13 +33,20 @@ class File extends DataObject {
 		"Owner" => "Member"
 	);
 	
-	static $extensions = array(
-		"Hierarchy",
-	);
+	static $has_many = array();
+	
+	static $many_many = array();
 	
 	static $belongs_many_many = array(
 		"BackLinkTracking" => "SiteTree",
 	);
+	
+	static $defaults = array();
+	
+	static $extensions = array(
+		"Hierarchy",
+	);
+
 	
 	/**
 	 * Cached result of a "SHOW FIELDS" call
