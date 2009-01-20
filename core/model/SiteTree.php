@@ -851,7 +851,6 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	/**
 	 * Return the title, description, keywords and language metatags.
 	 * 
-	 * @todo Make generator tag dynamically determine version number (currently defaults to "2.0")
 	 * @todo Move <title> tag in separate getter for easier customization and more obvious usage
 	 * 
 	 * @param boolean|string $includeTitle Show default <title>-tag, set to false for custom templating
@@ -866,7 +865,9 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 				? $this->MetaTitle
 				: $this->Title) . "</title>\n";
 		}
-		$tags .= "<meta name=\"generator\" http-equiv=\"generator\" content=\"SilverStripe - http://www.silverstripe.com\" />\n";
+		$version = new SapphireInfo();
+
+		$tags .= "<meta name=\"generator\" http-equiv=\"generator\" content=\"SilverStripe ". $version->Version() ." - http://www.silverstripe.com\" />\n";
 
 		$charset = ContentNegotiator::get_encoding();
 		$tags .= "<meta http-equiv=\"Content-type\" content=\"text/html; charset=$charset\" />\n";
