@@ -224,7 +224,7 @@ JS
 			if($this->dataRecord){
 				$thisPage = $this->dataRecord->Link();
 				$cmsLink = 'admin/show/' . $this->dataRecord->ID;
-				$cmsLink = "<a href=\"$cmsLink\" target=\"cms\">CMS</a>";
+				$cmsLink = "<a href=\"$cmsLink\" target=\"cms\">". _t('ContentController.CMS', 'CMS') ."</a>";
 			} else {
 				/**
 				 * HGS: If this variable is missing a notice is raised. Subclasses of ContentController
@@ -241,30 +241,30 @@ JS
 				$dateObj = Object::create('Datetime', $date, null);
 				// $dateObj->setVal($date);
 
-				$archiveLink = "<a class=\"current\">Archived Site</a>";
-				$liveLink = "<a href=\"$thisPage?stage=Live\" target=\"site\" style=\"left : -3px;\">Published Site</a>";
-				$stageLink = "<a href=\"$thisPage?stage=Stage\" target=\"site\" style=\"left : -1px;\">Draft Site</a>";
-				$message = "<div id=\"SilverStripeNavigatorMessage\" title=\"Note: this message won't be shown to your visitors\">Archived site from<br>" . $dateObj->Nice() . "</div>";
+				$archiveLink = "<a class=\"current\">". _t('ContentController.ARCHIVEDSITE', 'Archived Site') ."</a>";
+				$liveLink = "<a href=\"$thisPage?stage=Live\" target=\"site\" style=\"left : -3px;\">". _t('ContentController.PUBLISHEDSITE', 'Published Site') ."</a>";
+				$stageLink = "<a href=\"$thisPage?stage=Stage\" target=\"site\" style=\"left : -1px;\">". _t('ContentController.DRAFTSITE', 'Draft Site') ."</a>";
+				$message = "<div id=\"SilverStripeNavigatorMessage\" title='". _t('ContentControl.NOTEWONTBESHOWN', 'Note: this message won\'t be shown to your visitors') ."'>". _t('ContentController.ARCHIVEDSITEFROM', 'Archived site from') ."<br>" . $dateObj->Nice() . "</div>";
 
 			} else if(Versioned::current_stage() == 'Stage') {
-				$stageLink = "<a class=\"current\">Draft Site</a>";
-				$liveLink = "<a href=\"$thisPage?stage=Live\" target=\"site\" style=\"left : -3px;\">Published Site</a>";
-				$message = "<div id=\"SilverStripeNavigatorMessage\" title=\"Note: this message won't be shown to your visitors\">DRAFT SITE</div>";
+				$stageLink = "<a class=\"current\">". _t('ContentController.DRAFTSITE', 'Draft Site') ."</a>";
+				$liveLink = "<a href=\"$thisPage?stage=Live\" target=\"site\" style=\"left : -3px;\">". _t('ContentController.PUBLISHEDSITE', 'Published Site') ."</a>";
+				$message = "<div id=\"SilverStripeNavigatorMessage\" title='". _t('ContentControl.NOTEWONTBESHOWN', 'Note: this message won\'t be shown to your visitors') ."'>".  _t('ContentController.DRAFTSITE', 'Draft Site') ."</div>";
 
 			} else {
-				$liveLink = "<a class=\"current\">Published Site</a>";
-				$stageLink = "<a href=\"$thisPage?stage=Stage\" target=\"site\" style=\"left : -1px;\">Draft Site</a>";
-				$message = "<div id=\"SilverStripeNavigatorMessage\" title=\"Note: this message won't be shown to your visitors\">PUBLISHED SITE</div>";
+				$liveLink = "<a class=\"current\">". _t('ContentController.PUBLISHEDSITE', 'Published Site') ."</a>";
+				$stageLink = "<a href=\"$thisPage?stage=Stage\" target=\"site\" style=\"left : -1px;\">". _t('ContentController.DRAFTSITE', 'Draft Site') ."</a>";
+				$message = "<div id=\"SilverStripeNavigatorMessage\" title='". _t('ContentControl.NOTEWONTBESHOWN', 'Note: this message won\'t be shown to your visitors') ."'>".  _t('ContentController.PUBLISHEDSITE', 'Published Site') ."</div>";
 			}
 
 			if($member) {
 				$firstname = Convert::raw2xml($member->FirstName);
 				$surname = Convert::raw2xml($member->Surame);
-				$logInMessage = "Logged in as {$firstname} {$surname} - <a href=\"Security/logout\">log out</a>";
+				$logInMessage = _t('ContentController.LOGGEDINAS', 'Logged in as') ." {$firstname} {$surname} - <a href=\"Security/logout\">". _t('ContentController.LOGOUT', 'Log out'). "</a>";
 			} else {
-				$logInMessage = "Not logged in - <a href=\"Security/login\">log in</a>";
+				$logInMessage = _t('ContentController.NOTLOGGEDIN', 'Not logged in') ." - <a href='Security/login'>". _t('ContentController.LOGIN', 'Login') ."</a>";
 			}
-			
+			$viewPageIn = _t('ContentController.VIEWPAGEIN', 'View Page in:');
 			/**
 			 * HGS: cmsLink is now only set if there is a dataRecord. You can't view the page in the
 			 * CMS if there is no dataRecord
@@ -277,7 +277,7 @@ JS
 					</div>
 
 					<div id="switchView" class="bottomTabs">
-						<div class="blank"> View page in: </div>
+						<div class="blank">$viewPageIn :</div>
 						$cmsLink
 						$stageLink
 						<div class="blank" style="width:1em;"> </div>
@@ -295,7 +295,7 @@ HTML;
 				Requirements::css(SAPPHIRE_DIR . '/css/SilverStripeNavigator.css');
 				$dateObj = Object::create('Datetime', $date, null);
 				// $dateObj->setVal($date);
-				return "<div id=\"SilverStripeNavigatorMessage\">Archived site from<br>" . $dateObj->Nice() . "</div>";
+				return "<div id=\"SilverStripeNavigatorMessage\">". _t('ContentController.ARCHIVEDSITEFROM') ."<br>" . $dateObj->Nice() . "</div>";
 			}
 		}
 	}
