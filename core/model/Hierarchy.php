@@ -356,7 +356,18 @@ class Hierarchy extends DataObjectDecorator {
 	 * @return DataObjectSet
 	 */
 	public function Children() {
-		return $this->owner->stageChildren(false);
+		if(!$this->children) { 
+			$result = $this->owner->stageChildren(false); 
+		 	if(isset($result)) { 
+		 		$this->children = new DataObjectSet(); 
+		 		foreach($result as $child) { 
+		 			if($child->canView()) { 
+		 				$this->children->push($child); 
+		 			} 
+		 		} 
+		 	} 
+		} 
+		return $this->children;
 	}
 
 	/**
