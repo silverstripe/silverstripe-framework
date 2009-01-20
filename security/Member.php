@@ -866,6 +866,8 @@ class Member extends DataObject {
 		// Members are displayed within  group edit form in SecurityAdmin
 		$fields->removeByName('Groups');
 
+		$this->extend('updateCMSFields', $fields);
+		
 		return $fields;
 	}
 	
