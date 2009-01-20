@@ -739,6 +739,12 @@ class Email_BounceRecord extends DataObject {
     static $has_one = array(
         'Member' => 'Member'
     );   
+
+	static $has_many = array();
+	
+	static $many_many = array();
+	
+	static $defaults = array();
 }
 
 /**
