@@ -2824,7 +2824,7 @@ class DataObject extends ViewableData implements DataObjectInterface,i18nEntityP
 	/**
 	 * Inserts standard column-values when a DataObject
 	 * is instanciated. Does not insert default records {@see $default_records}.
-	 * This is a map from classname to default value.
+	 * This is a map from fieldname to default value.
 	 * 
 	 *  - If you would like to change a default value in a sub-class, just specify it.
 	 *  - If you would like to disable the default value given by a parent class, set the default value to 0,'',or false in your
