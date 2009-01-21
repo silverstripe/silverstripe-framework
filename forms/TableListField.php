@@ -801,6 +801,7 @@ JS
 	}
 	
 	function FirstItem() {
+		if ($this->TotalCount() < 1) return 0;
 		return isset($_REQUEST['ctf'][$this->Name()]['start']) ? $_REQUEST['ctf'][$this->Name()]['start'] + 1 : 1;
 	}
 	
