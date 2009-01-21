@@ -51,7 +51,7 @@ class MemberLoginForm extends LoginForm {
 				$fields = new FieldSet(
 					new HiddenField("AuthenticationMethod", null, $this->authenticator_class, $this),
 					new TextField("Email", _t('Member.EMAIL'), Session::get('SessionForms.MemberLoginForm.Email'), null, $this),
-					new PasswordField("Password", _t('Member.PASSWORD'), null, $this)
+					new PasswordField("Password", _t('Member.PASSWORD'))
 				);
 				if(Security::$autologin_enabled) {
 					$fields->push(new CheckboxField(
