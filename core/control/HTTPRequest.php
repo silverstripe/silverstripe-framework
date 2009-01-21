@@ -217,7 +217,7 @@ class HTTPRequest extends Object implements ArrayAccess {
 	 * @return string
 	 */
 	function getURL() {
-		return $this->url;
+		return ($this->getExtension()) ? $this->url . '.' . $this->getExtension() : $this->url; 
 	}
 	
 	/**
