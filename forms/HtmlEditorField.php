@@ -409,14 +409,14 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 				new TreeDropdownField('FolderID', _t('HtmlEditorField.FOLDER', 'Folder'), 'Folder'),
 				new LiteralField('AddFolderOrUpload',
 					'<div style="clear:both;"></div><div id="AddFolderGroup" style="display:inline">
-						<a style="" href="#" id="AddFolder" class="link">' . _t('HtmlEditorField.CREATEFOLDER','create folder') . '</a>
+						<a style="" href="#" id="AddFolder" class="link">' . _t('HtmlEditorField.CREATEFOLDER','Create Folder') . '</a>
 						<input style="display: none; margin-left: 2px; width: 94px;" id="NewFolderName" class="addFolder" type="text">
-						<a style="display: none;" href="#" id="FolderOk" class="link addFolder">' . _t('HtmlEditorField.OK','ok') . '</a>
-						<a style="display: none;" href="#" id="FolderCancel" class="link addFolder">' . _t('HtmlEditorField.FOLDERCANCEL','cancel') . '</a>
+						<a style="display: none;" href="#" id="FolderOk" class="link addFolder">' . _t('HtmlEditorField.OK','Ok') . '</a>
+						<a style="display: none;" href="#" id="FolderCancel" class="link addFolder">' . _t('HtmlEditorField.FOLDERCANCEL','Cancel') . '</a>
 					</div>
 					<div id="PipeSeparator" style="display:inline">|</div>
 					<div id="UploadGroup" class="group" style="display: inline; margin-top: 2px;">
-						<a href="#" id="UploadFiles" class="link">' . _t('HtmlEditorField.UPLOAD','upload') . '</a>
+						<a href="#" id="UploadFiles" class="link">' . _t('HtmlEditorField.UPLOAD','Upload') . '</a>
 					</div>'
 				),
 				new TextField('getimagesSearch', _t('HtmlEditorField.SEARCHFILENAME', 'Search by file name')),
