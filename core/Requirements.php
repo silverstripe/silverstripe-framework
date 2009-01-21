@@ -778,6 +778,7 @@ class Requirements_Backend {
 	 *
 	 */
 	function process_combined_files() {
+	
 		if(Director::isDev() && !SapphireTest::is_running_test()) {
 			return;
 		}
@@ -806,7 +807,7 @@ class Requirements_Backend {
 				$newJSRequirements[$file] = true;
 			}
 		}
-       
+     
 		foreach($this->css as $file => $params) {
 			if(isset($combinerCheck[$file])) {
 				$newCSSRequirements[$combinerCheck[$file]] = true;
@@ -815,7 +816,7 @@ class Requirements_Backend {
 				$newCSSRequirements[$file] = $params;
 			}
 		}
-      
+
 		// Process the combined files
 		$base = Director::baseFolder() . '/';
 		foreach(array_diff_key($combinedFiles,$this->blocked) as $combinedFile => $dummy) {
@@ -860,20 +861,11 @@ class Requirements_Backend {
 				fclose($fh);
 				unset($fh);
 			}
-			
+
 			// Unsuccessful write - just include the regular JS files, rather than the combined one
 			if(!$successfulWrite) {
 				user_error("Requirements_Backend::process_combined_files(): Couldn't create '$base$combinedFile'", E_USER_WARNING);
-				$keyedFileList = array();
-				foreach($fileList as $file) $keyedFileList[$file] = true;
-				$combinedPos = array_search($combinedFile, array_keys($newJSRequirements));
-				if($combinedPos) {
-					$newJSRequirements = array_merge(
-						array_slice($newJSRequirements, 0, $combinedPos),
-						$keyedFileList,
-						array_slice($newJSRequirements, $combinedPos+1)
-					);
-				}
+				return;
 			}
 		}
 
