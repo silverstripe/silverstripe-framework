@@ -45,7 +45,7 @@ Object::useCustomClass('Datetime','SSDatetime',true);
  * Add pear parser to include path
  */
 $path = Director::baseFolder().'/sapphire/parsers/';
-set_include_path(get_include_path() . PATH_SEPARATOR . $path);
+set_include_path(str_replace('.' . PATH_SEPARATOR, '.' . PATH_SEPARATOR . $path . PATH_SEPARATOR, get_include_path())); 
 
 /**
  * Define a default language different than english
