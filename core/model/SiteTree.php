@@ -559,7 +559,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	 * @todo Check we get a endless recursion if we use parent::can()
 	 */
 	function can($perm, $member = null) {
-		if(!$member && $member !== FALSE) $member = Member::currentUser();
+		if(!$member || !(is_a($member, 'Member')) || is_numeric($member)) $member = Member::currentUser();
 
 		if($member && Permission::checkMember($member, "ADMIN")) return true;
 		
@@ -596,7 +596,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	 * @return boolean True if the current user can add children.
 	 */
 	public function canAddChildren($member = null) {
-		if(!$member && $member !== FALSE) $member = Member::currentUser();
+		if(!$member || !(is_a($member, 'Member')) || is_numeric($member)) $member = Member::currentUser();
 
 		if($member && Permission::checkMember($member, "ADMIN")) return true;
 		
@@ -628,7 +628,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	 * @return boolean True if the current user can view this page.
 	 */
 	public function canView($member = null) {
-		if(!$member && $member !== FALSE) $member = Member::currentUser();
+		if(!$member || !(is_a($member, 'Member')) || is_numeric($member)) $member = Member::currentUser();
 
 		// admin override
 		if($member && Permission::checkMember($member, "ADMIN")) return true;
@@ -683,7 +683,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	 * @return boolean True if the current user can delete this page.
 	 */
 	public function canDelete($member = null) {
-		if(!$member && $member !== FALSE) $member = Member::currentUser();
+		if(!$member || !(is_a($member, 'Member')) || is_numeric($member)) $member = Member::currentUser();
 		
 		if($member && Permission::checkMember($member, "ADMIN")) return true;
 		
@@ -725,7 +725,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	 * @return boolean True if the current user can create pages on this class.
 	 */
 	public function canCreate($member = null) {
-		if(!$member && $member !== FALSE) $member = Member::currentUser();
+		if(!$member || !(is_a($member, 'Member')) || is_numeric($member)) $member = Member::currentUser();
 
 		if($member && Permission::checkMember($member, "ADMIN")) return true;
 		
@@ -761,7 +761,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	 * @return boolean True if the current user can edit this page.
 	 */
 	public function canEdit($member = null) {
-		if(!$member && $member !== FALSE) $member = Member::currentUser();
+		if(!$member || !(is_a($member, 'Member')) || is_numeric($member)) $member = Member::currentUser();
 
 		if($member && Permission::checkMember($member, "ADMIN")) return true;
 
@@ -809,7 +809,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	 * @return boolean True if the current user can publish this page.
 	 */
 	public function canPublish($member = null) {
-		if(!$member && $member !== FALSE) $member = Member::currentUser();
+		if(!$member || !(is_a($member, 'Member')) || is_numeric($member)) $member = Member::currentUser();
 		
 		if($member && Permission::checkMember($member, "ADMIN")) return true;
 		
