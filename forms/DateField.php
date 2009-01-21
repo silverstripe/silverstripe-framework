@@ -120,7 +120,8 @@ class DateField_Disabled extends DateField {
 		        $val = '<i>('._t('DateField.NOTSET', 'not set').')</i>';
 		}
 		
-		return "<span class=\"readonly\" id=\"" . $this->id() . "\">$val</span>";
+		return "<span class=\"readonly\" id=\"" . $this->id() . "\">$val</span>
+				<input type=\"hidden\" value=\"{$this->value}\" name=\"$this->name\" />";
 	}
 	
 	function Type() { 
