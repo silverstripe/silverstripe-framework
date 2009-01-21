@@ -404,7 +404,7 @@ class Security extends Controller {
 			$this,
 			'LostPasswordForm',
 			new FieldSet(
-				new EmailField('Email', _t('Member.EMAIL'))
+				new EmailField('Email', _t('Member.EMAIL', 'Email'))
 			),
 			new FieldSet(
 				new FormAction(
