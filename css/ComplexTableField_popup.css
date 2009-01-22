@@ -1,7 +1,21 @@
-html,body {
-	overflow:auto !important; 
+/* The hackiest fix out there for double-scrollbar problems in IE 7 */
+
+*:first-child+html {
+	overflow: auto;
 	background: #fff !important; 
 }
+
+* html {
+	overflow: auto;
+	background: #fff !important; 	
+} 
+
+html>/**/body {
+	overflow:auto !important;
+	background: #fff; 
+}
+
+/* end of hackiness */
 
 .ComplexTableField_popup {
 	background: #fff;	
