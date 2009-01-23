@@ -223,7 +223,7 @@ class TableField extends TableListField {
 	
 	function SubmittedFieldSet(&$sourceItems){
 		$fields = array ();
-		if($rows = $_POST[$this->name]){
+		if(isset($_POST[$this->name])&&$rows = $_POST[$this->name]){
 			if(count($rows)){
 				foreach($rows as $idx => $row){
 					if($idx == 'new'){
