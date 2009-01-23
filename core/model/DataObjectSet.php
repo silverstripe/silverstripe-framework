@@ -770,7 +770,7 @@ class DataObjectSet extends ViewableData implements IteratorAggregate {
 		$myViewer = SSViewer::fromString($currentTemplate);
 
 		if(isset($nestingLevels[$level+1]['dataclass'])){
-			$childrenMethod = $nestingLevels[$level+1]['dataclass'];if($level==1){print_r($childrenMethod);die;}
+			$childrenMethod = $nestingLevels[$level+1]['dataclass'];
 		}
 		// sql-parts
 
