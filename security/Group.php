@@ -296,7 +296,7 @@ class Group extends DataObject {
 		$filteredChildren = new DataObjectSet();
 		
 		if($children) foreach($children as $child) {
-			if($child->can()) $filteredChildren->push($child);
+			if($child->canEdit()) $filteredChildren->push($child);
 		}
 		
 		return $filteredChildren;
