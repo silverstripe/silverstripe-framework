@@ -9,7 +9,7 @@ class RestfulServiceTest extends SapphireTest {
 			'test1c' => 'And now for a string test' // string test
 		);
 		$connection->setQueryString($test1params);
-		$test1 = $connection->request('RestfulServiceTest_Controller?usetestmanifest=1')->getBody();
+		$test1 = $connection->request('RestfulServiceTest_Controller?usetestmanifest=1&flush=1')->getBody();
 		foreach ($test1params as $key => $value) {
 			$this->assertContains("<request_item name=\"$key\">$value</request_item>", $test1);
 			$this->assertContains("<get_item name=\"$key\">$value</get_item>", $test1);
@@ -20,7 +20,7 @@ class RestfulServiceTest extends SapphireTest {
 			'test2b' => '%\'"@?=;:/,$', // special character checks
 			'test2c' => 'And now for a string test', // string test
 		);
-		$test2suburl = 'RestfulServiceTest_Controller/?usetestmanifest=1&';
+		$test2suburl = 'RestfulServiceTest_Controller/?usetestmanifest=1&flush=1&';
 		foreach ($test2params as $key=>$value) {
 			$test2suburl .= "$key=$value&";
 		}
@@ -46,7 +46,7 @@ class RestfulServiceTest extends SapphireTest {
 			'test1b' => mt_rand(),
 			'test1c' => 'And now for a string test'
 		);
-		$test1 = $connection->request('RestfulServiceTest_Controller/?usetestmanifest=1', 'POST', $test1params)->getBody();
+		$test1 = $connection->request('RestfulServiceTest_Controller/?usetestmanifest=1&flush=1', 'POST', $test1params)->getBody();
 		foreach ($test1params as $key => $value) {
 			$this->assertContains("<request_item name=\"$key\">$value</request_item>", $test1);
 			$this->assertContains("<post_item name=\"$key\">$value</post_item>", $test1);
