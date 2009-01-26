@@ -745,6 +745,15 @@ class Email_BounceRecord extends DataObject {
 	static $many_many = array();
 	
 	static $defaults = array();
+	
+	
+	/** 
+	* a record of Email_BounceRecord can't be created manually. Instead, it should be  
+	* created though system. 
+	*/ 
+	public function canCreate($member = null) { 
+		return false; 
+	}
 }
 
 /**
