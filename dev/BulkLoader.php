@@ -93,7 +93,8 @@ abstract class BulkLoader extends ViewableData {
 	 * Specifies how to determine duplicates based on one or more provided fields
 	 * in the imported data, matching to properties on the used {@link DataObject} class.
 	 * Alternatively the array values can contain a callback method (see example for
-	 * implementation details).
+	 * implementation details). The callback method should be defined on the source class.
+	 * 
 	 * If multiple checks are specified, the first one "wins".
 	 * 
 	 *  <code>
