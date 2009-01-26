@@ -2712,7 +2712,7 @@ class DataObject extends ViewableData implements DataObjectInterface,i18nEntityP
 			$fields = array();
 			// try to scaffold a couple of usual suspects
 			if ($this->hasField('Name')) $fields['Name'] = 'Name';
-			if ($this->hasField('Title')) $fields['Title'] = 'Title';
+			if ($this->hasDataBaseField('Title')) $fields['Title'] = 'Title';
 			if ($this->hasField('Description')) $fields['Description'] = 'Description';
 			if ($this->hasField('FirstName')) $fields['FirstName'] = 'First Name';
 		}

@@ -181,6 +181,12 @@ abstract class DataObjectDecorator extends Extension {
 		$extra_fields = $this->extraStatics();
 		if(isset($extra_fields['summary_fields'])){
 			$summary_fields = $extra_fields['summary_fields'];
+			
+			// if summary_fields were passed in numeric array,
+			// convert to an associative array
+			if($summary_fields && array_key_exists(0, $summary_fields)) {
+				$summary_fields = array_combine(array_values($summary_fields), array_values($summary_fields));
+			}
 			if($summary_fields) $fields = array_merge($fields, $summary_fields);
 		}
 	}
