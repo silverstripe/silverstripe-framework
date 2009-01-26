@@ -946,6 +946,7 @@ JS
 		if($fieldItems) {
 			foreach($fieldItems as $fieldItem) {
 				$fields = $fieldItem->Fields();
+				$columnData = array();
 				if($fields) foreach($fields as $field) {
 					$value = $field->Value;
 					
