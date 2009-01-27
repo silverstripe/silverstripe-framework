@@ -7,12 +7,12 @@
 class Member extends DataObject {
 
 	static $db = array(
-		'FirstName' => "Varchar",
-		'Surname' => "Varchar",
-		'Email' => "Varchar",
-		'Password' => "Varchar(64)", // support for up to SHA256!
-		'RememberLoginToken' => "Varchar(50)",
-		'NumVisit' => "Int",
+		'FirstName' => 'Varchar',
+		'Surname' => 'Varchar',
+		'Email' => 'Varchar',
+		'Password' => 'Varchar(64)', // support for up to SHA256!
+		'RememberLoginToken' => 'Varchar(50)',
+		'NumVisit' => 'Int',
 		'LastVisited' => 'SSDatetime',
 		'Bounced' => 'Boolean', // Note: This does not seem to be used anywhere.
 		'AutoLoginHash' => 'Varchar(30)',
@@ -26,16 +26,18 @@ class Member extends DataObject {
 	);
 
 	static $belongs_many_many = array(
-		"Groups" => "Group",
+		'Groups' => 'Group',
 	);
 
 	static $has_one = array();
+	
 	static $has_many = array();
+	
 	static $many_many = array();
 	
 	static $many_many_extraFields = array();
 
-	static $default_sort = "Surname, FirstName";
+	static $default_sort = 'Surname, FirstName';
 
 	static $indexes = array(
 		'Email' => true,
