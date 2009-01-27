@@ -215,7 +215,8 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 
 		// If any of the descendents don't want any of the elders to show up, cruelly render the elders surplus to requirements.
 		if($kill_ancestors) {
-			foreach ($kill_ancestors as $mark) {
+			$kill_ancestors = array_unique($kill_ancestors);
+			foreach($kill_ancestors as $mark) {
 				// unset from $classes
 				$idx = array_search($mark, $classes);
 				unset($classes[$idx]);
