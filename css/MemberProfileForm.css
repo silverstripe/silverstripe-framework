@@ -1,8 +1,3 @@
-/* HACK Doesn't work in an iframe-popup at the moment, so we disable it */
-#Avatar {
-	display: none;
-}
-
 #i18nStatus {
 	margin-left: 0;
 }
