@@ -1515,7 +1515,8 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	protected function getClassDropdown() {
 		$classes = self::page_type_classes();
 		$currentClass = null;
-
+		$result = array();
+		
 		foreach($classes as $class) {
 			$instance = singleton($class);
 			if((($instance instanceof HiddenClass) || !$instance->canCreate()) && ($class != $this->class)) continue;
