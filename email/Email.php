@@ -756,36 +756,4 @@ class Email_BounceRecord extends DataObject {
 	}
 }
 
-/**
- * This class is responsible for ensuring that members who are on it receive NO email 
- * communication at all. any correspondance is caught before the email is sent.
- * @package sapphire
- * @subpackage email
- */
-class Email_BlackList extends DataObject{
-	 static $db = array(
-        'BlockedEmail' => 'Varchar',  
-    );
-     static $has_one = array(
-        'Member' => 'Member'
-    );
-    
-    /**
-     * Helper function to see if the email being
-     * sent has specifically been blocked.
-     */
-    static function isBlocked($email) {
-    	$blockedEmails = DataObject::get("Email_BlackList")->toDropDownMap("ID","BlockedEmail");
-    	if($blockedEmails){
-	    	if(in_array($email,$blockedEmails)){
-	    		return true;
-	    	}else{
-	    		return false;
-	    	}
-    	}else{
-    		return false;
-    	}
-    }
-}
-
 ?>

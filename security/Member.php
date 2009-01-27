@@ -17,7 +17,6 @@ class Member extends DataObject {
 		'Bounced' => 'Boolean', // Note: This does not seem to be used anywhere.
 		'AutoLoginHash' => 'Varchar(30)',
 		'AutoLoginExpired' => 'SSDatetime',
-		'BlacklistedEmail' => 'Boolean',
 		'PasswordEncryption' => "Enum('none', 'none')",
 		'Salt' => 'Varchar(50)',
 		'PasswordExpiry' => 'Date',
@@ -389,30 +388,6 @@ class Member extends DataObject {
 		}
 
 		return is_numeric($id) ? $id : 0;
-	}
-
-
-	/**
-	 * Add the members email address to the blacklist
-	 *
-	 * With this method the blacklisted email table is updated to ensure that
-	 * no promotional material is sent to the member (newsletters).
-	 * Standard system messages are still sent such as receipts.
-	 *
-	 * @param bool $val Set to TRUE if the address should be added to the
-	 *                  blacklist, otherwise to FALSE.
-	 */
-	function setBlacklistedEmail($val) {
-		if($val && $this->Email) {
-			$blacklisting = new Email_BlackList();
-	 		$blacklisting->BlockedEmail = $this->Email;
-	 		$blacklisting->MemberID = $this->ID;
-	 		$blacklisting->write();
-		}
-
-		$this->setField("BlacklistedEmail", $val);
-		// Save the BlacklistedEmail field to the Member table
-		$this->write();
 	}
 
 
@@ -860,10 +835,8 @@ class Member extends DataObject {
 		$mainFields->removeByName('Salt');
 		$mainFields->removeByName('NumVisit');
 		$mainFields->removeByName('LastVisited');
-		$mainFields->removeByName('BlacklistedEmail');
 	
 		$fields->removeByName('Subscriptions');
-		$fields->removeByName('UnsubscribedRecords');
 		// Groups relation will get us into logical conflicts because
 		// Members are displayed within  group edit form in SecurityAdmin
 		$fields->removeByName('Groups');
