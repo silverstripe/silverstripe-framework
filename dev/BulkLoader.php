@@ -95,6 +95,12 @@ abstract class BulkLoader extends ViewableData {
 	 * Alternatively the array values can contain a callback method (see example for
 	 * implementation details). The callback method should be defined on the source class.
 	 * 
+	 * NOTE: If you're trying to get a unique Member record by a particular field that
+	 * isn't Email, you need to ensure that Member is correctly set to the unique field
+	 * you want, as it will merge any duplicates during {@link Member::onBeforeWrite()}.
+	 * 
+	 * {@see Member::set_unique_identifier_field()}.
+	 * 
 	 * If multiple checks are specified, the first one "wins".
 	 * 
 	 *  <code>
