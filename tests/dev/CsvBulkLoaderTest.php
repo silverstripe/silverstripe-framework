@@ -23,10 +23,11 @@ class CsvBulkLoaderTest extends SapphireTest {
 		$this->assertEquals(4, $results->Count(), 'Test correct count of imported data');
 		
 		// Test that columns were correctly imported
-		$obj = Dataobject::get_one("CsvBulkLoaderTest_Player", "FirstName = 'John'");
+		$obj = DataObject::get_one("CsvBulkLoaderTest_Player", "FirstName = 'John'");
 		$this->assertNotNull($obj);
 		$this->assertEquals("He's a good guy", $obj->Biography);
 		$this->assertEquals("1988-01-31", $obj->Birthday);
+		$this->assertEquals("1", $obj->IsRegistered);
 		
 		fclose($file);
 	}
@@ -44,7 +45,8 @@ class CsvBulkLoaderTest extends SapphireTest {
 			'FirstName',
 			'Biography',
 			null, // ignored column
-			'Birthday'
+			'Birthday',
+			'IsRegistered'
 		);
 		$loader->hasHeaderRow = false;
 		$results = $loader->load($filepath);
@@ -53,10 +55,15 @@ class CsvBulkLoaderTest extends SapphireTest {
 		$this->assertEquals(4, $results->Count(), 'Test correct count of imported data');
 		
 		// Test that columns were correctly imported
-		$obj = Dataobject::get_one("CsvBulkLoaderTest_Player", "FirstName = 'John'");
+		$obj = DataObject::get_one("CsvBulkLoaderTest_Player", "FirstName = 'John'");
 		$this->assertNotNull($obj);
 		$this->assertEquals("He's a good guy", $obj->Biography);
 		$this->assertEquals("1988-01-31", $obj->Birthday);
+		$this->assertEquals("1", $obj->IsRegistered);
+		
+		$obj2 = DataObject::get_one('CsvBulkLoaderTest_Player', "FirstName = 'Jane'");
+		$this->assertNotNull($obj2);
+		$this->assertEquals('0', $obj2->IsRegistered);
 		
 		fclose($file);
 	}
@@ -133,7 +140,6 @@ class CsvBulkLoaderTest extends SapphireTest {
 		$player = DataObject::get_by_id('CsvBulkLoaderTest_Player', 1);
 		$this->assertEquals($player->FirstName, 'JohnUpdated', 'Test updating of existing records works');
 		$this->assertEquals($player->Biography, 'He\'s a good guy', 'Test retaining of previous information on duplicate when overwriting with blank field');
-		
 	}
 	
 	function testLoadWithCustomImportMethods() {
@@ -142,12 +148,14 @@ class CsvBulkLoaderTest extends SapphireTest {
 		$loader->columnMap = array(
 			'FirstName' => '->importFirstName',
 			'Biography' => 'Biography', 
-			'Birthday' => 'Birthday'
+			'Birthday' => 'Birthday',
+			'IsRegistered' => 'IsRegistered'
 		);
 		$results = $loader->load($filepath);
 		$player = DataObject::get_by_id('CsvBulkLoaderTest_Player', 1);
 		$this->assertEquals($player->FirstName, 'Customized John');
 		$this->assertEquals($player->Biography, "He's a good guy");
+		$this->assertEquals($player->IsRegistered, "1");
 	}
 	
 	protected function getLineCount(&$file) {
@@ -185,6 +193,7 @@ class CsvBulkLoaderTest_Player extends DataObject implements TestOnly {
 		'Biography' => 'HTMLText',
 		'Birthday' => 'Date',
 		'ExternalIdentifier' => 'Varchar(255)', // used for uniqueness checks on passed property
+		'IsRegistered' => 'Boolean'
 	);
 	
 	static $has_one = array(

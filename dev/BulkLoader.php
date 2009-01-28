@@ -229,7 +229,7 @@ abstract class BulkLoader extends ViewableData {
 	 * @return boolean
 	 */
 	protected function isNullValue($val, $fieldName = null) {
-		return (empty($val));
+		return (empty($val) && $val !== '0');
 	}
 	
 }
