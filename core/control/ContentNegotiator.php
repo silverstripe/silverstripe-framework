@@ -112,7 +112,7 @@ class ContentNegotiator {
 		
 		// Only serve "pure" XHTML if the XML header is present
 		if(substr($content,0,5) == '<' . '?xml' ) {
-			$response->addHeader("Content-type", "application/xhtml+xml; charset=" . self::$encoding);
+			$response->addHeader("Content-Type", "application/xhtml+xml; charset=" . self::$encoding);
 			$response->addHeader("Vary" , "Accept");
 			
 			$content = str_replace('&nbsp;','&#160;', $content);
@@ -134,7 +134,7 @@ class ContentNegotiator {
 	 * Removes "xmlns" attributes and any <?xml> Pragmas.
 	 */
 	function html(HTTPResponse $response) {
-		$response->addHeader("Content-type", "text/html; charset=" . self::$encoding);
+		$response->addHeader("Content-Type", "text/html; charset=" . self::$encoding);
 		$response->addHeader("Vary", "Accept");
 
 		$content = $response->getBody();
