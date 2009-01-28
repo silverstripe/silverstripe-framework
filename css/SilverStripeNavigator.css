@@ -13,7 +13,7 @@
 
 #SilverStripeNavigator * {
 	font-family: Arial,Helvetica,sans-serif;
-	font-size: 9.5px !important;
+	font-size: 10px !important;
 }
 
 #SilverStripeNavigator .holder {
@@ -21,10 +21,8 @@
 	padding-top : 4px;
 	padding-left : 3px;
 	padding-right : 6px;
-	font-size: 10px;
 	color: white;
 	border-top: 1px solid #555555;
-
 }
 #SilverStripeNavigator #logInStatus {
 	float: right;
@@ -57,7 +55,7 @@
 	cursor: pointer;
 	border : none;
 	background-color: transparent;
-	padding: 2px 6px 2px 2px;
+	padding: 2px 4px 2px 2px;
 	font-weight: bold;
 }
 
