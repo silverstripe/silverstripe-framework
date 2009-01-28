@@ -4,18 +4,21 @@
 	bottom: 0;
 	left: 0;
 	width: 100%;
-	border-top: 3px solid #d4d0c8;
+	border-top: 2px solid #d4d0c8;
 	background-color:#81858d;
-	height: 18px;
+	height: 22px;
 	overflow:hidden;
-	background-image:url(../../cms/images/textures/bottom.png);
+	background: #4d4e5a url(../../cms/images/textures/footerBg.gif) repeat-x left top;
+}
 
+#SilverStripeNavigator * {
+	font-family: Arial,Helvetica,sans-serif;
+	font-size: 9.5px !important;
 }
 
 #SilverStripeNavigator .holder {
-
 	text-align: center;
-	padding-top : 3px;
+	padding-top : 4px;
 	padding-left : 3px;
 	padding-right : 6px;
 	font-size: 10px;
@@ -32,72 +35,101 @@
 }
 
 #SilverStripeNavigator a  {
-	color: #333;
-	background-color: transparent;
-	text-decoration: none;
-}
-#SilverStripeNavigator a:hover  {
-	color: #333;
+	color: #fff;
 	background-color: transparent;
 	text-decoration: underline;
 }
+#SilverStripeNavigator a:hover  {
+	background-color: transparent;
+}
 
 #SilverStripeNavigator .bottomTabs a  {
-	width: auto;
-	display: block;
-	float : left;
-	height : 13px;
-	padding-left : 12px;
-	padding-right : 12px;
-	position:relative;
-	top : -3px;
-	border : 1px solid #65686e;
-	border-top : none;
-	cursor:pointer;
-	background-color: #cdc9c1;
-	color : #333333;
-	background-image: none;
+	margin-right: 8px;
+	text-decoration: underline;
 }
 
 #SilverStripeNavigator .bottomTabs div.blank {
 	display: block;
 	float : left;
 	height : 13px;
-	padding-left : 12px;
-	padding-right : 12px;
 	position:relative;
 	top : -3px;
-	border : 1px solid #65686e;
-	border-top : none;
-	cursor:pointer;
-	background-color: #cdc9c1;
-	color : #333333;
-
+	cursor: pointer;
 	border : none;
 	background-color: transparent;
-	padding-right: 2px;
-	padding-left: 2px;
-	padding-top : 2px;
-	color:#FFFFFF;
+	padding: 2px 6px 2px 2px;
+	font-weight: bold;
 }
 
 
 #SilverStripeNavigator .bottomTabs a.current {
-	background-color : #d4d0c8;
-	padding-top : 1px;
-	top : -5px;
-	height : 15px;
 	font-weight:bold;
-	font-size : 11px;
-	border : 1px solid #555555;
+	text-decoration: none;
 }
 
 #SilverStripeNavigatorMessage {
 	position: absolute;
-	right: 45%;
-	top: 10px;
+	right: 0;
+	top: 26px;
 	padding: 10px;
 	border-color: #c99;
 	color: #fff;
 	background-color: #c00;
 }
+
+#SilverStripeNavigator #logInStatus {
+	background:transparent url(../../cms/images/logout.gif) no-repeat scroll right top !important;
+	padding-bottom:4px;
+	padding-right:20px;
+	}
+	
+
+/*	html #SilverStripeNavigator a {
+		color: #fff;
+		text-decoration: underline;
+	}
+
+
+		#bottom a {
+			color: #fff;
+			background: none;
+		}
+			#bottom a:hover {
+				text-decoration: none;
+				color: #ccc;
+			}
+		#bottom #logInStatus #LogoutLink {
+			background: url(../images/logout.gif) no-repeat right top;
+			padding-right: 20px;
+			padding-bottom: 3px;
+		}
+	#bottom #switchView {
+		float: left;
+	}
+		#bottom #switchView a {
+			background: none;
+		}
+
+	#bottom .bottomTabs a {
+		color: #fff;
+	}
+
+	#bottom .bottomTabs div.blank {
+		display: block;
+		float: left;
+		cursor: pointer;
+		background-color: transparent;
+		padding-right: 4px;
+		font-weight: bold;
+		line-height: 13px;
+		font-size: 11px;
+		padding-left: 2px;
+		color: #fff;
+	}
+	#bottom .bottomTabs .current {
+		color: #ccc;
+	}
+		#bottom .bottomTabs a:hover {
+			color: #ccc;
+			text-decoration: none;
+		}*/
