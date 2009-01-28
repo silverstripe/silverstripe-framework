@@ -37,8 +37,6 @@ class MemberLoginForm extends LoginForm {
 			Requirements::css($customCSS);
 		}
 		
-		Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
-		
 		// Focus on the email input when the page is loaded
 		Requirements::customScript("
 			(function($){
