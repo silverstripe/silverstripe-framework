@@ -277,7 +277,7 @@ JS
 					</div>
 
 					<div id="switchView" class="bottomTabs">
-						<div class="blank">$viewPageIn :</div>
+						<div class="blank">$viewPageIn </div>
 						$cmsLink
 						$stageLink
 						<div class="blank" style="width:1em;"> </div>
