@@ -348,11 +348,7 @@ class Security extends Controller {
 		Session::clear('Security.Message');
 
 		// custom processing
-		if(SSViewer::hasTemplate("Security_login")) {
-			return $customisedController->renderWith(array("Security_login", $this->stat('template_main')));
-		} else {
-			return $customisedController->renderWith($this->stat('template_main'));
-		}
+		return $customisedController->renderWith(array('Security_login', 'Security', $this->stat('template_main')));
 	}
 	
 	function basicauthlogin() {
@@ -390,7 +386,7 @@ class Security extends Controller {
 		));
 		
 		//Controller::$currentController = $controller;
-		return $customisedController->renderWith($this->stat('template_main'));
+		return $customisedController->renderWith(array('Security_lostpassword', 'Security', $this->stat('template_main')));
 	}
 
 
@@ -448,7 +444,7 @@ class Security extends Controller {
 		));
 		
 		//Controller::$currentController = $controller;
-		return $customisedController->renderWith($this->stat('template_main'));
+		return $customisedController->renderWith(array('Security_passwordsent', 'Security', $this->stat('template_main')));
 	}
 
 
@@ -517,7 +513,7 @@ class Security extends Controller {
 		}
 
 		//Controller::$currentController = $controller;
-		return $customisedController->renderWith($this->stat('template_main'));
+		return $customisedController->renderWith(array('Security_changepassword', 'Security', $this->stat('template_main')));
 	}
 	
 	/**
