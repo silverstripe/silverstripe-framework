@@ -36,6 +36,17 @@ class MemberLoginForm extends LoginForm {
 		if(Director::fileExists($customCSS)) {
 			Requirements::css($customCSS);
 		}
+		
+		Requirements::javascript(THIRDPARTY_DIR . '/javascript/jquery/jquery.js');
+		
+		// Focus on the email input when the page is loaded
+		Requirements::customScript("
+			(function($){
+				$(document).ready(function() {
+					$('#Email input').focus();
+				});
+			})(jQuery);
+		");
 
 		if(isset($_REQUEST['BackURL'])) {
 			$backURL = $_REQUEST['BackURL'];
@@ -231,5 +242,4 @@ class MemberLoginForm extends LoginForm {
 	}
 
 }
-
 ?>
