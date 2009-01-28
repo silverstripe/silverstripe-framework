@@ -174,6 +174,11 @@ class ContentNegotiator {
 	 * By default, negotiation is only enabled for pages that have the xml header.
 	 */
 	static function enabled_for($response) {
+		$contentType = $response->getHeader("Content-Type");
+		
+		// Disable content negotation for other content types
+		if($contentType && substr($contentType, 0,9) != 'text/html' && substr($contentType, 0,21) != 'application/xhtml+xml') return false;
+
 		if(self::$enabled) return true;
 		else return (substr($response->getBody(),0,5) == '<' . '?xml');
 	}
