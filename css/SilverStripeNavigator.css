@@ -51,7 +51,7 @@
 	float : left;
 	height : 13px;
 	position:relative;
-	top : -3px;
+	top : -2px;
 	cursor: pointer;
 	border : none;
 	background-color: transparent;
@@ -68,7 +68,7 @@
 #SilverStripeNavigatorMessage {
 	position: absolute;
 	right: 0;
-	top: 26px;
+	top: 40px;
 	padding: 10px;
 	border-color: #c99;
 	color: #fff;
@@ -79,55 +79,4 @@
 	background:transparent url(../../cms/images/logout.gif) no-repeat scroll right top !important;
 	padding-bottom:4px;
 	padding-right:20px;
-	}
-	
-
-/*	html #SilverStripeNavigator a {
-		color: #fff;
-		text-decoration: underline;
-	}
-
-
-		#bottom a {
-			color: #fff;
-			background: none;
-		}
-			#bottom a:hover {
-				text-decoration: none;
-				color: #ccc;
-			}
-		#bottom #logInStatus #LogoutLink {
-			background: url(../images/logout.gif) no-repeat right top;
-			padding-right: 20px;
-			padding-bottom: 3px;
-		}
-	#bottom #switchView {
-		float: left;
-	}
-		#bottom #switchView a {
-			background: none;
-		}
-
-	#bottom .bottomTabs a {
-		color: #fff;
-	}
-
-	#bottom .bottomTabs div.blank {
-		display: block;
-		float: left;
-		cursor: pointer;
-		background-color: transparent;
-		padding-right: 4px;
-		font-weight: bold;
-		line-height: 13px;
-		font-size: 11px;
-		padding-left: 2px;
-		color: #fff;
-	}
-	#bottom .bottomTabs .current {
-		color: #ccc;
-	}
-		#bottom .bottomTabs a:hover {
-			color: #ccc;
-			text-decoration: none;
-		}*/
+}
