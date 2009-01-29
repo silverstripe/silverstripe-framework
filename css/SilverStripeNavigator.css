@@ -66,13 +66,15 @@
 }
 
 #SilverStripeNavigatorMessage {
+	font-family: 'Lucida Grande', Verdana, Arial, 'sans-serif';
 	position: absolute;
-	right: 0;
+	right: 20px;
 	top: 40px;
 	padding: 10px;
 	border-color: #c99;
 	color: #fff;
 	background-color: #c00;
+	border: 1px solid #000;
 }
 
 #SilverStripeNavigator #logInStatus {
