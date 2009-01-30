@@ -46,52 +46,6 @@ class HasManyComplexTableField extends ComplexTableField {
 		if($this->controller instanceof DataObject) return $this->controller->class;
 		elseif($this->controller instanceof ContentController) return $this->controller->data()->class;
 	}
-	
-	function getQuery($limitClause = null) {
-		if($this->customQuery) {
-			$query = $this->customQuery;
-			$query->select[] = "{$this->sourceClass}.ID AS ID";
-			$query->select[] = "{$this->sourceClass}.ClassName AS ClassName";
-			$query->select[] = "{$this->sourceClass}.ClassName AS RecordClassName";
-		}
-		else {
-			$query = singleton($this->sourceClass)->extendedSQL($this->sourceFilter, $this->sourceSort, $limitClause, $this->sourceJoin);
-			
-			// Add more selected fields if they are from joined table.
-
-			$SNG = singleton($this->sourceClass);
-			foreach($this->FieldList() as $k => $title) {
-				if(! $SNG->hasField($k) && ! $SNG->hasMethod('get' . $k))
-					$query->select[] = $k;
-			}
-		}
-		return clone $query;
-	}
-	
-	function sourceItems() {
-		if($this->sourceItems) return $this->sourceItems;
-		
-		$limitClause = '';
-		if(isset($_REQUEST['ctf'][$this->Name()]['start']) && is_numeric($_REQUEST['ctf'][$this->Name()]['start'])) {
-			$limitClause = $_REQUEST[ 'ctf' ][ $this->Name() ][ 'start' ] . ", $this->pageSize";
-		} else {
-			$limitClause = "0, $this->pageSize";
-		}
-		
-		$dataQuery = $this->getQuery($limitClause);
-		$records = $dataQuery->execute();
-		$items = new DataObjectSet();
-
-		$sourceClass = $this->sourceClass; 
-		$dataobject = new $sourceClass(); 
-		$items = $dataobject->buildDataObjectSet($records, 'DataObjectSet'); 
-		
-		$this->unpagedSourceItems = $dataobject->buildDataObjectSet($records, 'DataObjectSet');
-		
-		$this->totalCount = ($this->unpagedSourceItems) ? $this->unpagedSourceItems->TotalItems() : null;
-		
-		return $items;
-	}
 		
 	function getControllerID() {
 		return $this->controller->ID;
@@ -123,15 +77,21 @@ class HasManyComplexTableField extends ComplexTableField {
 		return $this->addTitle ? $this->addTitle : parent::Title();
 	}
 	
+	/**
+	 * Get the IDs of the selected items, in a has_many or many_many relation
+	 */
+	function selectedItemIDs() {
+		$fieldName = $this->name;
+		$selectedItems = $this->form->getRecord()->$fieldName();
+		$itemIDs = array();
+		foreach($selectedItems as $item) $itemIDs[] = $item->ID;
+		return $itemIDs;
+	}
+	
 	function ExtraData() {
 		$items = array();
-		if($this->unpagedSourceItems) {
-			foreach($this->unpagedSourceItems as $item) {
-				if($item->{$this->joinField} == $this->controller->ID)
-					$items[] = $item->ID;
-			}
-		}
-		$list = implode(',', $items);
+		
+		$list = implode(',', $this->selectedItemIDs());
 		$inputId = $this->id() . '_' . $this->htmlListEndName;
 		return <<<HTML
 		<input id="$inputId" name="{$this->name}[{$this->htmlListField}]" type="hidden" value="$list"/>
