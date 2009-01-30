@@ -57,6 +57,7 @@ class RestfulServiceTest extends SapphireTest {
 class RestfulServiceTest_Controller extends Controller {
 	public function index() {
 		ContentNegotiator::disable();
+		BasicAuth::disable();
 		$request_count = count($_REQUEST);
 		$get_count = count($_GET);
 		$post_count = count($_POST);
