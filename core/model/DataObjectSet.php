@@ -264,6 +264,85 @@ class DataObjectSet extends ViewableData implements IteratorAggregate {
 		return $ret;
 	}
 	
+	/*
+	 * Display a summarized pagination which limits the number of pages shown
+	 * "around" the currently active page for visual balance.
+	 * In case more paginated pages have to be displayed, only 
+	 * 
+	 * Example: 25 pages total, currently on page 6, context of 4 pages
+	 * [prev] [1] ... [4] [5] [[6]] [7] [8] ... [25] [next]
+	 * 
+	 * Example template usage:
+	 * <code>
+	 * <% if MyPages.MoreThanOnePage %>
+	 * 	<% if MyPages.NotFirstPage %>
+	 * 		<a class="prev" href="$MyPages.PrevLink">Prev</a>
+	 * 	<% end_if %>
+	 *  <% control MyPages.PaginationSummary(4) %>
+	 * 		<% if CurrentBool %>
+	 * 			$PageNum
+	 * 		<% else %>
+	 * 			<% if Link %>
+	 * 				<a href="$Link">$PageNum</a>
+	 * 			<% else %>
+	 * 				...
+	 * 			<% end_if %>
+	 * 		<% end_if %>
+	 * 	<% end_control %>
+	 * 	<% if MyPages.NotLastPage %>
+	 * 		<a class="next" href="$MyPages.NextLink">Next</a>
+	 * 	<% end_if %>
+	 * <% end_if %>
+	 * </code>
+	 * 
+	 * @param integer $context Number of pages to display "around" the current page. Number should be even,
+	 * 	because its halved to either side of the current page.
+	 * @return 	DataObjectSet
+	 */
+	public function PaginationSummary($context = 4) {
+		$ret = new DataObjectSet();
+		
+		// convert number of pages to even number for offset calculation
+		if($context % 2) $context--;
+		
+		// find out the offset
+		$current = $this->CurrentPage();
+		$totalPages = $this->TotalPages();
+		
+		// if the first or last page is shown, use all content on one side (either left or right of current page)
+		// otherwise half the number for usage "around" the current page
+		$offset = ($current == 1 || $current == $totalPages) ? $context : floor($context/2);
+		
+		$leftOffset = $current - ($offset);
+		if($leftOffset < 1) $leftOffset = 1;
+		if($leftOffset + $context > $totalPages) $leftOffset = $totalPages - $context;
+
+		for($i=0; $i < $totalPages; $i++) {
+			$link = HTTP::setGetVar($this->paginationGetVar, $i*$this->pageLength);
+			$num = $i+1;
+			$currentBool = ($current == $i+1) ? true:false;
+			if(
+				($num == $leftOffset-1 && $num != 1 && $num != $totalPages)
+				|| ($num == $leftOffset+$context+1 && $num != 1 && $num != $totalPages)
+			) {
+				$ret->push(new ArrayData(array(
+						"PageNum" => null,
+						"Link" => null,
+						"CurrentBool" => $currentBool,
+					)
+				));
+			} else if($num == 1 || $num == $totalPages || in_array($num, range($current-$offset,$current+$offset))) { 
+				$ret->push(new ArrayData(array(
+						"PageNum" => $num,
+						"Link" => $link,
+						"CurrentBool" => $currentBool,
+					)
+				));
+			}
+		}
+		return $ret;
+	}
+	
 	/**
 	 * Returns true if the current page is not the first page.
 	 * @return boolean
@@ -694,7 +773,7 @@ class DataObjectSet extends ViewableData implements IteratorAggregate {
 		$myViewer = SSViewer::fromString($currentTemplate);
 
 		if(isset($nestingLevels[$level+1]['dataclass'])){
-			$childrenMethod = $nestingLevels[$level+1]['dataclass'];if($level==1){print_r($childrenMethod);die;}
+			$childrenMethod = $nestingLevels[$level+1]['dataclass'];
 		}
 		// sql-parts
 

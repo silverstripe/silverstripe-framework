@@ -886,6 +886,8 @@ class Form extends RequestHandler {
 	 */
 	function getData() {
 		$dataFields = $this->fields->dataFields();
+		$data = array();
+		
 		if($dataFields){
 			foreach($dataFields as $field) {
 				if($field->Name()) {

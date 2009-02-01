@@ -54,15 +54,16 @@ class Requirements {
 	}
 
 	/**
-	 * Add the CSS styling to the header of the page
+	 * Include custom CSS styling to the header of the page.
 	 * 
 	 * See {@link Requirements_Backend::customCSS()}
+	 * 
+	 * @param string $script CSS selectors as a string (without <style> tag enclosing selectors).
+	 * @param int $uniquenessID Group CSS by a unique ID as to avoid duplicate custom CSS in header
 	 */
 	static function customCSS($script, $uniquenessID = null) {
-		self::backend()->custom($script, $uniquenessID);
+		self::backend()->customCSS($script, $uniquenessID);
 	}
-	
-
 	
 	/**
 	 * Add the following custom code to the <head> section of the page.
@@ -245,7 +246,7 @@ class Requirements {
 	 * Set whether you want to write the JS to the body of the page or 
 	 * in the head section 
 	 * 
-	 * @see {@link Requirements_Backend::set_write_js_to_body()}
+	 * @see Requirements_Backend::set_write_js_to_body()
 	 * @param boolean
 	 */
 	static function set_write_js_to_body($var) {
@@ -390,7 +391,12 @@ class Requirements_Backend {
 		$script .= "\n";
 	}
 	
-	
+	/**
+	 * Include custom CSS styling to the header of the page.
+	 *
+	 * @param string $script CSS selectors as a string (without <style> tag enclosing selectors).
+	 * @param int $uniquenessID Group CSS by a unique ID as to avoid duplicate custom CSS in header
+	 */
 	function customCSS($script, $uniquenessID = null) {
 		if($uniquenessID)
 			$this->customCSS[$uniquenessID] = $script;
@@ -398,7 +404,6 @@ class Requirements_Backend {
 			$this->customCSS[] = $script;		
 		}
 	}
-	
 	
 	/**
 	 * Add the following custom code to the <head> section of the page.
@@ -444,7 +449,7 @@ class Requirements_Backend {
 	}
 	
 	function get_css() {
-		return array_diff_key($this->css,$this->blocked);
+		return array_diff_key($this->css, $this->blocked);
 	}
 	
 	/**
@@ -561,7 +566,7 @@ class Requirements_Backend {
 					$requirements .= "<link rel=\"stylesheet\" type=\"text/css\"{$media} href=\"$path\" />\n";
 				}
 			}
-			foreach(array_diff_key($this->customCSS,$this->blocked) as $css) { 
+			foreach(array_diff_key($this->customCSS, $this->blocked) as $css) { 
 				$requirements .= "<style type=\"text/css\">\n$css\n</style>\n";
 			}
 			
@@ -775,6 +780,7 @@ class Requirements_Backend {
 	 *
 	 */
 	function process_combined_files() {
+	
 		if(Director::isDev() && !SapphireTest::is_running_test()) {
 			return;
 		}
@@ -803,7 +809,7 @@ class Requirements_Backend {
 				$newJSRequirements[$file] = true;
 			}
 		}
-
+		
 		foreach($this->css as $file => $params) {
 			if(isset($combinerCheck[$file])) {
 				$newCSSRequirements[$combinerCheck[$file]] = true;
@@ -812,7 +818,7 @@ class Requirements_Backend {
 				$newCSSRequirements[$file] = $params;
 			}
 		}
-      
+
 		// Process the combined files
 		$base = Director::baseFolder() . '/';
 		foreach(array_diff_key($combinedFiles,$this->blocked) as $combinedFile => $dummy) {
@@ -857,20 +863,11 @@ class Requirements_Backend {
 				fclose($fh);
 				unset($fh);
 			}
-			
+
 			// Unsuccessful write - just include the regular JS files, rather than the combined one
 			if(!$successfulWrite) {
 				user_error("Requirements_Backend::process_combined_files(): Couldn't create '$base$combinedFile'", E_USER_WARNING);
-				$keyedFileList = array();
-				foreach($fileList as $file) $keyedFileList[$file] = true;
-				$combinedPos = array_search($combinedFile, array_keys($newJSRequirements));
-				if($combinedPos) {
-					$newJSRequirements = array_merge(
-						array_slice($newJSRequirements, 0, $combinedPos),
-						$keyedFileList,
-						array_slice($newJSRequirements, $combinedPos+1)
-					);
-				}
+				return;
 			}
 		}
 
@@ -924,6 +921,5 @@ class Requirements_Backend {
 	}
 	
 }
-
 
 ?>

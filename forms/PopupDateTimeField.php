@@ -6,6 +6,21 @@
  */
 class PopupDateTimeField extends CalendarDateField {
 	
+	/**
+	 * @todo js validation needs to be implemented.
+	 * @see sapphire/forms/DateField#jsValidation()
+	 */
+	function jsValidation() {
+	}
+	
+	/**
+	 * @todo php validation needs to be implemented.
+	 * @see sapphire/forms/DateField#validate($validator)
+	 */
+	function validate() {
+		return true;
+	}
+	
 	function Field() {
 		
 		Requirements::css( SAPPHIRE_DIR . '/css/PopupDateTimeField.css' );

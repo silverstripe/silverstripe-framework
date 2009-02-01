@@ -515,10 +515,6 @@ class Object {
 	public static function remove_extension($className, $extensionName) {
 		Object::$extraStatics[$className]['extensions'] = array_diff(Object::$extraStatics[$className]['extensions'], array($extensionName));
 	}
-		
-	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	// CACHE METHODS (added by simon_w (simon -at- simon -dot- geek -dot- nz))
-	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
 	 * Loads a current cache from the filesystem, if it can.
@@ -606,8 +602,6 @@ class Object {
 	 * @param string|int $id An id for the cache
 	 * @return mixed The cached return of the method
 	 */
-	// I know this is almost exactly the same as cacheToFile, but call_user_func_array() is slow.
-	// Which is why there's two separate functions
 	public function cacheToFileWithArgs($callback, $args = array(), $expire = 3600, $id = false) {
 		if(!$this->class) {
 			$this->class = get_class($this);

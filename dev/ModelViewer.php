@@ -171,5 +171,4 @@ class ModelViewer_Relation extends ViewableData {
 	
 }
 
-
 ?>

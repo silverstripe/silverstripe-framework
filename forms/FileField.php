@@ -201,7 +201,7 @@ class FileField extends FormField {
 	 * @return string
 	 */
 	public function getFolderName() {
-		return $folderName;
+		return $this->folderName;
 	}
 	
 	public function validate($validator) {

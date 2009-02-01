@@ -235,7 +235,9 @@ abstract class Database extends Object {
 		} else {
 			$this->checkAndRepairTable($table);
 		}
-			
+
+		$this->requireField($table, "ID", "int(11) not null auto_increment");
+
 		// Create custom fields
 		if($fieldSchema) {
 			foreach($fieldSchema as $fieldName => $fieldSpec) {
@@ -591,10 +593,11 @@ abstract class Query extends Object implements Iterator {
 	 * @return array
 	 */
 	public function column() {
+		$column = array();
 		foreach($this as $record) {
 			$column[] = reset($record);
 		}
-		return isset($column) ? $column : null;
+		return $column;
 	}
 
 	/**
@@ -603,6 +606,7 @@ abstract class Query extends Object implements Iterator {
 	 * @return array
 	 */
 	public function keyedColumn() {
+		$column = array();
 		foreach($this as $record) {
 			$val = reset($record);
 			$column[$val] = $val;
@@ -615,6 +619,7 @@ abstract class Query extends Object implements Iterator {
 	 * @return array
 	 */
 	public function map() {
+		$column = array();
 		foreach($this as $record) {
 			$key = reset($record);
 			$val = next($record);

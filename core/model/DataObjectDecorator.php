@@ -57,7 +57,6 @@ abstract class DataObjectDecorator extends Extension {
 		return $this->loadExtraStatics();
 	}
 
-
 	/**
 	 * Edit the given query object to support queries for this extension
 	 *
@@ -65,7 +64,6 @@ abstract class DataObjectDecorator extends Extension {
 	 */
 	function augmentSQL(SQLQuery &$query) {
 	}
-
 
 	/**
 	 * Update the database schema as required by this extension.
@@ -139,7 +137,8 @@ abstract class DataObjectDecorator extends Extension {
 
 	/**
 	 * This function is used to provide modifications to the form in the CMS
-	 * by the decorator. By default, no changes are made.
+	 * by the decorator. By default, no changes are made. {@link DataObject->getCMSFields()}.
+	 * 
 	 * Please consider using {@link updateFormFields()} to globally add
 	 * formfields to the record. The method {@link updateCMSFields()}
 	 * should just be used to add or modify tabs, or fields which
@@ -153,16 +152,22 @@ abstract class DataObjectDecorator extends Extension {
 	}
 	
 	/**
-	 * This function is used to provide modifications to the form in the CMS
-	 * by the decorator.
+	 * This function is used to provide modifications to the form used
+	 * for front end forms. {@link DataObject->getFrontEndFields()}
 	 * 
 	 * Caution: Use {@link FieldSet->push()} to add fields.
 	 *
 	 * @param FieldSet $fields FieldSet without TabSet nesting
 	 */
-	function updateFormFields(FieldSet &$fields) {
+	function updateFrontEndFields(FieldSet &$fields) {
 	}
 	
+	/**
+	 * This is used to provide modifications to the form actions
+	 * used in the CMS. {@link DataObject->getCMSActions()}.
+	 *
+	 * @param FieldSet $actions FieldSet
+	 */
 	function updateCMSActions(FieldSet &$actions) {
 	}
 	
@@ -176,6 +181,12 @@ abstract class DataObjectDecorator extends Extension {
 		$extra_fields = $this->extraStatics();
 		if(isset($extra_fields['summary_fields'])){
 			$summary_fields = $extra_fields['summary_fields'];
+			
+			// if summary_fields were passed in numeric array,
+			// convert to an associative array
+			if($summary_fields && array_key_exists(0, $summary_fields)) {
+				$summary_fields = array_combine(array_values($summary_fields), array_values($summary_fields));
+			}
 			if($summary_fields) $fields = array_merge($fields, $summary_fields);
 		}
 	}
@@ -201,5 +212,4 @@ abstract class DataObjectDecorator extends Extension {
 	}
 
 }
-
 ?>

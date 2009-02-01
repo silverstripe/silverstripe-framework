@@ -15,7 +15,7 @@ class HtmlEditorField extends TextareaField {
 	/**
 	 * Construct a new HtmlEditor field
 	 */
-	function __construct($name, $title = "", $rows = 20, $cols = 20, $value = "", $form = null) {
+	function __construct($name, $title = null, $rows = 20, $cols = 20, $value = "", $form = null) {
 		parent::__construct($name, $title, $rows, $cols, $value, $form);
 		$this->extraClass = 'typography';
 	}
@@ -100,10 +100,10 @@ class HtmlEditorField extends TextareaField {
 		
 		$content = preg_replace('/mce_real_src="[^"]+"/i', "", $content);
 		
-		$content = eregi_replace('(<img[^>]* )width=([0-9]+)( [^>]*>|>)','\\1width="\\2"\\3',$content);
-		$content = eregi_replace('(<img[^>]* )height=([0-9]+)( [^>]*>|>)','\\1height="\\2"\\3',$content);
-		$content = eregi_replace('src="([^\?]*)\?r=[0-9]+"','src="\\1"',$content);
-		$content = eregi_replace('mce_src="([^\?]*)\?r=[0-9]+"','mce_src="\\1"',$content);
+		$content = eregi_replace('(<img[^>]* )width=([0-9]+)( [^>]*>|>)','\\1width="\\2"\\3', $content);
+		$content = eregi_replace('(<img[^>]* )height=([0-9]+)( [^>]*>|>)','\\1height="\\2"\\3', $content);
+		$content = eregi_replace('src="([^\?]*)\?r=[0-9]+"','src="\\1"', $content);
+		$content = eregi_replace('mce_src="([^\?]*)\?r=[0-9]+"','mce_src="\\1"', $content);
 		
 		$content = preg_replace_callback('/(<img[^>]* )(width="|height="|src=")([^"]+)("[^>]* )(width="|height="|src=")([^"]+)("[^>]* )(width="|height="|src=")([^"]+)("[^>]*>)/i', "HtmlEditorField_dataValue_processImage", $content);
 		
@@ -111,11 +111,12 @@ class HtmlEditorField extends TextareaField {
 		if(!ereg("^[ \t\r\n]*<", $content)) $content = "<p>$content</p>";
 
 		$links = HTTP::getLinksIn($content);
+		$linkedPages = array();
 		
 		if($links) foreach($links as $link) {
 			$link = Director::makeRelative($link);
 			
-			if(preg_match( '/^([A-Za-z0-9_-]+)\/?(#.*)?$/', $link, $parts ) ) {
+			if(preg_match('/^([A-Za-z0-9_-]+)\/?(#.*)?$/', $link, $parts)) {
 				$candidatePage = DataObject::get_one("SiteTree", "\"URLSegment\" = '" . urldecode( $parts[1] ). "'", false);
 				if($candidatePage) {
 					$linkedPages[] = $candidatePage->ID;
@@ -135,10 +136,8 @@ class HtmlEditorField extends TextareaField {
 		}
 		
 		$images = HTTP::getImagesIn($content);
-		
-		if($images){
+		if($images) {
 			foreach($images as $image) {
-				
 				$image = Director::makeRelative($image);
 				if(substr($image,0,7) == 'assets/') {
 					$candidateImage = DataObject::get_one("File", "\"Filename\" = '$image'");
@@ -150,7 +149,7 @@ class HtmlEditorField extends TextareaField {
 				
 		$fieldName = $this->name;
 		if($record->ID && $record->hasMethod('LinkTracking') && $linkTracking = $record->LinkTracking()) {
-			$linkTracking->removeByFilter("\"FieldName\" = '$fieldName'");
+			$linkTracking->removeByFilter("\"FieldName\" = '$fieldName' AND \"SiteTreeID\" = $record->ID");
 			
 			if(isset($linkedPages)) foreach($linkedPages as $item) {
 				$linkTracking->add($item, array("FieldName" => $fieldName));
@@ -410,14 +409,14 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 				new TreeDropdownField('FolderID', _t('HtmlEditorField.FOLDER', 'Folder'), 'Folder'),
 				new LiteralField('AddFolderOrUpload',
 					'<div style="clear:both;"></div><div id="AddFolderGroup" style="display:inline">
-						<a style="" href="#" id="AddFolder" class="link">' . _t('HtmlEditorField.CREATEFOLDER','create folder') . '</a>
+						<a style="" href="#" id="AddFolder" class="link">' . _t('HtmlEditorField.CREATEFOLDER','Create Folder') . '</a>
 						<input style="display: none; margin-left: 2px; width: 94px;" id="NewFolderName" class="addFolder" type="text">
-						<a style="display: none;" href="#" id="FolderOk" class="link addFolder">' . _t('HtmlEditorField.OK','ok') . '</a>
-						<a style="display: none;" href="#" id="FolderCancel" class="link addFolder">' . _t('HtmlEditorField.FOLDERCANCEL','cancel') . '</a>
+						<a style="display: none;" href="#" id="FolderOk" class="link addFolder">' . _t('HtmlEditorField.OK','Ok') . '</a>
+						<a style="display: none;" href="#" id="FolderCancel" class="link addFolder">' . _t('HtmlEditorField.FOLDERCANCEL','Cancel') . '</a>
 					</div>
 					<div id="PipeSeparator" style="display:inline">|</div>
 					<div id="UploadGroup" class="group" style="display: inline; margin-top: 2px;">
-						<a href="#" id="UploadFiles" class="link">' . _t('HtmlEditorField.UPLOAD','upload') . '</a>
+						<a href="#" id="UploadFiles" class="link">' . _t('HtmlEditorField.UPLOAD','Upload') . '</a>
 					</div>'
 				),
 				new TextField('getimagesSearch', _t('HtmlEditorField.SEARCHFILENAME', 'Search by file name')),

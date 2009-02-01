@@ -1581,7 +1581,7 @@ class DataObject extends ViewableData implements DataObjectInterface,i18nEntityP
 	 * Used for simple frontend forms without relation editing
 	 * or {@link TabSet} behaviour. Uses {@link scaffoldFormFields()}
 	 * by default. To customize, either overload this method in your
-	 * subclass, or decorate it by {@link DataObjectDecorator->updateFormFields()}.
+	 * subclass, or decorate it by {@link DataObjectDecorator->updateFrontEndFields()}.
 	 * 
 	 * @todo Decide on naming for "website|frontend|site|page" and stick with it in the API
 	 *
@@ -1590,7 +1590,7 @@ class DataObject extends ViewableData implements DataObjectInterface,i18nEntityP
 	 */
 	public function getFrontEndFields($params = null) {
 		$untabbedFields = $this->scaffoldFormFields($params);
-		$this->extend('updateFormFields', $untabbedFields);
+		$this->extend('updateFrontEndFields', $untabbedFields);
 	
 		return $untabbedFields;
 	}
@@ -1836,7 +1836,10 @@ class DataObject extends ViewableData implements DataObjectInterface,i18nEntityP
 	 * Uses the rules for whether the table should exist rather than actually looking in the database.
 	 */
 	public function has_own_table($dataClass) {
-		if(!is_subclass_of($dataClass,'DataObject')) return false;
+		// The condition below has the same effect as !is_subclass_of($dataClass,'DataObject'),
+		// which causes PHP < 5.3 to segfault in rare circumstances, see PHP bug #46753
+		if($dataClass == 'DataObject' || !in_array('DataObject', ClassInfo::ancestry($dataClass))) return false;
+		
 		if(!isset(self::$cache_has_own_table[$dataClass])) {
 			if(get_parent_class($dataClass) == 'DataObject') {
 				self::$cache_has_own_table[$dataClass] = true;
@@ -2736,7 +2739,7 @@ class DataObject extends ViewableData implements DataObjectInterface,i18nEntityP
 			$fields = array();
 			// try to scaffold a couple of usual suspects
 			if ($this->hasField('Name')) $fields['Name'] = 'Name';
-			if ($this->hasField('Title')) $fields['Title'] = 'Title';
+			if ($this->hasDataBaseField('Title')) $fields['Title'] = 'Title';
 			if ($this->hasField('Description')) $fields['Description'] = 'Description';
 			if ($this->hasField('FirstName')) $fields['FirstName'] = 'First Name';
 		}
@@ -2848,7 +2851,7 @@ class DataObject extends ViewableData implements DataObjectInterface,i18nEntityP
 	/**
 	 * Inserts standard column-values when a DataObject
 	 * is instanciated. Does not insert default records {@see $default_records}.
-	 * This is a map from classname to default value.
+	 * This is a map from fieldname to default value.
 	 * 
 	 *  - If you would like to change a default value in a sub-class, just specify it.
 	 *  - If you would like to disable the default value given by a parent class, set the default value to 0,'',or false in your

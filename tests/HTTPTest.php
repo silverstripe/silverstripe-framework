@@ -8,6 +8,21 @@
 class HTTPTest extends SapphireTest {
 	
 	/**
+	 * Tests {@link HTTP::getLinksIn()}
+	 */
+	public function testGetLinksIn() {
+		$content = '
+			<h2>My page</h2>
+			<p>A boy went <a href="home/">home</a> to see his <span><a href="mother/">mother</a></span>.</p>
+		';
+		
+		$links = HTTP::getLinksIn($content);
+		
+		$this->assertTrue(is_array($links));
+		$this->assertTrue(count($links) == 2);
+	}
+	
+	/**
 	 * Tests {@link HTTP::setGetVar()}
 	 */
 	public function testSetGetVar() {

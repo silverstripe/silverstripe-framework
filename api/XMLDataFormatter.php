@@ -29,7 +29,7 @@ class XMLDataFormatter extends DataFormatter {
 	 * @return String XML
 	 */
 	public function convertDataObject(DataObjectInterface $obj, $fields = null) {
-		Controller::curr()->getResponse()->addHeader("Content-type", "text/xml");
+		Controller::curr()->getResponse()->addHeader("Content-Type", "text/xml");
 		return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" . $this->convertDataObjectWithoutHeader($obj, $fields);
 	}
 		
@@ -111,7 +111,7 @@ class XMLDataFormatter extends DataFormatter {
 	 * @return String XML
 	 */
 	public function convertDataObjectSet(DataObjectSet $set, $fields = null) {
-		Controller::curr()->getResponse()->addHeader("Content-type", "text/xml");
+		Controller::curr()->getResponse()->addHeader("Content-Type", "text/xml");
 		$className = $set->class;
 	
 		$xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";

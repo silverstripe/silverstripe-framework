@@ -286,5 +286,4 @@ function _t($entity, $string = "", $priority = 40, $context = "") {
 	return i18n::_t($entity, $string, $priority, $context);
 }
 
-
 ?>

@@ -48,14 +48,27 @@
  * @subpackage view
  */
 class SSViewer extends Object {
+	
+	/**
+	 * @var boolean $source_file_comments
+	 */
 	protected static $source_file_comments = true;
 	
 	/**
 	 * Set whether HTML comments indicating the source .SS file used to render this page should be
 	 * included in the output.  This is enabled by default
+	 *
+	 * @param boolean $val
 	 */
-	function set_source_file_comments($val) {
+	static function set_source_file_comments($val) {
 		self::$source_file_comments = $val;
+	}
+	
+	/**
+	 * @return boolean
+	 */
+	static function get_source_file_comments() {
+		return self::$source_file_comments;
 	}
 	
 	/**
@@ -355,6 +368,7 @@ class SSViewer extends Object {
 
 	static function parseTemplateContent($content, $template="") {			
 		// Add template filename comments on dev sites
+
 		if(Director::isDev() && self::$source_file_comments && $template) {
 			// If this template is a full HTML page, then put the comments just inside the HTML tag to prevent any IE glitches
 			if(stripos($content, "<html") !== false) {
@@ -369,9 +383,9 @@ class SSViewer extends Object {
 			$oldContent = $content;
 			
 			// Add include filename comments on dev sites
-			if(Director::isDev()) $replacementCode = 'return "<!-- include " . SSViewer::getTemplateFile($matches[1]) . "-->\n" 
+			if(Director::isDev() && self::$source_file_comments) $replacementCode = 'return "<!-- include " . SSViewer::getTemplateFile($matches[1]) . " -->\n" 
 				. SSViewer::getTemplateContent($matches[1]) 
-				. "\n<!-- end include " . SSViewer::getTemplateFile($matches[1]) . "-->";';
+				. "\n<!-- end include " . SSViewer::getTemplateFile($matches[1]) . " -->";';
 			else $replacementCode = 'return SSViewer::getTemplateContent($matches[1]);';
 			
 			$content = preg_replace_callback('/<' . '% include +([A-Za-z0-9_]+) +%' . '>/', create_function(

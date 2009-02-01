@@ -59,5 +59,4 @@ class ImageField extends FileField {
 	}
 }
 
-
 ?>

@@ -262,6 +262,22 @@ class Email extends ViewableData {
 			$this->body;
 	}
 
+	/**
+	 * Set template name (without *.ss extension).
+	 * 
+	 * @param string $template
+	 */
+	public function setTemplate($template) {
+		$this->ss_template = $template;
+	}
+	
+	/**
+	 * @return string
+	 */
+	public function getTemplate() {
+		return $this->ss_template;
+	}
+
 	protected function templateData() {
 		if($this->template_data) {
 			return $this->template_data->customise(array(
@@ -384,6 +400,8 @@ class Email extends ViewableData {
 		if(trim($headers['Bcc'])) $headers['Bcc'] .= ', ';
 		$headers['Bcc'] .= self::$bcc_all_emails_to;		
 	}
+
+	Requirements::restore();
     
     return self::mailer()->sendPlain($to, $this->from, $subject, $this->body, $this->attachments, $headers);
   }
@@ -543,12 +561,19 @@ class Email extends ViewableData {
 	 * 
 	 * @param string $email Email-address
 	 * @param string $method Method for obfuscating/encoding the address
+	 *  - 'direction': Reverse the text and then use CSS to put the text direction back to normal
 	 *  - 'visible': Simple string substitution ('@' to '[at]', '.' to '[dot], '-' to [dash])
 	 *  - 'hex': Hexadecimal URL-Encoding - useful for mailto: links
 	 * @return string
 	 */
 	public static function obfuscate($email, $method = 'visible') {
 		switch($method) {
+			case 'direction' :
+				Requirements::customCSS(
+					'span.codedirection { unicode-bidi: bidi-override; direction: rtl; }',
+					'codedirectionCSS'
+				);
+				return '<span class="codedirection">' . strrev($email) . '</span>';
 			case 'visible' :
 				$obfuscated = array('@' => ' [at] ', '.' => ' [dot] ', '-' => ' [dash] ');
 				return strtr($email, $obfuscated);
@@ -714,38 +739,21 @@ class Email_BounceRecord extends DataObject {
     static $has_one = array(
         'Member' => 'Member'
     );   
-}
 
-/**
- * This class is responsible for ensuring that members who are on it receive NO email 
- * communication at all. any correspondance is caught before the email is sent.
- * @package sapphire
- * @subpackage email
- */
-class Email_BlackList extends DataObject{
-	 static $db = array(
-        'BlockedEmail' => 'Varchar',  
-    );
-     static $has_one = array(
-        'Member' => 'Member'
-    );
-    
-    /**
-     * Helper function to see if the email being
-     * sent has specifically been blocked.
-     */
-    static function isBlocked($email){
-    	$blockedEmails = DataObject::get("Email_BlackList")->toDropDownMap("ID","BlockedEmail");
-    	if($blockedEmails){
-	    	if(in_array($email,$blockedEmails)){
-	    		return true;
-	    	}else{
-	    		return false;
-	    	}
-    	}else{
-    		return false;
-    	}
-    }
+	static $has_many = array();
+	
+	static $many_many = array();
+	
+	static $defaults = array();
+	
+	
+	/** 
+	* a record of Email_BounceRecord can't be created manually. Instead, it should be  
+	* created though system. 
+	*/ 
+	public function canCreate($member = null) { 
+		return false; 
+	}
 }
 
 ?>

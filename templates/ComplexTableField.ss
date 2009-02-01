@@ -64,7 +64,7 @@
 					<% end_control %>
 					<% control Actions %>
 						<td width="16" class="action<% if Default %> default<% end_if %>"><a class="$Class" href="$Link"><% if Icon %><img src="$Icon" alt="$Label" /><% else %>$Label<% end_if %></a></td>
-					<% end_if %>
+					<% end_control %>
 				</tr>
 			<% end_control %>
 			<% else %>

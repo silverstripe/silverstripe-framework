@@ -48,7 +48,7 @@ if [ "$1" = "-start" ]; then
 		echo "You need to install the 'daemon' tool.  In debian, go 'sudo apt-get install daemon'"
 		exit 1
 	fi
-
+	
 	if [ ! -f $base/$2.pid ]; then
 		echo "Starting service $2 $3"
 		touch $base/$2.pid
@@ -61,11 +61,18 @@ if [ "$1" = "-start" ]; then
 		
 		sake=`realpath $0`
 		base=`realpath $base`
+		
+		# if third argument is not explicitly given, copy from second argument
+		if [ "$3" = "" ]; then
+			url=$2
+		else
+			url=$3
+		fi
 
 		# TODO: Give a globally unique processname by including the projectname as well		
 		processname=$2
 
-		daemon -n $processname -r -D $base --pidfile=$pidfile --stdout=$outlog --stderr=$errlog $sake $2 $3
+		daemon -n $processname -r -D $base --pidfile=$pidfile --stdout=$outlog --stderr=$errlog $sake $url
 	else
 		echo "Service $2 seems to already be running"
 	fi

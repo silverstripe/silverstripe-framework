@@ -965,15 +965,26 @@ class i18n extends Object {
 	 * Given a file name (a php class name, without the .php ext, or a template name, including the .ss extension)
 	 * this helper function determines the module where this file is located
 	 * 
-	 * @param string $name php class name or template file name
+	 * @param string $name php class name or template file name (including *.ss extension)
 	 * @return string Module where the file is located
 	 */
 	public static function get_owner_module($name) {
-		if (substr($name,-3) == '.ss') {
+		// if $name is a template file
+		if(substr($name,-3) == '.ss') {
 			global $_TEMPLATE_MANIFEST;
-			$path = str_replace('\\','/',Director::makeRelative(current($_TEMPLATE_MANIFEST[substr($name,0,-3)])));
+			$templateManifest = $_TEMPLATE_MANIFEST[substr($name,0,-3)];
+			if(is_array($templateManifest) && isset($templateManifest['themes'])) {
+				$absolutePath = $templateManifest['themes'][SSViewer::current_theme()];
+			} else {
+				$absolutePath = $templateManifest;
+			}
+			
+			$path = str_replace('\\','/',Director::makeRelative(current($absolutePath)));
+			
 			ereg('/([^/]+)/',$path,$module);
-		} else {
+		} 
+		// $name is assumed to be a PHP class
+		else {
 			global $_CLASS_MANIFEST;
 			if(strpos($name,'_') !== false) $name = strtok($name,'_');
 			if(isset($_CLASS_MANIFEST[$name])) {
@@ -1076,6 +1087,7 @@ class i18n extends Object {
 		$module = self::get_owner_module($class);
 
 		if(!$module) user_error("i18n::include_by_class: Class {$class} not found", E_USER_WARNING);
+		$locale = self::get_locale();
 		
 		if (file_exists($file = Director::getAbsFile("$module/lang/". self::get_locale() . '.php'))) {
 			include($file);
@@ -1088,6 +1100,12 @@ class i18n extends Object {
 		} else if(file_exists(Director::getAbsFile("$module/lang"))) {
 			user_error("i18n::include_by_class: Locale file $file should exist", E_USER_WARNING);
 		}
+
+		// If the language file wasn't included for this class, include an empty array to prevent
+		// this method from being called again
+		global $lang;
+		if(!isset($lang[$locale][$class])) $lang[$locale][$class] = array();
+		
 	}
 	
 	//-----------------------------------------------------------------------------------------------//

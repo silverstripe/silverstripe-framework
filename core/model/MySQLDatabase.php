@@ -174,11 +174,12 @@ class MySQLDatabase extends Database {
 	
 	public function createTable($tableName, $fields = null, $indexes = null) {
 		$fieldSchemas = $indexSchemas = "";
+		
+		if(!isset($fields['ID'])) $fields['ID'] = "int(11) not null auto_increment";
 		if($fields) foreach($fields as $k => $v) $fieldSchemas .= "\"$k\" $v,\n";
 		if($indexes) foreach($indexes as $k => $v) $fieldSchemas .= $this->getIndexSqlDefinition($k, $v) . ",\n";
 		
 		$this->query("CREATE TABLE \"$tableName\" (
-				ID int(11) not null auto_increment,
 				$fieldSchemas
 				$indexSchemas
 				primary key (ID)
@@ -468,7 +469,7 @@ class MySQLDatabase extends Database {
 		//$parts=Array('datatype'=>'decimal', 'precision'=>"$this->wholeSize,$this->decimalSize");
 		//DB::requireField($this->tableName, $this->name, "decimal($this->wholeSize,$this->decimalSize)");
 
-		return 'decimal(' . (int)$values['precision'] . ')';
+		return 'decimal(' . (int)$values['precision'] . ') not null';
 	}
 	
 	/**

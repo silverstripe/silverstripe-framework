@@ -103,6 +103,7 @@ class ErrorPage extends Page {
 
 		$errorContent = $response->getBody();
 		
+		// Check we have an assets base directory, creating if it we don't
 		if(!file_exists(ASSETS_PATH)) {
 			mkdir(ASSETS_PATH, 02775);
 		}
@@ -113,6 +114,17 @@ class ErrorPage extends Page {
 		if($fh = fopen($filePath, "w")) {
 			fwrite($fh, $errorContent);
 			fclose($fh);
+		} else {
+			$fileErrorText = sprintf(
+				_t(
+					"ErrorPage.ERRORFILEPROBLEM",
+					"Error opening file \"%s\" for writing. Please check file permissions."
+				),
+				$errorFile
+			);
+			FormResponse::status_message($fileErrorText, 'bad');
+			FormResponse::respond();
+			return;
 		}
 		
 		// Restore the version we're currently connected to.

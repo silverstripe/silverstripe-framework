@@ -278,6 +278,14 @@ class Group extends DataObject {
 				|| (Member::currentUserID() && !DataObject::get("Permission", "GroupID = $this->ID AND Code = 'ADMIN'"));
 		}
 	}
+	
+	public function canView() {
+		if($this->hasMethod('alternateCanView')) return $this->alternateCanView();
+		else {
+			return Permission::check("ADMIN") 
+				|| (Member::currentUserID() && !DataObject::get("Permission", "GroupID = $this->ID AND Code = 'ADMIN'"));
+		}
+	}
 
 	/**
 	 * Returns all of the children for the CMS Tree.

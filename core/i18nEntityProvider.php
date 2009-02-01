@@ -44,6 +44,23 @@ interface i18nEntityProvider {
 	 * 
 	 * Example usage in {@link DataObject->provideI18nEntities()}.
 	 * 
+	 * You can ask textcollector to add the provided entity to a different module
+	 * than the class is contained in by adding a 4th argument to the array:
+	 * <code>
+	 * class MyTestClass implements i18nEntityProvider {
+	 * function provideI18nEntities() {
+	 * 	$entities = array();
+	 * 		$entities["MyOtherModuleClass.MYENTITY"] = array(
+	 * 			$value,
+	 * 			PR_MEDIUM,
+	 * 			'My context description',
+	 * 			'myothermodule'
+	 * 		);
+	 * 	}
+	 * 	return $entities;
+	 * }
+	 * </code>
+	 * 
 	 * @return array All entites in an associative array, with
 	 * entity name as the key, and a numerical array of pseudo-arguments
 	 * for _t() as a value.

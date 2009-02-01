@@ -17,6 +17,12 @@ class QueuedEmail extends DataObject {
 		'To' => 'Member'
 	);
 	
+	static $has_many = array();
+	
+	static $many_many = array();
+	
+	static $defaults = array();
+	
 	// overwrite this method to provide a check whether or not to send the email
 	function canSendEmail() {
 		return true;

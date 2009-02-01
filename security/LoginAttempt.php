@@ -27,6 +27,12 @@ class LoginAttempt extends DataObject {
 		'Member' => 'Member', // only linked if the member actually exists
 	);
 	
+	static $has_many = array();
+	
+	static $many_many = array();
+	
+	static $belongs_many_many = array();
+	
 	function fieldLabels() {
 		$labels = parent::fieldLabels();
 		$labels['Email'] = _t('LoginAttempt.Email', 'Email Address');

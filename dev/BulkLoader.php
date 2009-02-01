@@ -93,7 +93,14 @@ abstract class BulkLoader extends ViewableData {
 	 * Specifies how to determine duplicates based on one or more provided fields
 	 * in the imported data, matching to properties on the used {@link DataObject} class.
 	 * Alternatively the array values can contain a callback method (see example for
-	 * implementation details).
+	 * implementation details). The callback method should be defined on the source class.
+	 * 
+	 * NOTE: If you're trying to get a unique Member record by a particular field that
+	 * isn't Email, you need to ensure that Member is correctly set to the unique field
+	 * you want, as it will merge any duplicates during {@link Member::onBeforeWrite()}.
+	 * 
+	 * {@see Member::set_unique_identifier_field()}.
+	 * 
 	 * If multiple checks are specified, the first one "wins".
 	 * 
 	 *  <code>
@@ -222,7 +229,7 @@ abstract class BulkLoader extends ViewableData {
 	 * @return boolean
 	 */
 	protected function isNullValue($val, $fieldName = null) {
-		return (empty($val));
+		return (empty($val) && $val !== '0');
 	}
 	
 }

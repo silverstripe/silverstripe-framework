@@ -22,7 +22,7 @@ class RootURLController extends Controller {
 		$controller = new ModelAsController();
 		
 		$request = new HTTPRequest("GET", self::get_homepage_urlsegment().'/', $request->getVars(), $request->postVars());
-		$request->match('$URLSegment//$Action');
+		$request->match('$URLSegment//$Action', true);
 			
 		$result = $controller->handleRequest($request);
 

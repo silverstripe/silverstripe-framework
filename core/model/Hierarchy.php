@@ -159,7 +159,7 @@ class Hierarchy extends DataObjectDecorator {
 	protected function markingFinished() {
 		// Mark childless nodes as expanded.
 		foreach($this->markedNodes as $id => $node) {
-			if(!$node->numChildren()) {
+			if(!$node->isExpanded() && !$node->numChildren()) {
 				$node->markExpanded();
 			}
 		}
@@ -351,7 +351,18 @@ class Hierarchy extends DataObjectDecorator {
 	 * @return DataObjectSet
 	 */
 	public function Children() {
-		return $this->owner->stageChildren(false);
+		if(!(isset($this->children) && $this->children)) { 
+			$result = $this->owner->stageChildren(false); 
+		 	if(isset($result)) { 
+		 		$this->children = new DataObjectSet(); 
+		 		foreach($result as $child) { 
+		 			if($child->canView()) { 
+		 				$this->children->push($child); 
+		 			} 
+		 		} 
+		 	} 
+		} 
+		return $this->children;
 	}
 
 	/**

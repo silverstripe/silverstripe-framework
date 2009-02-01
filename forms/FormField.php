@@ -481,7 +481,8 @@ HTML;
 	 * 
 	 * @todo shouldn't this be an abstract method?
 	 */
-	function jsValidation() {}
+	function jsValidation() {
+	}
 	
 	/**
 	 * Validation Functions for each field type by default
@@ -489,7 +490,9 @@ HTML;
 	 * 
 	 * @todo shouldn't this be an abstract method?
 	 */
-	function validate(){return true;}
+	function validate() {
+		return true;
+	}
 
 	/**
 	 * Describe this field, provide help text for it.

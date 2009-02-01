@@ -25,7 +25,6 @@ Director::addRules(10, array(
 	'$Controller//$Action/$ID/$OtherID' => '*',
 	'images' => 'Image_Uploader',
 	'' => 'RootURLController',
-	'sitemap.xml' => 'GoogleSitemap',
 	'api/v1' => 'RestfulServer',
 	'soap/v1' => 'SOAPModelAccess',
 	'dev' => 'DevelopmentAdmin',
@@ -47,7 +46,7 @@ Object::useCustomClass('Datetime','SSDatetime',true);
  * Add pear parser to include path
  */
 $path = Director::baseFolder().'/sapphire/parsers/';
-set_include_path(get_include_path() . PATH_SEPARATOR . $path);
+set_include_path(str_replace('.' . PATH_SEPARATOR, '.' . PATH_SEPARATOR . $path . PATH_SEPARATOR, get_include_path())); 
 
 /**
  * Define a default language different than english
@@ -69,8 +68,5 @@ define('MCE_ROOT', 'jsparty/tiny_mce2/');
  * {@link http://doc.silverstripe.com/doku.php?id=email_bouncehandler}
  */
 define('EMAIL_BOUNCEHANDLER_KEY', '1aaaf8fb60ea253dbf6efa71baaacbb3');
-
-
-
 
 ?>

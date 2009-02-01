@@ -4,6 +4,15 @@
  *
  * ASSUMPTION -> IF you pass your source as an array, you pass values as an array too.
  * 				Likewise objects are handled the same.
+ * 
+ * @todo Document the different source data that can be used
+ * with this form field - e.g ComponentSet, DataObjectSet,
+ * array. Is it also appropriate to accept so many different
+ * types of data when just using an array would be appropriate?
+ * 
+ * @todo Make use of FormField->createTag() to generate the
+ * HTML tag(s) for this field.
+ * 
  * @package forms
  * @subpackage fields-basic
  */
@@ -11,11 +20,12 @@ class CheckboxSetField extends OptionsetField {
 	
 	protected $disabled = false;
 	
-  	/**
-  	* Object handles arrays and dosets being passed by reference.
-  	* 
-  	* @todo Should use CheckboxField FieldHolder rather than constructing own markup.
-  	*/
+	/**
+	 * @todo Explain different source data that can be used with this field,
+	 * e.g. SQLMap, DataObjectSet or an array.
+	 * 
+	 * @todo Should use CheckboxField FieldHolder rather than constructing own markup.
+	 */
 	function Field() {
 		Requirements::css(SAPPHIRE_DIR . '/css/CheckboxSetField.css');
 
@@ -86,10 +96,10 @@ class CheckboxSetField extends OptionsetField {
 			$checked = '';
 			
 			if(isset($items)) {
-				in_array($key,$items) ? $checked = " checked=\"checked\"" : $checked = "";
+				$checked = (in_array($key, $items)) ? ' checked="checked"' : '';
 			}
 			
-			$this->disabled ? $disabled = " disabled=\"disabled\"" : $disabled = "";
+			$disabled = ($this->disabled) ? $disabled = ' disabled="disabled"' : '';
 			$options .= "<li class=\"$extraClass\"><input id=\"$itemID\" name=\"$this->name[$key]\" type=\"checkbox\" value=\"$key\"$checked $disabled class=\"checkbox\" /> <label for=\"$itemID\">$value</label></li>\n"; 
 		}
 		
@@ -108,7 +118,7 @@ class CheckboxSetField extends OptionsetField {
 		if(!$value && $obj && $obj instanceof DataObject && $obj->hasMethod($this->name)) {
 			$funcName = $this->name;
 			$selected = $obj->$funcName();
-			$value = $selected->toDropdownMap('ID','ID');
+			$value = $selected->toDropdownMap('ID', 'ID');
 		}
 
 		parent::setValue($value, $obj);
@@ -133,7 +143,7 @@ class CheckboxSetField extends OptionsetField {
 			$record->$fieldname()->setByIDList($idList);
 		} elseif($fieldname && $record) {
 			if($this->value) {
-				$this->value = str_replace(",", "{comma}", $this->value);
+				$this->value = str_replace(',', '{comma}', $this->value);
 				$record->$fieldname = implode(",", $this->value);
 			} else {
 				$record->$fieldname = '';
@@ -142,79 +152,93 @@ class CheckboxSetField extends OptionsetField {
 	}
 	
 	/**
-	 * Return the CheckboxSetField value, as an array of the selected item keys
+	 * Return the CheckboxSetField value as an array 
+	 * selected item keys.
+	 * 
+	 * @return string
 	 */
 	function dataValue() {
-		if($this->value&&is_array($this->value)){
-			// Filter items to those who aren't 0
+		if($this->value && is_array($this->value)) {
 			$filtered = array();
-			foreach($this->value as $item) if($item) $filtered[] = str_replace(",", "{comma}", $item); 
-			return implode(",", $filtered);
-		} else {
-			return '';
+			foreach($this->value as $item) {
+				if($item) {
+					$filtered[] = str_replace(",", "{comma}", $item);
+				}
+			}
+			
+			return implode(',', $filtered);
 		}
+		
+		return '';
 	}
 	
 	function performDisabledTransformation() {
 		$clone = clone $this;
 		$clone->setDisabled(true);
+		
 		return $clone;
 	}
 	
 	/**
-	* Makes a pretty readonly field
-	*/
-
+	 * Transforms the source data for this CheckboxSetField
+	 * into a comma separated list of values.
+	 * 
+	 * @return ReadonlyField
+	 */
 	function performReadonlyTransformation() {
 		$values = '';
+		$data = array();
 		
 		$items = $this->value;
-		foreach($this->source as $source) {
-			if(is_object($source)) {
-				$sourceTitles[$source->ID] = $source->Title;
+		if($this->source) {
+			foreach($this->source as $source) {
+				if(is_object($source)) {
+					$sourceTitles[$source->ID] = $source->Title;
+				}
 			}
 		}
 		
-		if($items){
+		if($items) {
 			// Items is a DO Set
-			if(is_a($items,'DataObjectSet')){
-				
-				foreach($items as $item){
+			if(is_a($items, 'DataObjectSet')) {
+				foreach($items as $item) {
 					$data[] = $item->Title;
 				}
-				if($data) {
-					$values = implode(", ",$data);
-				}
-			
+				if($data) $values = implode(', ', $data);
+				
 			// Items is an array or single piece of string (including comma seperated string)
-			}else{
+			} else {
 				if(!is_array($items)) {
-					$items = split(" *, *", trim($items));
+					$items = split(' *, *', trim($items));
 				}
-				foreach($items as $item){
+				
+				foreach($items as $item) {
 					if(is_array($item)) {
 						$data[] = $item['Title'];
-					} else if(is_array($this->source) && !empty($this->source[$item])) {
+					} elseif(is_array($this->source) && !empty($this->source[$item])) {
 						$data[] = $this->source[$item];
-					} else if(is_a($this->source, "ComponentSet")){
-						//added for editable checkboxset. 
+					} elseif(is_a($this->source, 'ComponentSet')) {
 						$data[] = $sourceTitles[$item];
-						
 					} else {
 						$data[] = $item;
 					}
 				}
-				$values = implode(", ",$data);
+				
+				$values = implode(', ', $data);
 			}
 		}
 		
-		$field = new ReadonlyField($this->name,$this->title ? $this->title : "",$values);
+		$title = ($this->title) ? $this->title : '';
+		
+		$field = new ReadonlyField($this->name, $title, $values);
 		$field->setForm($this->form);
+		
 		return $field;
 	}
 	
 	function ExtraOptions() {
 		return FormField::ExtraOptions();
-	}	
+	}
+	
 }
 ?>

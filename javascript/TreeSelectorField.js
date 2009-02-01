@@ -134,7 +134,7 @@ TreeDropdownField.prototype = {
 		this.treeShown = false;
 		if(this.itemTree) {
 			this.itemTree.style.display = 'none';
-			Event.stopObserving(document, 'click', this.bound_testForBlur);
+			if(this.bound_testForBlur) Event.stopObserving(document, 'click', this.bound_testForBlur);
 			// this.editLink.style.display = this.humanItems.style.display = 'block';
 			this.unstretchIframeIfNeeded();
 		}

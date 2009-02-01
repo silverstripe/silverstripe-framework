@@ -57,7 +57,7 @@ if($majorVersion < 5) {
  */
 require_once("core/Core.php");
 
-header("Content-type: text/html; charset=\"utf-8\"");
+if(!headers_sent()) header("Content-type: text/html; charset=\"utf-8\"");
 if (function_exists('mb_http_output')) {
 	mb_http_output('UTF-8');
 	mb_internal_encoding('UTF-8');
@@ -86,8 +86,7 @@ if (isset($_GET['url'])) {
 }
 
 // Fix glitches in URL generation
-if (substr($url, 0, strlen(BASE_URL)) == BASE_URL) $url = substr($url, strlen(BASE_URL));
-
+if (substr(strtolower($url), 0, strlen(BASE_URL)) == strtolower(BASE_URL)) $url = substr($url, strlen(BASE_URL));
 
 if (isset($_GET['debug_profile'])) {
 	Profiler::init();

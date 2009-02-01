@@ -192,6 +192,42 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	private static $runCMSFieldsExtensions = true;
 
 	/**
+	 * Return a subclass map of SiteTree
+	 * that shouldn't be hidden through
+	 * {@link SiteTree::$hide_ancestor}
+	 *
+	 * @return array
+	 */
+	public static function page_type_classes() {
+		$classes = ClassInfo::getValidSubClasses();
+		array_shift($classes);
+		$kill_ancestors = array();
+
+		// figure out if there are any classes we don't want to appear
+		foreach($classes as $class) {
+			$instance = singleton($class);
+
+			// do any of the progeny want to hide an ancestor?
+			if($ancestor_to_hide = $instance->stat('hide_ancestor')) {
+				// note for killing later
+				$kill_ancestors[] = $ancestor_to_hide;
+			}
+		}
+
+		// If any of the descendents don't want any of the elders to show up, cruelly render the elders surplus to requirements.
+		if($kill_ancestors) {
+			$kill_ancestors = array_unique($kill_ancestors);
+			foreach($kill_ancestors as $mark) {
+				// unset from $classes
+				$idx = array_search($mark, $classes);
+				unset($classes[$idx]);
+			}
+		}
+		
+		return $classes;
+	}
+	
+	/**
 	 * Get the URL for this page.
 	 *
 	 * @param string $action An action to include in the link
@@ -525,7 +561,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	 * @todo Check we get a endless recursion if we use parent::can()
 	 */
 	function can($perm, $member = null) {
-		if(!$member && $member !== FALSE) $member = Member::currentUser();
+		if(!$member || !(is_a($member, 'Member')) || is_numeric($member)) $member = Member::currentUser();
 
 		if($member && Permission::checkMember($member, "ADMIN")) return true;
 		
@@ -562,7 +598,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	 * @return boolean True if the current user can add children.
 	 */
 	public function canAddChildren($member = null) {
-		if(!$member && $member !== FALSE) $member = Member::currentUser();
+		if(!$member || !(is_a($member, 'Member')) || is_numeric($member)) $member = Member::currentUser();
 		if($member && Permission::checkMember($member, "ADMIN")) return true;
 		
 		// DEPRECATED 2.3: use canAddChildren() instead
@@ -593,7 +629,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	 * @return boolean True if the current user can view this page.
 	 */
 	public function canView($member = null) {
-		if(!$member && $member !== FALSE) $member = Member::currentUser();
+		if(!$member || !(is_a($member, 'Member')) || is_numeric($member)) $member = Member::currentUser();
 
 		// admin override
 		if($member && Permission::checkMember($member, "ADMIN")) return true;
@@ -648,7 +684,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	 * @return boolean True if the current user can delete this page.
 	 */
 	public function canDelete($member = null) {
-		if(!$member && $member !== FALSE) $member = Member::currentUser();
+		if(!$member || !(is_a($member, 'Member')) || is_numeric($member)) $member = Member::currentUser();
 		
 		if($member && Permission::checkMember($member, "ADMIN")) return true;
 		
@@ -690,7 +726,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	 * @return boolean True if the current user can create pages on this class.
 	 */
 	public function canCreate($member = null) {
-		if(!$member && $member !== FALSE) $member = Member::currentUser();
+		if(!$member || !(is_a($member, 'Member')) || is_numeric($member)) $member = Member::currentUser();
 
 		if($member && Permission::checkMember($member, "ADMIN")) return true;
 		
@@ -726,7 +762,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	 * @return boolean True if the current user can edit this page.
 	 */
 	public function canEdit($member = null) {
-		if(!$member && $member !== FALSE) $member = Member::currentUser();
+		if(!$member || !(is_a($member, 'Member')) || is_numeric($member)) $member = Member::currentUser();
 		
 		if($member && Permission::checkMember($member, "ADMIN")) return true;
 
@@ -774,7 +810,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	 * @return boolean True if the current user can publish this page.
 	 */
 	public function canPublish($member = null) {
-		if(!$member && $member !== FALSE) $member = Member::currentUser();
+		if(!$member || !(is_a($member, 'Member')) || is_numeric($member)) $member = Member::currentUser();
 		
 		if($member && Permission::checkMember($member, "ADMIN")) return true;
 		
@@ -816,7 +852,6 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	/**
 	 * Return the title, description, keywords and language metatags.
 	 * 
-	 * @todo Make generator tag dynamically determine version number (currently defaults to "2.0")
 	 * @todo Move <title> tag in separate getter for easier customization and more obvious usage
 	 * 
 	 * @param boolean|string $includeTitle Show default <title>-tag, set to false for custom templating
@@ -831,7 +866,9 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 				? $this->MetaTitle
 				: $this->Title) . "</title>\n";
 		}
-		$tags .= "<meta name=\"generator\" http-equiv=\"generator\" content=\"SilverStripe - http://www.silverstripe.com\" />\n";
+		$version = new SapphireInfo();
+
+		$tags .= "<meta name=\"generator\" http-equiv=\"generator\" content=\"SilverStripe ". $version->Version() ." - http://www.silverstripe.com\" />\n";
 
 		$charset = ContentNegotiator::get_encoding();
 		$tags .= "<meta http-equiv=\"Content-type\" content=\"text/html; charset=$charset\" />\n";
@@ -1076,26 +1113,6 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		Requirements::javascript(CMS_DIR . "/javascript/SitetreeAccess.js");
 		Requirements::javascript(SAPPHIRE_DIR . '/javascript/UpdateURL.js');
 
-		// Backlink report
-		if($this->hasMethod('BackLinkTracking')) {
-			$links = $this->BackLinkTracking();
-
-			if($links->exists()) {
-				foreach($links as $link) {
-					$backlinks[] = "<li><a class=\"cmsEditlink\" href=\"admin/show/$link->ID\">" .
-						$link->Breadcrumbs(null,true) . "</a></li>";
-				}
-				$backlinks = "<div style=\"clear:left\">
-					" . _t('SiteTree.PAGESLINKING', 'The following pages link to this page:') . 
-					"<ul>" . implode("",$backlinks) . "</ul></div>";
-			}
-		}
-
-		if(!isset($backlinks)) {
-			$backlinks = "<p>" . _t('SiteTree.NOBACKLINKS', 'This page hasn\'t been linked to from any pages.') . "</p>";
-		}
-
-
 		// Status / message
 		// Create a status message for multiple parents
 		if($this->ID && is_numeric($this->ID)) {
@@ -1139,18 +1156,37 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 			$message .= "NOTE: " . implode("<br />", $statusMessage);
 		}
 		
+		$backLinksNote = '';
+		$backLinksTable = new LiteralField('BackLinksNote', '<p>' . _t('NOBACKLINKEDPAGES', 'There are no pages linked to this page.') . '</p>');
+		
+		// Create a table for showing pages linked to this one
+		if($this->BackLinkTracking() && $this->BackLinkTracking()->Count() > 0) {
+			$backLinksNote = new LiteralField('BackLinksNote', '<p>' . _t('SiteTree.PAGESLINKING', 'The following pages link to this page:') . '</p>');
+			$backLinksTable = new TableListField(
+				'BackLinkTracking',
+				'SiteTree',
+				array(
+					'Title' => 'Title'
+				),
+				'ChildID = ' . $this->ID,
+				'',
+				'LEFT JOIN SiteTree_LinkTracking ON SiteTree.ID = SiteTree_LinkTracking.SiteTreeID'
+			);
+			$backLinksTable->setFieldFormatting(array(
+				'Title' => '<a href=\"admin/show/$ID\">$Title</a>'
+			));
+			$backLinksTable->setPermissions(array(
+				'show',
+				'export'
+			));
+		}
+		
 		// Lay out the fields
 		$fields = new FieldSet(
 			new TabSet("Root",
 				$tabContent = new TabSet('Content',
 					$tabMain = new Tab('Main',
 						new TextField("Title", $this->fieldLabel('Title')),
-						/*new UniqueTextField("Title",
-								"Title",
-								"SiteTree",
-								"Another page is using that name. Page names should be unique.",
-								"Page Name"
-						),*/
 						new TextField("MenuTitle", $this->fieldLabel('MenuTitle')),
 						new HtmlEditorField("Content", _t('SiteTree.HTMLEDITORTITLE', "Content", PR_MEDIUM, 'HTML editor title'))
 					),
@@ -1206,8 +1242,9 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 					new TextareaField("ToDo", "")
 				),
 				$tabReports = new TabSet('Reports',
-					$tabBacklinks =new Tab('Backlinks',
-						new LiteralField("Backlinks", $backlinks)
+					$tabBacklinks = new Tab('Backlinks',
+						$backLinksNote,
+						$backLinksTable
 					)
 				),
 				$tabAccess = new Tab('Access',
@@ -1496,11 +1533,10 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	 * @return array
 	 */
 	protected function getClassDropdown() {
-		$classes = ClassInfo::getValidSubClasses('SiteTree');
-		array_shift($classes);
-		
+		$classes = self::page_type_classes();
 		$currentClass = null;
-
+		$result = array();
+		
 		$result = array();
 		foreach($classes as $class) {
 			$instance = singleton($class);

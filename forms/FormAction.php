@@ -69,6 +69,10 @@ class FormAction extends FormField {
 				'type' => 'submit',
 				'name' => $this->action
 			);
+			if($this->isReadonly()) {
+				$attributes['disabled'] = 'disabled';
+				$attributes['class'] = $attributes['class'] . ' disabled';
+			}
 			
 			return $this->createTag('button', $attributes, $this->attrTitle());
 		} else {
@@ -79,7 +83,10 @@ class FormAction extends FormField {
 				'name' => $this->action,
 				'value' => ($this->dontEscape) ? $this->Title() : $this->attrTitle()
 			);
-
+			if($this->isReadonly()) {
+				$attributes['disabled'] = 'disabled';
+				$attributes['class'] = $attributes['class'] . ' disabled';
+			}
 			$attributes['title'] = ($this->description) ? $this->description : ($this->dontEscape) ? $this->Title() : $this->attrTitle();
 			
 			return $this->createTag('input', $attributes);

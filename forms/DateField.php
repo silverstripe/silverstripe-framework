@@ -112,15 +112,16 @@ class DateField_Disabled extends DateField {
 			$df->setValue($this->dataValue());
 			
 			if(date('Y-m-d', time()) == $this->dataValue()) {
-			        $val = Convert::raw2xml($this->value . ' ('._t('DateField.TODAY','today').')');
+				$val = Convert::raw2xml($this->value . ' ('._t('DateField.TODAY','today').')');
 			} else {
 				$val = Convert::raw2xml($this->value . ', ' . $df->Ago());
 			}
 		} else {
-		        $val = '<i>('._t('DateField.NOTSET', 'not set').')</i>';
+			$val = '<i>('._t('DateField.NOTSET', 'not set').')</i>';
 		}
 		
-		return "<span class=\"readonly\" id=\"" . $this->id() . "\">$val</span>";
+		return "<span class=\"readonly\" id=\"" . $this->id() . "\">$val</span>
+				<input type=\"hidden\" value=\"{$this->value}\" name=\"$this->name\" />";
 	}
 	
 	function Type() { 

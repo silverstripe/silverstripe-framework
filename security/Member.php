@@ -7,17 +7,16 @@
 class Member extends DataObject {
 
 	static $db = array(
-		'FirstName' => "Varchar",
-		'Surname' => "Varchar",
-		'Email' => "Varchar",
-		'Password' => "Varchar(64)", // support for up to SHA256!
-		'RememberLoginToken' => "Varchar(50)",
-		'NumVisit' => "Int",
+		'FirstName' => 'Varchar',
+		'Surname' => 'Varchar',
+		'Email' => 'Varchar',
+		'Password' => 'Varchar(64)', // support for up to SHA256!
+		'RememberLoginToken' => 'Varchar(50)',
+		'NumVisit' => 'Int',
 		'LastVisited' => 'SSDatetime',
 		'Bounced' => 'Boolean', // Note: This does not seem to be used anywhere.
 		'AutoLoginHash' => 'Varchar(30)',
 		'AutoLoginExpired' => 'SSDatetime',
-		'BlacklistedEmail' => 'Boolean',
 		'PasswordEncryption' => "Enum('none', 'none')",
 		'Salt' => 'Varchar(50)',
 		'PasswordExpiry' => 'Date',
@@ -26,11 +25,13 @@ class Member extends DataObject {
 	);
 
 	static $belongs_many_many = array(
-		"Groups" => "Group",
+		'Groups' => 'Group',
 	);
 
 	static $has_one = array();
+	
 	static $has_many = array();
+	
 	static $many_many = array();
 	
 	static $many_many_extraFields = array();
@@ -67,6 +68,15 @@ class Member extends DataObject {
 		'Surname',
 		'Email',
 	);	
+	
+	/**
+	 * The unique field used to identify this member.
+	 * By default, it's "Email", but another common
+	 * field could be Username.
+	 * 
+	 * @var string
+	 */
+	protected static $unique_identifier_field = 'Email';
 	
 	/**
 	 * {@link PasswordValidator} object for validating user's password
@@ -130,8 +140,30 @@ class Member extends DataObject {
 		// This can be called via CLI during testing.
 		if(Director::is_cli()) return;
 		
-		$file = ""; $line = "";
-		if (!headers_sent($file, $line)) session_regenerate_id(true);
+		$file = '';
+		$line = '';
+		
+		if(!headers_sent($file, $line)) session_regenerate_id(true);
+	}
+	
+	/**
+	 * Get the field used for uniquely identifying a member
+	 * in the database. {@see Member::$unique_identifier_field}
+	 * 
+	 * @return string
+	 */
+	static function get_unique_identifier_field() {
+		return self::$unique_identifier_field;
+	}
+	
+	/**
+	 * Set the field used for uniquely identifying a member
+	 * in the database. {@see Member::$unique_identifier_field}
+	 * 
+	 * @param $field The field name to set as the unique field
+	 */
+	static function set_unique_identifier_field($field) {
+		self::$unique_identifier_field = $field;
 	}
 	
 	/**
@@ -198,7 +230,10 @@ class Member extends DataObject {
 			Session::set('Member.FailedLogins', $failedLogins);
 		}
 		
-		$this->LockedOutUntil = null;
+		// Don't set column if its not built yet (the login might be precursor to a /dev/build...)
+		if(array_key_exists('LockedOutUntil', DB::fieldList('Member'))) {
+			$this->LockedOutUntil = null;
+		}
 
 		$this->write();
 		
@@ -388,30 +423,6 @@ class Member extends DataObject {
 	}
 
 
-	/**
-	 * Add the members email address to the blacklist
-	 *
-	 * With this method the blacklisted email table is updated to ensure that
-	 * no promotional material is sent to the member (newsletters).
-	 * Standard system messages are still sent such as receipts.
-	 *
-	 * @param bool $val Set to TRUE if the address should be added to the
-	 *                  blacklist, otherwise to FALSE.
-	 */
-	function setBlacklistedEmail($val) {
-		if($val && $this->Email) {
-			$blacklisting = new Email_BlackList();
-	 		$blacklisting->BlockedEmail = $this->Email;
-	 		$blacklisting->MemberID = $this->ID;
-	 		$blacklisting->write();
-		}
-
-		$this->setField("BlacklistedEmail", $val);
-		// Save the BlacklistedEmail field to the Member table
-		$this->write();
-	}
-
-
 	/*
 	 * Generate a random password, with randomiser to kick in if there's no words file on the
 	 * filesystem.
@@ -437,29 +448,18 @@ class Member extends DataObject {
 		}
 	}
 
-
 	/**
-	 * Event handler called before writing to the database
-	 *
-	 * If an email's filled out look for a record with the same email and if
-	 * found update this record to merge with that member.
+	 * Event handler called before writing to the database.
 	 */
-
 	function onBeforeWrite() {
 		if($this->SetPassword) $this->Password = $this->SetPassword;
 
-		if($this->Email) {
-			if($this->ID) {
-				$idClause = "AND \"Member\".\"ID\" <> $this->ID";
-			} else {
-				$idClause = "";
-			}
-
-			$existingRecord = DataObject::get_one(
-				"Member", "\"Email\" = '" . addslashes($this->Email) . "' $idClause");
-
-			// Debug::message("Found an existing member for email $this->Email");
-
+		$identifierField = self::$unique_identifier_field;
+		if($this->$identifierField) {
+			$idClause = ($this->ID) ? " AND \"Member\".\"ID\" <> $this->ID" : '';
+			$SQL_identifierField = Convert::raw2sql($this->$identifierField);
+			
+			$existingRecord = DataObject::get_one('Member', "\"$identifierField\" = '{$SQL_identifierField}'{$idClause}");
 			if($existingRecord) {
 				$newID = $existingRecord->ID;
 				if($this->ID) {
@@ -761,14 +761,12 @@ class Member extends DataObject {
 		$groupIDList = array();
 
 		if(is_a($groups, 'DataObjectSet')) {
-			foreach($groups as $group)
+			foreach($groups as $group) {
 				$groupIDList[] = $group->ID;
+			}
 		} elseif(is_array($groups)) {
 			$groupIDList = $groups;
 		}
-
-		/*if( empty( $groupIDList ) )
-			return Member::map();	*/
 
 		$filterClause = ($groupIDList)
 			? "\"GroupID\" IN (" . implode( ',', $groupIDList ) . ")"
@@ -792,8 +790,7 @@ class Member extends DataObject {
 	 * @return array Groups in which the member is NOT in.
 	 */
 	public function memberNotInGroups($groupList, $memberGroups = null){
-		if(!$memberGroups)
-			$memberGroups = $this->Groups();
+		if(!$memberGroups) $memberGroups = $this->Groups();
 
 		foreach($memberGroups as $group) {
 			if(in_array($group->Code, $groupList)) {
@@ -801,6 +798,7 @@ class Member extends DataObject {
 				unset($groupList[$index]);
 			}
 		}
+		
 		return $groupList;
 	}
 
@@ -846,11 +844,6 @@ class Member extends DataObject {
 			$locale
 		));
 		
-		$mainFields->insertAfter(
-			new TreeMultiselectField("Groups", _t("Member.SECURITYGROUPS", "Security groups")),
-			'Locale'
-		);
-		
 		$mainFields->removeByName('Bounced');
 		$mainFields->removeByName('RememberLoginToken');
 		$mainFields->removeByName('AutoLoginHash');
@@ -861,14 +854,14 @@ class Member extends DataObject {
 		$mainFields->removeByName('Salt');
 		$mainFields->removeByName('NumVisit');
 		$mainFields->removeByName('LastVisited');
-		$mainFields->removeByName('BlacklistedEmail');
 	
 		$fields->removeByName('Subscriptions');
-		$fields->removeByName('UnsubscribedRecords');
 		// Groups relation will get us into logical conflicts because
 		// Members are displayed within  group edit form in SecurityAdmin
 		$fields->removeByName('Groups');
 
+		$this->extend('updateCMSFields', $fields);
+		
 		return $fields;
 	}
 	
@@ -935,10 +928,6 @@ class Member extends DataObject {
 		if($valid->valid()) {
 			$this->AutoLoginHash = null;
 			$this->write();
-			
-			// Emails will be sent by Member::onBeforeWrite().
-
-			//$this->sendinfo('changePassword', array('CleartextPassword' => $password));
 		}
 		
 		return $valid;
@@ -1371,27 +1360,36 @@ class Member_Validator extends RequiredFields {
 	 */
 	function php($data) {
 		$valid = parent::php($data);
+		
+		$identifierField = Member::get_unique_identifier_field();
+		
+		$SQL_identifierField = Convert::raw2sql($data[$identifierField]);
+		$member = DataObject::get_one('Member', "\"$identifierField\" = '{$SQL_identifierField}'");
 
-		$member = DataObject::get_one('Member',
-			"\"Email\" = '". Convert::raw2sql($data['Email']) ."'");
-
-		// if we are in a complex table field popup, use ctf[childID], else use
-		// ID
-		if(isset($_REQUEST['ctf']['childID']))
+		// if we are in a complex table field popup, use ctf[childID], else use ID
+		if(isset($_REQUEST['ctf']['childID'])) {
 			$id = $_REQUEST['ctf']['childID'];
-		elseif(isset($_REQUEST['ID']))
+		} elseif(isset($_REQUEST['ID'])) {
 			$id = $_REQUEST['ID'];
-		else
+		} else {
 			$id = null;
-
-		if($id && is_object($member) && $member->ID != $id) {
-			$emailField = $this->form->dataFieldByName('Email');
-			$this->validationError($emailField->id(),
-				_t('Member.VALIDATIONMEMBEREXISTS', "There already exists a member with this email"),
-				"required");
-			$valid = false;
 		}
 
+		if($id && is_object($member) && $member->ID != $id) {
+			$uniqueField = $this->form->dataFieldByName($identifierField);
+			$this->validationError(
+				$uniqueField->id(),
+				sprintf(
+					_t(
+						'Member.VALIDATIONMEMBEREXISTS',
+						'A member already exists with the same %s'
+					),
+					strtolower($identifierField)
+				),
+				'required'
+			);
+			$valid = false;
+		}
 
 		// Execute the validators on the extensions
 		if($this->extension_instances) {
@@ -1401,7 +1399,6 @@ class Member_Validator extends RequiredFields {
 				}
 			}
 		}
-
 
 		return $valid;
 	}
@@ -1429,9 +1426,7 @@ class Member_Validator extends RequiredFields {
 		return $js;
 	}
 }
-
 // Initialize the static DB variables to add the supported encryption
 // algorithms to the PasswordEncryption Enum field
 Member::init_db_fields();
-
 ?>

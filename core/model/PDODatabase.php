@@ -727,5 +727,4 @@ class PDOQuery extends Query {
 	}
 }
 
-
 ?>

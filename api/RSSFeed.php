@@ -193,6 +193,7 @@ class RSSFeed extends ViewableData {
 	 * Return the content of the RSS feed
 	 */
 	function feedContent() {
+		SSViewer::set_source_file_comments(false);
 		return str_replace('&nbsp;', '&#160;', $this->renderWith('RSSFeed'));
 	}
 }

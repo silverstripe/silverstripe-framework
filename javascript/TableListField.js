@@ -136,8 +136,10 @@ TableListField.prototype = {
     			{
     				postBody: 'update=1',
     				onComplete: function(response) {
-    					Element.replace(this.id, response.responseText)
-    					Behaviour.apply($(this.id))
+    					Element.replace(this.id, response.responseText);
+						// reapply behaviour and reattach methods to TF container node
+						// e.g. <div class="TableListField">
+    					Behaviour.apply($(this.id), true);
     				}.bind(this)
     			}
     		);
