@@ -20,9 +20,9 @@
 					<span class="sortLink <% if SortBy %><% else %>sortLinkHidden<% end_if %>">
 						<a href="$SortLink"">
 							<% if SortDirection = desc %>
-							<img src="cms/images/bullet_arrow_up.png" alt="<% _t('SORTASC', 'Sort in ascending order') %>" />
-							<% else %>
 							<img src="cms/images/bullet_arrow_down.png" alt="<% _t('SORTDESC', 'Sort in descending order') %>" />
+							<% else %>
+							<img src="cms/images/bullet_arrow_up.png" alt="<% _t('SORTASC', 'Sort in ascending order') %>" />
 							<% end_if %>
 						</a>
 						&nbsp;
