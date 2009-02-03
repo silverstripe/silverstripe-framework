@@ -86,8 +86,8 @@ abstract class Validator extends Object {
 		);
 	}
 	
-	function showError(){
-		debug::show($this->errors);
+	function showError() {
+		Debug::show($this->errors);
 	}
 	
 	function getCombinedError(){
