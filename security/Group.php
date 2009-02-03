@@ -281,21 +281,29 @@ class Group extends DataObject {
 	public function canEdit($member = null) {
 		if(!$member || !(is_a($member, 'Member')) || is_numeric($member)) $member = Member::currentUser();
 		
-		if($this->hasMethod('alternateCanEdit')) {
-			return $this->alternateCanEdit($member);
-		} else {
-			return (
-				// either we have an ADMIN
-				(bool)Permission::checkMember($member, "ADMIN")
-				|| (
-					// or a privileged CMS user and a group without ADMIN permissions.
-					// without this check, a user would be able to add himself to an administrators group
-					// with just access to the "Security" admin interface
-					Permission::checkMember($member, "CMS_ACCESS_SecurityAdmin") && 
-					!DataObject::get("Permission", "GroupID = $this->ID AND Code = 'ADMIN'")
-				)
-			);
+		// DEPRECATED 2.3: use canView() instead
+		$results = $this->extend('alternateCanView', $member);
+		if($results && is_array($results)) if(!min($results)) return false;
+		
+		// decorated access checks
+		$results = $this->extend('canEdit', $member);
+		if($results && is_array($results)) if(!min($results)) return false;
+		
+ 		if(
+			// either we have an ADMIN
+			(bool)Permission::checkMember($member, "ADMIN")
+			|| (
+				// or a privileged CMS user and a group without ADMIN permissions.
+				// without this check, a user would be able to add himself to an administrators group
+				// with just access to the "Security" admin interface
+				Permission::checkMember($member, "CMS_ACCESS_SecurityAdmin") && 
+				!DataObject::get("Permission", "GroupID = $this->ID AND Code = 'ADMIN'")
+			)
+		) {
+			return true;
 		}
+
+		return false;
 	}
 	
 	/**
@@ -307,11 +315,28 @@ class Group extends DataObject {
 	public function canView($member = null) {
 		if(!$member || !(is_a($member, 'Member')) || is_numeric($member)) $member = Member::currentUser();
 		
-		if($this->hasMethod('alternateCanView')) {
-			return $this->alternateCanView($member);
-		} else {
-			return (bool)Permission::checkMember($member, "CMS_ACCESS_SecurityAdmin");
-		}
+		// DEPRECATED 2.3: use canView() instead
+		$results = $this->extend('alternateCanView', $member);
+		if($results && is_array($results)) if(!min($results)) return false;
+		
+		// decorated access checks
+		$results = $this->extend('canView', $member);
+		if($results && is_array($results)) if(!min($results)) return false;
+		
+		// user needs access to CMS_ACCESS_SecurityAdmin
+		if(Permission::checkMember($member, "CMS_ACCESS_SecurityAdmin")) return true;
+		
+		return false;
+	}
+	
+	public function canDelete($member = null) {
+		if(!$member || !(is_a($member, 'Member')) || is_numeric($member)) $member = Member::currentUser();
+		
+		// decorated access checks
+		$results = $this->extend('canDelete', $member);
+		if($results && is_array($results)) if(!min($results)) return false;
+		
+		return $this->canEdit($member);
 	}
 
 	/**

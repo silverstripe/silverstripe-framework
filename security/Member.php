@@ -891,12 +891,57 @@ class Member extends DataObject {
 		}
 	}
 	
+	/**
+	 * Users can view their own record.
+	 * Otherwise they'll need ADMIN or CMS_ACCESS_SecurityAdmin permissions.
+	 * This is likely to be customized for social sites etc. with a looser permission model.
+	 */
+	function canView($member = null) {
+		if(!$member || !(is_a($member, 'Member')) || is_numeric($member)) $member = Member::currentUser();
+		
+		// decorated access checks
+		$results = $this->extend('canView', $member);
+		if($results && is_array($results)) if(!min($results)) return false;
+		
+		// members can usually edit their own record
+		if($this->ID == $member->ID) return true;
+		
+		if(
+			Permission::checkMember($member, 'ADMIN')
+			|| Permission::checkMember($member, 'CMS_ACCESS_SecurityAdmin')
+		) {
+			return true;
+		}
+		
+		return false;
+	}
+	
+	/**
+	 * Users can edit their own record.
+	 * Otherwise they'll need ADMIN or CMS_ACCESS_SecurityAdmin permissions
+	 */
 	function canEdit($member = null) {
-		if(!$member && $member !== FALSE) $member = Member::currentUser();
+		if(!$member || !(is_a($member, 'Member')) || is_numeric($member)) $member = Member::currentUser();
 		
-		if($this->ID == Member::currentUserID()) return true;
+		// decorated access checks
+		$results = $this->extend('canEdit', $member);
+		if($results && is_array($results)) if(!min($results)) return false;
 		
-		return Permission::check('ADMIN');
+		return $this->canView($member);
+	}
+	
+	/**
+	 * Users can edit their own record.
+	 * Otherwise they'll need ADMIN or CMS_ACCESS_SecurityAdmin permissions
+	 */
+	function canDelete($member = null) {
+		if(!$member || !(is_a($member, 'Member')) || is_numeric($member)) $member = Member::currentUser();
+		
+		// decorated access checks
+		$results = $this->extend('canDelete', $member);
+		if($results && is_array($results)) if(!min($results)) return false;
+		
+		return $this->canEdit($member);
 	}
 
 
