@@ -10,9 +10,7 @@ class Percentage extends Decimal {
 	 * Create a new Decimal field.
 	 */
 	function __construct($name, $precision = 4) {
-	
-		if( !$precision )
-			$precision = 4;	
+		if(!$precision) $precision = 4;
 	
 		parent::__construct($name, $precision, $precision);
 	}
