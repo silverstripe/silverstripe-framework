@@ -128,7 +128,7 @@ class Convert extends Object {
 			
 			// For simpler stuff, a simple str_replace will do
 			else {
-				$converted = str_replace(array('&amp;', '&lt;', '&gt;'), array('&', '<', '>'), $val);
+				$converted = str_replace(array('&amp;', '&lt;', '&gt;', '&apos;'), array('&', '<', '>', "'"), $val);
 				$converted = ereg_replace('&#[0-9]+;', '', $converted);
 				return $converted;
 			}
