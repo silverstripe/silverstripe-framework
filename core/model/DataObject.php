@@ -2910,6 +2910,16 @@ class DataObject extends ViewableData implements DataObjectInterface,i18nEntityP
 	/**
 	 * Extra fields to include on the connecting many-many table.
 	 * This is a map from field name to field type.
+	 * 
+	 * Example code:
+	 * <code>
+	 * public static $many_many_extraFields = array(
+	 * 	'Members' => array(
+	 *			'Role' => 'Varchar(100)'
+	 *		)
+	 * );
+	 * </code>
+	 * 
 	 * @var array
 	 */
 	public static $many_many_extraFields = null;
