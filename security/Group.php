@@ -271,19 +271,46 @@ class Group extends DataObject {
 		}
 	}
 	
-	public function canEdit() {
-		if($this->hasMethod('alternateCanEdit')) return $this->alternateCanEdit();
-		else {
-			return Permission::check("ADMIN") 
-				|| (Member::currentUserID() && !DataObject::get("Permission", "GroupID = $this->ID AND Code = 'ADMIN'"));
+	/**
+	 * Checks for permission-code CMS_ACCESS_SecurityAdmin.
+	 * If the group has ADMIN permissions, it requires the user to have ADMIN permissions as well.
+	 * 
+	 * @param $member Member
+	 * @return boolean
+	 */
+	public function canEdit($member = null) {
+		if(!$member || !(is_a($member, 'Member')) || is_numeric($member)) $member = Member::currentUser();
+		
+		if($this->hasMethod('alternateCanEdit')) {
+			return $this->alternateCanEdit($member);
+		} else {
+			return (
+				// either we have an ADMIN
+				(bool)Permission::checkMember($member, "ADMIN")
+				|| (
+					// or a privileged CMS user and a group without ADMIN permissions.
+					// without this check, a user would be able to add himself to an administrators group
+					// with just access to the "Security" admin interface
+					Permission::checkMember($member, "CMS_ACCESS_SecurityAdmin") && 
+					!DataObject::get("Permission", "GroupID = $this->ID AND Code = 'ADMIN'")
+				)
+			);
 		}
 	}
 	
-	public function canView() {
-		if($this->hasMethod('alternateCanView')) return $this->alternateCanView();
-		else {
-			return Permission::check("ADMIN") 
-				|| (Member::currentUserID() && !DataObject::get("Permission", "GroupID = $this->ID AND Code = 'ADMIN'"));
+	/**
+	 * Checks for permission-code CMS_ACCESS_SecurityAdmin.
+	 * 
+	 * @param $member Member
+	 * @return boolean
+	 */
+	public function canView($member = null) {
+		if(!$member || !(is_a($member, 'Member')) || is_numeric($member)) $member = Member::currentUser();
+		
+		if($this->hasMethod('alternateCanView')) {
+			return $this->alternateCanView($member);
+		} else {
+			return (bool)Permission::checkMember($member, "CMS_ACCESS_SecurityAdmin");
 		}
 	}
 
@@ -296,7 +323,7 @@ class Group extends DataObject {
 		$filteredChildren = new DataObjectSet();
 		
 		if($children) foreach($children as $child) {
-			if($child->canEdit()) $filteredChildren->push($child);
+			if($child->canView()) $filteredChildren->push($child);
 		}
 		
 		return $filteredChildren;
