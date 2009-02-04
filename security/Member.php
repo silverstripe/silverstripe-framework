@@ -63,9 +63,9 @@ class Member extends DataObject {
 	);
 	
 	static $summary_fields = array(
-		'FirstName',
-		'Surname',
-		'Email',
+		'FirstName' => 'First Name',
+		'Surname' => 'Last Name',
+		'Email' => 'Email',
 	);	
 	
 	/**

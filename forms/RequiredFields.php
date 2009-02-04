@@ -54,13 +54,14 @@ class RequiredFields extends Validator{
 	function javascript() {
 		$js = "";
 		$fields = $this->form->Fields();
-
-		foreach($this->form->Fields()->dataFields() as $field) {
-			//if the field type has some special specific specification for validation of itself
-			$validationFunc = $field->jsValidation();
-			if($validationFunc) $js .= $validationFunc . "\n";
+		$dataFields = $this->form->Fields()->dataFields();
+		if($dataFields) {
+			foreach($dataFields as $field) {
+				// if the field type has some special specific specification for validation of itself
+				$validationFunc = $field->jsValidation();
+				if($validationFunc) $js .= $validationFunc . "\n";
+			}
 		}
-
 		$useLabels = $this->useLabels ? 'true' : 'false';
 
 		if($this->required) {
