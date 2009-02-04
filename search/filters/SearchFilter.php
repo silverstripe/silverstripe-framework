@@ -141,7 +141,10 @@ abstract class SearchFilter extends Object {
 					$parentBaseClass = ClassInfo::baseDataClass($parentClass);
 					$componentBaseClass = ClassInfo::baseDataClass($componentClass);
 					$query->innerJoin($relationTable, "\"$relationTable\".\"$parentField\" = \"$parentBaseClass\".\"ID\"");
-					$query->leftJoin($componentClass, "\"$relationTable\".\"$componentField\" = \"$componentClass\".\"ID\"");
+					$query->leftJoin($componentBaseClass, "\"$relationTable\".\"$componentField\" = \"$componentBaseClass\".\"ID\"");
+					if(ClassInfo::hasTable($componentClass)) {
+						$query->leftJoin($componentClass, "\"$relationTable\".\"$componentField\" = \"$componentClass\".\"ID\"");
+					}
 					$this->model = $componentClass;
 				
 				// Experimental support for user-defined relationships via a "(relName)Query" method
