@@ -351,18 +351,18 @@ class Hierarchy extends DataObjectDecorator {
 	 * @return DataObjectSet
 	 */
 	public function Children() {
-		if(!(isset($this->children) && $this->children)) { 
+		if(!(isset($this->_cache_children) && $this->_cache_children)) { 
 			$result = $this->owner->stageChildren(false); 
 		 	if(isset($result)) { 
-		 		$this->children = new DataObjectSet(); 
+		 		$this->_cache_children = new DataObjectSet(); 
 		 		foreach($result as $child) { 
 		 			if($child->canView()) { 
-		 				$this->children->push($child); 
+		 				$this->_cache_children->push($child); 
 		 			} 
 		 		} 
 		 	} 
 		} 
-		return $this->children;
+		return $this->_cache_children;
 	}
 
 	/**
@@ -594,6 +594,7 @@ class Hierarchy extends DataObjectDecorator {
 	}
 	
 	function flushCache() {
+		$this->_cache_children = null;
 		$this->_cache_allChildrenIncludingDeleted = null;
 		$this->_cache_allChildren = null;
 	}
