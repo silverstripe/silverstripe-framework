@@ -189,7 +189,10 @@ class SearchForm extends Form {
 		
 		$notMatch = $invertedMatch ? "NOT " : "";
 		if($keywords) {
-			$match['SiteTree'] = "MATCH (Title, MenuTitle, Content, MetaTitle, MetaDescription, MetaKeywords) AGAINST ('$keywords' $boolean)";
+			$match['SiteTree'] = "
+				MATCH (Title, MenuTitle, Content, MetaTitle, MetaDescription, MetaKeywords) AGAINST ('$keywords' $boolean)
+				+ MATCH (Content) AGAINST ('$htmlEntityKeywords' $boolean) 
+			";
 			$match['File'] = "MATCH (Filename, Title, Content) AGAINST ('$keywords' $boolean) AND ClassName = 'File'";
 	
 			// We make the relevance search by converting a boolean mode search into a normal one
