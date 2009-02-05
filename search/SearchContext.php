@@ -125,8 +125,7 @@ class SearchContext extends Object {
 		$searchParamArray = array();
 		if (is_object($searchParams)) {
 			$searchParamArray = $searchParams->getVars();
-		} else 
-		{
+		} else {
 			$searchParamArray = $searchParams;
 		}
 		
@@ -140,7 +139,6 @@ class SearchContext extends Object {
 				}
 			}
 		}
-		
 		
 		$query->connective = $this->connective;
 		$query->distinct = true;
