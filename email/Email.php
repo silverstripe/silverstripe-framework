@@ -238,8 +238,8 @@ class Email extends ViewableData {
 		if($headerName == 'Cc') $this->cc = $headerValue;
 		else if($headerName == 'Bcc') $this->bcc = $headerValue;
 		else {
-			if($this->customHeaders[$headerName]) $this->customHeaders[$headerName] .= ", ";
-			$this->customHeaders[$headerName] .= $headerValue;
+			if(isset($this->customHeaders[$headerName])) $this->customHeaders[$headerName] .= ", " . $headerValue;
+			else $this->customHeaders[$headerName] = $headerValue;
 		}
 	}
 
