@@ -10,6 +10,17 @@ class RequirementsTest extends SapphireTest {
 	
 	static $html_template = '<html><head></head><body></body></html>';
 	
+	function testCustomCSS() {
+		Requirements::customCSS(".testclass {color:#f00;}");
+		
+		$html = Requirements::includeInHTML(false, self::$html_template);
+
+		$this->assertTrue(
+			(strpos($html, '.testclass {color:#f00;}') !== false),
+			'customCSS() shows up in template'
+		);
+	}
+	
 	function testExternalUrls() {
 		Requirements::javascript('http://www.mydomain.com/test.js');
 		Requirements::javascript('https://www.mysecuredomain.com/test.js');

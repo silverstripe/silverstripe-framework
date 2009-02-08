@@ -534,7 +534,7 @@ class Requirements_Backend {
 	function includeInHTML($templateFile, $content) {
 		if(isset($_GET['debug_profile'])) Profiler::mark("Requirements::includeInHTML");
 		
-		if(strpos($content, '</head') !== false && ($this->javascript || $this->css || $this->customScript || $this->customHeadTags)) {
+		if(strpos($content, '</head') !== false && ($this->javascript || $this->customCSS || $this->customScript || $this->customHeadTags)) {
 			$requirements = '';
 			$jsRequirements = '';
 			
@@ -566,6 +566,7 @@ class Requirements_Backend {
 					$requirements .= "<link rel=\"stylesheet\" type=\"text/css\"{$media} href=\"$path\" />\n";
 				}
 			}
+			
 			foreach(array_diff_key($this->customCSS, $this->blocked) as $css) { 
 				$requirements .= "<style type=\"text/css\">\n$css\n</style>\n";
 			}
