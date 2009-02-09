@@ -282,7 +282,8 @@ class Upload extends Controller {
 	 */
 	public function isValidSize($tmpFile) {
 		$pathInfo = pathinfo($tmpFile['name']);
-		$maxSize = $this->getAllowedMaxFileSize(strtolower($pathInfo['extension']));
+		$extension = isset($pathInfo['extension']) ? strtolower($pathInfo['extension']) : null;
+		$maxSize = $this->getAllowedMaxFileSize($extension);
 		return (!$tmpFile['size'] || !$maxSize || (int)$tmpFile['size'] < $maxSize);
 	}
 	
