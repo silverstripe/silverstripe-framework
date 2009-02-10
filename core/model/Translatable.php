@@ -481,7 +481,7 @@ class Translatable extends DataObjectDecorator {
 		
 		if(!$this->owner->ID && $this->isTranslation()) {
 			$SQL_URLSegment = Convert::raw2sql($this->owner->URLSegment);
-			$existingOriginalPage = Translatable::get_one_by_lang('SiteTree', Translatable::default_lang(), "URLSegment = '{$SQL_URLSegment}'");
+			$existingOriginalPage = Translatable::get_one_by_lang('SiteTree', Translatable::default_lang(), "\"URLSegment\" = '{$SQL_URLSegment}'");
 			if($existingOriginalPage) $this->owner->URLSegment .= "-{$this->owner->Lang}";
 		}
 	}
@@ -491,7 +491,7 @@ class Translatable extends DataObjectDecorator {
 		
 		$SQL_URLSegment = Convert::raw2sql($urlSegment);
 		Translatable::disable();
-		$record = DataObject::get_one('SiteTree', "URLSegment = '{$SQL_URLSegment}'");
+		$record = DataObject::get_one('SiteTree', "\"URLSegment\" = '{$SQL_URLSegment}'");
 		Translatable::enable();
 		
 		return $record;
