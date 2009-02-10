@@ -84,18 +84,15 @@ class ComponentSet extends DataObjectSet {
 		}
 		
 		if(is_object($item)) {
-      		if(!is_a($item, $this->childClass)) {
-      			user_error("ComponentSet::add() Tried to add an '{$item->class}' object, but a '{$this->childClass}' object expected", E_USER_ERROR);
-      		}
+			if(!is_a($item, $this->childClass)) {
+				user_error("ComponentSet::add() Tried to add an '{$item->class}' object, but a '{$this->childClass}' object expected", E_USER_ERROR);
+			}
 		} else {
-			$id = $item;
-			
 			if(!$this->childClass) {
 				user_error("ComponentSet::add() \$this->childClass not set", E_USER_ERROR);
 			}
 			
-			$item = DataObject::get_by_id($this->childClass, $item);
-			
+			$item = DataObject::get_by_id($this->childClass, $item);			
 			if(!$item) return;
 		}
 
