@@ -250,28 +250,29 @@ class Date extends DBField {
 	}
 	
 	/**
-	 * Return the nearest date in the past, based on day and month. Automatically attaches the correct year.
-	 * Useful for determining a financial year start date.
+	 * Return the nearest date in the past, based on day and month.
+	 * Automatically attaches the correct year.
 	 * 
-	 * @param $fmonth int
-	 * @param $fday int
+	 * This is useful for determining a financial year start or end date.
+	 * 
+	 * @param $fmonth int The number of the month (e.g. 3 is March, 4 is April)
+	 * @param $fday int The day of the month
 	 * @param $fyear int Determine historical value
+	 * @return string Date in YYYY-MM-DD format
 	 */
 	static function past_date($fmonth, $fday = 1, $fyear = null) {
 		if(!$fyear) $fyear = date('Y');
-		$fday = (int)$fday;
-		$fmonth = (int)$fmonth;
-		$fyear = (int)$fyear;
+		$fday = (int) $fday;
+		$fmonth = (int) $fmonth;
+		$fyear = (int) $fyear;
 		
-		$pastDate = mktime(0,0,0, $fmonth,$fday,$fyear);
-		$curDate = mktime(0,0,0,date('m'), date('d'),$fyear);
+		$pastDate = mktime(0, 0, 0, $fmonth, $fday, $fyear);
+		$curDate = mktime(0, 0, 0, date('m'), date('d'), $fyear);
 
-		// if the pastdate is actually past, select it with the current year
-		// otherwise substract a year
 		if($pastDate < $curDate) {
-			return date("Y-m-d", mktime(0,0,0,$fmonth,$fday,$fyear));
+			return date('Y-m-d', mktime(0, 0, 0, $fmonth, $fday, $fyear));
 		} else {
-			return date("Y-m-d", mktime(0,0,0,$fmonth,$fday,$fyear-1));
+			return date('Y-m-d', mktime(0, 0, 0, $fmonth, $fday, $fyear - 1));
 		}
 	}
 	
