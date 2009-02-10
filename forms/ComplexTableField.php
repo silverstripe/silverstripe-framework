@@ -453,61 +453,87 @@ JS;
 	 * this method.
 	 */
 	function getCustomFieldsFor($childData) {
-		// If the fieldset is passed, use it
-		if(is_a($this->detailFormFields,"Fieldset")) {
+		if($this->detailFormFields instanceof Fieldset) {
 			return $this->detailFormFields;
-
-		// Else use the formfields returned from the object via a string method call.
 		} else {
-			if(!is_string($this->detailFormFields)) $this->detailFormFields = "getCMSFields";
-			$functioncall = $this->detailFormFields;
-			if(!$childData->hasMethod($functioncall)) $functioncall = "getCMSFields";
+			$fieldsMethod = $this->detailFormFields;
+
+			if(!is_string($fieldsMethod)) {
+				$this->detailFormFields = 'getCMSFields';
+				$fieldsMethod = 'getCMSFields';
+			}
 			
-			return $childData->$functioncall();
+			if(!$childData->hasMethod($fieldsMethod)) {
+				$fieldsMethod = 'getCMSFields';
+			}
+			
+			$fields = $childData->$fieldsMethod();
 		}
+
+		if(!$this->relationAutoSetting) {
+			return $fields;
+		}
+		
+		$parentClass = DataObject::get_by_id($this->getParentClass(), $this->sourceID());
+		$manyManyExtraFields = $parentClass->many_many_extraFields($this->name);
+		if($manyManyExtraFields) {
+			foreach($manyManyExtraFields as $fieldName => $fieldSpec) {
+				$dbField = new Varchar('ctf[extraFields][' . $fieldName . ']');
+				$fields->addFieldToTab('Root.Main', $dbField->scaffoldFormField($fieldName));
+			}
+		}
+		
+		return $fields;
 	}
 
 	function getFieldsFor($childData) {
+		// See if our parent class has any many_many relations by this source class
+		$SNG_parentClass = singleton($this->getParentClass());
+		$manyManyRelations = $SNG_parentClass->many_many();
+		$manyManyRelationName = null;
+		
+		if($manyManyRelations) foreach($manyManyRelations as $relation => $class) {
+			if($class == $this->sourceClass()) {
+				$manyManyRelationName = $relation;
+			}
+		}
+		
 		// Add the relation value to related records
 		if(!$childData->ID && $this->getParentClass()) {
 			// make sure the relation-link is existing, even if we just add the sourceClass and didn't save it
 			$parentIDName = $this->getParentIdName( $this->getParentClass(), $this->sourceClass() );
 			$childData->$parentIDName = $this->sourceID();
 		}
-		
+
 		$detailFields = $this->getCustomFieldsFor($childData);
 
 		// the ID field confuses the Controller-logic in finding the right view for ReferencedField
 		$detailFields->removeByName('ID');
-
+		
 		// only add childID if we're not adding a record		
 		if($childData->ID) {
-			$detailFields->push(new HiddenField("ctf[childID]","",$childData->ID));
+			$detailFields->push(new HiddenField('ctf[childID]', '', $childData->ID));
 		}
 
 		// add a namespaced ID instead thats "converted" by saveComplexTableField()
-		$detailFields->push(new HiddenField("ctf[ClassName]","",$this->sourceClass()));
+		$detailFields->push(new HiddenField('ctf[ClassName]', '', $this->sourceClass()));
 
 		if($this->getParentClass()) {
-			$parentIdName = $this->getParentIdName($this->getParentClass(), $this->sourceClass());
-			/*
-			if(!$parentIdName) {
-				user_error("ComplexTableField::DetailForm() Cannot automatically 
-					determine 'has-one'-relationship to parent class " . $this->ctf->getParentClass() .  ",
-					please use setParentClass() to set it manually", 
-				E_USER_WARNING);
-				return;
+			if($manyManyRelationName && $this->relationAutoSetting) {
+				$detailFields->push(new HiddenField('ctf[manyManyRelation]', '', $manyManyRelationName));
+				$detailFields->push(new HiddenField('ctf[parentClass]', '', $this->getParentClass()));
+				$detailFields->push(new HiddenField('ctf[sourceID]', '', $this->sourceID()));
 			}
-			*/
 			
+			$parentIdName = $this->getParentIdName($this->getParentClass(), $this->sourceClass());
 			if($parentIdName) {
 				// add relational fields
-				$detailFields->push(new HiddenField("ctf[parentClass]"," ",$this->getParentClass()));
-			
-				if( $this->relationAutoSetting ) {
+				$detailFields->push(new HiddenField('ctf[parentClass]', '', $this->getParentClass()));
+				
+				if($this->relationAutoSetting) {
 					// Hack for model admin: model admin will have included a dropdown for the relation itself
 					$detailFields->removeByName($parentIdName);
-					$detailFields->push(new HiddenField("$parentIdName"," ",$this->sourceID()));
+					$detailFields->push(new HiddenField($parentIdName, '', $this->sourceID()));
 				}
 			}
 		} 
@@ -579,17 +605,35 @@ JS;
 		$childData = new $className();
 		$form->saveInto($childData);
 		$childData->write();
+
+		// Save the many many relationship if it's available
+		if(isset($data['ctf']['manyManyRelation'])) {
+			$parentRecord = DataObject::get_by_id($data['ctf']['parentClass'], (int) $data['ctf']['sourceID']);
+			$relationName = $data['ctf']['manyManyRelation'];
+			$extraFields = array();
+			
+			if(isset($data['ctf']['extraFields'])) {
+				foreach($data['ctf']['extraFields'] as $field => $value) {
+					$extraFields[$field] = $value;
+				}
+			}
+			
+			$componentSet = $parentRecord->getManyManyComponents($relationName);
+			$componentSet->add($childData, $extraFields);
+		}
 		
 		$closeLink = sprintf(
 			'<small><a href="' . $_SERVER['HTTP_REFERER'] . '" onclick="javascript:window.top.GB_hide(); return false;">(%s)</a></small>',
 			_t('ComplexTableField.CLOSEPOPUP', 'Close Popup')
 		);
+		
 		$message = sprintf(
 			_t('ComplexTableField.SUCCESSADD', 'Added %s %s %s'),
 			$childData->singular_name(),
 			'<a href="' . $this->Link() . '/item/' . $childData->ID . '/edit">' . $childData->Title . '</a>',
 			$closeLink
 		);
+		
 		$form->sessionMessage($message, 'good');
 
 		Director::redirectBack();
