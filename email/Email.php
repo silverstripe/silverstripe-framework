@@ -746,6 +746,8 @@ class Email_BounceRecord extends DataObject {
 	
 	static $defaults = array();
 	
+	static $singular_name = 'Email Bounce Record';
+	
 	
 	/** 
 	* a record of Email_BounceRecord can't be created manually. Instead, it should be  
