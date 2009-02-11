@@ -488,9 +488,10 @@ JS;
 
 	function getFieldsFor($childData) {
 		// See if our parent class has any many_many relations by this source class
-		$SNG_parentClass = singleton($this->getParentClass());
-		$manyManyRelations = $SNG_parentClass->many_many();
+		$parentClass = DataObject::get_by_id($this->getParentClass(), $this->sourceID());
+		$manyManyRelations = $parentClass->many_many();
 		$manyManyRelationName = null;
+		$manyManyComponentSet = null;
 		
 		if($manyManyRelations) foreach($manyManyRelations as $relation => $class) {
 			if($class == $this->sourceClass()) {
@@ -506,6 +507,16 @@ JS;
 		}
 
 		$detailFields = $this->getCustomFieldsFor($childData);
+
+		// Loading of extra field values for editing an existing record
+		if($manyManyRelationName && $childData->ID) {
+			$manyManyComponentSet = $parentClass->getManyManyComponents($manyManyRelationName);
+			$extraData = $manyManyComponentSet->getExtraData($manyManyRelationName, $childData->ID);
+			if($extraData) foreach($extraData as $fieldName => $fieldValue) {
+				$field = $detailFields->dataFieldByName('ctf[extraFields][' . $fieldName . ']');
+				$field->setValue($fieldValue);
+			}
+		}
 
 		// the ID field confuses the Controller-logic in finding the right view for ReferencedField
 		$detailFields->removeByName('ID');
@@ -605,7 +616,7 @@ JS;
 		$childData = new $className();
 		$form->saveInto($childData);
 		$childData->write();
-
+		
 		// Save the many many relationship if it's available
 		if(isset($data['ctf']['manyManyRelation'])) {
 			$parentRecord = DataObject::get_by_id($data['ctf']['parentClass'], (int) $data['ctf']['sourceID']);
@@ -770,9 +781,24 @@ class ComplexTableField_ItemRequest extends RequestHandler {
 	 */
 	function saveComplexTableField($data, $form, $request) {
 		$dataObject = $this->dataObj();
-		
 		$form->saveInto($dataObject);
 		$dataObject->write();
+		
+		// Save the many many relationship if it's available
+		if(isset($data['ctf']['manyManyRelation'])) {
+			$parentRecord = DataObject::get_by_id($data['ctf']['parentClass'], (int) $data['ctf']['sourceID']);
+			$relationName = $data['ctf']['manyManyRelation'];
+			$extraFields = array();
+			
+			if(isset($data['ctf']['extraFields'])) {
+				foreach($data['ctf']['extraFields'] as $field => $value) {
+					$extraFields[$field] = $value;
+				}
+			}
+			
+			$componentSet = $parentRecord->getManyManyComponents($relationName);
+			$componentSet->add($dataObject, $extraFields);
+		}
 		
 		$closeLink = sprintf(
 			'<small><a href="' . $_SERVER['HTTP_REFERER'] . '" onclick="javascript:window.top.GB_hide(); return false;">(%s)</a></small>',
