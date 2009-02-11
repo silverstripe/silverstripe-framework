@@ -68,5 +68,16 @@ class DirectorTest extends SapphireTest {
 		}
 	}
 	
+	public function testIsAbsoluteUrl() {
+		$this->assertTrue(Director::is_absolute_url('http://test.com'));
+		$this->assertTrue(Director::is_absolute_url('https://test.com'));
+		$this->assertTrue(Director::is_absolute_url('   https://test.com/testpage   '));
+		$this->assertFalse(Director::is_absolute_url('test.com/testpage'));
+		$this->assertTrue(Director::is_absolute_url('ftp://test.com'));
+		$this->assertFalse(Director::is_absolute_url('/relative'));
+		$this->assertFalse(Director::is_absolute_url('relative'));
+		$this->assertFalse(Director::is_absolute_url('/relative/?url=http://test.com'));
+	}
+	
 }
 ?>
