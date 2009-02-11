@@ -14,6 +14,10 @@ form .field {
 	vertical-align: middle;
 }
 
+form .checkbox {
+	margin: 0 0 0 8.5em;
+}
+
 form .field.nolabel {
 	margin-left: 0;
 }
