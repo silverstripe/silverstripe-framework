@@ -462,6 +462,20 @@ class Director {
 	}
 	
 	/**
+	 * Checks if a given URL is absolute (e.g. starts with 'http://' etc.).
+	 * 
+	 * @param string $url
+	 * @return boolean
+	 */
+	public static function is_absolute_url($url) {
+		$url = trim($url);
+		// remove all query strings to avoid parse_url choking on URLs like 'test.com?url=http://test.com'
+		$url = preg_replace('/.*(\?.*)/', '', $url);
+		$parsed = parse_url($url);
+		return (isset($parsed['scheme']));
+	}
+	
+	/**
 	 * Given a filesystem reference relative to the site root, return the full file-system path.
 	 * 
 	 * @param string $file

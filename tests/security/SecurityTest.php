@@ -37,6 +37,40 @@ class SecurityTest extends FunctionalTest {
 		parent::tearDown();
 	}
 	
+	function testExternalBackUrlRedirectionDisallowed() {
+		$page = new SiteTree();
+		$page->URLSegment = 'testpage';
+		$page->Title = 'Testpage';
+		$page->write();
+		$page->publish('Stage','Live');
+		
+		// Test internal relative redirect
+		$response = $this->doTestLoginForm('noexpiry@silverstripe.com', '1nitialPassword', 'testpage');
+		$this->assertEquals(302, $response->getStatusCode());
+		$this->assertRegExp('/testpage/', $response->getHeader('Location'),
+			"Internal relative BackURLs work when passed through to login form"
+		);
+		// Log the user out
+		$this->session()->inst_set('loggedInAs', null);
+		
+		// Test internal absolute redirect
+		$response = $this->doTestLoginForm('noexpiry@silverstripe.com', '1nitialPassword', Director::absoluteBaseURL() . 'testpage');
+		// for some reason the redirect happens to a relative URL
+		$this->assertRegExp('/^' . preg_quote(Director::absoluteBaseURL(), '/') . 'testpage/', $response->getHeader('Location'),
+			"Internal absolute BackURLs work when passed through to login form"
+		);
+		// Log the user out
+		$this->session()->inst_set('loggedInAs', null);
+		
+		// Test external redirect
+		$response = $this->doTestLoginForm('noexpiry@silverstripe.com', '1nitialPassword', 'http://myspoofedhost.com');
+		$this->assertNotRegExp('/^' . preg_quote('http://myspoofedhost.com', '/') . '/', $response->getHeader('Location'),
+			"Redirection to external links in login form BackURL gets prevented as a measure against spoofing attacks"
+		);
+		// Log the user out
+		$this->session()->inst_set('loggedInAs', null);
+	}
+	
 	/**
 	 * Test that the login form redirects to the change password form after logging in with an expired password
 	 */
@@ -183,8 +217,8 @@ class SecurityTest extends FunctionalTest {
 	 * Execute a log-in form using Director::test().
 	 * Helper method for the tests above
 	 */
-	function doTestLoginForm($email, $password) {
-		$this->session()->inst_set('BackURL', 'test/link');
+	function doTestLoginForm($email, $password, $backURL = 'test/link') {
+		$this->session()->inst_set('BackURL', $backURL);
 		$this->get('Security/login');
 		
 		return $this->submitForm(
