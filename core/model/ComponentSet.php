@@ -73,6 +73,10 @@ class ComponentSet extends DataObjectSet {
 		$parentField = $this->ownerClass . 'ID';
 		$childField = ($this->childClass == $this->ownerClass) ? 'ChildID' : ($this->childClass . 'ID');
 		$result = array();
+		
+		if(!is_numeric($childID)) {
+			user_error('ComponentSet::getExtraData() passed a non-numeric child ID', E_USER_ERROR);
+		}
 
 		if(!$componentName) return false;
 
