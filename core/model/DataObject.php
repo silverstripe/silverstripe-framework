@@ -105,6 +105,29 @@ class DataObject extends ViewableData implements DataObjectInterface,i18nEntityP
 	 * @todo Define the options that can be set here
 	 */
 	static $api_access = false;
+	
+	/**
+	 * Should dataobjects be validated before they are written?
+	 */
+	private static $validation_enabled = true;
+	
+	/**
+	 * Returns when validation on DataObjects is enabled.
+	 * @return bool
+	 */
+	static function get_validation_enabled() {
+		return self::$validation_enabled;
+	}
+	
+	/**
+	 * Set whether DataObjects should be validated before they are written.
+	 * @param $enable bool
+	 * @see DataObject::validate()
+	 */
+	static function set_validation_enabled($enable) {
+		self::$validation_enabled = (bool) $enable;
+	}
+	
 
 	/**
 	 * Construct a new DataObject.
@@ -683,10 +706,12 @@ class DataObject extends ViewableData implements DataObjectInterface,i18nEntityP
 		$this->brokenOnWrite = true;
 		$isNewRecord = false;
 		
-		$valid = $this->validate();
-		if(!$valid->valid()) {
-			throw new ValidationException($valid, "Validation error writing a $this->class object: " . $valid->message() . ".  Object not written.", E_USER_WARNING);
-			return false;
+		if(self::get_validation_enabled()) {
+			$valid = $this->validate();
+			if(!$valid->valid()) {
+				throw new ValidationException($valid, "Validation error writing a $this->class object: " . $valid->message() . ".  Object not written.", E_USER_WARNING);
+				return false;
+			}
 		}
 		
 		$this->onBeforeWrite();
