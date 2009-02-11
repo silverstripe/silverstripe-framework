@@ -128,9 +128,9 @@ abstract class BulkLoader extends ViewableData {
 	 *  
 	 * @return BulkLoader_Result See {@link self::processAll()}
 	 */
-	public function load($filepath) {
+	public function load($filepath, $memory_limit='512M') {
 		ini_set('max_execution_time', 3600);
-		ini_set('memory_limit', '512M');
+		ini_set('memory_limit', $memory_limit);
 		return $this->processAll($filepath);
 	}
 	
