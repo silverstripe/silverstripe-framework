@@ -173,7 +173,7 @@
             processOnDemandHeaders(xml, _ondemandComplete);
         }
 
-        _originalAjax(s);
+        return _originalAjax(s);
     }
 
 })(jQuery);
