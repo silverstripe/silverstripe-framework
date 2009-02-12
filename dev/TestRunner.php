@@ -133,6 +133,9 @@ class TestRunner extends Controller {
 	}
 
 	function runTests($classList, $coverage = false) {
+		// XDEBUG seem to cause problems with test execution :-(
+		if(function_exists('xdebug_disable')) xdebug_disable();
+		
 		ini_set('max_execution_time', 0);		
 		
 		$this->setUp();
