@@ -8,6 +8,20 @@
  */
 class Requirements {
 	/**
+	 * Enable combining of css/javascript files.
+	 *
+	 * @var boolean
+	 */
+	private static $combined_files_enabled = true;
+	public static function set_combined_files_enabled($enable) {
+		self::$combined_files_enabled = (bool) $enable;
+	}
+	
+	public static function get_combined_files_enabled() {
+		return self::$combined_files_enabled;
+	}
+
+	/**
 	 * Instance of requirements for storage
 	 *
 	 * @var Requirements
@@ -779,7 +793,7 @@ class Requirements_Backend {
 	 */
 	function process_combined_files() {
 	
-		if(Director::isDev() && !SapphireTest::is_running_test()) {
+		if(Director::isDev() && !SapphireTest::is_running_test() && Requirements::get_combined_files_enabled()) {
 			return;
 		}
 		
