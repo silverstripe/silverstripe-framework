@@ -5,7 +5,7 @@
  */
 class DataObjectTest extends SapphireTest {
 	static $fixture_file = 'sapphire/tests/DataObjectTest.yml';
-	
+
 	/**
 	 * Test deletion of DataObjects
 	 *   - Deleting using delete() on the DataObject
@@ -479,29 +479,20 @@ class DataObjectTest extends SapphireTest {
 		$reloadedTeam1 = $this->objFromFixture('DataObjectTest_Team', 'team1');
 		$this->assertEquals('New and improved team 1', $reloadedTeam1->Title);
 	}
-	
-	public function testDataObjectValidation() {
+
+	public function testWritingInvalidDataObjectThrowsException() {
 		$validatedObject = new DataObjectTest_ValidatedObject();
-		
-		try {
-			$validatedObject->write();
-			
-			// If write doesn't throw an exception, this line is executed and the test fails.
-			$this->assertTrue(false, "Validated object did not throw a ValidationException when saving with DataObject::write");
-		
-		} catch (ValidationException $validationException) {
-			// ValidationException wraps a ValidationResult. This result should be invalid
-			$this->assertFalse($validationException->getResult()->valid(), "ValidationException thrown by DataObject::write contains a valid ValidationResult. The result should be invalid.");	
-		}
-		
+
+		$this->setExpectedException('ValidationException');
+		$validatedObject->write();
+	}
+	
+	public function testWritingValidDataObjectDoesntThrowException() {
+		$validatedObject = new DataObjectTest_ValidatedObject();
 		$validatedObject->Name = "Mr. Jones";
 		
-		try {
-			$validatedObject->write();
-			$this->assertTrue($validatedObject->isInDB(), "Validated object was not saved to database");
-		} catch (Exception $exception) {
-			$this->assertTrue(false, "Validated object threw an unexpected exception of type " . get_class($exception) . " from DataObject::write: " . $exception->getMessage());
-		}
+		$validatedObject->write();
+		$this->assertTrue($validatedObject->isInDB(), "Validated object was not saved to database");
 	}
 	
 	public function testSubclassCreation() {
