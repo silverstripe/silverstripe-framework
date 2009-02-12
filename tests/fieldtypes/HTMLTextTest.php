@@ -6,7 +6,7 @@
 class HTMLTextTest extends SapphireTest {
 	
 	/**
-	 * Test {@link Text->LimitCharacters()}
+	 * Test {@link HTMLText->LimitCharacters()}
 	 */
 	function testLimitCharacters() {
 		$cases = array(
