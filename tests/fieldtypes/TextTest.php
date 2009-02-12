@@ -12,6 +12,7 @@ class TextTest extends SapphireTest {
 		$cases = array(
 			/* Standard words limited, ellipsis added if truncated */
 			'The little brown fox jumped over the lazy cow.' => 'The little brown...',
+			' This text has white space around the ends ' => 'This text has...',
 		
 			/* Words less than the limt word count don't get truncated, ellipsis not added */
 			'Two words' => 'Two words',	// Two words shouldn't have an ellipsis
@@ -20,7 +21,8 @@ class TextTest extends SapphireTest {
 			
 			/* HTML tags get stripped out, leaving the raw text */
 			'<p>Text inside a paragraph tag should also work</p>' => 'Text inside a...',
-			'<p><span>Text nested inside another tag should also work</span></p>' => 'Text nested inside...'
+			'<p><span>Text nested inside another tag should also work</span></p>' => 'Text nested inside...',
+			'<p>Two words</p>' => 'Two words'
 		);
 		
 		foreach($cases as $originalValue => $expectedValue) {
@@ -33,9 +35,12 @@ class TextTest extends SapphireTest {
 	/**
 	 * Test {@link Text->LimitWordCountXML()}
 	 */
-	/*function testLimitWordCountXML() {
+	function testLimitWordCountXML() {
 		$cases = array(
-			// @todo add cases to test by
+			'<p>Stuff & stuff</p>' => 'Stuff &amp;...',
+			"Stuff\nBlah Blah Blah" => "Stuff<br />Blah Blah...",
+			"Stuff<Blah Blah" => "Stuff&lt;Blah Blah",
+			"Stuff>Blah Blah" => "Stuff&gt;Blah Blah"
 		);
 		
 		foreach($cases as $originalValue => $expectedValue) {
@@ -43,7 +48,7 @@ class TextTest extends SapphireTest {
 			$textObj->setValue($originalValue);
 			$this->assertEquals($expectedValue, $textObj->LimitWordCountXML(3));
 		}
-	}*/
+	}
 	
 }
 ?>
