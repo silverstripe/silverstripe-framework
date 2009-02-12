@@ -8,15 +8,19 @@ class DateTest extends SapphireTest {
 	function testNiceDate() {
 		/* Test the DD/MM/YYYY formatting of Date::Nice() */
 		$cases = array(
-			'4/3/03' => '04/03/2003',
-			'04/03/03' => '04/03/2003',
-			'4/3/03' => '04/03/2003',
-			'4/03/03' => '04/03/2003',
-			'4/3/2003' => '04/03/2003',
-			'4-3-2003' => '04/03/2003',
-			'2003-03-04' => '04/03/2003',
-			'04/03/2003' => '04/03/2003',
-			'04-03-2003' => '04/03/2003'
+			1206961200 => '01/04/2008',	// timestamp integers work as well!
+			1206874800 => '31/03/2008',
+			'1206961200' => '01/04/2008',	// a timestamp as a string, not an integer
+			'1206874800' => '31/03/2008',
+			'4/3/03' => '04/03/2003',		// D/M/YY format
+			'04/03/03' => '04/03/2003',	// DD/MM/YY format
+			'4/3/03' => '04/03/2003',		// D/M/YY format
+			'4/03/03' => '04/03/2003',		// D/MM/YY format
+			'4/3/2003' => '04/03/2003',	// D/M/YYYY format
+			'4-3-2003' => '04/03/2003',	// D-M-YYYY format
+			'2003-03-04' => '04/03/2003',	// YYYY-MM-DD format
+			'04/03/2003' => '04/03/2003',	// DD/MM/YYYY format
+			'04-03-2003' => '04/03/2003'	// DD-MM-YYYY format
 		);
 		
 		foreach($cases as $original => $expected) {
@@ -29,6 +33,10 @@ class DateTest extends SapphireTest {
 	function testLongDate() {
 		/* "24 May 2006" style formatting of Date::Long() */
 		$cases = array(
+			1206961200 => '1 April 2008',
+			'1206961200' => '1 April 2008',
+			1206874800 => '31 March 2008',
+			'1206874800' => '31 March 2008',
 			'2003-4-3' => '3 April 2003',
 			'3/4/2003' => '3 April 2003',
 		);

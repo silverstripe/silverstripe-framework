@@ -7,17 +7,21 @@
 class Date extends DBField {
 	
 	function setValue($value) {
-		if( is_array( $value ) && $value['Day'] && $value['Month'] && $value['Year'] ) {
+		if(is_array($value) && $value['Day'] && $value['Month'] && $value['Year']) {
 			$this->value = $value['Year'] . '-' . $value['Month'] . '-' . $value['Day'];
 			return;
 		}
- 		
+		
 		// Default to NZ date format - strtotime expects a US date
-		if(ereg('^([0-9]+)/([0-9]+)/([0-9]+)$', $value, $parts)) 
-			$value = "$parts[2]/$parts[1]/$parts[3]";
-
-		if($value && is_string($value)) $this->value = date('Y-m-d', strtotime($value));
-		else $value = null;
+		if(ereg('^([0-9]+)/([0-9]+)/([0-9]+)$', $value, $parts)) {
+			$value = "$parts[2]/$parts[1]/$parts[3]";			
+		}
+		
+		if(is_numeric($value)) {
+			$this->value = date('Y-m-d', $value);
+		} elseif(is_string($value)) {
+			$this->value = date('Y-m-d', strtotime($value));
+		}
 	}
 
 	/**
