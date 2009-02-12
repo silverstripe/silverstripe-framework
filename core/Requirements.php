@@ -793,7 +793,7 @@ class Requirements_Backend {
 	 */
 	function process_combined_files() {
 	
-		if(Director::isDev() && !SapphireTest::is_running_test() && Requirements::get_combined_files_enabled()) {
+		if((Director::isDev() && !SapphireTest::is_running_test()) || !Requirements::get_combined_files_enabled()) {
 			return;
 		}
 		
