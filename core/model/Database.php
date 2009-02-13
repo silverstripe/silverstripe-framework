@@ -236,8 +236,9 @@ abstract class Database extends Object {
 			$this->checkAndRepairTable($table);
 		}
 
-		$this->requireField($table, "ID", "int(11) not null auto_increment");
-
+		//DB ABSTRACTION: we need to convert this to a db-specific version:
+		$this->requireField($table, 'ID', DB::getConn()->IdColumn());
+		
 		// Create custom fields
 		if($fieldSchema) {
 			foreach($fieldSchema as $fieldName => $fieldSpec) {

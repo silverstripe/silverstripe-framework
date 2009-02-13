@@ -574,6 +574,16 @@ class MySQLDatabase extends Database {
 	}
 	
 	/**
+	 * This returns the column which is the primary key for each table
+	 * In Postgres, it is a SERIAL8, which is the equivalent of an auto_increment
+	 *
+	 * @return string
+	 */
+	function IdColumn(){
+		return 'int(11) not null auto_increment';
+	}
+	
+	/**
 	 * Returns true if the given table is exists in the current database 
 	 * NOTE: Experimental; introduced for db-abstraction and may changed before 2.4 is released.
 	 */
