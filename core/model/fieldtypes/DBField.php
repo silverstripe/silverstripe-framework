@@ -72,6 +72,14 @@ abstract class DBField extends ViewableData {
 	}
 	
 	/**
+	 * Returns the value of this field.
+	 * @return mixed
+	 */
+	function getValue() {
+		return $this->value;
+	}
+	
+	/**
 	 * Set the value on the field.
 	 * Optionally takes the whole record as an argument,
 	 * to pick other values.
