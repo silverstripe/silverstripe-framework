@@ -323,7 +323,7 @@ class Hierarchy extends DataObjectDecorator {
 	 * @var array $idList Array to put results in.
 	 */
 	public function loadDescendantIDListInto(&$idList) {
-		if($children = $this->_cache_allChildren()) {
+		if($children = $this->_cache_allChildren) {
 			foreach($children as $child) {
 				if(in_array($child->ID, $idList)) {
 					continue;
@@ -564,7 +564,7 @@ class Hierarchy extends DataObjectDecorator {
 		// child as the root of the search. This will stop the recursive call from searching backwards.
 		// If afterNode is given, then only search for the nodes after 
 		if(!$afterNode || $afterNode->ParentID != $this->owner->ID) {
-			$children = $this->_cache_allChildren();
+			$children = $this->_cache_allChildren;
 		} else {
 			$children = DataObject::get(ClassInfo::baseDataClass($this->owner->class), "\"$baseClass\".\"ParentID\"={$this->owner->ID}" . ( ( $afterNode ) ? " AND \"Sort\" > " . sprintf( '%d', $afterNode->Sort ) : "" ), '"Sort" ASC');
 		}
