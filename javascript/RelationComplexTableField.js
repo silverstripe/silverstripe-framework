@@ -1,7 +1,4 @@
-var checkedListNameArray = null;
-var checkedListEndName = 'CheckedList';
-var checkedListField = 'selected';
-var checkedArray = null;
+
 
 Event.observe( window, 'load', function() {
 	if($('sitetree')){
@@ -15,9 +12,12 @@ Event.observe( window, 'load', function() {
 } );
 
 RelationComplexTableField = Class.create();
-RelationComplexTableField.prototype = {
-	
+RelationComplexTableField.prototype = {	
 	initialize: function() {
+		var checkedListNameArray = null;
+		var checkedListEndName = 'CheckedList';
+		var checkedListField = 'selected';
+		var checkedArray = null;
 		
 		// 1) Find The Hidden Field Where The IDs Will Be Stored
 		
