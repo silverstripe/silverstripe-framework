@@ -383,11 +383,9 @@ class Requirements_Backend {
 	 * @param uniquenessID Use this to ensure that pieces of code only get added once.
 	 */
 	public function customScript($script, $uniquenessID = null) {
-		if($uniquenessID)
-			$this->customScript[$uniquenessID] = $script;
-		else {
-			$this->customScript[] = $script;		
-		}
+		if($uniquenessID) $this->customScript[$uniquenessID] = $script;
+		else $this->customScript[] = $script;
+		
 		$script .= "\n";
 	}
 	
@@ -398,11 +396,8 @@ class Requirements_Backend {
 	 * @param int $uniquenessID Group CSS by a unique ID as to avoid duplicate custom CSS in header
 	 */
 	function customCSS($script, $uniquenessID = null) {
-		if($uniquenessID)
-			$this->customCSS[$uniquenessID] = $script;
-		else {
-			$this->customCSS[] = $script;		
-		}
+		if($uniquenessID) $this->customCSS[$uniquenessID] = $script;
+		else $this->customCSS[] = $script;
 	}
 	
 	/**
@@ -412,12 +407,8 @@ class Requirements_Backend {
 	 * @param string $uniquenessID
 	 */
 	function insertHeadTags($html, $uniquenessID = null) {
-		if($uniquenessID)
-			$this->customHeadTags[$uniquenessID] = $html;
-		else {
-			$this->customHeadTags[] = $html;		
-		}
-		
+		if($uniquenessID) $this->customHeadTags[$uniquenessID] = $html;
+		else $this->customHeadTags[] = $html;
 	}
 	
 	/**
