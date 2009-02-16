@@ -468,8 +468,15 @@ class MySQLDatabase extends Database {
 		//For reference, this is what typically gets passed to this function:
 		//$parts=Array('datatype'=>'decimal', 'precision'=>"$this->wholeSize,$this->decimalSize");
 		//DB::requireField($this->tableName, $this->name, "decimal($this->wholeSize,$this->decimalSize)");
+		
+		// Avoid empty strings being put in the db
+		if($values['precision'] == '') {
+			$precision = 1;
+		} else {
+			$precision = $values['precision'];
+		}
 
-		return 'decimal(' . (int)$values['precision'] . ') not null';
+		return 'decimal(' . $precision . ') not null';
 	}
 	
 	/**
