@@ -427,10 +427,14 @@ class Requirements_Backend {
 	 */
 	function javascriptTemplate($file, $vars, $uniquenessID = null) {
 		$script = file_get_contents(Director::getAbsFile($file));
-		foreach($vars as $k => $v) {
+		$search = array();
+		$replace = array();
+
+		if($vars) foreach($vars as $k => $v) {
 			$search[] = '$' . $k;
 			$replace[] = str_replace("\\'","'", Convert::raw2js($v));
 		}
+		
 		$script = str_replace($search, $replace, $script);
 		$this->customScript($script, $uniquenessID);
 	}
