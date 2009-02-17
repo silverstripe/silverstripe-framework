@@ -13,7 +13,9 @@
 class Year extends DBField {
 	
 	function requireField() {
-		DB::requireField($this->tableName, $this->name, "year(4)");
+		$parts=Array('datatype'=>'year', 'precision'=>4);
+		$values=Array('type'=>'year', 'parts'=>$parts);
+		DB::requireField($this->tableName, $this->name, $values);
 	}
 	
 	public function scaffoldFormField($title = null, $params = null) {

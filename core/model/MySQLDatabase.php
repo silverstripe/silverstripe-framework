@@ -468,7 +468,7 @@ class MySQLDatabase extends Database {
 		//For reference, this is what typically gets passed to this function:
 		//$parts=Array('datatype'=>'decimal', 'precision'=>"$this->wholeSize,$this->decimalSize");
 		//DB::requireField($this->tableName, $this->name, "decimal($this->wholeSize,$this->decimalSize)");
-		
+
 		// Avoid empty strings being put in the db
 		if($values['precision'] == '') {
 			$precision = 1;
@@ -580,6 +580,12 @@ class MySQLDatabase extends Database {
 		return 'varchar(' . $values['precision'] . ') character set utf8 collate utf8_general_ci';
 	}
 	
+	/*
+	 * Return the MySQL-proprietary 'Year' datatype
+	 */
+	public function year($values){
+		return 'year(4)';
+	}
 	/**
 	 * This returns the column which is the primary key for each table
 	 * In Postgres, it is a SERIAL8, which is the equivalent of an auto_increment
