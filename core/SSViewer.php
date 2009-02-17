@@ -369,7 +369,7 @@ class SSViewer extends Object {
 	static function parseTemplateContent($content, $template="") {			
 		// Add template filename comments on dev sites
 
-		if(Director::isDev() && self::$source_file_comments && $template) {
+		if(Director::isDev() && self::$source_file_comments && $template && stripos($content, "<?xml") === false) {
 			// If this template is a full HTML page, then put the comments just inside the HTML tag to prevent any IE glitches
 			if(stripos($content, "<html") !== false) {
 				$content = preg_replace('/(<html[^>]*>)/i', "\\1<!-- template $template -->", $content);
