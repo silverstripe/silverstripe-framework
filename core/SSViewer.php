@@ -368,17 +368,14 @@ class SSViewer extends Object {
 
 	static function parseTemplateContent($content, $template="") {			
 		// Add template filename comments on dev sites
-		
-		// If the template is a xml template, then wrapping nothing.
-		if(stripos($content, "<?xml")===false){
-			if(Director::isDev() && self::$source_file_comments && $template) {
-				// If this template is a full HTML page, then put the comments just inside the HTML tag to prevent any IE glitches
-				if(stripos($content, "<html") !== false) {
-					$content = preg_replace('/(<html[^>]*>)/i', "\\1<!-- template $template -->", $content);
-					$content = preg_replace('/(<\/html[^>]*>)/i', "\\1<!-- end template $template -->", $content);
-				} else {
-					$content = "<!-- template $template -->\n" . $content . "\n<!-- end template $template -->";
-				}
+
+		if(Director::isDev() && self::$source_file_comments && $template) {
+			// If this template is a full HTML page, then put the comments just inside the HTML tag to prevent any IE glitches
+			if(stripos($content, "<html") !== false) {
+				$content = preg_replace('/(<html[^>]*>)/i', "\\1<!-- template $template -->", $content);
+				$content = preg_replace('/(<\/html[^>]*>)/i', "\\1<!-- end template $template -->", $content);
+			} else {
+				$content = "<!-- template $template -->\n" . $content . "\n<!-- end template $template -->";
 			}
 		}
 		
