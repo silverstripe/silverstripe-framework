@@ -333,6 +333,7 @@ abstract class Database extends Object {
 			//Convert the $spec array into a database-specific string
 			$spec=DB::getConn()->$spec['type']($spec['parts'], true);
 		}
+		
 		// Collations didn't come in until MySQL 4.1.  Anything earlier will throw a syntax error if you try and use
 		// collations.
 		if(!$this->supportsCollations()) {
@@ -354,6 +355,10 @@ abstract class Database extends Object {
 
 		if(is_array($spec_orig))
 			$spec_orig=DB::getConn()->$spec_orig['type']($spec_orig['parts']);
+		
+		if($spec_orig==DB::getConn()->IdColumn()){
+			$specValue=DB::getConn()->IdColumn(true);
+		}
 		
 		if($newTable || $fieldValue=='') {
 			Profiler::mark('createField');
