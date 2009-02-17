@@ -295,6 +295,7 @@ abstract class Database extends Object {
 		if(!$newTable &&  !isset($this->indexList[$table])) {
 			$this->indexList[$table] = $this->indexList($table);
 		}
+		
 		if($newTable || !isset($this->indexList[$table][$index])) {
 			$this->transCreateIndex($table, $index, $spec);
 			Database::alteration_message("Index $table.$index: created as $spec","created");
@@ -315,18 +316,23 @@ abstract class Database extends Object {
 	 * 	need to take care of database abstraction in your DBField subclass.  
 	 */
 	function requireField($table, $field, $spec) {
+		//TODO: this is starting to get extremely fragmented.
+		//There are two different versions of $spec floating around, and their content changes depending
+		//on how they are structured.  This needs to be tidied up.
+		
 		$newTable = false;
 
 		Profiler::mark('requireField');
 		
 		// backwards compatibility patch for pre 2.4 requireField() calls
+		$spec_orig=$spec;
 		if(!is_string($spec)) {
 			// TODO: This is tempororary
 			$spec['parts']['name'] = $field;
+			$spec_orig['parts']['name'] = $field;
 			//Convert the $spec array into a database-specific string
-			$spec=DB::getConn()->$spec['type']($spec['parts']);
+			$spec=DB::getConn()->$spec['type']($spec['parts'], true);
 		}
-				
 		// Collations didn't come in until MySQL 4.1.  Anything earlier will throw a syntax error if you try and use
 		// collations.
 		if(!$this->supportsCollations()) {
@@ -338,20 +344,33 @@ abstract class Database extends Object {
 			$this->fieldList[$table] = $this->fieldList($table);
 		}
 		
-		if($newTable || !isset($this->fieldList[$table][$field])) {
+		if(is_array($spec))
+			$specValue=$spec['data_type'];
+		else $specValue=$spec;
+		 
+		if(is_array($this->fieldList[$table][$field]))
+			$fieldValue=$this->fieldList[$table][$field]['data_type'];
+		else $fieldValue=$this->fieldList[$table][$field];
+
+		if(is_array($spec_orig))
+			$spec_orig=DB::getConn()->$spec_orig['type']($spec_orig['parts']);
+		
+		if($newTable || $fieldValue=='') {
 			Profiler::mark('createField');
-			$this->transCreateField($table, $field, $spec);
+			
+			$this->transCreateField($table, $field, $spec_orig);
 			Profiler::unmark('createField');
-			Database::alteration_message("Field $table.$field: created as $spec","created");
-		} else if($this->fieldList[$table][$field] != DB::getConn()->convertIndexSpec($spec)) {
+			Database::alteration_message("Field $table.$field: created as $spec_orig","created");
+		} else if($fieldValue != $specValue) {
 			// If enums are being modified, then we need to fix existing data in the table.
 			// Update any records where the enum is set to a legacy value to be set to the default.
 			// One hard-coded exception is SiteTree - the default for this is Page.
-			if(substr($spec, 0, 4) == "enum") {
-				$newStr = preg_replace("/(^enum\s*\(')|('$\).*)/i","",$spec);
+			
+			if(substr($specValue, 0, 4) == "enum") {
+				$newStr = preg_replace("/(^enum\s*\(')|('$\).*)/i","",$spec_orig);
 				$new = preg_split("/'\s*,\s*'/", $newStr);
 				
-				$oldStr = preg_replace("/(^enum\s*\(')|('$\).*)/i","",$this->fieldList[$table][$field]);
+				$oldStr = preg_replace("/(^enum\s*\(')|('$\).*)/i","", $fieldValue);
 				$old = preg_split("/'\s*,\s*'/", $newStr);
 
 				$holder = array();
@@ -361,7 +380,7 @@ abstract class Database extends Object {
 					}
 				}
 				if(count($holder)) {
-					$default = explode('default ', $spec);
+					$default = explode('default ', $spec_orig);
 					$default = $default[1];
 					if($default == "'SiteTree'") $default = "'Page'";
 					$query = "UPDATE \"$table\" SET $field=$default WHERE $field IN (";
@@ -375,10 +394,9 @@ abstract class Database extends Object {
 				}
 			}
 			Profiler::mark('alterField');
-			$this->transAlterField($table, $field, $spec);
+			$this->transAlterField($table, $field, $spec_orig);
 			Profiler::unmark('alterField');
-			$spec_msg=DB::getConn()->convertIndexSpec($spec);
-			Database::alteration_message("Field $table.$field: changed to $spec_msg <i style=\"color: #AAA\">(from {$this->fieldList[$table][$field]})</i>","changed");
+			Database::alteration_message("Field $table.$field: changed to $spec_orig <i style=\"color: #AAA\">(from {$fieldValue})</i>","changed");
 		}
 		Profiler::unmark('requireField');
 	}
