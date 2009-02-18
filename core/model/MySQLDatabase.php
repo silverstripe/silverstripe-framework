@@ -269,6 +269,8 @@ class MySQLDatabase extends Database {
 		}
 	}
 	
+	private static $_cache_collation_info = array();
+	
 	public function fieldList($table) {
 		$fields = DB::query("SHOW FULL FIELDS IN `$table`");
 		foreach($fields as $field) {
@@ -278,7 +280,11 @@ class MySQLDatabase extends Database {
 			}
 			
 			if($field['Collation'] && $field['Collation'] != 'NULL') {
-				$collInfo = DB::query("SHOW COLLATION LIKE '$field[Collation]'")->record();
+				// Cache collation info to cut down on database traffic
+				if(!isset(self::$_cache_collation_info[$field['Collation']])) {
+					self::$_cache_collation_info[$field['Collation']] = DB::query("SHOW COLLATION LIKE '$field[Collation]'")->record();
+				}
+				$collInfo = self::$_cache_collation_info[$field['Collation']];
 				$fieldSpec .= " character set $collInfo[Charset] collate $field[Collation]";
 			}
 			

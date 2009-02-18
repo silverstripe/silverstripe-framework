@@ -25,12 +25,23 @@ class ClassInfo {
 	}
 
 	/**
+	 * Cache for {@link hasTable()}
+	 */
+	private static $_cache_all_tables = null;
+	
+	/**
 	 * @todo Move this to Database or DB
 	 */
 	static function hasTable($class) {
 		if(DB::isActive()) {
-			$SQL_table = Convert::raw2sql($class);
-			return (bool)(DB::query("SHOW TABLES LIKE '$SQL_table'")->value());
+			// Cache the list of all table names to reduce on DB traffic
+			if(self::$_cache_all_tables === null) {
+				self::$_cache_all_tables = array();
+				$tables = DB::query("SHOW TABLES")->column();
+				foreach($tables as $table) self::$_cache_all_tables[strtolower($table)] = true;
+			}
+			return isset(self::$_cache_all_tables[strtolower($class)]);
+
 		} else {
 			return false;
 		}
