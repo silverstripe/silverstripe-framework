@@ -54,9 +54,15 @@ class SapphireSoapServer extends Controller {
 	}
 	
   function index() {
-    $s = new SoapServer($this->getWSDLURL());
-    $s->setClass($this->class);
-    $s->handle();
+	$wsdl = $this->getViewer('wsdl')->process($this);
+	$wsdlFile = TEMP_FOLDER . '/sapphire-wsdl-' . $this->class;
+	$fh = fopen($wsdlFile, 'w');
+	fwrite($fh, $wsdl);
+	fclose($fh);
+
+	$s = new SoapServer($wsdlFile);
+	$s->setClass($this->class);
+	$s->handle();
   }
 }
 
