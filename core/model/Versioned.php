@@ -194,7 +194,6 @@ class Versioned extends DataObjectDecorator {
 					// Version fields on each root table (including Stage)
 					if(isset($rootTable)) {
 						$stageTable = ($stage == $this->defaultStage) ? $table : "{$table}_$stage";
-						//DB::requireField($stageTable, "Version", "int(11) not null default '0'");
 						$parts=Array('datatype'=>'int', 'precision'=>11, 'null'=>'not null', 'default'=>(int)0);
 						$values=Array('type'=>'int', 'parts'=>$parts);
 						DB::requireField($stageTable, 'Version', $values);
@@ -605,7 +604,7 @@ class Versioned extends DataObjectDecorator {
 		}
 		
 		// get version as performance-optimized SQL query (gets called for each page in the sitetree)
-		$version = DB::query("SELECT Version FROM `$stageTable` WHERE ID = $id")->value();
+		$version = DB::query("SELECT \"Version\" FROM \"$stageTable\" WHERE \"ID\" = $id")->value();
 		
 		// cache value (if required)
 		if($cache) {
@@ -626,13 +625,13 @@ class Versioned extends DataObjectDecorator {
 		if($idList) {
 			// Validate the ID list
 			foreach($idList as $id) if(!is_numeric($id)) user_error("Bad ID passed to Versioned::prepopulate_versionnumber_cache() in \$idList: " . $id, E_USER_ERROR);
-			$filter = "WHERE ID IN(" .implode(", ", $idList) . ")";
+			$filter = "WHERE \"ID\" IN(" .implode(", ", $idList) . ")";
 		}
 		
 		$baseClass = ClassInfo::baseDataClass($class);
 		$stageTable = ($stage == 'Stage') ? $baseClass : "{$baseClass}_{$stage}";
 
-		$versions = DB::query("SELECT ID, Version FROM `$stageTable` $filter")->map();
+		$versions = DB::query("SELECT \"ID\", \"Version\" FROM \"$stageTable\" $filter")->map();
 		foreach($versions as $id => $version) {
 			self::$cache_versionnumber[$baseClass][$stage][$id] = $version;
 		}
