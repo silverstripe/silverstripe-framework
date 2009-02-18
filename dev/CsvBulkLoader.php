@@ -140,6 +140,8 @@ class CsvBulkLoader extends BulkLoader {
 	 * @return unknown
 	 */
 	public function findExistingObject($record) {
+		$SNG_objectClass = singleton($this->objectClass);
+		
 		// checking for existing records (only if not already found)
 		foreach($this->duplicateChecks as $fieldName => $duplicateCheck) {
 			if(is_string($duplicateCheck)) {
@@ -152,10 +154,17 @@ class CsvBulkLoader extends BulkLoader {
 				$existingRecord = DataObject::get_one($this->objectClass, "\"$SQL_fieldName\" = '{$SQL_fieldValue}'");
 				if($existingRecord) return $existingRecord;
 			} elseif(is_array($duplicateCheck) && isset($duplicateCheck['callback'])) {
-				$existingRecord = singleton($this->objectClass)->{$duplicateCheck['callback']}($record[$fieldName], $record);
+				if($this->hasMethod($duplicateCheck['callback'])) {
+					$existingRecord = $this->{$duplicateCheck['callback']}($record[$fieldName], $record);
+				} elseif($SNG_objectClass->hasMethod($duplicateCheck['callback'])) {
+					$existingRecord = $SNG_objectClass->{$duplicateCheck['callback']}($record[$fieldName], $record);
+				} else {
+					user_error("CsvBulkLoader::processRecord(): {$duplicateCheck['callback']} not found on importer or object class.", E_USER_ERROR);
+				}
+				
 				if($existingRecord) return $existingRecord;
 			} else {
-				user_error('CsvBulkLoader:processRecord: Wrong format for $duplicateChecks', E_USER_ERROR);
+				user_error('CsvBulkLoader::processRecord(): Wrong format for $duplicateChecks', E_USER_ERROR);
 			}
 		}
 		
