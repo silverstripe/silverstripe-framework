@@ -815,6 +815,31 @@ class Translatable extends DataObjectDecorator {
 		}
 		return $returnMap;
 	}
+	
+	/**
+	 * Gets a URLSegment value for a homepage in another language.
+	 * The value is inferred by finding the homepage in default language
+	 * (as identified by RootURLController::$default_homepage_urlsegment).
+	 * Returns NULL if no translated page can be found.
+	 * 
+	 * @param string $Lang
+	 * @return string|boolean URLSegment (e.g. "home")
+	 */
+	static function get_homepage_urlsegment_by_language($lang) {
+		$origHomepageObj = Translatable::get_one_by_lang(
+			'SiteTree',
+			Translatable::default_lang(),
+			sprintf('"URLSegment" = \'%s\'', RootUrlController::get_default_homepage_urlsegment())
+		);
+		if($origHomepageObj) {
+			$translatedHomepageObj = $origHomepageObj->getTranslation(Translatable::current_lang());
+			if($translatedHomepageObj) {
+				return $translatedHomepageObj->URLSegment;
+			}
+		}
+		
+		return null;
+	}
 		
 }
 

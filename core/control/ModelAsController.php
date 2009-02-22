@@ -38,9 +38,9 @@ class ModelAsController extends Controller implements NestedController {
 					$url = Controller::join_links(
 						Director::baseURL(),
 						$child->URLSegment,
-						$this->urlParams['Action'],
-						$this->urlParams['ID'],
-						$this->urlParams['OtherID']
+						(isset($this->urlParams['Action'])) ? $this->urlParams['Action'] : null,
+						(isset($this->urlParams['ID'])) ? $this->urlParams['ID'] : null,
+						(isset($this->urlParams['OtherID'])) ? $this->urlParams['OtherID'] : null
 					);
 					
 					$response = new HTTPResponse();

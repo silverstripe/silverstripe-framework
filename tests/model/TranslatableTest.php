@@ -41,7 +41,7 @@ class TranslatableTest extends FunctionalTest {
 		
 		parent::tearDown();
 	}
-		
+
 	function testGetOriginalPage() {
 		$origPage = $this->objFromFixture('Page', 'testpage_en');
 		$translatedPage = $origPage->createTranslation('de');
@@ -477,6 +477,40 @@ class TranslatableTest extends FunctionalTest {
 		
 		// reset language
 		Translatable::set_reading_lang('en');
+	}
+
+	function testRootUrlDefaultsToTranslatedUrlSegment() {
+		$_originalHost = $_SERVER['HTTP_HOST'];
+		
+		$origPage = $this->objFromFixture('Page', 'homepage_en');
+		$origPage->publish('Stage', 'Live');
+		$translationDe = $origPage->createTranslation('de');
+		$translationDe->URLSegment = 'heim';
+		$translationDe->write();
+		$translationDe->publish('Stage', 'Live');
+		
+		// test with translatable enabled
+		$_SERVER['HTTP_HOST'] = '/?lang=de';
+		Translatable::set_reading_lang('de');
+		$this->assertEquals(
+			RootURLController::get_homepage_urlsegment(), 
+			'heim', 
+			'Homepage with different URLSegment in non-default language is found'
+		);
+		
+		// test with translatable disabled
+		Translatable::disable();
+		$_SERVER['HTTP_HOST'] = '/';
+		$this->assertEquals(
+			RootURLController::get_homepage_urlsegment(), 
+			'home', 
+			'Homepage is showing in default language if ?lang GET variable is left out'
+		);
+		Translatable::enable();
+		
+		// setting back to default
+		Translatable::set_reading_lang('en');
+		$_SERVER['HTTP_HOST'] = $_originalHost;
 	}
 }
 

@@ -1,4 +1,8 @@
 Page:
+   homepage_en:
+      Title: Home
+      URLSegment: home
+      Lang: en
    testpage_en:
       Title: Home
       MenuTitle: A Testpage
