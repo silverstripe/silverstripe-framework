@@ -165,6 +165,7 @@ class Text extends DBField {
 		
 		// get first sentence?
 		// this needs to be more robust
+		$result = '';
 		if($plain) $data = Convert::xml2raw( $this->value, true );
 		
 		if( !$data )
