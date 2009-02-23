@@ -70,6 +70,16 @@ class Date extends DBField {
 		if($this->value) return date($formattingString, strtotime($this->value));
 	}
 	
+	/**
+	 * Return the date formatted using the given strftime formatting string.
+	 *
+	 * strftime obeyes the current LC_TIME/LC_ALL when printing lexical values
+	 * like day- and month-names
+	 */
+	function FormatI18N($formattingString) {
+		if($this->value) return strftime($formattingString, strtotime($this->value));
+	}
+	
 	/*
 	 * Return a string in the form "12 - 16 Sept" or "12 Aug - 16 Sept"
 	 */
