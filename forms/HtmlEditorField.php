@@ -54,6 +54,8 @@ class HtmlEditorField extends TextareaField {
 				} else if($link[0] == '/') {
 					$broken = true;
 				} else if(ereg('^assets/',$link)) {
+					$link = str_replace(array('%20', '%5C', '%27'), array(' ', '\\', '\''), $link);
+					$link = Convert::raw2sql($link);
 					if(!DataObject::get_one("File", "Filename = '$link'", false)) {
 						$broken = true;
 					}
