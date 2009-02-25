@@ -39,11 +39,11 @@ class ModelAsController extends Controller implements NestedController {
 					$url = Controller::join_links(
 						Director::baseURL(),
 						$child->URLSegment,
-						$this->urlParams['Action'],
-						$this->urlParams['ID'],
-						$this->urlParams['OtherID']
+						isset($this->urlParams['Action']) ? $this->urlParams['Action'] : null,
+						isset($this->urlParams['ID']) ? $this->urlParams['ID'] : null,
+						isset($this->urlParams['OtherID']) ? $this->urlParams['OtherID'] : null
 					);
-					
+
 					$response = new HTTPResponse();
 					$response->redirect($url, 301);
 					return $response;
@@ -78,17 +78,32 @@ class ModelAsController extends Controller implements NestedController {
 	}
 	
 	protected function findOldPage($urlSegment) {
-		$versionedQuery = new SQLQuery (
-			'RecordID', 'SiteTree_versions',
-			"`WasPublished` = 1 AND `URLSegment` = '$urlSegment'",
-			'`LastEdited` DESC, `WasPublished`',
-			null, null, 1
-		);
+		// Build the query by  replacing `SiteTree` with `SiteTree_versions` in a regular query.
+		// Note that this should *really* be handled by a more full-featured data mapper; as it stands
+		// this is a bit of a hack.
+		$origStage = Versioned::current_stage();
+		Versioned::reading_stage('Stage');
+		$versionedQuery = singleton('SiteTree')->extendedSQL('');
+		Versioned::reading_stage($origStage);
 		
+		foreach($versionedQuery->from as $k => $v) {
+			$versionedQuery->renameTable($k, $k . '_versions');
+		}
+		$versionedQuery->select = array("`SiteTree_versions`.RecordID");
+		$versionedQuery->where[] = "`SiteTree_versions`.`WasPublished` = 1 AND `URLSegment` = '$urlSegment'";
+		$versionedQuery->orderby = '`LastEdited` DESC, `SiteTree_versions`.`WasPublished`';
+		$versionedQuery->limit = 1;
+
 		$result = $versionedQuery->execute();
 		
 		if($result->numRecords() == 1 && $redirectPage = $result->nextRecord()) {
-			if($redirectObj = DataObject::get_by_id('SiteTree', $redirectPage['RecordID'])) return $redirectObj;
+			$redirectObj = DataObject::get_by_id('SiteTree', $redirectPage['RecordID']);
+			if($redirectObj) {
+				// Double-check by querying this page in the same way that getNestedController() does.  This
+				// will prevent query muck-ups from modules such as subsites
+				$doubleCheck = SiteTree::get_by_url($redirectObj->URLSegment);
+				if($doubleCheck) return $redirectObj;
+			}
 		}
 		
 		return false;
