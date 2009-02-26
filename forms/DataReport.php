@@ -272,7 +272,9 @@ HTML
 		}else{
 			//The field could be "Total->Nice" or "Order.Created->Date", intending to show its specific format.
 			//Caster then is "Nice" "Date" etc.
-			list($field, $caster) = explode("->", $field);
+			if(strpos($field,'->') !== false) list($field, $caster) = explode("->", $field);
+			else $caster = null;
+			
 			if(preg_match('/^(.+)\.(.+)$/', $field, $matches)){
 				$field = $matches[2];
 			}
