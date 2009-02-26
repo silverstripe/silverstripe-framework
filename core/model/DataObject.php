@@ -179,6 +179,9 @@ class DataObject extends ViewableData implements DataObjectInterface,i18nEntityP
 		$this->extension_instances = null;
 		$this->components = null;
 		$this->destroyed = true;
+		$this->record = null;
+		$this->orignal = null;
+		$this->changed = null;
 		$this->flushCache();
 	}
 
@@ -713,7 +716,7 @@ class DataObject extends ViewableData implements DataObjectInterface,i18nEntityP
 				return false;
 			}
 		}
-		
+
 		$this->onBeforeWrite();
 		if($this->brokenOnWrite) {
 			user_error("$this->class has a broken onBeforeWrite() function.  Make sure that you call parent::onBeforeWrite().", E_USER_ERROR);
