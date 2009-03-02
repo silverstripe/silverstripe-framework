@@ -197,7 +197,7 @@ class i18nTextCollector extends Object {
 			$entitiesArr = array_merge($entitiesArr,(array)$this->collectFromTemplate($includeContent, $module, $includeFileName));
 		}
 
-		// @todo respect template tags (<% _t() %> instead of _t())
+		// @todo respect template tags (< % _t() % > instead of _t())
 		$regexRule = '_t[[:space:]]*\(' .
 			'[[:space:]]*("[^"]*"|\\\'[^\']*\\\')[[:space:]]*,' . # namespace.entity
 			'[[:space:]]*("([^"]|\\\")*"|\'([^\']|\\\\\')*\')([[:space:]]*,' . # value
@@ -357,7 +357,7 @@ class i18nTextCollector extends Object {
 					user_error('i18nTextCollector->writeMasterStringFile(): Invalid PHP language file. Error: ' . $e->toString(), E_USER_ERROR);
 				}
 				
-				fwrite($fh, "<?php\n\nglobal \$lang;\n\n" . $php . "\n?>");			
+				fwrite($fh, "<"."?php\n\nglobal \$lang;\n\n" . $php . "\n?".">");
 				fclose($fh);
 				
 				//Debug::message("Created file: $langFolder/" . $this->defaultLocale . ".php", false);
