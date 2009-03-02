@@ -663,7 +663,7 @@ class ViewableData extends Object implements IteratorAggregate {
 	 * @return boolean
 	 */
 	function Even() {
-		return $this->iteratorPos % 2;
+		return (bool)($this->iteratorPos % 2);
 	}
 	
 	/**
@@ -671,7 +671,7 @@ class ViewableData extends Object implements IteratorAggregate {
 	 * @return boolean
 	 */
 	function Odd() {
-		return !$this->Even();
+		return (bool)!$this->Even();
 	}
 	
 	/**
