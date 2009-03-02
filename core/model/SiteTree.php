@@ -883,7 +883,10 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		if($this->ExtraMeta) { 
 			$tags .= $this->ExtraMeta . "\n";
 		} 
-		$tags .= "<meta http-equiv=\"Content-Language\" content=\"". Translatable::current_lang() ."\"/>\n";
+		
+		// get the "long" lang name suitable for the HTTP content-language flag (with hyphens instead of underscores)
+		$currentLang = (Translatable::is_enabled()) ? Translatable::current_lang() : i18n::convert_rfc1766(i18n::get_locale());
+		$tags .= "<meta http-equiv=\"Content-Language\" content=\"". $currentLang ."\"/>\n";
 		
 		// DEPRECATED 2.3: Use MetaTags
 		$this->extend('updateMetaTags', $tags);

@@ -962,6 +962,40 @@ class i18n extends Object {
 	}
 	
 	/**
+	 * Returns the "short" language name from a locale,
+	 * e.g. "en_US" would return "en". This conversion
+	 * is determined internally by the {@link $tinymce_lang}
+	 * lookup table. If no match can be found in this lookup,
+	 * the characters before the underscore ("_") are returned.
+	 * 
+	 * @todo More generic lookup table, don't rely on tinymce specific conversion
+	 * 
+	 * @param string $locale E.g. "en_US"
+	 * @return string Short language code, e.g. "en"
+	 */
+	static function get_lang_from_locale($locale) {
+		if(isset(self::$tinymce_lang[$locale])) {
+			return self::$tinymce_lang[$locale];
+		} else {
+			return preg_replace('/(_|-).*/', '', $locale);
+		}
+	}
+	
+	/**
+	 * Gets a RFC 1766 compatible language code,
+	 * e.g. "en-US".
+	 *
+	 * @see http://www.ietf.org/rfc/rfc1766.txt
+	 * @see http://tools.ietf.org/html/rfc2616#section-3.10
+	 * 
+	 * @param string $locale
+	 * @return string
+	 */
+	static function convert_rfc1766($locale) {
+		return str_replace('_','-', $locale);
+	}
+	
+	/**
 	 * Given a file name (a php class name, without the .php ext, or a template name, including the .ss extension)
 	 * this helper function determines the module where this file is located
 	 * 
