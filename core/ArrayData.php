@@ -32,6 +32,7 @@ class ArrayData extends ViewableData {
 				E_USER_WARNING
 			);
 		}
+		parent::__construct();
 	}
 	
 	public function getField($f) {
