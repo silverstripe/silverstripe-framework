@@ -446,13 +446,13 @@ class Versioned extends DataObjectDecorator {
 
 		foreach($query->from as $table => $join) {
 			if($join[0] == '"') $baseTable = str_replace('"','',$join);
-			else if (substr($join,0,5) != 'INNER') $query->from[$table] = "LEFT JOIN \"$table\" ON \"$table\".RecordID = \"{$baseTable}_versions\".RecordID AND \"$table\".Version = \"{$baseTable}_versions\".Version";
+			else if (substr($join,0,5) != 'INNER') $query->from[$table] = "LEFT JOIN \"$table\" ON \"$table\".\"RecordID\" = \"{$baseTable}_versions\".\"RecordID\" AND \"$table\".\"Version\" = \"{$baseTable}_versions\".\"Version\"";
 			$query->renameTable($table, $table . '_versions');
 		}
-		$query->select[] = "\"{$baseTable}_versions\".AuthorID, \"{$baseTable}_versions\".Version, \"{$baseTable}_versions\".RecordID";
+		$query->select[] = "\"{$baseTable}_versions\".\"AuthorID\", \"{$baseTable}_versions\".\"Version\", \"{$baseTable}_versions\".\"RecordID\"";
 		
-		$query->where[] = "\"{$baseTable}_versions\".RecordID = '{$this->owner->ID}'";
-		$query->orderby = "\"{$baseTable}_versions\".LastEdited DESC, \"{$baseTable}_versions\".Version DESC";
+		$query->where[] = "\"{$baseTable}_versions\".\"RecordID\" = '{$this->owner->ID}'";
+		$query->orderby = "\"{$baseTable}_versions\".\"LastEdited\" DESC, \"{$baseTable}_versions\".\"Version\" DESC";
 		
 
 		$records = $query->execute();
@@ -625,7 +625,7 @@ class Versioned extends DataObjectDecorator {
 		if($idList) {
 			// Validate the ID list
 			foreach($idList as $id) if(!is_numeric($id)) user_error("Bad ID passed to Versioned::prepopulate_versionnumber_cache() in \$idList: " . $id, E_USER_ERROR);
-			$filter = "WHERE \"ID\" IN(" .implode(", ", $idList) . ")";
+			$filter = "WHERE \"ID\" IN(" .implode("\", \"", $idList) . "\")";
 		}
 		
 		$baseClass = ClassInfo::baseDataClass($class);
@@ -681,10 +681,10 @@ class Versioned extends DataObjectDecorator {
 		$query = $this->owner->extendedSQL($filter,$sort);
 		foreach($query->from as $table => $join) {
 			if($join[0] == '"') $baseTable = str_replace('"','',$join);
-			else $query->from[$table] = "LEFT JOIN \"$table\" ON \"$table\".RecordID = \"{$baseTable}_versions\".RecordID AND \"$table\".Version = \"{$baseTable}_versions\".Version";
+			else $query->from[$table] = "LEFT JOIN \"$table\" ON \"$table\".\"RecordID\" = \"{$baseTable}_versions\".\"RecordID\" AND \"$table\".\"Version\" = \"{$baseTable}_versions\".\"Version\"";
 			$query->renameTable($table, $table . '_versions');
 		}
-		$query->select[] = "\"{$baseTable}_versions\".AuthorID, \"{$baseTable}_versions\".Version, \"{$baseTable}_versions\".RecordID AS ID";
+		$query->select[] = "\"{$baseTable}_versions\".\"AuthorID\", \"{$baseTable}_versions\".\"Version\", \"{$baseTable}_versions\".\"RecordID\" AS ID";
 		return $query;
 	}
 
@@ -692,10 +692,10 @@ class Versioned extends DataObjectDecorator {
 		$query = singleton($className)->extendedSQL($filter,$sort);
 		foreach($query->from as $table => $join) {
 			if($join[0] == '"') $baseTable = str_replace('"','',$join);
-			else $query->from[$table] = "LEFT JOIN \"$table\" ON \"$table\".RecordID = \"{$baseTable}_versions\".RecordID AND \"$table\".Version = \"{$baseTable}_versions\".Version";
+			else $query->from[$table] = "LEFT JOIN \"$table\" ON \"$table\".\"RecordID\" = \"{$baseTable}_versions\".\"RecordID\" AND \"$table\".\"Version\" = \"{$baseTable}_versions\".\"Version\"";
 			$query->renameTable($table, $table . '_versions');
 		}
-		$query->select[] = "\"{$baseTable}_versions\".AuthorID, \"{$baseTable}_versions\".Version, \"{$baseTable}_versions\".RecordID AS ID";
+		$query->select[] = "\"{$baseTable}_versions\".\"AuthorID\", \"{$baseTable}_versions\".\"Version\", \"{$baseTable}_versions\".\"RecordID\" AS ID";
 		return $query;
 	}
 	
@@ -709,7 +709,7 @@ class Versioned extends DataObjectDecorator {
 		Versioned::$reading_stage = null;
 
 		$baseTable = ClassInfo::baseDataClass($class);
-		$query = singleton($class)->buildVersionSQL("\"{$baseTable}\".RecordID = $id", "\"{$baseTable}\".Version DESC");
+		$query = singleton($class)->buildVersionSQL("\"{$baseTable}\".\"RecordID\" = $id", "\"{$baseTable}\".\"Version\" DESC");
 		$query->limit = 1;
 		$record = $query->execute()->record();
 		$className = $record['ClassName'];
@@ -732,7 +732,7 @@ class Versioned extends DataObjectDecorator {
 		Versioned::$reading_stage = null;
 
 		$baseTable = ClassInfo::baseDataClass($class);
-		$query = singleton($class)->buildVersionSQL("\"{$baseTable}\".RecordID = $id AND \"{$baseTable}\".Version = $version");
+		$query = singleton($class)->buildVersionSQL("\"{$baseTable}\".\"RecordID\" = $id AND \"{$baseTable}\".\"Version\" = $version");
 		$record = $query->execute()->record();
 		$className = $record['ClassName'];
 		if(!$className) {
@@ -751,7 +751,7 @@ class Versioned extends DataObjectDecorator {
 	 */
 	static function get_all_versions($class, $id, $version) {
 		$baseTable = ClassInfo::baseDataClass($class);
-		$query = singleton($class)->buildVersionSQL("\"{$baseTable}\".RecordID = $id AND \"{$baseTable}\".Version = $version");
+		$query = singleton($class)->buildVersionSQL("\"{$baseTable}\".\"RecordID\" = $id AND \"{$baseTable}\".\"Version\" = $version");
 		$record = $query->execute()->record();
 		$className = $record[ClassName];
 		if(!$className) {
