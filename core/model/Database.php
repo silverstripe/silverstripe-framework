@@ -345,19 +345,23 @@ abstract class Database extends Object {
 			$this->fieldList[$table] = $this->fieldList($table);
 		}
 		
+		// Get the value of this field.
 		if(is_array($spec))
 			$specValue=$spec['data_type'];
 		else $specValue=$spec;
-		 
+
+		// We need to get db-specific versions of the ID column:
+		if($spec_orig==DB::getConn()->IdColumn())
+			$specValue=DB::getConn()->IdColumn(true);
+					
 		if(is_array($this->fieldList[$table][$field]))
 			$fieldValue=$this->fieldList[$table][$field]['data_type'];
 		else $fieldValue=$this->fieldList[$table][$field];
 
-		if(is_array($spec_orig))
+		// Get the version of the field as we would create it. This is used for comparison purposes to see if the
+		// existing field is different to what we now want
+		if(is_array($spec_orig)) {
 			$spec_orig=DB::getConn()->$spec_orig['type']($spec_orig['parts']);
-		
-		if($spec_orig==DB::getConn()->IdColumn()){
-			$specValue=DB::getConn()->IdColumn(true);
 		}
 		
 		if($newTable || $fieldValue=='') {
