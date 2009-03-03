@@ -14,56 +14,93 @@
  * @subpackage validators
  */ 
 abstract class Validator extends Object {
+	
+	/**
+	 * @var Form $form
+	 */
 	protected $form;
+	
+	/**
+	 * @var array $errors
+	 */
 	protected $errors;
 	
 	/**
 	 * Static for default value of $this->javascriptValidationHandler.
 	 * Set with Validator::set_javascript_validation_handler();
+	 * @var string
 	 */
-	protected static $javascript_validation_handler = null;
+	protected static $javascript_validation_handler = "prototype";
 	
 	/**
-	 * Handler for javascript validation.  Can be "prototype" or "none"
+	 * Handler for javascript validation.  Can be "prototype" or "none".
+	 * @var string
 	 */
-	protected $javascriptValidationHandler = "prototype";
+	protected $javascriptValidationHandler = null;
 	
 	/**
 	 * Call this function to set the javascript validation handler for all valdiation on your site.
 	 * This could be called from _config.php to set site-wide javascript validation, or from ContentController::init()
 	 * to affect only the front-end site.
+	 * Use instance method {@link setJavascriptValidationHandler()} to
+	 * only set handler for a specific form instance.
 	 *
 	 * @param $handler A string representing the handler to use: 'prototype' or 'none'.
 	 * @todo Add 'jquery' as a handler option.
 	 */
-	public function set_javascript_validation_handler($handler = 'prototype') {
-		self::$javascript_validation_handler = $handler;
-	}
-
-	/**
-	 * Disable JavaScript validation for this validator
-	 */
-	public function setJavascriptValidationHandler($handler) {
+	public static function set_javascript_validation_handler($handler) {
 		if($handler == 'prototype' || $handler == 'none') {
-			$this->javascriptValidationHandler = $handler;
+			self::$javascript_validation_handler = $handler;
 		} else {
 			user_error("Validator::setJavascriptValidationHandler() passed bad handler '$handler'", E_USER_WARNING);
 		}
 	}
 	
-	public function __construct() {
-		if(self::$javascript_validation_handler) $this->setJavascriptValidationHandler(self::$javascript_validation_handler);
-		
-		if($this->javascriptValidationHandler && $this->javascriptValidationHandler != 'none') {
-			Requirements::javascript(SAPPHIRE_DIR . '/javascript/Validator.js');
+	/**
+	 * Returns global validation handler used for all forms by default,
+	 * unless overwritten by {@link setJavascriptValidationHandler()}.
+	 * 
+	 * @return string
+	 */
+	public static function get_javascript_validator_handler() {
+		return self::$javascript_validation_handler;
+	}
+
+	/**
+	 * Set JavaScript validation for this validator.
+	 * Use static method {@link set_javascript_validation_handler()}
+	 * to set handlers globally.
+	 * 
+	 * @param string $handler
+	 */
+	public function setJavascriptValidationHandler($handler) {
+		if($handler == 'prototype' || $handler == 'none') {
+			$this->javascriptValidationHandler = $handler; 
+		} else {
+			user_error("Validator::setJavascriptValidationHandler() passed bad handler '$handler'", E_USER_WARNING);
 		}
-		parent::__construct();
+	}
+
+	/**
+	 * Gets the current javascript validation handler for this form.
+	 * If not set, falls back to the global static {@link self::$javascript_validation_handler}.
+	 * 
+	 * @return string
+	 */
+	public function getJavascriptValidationHandler() {
+		return ($this->javascriptValidationHandler) ? $this->javascriptValidationHandler : self::$javascript_validation_handler;
 	}
 	
+	/**
+	 * @param Form $form
+	 */
 	function setForm($form) {
 		$this->form = $form;
 	}
 	
+	/**
+	 * @return array Errors (if any)
+	 */
 	function validate(){
 		$this->errors = null;
 		$this->php($this->form->getData());
@@ -86,8 +123,11 @@ abstract class Validator extends Object {
 		);
 	}
 	
-	function showError(){
-		debug::show($this->errors);
+	/**
+	 * @deprecated 2.4 Use Validator->getCombinedError() and custom code
+	 */
+	function showError() {
+		Debug::show($this->errors);
 	}
 	
 	function getCombinedError(){
@@ -109,10 +149,11 @@ abstract class Validator extends Object {
 	}
 	
 	function includeJavascriptValidation() {
-		if($this->javascriptValidationHandler == 'prototype') {
+		if($this->getJavascriptValidationHandler() == 'prototype') {
 			Requirements::javascript(THIRDPARTY_DIR . "/prototype.js");
 			Requirements::javascript(THIRDPARTY_DIR . "/behaviour.js");
 			Requirements::javascript(THIRDPARTY_DIR . "/prototype_improvements.js");
+			//Requirements::add_i18n_javascript(SAPPHIRE_DIR);
 			Requirements::javascript(SAPPHIRE_DIR . "/javascript/i18n.js");
 			Requirements::javascript(SAPPHIRE_DIR . "/javascript/Validator.js");
 		

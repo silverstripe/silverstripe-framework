@@ -546,7 +546,7 @@ class Requirements_Backend {
 	function includeInHTML($templateFile, $content) {
 		if(isset($_GET['debug_profile'])) Profiler::mark("Requirements::includeInHTML");
 		
-		if(strpos($content, '</head') !== false && ($this->javascript || $this->css || $this->customScript || $this->customHeadTags)) {
+		if(strpos($content, '</head') !== false && ($this->css || $this->javascript || $this->customCSS || $this->customScript || $this->customHeadTags)) {
 			$requirements = '';
 			$jsRequirements = '';
 			
