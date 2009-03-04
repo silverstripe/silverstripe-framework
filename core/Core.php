@@ -28,7 +28,7 @@ error_reporting(E_ALL);
  */
 $envFiles = array('../_ss_environment.php', '../../_ss_environment.php', '../../../_ss_environment.php');
 foreach($envFiles as $envFile) {
-	if(file_exists($envFile)) {
+	if(@file_exists($envFile)) {
 		define('SS_ENVIRONMENT_FILE', $envFile);
 		include_once($envFile);
 		break;
