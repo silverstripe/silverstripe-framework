@@ -240,6 +240,16 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 		
 		return $dbname;
 	}
+	
+	static function delete_all_temp_dbs() {
+		foreach(DB::getConn()->allDatabaseNames() as $dbName) {
+			if(preg_match('/^tmpdb[0-9]+$/', $dbName)) {
+				DB::getConn()->dropDatabaseByName($dbName);
+				echo "<li>Dropped databse \"$dbName\"\n";
+				flush();
+			}
+		}
+	}
 }
 
 ?>

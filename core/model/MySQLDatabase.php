@@ -142,7 +142,15 @@ class MySQLDatabase extends Database {
 	 * Use with caution.
 	 */
 	public function dropDatabase() {
-		$this->query("DROP DATABASE $this->database");
+		$this->dropDatabaseByName($this->database);
+	}
+
+	/**
+	 * Drop the database that this object is currently connected to.
+	 * Use with caution.
+	 */
+	public function dropDatabaseByName($dbName) {
+		$this->query("DROP DATABASE \"$dbName\"");
 	}
 	
 	/**
@@ -170,6 +178,13 @@ class MySQLDatabase extends Database {
 	public function databaseExists($name) {
 		$SQL_name = Convert::raw2sql($name);
 		return $this->query("SHOW DATABASES LIKE '$SQL_name'")->value() ? true : false;
+	}
+
+	/**
+	 * Returns a column 
+	 */
+	public function allDatabaseNames() {
+		return $this->query("SHOW DATABASES")->column();
 	}
 	
 	public function createTable($tableName, $fields = null, $indexes = null) {

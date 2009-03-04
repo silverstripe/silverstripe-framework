@@ -36,6 +36,7 @@ class TestRunner extends Controller {
 		'coverage' => 'coverage',
 		'startsession' => 'startsession',
 		'endsession' => 'endsession',
+		'cleanupdb' => 'cleanupdb',
 		'$TestCase' => 'only',
 	);
 	
@@ -115,6 +116,10 @@ class TestRunner extends Controller {
 		} else {
 			echo "Please install PHPUnit using pear";
 		}
+	}
+	
+	function cleanupdb() {
+		SapphireTest::delete_all_temp_dbs();
 	}
 		
 	/**
