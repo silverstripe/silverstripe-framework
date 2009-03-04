@@ -273,6 +273,18 @@ class Security extends Controller {
 	 * @return string Returns the "login" page as HTML code.
 	 */
 	public function login() {
+		// Event handler for pre-login, with an option to let it break you out of the login form
+		$eventResults = $this->extend('onBeforeSecurityLogin');
+		// If there was a redirection, return
+		if(Director::redirected_to()) return;
+		// If there was an HTTPResponse object returned, then return that
+		else if($eventResults) {
+			foreach($eventResults as $result) {
+				if($result instanceof HTTPResponse) return $result;
+			}
+		}
+		
+		
 		$customCSS = project() . '/css/tabs.css';
 		if(Director::fileExists($customCSS)) {
 			Requirements::css($customCSS);

@@ -244,17 +244,17 @@ JS
 				$archiveLink = "<a class=\"current\">". _t('ContentController.ARCHIVEDSITE', 'Archived Site') ."</a>";
 				$liveLink = "<a href=\"$thisPage?stage=Live\" target=\"site\" style=\"left : -3px;\">". _t('ContentController.PUBLISHEDSITE', 'Published Site') ."</a>";
 				$stageLink = "<a href=\"$thisPage?stage=Stage\" target=\"site\" style=\"left : -1px;\">". _t('ContentController.DRAFTSITE', 'Draft Site') ."</a>";
-				$message = "<div id=\"SilverStripeNavigatorMessage\" title='". _t('ContentControl.NOTEWONTBESHOWN', 'Note: this message won\'t be shown to your visitors') ."'>". _t('ContentController.ARCHIVEDSITEFROM', 'Archived site from') ."<br>" . $dateObj->Nice() . "</div>";
+				$message = "<div id=\"SilverStripeNavigatorMessage\" title='". _t('ContentControl.NOTEWONTBESHOWN', 'Note: this message will not be shown to your visitors') ."'>". _t('ContentController.ARCHIVEDSITEFROM', 'Archived site from') ."<br>" . $dateObj->Nice() . "</div>";
 
 			} else if(Versioned::current_stage() == 'Stage') {
 				$stageLink = "<a class=\"current\">". _t('ContentController.DRAFTSITE', 'Draft Site') ."</a>";
 				$liveLink = "<a href=\"$thisPage?stage=Live\" target=\"site\" style=\"left : -3px;\">". _t('ContentController.PUBLISHEDSITE', 'Published Site') ."</a>";
-				$message = "<div id=\"SilverStripeNavigatorMessage\" title='". _t('ContentControl.NOTEWONTBESHOWN', 'Note: this message won\'t be shown to your visitors') ."'>".  _t('ContentController.DRAFTSITE', 'Draft Site') ."</div>";
+				$message = "<div id=\"SilverStripeNavigatorMessage\" title='". _t('ContentControl.NOTEWONTBESHOWN', 'Note: this message will not be shown to your visitors') ."'>".  _t('ContentController.DRAFTSITE', 'Draft Site') ."</div>";
 
 			} else {
 				$liveLink = "<a class=\"current\">". _t('ContentController.PUBLISHEDSITE', 'Published Site') ."</a>";
 				$stageLink = "<a href=\"$thisPage?stage=Stage\" target=\"site\" style=\"left : -1px;\">". _t('ContentController.DRAFTSITE', 'Draft Site') ."</a>";
-				$message = "<div id=\"SilverStripeNavigatorMessage\" title='". _t('ContentControl.NOTEWONTBESHOWN', 'Note: this message won\'t be shown to your visitors') ."'>".  _t('ContentController.PUBLISHEDSITE', 'Published Site') ."</div>";
+				$message = "<div id=\"SilverStripeNavigatorMessage\" title='". _t('ContentControl.NOTEWONTBESHOWN', 'Note: this message will not be shown to your visitors') ."'>".  _t('ContentController.PUBLISHEDSITE', 'Published Site') ."</div>";
 			}
 
 			if($member) {

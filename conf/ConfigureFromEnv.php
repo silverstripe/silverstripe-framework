@@ -26,6 +26,7 @@
  * You can configure the default admin with these defines
  *  - SS_DEFAULT_ADMIN_USERNAME: The username of the default admin - this is a non-database user with administrative privileges.
  *  - SS_DEFAULT_ADMIN_PASSWORD: The password of the default admin.
+ *  - SS_USE_BASIC_AUTH: Protect the site with basic auth (good for test sites)
  * 
  * Email:
  *  - SS_SEND_ALL_EMAILS_TO: If you set this define, all emails will be redirected to this address.
@@ -81,6 +82,9 @@ if(defined('SS_SEND_ALL_EMAILS_TO')) {
 if(defined('SS_DEFAULT_ADMIN_USERNAME')) {
 	if(!defined('SS_DEFAULT_ADMIN_PASSWORD')) user_error("SS_DEFAULT_ADMIN_PASSWORD must be defined in your _ss_environment.php, if SS_DEFAULT_ADMIN_USERNAME is defined.  See http://doc.silverstripe.com/doku.php?id=environment-management for more infomration", E_USER_ERROR);
 	Security::setDefaultAdmin(SS_DEFAULT_ADMIN_USERNAME, SS_DEFAULT_ADMIN_PASSWORD);
+}
+if(defined('SS_USE_BASIC_AUTH') && SS_USE_BASIC_AUTH) {
+	BasicAuth::enable();
 }
 
 if(defined('SS_ERROR_LOG')) {

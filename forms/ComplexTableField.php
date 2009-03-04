@@ -40,7 +40,7 @@ class ComplexTableField extends TableListField {
     
 	protected $detailFormFields;
 	
-	protected $viewAction, $sourceJoin, $sourceItems, $unpagedSourceItems;
+	protected $viewAction, $sourceJoin, $sourceItems;
 
 	/**
 	 * @var Controller
@@ -825,9 +825,7 @@ class ComplexTableField_ItemRequest extends RequestHandler {
 		if(!isset($_REQUEST['ctf']['start']) || !is_numeric($_REQUEST['ctf']['start']) || $_REQUEST['ctf']['start'] == 0) {
 			return null;
 		}
-		
-		// We never use $item afterwards in the function, where we have it here? disable it!
-		//$item = $this->unpagedSourceItems->First();
+
 		$start = 0;
 		return Controller::join_links($this->Link(), "$this->methodName?ctf[start]={$start}");
 	}
@@ -837,8 +835,6 @@ class ComplexTableField_ItemRequest extends RequestHandler {
 			return null;
 		}
 		
-		// We never use $item afterwards in the function, where we have it here? disable it!
-		// $item = $this->unpagedSourceItems->Last();
 		$start = $this->totalCount - 1;
 		return Controller::join_links($this->Link(), "$this->methodName?ctf[start]={$start}");
 	}
@@ -848,9 +844,6 @@ class ComplexTableField_ItemRequest extends RequestHandler {
 			return null;
 		}
 
-		// We never use $item afterwards in the function, where we have it here? disable it!
-		//$item = $this->unpagedSourceItems->getIterator()->getOffset($_REQUEST['ctf']['start'] + 1);
-
 		$start = $_REQUEST['ctf']['start'] + 1;
 		return Controller::join_links($this->Link(), "$this->methodName?ctf[start]={$start}");
 	}
@@ -859,9 +852,6 @@ class ComplexTableField_ItemRequest extends RequestHandler {
 		if(!isset($_REQUEST['ctf']['start']) || !is_numeric($_REQUEST['ctf']['start']) || $_REQUEST['ctf']['start'] == 0) {
 			return null;
 		}
-
-		// We never use $item afterwards in the function, where we have it here? disable it!
-		//$item = $this->unpagedSourceItems->getIterator()->getOffset($_REQUEST['ctf']['start'] - 1);
 
 		$start = $_REQUEST['ctf']['start'] - 1;
 		return Controller::join_links($this->Link(), "$this->methodName?ctf[start]={$start}");
@@ -887,7 +877,6 @@ class ComplexTableField_ItemRequest extends RequestHandler {
         }
 		for($i = $offset;$i <= $offset + $this->pageSize && $i <= $this->totalCount;$i++) {
             $start = $i - 1;
-			$item = $this->unpagedSourceItems->getIterator()->getOffset($i-1);
 			$links['link'] = Controller::join_links($this->Link() . "$this->methodName?ctf[start]={$start}");
             $links['number'] = $i;
             $links['active'] = $i == $currentItem ? false : true;

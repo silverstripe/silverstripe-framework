@@ -158,13 +158,16 @@ class DatabaseAdmin extends Controller {
 		$conn = DB::getConn();
 		$conn->beginSchemaUpdate();
 		foreach($dataClasses as $dataClass) {
-			$SNG = singleton($dataClass);
-			if($testMode || !($SNG instanceof TestOnly)) {
-				if(!$quiet) {
-					if(Director::is_cli()) echo " * $dataClass\n";
-					else echo "<li>$dataClass</li>\n";
+			// Check if class exists before trying to instantiate - this sidesteps any manifest weirdness
+			if(class_exists($dataClass)) {
+				$SNG = singleton($dataClass);
+				if($testMode || !($SNG instanceof TestOnly)) {
+					if(!$quiet) {
+						if(Director::is_cli()) echo " * $dataClass\n";
+						else echo "<li>$dataClass</li>\n";
+					}
+					$SNG->requireTable();
 				}
-				$SNG->requireTable();
 			}
 		}
 		$conn->endSchemaUpdate();
@@ -176,9 +179,9 @@ class DatabaseAdmin extends Controller {
 			}
 
 			foreach($dataClasses as $dataClass) {
+				// Check if class exists before trying to instantiate - this sidesteps any manifest weirdness
 				// Test_ indicates that it's the data class is part of testing system
-
-				if(strpos($dataClass,'Test_') === false) {
+				if(strpos($dataClass,'Test_') === false && class_exists($dataClass)) {
 					if(!$quiet) {
 						if(Director::is_cli()) echo " * $dataClass\n";
 						else echo "<li>$dataClass</li>\n";

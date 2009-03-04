@@ -105,15 +105,11 @@ class SearchContext extends Object {
 	public function getQuery($searchParams, $sort = false, $limit = false, $existingQuery = null) {
 		$model = singleton($this->modelClass);
 		
-		$fields = $this->applyBaseTableFields($model);
-	
 		if($existingQuery) {
 			$query = $existingQuery;
 		} else {
 			$query = $model->buildSQL();
 		}
-
-		$query->select = array_merge($query->select,$fields);
 
 		$SQL_limit = Convert::raw2sql($limit);
 		$query->limit($SQL_limit);

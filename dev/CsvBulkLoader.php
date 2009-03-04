@@ -86,6 +86,7 @@ class CsvBulkLoader extends BulkLoader {
 				$obj->setComponent($relationName, $relationObj);
 				$obj->{"{$relationName}ID"} = $relationObj->ID;
 				$obj->write();
+				$obj->flushCache(); // avoid relation caching confusion
 				
 			} elseif(strpos($fieldName, '.') !== false) {
 				// we have a relation column with dot notation
@@ -95,11 +96,10 @@ class CsvBulkLoader extends BulkLoader {
 				$relationObj->write();
 				$obj->{"{$relationName}ID"} = $relationObj->ID;
 				$obj->write();
+				$obj->flushCache(); // avoid relation caching confusion
 			}
 			
-			$obj->flushCache(); // avoid relation caching confusion
 		}
-		$id = ($preview) ? 0 : $obj->write();
 
 		// second run: save data
 		foreach($record as $fieldName => $val) {
@@ -127,9 +127,15 @@ class CsvBulkLoader extends BulkLoader {
 			$results->addCreated($obj, $message);
 		}
 		
+		$objID = $obj->ID;
+		
+		$obj->destroy();
+		
 		// memory usage
 		unset($existingObj);
 		unset($obj);
+		
+		return $objID;
 	}
 	
 	/**

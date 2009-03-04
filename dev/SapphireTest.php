@@ -66,9 +66,15 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 
 			$dbadmin = new DatabaseAdmin();
 			$dbadmin->clearAllData();
-		
+			
+			// We have to disable validation while we import the fixtures, as the order in
+			// which they are imported doesnt guarantee valid relations until after the
+			// import is complete.
+			$validationenabled = DataObject::get_validation_enabled();
+			DataObject::set_validation_enabled(false);
 			$this->fixture = new YamlFixture($fixtureFile);
 			$this->fixture->saveIntoDatabase();
+			DataObject::set_validation_enabled($validationenabled);
 		}
 		
 		// Set up email

@@ -64,9 +64,9 @@ class Member extends DataObject {
 	);
 	
 	static $summary_fields = array(
-		'FirstName',
-		'Surname',
-		'Email',
+		'FirstName' => 'First Name',
+		'Surname' => 'Last Name',
+		'Email' => 'Email',
 	);	
 	
 	/**
@@ -453,7 +453,6 @@ class Member extends DataObject {
 	 */
 	function onBeforeWrite() {
 		if($this->SetPassword) $this->Password = $this->SetPassword;
-
 		$identifierField = self::$unique_identifier_field;
 		if($this->$identifierField) {
 			$idClause = ($this->ID) ? " AND \"Member\".\"ID\" <> $this->ID" : '';
@@ -471,6 +470,7 @@ class Member extends DataObject {
 				foreach($existingRecord->getAllFields() as $k => $v) {
 					if(!isset($this->changed[$k]) || !$this->changed[$k]) $this->record[$k] = $v;
 				}
+				$existingRecord->destroy();
 			}
 		}
 		

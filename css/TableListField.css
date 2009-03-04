@@ -40,7 +40,7 @@ table.CMSList thead th {
 	height : 24px;
 	border-right : 1px solid #aca899;
 	border-left : 1px solid #ffffff;
-	padding-left : 5px;
+	padding-left : 0 5px;
 }
 
 table.TableField thead th span, 
@@ -75,8 +75,8 @@ table.TableField tfoot td,
 .TableListField table.data tfoot td, 
 table.CMSList tbody td,
 table.CMSList tfoot td {
-	border : 1px solid #f1efe2;
-	padding-left : 5px;
+	border: 1px solid #f1efe2;
+	padding: 5px;
 }
 
 .TableListField table.data tfoot tr.addtogrouprow td {
