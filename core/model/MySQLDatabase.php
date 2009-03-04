@@ -187,12 +187,19 @@ class MySQLDatabase extends Database {
 		return $this->query("SHOW DATABASES")->column();
 	}
 	
+	/**
+	 * Returns a column 
+	 */
+	public function allDatabaseNames() {
+		return $this->query("SHOW DATABASES")->column();
+	}
+	
 	public function createTable($tableName, $fields = null, $indexes = null) {
 		$fieldSchemas = $indexSchemas = "";
 		
 		if(!isset($fields['ID'])) $fields['ID'] = "int(11) not null auto_increment";
 		if($fields) foreach($fields as $k => $v) $fieldSchemas .= "\"$k\" $v,\n";
-		if($indexes) foreach($indexes as $k => $v) $fieldSchemas .= $this->getIndexSqlDefinition($k, $v) . ",\n";
+		if($indexes) foreach($indexes as $k => $v) $indexSchemas .= $this->getIndexSqlDefinition($k, $v) . ",\n";
 		
 		$this->query("CREATE TABLE \"$tableName\" (
 				$fieldSchemas
@@ -220,8 +227,8 @@ class MySQLDatabase extends Database {
 			$alterList[] .= "ADD ". $this->getIndexSqlDefinition($k, $v);
  		}
 		
-		$alterations = implode(",\n", $alterList);
-		$this->query("ALTER TABLE \"$tableName\" " . $alterations);
+ 		$alterations = implode(",\n", $alterList);
+		$this->query("ALTER TABLE \"$tableName\" $alterations");
 	}
 
 	public function renameTable($oldTableName, $newTableName) {
@@ -345,24 +352,42 @@ class MySQLDatabase extends Database {
 				case 'unique':
 					$indexSpec='unique (' . $indexSpec['value'] . ')';
 					break;
+				case 'btree':
+					$indexSpec='using btree (' . $indexSpec['value'] . ')';
+					break;
+				case 'hash':
+					$indexSpec='using hash (' . $indexSpec['value'] . ')';
+					break;
 			}
 		}
 		
 		return $indexSpec;
 	}
 	
-	protected function getIndexSqlDefinition($indexName, $indexSpec) {
+	protected function getIndexSqlDefinition($indexName, $indexSpec=null) {
 	
 		$indexSpec=$this->convertIndexSpec($indexSpec);
 		
 		$indexSpec = trim($indexSpec);
-	    if($indexSpec[0] != '(') list($indexType, $indexFields) = explode(' ',$indexSpec,2);
+		if($indexSpec[0] != '(') list($indexType, $indexFields) = explode(' ',$indexSpec,2);
 	    else $indexFields = $indexSpec;
-	    if(!isset($indexType)) {
+	    
+	    if(!isset($indexType))
 			$indexType = "index";
-		}
 		
-		return "$indexType \"$indexName\" $indexFields";
+		if($indexType=='using')
+			return "index \"$indexName\" using $indexFields";  
+		else {
+			return "$indexType \"$indexName\" $indexFields";
+		}
+
+	}
+	
+	/**
+	 * MySQL does not need any transformations done on the index that's created, so we can just return it as-is
+	 */
+	function getDbSqlDefinition($tableName, $indexName, $indexSpec){
+		return $indexName;
 	}
 	
 	/**
@@ -405,6 +430,10 @@ class MySQLDatabase extends Database {
 				$groupedIndexes[$index['Key_name']]['type'] = 'fulltext ';
 			} else if(!$index['Non_unique']) {
 				$groupedIndexes[$index['Key_name']]['type'] = 'unique ';
+			} else if($index['Index_type'] =='HASH') {
+				$groupedIndexes[$index['Key_name']]['type'] = 'hash ';
+			} else if($index['Index_type'] =='RTREE') {
+				$groupedIndexes[$index['Key_name']]['type'] = 'rtree ';
 			} else {
 				$groupedIndexes[$index['Key_name']]['type'] = '';
 			}

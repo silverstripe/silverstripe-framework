@@ -296,13 +296,21 @@ abstract class Database extends Object {
 			$this->indexList[$table] = $this->indexList($table);
 		}
 		
+		//Fix up the index for database purposes
+		$index=DB::getConn()->getDbSqlDefinition($table, $index, null, true);
+		
+		if(is_array($this->indexList[$table][$index]))
+			$array_spec=$this->indexList[$table][$index]['spec'];
+		else 
+			$array_spec=$this->indexList[$table][$index];
+			
 		if($newTable || !isset($this->indexList[$table][$index])) {
 			$this->transCreateIndex($table, $index, $spec);
 			Database::alteration_message("Index $table.$index: created as $spec","created");
-		} else if($this->indexList[$table][$index] != DB::getConn()->convertIndexSpec($spec)) {
+		} else if($array_spec != DB::getConn()->convertIndexSpec($spec)) {
 			$this->transAlterIndex($table, $index, $spec);
 			$spec_msg=DB::getConn()->convertIndexSpec($spec);
-			Database::alteration_message("Index $table.$index: changed to $spec_msg <i style=\"color: #AAA\">(from {$this->indexList[$table][$index]})</i>","changed");			
+			Database::alteration_message("Index $table.$index: changed to $spec_msg <i style=\"color: #AAA\">(from {$array_spec})</i>","changed");			
 		}
 	}
 
