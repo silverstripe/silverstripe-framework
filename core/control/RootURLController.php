@@ -19,6 +19,13 @@ class RootURLController extends Controller {
 		
 		$this->init();
 
+		// If the basic database hasn't been created, then build it.
+		if(!DB::isActive() || !ClassInfo::hasTable('SiteTree')) {
+			$this->response = new HTTPResponse();
+			$this->redirect("dev/build?returnURL=");
+			return $this->response;
+		}
+
 		$controller = new ModelAsController();
 		
 		$request = new HTTPRequest("GET", self::get_homepage_urlsegment().'/', $request->getVars(), $request->postVars());
