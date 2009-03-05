@@ -108,7 +108,7 @@ class SearchContext extends Object {
 		if($existingQuery) {
 			$query = $existingQuery;
 		} else {
-			$query = $model->buildSQL();
+			$query = $model->extendedSQL();
 		}
 
 		$SQL_limit = Convert::raw2sql($limit);

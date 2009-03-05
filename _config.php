@@ -25,6 +25,7 @@ Director::addRules(10, array(
 	'$Controller//$Action/$ID/$OtherID' => '*',
 	'images' => 'Image_Uploader',
 	'' => 'RootURLController',
+	'api/v1/live' => 'VersionedRestfulServer',
 	'api/v1' => 'RestfulServer',
 	'soap/v1' => 'SOAPModelAccess',
 	'dev' => 'DevelopmentAdmin'
