@@ -644,17 +644,20 @@ class Requirements_Backend {
 	 * @param $langDir The javascript lang directory, relative to the site root, e.g., 'sapphire/javascript/lang'
 	 */
 	public function add_i18n_javascript($langDir) {
-		// Include i18n.js even if no languages are found.  The fact that
-		// add_i18n_javascript() was called indicates that the methods in
-		// here are needed.
-		$this->javascript(SAPPHIRE_DIR . '/javascript/i18n.js');
+		if(i18n::get_js_i18n()) {
+			// Include i18n.js even if no languages are found.  The fact that
+			// add_i18n_javascript() was called indicates that the methods in
+			// here are needed.
+			$this->javascript(SAPPHIRE_DIR . '/javascript/i18n.js');
 
-		if(substr($langDir,-1) != '/') $langDir .= '/';
+			if(substr($langDir,-1) != '/') $langDir .= '/';
 		
-		$defaultLangPath = $langDir . i18n::default_locale() . '.js';
-		$langPath = $langDir . i18n::get_locale() . '.js';
-		foreach(array($defaultLangPath, $langPath) as $path) {
-			if(Director::fileExists($path)) $this->javascript($path);
+			$this->javascript($langDir . i18n::default_locale() . '.js');
+			$this->javascript($langDir . i18n::get_locale() . '.js');
+		
+		// Stub i18n implementation for when i18n is disabled.
+		} else {
+			$this->javascript[SAPPHIRE_DIR . '/javascript/i18nx.js'] = true;
 		}
 	} 
 	

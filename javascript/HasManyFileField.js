@@ -84,7 +84,7 @@ HasManyFileFieldUploadButton.prototype = {
 	
 	uploadFileQueuedCallback: function(file,queueLength) {
 		var message = ss.i18n.sprintf(
-			ss.i18n._t('HASMANYFILEFIELD.UPLOADING'), 
+			ss.i18n._t('HASMANYFILEFIELD.UPLOADING', 'Uploading... %s'), 
 			this.upload.getFilesToUpload()
 		);
 		this.parentNode.parentNode.uploadMessage.innerHTML = message;    
@@ -92,7 +92,7 @@ HasManyFileFieldUploadButton.prototype = {
 	
 	uploadFileCompleteCallback: function(file,serverData) {
 		var message = ss.i18n.sprintf(
-			ss.i18n._t('HASMANYFILEFIELD.UPLOADING'), 
+			ss.i18n._t('HASMANYFILEFIELD.UPLOADING', 'Uploading... %s'), 
 			this.upload.getFilesUploaded() + "/" + this.upload.getFilesToUpload()
 		);
 		this.parentNode.parentNode.uploadMessage.innerHTML = message;
