@@ -192,12 +192,13 @@ class Requirements {
 	}
 	
 	/**
-	 * Automatically includes the necessary lang-files from the module.
+	 * Add i18n files from the given javascript directory.
+	 * @param $langDir The javascript lang directory, relative to the site root, e.g., 'sapphire/javascript/lang'
 	 * 
-	 * See {@link Requirements_Backend::process_i18n_javascript()} for more info.
+	 * See {@link Requirements_Backend::add_i18n_javascript()} for more information.
 	 */
-	protected static function process_i18n_javascript() {
-		return self::backend()->process_i18n_javascript();
+	public static function add_i18n_javascript($langDir) {
+		return self::backend()->add_i18n_javascript($langDir);
 	}
 	
 	/**
@@ -551,7 +552,6 @@ class Requirements_Backend {
 			$jsRequirements = '';
 			
 			// Combine files - updates $this->javascript and $this->css 
-			$this->process_i18n_javascript(); 
  			$this->process_combined_files(); 
 	
 			foreach(array_diff_key($this->javascript,$this->blocked) as $file => $dummy) { 
@@ -638,41 +638,25 @@ class Requirements_Backend {
 		$response->addHeader('X-Include-CSS', implode(',', $cssRequirements));
 	}
 	
-		/**
-	 * Automatically includes the necessary lang-files from the module
-	 * according to the locale set in {@link i18n::$current_locale}.
-	 * Assumes that a subfolder /javascript exists relative to the included
-	 * javascript file, with a file named after the locale - 
-	 * so usually <mymodule>/javascript/lang/en_US.js.
+	/**
+	 * Add i18n files from the given javascript directory.  Sapphire expects that the given directory
+	 * will contain a number of java script files named by language: en_US.js, de_DE.js, etc.
+	 * @param $langDir The javascript lang directory, relative to the site root, e.g., 'sapphire/javascript/lang'
 	 */
-	protected function process_i18n_javascript() {
-		// ensure to include the i18n base library
-		if(
-			count(array_diff_key($this->javascript,$this->blocked)) 
-			&& !isset($this->javascript[SAPPHIRE_DIR . '/javascript/i18n.js'])
-		) {
-			$this->javascript[THIRDPARTY_DIR . '/prototype.js'] = true;
-			$this->javascript[SAPPHIRE_DIR . '/javascript/i18n.js'] = true;
-		}
-		
-		// include the specific locale and the master locale for each module
-		foreach(array_diff_key($this->javascript,$this->blocked) as $file => $dummy) { 
-			if(preg_match('/^http[s]?/', $file)) continue;
-			
-			$absolutePath = Director::baseFolder() . '/' . $file;
-			$absoluteLangPath = dirname($absolutePath) . '/lang/' . i18n::get_locale() . '.js';
-			$absoluteDefaultLangPath = dirname($absolutePath) . '/lang/' . i18n::default_locale() . '.js';
-			foreach(array($absoluteDefaultLangPath, $absoluteLangPath) as $path) {
-				if(Director::fileExists($path)) {
-					$langFile = Director::makeRelative($path);
-					// Remove rogue leading slashes from Director::makeRelative()
-					$langFile = preg_replace('/^\//', '', $langFile);
-					$this->javascript[$langFile] = true;
-				}	
-			}
-		}
+	public function add_i18n_javascript($langDir) {
+		// Include i18n.js even if no languages are found.  The fact that
+		// add_i18n_javascript() was called indicates that the methods in
+		// here are needed.
+		$this->javascript(SAPPHIRE_DIR . '/javascript/i18n.js');
 
-	}
+		if(substr($langDir,-1) != '/') $langDir .= '/';
+		
+		$defaultLangPath = $langDir . i18n::default_locale() . '.js';
+		$langPath = $langDir . i18n::get_locale() . '.js';
+		foreach(array($defaultLangPath, $langPath) as $path) {
+			if(Director::fileExists($path)) $this->javascript($path);
+		}
+	} 
 	
 	/**
 	 * Finds the path for specified file.

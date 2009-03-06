@@ -247,7 +247,7 @@ class TableListField extends FormField {
 		Requirements::javascript(THIRDPARTY_DIR . '/behaviour.js');
 		Requirements::javascript(THIRDPARTY_DIR . '/prototype_improvements.js');
 		Requirements::javascript(THIRDPARTY_DIR . '/scriptaculous/effects.js');
-		Requirements::javascript(SAPPHIRE_DIR . "/javascript/i18n.js");
+		Requirements::add_i18n_javascript(SAPPHIRE_DIR . '/javascript/lang');
 		Requirements::javascript(SAPPHIRE_DIR . '/javascript/TableListField.js');
 		Requirements::css(SAPPHIRE_DIR . '/css/TableListField.css');
 	}
