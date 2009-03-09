@@ -57,7 +57,6 @@ if($majorVersion < 5) {
  */
 require_once("core/Core.php");
 
-if(!headers_sent()) header("Content-type: text/html; charset=\"utf-8\"");
 if (function_exists('mb_http_output')) {
 	mb_http_output('UTF-8');
 	mb_internal_encoding('UTF-8');
