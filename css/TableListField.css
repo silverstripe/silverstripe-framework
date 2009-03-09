@@ -33,14 +33,13 @@ table.CMSList th {
 table.TableField thead th, 
 .TableListField table.data thead th, 
 table.CMSList thead th {
-	background-image : url(../../cms/images/tables/thead.png);
-	background-repeat : repeat-x;
-	background-position : left bottom;
-	background-color : #ebeadb;
-	height : 24px;
-	border-right : 1px solid #aca899;
-	border-left : 1px solid #ffffff;
-	padding-left : 0 5px;
+	background-image: url(../../cms/images/tables/thead.png);
+	background-repeat: repeat-x;
+	background-position: left bottom;
+	background-color: #ebeadb;
+	height: 24px;
+	border-right: 1px solid #aca899;
+	border-left: 1px solid #ffffff;
 }
 
 table.TableField thead th span, 
