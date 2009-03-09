@@ -187,13 +187,6 @@ class MySQLDatabase extends Database {
 		return $this->query("SHOW DATABASES")->column();
 	}
 	
-	/**
-	 * Returns a column 
-	 */
-	public function allDatabaseNames() {
-		return $this->query("SHOW DATABASES")->column();
-	}
-	
 	public function createTable($tableName, $fields = null, $indexes = null) {
 		$fieldSchemas = $indexSchemas = "";
 		
