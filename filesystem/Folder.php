@@ -91,8 +91,8 @@ class Folder extends File {
 				// A record with a bad class type doesn't deserve to exist. It must be purged!
 				if(isset($hasDbChild[$actualChild])) {
 					$child = $hasDbChild[$actualChild];
-					if( ($child->class != 'Folder' && is_dir($baseDir . $actualChild)) 
-					|| ($child->class == 'Folder' && !is_dir($baseDir . $actualChild)) ) {
+					if(( !( $child instanceof Folder ) && is_dir($baseDir . $actualChild) ) 
+					|| (( $child instanceof Folder ) && !is_dir($baseDir . $actualChild)) ) {
 						DB::query("DELETE FROM `File` WHERE ID = $child->ID");
 						unset($hasDbChild[$actualChild]);						
 					}
