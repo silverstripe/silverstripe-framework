@@ -72,19 +72,19 @@ class Versioned extends DataObjectDecorator {
 					$baseTable = $table;
 				}
 				$query->renameTable($table, $table . '_versions');
-				$query->replaceText(".ID", ".RecordID");
-				$query->select[] = "\"{$baseTable}_versions\".RecordID AS ID";
+				$query->replaceText(".\"ID\"", ".\"RecordID\"");
+				$query->select[] = "\"{$baseTable}_versions\".\"RecordID\" AS \"ID\"";
 
 				if($table != $baseTable) {
-					$query->from[$table] .= " AND \"{$table}_versions\".Version = \"{$baseTable}_versions\".Version";
+					$query->from[$table] .= " AND \"{$table}_versions\".\"Version\" = \"{$baseTable}_versions\".\"Version\"";
 				}
 			}
 
 			// Link to the version archived on that date
 			$this->requireArchiveTempTable($baseTable, $date);
 			$query->from["_Archive$baseTable"] = "INNER JOIN \"_Archive$baseTable\"
-				ON \"_Archive$baseTable\".RecordID = \"{$baseTable}_versions\".RecordID 
-				AND \"_Archive$baseTable\".Version = \"{$baseTable}_versions\".Version";
+				ON \"_Archive$baseTable\".\"RecordID\" = \"{$baseTable}_versions\".\"RecordID\" 
+				AND \"_Archive$baseTable\".\"Version\" = \"{$baseTable}_versions\".\"Version\"";
 
 		// Get a specific stage
 		} else if(Versioned::$reading_stage && Versioned::$reading_stage != $this->defaultStage 
@@ -625,7 +625,7 @@ class Versioned extends DataObjectDecorator {
 		if($idList) {
 			// Validate the ID list
 			foreach($idList as $id) if(!is_numeric($id)) user_error("Bad ID passed to Versioned::prepopulate_versionnumber_cache() in \$idList: " . $id, E_USER_ERROR);
-			$filter = "WHERE \"ID\" IN(" .implode("\", \"", $idList) . "\")";
+			$filter = "WHERE \"ID\" IN(" .implode(", ", $idList) . ")";
 		}
 		
 		$baseClass = ClassInfo::baseDataClass($class);
@@ -684,7 +684,7 @@ class Versioned extends DataObjectDecorator {
 			else $query->from[$table] = "LEFT JOIN \"$table\" ON \"$table\".\"RecordID\" = \"{$baseTable}_versions\".\"RecordID\" AND \"$table\".\"Version\" = \"{$baseTable}_versions\".\"Version\"";
 			$query->renameTable($table, $table . '_versions');
 		}
-		$query->select[] = "\"{$baseTable}_versions\".\"AuthorID\", \"{$baseTable}_versions\".\"Version\", \"{$baseTable}_versions\".\"RecordID\" AS ID";
+		$query->select[] = "\"{$baseTable}_versions\".\"AuthorID\", \"{$baseTable}_versions\".\"Version\", \"{$baseTable}_versions\".\"RecordID\" AS \"ID\"";
 		return $query;
 	}
 
@@ -695,7 +695,7 @@ class Versioned extends DataObjectDecorator {
 			else $query->from[$table] = "LEFT JOIN \"$table\" ON \"$table\".\"RecordID\" = \"{$baseTable}_versions\".\"RecordID\" AND \"$table\".\"Version\" = \"{$baseTable}_versions\".\"Version\"";
 			$query->renameTable($table, $table . '_versions');
 		}
-		$query->select[] = "\"{$baseTable}_versions\".\"AuthorID\", \"{$baseTable}_versions\".\"Version\", \"{$baseTable}_versions\".\"RecordID\" AS ID";
+		$query->select[] = "\"{$baseTable}_versions\".\"AuthorID\", \"{$baseTable}_versions\".\"Version\", \"{$baseTable}_versions\".\"RecordID\" AS \"ID\"";
 		return $query;
 	}
 	
