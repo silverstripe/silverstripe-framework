@@ -164,9 +164,10 @@ Behaviour.register({
 		validate : function(fromAnOnBlur) {
 			initialiseForm(this, fromAnOnBlur);
 			$code
-			
+
 			var error = hasHadFormError();
 			if(!error && fromAnOnBlur) clearErrorMessage(fromAnOnBlur);
+			if(error && !fromAnOnBlur) focusOnFirstErroredField();
 			
 			return !error;
 		},
