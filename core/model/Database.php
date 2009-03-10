@@ -292,17 +292,20 @@ abstract class Database extends Object {
 
 		if(!isset($this->tableList[strtolower($table)])) $newTable = true;
 
-		if(!$newTable &&  !isset($this->indexList[$table])) {
+		if(!$newTable && !isset($this->indexList[$table])) {
 			$this->indexList[$table] = $this->indexList($table);
 		}
 		
 		//Fix up the index for database purposes
 		$index=DB::getConn()->getDbSqlDefinition($table, $index, null, true);
 		
-		if(is_array($this->indexList[$table][$index]))
-			$array_spec=$this->indexList[$table][$index]['spec'];
-		else 
-			$array_spec=$this->indexList[$table][$index];
+		if(!$newTable) {
+			if(is_array($this->indexList[$table][$index])) {
+				$array_spec = $this->indexList[$table][$index]['spec'];
+			} else {
+				$array_spec = $this->indexList[$table][$index];
+			}
+		}
 			
 		if($newTable || !isset($this->indexList[$table][$index])) {
 			$this->transCreateIndex($table, $index, $spec);
@@ -361,10 +364,14 @@ abstract class Database extends Object {
 		// We need to get db-specific versions of the ID column:
 		if($spec_orig==DB::getConn()->IdColumn())
 			$specValue=DB::getConn()->IdColumn(true);
-					
-		if(is_array($this->fieldList[$table][$field]))
-			$fieldValue=$this->fieldList[$table][$field]['data_type'];
-		else $fieldValue=$this->fieldList[$table][$field];
+
+		if(!$newTable) {
+			if(is_array($this->fieldList[$table][$field])) {
+				$fieldValue = $this->fieldList[$table][$field]['data_type'];
+			} else {
+				$fieldValue = $this->fieldList[$table][$field];
+			}
+		}
 
 		// Get the version of the field as we would create it. This is used for comparison purposes to see if the
 		// existing field is different to what we now want
