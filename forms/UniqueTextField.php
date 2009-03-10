@@ -24,7 +24,7 @@ class UniqueTextField extends TextField {
 	}
 	 
 	function Field() {
-		Requirements::javascript(SAPPHIRE_DIR . "/javascript/i18n.js");
+		Requirements::add_i18n_javascript(SAPPHIRE_DIR . '/javascript/lang');
 		Requirements::javascript(SAPPHIRE_DIR . "/javascript/UniqueFields.js");
 		
 		/*		

@@ -23,7 +23,7 @@ class HasManyComplexTableField extends ComplexTableField {
 	function __construct($controller, $name, $sourceClass, $fieldList, $detailFormFields = null, $sourceFilter = "", $sourceSort = "", $sourceJoin = "") {
 		parent::__construct($controller, $name, $sourceClass, $fieldList, $detailFormFields, $sourceFilter, $sourceSort, $sourceJoin);
 
-		Requirements::javascript(SAPPHIRE_DIR . "/javascript/i18n.js");
+		Requirements::add_i18n_javascript(SAPPHIRE_DIR . '/javascript/lang');
 		Requirements::javascript(SAPPHIRE_DIR . "/javascript/HasManyFileField.js");
 		Requirements::javascript(SAPPHIRE_DIR . '/javascript/RelationComplexTableField.js');
 		Requirements::css(SAPPHIRE_DIR . '/css/HasManyFileField.css');

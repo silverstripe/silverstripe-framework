@@ -7,7 +7,7 @@ UniqueFormField.prototype = {
 		if( this.restrictedValues[suggested] || suggested == null ) {
 			suggested = this.suggestNewValue();
 			statusMessage(ss.i18n.sprintf(
-				ss.i18n._t('UNIQUEFIELD.SUGGESTED'),
+				ss.i18n._t('UNIQUEFIELD.SUGGESTED', "Changed value to '%s' : %s"),
 				suggested,
 				this.restrictedMessage
 			));
@@ -112,9 +112,9 @@ UniqueRestrictedTextField.prototype = {
 		if( suggested == null || suggested.length == 0 || suggestedValue || suggested.match( this.charRegex ) ) {
 		    var message;
 			if( suggested == null )
-				message = ss.i18n._t('UNIQUEFIELD.ENTERNEWVALUE');
+				message = ss.i18n._t('UNIQUEFIELD.ENTERNEWVALUE', 'You will need to enter a new value for this field');
 			else if( suggested.length == 0 )
-				message = ss.i18n._t('UNIQUEFIELD.CANNOTLEAVEEMPTY');
+				message = ss.i18n._t('UNIQUEFIELD.CANNOTLEAVEEMPTY', 'This field cannot be left empty');
 			else if( suggestedValue )
 				message = this.restrictedMessage;
 			else
@@ -122,7 +122,7 @@ UniqueRestrictedTextField.prototype = {
 
 			suggested = this.suggestNewValue();
 			statusMessage(ss.i18n.sprintf(
-				ss.i18n._t('UNIQUEFIELD.SUGGESTED'),
+				ss.i18n._t('UNIQUEFIELD.SUGGESTED', "Changed value to '%s' : %s"),
 				suggested,
 				message
 			));
@@ -152,7 +152,7 @@ RestrictedTextField.prototype = {
 		for( var index = 0; index < this.restrictedChars.length; index++ ) {
 			if( lastChar == this.restrictedChars.charAt(index) ) {
 				alert(ss.i18n.sprintf(
-					ss.i18n._t('RESTRICTEDTEXTFIELD.CHARCANTBEUSED'),
+					ss.i18n._t('RESTRICTEDTEXTFIELD.CHARCANTBEUSED', "The character '%s' cannot be used in this field"),
 					lastChar
 				));
 				this.value = this.value.substring( 0, this.value.length - 1 );

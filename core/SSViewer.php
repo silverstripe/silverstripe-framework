@@ -121,7 +121,12 @@ class SSViewer extends Object {
 		
 		// flush template manifest cache if requested
 		if (isset($_GET['flush']) && $_GET['flush'] == 'all') {
-			self::flush_template_cache();
+			if(Director::isDev() || Permission::check('ADMIN')) {
+				self::flush_template_cache();
+				Debug::message('flushed!');
+			} else {
+				Security::permissionFailure(null, 'Please log in as an administrator to flush the template cache.');
+			}
 		}
 		
 		if(substr((string) $templateList,-3) == '.ss') {

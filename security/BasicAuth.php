@@ -11,6 +11,7 @@ class BasicAuth extends Object {
 	 * @var boolean
 	 */
 	static protected $enabled = false;
+	static protected $autologin = false;
 
 	/**
 	 * Require basic authentication.  Will request a username and password if none is given.
@@ -33,6 +34,9 @@ class BasicAuth extends Object {
 			
 			if($member) {
 				$authenticated = true;
+				if(self::$autologin) {
+					$member->logIn();
+				}
 			}
 		}
 		
@@ -64,8 +68,9 @@ class BasicAuth extends Object {
 		return $member;
 	}
 	
-	static function enable() {
+	static function enable($auto = false) {
 		self::$enabled = true;
+		self::$autologin = $auto;
 	}
 	static function disable() {
 		self::$enabled = false;

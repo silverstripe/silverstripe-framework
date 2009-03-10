@@ -4,10 +4,10 @@ if(typeof(ss) == 'undefined') ss = {};
  * Lightweight clientside i18n implementation.
  * Caution: Only available after DOM loaded because we need to detect the language
  * 
+ * For non-i18n stub implementation, see sapphire/javascript/i18nx.js
+ * 
  * Based on jQuery i18n plugin: 1.0.0  Feb-10-2008
- * @requires jQuery v1.1 or later
- *
- * Examples at: http://recurser.com/articles/2008/02/21/jquery-i18n-translation-plugin/
+ * 
  * Dual licensed under the MIT and GPL licenses:
  *   http://www.opensource.org/licenses/mit-license.php
  *   http://www.gnu.org/licenses/gpl.html
@@ -51,8 +51,8 @@ ss.i18n = {
 	 * dictionary and returns the translation if one exists. If a translation 
 	 * is not found, returns the original word
 	 *
-	 * @param string entity
-	 * @param string fallbackString
+	 * @param string entity A "long" locale format, e.g. "de_DE" (Required)
+	 * @param string fallbackString (Required)
 	 * @param int priority (not used)
 	 * @param string context Give translators context for the string
 	 * @return string : Translated word

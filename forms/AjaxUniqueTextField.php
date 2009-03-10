@@ -29,6 +29,7 @@ class AjaxUniqueTextField extends TextField {
 	}
 	 
 	function Field() {
+		Requirements::add_i18n_javascript(SAPPHIRE_DIR . '/javascript/lang');
 		Requirements::javascript(SAPPHIRE_DIR . "/javascript/UniqueFields.js");
 		
 		$this->jsValidation();

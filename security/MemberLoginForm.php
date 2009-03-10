@@ -37,15 +37,6 @@ class MemberLoginForm extends LoginForm {
 			Requirements::css($customCSS);
 		}
 		
-		// Focus on the email input when the page is loaded
-		Requirements::customScript("
-			(function($){
-				$(document).ready(function() {
-					$('#Email input').focus();
-				});
-			})(jQuery);
-		");
-
 		if(isset($_REQUEST['BackURL'])) {
 			$backURL = $_REQUEST['BackURL'];
 		} else {
@@ -85,6 +76,18 @@ class MemberLoginForm extends LoginForm {
 		}
 
 		parent::__construct($controller, $name, $fields, $actions);
+
+		// Focus on the email input when the page is loaded
+		// Only include this if other form JS validation is enabled
+		if($this->getValidator()->getJavascriptValidationHandler() != 'none') {
+			Requirements::customScript(<<<JS
+				(function() {
+					var el = document.getElementById("MemberLoginForm_LoginForm_Email");
+					if(el && el.focus) el.focus(); 
+				})();
+JS
+			);
+		}
 	}
 
 	/**

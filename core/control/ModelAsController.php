@@ -13,6 +13,14 @@ class ModelAsController extends Controller implements NestedController {
 		$this->urlParams = $request->allParams();
 		
 		$this->init();
+
+		// If the basic database hasn't been created, then build it.
+		if(!DB::isActive() || !ClassInfo::hasTable('SiteTree')) {
+			$this->response = new HTTPResponse();
+			$this->redirect("dev/build?returnURL=" . urlencode($_GET['url']));
+			return $this->response;
+		}
+
 		$result = $this->getNestedController();
 		
 		if(is_object($result) && $result instanceOf RequestHandler) {

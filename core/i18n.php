@@ -59,6 +59,38 @@ class i18n extends Object {
 	 * @var string
 	 */
 	protected static $default_locale = 'en_US';
+	
+	/**
+	 * @var boolean
+	 */
+	protected static $js_i18n = true;
+	
+	/**
+	 * Use javascript i18n through the ss.i18n class (enabled by default).
+	 * If set to TRUE, includes javascript requirements for the base library
+	 * (sapphire/javascript/i18n.js) and all necessary lang files (e.g. sapphire/lang/de_DE.js)
+	 * plus fallbacks to the default locale (e.g. sapphire/lang/en_US.js).
+	 * If set to FALSE, only includes a stub implementation
+	 * which is necessary. Mainly disabled to save bandwidth
+	 * in a frontend context when website is in single language.
+	 *
+	 * Caution: This flag gets overwritten in {@link LeftAndMain::init()} to enforce javascript
+	 * i18n for the CMS interfaces.
+	 * 
+	 * @see Requirements::process_i18n_javascript() 
+	 *
+	 * @param bool $bool
+	 */
+	public static function set_js_i18n($bool) {
+		self::$js_i18n = $bool;
+	}
+	
+	/**
+	 * @return bool
+	 */
+	public static function get_js_i18n() {
+		return self::$js_i18n;
+	}
 
 	/**
 	 * An exhaustive list of possible locales (code => language and country)

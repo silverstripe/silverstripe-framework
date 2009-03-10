@@ -37,6 +37,7 @@ class TreeDropdownField extends FormField {
 		Requirements::css(SAPPHIRE_DIR . '/css/TreeDropdownField.css');
 		Requirements::javascript(THIRDPARTY_DIR . "/tree/tree.js");
 		Requirements::css(THIRDPARTY_DIR . "/tree/tree.css");
+		Requirements::add_i18n_javascript(SAPPHIRE_DIR . '/javascript/lang');
 		Requirements::javascript(SAPPHIRE_DIR . "/javascript/TreeSelectorField.js");
 		
 		if($this->value) {

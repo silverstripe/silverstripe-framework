@@ -11,7 +11,7 @@ Behaviour.register({
 			var newSuggestion = urlSegmentField.suggestNewValue( this.value.toLowerCase() );
 			var isNew = urlSegmentField.value.indexOf("new") == 0;
 			var confirmMessage = ss.i18n.sprintf(
-				ss.i18n._t('UPDATEURL.CONFIRM'),
+				ss.i18n._t('UPDATEURL.CONFIRM', 'Would you like me to change the URL to:\n\n%s/\n\nClick Ok to change the URL, click Cancel to leave it as:\n\n%s'),
 				newSuggestion,
 				urlSegmentField.value
 			);

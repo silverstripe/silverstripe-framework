@@ -32,6 +32,7 @@ class ScaffoldingComplexTableField_Popup extends Form {
 		Requirements::javascript(THIRDPARTY_DIR . "/scriptaculous/scriptaculous.js");
 		Requirements::javascript(THIRDPARTY_DIR . "/scriptaculous/controls.js");
 		Requirements::javascript(THIRDPARTY_DIR . "/layout_helpers.js");
+		Requirements::add_i18n_javascript(SAPPHIRE_DIR . '/javascript/lang');
 		Requirements::javascript(CMS_DIR . "/javascript/LeftAndMain.js");
 		Requirements::javascript(CMS_DIR . "/javascript/LeftAndMain_right.js");
 		Requirements::javascript(SAPPHIRE_DIR . "/javascript/TableField.js");

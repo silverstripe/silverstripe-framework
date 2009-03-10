@@ -147,7 +147,7 @@ function require(fieldName,cachedError) {
 				fieldlabel = "this field";
 			}
 
-			var errorMessage = ss.i18n.sprintf(ss.i18n._t('VALIDATOR.FIELDREQUIRED'), fieldLabel);
+			var errorMessage = ss.i18n.sprintf(ss.i18n._t('VALIDATOR.FIELDREQUIRED', 'Please fill out "%s", it is required.'), fieldLabel);
 			if(baseEl.requiredErrorMsg) errorMessage = baseEl.requiredErrorMsg;
 			else if(_CURRENT_FORM.requiredErrorMsg) errorMessage = _CURRENT_FORM.requiredErrorMsg;
 
