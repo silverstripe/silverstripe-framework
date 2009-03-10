@@ -1,7 +1,9 @@
 <?php
 /**
- * Simple label tag.
- * This can be used to add extra text in your forms.
+ * Simple label tag. This can be used to add extra text in your forms.
+ * Consider using a {@link ReadonlyField} if you need to display a label
+ * AND a value.
+ * 
  * @package forms
  * @subpackage fields-dataless
  */
