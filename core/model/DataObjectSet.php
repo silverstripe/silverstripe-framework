@@ -806,9 +806,9 @@ class DataObjectSet extends ViewableData implements IteratorAggregate {
 	}
 
 	/**
-	* Returns a new DataObjectSet of the sorted array
-	* @param string $fieldname the name of the field on the dataobject that you wish to sort the set by
-	* @param string $direction the direction of the sort e.g. Ascending  = ASC ( LIKE SQL )
+	* Sorts the current DataObjectSet instance.
+	* @param string $fieldname The name of the field on the DataObject that you wish to sort the set by.
+	* @param string $direction Direction to sort by, either "ASC" or "DESC".
 	*/
 	public function sort($fieldname, $direction = "ASC") {
 		if($this->items) {
@@ -978,11 +978,10 @@ class DataObjectSet extends ViewableData implements IteratorAggregate {
 }
 
 /**
- * Sort a 2D array by particular comma separated list of columns.
- * Prefix column names with - for a descending search.
- * @param array $data The array to sort
- * @param string $column Comma separated list of columns
- * @param string $direction Direction to sort by, either "ASC" or "DESC"
+ * Sort a 2D array by particular column.
+ * @param array $data The array to sort.
+ * @param string $column The name of the column you wish to sort by.
+ * @param string $direction Direction to sort by, either "ASC" or "DESC".
  * @param boolean $preserveIndexes Preserve indexes
  */
 function column_sort(&$data, $column, $direction = "ASC", $preserveIndexes = true) {
