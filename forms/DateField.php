@@ -7,6 +7,15 @@
  */
 class DateField extends TextField {
 	
+	/**
+	 * Enable DD/MM/YYYY field format validation
+	 * in {@link DateField->validate()}. Set to
+	 * FALSE to disable this validation.
+	 * 
+	 * @var boolean
+	 */
+	public static $validation_enabled = true;
+	
 	function setValue($val) {
 		if(is_string($val) && preg_match('/^([\d]{2,4})-([\d]{1,2})-([\d]{1,2})/', $val)) {
 			$this->value = preg_replace('/^([\d]{2,4})-([\d]{1,2})-([\d]{1,2})/','\\3/\\2/\\1', $val);
@@ -72,8 +81,11 @@ if(\$('$formID')){
 JS;
 	}
 
-	function validate($validator)
-	{
+	function validate($validator) {
+		if(!self::$validation_enabled) {
+			return true;
+		}
+		
 		if(!empty ($this->value) && !preg_match('/^[0-9]{1,2}\/[0-9]{1,2}\/[0-90-9]{2,4}$/', $this->value))
 		{
 			$validator->validationError(
