@@ -55,8 +55,8 @@
 									<b>Template to install:</b>
 								</p>
 								<ul id="Themes">
-									<li><input type="radio" name="template" value="blackcandy" id="BlackCandy" checked="checked" /><label for="BlackCandy">BlackCandy, default template ready to use.</label></li>
-									<li><input type="radio" name="template" value="tutorial" id="EmptyTemplate" /><label for="EmptyTemplate">Empty template, ready to begin the tutorial.</label></li>
+									<li><input type="radio" name="template" value="blackcandy" id="BlackCandy" <?php if(!isset($_POST['template']) || $_POST['template'] == 'blackcandy') {?>checked="checked"<?}?> /><label for="BlackCandy">BlackCandy, default template ready to use.</label></li>
+									<li><input type="radio" name="template" value="tutorial" id="EmptyTemplate" <?php if(isset($_POST['template']) && $_POST['template'] == 'tutorial') {?>checked="checked"<?}?>/><label for="EmptyTemplate">Empty template, ready to begin the tutorial.</label></li>
 								</ul>
 								<p>You can change the template or download another from the SilverStripe website after installation.</p>
 			
