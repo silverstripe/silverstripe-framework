@@ -107,6 +107,8 @@ $lang['fr_FR']['CreditCardField']['VALIDATIONJS1'] = 'Veuillez vous assurer que 
 $lang['fr_FR']['CreditCardField']['VALIDATIONJS2'] = 'le bon numéro de de la carte de crédit.';
 $lang['fr_FR']['CurrencyField']['CURRENCYSYMBOL'] = '$';
 $lang['fr_FR']['CurrencyField']['VALIDATIONJS'] = 'Merci d\'entrer une devise existante';
+$lang['fr_FR']['DataObject']['PLURALNAME'] = 'Data Objects';
+$lang['fr_FR']['DataObject']['SINGULARNAME'] = 'Data Object';
 $lang['fr_FR']['Date']['AGO'] = 'auparavant';
 $lang['fr_FR']['Date']['AWAY'] = 'plus tard';
 $lang['fr_FR']['Date']['DAY'] = 'jour';
@@ -120,6 +122,7 @@ $lang['fr_FR']['Date']['MONTHS'] = 'mois';
 $lang['fr_FR']['Date']['SEC'] = 'seconde';
 $lang['fr_FR']['Date']['SECS'] = 'secondes';
 $lang['fr_FR']['Date']['TIMEDIFFAGO'] = 'il y a %s ';
+$lang['fr_FR']['Date']['TIMEDIFFAWAY'] = 'il y a %s';
 $lang['fr_FR']['Date']['YEAR'] = 'année';
 $lang['fr_FR']['Date']['YEARS'] = 'années';
 $lang['fr_FR']['DateField']['NODATESET'] = 'Au';
@@ -215,6 +218,7 @@ $lang['fr_FR']['GhostPage']['PLURALNAME'] = 'Pages fantômes';
 $lang['fr_FR']['GhostPage']['SINGULARNAME'] = 'Page fantôme';
 $lang['fr_FR']['Group']['Description'] = 'Description';
 $lang['fr_FR']['Group']['has_many_Permissions'] = 'Permissions';
+$lang['fr_FR']['Group']['IPRestrictions'] = 'Restrictions d\'adresse IP';
 $lang['fr_FR']['Group']['Locked'] = 'Verrouillé?';
 $lang['fr_FR']['Group']['many_many_Members'] = 'Membres';
 $lang['fr_FR']['Group']['Parent'] = 'Groupe parent';
@@ -240,6 +244,7 @@ $lang['fr_FR']['HtmlEditorField']['BUTTONITALIC'] = 'Italique ( Ctrl + I )';
 $lang['fr_FR']['HtmlEditorField']['BUTTONREMOVELINK'] = 'Supprimer le lien';
 $lang['fr_FR']['HtmlEditorField']['BUTTONSTRIKE'] = 'Barré';
 $lang['fr_FR']['HtmlEditorField']['BUTTONUNDERLINE'] = 'Souligné ( Ctrl + U )';
+$lang['fr_FR']['HtmlEditorField']['CAPTION'] = 'Inclure comme Légende';
 $lang['fr_FR']['HtmlEditorField']['CHARMAP'] = 'Insérer un symbole';
 $lang['fr_FR']['HtmlEditorField']['CLOSE'] = 'fermer';
 $lang['fr_FR']['HtmlEditorField']['COPY'] = 'Copier ( Ctrl + C )';
@@ -286,6 +291,7 @@ $lang['fr_FR']['HtmlEditorField']['LINKEXTERNAL'] = 'Un autre site web';
 $lang['fr_FR']['HtmlEditorField']['LINKFILE'] = 'Un fichier à télécharger';
 $lang['fr_FR']['HtmlEditorField']['LINKINTERNAL'] = 'Une page du site';
 $lang['fr_FR']['HtmlEditorField']['LINKOPENNEWWIN'] = 'Ouvrir le lien dans une nouvelle fenêtre ?';
+$lang['fr_FR']['HtmlEditorField']['LINKTEXT'] = 'Texte du lien';
 $lang['fr_FR']['HtmlEditorField']['LINKTO'] = 'Lier à';
 $lang['fr_FR']['HtmlEditorField']['OK'] = 'Ok';
 $lang['fr_FR']['HtmlEditorField']['OL'] = 'Liste numérotée';
@@ -428,12 +434,11 @@ $lang['fr_FR']['Security']['PERMFAILURE'] = 'Cette page est sécurisée et vous 
 $lang['fr_FR']['SecurityAdmin']['ADVANCEDONLY'] = 'Cette section est seulement pour les utilisateurs avancés. Voir <a href="http://doc.silverstripe.com/doku.php?id=permissions:codes" target="_blank">cette page</a> pour plus d\'informations.';
 $lang['fr_FR']['SecurityAdmin']['CODE'] = 'Code';
 $lang['fr_FR']['SecurityAdmin']['GROUPNAME'] = 'Nom du group';
-$lang['fr_FR']['SecurityAdmin']['IPADDRESSESHELP'] = '<p>Vous pouvez restreindre ce groupe à des classes d\'adressage IP. Entrez une classe par ligne. Une classe peut-être exprimée selon l\'un de ces 4 formats: <br />
+$lang['fr_FR']['SecurityAdmin']['IPADDRESSESHELP'] = '<p>Vous pouvez restreindre ce groupe à des intervalles d\'adresses IP (une classe par ligne). <br />Un intervalle peut-être exprimé sous l\'une des formes suivantes : <br />
 203.96.152.12<br />
 203.96.152/24<br />
 203.96/16<br />
-203/8<br /><br />
-Si vous entrez une ou plusieurs classes dans ce champ, les membres ne pourront être reconnus en tant que tels que depuis l\'une de ces adresses, mais cela ne les empéchera pas de se logger depuis d\'autres lieu d\'Internet. Cela permet à l\'utilisateur de se logger en tout temps pour accéder à d\'autres parties du site non restreintes à des classes d\'adressage IP.';
+203/8<br /><br />Si vous entrez un ou plusieurs intervalles d\'adresses IP dans ce champ, les membres n\'auront le droit d\'être dans ce groupe que s\'il s\'identifient à partir de l\'une de ces adresses IP valides. Mais n\'empêchera pas leur identification. Ils pourront toujours accéder à d\'autes parties du système pour lesquelles il n\'y a pas de restriction d\'adresses IP.';
 $lang['fr_FR']['SecurityAdmin']['MEMBERS'] = 'Membres';
 $lang['fr_FR']['SecurityAdmin']['OPTIONALID'] = 'ID Optionnelle';
 $lang['fr_FR']['SecurityAdmin']['PERMISSIONS'] = 'Permissions';
@@ -451,7 +456,7 @@ $lang['fr_FR']['SiteTree']['BUTTONCANCELDRAFTDESC'] = 'Supprimer votre brouillon
 $lang['fr_FR']['SiteTree']['BUTTONSAVEPUBLISH'] = 'Enregistrer & Publier';
 $lang['fr_FR']['SiteTree']['BUTTONUNPUBLISH'] = 'Retirer du site publié';
 $lang['fr_FR']['SiteTree']['BUTTONUNPUBLISHDESC'] = 'Retirer cette page du site publié';
-$lang['fr_FR']['SiteTree']['CHANGETO'] = 'Changer pour';
+$lang['fr_FR']['SiteTree']['CHANGETO'] = 'Changer pour ¨"%s"';
 $lang['fr_FR']['SiteTree']['Comments'] = 'Commentaires';
 $lang['fr_FR']['SiteTree']['Content'] = 'Contenu';
 $lang['fr_FR']['SiteTree']['CURRENT'] = 'actuel';
@@ -509,6 +514,7 @@ $lang['fr_FR']['SiteTree']['TABREPORTS'] = 'Rapports';
 $lang['fr_FR']['SiteTree']['TODOHELP'] = '<p>Vous pouvez utiliser ceci pour garder une trace du travail qui doit être effectué sur le contenu de votre site. Pour voir toutes les pages qui ont un "A faire", ouvrez le \'Rapport de site\' sur la fenêtre de gauche et sélectionnez \' A faire\'</p>';
 $lang['fr_FR']['SiteTree']['TOPLEVEL'] = 'Contenu du Site ( Premier Niveau )';
 $lang['fr_FR']['SiteTree']['URL'] = 'URL';
+$lang['fr_FR']['SiteTree']['URLSegment'] = 'Segment d\'URL';
 $lang['fr_FR']['SiteTree']['VALIDATIONURLSEGMENT1'] = 'Une autre page utilise cette URL. L\'URL doit être unique pour chaque page';
 $lang['fr_FR']['SiteTree']['VALIDATIONURLSEGMENT2'] = 'Les URLs ne peuvent contenir que des lettres, chiffres et tirets.';
 $lang['fr_FR']['TableField']['ISREQUIRED'] = 'Dans %s, \'%s\' est requis.';

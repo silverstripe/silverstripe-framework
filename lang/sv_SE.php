@@ -245,6 +245,7 @@ $lang['sv_SE']['HtmlEditorField']['BUTTONITALIC'] = 'Kursiv (Ctrl+I)';
 $lang['sv_SE']['HtmlEditorField']['BUTTONREMOVELINK'] = 'Ta bort länk';
 $lang['sv_SE']['HtmlEditorField']['BUTTONSTRIKE'] = 'genomstruken';
 $lang['sv_SE']['HtmlEditorField']['BUTTONUNDERLINE'] = 'Understruken (Ctrl+U)';
+$lang['sv_SE']['HtmlEditorField']['CAPTION'] = 'Inkludera som rubrik';
 $lang['sv_SE']['HtmlEditorField']['CHARMAP'] = 'Infoga symbol';
 $lang['sv_SE']['HtmlEditorField']['CLOSE'] = 'stäng';
 $lang['sv_SE']['HtmlEditorField']['COPY'] = 'Kopiera';
