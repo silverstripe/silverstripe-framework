@@ -670,6 +670,15 @@ class MySQLDatabase extends Database {
 		return $classes;
 	}
 	
+	/**
+	 * Because NOW() doesn't always work...
+	 * MSSQL, I'm looking at you
+	 *
+	 */
+	function now(){
+		return 'NOW()';
+	}
+	
 	/*
 	 * This will return text which has been escaped in a database-friendly manner
 	 * Using PHP's addslashes method won't work in MSSQL
