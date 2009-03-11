@@ -181,7 +181,7 @@ class Versioned extends DataObjectDecorator {
 				foreach($this->stages as $stage) {
 					// Extra tables for _Live, etc.
 					if($stage != $this->defaultStage) {
-						DB::requireTable("{$table}_$stage", $fields, $indexes);
+						DB::requireTable("{$table}_$stage", $fields, $indexes, false);
 						/*
 						if(!DB::query("SELECT * FROM {$table}_$stage")->value()) {
 							$fieldList = implode(", ",array_keys($fields));
