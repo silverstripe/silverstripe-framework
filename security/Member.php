@@ -654,7 +654,7 @@ class Member extends DataObject {
 		if(count($collatedGroups) > 0) {
 			$collatedGroups = implode(", ", array_unique($collatedGroups));
 
-			$unfilteredGroups = singleton('Group')->instance_get("\"ID\" IN ($collatedGroups)", '"ID"', "", "", "Member_GroupSet");
+			$unfilteredGroups = singleton('Group')->instance_get("\"ID\" IN ($collatedGroups)", "\"Group\".\"ID\"", "", "", "Member_GroupSet");
 			$result = new ComponentSet();
 			
 			// Only include groups where allowedIPAddress() returns true

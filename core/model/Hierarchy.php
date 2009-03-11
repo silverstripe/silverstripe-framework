@@ -497,7 +497,7 @@ class Hierarchy extends DataObjectDecorator {
 	 * @return DataObjectSet
 	 */
 	public function stageChildren($showAll = false) {
-		$extraFilter = $showAll ? '' : " AND \"ShowInMenus\"";
+		$extraFilter = $showAll ? '' : " AND \"ShowInMenus\"=1";
 		$baseClass = ClassInfo::baseDataClass($this->owner->class);
 		
 		$staged = DataObject::get($baseClass, "\"{$baseClass}\".\"ParentID\" = " . (int)$this->owner->ID . " AND \"{$baseClass}\".\"ID\" != " . (int)$this->owner->ID . $extraFilter, "");
