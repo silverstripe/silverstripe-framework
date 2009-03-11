@@ -107,7 +107,7 @@ class Convert extends Object {
 			return $val;
 			
 		} else {
-			return addslashes($val);
+			return DB::getConn()->addslashes($val);
 		}
 	}
 
