@@ -640,6 +640,13 @@ class MySQLDatabase extends Database {
 	}
 	
 	/**
+	 * Returns the SQL command to get all the tables in this database
+	 */
+	function allTablesSQL(){
+		return "SHOW TABLES;";
+	}
+	
+	/**
 	 * Returns true if the given table is exists in the current database 
 	 * NOTE: Experimental; introduced for db-abstraction and may changed before 2.4 is released.
 	 */
