@@ -85,7 +85,7 @@ class Controller extends RequestHandler {
 			$member = Member::currentUser();
 			if($member) {
 				if(!headers_sent()) Cookie::set("PastMember", true);
-				DB::query("UPDATE \"Member\" SET \"LastVisited\" = NOW() WHERE \"ID\" = $member->ID", null);
+				DB::query("UPDATE \"Member\" SET \"LastVisited\" = " . DB::getConn()->now() . " WHERE \"ID\" = $member->ID", null);
 			}
 		}
 		
