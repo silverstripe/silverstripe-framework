@@ -84,7 +84,7 @@ class Controller extends RequestHandler {
 		if(Session::get('loggedInAs') && Security::database_is_ready()) {
 			$member = Member::currentUser();
 			if($member) {
-				Cookie::set("PastMember", true);
+				if(!headers_sent()) Cookie::set("PastMember", true);
 				DB::query("UPDATE \"Member\" SET \"LastVisited\" = NOW() WHERE \"ID\" = $member->ID", null);
 			}
 		}
