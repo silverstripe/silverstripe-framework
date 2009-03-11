@@ -779,7 +779,7 @@ class DataObject extends ViewableData implements DataObjectInterface,i18nEntityP
 				if((!isset($this->record['ID']) || !$this->record['ID']) && isset($ancestry[0])) {
 					$baseTable = $ancestry[0];
 
-					DB::query("INSERT INTO \"{$baseTable}\" (\"Created\") VALUES (NOW())");
+					DB::query("INSERT INTO \"{$baseTable}\" (\"Created\") VALUES (" . DB::getConn()->now() . ")");
 					$this->record['ID'] = DB::getGeneratedID($baseTable);
 					$this->changed['ID'] = 2;
 
@@ -806,15 +806,16 @@ class DataObject extends ViewableData implements DataObjectInterface,i18nEntityP
 								if(!$fieldObj instanceof CompositeDBField) {
 									$fieldObj->setValue($this->record[$fieldName], $this->record);
 								}
-								$fieldObj->writeToManipulation($manipulation[$class]);
+								if($class != $baseTable || $fieldName!='ID')
+									$fieldObj->writeToManipulation($manipulation[$class]);
 							}
 						}
 
 						// Add the class name to the base object
 						if($idx == 0) {
-							$manipulation[$class]['fields']["LastEdited"] = "now()";
+							$manipulation[$class]['fields']["LastEdited"] = DB::getConn()->now();
 							if($dbCommand == 'insert') {
-								$manipulation[$class]['fields']["Created"] = "now()";
+								$manipulation[$class]['fields']["Created"] = DB::getConn()->now();
 								//echo "<li>$this->class - " .get_class($this);
 								$manipulation[$class]['fields']["ClassName"] = "'$this->class'";
 							}
@@ -2577,7 +2578,8 @@ class DataObject extends ViewableData implements DataObjectInterface,i18nEntityP
 		$indexes = $this->databaseIndexes();
 
 		if($fields) {
-			DB::requireTable($this->class, $fields, $indexes);
+			$hasAutoIncPK = ($this->class == ClassInfo::baseDataClass($this->class));
+			DB::requireTable($this->class, $fields, $indexes, $hasAutoIncPK);
 		} else {
 			DB::dontRequireTable($this->class);
 		}

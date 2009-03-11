@@ -182,13 +182,14 @@ class DB {
 	 * @param string $table The name of the table
 	 * @param string $fieldSchema A list of the fields to create, in the same form as DataObject::$db
 	 * @param string $indexSchema A list of indexes to create.  The keys of the array are the names of the index.
+	 * @param boolean $hasAutoIncPK A flag indicating that the primary key on this table is an autoincrement type
 	 * The values of the array can be one of:
 	 *   - true: Create a single column index on the field named the same as the index.
 	 *   - array('fields' => array('A','B','C'), 'type' => 'index/unique/fulltext'): This gives you full
 	 *     control over the index.
 	 */
-	static function requireTable($table, $fieldSchema = null, $indexSchema = null) {
-		return DB::$globalConn->requireTable($table, $fieldSchema, $indexSchema);
+	static function requireTable($table, $fieldSchema = null, $indexSchema = null, $hasAutoIncPK=true) {
+		return DB::$globalConn->requireTable($table, $fieldSchema, $indexSchema, $hasAutoIncPK);
 	}
 
 	/**

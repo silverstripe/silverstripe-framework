@@ -228,7 +228,7 @@ abstract class Database extends Object {
 	 *   - array('fields' => array('A','B','C'), 'type' => 'index/unique/fulltext'): This gives you full
 	 *     control over the index.
 	 */
-	function requireTable($table, $fieldSchema = null, $indexSchema = null) {
+	function requireTable($table, $fieldSchema = null, $indexSchema = null, $hasAutoIncPK=true) {
 		if(!isset($this->tableList[strtolower($table)])) {
 			$this->transCreateTable($table);
 			Database::alteration_message("Table $table: created","created");
@@ -237,7 +237,7 @@ abstract class Database extends Object {
 		}
 
 		//DB ABSTRACTION: we need to convert this to a db-specific version:
-		$this->requireField($table, 'ID', DB::getConn()->IdColumn());
+		$this->requireField($table, 'ID', DB::getConn()->IdColumn(false, $hasAutoIncPK));
 		
 		// Create custom fields
 		if($fieldSchema) {
@@ -453,6 +453,7 @@ abstract class Database extends Object {
 	 */
 	function manipulate($manipulation) {
 		foreach($manipulation as $table => $writeInfo) {
+			
 			if(isset($writeInfo['fields']) && $writeInfo['fields']) {
 				$fieldList = $columnList = $valueList = array();
 				foreach($writeInfo['fields'] as $fieldName => $fieldVal) {
@@ -485,6 +486,7 @@ abstract class Database extends Object {
 							$columnList[] = "\"ID\"";
 							$valueList[] = (int)$writeInfo['id'];
 						}
+						
 						$columnList = implode(", ", $columnList);
 						$valueList = implode(", ", $valueList);
 						$sql = "insert into \"$table\" ($columnList) VALUES ($valueList)";
