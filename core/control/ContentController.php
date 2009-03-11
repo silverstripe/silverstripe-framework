@@ -143,7 +143,7 @@ class ContentController extends Controller {
 	 */
 	public function getMenu($level = 1) {
 		if($level == 1) {
-			$result = DataObject::get("SiteTree", "\"ShowInMenus\" AND \"ParentID\" = 0");
+			$result = DataObject::get("SiteTree", "\"ShowInMenus\" = 1 AND \"ParentID\" = 0");
 
 		} else {
 			$parent = $this->data();
