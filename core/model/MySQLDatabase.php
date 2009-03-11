@@ -662,6 +662,14 @@ class MySQLDatabase extends Database {
 		}
 		return $classes;
 	}
+	
+	/*
+	 * This will return text which has been escaped in a database-friendly manner
+	 * Using PHP's addslashes method won't work in MSSQL
+	 */
+	function addslashes($value){
+		return mysql_escape_string($value);
+	}
 }
 
 /**
