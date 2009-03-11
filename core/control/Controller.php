@@ -511,7 +511,7 @@ class Controller extends RequestHandler {
 	 */
 	function isAjax() {
 		return (
-			isset($this->requestParams['ajax']) ||
+			isset($this->requestParams['ajax']) || isset($_REQUEST['ajax']) ||
 			(isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] == "XMLHttpRequest")
 		);
 	}
