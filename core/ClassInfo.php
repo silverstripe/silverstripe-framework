@@ -37,7 +37,7 @@ class ClassInfo {
 			// Cache the list of all table names to reduce on DB traffic
 			if(self::$_cache_all_tables === null) {
 				self::$_cache_all_tables = array();
-				$tables = DB::query("SHOW TABLES")->column();
+				$tables = DB::query(DB::getConn()->allTablesSQL())->column();
 				foreach($tables as $table) self::$_cache_all_tables[strtolower($table)] = true;
 			}
 			return isset(self::$_cache_all_tables[strtolower($class)]);
