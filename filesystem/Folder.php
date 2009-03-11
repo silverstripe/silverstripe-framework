@@ -156,7 +156,7 @@ class Folder extends File {
 		
 		DB::query("INSERT INTO \"File\" 
 			(\"ClassName\", \"ParentID\", \"OwnerID\", \"Name\", \"Filename\", \"Created\", \"LastEdited\", \"Title\")
-			VALUES ('$className', $this->ID, $ownerID, '$name', '$filename', NOW(), NOW(), '$name')");
+			VALUES ('$className', $this->ID, $ownerID, '$name', '$filename', " . DB::getConn()->now() . ',' . DB::getConn()->now() . ", '$name')");
 			
 		return DB::getGeneratedID("File");
 	}

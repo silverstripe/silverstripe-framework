@@ -325,8 +325,7 @@ class Member extends DataObject {
 	static function member_from_autologinhash($RAW_hash, $login = false) {
 		$SQL_hash = Convert::raw2sql($RAW_hash);
 
-		$member = DataObject::get_one('Member',"\"AutoLoginHash\"='" . $SQL_hash .
-																	"' AND \"AutoLoginExpired\" > NOW()");
+		$member = DataObject::get_one('Member',"\"AutoLoginHash\"='" . $SQL_hash . "' AND \"AutoLoginExpired\" > " . DB::getConn()->now());
 
 		if($login && $member)
 			$member->logIn();

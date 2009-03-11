@@ -13,7 +13,7 @@ class QueuedEmailDispatchTask extends DailyTask {
 		
 		echo "SENDING QUEUED EMAILS\n";
 		
-		$queued = DataObject::get('QueuedEmail', "\"Send\" < NOW()");
+		$queued = DataObject::get('QueuedEmail', "\"Send\" < " . DB::getConn()->now());
 		
 		if( !$queued )
 			return;
