@@ -23,8 +23,6 @@ HTML;
 		Requirements::css(SAPPHIRE_DIR . "/css/CalendarDateField.css");
 		Requirements::css(THIRDPARTY_DIR . "/calendar/calendar-win2k-1.css");
 
-		$field = parent::Field();
-		
 		$id = $this->id();
 		$val = $this->attrValue();
 		
