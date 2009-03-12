@@ -347,9 +347,11 @@ abstract class Database extends Object {
 		
 		// Collations didn't come in until MySQL 4.1.  Anything earlier will throw a syntax error if you try and use
 		// collations.
+		// TODO: move this to the MySQLDatabase file, or drop it altogether?
 		if(!$this->supportsCollations()) {
 			$spec = eregi_replace(' *character set [^ ]+( collate [^ ]+)?( |$)','\\2',$spec);
 		}
+		
 		if(!isset($this->tableList[strtolower($table)])) $newTable = true;
 
 		if(!$newTable && !isset($this->fieldList[$table])) {
@@ -362,9 +364,9 @@ abstract class Database extends Object {
 		else $specValue=$spec;
 
 		// We need to get db-specific versions of the ID column:
-		if($spec_orig==DB::getConn()->IdColumn())
+		if($spec_orig==DB::getConn()->IdColumn() || $spec_orig==DB::getConn()->IdColumn(true))
 			$specValue=DB::getConn()->IdColumn(true);
-
+		
 		if(!$newTable) {
 			if(is_array($this->fieldList[$table][$field])) {
 				$fieldValue = $this->fieldList[$table][$field]['data_type'];
@@ -372,7 +374,7 @@ abstract class Database extends Object {
 				$fieldValue = $this->fieldList[$table][$field];
 			}
 		}
-
+		
 		// Get the version of the field as we would create it. This is used for comparison purposes to see if the
 		// existing field is different to what we now want
 		if(is_array($spec_orig)) {
