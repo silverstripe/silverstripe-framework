@@ -16,6 +16,7 @@ HTML;
 	}
 	
 	function Field() {
+		Requirements::javascript(THIRDPARTY_DIR . '/prototype.js');
 		Requirements::javascript(THIRDPARTY_DIR . "/behaviour.js");
 		Requirements::javascript(THIRDPARTY_DIR . "/calendar/calendar.js");
 		Requirements::javascript(THIRDPARTY_DIR . "/calendar/lang/calendar-en.js");
