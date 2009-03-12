@@ -328,8 +328,8 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	 * @return DataObjectSet Comments on this page.
 	 */
 	public function Comments() {
-		$spamfilter = isset($_GET['showspam']) ? '' : 'AND NOT "IsSpam"';
-		$unmoderatedfilter = Permission::check('ADMIN') ? '' : 'AND NOT "NeedsModeration"';
+		$spamfilter = isset($_GET['showspam']) ? '' : "AND \"IsSpam\"=0";
+		$unmoderatedfilter = Permission::check('ADMIN') ? '' : "AND \"NeedsModeration\"=0";
 		$comments =  DataObject::get("PageComment", "\"ParentID\" = '" . Convert::raw2sql($this->ID) . "' $spamfilter $unmoderatedfilter", "\"Created\" DESC");
 		
 		return $comments ? $comments : new DataObjectSet();
