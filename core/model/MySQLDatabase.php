@@ -1,6 +1,9 @@
 <?php
 /**
  * MySQL connector class.
+ * 
+ * Supported indexes for {@link requireTable()}:
+ * 
  * @package sapphire
  * @subpackage model
  */
@@ -321,19 +324,25 @@ class MySQLDatabase extends Database {
 	
 	/**
 	 * Create an index on a table.
+	 * 
 	 * @param string $tableName The name of the table.
 	 * @param string $indexName The name of the index.
-	 * @param string $indexSpec The specification of the index, see Database::requireIndex() for more details.
+	 * @param string $indexSpec The specification of the index, see {@link Database::requireIndex()} for more details.
 	 */
 	public function createIndex($tableName, $indexName, $indexSpec) {
 		$this->query("ALTER TABLE \"$tableName\" ADD " . $this->getIndexSqlDefinition($indexName, $indexSpec));
 	}
 	
-	/*
+	/**
 	 * This takes the index spec which has been provided by a class (ie static $indexes = blah blah)
 	 * and turns it into a proper string.
 	 * Some indexes may be arrays, such as fulltext and unique indexes, and this allows database-specific
-	 * arrays to be created.
+	 * arrays to be created. See {@link requireTable()} for details on the index format.
+	 * 
+	 * @see http://dev.mysql.com/doc/refman/5.0/en/create-index.html
+	 * 
+	 * @param string|array $indexSpec
+	 * @return string MySQL compatible ALTER TABLE syntax
 	 */
 	public function convertIndexSpec($indexSpec){
 		if(is_array($indexSpec)){
@@ -357,6 +366,11 @@ class MySQLDatabase extends Database {
 		return $indexSpec;
 	}
 	
+	/**
+	 * @param string $indexName
+	 * @param string|array $indexSpec See {@link requireTable()} for details
+	 * @return string MySQL compatible ALTER TABLE syntax
+	 */
 	protected function getIndexSqlDefinition($indexName, $indexSpec=null) {
 	
 		$indexSpec=$this->convertIndexSpec($indexSpec);
@@ -387,7 +401,7 @@ class MySQLDatabase extends Database {
 	 * Alter an index on a table.
 	 * @param string $tableName The name of the table.
 	 * @param string $indexName The name of the index.
-	 * @param string $indexSpec The specification of the index, see Database::requireIndex() for more details.
+	 * @param string $indexSpec The specification of the index, see {@link Database::requireIndex()} for more details.
 	 */
 	public function alterIndex($tableName, $indexName, $indexSpec) {
 		

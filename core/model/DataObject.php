@@ -2959,6 +2959,8 @@ class DataObject extends ViewableData implements DataObjectInterface,i18nEntityP
 	/**
 	 * If a field is in this array, then create a database index
 	 * on that field. This is a map from fieldname to index type.
+	 * See {@link Database->requireIndex()} and custom subclasses for details on the array notation.
+	 * 
 	 * @var array
 	 */
 	public static $indexes = null;
