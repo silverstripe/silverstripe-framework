@@ -195,7 +195,24 @@ class Form extends RequestHandler {
 		// Validate the form
 		if(!$this->validate()) {
 			if(Director::is_ajax()) {
-				return FormResponse::respond();
+				// Special case for legacy Validator.js implementation (assumes eval'ed javascript collected through FormResponse)
+				if($this->validator->getJavascriptValidationHandler() == 'prototype') {
+					return FormResponse::respond();
+				} else {
+					$acceptType = $request->getHeader('Accept');
+					if(strpos($acceptType, 'application/json') !== FALSE) {
+						// Send validation errors back as JSON with a flag at the start
+						$response = new HTTPResponse(Convert::array2json($this->validator->getErrors()));
+						$response->addHeader('Content-Type', 'application/json');
+					} else {
+						$this->setupFormErrors();
+						// Send the newly rendered form tag as HTML
+						$response = new HTTPResponse($this->forTemplate());
+						$response->addHeader('Content-Type', 'text/html');
+					}
+					
+					return $response;
+				}
 			} else {
 				Director::redirectBack();
 				return;
@@ -760,18 +777,13 @@ class Form extends RequestHandler {
 	 * This includes form validation, if it fails, we redirect back
 	 * to the form with appropriate error messages.
 	 * Triggered through {@link httpSubmission()} which is triggered
-	 * @usedby Form->httpSubmission()
-	 * 
-	 * @todo Replace hardcoded exclude fields like CreditCardNumber with hook to specify sensitive fields in model
 	 */
 	 function validate(){
 		if($this->validator){
 			$errors = $this->validator->validate();
 
 			if($errors){
-				if(Director::is_ajax()) {
-					// Send validation errors back as JSON with a flag at the start
-					//echo "VALIDATIONERROR:" . Convert::array2json($errors);
+				if(Director::is_ajax() && $this->validator->getJavascriptValidationHandler() == 'prototype') {
 					FormResponse::status_message(_t('Form.VALIDATIONFAILED', 'Validation failed'), 'bad');
 					foreach($errors as $error) {
 						FormResponse::add(sprintf(
@@ -781,13 +793,8 @@ class Form extends RequestHandler {
 							Convert::raw2js($error['messageType'])
 						));
 					}
-					return false;
 				} else {
 					$data = $this->getData();
-
-					// People will get worried if you leave credit card information in session..
-					if(isset($data['CreditCardNumber']))	unset($data['CreditCardNumber']);
-					if(isset($data['DateExpiry'])) unset($data['Expiry']);
 
 					// Load errors into session and post back
 					Session::set("FormInfo.{$this->FormName()}", array(

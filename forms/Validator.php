@@ -113,9 +113,9 @@ abstract class Validator extends Object {
 	 * 
 	 * @param $fieldName name of the field
 	 * @param $message error message to display
-	 * @param $messageType optional parameter, gets loaded into the HTML class attribute in the rendered output
+	 * @param $messageType optional parameter, gets loaded into the HTML class attribute in the rendered output. See {@link getErrors()} for details.
 	 */
-	function validationError($fieldName,$message,$messageType=''){
+	function validationError($fieldName, $message, $messageType='') {
 		$this->errors[] = array(
 			'fieldName' => $fieldName,
 			'message' => $message,
@@ -124,12 +124,15 @@ abstract class Validator extends Object {
 	}
 	
 	/**
-	 * @deprecated 2.4 Use Validator->getCombinedError() and custom code
+	 * @deprecated 2.4 Use Validator->getErrors() and custom code
 	 */
 	function showError() {
 		Debug::show($this->errors);
 	}
 	
+	/**
+	 * @deprecated 2.4 Use custom code
+	 */
 	function getCombinedError(){
 		if($this->errors) {
 			foreach($this->errors as $error){
@@ -140,7 +143,26 @@ abstract class Validator extends Object {
 			return $ret;
 		}
 	}
+	
+	/**
+	 * @deprecated 2.4 Use getErrors()
+	 */
 	function getError(){
+		return $this->getErrors();
+	}
+	
+	/**
+	 * Returns all errors found by a previous call to {@link validate()}.
+	 * The array contains the following keys for each error:
+	 * - 'fieldName': the name of the FormField instance
+	 * - 'message': Validation message (optionally localized)
+	 * - 'messageType': Arbitrary type of the message which is rendered as a CSS class in the FormField template,
+	 *   e.g. <span class="message (type)">. Usually "bad|message|validation|required", which renders differently
+	 *   if sapphire/css/Form.css is included.
+	 * 
+	 * @return array
+	 */
+	function getErrors() {
 		return $this->errors;
 	}
 	
