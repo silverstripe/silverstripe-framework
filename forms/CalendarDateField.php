@@ -10,7 +10,7 @@ class CalendarDateField extends DateField {
 	static function HTMLField( $id, $name, $val ) {
 		return <<<HTML
 			<input type="text" id="$id" name="$name" value="$val" />
-			<img src="sapphire/images/calendar-icon.gif" id="$id-icon" />
+			<img src="sapphire/images/calendar-icon.gif" id="$id-icon" alt="Calendar icon" />
 			<div class="calendarpopup" id="$id-calendar"></div>
 HTML;
 	}
