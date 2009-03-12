@@ -776,8 +776,9 @@ class DataObject extends ViewableData implements DataObjectInterface,i18nEntityP
 					
 				// New records have their insert into the base data table done first, so that they can pass the
 				// generated primary key on to the rest of the manipulation
-				if((!isset($this->record['ID']) || !$this->record['ID']) && isset($ancestry[0])) {
-					$baseTable = $ancestry[0];
+				$baseTable = $ancestry[0];
+				
+				if((!isset($this->record['ID']) || !$this->record['ID']) && isset($ancestry[0])) {	
 
 					DB::query("INSERT INTO \"{$baseTable}\" (\"Created\") VALUES (" . DB::getConn()->now() . ")");
 					$this->record['ID'] = DB::getGeneratedID($baseTable);
