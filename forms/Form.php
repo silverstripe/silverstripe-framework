@@ -79,6 +79,16 @@ class Form extends RequestHandler {
 	 */
 	protected $legend;
 	
+	/**
+	 * The SS template to render this form HTML into.
+	 * Default is "Form", but this can be changed to
+	 * another template for customisation.
+	 * 
+	 * @see Form->setTemplate()
+	 * @var string
+	 */
+	protected $template;
+	
 	protected $buttonClickedFunc;
 	
 	protected $message;
@@ -505,6 +515,28 @@ class Form extends RequestHandler {
 	 */
 	function setLegend($legend) {
 		$this->legend = $legend;
+	}
+	
+	/**
+	 * Set the SS template that this form should use
+	 * to render with. The default is "Form".
+	 * 
+	 * @param string $template The name of the template (without the .ss extension)
+	 */
+	function setTemplate($template) {
+		$this->template = $template;
+	}
+	
+	/**
+	 * Return the template to render this form with.
+	 * If the template isn't set, then default to the
+	 * form class name e.g "Form".
+	 * 
+	 * @return string
+	 */
+	function getTemplate() {
+		if($this->template) return $this->template;
+		else return $this->class;
 	}
 	
 	/**
@@ -955,14 +987,12 @@ class Form extends RequestHandler {
 	/**
 	 * Return a rendered version of this form.
 	 * 
-	 * This also allows for subclasses of Form to have their own template,
-	 * falling back to 'Form' if it doesn't exist.
-	 * 
-	 * This is returned when you access a form as $FormObject rather than <% control FormObject %>
+	 * This is returned when you access a form as $FormObject rather
+	 * than <% control FormObject %>
 	 */
 	function forTemplate() {
 		return $this->renderWith(array(
-			$this->class,
+			$this->getTemplate(),
 			'Form'
 		));
 	}
@@ -972,7 +1002,7 @@ class Form extends RequestHandler {
 	 * It triggers slightly different behaviour, such as disabling the rewriting of # links
 	 */
 	function forAjaxTemplate() {
-		$view = new SSViewer("Form");
+		$view = new SSViewer($this->getTemplate());
 		return $view->dontRewriteHashlinks()->process($this);
 	}
 
