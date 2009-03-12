@@ -1002,7 +1002,11 @@ class Form extends RequestHandler {
 	 * It triggers slightly different behaviour, such as disabling the rewriting of # links
 	 */
 	function forAjaxTemplate() {
-		$view = new SSViewer($this->getTemplate());
+		$view = new SSViewer(array(
+			$this->getTemplate(),
+			'Form'
+		));
+		
 		return $view->dontRewriteHashlinks()->process($this);
 	}
 
