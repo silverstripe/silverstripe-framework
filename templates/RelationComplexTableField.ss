@@ -40,21 +40,7 @@
 		<tbody>
 			<% if Items %>
 			<% control Items %>
-				<tr id="record-$Parent.Name-$ID"<% if HighlightClasses %> class="$HighlightClasses"<% end_if %>>
-					<% if Markable %><td width="18" class="markingcheckbox">$MarkingCheckbox</td><% end_if %>
-					<% control Fields %>
-					<td>$Value</td>
-					<% end_control %>
-					<% if Can(show) %>
-						<td width="18"><a class="popuplink showlink" href="$ShowLink" target="_blank"><img src="cms/images/show.png" alt="<% _t('SHOW', 'show') %>" /></a></td>
-					<% end_if %>
-					<% if Can(edit) %>
-						<td width="18"><a class="popuplink editlink" href="$EditLink" target="_blank"><img src="cms/images/edit.gif" alt="<% _t('EDIT', 'edit') %>" /></a></td>
-					<% end_if %>
-					<% if Can(delete) %>
-						<td width="18"><a class="deletelink" href="$DeleteLink" title="Delete this row"><img src="cms/images/delete.gif" alt="<% _t('DELETE', 'delete') %>" /></a></td>
-					<% end_if %>
-				</tr>
+				<% include TableListField_Item %>
 			<% end_control %>
 			<% else %>
 				<tr class="notfound">

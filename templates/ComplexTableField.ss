@@ -57,15 +57,7 @@
 		<tbody>
 			<% if Items %>
 			<% control Items %>
-				<tr id="record-$Parent.id-$ID"<% if HighlightClasses %> class="$HighlightClasses"<% end_if %>>
-					<% if Markable %><td width="18" class="markingcheckbox">$MarkingCheckbox</td><% end_if %>
-					<% control Fields %>
-					<td>$Value</td>
-					<% end_control %>
-					<% control Actions %>
-						<td width="16" class="action<% if Default %> default<% end_if %>"><a class="$Class" href="$Link"><% if Icon %><img src="$Icon" alt="$Label" /><% else %>$Label<% end_if %></a></td>
-					<% end_control %>
-				</tr>
+				<% include TableListField_Item %>
 			<% end_control %>
 			<% else %>
 				<tr class="notfound">
