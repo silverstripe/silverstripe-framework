@@ -20,7 +20,7 @@ class HasManyComplexTableField extends ComplexTableField {
 	
 	protected $relationAutoSetting = false;
 	
-	function __construct($controller, $name, $sourceClass, $fieldList, $detailFormFields = null, $sourceFilter = "", $sourceSort = "", $sourceJoin = "") {
+	function __construct($controller, $name, $sourceClass, $fieldList = null, $detailFormFields = null, $sourceFilter = "", $sourceSort = "", $sourceJoin = "") {
 		parent::__construct($controller, $name, $sourceClass, $fieldList, $detailFormFields, $sourceFilter, $sourceSort, $sourceJoin);
 
 		Requirements::add_i18n_javascript(SAPPHIRE_DIR . '/javascript/lang');
@@ -64,7 +64,7 @@ class HasManyComplexTableField extends ComplexTableField {
 			if($list != 'undefined')
 				$items = explode(',', $list);
 		}
-		
+
 		$saveDest->setByIDList($items);
 	}
 	
