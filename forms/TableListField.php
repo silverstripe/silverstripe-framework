@@ -102,13 +102,19 @@ class TableListField extends FormField {
 	 * Actions can be disabled through $permissions.
 	 * Format (key is used for the methodname and CSS-class): 
 	 * array(
-	 * 	'delete' => array('label' => 'Delete', 'icon' => 'cms/images/delete.gif')
+	 * 	'delete' => array(
+	 * 		'label' => 'Delete', 
+	 * 		'icon' => 'cms/images/delete.gif',
+	 * 		'icon_disabled' => 'cms/images/delete_disabled.gif',
+	 * 		'class' => 'deletelink',
+	 * 	)
 	 * )
 	 */
 	public $actions = array(
 		'delete' => array(
 			'label' => 'Delete',
 			'icon' => 'cms/images/delete.gif',
+			'icon_disabled' => 'cms/images/delete_disabled.gif',
 			'class' => 'deletelink' 
 		)
 	);
@@ -677,7 +683,11 @@ JS
 	 */
 	
 	/**
-	 * Template accessor for Permissions
+	 * Template accessor for Permissions.
+	 * See {@link TableListField_Item->Can()} for object-specific
+	 * permissions.
+	 * 
+	 * @return boolean
 	 */
 	function Can($mode) {
 		if($mode == 'add' && $this->isReadonly()) {
@@ -1199,7 +1209,17 @@ JS
  * @see TableListField
  */
 class TableListField_Item extends ViewableData {
-	protected $item, $parent;
+	
+	/**
+	 * @var DataObject The underlying data record,
+	 * usually an element of {@link TableListField->sourceItems()}.
+	 */
+	protected $item;
+	
+	/**
+	 * @var TableListField
+	 */
+	protected $parent;
 	
 	function __construct($item, $parent) {
 		$this->failover = $this->item = $item;
@@ -1272,8 +1292,26 @@ class TableListField_Item extends ViewableData {
 		return $this->parent->Markable;
 	}
 	
+	/**
+	 * Checks global permissions for field in  {@link TableListField->Can()}.
+	 * If they are allowed, it checks for object permissions by assuming
+	 * a method with "can" + $mode parameter naming, e.g. canDelete().
+	 * 
+	 * @param string $mode See {@link TableListField::$permissions} array.
+	 * @return boolean
+	 */
 	function Can($mode) {
-		return $this->parent->Can($mode);
+		$canMethod = "can" . ucfirst($mode);
+		if(!$this->parent->Can($mode)) {
+			// check global settings for the field instance
+			return false;
+		} elseif($this->item->hasMethod($canMethod)) {
+			// if global allows, check object specific permissions (e.g. canDelete())
+			return $this->item->$canMethod();
+		} else {
+			// otherwise global allowed this action, so return TRUE
+			return true;
+		}
 	}
 	
 	function Link() {
@@ -1303,9 +1341,11 @@ class TableListField_Item extends ViewableData {
 					'Name' => $actionName,
 					'Link' => $this->{ucfirst($actionName).'Link'}(),
 					'Icon' => $actionSettings['icon'],
+					'IconDisabled' => $actionSettings['icon_disabled'],
 					'Label' => $actionSettings['label'],
 					'Class' => $actionSettings['class'],
 					'Default' => ($actionName == $this->parent->defaultAction),
+					'IsAllowed' => $this->Can($actionName), 
 				)));
 			}
 		}
