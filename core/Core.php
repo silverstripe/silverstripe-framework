@@ -93,8 +93,8 @@ if(!isset($_SERVER['HTTP_HOST'])) {
 /**
  * Define system paths
  */
-define('BASE_PATH', dirname(dirname($_SERVER['SCRIPT_FILENAME'])));
-define('BASE_URL', dirname(dirname($_SERVER['SCRIPT_NAME'])));
+define('BASE_PATH', rtrim(dirname(dirname($_SERVER['SCRIPT_FILENAME'])), DIRECTORY_SEPARATOR));
+define('BASE_URL', rtrim(dirname(dirname($_SERVER['SCRIPT_NAME'])), DIRECTORY_SEPARATOR));
 define('MODULES_DIR', 'modules');
 define('MODULES_PATH', BASE_PATH . '/' . MODULES_DIR);
 define('THIRDPARTY_DIR', 'jsparty');

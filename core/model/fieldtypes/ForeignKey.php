@@ -21,7 +21,7 @@ class ForeignKey extends Int {
 
 	protected static $default_search_filter_class = 'ExactMatchMultiFilter';
 	
-	function __construct($name, $object) {
+	function __construct($name, $object = null) {
 		$this->object = $object;
 		parent::__construct($name);
 	}

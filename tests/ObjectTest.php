@@ -44,7 +44,7 @@ class ObjectTest extends SapphireTest {
 			foreach($trueMethods as $method) {
 				$methodU = strtoupper($method);
 				$methodL = strtoupper($method);
-				$this->assertTrue($obj->hasMethod($method), "Test that obj#$i has method $method");
+				$this->assertTrue($obj->hasMethod($method), "Test that obj#$i has method $method ($obj->class)");
 				$this->assertTrue($obj->hasMethod($methodU), "Test that obj#$i has method $methodU");
 				$this->assertTrue($obj->hasMethod($methodL), "Test that obj#$i has method $methodL");
 
@@ -88,12 +88,6 @@ class ObjectTest extends SapphireTest {
 			$obj->stat('mystaticProperty'),
 			'Uninherited statics through stat() on a singleton behave the same as built-in PHP statics'
 		);
-		/*
-		$this->assertNull(
-			$obj->stat('mystaticSubProperty'),
-			'Statics through stat() on a singleton dont inherit statics from child classes'
-		);
-		*/
 	}
 	
 	function testStaticInheritanceGetters() {
@@ -106,39 +100,6 @@ class ObjectTest extends SapphireTest {
 			$subObj->stat('mystaticProperty'),
 			'MyObject',
 			'Statics defined on a parent class are available through stat() on a subclass'
-		);
-		/*
-		$this->assertEquals(
-			$subObj->uninherited('mystaticProperty'),
-			'MySubObject',
-			'Statics re-defined on a subclass are available through uninherited()'
-		);
-		*/
-	}
-	
-	function testStaticInheritanceSetters() {
-		static $_SINGLETONS;
-		$_SINGLETONS = null;
-		
-		$obj = singleton('ObjectTest_MyObject');
-		$subObj = singleton('ObjectTest_MyObject');
-		$subObj->set_uninherited('mystaticProperty', 'MySubObject_changed');
-		$this->assertEquals(
-			$obj->stat('mystaticProperty'),
-			'MyObject',
-			'Statics set on a subclass with set_uninherited() dont influence parent class'
-		);
-		/*
-		$this->assertEquals(
-			$subObj->stat('mystaticProperty'),
-			'MySubObject_changed',
-			'Statics set on a subclass with set_uninherited() are changed on subclass when using stat()'
-		);
-		*/
-		$this->assertEquals(
-			$subObj->uninherited('mystaticProperty'),
-			'MySubObject_changed',
-			'Statics set on a subclass with set_uninherited() are changed on subclass when using uninherited()'
 		);
 	}
 	
@@ -168,15 +129,104 @@ class ObjectTest extends SapphireTest {
 			'changed',
 			'Statics setting through set_stat() is populated throughout instances without explicitly clearing cache'
 		);
-		/*
-		$this->assertEquals(
-			ObjectTest_MyObject::$mystaticProperty,
-			'changed',
-			'Statics setting through set_stat() reflects on PHP built-in statics on the class'
-		);
-		*/
 	}
+	
+	/**
+	 * Tests that {@link Object::create()} correctly passes all arguments to the new object
+	 */
+	public function testCreateWithArgs() {
+		$createdObj = Object::create('ObjectTest_CreateTest', 'arg1', 'arg2', array(), null, 'arg5');
+		$this->assertEquals($createdObj->constructArguments, array('arg1', 'arg2', array(), null, 'arg5'));
+		
+		$strongObj = Object::strong_create('ObjectTest_CreateTest', 'arg1', 'arg2', array(), null, 'arg5');
+		$this->assertEquals($strongObj->constructArguments, array('arg1', 'arg2', array(), null, 'arg5'));
+	}
+	
+	/**
+	 * Tests that {@link Object::useCustomClass()} correnctly replaces normal and strong objects
+	 */
+	public function testUseCustomClass() {
+		$obj1 = Object::create('ObjectTest_CreateTest');
+		$this->assertTrue($obj1->is_a('ObjectTest_CreateTest'));
+		
+		Object::useCustomClass('ObjectTest_CreateTest', 'ObjectTest_CreateTest2');
+		$obj2 = Object::create('ObjectTest_CreateTest');
+		$this->assertTrue($obj2->is_a('ObjectTest_CreateTest2'));
+		
+		$obj2_2 = Object::strong_create('ObjectTest_CreateTest');
+		$this->assertTrue($obj2_2->is_a('ObjectTest_CreateTest'));
+		
+		Object::useCustomClass('ObjectTest_CreateTest', 'ObjectTest_CreateTest3', true);
+		$obj3 = Object::create('ObjectTest_CreateTest');
+		$this->assertTrue($obj3->is_a('ObjectTest_CreateTest3'));
+		
+		$obj3_2 = Object::strong_create('ObjectTest_CreateTest');
+		$this->assertTrue($obj3_2->is_a('ObjectTest_CreateTest3'));
+	}
+	
+	/**
+	 * Tests {@link Object::has_extension()}, {@link Object::add_extension()}
+	 */
+	public function testHasAndAddExtension() {
+		$this->assertTrue(Object::has_extension('ObjectTest_ExtensionTest', 'HIERACHY'));
+		$this->assertTrue(Object::has_extension('ObjectTest_ExtensionTest', 'translatable'));
+		$this->assertFalse(Object::has_extension('ObjectTest_ExtensionTest', 'Versioned'));
+		
+		Object::add_extension('ObjectTest_ExtensionTest', 'VERSIONED("Stage", "Live")');
+		$this->assertTrue(Object::has_extension('ObjectTest_ExtensionTest', 'Versioned'));
+	}
+	
+	public function testParentClass() {
+		$this->assertEquals(Object::create('ObjectTest_MyObject')->parentClass(), 'Object');
+	}
+	
+	public function testIsA() {
+		$this->assertTrue(Object::create('ObjectTest_MyObject')->is_a('Object'));
+		$this->assertTrue(Object::create('ObjectTest_MyObject')->is_a('ObjectTest_MyObject'));
+	}
+	
+	/**
+	 * Tests {@link Object::hasExtension() and Object::extInstance()}
+	 */
+	public function testExtInstance() {
+		$obj = new ObjectTest_ExtensionTest2();
+		
+		$this->assertTrue($obj->hasExtension('ObjectTest_Extension'));
+		$this->assertTrue($obj->extInstance('ObjectTest_Extension')->is_a('ObjectTest_Extension'));
+	}
+	
+	public function testCacheToFile() {
+		$obj = new ObjectTest_CacheTest();
+		
+		$this->assertEquals($obj->cacheToFile('cacheMethod', -1), 'noarg');
+		$this->assertEquals($obj->cacheToFile('cacheMethod', -1, null, array(true)), 'hasarg');
+		$this->assertEquals($obj->cacheToFile('cacheMethod', 3600, null, array(true)), 'hasarg');
+		
+		$this->assertEquals($obj->cacheToFile('incNumber', -1), 1);
+		$this->assertEquals($obj->cacheToFile('incNumber', -1), 2);
+		$this->assertEquals($obj->cacheToFile('incNumber'), 2);
+	}
+	
+	public function testExtend() {
+		$object   = new ObjectTest_ExtendTest();
+		$argument = 'test';
+		
+		$this->assertEquals($object->extend('extendableMethod'), array('ExtendTest2()'));
+		$this->assertEquals($object->extend('extendableMethod', $argument), array('ExtendTest2(modified)'));
+		$this->assertEquals($argument, 'modified');
+		
+		$this->assertEquals($object->invokeWithExtensions('extendableMethod'), array('ExtendTest()', 'ExtendTest2()'));
+		$this->assertEquals (
+			$object->invokeWithExtensions('extendableMethod', 'test'),
+			array('ExtendTest(test)', 'ExtendTest2(modified)')
+		);
+	}
+	
 }
+
+/**#@+
+ * @ignore
+ */
 
 class ObjectTest_T1A extends Object {
 	function testMethod() {
@@ -243,3 +293,65 @@ class ObjectTest_MySubObject extends ObjectTest_MyObject {
 	static $mystaticSubProperty = "MySubObject";
 	static $mystaticArray = array('two');
 }
+
+class ObjectTest_CreateTest extends Object {
+	
+	public $constructArguments;
+	
+	public function __construct() {
+		$this->constructArguments = func_get_args();
+		parent::__construct();
+	}
+	
+}
+
+class ObjectTest_CreateTest2 extends Object {}
+class ObjectTest_CreateTest3 extends Object {}
+
+class ObjectTest_ExtensionTest extends Object {
+	
+	public static $extensions = array (
+		'HiErAcHy',
+		"TrAnSlAtAbLe('FOO', 'BAR')",
+	);
+	
+}
+
+class ObjectTest_ExtensionTest2 extends Object {
+	public static $extensions = array('ObjectTest_Extension');
+}
+
+class ObjectTest_Extension extends Extension {}
+
+class ObjectTest_CacheTest extends Object {
+	
+	public $count = 0;
+	
+	public function cacheMethod($arg1 = null) {
+		return ($arg1) ? 'hasarg' : 'noarg';
+	}
+	
+	public function incNumber() {
+		$this->count++;
+		return $this->count;
+	}
+	
+}
+
+class ObjectTest_ExtendTest extends Object {
+	public static $extensions = array('ObjectTest_ExtendTest1', 'ObjectTest_ExtendTest2');
+	public function extendableMethod($argument = null) { return "ExtendTest($argument)"; }
+}
+
+class ObjectTest_ExtendTest1 extends Extension {
+	public function extendableMethod(&$argument = null) {
+		if($argument) $argument = 'modified';
+		return null;
+	}
+}
+
+class ObjectTest_ExtendTest2 extends Extension {
+	public function extendableMethod($argument = null) { return "ExtendTest2($argument)"; }
+}
+
+/**#@-*/

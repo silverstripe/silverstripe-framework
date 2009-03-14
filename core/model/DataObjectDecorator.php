@@ -32,21 +32,21 @@ abstract class DataObjectDecorator extends Extension {
 	 */
 	function loadExtraStatics() {
 		// Don't apply DB fields if the parent object has this extension too
-		if(singleton(get_parent_class($this->owner))->extInstance($this->class)) return;
-	
-		$fields = $this->extraStatics();
-		$className = $this->owner->class;
-
-		if($fields) {
-			foreach($fields as $relationType => $fields) {
-				if(in_array($relationType, self::$decoratable_statics)) {
-					eval("$className::\$$relationType = array_merge((array){$className}::\$$relationType, (array)\$fields);");
-					$this->owner->set_stat($relationType, eval("return $className::\$$relationType;"));
+		if(Object::has_extension($this->owner->parentClass(), $this->class)) return;
+		
+		if($fields = $this->extraStatics()) {
+			foreach($fields as $relation => $fields) {
+				if(in_array($relation, self::$decoratable_statics)) {
+					Object::set_static (
+						$this->owner->class,
+						$relation,
+						array_merge((array) Object::get_static($this->owner->class, $relation), $fields)
+					);
 				}
-				
-				// clear previously set caches from DataObject->hasOwnTableDatabaseField()
-				$this->owner->set_uninherited('_cache_hasOwnTableDatabaseField', null);
 			}
+			
+			DataObject::$cache_has_own_table[$this->owner->class]       = null;
+			DataObject::$cache_has_own_table_field[$this->owner->class] = null;
 		}
 	}
 	
