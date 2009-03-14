@@ -10,6 +10,8 @@
  * your model layer (ie, the DataObject classes) and not in your Controllers.  This is the recommended design for Sapphire
  * applications.
  * 
+ * Enabling restful access on a model will also enable a SOAP API, see {@link SOAPModelAccess}.
+ * 
  * Example DataObject with simple api access, giving full access to all object properties and relations,
  * unless explicitly controlled through model permissions.
  * <code>

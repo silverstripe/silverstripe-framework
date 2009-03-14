@@ -2,6 +2,7 @@
 /**
  * Basic SOAP Server to access and modify DataObject instances.
  * You can enable SOAP access on a DataObject by setting {@link DataObject::$api_access} to true.
+ * This means that you'll also enable a RESTful API through {@link RestfulServer}.
  * 
  * Usage - Getting a record:
  * <code>

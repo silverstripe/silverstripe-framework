@@ -1,6 +1,9 @@
 <?php
 /**
- * Soap server class
+ * Soap server class.
+ * See {@link SOAPModelAccess} for an auto-generated
+ * SOAP API for your models.
+ * 
  * @todo Improve documentation
  * @package sapphire
  * @subpackage integration
