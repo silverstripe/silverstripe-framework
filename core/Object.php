@@ -677,6 +677,18 @@ abstract class Object {
 	}
 	
 	/**
+	 * Clears the cache for the given cacheToFile call
+	 */
+	public function clearCache($method, $ID = false, $arguments = array()) {
+		$cacheName = $this->class . '_' . $method;
+		if(!is_array($arguments)) $arguments = array($arguments);
+		if($ID) $cacheName .= '_' . $ID;
+		if(count($arguments)) $cacheName .= '_' . implode('_', $arguments);
+
+		unlink(TEMP_FOLDER . '/' . $this->sanitiseCachename($cacheName));
+	}
+	
+	/**
 	 * @deprecated
 	 */
 	public function cacheToFileWithArgs($callback, $arguments = array(), $lifetime = 3600, $ID = false) {

@@ -198,6 +198,10 @@ class ObjectTest extends SapphireTest {
 	public function testCacheToFile() {
 		$obj = new ObjectTest_CacheTest();
 		
+		$obj->clearCache('cacheMethod');
+		$obj->clearCache('cacheMethod', null, array(true));
+		$obj->clearCache('incNumber');
+		
 		$this->assertEquals('noarg', $obj->cacheToFile('cacheMethod', -1));
 		$this->assertEquals('hasarg', $obj->cacheToFile('cacheMethod', -1, null, array(true)));
 		$this->assertEquals('hasarg', $obj->cacheToFile('cacheMethod', 3600, null, array(true)));
@@ -207,7 +211,7 @@ class ObjectTest extends SapphireTest {
 		// -1 lifetime will ensure that the cache isn't read - number incremented
 		$this->assertEquals(2, $obj->cacheToFile('incNumber', -1));
 		// Number shouldn't be incremented now because we're using the cached version
-		$this->assertEquals(2, $obj->cacheToFile('incNumber', 3600));
+		$this->assertEquals(2, $obj->cacheToFile('incNumber'));
 	}
 	
 	public function testExtend() {
