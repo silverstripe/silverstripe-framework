@@ -381,29 +381,46 @@ class RestfulServer extends Controller {
 	 * current resolves in creatig a new element,
 	 * rather than a "Conflict" message.
 	 */
-	protected function postHandler($className, $id) {
+	protected function postHandler($className, $id, $relation) {
 		if($id) {
-			$this->response->setStatusCode(409);
-			return 'Conflict';
+			if(!$relation) {
+				$this->response->setStatusCode(409);
+				return 'Conflict';
+			}
+			
+			$obj = DataObject::get_by_id($className, $id);
+			if(!$obj) return $this->notFound();
+			
+			if(!$obj->hasMethod($relation)) {
+				return $this->notFound();
+			}
+			
+			if(!$obj->stat('allowed_actions') || !in_array($relation, $obj->stat('allowed_actions'))) {
+				return $this->permissionFailure();
+			}
+			
+			$obj->$relation();
+			
+			$this->getResponse()->setStatusCode(204); // No Content
+			return true;
+		} else {
+			if(!singleton($className)->canCreate()) return $this->permissionFailure();
+			$obj = new $className();
+		
+			$reqFormatter = $this->getRequestDataFormatter();
+			if(!$reqFormatter) return $this->unsupportedMediaType();
+		
+			$responseFormatter = $this->getResponseDataFormatter();
+		
+			$obj = $this->updateDataObject($obj, $reqFormatter);
+		
+			$this->getResponse()->setStatusCode(201); // Created
+			$this->getResponse()->addHeader('Content-Type', $responseFormatter->getOutputContentType());
+			$objHref = Director::absoluteURL(self::$api_base . "$obj->class/$obj->ID");
+			$this->getResponse()->addHeader('Location', $objHref);
+		
+			return $responseFormatter->convertDataObject($obj);
 		}
-		
-		if(!singleton($className)->canCreate()) return $this->permissionFailure();
-		$obj = new $className();
-		
-		$reqFormatter = $this->getRequestDataFormatter();
-		if(!$reqFormatter) return $this->unsupportedMediaType();
-		
-		$responseFormatter = $this->getResponseDataFormatter();
-		
-		$obj = $this->updateDataObject($obj, $reqFormatter);
-		
-		$this->getResponse()->setStatusCode(201); // Created
-		$this->getResponse()->addHeader('Content-Type', $responseFormatter->getOutputContentType());
-		$objHref = Director::absoluteURL(self::$api_base . "$obj->class/$obj->ID");
-		$this->getResponse()->addHeader('Location', $objHref);
-		
-		return $responseFormatter->convertDataObject($obj);
-		
 	}
 	
 	/**
