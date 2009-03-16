@@ -17,7 +17,8 @@ class ModelAsController extends Controller implements NestedController {
 		// If the basic database hasn't been created, then build it.
 		if(!DB::isActive() || !ClassInfo::hasTable('SiteTree')) {
 			$this->response = new HTTPResponse();
-			$this->redirect("dev/build?returnURL=" . urlencode($_GET['url']));
+			$this->redirect("dev/build?returnURL=" . (isset($_GET['url']) ? urlencode($_GET['url']) : ''));
+			$this->popCurrent();
 			return $this->response;
 		}
 
