@@ -685,7 +685,8 @@ abstract class Object {
 		if($ID) $cacheName .= '_' . $ID;
 		if(count($arguments)) $cacheName .= '_' . implode('_', $arguments);
 
-		unlink(TEMP_FOLDER . '/' . $this->sanitiseCachename($cacheName));
+		$file = TEMP_FOLDER . '/' . $this->sanitiseCachename($cacheName);
+		if(file_exists($file)) unlink($file);
 	}
 	
 	/**
