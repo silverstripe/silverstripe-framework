@@ -595,6 +595,15 @@ class DataObjectTest extends SapphireTest {
 			'Position' => 'Varchar(100)'
 		));
 	}
+	
+	function testPopulateDefaults() {
+		$obj = new DataObjectTest_WithDefaults();
+		$this->assertEquals(
+			$obj->MyField,
+			"Default Value",
+			"Defaults are populated for in-memory object from \$defaults array"
+		);
+	}
 
 }
 
@@ -642,6 +651,16 @@ class DataObjectTest_FunnyFieldNames extends DataObject implements TestOnly {
 		'Data' => 'Text',
 		'Duplicate' => 'Text',
 		'DbObject' => 'Text',
+	);
+}
+
+class DataObjectTest_WithDefaults extends DataObject implements TestOnly {
+	static $db = array(
+		'MyField' => 'Text',
+	);
+	
+	static $defaults = array(
+		'MyField' => 'Default Value', 
 	);
 }
 
