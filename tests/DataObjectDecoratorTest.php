@@ -56,6 +56,15 @@ class DataObjectDecoratorTest extends SapphireTest {
 
 	}
 	
+	function testPopulateDefaults() {
+		$obj = new DataObjectDecoratorTest_Member();
+		$this->assertEquals(
+			$obj->Phone,
+			'123',
+			'Defaults can be populated through decorator'
+		);
+	}
+	
 }
 
 class DataObjectDecoratorTest_Member extends DataObject implements TestOnly {
@@ -77,6 +86,9 @@ class DataObjectDecoratorTest_ContactRole extends DataObjectDecorator implements
 			),
 			'has_many' => array(
 				'RelatedObjects' => 'DataObjectDecoratorTest_RelatedObject'
+			),
+			'defaults' => array(
+				'Phone' => '123'
 			)
 		);
 	}
