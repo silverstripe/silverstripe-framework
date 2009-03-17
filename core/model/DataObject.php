@@ -714,11 +714,11 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		
 		foreach($classes as $class) {
 			$defaults = Object::get_static($class, 'defaults');
+			
 			if($defaults) foreach($defaults as $fieldName => $fieldValue) {
 				// SRM 2007-03-06: Stricter check
 				if(!isset($this->$fieldName) || $this->$fieldName === null) {
 					$this->$fieldName = $fieldValue;
-					
 				}
 				// Set many-many defaults with an array of ids
 				if(is_array($fieldValue) && $this->many_many($fieldName)) {
@@ -836,6 +836,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 				if(isset($ancestry) && is_array($ancestry)) {
 					foreach($ancestry as $idx => $class) {
 						$classSingleton = singleton($class);
+						
 						foreach($this->record as $fieldName => $fieldValue) {
 							if(isset($this->changed[$fieldName]) && $this->changed[$fieldName] && $fieldType = $classSingleton->hasOwnTableDatabaseField($fieldName)) {
 								$fieldObj = $this->dbObject($fieldName);

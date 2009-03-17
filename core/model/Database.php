@@ -298,12 +298,13 @@ abstract class Database extends Object {
 		if(!$newTable && !isset($this->indexList[$table])) {
 			$this->indexList[$table] = $this->indexList($table);
 		}
-		
-		$index_alt=DB::getConn()->modifyIndex($index);
-				
+						
 		//Fix up the index for database purposes
 		$index=DB::getConn()->getDbSqlDefinition($table, $index, null, true);
 		
+		//Fix the key for database purposes
+		$index_alt=DB::getConn()->modifyIndex($index, $spec);
+				
 		if(!$newTable) {
 			if(is_array($this->indexList[$table][$index_alt])) {
 				$array_spec = $this->indexList[$table][$index_alt]['spec'];
