@@ -359,8 +359,15 @@ class Email extends ViewableData {
 		return ereg('^([a-zA-Z0-9_+\.\-]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$', $address);
 	}
   
-  /**
-  * @desc Send the email in plaintext
+ /**
+  * Send the email in plaintext.
+  * 
+  * @see send() for sending emails with HTML content.
+  * @uses Mailer->sendPlain()
+  * 
+  * @param string $messageID Optional message ID so the message can be identified in bounces etc.
+  * @return bool Success of the sending operation from an MTA perspective. 
+  * Doesn't actually give any indication if the mail has been delivered to the recipient properly)
   */
   function sendPlain($messageID = null) {
     global $project;
@@ -407,7 +414,14 @@ class Email extends ViewableData {
   }
 	
 	/**
-	 * Send the email.
+	 * Send an email with HTML content.
+	 *
+	 * @see sendPlain() for sending plaintext emails only.
+	 * @uses Mailer->sendHTML()
+	 * 
+	 * @param string $messageID Optional message ID so the message can be identified in bounces etc.
+	 * @return bool Success of the sending operation from an MTA perspective. 
+	 * Doesn't actually give any indication if the mail has been delivered to the recipient properly)
 	 */
 	public function send( $messageID = null ) {   	
     	Requirements::clear();

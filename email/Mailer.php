@@ -14,14 +14,18 @@
  */
 class Mailer extends Object {
 	/**
-	 * Send a plain-text email
+	 * Send a plain-text email.
+	 * 
+	 * @return bool
 	 */
 	function sendPlain($to, $from, $subject, $plainContent, $attachedFiles = false, $customheaders = false) {
 		return plaintextEmail($to, $from, $subject, $plainContent, $attachedFiles, $customheaders);
 	}
 	
 	/**
-	 * Send a multi-part HTML email
+	 * Send a multi-part HTML email.
+	 * 
+	 * @return bool
 	 */
 	function sendHTML($to, $from, $subject, $htmlContent, $attachedFiles = false, $customheaders = false, $plainContent = false, $inlineImages = false) {
 		return htmlEmail($to, $from, $subject, $htmlContent, $attachedFiles, $customheaders, $plainContent, $inlineImages);
@@ -36,6 +40,8 @@ class Mailer extends Object {
  *   $attachedFiles should be an array of file names
  *    - if you pass the entire $_FILES entry, the user-uploaded filename will be preserved
  *   use $plainContent to override default plain-content generation
+ * 
+ * @return bool
  */
 function htmlEmail($to, $from, $subject, $htmlContent, $attachedFiles = false, $customheaders = false, $plainContent = false, $inlineImages = false) {
 	if ($customheaders && is_array($customheaders) == false) {
