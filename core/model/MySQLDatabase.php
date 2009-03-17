@@ -700,6 +700,14 @@ class MySQLDatabase extends Database {
 	function addslashes($value){
 		return mysql_escape_string($value);
 	}
+	
+	/*
+	 * This changes the index name depending on database requirements.
+	 * MySQL doesn't need any changes.
+	 */
+	function modifyIndex($index){
+		return $index;
+	}
 }
 
 /**

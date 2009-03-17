@@ -299,9 +299,7 @@ abstract class Database extends Object {
 			$this->indexList[$table] = $this->indexList($table);
 		}
 		
-		//$index_alt=DB::getConn()->indexOrIndexAlt($index);
-		// @todo Geoff to fix his faulty commit from r73214
-		$index_alt = $index;
+		$index_alt=DB::getConn()->modifyIndex($index);
 				
 		//Fix up the index for database purposes
 		$index=DB::getConn()->getDbSqlDefinition($table, $index, null, true);
@@ -314,6 +312,7 @@ abstract class Database extends Object {
 			}
 		}
 		
+
 		if($newTable || !isset($this->indexList[$table][$index_alt])) {
 			$this->transCreateIndex($table, $index, $spec);
 			Database::alteration_message("Index $table.$index: created as $spec","created");
