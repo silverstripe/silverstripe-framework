@@ -115,13 +115,13 @@ class Email extends ViewableData {
 	/**
 	 * @param string $bounceHandlerURL
 	 */
-    protected $bounceHandlerURL = null;
+		protected $bounceHandlerURL = null;
 	
-    /**
+		/**
 	 * @param sring $admin_email_address The default administrator email address. 
 	 * This will be set in the config on a site-by-site basis
 	*/
-    static $admin_email_address = '';
+		static $admin_email_address = '';
 
 	/**
 	 * @param string $send_all_emails_to Email-Address
@@ -137,7 +137,7 @@ class Email extends ViewableData {
 	 * @param string $cc_all_emails_to Email-Address
 	 */
 	protected static $cc_all_emails_to = null;
-    
+		
 	/**
 	 * Create a new email.
 	 */
@@ -158,13 +158,13 @@ class Email extends ViewableData {
 			'mimetype' => $mimetype,
 		);
 	}
-    
-    public function setBounceHandlerURL( $bounceHandlerURL ) {
-        if( $bounceHandlerURL )
-            $this->bounceHandlerURL = $bounceHandlerURL;
-        else
-            $this->bounceHandlerURL = $_SERVER['HTTP_HOST'] . Director::baseURL() . 'Email_BounceHandler';      
-    }
+		
+	public function setBounceHandlerURL( $bounceHandlerURL ) {
+		if( $bounceHandlerURL )
+			$this->bounceHandlerURL = $bounceHandlerURL;
+		else
+			$this->bounceHandlerURL = $_SERVER['HTTP_HOST'] . Director::baseURL() . 'Email_BounceHandler';			
+	}
 
 	public function attachFile($filename, $attachedFilename = null, $mimetype = null) {
 		$absoluteFileName = Director::getAbsFile($filename);
@@ -307,7 +307,7 @@ class Email extends ViewableData {
 	 * This may be called many times.
 	 */
 	function populateTemplate($data) {
-    	if($this->template_data) {
+		if($this->template_data) {
 			$this->template_data = $this->template_data->customise($data);	
 		} else {
 			if(is_array($data)) $data = new ArrayData($data);
@@ -318,7 +318,7 @@ class Email extends ViewableData {
 	
 	/**
 	 * Load all the template variables into the internal variables, including
-	 * the template into body.  Called before send() or debugSend()
+	 * the template into body.	Called before send() or debugSend()
 	 * $isPlain=true will cause the template to be ignored, otherwise the GenericEmail template will be used
 	 * and it won't be plain email :) 
 	 */
@@ -354,64 +354,64 @@ class Email extends ViewableData {
 	
 	/**
 	 * @desc Validates the email address. Returns true of false
-	*/
+	 */
 	static function validEmailAddress($address) {
 		return ereg('^([a-zA-Z0-9_+\.\-]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$', $address);
 	}
-  
- /**
-  * Send the email in plaintext.
-  * 
-  * @see send() for sending emails with HTML content.
-  * @uses Mailer->sendPlain()
-  * 
-  * @param string $messageID Optional message ID so the message can be identified in bounces etc.
-  * @return bool Success of the sending operation from an MTA perspective. 
-  * Doesn't actually give any indication if the mail has been delivered to the recipient properly)
-  */
-  function sendPlain($messageID = null) {
-    global $project;
-
-    Requirements::clear();
-    
-    $this->parseVariables(true);
-    
-    if(empty($this->from)) $this->from = Email::getAdminEmail();
-            
-    $this->setBounceHandlerURL($this->bounceHandlerURL);
-                
-    $headers['X-SilverStripeBounceURL'] = $this->bounceHandlerURL;
-            
-    if($messageID) $headers['X-SilverStripeMessageID'] = $project . '.' . $messageID;
-            
-    if($project) $headers['X-SilverStripeSite'] = $project;
-
-	$to = $this->to;
-	$subject = $this->subject;
-	if(self::$send_all_emails_to) {
-		$subject .= " [addressed to $to";
-		$to = self::$send_all_emails_to;
-	    if($this->cc) $subject .= ", cc to $this->cc";
-	    if($this->bcc) $subject .= ", bcc to $this->bcc";
-		$subject .= ']';
-	} else {
-	    if($this->cc) $headers["Cc"] = $this->cc;
-	    if($this->bcc) $headers["Bcc"] = $this->bcc;
-	}
 	
-	if(self::$cc_all_emails_to) {
-		if(trim($headers['Cc'])) $headers['Cc'] .= ', ';
-		$headers['Cc'] .= self::$cc_all_emails_to;		
-	}
-	if(self::$bcc_all_emails_to) {
-		if(trim($headers['Bcc'])) $headers['Bcc'] .= ', ';
-		$headers['Bcc'] .= self::$bcc_all_emails_to;		
-	}
+	/**
+	 * Send the email in plaintext.
+	 * 
+	 * @see send() for sending emails with HTML content.
+	 * @uses Mailer->sendPlain()
+	 * 
+	 * @param string $messageID Optional message ID so the message can be identified in bounces etc.
+	 * @return bool Success of the sending operation from an MTA perspective. 
+	 * Doesn't actually give any indication if the mail has been delivered to the recipient properly)
+	 */
+	function sendPlain($messageID = null) {
+		global $project;
 
-	Requirements::restore();
-    
-    return self::mailer()->sendPlain($to, $this->from, $subject, $this->body, $this->attachments, $headers);
-  }
+		Requirements::clear();
+		
+		$this->parseVariables(true);
+		
+		if(empty($this->from)) $this->from = Email::getAdminEmail();
+						
+		$this->setBounceHandlerURL($this->bounceHandlerURL);
+								
+		$headers['X-SilverStripeBounceURL'] = $this->bounceHandlerURL;
+						
+		if($messageID) $headers['X-SilverStripeMessageID'] = $project . '.' . $messageID;
+						
+		if($project) $headers['X-SilverStripeSite'] = $project;
+
+		$to = $this->to;
+		$subject = $this->subject;
+		if(self::$send_all_emails_to) {
+			$subject .= " [addressed to $to";
+			$to = self::$send_all_emails_to;
+				if($this->cc) $subject .= ", cc to $this->cc";
+				if($this->bcc) $subject .= ", bcc to $this->bcc";
+			$subject .= ']';
+		} else {
+				if($this->cc) $headers["Cc"] = $this->cc;
+				if($this->bcc) $headers["Bcc"] = $this->bcc;
+		}
+	
+		if(self::$cc_all_emails_to) {
+			if(trim($headers['Cc'])) $headers['Cc'] .= ', ';
+			$headers['Cc'] .= self::$cc_all_emails_to;		
+		}
+		if(self::$bcc_all_emails_to) {
+			if(trim($headers['Bcc'])) $headers['Bcc'] .= ', ';
+			$headers['Bcc'] .= self::$bcc_all_emails_to;		
+		}
+
+		Requirements::restore();
+		
+		return self::mailer()->sendPlain($to, $this->from, $subject, $this->body, $this->attachments, $headers);
+	}
 	
 	/**
 	 * Send an email with HTML content.
@@ -423,8 +423,8 @@ class Email extends ViewableData {
 	 * @return bool Success of the sending operation from an MTA perspective. 
 	 * Doesn't actually give any indication if the mail has been delivered to the recipient properly)
 	 */
-	public function send( $messageID = null ) {   	
-    	Requirements::clear();
+	public function send( $messageID = null ) {	 	
+		Requirements::clear();
 	
 		$this->parseVariables();
 
@@ -447,14 +447,14 @@ class Email extends ViewableData {
 		if(self::$send_all_emails_to) {
 			$subject .= " [addressed to $to";
 			$to = self::$send_all_emails_to;
-		    if($this->cc) $subject .= ", cc to $this->cc";
-		    if($this->bcc) $subject .= ", bcc to $this->bcc";
+			if($this->cc) $subject .= ", cc to $this->cc";
+			if($this->bcc) $subject .= ", bcc to $this->bcc";
 			$subject .= ']';
 			unset($headers['Cc']);
 			unset($headers['Bcc']);
 		} else {
-		    if($this->cc) $headers["Cc"] = $this->cc;
-		    if($this->bcc) $headers["Bcc"] = $this->bcc;
+			if($this->cc) $headers["Cc"] = $this->cc;
+			if($this->bcc) $headers["Bcc"] = $this->bcc;
 		}
 
 		if(self::$cc_all_emails_to) {
@@ -472,7 +472,7 @@ class Email extends ViewableData {
 				$headers['Bcc'] = self::$bcc_all_emails_to;
 			}
 		}
-       	
+			 	
 		Requirements::restore();
 		
 		return self::mailer()->sendHTML($to, $this->from, $subject, $this->body, $this->attachments, $headers, $this->plaintext_body);
@@ -492,7 +492,10 @@ class Email extends ViewableData {
 	public static function setAdminEmail( $newEmail ) {
 		self::$admin_email_address = $newEmail;
 	}
-  
+	
+	/**
+	 * @return string
+	 */
 	public static function getAdminEmail() {
 		return self::$admin_email_address;
 	}
@@ -510,8 +513,8 @@ class Email extends ViewableData {
 	
 	/**
 	 * CC every email generated by the Email class to the given address.
-	 * It won't affect the original delivery in the same way that send_all_emails_to does.  It just adds a CC header 
-	 * with the given email address.  Note that you can only call this once - subsequent calls will overwrite the configuration
+	 * It won't affect the original delivery in the same way that send_all_emails_to does.	It just adds a CC header 
+	 * with the given email address.	Note that you can only call this once - subsequent calls will overwrite the configuration
 	 * variable.
 	 *
 	 * This can be used when you have a system that relies heavily on email and you want someone to be checking all correspondence.
@@ -524,8 +527,8 @@ class Email extends ViewableData {
 
 	/**
 	 * BCC every email generated by the Email class to the given address.
-	 * It won't affect the original delivery in the same way that send_all_emails_to does.  It just adds a BCC header 
-	 * with the given email address.  Note that you can only call this once - subsequent calls will overwrite the configuration
+	 * It won't affect the original delivery in the same way that send_all_emails_to does.	It just adds a BCC header 
+	 * with the given email address.	Note that you can only call this once - subsequent calls will overwrite the configuration
 	 * variable.
 	 *
 	 * This can be used when you have a system that relies heavily on email and you want someone to be checking all correspondence.
@@ -536,35 +539,35 @@ class Email extends ViewableData {
 		self::$bcc_all_emails_to = $emailAddress;
 	}
 	
-  
-  	/**
-  	 * Checks for RFC822-valid email format.
-  	 * 
-  	 * @param string $str
-  	 * @return boolean
-  	 * 
-  	 * @see http://code.iamcal.com/php/rfc822/rfc822.phps
-  	 * @copyright Cal Henderson <cal@iamcal.com> 
-  	 * 	This code is licensed under a Creative Commons Attribution-ShareAlike 2.5 License 
-  	 * 	http://creativecommons.org/licenses/by-sa/2.5/
-  	 */
+	
+	/**
+	 * Checks for RFC822-valid email format.
+	 * 
+	 * @param string $str
+	 * @return boolean
+	 * 
+	 * @see http://code.iamcal.com/php/rfc822/rfc822.phps
+	 * @copyright Cal Henderson <cal@iamcal.com> 
+	 * 	This code is licensed under a Creative Commons Attribution-ShareAlike 2.5 License 
+	 * 	http://creativecommons.org/licenses/by-sa/2.5/
+	 */
 	function is_valid_address($email){
-        $qtext = '[^\\x0d\\x22\\x5c\\x80-\\xff]';
-        $dtext = '[^\\x0d\\x5b-\\x5d\\x80-\\xff]';
-        $atom = '[^\\x00-\\x20\\x22\\x28\\x29\\x2c\\x2e\\x3a-\\x3c'.
-            '\\x3e\\x40\\x5b-\\x5d\\x7f-\\xff]+';
-        $quoted_pair = '\\x5c[\\x00-\\x7f]';
-        $domain_literal = "\\x5b($dtext|$quoted_pair)*\\x5d";
-        $quoted_string = "\\x22($qtext|$quoted_pair)*\\x22";
-        $domain_ref = $atom;
-        $sub_domain = "($domain_ref|$domain_literal)";
-        $word = "($atom|$quoted_string)";
-        $domain = "$sub_domain(\\x2e$sub_domain)*";
-        $local_part = "$word(\\x2e$word)*";
-        $addr_spec = "$local_part\\x40$domain";
+		$qtext = '[^\\x0d\\x22\\x5c\\x80-\\xff]';
+		$dtext = '[^\\x0d\\x5b-\\x5d\\x80-\\xff]';
+		$atom = '[^\\x00-\\x20\\x22\\x28\\x29\\x2c\\x2e\\x3a-\\x3c'.
+			'\\x3e\\x40\\x5b-\\x5d\\x7f-\\xff]+';
+		$quoted_pair = '\\x5c[\\x00-\\x7f]';
+		$domain_literal = "\\x5b($dtext|$quoted_pair)*\\x5d";
+		$quoted_string = "\\x22($qtext|$quoted_pair)*\\x22";
+		$domain_ref = $atom;
+		$sub_domain = "($domain_ref|$domain_literal)";
+		$word = "($atom|$quoted_string)";
+		$domain = "$sub_domain(\\x2e$sub_domain)*";
+		$local_part = "$word(\\x2e$word)*";
+		$addr_spec = "$local_part\\x40$domain";
 
-        return preg_match("!^$addr_spec$!", $email) ? 1 : 0;
-    }
+		return preg_match("!^$addr_spec$!", $email) ? 1 : 0;
+	}
 
 	/**
 	 * Encode an email-address to protect it from spambots.
@@ -575,9 +578,9 @@ class Email extends ViewableData {
 	 * 
 	 * @param string $email Email-address
 	 * @param string $method Method for obfuscating/encoding the address
-	 *  - 'direction': Reverse the text and then use CSS to put the text direction back to normal
-	 *  - 'visible': Simple string substitution ('@' to '[at]', '.' to '[dot], '-' to [dash])
-	 *  - 'hex': Hexadecimal URL-Encoding - useful for mailto: links
+	 *	- 'direction': Reverse the text and then use CSS to put the text direction back to normal
+	 *	- 'visible': Simple string substitution ('@' to '[at]', '.' to '[dot], '-' to [dash])
+	 *	- 'hex': Hexadecimal URL-Encoding - useful for mailto: links
 	 * @return string
 	 */
 	public static function obfuscate($email, $method = 'visible') {
@@ -605,8 +608,7 @@ class Email extends ViewableData {
 /**
  * Implements an email template that can be populated.
  * 
- * @deprecated - Please use Email instead!. 
- * @todo Remove this in 2.4
+ * @deprecated 2.4 Please use Email instead
  * @package sapphire
  * @subpackage email
  */
@@ -631,111 +633,110 @@ class Email_BounceHandler extends Controller {
 		parent::init();
 	}
 	
-    function index() {
-    	$subclasses = ClassInfo::subclassesFor( $this->class );
-    	unset($subclasses[$this->class]);
-    	
-    	if( $subclasses ) {  
-				$subclass = array_pop( $subclasses ); 
-        $task = new $subclass();
-        $task->index();
-        return;
-      }   
-      	
-	// Check if access key exists
-	if( !isset($_REQUEST['Key']) ) {
-		echo 'Error: Access validation failed. No "Key" specified.';
-		return;
-	}
-
-	// Check against access key defined in sapphire/_config.php
-	if( $_REQUEST['Key'] != EMAIL_BOUNCEHANDLER_KEY) {
-		echo 'Error: Access validation failed. Invalid "Key" specified.';
-		return;
-	}
-
-        if( !$_REQUEST['Email'] ) {
-            echo "No email address";
-            return;    
-        }
-        
-        $this->recordBounce( $_REQUEST['Email'], $_REQUEST['Date'], $_REQUEST['Time'], $_REQUEST['Message'] );       
-    }
-    
-    private function recordBounce( $email, $date = null, $time = null, $error = null ) {
-	  	if(ereg('<(.*)>', $email, $parts)) $email = $parts[1];
-	  	
-	  	$SQL_email = Convert::raw2sql($email);
-	  	$SQL_bounceTime = Convert::raw2sql("$date $time");
-
-    	$duplicateBounce = DataObject::get_one("Email_BounceRecord", "\"BounceEmail\" = '$SQL_email' AND (\"BounceTime\"+INTERVAL 1 MINUTE) > '$SQL_bounceTime'");
-    	
-    	if(!$duplicateBounce) {
-        $record = new Email_BounceRecord();
-        
-        $member = DataObject::get_one( 'Member', "\"Email\"='$SQL_email'" );
-        
-        if( $member ) {
-            $record->MemberID = $member->ID;
-
-		// If the SilverStripeMessageID (taken from the X-SilverStripeMessageID header embedded in the email) is sent,
-		// then log this bounce in a Newsletter_SentRecipient record so it will show up on the 'Sent Status Report' tab of the Newsletter
-		if( isset($_REQUEST['SilverStripeMessageID'])) {
-			// Note: was sent out with: $project . '.' . $messageID;
-			$message_id_parts = explode('.', $_REQUEST['SilverStripeMessageID']);
-			// Note: was encoded with: base64_encode( $newsletter->ID . '_' . date( 'd-m-Y H:i:s' ) );
-			$newsletter_id_date_parts = explode ('_', base64_decode($message_id_parts[1]) );
-			
-			// Escape just in case
-			$SQL_memberID = Convert::raw2sql($member->ID);
-			$SQL_newsletterID = Convert::raw2sql($newsletter_id_date_parts[0]);
-			// Log the bounce
-			$oldNewsletterSentRecipient = DataObject::get_one("Newsletter_SentRecipient", "\"MemberID\" = '$SQL_memberID' AND \"ParentID\" = '$SQL_newsletterID' AND \"Email\" = '$SQL_email'");
-    			// Update the Newsletter_SentRecipient record if it exists
-    			if($oldNewsletterSentRecipient) {			
-				$oldNewsletterSentRecipient->Result = 'Bounced';
-				$oldNewsletterSentRecipient->write();
-			} else {
-				// For some reason it didn't exist, create a new record
-				$newNewsletterSentRecipient = new Newsletter_SentRecipient();
-				$newNewsletterSentRecipient->Email = $SQL_email;
-				$newNewsletterSentRecipient->MemberID = $member->ID;
-				$newNewsletterSentRecipient->Result = 'Bounced';
-				$newNewsletterSentRecipient->ParentID = $newsletter_id_date_parts[0];
-				$newNewsletterSentRecipient->write();
-			}
-
-			// Now we are going to Blacklist this member so that email will not be sent to them in the future.
-			// Note: Sending can be re-enabled by going to 'Mailing List' 'Bounced' tab and unchecking the box under 'Blacklisted'
-			$member->setBlacklistedEmail(TRUE);
-			echo '<p><b>Member: '.$member->FirstName.' '.$member->Surname.' <'.$member->Email.'> was added to the Email Blacklist!</b></p>';
+	function index() {
+		$subclasses = ClassInfo::subclassesFor( $this->class );
+		unset($subclasses[$this->class]);
+		
+		if( $subclasses ) {	
+			$subclass = array_pop( $subclasses ); 
+			$task = new $subclass();
+			$task->index();
+			return;
+		}	 
+				
+		// Check if access key exists
+		if( !isset($_REQUEST['Key']) ) {
+			echo 'Error: Access validation failed. No "Key" specified.';
+			return;
 		}
 
+		// Check against access key defined in sapphire/_config.php
+		if( $_REQUEST['Key'] != EMAIL_BOUNCEHANDLER_KEY) {
+			echo 'Error: Access validation failed. Invalid "Key" specified.';
+			return;
+		}
 
-	} 
-            
-        if( !$date )
-            $date = date( 'd-m-Y' );
-        /*else
-            $date = date( 'd-m-Y', strtotime( $date ) );*/
-            
-        if( !$time )
-            $time = date( 'H:i:s' );
-        /*else
-            $time = date( 'H:i:s', strtotime( $time ) );*/
-            
-        $record->BounceEmail = $email;
-        $record->BounceTime = $date . ' ' . $time;
-        $record->BounceMessage = $error;
-        $record->write();
-        
-        echo "Handled bounced email to address: $email";  
-	} else {
-		echo 'Sorry, this bounce report has already been logged, not logging this duplicate bounce.';
+		if( !$_REQUEST['Email'] ) {
+			echo "No email address";
+			return;		
+		}
+		
+		$this->recordBounce( $_REQUEST['Email'], $_REQUEST['Date'], $_REQUEST['Time'], $_REQUEST['Message'] );			 
 	}
-    }
-    
-    
+		
+	private function recordBounce( $email, $date = null, $time = null, $error = null ) {
+		if(ereg('<(.*)>', $email, $parts)) $email = $parts[1];
+		
+		$SQL_email = Convert::raw2sql($email);
+		$SQL_bounceTime = Convert::raw2sql("$date $time");
+
+		$duplicateBounce = DataObject::get_one("Email_BounceRecord", "\"BounceEmail\" = '$SQL_email' AND (\"BounceTime\"+INTERVAL 1 MINUTE) > '$SQL_bounceTime'");
+		
+		if(!$duplicateBounce) {
+			$record = new Email_BounceRecord();
+			
+			$member = DataObject::get_one( 'Member', "\"Email\"='$SQL_email'" );
+			
+			if( $member ) {
+				$record->MemberID = $member->ID;
+
+				// If the SilverStripeMessageID (taken from the X-SilverStripeMessageID header embedded in the email) is sent,
+				// then log this bounce in a Newsletter_SentRecipient record so it will show up on the 'Sent Status Report' tab of the Newsletter
+				if( isset($_REQUEST['SilverStripeMessageID'])) {
+					// Note: was sent out with: $project . '.' . $messageID;
+					$message_id_parts = explode('.', $_REQUEST['SilverStripeMessageID']);
+					// Note: was encoded with: base64_encode( $newsletter->ID . '_' . date( 'd-m-Y H:i:s' ) );
+					$newsletter_id_date_parts = explode ('_', base64_decode($message_id_parts[1]) );
+		
+					// Escape just in case
+					$SQL_memberID = Convert::raw2sql($member->ID);
+					$SQL_newsletterID = Convert::raw2sql($newsletter_id_date_parts[0]);
+					
+					// Log the bounce
+					$oldNewsletterSentRecipient = DataObject::get_one("Newsletter_SentRecipient", "\"MemberID\" = '$SQL_memberID' AND \"ParentID\" = '$SQL_newsletterID' AND \"Email\" = '$SQL_email'");
+					
+					// Update the Newsletter_SentRecipient record if it exists
+					if($oldNewsletterSentRecipient) {			
+						$oldNewsletterSentRecipient->Result = 'Bounced';
+						$oldNewsletterSentRecipient->write();
+					} else {
+						// For some reason it didn't exist, create a new record
+						$newNewsletterSentRecipient = new Newsletter_SentRecipient();
+						$newNewsletterSentRecipient->Email = $SQL_email;
+						$newNewsletterSentRecipient->MemberID = $member->ID;
+						$newNewsletterSentRecipient->Result = 'Bounced';
+						$newNewsletterSentRecipient->ParentID = $newsletter_id_date_parts[0];
+						$newNewsletterSentRecipient->write();
+					}
+
+					// Now we are going to Blacklist this member so that email will not be sent to them in the future.
+					// Note: Sending can be re-enabled by going to 'Mailing List' 'Bounced' tab and unchecking the box under 'Blacklisted'
+					$member->setBlacklistedEmail(TRUE);
+					echo '<p><b>Member: '.$member->FirstName.' '.$member->Surname.' <'.$member->Email.'> was added to the Email Blacklist!</b></p>';
+				}
+			} 
+						
+			if( !$date )
+					$date = date( 'd-m-Y' );
+			/*else
+					$date = date( 'd-m-Y', strtotime( $date ) );*/
+					
+			if( !$time )
+					$time = date( 'H:i:s' );
+			/*else
+					$time = date( 'H:i:s', strtotime( $time ) );*/
+					
+			$record->BounceEmail = $email;
+			$record->BounceTime = $date . ' ' . $time;
+			$record->BounceMessage = $error;
+			$record->write();
+			
+			echo "Handled bounced email to address: $email";	
+		} else {
+			echo 'Sorry, this bounce report has already been logged, not logging this duplicate bounce.';
+		}
+	}	
+		
 }
 
 /**
@@ -744,15 +745,15 @@ class Email_BounceHandler extends Controller {
  * @subpackage email
  */
 class Email_BounceRecord extends DataObject {
-    static $db = array(
-        'BounceEmail' => 'Varchar',
-        'BounceTime' => 'SSDatetime',
-        'BounceMessage' => 'Varchar'
-    );
-    
-    static $has_one = array(
-        'Member' => 'Member'
-    );   
+	static $db = array(
+			'BounceEmail' => 'Varchar',
+			'BounceTime' => 'SSDatetime',
+			'BounceMessage' => 'Varchar'
+	);
+	
+	static $has_one = array(
+			'Member' => 'Member'
+	);	 
 
 	static $has_many = array();
 	
@@ -764,7 +765,7 @@ class Email_BounceRecord extends DataObject {
 	
 	
 	/** 
-	* a record of Email_BounceRecord can't be created manually. Instead, it should be  
+	* a record of Email_BounceRecord can't be created manually. Instead, it should be	
 	* created though system. 
 	*/ 
 	public function canCreate($member = null) { 
