@@ -96,6 +96,8 @@ class FormField extends RequestHandler {
 	
 	/**
 	 * Returns the field name - used by templates.
+	 * 
+	 * @return string
 	 */
 	function Name() {
 		return $this->name;
@@ -106,14 +108,22 @@ class FormField extends RequestHandler {
 	}
 	
 	/** 
-	 * Returns the field message, used by form validation
+	 * Returns the field message, used by form validation.
+	 * Use {@link setError()} to set this property.
+	 * 
+	 * @return string
 	 */
 	function Message(){
 		return $this->message;
 	} 
 	
 	/** 
-	 * Returns the field message type, used by form validation
+	 * Returns the field message type, used by form validation.
+	 * Arbitrary value which is mostly used for CSS classes
+	 * in the rendered HTML, e.g. "required".
+	 * Use {@link setError()} to set this property.
+	 * 
+	 * @return string
 	 */
 	function MessageType(){
 		return $this->messageType;
@@ -203,6 +213,8 @@ class FormField extends RequestHandler {
 	/**
 	 * Compiles all CSS-classes. Optionally includes a "nolabel"-class
 	 * if no title was set on the formfield.
+	 * Uses {@link Message()} and {@link MessageType()} to add validatoin
+	 * error classes which can be used to style the contained tags.
 	 * 
 	 * @return String CSS-classnames
 	 */
@@ -211,7 +223,15 @@ class FormField extends RequestHandler {
 		if(is_array($this->extraClasses)) {
 			$output = " " . implode($this->extraClasses, " ");
 		}
+		
+		// Allow customization of label and field tag positioning
 		if(!$this->Title()) $output .= " nolabel";
+		
+		// Allow custom styling of any element in the container based
+		// on validation errors, e.g. red borders on input tags.
+		// CSS-Class needs to be different from the one rendered
+		// through {@link FieldHolder()}
+		if($this->Message()) $output .= " holder-" . $this->MessageType();
 		
 		return $output;
 	}
@@ -341,9 +361,12 @@ class FormField extends RequestHandler {
 		$Name = $this->XML_val('Name');
 		$Field = $this->XML_val('Field');
 		
+		// Only of the the following titles should apply
 		$titleBlock = (!empty($Title)) ? "<label class=\"left\" for=\"{$this->id()}\">$Title</label>" : "";
-		$messageBlock = (!empty($Message)) ? "<span class=\"message $MessageType\">$Message</span>" : "";
 		$rightTitleBlock = (!empty($RightTitle)) ? "<label class=\"right\" for=\"{$this->id()}\">$RightTitle</label>" : "";
+
+		// $MessageType is also used in {@link extraClass()} with a "holder-" prefix
+		$messageBlock = (!empty($Message)) ? "<span class=\"message $MessageType\">$Message</span>" : "";
 
 		return <<<HTML
 <div id="$Name" class="field $Type $extraClass">$titleBlock<div class="middleColumn">$Field</div>$rightTitleBlock$messageBlock</div>
@@ -462,7 +485,9 @@ HTML;
 	function Type() {return strtolower(ereg_replace('Field$','',$this->class)); }
 	
 	/**
-	 * Construct and return HTML tag
+	 * Construct and return HTML tag.
+	 * 
+	 * @todo Transform to static helper method.
 	 */
 	function createTag($tag, $attributes, $content = null) {
 		$preparedAttributes = '';
@@ -516,6 +541,10 @@ HTML;
 		return $this->Field();
 	}
 	
+	/**
+	 * @uses Validator->fieldIsRequired()
+	 * @return boolean
+	 */
 	function Required() {
 		if($this->form && ($validator = $this->form->Validator)) {
 			return $validator->fieldIsRequired($this->name);
