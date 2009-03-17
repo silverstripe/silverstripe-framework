@@ -299,7 +299,9 @@ abstract class Database extends Object {
 			$this->indexList[$table] = $this->indexList($table);
 		}
 		
-		$index_alt=DB::getConn()->indexOrIndexAlt($index);
+		//$index_alt=DB::getConn()->indexOrIndexAlt($index);
+		// @todo Geoff to fix his faulty commit from r73214
+		$index_alt = $index;
 				
 		//Fix up the index for database purposes
 		$index=DB::getConn()->getDbSqlDefinition($table, $index, null, true);
