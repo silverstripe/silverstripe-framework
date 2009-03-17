@@ -16,9 +16,21 @@ class DevelopmentAdmin extends Controller {
 		'$Action//$Action/$ID' => 'handleAction',
 	);
 	
-	
 	function init() {
 		parent::init();
+		
+		// We allow access to this controller regardless of live-status or ADMIN permission only
+		// if on CLI.  Access to this controller is always allowed in "dev-mode", or of the user is ADMIN.
+		$canAccess = (
+			Director::isDev() 
+			|| Director::is_cli() 
+			|| Permission::check("ADMIN")
+		);
+		if(!$canAccess) {
+			return Security::permissionFailure($this,
+				"This page is secured and you need administrator rights to access it. " .
+				"Enter your credentials below and we will send you right along.");
+		}
 		
 		// check for valid url mapping
 		// lacking this information can cause really nasty bugs,
