@@ -477,6 +477,10 @@ class Image_Uploader extends Controller {
 		'$Action/$Class/$ID/$Field' => 'handleAction',
 	);
 	
+	static $allowed_actions = array(
+		'*' => 'CMS_ACCESS_CMSMain'
+	);
+	
 	function init() {
 		// set language
 		$member = Member::currentUser();
