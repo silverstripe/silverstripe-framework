@@ -233,6 +233,9 @@ class Email extends ViewableData {
 	/**
 	 * Add a custom header to this value.
 	 * Useful for implementing all those cool features that we didn't think of.
+	 * 
+	 * @param string $headerName
+	 * @param string $headerValue
 	 */
 	public function addCustomHeader($headerName, $headerValue) {
 		if($headerName == 'Cc') $this->cc = $headerValue;

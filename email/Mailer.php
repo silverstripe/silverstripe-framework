@@ -1,21 +1,21 @@
 <?php
 /**
+ * Mailer objects are responsible for actually sending emails.
+ * The default Mailer class will use PHP's mail() function.
+ * 
  * @package sapphire
  * @subpackage email
- */
-
-/**
- * Mailer objects are responsible for actually sending emails.
- * The default Mailer class will use PHP's mail() fun
- * However, it 
- * One Email::set_mailer();
- * 
- * @TODO complete the description above
  */
 class Mailer extends Object {
 	/**
 	 * Send a plain-text email.
-	 * 
+	 *  
+	 * @param string $to
+	 * @param string $from
+	 * @param string §subject
+	 * @param string $plainContent
+	 * @param bool $attachedFiles
+	 * @param array $customheaders
 	 * @return bool
 	 */
 	function sendPlain($to, $from, $subject, $plainContent, $attachedFiles = false, $customheaders = false) {
@@ -127,7 +127,7 @@ function htmlEmail($to, $from, $subject, $htmlContent, $attachedFiles = false, $
 	}
 
 	// Email headers
-	$headers["From"] 		= validEmailAddr($from);
+	$headers["From"] = validEmailAddr($from);
 
 	// Messages with the X-SilverStripeMessageID header can be tracked
     if(isset($customheaders["X-SilverStripeMessageID"]) && defined('BOUNCE_EMAIL')) {
@@ -319,7 +319,7 @@ function wrapImagesInline_rewriter($url) {
 }
 
 /*
- * Combine headers w/ the body into a single string
+ * Combine headers w/ the body into a single string.
  */
 function processHeaders($headers, $body = false) {
 	$res = '';
