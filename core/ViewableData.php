@@ -6,9 +6,12 @@
  * calling the methods provided by the ViewableData base-class, from which most Sapphire objects
  * are inherited.
  * 
- * 
  * ViewableData cover page controls, controllers, and data objects.  It's the basic unit of
  * data exchange.  More specifically, it's anything that can be put into a view.
+ * 
+ * If any public method on this class is prefixed with an underscore, 
+ * the results are cached in memory through {@link cachedCall()}.
+ * 
  * @package sapphire
  * @subpackage view
  */
