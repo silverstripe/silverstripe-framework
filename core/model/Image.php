@@ -478,7 +478,10 @@ class Image_Uploader extends Controller {
 	);
 	
 	static $allowed_actions = array(
-		'*' => 'CMS_ACCESS_CMSMain'
+		'iframe' => 'CMS_ACCESS_CMSMain',
+		'flush' => 'CMS_ACCESS_CMSMain',
+		'save' => 'CMS_ACCESS_CMSMain',
+		'delete' => 'CMS_ACCESS_CMSMain'
 	);
 	
 	function init() {
