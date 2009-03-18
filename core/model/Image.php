@@ -429,6 +429,11 @@ class Image_Saver extends DBField {
  * @subpackage filesystem
  */
 class Image_Uploader extends Controller {
+	
+	static $allowed_actions = array(
+		'*' => 'CMS_ACCESS_CMSMain'
+	);
+	
 	/**
 	 * Ensures the css is loaded for the iframe.
 	 */
