@@ -481,7 +481,8 @@ class Image_Uploader extends Controller {
 		'iframe' => 'CMS_ACCESS_CMSMain',
 		'flush' => 'CMS_ACCESS_CMSMain',
 		'save' => 'CMS_ACCESS_CMSMain',
-		'delete' => 'CMS_ACCESS_CMSMain'
+		'delete' => 'CMS_ACCESS_CMSMain',
+		'EditImageForm' => 'CMS_ACCESS_CMSMain'
 	);
 	
 	function init() {
