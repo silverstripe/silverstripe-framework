@@ -127,6 +127,11 @@ class Image extends File {
 			return;
 		}
 		
+		if(isset($tmpFile['tmp_name']) && !is_uploaded_file($tmpFile['tmp_name'])) {
+			user_error("Image::loadUploadedImage() Image file is not a valid upload", E_USER_ERROR);
+			return false;
+		}
+		
 		$base = dirname(dirname($_SERVER['SCRIPT_FILENAME']));
 		$class = $this->class;
 
