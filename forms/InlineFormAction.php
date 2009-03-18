@@ -1,7 +1,10 @@
 <?php
 /**
- * Render a button that will act as 
- * If you want to add custom behaviour, please set {inlcudeDefaultJS} to false and work with behaviour.js.
+ * Render a button that will submit the form its contained in through ajax.
+ * If you want to add custom behaviour, please set {@link inlcudeDefaultJS()} to FALSE and work with behaviour.js.
+ * 
+ * @see sapphire/javascript/InlineFormAction.js
+ * 
  * @package forms
  * @subpackage actions
  */
