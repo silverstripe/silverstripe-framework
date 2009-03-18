@@ -160,6 +160,10 @@ class File extends DataObject {
 		if(!is_array($tmpFile)) user_error("File::loadUploaded() Not passed an array.  Most likely, the form hasn't got the right enctype", E_USER_ERROR);
 		if(!$tmpFile['size']) return;
 		
+		if(isset($tmpFile['tmp_name']) && !is_uploaded_file($tmpFile['tmp_name'])) {
+			user_error("File::loadUploaded() File is not a valid upload", E_USER_ERROR);
+			return false;
+		}
 		
 		// @TODO This puts a HUGE limitation on files especially when lots
 		// have been uploaded.
