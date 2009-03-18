@@ -152,7 +152,8 @@ class Member extends DataObject {
 
 			$member = DataObject::get_one("Member", "Member.ID = '$SQL_uid'");
 
-			if($member && $member->RememberLoginToken != $token) {
+			// check if autologin token matches
+			if($member && (!$member->RememberLoginToken || $member->RememberLoginToken != $token)) {
 				$member = null;
 			}
 
