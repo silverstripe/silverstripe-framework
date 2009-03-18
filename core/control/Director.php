@@ -90,8 +90,16 @@ class Director {
 	static function direct($url) {
 		// Validate $_FILES array before merging it with $_POST
 		foreach($_FILES as $k => $v) {
-			if($v['tmp_name'] && !is_uploaded_file($v['tmp_name'])) {
-				user_error("File upoad '$k' doesn't appear to be a valid upload", E_USER_ERROR);
+			if(is_array($v['tmp_name'])) {
+				foreach($v['tmp_name'] as $tmpFile) {
+					if($tmpFile && !is_uploaded_file($tmpFile)) {
+						user_error("File upload '$k' doesn't appear to be a valid upload", E_USER_ERROR);
+					}
+				}
+			} else {
+				if($v['tmp_name'] && !is_uploaded_file($v['tmp_name'])) {
+					user_error("File upload '$k' doesn't appear to be a valid upload", E_USER_ERROR);
+				}
 			}
 		}
 		
