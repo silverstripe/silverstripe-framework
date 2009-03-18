@@ -482,7 +482,8 @@ class Image_Uploader extends Controller {
 		'flush' => 'CMS_ACCESS_CMSMain',
 		'save' => 'CMS_ACCESS_CMSMain',
 		'delete' => 'CMS_ACCESS_CMSMain',
-		'EditImageForm' => 'CMS_ACCESS_CMSMain'
+		'EditImageForm' => 'CMS_ACCESS_CMSMain',
+		'DeleteImageForm' => 'CMS_ACCESS_CMSMain'
 	);
 	
 	function init() {
