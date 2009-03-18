@@ -1746,9 +1746,10 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 			$classes .= " notinmenu";
 			
 		//TODO: Add integration
+		/*
 		if(Translatable::is_enabled() && $controller->Lang != Translatable::default_lang() && !$this->isTranslation())
 			$classes .= " untranslated ";
-		
+		*/
 		$classes .= $this->markingClasses();
 
 		return $classes;
