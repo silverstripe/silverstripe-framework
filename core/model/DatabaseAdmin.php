@@ -32,6 +32,26 @@ class DatabaseAdmin extends Controller {
 		'testinstall',
 		'import'
 	);
+	
+	function init() {
+		parent::init();
+		
+		// We allow access to this controller regardless of live-status or ADMIN permission only
+		// if on CLI or with the database not ready. The latter makes it less errorprone to do an
+		// initial schema build without requiring a default-admin login.
+		// Access to this controller is always allowed in "dev-mode", or of the user is ADMIN.
+		$canAccess = (
+			Director::isDev() 
+			|| !Security::database_is_ready() 
+			|| Director::is_cli() 
+			|| Permission::check("ADMIN")
+		);
+		if(!$canAccess) {
+			return Security::permissionFailure($this,
+				"This page is secured and you need administrator rights to access it. " .
+				"Enter your credentials below and we will send you right along.");
+		}
+	}
 
 	/**
 	 * Get the data classes, grouped by their root class
@@ -75,13 +95,6 @@ class DatabaseAdmin extends Controller {
 	 * Updates the database schema, creating tables & fields as necessary.
 	 */
 	function build() {
-		if(Director::isLive() && Security::database_is_ready() && (!Member::currentUser() || !Member::currentUser()->isAdmin())) {
-			Security::permissionFailure($this,
-				"This page is secured and you need administrator rights to access it. " .
-				"Enter your credentials below and we will send you right along.");
-			return;
-		}
-
 		// The default time limit of 30 seconds is normally not enough
 		if(ini_get("safe_mode") != "1") {
 			set_time_limit(600);
