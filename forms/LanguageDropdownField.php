@@ -27,7 +27,7 @@ class LanguageDropdownField extends GroupedDropdownField {
 			array_flip($dontInclude)
 		);
 
-		if (isset($usedlangs[Translatable::default_lang()])) unset($usedlangs[Translatable::default_lang()]);
+		//if (isset($usedlangs[Translatable::default_lang()])) unset($usedlangs[Translatable::default_lang()]);
 					
 		if ('Common-English' == $list) $languageList = i18n::get_common_languages();
 		else if ('Common-Native' == $list) $languageList = i18n::get_common_languages(true);
