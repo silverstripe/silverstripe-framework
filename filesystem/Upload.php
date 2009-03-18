@@ -165,6 +165,11 @@ class Upload extends Controller {
 		// we don't validate for empty upload fields yet
 		if(!isset($tmpFile['name']) || empty($tmpFile['name'])) return true;
 
+		if(isset($tmpFile['tmp_name']) && !is_uploaded_file($tmpFile['tmp_name'])) {
+			$this->errors[] = _t('File.NOVALIDUPLOAD', 'File is not a valid upload');
+			return false;
+		}
+
 		$pathInfo = pathinfo($tmpFile['name']);
 		// filesize validation
 		if(!$this->isValidSize($tmpFile)) {
