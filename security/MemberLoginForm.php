@@ -107,7 +107,7 @@ class MemberLoginForm extends LoginForm {
 				&& Director::is_site_url($_REQUEST['BackURL'])
 			) {
 				Session::clear("BackURL");
-				Director::redirect($backURL);
+				Director::redirect($_REQUEST['BackURL']);
 			} else {
 				Session::set("Security.Message.message", 
 					sprintf(_t('Member.WELCOMEBACK', "Welcome Back, %s"), $firstname)
