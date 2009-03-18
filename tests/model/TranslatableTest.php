@@ -41,22 +41,68 @@ class TranslatableTest extends FunctionalTest {
 		
 		parent::tearDown();
 	}
-
-	function testGetOriginalPage() {
-		$origPage = $this->objFromFixture('Page', 'testpage_en');
-		$translatedPage = $origPage->createTranslation('de');
-		
-		$this->assertEquals($translatedPage->getOriginalPage()->ID, $origPage->ID);
-	}
 	
-	function testIsTranslation() {
-		$origPage = $this->objFromFixture('Page', 'testpage_en');
-		$translatedPage = $origPage->createTranslation('de');
+	function testTranslationGroups() {
+		// first in french
+		$frPage = new SiteTree();
+		$frPage->Lang = 'fr';
+		$frPage->write();
 		
-		$this->assertFalse($origPage->isTranslation());
-		$this->assertTrue($translatedPage->isTranslation());
+		// second in english (from french "original")
+		$enPage = $frPage->createTranslation('en');
+		
+		// third in spanish (from the english translation)
+		$esPage = $enPage->createTranslation('es');
+		
+		// test french
+		$this->assertEquals(
+			$frPage->getTranslations()->column('Lang'),
+			array('en','es')
+		);
+		$this->assertNotNull($frPage->getTranslation('en'));
+		$this->assertEquals(
+			$frPage->getTranslation('en')->ID,
+			$enPage->ID
+		);
+		$this->assertNotNull($frPage->getTranslation('es'));
+		$this->assertEquals(
+			$frPage->getTranslation('es')->ID,
+			$esPage->ID
+		);
+		
+		// test english
+		$this->assertEquals(
+			$enPage->getTranslations()->column('Lang'),
+			array('fr','es')
+		);
+		$this->assertNotNull($frPage->getTranslation('fr'));
+		$this->assertEquals(
+			$enPage->getTranslation('fr')->ID,
+			$frPage->ID
+		);
+		$this->assertNotNull($frPage->getTranslation('es'));
+		$this->assertEquals(
+			$enPage->getTranslation('es')->ID,
+			$esPage->ID
+		);
+		
+		// test spanish
+		$this->assertEquals(
+			$esPage->getTranslations()->column('Lang'),
+			array('fr','en')
+		);
+		$this->assertNotNull($esPage->getTranslation('fr'));
+		$this->assertEquals(
+			$esPage->getTranslation('fr')->ID,
+			$frPage->ID
+		);
+		$this->assertNotNull($esPage->getTranslation('en'));
+		$this->assertEquals(
+			$esPage->getTranslation('en')->ID,
+			$enPage->ID
+		);
 	}
-	
+		
 	function testGetTranslationOnSiteTree() {
 		$origPage = $this->objFromFixture('Page', 'testpage_en');
 		$translatedPage = $origPage->createTranslation('fr');
@@ -68,11 +114,6 @@ class TranslatableTest extends FunctionalTest {
 	
 	function testGetTranslatedLanguages() {
 		$origPage = $this->objFromFixture('Page', 'testpage_en');
-		// manual creation of page
-		$translationDe = new Page();
-		$translationDe->OriginalID = $origPage->ID;
-		$translationDe->Lang = 'de';
-		$translationDe->write();
 		
 		// through createTranslation()
 		$translationAf = $origPage->createTranslation('af');
@@ -86,7 +127,6 @@ class TranslatableTest extends FunctionalTest {
 			$origPage->getTranslatedLangs(),
 			array(
 				'af',
-				'de', 
 				//'en', // default language is not included
 			),
 			'Language codes are returned specifically for the queried page through getTranslatedLangs()'
@@ -99,6 +139,16 @@ class TranslatableTest extends FunctionalTest {
 			array(),
 			'A page without translations returns empty array through getTranslatedLangs(), ' . 
 			'even if translations for other pages exist in the database'
+		);
+		
+		// manual creation of page without an original link
+		$translationDeWithoutOriginal = new Page();
+		$translationDeWithoutOriginal->Lang = 'de';
+		$translationDeWithoutOriginal->write();
+		$this->assertEquals(
+			$translationDeWithoutOriginal->getTranslatedLangs(),
+			array(),
+			'A translated page without an original doesn\'t return anything through getTranslatedLang()'
 		);
 	}
 
@@ -253,7 +303,7 @@ class TranslatableTest extends FunctionalTest {
 		$translatedPage->flushCache();
 		$origPage->flushCache();
 
-		$this->assertFalse($origPage->getTranslation('de'));
+		$this->assertNull($origPage->getTranslation('de'));
 		$this->assertNotNull(DataObject::get_by_id('Page', $origPage->ID));
 	}
 	
@@ -363,7 +413,6 @@ class TranslatableTest extends FunctionalTest {
 
 		$this->assertEquals($translatedPage->Lang, 'de');
 		$this->assertNotEquals($translatedPage->ID, $origPage->ID);
-		$this->assertEquals($translatedPage->OriginalID, $origPage->ID);
 
 		$subsequentTranslatedPage = $origPage->createTranslation('de');
 		$this->assertEquals(
@@ -402,6 +451,27 @@ class TranslatableTest extends FunctionalTest {
 		);
 	}
 	
+	function testCreateTranslationWithoutOriginal() {
+		$origParentPage = $this->objFromFixture('Page', 'testpage_en');
+		$translatedParentPage = $origParentPage->createTranslation('de');
+
+		$translatedPageWithoutOriginal = new SiteTree();
+		$translatedPageWithoutOriginal->ParentID = $translatedParentPage->ID;
+		$translatedPageWithoutOriginal->Lang = 'de';
+		$translatedPageWithoutOriginal->write();
+
+		Translatable::set_reading_lang('de');
+		$this->assertEquals(
+			$translatedParentPage->stageChildren()->column('ID'),
+			array(
+				$translatedPageWithoutOriginal->ID
+			),
+			"Children() still works on a translated page even if no translation group is set"
+		);
+		
+		Translatable::set_reading_lang('en');
+	}
+	
 	function testCreateTranslationTranslatesUntranslatedParents() {
 		$parentPage = $this->objFromFixture('Page', 'parent');
 		$child1Page = $this->objFromFixture('Page', 'child1');
@@ -419,32 +489,59 @@ class TranslatableTest extends FunctionalTest {
 	}
 
 	function testHierarchyAllChildrenIncludingDeleted() {
-		$parentPage = $this->objFromFixture('Page', 'parent');
-		$translatedParentPage = $parentPage->createTranslation('de');
-		$child1Page = $this->objFromFixture('Page', 'child1');
-		$child1Page->publish('Stage', 'Live');
-		$child1PageOrigID = $child1Page->ID;
-		$child1Page->delete();
-		$child2Page = $this->objFromFixture('Page', 'child2');
-		$child3Page = $this->objFromFixture('Page', 'child3');
-		$grandchildPage = $this->objFromFixture('Page', 'grandchild');
+		// Original tree in 'en':
+		//   parent
+		//    child1 (Live only, deleted from stage)
+		//    child2 (Stage only, never published)
+		//    child3 (Stage only, never published, untranslated)
+		// Translated tree in 'de':
+		//   parent
+		//    child1 (Live only, deleted from stage)
+		//    child2 (Stage only)
 		
+		// Create parent
+		$parentPage = $this->objFromFixture('Page', 'parent');
+		$parentPageID = $parentPage->ID;
+		
+		// Create parent translation
+		$translatedParentPage = $parentPage->createTranslation('de');
+		$translatedParentPageID = $translatedParentPage->ID;
+		
+		// Create child1
+		$child1Page = $this->objFromFixture('Page', 'child1');
+		$child1PageID = $child1Page->ID;
+		$child1Page->publish('Stage', 'Live');
+		
+		// Create child1 translation
 		$child1PageTranslated = $child1Page->createTranslation('de');
+		$child1PageTranslatedID = $child1PageTranslated->ID;
 		$child1PageTranslated->publish('Stage', 'Live');
-		$child1PageTranslatedOrigID = $child1PageTranslated->ID;
-		$child1PageTranslated->delete();
+		$child1PageTranslated->deleteFromStage('Stage'); // deleted from stage only, record still exists on live
+		$child1Page->deleteFromStage('Stage'); // deleted from stage only, record still exists on live
+		
+		// Create child2
+		$child2Page = $this->objFromFixture('Page', 'child2');
+		$child2PageID = $child2Page->ID;
+		
+		// Create child2 translation
 		$child2PageTranslated = $child2Page->createTranslation('de');
+		$child2PageTranslatedID = $child2PageTranslated->ID;
+		
+		// Create child3
+		$child3Page = $this->objFromFixture('Page', 'child3');
+		$child3PageID = $child3Page->ID;
 		
 		// on original parent in default language
 		Translatable::set_reading_lang('en');
 		SiteTree::flush_and_destroy_cache();
 		$parentPage = $this->objFromFixture('Page', 'parent');
+		$children = $parentPage->AllChildrenIncludingDeleted();
 		$this->assertEquals(
 			$parentPage->AllChildrenIncludingDeleted()->column('ID'),
 			array(
-				$child2Page->ID,
-				$child3Page->ID,
-				$child1PageOrigID // $child1Page was deleted, so the original record doesn't have the ID set
+				$child2PageID,
+				$child3PageID,
+				$child1PageID // $child1Page was deleted from stage, so the original record doesn't have the ID set
 			),
 			"Showing AllChildrenIncludingDeleted() in default language doesnt show deleted children in other languages"
 		);
@@ -456,24 +553,25 @@ class TranslatableTest extends FunctionalTest {
 		$this->assertEquals(
 			$parentPage->AllChildrenIncludingDeleted()->column('ID'),
 			array(
-				$child2PageTranslated->ID,
-				$child1PageTranslatedOrigID,
+				$child2PageTranslatedID,
+				$child1PageTranslatedID // $child1PageTranslated was deleted from stage, so the original record doesn't have the ID set
 			),
 			"Showing AllChildrenIncludingDeleted() in translation mode with parent page in default language shows children in default language"
 		);
 		
-		// on translated page in translation mode
-		SiteTree::flush_and_destroy_cache();
-		$parentPage = $this->objFromFixture('Page', 'parent');
-		$translatedParentPage = $parentPage->getTranslation('de');
-		$this->assertEquals(
-			$translatedParentPage->AllChildrenIncludingDeleted()->column('ID'),
-			array(
-				$child2PageTranslated->ID,
-				$child1PageTranslatedOrigID,
-			),
-			"Showing AllChildrenIncludingDeleted() in translation mode with translated parent page shows only translated children"
-		);
+		// @todo getTranslation() doesn't switch languages for future calls, its handled statically through set_reading_lang()
+		// // on translated page in translation mode using getTranslation()
+		// 		SiteTree::flush_and_destroy_cache();
+		// 		$parentPage = $this->objFromFixture('Page', 'parent');
+		// 		$translatedParentPage = $parentPage->getTranslation('de');
+		// 		$this->assertEquals(
+		// 			$translatedParentPage->AllChildrenIncludingDeleted()->column('ID'),
+		// 			array(
+		// 				$child2PageTranslatedID,
+		// 				$child1PageTranslatedID,
+		// 			),
+		// 			"Showing AllChildrenIncludingDeleted() in translation mode with translated parent page shows only translated children"
+		// 		);
 		
 		// reset language
 		Translatable::set_reading_lang('en');
