@@ -88,6 +88,13 @@ class Director {
 	 * @uses Controller::run() Controller::run() handles the page logic for a Director::direct() call.
 	 */
 	static function direct($url) {
+		// Validate $_FILES array before merging it with $_POST
+		foreach($_FILES as $k => $v) {
+			if($v['tmp_name'] && !is_uploaded_file($v['tmp_name'])) {
+				user_error("File upoad '$k' doesn't appear to be a valid upload", E_USER_ERROR);
+			}
+		}
+		
 		$req = new HTTPRequest(
 			(isset($_SERVER['X-HTTP-Method-Override'])) ? $_SERVER['X-HTTP-Method-Override'] : $_SERVER['REQUEST_METHOD'],
 			$url, 
@@ -432,23 +439,32 @@ class Director {
 	/**
 	 * Turns an absolute URL or folder into one that's relative to the root of the site.
 	 * This is useful when turning a URL into a filesystem reference, or vice versa.
+	 * 
+	 * @todo Implement checking across http/https protocols
+	 * 
+	 * @param string $url Accepts both a URL or a filesystem path
+	 * @return string Either a relative URL if the checks succeeded, or the original (possibly absolute) URL.
 	 */
 	static function makeRelative($url) {
 		// Allow for the accidental inclusion of a // in the URL
 		$url = ereg_replace('([^:])//','\\1/',$url);
+		$url = trim($url);
 
 		// Only bother comparing the URL to the absolute version if $url looks like a URL.
-		if(preg_match('/^http[^:]*:\/\//',$url)) {
+		if(preg_match('/^https?[^:]*:\/\//',$url)) {
 			$base1 = self::absoluteBaseURL();
 			if(substr($url,0,strlen($base1)) == $base1) return substr($url,strlen($base1));
 		}
 		
+		// test for base folder, e.g. /var/www
 		$base2 = self::baseFolder();
 		if(substr($url,0,strlen($base2)) == $base2) return substr($url,strlen($base2));
 
+		// Test for relative base url, e.g. mywebsite/ if the full URL is http://localhost/mywebsite/
 		$base3 = self::baseURL();
 		if(substr($url,0,strlen($base3)) == $base3) return substr($url,strlen($base3));
 		
+		// Nothing matched, fall back to returning the original URL
 		return $url;
 	}
 	
@@ -473,9 +489,35 @@ class Director {
 	public static function is_absolute_url($url) {
 		$url = trim($url);
 		// remove all query strings to avoid parse_url choking on URLs like 'test.com?url=http://test.com'
-		$url = preg_replace('/.*(\?.*)/', '', $url);
+		$url = preg_replace('/(.*)\?.*/', '$1', $url);
 		$parsed = parse_url($url);
 		return (isset($parsed['scheme']));
+	}
+	
+	/**
+	 * Checks if a given URL is relative by checking
+	 * {@link is_absolute_url()}.
+	 * 
+	 * @param string $url
+	 * @return boolean
+	 */
+	public static function is_relative_url($url) {
+		return (!Director::is_absolute_url($url));
+	}
+	
+	/**
+	 * Checks if the given URL is belonging to this "site",
+	 * as defined by {@link makeRelative()} and {@link absoluteBaseUrl()}.
+	 * Useful to check before redirecting based on a URL from user submissions
+	 * through $_GET or $_POST, and avoid phishing attacks by redirecting
+	 * to an attackers server.
+	 * 
+	 * @param string $url
+	 * @return boolean
+	 */
+	public static function is_site_url($url) {
+		$relativeUrl = Director::makeRelative($url);
+		return (bool)self::is_relative_url($relativeUrl);
 	}
 	
 	/**
