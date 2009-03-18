@@ -100,7 +100,12 @@ class MemberLoginForm extends LoginForm {
 			Session::clear('SessionForms.MemberLoginForm.Email');
 			Session::clear('SessionForms.MemberLoginForm.Remember');
 
-			if(isset($_REQUEST['BackURL']) && $backURL = $_REQUEST['BackURL']) {
+			if(
+				isset($_REQUEST['BackURL'])
+				&& $_REQUEST['BackURL']
+				// absolute redirection URLs may cause spoofing
+				&& Director::is_site_url($_REQUEST['BackURL'])
+			) {
 				Session::clear("BackURL");
 				Director::redirect($backURL);
 			} else {
