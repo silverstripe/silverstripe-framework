@@ -18,17 +18,46 @@
  * }
  * </example>
  * Make sure to rebuild the database through /dev/build after enabling translatable.
+ * 
+ * <h2>Usage</h2>
+ *
+ * Getting a translation for an existing instance: 
+ * <example>
+ * $translatedObj = DataObject::get_one_by_lang('MyObject', 'de');
+ * </example>
+ * 
+ * Getting a translation for an existing instance: 
+ * <example>
+ * $obj = DataObject::get_by_id('MyObject', 99); // original language
+ * $translatedObj = $obj->getTranslation('de');
+ * </example>
+ * 
+ * Getting translations through {@link Translatable::set_reading_lang()}.
+ * This is *not* a recommended approach, but sometimes inavoidable (e.g. for {@link Versioned} methods).
+ * <example>
+ * $obj = DataObject::get_by_id('MyObject', 99); // original language
+ * $translatedObj = $obj->getTranslation('de');
+ * </example>
+ * 
+ * Creating a translation: 
+ * <example>
+ * $obj = new MyObject();
+ * $translatedObj = $obj->createTranslation('de');
+ * </example>
  *
  * <h2>Usage for SiteTree</h2>
- * Translatable can be used for pages as well. 
- *
  * 
- * <h2>"Default" languages</h2>
- * 
- * Important: If the "default language" of your site is not english (en_US), 
- * please ensure to set the appropriate default language for
- * your content before building the database with Translatable enabled:
- * Translatable::set_default_language(<locale>);
+ * Translatable can be used for subclasses of {@link SiteTree} as well. 
+ * If a child page translation is requested without the parent
+ * page already having a translation in this language, the extension
+ * will recursively create translations up the tree.
+ * Caution: The "URLSegment" property is enforced to be unique across
+ * languages by auto-appending the language code at the end.
+ * You'll need to ensure that the appropriate "reading language" is set
+ * before showing links to other pages on a website: Either
+ * through setting $_COOKIE['lang'], $_SESSION['lang'] or $_GET['lang'].
+ * Pages in different languages can have different publication states
+ * through the {@link Versioned} extension.
  *
  * <h2>Translation groups</h2>
  * 
@@ -46,6 +75,13 @@
  * Caution: Does not apply any character-set conversion, it is assumed that all content
  * is stored and represented in UTF-8 (Unicode). Please make sure your database and
  * HTML-templates adjust to this.
+ * 
+ * <h2>"Default" languages</h2>
+ * 
+ * Important: If the "default language" of your site is not english (en_US), 
+ * please ensure to set the appropriate default language for
+ * your content before building the database with Translatable enabled:
+ * Translatable::set_default_language(<locale>);
  * 
  * <h2>Uninstalling/Disabling</h2>
  * 
@@ -578,6 +614,8 @@ class Translatable extends DataObjectDecorator {
 		}
 
 		// Specific logic for SiteTree subclasses.
+		// If page has untranslated parents, create (unpublished) translations
+		// of those as well to avoid having inaccessible children in the sitetree.
 		// Caution: This logic is very sensitve to eternal loops when translation status isn't determined properly
 		if($this->owner->hasField('ParentID')) {
 			if(
@@ -585,7 +623,8 @@ class Translatable extends DataObjectDecorator {
 				&& $this->owner->ParentID 
 				&& !$this->owner->Parent()->hasTranslation($this->owner->Lang)
 			) {
-				$this->owner->Parent()->createTranslation($this->owner->Lang);
+				$parentTranslation = $this->owner->Parent()->createTranslation($this->owner->Lang);
+				$this->owner->ParentID = $parentTranslation->ID;
 			}
 		}
 		
@@ -722,23 +761,6 @@ class Translatable extends DataObjectDecorator {
 				}
 			}
 			
-			$origLangName = i18n::get_language_name($originalRecord->Lang);
-			
-			// add link back to original page
-			$originalRecordLink = sprintf(
-				_t('Translatable.ORIGINALLINK', 'Show original page in %s', PR_MEDIUM, 'Show in specific language'),
-				$origLangName
-			);
-			$originalRecordHTML = sprintf('<p><a href="%s">%s</a></p>',
-				sprintf('admin/show/%d/?lang=%s', $originalRecord->ID, Translatable::default_lang()),
-				$originalRecordLink
-			);
-			$fields->addFieldsToTab(
-				'Root',
-				new Tab(_t('Translatable.TRANSLATIONS', 'Translations'),
-					new LiteralField('OriginalTranslationLink', $originalRecordHTML)
-				)
-			);
 		} elseif($this->owner->isNew()) {
 			$fields->addFieldsToTab(
 				'Root',
@@ -760,14 +782,14 @@ class Translatable extends DataObjectDecorator {
 		// We'd still want to show the default lang though,
 		// as records in this language might have NULL values in their $Lang property
 		// and otherwise wouldn't show up here
-		$alreadyTranslatedLangs[Translatable::default_lang()] = i18n::get_language_name(Translatable::default_lang());
+		//$alreadyTranslatedLangs[Translatable::default_lang()] = i18n::get_language_name(Translatable::default_lang());
 		
 		// Exclude the current language from being shown.
 		if(Translatable::current_lang() != Translatable::default_lang()) {
 			$currentLangKey = array_search(Translatable::current_lang(), $alreadyTranslatedLangs);
 			if($currentLangKey) unset($alreadyTranslatedLangs[$currentLangKey]);
 		}
-		
+
 		$fields->addFieldsToTab(
 			'Root',
 			new Tab(_t('Translatable.TRANSLATIONS', 'Translations'),
@@ -776,6 +798,7 @@ class Translatable extends DataObjectDecorator {
 				$createButton = new InlineFormAction('createtranslation',_t('Translatable.CREATEBUTTON', 'Create'))
 			)
 		);
+		$createButton->includeDefaultJS(false);
 
 		if($alreadyTranslatedLangs) {
 			$fields->addFieldToTab(
