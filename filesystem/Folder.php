@@ -211,6 +211,11 @@ class Folder extends File {
 			return;
 		}
 		
+		if(isset($tmpFile['tmp_name']) && !is_uploaded_file($tmpFile['tmp_name'])) {
+			user_error("Folder::addUploadToFolder() File is not a valid upload", E_USER_ERROR);
+			return false;
+		}
+		
 		$base = dirname(dirname($_SERVER['SCRIPT_FILENAME']));
 		// $parentFolder = Folder::findOrMake("Uploads");
 
