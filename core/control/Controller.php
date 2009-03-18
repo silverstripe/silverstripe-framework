@@ -479,7 +479,13 @@ class Controller extends RequestHandler {
 			$url = Director::baseURL();
 		}
 
-		$this->redirect($url);
+		// absolute redirection URLs not located on this site may cause phishing
+		if(Director::is_site_url($url)) {
+			return $this->redirect($url);
+		} else {
+			return false;
+		}
+
 	}
 	
 	/**

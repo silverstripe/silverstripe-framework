@@ -126,12 +126,8 @@ JS
 			} elseif(
 				isset($_REQUEST['BackURL']) 
 				&& $_REQUEST['BackURL'] 
-				&& (
-					// absolute redirection URLs may cause spoofing 
-					!Director::is_absolute_url($_REQUEST['BackURL'])
-					// absolute URLs on the current domain are allowed
-					|| strpos($_REQUEST['BackURL'], Director::absoluteBaseURL()) !== FALSE
-				)
+				// absolute redirection URLs may cause spoofing 
+				&& Director::is_site_url($_REQUEST['BackURL'])
 			) {
 				Director::redirect($_REQUEST['BackURL']);
 			} else {
