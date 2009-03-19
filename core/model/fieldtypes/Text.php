@@ -202,6 +202,11 @@ class Text extends DBField {
 	 * 
 	 * CAUTION: Not XML/HTML-safe - does not respect closing tags.
 	 * 
+	 * @TODO This shouldn't rely on having a <p> or <div> element
+	 * wrapping around the text to determine a "first paragraph".
+	 * If we can find two line breaks <br> or <br /> in the content
+	 * then we can consider any text which preceeds that as a paragraph.
+	 * 
 	 * @param boolean $plain Return plain text (1) or (0) HTML text
 	 * @return string The first paragraph of content
 	 */
