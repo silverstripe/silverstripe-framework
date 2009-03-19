@@ -202,7 +202,7 @@ class HTTPResponse extends Object {
 	 * Specifically, returns true if a redirect has already been requested
 	 */
 	function isFinished() {
-		return $this->statusCode == 302 || $this->statusCode == 301;
+		return in_array($this->statusCode, array(301, 302, 401, 403));
 	}
     
     /**
