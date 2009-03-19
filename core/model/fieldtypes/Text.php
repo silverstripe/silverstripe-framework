@@ -197,30 +197,44 @@ class Text extends DBField {
 	}
 	
 	/**
-	 * Caution: Not XML/HTML-safe - does not respect closing tags.
+	 * Take the first paragraph (the first <p> or <div> block in
+	 * the content HTML that can be found) and returns it.
+	 * 
+	 * CAUTION: Not XML/HTML-safe - does not respect closing tags.
+	 * 
+	 * @param boolean $plain Return plain text (1) or (0) HTML text
+	 * @return string The first paragraph of content
 	 */
 	function FirstParagraph($plain = 1) {
 		// get first sentence?
 		// this needs to be more robust
 		if($plain && $plain != 'html') {
 			$data = Convert::xml2raw( $this->value, true );
-			if( !$data ) return "";
+			if(!$data) return '';
 		
 			// grab the first paragraph, or, failing that, the whole content
-			if( strpos( $data, "\n\n" ) )
-				$data = substr( $data, 0, strpos( $data, "\n\n" ) );
+			if(strpos( $data, "\n\n")) $data = substr( $data, 0, strpos( $data, "\n\n" ) );
 
 			return $data;
-		
 		} else {
-			if(strpos( $this->value, "</p>" ) === false) return $this->value;
 			
-			$data = substr( $this->value, 0, strpos( $this->value, "</p>" ) + 4 );
-
-
-			if(strlen($data) < 20 && strpos( $this->value, "</p>", strlen($data) )) $data = substr( $this->value, 0, strpos( $this->value, "</p>", strlen($data) ) + 4 );
+			// Find out what the container element for limit paragraphs should be
+			// (div or p is supported)
+			if(strpos($this->value, '</div>')) {
+				$containerElement = '</div>';
+			} elseif(strpos($this->value, '</p>')) {
+				$containerElement = '</p>';
+			} else {
+				return $this->value;
+			}
 			
-			return $data;			
+			$data = substr($this->value, 0, strpos($this->value, $containerElement) + strlen($containerElement));
+	
+			if(strlen($data) < 20 && strpos($this->value, $containerElement, strlen($data))) {
+				$data = substr($this->value, 0, strpos($this->value, $containerElement, strlen($data)) + strlen($containerElement));
+			}
+			
+			return $data;
 		}
 	}
 	
