@@ -606,12 +606,13 @@ class Translatable extends DataObjectDecorator {
 			if (!$alreadyTranslatedLangs) $alreadyTranslatedLangs = array();
 			foreach ($alreadyTranslatedLangs as $i => $langCode) {
 				$alreadyTranslatedLangs[$i] = i18n::get_language_name($langCode);
+				if($alreadyTranslatedLangs[$i] == null) user_error("Couldn't get language name for '$langCode'", E_USER_WARNING);
 			}
 			$fields->addFieldsToTab(
 				'Root',
 				new Tab(_t('Translatable.TRANSLATIONS', 'Translations'),
 					new HeaderField(_t('Translatable.CREATE', 'Create new translation'), 2),
-					$langDropdown = new LanguageDropdownField("NewTransLang", _t('Translatable.NEWLANGUAGE', 'New language'), $alreadyTranslatedLangs),
+					$langDropdown = new LanguageDropdownField("NewTransLang", _t('Translatable.NEWLANGUAGE', 'New language'), $alreadyTranslatedLangs, 'SiteTree', null),
 					$createButton = new InlineFormAction('createtranslation',_t('Translatable.CREATEBUTTON', 'Create'))
 				)
 			);

@@ -26,6 +26,15 @@ class LanguageDropdownField extends GroupedDropdownField {
 			i18n::get_existing_content_languages($translatingClass),
 			$dontInclude
 		);
+
+		// Validate dontInclude
+		foreach($dontInclude as $i => $item) {
+			if(!is_numeric($item) && !is_string($item)) {
+				user_error("Bad value contained in dontInclude array, index $i: " . var_export($item,true), E_USER_WARNING);
+				unset($dontInclude[$i]);
+			}
+		}
+		
 		// we accept in dontInclude both language codes and names, so another diff is required
 		$usedlangs = array_diff(
 			$usedlangs,

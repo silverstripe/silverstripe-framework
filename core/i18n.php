@@ -860,8 +860,8 @@ class i18n extends Controller {
 	 * @return Name of the language
 	 */
 	static function get_language_name($code, $native = false) {
-		$langs = self::$common_languages;
-		return ($native ? $langs[$code][1] : $langs[$code][0]);
+		$langs = self::$all_locales;
+		return $langs[$code];
 	}
 	
 	/**
