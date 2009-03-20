@@ -58,6 +58,18 @@
  * through setting $_COOKIE['lang'], $_SESSION['lang'] or $_GET['lang'].
  * Pages in different languages can have different publication states
  * through the {@link Versioned} extension.
+ * 
+ * Note: You can't get Children() for a parent page in a different language
+ * through set_reading_lang(). Get the translated parent first.
+ * 
+ * <example>
+ * // wrong
+ * Translatable::set_reading_lang('de');
+ * $englishParent->Children(); 
+ * // right
+ * $germanParent = $englishParent->getTranslation('de');
+ * $germanParent->Children();
+ * </example>
  *
  * <h2>Translation groups</h2>
  * 
