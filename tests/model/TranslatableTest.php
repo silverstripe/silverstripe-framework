@@ -314,7 +314,11 @@ class TranslatableTest extends FunctionalTest {
 		$child3Page = $this->objFromFixture('Page', 'child3');
 		$grandchildPage = $this->objFromFixture('Page', 'grandchild');
 		
-		$child1PageTranslated = $child1Page->createTranslation('de');
+		$parentPageTranslated = $parentPage->createTranslation('de');
+		$child4PageTranslated = new SiteTree();
+		$child4PageTranslated->Lang = 'de';
+		$child4PageTranslated->ParentID = $parentPageTranslated->ID;
+		$child4PageTranslated->write();
 		
 		Translatable::set_reading_lang('en');
 		$this->assertEquals(
@@ -330,8 +334,8 @@ class TranslatableTest extends FunctionalTest {
 		Translatable::set_reading_lang('de');
 		$parentPage->flushCache();
 		$this->assertEquals(
-			$parentPage->Children()->column('ID'),
-			array($child1PageTranslated->ID),
+			$parentPageTranslated->Children()->column('ID'),
+			array($child4PageTranslated->ID),
 			"Showing Children() in translation mode doesnt show children in default languages"
 		);
 		
@@ -347,11 +351,21 @@ class TranslatableTest extends FunctionalTest {
 		$child3Page = $this->objFromFixture('Page', 'child3');
 		$grandchildPage = $this->objFromFixture('Page', 'grandchild');
 		
-		$child1PageTranslated = $child1Page->createTranslation('de');
-		$child1PageTranslated->publish('Stage', 'Live');
-		$child2PageTranslated = $child2Page->createTranslation('de');
+		$parentPageTranslated = $parentPage->createTranslation('de');
+		
+		$child4PageTranslated = new SiteTree();
+		$child4PageTranslated->Lang = 'de';
+		$child4PageTranslated->ParentID = $parentPageTranslated->ID;
+		$child4PageTranslated->write();
+		$child4PageTranslated->publish('Stage', 'Live');
+		
+		$child5PageTranslated = new SiteTree();
+		$child5PageTranslated->Lang = 'de';
+		$child5PageTranslated->ParentID = $parentPageTranslated->ID;
+		$child5PageTranslated->write();
 		
 		Translatable::set_reading_lang('en');
+		$this->assertNotNull($parentPage->liveChildren());
 		$this->assertEquals(
 			$parentPage->liveChildren()->column('ID'),
 			array(
@@ -359,6 +373,7 @@ class TranslatableTest extends FunctionalTest {
 			),
 			"Showing liveChildren() in default language doesnt show children in other languages"
 		);
+		$this->assertNotNull($parentPage->stageChildren());
 		$this->assertEquals(
 			$parentPage->stageChildren()->column('ID'),
 			array(
@@ -371,16 +386,18 @@ class TranslatableTest extends FunctionalTest {
 		
 		Translatable::set_reading_lang('de');
 		$parentPage->flushCache();
+		$this->assertNotNull($parentPageTranslated->liveChildren());
 		$this->assertEquals(
-			$parentPage->liveChildren()->column('ID'),
-			array($child1PageTranslated->ID),
+			$parentPageTranslated->liveChildren()->column('ID'),
+			array($child4PageTranslated->ID),
 			"Showing liveChildren() in translation mode doesnt show children in default languages"
 		);
+		$this->assertNotNull($parentPageTranslated->stageChildren());
 		$this->assertEquals(
-			$parentPage->stageChildren()->column('ID'),
+			$parentPageTranslated->stageChildren()->column('ID'),
 			array(
-				$child2PageTranslated->ID,
-				$child1PageTranslated->ID,
+				$child4PageTranslated->ID,
+				$child5PageTranslated->ID,
 			),
 			"Showing stageChildren() in translation mode doesnt show children in default languages"
 		);
