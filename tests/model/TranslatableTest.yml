@@ -2,17 +2,17 @@ Page:
    homepage_en:
       Title: Home
       URLSegment: home
-      Lang: en
+      Locale: en_US
    testpage_en:
       Title: Home
       MenuTitle: A Testpage
       URLSegment: testpage
-      Lang: en
+      Locale: en_US
    othertestpage_en:
       Title: Other Testpage
       MenuTitle: A Testpage
       URLSegment: othertestpage
-      Lang: en
+      Locale: en_US
    parent:
       Title: Parent
       URLSegment: parent
@@ -34,10 +34,10 @@ Page:
       Parent: =>Page.child1
 TranslatableTest_DataObject:
    testobject_en:
-      TranslatableProperty: En
-      TranslatableDecoratedProperty: En
+      TranslatableProperty: en_US
+      TranslatableDecoratedProperty: en_US
 TranslatableTest_Page:
    testpage_en:
       Title: En
-      TranslatableProperty: En
+      TranslatableProperty: en_US
       URLSegment: testpage-en

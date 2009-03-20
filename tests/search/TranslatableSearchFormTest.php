@@ -12,10 +12,10 @@ class TranslatableSearchFormTest extends FunctionalTest {
 	protected $recreateTempDb = true;
 	
 	function setUp() {
-		$this->origTranslatableSettings['enabled'] = Translatable::is_enabled();
-		$this->origTranslatableSettings['default_lang'] = Translatable::default_lang();
+		$this->origTranslatableSettings['enabled'] = Translatable::is_enabled();default_locale
+		$this->origTranslatableSettings['default_locale'] = Translatable::default_locale();
 		Translatable::enable();
-		Translatable::set_default_lang("en");
+		Translatable::set_default_locale("en");
 		
 		// needs to recreate the database schema with language properties
 		self::kill_temp_db();
@@ -34,7 +34,7 @@ class TranslatableSearchFormTest extends FunctionalTest {
 	function tearDown() {
 		if(!$this->origTranslatableSettings['enabled']) Translatable::disable();
 
-		Translatable::set_default_lang($this->origTranslatableSettings['default_lang']);
+		Translatable::set_default_locale($this->origTranslatableSettings['default_locale']);
 		
 		self::kill_temp_db();
 		self::create_temp_db();
@@ -53,7 +53,7 @@ class TranslatableSearchFormTest extends FunctionalTest {
 		$translatedPublishedPage->write();
 		$translatedPublishedPage->publish('Stage', 'Live');
 		
-		// Translatable::set_reading_lang() can't be used because the context
+		// Translatable::set_reading_locale() can't be used because the context
 		// from the holder is not present here - we set the language explicitly
 		// through a pseudo GET variable in getResults()
 		

@@ -35,7 +35,8 @@ class MigrateTranslatableTask extends BuildTask {
 				// Clone the original, and set it up as a translation
 				$newtrans = $original->duplicate(false);
 				$newtrans->OriginalID = $original->ID;
-				$newtrans->Lang = $oldtrans['Lang'];
+				// we have to "guess" a locale based on the language
+				$newtrans->Locale = i18n::get_locale_from_lang($oldtrans['Lang']);
 				if($stage == 'Live' && array_key_exists($original->ID, $ids)) {
 					$newtrans->ID = $ids[$original->ID];
 				}
@@ -53,7 +54,7 @@ class MigrateTranslatableTask extends BuildTask {
 				
 					// Copy each translated field into the new translation
 					if($oldtransitem) foreach($oldtransitem as $key => $value) {
-						if(!in_array($key, array('ID', 'OriginalLangID', 'ClassName', 'Lang'))) {
+						if(!in_array($key, array('ID', 'OriginalLangID', 'ClassName'))) {
 							$newtrans->$key = $value;
 						}
 					}
@@ -62,10 +63,10 @@ class MigrateTranslatableTask extends BuildTask {
 				
 				
 				// Write the new translation to the database
-				$sitelang = Translatable::current_lang();
-				Translatable::set_reading_lang($newtrans->Lang); 
+				$sitelang = Translatable::current_locale();
+				Translatable::set_reading_locale($newtrans->Locale); 
 				$newtrans->writeToStage($stage, true);
-				Translatable::set_reading_lang($sitelang);
+				Translatable::set_reading_locale($sitelang);
 				
 				if($stage == 'Stage') {
 					$ids[$original->ID] = $newtrans->ID;

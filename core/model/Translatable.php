@@ -3,7 +3,7 @@
  * The Translatable decorator allows your DataObjects to have versions in different languages,
  * defining which fields are can be translated.
  * 
- * Common language names (e.g. 'en') are used in Translatable for
+ * Common language names (e.g. 'en_US') are used in Translatable for
  * database-entities. On the other hand, the file-based i18n-translations 
  * always have a "locale" (e.g. 'en_US').
  * 
@@ -23,26 +23,26 @@
  *
  * Getting a translation for an existing instance: 
  * <example>
- * $translatedObj = DataObject::get_one_by_lang('MyObject', 'de');
+ * $translatedObj = DataObject::get_one_by_locale('MyObject', 'de_DE');
  * </example>
  * 
  * Getting a translation for an existing instance: 
  * <example>
  * $obj = DataObject::get_by_id('MyObject', 99); // original language
- * $translatedObj = $obj->getTranslation('de');
+ * $translatedObj = $obj->getTranslation('de_DE');
  * </example>
  * 
- * Getting translations through {@link Translatable::set_reading_lang()}.
+ * Getting translations through {@link Translatable::set_reading_locale()}.
  * This is *not* a recommended approach, but sometimes inavoidable (e.g. for {@link Versioned} methods).
  * <example>
  * $obj = DataObject::get_by_id('MyObject', 99); // original language
- * $translatedObj = $obj->getTranslation('de');
+ * $translatedObj = $obj->getTranslation('de_DE');
  * </example>
  * 
  * Creating a translation: 
  * <example>
  * $obj = new MyObject();
- * $translatedObj = $obj->createTranslation('de');
+ * $translatedObj = $obj->createTranslation('de_DE');
  * </example>
  *
  * <h2>Usage for SiteTree</h2>
@@ -55,7 +55,7 @@
  * languages by auto-appending the language code at the end.
  * You'll need to ensure that the appropriate "reading language" is set
  * before showing links to other pages on a website: Either
- * through setting $_COOKIE['lang'], $_SESSION['lang'] or $_GET['lang'].
+ * through setting $_COOKIE['locale'], $_SESSION['locale'] or $_GET['locale'].
  * Pages in different languages can have different publication states
  * through the {@link Versioned} extension.
  * 
@@ -93,14 +93,14 @@
  * Important: If the "default language" of your site is not english (en_US), 
  * please ensure to set the appropriate default language for
  * your content before building the database with Translatable enabled:
- * Translatable::set_default_language(<locale>);
+ * Translatable::set_default_locale(<locale>);
  * 
  * <h2>Uninstalling/Disabling</h2>
  * 
  * Disabling Translatable after creating translations will lead to all
  * pages being shown in the default sitetree regardless of their language.
  * It is advised to start with a new database after uninstalling Translatable,
- * or manually filter out translated objects through their "Lang" property
+ * or manually filter out translated objects through their "Locale" property
  * in the database.
  * 
  * @author Michael Gall <michael (at) wakeless (dot) net>
@@ -123,7 +123,7 @@ class Translatable extends DataObjectDecorator {
 	 * The 'default' language.
 	 * @var string
 	 */
-	protected static $default_lang = 'en';
+	protected static $default_locale = 'en_US';
 	
 	/**
 	 * The language in which we are reading dataobjects.
@@ -132,7 +132,7 @@ class Translatable extends DataObjectDecorator {
 	 * @see Director::get_site_mode()
 	 * @var string
 	 */
-	protected static $reading_lang = null;
+	protected static $reading_locale = null;
 	
 	/**
 	 * Indicates if the start language has been determined using choose_site_lang
@@ -141,7 +141,7 @@ class Translatable extends DataObjectDecorator {
 	protected static $language_decided = false;
 	
 	/**
-	 * Indicates whether the 'Lang' transformation when modifying queries should be bypassed
+	 * Indicates whether the 'Locale' transformation when modifying queries should be bypassed
 	 * If it's true
 	 *
 	 * @var boolean
@@ -175,7 +175,7 @@ class Translatable extends DataObjectDecorator {
 	protected $original_values = null;
 	
 	/**
-	 * @var boolean Temporarily override the "auto-filter" for {@link current_lang()}
+	 * @var boolean Temporarily override the "auto-filter" for {@link current_locale()}
 	 * in {@link augmentSQL()}. IMPORTANT: You must set this value back to TRUE
 	 * after the temporary usage.
 	 */
@@ -183,7 +183,7 @@ class Translatable extends DataObjectDecorator {
 	
 	/**
 	 * Choose the language the site is currently on.
-	 * If $_GET['lang'] or $_COOKIE['lang'] is set, then it will use that language, and store it in the session.
+	 * If $_GET['locale'] or $_COOKIE['locale'] is set, then it will use that language, and store it in the session.
 	 * Otherwise it checks the session for a possible stored language, either from namespace to the site_mode
 	 * ('site' or 'cms'), or for a 'global' language setting. 
 	 * The final option is the member preference.
@@ -192,25 +192,25 @@ class Translatable extends DataObjectDecorator {
 	 * 
 	 * @uses Director::get_site_mode()
 	 * @param $langsAvailable array A numerical array of languages which are valid choices (optional)
-	 * @return string Selected language (also saved in $reading_lang).
+	 * @return string Selected language (also saved in $reading_locale).
 	 */
 	static function choose_site_lang($langsAvailable = array()) {
 		$siteMode = Director::get_site_mode(); // either 'cms' or 'site'
-		if(self::$reading_lang) {
+		if(self::$reading_locale) {
 			self::$language_decided = true;
-			return self::$reading_lang;
+			return self::$reading_locale;
 		}
 
-		if((isset($_GET['lang']) && !$langsAvailable) || (isset($_GET['lang']) && in_array($_GET['lang'], $langsAvailable))) {
+		if((isset($_GET['locale']) && !$langsAvailable) || (isset($_GET['locale']) && in_array($_GET['locale'], $langsAvailable))) {
 			// get from GET parameter
-			self::set_reading_lang($_GET['lang']);
+			self::set_reading_locale($_GET['locale']);
 		} else {
-			self::set_reading_lang(self::default_lang());
+			self::set_reading_locale(self::default_locale());
 		}
 		
 		
 		self::$language_decided = true;
-		return self::$reading_lang; 
+		return self::$reading_locale; 
 	}
 		
 	/**
@@ -220,34 +220,34 @@ class Translatable extends DataObjectDecorator {
 	 * 
 	 * @return string
 	 */
-	static function default_lang() {
-		return self::$default_lang;
+	static function default_locale() {
+		return self::$default_locale;
 	}
 	
 	/**
 	 * Set default language.
 	 * 
-	 * @param $lang String
+	 * @param $locale String
 	 */
-	static function set_default_lang($lang) {
-		self::$default_lang = $lang;
+	static function set_default_locale($locale) {
+		self::$default_locale = $locale;
 	}
 
 	/**
 	 * Check whether the default and current reading language are the same.
 	 * @return boolean Return true if both default and reading language are the same.
 	 */
-	static function is_default_lang() {
-		return (!self::current_lang() || self::$default_lang == self::current_lang());
+	static function is_default_locale() {
+		return (!self::current_locale() || self::$default_locale == self::current_locale());
 	}
 
 	/**
 	 * Get the current reading language.
 	 * @return string
 	 */
-	static function current_lang() {
+	static function current_locale() {
 		if (!self::$language_decided) self::choose_site_lang();
-		return self::$reading_lang;
+		return self::$reading_locale;
 	}
 		
 	/**
@@ -258,25 +258,25 @@ class Translatable extends DataObjectDecorator {
 	 * 
 	 * @param string $lang New reading language.
 	 */
-	static function set_reading_lang($lang) {
-		self::$reading_lang = $lang;
+	static function set_reading_locale($locale) {
+		self::$reading_locale = $locale;
 		self::$language_decided = true;
 	}	
 	
 	/**
 	 * Get a singleton instance of a class in the given language.
 	 * @param string $class The name of the class.
-	 * @param string $lang  The name of the language.
+	 * @param string $locale  The name of the language.
 	 * @param string $filter A filter to be inserted into the WHERE clause.
 	 * @param boolean $cache Use caching (default: false)
 	 * @param string $orderby A sort expression to be inserted into the ORDER BY clause.
 	 * @return DataObject
 	 */
-	static function get_one_by_lang($class, $lang, $filter = '', $cache = false, $orderby = "") {
-		$orig = Translatable::current_lang();
-		Translatable::set_reading_lang($lang);
+	static function get_one_by_locale($class, $locale, $filter = '', $cache = false, $orderby = "") {
+		$orig = Translatable::current_locale();
+		Translatable::set_reading_locale($locale);
 		$do = DataObject::get_one($class, $filter, $cache, $orderby);
-		Translatable::set_reading_lang($orig);
+		Translatable::set_reading_locale($orig);
 		return $do;
 	}
 
@@ -284,7 +284,7 @@ class Translatable extends DataObjectDecorator {
 	 * Get all the instances of the given class translated to the given language
 	 *
 	 * @param string $class The name of the class
-	 * @param string $lang  The name of the language
+	 * @param string $locale  The name of the language
 	 * @param string $filter A filter to be inserted into the WHERE clause.
 	 * @param string $sort A sort expression to be inserted into the ORDER BY clause.
 	 * @param string $join A single join clause.  This can be used for filtering, only 1 instance of each DataObject will be returned.
@@ -293,24 +293,12 @@ class Translatable extends DataObjectDecorator {
 	 * @param string $having A filter to be inserted into the HAVING clause.
 	 * @return mixed The objects matching the conditions.
 	 */
-	static function get_by_lang($class, $lang, $filter = '', $sort = '', $join = "", $limit = "", $containerClass = "DataObjectSet", $having = "") {
-		$oldLang = self::current_lang();
-		self::set_reading_lang($lang);
+	static function get_by_locale($class, $locale, $filter = '', $sort = '', $join = "", $limit = "", $containerClass = "DataObjectSet", $having = "") {
+		$oldLang = self::current_locale();
+		self::set_reading_locale($locale);
 		$result = DataObject::get($class, $filter, $sort, $join, $limit, $containerClass, $having);
-		self::set_reading_lang($oldLang);
+		self::set_reading_locale($oldLang);
 		return $result;
-	}
-	
-	/**
-	 * Get a record in his original language version.
-	 * @param string $class The name of the class.
-	 * @param string $originalLangID  The original record id.
-	 * @return DataObject
-	 */
-	static function get_original($class, $originalLangID) {
-		$baseClass = $class;
-		while( ($p = get_parent_class($baseClass)) != "DataObject") $baseClass = $p;
-		return self::get_one_by_lang($class,self::default_lang(),"\"$baseClass\".\"ID\" = $originalLangID");
 	}
 	
 	/**
@@ -331,7 +319,7 @@ class Translatable extends DataObjectDecorator {
 		$translationGroupID = $this->owner->getTranslationGroup();
 		if(is_numeric($translationGroupID)) {
 			$query = new SQLQuery(
-				'DISTINCT Lang',
+				'DISTINCT Locale',
 				sprintf(
 					'"%s" LEFT JOIN "%s" ON "%s"."OriginalID" = "%s"."ID"',
 					$baseDataClass,
@@ -340,11 +328,11 @@ class Translatable extends DataObjectDecorator {
 					$baseDataClass
 				), // from
 				sprintf(
-					'"%s"."TranslationGroupID" = %d AND "%s"."Lang" != \'%s\'',
+					'"%s"."TranslationGroupID" = %d AND "%s"."Locale" != \'%s\'',
 					$translationGroupClass,
 					$translationGroupID,
 					$baseDataClass,
-					$this->owner->Lang
+					$this->owner->Locale
 				) // where
 			);
 			$langs = $query->execute()->column();
@@ -445,11 +433,11 @@ class Translatable extends DataObjectDecorator {
 		if(get_class($this->owner) == ClassInfo::baseDataClass(get_class($this->owner))) {
 			return array(
 				"db" => array(
-						"Lang" => "Varchar(12)",
+						"Locale" => "Varchar(12)",
 						"TranslationMasterID" => "Int" // optional relation to a "translation master"
 				),
                 "defaults" => array(
-                    "Lang" => Translatable::default_lang() // as an overloaded getter as well: getLang()
+                    "Locale" => Translatable::default_locale() // as an overloaded getter as well: getLang()
                 )
 			);
 		} else {
@@ -459,8 +447,8 @@ class Translatable extends DataObjectDecorator {
 
 	/**
 	 * Changes any SELECT query thats not filtering on an ID
-	 * to limit by the current language defined in {@link current_lang()}.
-	 * It falls back to "Lang='' OR Lang IS NULL" and assumes that
+	 * to limit by the current language defined in {@link current_locale()}.
+	 * It falls back to "Locale='' OR Lang IS NULL" and assumes that
 	 * this implies querying for the default language.
 	 * 
 	 * Use {@link $enable_lang_filter} to temporarily disable this "auto-filtering".
@@ -468,7 +456,7 @@ class Translatable extends DataObjectDecorator {
 	function augmentSQL(SQLQuery &$query) {
 		if(!Translatable::is_enabled()) return;
 
-		$lang = Translatable::current_lang();
+		$lang = Translatable::current_locale();
 		$baseTable = ClassInfo::baseDataClass($this->owner->class);
 		$where = $query->where;
 		if(
@@ -484,10 +472,10 @@ class Translatable extends DataObjectDecorator {
 			&& !preg_match('/("|\')Lang("|\')/', $query->getFilter())
 			//&& !$query->filtersOnFK()
 		)  {
-			$qry = "\"Lang\" = '$lang'";
-			if(Translatable::is_default_lang()) {
-				$qry .= " OR \"Lang\" = '' ";
-				$qry .= " OR \"Lang\" IS NULL ";
+			$qry = "\"Locale\" = '$lang'";
+			if(Translatable::is_default_locale()) {
+				$qry .= " OR \"Locale\" = '' ";
+				$qry .= " OR \"Locale\" IS NULL ";
 			}
 			$query->where[] = $qry; 
 		}
@@ -592,7 +580,7 @@ class Translatable extends DataObjectDecorator {
 	function contentcontrollerInit($controller) {
 		if(!Translatable::is_enabled()) return;
 		Translatable::choose_site_lang();
-		$controller->Lang = Translatable::current_lang();
+		$controller->Locale = Translatable::current_locale();
 	}
 	
 	function modelascontrollerInit($controller) {
@@ -617,12 +605,12 @@ class Translatable extends DataObjectDecorator {
 	function onBeforeWrite() {
 		if(!Translatable::is_enabled()) return;	
 
-		// If language is not set explicitly, set it to current_lang.
+		// If language is not set explicitly, set it to current_locale.
 		// This might be a bit overzealous in assuming the language
 		// of the content, as a "single language" website might be expanded
 		// later on. 
-		if(!$this->owner->ID && !$this->owner->Lang) {
-			$this->owner->Lang = Translatable::current_lang();
+		if(!$this->owner->ID && !$this->owner->Locale) {
+			$this->owner->Locale = Translatable::current_locale();
 		}
 
 		// Specific logic for SiteTree subclasses.
@@ -633,9 +621,9 @@ class Translatable extends DataObjectDecorator {
 			if(
 				!$this->owner->ID 
 				&& $this->owner->ParentID 
-				&& !$this->owner->Parent()->hasTranslation($this->owner->Lang)
+				&& !$this->owner->Parent()->hasTranslation($this->owner->Locale)
 			) {
-				$parentTranslation = $this->owner->Parent()->createTranslation($this->owner->Lang);
+				$parentTranslation = $this->owner->Parent()->createTranslation($this->owner->Locale);
 				$this->owner->ParentID = $parentTranslation->ID;
 			}
 		}
@@ -645,10 +633,10 @@ class Translatable extends DataObjectDecorator {
 		// will save as "myfrenchpage-fr" (only if we're not in the "default language").
 		// Its bad SEO to have multiple resources with different content (=language) under the same URL.
 		if($this->owner->hasField('URLSegment')) {
-			if(!$this->owner->ID && $this->owner->Lang != Translatable::default_lang()) {
+			if(!$this->owner->ID && $this->owner->Locale != Translatable::default_locale()) {
 				$SQL_URLSegment = Convert::raw2sql($this->owner->URLSegment);
-				$existingOriginalPage = Translatable::get_one_by_lang('SiteTree', Translatable::default_lang(), "\"URLSegment\" = '{$SQL_URLSegment}'");
-				if($existingOriginalPage) $this->owner->URLSegment .= "-{$this->owner->Lang}";
+				$existingOriginalPage = Translatable::get_one_by_lang('SiteTree', Translatable::default_locale(), "\"URLSegment\" = '{$SQL_URLSegment}'");
+				if($existingOriginalPage) $this->owner->URLSegment .= "-{$this->owner->Locale}";
 			}
 		}
 		
@@ -733,7 +721,7 @@ class Translatable extends DataObjectDecorator {
 		if(!($this->owner instanceof SiteTree)) return;
 		
 		// used in CMSMain->init() to set language state when reading/writing record
-		$fields->push(new HiddenField("Lang", "Lang", $this->owner->Lang) );
+		$fields->push(new HiddenField("Locale", "Locale", $this->owner->Locale) );
 
 		// if a language other than default language is used, we're in "translation mode",
 		// hence have to modify the original fields
@@ -743,14 +731,14 @@ class Translatable extends DataObjectDecorator {
 		while( ($p = get_parent_class($baseClass)) != "DataObject") $baseClass = $p;
 
 		// try to get the record in "default language"
-		$originalRecord = $this->owner->getTranslation(Translatable::default_lang());
+		$originalRecord = $this->owner->getTranslation(Translatable::default_locale());
 		// if no translation in "default language", fall back to first translation
 		if(!$originalRecord) {
 			$translations = $this->owner->getTranslations();
 			$originalRecord = ($translations) ? $translations->First() : null;
 		}
 		
-		$isTranslationMode = $this->owner->Lang != Translatable::default_lang();
+		$isTranslationMode = $this->owner->Locale != Translatable::default_locale();
 
 		if($originalRecord && $isTranslationMode) {
 			$originalLangID = Session::get($this->owner->ID . '_originalLangID');
@@ -794,11 +782,11 @@ class Translatable extends DataObjectDecorator {
 		// We'd still want to show the default lang though,
 		// as records in this language might have NULL values in their $Lang property
 		// and otherwise wouldn't show up here
-		//$alreadyTranslatedLangs[Translatable::default_lang()] = i18n::get_language_name(Translatable::default_lang());
+		//$alreadyTranslatedLangs[Translatable::default_locale()] = i18n::get_locale_name(Translatable::default_locale());
 		
 		// Exclude the current language from being shown.
-		if(Translatable::current_lang() != Translatable::default_lang()) {
-			$currentLangKey = array_search(Translatable::current_lang(), $alreadyTranslatedLangs);
+		if(Translatable::current_locale() != Translatable::default_locale()) {
+			$currentLangKey = array_search(Translatable::current_locale(), $alreadyTranslatedLangs);
 			if($currentLangKey) unset($alreadyTranslatedLangs[$currentLangKey]);
 		}
 
@@ -806,7 +794,13 @@ class Translatable extends DataObjectDecorator {
 			'Root',
 			new Tab(_t('Translatable.TRANSLATIONS', 'Translations'),
 				new HeaderField('CreateTransHeader', _t('Translatable.CREATE', 'Create new translation'), 2),
-				$langDropdown = new LanguageDropdownField("NewTransLang", _t('Translatable.NEWLANGUAGE', 'New language'), $alreadyTranslatedLangs),
+				$langDropdown = new LanguageDropdownField(
+					"NewTransLang", 
+					_t('Translatable.NEWLANGUAGE', 'New language'), 
+					$alreadyTranslatedLangs, 
+					'SiteTree', 
+					'Locale-English'
+				),
 				$createButton = new InlineFormAction('createtranslation',_t('Translatable.CREATEBUTTON', 'Create'))
 			)
 		);
@@ -822,8 +816,8 @@ class Translatable extends DataObjectDecorator {
 				$existingTranslation = $this->owner->getTranslation($langCode);
 				if($existingTranslation) {
 					$existingTransHTML .= sprintf('<li><a href="%s">%s</a></li>',
-						sprintf('admin/show/%d/?lang=%s', $existingTranslation->ID, $langCode),
-						i18n::get_language_name($langCode)
+						sprintf('admin/show/%d/?locale=%s', $existingTranslation->ID, $langCode),
+						i18n::get_locale_name($langCode)
 					);
 				}
 			}
@@ -879,10 +873,10 @@ class Translatable extends DataObjectDecorator {
 	 * excluding itself. See {@link getTranslation()} to retrieve
 	 * a single translated object.
 	 * 
-	 * @param string $lang
+	 * @param string $locale
 	 * @return DataObjectSet
 	 */
-	function getTranslations($lang = null) {
+	function getTranslations($locale = null) {
 		if($this->owner->exists()) {
 			// HACK need to disable language filtering in augmentSQL(), 
 			// as we purposely want to get different language
@@ -892,11 +886,11 @@ class Translatable extends DataObjectDecorator {
 			
 			$baseDataClass = ClassInfo::baseDataClass($this->owner->class);
 			$filter = sprintf('"%s_translationgroups"."TranslationGroupID" = %d', $baseDataClass, $translationGroupID);
-			if($lang) {
-				$filter .= sprintf(' AND "%s"."Lang" = \'%s\'', $baseDataClass, Convert::raw2sql($lang));
+			if($locale) {
+				$filter .= sprintf(' AND "%s"."Locale" = \'%s\'', $baseDataClass, Convert::raw2sql($locale));
 			} else {
 				// exclude the language of the current owner
-				$filter .= sprintf(' AND "%s"."Lang" != \'%s\'', $baseDataClass, $this->owner->Lang);
+				$filter .= sprintf(' AND "%s"."Locale" != \'%s\'', $baseDataClass, $this->owner->Locale);
 			}
 			$join = sprintf('LEFT JOIN "%s_translationgroups" ON "%s_translationgroups"."OriginalID" = "%s"."ID"',
 				$baseDataClass,
@@ -921,11 +915,11 @@ class Translatable extends DataObjectDecorator {
 	 * Use {@link hasTranslation()} as a quicker alternative to check
 	 * for an existing translation without getting the actual object.
 	 * 
-	 * @param String $lang
+	 * @param String $locale
 	 * @return DataObject Translated object
 	 */
-	function getTranslation($lang) {
-		$translations = $this->getTranslations($lang);
+	function getTranslation($locale) {
+		$translations = $this->getTranslations($locale);
 		return ($translations) ? $translations->First() : null;
 	}
 	
@@ -938,15 +932,15 @@ class Translatable extends DataObjectDecorator {
 	 * it belongs to. For "original records" which are not created through this
 	 * method, the "translation group" is set in {@link onAfterWrite()}.
 	 * 
-	 * @param string $lang
+	 * @param string $locale
 	 * @return DataObject The translated object
 	 */
-	function createTranslation($lang) {
+	function createTranslation($locale) {
 		if(!$this->owner->exists()) {
 			user_error('Translatable::createTranslation(): Please save your record before creating a translation', E_USER_ERROR);
 		}
 		
-		$existingTranslation = $this->getTranslation($lang);
+		$existingTranslation = $this->getTranslation($locale);
 		if($existingTranslation) return $existingTranslation;
 		
 		$class = $this->owner->class;
@@ -954,7 +948,7 @@ class Translatable extends DataObjectDecorator {
 		// copy all fields from owner (apart from ID)
 		$newTranslation->update($this->owner->toMap());
 		$newTranslation->ID = 0;
-		$newTranslation->Lang = $lang;
+		$newTranslation->Locale = $locale;
 		// hacky way to set an existing translation group in onAfterWrite()
 		$translationGroupID = $this->owner->getTranslationGroup();
 		$newTranslation->_TranslationGroupID = $translationGroupID ? $translationGroupID : $this->owner->ID;
@@ -968,10 +962,11 @@ class Translatable extends DataObjectDecorator {
 	 * Use {@link getTranslation()} to get the actual translated record from
 	 * the database.
 	 * 
+	 * @param string $locale
 	 * @return boolean
 	 */
-	function hasTranslation($lang) {
-		return (array_search($lang, $this->getTranslatedLangs()) !== false);
+	function hasTranslation($locale) {
+		return (array_search($locale, $this->getTranslatedLangs()) !== false);
 	}
 
 	/*
@@ -1007,12 +1002,12 @@ class Translatable extends DataObjectDecorator {
 		$find = array();
 		$replace = array();
 		
-		if($context && $context->Lang && $context->Lang != Translatable::default_lang()) {
+		if($context && $context->Locale && $context->Locale != Translatable::default_locale()) {
 			
 			if($children) {
 				foreach($children as $child) {
-					if($child->hasTranslation($context->Lang)) {
-						$trans = $child->getTranslation($context->Lang);
+					if($child->hasTranslation($context->Locale)) {
+						$trans = $child->getTranslation($context->Locale);
 						if($trans) {
 							$find[] = $child;
 							$replace[] = $trans;
@@ -1032,16 +1027,16 @@ class Translatable extends DataObjectDecorator {
 	 * Get a list of languages with at least one element translated in (including the default language)
 	 *
 	 * @param string $className Look for languages in elements of this class
-	 * @return array Map of languages in the form langCode => langName
+	 * @return array Map of languages in the form locale => langName
 	 */
 	static function get_existing_content_languages($className = 'SiteTree', $where = '') {
 		if(!Translatable::is_enabled()) return false;
 		$baseTable = ClassInfo::baseDataClass($className);
-		$query = new SQLQuery('Distinct Lang',$baseTable,$where,"",'Lang');
+		$query = new SQLQuery('Distinct Locale',$baseTable,$where,"",'Locale');
 		$dbLangs = $query->execute()->column();
-		$langlist = array_merge((array)Translatable::default_lang(), (array)$dbLangs);
+		$langlist = array_merge((array)Translatable::default_locale(), (array)$dbLangs);
 		$returnMap = array();
-		$allCodes = array_merge(i18n::$all_locales, i18n::$common_languages);
+		$allCodes = array_merge(i18n::$all_locales, i18n::$common_locales);
 		foreach ($langlist as $langCode) {
 			if($langCode)
 				$returnMap[$langCode] = (is_array($allCodes[$langCode]) ? $allCodes[$langCode][0] : $allCodes[$langCode]);
@@ -1055,23 +1050,79 @@ class Translatable extends DataObjectDecorator {
 	 * (as identified by RootURLController::$default_homepage_urlsegment).
 	 * Returns NULL if no translated page can be found.
 	 * 
-	 * @param string $Lang
+	 * @param string $locale
 	 * @return string|boolean URLSegment (e.g. "home")
 	 */
-	static function get_homepage_urlsegment_by_language($lang) {
-		$origHomepageObj = Translatable::get_one_by_lang(
+	static function get_homepage_urlsegment_by_language($locale) {
+		$origHomepageObj = Translatable::get_one_by_locale(
 			'SiteTree',
-			Translatable::default_lang(),
+			Translatable::default_locale(),
 			sprintf('"URLSegment" = \'%s\'', RootUrlController::get_default_homepage_urlsegment())
 		);
 		if($origHomepageObj) {
-			$translatedHomepageObj = $origHomepageObj->getTranslation(Translatable::current_lang());
+			$translatedHomepageObj = $origHomepageObj->getTranslation(Translatable::current_locale());
 			if($translatedHomepageObj) {
 				return $translatedHomepageObj->URLSegment;
 			}
 		}
 		
 		return null;
+	}
+	
+	/**
+	 * @deprecated 2.4 Use is_default_locale()
+	 */
+	static function is_default_lang() {
+		return self::is_default_locale();
+	}
+	
+	/**
+	 * @deprecated 2.4 Use set_default_locale()
+	 */
+	static function set_default_lang($lang) {
+		self::set_default_locale($lang);
+	}
+	
+	/**
+	 * @deprecated 2.4 Use get_default_locale()
+	 */
+	static function get_default_lang() {
+		return self::get_default_locale();
+	}
+	
+	/**
+	 * @deprecated 2.4 Use current_locale()
+	 */
+	static function current_lang() {
+		return self::current_locale();
+	}
+	
+	/**
+	 * @deprecated 2.4 Use set_reading_locale()
+	 */
+	static function set_reading_lang($lang) {
+		self::set_reading_locale($lang);
+	}
+	
+	/**
+	 * @deprecated 2.4 Use get_reading_locale()
+	 */
+	static function get_reading_lang() {
+		return self::get_reading_locale();
+	}
+	
+	/**
+	 * @deprecated 2.4 Use get_by_locale()
+	 */
+	static function get_by_lang($class, $lang, $filter = '', $sort = '', $join = "", $limit = "", $containerClass = "DataObjectSet", $having = "") {
+		return self::get_by_locale($class, $lang, $filter, $sort, $join, $limit, $containerClass, $having);
+	}
+	
+	/**
+	 * @deprecated 2.4 Use get_one_by_locale()
+	 */
+	static function get_one_by_lang($class, $lang, $filter = '', $cache = false, $orderby = "") {
+		return self::get_one_by_locale($class, $lang, $filter, $cache, $orderby);
 	}
 		
 }

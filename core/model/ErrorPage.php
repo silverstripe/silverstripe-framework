@@ -110,7 +110,7 @@ class ErrorPage extends Page {
 
 		// if the page is published in a language other than default language,
 		// write a specific language version of the HTML page
-		$filePath = self::get_filepath_for_errorcode($this->ErrorCode, $this->Lang);
+		$filePath = self::get_filepath_for_errorcode($this->ErrorCode, $this->Locale);
 		if($fh = fopen($filePath, "w")) {
 			fwrite($fh, $errorContent);
 			fclose($fh);
@@ -149,7 +149,7 @@ class ErrorPage extends Page {
 	 * @return String
 	 */
 	static function get_filepath_for_errorcode($statusCode, $lang = null) {
-		if(Translatable::is_enabled() && $lang && $lang != Translatable::default_lang()) {
+		if(Translatable::is_enabled() && $lang && $lang != Translatable::default_locale()) {
 			return self::$static_filepath . "/error-{$statusCode}-{$lang}.html";
 		} else {
 			return self::$static_filepath . "/error-{$statusCode}.html";

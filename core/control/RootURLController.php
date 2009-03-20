@@ -68,7 +68,7 @@ class RootURLController extends Controller {
 		if($homePageOBJ) {
 			$urlSegment = $homePageOBJ->URLSegment;
 		} elseif(Translatable::is_enabled()) {
-			$urlSegment = Translatable::get_homepage_urlsegment_by_language(Translatable::current_lang());
+			$urlSegment = Translatable::get_homepage_urlsegment_by_language(Translatable::current_locale());
 		}
 		
 		return ($urlSegment) ? $urlSegment : self::get_default_homepage_urlsegment();

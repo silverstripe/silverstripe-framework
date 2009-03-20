@@ -6,7 +6,7 @@
  * If multilingual content is enabled through the {@link Translatable} extension,
  * only pages the currently set language on the holder for this searchform are found.
  * The language is set through a hidden field in the form, which is prepoluated
- * with {@link Translatable::current_lang()} when then form is constructed.
+ * with {@link Translatable::current_locale()} when then form is constructed.
  * 
  * @see Use ModelController and SearchContext for a more generic search implementation based around DataObject
  * @package sapphire
@@ -55,7 +55,7 @@ class SearchForm extends Form {
 		}
 		
 		if(Translatable::is_enabled()) {
-			$fields->push(new HiddenField('lang', 'lang', Translatable::current_lang()));
+			$fields->push(new HiddenField('lang', 'lang', Translatable::current_locale()));
 		}
 		
 		if(!$actions) {
@@ -105,7 +105,7 @@ class SearchForm extends Form {
 		
 		// set language (if present)
 		if(Translatable::is_enabled() && isset($data['lang'])) {
-			Translatable::set_reading_lang($data['lang']);
+			Translatable::set_reading_locale($data['lang']);
 		}
 	
 		$keywords = $data['Search'];
