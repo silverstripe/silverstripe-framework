@@ -12,7 +12,7 @@ class TranslatableSearchFormTest extends FunctionalTest {
 	protected $recreateTempDb = true;
 	
 	function setUp() {
-		$this->origTranslatableSettings['enabled'] = Translatable::is_enabled();default_locale
+		$this->origTranslatableSettings['enabled'] = Translatable::is_enabled();
 		$this->origTranslatableSettings['default_locale'] = Translatable::default_locale();
 		Translatable::enable();
 		Translatable::set_default_locale("en");
