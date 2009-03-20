@@ -70,7 +70,8 @@ class File extends DataObject {
 
 		foreach($parts as $part) {
 			if($part == "assets" && !$parentID) continue;
-			$item = DataObject::get_one('File', "Name = '$part' AND ParentID = $parentID");
+			$SQL_part = Convert::raw2sql($part);
+			$item = DataObject::get_one('File', "Name = '$SQL_part' AND ParentID = $parentID");
 			if(!$item) break;
 			$parentID = $item->ID;
 		}
