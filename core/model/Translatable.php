@@ -515,7 +515,7 @@ class Translatable extends DataObjectDecorator {
 	 * @param int $originalID Either the primary key of the record this new translation is based on,
 	 *  or the primary key of this record, to create a new translation group
 	 */
-	protected function addTranslationGroup($originalID) {
+	public function addTranslationGroup($originalID) {
 		if(!$this->owner->exists()) return false;
 		
 		$baseDataClass = ClassInfo::baseDataClass($this->owner->class);
@@ -534,7 +534,7 @@ class Translatable extends DataObjectDecorator {
 	 * 
 	 * @return int Numeric ID of the translationgroup in the <classname>_translationgroup table
 	 */
-	protected function getTranslationGroup() {
+	public function getTranslationGroup() {
 		if(!$this->owner->exists()) return false;
 		
 		$baseDataClass = ClassInfo::baseDataClass($this->owner->class);
@@ -549,7 +549,7 @@ class Translatable extends DataObjectDecorator {
 	 * if this happens to be the last record assigned to the group,
 	 * this group ceases to exist.
 	 */
-	protected function removeTranslationGroup() {
+	public function removeTranslationGroup() {
 		$baseDataClass = ClassInfo::baseDataClass($this->owner->class);
 		DB::query(
 			sprintf('DELETE FROM "%s_translationgroups" WHERE "OriginalID" = %d', $baseDataClass, $this->owner->ID)
