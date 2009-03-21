@@ -52,6 +52,23 @@ class ObjectStaticTest extends SapphireTest {
 		$this->assertEquals(Object::uninherited_static('ObjectStaticTest_Fourth', 'third', true), null);
 	}
 	
+	public function testCombinedStatic() {
+		// test basic operation
+		$this->assertEquals (
+			array('test_1', 'test_2', 'test_3'), Object::combined_static('ObjectStaticTest_Combined3', 'first')
+		);
+		
+		// test that null values are ignored, but values on either side are still merged
+		$this->assertEquals (
+			array('test_1', 'test_3'), Object::combined_static('ObjectStaticTest_Combined3', 'second')
+		);
+		
+		// test the $ceiling param
+		$this->assertEquals (
+			array('test_2', 'test_3'), Object::combined_static('ObjectStaticTest_Combined3', 'first', 'ObjectStaticTest_Combined2')
+		);
+	}
+	
 }
 
 /**#@+
@@ -75,5 +92,20 @@ class ObjectStaticTest_Third extends ObjectStaticTest_Second {
 
 class ObjectStaticTest_Fourth extends ObjectStaticTest_Third {
 	public static $fourth = array('test_4');
+}
+
+class ObjectStaticTest_Combined1 extends Object {
+	public static $first  = array('test_1');
+	public static $second = array('test_1');
+}
+
+class ObjectStaticTest_Combined2 extends ObjectStaticTest_Combined1 {
+	public static $first  = array('test_2');
+	public static $second = null;
+}
+
+class ObjectStaticTest_Combined3 extends ObjectStaticTest_Combined2 {
+	public static $first  = array('test_3');
+	public static $second = array('test_3');
 }
 /**#@-*/

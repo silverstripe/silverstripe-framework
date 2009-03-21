@@ -35,6 +35,10 @@ class ControllerTest extends SapphireTest {
 
 		$response = Director::test("ControllerTest_SecuredController/adminonly");
 		$this->assertEquals(403, $response->getStatusCode());
+		
+		// test that a controller without a specified allowed_actions allows actions through
+		$response = Director::test('ControllerTest_UnsecuredController/stringaction');
+		$this->assertEquals(200, $response->getStatusCode());
 	}
 	
 	/**
@@ -106,3 +110,5 @@ class ControllerTest_SecuredController extends Controller {
 		return "You must be an admin!";
 	}
 }
+
+class ControllerTest_UnsecuredController extends ControllerTest_SecuredController {}

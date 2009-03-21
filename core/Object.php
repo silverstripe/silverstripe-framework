@@ -252,6 +252,37 @@ abstract class Object {
 	}
 	
 	/**
+	 * Traverse down a class ancestry and attempt to merge all the uninherited static values for a particular static
+	 * into a single variable
+	 *
+	 * @param string $class
+	 * @param string $name the static name
+	 * @param string $ceiling an optional parent class name to begin merging statics down from, rather than traversing
+	 *        the entire hierarchy
+	 * @return mixed
+	 */
+	public static function combined_static($class, $name, $ceiling = false) {
+		$ancestry = ClassInfo::ancestry($class);
+		$values   = null;
+		
+		if($ceiling) while(current($ancestry) != $ceiling && $ancestry) {
+			array_shift($ancestry);
+		}
+		
+		if($ancestry) foreach($ancestry as $ancestor) {
+			$merge = self::uninherited_static($ancestor, $name);
+			
+			if(is_array($values) && is_array($merge)) {
+				$values = array_merge($values, $merge);
+			} elseif($merge) {
+				$values = $merge;
+			}
+		}
+		
+		return $values;
+	}
+	
+	/**
 	 * Merge in a set of additional static variables
 	 *
 	 * @param string $class
