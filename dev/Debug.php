@@ -649,21 +649,21 @@ function exceptionHandler($exception) {
  * @param string $errstr
  * @param string $errfile
  * @param int $errline
- * @param string $errcontext
  */
-function errorHandler($errno, $errstr, $errfile, $errline, $errcontext) {
+function errorHandler($errno, $errstr, $errfile, $errline) {
+    $bt = debug_backtrace();
 	switch($errno) {
 		case E_ERROR:
 		case E_CORE_ERROR:
 		case E_USER_ERROR:
-			Debug::fatalHandler($errno, $errstr, $errfile, $errline, $errcontext);
+			Debug::fatalHandler($errno, $errstr, $errfile, $errline, $bt);
 			break;
 
 		case E_NOTICE:
 		case E_WARNING:
 		case E_CORE_WARNING:
 		case E_USER_WARNING:
-			Debug::warningHandler($errno, $errstr, $errfile, $errline, $errcontext);
+			Debug::warningHandler($errno, $errstr, $errfile, $errline, $bt);
 			break;
 			
 	}
