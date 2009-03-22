@@ -281,7 +281,6 @@ class ViewableData extends Object implements IteratorAggregate {
 	/**
 	 * Return the string-format type for the given field.
 	 *
-	 * @usedby ViewableData::XML_val()
 	 * @param string $fieldName 
 	 * @return string 'xml'|'raw'
 	 */
@@ -870,9 +869,9 @@ class ViewableData extends Object implements IteratorAggregate {
 	 * Avoids having to subclass just to built templates with new css-classes,
 	 * and allows for versatile css inheritance and overrides.
 	 * 
-	 * <example>
+	 * <code>
 	 * <body class="$CSSClasses">
-	 * </example>
+	 * </code>
 	 * 
 	 * @uses ClassInfo
 	 * 

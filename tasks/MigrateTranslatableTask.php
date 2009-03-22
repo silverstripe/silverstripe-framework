@@ -1,5 +1,8 @@
 <?php
-
+/**
+ * @package sapphire
+ * @subpackage tasks
+ */
 class MigrateTranslatableTask extends BuildTask {
 	protected $title = "Migrate Translatable Task";
 	

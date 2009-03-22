@@ -10,40 +10,40 @@
  * <h2>Configuration</h2>
  * 
  * You can enable {Translatable} for any subclass of {@link DataObject}:
- * <example>
+ * <code>
  * class MyClass extends DataObject {
  *   static $extensions = array(
  *     "Translatable"
  *   );
  * }
- * </example>
+ * </code>
  * Make sure to rebuild the database through /dev/build after enabling translatable.
  * 
  * <h2>Usage</h2>
  *
  * Getting a translation for an existing instance: 
- * <example>
+ * <code>
  * $translatedObj = DataObject::get_one_by_locale('MyObject', 'de_DE');
- * </example>
+ * </code>
  * 
  * Getting a translation for an existing instance: 
- * <example>
+ * <code>
  * $obj = DataObject::get_by_id('MyObject', 99); // original language
  * $translatedObj = $obj->getTranslation('de_DE');
- * </example>
+ * </code>
  * 
  * Getting translations through {@link Translatable::set_reading_locale()}.
  * This is *not* a recommended approach, but sometimes inavoidable (e.g. for {@link Versioned} methods).
- * <example>
+ * <code>
  * $obj = DataObject::get_by_id('MyObject', 99); // original language
  * $translatedObj = $obj->getTranslation('de_DE');
- * </example>
+ * </code>
  * 
  * Creating a translation: 
- * <example>
+ * <code>
  * $obj = new MyObject();
  * $translatedObj = $obj->createTranslation('de_DE');
- * </example>
+ * </code>
  *
  * <h2>Usage for SiteTree</h2>
  * 
@@ -62,14 +62,14 @@
  * Note: You can't get Children() for a parent page in a different language
  * through set_reading_lang(). Get the translated parent first.
  * 
- * <example>
+ * <code>
  * // wrong
  * Translatable::set_reading_lang('de');
  * $englishParent->Children(); 
  * // right
  * $germanParent = $englishParent->getTranslation('de');
  * $germanParent->Children();
- * </example>
+ * </code>
  *
  * <h2>Translation groups</h2>
  * 

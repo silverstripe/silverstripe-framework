@@ -5,6 +5,7 @@
  * that controller will be used instead.  It should be a subclass of ContentController.
  *
  * @package sapphire
+ * @subpackage control
  */
 class ModelAsController extends Controller implements NestedController {
 	

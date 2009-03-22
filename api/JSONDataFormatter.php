@@ -1,5 +1,8 @@
 <?php
-
+/**
+ * @package sapphire
+ * @subpackage formatters
+ */
 class JSONDataFormatter extends DataFormatter {
 	/**
 	 * @todo pass this from the API to the data formatter somehow

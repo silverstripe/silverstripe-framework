@@ -489,7 +489,7 @@ class MySQLDatabase extends Database {
 	/**
 	 * Return a boolean type-formatted string
 	 * 
-	 * @params array $values Contains a tokenised list of info about this data type
+	 * @param array $values Contains a tokenised list of info about this data type
 	 * @return string
 	 */
 	public function boolean($values){
@@ -504,7 +504,7 @@ class MySQLDatabase extends Database {
 	 * Return a date type-formatted string
 	 * For MySQL, we simply return the word 'date', no other parameters are necessary
 	 * 
-	 * @params array $values Contains a tokenised list of info about this data type
+	 * @param array $values Contains a tokenised list of info about this data type
 	 * @return string
 	 */
 	public function date($values){
@@ -518,7 +518,7 @@ class MySQLDatabase extends Database {
 	/**
 	 * Return a decimal type-formatted string
 	 * 
-	 * @params array $values Contains a tokenised list of info about this data type
+	 * @param array $values Contains a tokenised list of info about this data type
 	 * @return string
 	 */
 	public function decimal($values){
@@ -539,7 +539,7 @@ class MySQLDatabase extends Database {
 	/**
 	 * Return a enum type-formatted string
 	 * 
-	 * @params array $values Contains a tokenised list of info about this data type
+	 * @param array $values Contains a tokenised list of info about this data type
 	 * @return string
 	 */
 	public function enum($values){
@@ -554,7 +554,7 @@ class MySQLDatabase extends Database {
 	 * Return a float type-formatted string
 	 * For MySQL, we simply return the word 'date', no other parameters are necessary
 	 * 
-	 * @params array $values Contains a tokenised list of info about this data type
+	 * @param array $values Contains a tokenised list of info about this data type
 	 * @return string
 	 */
 	public function float($values){
@@ -568,7 +568,7 @@ class MySQLDatabase extends Database {
 	/**
 	 * Return a int type-formatted string
 	 * 
-	 * @params array $values Contains a tokenised list of info about this data type
+	 * @param array $values Contains a tokenised list of info about this data type
 	 * @return string
 	 */
 	public function int($values){
@@ -583,7 +583,7 @@ class MySQLDatabase extends Database {
 	 * Return a datetime type-formatted string
 	 * For MySQL, we simply return the word 'datetime', no other parameters are necessary
 	 * 
-	 * @params array $values Contains a tokenised list of info about this data type
+	 * @param array $values Contains a tokenised list of info about this data type
 	 * @return string
 	 */
 	public function ssdatetime($values){
@@ -597,7 +597,7 @@ class MySQLDatabase extends Database {
 	/**
 	 * Return a text type-formatted string
 	 * 
-	 * @params array $values Contains a tokenised list of info about this data type
+	 * @param array $values Contains a tokenised list of info about this data type
 	 * @return string
 	 */
 	public function text($values){
@@ -612,7 +612,7 @@ class MySQLDatabase extends Database {
 	 * Return a time type-formatted string
 	 * For MySQL, we simply return the word 'time', no other parameters are necessary
 	 * 
-	 * @params array $values Contains a tokenised list of info about this data type
+	 * @param array $values Contains a tokenised list of info about this data type
 	 * @return string
 	 */
 	public function time($values){
@@ -626,7 +626,7 @@ class MySQLDatabase extends Database {
 	/**
 	 * Return a varchar type-formatted string
 	 * 
-	 * @params array $values Contains a tokenised list of info about this data type
+	 * @param array $values Contains a tokenised list of info about this data type
 	 * @return string
 	 */
 	public function varchar($values){

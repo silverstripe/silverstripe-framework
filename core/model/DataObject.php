@@ -426,8 +426,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * }
 	 * </code>
 	 *
-	 * @usedby {@link DataObjectSet->toDropDownMap()}
-	 *
 	 * @return string
 	 */
 	public function getTitle() {
@@ -1581,7 +1579,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * Generates a SearchContext to be used for building and processing
 	 * a generic search form for properties on this object.
 	 *
-	 * @usedby {@link ModelAdmin}
 	 * @return SearchContext
 	 */
 	public function getDefaultSearchContext() {
@@ -1600,7 +1597,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * Some additional logic is included for switching field labels, based on
 	 * how generic or specific the field type is.
 	 *
-	 * @usedby {@link SearchContext}
+	 * Used by {@link SearchContext}.
 	 * 
 	 * @param array $_params
 	 * 	'fieldClasses': Associative array of field names as keys and FormField classes as values
@@ -1693,7 +1690,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * generate this set. To customize, overload this method in a subclass
 	 * or decorate onto it by using {@link DataObjectDecorator->updateCMSFields()}.
 	 *
-	 * <example>
+	 * <code>
 	 * klass MyCustomClass extends DataObject {
 	 * 	static $db = array('CustomProperty'=>'Boolean');
 	 *
@@ -1703,7 +1700,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 *		return $fields;
 	 *	}
 	 * }
-	 * </example>
+	 * </code>
 	 *
 	 * @see Good example of complex FormField building: SiteTree::getCMSFields()
 	 *

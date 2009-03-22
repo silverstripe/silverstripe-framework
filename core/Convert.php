@@ -17,7 +17,6 @@
  * Objects of type {@link ViewableData} can have an "escaping type",
  * which determines if they are automatically escaped before output by {@link SSViewer}. 
  * 
- * @usedby ViewableData::XML_val()
  * @package sapphire
  * @subpackage misc
  */

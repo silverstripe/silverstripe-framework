@@ -11,15 +11,9 @@
 * 
 * In case you need multiple contexts, consider namespacing your request parameters
 * by using {@link FieldSet->namespace()} on the $fields constructor parameter.
-* 
-* @usedby {@link ModelAdmin}
-* 
-* @param string $modelClass The base {@link DataObject} class that search properties related to.
-* 						Also used to generate a set of result objects based on this class.
-* @param FieldSet $fields Optional. FormFields mapping to {@link DataObject::$db} properties
-*	 					which are to be searched. Derived from modelclass using 
-*						{@link DataObject::scaffoldSearchFields()} if left blank.
-* @param array $filters Optional. Derived from modelclass if left blank
+*
+* @package sapphire
+* @subpackage search
 */
 class SearchContext extends Object {
 	
@@ -58,8 +52,14 @@ class SearchContext extends Object {
 	 * Usually these values come from a submitted searchform
 	 * in the form of a $_REQUEST object.
 	 * CAUTION: All values should be treated as insecure client input.
-	 */
-		
+	 * 
+	 * @param string $modelClass The base {@link DataObject} class that search properties related to.
+	 * 						Also used to generate a set of result objects based on this class.
+	 * @param FieldSet $fields Optional. FormFields mapping to {@link DataObject::$db} properties
+	 *	 					which are to be searched. Derived from modelclass using 
+	 *						{@link DataObject::scaffoldSearchFields()} if left blank.
+	 * @param array $filters Optional. Derived from modelclass if left blank
+	 */	
 	function __construct($modelClass, $fields = null, $filters = null) {
 		$this->modelClass = $modelClass;
 		$this->fields = ($fields) ? $fields : new FieldSet();

@@ -8,7 +8,6 @@
  * @package sapphire
  * @subpackage parsers
  * @author Ingo Schommer, Silverstripe Ltd. (<firstname>@silverstripe.com)
- * @usedby Database->databaseError()
  */
 class SQLFormatter extends Object {
 	

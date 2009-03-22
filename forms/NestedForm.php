@@ -1,8 +1,10 @@
 <?php
-
 /**
  * This is a form decorator that lets you place a form inside another form.
  * The actions will be appropriately rewritten so that the nested form gets called, rather than the parent form.
+ * 
+ * @package sapphire
+ * @subpackage forms
  */
 class NestedForm extends ViewableData {
 	protected $form;

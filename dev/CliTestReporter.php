@@ -1,7 +1,9 @@
 <?php
-
 /**
  * Test reporter optimised for CLI (ie, plain-text) output
+ * 
+ * @package sapphire
+ * @subpackage testing
  */
 class CliTestReporter extends SapphireTestReporter {
 

@@ -315,8 +315,6 @@ class Requirements_Backend {
 	/**
 	 * Remembers the filepaths of all cleared Requirements
 	 * through {@link clear()}.
-	 * 
-	 * @usedby {@link restore()}
 	 *
 	 * @var array $disabled
 	 */

@@ -1,7 +1,9 @@
 <?php
-
 /**
  * Simple wrapper to allow access to the live site via REST
+ * 
+ * @package sapphire
+ * @subpackage integration
  */ 
 class VersionedRestfulServer extends Controller {
 	function handleRequest($request) {

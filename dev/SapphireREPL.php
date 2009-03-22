@@ -18,7 +18,10 @@ define('8192',E_DEPRECATED);
 define('16384',E_USER_DEPRECATED);
 define('30719',E_ALL);
 */
-
+/**
+ * @package sapphire
+ * @subpackage dev
+ */
 class SapphireREPL extends Controller {
 
 	private function error_handler( $errno, $errstr, $errfile, $errline, $errctx ) {

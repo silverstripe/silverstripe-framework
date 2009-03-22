@@ -3,6 +3,9 @@
  * Exception thrown by {@link DataObject}::write if validation fails. By throwing an
  * exception rather than a user error, the exception can be caught in unit tests and as such
  * can be used as a successful test.
+ * 
+ * @package sapphire
+ * @subpackage validation
  */
 class ValidationException extends Exception {
 

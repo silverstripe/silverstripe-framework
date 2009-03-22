@@ -24,6 +24,9 @@
  *    Matching $url_handlers: "$Action/$ID" => "handleItem" (defined in TreeMultiSelectField class)
  *
  * {@link RequestHandler::handleRequest()} is where this behaviour is implemented.
+ * 
+ * @package sapphire
+ * @subpackage control
  */
 class RequestHandler extends ViewableData {
 	protected $request = null;
