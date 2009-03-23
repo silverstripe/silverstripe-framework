@@ -306,10 +306,12 @@ abstract class Database extends Object {
 		$index_alt=DB::getConn()->modifyIndex($index, $spec);
 				
 		if(!$newTable) {
-			if(is_array($this->indexList[$table][$index_alt])) {
-				$array_spec = $this->indexList[$table][$index_alt]['spec'];
-			} else {
-				$array_spec = $this->indexList[$table][$index_alt];
+			if(isset($this->indexList[$table][$index_alt])) {
+				if(is_array($this->indexList[$table][$index_alt])) {
+					$array_spec = $this->indexList[$table][$index_alt]['spec'];
+				} else {
+					$array_spec = $this->indexList[$table][$index_alt];
+				}
 			}
 		}
 		
