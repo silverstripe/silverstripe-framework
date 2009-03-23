@@ -100,9 +100,9 @@ class ModelAsController extends Controller implements NestedController {
 		foreach($versionedQuery->from as $k => $v) {
 			$versionedQuery->renameTable($k, $k . '_versions');
 		}
-		$versionedQuery->select = array("`SiteTree_versions`.RecordID");
-		$versionedQuery->where[] = "`SiteTree_versions`.`WasPublished` = 1 AND `URLSegment` = '$urlSegment'";
-		$versionedQuery->orderby = '`LastEdited` DESC, `SiteTree_versions`.`WasPublished`';
+		$versionedQuery->select = array("\"SiteTree_versions\".\"RecordID\"");
+		$versionedQuery->where[] = "\"SiteTree_versions\".\"WasPublished\" = 1 AND \"URLSegment\" = '$urlSegment'";
+		$versionedQuery->orderby = "\"LastEdited\" DESC, \"SiteTree_versions\".\"WasPublished\"";
 		$versionedQuery->limit = 1;
 
 		$result = $versionedQuery->execute();
