@@ -65,7 +65,7 @@ class CustomRequiredFields extends RequiredFields{
 					if(!$data[$fieldName] || preg_match('/^\s*$/', $data[$fieldName])) {
 						$this->validationError(
 							$fieldName,
-                                                        sprintf(_t('Form.FIELDISREQUIRED', "%s is required"),
+                                                        sprintf(_t('Form.FIELDISREQUIRED', "%s is required."),
                                                                 $formField->Title()),
 							"required"
 						);

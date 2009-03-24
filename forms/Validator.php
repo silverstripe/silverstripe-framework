@@ -145,7 +145,7 @@ abstract class Validator extends Object {
 	}
 	
 	function requireField($fieldName, $data) {
-		if(!$data[$fieldName]) $this->validationError($fieldName, "$fieldName is required", "required");
+		if(!$data[$fieldName]) $this->validationError($fieldName, "$fieldName is required.", "required");
 	}
 	
 	function includeJavascriptValidation() {

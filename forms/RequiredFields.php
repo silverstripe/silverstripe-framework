@@ -102,7 +102,7 @@ JS;
 					$this->validationError(
 						$fieldName,
 						sprintf(
-							_t('Form.FIELDISREQUIRED'),
+							_t('Form.FIELDISREQUIRED').'.',
 							strip_tags('"' . ($formField->Title() ? $formField->Title() : $fieldName) . '"') 
 						),
 						"required"
