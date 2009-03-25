@@ -465,7 +465,7 @@ abstract class Database extends Object {
 	 * @param array $manipulation
 	 */
 	function manipulate($manipulation) {
-		foreach($manipulation as $table => $writeInfo) {
+		if($manipulation) foreach($manipulation as $table => $writeInfo) {
 			
 			if(isset($writeInfo['fields']) && $writeInfo['fields']) {
 				$fieldList = $columnList = $valueList = array();
