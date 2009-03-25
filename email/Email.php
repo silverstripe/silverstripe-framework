@@ -232,6 +232,14 @@ class Email extends ViewableData {
 	}
 	
 	/**
+	 * Set the "Reply-To" header with an email address.
+	 * @param string $email The email address of the "Reply-To" header
+	 */
+	public function replyTo($email) { 
+		$this->addCustomHeader('Reply-To', $email); 
+	}
+	
+	/**
 	 * Add a custom header to this value.
 	 * Useful for implementing all those cool features that we didn't think of.
 	 * 
