@@ -115,13 +115,13 @@ class Email extends ViewableData {
 	/**
 	 * @param string $bounceHandlerURL
 	 */
-		protected $bounceHandlerURL = null;
+	protected $bounceHandlerURL = null;
 	
-		/**
+	/**
 	 * @param sring $admin_email_address The default administrator email address. 
 	 * This will be set in the config on a site-by-site basis
-	*/
-		static $admin_email_address = '';
+	 */
+	static $admin_email_address = '';
 
 	/**
 	 * @param string $send_all_emails_to Email-Address
@@ -160,10 +160,11 @@ class Email extends ViewableData {
 	}
 		
 	public function setBounceHandlerURL( $bounceHandlerURL ) {
-		if( $bounceHandlerURL )
+		if($bounceHandlerURL) {
 			$this->bounceHandlerURL = $bounceHandlerURL;
-		else
-			$this->bounceHandlerURL = $_SERVER['HTTP_HOST'] . Director::baseURL() . 'Email_BounceHandler';			
+		} else {
+			$this->bounceHandlerURL = $_SERVER['HTTP_HOST'] . Director::baseURL() . 'Email_BounceHandler';
+		}
 	}
 
 	public function attachFile($filename, $attachedFilename = null, $mimetype = null) {
@@ -394,18 +395,19 @@ class Email extends ViewableData {
 		if(self::$send_all_emails_to) {
 			$subject .= " [addressed to $to";
 			$to = self::$send_all_emails_to;
-				if($this->cc) $subject .= ", cc to $this->cc";
-				if($this->bcc) $subject .= ", bcc to $this->bcc";
+			if($this->cc) $subject .= ", cc to $this->cc";
+			if($this->bcc) $subject .= ", bcc to $this->bcc";
 			$subject .= ']';
 		} else {
-				if($this->cc) $headers["Cc"] = $this->cc;
-				if($this->bcc) $headers["Bcc"] = $this->bcc;
+			if($this->cc) $headers["Cc"] = $this->cc;
+			if($this->bcc) $headers["Bcc"] = $this->bcc;
 		}
 	
 		if(self::$cc_all_emails_to) {
 			if(trim($headers['Cc'])) $headers['Cc'] .= ', ';
 			$headers['Cc'] .= self::$cc_all_emails_to;		
 		}
+
 		if(self::$bcc_all_emails_to) {
 			if(trim($headers['Bcc'])) $headers['Bcc'] .= ', ';
 			$headers['Bcc'] .= self::$bcc_all_emails_to;		
@@ -431,9 +433,7 @@ class Email extends ViewableData {
 	
 		$this->parseVariables();
 
-		if( empty( $this->from ) ){
-			$this->from = Email::getAdminEmail();
-		}
+		if(empty($this->from)) $this->from = Email::getAdminEmail();
 
 		$this->setBounceHandlerURL( $this->bounceHandlerURL );
 
@@ -441,9 +441,9 @@ class Email extends ViewableData {
 
 		$headers['X-SilverStripeBounceURL'] = $this->bounceHandlerURL;
 
-		if( $messageID ) $headers['X-SilverStripeMessageID'] = project() . '.' . $messageID;
+		if($messageID) $headers['X-SilverStripeMessageID'] = project() . '.' . $messageID;
 
-		if( project() ) $headers['X-SilverStripeSite'] = project();
+		if(project()) $headers['X-SilverStripeSite'] = project();
 
 		$to = $this->to;
 		$subject = $this->subject;
@@ -490,7 +490,7 @@ class Email extends ViewableData {
 	 * 
 	 * @param string $newEmail
 	 */
-	public static function setAdminEmail( $newEmail ) {
+	public static function setAdminEmail($newEmail) {
 		self::$admin_email_address = $newEmail;
 	}
 	
@@ -539,7 +539,6 @@ class Email extends ViewableData {
 	public static function bcc_all_emails_to($emailAddress) {
 		self::$bcc_all_emails_to = $emailAddress;
 	}
-	
 	
 	/**
 	 * Checks for RFC822-valid email format.
