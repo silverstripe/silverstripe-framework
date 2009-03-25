@@ -374,8 +374,6 @@ class Email extends ViewableData {
 	 * Doesn't actually give any indication if the mail has been delivered to the recipient properly)
 	 */
 	function sendPlain($messageID = null) {
-		global $project;
-
 		Requirements::clear();
 		
 		$this->parseVariables(true);
@@ -386,9 +384,9 @@ class Email extends ViewableData {
 								
 		$headers['X-SilverStripeBounceURL'] = $this->bounceHandlerURL;
 						
-		if($messageID) $headers['X-SilverStripeMessageID'] = $project . '.' . $messageID;
+		if($messageID) $headers['X-SilverStripeMessageID'] = project() . '.' . $messageID;
 						
-		if($project) $headers['X-SilverStripeSite'] = $project;
+		if(project()) $headers['X-SilverStripeSite'] = project();
 
 		$to = $this->to;
 		$subject = $this->subject;
