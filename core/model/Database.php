@@ -1,4 +1,4 @@
-<?php
+l<?php
 /**
  * Abstract database connectivity class.
  * Sub-classes of this implement the actual database connection libraries
@@ -339,7 +339,7 @@ abstract class Database extends Object {
 		//TODO: this is starting to get extremely fragmented.
 		//There are two different versions of $spec floating around, and their content changes depending
 		//on how they are structured.  This needs to be tidied up.
-		
+		$fieldValue = null;
 		$newTable = false;
 
 		Profiler::mark('requireField');
@@ -377,10 +377,12 @@ abstract class Database extends Object {
 			$specValue=DB::getConn()->IdColumn(true);
 		
 		if(!$newTable) {
-			if(is_array($this->fieldList[$table][$field])) {
-				$fieldValue = $this->fieldList[$table][$field]['data_type'];
-			} else {
-				$fieldValue = $this->fieldList[$table][$field];
+			if(isset($this->fieldList[$table][$field])) {
+				if(is_array($this->fieldList[$table][$field])) {
+					$fieldValue = $this->fieldList[$table][$field]['data_type'];
+				} else {
+					$fieldValue = $this->fieldList[$table][$field];
+				}
 			}
 		}
 		
