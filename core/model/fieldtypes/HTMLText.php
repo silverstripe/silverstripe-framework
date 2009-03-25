@@ -9,6 +9,20 @@
 class HTMLText extends Text {
 
 	/**
+	 * Limit this field's content by a number of characters.
+	 * This makes use of strip_tags() to avoid malforming the
+	 * HTML tags in the string of text.
+	 *
+	 * @param int $limit Number of characters to limit by
+	 * @param string $add Ellipsis to add to the end of truncated string
+	 * @return string
+	 */
+	function LimitCharacters($limit = 20, $add = "...") {
+		$value = trim(strip_tags($this->value));
+		return (strlen($value) > $limit) ? substr($value, 0, $limit) . $add : $value;
+	}
+
+	/**
 	 * Create a summary of the content. This will either be the first paragraph, or the first $maxWords 
 	 * words, whichever is shorter
 	 */
