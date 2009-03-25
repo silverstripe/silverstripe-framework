@@ -89,7 +89,7 @@ class Email extends ViewableData {
 	/**
 	 * @param array $customHeaders A map of header-name -> header-value
 	 */
-	protected $customHeaders;
+	protected $customHeaders = array();
 
 	/**
 	 * @param array $attachements Internal, use {@link attachFileFromString()} or {@link attachFile()}
@@ -381,7 +381,9 @@ class Email extends ViewableData {
 		if(empty($this->from)) $this->from = Email::getAdminEmail();
 						
 		$this->setBounceHandlerURL($this->bounceHandlerURL);
-								
+		
+		$headers = $this->customHeaders;
+		
 		$headers['X-SilverStripeBounceURL'] = $this->bounceHandlerURL;
 						
 		if($messageID) $headers['X-SilverStripeMessageID'] = project() . '.' . $messageID;
@@ -432,7 +434,7 @@ class Email extends ViewableData {
 	 * @return bool Success of the sending operation from an MTA perspective. 
 	 * Doesn't actually give any indication if the mail has been delivered to the recipient properly)
 	 */
-	public function send( $messageID = null ) {	 	
+	public function send($messageID = null) {
 		Requirements::clear();
 	
 		$this->parseVariables();
