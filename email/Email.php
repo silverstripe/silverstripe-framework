@@ -399,18 +399,24 @@ class Email extends ViewableData {
 			if($this->bcc) $subject .= ", bcc to $this->bcc";
 			$subject .= ']';
 		} else {
-			if($this->cc) $headers["Cc"] = $this->cc;
-			if($this->bcc) $headers["Bcc"] = $this->bcc;
+			if($this->cc) $headers['Cc'] = $this->cc;
+			if($this->bcc) $headers['Bcc'] = $this->bcc;
 		}
 	
 		if(self::$cc_all_emails_to) {
-			if(trim($headers['Cc'])) $headers['Cc'] .= ', ';
-			$headers['Cc'] .= self::$cc_all_emails_to;		
+			if(!empty($headers['Cc']) && trim($headers['Cc'])) {
+				$headers['Cc'] .= ', ' . self::$cc_all_emails_to;		
+			} else {
+				$headers['Cc'] = self::$cc_all_emails_to;
+			}
 		}
 
 		if(self::$bcc_all_emails_to) {
-			if(trim($headers['Bcc'])) $headers['Bcc'] .= ', ';
-			$headers['Bcc'] .= self::$bcc_all_emails_to;		
+			if(!empty($headers['Bcc']) && trim($headers['Bcc'])) {
+				$headers['Bcc'] .= ', ' . self::$bcc_all_emails_to;
+			} else {
+				$headers['Bcc'] = self::$bcc_all_emails_to;
+			}
 		}
 
 		Requirements::restore();
@@ -456,8 +462,8 @@ class Email extends ViewableData {
 			unset($headers['Cc']);
 			unset($headers['Bcc']);
 		} else {
-			if($this->cc) $headers["Cc"] = $this->cc;
-			if($this->bcc) $headers["Bcc"] = $this->bcc;
+			if($this->cc) $headers['Cc'] = $this->cc;
+			if($this->bcc) $headers['Bcc'] = $this->bcc;
 		}
 
 		if(self::$cc_all_emails_to) {
@@ -475,7 +481,7 @@ class Email extends ViewableData {
 				$headers['Bcc'] = self::$bcc_all_emails_to;
 			}
 		}
-			 	
+		
 		Requirements::restore();
 		
 		return self::mailer()->sendHTML($to, $this->from, $subject, $this->body, $this->attachments, $headers, $this->plaintext_body);
