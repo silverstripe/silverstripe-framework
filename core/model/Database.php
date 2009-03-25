@@ -1,4 +1,4 @@
-l<?php
+<?php
 /**
  * Abstract database connectivity class.
  * Sub-classes of this implement the actual database connection libraries
