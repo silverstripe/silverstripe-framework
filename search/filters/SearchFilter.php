@@ -94,7 +94,7 @@ abstract class SearchFilter extends Object {
 		}
 		if($candidateClass == 'DataObject') user_error("Couldn't find field $this->name in any of $this->model's tables.", E_USER_ERROR);
 		
-		return $candidateClass . "." . $this->name;
+		return "`$candidateClass`.`$this->name`";
 	}
 	
 	/**
