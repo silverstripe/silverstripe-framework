@@ -67,7 +67,7 @@ class HTTPRequest extends Object implements ArrayAccess {
 	/**
 	 * @var array $allParams Contains an assiciative array of all
 	 * arguments matched in all calls to {@link RequestHandler->handleRequest()}.
-	 * Its a "historical record" thats specific to the current call of
+	 * It's a "historical record" that's specific to the current call of
 	 * {@link handleRequest()}, and is only complete once the "last call" to that method is made.
 	 */
 	protected $allParams = array();
@@ -222,7 +222,7 @@ class HTTPRequest extends Object implements ArrayAccess {
 	
 	/**
 	 * Enables the existence of a key-value pair in the request to be checked using
-	 * array syntax, so isset($request['title']) will check for $_POST['title'] and $_GET['title]
+	 * array syntax, so isset($request['title']) will check for $_POST['title'] and $_GET['title']
 	 *
 	 * @param unknown_type $offset
 	 * @return boolean
@@ -269,7 +269,7 @@ class HTTPRequest extends Object implements ArrayAccess {
 	
 	/**
 	 * Matches a URL pattern
-	 * The pattern can contain a number of segments, separted by / (and an extension indicated by a .)
+	 * The pattern can contain a number of segments, separated by / (and an extension indicated by a .)
 	 * 
 	 * The parts can be either literals, or, if they start with a $ they are interpreted as variables.
 	 *  - Literals must be provided in order to match
