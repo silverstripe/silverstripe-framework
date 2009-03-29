@@ -94,16 +94,20 @@ class RestfulServerTest extends SapphireTest {
 	public function testPUTWithFormEncoded() {
 		$_SERVER['PHP_AUTH_USER'] = 'editor@test.com';
 		$_SERVER['PHP_AUTH_PW'] = 'editor';
-		
+
 		$url = "/api/v1/RestfulServerTest_Comment/1";
-		$data = array('Comment' => 'updated');
-		$response = Director::test($url, $data, null, 'PUT');
+		$body = 'Name=Updated Comment&Comment=updated';
+		$headers = array(
+			'Content-Type' => 'application/x-www-form-urlencoded'
+		);
+		$response = Director::test($url, null, null, 'PUT', $body, $headers);
 		$this->assertEquals($response->getStatusCode(), 200); // Success
 		// Assumption: XML is default output
 		$responseArr = Convert::xml2array($response->getBody());
 		$this->assertEquals($responseArr['ID'], 1);
 		$this->assertEquals($responseArr['Comment'], 'updated');
-		
+		$this->assertEquals($responseArr['Name'], 'Updated Comment');
+
 		unset($_SERVER['PHP_AUTH_USER']);
 		unset($_SERVER['PHP_AUTH_PW']);
 	}
@@ -111,16 +115,20 @@ class RestfulServerTest extends SapphireTest {
 	public function testPOSTWithFormEncoded() {
 		$_SERVER['PHP_AUTH_USER'] = 'editor@test.com';
 		$_SERVER['PHP_AUTH_PW'] = 'editor';
-		
+
 		$url = "/api/v1/RestfulServerTest_Comment";
-		$data = array('Comment' => 'created');
-		$response = Director::test($url, $data, null, 'POST');
+		$body = 'Name=New Comment&Comment=created';
+		$headers = array(
+			'Content-Type' => 'application/x-www-form-urlencoded'
+		);
+		$response = Director::test($url, null, null, 'POST', $body, $headers);
 		$this->assertEquals($response->getStatusCode(), 201); // Created
 		// Assumption: XML is default output
 		$responseArr = Convert::xml2array($response->getBody());
 		$this->assertEquals($responseArr['ID'], 2);
 		$this->assertEquals($responseArr['Comment'], 'created');
-		
+		$this->assertEquals($responseArr['Name'], 'New Comment');
+
 		unset($_SERVER['PHP_AUTH_USER']);
 		unset($_SERVER['PHP_AUTH_PW']);
 	}
