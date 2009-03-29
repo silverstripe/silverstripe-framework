@@ -65,7 +65,7 @@ class SQLQueryTest extends SapphireTest {
 		$match->setModel('SQLQueryTest_DO');
 		$match->apply($query);
 
-		$this->assertEquals("SELECT Name FROM SQLQueryTest_DO WHERE (SQLQueryTest_DO.Name = 'Value') AND (SQLQueryTest_DO.Meta LIKE '%Value%')", $query->sql());
+		$this->assertEquals("SELECT Name FROM SQLQueryTest_DO WHERE (`SQLQueryTest_DO`.`Name` = 'Value') AND (`SQLQueryTest_DO`.`Meta` LIKE '%Value%')", $query->sql());
 	}
 	
 	function testSelectWithLimitClause() {
