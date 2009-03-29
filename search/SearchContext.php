@@ -108,7 +108,7 @@ class SearchContext extends Object {
 		if($existingQuery) {
 			$query = $existingQuery;
 		} else {
-			$query = $model->extendedSQL();
+			$query = $model->buildSQL();
 		}
 
 		$SQL_limit = Convert::raw2sql($limit);
@@ -138,6 +138,8 @@ class SearchContext extends Object {
 		
 		$query->connective = $this->connective;
 		$query->distinct = true;
+		
+		$model->extend('augmentSQL', $query);
 		
 		return $query;
 	}
