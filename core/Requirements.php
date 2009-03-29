@@ -519,8 +519,8 @@ class Requirements_Backend {
 	/**
 	 * Removes all items from the blocking-list.
 	 */
-	static function unblock_all() {
-		self::backend()->blocked = array();
+	function unblock_all() {
+		$this->blocked = array();
 	}
 	
 	/**
