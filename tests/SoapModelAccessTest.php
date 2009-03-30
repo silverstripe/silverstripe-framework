@@ -56,7 +56,7 @@ XML;
 			'editor@test.com',
 			'wrongpassword'
 		);
-		$this->assertEquals('<error type="authentication" code="403">Forbidden</error>', $soapResponse);
+		$this->assertEquals('<error type="authentication" code="401">Unauthorized</error>', $soapResponse);
 		
 		// Check that the details weren't saved
 		$c = $this->getTestSoapConnection();
