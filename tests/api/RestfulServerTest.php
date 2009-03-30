@@ -22,7 +22,7 @@ class RestfulServerTest extends SapphireTest {
 		// even with logged in user a GET with $api_access disabled should fail
 		$url = "/api/v1/RestfulServerTest_Page/1";
 		$response = Director::test($url, null, null, 'GET');
-		$this->assertEquals($response->getStatusCode(), 403);
+		$this->assertEquals($response->getStatusCode(), 401);
 		
 		unset($_SERVER['PHP_AUTH_USER']);
 		unset($_SERVER['PHP_AUTH_PW']);
@@ -42,7 +42,7 @@ class RestfulServerTest extends SapphireTest {
 		// @todo create additional mock object with authenticated VIEW permissions
 		$url = "/api/v1/RestfulServerTest_SecretThing/1";
 		$response = Director::test($url, null, null, 'GET');
-		$this->assertEquals($response->getStatusCode(), 403);
+		$this->assertEquals($response->getStatusCode(), 401);
 		
 		$_SERVER['PHP_AUTH_USER'] = 'user@test.com';
 		$_SERVER['PHP_AUTH_PW'] = 'user';
@@ -60,7 +60,7 @@ class RestfulServerTest extends SapphireTest {
 		$data = array('Comment' => 'created');
 		
 		$response = Director::test($url, $data, null, 'PUT');
-		$this->assertEquals($response->getStatusCode(), 403); // Permission failure
+		$this->assertEquals($response->getStatusCode(), 401); // Permission failure
 		
 		$_SERVER['PHP_AUTH_USER'] = 'editor@test.com';
 		$_SERVER['PHP_AUTH_PW'] = 'editor';

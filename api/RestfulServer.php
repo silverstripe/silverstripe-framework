@@ -505,7 +505,8 @@ class RestfulServer extends Controller {
 	
 	protected function permissionFailure() {
 		// return a 401
-		$this->getResponse()->setStatusCode(403);
+		$this->getResponse()->setStatusCode(401);
+		$this->getResponse()->addHeader('WWW-Authenticate', 'Basic realm="API Access"');
 		return "You don't have access to this item through the API.";
 	}
 
