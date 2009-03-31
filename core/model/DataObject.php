@@ -2,6 +2,12 @@
 /**
  * A single database record & abstract class for the data-access-model.
  *
+ * <h2>Extensions and Decorators</h2>
+ *
+ * See {@link Extension} and {@link DataObjectDecorator}.
+ * 
+ * <h2>Permission Control</h2>
+ * 
  * Object-level access control by {@link Permission}. Permission codes are arbitrary
  * strings which can be selected on a group-by-group basis.
  * 
@@ -52,6 +58,10 @@
  * 
  * If any public method on this class is prefixed with an underscore, 
  * the results are cached in memory through {@link cachedCall()}.
+ * 
+ * 
+ * @todo Add instance specific removeExtension() which undos loadExtraStatics()
+ *  and defineMethods()
  * 
  * @package sapphire
  * @subpackage model
@@ -1934,6 +1944,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @return boolean
 	 */
 	public function hasDatabaseField($field) {
+		// Add base fields which are not defined in static $db
 		$fixedFields = array(
 			'ID' => 'Int',
 			'ClassName' => 'Enum',
@@ -1943,8 +1954,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			'Version' => $this->hasExtension('Versioned') ? 'Int' : false,
 		);
 		
-		// Add base fields which are not defined in static $db
-		if(isset($fixedFields[$field])) return (bool)$fixedFields[$field];
+		if(isset($fixedFields[$field])) return true;
 
 		return array_key_exists($field, $this->inheritedDatabaseFields());
 	}
