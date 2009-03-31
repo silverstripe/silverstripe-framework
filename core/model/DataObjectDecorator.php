@@ -28,15 +28,34 @@ abstract class DataObjectDecorator extends Extension {
 	);
 	
 	/**
+	 * Set the owner of this decorator.
+	 * @param DataObject $owner
+	 */
+	function setOwner(Object $owner) {
+		if(!($owner instanceof DataObject)) {
+			user_error(sprintf(
+				"DataObjectDecorator->setOwner(): Trying to decorate an object of class '%s' with '%s', 
+				only Dataobject subclasses are supported.",
+				get_class($owner), $this->class),
+				E_USER_ERROR
+			);
+			return false;
+		}
+		
+		parent::setOwner($owner);
+	}
+	
+	/**
 	 * Load the extra database fields defined in extraStatics.
 	 */
 	function loadExtraStatics() {
 		// Don't apply DB fields if the parent object has this extension too
 		if(Object::has_extension($this->owner->parentClass(), $this->class)) return;
-		
+
 		if($fields = $this->extraStatics()) {
 			foreach($fields as $relation => $fields) {
 				if(in_array($relation, self::$decoratable_statics)) {
+					// Can't use add_static_var() here as it would merge the array rather than replacing
 					Object::set_static (
 						$this->owner->class,
 						$relation,
