@@ -114,7 +114,6 @@ class SSHTMLBBCodeParser_Filter_Links extends SSHTMLBBCodeParser_Filter
      */
     function smarterPPLinkExpand($matches)
     {
-        //echo '<hr><pre>';var_dump($matches);echo '</pre><hr>';
         $options = SSHTMLBBCodeParser::getStaticProperty('SSHTMLBBCodeParser','_options');
         $o = $options['open'];
         $c = $options['close'];
