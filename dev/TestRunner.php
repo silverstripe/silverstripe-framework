@@ -123,17 +123,20 @@ class TestRunner extends Controller {
 	}
 		
 	/**
-	 * Run only a single test class
+	 * Run only a single test class or a comma-separated list of tests
 	 */
 	function only($request) {
-		$className = $request->param('TestCase');
-		if(class_exists($className)) {
-			if(!(singleton($className) instanceof SapphireTest)) {
-				user_error("TestRunner::only(): Invalid TestCase '$className', cannot find matching class", E_USER_ERROR);
-			}
-			$this->runTests(array($className));
+		if ($request->param('TestCase') == 'all') {
+			$this->all();
 		} else {
-			if ($className == 'all') $this->all();
+			$classNames = explode(',',$request->param('TestCase'));
+			foreach($classNames as $className) {
+				if(!class_exists($className) || !(singleton($className) instanceof SapphireTest)) {
+					user_error("TestRunner::only(): Invalid TestCase '$className', cannot find matching class", E_USER_ERROR);
+				}
+			}
+			
+			$this->runTests($classNames);
 		}
 	}
 
