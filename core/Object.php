@@ -1,9 +1,15 @@
 <?php
 /**
- * A base class for all sapphire objects to inherit from
+ * A base class for all sapphire objects to inherit from.
  *
  * This class provides a number of pattern implementations, as well as methods and fixes to add extra psuedo-static
- * and method functionality to PHP
+ * and method functionality to PHP.
+ * 
+ * See {@link Extension} on how to implement a custom multiple
+ * inheritance for object instances based on PHP5 method call overloading.
+ * 
+ * @todo Create instance-specific removeExtension() which removes an extension from $extension_instances,
+ * but not from static $extensions, and clears everything added through defineMethods(), mainly $extra_methods.
  *
  * @package sapphire
  * @subpackage core
@@ -11,20 +17,24 @@
 abstract class Object {
 	
 	/**
-	 * An array of extension names and parameters to be applied to this object upon construction. For example:
-	 *
+	 * An array of extension names and parameters to be applied to this object upon construction.
+	 * 
+	 * Example:
 	 * <code>
 	 * public static $extensions = array (
 	 *   'Hierachy',
 	 *   "Version('Stage', 'Live')"
 	 * );
 	 * </code>
+	 * 
+	 * Use {@link Object::add_extension()} to add extensions without access to the class code,
+	 * e.g. to extend core classes.
+	 * 
+	 * Extensions are instanciated together with the object and stored in {@link $extension_instances}.
 	 *
-	 * @var array
+	 * @var array $extensions
 	 */
 	public static $extensions = null;
-	
-	// -----------------------------------------------------------------------------------------------------------------
 	
 	/**#@+
 	 * @var array
@@ -47,19 +57,15 @@ abstract class Object {
 	
 	/**#@-*/
 	
-	// -----------------------------------------------------------------------------------------------------------------
-	
 	/**
 	 * @var string the class name
 	 */
 	public $class;
 	
 	/**
-	 * @var array all current extension instances
+	 * @var array all current extension instances.
 	 */
 	protected $extension_instances = array();
-	
-	// -----------------------------------------------------------------------------------------------------------------
 	
 	/**
 	 * An implementation of the factory method, allows you to create an instance of a class
@@ -230,7 +236,9 @@ abstract class Object {
 	}
 	
 	/**
-	 * Get an uninherited static variable - a variable that is explicity set in this class, and not in the parent class
+	 * Get an uninherited static variable - a variable that is explicity set in this class, and not in the parent class.
+	 * 
+	 * @todo Recursively filter out parent statics, currently only inspects the parent class
 	 *
 	 * @param string $class
 	 * @param string $name
@@ -295,7 +303,14 @@ abstract class Object {
 	
 	/**
 	 * Add a static variable without replacing it completely if possible, but merging in with both existing PHP statics
-	 * and existing psuedo-statics
+	 * and existing psuedo-statics. Uses PHP's array_merge_recursive() with if the $replace argument is FALSE.
+	 * 
+	 * Documentation from http://php.net/array_merge_recursive:
+	 * If the input arrays have the same string keys, then the values for these keys are merged together 
+	 * into an array, and this is done recursively, so that if one of the values is an array itself, 
+	 * the function will merge it with a corresponding entry in another array too. 
+	 * If, however, the arrays have the same numeric key, the later value will not overwrite the original value, 
+	 * but will be appended. 
 	 *
 	 * @param string $class
 	 * @param string $name the static name
@@ -321,43 +336,104 @@ abstract class Object {
 	 * Return TRUE if a class has a specified extension
 	 *
 	 * @param string $class
-	 * @param string $requiredExtension the class name of the extension to check for
+	 * @param string $requiredExtension the class name of the extension to check for.
 	 */
 	public static function has_extension($class, $requiredExtension) {
 		$requiredExtension = strtolower($requiredExtension);
-		
 		if($extensions = self::get_static($class, 'extensions')) foreach($extensions as $extension) {
-			if(($p = strpos($extension, '(')) !== false) $extension = substr($extension, 0, $p);
-			if(strtolower($extension) == $requiredExtension) return true;
+			$left = strtolower(Extension::get_classname_without_arguments($extension));
+			$right = strtolower(Extension::get_classname_without_arguments($requiredExtension));
+			if($left == $right) return true;
 		}
 		
 		return false;
 	}
 	
 	/**
-	 * Add an extension to a specific class
+	 * Add an extension to a specific class.
+	 * As an alternative, extensions can be added to a specific class
+	 * directly in the {@link Object::$extensions} array.
+	 * See {@link SiteTree::$extensions} for examples.
+	 * Keep in mind that the extension will only be applied to new
+	 * instances, not existing ones (including all instances created through {@link singleton()}).
 	 *
-	 * @param string $class
-	 * @param string $extension the extension to add to the class
+	 * @param string $class Class that should be decorated - has to be a subclass of {@link Object}
+	 * @param string $extension Subclass of {@link Extension} with optional parameters 
+	 *  as a string, e.g. "Versioned" or "Translatable('Param')"
 	 */
 	public static function add_extension($class, $extension) {
+		if(!preg_match('/([^(]*)/', $extension, $matches)) {
+			return false;
+		}
+		$extensionClass = $matches[1];
+		if(!class_exists($extensionClass)) {
+			user_error(sprintf('Object::add_extension() - Can\'t find extension class for "%s"', $extensionClass), E_USER_ERROR);
+		}
+		
+		if(!is_subclass_of($extensionClass, 'Extension')) {
+			user_error(sprintf('Object::add_extension() - Extension "%s" is not a subclass of Extension', $extensionClass), E_USER_ERROR);
+		}
+		
+		// unset some caches
 		self::$cached_statics[$class]['extensions'] = null;
+		$subclasses = ClassInfo::subclassesFor($class);
+		$subclasses[] = $class;
+		if($subclasses) foreach($subclasses as $subclass) {
+			unset(self::$classes_constructed[$subclass]);
+		}
+		
+		
+		// merge with existing static vars
 		self::add_static_var($class, 'extensions', array($extension));
 	}
 	
 	/**
-	 * Remove an extension from a class
+	 * Remove an extension from a class.
+	 * Keep in mind that this won't revert any datamodel additions
+	 * of the extension at runtime, unless its used before the
+	 * schema building kicks in (in your _config.php).
+	 * Doesn't remove the extension from any {@link Object}
+	 * instances which are already created, but will have an
+	 * effect on new extensions.
+	 * Clears any previously created singletons through {@link singleton()}
+	 * to avoid side-effects from stale extension information.
+	 * 
+	 * @todo Add support for removing extensions with parameters
 	 *
 	 * @param string $class
-	 * @param string $extension
+	 * @param string $extension Classname of an {@link Extension} subclass, without parameters
 	 */
 	public static function remove_extension($class, $extension) {
 		if(self::has_extension($class, $extension)) {
-			self::set_static (
+			self::set_static(
 				$class,
 				'extensions',
 				array_diff(self::get_static($class, 'extensions'), array($extension))
 			);
+		}
+		
+		// unset singletons to avoid side-effects
+		global $_SINGLETONS;
+		$_SINGLETONS = array();
+	}
+	
+	/**
+	 * @param string $class
+	 * @param bool $includeArgumentString Include the argument string in the return array,
+	 *  FALSE would return array("Versioned"), TRUE returns array("Versioned('Stage','Live')").
+	 * @return array Numeric array of either {@link DataObjectDecorator} classnames,
+	 *  or eval'ed classname strings with constructor arguments.
+	 */
+	function get_extensions($class, $includeArgumentString = false) {
+		$extensions = self::get_static($class, 'extensions');
+		if($includeArgumentString) {
+			return $extensions;
+		} else {
+			$extensionClassnames = array();
+			if($extensions) foreach($extensions as $extension) {
+				$extensionClassnames[] = Extension::get_classname_without_arguments($extension);
+			}
+			return $extensionClassnames;
 		}
 	}
 	
@@ -368,6 +444,8 @@ abstract class Object {
 		
 		if($extensionClasses = ClassInfo::ancestry($this->class)) foreach($extensionClasses as $class) {
 			if($extensions = self::uninherited_static($class, 'extensions')) foreach($extensions as $extension) {
+				// an $extension value can contain parameters as a string,
+				// e.g. "Versioned('Stage','Live')"
 				$instance = eval("return new $extension;");
 				$instance->setOwner($this);
 				$this->extension_instances[$instance->class] = $instance;
@@ -470,7 +548,14 @@ abstract class Object {
 		
 		self::$built_in_methods['_set'][$this->class] = true;
 	}
-	
+
+	/**
+	 * Adds any methods from {@link Extension} instances attached to this object.
+	 * All these methods can then be called directly on the instance (transparently
+	 * mapped through {@link __call()}), or called explicitly through {@link extend()}.
+	 * 
+	 * @uses addMethodsFrom()
+	 */
 	protected function defineMethods() {
 		if($this->extension_instances) foreach(array_keys($this->extension_instances) as $key) {
 			$this->addMethodsFrom('extension_instances', $key);
@@ -488,7 +573,7 @@ abstract class Object {
 	}
 	
 	/**
-	 * Add all the methods from an object property (which is an {@link Extension}) to this object
+	 * Add all the methods from an object property (which is an {@link Extension}) to this object.
 	 *
 	 * @param string $property the property name
 	 * @param string|int $index an index to use if the property is an array
@@ -634,7 +719,9 @@ abstract class Object {
 	 * Currently returns an array, with an index resulting every time the function is called. Only adds returns if
 	 * they're not NULL, to avoid bogus results from methods just defined on the parent decorator. This is important for
 	 * permission-checks through extend, as they use min() to determine if any of the returns is FALSE. As min() doesn't
-	 * do type checking, an included NULL return would fail the permission checks
+	 * do type checking, an included NULL return would fail the permission checks.
+	 * 
+	 * The extension methods are defined during {@link __construct()} in {@link defineMethods()}.
 	 * 
 	 * @param string $method the name of the method to call on each extension
 	 * @param mixed $a1,... up to 7 arguments to be passed to the method
@@ -654,23 +741,44 @@ abstract class Object {
 	}
 	
 	/**
-	 * Get an extension instance attached to this object by name
+	 * Get an extension instance attached to this object by name.
+	 * 
+	 * @uses hasExtension()
 	 *
 	 * @param string $extension
 	 * @return Extension
 	 */
-	public function extInstance($extension) {
+	public function getExtensionInstance($extension) {
 		if($this->hasExtension($extension)) return $this->extension_instances[$extension];
 	}
 	
 	/**
-	 * Returns TRUE if this object has a specific extension applied
+	 * Returns TRUE if this object instance has a specific extension applied
+	 * in {@link $extension_instances}. Extension instances are initialized
+	 * at constructor time, meaning if you use {@link add_extension()}
+	 * afterwards, the added extension will just be added to new instances
+	 * of the decorated class. Use the static method {@link has_extension()}
+	 * to check if a class (not an instance) has a specific extension.
+	 * Caution: Don't use singleton(<class>)->hasExtension() as it will
+	 * give you inconsistent results based on when the singleton was first
+	 * accessed.
 	 *
-	 * @param string $extension
+	 * @param string $extension Classname of an {@link Extension} subclass without parameters
 	 * @return bool
 	 */
 	public function hasExtension($extension) {
 		return isset($this->extension_instances[$extension]);
+	}
+	
+	/**
+	 * Get all extension instances for this specific object instance.
+	 * See {@link get_extensions()} to get all applied extension classes
+	 * for this class (not the instance).
+	 * 
+	 * @return array Map of {@link DataObjectDecorator} instances, keyed by classname.
+	 */
+	public function getExtensionInstances() {
+		return $this->extension_instances;
 	}
 	
 	// -----------------------------------------------------------------------------------------------------------------
@@ -767,6 +875,13 @@ abstract class Object {
 	 */
 	protected function sanitiseCachename($name) {
 		return str_replace(array('~', '.', '/', '!', ' ', "\n", "\r", "\t", '\\', ':', '"', '\'', ';'), '_', $name);
+	}
+	
+	/**
+	 * @deprecated 2.4 Use getExtensionInstance
+	 */
+	public function extInstance($extension) {
+		return $this->getExtensionInstance($extension);
 	}
 	
 }

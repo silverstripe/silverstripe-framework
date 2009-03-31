@@ -164,16 +164,125 @@ class ObjectTest extends SapphireTest {
 		$this->assertTrue($obj3_2->is_a('ObjectTest_CreateTest3'));
 	}
 	
+	public function testGetExtensions() {
+		$this->assertEquals(
+			Object::get_extensions('ObjectTest_ExtensionTest'),
+			array(
+				'oBjEcTTEST_ExtendTest1',
+				"ObjectTest_ExtendTest2",
+			)
+		);
+		$this->assertEquals(
+			Object::get_extensions('ObjectTest_ExtensionTest', true),
+			array(
+				'oBjEcTTEST_ExtendTest1',
+				"ObjectTest_ExtendTest2('FOO', 'BAR')",
+			)
+		);
+		$inst = new ObjectTest_ExtensionTest();
+		$extensions = $inst->getExtensionInstances();
+		$this->assertEquals(count($extensions), 2);
+		$this->assertType(
+			'ObjectTest_ExtendTest1',
+			$extensions['ObjectTest_ExtendTest1']
+		);
+		$this->assertType(
+			'ObjectTest_ExtendTest2',
+			$extensions['ObjectTest_ExtendTest2']
+		);
+		$this->assertType(
+			'ObjectTest_ExtendTest1',
+			$inst->getExtensionInstance('ObjectTest_ExtendTest1')
+		);
+		$this->assertType(
+			'ObjectTest_ExtendTest2',
+			$inst->getExtensionInstance('ObjectTest_ExtendTest2')
+		);
+	}
+	
 	/**
 	 * Tests {@link Object::has_extension()}, {@link Object::add_extension()}
 	 */
 	public function testHasAndAddExtension() {
-		$this->assertTrue(Object::has_extension('ObjectTest_ExtensionTest', 'HIERACHY'));
-		$this->assertTrue(Object::has_extension('ObjectTest_ExtensionTest', 'translatable'));
-		$this->assertFalse(Object::has_extension('ObjectTest_ExtensionTest', 'Versioned'));
+		// ObjectTest_ExtendTest1 is built in via $extensions
+		$this->assertTrue(
+			Object::has_extension('ObjectTest_ExtensionTest', 'OBJECTTEST_ExtendTest1'),
+			"Extensions are detected when set on Object::\$extensions on has_extension() without case-sensitivity"
+		);
+		$this->assertTrue(
+			Object::has_extension('ObjectTest_ExtensionTest', 'ObjectTest_ExtendTest1'),
+			"Extensions are detected when set on Object::\$extensions on has_extension() without case-sensitivity"
+		);
+		$this->assertTrue(
+			singleton('ObjectTest_ExtensionTest')->hasExtension('ObjectTest_ExtendTest1'),
+			"Extensions are detected when set on Object::\$extensions on instance hasExtension() without case-sensitivity"
+		);
 		
-		Object::add_extension('ObjectTest_ExtensionTest', 'VERSIONED("Stage", "Live")');
-		$this->assertTrue(Object::has_extension('ObjectTest_ExtensionTest', 'Versioned'));
+		// ObjectTest_ExtendTest2 is built in via $extensions (with parameters)
+		$this->assertTrue(
+			Object::has_extension('ObjectTest_ExtensionTest', 'ObjectTest_ExtendTest2'),
+			"Extensions are detected with static has_extension() when set on Object::\$extensions with additional parameters"
+		);
+		$this->assertTrue(
+			singleton('ObjectTest_ExtensionTest')->hasExtension('ObjectTest_ExtendTest2'),
+			"Extensions are detected with instance hasExtension() when set on Object::\$extensions with additional parameters"
+		);
+		$this->assertFalse(
+			Object::has_extension('ObjectTest_ExtensionTest', 'ObjectTest_ExtendTest3'),
+			"Other extensions available in the system are not present unless explicitly added to this object when checking through has_extension()"
+		);
+		$this->assertFalse(
+			singleton('ObjectTest_ExtensionTest')->hasExtension('ObjectTest_ExtendTest3'),
+			"Other extensions available in the system are not present unless explicitly added to this object when checking through instance hasExtension()"
+		);
+		
+		// ObjectTest_ExtendTest3 is added manually
+		Object::add_extension('ObjectTest_ExtensionTest', 'ObjectTest_ExtendTest3("Param")');
+		$this->assertTrue(
+			Object::has_extension('ObjectTest_ExtensionTest', 'ObjectTest_ExtendTest3'),
+			"Extensions are detected with static has_extension() when added through add_extension()"
+		);
+		// a singleton() wouldn't work as its already initialized
+		$objectTest_ExtensionTest = new ObjectTest_ExtensionTest();
+		$this->assertTrue(
+			$objectTest_ExtensionTest->hasExtension('ObjectTest_ExtendTest3'),
+			"Extensions are detected with instance hasExtension() when added through add_extension()"
+		);
+		
+		// @todo At the moment, this does NOT remove the extension due to parameterized naming,
+		//  meaning the extension will remain added in further test cases
+		Object::remove_extension('ObjectTest_ExtensionTest', 'ObjectTest_ExtendTest3');
+	}
+	
+	public function testRemoveExtension() {
+		// manually add ObjectTest_ExtendTest2
+		Object::add_extension('ObjectTest_ExtensionRemoveTest', 'ObjectTest_ExtendTest2');
+		$this->assertTrue(
+			Object::has_extension('ObjectTest_ExtensionRemoveTest', 'ObjectTest_ExtendTest2'),
+			"Extension added through \$add_extension() are added correctly"
+		);
+		
+		Object::remove_extension('ObjectTest_ExtensionRemoveTest', 'ObjectTest_ExtendTest2');
+		$this->assertFalse(
+			Object::has_extension('ObjectTest_ExtensionRemoveTest', 'ObjectTest_ExtendTest2'),
+			"Extension added through \$add_extension() are detected as removed in has_extension()"
+		);
+		$this->assertFalse(
+			singleton('ObjectTest_ExtensionRemoveTest')->hasExtension('ObjectTest_ExtendTest2'),
+			"Extensions added through \$add_extension() are detected as removed in instances through hasExtension()"
+		);
+
+		// ObjectTest_ExtendTest1 is already present in $extensions
+		Object::remove_extension('ObjectTest_ExtensionRemoveTest', 'ObjectTest_ExtendTest1');
+		$this->assertFalse(
+			Object::has_extension('ObjectTest_ExtensionRemoveTest', 'ObjectTest_ExtendTest1'),
+			"Extension added through \$extensions are detected as removed in has_extension()"
+		);
+		$objectTest_ExtensionRemoveTest = new ObjectTest_ExtensionRemoveTest();
+		$this->assertFalse(
+			$objectTest_ExtensionRemoveTest->hasExtension('ObjectTest_ExtendTest1'),
+			"Extensions added through \$extensions are detected as removed in instances through hasExtension()"
+		);
 	}
 	
 	public function testParentClass() {
@@ -321,14 +430,22 @@ class ObjectTest_CreateTest3 extends Object {}
 class ObjectTest_ExtensionTest extends Object {
 	
 	public static $extensions = array (
-		'HiErAcHy',
-		"TrAnSlAtAbLe('FOO', 'BAR')",
+		'oBjEcTTEST_ExtendTest1',
+		"ObjectTest_ExtendTest2('FOO', 'BAR')",
 	);
 	
 }
 
 class ObjectTest_ExtensionTest2 extends Object {
 	public static $extensions = array('ObjectTest_Extension');
+}
+
+class ObjectTest_ExtensionRemoveTest extends Object {
+	
+	public static $extensions = array (
+		'ObjectTest_ExtendTest1',
+	);
+	
 }
 
 class ObjectTest_Extension extends Extension {}
@@ -362,6 +479,10 @@ class ObjectTest_ExtendTest1 extends Extension {
 
 class ObjectTest_ExtendTest2 extends Extension {
 	public function extendableMethod($argument = null) { return "ExtendTest2($argument)"; }
+}
+
+class ObjectTest_ExtendTest3 extends Extension {
+	public function extendableMethod($argument = null) { return "ExtendTest3($argument)"; }
 }
 
 /**#@-*/
