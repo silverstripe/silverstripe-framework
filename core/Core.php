@@ -255,8 +255,20 @@ function getClassFile($className) {
 	if($_CLASS_MANIFEST[$className]) return $_CLASS_MANIFEST[$className];
 }
 
+/**
+ * Creates a class instance by the "singleton" design pattern.
+ * It will always return the same instance for this class,
+ * which can be used for performance reasons and as a simple
+ * way to access instance methods which don't rely on instance
+ * data (e.g. the custom SilverStripe static handling).
+ *
+ * @uses Object::strong_create()
+ *
+ * @param string $className
+ * @return Object
+ */
 function singleton($className) {
-	static $_SINGLETONS;
+	global $_SINGLETONS;
 	if(!isset($className)) user_error("singleton() Called without a class", E_USER_ERROR);
 	if(!is_string($className)) user_error("singleton() passed bad class_name: " . var_export($className,true), E_USER_ERROR);
 	if(!isset($_SINGLETONS[$className])) {
