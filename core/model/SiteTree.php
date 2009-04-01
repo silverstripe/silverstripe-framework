@@ -171,7 +171,6 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	static $extensions = array(
 		"Hierarchy",
 		"Versioned('Stage', 'Live')",
-		"Translatable('Title', 'MenuTitle', 'Content', 'URLSegment', 'MetaTitle', 'MetaDescription', 'MetaKeywords', 'Status')",
 	);
 	
 	/**
@@ -885,7 +884,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		} 
 		
 		// get the "long" lang name suitable for the HTTP content-language flag (with hyphens instead of underscores)
-		$currentLang = (Translatable::is_enabled()) ? Translatable::current_locale() : i18n::get_locale();
+		$currentLang = ($this->hasExtension('Translatable')) ? Translatable::current_locale() : i18n::get_locale();
 		$tags .= "<meta http-equiv=\"Content-Language\" content=\"". i18n::convert_rfc1766($currentLang) ."\"/>\n";
 		
 		// DEPRECATED 2.3: Use MetaTags
@@ -1747,7 +1746,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 			
 		//TODO: Add integration
 		/*
-		if(Translatable::is_enabled() && $controller->Locale != Translatable::default_locale() && !$this->isTranslation())
+		if($this->hasExtension('Translatable') && $controller->Locale != Translatable::default_locale() && !$this->isTranslation())
 			$classes .= " untranslated ";
 		*/
 		$classes .= $this->markingClasses();

@@ -11,20 +11,45 @@ class TranslatableSearchFormTest extends FunctionalTest {
 	
 	protected $recreateTempDb = true;
 	
+	/**
+	 * @todo Necessary because of monolithic Translatable design
+	 */
+	protected $origTranslatableSettings = array();
+	
 	function setUp() {
-		$this->origTranslatableSettings['enabled'] = Translatable::is_enabled();
-		$this->origTranslatableSettings['default_locale'] = Translatable::default_locale();
-		Translatable::enable();
-		Translatable::set_default_locale("en");
-		
 		// needs to recreate the database schema with language properties
 		self::kill_temp_db();
+		
+		// store old defaults	
+		$this->origTranslatableSettings['has_extension'] = singleton('SiteTree')->hasExtension('Translatable');
+		$this->origTranslatableSettings['default_locale'] = Translatable::default_locale();
+		
+		// overwrite locale
+		Translatable::set_default_locale("en_US");
+
 		// refresh the decorated statics - different fields in $db with Translatable enabled
-		singleton('SiteTree')->loadExtraStatics();
-		singleton('TranslatableTest_DataObject')->loadExtraStatics();
+		if(!$this->origTranslatableSettings['has_extension']) Object::add_extension('SiteTree', 'Translatable');
+		Object::add_extension('TranslatableTest_DataObject', 'Translatable');
+		
+		// clear singletons, they're caching old extension info which is used in DatabaseAdmin->doBuild()
+		global $_SINGLETONS;
+		$_SINGLETONS = array();
+		
+		// @todo Hack to refresh statics on the newly decorated classes
+		$newSiteTree = new SiteTree();
+		foreach($newSiteTree->getExtensionInstances() as $extInstance) {
+			$extInstance->loadExtraStatics();
+		}
+		// @todo Hack to refresh statics on the newly decorated classes
+		$TranslatableTest_DataObject = new TranslatableTest_DataObject();
+		foreach($TranslatableTest_DataObject->getExtensionInstances() as $extInstance) {
+			$extInstance->loadExtraStatics();
+		}
+
+		// recreate database with new settings
 		$dbname = self::create_temp_db();
 		DB::set_alternative_database_name($dbname);
-		
+
 		parent::setUp();
 		
 		$holderPage = $this->objFromFixture('SiteTree', 'searchformholder');
@@ -32,7 +57,7 @@ class TranslatableSearchFormTest extends FunctionalTest {
 	}
 	
 	function tearDown() {
-		if(!$this->origTranslatableSettings['enabled']) Translatable::disable();
+		if(!$this->origTranslatableSettings['has_extension']) Object::remove_extension('SiteTree', 'Translatable');
 
 		Translatable::set_default_locale($this->origTranslatableSettings['default_locale']);
 		
@@ -47,7 +72,7 @@ class TranslatableSearchFormTest extends FunctionalTest {
 
 		$publishedPage = $this->objFromFixture('SiteTree', 'publishedPage');
 		$publishedPage->publish('Stage', 'Live');
-		$translatedPublishedPage = $publishedPage->createTranslation('de');
+		$translatedPublishedPage = $publishedPage->createTranslation('de_DE');
 		$translatedPublishedPage->Title = 'translatedPublishedPage';
 		$translatedPublishedPage->Content = 'German content';
 		$translatedPublishedPage->write();
@@ -57,8 +82,8 @@ class TranslatableSearchFormTest extends FunctionalTest {
 		// from the holder is not present here - we set the language explicitly
 		// through a pseudo GET variable in getResults()
 		
-		$lang = 'en';
-		$results = $sf->getResults(null, array('Search'=>'content', 'lang'=>$lang));
+		$lang = 'en_US';
+		$results = $sf->getResults(null, array('Search'=>'content', 'locale'=>$lang));
 		$this->assertContains(
 			$publishedPage->ID,
 			$results->column('ID'),
@@ -70,8 +95,8 @@ class TranslatableSearchFormTest extends FunctionalTest {
 			'Published pages in another language are not found when searching in default language'
 		);
 		
-		$lang = 'de';
-		$results = $sf->getResults(null, array('Search'=>'content', 'lang'=>$lang));
+		$lang = 'de_DE';
+		$results = $sf->getResults(null, array('Search'=>'content', 'locale'=>$lang));
 		$this->assertNotContains(
 			$publishedPage->ID,
 			$results->column('ID'),

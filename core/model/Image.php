@@ -494,7 +494,7 @@ class Image_Uploader extends Controller {
 		}
 		
 		// set reading lang
-		if(Translatable::is_enabled() && !Director::is_ajax()) {
+		if(singleton('SiteTree')->hasExtension('Translatable') && !Director::is_ajax()) {
 			Translatable::choose_site_lang(array_keys(Translatable::get_existing_content_languages('SiteTree')));
 		}
 		

@@ -64,13 +64,13 @@ class RootURLController extends Controller {
 		} else {
 			$homePageOBJ = null;
 		}
-
-		if($homePageOBJ) {
-			$urlSegment = $homePageOBJ->URLSegment;
-		} elseif(Translatable::is_enabled()) {
-			$urlSegment = Translatable::get_homepage_urlsegment_by_language(Translatable::current_locale());
-		}
 		
+		if(singleton('SiteTree')->hasExtension('Translatable')) {
+			$urlSegment = Translatable::get_homepage_urlsegment_by_language(Translatable::current_locale());
+		} elseif($homePageOBJ) {
+			$urlSegment = $homePageOBJ->URLSegment;
+		}
+
 		return ($urlSegment) ? $urlSegment : self::get_default_homepage_urlsegment();
 	}
 	

@@ -1699,7 +1699,9 @@ class i18n extends Object {
 	}
 	
 	/**
-	 * Enables the multilingual content feature (proxy for Translatable::enable())
+	 * Enables the multilingual content feature (proxy for Translatable::enable()).
+	 * 
+	 * @deprecated 2.4 Use Object::add_extension('Page', 'Translatable');
 	 */
 	static function enable() {
 		Translatable::enable();
@@ -1707,6 +1709,8 @@ class i18n extends Object {
 
 	/**
 	 * Disable the multilingual content feature (proxy for Translatable::disable())
+	 * 
+	 * @deprecated 2.4 Use Object::add_extension('Page', 'Translatable');
 	 */
 	static function disable() {
 		Translatable::disable();

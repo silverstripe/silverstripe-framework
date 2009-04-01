@@ -54,8 +54,8 @@ class SearchForm extends Form {
 			));
 		}
 		
-		if(Translatable::is_enabled()) {
-			$fields->push(new HiddenField('lang', 'lang', Translatable::current_locale()));
+		if(singleton('SiteTree')->hasExtension('Translatable')) {
+			$fields->push(new HiddenField('locale', 'locale', Translatable::current_locale()));
 		}
 		
 		if(!$actions) {
@@ -104,8 +104,8 @@ class SearchForm extends Form {
 		if(!isset($data)) $data = $_REQUEST;
 		
 		// set language (if present)
-		if(Translatable::is_enabled() && isset($data['lang'])) {
-			Translatable::set_reading_locale($data['lang']);
+		if(singleton('SiteTree')->hasExtension('Translatable') && isset($data['locale'])) {
+			Translatable::set_reading_locale($data['locale']);
 		}
 	
 		$keywords = $data['Search'];

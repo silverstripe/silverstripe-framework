@@ -149,7 +149,7 @@ class ErrorPage extends Page {
 	 * @return String
 	 */
 	static function get_filepath_for_errorcode($statusCode, $lang = null) {
-		if(Translatable::is_enabled() && $lang && $lang != Translatable::default_locale()) {
+		if(singleton('SiteTree')->hasExtension('Translatable') && $lang && $lang != Translatable::default_locale()) {
 			return self::$static_filepath . "/error-{$statusCode}-{$lang}.html";
 		} else {
 			return self::$static_filepath . "/error-{$statusCode}.html";

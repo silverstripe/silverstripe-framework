@@ -1,15 +1,15 @@
 <?php
 /**
  * The Translatable decorator allows your DataObjects to have versions in different languages,
- * defining which fields are can be translated.
+ * defining which fields are can be translated. Translatable can be applied
+ * to any {@link DataObject} subclass, but is mostly used with {@link SiteTree}.
+ * Translatable is compatible with the {@link Versioned} extension.
  * 
- * Common language names (e.g. 'en_US') are used in Translatable for
- * database-entities. On the other hand, the file-based i18n-translations 
- * always have a "locale" (e.g. 'en_US').
+ * Locales (e.g. 'en_US') are used in Translatable for identifying a record by language.
  * 
  * <h2>Configuration</h2>
  * 
- * You can enable {Translatable} for any subclass of {@link DataObject}:
+ * Enabling Translatable in the $extension array of a DataObject
  * <code>
  * class MyClass extends DataObject {
  *   static $extensions = array(
@@ -17,6 +17,12 @@
  *   );
  * }
  * </code>
+ * 
+ * Enabling Translatable through {@link Object::add_extension()} in your _config.php:
+ * <example>
+ * Object::add_extension('MyClass', 'Translatable');
+ * </example>
+ * 
  * Make sure to rebuild the database through /dev/build after enabling translatable.
  * 
  * <h2>Usage</h2>
@@ -67,6 +73,7 @@
  * Translatable::set_reading_lang('de');
  * $englishParent->Children(); 
  * // right
+ * Translatable::set_reading_lang('de');
  * $germanParent = $englishParent->getTranslation('de');
  * $germanParent->Children();
  * </code>
@@ -111,13 +118,6 @@
  * @subpackage misc
  */
 class Translatable extends DataObjectDecorator {
-	
-	/**
-	 * Indicates if the multilingual feature is enabled
-	 *
-	 * @var boolean
-	 */
-	protected static $enabled = false;
 
 	/**
 	 * The 'default' language.
@@ -141,26 +141,11 @@ class Translatable extends DataObjectDecorator {
 	protected static $language_decided = false;
 	
 	/**
-	 * Indicates whether the 'Locale' transformation when modifying queries should be bypassed
-	 * If it's true
-	 *
-	 * @var boolean
-	 */
-	protected static $bypass = false;
-	
-	/**
 	 * A cached list of existing tables
 	 *
 	 * @var mixed
 	 */
 	protected static $tableList = null;
-	
-	/**
-	 * Dataobject's original ID when we're creating a new language version of an object
-	 *
-	 * @var unknown_type
-	 */
-	protected static $creatingFromID;
 
 	/**
 	 * An array of fields that can be translated.
@@ -316,7 +301,7 @@ class Translatable extends DataObjectDecorator {
 			$baseDataClass = $baseDataClass . "_Live";
 		}
 		
-		$translationGroupID = $this->owner->getTranslationGroup();
+		$translationGroupID = $this->getTranslationGroup();
 		if(is_numeric($translationGroupID)) {
 			$query = new SQLQuery(
 				'DISTINCT Locale',
@@ -361,39 +346,30 @@ class Translatable extends DataObjectDecorator {
 	/**
 	 * Enables the multilingual feature
 	 *
+	 * @deprecated 2.4 Use Object::add_extension('Page', 'Translatable')
 	 */
 	static function enable() {
-		self::$enabled = true;
+		Object::add_extension('Page', 'Translatable');
 	}
 
 	/**
 	 * Disable the multilingual feature
 	 *
+	 * @deprecated 2.4 Use Object::remove_extension('Page', 'Translatable')
 	 */
 	static function disable() {
-		self::$enabled = false;
+		Object::remove_extension('Page', 'Translatable');
 	}
 	
 	/**
 	 * Check whether multilingual support has been enabled
 	 *
+	 * @deprecated 2.4 Use Object::has_extension('Page', 'Translatable')
 	 * @return boolean True if enabled
 	 */
 	static function is_enabled() {
-		return self::$enabled;
+		return Object::has_extension('Page', 'Translatable');
 	}
-	
-	/**
-	 * When creating, set the original ID value
-	 *
-	 * @param int $id
-	 */
-	static function creating_from($id) {
-		self::$creatingFromID = $id;
-	}
-
-	
-		//-----------------------------------------------------------------------------------------------//
 	
 		
 	/**
@@ -428,8 +404,6 @@ class Translatable extends DataObjectDecorator {
 	}
 	
 	function extraStatics() {
-		if(!Translatable::is_enabled()) return;
-
 		if(get_class($this->owner) == ClassInfo::baseDataClass(get_class($this->owner))) {
 			return array(
 				"db" => array(
@@ -454,8 +428,6 @@ class Translatable extends DataObjectDecorator {
 	 * Use {@link $enable_lang_filter} to temporarily disable this "auto-filtering".
 	 */
 	function augmentSQL(SQLQuery &$query) {
-		if(!Translatable::is_enabled()) return;
-
 		$lang = Translatable::current_locale();
 		$baseTable = ClassInfo::baseDataClass($this->owner->class);
 		$where = $query->where;
@@ -491,19 +463,16 @@ class Translatable extends DataObjectDecorator {
 		$baseDataClass = ClassInfo::baseDataClass($this->owner->class);
 		if($this->owner->class != $baseDataClass) return;
 		
-		if(Translatable::is_enabled()) {
-			$fields = array(
-				'OriginalID' => 'Int', 
-				'TranslationGroupID' => 'Int', 
-			);
-			$indexes = array(
-				'OriginalID' => true,
-				'TranslationGroupID' => true
-			);
-			DB::requireTable("{$baseDataClass}_translationgroups", $fields, $indexes);
-		} else {
-		    DB::dontRequireTable("{$baseDataClass}_translationgroups");
-		}
+		$fields = array(
+			'OriginalID' => 'Int', 
+			'TranslationGroupID' => 'Int', 
+		);
+		$indexes = array(
+			'OriginalID' => true,
+			'TranslationGroupID' => true
+		);
+
+		DB::requireTable("{$baseDataClass}_translationgroups", $fields, $indexes);
 	}
 	
 	/**
@@ -558,8 +527,6 @@ class Translatable extends DataObjectDecorator {
 	
 	/*
 	function augmentNumChildrenCountQuery(SQLQuery $query) {
-		if(!Translatable::is_enabled()) return;
-		
 		if($this->isTranslation()) {
 			$query->where[0] = '"ParentID" = '.$this->getOriginalPage()->ID;
 		}
@@ -578,20 +545,15 @@ class Translatable extends DataObjectDecorator {
 	}
 
 	function contentcontrollerInit($controller) {
-		if(!Translatable::is_enabled()) return;
 		Translatable::choose_site_lang();
 		$controller->Locale = Translatable::current_locale();
 	}
 	
 	function modelascontrollerInit($controller) {
-		if(!Translatable::is_enabled()) return;
-		
 		//$this->contentcontrollerInit($controller);
 	}
 	
 	function initgetEditForm($controller) {
-		if(!Translatable::is_enabled()) return;
-		
 		$this->contentcontrollerInit($controller);
 	}
 
@@ -603,8 +565,6 @@ class Translatable extends DataObjectDecorator {
 	 * but this involves complicated special cases in AllChildrenIncludingDeleted().
 	 */
 	function onBeforeWrite() {
-		if(!Translatable::is_enabled()) return;	
-
 		// If language is not set explicitly, set it to current_locale.
 		// This might be a bit overzealous in assuming the language
 		// of the content, as a "single language" website might be expanded
@@ -616,7 +576,7 @@ class Translatable extends DataObjectDecorator {
 		// Specific logic for SiteTree subclasses.
 		// If page has untranslated parents, create (unpublished) translations
 		// of those as well to avoid having inaccessible children in the sitetree.
-		// Caution: This logic is very sensitve to eternal loops when translation status isn't determined properly
+		// Caution: This logic is very sensitve to infinite loops when translation status isn't determined properly
 		if($this->owner->hasField('ParentID')) {
 			if(
 				!$this->owner->ID 
@@ -647,16 +607,14 @@ class Translatable extends DataObjectDecorator {
 	}
 	
 	function onAfterWrite() {
-		if(!Translatable::is_enabled()) return;	
-		
 		// hacky way to determine if the record was created in the database,
 		// or just updated
 		if($this->owner->_TranslatableIsNewRecord) {
 			// this would kick in for all new records which are NOT
 			// created through createTranslation(), meaning they don't
 			// have the translation group automatically set.
-			$translationGroupID = $this->owner->getTranslationGroup();
-			if(!$translationGroupID) $this->owner->addTranslationGroup($this->owner->_TranslationGroupID ? $this->owner->_TranslationGroupID : $this->owner->ID);
+			$translationGroupID = $this->getTranslationGroup();
+			if(!$translationGroupID) $this->addTranslationGroup($this->owner->_TranslationGroupID ? $this->owner->_TranslationGroupID : $this->owner->ID);
 			unset($this->owner->_TranslatableIsNewRecord);
 			unset($this->owner->_TranslationGroupID);
 		}
@@ -667,8 +625,6 @@ class Translatable extends DataObjectDecorator {
 	 * Remove the record from the translation group mapping.
 	 */
 	function onBeforeDelete() {
-		if(!Translatable::is_enabled()) return;
-		
 		$this->removeTranslationGroup();
 		
 		parent::onBeforeDelete();
@@ -687,8 +643,6 @@ class Translatable extends DataObjectDecorator {
 	 * @return DataObject
 	 */
 	function alternateGetByUrl($urlSegment, $extraFilter, $cache = null, $orderby = null) {
-		if(!Translatable::is_enabled()) return;
-		
 		$SQL_URLSegment = Convert::raw2sql($urlSegment);
 		Translatable::disable();
 		$record = DataObject::get_one('SiteTree', "\"URLSegment\" = '{$SQL_URLSegment}'");
@@ -715,8 +669,6 @@ class Translatable extends DataObjectDecorator {
 	 * seeing readonly fields as well.
 	 */
 	function updateCMSFields(FieldSet &$fields) {
-		if(!Translatable::is_enabled()) return;
-		
 		// Don't apply these modifications for normal DataObjects - they rely on CMSMain logic
 		if(!($this->owner instanceof SiteTree)) return;
 		
@@ -950,7 +902,7 @@ class Translatable extends DataObjectDecorator {
 		$newTranslation->ID = 0;
 		$newTranslation->Locale = $locale;
 		// hacky way to set an existing translation group in onAfterWrite()
-		$translationGroupID = $this->owner->getTranslationGroup();
+		$translationGroupID = $this->getTranslationGroup();
 		$newTranslation->_TranslationGroupID = $translationGroupID ? $translationGroupID : $this->owner->ID;
 		$newTranslation->write();
 		
@@ -971,8 +923,6 @@ class Translatable extends DataObjectDecorator {
 
 	/*
 	function augmentStageChildren(DataObjectSet $children, $showall = false) {
-		if(!Translatable::is_enabled()) return;
-
 		if($this->isTranslation()) {
 			$children->merge($this->getOriginalPage()->stageChildren($showall));
 		}
@@ -998,7 +948,6 @@ class Translatable extends DataObjectDecorator {
 	 */
 	/*
 	function augmentAllChildrenIncludingDeleted(DataObjectSet $children, $context) {
-		if(!Translatable::is_enabled()) return false;
 		$find = array();
 		$replace = array();
 		
@@ -1030,7 +979,6 @@ class Translatable extends DataObjectDecorator {
 	 * @return array Map of languages in the form locale => langName
 	 */
 	static function get_existing_content_languages($className = 'SiteTree', $where = '') {
-		if(!Translatable::is_enabled()) return false;
 		$baseTable = ClassInfo::baseDataClass($className);
 		$query = new SQLQuery('Distinct Locale',$baseTable,$where,"",'Locale');
 		$dbLangs = $query->execute()->column();
