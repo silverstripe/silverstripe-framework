@@ -387,7 +387,7 @@ class TranslatableTest extends FunctionalTest {
 		$child5PageTranslated->ParentID = $parentPageTranslated->ID;
 		$child5PageTranslated->write();
 		
-		Translatable::set_reading_lang('en_US');
+		Translatable::set_reading_locale('en_US');
 		$this->assertNotNull($parentPage->liveChildren());
 		$this->assertEquals(
 			$parentPage->liveChildren()->column('ID'),
@@ -407,7 +407,7 @@ class TranslatableTest extends FunctionalTest {
 			"Showing stageChildren() in default language doesnt show children in other languages"
 		);
 		
-		Translatable::set_reading_lang('de_DE');
+		Translatable::set_reading_locale('de_DE');
 		$parentPage->flushCache();
 		$this->assertNotNull($parentPageTranslated->liveChildren());
 		$this->assertEquals(
@@ -426,7 +426,7 @@ class TranslatableTest extends FunctionalTest {
 		);
 		
 		// reset language
-		Translatable::set_reading_lang('en_US');
+		Translatable::set_reading_locale('en_US');
 	}
 	
 	function testTranslatablePropertiesOnSiteTree() {

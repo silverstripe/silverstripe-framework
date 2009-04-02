@@ -1028,49 +1028,49 @@ class Translatable extends DataObjectDecorator {
 	 * @deprecated 2.4 Use set_default_locale()
 	 */
 	static function set_default_lang($lang) {
-		self::set_default_locale($lang);
+		self::set_default_locale(i18n::get_locale_from_lang($lang));
 	}
 	
 	/**
 	 * @deprecated 2.4 Use get_default_locale()
 	 */
 	static function get_default_lang() {
-		return self::get_default_locale();
+		return i18n::get_lang_from_locale(self::get_default_locale());
 	}
 	
 	/**
 	 * @deprecated 2.4 Use current_locale()
 	 */
 	static function current_lang() {
-		return self::current_locale();
+		return i18n::get_lang_from_locale(self::current_locale());
 	}
 	
 	/**
 	 * @deprecated 2.4 Use set_reading_locale()
 	 */
 	static function set_reading_lang($lang) {
-		self::set_reading_locale($lang);
+		self::set_reading_locale(i18n::get_locale_from_lang($lang));
 	}
 	
 	/**
 	 * @deprecated 2.4 Use get_reading_locale()
 	 */
 	static function get_reading_lang() {
-		return self::get_reading_locale();
+		return i18n::get_lang_from_locale(self::get_reading_locale());
 	}
 	
 	/**
 	 * @deprecated 2.4 Use get_by_locale()
 	 */
 	static function get_by_lang($class, $lang, $filter = '', $sort = '', $join = "", $limit = "", $containerClass = "DataObjectSet", $having = "") {
-		return self::get_by_locale($class, $lang, $filter, $sort, $join, $limit, $containerClass, $having);
+		return self::get_by_locale($class, i18n::get_locale_from_lang($lang), $filter, $sort, $join, $limit, $containerClass, $having);
 	}
 	
 	/**
 	 * @deprecated 2.4 Use get_one_by_locale()
 	 */
 	static function get_one_by_lang($class, $lang, $filter = '', $cache = false, $orderby = "") {
-		return self::get_one_by_locale($class, $lang, $filter, $cache, $orderby);
+		return self::get_one_by_locale($class, i18n::get_locale_from_lang($lang), $filter, $cache, $orderby);
 	}
 		
 }
