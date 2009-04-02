@@ -1,6 +1,9 @@
 <?php
 /**
- * Represents a column in the database with the type 'Time'
+ * Represents a column in the database with the type 'Time'.
+ * 
+ * @todo Add localization support, see http://open.silverstripe.com/ticket/2931
+ * 
  * @package sapphire
  * @subpackage model
  */

@@ -1,6 +1,9 @@
 <?php
 /**
  * Field for entering a date/time pair.
+ * 
+ * @todo Add localization support, see http://open.silverstripe.com/ticket/2931
+ *
  * @package forms
  * @subpackage fields-datetime
  */

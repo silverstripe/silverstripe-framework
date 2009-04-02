@@ -1,6 +1,13 @@
 <?php
 /**
  * Represents a date-time field.
+ * The field currently supports New Zealand date format (DD/MM/YYYY),
+ * or an ISO 8601 formatted date and time (Y-m-d H:i:s).
+ * Alternatively you can set a timestamp that is evaluated through
+ * PHP's built-in date() and strtotime() function according to your system locale.
+ * 
+ * @todo Add localization support, see http://open.silverstripe.com/ticket/2931
+ * 
  * @package sapphire
  * @subpackage model
  */

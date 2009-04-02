@@ -1,7 +1,10 @@
 <?php
 /**
  * Displays a date field with day, month and year boxes, with a calendar to select
- * the date
+ * the date.
+ * 
+ * @todo Add localization support, see http://open.silverstripe.com/ticket/2931
+ *
  * @package forms
  * @subpackage fields-datetime
  */

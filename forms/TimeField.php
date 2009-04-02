@@ -3,6 +3,8 @@
  * Time field.
  * Default Value represented in the format passed as constructor.
  * 
+ * @todo Add localization support, see http://open.silverstripe.com/ticket/2931
+ *
  * @package forms
  * @subpackage fields-datetime
  */
