@@ -36,9 +36,20 @@ class ControllerTest extends SapphireTest {
 		$response = Director::test("ControllerTest_SecuredController/adminonly");
 		$this->assertEquals(403, $response->getStatusCode());
 		
-		// test that a controller without a specified allowed_actions allows actions through
 		$response = Director::test('ControllerTest_UnsecuredController/stringaction');
-		$this->assertEquals(200, $response->getStatusCode());
+		$this->assertEquals(200, $response->getStatusCode(), 
+			"test that a controller without a specified allowed_actions allows actions through"
+		);
+		
+		$response = Director::test("ControllerTest_FullSecuredController/adminonly");
+		$this->assertEquals(403, $response->getStatusCode(),
+			"Actions can be globally disallowed by using asterisk (*) instead of a method name"
+		);
+		
+		$response = Director::test("ControllerTest_FullSecuredController/unsecuredaction");
+		$this->assertEquals(200, $response->getStatusCode(),
+			"Actions can be overridden to be allowed if globally disallowed by using asterisk (*)"
+		);
 	}
 	
 	/**
@@ -108,6 +119,22 @@ class ControllerTest_SecuredController extends Controller {
 
 	function adminonly() {
 		return "You must be an admin!";
+	}
+}
+
+class ControllerTest_FullSecuredController extends Controller {
+	
+	static $allowed_actions = array(
+		"*" => "ADMIN",
+		'unsecuredaction' => true,
+	);
+	
+	function adminonly() {
+		return "You must be an admin!";
+	}
+	
+	function unsecuredaction() {
+		return "Allowed for everybody";
 	}
 }
 

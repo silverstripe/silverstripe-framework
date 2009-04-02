@@ -166,24 +166,31 @@ class RequestHandler extends ViewableData {
 		if($action == 'index') return true;
 		
 		if($allowedActions)  {
+			// convert all keys and values to lowercase for easier comparison (only if not set as boolean)
 			foreach($allowedActions as $key => $value) {
-				$newAllowedActions[strtolower($key)] = strtolower($value);
+				$newAllowedActions[strtolower($key)] = (is_bool($value)) ? $value : strtolower($value);
 			}
-			
 			$allowedActions = $newAllowedActions;
 			
-			if(isset($allowedActions[$action])) {
-				$test = $allowedActions[$action];
-				
-				if($test === true) {
-					return true;
-				} elseif(substr($test, 0, 2) == '->') {
-					return $this->{substr($test, 2)}();
-				} elseif(Permission::check($test)) {
+			// check for specific action rules first, and fall back to global rules defined by asterisk
+			foreach(array($action,'*') as $actionOrAll) {
+				// check if specific action is set
+				if(isset($allowedActions[$actionOrAll])) {
+					$test = $allowedActions[$actionOrAll];
+					if($test === true) {
+						// Case 1: TRUE should always allow access
+						return true;
+					} elseif(substr($test, 0, 2) == '->') {
+						// Case 2: Determined by custom method with "->" prefix
+						return $this->{substr($test, 2)}();
+					} elseif(Permission::check($test)) {
+						// Case 3: Value is a permission code to check the current member against
+						return true;
+					}
+				} elseif((($key = array_search($actionOrAll, $allowedActions)) !== false) && is_numeric($key)) {
+					// Case 4: Allow numeric array notation (search for array value as action instead of key)
 					return true;
 				}
-			} elseif((($key = array_search($action, $allowedActions)) !== false) && is_numeric($key)) {
-				return true;
 			}
 		}
 		
