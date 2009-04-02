@@ -5,6 +5,23 @@
  */
 class DateTest extends SapphireTest {
 	
+	protected $originalTZ;
+	
+	function setUp() {
+		// Set timezone to support timestamp->date conversion.
+		// We can't use date_default_timezone_set() as its not supported prior to PHP 5.2
+		$this->originalTZ = ini_get('date.timezone');
+		ini_set('date.timezone','Pacific/Auckland');
+		
+		parent::setUp();
+	}
+	
+	function tearDown() {
+		ini_set('date.timezone',$this->originalTZ);
+		
+		parent::tearDown();
+	}
+	
 	function testNiceDate() {
 		$this->assertEquals('01/04/2008', DBField::create('Date', 1206968400)->Nice(),
 			"Date->Nice() works with timestamp integers"
