@@ -6,46 +6,66 @@
 class DateTest extends SapphireTest {
 	
 	function testNiceDate() {
-		/* Test the DD/MM/YYYY formatting of Date::Nice() */
-		$cases = array(
-			1206968400 => '01/04/2008',	// timestamp integers work as well!
-			1206882000 => '31/03/2008',
-			'1206968400' => '01/04/2008',	// a timestamp as a string, not an integer
-			'1206882000' => '31/03/2008',
-			'4/3/03' => '04/03/2003',		// D/M/YY format
-			'04/03/03' => '04/03/2003',	// DD/MM/YY format
-			'4/3/03' => '04/03/2003',		// D/M/YY format
-			'4/03/03' => '04/03/2003',		// D/MM/YY format
-			'4/3/2003' => '04/03/2003',	// D/M/YYYY format
-			'4-3-2003' => '04/03/2003',	// D-M-YYYY format
-			'2003-03-04' => '04/03/2003',	// YYYY-MM-DD format
-			'04/03/2003' => '04/03/2003',	// DD/MM/YYYY format
-			'04-03-2003' => '04/03/2003'	// DD-MM-YYYY format
+		$this->assertEquals('01/04/2008', DBField::create('Date', 1206968400)->Nice(),
+			"Date->Nice() works with timestamp integers"
 		);
-		
-		foreach($cases as $original => $expected) {
-			$date = new Date();
-			$date->setValue($original);
-			$this->assertEquals($expected, $date->Nice());
-		}
+		$this->assertEquals('31/03/2008', DBField::create('Date', 1206882000)->Nice(),
+			"Date->Nice() works with timestamp integers"
+		);
+		$this->assertEquals('01/04/2008', DBField::create('Date', '1206968400')->Nice(),
+			"Date->Nice() works with timestamp strings"
+		);
+		$this->assertEquals('31/03/2008', DBField::create('Date', '1206882000')->Nice(),
+			"Date->Nice() works with timestamp strings"
+		);
+		$this->assertEquals('04/03/2003', DBField::create('Date', '4/3/03')->Nice(),
+			"Date->Nice() works with D/M/YY format"
+		);
+		$this->assertEquals('04/03/2003', DBField::create('Date', '04/03/03')->Nice(),
+			"Date->Nice() works with DD/MM/YY format"
+		);
+		$this->assertEquals('04/03/2003', DBField::create('Date', '4/3/03')->Nice(),
+			"Date->Nice() works with D/M/YY format"
+		);
+		$this->assertEquals('04/03/2003', DBField::create('Date', '4/03/03')->Nice(),
+			"Date->Nice() works with D/M/YY format"
+		);
+		$this->assertEquals('04/03/2003', DBField::create('Date', '4/3/2003')->Nice(),
+			"Date->Nice() works with D/M/YYYY format"
+		);
+		$this->assertEquals('04/03/2003', DBField::create('Date', '4-3-2003')->Nice(),
+			"Date->Nice() works with D-M-YYYY format"
+		);
+		$this->assertEquals('04/03/2003', DBField::create('Date', '2003-03-04')->Nice(),
+			"Date->Nice() works with YYYY-MM-DD format"
+		);
+		$this->assertEquals('04/03/2003', DBField::create('Date', '04/03/2003')->Nice(),
+			"Date->Nice() works with DD/MM/YYYY format"
+		);
+		$this->assertEquals('04/03/2003', DBField::create('Date', '04-03-2003')->Nice(),
+			"Date->Nice() works with DD/MM/YYYY format"
+		);
 	}
 	
 	function testLongDate() {
-		/* "24 May 2006" style formatting of Date::Long() */
-		$cases = array(
-			1206968400 => '1 April 2008',
-			'1206968400' => '1 April 2008',
-			1206882000 => '31 March 2008',
-			'1206882000' => '31 March 2008',
-			'2003-4-3' => '3 April 2003',
-			'3/4/2003' => '3 April 2003',
+		$this->assertEquals('1 April 2008', DBField::create('Date', 1206968400)->Long(),
+			"Date->Long() works with numeric timestamp"
 		);
-		
-		foreach($cases as $original => $expected) {
-			$date = new Date();
-			$date->setValue($original);
-			$this->assertEquals($expected, $date->Long());
-		}
+		$this->assertEquals('1 April 2008', DBField::create('Date', '1206968400')->Long(),
+			"Date->Long() works with string timestamp"
+		);
+		$this->assertEquals('31 March 2008', DBField::create('Date', 1206882000)->Long(),
+			"Date->Long() works with numeric timestamp"
+		);
+		$this->assertEquals('31 March 2008', DBField::create('Date', '1206882000')->Long(),
+			"Date->Long() works with numeric timestamp"
+		);
+		$this->assertEquals('3 April 2003', DBField::create('Date', '2003-4-3')->Long(),
+			"Date->Long() works with YYYY-M-D"
+		);
+		$this->assertEquals('3 April 2003', DBField::create('Date', '3/4/2003')->Long(),
+			"Date->Long() works with D/M/YYYY"
+		);
 	}
 	
 }
