@@ -1060,6 +1060,13 @@ class Translatable extends DataObjectDecorator {
 	}
 	
 	/**
+	 * @deprecated 2.4 Use default_locale()
+	 */
+	static function default_lang() {
+		return i18n::get_lang_from_locale(self::default_locale());
+	}
+	
+	/**
 	 * @deprecated 2.4 Use get_by_locale()
 	 */
 	static function get_by_lang($class, $lang, $filter = '', $sort = '', $join = "", $limit = "", $containerClass = "DataObjectSet", $having = "") {
