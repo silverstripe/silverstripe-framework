@@ -73,7 +73,6 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		"HomepageForDomain" => "Varchar(100)",
 		"ProvideComments" => "Boolean",
 		"Sort" => "Int",
-		"LegacyURL" => "Varchar(255)",
 		"HasBrokenFile" => "Boolean",
 		"HasBrokenLink" => "Boolean",
 		"Status" => "Varchar",
