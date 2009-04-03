@@ -135,7 +135,7 @@ class Translatable extends DataObjectDecorator {
 	protected static $reading_locale = null;
 	
 	/**
-	 * Indicates if the start language has been determined using choose_site_lang
+	 * Indicates if the start language has been determined using choose_site_locale()
 	 * @var boolean
 	 */
 	protected static $language_decided = false;
@@ -179,7 +179,7 @@ class Translatable extends DataObjectDecorator {
 	 * @param $langsAvailable array A numerical array of languages which are valid choices (optional)
 	 * @return string Selected language (also saved in $reading_locale).
 	 */
-	static function choose_site_lang($langsAvailable = array()) {
+	static function choose_site_locale($langsAvailable = array()) {
 		$siteMode = Director::get_site_mode(); // either 'cms' or 'site'
 		if(self::$reading_locale) {
 			self::$language_decided = true;
@@ -231,7 +231,7 @@ class Translatable extends DataObjectDecorator {
 	 * @return string
 	 */
 	static function current_locale() {
-		if (!self::$language_decided) self::choose_site_lang();
+		if (!self::$language_decided) self::choose_site_locale();
 		return self::$reading_locale;
 	}
 		
@@ -545,7 +545,7 @@ class Translatable extends DataObjectDecorator {
 	}
 
 	function contentcontrollerInit($controller) {
-		Translatable::choose_site_lang();
+		Translatable::choose_site_locale();
 		$controller->Locale = Translatable::current_locale();
 	}
 	
@@ -1092,6 +1092,13 @@ class Translatable extends DataObjectDecorator {
 	 */
 	function isTranslation() { 
 		return ($this->owner->Locale && ($this->owner->Locale != Translatable::default_locale())); 
+	}
+	
+	/**
+	 * @deprecated 2.4 Use choose_site_locale()
+	 */
+	static function choose_site_lang($langsAvail=null) {
+		return self::choose_site_locale($langAvail);
 	}
 		
 }
