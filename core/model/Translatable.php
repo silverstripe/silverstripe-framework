@@ -346,29 +346,29 @@ class Translatable extends DataObjectDecorator {
 	/**
 	 * Enables the multilingual feature
 	 *
-	 * @deprecated 2.4 Use Object::add_extension('Page', 'Translatable')
+	 * @deprecated 2.4 Use Object::add_extension('SiteTree', 'Translatable')
 	 */
 	static function enable() {
-		Object::add_extension('Page', 'Translatable');
+		Object::add_extension('SiteTree', 'Translatable');
 	}
 
 	/**
 	 * Disable the multilingual feature
 	 *
-	 * @deprecated 2.4 Use Object::remove_extension('Page', 'Translatable')
+	 * @deprecated 2.4 Use Object::remove_extension('SiteTree', 'Translatable')
 	 */
 	static function disable() {
-		Object::remove_extension('Page', 'Translatable');
+		Object::remove_extension('SiteTree', 'Translatable');
 	}
 	
 	/**
 	 * Check whether multilingual support has been enabled
 	 *
-	 * @deprecated 2.4 Use Object::has_extension('Page', 'Translatable')
+	 * @deprecated 2.4 Use Object::has_extension('SiteTree', 'Translatable')
 	 * @return boolean True if enabled
 	 */
 	static function is_enabled() {
-		return Object::has_extension('Page', 'Translatable');
+		return Object::has_extension('SiteTree', 'Translatable');
 	}
 	
 		
