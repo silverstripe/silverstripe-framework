@@ -1079,6 +1079,20 @@ class Translatable extends DataObjectDecorator {
 	static function get_one_by_lang($class, $lang, $filter = '', $cache = false, $orderby = "") {
 		return self::get_one_by_locale($class, i18n::get_locale_from_lang($lang), $filter, $cache, $orderby);
 	}
+	
+	/**
+	 * Determines if the record has a locale,
+	 * and if this locale is different from the "default locale"
+	 * set in {@link Translatable::default_locale()}.
+	 * Does not look at translation groups to see if the record
+	 * is based on another record.
+	 * 
+	 * @return boolean
+	 * @deprecated 2.4
+	 */
+	function isTranslation() { 
+		return ($this->owner->Locale && ($this->owner->Locale != Translatable::default_locale())); 
+	}
 		
 }
 
