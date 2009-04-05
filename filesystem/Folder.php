@@ -45,7 +45,7 @@ class Folder extends File {
 		// First, merge any children that are duplicates
 		$duplicateChildrenNames = DB::query("SELECT \"Name\" FROM \"File\" WHERE \"ParentID\" = $parentID GROUP BY \"Name\" HAVING count(*) > 1")->column();
 		if($duplicateChildrenNames) foreach($duplicateChildrenNames as $childName) {
-			$childName = addslashes($childName);
+			$childName = DB::getConn()->addslashes($childName);
 			// Note, we do this in the database rather than object-model; otherwise we get all sorts of problems about deleting files
 			$children = DB::query("SELECT \"ID\" FROM \"File\" WHERE \"Name\" = '$childName' AND \"ParentID\" = $parentID")->column();
 			if($children) {
@@ -149,10 +149,10 @@ class Folder extends File {
 		if(Member::currentUser()) $ownerID = Member::currentUser()->ID;
 		else $ownerID = 0;
 		
-		$filename = addslashes($this->Filename . $name);
+		$filename = DB::getConn()->addslashes($this->Filename . $name);
 		if($className == 'Folder' ) $filename .= '/';
 
-		$name = addslashes($name);
+		$name = DB::getConn()->addslashes($name);
 		
 		DB::query("INSERT INTO \"File\" 
 			(\"ClassName\", \"ParentID\", \"OwnerID\", \"Name\", \"Filename\", \"Created\", \"LastEdited\", \"Title\")

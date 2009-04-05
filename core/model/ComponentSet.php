@@ -163,7 +163,7 @@ class ComponentSet extends DataObjectSet {
 			$extraKeys = $extraValues = '';
 			if($extraFields) foreach($extraFields as $k => $v) {
 				$extraKeys .= ", \"$k\"";
-				$extraValues .= ", '" . addslashes($v) . "'";
+				$extraValues .= ", '" . DB::getConn()->addslashes($v) . "'";
 			}
 
 			DB::query("INSERT INTO \"$this->tableName\" (\"$parentField\",\"$childField\" $extraKeys) VALUES ({$this->ownerObj->ID}, {$item->ID} $extraValues)");
