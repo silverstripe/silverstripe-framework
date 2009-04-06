@@ -100,7 +100,7 @@ class Image extends File {
 	function getTag() {
 		if(file_exists("../" . $this->Filename)) {
 			$url = $this->URL();
-			$title = $this->Title;
+			$title = ($this->Title) ? $this->Title : $this->Filename;
 			return "<img src=\"$url\" alt=\"$title\" />";
 		}
 	}
