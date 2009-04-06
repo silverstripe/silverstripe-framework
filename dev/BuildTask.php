@@ -31,6 +31,10 @@ abstract class BuildTask extends Object {
 	 */
 	protected $description = 'No description available';
 	
+	/**
+ 	 * Implement this method in the task subclass to
+	 * execute via the TaskRunner
+	 */
 	abstract function run($request);
 	
 	public function isEnabled() {
