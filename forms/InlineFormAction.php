@@ -57,7 +57,7 @@ class InlineFormAction_ReadOnly extends FormField {
 	protected $readonly = true;
 	
 	function Field() {
-		return "<input type=\"submit\" name=\"action_{$this->name}\" value=\"{$this->title}\" id=\"{$this->id()}\" disabled=\"disabled\" class=\"action$this->extraClass\" />";
+		return "<input type=\"submit\" name=\"action_{$this->name}\" value=\"{$this->title}\" id=\"{$this->id()}\" disabled=\"disabled\" class=\"action disabled$this->extraClass\" />";
 	}	
 	
 	function Title() { 

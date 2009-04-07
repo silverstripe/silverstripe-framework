@@ -331,6 +331,9 @@ class Folder extends File {
 			$deleteButton = new HiddenField('deletemarked');
 		}
 
+		$inlineFormAction = new InlineFormAction("delete_unused_thumbnails", _t('Folder.DELETEUNUSEDTHUMBNAILS', 'Delete unused thumbnails'));
+		$inlineFormAction->includeDefaultJS(false) ;
+		
 		$fields = new FieldSet(
 			new HiddenField("Title"),
 			new TabSet("Root", 
@@ -353,19 +356,14 @@ class Folder extends File {
 					)
 				),
 				new Tab("UnusedFiles", _t('Folder.UNUSEDFILESTAB', "Unused files"),
-				    new LiteralField("UnusedAssets",
-	                    "<div id=\"UnusedAssets\"><h2>"._t('Folder.UNUSEDFILESTITLE', 'Unused files')."</h2>"
-	                ),
-				    $this->getAssetList(),
-				    new LiteralField("UnusedThumbnails",
-	                   "</div>
-	                        <div id=\"UnusedThumbnails\">
-	                            <h2>"._t('Folder.UNUSEDTHUMBNAILSTITLE', 'Unused thumbnails')."</h2>
-	                            <button class=\"action\">"._t('Folder.DELETEUNUSEDTHUMBNAILS', 'Delete unused thumbnails')."</button>
-	                        </div>"
-	                )     
-	            )
-		    ),
+					new LiteralField( "UnusedAssets", "<h2>"._t('Folder.UNUSEDFILESTITLE', 'Unused files')."</h2>" ),
+					$this->getAssetList(),
+					new FieldGroup(
+						new LiteralField( "UnusedThumbnails", "<h2>"._t('Folder.UNUSEDTHUMBNAILSTITLE', 'Unused thumbnails')."</h2>"),
+						$inlineFormAction
+					)
+				)
+			),
 			new HiddenField("ID")
 		);
 
