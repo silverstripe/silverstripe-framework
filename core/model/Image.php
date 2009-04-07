@@ -173,6 +173,10 @@ class Image extends File {
 		return $this->getFormattedImage('SetWidth', $width);
 	}
 	
+	public function SetSize($width, $height) {
+		return $this->getFormattedImage('SetSize', $width, $height);
+	}
+	
 	/**
 	 * Resize this Image by width, keeping aspect ratio. Use in templates with $SetWidth.
 	 * @return GD
@@ -187,6 +191,14 @@ class Image extends File {
 	 */
 	public function generateSetHeight(GD $gd, $height){
 		return $gd->resizeByHeight($height);
+	}
+	
+	/**
+	 * Resize this Image by both width and height, using padded resize. Use in templates with $SetSize.
+	 * @return GD
+	 */
+	public function generateSetSize(GD $gd, $width, $height) {
+		return $gd->paddedResize($width, $height);
 	}
 	
 	public function CMSThumbnail() {
