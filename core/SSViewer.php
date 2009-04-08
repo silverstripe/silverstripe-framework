@@ -275,6 +275,10 @@ class SSViewer extends Object {
 	 * @return string content of template
 	 */
 	public static function getTemplateContent($identifier) {
+		if(!SSViewer::getTemplateFile($identifier)) {
+			return null;
+		}
+		
 		return file_get_contents(SSViewer::getTemplateFile($identifier));
 	}
 	
