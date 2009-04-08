@@ -352,8 +352,8 @@ class GD extends Object {
 		$rr = ($rv == 0) ? 0 : 1/($rt/$rv);
 		$br = ($bv == 0) ? 0 : 1/($rt/$bv);
 		$gr = ($gv == 0) ? 0 : 1/($rt/$gv);
-		for($dy = 0; $dy <= $height; $dy++) {
-			for($dx = 0; $dx <= $width; $dx++) {
+		for($dy = 0; $dy < $height; $dy++) {
+			for($dx = 0; $dx < $width; $dx++) {
 				$pxrgb = imagecolorat($this->gd, $dx, $dy);
 				$heightgb = ImageColorsforIndex($this->gd, $pxrgb);
 				$newcol = ($rr*$heightgb['red']) + ($br*$heightgb['blue']) + ($gr*$heightgb['green']);
