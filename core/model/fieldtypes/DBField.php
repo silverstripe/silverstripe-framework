@@ -184,7 +184,16 @@ abstract class DBField extends ViewableData {
 	 */
 	function LowerCase() {
 		return Convert::raw2xml(strtolower($this->value));
-	}	
+	}
+		
+	/**
+	 * Converts the current value for this Enum DBField to uppercase.
+	 * @return string 
+	 */ 
+	function UpperCase() {
+		return Convert::raw2xml(strtoupper($this->value));
+	}
+	    
 	
 	/**
 	 * Returns the value to be set in the database to blank this field.
