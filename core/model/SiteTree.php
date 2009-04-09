@@ -1448,6 +1448,8 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		$clone = DataObject::get_by_id("SiteTree", $this->ID);
 		$clone->Status = "Published";
 		$clone->writeWithoutVersion();
+		
+		$this->extend('onAfterRevertToLive');
 	}
 
 	/**
