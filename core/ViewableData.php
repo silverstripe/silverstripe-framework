@@ -120,7 +120,7 @@ class ViewableData extends Object implements IteratorAggregate {
 	 * @param mixed $val The field value.
 	 */
 	public function __set($field, $val) {
-		if(method_exists($this, $funcName = "set$field")) {
+		if($this->hasMethod($funcName = "set$field")) {
 			return $this->$funcName($val);
 		} else {
 			$this->setField($field, $val);
