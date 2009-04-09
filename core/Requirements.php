@@ -7,12 +7,14 @@
  * @subpackage view
  */
 class Requirements {
+	
 	/**
 	 * Enable combining of css/javascript files.
 	 *
 	 * @var boolean
 	 */
 	private static $combined_files_enabled = true;
+	
 	public static function set_combined_files_enabled($enable) {
 		self::$combined_files_enabled = (bool) $enable;
 	}
@@ -21,6 +23,34 @@ class Requirements {
 		return self::$combined_files_enabled;
 	}
 
+	/**
+	 * Do we want requirements to suffix onto the requirement link
+	 * tags for caching or is it disabled. Getter / Setter available
+	 * through {@link Requirements::set_suffix_requirements()}
+	 *
+	 * @var bool
+	 */
+	private static $suffix_requirements = true;
+	
+	/**
+	 * Set whether we want to suffix requirements with the time / 
+	 * location on to the requirements
+	 * 
+	 * @param bool
+	 */
+	public static function set_suffix_requirements($var) {
+		self::$suffix_requirements = $var;
+	}
+	
+	/**
+	 * Return whether we want to suffix requirements
+	 * 
+	 * @return bool
+	 */
+	public static function get_suffix_requirements() {
+		return self::$suffix_requirements;
+	}
+	
 	/**
 	 * Instance of requirements for storage
 	 *
@@ -321,7 +351,7 @@ class Requirements_Backend {
 	 * @var array $disabled
 	 */
 	protected $disabled = array();
-
+	
 	/**
 	 * The filepaths (relative to webroot) or
 	 * uniquenessIDs of any included requirements
@@ -672,7 +702,10 @@ class Requirements_Backend {
 			return $fileOrUrl;
 		} elseif(Director::fileExists($fileOrUrl)) {
 			$prefix = Director::absoluteBaseURL();
-			$mtimesuffix = "?m=" . filemtime(Director::baseFolder() . '/' . $fileOrUrl);
+			$mtimesuffix = "";
+			if(Requirements::get_suffix_requirements()) {
+				$mtimesuffix = "?m=" . filemtime(Director::baseFolder() . '/' . $fileOrUrl);
+			}
 			return "{$prefix}{$fileOrUrl}{$mtimesuffix}";
 		} else {
 			return false;
