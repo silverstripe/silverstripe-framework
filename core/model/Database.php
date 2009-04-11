@@ -575,7 +575,7 @@ abstract class Database extends Object {
 				default:
 					$color="";
 			}
-			echo "<li style=\"color: $color\">$message</li>";
+			echo (Director::is_cli()) ? " * ".strip_tags($message)."\n" : "<li style=\"color: $color\">$message</li>";
 		}
 	}
 
