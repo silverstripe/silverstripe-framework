@@ -117,6 +117,8 @@ class ConfirmedPasswordField extends FormField {
 		}
 
 		foreach($this->children as $field) {
+			$field->setDisabled($this->isDisabled()); 
+			$field->setReadonly($this->isReadonly());
 			$content .= $field->FieldHolder();
 		}
 
