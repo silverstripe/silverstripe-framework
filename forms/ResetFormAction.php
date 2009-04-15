@@ -22,7 +22,7 @@ class ResetFormAction extends FormAction {
 			
 		$attributes['title'] = ($this->description) ? $this->description : ($this->dontEscape) ? $this->Title() : $this->attrTitle();
 		
-		if($this->$useButtonTag) {
+		if($this->useButtonTag) {
 			return $this->createTag('button', $attributes, $this->attrTitle());
 		}
 
