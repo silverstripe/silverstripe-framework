@@ -24,9 +24,9 @@ class SimpleImageField extends FileField {
 	public $allowedExtensions = array('jpg','gif','png');
 
 	function Field() {
-	    $record = $this->form->getRecord();
+	    if($this->form) $record = $this->form->getRecord();
 	    $fieldName = $this->name;
-	    if($record) {
+	    if(isset($record)&&$record) {
 	    	$imageField = $record->$fieldName();
 	    } else {
 	    	$imageField = "";
@@ -47,7 +47,8 @@ class SimpleImageField extends FileField {
 				"type" => "file", 
 				"name" => $this->name, 
 				"id" => $this->id(),
-				"tabindex" => $this->getTabIndex()
+				"tabindex" => $this->getTabIndex(),
+				'disabled' => $this->disabled
 			)
 		);
 		$html .= $this->createTag("input", 
