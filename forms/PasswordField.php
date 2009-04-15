@@ -25,9 +25,9 @@ class PasswordField extends FormField {
 
 
 	function Field() {
+		$disabled = $this->isDisabled()?"disabled=\"disabled\"":""; 
+		$readonly = $this->isReadonly()?"readonly=\"readonly\"":"";
 		if($this->maxLength) {
-			$disabled = $this->isDisabled()?"disabled=\"disabled\"":""; 
-			$readonly = $this->isReadonly()?"readonly=\"readonly\"":"";
 			return "<input class=\"text\" type=\"password\" id=\"" . $this->id() .
 				"\" name=\"{$this->name}\" value=\"" . $this->attrValue() .
 				"\" maxlength=\"$this->maxLength\" size=\"$this->maxLength\" $disabled $readonly />"; 
