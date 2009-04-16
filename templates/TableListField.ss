@@ -63,7 +63,7 @@
 				<% else %>
 					<tr class="notfound">
 						<% if Markable %><th width="18">&nbsp;</th><% end_if %>
-						<td colspan="$Headings.Count"><i><% _t('NOITEMSFOUND') %></i></td>
+						<td colspan="$Headings.Count"><i><% _t('NOITEMSFOUND','No items found') %></i></td>
 						<% if Can(delete) %><td width="18">&nbsp;</td><% end_if %>
 					</tr>
 				<% end_if %>
