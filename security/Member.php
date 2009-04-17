@@ -589,7 +589,17 @@ class Member extends DataObject {
 	public function getTitle() {
 		if($this->getField('ID') === 0)
 			return $this->getField('Surname');
-		return $this->getField('Surname') . ', ' . $this->getField('FirstName');
+		else{
+			if($this->getField('Surname') && $this->getField('FirstName')){
+				return $this->getField('Surname') . ', ' . $this->getField('FirstName');
+			}elseif($this->getField('Surname')){
+				return $this->getField('Surname');
+			}elseif($this->getField('FirstName')){
+				return $this->getField('FirstName');
+			}else{
+				return null;
+			}
+		}
 	}
 
 
