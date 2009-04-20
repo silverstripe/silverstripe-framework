@@ -43,7 +43,7 @@ JS;
 	
 	/** PHP Validation **/
 	function validate($validator){
-		if($this->value && !is_numeric($this->value)){
+		if($this->value && !is_numeric(trim($this->value))){
  			$validator->validationError(
  				$this->name,
 				sprintf(
