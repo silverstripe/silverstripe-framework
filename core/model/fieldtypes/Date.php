@@ -79,10 +79,13 @@ class Date extends DBField {
 	}
 	
 	/**
-	 * Return the date formatted using the given PHP formatting string
+	 * Return the date using a particular formatting string.
+	 * 
+	 * @param string $format Format code string. e.g. "d M Y"
+	 * @return string The date in the requested format
 	 */
-	function Format($formattingString) {
-		if($this->value) return date($formattingString, strtotime($this->value));
+	function Format($format) {
+		if($this->value) return date($format, strtotime($this->value));
 	}
 	
 	/**
@@ -304,6 +307,6 @@ class Date extends DBField {
 	public function scaffoldFormField($title = null, $params = null) {
 		return new DateField($this->name, $title);
 	}
+	
 }
-
 ?>
