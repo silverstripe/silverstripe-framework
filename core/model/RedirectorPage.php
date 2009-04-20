@@ -1,11 +1,14 @@
 <?php
 /**
  * A redirector page redirects when the page is visited.
+ *
  * @package cms
  * @subpackage content
  */
 class RedirectorPage extends Page {
+	
 	static $add_action = "Redirector to another page";
+	
 	static $icon = array("cms/images/treeicons/page-shortcut","file");
 	
 	static $db = array(
