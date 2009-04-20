@@ -59,6 +59,11 @@ class FormField extends RequestHandler {
 	protected $disabled = false;
 	
 	/**
+	 * @var Custom Validation Message for the Field
+	 */
+	protected $customValidationMessage = "";
+	
+	/**
 	 * Create a new field.
 	 * @param name The internal field name, passed to forms.
 	 * @param title The field label.
@@ -287,6 +292,29 @@ class FormField extends RequestHandler {
 	function setError($message,$messageType){
 		$this->message = $message; 
 		$this->messageType = $messageType; 
+	}
+	
+	/**
+	 * Set the custom error message to show instead of the default
+	 * format of Please Fill In XXX. Different from setError() as
+	 * that appends it to the standard error messaging
+	 * 
+	 * @param String Message for the error
+	 */
+	public function setCustomValidationMessage($msg) {
+		$this->customValidationMessage = $msg;
+	}
+	
+	/**
+	 * Get the custom error message for this form field. If a custom
+	 * message has not been defined then just return blank. The default
+	 * error is defined on {@link Validator}.
+	 *
+	 * @todo Should the default error message be stored here instead
+	 * @return String
+	 */
+	public function getCustomValidationMessage() {
+		return $this->customValidationMessage;
 	}
 	
 	/**

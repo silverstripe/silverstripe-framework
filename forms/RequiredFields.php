@@ -5,10 +5,12 @@
  * Submit an array of arguments or each field as a
  * seperate argument. Validation is performed on a name by
  * name basis.
+ *
  * @package forms
  * @subpackage validators
  */
-class RequiredFields extends Validator{
+class RequiredFields extends Validator {
+	
 	protected $required;
 	protected $useLabels = true;
 
@@ -99,12 +101,13 @@ JS;
 			foreach($this->required as $fieldName) { 
 				$formField = $fields->dataFieldByName($fieldName); 
 				if($formField && !$data[$fieldName]) {
+					$errorMessage = sprintf(_t('Form.FIELDISREQUIRED').'.', strip_tags('"' . ($formField->Title() ? $formField->Title() : $fieldName) . '"'));
+					if($msg = $formField->getCustomValidationMessage()) {
+						$errorMessage = $msg;
+					}
 					$this->validationError(
 						$fieldName,
-						sprintf(
-							_t('Form.FIELDISREQUIRED').'.',
-							strip_tags('"' . ($formField->Title() ? $formField->Title() : $fieldName) . '"') 
-						),
+						$errorMessage,
 						"required"
 					);
 					$valid = false;
