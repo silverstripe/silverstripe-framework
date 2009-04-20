@@ -50,7 +50,7 @@ Behaviour.register({
 			if(!el || !el.value) return true;
 			
 			var value = \$F(el);
-			if(value.length > 0 && !value.match(/^\\$?(\d{1,3}(\,\d{3})*|(\d+))(\.\d{2})?\$/)) {
+			if(value.length > 0 && !value.match(/^\s*\\$?(\d{1,3}(\,\d{3})*|(\d+))(\.\d{2})?\s*\$/)) {
 				validationError(el,"$error","validation",false);
 				return false;
 			}
@@ -68,7 +68,7 @@ JS;
 	}
 
 	function validate($validator) {
-		if(!empty ($this->value) && !preg_match('/^\$?(\d{1,3}(\,\d{3})*|(\d+))(\.\d{2})?$/', $this->value)) {
+		if(!empty ($this->value) && !preg_match('/^\s*\$?(\d{1,3}(\,\d{3})*|(\d+))(\.\d{2})?\s*$/', $this->value)) {
 			$validator->validationError($this->name, _t('Form.VALIDCURRENCY', "Please enter a valid currency."), "validation", false);
 			return false;
 		}
