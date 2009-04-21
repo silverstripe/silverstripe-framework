@@ -132,6 +132,11 @@ class ErrorPage extends Page {
 		return $this->extension_instances['Versioned']->publish($fromStage, $toStage, $createNewVersion);
 	}
 	
+	/**
+	 *
+	 * @param boolean $includerelations a boolean value to indicate if the labels returned include relation fields
+	 * 
+	 */
 	function fieldLabels($includerelations = true) {
 		$labels = parent::fieldLabels($includerelations);
 		$labels['ErrorCode'] = _t('ErrorPage.CODE', "Error code");

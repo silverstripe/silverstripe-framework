@@ -2672,6 +2672,8 @@ class DataObject extends ViewableData implements DataObjectInterface,i18nEntityP
 	 *
 	 * @uses $field_labels
 	 * @uses FormField::name_to_label()
+	 *
+	 * @param boolean $includerelations a boolean value to indicate if the labels returned include relation fields
 	 * 
 	 * @return array of all element labels if no argument given
 	 * @return string of label if field

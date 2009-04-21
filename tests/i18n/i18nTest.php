@@ -219,6 +219,11 @@ class i18nTest_DataObject extends DataObject implements TestOnly {
 		'ManyManyRelation' => 'Member'
 	);
 	
+	/**
+	 *
+	 * @param boolean $includerelations a boolean value to indicate if the labels returned include relation fields
+	 * 
+	 */
 	function fieldLabels($includerelations = true) {
 		$labels = parent::fieldLabels($includerelations);
 		$labels['MyProperty'] = _t('i18nTest_DataObject.MyProperty', 'My Property');

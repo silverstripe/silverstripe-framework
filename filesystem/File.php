@@ -596,6 +596,11 @@ class File extends DataObject {
 		self::$cache_file_fields = null;
 	}
 	
+	/**
+	 *
+	 * @param boolean $includerelations a boolean value to indicate if the labels returned include relation fields
+	 * 
+	 */
 	function fieldLabels($includerelations = true) {
 		$labels = parent::fieldLabels($includerelations);
 		$labels['Name'] = _t('File.Name', 'Name');
