@@ -104,7 +104,7 @@ function htmlEmail($to, $from, $subject, $htmlContent, $attachedFiles = false, $
 
 		// Include any specified attachments as additional parts
 		foreach($attachedFiles as $file) {
-			if($file['tmp_name'] && $file['name']) {
+			if(isset($file['tmp_name']) && isset($file['name'])) {
 				$messageParts[] = encodeFileForEmail($file['tmp_name'], $file['name']);
 			} else {
 				$messageParts[] = encodeFileForEmail($file);
@@ -194,7 +194,7 @@ function plaintextEmail($to, $from, $subject, $plainContent, $attachedFiles, $cu
 
 		// Include any specified attachments as additional parts
 		foreach($attachedFiles as $file) {
-			if($file['tmp_name'] && $file['name']) {
+			if(isset($file['tmp_name']) && isset($file['name'])) {
 				$messageParts[] = encodeFileForEmail($file['tmp_name'], $file['name']);
 			} else {
 				$messageParts[] = encodeFileForEmail($file);
@@ -323,10 +323,45 @@ function processHeaders($headers, $body = false) {
 	return $res;
 }
 
-/*
+/**
  * Encode the contents of a file for emailing, including headers
+ * 
+ * $file can be an array, in which case it expects these members:
+ *   'filename'        - the filename of the file
+ *   'contents'        - the raw binary contents of the file as a string
+ *  and can optionally include these members:
+ *   'mimetype'        - the mimetype of the file (calculated from filename if missing)
+ *   'contentLocation' - the 'Content-Location' header value for the file
+ *   
+ * $file can also be a string, in which case it is assumed to be the filename
+ * 
+ * h5. contentLocation
+ * 
+ * Content Location is one of the two methods allowed for embedding images into an html email. It's also the simplest, and best supported
+ * 
+ * Assume we have an email with this in the body:
+ * 
+ *   <img src="http://example.com/image.gif" />
+ * 
+ * To display the image, an email viewer would have to download the image from the web every time it is displayed. Due to privacy issues, most
+ * viewers will not display any images unless the user clicks 'Show images in this email'. Not optimal.
+ * 
+ * However, we can also include a copy of this image as an attached file in the email. By giving it a contentLocation of "http://example.com/image.gif"
+ * most email viewers will use this attached copy instead of downloading it. Better, most viewers will show it without a 'Show images in this email'
+ * conformation.
+ * 
+ * Here is an example of passing this information through Email.php:
+ * 
+ *   $email = new Email();
+ *   $email->attachments[] = array(
+ *     'filename' => BASE_PATH . "/themes/mytheme/images/header.gif",
+ *     'contents' => file_get_contents(BASE_PATH . "/themes/mytheme/images/header.gif"),
+ *     'mimetype' => 'image/gif',
+ *     'contentLocation' => Director::absoluteBaseURL() . "/themes/mytheme/images/header.gif"
+ *   );
+ * 
  */
-function encodeFileForEmail($file, $destFileName = false, $disposition = "attachment", $extraHeaders = "") {	
+function encodeFileForEmail($file, $destFileName = false, $disposition = NULL, $extraHeaders = "") {	
 	if(!$file) {
 		user_error("encodeFileForEmail: not passed a filename and/or data", E_USER_WARNING);
 		return;
@@ -348,6 +383,8 @@ function encodeFileForEmail($file, $destFileName = false, $disposition = "attach
 	$mimeType = $file['mimetype'] ? $file['mimetype'] : getMimeType($file['filename']);
 	if(!$mimeType) $mimeType = "application/unknown";
 		
+	if (empty($disposition)) $disposition = isset($file['contentLocation']) ? 'inline' : 'attachment';
+	
 	// Encode for emailing
 	if (substr($file['mimetype'], 0, 4) != 'text') {
 		$encoding = "base64";
@@ -360,8 +397,12 @@ function encodeFileForEmail($file, $destFileName = false, $disposition = "attach
 	}
 
 	$headers = "Content-type: $mimeType;\n\tname=\"$base\"\n".
-						 "Content-Transfer-Encoding: $encoding\n".
-						 "Content-Disposition: $disposition;\n\tfilename=\"$base\"\n" . $extraHeaders . "\n";
+	           "Content-Transfer-Encoding: $encoding\n".
+	           "Content-Disposition: $disposition;\n\tfilename=\"$base\"\n" ;
+	
+	if ( isset($file['contentLocation']) ) $headers .= 'Content-Location: ' . $file['contentLocation'] . "\n" ;
+	
+	$headers .= $extraHeaders . "\n";
 
 	// Return completed packet
 	return $headers . $file['contents'];
