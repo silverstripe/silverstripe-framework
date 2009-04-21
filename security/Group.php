@@ -119,7 +119,7 @@ class Group extends DataObject {
 		$labels['Locked'] = _t('Group.Locked', 'Locked?', PR_MEDIUM, 'Group is locked in the security administration area');
 		$labels['Sort'] = _t('Group.Sort', 'Sort Order');
 		$labels['IPRestrictions'] = _t('Group.IPRestrictions', 'IP Address Restrictions');
-		if($$includerelations){
+		if($includerelations){
 			$labels['Parent'] = _t('Group.Parent', 'Parent Group', PR_MEDIUM, 'One group has one parent group');
 			$labels['Permissions'] = _t('Group.has_many_Permissions', 'Permissions', PR_MEDIUM, 'One group has many permissions');
 			$labels['Members'] = _t('Group.many_many_Members', 'Members', PR_MEDIUM, 'One group has many members');
