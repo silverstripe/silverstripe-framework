@@ -119,7 +119,7 @@ class Form extends RequestHandler {
 
 		// Form validation
 		$this->validator = ($validator) ? $validator : new RequiredFields();
-		$this->validator->setForm($this);
+		if($this->validator) $this->validator->setForm($this);
 
 		// Form error controls
 		$this->setupFormErrors();
