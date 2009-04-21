@@ -16,44 +16,6 @@ class ScaffoldingComplexTableField_Popup extends Form {
 	function __construct($controller, $name, $fields, $validator, $readonly, $dataObject) {
 		$this->dataObject = $dataObject;
 
-		/**
-		 * WARNING: DO NOT CHANGE THE ORDER OF THESE JS FILES
-		 * Some have special requirements.
-		 */
-		//Requirements::css(CMS_DIR . 'css/layout.css');
-		Requirements::css(SAPPHIRE_DIR . '/css/Form.css');
-		Requirements::css(SAPPHIRE_DIR . '/css/ComplexTableField_popup.css');
-		Requirements::css(CMS_DIR . '/css/typography.css');
-		Requirements::css(CMS_DIR . '/css/cms_right.css');
-		Requirements::css(THIRDPARTY_DIR . '/jquery/plugins/autocomplete/jquery.ui.autocomplete.css');
-		Requirements::javascript(THIRDPARTY_DIR . "/prototype.js");
-		Requirements::javascript(THIRDPARTY_DIR . "/behaviour.js");
-		Requirements::javascript(THIRDPARTY_DIR . "/prototype_improvements.js");
-		Requirements::javascript(THIRDPARTY_DIR . "/scriptaculous/scriptaculous.js");
-		Requirements::javascript(THIRDPARTY_DIR . "/scriptaculous/controls.js");
-		Requirements::javascript(THIRDPARTY_DIR . "/layout_helpers.js");
-		Requirements::add_i18n_javascript(SAPPHIRE_DIR . '/javascript/lang');
-		Requirements::javascript(CMS_DIR . "/javascript/LeftAndMain.js");
-		Requirements::javascript(CMS_DIR . "/javascript/LeftAndMain_right.js");
-		Requirements::javascript(SAPPHIRE_DIR . "/javascript/TableField.js");
-		Requirements::javascript(SAPPHIRE_DIR . "/javascript/ComplexTableField.js");
-		Requirements::javascript(SAPPHIRE_DIR . "/javascript/ComplexTableField_popup.js");
-		// jQuery requirements (how many of these are actually needed?)
-		Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
-		Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery_improvements.js');
-		Requirements::javascript(THIRDPARTY_DIR . '/jquery/plugins/livequery/jquery.livequery.js');
-		Requirements::javascript(THIRDPARTY_DIR . '/jquery/ui/ui.core.js');
-		Requirements::javascript(THIRDPARTY_DIR . '/jquery/ui/ui.tabs.js');
-		Requirements::javascript(THIRDPARTY_DIR . '/jquery/plugins/form/jquery.form.js');
-		Requirements::javascript(THIRDPARTY_DIR . '/jquery/plugins/dimensions/jquery.dimensions.js');
-		Requirements::javascript(THIRDPARTY_DIR . '/jquery/plugins/autocomplete/jquery.ui.autocomplete.js');
-		Requirements::javascript(SAPPHIRE_DIR . '/javascript/ScaffoldComplexTableField.js');
-		Requirements::javascript(CMS_DIR . '/javascript/ModelAdmin.js');
-		
- 		if($this->dataObject->hasMethod('getRequirementsForPopup')) {
-			$this->dataObject->getRequirementsForPopup();
-		}
-		
 		$actions = new FieldSet();	
 		if(!$readonly) {
 			$actions->push(
@@ -66,11 +28,6 @@ class ScaffoldingComplexTableField_Popup extends Form {
 		
 		parent::__construct($controller, $name, $fields, $actions, $validator);
 	}
-
-	function FieldHolder() {
-		return $this->renderWith('ComplexTableField_Form');
-	}
-	
 	
 	/**
 	 * Handle a generic action passed in by the URL mapping.

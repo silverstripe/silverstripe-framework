@@ -113,9 +113,6 @@ class TableField extends TableListField {
 			$sourceFilter = "`$filterField` = '" . Convert::raw2sql($sourceFilter) . "'";
 		}
 		parent::__construct($name, $sourceClass, $fieldList, $sourceFilter, $sourceSort, $sourceJoin);
-
-		Requirements::add_i18n_javascript(SAPPHIRE_DIR . '/javascript/lang');
-		Requirements::javascript(SAPPHIRE_DIR . '/javascript/TableField.js');
 	}
 	
 	/** 
@@ -475,6 +472,15 @@ class TableField extends TableListField {
 	 * Sets the template to be rendered with
 	 */
 	function FieldHolder() {
+		Requirements::javascript(THIRDPARTY_DIR . '/prototype.js');
+		Requirements::javascript(THIRDPARTY_DIR . '/behaviour.js');
+		Requirements::javascript(THIRDPARTY_DIR . '/prototype_improvements.js');
+		Requirements::javascript(THIRDPARTY_DIR . '/scriptaculous/effects.js');
+		Requirements::add_i18n_javascript(SAPPHIRE_DIR . '/javascript/lang');
+		Requirements::javascript(SAPPHIRE_DIR . '/javascript/TableListField.js');
+		Requirements::javascript(SAPPHIRE_DIR . '/javascript/TableField.js');
+		Requirements::css(SAPPHIRE_DIR . '/css/TableListField.css');
+		
 		return $this->renderWith($this->template);
 	}
 	

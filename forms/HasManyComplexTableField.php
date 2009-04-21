@@ -22,11 +22,6 @@ class HasManyComplexTableField extends ComplexTableField {
 	
 	function __construct($controller, $name, $sourceClass, $fieldList, $detailFormFields = null, $sourceFilter = "", $sourceSort = "", $sourceJoin = "") {
 		parent::__construct($controller, $name, $sourceClass, $fieldList, $detailFormFields, $sourceFilter, $sourceSort, $sourceJoin);
-
-		Requirements::add_i18n_javascript(SAPPHIRE_DIR . '/javascript/lang');
-		Requirements::javascript(SAPPHIRE_DIR . "/javascript/HasManyFileField.js");
-		Requirements::javascript(SAPPHIRE_DIR . '/javascript/RelationComplexTableField.js');
-		Requirements::css(SAPPHIRE_DIR . '/css/HasManyFileField.css');
 		
 		$this->Markable = true;
 
@@ -37,6 +32,17 @@ class HasManyComplexTableField extends ComplexTableField {
 			user_error("Can't figure out the data class of $controller", E_USER_WARNING);
 		}
 		
+	}
+	
+	function FieldHolder() {
+		$ret = parent::FieldHolder();
+		
+		Requirements::add_i18n_javascript(SAPPHIRE_DIR . '/javascript/lang');
+		Requirements::javascript(SAPPHIRE_DIR . "/javascript/HasManyFileField.js");
+		Requirements::javascript(SAPPHIRE_DIR . '/javascript/RelationComplexTableField.js');
+		Requirements::css(SAPPHIRE_DIR . '/css/HasManyFileField.css');
+		
+		return $ret;
 	}
 	
 	/**
