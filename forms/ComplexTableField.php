@@ -941,6 +941,7 @@ class ComplexTableField_Item extends TableListField_Item {
  */
 class ComplexTableField_Popup extends Form {
 	protected $sourceClass;
+	
 	protected $dataObject;
 
 	function __construct($controller, $name, $fields, $validator, $readonly, $dataObject) {
@@ -950,7 +951,7 @@ class ComplexTableField_Popup extends Form {
 		 * WARNING: DO NOT CHANGE THE ORDER OF THESE JS FILES
 		 * Some have special requirements.
 		 */
-		//Requirements::css(CMS_DIR . '/css/layout.css');
+		Requirements::clear();
 		Requirements::css(SAPPHIRE_DIR . '/css/Form.css');
 		Requirements::css(SAPPHIRE_DIR . '/css/ComplexTableField_popup.css');
 		Requirements::css(CMS_DIR . '/css/typography.css');
@@ -962,10 +963,6 @@ class ComplexTableField_Popup extends Form {
 		Requirements::javascript(THIRDPARTY_DIR . "/scriptaculous/controls.js");
 		Requirements::javascript(THIRDPARTY_DIR . "/layout_helpers.js");
 		Requirements::add_i18n_javascript(SAPPHIRE_DIR . '/javascript/lang');
-		Requirements::javascript(CMS_DIR . "/javascript/LeftAndMain.js");
-		Requirements::javascript(CMS_DIR . "/javascript/LeftAndMain_right.js");
-		Requirements::javascript(SAPPHIRE_DIR . "/javascript/TableField.js");
-		Requirements::javascript(SAPPHIRE_DIR . "/javascript/ComplexTableField.js");
 		Requirements::javascript(SAPPHIRE_DIR . "/javascript/ComplexTableField_popup.js");
 
  		if($this->dataObject->hasMethod('getRequirementsForPopup')) {
