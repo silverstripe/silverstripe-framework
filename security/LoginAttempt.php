@@ -33,8 +33,8 @@ class LoginAttempt extends DataObject {
 	
 	static $belongs_many_many = array();
 	
-	function fieldLabels() {
-		$labels = parent::fieldLabels();
+	function fieldLabels($includerelations = true) {
+		$labels = parent::fieldLabels($includerelations);
 		$labels['Email'] = _t('LoginAttempt.Email', 'Email Address');
 		$labels['Status'] = _t('LoginAttempt.Status', 'Status');
 		$labels['IP'] = _t('LoginAttempt.IP', 'IP Address');

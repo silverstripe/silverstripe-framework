@@ -111,17 +111,19 @@ class Group extends DataObject {
 		return $fields;
 	}
 	
-	function fieldLabels() {
-		$labels = parent::fieldLabels();
+	function fieldLabels($includerelations = true) {
+		$labels = parent::fieldLabels($includerelations);
 		$labels['Title'] = _t('SecurityAdmin.GROUPNAME', 'Group name');
 		$labels['Description'] = _t('Group.Description', 'Description');
 		$labels['Code'] = _t('Group.Code', 'Group Code', PR_MEDIUM, 'Programmatical code identifying a group');
 		$labels['Locked'] = _t('Group.Locked', 'Locked?', PR_MEDIUM, 'Group is locked in the security administration area');
 		$labels['Sort'] = _t('Group.Sort', 'Sort Order');
 		$labels['IPRestrictions'] = _t('Group.IPRestrictions', 'IP Address Restrictions');
-		$labels['Parent'] = _t('Group.Parent', 'Parent Group', PR_MEDIUM, 'One group has one parent group');
-		$labels['Permissions'] = _t('Group.has_many_Permissions', 'Permissions', PR_MEDIUM, 'One group has many permissions');
-		$labels['Members'] = _t('Group.many_many_Members', 'Members', PR_MEDIUM, 'One group has many members');
+		if($$includerelations){
+			$labels['Parent'] = _t('Group.Parent', 'Parent Group', PR_MEDIUM, 'One group has one parent group');
+			$labels['Permissions'] = _t('Group.has_many_Permissions', 'Permissions', PR_MEDIUM, 'One group has many permissions');
+			$labels['Members'] = _t('Group.many_many_Members', 'Members', PR_MEDIUM, 'One group has many members');
+		}
 		
 		return $labels;
 	}

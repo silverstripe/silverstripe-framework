@@ -206,7 +206,8 @@ abstract class BulkLoader extends ViewableData {
 		$spec = array();
 
 		// get database columns (fieldlabels include fieldname as a key)
-		$spec['fields'] = (array)singleton($this->objectClass)->fieldLabels();
+		$spec['fields'] = (array)singleton($this->objectClass)->fieldLabels($includerelations=false);
+	//	Debug::show($spec);die;
 		
 		$has_ones = singleton($this->objectClass)->has_one();
 		$has_manys = singleton($this->objectClass)->has_many();

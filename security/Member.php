@@ -865,8 +865,8 @@ class Member extends DataObject {
 		return $fields;
 	}
 	
-	function fieldLabels() {
-		$labels = parent::fieldLabels();
+	function fieldLabels($includerelations = true) {
+		$labels = parent::fieldLabels($includerelations);
 		
 		$labels['FirstName'] = _t('Member.FIRSTNAME');
 		$labels['Surname'] = _t('Member.SURNAME');
@@ -877,8 +877,9 @@ class Member extends DataObject {
 		$labels['PasswordExpiry'] = _t('Member.db_PasswordExpiry', 'Password Expiry Date', PR_MEDIUM, 'Password expiry date');
 		$labels['LockedOutUntil'] = _t('Member.db_LockedOutUntil', 'Locked out until', PR_MEDIUM, 'Security related date');
 		$labels['Locale'] = _t('Member.db_Locale', 'Interface Locale');
-		$labels['Groups'] = _t('Member.belongs_many_many_Groups', 'Groups', PR_MEDIUM, 'Security Groups this member belongs to');
-		
+		if($includerelations){
+			$labels['Groups'] = _t('Member.belongs_many_many_Groups', 'Groups', PR_MEDIUM, 'Security Groups this member belongs to');
+		}
 		return $labels;
 	}
 

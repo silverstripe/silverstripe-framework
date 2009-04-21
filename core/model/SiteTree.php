@@ -1292,8 +1292,8 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		return $fields;
 	}
 	
-	function fieldLabels() {
-		$labels = parent::fieldLabels();
+	function fieldLabels($includerelations = true) {
+		$labels = parent::fieldLabels($includerelations);
 		
 		$labels['Title'] = _t('SiteTree.PAGETITLE', "Page name");
 		$labels['MenuTitle'] = _t('SiteTree.MENUTITLE', "Navigation label");
@@ -1314,11 +1314,14 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		$labels['CanViewType'] = _t('SiteTree.Viewers', 'Viewers Groups');
 		$labels['CanEditType'] = _t('SiteTree.Editors', 'Editors Groups');
 		$labels['ToDo'] = _t('SiteTree.ToDo', 'Todo Notes');
-		$labels['Parent'] = _t('SiteTree.has_one_Parent', 'Parent Page', PR_MEDIUM, 'The parent page in the site hierarchy');
 		$labels['Comments'] = _t('SiteTree.Comments', 'Comments');
-		$labels['LinkTracking'] = _t('SiteTree.many_many_LinkTracking', 'Link Tracking');
-		$labels['ImageTracking'] = _t('SiteTree.many_many_ImageTracking', 'Image Tracking');
-		$labels['BackLinkTracking'] = _t('SiteTree.many_many_BackLinkTracking', 'Backlink Tracking');
+		
+		if($includerelations){
+			$labels['Parent'] = _t('SiteTree.has_one_Parent', 'Parent Page', PR_MEDIUM, 'The parent page in the site hierarchy');
+			$labels['LinkTracking'] = _t('SiteTree.many_many_LinkTracking', 'Link Tracking');
+			$labels['ImageTracking'] = _t('SiteTree.many_many_ImageTracking', 'Image Tracking');
+			$labels['BackLinkTracking'] = _t('SiteTree.many_many_BackLinkTracking', 'Backlink Tracking');
+		}
 				
 		return $labels;
 	}
