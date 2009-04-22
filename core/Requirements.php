@@ -703,10 +703,15 @@ class Requirements_Backend {
 		} elseif(Director::fileExists($fileOrUrl)) {
 			$prefix = Director::absoluteBaseURL();
 			$mtimesuffix = "";
+			$suffix = '';
+			if(strpos($fileOrUrl, '?') !== false) {
+				$suffix = '&' . substr($fileOrUrl, strpos($fileOrUrl, '?')+1);
+				$fileOrUrl = substr($fileOrUrl, 0, strpos($fileOrUrl, '?'));
+			}
 			if(Requirements::get_suffix_requirements()) {
 				$mtimesuffix = "?m=" . filemtime(Director::baseFolder() . '/' . $fileOrUrl);
 			}
-			return "{$prefix}{$fileOrUrl}{$mtimesuffix}";
+			return "{$prefix}{$fileOrUrl}{$mtimesuffix}{$suffix}";
 		} else {
 			return false;
 		}

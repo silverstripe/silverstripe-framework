@@ -111,6 +111,26 @@ class RequirementsTest extends SapphireTest {
 		Requirements::delete_combined_files('RequirementsTest_bc.js');
 	}
 	
+	function testArgsInUrls() {
+		// Clear previous requirements
+		Requirements::clear();
+
+		// clearing all previously generated requirements (just in case)
+		Requirements::clear_combined_files();
+		Requirements::delete_combined_files('RequirementsTest_bc.js'); 
+
+		Requirements::javascript(SAPPHIRE_DIR . '/tests/forms/RequirementsTest_a.js?test=1&test=2&test=3');
+		Requirements::css(SAPPHIRE_DIR . '/tests/forms/RequirementsTest_a.css?test=1&test=2&test=3');
+
+		$html = Requirements::includeInHTML(false, self::$html_template);
+
+		/* Javascript has correct path */
+		$this->assertTrue((bool)preg_match('/src=".*\/RequirementsTest_a\.js\?m=\d\d+&test=1&test=2&test=3/', $html), 'javascript has correct path'); 
+
+		/* CSS has correct path */
+		$this->assertTrue((bool)preg_match('/href=".*\/RequirementsTest_a\.css\?m=\d\d+&test=1&test=2&test=3/', $html), 'css has correct path'); 
+	}
+	
 	/**
 	 * This is a bit of a hack, as it alters the Requirements
 	 * statics globally for all tests.
