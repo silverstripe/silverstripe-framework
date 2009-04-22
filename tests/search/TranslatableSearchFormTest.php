@@ -49,6 +49,10 @@ class TranslatableSearchFormTest extends FunctionalTest {
 		DB::set_alternative_database_name($dbname);
 
 		parent::set_up_once();
+	}
+	
+	function setUp() {
+		parent::setUp();
 		
 		$holderPage = $this->objFromFixture('SiteTree', 'searchformholder');
 		$this->mockController = new ContentController($holderPage);
