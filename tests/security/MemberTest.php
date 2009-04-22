@@ -255,5 +255,9 @@ class MemberTest extends SapphireTest {
 			$accountingmember->inGroup($managementgroup),
 			'Users of group are not members of any siblings'
 		);
+		$this->assertFalse(
+			$staffmember->inGroup('does-not-exist'),
+			'Non-existant group returns false'
+		);
 	}
 }

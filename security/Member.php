@@ -560,6 +560,8 @@ class Member extends DataObject {
 			user_error('Member::inGroup(): Wrong format for $group parameter', E_USER_ERROR);
 		}
 		
+		if(!$groupCheckObj) return false;
+		
 		$groupCandidateObjs = ($strict) ? $this->getManyManyComponents("Groups") : $this->Groups();
 		if($groupCandidateObjs) foreach($groupCandidateObjs as $groupCandidateObj) {
 			if($groupCandidateObj->ID == $groupCheckObj->ID) return true;
