@@ -9,26 +9,24 @@ class TranslatableSearchFormTest extends FunctionalTest {
 	
 	protected $mockController;
 	
-	protected $recreateTempDb = true;
-	
 	/**
 	 * @todo Necessary because of monolithic Translatable design
 	 */
-	protected $origTranslatableSettings = array();
+	static protected $origTranslatableSettings = array();
 	
-	function setUp() {
+	static function set_up_once() {
 		// needs to recreate the database schema with language properties
 		self::kill_temp_db();
 		
 		// store old defaults	
-		$this->origTranslatableSettings['has_extension'] = singleton('SiteTree')->hasExtension('Translatable');
-		$this->origTranslatableSettings['default_locale'] = Translatable::default_locale();
+		self::$origTranslatableSettings['has_extension'] = singleton('SiteTree')->hasExtension('Translatable');
+		self::$origTranslatableSettings['default_locale'] = Translatable::default_locale();
 		
 		// overwrite locale
 		Translatable::set_default_locale("en_US");
 
 		// refresh the decorated statics - different fields in $db with Translatable enabled
-		if(!$this->origTranslatableSettings['has_extension']) Object::add_extension('SiteTree', 'Translatable');
+		if(!self::$origTranslatableSettings['has_extension']) Object::add_extension('SiteTree', 'Translatable');
 		Object::add_extension('TranslatableTest_DataObject', 'Translatable');
 		
 		// clear singletons, they're caching old extension info which is used in DatabaseAdmin->doBuild()
@@ -50,21 +48,21 @@ class TranslatableSearchFormTest extends FunctionalTest {
 		$dbname = self::create_temp_db();
 		DB::set_alternative_database_name($dbname);
 
-		parent::setUp();
+		parent::set_up_once();
 		
 		$holderPage = $this->objFromFixture('SiteTree', 'searchformholder');
 		$this->mockController = new ContentController($holderPage);
 	}
 	
-	function tearDown() {
-		if(!$this->origTranslatableSettings['has_extension']) Object::remove_extension('SiteTree', 'Translatable');
+	static function tear_down_once() {
+		if(!self::$origTranslatableSettings['has_extension']) Object::remove_extension('SiteTree', 'Translatable');
 
-		Translatable::set_default_locale($this->origTranslatableSettings['default_locale']);
+		Translatable::set_default_locale(self::$origTranslatableSettings['default_locale']);
 		
 		self::kill_temp_db();
 		self::create_temp_db();
 		
-		parent::tearDown();
+		parent::tear_down_once();
 	}
 		
 	function testPublishedPagesMatchedByTitleInDefaultLanguage() {
