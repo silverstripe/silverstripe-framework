@@ -5,9 +5,7 @@
  * @package forms
  * @subpackage fields-relational
  */
-class ScaffoldingComplexTableField_Popup extends Form {
-	protected $sourceClass;
-	protected $dataObject;
+class ScaffoldingComplexTableField_Popup extends ComplexTableField_Popup {
 	
 	public static $allowed_actions = array(
 		'filter', 'record', 'httpSubmission', 'handleAction', 'handleField'
@@ -15,6 +13,8 @@ class ScaffoldingComplexTableField_Popup extends Form {
 
 	function __construct($controller, $name, $fields, $validator, $readonly, $dataObject) {
 		$this->dataObject = $dataObject;
+		
+		Requirements::clear();
 
 		$actions = new FieldSet();	
 		if(!$readonly) {
@@ -26,7 +26,7 @@ class ScaffoldingComplexTableField_Popup extends Form {
 		
 		$fields->push(new HiddenField("ComplexTableField_Path", Director::absoluteBaseURL()));
 		
-		parent::__construct($controller, $name, $fields, $actions, $validator);
+		parent::__construct($controller, $name, $fields, $validator, $readonly, $dataObject);
 	}
 	
 	/**
