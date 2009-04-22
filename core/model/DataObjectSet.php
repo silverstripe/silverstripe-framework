@@ -137,25 +137,20 @@ class DataObjectSet extends ViewableData implements IteratorAggregate {
 	}
 
 	/**
-	* Returns an array of ID => $titleField
-	* @param string $index The field you wish to use as a key for the array
-	* @param string $titleField The field or method you wish to use to get values for the map
-	* @param string $emptyString String for no option selected
-	* @param bool $sort If you want to sort the map based on $titleField 
-	* @return array
-	*/
-	public function toDropDownMap($index = "ID",$titleField = "Title",$emptyString = null, $sort = false){
-		$map = array();
-		foreach($this->items as $item) {
-			$map[$item->$index] = $item->$titleField;
-		}
-		if($emptyString) {
-			$map = array("0"=>"$emptyString") + $map;
-		}
-		if($sort) {  
-			asort($map); 
-		}
-		return $map;
+	 * Returns an array of ID => Title for the items in this set.
+	 * 
+	 * This is an alias of {@link DataObjectSet->map()}
+	 * 
+	 * @deprecated 2.5 Please use map() instead
+	 * 
+	 * @param string $index The field to use as a key for the array
+	 * @param string $titleField The field (or method) to get values for the map
+	 * @param string $emptyString Empty option text e.g "(Select one)"
+	 * @param bool $sort Sort the map alphabetically based on the $titleField value
+	 * @return array
+	 */
+	public function toDropDownMap($index = 'ID', $titleField = 'Title', $emptyString = null, $sort = false) {
+		return $this->map($index, $titleField, $emptyString, $sort);
 	}
 	
 	/**
@@ -610,38 +605,26 @@ class DataObjectSet extends ViewableData implements IteratorAggregate {
 	}
 
 	/**
-	 * Returns the dataset as an array of ID => Title.
-	 *
-	 * @todo Duplication from toDropdownMap()
+	 * Returns an array of ID => Title for the items in this set.
 	 * 
-	* @param string $key The field you wish to use as a key for the array
-	* @param string $value The field or method you wish to use to get values for the map
-	* @param string $includeBlank String for no option selected
-	* @return array
+	 * @param string $index The field to use as a key for the array
+	 * @param string $titleField The field (or method) to get values for the map
+	 * @param string $emptyString Empty option text e.g "(Select one)"
+	 * @param bool $sort Sort the map alphabetically based on the $titleField value
+	 * @return array
 	 */
-	public function map($key = "ID", $value = "Title", $includeBlank=null) {
+	public function map($index = 'ID', $titleField = 'Title', $emptyString = null, $sort = false) {
 		$map = array();
 		
-		/* Don't do this, add this locally.
-		 * Reasons: 1: In some case this blank value don't/mustn't present.
-		 						2: In some case, this balnk value should be customised, such as (Select from below)
-		 						3: In some case, the key need to be explicitly "0", cos "" and "0" need to be treated differently
-		 */
-		//$map[''] = "(Select)";
-
-		/* Instead do this as an option */
-		if($includeBlank) $map[''] = $includeBlank;
-		
-		foreach($this->items as $item ){
-			if(is_array($value)){
-				foreach($value as $individul){
-					if($map[$item->$key]) $map[$item->$key] .=" - ";
-					$map[$item->$key] .= $item->$individul;
-				}
-			}else{
-				$map[$item->$key] = $item->$value;
+		if($this->items) {
+			foreach($this->items as $item) {
+				$map[$item->$index] = ($item->hasMethod($titleField)) ? $item->$titleField() : $item->$titleField;
 			}
 		}
+		
+		if($emptyString) $map = array('0' => "$emptyString") + $map;
+		if($sort) asort($map);
+		
 		return $map;
 	}
 	
@@ -650,7 +633,7 @@ class DataObjectSet extends ViewableData implements IteratorAggregate {
 	 * 
 	 * Question: should any args be passed to the filter function?
 	 * 
-	 * @todo deprecate toDropdownMap() and map_multiple(), rename this method to map()
+	 * @deprecated 2.4 Please use map() instead
 	 */
 	public function filter_map($key, $value) {
 		$map = array();
