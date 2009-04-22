@@ -583,6 +583,10 @@ class DataObjectSet extends ViewableData implements IteratorAggregate {
 
 	/**
 	 * Returns the dataset as an array of ID => "FirstName Surname"
+	 * 
+	 * @deprecated 2.4 Please use map() instead, pointing the title
+	 * to a method name that does the concatenation of values.
+	 * 
 	 * @param string $key Field name to index the array.
 	 * @param array $values An array of fieldnames to insert in array
 	 * @param boolean $withdash Add dashes inbetween values
