@@ -292,6 +292,7 @@ class RestfulServer extends Controller {
 			$formatter = DataFormatter::for_extension($extension);
 		}elseif($includeAcceptHeader && !empty($accept) && $accept != '*/*') {
 			$formatter = DataFormatter::for_mimetypes($mimetypes);
+			if(!$formatter) $formatter = DataFormatter::for_extension(self::$default_extension);
 		} elseif(!empty($contentType)) {
 			$formatter = DataFormatter::for_mimetype($contentType);
 		} else {
