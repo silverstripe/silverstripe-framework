@@ -441,7 +441,7 @@ class Translatable extends DataObjectDecorator {
 			// @todo Isn't this always the case?!
 			&& array_search($baseTable, array_keys($query->from)) !== false 
 			// or we're already filtering by Lang (either from an earlier augmentSQL() call or through custom SQL filters)
-			&& !preg_match('/("|\')Lang("|\')/', $query->getFilter())
+			&& !preg_match('/("|\'|`)Locale("|\'|`)/', $query->getFilter())
 			//&& !$query->filtersOnFK()
 		)  {
 			$qry = "\"Locale\" = '$lang'";
@@ -577,6 +577,8 @@ class Translatable extends DataObjectDecorator {
 		// If page has untranslated parents, create (unpublished) translations
 		// of those as well to avoid having inaccessible children in the sitetree.
 		// Caution: This logic is very sensitve to infinite loops when translation status isn't determined properly
+		// If a parent for the newly written translation was existing before this
+		// onBeforeWrite() call, it will already have been linked correctly through createTranslation()
 		if($this->owner->hasField('ParentID')) {
 			if(
 				!$this->owner->ID 
@@ -897,8 +899,21 @@ class Translatable extends DataObjectDecorator {
 		
 		$class = $this->owner->class;
 		$newTranslation = new $class;
+		
 		// copy all fields from owner (apart from ID)
 		$newTranslation->update($this->owner->toMap());
+		
+		// If the object has Hierarchy extension,
+		// check for existing translated parents and assign
+		// their ParentID (and overwrite any existing ParentID relations
+		// to parents in other language). If no parent translations exist,
+		// they are automatically created in onBeforeWrite()
+		if($newTranslation->hasField('ParentID')) {
+			$origParent = $this->owner->Parent();
+			$newTranslationParent = $origParent->getTranslation($locale);
+			if($newTranslationParent) $newTranslation->ParentID = $newTranslationParent->ID;
+		}
+		
 		$newTranslation->ID = 0;
 		$newTranslation->Locale = $locale;
 		// hacky way to set an existing translation group in onAfterWrite()
