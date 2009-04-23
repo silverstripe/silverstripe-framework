@@ -43,16 +43,7 @@ class MemberLoginForm extends LoginForm {
 			$backURL = Session::get('BackURL');
 		}
 
-		// We assume if session is storing a member ID, that member exists in the DB
-		$sessMemberExistsInDB = true;
-		if($sessionMemberID = Member::currentUserID()) {
-			$sessMemberInDB = DataObject::get_by_id('Member', $sessionMemberID);
-			if(!($sessMemberInDB && $sessMemberInDB->exists())) {
-				$sessMemberExistsInDB = false;
-			}
-		}
-		
-		if($checkCurrentUser && Member::currentUserID() && $sessMemberExistsInDB) {
+		if($checkCurrentUser && Member::currentUserID() && Member::logged_in_session_exists()) {
 			$fields = new FieldSet(
 				new HiddenField("AuthenticationMethod", null, $this->authenticator_class, $this)
 			);
