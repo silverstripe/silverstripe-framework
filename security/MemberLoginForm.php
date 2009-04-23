@@ -44,8 +44,12 @@ class MemberLoginForm extends LoginForm {
 		}
 
 		if($checkCurrentUser && Member::currentUserID()) {
-			$fields = new FieldSet();
-			$actions = new FieldSet(new FormAction("logout", _t('Member.BUTTONLOGINOTHER', "Log in as someone else")));
+			$fields = new FieldSet(
+				new HiddenField("AuthenticationMethod", null, $this->authenticator_class, $this)
+			);
+			$actions = new FieldSet(
+				new FormAction("logout", _t('Member.BUTTONLOGINOTHER', "Log in as someone else"))
+			);
 		} else {
 			if(!$fields) {
 				$fields = new FieldSet(

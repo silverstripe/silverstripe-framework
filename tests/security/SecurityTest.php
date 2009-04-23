@@ -37,13 +37,35 @@ class SecurityTest extends FunctionalTest {
 		parent::tearDown();
 	}
 	
-	function testExternalBackUrlRedirectionDisallowed() {
-		$page = new SiteTree();
-		$page->URLSegment = 'testpage';
-		$page->Title = 'Testpage';
-		$page->write();
-		$page->publish('Stage','Live');
+	function testLogInAsSomeoneElse() {
+		$member = DataObject::get_one('Member');
+
+		/* Log in with any user that we can find */
+		$this->session()->inst_set('loggedInAs', $member->ID);
+
+		/* View the Security/login page */
+		$this->get('Security/login');
 		
+		$items = $this->cssParser()->getBySelector('#MemberLoginForm_LoginForm input.action');
+		
+		/* We have only 1 input, one to allow the user to log in as someone else */
+		$this->assertEquals(count($items), 1, 'There is 1 input, allowing the user to log in as someone else.');
+		
+		/* Submit the form, using only the logout action and a hidden field for the authenticator */
+		$this->submitForm(
+			'MemberLoginForm_LoginForm', 
+			null,
+			array(
+				'AuthenticationMethod' => 'MemberAuthenticator',
+				'action_dologout' => 1,
+			)
+		);
+
+		/* Log the user out */
+		$this->session()->inst_set('loggedInAs', null);
+	}
+	
+	function testExternalBackUrlRedirectionDisallowed() {
 		// Test internal relative redirect
 		$response = $this->doTestLoginForm('noexpiry@silverstripe.com', '1nitialPassword', 'testpage');
 		$this->assertEquals(302, $response->getStatusCode());
