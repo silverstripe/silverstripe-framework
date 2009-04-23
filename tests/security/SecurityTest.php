@@ -65,6 +65,40 @@ class SecurityTest extends FunctionalTest {
 		$this->session()->inst_set('loggedInAs', null);
 	}
 	
+	function testMemberIDInSessionDoesntExistInDatabase() {
+		/* Log in with a Member ID that doesn't exist in the DB */
+		$this->session()->inst_set('loggedInAs', 500);
+
+		/* We're simulating a redirection because of a permission failure, so we need to set auto following */
+		$this->autoFollowRedirection = true;
+		
+		/* Attempt to get into the admin section */
+		$this->get('admin');
+		
+		$items = $this->cssParser()->getBySelector('#MemberLoginForm_LoginForm input.text');
+
+		/* We have 2 text inputs - one for email, and another for the password */
+		$this->assertEquals(count($items), 2, 'There are 2 inputs - one for email, another for password');
+
+		$member = DataObject::get_one('Member');
+
+		unset($items);
+		
+		/* Now, log in with a Member ID that DOES exist in the DB */
+		$this->session()->inst_set('loggedInAs', $member->ID);
+		
+		/* Attempt to get into the admin section */
+		$this->get('admin');
+		
+		$items = $this->cssParser()->getBySelector('#MemberLoginForm_LoginForm input.text');
+
+		/* We have 2 text inputs - one for email, and another for the password */
+		$this->assertEquals(count($items), 2, 'There are 2 inputs - one for email, another for password');
+		
+		/* Log the user out */
+		$this->session()->inst_set('loggedInAs', null);
+	}
+	
 	function testExternalBackUrlRedirectionDisallowed() {
 		// Test internal relative redirect
 		$response = $this->doTestLoginForm('noexpiry@silverstripe.com', '1nitialPassword', 'testpage');
