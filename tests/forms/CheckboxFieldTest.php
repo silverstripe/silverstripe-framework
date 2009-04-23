@@ -64,5 +64,60 @@ class CheckboxFieldTest extends SapphireTest {
 		$this->assertEquals($field->Value(), 0, 'Value() returns a 0');
 	}
 	
+	function testSavingChecked() {
+		/* Create a new test data record */
+		$article = new CheckboxFieldTest_Article();
+		
+		/* Create a field, with a value of 1 */
+		$field = new CheckboxField('IsChecked', 'Checked', 1);
+		
+		/* Save the field into our Article object */
+		$field->saveInto($article);
+		
+		/* Write the record to the test database */
+		$article->write();
+		
+		/* Check that IsChecked column contains a 1 */
+		$this->assertEquals(
+			DB::query("SELECT IsChecked FROM CheckboxFieldTest_Article")->value(),
+			1,
+			'We have a 1 set in the database, because the field saved into as a 1'
+		);
+		
+		/* Delete the record we tested */
+		$article->delete();
+	}
+	
+	function testSavingUnchecked() {
+		/* Create a new test data record */
+		$article = new CheckboxFieldTest_Article();
+		
+		/* Create a field, with no value */
+		$field = new CheckboxField('IsChecked', 'Checked');
+		
+		/* Save the field into our Article object */
+		$field->saveInto($article);
+		
+		/* Write the record to the test database */
+		$article->write();
+		
+		/* Check that IsChecked column contains a 0 */
+		$this->assertEquals(
+			DB::query("SELECT IsChecked FROM CheckboxFieldTest_Article")->value(),
+			0,
+			'We have a 0 set in the database, because the field saved into as a 0'
+		);
+		
+		/* Delete the record we tested */
+		$article->delete();
+	}
+	
+}
+class CheckboxFieldTest_Article extends DataObject implements TestOnly {
+	
+	public static $db = array(
+		'IsChecked' => 'Boolean'
+	);
+	
 }
 ?>
