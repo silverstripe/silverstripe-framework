@@ -113,14 +113,14 @@ class FormField extends RequestHandler {
 	/** 
 	 * Returns the field message, used by form validation
 	 */
-	function Message(){
+	function Message() {
 		return $this->message;
 	} 
 	
 	/** 
 	 * Returns the field message type, used by form validation
 	 */
-	function MessageType(){
+	function MessageType() {
 		return $this->messageType;
 	} 
 	

@@ -16,6 +16,10 @@ class CheckboxField extends FormField {
 		return ($this->value) ? 1 : 0;
 	}
 	
+	function Value() {
+		return ($this->value) ? 1 : 0;
+	}
+	
 	function Field() {
 		$attributes = array(
 			'type' => 'checkbox',

@@ -1,5 +1,8 @@
 <?php
-
+/**
+ * @package sapphire
+ * @subpackage tests
+ */
 class CheckboxSetFieldTest extends SapphireTest {
 	
 	static $fixture_file = 'sapphire/tests/forms/CheckboxSetFieldTest.yml';
