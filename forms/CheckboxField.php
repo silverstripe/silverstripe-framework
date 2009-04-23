@@ -5,13 +5,16 @@
  * @subpackage fields-basic
  */
 class CheckboxField extends FormField {
-	/**
-	 * Returns a single checkbox field - used by templates.
-	 *
-	 * Shouldn't this have a value?
-	 */
 	 
 	protected $disabled;
+
+	function setValue($value) {
+		$this->value = ($value) ? 1 : 0;
+	}
+
+	function dataValue() {
+		return ($this->value) ? 1 : 0;
+	}
 	
 	function Field() {
 		$attributes = array(
@@ -27,12 +30,7 @@ class CheckboxField extends FormField {
 		
 		return $this->createTag('input', $attributes);
 	}
-	
-	
-	function dataValue() {
-		return $this->value ? 1 : 0;
-	}
-	
+
 	/**
 	 * Checkboxes use the RightLabelledFieldHolder template, to put the field on the left
 	 * and the label on the right.  See {@link FormField::FieldHolder} for more information about
