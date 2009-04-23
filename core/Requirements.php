@@ -345,8 +345,6 @@ class Requirements_Backend {
 	/**
 	 * Remembers the filepaths of all cleared Requirements
 	 * through {@link clear()}.
-	 * 
-	 * @usedby {@link restore()}
 	 *
 	 * @var array $disabled
 	 */
@@ -529,6 +527,7 @@ class Requirements_Backend {
 			$this->disabled['css'] = $this->css;
 			$this->disabled['customScript'] = $this->customScript;
 			$this->disabled['customCSS'] = $this->customCSS;
+			$this->disabled['customHeadTags'] = $this->customHeadTags;
 		
 			$this->javascript = array();
 			$this->css = array();
@@ -561,6 +560,7 @@ class Requirements_Backend {
 		$this->css = $this->disabled['css'];
 		$this->customScript = $this->disabled['customScript'];
 		$this->customCSS = $this->disabled['customCSS'];
+		$this->customHeadTags = $this->disabled['customHeadTags'];
 	}
 	
 	/**
@@ -611,7 +611,6 @@ class Requirements_Backend {
 			foreach(array_diff_key($this->customCSS, $this->blocked) as $css) { 
 				$requirements .= "<style type=\"text/css\">\n$css\n</style>\n";
 			}
-			
 			foreach(array_diff_key($this->customHeadTags,$this->blocked) as $customHeadTag) { 
 				$requirements .= "$customHeadTag\n"; 
 			}

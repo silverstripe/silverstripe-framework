@@ -2,6 +2,11 @@
 /**
  * Standard basic search form which conducts a fulltext search on all {@link SiteTree}
  * objects. 
+ *
+ * If multilingual content is enabled through the {@link Translatable} extension,
+ * only pages the currently set language on the holder for this searchform are found.
+ * The language is set through a hidden field in the form, which is prepoluated
+ * with {@link Translatable::current_locale()} when then form is constructed.
  * 
  * @see Use ModelController and SearchContext for a more generic search implementation based around DataObject
  * @package sapphire
@@ -49,6 +54,10 @@ class SearchForm extends Form {
 			));
 		}
 		
+		if(singleton('SiteTree')->hasExtension('Translatable')) {
+			$fields->push(new HiddenField('locale', 'locale', Translatable::current_locale()));
+		}
+		
 		if(!$actions) {
 			$actions = new FieldSet(
 				new FormAction("getResults", _t('SearchForm.GO', 'Go'))
@@ -93,6 +102,11 @@ class SearchForm extends Form {
 	public function getResults($pageLength = null, $data = null){
 	 	// legacy usage: $data was defaulting to $_REQUEST, parameter not passed in doc.silverstripe.com tutorials
 		if(!isset($data)) $data = $_REQUEST;
+		
+		// set language (if present)
+		if(singleton('SiteTree')->hasExtension('Translatable') && isset($data['locale'])) {
+			Translatable::set_reading_locale($data['locale']);
+		}
 	
 		$keywords = $data['Search'];
 

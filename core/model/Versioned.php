@@ -325,22 +325,8 @@ class Versioned extends DataObjectDecorator {
 	 * @return boolean
 	 */
 	function canBeVersioned($table) {
-		
-		$tableParts = explode('_',$table);
-		$dbFields = singleton($tableParts[0])->databaseFields();
-		if (!ClassInfo::exists( $tableParts[0] ) || !is_subclass_of( $tableParts[0], 'DataObject' ) || empty( $dbFields )){
-			return false;
-		} else if (count($tableParts)>1) {
-			foreach (Versioned::$versionableExtensions as $versionableExtension => $suffixes) {
-				if ($this->owner->hasExtension($versionableExtension)) {
-					foreach ((array)$suffixes as $suffix) {
-						if ($part = array_search($suffix,$tableParts)) unset($tableParts[$part]);
-					}
-				}
-			}
-			if (count($tableParts)>1) return false;
-		}
-		return true;
+		$dbFields = singleton($table)->databaseFields();
+		return !(!ClassInfo::exists($table) || !is_subclass_of($table, 'DataObject' ) || empty( $dbFields ));
 	}
 	
 	/**

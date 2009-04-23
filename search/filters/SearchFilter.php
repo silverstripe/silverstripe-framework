@@ -181,8 +181,6 @@ abstract class SearchFilter extends Object {
 	 * Relies on the field being populated with
 	 * {@link setValue()}
 	 * 
-	 * @usedby SearchContext
-	 * 
 	 * @return boolean
 	 */
 	public function isEmpty() {

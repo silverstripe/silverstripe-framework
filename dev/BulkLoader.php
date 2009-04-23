@@ -190,15 +190,14 @@ abstract class BulkLoader extends ViewableData {
 	 * Useful for generation of spec documents for technical end users.
 	 * 
 	 * Return Format:
-	 * <example>
+	 * <code>
 	 * array(
 	 *   'fields' => array('myFieldName'=>'myDescription'), 
 	 *   'relations' => array('myRelationName'=>'myDescription'), 
 	 * )
-	 * </example>
+	 * </code>
 	 *
 	 * @todo Mix in custom column mappings
-	 * @usedby {@link ModelAdmin}
 	 *
 	 * @return array
 	 **/

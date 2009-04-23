@@ -85,7 +85,18 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	}
 	
 	/**
-	 * Array of
+	 * Called once per test case ({@link SapphireTest} subclass).
+	 * This is different to {@link setUp()}, which gets called once
+	 * per method. Useful to initialize expensive operations which
+	 * don't change state for any called method inside the test,
+	 * e.g. dynamically adding an extension. See {@link tear_down_once()}
+	 * for tearing down the state again.
+	 */
+	static function set_up_once() {	
+	}
+	
+	/**
+	 * Array
 	 */
 	protected $fixtureDictionary;
 	
@@ -150,6 +161,9 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 		// Mark test as no longer being run - we use originalIsRunningTest to allow for nested SapphireTest calls
 		self::$is_running_test = $this->originalIsRunningTest;
 		$this->originalIsRunningTest = null;
+	}
+	
+	static function tear_down_once() {
 	}
 	
 	/**

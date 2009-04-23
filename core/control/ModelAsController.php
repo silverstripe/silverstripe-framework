@@ -5,6 +5,7 @@
  * that controller will be used instead.  It should be a subclass of ContentController.
  *
  * @package sapphire
+ * @subpackage control
  */
 class ModelAsController extends Controller implements NestedController {
 	
@@ -48,9 +49,9 @@ class ModelAsController extends Controller implements NestedController {
 					$url = Controller::join_links(
 						Director::baseURL(),
 						$child->URLSegment,
-						isset($this->urlParams['Action']) ? $this->urlParams['Action'] : null,
-						isset($this->urlParams['ID']) ? $this->urlParams['ID'] : null,
-						isset($this->urlParams['OtherID']) ? $this->urlParams['OtherID'] : null
+						(isset($this->urlParams['Action'])) ? $this->urlParams['Action'] : null,
+						(isset($this->urlParams['ID'])) ? $this->urlParams['ID'] : null,
+						(isset($this->urlParams['OtherID'])) ? $this->urlParams['OtherID'] : null
 					);
 
 					$response = new HTTPResponse();
@@ -63,6 +64,9 @@ class ModelAsController extends Controller implements NestedController {
 		
 			if($child) {
 				if(isset($_REQUEST['debug'])) Debug::message("Using record #$child->ID of type $child->class with URL {$this->urlParams['URLSegment']}");
+				
+				// set language
+				if($child->Locale) Translatable::set_reading_locale($child->Locale);
 				
 				$controllerClass = "{$child->class}_Controller";
 	

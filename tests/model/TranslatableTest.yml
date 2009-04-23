@@ -1,12 +1,43 @@
 Page:
-   home:
+   homepage_en:
       Title: Home
       URLSegment: home
-      ShowInMenus: 
-      
-SiteTree_lang:
-   home:
-      OriginalLangID: =>Page.home
-      Title: Home fr
-      Lang: fr
-      ClassName: Page
+      Locale: en_US
+   testpage_en:
+      Title: Home
+      MenuTitle: A Testpage
+      URLSegment: testpage
+      Locale: en_US
+   othertestpage_en:
+      Title: Other Testpage
+      MenuTitle: A Testpage
+      URLSegment: othertestpage
+      Locale: en_US
+   parent:
+      Title: Parent
+      URLSegment: parent
+   child1:
+      Title: Child 1
+      URLSegment: child1
+      Parent: =>Page.parent
+   child2:
+      Title: Child 2
+      URLSegment: child2
+      Parent: =>Page.parent
+   child3:
+      Title: Child 3
+      URLSegment: child3
+      Parent: =>Page.parent
+   grandchild:
+      Title: Grandchild
+      URLSegment: grandchild
+      Parent: =>Page.child1
+TranslatableTest_DataObject:
+   testobject_en:
+      TranslatableProperty: en_US
+      TranslatableDecoratedProperty: en_US
+TranslatableTest_Page:
+   testpage_en:
+      Title: En
+      TranslatableProperty: en_US
+      URLSegment: testpage-en

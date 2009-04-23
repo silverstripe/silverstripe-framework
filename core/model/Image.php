@@ -462,8 +462,8 @@ class Image_Cached extends Image {
  * Is connected to the URL routing "/image" through sapphire/_config.php,
  * and used by all iframe-based upload-fields in the CMS.
  *
- * @usedby FileIFrameField
- * @usedby ImageField
+ * Used by {@link FileIFrameField}, {@link ImageField}.
+ * 
  * @todo Refactor to using FileIFrameField and ImageField as a controller for the upload,
  *   rather than something totally disconnected from the original Form and FormField
  *   context. Without the original context its impossible to control permissions etc.
@@ -494,8 +494,8 @@ class Image_Uploader extends Controller {
 		}
 		
 		// set reading lang
-		if(Translatable::is_enabled() && !Director::is_ajax()) {
-			Translatable::choose_site_lang(array_keys(Translatable::get_existing_content_languages('SiteTree')));
+		if(singleton('SiteTree')->hasExtension('Translatable') && !Director::is_ajax()) {
+			Translatable::choose_site_locale(array_keys(Translatable::get_existing_content_languages('SiteTree')));
 		}
 		
 		parent::init();

@@ -22,6 +22,8 @@ class ErrorPage extends Page {
 		"ShowInSearch" => 0
 	);
 	
+	protected static $static_filepath = ASSETS_PATH;
+	
 	/**
 	 * Ensures that there is always a 404 page
 	 * by checking if there's an instance of
@@ -105,12 +107,10 @@ class ErrorPage extends Page {
 			mkdir(ASSETS_PATH, 02775);
 		}
 
-		// Path to the error file in the file store
-		$errorFile = ASSETS_PATH . "/error-$this->ErrorCode.html";
-
-		// Attempt to open the file, writing it if it doesn't exist
-		$fh = @fopen($errorFile, "w");
-		if($fh) {
+		// if the page is published in a language other than default language,
+		// write a specific language version of the HTML page
+		$filePath = self::get_filepath_for_errorcode($this->ErrorCode, $this->Lang);
+		if($fh = fopen($filePath, "w")) {
 			fwrite($fh, $errorContent);
 			fclose($fh);
 		} else {
@@ -142,6 +142,39 @@ class ErrorPage extends Page {
 		$labels['ErrorCode'] = _t('ErrorPage.CODE', "Error code");
 		
 		return $labels;
+	}
+	
+	/**
+	 * Returns an absolute filesystem path to a static error file
+	 * which is generated through {@link publish()}.
+	 * 
+	 * @param int $statusCode A HTTP Statuscode, mostly 404 or 500
+	 * @param String $lang A language code in short locale format, e.g. 'de' (Optional)
+	 * @return String
+	 */
+	static function get_filepath_for_errorcode($statusCode, $lang = null) {
+		if(Translatable::is_enabled() && $lang && $lang != Translatable::default_lang()) {
+			return self::$static_filepath . "/error-{$statusCode}-{$lang}.html";
+		} else {
+			return self::$static_filepath . "/error-{$statusCode}.html";
+		}
+	}
+	
+	/**
+	 * Set the path where static error files are saved through {@link publish()}.
+	 * Defaults to /assets.
+	 * 
+	 * @param string $path
+	 */
+	static function set_static_filepath($path) {
+		self::$static_filepath = $path;
+	}
+	
+	/**
+	 * @return string
+	 */
+	static function get_static_filepath($path) {
+		return self::$static_filepath;
 	}
 }
 

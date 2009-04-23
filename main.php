@@ -1,5 +1,4 @@
 <?php
-
 /************************************************************************************
  ************************************************************************************
  **                                                                                **
@@ -9,6 +8,10 @@
  ************************************************************************************
  ************************************************************************************/
 
+/**
+ * @package sapphire
+ * @subpackage core
+ */
 $majorVersion = strtok(phpversion(),'.');
 if($majorVersion < 5) {
 	header("HTTP/1.1 500 Server Error");
@@ -26,7 +29,7 @@ if($majorVersion < 5) {
  *  - Gets an up-to-date manifest from {@link ManifestBuilder}
  *  - Sets up error handlers with {@link Debug::loadErrorHandlers()}
  *  - Calls {@link DB::connect()}, passing it the global variable $databaseConfig that should 
- &    be defined in an _config.php
+ *    be defined in an _config.php
  *  - Sets up the default director rules using {@link Director::addRules()}
  * 
  * After that, it calls {@link Director::direct()}, which is responsible for doing most of the 

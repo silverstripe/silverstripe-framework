@@ -469,9 +469,7 @@ class Email extends ViewableData {
 	 * unless overwritten. Also shown to users on live environments
 	 * as a contact address on system error pages.
 	 * 
-	 * @usedby Email->send()
-	 * @usedby Email->sendPlain()
-	 * @usedby Debug->friendlyError()
+	 * Used by {@link Email->send()}, {@link Email->sendPlain()}, {@link Debug->friendlyError()}.
 	 * 
 	 * @param string $newEmail
 	 */

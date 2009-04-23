@@ -116,14 +116,14 @@ class ClassInfo {
 	 * through the $class parameter as the first array value.
 	 * 
 	 * Example usage:
-	 * <example>
+	 * <code>
 	 * ClassInfo::subclassesFor('BaseClass');
 	 * 	array(
 	 * 	0 => 'BaseClass',
 	 * 	'ChildClass' => 'ChildClass',
 	 * 	'GrandChildClass' => 'GrandChildClass'
 	 * )
-	 * </example>
+	 * </code>
 	 * 
 	 * @param mixed $class string of the classname or instance of the class
 	 * @return array Names of all subclasses as an associative array.

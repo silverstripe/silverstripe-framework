@@ -1,5 +1,8 @@
 <?php
-
+/**
+ * @package sapphire
+ * @subpackage formatters
+ */
 class XMLDataFormatter extends DataFormatter {
 	/**
 	 * @todo pass this from the API to the data formatter somehow

@@ -1,8 +1,10 @@
 <?php
-
 /**
  * Class to facilitate command-line output.
  * Support less-trivial output stuff such as colours (on xterm-color)
+ * 
+ * @package sapphire
+ * @subpackage dev
  */
 class SSCli extends Object {
 	static function supports_colour() {

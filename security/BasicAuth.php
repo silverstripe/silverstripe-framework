@@ -16,7 +16,8 @@ class BasicAuth extends Object {
 	/**
 	 * Require basic authentication.  Will request a username and password if none is given.
 	 * 
-	 * @usedby Controller::init()
+	 * Used by {@link Controller::init()}.
+	 * 
 	 * @param string $realm
 	 * @param string|array $permissionCode
 	 * @return Member $member 

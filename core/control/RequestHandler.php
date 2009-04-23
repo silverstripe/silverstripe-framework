@@ -24,6 +24,9 @@
  *    Matching $url_handlers: "$Action/$ID" => "handleItem" (defined in TreeMultiSelectField class)
  *
  * {@link RequestHandler::handleRequest()} is where this behaviour is implemented.
+ * 
+ * @package sapphire
+ * @subpackage control
  */
 class RequestHandler extends ViewableData {
 	protected $request = null;
@@ -81,8 +84,7 @@ class RequestHandler extends ViewableData {
 		$handlerClass = ($this->class) ? $this->class : get_class($this);
 		// We stop after RequestHandler; in other words, at ViewableData
 		while($handlerClass && $handlerClass != 'ViewableData') {
-			// Todo: ajshort's stat rewriting could be useful here.
-			$urlHandlers = eval("return $handlerClass::\$url_handlers;");
+			$urlHandlers = Object::get_static($handlerClass, 'url_handlers');
 			
 			if($urlHandlers) foreach($urlHandlers as $rule => $action) {
 				if(isset($_REQUEST['debug_request'])) Debug::message("Testing '$rule' with '" . $request->remaining() . "' on $this->class");
@@ -144,65 +146,57 @@ class RequestHandler extends ViewableData {
 		// If nothing matches, return this object
 		return $this;
 	}
-
+	
 	/**
 	 * Check that the given action is allowed to be called from a URL.
 	 * It will interrogate {@link self::$allowed_actions} to determine this.
 	 */
 	function checkAccessAction($action) {
-		// Collate self::$allowed_actions from this class and all parent classes
-		$access = null;
-		$className = ($this->class) ? $this->class : get_class($this);
-		while($className && $className != 'RequestHandler') {
-			// Merge any non-null parts onto $access.
-			$accessPart = eval("return $className::\$allowed_actions;");		
-			if($accessPart != null) $access = array_merge((array)$access, $accessPart);
-			
-			// Build an array of parts for checking if part[0] == part[1], which means that this class doesn't directly define it.
-			$accessParts[] = $accessPart;
-			
-			$className = get_parent_class($className);
-		}
+		$action            = strtolower($action);
+		$allowedActions    = Object::combined_static($this->class, 'allowed_actions');
+		$newAllowedActions = array();
 		
-		// Add $allowed_actions from extensions
-		if($this->extension_instances) {
-			foreach($this->extension_instances as $inst) {
-				$accessPart = $inst->stat('allowed_actions');
-				if($accessPart !== null) $access = array_merge((array)$access, $accessPart);
+		// merge in any $allowed_actions from extensions
+		if($this->extension_instances) foreach($this->extension_instances as $extension) {
+			if($extAccess = $extension->stat('allowed_actions')) {
+				$allowedActions = array_merge($allowedActions, $extAccess);
 			}
 		}
-
+		
 		if($action == 'index') return true;
 		
-		// Make checkAccessAction case-insensitive
-		$action = strtolower($action);
-		if($access) {
-			foreach($access as $k => $v) $newAccess[strtolower($k)] = strtolower($v);
-			$access = $newAccess;
+		if($allowedActions)  {
+			foreach($allowedActions as $key => $value) {
+				$newAllowedActions[strtolower($key)] = strtolower($value);
+			}
+			
+			$allowedActions = $newAllowedActions;
+			
+			if(isset($allowedActions[$action])) {
+				$test = $allowedActions[$action];
 				
-			if(isset($access[$action])) {
-				$test = $access[$action];
-				if($test === true) return true;
-				if(substr($test,0,2) == '->') {
-					$funcName = substr($test,2);
-					return $this->$funcName();
+				if($test === true) {
+					return true;
+				} elseif(substr($test, 0, 2) == '->') {
+					return $this->{substr($test, 2)}();
+				} elseif(Permission::check($test)) {
+					return true;
 				}
-				if(Permission::check($test)) return true;
-			} else if((($key = array_search($action, $access)) !== false) && is_numeric($key)) {
+			} elseif((($key = array_search($action, $allowedActions)) !== false) && is_numeric($key)) {
 				return true;
 			}
 		}
-
-		if($access === null || (isset($accessParts[1]) && $accessParts[0] === $accessParts[1])) {
+		
+		if($allowedActions === null || !$this->uninherited('allowed_actions')) {
 			// If no allowed_actions are provided, then we should only let through actions that aren't handled by magic methods
 			// we test this by calling the unmagic method_exists and comparing it to the magic $this->hasMethod().  This will
 			// still let through actions that are handled by templates.
 			return method_exists($this, $action) || !$this->hasMethod($action);
 		}
-
+		
 		return false;
 	}
-
+	
 	/**
 	 * Throw an HTTP error instead of performing the normal processing
 	 * @todo This doesn't work properly right now. :-(

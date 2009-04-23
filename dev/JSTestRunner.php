@@ -5,7 +5,7 @@
  * and includes them as iFrames.
  * 
  * To create your own tests, please use this template:
- * <example>
+ * <code>
  * <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
  * <html>
  * <head>
@@ -28,7 +28,7 @@
  *  <div id="main"></div>
  * </body>
  * </html>
- * </example>
+ * </code>
  * 
  * @package sapphire
  * @subpackage testing

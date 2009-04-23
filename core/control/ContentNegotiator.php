@@ -51,9 +51,6 @@ class ContentNegotiator {
 	    return self::$encoding;
 	}
 	
-	/**
-	 * @usedby Controller->handleRequest()
-	 */
 	static function process(HTTPResponse $response) {
 		if(!self::enabled_for($response)) return;
 

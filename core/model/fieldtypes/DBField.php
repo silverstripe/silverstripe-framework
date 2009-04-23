@@ -219,9 +219,7 @@ abstract class DBField extends ViewableData {
 	 * Returns a FormField instance used as a default
 	 * for form scaffolding.
 	 *
-	 * @usedby {@link SearchContext}
-	 * @usedby {@link ModelAdmin}
-	 * @usedby {@link DataObject::scaffoldFormFields()}
+	 * Used by {@link SearchContext}, {@link ModelAdmin}, {@link DataObject::scaffoldFormFields()}
 	 * 
 	 * @param string $title Optional. Localized title of the generated instance
 	 * @return FormField
@@ -236,9 +234,7 @@ abstract class DBField extends ViewableData {
 	 * Returns a FormField instance used as a default
 	 * for searchform scaffolding.
 	 *
-	 * @usedby {@link SearchContext}
-	 * @usedby {@link ModelAdmin}
-	 * @usedby {@link DataObject::scaffoldFormFields()}
+	 * Used by {@link SearchContext}, {@link ModelAdmin}, {@link DataObject::scaffoldFormFields()}.
 	 * 
 	 * @param string $title Optional. Localized title of the generated instance
 	 * @return FormField

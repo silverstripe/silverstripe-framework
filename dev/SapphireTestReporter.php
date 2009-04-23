@@ -9,6 +9,9 @@
  * Changelog:
  *  0.6 First created [David Spurr]
  *  0.7 Added fix to getTestException provided [Glen Ogilvie]
+ * 
+ * @package sapphire
+ * @subpackage testing
  *
  * @version 0.7 2006-03-12
  * @author David Spurr

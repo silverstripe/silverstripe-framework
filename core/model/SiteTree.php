@@ -169,7 +169,6 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 
 	static $extensions = array(
 		"Hierarchy",
-		"Translatable('Title', 'MenuTitle', 'Content', 'URLSegment', 'MetaTitle', 'MetaDescription', 'MetaKeywords', 'Status')",
 		"Versioned('Stage', 'Live')"
 	);
 	
@@ -883,7 +882,10 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		if($this->ExtraMeta) { 
 			$tags .= $this->ExtraMeta . "\n";
 		} 
-		$tags .= "<meta http-equiv=\"Content-Language\" content=\"". Translatable::current_lang() ."\"/>\n";
+		
+		// get the "long" lang name suitable for the HTTP content-language flag (with hyphens instead of underscores)
+		$currentLang = ($this->hasExtension('Translatable')) ? Translatable::current_locale() : i18n::get_locale();
+		$tags .= "<meta http-equiv=\"Content-Language\" content=\"". i18n::convert_rfc1766($currentLang) ."\"/>\n";
 		
 		// DEPRECATED 2.3: Use MetaTags
 		$this->extend('updateMetaTags', $tags);
@@ -1725,7 +1727,12 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 
 		if(!$this->ShowInMenus) 
 			$classes .= " notinmenu";
-		
+			
+		//TODO: Add integration
+		/*
+		if($this->hasExtension('Translatable') && $controller->Locale != Translatable::default_locale() && !$this->isTranslation())
+			$classes .= " untranslated ";
+		*/
 		$classes .= $this->markingClasses();
 
 		return $classes;

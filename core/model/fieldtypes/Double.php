@@ -1,6 +1,8 @@
 <?php
 /**
  * 
+ * @package sapphire
+ * @subpackage model
  */
 class Double extends DBField {
 	

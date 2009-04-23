@@ -219,6 +219,8 @@ class SecurityTest extends FunctionalTest {
 	 */
 	function doTestLoginForm($email, $password, $backURL = 'test/link') {
 		$this->session()->inst_set('BackURL', $backURL);
+
+		$this->get('Security/logout');
 		$this->get('Security/login');
 		
 		return $this->submitForm(

@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Class to handle parsing of CSV files, where the column headers are in the first row.
  * The idea is that you pass it another object to handle the actual procesing of the data in the CSV file.
@@ -19,6 +18,9 @@
  *   $obj->write();
  * }
  * </code>
+ * 
+ * @package sapphire
+ * @subpackage bulkloading
  */
 class CSVParser extends Object implements Iterator {
 	protected $filename;

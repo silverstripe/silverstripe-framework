@@ -318,7 +318,7 @@ HTML;
 	 * Returns the xml:lang and lang attributes
 	 */
 	function LangAttributes() {
-		$lang = Translatable::current_lang();
+		$lang = Translatable::current_locale();
 		return "xml:lang=\"$lang\" lang=\"$lang\"";	
 	}
 

@@ -338,7 +338,7 @@ class HTTP {
 		// Now that we've generated them, either output them or attach them to the HTTPResponse as appropriate
 		foreach($responseHeaders as $k => $v) {
 			if($body) $body->addHeader($k, $v);
-			else header("$k: $v");
+			else if(!headers_sent()) header("$k: $v");
 		}
 	}
 
@@ -350,6 +350,13 @@ class HTTP {
 	 */
 	static function gmt_date($timestamp) {
 		return gmdate('D, d M Y H:i:s', $timestamp) . ' GMT';
+	}
+	
+	/* 
+	 * Return static variable cache_age in second
+	 */
+	static function get_cache_age() {
+		return self::$cache_age;
 	}
 
 }

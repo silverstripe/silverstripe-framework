@@ -1,8 +1,10 @@
 <?php
-
 /**
  * Gives you a nice way of viewing your data model.
  * Access at dev/viewmodel
+ * 
+ * @package sapphire
+ * @subpackage tools
  */
 class ModelViewer extends Controller {
 	static $url_handlers = array(
