@@ -183,9 +183,7 @@ class ErrorPage extends Page {
  * @package cms
  */
 class ErrorPage_Controller extends Page_Controller {
-	public function init() {
-		parent::init();
-		
+	public function index() {
 		Director::set_status_code($this->failover->ErrorCode ? $this->failover->ErrorCode : 404);
 	}
 }

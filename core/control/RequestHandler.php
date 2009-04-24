@@ -133,7 +133,7 @@ class RequestHandler extends ViewableData {
 					
 					// But if we have more content on the URL and we don't know what to do with it, return an error.
 					} else {
-						return $this->httpError(400, "I can't handle sub-URLs of a $this->class object.");
+						return $this->httpError(404, "I can't handle sub-URLs of a $this->class object.");
 					}
 				
 					return $this;
