@@ -256,7 +256,7 @@ class Debug {
 			echo $friendlyErrorMessage;
 		} else {
 			$errorFilePath = ErrorPage::get_filepath_for_errorcode($statusCode, Translatable::current_lang());
-			if(file_exists($errorfilePath)) {
+			if(file_exists($errorFilePath)) {
 				echo file_get_contents(ASSETS_PATH . "/error-$statusCode.html");
 			} else {
 				$renderer = new DebugView();
