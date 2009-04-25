@@ -25,5 +25,15 @@ class ErrorPageTest extends FunctionalTest {
 		$this->assertEquals($response->getStatusDescription(), 'Not Found', 'Status message of the HTTResponse for error page is "Not found"');
 	}
 	
+	function testBehaviourOfShowInMenuAndShowInSearchFlags() {
+		$page = $this->objFromFixture('ErrorPage', '404');
+		
+		/* Don't show the error page in the menus */
+		$this->assertEquals($page->ShowInMenus, 0, 'Don\'t show the error page in the menus');
+		
+		/* Don't show the error page in the search */
+		$this->assertEquals($page->ShowInSearch, 0, 'Don\'t show the error page in search');
+	}
+	
 }
 ?>
