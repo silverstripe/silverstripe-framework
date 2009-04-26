@@ -73,7 +73,7 @@ class Date extends DBField {
 	/**
 	 * Return the date formatted using the given strftime formatting string.
 	 *
-	 * strftime obeyes the current LC_TIME/LC_ALL when printing lexical values
+	 * strftime obeys the current LC_TIME/LC_ALL when printing lexical values
 	 * like day- and month-names
 	 */
 	function FormatI18N($formattingString) {

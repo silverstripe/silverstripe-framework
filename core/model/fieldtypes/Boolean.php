@@ -21,11 +21,11 @@ class Boolean extends DBField {
 	}
 	
 	function Nice() {
-		return ($this->value) ? "yes" : "no";
+		return ($this->value) ? _t('Boolean.YES', 'Yes') : _t('Boolean.NO', 'No');
 	}
 	
 	function NiceAsBoolean() {
-		return ($this->value) ? "true" : "false";
+		return ($this->value) ? 'true' : 'false';
 	}
 
 	/**
@@ -34,7 +34,7 @@ class Boolean extends DBField {
 	function saveInto($dataObject) {
 		$fieldName = $this->name;
 		if($fieldName) {
-			$dataObject->$fieldName = $this->value ? 1 : 0;
+			$dataObject->$fieldName = ($this->value) ? 1 : 0;
 		} else {
 			user_error("DBField::saveInto() Called on a nameless '$this->class' object", E_USER_ERROR);
 		}
@@ -42,6 +42,16 @@ class Boolean extends DBField {
 	
 	public function scaffoldFormField($title = null, $params = null) {
 		return new CheckboxField($this->name, $title);
+	}
+	
+	public function scaffoldSearchField($title = null) {
+		$anyText = _t('Boolean.ANY', 'Any');
+		$source = array(
+			1 => _t('Boolean.YES', 'Yes'),
+			0 => _t('Boolean.NO', 'No')
+		);
+		
+		return new DropdownField($this->name, $title, $source, '', null, "($anyText)");
 	}
 
 	/**

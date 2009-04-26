@@ -45,27 +45,25 @@ class Enum extends DBField {
 		DB::requireField($this->tableName, $this->name, "enum('" . implode("','", $this->enum) . "') character set utf8 collate utf8_general_ci default '{$this->default}'");
 	}
 	
+	/**
+	 * Return a dropdown field suitable for editing this field 
+	 */
+	function formField($title = null, $name = null, $hasEmpty = false, $value = "", $form = null, $emptyString = null) {
+		if(!$title) $title = $this->name;
+		if(!$name) $name = $this->name;
+
+		$field = new DropdownField($name, $title, $this->enumValues($hasEmpty), $value, $form, $emptyString);
+			
+		return $field;		
+	}
 
 	public function scaffoldFormField($title = null, $params = null) {
 		return $this->formField($title);
 	}
 	
-	/**
-	 * Return a dropdown field suitable for editing this field 
-	 */
-	function formField($title = null, $name = null, $hasEmpty = false, $value = "", $form = null) {
-		if(!$title) $title = $this->name;
-		if(!$name) $name = $this->name;
-
-		$field = new DropdownField($name, $title, $this->enumValues($hasEmpty), $value, $form);
-			
-		return $field;		
-	}
-	
 	function scaffoldSearchField($title = null) {
-		$field = $this->formField($title);
-		$field->Source = array_merge(array("" => "(Any)"), $this->enumValues());
-		return $field;
+		$anyText = _t('Enum.ANY', 'Any');
+		return $this->formField($title, null, false, '', null, "($anyText)");
 	}
 	
 	/**

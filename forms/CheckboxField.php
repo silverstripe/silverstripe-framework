@@ -79,7 +79,7 @@ HTML;
 	 */
 	 
 	function performReadonlyTransformation() {
-		$field = new CheckboxField_Readonly($this->name, $this->title, $this->value ? 'Yes' : 'No');
+		$field = new CheckboxField_Readonly($this->name, $this->title, $this->value ? _t('CheckboxField.YES', 'Yes') : _t('CheckboxField.NO', 'No'));
 		$field->setForm($this->form);
 		return $field;	
 	}
@@ -102,7 +102,7 @@ class CheckboxField_Readonly extends ReadonlyField {
 	}
 	
 	function setValue($val) {
-		$this->value = ($val) ? 'Yes' : 'No';
+		$this->value = ($val) ? _t('CheckboxField.YES', 'Yes') : _t('CheckboxField.NO', 'No');
 	}
 }
 
