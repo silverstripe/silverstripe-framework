@@ -74,7 +74,7 @@ class CSVParser extends Object implements Iterator {
 	function __construct($filename, $delimiter = ",", $enclosure = '"') {
 		$filename = Director::getAbsFile($filename);
 		$this->filename = $filename;
-		$tis->delimiter = $delimiter;
+		$this->delimiter = $delimiter;
 		$this->enclosure = $enclosure;
 	}
 	
