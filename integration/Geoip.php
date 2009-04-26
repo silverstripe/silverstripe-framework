@@ -1,14 +1,7 @@
 <?php
-
 /**
- * Routines for DNS to country resolution
+ * Routines for IP to country resolution.
  * 
- *  - convert address (either ip or domainname) to country.
- *  - returns false if IP address not found / not known;
- *  - otherwise an array 
- *  - set $codeOnly to true if you just want the country code
- *  - give a default for IP
- *
  * @package sapphire
  * @subpackage misc
  */
@@ -272,41 +265,45 @@ class Geoip extends Object {
 	);
 	
 	/** 
-	 * Returns the country code of the person given an IP.
+	 * Find the country for an IP address.
 	 * 
-	 * @param address - The IP address of the user,
-	 * @param codeOnly - Returns just the code of the IP instead of array( $CountryCode => $CountryName)
+	 * By default, it will return an array, keyed by
+	 * the country code with a value of the country
+	 * name.
+	 * 
+	 * To return the code only, pass in true for the
+	 * $codeOnly parameter.
+	 * 
+	 * @param string $address The IP address to get the country of
+	 * @param boolean $codeOnly Returns just the country code
 	 */
-	static function ip2country($address, $codeOnly = false) {	
-		
-		// Detect internal networks - this is us, so we're NZ
-		if(substr($address, 0, 7) == "192.168" || substr($address,0,4) == "127.") {
-			$code = 'NZ';
-		} else {
-			$cmd = 'geoiplookup ' . escapeshellarg($address);	
-			exec($cmd, $result, $code);	
-			// Note: At time of writing, $result is always zero for this program
+	static function ip2country($address, $codeOnly = false) {
+		$cmd = 'geoiplookup ' . escapeshellarg($address);
+		exec($cmd, $result, $code);
+		// Note: At time of writing, $result is always zero for this program
 
-			if($code == 127) return false;
-			if($result == false) return false;
-			
-			// Always returns one line of code, e.g. :
-			// Geoip Country Edition: GB, United Kingdom
-			// NZ
-			$country = $result[0]; 		
-	
-			$start = strpos($country, ':');
-			if($start) $start += 2;
-			$code = substr($country, $start, 2); // skip space	
-		}
+		if($code == 127) return false;
+		if($result == false) return false;
+		
+		// Always returns one line of code, e.g. :
+		// Geoip Country Edition: GB, United Kingdom
+		// NZ
+		$country = $result[0];
+
+		$start = strpos($country, ':');
+		if($start) $start += 2;
+		$code = substr($country, $start, 2); // skip space
 
 		if($code == 'IP' || $code == '--') {
-			 if(self::$default_country_code) $code = self::$default_country_code;
-			 else return false;
+			 if(self::$default_country_code) {
+			 	$code = self::$default_country_code;
+			 } else {
+			 	return false;
+			 }
 		}
 		
 		if(!$codeOnly) {
-			$name = substr($country, $start+4);
+			$name = substr($country, $start + 4);
 			if(!$name) $name = $this->countryCode2name($code);
 			
 			return array('code' => $code, 'name' => $name);
@@ -314,7 +311,6 @@ class Geoip extends Object {
 			return $code;
 		}
 	}
-
 
 	/**
 	 * Returns the country code, for the current visitor
@@ -378,5 +374,4 @@ class Geoip extends Object {
 		return $dropdown;
 	}
 }
-
 ?>
