@@ -33,6 +33,10 @@ Member:
       Groups: =>Group.admingroup
    websiteuser:
       Email: websiteuser@test.com
+DataObjectDecoratorTest_Member:
+   member1:
+      Name: Sam
+      Website: http://www.example.org
 DataObjectDecoratorTest_MyObject:
    object1:
       Title: Object 1

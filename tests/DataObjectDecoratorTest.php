@@ -56,6 +56,14 @@ class DataObjectDecoratorTest extends SapphireTest {
 
 	}
 	
+	/**
+	 * Test that DataObject::dbObject() works for fields applied by a decorator
+	 */
+	function testDbObjectOnDecoratedFields() {
+		$member = $this->objFromFixture('DataObjectDecoratorTest_Member', 'member1');
+		$this->assertNotNull($member->dbObject('Website'));
+		$this->assertType('Text', $member->dbObject('Website'));
+	}	
 }
 
 class DataObjectDecoratorTest_Member extends DataObject implements TestOnly {

@@ -208,19 +208,19 @@ class ViewableData extends Object implements IteratorAggregate {
 	public function buildCastingHelperCache(&$cache) {
 		$class = $this->class ? $this->class : get_class($this);
 		$classes = ClassInfo::ancestry($class);
-
+		
 		foreach($classes as $componentClass) {
 			if($componentClass == "ViewableData") $isViewableData = true;
 			if($componentClass == "DataObject") $isDataObject = true;
 
 			if(isset($isDataObject) && $isDataObject) {
-				$fields = eval("return {$componentClass}::\$db;");
+				$fields = Object::uninherited_static($componentClass, 'db');
 				if($fields) foreach($fields as $fieldName => $fieldSchema) {
 					$cache[$fieldName] = ViewableData::castingObjectCreatorPair($fieldSchema);
 				}
 			}
 			if(isset($isViewableData) && $isViewableData) {
-				$fields = eval("return {$componentClass}::\$casting;");
+				$fields = Object::uninherited_static($componentClass, 'casting');
 				if($fields) foreach($fields as $fieldName => $fieldSchema) {
 					$cache[$fieldName] = ViewableData::castingObjectCreatorPair($fieldSchema);
 				}
