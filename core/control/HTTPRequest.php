@@ -263,6 +263,7 @@ class HTTPRequest extends Object implements ArrayAccess {
 		$response->addHeader("Content-Type", "$mimeType; name=\"" . addslashes($fileName) . "\"");
 		$response->addHeader("Content-disposition", "attachment; filename=" . addslashes($fileName));
 		$response->addHeader("Content-Length", strlen($fileData));
+		$response->addheader("Pragma", ""); // Necessary because IE has issues sending files over SSL
 		
 		return $response;
 	}
