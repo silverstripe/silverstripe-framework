@@ -487,7 +487,7 @@ abstract class Database extends Object {
 						// Test to see if this update query shouldn't, in fact, be an insert
 						if($this->query("SELECT \"ID\" FROM \"$table\" WHERE $writeInfo[where]")->value()) {
 							$fieldList = implode(", ", $fieldList);
-							$sql = "update \"$table\" SET $fieldList where $writeInfo[where]";
+							$sql = "UPDATE \"$table\" SET $fieldList where $writeInfo[where]";
 							$this->query($sql);
 							break;
 						}
@@ -502,7 +502,7 @@ abstract class Database extends Object {
 						
 						$columnList = implode(", ", $columnList);
 						$valueList = implode(", ", $valueList);
-						$sql = "insert into \"$table\" ($columnList) VALUES ($valueList)";
+						$sql = "INSERT INTO \"$table\" ($columnList) VALUES ($valueList)";
 						$this->query($sql);
 						break;
 
