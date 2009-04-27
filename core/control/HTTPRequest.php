@@ -265,7 +265,7 @@ class HTTPRequest extends Object implements ArrayAccess {
 		$response->addHeader("Content-Length", strlen($fileData));
 		$response->addHeader("Pragma", ""); // Necessary because IE has issues sending files over SSL
 		
-		return $response->output();
+		return $response;
 	}
 	
 	/**
