@@ -83,7 +83,7 @@ class Controller extends RequestHandler {
 		// Directly access the session variable just in case the Group or Member tables don't yet exist
 		if(Session::get('loggedInAs') && Security::database_is_ready()) {
 			if($member = Member::currentUser()) {
-				Cookie::set("PastMember", true);
+				if(!headers_sent()) Cookie::set("PastMember", true);
 				DB::query("UPDATE Member SET LastVisited = NOW() WHERE ID = $member->ID", null);
 			}
 		}
