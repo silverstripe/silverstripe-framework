@@ -195,7 +195,11 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	function __construct($record = null, $isSingleton = false) {
 		// Set the fields data.
 		if(!$record) {
-			$record = array("ID" => 0);
+			$record = array(
+				'ID' => 0,
+				'ClassName' => get_class($this),
+				'RecordClassName' => get_class($this)
+			);
 		}
 
 		if(!is_array($record)) {
