@@ -602,6 +602,23 @@ class Translatable extends DataObjectDecorator {
 			}
 		}
 		
+		// Has to be limited to the default locale, the assumption is that the "page type"
+		// dropdown is readonly on all translations.
+		if($this->owner->ID && $this->owner->Locale == Translatable::default_locale()) {
+			$changedFields = $this->owner->getChangedFields();
+			if(isset($changedFields['ClassName'])) {
+				$this->owner->ClassName = $changedFields['ClassName']['before'];
+				$translations = $this->owner->getTranslations();
+				$this->owner->ClassName = $changedFields['ClassName']['after'];
+				if($translations) foreach($translations as $translation) {
+					$translation->setClassName($this->owner->ClassName);
+					$translation = $translation->newClassInstance($translation->ClassName);
+					$translation->forceChange();
+					$translation->write();
+				}
+			}
+		}		
+		
 		// see onAfterWrite()
 		if(!$this->owner->ID) {
 			$this->owner->_TranslatableIsNewRecord = true;
@@ -730,20 +747,10 @@ class Translatable extends DataObjectDecorator {
 		
 		// Show a dropdown to create a new translation.
 		// This action is possible both when showing the "default language"
-		// and a translation.
+		// and a translation. Include the current locale (record might not be saved yet).
 		$alreadyTranslatedLangs = $this->getTranslatedLangs();
+		$alreadyTranslatedLangs[$this->owner->Locale] = $this->owner->Locale;
 		
-		// We'd still want to show the default lang though,
-		// as records in this language might have NULL values in their $Lang property
-		// and otherwise wouldn't show up here
-		//$alreadyTranslatedLangs[Translatable::default_locale()] = i18n::get_locale_name(Translatable::default_locale());
-		
-		// Exclude the current language from being shown.
-		if(Translatable::current_locale() != Translatable::default_locale()) {
-			$currentLangKey = array_search(Translatable::current_locale(), $alreadyTranslatedLangs);
-			if($currentLangKey) unset($alreadyTranslatedLangs[$currentLangKey]);
-		}
-
 		$fields->addFieldsToTab(
 			'Root',
 			new Tab(_t('Translatable.TRANSLATIONS', 'Translations'),

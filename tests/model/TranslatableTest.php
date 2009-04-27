@@ -655,6 +655,36 @@ class TranslatableTest extends FunctionalTest {
 		Translatable::set_reading_locale('en_US');
 		$_SERVER['HTTP_HOST'] = $_originalHost;
 	}
+	
+	function testSiteTreeChangePageTypeInMaster() {
+		// create original
+		$origPage = new SiteTree();
+		$origPage->Locale = 'en_US';
+		$origPage->write();
+		$origPageID = $origPage->ID;
+		
+		// create translation
+		$translatedPage = $origPage->createTranslation('de_DE');
+		$translatedPageID = $translatedPage->ID;
+		
+		// change page type
+		$origPage->ClassName = 'RedirectorPage';
+		$origPage->write();
+		
+		// re-fetch original page with new instance
+		$origPageChanged = DataObject::get_by_id('RedirectorPage', $origPageID);
+		$this->assertEquals($origPageChanged->ClassName, 'RedirectorPage',
+			'A ClassName change to an original page doesnt change original classname'
+		);
+		
+		// re-fetch the translation with new instance
+		Translatable::set_reading_locale('de_DE');
+		$translatedPageChanged = DataObject::get_by_id('RedirectorPage', $translatedPageID);
+		$translatedPageChanged = $origPageChanged->getTranslation('de_DE');
+		$this->assertEquals($translatedPageChanged->ClassName, 'RedirectorPage',
+			'ClassName change on an original page also changes ClassName attribute of translation'
+		);
+	}
 
 }
 
