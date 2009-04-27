@@ -604,6 +604,25 @@ class DataObjectTest extends SapphireTest {
 			"Defaults are populated for in-memory object from \$defaults array"
 		);
 	}
+	
+	function testNewClassInstance() {
+		$page = $this->fixture->objFromFixture('Page', 'page1');
+		$changedPage = $page->newClassInstance('RedirectorPage');
+		$changedFields = $changedPage->getChangedFields();
+		
+		// Don't write the record, it will reset changed fields
+		
+		$this->assertType('RedirectorPage', $changedPage);
+		$this->assertEquals($changedPage->ClassName, 'RedirectorPage');
+		//$this->assertEquals($changedPage->RecordClassName, 'RedirectorPage');
+		$this->assertContains('ClassName', array_keys($changedFields));
+		$this->assertEquals($changedFields['ClassName']['before'], 'Page');
+		$this->assertEquals($changedFields['ClassName']['after'], 'RedirectorPage');
+		
+		$changedPage->write();
+		$this->assertType('RedirectorPage', $changedPage);
+		$this->assertEquals($changedPage->ClassName, 'RedirectorPage');
+	}
 
 }
 
