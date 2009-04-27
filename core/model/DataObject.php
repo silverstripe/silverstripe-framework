@@ -2319,7 +2319,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			}
 		}
 
-		//TODO: DB ABSTRACTION: IF STATEMENT:
 		$query->select[] = "\"$baseClass\".\"ID\"";
 		$query->select[] = "CASE WHEN \"$baseClass\".\"ClassName\" IS NOT NULL THEN \"$baseClass\".\"ClassName\" ELSE '$baseClass' END AS \"RecordClassName\"";
 
