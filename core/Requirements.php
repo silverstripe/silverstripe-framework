@@ -775,8 +775,12 @@ class Requirements_Backend {
 	 *
 	 */
 	function process_combined_files() {
-	
-		if((Director::isDev() && !SapphireTest::is_running_test()) || !Requirements::get_combined_files_enabled()) {
+		// The class_exists call prevents us from loading SapphireTest.php (slow) just to know that
+		// SapphireTest isn't running :-)
+		if(class_exists('SapphireTest',false)) $runningTest = SapphireTest::is_running_test();
+		else $runningTest = false;
+		
+		if((Director::isDev() && !$runningTest) || !Requirements::get_combined_files_enabled()) {
 			return;
 		}
 		
