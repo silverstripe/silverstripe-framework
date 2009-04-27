@@ -622,8 +622,6 @@ class TranslatableTest extends FunctionalTest {
 	}
 
 	function testRootUrlDefaultsToTranslatedUrlSegment() {
-		$_originalHost = $_SERVER['HTTP_HOST'];
-		
 		$origPage = $this->objFromFixture('Page', 'homepage_en');
 		$origPage->publish('Stage', 'Live');
 		$translationDe = $origPage->createTranslation('de_DE');
@@ -631,9 +629,8 @@ class TranslatableTest extends FunctionalTest {
 		$translationDe->write();
 		$translationDe->publish('Stage', 'Live');
 		
-		// test with translatable enabled
-		$_SERVER['HTTP_HOST'] = '/?locale=de';
-		Translatable::set_reading_locale('de_DE');
+		// test with translatable
+		Translatable::set_reading_locale('de_DE');		
 		$this->assertEquals(
 			RootURLController::get_homepage_urlsegment(), 
 			'heim', 
@@ -653,7 +650,6 @@ class TranslatableTest extends FunctionalTest {
 		
 		// setting back to default
 		Translatable::set_reading_locale('en_US');
-		$_SERVER['HTTP_HOST'] = $_originalHost;
 	}
 	
 	function testSiteTreeChangePageTypeInMaster() {

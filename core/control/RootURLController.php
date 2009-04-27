@@ -50,6 +50,7 @@ class RootURLController extends Controller {
 	/**
 	 * Return the URL segment for the current HTTP_HOST value
 	 * 
+	 * @param string $locale
 	 * @return string
 	 */
 	static function get_homepage_urlsegment() {
@@ -65,8 +66,8 @@ class RootURLController extends Controller {
 			$homePageOBJ = null;
 		}
 		
-		if(singleton('SiteTree')->hasExtension('Translatable')) {
-			$urlSegment = Translatable::get_homepage_urlsegment_by_language(Translatable::current_locale());
+		if(singleton('SiteTree')->hasExtension('Translatable') && !$homePageOBJ) {
+			$urlSegment = Translatable::get_homepage_urlsegment_by_locale(Translatable::current_locale());
 		} elseif($homePageOBJ) {
 			$urlSegment = $homePageOBJ->URLSegment;
 		}
@@ -76,14 +77,34 @@ class RootURLController extends Controller {
 	
 	/**
 	 * Returns true if we're currently on the root page and should be redirecting to the root
-	 * Doesn't take into account actions, post vars, or get vars
+	 * Doesn't take into account actions, post vars, or get vars.
+	 *
+	 * @param SiteTree $currentPage
+	 * @return boolean
 	 */
 	static function should_be_on_root(SiteTree $currentPage) {
-		if(!self::$is_at_root) return self::get_homepage_urlsegment() == $currentPage->URLSegment;
-		else return false;
+		if(self::$is_at_root) return false;
+		
+		$matchesHomepageSegment = (self::get_homepage_urlsegment() == $currentPage->URLSegment);
+		// Don't redirect translated homepage segments,
+		// as the redirection target '/' will show the default locale
+		// instead of the translation.
+		$isTranslatedHomepage = (
+			singleton('SiteTree')->hasExtension('Translatable')
+			&& $currentPage->Locale 
+			&& $currentPage->Locale != Translatable::default_locale()
+		);
+		if($matchesHomepageSegment && !$isTranslatedHomepage) return true;
+		
+		return false;
 	}
 	
 	/**
+	 * Returns the (untranslated) hardcoded URL segment that will
+	 * show when the website is accessed without a URL segment (http://mysite.com/).
+	 * It is also the base for any redirections to '/' for the homepage,
+	 * see {@link should_be_on_root()}.
+	 * 
 	 * @return string
 	 */
 	static function get_default_homepage_urlsegment() {

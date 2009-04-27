@@ -10,20 +10,23 @@
  * <h2>Configuration</h2>
  * 
  * Enabling Translatable in the $extension array of a DataObject
- * <code>
+ * <example>
  * class MyClass extends DataObject {
  *   static $extensions = array(
  *     "Translatable"
  *   );
  * }
- * </code>
+ * </example>
  * 
  * Enabling Translatable through {@link Object::add_extension()} in your _config.php:
  * <example>
+ * Translatable::set_default_locale('en_US');
  * Object::add_extension('MyClass', 'Translatable');
  * </example>
  * 
  * Make sure to rebuild the database through /dev/build after enabling translatable.
+ * Use the correct {@link set_default_locale()} before building the database
+ * for the first time, as this locale will be written on all new records.
  * 
  * <h2>Usage</h2>
  *
@@ -210,7 +213,9 @@ class Translatable extends DataObjectDecorator {
 	}
 	
 	/**
-	 * Set default language.
+	 * Set default language. Please set this value *before* creating
+	 * any database records (like pages), as this locale will be attached
+	 * to all new records.
 	 * 
 	 * @param $locale String
 	 */
@@ -663,9 +668,9 @@ class Translatable extends DataObjectDecorator {
 	 */
 	function alternateGetByUrl($urlSegment, $extraFilter, $cache = null, $orderby = null) {
 		$SQL_URLSegment = Convert::raw2sql($urlSegment);
-		Translatable::disable();
-		$record = DataObject::get_one('SiteTree', "\"URLSegment\" = '{$SQL_URLSegment}'");
-		Translatable::enable();
+		self::$enable_lang_filter = false;
+		$record = DataObject::get_one('SiteTree', "\"URLSegment\" = '{$SQL_URLSegment}'", false);
+		self::$enable_lang_filter = true;
 		
 		return $record;
 	}
@@ -1023,20 +1028,27 @@ class Translatable extends DataObjectDecorator {
 	 * @param string $locale
 	 * @return string|boolean URLSegment (e.g. "home")
 	 */
-	static function get_homepage_urlsegment_by_language($locale) {
+	static function get_homepage_urlsegment_by_locale($locale) {
 		$origHomepageObj = Translatable::get_one_by_locale(
 			'SiteTree',
 			Translatable::default_locale(),
 			sprintf('"URLSegment" = \'%s\'', RootUrlController::get_default_homepage_urlsegment())
 		);
 		if($origHomepageObj) {
-			$translatedHomepageObj = $origHomepageObj->getTranslation(Translatable::current_locale());
+			$translatedHomepageObj = $origHomepageObj->getTranslation($locale);
 			if($translatedHomepageObj) {
 				return $translatedHomepageObj->URLSegment;
 			}
 		}
 		
 		return null;
+	}
+	
+	/**
+	 * @deprecated 2.4 Use get_homepage_urlsegment_by_locale()
+	 */
+	static function get_homepage_urlsegment_by_language($locale) {
+		return self::get_homepage_urlsegment_by_locale($locale);
 	}
 	
 	/**
