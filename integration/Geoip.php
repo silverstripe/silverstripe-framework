@@ -278,6 +278,9 @@ class Geoip extends Object {
 	 * @param boolean $codeOnly Returns just the country code
 	 */
 	static function ip2country($address, $codeOnly = false) {
+		// Return if in CLI, or you'll get this error: "sh: geoiplookup: command not found"
+		if(Director::is_cli()) return false;
+		
 		$cmd = 'geoiplookup ' . escapeshellarg($address);
 		exec($cmd, $result, $code);
 		// Note: At time of writing, $result is always zero for this program
