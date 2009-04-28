@@ -141,15 +141,19 @@ class DataObjectSet extends ViewableData implements IteratorAggregate {
 	* @param string $index The field you wish to use as a key for the array
 	* @param string $titleField The field or method you wish to use to get values for the map
 	* @param string $emptyString String for no option selected
+	* @param bool $sort If you want to sort the map based on $titleField 
 	* @return array
 	*/
-	public function toDropDownMap($index = "ID",$titleField = "Title",$emptyString = null){
+	public function toDropDownMap($index = "ID",$titleField = "Title",$emptyString = null, $sort = false){
 		$map = array();
 		foreach($this->items as $item) {
 			$map[$item->$index] = $item->$titleField;
 		}
 		if($emptyString) {
 			$map = array("0"=>"$emptyString") + $map;
+		}
+		if($sort) {  
+			asort($map); 
 		}
 		return $map;
 	}

@@ -227,6 +227,13 @@ class File extends DataObject {
 		
 		return $upload->isError();
 	}
+	
+	/**
+	 * Should be called after the file was uploaded 
+	 */ 
+	function onAfterUpload() {
+		$this->extend('onAfterUpload');
+	}
 
 	/**
 	 * Delete the database record (recursively for folders) without touching the filesystem
@@ -431,7 +438,7 @@ class File extends DataObject {
 		if($this->ParentID) {
 			$p = DataObject::get_one('Folder', "\"ID\"={$this->ParentID}");
 
-			if($p->ID) return $p->getRelativePath() . $this->getField("Name");
+			if($p && $p->ID) return $p->getRelativePath() . $this->getField("Name");
 			else return ASSETS_DIR . "/" . $this->getField("Name");
 
 		} else if($this->getField("Name")) {

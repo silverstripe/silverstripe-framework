@@ -6,7 +6,7 @@ html {
 	overflow-y: auto !important;
 }
 body {
-	height: auto;
+	height: 100%;
 }
 
 #ComplexTableField_Popup_DetailForm input.loading {

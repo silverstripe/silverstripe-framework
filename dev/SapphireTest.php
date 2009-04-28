@@ -81,6 +81,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 		$this->originalMailer = Email::mailer();
 		$this->mailer = new TestMailer();
 		Email::set_mailer($this->mailer);
+		Email::send_all_emails_to(null);
 	}
 	
 	/**

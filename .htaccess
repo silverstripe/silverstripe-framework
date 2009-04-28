@@ -1,0 +1,4 @@
+<Files cli-script.php>
+Order deny,allow
+Deny from all
+</Files>
