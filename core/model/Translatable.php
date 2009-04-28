@@ -63,8 +63,7 @@
  * Caution: The "URLSegment" property is enforced to be unique across
  * languages by auto-appending the language code at the end.
  * You'll need to ensure that the appropriate "reading language" is set
- * before showing links to other pages on a website: Either
- * through setting $_COOKIE['locale'], $_SESSION['locale'] or $_GET['locale'].
+ * before showing links to other pages on a website through $_GET['locale'].
  * Pages in different languages can have different publication states
  * through the {@link Versioned} extension.
  * 
@@ -171,7 +170,7 @@ class Translatable extends DataObjectDecorator {
 	
 	/**
 	 * Choose the language the site is currently on.
-	 * If $_GET['locale'] or $_COOKIE['locale'] is set, then it will use that language, and store it in the session.
+	 * If $_GET['locale'] is set, then it will use that language, and store it in the session.
 	 * Otherwise it checks the session for a possible stored language, either from namespace to the site_mode
 	 * ('site' or 'cms'), or for a 'global' language setting. 
 	 * The final option is the member preference.
@@ -960,6 +959,27 @@ class Translatable extends DataObjectDecorator {
 		$children = $this->owner->doAllChildrenIncludingDeleted($context);
 		
 		return $children;
+	}
+	
+	/**
+	 * Returns <link rel="alternate"> markup for insertion into
+	 * a HTML4/XHTML compliant <head> section, listing all available translations
+	 * of a page.
+	 * 
+	 * @see http://www.w3.org/TR/html4/struct/links.html#edef-LINK
+	 * 
+	 * @return string HTML
+	 */
+	function MetaTags(&$tags) {
+		$template = '<link rel="alternate" type="text/html" title="%s" hreflang="%s" href="%s">' . "\n";
+		$translations = $this->owner->getTranslations();
+		if($translations) foreach($translations as $translation) {
+			$tags .= sprintf($template,
+				$translation->Title,
+				i18n::convert_rfc1766($translation->Locale),
+				$translation->Link()
+			);
+		}
 	}
 	
 	/**
