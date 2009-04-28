@@ -647,7 +647,7 @@ class Requirements_Backend {
 			$this->javascript(SAPPHIRE_DIR . '/javascript/i18n.js');
 
 			if(substr($langDir,-1) != '/') $langDir .= '/';
-		
+			
 			$this->javascript($langDir . i18n::default_locale() . '.js');
 			$this->javascript($langDir . i18n::get_locale() . '.js');
 		
