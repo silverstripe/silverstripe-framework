@@ -63,7 +63,7 @@ class SapphireSoapServer extends Controller {
 	fwrite($fh, $wsdl);
 	fclose($fh);
 
-	$s = new SoapServer($wsdlFile);
+	$s = new SoapServer($wsdlFile, array('cache_wsdl' => WSDL_CACHE_NONE));
 	$s->setClass($this->class);
 	$s->handle();
   }

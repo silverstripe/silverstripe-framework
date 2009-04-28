@@ -21,6 +21,13 @@
 	font-size: 11px;
 }
 
+/* popup */
+.ComplexTableField_ItemRequest_Popup {
+	height: 100%;
+	overflow: auto;
+}
+
+/* table */
 .ComplexTableField {
 	margin-bottom: 10px;
 }

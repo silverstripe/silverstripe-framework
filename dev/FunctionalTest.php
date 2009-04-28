@@ -153,7 +153,7 @@ class FunctionalTest extends SapphireTest {
 		foreach($expectedMatches as $match) {
 			if(!isset($actuals[$match])) {
 				throw new PHPUnit_Framework_AssertionFailedError(
-		            "Failed asserting the CSS selector '$selector' has an exact match to the expected elements:\n'" . implode("'\n'", $expectedMatches) . "'\n\n" 
+		            "Failed asserting the CSS selector '$selector' has a partial match to the expected elements:\n'" . implode("'\n'", $expectedMatches) . "'\n\n" 
 					. "Instead the following elements were found:\n'" . implode("'\n'", array_keys($actuals)) . "'"
 		        );
 				return false;
@@ -217,7 +217,7 @@ class FunctionalTest extends SapphireTest {
 		foreach($expectedMatches as $match) {
 			if(!isset($actuals[$match])) {
 				throw new PHPUnit_Framework_AssertionFailedError(
-		            "Failed asserting the CSS selector '$selector' has an exact match to the expected elements:\n'" . implode("'\n'", $expectedMatches) . "'\n\n" 
+		            "Failed asserting the CSS selector '$selector' has a partial match to the expected elements:\n'" . implode("'\n'", $expectedMatches) . "'\n\n" 
 					. "Instead the following elements were found:\n'" . implode("'\n'", array_keys($actuals)) . "'"
 		        );
 				return false;

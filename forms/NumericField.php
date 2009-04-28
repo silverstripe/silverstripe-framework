@@ -17,7 +17,7 @@ Behaviour.register({
 				el = _CURRENT_FORM.elements[fieldName];
 				if(!el || !el.value) return true;
 				
-			 	if(el.value.match(/^([0-9]+(\.[0-9]+)?$)/)) { 
+			 	if(el.value.match(/^\s*([0-9]+(\.[0-9]+)?\s*$)/)) { 
 			 		return true;
 			 	} else {
 					validationError(el, "'" + el.value + "' $error","validation");
@@ -43,7 +43,7 @@ JS;
 	
 	/** PHP Validation **/
 	function validate($validator){
-		if($this->value && !is_numeric($this->value)){
+		if($this->value && !is_numeric(trim($this->value))){
  			$validator->validationError(
  				$this->name,
 				sprintf(
