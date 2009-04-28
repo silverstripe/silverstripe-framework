@@ -23,3 +23,7 @@ GroupTest_Member:
    allgroupuser:
       FirstName: All Group User
       Groups: =>Group.admingroup,=>Group.parentgroup,=>Group.childgroup
+Permission:
+   admincode:
+      Code: ADMIN
+      Group: =>Group.admingroup
