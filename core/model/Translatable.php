@@ -480,6 +480,36 @@ class Translatable extends DataObjectDecorator {
 	}
 	
 	/**
+	 * @todo Find more appropriate place to hook into database building
+	 */
+	function requireDefaultRecords() {
+		// @todo This relies on the Locale attribute being on the base data class, and not any subclasses
+		if($this->owner->class != ClassInfo::baseDataClass($this->owner->class)) return false;
+		
+		// If the Translatable extension was added after the first records were already
+		// created in the database, make sure to update the Locale property if
+		// if wasn't set before
+		$idsWithoutLocale = DB::query(sprintf(
+			'SELECT "ID" FROM "%s" WHERE "Locale" IS NULL OR "Locale" = \'\'',
+			ClassInfo::baseDataClass($this->owner->class)
+		))->column();
+		if($idsWithoutLocale) {
+			foreach($idsWithoutLocale as $id) {
+				$obj = DataObject::get_by_id($this->owner->class, $id);
+				$obj->Locale = Translatable::default_locale();
+				$obj->write();
+				$obj->destroy();
+				unset($obj);
+			}
+			Database::alteration_message(sprintf(
+				"Added default locale '%s' to table %s","changed",
+				Translatable::default_locale(),
+				$this->owner->class
+			));
+		}
+	}
+	
+	/**
 	 * Add a record to a "translation group",
 	 * so its relationship to other translations
 	 * based off the same object can be determined later on.
