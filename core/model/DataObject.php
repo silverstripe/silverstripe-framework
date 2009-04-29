@@ -182,7 +182,11 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	function __construct($record = null, $isSingleton = false) {
 		// Set the fields data.
 		if(!$record) {
-			$record = array("ID" => 0);
+			$record = array(
+				'ID' => 0,
+				'ClassName' => get_class($this),
+				'RecordClassName' => get_class($this)
+			);
 		}
 
 		if(!is_array($record)) {
@@ -243,9 +247,13 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	}
 
 	/**
-	 * Set the ClassName attribute; $this->class is also updated.
+	 * Set the ClassName attribute. {@link $class} is also updated.
+	 * Warning: This will produce an inconsistent record, as the object
+	 * instance will not automatically switch to the new subclass.
+	 * Please use {@link newClassInstance()} for this purpose,
+	 * or destroy and reinstanciate the record.
 	 *
-	 * @param string $className The new ClassName attribute
+	 * @param string $className The new ClassName attribute (a subclass of {@link DataObject})
 	 */
 	function setClassName($className) {
 		$this->class = trim($className);
@@ -256,19 +264,26 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * Create a new instance of a different class from this object's record
 	 * This is useful when dynamically changing the type of an instance. Specifically,
 	 * it ensures that the instance of the class is a match for the className of the
-	 * record.
+	 * record. Don't set the {@link DataObject->class} or {@link DataObject->ClassName}
+	 * property manually before calling this method, as it will confuse change detection.
 	 *
 	 * @param string $newClassName The name of the new class
 	 *
 	 * @return DataObject The new instance of the new class, The exact type will be of the class name provided.
 	 */
 	function newClassInstance($newClassName) {
-		$newRecord = $this->record;
-		//$newRecord['RecordClassName'] = $newRecord['ClassName'] = $newClassName;
-
-		$newInstance = new $newClassName($newRecord);
-		$newInstance->setClassName($newClassName);
-		$newInstance->forceChange();
+		$originalClass = $this->ClassName;
+		$newInstance = new $newClassName(array_merge(
+			$this->record,
+			array(
+				'ClassName'=>$originalClass,
+				'RecordClassName'=>$originalClass,
+			)
+		));
+		if($newClassName != $this->ClassName) {
+			$newInstance->setClassName($newClassName);
+			$newInstance->forceChange();
+		}
 
 		return $newInstance;
 	}
@@ -596,11 +611,13 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 
 	/**
 	 * Forces the record to think that all its data has changed.
-	 * Doesn't write to the database.
+	 * Doesn't write to the database. Only sets fields as changed
+	 * if they are not already marked as changed.
 	 */
 	public function forceChange() {
-		foreach($this->record as $fieldName => $fieldVal)
-		$this->changed[$fieldName] = 1;
+		foreach($this->record as $fieldName => $fieldVal) {
+			if(!isset($this->changed[$fieldName])) $this->changed[$fieldName] = 1;
+		}
 	}
 	
 	/**

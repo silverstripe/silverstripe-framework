@@ -617,8 +617,6 @@ class TranslatableTest extends FunctionalTest {
 	}
 
 	function testRootUrlDefaultsToTranslatedUrlSegment() {
-		$_originalHost = $_SERVER['HTTP_HOST'];
-		
 		$origPage = $this->objFromFixture('Page', 'homepage_en');
 		$origPage->publish('Stage', 'Live');
 		$translationDe = $origPage->createTranslation('de_DE');
@@ -626,9 +624,8 @@ class TranslatableTest extends FunctionalTest {
 		$translationDe->write();
 		$translationDe->publish('Stage', 'Live');
 		
-		// test with translatable enabled
-		$_SERVER['HTTP_HOST'] = '/?locale=de';
-		Translatable::set_reading_locale('de_DE');
+		// test with translatable
+		Translatable::set_reading_locale('de_DE');		
 		$this->assertEquals(
 			RootURLController::get_homepage_urlsegment(), 
 			'heim', 
@@ -648,8 +645,63 @@ class TranslatableTest extends FunctionalTest {
 		
 		// setting back to default
 		Translatable::set_reading_locale('en_US');
-		$_SERVER['HTTP_HOST'] = $_originalHost;
 	}
+	
+	function testSiteTreeChangePageTypeInMaster() {
+		// create original
+		$origPage = new SiteTree();
+		$origPage->Locale = 'en_US';
+		$origPage->write();
+		$origPageID = $origPage->ID;
+		
+		// create translation
+		$translatedPage = $origPage->createTranslation('de_DE');
+		$translatedPageID = $translatedPage->ID;
+		
+		// change page type
+		$origPage->ClassName = 'RedirectorPage';
+		$origPage->write();
+		
+		// re-fetch original page with new instance
+		$origPageChanged = DataObject::get_by_id('RedirectorPage', $origPageID);
+		$this->assertEquals($origPageChanged->ClassName, 'RedirectorPage',
+			'A ClassName change to an original page doesnt change original classname'
+		);
+		
+		// re-fetch the translation with new instance
+		Translatable::set_reading_locale('de_DE');
+		$translatedPageChanged = DataObject::get_by_id('RedirectorPage', $translatedPageID);
+		$translatedPageChanged = $origPageChanged->getTranslation('de_DE');
+		$this->assertEquals($translatedPageChanged->ClassName, 'RedirectorPage',
+			'ClassName change on an original page also changes ClassName attribute of translation'
+		);
+	}
+	
+	function testGetTranslationByStage() {
+		$publishedPage = new SiteTree();
+		$publishedPage->Locale = 'en_US';
+		$publishedPage->Title = 'Published';
+		$publishedPage->write();
+		$publishedPage->publish('Stage', 'Live');
+		$publishedPage->Title = 'Unpublished';
+		$publishedPage->write();
+		
+		$publishedTranslatedPage = $publishedPage->createTranslation('de_DE');
+		$publishedTranslatedPage->Title = 'Publiziert';
+		$publishedTranslatedPage->write();
+		$publishedTranslatedPage->publish('Stage', 'Live');
+		$publishedTranslatedPage->Title = 'Unpubliziert';
+		$publishedTranslatedPage->write();
+		
+		$compareStage = $publishedPage->getTranslation('de_DE', 'Stage');
+		$this->assertNotNull($compareStage);
+		$this->assertEquals($compareStage->Title, 'Unpubliziert');
+		
+		$compareLive = $publishedPage->getTranslation('de_DE', 'Live');
+		$this->assertNotNull($compareLive);
+		$this->assertEquals($compareLive->Title, 'Publiziert');
+	}
+
 }
 
 class TranslatableTest_DataObject extends DataObject implements TestOnly {

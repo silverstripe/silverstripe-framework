@@ -198,6 +198,12 @@ class i18nTest extends SapphireTest {
 		
 		i18n::set_locale($oldLocale);
 	}
+	
+	function testGetLocaleFromLang() {
+		$this->assertEquals('en_US', i18n::get_locale_from_lang('en'));
+		$this->assertEquals('de_DE', i18n::get_locale_from_lang('de_DE'));
+		$this->assertEquals('xy_XY', i18n::get_locale_from_lang('xy'));
+	}
 }
 
 class i18nTest_DataObject extends DataObject implements TestOnly {

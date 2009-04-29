@@ -1602,7 +1602,9 @@ class i18n extends Object {
 	 * @return string Long locale, e.g. "en_US"
 	 */
 	static function get_locale_from_lang($lang) {
-		if(isset(self::$likely_subtags[$lang])) {
+		if(preg_match('/\-|_/', $lang)) {
+			return $lang;
+		} else if(isset(self::$likely_subtags[$lang])) {
 			return self::$likely_subtags[$lang];
 		} else {
 			return $lang . '_' . strtoupper($lang);

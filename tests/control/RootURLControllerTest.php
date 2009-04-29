@@ -37,7 +37,11 @@ class RootURLControllerTest extends SapphireTest {
 		
 		foreach($tests as $domain => $urlSegment) {
 			$_SERVER['HTTP_HOST'] = $domain;
-			$this->assertEquals($urlSegment, RootURLController::get_homepage_urlsegment(), "Testing $domain matches $urlSegment");
+			$this->assertEquals(
+				$urlSegment, 
+				RootURLController::get_homepage_urlsegment(Translatable::default_locale()), 
+				"Testing $domain matches $urlSegment"
+			);
 		}
 		
 		$_SERVER['HTTP_HOST'] = $originalHost;
