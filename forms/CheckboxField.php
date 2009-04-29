@@ -5,13 +5,20 @@
  * @subpackage fields-basic
  */
 class CheckboxField extends FormField {
-	/**
-	 * Returns a single checkbox field - used by templates.
-	 *
-	 * Shouldn't this have a value?
-	 */
 	 
 	protected $disabled;
+
+	function setValue($value) {
+		$this->value = ($value) ? 1 : 0;
+	}
+
+	function dataValue() {
+		return ($this->value) ? 1 : 0;
+	}
+	
+	function Value() {
+		return ($this->value) ? 1 : 0;
+	}
 	
 	function Field() {
 		$attributes = array(
@@ -19,6 +26,7 @@ class CheckboxField extends FormField {
 			'class' => ($this->extraClass() ? $this->extraClass() : ''),
 			'id' => $this->id(),
 			'name' => $this->Name(),
+			'value' => 1,
 			'checked' => $this->value ? 'checked' : '',
 			'tabindex' => $this->getTabIndex()
 		);
@@ -27,12 +35,7 @@ class CheckboxField extends FormField {
 		
 		return $this->createTag('input', $attributes);
 	}
-	
-	
-	function dataValue() {
-		return $this->value ? 1 : 0;
-	}
-	
+
 	/**
 	 * Checkboxes use the RightLabelledFieldHolder template, to put the field on the left
 	 * and the label on the right.  See {@link FormField::FieldHolder} for more information about
@@ -76,7 +79,7 @@ HTML;
 	 */
 	 
 	function performReadonlyTransformation() {
-		$field = new CheckboxField_Readonly($this->name, $this->title, $this->value ? 'Yes' : 'No');
+		$field = new CheckboxField_Readonly($this->name, $this->title, $this->value ? _t('CheckboxField.YES', 'Yes') : _t('CheckboxField.NO', 'No'));
 		$field->setForm($this->form);
 		return $field;	
 	}
@@ -99,7 +102,7 @@ class CheckboxField_Readonly extends ReadonlyField {
 	}
 	
 	function setValue($val) {
-		$this->value = ($val) ? 'Yes' : 'No';
+		$this->value = ($val) ? _t('CheckboxField.YES', 'Yes') : _t('CheckboxField.NO', 'No');
 	}
 }
 

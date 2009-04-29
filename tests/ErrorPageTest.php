@@ -1,31 +1,39 @@
 <?php
-
-class ErrorPageTest extends SapphireTest {
+/**
+ * @package sapphire
+ * @subpackage tests
+ */
+class ErrorPageTest extends FunctionalTest {
 	
 	static $fixture_file = 'sapphire/tests/ErrorPageTest.yml';
 	
 	function test404ErrorPage() {
-		$errorPage = DataObject::get_one('ErrorPage', "ErrorCode = '404'");
-
-		/* We have an ErrorPage object to use */
-		$this->assertTrue($errorPage instanceof ErrorPage);
+		$page = $this->objFromFixture('ErrorPage', '404');
 		
-		/* Test the URL of the error page out to get a response */
-		$response = Director::test(Director::makeRelative($errorPage->Link()));
+		/* The page is an instance of ErrorPage */
+		$this->assertTrue($page instanceof ErrorPage, 'The page is an instance of ErrorPage');
 		
-		/* We have an HTTPResponse object for the error page */
-		$this->assertTrue($response instanceof HTTPResponse);
+		$response = $this->get($page->URLSegment);
 		
 		/* We have body text from the error page */
-		$this->assertTrue($response->getBody() != null);
+		$this->assertNotNull($response->getBody(), 'We have body text from the error page');
 
 		/* Status code of the HTTPResponse for error page is "404" */
-		$this->assertTrue($response->getStatusCode() == '404');
+		$this->assertEquals($response->getStatusCode(), '404', 'Status cod eof the HTTPResponse for error page is "404"');
 		
 		/* Status message of the HTTPResponse for error page is "Not Found" */
-		$this->assertTrue($response->getStatusDescription() == 'Not Found');
+		$this->assertEquals($response->getStatusDescription(), 'Not Found', 'Status message of the HTTResponse for error page is "Not found"');
+	}
+	
+	function testBehaviourOfShowInMenuAndShowInSearchFlags() {
+		$page = $this->objFromFixture('ErrorPage', '404');
+		
+		/* Don't show the error page in the menus */
+		$this->assertEquals($page->ShowInMenus, 0, 'Don\'t show the error page in the menus');
+		
+		/* Don't show the error page in the search */
+		$this->assertEquals($page->ShowInSearch, 0, 'Don\'t show the error page in search');
 	}
 	
 }
-
 ?>

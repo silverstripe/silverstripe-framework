@@ -27,6 +27,8 @@ class GroupTest extends FunctionalTest {
 	}
 	
 	function testMemberGroupRelationForm() {
+		Session::set('loggedInAs', $this->idFromFixture('GroupTest_Member', 'admin'));
+		
 	      $adminGroup = $this->fixture->objFromFixture('Group', 'admingroup');
 	      $parentGroup = $this->fixture->objFromFixture('Group', 'parentgroup');
 	      $childGroup = $this->fixture->objFromFixture('Group', 'childgroup');
@@ -42,6 +44,7 @@ class GroupTest extends FunctionalTest {
 	      ));
 	      $form->saveInto($member);
 	      $updatedGroups = $member->Groups();
+
 	      $controlGroups = new Member_GroupSet(
 	         $adminGroup,
 	         $parentGroup

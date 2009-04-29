@@ -241,6 +241,23 @@ class Member extends DataObject {
 	}
 
 	/**
+	 * Check if the member ID logged in session actually
+	 * has a database record of the same ID. If there is
+	 * no logged in user, FALSE is returned anyway.
+	 * 
+	 * @return boolean TRUE record found FALSE no record found
+	 */
+	static function logged_in_session_exists() {
+		if($id = Member::currentUserID()) {
+			if($member = DataObject::get_by_id('Member', $id)) {
+				if($member->exists()) return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	/**
 	 * Log the user in if the "remember login" cookie is set
 	 *
 	 * The <i>remember login token</i> will be changed on every successful

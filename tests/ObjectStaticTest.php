@@ -119,4 +119,3 @@ class ObjectStaticTest_Combined3 extends ObjectStaticTest_Combined2 {
 	public static $first  = array('test_3');
 	public static $second = array('test_3');
 }
-/**#@-*/

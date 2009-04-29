@@ -77,9 +77,20 @@ class DropdownField extends FormField {
 			}
 			
 			foreach($source as $value => $title) {
-				$selected = ($value == $this->value) ? 'selected' : null;
-				if($selected && $this->value != 0) {
-					$this->isSelected = true;
+				
+				// Blank value of field and source (e.g. "" => "(Any)")
+				if($value === '' && ($this->value === '' || $this->value === null)) {
+					$selected = 'selected';
+				} else {
+					// Normal value from the source
+					if($value) {
+						$selected = ($value == $this->value) ? 'selected' : null;
+					} else {
+						// Do a type check comparison, we might have an array key of 0
+						$selected = ($value === $this->value) ? 'selected' : null;
+					}
+					
+					$this->isSelected = ($selected) ? true : false;
 				}
 				
 				$options .= $this->createTag(
@@ -92,7 +103,7 @@ class DropdownField extends FormField {
 				);
 			}
 		}
-	
+		
 		$attributes = array(
 			'class' => ($this->extraClass() ? $this->extraClass() : ''),
 			'id' => $this->id(),

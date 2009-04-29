@@ -118,7 +118,7 @@ class FormField extends RequestHandler {
 	 * 
 	 * @return string
 	 */
-	function Message(){
+	function Message() {
 		return $this->message;
 	} 
 	
@@ -130,7 +130,7 @@ class FormField extends RequestHandler {
 	 * 
 	 * @return string
 	 */
-	function MessageType(){
+	function MessageType() {
 		return $this->messageType;
 	} 
 	
