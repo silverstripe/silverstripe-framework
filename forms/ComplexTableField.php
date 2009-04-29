@@ -200,14 +200,6 @@ class ComplexTableField extends TableListField {
 		$this->detailFormFields = $detailFormFields;
 		$this->controller = $controller;
 		$this->pageSize = 10;
-
-		Requirements::javascript(THIRDPARTY_DIR . "/greybox/AmiJS.js");
-		Requirements::javascript(THIRDPARTY_DIR . "/greybox/greybox.js");
-		Requirements::add_i18n_javascript(SAPPHIRE_DIR . '/javascript/lang');
-		Requirements::javascript(SAPPHIRE_DIR . '/javascript/TableListField.js');
-		Requirements::javascript(SAPPHIRE_DIR . "/javascript/ComplexTableField.js");
-		Requirements::css(THIRDPARTY_DIR . "/greybox/greybox.css");
-		Requirements::css(SAPPHIRE_DIR . "/css/ComplexTableField.css");
 		
 		parent::__construct($name, $sourceClass, $fieldList, $sourceFilter, $sourceSort, $sourceJoin);
 		
@@ -246,6 +238,15 @@ class ComplexTableField extends TableListField {
 	 * @return String
 	 */
 	function FieldHolder() {
+		Requirements::javascript(THIRDPARTY_DIR . "/greybox/AmiJS.js");
+		Requirements::javascript(THIRDPARTY_DIR . "/greybox/greybox.js");
+		Requirements::add_i18n_javascript(SAPPHIRE_DIR . '/javascript/lang');
+		Requirements::javascript(SAPPHIRE_DIR . '/javascript/TableListField.js');
+		Requirements::javascript(SAPPHIRE_DIR . "/javascript/ComplexTableField.js");
+		Requirements::css(THIRDPARTY_DIR . "/greybox/greybox.css");
+		Requirements::css(SAPPHIRE_DIR . "/css/TableListField.css");
+		Requirements::css(SAPPHIRE_DIR . "/css/ComplexTableField.css");
+		
 		// set caption if required
 		if($this->popupCaption) {
 			$id = $this->id();
@@ -1014,36 +1015,13 @@ class ComplexTableField_Item extends TableListField_Item {
  */
 class ComplexTableField_Popup extends Form {
 	protected $sourceClass;
+	
 	protected $dataObject;
 
 	function __construct($controller, $name, $fields, $validator, $readonly, $dataObject) {
 		$this->dataObject = $dataObject;
-
-		/**
-		 * WARNING: DO NOT CHANGE THE ORDER OF THESE JS FILES
-		 * Some have special requirements.
-		 */
-		//Requirements::css(CMS_DIR . '/css/layout.css');
-		Requirements::css(SAPPHIRE_DIR . '/css/Form.css');
-		Requirements::css(SAPPHIRE_DIR . '/css/ComplexTableField_popup.css');
-		Requirements::css(CMS_DIR . '/css/typography.css');
-		Requirements::css(CMS_DIR . '/css/cms_right.css');
-		Requirements::javascript(THIRDPARTY_DIR . "/prototype.js");
-		Requirements::javascript(THIRDPARTY_DIR . "/behaviour.js");
-		Requirements::javascript(THIRDPARTY_DIR . "/prototype_improvements.js");
-		Requirements::javascript(THIRDPARTY_DIR . "/scriptaculous/scriptaculous.js");
-		Requirements::javascript(THIRDPARTY_DIR . "/scriptaculous/controls.js");
-		Requirements::javascript(THIRDPARTY_DIR . "/layout_helpers.js");
-		Requirements::add_i18n_javascript(SAPPHIRE_DIR . '/javascript/lang');
-		Requirements::javascript(CMS_DIR . "/javascript/LeftAndMain.js");
-		Requirements::javascript(CMS_DIR . "/javascript/LeftAndMain_right.js");
-		Requirements::javascript(SAPPHIRE_DIR . "/javascript/TableField.js");
-		Requirements::javascript(SAPPHIRE_DIR . "/javascript/ComplexTableField.js");
-		Requirements::javascript(SAPPHIRE_DIR . "/javascript/ComplexTableField_popup.js");
-
- 		if($this->dataObject->hasMethod('getRequirementsForPopup')) {
-			$this->dataObject->getRequirementsForPopup();
-		}
+		
+		Requirements::clear();
 		
 		$actions = new FieldSet();	
 		if(!$readonly) {
@@ -1059,8 +1037,31 @@ class ComplexTableField_Popup extends Form {
 		parent::__construct($controller, $name, $fields, $actions, $validator);
 	}
 
-	function FieldHolder() {
-		return $this->renderWith('ComplexTableField_Form');
+	function forTemplate() {
+		$ret = parent::forTemplate();
+		
+		/**
+		 * WARNING: DO NOT CHANGE THE ORDER OF THESE JS FILES
+		 * Some have special requirements.
+		 */
+		Requirements::css(SAPPHIRE_DIR . '/css/Form.css');
+		Requirements::css(SAPPHIRE_DIR . '/css/ComplexTableField_popup.css');
+		Requirements::css(CMS_DIR . '/css/typography.css');
+		Requirements::css(CMS_DIR . '/css/cms_right.css');
+		Requirements::javascript(THIRDPARTY_DIR . "/prototype.js");
+		Requirements::javascript(THIRDPARTY_DIR . "/behaviour.js");
+		Requirements::javascript(THIRDPARTY_DIR . "/prototype_improvements.js");
+		Requirements::javascript(THIRDPARTY_DIR . "/scriptaculous/scriptaculous.js");
+		Requirements::javascript(THIRDPARTY_DIR . "/scriptaculous/controls.js");
+		Requirements::javascript(THIRDPARTY_DIR . "/layout_helpers.js");
+		Requirements::add_i18n_javascript(SAPPHIRE_DIR . '/javascript/lang');
+		Requirements::javascript(SAPPHIRE_DIR . "/javascript/ComplexTableField_popup.js");
+
+ 		if($this->dataObject->hasMethod('getRequirementsForPopup')) {
+			$this->dataObject->getRequirementsForPopup();
+		}
+		
+		return $ret;
 	}
 }
 

@@ -43,9 +43,22 @@ class MemberLoginForm extends LoginForm {
 			$backURL = Session::get('BackURL');
 		}
 
-		if($checkCurrentUser && Member::currentUserID()) {
-			$fields = new FieldSet();
-			$actions = new FieldSet(new FormAction("logout", _t('Member.BUTTONLOGINOTHER', "Log in as someone else")));
+		// We assume if session is storing a member ID, that member exists in the DB
+		$sessMemberExistsInDB = true;
+		if($sessionMemberID = Member::currentUserID()) {
+			$sessMemberInDB = DataObject::get_by_id('Member', $sessionMemberID);
+			if(!($sessMemberInDB && $sessMemberInDB->exists())) {
+				$sessMemberExistsInDB = false;
+			}
+		}
+		
+		if($checkCurrentUser && Member::currentUserID() && $sessMemberExistsInDB) {
+			$fields = new FieldSet(
+				new HiddenField("AuthenticationMethod", null, $this->authenticator_class, $this)
+			);
+			$actions = new FieldSet(
+				new FormAction("logout", _t('Member.BUTTONLOGINOTHER', "Log in as someone else"))
+			);
 		} else {
 			if(!$fields) {
 				$fields = new FieldSet(

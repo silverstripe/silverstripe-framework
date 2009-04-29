@@ -2826,11 +2826,13 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 *
 	 * @uses $field_labels
 	 * @uses FormField::name_to_label()
+	 *
+	 * @param boolean $includerelations a boolean value to indicate if the labels returned include relation fields
 	 * 
 	 * @return array of all element labels if no argument given
 	 * @return string of label if field
 	 */
-	public function fieldLabels() {
+	public function fieldLabels($includerelations = true) {
 		$customLabels = $this->stat('field_labels');
 		$autoLabels = array();
 		
@@ -2845,6 +2847,11 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 				'has_many'  => (array) Object::uninherited_static($ancestorClass, 'has_many'),
 				'many_many' => (array) Object::uninherited_static($ancestorClass, 'many_many')
 			);
+			if($includerelations){
+				$types['has_one'] = (array)singleton($ancestorClass)->uninherited('has_one', true);
+				$types['has_many'] = (array)singleton($ancestorClass)->uninherited('has_many', true);
+				$types['many_many'] = (array)singleton($ancestorClass)->uninherited('many_many', true);
+			}
 			foreach($types as $type => $attrs) {
 				foreach($attrs as $name => $spec)
 				$autoLabels[$name] = _t("{$ancestorClass}.{$type}_{$name}",FormField::name_to_label($name));

@@ -162,6 +162,12 @@ TableField.prototype = {
 			if(newRow.id != "new"){
 				this.resetNames(newRow);
 			}
+			
+			// Make sure all inputs have unique IDs
+			for(var i = 0; i < inputs.length; i++) {
+				inputs[i].id += "-" + this.newRowID;
+			}
+			
 			// Change the ID to a unique one
 			newRow.id = "New_" + this.newRowID;
 			

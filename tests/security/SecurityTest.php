@@ -37,13 +37,61 @@ class SecurityTest extends FunctionalTest {
 		parent::tearDown();
 	}
 	
-	function testExternalBackUrlRedirectionDisallowed() {
-		$page = new SiteTree();
-		$page->URLSegment = 'testpage';
-		$page->Title = 'Testpage';
-		$page->write();
-		$page->publish('Stage','Live');
+	function testLogInAsSomeoneElse() {
+		$member = DataObject::get_one('Member');
+
+		/* Log in with any user that we can find */
+		$this->session()->inst_set('loggedInAs', $member->ID);
+
+		/* View the Security/login page */
+		$this->get('Security/login');
 		
+		$items = $this->cssParser()->getBySelector('#MemberLoginForm_LoginForm input.action');
+		
+		/* We have only 1 input, one to allow the user to log in as someone else */
+		$this->assertEquals(count($items), 1, 'There is 1 input, allowing the user to log in as someone else.');
+
+		$this->autoFollowRedirection = true;
+		
+		/* Submit the form, using only the logout action and a hidden field for the authenticator */
+		$response = $this->submitForm(
+			'MemberLoginForm_LoginForm', 
+			null,
+			array(
+				'AuthenticationMethod' => 'MemberAuthenticator',
+				'action_dologout' => 1,
+			)
+		);
+
+		/* We get a good response */
+		$this->assertEquals($response->getStatusCode(), 200, 'We have a 200 OK response');
+		$this->assertNotNull($response->getBody(), 'There is body content on the page');
+
+		/* Log the user out */
+		$this->session()->inst_set('loggedInAs', null);
+	}
+	
+	function testMemberIDInSessionDoesntExistInDatabaseHasToLogin() {
+		/* Log in with a Member ID that doesn't exist in the DB */
+		$this->session()->inst_set('loggedInAs', 500);
+
+		$this->autoFollowRedirection = true;
+		
+		/* Attempt to get into the admin section */
+		$this->get('admin');
+		
+		$items = $this->cssParser()->getBySelector('#MemberLoginForm_LoginForm input.text');
+
+		/* We have 2 text inputs - one for email, and another for the password */
+		$this->assertEquals(count($items), 2, 'There are 2 inputs - one for email, another for password');
+
+		$this->autoFollowRedirection = false;
+		
+		/* Log the user out */
+		$this->session()->inst_set('loggedInAs', null);
+	}
+	
+	function testExternalBackUrlRedirectionDisallowed() {
 		// Test internal relative redirect
 		$response = $this->doTestLoginForm('noexpiry@silverstripe.com', '1nitialPassword', 'testpage');
 		$this->assertEquals(302, $response->getStatusCode());

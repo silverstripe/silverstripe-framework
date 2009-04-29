@@ -389,9 +389,9 @@ class Image extends File {
 	
 	/**
 	 * Get the orientation of this image.
-	 * @return 	ORIENTATION_SQUARE | ORIENTATION_PORTRAIT | ORIENTATION_LANDSCAPE
+	 * @return ORIENTATION_SQUARE | ORIENTATION_PORTRAIT | ORIENTATION_LANDSCAPE
 	 */
-	function getOrienation() {
+	function getOrientation() {
 		$width = $this->getWidth();
 		$height = $this->getHeight();
 		if($width > $height) {
