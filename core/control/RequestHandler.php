@@ -32,6 +32,15 @@ class RequestHandler extends ViewableData {
 	protected $request = null;
 	
 	/**
+	 * This variable records whether RequestHandler::__construct()
+	 * was called or not. Useful for checking if subclasses have
+	 * called parent::__construct()
+	 *
+	 * @var boolean
+	 */
+	protected $brokenOnConstruct = true;
+	
+	/**
 	 * The default URL handling rules.  This specifies that the next component of the URL corresponds to a method to
 	 * be called on this RequestHandlingData object.
 	 *
@@ -59,6 +68,12 @@ class RequestHandler extends ViewableData {
 	 * </code>
 	 */
 	static $allowed_actions = null;
+	
+	public function __construct() {
+		$this->brokenOnConstruct = false;
+		parent::__construct();
+	}
+	
 	/**
 	 * Handles URL requests.
 	 *
@@ -78,10 +93,15 @@ class RequestHandler extends ViewableData {
 	 * @return HTTPResponse|RequestHandler|string|array
 	 */
 	function handleRequest($request) {
-		$this->request = $request;
-		
 		// $handlerClass is used to step up the class hierarchy to implement url_handlers inheritance
 		$handlerClass = ($this->class) ? $this->class : get_class($this);
+	
+		if($this->brokenOnConstruct) {
+			user_error("parent::__construct() needs to be called on {$handlerClass}::__construct()", E_USER_WARNING);
+		}
+	
+		$this->request = $request;
+		
 		// We stop after RequestHandler; in other words, at ViewableData
 		while($handlerClass && $handlerClass != 'ViewableData') {
 			$urlHandlers = Object::get_static($handlerClass, 'url_handlers');
