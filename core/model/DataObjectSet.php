@@ -626,7 +626,7 @@ class DataObjectSet extends ViewableData implements IteratorAggregate {
 			}
 		}
 		
-		if($emptyString) $map = array('0' => "$emptyString") + $map;
+		if($emptyString) $map = array('' => "$emptyString") + $map;
 		if($sort) asort($map);
 		
 		return $map;

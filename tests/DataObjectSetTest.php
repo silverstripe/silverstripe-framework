@@ -51,7 +51,7 @@ class DataObjectSetTest extends SapphireTest {
 		$map = $comments->map('ID', 'Title', '(Select one)');
 		
 		$expectedMap = array(
-			0 => '(Select one)',
+			'' => '(Select one)',
 			1 => 'Joe',
 			2 => 'Jane',
 			3 => 'Bob',
