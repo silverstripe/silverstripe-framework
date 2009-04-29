@@ -297,7 +297,7 @@ class Permission extends DataObject {
 				if(is_numeric($arg)) {
 					$perm->Arg = $arg;
 				} else {
-					use_error("Permission::checkMember: bad arg '$arg'",
+					user_error("Permission::checkMember: bad arg '$arg'",
 										E_USER_ERROR);
 				}
 		}
@@ -331,7 +331,7 @@ class Permission extends DataObject {
 				if(is_numeric($arg)) {
 					$perm->Arg = $arg;
 				} else {
-					use_error("Permission::checkMember: bad arg '$arg'",
+					user_error("Permission::checkMember: bad arg '$arg'",
 										E_USER_ERROR);
 				}
 		}

@@ -89,7 +89,7 @@ class Email extends ViewableData {
 	/**
 	 * @param array $customHeaders A map of header-name -> header-value
 	 */
-	protected $customHeaders;
+	protected $customHeaders = array();
 
 	/**
 	 * @param array $attachements Internal, use {@link attachFileFromString()} or {@link attachFile()}
@@ -115,13 +115,13 @@ class Email extends ViewableData {
 	/**
 	 * @param string $bounceHandlerURL
 	 */
-    protected $bounceHandlerURL = null;
+	protected $bounceHandlerURL = null;
 	
-    /**
+	/**
 	 * @param sring $admin_email_address The default administrator email address. 
 	 * This will be set in the config on a site-by-site basis
 	*/
-    static $admin_email_address = '';
+	static $admin_email_address = '';
 
 	/**
 	 * @param string $send_all_emails_to Email-Address
@@ -158,14 +158,15 @@ class Email extends ViewableData {
 			'mimetype' => $mimetype,
 		);
 	}
-    
-    public function setBounceHandlerURL( $bounceHandlerURL ) {
-        if( $bounceHandlerURL )
-            $this->bounceHandlerURL = $bounceHandlerURL;
-        else
-            $this->bounceHandlerURL = $_SERVER['HTTP_HOST'] . Director::baseURL() . 'Email_BounceHandler';      
-    }
-
+	
+	public function setBounceHandlerURL( $bounceHandlerURL ) {
+		if($bounceHandlerURL) {
+			$this->bounceHandlerURL = $bounceHandlerURL;
+		} else {
+			$this->bounceHandlerURL = $_SERVER['HTTP_HOST'] . Director::baseURL() . 'Email_BounceHandler';
+		}
+	}
+	
 	public function attachFile($filename, $attachedFilename = null, $mimetype = null) {
 		$absoluteFileName = Director::getAbsFile($filename);
 		if(file_exists($absoluteFileName)) {
@@ -228,6 +229,14 @@ class Email extends ViewableData {
 	
 	public function setBcc($val) {
 		$this->bcc = $val;
+	}
+	
+	/**
+	 * Set the "Reply-To" header with an email address.
+	 * @param string $email The email address of the "Reply-To" header
+	 */
+	public function replyTo($email) { 
+		$this->addCustomHeader('Reply-To', $email); 
 	}
 	
 	/**
@@ -358,65 +367,77 @@ class Email extends ViewableData {
 	static function validEmailAddress($address) {
 		return ereg('^([a-zA-Z0-9_+\.\-]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$', $address);
 	}
-  
-  /**
-  * @desc Send the email in plaintext
-  */
-  function sendPlain($messageID = null) {
-    global $project;
-
-    Requirements::clear();
-    
-    $this->parseVariables(true);
-    
-    if(empty($this->from)) $this->from = Email::getAdminEmail();
-            
-    $this->setBounceHandlerURL($this->bounceHandlerURL);
-                
-    $headers['X-SilverStripeBounceURL'] = $this->bounceHandlerURL;
-            
-    if($messageID) $headers['X-SilverStripeMessageID'] = $project . '.' . $messageID;
-            
-    if($project) $headers['X-SilverStripeSite'] = $project;
-
-	$to = $this->to;
-	$subject = $this->subject;
-	if(self::$send_all_emails_to) {
-		$subject .= " [addressed to $to";
-		$to = self::$send_all_emails_to;
-	    if($this->cc) $subject .= ", cc to $this->cc";
-	    if($this->bcc) $subject .= ", bcc to $this->bcc";
-		$subject .= ']';
-	} else {
-	    if($this->cc) $headers["Cc"] = $this->cc;
-	    if($this->bcc) $headers["Bcc"] = $this->bcc;
-	}
 	
-	if(self::$cc_all_emails_to) {
-		if(trim($headers['Cc'])) $headers['Cc'] .= ', ';
-		$headers['Cc'] .= self::$cc_all_emails_to;		
-	}
-	if(self::$bcc_all_emails_to) {
-		if(trim($headers['Bcc'])) $headers['Bcc'] .= ', ';
-		$headers['Bcc'] .= self::$bcc_all_emails_to;		
-	}
+	/**
+	 * Send the email in plaintext.
+	 * 
+	 * @see send() for sending emails with HTML content.
+	 * @uses Mailer->sendPlain()
+	 * 
+	 * @param string $messageID Optional message ID so the message can be identified in bounces etc.
+	 * @return bool Success of the sending operation from an MTA perspective. 
+	 * Doesn't actually give any indication if the mail has been delivered to the recipient properly)
+	 */
+	function sendPlain($messageID = null) {
+		Requirements::clear();
+		
+		$this->parseVariables(true);
+		
+		if(empty($this->from)) $this->from = Email::getAdminEmail();
+						
+		$this->setBounceHandlerURL($this->bounceHandlerURL);
+		
+		$headers = $this->customHeaders;
+		
+		$headers['X-SilverStripeBounceURL'] = $this->bounceHandlerURL;
+						
+		if($messageID) $headers['X-SilverStripeMessageID'] = project() . '.' . $messageID;
+						
+		if(project()) $headers['X-SilverStripeSite'] = project();
 
-	Requirements::restore();
-    
-    return self::mailer()->sendPlain($to, $this->from, $subject, $this->body, $this->attachments, $headers);
-  }
+		$to = $this->to;
+		$subject = $this->subject;
+		if(self::$send_all_emails_to) {
+			$subject .= " [addressed to $to";
+			$to = self::$send_all_emails_to;
+			if($this->cc) $subject .= ", cc to $this->cc";
+			if($this->bcc) $subject .= ", bcc to $this->bcc";
+			$subject .= ']';
+		} else {
+			if($this->cc) $headers['Cc'] = $this->cc;
+			if($this->bcc) $headers['Bcc'] = $this->bcc;
+		}
+	
+		if(self::$cc_all_emails_to) {
+			if(!empty($headers['Cc']) && trim($headers['Cc'])) {
+				$headers['Cc'] .= ', ' . self::$cc_all_emails_to;		
+			} else {
+				$headers['Cc'] = self::$cc_all_emails_to;
+			}
+		}
+
+		if(self::$bcc_all_emails_to) {
+			if(!empty($headers['Bcc']) && trim($headers['Bcc'])) {
+				$headers['Bcc'] .= ', ' . self::$bcc_all_emails_to;
+			} else {
+				$headers['Bcc'] = self::$bcc_all_emails_to;
+			}
+		}
+
+		Requirements::restore();
+		
+		return self::mailer()->sendPlain($to, $this->from, $subject, $this->body, $this->attachments, $headers);
+	}
 	
 	/**
 	 * Send the email.
 	 */
-	public function send( $messageID = null ) {   	
-    	Requirements::clear();
+	public function send($messageID = null) {
+		Requirements::clear();
 	
 		$this->parseVariables();
 
-		if( empty( $this->from ) ){
-			$this->from = Email::getAdminEmail();
-		}
+		if(empty($this->from)) $this->from = Email::getAdminEmail();
 
 		$this->setBounceHandlerURL( $this->bounceHandlerURL );
 
@@ -424,9 +445,9 @@ class Email extends ViewableData {
 
 		$headers['X-SilverStripeBounceURL'] = $this->bounceHandlerURL;
 
-		if( $messageID ) $headers['X-SilverStripeMessageID'] = project() . '.' . $messageID;
+		if($messageID) $headers['X-SilverStripeMessageID'] = project() . '.' . $messageID;
 
-		if( project() ) $headers['X-SilverStripeSite'] = project();
+		if(project()) $headers['X-SilverStripeSite'] = project();
 
 		$to = $this->to;
 		$subject = $this->subject;
@@ -439,8 +460,8 @@ class Email extends ViewableData {
 			unset($headers['Cc']);
 			unset($headers['Bcc']);
 		} else {
-		    if($this->cc) $headers["Cc"] = $this->cc;
-		    if($this->bcc) $headers["Bcc"] = $this->bcc;
+			if($this->cc) $headers['Cc'] = $this->cc;
+			if($this->bcc) $headers['Bcc'] = $this->bcc;
 		}
 
 		if(self::$cc_all_emails_to) {
@@ -458,7 +479,7 @@ class Email extends ViewableData {
 				$headers['Bcc'] = self::$bcc_all_emails_to;
 			}
 		}
-       	
+		
 		Requirements::restore();
 		
 		return self::mailer()->sendHTML($to, $this->from, $subject, $this->body, $this->attachments, $headers, $this->plaintext_body);
@@ -473,7 +494,7 @@ class Email extends ViewableData {
 	 * 
 	 * @param string $newEmail
 	 */
-	public static function setAdminEmail( $newEmail ) {
+	public static function setAdminEmail($newEmail) {
 		self::$admin_email_address = $newEmail;
 	}
   
@@ -520,18 +541,17 @@ class Email extends ViewableData {
 		self::$bcc_all_emails_to = $emailAddress;
 	}
 	
-  
-  	/**
-  	 * Checks for RFC822-valid email format.
-  	 * 
-  	 * @param string $str
-  	 * @return boolean
-  	 * 
-  	 * @see http://code.iamcal.com/php/rfc822/rfc822.phps
-  	 * @copyright Cal Henderson <cal@iamcal.com> 
-  	 * 	This code is licensed under a Creative Commons Attribution-ShareAlike 2.5 License 
-  	 * 	http://creativecommons.org/licenses/by-sa/2.5/
-  	 */
+	/**
+	 * Checks for RFC822-valid email format.
+	 * 
+	 * @param string $str
+	 * @return boolean
+	 * 
+	 * @see http://code.iamcal.com/php/rfc822/rfc822.phps
+	 * @copyright Cal Henderson <cal@iamcal.com> 
+	 * 	This code is licensed under a Creative Commons Attribution-ShareAlike 2.5 License 
+	 * 	http://creativecommons.org/licenses/by-sa/2.5/
+	 */
 	function is_valid_address($email){
         $qtext = '[^\\x0d\\x22\\x5c\\x80-\\xff]';
         $dtext = '[^\\x0d\\x5b-\\x5d\\x80-\\xff]';
