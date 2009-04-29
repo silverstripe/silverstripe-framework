@@ -681,6 +681,31 @@ class TranslatableTest extends FunctionalTest {
 			'ClassName change on an original page also changes ClassName attribute of translation'
 		);
 	}
+	
+	function testGetTranslationByStage() {
+		$publishedPage = new SiteTree();
+		$publishedPage->Locale = 'en_US';
+		$publishedPage->Title = 'Published';
+		$publishedPage->write();
+		$publishedPage->publish('Stage', 'Live');
+		$publishedPage->Title = 'Unpublished';
+		$publishedPage->write();
+		
+		$publishedTranslatedPage = $publishedPage->createTranslation('de_DE');
+		$publishedTranslatedPage->Title = 'Publiziert';
+		$publishedTranslatedPage->write();
+		$publishedTranslatedPage->publish('Stage', 'Live');
+		$publishedTranslatedPage->Title = 'Unpubliziert';
+		$publishedTranslatedPage->write();
+		
+		$compareStage = $publishedPage->getTranslation('de_DE', 'Stage');
+		$this->assertNotNull($compareStage);
+		$this->assertEquals($compareStage->Title, 'Unpubliziert');
+		
+		$compareLive = $publishedPage->getTranslation('de_DE', 'Live');
+		$this->assertNotNull($compareLive);
+		$this->assertEquals($compareLive->Title, 'Publiziert');
+	}
 
 }
 

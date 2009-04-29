@@ -412,7 +412,7 @@ class Translatable extends DataObjectDecorator {
 			return array(
 				"db" => array(
 						"Locale" => "Varchar(12)",
-						"TranslationMasterID" => "Int" // optional relation to a "translation master"
+						//"TranslationMasterID" => "Int" // optional relation to a "translation master"
 				),
                 "defaults" => array(
                     "Locale" => Translatable::default_locale() // as an overloaded getter as well: getLang()
@@ -476,7 +476,15 @@ class Translatable extends DataObjectDecorator {
 			'TranslationGroupID' => true
 		);
 
+		// Add new tables if required
 		DB::requireTable("{$baseDataClass}_translationgroups", $fields, $indexes);
+		
+		// Remove 2.2 style tables
+		DB::dontRequireTable("{$baseDataClass}_lang");
+		if($this->owner->hasExtension('Versioned')) {
+			DB::dontRequireTable("{$baseDataClass}_lang_Live");
+			DB::dontRequireTable("{$baseDataClass}_lang_versions");
+		}
 	}
 	
 	/**
@@ -517,16 +525,35 @@ class Translatable extends DataObjectDecorator {
 	 * 
 	 * @param int $originalID Either the primary key of the record this new translation is based on,
 	 *  or the primary key of this record, to create a new translation group
+	 * @param boolean $overwrite
 	 */
-	public function addTranslationGroup($originalID) {
+	public function addTranslationGroup($originalID, $overwrite = false) {
 		if(!$this->owner->exists()) return false;
 		
 		$baseDataClass = ClassInfo::baseDataClass($this->owner->class);
 		$existingGroupID = $this->getTranslationGroup($originalID);
-		if(!$existingGroupID) {
-			DB::query(
-				sprintf('INSERT INTO "%s_translationgroups" ("TranslationGroupID","OriginalID") VALUES (%d,%d)', $baseDataClass, $originalID, $this->owner->ID)
+		
+		// Remove any existing groups if overwrite flag is set
+		if($existingGroupID && $overwrite) {
+			$sql = sprintf(
+				'DELETE FROM "%s_translationgroups" WHERE "TranslationGroupID" = %d AND "OriginalID" = %d', 
+				$baseDataClass, 
+				$existingGroupID,
+				$this->owner->ID
 			);
+			DB::query($sql);
+			$existingGroupID = null;
+		}
+		
+		// Add to group (only if not in existing group or $overwrite flag is set)
+		if(!$existingGroupID) {
+			$sql = sprintf(
+				'INSERT INTO "%s_translationgroups" ("TranslationGroupID","OriginalID") VALUES (%d,%d)', 
+				$baseDataClass, 
+				$originalID, 
+				$this->owner->ID
+			);
+			DB::query($sql);
 		}
 	}
 	
@@ -868,10 +895,14 @@ class Translatable extends DataObjectDecorator {
 	 * excluding itself. See {@link getTranslation()} to retrieve
 	 * a single translated object.
 	 * 
+	 * Getter with $stage parameter is specific to {@link Versioned} extension,
+	 * mostly used for {@link SiteTree} subclasses.
+	 * 
 	 * @param string $locale
+	 * @param string $stage 
 	 * @return DataObjectSet
 	 */
-	function getTranslations($locale = null) {
+	function getTranslations($locale = null, $stage = null) {
 		if($this->owner->exists()) {
 			// HACK need to disable language filtering in augmentSQL(), 
 			// as we purposely want to get different language
@@ -893,8 +924,11 @@ class Translatable extends DataObjectDecorator {
 				$baseDataClass
 			);
 
-			if($this->owner->hasExtension("Versioned") && Versioned::current_stage()) {
+			$currentStage = Versioned::current_stage();
+			if($this->owner->hasExtension("Versioned")) {
+				if($stage) Versioned::reading_stage($stage);
 				$translations = Versioned::get_by_stage($this->owner->class, Versioned::current_stage(), $filter, null, $join);
+				if($stage) Versioned::reading_stage($currentStage);
 			} else {
 				$translations = DataObject::get($this->owner->class, $filter, null, $join);
 			}
@@ -913,8 +947,8 @@ class Translatable extends DataObjectDecorator {
 	 * @param String $locale
 	 * @return DataObject Translated object
 	 */
-	function getTranslation($locale) {
-		$translations = $this->getTranslations($locale);
+	function getTranslation($locale, $stage = null) {
+		$translations = $this->getTranslations($locale, $stage);
 		return ($translations) ? $translations->First() : null;
 	}
 	
@@ -1119,7 +1153,7 @@ class Translatable extends DataObjectDecorator {
 	 * @deprecated 2.4 Use get_default_locale()
 	 */
 	static function get_default_lang() {
-		return i18n::get_lang_from_locale(self::get_default_locale());
+		return i18n::get_lang_from_locale(self::default_locale());
 	}
 	
 	/**
