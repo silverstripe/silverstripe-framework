@@ -638,8 +638,10 @@ JS;
 			$componentSet->add($childData, $extraFields);
 		}
 		
+		$referrer = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : null;
+		
 		$closeLink = sprintf(
-			'<small><a href="' . $_SERVER['HTTP_REFERER'] . '" onclick="javascript:window.top.GB_hide(); return false;">(%s)</a></small>',
+			'<small><a href="' . $referrer . '" onclick="javascript:window.top.GB_hide(); return false;">(%s)</a></small>',
 			_t('ComplexTableField.CLOSEPOPUP', 'Close Popup')
 		);
 		
@@ -805,8 +807,10 @@ class ComplexTableField_ItemRequest extends RequestHandler {
 			$componentSet->add($dataObject, $extraFields);
 		}
 		
+		$referrer = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : null;
+		
 		$closeLink = sprintf(
-			'<small><a href="' . $_SERVER['HTTP_REFERER'] . '" onclick="javascript:window.top.GB_hide(); return false;">(%s)</a></small>',
+			'<small><a href="' . $referrer . '" onclick="javascript:window.top.GB_hide(); return false;">(%s)</a></small>',
 			_t('ComplexTableField.CLOSEPOPUP', 'Close Popup')
 		);
 		$message = sprintf(
