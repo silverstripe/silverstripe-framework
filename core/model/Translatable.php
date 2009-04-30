@@ -886,6 +886,10 @@ class Translatable extends DataObjectDecorator {
 		$baseClass = array_shift($tableClasses);
 		return (!$stage || $stage == $this->defaultStage) ? $baseClass : $baseClass . "_$stage";		
 	}
+	
+	function extendWithSuffix($table) { 
+		return $table; 
+	}
 		
 	/**
 	 * Gets all related translations for the current object,

@@ -6,7 +6,7 @@
 class DBLocaleTest extends SapphireTest {
 	function testNice() {
 		$l = DBField::create('DBLocale', 'de_DE');
-		$this->assertEquals($l->Nice(), 'German (Germany)');
+		$this->assertEquals($l->Nice(), 'German');
 	}
 }
 ?>
