@@ -61,6 +61,35 @@ class ComponentSet extends DataObjectSet {
 	}
 	
 	/**
+	 * Find the extra field data for a single row of the relationship
+	 * join table, given the known child ID.
+	 *	
+	 * @param string $componentName The name of the component
+	 * @param int $childID The ID of the child for the relationship
+	 * @return array Map of fieldName => fieldValue
+	 */
+	function getExtraData($componentName, $childID) {
+		$ownerObj = $this->ownerObj;
+		$parentField = $this->ownerClass . 'ID';
+		$childField = ($this->childClass == $this->ownerClass) ? 'ChildID' : ($this->childClass . 'ID');
+		$result = array();
+
+		if(!$componentName) return false;
+
+		// @todo Optimize into a single query instead of one per extra field
+		$extraFields = $ownerObj->many_many_extraFields($componentName);
+		if($extraFields) {
+			foreach($extraFields as $fieldName => $dbFieldSpec) {
+				$query = DB::query("SELECT $fieldName FROM {$this->tableName} WHERE $parentField = '{$this->ownerObj->ID}' AND $childField = '{$childID}'");
+				$value = $query->value();
+				$result[$fieldName] = $value;
+			}
+		}
+		
+		return $result;
+	}
+	
+	/**
 	 * Get an array of all the IDs in this component set, where the keys are the same as the
 	 * values.
 	 * @return array
@@ -95,7 +124,6 @@ class ComponentSet extends DataObjectSet {
 			}
 			
 			$item = DataObject::get_by_id($this->childClass, $item);
-			
 			if(!$item) return;
 		}
 

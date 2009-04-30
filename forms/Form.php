@@ -187,6 +187,7 @@ class Form extends RequestHandler {
 			}
 		}
 
+
 		// Protection against CSRF attacks
 		if($this->securityTokenEnabled()) {
 			$securityID = Session::get('SecurityID');

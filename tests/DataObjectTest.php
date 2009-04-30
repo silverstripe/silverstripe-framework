@@ -553,6 +553,23 @@ class DataObjectTest extends SapphireTest {
 		$this->assertType('RedirectorPage', $changedPage);
 		$this->assertEquals($changedPage->ClassName, 'RedirectorPage');
 	}
+	
+	function testManyManyExtraFields() {
+		$player = $this->fixture->objFromFixture('DataObjectTest_Player', 'player1');
+	   $team = $this->fixture->objFromFixture('DataObjectTest_Team', 'team1');
+		
+		// Extra fields are immediately available on the Team class (defined in $many_many_extraFields)
+		$teamExtraFields = $team->many_many_extraFields('Players');
+		$this->assertEquals($teamExtraFields, array(
+			'Position' => 'Varchar(100)'
+		));
+		
+		// We'll have to go through the relation to get the extra fields on Player
+		$playerExtraFields = $player->many_many_extraFields('Teams');
+		$this->assertEquals($playerExtraFields, array(
+			'Position' => 'Varchar(100)'
+		));
+	}
 
 }
 
@@ -581,6 +598,12 @@ class DataObjectTest_Team extends DataObject implements TestOnly {
 
 	static $many_many = array(
 		'Players' => 'DataObjectTest_Player'
+	);
+	
+	static $many_many_extraFields = array(
+		'Players' => array(
+			'Position' => 'Varchar(100)'
+		)
 	);
 	
 	function getDynamicField() {

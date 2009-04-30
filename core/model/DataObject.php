@@ -1422,6 +1422,90 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	}
 
 	/**
+	 * Return the many-to-many extra fields specification.
+	 * 
+	 * If you don't specify a component name, it returns all
+	 * extra fields for all components available.
+	 * 
+	 * @param string $component Name of component
+	 * @return array
+	 */
+	public function many_many_extraFields($component = null) {
+		$classes = ClassInfo::ancestry($this);
+
+		foreach($classes as $class) {
+			if(in_array($class, array('ViewableData', 'Object', 'DataObject'))) continue;
+			
+			// Find extra fields for one component
+			if($component) {
+				$SNG_class = singleton($class);
+				$extraFields = $SNG_class->stat('many_many_extraFields');
+
+				// Extra fields are immediately available on this class
+				if(isset($extraFields[$component])) {
+					return $extraFields[$component];
+				}
+				
+				$manyMany = $SNG_class->stat('many_many');
+				$candidate = (isset($manyMany[$component])) ? $manyMany[$component] : null;
+				if($candidate) {
+					$SNG_candidate = singleton($candidate);
+					$candidateManyMany = $SNG_candidate->stat('belongs_many_many');
+					
+					// Find the relation given the class
+					if($candidateManyMany) foreach($candidateManyMany as $relation => $relatedClass) {
+						if($relatedClass == $class) {
+							$relationName = $relation;
+						}
+					}
+					
+					$extraFields = $SNG_candidate->stat('many_many_extraFields');
+					if(isset($extraFields[$relationName])) {
+						return $extraFields[$relationName];
+					}
+				}
+								
+				$manyMany = $SNG_class->stat('belongs_many_many');
+				$candidate = (isset($manyMany[$component])) ? $manyMany[$component] : null;
+				if($candidate) {
+					$SNG_candidate = singleton($candidate);
+					$candidateManyMany = $SNG_candidate->stat('many_many');
+					
+					// Find the relation given the class
+					if($candidateManyMany) foreach($candidateManyMany as $relation => $relatedClass) {
+						if($relatedClass == $class) {
+							$relationName = $relation;
+						}
+					}
+					
+					$extraFields = $SNG_candidate->stat('many_many_extraFields');
+					if(isset($extraFields[$relationName])) {
+						return $extraFields[$relationName];
+					}
+				}
+				
+			} else {
+				
+				// Find all the extra fields for all components
+				$newItems = eval("return (array){$class}::\$many_many_extraFields;");
+				
+				foreach($newItems as $k => $v) {
+					if(!is_array($v)) {
+						user_error(
+							"$class::\$many_many_extraFields has a bad entry: "
+							. var_export($k, true) . " => " . var_export($v, true)
+							. ". Each many_many_extraFields entry should map to a field specification array.",
+							E_USER_ERROR
+						);
+					}
+				}
+					
+				return isset($items) ? array_merge($newItems, $items) : $newItems;
+			}
+		}
+	}
+	
+	/**
 	 * Return information about a many-to-many component.
 	 * The return value is an array of (parentclass, childclass).  If $component is null, then all many-many
 	 * components are returned.
