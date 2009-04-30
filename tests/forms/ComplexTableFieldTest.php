@@ -53,7 +53,7 @@ class ComplexTableFieldTest extends FunctionalTest {
 		$this->assertNotNull($parser->getBySelector('#Role input'), 'There is a field called "Role" - this field is the extra field for $many_many_extraFields');
 	}
 
-	function testAddingNewPlayerWithExtraData() {
+	function testAddingManyManyNewPlayerWithExtraData() {
 		$team = DataObject::get_one('ComplexTableFieldTest_Team', "Name = 'The Awesome People'");
 	
 		$this->post('ComplexTableFieldTest_Controller/ManyManyForm/field/Players/AddForm', array(
