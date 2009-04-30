@@ -106,9 +106,9 @@ class Versioned extends DataObjectDecorator {
 	 * Create a temporary table mapping each database record to its version on the given date.
 	 * This is used by the versioning system to return database content on that date.
 	 * @param string $baseTable The base table.
-	 * @param string $date The date.
+	 * @param string $date The date.  If omitted, then the latest version of each page will be returned.
 	 */
-	protected function requireArchiveTempTable($baseTable, $date) {
+	protected static function requireArchiveTempTable($baseTable, $date = null) {
 		if(!isset(self::$createdArchiveTempTable[$baseTable])) {
 			self::$createdArchiveTempTable[$baseTable] = true;
 		
@@ -116,12 +116,17 @@ class Versioned extends DataObjectDecorator {
 					RecordID INT NOT NULL PRIMARY KEY,
 					Version INT NOT NULL
 				)");
+				
+			if($date) $dateClause = "WHERE LastEdited <= '$date'";
+			else $dateClause = "";
+			
 			DB::query("INSERT INTO _Archive$baseTable
 				SELECT RecordID, max(Version) FROM {$baseTable}_versions
-				WHERE LastEdited <= '$date'
+				$dateClause
 				GROUP BY RecordID");
 		}
 	}
+
 	/**
 	 * An array of DataObject extensions that may require versioning for extra tables
 	 * The array value is a set of suffixes to form these table names, assuming a preceding '_'.
@@ -718,6 +723,33 @@ class Versioned extends DataObjectDecorator {
 		Versioned::$reading_stage = $oldStage;
 
 		return new $className($record);
+	}
+
+	/**
+	 * Return the equivalent of a DataObject::get() call, querying the latest
+	 * version of each page stored in the (class)_versions tables.
+	 *
+	 * In particular, this will query deleted records as well as active ones.
+	 */
+	static function get_including_deleted($class, $filter = "", $sort = "") {
+		$oldStage = Versioned::$reading_stage;
+		Versioned::$reading_stage = null;
+
+		$SNG = singleton($class);
+		
+		// Build query
+		$query = $SNG->buildVersionSQL($filter, $sort);
+		$baseTable = ClassInfo::baseDataClass($class);
+		self::requireArchiveTempTable($baseTable);
+		$query->from["_Archive$baseTable"] = "INNER JOIN `_Archive$baseTable`
+			ON `_Archive$baseTable`.RecordID = `{$baseTable}_versions`.RecordID 
+			AND `_Archive$baseTable`.Version = `{$baseTable}_versions`.Version";
+		
+		// Process into a DataObjectSet
+		$result = $SNG->buildDataObjectSet($query->execute());
+
+		Versioned::$reading_stage = $oldStage;
+		return $result;
 	}
 	
 	/**

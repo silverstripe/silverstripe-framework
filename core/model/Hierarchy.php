@@ -25,15 +25,21 @@ class Hierarchy extends DataObjectDecorator {
 	 * @param string $titleEval PHP code to evaluate to start each child - this should include '<li>'
 	 * @param string $extraArg Extra arguments that will be passed on to children, for if they overload this function.
 	 * @param boolean $limitToMarked Display only marked children.
+	 * @param string $childrenMethod The name of the method used to get children from each object
 	 * @param boolean $rootCall Set to true for this first call, and then to false for calls inside the recursion. You should not change this.
 	 * @return string
 	 */
-	public function getChildrenAsUL($attributes = "", $titleEval = '"<li>" . $child->Title', $extraArg = null, $limitToMarked = false, $rootCall = true) {
+	public function getChildrenAsUL($attributes = "", $titleEval = '"<li>" . $child->Title', $extraArg = null, $limitToMarked = false, $childrenMethod = "AllChildrenIncludingDeleted", $rootCall = true) {
 		if($limitToMarked && $rootCall) {
 			$this->markingFinished();
 		}
 
-		$children = $this->owner->AllChildrenIncludingDeleted($extraArg);
+		if($this->owner->hasMethod($childrenMethod)) {
+			$children = $this->owner->$childrenMethod($extraArg);
+		} else {
+			user_error(sprintf("Can't find the method '%s' on class '%s' for getting tree children", 
+				$childrenMethod, get_class($this->owner)), E_USER_ERROR);
+		}
 
 		if($children) {
 			if($attributes) {
@@ -47,7 +53,7 @@ class Hierarchy extends DataObjectDecorator {
 				if(!$limitToMarked || $child->isMarked()) {
 					$foundAChild = true;
 					$output .= eval("return $titleEval;") . "\n" . 
-					$child->getChildrenAsUL("", $titleEval, $extraArg, $limitToMarked, false) . "</li>\n";
+					$child->getChildrenAsUL("", $titleEval, $extraArg, $limitToMarked, $childrenMethod, false) . "</li>\n";
 				}
 			}
 			
@@ -70,13 +76,13 @@ class Hierarchy extends DataObjectDecorator {
 	 * @param int $minCount The minimum amount of nodes to mark.
 	 * @return int The actual number of nodes marked.
 	 */
-	public function markPartialTree($minCount = 30, $context = null) {
+	public function markPartialTree($minCount = 30, $context = null, $childrenMethod = "AllChildrenIncludingDeleted") {
 		$this->markedNodes = array($this->owner->ID => $this->owner);
 		$this->owner->markUnexpanded();
 
 		// foreach can't handle an ever-growing $nodes list
 		while(list($id, $node) = each($this->markedNodes)) {
-			$this->markChildren($node, $context);
+			$this->markChildren($node, $context, $childrenMethod);
 			
 			if($minCount && sizeof($this->markedNodes) >= $minCount) {
 				break;
@@ -140,8 +146,14 @@ class Hierarchy extends DataObjectDecorator {
 	 * Mark all children of the given node that match the marking filter.
 	 * @param DataObject $node Parent node.
 	 */
-	public function markChildren($node, $context = null) {
-		$children = $node->AllChildrenIncludingDeleted($context);
+	public function markChildren($node, $context = null, $childrenMethod = "AllChildrenIncludingDeleted") {
+		if($node->hasMethod($childrenMethod)) {
+			$children = $node->$childrenMethod($context);
+		} else {
+			user_error(sprintf("Can't find the method '%s' on class '%s' for getting tree children", 
+				$childrenMethod, get_class($this->owner)), E_USER_ERROR);
+		}
+		
 		$node->markExpanded();
 		if($children) {
 			foreach($children as $child) {
@@ -172,10 +184,10 @@ class Hierarchy extends DataObjectDecorator {
 	 */
 	public function markingClasses() {
 		$classes = '';
-		if(!$this->expanded) {
+		if(!$this->isExpanded()) {
 			$classes .= " unexpanded";
 		}
-		if(!$this->treeOpened) {
+		if(!$this->isTreeOpened()) {
 			$classes .= " closed";
 		}
 		return $classes;
@@ -230,42 +242,42 @@ class Hierarchy extends DataObjectDecorator {
 	 * True if this DataObject is marked.
 	 * @var boolean
 	 */
-	protected $marked = false;
+	protected static $marked = array();
 	
 	/**
 	 * True if this DataObject is expanded.
 	 * @var boolean
 	 */
-	protected $expanded = false;
+	protected static $expanded = array();
 	
 	/**
 	 * True if this DataObject is opened.
 	 * @var boolean
 	 */
-	protected $treeOpened = false;
+	protected static $treeOpened = array();
 	
 	/**
 	 * Mark this DataObject as expanded.
 	 */
 	public function markExpanded() {
-		$this->marked = true;		
-		$this->expanded = true;
+		self::$marked[ClassInfo::baseDataClass($this->owner->class)][$this->owner->ID] = true;
+		self::$expanded[ClassInfo::baseDataClass($this->owner->class)][$this->owner->ID] = true;
 	}
 	
 	/**
 	 * Mark this DataObject as unexpanded.
 	 */
 	public function markUnexpanded() {
-		$this->marked = true;		
-		$this->expanded = false;
+		self::$marked[ClassInfo::baseDataClass($this->owner->class)][$this->owner->ID] = true;
+		self::$expanded[ClassInfo::baseDataClass($this->owner->class)][$this->owner->ID] = false;
 	}
 	
 	/**
 	 * Mark this DataObject's tree as opened.
 	 */
 	public function markOpened() {
-		$this->marked = true;
-		$this->treeOpened = true;
+		self::$marked[ClassInfo::baseDataClass($this->owner->class)][$this->owner->ID] = true;
+		self::$treeOpened[ClassInfo::baseDataClass($this->owner->class)][$this->owner->ID] = true;
 	}
 	
 	/**
@@ -273,7 +285,9 @@ class Hierarchy extends DataObjectDecorator {
 	 * @return boolean
 	 */
 	public function isMarked() {
-		return $this->marked;
+		$baseClass = ClassInfo::baseDataClass($this->owner->class);
+		$id = $this->owner->ID;
+		return isset(self::$marked[$baseClass][$id]) ? self::$marked[$baseClass][$id] : false;
 	}
 	
 	/**
@@ -281,14 +295,18 @@ class Hierarchy extends DataObjectDecorator {
 	 * @return boolean
 	 */
 	public function isExpanded() {
-		return $this->expanded;
+		$baseClass = ClassInfo::baseDataClass($this->owner->class);
+		$id = $this->owner->ID;
+		return isset(self::$expanded[$baseClass][$id]) ? self::$expanded[$baseClass][$id] : false;
 	}
 	
 	/**
 	 * Check if this DataObject's tree is opened.
 	 */
 	public function isTreeOpened() {
-		return $this->treeOpened;
+		$baseClass = ClassInfo::baseDataClass($this->owner->class);
+		$id = $this->owner->ID;
+		return isset(self::$treeOpened[$baseClass][$id]) ? self::$treeOpened[$baseClass][$id] : false;
 	}
 
 	/**
@@ -480,6 +498,15 @@ class Hierarchy extends DataObjectDecorator {
 		}
 		
 		return $this->allChildrenIncludingDeleted;
+	}
+	
+	/**
+	 * Return all the children that this page had, including pages that were deleted
+	 * from both stage & live.
+	 */
+	public function AllHistoricalChildren() {
+		return Versioned::get_including_deleted(ClassInfo::baseDataClass($this->owner->class), 
+			"ParentID = " . (int)$this->owner->ID);
 	}
 
 	/**

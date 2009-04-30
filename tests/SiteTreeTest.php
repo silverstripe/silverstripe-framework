@@ -167,6 +167,45 @@ class SiteTreeTest extends SapphireTest {
 		$this->assertFalse($modifiedOnDraftPage->IsAddedToStage);
 		$this->assertTrue($modifiedOnDraftPage->IsModifiedOnStage);
 	}
+	
+	/**
+	 * Test that a page can be completely deleted and restored to the stage site
+	 */
+	function testRestoreToStage() {
+		$page = $this->objFromFixture('Page', 'about');
+		$pageID = $page->ID;
+		$page->delete();
+		$this->assertTrue(!DataObject::get_by_id("Page", $pageID));
+		
+		$deletedPage = Versioned::get_latest_version('SiteTree', $pageID);
+		$resultPage = $deletedPage->doRestoreToStage();
+		
+		$requeriedPage = DataObject::get_by_id("Page", $pageID);
+		
+		$this->assertEquals($pageID, $resultPage->ID);
+		$this->assertEquals($pageID, $requeriedPage->ID);
+		$this->assertEquals('About Us', $requeriedPage->Title);
+		$this->assertEquals('Page', $requeriedPage->class);
+
+
+		$page2 = $this->objFromFixture('Page', 'staff');
+		$page2ID = $page2->ID;
+		$page2->doUnpublish();
+		$page2->delete();
+		
+		// Check that if we restore while on the live site that the content still gets pushed to
+		// stage
+		Versioned::reading_stage('Live');
+		$deletedPage = Versioned::get_latest_version('SiteTree', $page2ID);
+		$deletedPage->doRestoreToStage();
+		$this->assertTrue(!Versioned::get_one_by_stage("Page", "Live", "`SiteTree`.ID = " . $page2ID));
+
+		Versioned::reading_stage('Stage');
+		$requeriedPage = DataObject::get_by_id("Page", $page2ID);
+		$this->assertEquals('Staff', $requeriedPage->Title);
+		$this->assertEquals('Page', $requeriedPage->class);
+		
+	}
 }
 
 // We make these extend page since that's what all page types are expected to do

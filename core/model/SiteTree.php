@@ -1362,11 +1362,15 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 
 		if($this->IsDeletedFromStage) {
 			if($this->can('CMSEdit')) {
-				// "restore"
-				$actions->push(new FormAction('revert',_t('CMSMain.RESTORE','Restore')));
-				
-				// "delete from live"
-				$actions->push(new FormAction('deletefromlive',_t('CMSMain.DELETEFP','Delete from the published site')));
+				if($this->ExistsOnLive) {
+					// "restore"
+					$actions->push(new FormAction('revert',_t('CMSMain.RESTORE','Restore')));
+					// "delete from live"
+					$actions->push(new FormAction('deletefromlive',_t('CMSMain.DELETEFP','Delete from the published site')));
+				} else {
+					// "restore"
+					$actions->push(new FormAction('restore',_t('CMSMain.RESTORE','Restore')));
+				}
 			}
 		} else {
 			if($this->canEdit()) {
@@ -1460,6 +1464,29 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		$clone->writeWithoutVersion();
 		
 		$this->extend('onAfterRevertToLive');
+	}
+	
+	/**
+	 * Restore the content in the active copy of this SiteTree page to the stage site.
+	 * @return The SiteTree object.
+	 */
+	function doRestoreToStage() {
+		// if no record can be found on draft stage (meaning it has been "deleted from draft" before),
+		// create an empty record
+		if(!DB::query("SELECT ID FROM SiteTree WHERE ID = $this->ID")->value()) {
+			DB::query("INSERT INTO SiteTree SET ID = $this->ID");
+		}
+		
+		$oldStage = Versioned::current_stage();
+		Versioned::reading_stage('Stage');
+		$this->forceChange();
+		$this->writeWithoutVersion();
+		
+		$result = DataObject::get_by_id($this->class, $this->ID);
+		
+		Versioned::reading_stage($oldStage);
+		
+		return $result;
 	}
 
 	/**
@@ -1569,11 +1596,13 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		
 		// sort alphabetically, and put current on top
 		asort($result);
-		$currentPageTypeName = $result[$currentClass];
-		unset($result[$currentClass]);
-		$result = array_reverse($result);
-		$result[$currentClass] = $currentPageTypeName;
-		$result = array_reverse($result);
+		if($currentClass) {
+			$currentPageTypeName = $result[$currentClass];
+			unset($result[$currentClass]);
+			$result = array_reverse($result);
+			$result[$currentClass] = $currentPageTypeName;
+			$result = array_reverse($result);
+		}
 		
 		return $result;
 	}
@@ -1675,7 +1704,11 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	 */
 	function TreeTitle() {
 		if($this->IsDeletedFromStage) {
-			$tag ="del title=\"" . _t('SiteTree.REMOVEDFROMDRAFT', 'Removed from draft site') . "\"";
+			if($this->ExistsOnLive) {
+				$tag ="del title=\"" . _t('SiteTree.REMOVEDFROMDRAFT', 'Removed from draft site') . "\"";
+			} else {
+				$tag ="del class=\"deletedOnLive\" title=\"" . _t('SiteTree.DELETEDPAGE', 'Deleted page') . "\"";
+			}
 		} elseif($this->IsAddedToStage) {
 			$tag = "ins title=\"" . _t('SiteTree.ADDEDTODRAFT', 'Added to draft site') . "\"";
 		} elseif($this->IsModifiedOnStage) {
@@ -1754,9 +1787,16 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		if(!is_numeric($this->ID)) return false;
 		
 		$stageVersion = Versioned::get_versionnumber_by_stage('SiteTree', 'Stage', $this->ID);
-		$liveVersion = Versioned::get_versionnumber_by_stage('SiteTree', 'Live', $this->ID);
 
-		return (!$stageVersion && $liveVersion);
+		// Return true for both completely deleted pages and for pages just deleted from stage.
+		return !$stageVersion;
+	}
+	
+	/**
+	 * Return true if this page exists on the live site
+	 */
+	function getExistsOnLive() {
+		return (bool)Versioned::get_versionnumber_by_stage('SiteTree', 'Live', $this->ID);
 	}
 
 	/**
