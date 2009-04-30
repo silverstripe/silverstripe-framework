@@ -8,3 +8,8 @@ ComplexTableFieldTest_Team:
       Name: The Awesome People
    t2:
       Name: Incredible Four
+ComplexTableFieldTest_Sponsor:
+   s1:
+      Name: Coca Cola
+   s2:
+      Name: Pepsi

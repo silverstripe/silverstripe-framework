@@ -505,19 +505,29 @@ JS;
 		$manyManyRelationName = null;
 		$manyManyComponentSet = null;
 		
+		$hasManyRelations = $parentClass->has_many();
+		$hasManyRelationName = null;
+		$hasManyComponentSet = null;
+		
 		if($manyManyRelations) foreach($manyManyRelations as $relation => $class) {
 			if($class == $this->sourceClass()) {
 				$manyManyRelationName = $relation;
 			}
 		}
 		
+		if($hasManyRelations) foreach($hasManyRelations as $relation => $class) {
+			if($class == $this->sourceClass()) {
+				$hasManyRelationName = $relation;
+			}
+		}
+		
 		// Add the relation value to related records
 		if(!$childData->ID && $this->getParentClass()) {
 			// make sure the relation-link is existing, even if we just add the sourceClass and didn't save it
-			$parentIDName = $this->getParentIdName( $this->getParentClass(), $this->sourceClass() );
+			$parentIDName = $this->getParentIdName($this->getParentClass(), $this->sourceClass());
 			$childData->$parentIDName = $this->sourceID();
 		}
-
+		
 		$detailFields = $this->getCustomFieldsFor($childData);
 
 		// Loading of extra field values for editing an existing record
@@ -530,6 +540,10 @@ JS;
 				$field->setValue($fieldValue);
 			}
 		}
+		
+		if($hasManyRelationName && $childData->ID) {
+			$hasManyComponentSet = $parentClass->getComponents($hasManyRelationName);
+		}
 
 		// the ID field confuses the Controller-logic in finding the right view for ReferencedField
 		$detailFields->removeByName('ID');
@@ -538,22 +552,28 @@ JS;
 		if($childData->ID) {
 			$detailFields->push(new HiddenField('ctf[childID]', '', $childData->ID));
 		}
-
+		
 		// add a namespaced ID instead thats "converted" by saveComplexTableField()
 		$detailFields->push(new HiddenField('ctf[ClassName]', '', $this->sourceClass()));
 
 		if($this->getParentClass()) {
+			$detailFields->push(new HiddenField('ctf[parentClass]', '', $this->getParentClass()));
+
 			if($manyManyRelationName && $this->relationAutoSetting) {
 				$detailFields->push(new HiddenField('ctf[manyManyRelation]', '', $manyManyRelationName));
-				$detailFields->push(new HiddenField('ctf[parentClass]', '', $this->getParentClass()));
+			}
+			
+			if($hasManyRelationName && $this->relationAutoSetting) {
+				$detailFields->push(new HiddenField('ctf[hasManyRelation]', '', $hasManyRelationName));
+			}
+			
+			if($manyManyRelationName || $hasManyRelationName) {
 				$detailFields->push(new HiddenField('ctf[sourceID]', '', $this->sourceID()));
 			}
 			
 			$parentIdName = $this->getParentIdName($this->getParentClass(), $this->sourceClass());
+			
 			if($parentIdName) {
-				// add relational fields
-				$detailFields->push(new HiddenField('ctf[parentClass]', '', $this->getParentClass()));
-				
 				if($this->relationAutoSetting) {
 					// Hack for model admin: model admin will have included a dropdown for the relation itself
 					$detailFields->removeByName($parentIdName);
@@ -634,7 +654,6 @@ JS;
 
 		// Save the many many relationship if it's available
 		if(isset($data['ctf']['manyManyRelation'])) {
-		
 			$parentRecord = DataObject::get_by_id($data['ctf']['parentClass'], (int) $data['ctf']['sourceID']);
 			$relationName = $data['ctf']['manyManyRelation'];
 			$extraFields = array();
@@ -647,6 +666,14 @@ JS;
 			
 			$componentSet = $parentRecord->getManyManyComponents($relationName);
 			$componentSet->add($childData, $extraFields);
+		}
+		
+		if(isset($data['ctf']['hasManyRelation'])) {
+			$parentRecord = DataObject::get_by_id($data['ctf']['parentClass'], (int) $data['ctf']['sourceID']);
+			$relationName = $data['ctf']['hasManyRelation'];
+			
+			$componentSet = $parentRecord->getComponents($relationName);
+			$componentSet->add($childData);
 		}
 		
 		$referrer = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : null;
@@ -820,8 +847,10 @@ class ComplexTableField_ItemRequest extends RequestHandler {
 			$componentSet->add($dataObject, $extraFields);
 		}
 		
+		$referrer = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : null;
+		
 		$closeLink = sprintf(
-			'<small><a href="' . $_SERVER['HTTP_REFERER'] . '" onclick="javascript:window.top.GB_hide(); return false;">(%s)</a></small>',
+			'<small><a href="' . $referrer . '" onclick="javascript:window.top.GB_hide(); return false;">(%s)</a></small>',
 			_t('ComplexTableField.CLOSEPOPUP', 'Close Popup')
 		);
 		$message = sprintf(
