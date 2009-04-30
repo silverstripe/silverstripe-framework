@@ -47,10 +47,10 @@ class ComplexTableFieldTest extends FunctionalTest {
 		$parser = new CSSContentParser($detailForm);
 		
 		/* There is a field called "Name", which is a text input */
-		$this->assertNotNull($parser->getBySelector('#Name input'), 'There is a field called "Name", which is a text input');
+		$this->assertEquals(count($parser->getBySelector('#Name input')), 1, 'There is a field called "Name", which is a text input');
 		
 		/* There is a field called "Role" - this field is the extra field for $many_many_extraFields */
-		$this->assertNotNull($parser->getBySelector('#Role input'), 'There is a field called "Role" - this field is the extra field for $many_many_extraFields');
+		$this->assertEquals(count($parser->getBySelector('#Role input')), 1, 'There is a field called "Role" - this field is the extra field for $many_many_extraFields');
 	}
 
 	function testAddingManyManyNewPlayerWithExtraData() {
@@ -60,7 +60,9 @@ class ComplexTableFieldTest extends FunctionalTest {
 			'Name' => 'Bobby Joe',
 			'ctf' => array(
 				'extraFields' => array(
-					'Role' => 'Goalie'
+					'Role' => 'Goalie',
+					'Position' => 'Player',
+					'DateJoined' => '2008-10-10'
 				),
 				'ClassName' => 'ComplexTableFieldTest_Player',
 				'manyManyRelation' => 'Players',
@@ -83,7 +85,14 @@ class ComplexTableFieldTest extends FunctionalTest {
 		
 		/* The extra fields have the correct value */
 		$extraFields = $teams->getExtraData('Teams', $team->ID);
-		$this->assertEquals($extraFields['Role'], 'Goalie', 'The extra fields have the correct value');
+		
+		/* There are 3 extra fields */
+		$this->assertEquals(count($extraFields), 3, 'There are 3 extra fields');
+
+		/* The three extra fields have the correct values */
+		$this->assertEquals($extraFields['Role'], 'Goalie', 'The extra field "Role" has the correct value');
+		$this->assertEquals($extraFields['Position'], 'Player', 'The extra field "Position" has the correct value');
+		$this->assertEquals($extraFields['DateJoined'], '2008-10-10', 'The extra field "DateJoined" has the correct value');
 	}
 	
 	function testAddingHasManyData() {
@@ -201,7 +210,9 @@ class ComplexTableFieldTest_Player extends DataObject implements TestOnly {
 	
 	public static $many_many_extraFields = array(
 		'Teams' => array(
-			'Role' => 'Varchar(100)'
+			'Role' => 'Varchar(100)',
+			'Position' => "Enum('Admin,Player,Coach','Admin')",
+			'DateJoined' => 'Date'
 		)
 	);
 

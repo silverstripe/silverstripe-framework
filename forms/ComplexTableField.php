@@ -455,42 +455,22 @@ JS;
 	 * this method.
 	 */
 	function getCustomFieldsFor($childData) {
-		if($this->detailFormFields instanceof Fieldset) {
+		if($this->detailFormFields instanceof FieldSet) {
 			return $this->detailFormFields;
-		} else {
-			$fieldsMethod = $this->detailFormFields;
+		}
+		
+		$fieldsMethod = $this->detailFormFields;
 
-			if(!is_string($fieldsMethod)) {
-				$this->detailFormFields = 'getCMSFields';
-				$fieldsMethod = 'getCMSFields';
-			}
-			
-			if(!$childData->hasMethod($fieldsMethod)) {
-				$fieldsMethod = 'getCMSFields';
-			}
-			
-			$fields = $childData->$fieldsMethod();
+		if(!is_string($fieldsMethod)) {
+			$this->detailFormFields = 'getCMSFields';
+			$fieldsMethod = 'getCMSFields';
 		}
 		
-		if(!$this->relationAutoSetting) {
-			return $fields;
+		if(!$childData->hasMethod($fieldsMethod)) {
+			$fieldsMethod = 'getCMSFields';
 		}
 		
-		if($this->sourceID()) {
-			$parentClass = DataObject::get_by_id($this->getParentClass(), $this->sourceID());
-		} else {
-			$parentClass = singleton($this->getParentClass());
-		}
-		
-		$manyManyExtraFields = $parentClass->many_many_extraFields($this->name);
-		if($manyManyExtraFields) {
-			foreach($manyManyExtraFields as $fieldName => $fieldSpec) {
-				$dbField = new Varchar('ctf[extraFields][' . $fieldName . ']');
-				$fields->addFieldToTab('Root.Main', $dbField->scaffoldFormField($fieldName));
-			}
-		}
-		
-		return $fields;
+		return $childData->$fieldsMethod();
 	}
 		
 	function getFieldsFor($childData) {
@@ -531,13 +511,24 @@ JS;
 		$detailFields = $this->getCustomFieldsFor($childData);
 
 		// Loading of extra field values for editing an existing record
-		if($manyManyRelationName && $childData->ID) {
+		if($manyManyRelationName) {
 			$manyManyComponentSet = $parentClass->getManyManyComponents($manyManyRelationName);
-			$extraData = $manyManyComponentSet->getExtraData($manyManyRelationName, $childData->ID);
+			$extraFieldsSpec = $parentClass->many_many_extraFields($this->name);
 			
-			if($extraData) foreach($extraData as $fieldName => $fieldValue) {
-				$field = $detailFields->dataFieldByName('ctf[extraFields][' . $fieldName . ']');
-				$field->setValue($fieldValue);
+			$extraData = null;
+			if($childData && $childData->ID) {
+				$extraData = $manyManyComponentSet->getExtraData($manyManyRelationName, $childData->ID);
+			}
+			
+			if($extraFieldsSpec) foreach($extraFieldsSpec as $fieldName => $fieldSpec) {
+				// @todo Create the proper DBField type instead of hardcoding Varchar
+				$fieldObj = new Varchar($fieldName);
+				
+				if(isset($extraData[$fieldName])) {
+					$fieldObj->setValue($extraData[$fieldName]);
+				}
+
+				$detailFields->addFieldToTab('Root.Main', $fieldObj->scaffoldFormField($fieldName));
 			}
 		}
 		
