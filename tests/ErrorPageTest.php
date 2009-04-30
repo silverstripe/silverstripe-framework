@@ -9,15 +9,20 @@ class ErrorPageTest extends FunctionalTest {
 	
 	function test404ErrorPage() {
 		$page = $this->objFromFixture('ErrorPage', '404');
+
+		$response = $this->get($page->URLSegment);
 		
-		/* The page is an instance of ErrorPage */
-		$this->assertTrue($page instanceof ErrorPage, 'The page is an instance of ErrorPage');
+		/* A standard error is shown */
+		$this->assertEquals($response->getBody(), 'The requested page couldn\'t be found.', 'A standard error is shown');
+
+		/* When the page is published, an error page with the theme is shown instead */		
+		$page->publish('Stage', 'Live', false);
 		
 		$response = $this->get($page->URLSegment);
 		
-		/* We have body text from the error page */
+		/* There is body text from the error page */
 		$this->assertNotNull($response->getBody(), 'We have body text from the error page');
-
+		
 		/* Status code of the HTTPResponse for error page is "404" */
 		$this->assertEquals($response->getStatusCode(), '404', 'Status cod eof the HTTPResponse for error page is "404"');
 		
