@@ -360,11 +360,10 @@ class SSViewer extends Object {
 
 		if(isset($_GET['debug_profile'])) Profiler::unmark("SSViewer::process", " for $template");
 		
-		
 		// If we have our crazy base tag, then fix # links referencing the current page.
-		if(strpos($output, '<base') !== false) {		
+		if(strpos($output, '<base') !== false) {
 			$thisURLRelativeToBase = Director::makeRelative(Director::absoluteURL($_SERVER['REQUEST_URI']));
-			$output = preg_replace('/(<a[^>+]href *= *")#/i', '\\1' . $thisURLRelativeToBase . '#', $output);
+			$output = preg_replace('/(<a[^>+]href *= *)"#/i', '\\1"' . $thisURLRelativeToBase . '#', $output);
 		}
 
 		return $output;
