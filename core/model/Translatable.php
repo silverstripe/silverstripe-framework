@@ -248,14 +248,6 @@ class Translatable extends DataObjectDecorator {
 	}
 
 	/**
-	 * Check whether the default and current reading language are the same.
-	 * @return boolean Return true if both default and reading language are the same.
-	 */
-	static function is_default_locale() {
-		return (!self::current_locale() || self::$default_locale == self::current_locale());
-	}
-
-	/**
 	 * Get the current reading language.
 	 * @return string
 	 */
@@ -361,7 +353,9 @@ class Translatable extends DataObjectDecorator {
 	}
 
 	/**
-	 * Get a list of languages in which a given element has been translated
+	 * Get a list of languages in which a given element has been translated.
+	 * 
+	 * @deprecated 2.4 Use {@link getTranslations()}
 	 *
 	 * @param string $class Name of the class of the element
 	 * @param int $id ID of the element
@@ -436,7 +430,7 @@ class Translatable extends DataObjectDecorator {
 		if(get_class($this->owner) == ClassInfo::baseDataClass(get_class($this->owner))) {
 			return array(
 				"db" => array(
-						"Locale" => "Varchar(12)",
+						"Locale" => "DBLocale",
 						//"TranslationMasterID" => "Int" // optional relation to a "translation master"
 				),
                 "defaults" => array(
@@ -474,7 +468,7 @@ class Translatable extends DataObjectDecorator {
 			//&& !$query->filtersOnFK()
 		)  {
 			$qry = "`Locale` = '$lang'";
-			if(Translatable::is_default_locale()) {
+			if(self::$default_locale == self::current_locale()) {
 				$qry .= " OR `Locale` = '' ";
 				$qry .= " OR `Locale` IS NULL ";
 			}
@@ -610,14 +604,6 @@ class Translatable extends DataObjectDecorator {
 			sprintf('DELETE FROM `%s_translationgroups` WHERE `OriginalID` = %d', $baseDataClass, $this->owner->ID)
 		);
 	}
-	
-	/*
-	function augmentNumChildrenCountQuery(SQLQuery $query) {
-		if($this->isTranslation()) {
-			$query->where[0] = '"ParentID" = '.$this->getOriginalPage()->ID;
-		}
-	}
-	*/
 	
 	/**
 	 * Determine if a table needs Versioned support
@@ -878,17 +864,7 @@ class Translatable extends DataObjectDecorator {
 		$langDropdown->addExtraClass('languageDropdown');
 		$createButton->addExtraClass('createTranslationButton');
 	}
-	
-	/**
-	 * Get a list of fields from the tables created by this extension
-	 *
-	 * @param string $table Name of the table
-	 * @return array Map where the keys are db, indexes and the values are the table fields
-	 */
-	function fieldsInExtraTables($table){
-		return array('db'=>null,'indexes'=>null);
-	}
-	
+		
 	/**
 	 * Get the names of all translatable fields on this class
 	 * as a numeric array.
@@ -910,10 +886,10 @@ class Translatable extends DataObjectDecorator {
 		return (!$stage || $stage == $this->defaultStage) ? $baseClass : $baseClass . "_$stage";		
 	}
 	
-	function extendWithSuffix($table) {
-		return $table;
+	function extendWithSuffix($table) { 
+		return $table; 
 	}
-	
+		
 	/**
 	 * Gets all related translations for the current object,
 	 * excluding itself. See {@link getTranslation()} to retrieve
@@ -1021,14 +997,6 @@ class Translatable extends DataObjectDecorator {
 	function hasTranslation($locale) {
 		return (array_search($locale, $this->getTranslatedLangs()) !== false);
 	}
-
-	/*
-	function augmentStageChildren(DataObjectSet $children, $showall = false) {
-		if($this->isTranslation()) {
-			$children->merge($this->getOriginalPage()->stageChildren($showall));
-		}
-	}
-	*/
 	
 	function AllChildrenIncludingDeleted($context = null) {
 		$children = $this->owner->doAllChildrenIncludingDeleted($context);
@@ -1059,43 +1027,6 @@ class Translatable extends DataObjectDecorator {
 	}
 	
 	/**
-	 * If called with default language, doesn't affect the results.
-	 * Otherwise (called in translation mode) the method tries to find translations
-	 * for each page in its original language and replace the original.
-	 * The result will contain a mixture of translated and untranslated pages.
-	 * 
-	 * Caution: We also create a method AllChildrenIncludingDeleted() dynamically in the class constructor.
-	 * 
-	 * @param DataObjectSet $untranslatedChildren
-	 * @param Object $context
-	 */
-	/*
-	function augmentAllChildrenIncludingDeleted(DataObjectSet $children, $context) {
-		$find = array();
-		$replace = array();
-		
-		if($context && $context->Locale && $context->Locale != Translatable::default_locale()) {
-			
-			if($children) {
-				foreach($children as $child) {
-					if($child->hasTranslation($context->Locale)) {
-						$trans = $child->getTranslation($context->Locale);
-						if($trans) {
-							$find[] = $child;
-							$replace[] = $trans;
-						}
-					}
-				}
-				foreach($find as $i => $found) {
-					$children->replace($found, $replace[$i]);
-				}
-			}
-			
-		}	
-	}
-	*/
-	
-	/**
 	 * Get a list of languages with at least one element translated in (including the default language)
 	 *
 	 * @param string $className Look for languages in elements of this class
@@ -1109,8 +1040,9 @@ class Translatable extends DataObjectDecorator {
 		$returnMap = array();
 		$allCodes = array_merge(i18n::$all_locales, i18n::$common_locales);
 		foreach ($langlist as $langCode) {
-			if($langCode)
-				$returnMap[$langCode] = (is_array($allCodes[$langCode]) ? $allCodes[$langCode][0] : $allCodes[$langCode]);
+			if($langCode && isset($allCodes[$langCode])) {
+				$returnMap[$langCode] = (is_array($allCodes[$langCode])) ? $allCodes[$langCode][0] : $allCodes[$langCode];
+			}
 		}
 		return $returnMap;
 	}
@@ -1148,10 +1080,10 @@ class Translatable extends DataObjectDecorator {
 	}
 	
 	/**
-	 * @deprecated 2.4 Use is_default_locale()
+	 * @deprecated 2.4 Use custom check: self::$default_locale == self::current_locale()
 	 */
 	static function is_default_lang() {
-		return self::is_default_locale();
+		return (self::$default_locale == self::current_locale());
 	}
 	
 	/**
