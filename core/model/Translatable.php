@@ -4,29 +4,46 @@
  * defining which fields are can be translated. Translatable can be applied
  * to any {@link DataObject} subclass, but is mostly used with {@link SiteTree}.
  * Translatable is compatible with the {@link Versioned} extension.
+ * To avoid cluttering up the database-schema of the 99% of sites without multiple languages,
+ * the translation-feature is disabled by default.
  * 
- * Locales (e.g. 'en_US') are used in Translatable for identifying a record by language.
+ * Locales (e.g. 'en_US') are used in Translatable for identifying a record by language,
+ * see section "Locales and Language Tags".
  * 
  * <h2>Configuration</h2>
  * 
- * Enabling Translatable in the $extension array of a DataObject
- * <example>
+ * <h3>Through Object::add_extension()</h3>
+ * Enabling Translatable through {@link Object::add_extension()} in your _config.php:
+ * <code>
+ * Object::add_extension('MyClass', 'Translatable');
+ * </code>
+ * This is the recommended approach for enabling Translatable.
+ * 
+ * <h3>Through $extensions</h3>
+ * <code>
  * class MyClass extends DataObject {
  *   static $extensions = array(
  *     "Translatable"
  *   );
  * }
- * </example>
- * 
- * Enabling Translatable through {@link Object::add_extension()} in your _config.php:
- * <example>
- * Translatable::set_default_locale('en_US');
- * Object::add_extension('MyClass', 'Translatable');
- * </example>
+ * </code>
  * 
  * Make sure to rebuild the database through /dev/build after enabling translatable.
  * Use the correct {@link set_default_locale()} before building the database
  * for the first time, as this locale will be written on all new records.
+ * 
+ * <h3>"Default" locales</h3>
+ * 
+ * Important: If the "default language" of your site is not US-English (en_US), 
+ * please ensure to set the appropriate default language for
+ * your content before building the database with Translatable enabled:
+ * <code>
+ * Translatable::set_default_locale(<locale>); // e.g. 'de_DE' or 'fr_FR'
+ * </code>
+ * 
+ * For the Translatable class, a "locale" consists of a language code plus a region code separated by an underscore, 
+ * for example "de_AT" for German language ("de") in the region Austria ("AT").
+ * See http://www.w3.org/International/articles/language-tags/ for a detailed description.
  * 
  * <h2>Usage</h2>
  *
@@ -44,8 +61,10 @@
  * Getting translations through {@link Translatable::set_reading_locale()}.
  * This is *not* a recommended approach, but sometimes inavoidable (e.g. for {@link Versioned} methods).
  * <code>
- * $obj = DataObject::get_by_id('MyObject', 99); // original language
- * $translatedObj = $obj->getTranslation('de_DE');
+ * $origLocale = Translatable::get_reading_locale();
+ * Translatable::set_reading_locale('de_DE');
+ * $obj = Versioned::get_one_by_stage('MyObject', "ID = 99");
+ * Translatable::set_reading_locale($origLocale);
  * </code>
  * 
  * Creating a translation: 
@@ -68,15 +87,14 @@
  * through the {@link Versioned} extension.
  * 
  * Note: You can't get Children() for a parent page in a different language
- * through set_reading_lang(). Get the translated parent first.
+ * through set_reading_locale(). Get the translated parent first.
  * 
  * <code>
  * // wrong
- * Translatable::set_reading_lang('de');
+ * Translatable::set_reading_lang('de_DE');
  * $englishParent->Children(); 
  * // right
- * Translatable::set_reading_lang('de');
- * $germanParent = $englishParent->getTranslation('de');
+ * $germanParent = $englishParent->getTranslation('de_DE');
  * $germanParent->Children();
  * </code>
  *
@@ -90,19 +108,24 @@
  * in the default english language tree.
  * Caution: There is no versioning for translation groups,
  * meaning associating an object with a group will affect both stage and live records.
+ * 
+ * SiteTree database table (abbreviated)
+ * ^ ID ^ URLSegment ^ Title ^ Locale ^
+ * | 1 | about-us | About us | en_US |
+ * | 2 | ueber-uns | Über uns | de_DE |
+ * | 3 | contact | Contact | en_US |
+ * 
+ * SiteTree_translationgroups database table
+ * ^ TranslationGroupID ^ OriginalID ^
+ * | 99 | 1 |
+ * | 99 | 2 |
+ * | 199 | 3 |
  *
  * <h2>Character Sets</h2>
  * 
  * Caution: Does not apply any character-set conversion, it is assumed that all content
  * is stored and represented in UTF-8 (Unicode). Please make sure your database and
  * HTML-templates adjust to this.
- * 
- * <h2>"Default" languages</h2>
- * 
- * Important: If the "default language" of your site is not english (en_US), 
- * please ensure to set the appropriate default language for
- * your content before building the database with Translatable enabled:
- * Translatable::set_default_locale(<locale>);
  * 
  * <h2>Uninstalling/Disabling</h2>
  * 
@@ -112,12 +135,14 @@
  * or manually filter out translated objects through their "Locale" property
  * in the database.
  * 
- * @author Michael Gall <michael (at) wakeless (dot) net>
+ * @see http://doc.silverstripe.com/doku.php?id=multilingualcontent
+ *
  * @author Ingo Schommer <ingo (at) silverstripe (dot) com>
+ * @author Michael Gall <michael (at) wakeless (dot) net>
  * @author Bernat Foj Capell <bernat@silverstripe.com>
  * 
  * @package sapphire
- * @subpackage misc
+ * @subpackage i18n
  */
 class Translatable extends DataObjectDecorator {
 
@@ -1017,6 +1042,7 @@ class Translatable extends DataObjectDecorator {
 	 * of a page.
 	 * 
 	 * @see http://www.w3.org/TR/html4/struct/links.html#edef-LINK
+	 * @see http://www.w3.org/International/articles/language-tags/
 	 * 
 	 * @return string HTML
 	 */

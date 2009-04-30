@@ -40,6 +40,10 @@
  *
  * Please see the {Translatable} DataObjectDecorator for managing translations of database-content.
  *
+ * For the i18n class, a "locale" consists of a language code plus a region code separated by an underscore, 
+ * for example "de_AT" for German language ("de") in the region Austria ("AT").
+ * See http://www.w3.org/International/articles/language-tags/ for a detailed description.
+ *
  * @see http://www.w3.org/TR/i18n-html-tech-lang
  *
  * @author Bernat Foj Capell <bernat@silverstripe.com>
