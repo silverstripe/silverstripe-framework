@@ -96,30 +96,21 @@ class Versioned extends DataObjectDecorator {
 	}
 	
 	/**
-	 * Temporary table mapping each database record to its version on the given date.
-	 * Created by requireArchiveTempTable().
-	 * @var array
-	 */
-	protected static $createdArchiveTempTable = array();
-	
-	/**
 	 * Create a temporary table mapping each database record to its version on the given date.
 	 * This is used by the versioning system to return database content on that date.
 	 * @param string $baseTable The base table.
 	 * @param string $date The date.  If omitted, then the latest version of each page will be returned.
 	 */
 	protected static function requireArchiveTempTable($baseTable, $date = null) {
-		if(!isset(self::$createdArchiveTempTable[$baseTable])) {
-			self::$createdArchiveTempTable[$baseTable] = true;
-		
-			DB::query("CREATE TEMPORARY TABLE _Archive$baseTable (
-					RecordID INT NOT NULL PRIMARY KEY,
-					Version INT NOT NULL
-				)");
-				
+		DB::query("CREATE TEMPORARY TABLE IF NOT EXISTS _Archive$baseTable (
+				RecordID INT NOT NULL PRIMARY KEY,
+				Version INT NOT NULL
+			)");
+			
+		if(!DB::query("SELECT COUNT(*) FROM _Archive$baseTable")->value()) {
 			if($date) $dateClause = "WHERE LastEdited <= '$date'";
 			else $dateClause = "";
-			
+		
 			DB::query("INSERT INTO _Archive$baseTable
 				SELECT RecordID, max(Version) FROM {$baseTable}_versions
 				$dateClause
