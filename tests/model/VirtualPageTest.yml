@@ -1,0 +1,15 @@
+Page:
+   master:
+      Title: My Page
+   master2:
+      Title: My Other Page
+   holder:
+      Title: Sub-pages
+VirtualPage:
+   vp1:
+      CopyContentFrom: =>Page.master
+      Parent: =>Page.holder
+   vp2:
+      CopyContentFrom: =>Page.master
+      Parent: =>Page.holder
+      

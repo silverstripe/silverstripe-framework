@@ -1434,6 +1434,13 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 			SET SiteTree_Live.Sort = SiteTree.Sort
 			WHERE SiteTree_Live.ParentID = " . sprintf('%d', $this->ParentID));
 
+		// Publish any virtual pages that might need publishing
+		$linkedPages = DataObject::get("VirtualPage", "CopyContentFromID = $this->ID");
+		if($linkedPages) foreach($linkedPages as $page) {
+			$page->copyFrom($page->CopyContentFrom());
+			$page->doPublish();
+		}
+
 		// Handle activities undertaken by decorators
 		$this->extend('onAfterPublish', $original);
 	}
