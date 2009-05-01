@@ -451,11 +451,14 @@ class Translatable extends DataObjectDecorator {
 	 * Use {@link $enable_lang_filter} to temporarily disable this "auto-filtering".
 	 */
 	function augmentSQL(SQLQuery &$query) {
-		$lang = Translatable::current_locale();
+		// If the record is saved (and not a singleton), and has a locale,
+		// limit the current call to its locale. This fixes a lot of problems
+		// with other extensions like Versioned
+		$locale = ($this->owner->ID && $this->owner->Locale) ? $this->owner->Locale : Translatable::current_locale();
 		$baseTable = ClassInfo::baseDataClass($this->owner->class);
 		$where = $query->where;
 		if(
-			$lang
+			$locale
 			// unless the filter has been temporarily disabled
 			&& self::$enable_lang_filter
 			// DataObject::get_by_id() should work independently of language
@@ -467,11 +470,7 @@ class Translatable extends DataObjectDecorator {
 			&& !preg_match('/("|\')Lang("|\')/', $query->getFilter())
 			//&& !$query->filtersOnFK()
 		)  {
-			$qry = "`Locale` = '$lang'";
-			if(self::$default_locale == self::current_locale()) {
-				$qry .= " OR `Locale` = '' ";
-				$qry .= " OR `Locale` IS NULL ";
-			}
+			$qry = sprintf('`%s`.`Locale` = \'%s\'', $baseTable, $locale);
 			$query->where[] = $qry; 
 		}
 	}

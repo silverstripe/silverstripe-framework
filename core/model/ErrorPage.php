@@ -149,12 +149,12 @@ class ErrorPage extends Page {
 	 * which is generated through {@link publish()}.
 	 * 
 	 * @param int $statusCode A HTTP Statuscode, mostly 404 or 500
-	 * @param String $lang A language code in short locale format, e.g. 'de' (Optional)
+	 * @param String $locale A locale, e.g. 'de_DE' (Optional)
 	 * @return String
 	 */
-	static function get_filepath_for_errorcode($statusCode, $lang = null) {
-		if(Translatable::is_enabled() && $lang && $lang != Translatable::default_lang()) {
-			return self::$static_filepath . "/error-{$statusCode}-{$lang}.html";
+	static function get_filepath_for_errorcode($statusCode, $locale = null) {
+		if(singleton('SiteTree')->hasExtension('Translatable') && $locale && $locale != Translatable::default_locale()) {
+			return self::$static_filepath . "/error-{$statusCode}-{$locale}.html";
 		} else {
 			return self::$static_filepath . "/error-{$statusCode}.html";
 		}

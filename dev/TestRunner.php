@@ -142,6 +142,7 @@ class TestRunner extends Controller {
 		
 		// run tests before outputting anything to the client
 		$suite = new PHPUnit_Framework_TestSuite();
+		natcasesort($classList);
 		foreach($classList as $className) {
 			// Ensure that the autoloader pulls in the test class, as PHPUnit won't know how to do this.
 			class_exists($className);
@@ -157,7 +158,7 @@ class TestRunner extends Controller {
 
 		self::$default_reporter->writeHeader("Sapphire Test Runner");
 		if (count($classList) > 1) { 
-			self::$default_reporter->writeInfo("All Tests", "Running test cases: " . implode(", ", $classList));
+			self::$default_reporter->writeInfo("All Tests", "Running test cases: " . implode(",", $classList));
 		} else {
 			self::$default_reporter->writeInfo($classList[0], "");
 		}
