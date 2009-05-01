@@ -1032,6 +1032,13 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		// Need to flush cache to avoid outdated versionnumber references
 		$this->flushCache();
 		
+		// Update any virtual pages that might need updating
+		$linkedPages = DataObject::get("VirtualPage", "CopyContentFromID = $this->ID");
+		if($linkedPages) foreach($linkedPages as $page) {
+			$page->copyFrom($page->CopyContentFrom());
+			$page->write();
+		}
+		
 		parent::onAfterWrite();
 	}
 	
