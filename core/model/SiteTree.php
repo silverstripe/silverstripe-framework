@@ -1214,6 +1214,13 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 						$this->fieldLabel('ClassName'), 
 						$this->getClassDropdown()
 					),
+					
+					new OptionsetField("ParentType", "Page location", array(
+						"root" => _t("SiteTree.PARENTTYPE_ROOT", "Top-level page"),
+						"subpage" => _t("SiteTree.PARENTTYPE_SUBPAGE", "Sub-page underneath a parent page (choose below)"),
+					)),
+					new TreeDropdownField("ParentID", $this->fieldLabel('ParentID'), 'SiteTree'),
+					
 					new CheckboxField("ShowInMenus", $this->fieldLabel('ShowInMenus')),
 					new CheckboxField("ShowInSearch", $this->fieldLabel('ShowInSearch')),
 					/*, new TreeMultiselectField("MultipleParents", "Page appears within", "SiteTree")*/
@@ -1310,6 +1317,8 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		$labels['MetaKeywords'] = _t('SiteTree.METAKEYWORDS', "Keywords");
 		$labels['ExtraMeta'] = _t('SiteTree.METAEXTRA', "Custom Meta Tags");
 		$labels['ClassName'] = _t('SiteTree.PAGETYPE', "Page type", PR_MEDIUM, 'Classname of a page object');
+		$labels['ParentType'] = _t('SiteTree.PARENTTYPE', "Page location", PR_MEDIUM);
+		$labels['ParentID'] = _t('SiteTree.PARENTID', "Parent page", PR_MEDIUM);
 		$labels['ShowInMenus'] =_t('SiteTree.SHOWINMENUS', "Show in menus?");
 		$labels['ShowInSearch'] = _t('SiteTree.SHOWINSEARCH', "Show in search?");
 		$labels['ProvideComments'] = _t('SiteTree.ALLOWCOMMENTS', "Allow comments on this page?");
@@ -1877,6 +1886,10 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		if(isset($entities['Page.PLURALNAME'])) $entities['Page.PLURALNAME'][3] = 'sapphire';		
 
 		return $entities;
+	}
+	
+	function getParentType() {
+		return $this->ParentID == 0 ? 'root' : 'subpage';
 	}
 
 }
