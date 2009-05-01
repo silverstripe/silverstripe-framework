@@ -510,28 +510,6 @@ JS;
 		
 		$detailFields = $this->getCustomFieldsFor($childData);
 
-		// Loading of extra field values for editing an existing record
-		if($manyManyRelationName) {
-			$manyManyComponentSet = $parentClass->getManyManyComponents($manyManyRelationName);
-			$extraFieldsSpec = $parentClass->many_many_extraFields($this->name);
-			
-			$extraData = null;
-			if($childData && $childData->ID) {
-				$extraData = $manyManyComponentSet->getExtraData($manyManyRelationName, $childData->ID);
-			}
-			
-			if($extraFieldsSpec) foreach($extraFieldsSpec as $fieldName => $fieldSpec) {
-				// @todo Create the proper DBField type instead of hardcoding Varchar
-				$fieldObj = new Varchar($fieldName);
-				
-				if(isset($extraData[$fieldName])) {
-					$fieldObj->setValue($extraData[$fieldName]);
-				}
-
-				$detailFields->addFieldToTab('Root.Main', $fieldObj->scaffoldFormField($fieldName));
-			}
-		}
-		
 		if($hasManyRelationName && $childData->ID) {
 			$hasManyComponentSet = $parentClass->getComponents($hasManyRelationName);
 		}
@@ -647,16 +625,8 @@ JS;
 		if(isset($data['ctf']['manyManyRelation'])) {
 			$parentRecord = DataObject::get_by_id($data['ctf']['parentClass'], (int) $data['ctf']['sourceID']);
 			$relationName = $data['ctf']['manyManyRelation'];
-			$extraFields = array();
-			
-			if(isset($data['ctf']['extraFields'])) {
-				foreach($data['ctf']['extraFields'] as $field => $value) {
-					$extraFields[$field] = $value;
-				}
-			}
-			
 			$componentSet = $parentRecord->getManyManyComponents($relationName);
-			$componentSet->add($childData, $extraFields);
+			$componentSet->add($childData);
 		}
 		
 		if(isset($data['ctf']['hasManyRelation'])) {
@@ -826,16 +796,8 @@ class ComplexTableField_ItemRequest extends RequestHandler {
 		if(isset($data['ctf']['manyManyRelation'])) {
 			$parentRecord = DataObject::get_by_id($data['ctf']['parentClass'], (int) $data['ctf']['sourceID']);
 			$relationName = $data['ctf']['manyManyRelation'];
-			$extraFields = array();
-			
-			if(isset($data['ctf']['extraFields'])) {
-				foreach($data['ctf']['extraFields'] as $field => $value) {
-					$extraFields[$field] = $value;
-				}
-			}
-			
 			$componentSet = $parentRecord->getManyManyComponents($relationName);
-			$componentSet->add($dataObject, $extraFields);
+			$componentSet->add($dataObject);
 		}
 		
 		$referrer = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : null;
