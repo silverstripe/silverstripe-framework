@@ -95,6 +95,14 @@ class Form extends RequestHandler {
 	
 	protected $messageType;
 	
+	/**
+	 * Should we redirect the user back down to the 
+	 * the form on validation errors rather then just the page
+	 * 
+	 * @var bool
+	 */
+	protected $redirectToFormOnValidationError = false;
+	
 	protected $security = true;
 	
 	/**
@@ -214,10 +222,15 @@ class Form extends RequestHandler {
 					return $response;
 				}
 			} else {
-				Director::redirectBack();
-				return;
+				if($this->getRedirectToFormOnValidationError()) {
+					if($pageURL = $request->getHeader('Referer')) {
+						return Director::redirect($pageURL . '#' . $this->FormName());
+					}
+				}
+				return Director::redirectBack();
 			}
 		}
+
 
 		// Protection against CSRF attacks
 		if($this->securityTokenEnabled()) {
@@ -277,6 +290,27 @@ class Form extends RequestHandler {
 	 */
 	function makeReadonly() {
 		$this->transform(new ReadonlyTransformation());
+	}
+	
+	/**
+	 * Set whether the user should be redirected back down to the 
+	 * form on the page upon validation errors in the form or if 
+	 * they just need to redirect back to the page
+	 *
+	 * @param bool Redirect to the form
+	 */
+	public function setRedirectToFormOnValidationError($bool) {
+		$this->redirectToFormOnValidationError = $bool;
+	}
+	
+	/**
+	 * Get whether the user should be redirected back down to the
+	 * form on the page upon validation errors
+	 *
+	 * @return bool
+	 */
+	public function getRedirectToFormOnValidationError() {
+		return $this->redirectToFormOnValidationError;
 	}
 
 	/**

@@ -158,7 +158,7 @@ class Email extends ViewableData {
 			'mimetype' => $mimetype,
 		);
 	}
-		
+	
 	public function setBounceHandlerURL( $bounceHandlerURL ) {
 		if($bounceHandlerURL) {
 			$this->bounceHandlerURL = $bounceHandlerURL;
@@ -166,7 +166,7 @@ class Email extends ViewableData {
 			$this->bounceHandlerURL = $_SERVER['HTTP_HOST'] . Director::baseURL() . 'Email_BounceHandler';
 		}
 	}
-
+	
 	public function attachFile($filename, $attachedFilename = null, $mimetype = null) {
 		$absoluteFileName = Director::getAbsFile($filename);
 		if(file_exists($absoluteFileName)) {
