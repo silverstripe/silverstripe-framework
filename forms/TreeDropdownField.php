@@ -98,6 +98,9 @@ HTML;
 		echo substr(trim($tree), 4,-5);
 	}
 	
+	/**
+	 * @return DataObject
+	 */
 	public function getByKey($key) {
 		if($this->keyField == 'ID') {
 			return DataObject::get_by_id($this->sourceObject, $key);
@@ -123,9 +126,13 @@ HTML;
 
 	function performReadonlyTransformation() {
 		$fieldName = $this->labelField;
-		$value = ($this->getByKey($this->value)) ? $this->getByKey($this->value)->$fieldName : '';
+		if($this->value) {
+			$obj = ($this->getByKey($this->value)) ? $this->getByKey($this->value)->$fieldName : '';
+		} else {
+			$obj = null;
+		}
 		$source = array(
-			$this->value => $value
+			$this->value => $obj
 		);
 		$field = new LookupField($this->name, $this->title, $source);
 		$field->setValue($this->value);
