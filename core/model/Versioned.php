@@ -110,7 +110,7 @@ class Versioned extends DataObjectDecorator {
 					\"RecordID\" INT NOT NULL PRIMARY KEY,
 					\"Version\" INT NOT NULL
 				)");
-			
+		
 			if(!DB::query("SELECT COUNT(*) FROM \"_Archive$baseTable\"")->value()) {
 				if($date) $dateClause = "WHERE \"LastEdited\" <= '$date'";
 				else $dateClause = "";
