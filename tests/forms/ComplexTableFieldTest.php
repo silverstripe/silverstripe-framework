@@ -41,29 +41,12 @@ class ComplexTableFieldTest extends FunctionalTest {
 		$this->assertEquals($field->Items()->Count(), 2, 'There are 2 CTF items in the DataObjectSet');
 	}
 	
-	function testDetailFormDisplaysWithCorrectFields() {
-		$field = $this->manyManyForm->dataFieldByName('Players');
-		$detailForm = $field->add();
-		$parser = new CSSContentParser($detailForm);
-		
-		/* There is a field called "Name", which is a text input */
-		$this->assertEquals(count($parser->getBySelector('#Name input')), 1, 'There is a field called "Name", which is a text input');
-		
-		/* There is a field called "Role" - this field is the extra field for $many_many_extraFields */
-		$this->assertEquals(count($parser->getBySelector('#Role input')), 1, 'There is a field called "Role" - this field is the extra field for $many_many_extraFields');
-	}
-
-	function testAddingManyManyNewPlayerWithExtraData() {
+	function testAddingManyManyNewPlayer() {
 		$team = DataObject::get_one('ComplexTableFieldTest_Team', "Name = 'The Awesome People'");
 	
 		$this->post('ComplexTableFieldTest_Controller/ManyManyForm/field/Players/AddForm', array(
 			'Name' => 'Bobby Joe',
 			'ctf' => array(
-				'extraFields' => array(
-					'Role' => 'Goalie',
-					'Position' => 'Player',
-					'DateJoined' => '2008-10-10'
-				),
 				'ClassName' => 'ComplexTableFieldTest_Player',
 				'manyManyRelation' => 'Players',
 				'parentClass' => 'ComplexTableFieldTest_Team',
@@ -82,17 +65,6 @@ class ComplexTableFieldTest extends FunctionalTest {
 
 		/* Automatic many-many relation was set correctly on the new player */		
 		$this->assertEquals($teams->Count(), 1, 'Automatic many-many relation was set correctly on the new player');
-		
-		/* The extra fields have the correct value */
-		$extraFields = $teams->getExtraData('Teams', $team->ID);
-		
-		/* There are 3 extra fields */
-		$this->assertEquals(count($extraFields), 3, 'There are 3 extra fields');
-
-		/* The three extra fields have the correct values */
-		$this->assertEquals($extraFields['Role'], 'Goalie', 'The extra field "Role" has the correct value');
-		$this->assertEquals($extraFields['Position'], 'Player', 'The extra field "Position" has the correct value');
-		$this->assertEquals($extraFields['DateJoined'], '2008-10-10', 'The extra field "DateJoined" has the correct value');
 	}
 	
 	function testAddingHasManyData() {

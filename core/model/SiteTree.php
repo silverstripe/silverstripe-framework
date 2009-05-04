@@ -1031,6 +1031,13 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		// Need to flush cache to avoid outdated versionnumber references
 		$this->flushCache();
 		
+		// Update any virtual pages that might need updating
+		$linkedPages = DataObject::get("VirtualPage", "CopyContentFromID = $this->ID");
+		if($linkedPages) foreach($linkedPages as $page) {
+			$page->copyFrom($page->CopyContentFrom());
+			$page->write();
+		}
+		
 		parent::onAfterWrite();
 	}
 	
@@ -1444,6 +1451,13 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 				FROM \"SiteTree\"
 				WHERE \"SiteTree_Live\".\"ID\" = \"SiteTree\".\"ID\"
 				AND \"SiteTree_Live\".\"ParentID\" = " . sprintf('%d', $this->ParentID) );
+		}
+
+		// Publish any virtual pages that might need publishing
+		$linkedPages = DataObject::get("VirtualPage", "CopyContentFromID = $this->ID");
+		if($linkedPages) foreach($linkedPages as $page) {
+			$page->copyFrom($page->CopyContentFrom());
+			$page->doPublish();
 		}
 
 		// Handle activities undertaken by decorators

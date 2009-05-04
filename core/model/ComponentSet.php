@@ -61,41 +61,6 @@ class ComponentSet extends DataObjectSet {
 	}
 	
 	/**
-	 * Find the extra field data for a single row of the relationship
-	 * join table, given the known child ID.
-	 *
-	 * @todo This should return casted fields, like Enum, Varchar, Date
-	 * instead of just the raw value of the field.
-	 *	
-	 * @param string $componentName The name of the component
-	 * @param int $childID The ID of the child for the relationship
-	 * @param string|null $fieldName To get a specific extra data field, specify it here
-	 * @return array|string Array of field => value or single string of value
-	 */
-	function getExtraData($componentName, $childID, $fieldName = null) {
-		$ownerObj = $this->ownerObj;
-		$parentField = $this->ownerClass . 'ID';
-		$childField = ($this->childClass == $this->ownerClass) ? 'ChildID' : ($this->childClass . 'ID');
-
-		if(!$componentName) return false;
-
-		$extraFields = $ownerObj->many_many_extraFields($componentName);
-		if(!$extraFields) return false;
-		
-		if($fieldName && !empty($extraFields[$fieldName])) {
-			$query = DB::query("SELECT $fieldName FROM {$this->tableName} WHERE $parentField = '{$this->ownerObj->ID}' AND $childField = '{$childID}'");
-			return $query->value();
-		} else {
-			$fields = array();
-			foreach($extraFields as $fieldName => $fieldSpec) {
-				$query = DB::query("SELECT $fieldName FROM {$this->tableName} WHERE $parentField = '{$this->ownerObj->ID}' AND $childField = '{$childID}'");
-				$fields[$fieldName] = $query->value();
-			}
-			return $fields;
-		}
-	}
-	
-	/**
 	 * Get an array of all the IDs in this component set, where the keys are the same as the
 	 * values.
 	 * @return array
