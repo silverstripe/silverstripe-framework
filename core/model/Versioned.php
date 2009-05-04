@@ -116,7 +116,7 @@ class Versioned extends DataObjectDecorator {
 				else $dateClause = "";
 
 				DB::query("INSERT INTO \"_Archive$baseTable\"
-					SELECT \"RecordID\", max(Version) FROM \"{$baseTable}_versions\"
+					SELECT \"RecordID\", max(\"Version\") FROM \"{$baseTable}_versions\"
 					$dateClause
 					GROUP BY \"RecordID\"");
 			}
