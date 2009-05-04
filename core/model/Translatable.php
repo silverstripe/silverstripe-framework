@@ -634,6 +634,10 @@ class Translatable extends DataObjectDecorator {
 	 * nested pages accessible in a translated CMS page tree.
 	 * It would be more userfriendly to grey out untranslated pages,
 	 * but this involves complicated special cases in AllChildrenIncludingDeleted().
+	 * 
+	 * {@link SiteTree->onBeforeWrite()} will ensure that each translation will get
+	 * a unique URL across languages, by means of {@link SiteTree::get_by_url()}
+	 * and {@link Translatable->alternateGetByURL()}.
 	 */
 	function onBeforeWrite() {
 		// If language is not set explicitly, set it to current_locale.
@@ -656,18 +660,6 @@ class Translatable extends DataObjectDecorator {
 			) {
 				$parentTranslation = $this->owner->Parent()->createTranslation($this->owner->Locale);
 				$this->owner->ParentID = $parentTranslation->ID;
-			}
-		}
-		
-		// Specific logic for SiteTree subclasses.
-		// Append language to URLSegment to disambiguate URLs, meaning "myfrenchpage"
-		// will save as "myfrenchpage-fr" (only if we're not in the "default language").
-		// Its bad SEO to have multiple resources with different content (=language) under the same URL.
-		if($this->owner->hasField('URLSegment')) {
-			if(!$this->owner->ID && $this->owner->Locale != Translatable::default_locale()) {
-				$SQL_URLSegment = Convert::raw2sql($this->owner->URLSegment);
-				$existingOriginalPage = Translatable::get_one_by_lang('SiteTree', Translatable::default_locale(), "`URLSegment` = '{$SQL_URLSegment}'");
-				if($existingOriginalPage) $this->owner->URLSegment .= "-{$this->owner->Locale}";
 			}
 		}
 		
@@ -783,6 +775,10 @@ class Translatable extends DataObjectDecorator {
 
 		if($originalRecord && $isTranslationMode) {
 			$originalLangID = Session::get($this->owner->ID . '_originalLangID');
+			
+			// Remove parent page dropdown
+			$fields->removeByName("ParentType");
+			$fields->removeByName("ParentID");
 			
 			$translatableFieldNames = $this->getTranslatableFields();
 			$allDataFields = $fields->dataFields();

@@ -174,12 +174,13 @@ class TranslatableTest extends FunctionalTest {
 		);
 	}
 
-	function testTranslationCanHaveSameURLSegment() {
+	function testTranslationCantHaveSameURLSegmentAcrossLanguages() {
 		$origPage = $this->objFromFixture('Page', 'testpage_en');
 		$translatedPage = $origPage->createTranslation('de_DE');
 		$translatedPage->URLSegment = 'testpage';
-		
-		$this->assertEquals($origPage->URLSegment, $translatedPage->URLSegment);
+		$translatedPage->write();
+
+		$this->assertNotEquals($origPage->URLSegment, $translatedPage->URLSegment);
 	}
 	
 	function testUpdateCMSFieldsOnSiteTree() {

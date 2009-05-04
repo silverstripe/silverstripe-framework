@@ -1008,7 +1008,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 			$count++;
 			$this->URLSegment = ereg_replace('-[0-9]+$','', $this->URLSegment) . "-$count";
 		}
-
+		
 		DataObject::set_context_obj(null);
 		
 		// If the URLSegment has been changed, rewrite links
@@ -1079,7 +1079,16 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	public static function get_by_url($urlSegment, $extraFilter = "", $cache = true, $orderby = "") {
 		$filter = sprintf("`SiteTree`.URLSegment = '%s'", Convert::raw2sql($urlSegment));
 		if($extraFilter) $filter .= " AND $extraFilter";
-		return DataObject::get_one("SiteTree", $filter, $cache, $orderby);
+		$matchedPage = DataObject::get_one("SiteTree", $filter, $cache, $orderby);
+		if($matchedPage) {
+			return $matchedPage;
+		} else {
+			$alternativeMatches = singleton('SiteTree')->extend('alternateGetByUrl', $urlSegment, $extraFilter, $cache, $orderby);
+			if($alternativeMatches) foreach($alternativeMatches as $alternativeMatch) {
+				if($alternativeMatch) return $alternativeMatch;
+			} 
+			return false;
+		} 
 	}
 
 	/**
