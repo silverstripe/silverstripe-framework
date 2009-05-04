@@ -55,6 +55,7 @@ class TranslatableTest extends FunctionalTest {
 		if(!self::$origTranslatableSettings['has_extension']) Object::remove_extension('SiteTree', 'Translatable');
 
 		Translatable::set_default_locale(self::$origTranslatableSettings['default_locale']);
+		Translatable::set_reading_locale(self::$origTranslatableSettings['default_locale']);
 		
 		self::kill_temp_db();
 		self::create_temp_db();
@@ -273,7 +274,7 @@ class TranslatableTest extends FunctionalTest {
 		);
 		
 		// reset language to default
-		Translatable::set_reading_locale('de_DE');
+		Translatable::set_reading_locale('en_US');
 	}
 	
 	function testModifyTranslationWithDefaultReadingLang() {

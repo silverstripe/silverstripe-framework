@@ -105,6 +105,7 @@ class SearchForm extends Form {
 		
 		// set language (if present)
 		if(singleton('SiteTree')->hasExtension('Translatable') && isset($data['locale'])) {
+			$origLocale = Translatable::current_locale();
 			Translatable::set_reading_locale($data['locale']);
 		}
 	
@@ -133,6 +134,11 @@ class SearchForm extends Form {
 		// filter by permission
 		if($results) foreach($results as $result) {
 			if(!$result->canView()) $results->remove($result);
+		}
+		
+		// reset locale
+		if(singleton('SiteTree')->hasExtension('Translatable') && isset($data['locale'])) {
+			Translatable::set_reading_locale($origLocale);
 		}
 		
 		return $results;

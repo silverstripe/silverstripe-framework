@@ -104,8 +104,8 @@ class VirtualPage extends Page {
 				&& $this->changed['CopyContentFromID'] 
 	 			&& $this->CopyContentFromID != 0 
 				&& $this instanceof VirtualPage
-			) {;
-				$source = DataObject::get_one("SiteTree","`SiteTree`.`ID`='$this->CopyContentFromID'");
+			) {
+				$source = DataObject::get_one("SiteTree",sprintf('`SiteTree`.`ID` = %d', $this->CopyContentFromID));
 				$this->copyFrom($source);
 				$this->URLSegment = $source->URLSegment . '-' . $this->ID;			
 			}
