@@ -7,24 +7,44 @@ class ErrorPageTest extends FunctionalTest {
 	
 	static $fixture_file = 'sapphire/tests/ErrorPageTest.yml';
 	
+	protected $orig = array();
+	
+	protected $tmpAssetsPath = '';
+	
+	function setUp() {
+		parent::setUp();
+		
+		$this->orig['ErrorPage_staticfilepath'] = ErrorPage::get_static_filepath();		
+		$this->tmpAssetsPath = sprintf('%s/_tmp_assets_%s', TEMP_FOLDER, rand());
+		Filesystem::makeFolder($this->tmpAssetsPath . '/ErrorPageTest');
+		ErrorPage::set_static_filepath($this->tmpAssetsPath . '/ErrorPageTest');
+		
+		$this->orig['Director_environmenttype'] = Director::get_environment_type();
+		Director::set_environment_type('live');
+	}
+	
+	function tearDown() {
+		parent::tearDown();
+		
+		ErrorPage::set_static_filepath($this->orig['ErrorPage_staticfilepath']);
+		Director::set_environment_type($this->orig['Director_environmenttype']);
+		
+		Filesystem::removeFolder($this->tmpAssetsPath . '/ErrorPageTest');
+		Filesystem::removeFolder($this->tmpAssetsPath);
+	}
+	
 	function test404ErrorPage() {
 		$page = $this->objFromFixture('ErrorPage', '404');
-
-		$response = $this->get($page->URLSegment);
+		// ensure that the errorpage exists as a physical file
+		$page->publish('Stage', 'Live');
 		
-		/* A standard error is shown */
-		$this->assertEquals($response->getBody(), 'The requested page couldn\'t be found.', 'A standard error is shown');
-
-		/* When the page is published, an error page with the theme is shown instead */		
-		$page->publish('Stage', 'Live', false);
+		$response = $this->get('nonexistent-page');
 		
-		$response = $this->get($page->URLSegment);
-		
-		/* There is body text from the error page */
+		/* We have body text from the error page */
 		$this->assertNotNull($response->getBody(), 'We have body text from the error page');
-		
+
 		/* Status code of the HTTPResponse for error page is "404" */
-		$this->assertEquals($response->getStatusCode(), '404', 'Status cod eof the HTTPResponse for error page is "404"');
+		$this->assertEquals($response->getStatusCode(), '404', 'Status code of the HTTPResponse for error page is "404"');
 		
 		/* Status message of the HTTPResponse for error page is "Not Found" */
 		$this->assertEquals($response->getStatusDescription(), 'Not Found', 'Status message of the HTTResponse for error page is "Not found"');

@@ -95,8 +95,8 @@ class ErrorPage extends Page {
 	 * @param string $toStage Place to copy to. Must be a stage name.
 	 * @param boolean $createNewVersion Set this to true to create a new version number.  By default, the existing version number will be copied over.
 	 */
-	function publish($fromStage, $toStage, $createNewVersion = false) {
-		$oldStage = Versioned::current_stage();
+	function doPublish() {
+		parent::doPublish();
 
 		// Run the page
 		$response = Director::test(Director::makeRelative($this->Link()));
@@ -125,11 +125,6 @@ class ErrorPage extends Page {
 			FormResponse::respond();
 			return;
 		}
-		
-		// Restore the version we're currently connected to.
-		Versioned::reading_stage($oldStage);
-		
-		return $this->extension_instances['Versioned']->publish($fromStage, $toStage, $createNewVersion);
 	}
 	
 	/**
@@ -173,7 +168,7 @@ class ErrorPage extends Page {
 	/**
 	 * @return string
 	 */
-	static function get_static_filepath($path) {
+	static function get_static_filepath() {
 		return self::$static_filepath;
 	}
 }
@@ -183,8 +178,14 @@ class ErrorPage extends Page {
  * @package cms
  */
 class ErrorPage_Controller extends Page_Controller {
-	public function index() {
-		Director::set_status_code($this->failover->ErrorCode ? $this->failover->ErrorCode : 404);
+	function init() {
+		parent::init();
+
+		$action = $this->request->param('Action');
+		if(!$action || $action == 'index') {
+			Director::set_status_code($this->failover->ErrorCode ? $this->failover->ErrorCode : 404); 
+		}
+		
 	}
 }
 
