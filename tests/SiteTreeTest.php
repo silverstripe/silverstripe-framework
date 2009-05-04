@@ -206,6 +206,19 @@ class SiteTreeTest extends SapphireTest {
 		$this->assertEquals('Page', $requeriedPage->class);
 		
 	}
+
+	/**
+	 * Test SiteTree::get_by_url()
+	 */
+	function testGetByURL() {
+		// Test basic get by url
+		$this->assertEquals($this->idFromFixture('Page', 'home'), SiteTree::get_by_url("home")->ID);
+
+		// Test the extraFilter argument
+		// Note: One day, it would be more appropriate to return null instead of false for queries such as these
+		$this->assertFalse(SiteTree::get_by_url("home", "1 = 2"));
+	}
+
 }
 
 // We make these extend page since that's what all page types are expected to do
