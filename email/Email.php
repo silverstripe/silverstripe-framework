@@ -332,6 +332,8 @@ class Email extends ViewableData {
 	 * and it won't be plain email :) 
 	 */
 	protected function parseVariables($isPlain = false) {
+		SSViewer::set_source_file_comments(false);
+		
 		if(!$this->parseVariables_done) {
 			$this->parseVariables_done = true;
 
