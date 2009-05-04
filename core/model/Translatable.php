@@ -777,6 +777,10 @@ class Translatable extends DataObjectDecorator {
 		if($originalRecord && $isTranslationMode) {
 			$originalLangID = Session::get($this->owner->ID . '_originalLangID');
 			
+			// Remove parent page dropdown
+			$fields->removeByName("ParentType");
+			$fields->removeByName("ParentID");
+			
 			$translatableFieldNames = $this->getTranslatableFields();
 			$allDataFields = $fields->dataFields();
 			
