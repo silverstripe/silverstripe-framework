@@ -3,7 +3,7 @@
  * Represents a decimal field containing a currency amount.
  * Currency the currency class only supports single currencies.
  *
- * @todo Add localization support, see http://open.silverstripe.com/ticket/2931
+ * @deprecated 2.5 Use Money class
  * 
  * @package sapphire
  * @subpackage model

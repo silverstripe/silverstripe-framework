@@ -1,0 +1,4 @@
+MoneyTest_DataObject:
+   test1:
+      MyMoneyCurrency: EUR
+      MyMoneyAmount: 1.23
