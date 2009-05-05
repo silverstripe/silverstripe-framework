@@ -123,7 +123,7 @@ class TestRunner extends Controller {
 	function only($request) {
 		$className = $request->param('TestCase');
 		if(class_exists($className)) {
-			if(!(singleton($className) instanceof SapphireTest)) {
+			if(!is_subclass_of($className, 'SapphireTest')) {
 				user_error("TestRunner::only(): Invalid TestCase '$className', cannot find matching class", E_USER_ERROR);
 			}
 			$this->runTests(array($className));

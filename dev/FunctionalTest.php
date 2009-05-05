@@ -251,7 +251,19 @@ class FunctionalTest extends SapphireTest {
 				. "Instead the following elements were found:\n'" . implode("'\n'", $actuals) . "'"
 	        );
 		}
-	}	
+	}
+	
+	/**
+	 * Log in as the given member
+	 * @param $member The ID, fixture codename, or Member object of the member that you want to log in
+	 */
+	function logInAs($member) {
+		if(is_object($member)) $memberID = $member->ID;
+		elseif(is_numeric($member)) $memberID = $member;
+		else $memberID = $this->idFromFixture('Member', $member);
+		
+		$this->session()->inst_set('loggedInAs', $memberID);
+	}
 	
 	/**
 	 * Use the draft (stage) site for testing.
