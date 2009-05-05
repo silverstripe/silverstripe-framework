@@ -103,23 +103,19 @@ class Versioned extends DataObjectDecorator {
 	 * @todo Ensure that this is DB abstracted
 	 */
 	protected static function requireArchiveTempTable($baseTable, $date = null) {
-		if(!isset(self::$createdArchiveTempTable[$baseTable])) {
-			self::$createdArchiveTempTable[$baseTable] = true;
-		
-			DB::query("CREATE TEMPORARY TABLE IF NOT EXISTS \"_Archive$baseTable\" (
-					\"RecordID\" INT NOT NULL PRIMARY KEY,
-					\"Version\" INT NOT NULL
-				)");
-		
-			if(!DB::query("SELECT COUNT(*) FROM \"_Archive$baseTable\"")->value()) {
-				if($date) $dateClause = "WHERE \"LastEdited\" <= '$date'";
-				else $dateClause = "";
+		DB::query("CREATE TEMPORARY TABLE IF NOT EXISTS \"_Archive$baseTable\" (
+				\"RecordID\" INT NOT NULL PRIMARY KEY,
+				\"Version\" INT NOT NULL
+			)");
+	
+		if(!DB::query("SELECT COUNT(*) FROM \"_Archive$baseTable\"")->value()) {
+			if($date) $dateClause = "WHERE \"LastEdited\" <= '$date'";
+			else $dateClause = "";
 
-				DB::query("INSERT INTO \"_Archive$baseTable\"
-					SELECT \"RecordID\", max(\"Version\") FROM \"{$baseTable}_versions\"
-					$dateClause
-					GROUP BY \"RecordID\"");
-			}
+			DB::query("INSERT INTO \"_Archive$baseTable\"
+				SELECT \"RecordID\", max(\"Version\") FROM \"{$baseTable}_versions\"
+				$dateClause
+				GROUP BY \"RecordID\"");
 		}
 	}
 
