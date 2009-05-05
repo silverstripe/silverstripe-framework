@@ -901,7 +901,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 						}
 					}
 				}
-
 				$this->extend('augmentWrite', $manipulation);
 				
 				// New records have their insert into the base data table done first, so that they can pass the
@@ -938,7 +937,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		if($writeComponents) {
 			$this->writeComponents(true);
 		}
-
 		return $this->record['ID'];
 	}
 
@@ -1810,7 +1808,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	public function getField($field) {
 		// If we already have an object in $this->record, then we should just return that
 		if(isset($this->record[$field]) && is_object($this->record[$field]))  return $this->record[$field];
-
+		
 		// Otherwise, we need to determine if this is a complex field
 		$fieldClass = $this->db($field);
 		if($fieldClass && ClassInfo::classImplements($fieldClass, 'CompositeDBField')) {
@@ -1818,7 +1816,12 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			$constructor = $helperPair['castingHelper'];
 			$fieldName = $field;
 			$fieldObj = eval($constructor);
-			if(isset($this->record[$field])) $fieldObj->setValue($this->record[$field], $this->record);
+			
+			// write value only if either the field value exists,
+			// or a valid record has been loaded from the database
+			$value = (isset($this->record[$field])) ? $this->record[$field] : null;
+			if($value || $this->exists()) $fieldObj->setValue($value, $this->record);
+			
 			$this->record[$field] = $fieldObj;
 
 			return $this->record[$field];
@@ -2000,6 +2003,14 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		if(!$fieldMap) {
 			// all $db fields on this specific class (no parents)
 			$fieldMap = $this->uninherited('db', true);
+			if($fieldMap) foreach($fieldMap as $fieldname => $fieldtype){
+				if(ClassInfo::classImplements($fieldtype, 'CompositeDBField')){
+					$combined_db = singleton($fieldtype)->composite_db();
+					foreach($combined_db as $name => $type){
+						$fieldMap[$fieldname.$name] = $type;
+					}
+				}
+			}
 			
 			// all has_one relations on this specific class,
 			// add foreign key
@@ -2007,11 +2018,11 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			if($hasOne) foreach($hasOne as $fieldName => $fieldSchema) {
 				$fieldMap[$fieldName . 'ID'] = "ForeignKey";
 			}
-			
+
 			// set cached fieldmap
 			self::$cache_has_own_table_field[$this->class] = $fieldMap;
 		}
-		
+
 		// Remove string-based "constructor-arguments" from the DBField definition
 		return isset($fieldMap[$field]) ? strtok($fieldMap[$field],'(') : null;
 	}
