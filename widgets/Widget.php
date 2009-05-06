@@ -38,18 +38,15 @@ class Widget extends DataObject {
 	}
 	
 	function Title() {
-		$instance = singleton($this->class);
-		return $instance->uninherited('title', true);
+		return Object::get_static($this->class, 'title');
 	}
 	
 	function CMSTitle() {
-		$instance = singleton($this->class);
-		return $instance->uninherited('cmsTitle', true);
+		return Object::get_static($this->class, 'cmsTitle');
 	}
 	
 	function Description() {
-		$instance = singleton($this->class);
-		return $instance->uninherited('description', true);
+		return Object::get_static($this->class, 'description');
 	}
 	
 	function DescriptionSegment() {
