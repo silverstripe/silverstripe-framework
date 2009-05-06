@@ -1023,6 +1023,7 @@ class ComplexTableField_Popup extends Form {
 		$this->dataObject = $dataObject;
 		
 		Requirements::clear();
+		Requirements::unblock_all();
 		
 		$actions = new FieldSet();	
 		if(!$readonly) {

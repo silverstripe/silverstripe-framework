@@ -26,7 +26,7 @@ abstract class DBField extends ViewableData {
 	 *
 	 * @var string
 	 */
-	protected static $default_search_filter_class = 'PartialMatchFilter';
+	public static $default_search_filter_class = 'PartialMatchFilter';
 	
 	/**
 	 * @var $default mixed Default-value in the database.

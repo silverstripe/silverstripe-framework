@@ -725,11 +725,12 @@ class Translatable extends DataObjectDecorator {
 	 * @return DataObject
 	 */
 	function alternateGetByUrl($urlSegment, $extraFilter, $cache = null, $orderby = null) {
-		$SQL_URLSegment = Convert::raw2sql($urlSegment);
+		$filter = sprintf("\"SiteTree\".\"URLSegment\" = '%s'", Convert::raw2sql($urlSegment));
+		if($extraFilter) $filter .= " AND $extraFilter";
 		self::$enable_lang_filter = false;
-		$record = DataObject::get_one('SiteTree', "\"URLSegment\" = '{$SQL_URLSegment}'", false);
+		$record = DataObject::get_one('SiteTree', $filter);
 		self::$enable_lang_filter = true;
-		
+
 		return $record;
 	}
 
