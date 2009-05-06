@@ -254,6 +254,8 @@ class Money extends DBField implements CompositeDBField {
 			$fieldCurrency
 		);
 		
+		$field->setID ($this->name);
+		
 		return $field;
 	}
 }
