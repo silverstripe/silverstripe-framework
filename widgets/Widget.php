@@ -59,7 +59,6 @@ class Widget extends DataObject {
 	
 	function CMSEditor() {
 		$output = '';
-		
 		$fields = $this->getCMSFields();
 		foreach($fields as $field) {
 			$name = $field->Name();
@@ -104,6 +103,7 @@ class Widget extends DataObject {
 }
 
 class Widget_Controller extends Controller {
+	
 	function editablesegment() {
 		$className = $this->urlParams['ID'];
 		if(class_exists($className) && is_subclass_of($className, 'Widget')) {
@@ -114,6 +114,6 @@ class Widget_Controller extends Controller {
 			return "Bad widget class name given";
 		}
 	}
+	
 }
-
 ?>
