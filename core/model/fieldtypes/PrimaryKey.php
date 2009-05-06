@@ -13,7 +13,7 @@ class PrimaryKey extends Int {
 	 */
 	protected $object;
 
-	protected static $default_search_filter_class = 'ExactMatchMultiFilter';
+	public static $default_search_filter_class = 'ExactMatchMultiFilter';
 	
 	/**
 	 * @param string $name

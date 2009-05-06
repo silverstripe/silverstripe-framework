@@ -160,6 +160,9 @@ abstract class Object {
 	 * If any extra values are discovered, they are then merged with the default PHP static values, or in some cases
 	 * completely replace the default PHP static when you set $replace = true, and do not define extra data on any child
 	 * classes
+	 * 
+	 * Note that from SilverStripe 2.3.2, Object::get_static() can only be used to get public
+	 * static variables, not protected ones.
 	 *
 	 * @param string $class
 	 * @param string $name the property name
@@ -237,6 +240,9 @@ abstract class Object {
 	
 	/**
 	 * Get an uninherited static variable - a variable that is explicity set in this class, and not in the parent class.
+	 * 
+	 * Note that from SilverStripe 2.3.2, Object::uninherited_static() can only be used to get public
+	 * static variables, not protected ones.
 	 * 
 	 * @todo Recursively filter out parent statics, currently only inspects the parent class
 	 *
