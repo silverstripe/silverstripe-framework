@@ -87,8 +87,6 @@ class Money extends DBField implements CompositeDBField {
 	}
 
 	function setValue($value,$record=null) {
-		//var_dump($value);
-		//var_dump($record);
 		if($record && isset($record[$this->name . 'Currency']) && isset($record[$this->name . 'Amount'])) {
 			if($record[$this->name . 'Currency'] && $record[$this->name . 'Amount']) {
 				$this->setCurrency($record[$this->name . 'Currency']);
