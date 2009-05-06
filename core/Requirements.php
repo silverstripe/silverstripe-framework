@@ -620,13 +620,12 @@ class Requirements_Backend {
 				$jsRequirements = preg_replace('/>\n*/', '>', $jsRequirements);
 				
 				// We put script tags into the body, for performance.
-				// If your template already has script tags in the body, then we put our script tags at the top of the body.
-				// Otherwise, we put it at the bottom.
+				// If your template already has script tags in the body, then we put our script 
+				// tags just before those. Otherwise, we put it at the bottom.
 				$p1 = strripos($content, '<script');
 				$p2 = stripos($content, '<body');
 				if($p1 !== false && $p1 > $p2) {
-					user_error("You have a script tag in the body, moving requirements to top of <body> for compatibilty.  I recommend removing the script tag from your template's body.", E_USER_NOTICE);
-					$content = eregi_replace("(<body[^>]*>)", "\\1" . $jsRequirements, $content);
+					$content = substr($content,0,$p1) . $jsRequirements . substr($content,$p1);
 				} else {
 					$content = eregi_replace("(</body[^>]*>)", $jsRequirements . "\\1", $content);
 				}
