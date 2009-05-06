@@ -65,7 +65,7 @@ class Money extends DBField implements CompositeDBField {
 	);
 	
 	function __construct($name = null) {
-		$this->currencyLib = new Zend_Currency(i18n::default_locale());
+		$this->currencyLib = new Zend_Currency(null, i18n::default_locale());
 		
 		parent::__construct($name);
 	}
@@ -116,6 +116,15 @@ class Money extends DBField implements CompositeDBField {
 	 */
 	function Nice($options = array()) {
 		return $this->currencyLib->toCurrency($this->getAmount(), $options);
+	}
+	
+	/**
+	 * @return string
+	 */
+	function NiceWithShortname($options = array()){
+		$shortName = $this->getShortName();
+		$symbol = $this->getSymbol();
+		return $shortName."(".$symbol.")"." ".$this->getAmount();
 	}
 
 	/**
