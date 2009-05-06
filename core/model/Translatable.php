@@ -100,11 +100,11 @@
  *
  * <h2>Translation groups</h2>
  * 
- * Each translation can have an associated "master" object in another language which it is based on,
- * as defined by the "MasterTranslationID" property. This relation is optional, meaning you can
+ * Each translation can have one or more related pages in other languages. 
+ * This relation is optional, meaning you can
  * create translations which have no representation in the "default language".
- * This "original" doesn't have to be in a default language, meaning
- * a french translation can have a german original, without either of them having a representation
+ * This means you can have a french translation with a german original, 
+ * without either of them having a representation
  * in the default english language tree.
  * Caution: There is no versioning for translation groups,
  * meaning associating an object with a group will affect both stage and live records.
