@@ -220,7 +220,12 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			}
 		}
 
-		$this->record = $this->original = $record;
+		// Set $this->record to $record, but ignore NULLs
+		$this->record = array();
+		foreach($record as $k => $v) {
+			if($v !== null) $this->record[$k] = $v;
+		}
+		$this->original = $this->record;
 
 		// Keep track of the modification date of all the data sourced to make this page
 		// From this we create a Last-Modified HTTP header
@@ -2024,7 +2029,10 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		}
 
 		// Remove string-based "constructor-arguments" from the DBField definition
-		return isset($fieldMap[$field]) ? strtok($fieldMap[$field],'(') : null;
+		if(isset($fieldMap[$field])) {
+			if(is_string($fieldMap[$field])) return strtok($fieldMap[$field],'(');
+			else return $fieldMap[$field]['type'];
+		}
 	}
 	
 	/**
@@ -2294,37 +2302,35 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		}
 
 		$baseClass = array_shift($tableClasses);
-		$select = array("\"$baseClass\".*");
 
 		// Build our intial query
-		$query = new SQLQuery($select);
+		$query = new SQLQuery(array());
 		$query->from("\"$baseClass\"");
 		$query->where($filter);
 		$query->orderby($sort);
 		$query->limit($limit);
 
 		// Add SQL for multi-value fields on the base table
-		$databaseFields = $this->databaseFields();
+		$databaseFields = self::database_fields($baseClass);
 		if($databaseFields) foreach($databaseFields as $k => $v) {
-			if(!in_array($k, array('ClassName', 'LastEdited', 'Created'))) {
-				if(ClassInfo::classImplements($v, 'CompositeDBField')) {
-					$this->dbObject($k)->addToQuery($query);
-				}
+			if(!in_array($k, array('ClassName', 'LastEdited', 'Created')) && ClassInfo::classImplements($v, 'CompositeDBField')) {
+				$this->dbObject($k)->addToQuery($query);
+			} else {
+				$query->select[] = "\"$baseClass\".\"$k\"";
 			}
 		}
 		// Join all the tables
 		if($tableClasses && self::$subclass_access) {
 			foreach($tableClasses as $tableClass) {
 				$query->from[$tableClass] = "LEFT JOIN \"$tableClass\" ON \"$tableClass\".\"ID\" = \"$baseClass\".\"ID\"";
-				$query->select[] = "\"$tableClass\".*";
 
 				// Add SQL for multi-value fields
 				$databaseFields = self::database_fields($tableClass);
 				if($databaseFields) foreach($databaseFields as $k => $v) {
-					if(!in_array($k, array('ClassName', 'LastEdited', 'Created'))) {
-						if(ClassInfo::classImplements($v, 'CompositeDBField')) {
-							singleton($tableClass)->dbObject($k)->addToQuery($query);
-						}
+					if(ClassInfo::classImplements($v, 'CompositeDBField')) {
+						singleton($tableClass)->dbObject($k)->addToQuery($query);
+					} else {
+						$query->select[] = "\"$tableClass\".\"$k\"";
 					}
 				}
 			}

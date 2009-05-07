@@ -126,10 +126,10 @@ class SearchContextTest extends SapphireTest {
 class SearchContextTest_Person extends DataObject implements TestOnly {
 	
 	static $db = array(
-		"Name" => "Text",
-		"Email" => "Text",
-		"HairColor" => "Text",
-		"EyeColor" => "Text"
+		"Name" => "Varchar",
+		"Email" => "Varchar",
+		"HairColor" => "Varchar",
+		"EyeColor" => "Varchar"
 	);
 	
 	static $searchable_fields = array(
@@ -141,8 +141,8 @@ class SearchContextTest_Person extends DataObject implements TestOnly {
 class SearchContextTest_Book extends DataObject implements TestOnly {
 	
 	static $db = array(
-		"Title" => "Text",
-		"Summary" => "Text"
+		"Title" => "Varchar",
+		"Summary" => "Varchar"
 	);
 	
 }
@@ -150,8 +150,8 @@ class SearchContextTest_Book extends DataObject implements TestOnly {
 class SearchContextTest_Company extends DataObject implements TestOnly {
 	
 	static $db = array(
-		"Name" => "Text",
-		"Industry" => "Text",
+		"Name" => "Varchar",
+		"Industry" => "Varchar",
 		"AnnualProfit" => "Int"
 	);
 	
@@ -176,7 +176,7 @@ class SearchContextTest_Company extends DataObject implements TestOnly {
 class SearchContextTest_Project extends DataObject implements TestOnly {
 	
 	static $db = array(
-		"Name" => "Text"
+		"Name" => "Varchar"
 	);
 	
 	static $has_one = array(
@@ -211,7 +211,7 @@ class SearchContextTest_Action extends DataObject implements TestOnly {
 	
 	static $db = array(
 		"Description" => "Text",
-		"SolutionArea" => "Text"
+		"SolutionArea" => "Varchar"
 	);
 	
 	static $has_one = array(
@@ -223,14 +223,14 @@ class SearchContextTest_Action extends DataObject implements TestOnly {
 class SearchContextTest_AllFilterTypes extends DataObject implements TestOnly {
 	
 	static $db = array(
-		"ExactMatch" => "Text",
-		"PartialMatch" => "Text",
-		"Negation" => "Text",
-		"SubstringMatch" => "Text",
-		"CollectionMatch" => "Text",
-		"StartsWith" => "Text",
-		"EndsWith" => "Text",
-		"HiddenValue" => "Text"
+		"ExactMatch" => "Varchar",
+		"PartialMatch" => "Varchar",
+		"Negation" => "Varchar",
+		"SubstringMatch" => "Varchar",
+		"CollectionMatch" => "Varchar",
+		"StartsWith" => "Varchar",
+		"EndsWith" => "Varchar",
+		"HiddenValue" => "Varchar"
 	);
 	
 	static $searchable_fields = array(

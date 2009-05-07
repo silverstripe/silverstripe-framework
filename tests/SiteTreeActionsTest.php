@@ -71,7 +71,7 @@ if(class_exists('SiteTreeCMSWorkflow')) {
 			$page->deleteFromStage('Stage');
 			
 			// Get the live version of the page
-			$page = Versioned::get_one_by_stage("SiteTree", "Live", "`SiteTree`.ID = $pageID");
+			$page = Versioned::get_one_by_stage("SiteTree", "Live", "\"SiteTree\".ID = $pageID");
 			
 			$author = $this->objFromFixture('Member', 'cmseditor');
 			$this->session()->inst_set('loggedInAs', $author->ID);

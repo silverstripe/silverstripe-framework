@@ -58,6 +58,9 @@ class Versioned extends DataObjectDecorator {
 	
 	function extraStatics() {
 		return array(
+			'db' => array(
+				'Version' => 'Int',
+			),
 			'has_many' => array(
 				'Versions' => 'SiteTree',
 			)
@@ -188,12 +191,14 @@ class Versioned extends DataObjectDecorator {
 					}
 	
 					// Version fields on each root table (including Stage)
+					/*
 					if(isset($rootTable)) {
 						$stageTable = ($stage == $this->defaultStage) ? $table : "{$table}_$stage";
 						$parts=Array('datatype'=>'int', 'precision'=>11, 'null'=>'not null', 'default'=>(int)0);
 						$values=Array('type'=>'int', 'parts'=>$parts);
 						DB::requireField($stageTable, 'Version', $values);
 					}
+					*/
 				}
 				
 				// Create table for all versions

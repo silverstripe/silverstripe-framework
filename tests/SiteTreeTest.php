@@ -198,7 +198,7 @@ class SiteTreeTest extends SapphireTest {
 		Versioned::reading_stage('Live');
 		$deletedPage = Versioned::get_latest_version('SiteTree', $page2ID);
 		$deletedPage->doRestoreToStage();
-		$this->assertTrue(!Versioned::get_one_by_stage("Page", "Live", "`SiteTree`.ID = " . $page2ID));
+		$this->assertTrue(!Versioned::get_one_by_stage("Page", "Live", "\"SiteTree\".ID = " . $page2ID));
 
 		Versioned::reading_stage('Stage');
 		$requeriedPage = DataObject::get_by_id("Page", $page2ID);

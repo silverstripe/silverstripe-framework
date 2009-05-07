@@ -71,15 +71,15 @@ class DataObjectDecoratorTest extends SapphireTest {
 	function testDbObjectOnDecoratedFields() {
 		$member = $this->objFromFixture('DataObjectDecoratorTest_Member', 'member1');
 		$this->assertNotNull($member->dbObject('Website'));
-		$this->assertType('Text', $member->dbObject('Website'));
+		$this->assertType('Varchar', $member->dbObject('Website'));
 	}	
 }
 
 class DataObjectDecoratorTest_Member extends DataObject implements TestOnly {
 	
 	static $db = array(
-		"Name" => "Text",
-		"Email" => "Text"
+		"Name" => "Varchar",
+		"Email" => "Varchar"
 	);
 	
 }
@@ -89,7 +89,7 @@ class DataObjectDecoratorTest_ContactRole extends DataObjectDecorator implements
 	function extraStatics() {
 		return array(
 			'db' => array(
-				'Website' => 'Text',
+				'Website' => 'Varchar',
 				'Phone' => 'Varchar(255)',
 			),
 			'has_many' => array(
@@ -106,8 +106,8 @@ class DataObjectDecoratorTest_ContactRole extends DataObjectDecorator implements
 class DataObjectDecoratorTest_RelatedObject extends DataObject implements TestOnly {
 	
 	static $db = array(
-		"FieldOne" => "Text",
-		"FieldTwo" => "Text"
+		"FieldOne" => "Varchar",
+		"FieldTwo" => "Varchar"
 	);
 	
 	static $has_one = array(

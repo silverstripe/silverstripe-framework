@@ -504,11 +504,14 @@ class DataObjectTest extends SapphireTest {
 	
 	public function testForceInsert() {	
 		/* If you set an ID on an object and pass forceInsert = true, then the object should be correctly created */
+		$conn = DB::getConn();
+		if($conn->hasMethod('allowPrimaryKeyEditing')) $conn->allowPrimaryKeyEditing('DataObjectTest_Team', true);
 		$obj = new DataObjectTest_SubTeam();
 		$obj->ID = 1001;
 		$obj->Title = 'asdfasdf';
 		$obj->SubclassDatabaseField = 'asdfasdf';
 		$obj->write(false, true);
+		if($conn->hasMethod('allowPrimaryKeyEditing')) $conn->allowPrimaryKeyEditing('DataObjectTest_Team', false);
 
 		$this->assertEquals("DataObjectTest_SubTeam", DB::query("SELECT \"ClassName\" FROM \"DataObjectTest_Team\" WHERE \"ID\" = $obj->ID")->value());
 
@@ -640,8 +643,8 @@ class DataObjectTest_Player extends Member implements TestOnly {
 class DataObjectTest_Team extends DataObject implements TestOnly {
 
 	static $db = array(
-		'Title' => 'Text', 
-		'DatabaseField' => 'Text'
+		'Title' => 'Varchar', 
+		'DatabaseField' => 'Varchar'
 	);
 
 	static $has_one = array(
@@ -667,15 +670,15 @@ class DataObjectTest_Team extends DataObject implements TestOnly {
 
 class DataObjectTest_FunnyFieldNames extends DataObject implements TestOnly {
 	static $db = array(
-		'Data' => 'Text',
-		'Duplicate' => 'Text',
-		'DbObject' => 'Text',
+		'Data' => 'Varchar',
+		'Duplicate' => 'Varchar',
+		'DbObject' => 'Varchar',
 	);
 }
 
 class DataObjectTest_WithDefaults extends DataObject implements TestOnly {
 	static $db = array(
-		'MyField' => 'Text',
+		'MyField' => 'Varchar',
 	);
 	
 	static $defaults = array(
@@ -685,7 +688,7 @@ class DataObjectTest_WithDefaults extends DataObject implements TestOnly {
 
 class DataObjectTest_SubTeam extends DataObjectTest_Team implements TestOnly {
 	static $db = array(
-		'SubclassDatabaseField' => 'Text'
+		'SubclassDatabaseField' => 'Varchar'
 	);
 }
 
@@ -701,7 +704,7 @@ class DataObjectTest_Team_Decorator extends DataObjectDecorator implements TestO
 	function extraStatics() {
 		return array(
 			'db' => array(
-				'DecoratedDatabaseField' => 'Text'
+				'DecoratedDatabaseField' => 'Varchar'
 			),
 			'has_one' => array(
 				'DecoratedHasOneRelationship' => 'DataObjectTest_Player'
