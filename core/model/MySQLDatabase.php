@@ -456,13 +456,12 @@ class MySQLDatabase extends Database {
 
 	/**
 	 * Returns a list of all the tables in the database.
-	 * Table names will all be in lowercase.
 	 * @return array
 	 */
 	public function tableList() {
 		$tables = array();
 		foreach($this->query("SHOW TABLES") as $record) {
-			$table = strtolower(reset($record));
+			$table = reset($record);
 			$tables[$table] = $table;
 		}
 		return $tables;
@@ -470,7 +469,7 @@ class MySQLDatabase extends Database {
 	
 	/**
 	 * Return the number of rows affected by the previous operation.
-	 * @return int
+	 * @return int 
 	 */
 	public function affectedRows() {
 		return mysql_affected_rows($this->dbConn);

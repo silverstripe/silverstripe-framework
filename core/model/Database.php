@@ -156,7 +156,10 @@ abstract class Database extends Object {
 	 * Once	
 	 */
 	function beginSchemaUpdate() {
-		$this->tableList = $this->tableList();
+		$this->tableList = array();
+		$tables = $this->tableList();
+		foreach($tables as $table) $this->tableList[strtolower($table)] = strtolower($table);
+
 		$this->indexList = null;
 		$this->fieldList = null;
 		$this->schemaUpdateTransaction = array();
@@ -257,7 +260,6 @@ abstract class Database extends Object {
 	 * @param string $table The table name.
 	 */
 	function dontRequireTable($table) {
-		if(!isset($this->tableList)) $this->tableList = $this->tableList();
 		if(isset($this->tableList[strtolower($table)])) {
 			$suffix = '';
 			while(isset($this->tableList[strtolower("_obsolete_{$table}$suffix")])) {
