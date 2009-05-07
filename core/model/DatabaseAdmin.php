@@ -225,9 +225,10 @@ class DatabaseAdmin extends Controller {
 	 * @todo Move this code into Database class, for DB abstraction
 	 */
 	function clearAllData() {
-		$tables = DB::query("SHOW TABLES")->column();
+		$tables = DB::getConn()->tableList();
 		foreach($tables as $table) {
-			DB::query("TRUNCATE \"$table\"");
+			if(DB::getConn()->hasMethod('clearTable')) DB::getConn()->clearTable($table);
+			else DB::query("TRUNCATE \"$table\"");
 		}
 	}
 

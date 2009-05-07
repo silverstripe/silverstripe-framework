@@ -229,7 +229,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 		if(self::using_temp_db()) {
 			$dbConn = DB::getConn();
 			$dbName = $dbConn->currentDatabase();
-			if($dbName && DB::query("SHOW DATABASES LIKE '$dbName'")->value()) {
+			if($dbName && DB::getConn()->databaseExists($dbName)) {
 				// echo "Deleted temp database " . $dbConn->currentDatabase() . "\n";
 				$dbConn->dropDatabase();
 			}
