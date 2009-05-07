@@ -1516,7 +1516,10 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		// if no record can be found on draft stage (meaning it has been "deleted from draft" before),
 		// create an empty record
 		if(!DB::query("SELECT ID FROM SiteTree WHERE ID = $this->ID")->value()) {
-			DB::query("INSERT INTO SiteTree SET ID = $this->ID");
+			$conn = DB::getConn();
+			if($conn->hasMethod('allowPrimaryKeyEditing')) $conn->allowPrimaryKeyEditing('SiteTree', true);
+			DB::query("INSERT INTO \"SiteTree\" (\"ID\") VALUES ($this->ID)");
+			if($conn->hasMethod('allowPrimaryKeyEditing')) $conn->allowPrimaryKeyEditing('SiteTree', false);
 		}
 		
 		$oldStage = Versioned::current_stage();
