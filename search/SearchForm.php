@@ -197,14 +197,14 @@ class SearchForm extends Form {
 		if($keywords) {
 			$match['SiteTree'] = "
 				MATCH (Title, MenuTitle, Content, MetaTitle, MetaDescription, MetaKeywords) AGAINST ('$keywords' $boolean)
-				+ MATCH (Content) AGAINST ('$htmlEntityKeywords' $boolean) 
+				+ MATCH (Title, MenuTitle, Content, MetaTitle, MetaDescription, MetaKeywords) AGAINST ('$htmlEntityKeywords' $boolean)
 			";
 			$match['File'] = "MATCH (Filename, Title, Content) AGAINST ('$keywords' $boolean) AND ClassName = 'File'";
 	
 			// We make the relevance search by converting a boolean mode search into a normal one
 			$relevanceKeywords = str_replace(array('*','+','-'),'',$keywords);
 			$htmlEntityRelevanceKeywords = str_replace(array('*','+','-'),'',$htmlEntityKeywords);
-			$relevance['SiteTree'] = "MATCH (Title) AGAINST ('$relevanceKeywords') + MATCH(Content) AGAINST ('$htmlEntityRelevanceKeywords') + MATCH (Title, MenuTitle, Content, MetaTitle, MetaDescription, MetaKeywords) AGAINST ('$relevanceKeywords')";
+			$relevance['SiteTree'] = "MATCH (Title, MenuTitle, Content, MetaTitle, MetaDescription, MetaKeywords) AGAINST ('$relevanceKeywords') + MATCH (Title, MenuTitle, Content, MetaTitle, MetaDescription, MetaKeywords) AGAINST ('$htmlEntityRelevanceKeywords')";
 			$relevance['File'] = "MATCH (Filename, Title, Content) AGAINST ('$relevanceKeywords')";
 		} else {
 			$relevance['SiteTree'] = $relevance['File'] = 1;
