@@ -177,6 +177,7 @@ class ManifestBuilder {
 			foreach($topLevel as $filename) {
 				if($filename[0] == '.') continue;
 				if($filename == 'themes') continue;
+				if($filename == 'assets') continue;
 				if(in_array($filename, $excludedFolders)) continue;
 
 				if(@is_dir("$baseDir/$filename") &&
