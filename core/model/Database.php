@@ -7,6 +7,14 @@
  */
 abstract class Database extends Object {
 	/**
+	 * This constant was added in SilverStripe 2.4 to indicate that SQL-queries
+	 * should now use ANSI-compatible syntax.  The most notable affect of this
+	 * change is that table and field names should be escaped with double quotes
+	 * and not backticks
+	 */
+	const USE_ANSI_SQL = true;
+	
+	/**
 	 * Connection object to the database.
 	 * @param resource
 	 */
