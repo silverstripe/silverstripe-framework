@@ -91,55 +91,28 @@ class RedirectorPage extends Page {
 	function getCMSFields() {
 		Requirements::javascript(SAPPHIRE_DIR . "/javascript/RedirectorPage.js");
 		
-    	$fields = new FieldSet(
-			new TabSet("Root",
-				$tabContent = new Tab("Content",
-					new TextField("Title", $this->fieldLabel('Title')),
-					new TextField("MenuTitle", $this->fieldLabel('MenuTitle')),
-					new FieldGroup(_t('SiteTree.URL'),
-						new LabelField('BaseUrlLabel',Director::absoluteBaseURL()),
-						new UniqueRestrictedTextField("URLSegment",
-							"URLSegment",
-							"SiteTree",
-							_t('SiteTree.VALIDATIONURLSEGMENT1', "Another page is using that URL. URL must be unique for each page"),
-							"[^A-Za-z0-9-]+",
-							"-",
-							_t('SiteTree.VALIDATIONURLSEGMENT2', "URLs can only be made up of letters, digits and hyphens."),
-							"",
-							"",
-							"",
-							50
-						),
-						new LabelField('TrailingSlashLabel',"/")
-					),
-					new HeaderField('RedirectorDescHeader',_t('RedirectorPage.HEADER', "This page will redirect users to another page")),
-					new OptionsetField(
-						"RedirectionType", 
-						_t('RedirectorPage.REDIRECTTO', "Redirect to"), 
-						array(
-							"Internal" => _t('RedirectorPage.REDIRECTTOPAGE', "A page on your website"),
-							"External" => _t('RedirectorPage.REDIRECTTOEXTERNAL', "Another website"),
-						), 
-						"Internal"
-					),
-					new TreeDropdownField(	
-						"LinkToID", 
-						_t('RedirectorPage.YOURPAGE', "Page on your website"), 
-						"SiteTree"
-					),
-					new TextField("ExternalURL", _t('RedirectorPage.OTHERURL', "Other website URL")),
-					new TextareaField("MetaDescription", _t('SiteTree.METADESC'))
+		$fields = parent::getCMSFields();
+		$fields->removeByName('Content', true);
+		$fields->addFieldsToTab('Root.Content.Main',
+			array(
+				new HeaderField('RedirectorDescHeader',_t('RedirectorPage.HEADER', "This page will redirect users to another page")),
+				new OptionsetField(
+					"RedirectionType", 
+					_t('RedirectorPage.REDIRECTTO', "Redirect to"), 
+					array(
+						"Internal" => _t('RedirectorPage.REDIRECTTOPAGE', "A page on your website"),
+						"External" => _t('RedirectorPage.REDIRECTTOEXTERNAL', "Another website"),
+					), 
+					"Internal"
 				),
-				$tabBehaviour = new Tab("Behaviour",
-					new DropdownField("ClassName",$this->fieldLabel('ClassName'), $this->getClassDropdown()),
-					new CheckboxField("ShowInMenus", $this->fieldLabel('ShowInMenus')),
-					new CheckboxField("ShowInSearch", $this->fieldLabel('ShowInSearch'))
-				)
+				new TreeDropdownField(	
+					"LinkToID", 
+					_t('RedirectorPage.YOURPAGE', "Page on your website"), 
+					"SiteTree"
+				),
+				new TextField("ExternalURL", _t('RedirectorPage.OTHERURL', "Other website URL"))
 			)
 		);
-		
-		$tabContent->setTitle(_t('SiteTree.TABCONTENT'));
-		$tabBehaviour->setTitle(_t('SiteTree.TABBEHAVIOUR'));
 		
 		return $fields;
 	}
