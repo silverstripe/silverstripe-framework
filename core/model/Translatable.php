@@ -1025,7 +1025,7 @@ class Translatable extends DataObjectDecorator {
 	 * @return string HTML
 	 */
 	function MetaTags(&$tags) {
-		$template = '<link rel="alternate" type="text/html" title="%s" hreflang="%s" href="%s">' . "\n";
+		$template = '<link rel="alternate" type="text/html" title="%s" hreflang="%s" href="%s" />' . "\n";
 		$translations = $this->owner->getTranslations();
 		if($translations) foreach($translations as $translation) {
 			$tags .= sprintf($template,
