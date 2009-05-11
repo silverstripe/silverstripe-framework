@@ -369,39 +369,43 @@ class Folder extends File {
      * @returns String where clause which will work as filter.
      */
 	public function getUsedFilesList() {
-	    $result = DB::query("SELECT DISTINCT \"FileID\" FROM \"SiteTree_ImageTracking\"");
-        $usedFiles = array();
-	    $where = "";
-        if($result->numRecords() > 0) {
-            while($nextResult = $result->next()){
-                $where .= $nextResult['FileID'] . ','; 
-            }        
-        }
-        $classes = ClassInfo::subclassesFor('SiteTree');
-        foreach($classes as $className) {
-            $query = singleton($className)->extendedSQL();
-            $ids = $query->execute()->column();
-            if(!count($ids)) continue;
-            
-            foreach(singleton($className)->has_one() as $fieldName => $joinClass) {
-                if($joinClass == 'Image' || $joinClass == 'File')  {
-                	foreach($ids as $id) {
-                		$object = DataObject::get_by_id($className, $id);
-                		if($object->$fieldName != NULL) $usedFiles[] = $object->$fieldName;
-		                unset($object);
-                    }
-                } elseif($joinClass == 'Folder') {
-                    // @todo 
-                }
-            }
-        }
-        foreach($usedFiles as $file) {
-            $where .= $file->ID . ',';     
-        }
-        if($where == "") return "(\"ClassName\" = 'File' OR \"ClassName\" =  'Image')";
-        $where = substr($where,0,strlen($where)-1);
-        $where = "\"File\".\"ID\" NOT IN (" . $where . ") AND (\"ClassName\" = 'File' OR \"ClassName\" =  'Image')";
-        return $where;
+		$result = DB::query("SELECT DISTINCT \"FileID\" FROM \"SiteTree_ImageTracking\"");
+		$usedFiles = array();
+		$where = '';
+		$classes = ClassInfo::subclassesFor('SiteTree');
+		
+		if($result->numRecords() > 0) {
+			while($nextResult = $result->next()) {
+				$where .= $nextResult['FileID'] . ','; 
+			}        
+		}
+
+		foreach($classes as $className) {
+			$query = singleton($className)->extendedSQL();
+			$ids = $query->execute()->column();
+			if(!count($ids)) continue;
+			
+			foreach(singleton($className)->has_one() as $fieldName => $joinClass) {
+				if($joinClass == 'Image' || $joinClass == 'File') {
+					foreach($ids as $id) {
+						$object = DataObject::get_by_id($className, (int) $id);
+						if($object && $object->$fieldName != NULL) $usedFiles[] = $object->$fieldName;
+							unset($object);
+						}
+				} elseif($joinClass == 'Folder') {
+ 					// @todo
+				}
+			}
+		}
+		
+		foreach($usedFiles as $file) {
+			$where .= $file->ID . ',';     
+		}
+		
+		if($where == "") return "(\"ClassName\" = 'File' OR \"ClassName\" = 'Image')";
+		$where = substr($where, 0, strlen($where) - 1);
+		$where = "\"File\".\"ID\" NOT IN (" . $where . ") AND (\"ClassName\" = 'File' OR \"ClassName\" = 'Image')";
+		return $where;
 	}
 
 	/**
