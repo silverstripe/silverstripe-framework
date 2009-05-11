@@ -245,7 +245,7 @@ class File extends DataObject {
 	/**
 	 * Event handler called before deleting from the database.
 	 * You can overload this to clean up or otherwise process data before delete this
-	 * record.  Don't forget to call parent::onBeforeDelete(), though!
+	 * record.  Don't forget to call parent::onBeforeWrite(), though!
 	 */
 	protected function onBeforeWrite() {
 		parent::onBeforeWrite();
