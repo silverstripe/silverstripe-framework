@@ -182,6 +182,14 @@ class Image extends File {
 		return $this->getFormattedImage('SetSize', $width, $height);
 	}
 	
+	public function SetRatioSize($width, $height) {
+		return $this->getFormattedImage('SetRatioSize', $width, $height);
+	}
+	
+	public function generateSetRatioSize(GD $gd, $width, $height) {
+		return $gd->resizeRatio($width, $height);
+	}
+	
 	/**
 	 * Resize this Image by width, keeping aspect ratio. Use in templates with $SetWidth.
 	 * @return GD
