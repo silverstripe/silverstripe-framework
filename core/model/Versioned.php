@@ -40,6 +40,36 @@ class Versioned extends DataObjectDecorator {
 	protected static $cache_versionnumber;
 	
 	/**
+	 * Additional database columns for the new
+	 * "_versions" table. Used in {@link augmentDatabase()}
+	 * and all Versioned calls decorating or creating
+	 * SELECT statements.
+	 * 
+	 * @var array $db_for_versions_table
+	 */
+	static $db_for_versions_table = array(
+		"RecordID" => "Int",
+		"Version" => "Int",
+		"WasPublished" => "Boolean",
+		"AuthorID" => "Int",
+		"PublisherID" => "Int"				
+	);
+	
+	/**
+	 * Additional database indexes for the new
+	 * "_versions" table. Used in {@link augmentDatabase()}.
+	 * 
+	 * @var array $indexes_for_versions_table
+	 */
+	static $indexes_for_versions_table = array(
+		'RecordID_Version' => '(RecordID, Version)',
+		'RecordID' => true,
+		'Version' => true,
+		'AuthorID' => true,
+		'PublisherID' => true,
+	);
+	
+	/**
 	 * Construct a new Versioned object.
 	 * @var array $stages The different stages the versioned object can be.
 	 * The first stage is consiedered the 'default' stage, the last stage is
@@ -76,7 +106,12 @@ class Versioned extends DataObjectDecorator {
 				}
 				$query->renameTable($table, $table . '_versions');
 				$query->replaceText(".\"ID\"", ".\"RecordID\"");
-				$query->select[] = "\"{$baseTable}_versions\".\"RecordID\" AS \"ID\"";
+				
+				// Add all <basetable>_versions columns
+				foreach(self::$db_for_versions_table as $name => $type) {
+					$query->select[] = sprintf('"%s_versions"."%s"', $baseTable, $name);
+				}
+				$query->select[] = sprintf('"%s_versions"."%s" AS "ID"', $baseTable, 'RecordID');
 
 				if($table != $baseTable) {
 					$query->from[$table] .= " AND \"{$table}_versions\".\"Version\" = \"{$baseTable}_versions\".\"Version\"";
@@ -203,24 +238,12 @@ class Versioned extends DataObjectDecorator {
 				
 				// Create table for all versions
 				$versionFields = array_merge(
-					array(
-						"RecordID" => "Int",
-						"Version" => "Int",
-						"WasPublished" => "Boolean",
-						"AuthorID" => "Int",
-						"PublisherID" => "Int"				
-					),
+					self::$db_for_versions_table,
 					(array)$fields
 				);
 				
 				$versionIndexes = array_merge(
-					array(
-						'RecordID_Version' => '(RecordID, Version)',
-						'RecordID' => true,
-						'Version' => true,
-						'AuthorID' => true,
-						'PublisherID' => true,
-					),
+					self::$indexes_for_versions_table,
 					(array)$indexes
 				);
 				
@@ -450,7 +473,11 @@ class Versioned extends DataObjectDecorator {
 			else if (substr($join,0,5) != 'INNER') $query->from[$table] = "LEFT JOIN \"$table\" ON \"$table\".\"RecordID\" = \"{$baseTable}_versions\".\"RecordID\" AND \"$table\".\"Version\" = \"{$baseTable}_versions\".\"Version\"";
 			$query->renameTable($table, $table . '_versions');
 		}
-		$query->select[] = "\"{$baseTable}_versions\".\"AuthorID\", \"{$baseTable}_versions\".\"Version\", \"{$baseTable}_versions\".\"RecordID\"";
+		
+		// Add all <basetable>_versions columns
+		foreach(self::$db_for_versions_table as $name => $type) {
+			$query->select[] = sprintf('"%s_versions"."%s"', $baseTable, $name);
+		}
 		
 		$query->where[] = "\"{$baseTable}_versions\".\"RecordID\" = '{$this->owner->ID}'";
 		$query->orderby = "\"{$baseTable}_versions\".\"LastEdited\" DESC, \"{$baseTable}_versions\".\"Version\" DESC";
@@ -685,7 +712,13 @@ class Versioned extends DataObjectDecorator {
 			else $query->from[$table] = "LEFT JOIN \"$table\" ON \"$table\".\"RecordID\" = \"{$baseTable}_versions\".\"RecordID\" AND \"$table\".\"Version\" = \"{$baseTable}_versions\".\"Version\"";
 			$query->renameTable($table, $table . '_versions');
 		}
-		$query->select[] = "\"{$baseTable}_versions\".\"AuthorID\", \"{$baseTable}_versions\".\"Version\", \"{$baseTable}_versions\".\"RecordID\" AS \"ID\"";
+		
+		// Add all <basetable>_versions columns
+		foreach(self::$db_for_versions_table as $name => $type) {
+			$query->select[] = sprintf('"%s_versions"."%s"', $baseTable, $name);
+		}
+		$query->select[] = sprintf('"%s_versions"."%s" AS "ID"', $baseTable, 'RecordID');
+		
 		return $query;
 	}
 
@@ -696,7 +729,13 @@ class Versioned extends DataObjectDecorator {
 			else $query->from[$table] = "LEFT JOIN \"$table\" ON \"$table\".\"RecordID\" = \"{$baseTable}_versions\".\"RecordID\" AND \"$table\".\"Version\" = \"{$baseTable}_versions\".\"Version\"";
 			$query->renameTable($table, $table . '_versions');
 		}
-		$query->select[] = "\"{$baseTable}_versions\".\"AuthorID\", \"{$baseTable}_versions\".\"Version\", \"{$baseTable}_versions\".\"RecordID\" AS \"ID\"";
+		
+		// Add all <basetable>_versions columns
+		foreach(self::$db_for_versions_table as $name => $type) {
+			$query->select[] = sprintf('"%s_versions"."%s"', $baseTable, $name);
+		}
+		$query->select[] = sprintf('"%s_versions"."%s" AS "ID"', $baseTable, 'RecordID');
+		
 		return $query;
 	}
 	
