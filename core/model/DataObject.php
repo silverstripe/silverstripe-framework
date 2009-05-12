@@ -124,6 +124,18 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	protected $components;
 	
 	/**
+	 * Used by onBeforeDelete() to ensure child classes call parent::onBeforeDelete()
+	 * @var boolean
+	 */
+	protected $brokenOnDelete = false;
+	
+	/**
+	 * Used by onBeforeWrite() to ensure child classes call parent::onBeforeWrite()
+	 * @var boolean
+	 */
+	protected $brokenOnWrite = false;
+	
+	/**
 	 * Should dataobjects be validated before they are written?
 	 */
 	private static $validation_enabled = true;
@@ -703,12 +715,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	}
 
 	/**
-	 * Used by onBeforeWrite() to ensure child classes call parent::onBeforeWrite()
-	 * @var boolean
-	 */
-	protected $brokenOnWrite = false;
-
-	/**
 	 * Event handler called before deleting from the database.
 	 * You can overload this to clean up or otherwise process data before delete this
 	 * record.  Don't forget to call parent::onBeforeDelete(), though!
@@ -725,12 +731,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	protected function onAfterDelete() {
 		$this->extend('onAfterDelete');
 	}
-
-	/**
-	 * Used by onBeforeDelete() to ensure child classes call parent::onBeforeDelete()
-	 * @var boolean
-	 */
-	protected $brokenOnDelete = false;
 
 	/**
 	 * Load the default values in from the self::$defaults array.
