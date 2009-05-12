@@ -704,6 +704,8 @@ class Versioned extends DataObjectDecorator {
 		$query = singleton($class)->buildVersionSQL("`{$baseTable}`.RecordID = $id", "`{$baseTable}`.Version DESC");
 		$query->limit = 1;
 		$record = $query->execute()->record();
+		if(!$record) return;
+		
 		$className = $record['ClassName'];
 		if(!$className) {
 			Debug::show($query->sql());
