@@ -820,7 +820,7 @@ class Translatable extends DataObjectDecorator {
 		
 		$fields->addFieldsToTab(
 			'Root',
-			new Tab(_t('Translatable.TRANSLATIONS', 'Translations'),
+			new Tab('Translations', _t('Translatable.TRANSLATIONS', 'Translations'),
 				new HeaderField('CreateTransHeader', _t('Translatable.CREATE', 'Create new translation'), 2),
 				$langDropdown = new LanguageDropdownField(
 					"NewTransLang", 
