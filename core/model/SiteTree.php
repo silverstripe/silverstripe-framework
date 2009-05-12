@@ -1177,7 +1177,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 				array(
 					'Title' => 'Title'
 				),
-				'\"ChildID\" = ' . $this->ID,
+				'"ChildID" = ' . $this->ID,
 				'',
 				'LEFT JOIN "SiteTree_LinkTracking" ON "SiteTree"."ID" = "SiteTree_LinkTracking"."SiteTreeID"'
 			);
