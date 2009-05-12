@@ -234,12 +234,12 @@ function HtmlEditorField_dataValue_processImage($parts) {
 	$image = Image::find(urldecode($src));
 	
 	// If we have an image, insert the resampled one into the src attribute; otherwise, leave the img src alone.
-	if($image && $image->getWidth() != $width && $image->getHeight() != $height) {
+	if($image && ($image instanceof Image) && ($image->getWidth() != $width) && ($image->getHeight() != $height)) {
 		// If we have an image, generate the resized image.
 		$resizedImage = $image->getFormattedImage('ResizedImage', $width, $height);
 		if($resizedImage) $parts[$partSource['src="']] = $resizedImage->getRelativePath();
 	}
-		
+	
 	$parts[0] = "";
 	$result = implode("", $parts);
 
