@@ -970,8 +970,21 @@ class Translatable extends DataObjectDecorator {
 		
 		$class = $this->owner->class;
 		$newTranslation = new $class;
+		
 		// copy all fields from owner (apart from ID)
 		$newTranslation->update($this->owner->toMap());
+		
+		// If the object has Hierarchy extension,
+		// check for existing translated parents and assign
+		// their ParentID (and overwrite any existing ParentID relations
+		// to parents in other language). If no parent translations exist,
+		// they are automatically created in onBeforeWrite()
+		if($newTranslation->hasField('ParentID')) {
+			$origParent = $this->owner->Parent();
+			$newTranslationParent = $origParent->getTranslation($locale);
+			if($newTranslationParent) $newTranslation->ParentID = $newTranslationParent->ID;
+		}
+		
 		$newTranslation->ID = 0;
 		$newTranslation->Locale = $locale;
 		// hacky way to set an existing translation group in onAfterWrite()

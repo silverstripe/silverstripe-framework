@@ -524,9 +524,19 @@ class TranslatableTest extends FunctionalTest {
 		$this->assertFalse($parentPage->hasTranslation('de_DE'));
 		
 		$translatedGrandChildPage = $grandchildPage->createTranslation('de_DE');
+		
 		$this->assertTrue($grandchildPage->hasTranslation('de_DE'));
 		$this->assertTrue($child1Page->hasTranslation('de_DE'));
 		$this->assertTrue($parentPage->hasTranslation('de_DE'));
+		
+		$this->assertEquals(
+			$grandchildPage->getTranslation('de_DE')->Parent()->ID,
+			$child1Page->getTranslation('de_DE')->ID
+		);
+		$this->assertEquals(
+			$child1Page->getTranslation('de_DE')->Parent()->ID,
+			$parentPage->getTranslation('de_DE')->ID
+		);
 	}
 
 	function testHierarchyAllChildrenIncludingDeleted() {
@@ -592,32 +602,27 @@ class TranslatableTest extends FunctionalTest {
 		SiteTree::flush_and_destroy_cache();
 		$parentPage = $this->objFromFixture('Page', 'parent');
 		$this->assertEquals(
-			$parentPage->AllChildrenIncludingDeleted()->column('ID'),
+			$translatedParentPage->AllChildrenIncludingDeleted()->column('ID'),
 			array(
 				$child2PageTranslatedID,
 				$child1PageTranslatedID // $child1PageTranslated was deleted from stage, so the original record doesn't have the ID set
 			),
-			"Showing AllChildrenIncludingDeleted() in translation mode with parent page in default language shows children in default language"
+			"Showing AllChildrenIncludingDeleted() in translation mode with parent page in translated language shows children in translated language"
 		);
 		
-		// @todo getTranslation() doesn't switch languages for future calls, its handled statically through set_reading_locale()
-		// // on translated page in translation mode using getTranslation()
-		// 		SiteTree::flush_and_destroy_cache();
-		// 		$parentPage = $this->objFromFixture('Page', 'parent');
-		// 		$translatedParentPage = $parentPage->getTranslation('de_DE');
-		// 		$this->assertEquals(
-		// 			$translatedParentPage->AllChildrenIncludingDeleted()->column('ID'),
-		// 			array(
-		// 				$child2PageTranslatedID,
-		// 				$child1PageTranslatedID,
-		// 			),
-		// 			"Showing AllChildrenIncludingDeleted() in translation mode with translated parent page shows only translated children"
-		// 		);
+		Translatable::set_reading_locale('de_DE');
+		SiteTree::flush_and_destroy_cache();
+		$parentPage = $this->objFromFixture('Page', 'parent');
+		$this->assertEquals(
+			$parentPage->AllChildrenIncludingDeleted()->column('ID'),
+			array(),
+			"Showing AllChildrenIncludingDeleted() in translation mode with parent page in translated language shows children in default language"
+		);
 		
 		// reset language
 		Translatable::set_reading_locale('en_US');
 	}
-
+	
 	function testRootUrlDefaultsToTranslatedUrlSegment() {
 		$origPage = $this->objFromFixture('Page', 'homepage_en');
 		$origPage->publish('Stage', 'Live');
