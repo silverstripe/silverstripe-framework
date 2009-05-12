@@ -28,9 +28,13 @@ Page:
       Title: Child 3
       URLSegment: child3
       Parent: =>Page.parent
-   grandchild:
+   grandchild1:
       Title: Grandchild
-      URLSegment: grandchild
+      URLSegment: grandchild1
+      Parent: =>Page.child1
+   grandchild2:
+      Title: Grandchild
+      URLSegment: grandchild2
       Parent: =>Page.child1
 TranslatableTest_DataObject:
    testobject_en:

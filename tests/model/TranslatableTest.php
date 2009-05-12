@@ -335,7 +335,7 @@ class TranslatableTest extends FunctionalTest {
 		$child1Page = $this->objFromFixture('Page', 'child1');
 		$child2Page = $this->objFromFixture('Page', 'child2');
 		$child3Page = $this->objFromFixture('Page', 'child3');
-		$grandchildPage = $this->objFromFixture('Page', 'grandchild');
+		$grandchildPage = $this->objFromFixture('Page', 'grandchild1');
 		
 		$parentPageTranslated = $parentPage->createTranslation('de_DE');
 		$child4PageTranslated = new SiteTree();
@@ -372,7 +372,7 @@ class TranslatableTest extends FunctionalTest {
 		$child1Page->publish('Stage', 'Live');
 		$child2Page = $this->objFromFixture('Page', 'child2');
 		$child3Page = $this->objFromFixture('Page', 'child3');
-		$grandchildPage = $this->objFromFixture('Page', 'grandchild');
+		$grandchildPage = $this->objFromFixture('Page', 'grandchild1');
 		
 		$parentPageTranslated = $parentPage->createTranslation('de_DE');
 		
@@ -517,26 +517,28 @@ class TranslatableTest extends FunctionalTest {
 		$parentPage = $this->objFromFixture('Page', 'parent');
 		$child1Page = $this->objFromFixture('Page', 'child1');
 		$child1PageOrigID = $child1Page->ID;
-		$grandchildPage = $this->objFromFixture('Page', 'grandchild');
-		
-		$this->assertFalse($grandchildPage->hasTranslation('de_DE'));
+		$grandChild1Page = $this->objFromFixture('Page', 'grandchild1');
+		$grandChild2Page = $this->objFromFixture('Page', 'grandchild2');
+
+		$this->assertFalse($grandChild1Page->hasTranslation('de_DE'));
 		$this->assertFalse($child1Page->hasTranslation('de_DE'));
 		$this->assertFalse($parentPage->hasTranslation('de_DE'));
-		
-		$translatedGrandChildPage = $grandchildPage->createTranslation('de_DE');
-		
-		$this->assertTrue($grandchildPage->hasTranslation('de_DE'));
+
+		$translatedGrandChild1Page = $grandChild1Page->createTranslation('de_DE');
+		$translatedGrandChild2Page = $grandChild2Page->createTranslation('de_DE');
+		$translatedChildPage = $child1Page->getTranslation('de_DE');
+		$translatedParentPage = $parentPage->getTranslation('de_DE');
+
+		$this->assertTrue($grandChild1Page->hasTranslation('de_DE'));
+		$this->assertEquals($translatedGrandChild1Page->ParentID, $translatedChildPage->ID);
+
+		$this->assertTrue($grandChild2Page->hasTranslation('de_DE'));
+		$this->assertEquals($translatedGrandChild2Page->ParentID, $translatedChildPage->ID);
+
 		$this->assertTrue($child1Page->hasTranslation('de_DE'));
+		$this->assertEquals($translatedChildPage->ParentID, $translatedParentPage->ID);
+
 		$this->assertTrue($parentPage->hasTranslation('de_DE'));
-		
-		$this->assertEquals(
-			$grandchildPage->getTranslation('de_DE')->Parent()->ID,
-			$child1Page->getTranslation('de_DE')->ID
-		);
-		$this->assertEquals(
-			$child1Page->getTranslation('de_DE')->Parent()->ID,
-			$parentPage->getTranslation('de_DE')->ID
-		);
 	}
 
 	function testHierarchyAllChildrenIncludingDeleted() {
