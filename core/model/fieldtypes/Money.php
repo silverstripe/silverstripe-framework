@@ -85,6 +85,12 @@ class Money extends DBField implements CompositeDBField {
 		$manipulation['fields'][$this->name.'Currency'] = $this->prepValueForDB($this->getCurrency());
 		$manipulation['fields'][$this->name.'Amount'] = $this->getAmount();
 	}
+	
+	function addToQuery(&$query) {
+		parent::addToQuery($query);
+		$query->select[] = $this->name . "Amount";
+		$query->select[] = $this->name . "Currency";
+	}
 
 	function setValue($value,$record=null) {
 		if($record && isset($record[$this->name . 'Currency']) && isset($record[$this->name . 'Amount'])) {
