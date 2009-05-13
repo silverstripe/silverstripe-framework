@@ -61,7 +61,7 @@ class Money extends DBField implements CompositeDBField {
 	 */
 	static $composite_db = array(
 		"Currency" => "Varchar(3) null",
-		"Amount" => Array('type'=>'decimal', 'parts'=>Array('datatype'=>'decimal', 'precision'=>"14,2"), 'default' => '0'),
+		"Amount" => Array('type'=>'decimal', 'parts'=>Array('datatype'=>'decimal', 'precision'=>"19,4"), 'default' => '0'),
 	);
 	
 	function __construct($name = null) {
