@@ -697,12 +697,12 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		
 		// if page can't be edited, don't grant delete permissions
 		if(!$this->canEdit($member)) return false;
-		
+
 		$children = $this->AllChildren();
 		if($children) foreach($children as $child) {
 			if(!$child->canDelete($member)) return false;
 		}
-		
+
 		return $this->stat('can_create') != false;
 	}
 
@@ -1519,6 +1519,13 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		Versioned::reading_stage($oldStage);
 		
 		return $result;
+	}
+	
+	function doDeleteFromLive() {
+		$origStage = Versioned::current_stage();
+		Versioned::reading_stage('Live');
+		$this->delete();
+		Versioned::reading_stage($origStage);		
 	}
 
 	/**
