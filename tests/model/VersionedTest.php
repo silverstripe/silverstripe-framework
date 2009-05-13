@@ -13,6 +13,7 @@ class VersionedTest extends SapphireTest {
 		// Get all items, ignoring deleted
 		$remainingPages = DataObject::get("SiteTree", "ParentID = 0");
 		// Check that page 3 has gone
+		$this->assertNotNull($remainingPages);
 		$this->assertEquals(array("Page 1", "Page 2"), $remainingPages->column('Title'));
 		
 		// Get all including deleted
