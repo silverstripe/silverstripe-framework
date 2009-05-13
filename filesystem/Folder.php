@@ -358,6 +358,10 @@ class Folder extends File {
 			),
 			new HiddenField("ID")
 		);
+		
+		if(!$this->canEdit()) {
+			$fields->removeFieldFromTab("Root", "Upload");
+		}
 
 		$this->extend('updateCMSFields', $fields);
 		
