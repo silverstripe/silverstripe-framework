@@ -1070,7 +1070,7 @@ class Translatable extends DataObjectDecorator {
 		$origHomepageObj = Translatable::get_one_by_locale(
 			'SiteTree',
 			Translatable::default_locale(),
-			sprintf('"URLSegment" = \'%s\'', RootUrlController::get_default_homepage_urlsegment())
+			sprintf('"URLSegment" = \'%s\'', RootURLController::get_default_homepage_urlsegment())
 		);
 		if($origHomepageObj) {
 			$translatedHomepageObj = $origHomepageObj->getTranslation($locale);
