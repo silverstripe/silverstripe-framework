@@ -926,24 +926,21 @@ JS
 			$items = $this->customSourceItems;
 		} else {
 			$dataQuery = $this->getCsvQuery();
-			$records = $dataQuery->execute();
-			$sourceClass = $this->sourceClass;
-			$dataobject = new $sourceClass();
-			$items = $dataobject->buildDataObjectSet($records, 'DataObjectSet');
-		}
-		
-		if($items && $items->count()) foreach($items as $item) {
-			// create a TableListField_Item to support resolving of
-			// relation-fields in dot notation via TableListField_Item->Fields()
-			if($item) $fieldItems->push(new TableListField_Item($item, $this));
+			$items = $dataQuery->execute();
 		}
 		
 		// temporary override to adjust TableListField_Item behaviour
 		$this->setFieldFormatting(array());
 		$this->fieldList = $csvColumns;
 
-		if($fieldItems) {
-			foreach($fieldItems as $fieldItem) {
+		if($items) {
+			foreach($items as $item) {
+				if(is_array($item)) {
+					$className = isset($item['RecordClassName']) ? $item['RecordClassName'] : $item['ClassName'];
+					$item = new $className($item);
+				}
+				$fieldItem = new TableListField_Item($item, $this);
+				
 				$fields = $fieldItem->Fields();
 				$columnData = array();
 				if($fields) foreach($fields as $field) {
@@ -963,6 +960,10 @@ JS
 				}
 				$fileData .= implode($separator, $columnData);
 				$fileData .= "\n";
+				
+				$item->destroy();
+				unset($item);
+				unset($fieldItem);
 			}
 			
 			$numColumns = count($columnData);
