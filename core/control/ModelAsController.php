@@ -123,12 +123,12 @@ class ModelAsController extends Controller implements NestedController {
 	}
 	
 	protected function get404Page() {
-		$page = DataObject::get_one("ErrorPage", "\"ErrorCode\" = '404'");
+		$page = DataObject::get_one("ErrorPage", "`ErrorCode` = '404'");
 		if($page) {
 			return $page;
 		} else {
 			// @deprecated 2.5 Use ErrorPage class
-			return DataObject::get_one("SiteTree", "\"URLSegment\" = '404'");
+			return DataObject::get_one("SiteTree", "`URLSegment` = '404'");
 		}
 	}
 }
