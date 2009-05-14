@@ -27,6 +27,8 @@ Page:
         Title: Object
     controller:
         Title: Controller
+    numericonly:
+        Title: 1930
         
 ErrorPage:
     404:

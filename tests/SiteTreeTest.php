@@ -24,7 +24,8 @@ class SiteTreeTest extends SapphireTest {
 			'product3' => 'another-product-2',
 			'product4' => 'another-product-3',
 			'object'   => 'object',
-			'controller' => 'controller-2'
+			'controller' => 'controller-2',
+			'numericonly' => '1930',
 		);
 		
 		foreach($expectedURLs as $fixture => $urlSegment) {
