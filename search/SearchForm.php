@@ -6,7 +6,7 @@
  * If multilingual content is enabled through the {@link Translatable} extension,
  * only pages the currently set language on the holder for this searchform are found.
  * The language is set through a hidden field in the form, which is prepoluated
- * with {@link Translatable::current_locale()} when then form is constructed.
+ * with {@link Translatable::get_current_locale()} when then form is constructed.
  * 
  * @see Use ModelController and SearchContext for a more generic search implementation based around DataObject
  * @package sapphire
@@ -55,7 +55,7 @@ class SearchForm extends Form {
 		}
 		
 		if(singleton('SiteTree')->hasExtension('Translatable')) {
-			$fields->push(new HiddenField('locale', 'locale', Translatable::current_locale()));
+			$fields->push(new HiddenField('locale', 'locale', Translatable::get_current_locale()));
 		}
 		
 		if(!$actions) {
@@ -105,7 +105,7 @@ class SearchForm extends Form {
 		
 		// set language (if present)
 		if(singleton('SiteTree')->hasExtension('Translatable') && isset($data['locale'])) {
-			$origLocale = Translatable::current_locale();
+			$origLocale = Translatable::get_current_locale();
 			Translatable::set_reading_locale($data['locale']);
 		}
 	
