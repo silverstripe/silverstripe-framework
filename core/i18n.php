@@ -1682,7 +1682,7 @@ class i18n extends Object {
 	 * @param $lang String
 	 */
 	static function set_default_lang($lang) {
-		Translatable::set_default_locale($lang);
+		Translatable::set_default_lang($lang);
 	}
 	
 	/**
