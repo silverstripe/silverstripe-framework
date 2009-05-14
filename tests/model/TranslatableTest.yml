@@ -45,3 +45,16 @@ TranslatableTest_Page:
       Title: En
       TranslatableProperty: en_US
       URLSegment: testpage-en
+Group:
+   cmseditorgroup:
+      Code: cmseditorgroup
+Member:
+   cmseditor:
+      FirstName: Editor
+      Groups: =>Group.cmseditorgroup
+   websiteuser:
+      FirstName: Website User
+Permission:
+   cmsmaincode:
+      Code: CMS_ACCESS_CMSMain
+      Group: =>Group.cmseditorgroup

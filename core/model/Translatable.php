@@ -194,6 +194,15 @@ class Translatable extends DataObjectDecorator {
 	protected static $enable_lang_filter = true;
 	
 	/**
+	 * @var array All locales in which a translation can be created.
+	 * This limits the choice in the CMS language dropdown in the
+	 * "Translation" tab, as well as the language dropdown above
+	 * the CMS tree. If not set, it will default to showing all
+	 * common locales.
+	 */
+	protected static $allowed_locales = null;
+	
+	/**
 	 * Choose the language the site is currently on.
 	 * If $_GET['locale'] is set, then it will use that language, and store it in the session.
 	 * Otherwise it checks the session for a possible stored language, either from namespace to the site_mode
@@ -311,9 +320,9 @@ class Translatable extends DataObjectDecorator {
 	 * Gets all translations for this specific page.
 	 * Doesn't include the language of the current record.
 	 * 
-	 * @return array Numeric array of all language codes, sorted alphabetically.
+	 * @return array Numeric array of all locales, sorted alphabetically.
 	 */
-	function getTranslatedLangs() {
+	function getTranslatedLocales() {
 		$langs = array();
 		
 		$baseDataClass = ClassInfo::baseDataClass($this->owner->class); //Base Class
@@ -363,7 +372,7 @@ class Translatable extends DataObjectDecorator {
 	 */
 	static function get_langs_by_id($class, $id) {
 		$do = DataObject::get_by_id($class, $id);
-		return ($do ? $do->getTranslatedLangs() : array());
+		return ($do ? $do->getTranslatedLocales() : array());
 	}
 
 	/**
@@ -773,6 +782,12 @@ class Translatable extends DataObjectDecorator {
 		}
 		
 		$isTranslationMode = $this->owner->Locale != Translatable::default_locale();
+		
+		// Show a dropdown to create a new translation.
+		// This action is possible both when showing the "default language"
+		// and a translation. Include the current locale (record might not be saved yet).
+		$alreadyTranslatedLocales = $this->getTranslatedLocales();
+		$alreadyTranslatedLocales[$this->owner->Locale] = $this->owner->Locale;
 
 		if($originalRecord && $isTranslationMode) {
 			$originalLangID = Session::get($this->owner->ID . '_originalLangID');
@@ -812,12 +827,6 @@ class Translatable extends DataObjectDecorator {
 			);
 		} 
 		
-		// Show a dropdown to create a new translation.
-		// This action is possible both when showing the "default language"
-		// and a translation. Include the current locale (record might not be saved yet).
-		$alreadyTranslatedLangs = $this->getTranslatedLangs();
-		$alreadyTranslatedLangs[$this->owner->Locale] = $this->owner->Locale;
-		
 		$fields->addFieldsToTab(
 			'Root',
 			new Tab('Translations', _t('Translatable.TRANSLATIONS', 'Translations'),
@@ -825,22 +834,22 @@ class Translatable extends DataObjectDecorator {
 				$langDropdown = new LanguageDropdownField(
 					"NewTransLang", 
 					_t('Translatable.NEWLANGUAGE', 'New language'), 
-					$alreadyTranslatedLangs, 
-					'SiteTree', 
-					'Locale-English'
+					$alreadyTranslatedLocales,
+					'SiteTree',
+					$this->owner
 				),
 				$createButton = new InlineFormAction('createtranslation',_t('Translatable.CREATEBUTTON', 'Create'))
 			)
 		);
 		$createButton->includeDefaultJS(false);
 
-		if($alreadyTranslatedLangs) {
+		if($alreadyTranslatedLocales) {
 			$fields->addFieldToTab(
 				'Root.Translations',
 				new HeaderField('ExistingTransHeader', _t('Translatable.EXISTING', 'Existing translations:'), 3)
 			);
 			$existingTransHTML = '<ul>';
-			foreach($alreadyTranslatedLangs as $i => $langCode) {		
+			foreach($alreadyTranslatedLocales as $i => $langCode) {		
 				$existingTranslation = $this->owner->getTranslation($langCode);
 				if($existingTranslation) {
 					$existingTransHTML .= sprintf('<li><a href="%s">%s</a></li>',
@@ -855,8 +864,7 @@ class Translatable extends DataObjectDecorator {
 				new LiteralField('existingtrans',$existingTransHTML)
 			);
 		}
-		
-
+	
 		$langDropdown->addExtraClass('languageDropdown');
 		$createButton->addExtraClass('createTranslationButton');
 	}
@@ -965,6 +973,15 @@ class Translatable extends DataObjectDecorator {
 			user_error('Translatable::createTranslation(): Please save your record before creating a translation', E_USER_ERROR);
 		}
 		
+		// permission check
+		if(!$this->owner->canTranslate(null, $locale)) {
+			throw new Exception(sprintf(
+				'Creating a new translation in locale "%s" is not allowed for this user',
+				$locale
+			));
+			return;
+		}
+		
 		$existingTranslation = $this->getTranslation($locale);
 		if($existingTranslation) return $existingTranslation;
 		
@@ -996,6 +1013,31 @@ class Translatable extends DataObjectDecorator {
 	}
 	
 	/**
+	 * Caution: Does not consider the {@link canEdit()} permissions.
+	 * 
+	 * @param DataObject|int $member
+	 * @param string $locale
+	 * @return boolean
+	 */
+	function canTranslate($member = null, $locale) {
+		if(!$member || !(is_a($member, 'Member')) || is_numeric($member)) $member = Member::currentUser();
+
+		return (
+			!is_array(self::get_allowed_locales()) 
+			|| in_array($locale, self::get_allowed_locales())
+		);
+	}
+	
+	/**
+	 * @return boolean
+	 */
+	function canEdit($member) {
+		if(!$this->owner->Locale) return true;
+		
+		return $this->owner->canTranslate($member, $this->owner->Locale);
+	}
+	
+	/**
 	 * Returns TRUE if the current record has a translation in this language.
 	 * Use {@link getTranslation()} to get the actual translated record from
 	 * the database.
@@ -1004,7 +1046,7 @@ class Translatable extends DataObjectDecorator {
 	 * @return boolean
 	 */
 	function hasTranslation($locale) {
-		return (array_search($locale, $this->getTranslatedLangs()) !== false);
+		return (array_search($locale, $this->getTranslatedLocales()) !== false);
 	}
 	
 	function AllChildrenIncludingDeleted($context = null) {
@@ -1079,6 +1121,28 @@ class Translatable extends DataObjectDecorator {
 		}
 		
 		return null;
+	}
+	
+	/**
+	 * Define all locales which in which a new translation is allowed.
+	 * Checked in {@link canTranslate()}.
+	 *
+	 * @param array List of allowed locale codes (see {@link i18n::$all_locales}).
+	 *  Example: array('de_DE','ja_JP')
+	 */
+	static function set_allowed_locales($locales) {
+		self::$allowed_locales = $locales;
+	}
+	
+	/**
+	 * Get all locales which are generally permitted to be translated.
+	 * Use {@link canTranslate()} to check if a specific member has permission
+	 * to translate a record.
+	 * 
+	 * @return array
+	 */
+	static function get_allowed_locales() {
+		return self::$allowed_locales;
 	}
 	
 	/**
@@ -1170,6 +1234,13 @@ class Translatable extends DataObjectDecorator {
 	 */
 	static function choose_site_lang($langsAvail=null) {
 		return self::choose_site_locale($langAvail);
+	}
+	
+	/**
+	 * @deprecated 2.4 Use getTranslatedLocales()
+	 */
+	function getTranslatedLangs() {
+		return $this->getTranslatedLocales();
 	}
 		
 }
