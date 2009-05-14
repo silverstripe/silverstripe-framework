@@ -67,6 +67,11 @@ if (function_exists('mb_http_output')) {
 
 Session::start();
 
+// IIS will sometimes generate this.
+if(!empty($_SERVER['HTTP_X_ORIGINAL_URL'])) {
+	$_SERVER['REQUEST_URI'] = $_SERVER['HTTP_X_ORIGINAL_URL'];
+}
+
 // Apache rewrite rules use this
 if (isset($_GET['url'])) {
 	$url = $_GET['url'];
