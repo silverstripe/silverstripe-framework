@@ -529,18 +529,27 @@ class Translatable extends DataObjectDecorator {
 			ClassInfo::baseDataClass($this->owner->class)
 		))->column();
 		if($idsWithoutLocale) {
-			foreach($idsWithoutLocale as $id) {
-				$obj = DataObject::get_by_id($this->owner->class, $id);
-				$obj->Locale = Translatable::default_locale();
-				$obj->write();
-				$obj->destroy();
-				unset($obj);
+			foreach(array('Stage', 'Live') as $stage) {
+				foreach($idsWithoutLocale as $id) {
+					$obj = Versioned::get_one_by_stage(
+						$this->owner->class, 
+						$stage, 
+						sprintf('`SiteTree`.`ID` = %d', $id)
+					);
+					if(!$obj) continue;
+					
+					$obj->Locale = Translatable::default_locale();
+					$obj->writeToStage($stage);
+					$obj->addTranslationGroup($obj->ID);
+					$obj->destroy();
+					unset($obj);
+				}
+				Database::alteration_message(sprintf(
+					"Added default locale '%s' to table %s","changed",
+					Translatable::default_locale(),
+					$this->owner->class
+				));
 			}
-			Database::alteration_message(sprintf(
-				"Added default locale '%s' to table %s","changed",
-				Translatable::default_locale(),
-				$this->owner->class
-			));
 		}
 	}
 	
@@ -927,16 +936,21 @@ class Translatable extends DataObjectDecorator {
 				$baseDataClass,
 				$baseDataClass
 			);
-
 			$currentStage = Versioned::current_stage();
 			if($this->owner->hasExtension("Versioned")) {
 				if($stage) Versioned::reading_stage($stage);
-				$translations = Versioned::get_by_stage($this->owner->class, Versioned::current_stage(), $filter, null, $join);
+				$translations = Versioned::get_by_stage(
+					$this->owner->class, 
+					Versioned::current_stage(), 
+					$filter, 
+					null, 
+					$join
+				);
 				if($stage) Versioned::reading_stage($currentStage);
 			} else {
 				$translations = DataObject::get($this->owner->class, $filter, null, $join);
 			}
-			
+
 			self::$enable_lang_filter = true;
 
 			return $translations;
