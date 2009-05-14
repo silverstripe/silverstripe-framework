@@ -1,6 +1,8 @@
 <?php
-
 /**
+ * @package sapphire
+ * @subpackage tests
+ * 
  * Test the syntax of the PHP files with various settings
  */
 class PhpSyntaxTest extends SapphireTest {
