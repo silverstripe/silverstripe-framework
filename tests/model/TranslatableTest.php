@@ -62,6 +62,14 @@ class TranslatableTest extends FunctionalTest {
 		
 		parent::tear_down_once();
 	}
+	
+	function setUp() {
+		parent::setUp();
+		
+		// whenever a translation is created, canTranslate() is checked
+		$cmseditor = $this->objFromFixture('Member', 'cmseditor');
+		$cmseditor->logIn();
+	}
 
 	function testTranslationGroups() {
 		// first in french
@@ -462,7 +470,7 @@ class TranslatableTest extends FunctionalTest {
 			'Subsequent calls to createTranslation() dont cause new records in database'
 		);
 	}
-	
+
 	function testTranslatablePropertiesOnDataObject() {
 		$origObj = $this->objFromFixture('TranslatableTest_DataObject', 'testobject_en');
 		$translatedObj = $origObj->createTranslation('fr_FR');
@@ -711,6 +719,38 @@ class TranslatableTest extends FunctionalTest {
 		$this->assertEquals($compareLive->Title, 'Publiziert');
 	}
 
+	function testCanTranslate() {
+		$origAllowedLocales = Translatable::get_allowed_locales();
+		
+		$cmseditor = $this->objFromFixture('Member', 'cmseditor');
+		
+		$testPage = $this->objFromFixture('Page', 'testpage_en');
+		$this->assertTrue(
+			$testPage->canTranslate($cmseditor, 'de_DE'),
+			"Users with canEdit() permission can create a new translation if locales are not limited"
+		);
+		
+		Translatable::set_allowed_locales(array('ja_JP'));
+		$this->assertTrue(
+			$testPage->canTranslate($cmseditor, 'ja_JP'),
+			"Users with canEdit() permission can create a new translation if locale is in Translatable::get_allowed_locales()"
+		);
+		$this->assertFalse(
+			$testPage->canTranslate($cmseditor, 'de_DE'),
+			"Users with canEdit() permission can't create a new translation if locale is not in Translatable::get_allowed_locales()"
+		);
+		
+		$this->assertType(
+			'Page',
+			$testPage->createTranslation('ja_JP')
+		);
+		try {
+			$testPage->createTranslation('de_DE');
+			$this->setExpectedException("Exception");
+		} catch(Exception $e) {}
+		
+		Translatable::set_allowed_locales($origAllowedLocales);
+	}
 }
 
 class TranslatableTest_DataObject extends DataObject implements TestOnly {
