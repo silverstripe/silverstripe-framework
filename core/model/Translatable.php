@@ -49,7 +49,7 @@
  *
  * Getting a translation for an existing instance: 
  * <code>
- * $translatedObj = DataObject::get_one_by_locale('MyObject', 'de_DE');
+ * $translatedObj = Translatable::get_one_by_locale('MyObject', 'de_DE');
  * </code>
  * 
  * Getting a translation for an existing instance: 
