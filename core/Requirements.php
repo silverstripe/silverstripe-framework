@@ -885,7 +885,7 @@ class Requirements_Backend {
 					$fileContent = JSMin::minify($fileContent);
 				}
 				// write a header comment for each file for easier identification and debugging
-				$combinedData .= "/****** FILE: $file *****/\n" . $fileContent . "\n;\n";
+				$combinedData .= "/****** FILE: $file *****/\n" . $fileContent . "\n\n";
 			}
 			if(!file_exists(dirname($base . $combinedFile))) {
 				Filesystem::makeFolder(dirname($base . $combinedFile));
