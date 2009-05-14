@@ -102,12 +102,6 @@ class Image extends File {
 			$url = $this->URL();
 			$title = ($this->Title) ? $this->Title : $this->Filename;
 			
-			// remove file path and extension 
-			// that accessware.co.nz complains about this
-			if (preg_match("/([^\/.]*)\..{1,6}$/", $title, $matches)) {
-				$title = $matches[1];
-			}
-			
 			return "<img src=\"$url\" alt=\"$title\" />";
 		}
 	}

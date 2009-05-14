@@ -10,6 +10,7 @@ class VirtualPageTest extends SapphireTest {
 	function testEditingSourcePageUpdatesVirtualPages() {
 		$master = $this->objFromFixture('Page', 'master');
 		$master->Title = "New title";
+		$master->MenuTitle = "New menutitle";
 		$master->Content = "<p>New content</p>";
 		$master->write();
 		
@@ -18,6 +19,8 @@ class VirtualPageTest extends SapphireTest {
 		
 		$this->assertEquals("New title", $vp1->Title);
 		$this->assertEquals("New title", $vp2->Title);
+		$this->assertEquals("New menutitle", $vp1->MenuTitle);
+		$this->assertEquals("New menutitle", $vp2->MenuTitle);
 		$this->assertEquals("<p>New content</p>", $vp1->Content);
 		$this->assertEquals("<p>New content</p>", $vp2->Content);
 	}
@@ -29,6 +32,7 @@ class VirtualPageTest extends SapphireTest {
 	function testPublishingSourcePagePublishesVirtualPages() {
 		$master = $this->objFromFixture('Page', 'master');
 		$master->Title = "New title";
+		$master->MenuTitle = "New menutitle";
 		$master->Content = "<p>New content</p>";
 		$master->write();
 		$master->doPublish();
@@ -42,9 +46,31 @@ class VirtualPageTest extends SapphireTest {
 		
 		$this->assertEquals("New title", $vp1->Title);
 		$this->assertEquals("New title", $vp2->Title);
+		$this->assertEquals("New menutitle", $vp1->MenuTitle);
+		$this->assertEquals("New menutitle", $vp2->MenuTitle);
 		$this->assertEquals("<p>New content</p>", $vp1->Content);
 		$this->assertEquals("<p>New content</p>", $vp2->Content);
 		Versioned::reading_stage("Stage");
+	}
+	
+	/**
+	 * Test that virtual pages get the content from the master page when they are created.
+	 */
+	function testNewVirtualPagesGrabTheContentFromTheirMaster() {
+		$vp = new VirtualPage();
+		$vp->write();
+		
+		$vp->CopyContentFromID = $this->idFromFixture('Page', 'master');
+		$vp->write();
+		
+		$this->assertEquals("My Page", $vp->Title);
+		$this->assertEquals("My Page Nav", $vp->MenuTitle);
+
+		$vp->CopyContentFromID = $this->idFromFixture('Page', 'master2');
+		$vp->write();
+
+		$this->assertEquals("My Other Page", $vp->Title);
+		$this->assertEquals("My Other Page Nav", $vp->MenuTitle);
 	}
 	
 }

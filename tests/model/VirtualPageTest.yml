@@ -1,8 +1,10 @@
 Page:
    master:
       Title: My Page
+      MenuTitle: My Page Nav
    master2:
       Title: My Other Page
+      MenuTitle: My Other Page Nav
    holder:
       Title: Sub-pages
 VirtualPage:
