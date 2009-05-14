@@ -20,13 +20,12 @@ class HtmlEditorField extends TextareaField {
 		$this->extraClass = 'typography';
 	}
 	
-	
 	/**
 	 * Returns the a <textarea> field with tinymce="true" set on it
 	 */
 	function Field() {
 		Requirements::javascript(MCE_ROOT . "tiny_mce_src.js");
-		Requirements::javascript(SAPPHIRE_DIR . '/javascript/HtmlEditorField.js');
+		Requirements::customScript(HtmlEditorConfig::get_active()->generateJS(), 'htmlEditorConfig');
 
 		// Don't allow unclosed tags - they will break the whole application ;-)		
 		$cleanVal = $this->value;
