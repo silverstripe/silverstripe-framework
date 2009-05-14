@@ -1338,8 +1338,8 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		$labels['ShowInMenus'] =_t('SiteTree.SHOWINMENUS', "Show in menus?");
 		$labels['ShowInSearch'] = _t('SiteTree.SHOWINSEARCH', "Show in search?");
 		$labels['ProvideComments'] = _t('SiteTree.ALLOWCOMMENTS', "Allow comments on this page?");
-		$labels['ViewersGroup'] = _t('SiteTree.GROUP', "Group");
-		$labels['EditorsGroup'] = _t('SiteTree.GROUP');
+		$labels['ViewerGroups'] = _t('SiteTree.VIEWERGROUPS', "Viewer Groups");
+		$labels['EditorGroups'] = _t('SiteTree.EDITORGROUPS', "Editor Groups");
 		$labels['URLSegment'] = _t('SiteTree.URLSegment', 'URL Segment', PR_MEDIUM, 'URL for this page');
 		$labels['Content'] = _t('SiteTree.Content', 'Content', PR_MEDIUM, 'Main HTML Content for a page');
 		$labels['HomepageForDomain'] = _t('SiteTree.HomepageForDomain', 'Hompage for this domain');
