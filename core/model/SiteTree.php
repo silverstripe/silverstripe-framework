@@ -884,7 +884,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		} 
 		
 		// get the "long" lang name suitable for the HTTP content-language flag (with hyphens instead of underscores)
-		$currentLang = ($this->hasExtension('Translatable')) ? Translatable::current_locale() : i18n::get_locale();
+		$currentLang = ($this->hasExtension('Translatable')) ? Translatable::get_current_locale() : i18n::get_locale();
 		$tags .= "<meta http-equiv=\"Content-Language\" content=\"". i18n::convert_rfc1766($currentLang) ."\"/>\n";
 		
 		// DEPRECATED 2.3: Use MetaTags

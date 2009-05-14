@@ -187,7 +187,7 @@ class Translatable extends DataObjectDecorator {
 	protected $original_values = null;
 	
 	/**
-	 * @var boolean Temporarily override the "auto-filter" for {@link current_locale()}
+	 * @var boolean Temporarily override the "auto-filter" for {@link get_current_locale()}
 	 * in {@link augmentSQL()}. IMPORTANT: You must set this value back to TRUE
 	 * after the temporary usage.
 	 */
@@ -260,7 +260,7 @@ class Translatable extends DataObjectDecorator {
 	 * Get the current reading language.
 	 * @return string
 	 */
-	static function current_locale() {
+	static function get_current_locale() {
 		if (!self::$language_decided) self::choose_site_locale();
 		return self::$reading_locale;
 	}
@@ -288,7 +288,7 @@ class Translatable extends DataObjectDecorator {
 	 * @return DataObject
 	 */
 	static function get_one_by_locale($class, $locale, $filter = '', $cache = false, $orderby = "") {
-		$orig = Translatable::current_locale();
+		$orig = Translatable::get_current_locale();
 		Translatable::set_reading_locale($locale);
 		$do = DataObject::get_one($class, $filter, $cache, $orderby);
 		Translatable::set_reading_locale($orig);
@@ -309,7 +309,7 @@ class Translatable extends DataObjectDecorator {
 	 * @return mixed The objects matching the conditions.
 	 */
 	static function get_by_locale($class, $locale, $filter = '', $sort = '', $join = "", $limit = "", $containerClass = "DataObjectSet", $having = "") {
-		$oldLang = self::current_locale();
+		$oldLang = self::get_current_locale();
 		self::set_reading_locale($locale);
 		$result = DataObject::get($class, $filter, $sort, $join, $limit, $containerClass, $having);
 		self::set_reading_locale($oldLang);
@@ -453,7 +453,7 @@ class Translatable extends DataObjectDecorator {
 
 	/**
 	 * Changes any SELECT query thats not filtering on an ID
-	 * to limit by the current language defined in {@link current_locale()}.
+	 * to limit by the current language defined in {@link get_current_locale()}.
 	 * It falls back to "Locale='' OR Lang IS NULL" and assumes that
 	 * this implies querying for the default language.
 	 * 
@@ -463,7 +463,7 @@ class Translatable extends DataObjectDecorator {
 		// If the record is saved (and not a singleton), and has a locale,
 		// limit the current call to its locale. This fixes a lot of problems
 		// with other extensions like Versioned
-		$locale = ($this->owner->ID && $this->owner->Locale) ? $this->owner->Locale : Translatable::current_locale();
+		$locale = ($this->owner->ID && $this->owner->Locale) ? $this->owner->Locale : Translatable::get_current_locale();
 		$baseTable = ClassInfo::baseDataClass($this->owner->class);
 		$where = $query->where;
 		if(
@@ -626,7 +626,7 @@ class Translatable extends DataObjectDecorator {
 
 	function contentcontrollerInit($controller) {
 		Translatable::choose_site_locale();
-		$controller->Locale = Translatable::current_locale();
+		$controller->Locale = Translatable::get_current_locale();
 	}
 	
 	function modelascontrollerInit($controller) {
@@ -654,7 +654,7 @@ class Translatable extends DataObjectDecorator {
 		// of the content, as a "single language" website might be expanded
 		// later on. 
 		if(!$this->owner->ID && !$this->owner->Locale) {
-			$this->owner->Locale = Translatable::current_locale();
+			$this->owner->Locale = Translatable::get_current_locale();
 		}
 
 		// Specific logic for SiteTree subclasses.
@@ -1153,10 +1153,10 @@ class Translatable extends DataObjectDecorator {
 	}
 	
 	/**
-	 * @deprecated 2.4 Use custom check: self::$default_locale == self::current_locale()
+	 * @deprecated 2.4 Use custom check: self::$default_locale == self::get_current_locale()
 	 */
 	static function is_default_lang() {
-		return (self::$default_locale == self::current_locale());
+		return (self::$default_locale == self::get_current_locale());
 	}
 	
 	/**
@@ -1174,10 +1174,10 @@ class Translatable extends DataObjectDecorator {
 	}
 	
 	/**
-	 * @deprecated 2.4 Use current_locale()
+	 * @deprecated 2.4 Use get_current_locale()
 	 */
 	static function current_lang() {
-		return i18n::get_lang_from_locale(self::current_locale());
+		return i18n::get_lang_from_locale(self::get_current_locale());
 	}
 	
 	/**

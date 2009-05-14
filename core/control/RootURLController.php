@@ -67,7 +67,7 @@ class RootURLController extends Controller {
 		}
 		
 		if(singleton('SiteTree')->hasExtension('Translatable') && !$homePageOBJ) {
-			$urlSegment = Translatable::get_homepage_urlsegment_by_locale(Translatable::current_locale());
+			$urlSegment = Translatable::get_homepage_urlsegment_by_locale(Translatable::get_current_locale());
 		} elseif($homePageOBJ) {
 			$urlSegment = $homePageOBJ->URLSegment;
 		}

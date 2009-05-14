@@ -152,7 +152,7 @@ class MigrateTranslatableTask extends BuildTask {
 				}
 
 				// Write the new translation to the database
-				$sitelang = Translatable::current_locale();
+				$sitelang = Translatable::get_current_locale();
 				Translatable::set_reading_locale($newtrans->Locale); 
 				$newtrans->writeToStage($stage);
 				Translatable::set_reading_locale($sitelang);
