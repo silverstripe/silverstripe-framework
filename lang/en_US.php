@@ -3,7 +3,7 @@
 global $lang;
 
 $lang['en_US']['Page']['PLURALNAME'] = array(
-	'Pags',
+	'Pages',
 	50,
 	'Pural name of the object, used in dropdowns and to generally identify a collection of this object in the interface'
 );
@@ -185,7 +185,7 @@ $lang['en_US']['ErrorPage']['CODE'] = 'Error code';
 $lang['en_US']['ErrorPage']['DEFAULTERRORPAGECONTENT'] = '<p>Sorry, it seems you were trying to access a page that doesn\'t exist.</p><p>Please check the spelling of the URL you were trying to access and try again.</p>';
 $lang['en_US']['ErrorPage']['DEFAULTERRORPAGETITLE'] = 'Page not found';
 $lang['en_US']['ErrorPage']['PLURALNAME'] = array(
-	'Error Pags',
+	'Error Pages',
 	50,
 	'Pural name of the object, used in dropdowns and to generally identify a collection of this object in the interface'
 );
@@ -271,7 +271,7 @@ $lang['en_US']['GSTNumberField']['VALIDATION'] = 'Please enter a valid GST Numbe
 $lang['en_US']['GSTNumberField']['VALIDATIONJS'] = 'Please enter a valid GST Number';
 $lang['en_US']['GhostPage']['NOLINKED'] = 'This ghost page has no linked page.';
 $lang['en_US']['GhostPage']['PLURALNAME'] = array(
-	'Ghost Pags',
+	'Ghost Pages',
 	50,
 	'Pural name of the object, used in dropdowns and to generally identify a collection of this object in the interface'
 );
@@ -612,7 +612,7 @@ $lang['en_US']['RedirectorPage']['HASBEENSETUP'] = 'A redirector page has been s
 $lang['en_US']['RedirectorPage']['HEADER'] = 'This page will redirect users to another page';
 $lang['en_US']['RedirectorPage']['OTHERURL'] = 'Other website URL';
 $lang['en_US']['RedirectorPage']['PLURALNAME'] = array(
-	'Redirector Pags',
+	'Redirector Pages',
 	50,
 	'Pural name of the object, used in dropdowns and to generally identify a collection of this object in the interface'
 );
@@ -819,7 +819,7 @@ $lang['en_US']['VirtualPage']['CHOOSE'] = 'Choose a page to link to';
 $lang['en_US']['VirtualPage']['EDITCONTENT'] = 'click here to edit the content';
 $lang['en_US']['VirtualPage']['HEADER'] = 'This is a virtual page';
 $lang['en_US']['VirtualPage']['PLURALNAME'] = array(
-	'Virtual Pags',
+	'Virtual Pages',
 	50,
 	'Pural name of the object, used in dropdowns and to generally identify a collection of this object in the interface'
 );
