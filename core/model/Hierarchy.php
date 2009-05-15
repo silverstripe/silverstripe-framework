@@ -137,8 +137,8 @@ class Hierarchy extends DataObjectDecorator {
 			} else {
 				return ($node->$parameterName == $this->markingFilter['value']);
 			}
-		} else if ($funcName = $this->markingFilter['func']) {
-			return $funcName($node);
+		} else if ($func = $this->markingFilter['func']) {
+			return call_user_func($func, $node);
 		}
 	}
 	
