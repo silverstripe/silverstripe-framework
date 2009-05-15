@@ -1128,18 +1128,20 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		if($this->ID && is_numeric($this->ID)) {
 			$linkedPages = DataObject::get("VirtualPage", "CopyContentFromID = $this->ID");
 		}
+		
+		$parentPageLinks = array();
 
 		if(isset($linkedPages)) {
 			foreach($linkedPages as $linkedPage) {
 				$parentPage = $linkedPage->Parent;
-				$parentPageTitle = $parentPage->Title;
-
-				if($parentPage->ID) {
-					$parentPageLinks[] = "<a class=\"cmsEditlink\" href=\"admin/show/$linkedPage->ID\">{$parentPage->Title}</a>";
-				} else {
-					$parentPageLinks[] = "<a class=\"cmsEditlink\" href=\"admin/show/$linkedPage->ID\">" .
-						_t('SiteTree.TOPLEVEL', 'Site Content (Top Level)') .
-						"</a>";
+				if($parentPage) {
+					if($parentPage->ID) {
+						$parentPageLinks[] = "<a class=\"cmsEditlink\" href=\"admin/show/$linkedPage->ID\">{$parentPage->Title}</a>";
+					} else {
+						$parentPageLinks[] = "<a class=\"cmsEditlink\" href=\"admin/show/$linkedPage->ID\">" .
+							_t('SiteTree.TOPLEVEL', 'Site Content (Top Level)') .
+							"</a>";
+					}
 				}
 			}
 
