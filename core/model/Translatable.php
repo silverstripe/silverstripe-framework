@@ -253,7 +253,12 @@ class Translatable extends DataObjectDecorator {
 	 * @param $locale String
 	 */
 	static function set_default_locale($locale) {
-		self::$default_locale = $locale;
+		$localeList = i18n::get_locale_list();
+		if(isset($localeList[$locale])) {
+			self::$default_locale = $locale;
+		} else {
+			user_error("Translatable::set_default_locale(): '$locale' is not a valid locale.", E_USER_WARNING);
+		}
 	}
 
 	/**
