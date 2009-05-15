@@ -885,7 +885,8 @@ class Requirements_Backend {
 					$fileContent = JSMin::minify($fileContent);
 				}
 				// write a header comment for each file for easier identification and debugging
-				$combinedData .= "/****** FILE: $file *****/\n" . $fileContent . "\n\n";
+				// also the semicolon between each file is required for jQuery to be combinable properly
+				$combinedData .= "/****** FILE: $file *****/\n" . $fileContent . "\n;\n";
 			}
 			if(!file_exists(dirname($base . $combinedFile))) {
 				Filesystem::makeFolder(dirname($base . $combinedFile));
