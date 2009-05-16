@@ -2114,7 +2114,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @return boolean
 	 */
 	public function canCreate($member = null) {
-		return Permission::check('ADMIN', 'any', $member);;
+		return Permission::check('ADMIN', 'any', $member);
 	}
 
 	/**
