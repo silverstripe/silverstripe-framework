@@ -55,7 +55,7 @@ class TranslatableTest extends FunctionalTest {
 		if(!self::$origTranslatableSettings['has_extension']) Object::remove_extension('SiteTree', 'Translatable');
 
 		Translatable::set_default_locale(self::$origTranslatableSettings['default_locale']);
-		Translatable::set_reading_locale(self::$origTranslatableSettings['default_locale']);
+		Translatable::set_current_locale(self::$origTranslatableSettings['default_locale']);
 		
 		self::kill_temp_db();
 		self::create_temp_db();
@@ -239,7 +239,7 @@ class TranslatableTest extends FunctionalTest {
 		$this->assertNotContains($translatedPage->ID, $resultPagesDefaultLang->column('ID'));
 		
 		// test in custom language
-		Translatable::set_reading_locale('de_DE');
+		Translatable::set_current_locale('de_DE');
 		$resultPagesCustomLang = DataObject::get(
 			'Page',
 			sprintf("`SiteTree`.`MenuTitle` = '%s'", 'A Testpage')
@@ -250,7 +250,7 @@ class TranslatableTest extends FunctionalTest {
 		// casting as a workaround for types not properly set on duplicated dataobjects from createTranslation()
 		$this->assertContains((string)$translatedPage->ID, $resultPagesCustomLang->column('ID'));
 		
-		Translatable::set_reading_locale('en_US');
+		Translatable::set_current_locale('en_US');
 	}
 	
 	function testDataObjectGetByIdWithReadingLanguage() {
@@ -270,7 +270,7 @@ class TranslatableTest extends FunctionalTest {
 		$translatedPage = $origPage->createTranslation('de_DE');
 		
 		// running the same query twice with different 
-		Translatable::set_reading_locale('de_DE');
+		Translatable::set_current_locale('de_DE');
 		$compareTranslatedPage = DataObject::get_one(
 			'Page', 
 			sprintf("`SiteTree`.`Title` = '%s'", $translatedPage->Title)
@@ -283,14 +283,14 @@ class TranslatableTest extends FunctionalTest {
 		);
 		
 		// reset language to default
-		Translatable::set_reading_locale('en_US');
+		Translatable::set_current_locale('en_US');
 	}
 	
 	function testModifyTranslationWithDefaultReadingLang() {
 		$origPage = $this->objFromFixture('Page', 'testpage_en');
 		$translatedPage = $origPage->createTranslation('de_DE');
 		
-		Translatable::set_reading_locale('en_US');
+		Translatable::set_current_locale('en_US');
 		$translatedPage->Title = 'De Modified';
 		$translatedPage->write();
 		$savedTranslatedPage = $origPage->getTranslation('de_DE');
@@ -310,7 +310,7 @@ class TranslatableTest extends FunctionalTest {
 		$origPage = $this->objFromFixture('Page', 'testpage_en');
 		$translatedPage = $origPage->createTranslation('de_DE');
 		
-		Translatable::set_reading_locale('en_US');
+		Translatable::set_current_locale('en_US');
 		$origPage->Title = 'En Modified';
 		$origPage->write();
 		// modifying a record in language which is not the reading language should still write the record correctly
@@ -351,7 +351,7 @@ class TranslatableTest extends FunctionalTest {
 		$child4PageTranslated->ParentID = $parentPageTranslated->ID;
 		$child4PageTranslated->write();
 		
-		Translatable::set_reading_locale('en_US');
+		Translatable::set_current_locale('en_US');
 		$this->assertEquals(
 			$parentPage->Children()->column('ID'),
 			array(
@@ -362,7 +362,7 @@ class TranslatableTest extends FunctionalTest {
 			"Showing Children() in default language doesnt show children in other languages"
 		);
 		
-		Translatable::set_reading_locale('de_DE');
+		Translatable::set_current_locale('de_DE');
 		$parentPage->flushCache();
 		$this->assertEquals(
 			$parentPageTranslated->Children()->column('ID'),
@@ -371,7 +371,7 @@ class TranslatableTest extends FunctionalTest {
 		);
 		
 		// reset language
-		Translatable::set_reading_locale('en_US');
+		Translatable::set_current_locale('en_US');
 	}
 	
 	function testHierarchyLiveStageChildren() {
@@ -395,7 +395,7 @@ class TranslatableTest extends FunctionalTest {
 		$child5PageTranslated->ParentID = $parentPageTranslated->ID;
 		$child5PageTranslated->write();
 		
-		Translatable::set_reading_locale('en_US');
+		Translatable::set_current_locale('en_US');
 		$this->assertNotNull($parentPage->liveChildren());
 		$this->assertEquals(
 			$parentPage->liveChildren()->column('ID'),
@@ -415,7 +415,7 @@ class TranslatableTest extends FunctionalTest {
 			"Showing stageChildren() in default language doesnt show children in other languages"
 		);
 		
-		Translatable::set_reading_locale('de_DE');
+		Translatable::set_current_locale('de_DE');
 		$parentPage->flushCache();
 		$this->assertNotNull($parentPageTranslated->liveChildren());
 		$this->assertEquals(
@@ -434,7 +434,7 @@ class TranslatableTest extends FunctionalTest {
 		);
 		
 		// reset language
-		Translatable::set_reading_locale('en_US');
+		Translatable::set_current_locale('en_US');
 	}
 	
 	function testTranslatablePropertiesOnSiteTree() {
@@ -509,7 +509,7 @@ class TranslatableTest extends FunctionalTest {
 		$translatedPageWithoutOriginal->Locale = 'de_DE';
 		$translatedPageWithoutOriginal->write();
 
-		Translatable::set_reading_locale('de_DE');
+		Translatable::set_current_locale('de_DE');
 		$this->assertEquals(
 			$translatedParentPage->stageChildren()->column('ID'),
 			array(
@@ -518,7 +518,7 @@ class TranslatableTest extends FunctionalTest {
 			"Children() still works on a translated page even if no translation group is set"
 		);
 		
-		Translatable::set_reading_locale('en_US');
+		Translatable::set_current_locale('en_US');
 	}
 	
 	function testCreateTranslationTranslatesUntranslatedParents() {
@@ -593,7 +593,7 @@ class TranslatableTest extends FunctionalTest {
 		$child3PageID = $child3Page->ID;
 		
 		// on original parent in default language
-		Translatable::set_reading_locale('en_US');
+		Translatable::set_current_locale('en_US');
 		SiteTree::flush_and_destroy_cache();
 		$parentPage = $this->objFromFixture('Page', 'parent');
 		$children = $parentPage->AllChildrenIncludingDeleted();
@@ -608,7 +608,7 @@ class TranslatableTest extends FunctionalTest {
 		);
 
 		// on original parent in translation mode
-		Translatable::set_reading_locale('de_DE');
+		Translatable::set_current_locale('de_DE');
 		SiteTree::flush_and_destroy_cache();
 		$parentPage = $this->objFromFixture('Page', 'parent');
 		$this->assertEquals(
@@ -620,7 +620,7 @@ class TranslatableTest extends FunctionalTest {
 			"Showing AllChildrenIncludingDeleted() in translation mode with parent page in translated language shows children in translated language"
 		);
 		
-		Translatable::set_reading_locale('de_DE');
+		Translatable::set_current_locale('de_DE');
 		SiteTree::flush_and_destroy_cache();
 		$parentPage = $this->objFromFixture('Page', 'parent');
 		$this->assertEquals(
@@ -630,7 +630,7 @@ class TranslatableTest extends FunctionalTest {
 		);
 		
 		// reset language
-		Translatable::set_reading_locale('en_US');
+		Translatable::set_current_locale('en_US');
 	}
 	
 	function testRootUrlDefaultsToTranslatedUrlSegment() {
@@ -642,7 +642,7 @@ class TranslatableTest extends FunctionalTest {
 		$translationDe->publish('Stage', 'Live');
 		
 		// test with translatable
-		Translatable::set_reading_locale('de_DE');		
+		Translatable::set_current_locale('de_DE');		
 		$this->assertEquals(
 			RootURLController::get_homepage_urlsegment(), 
 			'heim', 
@@ -661,7 +661,7 @@ class TranslatableTest extends FunctionalTest {
 		// 		Object::add_extension('Page', 'Translatable');
 		
 		// setting back to default
-		Translatable::set_reading_locale('en_US');
+		Translatable::set_current_locale('en_US');
 	}
 	
 	function testSiteTreeChangePageTypeInMaster() {
@@ -686,7 +686,7 @@ class TranslatableTest extends FunctionalTest {
 		);
 		
 		// re-fetch the translation with new instance
-		Translatable::set_reading_locale('de_DE');
+		Translatable::set_current_locale('de_DE');
 		$translatedPageChanged = DataObject::get_by_id('RedirectorPage', $translatedPageID);
 		$translatedPageChanged = $origPageChanged->getTranslation('de_DE');
 		$this->assertEquals($translatedPageChanged->ClassName, 'RedirectorPage',

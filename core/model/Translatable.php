@@ -58,13 +58,13 @@
  * $translatedObj = $obj->getTranslation('de_DE');
  * </code>
  * 
- * Getting translations through {@link Translatable::set_reading_locale()}.
+ * Getting translations through {@link Translatable::set_current_locale()}.
  * This is *not* a recommended approach, but sometimes inavoidable (e.g. for {@link Versioned} methods).
  * <code>
- * $origLocale = Translatable::get_reading_locale();
- * Translatable::set_reading_locale('de_DE');
+ * $origLocale = Translatable::get_current_locale();
+ * Translatable::set_current_locale('de_DE');
  * $obj = Versioned::get_one_by_stage('MyObject', "ID = 99");
- * Translatable::set_reading_locale($origLocale);
+ * Translatable::set_current_locale($origLocale);
  * </code>
  * 
  * Creating a translation: 
@@ -87,11 +87,11 @@
  * through the {@link Versioned} extension.
  * 
  * Note: You can't get Children() for a parent page in a different language
- * through set_reading_locale(). Get the translated parent first.
+ * through set_current_locale(). Get the translated parent first.
  * 
  * <code>
  * // wrong
- * Translatable::set_reading_lang('de_DE');
+ * Translatable::set_current_locale('de_DE');
  * $englishParent->Children(); 
  * // right
  * $germanParent = $englishParent->getTranslation('de_DE');
@@ -159,13 +159,7 @@ class Translatable extends DataObjectDecorator {
 	 * @see Director::get_site_mode()
 	 * @var string
 	 */
-	protected static $reading_locale = null;
-	
-	/**
-	 * Indicates if the start language has been determined using choose_site_locale()
-	 * @var boolean
-	 */
-	protected static $language_decided = false;
+	protected static $current_locale = null;
 	
 	/**
 	 * A cached list of existing tables
@@ -213,25 +207,22 @@ class Translatable extends DataObjectDecorator {
 	 * 
 	 * @uses Director::get_site_mode()
 	 * @param $langsAvailable array A numerical array of languages which are valid choices (optional)
-	 * @return string Selected language (also saved in $reading_locale).
+	 * @return string Selected language (also saved in $current_locale).
 	 */
 	static function choose_site_locale($langsAvailable = array()) {
 		$siteMode = Director::get_site_mode(); // either 'cms' or 'site'
-		if(self::$reading_locale) {
-			self::$language_decided = true;
-			return self::$reading_locale;
+		if(self::$current_locale) {
+			return self::$current_locale;
 		}
 
 		if((isset($_GET['locale']) && !$langsAvailable) || (isset($_GET['locale']) && in_array($_GET['locale'], $langsAvailable))) {
 			// get from GET parameter
-			self::set_reading_locale($_GET['locale']);
+			self::set_current_locale($_GET['locale']);
 		} else {
-			self::set_reading_locale(self::default_locale());
+			self::set_current_locale(self::default_locale());
 		}
 		
-		
-		self::$language_decided = true;
-		return self::$reading_locale; 
+		return self::$current_locale; 
 	}
 		
 	/**
@@ -263,11 +254,12 @@ class Translatable extends DataObjectDecorator {
 
 	/**
 	 * Get the current reading language.
+	 * If its not chosen, call {@link choose_site_locale()}.
+	 * 
 	 * @return string
 	 */
 	static function get_current_locale() {
-		if (!self::$language_decided) self::choose_site_locale();
-		return self::$reading_locale;
+		return (self::$current_locale) ? self::$current_locale : self::choose_site_locale();
 	}
 		
 	/**
@@ -278,9 +270,8 @@ class Translatable extends DataObjectDecorator {
 	 * 
 	 * @param string $lang New reading language.
 	 */
-	static function set_reading_locale($locale) {
-		self::$reading_locale = $locale;
-		self::$language_decided = true;
+	static function set_current_locale($locale) {
+		self::$current_locale = $locale;
 	}	
 	
 	/**
@@ -294,9 +285,9 @@ class Translatable extends DataObjectDecorator {
 	 */
 	static function get_one_by_locale($class, $locale, $filter = '', $cache = false, $orderby = "") {
 		$orig = Translatable::get_current_locale();
-		Translatable::set_reading_locale($locale);
+		Translatable::set_current_locale($locale);
 		$do = DataObject::get_one($class, $filter, $cache, $orderby);
-		Translatable::set_reading_locale($orig);
+		Translatable::set_current_locale($orig);
 		return $do;
 	}
 
@@ -315,9 +306,9 @@ class Translatable extends DataObjectDecorator {
 	 */
 	static function get_by_locale($class, $locale, $filter = '', $sort = '', $join = "", $limit = "", $containerClass = "DataObjectSet", $having = "") {
 		$oldLang = self::get_current_locale();
-		self::set_reading_locale($locale);
+		self::set_current_locale($locale);
 		$result = DataObject::get($class, $filter, $sort, $join, $limit, $containerClass, $having);
-		self::set_reading_locale($oldLang);
+		self::set_current_locale($oldLang);
 		return $result;
 	}
 	
@@ -1200,10 +1191,10 @@ class Translatable extends DataObjectDecorator {
 	}
 	
 	/**
-	 * @deprecated 2.4 Use set_reading_locale()
+	 * @deprecated 2.4 Use set_current_locale()
 	 */
 	static function set_reading_lang($lang) {
-		self::set_reading_locale(i18n::get_locale_from_lang($lang));
+		self::set_current_locale(i18n::get_locale_from_lang($lang));
 	}
 	
 	/**

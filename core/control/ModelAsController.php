@@ -66,7 +66,7 @@ class ModelAsController extends Controller implements NestedController {
 				if(isset($_REQUEST['debug'])) Debug::message("Using record #$child->ID of type $child->class with URL {$this->urlParams['URLSegment']}");
 				
 				// set language
-				if($child->Locale) Translatable::set_reading_locale($child->Locale);
+				if($child->Locale) Translatable::set_current_locale($child->Locale);
 				
 				$controllerClass = "{$child->class}_Controller";
 	

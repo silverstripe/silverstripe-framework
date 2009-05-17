@@ -80,7 +80,7 @@ class TranslatableSearchFormTest extends FunctionalTest {
 		$translatedPublishedPage->write();
 		$translatedPublishedPage->publish('Stage', 'Live');
 		
-		// Translatable::set_reading_locale() can't be used because the context
+		// Translatable::set_current_locale() can't be used because the context
 		// from the holder is not present here - we set the language explicitly
 		// through a pseudo GET variable in getResults()
 		
