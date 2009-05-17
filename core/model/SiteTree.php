@@ -1127,6 +1127,8 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		if($this->ID && is_numeric($this->ID)) {
 			$linkedPages = DataObject::get("VirtualPage", "\"CopyContentFromID\" = $this->ID");
 		}
+		
+		$parentPageLinks = array();
 
 		if(isset($linkedPages)) {
 			foreach($linkedPages as $linkedPage) {
