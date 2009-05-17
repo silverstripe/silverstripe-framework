@@ -1,35 +1,228 @@
 <?php 
 /**
- * A field that will upload files to a page for use within the CMS through an iframe.
- * If you want to upload files without an iframe, use {@link FileField}.
+ * A field that allows you to attach a file to a DataObject without submitting the form it is part of, through the use
+ * of an iframe.
  *
- * @used Image_Upload
- * 
+ * If all you need is a simple file upload, it is reccomended you use {@link FileField}
+ *
  * @package forms
  * @subpackage fields-files
  */
 class FileIFrameField extends FileField {
 	
-	public function Field() {
-		$data = $this->form->getRecord();
-		
-		if($data && $data->ID && is_numeric($data->ID)) {
-			$idxField = $this->name . 'ID';
-			$hiddenField =  "<input type=\"hidden\" id=\"" . $this->id() . "\" name=\"$idxField\" value=\"" . $this->attrValue() . "\" />";
-			
-			$parentClass = $data->class;
-
-			$parentID = $data->ID;
-			$parentField = $this->name;
-			$iframe = "<iframe name=\"{$this->name}_iframe\" src=\"images/iframe/$parentClass/$parentID/$parentField\" style=\"height: 152px; width: 600px; border-style: none;\"></iframe>";
+	public static $allowed_actions = array (
+		'iframe',
+		'EditFileForm',
+		'DeleteFileForm'
+	);
 	
-			return $iframe . $hiddenField;
-			
-		} else {
-			$this->value = _t('FileIFrameField.NOTEADDFILES', 'You can add files once you have saved for the first time.');
-			return FormField::Field();
-		}
+	/**
+	 * @see FileField::__construct()
+	 */
+	public function __construct($name, $title = null, $value = null, $form = null, $rightTitle = null, $folderName = null) {
+		Requirements::css(THIRDPARTY_DIR . '/jquery/themes/default/ui.all.css');
+		
+		Requirements::add_i18n_javascript(SAPPHIRE_DIR . '/javascript/lang');
+		Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
+		Requirements::javascript(THIRDPARTY_DIR . '/jquery/ui/ui.core.js');
+		Requirements::javascript(THIRDPARTY_DIR . '/jquery/ui/ui.dialog.js');
+		
+		parent::__construct($name, $title, $value, $form, $rightTitle, $folderName);
 	}
-
+	
+	/**
+	 * @return string
+	 */
+	public function Field() {
+		if($this->form->getRecord() && $this->form->getRecord()->exists()) {
+			return $this->createTag (
+				'iframe',
+				array (
+					'name'  => $this->Name() . '_iframe',
+					'src'   => Controller::join_links($this->Link(), 'iframe'),
+					'style' => 'height: 152px; width: 100%; border: none;'
+				)
+			) . $this->createTag (
+				'input',
+				array (
+					'type'  => 'hidden',
+					'id'    => $this->ID(),
+					'name'  => $this->Name() . 'ID',
+					'value' => $this->attrValue()
+				)
+			);
+		}
+		
+		$this->setValue(sprintf(_t (
+			'FileIFrameField.ATTACHONCESAVED', '%ss can be attached once you have saved the record for the first time.'
+		), $this->FileTypeName()));
+		
+		return FormField::field();
+	}
+	
+	/**
+	 * Attempt to retreive a File object that has already been attached to this forms data record
+	 *
+	 * @return File|null
+	 */
+	public function AttachedFile() {
+		return $this->form->getRecord()->has_one($this->Name()) ? $this->form->getRecord()->{$this->Name()}() : null;
+	}
+	
+	/**
+	 * @return string
+	 */
+	public function iframe() {
+		// clear the requirements added by any parent controllers
+		Requirements::clear();
+		Requirements::add_i18n_javascript('sapphire/javascript/lang');
+		Requirements::javascript('jsparty/jquery/jquery.js');
+		Requirements::javascript('sapphire/javascript/FileIFrameField.js');
+		
+		Requirements::css('cms/css/typography.css');
+		Requirements::css('sapphire/css/FileIFrameField.css');
+		
+		return $this->renderWith('FileIFrameField');
+	}
+	
+	/**
+	 * @return Form
+	 */
+	public function EditFileForm() {
+		$uploadFile = _t('FileIFrameField.FROMCOMPUTER', 'From your Computer');
+		$selectFile = _t('FileIFrameField.FROMFILESTORE', 'From the File Store');
+		
+		if($this->AttachedFile() && $this->AttachedFile()->ID) {
+			$title = sprintf(_t('FileIFrameField.REPLACE', 'Replace %s'), $this->FileTypeName());
+		} else {
+			$title = sprintf(_t('FileIFrameField.ATTACH', 'Attach %s'), $this->FileTypeName());
+		}
+		
+		$fileSources = array();
+		
+		if(singleton('File')->canCreate()) {
+			$fileSources["new//$uploadFile"] = new FileField('Upload', '');
+		}
+		
+		$fileSources["existing//$selectFile"] = new TreeDropdownField('ExistingFile', '', 'File');
+		
+		return new Form (
+			$this,
+			'EditFileForm',
+			new FieldSet (
+				new HeaderField('EditFileHeader', $title),
+				new SelectionGroup('FileSource', $fileSources)
+			),
+			new FieldSet (
+				new FormAction('save', $title)
+			)
+		);
+	}
+	
+	public function save($data, $form) {
+		// check the user has entered all the required information
+		if (
+			!isset($data['FileSource'])
+			|| ($data['FileSource'] == 'new' && (!isset($_FILES['Upload']) || !$_FILES['Upload']))
+			|| ($data['FileSource'] == 'existing' && (!isset($data['ExistingFile']) || !$data['ExistingFile']))
+		) {
+			Director::redirectBack();
+			return;
+		}
+		
+		if($this->form->getRecord()->has_one($this->Name())) {
+			$desiredClass = $this->form->getRecord()->has_one($this->Name());
+		} else {
+			$desiredClass = 'File';
+		}
+		
+		// upload a new file
+		if($data['FileSource'] == 'new') {
+			$fileObject = Object::create($desiredClass);
+			
+			$this->upload->setAllowedExtensions($this->allowedExtensions);
+			$this->upload->setAllowedMaxFileSize($this->allowedMaxFileSize);
+			
+			$this->upload->loadIntoFile($_FILES['Upload'], $fileObject, $this->folderName);
+			
+			if($this->upload->isError()) {
+				Director::redirectBack();
+				return;
+			}
+			
+			$this->form->getRecord()->{$this->Name() . 'ID'} = $fileObject->ID;
+			
+			$fileObject->OwnerID = (Member::currentUser() ? Member::currentUser()->ID : 0);
+			$fileObject->write();
+		}
+		
+		// attach an existing image from the assets store
+		if($data['FileSource'] == 'existing') {
+			$fileObject = DataObject::get_by_id('File', $data['ExistingFile']);
+			
+			// dont allow the user to attach a folder by default
+			if(!$fileObject || ($fileObject instanceof Folder && $desiredClass != 'Folder')) {
+				Director::redirectBack();
+				return;
+			}
+			
+			$this->form->getRecord()->{$this->Name() . 'ID'} = $fileObject->ID;
+			
+			if(!$fileObject instanceof $desiredClass) {
+				$fileObject->ClassName = $desiredClass;
+				$fileObject->write();
+			}
+		}
+		
+		$this->form->getRecord()->write();
+		Director::redirectBack();
+	}
+	
+	/**
+	 * @return Form
+	 */
+	public function DeleteFileForm() {
+		$form = new Form (
+			$this,
+			'DeleteFileForm',
+			new FieldSet (
+				new HiddenField('DeleteFile', null, false)
+			),
+			new FieldSet (
+				$deleteButton = new FormAction (
+					'delete', sprintf(_t('FileIFrameField.DELETE', 'Delete %s'), $this->FileTypeName())
+				)
+			)
+		);
+		
+		$deleteButton->addExtraClass('delete');
+		return $form;
+	}
+	
+	public function delete($data, $form) {
+		// delete the actual file, or just un-attach it?
+		if(isset($data['DeleteFile']) && $data['DeleteFile']) {
+			$file = DataObject::get_by_id('File', $this->form->getRecord()->{$this->Name() . 'ID'});
+			
+			if($file) {
+				$file->delete();
+			}
+		}
+		
+		// then un-attach file from this record
+		$this->form->getRecord()->{$this->Name() . 'ID'} = 0;
+		$this->form->getRecord()->write();
+		
+		Director::redirectBack();
+	}
+	
+	/**
+	 * Get the type of file this field is used to attach (e.g. File, Image)
+	 *
+	 * @return string
+	 */
+	public function FileTypeName() {
+		return _t('FileIFrameField.FILE', 'File');
+	}
+	
 }
-?>
