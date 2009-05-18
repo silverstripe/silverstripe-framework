@@ -13,6 +13,16 @@ class HtmlEditorField extends TextareaField {
 	protected $rows;
 
 	/**
+	 * Includes the javascript neccesary for this field to work in the current output.
+	 * NOTE: If you are loading a form that includes an HtmlEditorField via Ajax this function must be called in the requesting page, because
+	 * javascript is not sent via ajax
+	 */
+	static function include_js() {
+		Requirements::javascript(MCE_ROOT . "tiny_mce_src.js");
+		Requirements::customScript(HtmlEditorConfig::get_active()->generateJS(), 'htmlEditorConfig');
+	}
+		
+	/**
 	 * Construct a new HtmlEditor field
 	 */
 	function __construct($name, $title = null, $rows = 30, $cols = 20, $value = "", $form = null) {
@@ -24,8 +34,8 @@ class HtmlEditorField extends TextareaField {
 	 * Returns the a <textarea> field with tinymce="true" set on it
 	 */
 	function Field() {
-		Requirements::javascript(MCE_ROOT . "tiny_mce_src.js");
-		Requirements::customScript(HtmlEditorConfig::get_active()->generateJS(), 'htmlEditorConfig');
+		// Make sure the nessecary javascript is included
+		self::include_js();
 
 		// Don't allow unclosed tags - they will break the whole application ;-)		
 		$cleanVal = $this->value;
