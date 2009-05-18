@@ -10,6 +10,10 @@ if(typeof(ss) == 'undefined' || typeof(ss.i18n) == 'undefined') {
 		'UNIQUEFIELD.ENTERNEWVALUE': 'You will need to enter a new value for this field',
 		'UNIQUEFIELD.CANNOTLEAVEEMPTY': 'This field cannot be left empty',
 		'RESTRICTEDTEXTFIELD.CHARCANTBEUSED': "The character '%s' cannot be used in this field",
-		'UPDATEURL.CONFIRM': 'Would you like me to change the URL to:\n\n%s/\n\nClick Ok to change the URL, click Cancel to leave it as:\n\n%s'
+		'UPDATEURL.CONFIRM': 'Would you like me to change the URL to:\n\n%s/\n\nClick Ok to change the URL, click Cancel to leave it as:\n\n%s',
+		'FILEIFRAMEFIELD.DELETEFILE': 'Delete File',
+		'FILEIFRAMEFIELD.UNATTACHFILE': 'Un-Attach File',
+		'FILEIFRAMEFIELD.DELETEIMAGE': 'Delete Image',
+		'FILEIFRAMEFIELD.CONFIRMDELETE': 'Are you sure you want to delete this file?'
 	});
 }
