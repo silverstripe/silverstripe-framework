@@ -1222,8 +1222,8 @@ class TableListField_Item extends ViewableData {
 
 			// This supports simple FieldName syntax
 			if(strpos($fieldName,'.') === false) {
-				$value = ($this->item->val($fieldName)) ? $this->item->val($fieldName) : $this->item->$fieldName;
-			// This support the syntax fieldName = Relation.RelatedField				
+				$value = ($this->item->XML_val($fieldName)) ? $this->item->XML_val($fieldName) : $this->item->$fieldName;
+			// This support the syntax fieldName = Relation.RelatedField
 			} else {					
 				$fieldNameParts = explode('.', $fieldName)	;
 				$tmpItem = $this->item;
@@ -1237,6 +1237,7 @@ class TableListField_Item extends ViewableData {
 					}
 				}
 			}
+			
 			// casting
 			if(array_key_exists($fieldName, $this->parent->fieldCasting)) {
 				$value = $this->parent->getCastedValue($value, $this->parent->fieldCasting[$fieldName]);
@@ -1257,6 +1258,7 @@ class TableListField_Item extends ViewableData {
 					$value = str_replace($search, $replace, $value);
 				}
 			}
+			
 						
 			$fields[] = new ArrayData(array(
 				"Name" => $fieldName, 
