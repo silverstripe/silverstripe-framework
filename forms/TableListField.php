@@ -308,6 +308,12 @@ JS
 					$XML_sort = (isset($_REQUEST['ctf'][$this->Name()]['dir'])) ? Convert::raw2xml($_REQUEST['ctf'][$this->Name()]['dir']) : null;
 					$sortLink = HTTP::setGetVar("ctf[{$this->Name()}][dir]", $XML_sort, $sortLink);
 				}
+				if(isset($_REQUEST['ctf'][$this->Name()]['search'])) {
+					foreach($_REQUEST['ctf'][$this->Name()]['search'] as $parameter => $value) {
+						$XML_search = Convert::raw2xml($value);
+						$sortLink = HTTP::setGetVar("ctf[{$this->Name()}][search][$parameter]", $XML_search, $sortLink);
+					}
+				}
 			} else {
 				$sortLink = '#';
 			}
