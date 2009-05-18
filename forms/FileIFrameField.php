@@ -17,23 +17,15 @@ class FileIFrameField extends FileField {
 	);
 	
 	/**
-	 * @see FileField::__construct()
+	 * @return string
 	 */
-	public function __construct($name, $title = null, $value = null, $form = null, $rightTitle = null, $folderName = null) {
+	public function Field() {
 		Requirements::css(THIRDPARTY_DIR . '/jquery/themes/default/ui.all.css');
-		
 		Requirements::add_i18n_javascript(SAPPHIRE_DIR . '/javascript/lang');
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery/ui/ui.core.js');
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery/ui/ui.dialog.js');
 		
-		parent::__construct($name, $title, $value, $form, $rightTitle, $folderName);
-	}
-	
-	/**
-	 * @return string
-	 */
-	public function Field() {
 		if($this->form->getRecord() && $this->form->getRecord()->exists()) {
 			return $this->createTag (
 				'iframe',
