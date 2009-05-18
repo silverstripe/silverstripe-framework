@@ -244,6 +244,7 @@ class HtmlEditorConfig {
 		return "
 if((typeof tinyMCE != 'undefined')) {
 	tinyMCE.init(" . Convert::raw2json($config) . ");
-}";
+}
+";
 	}
 }
