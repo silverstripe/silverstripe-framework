@@ -12,13 +12,18 @@
  * @subpackage model
  */
 class SSDatetime extends Date {
+	
 	function setValue($value) {
 		// Default to NZ date format - strtotime expects a US date
-		if(ereg('^([0-9]+)/([0-9]+)/([0-9]+)$', $value, $parts))
+		if(ereg('^([0-9]+)/([0-9]+)/([0-9]+)$', $value, $parts)) {
 			$value = "$parts[2]/$parts[1]/$parts[3]";
-
-		if($value) $this->value = date('Y-m-d H:i:s', strtotime($value));
-		else $value = null;
+		}
+		
+		if(is_numeric($value)) {
+			$this->value = date('Y-m-d H:i:s', $value);
+		} elseif(is_string($value)) {
+			$this->value = date('Y-m-d H:i:s', strtotime($value));
+		}
 	}
 
 	function Nice() {
