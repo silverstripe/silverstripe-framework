@@ -115,7 +115,7 @@ table.TableField tbody tr.over td,
 .TableListField table.data tbody tr.over td, 
 .TableListField table.data tbody tr.over td input,
 table.CMSList tbody td.over td{
-	background-color: #FFCC66;
+	background-color: #FFFFBB;
 }
 
 table.TableField tbody tr.current td, 
