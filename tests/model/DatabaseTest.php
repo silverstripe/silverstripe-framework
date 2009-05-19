@@ -45,9 +45,25 @@ class DatabaseTest extends SapphireTest {
 		self::create_temp_db();
 	}
 	
+	function testMySQLCreateTableOptions() {
+		if(DB::getConn() instanceof MySQLDatabase) {
+			$ret = DB::query(sprintf(
+				'SHOW TABLE STATUS WHERE "Name" = \'%s\'',
+				'DatabaseTest_MyObject'
+			))->first();
+			$this->assertEquals($ret['Engine'],'InnoDB',
+				"MySQLDatabase tables can be changed to InnoDB through DataObject::\$create_table_options"
+			);
+		}
+		
+	}
+	
 }
 
 class DatabaseTest_MyObject extends DataObject implements TestOnly {
+	
+	static $create_table_options = array('MySQLDatabase' => 'ENGINE=InnoDB');
+	
 	static $db = array(
 		'MyField' => 'Varchar'
 	);

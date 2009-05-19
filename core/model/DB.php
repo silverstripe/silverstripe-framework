@@ -187,9 +187,10 @@ class DB {
 	 *   - true: Create a single column index on the field named the same as the index.
 	 *   - array('fields' => array('A','B','C'), 'type' => 'index/unique/fulltext'): This gives you full
 	 *     control over the index.
+	 * @param string $options SQL statement to append to the CREATE TABLE call.
 	 */
-	static function requireTable($table, $fieldSchema = null, $indexSchema = null, $hasAutoIncPK=true) {
-		return DB::$globalConn->requireTable($table, $fieldSchema, $indexSchema, $hasAutoIncPK);
+	static function requireTable($table, $fieldSchema = null, $indexSchema = null, $hasAutoIncPK=true, $options = null) {
+		return DB::$globalConn->requireTable($table, $fieldSchema, $indexSchema, $hasAutoIncPK, $options);
 	}
 
 	/**

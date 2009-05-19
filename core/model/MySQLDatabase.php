@@ -190,18 +190,25 @@ class MySQLDatabase extends Database {
 		return $this->query("SHOW DATABASES")->column();
 	}
 	
-	public function createTable($tableName, $fields = null, $indexes = null) {
+	/**
+	 * @param string $table
+	 * @param array $fields
+	 * @param array $indexes
+	 * @param string $options
+	 */
+	public function createTable($table, $fields = null, $indexes = null, $options = null) {
 		$fieldSchemas = $indexSchemas = "";
+		$addOptions = (isset($options[$this->class])) ? $options[$this->class] : null;
 		
 		if(!isset($fields['ID'])) $fields['ID'] = "int(11) not null auto_increment";
 		if($fields) foreach($fields as $k => $v) $fieldSchemas .= "\"$k\" $v,\n";
 		if($indexes) foreach($indexes as $k => $v) $indexSchemas .= $this->getIndexSqlDefinition($k, $v) . ",\n";
-		
-		$this->query("CREATE TABLE \"$tableName\" (
+
+		$this->query("CREATE TABLE \"$table\" (
 				$fieldSchemas
 				$indexSchemas
 				primary key (ID)
-			) TYPE=MyISAM");
+			) {$addOptions}");
 	}
 
 	/**
@@ -211,9 +218,11 @@ class MySQLDatabase extends Database {
 	 * @param $newIndexes New indexes, a map of index name => index type
 	 * @param $alteredFields Updated fields, a map of field name => field schema
 	 * @param $alteredIndexes Updated indexes, a map of index name => index type
+	 * @param $alteredOptions
 	 */
-	public function alterTable($tableName, $newFields = null, $newIndexes = null, $alteredFields = null, $alteredIndexes = null) {
+	public function alterTable($tableName, $newFields = null, $newIndexes = null, $alteredFields = null, $alteredIndexes = null, $alteredOptions = null) {
 		$fieldSchemas = $indexSchemas = "";
+		$alterList = array();
 		
 		if($newFields) foreach($newFields as $k => $v) $alterList[] .= "ADD \"$k\" $v";
 		if($newIndexes) foreach($newIndexes as $k => $v) $alterList[] .= "ADD " . $this->getIndexSqlDefinition($k, $v);
@@ -225,6 +234,14 @@ class MySQLDatabase extends Database {
 		
  		$alterations = implode(",\n", $alterList);
 		$this->query("ALTER TABLE \"$tableName\" $alterations");
+		
+		if($alteredOptions && isset($alteredOptions[$this->class])) {
+			$this->query(sprintf("ALTER TABLE \"%s\" %s", $tableName, $alteredOptions[$this->class]));
+			Database::alteration_message(
+				sprintf("Table %s options changed: %s", $tableName, $alteredOptions[$this->class]),
+				"changed"
+			);
+		}
 	}
 
 	public function renameTable($oldTableName, $newTableName) {

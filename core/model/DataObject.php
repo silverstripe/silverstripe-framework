@@ -2666,7 +2666,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 
 		if($fields) {
 			$hasAutoIncPK = ($this->class == ClassInfo::baseDataClass($this->class));
-			DB::requireTable($this->class, $fields, $indexes, $hasAutoIncPK);
+			DB::requireTable($this->class, $fields, $indexes, $hasAutoIncPK, $this->stat('create_table_options'));
 		} else {
 			DB::dontRequireTable($this->class);
 		}
@@ -3018,6 +3018,24 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		"LastEdited" => "SSDatetime",
 		"Created" => "SSDatetime",
 		"Title" => 'Text',
+	);
+	
+	/**
+	 * Specify custom options for a CREATE TABLE call.
+	 * Can be used to specify a custom storage engine for specific database table.
+	 * All options have to be keyed for a specific database implementation,
+	 * identified by their class name (extending from {@link Database}).
+	 * 
+	 * <code>
+	 * array(
+	 * 	'MySQLDatabase' => 'ENGINE=MyISAM'
+	 * )
+	 * </code>
+	 * 
+	 * @var array
+	 */
+	static $create_table_options = array(
+		'MySQLDatabase' => 'ENGINE=MyISAM'
 	);
 
 	/**

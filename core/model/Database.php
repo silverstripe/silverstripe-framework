@@ -71,9 +71,13 @@ abstract class Database extends Object {
 	/**
 	 * Create a new table.
 	 * The table will have a single field - the integer key ID.
-	 * @param string $table Name of table to create.
+	 * @param string $table
+	 * @param array $fields
+	 * @param array $indexes
+	 * @param string $driver
+	 * @param array $options
 	 */
-	abstract function createTable($table, $fields = null, $indexes = null);
+	abstract function createTable($table, $fields = null, $indexes = null, $options = null);
 	
 	/**
 	 * Alter a table's schema.
@@ -177,12 +181,12 @@ abstract class Database extends Object {
 		foreach($this->schemaUpdateTransaction as $tableName => $changes) {
 			switch($changes['command']) {
 				case 'create':
-					$this->createTable($tableName, $changes['newFields'], $changes['newIndexes']);
+					$this->createTable($tableName, $changes['newFields'], $changes['newIndexes'], $changes['options']);
 					break;
 				
 				case 'alter':
 					$this->alterTable($tableName, $changes['newFields'], $changes['newIndexes'],
-						$changes['alteredFields'], $changes['alteredIndexes']);
+						$changes['alteredFields'], $changes['alteredIndexes'], $changes['alteredOptions']);
 					break;
 			}
 		}
@@ -191,9 +195,23 @@ abstract class Database extends Object {
 	
 	// Transactional schema altering functions - they don't do anyhting except for update schemaUpdateTransaction
 	
-	function transCreateTable($table) {
-		$this->schemaUpdateTransaction[$table] = array('command' => 'create', 'newFields' => array(), 'newIndexes' => array());
+	/**
+	 * @param string $table
+	 * @param string $options
+	 */
+	function transCreateTable($table, $options = null) {
+		$this->schemaUpdateTransaction[$table] = array('command' => 'create', 'newFields' => array(), 'newIndexes' => array(), 'options' => $options);
 	}
+	
+	/**
+	 * @param string $table
+	 * @param array $options
+	 */
+	function transAlterTable($table, $options) {
+		$this->transInitTable($table);
+		$this->schemaUpdateTransaction[$table]['alteredOptions'] = $options;
+	}
+	
 	function transCreateField($table, $field, $schema) {
 		$this->transInitTable($table);
 		$this->schemaUpdateTransaction[$table]['newFields'][$field] = $schema;
@@ -223,6 +241,7 @@ abstract class Database extends Object {
 				'newIndexes' => array(),
 				'alteredFields' => array(),
 				'alteredIndexes' => array(),
+				'alteredOptions' => ''
 			);
 		}		
 	}
@@ -231,16 +250,36 @@ abstract class Database extends Object {
 	/**
 	 * Generate the following table in the database, modifying whatever already exists
 	 * as necessary.
+	 * @todo Change detection for CREATE TABLE $options other than "Engine"
+	 * 
 	 * @param string $table The name of the table
 	 * @param string $fieldSchema A list of the fields to create, in the same form as DataObject::$db
 	 * @param string $indexSchema A list of indexes to create. See {@link requireIndex()}
+	 * @param array $options
 	 */
-	function requireTable($table, $fieldSchema = null, $indexSchema = null, $hasAutoIncPK=true) {
+	function requireTable($table, $fieldSchema = null, $indexSchema = null, $hasAutoIncPK=true, $options = null) {
 		if(!isset($this->tableList[strtolower($table)])) {
-			$this->transCreateTable($table);
+			$this->transCreateTable($table, $options);
 			Database::alteration_message("Table $table: created","created");
 		} else {
-			$this->checkAndRepairTable($table);
+			$this->checkAndRepairTable($table, $options);
+			
+			// Check if options changed
+			if($options && isset($options[$this->class])) {
+				$tableOptionsChanged = false;
+				if(preg_match('/ENGINE=([^\s]*)/', $options[$this->class], $alteredEngineMatches)) {
+					$alteredEngine = $alteredEngineMatches[1];
+					$tableStatus = DB::query(sprintf(
+						'SHOW TABLE STATUS WHERE "Name" = \'%s\'',
+						$table
+					))->first();
+					$tableOptionsChanged = ($tableStatus['Engine'] != $alteredEngine);
+				}
+				
+				if($tableOptionsChanged) {
+					$this->transAlterTable($table, $options);
+				}
+			}
 		}
 
 		//DB ABSTRACTION: we need to convert this to a db-specific version:
@@ -253,7 +292,7 @@ abstract class Database extends Object {
 				$fieldObj->setTable($table);
 				$fieldObj->requireField();
 			}
-		}	
+		}
 
 		// Create custom indexes
 		if($indexSchema) {
