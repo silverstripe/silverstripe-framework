@@ -475,29 +475,31 @@ JS;
 		
 	function getFieldsFor($childData) {
 		// See if our parent class has any many_many relations by this source class
-		if($this->sourceID()) {
-			$parentClass = DataObject::get_by_id($this->getParentClass(), $this->sourceID());
-		} else {
-			$parentClass = singleton($this->getParentClass());
-		}
-		
-		$manyManyRelations = $parentClass->many_many();
-		$manyManyRelationName = null;
-		$manyManyComponentSet = null;
-		
-		$hasManyRelations = $parentClass->has_many();
-		$hasManyRelationName = null;
-		$hasManyComponentSet = null;
-		
-		if($manyManyRelations) foreach($manyManyRelations as $relation => $class) {
-			if($class == $this->sourceClass()) {
-				$manyManyRelationName = $relation;
+		if($this->getParentClass()) {
+			if($this->sourceID()) {
+				$parentClass = DataObject::get_by_id($this->getParentClass(), $this->sourceID());
+			} else {
+				$parentClass = singleton($this->getParentClass());
 			}
-		}
-		
-		if($hasManyRelations) foreach($hasManyRelations as $relation => $class) {
-			if($class == $this->sourceClass()) {
-				$hasManyRelationName = $relation;
+			
+			$manyManyRelations = $parentClass->many_many();
+			$manyManyRelationName = null;
+			$manyManyComponentSet = null;
+
+			$hasManyRelations = $parentClass->has_many();
+			$hasManyRelationName = null;
+			$hasManyComponentSet = null;
+
+			if($manyManyRelations) foreach($manyManyRelations as $relation => $class) {
+				if($class == $this->sourceClass()) {
+					$manyManyRelationName = $relation;
+				}
+			}
+
+			if($hasManyRelations) foreach($hasManyRelations as $relation => $class) {
+				if($class == $this->sourceClass()) {
+					$hasManyRelationName = $relation;
+				}
 			}
 		}
 		
@@ -510,7 +512,7 @@ JS;
 		
 		$detailFields = $this->getCustomFieldsFor($childData);
 
-		if($hasManyRelationName && $childData->ID) {
+		if($this->getParentClass() && $hasManyRelationName && $childData->ID) {
 			$hasManyComponentSet = $parentClass->getComponents($hasManyRelationName);
 		}
 
