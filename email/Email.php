@@ -142,13 +142,13 @@ class Email extends ViewableData {
 	 * Create a new email.
 	 */
 	public function __construct($from = null, $to = null, $subject = null, $body = null, $bounceHandlerURL = null, $cc = null, $bcc = null) {
-		$this->from = $from;
-		$this->to = $to;
-		$this->subject = $subject;
-		$this->body = $body;
-		$this->cc = $cc;
-		$this->bcc = $bcc;
-		$this->setBounceHandlerURL($bounceHandlerURL);
+		if($from != null) $this->from = $from;
+		if($to != null) $this->to = $to;
+		if($subject != null) $this->subject = $subject;
+		if($body != null) $this->body = $body;
+		if($cc != null) $this->cc = $cc;
+		if($bcc != null) $this->bcc = $bcc;
+		if($bounceHandlerURL != null) $this->setBounceHandlerURL($bounceHandlerURL);
 	}
 	
 	public function attachFileFromString($data, $filename, $mimetype = null) {
