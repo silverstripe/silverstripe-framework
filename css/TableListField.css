@@ -159,14 +159,24 @@ table.CMSList tbody td.current td {
 }
 
 .TableListField div.utility {
-	margin-top: 0.5em;
+	margin-top: 1em;
 }
-
-.TableListField div.utility a {
-	font-size: 9px;
-	border: 1px solid #aaa;
-	padding: 2px;
-}
+	.TableListField div.utility a {
+		text-decoration: none;
+		background-image:url(../../cms/images/textures/ToolBar.png);
+		border-color: #ccc #999 #999 #ccc;
+		border-style: double;
+		color: #333;
+		cursor: pointer;
+		font-size: 11px;
+		margin-right: 2px;
+		overflow: visible;
+		padding: 3px 2px;
+		width: auto;	
+	}
+		.TableListField div.utility a:hover {
+			background: #fff;
+		}
 
 form .TableField .message {
 	width: auto;
