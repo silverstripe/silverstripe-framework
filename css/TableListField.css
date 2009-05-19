@@ -76,7 +76,7 @@ table.TableField tfoot td,
 table.CMSList tbody td,
 table.CMSList tfoot td {
 	border: 1px solid #f1efe2;
-	padding: 5px;
+	padding: 2px 4px;
 }
 
 .TableListField table.data tfoot tr.addtogrouprow td {
