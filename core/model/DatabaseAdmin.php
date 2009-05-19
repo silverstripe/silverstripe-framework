@@ -143,7 +143,11 @@ class DatabaseAdmin extends Controller {
 		if($quiet) {
 			DB::quiet();
 		} else {
-			echo "<h2>Building Database</h2>";
+			$conn = DB::getConn();
+			$databaseName = ($conn->hasMethod('currentDatabase')) ? $conn->currentDatabase() : "";
+			
+			if(Director::is_cli()) echo "\n\nBuilding Database $databaseName\n\n";
+			else echo "<h2>Building Database $databaseName</h2>";
 		}
 
 		// Set up the initial database
