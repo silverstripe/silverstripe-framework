@@ -1243,7 +1243,7 @@ class Translatable extends DataObjectDecorator {
 	 * @deprecated 2.4 Use choose_site_locale()
 	 */
 	static function choose_site_lang($langsAvail=null) {
-		return self::choose_site_locale($langAvail);
+		return self::choose_site_locale($langsAvail);
 	}
 	
 	/**
