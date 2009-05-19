@@ -7,7 +7,6 @@
  * @version   $Id: Currency.php 6137 2007-08-19 14:55:27Z shreef $
  */
 
-set_include_path(get_include_path() . PATH_SEPARATOR . BASE_PATH . '/sapphire/thirdparty');
 require_once 'Zend/Currency.php';
 
 /**
@@ -88,8 +87,8 @@ class Money extends DBField implements CompositeDBField {
 	
 	function addToQuery(&$query) {
 		parent::addToQuery($query);
-		$query->select[] = $this->name . "Amount";
-		$query->select[] = $this->name . "Currency";
+		$query->select[] = sprintf('"%sAmount"', $this->name);
+		$query->select[] = sprintf('"%sCurrency"', $this->name);
 	}
 
 	function setValue($value,$record=null) {
