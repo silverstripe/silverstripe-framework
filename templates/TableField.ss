@@ -30,8 +30,8 @@
 		<% if Can(add) %>
 			<tr>
 				<td colspan="$ItemCount">
-					<a href="#" class="addrow" title="<% _t('ADD', 'Add a new row') %>"><img src="cms/images/add.gif" alt="<% _t('ADD') %>" />
-						<% sprintf(_t('ADDITEM'),$Title) %> 
+					<a href="#" class="addrow" title="<% _t('ADD', 'Add a new row') %>"><img src="cms/images/add.gif" alt="<% _t('ADD','Add a new row') %>" />
+						<% sprintf(_t('ADDITEM','Add %s'),$Title) %>
 					</a>
 				</td>
 				<td style="display: none"></td>
