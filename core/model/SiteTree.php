@@ -1246,7 +1246,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 					/*, new TreeMultiselectField("MultipleParents", "Page appears within", "SiteTree")*/
 					new CheckboxField("ProvideComments", $this->fieldLabel('ProvideComments')),
 					new LiteralField(
-						"", 
+						"HomepageForDomainInfo", 
 						"<p>" . 
 							_t('SiteTree.NOTEUSEASHOMEPAGE', 
 							"Use this page as the 'home page' for the following domains: 
