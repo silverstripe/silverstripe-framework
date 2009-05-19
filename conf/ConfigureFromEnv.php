@@ -15,10 +15,14 @@
  *  - SS_DATABASE_PREFIX: A prefix to add to the database name.
  * 
  * There is one more setting that is intended to be used by people who work on SilverStripe.
- *  - SS_DATABASE_CHOOSE_NAME: Boolean.  If true, then the system will choose a default database name for you if one isn't give
+ *  - SS_DATABASE_CHOOSE_NAME: Boolean/Int.  If set, then the system will choose a default database name for you if one isn't give
  *    in the $database variable.  The database name will be "SS_" followed by the name of the folder into which you have installed
  *    SilverStripe.  If this is enabled, it means that the phpinstaller will work out of the box without the installer needing to
  *    alter any files.  This helps prevent accidental changes to the environment.
+ * 
+ *    If SS_DATABASE_CHOOSE_NAME is an integer greater than one, then an ancestor folder will be used for the database name.  This
+ *    is handy for a site that's hosted from /sites/examplesite/www or /buildbot/allmodules-2.3/build.  If it's 2, the parent folder
+ *    will be chosen; if it's 3 the grandparent, and so on.
  * 
  * You can configure the environment with this define:
  *  - SS_ENVIRONMENT_TYPE: The environment type: dev, test or live.
@@ -58,7 +62,11 @@ global $database;
 if(!isset($database) || !$database) {
 	// if SS_DATABASE_CHOOSE_NAME 
 	if(defined('SS_DATABASE_CHOOSE_NAME') && SS_DATABASE_CHOOSE_NAME) {
-		$database = "SS_" . basename(dirname(dirname($_SERVER['SCRIPT_FILENAME'])));
+		$loopCount = (int)SS_DATABASE_CHOOSE_NAME;
+		$databaseDir = dirname($_SERVER['SCRIPT_FILENAME']);
+		for($i=0;$i<$loopCount;$i++) $databaseDir = dirname($databaseDir);
+		$database = "SS_" . basename($databaseDir);
+		$database = str_replace('.','',$database);
 	}
 }
 	
