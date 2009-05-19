@@ -340,26 +340,47 @@ class Image extends File {
 	}
 	
 	/**
-	 * Remove all of the formatted cached images.
-	 * Should be called by any method that updates the current image.
+	 * Remove all of the formatted cached images for this image.
+	 * @return int The number of formatted images deleted
 	 */
 	public function deleteFormattedImages() {
-		if($this->Filename) {
-			$numDeleted = 0;
-			$methodNames = $this->allMethodNames();
-			$numDeleted = 0;
-			foreach($methodNames as $methodName) {
-				if(substr($methodName,0,8) == 'generate') {
-					$format = substr($methodName,8);
-					$cacheFile = $this->cacheFilename($format);
-					if(Director::fileExists($cacheFile)) {
-						unlink(Director::getAbsFile($cacheFile));
-						$numDeleted++;
+		if(!$this->Filename) return 0;
+		
+		$numDeleted = 0;
+		$methodNames = $this->allMethodNames();
+		$cachedFiles = array();
+		
+		$folder = $this->ParentID ? $this->Parent()->Filename : 'assets/';
+		$cacheDir = Director::getAbsFile($folder . '_resampled/');
+		
+		if(is_dir($cacheDir)) {
+			if($handle = opendir($cacheDir)) {
+				while(($file = readdir($handle)) !== false) {
+					// ignore all entries starting with a dot
+					if(substr($file, 0, 1) != '.' && is_file($cacheDir . $file)) {
+						$cachedFiles[] = $file;
+					}
+				}
+				closedir($handle);
+			}
+		}
+		
+		foreach($methodNames as $methodName) {
+			if(substr($methodName, 0, 8) == 'generate') {
+				$format = substr($methodName, 8);
+				$pattern = '/^' . $format . '[^\-]*\-' . $this->Name . '$/';
+				foreach($cachedFiles as $cfile) {
+					if(preg_match($pattern, $cfile)) {
+						if(Director::fileExists($cacheDir . $cfile)) {
+							unlink($cacheDir . $cfile);
+							$numDeleted++;
+						}
 					}
 				}
 			}
-			return $numDeleted;
 		}
+		
+		return $numDeleted;
 	}
 	
 	/**
