@@ -692,6 +692,10 @@ class Director {
 	 *
 	 * Dev mode can also be forced by putting ?isDev=1 in your URL, which will ask you to log in and then push the site into dev
 	 * mode for the remainder of the session. Putting ?isDev=0 onto the URL can turn it back.
+	 * 
+	 * Test mode can also be forced by putting ?isTest=1 in your URL, which will ask you to log in and then push the site into test
+	 * mode for the remainder of the session. Putting ?isTest=0 onto the URL can turn it back.
+	 * 
 	 * Generally speaking, these methods will be called from your _config.php file.
 	 * 
 	 * Once the environment type is set, it can be checked with {@link Director::isDev()}, {@link Director::isTest()}, and
@@ -774,12 +778,6 @@ class Director {
 		if(isset($_SERVER['HTTP_HOST']) && in_array($_SERVER['HTTP_HOST'], Director::$dev_servers))  {
 			return true;
 		}
-		/*
-		// Check if we are running on one of the test servers
-		if(in_array($_SERVER['HTTP_HOST'], Director::$test_servers))  {
-			return true;
-		}
-		*/
 		
 		return false;
 	}
@@ -789,6 +787,15 @@ class Director {
 	 * For information about environment types, see {@link Director::set_environment_type()}.
 	 */
 	static function isTest() {
+		// Use ?isTest=1 to get test access on the live server, or explicitly set your environment
+		if(isset($_GET['isTest'])) {
+			if(Security::database_is_ready()) {
+				BasicAuth::requireLogin("SilverStripe developer access.  Use your CMS login", "ADMIN");
+				$_SESSION['isTest'] = $_GET['isTest'];
+			} else {
+				return true;
+			}
+		}
 		if(self::isDev()) return false;
 		
 		if(self::$environment_type) {
