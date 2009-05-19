@@ -3031,6 +3031,9 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * 	'MySQLDatabase' => 'ENGINE=MyISAM'
 	 * )
 	 * </code>
+	 *
+	 * Caution: This API is experimental, and might not be
+	 * included in the next major release. Please use with care.
 	 * 
 	 * @var array
 	 */
