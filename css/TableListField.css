@@ -75,7 +75,7 @@ table.TableField tfoot td,
 table.CMSList tbody td,
 table.CMSList tfoot td {
 	border: 1px solid #f1efe2;
-	padding: 0 5px;
+	padding: 2px 4px;
 }
 
 .TableListField table.data tfoot tr.addtogrouprow td {
@@ -114,7 +114,7 @@ table.TableField tbody tr.over td,
 .TableListField table.data tbody tr.over td, 
 .TableListField table.data tbody tr.over td input,
 table.CMSList tbody td.over td{
-	background-color: #FFCC66;
+	background-color: #FFFFBB;
 }
 
 table.TableField tbody tr.current td, 
