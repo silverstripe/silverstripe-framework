@@ -1105,15 +1105,20 @@ class DataObjectSet_Iterator implements Iterator {
 	/**
 	 * Return the object in this set offset by $offset from the iterator pointer.
 	 * @param int $offset The offset.
-	 * @return DataObject
+	 * @return DataObject|boolean DataObject of offset item, or boolean FALSE if not found
 	 */
 	public function getOffset($offset) {
 		$keys = array_keys($this->items);
 		foreach($keys as $i => $key) {
 			if($key == key($this->items)) break;
 		}
-		$requiredKey = $keys[$i + $offset];
-		return $this->items [$requiredKey];
+		
+		if(isset($keys[$i + $offset])) {
+			$requiredKey = $keys[$i + $offset];
+			return $this->items[$requiredKey];
+		}
+		
+		return false;
 	}
 }
 
