@@ -176,13 +176,6 @@ class Email extends ViewableData {
 		}
 	}
 
-	/**
-	 * @deprecated 2.3 Not used anywhere else
-	 */
-	public function setFormat($format) {
-		user_error('Email->setFormat() is deprecated', E_USER_NOTICE);
-	}
-
 	public function Subject() {
 		return $this->subject;
 	}
