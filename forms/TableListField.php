@@ -957,7 +957,7 @@ JS
 				}
 				$fieldItem = new TableListField_Item($item, $this);
 				
-				$fields = $fieldItem->Fields();
+				$fields = $fieldItem->Fields(false);
 				$columnData = array();
 				if($fields) foreach($fields as $field) {
 					$value = $field->Value;
@@ -1241,16 +1241,16 @@ class TableListField_Item extends ViewableData {
 		return $this->parent;
 	}
 	
-	function Fields() {
+	function Fields($xmlSafe = true) {
 		$list = $this->parent->FieldList();
 		foreach($list as $fieldName => $fieldTitle) {
 			$value = "";
 
 			// This supports simple FieldName syntax
 			if(strpos($fieldName,'.') === false) {
-				$value = ($this->item->XML_val($fieldName)) ? $this->item->XML_val($fieldName) : $this->item->$fieldName;
-			// This support the syntax fieldName = Relation.RelatedField
-			} else {					
+				$value = ($this->item->XML_val($fieldName) && $xmlSafe) ? $this->item->XML_val($fieldName) : $this->item->$fieldName;
+			} else {
+				// This supports the syntax fieldName = Relation.RelatedField
 				$fieldNameParts = explode('.', $fieldName)	;
 				$tmpItem = $this->item;
 				for($j=0;$j<sizeof($fieldNameParts);$j++) {
@@ -1268,7 +1268,7 @@ class TableListField_Item extends ViewableData {
 			if(array_key_exists($fieldName, $this->parent->fieldCasting)) {
 				$value = $this->parent->getCastedValue($value, $this->parent->fieldCasting[$fieldName]);
 			}
-
+			
 			// formatting
 			$item = $this->item;
 			if(array_key_exists($fieldName, $this->parent->fieldFormatting)) {
@@ -1285,7 +1285,6 @@ class TableListField_Item extends ViewableData {
 				}
 			}
 			
-						
 			$fields[] = new ArrayData(array(
 				"Name" => $fieldName, 
 				"Title" => $fieldTitle,

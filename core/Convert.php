@@ -22,35 +22,47 @@
  */
 class Convert extends Object {
 	
+	/**
+	 * Convert a value to be suitable for an XML attribute.
+	 * 
+	 * @param array|string $val String to escape, or array of strings
+	 * @return array|string
+	 */
 	static function raw2att($val) {
 		if(is_array($val)) {
 			foreach($val as $k => $v) $val[$k] = self::raw2att($v);
 			return $val;
-			
 		} else {
-			return str_replace(array('&','"',"'",'<','>'),array('&amp;','&quot;','&#39;','&lt;','&gt;'),$val);
+			return str_replace(array('&','"',"'",'<','>'), array('&amp;','&quot;','&apos;','&lt;','&gt;'), $val);
 		}
 	}
 	
 	/**
+	 * Convert a value to be suitable for an HTML attribute.
+	 * 
+	 * This is useful for converting human readable values into
+	 * a value suitable for an ID or NAME attribute.
+	 * 
 	 * @see http://www.w3.org/TR/REC-html40/types.html#type-cdata
-	 * @uses raw2att
+	 * @uses Convert::raw2att()
+	 * @param array|string $val String to escape, or array of strings
+	 * @return array|string
 	 */
 	static function raw2htmlatt($val) {
 		if(is_array($val)) {
-			foreach($val as $k => $v) $val[$k] = self::raw2att($v);
+			foreach($val as $k => $v) $val[$k] = self::raw2htmlatt($v);
 			return $val;
-			
 		} else {
-			$val = str_replace(array('&','"',"'",'<','>'),array('&amp;','&quot;','&#39;','&lt;','&gt;'),$val);
-			$val = preg_replace('/[^a-zA-Z0-9\-_]*/','', $val);
+			$val = self::raw2att($val);
+			$val = preg_replace('/[^a-zA-Z0-9\-_]*/', '', $val);
 			return $val;
 		}
 	}
 	
 	/**
 	 * Ensure that text is properly escaped for XML.
-	 *
+	 * 
+	 * @see http://www.w3.org/TR/REC-xml/#dt-escape
 	 * @param array|string $val String to escape, or array of strings
 	 * @return array|string
 	 */
@@ -59,7 +71,7 @@ class Convert extends Object {
 			foreach($val as $k => $v) $val[$k] = self::raw2xml($v);
 			return $val;
 		} else {
-			return str_replace(array('&', '<', '>', "\n"), array('&amp;', '&lt;', '&gt;', '<br />'), $val);
+			return str_replace(array('&','<','>',"\n",'"',"'"), array('&amp;','&lt;','&gt;','<br />','&quot;','&apos;'), $val);
 		}
 	}
 	
@@ -79,7 +91,7 @@ class Convert extends Object {
 	}
 	
 	/**
-	 * Uses the PHP5.2 native json_encode function if available,
+	 * Uses the PHP 5.2 native json_encode function if available,
 	 * otherwise falls back to the Services_JSON class.
 	 * 
 	 * @see http://pear.php.net/pepr/pepr-proposal-show.php?id=198
@@ -99,19 +111,17 @@ class Convert extends Object {
 		}
 	}
 	
-	
 	static function raw2sql($val) {
 		if(is_array($val)) {
 			foreach($val as $k => $v) $val[$k] = self::raw2sql($v);
 			return $val;
-			
 		} else {
 			return DB::getConn()->addslashes($val);
 		}
 	}
 
 	/**
-	 * Convert XML to raw text
+	 * Convert XML to raw text.
 	 * @uses html2raw()
 	 * @todo Currently &#xxx; entries are stripped; they should be converted
 	 */
@@ -119,18 +129,13 @@ class Convert extends Object {
 		if(is_array($val)) {
 			foreach($val as $k => $v) $val[$k] = self::xml2raw($v);
 			return $val;
-			
 		} else {
-
-			// More complex text needs to use html2raw instaed
+			// More complex text needs to use html2raw instead
 			if(strpos($val,'<') !== false) return self::html2raw($val);
 			
-			// For simpler stuff, a simple str_replace will do
-			else {
-				$converted = str_replace(array('&amp;', '&lt;', '&gt;', '&apos;'), array('&', '<', '>', "'"), $val);
-				$converted = ereg_replace('&#[0-9]+;', '', $converted);
-				return $converted;
-			}
+			$converted = str_replace(array('&amp;','&lt;','&gt;','&quot;','&apos;'), array('&','<','>','"',"'"), $val);
+			$converted = ereg_replace('&#[0-9]+;', '', $converted);
+			return $converted;
 		}
 	}
 	
@@ -191,7 +196,7 @@ class Convert extends Object {
 	}
 	
 	/**
-	 * Uses the PHP5.2 native json_decode function if available,
+	 * Uses the PHP 5.2 native json_decode function if available,
 	 * otherwise falls back to the Services_JSON class.
 	 * 
 	 * @see http://pear.php.net/pepr/pepr-proposal-show.php?id=198
@@ -200,13 +205,9 @@ class Convert extends Object {
 	 * @return mixed JSON safe string
 	 */
 	static function json2obj($val) {
-		//if(function_exists('json_decode')) {
-		//	return json_decode($val);	
-		//} else {
-			require_once(Director::baseFolder() . '/sapphire/thirdparty/json/JSON.php');			
-			$json = new Services_JSON();
-			return $json->decode($val);
-		//}
+		require_once(Director::baseFolder() . '/sapphire/thirdparty/json/JSON.php');			
+		$json = new Services_JSON();
+		return $json->decode($val);
 	}
 
 	/**
@@ -264,8 +265,6 @@ class Convert extends Object {
 		return '{' . implode( ', ', $result ) . '}';
 	}
 	
-
-	
 	/**
 	 * Create a link if the string is a valid URL
 	 * @param string The string to linkify
@@ -277,18 +276,6 @@ class Convert extends Object {
 		else
 			return $string;
 	}
-	
-	/**
-	 * Create a link if the string is a valid URL
-	 * @param string The string to linkify
-	 * @return A link to the URL if string is a URL
-	 */
-	/*static function mailtoIfMatch($string) {
-		if( preg_match( '/^[a-z+]+\:\/\/[a-zA-Z0-9$-_.+?&=!*\'()%]+$/', $string ) )
-			return "<a href=\"$string\">$string</a>";
-		else
-			return $string;
-	}*/
 	
 	/**
 	 * Simple conversion of HTML to plaintext.
