@@ -173,13 +173,6 @@ class CompositeField extends FormField {
 		return $ret;
 	}
 
-	/**
-	 * @deprecated 2.3 Use insertBefore
-	 */
-	public function insertBeforeRecursive($field, $insertBefore) {
-		return $this->children->insertBefore($field, $insertBefore);
-	}
-
 	public function insertAfter($field, $insertAfter) {
 		$ret = $this->children->insertAfter($field, $insertAfter);
 		$this->sequentialSet = null;
