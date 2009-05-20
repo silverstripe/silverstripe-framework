@@ -1030,16 +1030,7 @@ class Member extends DataObject {
 			}
 		}
 	}
-	
-	/**
-	 * @deprecated 2.3 Use inGroup()
-	 */
-	public function isInGroup($groupID) {
-		user_error('Member::isInGroup() is deprecated. Please use inGroup() instead.', E_USER_NOTICE);
-		return $this->inGroup($groupID);
-	}
 }
-
 
 /**
  * Special kind of {@link ComponentSet} that has special methods for
