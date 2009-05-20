@@ -1581,27 +1581,6 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 			: false;
 	}
 
-
-	/**
-	 * Look for ghost parents
-	 */
-	function MultipleParents() {
-		$parents = new GhostPage_ComponentSet($this->Parent);
-		$parents->setOwner($this);
-		$ghostPages = DataObject::get("GhostPage", "\"LinkedPageID\" = '$this->ID'");
-
-		if($ghostPages) {
-			foreach($ghostPages as $ghostPage) {
-				// Ignore root ghost-pages
-				if($p = $ghostPage->getParent())
-					$parents->push($p);
-			}
-		}
-
-		return $parents;
-	}
-
-
 	/**
 	 * Get the class dropdown used in the CMS to change the class of a page.
 	 * This returns the list of options in the drop as a Map from class name
