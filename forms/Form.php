@@ -969,13 +969,6 @@ class Form extends RequestHandler {
 	}
 
 	/**
-	 * @deprecated 2.3 Use resetField()
-	 */
-	function resetData($fieldName, $fieldValue){
-		return $this->resetField($fieldName, $fieldValue);
-	}
-	
-	/**
 	 * Resets a specific field to its passed default value.
 	 * Does NOT clear out all submitted data in the form.
 	 * 
