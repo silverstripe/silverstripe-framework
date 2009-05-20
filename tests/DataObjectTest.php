@@ -154,6 +154,21 @@ class DataObjectTest extends SapphireTest {
 			$this->assertTrue($comment->ParentID == $page->ID);
 		}
 	}
+
+	function testHasOneRelationship() {
+		$team1 = $this->fixture->objFromFixture('DataObjectTest_Team', 'team1');
+		$player1 = $this->fixture->objFromFixture('DataObjectTest_Player', 'player1');
+	   
+		// Add a captain to team 1
+		$team1->setField('CaptainID', $player1->ID);
+		$team1->write();
+		
+		$this->assertEquals($player1->ID, $team1->Captain()->ID, 'The captain exists for team 1');
+		$this->assertEquals($player1->ID, $team1->getComponent('Captain')->ID, 'The captain exists through the component getter');
+
+		$this->assertEquals($team1->Captain()->FirstName, 'Player 1', 'Player 1 is the captain');
+		$this->assertEquals($team1->getComponent('Captain')->FirstName, 'Player 1', 'Player 1 is the captain');
+	}
 	
 	/**
 	 * @todo Test removeMany() and addMany() on $many_many relationships
@@ -577,7 +592,7 @@ class DataObjectTest_Player extends Member implements TestOnly {
 	static $has_one = array(
 		'FavouriteTeam' => 'DataObjectTest_Team',
 	);
-
+	
 	static $belongs_many_many = array(
 		'Teams' => 'DataObjectTest_Team'
 	);
