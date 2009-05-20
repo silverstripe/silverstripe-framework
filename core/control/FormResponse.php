@@ -22,8 +22,9 @@
  * @todo Force a specific execution order ($forceTop, $forceBottom)Ω
  * @todo Extension to return different formats, e.g. JSON or XML
  * 
- * @deprecated 2.3 Use markup or JSON to transfer state to the client, and react with javascript callbacks instead
- *
+ * WARNING: This should only be used within the CMS context. Please use markup or JSON to transfer state to the client,
+ * and react with javascript callbacks instead in other situations.
+ * 
  * @package forms
  * @subpackage core
  */
