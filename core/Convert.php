@@ -229,25 +229,29 @@ class Convert extends Object {
 		$xml = new SimpleXMLElement($val);
 		return self::recursiveXMLToArray($xml);
 	}
-	
+
+	/**
+	 * Function recursively run from {@link Convert::xml2array()}
+	 * @uses SimpleXMLElement
+	 */
 	protected static function recursiveXMLToArray($xml) {
-		if (get_class($xml) == 'SimpleXMLElement') {
-	       $attributes = $xml->attributes();
-	       foreach($attributes as $k=>$v) {
-	           if ($v) $a[$k] = (string) $v;
-	       }
-	       $x = $xml;
-	       $xml = get_object_vars($xml);
-	   }
-	   if (is_array($xml)) {
-	       if (count($xml) == 0) return (string) $x; // for CDATA
-	       foreach($xml as $key=>$value) {
-	           $r[$key] = self::recursiveXMLToArray($value);
-	       }
-	       if (isset($a)) $r['@'] = $a;    // Attributes
-	       return $r;
-	   }
-	   return (string) $xml;
+		if(get_class($xml) == 'SimpleXMLElement') {
+			$attributes = $xml->attributes();
+			foreach($attributes as $k => $v) {
+				if($v) $a[$k] = (string) $v;
+			}
+			$x = $xml;
+			$xml = get_object_vars($xml);
+		}
+		if(is_array($xml)) {
+			if(count($xml) == 0) return (string) $x; // for CDATA
+			foreach($xml as $key => $value) {
+				$r[$key] = self::recursiveXMLToArray($value);
+			}
+			if(isset($a)) $r['@'] = $a; // Attributes
+			return $r;
+		}
+		return (string) $xml;
 	}
 
 	static function array2json( $array ) {
