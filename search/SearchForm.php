@@ -15,12 +15,6 @@
 class SearchForm extends Form {
 	
 	/**
-	 * @var boolean $showInSearchTurnOn
-	 * @deprecated 2.3 SiteTree->ShowInSearch should always be respected
-	 */
-	protected $showInSearchTurnOn;
-	
-	/**
 	 * @var int $pageLength How many results are shown per page.
 	 * Relies on pagination being implemented in the search results template.
 	 */
@@ -38,11 +32,8 @@ class SearchForm extends Form {
 	 * @param FieldSet $fields Optional, defaults to a single field named "Search". Search logic needs to be customized
 	 *  if fields are added to the form.
 	 * @param FieldSet $actions Optional, defaults to a single field named "Go".
-	 * @param boolean $showInSearchTurnOn DEPRECATED 2.3
 	 */
-	function __construct($controller, $name, $fields = null, $actions = null, $showInSearchTurnOn = true) {
-		$this->showInSearchTurnOn = $showInSearchTurnOn;
-		
+	function __construct($controller, $name, $fields = null, $actions = null) {
 		if(!$fields) {
 			$fields = new FieldSet(
 				new TextField('Search', _t('SearchForm.SEARCH', 'Search')
@@ -183,7 +174,8 @@ class SearchForm extends Form {
 	 		else $extraFilters['File'] = $extraFilters['SiteTree'];
 	 	}
 	 	
-	 	if($this->showInSearchTurnOn)	$extraFilters['SiteTree'] .= " AND showInSearch <> 0";
+		// Always ensure that only pages with ShowInSearch = 1 can be searched
+		$extraFilters['SiteTree'] .= " AND ShowInSearch <> 0";
 
 		$start = isset($_GET['start']) ? (int)$_GET['start'] : 0;
 		$limit = $start . ", " . (int) $pageLength;
