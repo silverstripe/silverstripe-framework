@@ -152,7 +152,6 @@ abstract class DataObjectDecorator extends Extension {
 	 * @deprecated 2.4 Use extraStatics()
 	 */
 	function extraDBFields() {
-		user_error('DataObjectDecorator::extraDBFields() is deprecated. Please use extraStatics() instead.', E_USER_NOTICE);
 		return array();
 	}
 
