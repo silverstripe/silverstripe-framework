@@ -70,9 +70,10 @@ abstract class DataObjectDecorator extends Extension {
 	}
 	
 	/**
-	 * @deprecated 2.3 Use loadExtraStatics()
+	 * @deprecated 2.4 Use loadExtraStatics()
 	 */
 	function loadExtraDBFields() {
+		user_error('DataObjectDecorator::loadExtraDBFields() is deprecated. Please use loadExtraStatics() instead.', E_USER_NOTICE);
 		return $this->loadExtraStatics();
 	}
 
@@ -148,9 +149,10 @@ abstract class DataObjectDecorator extends Extension {
 	}
 	
 	/**
-	 * @deprecated 2.3 Use extraStatics()
+	 * @deprecated 2.4 Use extraStatics()
 	 */
 	function extraDBFields() {
+		user_error('DataObjectDecorator::extraDBFields() is deprecated. Please use extraStatics() instead.', E_USER_NOTICE);
 		return array();
 	}
 
