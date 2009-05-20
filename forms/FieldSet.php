@@ -344,13 +344,6 @@ class FieldSet extends DataObjectSet {
 	}
 
 	/**
-	 * @deprecated 2.3 Use insertBefore()
-	 */
-	public function insertBeforeRecursive($item, $name, $level = 0) {
-		return $this->insertBefore($item, $name);
-	}
-	
-	/**
 	 * Inserts a field after a particular field in a FieldSet.
 	 *
 	 * @param FormField $item The form field to insert
