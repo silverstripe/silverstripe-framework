@@ -51,7 +51,7 @@ class Form extends RequestHandler {
 	protected static $current_action;
 	
 	/**
-	 * @var Dataobject $record Populated by {@link loadDataFrom()} or {@link loadNonBlankDataFrom()}.
+	 * @var Dataobject $record Populated by {@link loadDataFrom()}.
 	 */
 	protected $record;
 
@@ -792,7 +792,7 @@ class Form extends RequestHandler {
 
 	/**
 	 * Returns the DataObject that has given this form its data
-	 * through {@link loadDataFrom()} or {@link loadNonBlankDataFrom()}.
+	 * through {@link loadDataFrom()}.
 	 * 
 	 * @return DataObject
 	 */
@@ -920,13 +920,6 @@ class Form extends RequestHandler {
 				$field->setValue($val, $data);
 			}
 		}
-	}
-
-	/**
-	 * @deprecated 2.3 Use loadDataFrom()
-	 */
-	function loadNonBlankDataFrom($data) {
-		return $this->loadDataFrom($data);
 	}
 	
 	/**
