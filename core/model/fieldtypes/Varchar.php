@@ -31,14 +31,6 @@ class Varchar extends DBField {
 	}
 	
 	/**
-	 * @deprecated 2.3 Use ATT_val()
-	 */
-	function Attr() {
-		user_error("Varchar::Attr() is deprecated.  Use ATT_val() instead.", E_USER_NOTICE);
-		return Convert::raw2att($this->value);
-	}
-	
-	/**
 	 * Ensure that the given value is an absolute URL.
 	 */
 	function URL() {
