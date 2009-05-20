@@ -155,14 +155,21 @@ class Convert extends Object {
 	}
 
 	/**
+	 * Convert a JSON string into an array.
+	 * 
 	 * @uses json2obj
+	 * @param string $val JSON string to convert
+	 * @return array|boolean
 	 */
 	static function json2array($val) {
 		$json = self::json2obj($val);
+		if(!$json) return false;
+		
 		$arr = array();
 		foreach($json as $k => $v) {
 			$arr[$k] = $v;
 		}
+		
 		return $arr;
 	}
 	
