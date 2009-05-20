@@ -178,13 +178,6 @@ class ContentController extends Controller {
 	}
 
 	/**
-	 * @deprecated 2.3 Use $this->Level(2)->URLSegment
-	 */
-	public function Section2() {
-		return $this->Level(2)->URLSegment;
-	}
-
-	/**
 	 * Returns the default log-in form.
 	 *
 	 * @todo Check if here should be returned just the default log-in form or
