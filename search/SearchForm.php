@@ -21,11 +21,6 @@ class SearchForm extends Form {
 	protected $showInSearchTurnOn;
 	
 	/**
-	 * @deprecated 2.3 Use {@link $pageLength}.
-	 */
-	protected $numPerPage;
-	
-	/**
 	 * @var int $pageLength How many results are shown per page.
 	 * Relies on pagination being implemented in the search results template.
 	 */
@@ -280,8 +275,7 @@ class SearchForm extends Form {
 	 * @return int
 	 */
 	public function getPageLength() {
-		// legacy handling for deprecated $numPerPage
-		return (isset($this->numPerPage)) ? $this->numPerPage : $this->pageLength;
+		return $this->pageLength;
 	}
 
 }
