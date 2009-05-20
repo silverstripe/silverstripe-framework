@@ -127,19 +127,7 @@ class HTTP {
 	static function getImagesIn($content) {
 		return self::findByTagAndAttribute($content, array("img" => "src"));
 	}
-
-	/**
-	 * Outputs appropriate header for downloading a file
-	 * exits() after the call, so that no further output is given.
-	 * 
-	 * @deprecated 2.3 Return a HTTPRequest::send_file() object instead
-	 */
-	static function sendFileToBrowser($fileData, $fileName, $mimeType = false) {
-		user_error("HTTP::sendFileToBrowser() deprecated; return a HTTPRequest::send_file() object instead", E_USER_NOTICE);
-		HTTPRequest::send_file($fileData, $fileName, $mimeType)->output();
-		exit(0);
-	}
-
+	
 	/*
 	 * Get mime type based on extension
 	 */
