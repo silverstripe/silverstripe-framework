@@ -469,16 +469,6 @@ class Debug {
 		self::$log_errors_to = $logFile;
 	}
 	
-
-	/**
-	 * Deprecated.  Send live errors and warnings to the given address.
-	 * @deprecated 2.3 Use send_errors_to() instead.
-	 */
-	static function sendLiveErrorsTo($emailAddress) {
-		user_error('Debug::sendLiveErrorsTo() is deprecated. Use Debug::send_errors_to() instead.', E_USER_NOTICE);
-		if(!Director::isDev()) self::send_errors_to($emailAddress, true);
-	}
-	
 	static function caller() {
 		$bt = debug_backtrace();
 		$caller = $bt[2];
