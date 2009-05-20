@@ -156,6 +156,13 @@ require_once('core/control/Director.php');
 require_once('filesystem/Filesystem.php');
 require_once("core/Session.php");
 
+/**
+ * Add thirdparty include paths
+ */
+$path = Director::baseFolder().'/sapphire/parsers/';
+set_include_path(str_replace('.' . PATH_SEPARATOR, '.' . PATH_SEPARATOR . $path . PATH_SEPARATOR, get_include_path())); 
+set_include_path(get_include_path() . PATH_SEPARATOR . BASE_PATH . '/sapphire/thirdparty');
+
 ///////////////////////////////////////////////////////////////////////////////
 // MANIFEST
 
