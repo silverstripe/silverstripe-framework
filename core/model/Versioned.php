@@ -139,6 +139,14 @@ class Versioned extends DataObjectDecorator {
 	private static $archive_tables = array();
 	
 	/**
+	 * Called by {@link SapphireTest} when the database is reset.
+	 * @todo Reduce the coupling between this and SapphireTest, somehow.
+	 */
+	public static function on_db_reset() {
+		self::$archive_tables = array();
+	}
+	
+	/**
 	 * Create a temporary table mapping each database record to its version on the given date.
 	 * This is used by the versioning system to return database content on that date.
 	 * @param string $baseTable The base table.

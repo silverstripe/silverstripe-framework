@@ -233,6 +233,10 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 				// echo "Deleted temp database " . $dbConn->currentDatabase() . "\n";
 				$dbConn->dropDatabase();
 			}
+			
+			// Todo: it would be good to remove this inappropriate coupling, somehow.
+			// The versioned class keeps a static cache of information about temporary tables.
+			Versioned::on_db_reset();
 		}
 	}
 	
