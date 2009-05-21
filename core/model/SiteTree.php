@@ -1042,6 +1042,18 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		parent::onAfterWrite();
 	}
 	
+	function onBeforeDelete() {
+		parent::onBeforeDelete();
+		
+		// If deleting this page, delete all its children.
+		if($children = $this->Children()) {
+			foreach($children as $child) {
+				$child->delete();
+			}
+		}
+	}
+	
+	
 	function onAfterDelete() {
 		// Need to flush cache to avoid outdated versionnumber references
 		$this->flushCache();
@@ -1387,8 +1399,8 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 			}
 		}
 
-		if($this->IsDeletedFromStage) {
-			if($this->can('CMSEdit')) {
+		if($this->canEdit()) {
+			if($this->IsDeletedFromStage) {
 				if($this->ExistsOnLive) {
 					// "restore"
 					$actions->push(new FormAction('revert',_t('CMSMain.RESTORE','Restore')));
@@ -1398,13 +1410,11 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 					// "restore"
 					$actions->push(new FormAction('restore',_t('CMSMain.RESTORE','Restore')));
 				}
-			}
-		} else {
-			if($this->canEdit()) {
+			} else {
 				// "delete"
 				$actions->push($deleteAction = new FormAction('delete',_t('CMSMain.DELETE','Delete from the draft site')));
 				$deleteAction->addExtraClass('delete');
-				
+			
 				// "save"
 				$actions->push(new FormAction('save',_t('CMSMain.SAVE','Save')));
 			}

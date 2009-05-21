@@ -5,7 +5,7 @@
  */
 class SiteTreeTest extends SapphireTest {
 	static $fixture_file = 'sapphire/tests/SiteTreeTest.yml';
-	
+
 	/**
 	 * Test generation of the URLSegment values.
 	 *  - Turns things into lowercase-hyphen-format
@@ -80,6 +80,8 @@ class SiteTreeTest extends SapphireTest {
 		
 		$checkSiteTree = DataObject::get_one("SiteTree", "URLSegment = 'get-one-test-page'");
 		$this->assertEquals("V1", $checkSiteTree->Title);
+
+		Versioned::reading_stage($oldStage);
 	}
 	
 	function testChidrenOfRootAreTopLevelPages() {
@@ -188,7 +190,7 @@ class SiteTreeTest extends SapphireTest {
 		$this->assertEquals('Page', $requeriedPage->class);
 
 
-		$page2 = $this->objFromFixture('Page', 'staff');
+		$page2 = $this->objFromFixture('Page', 'products');
 		$page2ID = $page2->ID;
 		$page2->doUnpublish();
 		$page2->delete();
@@ -202,7 +204,7 @@ class SiteTreeTest extends SapphireTest {
 
 		Versioned::reading_stage('Stage');
 		$requeriedPage = DataObject::get_by_id("Page", $page2ID);
-		$this->assertEquals('Staff', $requeriedPage->Title);
+		$this->assertEquals('Products', $requeriedPage->Title);
 		$this->assertEquals('Page', $requeriedPage->class);
 		
 	}
@@ -217,6 +219,32 @@ class SiteTreeTest extends SapphireTest {
 		// Test the extraFilter argument
 		// Note: One day, it would be more appropriate to return null instead of false for queries such as these
 		$this->assertFalse(SiteTree::get_by_url("home", "1 = 2"));
+	}
+	
+
+	function testDeleteFromStageOperatesRecursively() {
+		$parentPage = $this->objFromFixture('Page', 'about');
+		$parentPage->delete();
+		
+		$this->assertFalse($this->objFromFixture('Page', 'about'));
+		$this->assertFalse($this->objFromFixture('Page', 'staff'));
+		$this->assertFalse($this->objFromFixture('Page', 'staffduplicate'));
+	}
+
+	function testDeleteFromLiveOperatesRecursively() {
+		$this->objFromFixture('Page', 'about')->doPublish();
+		$this->objFromFixture('Page', 'staff')->doPublish();
+		$this->objFromFixture('Page', 'staffduplicate')->doPublish();
+		
+		
+		$parentPage = $this->objFromFixture('Page', 'about');
+		$parentPage->doDeleteFromLive();
+		
+		Versioned::reading_stage('Live');
+		$this->assertFalse($this->objFromFixture('Page', 'about'));
+		$this->assertFalse($this->objFromFixture('Page', 'staff'));
+		$this->assertFalse($this->objFromFixture('Page', 'staffduplicate'));
+		Versioned::reading_stage('Stage');
 	}
 
 }
