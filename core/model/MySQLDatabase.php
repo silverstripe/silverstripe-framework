@@ -456,6 +456,8 @@ class MySQLDatabase extends Database {
 	 */
 	public function indexList($table) {
 		$indexes = DB::query("SHOW INDEXES IN \"$table\"");
+		$groupedIndexes = array();
+		$indexList = array();
 		
 		foreach($indexes as $index) {
 			$groupedIndexes[$index['Key_name']]['fields'][$index['Seq_in_index']] = $index['Column_name'];
@@ -472,10 +474,12 @@ class MySQLDatabase extends Database {
 				$groupedIndexes[$index['Key_name']]['type'] = '';
 			}
 		}
-		
-		foreach($groupedIndexes as $index => $details) {
-			ksort($details['fields']);
-			$indexList[$index] = $details['type'] . '(' . implode(',',$details['fields']) . ')';
+
+		if($groupedIndexes) {
+			foreach($groupedIndexes as $index => $details) {
+				ksort($details['fields']);
+				$indexList[$index] = $details['type'] . '(' . implode(',',$details['fields']) . ')';
+			}
 		}
 		
 		return $indexList;
