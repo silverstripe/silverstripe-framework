@@ -1267,6 +1267,8 @@ class TableListField_Item extends ViewableData {
 			// casting
 			if(array_key_exists($fieldName, $this->parent->fieldCasting)) {
 				$value = $this->parent->getCastedValue($value, $this->parent->fieldCasting[$fieldName]);
+			} elseif(is_object($value) && method_exists($value, 'Nice')) {
+				$value = $value->Nice();
 			}
 			
 			// formatting
