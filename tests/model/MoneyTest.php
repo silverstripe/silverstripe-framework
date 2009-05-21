@@ -15,6 +15,27 @@ class MoneyTest extends SapphireTest {
 	
 	static $fixture_file = 'sapphire/tests/model/MoneyTest.yml';
 	
+	function testCanOverwriteSettersWithNull() {
+		$obj = new MoneyTest_DataObject();
+
+		$m1 = new Money();
+		$m1->setAmount(987.65);
+		$m1->setCurrency('USD');
+		$obj->MyMoney = $m1;
+		$obj->write();
+		
+		$m2 = new Money();
+		$m2->setAmount(null);
+		$m2->setCurrency(null);
+		$obj->MyMoney = $m2;
+		$obj->write();
+
+		$moneyTest = DataObject::get_by_id('MoneyTest_DataObject',$obj->ID);
+		$this->assertTrue($moneyTest instanceof MoneyTest_DataObject);
+		$this->assertEquals('', $moneyTest->MyMoneyCurrency);
+		$this->assertEquals(0.0000, $moneyTest->MyMoneyAmount);
+	}
+	
 	/**
      * Write a Money object to the database, then re-read it to ensure it
      * is re-read properly.

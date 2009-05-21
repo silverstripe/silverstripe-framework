@@ -81,8 +81,17 @@ class Money extends DBField implements CompositeDBField {
 	}
 
 	function writeToManipulation(&$manipulation) {
-		$manipulation['fields'][$this->name.'Currency'] = $this->prepValueForDB($this->getCurrency());
-		$manipulation['fields'][$this->name.'Amount'] = $this->getAmount();
+		if($this->getCurrency()) {
+			$manipulation['fields'][$this->name.'Currency'] = $this->prepValueForDB($this->getCurrency());
+		} else {
+			$manipulation['fields'][$this->name.'Currency'] = DBField::create('Varchar', $this->getCurrency())->nullValue();
+		}
+		
+		if($this->getAmount()) {
+			$manipulation['fields'][$this->name.'Amount'] = $this->getAmount();
+		} else {
+			$manipulation['fields'][$this->name.'Amount'] = DBField::create('Decimal', $this->getAmount())->nullValue();
+		}
 	}
 	
 	function addToQuery(&$query) {
@@ -105,31 +114,40 @@ class Money extends DBField implements CompositeDBField {
 		} else if (is_array($value)) {
 			if (array_key_exists('Currency', $value)) {
 				$this->setCurrency($value['Currency']);
-				$this->isChanged = true;
 			}
 			if (array_key_exists('Amount', $value)) {
 				$this->setAmount($value['Amount']);
-				$this->isChanged = true;
 			}
 		} else {
-			user_error('Invalid value in Money->setValue()', E_USER_ERROR);
+			// @todo Allow to reset a money value by passing in NULL
+			//user_error('Invalid value in Money->setValue()', E_USER_ERROR);
 		}
+		
+		$this->isChanged = true;
 	}
 
 	/**
 	 * @return string
 	 */
 	function Nice($options = array()) {
-		return $this->currencyLib->toCurrency($this->getAmount(), $options);
+		$amount = $this->getAmount();
+		return (is_numeric($amount)) ? $this->currencyLib->toCurrency($amount, $options) : '';
 	}
 	
 	/**
 	 * @return string
 	 */
 	function NiceWithShortname($options = array()){
-		$shortName = $this->getShortName();
-		$symbol = $this->getSymbol();
-		return $shortName."(".$symbol.")"." ".$this->getAmount();
+		$options['display'] = Zend_Currency::USE_SHORTNAME;
+		return $this->Nice($options);
+	}
+	
+	/**
+	 * @return string
+	 */
+	function NiceWithName($options = array()){
+		$options['display'] = Zend_Currency::USE_NAME;
+		return $this->Nice($options);
 	}
 
 	/**
@@ -144,6 +162,7 @@ class Money extends DBField implements CompositeDBField {
 	 */
 	function setCurrency($currency) {
 		$this->currency = $currency;
+		$this->isChanged = true;
 	}
 	
 	/**
@@ -160,6 +179,7 @@ class Money extends DBField implements CompositeDBField {
 	 */
 	function setAmount($amount) {
 		$this->amount = (float)$amount;
+		$this->isChanged = true;
 	}
 	
 	/**
@@ -232,13 +252,6 @@ class Money extends DBField implements CompositeDBField {
 	function getAllowedCurrencies() {
 		return $this->allowedCurrencies;
 	}
-
-	/**
-	 * @todo Implement this
-	 */
-	function toString() {
-		
-	}
 	
 	/**
 	 * Returns a CompositeField instance used as a default
@@ -271,6 +284,16 @@ class Money extends DBField implements CompositeDBField {
 		$field->setID ($this->name);
 		
 		return $field;
+	}
+	
+	/**
+	 * For backwards compatibility reasons
+	 * (mainly with ecommerce module),
+	 * this returns the amount value of the field,
+	 * rather than a {@link Nice()} formatting.
+	 */
+	function __toString() {
+		return $this->getAmount();
 	}
 }
 ?>
