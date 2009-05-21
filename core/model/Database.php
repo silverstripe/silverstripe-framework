@@ -70,12 +70,13 @@ abstract class Database extends Object {
 	
 	/**
 	 * Create a new table.
-	 * The table will have a single field - the integer key ID.
-	 * @param string $table
-	 * @param array $fields
-	 * @param array $indexes
-	 * @param string $driver
-	 * @param array $options
+	 * @param $tableName The name of the table
+	 * @param $fields A map of field names to field types
+	 * @param $indexes A map of indexes
+	 * @param $options An map of additional options.  The available keys are as follows:
+	 *   - 'MSSQLDatabase'/'MySQLDatabase'/'PostgreSQLDatabase' - database-specific options such as "engine" for MySQL.
+	 *   - 'temporary' - If true, then a temporary table will be created
+	 * @return The table name generated.  This may be different from the table name, for example with temporary tables.
 	 */
 	abstract function createTable($table, $fields = null, $indexes = null, $options = null);
 	

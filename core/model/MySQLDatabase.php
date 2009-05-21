@@ -191,10 +191,14 @@ class MySQLDatabase extends Database {
 	}
 	
 	/**
-	 * @param string $table
-	 * @param array $fields
-	 * @param array $indexes
-	 * @param string $options
+	 * Create a new table.
+	 * @param $tableName The name of the table
+	 * @param $fields A map of field names to field types
+	 * @param $indexes A map of indexes
+	 * @param $options An map of additional options.  The available keys are as follows:
+	 *   - 'MSSQLDatabase'/'MySQLDatabase'/'PostgreSQLDatabase' - database-specific options such as "engine" for MySQL.
+	 *   - 'temporary' - If true, then a temporary table will be created
+	 * @return The table name generated.  This may be different from the table name, for example with temporary tables.
 	 */
 	public function createTable($table, $fields = null, $indexes = null, $options = null) {
 		$fieldSchemas = $indexSchemas = "";
@@ -204,11 +208,16 @@ class MySQLDatabase extends Database {
 		if($fields) foreach($fields as $k => $v) $fieldSchemas .= "\"$k\" $v,\n";
 		if($indexes) foreach($indexes as $k => $v) $indexSchemas .= $this->getIndexSqlDefinition($k, $v) . ",\n";
 
-		$this->query("CREATE TABLE \"$table\" (
+		// Switch to "CREATE TEMPORARY TABLE" for temporary tables
+		$temporary = empty($options['temporary']) ? "" : "TEMPORARY";
+
+		$this->query("CREATE $temporary TABLE \"$table\" (
 				$fieldSchemas
 				$indexSchemas
 				primary key (ID)
 			) {$addOptions}");
+		
+		return $table;
 	}
 
 	/**
@@ -723,6 +732,22 @@ class MySQLDatabase extends Database {
 	 */
 	function modifyIndex($index){
 		return $index;
+	}
+
+	/**
+	 * Returns a SQL fragment for querying a fulltext search index
+	 * @param $fields array The list of field names to search on
+	 * @param $keywords string The search query
+	 * @param $booleanSearch A MySQL-specific flag to switch to boolean search
+	 */
+	function fullTextSearchSQL($fields, $keywords, $booleanSearch = false) {
+		$boolean = $booleanSearch ? "IN BOOLEAN MODE" : "";
+		$fieldNames = '"' . implode('", "', $fields) . '"';
+
+	 	$SQL_keywords = Convert::raw2sql($keywords);
+		$SQL_htmlEntityKeywords = Convert::raw2sql(htmlentities($keywords));
+
+		return "(MATCH ($fieldNames) AGAINST ('$SQL_keywords' $boolean) + MATCH ($fieldNames) AGAINST ('$SQL_htmlEntityKeywords' $boolean))";
 	}
 }
 

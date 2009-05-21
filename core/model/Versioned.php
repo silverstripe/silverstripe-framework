@@ -119,10 +119,10 @@ class Versioned extends DataObjectDecorator {
 			}
 
 			// Link to the version archived on that date
-			$this->requireArchiveTempTable($baseTable, $date);
-			$query->from["_Archive$baseTable"] = "INNER JOIN \"_Archive$baseTable\"
-				ON \"_Archive$baseTable\".\"RecordID\" = \"{$baseTable}_versions\".\"RecordID\" 
-				AND \"_Archive$baseTable\".\"Version\" = \"{$baseTable}_versions\".\"Version\"";
+			$archiveTable = $this->requireArchiveTempTable($baseTable, $date);
+			$query->from[$archiveTable] = "INNER JOIN \"$archiveTable\"
+				ON \"$archiveTable\".\"ID\" = \"{$baseTable}_versions\".\"RecordID\" 
+				AND \"$archiveTable\".\"Version\" = \"{$baseTable}_versions\".\"Version\"";
 
 		// Get a specific stage
 		} else if(Versioned::$reading_stage && Versioned::$reading_stage != $this->defaultStage 
@@ -134,6 +134,11 @@ class Versioned extends DataObjectDecorator {
 	}
 	
 	/**
+	 * Keep track of the archive tables that have been created 
+	 */
+	private static $archive_tables = array();
+	
+	/**
 	 * Create a temporary table mapping each database record to its version on the given date.
 	 * This is used by the versioning system to return database content on that date.
 	 * @param string $baseTable The base table.
@@ -141,20 +146,24 @@ class Versioned extends DataObjectDecorator {
 	 * @todo Ensure that this is DB abstracted
 	 */
 	protected static function requireArchiveTempTable($baseTable, $date = null) {
-		DB::query("CREATE TEMPORARY TABLE IF NOT EXISTS \"_Archive$baseTable\" (
-				\"RecordID\" INT NOT NULL PRIMARY KEY,
-				\"Version\" INT NOT NULL
-			)");
-	
-		if(!DB::query("SELECT COUNT(*) FROM \"_Archive$baseTable\"")->value()) {
+		if(!isset(self::$archive_tables[$baseTable])) {
+			self::$archive_tables[$baseTable] = DB::createTable("_Archive$baseTable", array(
+				"ID" => "INT NOT NULL",
+				"Version" => "INT NOT NULL",
+			), null, array('temporary' => true));
+		}
+		
+		if(!DB::query("SELECT COUNT(*) FROM \"" . self::$archive_tables[$baseTable] . "\"")->value()) {
 			if($date) $dateClause = "WHERE \"LastEdited\" <= '$date'";
 			else $dateClause = "";
 
-			DB::query("INSERT INTO \"_Archive$baseTable\"
+			DB::query("INSERT INTO \"" . self::$archive_tables[$baseTable] . "\"
 				SELECT \"RecordID\", max(\"Version\") FROM \"{$baseTable}_versions\"
 				$dateClause
 				GROUP BY \"RecordID\"");
 		}
+		
+		return self::$archive_tables[$baseTable];
 	}
 
 	/**
@@ -781,10 +790,10 @@ class Versioned extends DataObjectDecorator {
 		// Build query
 		$query = $SNG->buildVersionSQL($filter, $sort);
 		$baseTable = ClassInfo::baseDataClass($class);
-		self::requireArchiveTempTable($baseTable);
-		$query->from["_Archive$baseTable"] = "INNER JOIN `_Archive$baseTable`
-			ON `_Archive$baseTable`.RecordID = `{$baseTable}_versions`.RecordID 
-			AND `_Archive$baseTable`.Version = `{$baseTable}_versions`.Version";
+		$archiveTable = self::requireArchiveTempTable($baseTable);
+		$query->from[$archiveTable] = "INNER JOIN \"$archiveTable\"
+			ON \"$archiveTable\".\"ID\" = \"{$baseTable}_versions\".\"RecordID\"
+			AND \"$archiveTable\".\"Version\" = \"{$baseTable}_versions\".\"Version\"";
 		
 		// Process into a DataObjectSet
 		$result = $SNG->buildDataObjectSet($query->execute());
