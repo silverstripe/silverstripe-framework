@@ -202,7 +202,8 @@ class MySQLDatabase extends Database {
 	 */
 	public function createTable($table, $fields = null, $indexes = null, $options = null) {
 		$fieldSchemas = $indexSchemas = "";
-		$addOptions = (isset($options[$this->class])) ? $options[$this->class] : null;
+		
+		$addOptions = empty($options[$this->class]) ? "ENGINE=MyISAM" : $options[$this->class];
 		
 		if(!isset($fields['ID'])) $fields['ID'] = "int(11) not null auto_increment";
 		if($fields) foreach($fields as $k => $v) $fieldSchemas .= "\"$k\" $v,\n";
