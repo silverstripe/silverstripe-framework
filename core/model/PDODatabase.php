@@ -279,7 +279,7 @@ class PDODatabase extends Database {
 	 * @var string $tableName The name of the table.
 	 * @return void.
 	 */
-	public function createTable($tableName, $fields = null, $indexes = null) {
+	public function createTable($tableName, $fields = null, $indexes = null, $options = null) {
 		$fieldSchemas = $indexSchemas = "";
 		if ($fields) {
 			foreach($fields as $k => $v) $fieldSchemas .= "\"$k\" $v,\n";
