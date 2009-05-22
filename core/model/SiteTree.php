@@ -65,7 +65,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		"MenuTitle" => "Varchar(100)",
 		"Content" => "HTMLText",
 		"MetaTitle" => "Varchar(255)",
-		"MetaDescription" => "Varchar(255)",
+		"MetaDescription" => "Text",
 		"MetaKeywords" => "Varchar(255)",
 		"ExtraMeta" => "HTMLText",
 		"ShowInMenus" => "Boolean",
@@ -1223,8 +1223,8 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 						),
 						new HeaderField('MetaTagsHeader',$this->fieldLabel('MetaTagsHeader')),
 						new TextField("MetaTitle", $this->fieldLabel('MetaTitle')),
+						new TextareaField("MetaKeywords", $this->fieldLabel('MetaKeywords'), 1),
 						new TextareaField("MetaDescription", $this->fieldLabel('MetaDescription')),
-						new TextareaField("MetaKeywords", $this->fieldLabel('MetaKeywords')),
 						new TextareaField("ExtraMeta",$this->fieldLabel('ExtraMeta'))
 					)
 				),
