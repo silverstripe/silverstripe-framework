@@ -68,16 +68,6 @@ class Text extends DBField {
 	}
 	
 	/**
-	 * @deprecated. Please use {@link LimitWordCount()}
-	 */
-	function LimitWordCountPlainText($numWords = 26) {
-		$ret = $this->LimitWordCount( $numWords );
-		// Use LimitWordCountXML() instead!
-		// return Convert::raw2xml($ret);
-		return $ret;
-	}
-	
-	/**
 	 * Limit the number of words of the current field's
 	 * content. This is XML safe, so characters like &
 	 * are converted to &amp;
