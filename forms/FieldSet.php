@@ -288,7 +288,7 @@ class FieldSet extends DataObjectSet {
 		else $remainder = null;
 		
 		foreach($this->items as $child) {
-			if($name == $child->Name() || $name == $child->id) {
+			if(trim($name) == trim($child->Name()) || $name == $child->id) {
 				if($remainder) {
 					if($child->isComposite()) {
 						return $child->fieldByName($remainder);
@@ -313,7 +313,7 @@ class FieldSet extends DataObjectSet {
 	public function dataFieldByName($name) {
 		if($dataFields = $this->dataFields()) {
 			foreach($dataFields as $child) {
-				if($name == $child->Name() || $name == $child->id) return $child;
+				if(trim($name) == trim($child->Name()) || $name == $child->id) return $child;
 			}
 		}                                 
 	}
