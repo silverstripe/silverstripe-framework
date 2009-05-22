@@ -15,6 +15,14 @@ class MoneyTest extends SapphireTest {
 	
 	static $fixture_file = 'sapphire/tests/model/MoneyTest.yml';
 	
+	function testLoadFromFixture() {
+		$obj = $this->objFromFixture('MoneyTest_DataObject', 'test1');
+		
+		$this->assertType('Money', $obj->MyMoney);
+		$this->assertEquals($obj->MyMoney->getCurrency(), 'EUR');
+		$this->assertEquals($obj->MyMoney->getAmount(), 1.23);
+	}
+	
 	function testCanOverwriteSettersWithNull() {
 		$obj = new MoneyTest_DataObject();
 
