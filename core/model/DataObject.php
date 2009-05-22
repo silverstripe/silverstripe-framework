@@ -877,11 +877,9 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 									$fieldObj = DBField::create('Varchar', $this->record[$fieldName], $fieldName);
 								}
 
-								// CompositeDBFields handle their own value storage; regular fields need to be
-								// re-populated from the database
-								if(!$fieldObj instanceof CompositeDBField) {
-									$fieldObj->setValue($this->record[$fieldName], $this->record);
-								}
+								// Both CompositeDBFields and regular fields need to be repopulated
+								$fieldObj->setValue($this->record[$fieldName], $this->record);
+
 								if($class != $baseTable || $fieldName!='ID')
 									$fieldObj->writeToManipulation($manipulation[$class]);
 							}
