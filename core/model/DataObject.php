@@ -392,10 +392,10 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @return string User friendly singular name of this DataObject
 	 */
 	function singular_name() {
-		$name = $this->stat('singular_name');
-		if(!$name) {
-			$name = ucwords(trim(strtolower(ereg_replace('([A-Z])',' \\1',$this->class))));
+		if(!$name = $this->stat('singular_name')) {
+			$name = ucwords(trim(strtolower(preg_replace('/_?([A-Z])/', ' $1', $this->class))));
 		}
+		
 		return $name;
 	}
 

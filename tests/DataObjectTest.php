@@ -641,7 +641,26 @@ class DataObjectTest extends SapphireTest {
 			'Position' => 'Varchar(100)'
 		));
 	}
-
+	
+	/**
+	 * Tests that singular_name() generates sensible defaults.
+	 */
+	public function testSingularName() {
+		$assertions = array (
+			'DataObjectTest_Player'       => 'Data Object Test Player',
+			'DataObjectTest_Team'         => 'Data Object Test Team',
+			'DataObjectTest_WithDefaults' => 'Data Object Test With Defaults'
+		);
+		
+		foreach($assertions as $class => $expectedSingularName) {
+			$this->assertEquals (
+				$expectedSingularName,
+				singleton($class)->singular_name(),
+				"Assert that the singular_name for '$class' is correct."
+			);
+		}
+	}
+	
 }
 
 class DataObjectTest_Player extends Member implements TestOnly {
