@@ -221,12 +221,9 @@ class Controller extends RequestHandler {
 	 * Then it looks for the action method.  The action is taken from $this->urlParams['Action'] - for this reason, it's important
 	 * to have $Action included in your Director rule
 	 * 
-	 * If $requestParams['executeForm'] is set, then the Controller assumes that we're processing a form.  This is usually
-	 * set by adding ?executeForm=XXX to the form's action URL.  Form processing differs in the following ways:
-	 *  - The action name will be the name of the button clicked.  If no button-click can be detected, the first button in the
-	 *    list will be assumed.
-	 *  - If the given action method doesn't exist on the controller, Controller will look for that method on the Form object.
-	 *    this lets developers package both a form and its action handlers in a single subclass of Form.
+	 * $requestParams['executeForm'] support was removed, make the following change in your URLs: 
+	 *  "/?executeForm=FooBar" -> "/FooBar" 
+	 * Also make sure "FooBar" is in the $allowed_actions of your controller class.
 	 * 
 	 * NOTE: You should rarely need to overload run() - this kind of change is only really appropriate for things like nested
 	 * controllers - {@link ModelAsController} and {@link RootURLController} are two examples here.  If you want to make more
