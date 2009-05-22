@@ -32,9 +32,9 @@ class FieldSet extends DataObjectSet {
 		$itemsArr = (!is_array($items) || count(func_get_args()) > 1) ? func_get_args() : $items;
 		parent::__construct($itemsArr);
 		
-		if(isset($this->items)&&count($this->items)){
+		if(isset($this->items) && count($this->items)) {
 			foreach($this->items as $item) {
-				if(isset($item)&&is_a($item,"FormField")){
+				if(isset($item) && is_a($item, 'FormField')) {
 					$item->setContainerFieldSet($this);
 				}
 			}
