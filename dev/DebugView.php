@@ -69,7 +69,7 @@ class DebugView {
 	 * Render HTML header for development views
 	 */
 	public function writeHeader() {
-		echo '<!DOCTYPE html><html><head><title>'. $_SERVER['REQUEST_METHOD'] . ' ' .$_SERVER['REQUEST_URI'] .'</title>';
+		echo '<!DOCTYPE html><html><head><title>' . htmlentities($_SERVER['REQUEST_METHOD'] . ' ' . $_SERVER['REQUEST_URI']) . '</title>';
 		echo '<style type="text/css">';
 		echo 'body { background-color:#eee; margin:0; padding:0; font-family:Helvetica,Arial,sans-serif; }';
 		echo '.info { border-bottom:1px dotted #333; background-color:#ccdef3; margin:0; padding:6px 12px; }';
