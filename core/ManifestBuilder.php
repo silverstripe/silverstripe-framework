@@ -17,9 +17,6 @@ if(!defined('MANIFEST_FILE')) define("MANIFEST_FILE", TEMP_FOLDER . "/manifest-"
  * This information is cached so that it need not be regenerated on every
  * pageview.
  * 
- * {@link ManifestBuilder::compileManifest()} is called by {@link main.php} 
- * whenever {@link ManifestBuilder::staleManifest()} returns true.
- *
  * @see main.php, __autoload(), SSViewer, Requirements::themedCSS()
  * @package sapphire
  * @subpackage core

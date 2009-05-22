@@ -167,7 +167,6 @@ class DatabaseAdmin extends Controller {
 			}
 
 			DB::createDatabase($connect, $username, $password, $database);
-			// ManifestBuilder::compileManifest();
 		}
 
 		// Build the database.  Most of the hard work is handled by DataObject
