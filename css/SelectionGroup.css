@@ -7,7 +7,7 @@
 	float : left;
 	clear : both;
 }
-.SelectionGroup li input {
+.SelectionGroup li input.selector {
 	width: 20px;
 	float : left;
 }
