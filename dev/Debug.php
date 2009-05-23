@@ -323,7 +323,7 @@ class Debug {
 		$lines = array_slice($lines, $offset, 16, true);
 		$reporter->writeSourceFragment($lines, $errline);
 
-		$reporter->writeTrace($lines);
+		$reporter->writeTrace(($errcontext ? $errcontext : debug_backtrace()));
 		$reporter->writeFooter();
 		exit(1);
 	}
