@@ -1844,6 +1844,13 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	public function getChangedFields($databaseFieldsOnly = false, $changeLevel = 1) {
 		$changedFields = array();
 		
+		// Update the changed array with references to changed obj-fields
+		foreach($this->record as $k => $v) {
+			if(is_object($v) && method_exists($v, 'isChanged') && $v->isChanged()) {
+				$this->changed[$k] = true;
+			}
+		}
+		
 		if($databaseFieldsOnly) {
 			$customDatabaseFields = $this->customDatabaseFields();
 			$fields = array_intersect_key($this->changed, $customDatabaseFields);

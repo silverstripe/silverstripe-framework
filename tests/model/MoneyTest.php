@@ -23,6 +23,13 @@ class MoneyTest extends SapphireTest {
 		$this->assertEquals($obj->MyMoney->getAmount(), 1.23);
 	}
 	
+	function testDataObjectChangedFields() {
+		$obj = $this->objFromFixture('MoneyTest_DataObject', 'test1');
+		$obj->MyMoney->setAmount(99);
+		$changed = $obj->getChangedFields();
+		$this->assertContains('MyMoney', array_keys($changed));
+	}
+	
 	function testCanOverwriteSettersWithNull() {
 		$obj = new MoneyTest_DataObject();
 
