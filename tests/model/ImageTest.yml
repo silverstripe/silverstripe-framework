@@ -1,0 +1,8 @@
+Image:
+    imageWithTitle:
+        Title: This is a image Title
+        Filename: sapphire/tests/model/testimages/test_image.png
+    imageWithoutTitle:
+        Filename: sapphire/tests/model/testimages/test_image.png
+    imageWithoutTitleContainingDots: 
+        Filename: sapphire/tests/model/testimages/test.image.with.dots.png

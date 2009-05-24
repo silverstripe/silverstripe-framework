@@ -102,6 +102,15 @@ class Image extends File {
 			$url = $this->URL();
 			$title = ($this->Title) ? $this->Title : $this->Filename;
 			
+			if ($this->Title) {
+				$title = $this->Title;
+			}
+			else { 
+				// use the file name (without path and extension) for alt atttribute when the title is not defined
+				$title = $this->Filename;
+				if (preg_match("/([^\/]*)\.[a-zA-Z0-9]{1,6}$/", $title, $matches)) $title = $matches[1]; 
+			}
+			
 			return "<img src=\"$url\" alt=\"$title\" />";
 		}
 	}
