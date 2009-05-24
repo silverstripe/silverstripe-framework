@@ -65,3 +65,4 @@ SearchContextTest_AllFilterTypes:
         CollectionMatch: ExistingCollectionValue
         StartsWith: 12345-6789
         EndsWith: abcd-efgh-ijkl
+        FulltextField: one two three
