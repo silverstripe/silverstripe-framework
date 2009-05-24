@@ -47,7 +47,7 @@ class TextareaField extends FormField {
 			return $this->createTag(
 				'span',
 				$attributes,
-				($this->value) ? Convert::raw2xml($this->value) : '<i>(' . _t('FormField.NONE', 'none') . ')</i>'
+				($this->value ? $this->value : '<i>(' . _t('FormField.NONE', 'none') . ')</i>')
 			);
 		} else {
 			$attributes = array(
@@ -60,7 +60,7 @@ class TextareaField extends FormField {
 			
 			if($this->disabled) $attributes['disabled'] = 'disabled';
 			
-			return $this->createTag('textarea', $attributes, Convert::raw2xml($this->value));
+			return $this->createTag('textarea', $attributes, $this->value);
 		}
 	}
 	
