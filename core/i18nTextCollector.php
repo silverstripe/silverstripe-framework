@@ -192,9 +192,12 @@ class i18nTextCollector extends Object {
 			$includeName = $reg[1];
 			$includeFileName = "{$includeName}.ss";
 			$filePath = SSViewer::getTemplateFileByType($includeName, 'Includes');
-			$includeContent = file_get_contents($filePath);
+			if(!$filePath) $filePath = SSViewer::getTemplateFileByType($includeName, 'main');
+			if($filePath) {
+				$includeContent = file_get_contents($filePath);
+				$entitiesArr = array_merge($entitiesArr,(array)$this->collectFromTemplate($includeContent, $module, $includeFileName));
+			}
 			// @todo Will get massively confused if you include the includer -> infinite loop
-			$entitiesArr = array_merge($entitiesArr,(array)$this->collectFromTemplate($includeContent, $module, $includeFileName));
 		}
 
 		// @todo respect template tags (< % _t() % > instead of _t())
