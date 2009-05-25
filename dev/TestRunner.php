@@ -56,7 +56,7 @@ class TestRunner extends Controller {
 		if (!self::$default_reporter) self::set_reporter(Director::is_cli() ? 'CliDebugView' : 'DebugView');
 		
 		if(!hasPhpUnit()) {
-			die("Please install PHPUnit using pear"));
+			die("Please install PHPUnit using pear");
 		}
 	}
 	
