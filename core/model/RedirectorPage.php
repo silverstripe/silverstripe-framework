@@ -62,7 +62,7 @@ class RedirectorPage extends Page {
 	function redirectionLink() {
 		if($this->RedirectionType == 'External') {
 			if($this->ExternalURL) {
-				return Convert::raw2att($this->ExternalURL);
+				return $this->ExternalURL;
 			}
 			
 		} else {
