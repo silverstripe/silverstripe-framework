@@ -117,7 +117,6 @@ class MoneyTest extends SapphireTest {
 		}
 		*/
 
-		/*
 		$INR = new Money();
 		$INR->setLocale('de_AT');
 		$INR->setCurrency('INR');
@@ -129,7 +128,6 @@ class MoneyTest extends SapphireTest {
 		$this->assertSame('Rs. 0,00', $INR->Nice());
 		$INR->setAmount(-3);
 		$this->assertSame('-Rs. 3,00', $INR->Nice());
-		*/
 	}
 
 	public function testGetSign() {
