@@ -54,6 +54,10 @@ class TestRunner extends Controller {
 		parent::init();
 		ManifestBuilder::load_test_manifest();
 		if (!self::$default_reporter) self::set_reporter(Director::is_cli() ? 'CliDebugView' : 'DebugView');
+		
+		if(!hasPhpUnit()) {
+			die("Please install PHPUnit using pear"));
+		}
 	}
 	
 	public function Link() {
@@ -63,16 +67,12 @@ class TestRunner extends Controller {
 	/**
 	 * Run all test classes
 	 */
-	function all() {
-		if(hasPhpUnit()) {
-			$tests = ClassInfo::subclassesFor('SapphireTest');
-			array_shift($tests);
-			unset($tests['FunctionalTest']);
-		
-			$this->runTests($tests);
-		} else {
-			echo "Please install PHPUnit using pear";
-		}
+	function all() {		
+		$tests = ClassInfo::subclassesFor('SapphireTest');
+		array_shift($tests);
+		unset($tests['FunctionalTest']);
+	
+		$this->runTests($tests);
 	}
 	
 	/**
@@ -106,16 +106,12 @@ class TestRunner extends Controller {
 	}
 	
 	function coverage() {
-		if(hasPhpUnit()) {
-			ManifestBuilder::load_all_classes();
-			$tests = ClassInfo::subclassesFor('SapphireTest');
-			array_shift($tests);
-			unset($tests['FunctionalTest']);
-		
-			$this->runTests($tests, true);
-		} else {
-			echo "Please install PHPUnit using pear";
-		}
+		ManifestBuilder::load_all_classes();
+		$tests = ClassInfo::subclassesFor('SapphireTest');
+		array_shift($tests);
+		unset($tests['FunctionalTest']);
+	
+		$this->runTests($tests, true);
 	}
 	
 	function cleanupdb() {
