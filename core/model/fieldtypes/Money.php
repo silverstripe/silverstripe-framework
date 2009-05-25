@@ -101,16 +101,16 @@ class Money extends DBField implements CompositeDBField {
 	}
 
 	function setValue($value,$record=null) {
-		if($record && isset($record[$this->name . 'Currency']) && isset($record[$this->name . 'Amount'])) {
+		if ($value instanceof Money) {
+			$this->setCurrency($value->getCurrency());
+			$this->setAmount($value->getAmount());
+		} else if($record && isset($record[$this->name . 'Currency']) && isset($record[$this->name . 'Amount'])) {
 			if($record[$this->name . 'Currency'] && $record[$this->name . 'Amount']) {
 				$this->setCurrency($record[$this->name . 'Currency']);
 				$this->setAmount($record[$this->name . 'Amount']);
 			} else {
 				$this->value = $this->nullValue();
 			}
-		} elseif ($value instanceof Money) {
-			$this->setCurrency($value->getCurrency());
-			$this->setAmount($value->getAmount());
 		} else if (is_array($value)) {
 			if (array_key_exists('Currency', $value)) {
 				$this->setCurrency($value['Currency']);
@@ -266,25 +266,8 @@ class Money extends DBField implements CompositeDBField {
 	 * @return FormField
 	 */
 	public function scaffoldFormField($title = null) {
-		$fieldAmount = new NumericField($this->name."Amount", 'Amount');
-
-		$allowedCurrencies = $this->getAllowedCurrencies();
-		if($allowedCurrencies) {
-			$fieldCurrency = new DropdownField(
-				$this->name."Currency", 
-				'Currency',
-				array_combine($allowedCurrencies,$allowedCurrencies)
-			);
-		} else {
-			$fieldCurrency = new TextField($this->name."Currency", 'Currency');
-		}
-		
-		$field = new FieldGroup(
-			$fieldAmount,
-			$fieldCurrency
-		);
-		
-		$field->setID ($this->name);
+		$field = new MoneyField($this->name);
+		$field->setAllowedCurrencies($this->getAllowedCurrencies());
 		
 		return $field;
 	}
