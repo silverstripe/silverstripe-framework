@@ -5,9 +5,10 @@
 .SelectionGroup li {
 	list-style-type: none;
 	float : left;
+	width: 100%;
 	clear : both;
 }
-.SelectionGroup li input {
+.SelectionGroup li input.selector {
 	width: 20px;
 	float : left;
 }
