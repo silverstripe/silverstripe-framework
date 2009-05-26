@@ -13,18 +13,22 @@ abstract class DataObjectDecorator extends Extension {
 	 * which can be decorated onto. This list is
 	 * limited for security and performance reasons.
 	 *
+	 * Keys are the static names, and the values are whether or not the value is an array that should
+	 * be merged.
+	 *
 	 * @var array
 	 */
 	protected static $decoratable_statics = array(
-		'db', 
-		'has_one', 
-		'indexes', 
-		'defaults', 
-		'has_many', 
-		'many_many', 
-		'belongs_many_many', 
-		'many_many_extraFields',
-		'searchable_fields',
+		'db' => true, 
+		'has_one' => true, 
+		'indexes' => true, 
+		'defaults' => true, 
+		'has_many' => true, 
+		'many_many' => true, 
+		'belongs_many_many' => true, 
+		'many_many_extraFields' => true,
+		'searchable_fields' => true,
+		'api_access' => false,
 	);
 	
 	/**
@@ -53,14 +57,19 @@ abstract class DataObjectDecorator extends Extension {
 		if(Object::has_extension($this->owner->parentClass(), $this->class)) return;
 
 		if($fields = $this->extraStatics()) {
-			foreach($fields as $relation => $fields) {
-				if(in_array($relation, self::$decoratable_statics)) {
-					// Can't use add_static_var() here as it would merge the array rather than replacing
-					Object::set_static (
-						$this->owner->class,
-						$relation,
-						array_merge((array) Object::get_static($this->owner->class, $relation), $fields)
-					);
+			foreach($fields as $relation => $newVal) {
+				if(isset(self::$decoratable_statics[$relation])) {
+					$origVal = Object::get_static($this->owner->class, $relation);
+
+					// Array to be merged 
+					if(self::$decoratable_statics[$relation]) {
+						// Can't use add_static_var() here as it would merge the array rather than replacing
+						Object::set_static($this->owner->class, $relation, array_merge((array)$origVal, $newVal));
+
+					// Value to be overwritten
+					} else {
+						Object::set_static ($this->owner->class, $relation, $newVal);
+					}
 				}
 			}
 			

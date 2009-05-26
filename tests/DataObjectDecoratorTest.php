@@ -31,6 +31,13 @@ class DataObjectDecoratorTest extends SapphireTest {
 		$contact->delete();
 	}
 	
+	/**
+	 * Test that DataObject::$api_access can be set to true via a decorator
+	 */
+	function testApiAccessCanBeDecorated() {
+		$this->assertTrue(Object::get_static('DataObjectDecoratorTest_Member', 'api_access'));
+	}
+	
 	function testPermissionDecoration() {
 		// testing behaviour in isolation, too many sideeffects and other checks
 		// in SiteTree->can*() methods to test one single feature reliably with them
@@ -97,7 +104,8 @@ class DataObjectDecoratorTest_ContactRole extends DataObjectDecorator implements
 			),
 			'defaults' => array(
 				'Phone' => '123'
-			)
+			),
+			'api_access' => true,
 		);
 	}
 	
