@@ -23,12 +23,23 @@ abstract class Extension extends Object {
 	 * @var DataObject
 	 */
 	protected $owner;
+	
+	/**
+	 * The base class that this extension was applied to; $this->owner must be one of these
+	 * @var DataObject
+	 */
+	protected $ownerBaseClass;
 
 	/**
 	 * Set the owner of this decorator.
-	 * @param DataObject $owner
+	 * @param Object $owner The owner object,
+	 * @param string $ownerBaseClass The base class that the extension is applied to; this may be
+	 * the class of owner, or it may be a parent.  For example, if Versioned was applied to SiteTree,
+	 * and then a Page object was instantiated, $owner would be a Page object, but $ownerBaseClass
+	 * would be 'SiteTree'.
 	 */
-	function setOwner(Object $owner) {
+	function setOwner(Object $owner, $ownerBaseClass = null) {
+		$this->ownerBaseClass = $ownerBaseClass ? $ownerBaseClass : $owner->class;
 		$this->owner = $owner;
 	}
 	

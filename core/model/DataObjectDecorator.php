@@ -27,6 +27,8 @@ abstract class DataObjectDecorator extends Extension {
 		'searchable_fields',
 	);
 	
+	private static $extra_statics_loaded = array();
+	
 	/**
 	 * Set the owner of this decorator.
 	 * @param DataObject $owner
@@ -49,23 +51,23 @@ abstract class DataObjectDecorator extends Extension {
 	 * Load the extra database fields defined in extraStatics.
 	 */
 	function loadExtraStatics() {
-		// Don't apply DB fields if the parent object has this extension too
-		if(Object::has_extension($this->owner->parentClass(), $this->class)) return;
+		if(!empty(self::$extra_statics_loaded[$this->ownerBaseClass][$this->class])) return;
+		self::$extra_statics_loaded[$this->ownerBaseClass][$this->class] = true;
 
 		if($fields = $this->extraStatics()) {
 			foreach($fields as $relation => $fields) {
 				if(in_array($relation, self::$decoratable_statics)) {
 					// Can't use add_static_var() here as it would merge the array rather than replacing
 					Object::set_static (
-						$this->owner->class,
+						$this->ownerBaseClass,
 						$relation,
-						array_merge((array) Object::get_static($this->owner->class, $relation), $fields)
+						array_merge((array) Object::get_static($this->ownerBaseClass, $relation), $fields)
 					);
 				}
 			}
 			
-			DataObject::$cache_has_own_table[$this->owner->class]       = null;
-			DataObject::$cache_has_own_table_field[$this->owner->class] = null;
+			DataObject::$cache_has_own_table[$this->ownerBaseClass]       = null;
+			DataObject::$cache_has_own_table_field[$this->ownerBaseClass] = null;
 		}
 	}
 	
