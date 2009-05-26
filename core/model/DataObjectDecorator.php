@@ -33,7 +33,7 @@ abstract class DataObjectDecorator extends Extension {
 	 * Set the owner of this decorator.
 	 * @param DataObject $owner
 	 */
-	function setOwner(Object $owner) {
+	function setOwner(Object $owner, $ownerBaseClass = null) {
 		if(!($owner instanceof DataObject)) {
 			user_error(sprintf(
 				"DataObjectDecorator->setOwner(): Trying to decorate an object of class '%s' with '%s', 
@@ -44,7 +44,7 @@ abstract class DataObjectDecorator extends Extension {
 			return false;
 		}
 		
-		parent::setOwner($owner);
+		parent::setOwner($owner, $ownerBaseClass);
 	}
 	
 	/**
@@ -53,6 +53,9 @@ abstract class DataObjectDecorator extends Extension {
 	function loadExtraStatics() {
 		if(!empty(self::$extra_statics_loaded[$this->ownerBaseClass][$this->class])) return;
 		self::$extra_statics_loaded[$this->ownerBaseClass][$this->class] = true;
+
+		// If the extension has been manually applied to a subclass, we should ignore that.
+		if(Object::has_extension(get_parent_class($this->owner), $this->class)) return;
 
 		if($fields = $this->extraStatics()) {
 			foreach($fields as $relation => $fields) {
