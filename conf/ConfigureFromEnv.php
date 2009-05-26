@@ -8,11 +8,13 @@
  * your site.
  * 
  * Your database connection will be set up using these defines:
- *  - SS_DATABASE_SERVER: The database server to use, defaulting to localhost
+ *  - SS_DATABASE_CLASS:    The database class to use, MySQLDatabase, MSSQLDatabase, etc. defaults to
+ *                          MySQLDatabase
+ *  - SS_DATABASE_SERVER:   The database server to use, defaulting to localhost
  *  - SS_DATABASE_USERNAME: The databsae username (mandatory)
  *  - SS_DATABASE_PASSWORD: The database password (mandatory)
- *  - SS_DATABASE_SUFFIX: A suffix to add to the database name.
- *  - SS_DATABASE_PREFIX: A prefix to add to the database name.
+ *  - SS_DATABASE_SUFFIX:   A suffix to add to the database name.
+ *  - SS_DATABASE_PREFIX:   A prefix to add to the database name.
  * 
  * There is one more setting that is intended to be used by people who work on SilverStripe.
  *  - SS_DATABASE_CHOOSE_NAME: Boolean/Int.  If set, then the system will choose a default database name for you if one isn't give
@@ -73,7 +75,7 @@ if(!isset($database) || !$database) {
 if(defined('SS_DATABASE_USERNAME') && defined('SS_DATABASE_PASSWORD')) {
 	global $databaseConfig;
 	$databaseConfig = array(
-		"type" => "MySQLDatabase",
+		"type" => defined('SS_DATABASE_CLASS') ? SS_DATABASE_CLASS : "MySQLDatabase",
 		"server" => defined('SS_DATABASE_SERVER') ? SS_DATABASE_SERVER : 'localhost', 
 		"username" => SS_DATABASE_USERNAME, 
 		"password" => SS_DATABASE_PASSWORD, 
