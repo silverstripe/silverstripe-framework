@@ -1780,7 +1780,8 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 			$tag = '';
 		}
 
-		return ($tag) ? "<$tag>" . $this->MenuTitle . "</" . strtok($tag,' ') . ">" : $this->MenuTitle;
+		$text = Convert::raw2xml(str_replace(array("\n","\r"),"",$this->MenuTitle));
+		return ($tag) ? "<$tag>" . $text . "</" . strtok($tag,' ') . ">" : $text;
 	}
 
 	/**
