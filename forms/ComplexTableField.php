@@ -412,8 +412,8 @@ JS;
 	/**
 	 * Returns the db-fieldname of the currently used has_one-relationship.
 	 */
-	function getParentIdName( $parentClass, $childClass ) {
-		return $this->getParentIdNameRelation( $childClass, $parentClass, 'has_one' );
+	function getParentIdName($parentClass, $childClass) {
+		return $this->getParentIdNameRelation($childClass, $parentClass, 'has_one');
 	}
 	
 	/**
@@ -429,14 +429,15 @@ JS;
 	/**
 	 * Returns the db-fieldname of the currently used relationship.
 	 */
-	function getParentIdNameRelation( $parentClass, $childClass, $relation ){
-		if($this->parentIdName) return $this->parentIdName; 
+	function getParentIdNameRelation($parentClass, $childClass, $relation) {
+		if($this->parentIdName) return $this->parentIdName;
 		
-		$relations = singleton( $parentClass )->$relation();
-		$classes = ClassInfo::ancestry( $childClass );
-		foreach( $relations as $k => $v ) {
-			if( $v == $childClass )
-				return $k . 'ID';
+		$relations = singleton($parentClass)->$relation();
+		$classes = ClassInfo::ancestry($childClass);
+		if($relations) {
+			foreach($relations as $k => $v) {
+				if(array_key_exists($v, $classes)) return $k . 'ID';
+			}
 		}
 		return false;
 	}
@@ -930,8 +931,8 @@ class ComplexTableField_ItemRequest extends RequestHandler {
 	/**
 	 * Returns the db-fieldname of the currently used has_one-relationship.
 	 */
-	function getParentIdName( $parentClass, $childClass ) {
-		return $this->getParentIdNameRelation( $childClass, $parentClass, 'has_one' );
+	function getParentIdName($parentClass, $childClass) {
+		return $this->getParentIdNameRelation($childClass, $parentClass, 'has_one');
 	}
 	
 	/**
@@ -952,8 +953,10 @@ class ComplexTableField_ItemRequest extends RequestHandler {
 		
 		$relations = singleton($parentClass)->$relation();
 		$classes = ClassInfo::ancestry($childClass);
-		foreach($relations as $k => $v) {
-			if(array_key_exists($v, $classes)) return $k . 'ID';
+		if($relations) {
+			foreach($relations as $k => $v) {
+				if(array_key_exists($v, $classes)) return $k . 'ID';
+			}
 		}
 		return false;
 	}

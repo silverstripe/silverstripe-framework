@@ -15,14 +15,6 @@ class ComplexTableFieldTest extends FunctionalTest {
 	 */
 	protected $controller;
 	
-	/**
-	 * An instance of {@link Form} that is taken
-	 * from the test controller, used for testing.
-	 *
-	 * @var Form object
-	 */
-	protected $form;
-
 	function setUp() {
 		parent::setUp();
 		
@@ -34,10 +26,7 @@ class ComplexTableFieldTest extends FunctionalTest {
 		$field = $this->manyManyForm->dataFieldByName('Players');
 		$parser = new CSSContentParser($field->FieldHolder());
 		
-		/* There are 2 players (rows) in the table */
 		$this->assertEquals(count($parser->getBySelector('tbody tr')), 2, 'There are 2 players (rows) in the table');
-		
-		/* There are 2 CTF items in the DataObjectSet */
 		$this->assertEquals($field->Items()->Count(), 2, 'There are 2 CTF items in the DataObjectSet');
 	}
 	
@@ -54,16 +43,9 @@ class ComplexTableFieldTest extends FunctionalTest {
 			)
 		));
 
-		/* Retrieve the new player record we created */		
 		$newPlayer = DataObject::get_one('ComplexTableFieldTest_Player', "Name = 'Bobby Joe'");
-		
-		/* A new ComplexTableFieldTest_Player record was created, Name = "Bobby Joe" */
 		$this->assertNotNull($newPlayer, 'A new ComplexTableFieldTest_Player record was created, Name = "Bobby Joe"');
-		
-		/* Get the many-many related Teams to the new player that were automatically linked by CTF */
 		$teams = $newPlayer->getManyManyComponents('Teams');
-
-		/* Automatic many-many relation was set correctly on the new player */		
 		$this->assertEquals($teams->Count(), 1, 'Automatic many-many relation was set correctly on the new player');
 	}
 	
@@ -80,26 +62,16 @@ class ComplexTableFieldTest extends FunctionalTest {
 			)
 		));
 
-		/* Retrieve the new sponsor record we created */		
 		$newSponsor = DataObject::get_one('ComplexTableFieldTest_Sponsor', "Name = 'Jim Beam'");
-		
-		/* A new ComplexTableFieldTest_Sponsor record was created, Name = "Jim Beam" */
 		$this->assertNotNull($newSponsor, 'A new ComplexTableFieldTest_Sponsor record was created, Name = "Jim Beam"');
+		$this->assertEquals($newSponsor->TeamID, $team->ID, 'Automatic has-many/has-one relation was set correctly on the sponsor');
+		$this->assertEquals($newSponsor->getComponent('Team')->ID, $team->ID, 'Automatic has-many/has-one relation was set correctly on the sponsor');
 		
-		/* Get the has-one related Team to the new sponsor that were automatically linked by CTF */
-		$teamID = $newSponsor->TeamID;
-
-		/* Automatic many-many relation was set correctly on the new player */		
-		$this->assertTrue($teamID > 0, 'Automatic has-many/has-one relation was set correctly on the sponsor');
-
-		/* The other side of the relation works as well */
-		$team = DataObject::get_by_id('ComplexTableFieldTest_Team', $teamID);
-
-		/* Let's get the Sponsors component */		
-		$sponsor = $team->getComponents('Sponsors')->First();
-
-		/* The sponsor is the same as the one we added */
+		$team = DataObject::get_by_id('ComplexTableFieldTest_Team', $team->ID);
+		$sponsor = DataObject::get_by_id('ComplexTableFieldTest_Sponsor', $newSponsor->ID);
 		$this->assertEquals($newSponsor->ID, $sponsor->ID, 'The sponsor is the same as the one we added');
+		$foundTeam = $sponsor->getComponent('Team');
+		$this->assertEquals($team->ID, $foundTeam->ID, 'The team ID matches on the other side of the relation');
 	}
 	
 }
