@@ -101,7 +101,8 @@ class Money extends DBField implements CompositeDBField {
 	}
 
 	function setValue($value,$record=null) {
-		if ($value instanceof Money) {
+		// @todo Allow resetting value to NULL through Money $value field
+		if ($value instanceof Money && $value->hasValue()) {
 			$this->setCurrency($value->getCurrency());
 			$this->setAmount($value->getAmount());
 		} else if($record && isset($record[$this->name . 'Currency']) && isset($record[$this->name . 'Amount'])) {
@@ -268,6 +269,7 @@ class Money extends DBField implements CompositeDBField {
 	public function scaffoldFormField($title = null) {
 		$field = new MoneyField($this->name);
 		$field->setAllowedCurrencies($this->getAllowedCurrencies());
+		$field->setLocale($this->getLocale());
 		
 		return $field;
 	}
