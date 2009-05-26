@@ -185,6 +185,9 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @return array
 	 */
 	public static function custom_database_fields($class) {
+		// Ensure that statics are loaded from the decorators
+		singleton($class);
+
 		$fields = Object::uninherited_static($class, 'db');
 		$hasOne = Object::uninherited_static($class, 'has_one');
 	
@@ -911,7 +914,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 				if(isset($isNewRecord) && $isNewRecord && isset($manipulation[$baseTable])) {
 					$manipulation[$baseTable]['command'] = 'update';
 				}
-				
 				DB::manipulate($manipulation);
 
 				if(isset($isNewRecord) && $isNewRecord) {
@@ -2029,10 +2031,12 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @return bool
 	 */
 	public function has_own_table($dataClass) {
-		
 		// The condition below has the same effect as !is_subclass_of($dataClass,'DataObject'),
 		// which causes PHP < 5.3 to segfault in rare circumstances, see PHP bug #46753
 		if($dataClass == 'DataObject' || !in_array('DataObject', ClassInfo::ancestry($dataClass))) return false;
+
+		// Ensure that statics are loaded from the decorators
+		singleton($dataClass);
 		
 		if(!isset(self::$cache_has_own_table[$dataClass])) {
 			if(get_parent_class($dataClass) == 'DataObject') {
@@ -2555,7 +2559,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		}
 
 		$this->extend('augmentSQL', $query);
-
 		$records = $query->execute();
 		$records->rewind();
 		$record = $records->current();
