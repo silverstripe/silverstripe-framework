@@ -453,7 +453,7 @@ abstract class Object {
 				// an $extension value can contain parameters as a string,
 				// e.g. "Versioned('Stage','Live')"
 				$instance = eval("return new $extension;");
-				$instance->setOwner($this);
+				$instance->setOwner($this, $class);
 				$this->extension_instances[$instance->class] = $instance;
 			}
 		}

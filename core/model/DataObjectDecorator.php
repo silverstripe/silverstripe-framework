@@ -31,11 +31,13 @@ abstract class DataObjectDecorator extends Extension {
 		'api_access' => false,
 	);
 	
+	private static $extra_statics_loaded = array();
+	
 	/**
 	 * Set the owner of this decorator.
 	 * @param DataObject $owner
 	 */
-	function setOwner(Object $owner) {
+	function setOwner(Object $owner, $ownerBaseClass = null) {
 		if(!($owner instanceof DataObject)) {
 			user_error(sprintf(
 				"DataObjectDecorator->setOwner(): Trying to decorate an object of class '%s' with '%s', 
@@ -46,35 +48,38 @@ abstract class DataObjectDecorator extends Extension {
 			return false;
 		}
 		
-		parent::setOwner($owner);
+		parent::setOwner($owner, $ownerBaseClass);
 	}
 	
 	/**
 	 * Load the extra database fields defined in extraStatics.
 	 */
 	function loadExtraStatics() {
-		// Don't apply DB fields if the parent object has this extension too
-		if(Object::has_extension($this->owner->parentClass(), $this->class)) return;
+		if(!empty(self::$extra_statics_loaded[$this->ownerBaseClass][$this->class])) return;
+		self::$extra_statics_loaded[$this->ownerBaseClass][$this->class] = true;
+
+		// If the extension has been manually applied to a subclass, we should ignore that.
+		if(Object::has_extension(get_parent_class($this->owner), $this->class)) return;
 
 		if($fields = $this->extraStatics()) {
 			foreach($fields as $relation => $newVal) {
 				if(isset(self::$decoratable_statics[$relation])) {
-					$origVal = Object::get_static($this->owner->class, $relation);
+					$origVal = Object::get_static($this->ownerBaseClass, $relation);
 
 					// Array to be merged 
 					if(self::$decoratable_statics[$relation]) {
 						// Can't use add_static_var() here as it would merge the array rather than replacing
-						Object::set_static($this->owner->class, $relation, array_merge((array)$origVal, $newVal));
+						Object::set_static($this->ownerBaseClass, $relation, array_merge((array)$origVal, $newVal));
 
 					// Value to be overwritten
 					} else {
-						Object::set_static ($this->owner->class, $relation, $newVal);
+						Object::set_static ($this->ownerBaseClass, $relation, $newVal);
 					}
 				}
 			}
 			
-			DataObject::$cache_has_own_table[$this->owner->class]       = null;
-			DataObject::$cache_has_own_table_field[$this->owner->class] = null;
+			DataObject::$cache_has_own_table[$this->ownerBaseClass]       = null;
+			DataObject::$cache_has_own_table_field[$this->ownerBaseClass] = null;
 		}
 	}
 	
