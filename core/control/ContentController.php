@@ -297,7 +297,8 @@ HTML;
 	 * Returns a page comment system
 	 */
 	function PageComments() {
-		if($this->data() && $this->data()->ProvideComments) {
+		$hasComments = DB::query("SELECT COUNT(*) FROM `PageComment` WHERE `PageComment`.`ParentID` ='". Convert::raw2sql($this->ID)."'")->value();
+		if(($this->data() && $this->data()->ProvideComments) || ($hasComments > 0 && PageCommentInterface::$show_comments_when_disabled)) {
 			return new PageCommentInterface($this, 'PageComments', $this->data());
 		} else {
 			if(isset($_REQUEST['executeForm']) && $_REQUEST['executeForm'] == 'PageComments.PostCommentForm') {
