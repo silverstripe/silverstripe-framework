@@ -72,12 +72,20 @@ class MoneyField extends FormField {
 		$this->value = $val;
 
 		if(is_array($val)) {
-			$this->fieldCurrency->setValue($val['Currency']);
-			$this->fieldAmount->setValue($val['Amount']);
+			$currency = $val['Currency'];
+			$amount = $val['Amount'];
 		} elseif($val instanceof Money) {
-			$this->fieldCurrency->setValue($val->getCurrency());
-			$this->fieldAmount->setValue($val->getAmount());
+			$currency = $val->getCurrency();
+			$amount = $val->getAmount();
 		}
+		
+		// @todo Format numbers according to current locale, incl.
+		//  decimal and thousands signs, while respecting the stored
+		//  precision in the database without truncating it during display
+		//  and subsequent save operations
+		
+		$this->fieldCurrency->setValue($currency);
+		$this->fieldAmount->setValue($amount);
 	}
 	
 	function saveInto($dataObject) {
@@ -129,7 +137,6 @@ class MoneyField extends FormField {
 	
 	function setLocale($locale) {
 		$this->_locale = $locale;
-		$this->fieldAmount->setLocale($locale);
 	}
 	
 	function getLocale() {
