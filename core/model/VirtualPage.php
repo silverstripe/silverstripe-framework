@@ -100,8 +100,7 @@ class VirtualPage extends Page {
 		// Don't do this stuff when we're publishing
 		if(!$this->extension_instances['Versioned']->migratingVersion) {
 	 		if(
-				isset($this->changed['CopyContentFromID']) 
-				&& $this->changed['CopyContentFromID'] 
+				$this->isChanged('CopyContentFromID')
 	 			&& $this->CopyContentFromID != 0 
 				&& $this instanceof VirtualPage
 			) {

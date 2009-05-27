@@ -982,7 +982,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		// If there is no URLSegment set, generate one from Title
 		if((!$this->URLSegment || $this->URLSegment == 'new-page') && $this->Title) {
 			$this->URLSegment = $this->generateURLSegment($this->Title);
-		} else if(isset($this->changed['URLSegment']) && $this->changed['URLSegment']) {
+		} else if($this->isChanged('URLSegment')) {
 			// Make sure the URLSegment is valid for use in a URL
 			$segment = ereg_replace('[^A-Za-z0-9]+','-',$this->URLSegment);
 			$segment = ereg_replace('-+','-',$segment);
@@ -1012,7 +1012,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		DataObject::set_context_obj(null);
 		
 		// If the URLSegment has been changed, rewrite links
-		if(isset($this->changed['URLSegment']) && $this->changed['URLSegment']) {
+		if($this->isChanged('URLSegment')) {
 			if($this->hasMethod('BackLinkTracking')) {
 				$links = $this->BackLinkTracking();
 				if($links) {
