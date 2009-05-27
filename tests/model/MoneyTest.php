@@ -25,6 +25,13 @@ class MoneyTest extends SapphireTest {
 	
 	function testDataObjectChangedFields() {
 		$obj = $this->objFromFixture('MoneyTest_DataObject', 'test1');
+		
+		// Without changes
+		$curr = $obj->obj('MyMoney');
+		$changed = $obj->getChangedFields();
+		$this->assertNotContains('MyMoney', array_keys($changed));
+
+		// With changes
 		$obj->MyMoney->setAmount(99);
 		$changed = $obj->getChangedFields();
 		$this->assertContains('MyMoney', array_keys($changed));

@@ -484,7 +484,7 @@ class Member extends DataObject {
 				// Merge existing data into the local record
 
 				foreach($existingRecord->getAllFields() as $k => $v) {
-					if(!isset($this->changed[$k]) || !$this->changed[$k]) $this->record[$k] = $v;
+					if(!$this->isChanged($k)) $this->record[$k] = $v;
 				}
 				$existingRecord->destroy();
 			}
@@ -494,8 +494,7 @@ class Member extends DataObject {
 		// However, if TestMailer is in use this isn't a risk.
 		if(
 			(Director::isLive() || Email::mailer() instanceof TestMailer) 
-			&& isset($this->changed['Password']) 
-			&& $this->changed['Password'] 
+			&& $this->isChanged('Password')
 			&& $this->record['Password'] 
 			&& Member::$notify_password_change
 		) {
@@ -503,18 +502,15 @@ class Member extends DataObject {
 		}
 		
 		// The test on $this->ID is used for when records are initially created
-		if(!$this->ID || (isset($this->changed['Password']) && $this->changed['Password'])) {
+		if(!$this->ID || $this->isChanged('Password')) {
 			// Password was changed: encrypt the password according the settings
 			$encryption_details = Security::encrypt_password($this->Password);
 			$this->Password = $encryption_details['password'];
 			$this->Salt = $encryption_details['salt'];
 			$this->PasswordEncryption = $encryption_details['algorithm'];
-
-			$this->changed['Salt'] = true;
-			$this->changed['PasswordEncryption'] = true;
 			
 			// If we haven't manually set a password expiry
-			if(!isset($this->changed['PasswordExpiry']) || !$this->changed['PasswordExpiry']) {
+			if(!$this->isChanged('PasswordExpiry')) {
 				// then set it for us
 				if(self::$password_expiry_days) {
 					$this->PasswordExpiry = date('Y-m-d', time() + 86400 * self::$password_expiry_days);
@@ -535,7 +531,7 @@ class Member extends DataObject {
 	function onAfterWrite() {
 		parent::onAfterWrite();
 
-		if(isset($this->changed['Password']) && $this->changed['Password']) {
+		if($this->isChanged('Password')) {
 			MemberPassword::log($this);
 		}
 	}
@@ -985,13 +981,13 @@ class Member extends DataObject {
 	function validate() {
 		$valid = parent::validate();
 		
-		if(!$this->ID || (isset($this->changed['Password']) && $this->changed['Password'])) {
+		if(!$this->ID || $this->isChanged('Password')) {
 			if($this->Password && self::$password_validator) {
 				$valid->combineAnd(self::$password_validator->validate($this->Password, $this));
 			}
 		}
 
-		if((!$this->ID && $this->SetPassword) || (isset($this->changed['SetPassword']) && $this->changed['SetPassword'])) {
+		if((!$this->ID && $this->SetPassword) || $this->isChanged('SetPassword')) {
 			if($this->SetPassword && self::$password_validator) {
 				$valid->combineAnd(self::$password_validator->validate($this->SetPassword, $this));
 			}

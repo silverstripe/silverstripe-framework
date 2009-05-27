@@ -3,6 +3,18 @@
 class VersionedTest extends SapphireTest {
 	static $fixture_file = 'sapphire/tests/model/VersionedTest.yml';
 	
+	function testForceChangeUpdatesVersion() {
+		$page = $this->objFromFixture('Page', 'page3');
+		$oldVersion = $page->Version;
+		$page->forceChange();
+		$page->write();
+
+		$this->assertTrue(
+			($page->Version > $oldVersion),
+			"A object Version is increased when just calling forceChange() without any other changes"
+		);
+	}
+	
 	/**
 	 * Test Versioned::get_including_deleted()
 	 */

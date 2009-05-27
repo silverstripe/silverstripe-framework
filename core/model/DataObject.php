@@ -105,9 +105,12 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 
 	/**
 	 * An array indexed by fieldname, true if the field has been changed.
+	 * Use {@link getChangedFields()} and {@link isChanged()} to inspect
+	 * the changed state.
+	 * 
 	 * @var array
 	 */
-	protected $changed;
+	private $changed;
 
 	/**
 	 * The database record (in the same format as $record), before
@@ -660,6 +663,9 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		foreach($this->record as $fieldName => $fieldVal) {
 			if(!isset($this->changed[$fieldName])) $this->changed[$fieldName] = 1;
 		}
+		
+		// @todo Find better way to allow versioned to write a new version after forceChange
+		if($this->isChanged('Version')) unset($this->changed['Version']);
 	}
 	
 	/**
@@ -848,7 +854,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 					break;
 				}
 			}
-			
+
 			if($hasChanges || $forceWrite || !$this->record['ID']) {
 					
 				// New records have their insert into the base data table done first, so that they can pass the
@@ -1806,7 +1812,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			// write value only if either the field value exists,
 			// or a valid record has been loaded from the database
 			$value = (isset($this->record[$field])) ? $this->record[$field] : null;
-			if($value || $this->exists()) $fieldObj->setValue($value, $this->record);
+			if($value || $this->exists()) $fieldObj->setValue($value, $this->record, false);
 			
 			$this->record[$field] = $fieldObj;
 
@@ -1827,9 +1833,10 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 
 	/**
 	 * Return the fields that have changed.
+	 * 
 	 * The change level affects what the functions defines as "changed":
-	 * Level 1 will return strict changes, even !== ones.
-	 * Level 2 is more lenient, it will onlr return real data changes, for example a change from 0 to null
+	 * - Level 1 will return strict changes, even !== ones.
+	 * - Level 2 is more lenient, it will only return real data changes, for example a change from 0 to null
 	 * would not be included.
 	 *
 	 * Example return:
@@ -1849,7 +1856,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		// Update the changed array with references to changed obj-fields
 		foreach($this->record as $k => $v) {
 			if(is_object($v) && method_exists($v, 'isChanged') && $v->isChanged()) {
-				$this->changed[$k] = true;
+				$this->changed[$k] = 1;
 			}
 		}
 		
@@ -1862,7 +1869,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 
 		// Filter the list to those of a certain change level
 		if($changeLevel > 1) {
-			foreach($fields as $name => $level) {
+			if($fields) foreach($fields as $name => $level) {
 				if($level < $changeLevel) {
 					unset($fields[$name]);
 				}
@@ -1878,6 +1885,19 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		}
 
 		return $changedFields;
+	}
+	
+	/**
+	 * Uses {@link getChangedFields()} to determine if fields have been changed
+	 * since loading them from the database.
+	 * 
+	 * @param string $fieldName Name of the database field
+	 * @param int $changeLevel See {@link getChangedFields()}
+	 * @return boolean
+	 */
+	function isChanged($fieldName, $changeLevel = 1) {
+		$changed = $this->getChangedFields(false, $changeLevel);
+		return array_key_exists($fieldName, $changed);
 	}
 
 	/**
@@ -1998,7 +2018,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			$fieldMap = $this->uninherited('db', true);
 			if($fieldMap) foreach($fieldMap as $fieldname => $fieldtype){
 				if(ClassInfo::classImplements($fieldtype, 'CompositeDBField')){
-					$combined_db = singleton($fieldtype)->composite_db();
+					$combined_db = singleton($fieldtype)->compositeDatabaseFields();
 					foreach($combined_db as $name => $type){
 						$fieldMap[$fieldname.$name] = $type;
 					}
@@ -2196,7 +2216,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		} else if($helperPair = $this->castingHelperPair($fieldName)) {
 			$constructor = $helperPair['castingHelper'];
 			$obj = eval($constructor);
-			$obj->setValue($this->$fieldName, $this->record);
+			$obj->setValue($this->$fieldName, $this->record, false);
 			return $obj;
 			
 		// Special case for has_one relationships

@@ -47,7 +47,7 @@ abstract class DBField extends ViewableData {
 	 */
 	static function create($className, $value, $name = null, $object = null) {
 		$dbField = Object::create($className, $name, $object);
-		$dbField->setValue($value);
+		$dbField->setValue($value, null, false);
 		return $dbField;
 	}
 	

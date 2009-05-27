@@ -272,6 +272,37 @@ class DataObjectTest extends SapphireTest {
 		);
 	}
 	
+	function testIsChanged() {
+		$page = $this->fixture->objFromFixture('Page', 'home');
+		$page->Title = 'Home-Changed';
+		$page->ShowInMenus = true; // type change only, database stores "1"
+
+		$this->assertTrue($page->isChanged('Title', 1));
+		$this->assertTrue($page->isChanged('Title', 2));
+		$this->assertTrue($page->isChanged('ShowInMenus', 1));
+		$this->assertFalse($page->isChanged('ShowInMenus', 2));
+		$this->assertFalse($page->isChanged('Content', 1));
+		$this->assertFalse($page->isChanged('Content', 2));
+		
+		$newPage = new Page();
+		$newPage->Title = "New Page Title";
+		$this->assertTrue($newPage->isChanged('Title', 1));
+		$this->assertTrue($newPage->isChanged('Title', 2));
+		$this->assertFalse($newPage->isChanged('Content', 1));
+		$this->assertFalse($newPage->isChanged('Content', 2));
+		
+		$newPage->write();
+		$this->assertFalse($newPage->isChanged('Title', 1));
+		$this->assertFalse($newPage->isChanged('Title', 2));
+		$this->assertFalse($newPage->isChanged('Content', 1));
+		$this->assertFalse($newPage->isChanged('Content', 2));
+		
+		$page = $this->fixture->objFromFixture('Page', 'home');
+		$page->Title = null;
+		$this->assertTrue($page->isChanged('Title', 1));
+		$this->assertTrue($page->isChanged('Title', 2));
+	}
+	
 	function testRandomSort() {
 		/* If we perforn the same regularly sorted query twice, it should return the same results */
 		$itemsA = DataObject::get("PageComment", "", "ID");
