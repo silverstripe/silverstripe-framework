@@ -2175,11 +2175,11 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @return string HTML data representing this object
 	 */
 	public function debug() {
-		$val = "<h3>Database record: $this->class</h3><ul>";
+		$val = "<h3>Database record: $this->class</h3>\n<ul>\n";
 		if($this->record) foreach($this->record as $fieldName => $fieldVal) {
-			$val .= "<li style=\"list-style-type: disc; margin-left: 20px\">$fieldName : " . Debug::text($fieldVal) . "</li>";
+			$val .= "\t<li>$fieldName: " . Debug::text($fieldVal) . "</li>\n";
 		}
-		$val .= "</ul>";
+		$val .= "</ul>\n";
 		return $val;
 	}
 
