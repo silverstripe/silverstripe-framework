@@ -2603,19 +2603,20 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 *
 	 * @param string $callerClass The class of the object to be returned
 	 * @param int $id The id of the element
+	 * @param boolean $cache See {@link get_one()}
 	 *
 	 * @return DataObject The element
 	 */
-	public static function get_by_id($callerClass, $id) {
+	public static function get_by_id($callerClass, $id, $cache = true) {
 		if(is_numeric($id)) {
 			if(is_subclass_of($callerClass, 'DataObject')) {
 				$tableClasses = ClassInfo::dataClassesFor($callerClass);
 				$baseClass = array_shift($tableClasses);
-				return DataObject::get_one($callerClass,"\"$baseClass\".\"ID\" = $id");
+				return DataObject::get_one($callerClass,"\"$baseClass\".\"ID\" = $id", $cache);
 
 				// This simpler code will be used by non-DataObject classes that implement DataObjectInterface
 			} else {
-				return DataObject::get_one($callerClass,"\"ID\" = $id");
+				return DataObject::get_one($callerClass,"\"ID\" = $id", $cache);
 			}
 		} else {
 			user_error("DataObject::get_by_id passed a non-numeric ID #$id", E_USER_WARNING);
