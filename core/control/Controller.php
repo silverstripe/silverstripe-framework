@@ -108,12 +108,16 @@ class Controller extends RequestHandler {
 		$this->urlParams = $request->allParams();
 		$this->request = $request;
 		$this->response = new HTTPResponse();
+		
+		$this->extend('onBeforeInit');
 
 		// Init
 		$this->baseInitCalled = false;	
 		$this->init();
 		if(!$this->baseInitCalled) user_error("init() method on class '$this->class' doesn't call Controller::init().  Make sure that you have parent::init() included.", E_USER_WARNING);
 
+		$this->extend('onAfterInit');
+		
 		// If we had a redirection or something, halt processing.
 		if($this->response->isFinished()) {
 			$this->popCurrent();
@@ -320,7 +324,7 @@ class Controller extends RequestHandler {
 		$obj = ($this->customisedObj) ? $this->customisedObj : $this;
 	
 		if($params) $obj = $this->customise($params);
-	
+		
 		return $template->process($obj);
 	}
   
