@@ -20,6 +20,18 @@ class DateField extends TextField {
 	public static $validation_enabled = true;
 	
 	function setValue($val) {
+		if ($val) {
+			if (!is_array($val) ) { //&& strlen($val) == 26) {
+
+				$ampm = substr($val,strlen($val)-2,strlen($val));
+				if ($ampm == "PM") {	//correct for pm offset when cutting off 12-hour clock format
+					$val =  substr($val,0,strlen($val)-6)."PM";
+				} elseif ($ampm == "AM") {
+					$val =  substr($val,0,strlen($val)-6);
+				}
+			}
+		}		
+		
 		if(is_string($val) && preg_match('/^([\d]{2,4})-([\d]{1,2})-([\d]{1,2})/', $val)) {
 			$this->value = preg_replace('/^([\d]{2,4})-([\d]{1,2})-([\d]{1,2})/','\\3/\\2/\\1', $val);
 		} else {
@@ -51,7 +63,12 @@ class DateField extends TextField {
 	}
 	
 	function jsValidation() {
-		$formID = $this->form->FormName(); 
+		$formID = $this->form->FormName();
+		
+		if(Validator::get_javascript_validator_handler() == 'none') {
+			return true;
+		}
+		
 		$error = _t('DateField.VALIDATIONJS', 'Please enter a valid date format (DD/MM/YYYY).');
 		$jsFunc =<<<JS
 Behaviour.register({
@@ -85,7 +102,9 @@ JS;
 	}
 
 	function validate($validator) {
-		if(!self::$validation_enabled) {
+		$validationHandler = Validator::get_javascript_validator_handler();
+		
+		if(!self::$validation_enabled || $validationHandler == 'none') {
 			return true;
 		}
 		
