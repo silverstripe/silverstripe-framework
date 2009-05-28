@@ -695,6 +695,11 @@ abstract class Query extends Object implements Iterator {
 	 * @var int
 	 */
 	private $rowNum = -1;
+	
+	/**
+	 * Flag to keep track of whether iteration has begun, to prevent unnecessary seeks
+	 */
+	private $queryHasBegun = false;
 
 	/**
 	 * Return an array containing all values in the leftmost column.
@@ -789,7 +794,8 @@ abstract class Query extends Object implements Iterator {
 	 * @return array
 	 */
 	public function rewind() {
-		if($this->numRecords() > 0) {
+		if($this->queryHasBegun && $this->numRecords() > 0) {
+			$this->queryHasBegun = false;
 			return $this->seek(0);
 		}
 	}
@@ -829,6 +835,7 @@ abstract class Query extends Object implements Iterator {
 	 * @return array
 	 */
 	public function next() {
+		$this->queryHasBegun = true;
 		$this->currentRecord = $this->nextRecord();
 		$this->rowNum++;
 		return $this->currentRecord;
