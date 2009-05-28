@@ -314,7 +314,7 @@ JS
 					$XML_sort = (isset($_REQUEST['ctf'][$this->Name()]['dir'])) ? Convert::raw2xml($_REQUEST['ctf'][$this->Name()]['dir']) : null;
 					$sortLink = HTTP::setGetVar("ctf[{$this->Name()}][dir]", $XML_sort, $sortLink);
 				}
-				if(isset($_REQUEST['ctf'][$this->Name()]['search'])) {
+				if(isset($_REQUEST['ctf'][$this->Name()]['search']) && is_array($_REQUEST['ctf'][$this->Name()]['search'])) {
 					foreach($_REQUEST['ctf'][$this->Name()]['search'] as $parameter => $value) {
 						$XML_search = Convert::raw2xml($value);
 						$sortLink = HTTP::setGetVar("ctf[{$this->Name()}][search][$parameter]", $XML_search, $sortLink);
@@ -1248,9 +1248,9 @@ class TableListField_Item extends ViewableData {
 
 			// This supports simple FieldName syntax
 			if(strpos($fieldName,'.') === false) {
-				$value = ($this->item->XML_val($fieldName) && $xmlSafe) ? $this->item->XML_val($fieldName) : $this->item->$fieldName;
-			} else {
-				// This supports the syntax fieldName = Relation.RelatedField
+				$value = ($this->item->XML_val($fieldName)) ? $this->item->XML_val($fieldName) : $this->item->$fieldName;
+			// This support the syntax fieldName = Relation.RelatedField
+			} else {					
 				$fieldNameParts = explode('.', $fieldName)	;
 				$tmpItem = $this->item;
 				for($j=0;$j<sizeof($fieldNameParts);$j++) {
