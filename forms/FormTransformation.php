@@ -22,6 +22,9 @@ class FormTransformation extends Object {
 		
 		// We iterate through each array simultaneously, looking at [0] of both, then [1] of both.
 		// This provides a more natural failover scheme.
+		if(!$field->class) {
+			user_error(get_class($field) . ' is missing a class property, please ensure constructors call parent', E_USER_ERROR);
+		}
 		
 		$transNames = array_reverse(array_values(ClassInfo::ancestry($this->class)));
 		$fieldClasses = array_reverse(array_values(ClassInfo::ancestry($field->class)));
