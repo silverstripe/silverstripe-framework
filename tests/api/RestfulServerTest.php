@@ -280,7 +280,6 @@ class RestfulServerTest extends SapphireTest {
 		
 		$url = "/api/v1/RestfulServerTest_Author/" . $author1->ID;
 		$response = Director::test($url, null, null, 'GET');
-		var_dump($response->getBody());
 		$this->assertNotContains('<RelatedPages', $response->getBody());
 		$this->assertNotContains('<PublishedPages', $response->getBody());
 	}
