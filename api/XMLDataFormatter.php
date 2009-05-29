@@ -59,6 +59,8 @@ class XMLDataFormatter extends DataFormatter {
 	
 		if($this->relationDepth > 0) {
 			foreach($obj->has_one() as $relName => $relClass) {
+				if(!singleton($relClass)->stat('api_access')) continue;
+				
 				// Field filtering
 				if($fields && !in_array($relName, $fields)) continue;
 				if($this->customRelations && !in_array($relName, $this->customRelations)) continue;
@@ -73,6 +75,8 @@ class XMLDataFormatter extends DataFormatter {
 			}
 
 			foreach($obj->has_many() as $relName => $relClass) {
+				if(!singleton($relClass)->stat('api_access')) continue;
+
 				// Field filtering
 				if($fields && !in_array($relName, $fields)) continue;
 				if($this->customRelations && !in_array($relName, $this->customRelations)) continue;
@@ -88,6 +92,8 @@ class XMLDataFormatter extends DataFormatter {
 			}
 	
 			foreach($obj->many_many() as $relName => $relClass) {
+				if(!singleton($relClass)->stat('api_access')) continue;
+				
 				// Field filtering
 				if($fields && !in_array($relName, $fields)) continue;
 				if($this->customRelations && !in_array($relName, $this->customRelations)) continue;

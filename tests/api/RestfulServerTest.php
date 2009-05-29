@@ -275,6 +275,16 @@ class RestfulServerTest extends SapphireTest {
 		);
 	}
 	
+	public function testApiAccessRelationRestrictions() {
+		$author1 = $this->objFromFixture('RestfulServerTest_Author','author1');
+		
+		$url = "/api/v1/RestfulServerTest_Author/" . $author1->ID;
+		$response = Director::test($url, null, null, 'GET');
+		var_dump($response->getBody());
+		$this->assertNotContains('<RelatedPages', $response->getBody());
+		$this->assertNotContains('<PublishedPages', $response->getBody());
+	}
+	
 	public function testApiAccessWithPUT() {
 		$rating1 = $this->objFromFixture('RestfulServerTest_AuthorRating','rating1');
 		
@@ -377,8 +387,16 @@ class RestfulServerTest_Page extends DataObject implements TestOnly {
 		'Content' => 'HTMLText',
 	);
 	
+	static $has_one = array(
+		'Author' => 'RestfulServerTest_Author', 
+	);
+	
 	static $has_many = array(
 		'TestComments' => 'RestfulServerTest_Comment'
+	);
+	
+	static $belongs_many_many = array(
+		'RelatedAuthors' => 'RestfulServerTest_Author', 
 	);
 
 }
@@ -390,8 +408,13 @@ class RestfulServerTest_Author extends DataObject implements TestOnly {
 	static $db = array(
 		'Name' => 'Text',
 	);
+		
+	static $many_many = array(
+		'RelatedPages' => 'RestfulServerTest_Page', 
+	);
 	
 	static $has_many = array(
+		'PublishedPages' => 'RestfulServerTest_Page',
 		'Ratings' => 'RestfulServerTest_AuthorRating', 
 	);
 	
