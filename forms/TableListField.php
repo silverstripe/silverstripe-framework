@@ -458,13 +458,12 @@ JS
 			$query->select[] = "{$baseClass}.ClassName AS \"RecordClassName\"";
 		} else {
 			$query = singleton($this->sourceClass)->extendedSQL($this->sourceFilter(), $this->sourceSort, null, $this->sourceJoin);
-
+			
 			// Add more selected fields if they are from joined table.
-
-			$SNG = singleton($this->sourceClass);
-			foreach($this->FieldList() as $k=>$title){
-				if(!$SNG->hasField($k) && !$SNG->hasMethod('get' . $k) && !$SNG->hasMethod($k) && !strpos($k, "."))
+			foreach($this->FieldList() as $k => $title) {
+				if(!strpos($k, '.') && singleton($this->sourceClass)->hasDatabaseField($k)) {
 					$query->select[] = "\"$k\"";
+				}
 			}
 		}
 		
