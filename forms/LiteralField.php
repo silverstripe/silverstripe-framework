@@ -40,6 +40,13 @@ class LiteralField extends DatalessField {
 	function getContent() {
 		return $this->content;
 	}
+	
+	/**
+	 * Synonym of {@link setContent()} so that LiteralField is more compatible with other field types.
+	 */
+	function setValue($value) {
+		return $this->setContent($value);
+	}
 
 	function performReadonlyTransformation() {
 		$clone = clone $this;
