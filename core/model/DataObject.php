@@ -1884,7 +1884,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 				// At the very least, the type has changed
 				$this->changed[$fieldName] = 1;
 				
-				if(!isset($this->record[$fieldName]) || $this->record[$fieldName] != $val) {
+				if((!isset($this->record[$fieldName]) && $val) || (isset($this->record[$fieldName]) && $this->record[$fieldName] != $val)) {
 					// Value has changed as well, not just the type
 					$this->changed[$fieldName] = 2;
 				}
