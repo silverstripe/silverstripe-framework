@@ -5,19 +5,32 @@
  * @subpackage fields-basic
  */
 class ListboxField extends DropdownField {
-	protected $source;
+
+	/**
+	 * The size of the field in rows.
+	 * @var int
+	 */
 	protected $size;
-	protected $multiple;
+
+	/**
+	 * Should the user be able to select multiple
+	 * items on this dropdown field?
+	 * 
+	 * @var boolean
+	 */
+	protected $multiple = false;
 	
 	/**
 	 * Creates a new dropdown field.
-	 * @param name The field name
-	 * @param title The field title
-	 * @param source An map of the dropdown items
-	 * @param value You can pass an array of values or a single value like a drop down to be selected
+	 * 
+	 * @param string $name The field name
+	 * @param string $title The field title
+	 * @param array $source An map of the dropdown items
+	 * @param string|array $value You can pass an array of values or a single value like a drop down to be selected
+	 * @param int $size Optional size of the select element
 	 * @param form The parent form
 	 */
-	function __construct($name, $title = "", $source = array(), $value = array(), $size = null, $multiple = null, $form = null) {
+	function __construct($name, $title = '', $source = array(), $value = '', $size = null, $multiple = false, $form = null) {
 		if($size) $this->size = $size;
 		if($multiple) $this->multiple = $multiple;
 		parent::__construct($name, $title, $source, $value, $form);
@@ -65,19 +78,22 @@ class ListboxField extends DropdownField {
 		$id = $this->id();
 		return "<select $size $multiple name=\"$this->name\" id=\"$id\">$options</select>";
 	}
+	
 	/** 
-	 * Sets the number of rows high this field should be
+	 * Sets the size of this dropdown in rows.
+	 * @param int $size The height in rows (e.g. 3)
 	 */
-	function setSize($i){
-		$this->size = $i;
+	function setSize($size) {
+		$this->size = $size;
 	}
 	
 	/** 
-	* Sets this field to have a muliple select attribute
-	*/
-	function setMultiple($bool){
+	 * Sets this field to have a muliple select attribute
+	 * @param boolean $bool
+	 */
+	function setMultiple($bool) {
 		$this->multiple = $bool;
 	}
+	
 }
-
 ?>
