@@ -196,8 +196,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		$fields = Object::uninherited_static($class, 'db');
 		
 		// Remove CompositeDBField instances, and replace with the actually used fields
-		if($fields) foreach($fields as $fieldName => $fieldSpec) {
-			$fieldClass = singleton($class)->db($fieldName);
+		if($fields) foreach($fields as $fieldName => $fieldClass) {
 			// Strip off any parameters
 			if(strpos('(', $fieldClass) !== FALSE) $fieldClass = substr(0,strpos('(', $fieldClass), $fieldClass);
 			if(ClassInfo::classImplements($fieldClass, 'CompositeDBField')) {
