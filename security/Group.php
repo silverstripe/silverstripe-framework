@@ -226,7 +226,7 @@ class Group extends DataObject {
 			// This minimises the number of SQL queries necessary			
 			$sql = $this->extendedSQL("\"ParentID\" IN ($idList)", "");
 			$chunkToAdd = $sql->execute();
-			if(!$chunkToAdd->numRecords()) $chunkToAdd = null;
+			if(!$chunkToAdd->column()) $chunkToAdd = null;
 		}
 		
 		return $familyIDs;
