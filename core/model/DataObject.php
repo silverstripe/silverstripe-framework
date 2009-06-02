@@ -182,15 +182,37 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	}
 
 	/**
-	 * Get all database fields explicitly defined on a class in {@link DataObject::$db} and {@link DataObject::$has_one}
+	 * Get all database columns explicitly defined on a class in {@link DataObject::$db} 
+	 * and {@link DataObject::$has_one}. Resolves instances of {@link CompositeDBField} 
+	 * into the actual database fields, rather than the name of the field which 
+	 * might not equate a database column.
+	 * 
+	 * @uses CompositeDBField->compositeDatabaseFields()
 	 *
 	 * @param string $class
-	 * @return array
+	 * @return array Map of fieldname to specification, similiar to {@link DataObject::$db}.
 	 */
 	public static function custom_database_fields($class) {
 		$fields = Object::uninherited_static($class, 'db');
+		
+		// Remove CompositeDBField instances, and replace with the actually used fields
+		if($fields) foreach($fields as $fieldName => $fieldSpec) {
+			$fieldClass = singleton($class)->db($fieldName);
+			// Strip off any parameters
+			if(strpos('(', $fieldClass) !== FALSE) $fieldClass = substr(0,strpos('(', $fieldClass), $fieldClass);
+			if(ClassInfo::classImplements($fieldClass, 'CompositeDBField')) {
+				// Remove the original fieldname, its not an actual database column
+				unset($fields[$fieldName]);
+				// Add all composite columns
+				$compositeFields = singleton($fieldClass)->compositeDatabaseFields();
+				if($compositeFields) foreach($compositeFields as $compositeName => $spec) {
+					$fields["{$fieldName}{$compositeName}"] = $spec;
+				}
+			}
+		}
+
+		// Add has_one relationships
 		$hasOne = Object::uninherited_static($class, 'has_one');
-	
 		if($hasOne) foreach(array_keys($hasOne) as $field) {
 			$fields[$field . 'ID'] = 'ForeignKey';
 		}
@@ -1964,7 +1986,12 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @return boolean True if the given field exists
 	 */
 	public function hasField($field) {
-		return array_key_exists($field, $this->record) || $this->hasDatabaseField($field) || $this->hasMethod("get{$field}");
+		return (
+			array_key_exists($field, $this->record) 
+			|| $this->hasDatabaseField($field) 
+			|| array_key_exists($field, $this->db()) 
+			|| $this->hasMethod("get{$field}")
+		);
 	}
 
 	/**

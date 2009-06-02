@@ -692,6 +692,38 @@ class DataObjectTest extends SapphireTest {
 		}
 	}
 	
+	function hasDatabaseField() {
+		$team = singleton('DataObjectTest_Team');
+		$subteam = singleton('DataObjectTest_SubTeam');
+		
+		$this->assertTrue(
+			$team->hasDatabaseField('Title'),
+			"hasOwnDatabaseField() works with \$db fields"
+		);
+		$this->assertTrue(
+			$team->hasDatabaseField('CaptainID'),
+			"hasOwnDatabaseField() works with \$has_one fields"
+		);
+		$this->assertFalse(
+			$team->hasDatabaseField('NonExistentField'),
+			"hasOwnDatabaseField() doesn't detect non-existend fields"
+		);
+		$this->assertTrue(
+			$team->hasDatabaseField('DecoratedDatabaseField'),
+			"hasOwnDatabaseField() works with decorated fields"
+		);
+		$this->assertFalse(
+			$team->hasDatabaseField('SubclassDatabaseField'),
+			"hasOwnDatabaseField() doesn't pick up fields in subclasses on parent class"
+		);
+		
+		$this->assertFalse(
+			$subteam->hasDatabaseField('SubclassDatabaseField'),
+			"hasOwnDatabaseField() picks up fields in subclasses"
+		);
+		
+	}
+	
 }
 
 class DataObjectTest_Player extends Member implements TestOnly {
