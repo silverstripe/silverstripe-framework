@@ -1403,9 +1403,10 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * Return all of the database fields defined in self::$db and all the parent classes.
 	 * Doesn't include any fields specified by self::$has_one.  Use $this->has_one() to get these fields
 	 *
+	 * @param string $fieldName Limit the output to a specific field name
 	 * @return array The database fields
 	 */
-	public function db($component = null) {
+	public function db($fieldName = null) {
 		$classes = ClassInfo::ancestry($this);
 		$good = false;
 		$items = array();
@@ -1419,11 +1420,11 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 				continue;
 			}
 
-			if($component) {
+			if($fieldName) {
 				$db = Object::get_static($class, 'db');
 				
-				if(isset($db[$component])) {
-					return $db[$component];
+				if(isset($db[$fieldName])) {
+					return $db[$fieldName];
 				}
 			} else {
 				$newItems = (array) Object::get_static($class, 'db');
