@@ -202,7 +202,6 @@ class ComplexTableField extends TableListField {
 		$this->pageSize = 10;
 		
 		parent::__construct($name, $sourceClass, $fieldList, $sourceFilter, $sourceSort, $sourceJoin);
-		
 	}
 
 	/**
@@ -625,7 +624,13 @@ JS;
 		$className = $this->sourceClass();
 		$childData = new $className();
 		$form->saveInto($childData);
-		$childData->write();
+
+		try {
+			$childData->write();
+		} catch(ValidationException $e) {
+			$form->sessionMessage($e->getResult()->message(), 'bad');
+			return Director::redirectBack();
+		}
 
 		// Save the many many relationship if it's available
 		if(isset($data['ctf']['manyManyRelation'])) {
@@ -796,7 +801,13 @@ class ComplexTableField_ItemRequest extends RequestHandler {
 	function saveComplexTableField($data, $form, $request) {
 		$dataObject = $this->dataObj();
 		$form->saveInto($dataObject);
-		$dataObject->write();
+		
+		try {
+			$dataObject->write();
+		} catch(ValidationException $e) {
+			$form->sessionMessage($e->getResult()->message(), 'bad');
+			return Director::redirectBack();
+		}
 		
 		// Save the many many relationship if it's available
 		if(isset($data['ctf']['manyManyRelation'])) {
