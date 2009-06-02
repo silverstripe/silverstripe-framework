@@ -78,7 +78,7 @@ class ViewableData extends Object implements IteratorAggregate {
 		// Set up cached methods
 		$methodNames = $this->allMethodNames();
 		foreach($methodNames as $methodName) {
-			if($methodName[0] == "_") {
+			if($methodName[0] == "_" && $methodName[1] != "_") {
 				$trimmedName = substr($methodName,1);
 				$this->createMethod($trimmedName, "return \$obj->cachedCall('$methodName', '$trimmedName', \$args);");
 			}
