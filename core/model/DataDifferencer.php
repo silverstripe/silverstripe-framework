@@ -52,6 +52,10 @@ class DataDifferencer extends ViewableData {
 		$this->ignoredFields = array_merge($this->ignoredFields, $ignoredFields);
 	}
 	
+	/**
+	 * Get a DataObject with altered values replaced with HTML diff strings, incorporating
+	 * <ins> and <del> tags.
+	 */
 	function diffedData() {
 		$diffed = clone $this->fromRecord;
 		$fields = array_keys($diffed->getAllFields());
@@ -67,6 +71,15 @@ class DataDifferencer extends ViewableData {
 		return $diffed;
 	}
 	
+	/**
+	 * Get a DataObjectSet of the changed fields.
+	 * Each element is an array data containing
+	 *  - Name: The field name
+	 *  - Title: The human-readable field title
+	 *  - Diff: An HTML diff showing the changes
+	 *  - From: The older version of the field
+	 *  - To: The newer version of the field
+	 */
 	function ChangedFields() {
 		$changedFields = new DataObjectSet();
 		$fields = array_keys($this->fromRecord->getAllFields());
@@ -76,9 +89,32 @@ class DataDifferencer extends ViewableData {
 
 			if($this->fromRecord->$field != $this->toRecord->$field) {			
 				$changedFields->push(new ArrayData(array(
+					'Name' => $field,
 					'Title' => $this->fromRecord->fieldLabel($field),
 					'Diff' => Diff::compareHTML($this->fromRecord->$field, $this->toRecord->$field),
+					'From' => $this->fromRecord->$field,
+					'To' => $this->toRecord->$field,
 				)));
+			}
+		}
+		
+		return $changedFields;
+	}
+
+	/**
+	 * Get an array of the names of every fields that has changed.
+	 * This is simpler than {@link ChangedFields()}
+	 */
+	function changedFieldNames() {
+		$diffed = clone $this->fromRecord;
+		$fields = array_keys($diffed->getAllFields());
+		
+		$changedFields = array();
+		
+		foreach($fields as $field) {
+			if(in_array($field, $this->ignoredFields)) continue;
+			if($this->fromRecord->$field != $this->toRecord->$field) {			
+				$changedFields[] = $field;
 			}
 		}
 		
