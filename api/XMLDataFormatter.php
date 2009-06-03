@@ -79,10 +79,12 @@ class XMLDataFormatter extends DataFormatter {
 
 				$xml .= "<$relName linktype=\"has_many\" href=\"$objHref/$relName.xml\">\n";
 				$items = $obj->$relName();
-				foreach($items as $item) {
-					//$href = Director::absoluteURL(self::$api_base . "$className/$id/$relName/$item->ID");
-					$href = Director::absoluteURL(self::$api_base . "$relClass/$item->ID");
-					$xml .= "<$relClass href=\"$href.xml\" id=\"{$item->ID}\"></$relClass>\n";
+				if ($items) {
+					foreach($items as $item) {
+						//$href = Director::absoluteURL(self::$api_base . "$className/$id/$relName/$item->ID");
+						$href = Director::absoluteURL(self::$api_base . "$relClass/$item->ID");
+						$xml .= "<$relClass href=\"$href.xml\" id=\"{$item->ID}\"></$relClass>\n";
+					}
 				}
 				$xml .= "</$relName>\n";
 			}
@@ -94,9 +96,11 @@ class XMLDataFormatter extends DataFormatter {
 
 				$xml .= "<$relName linktype=\"many_many\" href=\"$objHref/$relName.xml\">\n";
 				$items = $obj->$relName();
-				foreach($items as $item) {
-					$href = Director::absoluteURL(self::$api_base . "$relClass/$item->ID");
-					$xml .= "<$relClass href=\"$href.xml\" id=\"{$item->ID}\"></$relClass>\n";
+				if ($items) {
+					foreach($items as $item) {
+						$href = Director::absoluteURL(self::$api_base . "$relClass/$item->ID");
+						$xml .= "<$relClass href=\"$href.xml\" id=\"{$item->ID}\"></$relClass>\n";
+					}
 				}
 				$xml .= "</$relName>\n";
 			}
