@@ -4,6 +4,7 @@
  * @subpackage tests
  */
 class DataObjectTest extends SapphireTest {
+	
 	static $fixture_file = 'sapphire/tests/DataObjectTest.yml';
 
 	/**
@@ -692,7 +693,7 @@ class DataObjectTest extends SapphireTest {
 		}
 	}
 	
-	function hasDatabaseField() {
+	function testHasDatabaseField() {
 		$team = singleton('DataObjectTest_Team');
 		$subteam = singleton('DataObjectTest_SubTeam');
 		
@@ -717,7 +718,7 @@ class DataObjectTest extends SapphireTest {
 			"hasOwnDatabaseField() doesn't pick up fields in subclasses on parent class"
 		);
 		
-		$this->assertFalse(
+		$this->assertTrue(
 			$subteam->hasDatabaseField('SubclassDatabaseField'),
 			"hasOwnDatabaseField() picks up fields in subclasses"
 		);
