@@ -223,7 +223,9 @@ class Versioned extends DataObjectDecorator {
 				}
 				if ($suffix && ($ext = $this->owner->extInstance($allSuffixes[$suffix]))) {
 					if (!$ext->isVersionedTable($table)) continue;
+					$ext->setOwner($this->owner);
 					$fields = $ext->fieldsInExtraTables($suffix);
+					$ext->clearOwner();
 					$indexes = $fields['indexes'];
 					$fields = $fields['db'];
 				}
@@ -387,7 +389,10 @@ class Versioned extends DataObjectDecorator {
 	function extendWithSuffix($table) {
 		foreach (Versioned::$versionableExtensions as $versionableExtension => $suffixes) {
 			if ($this->owner->hasExtension($versionableExtension)) {
-				$table = $this->owner->extInstance($versionableExtension)->extendWithSuffix($table);
+				$ext = $this->owner->extInstance($versionableExtension);
+				$ext->setOwner($this->owner);
+				$table = $ext->extendWithSuffix($table);
+				$ext->clearOwner();
 			}
 		}
 		return $table;
@@ -796,7 +801,7 @@ class Versioned extends DataObjectDecorator {
 			AND \"$archiveTable\".\"Version\" = \"{$baseTable}_versions\".\"Version\"";
 		
 		// Process into a DataObjectSet
-		$result = $SNG->buildDataObjectSet($query->execute());
+		$result = $SNG->buildDataObjectSet($query->execute(), 'DataObjectSet', null, $class);
 
 		Versioned::$reading_stage = $oldStage;
 		return $result;

@@ -416,6 +416,8 @@ class Hierarchy extends DataObjectDecorator {
 	 * @return DataObjectSet
 	 */
 	public function doAllChildrenIncludingDeleted($context = null) {
+		if(!$this->owner) user_error('Hierarchy::doAllChildrenIncludingDeleted() called without $this->owner');
+		
 		$idxStageChildren = array();
 		$idxLiveChildren = array();
 		

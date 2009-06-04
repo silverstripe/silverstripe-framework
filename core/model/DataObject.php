@@ -362,7 +362,9 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 
 		// Define the extra db fields
 		if($this->extension_instances) foreach($this->extension_instances as $i => $instance) {
+			$instance->setOwner($this);
 			$instance->loadExtraStatics();
+			$instance->clearOwner();
 		}
 
 		// Set up accessors for joined items
@@ -2507,6 +2509,13 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			if(class_exists($record['RecordClassName'])) {
 				$results[] = new $record['RecordClassName']($record);
 			} else {
+				if(!$baseClass) {
+					user_error("Bad RecordClassName '{$record['RecordClassName']}' and "
+						. "\$baseClass not set", E_USER_ERROR);
+				} else if(!is_string($baseClass) || !class_exists($baseClass)) {
+					user_error("Bad RecordClassName '{$record['RecordClassName']}' and bad "
+						. "\$baseClass '$baseClass not set", E_USER_ERROR);
+				}
 				$results[] = new $baseClass($record);
 			}
 		}

@@ -29,6 +29,12 @@ abstract class Extension extends Object {
 	 * @var DataObject
 	 */
 	protected $ownerBaseClass;
+	
+	/**
+	 * Reference counter to ensure that the owner isn't cleared until clearOwner() has
+	 * been called as many times as setOwner()
+	 */
+	private $ownerRefs = 0;
 
 	/**
 	 * Set the owner of this decorator.
@@ -38,9 +44,18 @@ abstract class Extension extends Object {
 	 * and then a Page object was instantiated, $owner would be a Page object, but $ownerBaseClass
 	 * would be 'SiteTree'.
 	 */
-	function setOwner(Object $owner, $ownerBaseClass = null) {
-		$this->ownerBaseClass = $ownerBaseClass ? $ownerBaseClass : $owner->class;
+	function setOwner($owner, $ownerBaseClass = null) {
+		if($owner) $this->ownerRefs++;
 		$this->owner = $owner;
+
+		if($ownerBaseClass) $this->ownerBaseClass = $ownerBaseClass;
+		else if(!$this->ownerBaseClass && $owner) $this->ownerBaseClass = $owner->class;
+	}
+	
+	function clearOwner() {
+		if($this->ownerRefs <= 0) user_error("clearOwner() called more than setOwner()", E_USER_WARNING);
+		$this->ownerRefs--;
+		if($this->ownerRefs == 0) $this->owner = null;
 	}
 	
 	/**

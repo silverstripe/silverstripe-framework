@@ -172,7 +172,7 @@ class Translatable extends DataObjectDecorator {
 	 * An array of fields that can be translated.
 	 * @var array
 	 */
-	protected $translatableFields;
+	protected $translatableFields = null;
 
 	/**
 	 * A map of the field values of the original (untranslated) DataObject record
@@ -424,11 +424,13 @@ class Translatable extends DataObjectDecorator {
 	
 	}
 	
-	function setOwner(Object $owner) {
-		parent::setOwner($owner);
+	function setOwner($owner, $ownerBaseClass = null) {
+		parent::setOwner($owner, $ownerBaseClass);
 
 		// setting translatable fields by inspecting owner - this should really be done in the constructor
-		$this->translatableFields = array_keys($this->owner->inheritedDatabaseFields());
+		if($this->owner && $this->translatableFields === null) {
+			$this->translatableFields = array_keys($this->owner->inheritedDatabaseFields());
+		}
 	}
 	
 	function extraStatics() {

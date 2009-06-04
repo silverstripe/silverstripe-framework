@@ -453,7 +453,7 @@ abstract class Object {
 				// an $extension value can contain parameters as a string,
 				// e.g. "Versioned('Stage','Live')"
 				$instance = eval("return new $extension;");
-				$instance->setOwner($this, $class);
+				$instance->setOwner(null, $class);
 				$this->extension_instances[$instance->class] = $instance;
 			}
 		}
@@ -463,6 +463,7 @@ abstract class Object {
 			self::$classes_constructed[$this->class] = true;
 		}
 	}
+	
 	
 	/**
 	 * Attemps to locate and call a method dynamically added to a class at runtime if a default cannot be located
@@ -485,8 +486,13 @@ abstract class Object {
 					$obj = $config['index'] !== null ?
 						$this->{$config['property']}[$config['index']] :
 						$this->{$config['property']};
-					
-					if($obj) return call_user_func_array(array($obj, $method), $arguments);
+						
+					if($obj) {
+						if(!empty($config['callSetOwnerFirst'])) $obj->setOwner($this);
+						$retVal = call_user_func_array(array($obj, $method), $arguments);
+						if(!empty($config['callSetOwnerFirst'])) $obj->clearOwner();
+						return $retVal;
+					}
 					
 					if($this->destroyed) {
 						throw new Exception (
@@ -597,7 +603,8 @@ abstract class Object {
 			foreach($extension->allMethodNames(true) as $method) {
 				self::$extra_methods[$this->class][$method] = array (
 					'property' => $property,
-					'index'    => $index
+					'index'    => $index,
+					'callSetOwnerFirst' => $extension instanceof Extension,
 				);
 			}
 		}
@@ -738,8 +745,10 @@ abstract class Object {
 		
 		if($this->extension_instances) foreach($this->extension_instances as $instance) {
 			if($instance->hasMethod($method)) {
+				$instance->setOwner($this);
 				$value = $instance->$method($a1, $a2, $a3, $a4, $a5, $a6, $a7);
 				if($value !== null) $values[] = $value;
+				$instance->clearOwner();
 			}
 		}
 		

@@ -37,8 +37,9 @@ abstract class DataObjectDecorator extends Extension {
 	 * Set the owner of this decorator.
 	 * @param DataObject $owner
 	 */
-	function setOwner(Object $owner, $ownerBaseClass = null) {
-		if(!($owner instanceof DataObject)) {
+	/*
+	function setOwner($owner, $ownerBaseClass = null) {
+		if($owner && !($owner instanceof DataObject)) {
 			user_error(sprintf(
 				"DataObjectDecorator->setOwner(): Trying to decorate an object of class '%s' with '%s', 
 				only Dataobject subclasses are supported.",
@@ -50,6 +51,7 @@ abstract class DataObjectDecorator extends Extension {
 		
 		parent::setOwner($owner, $ownerBaseClass);
 	}
+	*/
 	
 	/**
 	 * Load the extra database fields defined in extraStatics.

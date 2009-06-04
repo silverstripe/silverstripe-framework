@@ -36,12 +36,16 @@ class TranslatableTest extends FunctionalTest {
 		// @todo Hack to refresh statics on the newly decorated classes
 		$newSiteTree = new SiteTree();
 		foreach($newSiteTree->getExtensionInstances() as $extInstance) {
+			$extInstance->setOwner($newSiteTree);
 			$extInstance->loadExtraStatics();
+			$extInstance->clearOwner();
 		}
 		// @todo Hack to refresh statics on the newly decorated classes
 		$TranslatableTest_DataObject = new TranslatableTest_DataObject();
 		foreach($TranslatableTest_DataObject->getExtensionInstances() as $extInstance) {
+			$extInstance->setOwner($TranslatableTest_DataObject);
 			$extInstance->loadExtraStatics();
+			$extInstance->clearOwner();
 		}
 
 		// recreate database with new settings
