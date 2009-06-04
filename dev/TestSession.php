@@ -29,6 +29,10 @@ class TestSession {
 	}
 	
 	function __destruct() {
+		// Shift off anything else that's on the stack.  This can happen if something throws
+		// an exception that causes a premature TestSession::__destruct() call
+		while(Controller::curr() != $this->controller) Controller::curr()->popCurrent();
+
 		$this->controller->popCurrent();
 	}
 	
