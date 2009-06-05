@@ -720,12 +720,10 @@ class MySQLDatabase extends Database {
 	 * 
 	 * @param string $keywords Keywords as a string.
 	 */
-	public function searchEngine($keywords, $pageLength = null, $sortBy = "Relevance DESC", $extraFilter = "", $booleanSearch = false, $alternativeFileFilter = "", $invertedMatch = false) {
-		if(!$pageLength) $pageLength = $this->pageLength;
+	public function searchEngine($classesToSearch, $keywords, $start, $pageLength, $sortBy = "Relevance DESC", $extraFilter = "", $booleanSearch = false, $alternativeFileFilter = "", $invertedMatch = false) {
 		$fileFilter = '';	 	
 	 	$keywords = Convert::raw2sql($keywords);
 		$htmlEntityKeywords = htmlentities($keywords);
-		$classesToSearch = explode(',', SearchForm::$classesToSearch);
 		
 		$extraFilters = array('SiteTree' => '', 'File' => '');
 	 	
@@ -741,7 +739,6 @@ class MySQLDatabase extends Database {
 		// Always ensure that only pages with ShowInSearch = 1 can be searched
 		$extraFilters['SiteTree'] .= " AND ShowInSearch <> 0";
 
-		$start = isset($_GET['start']) ? (int)$_GET['start'] : 0;
 		$limit = $start . ", " . (int) $pageLength;
 		
 		$notMatch = $invertedMatch ? "NOT " : "";

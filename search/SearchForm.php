@@ -23,7 +23,9 @@ class SearchForm extends Form {
 	/**
 	 * Classes to search
 	 */	
-	static public $classesToSearch = "SiteTree,File";
+ 	protected $classesToSearch = array(
+		"SiteTree", "File"
+	);
 	
 	/**
 	 * 
@@ -111,10 +113,13 @@ class SearchForm extends Form {
 		
 		$keywords = $this->addStarsToKeywords($keywords);
 
+		if(!$pageLength) $pageLength = $this->pageLength;
+		$start = isset($_GET['start']) ? (int)$_GET['start'] : 0;
+		
 		if(strpos($keywords, '"') !== false || strpos($keywords, '+') !== false || strpos($keywords, '-') !== false || strpos($keywords, '*') !== false) {
-			$results = DB::GetConn()->searchEngine($keywords, $pageLength, "Relevance DESC", "", true);
+			$results = DB::GetConn()->searchEngine($this->classesToSearch, $keywords, $start, $pageLength, "Relevance DESC", "", true);
 		} else {
-			$results = DB::GetConn()->searchEngine($keywords, $pageLength);
+			$results = DB::GetConn()->searchEngine($this->classesToSearch, $keywords, $start, $pageLength);
 		}
 		
 		// filter by permission
@@ -126,7 +131,7 @@ class SearchForm extends Form {
 		if(singleton('SiteTree')->hasExtension('Translatable') && isset($data['locale'])) {
 			Translatable::set_current_locale($origLocale);
 		}
-		
+
 		return $results;
 	}
 
