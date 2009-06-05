@@ -1295,13 +1295,6 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 			)
 			//new NamedLabelField("Status", $message, "pageStatusMessage", true)
 		);
-
-		if(!Permission::check('SITETREE_GRANT_ACCESS')) {
-			$fields->makeFieldReadonly($viewersOptionsField);
-			$fields->makeFieldReadonly($viewerGroupsField);
-			$fields->makeFieldReadonly($editorsOptionsField);
-			$fields->makeFieldReadonly($editorGroupsField);
-		}
 		
 		$viewersOptionsSource = array();
 		if($this->Parent()->ID || $this->CanViewType == 'Inherit') $viewersOptionsSource["Inherit"] = _t('SiteTree.INHERIT', "Inherit from parent page");
@@ -1315,6 +1308,13 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		$editorsOptionsSource["LoggedInUsers"] = _t('SiteTree.EDITANYONE', "Anyone who can log-in to the CMS");
 		$editorsOptionsSource["OnlyTheseUsers"] = _t('SiteTree.EDITONLYTHESE', "Only these people (choose from list)");
 		$editorsOptionsField->setSource($editorsOptionsSource);
+
+		if(!Permission::check('SITETREE_GRANT_ACCESS')) {
+			$fields->makeFieldReadonly($viewersOptionsField);
+			$fields->makeFieldReadonly($viewerGroupsField);
+			$fields->makeFieldReadonly($editorsOptionsField);
+			$fields->makeFieldReadonly($editorGroupsField);
+		}
 		
 		$tabContent->setTitle(_t('SiteTree.TABCONTENT', "Content"));
 		$tabMain->setTitle(_t('SiteTree.TABMAIN', "Main"));
