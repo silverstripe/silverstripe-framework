@@ -760,13 +760,22 @@ class Director {
 	 * For information about environment types, see {@link Director::set_environment_type()}.
 	 */
 	static function isDev() {
+		// This variable is used to supress repetitions of the isDev security message below.
+		static $firstTimeCheckingGetVar = true;
+		
 		// Use ?isDev=1 to get development access on the live server
 		if(isset($_GET['isDev'])) {
 			if(Security::database_is_ready()) {
 				BasicAuth::requireLogin("SilverStripe developer access.  Use your CMS login", "ADMIN");
 				$_SESSION['isDev'] = $_GET['isDev'];
 			} else {
-				return true;
+				if($firstTimeCheckingGetVar && DB::connection_attempted()) {
+	 				echo "<p style=\"padding: 3px; margin: 3px; background-color: orange; 
+						color: white; font-weight: bold\">Sorry, you can't use ?isDev=1 until your
+						Member and Group tables database are available.  Perhaps your database
+						connection is failing?</p>";
+					$firstTimeCheckingGetVar = false;
+				}
 			}
 		}
 
