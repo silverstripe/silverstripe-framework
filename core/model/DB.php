@@ -19,6 +19,11 @@ class DB {
 	public static $lastQuery;
 
 	/**
+	 * Internal flag to keep track of when db connection was attempted.
+	 */
+	private static $connection_attempted = false;
+
+	/**
 	 * Set the global database connection.
 	 * Pass an object that's a subclass of Database.  This object will be used when {@link DB::query()}
 	 * is called.
@@ -65,6 +70,8 @@ class DB {
 		if(!isset($databaseConfig['type']) || empty($databaseConfig['type'])) {
 			user_error("DB::connect: Not passed a valid database config", E_USER_ERROR);
 		}
+		
+		self::$connection_attempted = true;
 		if (isset($databaseConfig['pdo']) && $databaseConfig['pdo']) { // TODO:pkrenn_remove
 			$conn = new PDODatabase($databaseConfig);
 		} else { // TODO:pkrenn_remove begin
@@ -72,6 +79,15 @@ class DB {
 			$conn = new $dbClass($databaseConfig);
 		} // TODO:pkrenn_remove end
 		DB::setConn($conn);
+	}
+	
+	/**
+	 * Returns true if a database connection has been attempted.
+	 * In particular, it lets the caller know if we're still so early in the execution pipeline that
+	 * we haven't even tried to connect to the database yet.
+	 */
+	public static function connection_attempted() {
+		return self::$connection_attempted;
 	}
 
 	/**
