@@ -540,7 +540,7 @@ class Form extends RequestHandler {
 		$attributes['enctype'] = $this->FormEncType();
 		if($this->target) $attributes['target'] = $this->target;
 		if($this->extraClass()) $attributes['class'] = $this->extraClass();
-		if($this->validator->getErrors()) {
+		if($this->validator && $this->validator->getErrors()) {
 			if(!isset($attributes['class'])) $attributes['class'] = '';
 			$attributes['class'] .= ' validationerror';
 		}
