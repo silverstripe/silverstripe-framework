@@ -125,26 +125,8 @@ define('PR_LOW',10);
 /**
  * Ensure we have enough memory
  */
-$memString = ini_get("memory_limit");
-switch(strtolower(substr($memString, -1))) {
-case "k":
-	$memory = round(substr($memString, 0, -1)*1024);
-	break;
-case "m":
-	$memory = round(substr($memString, 0, -1)*1024*1024);
-	break;
-case "g":
-	$memory = round(substr($memString, 0, -1)*1024*1024*1024);
-	break;
-default:
-	$memory = round($memString);
-}
 
-// Check we have at least 64M
-if ($memory < (64 * 1024 * 1024)) {
-	// Increase memory limit
-	ini_set('memory_limit', '64M');
-}
+increase_memory_limit_to('64M');
 
 ///////////////////////////////////////////////////////////////////////////////
 // INCLUDES
@@ -296,6 +278,30 @@ function stripslashes_recursively(&$array) {
  */
 function _t($entity, $string = "", $priority = 40, $context = "") {
 	return i18n::_t($entity, $string, $priority, $context);
+}
+
+/**
+ * Increase the memory limit to the given level if it's currently too low.
+ * @param A memory limit string, such as "64M"
+ */
+function increase_memory_limit_to($memoryLimit) {
+	// Increase the memory limit if it's too low
+	if(translate_memstring($memoryLimit) >  translate_memstring(ini_get('memory_limit'))) {
+		ini_set('memory_limit', $memoryLimit);
+	}
+}
+
+/**
+ * Turn a memory string, such as 512M into an actual number of bytes.
+ * @param A memory limit string, such as "64M"
+ */
+function translate_memstring($memString) {
+	switch(strtolower(substr($memString, -1))) {
+		case "k": return round(substr($memString, 0, -1)*1024);
+		case "m": return round(substr($memString, 0, -1)*1024*1024);
+		case "g": return round(substr($memString, 0, -1)*1024*1024*1024);
+		default: return round($memString);
+	}
 }
 
 ?>
