@@ -26,8 +26,8 @@ Behaviour.register({
 	}
 });
 JS;
-
-		Requirements::customScript($jsFunc, 'func_validateEmailField');
+		//fix for the problem with more than one form on a page.
+		Requirements::customScript($jsFunc, 'func_validateEmailField' .'_' . $formID);
 
 		//return "\$('$formID').validateEmailField('$this->name');";
 		return <<<JS
