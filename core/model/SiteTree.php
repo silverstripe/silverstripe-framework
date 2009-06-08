@@ -630,7 +630,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		if(!$member || !(is_a($member, 'Member')) || is_numeric($member)) $member = Member::currentUser();
 
 		// admin override
-		if($member && Permission::checkMember($member, "ADMIN")) return true;
+		if($member && Permission::checkMember($member, array("ADMIN", "SITETREE_VIEW_ALL"))) return true;
 		
 		// DEPRECATED 2.3: use canView() instead
 		$results = $this->extend('alternateCanView', $member);
@@ -684,7 +684,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	public function canDelete($member = null) {
 		if(!$member || !(is_a($member, 'Member')) || is_numeric($member)) $member = Member::currentUser();
 		
-		if($member && Permission::checkMember($member, "ADMIN")) return true;
+		if($member && Permission::checkMember($member, array("ADMIN", "SITETREE_EDIT_ALL"))) return true;
 		
 		// DEPRECATED 2.3: use canDelete() instead
 		$results = $this->extend('alternateCanDelete', $member);
@@ -762,7 +762,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	public function canEdit($member = null) {
 		if(!$member || !(is_a($member, 'Member')) || is_numeric($member)) $member = Member::currentUser();
 		
-		if($member && Permission::checkMember($member, "ADMIN")) return true;
+		if($member && Permission::checkMember($member, array("ADMIN", "SITETREE_EDIT_ALL"))) return true;
 
 		// DEPRECATED 2.3: use canEdit() instead
 		$results = $this->extend('alternateCanEdit', $member);
@@ -1905,7 +1905,15 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 			'SITETREE_GRANT_ACCESS' => _t(
 				'SiteTree.PERMISSION_GRANTACCESS_DESCRIPTION',
 				'Control which groups can access or edit certain pages'
-			)
+			),
+			'SITETREE_VIEW_ALL' => _t(
+				'SiteTree.VIEW_ALL_DESCRIPTION',
+				'Can view any page on the site, regard of the settings on the Access tab'
+			),
+			'SITETREE_EDIT_ALL' => _t(
+				'SiteTree.EDIT_ALL_DESCRIPTION',
+				'Can edit any page on the site, regard of the settings on the Access tab'
+			),
 		);
 	}
 	
