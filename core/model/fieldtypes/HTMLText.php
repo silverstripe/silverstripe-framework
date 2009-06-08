@@ -23,61 +23,82 @@ class HTMLText extends Text {
 	}
 
 	/**
-	 * Create a summary of the content. This will either be the first paragraph, or the first $maxWords 
-	 * words, whichever is shorter
+	 * Create a summary of the content. This will be some section of the first paragraph, limited by
+	 * $maxWords. All internal tags are stripped out - the return value is a string
+	 * 
+	 * This is sort of the HTML aware equivilent to Text#Summary, although the logic for summarising is not exactly the same
+	 * 
+	 * @param int $maxWords Maximum number of words to return - may return less, but never more. Pass -1 for no limit
+	 * @param int $flex Number of words to search through when looking for a nice cut point 
+	 * @param string $add What to add to the end of the summary if we cut at a less-than-ideal cut point
+	 * @return string A nice(ish) summary with no html tags (but possibly still some html entities)
+	 * 
+	 * @see sapphire/core/model/fieldtypes/Text#Summary($maxWords)
 	 */
-	public function Summary( $maxWords = 50 ) {
-		// split the string into tags and words
-		$parts = Convert::xml2array( $this->value );
-		
-		// store any unmatched tags
-		$tagStack = array();
-		
-		$pIndex = 0;
-		
-		// find the first paragraph tag
-		for( $i = 0; $i < count( $parts ); $i++ )
-			if( strpos( $parts[$i], '<p' ) === 0 ) {
-				$pIndex = $i;
-				break;
-			}
-				
-		$summary = '';
-		$words = 0;
-		
-		// create the summary, keeping track of opening and closing tags
-		while( $words <= $maxWords && $pIndex < count( $parts ) ) {
-			if( $parts[$pIndex] == '</p>' ) {
-				$summary .= $parts[$pIndex];
-				break;
-			}
-			elseif( preg_match( '/<\/(\w+)>/', $parts[$pIndex], $endTag ) && $endTag[1] == substr( $tagStack[count($tagStack) - 1], 1, strlen( $endTag[1] ) ) ) {
-				array_pop( $tagStack );
-				$words++;
-				$summary .= $parts[$pIndex++];
-			} elseif( preg_match( '/^<\w+/', $parts[$pIndex] ) ) {
-				array_push( $tagStack, $parts[$pIndex] );
-				$words++;
-				$summary .= $parts[$pIndex++];
-			} else
-				$summary .= $parts[$pIndex++] . ' ';
-		}
-		
-		// Tags that shouldn't be closed
-		$noClose = array("br", "img");
-		
-		// make sure that the summary is well formed XHTML by closing tags
-		while( $openTag = array_pop( $tagStack ) ) {
-			preg_match( '/^<(\w+)\s+/', $openTag, $tagName );
-			if(sizeof($tagName) > 0) {
-			    if(!in_array($tagName[1], $noClose)) {
-					$summary .= "</{$tagName[1]}>";
-			    }
+	public function Summary($maxWords = 50, $flex = 15, $add = '...') {
+		$str = false;
+
+		/* First we need the text of the first paragraph, without tags. Try using SimpleXML first */
+		if (class_exists('SimpleXMLElement')) {
+			$doc = new DOMDocument();
+			$doc->strictErrorChecking = FALSE;
+			if ($doc->loadHTML('<meta content="text/html; charset=utf-8" http-equiv="Content-type"/>' . $this->value)) {
+				$xml = simplexml_import_dom($doc);
+				$res = $xml->xpath('//p');
+				if (!empty($res)) $str = strip_tags($res[0]->asXML());
 			}
 		}
 		
-		return $summary;
+		if (!$str) {
+			/* If that failed, use a simple regex + a strip_tags. We look for the first paragraph with some words in it, not just the first paragraph. 
+			 * Not as good on broken HTML, and doesn't understand escaping or cdata blocks, but will probably work on even very malformed HTML */
+			if (preg_match('{<p[^>]*>(.*[A-Za-z]+.*)</p>}', $this->value, $matches)) {
+				$str = strip_tags($matches[1]);
+			}
+			/* If _that_ failed, just use the whole text with strip_tags */
+			else {
+				$str = strip_tags($this->value);
+			}
+		}
+		
+		/* Now split into words. If we are under the maxWords limit, just return the whole string */
+		$words = preg_split('/\s+/', $str);
+		if ($maxWords == -1 || count($words) <= $maxWords) return $str;
+
+		/* Otherwise work backwards for a looking for a sentence ending (we try to avoid abbreviations, but aren't very good at it) */
+		for ($i = $maxWords; $i > $maxWords - $flex; $i--) {
+			if (preg_match('/\.$/', $words[$i]) && !preg_match('/(Dr|Mr|Mrs|Ms|Miss|Sr|Jr|No)\.$/i', $words[$i])) {
+				return implode(' ', array_slice($words, 0, $i+1));
+			}
+		}
+		
+		/* If we didn't find a sentence ending quickly enough, just cut at the maxWords point and add '...' to the end */
+		return implode(' ', array_slice($words, 0, $maxWords)) . $add;
 	}
+	
+	/**
+	 * Returns the first sentence from the first paragraph. If it can't figure out what the first paragraph is (or there isn't one)
+	 * it returns the same as Summary()
+	 * 
+	 * This is the HTML aware equivilent to Text#FirstSentence
+	 * 
+	 * @see sapphire/core/model/fieldtypes/Text#FirstSentence()
+	 */
+	function FirstSentence() {
+		/* Use summary's html processing logic to get the first paragraph */
+		$paragraph = $this->Summary(-1);
+		
+		/* Then look for the first sentence ending. We could probably use a nice regex, but for now this will do */
+		$words = preg_split('/\s+/', $paragraph);
+		foreach ($words as $i => $word) {
+			if (preg_match('/\.$/', $word) && !preg_match('/(Dr|Mr|Mrs|Ms|Miss|Sr|Jr|No)\.$/i', $word)) {
+				return implode(' ', array_slice($words, 0, $i+1));
+			}
+		}
+		
+		/* If we didn't find a sentence ending, use the summary. We re-call rather than using paragraph so that Summary will limit the result this time */
+		return $this->Summary();
+	}	
 	
 	public function scaffoldFormField($title = null, $params = null) {
 		return new HtmlEditorField($this->name, $title);
