@@ -267,7 +267,7 @@ class Convert extends Object {
 			);
 		}
 		// Expand hyperlinks
-		if( !$preserveLinks && !isset($config['PreserveLink'])) {
+		if(!$preserveLinks && !$config['PreserveLinks']) {
 			$data = preg_replace('/<a[^>]*href\s*=\s*"([^"]*)">(.*?)<\/a>/ie', "Convert::html2raw('\\2').'[\\1]'", $data);
 			$data = preg_replace('/<a[^>]*href\s*=\s*([^ ]*)>(.*?)<\/a>/ie', "Convert::html2raw('\\2').'[\\1]'", $data);
 			
@@ -306,7 +306,7 @@ class Convert extends Object {
 		
 		// strip_tags seemed to be restricting the length of the output
 		// arbitrarily. This essentially does the same thing.
-		if( !$preserveLinks ) {
+		if(!$preserveLinks && !$config['PreserveLinks']) {
 			$data = preg_replace('/<\/?[^>]*>/','', $data);
 		} else {
 			$data = strip_tags($data, '<a>');
