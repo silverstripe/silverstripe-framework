@@ -702,15 +702,20 @@ abstract class Query extends Object implements Iterator {
 	private $queryHasBegun = false;
 
 	/**
-	 * Return an array containing all values in the leftmost column.
+	 * Return an array containing all the values from a specific column. If no column is set, then the first will be
+	 * returned
+	 *
+	 * @param string $column
 	 * @return array
 	 */
-	public function column() {
-		$column = array();
+	public function column($column = null) {
+		$result = array();
+		
 		foreach($this as $record) {
-			$column[] = reset($record);
+			$result[] = ($column) ? $record[$column] : reset($record);
 		}
-		return $column;
+		
+		return $result;
 	}
 
 	/**
