@@ -213,6 +213,17 @@ Behaviour.register({
 			}
 		}
 	},
+	'#$formID textarea' : {
+		initialise: function() {
+			if(!this.old_onblur) this.old_onblur = function() { return true; } 
+			if(!this.old_onfocus) this.old_onfocus = function() { return true; } 
+		},
+		onblur : function() {
+			if(this.old_onblur()) {
+				return $('$formID').validate(this);
+			}
+		}
+	},
 	'#$formID select' : {
 		initialise: function() {
 			if(!this.old_onblur) this.old_onblur = function() { return true; } 
