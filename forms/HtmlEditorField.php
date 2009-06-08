@@ -60,7 +60,7 @@ class HtmlEditorField extends TextareaField {
 						// Prevents execution timeouts if a page has 50 identical broken links by only highlighting them once
 						$alreadyHighlighted[$parts[1]] = true;
 					}
-				} else if($link[0] == '/') {
+				} else if($link == '' || $link[0] == '/') {
 					$broken = true;
 				} else if(ereg('^assets/',$link)) {
 					$link = str_replace(array('%20', '%5C', '%27'), array(' ', '\\', '\''), $link);
@@ -137,7 +137,7 @@ class HtmlEditorField extends TextareaField {
 					$record->HasBrokenLink = 1;
 				}
 
-			} else if($link{0} == '/') {
+			} else if($link == '' || $link[0] == '/') {
 				$record->HasBrokenLink = 1;
 
 			} else if($candidateFile = DataObject::get_one("File", "\"Filename\" = '" . Convert::raw2sql(urldecode($link)) . "'", false)) {
