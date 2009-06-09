@@ -319,7 +319,10 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @param string $className The new ClassName attribute (a subclass of {@link DataObject})
 	 */
 	function setClassName($className) {
-		$this->class = trim($className);
+		$className = trim($className);
+		if(!$className || !is_subclass_of($className, 'DataObject')) return;
+
+		$this->class = $className;
 		$this->setField("ClassName", $className);
 	}
 
