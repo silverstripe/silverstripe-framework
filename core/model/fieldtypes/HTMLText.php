@@ -41,32 +41,39 @@ class HTMLText extends Text {
 		/* First we need the text of the first paragraph, without tags. Try using SimpleXML first */
 		if (class_exists('SimpleXMLElement')) {
 			$doc = new DOMDocument();
-			$doc->strictErrorChecking = FALSE;
-			if ($doc->loadHTML('<meta content="text/html; charset=utf-8" http-equiv="Content-type"/>' . $this->value)) {
+			
+			/* Catch warnings thrown by loadHTML and turn them into a failure boolean rather than a SilverStripe error */
+			set_error_handler(create_function('$no, $str', 'throw new Exception("HTML Parse Error: ".$str);'), E_ALL);
+			try { $res = $doc->loadHTML('<meta content="text/html; charset=utf-8" http-equiv="Content-type"/>' . $this->value); }
+			catch (Exception $e) { $res = false; }
+			restore_error_handler();
+			
+			if ($res) {
 				$xml = simplexml_import_dom($doc);
 				$res = $xml->xpath('//p');
 				if (!empty($res)) $str = strip_tags($res[0]->asXML());
 			}
 		}
 		
+		/* If that failed, most likely the passed HTML is broken. use a simple regex + a custom more brutal strip_tags. We don't use strip_tags because
+		 * that does very badly on broken HTML*/
 		if (!$str) {
-			/* If that failed, use a simple regex + a strip_tags. We look for the first paragraph with some words in it, not just the first paragraph. 
-			 * Not as good on broken HTML, and doesn't understand escaping or cdata blocks, but will probably work on even very malformed HTML */
-			if (preg_match('{<p[^>]*>(.*[A-Za-z]+.*)</p>}', $this->value, $matches)) {
-				$str = strip_tags($matches[1]);
-			}
-			/* If _that_ failed, just use the whole text with strip_tags */
-			else {
-				$str = strip_tags($this->value);
-			}
+			/* See if we can pull a paragraph out*/
+			if (preg_match('{<p(\s[^<>]*)?>(.*[A-Za-z]+.*)</p>}', $this->value, $matches)) $str = $matches[2];
+			/* If _that_ failed, just use the whole text */
+			else $str = $this->value;
+			
+			/* Now pull out all the html-alike stuff */
+			$str = preg_replace('{</?[a-zA-Z]+[^<>]*>}', '', $str); /* Take out anything that is obviously a tag */
+			$str = preg_replace('{</|<|>}', '', $str); /* Strip out any left over looking bits. Textual < or > should already be encoded to &lt; or &gt; */
 		}
 		
-		/* Now split into words. If we are under the maxWords limit, just return the whole string */
+		/* Now split into words. If we are under the maxWords limit, just return the whole string (re-implode for whitespace normalization) */
 		$words = preg_split('/\s+/', $str);
-		if ($maxWords == -1 || count($words) <= $maxWords) return $str;
+		if ($maxWords == -1 || count($words) <= $maxWords) return implode(' ', $words);
 
 		/* Otherwise work backwards for a looking for a sentence ending (we try to avoid abbreviations, but aren't very good at it) */
-		for ($i = $maxWords; $i > $maxWords - $flex; $i--) {
+		for ($i = $maxWords; $i >= $maxWords - $flex && $i >= 0; $i--) {
 			if (preg_match('/\.$/', $words[$i]) && !preg_match('/(Dr|Mr|Mrs|Ms|Miss|Sr|Jr|No)\.$/i', $words[$i])) {
 				return implode(' ', array_slice($words, 0, $i+1));
 			}
