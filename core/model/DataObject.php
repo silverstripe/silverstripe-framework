@@ -289,7 +289,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		$this->components = null;
 		$this->destroyed = true;
 		$this->record = null;
-		$this->orignal = null;
+		$this->original = null;
 		$this->changed = null;
 		$this->flushCache();
 	}
