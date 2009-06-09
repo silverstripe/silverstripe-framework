@@ -47,7 +47,7 @@ class TextareaField extends FormField {
 			return $this->createTag(
 				'span',
 				$attributes,
-				(($this->value) ? htmlentities($this->value) : '<i>(' . _t('FormField.NONE', 'none') . ')</i>')
+				(($this->value) ? nl2br(htmlentities($this->value, ENT_COMPAT, 'UTF-8')) : '<i>(' . _t('FormField.NONE', 'none') . ')</i>')
 			);
 		} else {
 			$attributes = array(
@@ -60,7 +60,7 @@ class TextareaField extends FormField {
 			
 			if($this->disabled) $attributes['disabled'] = 'disabled';
 			
-			return $this->createTag('textarea', $attributes, htmlentities($this->value));
+			return $this->createTag('textarea', $attributes, htmlentities($this->value, ENT_COMPAT, 'UTF-8'));
 		}
 	}
 	
