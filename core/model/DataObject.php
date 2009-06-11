@@ -256,8 +256,8 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			}
 		}
 		
-		// Remove milliseconds from the datetime returned by MSSQL. If we don't do this, PHP will choke.
-		// TODO: As per the above PostgreSQLDatabase change, implement more elegantly
+		// TODO: MSSQL has a convert function that can do this on the SQL end. We just need a
+		// nice way of telling the database how we want to get the value out on a per-fieldtype basis
 		if(DB::getConn() instanceof MSSQLDatabase) {
 			$this->class = get_class($this);
 			foreach($record as $k => $v) {
