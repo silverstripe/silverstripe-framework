@@ -144,8 +144,7 @@ class DevelopmentAdmin extends Controller {
 		$databaseName = $databaseConfig['database'];
 		
 		if(Director::is_cli()) {
-			$this->performReset();
-			echo "\n$databaseName has been completely truncated and rebuilt.\n\n";
+			echo "\nPlease run dev/reset from your web browser.\n";
 		} else {
 			$renderer = new DebugView();
 			$renderer->writeHeader();
@@ -164,17 +163,6 @@ class DevelopmentAdmin extends Controller {
 			echo '</div>';
 			$renderer->writeFooter();
 		}
-	}
-	
-	function performReset() {
-		$da = new DatabaseAdmin();
-		$da->clearAllData();
-		
-		// If _ss_environment.php has some constants set for default admin, set these up in the request
-		$_REQUEST['username'] = defined('SS_DEFAULT_ADMIN_USERNAME') ? SS_DEFAULT_ADMIN_USERNAME : null;
-		$_REQUEST['password'] = defined('SS_DEFAULT_ADMIN_PASSWORD') ? SS_DEFAULT_ADMIN_PASSWORD : null;
-		
-		$da->build();
 	}
 	
 	function ResetForm() {
@@ -219,7 +207,15 @@ class DevelopmentAdmin extends Controller {
 			return false;
 		}
 		
-		$this->performReset();
+		$da = new DatabaseAdmin();
+		$da->clearAllData();
+		
+		// If _ss_environment.php has some constants set for default admin, set these up in the request
+		$_REQUEST['username'] = defined('SS_DEFAULT_ADMIN_USERNAME') ? SS_DEFAULT_ADMIN_USERNAME : null;
+		$_REQUEST['password'] = defined('SS_DEFAULT_ADMIN_PASSWORD') ? SS_DEFAULT_ADMIN_PASSWORD : null;
+		
+		$da->build();
+		
 		Session::clear('devResetRandNumber');
 		Director::redirect(Director::absoluteBaseURL() . 'dev/reset?done=1');
 	}
