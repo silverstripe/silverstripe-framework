@@ -63,6 +63,7 @@ class DevelopmentAdmin extends Controller {
 	function index() {
 		$actions = array(
 			"build" => "Build/rebuild this environment (formerly db/build).  Call this whenever you have updated your project sources",
+			"reset" => "Reset this environment - truncate the database and rebuild.  This is useful after testing to start with a fresh working copy",
 			"tests" => "See a list of unit tests to run",
 			"tests/all" => "Run all tests",
 			"jstests" => "See a list of JavaScript tests to run",
@@ -121,16 +122,106 @@ class DevelopmentAdmin extends Controller {
 	}
 	
 	function build() {
-		$renderer = new DebugView();
-		$renderer->writeHeader();
-		$renderer->writeInfo("Environment Builder (formerly db/build)", Director::absoluteBaseURL());
-		echo "<div style=\"margin: 0 2em\">";
+		if(Director::is_cli()) {
+			$da = new DatabaseAdmin();
+			$da->build();
+		} else {
+			$renderer = new DebugView();
+			$renderer->writeHeader();
+			$renderer->writeInfo("Environment Builder (formerly db/build)", Director::absoluteBaseURL());
+			echo "<div style=\"margin: 0 2em\">";
 
-		$da = new DatabaseAdmin();
-		$da->build();
+			$da = new DatabaseAdmin();
+			$da->build();
+
+			echo "</div>";
+			$renderer->writeFooter();
+		}
+	}
+	
+	function reset() {
+		global $databaseConfig;
+		$databaseName = $databaseConfig['database'];
 		
-		echo "</div>";
-		$renderer->writeFooter();
+		if(Director::is_cli()) {
+			$this->performReset();
+			echo "\n$databaseName has been completely truncated and rebuilt.\n\n";
+		} else {
+			$renderer = new DebugView();
+			$renderer->writeHeader();
+			$renderer->writeInfo('Database reset', 'Completely truncate and rebuild the current database');
+			echo '<div style="margin: 0 2em">';
+
+			if(isset($_GET['done'])) {
+				echo "<p style=\"color: green\"><b>$databaseName</b> has been completely truncated and rebuilt.</p>";
+				echo "<p>Note: If you had <i>SS_DEFAULT_ADMIN_USERNAME</i> and <i>SS_DEFAULT_ADMIN_PASSWORD</i>
+						defined in your <b>_ss_environment.php</b> file, a default admin Member record has been created
+						with those credentials.</p>";
+			} else {
+				echo $this->ResetForm()->renderWith('Form');
+			}
+
+			echo '</div>';
+			$renderer->writeFooter();
+		}
+	}
+	
+	function performReset() {
+		$da = new DatabaseAdmin();
+		$da->clearAllData();
+		
+		// If _ss_environment.php has some constants set for default admin, set these up in the request
+		$_REQUEST['username'] = defined('SS_DEFAULT_ADMIN_USERNAME') ? SS_DEFAULT_ADMIN_USERNAME : null;
+		$_REQUEST['password'] = defined('SS_DEFAULT_ADMIN_PASSWORD') ? SS_DEFAULT_ADMIN_PASSWORD : null;
+		
+		$da->build();
+	}
+	
+	function ResetForm() {
+		global $databaseConfig;
+		$databaseName = $databaseConfig['database'];
+		
+		if(!Session::get('devResetRandNumber')) {
+			$rand = rand(5,500);
+			Session::set('devResetRandNumber', $rand);
+		} else {
+			$rand = Session::get('devResetRandNumber');
+		}
+		
+		$form = new Form(
+			$this,
+			'ResetForm',
+			new FieldSet(
+				new LiteralField('ResetWarning', "<p style=\"color: red\">WARNING: This will completely
+					destroy ALL existing data in <b>$databaseName</b>! &nbsp; Press the button below to
+					confirm this action.</p>"),
+				new HiddenField('devResetRandNumber', '', $rand)
+			),
+			new FieldSet(
+				new FormAction('doReset', 'Reset and completely rebuild the database')
+			)
+		);
+		
+		$form->setFormAction(Director::absoluteBaseURL() . 'dev/ResetForm');
+		
+		return $form;
+	}
+	
+	function doReset($data, $form, $request) {
+		if(!isset($data['devResetRandNumber'])) {
+			Director::redirectBack();
+			return false;
+		}
+		
+		// Avoid accidental database resets by checking the posted number to the one in session
+		if(Session::get('devResetRandNumber') != $data['devResetRandNumber']) {
+			Director::redirectBack();
+			return false;
+		}
+		
+		$this->performReset();
+		Session::clear('devResetRandNumber');
+		Director::redirect(Director::absoluteBaseURL() . 'dev/reset?done=1');
 	}
 	
 	function errors() {
