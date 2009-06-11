@@ -255,6 +255,20 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 				if($this->db($k) == 'Boolean' && $v == 'f') $record[$k] = '0';
 			}
 		}
+		
+		// Remove milliseconds from the datetime returned by MSSQL. If we don't do this, PHP will choke.
+		// TODO: As per the above PostgreSQLDatabase change, implement more elegantly
+		if(DB::getConn() instanceof MSSQLDatabase) {
+			$this->class = get_class($this);
+			foreach($record as $k => $v) {
+				// MSSQLDatabase::date() uses datetime for the data type for "Date" and "SSDatetime"
+				if($this->db($k) == 'Date' || $this->db($k) == 'SSDatetime') {
+					$meridiem = substr($v, strlen($v) - 2, strlen($v));
+					$v = substr($v, 0, strlen($v) - 6);
+					$record[$k] = date('Y-m-d H:i:s', strtotime($v . ' ' . $meridiem));
+				}
+			}
+		}
 
 		// Set $this->record to $record, but ignore NULLs
 		$this->record = array();
@@ -2489,7 +2503,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		$this->extend('augmentSQL', $query);
 
 		$records = $query->execute();
-
+		
 		$ret = $this->buildDataObjectSet($records, $containerClass, $query, $this->class);
 		if($ret) $ret->parseQueryLimit($query);
 

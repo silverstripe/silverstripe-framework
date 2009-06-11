@@ -20,18 +20,6 @@ class DateField extends TextField {
 	public static $validation_enabled = true;
 	
 	function setValue($val) {
-		if ($val) {
-			if (!is_array($val) ) { //&& strlen($val) == 26) {
-
-				$ampm = substr($val,strlen($val)-2,strlen($val));
-				if ($ampm == "PM") {	//correct for pm offset when cutting off 12-hour clock format
-					$val =  substr($val,0,strlen($val)-6)."PM";
-				} elseif ($ampm == "AM") {
-					$val =  substr($val,0,strlen($val)-6);
-				}
-			}
-		}		
-		
 		if(is_string($val) && preg_match('/^([\d]{2,4})-([\d]{1,2})-([\d]{1,2})/', $val)) {
 			$this->value = preg_replace('/^([\d]{2,4})-([\d]{1,2})-([\d]{1,2})/','\\3/\\2/\\1', $val);
 		} else {
