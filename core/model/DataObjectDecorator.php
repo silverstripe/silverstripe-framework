@@ -150,12 +150,6 @@ abstract class DataObjectDecorator extends Extension {
 	 *
 	 * Return a map where the keys are db, has_one, etc, and the values are
 	 * additional fields/relations to be defined.
-	 * 
-	 * Note: please ensure that the static variable that you are overloading is explicitly defined on the class that
-	 * you are extending.  For example, we have added static $has_one = array() to the Member definition, so that we
-	 * can add has_one relationships to Member with decorators.
-	 * 
-	 * If you forget to do this, db/build won't create the new relation.  Don't blame us, blame PHP! ;-)
 	 *
 	 * @return array Returns a map where the keys are db, has_one, etc, and
 	 *               the values are additional fields/relations to be defined.
