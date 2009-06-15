@@ -90,6 +90,9 @@ HTML;
 }
 
 class TreeMultiselectField_Readonly extends TreeMultiselectField {
+	
+	protected $readonly = true;
+	
 	function Field() {
 		$titleArray = array();
 		$titleList = array();
