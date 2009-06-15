@@ -144,6 +144,8 @@ TreeDropdownField.prototype = {
 	ajaxGetTree: function(after) {
 		var ajaxURL = this.helperURLBase() + 'gettree?forceValues=' + this.inputTag.value;
 		ajaxURL += $('SecurityID') ? '&SecurityID=' + $('SecurityID').value : '';
+		if($('Form_EditForm_Locale')) ajaxURL += "&locale=" + $('Form_EditForm_Locale').value;
+		
 		new Ajax.Request(ajaxURL, {
 			method : 'get', 
 			onSuccess : after,
@@ -190,6 +192,7 @@ TreeDropdownField.prototype = {
 		
 		var ajaxURL = this.options.dropdownField.helperURLBase() + 'getsubtree?&SubtreeRootID=' + this.getIdx();
 		ajaxURL += $('SecurityID') ? '&SecurityID=' + $('SecurityID').value : '';
+		if($('Form_EditForm_Locale')) ajaxURL += "&locale=" + $('Form_EditForm_Locale').value;
 		
 		new Ajax.Request(ajaxURL, {
 			onSuccess : this.installSubtree.bind(this),
