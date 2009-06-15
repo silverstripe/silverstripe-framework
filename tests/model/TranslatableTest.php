@@ -776,6 +776,7 @@ class TranslatableTest extends FunctionalTest {
 	}
 	
 	function testSavePageInCMS() {
+		$adminUser = $this->objFromFixture('Member', 'admin');
 		$enPage = $this->objFromFixture('Page', 'testpage_en');
 		
 		$group = new Group();
@@ -784,6 +785,8 @@ class TranslatableTest extends FunctionalTest {
 		
 		$frPage = $enPage->createTranslation('fr_FR');
 		$frPage->write();
+		
+		$adminUser->logIn();
 		
 		$cmsMain = new CMSMain();
 		
@@ -801,6 +804,7 @@ class TranslatableTest extends FunctionalTest {
 		$this->assertEquals('Translated', $frPage->Title);
 		$this->assertEquals(array($group->ID), $frPage->ViewerGroups()->column('ID'));
 		
+		$adminUser->logOut();
 		Translatable::set_current_locale($origLocale);
 	}
 }
