@@ -429,7 +429,11 @@ class Translatable extends DataObjectDecorator {
 
 		// setting translatable fields by inspecting owner - this should really be done in the constructor
 		if($this->owner && $this->translatableFields === null) {
-			$this->translatableFields = array_keys($this->owner->inheritedDatabaseFields());
+			$this->translatableFields = array_merge(
+				array_keys($this->owner->inheritedDatabaseFields()),
+				array_keys($this->owner->has_many()),
+				array_keys($this->owner->many_many())
+			);
 		}
 	}
 	
@@ -792,6 +796,13 @@ class Translatable extends DataObjectDecorator {
 		// Don't apply these modifications for normal DataObjects - they rely on CMSMain logic
 		if(!($this->owner instanceof SiteTree)) return;
 		
+		$excludeFields = array(
+			'ViewerGroups',
+			'EditorGroups',
+			'CanViewType',
+			'CanEditType'
+		);
+		
 		// used in CMSMain->init() to set language state when reading/writing record
 		$fields->push(new HiddenField("Locale", "Locale", $this->owner->Locale) );
 
@@ -834,6 +845,8 @@ class Translatable extends DataObjectDecorator {
 			// (fields are object references, so we can replace them with the translatable CompositeField)
 			foreach($allDataFields as $dataField) {
 				if($dataField instanceof HiddenField) continue;
+				if(in_array($dataField->Name(), $excludeFields)) continue;
+				
 				if(in_array($dataField->Name(), $translatableFieldNames)) {
 					// if the field is translatable, perform transformation
 					$fields->replaceField($dataField->Name(), $transformation->transformFormField($dataField));
