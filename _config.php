@@ -47,7 +47,7 @@ Object::useCustomClass('Datetime','SSDatetime',true);
 /**
  * The root directory of TinyMCE
  */
-define('MCE_ROOT', 'jsparty/tiny_mce2/');
+define('MCE_ROOT', 'jsparty/tiny_mce/');
 
 /**
  * The secret key that needs to be sent along with pings to /Email_BounceHandler
