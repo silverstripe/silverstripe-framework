@@ -733,8 +733,15 @@ class Translatable extends DataObjectDecorator {
 	 * Remove the record from the translation group mapping.
 	 */
 	function onBeforeDelete() {
-		$this->removeTranslationGroup();
-		
+		// @todo Coupling to Versioned, we need to avoid removing
+		// translation groups if records are just deleted from a stage
+		// (="unpublished"). Ideally the translation group tables would
+		// be specific to different Versioned changes, making this restriction unnecessary.
+		// This will produce orphaned translation group records for SiteTree subclasses.
+		if(!$this->owner->hasExtension('Versioned')) {
+			$this->removeTranslationGroup();
+		}
+
 		parent::onBeforeDelete();
 	}
 	

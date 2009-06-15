@@ -131,6 +131,25 @@ class TranslatableTest extends FunctionalTest {
 			$enPage->ID
 		);
 	}
+	
+	function testTranslationGroupNotRemovedWhenSiteTreeUnpublished() {
+		$enPage = new Page();
+		$enPage->Locale = 'en_US';
+		$enPage->write();
+		$enPage->publish('Stage', 'Live');
+		$enTranslationGroup = $enPage->getTranslationGroup();
+		
+		$frPage = $enPage->createTranslation('fr_FR');
+		$frPage->write();
+		$frPage->publish('Stage', 'Live');
+		$frTranslationGroup = $frPage->getTranslationGroup();
+		
+		$enPage->doUnpublish();
+		$this->assertEquals($enPage->getTranslationGroup(), $enTranslationGroup);
+		
+		$frPage->doUnpublish();
+		$this->assertEquals($frPage->getTranslationGroup(), $frTranslationGroup);
+	}
 
 	function testGetTranslationOnSiteTree() {
 		$origPage = $this->objFromFixture('Page', 'testpage_en');
