@@ -10,8 +10,7 @@
  * @subpackage fields-formattedinput
  */
 class HtmlEditorField extends TextareaField {
-	protected $rows;
-
+	
 	/**
 	 * Includes the javascript neccesary for this field to work in the current output.
 	 * NOTE: If you are loading a form that includes an HtmlEditorField via Ajax this function must be called in the requesting page, because
@@ -82,8 +81,7 @@ class HtmlEditorField extends TextareaField {
 		// We can't use htmlentities as that messes with unicode
 		$cleanVal = str_replace(array("&","<",">"),array("&amp;","&lt;","&gt;"),$cleanVal);
 		// 97% instead of 100% to prevent horizontal scrollbars in IE7
-		$style = "width: 97%; height: " . ($this->rows * 16) . "px";		
-		
+		$style = "width: 97%; height: " . ($this->rows * 16) . "px";
 		$class = "htmleditor";
 		$class = ($this->extraClass)?$class." ".$this->extraClass:$class;
 		
