@@ -672,8 +672,9 @@ class Translatable extends DataObjectDecorator {
 		// If language is not set explicitly, set it to current_locale.
 		// This might be a bit overzealous in assuming the language
 		// of the content, as a "single language" website might be expanded
-		// later on. 
-		if(!$this->owner->ID && !$this->owner->Locale) {
+		// later on. See {@link requireDefaultRecords()} for batch setting
+		// of empty Locale columns on each dev/build call.
+		if(!$this->owner->Locale) {
 			$this->owner->Locale = Translatable::get_current_locale();
 		}
 
