@@ -774,6 +774,35 @@ class TranslatableTest extends FunctionalTest {
 		
 		Translatable::set_allowed_locales($origAllowedLocales);
 	}
+	
+	function testSavePageInCMS() {
+		$enPage = $this->objFromFixture('Page', 'testpage_en');
+		
+		$group = new Group();
+		$group->Title = 'Example Group';
+		$group->write();
+		
+		$frPage = $enPage->createTranslation('fr_FR');
+		$frPage->write();
+		
+		$cmsMain = new CMSMain();
+		
+		$origLocale = Translatable::get_current_locale();
+		Translatable::set_current_locale('fr_FR');
+		
+		$form = $cmsMain->getEditForm($frPage->ID);
+		$form->loadDataFrom(array(
+			'Title' => 'Translated', // $db field
+			'ViewerGroups' => $group->ID // $many_many field
+		));
+		$form->saveInto($frPage);
+		$frPage->write();
+
+		$this->assertEquals('Translated', $frPage->Title);
+		$this->assertEquals(array($group->ID), $frPage->ViewerGroups()->column('ID'));
+		
+		Translatable::set_current_locale($origLocale);
+	}
 }
 
 class TranslatableTest_DataObject extends DataObject implements TestOnly {
