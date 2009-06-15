@@ -524,7 +524,9 @@ class Translatable extends DataObjectDecorator {
 			'SELECT `ID` FROM `%s` WHERE `Locale` IS NULL OR `Locale` = \'\'',
 			ClassInfo::baseDataClass($this->owner->class)
 		))->column();
-		if($idsWithoutLocale) {
+		if(!$idsWithoutLocale) return;
+		
+			if($this->owner->class == 'SiteTree') {
 			foreach(array('Stage', 'Live') as $stage) {
 				foreach($idsWithoutLocale as $id) {
 					$obj = Versioned::get_one_by_stage(
@@ -533,20 +535,31 @@ class Translatable extends DataObjectDecorator {
 						sprintf('`SiteTree`.`ID` = %d', $id)
 					);
 					if(!$obj) continue;
-					
+
 					$obj->Locale = Translatable::default_locale();
 					$obj->writeToStage($stage);
 					$obj->addTranslationGroup($obj->ID);
 					$obj->destroy();
 					unset($obj);
 				}
-				Database::alteration_message(sprintf(
-					"Added default locale '%s' to table %s","changed",
-					Translatable::default_locale(),
-					$this->owner->class
-				));
+			}
+		} else {
+			foreach($idsWithoutLocale as $id) {
+				$obj = DataObject::get_by_id($this->owner->class, $id);
+				if(!$obj) continue;
+
+				$obj->Locale = Translatable::default_locale();
+				$obj->write();
+				$obj->addTranslationGroup($obj->ID);
+				$obj->destroy();
+				unset($obj);
 			}
 		}
+		Database::alteration_message(sprintf(
+			"Added default locale '%s' to table %s","changed",
+			Translatable::default_locale(),
+			$this->owner->class
+		));
 	}
 	
 	/**
@@ -657,8 +670,9 @@ class Translatable extends DataObjectDecorator {
 		// If language is not set explicitly, set it to current_locale.
 		// This might be a bit overzealous in assuming the language
 		// of the content, as a "single language" website might be expanded
-		// later on. 
-		if(!$this->owner->ID && !$this->owner->Locale) {
+		// later on. See {@link requireDefaultRecords()} for batch setting
+		// of empty Locale columns on each dev/build call.
+		if(!$this->owner->Locale) {
 			$this->owner->Locale = Translatable::get_current_locale();
 		}
 
