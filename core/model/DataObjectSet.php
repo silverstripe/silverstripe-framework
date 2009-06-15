@@ -5,7 +5,7 @@
  * @package sapphire
  * @subpackage model
  */
-class DataObjectSet extends ViewableData implements IteratorAggregate {
+class DataObjectSet extends ViewableData implements IteratorAggregate, Countable {
 	/**
 	 * The DataObjects in this set.
 	 * @var array
