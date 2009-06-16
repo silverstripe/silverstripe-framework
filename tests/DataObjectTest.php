@@ -734,7 +734,7 @@ class DataObjectTest extends SapphireTest {
 		
 		$obj = DataObject::get_by_id('DataObjectTest_Fixture', $obj->ID);
 		$this->assertEquals('1988-01-02', $obj->DateField);
-		$this->assertEquals('1988-03-04 06:30', $obj->DatetimeField);
+		$this->assertEquals('1988-03-04 06:30:00', $obj->DatetimeField);
 	}
 	
 }
