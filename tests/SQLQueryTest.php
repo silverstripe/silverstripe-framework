@@ -69,23 +69,26 @@ class SQLQueryTest extends SapphireTest {
 	}
 	
 	function testSelectWithLimitClause() {
-		// numeric limit
-		$query = new SQLQuery();
-		$query->from[] = "MyTable";
-		$query->limit("99");
-		$this->assertEquals("SELECT * FROM MyTable LIMIT 99", $query->sql());
+		// These are MySQL specific :-S
+		if(DB::getConn() instanceof MySQLDatabase) {
+			// numeric limit
+			$query = new SQLQuery();
+			$query->from[] = "MyTable";
+			$query->limit("99");
+			$this->assertEquals("SELECT * FROM MyTable LIMIT 99", $query->sql());
 		
-		// array limit
-		$query = new SQLQuery();
-		$query->from[] = "MyTable";
-		$query->limit(array('limit'=>99));
-		$this->assertEquals("SELECT * FROM MyTable LIMIT 99", $query->sql());
+			// array limit
+			$query = new SQLQuery();
+			$query->from[] = "MyTable";
+			$query->limit(array('limit'=>99));
+			$this->assertEquals("SELECT * FROM MyTable LIMIT 99", $query->sql());
 
-		// array limit with start (MySQL specific)
-		$query = new SQLQuery();
-		$query->from[] = "MyTable";
-		$query->limit(array('limit'=>99, 'start'=>97));
-		$this->assertEquals("SELECT * FROM MyTable LIMIT 99 OFFSET 97", $query->sql());
+			// array limit with start (MySQL specific)
+			$query = new SQLQuery();
+			$query->from[] = "MyTable";
+			$query->limit(array('limit'=>99, 'start'=>97));
+			$this->assertEquals("SELECT * FROM MyTable LIMIT 99 OFFSET 97", $query->sql());
+		}
 	}
 	
 	function testSelectWithOrderbyClause() {
