@@ -79,7 +79,15 @@ class DevelopmentAdmin extends Controller {
 			
 			$renderer = new DebugView();
 			$renderer->writeHeader();
-			$renderer->writeInfo("Sapphire Development Tools", Director::absoluteBaseURL());
+
+			// Todo: the database info could be encapsulated better
+			global $databaseConfig;
+			$summaryInfo = "Base URL: " . Director::absoluteBaseURL() . "\n"
+				. "Document root: " . Director::baseFolder() . "\n"
+				. "Database: " . DB::getConn()->class . ", database " . DB::getConn()->currentDatabase() 
+				. " on " . $databaseConfig['server'];
+		
+			$renderer->writeInfo("Sapphire Development Tools", $summaryInfo);
 			$base = Director::baseURL();
 
 			echo '<div class="options"><ul>';
