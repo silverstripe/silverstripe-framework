@@ -48,13 +48,21 @@ TranslatableTest_Page:
 Group:
    cmseditorgroup:
       Code: cmseditorgroup
+   admingroup:
+      Code: admingroup
 Member:
    cmseditor:
       FirstName: Editor
       Groups: =>Group.cmseditorgroup
    websiteuser:
       FirstName: Website User
+   admin:
+       FirstName: Admin
+       Groups: =>Group.admingroup
 Permission:
    cmsmaincode:
       Code: CMS_ACCESS_CMSMain
       Group: =>Group.cmseditorgroup
+   admincode:
+      Code: ADMIN
+      Group: =>Group.admingroup
