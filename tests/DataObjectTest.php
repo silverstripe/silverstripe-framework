@@ -363,16 +363,16 @@ class DataObjectTest extends SapphireTest {
 	
 	function testFieldNamesThatMatchMethodNamesWork() {
 		/* Check that a field name that corresponds to a method on DataObject will still work */
-		$obj = new DataObjectTest_FunnyFieldNames();
+		$obj = new DataObjectTest_Fixture();
 		$obj->Data = "value1";
 		$obj->DbObject = "value2";
 		$obj->Duplicate = "value3";
 		$obj->write();
 
 		$this->assertNotNull($obj->ID);
-		$this->assertEquals('value1', DB::query("SELECT \"Data\" FROM \"DataObjectTest_FunnyFieldNames\" WHERE \"ID\" = $obj->ID")->value());
-		$this->assertEquals('value2', DB::query("SELECT \"DbObject\" FROM \"DataObjectTest_FunnyFieldNames\" WHERE \"ID\" = $obj->ID")->value());
-		$this->assertEquals('value3', DB::query("SELECT \"Duplicate\" FROM \"DataObjectTest_FunnyFieldNames\" WHERE \"ID\" = $obj->ID")->value());
+		$this->assertEquals('value1', DB::query("SELECT \"Data\" FROM \"DataObjectTest_Fixture\" WHERE \"ID\" = $obj->ID")->value());
+		$this->assertEquals('value2', DB::query("SELECT \"DbObject\" FROM \"DataObjectTest_Fixture\" WHERE \"ID\" = $obj->ID")->value());
+		$this->assertEquals('value3', DB::query("SELECT \"Duplicate\" FROM \"DataObjectTest_Fixture\" WHERE \"ID\" = $obj->ID")->value());
 	}
 	
 	/**
@@ -571,7 +571,7 @@ class DataObjectTest extends SapphireTest {
 		/* Test DataObject::has_own_table() returns true if the object has $has_one or $db values */
 		$this->assertTrue(DataObject::has_own_table("DataObjectTest_Player"));
 		$this->assertTrue(DataObject::has_own_table("DataObjectTest_Team"));
-		$this->assertTrue(DataObject::has_own_table("DataObjectTest_FunnyFieldNames"));
+		$this->assertTrue(DataObject::has_own_table("DataObjectTest_Fixture"));
 
 		/* Root DataObject that always have a table, even if they lack both $db and $has_one */
 		$this->assertTrue(DataObject::has_own_table("DataObjectTest_FieldlessTable"));
@@ -630,9 +630,9 @@ class DataObjectTest extends SapphireTest {
 	}
 	
 	function testPopulateDefaults() {
-		$obj = new DataObjectTest_WithDefaults();
+		$obj = new DataObjectTest_Fixture();
 		$this->assertEquals(
-			$obj->MyField,
+			$obj->MyFieldWithDefault,
 			"Default Value",
 			"Defaults are populated for in-memory object from \$defaults array"
 		);
@@ -681,7 +681,7 @@ class DataObjectTest extends SapphireTest {
 		$assertions = array (
 			'DataObjectTest_Player'       => 'Data Object Test Player',
 			'DataObjectTest_Team'         => 'Data Object Test Team',
-			'DataObjectTest_WithDefaults' => 'Data Object Test With Defaults'
+			'DataObjectTest_Fixture'      => 'Data Object Test Fixture'
 		);
 		
 		foreach($assertions as $class => $expectedSingularName) {
@@ -725,6 +725,18 @@ class DataObjectTest extends SapphireTest {
 		
 	}
 	
+	function testFieldTypes() {
+		$obj = new DataObjectTest_Fixture();
+		$obj->DateField = '1988-01-02';
+		$obj->DatetimeField = '1988-03-04 06:30';
+		$obj->write();
+		$obj->flushCache();
+		
+		$obj = DataObject::get_by_id('DataObjectTest_Fixture', $obj->ID);
+		$this->assertEquals('1988-01-02', $obj->DateField);
+		$this->assertEquals('1988-03-04 06:30', $obj->DatetimeField);
+	}
+	
 }
 
 class DataObjectTest_Player extends Member implements TestOnly {
@@ -766,21 +778,23 @@ class DataObjectTest_Team extends DataObject implements TestOnly {
 
 }
 
-class DataObjectTest_FunnyFieldNames extends DataObject implements TestOnly {
+class DataObjectTest_Fixture extends DataObject implements TestOnly {
 	static $db = array(
+		// Funny field names
 		'Data' => 'Varchar',
 		'Duplicate' => 'Varchar',
 		'DbObject' => 'Varchar',
-	);
-}
-
-class DataObjectTest_WithDefaults extends DataObject implements TestOnly {
-	static $db = array(
+		
+		// Field with default
 		'MyField' => 'Varchar',
+		
+		// Field types
+		"DateField" => "Date",
+		"DatetimeField" => "Datetime",
 	);
-	
+
 	static $defaults = array(
-		'MyField' => 'Default Value', 
+		'MyFieldWithDefault' => 'Default Value', 
 	);
 }
 
