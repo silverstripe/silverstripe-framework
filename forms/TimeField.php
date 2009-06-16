@@ -28,11 +28,20 @@ class TimeField extends TextField {
 	}
 	
 	function dataValue() {
-		return date($this->timeformat,strtotime($this->value));
+		if($this->value) {
+			return date($this->timeformat,strtotime($this->value));
+		} else {
+			return $this->value;
+		}
 	}
 	
 	function setValue($val) {
-		$this->value = date($this->timeformat,strtotime($val));
+		if($val) {
+			$this->value = date($this->timeformat,strtotime($val));
+		} else {
+			$this->value = $val;
+		}
+		
 	}
 	
 	/**
