@@ -56,14 +56,18 @@ class RootURLController extends Controller {
 	static function get_homepage_urlsegment() {
 		$urlSegment = '';
 		
-		// @todo Temporarily restricted to MySQL database while testing db abstraction
-		if(DB::getConn() instanceof MySQLDatabase) {
-			$host = $_SERVER['HTTP_HOST'];
-			$host = str_replace('www.','',$host);
-			$SQL_host = str_replace('.','\\.',Convert::raw2sql($host));
-	        $homePageOBJ = DataObject::get_one("SiteTree", "HomepageForDomain REGEXP '(,|^) *$SQL_host *(,|\$)'");
-		} else {
-			$homePageOBJ = null;
+		$homePageOBJ = null;
+
+		$host = $_SERVER['HTTP_HOST'];
+		$host = str_replace('www.','',$host);
+		$SQL_host = Convert::raw2sql($host);
+		
+        $homePageOBJs = DataObject::get("SiteTree", "HomepageForDomain LIKE '%$SQL_host%'");
+		if($homePageOBJs) foreach($homePageOBJs as $candidateObj) {
+			if(preg_match('/(,|^) *' . preg_quote($host) . ' *(,|$)/', $candidateObj->HomepageForDomain)) {
+				$homePageOBJ = $candidateObj;
+				break;
+			}
 		}
 		
 		if(singleton('SiteTree')->hasExtension('Translatable') && !$homePageOBJ) {
