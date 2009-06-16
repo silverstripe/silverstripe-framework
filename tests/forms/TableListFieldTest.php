@@ -159,6 +159,7 @@ class TableListFieldTest_Obj extends DataObject implements TestOnly {
 		"B" => "Varchar",
 		"C" => "Varchar",
 	);
+	static $default_sort = "A";
 	
 	function D() {
 		return $this->A . '/' . $this->B . '/' . $this->C;
@@ -174,6 +175,7 @@ class TableListFieldTest_CsvExport extends DataObject implements TestOnly {
 		"A" => "Varchar",
 		"B" => "Varchar"
 	);
+	static $default_sort = "A";
 }
 
 class TableListFieldTest_TestController extends Controller {

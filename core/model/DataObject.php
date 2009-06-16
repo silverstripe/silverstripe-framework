@@ -265,16 +265,14 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 					// MSSQLDatabase::date() uses datetime for the data type for "Date" and "SSDatetime"
 					switch($this->db($k)) {
 						case "Date":
-							$meridiem = substr($v, strlen($v) - 2, strlen($v));
-							$v = substr($v, 0, strlen($v) - 6);
-							$record[$k] = date('Y-m-d', strtotime($v . ' ' . $meridiem));
+							$v = preg_replace('/([ap]m)$/i', ' \\1', $v);
+							$record[$k] = date('Y-m-d', strtotime($v));
 							break;
 					
 						case "Datetime":
 						case "SSDatetime":
-							$meridiem = substr($v, strlen($v) - 2, strlen($v));
-							$v = substr($v, 0, strlen($v) - 6);
-							$record[$k] = date('Y-m-d H:i:s', strtotime($v . ' ' . $meridiem));
+						$v = preg_replace('/([ap]m)$/i', ' \\1', $v);
+							$record[$k] = date('Y-m-d H:i:s', strtotime($v));
 							break;
 					}
 				}
