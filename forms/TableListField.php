@@ -458,13 +458,6 @@ JS
 			$query->select[] = "{$baseClass}.ClassName AS \"RecordClassName\"";
 		} else {
 			$query = singleton($this->sourceClass)->extendedSQL($this->sourceFilter(), $this->sourceSort, null, $this->sourceJoin);
-			
-			// Add more selected fields if they are from joined table.
-			foreach($this->FieldList() as $k => $title) {
-				if(!strpos($k, '.') && singleton($this->sourceClass)->hasDatabaseField($k)) {
-					$query->select[] = "\"$k\"";
-				}
-			}
 		}
 		
 		if(isset($_REQUEST['ctf'][$this->Name()]['sort'])) {
@@ -493,12 +486,6 @@ JS
 			$query->select[] = "{$baseClass}.ClassName AS \"RecordClassName\"";
 		} else {
 			$query = singleton($this->sourceClass)->extendedSQL($this->sourceFilter(), $this->sourceSort, null, $this->sourceJoin);
-			
-			// Add more selected fields if they are from joined table.
-			foreach($this->FieldList() as $k=>$title){
-				if(singleton($this->sourceClass)->hasDatabaseField($k))
-					$query->select[] = "\"$k\"";
-			}
 		}
 		return clone $query;
 	}
