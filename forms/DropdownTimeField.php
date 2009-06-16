@@ -6,10 +6,6 @@
  */
 class DropdownTimeField extends TimeField {
 	
-	function __construct( $name, $title = null, $value = "", $timeformat = 'H:i a' ){
-		parent::__construct( $name, $title, $value, $timeformat );
-	}
-	
 	static function Requirements() {
 		Requirements::javascript( SAPPHIRE_DIR . '/javascript/DropdownTimeField.js' );
 		Requirements::css( SAPPHIRE_DIR . '/css/DropdownTimeField.css' );
