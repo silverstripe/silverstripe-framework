@@ -261,20 +261,22 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		if(DB::getConn() instanceof MSSQLDatabase) {
 			$this->class = get_class($this);
 			foreach($record as $k => $v) {
-				// MSSQLDatabase::date() uses datetime for the data type for "Date" and "SSDatetime"
-				switch($this->db($k)) {
-					case "Date":
-						$meridiem = substr($v, strlen($v) - 2, strlen($v));
-						$v = substr($v, 0, strlen($v) - 6);
-						$record[$k] = date('Y-m-d', strtotime($v . ' ' . $meridiem));
-						break;
+				if($v) {
+					// MSSQLDatabase::date() uses datetime for the data type for "Date" and "SSDatetime"
+					switch($this->db($k)) {
+						case "Date":
+							$meridiem = substr($v, strlen($v) - 2, strlen($v));
+							$v = substr($v, 0, strlen($v) - 6);
+							$record[$k] = date('Y-m-d', strtotime($v . ' ' . $meridiem));
+							break;
 					
-					case "Datetime":
-					case "SSDatetime":
-						$meridiem = substr($v, strlen($v) - 2, strlen($v));
-						$v = substr($v, 0, strlen($v) - 6);
-						$record[$k] = date('Y-m-d H:i:s', strtotime($v . ' ' . $meridiem));
-						break;
+						case "Datetime":
+						case "SSDatetime":
+							$meridiem = substr($v, strlen($v) - 2, strlen($v));
+							$v = substr($v, 0, strlen($v) - 6);
+							$record[$k] = date('Y-m-d H:i:s', strtotime($v . ' ' . $meridiem));
+							break;
+					}
 				}
 			}
 		}
