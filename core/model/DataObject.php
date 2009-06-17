@@ -800,6 +800,12 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		foreach($classes as $class) {
 			$defaults = Object::get_static($class, 'defaults');
 			
+			if($defaults && !is_array($defaults)) {
+				user_error("Bad '$this->class' defaults given: " . var_export($defaults, true),
+				 	E_USER_WARNING);
+				$defaults = null;
+			}
+			
 			if($defaults) foreach($defaults as $fieldName => $fieldValue) {
 				// SRM 2007-03-06: Stricter check
 				if(!isset($this->$fieldName) || $this->$fieldName === null) {
