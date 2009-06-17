@@ -173,10 +173,6 @@ class RequestHandler extends ViewableData {
 	 */
 	function checkAccessAction($action) {
 		$action            = strtolower($action);
-		
-		/** $this->class is not a safe call, cos $this->class is not assigned in some circumstance.
-		 *	we used get_class($this) here
-		 */
 		$allowedActions    = Object::combined_static(get_class($this), 'allowed_actions');
 		$newAllowedActions = array();
 		
