@@ -37,7 +37,12 @@ class DataDifferencer extends ViewableData {
 	
 	protected $ignoredFields = array("ID","Version","RecordID");
 	
+	/**
+	 * Construct a DataDifferencer to show the changes between $fromRecord and $toRecord.
+	 * If $fromRecord is null, this will represent a "creation".
+	 */
 	function __construct($fromRecord, $toRecord) {
+		if(!$toRecord) user_error("DataDifferencer constructed without a toRecord", E_USER_WARNING);
 		$this->fromRecord = $fromRecord;
 		$this->toRecord = $toRecord;
 	}
@@ -57,13 +62,20 @@ class DataDifferencer extends ViewableData {
 	 * <ins> and <del> tags.
 	 */
 	function diffedData() {
-		$diffed = clone $this->fromRecord;
-		$fields = array_keys($diffed->getAllFields());
+		if($this->fromRecord) {
+			$diffed = clone $this->fromRecord;
+			$fields = array_keys($diffed->getAllFields());
+		} else {
+			$diffed = clone $this->toRecord;
+			$fields = array_keys($this->toRecord->getAllFields());
+		}
 		
 		foreach($fields as $field) {
 			if(in_array($field, $this->ignoredFields)) continue;
 			
-			if($this->fromRecord->$field != $this->toRecord->$field) {			
+			if(!$this->fromRecord) {
+				$diffed->$field = "<ins>" . $this->toRecord->$field . "</ins>";
+			} else if($this->fromRecord->$field != $this->toRecord->$field) {			
 				$diffed->$field = Diff::compareHTML($this->fromRecord->$field, $this->toRecord->$field);
 			}
 		}
@@ -82,16 +94,25 @@ class DataDifferencer extends ViewableData {
 	 */
 	function ChangedFields() {
 		$changedFields = new DataObjectSet();
-		$fields = array_keys($this->fromRecord->getAllFields());
+
+		if($this->fromRecord) {
+			$base = $this->fromRecord;
+			$fields = array_keys($this->fromRecord->getAllFields());
+		} else {
+			$base = $this->toRecord;
+			$fields = array_keys($this->toRecord->getAllFields());
+		}
 		
 		foreach($fields as $field) {
 			if(in_array($field, $this->ignoredFields)) continue;
 
-			if($this->fromRecord->$field != $this->toRecord->$field) {			
+			if(!$this->fromRecord || $this->fromRecord->$field != $this->toRecord->$field) {			
 				$changedFields->push(new ArrayData(array(
 					'Name' => $field,
-					'Title' => $this->fromRecord->fieldLabel($field),
-					'Diff' => Diff::compareHTML($this->fromRecord->$field, $this->toRecord->$field),
+					'Title' => $base->fieldLabel($field),
+					'Diff' => $this->fromRecord
+						? Diff::compareHTML($this->fromRecord->$field, $this->toRecord->$field)
+						: "<ins>" . $this->toRecord->$field . "</ins>",
 					'From' => $this->fromRecord->$field,
 					'To' => $this->toRecord->$field,
 				)));
