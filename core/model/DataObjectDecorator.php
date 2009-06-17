@@ -1,8 +1,11 @@
 <?php
 /**
- * Plug-ins for additional functionality in your DataObjects
+ * Plug-ins for additional functionality in your DataObjects.
+ * 
+ * Note: DataObjectDecorators are not actually Decorators in the GoF Design Patterns sense of the
+ * word.  A better name for this class would be DataExtension.  However, in the interests of
+ * backward compatibility we haven't renamed the class.
  *
- * DataObject decorators add extra functionality to your data objects.
  * @package sapphire
  * @subpackage model
  */
