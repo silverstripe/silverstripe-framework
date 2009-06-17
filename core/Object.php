@@ -388,9 +388,10 @@ abstract class Object {
 			unset(self::$classes_constructed[$subclass]);
 		}
 		
-		
 		// merge with existing static vars
 		self::add_static_var($class, 'extensions', array($extension));
+		
+		DataObjectDecorator::load_extra_statics($class, $extension);
 	}
 	
 	/**

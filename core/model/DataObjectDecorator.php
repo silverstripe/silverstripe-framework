@@ -34,65 +34,44 @@ abstract class DataObjectDecorator extends Extension {
 	private static $extra_statics_loaded = array();
 	
 	/**
-	 * Set the owner of this decorator.
-	 * @param DataObject $owner
+	 * Load the extra static definitions for the given extension
+	 * class name, called by {@link Object::add_extension()}
+	 * 
+	 * @param string $class Class name of the owner class (or owner base class)
+	 * @param string $extension Class name of the extension class
 	 */
-	/*
-	function setOwner($owner, $ownerBaseClass = null) {
-		if($owner && !($owner instanceof DataObject)) {
-			user_error(sprintf(
-				"DataObjectDecorator->setOwner(): Trying to decorate an object of class '%s' with '%s', 
-				only Dataobject subclasses are supported.",
-				get_class($owner), $this->class),
-				E_USER_ERROR
-			);
-			return false;
-		}
+	public static function load_extra_statics($class, $extension) {
+		if(!empty(self::$extra_statics_loaded[$class][$extension])) return;
+		self::$extra_statics_loaded[$class][$extension] = true;
 		
-		parent::setOwner($owner, $ownerBaseClass);
-	}
-	*/
-	
-	/**
-	 * Load the extra database fields defined in extraStatics.
-	 */
-	function loadExtraStatics() {
-		if(!empty(self::$extra_statics_loaded[$this->ownerBaseClass][$this->class])) return;
-		self::$extra_statics_loaded[$this->ownerBaseClass][$this->class] = true;
-
+		if(!method_exists($extension, 'extraStatics')) return;
+		
 		// If the extension has been manually applied to a subclass, we should ignore that.
-		if(Object::has_extension(get_parent_class($this->owner), $this->class)) return;
-
-		if($fields = $this->extraStatics()) {
-			foreach($fields as $relation => $newVal) {
-				if(isset(self::$decoratable_statics[$relation])) {
-					$origVal = Object::get_static($this->ownerBaseClass, $relation);
-
+		if(Object::has_extension(get_parent_class($class), $extension)) return;
+		
+		$statics = call_user_func(array($extension, 'extraStatics'));
+		if($statics) {
+			foreach($statics as $name => $newVal) {
+				if(isset(self::$decoratable_statics[$name])) {
+					$origVal = self::get_static($class, $name);
+				
 					// Array to be merged 
-					if(self::$decoratable_statics[$relation]) {
+					if(self::$decoratable_statics[$name]) {
 						// Can't use add_static_var() here as it would merge the array rather than replacing
-						Object::set_static($this->ownerBaseClass, $relation, array_merge((array)$origVal, $newVal));
-
-					// Value to be overwritten
+						self::set_static($class, $name, array_merge((array)$origVal, $newVal));
+					
+						// Value to be overwritten
 					} else {
-						Object::set_static ($this->ownerBaseClass, $relation, $newVal);
+						Object::set_static($class, $name, $newVal);
 					}
 				}
 			}
 			
-			DataObject::$cache_has_own_table[$this->ownerBaseClass]       = null;
-			DataObject::$cache_has_own_table_field[$this->ownerBaseClass] = null;
+			DataObject::$cache_has_own_table[$class]       = null;
+			DataObject::$cache_has_own_table_field[$class] = null;
 		}
 	}
 	
-	/**
-	 * @deprecated 2.4 Use loadExtraStatics()
-	 */
-	function loadExtraDBFields() {
-		user_error('DataObjectDecorator::loadExtraDBFields() is deprecated. Please use loadExtraStatics() instead.', E_USER_NOTICE);
-		return $this->loadExtraStatics();
-	}
-
 	/**
 	 * Edit the given query object to support queries for this extension
 	 *
@@ -155,16 +134,9 @@ abstract class DataObjectDecorator extends Extension {
 	 *               the values are additional fields/relations to be defined.
 	 */
 	function extraStatics() {
-		return $this->extraDBFields();
-	}
-	
-	/**
-	 * @deprecated 2.4 Use extraStatics()
-	 */
-	function extraDBFields() {
 		return array();
 	}
-
+	
 	/**
 	 * This function is used to provide modifications to the form in the CMS
 	 * by the decorator. By default, no changes are made. {@link DataObject->getCMSFields()}.
