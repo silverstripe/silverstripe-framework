@@ -32,6 +32,33 @@ class DataObjectDecoratorTest extends SapphireTest {
 	}
 	
 	/**
+	 * Test {@link Object::add_extension()} has loaded DataObjectDecorator statics correctly.
+	 */
+	function testAddExtensionLoadsStatics() {
+		// Object::add_extension() will load DOD statics directly, so let's try adding a decorator on the fly
+		Object::add_extension('DataObjectDecoratorTest_Player', 'DataObjectDecoratorTest_PlayerDecorator');
+		
+		// Now that we've just added the decorator, we need to rebuild the database
+		$da = new DatabaseAdmin();
+		$da->doBuild(true, false, true);
+		
+		// Create a test record with decorated fields, writing to the DB
+		$player = new DataObjectDecoratorTest_Player();
+		$player->setField('Name', 'Joe');
+		$player->setField('DateBirth', '1990-5-10');
+		$player->Address = '123 somewhere street';
+		$player->write();
+		
+		unset($player);
+		
+		// Pull the record out of the DB and examine the decorated fields
+		$player = DataObject::get_one('DataObjectDecoratorTest_Player', "\"Name\" = 'Joe'");
+		$this->assertEquals($player->DateBirth, '1990-05-10');
+		$this->assertEquals($player->Address, '123 somewhere street');
+		$this->assertEquals($player->Status, 'Goalie');
+	}
+	
+	/**
 	 * Test that DataObject::$api_access can be set to true via a decorator
 	 */
 	function testApiAccessCanBeDecorated() {
@@ -88,6 +115,31 @@ class DataObjectDecoratorTest_Member extends DataObject implements TestOnly {
 		"Name" => "Varchar",
 		"Email" => "Varchar"
 	);
+	
+}
+
+class DataObjectDecoratorTest_Player extends DataObject implements TestOnly {
+
+	static $db = array(
+		'Name' => 'Varchar'
+	);
+	
+}
+
+class DataObjectDecoratorTest_PlayerDecorator extends DataObjectDecorator implements TestOnly {
+	
+	function extraStatics() {
+		return array(
+			'db' => array(
+				'Address' => 'Text',
+				'DateBirth' => 'Date',
+				'Status' => "Enum('Shooter,Goalie')"
+			),
+			'defaults' => array(
+				'Status' => 'Goalie'
+			)
+		);
+	}
 	
 }
 
