@@ -646,14 +646,14 @@ function errorHandler($errno, $errstr, $errfile, $errline) {
 		case E_ERROR:
 		case E_CORE_ERROR:
 		case E_USER_ERROR:
-			Debug::fatalHandler($errno, $errstr, $errfile, $errline, $bt);
+			Debug::fatalHandler($errno, $errstr, $errfile, $errline, null);
 			break;
 
 		case E_NOTICE:
 		case E_WARNING:
 		case E_CORE_WARNING:
 		case E_USER_WARNING:
-			Debug::warningHandler($errno, $errstr, $errfile, $errline, $bt);
+			Debug::warningHandler($errno, $errstr, $errfile, $errline, null);
 			break;
 			
 	}

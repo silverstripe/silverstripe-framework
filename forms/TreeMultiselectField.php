@@ -85,16 +85,25 @@ HTML;
 	 * Changes this field to the readonly field.
 	 */
 	function performReadonlyTransformation() {
+		return new TreeMultiselectField_Readonly($this->name, $this->title, $this->sourceObject, $this->keyField, $this->labelField);
+	}
+}
+
+class TreeMultiselectField_Readonly extends TreeMultiselectField {
+	
+	protected $readonly = true;
+	
+	function Field() {
 		$titleArray = array();
 		$titleList = array();
 		if($items = $this->getItems()) {
 			foreach($items as $item) $titleArray[] = $item->Title;
 			if($titleArray) $titleList = implode(", ", $titleArray);
 		}
-		
+
 		$field = new ReadonlyField($this->name, $this->title);
 		$field->setValue($titleList);
 		$field->setForm($this->form);
-		return $field;
+		return $field->Field();
 	}
-}
+}	

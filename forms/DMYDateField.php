@@ -70,7 +70,7 @@ HTML;
  		{ 
  			$validator->validationError( 
  				$this->name,  
- 				_t('DMYDateField.VALIDDATEFORMAT', "Please enter a valid  date format (DD-MM-YYYY)."),  
+ 				_t('DMYDateField.VALIDDATEFORMAT', "Please enter a valid date format (DD-MM-YYYY)."),  
  				"validation",  
  				false 
  			); 
