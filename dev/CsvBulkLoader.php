@@ -90,7 +90,7 @@ class CsvBulkLoader extends BulkLoader {
 				
 			} elseif(strpos($fieldName, '.') !== false) {
 				// we have a relation column with dot notation
-				list($relationName,$columnName) = split('\.', $fieldName);
+				list($relationName,$columnName) = explode('.', $fieldName);
 				$relationObj = $obj->getComponent($relationName); // always gives us an component (either empty or existing)
 				$obj->setComponent($relationName, $relationObj);
 				$relationObj->write();

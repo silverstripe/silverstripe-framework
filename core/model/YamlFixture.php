@@ -172,7 +172,7 @@ class YamlFixture extends Object {
 			foreach($fields as $fieldName => $fieldVal) {
 				if($obj->many_many($fieldName) || $obj->has_many($fieldName)) {
 					$parsedItems = array();
-					$items = split(' *, *',trim($fieldVal));
+					$items = preg_split('/ *, */',trim($fieldVal));
 					foreach($items as $item) {
 						$parsedItems[] = $this->parseFixtureVal($item);
 					}

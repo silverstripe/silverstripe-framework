@@ -209,7 +209,7 @@ class CheckboxSetField extends OptionsetField {
 			// Items is an array or single piece of string (including comma seperated string)
 			} else {
 				if(!is_array($items)) {
-					$items = split(' *, *', trim($items));
+					$items = preg_split('/ *, */', trim($items));
 				}
 				
 				foreach($items as $item) {

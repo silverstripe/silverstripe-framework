@@ -66,7 +66,7 @@ HTML;
 			if(!$saveDest) user_error("TreeMultiselectField::saveInto() Field '$fieldName' not found on $record->class.$record->ID", E_USER_ERROR);
 			
 			if($this->value) {
-				$items = split(" *, *", trim($this->value));
+				$items = preg_split("/ *, */", trim($this->value));
 			}
 					
 			// Allows you to modify the items on your object before save

@@ -138,7 +138,7 @@ class SearchForm extends Form {
 	protected function addStarsToKeywords($keywords) {
 		if(!trim($keywords)) return "";
 		// Add * to each keyword
-		$splitWords = split(" +" , trim($keywords));
+		$splitWords = preg_split("/ +/" , trim($keywords));
 		while(list($i,$word) = each($splitWords)) {
 			if($word[0] == '"') {
 				while(list($i,$subword) = each($splitWords)) {

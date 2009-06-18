@@ -51,7 +51,7 @@ HTML;
 		$saveDest = $record->$fieldName();
 
 		if($this->value) {
-			$items = split(" *, *", trim($this->value));
+			$items = preg_split("/ *, */", trim($this->value));
 		}
 
 		$saveDest->setByIDList($items);

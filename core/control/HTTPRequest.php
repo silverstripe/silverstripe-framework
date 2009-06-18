@@ -96,7 +96,7 @@ class HTTPRequest extends Object implements ArrayAccess {
 			$this->url = $matches[1];
 			$this->extension = $matches[2];
 		}
-		if($this->url) $this->dirParts = split('/+', $this->url);
+		if($this->url) $this->dirParts = preg_split('|/+|', $this->url);
 		else $this->dirParts = array();
 		
 		$this->getVars = (array)$getVars;

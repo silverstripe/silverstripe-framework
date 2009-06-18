@@ -460,7 +460,7 @@ function loadMimeTypes() {
 	$mimeTypes = file_exists($mimetypePathGeneric) ?  file($mimetypePathGeneric) : file($mimetypePathCustom);
 	foreach($mimeTypes as $typeSpec) {
 		if(($typeSpec = trim($typeSpec)) && substr($typeSpec,0,1) != "#") {
-			$parts = split("[ \t\r\n]+", $typeSpec);
+			$parts = preg_split("/[ \t\r\n]+/", $typeSpec);
 			if(sizeof($parts) > 1) {
 				$mimeType = array_shift($parts);
 				foreach($parts as $ext) {

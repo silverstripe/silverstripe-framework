@@ -20,7 +20,7 @@ class Enum extends DBField {
 	function __construct($name, $enum = NULL, $default = NULL) {
 		if($enum) {
 			if(!is_array($enum)){
-				$enum = split(" *, *", trim($enum));
+				$enum = preg_split("/ *, */", trim($enum));
 			}
 
 			$this->enum = $enum;

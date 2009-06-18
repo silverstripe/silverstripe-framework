@@ -72,7 +72,7 @@ HTML;
 
 		// If we've already got values selected, make sure that we've got them in our tree
 		if($_REQUEST['forceValues']) {
-			$forceValues = split(" *, *", trim($_REQUEST['forceValues']));
+			$forceValues = preg_split("/ *, */", trim($_REQUEST['forceValues']));
 			foreach($forceValues as $value) {
 				$obj->markToExpose($this->getByKey($value));
 			}			

@@ -183,9 +183,9 @@ class DataObjectSet extends ViewableData implements IteratorAggregate, Countable
 				$length = $query->limit['limit'];
 				$start = $query->limit['start'];
 			} else if(stripos($query->limit, 'OFFSET')) {
-				list($length, $start) = split(" +OFFSET +", trim($query->limit));
+				list($length, $start) = preg_split("/ +OFFSET +/", trim($query->limit));
 			} else {
-				$result = split(" *, *", trim($query->limit));
+				$result = preg_split("/ *, */", trim($query->limit));
 				$start = $result[0];
 				$length = isset($result[1]) ? $result[1] : null;
 			}
