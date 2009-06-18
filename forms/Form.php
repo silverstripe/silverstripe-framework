@@ -200,38 +200,6 @@ class Form extends RequestHandler {
 		// Populate the form
 		$this->loadDataFrom($vars, true);
 		
-		// Validate the form
-		if(!$this->validate()) {
-			if(Director::is_ajax()) {
-				// Special case for legacy Validator.js implementation (assumes eval'ed javascript collected through FormResponse)
-				if($this->validator->getJavascriptValidationHandler() == 'prototype') {
-					return FormResponse::respond();
-				} else {
-					$acceptType = $request->getHeader('Accept');
-					if(strpos($acceptType, 'application/json') !== FALSE) {
-						// Send validation errors back as JSON with a flag at the start
-						$response = new HTTPResponse(Convert::array2json($this->validator->getErrors()));
-						$response->addHeader('Content-Type', 'application/json');
-					} else {
-						$this->setupFormErrors();
-						// Send the newly rendered form tag as HTML
-						$response = new HTTPResponse($this->forTemplate());
-						$response->addHeader('Content-Type', 'text/html');
-					}
-					
-					return $response;
-				}
-			} else {
-				if($this->getRedirectToFormOnValidationError()) {
-					if($pageURL = $request->getHeader('Referer')) {
-						return Director::redirect($pageURL . '#' . $this->FormName());
-					}
-				}
-				return Director::redirectBack();
-			}
-		}
-
-
 		// Protection against CSRF attacks
 		if($this->securityTokenEnabled()) {
 			$securityID = Session::get('SecurityID');
@@ -267,7 +235,38 @@ class Form extends RequestHandler {
 		if(isset($funcName)) {
 			$this->setButtonClicked($funcName);
 		}
-
+		
+		// Validate the form
+		if(!$this->validate()) {
+			if(Director::is_ajax()) {
+				// Special case for legacy Validator.js implementation (assumes eval'ed javascript collected through FormResponse)
+				if($this->validator->getJavascriptValidationHandler() == 'prototype') {
+					return FormResponse::respond();
+				} else {
+					$acceptType = $request->getHeader('Accept');
+					if(strpos($acceptType, 'application/json') !== FALSE) {
+						// Send validation errors back as JSON with a flag at the start
+						$response = new HTTPResponse(Convert::array2json($this->validator->getErrors()));
+						$response->addHeader('Content-Type', 'application/json');
+					} else {
+						$this->setupFormErrors();
+						// Send the newly rendered form tag as HTML
+						$response = new HTTPResponse($this->forTemplate());
+						$response->addHeader('Content-Type', 'text/html');
+					}
+					
+					return $response;
+				}
+			} else {
+				if($this->getRedirectToFormOnValidationError()) {
+					if($pageURL = $request->getHeader('Referer')) {
+						return Director::redirect($pageURL . '#' . $this->FormName());
+					}
+				}
+				return Director::redirectBack();
+			}
+		}
+		
 		// First, try a handler method on the controller
 		if($this->controller->hasMethod($funcName)) {
 			return $this->controller->$funcName($vars, $this, $request);
