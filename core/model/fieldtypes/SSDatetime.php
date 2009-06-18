@@ -6,6 +6,11 @@
  * Alternatively you can set a timestamp that is evaluated through
  * PHP's built-in date() and strtotime() function according to your system locale.
  * 
+ * For all computations involving the current date and time,
+ * please use {@link SSDatetime::now()} instead of PHP's built-in date() and time()
+ * methods. This ensures that all time-based computations are testable with mock dates
+ * through {@link SSDatetime::set_mock_now()}.
+ * 
  * @todo Add localization support, see http://open.silverstripe.com/ticket/2931
  * 
  * @package sapphire
@@ -44,7 +49,7 @@ class SSDatetime extends Date {
 
 	function requireField() {
 		$parts=Array('datatype'=>'datetime');
-		$values=Array('type'=>'ssdatetime', 'parts'=>$parts);
+		$values=Array('type'=>'SSDatetime', 'parts'=>$parts);
 		DB::requireField($this->tableName, $this->name, $values);
 	}
 	
@@ -54,6 +59,50 @@ class SSDatetime extends Date {
 	
 	public function scaffoldFormField($title = null, $params = null) {
 		return new PopupDateTimeField($this->name, $title);
+	}
+	
+	/**
+	 * 
+	 */
+	protected static $mock_now = null;
+	
+	/**
+	 * Returns either the current system date as determined
+	 * by date(), or a mocked date through {@link set_mock_now()}.
+	 * 
+	 * @return SSDatetime
+	 */
+	static function now() {
+		if(self::$mock_now) {
+			return self::$mock_now;
+		} else {
+			return DBField::create('SSDatetime', date('Y-m-d H:i:s'));
+		}
+	}
+	
+	/**
+	 * Mock the system date temporarily, which is useful for time-based unit testing.
+	 * Use {@link clear_mock_now()} to revert to the current system date.
+	 * Caution: This sets a fixed date that doesn't increment with time.
+	 * 
+	 * @param SSDatetime|string $datetime Either in object format, or as a SSDatetime compatible string.
+	 */
+	static function set_mock_now($datetime) {
+		if($datetime instanceof SSDatetime) {
+			self::$mock_now = $datetime;
+		} elseif(is_string($datetime)) {
+			self::$mock_now = DBField::create('SSDatetime', $datetime);
+		} else {
+			throw new Exception('SSDatetime::set_mock_now(): Wrong format: ' . $datetime);
+		}
+	}
+	
+	/**
+	 * Clear any mocked date, which causes
+	 * {@link Now()} to return the current system date.
+	 */
+	static function clear_mock_now() {
+		self::$mock_now = null;
 	}
 }
 
