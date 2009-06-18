@@ -353,7 +353,7 @@ class Security extends Controller {
 			));
 		} else {
 			$customisedController = $controller->customise(array(
-				"Content" => $content,
+				"Form" => $content,
 			));
 		}
 		
