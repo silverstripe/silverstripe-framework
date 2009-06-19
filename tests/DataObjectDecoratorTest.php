@@ -31,6 +31,26 @@ class DataObjectDecoratorTest extends SapphireTest {
 		$contact->delete();
 	}
 	
+	function testManyManyAssociationWithDecorator() {
+		$parent = new DataObjectDecoratorTest_MyObject();
+		$parent->Title = 'My Title';
+		$parent->write();
+		
+		$this->assertEquals(0, $parent->Faves()->Count());
+		
+		$homepage = $this->objFromFixture('Page', 'home');
+		$firstpage = $this->objFromFixture('Page', 'page1');
+
+		$parent->Faves()->add($homepage->ID);
+		$this->assertEquals(1, $parent->Faves()->Count());
+		
+		$parent->Faves()->add($firstpage->ID);
+		$this->assertEquals(2, $parent->Faves()->Count());
+		
+		$parent->Faves()->remove($firstpage->ID);
+		$this->assertEquals(1, $parent->Faves()->Count());
+	}
+	
 	/**
 	 * Test {@link Object::add_extension()} has loaded DataObjectDecorator statics correctly.
 	 */
@@ -239,6 +259,17 @@ class DataObjectDecoratorTest_Ext2 extends DataObjectDecorator implements TestOn
 	
 }
 
+class DataObjectDecoratorTest_Faves extends DataObjectDecorator implements TestOnly {
+	public function extraDBFields() {
+		return array(
+			'many_many' => array(
+				'Faves' => 'Page'
+			)
+		);
+	}
+}
+
 DataObject::add_extension('DataObjectDecoratorTest_MyObject', 'DataObjectDecoratorTest_Ext1');
 DataObject::add_extension('DataObjectDecoratorTest_MyObject', 'DataObjectDecoratorTest_Ext2');
+DataObject::add_extension('DataObjectDecoratorTest_MyObject', 'DataObjectDecoratorTest_Faves');
 ?>
