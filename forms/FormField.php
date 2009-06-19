@@ -256,7 +256,7 @@ class FormField extends RequestHandler {
 	 * @param $class String
 	 */
 	function removeExtraClass($class) {
-		if(array_key_exists($class, $this->extraClasses)) unset($this->extraClasses[$class]);
+		if(isset($this->extraClasses) && array_key_exists($class, $this->extraClasses)) unset($this->extraClasses[$class]);
 	}
 
 	/**
