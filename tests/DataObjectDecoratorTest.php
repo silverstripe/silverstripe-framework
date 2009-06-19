@@ -260,7 +260,7 @@ class DataObjectDecoratorTest_Ext2 extends DataObjectDecorator implements TestOn
 }
 
 class DataObjectDecoratorTest_Faves extends DataObjectDecorator implements TestOnly {
-	public function extraDBFields() {
+	public function extraStatics() {
 		return array(
 			'many_many' => array(
 				'Faves' => 'Page'
