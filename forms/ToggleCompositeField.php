@@ -14,10 +14,8 @@ class ToggleCompositeField extends CompositeField {
 	function __construct($name, $title, $children) {
 		$this->name = $name;
 		$this->title = $title;
-		$valueField = new HiddenField($name);
-		$valueField->addExtraClass('hiddenValue');
 
-		$children->push($valueField);
+		$this->startClosed(true);
 		
 		parent::__construct($children);
 	}
