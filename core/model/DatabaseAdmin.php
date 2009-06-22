@@ -224,6 +224,8 @@ class DatabaseAdmin extends Controller {
 		if(isset($_REQUEST['from_installer'])) {
 			echo "OK";
 		}
+		
+		if(!$quiet) echo "<p>Database build completed!</p>";
 	}
 	
 	/**
