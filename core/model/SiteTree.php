@@ -1941,4 +1941,11 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	}
 
 }
+
+// Workaround for issues with extensions defined directly on the class in trunk
+if(method_exists('DataObjectDecorator', 'load_extra_statics')) {
+	DataObjectDecorator::load_extra_statics('SiteTree', 'Hierarchy');
+	DataObjectDecorator::load_extra_statics('SiteTree', 'Versioned');
+}
+
 ?>

@@ -39,5 +39,31 @@ class VersionedTest extends SapphireTest {
 		$this->assertEquals(array("Page 1", "Page 2", "Page 3"), $allPages->column('Title'));
 		
 	}
+	
+	function testVersionedFieldsAdded() {
+		$obj = new VersionedTest_DataObject();
+		// Check that the Version column is added as a full-fledged column
+		$this->assertType('Int', $obj->dbObject('Version'));
 
+		$obj2 = new VersionedTest_Subclass();
+		// Check that the Version column is added as a full-fledged column
+		$this->assertType('Int', $obj2->dbObject('Version'));
+	}
+
+}
+
+class VersionedTest_DataObject extends DataObject {
+	static $db = array(
+		"Name" => "Varchar",
+	);
+
+	static $extensions = array(
+		"Versioned('Stage', 'Live')"
+	);
+}
+
+class VersionedTest_Subclass extends VersionedTest_DataObject {
+	static $db = array(
+		"ExtraField" => "Varchar",
+	);
 }
