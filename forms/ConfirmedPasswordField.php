@@ -163,6 +163,17 @@ class ConfirmedPasswordField extends FormField {
 		}
 	}
 	
+	function setChildrenTitles($titles) {
+		if(is_array($titles)&&count($titles)){
+			foreach($this->children as $field) {
+				if(isset($titles[0])){
+					$field->setTitle($titles[0]);
+					array_shift($titles);		
+				}
+			}
+		}
+	}
+	
 	/**
 	 * Value is sometimes an array, and sometimes a single value, so we need to handle both cases
 	 */
