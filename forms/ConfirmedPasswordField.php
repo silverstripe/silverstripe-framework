@@ -163,8 +163,11 @@ class ConfirmedPasswordField extends FormField {
 		}
 	}
 	
+	/**
+	 * @param array: 2 entrie array with the customised title for each of the 2 children.
+	 */
 	function setChildrenTitles($titles) {
-		if(is_array($titles)&&count($titles)){
+		if(is_array($titles)&&count($titles)==2){
 			foreach($this->children as $field) {
 				if(isset($titles[0])){
 					$field->setTitle($titles[0]);
