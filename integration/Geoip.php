@@ -264,6 +264,7 @@ class Geoip extends Object {
 		'ZW' => "Zimbabwe"
 	);
 	
+
 	/** 
 	 * Find the country for an IP address.
 	 * 
@@ -366,14 +367,18 @@ class Geoip extends Object {
 	}
 
 	/** 
+	 * @param boolean $withBlank indicating the returned array containing blank value or not
 	 * Returns an array of ISO Country Codes -> Country Names
 	 */
-	static function getCountryDropDown() {
+	static function getCountryDropDown($withBlank = false) {
 		$dropdown = Geoip::$iso_3166_countryCodes;
 		unset($dropdown['A1']);
 		unset($dropdown['A2']);
 		unset($dropdown['A3']);	
 		asort($dropdown);
+		if($withBlank){
+			$dropdown = array_merge(array(""=>"Select a Country"), $dropdown);
+		}
 		return $dropdown;
 	}
 }
