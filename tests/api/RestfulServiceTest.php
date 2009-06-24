@@ -1,92 +1,183 @@
 <?php
 
 class RestfulServiceTest extends SapphireTest {
-	function testGetData() {
-		$connection = new RestfulService(Director::absoluteBaseURL());
-		$test1params = array(
+	
+	function testSpecialCharacters() {
+		$service = new RestfulServiceTest_MockRestfulService(Director::absoluteBaseURL());
+		$url = 'RestfulServiceTest_Controller/';
+		$params = array(
 			'test1a' => 4352655636.76543, // number test
 			'test1b' => '$&+,/:;=?@#"\'%', // special char test. These should all get encoded
 			'test1c' => 'And now for a string test' // string test
 		);
-		$connection->setQueryString($test1params);
-		$test1 = $connection->request('RestfulServiceTest_Controller?usetestmanifest=1&flush=1')->getBody();
-		foreach ($test1params as $key => $value) {
-			$this->assertContains("<request_item name=\"$key\">$value</request_item>", $test1);
-			$this->assertContains("<get_item name=\"$key\">$value</get_item>", $test1);
+		$service->setQueryString($params);
+		$responseBody = $service->request($url)->getBody();
+		foreach ($params as $key => $value) {
+ 			$this->assertContains("<request_item name=\"$key\">$value</request_item>", $responseBody);
+			$this->assertContains("<get_item name=\"$key\">$value</get_item>", $responseBody);
 		}
-		$connection->setQueryString(array());
-		$test2params = array(
-			'test2a' => 767545678.76887, // number test
-			'test2b' => '%\'"@?=;:/,$', // special character checks
-			'test2c' => 'And now for a string test', // string test
+	}
+	
+	function testGetDataWithSetQueryString() {
+		$service = new RestfulServiceTest_MockRestfulService(Director::absoluteBaseURL());
+		$url = 'RestfulServiceTest_Controller/';
+		$params = array(
+			'test1a' => 'val1a',
+			'test1b' => 'val1b'
 		);
-		$test2suburl = 'RestfulServiceTest_Controller/?usetestmanifest=1&flush=1&';
-		foreach ($test2params as $key=>$value) {
-			$test2suburl .= "$key=$value&";
+		$service->setQueryString($params);
+		$responseBody = $service->request($url)->getBody();
+		foreach ($params as $key => $value) {
+ 			$this->assertContains("<request_item name=\"$key\">$value</request_item>", $responseBody);
+			$this->assertContains("<get_item name=\"$key\">$value</get_item>", $responseBody);
 		}
-		$test2suburl = substr($test2suburl, 0, -1);
-		$test2 = $connection->request($test2suburl)->getBody();
-		foreach ($test2params as $key => $value) {
-			$this->assertContains("<request_item name=\"$key\">$value</request_item>", $test2);
-			$this->assertContains("<get_item name=\"$key\">$value</get_item>", $test2);
-		}
-		$test3params = array_merge($test1params, $test2params); // We want to check using setQueryString() and hard coded
-		$connection->setQueryString($test1params);
-		$test3 = $connection->request($test2suburl)->getBody();
-		foreach ($test3params as $key => $value) {
-			$this->assertContains("<request_item name=\"$key\">$value</request_item>", $test3);
-			$this->assertContains("<get_item name=\"$key\">$value</get_item>", $test3);
+	}
+	
+	function testGetDataWithUrlParameters() {
+		$service = new RestfulServiceTest_MockRestfulService(Director::absoluteBaseURL());
+		$url = 'RestfulServiceTest_Controller/';
+		$params = array(
+			'test1a' => 'val1a',
+			'test1b' => 'val1b'
+		);
+		$url .= '?' . http_build_query($params);
+		$responseBody = $service->request($url)->getBody();
+		foreach ($params as $key => $value) {
+ 			$this->assertContains("<request_item name=\"$key\">$value</request_item>", $responseBody);
+			$this->assertContains("<get_item name=\"$key\">$value</get_item>", $responseBody);
 		}
 	}
 	
 	function testPostData() {
-		$connection = new RestfulService(Director::absoluteBaseURL(), 0);
-		$test1params = array(
-			'test1a' => mktime(),
-			'test1b' => mt_rand(),
-			'test1c' => 'And now for a string test'
+		$service = new RestfulServiceTest_MockRestfulService(Director::absoluteBaseURL(), 0);
+		$params = array(
+			'test1a' => 'val1a',
+			'test1b' => 'val1b'
 		);
-		$test1 = $connection->request('RestfulServiceTest_Controller/?usetestmanifest=1&flush=1', 'POST', $test1params)->getBody();
-		foreach ($test1params as $key => $value) {
-			$this->assertContains("<request_item name=\"$key\">$value</request_item>", $test1);
-			$this->assertContains("<post_item name=\"$key\">$value</post_item>", $test1);
+		$responseBody = $service->request('RestfulServiceTest_Controller/', 'POST', $params)->getBody();
+		foreach ($params as $key => $value) {
+			$this->assertContains("<request_item name=\"$key\">$value</request_item>", $responseBody);
+			$this->assertContains("<post_item name=\"$key\">$value</post_item>", $responseBody);
 		}
 	}
+	
+	function testConnectionDoesntCacheWithDifferentUrl() {
+		$service = new RestfulServiceTest_MockRestfulService(Director::absoluteBaseURL());
+		$url = 'RestfulServiceTest_Controller/';
+		
+		// First run
+		$params = array(
+			'test1a' => 'first run',
+		);
+		$service->setQueryString($params);
+		$responseBody = $service->request($url)->getBody();
+		$this->assertContains("<request_item name=\"test1a\">first run</request_item>", $responseBody);
+		
+		// Second run
+		$params = array(
+			'test1a' => 'second run',
+		);
+		$service->setQueryString($params);
+		$responseBody = $service->request($url)->getBody();
+		$this->assertContains("<request_item name=\"test1a\">second run</request_item>", $responseBody);
+	}
+
 }
 
 class RestfulServiceTest_Controller extends Controller {
 	public function index() {
 		ContentNegotiator::disable();
 		BasicAuth::disable();
-		$request_count = count($_REQUEST);
-		$get_count = count($_GET);
-		$post_count = count($_POST);
+		
 		$request = '';
-		foreach ($_REQUEST as $key=>$value) {
+		foreach ($this->request->requestVars() as $key=>$value) {
 			$request .= "\t\t<request_item name=\"$key\">$value</request_item>\n";
 		}
 		$get = '';
-		foreach ($_GET as $key => $value) {
+		foreach ($this->request->getVars() as $key => $value) {
 			$get .= "\t\t<get_item name=\"$key\">$value</get_item>\n";
 		}
 		$post = '';
-		foreach ($_POST as $key => $value) {
+		foreach ($this->request->postVars() as $key => $value) {
 			$post .= "\t\t<post_item name=\"$key\">$value</post_item>\n";
 		}
+		
 		$out = <<<XML
 <?xml version="1.0"?>
 <test>
-	<request count="$request_count">
-$request	</request>
-	<get count="$get_count">
-$get	</get>
-	<post count="$post_count">
-$post	</post>
+	<request>$request</request>
+	<get>$get</get>
+	<post>$post</post>
 </test>
 XML;
-		header('Content-type: text/xml');
-		echo $out;
+		$this->response->setBody($out);
+		$this->response->addHeader('Content-type', 'text/xml');
+		
+		return $this->response;
 	}
 }
 
+/**
+ * Mock implementation of {@link RestfulService}, which uses {@link Director::test()}
+ * instead of direct curl system calls.
+ * 
+ * @todo Less overloading of request()
+ * @todo Currently only works with relative (internal) URLs
+ * 
+ * @package sapphire
+ * @subpackage tests
+ */
+class RestfulServiceTest_MockRestfulService extends RestfulService {
+	
+	public $session = null;
+	
+	public function request($subURL = '', $method = "GET", $data = null, $headers = null) {
+		
+		if(!$this->session) {
+			$this->session = new Session(array());
+		}
+		
+		$url = $this->baseURL . $subURL; // Url for the request
+
+		if($this->queryString) {
+			if(strpos($url, '?') !== false) {
+				$url .= '&' . $this->queryString;
+			} else {
+				$url .= '?' . $this->queryString;
+			}
+		}
+		$url = str_replace(' ', '%20', $url); // Encode spaces
+	
+		// Custom for mock implementation: Director::test() doesn't cope with absolute URLs
+		$url = Director::makeRelative($url);
+		
+		$method = strtoupper($method);
+		
+		assert(in_array($method, array('GET','POST','PUT','DELETE','HEAD','OPTIONS')));
+		
+		// Add headers
+		if($this->customHeaders) {
+			$headers = array_merge((array)$this->customHeaders, (array)$headers);
+		}
+	
+		// Add authentication
+		if($this->authUsername) {
+			$headers[] = "Authorization: Basic " . base64_encode(
+				$this->authUsername.':'.$this->authPassword
+			);
+		}
+
+		// Custom for mock implementation: Use Director::test()
+		$getVars = ($method == 'GET') ? $data : null;
+		$postVars = ($method == 'POST') ? $data : null;
+		$responseFromDirector = Director::test($url, $postVars, $this->session, $method, $getVars, $headers);
+
+		$response = new RestfulService_Response(
+			$responseFromDirector->getBody(), 
+			$responseFromDirector->getStatusCode()
+		);
+
+		return $response;
+	}
+}
 ?>
