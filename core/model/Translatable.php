@@ -154,9 +154,7 @@ class Translatable extends DataObjectDecorator {
 	
 	/**
 	 * The language in which we are reading dataobjects.
-	 * Usually stored in session, specific to the "site mode":
-	 * either 'site' or 'cms'.
-	 * @see Director::get_site_mode()
+	 *
 	 * @var string
 	 */
 	protected static $current_locale = null;
@@ -198,19 +196,16 @@ class Translatable extends DataObjectDecorator {
 	
 	/**
 	 * Choose the language the site is currently on.
-	 * If $_GET['locale'] is set, then it will use that language, and store it in the session.
-	 * Otherwise it checks the session for a possible stored language, either from namespace to the site_mode
-	 * ('site' or 'cms'), or for a 'global' language setting. 
-	 * The final option is the member preference.
+	 *
+	 * If $_GET['locale'] is currently set, then that locale will be used. Otherwise the member preference (if logged
+	 * in) or default locale will be used.
 	 * 
 	 * @todo Re-implement cookie and member option
 	 * 
-	 * @uses Director::get_site_mode()
 	 * @param $langsAvailable array A numerical array of languages which are valid choices (optional)
 	 * @return string Selected language (also saved in $current_locale).
 	 */
 	static function choose_site_locale($langsAvailable = array()) {
-		$siteMode = Director::get_site_mode(); // either 'cms' or 'site'
 		if(self::$current_locale) {
 			return self::$current_locale;
 		}

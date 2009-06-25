@@ -19,11 +19,6 @@ class RootURLController extends Controller {
 	 */
 	protected static $default_homepage_urlsegment = 'home';
 	
-	public function init() {
-		Director::set_site_mode('site');
-		parent::init();
-	}
-	
 	public function handleRequest($request) {
 		self::$is_at_root = true;
 		$this->pushCurrent();

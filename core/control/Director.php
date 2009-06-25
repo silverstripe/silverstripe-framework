@@ -19,6 +19,9 @@ class Director {
 
 	static private $rules = array();
 	
+	/**
+	 * @deprecated 2.4
+	 */
 	static $siteMode;
 	
 	static $alternateBaseFolder;
@@ -35,8 +38,7 @@ class Director {
 	static protected $environment_type;
 
 	/** 
-	 * Sets the site mode (if it is the public site or the cms), 
-	 * and runs registered modules. 
+	 * @deprecated 2.4
  	 */ 
 	static protected $callbacks;
 
@@ -638,11 +640,13 @@ class Director {
 	////////////////////////////////////////////////////////////////////////////////////////////
 
 	/**
-	 * Sets the site mode (if it is the public site or the cms), and runs registered modules.
-	 * 
-	 * @param string $mode 'site' or 'cms' 
+	 * @deprecated 2.4
 	 */
 	static function set_site_mode($mode) {
+		user_error (
+			'Director::set_site_mode() is deprecated as the functionality is no longer neccesary.', E_USER_NOTICE
+		);
+		
 		Director::$siteMode = $mode;
 		
 		if(isset(self::$callbacks[$mode])) {
@@ -653,23 +657,24 @@ class Director {
 	}
 	
 	/**
-	 * @return string 'site' or 'cms'
+	 * @deprecated 2.4
 	 */
 	static function get_site_mode() {
+		user_error (
+			'Director::set_site_mode() is deprecated as the functionality is no longer neccesary.', E_USER_NOTICE
+		);
+		
 		return Director::$siteMode;
 	}
 
 	/**
-	 * Allows a module to register with the director to be run once
-	 * the controller is instantiated.  The optional 'mode' parameter
-	 * can be either 'site' or 'cms', as those are the two values currently
-	 * set by controllers.  The callback function will be run at the
-	 * initialization of the relevant controller.
-	 * 
-	 * @param $function string PHP-function array based on http://php.net/call_user_func
-	 * @param $mode string
+	 * @deprecated 2.4 Use a custom extension on your controller.
 	 */
 	static function add_callback($function, $mode = 'site') {
+		user_error (
+			'Director::add_callback() is deprecated, please use a custom extension on your controller', E_USER_NOTICE
+		);
+		
 		self::$callbacks[$mode][] = $function;
 	}
 

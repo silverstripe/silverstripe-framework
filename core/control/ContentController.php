@@ -98,8 +98,6 @@ class ContentController extends Controller {
 		else singleton('SiteTree')->extend('contentcontrollerInit', $this);
 
 		if(Director::redirected_to()) return;
-		
-		Director::set_site_mode('site');
 
 		// Check page permissions
 		if($this->dataRecord && $this->URLSegment != 'Security' && !$this->dataRecord->can('View')) {
