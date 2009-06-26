@@ -23,6 +23,8 @@ class TestMailer extends Mailer {
 			'attachedFiles' => $attachedFiles,
 			'customHeaders' => $customHeaders,
 		);
+		
+		return true;
 	}
 	
 	/**
@@ -44,6 +46,8 @@ class TestMailer extends Mailer {
 			'customHeaders' => $customHeaders,
 			'inlineImages' => $inlineImages,
 		);
+		
+		return true;
 	}
 	
 	/**
@@ -65,7 +69,7 @@ class TestMailer extends Mailer {
 	function findEmail($to, $from = null, $subject = null, $content = null) {
 		foreach($this->emailsSent as $email) {
 			$matched = true;
-			
+
 			foreach(array('to','from','subject','content') as $field) {
 				if($value = $$field) {
 					if($value[0] == '/') $matched = preg_match($value, $email[$field]);
