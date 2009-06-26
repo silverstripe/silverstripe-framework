@@ -7,7 +7,7 @@ class RestfulServiceTest extends SapphireTest {
 		$url = 'RestfulServiceTest_Controller/';
 		$params = array(
 			'test1a' => 4352655636.76543, // number test
-			'test1b' => '$&+,/:;=?@#"\'%', // special char test. These should all get encoded
+			'test1b' => '$&+,/:;=?@#%', // special char test. These should all get encoded
 			'test1c' => 'And now for a string test' // string test
 		);
 		$service->setQueryString($params);
