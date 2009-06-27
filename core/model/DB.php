@@ -72,12 +72,10 @@ class DB {
 		}
 		
 		self::$connection_attempted = true;
-		if (isset($databaseConfig['pdo']) && $databaseConfig['pdo']) { // TODO:pkrenn_remove
-			$conn = new PDODatabase($databaseConfig);
-		} else { // TODO:pkrenn_remove begin
-			$dbClass = $databaseConfig['type'];
-			$conn = new $dbClass($databaseConfig);
-		} // TODO:pkrenn_remove end
+
+		$dbClass = $databaseConfig['type'];
+		$conn = new $dbClass($databaseConfig);
+
 		DB::setConn($conn);
 	}
 	
