@@ -125,8 +125,13 @@ class RequestHandler extends ViewableData {
 							$action = "index";
 						} else if(!is_string($action)) {
 							user_error("Non-string method name: " . var_export($action, true), E_USER_ERROR);
-						} 
-						$result = $this->$action($request);
+						}
+						
+						try {
+							$result = $this->$action($request);
+						} catch(HTTPResponse_Exception $responseException) {
+							$result = $responseException->getResponse();
+						}
 					} else {
 						return $this->httpError(403, "Action '$action' isn't allowed on class $this->class");
 					}
@@ -225,14 +230,15 @@ class RequestHandler extends ViewableData {
 	}
 	
 	/**
-	 * Throw an HTTP error instead of performing the normal processing
-	 * @todo This doesn't work properly right now. :-(
+	 * Throws a HTTP error response encased in a {@link HTTPResponse_Exception}, which is later caught in
+	 * {@link RequestHandler::handleAction()} and returned to the user.
+	 *
+	 * @param int $errorCode
+	 * @param string $errorMessage
+	 * @uses HTTPResponse_Exception
 	 */
-	function httpError($errorCode, $errorMessage = null) {
-		$r = new HTTPResponse();
-		$r->setBody($errorMessage);
-		$r->setStatuscode($errorCode);
-		return $r;
+	public function httpError($errorCode, $errorMessage = null) {
+		throw new HTTPResponse_Exception($errorMessage, $errorCode);
 	}
 	
 	/**

@@ -105,6 +105,23 @@ class RequestHandlingTest extends SapphireTest {
 		$this->assertEquals("extendedMethod", $response->getBody());
 		
 	}
+	
+	public function testHTTPException() {
+		$exception = Director::test('RequestHandlingTest_Controller/throwexception');
+		$this->assertEquals(400, $exception->getStatusCode());
+		$this->assertEquals('This request was invalid.', $exception->getBody());
+		
+		$responseException = (Director::test('RequestHandlingTest_Controller/throwresponseexception'));
+		$this->assertEquals(500, $responseException->getStatusCode());
+		$this->assertEquals('There was an internal server error.', $responseException->getBody());
+	}
+	
+	public function testHTTPError() {
+		$response = Director::test('RequestHandlingTest_Controller/throwhttperror');
+		$this->assertEquals(404, $response->getStatusCode());
+		$this->assertEquals('This page does not exist.', $response->getBody());
+	}
+	
 }
 
 /**
@@ -176,6 +193,19 @@ class RequestHandlingTest_Controller extends Controller {
 			new FormAction("myAction")
 		));
 	}
+	
+	public function throwexception() {
+		throw new HTTPResponse_Exception('This request was invalid.', 400);
+	}
+	
+	public function throwresponseexception() {
+		throw new HTTPResponse_Exception(new HTTPResponse('There was an internal server error.', 500));
+	}
+	
+	public function throwhttperror() {
+		$this->httpError(404, 'This page does not exist.');
+	}
+	
 }
 
 /**

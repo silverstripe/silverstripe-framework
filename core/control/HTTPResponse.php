@@ -234,3 +234,49 @@ class HTTPResponse extends Object {
     }
 	
 }
+
+/**
+ * A {@link HTTPResponse} encapsulated in an exception, which can interrupt the processing flow and be caught by the
+ * {@link RequestHandler} and returned to the user.
+ *
+ * Example Usage:
+ * <code>
+ * throw new HTTPResponse_Exception('This request was invalid.', 400);
+ * throw new HTTPResponse_Exception(new HTTPResponse('There was an internal server error.', 500));
+ * </code>
+ *
+ * @package sapphire
+ * @subpackage control
+ */
+class HTTPResponse_Exception extends Exception {
+	
+	protected $response;
+	
+	/**
+	 * @see HTTPResponse::__construct();
+	 */
+	 public function __construct($body = null, $statusCode = null, $statusDescription = null) {
+	 	if($body instanceof HTTPResponse) {
+	 		$this->setResponse($body);
+	 	} else {
+	 		$this->setResponse(new HTTPResponse($body, $statusCode, $statusDescription));
+	 	}
+	 	
+	 	parent::__construct($this->getResponse()->getBody(), $this->getResponse()->getStatusCode());
+	 }
+	 
+	 /**
+	  * @return HTTPResponse
+	  */
+	 public function getResponse() {
+	 	return $this->response;
+	 }
+	 
+	 /**
+	  * @param HTTPResponse $response
+	  */
+	 public function setResponse(HTTPResponse $response) {
+	 	$this->response = $response;
+	 }
+	
+}
