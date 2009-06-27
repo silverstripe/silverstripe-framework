@@ -212,7 +212,8 @@ class ManifestBuilder {
 
 		// Ensure that any custom templates get favoured
 		if(!$project) user_error("\$project isn't set", E_USER_WARNING);
-		ManifestBuilder::getTemplateManifest($baseDir, $project, $excludedFolders, $templateManifest, $cssManifest);
+		else if(!file_exists("$baseDir/$project")) user_error("\$project is set to '$project' but no such folder exists.", E_USER_WARNING);
+		else ManifestBuilder::getTemplateManifest($baseDir, $project, $excludedFolders, $templateManifest, $cssManifest);
 
 		$manifestInfo["globals"]["_CLASS_MANIFEST"] = $classManifest;
 		$manifestInfo["globals"]["_ALL_CLASSES"] = $allClasses;
