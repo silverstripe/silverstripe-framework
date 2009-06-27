@@ -31,7 +31,7 @@ class FormField extends RequestHandler {
 	
 	/**
 	 * @var $leftTitle string Used in SmallFieldHolder() to force a left-aligned label with correct spacing.
-	 * Please use $title for FormFields rendered with DefaultFieldHolder.
+	 * Please use $title for FormFields rendered with FieldHolder().
 	 */
 	protected $leftTitle;
 	
