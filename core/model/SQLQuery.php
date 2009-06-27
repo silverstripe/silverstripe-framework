@@ -72,6 +72,12 @@ class SQLQuery extends Object {
 	public $connective = 'AND';
 	
 	/**
+	 * Keep an internal register of find/replace pairs to execute when it's time to actually get the
+	 * query SQL.
+	 */
+	private $replacementsOld = array(), $replacementsNew = array();
+	
+	/**
 	 * Construct a new SQLQuery.
 	 * 
 	 * @param array $select An array of fields to select.
@@ -337,28 +343,8 @@ class SQLQuery extends Object {
 	 * @param string $new The new text.
 	 */
 	function replaceText($old, $new) {
-		if($this->select) foreach($this->select as $i => $item)
-			$this->select[$i] = str_replace($old, $new, $item);
-
-		if($this->from) foreach($this->from as $i => $item)
-			$this->from[$i] = str_replace($old, $new, $item);
-
-		if($this->where) {
-			foreach($this->where as $i => $item)
-				$this->where[$i] = str_replace($old, $new, $item);
-		}
-		
-		$this->orderby = str_replace($old, $new, $this->orderby);
-
-		if($this->groupby) {
-			foreach($this->groupby as $i => $item)
-				$this->groupby[$i] = str_replace($old, $new, $item);
-		}
-
-		if($this->having) {
-			foreach($this->having as $i => $item)
-				$this->having[$i] = str_replace($old, $new, $item);
-		}
+		$this->replacementsOld[] = $old;
+		$this->replacementsNew[] = $new;
 	}
 
 	/**
@@ -376,7 +362,9 @@ class SQLQuery extends Object {
 	 * @return string
 	 */
 	function sql() {
-		return DB::getConn()->sqlQueryToString($this);
+		$sql = DB::getConn()->sqlQueryToString($this);
+		if($this->replacementsOld) $sql = str_replace($this->replacementsOld, $this->replacementsNew, $sql);
+		return $sql;
 	}
 	
 	/**
