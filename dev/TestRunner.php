@@ -8,6 +8,7 @@
 function hasPhpUnit() {
 	$paths = explode(PATH_SEPARATOR, ini_get('include_path'));
 	foreach($paths as $path) {
+		if(substr($path,-1) == DIRECTORY_SEPARATOR) $path = substr($path,0,-1);
 		if(@file_exists("$path/PHPUnit/Framework.php")) return true;
 	}
 	return false;
