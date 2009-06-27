@@ -140,15 +140,6 @@ class DB {
 	}
 
 	/**
-	 * Get the ID for the next new record for the table.
-	 * @var string $table The name od the table.
-	 * @return int
-	 */
-	static function getNextID($table) {
-		return DB::$globalConn->getNextID($table);
-	}
-
-	/**
 	 * Check if the connection to the database is active.
 	 * @return boolean
 	 */
