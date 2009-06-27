@@ -17,7 +17,7 @@ class MultiEnum extends Enum {
 	
 	
 	/**
-	 * Return a dropdown field suitable for editing this field 
+	 * Return a {@link CheckboxSetField} suitable for editing this field 
 	 */
 	function formField($title = null, $name = null, $hasEmpty = false, $value = "", $form = null) {
 		if(!$title) $title = $this->name;
