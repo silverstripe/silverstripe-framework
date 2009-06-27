@@ -88,7 +88,8 @@ class ConfirmedPasswordField extends FormField {
 		// we have labels for the subfields
 		$title = false;
 		
-		parent::__construct($name, $title, $value, $form);
+		parent::__construct($name, $title, null, $form);
+		$this->setValue($value);
 	}
 	
 	function Field() {
@@ -193,6 +194,8 @@ class ConfirmedPasswordField extends FormField {
 				$this->value = $value;
 			}
 		}
+		$this->children->fieldByName($this->Name() . '[_Password]')->setValue($this->value);
+		$this->children->fieldByName($this->Name() . '[_ConfirmPassword]')->setValue($this->value);
 	}
 	
 	function jsValidation() {
