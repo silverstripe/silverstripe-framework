@@ -38,7 +38,7 @@ class MySQLDatabase extends Database {
 	 * safe will be corrupted.  As such, the installer comes with this set in mysite/_config.php by
 	 * default in versions 2.4.0 and later.
 	 */
-	public static set_connection_charset($charset = 'utf8') {
+	public static function set_connection_charset($charset = 'utf8') {
 		self::$connection_charset = $charset;
 	}
 	
@@ -54,7 +54,7 @@ class MySQLDatabase extends Database {
 		$this->dbConn = mysql_connect($parameters['server'], $parameters['username'], $parameters['password']);
 
 		if(self::$connection_charset) {
-			$this->query("SET CHARACTER SET '" . self::$connection_charset "'"); 
+			$this->query("SET CHARACTER SET '" . self::$connection_charset . "'"); 
 			$this->query("SET NAMES '" . self::$connection_charset . "'");
 		}
 
