@@ -147,7 +147,13 @@ class Form extends RequestHandler {
 		// Form error controls
 		$this->setupFormErrors();
 		
-		$this->security = self::$default_security;
+		// Check if CSRF protection is enabled, either on the parent controller or from the default setting. Note that
+		// method_exists() is used as some controllers (e.g. GroupTest) do not always extend from Object.
+		if(method_exists($controller, 'securityTokenEnabled')) {
+			$this->security = $controller->securityTokenEnabled();
+		} else {
+			$this->security = self::$default_security;
+		}
 	}
 	
 	static $url_handlers = array(

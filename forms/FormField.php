@@ -306,6 +306,15 @@ class FormField extends RequestHandler {
 	}
 	
 	/**
+	 * Return TRUE if security token protection is enabled on the parent {@link Form}.
+	 *
+	 * @return bool
+	 */
+	public function securityTokenEnabled() {
+		return $this->getForm() && $this->getForm()->securityTokenEnabled();
+	}
+	
+	/**
 	 * Sets the error message to be displayed on the form field
 	 * Set by php validation of the form
 	 */
