@@ -26,6 +26,22 @@ class MySQLDatabase extends Database {
 	 */
 	private $database;
 	
+	private static $connection_charset = null;
+	
+	/**
+	 * Sets the character set for the MySQL database connection.
+	 * 
+	 * The character set connection should be set to 'utf8' for SilverStripe version 2.4.0 and
+	 * later.
+	 * 
+	 * However, sites created before version 2.4.0 should leave this unset or data that isn't 7-bit
+	 * safe will be corrupted.  As such, the installer comes with this set in mysite/_config.php by
+	 * default in versions 2.4.0 and later.
+	 */
+	public static set_connection_charset($charset = 'utf8') {
+		self::$connection_charset = $charset;
+	}
+	
 	/**
 	 * Connect to a MySQL database.
 	 * @param array $parameters An map of parameters, which should include:
@@ -36,6 +52,12 @@ class MySQLDatabase extends Database {
 	 */
 	public function __construct($parameters) {
 		$this->dbConn = mysql_connect($parameters['server'], $parameters['username'], $parameters['password']);
+
+		if(self::$connection_charset) {
+			$this->query("SET CHARACTER SET '" . self::$connection_charset "'"); 
+			$this->query("SET NAMES '" . self::$connection_charset . "'");
+		}
+
 		$this->active = mysql_select_db($parameters['database'], $this->dbConn);
 		$this->database = $parameters['database'];
 		if(!$this->dbConn) {
