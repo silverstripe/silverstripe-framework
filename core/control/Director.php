@@ -595,7 +595,7 @@ class Director {
 	 * Force a redirect to a domain starting with "www."
 	 */
 	static function forceWWW() {
-		if(!Director::isDev() && !Director::isTest() && strpos($_SERVER['SERVER_NAME'], 'www') !== 0) {
+		if(!Director::isDev() && !Director::isTest() && strpos($_SERVER['HTTP_HOST'], 'www') !== 0) {
 			if(isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off') {
 				$destURL = str_replace('https://', 'https://www.', Director::absoluteURL($_SERVER['REQUEST_URI']));
 			} else {
