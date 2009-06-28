@@ -83,9 +83,7 @@ class DatabaseAdmin extends Controller {
 	 */
 	function build() {
 		// The default time limit of 30 seconds is normally not enough
-		if(ini_get("safe_mode") != "1") {
-			set_time_limit(600);
-		}
+		increase_time_limit_to(600);
 
 		// Get all our classes
 		ManifestBuilder::create_manifest_file();
