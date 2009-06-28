@@ -31,7 +31,7 @@ class MemberAuthenticator extends Authenticator {
 		if($member && ($member->checkPassword($RAW_data['Password']) == false)) { 
 			if($member->isLockedOut()) $isLockedOut = true;
 			$member->registerFailedLogin();
-			$member = null;
+			$member = false;
 		}
 	}
 	
