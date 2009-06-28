@@ -64,6 +64,7 @@ class DevelopmentAdmin extends Controller {
 		$actions = array(
 			"build" => "Build/rebuild this environment (formerly db/build).  Call this whenever you have updated your project sources",
 			"reset" => "Reset this environment - truncate the database and rebuild.  This is useful after testing to start with a fresh working copy",
+			"buildcache" => "Rebuild the static cache, if you're using StaticPublisher",
 			"tests" => "See a list of unit tests to run",
 			"tests/all" => "Run all tests",
 			"jstests" => "See a list of JavaScript tests to run",
