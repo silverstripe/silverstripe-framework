@@ -318,7 +318,14 @@ class RestfulService_Response extends HTTPResponse {
 	}
 	
 	function simpleXML() {
-		if(!$this->simpleXML) $this->simpleXML = new SimpleXMLElement($this->body);
+		if(!$this->simpleXML) {
+			try {
+				$this->simpleXML = new SimpleXMLElement($this->body);
+			}
+			catch(Exception $e) {
+				user_error("String could not be parsed as XML. " . $e, E_USER_WARNING);
+			}
+		}
 		return $this->simpleXML;
 	}
 	
