@@ -66,12 +66,7 @@ class ContentController extends Controller {
 		$parent = DataObject::get_one('SiteTree', "\"URLSegment\" = '$SQL_parentRef'");
 
 		if(!$parent && is_numeric($parentRef)) $parent = DataObject::get_by_id('SiteTree', $SQL_parentRef);
-		if($parent) {
-			return $parent->Children();
-		} else {
-			user_error("Error running <% control ChildrenOf($parentRef) %>: page '$parentRef' couldn't be found", E_USER_WARNING);
-		}
-
+		if($parent) return $parent->Children();
 	}
 
 	public function Page($url) {
