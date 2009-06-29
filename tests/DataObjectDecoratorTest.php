@@ -20,10 +20,17 @@ class DataObjectDecoratorTest extends SapphireTest {
 		$contact->write();
 		$object->ContactID = $contact->ID;
 		$object->write();
-		
+
+		$contactID = $contact->ID;
 		unset($contact);
+		unset($object);
 		
 		$contact = DataObject::get_one("DataObjectDecoratorTest_Member", "\"Website\"='http://www.example.com'");
+		$object = DataObject::get_one('DataObjectDecoratorTest_RelatedObject', "\"ContactID\" = {$contactID}");
+
+		$this->assertNotNull($object, 'Related object not null');
+		$this->assertType('DataObjectDecoratorTest_Member', $object->Contact(), 'Related contact is a member dataobject');
+		$this->assertType('DataObjectDecoratorTest_Member', $object->getComponent('Contact'), 'getComponent does the same thing as Contact()');
 		
 		$this->assertType('DataObjectDecoratorTest_RelatedObject', $contact->RelatedObjects()->First());
 		$this->assertEquals("Lorem ipsum dolor", $contact->RelatedObjects()->First()->FieldOne);
