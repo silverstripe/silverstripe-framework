@@ -85,10 +85,26 @@ class MoneyField extends FormField {
 		//  and subsequent save operations
 	}
 	
+	/**
+	 * 30/06/2009 - Enhancement: 
+	 * SaveInto checks if set-methods are available and use them 
+	 * instead of setting the values in the money class directly. saveInto
+	 * initiates a new Money class object to pass through the values to the setter
+	 * method.
+	 *
+	 * (see @link MoneyFieldTest_CustomSetter_Object for more information)
+	 */
 	function saveInto($dataObject) {
 		$fieldName = $this->name;
-		$dataObject->$fieldName->setCurrency($this->fieldCurrency->Value()); 
-		$dataObject->$fieldName->setAmount($this->fieldAmount->Value());
+		if($dataObject->hasMethod("set$fieldName")) {
+			$dataObject->$fieldName = DBField::create('Money', array(
+				"Currency" => $this->fieldCurrency->Value(),
+				"Amount" => $this->fieldAmount->Value()
+			));
+		} else {
+			$dataObject->$fieldName->setCurrency($this->fieldCurrency->Value()); 
+			$dataObject->$fieldName->setAmount($this->fieldAmount->Value());
+		}
 	}
 
 	/**
