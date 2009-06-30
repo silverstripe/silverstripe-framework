@@ -25,6 +25,8 @@ require_once 'PHPUnit/TextUI/TestRunner.php';
 /**
  * Controller that executes PHPUnit tests.
  * 
+ * See {@link browse()} output for generic usage instructions.
+ * 
  * @package sapphire
  * @subpackage testing
  */
@@ -38,6 +40,7 @@ class TestRunner extends Controller {
 		'startsession' => 'startsession',
 		'endsession' => 'endsession',
 		'cleanupdb' => 'cleanupdb',
+		'module/$ModuleName' => 'module',
 		'$TestCase' => 'only',
 	);
 	
@@ -87,6 +90,7 @@ class TestRunner extends Controller {
 			$relativeLink = Director::makeRelative($this->Link());
 			echo "sake {$relativeLink}all: Run all " . count($tests) . " tests\n";
 			echo "sake {$relativeLink}coverage: Runs all tests and make test coverage report\n";
+			echo "sake {$relativeLink}module/<modulename>: Runs all tests in a module folder\n";
 			foreach ($tests as $test) {
 				echo "sake {$relativeLink}$test: Run $test\n";
 			}
@@ -135,6 +139,23 @@ class TestRunner extends Controller {
 			
 			$this->runTests($classNames);
 		}
+	}
+	
+	/**
+	 * Run tests for one or more "modules".
+	 * A module is generally a toplevel folder, e.g. "mysite" or "sapphire".
+	 */
+	function module($request) {
+		$classNames = array();
+		$moduleNames = explode(',', $request->param('ModuleName'));
+		foreach($moduleNames as $moduleName) {
+			$classesForModule = ClassInfo::classes_for_folder($moduleName);
+			if($classesForModule) foreach($classesForModule as $class) {
+				if(is_subclass_of($class, 'SapphireTest')) $classNames[] = $class;
+			}
+		}
+
+		$this->runTests($classNames);
 	}
 
 	function runTests($classList, $coverage = false) {
