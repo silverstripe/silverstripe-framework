@@ -301,7 +301,7 @@ class HTTPRequest extends Object implements ArrayAccess {
 		// Check for the '//' marker that represents the "shifting point"
 		$doubleSlashPoint = strpos($pattern, '//');
 		if($doubleSlashPoint !== false) {
-			$shiftCount = substr_count($pattern, '/', 0, $doubleSlashPoint) + 1;
+			$shiftCount = substr_count(substr($pattern,0,$doubleSlashPoint), '/') + 1;
 			$pattern = str_replace('//', '/', $pattern);
 			$patternParts = explode('/', $pattern);
 			
