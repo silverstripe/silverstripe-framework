@@ -24,6 +24,9 @@ require_once 'PHPUnit/TextUI/TestRunner.php';
 
 /**
  * Controller that executes PHPUnit tests.
+ *
+ * <h2>URL Options</h2>
+ * - SkipTests: A comma-separated list of test classes to skip (useful when running dev/tests/all)
  * 
  * See {@link browse()} output for generic usage instructions.
  * 
@@ -75,6 +78,10 @@ class TestRunner extends Controller {
 		$tests = ClassInfo::subclassesFor('SapphireTest');
 		array_shift($tests);
 		unset($tests['FunctionalTest']);
+		foreach($tests as $class => $v) {
+			$reflection = new ReflectionClass($class);
+			if(!$reflection->isInstantiable()) unset($tests[$class]);
+		}
 	
 		$this->runTests($tests);
 	}
@@ -158,6 +165,10 @@ class TestRunner extends Controller {
 		$this->runTests($classNames);
 	}
 
+	/**
+	 * @param array $classList
+	 * @param boolean $coverage
+	 */
 	function runTests($classList, $coverage = false) {
 		// XDEBUG seem to cause problems with test execution :-(
 		if(function_exists('xdebug_disable')) xdebug_disable();
@@ -165,6 +176,13 @@ class TestRunner extends Controller {
 		ini_set('max_execution_time', 0);		
 		
 		$this->setUp();
+		
+		// Optionally skip certain tests
+		$skipTests = array();
+		if($this->request->getVar('SkipTests')) {
+			$skipTests = explode(',', $this->request->getVar('SkipTests'));
+		}
+		$classList = array_diff($classList, $skipTests);
 		
 		// run tests before outputting anything to the client
 		$suite = new PHPUnit_Framework_TestSuite();
