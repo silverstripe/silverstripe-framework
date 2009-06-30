@@ -13,7 +13,7 @@ if((typeof tinyMCE != 'undefined')) {
 		theme_advanced_toolbar_location : "top",
 		theme_advanced_toolbar_align : "left",
 		theme_advanced_toolbar_parent : "right",
-		plugins : "blockquote,contextmenu,table,emotions,paste,../../tinymce_advcode,spellchecker",	
+		plugins : "contextmenu,table,emotions,paste,../../tinymce_advcode,spellchecker",	
 		blockquote_clear_tag : "p",
 		table_inline_editing : true,
 		theme_advanced_buttons1 : "bold,italic,underline,strikethrough,separator,justifyleft,justifycenter,justifyright,justifyfull,formatselect,separator,bullist,numlist,outdent,indent,blockquote,hr,charmap",
