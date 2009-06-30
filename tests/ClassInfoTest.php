@@ -17,6 +17,23 @@ class ClassInfoTest extends SapphireTest {
 		);
 	}
 	
+	function testClassesForFolder() {
+		//$baseFolder = Director::baseFolder() . '/' . SAPPHIRE_DIR . '/tests/_ClassInfoTest';
+		//$manifestInfo = ManifestBuilder::get_manifest_info($baseFolder);
+		
+		$classes = ClassInfo::classes_for_folder('sapphire/tests');
+		$this->assertContains(
+			'ClassInfoTest',
+			$classes,
+			'ClassInfo::classes_for_folder() returns classes matching the filename'
+		);
+		// $this->assertContains(
+		// 			'ClassInfoTest_BaseClass',
+		// 			$classes,
+		// 			'ClassInfo::classes_for_folder() returns additional classes not matching the filename'
+		// 		);
+	}
+	
 }
 
 class ClassInfoTest_BaseClass {

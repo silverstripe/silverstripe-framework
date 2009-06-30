@@ -175,6 +175,9 @@ class ClassInfo {
 	 * Get all classes contained in a file.
 	 * @uses ManifestBuilder
 	 * 
+	 * @todo Doesn't return additional classes that only begin
+	 *  with the filename, and have additional naming separated through underscores.
+	 * 
 	 * @param string $filePath Path to a PHP file (absolute or relative to webroot)
 	 * @return array
 	 */
@@ -187,6 +190,27 @@ class ClassInfo {
 			if($absFilePath == $compareFilePath) $matchedClasses[] = $class;
 		}
 		
+		return $matchedClasses;
+	}
+	
+	/**
+	 * Returns all classes contained in a certain folder.
+	 *
+	 * @todo Doesn't return additional classes that only begin
+	 *  with the filename, and have additional naming separated through underscores.
+	 * 
+	 * @param string $folderPath Relative or absolute folder path
+	 * @return array Array of class names
+	 */
+	static function classes_for_folder($folderPath) {
+		$absFolderPath = Director::getAbsFile($folderPath);
+		global $_CLASS_MANIFEST;
+
+		$matchedClasses = array();
+		foreach($_CLASS_MANIFEST as $class => $compareFilePath) {
+			if(stripos($compareFilePath, $absFolderPath) === 0) $matchedClasses[] = $class;
+		}
+
 		return $matchedClasses;
 	}
 	
