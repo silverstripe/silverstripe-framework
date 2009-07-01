@@ -194,7 +194,9 @@ class Session {
 		
 		if(!session_id() && !headers_sent()) {
 			session_set_cookie_params(self::$timeout, Director::baseURL());
-			session_start();
+			// @ is to supress win32 warnings/notices when session wasn't cleaned up properly
+			// There's nothing we can do about this, because it's an operating system function!
+			@session_start();
 		}
 	}
 	

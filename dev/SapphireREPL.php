@@ -24,7 +24,7 @@ define('30719',E_ALL);
  */
 class SapphireREPL extends Controller {
 
-	private function error_handler( $errno, $errstr, $errfile, $errline, $errctx ) {
+	public function error_handler( $errno, $errstr, $errfile, $errline, $errctx ) {
 		// Ignore unless important error
 		if ( ($errno & ~( 2048 | 8192 | 16384 )) == 0 ) return ;
 		// Otherwise throw exception to handle in REPL loop

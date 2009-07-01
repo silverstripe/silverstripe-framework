@@ -19,6 +19,16 @@ class FormAction extends FormField {
 	 */
 	public $useButtonTag = false;
 	
+	private $buttonContent = null;
+	
+	/**
+	 * Add content inside a button field.
+	 */
+	function setButtonContent($content) {
+		$this->buttonContent = (string) $content;
+	}
+	
+	
 	/**
 	 * Create a new action button.
 	 * @param action The method to call when the button is clicked
@@ -74,7 +84,7 @@ class FormAction extends FormField {
 				$attributes['class'] = $attributes['class'] . ' disabled';
 			}
 			
-			return $this->createTag('button', $attributes, $this->attrTitle());
+			return $this->createTag('button', $attributes, $this->buttonContent ? $this->buttonContent : $this->attrTitle());
 		} else {
 			$attributes = array(
 				'class' => 'action' . ($this->extraClass() ? $this->extraClass() : ''),

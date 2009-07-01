@@ -123,7 +123,7 @@ class Date extends DBField {
 	 */
 	function Ago() {
 		if($this->value) {
-			if(time() > strtotime($this->value)) {
+			if(strtotime($this->value) == time() || time() > strtotime($this->value)) {
 				return sprintf(
 					_t(
 						'Date.TIMEDIFFAGO',

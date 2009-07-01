@@ -429,66 +429,18 @@ class Hierarchy extends DataObjectDecorator {
 				$stageChildren = $this->owner->stageChildren(true);
 				$this->_cache_allChildrenIncludingDeleted = $stageChildren;
 				
-				$this->owner->extend("augmentAllChildrenIncludingDeleted", $stageChildren, $context); 
-				
-				// Add live site content, if required.
+				// Add live site content that doesn't exist on the stage site, if required.
 				if($this->owner->hasExtension('Versioned')) {
-					// Get all the requisite data, and index it
-					$liveChildren = $this->owner->liveChildren(true);
-					
-					if(isset($stageChildren)) {
-						foreach($stageChildren as $child) {
-							$idxStageChildren[$child->ID] = $child;
-						}
-					}
-					
-					if(isset($liveChildren)) {
+					// Next, go through the live children.  Only some of these will be listed					
+					$liveChildren = $this->owner->liveChildren(true, true);
+					if($liveChildren) {
 						foreach($liveChildren as $child) {
-							$idxLiveChildren[$child->ID] = $child;
-						}
-					}
-					
-					DataObject::disable_subclass_access();
-					if($idxStageChildren) {
-						$foundInLive = Versioned::get_by_stage( $baseClass, 'Live', "\"{$baseClass}\".\"ID\" IN (" . implode(",", array_keys($idxStageChildren)) . ")", "" );
-					}
-					
-					if($idxLiveChildren) {
-						$foundInStage = Versioned::get_by_stage( $baseClass, 'Stage', "\"{$baseClass}\".\"ID\" IN (" . implode(",", array_keys($idxLiveChildren)) . ")", "" );
-					}
-					DataObject::enable_subclass_access();
-					
-					if(isset($foundInLive)) {
-						foreach($foundInLive as $child) {
-							$idxFoundInLive[$child->ID] = $child;
-						}
-					}
-					
-					if(isset($foundInStage)) {
-						foreach($foundInStage as $child) {
-							$idxFoundInStage[$child->ID] = $child;
-						}
-					}
-					
-					$this->_cache_allChildrenIncludingDeleted = new DataObjectSet();
-					
-					// First, go through the stage children.  They will all be listed but may be different colours
-					if($stageChildren) {
-						foreach($stageChildren as $child) {
 							$this->_cache_allChildrenIncludingDeleted->push($child);
 						}
 					}
-					
-					// Next, go through the live children.  Only some of these will be listed					
-					if($liveChildren) {
-						foreach($liveChildren as $child) {
-							// Not found on stage = deleted page.  Anything else is ignored
-							if(!isset($idxFoundInStage[$child->ID])) {
-								$this->_cache_allChildrenIncludingDeleted->push($child);
-							}
-						}
-					}
 				}
+
+				$this->owner->extend("augmentAllChildrenIncludingDeleted", $stageChildren, $context); 
 				
 			} else {
 				user_error("Hierarchy::AllChildren() Couldn't determine base class for '{$this->owner->class}'", E_USER_ERROR);
@@ -529,7 +481,10 @@ class Hierarchy extends DataObjectDecorator {
 		$extraFilter = $showAll ? '' : " AND \"ShowInMenus\"=1";
 		$baseClass = ClassInfo::baseDataClass($this->owner->class);
 		
-		$staged = DataObject::get($baseClass, "\"{$baseClass}\".\"ParentID\" = " . (int)$this->owner->ID . " AND \"{$baseClass}\".\"ID\" != " . (int)$this->owner->ID . $extraFilter, "");
+		$staged = DataObject::get($baseClass, "\"{$baseClass}\".\"ParentID\" = " 
+			. (int)$this->owner->ID . " AND \"{$baseClass}\".\"ID\" != " . (int)$this->owner->ID
+			. $extraFilter, "");
+			
 		if(!$staged) $staged = new DataObjectSet();
 		$this->owner->extend("augmentStageChildren", $staged, $showAll);
 		return $staged;
@@ -538,12 +493,28 @@ class Hierarchy extends DataObjectDecorator {
 	/**
 	 * Return children from the live site, if it exists.
 	 * @param boolean $showAll Include all of the elements, even those not shown in the menus.
+	 * @param boolean $onlyDeletedFromStage Only return items that have been deleted from stage
 	 * @return DataObjectSet
 	 */
-	public function liveChildren($showAll = false) {
+	public function liveChildren($showAll = false, $onlyDeletedFromStage = false) {
 		$extraFilter = $showAll ? '' : " AND \"ShowInMenus\"=1";
+		$join = "";
+
 		$baseClass = ClassInfo::baseDataClass($this->owner->class);
-		return Versioned::get_by_stage($baseClass, "Live", "\"{$baseClass}\".\"ParentID\" = " . (int)$this->owner->ID . " AND \"{$baseClass}\".\"ID\" != " . (int)$this->owner->ID. $extraFilter, "");
+		
+		if($onlyDeletedFromStage) {
+			// Note that the lack of double-quotes around $baseClass are the only thing preventing
+			// it from being rewritten to {$baseClass}_Live.  This is brittle, won't work in
+			// postgres, and will need to be fixed *somehow*.  Also, this code should probably be
+			// refactored to be pushed into Versioned somehow; perhaps a "doesn't exist on stage X"
+			// option for get_by_stage.
+			$join = "LEFT JOIN {$baseClass} ON {$baseClass}.\"ID\" = \"{$baseClass}\".\"ID\"";
+			$extraFilter .=  " AND {$baseClass}.\"ID\" IS NULL";
+		}
+		
+		return Versioned::get_by_stage($baseClass, "Live", "\"{$baseClass}\".\"ParentID\" = "
+		 	. (int)$this->owner->ID . " AND \"{$baseClass}\".\"ID\" != " . (int)$this->owner->ID
+			. $extraFilter, null, $join);
 	}
 	
 	/**

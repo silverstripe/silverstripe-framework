@@ -44,7 +44,9 @@ class HTMLText extends Text {
 			
 			/* Catch warnings thrown by loadHTML and turn them into a failure boolean rather than a SilverStripe error */
 			set_error_handler(create_function('$no, $str', 'throw new Exception("HTML Parse Error: ".$str);'), E_ALL);
-			try { $res = $doc->loadHTML('<meta content="text/html; charset=utf-8" http-equiv="Content-type"/>' . $this->value); }
+			//  Nonbreaking spaces get converted into weird characters, so strip them
+			$value = str_replace('&nbsp;', ' ', $this->value);
+			try { $res = $doc->loadHTML('<meta content="text/html; charset=utf-8" http-equiv="Content-type"/>' . $value); }
 			catch (Exception $e) { $res = false; }
 			restore_error_handler();
 			

@@ -262,8 +262,14 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			$this->class = get_class($this);
 			foreach($record as $k => $v) {
 				if($v) {
+					if($k == 'Created' || $k == 'LastEdited') {
+						$fieldtype = 'SSDatetime';
+					} else {
+						$fieldtype = $this->db($k);
+					}
+				
 					// MSSQLDatabase::date() uses datetime for the data type for "Date" and "SSDatetime"
-					switch($this->db($k)) {
+					switch($fieldtype) {
 						case "Date":
 							$v = preg_replace('/:[0-9][0-9][0-9]([ap]m)$/i', ' \\1', $v);
 							$record[$k] = date('Y-m-d', strtotime($v));

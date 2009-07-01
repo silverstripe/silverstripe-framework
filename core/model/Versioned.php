@@ -442,7 +442,12 @@ class Versioned extends DataObjectDecorator {
 
 			$oldStage = Versioned::$reading_stage;
 			Versioned::$reading_stage = $toStage;
+
+			$conn = DB::getConn();
+			if($conn->hasMethod('allowPrimaryKeyEditing')) $conn->allowPrimaryKeyEditing($baseClass, true);
 			$from->write();
+			if($conn->hasMethod('allowPrimaryKeyEditing')) $conn->allowPrimaryKeyEditing($baseClass, false);
+
 			$from->destroy();
 			
 			Versioned::$reading_stage = $oldStage;

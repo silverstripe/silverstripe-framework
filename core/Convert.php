@@ -33,7 +33,7 @@ class Convert extends Object {
 			foreach($val as $k => $v) $val[$k] = self::raw2att($v);
 			return $val;
 		} else {
-			return str_replace(array('&','"',"'",'<','>'), array('&amp;','&quot;','&apos;','&lt;','&gt;'), $val);
+			return str_replace(array('&','"',"'",'<','>'), array('&amp;','&quot;','&#39;','&lt;','&gt;'), $val);
 		}
 	}
 	
@@ -71,7 +71,7 @@ class Convert extends Object {
 			foreach($val as $k => $v) $val[$k] = self::raw2xml($v);
 			return $val;
 		} else {
-			return str_replace(array('&','<','>',"\n",'"',"'"), array('&amp;','&lt;','&gt;','<br />','&quot;','&apos;'), $val);
+			return str_replace(array('&','<','>',"\n",'"',"'"), array('&amp;','&lt;','&gt;','<br />','&quot;','&#39;'), $val);
 		}
 	}
 	
@@ -133,7 +133,7 @@ class Convert extends Object {
 			// More complex text needs to use html2raw instead
 			if(strpos($val,'<') !== false) return self::html2raw($val);
 			
-			$converted = str_replace(array('&amp;','&lt;','&gt;','&quot;','&apos;'), array('&','<','>','"',"'"), $val);
+			$converted = str_replace(array('&amp;','&lt;','&gt;','&quot;','&apos;', '&#39;'), array('&','<','>','"',"'", "'"), $val);
 			$converted = ereg_replace('&#[0-9]+;', '', $converted);
 			return $converted;
 		}

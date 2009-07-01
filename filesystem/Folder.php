@@ -191,11 +191,15 @@ class Folder extends File {
 			if($oldFile == $file && $i > 2) user_error("Couldn't fix $file with $i", E_USER_ERROR);
 		}
 		
-		if(file_exists($tmpFile['tmp_name']) && copy($tmpFile['tmp_name'], "$base/$file")) {
+		//$fullFilename = "$base/$file";
+		$fullFilename = $base . DIRECTORY_SEPARATOR . str_replace(array("\\","/") , DIRECTORY_SEPARATOR, $file );
+		
+		if(file_exists($tmpFile['tmp_name']) && copy($tmpFile['tmp_name'], $fullFilename)) {
 			// Update with the new image
 			return $this->constructChild(basename($file));
 		} else {
-			user_error("Folder::addUploadToFolder: Couldn't copy '$tmpFile[tmp_name]' to '$file'", E_USER_ERROR);
+			if(!file_exists($tmpFile['tmp_name'])) user_error("Folder::addUploadToFolder: '$tmpFile[tmp_name]' doesn't exist", E_USER_ERROR);
+			else user_error("Folder::addUploadToFolder: Couldn't copy '$tmpFile[tmp_name]' to '$fullFilename'", E_USER_ERROR);
 			return false;
 		}
 	}
@@ -260,7 +264,18 @@ class Folder extends File {
 	 * Returns true if this folder has children
 	 */
 	public function hasChildren() {
-		return $this->ID && $this->myChildren() && $this->myChildren()->Count() > 0;	
+		return (bool)DB::query("SELECT COUNT(*) FROM \"File\" WHERE ParentID = "
+			. (int)$this->ID)->value();
+	}
+
+	/**
+	 * Returns true if this folder has children
+	 */
+	public function hasChildFolders() {
+		$SQL_folderClasses = Convert::raw2sql(ClassInfo::subclassesFor('Folder'));
+		
+		return (bool)DB::query("SELECT COUNT(*) FROM \"File\" WHERE ParentID = " . (int)$this->ID
+			. " AND \"ClassName\" IN ('" . implode("','", $SQL_folderClasses) . "')")->value();
 	}
 	
 	/**
@@ -311,7 +326,6 @@ class Folder extends File {
 	 */
 	function getCMSFields() {
 		$nameField = ($this->ID > 0) ? new TextField("Name") : new HiddenField("Name");
-
 		$fileList = new AssetTableField(
 			$this,
 			"Files",
@@ -350,10 +364,10 @@ class Folder extends File {
 					new LiteralField("UploadIframe",
 						$this->getUploadIframe()
 					)
-				),
+				)/*,
 				new Tab("UnusedFiles", _t('Folder.UNUSEDFILESTAB', "Unused files"),
 					new Folder_UnusedAssetsField($this)
-				)
+				)*/
 			),
 			new HiddenField("ID")
 		);
@@ -422,6 +436,12 @@ class Folder extends File {
 HTML;
 	}
 	
+	/**
+	 * Get the children of this folder that are also folders.
+	 */
+	function ChildFolders() {
+		return DataObject::get("Folder", "ParentID = " . (int)$this->ID);
+	}
 }
 
 class Folder_UnusedAssetsField extends CompositeField {
