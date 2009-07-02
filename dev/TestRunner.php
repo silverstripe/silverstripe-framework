@@ -158,7 +158,9 @@ class TestRunner extends Controller {
 		foreach($moduleNames as $moduleName) {
 			$classesForModule = ClassInfo::classes_for_folder($moduleName);
 			if($classesForModule) foreach($classesForModule as $class) {
-				if(is_subclass_of($class, 'SapphireTest')) $classNames[] = $class;
+				if(class_exists($class) && is_subclass_of($class, 'SapphireTest')) {
+					$classNames[] = $class;
+				}
 			}
 		}
 
@@ -202,7 +204,7 @@ class TestRunner extends Controller {
 
 		self::$default_reporter->writeHeader("Sapphire Test Runner");
 		if (count($classList) > 1) { 
-			self::$default_reporter->writeInfo("All Tests", "Running test cases: " . implode(", ", $classList));
+			self::$default_reporter->writeInfo("All Tests", "Running test cases: " . implode(",", $classList));
 		} else {
 			self::$default_reporter->writeInfo($classList[0], "");
 		}
