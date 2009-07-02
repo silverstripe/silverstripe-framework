@@ -279,7 +279,9 @@ class Form extends RequestHandler {
 
 		// Otherwise, try a handler method on the form object
 		} else {
-			return $this->$funcName($vars, $this, $request);
+			if($this->hasMethod($funcName)) {
+				return $this->$funcName($vars, $this, $request);
+			}
 		}
 	}
 	

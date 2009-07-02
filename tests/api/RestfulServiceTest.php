@@ -82,6 +82,14 @@ class RestfulServiceTest extends SapphireTest {
 		$this->assertContains("<request_item name=\"test1a\">second run</request_item>", $responseBody);
 	}
 
+	/**
+	 * @expectedException PHPUnit_Framework_Error 
+	 */
+	function testIncorrectData() {
+		$connection = new RestfulService(Director::absoluteBaseURL(), 0);
+		$test1 = $connection->request('RestfulServiceTest_Controller/invalid?usetestmanifest=1&flush=1');
+		$test1->xpath("\\fail");
+	}
 }
 
 class RestfulServiceTest_Controller extends Controller {
@@ -114,6 +122,19 @@ XML;
 		$this->response->addHeader('Content-type', 'text/xml');
 		
 		return $this->response;
+	}
+	
+	public function invalid() {
+		ContentNegotiator::disable();
+		BasicAuth::disable();
+		$out = <<<XML
+<?xml version="1.0"?>
+<test>
+	<fail><invalid>
+</test>
+XML;
+		header('Content-type: text/xml');
+		echo $out;		
 	}
 }
 
