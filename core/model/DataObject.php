@@ -2527,8 +2527,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		
 		$query = $this->extendedSQL($filter, $sort, $limit, $join);
 		
-		$this->extend('augmentSQL', $query);
-
 		$records = $query->execute();
 		
 		$ret = $this->buildDataObjectSet($records, $containerClass, $query, $this->class);
