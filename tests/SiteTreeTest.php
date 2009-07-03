@@ -45,6 +45,25 @@ class SiteTreeTest extends SapphireTest {
 		$this->assertEquals($obj->ID, $createdID);
 	}
 	
+	/**
+	 * Test that field which are set and then cleared are also transferred to the published site.
+	 */
+	function testPublishDeletedFields() {
+		$obj = $this->fixture->objFromFixture('Page', 'about');
+		$obj->MetaTitle = "asdfasdf";
+		$obj->write();
+		$obj->doPublish();
+		
+		$this->assertEquals('asdfasdf', DB::query("SELECT \"MetaTitle\" FROM \"SiteTree_Live\" WHERE \"ID\" = '$obj->ID'")->value());
+
+		$obj->MetaTitle = null;
+		$obj->write();
+		$obj->doPublish();
+
+		$this->assertNull(DB::query("SELECT \"MetaTitle\" FROM \"SiteTree_Live\" WHERE \"ID\" = '$obj->ID'")->value());
+		
+	}
+	
 	function testParentNodeCachedInMemory() {
 		$parent = new SiteTree();
      	$parent->Title = 'Section Title';

@@ -713,8 +713,13 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * if they are not already marked as changed.
 	 */
 	public function forceChange() {
-		foreach($this->record as $fieldName => $fieldVal) {
+		// $this->record might not contain the blank values so we loop on $this->inheritedDatabaseFields() as well
+		$fieldNames = array_unique(array_merge(array_keys($this->record), array_keys($this->inheritedDatabaseFields())));
+		
+		foreach($fieldNames as $fieldName) {
 			if(!isset($this->changed[$fieldName])) $this->changed[$fieldName] = 1;
+			// Populate the null values in record so that they actually get written
+			if(!isset($this->record[$fieldName])) $this->record[$fieldName] = null;
 		}
 		
 		// @todo Find better way to allow versioned to write a new version after forceChange
