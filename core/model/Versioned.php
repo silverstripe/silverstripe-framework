@@ -426,10 +426,10 @@ class Versioned extends DataObjectDecorator {
 		$extTable = $this->extendWithSuffix($baseClass);//die($extTable);
 		
 		if(is_numeric($fromStage)) {
-			$from = Versioned::get_version($this->owner->class, $this->owner->ID, $fromStage);
+			$from = Versioned::get_version($baseClass, $this->owner->ID, $fromStage);
 		} else {
 			$this->owner->flushCache();
-			$from = Versioned::get_one_by_stage($this->owner->class, $fromStage, "\"{$baseClass}\".\"ID\" = {$this->owner->ID}");
+			$from = Versioned::get_one_by_stage($baseClass, $fromStage, "\"{$baseClass}\".\"ID\" = {$this->owner->ID}");
 		}
 		
 		$publisherID = isset(Member::currentUser()->ID) ? Member::currentUser()->ID : 0;
