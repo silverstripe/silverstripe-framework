@@ -39,6 +39,9 @@ class CompositeField extends FormField {
 		}
 		$this->children->setContainerField($this);
 		
+		// Skipping FormField::__construct(), but we have to make sure this
+		// doesn't count as a broken constructor
+		$this->brokenOnConstruct = false;
 		Object::__construct();
 	}
 
