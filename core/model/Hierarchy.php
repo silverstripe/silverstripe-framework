@@ -171,9 +171,11 @@ class Hierarchy extends DataObjectDecorator {
 	 */
 	protected function markingFinished() {
 		// Mark childless nodes as expanded.
-		foreach($this->markedNodes as $id => $node) {
-			if(!$node->isExpanded() && !$node->numChildren()) {
-				$node->markExpanded();
+		if($this->markedNodes) {
+			foreach($this->markedNodes as $id => $node) {
+				if(!$node->isExpanded() && !$node->numChildren()) {
+					$node->markExpanded();
+				}
 			}
 		}
 	}
