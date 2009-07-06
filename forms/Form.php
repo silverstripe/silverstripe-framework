@@ -18,12 +18,26 @@
  * If you want to process the submitted data in any way, please use {@link getData()} rather than
  * the raw request data.
  * 
- * Validation
+ * <h2>Validation</h2>
  * Each form needs some form of {@link Validator} to trigger the {@link FormField->validate()} methods for each field.
  * You can't disable validator for security reasons, because crucial behaviour like extension checks for file uploads depend on it.
  * The default validator is an instance of {@link RequiredFields}.
  * If you want to enforce serverside-validation to be ignored for a specific {@link FormField},
  * you need to subclass it.
+ *
+ * <h2>URL Handling</h2>
+ * The form class extends {@link RequestHandler}, which means it can
+ * be accessed directly through a URL. This can be handy for refreshing
+ * a form by ajax, or even just displaying a single form field.
+ * You can find out the base URL for your form by looking at the
+ * <form action="..."> value. For example, the edit form in the CMS would be located at
+ * "admin/EditForm". This URL will render the form without its surrounding
+ * template when called through GET instead of POST. 
+ * 
+ * By appending to this URL, you can render invidual form elements
+ * through the {@link FormField->FieldHolder()} method.
+ * For example, the "URLSegment" field in a standard CMS form would be
+ * accessible through "admin/EditForm/field/URLSegment/FieldHolder".
  *
  * @package forms
  * @subpackage core
@@ -286,10 +300,25 @@ class Form extends RequestHandler {
 	}
 	
 	/**
-	 * Handle a field request
+	 * Handle a field request.
+	 * Uses {@link Form->dataFieldByName()} to find a matching field,
+	 * and falls back to {@link FieldSet->fieldByName()} to look
+	 * for tabs instead. This means that if you have a tab and a
+	 * formfield with the same name, this method gives priority
+	 * to the formfield.
+	 * 
+	 * @param HTTPRequest $request
+	 * @return FormField
 	 */
 	function handleField($request) {
-		return $this->Fields()->fieldByName($request->param('FieldName'));
+		$field = $this->dataFieldByName($request->param('FieldName'));
+		
+		if($field) {
+			return $field;
+		} else {
+			// falling back to fieldByName, e.g. for getting tabs
+			return $this->Fields()->fieldByName($request->param('FieldName'));
+		}
 	}
 
 	/**
