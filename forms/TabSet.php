@@ -83,8 +83,22 @@ class TabSet extends CompositeField {
 	 * Returns the named tab
 	 */
 	public function fieldByName($name) {
+		if(strpos($name,'.') !== false)	list($name, $remainder) = explode('.',$name,2);
+		else $remainder = null;
+		
 		foreach($this->children as $child) {
-			if($name == $child->Name || $name == $child->id) return $child;
+			if(trim($name) == trim($child->Name) || $name == $child->id) {
+				if($remainder) {
+					if($child->isComposite()) {
+						return $child->fieldByName($remainder);
+					} else {
+						user_error("Trying to get field '$remainder' from non-composite field $child->class.$name", E_USER_WARNING);
+						return null;
+					}
+				} else {
+					return $child;
+				}
+			}
 		}
 	}
 

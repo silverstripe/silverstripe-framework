@@ -289,7 +289,7 @@ class Form extends RequestHandler {
 	 * Handle a field request
 	 */
 	function handleField($request) {
-		return $this->dataFieldByName($request->param('FieldName'));
+		return $this->Fields()->fieldByName($request->param('FieldName'));
 	}
 
 	/**

@@ -235,6 +235,9 @@ class FieldSetTest extends SapphireTest {
 		/* We have 1 field for each of the tabs */
 		$this->assertEquals(1, $mainTab->Fields()->Count());
 		$this->assertEquals(1, $otherTab->Fields()->Count());
+		
+		$this->assertNotNull($fields->fieldByName('Root.Content'));
+		$this->assertNotNull($fields->fieldByName('Root.Content.Main'));
 	}
 	
 	function testTabTitles() {
