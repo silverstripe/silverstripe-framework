@@ -173,7 +173,7 @@ class RequestHandler extends ViewableData {
 	 */
 	function checkAccessAction($action) {
 		$action            = strtolower($action);
-		$allowedActions    = Object::combined_static($this->class, 'allowed_actions');
+		$allowedActions    = Object::combined_static(get_class($this), 'allowed_actions');
 		$newAllowedActions = array();
 		
 		// merge in any $allowed_actions from extensions
@@ -194,8 +194,8 @@ class RequestHandler extends ViewableData {
 			
 			if(isset($allowedActions[$action])) {
 				$test = $allowedActions[$action];
-				
-				if($test === true) {
+				// PHP can be loose about typing; let's give people a break if true becomes 1 or '1'
+				if($test === true || $test === 1 || $test === '1') {
 					return true;
 				} elseif(substr($test, 0, 2) == '->') {
 					return $this->{substr($test, 2)}();
