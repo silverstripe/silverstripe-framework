@@ -368,7 +368,7 @@ abstract class Object {
 	 *  as a string, e.g. "Versioned" or "Translatable('Param')"
 	 */
 	public static function add_extension($class, $extension) {
-		if(!preg_match('/([^(]*)/', $extension, $matches)) {
+		if(!preg_match('/^([^(]*)/', $extension, $matches)) {
 			return false;
 		}
 		$extensionClass = $matches[1];
@@ -393,7 +393,7 @@ abstract class Object {
 		
 		// load statics now for DataObject classes
 		if(is_subclass_of($class, 'DataObject')) {
-			DataObjectDecorator::load_extra_statics($class, $extension);
+			DataObjectDecorator::load_extra_statics($class, $extensionClass);
 		}
 	}
 	
