@@ -29,7 +29,7 @@ class SiteTreeTest extends SapphireTest {
 		);
 		
 		foreach($expectedURLs as $fixture => $urlSegment) {
-			$obj = $this->fixture->objFromFixture('Page', $fixture);
+			$obj = $this->objFromFixture('Page', $fixture);
 			$this->assertEquals($urlSegment, $obj->URLSegment);
 		}
 	}
@@ -38,7 +38,7 @@ class SiteTreeTest extends SapphireTest {
 	 * Test that publication copies data to SiteTree_Live
 	 */
 	function testPublishCopiesToLiveTable() {
-		$obj = $this->fixture->objFromFixture('Page','about');
+		$obj = $this->objFromFixture('Page','about');
 		$obj->publish('Stage', 'Live');
 		
 		$createdID = DB::query("SELECT \"ID\" FROM \"SiteTree_Live\" WHERE \"URLSegment\" = '$obj->URLSegment'")->value();
@@ -49,7 +49,7 @@ class SiteTreeTest extends SapphireTest {
 	 * Test that field which are set and then cleared are also transferred to the published site.
 	 */
 	function testPublishDeletedFields() {
-		$obj = $this->fixture->objFromFixture('Page', 'about');
+		$obj = $this->objFromFixture('Page', 'about');
 		$obj->MetaTitle = "asdfasdf";
 		$obj->write();
 		$obj->doPublish();

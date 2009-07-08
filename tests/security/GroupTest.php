@@ -29,13 +29,13 @@ class GroupTest extends FunctionalTest {
 	function testMemberGroupRelationForm() {
 		Session::set('loggedInAs', $this->idFromFixture('GroupTest_Member', 'admin'));
 		
-	      $adminGroup = $this->fixture->objFromFixture('Group', 'admingroup');
-	      $parentGroup = $this->fixture->objFromFixture('Group', 'parentgroup');
-	      $childGroup = $this->fixture->objFromFixture('Group', 'childgroup');
+	      $adminGroup = $this->objFromFixture('Group', 'admingroup');
+	      $parentGroup = $this->objFromFixture('Group', 'parentgroup');
+	      $childGroup = $this->objFromFixture('Group', 'childgroup');
 
 	      // Test single group relation through checkboxsetfield
 	      $form = new GroupTest_MemberForm($this, 'Form');
-	      $member = $this->fixture->objFromFixture('GroupTest_Member', 'admin');
+	      $member = $this->objFromFixture('GroupTest_Member', 'admin');
 	      $form->loadDataFrom($member);
 	      $checkboxSetField = $form->Fields()->fieldByName('Groups');
 	      $checkboxSetField->setValue(array(

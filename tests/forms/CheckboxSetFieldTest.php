@@ -16,7 +16,7 @@ class CheckboxSetFieldTest extends SapphireTest {
 	}
 	
 	function testSaveWithNothingSelected() {
-		$article = $this->fixture->objFromFixture('CheckboxSetFieldTest_Article', 'articlewithouttags');
+		$article = $this->objFromFixture('CheckboxSetFieldTest_Article', 'articlewithouttags');
 		
 		/* Create a CheckboxSetField with nothing selected */
 		$field = new CheckboxSetField("Tags", "Test field", DataObject::get("CheckboxSetFieldTest_Tag")->map());
@@ -34,10 +34,10 @@ class CheckboxSetFieldTest extends SapphireTest {
 	}
 
 	function testSaveWithArrayValueSet() {
-		$article = $this->fixture->objFromFixture('CheckboxSetFieldTest_Article', 'articlewithouttags');
-		$articleWithTags = $this->fixture->objFromFixture('CheckboxSetFieldTest_Article', 'articlewithtags');
-		$tag1 = $this->fixture->objFromFixture('CheckboxSetFieldTest_Tag', 'tag1');
-		$tag2 = $this->fixture->objFromFixture('CheckboxSetFieldTest_Tag', 'tag2');
+		$article = $this->objFromFixture('CheckboxSetFieldTest_Article', 'articlewithouttags');
+		$articleWithTags = $this->objFromFixture('CheckboxSetFieldTest_Article', 'articlewithtags');
+		$tag1 = $this->objFromFixture('CheckboxSetFieldTest_Tag', 'tag1');
+		$tag2 = $this->objFromFixture('CheckboxSetFieldTest_Tag', 'tag2');
 		
 		/* Create a CheckboxSetField with 2 items selected.  Note that the array is in the format (key) => (selected) */
 		$field = new CheckboxSetField("Tags", "Test field", DataObject::get("CheckboxSetFieldTest_Tag")->map());
@@ -68,10 +68,10 @@ class CheckboxSetFieldTest extends SapphireTest {
 	}
 	
 	function testLoadDataFromObject() {
-		$article = $this->fixture->objFromFixture('CheckboxSetFieldTest_Article', 'articlewithouttags');
-		$articleWithTags = $this->fixture->objFromFixture('CheckboxSetFieldTest_Article', 'articlewithtags');
-		$tag1 = $this->fixture->objFromFixture('CheckboxSetFieldTest_Tag', 'tag1');
-		$tag2 = $this->fixture->objFromFixture('CheckboxSetFieldTest_Tag', 'tag2');
+		$article = $this->objFromFixture('CheckboxSetFieldTest_Article', 'articlewithouttags');
+		$articleWithTags = $this->objFromFixture('CheckboxSetFieldTest_Article', 'articlewithtags');
+		$tag1 = $this->objFromFixture('CheckboxSetFieldTest_Tag', 'tag1');
+		$tag2 = $this->objFromFixture('CheckboxSetFieldTest_Tag', 'tag2');
 
 		$field = new CheckboxSetField("Tags", "Test field", DataObject::get("CheckboxSetFieldTest_Tag")->map());
 		$form = new Form(

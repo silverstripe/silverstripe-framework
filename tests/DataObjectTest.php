@@ -15,25 +15,25 @@ class DataObjectTest extends SapphireTest {
 	function testDelete() {
 		// Test deleting using delete() on the DataObject
 		// Get the first page
-		$page = $this->fixture->objFromFixture('Page', 'page1');
+		$page = $this->objFromFixture('Page', 'page1');
 		// Check the page exists before deleting
 		$this->assertTrue(is_object($page) && $page->exists());
 		// Delete the page
 		$page->delete();
 		// Check that page does not exist after deleting
-		$page = $this->fixture->objFromFixture('Page', 'page1');
+		$page = $this->objFromFixture('Page', 'page1');
 		$this->assertTrue(!$page || !$page->exists());
 		
 		
 		// Test deleting using DataObject::delete_by_id()
 		// Get the second page
-		$page2 = $this->fixture->objFromFixture('Page', 'page2');
+		$page2 = $this->objFromFixture('Page', 'page2');
 		// Check the page exists before deleting
 		$this->assertTrue(is_object($page2) && $page2->exists());
 		// Delete the page
 		DataObject::delete_by_id('Page', $page2->ID);
 		// Check that page does not exist after deleting
-		$page2 = $this->fixture->objFromFixture('Page', 'page2');
+		$page2 = $this->objFromFixture('Page', 'page2');
 		$this->assertTrue(!$page2 || !$page2->exists());
 	}
 	
@@ -131,7 +131,7 @@ class DataObjectTest extends SapphireTest {
 	 *
 	 */
 	function testWritePropertyWithoutDBField() {
-		$page = $this->fixture->objFromFixture('Page', 'page1');
+		$page = $this->objFromFixture('Page', 'page1');
 		$page->ParentID = 99;
 		$page->write();
 		// reload the page from the database
@@ -145,7 +145,7 @@ class DataObjectTest extends SapphireTest {
 	 *   - Test the IDs on the DataObjects are set correctly
 	 */
 	function testHasManyRelationships() {
-		$page = $this->fixture->objFromFixture('Page', 'home');
+		$page = $this->objFromFixture('Page', 'home');
 		
 		// Test getComponents() gets the ComponentSet of the other side of the relation
 		$this->assertTrue($page->getComponents('Comments')->Count() == 2);
@@ -157,8 +157,8 @@ class DataObjectTest extends SapphireTest {
 	}
 
 	function testHasOneRelationship() {
-		$team1 = $this->fixture->objFromFixture('DataObjectTest_Team', 'team1');
-		$player1 = $this->fixture->objFromFixture('DataObjectTest_Player', 'player1');
+		$team1 = $this->objFromFixture('DataObjectTest_Team', 'team1');
+		$player1 = $this->objFromFixture('DataObjectTest_Player', 'player1');
 	   
 		// Add a captain to team 1
 		$team1->setField('CaptainID', $player1->ID);
@@ -175,10 +175,10 @@ class DataObjectTest extends SapphireTest {
 	 * @todo Test removeMany() and addMany() on $many_many relationships
 	 */
 	function testManyManyRelationships() {
-	   $player1 = $this->fixture->objFromFixture('DataObjectTest_Player', 'player1');
-	   $player2 = $this->fixture->objFromFixture('DataObjectTest_Player', 'player2');
-	   $team1 = $this->fixture->objFromFixture('DataObjectTest_Team', 'team1');
-	   $team2 = $this->fixture->objFromFixture('DataObjectTest_Team', 'team2');
+	   $player1 = $this->objFromFixture('DataObjectTest_Player', 'player1');
+	   $player2 = $this->objFromFixture('DataObjectTest_Player', 'player2');
+	   $team1 = $this->objFromFixture('DataObjectTest_Team', 'team1');
+	   $team2 = $this->objFromFixture('DataObjectTest_Team', 'team2');
 	   
 	   // Test adding single DataObject by reference
 	   $player1->Teams()->add($team1);
@@ -225,7 +225,7 @@ class DataObjectTest extends SapphireTest {
 	 * @todo Extend type change tests (e.g. '0'==NULL)
 	 */
 	function testChangedFields() {
-		$page = $this->fixture->objFromFixture('Page', 'home');
+		$page = $this->objFromFixture('Page', 'home');
 		$page->Title = 'Home-Changed';
 		$page->ShowInMenus = true;
 
@@ -274,7 +274,7 @@ class DataObjectTest extends SapphireTest {
 	}
 	
 	function testIsChanged() {
-		$page = $this->fixture->objFromFixture('Page', 'home');
+		$page = $this->objFromFixture('Page', 'home');
 		$page->Title = 'Home-Changed';
 		$page->ShowInMenus = true; // type change only, database stores "1"
 
@@ -298,7 +298,7 @@ class DataObjectTest extends SapphireTest {
 		$this->assertFalse($newPage->isChanged('Content', 1));
 		$this->assertFalse($newPage->isChanged('Content', 2));
 		
-		$page = $this->fixture->objFromFixture('Page', 'home');
+		$page = $this->objFromFixture('Page', 'home');
 		$page->Title = null;
 		$this->assertTrue($page->isChanged('Title', 1));
 		$this->assertTrue($page->isChanged('Title', 2));
@@ -639,7 +639,7 @@ class DataObjectTest extends SapphireTest {
 	}
 	
 	function testNewClassInstance() {
-		$page = $this->fixture->objFromFixture('Page', 'page1');
+		$page = $this->objFromFixture('Page', 'page1');
 		$changedPage = $page->newClassInstance('RedirectorPage');
 		$changedFields = $changedPage->getChangedFields();
 		
@@ -658,8 +658,8 @@ class DataObjectTest extends SapphireTest {
 	}
 	
 	function testManyManyExtraFields() {
-		$player = $this->fixture->objFromFixture('DataObjectTest_Player', 'player1');
-	   $team = $this->fixture->objFromFixture('DataObjectTest_Team', 'team1');
+		$player = $this->objFromFixture('DataObjectTest_Player', 'player1');
+	   $team = $this->objFromFixture('DataObjectTest_Team', 'team1');
 		
 		// Extra fields are immediately available on the Team class (defined in $many_many_extraFields)
 		$teamExtraFields = $team->many_many_extraFields('Players');

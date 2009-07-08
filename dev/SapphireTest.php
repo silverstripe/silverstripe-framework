@@ -14,8 +14,11 @@ require_once 'PHPUnit/Framework.php';
 class SapphireTest extends PHPUnit_Framework_TestCase {
 	/**
 	 * Path to fixture data for this test run.
+	 * If passed as an array, multiple fixture files will be loaded.
+	 * Please note that you won't be able to refer with "=>" notation
+	 * between the fixtures, they act independent of each other.
 	 * 
-	 * @var string
+	 * @var string|array
 	 */
 	static $fixture_file = null;
 	
@@ -33,9 +36,9 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	}
 	
 	/**
-	 * @var YamlFixture
+	 * @var array $fixtures Array of {@link YamlFixture} instances
 	 */
-	protected $fixture; 
+	protected $fixtures; 
 	
 	function setUp() {
 		// Mark test as being run
@@ -67,14 +70,15 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 			$dbadmin = new DatabaseAdmin();
 			$dbadmin->clearAllData();
 			
-			// We have to disable validation while we import the fixtures, as the order in
-			// which they are imported doesnt guarantee valid relations until after the
-			// import is complete.
-			$validationenabled = DataObject::get_validation_enabled();
-			DataObject::set_validation_enabled(false);
-			$this->fixture = new YamlFixture($fixtureFile);
-			$this->fixture->saveIntoDatabase();
-			DataObject::set_validation_enabled($validationenabled);
+			$fixtureFiles = (is_array($fixtureFile)) ? $fixtureFile : array($fixtureFile);
+			
+			foreach($fixtureFiles as $fixtureFilePath) {
+				$fixture = new YamlFixture($fixtureFilePath);
+				$fixture->saveIntoDatabase();
+				$this->fixtures[] = $fixture;
+			}
+			
+			
 		}
 		
 		// Set up email
@@ -105,21 +109,43 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	 * Get the ID of an object from the fixture.
 	 * @param $className The data class, as specified in your fixture file.  Parent classes won't work
 	 * @param $identifier The identifier string, as provided in your fixture file
+	 * @return int
 	 */
 	protected function idFromFixture($className, $identifier) {
-		if($this->fixture) return $this->fixture->idFromFixture($className, $identifier);
-		else user_error("You've called \$this->objFromFixture() but you haven't specified static \$fixture_file.\n" . 
-			"Ensure that static \"\$fixture_file = 'module/tests/fixturefile.yml';\" is specified in your " .get_class($this). " class.", E_USER_WARNING);
+		if(!$this->fixtures) {
+			user_error("You've called \$this->objFromFixture() but you haven't specified static \$fixture_file.\n" . 
+				"Ensure that static \"\$fixture_file = 'module/tests/fixturefile.yml';\" is specified in your " .get_class($this). " class.", E_USER_WARNING);
+			return;
+		}
+		
+		foreach($this->fixtures as $fixture) {
+			$match = $fixture->idFromFixture($className, $identifier);
+			if($match) return $match;
+		}
+		
+		return false;
 	}
 	
 	/**
 	 * Return all of the IDs in the fixture of a particular class name.
+	 * Will collate all IDs form all fixtures if multiple fixtures are provided.
+	 * 
+	 * @param string $className
 	 * @return A map of fixture-identifier => object-id
 	 */
 	protected function allFixtureIDs($className) {
-		if($this->fixture) return $this->fixture->allFixtureIDs($className);
-		else user_error("You've called \$this->objFromFixture() but you haven't specified static \$fixture_file.\n" . 
+		if(!$this->fixtures) {
+			user_error("You've called \$this->objFromFixture() but you haven't specified static \$fixture_file.\n" . 
 			"Ensure that static \"\$fixture_file = 'module/tests/fixturefile.yml';\" is specified in your " .get_class($this). " class.", E_USER_WARNING);
+			return;
+		}
+		
+		$ids = array();
+		foreach($this->fixtures as $fixture) {
+			$ids += $fixture->allFixtureIDs($className);
+		}
+		
+		return $ids;
 	}
 
 	/**
@@ -128,22 +154,42 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	 * @param $identifier The identifier string, as provided in your fixture file
 	 */
 	protected function objFromFixture($className, $identifier) {
-		if($this->fixture) return $this->fixture->objFromFixture($className, $identifier);
-		else user_error("You've called \$this->objFromFixture() but you haven't specified static \$fixture_file.\n" . 
+		if(!$this->fixtures) {
+			user_error("You've called \$this->objFromFixture() but you haven't specified static \$fixture_file.\n" . 
 			"Ensure that static \"\$fixture_file = 'module/tests/fixturefile.yml';\" is specified in your " .get_class($this). " class.", E_USER_WARNING);
+			return;
+		}
+		
+		foreach($this->fixtures as $fixture) {
+			$match = $fixture->objFromFixture($className, $identifier);
+			if($match) return $match;
+		}
+		
+		return false;
 	}
 	
 	/**
 	 * Load a YAML fixture file into the database.
-	 * Once loaded, you can use idFromFixture() and objFromFixture() to get items from the fixture
+	 * Once loaded, you can use idFromFixture() and objFromFixture() to get items from the fixture.
+	 * Doesn't clear existing fixtures.
+	 *
 	 * @param $fixtureFile The location of the .yml fixture file, relative to the site base dir
 	 */
 	function loadFixture($fixtureFile) {
 		$parser = new Spyc();
 		$fixtureContent = $parser->load(Director::baseFolder().'/'.$fixtureFile);
 		
-		$this->fixture = new YamlFixture($fixtureFile);
-		$this->fixture->saveIntoDatabase();
+		$fixture = new YamlFixture($fixtureFile);
+		$fixture->saveIntoDatabase();
+		$this->fixtures[] = $fixture;
+	}
+	
+	/**
+	 * Clear all fixtures which were previously loaded through
+	 * {@link loadFixture()}.
+	 */
+	function clearFixtures() {
+		$this->fixtures = array();
 	}
 	
 	function tearDown() {

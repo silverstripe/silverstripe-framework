@@ -96,7 +96,17 @@ class YamlFixture extends Object {
 	 * @param $identifier The identifier string, as provided in your fixture file
 	 */
 	public function idFromFixture($className, $identifier) {
-		return $this->fixtureDictionary[$className][$identifier];
+		if(isset($this->fixtureDictionary[$className][$identifier])) {
+			return $this->fixtureDictionary[$className][$identifier];
+		} else {
+			user_error(sprintf(
+				"Couldn't find object #%d (%s) in file %s",
+				$identifier,
+				$className,
+				$this->fixtureFile
+			), E_USER_ERROR);
+		}
+		
 	}
 	
 	/**
@@ -105,7 +115,16 @@ class YamlFixture extends Object {
 	 * @return A map of fixture-identifier => object-id
 	 */
 	public function allFixtureIDs($className) {
-		return $this->fixtureDictionary[$className];
+		if(isset($this->fixtureDictionary[$className])) {
+			return $this->fixtureDictionary[$className];
+		} else {
+			user_error(sprintf(
+				"Couldn't find objects of type %s in file %s",
+				$className,
+				$this->fixtureFile
+			), E_USER_ERROR);
+		}
+		
 	}
 
 	/**
@@ -128,6 +147,12 @@ class YamlFixture extends Object {
 	 * then again after populating all relations (has_one, has_many, many_many).
 	 */
 	public function saveIntoDatabase() {
+		// We have to disable validation while we import the fixtures, as the order in
+		// which they are imported doesnt guarantee valid relations until after the
+		// import is complete.
+		$validationenabled = DataObject::get_validation_enabled();
+		DataObject::set_validation_enabled(false);
+		
 		$parser = new Spyc();
 		$fixtureContent = $parser->load(Director::baseFolder().'/'.$this->fixtureFile);
 		$this->fixtureDictionary = array();
@@ -138,6 +163,8 @@ class YamlFixture extends Object {
 				$this->writeSQL($dataClass, $items);
 			}
 		}
+		
+		DataObject::set_validation_enabled($validationenabled);
 	}
 	
 	/**
