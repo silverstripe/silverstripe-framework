@@ -826,7 +826,7 @@ class MySQLDatabase extends Database {
 	 * Using PHP's addslashes method won't work in MSSQL
 	 */
 	function addslashes($value){
-		return mysql_escape_string($value);
+		return mysql_real_escape_string($value, $this->dbConn);
 	}
 	
 	/*
