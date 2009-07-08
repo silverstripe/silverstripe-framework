@@ -45,7 +45,8 @@ class CheckboxField extends FormField {
 		if($this->labelLeft) {
 			return parent::FieldHolder();
 		} else {
-			extract($this->getXMLValues(array( 'Name', 'Field', 'Title', 'Message', 'MessageType' )));
+			extract($this->getXMLValues(array( 'Name', 'Field', 'Title', 'Message', 'MessageType' )),
+				EXTR_SKIP);
 			$messageBlock = isset($Message) ? "<span class=\"message $MessageType\">$Message</span>" : '';
 			$Type = $this->XML_val('Type');
 			return <<<HTML
