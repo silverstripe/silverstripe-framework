@@ -122,11 +122,12 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 			if($match) return $match;
 		}
 		
+		$fixtureFiles = Object::get_static(get_class($this), 'fixture_file');
 		user_error(sprintf(
 			"Couldn't find object '%s' (class: %s) in files %s",
 			$identifier,
 			$className,
-			implode(',', Object::get_static(get_class($this), 'fixture_file'))
+			(is_array($fixtureFiles)) ? implode(',', $fixtureFiles) : $fixtureFiles
 		), E_USER_ERROR);
 		
 		return false;
@@ -168,12 +169,13 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 			$match = $fixture->objFromFixture($className, $identifier);
 			if($match) return $match;
 		}
-		
+
+		$fixtureFiles = Object::get_static(get_class($this), 'fixture_file');
 		user_error(sprintf(
 			"Couldn't find object '%s' (class: %s) in files %s",
 			$identifier,
 			$className,
-			implode(',', Object::get_static(get_class($this), 'fixture_file'))
+			(is_array($fixtureFiles)) ? implode(',', $fixtureFiles) : $fixtureFiles
 		), E_USER_ERROR);
 		
 		return false;

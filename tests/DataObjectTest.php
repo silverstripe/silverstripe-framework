@@ -16,24 +16,26 @@ class DataObjectTest extends SapphireTest {
 		// Test deleting using delete() on the DataObject
 		// Get the first page
 		$page = $this->objFromFixture('Page', 'page1');
+		$pageID = $page->ID;
 		// Check the page exists before deleting
 		$this->assertTrue(is_object($page) && $page->exists());
 		// Delete the page
 		$page->delete();
 		// Check that page does not exist after deleting
-		$page = $this->objFromFixture('Page', 'page1');
+		$page = DataObject::get_by_id('Page', $pageID);
 		$this->assertTrue(!$page || !$page->exists());
 		
 		
 		// Test deleting using DataObject::delete_by_id()
 		// Get the second page
 		$page2 = $this->objFromFixture('Page', 'page2');
+		$page2ID = $page2->ID;
 		// Check the page exists before deleting
 		$this->assertTrue(is_object($page2) && $page2->exists());
 		// Delete the page
 		DataObject::delete_by_id('Page', $page2->ID);
 		// Check that page does not exist after deleting
-		$page2 = $this->objFromFixture('Page', 'page2');
+		$page2 = DataObject::get_by_id('Page', $page2ID);
 		$this->assertTrue(!$page2 || !$page2->exists());
 	}
 	
