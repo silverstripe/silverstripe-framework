@@ -508,6 +508,8 @@ class RestfulServer extends Controller {
 			$query = $obj->{"{$relationName}Query"}(null, $sort, null, $limit);
 			$relationClass = $obj->{"{$relationName}Class"}();
 		} elseif($relationClass = $obj->many_many($relationName)) {
+			// many_many() returns different notation
+			$relationClass = $relationClass[1];
 			$query = $obj->getManyManyComponentsQuery($relationName);
 		} elseif($relationClass = $obj->has_many($relationName)) {
 			$query = $obj->getComponentsQuery($relationName);

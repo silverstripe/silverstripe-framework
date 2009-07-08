@@ -54,7 +54,7 @@ class RestfulServerTest extends SapphireTest {
 		unset($_SERVER['PHP_AUTH_USER']);
 		unset($_SERVER['PHP_AUTH_PW']);
 	}
-
+	
 	public function testAuthenticatedPUT() {
 		$url = "/api/v1/RestfulServerTest_Comment/1";
 		$data = array('Comment' => 'created');
@@ -83,18 +83,35 @@ class RestfulServerTest extends SapphireTest {
 		$url = "/api/v1/RestfulServerTest_Author/" . $author1->ID;
 		$response = Director::test($url, null, null, 'GET');
 		$this->assertEquals($response->getStatusCode(), 200);
-
+	
 		$responseArr = Convert::xml2array($response->getBody());
 		$ratingsArr = $responseArr['Ratings']['RestfulServerTest_AuthorRating'];
 		$this->assertEquals(count($ratingsArr), 2);
 		$this->assertEquals($ratingsArr[0]['@attributes']['id'], $rating1->ID);
 		$this->assertEquals($ratingsArr[1]['@attributes']['id'], $rating2->ID);
 	}
+	
+	public function testGETManyManyRelationshipsXML() {
+		// author4 has related authors author2 and author3
+		$author2 = $this->objFromFixture('RestfulServerTest_Author', 'author2');
+		$author3 = $this->objFromFixture('RestfulServerTest_Author', 'author3');
+		$author4 = $this->objFromFixture('RestfulServerTest_Author', 'author4');
+		
+		$url = "/api/v1/RestfulServerTest_Author/" . $author4->ID . '/RelatedAuthors';
+		$response = Director::test($url, null, null, 'GET');
+		$this->assertEquals($response->getStatusCode(), 200);
+		$arr = Convert::xml2array($response->getBody());
+		$authorsArr = $arr['RestfulServerTest_Author'];
+		
+		$this->assertEquals(count($authorsArr), 2);
+		$this->assertEquals($authorsArr[0]['ID'], $author2->ID);
+		$this->assertEquals($authorsArr[1]['ID'], $author3->ID);
+	}
 
 	public function testPUTWithFormEncoded() {
 		$_SERVER['PHP_AUTH_USER'] = 'editor@test.com';
 		$_SERVER['PHP_AUTH_PW'] = 'editor';
-
+	
 		$url = "/api/v1/RestfulServerTest_Comment/1";
 		$body = 'Name=Updated Comment&Comment=updated';
 		$headers = array(
@@ -107,15 +124,15 @@ class RestfulServerTest extends SapphireTest {
 		$this->assertEquals($responseArr['ID'], 1);
 		$this->assertEquals($responseArr['Comment'], 'updated');
 		$this->assertEquals($responseArr['Name'], 'Updated Comment');
-
+	
 		unset($_SERVER['PHP_AUTH_USER']);
 		unset($_SERVER['PHP_AUTH_PW']);
 	}
-
+	
 	public function testPOSTWithFormEncoded() {
 		$_SERVER['PHP_AUTH_USER'] = 'editor@test.com';
 		$_SERVER['PHP_AUTH_PW'] = 'editor';
-
+	
 		$url = "/api/v1/RestfulServerTest_Comment";
 		$body = 'Name=New Comment&Comment=created';
 		$headers = array(
@@ -128,7 +145,7 @@ class RestfulServerTest extends SapphireTest {
 		$this->assertEquals($responseArr['ID'], 2);
 		$this->assertEquals($responseArr['Comment'], 'created');
 		$this->assertEquals($responseArr['Name'], 'New Comment');
-
+	
 		unset($_SERVER['PHP_AUTH_USER']);
 		unset($_SERVER['PHP_AUTH_PW']);
 	}
@@ -145,7 +162,7 @@ class RestfulServerTest extends SapphireTest {
 		$obj = Convert::json2obj($response->getBody());
 		$this->assertEquals($obj->ID, 1);
 		$this->assertEquals($obj->Comment, 'updated');
-
+	
 		// by extension
 		$url = "/api/v1/RestfulServerTest_Comment/1.json";
 		$body = '{"Comment":"updated"}';
@@ -171,7 +188,7 @@ class RestfulServerTest extends SapphireTest {
 		$obj = Convert::xml2array($response->getBody());
 		$this->assertEquals($obj['ID'], 1);
 		$this->assertEquals($obj['Comment'], 'updated');
-
+	
 		// by extension
 		$url = "/api/v1/RestfulServerTest_Comment/1.xml";
 		$body = '<RestfulServerTest_Comment><Comment>updated</Comment></RestfulServerTest_Comment>';
@@ -195,7 +212,7 @@ class RestfulServerTest extends SapphireTest {
 		$this->assertEquals($obj->ID, 1);
 		$this->assertEquals($response->getHeader('Content-Type'), 'application/json');
 	}
-
+	
 	public function testNotFound(){
 		$_SERVER['PHP_AUTH_USER'] = 'user@test.com';
 		$_SERVER['PHP_AUTH_PW'] = 'user';
@@ -225,7 +242,7 @@ class RestfulServerTest extends SapphireTest {
 	public function testUnsupportedMediaType() {
 		$_SERVER['PHP_AUTH_USER'] = 'user@test.com';
 		$_SERVER['PHP_AUTH_PW'] = 'user';
-
+	
 		$url = "/api/v1/RestfulServerTest_Comment";
 		$data = "Comment||\/||updated"; // weird format
 		$headers = array('Content-Type' => 'text/weirdformat');
@@ -410,6 +427,7 @@ class RestfulServerTest_Author extends DataObject implements TestOnly {
 		
 	static $many_many = array(
 		'RelatedPages' => 'RestfulServerTest_Page', 
+		'RelatedAuthors' => 'RestfulServerTest_Author', 
 	);
 	
 	static $has_many = array(
