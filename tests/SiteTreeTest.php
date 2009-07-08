@@ -243,27 +243,32 @@ class SiteTreeTest extends SapphireTest {
 	
 
 	function testDeleteFromStageOperatesRecursively() {
-		$parentPage = $this->objFromFixture('Page', 'about');
-		$parentPage->delete();
+		$pageAbout = $this->objFromFixture('Page', 'about');
+		$pageStaff = $this->objFromFixture('Page', 'staff');
+		$pageStaffDuplicate = $this->objFromFixture('Page', 'staffduplicate');
 		
-		$this->assertFalse($this->objFromFixture('Page', 'about'));
-		$this->assertFalse($this->objFromFixture('Page', 'staff'));
-		$this->assertFalse($this->objFromFixture('Page', 'staffduplicate'));
+		$pageAbout->delete();
+		
+		$this->assertFalse(DataObject::get_by_id('Page', $pageAbout->ID));
+		$this->assertFalse(DataObject::get_by_id('Page', $pageStaff->ID));
+		$this->assertFalse(DataObject::get_by_id('Page', $pageStaffDuplicate->ID));
 	}
 
 	function testDeleteFromLiveOperatesRecursively() {
-		$this->objFromFixture('Page', 'about')->doPublish();
-		$this->objFromFixture('Page', 'staff')->doPublish();
-		$this->objFromFixture('Page', 'staffduplicate')->doPublish();
-		
+		$pageAbout = $this->objFromFixture('Page', 'about');
+		$pageAbout->doPublish();
+		$pageStaff = $this->objFromFixture('Page', 'staff');
+		$pageStaff->doPublish();
+		$pageStaffDuplicate = $this->objFromFixture('Page', 'staffduplicate');
+		$pageStaffDuplicate->doPublish();
 		
 		$parentPage = $this->objFromFixture('Page', 'about');
 		$parentPage->doDeleteFromLive();
 		
 		Versioned::reading_stage('Live');
-		$this->assertFalse($this->objFromFixture('Page', 'about'));
-		$this->assertFalse($this->objFromFixture('Page', 'staff'));
-		$this->assertFalse($this->objFromFixture('Page', 'staffduplicate'));
+		$this->assertFalse(DataObject::get_by_id('Page', $pageAbout->ID));
+		$this->assertFalse(DataObject::get_by_id('Page', $pageStaff->ID));
+		$this->assertFalse(DataObject::get_by_id('Page', $pageStaffDuplicate->ID));
 		Versioned::reading_stage('Stage');
 	}
 
