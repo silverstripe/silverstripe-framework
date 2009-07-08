@@ -122,6 +122,13 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 			if($match) return $match;
 		}
 		
+		user_error(sprintf(
+			"Couldn't find object '%s' (class: %s) in files %s",
+			$identifier,
+			$className,
+			implode(',', Object::get_static(get_class($this), 'fixture_file'))
+		), E_USER_ERROR);
+		
 		return false;
 	}
 	
@@ -161,6 +168,13 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 			$match = $fixture->objFromFixture($className, $identifier);
 			if($match) return $match;
 		}
+		
+		user_error(sprintf(
+			"Couldn't find object '%s' (class: %s) in files %s",
+			$identifier,
+			$className,
+			implode(',', Object::get_static(get_class($this), 'fixture_file'))
+		), E_USER_ERROR);
 		
 		return false;
 	}

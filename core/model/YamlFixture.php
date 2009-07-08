@@ -99,12 +99,7 @@ class YamlFixture extends Object {
 		if(isset($this->fixtureDictionary[$className][$identifier])) {
 			return $this->fixtureDictionary[$className][$identifier];
 		} else {
-			user_error(sprintf(
-				"Couldn't find object #%d (%s) in file %s",
-				$identifier,
-				$className,
-				$this->fixtureFile
-			), E_USER_ERROR);
+			return false;
 		}
 		
 	}
@@ -118,11 +113,7 @@ class YamlFixture extends Object {
 		if(isset($this->fixtureDictionary[$className])) {
 			return $this->fixtureDictionary[$className];
 		} else {
-			user_error(sprintf(
-				"Couldn't find objects of type %s in file %s",
-				$className,
-				$this->fixtureFile
-			), E_USER_ERROR);
+			return false;
 		}
 		
 	}
