@@ -113,8 +113,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	 */
 	protected function idFromFixture($className, $identifier) {
 		if(!$this->fixtures) {
-			user_error("You've called \$this->objFromFixture() but you haven't specified static \$fixture_file.\n" . 
-				"Ensure that static \"\$fixture_file = 'module/tests/fixturefile.yml';\" is specified in your " .get_class($this). " class.", E_USER_WARNING);
+			user_error("You've called idFromFixture() but you haven't specified static \$fixture_file.\n", E_USER_WARNING);
 			return;
 		}
 		
@@ -135,8 +134,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	 */
 	protected function allFixtureIDs($className) {
 		if(!$this->fixtures) {
-			user_error("You've called \$this->objFromFixture() but you haven't specified static \$fixture_file.\n" . 
-			"Ensure that static \"\$fixture_file = 'module/tests/fixturefile.yml';\" is specified in your " .get_class($this). " class.", E_USER_WARNING);
+			user_error("You've called allFixtureIDs() but you haven't specified static \$fixture_file.\n", E_USER_WARNING);
 			return;
 		}
 		
@@ -155,8 +153,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	 */
 	protected function objFromFixture($className, $identifier) {
 		if(!$this->fixtures) {
-			user_error("You've called \$this->objFromFixture() but you haven't specified static \$fixture_file.\n" . 
-			"Ensure that static \"\$fixture_file = 'module/tests/fixturefile.yml';\" is specified in your " .get_class($this). " class.", E_USER_WARNING);
+			user_error("You've called objFromFixture() but you haven't specified static \$fixture_file.\n", E_USER_WARNING);
 			return;
 		}
 		
