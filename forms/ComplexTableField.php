@@ -643,7 +643,8 @@ JS;
 		$referrer = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : null;
 		
 		$closeLink = sprintf(
-			'<small><a href="' . $referrer . '" onclick="javascript:window.top.GB_hide(); return false;">(%s)</a></small>',
+			'<small><a href="%s" onclick="javascript:window.top.GB_hide(); return false;">(%s)</a></small>',
+			$referrer,
 			_t('ComplexTableField.CLOSEPOPUP', 'Close Popup')
 		);
 		
