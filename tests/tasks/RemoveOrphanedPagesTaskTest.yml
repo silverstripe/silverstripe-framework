@@ -1,0 +1,32 @@
+Page:
+    parent1_published:
+        Title: Parent1
+    child1_1_published:
+        Title: Child1.1
+        Parent: =>Page.parent1_published
+    child1_2_published:
+        Title: Child1.2
+        Parent: =>Page.parent1_published
+    child1_3_orphaned:
+        Title: Child1.3
+        Parent: =>Page.parent1_published
+    child1_4_orphaned_published:
+        Title: Child1.4
+        Parent: =>Page.parent1_published
+    grandchild1_1_1:
+        Title: Grandchild1.1.1
+        Parent: =>Page.child1_1_published
+    grandchild1_1_2_published:
+        Title: Grandchild1.1.2
+        Parent: =>Page.child1_1_published
+    grandchild1_1_3_orphaned:
+        Title: Grandchild1.1.3
+        Parent: =>Page.child1_1_published
+    grandchild1_1_4_orphaned_published:
+        Title: Grandchild1.1.4
+        Parent: =>Page.child1_1_published
+    parent2:
+        Title: Parent2
+    child2_1_published_orphaned:
+        Title: Child2.1
+        Parent: =>Page.parent2
