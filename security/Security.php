@@ -138,8 +138,13 @@ class Security extends Controller {
 	 *                                                       in and lacks the
 	 *                                                       permission to
 	 *                                                       access the item.
+	 *
+	 * The alreadyLoggedIn value can contain a '%s' placeholder that will be replaced with a link
+	 * to log in.
 	 */
 	static function permissionFailure($controller = null, $messageSet = null) {
+		if(!$controller) $controller = Controller::curr();
+		
 		if(Director::is_ajax()) {
 			$response = ($controller) ? $controller->getResponse() : new HTTPResponse();
 			$response->setStatusCode(403);
@@ -154,15 +159,20 @@ class Security extends Controller {
 					$messageSet = array(
 						'default' => _t(
 							'Security.NOTEPAGESECURED', 
-							"That page is secured. Enter your credentials below and we will send you right along."
+							"That page is secured. Enter your credentials below and we will send "
+								. "you right along."
 						),
 						'alreadyLoggedIn' => _t(
 							'Security.ALREADYLOGGEDIN', 
-							"You don't have access to this page.  If you have another account that can access that page, you can log in below."
+							"You don't have access to this page.  If you have another account that "
+								. "can access that page, you can <a href=\"%s\">log in again</a>.",
+							PR_MEDIUM,
+							"%s will be replaced with a link to log in."
 						),
 						'logInAgain' => _t(
 							'Security.LOGGEDOUT',
-							"You have been logged out.  If you would like to log in again, enter your credentials below."
+							"You have been logged out.  If you would like to log in again, enter "
+								. "your credentials below."
 						)
 					);
 				}
@@ -173,11 +183,18 @@ class Security extends Controller {
 			}
 
 			// Work out the right message to show
-			if(Member::currentUserID()) {
-				$message = isset($messageSet['alreadyLoggedIn']) ? $messageSet['alreadyLoggedIn'] : $messageSet['default'];
-				if($member = Member::currentUser()) {
-					$member->logOut();
-				}
+			if(Member::currentUser()) {
+				$response = ($controller) ? $controller->getResponse() : new HTTPResponse();
+				$response->setStatusCode(403);
+
+				// Replace %s with the log in link
+				$body = sprintf($messageSet['alreadyLoggedIn'], 
+					Controller::join_links(Director::baseURL(), 'Security/login',
+					'?BackURL=' . urlencode($_SERVER['REQUEST_URI'])));
+				
+				$response->setBody($body);
+				return $response;
+
 			} else if(substr(Director::history(),0,15) == 'Security/logout') {
 				$message = $messageSet['logInAgain'] ? $messageSet['logInAgain'] : $messageSet['default'];
 			} else {

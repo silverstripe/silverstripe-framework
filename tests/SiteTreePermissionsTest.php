@@ -106,7 +106,7 @@ class SiteTreePermissionsTest extends FunctionalTest {
 		$response = $this->get($page->URLSegment);
 		$this->assertEquals(
 			$response->getStatusCode(),
-			302,
+			403,
 			'Authenticated members cant view a page marked as "Viewable by these groups" if theyre not in the listed groups'
 		);
 		$this->session()->inst_set('loggedInAs', null);
