@@ -175,10 +175,11 @@ class i18nTextCollector extends Object {
 		$entitiesArr = array();
 		
 		$regexRule = '_t[[:space:]]*\(' .
-			'[[:space:]]*("[^"]*"|\\\'[^\']*\\\')[[:space:]]*,' . # namespace.entity
-			'[[:space:]]*("([^"]|\\\")*"|\'([^\']|\\\\\')*\')([[:space:]*,' . # value
-			'[[:space:]]*[^,)]*)?([[:space:]]*,' . # priority (optional)
-			'[[:space:]]*("([^"]|\\\")*"|\'([^\']|\\\\\')*\'))?[[:space:]]*' . # comment
+			'[[:space:]]*("[^"]*"|\\\'[^\']*\\\')[[:space:]]*,' . // namespace.entity
+			'[[:space:]]*(("([^"]|\\\")*"|\'([^\']|\\\\\')*\')' .  // value
+			'([[:space:]]*\\.[[:space:]]*("([^"]|\\\")*"|\'([^\']|\\\\\')*\'))*)' . // concatenations
+			'([[:space:]]*,[[:space:]]*[^,)]*)?([[:space:]]*,' . // priority (optional)
+			'[[:space:]]*("([^"]|\\\")*"|\'([^\']|\\\\\')*\'))?[[:space:]]*' . // comment (optional)
 		'\)';
 		while (ereg($regexRule, $content, $regs)) {
 			$entitiesArr = array_merge($entitiesArr, (array)$this->entitySpecFromRegexMatches($regs));
@@ -211,10 +212,11 @@ class i18nTextCollector extends Object {
 
 		// @todo respect template tags (< % _t() % > instead of _t())
 		$regexRule = '_t[[:space:]]*\(' .
-			'[[:space:]]*("[^"]*"|\\\'[^\']*\\\')[[:space:]]*,' . # namespace.entity
-			'[[:space:]]*("([^"]|\\\")*"|\'([^\']|\\\\\')*\')([[:space:]]*,' . # value
-			'[[:space:]]*[^,)]*)?([[:space:]]*,' . # priority (optional)
-			'[[:space:]]*("([^"]|\\\")*"|\'([^\']|\\\\\')*\'))?[[:space:]]*' . # comment (optional)
+			'[[:space:]]*("[^"]*"|\\\'[^\']*\\\')[[:space:]]*,' . // namespace.entity
+			'[[:space:]]*(("([^"]|\\\")*"|\'([^\']|\\\\\')*\')' .  // value
+			'([[:space:]]*\\.[[:space:]]*("([^"]|\\\")*"|\'([^\']|\\\\\')*\'))*)' . // concatenations
+			'([[:space:]]*,[[:space:]]*[^,)]*)?([[:space:]]*,' . // priority (optional)
+			'[[:space:]]*("([^"]|\\\")*"|\'([^\']|\\\\\')*\'))?[[:space:]]*' . // comment (optional)
 		'\)';
 		while(ereg($regexRule,$content,$regs)) {
 			$entitiesArr = array_merge($entitiesArr,(array)$this->entitySpecFromRegexMatches($regs, $fileName));
@@ -280,6 +282,8 @@ class i18nTextCollector extends Object {
 		
 		// remove wrapping quotes
 		$value = ($regs[2]) ? substr($regs[2],1,-1) : null;
+		
+		$value = ereg_replace("([^\\])['\"][[:space:]]*.[[:space:]]*['\"]",'\\1',$value);
 
 		// only escape quotes when wrapped in double quotes, to make them safe for insertion
 		// into single-quoted PHP code. If they're wrapped in single quotes, the string should
@@ -287,10 +291,10 @@ class i18nTextCollector extends Object {
 		if(substr($regs[2],0,1) == '"') $value = addcslashes($value,'\'');
 		
 		// remove starting comma and any newlines
-		$prio = ($regs[5]) ? trim(preg_replace('/\n/','',substr($regs[5],1))) : null;
+		$prio = ($regs[10]) ? trim(preg_replace('/\n/','',substr($regs[10],1))) : null;
 		
 		// remove wrapping quotes
-		$comment = ($regs[7]) ? substr($regs[7],1,-1) : null;
+		$comment = ($regs[12]) ? substr($regs[12],1,-1) : null;
 
 		return array(
 			"{$namespace}.{$entity}" => array(

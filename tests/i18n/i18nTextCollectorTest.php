@@ -63,7 +63,27 @@ class i18nTextCollectorTest extends SapphireTest {
 		
 		parent::tearDown();
 	}
-	
+
+	function testConcatenationInEntityValues() {
+		$c = new i18nTextCollector();
+
+		$php = <<<PHP
+_t(
+'Test.CONCATENATED',
+'Line 1' .
+'Line 2' .
+'Line 3',
+PR_MEDIUM,
+'Comment'
+);
+PHP;
+		$this->assertEquals(
+			$c->collectFromCode($php, 'mymodule'),
+			array(
+				'Test.CONCATENATED' => array("Line 1Line 2Line 3",'PR_MEDIUM','Comment')
+			)
+		);
+	}	
 	function testCollectFromTemplateSimple() {
 		$c = new i18nTextCollector();
 
@@ -275,7 +295,7 @@ PHP;
 			)
 		);
 	}
-	
+
 	/**
 	 * Input for langArrayCodeForEntitySpec() should be suitable for insertion
 	 * into single-quoted strings, so needs to be escaped already.
