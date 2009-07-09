@@ -1022,7 +1022,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		DataObject::set_context_obj(null);
 		
 		// If the URLSegment has been changed, rewrite links
-		if($this->isChanged('URLSegment')) {
+		if($this->isChanged('URLSegment', 2)) {
 			if($this->hasMethod('BackLinkTracking')) {
 				$links = $this->BackLinkTracking();
 				if($links) {
