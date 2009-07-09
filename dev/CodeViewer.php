@@ -73,6 +73,7 @@ class CodeViewer extends Controller {
 	
 	function init() {
 		if(!Permission::check('ADMIN')) Security::permissionFailure();
+		ManifestBuilder::load_test_manifest();
 		parent::init();
 	}
 
