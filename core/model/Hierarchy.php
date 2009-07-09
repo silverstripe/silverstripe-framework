@@ -27,9 +27,10 @@ class Hierarchy extends DataObjectDecorator {
 	 * @param boolean $limitToMarked Display only marked children.
 	 * @param string $childrenMethod The name of the method used to get children from each object
 	 * @param boolean $rootCall Set to true for this first call, and then to false for calls inside the recursion. You should not change this.
+	 * @param int $minNodeCount
 	 * @return string
 	 */
-	public function getChildrenAsUL($attributes = "", $titleEval = '"<li>" . $child->Title', $extraArg = null, $limitToMarked = false, $childrenMethod = "AllChildrenIncludingDeleted", $rootCall = true) {
+	public function getChildrenAsUL($attributes = "", $titleEval = '"<li>" . $child->Title', $extraArg = null, $limitToMarked = false, $childrenMethod = "AllChildrenIncludingDeleted", $rootCall = true, $minNodeCount = 30) {
 		if($limitToMarked && $rootCall) {
 			$this->markingFinished();
 		}
@@ -52,7 +53,7 @@ class Hierarchy extends DataObjectDecorator {
 				if(!$limitToMarked || $child->isMarked()) {
 					$foundAChild = true;
 					$output .= eval("return $titleEval;") . "\n" . 
-					$child->getChildrenAsUL("", $titleEval, $extraArg, $limitToMarked, $childrenMethod, false) . "</li>\n";
+					$child->getChildrenAsUL("", $titleEval, $extraArg, $limitToMarked, $childrenMethod, false, $minNodeCount) . "</li>\n";
 				}
 			}
 			
@@ -72,18 +73,19 @@ class Hierarchy extends DataObjectDecorator {
 	 * This method returns the number of nodes marked.  After this method is called other methods 
 	 * can check isExpanded() and isMarked() on individual nodes.
 	 * 
-	 * @param int $minCount The minimum amount of nodes to mark.
+	 * @param int $minNodeCount The minimum amount of nodes to mark.
 	 * @return int The actual number of nodes marked.
 	 */
-	public function markPartialTree($minCount = 30, $context = null, $childrenMethod = "AllChildrenIncludingDeleted") {
+	public function markPartialTree($minNodeCount = 30, $context = null, $childrenMethod = "AllChildrenIncludingDeleted") {
+		if(!is_numeric($minNodeCount)) $minNodeCount = 30;
+
 		$this->markedNodes = array($this->owner->ID => $this->owner);
 		$this->owner->markUnexpanded();
 
 		// foreach can't handle an ever-growing $nodes list
 		while(list($id, $node) = each($this->markedNodes)) {
 			$this->markChildren($node, $context, $childrenMethod);
-			
-			if($minCount && sizeof($this->markedNodes) >= $minCount) {
+			if($minNodeCount && sizeof($this->markedNodes) >= $minNodeCount) {
 				break;
 			}
 		}		
