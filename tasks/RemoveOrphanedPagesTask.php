@@ -52,6 +52,14 @@ in the other stage:<br />
 		return $this->class;
 	}
 	
+	function init() {
+		parent::init();
+		
+		if(!Permission::check('ADMIN')) {
+			return Security::permissionFailure($this);
+		}
+	}
+	
 	function index() {
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
 		Requirements::customCSS('#OrphanIDs .middleColumn {width: auto;}');
@@ -110,15 +118,28 @@ in the other stage:<br />
 			$fields->push(new LiteralField(
 				'SelectAllLiteral',
 				sprintf(
-					'<p><a href="#" onclick="javascript:jQuery(\'#Form_Form_OrphanIDs :checkbox\').attr(\'checked\', \'checked\'); return false;">%s</a></p>',
+					'<p><a href="#" onclick="javascript:jQuery(\'#Form_Form_OrphanIDs :checkbox\').attr(\'checked\', \'checked\'); return false;">%s</a>&nbsp;',
 					_t('RemoveOrphanedPagesTask.SELECTALL', 'select all')
+				)
+			));
+			$fields->push(new LiteralField(
+				'UnselectAllLiteral',
+				sprintf(
+					'<a href="#" onclick="javascript:jQuery(\'#Form_Form_OrphanIDs :checkbox\').attr(\'checked\', \'\'); return false;">%s</a></p>',
+					_t('RemoveOrphanedPagesTask.UNSELECTALL', 'unselect all')
 				)
 			));
 			$fields->push(new OptionSetField(
 				'OrphanOperation', 
 				_t('RemoveOrphanedPagesTask.CHOOSEOPERATION', 'Choose operation:'),
 				array(
-					'rebase' => _t('RemoveOrphanedPagesTask.OPERATION_REBASE', 'Rebase selected to tree root and unpublish'),
+					'rebase' => _t(
+						'RemoveOrphanedPagesTask.OPERATION_REBASE', 
+						sprintf(
+							'Rebase selected to a new holder page "%s" and unpublish. None of these pages will show up for website visitors.',
+							$this->rebaseHolderTitle()
+						)
+					),
 					'remove' => _t('RemoveOrphanedPagesTask.OPERATION_REMOVE', 'Remove selected from all stages (WARNING: Will destroy all selected pages from both stage and live)'),
 				),
 				'rebase'
@@ -163,6 +184,8 @@ in the other stage:<br />
 	}
 	
 	function doSubmit($data, $form) {
+		set_time_limit(60*10); // 10 minutes
+		
 		if(!isset($data['OrphanIDs']) || !isset($data['OrphanOperation'])) return false;
 		
 		switch($data['OrphanOperation']) {
@@ -229,7 +252,18 @@ in the other stage:<br />
 		return $removedOrphans;
 	}
 	
+	protected function rebaseHolderTitle() {
+		return sprintf('Rebased Orphans (%s)', date('d/m/Y g:ia', time()));
+	}
+	
 	protected function rebaseOrphans($orphanIDs) {
+		$holder = new SiteTree();
+		$holder->ShowInMenus = 0;
+		$holder->ShowInSearch = 0;
+		$holder->ParentID = 0;
+		$holder->Title = $this->rebaseHolderTitle();
+		$holder->write();
+		
 		$removedOrphans = array();
 		foreach($orphanIDs as $id) {
 			$stageRecord = Versioned::get_one_by_stage(
@@ -242,11 +276,13 @@ in the other stage:<br />
 			);
 			if($stageRecord) {
 				$removedOrphans[$stageRecord->ID] = sprintf('Rebased %s (#%d)', $stageRecord->Title, $stageRecord->ID);
-				$stageRecord->ParentID = 0;
+				$stageRecord->ParentID = $holder->ID;
+				$stageRecord->ShowInMenus = 0;
+				$stageRecord->ShowInSearch = 0;
 				$stageRecord->write();
 				$stageRecord->doUnpublish();
 				$stageRecord->destroy();
-				unset($stageRecord);
+				//unset($stageRecord);
 			}
 			$liveRecord = Versioned::get_one_by_stage(
 				$this->orphanedSearchClass, 
@@ -258,11 +294,17 @@ in the other stage:<br />
 			);
 			if($liveRecord) {
 				$removedOrphans[$liveRecord->ID] = sprintf('Rebased %s (#%d)', $liveRecord->Title, $liveRecord->ID);
-				$liveRecord->ParentID = 0;
+				$liveRecord->ParentID = $holder->ID;
+				$liveRecord->ShowInMenus = 0;
+				$liveRecord->ShowInSearch = 0;
 				$liveRecord->write();
+				if(!$stageRecord) $liveRecord->doRestoreToStage();
 				$liveRecord->doUnpublish();
 				$liveRecord->destroy();
 				unset($liveRecord);
+			}
+			if($stageRecord) {
+				unset($stageRecord);
 			}
 		}
 		
@@ -279,7 +321,7 @@ in the other stage:<br />
 	 * @param int|array $limit
 	 * @return DataObjectSet
 	 */
-	protected function getOrphanedPages($class = 'SiteTree', $filter = '', $sort = null, $join = null, $limit = null) {
+	function getOrphanedPages($class = 'SiteTree', $filter = '', $sort = null, $join = null, $limit = null) {
 		$filter .= ($filter) ? ' AND ' : '';
 		$filter .= sprintf('`%s`.`ParentID` != 0 AND `Parents`.`ID` IS NULL', $class);
 		
