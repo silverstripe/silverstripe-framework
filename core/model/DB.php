@@ -230,6 +230,16 @@ class DB {
 	static function dontRequireTable($table) {
 		return DB::$globalConn->dontRequireTable($table);
 	}
+	
+	/**
+	 * See {@link Database->dontRequireField()}.
+	 * 
+	 * @param string $table The table name.
+	 * @param string $fieldName
+	 */
+	static function dontRequireField($table, $fieldName) {
+		return DB::$globalConn->dontRequireField($table, $fieldName);
+	}
 
 	/**
 	 * Checks a table's integrity and repairs it if necessary.
