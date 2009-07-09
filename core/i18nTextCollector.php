@@ -181,6 +181,7 @@ class i18nTextCollector extends Object {
 			'([[:space:]]*,[[:space:]]*[^,)]*)?([[:space:]]*,' . // priority (optional)
 			'[[:space:]]*("([^"]|\\\")*"|\'([^\']|\\\\\')*\'))?[[:space:]]*' . // comment (optional)
 		'\)';
+		
 		while (ereg($regexRule, $content, $regs)) {
 			$entitiesArr = array_merge($entitiesArr, (array)$this->entitySpecFromRegexMatches($regs));
 			
@@ -282,13 +283,19 @@ class i18nTextCollector extends Object {
 		
 		// remove wrapping quotes
 		$value = ($regs[2]) ? substr($regs[2],1,-1) : null;
-		
-		$value = ereg_replace("([^\\])['\"][[:space:]]*.[[:space:]]*['\"]",'\\1',$value);
+
+		$value = ereg_replace("([^\\])['\"][[:space:]]*\.[[:space:]]*['\"]",'\\1',$value);
 
 		// only escape quotes when wrapped in double quotes, to make them safe for insertion
 		// into single-quoted PHP code. If they're wrapped in single quotes, the string should
 		// be properly escaped already
-		if(substr($regs[2],0,1) == '"') $value = addcslashes($value,'\'');
+		if(substr($regs[2],0,1) == '"') {
+			// Double quotes don't need escaping
+			$value = str_replace('\\"','"', $value);
+			// But single quotes do
+			$value = str_replace("'","\\'", $value);
+		}
+
 		
 		// remove starting comma and any newlines
 		$prio = ($regs[10]) ? trim(preg_replace('/\n/','',substr($regs[10],1))) : null;

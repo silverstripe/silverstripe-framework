@@ -70,17 +70,23 @@ class i18nTextCollectorTest extends SapphireTest {
 		$php = <<<PHP
 _t(
 'Test.CONCATENATED',
-'Line 1' .
-'Line 2' .
-'Line 3',
+'Line 1 and ' .
+'Line \'2\' and ' .
+'Line "3"',
 PR_MEDIUM,
 'Comment'
 );
+
+_t(
+'Test.CONCATENATED2',
+"Line \"4\" and " . 
+"Line 5");
 PHP;
 		$this->assertEquals(
 			$c->collectFromCode($php, 'mymodule'),
 			array(
-				'Test.CONCATENATED' => array("Line 1Line 2Line 3",'PR_MEDIUM','Comment')
+				'Test.CONCATENATED' => array("Line 1 and Line \\'2\\' and Line \"3\"",'PR_MEDIUM','Comment'),
+				'Test.CONCATENATED2' => array("Line \"4\" and Line 5",null,null)
 			)
 		);
 	}	
