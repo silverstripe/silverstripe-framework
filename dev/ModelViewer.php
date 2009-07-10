@@ -26,10 +26,10 @@ class ModelViewer extends Controller {
 		// check for graphviz dependencies
 		$returnCode = 0;
 		$output = array();
-		exec("which digraph && which neato", $output, $returnCode);
+		exec("which neato", $output, $returnCode);
 		if($returnCode != 0) {
 			user_error(
-				'You don\'t seem to have the GraphViz library (http://graphviz.org/) or the "digraph" and "neato" command-line utility available',
+				'You don\'t seem to have the GraphViz library (http://graphviz.org/) and the "neato" command-line utility available',
 				E_USER_ERROR
 			);
 		}
@@ -99,7 +99,7 @@ class ModelViewer_Module extends ModelViewer {
 		SSViewer::set_source_file_comments(false);
 		$dotContent = $this->renderWith("ModelViewer_dotsrc");
 		$CLI_dotContent = escapeshellarg($dotContent);
-		
+
 		$output= `echo $CLI_dotContent | neato -Tpng:gd &> /dev/stdout`;
 		if(substr($output,1,3) == 'PNG') header("Content-type: image/png");
 		else header("Content-type: text/plain");
