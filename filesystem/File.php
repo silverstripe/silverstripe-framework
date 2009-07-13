@@ -617,9 +617,4 @@ class File extends DataObject {
 	
 }
 
-// Workaround for issues with extensions defined directly on the class in trunk
-if(method_exists('DataObjectDecorator', 'load_extra_statics')) {
-	DataObjectDecorator::load_extra_statics('File', 'Hierarchy');
-}
-
 ?>
