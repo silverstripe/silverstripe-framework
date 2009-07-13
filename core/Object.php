@@ -171,11 +171,11 @@ abstract class Object {
 	 * @return mixed
 	 */
 	public static function get_static($class, $name, $uncached = false) {
+		if(!isset(self::$_cache_statics_prepared[$class])) {
+			Object::prepare_statics($class);
+		}
+
 		if(!isset(self::$cached_statics[$class][$name]) || $uncached) {
-			if(!isset(self::$_cache_statics_prepared[$class])) {
-				Object::prepare_statics($class);
-			}
-			
 			//if($class == 'DataObjectDecoratorTest_MyObject') Debug::message("$class - $name");
 			$extra     = $builtIn = $break = $replacedAt = false;
 			$ancestry  = array_reverse(ClassInfo::ancestry($class));
