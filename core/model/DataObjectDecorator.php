@@ -13,26 +13,27 @@ abstract class DataObjectDecorator extends Extension {
 	 * which can be decorated onto. This list is
 	 * limited for security and performance reasons.
 	 *
+	 * Keys are the static names, and the values are whether or not the value is an array that should
+	 * be merged.
+	 *
 	 * @var array
 	 */
 	protected static $decoratable_statics = array(
-		'db', 
-		'has_one', 
-		'indexes', 
-		'defaults', 
-		'has_many', 
-		'many_many', 
-		'belongs_many_many', 
-		'many_many_extraFields',
-		'searchable_fields',
+		'db' => true, 
+		'has_one' => true, 
+		'indexes' => true, 
+		'defaults' => true, 
+		'has_many' => true, 
+		'many_many' => true, 
+		'belongs_many_many' => true, 
+		'many_many_extraFields' => true,
+		'searchable_fields' => true,
+		'api_access' => false,
 	);
+
 	
 	private static $extra_statics_loaded = array();
 	
-	/**
-	 * Set the owner of this decorator.
-	 * @param DataObject $owner
-	 */
 	function setOwner(Object $owner, $ownerBaseClass = null) {
 		if(!($owner instanceof DataObject)) {
 			user_error(sprintf(
@@ -43,34 +44,55 @@ abstract class DataObjectDecorator extends Extension {
 			);
 			return false;
 		}
-		
 		parent::setOwner($owner, $ownerBaseClass);
 	}
-	
+
 	/**
-	 * Load the extra database fields defined in extraStatics.
+	 * Load the extra static definitions for the given extension
+	 * class name, called by {@link Object::add_extension()}
+	 * 
+	 * @param string $class Class name of the owner class (or owner base class)
+	 * @param string $extension Class name of the extension class
 	 */
-	function loadExtraStatics() {
-		if(!empty(self::$extra_statics_loaded[$this->ownerBaseClass][$this->class])) return;
-		self::$extra_statics_loaded[$this->ownerBaseClass][$this->class] = true;
-
+	public static function load_extra_statics($class, $extension) {
+		if(!empty(self::$extra_statics_loaded[$class][$extension])) return;
+		self::$extra_statics_loaded[$class][$extension] = true;
+		
+		// @deprecated 2.4 - use extraStatics() now, not extraDBFields()
+		if(method_exists($extension, 'extraDBFields')) {
+			$extraStaticsMethod = 'extraDBFields';
+		} else {
+			$extraStaticsMethod = 'extraStatics';
+		}
+		
 		// If the extension has been manually applied to a subclass, we should ignore that.
-		if(Object::has_extension(get_parent_class($this->owner), $this->class)) return;
-
-		if($fields = $this->extraStatics()) {
-			foreach($fields as $relation => $fields) {
-				if(in_array($relation, self::$decoratable_statics)) {
-					// Can't use add_static_var() here as it would merge the array rather than replacing
-					Object::set_static (
-						$this->ownerBaseClass,
-						$relation,
-						array_merge((array) Object::get_static($this->ownerBaseClass, $relation), $fields)
-					);
+		if(Object::has_extension(get_parent_class($class), $extension)) return;
+		
+		$statics = call_user_func(array($extension, $extraStaticsMethod));
+		
+		if($statics) {
+			foreach($statics as $name => $newVal) {
+				if(isset(self::$decoratable_statics[$name])) {
+					$origVal = self::get_static($class, $name);
+					if($class == 'VersionedTest_DataObject') {
+						Debug::message($name);
+						Debug::dump($newVal);
+					}
+				
+					// Array to be merged 
+					if(self::$decoratable_statics[$name]) {
+						// Can't use add_static_var() here as it would merge the array rather than replacing
+						self::set_static($class, $name, array_merge((array)$origVal, $newVal));
+					
+						// Value to be overwritten
+					} else {
+						Object::set_static($class, $name, $newVal);
+					}
 				}
 			}
 			
-			DataObject::$cache_has_own_table[$this->ownerBaseClass]       = null;
-			DataObject::$cache_has_own_table_field[$this->ownerBaseClass] = null;
+			DataObject::$cache_has_own_table[$class]       = null;
+			DataObject::$cache_has_own_table_field[$class] = null;
 		}
 	}
 	
@@ -149,13 +171,6 @@ abstract class DataObjectDecorator extends Extension {
 	 *               the values are additional fields/relations to be defined.
 	 */
 	function extraStatics() {
-		return $this->extraDBFields();
-	}
-	
-	/**
-	 * @deprecated 2.3 Use extraStatics()
-	 */
-	function extraDBFields() {
 		return array();
 	}
 

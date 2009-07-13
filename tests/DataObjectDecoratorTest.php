@@ -31,6 +31,13 @@ class DataObjectDecoratorTest extends SapphireTest {
 		$contact->delete();
 	}
 	
+	/**
+	 * Test that DataObject::$api_access can be set to true via a decorator
+	 */
+	function testApiAccessCanBeDecorated() {
+		$this->assertTrue(Object::get_static('DataObjectDecoratorTest_Member', 'api_access'));
+	}
+	
 	function testPermissionDecoration() {
 		// testing behaviour in isolation, too many sideeffects and other checks
 		// in SiteTree->can*() methods to test one single feature reliably with them
@@ -85,7 +92,8 @@ class DataObjectDecoratorTest_ContactRole extends DataObjectDecorator implements
 			),
 			'has_many' => array(
 				'RelatedObjects' => 'DataObjectDecoratorTest_RelatedObject'
-			)
+			),
+			'api_access' => true,
 		);
 	}
 	
@@ -167,6 +175,17 @@ class DataObjectDecoratorTest_Ext2 extends DataObjectDecorator implements TestOn
 	
 }
 
+class DataObjectDecoratorTest_Faves extends DataObjectDecorator implements TestOnly {
+	public function extraStatics() {
+		return array(
+			'many_many' => array(
+				'Faves' => 'Page'
+			)
+		);
+	}
+}
+
 DataObject::add_extension('DataObjectDecoratorTest_MyObject', 'DataObjectDecoratorTest_Ext1');
 DataObject::add_extension('DataObjectDecoratorTest_MyObject', 'DataObjectDecoratorTest_Ext2');
+DataObject::add_extension('DataObjectDecoratorTest_MyObject', 'DataObjectDecoratorTest_Faves');
 ?>

@@ -33,17 +33,6 @@ class TranslatableTest extends FunctionalTest {
 		global $_SINGLETONS;
 		$_SINGLETONS = array();
 
-		// @todo Hack to refresh statics on the newly decorated classes
-		$newSiteTree = new SiteTree();
-		foreach($newSiteTree->getExtensionInstances() as $extInstance) {
-			$extInstance->loadExtraStatics();
-		}
-		// @todo Hack to refresh statics on the newly decorated classes
-		$TranslatableTest_DataObject = new TranslatableTest_DataObject();
-		foreach($TranslatableTest_DataObject->getExtensionInstances() as $extInstance) {
-			$extInstance->loadExtraStatics();
-		}
-
 		// recreate database with new settings
 		$dbname = self::create_temp_db();
 		DB::set_alternative_database_name($dbname);

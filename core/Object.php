@@ -41,10 +41,11 @@ abstract class Object {
 	 */
 	
 	private static
-		$statics          = array(),
-		$cached_statics   = array(),
-		$extra_statics    = array(),
-		$replaced_statics = array();
+		$statics                 = array(),
+		$cached_statics          = array(),
+		$extra_statics           = array(),
+		$replaced_statics        = array(),
+		$_cache_statics_prepared = array();
 	
 	private static
 		$classes_constructed = array(),
@@ -170,7 +171,12 @@ abstract class Object {
 	 * @return mixed
 	 */
 	public static function get_static($class, $name, $uncached = false) {
+		if(!isset(self::$_cache_statics_prepared[$class])) {
+			Object::prepare_statics($class);
+		}
+
 		if(!isset(self::$cached_statics[$class][$name]) || $uncached) {
+			//if($class == 'DataObjectDecoratorTest_MyObject') Debug::message("$class - $name");
 			$extra     = $builtIn = $break = $replacedAt = false;
 			$ancestry  = array_reverse(ClassInfo::ancestry($class));
 			
@@ -234,6 +240,10 @@ abstract class Object {
 	 * @param mixed $value
 	 */
 	public static function set_static($class, $name, $value) {
+		if(!isset(self::$_cache_statics_prepared[$class])) {
+			Object::prepare_statics($class);
+		}
+
 		self::$statics[$class][$name]        = $value;
 		self::$cached_statics[$class][$name] = true;
 	}
@@ -368,7 +378,7 @@ abstract class Object {
 	 *  as a string, e.g. "Versioned" or "Translatable('Param')"
 	 */
 	public static function add_extension($class, $extension) {
-		if(!preg_match('/([^(]*)/', $extension, $matches)) {
+		if(!preg_match('/^([^(]*)/', $extension, $matches)) {
 			return false;
 		}
 		$extensionClass = $matches[1];
@@ -388,10 +398,36 @@ abstract class Object {
 			unset(self::$classes_constructed[$subclass]);
 		}
 		
-		
 		// merge with existing static vars
 		self::add_static_var($class, 'extensions', array($extension));
+		
+		// load statics now for DataObject classes
+		if(is_subclass_of($class, 'DataObject')) {
+			DataObjectDecorator::load_extra_statics($class, $extensionClass);
+		}
 	}
+
+	/**
+	 * Prepare static variables before processing a {@link get_static} or {@link set_static}
+	 * call.
+	 */
+	private static function prepare_statics($class) {
+		// _cache_statics_prepared setting must come first to prevent infinite loops when we call
+		// get_static below
+		self::$_cache_statics_prepared[$class] = true;
+
+		// load statics now for DataObject classes
+		if(is_subclass_of($class, 'DataObject')) {
+			$extensions = Object::get_static($class, 'extensions');
+			if($extensions) foreach($extensions as $extension) {
+				if(preg_match('/^([^(]*)/', $extension, $matches)) {
+					$extensionClass = $matches[1];
+					DataObjectDecorator::load_extra_statics($class, $extensionClass);
+				}
+			}
+		}
+	}
+	
 	
 	/**
 	 * Remove an extension from a class.

@@ -436,19 +436,15 @@ class Translatable extends DataObjectDecorator {
 	}
 	
 	function extraStatics() {
-		if(get_class($this->owner) == ClassInfo::baseDataClass(get_class($this->owner))) {
-			return array(
-				"db" => array(
-						"Locale" => "DBLocale",
-						//"TranslationMasterID" => "Int" // optional relation to a "translation master"
-				),
-                "defaults" => array(
-                    "Locale" => Translatable::default_locale() // as an overloaded getter as well: getLang()
-                )
-			);
-		} else {
-			return array();
-		}
+		return array(
+			"db" => array(
+				"Locale" => "DBLocale",
+				//"TranslationMasterID" => "Int" // optional relation to a "translation master"
+			),
+			"defaults" => array(
+				"Locale" => Translatable::default_locale() // as an overloaded getter as well: getLang()
+			)
+		);
 	}
 
 	/**
