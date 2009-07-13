@@ -179,12 +179,6 @@ class Director {
 		
 		if(!$httpMethod) $httpMethod = ($postVars || is_array($postVars)) ? "POST" : "GET";
 		
-		$urlWithQuerystring = $url;
-		if(strpos($url, '?') !== false) {
-			list($url, $getVarsEncoded) = explode('?', $url, 2);
-			parse_str($getVarsEncoded, $getVars);
-		}
-		
 		if(!$session) $session = new Session(null);
 
 		// Back up the current values of the superglobals
@@ -200,6 +194,19 @@ class Director {
 		Cookie::set_report_errors(false);
 		Requirements::set_backend(new Requirements_Backend());
 
+		// Handle absolute URLs
+		if (@parse_url($url, PHP_URL_HOST) != '') {
+			$bits = parse_url($url);
+			$_SERVER['HTTP_HOST'] = $bits['host'];
+			$url = Director::makeRelative($url);
+		}
+
+		$urlWithQuerystring = $url;
+		if(strpos($url, '?') !== false) {
+			list($url, $getVarsEncoded) = explode('?', $url, 2);
+			parse_str($getVarsEncoded, $getVars);
+		}
+		
 		// Replace the superglobals with appropriate test values
 		$_REQUEST = array_merge((array)$getVars, (array)$postVars); 
 		$_GET = (array)$getVars; 
