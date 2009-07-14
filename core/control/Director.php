@@ -198,7 +198,10 @@ class Director {
 		if (@parse_url($url, PHP_URL_HOST) != '') {
 			$bits = parse_url($url);
 			$_SERVER['HTTP_HOST'] = $bits['host'];
-			$url = Director::makeRelative($url);
+			// Implementing a custom absolute->relative code snippet as
+			// Director::makeRelative() chokes on a url like http://localhost
+			// it will just return the original string, not /, or ''.
+			$url = (isset($bits['path']) ? $bits['path'] : '/') . (isset($bits['query']) ? '?'.$bits['query'] : '') . (isset($bits['fragment']) ? '#'.$bits['fragment'] : '');
 		}
 
 		$urlWithQuerystring = $url;
