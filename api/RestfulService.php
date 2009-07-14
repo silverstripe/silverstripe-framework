@@ -119,8 +119,7 @@ class RestfulService extends ViewableData {
 				curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
 			}
 		
-			$responseBody = curl_exec($ch);
-		
+			// Run request
 			curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 			$responseBody = curl_exec($ch);
 			$curlError = curl_error($ch);
