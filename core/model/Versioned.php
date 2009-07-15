@@ -466,17 +466,9 @@ class Versioned extends DataObjectDecorator {
 	function compareVersions($from, $to) {
 		$fromRecord = Versioned::get_version($this->owner->class, $this->owner->ID, $from);
 		$toRecord = Versioned::get_version($this->owner->class, $this->owner->ID, $to);
-
 		
-		$fields = array_keys($fromRecord->getAllFields());
-		
-		foreach($fields as $field) {
-			if(in_array($field, array("ID","Version","RecordID","AuthorID", "ParentID"))) continue;
-			
-			$fromRecord->$field = Diff::compareHTML($fromRecord->$field, $toRecord->$field);
-		}
-		
-		return $fromRecord;
+		$diff = new DataDifferencer($fromRecord, $toRecord);
+		return $diff->diffedData();
 	}
 	
 	/**
