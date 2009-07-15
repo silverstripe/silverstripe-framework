@@ -230,7 +230,7 @@ class Convert extends Object {
 	}
 	
 	protected static function recursiveXMLToArray($xml) {
-		if (get_class($xml) == 'SimpleXMLElement') {
+		if(is_object($xml) && get_class($xml) == 'SimpleXMLElement') {
 	       $attributes = $xml->attributes();
 	       foreach($attributes as $k=>$v) {
 	           if ($v) $a[$k] = (string) $v;
