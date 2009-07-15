@@ -21,7 +21,8 @@
 ///////////////////////////////////////////////////////////////////////////////
 // ENVIRONMENT CONFIG
 
-error_reporting(E_ALL);
+if(defined('E_DEPRECATED')) error_reporting(E_ALL ^ E_DEPRECATED);
+else error_reporting(E_ALL);
 
 /**
  * Include _ss_environment.php files
@@ -46,9 +47,11 @@ if(!isset($_SERVER['HTTP_HOST'])) {
 	// HTTP_HOST, REQUEST_PORT, SCRIPT_NAME, and PHP_SELF
 	if(isset($_FILE_TO_URL_MAPPING)) {
 		$fullPath = $testPath = $_SERVER['SCRIPT_FILENAME'];
-		while($testPath && $testPath != "/") {
+		while($testPath && $testPath != "/"  && !preg_match('/^[A-Z]:\\\\$/', $testPath)) {
 			if(isset($_FILE_TO_URL_MAPPING[$testPath])) {
-				$url = $_FILE_TO_URL_MAPPING[$testPath] . substr($fullPath,strlen($testPath));
+				$url = $_FILE_TO_URL_MAPPING[$testPath] 
+					. str_replace(DIRECTORY_SEPARATOR,'/',substr($fullPath,strlen($testPath)));
+				
 				$_SERVER['HTTP_HOST'] = parse_url($url, PHP_URL_HOST);
 				$_SERVER['SCRIPT_NAME'] = $_SERVER['PHP_SELF'] = parse_url($url, PHP_URL_PATH);
 				$_SERVER['REQUEST_PORT'] = parse_url($url, PHP_URL_PORT);
@@ -57,7 +60,7 @@ if(!isset($_SERVER['HTTP_HOST'])) {
 			$testPath = dirname($testPath);
 		}
 	}
-	
+
 	// Everything else
 	$serverDefaults = array(
 		'SERVER_PROTOCOL' => 'HTTP/1.1',
@@ -155,7 +158,8 @@ if(isset($_GET['debugmanifest'])) Debug::show(file_get_contents(MANIFEST_FILE));
 // This is necessary to force developers to acknowledge and fix
 // notice level errors (you can override this directive in your _config.php)
 if (Director::isLive()) {
-	error_reporting(E_ALL ^ E_NOTICE);
+	if(defined('E_DEPRECATED')) error_reporting((E_ALL ^ E_NOTICE) ^ E_DEPRECATED);
+	else error_reporting(E_ALL ^ E_NOTICE);
 }
 ///////////////////////////////////////////////////////////////////////////////
 // POST-MANIFEST COMMANDS
