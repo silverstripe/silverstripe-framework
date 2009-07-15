@@ -193,6 +193,7 @@ class MySQLDatabase extends Database {
 	 */
 	public function alterTable($tableName, $newFields = null, $newIndexes = null, $alteredFields = null, $alteredIndexes = null) {
 		$fieldSchemas = $indexSchemas = "";
+		$alterList = array();
 		
 		if($newFields) foreach($newFields as $k => $v) $alterList[] .= "ADD `$k` $v";
 		if($newIndexes) foreach($newIndexes as $k => $v) $alterList[] .= "ADD " . $this->getIndexSqlDefinition($k, $v);
