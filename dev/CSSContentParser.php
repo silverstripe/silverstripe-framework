@@ -34,7 +34,7 @@ class CSSContentParser extends Object {
 			$tidy->cleanRepair();
 			$tidy = str_replace('xmlns="http://www.w3.org/1999/xhtml"','',$tidy);
 			$tidy = str_replace('&#160;','',$tidy);
-		} elseif(`which tidy`) {
+		} elseif(@shell_exec('which tidy')) {
 			// using tiny through cli
 			$CLI_content = escapeshellarg($content);
 			$tidy = `echo $CLI_content | tidy -n -q -utf8 -asxhtml 2> /dev/null`;
