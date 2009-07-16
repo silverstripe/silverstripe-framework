@@ -98,6 +98,14 @@ class TableField extends TableListField {
 	 * @param boolean $showAddRow
 	 */
 	public $showAddRow = true;
+	
+	/**
+	 * Automatically detect a has-one relationship
+	 * in the popup (=child-class) and save the relation ID.
+	 *
+	 * @var boolean
+	 */
+	protected $relationAutoSetting = true;
 
 	function __construct($name, $sourceClass, $fieldList = null, $fieldTypes, $filterField = null, 
 						$sourceFilter = null, $editExisting = true, $sourceSort = null, $sourceJoin = null) {
@@ -281,7 +289,22 @@ class TableField extends TableListField {
 			} else if(isset($newFields) && $newFields) {
 				$savedObj = $this->saveData($newFields,false);
 			}
+
+			// Optionally save the newly created records into a relationship
+			// on $record. This assumes the name of this formfield instance
+			// is set to a relationship name on $record.
+			if($this->relationAutoSetting) {
+				$relationName = $this->Name();
+				if($record->has_many($relationName) || $record->many_many($relationName)) {
+					if($savedObj) foreach($savedObj as $id => $status) {
+						$record->$relationName()->add($id);
+					}	
+				}
+			}
+
+			// Update the internal source items cache
 			$items = $this->sourceItems();
+			
 			FormResponse::update_dom_id($this->id(), $this->FieldHolder());
 		}
 	}
@@ -612,6 +635,20 @@ JS;
 	
 	function setRequiredFields($fields) {
 		$this->requiredFields = $fields;
+	}
+	
+	/**
+	 * @param boolean $value 
+	 */
+	function setRelationAutoSetting($value) {
+		$this->relationAutoSetting = $value;
+	}
+	
+	/**
+	 * @return boolean
+	 */
+	function getRelationAutoSetting() {
+		return $this->relationAutoSetting;
 	}
 }
 
