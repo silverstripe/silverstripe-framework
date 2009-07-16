@@ -274,18 +274,12 @@ class Text extends DBField {
 		}
 		
 		$summary = substr($text, $position, $characters);
-		
 		$stringPieces = explode(' ', $string);
 		
 		if($highlight) {
-			// Add a span around all occurences of the search term
-			$summary = str_ireplace($string, "<span class=\"highlight\">$string</span>", $summary);
-			
 			// Add a span around all key words from the search term as well
-			if($stringPieces) {
-				foreach($stringPieces as $stringPiece) {
-					$summary = str_ireplace($stringPiece, "<span class=\"highlight\">$stringPiece</span>", $summary);
-				}
+			if($stringPieces) foreach($stringPieces as $stringPiece) {
+				$summary = str_ireplace($stringPiece, "<span class=\"highlight\">$stringPiece</span>", $summary);
 			}
 		}
 		

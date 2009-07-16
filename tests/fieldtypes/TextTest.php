@@ -66,5 +66,25 @@ class TextTest extends SapphireTest {
 		}
 	}
 	
+	function testContextSummary() {
+		$testString1 = '<p>This is &quot;some text&quot;. It is a test</p>';
+		$testKeywords1 = 'test';
+		$testString2 = '<p>This is some test text. Test test what if you have multiple keywords.</p>';
+		$testKeywords2 = 'some test';
+		$textObj = DBField::create('Text', $testString1, 'Text');
+		
+		$this->assertEquals(
+			'text. It is a <span class="highlight">test</span>',
+			$textObj->ContextSummary(20, $testKeywords1)
+		);
+		
+		$textObj->setValue($testString2);
+		
+		$this->assertEquals(
+			'This is <span class="highlight">some</span> <span class="highlight">test</span> text. <span class="highlight">test</span> <span class="highlight">test</span> what if you have',
+			$textObj->ContextSummary(50, $testKeywords2)
+		);
+	}
+	
 }
 ?>
