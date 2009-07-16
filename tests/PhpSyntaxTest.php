@@ -25,7 +25,8 @@ class PhpSyntaxTest extends SapphireTest {
 				$returnCode = 0;
 				$output = array();
 				exec("php -l -d $settingTest $CLI_file", $output, $returnCode);
-				$this->assertEquals(0, $returnCode, "Syntax error parsing $CLI_file with setting $settingTest:\n" . implode("\n", $output));
+				$hasErrors = ($returnCode != 0 && strpos('No syntax errors detected', $returnCode) === FALSE);
+				$this->assertFalse($hasErrors, "Syntax error parsing $CLI_file with setting $settingTest:\n" . implode("\n", $output) . " (Returned: {$returnCode})");
 			}
 		}
 	}
