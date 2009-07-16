@@ -67,7 +67,7 @@ class TextTest extends SapphireTest {
 	}
 	
 	function testContextSummary() {
-		$testString1 = '<p>This is &quot;some text&quot;. It is a test</p>';
+		$testString1 = '<p>This is some text. It is a test</p>';
 		$testKeywords1 = 'test';
 		$testString2 = '<p>This is some test text. Test test what if you have multiple keywords.</p>';
 		$testKeywords2 = 'some test';
