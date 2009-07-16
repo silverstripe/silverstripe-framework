@@ -174,7 +174,7 @@ class Debug {
 	static function log($message) {
 		$file = dirname(__FILE__).'/../../debug.log';
 		$now = date('r');
-		$oldcontent = file_get_contents($file);
+		$oldcontent = (file_exists($file)) ? file_get_contents($file) : '';
 		$content = $oldcontent . "\n\n== $now ==\n$message\n";
 		file_put_contents($file, $content);
 	}
