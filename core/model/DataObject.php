@@ -1942,7 +1942,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			}
 		}
 		
-		if ($fields) foreach($fields as $name => $level) {
+		if($fields) foreach($fields as $name => $level) {
 			$changedFields[$name] = array(
 				'before' => array_key_exists($name, $this->original) ? $this->original[$name] : null,
 				'after' => array_key_exists($name, $this->record) ? $this->record[$name] : null,
