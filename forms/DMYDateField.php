@@ -20,11 +20,6 @@ class DMYDateField extends CalendarDateField {
 	}
 	
 	function Field() {
-		Requirements::javascript(THIRDPARTY_DIR . "/calendar/calendar.js");
-		Requirements::javascript(THIRDPARTY_DIR . "/calendar/lang/calendar-en.js");
-		Requirements::javascript(THIRDPARTY_DIR . "/calendar/calendar-setup.js");
-		Requirements::css(SAPPHIRE_DIR . "/css/CalendarDateField.css");
-		Requirements::css(THIRDPARTY_DIR . "/calendar/calendar-win2k-1.css");
 		Requirements::javascript(SAPPHIRE_DIR . "/javascript/CalendarDateField.js");
 
 		$field = DateField::Field();
@@ -49,16 +44,11 @@ class DMYDateField extends CalendarDateField {
 		
 		$fieldName = $this->name;
 		
-		$tabIndex0 = $this->getTabIndexHTML(0);
-		$tabIndex1 = $this->getTabIndexHTML(1);
-		$tabIndex2 = $this->getTabIndexHTML(2);
-		
 		return <<<HTML
 			<div class="dmycalendardate">
-				<input type="hidden" id="$id" name="{$this->name}" value="$val" />
-				<input type="text" id="$id-day" class="day numeric" name="{$fieldName}[Day]" value="$day" maxlength="2"$tabIndex0 />/
-				<input type="text" id="$id-month" class="month numeric" name="{$fieldName}[Month]" value="$month" maxlength="2"$tabIndex1 />/
-				<input type="text" id="$id-year" class="year numeric" name="{$fieldName}[Year]" value="$year" maxlength="4"$tabIndex2 />
+				<input type="text" id="$id-day" class="day" name="{$fieldName}[Day]" value="$day" maxlength="2" />/
+				<input type="text" id="$id-month" class="month" name="{$fieldName}[Month]" value="$month" maxlength="2" />/
+				<input type="text" id="$id-year" class="year" name="{$fieldName}[Year]" value="$year" maxlength="4" />
 				<div class="calendarpopup" id="{$id}-calendar"></div>
 			</div>
 HTML;
@@ -78,5 +68,43 @@ HTML;
  		} 
  	return true; 
  	} 
+
+	function jsValidation() {
+		$formID = $this->form->FormName(); 
+		$error = _t('DateField.VALIDATIONJS', 'Please enter a valid date format (DD/MM/YYYY).');
+		$jsFunc =<<<JS
+Behaviour.register({
+	"#$formID": {
+		validateDMYDate: function(fieldName) {
+			var value = \$F(_CURRENT_FORM.elements[fieldName+'[Day]']) 
+				+ '/' 
+				+ \$F(_CURRENT_FORM.elements[fieldName+'[Month]']) 
+				+ '/' 
+				+ \$F(_CURRENT_FORM.elements[fieldName+'[Year]'])
+			;
+
+			if(value && value.length > 0 && !value.match(/^[0-9]{1,2}\/[0-9]{1,2}\/[0-90-9]{2,4}\$/)) {
+				validationError(_CURRENT_FORM.elements[fieldName+'[Day]'],"$error","validation",false);
+				return false;
+			}
+			return true;
+		}
+	}
+});
+JS;
+		Requirements :: customScript($jsFunc, 'func_validateDMYDate_'.$formID);
+		
+//		return "\$('$formID').validateDate('$this->name');";
+		return <<<JS
+if(\$('$formID')){
+	if(typeof fromAnOnBlur != 'undefined'){
+		if(fromAnOnBlur.name == '$this->name')
+			\$('$formID').validateDMYDate('$this->name');
+	}else{
+		\$('$formID').validateDMYDate('$this->name');
+	}
+}
+JS;
+	}
 }
 ?>
