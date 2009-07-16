@@ -32,7 +32,11 @@ class XMLDataFormatter extends DataFormatter {
 	 * @return String XML
 	 */
 	public function convertDataObject(DataObjectInterface $obj, $fields = null) {
-		Controller::curr()->getResponse()->addHeader("Content-Type", "text/xml");
+		$response = Controller::curr()->getResponse();
+		if($response) {
+			$response->addHeader("Content-Type", "text/xml");
+		}
+		
 		return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" . $this->convertDataObjectWithoutHeader($obj, $fields);
 	}
 		
