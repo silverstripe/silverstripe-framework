@@ -138,6 +138,7 @@ class Versioned extends DataObjectDecorator {
 	
 	function augmentDatabase() {
 		$classTable = $this->owner->class;
+ 		$isRootClass = ($this->owner->class == ClassInfo::baseDataClass($this->owner->class));
 
 		// Build a list of suffixes whose tables need versioning
 		$allSuffixes = array();
@@ -162,9 +163,6 @@ class Versioned extends DataObjectDecorator {
 
 			if(($fields = $this->owner->databaseFields())) {
 				$indexes = $this->owner->databaseIndexes();
-				if($this->owner->parentClass() == "DataObject") {
-					$rootTable = true;
-				}
 				if ($suffix && ($ext = $this->owner->extInstance($allSuffixes[$suffix]))) {
 					if (!$ext->isVersionedTable($table)) continue;
 					$fields = $ext->fieldsInExtraTables($suffix);
@@ -177,54 +175,57 @@ class Versioned extends DataObjectDecorator {
 					// Extra tables for _Live, etc.
 					if($stage != $this->defaultStage) {
 						DB::requireTable("{$table}_$stage", $fields, $indexes);
-						/*
-						if(!DB::query("SELECT * FROM {$table}_$stage")->value()) {
-							$fieldList = implode(", ",array_keys($fields));
-							DB::query("INSERT INTO `{$table}_$stage` (ID,$fieldList)
-								SELECT ID,$fieldList FROM `$table`");
-						}
-						*/
 					}
 	
 					// Version fields on each root table (including Stage)
-					if(isset($rootTable)) {
+					if($isRootClass) {
 						$stageTable = ($stage == $this->defaultStage) ? $table : "{$table}_$stage";
 						DB::requireField($stageTable, "Version", "int(11) not null default '0'");
 					}
 				}
+				if($isRootClass) { 
+					// Create table for all versions
+					$versionFields = array_merge(
+						array(
+							"RecordID" => "Int",
+							"Version" => "Int",
+							"WasPublished" => "Boolean",
+							"AuthorID" => "Int",
+							"PublisherID" => "Int"				
+						),
+						(array)$fields
+					);
 				
-				// Create table for all versions
-				$versionFields = array_merge(
-					array(
-						"RecordID" => "Int",
-						"Version" => "Int",
-						"WasPublished" => "Boolean",
-						"AuthorID" => "Int",
-						"PublisherID" => "Int"				
-					),
-					(array)$fields
-				);
-				
-				$versionIndexes = array_merge(
-					array(
-						'RecordID_Version' => '(RecordID, Version)',
-						'RecordID' => true,
-						'Version' => true,
-						'AuthorID' => true,
-						'PublisherID' => true,
-					),
-					(array)$indexes
-				);
-				
-				DB::requireTable("{$table}_versions", $versionFields, $versionIndexes);
-				/*
-				if(!DB::query("SELECT * FROM {$table}_versions")->value()) {
-					$fieldList = implode(", ",array_keys($fields));
-									
-					DB::query("INSERT INTO `{$table}_versions` ($fieldList, RecordID, Version) 
-						SELECT $fieldList, ID AS RecordID, 1 AS Version FROM `$table`");
+					$versionIndexes = array_merge(
+						array(
+							'RecordID_Version' => '(RecordID, Version)',
+							'RecordID' => true,
+							'Version' => true,
+							'AuthorID' => true,
+							'PublisherID' => true,
+						),
+						(array)$indexes
+					);
 				}
-				*/
+				else {
+					// Create fields for any tables of subclasses 
+					$versionFields = array_merge( 
+						array( 
+							"RecordID" => "Int", 
+							"Version" => "Int", 
+						), 
+						(array)$fields 
+						); 
+					$versionIndexes = array_merge( 
+						array( 
+							'RecordID_Version' => '(RecordID, Version)', 
+							'RecordID' => true, 
+							'Version' => true, 
+						), 
+						(array)$indexes 
+					);
+				}
+				DB::requireTable("{$table}_versions", $versionFields, $versionIndexes);
 				
 			} else {
 				DB::dontRequireTable("{$table}_versions");
@@ -243,14 +244,15 @@ class Versioned extends DataObjectDecorator {
 		$tables = array_keys($manipulation);
 		$version_table = array();
 		foreach($tables as $table) {
+			$baseDataClass = ClassInfo::baseDataClass($table); 
+			$isRootClass = ($this->owner->class == ClassInfo::baseDataClass($this->owner->class));
 			
 			// Make sure that the augmented write is being applied to a table that can be versioned
 			if( !$this->canBeVersioned($table) ) {
-				// Debug::message( "$table doesn't exist or has no database fields" );
 				unset($manipulation[$table]);
 				continue;
 			}
-			$id = $manipulation[$table]['id'] ? $manipulation[$table]['id'] : $manipulation[$table]['fields']['ID'];//echo 'id' .$id.' from '.$manipulation[$table]['id'].' and '.$manipulation[$table]['fields']['ID']."\n\n<br><br>";
+			$id = $manipulation[$table]['id'] ? $manipulation[$table]['id'] : $manipulation[$table]['fields']['ID'];
 			if(!$id) user_error("Couldn't find ID in " . var_export($manipulation[$table], true), E_USER_ERROR);
 			
 			$rid = isset($manipulation[$table]['RecordID']) ? $manipulation[$table]['RecordID'] : $id;
@@ -264,8 +266,8 @@ class Versioned extends DataObjectDecorator {
 				$manipulation[$table]['fields']['Version'] = $this->migratingVersion;
 			}
 				
-			// If we haven't got a version #, then we're creating a new version.  Otherwise, we're just
-			// copying a version to another table
+			// If we haven't got a version #, then we're creating a new version. 
+			// Otherwise, we're just copying a version to another table
 			
 			if(!isset($manipulation[$table]['fields']['Version'])) {
 				// Add any extra, unchanged fields to the version record.
@@ -281,10 +283,13 @@ class Versioned extends DataObjectDecorator {
 				// Create a new version #
 				if (isset($version_table[$table])) $nextVersion = $version_table[$table];
 				else unset($nextVersion);
-				if($rid && !isset($nextVersion)) $nextVersion = DB::query("SELECT MAX(Version) + 1 FROM {$table}_versions WHERE RecordID = $rid")->value();
+				if($rid && !isset($nextVersion)) $nextVersion = DB::query("SELECT MAX(Version) + 1 FROM {$baseDataClass}_versions WHERE RecordID = $rid")->value();
 				
 				$newManipulation['fields']['Version'] = $nextVersion ? $nextVersion : 1;
-				$newManipulation['fields']['AuthorID'] = Member::currentUserID() ? Member::currentUserID() : 0;
+				if($isRootClass) { 
+				 	$userID = (Member::currentUser()) ? Member::currentUser()->ID : 0; 
+					$newManipulation['fields']['AuthorID'] = $userID; 
+				}
 
 
 				$manipulation["{$table}_versions"] = $newManipulation;
