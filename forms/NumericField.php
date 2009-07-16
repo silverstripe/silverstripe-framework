@@ -7,6 +7,13 @@
  */
 class NumericField extends TextField{
 	
+	function Field() {
+		$html = parent::Field();
+		Requirements::javascript(SAPPHIRE_DIR . 'javascript/NumericField.js');
+		
+		return $html;
+	}
+	
 	function jsValidation() {
 		$formID = $this->form->FormName();
 		$error = _t('NumericField.VALIDATIONJS', 'is not a number, only numbers can be accepted for this field');
