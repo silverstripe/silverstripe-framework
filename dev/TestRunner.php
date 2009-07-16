@@ -139,7 +139,7 @@ class TestRunner extends Controller {
 		} else {
 			$classNames = explode(',', $request->param('TestCase'));
 			foreach($classNames as $className) {
-				if(!class_exists($className) || !(singleton($className) instanceof SapphireTest)) {
+				if(!class_exists($className) || !is_subclass_of($className, 'SapphireTest')) {
 					user_error("TestRunner::only(): Invalid TestCase '$className', cannot find matching class", E_USER_ERROR);
 				}
 			}
