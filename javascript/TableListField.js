@@ -290,6 +290,12 @@ TableListRecord.prototype = {
 		});
 	},
 	
+	getRecordId: function(){
+		parts = this.id.match( /.*[\-]{1}(\d+)$/ );
+		if(parts) return parts[1];
+		else return false;
+	},
+	
 	select_success : function(response) {
 		Element.removeClassName(this, 'loading');
 		this.subform.loadNewPage(response.responseText);

@@ -51,12 +51,13 @@ TableField.prototype = {
 		var row = Event.findElement(e,"tr");
 		var params = link.getAttribute("href").toQueryParams();
 		var isEmpty = true;
+		var recordID = row.getRecordId();
 		
 		// Check to see if there is a dataobject to delete first, otherwise remove the row.
 		// or: Check if a childID is set (not present on new items)
 		if(
 			(this.hasNoValues(row,"input") && this.hasNoValues(row,"select") && this.hasNoValues(row,"textarea"))
-			|| params["childID"] <= 0
+			|| params["childID"] <= 0 || (recordID <= 0 || recordID == false)
 		){
 			if( row.parentNode.getElementsByTagName('tr').length > 1 ) {
 				try { Effect.FadeOut(row); } catch (e) { 
@@ -73,7 +74,7 @@ TableField.prototype = {
 			Event.stop(e);
 			return false;
 		}
-	
+	return false;
 		// TODO ajaxErrorHandler and loading-image are dependent on cms, but formfield is in sapphire
 		var confirmed = confirm(ss.i18n._t('TABLEFIELD.DELETECONFIRMMESSAGE', 'Are you sure you want to delete this record?'));
 		if(confirmed){
