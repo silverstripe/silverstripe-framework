@@ -16,6 +16,7 @@ class DMYCalendarDateField extends CalendarDateField {
 		Requirements::javascript(THIRDPARTY_DIR . "/calendar/calendar-setup.js");
 		Requirements::css(SAPPHIRE_DIR . "/css/CalendarDateField.css");
 		Requirements::css(THIRDPARTY_DIR . "/calendar/calendar-win2k-1.css");
+		Requirements::javascript(SAPPHIRE_DIR . "/javascript/NumericField.js");
 		Requirements::javascript(SAPPHIRE_DIR . "/javascript/CalendarDateField.js");
 
 		$field = DateField::Field();
