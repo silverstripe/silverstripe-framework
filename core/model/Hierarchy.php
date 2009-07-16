@@ -158,7 +158,11 @@ class Hierarchy extends DataObjectDecorator {
 		if($children) {
 			foreach($children as $child) {
 				if(!$this->markingFilter || $this->markingFilterMatches($child)) {
-					$child->markUnexpanded();
+					if($child->numChildren()) {
+						$child->markUnexpanded();
+					} else {
+						$child->markExpanded();
+					}
 					$this->markedNodes[$child->ID] = $child;
 				}
 			}
