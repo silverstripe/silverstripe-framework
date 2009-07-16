@@ -10,15 +10,19 @@ class RequirementsTest extends SapphireTest {
 	
 	static $html_template = '<html><head></head><body></body></html>';
 	
-	function testCustomCSS() {
-		Requirements::customCSS(".testclass {color:#f00;}");
+	protected $orig = array();
+	
+	function setUp() {
+		parent::setUp();
 		
-		$html = Requirements::includeInHTML(false, self::$html_template);
-
-		$this->assertTrue(
-			(strpos($html, '.testclass {color:#f00;}') !== false),
-			'customCSS() shows up in template'
-		);
+		$this->orig['SetCombineFiles'] = Requirements::get_combined_files_enabled();
+		Requirements::set_combined_files_enabled(true);
+	}
+	
+	function tearDown() {
+		parent::tearDown();
+		
+		Requirements::set_combined_files_enabled($this->orig['SetCombineFiles']);
 	}
 	
 	function testExternalUrls() {
