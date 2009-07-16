@@ -202,7 +202,7 @@ class RequestHandler extends ViewableData {
 				// check if specific action is set
 				if(isset($allowedActions[$actionOrAll])) {
 					$test = $allowedActions[$actionOrAll];
-					if($test === true) {
+					if($test === true || $test === 1 || $test === '1') {
 						// Case 1: TRUE should always allow access
 						return true;
 					} elseif(substr($test, 0, 2) == '->') {
