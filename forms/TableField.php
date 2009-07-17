@@ -265,6 +265,8 @@ class TableField extends TableListField {
 	function saveInto(DataObject $record) {
 		// CMS sometimes tries to set the value to one.
 		if(is_array($this->value)){
+			$newFields = array();
+			
 			// Sort into proper array
 			$value = ArrayLib::invert($this->value);
 			$dataObjects = $this->sortData($value, $record->ID);
@@ -279,7 +281,7 @@ class TableField extends TableListField {
 			$savedObjIds = $this->saveData($dataObjects, $this->editExisting);
 			
 			// Save newly added record
-			if($savedObjIds || (isset($newFields) && $newFields)) {
+			if($savedObjIds || $newFields) {
 				$savedObjIds = $this->saveData($newFields,false);
  			}
 
