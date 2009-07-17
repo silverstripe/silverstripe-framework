@@ -173,9 +173,12 @@ class TableField extends TableListField {
 	}
 	
 	/**
-	 * Displays the items from sourceItems using the encapsulation object
+	 * Displays the items from {@link sourceItems()} using the encapsulation object.
+	 * If the field value has been set as an array (e.g. after a failed validation),
+	 * it generates the rows from array data instead.
+	 * Used in the formfield template to iterate over each row.
 	 * 
-	 * @return DataObjectSet
+	 * @return DataObjectSet Collection of {@link TableField_Item}
 	 */
 	function Items() {
 		$output = new DataObjectSet();
@@ -313,7 +316,11 @@ class TableField extends TableListField {
 	}
 	
 	/**
-	 * Get all fields in a single row.
+	 * Get all {@link FormField} instances necessary for a single row,
+	 * respecting the casting set in {@link $fieldTypes}.
+	 * Doesn't populate with any data. Optionally performs a readonly
+	 * transformation if {@link $IsReadonly} is set, or the current user
+	 * doesn't have edit permissions.
 	 * 
 	 * @return FieldSet
 	 */
@@ -377,6 +384,12 @@ class TableField extends TableListField {
 	/**
 	 * Called on save, it creates the appropriate objects and writes them
 	 * to the database.
+	 * 
+	 * @param DataObjectSet $dataObjects
+	 * @param boolean $existingValues If set to TRUE, it tries to find existing objects
+	 *  based on the database IDs passed as array keys in $dataObjects parameter.
+	 *  If set to FALSE, it will always create new object (default: TRUE)
+	 * @return array Array of saved object IDs in the key, and the status ("Updated") in the value
 	 */
 	function saveData($dataObjects,$ExistingValues = true) {
       $savedObj = array();
@@ -453,7 +466,11 @@ class TableField extends TableListField {
    }
 	
 	/** 
-	 * organises the data in the appropriate manner for saving
+	 * Organises the data in the appropriate manner for saving
+	 * 
+	 * @param array $data 
+	 * @param int $recordID
+	 * @return array Collection of maps suitable to construct DataObjects
 	 */
 	function sortData($data, $recordID = null) {
 		$dataObjects = array();
@@ -537,11 +554,6 @@ class TableField extends TableListField {
 		$this->transformationConditions = $conditions;
 	}
 	
-	
-	/**
-	 * Validation
-	 */
-	 
 	function jsValidation() {
 		$js = "";
 
@@ -663,6 +675,9 @@ JS;
  */ 
 class TableField_Item extends TableListField_Item {
 	
+	/**
+	 * @var FieldSet $fields
+	 */
 	protected $fields;
 	
 	protected $data;
@@ -691,7 +706,7 @@ class TableField_Item extends TableListField_Item {
 		$this->fields = $this->createFields();
 	}
 	/** 
-	 * Represents each cell of the table with an attribute 
+	 * Represents each cell of the table with an attribute.
 	 */
 	function createFields() {
 		// Existing record
