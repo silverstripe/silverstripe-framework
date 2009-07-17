@@ -533,23 +533,7 @@ class TableField extends TableListField {
 	function sourceID() {
 		return $this->filterField;
 	}
-	
-	/**
-	 * @return String
-	 */
-	function delete() {	
-		$childId = Convert::raw2sql($_REQUEST['childID']);
-		if (is_numeric($childId)) {
-			$childObject = DataObject::get_by_id($this->sourceClass, $childId);
-			if($childObject) {
-				$childObject->delete();
-				return 1;		
-			}
-		}else{
-			return 0;
-		}
-	}
-	
+		
 	function setTransformationConditions($conditions) {
 		$this->transformationConditions = $conditions;
 	}
