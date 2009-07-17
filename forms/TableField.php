@@ -181,88 +181,75 @@ class TableField extends TableListField {
 	 * @return DataObjectSet Collection of {@link TableField_Item}
 	 */
 	function Items() {
-		$output = new DataObjectSet();
-		if($items = $this->sourceItems()) {
-			foreach	($items as $item) {
-				// Load the data in to a temporary form (for correct field types)
-				$fieldset = $this->FieldSetForRow();
-				if($fieldset){
-					$form = new Form($this, null, $fieldset, new FieldSet());
-					$form->loadDataFrom($item);
-	 				// Add the item to our new DataObjectSet, with a wrapper class.
-					$output->push(new TableField_Item($item, $this, $form, $this->fieldTypes));
-				}
-			}
-		}
-		// Create a temporary DataObject
-		if($this->Can('add')) {
-			if($this->showAddRow){
-				$output->push(new TableField_Item(null, $this, null, $this->fieldTypes, true));
-			}
-		}
-		return $output;
-	}
-	
-	/**
-	 * Get all fields for each row contained in the TableField.
-	 * Does not include the empty row.
-	 * 
-	 * @return array
-	 */
-	function FieldSet() {
-		$fields = array ();
-		if($items = $this->sourceItems()) {
-			foreach($items as $item) {
-				// Load the data in to a temporary form (for correct field types)
-				$fieldset = $this->FieldSetForRow();
-				if ($fieldset)
-				{
-					// TODO Needs to be attached to a form existing in the DOM-tree
-					$form = new Form($this, 'EditForm', $fieldset, new FieldSet());
-					$form->loadDataFrom($item);
-					$row = new TableField_Item($item, $this, $form, $this->fieldTypes);
-					$fields = array_merge($fields, $row->Fields()->toArray());
-				}
-			}
-		}
+		// holds TableField_Item instances
+		$items = new DataObjectSet();
 
-		return $fields;
-	}
-	
-	function SubmittedFieldSet(&$sourceItems){
-		$fields = array ();
-		if(isset($_POST[$this->name])&&$rows = $_POST[$this->name]){
-			if(count($rows)){
-				foreach($rows as $idx => $row){
-					if($idx == 'new'){
-						$newitems = ArrayLib::invert($row);
-						if(count($newitems)){
-							$sourceItems = new DataObjectSet();
-							foreach($newitems as $k => $newitem){
-								$fieldset = $this->FieldSetForRow();
-								if($fieldset){
-									$newitem['ID'] = "new".$k;
-									foreach($newitem as $k => $v){
-										if($this->extraData && array_key_exists($k, $this->extraData)){
-											unset($newitem[$k]);
-										}
-									}
-									$sourceItem = new DataObject($newitem);
-									if(!$sourceItem->isEmpty()){
-										$sourceItems->push($sourceItem);
-										$form = new Form($this, "EditForm", $fieldset, new FieldSet());
-										$form->loadDataFrom($sourceItem);
-										$item = new TableField_Item($sourceItem, $this, $form, $this->fieldTypes);
-										$fields = array_merge($fields, $item->Fields()->toArray());
-									}
-								}
-							}
+		$sourceItems = $this->sourceItems();
+
+		// either load all rows from the field value,
+		// (e.g. when validation failed), or from sourceItems()
+		if($this->value) {
+			if(!$sourceItems) $sourceItems = new DataObjectSet();
+
+			// get an array keyed by rows, rather than values
+			$rows = $this->sortData(ArrayLib::invert($this->value));
+			// ignore all rows which are already saved
+			if(isset($rows['new'])) {
+				$newRows = $this->sortData($rows['new']);
+				// iterate over each value (not each row)
+				$i = 0;
+				foreach($newRows as $idx => $newRow){
+					// set a pseudo-ID
+					$newRow['ID'] = "new";
+
+					// unset any extradata
+					foreach($newRow as $k => $v){
+						if($this->extraData && array_key_exists($k, $this->extraData)){
+							unset($newRow[$k]);
 						}
 					}
+
+					// generate a temporary DataObject container (not saved in the database)
+					$sourceClass = $this->sourceClass;
+					$sourceItems->push(new $sourceClass($newRow));
+
+					$i++;
 				}
 			}
+		} 
+
+		// generate a new TableField_Item instance from each collected item
+		if($sourceItems) foreach($sourceItems as $sourceItem) {
+			$items->push($this->generateTableFieldItem($sourceItem));
 		}
-		return $fields;
+
+		// add an empty TableField_Item for a single "add row"
+		if($this->showAddRow && $this->Can('add')) {
+			$items->push(new TableField_Item(null, $this, null, $this->fieldTypes, true));
+		}
+
+		return $items;
+	}
+
+	/**
+	 * Generates a new {@link TableField} instance
+	 * by loading a fieldset for this row into a temporary form.
+	 * 
+	 * @param DataObject $dataObj
+	 * @return TableField_Item
+	 */
+	protected function generateTableFieldItem($dataObj) {
+		// Load the data in to a temporary form (for correct field types)
+		$form = new Form(
+			$this, 
+			null, 
+			$this->FieldSetForRow(), 
+			new FieldSet()
+		);
+		$form->loadDataFrom($dataObj);
+
+		// Add the item to our new DataObjectSet, with a wrapper class.
+		return new TableField_Item($dataObj, $this, $form, $this->fieldTypes);
 	}
 	
 	/**
@@ -537,21 +524,18 @@ class TableField extends TableListField {
 	function jsValidation() {
 		$js = "";
 
-		$fields = $this->FieldSet();
-		$fields = new FieldSet($fields);
-		// TODO doesn't automatically update validation when adding a row
-		foreach($fields as $field) {
-			//if the field type has some special specific specification for validation of itself
-			$js .= $field->jsValidation($this->form->class."_".$this->form->Name()); 
+		$items = $this->Items();
+		if($items) foreach($items as $item) {
+			foreach($item->Fields() as $field) {
+				//if the field type has some special specific specification for validation of itself
+				$js .= $field->jsValidation($this->form->class."_".$this->form->Name());
+			}
 		}
 		
 		// TODO Implement custom requiredFields
 		$items = $this->sourceItems(); 
 		if($items && $this->requiredFields && $items->count()) {
 			foreach ($this->requiredFields as $field) {
-				/*if($fields->dataFieldByName($field)) {
-					$js .= "\t\t\t\t\trequire('$field');\n";
-				}*/
 				foreach($items as $item){
 					$cellName = $this->Name().'['.$item->ID.']['.$field.']';
 					$js .= "\n";
@@ -575,14 +559,16 @@ JS;
 	function php($data) {
 		$valid = true;
 		
-		if($data['methodName'] != 'delete'){
-			$fields = $this->FieldSet();
-			$fields = new FieldSet($fields);
-			foreach($fields as $field){
-				$valid = $field->validate($this) && $valid;
+		if($data['methodName'] != 'delete') {
+			$items = $this->Items();
+			if($items) foreach($items as $item) {
+				foreach($item->Fields() as $field) {
+					$valid = $field->validate($this) && $valid;
+				}
 			}
+
 			return $valid;
-		}else{
+		} else {
 			return $valid;
 		}
 	}
@@ -590,10 +576,13 @@ JS;
 	function validate($validator) {
 		$errorMessage = '';
 		$valid = true;
-		$fields = $this->SubmittedFieldSet($sourceItemsNew);
-		$fields = new FieldSet($fields);
-		foreach($fields as $field){
-			$valid = $field->validate($validator)&&$valid;
+		
+		// @todo should only contain new elements
+		$items = $this->Items();
+		if($items) foreach($items as $item) {
+			foreach($item->Fields() as $field) {
+				$valid = $field->validate($validator) && $valid;
+			}
 		}
 
 		//debug::show($this->form->Message());
@@ -702,8 +691,10 @@ class TableField_Item extends TableListField_Item {
 					$origFieldName = $field->Name();
 
 					// set unique fieldname with id
-					$combinedFieldName = $this->parent->Name() . "[" . $this->ID . "][" . $origFieldName . "]";
-					if($this->isAddRow) $combinedFieldName .= '[]';
+					$combinedFieldName = $this->parent->Name() . "[" . $this->ID() . "][" . $origFieldName . "]";
+					// ensure to set field to nested array notation
+					// if its an unsaved row, or the "add row" which is present by default
+					if($this->isAddRow || $this->ID() == 'new') $combinedFieldName .= '[]';
 					
 					// get value
 					if(strpos($origFieldName,'.') === false) {
