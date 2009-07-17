@@ -392,41 +392,42 @@ class TableField extends TableListField {
 	 * @return array Array of saved object IDs in the key, and the status ("Updated") in the value
 	 */
 	function saveData($dataObjects,$ExistingValues = true) {
-      $savedObj = array();
-      $fieldset = $this->FieldSetForRow();
+		$savedObj = array();
+		$fieldset = $this->FieldSetForRow();
 	    
-      // add hiddenfields
-      if($this->extraData) {
-         foreach($this->extraData as $fieldName => $fieldValue) {
+		// add hiddenfields
+		if($this->extraData) {
+			foreach($this->extraData as $fieldName => $fieldValue) {
 				$fieldset->push(new HiddenField($fieldName));
 			}
-       }
+		}
 		
-	    $form = new Form($this, null, $fieldset, new FieldSet());
+		$form = new Form($this, null, $fieldset, new FieldSet());
 
-       if($dataObjects) {
+		if($dataObjects) {
 			foreach ($dataObjects as $objectid => $fieldValues) {
-            // we have to "sort" new data first, and process it in a seperate saveData-call (see setValue())
-           	if($objectid === "new") continue;
+			// we have to "sort" new data first, 
+			// and process it in a seperate saveData-call (see setValue())
+			if($objectid === "new") continue;
 
-	        // extra data was creating fields, but
-	        if($this->extraData) {
-              $fieldValues = array_merge( $this->extraData, $fieldValues );
-	        }
-        
-	        $hasData = false;
-	        $obj = new $this->sourceClass();
+			// extra data was creating fields, but
+			if($this->extraData) {
+				$fieldValues = array_merge( $this->extraData, $fieldValues );
+			}
+
+			$hasData = false;
+			$obj = new $this->sourceClass();
 				
-           if($ExistingValues) {
+			if($ExistingValues) {
 				$obj = DataObject::get_by_id($this->sourceClass, $objectid);
-           }
+			}
 
 				// Legacy: Use the filter as a predefined relationship-ID 
 				if($this->filterField && $this->filterValue) {
 					$filterField = $this->filterField;
 					$obj->$filterField = $this->filterValue;
 				}
-			
+
 				// Determine if there is changed data for saving
 				$dataFields = array();
 			
@@ -459,11 +460,11 @@ class TableField extends TableListField {
 				}
 
 			}
-		   return $savedObj;
-	   } else {
-	      return false;
-	   }
-   }
+			return $savedObj;
+		} else {
+			return false;
+		}
+	}
 	
 	/** 
 	 * Organises the data in the appropriate manner for saving
@@ -475,7 +476,7 @@ class TableField extends TableListField {
 	function sortData($data, $recordID = null) {
 		$dataObjects = array();
 		if($data) {
-            $dataObjects = array();
+			$dataObjects = array();
 			foreach($data as $field => $rowData) {
 				$i = 0;
 				$blank = 0;
