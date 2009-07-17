@@ -275,20 +275,23 @@ class TableField extends TableListField {
 	function saveInto(DataObject $record) {
 		// CMS sometimes tries to set the value to one.
 		if(is_array($this->value)){
-			
 			// Sort into proper array
-			$this->value = ArrayLib::invert($this->value);
-			$dataObjects = $this->sortData($this->value, $record->ID);
-			if(isset($dataObjects['new']) && $dataObjects['new']) {
-				$newFields = $this->sortData($dataObjects['new'], $record->ID);
-			}
+			$value = ArrayLib::invert($this->value);
+			$dataObjects = $this->sortData($value, $record->ID);
+			
+			// New fields are nested in their own sub-array, and need to be sorted separately
+ 			if(isset($dataObjects['new']) && $dataObjects['new']) {
+ 				$newFields = $this->sortData($dataObjects['new'], $record->ID);
+ 			}
 
-			$savedObj = $this->saveData($dataObjects, $this->editExisting);
-			if($savedObj && isset($newFields) && $newFields) {
-				$savedObj = $this->saveData($newFields,false);
-			} else if(isset($newFields) && $newFields) {
-				$savedObj = $this->saveData($newFields,false);
-			}
+			// Update existing fields
+			// @todo Should this be in an else{} statement?
+			$savedObjIds = $this->saveData($dataObjects, $this->editExisting);
+			
+			// Save newly added record
+			if($savedObjIds || (isset($newFields) && $newFields)) {
+				$savedObjIds = $this->saveData($newFields,false);
+ 			}
 
 			// Optionally save the newly created records into a relationship
 			// on $record. This assumes the name of this formfield instance
@@ -296,7 +299,7 @@ class TableField extends TableListField {
 			if($this->relationAutoSetting) {
 				$relationName = $this->Name();
 				if($record->has_many($relationName) || $record->many_many($relationName)) {
-					if($savedObj) foreach($savedObj as $id => $status) {
+					if($savedObjIds) foreach($savedObjIds as $id => $status) {
 						$record->$relationName()->add($id);
 					}	
 				}
