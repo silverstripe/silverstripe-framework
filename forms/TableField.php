@@ -391,23 +391,23 @@ class TableField extends TableListField {
 	 *  If set to FALSE, it will always create new object (default: TRUE)
 	 * @return array Array of saved object IDs in the key, and the status ("Updated") in the value
 	 */
-	function saveData($dataObjects,$ExistingValues = true) {
-		$savedObj = array();
+	function saveData($dataObjects, $existingValues = true) {
+		if(!$dataObjects) return false;
+
+		$savedObjIds = array();
 		$fieldset = $this->FieldSetForRow();
-	    
+
 		// add hiddenfields
 		if($this->extraData) {
 			foreach($this->extraData as $fieldName => $fieldValue) {
 				$fieldset->push(new HiddenField($fieldName));
 			}
 		}
-		
+
 		$form = new Form($this, null, $fieldset, new FieldSet());
 
-		if($dataObjects) {
-			foreach ($dataObjects as $objectid => $fieldValues) {
-			// we have to "sort" new data first, 
-			// and process it in a seperate saveData-call (see setValue())
+		foreach ($dataObjects as $objectid => $fieldValues) {
+			// 'new' counts as an empty column, don't save it
 			if($objectid === "new") continue;
 
 			// extra data was creating fields, but
@@ -415,56 +415,53 @@ class TableField extends TableListField {
 				$fieldValues = array_merge( $this->extraData, $fieldValues );
 			}
 
-			$hasData = false;
-			$obj = new $this->sourceClass();
-				
-			if($ExistingValues) {
+			// either look for an existing object, or create a new one
+			if($existingValues) {
 				$obj = DataObject::get_by_id($this->sourceClass, $objectid);
+			} else {
+				$sourceClass = $this->sourceClass;
+				$obj = new $sourceClass();
 			}
 
-				// Legacy: Use the filter as a predefined relationship-ID 
-				if($this->filterField && $this->filterValue) {
-					$filterField = $this->filterField;
-					$obj->$filterField = $this->filterValue;
-				}
+			// Legacy: Use the filter as a predefined relationship-ID 
+			if($this->filterField && $this->filterValue) {
+				$filterField = $this->filterField;
+				$obj->$filterField = $this->filterValue;
+			}
 
-				// Determine if there is changed data for saving
-				$dataFields = array();
-			
-				foreach($fieldValues as $type => $value) {
-					if(is_array($this->extraData)){ // if the field is an actual datafield (not a preset hiddenfield)
-						if(!in_array($type, array_keys($this->extraData))) {
-							$dataFields[$type] = $value;
-						}
-					} else {  // all fields are real 
+			// Determine if there is changed data for saving
+			$dataFields = array();
+			foreach($fieldValues as $type => $value) {
+				// if the field is an actual datafield (not a preset hiddenfield)
+				if(is_array($this->extraData)) { 
+					if(!in_array($type, array_keys($this->extraData))) {
 						$dataFields[$type] = $value;
-					}					
-				}
-		
-				$dataValues = ArrayLib::array_values_recursive($dataFields);
-		
-				foreach($dataValues as $value) {
-					if(!empty($value)) {
-						$hasData = true;
 					}
+				// all fields are real 
+				} else {  
+					$dataFields[$type] = $value;
 				}
-
-				// save
-				if($hasData) {
-					$form->loadDataFrom($fieldValues, true);
-					$form->saveInto($obj);
-								
-					$objectid = $obj->write();
-				
-					$savedObj[$objectid] = "Updated";
-				}
-
 			}
-			return $savedObj;
-		} else {
-			return false;
+			$dataValues = ArrayLib::array_values_recursive($dataFields);
+			// determine if any of the fields have a value (loose checking with empty())
+			$hasData = false;
+			foreach($dataValues as $value) {
+				if(!empty($value)) $hasData = true;
+			}
+
+			if($hasData) {
+				$form->loadDataFrom($fieldValues, true);
+				$form->saveInto($obj);
+
+				$objectid = $obj->write();
+
+				$savedObjIds[$objectid] = "Updated";
+			}
+
 		}
-	}
+
+		return $savedObjIds;
+   }
 	
 	/** 
 	 * Organises the data in the appropriate manner for saving
