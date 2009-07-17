@@ -5,15 +5,54 @@
  * @subpackage misc
  */
 class ArrayLib extends Object {
+	
+	/**
+	 * Inverses the first and second level keys of an associative
+	 * array, keying the result by the second level, and combines
+	 * all first level entries within them.
+	 * 
+	 * Before:
+	 * <example>
+	 * array(
+	 * 	'row1' => array(
+	 * 		'col1' =>'val1',
+	 * 		'col2' => 'val2'
+	 * 	),
+	 * 	'row2' => array(
+	 * 		'col1' => 'val3',
+	 * 		'col2' => 'val4'
+	 * 	)
+	 * )
+	 * </example>
+	 * 
+	 * After:
+	 * <example>
+	 * array(
+	 * 	'col1' => array(
+	 * 		'row1' => 'val1',
+	 * 		'row2' => 'val3',
+	 * 	),
+	 * 	'col2' => array(
+	 * 		'row1' => 'val2',
+	 * 		'row2' => 'val4',
+	 * 	),
+	 * )
+	 * </example>
+	 * 
+	 * @param array $arr
+	 * @return array
+	 */
 	static function invert($arr) {
-		if (! $arr) return false;
+		if(!$arr) return false;
+		$result = array();
 		
 		foreach($arr as $columnName => $column) {
 			foreach($column as $rowName => $cell) {
-				$output[$rowName][$columnName] = $cell;
+				$result[$rowName][$columnName] = $cell;
 			}
 		}
-		return $output;
+		
+		return $result;
 	}
 	
 	/**
