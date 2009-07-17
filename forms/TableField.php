@@ -707,6 +707,8 @@ class TableField_Item extends TableListField_Item {
 	}
 	/** 
 	 * Represents each cell of the table with an attribute.
+	 *
+	 * @return FieldSet
 	 */
 	function createFields() {
 		// Existing record
@@ -799,7 +801,7 @@ class TableField_Item extends TableListField_Item {
 				$i++;
 			}
 		}
-		return new DataObjectSet($this->fields);
+		return new FieldSet($this->fields);
 	}
 	
 	function Fields() {
