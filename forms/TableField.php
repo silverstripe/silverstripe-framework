@@ -471,28 +471,26 @@ class TableField extends TableListField {
 	 * @return array Collection of maps suitable to construct DataObjects
 	 */
 	function sortData($data, $recordID = null) {
-		$dataObjects = array();
-		if($data) {
-			$dataObjects = array();
-			foreach($data as $field => $rowData) {
-				$i = 0;
-				$blank = 0;
-				if(!is_array($rowData)) continue;
-				foreach($rowData as $id => $value) {
-					if($value == '$RecordID') $value = $recordID;
-					
-					if($value){
-						$dataObjects[$id][$field] = $value;
-					}else{
-						$blank++;
-					}
-					$i++;
-				}
+		if(!$data) return false;
+		
+		$sortedData = array();
+		
+		foreach($data as $field => $rowData) {
+			$i = 0;
+			if(!is_array($rowData)) continue;
+			
+			foreach($rowData as $id => $value) {
+				if($value == '$recordID') $value = $recordID;
 				
-				// TODO ADD stuff for removing rows with incomplete data
+				if($value) $sortedData[$id][$field] = $value;
+
+				$i++;
 			}
-    		return $dataObjects;
+			
+			// TODO ADD stuff for removing rows with incomplete data
 		}
+		
+    	return $sortedData;
 	}
 	
 	/**
