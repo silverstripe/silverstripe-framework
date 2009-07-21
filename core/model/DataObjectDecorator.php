@@ -74,10 +74,6 @@ abstract class DataObjectDecorator extends Extension {
 			foreach($statics as $name => $newVal) {
 				if(isset(self::$decoratable_statics[$name])) {
 					$origVal = self::get_static($class, $name);
-					if($class == 'VersionedTest_DataObject') {
-						Debug::message($name);
-						Debug::dump($newVal);
-					}
 				
 					// Array to be merged 
 					if(self::$decoratable_statics[$name]) {
