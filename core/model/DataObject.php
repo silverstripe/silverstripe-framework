@@ -1974,11 +1974,14 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @param mixed $val New field value
 	 */
 	function setField($fieldName, $val) {
-		// Situation 1: Passing a DBField
-		if($val instanceof DBField) {
-			$val->Name = $fieldName;
-			$this->record[$fieldName] = $val;
-
+		// Situation 1: Passing an object
+		if(is_object($val)) {
+			if($val instanceof DBField) {
+				$val->Name = $fieldName;
+				$this->record[$fieldName] = $val;
+			} else {
+				user_error('DataObject::setField: passed an object that is not a DBField', E_USER_WARNING);
+			}
 			// Situation 2: Passing a literal
 		} else {
 			$defaults = $this->stat('defaults');
