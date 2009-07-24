@@ -121,6 +121,25 @@ class VirtualPage extends Page {
 				$this->$virtualField = $source->$virtualField;
 		}
 	}
+	
+	/**
+	 * Allow attributes on the master page to pass
+	 * through to the virtual page
+	 *
+	 * @param string $field 
+	 * @return mixed
+	 */
+	function __get($field) {
+		$return = parent::__get($field);
+		if ($return === null) {
+			if($this->copyContentFrom()->hasMethod($funcName = "get$field")) {
+				$return = $this->copyContentFrom()->$funcName();
+			} else if($this->copyContentFrom()->hasField($field)) {
+				$return = $this->copyContentFrom()->getField($field);
+			}
+		}
+		return $return;
+	}
 }
 
 /**
@@ -140,6 +159,12 @@ class VirtualPage_Controller extends Page_Controller {
 		$this->failover->copyFrom($this->failover->CopyContentFrom());
 		$this->failover->write();
 		return;
+	}
+	
+	function getViewer($action) {
+		$name = get_class($this->CopyContentFrom())."_Controller";
+		$controller = new $name();
+		return $controller->getViewer($action);
 	}
 	
 	/**
