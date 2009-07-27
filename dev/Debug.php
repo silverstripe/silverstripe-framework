@@ -177,7 +177,7 @@ class Debug {
 	 * @param string $prefix (optional)
 	 * @return void
 	 */
-	static function header($msg, $prefix) {
+	static function header($msg, $prefix = null) {
 		if (Director::isDev() && !headers_sent()) {
 			self::$headerCount++;
 			header('SS-'.self::$headerCount.($prefix?'-'.$prefix:'').': '.$msg);
