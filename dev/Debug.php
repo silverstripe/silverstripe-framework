@@ -165,6 +165,24 @@ class Debug {
 			}
 		}
 	}
+	
+	// Keep track of how many headers have been sent
+	static $headerCount = 0;
+	
+	/**
+	 * Send a debug message in an HTTP header. Only works if you are
+	 * on Dev, and headers have not yet been sent.
+	 *
+	 * @param string $msg 
+	 * @param string $prefix (optional)
+	 * @return void
+	 */
+	static function header($msg, $prefix) {
+		if (Director::isDev() && !headers_sent()) {
+			self::$headerCount++;
+			header('SS-'.self::$headerCount.($prefix?'-'.$prefix:'').': '.$msg);
+		}
+	}
 
 	/**
 	 * Log to a standard text file output.
