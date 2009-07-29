@@ -12,11 +12,20 @@ class Percentage extends Decimal {
 	function __construct($name, $precision = 4) {
 		if(!$precision) $precision = 4;
 	
-		parent::__construct($name, $precision, $precision);
+		parent::__construct($name, $precision + 1, $precision);
 	}
 	
 	function Nice() {
 		return number_format($this->value * 100, $this->decimalSize - 2) . '%';
+	}
+	
+	function saveInto($dataObject) {
+		parent::saveInto($dataObject);
+		
+		$fieldName = $this->name;
+		if($fieldName && $dataObject->$fieldName > 1.0) {
+			$dataObject->$fieldName = 1.0;
+		}
 	}
 }
 
