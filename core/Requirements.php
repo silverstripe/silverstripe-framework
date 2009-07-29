@@ -878,7 +878,8 @@ class Requirements_Backend {
 			foreach(array_diff($fileList,$this->blocked) as $file) {
 				$fileContent = file_get_contents($base . $file);
 				// if we have a javascript file and jsmin is enabled, minify the content
-				if(stripos($file, '.js') && $this->combine_js_with_jsmin) {
+				$isJS = stripos($file, '.js');
+				if($isJS && $this->combine_js_with_jsmin) {
 					require_once('thirdparty/jsmin/JSMin.php');
 					
 					set_time_limit(0);
@@ -886,7 +887,7 @@ class Requirements_Backend {
 				}
 				// write a header comment for each file for easier identification and debugging
 				// also the semicolon between each file is required for jQuery to be combinable properly
-				$combinedData .= "/****** FILE: $file *****/\n" . $fileContent . "\n;\n";
+				$combinedData .= "/****** FILE: $file *****/\n" . $fileContent . "\n".($isJS ? ';' : '')."\n";
 			}
 			if(!file_exists(dirname($base . $combinedFile))) {
 				Filesystem::makeFolder(dirname($base . $combinedFile));
