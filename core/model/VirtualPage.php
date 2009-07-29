@@ -138,7 +138,38 @@ class VirtualPage extends Page {
 				$return = $this->copyContentFrom()->getField($field);
 			}
 		}
+		
 		return $return;
+	}
+	
+	/**
+	 * Pass unrecognized method calls on to the original data object
+	 *
+	 * @param string $method 
+	 * @param string $args 
+	 */
+	function __call($method, $args) {
+		try {
+			return parent::__call($method, $args);
+		} catch (Exception $e) {
+			// Hack... detect exception type. We really should use exception subclasses.
+			// if the exception isn't a 'no method' error, rethrow it
+			if ($e->getCode() !== 2175) throw $e;
+			$original = $this->copyContentFrom();
+			return call_user_func_array(array($original, $method), $args);
+		}
+	}
+	
+	/**
+	 * Overwrite to also check for method on the original data object
+	 *
+	 * @param string $method 
+	 * @return bool 
+	 */
+	function hasMethod($method) {
+		$haveIt = parent::hasMethod($method);
+		if (!$haveIt) $haveIt = $this->copyContentFrom()->hasMethod($method);		
+		return $haveIt;
 	}
 }
 
@@ -147,7 +178,7 @@ class VirtualPage extends Page {
  * @package cms
  */
 class VirtualPage_Controller extends Page_Controller {
-
+	
 	static $allowed_actions = array(
 		'loadcontentall' => 'ADMIN',
 	);
@@ -190,6 +221,40 @@ class VirtualPage_Controller extends Page_Controller {
 			$page->write();
 			$page->publish("Stage", "Live");
 			echo "<li>Published $page->URLSegment";
+		}
+	}
+	
+	/**
+	 * Also check the original objects' original controller for the method
+	 *
+	 * @param string $method 
+	 * @return bool 
+	 */
+	function hasMethod($method) {
+		$haveIt = parent::hasMethod($method);
+		if (!$haveIt) {	
+			$name = get_class($this->CopyContentFrom())."_Controller";
+			$controller = new $name($this->dataRecord->copyContentFrom());
+			$haveIt = $controller->hasMethod($method);
+		}
+		return $haveIt;
+	}
+	
+	/**
+	 * Pass unrecognized method calls on to the original controller
+	 *
+	 * @param string $method 
+	 * @param string $args 
+	 */
+	function __call($method, $args) {
+		try {
+			return parent::__call($method, $args);
+		} catch (Exception $e) {
+			// Hack... detect exception type. We really should use exception subclasses.
+			// if the exception isn't a 'no method' error, rethrow it
+			if ($e->getCode() !== 2175) throw $e;
+			$original = $this->copyContentFrom();
+			return call_user_func_array(array($original, $method), $args);
 		}
 	}
 }
