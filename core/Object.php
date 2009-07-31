@@ -261,19 +261,25 @@ abstract class Object {
 	 * @return mixed
 	 */
 	public static function uninherited_static($class, $name) {
-		$inherited = self::get_static($class, $name);
-		$parent    = null;
-		
-		if($parentClass = get_parent_class($class)) {
-			$parent = self::get_static($parentClass, $name);
+		if(isset(self::$cache_is_inherited[$class][$name])) {
+			return self::$cache_is_inherited[$class][$name] ? null : self::get_static($class, $name);
+
+		} else {
+			$inherited = self::get_static($class, $name);
+			$parent    = null;
+			if($parentClass = get_parent_class($class)) {
+				$parent = self::get_static($parentClass, $name);
+			}
+
+			self::$cache_is_inherited[$class][$name] = ($inherited == $parent);
+			return ($inherited == $parent) ? null : $inherited;
 		}
-		
-		if(is_array($inherited) && is_array($parent)) {
-			return array_diff_assoc($inherited, $parent);
-		}
-		
-		return ($inherited != $parent) ? $inherited : null;
 	}
+	
+	/**
+	 * Cache the results of whether or not a given var is inherited. 
+	 */
+	private static $cache_is_inherited = array();
 	
 	/**
 	 * Traverse down a class ancestry and attempt to merge all the uninherited static values for a particular static
@@ -484,11 +490,16 @@ abstract class Object {
 	public function __construct() {
 		$this->class = get_class($this);
 		
+		// Don't do magic methods and/or extensions on extensions themselves.
+		if($this instanceof Extension) return;
+		
 		if($extensionClasses = ClassInfo::ancestry($this->class)) foreach($extensionClasses as $class) {
 			if($extensions = self::uninherited_static($class, 'extensions')) foreach($extensions as $extension) {
 				// an $extension value can contain parameters as a string,
 				// e.g. "Versioned('Stage','Live')"
-				$instance = eval("return new $extension;");
+				if(strpos($extension,'(') === false) $instance = new $extension();
+				else $instance = eval("return new $extension;");
+				
 				$instance->setOwner(null, $class);
 				$this->extension_instances[$instance->class] = $instance;
 			}
