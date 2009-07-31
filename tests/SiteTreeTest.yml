@@ -1,8 +1,36 @@
+Group:
+   editors:
+      Title: Editors
+   admins:
+      Title: Administrators
+      
+Permission:
+   admins:
+      Code: ADMIN
+      Group: =>Group.admins
+   editors:
+      Code: CMS_ACCESS_CMSMain
+      Group: =>Group.editors
+      
+Member:
+   editor:
+      FirstName: Test
+      Surname: Editor
+      Groups: =>Group.editors
+   admin:
+      FirstName: Test
+      Surname: Administrator
+      Groups: =>Group.admins
+
 Page:
     home:
         Title: Home
+        CanEditType: OnlyTheseUsers
+        EditorGroups: =>Group.admins
     about:
         Title: About Us
+        CanEditType: OnlyTheseUsers
+        EditorGroups: =>Group.admins
     staff:
         Title: Staff
         URLSegment: my-staff
@@ -13,14 +41,25 @@ Page:
         Parent: =>Page.about
     products:
         Title: Products
+        CanEditType: OnlyTheseUsers
+        EditorGroups: =>Group.editors
     product1:
         Title: 1.1 Test Product
+        Parent: =>Page.products
+        CanEditType: Inherit
     product2:
         Title: Another Product
+        Parent: =>Page.products
+        CanEditType: Inherit
     product3:
         Title: Another Product
+        Parent: =>Page.products
+        CanEditType: Inherit
     product4:
         Title: Another Product
+        Parent: =>Page.products
+        CanEditType: OnlyTheseUsers
+        EditorGroups: =>Group.admins
     contact:
         Title: Contact Us
     object:

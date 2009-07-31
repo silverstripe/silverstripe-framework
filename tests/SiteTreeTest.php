@@ -271,6 +271,39 @@ class SiteTreeTest extends SapphireTest {
 		$this->assertFalse(DataObject::get_by_id('Page', $pageStaffDuplicate->ID));
 		Versioned::reading_stage('Stage');
 	}
+	
+	/**
+	 * Simple test to confirm that querying from a particular archive date doesn't throw
+	 * an error
+	 */
+	function testReadArchiveDate() {
+		Versioned::reading_archived_date('2009-07-02% 14:05:07');
+		
+		DataObject::get('SiteTree', 'ParentID = 0');
+		
+		Versioned::reading_archived_date(null);
+	}
+	
+	function testEditPermissions() {
+		$editor = $this->objFromFixture("Member", "editor");
+		
+		$home = $this->objFromFixture("Page", "home");
+		$products = $this->objFromFixture("Page", "products");
+		$product1 = $this->objFromFixture("Page", "product1");
+		$product4 = $this->objFromFixture("Page", "product4");
+
+		// Can't edit a page that is locked to admins
+		$this->assertFalse($home->canEdit($editor));
+		
+		// Can edit a page that is locked to editors
+		$this->assertTrue($products->canEdit($editor));
+		
+		// Can edit a child of that page that inherits
+		$this->assertTrue($product1->canEdit($editor));
+		
+		// Can't edit a child of that page that has its permissions overridden
+		$this->assertFalse($product4->canEdit($editor));
+	}
 
 }
 

@@ -229,6 +229,13 @@ class Hierarchy extends DataObjectDecorator {
 			}
 		}
 	}
+	
+	/**
+	 * Return the IDs of all the marked nodes
+	 */
+	public function markedNodeIDs() {
+		return array_keys($this->markedNodes);
+	}
 
 	/**
 	 * Return an array of this page and its ancestors, ordered item -> root.
