@@ -22,4 +22,17 @@ class ImageField extends FileIFrameField {
 		return _t('ImageField.IMAGE', 'Image');
 	}
 	
+	/**
+	 * Adds the filter, so the dropdown displays only images and folders.
+	 *
+	 * @return Form
+	 */
+	public function EditFileForm() {
+		$filter = create_function('$item', 'return ($item->ClassName=="Folder" || $item->ClassName=="Image");');
+		
+		$form = parent::EditFileForm();
+		$form->dataFieldByName('ExistingFile')->setFilterFunction($filter);
+
+		return $form;
+	}
 }
