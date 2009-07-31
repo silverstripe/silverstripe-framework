@@ -168,7 +168,7 @@ class ClassInfo {
 	 */
 	static function classImplements($className, $interfaceName) {
 	    global $_ALL_CLASSES;
-		return isset($_ALL_CLASSES['implementors'][$interfaceName]) ? in_array($className, $_ALL_CLASSES['implementors'][$interfaceName]) : false;
+		return isset($_ALL_CLASSES['implementors'][$interfaceName][$className]);
 	}
 	
 	/**
