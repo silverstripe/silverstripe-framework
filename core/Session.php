@@ -83,19 +83,26 @@ class Session {
 	}
 
 	public function inst_set($name, $val) {
-		$names = explode('.', $name);
+		// Quicker execution path for "."-free names
+		if(strpos($name,'.') === false) {
+			$this->data[$name] = $val;
+			$this->changedData[$name] = $val;
+
+		} else {
+			$names = explode('.', $name);
 		
-		// We still want to do this even if we have strict path checking for legacy code
-		$var = &$this->data;
-		$diffVar = &$this->changedData;
+			// We still want to do this even if we have strict path checking for legacy code
+			$var = &$this->data;
+			$diffVar = &$this->changedData;
 			
-		foreach($names as $n) {
-			$var = &$var[$n];
-			$diffVar = &$diffVar[$n];
+			foreach($names as $n) {
+				$var = &$var[$n];
+				$diffVar = &$diffVar[$n];
+			}
+			
+			$var = $val;
+			$diffVar = $val;
 		}
-			
-		$var = $val;
-		$diffVar = $val;
 	}
 	
 	public function inst_addToArray($name, $val) {
@@ -115,22 +122,28 @@ class Session {
 	}
 	
 	public function inst_get($name) {
-		$names = explode('.', $name);
+		// Quicker execution path for "."-free names
+		if(strpos($name,'.') === false) {
+			if(isset($this->data[$name])) return $this->data[$name];
+			
+		} else {
+			$names = explode('.', $name);
 		
-		if(!isset($this->data)) {
-			return null;
-		}
-		
-		$var = $this->data;
-
-		foreach($names as $n) {
-			if(!isset($var[$n])) {
+			if(!isset($this->data)) {
 				return null;
 			}
-			$var = $var[$n];
-		}
+		
+			$var = $this->data;
 
-		return $var;
+			foreach($names as $n) {
+				if(!isset($var[$n])) {
+					return null;
+				}
+				$var = $var[$n];
+			}
+
+			return $var;
+		}
 	}
 
 	public function inst_clear($name) {
