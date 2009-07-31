@@ -215,8 +215,8 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		if($hasOne) foreach(array_keys($hasOne) as $field) {
 			$fields[$field . 'ID'] = 'ForeignKey';
 		}
-	
-		return (array) $fields;
+		
+		return (array)$fields;
 	}
 	
 
@@ -2366,6 +2366,76 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @return SQLQuery Query built.
 	 */
 	public function buildSQL($filter = "", $sort = "", $limit = "", $join = "", $restrictClasses = true, $having = "") {
+		// Cache the big hairy part of buildSQL
+		if(!isset(self::$cache_buildSQL_query[$this->class])) {
+			// Get the tables to join to
+			$tableClasses = ClassInfo::dataClassesFor($this->class);
+			if(!$tableClasses) {
+				if(!ManifestBuilder::has_been_included()) {
+					user_error("DataObjects have been requested before the manifest is loaded. Please ensure you are not querying the database in _config.php.", E_USER_ERROR);
+				} else {
+					user_error("DataObject::buildSQL: Can't find data classes (classes linked to tables) for $this->class. Please ensure you run dev/build after creating a new DataObject.", E_USER_ERROR);
+				}
+			}
+
+			$baseClass = array_shift($tableClasses);
+
+			// Build our intial query
+			$query = new SQLQuery(array());
+			$query->from("\"$baseClass\"");
+
+			// Add SQL for multi-value fields on the base table
+			$databaseFields = self::database_fields($baseClass);
+			if($databaseFields) foreach($databaseFields as $k => $v) {
+				if(!in_array($k, array('ClassName', 'LastEdited', 'Created')) && ClassInfo::classImplements($v, 'CompositeDBField')) {
+					$this->dbObject($k)->addToQuery($query);
+				} else {
+					$query->select[] = "\"$baseClass\".\"$k\"";
+				}
+			}
+			// Join all the tables
+			if($tableClasses && self::$subclass_access) {
+				foreach($tableClasses as $tableClass) {
+					$query->from[$tableClass] = "LEFT JOIN \"$tableClass\" ON \"$tableClass\".\"ID\" = \"$baseClass\".\"ID\"";
+
+					// Add SQL for multi-value fields
+					$databaseFields = self::database_fields($tableClass);
+					if($databaseFields) foreach($databaseFields as $k => $v) {
+						if(ClassInfo::classImplements($v, 'CompositeDBField')) {
+							singleton($tableClass)->dbObject($k)->addToQuery($query);
+						} else {
+							$query->select[] = "\"$tableClass\".\"$k\"";
+						}
+					}
+				}
+			}
+
+			$query->select[] = "\"$baseClass\".\"ID\"";
+			$query->select[] = "CASE WHEN \"$baseClass\".\"ClassName\" IS NOT NULL THEN \"$baseClass\".\"ClassName\" ELSE '$baseClass' END AS \"RecordClassName\"";
+
+			// Get the ClassName values to filter to
+			$classNames = ClassInfo::subclassesFor($this->class);
+
+			if(!$classNames) {
+				user_error("DataObject::get() Can't find data sub-classes for '$callerClass'");
+			}
+
+			// If querying the base class, don't bother filtering on class name
+			if($restrictClasses && $this->class != $baseClass) {
+				// Get the ClassName values to filter to
+				$classNames = ClassInfo::subclassesFor($this->class);
+				if(!$classNames) {
+					user_error("DataObject::get() Can't find data sub-classes for '$callerClass'");
+				}
+
+				$query->where[] = "\"$baseClass\".\"ClassName\" IN ('" . implode("','", $classNames) . "')";
+			}
+			self::$cache_buildSQL_query[$this->class] = clone $query;
+		} else {
+			$query = clone self::$cache_buildSQL_query[$this->class];
+			
+		}
+		
 		// Find a default sort
 		if(!$sort) {
 			$sort = $this->stat('default_sort');
@@ -2373,71 +2443,10 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		// Add quoting to sort expression if it's a simple column name
 		if(preg_match('/^[A-Z][A-Z0-9_]*$/i', $sort)) $sort = "\"$sort\"";
 
-		// Get the tables to join to
-		$tableClasses = ClassInfo::dataClassesFor($this->class);
-		if(!$tableClasses) {
-			if(!ManifestBuilder::has_been_included()) {
-				user_error("DataObjects have been requested before the manifest is loaded. Please ensure you are not querying the database in _config.php.", E_USER_ERROR);
-			} else {
-				user_error("DataObject::buildSQL: Can't find data classes (classes linked to tables) for $this->class. Please ensure you run dev/build after creating a new DataObject.", E_USER_ERROR);
-			}
-		}
-
-		$baseClass = array_shift($tableClasses);
-
-		// Build our intial query
-		$query = new SQLQuery(array());
-		$query->from("\"$baseClass\"");
 		$query->where($filter);
 		$query->orderby($sort);
 		$query->limit($limit);
-
-		// Add SQL for multi-value fields on the base table
-		$databaseFields = self::database_fields($baseClass);
-		if($databaseFields) foreach($databaseFields as $k => $v) {
-			if(!in_array($k, array('ClassName', 'LastEdited', 'Created')) && ClassInfo::classImplements($v, 'CompositeDBField')) {
-				$this->dbObject($k)->addToQuery($query);
-			} else {
-				$query->select[] = "\"$baseClass\".\"$k\"";
-			}
-		}
-		// Join all the tables
-		if($tableClasses && self::$subclass_access) {
-			foreach($tableClasses as $tableClass) {
-				$query->from[$tableClass] = "LEFT JOIN \"$tableClass\" ON \"$tableClass\".\"ID\" = \"$baseClass\".\"ID\"";
-
-				// Add SQL for multi-value fields
-				$databaseFields = self::database_fields($tableClass);
-				if($databaseFields) foreach($databaseFields as $k => $v) {
-					if(ClassInfo::classImplements($v, 'CompositeDBField')) {
-						singleton($tableClass)->dbObject($k)->addToQuery($query);
-					} else {
-						$query->select[] = "\"$tableClass\".\"$k\"";
-					}
-				}
-			}
-		}
-
-		$query->select[] = "\"$baseClass\".\"ID\"";
-		$query->select[] = "CASE WHEN \"$baseClass\".\"ClassName\" IS NOT NULL THEN \"$baseClass\".\"ClassName\" ELSE '$baseClass' END AS \"RecordClassName\"";
-
-		// Get the ClassName values to filter to
-		$classNames = ClassInfo::subclassesFor($this->class);
-
-		if(!$classNames) {
-			user_error("DataObject::get() Can't find data sub-classes for '$callerClass'");
-		}
-
-		// If querying the base class, don't bother filtering on class name
-		if($restrictClasses && $this->class != $baseClass) {
-			// Get the ClassName values to filter to
-			$classNames = ClassInfo::subclassesFor($this->class);
-			if(!$classNames) {
-				user_error("DataObject::get() Can't find data sub-classes for '$callerClass'");
-			}
-
-			$query->where[] = "\"$baseClass\".\"ClassName\" IN ('" . implode("','", $classNames) . "')";
-		}
+		
 
 		if($having) {
 			$query->having[] = $having;
@@ -2457,6 +2466,11 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 
 		return $query;
 	}
+	
+	/**
+	 * Cache for the hairy bit of buildSQL
+	 */
+	private static $cache_buildSQL_query;
 
 	/**
 	 * Like {@link buildSQL}, but applies the extension modifications.
