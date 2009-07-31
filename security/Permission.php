@@ -101,16 +101,19 @@ class Permission extends DataObject {
 	 */
 	public static function check($code, $arg = "any", $member = null, $strict = true) {
 		if(!$member) {
-			if(!Member::currentUser()) {
+			if(!Member::currentUserID()) {
 				return false;
 			}
-			$member = Member::currentUser();
+			$member = Member::currentUserID();
 		}
 
 		return self::checkMember($member, $code, $arg, $strict);
 	}
 
-
+	/**
+	 * Permissions cache.  The format is a map, where the keys are member IDs, and the values are
+	 * arrays of permission codes.
+	 */
 	private static $cache_permissions = array();
 
 	/**
@@ -139,29 +142,29 @@ class Permission extends DataObject {
 		$perms_list = self::get_declared_permissions_list();
 		$memberID = (is_object($member)) ? $member->ID : $member; 
 
-		// Simple cache.  This could be improved a lot by actually downloading all of the given user's permissions in one hit
-		$codeStr = is_array($code) ? implode(',',$code) : $code;
-		if($arg == 'any' && isset(self::$cache_permissions[$memberID][$codeStr])) {
-			return self::$cache_permissions[$memberID][$codeStr];
+		if($arg == 'any') {
+			// Cache the permissions in memory
+			if(!isset(self::$cache_permissions[$memberID])) {
+				self::$cache_permissions[$memberID] = self::permissions_for_member($memberID);
+			}
+			
+			// If $admin_implies_all was false then this would be inefficient, but that's an edge
+			// case and this keeps the code simpler
+			if(!is_array($code)) $code = array($code);
+			if(self::$admin_implies_all) $code[] = "ADMIN";
+			
+			// Multiple $code values - return true if at least one matches, ie, intersection exists
+			return (bool)array_intersect($code, self::$cache_permissions[$memberID]);
 		} 
 
-		/*
-		if(self::$declared_permissions && is_array($perms_list) && !in_array($code, $perms_list)) {
-			user_error(
-				"Permission '$code' has not been declared. Use " .
-				"Permission::declare_permissions() to add this permission",
-				E_USER_WARNING
-			);
-		}
-		*/
-		
-		
-		
+		// The following code should only be used if you're not using the "any" arg.  This is kind
+		// of obselete functionality and could possibly be deprecated.
+
 		$groupList = self::groupList($memberID);
 		if(!$groupList) return false;
 		
 		$groupCSV = implode(", ", $groupList);
-
+		
 		// Arg component
 		switch($arg) {
 			case "any":
@@ -200,10 +203,7 @@ class Permission extends DataObject {
 			)
 		")->value();
 
-		if($permission) {
-			self::$cache_permissions[$memberID][$codeStr] = $permission;
-			return $permission;
-		}
+		if($permission) return $permission;
 
 		// Strict checking disabled?
 		if(!self::$strict_checking || !$strict) {
@@ -216,14 +216,26 @@ class Permission extends DataObject {
 				)
 			")->value();
 
-			if(!$hasPermission) {
-				self::$cache_permissions[$memberID][$codeStr] = true;
-				return true;
-			}
+			if(!$hasPermission) return;
 		}
 		
-		self::$cache_permissions[$memberID][$codeStr] = false;
 		return false;
+	}
+
+	/**
+	 * Get all the 'any' permission codes available to the given member.
+	 */
+	public static function permissions_for_member($memberID) {
+		$groupList = self::groupList($memberID);
+		$groupCSV = implode(", ", $groupList);
+
+		// Raw SQL for efficiency
+		return DB::query("
+			SELECT \"Code\"
+			FROM \"Permission\"
+			WHERE \"Type\" = " . self::GRANT_PERMISSION . " AND \"GroupID\" IN ($groupCSV)
+		")->column();
+		
 	}
 
 
