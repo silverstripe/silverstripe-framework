@@ -676,8 +676,9 @@ class DataObjectSet extends ViewableData implements IteratorAggregate {
 	 * @param string $index The field name to index the array by.
 	 * @return array
 	 */
-	public function groupBy($index){
-		foreach($this->items as $item ){
+	public function groupBy($index) {
+		$result = array();
+		foreach($this->items as $item) {
 			if(!isset($result[$item->$index])) {
 				$result[$item->$index] = new DataObjectSet();
 			}
