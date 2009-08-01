@@ -954,6 +954,8 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	 * @param useCached Return values from the permission cache if they exist.
 	 */
 	static function can_delete_multiple($ids, $memberID, $useCached = true) {
+		$deletable = array();
+		
 		// Look in the cache for values
 		if($useCached && isset(self::$cache_permissions['delete'])) {
 			$cachedValues = array_intersect_key(self::$cache_permissions['delete'], $result);
