@@ -332,6 +332,7 @@ class ReportField_SimpleFilter extends Object {
 
 	function __construct( $hiddenColumns ) {
 		$this->hiddenFields = $hiddenColumns;
+		parent::__construct();
 	}
 
 	function columnIsVisible( $table, $column ) {

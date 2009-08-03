@@ -53,6 +53,7 @@ class FormScaffolder extends Object {
 	 */
 	function __construct($obj) {
 		$this->obj = $obj;
+		parent::__construct();
 	}
 	
 	/**

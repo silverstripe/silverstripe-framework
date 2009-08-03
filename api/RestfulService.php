@@ -23,6 +23,7 @@ class RestfulService extends ViewableData {
 	function __construct($base, $expiry=3600){
 		$this->baseURL = $base;
 		$this->cache_expire = $expiry;
+		parent::__construct();
 	}
 	
 	/**

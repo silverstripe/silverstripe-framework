@@ -25,6 +25,7 @@ class ValidationResult extends Object {
 	function __construct($valid = true, $message = null) {
 		$this->isValid = $valid;
 		if($message) $this->errorList[] = $message;
+		parent::__construct();
 	}
 	
 	/**

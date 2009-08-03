@@ -88,6 +88,7 @@ class YamlFixture extends Object {
 		}
 		
 		$this->fixtureFile = $fixtureFile;
+		parent::__construct();
 	}
 	
 	/**
