@@ -13,30 +13,37 @@
  * to no subdirectory.
  */
 
-if (file_exists('../subsites/host-map.php')) {
-	include_once '../subsites/host-map.php';
-	$subsiteHostmap['default'] = isset($subsiteHostmap['default']) ? $subsiteHostmap['default'] : '';
-	
-	// Look for the host, and find the cache dir
-	$host = str_replace('www.', '', $_SERVER['HTTP_HOST']);
-	$cacheDir = (isset($subsiteHostmap[$host]) ? $subsiteHostmap[$host] : $subsiteHostmap['default']) . '/';
-} else {
-	$cacheDir = '';
-}
+$cacheOn = true;
+$hostmapLocation = '../subsites/host-map.php';
 
-// Look for the file in the cachedir
-$file = preg_replace('/[^a-zA-Z0-9]/si', '_', trim($_SERVER['REQUEST_URI'], '/'));
-$file = $file ? $file : 'index';
+if ($cacheOn) {
+	if (file_exists($hostmapLocation)) {
+		include_once $hostmapLocation;
+		$subsiteHostmap['default'] = isset($subsiteHostmap['default']) ? $subsiteHostmap['default'] : '';
 	
-if (file_exists('../cache/'.$cacheDir.$file.'.html')) {
-	header('X-cache: hit at '.date('r'));
-	echo file_get_contents('../cache/'.$cacheDir.$file.'.html');
-} elseif (file_exists('../cache/'.$cacheDir.$file.'.php')) {
-	header('X-cache: hit at '.date('r'));
-	include_once '../cache/'.$cacheDir.$file.'.php';
+		// Look for the host, and find the cache dir
+		$host = str_replace('www.', '', $_SERVER['HTTP_HOST']);
+		$cacheDir = (isset($subsiteHostmap[$host]) ? $subsiteHostmap[$host] : $subsiteHostmap['default']) . '/';
+	} else {
+		$cacheDir = '';
+	}
+
+	// Look for the file in the cachedir
+	$file = preg_replace('/[^a-zA-Z0-9]/si', '_', trim($_SERVER['REQUEST_URI'], '/'));
+	$file = $file ? $file : 'index';
+	
+	if (file_exists('../cache/'.$cacheDir.$file.'.html')) {
+		header('X-cache: hit at '.date('r'));
+		echo file_get_contents('../cache/'.$cacheDir.$file.'.html');
+	} elseif (file_exists('../cache/'.$cacheDir.$file.'.php')) {
+		header('X-cache: hit at '.date('r'));
+		include_once '../cache/'.$cacheDir.$file.'.php';
+	} else {
+		header('X-cache: miss at '.date('r') . ' on ' . $cacheDir . $file);
+		// No cache hit... fallback!!!
+		include 'main.php';
+	}
 } else {
-	header('X-cache: miss at '.date('r'));
-	// No cache hit... fallback!!!
 	include 'main.php';
 }
 
