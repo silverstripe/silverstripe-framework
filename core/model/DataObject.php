@@ -302,6 +302,10 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		// those objects, which is a better mechanism.  Perhaps extensions defined inside the
 		// class def can somehow be applied at definiton time also?
 		if($this->extension_instances) foreach($this->extension_instances as $i => $instance) {
+			if(!$instance->class) {
+				$class = get_class($instance);
+				user_error("DataObject::defineMethods(): Please ensure {$class}::__construct() calls parent::__construct()", E_USER_ERROR);
+			}
 			DataObjectDecorator::load_extra_statics($this->class, $instance->class);
 		}
 
