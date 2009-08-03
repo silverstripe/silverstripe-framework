@@ -261,21 +261,20 @@ abstract class Object {
 	 * @return mixed
 	 */
 	public static function uninherited_static($class, $name) {
-		if(isset(self::$cache_is_inherited[$class][$name])) {
-			return self::$cache_is_inherited[$class][$name] ? null : self::get_static($class, $name);
+		$inherited = self::get_static($class, $name); 
+		$parent    = null; 
 
-		} else {
-			$inherited = self::get_static($class, $name);
-			$parent    = null;
-			if($parentClass = get_parent_class($class)) {
-				$parent = self::get_static($parentClass, $name);
-			}
+		if($parentClass = get_parent_class($class)) { 
+			$parent = self::get_static($parentClass, $name); 
+		} 
 
-			self::$cache_is_inherited[$class][$name] = ($inherited == $parent);
-			return ($inherited == $parent) ? null : $inherited;
-		}
+		if(is_array($inherited) && is_array($parent)) { 
+			return array_diff_assoc($inherited, $parent); 
+		} 
+
+		return ($inherited != $parent) ? $inherited : null; 
 	}
-	
+
 	/**
 	 * Cache the results of whether or not a given var is inherited. 
 	 */
