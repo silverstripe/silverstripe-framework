@@ -718,7 +718,7 @@ class Security extends Controller {
 		// but can be helpful for migrating legacy user-sets into a SilverStripe application.
 		// Since DB::getConn() doesn't exist yet, we need to look at $databaseConfig. Gack!
 		global $databaseConfig;
-		if($databaseConfig['type'] == 'MySQLDatabase') {
+		if(isset($databaseConfig['type']) && $databaseConfig['type'] == 'MySQLDatabase') {
 			$result[] = 'password';
 			$result[] = 'old_password';
 		}
