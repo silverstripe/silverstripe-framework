@@ -170,6 +170,15 @@ class ClassInfo {
 	    global $_ALL_CLASSES;
 		return isset($_ALL_CLASSES['implementors'][$interfaceName][$className]);
 	}
+
+	/**
+	 * Returns true if $subclass is a subclass of $parentClass.
+	 * Identical to the PHP built-in function, but faster.
+	 */
+	static function is_subclass_of($subclass, $parentClass) {
+		global $_ALL_CLASSES;
+		return isset($_ALL_CLASSES['parents'][$subclass][$parentClass]);
+	}
 	
 	/**
 	 * Get all classes contained in a file.

@@ -391,7 +391,7 @@ abstract class Object {
 			user_error(sprintf('Object::add_extension() - Can\'t find extension class for "%s"', $extensionClass), E_USER_ERROR);
 		}
 		
-		if(!is_subclass_of($extensionClass, 'Extension')) {
+		if(!ClassInfo::is_subclass_of($extensionClass, 'Extension')) {
 			user_error(sprintf('Object::add_extension() - Extension "%s" is not a subclass of Extension', $extensionClass), E_USER_ERROR);
 		}
 		
@@ -407,7 +407,7 @@ abstract class Object {
 		self::add_static_var($class, 'extensions', array($extension));
 		
 		// load statics now for DataObject classes
-		if(is_subclass_of($class, 'DataObject')) {
+		if(ClassInfo::is_subclass_of($class, 'DataObject')) {
 			DataObjectDecorator::load_extra_statics($class, $extensionClass);
 		}
 	}
