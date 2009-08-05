@@ -84,6 +84,9 @@ class RootURLController extends Controller {
 	static function should_be_on_root(SiteTree $currentPage) {
 		if(self::$is_at_root) return false;
 		
+		if(!$currentPage->HomepageForDomain 
+			&& $currentPage->URLSegment != self::get_default_homepage_urlsegment()) return false;
+		
 		$matchesHomepageSegment = (self::get_homepage_urlsegment() == $currentPage->URLSegment);
 		// Don't redirect translated homepage segments,
 		// as the redirection target '/' will show the default locale
