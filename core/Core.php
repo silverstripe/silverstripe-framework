@@ -235,7 +235,6 @@ function getTempFolder() {
  */
 function __autoload($className) {
 	global $_CLASS_MANIFEST;
-	if(($pos = strpos($className,'_')) !== false) $className = substr($className,0,$pos);
 	if(isset($_CLASS_MANIFEST[$className])) include_once($_CLASS_MANIFEST[$className]);
 }
 
@@ -335,7 +334,6 @@ function increase_time_limit_to($timeLimit = null) {
 			}
 		}
 	}
-			
 }
 
 ?>

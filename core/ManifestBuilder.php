@@ -73,10 +73,25 @@ class ManifestBuilder {
 	 * Only loads the ClassInfo and __autoload() globals; this assumes that _config.php files are already included.
 	 */
 	static function load_test_manifest() {
-		// Build the complete manifest
-		$manifestInfo = self::get_manifest_info(BASE_PATH);
-		// Load it into the current session.
-		self::process_manifest($manifestInfo);
+		$testManifestFile = MANIFEST_FILE . '-test';
+
+		// The dev/build reference is some coupling but it solves an annoying bug
+		if(!file_exists($testManifestFile) 
+			|| (filemtime($testManifestFile) < filemtime($testManifestFile)) 
+			|| isset($_GET['flush'])) {
+
+			// Build the manifest, including the tests/ folders
+			$manifestInfo = self::get_manifest_info(BASE_PATH);
+			$manifest = self::generate_php_file($manifestInfo);
+			if($fh = fopen($testManifestFile, "w")) {
+				fwrite($fh, $manifest);
+				fclose($fh);
+			} else {
+				user_error("Cannot write manifest file! Check permissions of " . MANIFEST_FILE, E_USER_ERROR);
+			}
+		}
+		
+		require($testManifestFile);
 	}
 	
 	/**
@@ -157,7 +172,7 @@ class ManifestBuilder {
 		$project = null;
 
 		// Class, CSS, template manifest
-		$classManifest = array();
+		$allPhpFiles = array();
 		$templateManifest = array();
 		$cssManifest = array();
 
@@ -166,7 +181,7 @@ class ManifestBuilder {
 			// $restrict_to_modules is set, so we include only those specified
 			// modules
 			foreach(self::$restrict_to_modules as $module)
-				ManifestBuilder::getClassManifest($baseDir . '/' . $module, $excludedFolders, $classManifest);
+				ManifestBuilder::get_all_php_files($baseDir . '/' . $module, $excludedFolders, $allPhpFiles);
 		} else {
 			// Include all directories which have an _config.php file but don't
 			// have an _manifest_exclude file
@@ -182,7 +197,7 @@ class ManifestBuilder {
 						 !file_exists("$baseDir/$filename/_manifest_exclude")) {
 							
 					// Get classes, templates, and CSS files
-					ManifestBuilder::getClassManifest("$baseDir/$filename", $excludedFolders, $classManifest);
+					ManifestBuilder::get_all_php_files("$baseDir/$filename", $excludedFolders, $allPhpFiles);
 					ManifestBuilder::getTemplateManifest($baseDir, $filename, $excludedFolders, $templateManifest, $cssManifest);
 
 					// List the _config.php files
@@ -208,7 +223,11 @@ class ManifestBuilder {
 		}
 
 		// Build class-info array from class manifest
-		$allClasses = ManifestBuilder::allClasses($classManifest);
+		$allClasses = ManifestBuilder::allClasses($allPhpFiles);
+		
+		// Pull the class filenames out
+		$classManifest = $allClasses['file'];
+		unset($allClasses['file']);
 
 		// Ensure that any custom templates get favoured
 		if(!$project) user_error("\$project isn't set", E_USER_WARNING);
@@ -225,13 +244,12 @@ class ManifestBuilder {
 
 
 	/**
-	 * Generates the class manifest - a list of all the PHP files in the
-	 * application
+	 * Generates a list of all the PHP files that should be analysed by the manifest builder.
 	 *
 	 * @param string $folder The folder to traverse (recursively)
 	 * @param array $classMap The already built class map
 	 */
-	private static function getClassManifest($folder, $excludedFolders, &$classMap) {
+	private static function get_all_php_files($folder, $excludedFolders, &$allPhpFiles) {
 		$items = scandir($folder);
 		if($items) foreach($items as $item) {
 			// Skip some specific PHP files
@@ -260,26 +278,9 @@ class ManifestBuilder {
 				if(in_array($item, $excludedFolders)) continue;
 				
 				// recurse into directories (if not in $ignore_folders)
-				ManifestBuilder::getClassManifest("$folder/$item", $excludedFolders, $classMap);
+				ManifestBuilder::get_all_php_files("$folder/$item", $excludedFolders, $allPhpFiles);
 			} else {
-				// include item in the manifest
-				$itemCode = substr($item,0,-4);
-				// if $itemCode is already in manifest, check if the two files do really contain the same class
-				if($classMap && array_key_exists($itemCode, $classMap)) {
-					$regex = '/class\s' . $itemCode .'/';
-					if(
-						preg_match($regex, file_get_contents("$folder/$item"))
-						&& preg_match($regex,  file_get_contents($classMap[$itemCode]))
-					) {
-						user_error("Warning: there are two '$itemCode' files both containing the same class: '$folder/$item' and '{$classMap[$itemCode]}'.
-							This might mean that the wrong code is being used.", E_USER_WARNING);
-					} else {
-						user_error("Warning: there are two '$itemCode' files with the same filename: '$folder/$item' and '{$classMap[$itemCode]}'.
-							This might mean that the wrong code is being used.", E_USER_NOTICE);
-					}
-				} else {
-					$classMap[$itemCode] = "$folder/$item";
-				}
+				$allPhpFiles[] = "$folder/$item";
 			}
 
 		}
@@ -353,6 +354,7 @@ class ManifestBuilder {
 
 		foreach(self::$classArray as $class => $info) {
 			$allClasses['exists'][$class] = $class;
+			$allClasses['file'][$class] = $info['file'];
 		}
 
 		// Build a map of classes and their subclasses
@@ -414,6 +416,13 @@ class ManifestBuilder {
 				self::$implementsArray[$interface][$className] = $className;
 			}
 			
+			if(isset(self::$classArray[$className])) {
+				$file1 = self::$classArray[$className]['file'];
+				$file2 = $class[$className];
+				user_error("There are two files both containing the same class: '$file1' and " .
+					"'$file2'. This might mean that the wrong code is being used.", E_USER_WARNING);
+			}
+			
 			self::$classArray[$className] = $class;
 		}
 
@@ -422,6 +431,14 @@ class ManifestBuilder {
 			unset($interface['interfaceName']);
 			$interface['file'] = $filename;
 			if(!isset($interface['extends'])) $interface['extends'] = null;
+
+			if(isset(self::$classArray[$className])) {
+				$file1 = self::$classArray[$className]['file'];
+				$file2 = $interface[$className];
+				user_error("There are two files both containing the same class: '$file1' and " .
+					"'$file2'. This might mean that the wrong code is being used.", E_USER_WARNING);
+			}
+
 			self::$classArray[$className] = $interface;
 		}
 	}
