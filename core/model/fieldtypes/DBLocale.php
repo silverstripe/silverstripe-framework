@@ -13,6 +13,11 @@ class DBLocale extends Varchar {
 		parent::__construct($name, $size);
 	}
 
+	/**
+	 * See {@link getShortName()}.
+	 * 
+	 * @return String
+	 */
 	function Nice() {
 		return $this->getShortName();
 	}
@@ -21,6 +26,12 @@ class DBLocale extends Varchar {
 		return i18n::convert_rfc1766($this->value);
 	}
 	
+	/**
+	 * Resolves the locale to a common english-language
+	 * name through {@link i18n::get_common_locales()}.
+	 * 
+	 * @return String
+	 */
 	function getShortName() {
 		$common_names = i18n::get_common_locales();
 		return (isset($common_names[$this->value])) ? $common_names[$this->value] : false;
