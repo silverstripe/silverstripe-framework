@@ -355,15 +355,15 @@ class SSViewer extends Object {
 
 		$output = $val;		
 		$output = Requirements::includeInHTML($template, $output);
-		
+				
 		array_pop(SSViewer::$topLevel);
 
 		if(isset($_GET['debug_profile'])) Profiler::unmark("SSViewer::process", " for $template");
-		
+
 		// If we have our crazy base tag, then fix # links referencing the current page.
 		if(strpos($output, '<base') !== false) {
 			$thisURLRelativeToBase = Director::makeRelative(Director::absoluteURL($_SERVER['REQUEST_URI']));
-			$output = preg_replace('/(<a[^>+]href *= *)"#/i', '\\1"' . $thisURLRelativeToBase . '#', $output);
+			$output = preg_replace('/(href=".*)#(.*")/i', '\\1' . $thisURLRelativeToBase . '#\\2', $output);
 		}
 
 		return $output;
@@ -509,7 +509,9 @@ class SSViewer extends Object {
 		$content = ereg_replace('<!-- +if_end +-->', '<? }  ?>', $content);
 			
 		// Fix link stuff
-		$content = ereg_replace('href *= *"#', 'href="<?= SSViewer::$options[\'rewriteHashlinks\'] ? Convert::raw2att( $_SERVER[\'REQUEST_URI\'] ) : "" ?>#', $content);
+		/*
+		 $content = ereg_replace('href *= *"#', 'href="<?= SSViewer::$options[\'rewriteHashlinks\'] ? Convert::raw2att( $_SERVER[\'REQUEST_URI\'] ) : "" ?>#', $content);
+		*/
 	
 		// Protect xml header
 		$content = ereg_replace('<\?xml([^>]+)\?' . '>', '<##xml\\1##>', $content);
