@@ -233,7 +233,9 @@ class VirtualPage_Controller extends Page_Controller {
 	function hasMethod($method) {
 		$haveIt = parent::hasMethod($method);
 		if (!$haveIt) {	
-			$name = get_class($this->CopyContentFrom())."_Controller";
+			$originalClass = get_class($this->CopyContentFrom());
+			if ($originalClass == 'SiteTree') $name = 'ContentController';
+			else $name = $originalClass."_Controller";
 			$controller = new $name($this->dataRecord->copyContentFrom());
 			$haveIt = $controller->hasMethod($method);
 		}
