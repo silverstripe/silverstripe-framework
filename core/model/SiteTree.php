@@ -1214,7 +1214,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		// If this is a new page, it does not have a parent, and the edit type is
 		// set to inherit, change it to logged in users only (otherwise only admins
 		// will be able to edit it)
-		if (!$this->ID && !$this->ParentID && $this->CanEditType == 'Inherit') {
+		if ($this->ID == 0 && $this->ParentID == 0 && $this->CanEditType == 'Inherit') {
 			$this->CanEditType = 'LoggedInUsers';
 		}
 		
