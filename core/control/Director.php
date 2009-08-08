@@ -119,7 +119,8 @@ class Director {
 		if(isset($_SERVER['HTTP_REFERER'])) $req->addHeader("Referer", $_SERVER['HTTP_REFERER']);
 
 		// Load the session into the controller
-		$session = new Session($_SESSION);
+		$session = new Session(isset($_SESSION) ? $_SESSION : null);
+		
 		$result = Director::handleRequest($req, $session);
 		$session->inst_save();
 
