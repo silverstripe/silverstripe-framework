@@ -554,13 +554,13 @@ class DataObjectTest extends SapphireTest {
 	public function testForceInsert() {	
 		/* If you set an ID on an object and pass forceInsert = true, then the object should be correctly created */
 		$conn = DB::getConn();
-		if($conn->hasMethod('allowPrimaryKeyEditing')) $conn->allowPrimaryKeyEditing('DataObjectTest_Team', true);
+		if(method_exists($conn, 'allowPrimaryKeyEditing')) $conn->allowPrimaryKeyEditing('DataObjectTest_Team', true);
 		$obj = new DataObjectTest_SubTeam();
 		$obj->ID = 1001;
 		$obj->Title = 'asdfasdf';
 		$obj->SubclassDatabaseField = 'asdfasdf';
 		$obj->write(false, true);
-		if($conn->hasMethod('allowPrimaryKeyEditing')) $conn->allowPrimaryKeyEditing('DataObjectTest_Team', false);
+		if(method_exists($conn, 'allowPrimaryKeyEditing')) $conn->allowPrimaryKeyEditing('DataObjectTest_Team', false);
 
 		$this->assertEquals("DataObjectTest_SubTeam", DB::query("SELECT \"ClassName\" FROM \"DataObjectTest_Team\" WHERE \"ID\" = $obj->ID")->value());
 

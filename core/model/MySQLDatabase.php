@@ -211,7 +211,7 @@ class MySQLDatabase extends Database {
 	public function createTable($table, $fields = null, $indexes = null, $options = null) {
 		$fieldSchemas = $indexSchemas = "";
 		
-		$addOptions = empty($options[$this->class]) ? "ENGINE=MyISAM" : $options[$this->class];
+		$addOptions = empty($options[get_class($this)]) ? "ENGINE=MyISAM" : $options[get_class($this)];
 		
 		if(!isset($fields['ID'])) $fields['ID'] = "int(11) not null auto_increment";
 		if($fields) foreach($fields as $k => $v) $fieldSchemas .= "\"$k\" $v,\n";
@@ -253,10 +253,10 @@ class MySQLDatabase extends Database {
  		$alterations = implode(",\n", $alterList);
 		$this->query("ALTER TABLE \"$tableName\" $alterations");
 		
-		if($alteredOptions && isset($alteredOptions[$this->class])) {
-			$this->query(sprintf("ALTER TABLE \"%s\" %s", $tableName, $alteredOptions[$this->class]));
+		if($alteredOptions && isset($alteredOptions[get_class($this)])) {
+			$this->query(sprintf("ALTER TABLE \"%s\" %s", $tableName, $alteredOptions[get_class($this)]));
 			Database::alteration_message(
-				sprintf("Table %s options changed: %s", $tableName, $alteredOptions[$this->class]),
+				sprintf("Table %s options changed: %s", $tableName, $alteredOptions[get_class($this)]),
 				"changed"
 			);
 		}

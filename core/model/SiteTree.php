@@ -661,7 +661,29 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		$results = $this->extend('canView', $member);
 		if($results && is_array($results)) if(!min($results)) return false;
 		
-		return true;
+		// check for empty spec
+		if(!$this->CanViewType || $this->CanViewType == 'Anyone') return true;
+
+		// check for inherit
+		if($this->CanViewType == 'Inherit') {
+			if($this->ParentID) return $this->Parent()->canView($member);
+			else return true;
+		}
+		
+		// check for any logged-in users
+		if($this->CanViewType == 'LoggedInUsers' && $member) {
+			return true;
+		}
+		
+		// check for specific groups
+		if($member && is_numeric($member)) $member = DataObject::get_by_id('Member', $member);
+		if(
+			$this->CanViewType == 'OnlyTheseUsers' 
+			&& $member 
+			&& $member->inGroups($this->ViewerGroups())
+		) return true;
+		
+		return false;
 	}
 
 	/**
@@ -854,7 +876,9 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	 * page can be edited.
 	 */
 	static function can_edit_multiple($ids, $memberID, $useCached = true) {
-		set_time_limit(0);
+		// Sanitise the IDs
+		$ids = array_filter($ids, 'is_numeric');
+
 		// Default result: nothing editable
 		$result = array_fill_keys($ids, false);
 		if($ids) {
@@ -877,8 +901,6 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 				return $result;
 			}
 
-			// Sanitise the IDs
-			$ids = array_filter($ids, 'is_numeric');
 			$SQL_idList = implode($ids, ", ");
 
 			// if page can't be viewed, don't grant edit permissions
@@ -1726,9 +1748,9 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		// create an empty record
 		if(!DB::query("SELECT ID FROM SiteTree WHERE ID = $this->ID")->value()) {
 			$conn = DB::getConn();
-			if($conn->hasMethod('allowPrimaryKeyEditing')) $conn->allowPrimaryKeyEditing('SiteTree', true);
+			if(method_exists($conn, 'allowPrimaryKeyEditing')) $conn->allowPrimaryKeyEditing('SiteTree', true);
 			DB::query("INSERT INTO \"SiteTree\" (\"ID\") VALUES ($this->ID)");
-			if($conn->hasMethod('allowPrimaryKeyEditing')) $conn->allowPrimaryKeyEditing('SiteTree', false);
+			if(method_exists($conn, 'allowPrimaryKeyEditing')) $conn->allowPrimaryKeyEditing('SiteTree', false);
 		}
 		
 		$oldStage = Versioned::current_stage();

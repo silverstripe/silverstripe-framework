@@ -145,7 +145,7 @@ class DatabaseAdmin extends Controller {
 			DB::quiet();
 		} else {
 			$conn = DB::getConn();
-			$databaseName = ($conn->hasMethod('currentDatabase')) ? $conn->currentDatabase() : "";
+			$databaseName = (method_exists($conn. 'currentDatabase')) ? $conn->currentDatabase() : "";
 			
 			if(Director::is_cli()) echo "\n\nBuilding Database $databaseName\n\n";
 			else echo "<h2>Building Database $databaseName</h2>";
@@ -233,7 +233,7 @@ class DatabaseAdmin extends Controller {
 	function clearAllData() {
 		$tables = DB::getConn()->tableList();
 		foreach($tables as $table) {
-			if(DB::getConn()->hasMethod('clearTable')) DB::getConn()->clearTable($table);
+			if(method_exists(DB::getConn(), 'clearTable')) DB::getConn()->clearTable($table);
 			else DB::query("TRUNCATE \"$table\"");
 		}
 	}
