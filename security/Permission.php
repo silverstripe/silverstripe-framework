@@ -139,9 +139,12 @@ class Permission extends DataObject {
 	 *                  not exist at all.
 	 */
 	public static function checkMember($member, $code, $arg = "any", $strict = true) {
-		$perms_list = self::get_declared_permissions_list();
-		$memberID = (is_object($member)) ? $member->ID : $member; 
-
+		if(!$member) {
+			$memberID = $member = Member::currentUserID();
+		} else {
+			$memberID = (is_object($member)) ? $member->ID : $member; 
+		}
+		
 		if($arg == 'any') {
 			// Cache the permissions in memory
 			if(!isset(self::$cache_permissions[$memberID])) {
@@ -227,15 +230,18 @@ class Permission extends DataObject {
 	 */
 	public static function permissions_for_member($memberID) {
 		$groupList = self::groupList($memberID);
-		$groupCSV = implode(", ", $groupList);
+		if($groupList) {
+			$groupCSV = implode(", ", $groupList);
 
-		// Raw SQL for efficiency
-		return DB::query("
-			SELECT \"Code\"
-			FROM \"Permission\"
-			WHERE \"Type\" = " . self::GRANT_PERMISSION . " AND \"GroupID\" IN ($groupCSV)
-		")->column();
-		
+			// Raw SQL for efficiency
+			return DB::query("
+				SELECT \"Code\"
+				FROM \"Permission\"
+				WHERE \"Type\" = " . self::GRANT_PERMISSION . " AND \"GroupID\" IN ($groupCSV)
+			")->column();
+		} else {
+			return array();
+		}
 	}
 
 
