@@ -16,37 +16,13 @@ class SiteTreeActionsTest extends FunctionalTest {
 
 	static $fixture_file = 'sapphire/tests/SiteTreeActionsTest.yml';
 
-	function testActionsNewPage() {
-		if(class_exists('SiteTreeCMSWorkflow')) return true;
-		
-		$className = 'Page';
-		$page = new $className();
-		$page->Title = 'New ' . $className;
-		$page->URLSegment = "new-" . strtolower($className);
-		$page->ClassName = $className;
-		$page->ParentID = 0;
-		$page->ID = 'new-Page-1';
-	
-		$author = $this->objFromFixture('Member', 'cmseditor');
-		$this->session()->inst_set('loggedInAs', $author->ID);
-	
-		$actionsArr = $page->getCMSActions()->column('Name');
-	
-		$this->assertContains('action_save',$actionsArr);
-		$this->assertContains('action_publish',$actionsArr);
-		$this->assertNotContains('action_unpublish',$actionsArr);
-		$this->assertContains('action_delete',$actionsArr);
-		$this->assertNotContains('action_deletefromlive',$actionsArr);
-		$this->assertNotContains('action_rollback',$actionsArr);
-		$this->assertNotContains('action_revert',$actionsArr);
-	}
-
 	function testActionsPublishedRecord() {
 		if(class_exists('SiteTreeCMSWorkflow')) return true;
 		
 		$page = new Page();
+		$page->CanEditType = 'LoggedInUsers';
 		$page->write();
-		$page->publish('Stage', 'Live');
+		$page->doPublish();
 	
 		$author = $this->objFromFixture('Member', 'cmseditor');
 		$this->session()->inst_set('loggedInAs', $author->ID);
@@ -66,9 +42,10 @@ class SiteTreeActionsTest extends FunctionalTest {
 		if(class_exists('SiteTreeCMSWorkflow')) return true;
 		
 		$page = new Page();
+		$page->CanEditType = 'LoggedInUsers';
 		$page->write();
 		$pageID = $page->ID;
-		$page->publish('Stage', 'Live');
+		$page->doPublish();
 		$page->deleteFromStage('Stage');
 		
 		// Get the live version of the page
@@ -92,8 +69,9 @@ class SiteTreeActionsTest extends FunctionalTest {
 		if(class_exists('SiteTreeCMSWorkflow')) return true;
 		
 		$page = new Page();
+		$page->CanEditType = 'LoggedInUsers';
 		$page->write();
-		$page->publish('Stage', 'Live');
+		$page->doPublish();
 		$page->Content = 'Changed on Stage';
 		$page->write();
 		$page->flushCache();
