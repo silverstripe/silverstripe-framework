@@ -15,6 +15,16 @@ PHP
 	'sapphire/MyClass.php' => <<<PHP
 <?php
 
+interface MyInterface {
+	
+}
+interface OtherInterface {
+	
+}
+class BaseClass {
+	
+}
+
 /* This is a comment before */
 class MyClass extends Object {
 
@@ -22,11 +32,11 @@ class MyClass extends Object {
 
 /* This is a comment between */
 
-class MyClass_Other extends DataObject implements Something {
+class MyClass_Other extends DataObject implements MyInterface {
 
 }
 
-class MyClass_Final extends DataObject implements Something, OtherClass {
+class MyClass_Final extends DataObject implements MyInterface, OtherInterface {
 
 }
 
@@ -83,7 +93,7 @@ PHP
 	'sapphire/subdir/SubDirClass.php' => <<<PHP
 <?php
 
-class SubDirClass extends Something implements Else, Other {
+class SubDirClass extends BaseClass implements MyInterace, OtherInterface {
 
 }
 PHP
@@ -93,7 +103,7 @@ PHP
 	'otherdir/OtherFile.php' => <<<PHP
 <?php
 
-class OtherFile extends Object {
+class OtherFile extends BaseClass {
 
 }
 PHP

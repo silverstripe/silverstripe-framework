@@ -31,7 +31,6 @@ class ManifestBuilderTest extends SapphireTest {
 		$this->assertEquals(1, preg_match('/require_once\("[^"]+sapphire\/_config.php"\);/i', $manifest), "sapphire/_config.php included");
 	}
 	
-	
 	function testManifestIgnoresClassesInComments() {
 		$baseFolder = TEMP_FOLDER . '/manifest-test';
 		global $project;
@@ -69,6 +68,13 @@ class ManifestBuilderTest extends SapphireTest {
 		$this->assertNotContains('MyClass_InHeredocString', array_keys($manifestInfo['globals']['_ALL_CLASSES']['parents']));
 	}
 
+
+	function testClassNamesDontHaveToBeTheSameAsFileNames() {
+		$baseFolder = TEMP_FOLDER . '/manifest-test';
+		$manifestInfo = ManifestBuilder::get_manifest_info($baseFolder);
+		
+		$this->assertContains('BaseClass', array_keys($manifestInfo['globals']['_ALL_CLASSES']['exists']));
+	}
 	
 	protected $originalClassManifest, $originalProject, $originalAllClasses;
 	protected static $test_fixture_project;
