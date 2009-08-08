@@ -5,7 +5,7 @@
  * @package sapphire
  * @subpackage model
  */
-abstract class Database extends Object {
+abstract class Database {
 	/**
 	 * This constant was added in SilverStripe 2.4 to indicate that SQL-queries
 	 * should now use ANSI-compatible syntax.  The most notable affect of this
@@ -162,7 +162,7 @@ abstract class Database extends Object {
 	 * Large array structure that represents a schema update transaction
 	 */
 	protected $schemaUpdateTransaction;
-	
+
 	/**
 	 * Start a schema-updating transaction.
 	 * All calls to requireTable/Field/Index will keep track of the changes requested, but not actually do anything.
@@ -266,9 +266,9 @@ abstract class Database extends Object {
 			$this->checkAndRepairTable($table, $options);
 			
 			// Check if options changed
-			if($options && isset($options[$this->class])) {
+			if($options && isset($options[get_class($this)])) {
 				$tableOptionsChanged = false;
-				if(preg_match('/ENGINE=([^\s]*)/', $options[$this->class], $alteredEngineMatches)) {
+				if(preg_match('/ENGINE=([^\s]*)/', $options[get_class($this)], $alteredEngineMatches)) {
 					$alteredEngine = $alteredEngineMatches[1];
 					$tableStatus = DB::query(sprintf(
 						'SHOW TABLE STATUS WHERE "Name" = \'%s\'',
@@ -683,7 +683,7 @@ abstract class Database extends Object {
  * @package sapphire
  * @subpackage model
  */
-abstract class Query extends Object implements Iterator {
+abstract class Query implements Iterator {
 	/**
 	 * The current record in the interator.
 	 * @var array

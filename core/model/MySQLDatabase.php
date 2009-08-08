@@ -65,8 +65,6 @@ class MySQLDatabase extends Database {
 		}
 		
 		$this->query("SET sql_mode = 'ANSI'");
-
-		parent::__construct();
 	}
 	
 	/**
@@ -880,7 +878,6 @@ class MySQLQuery extends Query {
 	public function __construct(MySQLDatabase $database, $handle) {
 		$this->database = $database;
 		$this->handle = $handle;
-		parent::__construct();
 	}
 	
 	public function __destroy() {
