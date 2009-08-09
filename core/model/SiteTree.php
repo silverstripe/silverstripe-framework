@@ -2133,6 +2133,10 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 				'SiteTree.EDIT_ALL_DESCRIPTION',
 				'Can edit any page on the site, regard of the settings on the Access tab'
 			),
+			'SITETREE_REORGANISE' => _t(
+				'SiteTree.REORGANISE_DESCRIPTION',
+				'Can reorganise the site tree'
+			),
 		);
 	}
 	
