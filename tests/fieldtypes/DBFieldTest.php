@@ -70,6 +70,28 @@ class DBFieldTest extends SapphireTest {
 		$this->assertEquals("'0'", singleton('Text')->prepValueForDB(0000));
 		$this->assertEquals("'test'", singleton('Text')->prepValueForDB('test'));
 		$this->assertEquals("'123'", singleton('Text')->prepValueForDB(123));
+		
+		/* Time behaviour */
+		$time = singleton('Time');
+		$time->setValue('00:01am');
+		$this->assertEquals("00:01:00", $time->getValue());
+		$time->setValue('00:59am');
+		$this->assertEquals("00:59:00", $time->getValue());
+		$time->setValue('11:59am');
+		$this->assertEquals("11:59:00", $time->getValue());
+		$time->setValue('12:00pm');
+		$this->assertEquals("12:00:00", $time->getValue());
+		$time->setValue('12:59am');
+		$this->assertEquals("12:59:00", $time->getValue());
+		$time->setValue('1:00pm');
+		$this->assertEquals("13:00:00", $time->getValue());
+		$time->setValue('11:59pm');
+		$this->assertEquals("23:59:00", $time->getValue());
+		$time->setValue('00:00am');
+		$this->assertEquals("00:00:00", $time->getValue());
+		$time->setValue('00:00:00');
+		$this->assertEquals("00:00:00", $time->getValue());
+
 	}
 	
 }
