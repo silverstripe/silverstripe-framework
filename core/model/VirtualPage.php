@@ -193,7 +193,9 @@ class VirtualPage_Controller extends Page_Controller {
 	}
 	
 	function getViewer($action) {
-		$name = get_class($this->CopyContentFrom())."_Controller";
+		$originalClass = get_class($this->CopyContentFrom());
+		if ($originalClass == 'SiteTree') $name = 'Page_Controller';
+		else $name = $originalClass."_Controller";
 		$controller = new $name();
 		return $controller->getViewer($action);
 	}
