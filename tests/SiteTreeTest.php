@@ -277,7 +277,7 @@ class SiteTreeTest extends SapphireTest {
 	 * an error
 	 */
 	function testReadArchiveDate() {
-		Versioned::reading_archived_date('2009-07-02% 14:05:07');
+		Versioned::reading_archived_date('2009-07-02 14:05:07');
 		
 		DataObject::get('SiteTree', 'ParentID = 0');
 		

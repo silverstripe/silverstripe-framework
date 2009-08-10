@@ -105,7 +105,7 @@ class Versioned extends DataObjectDecorator {
 					$baseTable = $table;
 				}
 				$query->renameTable($table, $table . '_versions');
-				$query->replaceText(".\"ID\"", ".\"RecordID\"");
+				$query->replaceText("\"$table\".\"ID\"", "\"$table\".\"RecordID\"");
 				
 				// Add all <basetable>_versions columns
 				foreach(self::$db_for_versions_table as $name => $type) {
