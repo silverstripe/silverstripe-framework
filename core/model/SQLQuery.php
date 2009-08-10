@@ -392,11 +392,13 @@ class SQLQuery extends Object {
 	 * @return boolean
 	 */
 	function filtersOnID() {
-		return (
-			$this->where 
-			//&& count($this->where) == 1  
-			&& preg_match('/^(.*\.)?("|`)?ID("|`)?\s?=/', $this->where[0])
-		);
+		$regexp = '/^(.*\.)?("|`)?ID("|`)?\s?=/';
+		
+		// Sometimes the ID filter will be the 2nd element, if there's a ClasssName filter first.
+		if(isset($this->where[0]) && preg_match($regexp, $this->where[0])) return true;
+		if(isset($this->where[1]) && preg_match($regexp, $this->where[1])) return true;
+		
+		return  false;
 	}
 	
 	/**
