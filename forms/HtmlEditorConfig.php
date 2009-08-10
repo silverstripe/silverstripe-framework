@@ -42,9 +42,26 @@ class HtmlEditorConfig {
 	}
 	
 	/**
+	 * Get the available configurations as a map of friendly_name to
+	 * configuration name.
+	 * @return array
+	 */
+	static function get_available_configs_map() {
+		$configs = array();
+		
+		foreach(self::$configs as $identifier => $config) {
+			$configs[$identifier] = $config->getOption('friendly_name');
+		}
+		
+		return $configs;
+	}
+	
+	/**
 	 * Holder for all TinyMCE settings _except_ plugins and buttons
 	 */
 	protected $settings = array(
+		'friendly_name' => '(Please set a friendly name for this config)',
+		'priority' => 0,
 		'mode' => "specific_textareas",
 		'editor_selector' => "htmleditor",
 		'width' => "100%",

@@ -1026,6 +1026,27 @@ class Member extends DataObject {
 			}
 		}
 	}
+	
+	/**
+	 * Get the HtmlEditorConfig for this user to be used in the CMS.
+	 * This is set by the group.
+	 * @return string
+	 */
+	function getHtmlEditorConfigForCMS() {
+		$currentName = '';
+		$currentPriority = 0;
+		
+		foreach($this->Groups() as $group) {
+			$configName = $group->HtmlEditorConfig;
+			$config = HtmlEditorConfig::get($group->HtmlEditorConfig);
+			if($config && $config->getOption('priority') > $currentPriority) {
+				$currentName = $configName;
+			}
+		}
+		
+		// If can't find a suitable editor, just default to cms
+		return $currentName ? $currentName : 'cms';
+	}
 }
 
 /**
