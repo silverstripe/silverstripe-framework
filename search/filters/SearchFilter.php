@@ -129,11 +129,8 @@ abstract class SearchFilter extends Object {
 						$query->leftJoin($component, "\"$component\".\"ID\" = \"{$this->model}\".\"{$foreignKey}ID\"");
 						
 						/**
-						 * add join clause to the component's parent class so that the search filter could search on its 
-						 * parent fields.
-						 * todo: add UT for this. Also add the clause for other relations like has_many, many_many in other
-						 * elseif branch and their UTs.
-						 *
+						 * add join clause to the component's ancestry classes so that the search filter could search on its 
+						 * ancester fields.
 						 */
 						$ancestry = ClassInfo::ancestry($component, true);
 						if(!empty($ancestry)){
@@ -152,6 +149,20 @@ abstract class SearchFilter extends Object {
 					 	$ancestry = $model->getClassAncestry();
 						$foreignKey = $model->getComponentJoinField($rel);
 						$query->leftJoin($component, "\"$component\".\"{$foreignKey}\" = \"{$ancestry[0]}\".\"ID\"");
+						/**
+						 * add join clause to the component's ancestry classes so that the search filter could search on its 
+						 * ancestor fields.
+						 */
+						$ancestry = ClassInfo::ancestry($component, true);
+						if(!empty($ancestry)){
+							$ancestry = array_reverse($ancestry);
+							foreach($ancestry as $ancestor){
+								if($ancestor != $component){
+									$query->innerJoin($ancestor, "\"$component\".\"ID\" = \"$ancestor\".ID");
+									$component=$ancestor;
+								}
+							}
+						}
 					}
 					$this->model = $component;
 				} elseif ($component = $model->many_many($rel)) {
