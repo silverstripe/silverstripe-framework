@@ -14,6 +14,7 @@ class Group extends DataObject {
 		"Locked" => "Boolean",
 		"Sort" => "Int",
 		"IPRestrictions" => "Text",
+		"HtmlEditorConfig" => "Varchar"
 	);
 	
 	static $has_one = array(
@@ -63,6 +64,7 @@ class Group extends DataObject {
 						) . 
 						"</p>"
 					),
+					new DropdownField('HtmlEditorConfig', 'HTML Editor Configuration', HtmlEditorConfig::get_available_configs_map()),
 					new TableField(
 						"Permissions",
 						"Permission",
