@@ -70,14 +70,14 @@ class ObjectStaticTest extends SapphireTest {
 	}
 	
 	/**
-	 * Check that calls to Object::add_static() will update the data returned by Object::uninherited_static()
+	 * Confirms that Object::add_static_var() doesn't work for uninherited stats
 	 */
-	public function testAddStaticFollowedByUnheritedCall() {
+	public function testAddStaticVarDoesntWorkFor() {
 		Object::add_static_var('ObjectStaticTest_First', 'first', array('test_1b'));
 		Object::add_static_var('ObjectStaticTest_Second', 'first', array('test_2b'));
 		
-		$this->assertContains('test_1b', Object::uninherited_static('ObjectStaticTest_First', 'first'));
-		$this->assertContains('test_2b', Object::uninherited_static('ObjectStaticTest_Second', 'first'));
+		$this->assertNotContains('test_1b', Object::uninherited_static('ObjectStaticTest_First', 'first'));
+		$this->assertNotContains('test_2b', Object::uninherited_static('ObjectStaticTest_Second', 'first'));
 	}
 	
 }
