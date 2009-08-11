@@ -2096,7 +2096,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		return (
 			array_key_exists($field, $this->record) 
 			|| $this->hasDatabaseField($field) 
-			|| array_key_exists($field, $this->db())
 			|| $this->hasMethod("get{$field}")
 		);
 	}
@@ -2110,13 +2109,11 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 */
 	public function hasDatabaseField($field) {
 		// Add base fields which are not defined in static $db
-		$fixedFields = array(
+		static $fixedFields = array(
 			'ID' => 'Int',
 			'ClassName' => 'Enum',
 			'LastEdited' => 'SSDatetime',
 			'Created' => 'SSDatetime',
-			// Add fields from Versioned decorator
-			'Version' => $this->hasExtension('Versioned') ? 'Int' : false,
 		);
 		
 		if(isset($fixedFields[$field])) return true;
@@ -2130,8 +2127,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 *
 	 * @param string $field Name of the field
 	 * @return string The field type of the given field
-	 */
-	public function hasOwnTableDatabaseField($field) {
+	 */	public function hasOwnTableDatabaseField($field) {
 		// Add base fields which are not defined in static $db
 		if($field == "ID") return "Int";
 		if($field == "ClassName" && get_parent_class($this) == "DataObject") return "Enum";
