@@ -211,7 +211,7 @@ class Versioned extends DataObjectDecorator {
 		// Build a list of suffixes whose tables need versioning
 		$allSuffixes = array();
 		foreach (Versioned::$versionableExtensions as $versionableExtension => $suffixes) {
-			if ($this->owner->hasExtension($versionableExtension) && singleton($versionableExtension)->stat('enabled')) {
+			if ($this->owner->hasExtension($versionableExtension)) {
 				$allSuffixes = array_merge($allSuffixes, (array)$suffixes);
 				foreach ((array)$suffixes as $suffix) {
 					$allSuffixes[$suffix] = $versionableExtension;
@@ -229,7 +229,7 @@ class Versioned extends DataObjectDecorator {
 			if ($suffix) $table = "{$classTable}_$suffix";
 			else $table = $classTable;
 
-			if(($fields = $this->owner->databaseFields())) {
+			if($fields = DataObject::database_fields($this->owner->class)) {
 				$indexes = $this->owner->databaseIndexes();
 				if ($suffix && ($ext = $this->owner->extInstance($allSuffixes[$suffix]))) {
 					if (!$ext->isVersionedTable($table)) continue;
@@ -392,8 +392,9 @@ class Versioned extends DataObjectDecorator {
 	 * @return boolean
 	 */
 	function canBeVersioned($table) {
-		$dbFields = singleton($table)->databaseFields();
-		return !(!ClassInfo::exists($table) || !is_subclass_of($table, 'DataObject' ) || empty( $dbFields ));
+		return ClassInfo::exists($table) 
+			&& ClassInfo::is_subclass_of($table, 'DataObject')
+			&& DataObject::has_own_table($table);
 	}
 	
 	/**

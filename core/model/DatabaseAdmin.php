@@ -264,7 +264,7 @@ class DatabaseAdmin extends Controller {
 			$subclasses = ClassInfo::subclassesFor($baseClass);
 			unset($subclasses[0]);
 			foreach($subclasses as $k => $subclass) {
-				if(!singleton($subclass)->databaseFields()) {
+				if(DataObject::database_fields($subclass)) {
 					unset($subclasses[$k]);
 				}
 			}

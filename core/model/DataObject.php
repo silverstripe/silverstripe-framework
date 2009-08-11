@@ -195,21 +195,17 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	public static function custom_database_fields($class) {
 		$fields = Object::uninherited_static($class, 'db');
 		
-		// Remove CompositeDBField instances, and replace with the actually used fields
-		if($fields) foreach($fields as $fieldName => $fieldClass) {
-			// Strip off any parameters
-			if(strpos('(', $fieldClass) !== FALSE) $fieldClass = substr(0,strpos('(', $fieldClass), $fieldClass);
-			if(ClassInfo::classImplements($fieldClass, 'CompositeDBField')) {
-				// Remove the original fieldname, its not an actual database column
-				unset($fields[$fieldName]);
-				// Add all composite columns
-				$compositeFields = singleton($fieldClass)->compositeDatabaseFields();
-				if($compositeFields) foreach($compositeFields as $compositeName => $spec) {
-					$fields["{$fieldName}{$compositeName}"] = $spec;
-				}
+		foreach(self::composite_fields($class, false) as $fieldName => $fieldClass) {
+			// Remove the original fieldname, its not an actual database column
+			unset($fields[$fieldName]);
+			
+			// Add all composite columns
+			$compositeFields = singleton($fieldClass)->compositeDatabaseFields();
+			if($compositeFields) foreach($compositeFields as $compositeName => $spec) {
+				$fields["{$fieldName}{$compositeName}"] = $spec;
 			}
 		}
-
+		
 		// Add has_one relationships
 		$hasOne = Object::uninherited_static($class, 'has_one');
 		if($hasOne) foreach(array_keys($hasOne) as $field) {
@@ -218,6 +214,64 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		
 		return (array)$fields;
 	}
+	
+	private static $_cache_custom_database_fields = array();
+	
+	
+	/**
+	 * Returns the field class if the given db field on the class is a composite field.
+	 * Will check all applicable ancestor classes and aggregate results.
+	 */
+	static function is_composite_field($class, $name, $aggregated = true) {
+		if(!isset(self::$_cache_composite_fields[$class])) self::cache_composite_fields($class);
+		
+		if(isset(self::$_cache_composite_fields[$class][$name])) {
+			return self::$_cache_composite_fields[$class][$name];
+			
+		} else if($aggregated && $class != 'DataObject' && ($parentClass=get_parent_class($class)) != 'DataObject') {
+			return self::is_composite_field($parentClass, $name);
+		}
+	}
+
+	/**
+	 * Returns a list of all the composite if the given db field on the class is a composite field.
+	 * Will check all applicable ancestor classes and aggregate results.
+	 */
+	static function composite_fields($class, $aggregated = true) {
+		if(!isset(self::$_cache_composite_fields[$class])) self::cache_composite_fields($class);
+		
+		$compositeFields = self::$_cache_composite_fields[$class];
+		
+		if($aggregated && $class != 'DataObject' && ($parentClass=get_parent_class($class)) != 'DataObject') {
+			$compositeFields = array_merge($compositeFields, 
+				self::composite_fields($parentClass));
+		}
+		
+		return $compositeFields;
+	}
+
+	/**
+	 * Internal cacher for the composite field information
+	 */
+	private static function cache_composite_fields($class) {
+		$compositeFields = array();
+		
+		$fields = Object::uninherited_static($class, 'db');
+		if($fields) foreach($fields as $fieldName => $fieldClass) {
+			// Strip off any parameters
+			$bPos = strpos('(', $fieldClass);
+			if($bPos !== FALSE) $fieldClass = substr(0,$bPos, $fieldClass);
+			
+			// Test to see if it implements CompositeDBField
+			if(ClassInfo::classImplements($fieldClass, 'CompositeDBField')) {
+				$compositeFields[$fieldName] = $fieldClass;
+			}
+		}
+		
+		self::$_cache_composite_fields[$class] = $compositeFields;
+	}
+	
+	private static $_cache_composite_fields = array();
 	
 
 	/**
@@ -1455,7 +1509,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		$classes = ClassInfo::ancestry($this);
 		$good = false;
 		$items = array();
-
+		
 		foreach($classes as $class) {
 			// Wait until after we reach DataObject
 			if(!$good) {
@@ -1494,29 +1548,34 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @return string|array The class of the one-to-many component, or an array of all one-to-many components and their classes.
 	 */
 	public function has_many($component = null) {
-		$classes = ClassInfo::ancestry($this);
-
-		foreach($classes as $class) {
-			if(in_array($class, array('ViewableData', 'Object', 'DataObject'))) continue;
-
-			if($component) {
-				$hasMany = Object::uninherited_static($class, 'has_many');
+		static $ignoreClasses = array('ViewableData', 'Object', 'DataObject');
+		$classes = ClassInfo::ancestry($this->class);
+		
+		if($component) {
+			foreach($classes as $class) {
+				if(in_array($class, $ignoreClasses)) continue;
 				
-				if(isset($hasMany[$component])) {
-					return $hasMany[$component];
-				}
-			} else {
-				$newItems = (array) Object::uninherited_static($class, 'has_many');
+				$hasMany = (array)Object::uninherited_static($class, 'has_many');
+				if(isset($hasMany[$component])) return $hasMany[$component];
+			}
+			
+		} else {
+			$items = array();
+			foreach($classes as $class) {
+				if(in_array($class, $ignoreClasses)) continue;
+
+				$newItems = (array)Object::uninherited_static($class, 'has_many');
 				// Validate the data
 				foreach($newItems as $k => $v) {
 					if(!is_string($k) || is_numeric($k) || !is_string($v)) user_error("$class::\$has_many has a bad entry: " 
 						. var_export($k,true). " => " . var_export($v,true) . ".  Each map key should be a relationship name, and the map value should be the data class to join to.", E_USER_ERROR);
 				}
-				$items = isset($items) ? array_merge($newItems, (array)$items) : $newItems;
+				$items = array_merge($newItems, (array)$items);
 			}
-		}
 
-		return isset($items) ? $items : null;
+
+			return $items;
+		}
 	}
 
 	/**
@@ -1868,8 +1927,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		if(isset($this->record[$field]) && is_object($this->record[$field]))  return $this->record[$field];
 		
 		// Otherwise, we need to determine if this is a complex field
-		$fieldClass = $this->db($field);
-		if($fieldClass && ClassInfo::classImplements($fieldClass, 'CompositeDBField')) {
+		if(self::is_composite_field($this->class, $field)) {
 			$helperPair = $this->castingHelperPair($field);
 			$constructor = $helperPair['castingHelper'];
 			$fieldName = $field;
@@ -1927,7 +1985,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		}
 		
 		if($databaseFieldsOnly) {
-			$customDatabaseFields = $this->customDatabaseFields();
+			$customDatabaseFields = self::custom_database_fields($this->class);
 			$fields = array_intersect_key($this->changed, $customDatabaseFields);
 		} else {
 			$fields = $this->changed;
@@ -2038,7 +2096,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		return (
 			array_key_exists($field, $this->record) 
 			|| $this->hasDatabaseField($field) 
-			|| array_key_exists($field, $this->db()) 
+			|| array_key_exists($field, $this->db())
 			|| $this->hasMethod("get{$field}")
 		);
 	}
@@ -2088,20 +2146,19 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		
 		// if no fieldmap is cached, get all fields
 		if(!$fieldMap) {
+			$fieldMap = Object::uninherited_static($this->class, 'db');
+			
 			// all $db fields on this specific class (no parents)
-			$fieldMap = $this->uninherited('db', true);
-			if($fieldMap) foreach($fieldMap as $fieldname => $fieldtype){
-				if(ClassInfo::classImplements($fieldtype, 'CompositeDBField')){
-					$combined_db = singleton($fieldtype)->compositeDatabaseFields();
-					foreach($combined_db as $name => $type){
-						$fieldMap[$fieldname.$name] = $type;
-					}
+			foreach(self::composite_fields($this->class, false) as $fieldname => $fieldtype) {
+				$combined_db = singleton($fieldtype)->compositeDatabaseFields();
+				foreach($combined_db as $name => $type){
+					$fieldMap[$fieldname.$name] = $type;
 				}
 			}
 			
 			// all has_one relations on this specific class,
 			// add foreign key
-			$hasOne = $this->uninherited('has_one', true);
+			$hasOne = Object::uninherited_static($this->class, 'has_one');
 			if($hasOne) foreach($hasOne as $fieldName => $fieldSchema) {
 				$fieldMap[$fieldName . 'ID'] = "ForeignKey";
 			}
@@ -2400,12 +2457,14 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 
 					// Add SQL for multi-value fields
 					$databaseFields = self::database_fields($tableClass);
+					$compositeFields = self::composite_fields($tableClass, false);
 					if($databaseFields) foreach($databaseFields as $k => $v) {
-						if(ClassInfo::classImplements($v, 'CompositeDBField')) {
-							singleton($tableClass)->dbObject($k)->addToQuery($query);
-						} else {
+						if(!isset($compositeFields[$k])) {
 							$query->select[] = "\"$tableClass\".\"$k\"";
 						}
+					}
+					if($compositeFields) foreach($compositeFields as $k => $v) {
+						$this->dbObject($k)->addToQuery($query);
 					}
 				}
 			}
@@ -2771,7 +2830,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 */
 	public function requireTable() {
 		// Only build the table if we've actually got fields
-		$fields = $this->databaseFields();
+		$fields = self::database_fields($this->class);
 		$indexes = $this->databaseIndexes();
 
 		if($fields) {
@@ -2842,6 +2901,8 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @see DataObject::database_fields()
 	 */
 	public function databaseFields() {
+		user_error("databaseFields() is deprecated; use self::database_fields() "
+			. "instead", E_USER_NOTICE);
 		return self::database_fields($this->class);
 	}
 	
@@ -2849,6 +2910,8 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @see DataObject::custom_database_fields()
 	 */
 	public function customDatabaseFields() {
+		user_error("customDatabaseFields() is deprecated; use self::custom_database_fields() "
+			. "instead", E_USER_NOTICE);
 		return self::custom_database_fields($this->class);
 	}
 	

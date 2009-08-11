@@ -460,7 +460,7 @@ class DataObjectTest extends SapphireTest {
 		);
 		
 		$this->assertEquals(
-			array_keys($teamInstance->databaseFields()),
+			array_keys(DataObject::database_fields('DataObjectTest_Team')),
 			array(
 				//'ID',
 				'ClassName',
@@ -495,7 +495,7 @@ class DataObjectTest extends SapphireTest {
 		);
 		
 		$this->assertEquals(
-			array_keys($subteamInstance->databaseFields()),
+			array_keys(DataObject::database_fields('DataObjectTest_SubTeam')),
 			array(
 				'SubclassDatabaseField',
 			),
