@@ -881,6 +881,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 
 		// Default result: nothing editable
 		$result = array_fill_keys($ids, false);
+
 		if($ids) {
 
 			// Look in the cache for values
@@ -982,6 +983,8 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		
 		// Look in the cache for values
 		if($useCached && isset(self::$cache_permissions['delete'])) {
+			$result = array_fill_keys($ids, false);
+
 			$cachedValues = array_intersect_key(self::$cache_permissions['delete'], $result);
 			
 			// If we can't find everything in the cache, then look up the remainder separately
