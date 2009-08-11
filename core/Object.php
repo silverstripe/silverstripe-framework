@@ -611,21 +611,15 @@ abstract class Object {
 	 * @return array
 	 */
 	public function allMethodNames($custom = false) {
-		if(!isset(self::$built_in_methods['_set'][$this->class])) $this->buildMethodList();
+		if(!isset(self::$built_in_methods[$this->class])) {
+			self::$built_in_methods[$this->class] = array_map('strtolower', get_class_methods($this));
+		}
 		
 		if($custom && isset(self::$extra_methods[$this->class])) {
 			return array_merge(self::$built_in_methods[$this->class], array_keys(self::$extra_methods[$this->class]));
 		} else {
 			return self::$built_in_methods[$this->class];
 		}
-	}
-	
-	protected function buildMethodList() {
-		foreach(get_class_methods($this) as $method) {
-			self::$built_in_methods[$this->class][strtolower($method)] = strtolower($method);
-		}
-		
-		self::$built_in_methods['_set'][$this->class] = true;
 	}
 
 	/**
@@ -667,12 +661,19 @@ abstract class Object {
 		}
 		
 		if(method_exists($extension, 'allMethodNames')) {
-			foreach($extension->allMethodNames(true) as $method) {
-				self::$extra_methods[$this->class][$method] = array (
-					'property' => $property,
-					'index'    => $index,
-					'callSetOwnerFirst' => $extension instanceof Extension,
-				);
+			$methodInfo = array(
+				'property' => $property,
+				'index'    => $index,
+				'callSetOwnerFirst' => $extension instanceof Extension,
+			);
+
+			$newMethods = array_fill_keys($extension->allMethodNames(true), $methodInfo);
+			
+			if(isset(self::$extra_methods[$this->class])) {
+				self::$extra_methods[$this->class] =
+					array_merge(self::$extra_methods[$this->class], $newMethods);
+			} else {
+				self::$extra_methods[$this->class] = $newMethods;
 			}
 		}
 	}
