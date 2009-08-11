@@ -418,7 +418,9 @@ abstract class Object {
 		
 		// merge with existing static vars
 		$extensions = self::uninherited_static($class, 'extensions');
-		$extensions[] = $extension;
+		// We use unshift rather than push so that module extensions are added before built-in ones.
+		// in particular, this ensures that the Versioned rewriting is done last.
+		array_unshift($extensions, $extension);
 		self::set_static($class, 'extensions', $extensions);
 		
 		// load statics now for DataObject classes
