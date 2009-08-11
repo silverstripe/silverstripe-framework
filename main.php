@@ -12,8 +12,8 @@
  * @package sapphire
  * @subpackage core
  */
-$majorVersion = strtok(phpversion(),'.');
-if($majorVersion < 5) {
+
+if(version_compare(phpversion(), 5, '<')) {
 	header("HTTP/1.1 500 Server Error");
 	echo str_replace('$PHPVersion', phpversion(), file_get_contents("dev/install/php5-required.html"));
 	die();
