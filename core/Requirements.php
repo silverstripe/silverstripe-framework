@@ -624,14 +624,14 @@ class Requirements_Backend {
 				if($p1 !== false && $p1 > $p2) {
 					$content = substr($content,0,$p1) . $jsRequirements . substr($content,$p1);
 				} else {
-					$content = eregi_replace("(</body[^>]*>)", $jsRequirements . "\\1", $content);
+					$content = preg_replace("/(<\/body[^>]*>)/i", $jsRequirements . "\\1", $content);
 				}
 				
 				// Put CSS at the bottom of the head			
-				$content = eregi_replace("(</head[^>]*>)", $requirements . "\\1", $content);
+				$content = preg_replace("/(<\/head[^>]*>)/i", $requirements . "\\1", $content);
 			} else {
-				$content = eregi_replace("(</head[^>]*>)", $requirements . "\\1", $content);
-				$content = eregi_replace("(</head[^>]*>)", $jsRequirements . "\\1", $content);
+				$content = preg_replace("/(<\/head[^>]*>)/i", $requirements . "\\1", $content);
+				$content = preg_replace("/(<\/head[^>]*>)/i", $jsRequirements . "\\1", $content);
 			}
 		} 
 		
