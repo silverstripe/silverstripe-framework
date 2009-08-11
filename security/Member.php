@@ -264,6 +264,9 @@ class Member extends DataObject {
 	 * auto-login.
 	 */
 	static function autoLogin() {
+		// Don't bother trying this multiple times
+		self::$_already_tried_to_auto_log_in = true;
+		
 		if(strpos(Cookie::get('alc_enc'), ':') && !Session::get("loggedInAs")) {
 			list($uid, $token) = explode(':', Cookie::get('alc_enc'), 2);
 			$SQL_uid = Convert::raw2sql($uid);
@@ -411,12 +414,7 @@ class Member extends DataObject {
 	 *                     user or FALSE.
 	 */
 	static function currentUser() {
-		$id = Session::get("loggedInAs");
-		if(!$id) {
-			self::autoLogin();
-			$id = Session::get("loggedInAs");
-		}
-
+		$id = Member::currentUserID();
 		if($id) {
 			return DataObject::get_one("Member", "\"Member\".\"ID\" = $id");
 		}
@@ -430,13 +428,14 @@ class Member extends DataObject {
 	 */
 	static function currentUserID() {
 		$id = Session::get("loggedInAs");
-		if(!$id) {
+		if(!$id && !self::$_already_tried_to_auto_log_in) {
 			self::autoLogin();
 			$id = Session::get("loggedInAs");
 		}
 
 		return is_numeric($id) ? $id : 0;
 	}
+	private static $_already_tried_to_auto_log_in = false;
 
 
 	/*
