@@ -39,14 +39,14 @@ class SearchFilterApplyRelationTest extends SapphireTest{
 		);
 		$results = $context->getResults($params);
 		$this->assertEquals(1, $results->count());
-		$this->assertEquals(1, $results->First()->ID);
+		$this->assertEquals(array('1'), $results->column('ID'));
 		
 		$params = array(
 			"Title" => "I am has_many object3",
 		);
 		$results = $context->getResults($params);
 		$this->assertEquals(1, $results->count());
-		$this->assertEquals(2, $results->First()->ID);
+		$this->assertEquals(array('2'), $results->column('ID'));
 		
 		$params = array(
 			"Title" => "I am has_many object",
@@ -65,7 +65,7 @@ class SearchFilterApplyRelationTest extends SapphireTest{
 		$all = singleton("SearchFilterApplyRelationTest_DO");
 		$context = $all->getDefaultSearchContext();
 			
-		$filter = new PartialMatchFilter("SearchFilterApplyRelationTest_ManyManyGrantChildren.Title");
+		$filter = new PartialMatchFilter("ManyManyGrantChildren.Title");
 		$context->setFilters(null);
 		$context->addFilter($filter);
 		$params = array(
@@ -79,6 +79,18 @@ class SearchFilterApplyRelationTest extends SapphireTest{
 		);
 		$results = $context->getResults($params);
 		$this->assertEquals(2, $results->count());
+		
+		$params = array(
+			"Title" => "I am many_many object",
+		);
+		$results = $context->getResults($params);
+		$this->assertEquals(2, $results->count());
+		
+		$params = array(
+			"Title" => "not exist",
+		);
+		$results = $context->getResults($params);
+		$this->assertEquals(0, $results->count());
 	}
 }
 
@@ -92,7 +104,7 @@ class SearchFilterApplyRelationTest_DO extends DataObject implements TestOnly{
 	);
 	
 	static $many_many = array(
-		'SearchFilterApplyRelationTest_ManyManyGrantChildren' => 'SearchFilterApplyRelationTest_ManyManyGrantChild'
+		'ManyManyGrantChildren' => 'SearchFilterApplyRelationTest_ManyManyGrantChild'
 	);
 }
 
@@ -157,7 +169,7 @@ class SearchFilterApplyRelationTest_ManyManyGrantChild extends SearchFilterApply
 		"GrantChildField" => "Varchar"
 	);
 	static $belongs_many_many = array(
-		"SearchFilterApplyRelationTest_DOs" => "SearchFilterApplyRelationTest_DO"
+		"DOs" => "SearchFilterApplyRelationTest_DO"
 	);
 }
 
