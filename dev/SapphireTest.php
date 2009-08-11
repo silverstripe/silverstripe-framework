@@ -50,6 +50,12 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 		$this->originalRequirements = Requirements::backend();
 		Member::set_password_validator(null);
 		Cookie::set_report_errors(false);
+		
+		// Reset Translatable and Versioned
+		Translatable::reset();
+		Versioned::reset();
+		DataObject::reset();
+		Controller::curr()->setSession(new Session(array()));
 
 		$className = get_class($this);
 		$fixtureFile = eval("return {$className}::\$fixture_file;");
@@ -61,9 +67,6 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 				self::create_temp_db();
 				//echo "done.\n";
 			}
-
-			// This code is a bit misplaced; we want some way of the whole session being reinitialised...
-			Versioned::reading_stage(null);
 
 			singleton('DataObject')->flushCache();
 

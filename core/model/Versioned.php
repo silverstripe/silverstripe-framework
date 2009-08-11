@@ -68,6 +68,17 @@ class Versioned extends DataObjectDecorator {
 		'AuthorID' => true,
 		'PublisherID' => true,
 	);
+
+	/**
+	 * Reset static configuration variables to their default values
+	 */
+	static function reset() {
+		self::$reading_stage = null;
+		self::$reading_archived_date = null;
+
+		Session::clear('currentStage');
+		Session::clear('archiveDate');
+	}
 	
 	/**
 	 * Construct a new Versioned object.

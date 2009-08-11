@@ -195,6 +195,16 @@ class Translatable extends DataObjectDecorator {
 	protected static $allowed_locales = null;
 	
 	/**
+	 * Reset static configuration variables to their default values
+	 */
+	static function reset() {
+		self::$default_locale = 'en_US';
+		self::$current_locale = null;
+		self::$enable_lang_filter = true;
+		self::$allowed_locales = null;
+	}
+	
+	/**
 	 * Choose the language the site is currently on.
 	 *
 	 * If $_GET['locale'] is currently set, then that locale will be used. Otherwise the member preference (if logged

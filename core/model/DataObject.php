@@ -2648,6 +2648,14 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		}
 		self::$cache_get_one = array();
 	}
+	
+	/**
+	 * Reset internal caches, for example after test runs
+	 */
+	static function reset() {
+		self::$cache_get_one = array();
+		self::$cache_buildSQL_query = array();
+	}
 
 	/**
 	 * Does the hard work for get_one()
