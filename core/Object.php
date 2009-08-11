@@ -270,24 +270,18 @@ abstract class Object {
 		}
 		
 		if(!isset(self::$cached_uninherited_statics[$class][$name]) || $uncached) {
-			$classRef     = new ReflectionClass($class);
-			$classProps   = $classRef->getStaticProperties();
+			$classRef = new ReflectionClass($class);
+			$classProp = $classRef->getStaticPropertyValue($name, null);
 
 			$parentClass = get_parent_class($class);
 			if($parentClass) {
-				$parentRef     = new ReflectionClass($parentClass);
-				$parentProps   = $parentRef->getStaticProperties();
-
-				$uninheritedBuiltIn = isset($classProps[$name]) 
-					&& (!isset($parentProps[$name]) 
-					|| $classProps[$name] != $parentProps[$name]) ? $classProps[$name] : null;
-			} else {
-				$uninheritedBuiltIn = isset($classProps[$name]) ? $classProps[$name] : null;
+				$parentRef = new ReflectionClass($parentClass);
+				$parentProp = $parentRef->getStaticPropertyValue($name, null);
+				if($parentProp == $classProp) $classProp = null;
 			}
-				
 			
 			self::$cached_uninherited_statics[$class][$name] = true;
-			self::$uninherited_statics[$class][$name]        = $uninheritedBuiltIn;
+			self::$uninherited_statics[$class][$name] = $classProp;
 		}
 
 		return self::$uninherited_statics[$class][$name];
