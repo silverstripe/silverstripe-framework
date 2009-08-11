@@ -893,20 +893,9 @@ class MySQLQuery extends Query {
 	}
 	
 	public function nextRecord() {
-		// Coalesce rather than replace common fields.
-		if($data = mysql_fetch_row($this->handle)) {
-			foreach($data as $columnIdx => $value) {
-				$columnName = mysql_field_name($this->handle, $columnIdx);
-				// $value || !$ouput[$columnName] means that the *last* occurring value is shown
-				// !$ouput[$columnName] means that the *first* occurring value is shown
-				if(isset($value) || !isset($output[$columnName])) {
-					$output[$columnName] = $value;
-				}
-			}
-			return $output;
-		} else {
-			return false;
-		}
+		$data = mysql_fetch_assoc($this->handle);
+		if(!$data) $data = false;
+		return $data;
 	}
 	
 	

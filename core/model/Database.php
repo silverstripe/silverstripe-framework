@@ -711,10 +711,11 @@ abstract class Query implements Iterator {
 	public function column($column = null) {
 		$result = array();
 		
-		foreach($this as $record) {
-			$result[] = ($column) ? $record[$column] : reset($record);
+		while($record = $this->next()) {
+			if($column) $result[] = $record[$column];
+			else $result[] = $record[key($record)];
 		}
-		
+
 		return $result;
 	}
 
@@ -726,7 +727,7 @@ abstract class Query implements Iterator {
 	public function keyedColumn() {
 		$column = array();
 		foreach($this as $record) {
-			$val = reset($record);
+			$val = $record[key($record)];
 			$column[$val] = $val;
 		}
 		return $column;
@@ -759,9 +760,8 @@ abstract class Query implements Iterator {
 	 * @return string
 	 */
 	public function value() {
-		foreach($this as $record) {
-			return reset($record);
-		}
+		$record = $this->next();
+		if($record) return $record[key($record)];
 	}
 
 	/**
@@ -851,7 +851,8 @@ abstract class Query implements Iterator {
 	 * @return boolean
 	 */
 	public function valid() {
-	 	return $this->current() !== false;
+		if(!$this->currentRecord) $this->next();
+	 	return $this->currentRecord !== false;
 	}
 
 	/**
