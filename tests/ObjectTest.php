@@ -147,21 +147,21 @@ class ObjectTest extends SapphireTest {
 	 */
 	public function testUseCustomClass() {
 		$obj1 = Object::create('ObjectTest_CreateTest');
-		$this->assertTrue($obj1->is_a('ObjectTest_CreateTest'));
+		$this->assertTrue($obj1 instanceof ObjectTest_CreateTest);
 		
 		Object::useCustomClass('ObjectTest_CreateTest', 'ObjectTest_CreateTest2');
 		$obj2 = Object::create('ObjectTest_CreateTest');
-		$this->assertTrue($obj2->is_a('ObjectTest_CreateTest2'));
+		$this->assertTrue($obj2 instanceof ObjectTest_CreateTest2);
 		
 		$obj2_2 = Object::strong_create('ObjectTest_CreateTest');
-		$this->assertTrue($obj2_2->is_a('ObjectTest_CreateTest'));
+		$this->assertTrue($obj2_2 instanceof ObjectTest_CreateTest);
 		
 		Object::useCustomClass('ObjectTest_CreateTest', 'ObjectTest_CreateTest3', true);
 		$obj3 = Object::create('ObjectTest_CreateTest');
-		$this->assertTrue($obj3->is_a('ObjectTest_CreateTest3'));
+		$this->assertTrue($obj3 instanceof ObjectTest_CreateTest3);
 		
 		$obj3_2 = Object::strong_create('ObjectTest_CreateTest');
-		$this->assertTrue($obj3_2->is_a('ObjectTest_CreateTest3'));
+		$this->assertTrue($obj3_2 instanceof ObjectTest_CreateTest3);
 	}
 	
 	public function testGetExtensions() {
@@ -290,8 +290,8 @@ class ObjectTest extends SapphireTest {
 	}
 	
 	public function testIsA() {
-		$this->assertTrue(Object::create('ObjectTest_MyObject')->is_a('Object'));
-		$this->assertTrue(Object::create('ObjectTest_MyObject')->is_a('ObjectTest_MyObject'));
+		$this->assertTrue(Object::create('ObjectTest_MyObject') instanceof Object);
+		$this->assertTrue(Object::create('ObjectTest_MyObject') instanceof ObjectTest_MyObject);
 	}
 	
 	/**
@@ -301,7 +301,7 @@ class ObjectTest extends SapphireTest {
 		$obj = new ObjectTest_ExtensionTest2();
 		
 		$this->assertTrue($obj->hasExtension('ObjectTest_Extension'));
-		$this->assertTrue($obj->extInstance('ObjectTest_Extension')->is_a('ObjectTest_Extension'));
+		$this->assertTrue($obj->extInstance('ObjectTest_Extension') instanceof ObjectTest_Extension);
 	}
 	
 	public function testCacheToFile() {
