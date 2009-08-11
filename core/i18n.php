@@ -1732,13 +1732,14 @@ class i18n extends Object {
 	 * @param string $locale All resources from any module in locale $locale will be loaded
 	 */
 	static function include_by_locale($locale) {
-		$topLevel = scandir(Director::baseFolder());
+		$base = Director::baseFolder();
+		$topLevel = scandir($base);
 		foreach($topLevel as $module) {
 			//$topLevel is the website root, some server is configurated not to allow excess website root's parent level
 			//and we don't need to check website root's parent level and websit root level for its lang folder, so we skip these 2 levels checking.
 			if($module[0] == '.') continue;
-			if (file_exists(Director::getAbsFile("$module/_config.php")) && 
-			  file_exists($file = Director::getAbsFile("$module/lang/$locale.php"))) { 
+			if (file_exists("$base/$module/_config.php") && 
+			  file_exists($file = "$base/$module/lang/$locale.php")) { 
 				include_once($file);
 			}
 		}
