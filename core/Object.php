@@ -506,15 +506,22 @@ abstract class Object {
 		// Don't do magic methods and/or extensions on extensions themselves.
 		if($this instanceof Extension) return;
 		
+		// Don't bother checking some classes that should never be extended
+		static $notExtendable = array('Object', 'ViewableData', 'DataObject', 'RequestHandler');
+		
 		if($extensionClasses = ClassInfo::ancestry($this->class)) foreach($extensionClasses as $class) {
-			if($extensions = self::uninherited_static($class, 'extensions')) foreach($extensions as $extension) {
-				// an $extension value can contain parameters as a string,
-				// e.g. "Versioned('Stage','Live')"
-				if(strpos($extension,'(') === false) $instance = new $extension();
-				else $instance = eval("return new $extension;");
+			if(in_array($class, $notExtendable)) continue;
+			
+			if($extensions = self::uninherited_static($class, 'extensions')) {
+				foreach($extensions as $extension) {
+					// an $extension value can contain parameters as a string,
+					// e.g. "Versioned('Stage','Live')"
+					if(strpos($extension,'(') === false) $instance = new $extension();
+					else $instance = eval("return new $extension;");
 				
-				$instance->setOwner(null, $class);
-				$this->extension_instances[$instance->class] = $instance;
+					$instance->setOwner(null, $class);
+					$this->extension_instances[$instance->class] = $instance;
+				}
 			}
 		}
 		
@@ -655,13 +662,23 @@ abstract class Object {
 		}
 		
 		if(method_exists($extension, 'allMethodNames')) {
+			$methods = $extension->allMethodNames(true);
+
+		} else {
+			if(!isset(self::$built_in_methods[$extension->class])) {
+				self::$built_in_methods[$extension->class] = array_map('strtolower', get_class_methods($extension));
+			}
+			$methods = self::$built_in_methods[$extension->class];
+		}
+		
+		if($methods) {
 			$methodInfo = array(
 				'property' => $property,
 				'index'    => $index,
 				'callSetOwnerFirst' => $extension instanceof Extension,
 			);
 
-			$newMethods = array_fill_keys($extension->allMethodNames(true), $methodInfo);
+			$newMethods = array_fill_keys($methods, $methodInfo);
 			
 			if(isset(self::$extra_methods[$this->class])) {
 				self::$extra_methods[$this->class] =
@@ -806,7 +823,7 @@ abstract class Object {
 		$values = array();
 		
 		if($this->extension_instances) foreach($this->extension_instances as $instance) {
-			if($instance->hasMethod($method)) {
+			if(method_exists($instance, $method)) {
 				$instance->setOwner($this);
 				$value = $instance->$method($a1, $a2, $a3, $a4, $a5, $a6, $a7);
 				if($value !== null) $values[] = $value;

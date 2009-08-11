@@ -11,7 +11,7 @@
  * @package sapphire
  * @subpackage core
  */
-abstract class Extension extends Object {
+abstract class Extension {
 	/**
 	 * This is used by extensions designed to be applied to controllers.
 	 * It works the same way as {@link Controller::$allowed_actions}.
@@ -35,6 +35,12 @@ abstract class Extension extends Object {
 	 * been called as many times as setOwner()
 	 */
 	private $ownerRefs = 0;
+	
+	public $class;
+	
+	function __construct() {
+		$this->class = get_class($this);
+	}
 
 	/**
 	 * Set the owner of this decorator.
