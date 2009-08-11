@@ -22,8 +22,8 @@ SearchFilterApplyRelationTest_DO:
     do1:
         SearchFilterApplyRelationTest_HasOneGrantChild: =>SearchFilterApplyRelationTest_HasOneGrantChild.grant_child
         SearchFilterApplyRelationTest_HasManyGrantChildren: =>SearchFilterApplyRelationTest_HasManyGrantChild.grant_child1,=>SearchFilterApplyRelationTest_HasManyGrantChild.grant_child2
-        SearchFilterApplyRelationTest_ManyManyGrantChildren: =>SearchFilterApplyRelationTest_ManyManyGrantChild.grant_child1,=>SearchFilterApplyRelationTest_ManyManyGrantChild.grant_child2
+        ManyManyGrantChildren: =>SearchFilterApplyRelationTest_ManyManyGrantChild.grant_child1,=>SearchFilterApplyRelationTest_ManyManyGrantChild.grant_child2
     do2:
         SearchFilterApplyRelationTest_HasOneGrantChild: =>SearchFilterApplyRelationTest_HasOneGrantChild.grant_child
         SearchFilterApplyRelationTest_HasManyGrantChildren: =>SearchFilterApplyRelationTest_HasManyGrantChild.grant_child3,=>SearchFilterApplyRelationTest_HasManyGrantChild.grant_child4
-        SearchFilterApplyRelationTest_ManyManyGrantChildren: =>SearchFilterApplyRelationTest_ManyManyGrantChild.grant_child1, =>SearchFilterApplyRelationTest_ManyManyGrantChild.grant_child2
+        ManyManyGrantChildren: =>SearchFilterApplyRelationTest_ManyManyGrantChild.grant_child1, =>SearchFilterApplyRelationTest_ManyManyGrantChild.grant_child2
