@@ -69,10 +69,10 @@ abstract class DataObjectDecorator extends Extension {
 		if($statics) {
 			foreach($statics as $name => $newVal) {
 				if(isset(self::$decoratable_statics[$name])) {
-					$origVal = self::get_static($class, $name);
 				
 					// Array to be merged 
 					if(self::$decoratable_statics[$name]) {
+						$origVal = self::uninherited_static($class, $name);
 						// Can't use add_static_var() here as it would merge the array rather than replacing
 						self::set_static($class, $name, array_merge((array)$origVal, $newVal));
 					

@@ -41,10 +41,12 @@ abstract class Object {
 	 */
 	
 	private static
-		$statics                 = array(),
-		$cached_statics          = array(),
-		$extra_statics           = array(),
-		$replaced_statics        = array(),
+		$statics = array(),
+		$cached_statics = array(),
+		$uninherited_statics = array(),
+		$cached_uninherited_statics = array(),
+		$extra_statics = array(),
+		$replaced_statics = array(),
 		$_cache_statics_prepared = array();
 	
 	private static
@@ -231,7 +233,7 @@ abstract class Object {
 		
 		return self::$statics[$class][$name];
 	}
-	
+
 	/**
 	 * Set a static variable
 	 *
@@ -244,10 +246,12 @@ abstract class Object {
 			Object::prepare_statics($class);
 		}
 
-		self::$statics[$class][$name]        = $value;
+		self::$statics[$class][$name] = $value;
+		self::$uninherited_statics[$class][$name] = $value;
 		self::$cached_statics[$class][$name] = true;
+		self::$cached_uninherited_statics[$class][$name] = true;
 	}
-	
+
 	/**
 	 * Get an uninherited static variable - a variable that is explicity set in this class, and not in the parent class.
 	 * 
@@ -260,19 +264,33 @@ abstract class Object {
 	 * @param string $name
 	 * @return mixed
 	 */
-	public static function uninherited_static($class, $name) {
-		$inherited = self::get_static($class, $name);
-		$parent    = null;
-		
-		if($parentClass = get_parent_class($class)) {
-			$parent = self::get_static($parentClass, $name);
+	public static function uninherited_static($class, $name, $uncached = false) {
+		if(!isset(self::$_cache_statics_prepared[$class])) {
+			Object::prepare_statics($class);
 		}
 		
-		if(is_array($inherited) && is_array($parent)) {
-			return array_diff_assoc($inherited, $parent);
+		if(!isset(self::$cached_uninherited_statics[$class][$name]) || $uncached) {
+			$classRef     = new ReflectionClass($class);
+			$classProps   = $classRef->getStaticProperties();
+
+			$parentClass = get_parent_class($class);
+			if($parentClass) {
+				$parentRef     = new ReflectionClass($parentClass);
+				$parentProps   = $parentRef->getStaticProperties();
+
+				$uninheritedBuiltIn = isset($classProps[$name]) 
+					&& (!isset($parentProps[$name]) 
+					|| $classProps[$name] != $parentProps[$name]) ? $classProps[$name] : null;
+			} else {
+				$uninheritedBuiltIn = isset($classProps[$name]) ? $classProps[$name] : null;
+			}
+				
+			
+			self::$cached_uninherited_statics[$class][$name] = true;
+			self::$uninherited_statics[$class][$name]        = $uninheritedBuiltIn;
 		}
-		
-		return ($inherited != $parent) ? $inherited : null;
+
+		return self::$uninherited_statics[$class][$name];
 	}
 	
 	/**
@@ -356,7 +374,7 @@ abstract class Object {
 	 */
 	public static function has_extension($class, $requiredExtension) {
 		$requiredExtension = strtolower($requiredExtension);
-		if($extensions = self::get_static($class, 'extensions')) foreach($extensions as $extension) {
+		if($extensions = self::combined_static($class, 'extensions')) foreach($extensions as $extension) {
 			$left = strtolower(Extension::get_classname_without_arguments($extension));
 			$right = strtolower(Extension::get_classname_without_arguments($requiredExtension));
 			if($left == $right) return true;
@@ -399,7 +417,14 @@ abstract class Object {
 		}
 		
 		// merge with existing static vars
-		self::add_static_var($class, 'extensions', array($extension));
+		$extensions = self::uninherited_static($class, 'extensions');
+		
+		// We use unshift rather than push so that module extensions are added before built-in ones.
+		// in particular, this ensures that the Versioned rewriting is done last.
+		if($extensions) array_unshift($extensions, $extension);
+		else $extensions = array($extension);
+		
+		self::set_static($class, 'extensions', $extensions);
 		
 		// load statics now for DataObject classes
 		if(is_subclass_of($class, 'DataObject')) {
@@ -418,7 +443,7 @@ abstract class Object {
 
 		// load statics now for DataObject classes
 		if(is_subclass_of($class, 'DataObject')) {
-			$extensions = Object::get_static($class, 'extensions');
+			$extensions = Object::uninherited_static($class, 'extensions');
 			if($extensions) foreach($extensions as $extension) {
 				if(preg_match('/^([^(]*)/', $extension, $matches)) {
 					$extensionClass = $matches[1];
@@ -450,7 +475,7 @@ abstract class Object {
 			self::set_static(
 				$class,
 				'extensions',
-				array_diff(self::get_static($class, 'extensions'), array($extension))
+				array_diff(self::uninherited_static($class, 'extensions'), array($extension))
 			);
 		}
 		

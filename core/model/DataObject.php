@@ -723,7 +723,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		$classes = array_reverse(ClassInfo::ancestry($this));
 		
 		foreach($classes as $class) {
-			$defaults = Object::get_static($class, 'defaults');
+			$defaults = Object::uninherited_static($class, 'defaults');
 			
 			if($defaults) foreach($defaults as $fieldName => $fieldValue) {
 				// SRM 2007-03-06: Stricter check
@@ -1336,13 +1336,13 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			if(in_array($class, array('Object', 'ViewableData', 'DataObject'))) continue;
 
 			if($component) {
-				$hasOne = Object::get_static($class, 'has_one');
+				$hasOne = Object::uninherited_static($class, 'has_one');
 				
 				if(isset($hasOne[$component])) {
 					return $hasOne[$component];
 				}
 			} else {
-				$newItems = (array) Object::get_static($class, 'has_one');
+				$newItems = (array) Object::uninherited_static($class, 'has_one');
 				// Validate the data
 				foreach($newItems as $k => $v) {
 					if(!is_string($k) || is_numeric($k) || !is_string($v)) user_error("$class::\$has_one has a bad entry: " 
@@ -1375,13 +1375,13 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			}
 
 			if($component) {
-				$db = Object::get_static($class, 'db');
+				$db = Object::uninherited_static($class, 'db');
 				
 				if(isset($db[$component])) {
 					return $db[$component];
 				}
 			} else {
-				$newItems = (array) Object::get_static($class, 'db');
+				$newItems = (array) Object::uninherited_static($class, 'db');
 				// Validate the data
 				foreach($newItems as $k => $v) {
 					if(!is_string($k) || is_numeric($k) || !is_string($v)) user_error("$class::\$db has a bad entry: " 
@@ -1409,13 +1409,13 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			if(in_array($class, array('ViewableData', 'Object', 'DataObject'))) continue;
 
 			if($component) {
-				$hasMany = Object::get_static($class, 'has_many');
+				$hasMany = Object::uninherited_static($class, 'has_many');
 				
 				if(isset($hasMany[$component])) {
 					return $hasMany[$component];
 				}
 			} else {
-				$newItems = (array) Object::get_static($class, 'has_many');
+				$newItems = (array) Object::uninherited_static($class, 'has_many');
 				// Validate the data
 				foreach($newItems as $k => $v) {
 					if(!is_string($k) || is_numeric($k) || !is_string($v)) user_error("$class::\$has_many has a bad entry: " 
@@ -1529,7 +1529,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			if(in_array($class, array('ViewableData', 'Object', 'DataObject'))) continue;
 
 			if($component) {
-				$manyMany = Object::get_static($class, 'many_many');
+				$manyMany = Object::uninherited_static($class, 'many_many');
 				// Try many_many
 				$candidate = (isset($manyMany[$component])) ? $manyMany[$component] : null;
 				if($candidate) {
@@ -1539,13 +1539,13 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 				}
 
 				// Try belongs_many_many
-				$belongsManyMany = Object::get_static($class, 'belongs_many_many');
+				$belongsManyMany = Object::uninherited_static($class, 'belongs_many_many');
 				$candidate = (isset($belongsManyMany[$component])) ? $belongsManyMany[$component] : null;
 				if($candidate) {
 					$childField = $candidate . "ID";
 
 					// We need to find the inverse component name
-					$otherManyMany = Object::get_static($candidate, 'many_many');
+					$otherManyMany = Object::uninherited_static($candidate, 'many_many');
 					if(!$otherManyMany) {
 						user_error("Inverse component of $candidate not found ({$this->class})", E_USER_ERROR);
 					}
@@ -1564,7 +1564,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 					user_error("Orphaned \$belongs_many_many value for $this->class.$component", E_USER_ERROR);
 				}
 			} else {
-				$newItems = (array) Object::get_static($class, 'many_many');
+				$newItems = (array) Object::uninherited_static($class, 'many_many');
 				// Validate the data
 				foreach($newItems as $k => $v) {
 					if(!is_string($k) || is_numeric($k) || !is_string($v)) user_error("$class::\$many_many has a bad entry: " 
@@ -1572,7 +1572,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 				}
 				$items = isset($items) ? array_merge($newItems, $items) : $newItems;
 				
-				$newItems = (array) Object::get_static($class, 'belongs_many_many');
+				$newItems = (array) Object::uninherited_static($class, 'belongs_many_many');
 				// Validate the data
 				foreach($newItems as $k => $v) {
 					if(!is_string($k) || is_numeric($k) || !is_string($v)) user_error("$class::\$belongs_many_many has a bad entry: " 
