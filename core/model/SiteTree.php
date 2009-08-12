@@ -100,6 +100,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		"ImageTracking" => "File",
 		"ViewerGroups" => "Group",
 		"EditorGroups" => "Group",
+		"UsersCurrentlyEditing" => "Member",
 	);
 
 	static $belongs_many_many = array(
@@ -107,6 +108,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	);
 
 	static $many_many_extraFields = array(
+		"UsersCurrentlyEditing" => array("LastPing" => "SSDatetime"),
 		"LinkTracking" => array("FieldName" => "Varchar"),
 		"ImageTracking" => array("FieldName" => "Varchar")
 	);
@@ -881,7 +883,6 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 
 		// Default result: nothing editable
 		$result = array_fill_keys($ids, false);
-
 		if($ids) {
 
 			// Look in the cache for values
@@ -983,8 +984,6 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		
 		// Look in the cache for values
 		if($useCached && isset(self::$cache_permissions['delete'])) {
-			$result = array_fill_keys($ids, false);
-
 			$cachedValues = array_intersect_key(self::$cache_permissions['delete'], $result);
 			
 			// If we can't find everything in the cache, then look up the remainder separately
@@ -1428,12 +1427,16 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		
 		// Lay out the fields
 		$fields = new FieldSet(
+			// Add a field with a bit of metadata for concurrent editing. The fact that we're using
+			// non-standard attributes does not really matter, all modern UA's just ignore em.
+			new LiteralField("SiteTree_Alert", '<div deletedfromstage="'.((int) $this->getIsDeletedFromStage()).'" id="SiteTree_Alert"></div>'),
 			new TabSet("Root",
 				$tabContent = new TabSet('Content',
 					$tabMain = new Tab('Main',
 						new TextField("Title", $this->fieldLabel('Title')),
 						new TextField("MenuTitle", $this->fieldLabel('MenuTitle')),
-						new HtmlEditorField("Content", _t('SiteTree.HTMLEDITORTITLE', "Content", PR_MEDIUM, 'HTML editor title'))
+						new HtmlEditorField("Content", _t('SiteTree.HTMLEDITORTITLE', "Content", PR_MEDIUM, 'HTML editor title')),
+						new HiddenField("Version", "Version", $this->Version)
 					),
 					$tabMeta = new Tab('Metadata',
 						new FieldGroup(_t('SiteTree.URL', "URL"),
