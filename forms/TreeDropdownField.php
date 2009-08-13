@@ -34,6 +34,9 @@ class TreeDropdownField extends FormField {
 	}
 	
 	function Field() {
+		Requirements::javascript(THIRDPARTY_DIR . "/prototype.js");
+		Requirements::javascript(THIRDPARTY_DIR . "/behaviour.js");
+		Requirements::javascript(THIRDPARTY_DIR . "/prototype_improvements.js");
 		Requirements::css(SAPPHIRE_DIR . '/css/TreeDropdownField.css');
 		Requirements::javascript(THIRDPARTY_DIR . "/tree/tree.js");
 		Requirements::css(THIRDPARTY_DIR . "/tree/tree.css");
