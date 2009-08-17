@@ -792,6 +792,25 @@ class TranslatableTest extends FunctionalTest {
 		$adminUser->logOut();
 		Translatable::set_current_locale($origLocale);
 	}
+	
+	public function testSiteTreeGetByUrlFindsTranslationWithoutLocale() {
+		$parent = $this->objFromFixture('Page', 'parent');
+		
+		$parentTranslation = $parent->createTranslation('en_AU');
+		$parentTranslation->URLSegment = 'parent-en-AU';
+		$parentTranslation->write();
+		
+		$match = Sitetree::get_by_url($parentTranslation->URLSegment);
+		$this->assertNotNull(
+			$match,
+			'SiteTree::get_by_url() doesnt need a locale setting to find translated pages'
+		);
+		$this->assertEquals(
+			$parentTranslation->ID,
+			$match->ID,
+			'SiteTree::get_by_url() doesnt need a locale setting to find translated pages'
+		);
+	}
 }
 
 class TranslatableTest_DataObject extends DataObject implements TestOnly {
