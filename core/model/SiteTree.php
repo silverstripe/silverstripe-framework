@@ -1290,7 +1290,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		$t = str_replace('&','-and-',$t);
 		$t = ereg_replace('[^A-Za-z0-9]+','-',$t);
 		$t = ereg_replace('-+','-',$t);
-		if(!$t) {
+		if(!$t || $t == '-' || $t == '-1') {
 			$t = "page-$this->ID";
 		}
 		return $t;
