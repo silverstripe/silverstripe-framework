@@ -341,11 +341,6 @@ class Email extends ViewableData {
 			// Parse $ variables in the base parameters
 			$data = $this->templateData();
 			
-			foreach(array('from','to','subject','body', 'plaintext_body', 'cc', 'bcc') as $param) {
-				$template = SSViewer::fromString($this->$param);
-				$this->$param = $template->process($data);
-			}
-			
 			// Process a .SS template file
 			$fullBody = $this->body;
 			if($this->ss_template && !$isPlain) {
