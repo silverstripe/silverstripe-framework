@@ -209,7 +209,7 @@ class Debug {
 		);
 		
 		if(Director::isDev()) {
-		  self::showError($errno, $errstr, $errfile, $errline, $errcontext, "Notice");
+			self::showError($errno, $errstr, $errfile, $errline, $errcontext, "Notice");
 		}
 	}
 
@@ -241,7 +241,7 @@ class Debug {
 		self::log_error_if_necessary( $errno, $errstr, $errfile, $errline, $errcontext, "Warning");
 
 		if(Director::isDev()) {
-		  self::showError($errno, $errstr, $errfile, $errline, $errcontext, "Warning");
+			self::showError($errno, $errstr, $errfile, $errline, $errcontext, "Warning");
 		}
 	}
 
@@ -275,7 +275,6 @@ class Debug {
 		
 		if(Director::isDev() || Director::is_cli()) {
 			self::showError($errno, $errstr, $errfile, $errline, $errcontext, "Error");
-
 		} else {
 			self::friendlyError();
 		}
