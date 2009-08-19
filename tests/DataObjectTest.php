@@ -739,6 +739,24 @@ class DataObjectTest extends SapphireTest {
 		$this->assertEquals('1988-03-04 06:30:00', $obj->DatetimeField);
 	}
 	
+	function testTwoSubclassesWithTheSameFieldNameWork() {
+		// Create two objects of different subclasses, setting the values of fields that are
+		// defined separately in each subclass
+		$obj1 = new DataObjectTest_SubTeam();
+		$obj1->SubclassDatabaseField = "obj1";
+		$obj2 = new OtherSubclassWithSameField();
+		$obj2->SubclassDatabaseField = "obj2";
+
+		// Write them to the database
+		$obj1->write();
+		$obj2->write();
+		
+		// Check that the values of those fields are properly read from the database
+		$values = DataObject::get("DataObjectTest_Team", "DataObjectTest_Team.ID IN 
+			($obj1->ID, $obj2->ID)")->column("SubclassDatabaseField");
+		$this->assertEquals(array('obj1', 'obj2'), $values);
+	}
+	
 }
 
 class DataObjectTest_Player extends Member implements TestOnly {
@@ -805,6 +823,12 @@ class DataObjectTest_SubTeam extends DataObjectTest_Team implements TestOnly {
 		'SubclassDatabaseField' => 'Varchar'
 	);
 }
+class OtherSubclassWithSameField extends DataObjectTest_Team {
+	static $db = array(
+		'SubclassDatabaseField' => 'Varchar',
+	);
+}
+
 
 class DataObjectTest_FieldlessTable extends DataObject implements TestOnly {
 }
