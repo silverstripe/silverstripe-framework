@@ -5,13 +5,15 @@
  * sends it to one or more {@link Zend_Log_Writer_Abstract}
  * subclasses for output.
  * 
- * The only priorities currently supported are SSLog::ERR and
- * SSLog::WARN - this may change in the future if other types
- * are to be supported.
+ * These priorities are currently supported:
+ *  - SSLog::ERR
+ *  - SSLog::WARN
+ *  - SSLog::NOTICE
  * 
  * You can add an error writer by calling {@link SSLog::add_writer()}
  * 
- * Example usage (called from mysite/_config.php):
+ * Example usage (called from mysite/_config.php) which adds a writer
+ * that will write all errors:
  * <code>
  * $emailWriter = new SSErrorEmailWriter('my@email.com');
  * SSLog::add_writer($emailWriter, SSLog::ERR);
@@ -27,6 +29,7 @@ class SSLog {
 
 	const ERR = Zend_Log::ERR;
 	const WARN = Zend_Log::WARN;
+	const NOTICE = Zend_Log::NOTICE;
 
 	/**
 	 * Logger class to use.

@@ -3,6 +3,8 @@
  * Sends an error message to an email whenever an error occurs
  * in sapphire.
  * 
+ * @see SSLog for more information on using writers.
+ * 
  * @package sapphire
  * @subpackage dev
  */

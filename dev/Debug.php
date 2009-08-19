@@ -2,11 +2,9 @@
 /**
  * Supports debugging and core error handling.
  * 
- * Attaches custom methods to the default 
- * error handling hooks in PHP. Currently, three levels
- * of error are supported:
+ * Attaches custom methods to the default error handling hooks
+ * in PHP. Currently, two levels of error are supported:
  * 
- * - Notice
  * - Warning
  * - Error
  * 
@@ -16,24 +14,16 @@
  * Uncaught exceptions are currently passed to the debug
  * reporter as standard PHP errors.
  * 
- * There are four different types of error handler supported by the
- * Debug class:
+ * Errors handled by this class are passed along to {@link SSLog}.
+ * For configuration information, see the {@link SSLog}
+ * class documentation.
  * 
- * - Friendly
- * - Fatal
- * - Logger
- * - Emailer
- * 
- * Currently, only Friendly, Fatal, and Emailer handlers are implemented.
- * 
- * @todo port header/footer wrapping code to external reporter class
  * @todo add support for user defined config: Debug::die_on_notice(true | false)
  * @todo add appropriate handling for E_NOTICE and E_USER_NOTICE levels
  * @todo better way of figuring out the error context to display in highlighted source
- * @todo implement error logger handler
  * 
  * @package sapphire
- * @subpackage core
+ * @subpackage dev
  */
 class Debug {
 	
@@ -270,7 +260,7 @@ class Debug {
 			self::showError($errno, $errstr, $errfile, $errline, $errcontext, "Error");
 
 		} else {
-			Debug::friendlyError();
+			self::friendlyError();
 		}
 		exit(1);
 	}
@@ -461,6 +451,7 @@ class Debug {
 	
 	/**
 	 * @param string $server IP-Address or domain
+	 * @deprecated 2.5 See SSLog on setting up error email notification
 	 */
 	static function set_custom_smtp_server($server) {
 		self::$custom_smtp_server = $server;
@@ -468,6 +459,7 @@ class Debug {
 
 	/**
 	 * @return string
+	 * @deprecated 2.5 See SSLog on setting up error email notification
 	 */
 	static function get_custom_smtp_server() {
 		return self::$custom_smtp_server;
@@ -477,6 +469,8 @@ class Debug {
 	 * Send errors to the given email address.
 	 * Can be used like so:
 	 * if(Director::isLive()) Debug::send_errors_to("sam@silverstripe.com");
+	 * 
+	 * @deprecated 2.5 See SSLog on setting up error email notification
 	 * 
 	 * @param string $emailAddress The email address to send errors to
 	 * @param string $sendWarnings Set to true to send warnings as well as errors (Default: false)
@@ -488,6 +482,7 @@ class Debug {
 	
 	/**
 	 * @return string
+	 * @deprecated 2.5 See SSLog on setting up error email notification
 	 */
 	static function get_send_errors_to() {
 		return self::$send_errors_to;
@@ -495,6 +490,7 @@ class Debug {
 	
 	/**
 	 * @param string $emailAddress
+	 * @deprecated 2.5 See SSLog on setting up error email notification
 	 */
 	static function send_warnings_to($emailAddress) {
 		self::$send_warnings_to = $emailAddress;
@@ -502,6 +498,7 @@ class Debug {
 
 	/**
 	 * @return string
+	 * @deprecated 2.5 See SSLog on setting up error email notification
 	 */
 	static function get_send_warnings_to() {
 		return self::$send_warnings_to;
