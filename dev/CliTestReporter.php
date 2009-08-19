@@ -94,7 +94,7 @@ class CliTestReporter extends SapphireTestReporter {
 			
 			echo "\n\n" . SSCli::text($this->testNameToPhrase($test['name']) . "\n". $test['message'] . "\n", 'red', null, true);
 			echo SSCli::text("In line {$test['exception']['line']} of {$test['exception']['file']}" . "\n\n", 'red');
-			echo Debug::get_rendered_backtrace($filteredTrace, true);
+			echo SSBacktrace::get_rendered_backtrace($filteredTrace, true);
 			echo "\n--------------------\n";
 		}
 	}

@@ -284,7 +284,7 @@ class SapphireTestReporter implements PHPUnit_Framework_TestListener {
 				if ($test['status'] != 1) {
 					echo "<div class=\"failure\"><span>&otimes; ". $this->testNameToPhrase($test['name']) ."</span><br>";
 					echo "<pre>".htmlentities($test['message'])."</pre><br>";
-					echo Debug::get_rendered_backtrace($test['trace']);
+					echo SSBacktrace::get_rendered_backtrace($test['trace']);
 					echo "</div>";
 				}
 			}
