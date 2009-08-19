@@ -216,8 +216,21 @@ class Debug {
 	 * @param unknown_type $errcontext
 	 */
 	static function warningHandler($errno, $errstr, $errfile, $errline, $errcontext) {
-	  if(error_reporting() == 0) return;
+		if(error_reporting() == 0) return;
 		if(self::$send_warnings_to) self::emailError(self::$send_warnings_to, $errno, $errstr, $errfile, $errline, $errcontext, "Warning");
+
+		// Send out the error details to the logger for writing
+		SSLog::log(
+			array(
+				'errno' => $errno,
+				'errstr' => $errstr,
+				'errfile' => $errfile,
+				'errline' => $errline,
+				'errcontext' => $errcontext
+			),
+			SSLog::WARN
+		);
+		
 		self::log_error_if_necessary( $errno, $errstr, $errfile, $errline, $errcontext, "Warning");
 
 		if(Director::isDev()) {
@@ -237,12 +250,24 @@ class Debug {
 	 * @param unknown_type $errcontext
 	 */
 	static function fatalHandler($errno, $errstr, $errfile, $errline, $errcontext) {
-
 		if(self::$send_errors_to) self::emailError(self::$send_errors_to, $errno, $errstr, $errfile, $errline, $errcontext, "Error");
+		
+		// Send out the error details to the logger for writing
+		SSLog::log(
+			array(
+				'errno' => $errno,
+				'errstr' => $errstr,
+				'errfile' => $errfile,
+				'errline' => $errline,
+				'errcontext' => $errcontext
+			),
+			SSLog::ERR
+		);
+		
 		self::log_error_if_necessary( $errno, $errstr, $errfile, $errline, $errcontext, "Error");
 		
 		if(Director::isDev() || Director::is_cli()) {
-			Debug::showError($errno, $errstr, $errfile, $errline, $errcontext, "Error");
+			self::showError($errno, $errstr, $errfile, $errline, $errcontext, "Error");
 
 		} else {
 			Debug::friendlyError();
@@ -372,9 +397,14 @@ class Debug {
 	}
 
 	/**
-	 * Dispatch an email notification message when an error is triggered. 
-	 * Uses the native PHP mail() function.
-	 *
+	 * Dispatch an email notification message when an error is triggered.
+	 * @deprecated 2.5
+	 * To create error logs by email, use this code instead:
+	 * <code>
+	 * $emailWriter = new SSLogEmailWriter('my@email.com');
+	 * SSLog::add_writer($emailWriter, SSLog::ERR);
+	 * </code>
+	 * 
 	 * @param string $emailAddress
 	 * @param string $errno
 	 * @param string $errstr
@@ -385,25 +415,22 @@ class Debug {
 	 * @return boolean
 	 */
 	static function emailError($emailAddress, $errno, $errstr, $errfile, $errline, $errcontext, $errorType = "Error") {
-		if(strtolower($errorType) == 'warning') {
-			$colour = "orange";
-		} else {
-			$colour = "red";
-		}
-
-		$data = "<div style=\"border: 5px $colour solid\">\n";
-		$data .= "<p style=\"color: white; background-color: $colour; margin: 0\">$errorType: $errstr<br /> At line $errline in $errfile\n<br />\n<br />\n</p>\n";
-
-		$data .= Debug::backtrace(true);
-		$data .= "</div>\n";
-
-		// override smtp-server if needed			
-		if(self::$custom_smtp_server) ini_set("SMTP", self::$custom_smtp_server);			
-
-		$relfile = Director::makeRelative($errfile);
-		if($relfile[0] == '/') $relfile = substr($relfile,1);
-		
-		return mail($emailAddress, "$errorType at $relfile line $errline (http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI])", $data, "Content-type: text/html\nFrom: errors@silverstripe.com");
+		user_error('Debug::send_errors_to() and Debug::emailError() is deprecated. Please use SSLog instead.
+			See the class documentation for SSLog for more information.', E_USER_NOTICE);
+		$priority = ($errorType == 'Error') ? SSLog::ERR : SSLog::WARN;
+		$writer = new SSLogEmailWriter($emailAddress);
+		SSLog::add_writer($writer, $priority);
+		SSLog::log(
+			array(
+				'errno' => $errno,
+				'errstr' => $errstr,
+				'errfile' => $errfile,
+				'errline' => $errline,
+				'errcontext' => $errcontext
+			),
+			$priority
+		);
+		SSLog::remove_writer($writer);
 	}
 	
 	/**
@@ -450,7 +477,7 @@ class Debug {
 	 * Send errors to the given email address.
 	 * Can be used like so:
 	 * if(Director::isLive()) Debug::send_errors_to("sam@silverstripe.com");
-	 *
+	 * 
 	 * @param string $emailAddress The email address to send errors to
 	 * @param string $sendWarnings Set to true to send warnings as well as errors (Default: false)
 	 */
@@ -498,82 +525,19 @@ class Debug {
 	}
 	
 	/**
-	 * Render or return a backtrace from the given scope.
-	 *
-	 * @param unknown_type $returnVal
-	 * @param unknown_type $ignoreAjax
-	 * @return unknown
+	 * @deprecated 2.5 Please use {@link SSBacktrace::backtrace()}
 	 */
 	static function backtrace($returnVal = false, $ignoreAjax = false) {
-		$bt = debug_backtrace();
-		$result = self::get_rendered_backtrace($bt, Director::is_cli() || (Director::is_ajax() && !$ignoreAjax));
-		if ($returnVal) {
-			return $result;
-		} else {
-			echo $result;
-		}
-	}
-		
-	/**
-	 * Render a backtrace array into an appropriate plain-text or HTML string.
-	 * @param $bt The trace array, as returned by debug_backtrace() or Exception::getTrace().
-	 * @param $plainText Set to false for HTML output, or true for plain-text output
-	 */
-	static function get_rendered_backtrace($bt, $plainText = false) {
-		// Ingore functions that are plumbing of the error handler
-		$ignoredFunctions = array('DebugView->writeTrace', 'CliDebugView->writeTrace', 
-			'Debug::emailError','Debug::warningHandler','Debug::fatalHandler','errorHandler','Debug::showError',
-			'Debug::backtrace', 'exceptionHandler');
-			
-		while( $bt && in_array(self::full_func_name($bt[0]), $ignoredFunctions) ) {
-			array_shift($bt);
-		}
-		
-		$result = "<ul>";
-		foreach($bt as $item) {
-			if($plainText) {
-				$result .= self::full_func_name($item,true) . "\n";
-				if(isset($item['line']) && isset($item['file'])) $result .= "line $item[line] of " . basename($item['file']) . "\n";
-				$result .= "\n";
-			} else {
-				if ($item['function'] == 'user_error') {
-					$name = $item['args'][0];
-				} else {
-					$name = self::full_func_name($item,true);
-				}
-				$result .= "<li><b>" . htmlentities($name) . "</b>\n<br />\n";
-				$result .= isset($item['line']) ? "Line $item[line] of " : '';
-				$result .=  isset($item['file']) ? htmlentities(basename($item['file'])) : ''; 
-				$result .= "</li>\n";
-			}
-		}
-		$result .= "</ul>";
-		return $result;
+		user_error('Debug::backtrace() is deprecated. Please use SSBacktrace::backtrace() instead', E_USER_NOTICE);
+		return SSBacktrace::backtrace($returnVal, $ignoreAjax);
 	}
 	
 	/**
-	 * Return the full function name.  If showArgs is set to true, a string representation of the arguments will be shown
+	 * @deprecated 2.5 Please use {@link SSBacktrace::get_rendered_backtrace()}
 	 */
-	static function full_func_name($item, $showArgs = false) {
-		$funcName = '';
-		if(isset($item['class'])) $funcName .= $item['class'];
-		if(isset($item['type'])) $funcName .= $item['type'];
-		if(isset($item['function'])) $funcName .= $item['function'];
-		
-		if($showArgs && isset($item['args'])) {
-			$args = array();
-			foreach($item['args'] as $arg) {
-				if(!is_object($arg) || method_exists($arg, '__toString')) {
-					$args[] = (string) $arg;
-				} else {
-					$args[] = get_class($arg);
-				}
-			}
-		
-			$funcName .= "(" . implode(",", $args)  .")";
-		}
-		
-		return $funcName;
+	static function get_rendered_backtrace($bt, $plainText = false) {
+		user_error('Debug::get_rendered_backtrace() is deprecated. Please use SSBacktrace::get_rendered_backtrace() instead', E_USER_NOTICE);
+		return SSBacktrace::get_rendered_backtrace($bt, $plainText);
 	}
 	
 	/**
