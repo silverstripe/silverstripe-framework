@@ -37,6 +37,7 @@ class SSBacktrace {
 			'CliDebugView->writeTrace',
 			'Debug::emailError',
 			'Debug::warningHandler',
+			'Debug::noticeHandler',
 			'Debug::fatalHandler',
 			'errorHandler',
 			'Debug::showError',

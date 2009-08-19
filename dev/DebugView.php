@@ -26,6 +26,10 @@ class DebugView {
 			'title' => 'Notice',
 			'class' => 'notice'
 		),
+		E_USER_NOTICE => array(
+			'title' => 'Notice',
+			'class' => 'notice'
+		),
 		E_CORE_ERROR => array(
 			'title' => 'Core Error',
 			'class' => 'error'

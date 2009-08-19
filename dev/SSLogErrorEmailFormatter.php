@@ -10,11 +10,19 @@ require_once 'Zend/Log/Formatter/Interface.php';
 class SSLogErrorEmailFormatter implements Zend_Log_Formatter_Interface {
 
 	public function format($event) {
-		$errorType = ($event['priorityName'] == 'WARN') ? 'Warning' : 'Error';
-		if($event['priorityName'] == 'WARN') {
-			$colour = "orange";
-		} else {
-			$colour = "red";
+		switch($event['priorityName']) {
+			case 'ERR':
+				$errorType = 'Error';
+				$colour = 'red';
+				break;
+			case 'WARN':
+				$errorType = 'Warning';
+				$colour = 'warning';
+				break;
+			case 'NOTICE':
+				$errorType = 'Notice';
+				$colour = 'grey';
+				break;
 		}
 
 		if(!is_array($event['message'])) {

@@ -5,11 +5,9 @@
  * Attaches custom methods to the default error handling hooks
  * in PHP. Currently, two levels of error are supported:
  * 
+ * - Notice
  * - Warning
  * - Error
- * 
- * Notice level errors are currently unsupported, and will be passed
- * directly to the normal PHP error output.
  * 
  * Uncaught exceptions are currently passed to the debug
  * reporter as standard PHP errors.
@@ -19,7 +17,6 @@
  * class documentation.
  * 
  * @todo add support for user defined config: Debug::die_on_notice(true | false)
- * @todo add appropriate handling for E_NOTICE and E_USER_NOTICE levels
  * @todo better way of figuring out the error context to display in highlighted source
  * 
  * @package sapphire
@@ -194,6 +191,26 @@ class Debug {
 	static function loadErrorHandlers() {
 		set_error_handler('errorHandler', error_reporting());
 		set_exception_handler('exceptionHandler');
+	}
+
+	static function noticeHandler($errno, $errstr, $errfile, $errline, $errcontext) {
+		if(error_reporting() == 0) return;
+		
+		// Send out the error details to the logger for writing
+		SSLog::log(
+			array(
+				'errno' => $errno,
+				'errstr' => $errstr,
+				'errfile' => $errfile,
+				'errline' => $errline,
+				'errcontext' => $errcontext
+			),
+			SSLog::NOTICE
+		);
+		
+		if(Director::isDev()) {
+		  self::showError($errno, $errstr, $errfile, $errline, $errcontext, "Notice");
+		}
 	}
 
 	/**
@@ -628,12 +645,15 @@ function errorHandler($errno, $errstr, $errfile, $errline) {
 			Debug::fatalHandler($errno, $errstr, $errfile, $errline, null);
 			break;
 
-		case E_NOTICE:
 		case E_WARNING:
 		case E_CORE_WARNING:
 		case E_USER_WARNING:
 			Debug::warningHandler($errno, $errstr, $errfile, $errline, null);
 			break;
 			
+		case E_NOTICE:
+		case E_USER_NOTICE:
+			Debug::noticeHandler($errno, $errstr, $errfile, $errline, null);
+			break;
 	}
 }
