@@ -434,16 +434,12 @@ class File extends DataObject {
 	}
 
 	function getRelativePath() {
-
 		if($this->ParentID) {
-			$p = DataObject::get_one('Folder', "\"ID\"={$this->ParentID}");
-
-			if($p && $p->ID) return $p->getRelativePath() . $this->getField("Name");
+			$p = DataObject::get_by_id('Folder', $this->ParentID);
+			if($p && $p->exists()) return $p->getRelativePath() . $this->getField("Name");
 			else return ASSETS_DIR . "/" . $this->getField("Name");
-
 		} else if($this->getField("Name")) {
 			return ASSETS_DIR . "/" . $this->getField("Name");
-
 		} else {
 			return ASSETS_DIR;
 		}
