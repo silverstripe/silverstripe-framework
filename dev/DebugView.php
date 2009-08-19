@@ -27,7 +27,7 @@ class DebugView {
 			'class' => 'notice'
 		),
 		E_USER_NOTICE => array(
-			'title' => 'Notice',
+			'title' => 'User Notice',
 			'class' => 'notice'
 		),
 		E_CORE_ERROR => array(
@@ -43,7 +43,7 @@ class DebugView {
 			'class' => 'warning'
 		),
 		E_USER_WARNING => array(
-			'title' => 'Warning',
+			'title' => 'User Warning',
 			'class' => 'warning'
 		)
 	);
