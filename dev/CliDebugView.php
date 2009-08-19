@@ -50,7 +50,7 @@ class CliDebugView extends DebugView {
 	 * Write a backtrace
 	 */
 	function writeTrace() {
-		Debug::backtrace();
+		SSBacktrace::backtrace();
 	}
 
 	/**

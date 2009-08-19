@@ -725,7 +725,7 @@ class Director {
 	 */
 	static function set_environment_type($et) {
 		if($et != 'dev' && $et != 'test' && $et != 'live') {
-			Debug::backtrace();
+			SSBacktrace::backtrace();
 			user_error("Director::set_environment_type passed '$et'.  It should be passed dev, test, or live", E_USER_WARNING);
 		} else {
 			self::$environment_type = $et;
