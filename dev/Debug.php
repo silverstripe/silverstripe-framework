@@ -648,7 +648,7 @@ function exceptionHandler($exception) {
  * @param int $errline
  */
 function errorHandler($errno, $errstr, $errfile, $errline) {
-    $bt = debug_backtrace();
+	$bt = debug_backtrace();
 	switch($errno) {
 		case E_ERROR:
 		case E_CORE_ERROR:
@@ -661,7 +661,7 @@ function errorHandler($errno, $errstr, $errfile, $errline) {
 		case E_USER_WARNING:
 			Debug::warningHandler($errno, $errstr, $errfile, $errline, null);
 			break;
-			
+
 		case E_NOTICE:
 		case E_USER_NOTICE:
 			Debug::noticeHandler($errno, $errstr, $errfile, $errline, null);
