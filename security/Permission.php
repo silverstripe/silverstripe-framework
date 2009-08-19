@@ -227,6 +227,7 @@ class Permission extends DataObject {
 
 	/**
 	 * Get all the 'any' permission codes available to the given member.
+	 * @return array();
 	 */
 	public static function permissions_for_member($memberID) {
 		$groupList = self::groupList($memberID);
