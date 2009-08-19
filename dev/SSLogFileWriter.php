@@ -1,0 +1,62 @@
+<?php
+/**
+ * Sends an error message to an email whenever an
+ * error occurs in sapphire.
+ * 
+ * Note: You need to make sure your web server is able
+ * to write to the file path that you specify to write
+ * logs to.
+ * 
+ * @uses error_log() built-in PHP function.
+ * @see SSLog for more information on using writers.
+ * 
+ * @package sapphire
+ * @subpackage dev
+ */
+
+require_once 'Zend/Log/Writer/Abstract.php';
+
+class SSLogFileWriter extends Zend_Log_Writer_Abstract {
+
+	/**
+	 * The path to the file that errors will be stored in.
+	 * For example, "/var/logs/silverstripe/errors.log".
+	 * 
+	 * @var string
+	 */
+	protected $path;
+	
+	/**
+	 * Message type to pass to error_log()
+	 * @see http://us3.php.net/manual/en/function.error-log.php
+	 * @var int
+	 */
+	protected $messageType;
+	
+	/**
+	 * Extra headers to pass to error_log()
+	 * @see http://us3.php.net/manual/en/function.error-log.php
+	 * @var string
+	 */
+	protected $extraHeaders;
+
+	public function __construct($path, $messageType = 3, $extraHeaders = '') {
+		$this->path = $path;
+		$this->messageType = $messageType;
+		$this->extraHeaders = $extraHeaders;
+	}
+
+	/**
+	 * Write the log message to the file path set
+	 * in this writer.
+	 */
+	public function _write($event) {
+		if(!$this->_formatter) {
+			$formatter = new SSLogErrorFileFormatter();
+			$this->setFormatter($formatter);
+		}
+		$message = $this->_formatter->format($event);
+		error_log($message, $this->messageType, $this->path, $this->extraHeaders);
+	}
+
+}

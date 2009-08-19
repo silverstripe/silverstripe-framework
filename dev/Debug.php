@@ -224,7 +224,9 @@ class Debug {
 	 */
 	static function warningHandler($errno, $errstr, $errfile, $errline, $errcontext) {
 		if(error_reporting() == 0) return;
-		if(self::$send_warnings_to) self::emailError(self::$send_warnings_to, $errno, $errstr, $errfile, $errline, $errcontext, "Warning");
+		if(self::$send_warnings_to) {
+			self::emailError(self::$send_warnings_to, $errno, $errstr, $errfile, $errline, $errcontext, "Warning");
+		}
 
 		// Send out the error details to the logger for writing
 		SSLog::log(
@@ -238,7 +240,9 @@ class Debug {
 			SSLog::WARN
 		);
 		
-		self::log_error_if_necessary( $errno, $errstr, $errfile, $errline, $errcontext, "Warning");
+		if(self::$log_errors_to) {
+			self::log_error_if_necessary( $errno, $errstr, $errfile, $errline, $errcontext, "Warning");
+		}
 
 		if(Director::isDev()) {
 			self::showError($errno, $errstr, $errfile, $errline, $errcontext, "Warning");
@@ -257,7 +261,9 @@ class Debug {
 	 * @param unknown_type $errcontext
 	 */
 	static function fatalHandler($errno, $errstr, $errfile, $errline, $errcontext) {
-		if(self::$send_errors_to) self::emailError(self::$send_errors_to, $errno, $errstr, $errfile, $errline, $errcontext, "Error");
+		if(self::$send_errors_to) {
+			self::emailError(self::$send_errors_to, $errno, $errstr, $errfile, $errline, $errcontext, "Error");
+		}
 		
 		// Send out the error details to the logger for writing
 		SSLog::log(
@@ -271,7 +277,9 @@ class Debug {
 			SSLog::ERR
 		);
 		
-		self::log_error_if_necessary( $errno, $errstr, $errfile, $errline, $errcontext, "Error");
+		if(self::$log_errors_to) {
+			self::log_error_if_necessary( $errno, $errstr, $errfile, $errline, $errcontext, "Error");
+		}
 		
 		if(Director::isDev() || Director::is_cli()) {
 			self::showError($errno, $errstr, $errfile, $errline, $errcontext, "Error");
@@ -422,7 +430,7 @@ class Debug {
 	 */
 	static function emailError($emailAddress, $errno, $errstr, $errfile, $errline, $errcontext, $errorType = "Error") {
 		user_error('Debug::send_errors_to() and Debug::emailError() is deprecated. Please use SSLog instead.
-			See the class documentation for SSLog for more information.', E_USER_NOTICE);
+			See the class documentation in SSLog.php for more information.', E_USER_NOTICE);
 		$priority = ($errorType == 'Error') ? SSLog::ERR : SSLog::WARN;
 		$writer = new SSLogEmailWriter($emailAddress);
 		SSLog::add_writer($writer, $priority);
@@ -447,22 +455,25 @@ class Debug {
 	 * 
 	 * @todo Detect script path for CLI errors
 	 * @todo Log detailed errors to full file
+	 * @deprecated 2.5 See SSLog on setting up error file logging
 	 */
 	protected static function log_error_if_necessary($errno, $errstr, $errfile, $errline, $errcontext, $errtype) {
-		if(self::$log_errors_to) {
-			$shortFile = "../" . self::$log_errors_to;
-			$fullFile = $shortFile . '.full';
-
-			$relfile = Director::makeRelative($errfile);
-			if($relfile[0] == '/') $relfile = substr($relfile,1);
-
-			$urlSuffix = "";
-			if(isset($_SERVER['HTTP_HOST']) && $_SERVER['HTTP_HOST'] && isset($_SERVER['REQUEST_URI'])) {
-				$urlSuffix = " (http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI])";
-			}
-			
-			error_log('[' . date('d-M-Y h:i:s') . "] $errtype at $relfile line $errline: $errstr$urlSuffix\n", 3, $shortFile);
-		}
+		user_error('Debug::log_error_if_necessary() and Debug::log_errors_to() are deprecated. Please use SSLog instead.
+			See the class documentation in SSLog.php for more information.', E_USER_NOTICE);
+		$priority = ($errtype == 'Error') ? SSLog::ERR : SSLog::WARN;
+		$writer = new SSLogFileWriter('../' . self::$log_errors_to);
+		SSLog::add_writer($writer, $priority);
+		SSLog::log(
+			array(
+				'errno' => $errno,
+				'errstr' => $errstr,
+				'errfile' => $errfile,
+				'errline' => $errline,
+				'errcontext' => $errcontext
+			),
+			$priority
+		);
+		SSLog::remove_writer($writer);
 	}
 	
 	/**
@@ -522,6 +533,7 @@ class Debug {
 	
 	/**
 	 * Call this to enable logging of errors.
+	 * @deprecated 2.5 See SSLog on setting up error file logging
 	 */
 	static function log_errors_to($logFile = ".sserrors") {
 		self::$log_errors_to = $logFile;

@@ -23,8 +23,8 @@ class SSLogEmailWriter extends Zend_Log_Writer_Abstract {
 	}
 
 	/**
-	 * Send an email to the designated emails set in
-	 * {@link Debug::send_errors_to()}
+	 * Send an email to the email address set in
+	 * this writer.
 	 */
 	public function _write($event) {
 		// If no formatter set up, use the default

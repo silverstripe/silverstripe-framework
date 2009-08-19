@@ -12,11 +12,28 @@
  * 
  * You can add an error writer by calling {@link SSLog::add_writer()}
  * 
- * Example usage (called from mysite/_config.php) which adds a writer
- * that will write all errors:
+ * Example usage of logging errors by email notification:
  * <code>
- * $emailWriter = new SSErrorEmailWriter('my@email.com');
- * SSLog::add_writer($emailWriter, SSLog::ERR);
+ * $logEmailWriter = new SSErrorEmailWriter('my@email.com');
+ * SSLog::add_writer($logEmailWriter, SSLog::ERR);
+ * </code>
+ * 
+ * Example usage of logging errors by file:
+ * <code>
+ *	$logFileWriter = new SSLogFileWriter('/var/log/silverstripe/errors.log');
+ *	SSLog::add_writer($logFileWriter, SSLog::ERR);
+ * </code>
+ *
+ * Each writer object can be assigned a formatter. The formatter is
+ * responsible for formatting the message before giving it to the writer.
+ * {@link SSLogErrorEmailFormatter} is such an example that formats errors
+ * into HTML for human readability in an email client.
+ * 
+ * Formatters are added to writers like this:
+ * <code>
+ * $logEmailWriter = new SSErrorEmailWriter('my@email.com');
+ * $myEmailFormatter = new MyLogEmailFormatter();
+ * $logEmailWriter->setFormatter($myEmailFormatter);
  * </code>
  * 
  * @package sapphire
@@ -63,6 +80,13 @@ class SSLog {
 	 */
 	public static function get_writers() {
 		return self::get_logger()->getWriters();
+	}
+
+	/**
+	 * Remove all writers currently in use.
+	 */
+	public static function clear_writers() {
+		self::get_logger()->clearWriters();
 	}
 
 	/**

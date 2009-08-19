@@ -1,10 +1,10 @@
 <?php
 /**
- * Modifications to Zend_Log to make it work nicer
- * with {@link SSLog}. Specifically, this includes removing
- * writers that have been added to the logger, as well as
- * listing which ones are currently in use since the Zend_Log
- * API does not support these methods.
+ * Extensions to Zend_Log to make it work nicer
+ * with {@link SSLog}.
+ * 
+ * Please refer to {@link SSLog} for information on
+ * setting up logging for your projects.
  * 
  * @package sapphire
  * @subpackage dev
@@ -14,14 +14,16 @@ require_once 'Zend/Log.php';
 
 class SSZendLog extends Zend_Log {
 
+	/**
+	 * Get all writers in this logger.
+	 * @return array of Zend_Log_Writer_Abstract instances
+	 */
 	public function getWriters() {
 		return $this->_writers;
 	}
 
 	/**
-	 * Remove a writer instance that exists in
-	 * the current writers collection for this logger.
-	 * 
+	 * Remove a writer instance that exists in this logger.
 	 * @param object Zend_Log_Writer_Abstract instance
 	 */
 	public function removeWriter($writer) {
@@ -30,6 +32,13 @@ class SSZendLog extends Zend_Log {
 				unset($this->_writers[$index]);
 			}
 		}
+	}
+
+	/**
+	 * Clear all writers in this logger.
+	 */
+	public function clearWriters() {
+		$this->_writers = array();
 	}
 
 }
