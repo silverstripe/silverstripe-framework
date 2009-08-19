@@ -17,7 +17,7 @@ class SSLogErrorEmailFormatter implements Zend_Log_Formatter_Interface {
 				break;
 			case 'WARN':
 				$errorType = 'Warning';
-				$colour = 'warning';
+				$colour = 'orange';
 				break;
 			case 'NOTICE':
 				$errorType = 'Notice';
