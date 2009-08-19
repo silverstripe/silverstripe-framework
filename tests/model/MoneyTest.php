@@ -15,6 +15,12 @@ class MoneyTest extends SapphireTest {
 	
 	static $fixture_file = 'sapphire/tests/model/MoneyTest.yml';
 	
+	function testMoneyFieldsReturnedAsObjects() {
+		$obj = $this->objFromFixture('MoneyTest_DataObject', 'test1');
+		$this->assertType('Money', $obj->MyMoney);
+	}
+
+	
 	function testLoadFromFixture() {
 		$obj = $this->objFromFixture('MoneyTest_DataObject', 'test1');
 		
@@ -30,8 +36,9 @@ class MoneyTest extends SapphireTest {
 		$curr = $obj->obj('MyMoney');
 		$changed = $obj->getChangedFields();
 		$this->assertNotContains('MyMoney', array_keys($changed));
-
+		
 		// With changes
+		$this->assertType('Money', $obj->MyMoney);
 		$obj->MyMoney->setAmount(99);
 		$changed = $obj->getChangedFields();
 		$this->assertContains('MyMoney', array_keys($changed));
