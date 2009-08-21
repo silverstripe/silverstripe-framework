@@ -77,9 +77,9 @@ class ManifestBuilder {
 
 		// The dev/build reference is some coupling but it solves an annoying bug
 		if(!file_exists($testManifestFile) 
-			|| (filemtime($testManifestFile) < filemtime($testManifestFile)) 
+			|| (filemtime($testManifestFile) < filemtime(BASE_PATH)) 
 			|| isset($_GET['flush'])) {
-
+				
 			// Build the manifest, including the tests/ folders
 			$manifestInfo = self::get_manifest_info(BASE_PATH);
 			$manifest = self::generate_php_file($manifestInfo);
