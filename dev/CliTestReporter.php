@@ -34,9 +34,6 @@ class CliTestReporter extends SapphireTestReporter {
 		if(function_exists('memory_get_peak_usage')) {
 			echo "Maximum memory usage: " . number_format(memory_get_peak_usage()/(1024*1024), 1) . "M\n\n";
 		}
-
-		$totalTime = array_sum($this->testSpeeds);
-		echo "Total time: " . round($totalTime,3) . " seconds\n";
 		
 		// Use sake dev/tests/all --showslow to show slow tests
 		if((isset($_GET['args']) && is_array($_GET['args']) && in_array('--showslow', $_GET['args'])) || isset($_GET['showslow'])) {
