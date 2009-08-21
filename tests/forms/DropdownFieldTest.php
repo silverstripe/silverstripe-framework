@@ -24,6 +24,14 @@ class DropdownFieldTest extends SapphireTest {
 		);
 	}
 	
+	function testReadonlyField() {
+		$dropdownField = new DropdownField('FeelingOk', 'Are you feeling ok?', array(0 => 'No', 1 => 'Yes'), '', null, '(Select one)');
+		$dropdownField->setValue(1);
+		$readonlyDropdownField = $dropdownField->performReadonlyTransformation();
+		preg_match('/Yes/', $dropdownField->Field(), $matches);
+		$this->assertEquals($matches[0], 'Yes');
+	}
+	
 	function testEmptyStringAsBooleanConstructorArgument() {
 		$source = array(1=>'one');
 		$field = new DropdownField('Field', null, $source, null, null, true);
