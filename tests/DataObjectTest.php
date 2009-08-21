@@ -757,6 +757,11 @@ class DataObjectTest extends SapphireTest {
 		$this->assertEquals(array('obj1', 'obj2'), $values);
 	}
 	
+	function testClassNameSetForNewObjects() {
+		$d = new DataObjectTest_Player();
+		$this->assertEquals('DataObjectTest_Player', $d->ClassName);
+	}
+	
 }
 
 class DataObjectTest_Player extends Member implements TestOnly {
