@@ -305,6 +305,38 @@ class SiteTreeTest extends SapphireTest {
 		$this->assertFalse($product4->canEdit($editor));
 	}
 
+	function testAuthorIDAndPublisherIDFilledOutOnPublish() {
+		// Ensure that we have a member ID who is doing all this work
+		$member = Member::currentUser();
+		if($member) {
+			$memberID = $member->ID;
+		} else {
+			$memberID = $this->idFromFixture("Member", "admin");
+			Session::set("loggedInAs", $memberID);
+		}
+
+		// Write the page
+		$about = $this->objFromFixture('Page','about');
+		$about->Title = "Another title";
+		$about->write();
+		
+		// Check the version created
+		$savedVersion = DB::query("SELECT AuthorID, PublisherID FROM SiteTree_versions 
+			WHERE RecordID = $about->ID ORDER BY Version DESC LIMIT 1")->record();
+		$this->assertEquals($memberID, $savedVersion['AuthorID']);
+		$this->assertEquals(0, $savedVersion['PublisherID']);
+		
+		// Publish the page
+		$about->doPublish();
+		$publishedVersion = DB::query("SELECT AuthorID, PublisherID FROM SiteTree_versions 
+			WHERE RecordID = $about->ID ORDER BY Version DESC LIMIT 1")->record();
+			
+		// Check the version created
+		$this->assertEquals($memberID, $publishedVersion['AuthorID']);
+		$this->assertEquals($memberID, $publishedVersion['PublisherID']);
+		
+	}
+
 }
 
 // We make these extend page since that's what all page types are expected to do

@@ -309,7 +309,7 @@ class Versioned extends DataObjectDecorator {
 		foreach($tables as $table) {
 			$baseDataClass = ClassInfo::baseDataClass($table);
 			
-			$isRootClass = ($this->owner->class == ClassInfo::baseDataClass($this->owner->class));
+			$isRootClass = ($table == $baseDataClass);
 			
 			// Make sure that the augmented write is being applied to a table that can be versioned
 			if( !$this->canBeVersioned($table) ) {
