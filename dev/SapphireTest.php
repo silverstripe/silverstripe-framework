@@ -279,7 +279,152 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
             );
 		}
 	}
+
+
+	/**
+	 * Assert that the given {@link DataObjectSet} includes DataObjects matching the given key-value
+	 * pairs.  Each match must correspond to 1 distinct record.
+	 * 
+	 * @param $matches The patterns to match.  Each pattern is a map of key-value pairs.  You can
+	 * either pass a single pattern or an array of patterns.
+	 * @param $dataObjectSet The {@link DataObjectSet} to test.
+	 *
+	 * Examples
+	 * --------
+	 * Check that $members includes an entry with Email = sam@example.com:
+	 *      $this->assertDOSContains(array('Email' => '...@example.com'), $members); 
+	 * 
+	 * Check that $members includes entries with Email = sam@example.com and with 
+	 * Email = ingo@example.com:
+	 *      $this->assertDOSContains(array( 
+	 *         array('Email' => '...@example.com'), 
+	 *         array('Email' => 'i...@example.com'), 
+	 *      ), $members); 
+	 */
+	function assertDOSContains($matches, $dataObjectSet) {
+		$extracted = array();
+		foreach($dataObjectSet as $item) $extracted[] = $item->toMap();
+		
+		foreach($matches as $match) {
+			$matched = false;
+			foreach($extracted as $i => $item) {
+				if($this->dataObjectArrayMatch($item, $match)) {
+					// Remove it from $extracted so that we don't get duplicate mapping.
+					unset($extracted[$i]);
+					$matched = true;
+					break;
+				}
+			}
+
+			// We couldn't find a match - assertion failed
+			if(!$matched) {
+				throw new PHPUnit_Framework_AssertionFailedError(
+	                "Failed asserting that the DataObjectSet contains an item matching "
+						. var_export($match, true) . "\n\nIn the following DataObjectSet:\n" 
+						. $this->DOSSummaryForMatch($dataObjectSet, $match)
+	            );
+			}
+
+		}
+	} 
 	
+	/**
+	 * Assert that the given {@link DataObjectSet} includes only DataObjects matching the given 
+	 * key-value pairs.  Each match must correspond to 1 distinct record.
+	 * 
+	 * @param $matches The patterns to match.  Each pattern is a map of key-value pairs.  You can
+	 * either pass a single pattern or an array of patterns.
+	 * @param $dataObjectSet The {@link DataObjectSet} to test.
+	 *
+	 * Example
+	 * --------
+	 * Check that *only* the entries Sam Minnee and Ingo Schommer exist in $members.  Order doesn't 
+	 * matter:
+	 *     $this->assertDOSEquals(array( 
+	 *        array('FirstName' =>'Sam', 'Surname' => 'Minnee'), 
+	 *        array('FirstName' => 'Ingo', 'Surname' => 'Schommer'), 
+	 *      ), $members); 
+	 */
+	function assertDOSEquals($matches, $dataObjectSet) {
+		$extracted = array();
+		foreach($dataObjectSet as $item) $extracted[] = $item->toMap();
+		
+		foreach($matches as $match) {
+			$matched = false;
+			foreach($extracted as $i => $item) {
+				if($this->dataObjectArrayMatch($item, $match)) {
+					// Remove it from $extracted so that we don't get duplicate mapping.
+					unset($extracted[$i]);
+					$matched = true;
+					break;
+				}
+			}
+
+			// We couldn't find a match - assertion failed
+			if(!$matched) {
+				throw new PHPUnit_Framework_AssertionFailedError(
+	                "Failed asserting that the DataObjectSet contains an item matching "
+						. var_export($match, true) . "\n\nIn the following DataObjectSet:\n" 
+						. $this->DOSSummaryForMatch($dataObjectSet, $match)
+	            );
+			}
+		}
+		
+		// If we have leftovers than the DOS has extra data that shouldn't be there
+		if($extracted) {
+			// If we didn't break by this point then we couldn't find a match
+			throw new PHPUnit_Framework_AssertionFailedError(
+	            "Failed asserting that the DataObjectSet contained only the given items, the "
+					. "following items were left over:\n" . var_export($extracted, true)
+	        );
+		}
+	} 
+
+	/**
+	 * Assert that the every record in the given {@link DataObjectSet} matches the given key-value
+	 * pairs.
+	 * 
+	 * @param $match The pattern to match.  The pattern is a map of key-value pairs.
+	 * @param $dataObjectSet The {@link DataObjectSet} to test.
+	 *
+	 * Example
+	 * --------
+	 * Check that every entry in $members has a Status of 'Active':
+	 *     $this->assertDOSAllMatch(array('Status' => 'Active'), $members); 
+	 */
+	function assertDOSAllMatch($match, $dataObjectSet) {
+		$extracted = array();
+		foreach($dataObjectSet as $item) $extracted[] = $item->toMap();
+
+		foreach($extracted as $i => $item) {
+			if(!$this->dataObjectArrayMatch($item, $match)) {
+				throw new PHPUnit_Framework_AssertionFailedError(
+		            "Failed asserting that the the following item matched " 
+					. var_export($match, true) . ": " . var_export($item, true)
+		        );
+			}
+		}
+	} 
+	
+	/**
+	 * Helper function for the DOS matchers
+	 */
+	private function dataObjectArrayMatch($item, $match) {
+		foreach($match as $k => $v) {
+			if(!isset($item[$k]) || $item[$k] != $v) return false;
+		}
+		return true;
+	}
+
+	/**
+	 * Helper function for the DOS matchers
+	 */
+	private function DOSSummaryForMatch($dataObjectSet, $match) {
+		$extracted = array();
+		foreach($dataObjectSet as $item) $extracted[] = array_intersect_key($item->toMap(), $match);
+		return var_export($extracted, true);
+	}
+
 	/**
 	 * Returns true if we are currently using a temporary database
 	 */
