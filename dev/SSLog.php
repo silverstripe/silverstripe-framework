@@ -101,9 +101,13 @@ class SSLog {
 	 * Add a writer instance to the logger.
 	 * @param object $writer Zend_Log_Writer_Abstract instance
 	 * @param const $priority Priority. Possible values: SSLog::ERR or SSLog::WARN
+	 * @param $comparison Priority comparison operator.  Acts on the integer values of the error
+	 * levels, where more serious errors are lower numbers.  By default this is "=", which means only
+	 * the given priority will be logged.  Set to "<=" if you want to track errors of *at least* 
+	 * the given priority.
 	 */
-	public static function add_writer($writer, $priority = null) {
-		if($priority) $writer->addFilter(new Zend_Log_Filter_Priority($priority, '='));
+	public static function add_writer($writer, $priority = null, $comparison = '=') {
+		if($priority) $writer->addFilter(new Zend_Log_Filter_Priority($priority, $comparison));
 		self::get_logger()->addWriter($writer);
 	}
 
