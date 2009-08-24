@@ -181,7 +181,6 @@ class Text extends DBField {
 			return "";
 			
 		$sentences = explode( '.', $data );	
-		
 		$count = count( explode( ' ', $sentences[0] ) );
 		
 		// if the first sentence is too long, show only the first $maxWords words
@@ -190,13 +189,15 @@ class Text extends DBField {
 		}
 		// add each sentence while there are enough words to do so
 		do {
-			$result .= trim(array_shift( $sentences )).'. ' ;
-			$count += count( explode( ' ', $sentences[0] ) );
+			$result .= trim(array_shift($sentences));
+			if($sentences) {
+				$result .= '. ';
+				$count += count(explode(' ', $sentences[0]));
+			}
 			
 			// Ensure that we don't trim half way through a tag or a link
 			$brokenLink = (substr_count($result,'<') != substr_count($result,'>')) ||
 				(substr_count($result,'<a') != substr_count($result,'</a'));
-			
 		} while( ($count < $maxWords || $brokenLink) && $sentences && trim( $sentences[0] ) );
 		
 		if( preg_match( '/<a[^>]*>/', $result ) && !preg_match( '/<\/a>/', $result ) )

@@ -87,5 +87,22 @@ class TextTest extends SapphireTest {
 		}
 	}
 	
+	/**
+	 * Test {@link Text->BigSummary()}
+	 */
+	function testBigSummary() {
+		$cases = array(
+			'This text has multiple sentences. Big Summary uses this to split sentences up.' => 'This text has multiple...',
+			'This text does not have multiple sentences' => 'This text does not...',
+			'Very short' => 'Very short',
+			'' => ''
+		);
+		
+		foreach($cases as $originalValue => $expectedValue) {
+			$textObj = DBField::create('Text', $originalValue);
+			$this->assertEquals($expectedValue, $textObj->BigSummary(4));
+		}
+	}
+	
 }
 ?>
