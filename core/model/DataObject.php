@@ -2461,7 +2461,8 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 						}
 					}
 					if($compositeFields) foreach($compositeFields as $k => $v) {
-						$this->dbObject($k)->addToQuery($query);
+						$dbO = $this->dbObject($k);
+						if($dbO) $dbO->addToQuery($query);
 					}
 				}
 			}
