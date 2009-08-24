@@ -67,6 +67,7 @@ class Folder extends File {
 		if($dbChildren) {
 			foreach($dbChildren as $dbChild) {
 				$className = $dbChild['ClassName'];
+				if(!$className) $className = "File";
 				$hasDbChild[$dbChild['Name']] = new $className($dbChild);
 			}
 		}
