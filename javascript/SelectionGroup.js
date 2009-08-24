@@ -6,7 +6,7 @@ $(document).ready(function() {
 		
 		var prev = li.prevAll('li.selected');
 		if(prev.length) prev.removeClass('selected');
-		var next = li.prevAll('li.selected');
+		var next = li.nextAll('li.selected');
 		if(next.length) next.removeClass('selected');
 	});
 })
