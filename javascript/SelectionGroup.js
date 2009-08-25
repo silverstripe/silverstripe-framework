@@ -8,6 +8,8 @@ $(document).ready(function() {
 		if(prev.length) prev.removeClass('selected');
 		var next = li.nextAll('li.selected');
 		if(next.length) next.removeClass('selected');
+		
+		$(this).focus();
 	});
 })
 })(jQuery);
