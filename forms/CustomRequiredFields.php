@@ -57,7 +57,7 @@ class CustomRequiredFields extends RequiredFields{
 		}
 		if($this->required){
                         foreach($this->required as $key => $fieldName) {
-                                $formField = $fields->dataFieldByName($fieldName);
+                if(is_string($fieldName)) $formField = $fields->dataFieldByName($fieldName);
 				if(is_array($fieldName) && isset($fieldName['php'])){
 					eval($fieldName['php']);
 				}else if($formField) {
