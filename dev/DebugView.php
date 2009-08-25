@@ -122,9 +122,10 @@ class DebugView {
 	 */
 	public function writeError($httpRequest, $errno, $errstr, $errfile, $errline, $errcontext) {
 		$errorType = self::$error_types[$errno];
+		$httpRequestEnt = htmlentities($httpRequest);
 		echo '<div class="info ' . $errorType['class'] . '">';
 		echo "<h1>[" . $errorType['title'] . '] ' . strip_tags($errstr) . "</h1>";
-		echo "<h3>$httpRequest</h3>";
+		echo "<h3>$httpRequestEnt</h3>";
 		echo "<p>Line <strong>$errline</strong> in <strong>$errfile</strong></p>";
 		echo '</div>';
 	}
