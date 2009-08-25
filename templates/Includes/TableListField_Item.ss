@@ -1,7 +1,7 @@
 					<tr id="record-$Parent.id-$ID"<% if HighlightClasses %> class="$HighlightClasses"<% end_if %>>
 						<% if Markable %><td width="16" class="markingcheckbox">$MarkingCheckbox</td><% end_if %>
 						<% control Fields %>
-						<td class="field-$Title.HTMLATT $FirstLast">$Value</td>
+						<td class="field-$Title.HTMLATT $FirstLast $Name">$Value</td>
 						<% end_control %>
 						<% control Actions %>
 							<td width="16">
