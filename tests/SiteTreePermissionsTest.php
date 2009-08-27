@@ -63,7 +63,7 @@ class SiteTreePermissionsTest extends FunctionalTest {
 			302,
 			'Unauthenticated members cant view a page marked as "Viewable for any logged in users"'
 		);
-
+	
 		// website users
 		$websiteuser = $this->objFromFixture('Member', 'websiteuser');
 		$this->assertTrue(
@@ -179,7 +179,7 @@ class SiteTreePermissionsTest extends FunctionalTest {
 	function testRestrictedViewInheritance() {
 		$parentPage = $this->objFromFixture('Page', 'parent_restrictedViewOnlySubadminGroup');
 		$childPage = $this->objFromFixture('Page', 'child_restrictedViewOnlySubadminGroup');
-
+	
 		// unauthenticated users
 		$this->assertFalse(
 			$childPage->canView(FALSE),
@@ -192,7 +192,7 @@ class SiteTreePermissionsTest extends FunctionalTest {
 			302,
 			'Unauthenticated members cant view a page marked as "Viewable by these groups" by inherited permission'
 		);
-
+	
 		// subadmin users
 		$subadminuser = $this->objFromFixture('Member', 'subadmin');
 		$this->assertTrue(
@@ -212,13 +212,13 @@ class SiteTreePermissionsTest extends FunctionalTest {
 	function testRestrictedEditInheritance() {
 		$parentPage = $this->objFromFixture('Page', 'parent_restrictedEditOnlySubadminGroup');
 		$childPage = $this->objFromFixture('Page', 'child_restrictedEditOnlySubadminGroup');
-
+	
 		// unauthenticated users
 		$this->assertFalse(
 			$childPage->canEdit(FALSE),
 			'Unauthenticated members cant edit a page marked as "Editable by these groups" by inherited permission'
 		);
-
+	
 		// subadmin users
 		$subadminuser = $this->objFromFixture('Member', 'subadmin');
 		$this->assertTrue(
@@ -230,7 +230,7 @@ class SiteTreePermissionsTest extends FunctionalTest {
 	function testDeleteRestrictedChild() {
 		$parentPage = $this->objFromFixture('Page', 'deleteTestParentPage');
 		$childPage = $this->objFromFixture('Page', 'deleteTestChildPage');
-
+	
 		// unauthenticated users
 		$this->assertFalse(
 			$parentPage->canDelete(FALSE),
@@ -241,6 +241,24 @@ class SiteTreePermissionsTest extends FunctionalTest {
 			'Unauthenticated members cant delete a child page marked as "Editable by these groups"'
 		);
 	}
+	
+	function testRestrictedEditLoggedInUsersDeletedFromStage() {
+		$page = $this->objFromFixture('Page', 'restrictedEditLoggedInUsers');
+		$pageID = $page->ID;
+		
+		$page->doPublish();
+		$page->deleteFromStage('Stage');
 
+		// Get the live version of the page
+		$page = Versioned::get_one_by_stage("SiteTree", "Live", "\"SiteTree\".ID = $pageID");
+		
+		// subadmin users
+		$subadminuser = $this->objFromFixture('Member', 'subadmin');
+		$this->assertTrue(
+			$page->canEdit($subadminuser),
+			'Authenticated members can edit a page that was deleted from stage and marked as "Editable by logged in users" if they have cms permissions and belong to any of these groups'
+		);
+	}
+	
 }
 ?>
