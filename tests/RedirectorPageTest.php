@@ -18,13 +18,13 @@ class RedirectorPageTest extends FunctionalTest {
 
 		/* An error message will be shown if you visit it */
 		$content = $this->get(Director::makeRelative($page1->Link()))->getBody();
-		$this->assertContains(_t('RedirectorPage.HASBEENSETUP'), $content);
+		$this->assertContains('message-setupWithoutRedirect', $content);
 
 		/* This also applies for internal links */
 		$page2 = $this->objFromFixture('RedirectorPage','badinternal');
 		$this->assertEquals(Director::baseURL() . 'bad-internal/', $page2->Link());
 		$content = $this->get(Director::makeRelative($page2->Link()))->getBody();
-		$this->assertContains(_t('RedirectorPage.HASBEENSETUP'), $content);
+		$this->assertContains('message-setupWithoutRedirect', $content);
 	}
 
 	function testReflexiveAndTransitiveInternalRedirectors() {
@@ -32,7 +32,7 @@ class RedirectorPageTest extends FunctionalTest {
 		$page = $this->objFromFixture('RedirectorPage','reflexive');
 		$this->assertEquals(Director::baseURL() . 'reflexive/', $page->Link());
 		$content = $this->get(Director::makeRelative($page->Link()))->getBody();
-		$this->assertContains(_t('RedirectorPage.HASBEENSETUP'), $content);
+		$this->assertContains('message-setupWithoutRedirect', $content);
 
 		/* Transitive redirectors are those that point to another redirector page.  They should send people to the URLSegment
 		 * of the destination page - the middle-stop, so to speak.  That should redirect to the final destination */

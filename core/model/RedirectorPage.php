@@ -143,7 +143,7 @@ class RedirectorPage_Controller extends Page_Controller {
 	 */
 	function index() {
 		return array(
-			"Content" => "<p>" .
+			"Content" => "<p class=\"message-setupWithoutRedirect\">" .
 			_t('RedirectorPage.HASBEENSETUP', 'A redirector page has been set up without anywhere to redirect to.') .
 			"</p>"
 		);
