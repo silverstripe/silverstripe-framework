@@ -2175,6 +2175,10 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		return $this->ParentID == 0 ? 'root' : 'subpage';
 	}
 	
+	static function reset() {
+		self::$cache_permissions = array();
+	}
+
 }
 
 ?>
