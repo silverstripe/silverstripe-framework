@@ -445,7 +445,7 @@ class Versioned extends DataObjectDecorator {
 	function publish($fromStage, $toStage, $createNewVersion = false) {
 		$baseClass = $this->owner->class;
 		while( ($p = get_parent_class($baseClass)) != "DataObject") $baseClass = $p;
-		$extTable = $this->extendWithSuffix($baseClass);//die($extTable);
+		$extTable = $this->extendWithSuffix($baseClass);
 		
 		if(is_numeric($fromStage)) {
 			$from = Versioned::get_version($baseClass, $this->owner->ID, $fromStage);
