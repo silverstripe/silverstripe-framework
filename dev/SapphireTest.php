@@ -31,6 +31,14 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	
 	protected static $is_running_test = false;
 	
+	/**
+	 * We need to disabling backing up of globals to avoid overriding
+	 * the few globals SilverStripe relies on, like $lang for the i18n subsystem.
+	 * 
+	 * @see http://sebastian-bergmann.de/archives/797-Global-Variables-and-PHPUnit.html
+	 */
+	protected $backupGlobals = FALSE;
+	
 	public static function is_running_test() {
 		return self::$is_running_test;
 	}
