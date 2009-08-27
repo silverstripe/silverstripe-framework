@@ -810,6 +810,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		
 		// Regular canEdit logic is handled by can_edit_multiple
 		$results = self::can_edit_multiple(array($this->ID), $memberID);
+		
 		return $results[$this->ID];
 	}
 
@@ -910,47 +911,52 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 			//$ids = array_keys(array_filter(self::can_view_multiple($ids, $memberID)));
 		
 			// Get the groups that the given member belongs to
-			//Debug::message("can_edit_multiple");
 			$groupIDs = DataObject::get_by_id('Member', $memberID)->Groups()->column("ID");
 			$SQL_groupList = implode(", ", $groupIDs);
 
-			// Get the uninherited permissions
-			$uninheritedPermissions = DataObject::get("SiteTree", "(CanEditType = 'LoggedInUsers' OR
-				(CanEditType = 'OnlyTheseUsers' AND \"SiteTree_EditorGroups\".SiteTreeID IS NOT NULL))
-				AND \"SiteTree\".ID IN ($SQL_idList)",
-				"",
-				"LEFT JOIN \"SiteTree_EditorGroups\" 
-				ON \"SiteTree_EditorGroups\".\"SiteTreeID\" = \"SiteTree\".\"ID\"
-				AND \"SiteTree_EditorGroups\".\"GroupID\" IN ($SQL_groupList)");
+			$combinedStageResult = array();
 			
-			if($uninheritedPermissions) {
-				// Set all the relevant items in $result to true
-				$result = array_fill_keys($uninheritedPermissions->column('ID'), true) + $result;
-			}
-		
-			// Get permissions that are inherited
-			$potentiallyInherited = DataObject::get("SiteTree", "CanEditType = 'Inherit'
-				AND \"SiteTree\".ID IN ($SQL_idList)");
-			
-			if($potentiallyInherited) {
-				// Group $potentiallyInherited by ParentID; we'll look at the permission of all those
-				// parents and then see which ones the user has permission on
-				foreach($potentiallyInherited as $item) {
-					$groupedByParent[$item->ParentID][] = $item->ID;
+			foreach(array('Stage', 'Live') as $stage) {
+				// Get the uninherited permissions
+				$uninheritedPermissions = Versioned::get_by_stage("SiteTree", $stage, "(CanEditType = 'LoggedInUsers' OR
+					(CanEditType = 'OnlyTheseUsers' AND \"SiteTree_EditorGroups\".SiteTreeID IS NOT NULL))
+					AND \"SiteTree\".ID IN ($SQL_idList)",
+					"",
+					"LEFT JOIN \"SiteTree_EditorGroups\" 
+					ON \"SiteTree_EditorGroups\".\"SiteTreeID\" = \"SiteTree\".\"ID\"
+					AND \"SiteTree_EditorGroups\".\"GroupID\" IN ($SQL_groupList)");
+
+				if($uninheritedPermissions) {
+					// Set all the relevant items in $result to true
+					$result = array_fill_keys($uninheritedPermissions->column('ID'), true) + $result;
 				}
-		
-				$actuallyInherited = self::can_edit_multiple(array_keys($groupedByParent), $memberID);
-				if($actuallyInherited) {
-					$parentIDs = array_keys(array_filter($actuallyInherited));
-					foreach($parentIDs as $parentID) {
-						// Set all the relevant items in $result to true
-						$result = array_fill_keys($groupedByParent[$parentID], true) + $result;
+
+				// Get permissions that are inherited
+				$potentiallyInherited = Versioned::get_by_stage("SiteTree", $stage, "CanEditType = 'Inherit'
+					AND \"SiteTree\".ID IN ($SQL_idList)");
+
+				if($potentiallyInherited) {
+					// Group $potentiallyInherited by ParentID; we'll look at the permission of all those
+					// parents and then see which ones the user has permission on
+					foreach($potentiallyInherited as $item) {
+						$groupedByParent[$item->ParentID][] = $item->ID;
+					}
+
+					$actuallyInherited = self::can_edit_multiple(array_keys($groupedByParent), $memberID);
+					if($actuallyInherited) {
+						$parentIDs = array_keys(array_filter($actuallyInherited));
+						foreach($parentIDs as $parentID) {
+							// Set all the relevant items in $result to true
+							$result = array_fill_keys($groupedByParent[$parentID], true) + $result;
+						}
 					}
 				}
 			}
+
+			$combinedStageResult = $combinedStageResult + $result;
 		}
-		
-		return $result;
+
+		return $combinedStageResult;
 		
 		
 		/*
@@ -2063,7 +2069,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		$stageVersion = Versioned::get_versionnumber_by_stage('SiteTree', 'Stage', $this->ID);
 
 		// Return true for both completely deleted pages and for pages just deleted from stage.
-		return !$stageVersion;
+		return !($stageVersion);
 	}
 	
 	/**
@@ -2168,7 +2174,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	function getParentType() {
 		return $this->ParentID == 0 ? 'root' : 'subpage';
 	}
-
+	
 }
 
 ?>
