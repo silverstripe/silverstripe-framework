@@ -2139,11 +2139,11 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 			),
 			'SITETREE_VIEW_ALL' => _t(
 				'SiteTree.VIEW_ALL_DESCRIPTION',
-				'Can view any page on the site, regard of the settings on the Access tab'
+				'Can view any page on the site, bypassing page specific security'
 			),
 			'SITETREE_EDIT_ALL' => _t(
 				'SiteTree.EDIT_ALL_DESCRIPTION',
-				'Can edit any page on the site, regard of the settings on the Access tab'
+				'Can edit any page on the site, bypassing page specific security'
 			),
 			'SITETREE_REORGANISE' => _t(
 				'SiteTree.REORGANISE_DESCRIPTION',
