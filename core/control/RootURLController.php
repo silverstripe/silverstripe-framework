@@ -57,7 +57,7 @@ class RootURLController extends Controller {
 		$host = str_replace('www.','',$host);
 		$SQL_host = Convert::raw2sql($host);
 		
-        $homePageOBJs = DataObject::get("SiteTree", "HomepageForDomain LIKE '%$SQL_host%'");
+        $homePageOBJs = DataObject::get("SiteTree", "\"HomepageForDomain\" LIKE '%$SQL_host%'");
 		if($homePageOBJs) foreach($homePageOBJs as $candidateObj) {
 			if(preg_match('/(,|^) *' . preg_quote($host) . ' *(,|$)/', $candidateObj->HomepageForDomain)) {
 				$homePageOBJ = $candidateObj;
