@@ -441,7 +441,7 @@ HTML;
 	 * Get the children of this folder that are also folders.
 	 */
 	function ChildFolders() {
-		return DataObject::get("Folder", "ParentID = " . (int)$this->ID);
+		return DataObject::get("Folder", "\"ParentID\" = " . (int)$this->ID);
 	}
 }
 
