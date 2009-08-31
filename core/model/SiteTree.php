@@ -1256,7 +1256,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		$this->flushCache();
 		
 		// Update any virtual pages that might need updating
-		$linkedPages = DataObject::get("VirtualPage", "CopyContentFromID = $this->ID");
+		$linkedPages = DataObject::get("VirtualPage", "\"CopyContentFromID\" = $this->ID");
 		if($linkedPages) foreach($linkedPages as $page) {
 			$page->copyFrom($page->CopyContentFrom());
 			$page->write();
@@ -1697,7 +1697,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		}
 
 		// Publish any virtual pages that might need publishing
-		$linkedPages = DataObject::get("VirtualPage", "CopyContentFromID = $this->ID");
+		$linkedPages = DataObject::get("VirtualPage", "\"CopyContentFromID\" = $this->ID");
 		if($linkedPages) foreach($linkedPages as $page) {
 			$page->copyFrom($page->CopyContentFrom());
 			$page->doPublish();
