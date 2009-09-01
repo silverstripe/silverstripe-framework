@@ -78,7 +78,7 @@ class SecurityTest extends FunctionalTest {
 		$this->autoFollowRedirection = true;
 		
 		/* Attempt to get into the admin section */
-		$this->get('admin');
+		$response = $this->get('admin/cms/');
 		
 		$items = $this->cssParser()->getBySelector('#MemberLoginForm_LoginForm input.text');
 
