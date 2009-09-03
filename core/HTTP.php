@@ -103,6 +103,8 @@ class HTTP {
 	static function findByTagAndAttribute($content, $attribs) {
 		$regExps = array();
 		
+		
+		
 		foreach($attribs as $tag => $attrib) {
 			$tagPrefix = (is_numeric($tag)) ? '' : "$tag ";
 			
@@ -113,7 +115,7 @@ class HTTP {
 
 		if($regExps) {
 			foreach($regExps as $regExp) {
-				$content = preg_replace($regExp, '$items[] = "$2"', $content);
+				$content = preg_replace($regExp, '$items[] = \'$2\'', $content);
 			}
 		}
 
