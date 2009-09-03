@@ -98,7 +98,7 @@ class Image extends File {
 	 * @return string
 	 */
 	function getTag() {
-		if(file_exists("../" . $this->Filename)) {
+		if(file_exists(Director::baseFolder()."/".$this->Filename)) {
 			$url = $this->URL();
 			$title = ($this->Title) ? $this->Title : $this->Filename;
 			
@@ -277,7 +277,7 @@ class Image extends File {
 		if($this->ID && $this->Filename && Director::fileExists($this->Filename)) {
 			$cacheFile = $this->cacheFilename($format, $arg1, $arg2);
 
-			if(!file_exists("../".$cacheFile) || isset($_GET['flush'])) {
+			if(!file_exists(Director::baseFolder()."/".$cacheFile) || isset($_GET['flush'])) {
 				$this->generateFormattedImage($format, $arg1, $arg2);
 			}
 			
@@ -311,7 +311,7 @@ class Image extends File {
 	function generateFormattedImage($format, $arg1 = null, $arg2 = null) {
 		$cacheFile = $this->cacheFilename($format, $arg1, $arg2);
 	
-		$gd = new GD("../" . $this->Filename);
+		$gd = new GD(Director::baseFolder()."/" . $this->Filename);
 		
 		
 		if($gd->hasGD()){
@@ -319,7 +319,7 @@ class Image extends File {
 			if($this->hasMethod($generateFunc)){
 				$gd = $this->$generateFunc($gd, $arg1, $arg2);
 				if($gd){
-					$gd->writeTo("../" . $cacheFile);
+					$gd->writeTo(Director::baseFolder()."/" . $cacheFile);
 				}
 	
 			} else {
