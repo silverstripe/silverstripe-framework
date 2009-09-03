@@ -65,7 +65,7 @@ class Security extends Controller {
 	 * 
 	 * @var string
 	 */
-	protected static $wordlist = '/usr/share/silverstripe/wordlist.txt';
+	protected static $wordlist = './wordlist.txt';
 	
 	/**
 	 * Template thats used to render the pages.
