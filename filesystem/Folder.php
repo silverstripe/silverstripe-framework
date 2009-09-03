@@ -192,10 +192,7 @@ class Folder extends File {
 			if($oldFile == $file && $i > 2) user_error("Couldn't fix $file with $i", E_USER_ERROR);
 		}
 		
-		//$fullFilename = "$base/$file";
-		$fullFilename = $base . DIRECTORY_SEPARATOR . str_replace(array("\\","/") , DIRECTORY_SEPARATOR, $file );
-		
-		if(file_exists($tmpFile['tmp_name']) && copy($tmpFile['tmp_name'], $fullFilename)) {
+		if (move_uploaded_file($tmpFile['tmp_name'], "$base/$file")) {
 			// Update with the new image
 			return $this->constructChild(basename($file));
 		} else {
