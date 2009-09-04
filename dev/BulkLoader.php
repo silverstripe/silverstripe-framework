@@ -124,14 +124,23 @@ abstract class BulkLoader extends ViewableData {
 	}
 	
 	/*
-	 * Load the given file via {@link self::processAll()} and {@link self::processRecord()}.
+	 * Load the given file via {@link self::processAll()} and {@link self::processRecord()}. Optionally truncates (clear) the table before it imports. 
 	 *  
 	 * @return BulkLoader_Result See {@link self::processAll()}
 	 */
-	public function load($filepath, $memory_limit='512M') {
+	public function load($filepath, $memory_limit='512M', $clear_table_before_import=false) {
 		ini_set('max_execution_time', 3600);
 		
 		increase_memory_limit_to($memory_limit);
+		
+		if ($clear_table_before_import) { 
+			$objectSet = DataObject::get($this->objectClass);       //get all instances of the to be imported data object 
+			if (!empty($objectSet)) { 
+				foreach($objectSet as $obj) { 
+					$obj->delete(); //deleting objects ensures that versions are also deleted (truncating would just delete the main table); performance is slower, however 
+				} 
+			} 
+		} 
 		
 		return $this->processAll($filepath);
 	}
