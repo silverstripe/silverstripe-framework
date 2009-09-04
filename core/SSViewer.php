@@ -52,7 +52,7 @@ class SSViewer extends Object {
 	/**
 	 * @var boolean $source_file_comments
 	 */
-	protected static $source_file_comments = true;
+	protected static $source_file_comments = false;
 	
 	/**
 	 * Set whether HTML comments indicating the source .SS file used to render this page should be
