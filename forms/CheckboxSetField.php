@@ -217,7 +217,7 @@ class CheckboxSetField extends OptionsetField {
 						$data[] = $item['Title'];
 					} elseif(is_array($this->source) && !empty($this->source[$item])) {
 						$data[] = $this->source[$item];
-					} elseif(is_a($this->source, 'ComponentSet')) {
+					} elseif(is_a($this->source, 'DataObjectSet')) {
 						$data[] = $sourceTitles[$item];
 					} else {
 						$data[] = $item;
