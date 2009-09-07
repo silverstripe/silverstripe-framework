@@ -55,7 +55,7 @@ class Widget extends DataObject {
 	 * @return string HTML
 	 */
 	function Content() {
-		return $this->renderWith($this->class);
+		return $this->renderWith(array_reverse(ClassInfo::ancestry($this->class)));
 	}
 	
 	function Title() {
@@ -176,7 +176,7 @@ class Widget_Controller extends Controller {
 	 * @return string HTML
 	 */
 	function Content() {
-		return $this->renderWith($this->widget->class);
+		return $this->renderWith(array_reverse(ClassInfo::ancestry($this->widget->class)));
 	}
 	
 	/**
