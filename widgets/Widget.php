@@ -1,7 +1,12 @@
 <?php
 /**
- * Base class for widgets.
- * Widgets let CMS authors drag and drop small pieces of functionality into defined areas of their websites.
+ * Widgets let CMS authors drag and drop small pieces of functionality into 
+ * defined areas of their websites.
+ * 
+ * ## Forms
+ * You can use forms in widgets by implementing a {@link Widget_Controller}.
+ * See {@link Widget_Controller} for more information.
+ * 
  * @package sapphire
  * @subpackage widgets
  */
@@ -29,10 +34,26 @@ class Widget extends DataObject {
 		return new FieldSet();
 	}
 	
+	/**
+	 * Note: Overloaded in {@link Widget_Controller}.
+	 * 
+	 * @return string HTML
+	 */
 	function WidgetHolder() {
 		return $this->renderWith("WidgetHolder");
 	}
 	
+	/**
+	 * Renders the widget content in a custom template with the same name as the current class.
+	 * This should be the main point of output customization.
+	 * 
+	 * Invoked from within WidgetHolder.ss, which contains
+	 * the "framing" around the custom content, like a title.
+	 * 
+	 * Note: Overloaded in {@link Widget_Controller}.
+	 * 
+	 * @return string HTML
+	 */
 	function Content() {
 		return $this->renderWith($this->class);
 	}
@@ -53,6 +74,9 @@ class Widget extends DataObject {
 		return $this->renderWith('WidgetDescription'); 
 	}
 	
+	/**
+	 * @see Widget_Controller->editablesegment()
+	 */
 	function EditableSegment() {
 		return $this->renderWith('WidgetEditor'); 
 	}
@@ -93,17 +117,86 @@ class Widget extends DataObject {
 		$this->write();
 	}
 	
-	function FormObjectLink($formName) {
-		if(is_numeric($this->ID)) {
-			return "WidgetFormProxy/index/$this->ID?executeForm=$formName";
-		} else {
-			user_error("Attempted to create a form on a widget that hasn't been saved to the database.", E_USER_WARNING);
-		}
-	}
 }
 
+/**
+ * Optional controller for every widget which has its own logic,
+ * e.g. in forms. It always handles a single widget, usually passed
+ * in as a database identifier through the controller URL.
+ * Needs to be constructed as a nested controller
+ * within a {@link ContentController}.
+ * 
+ * ## Forms
+ * You can add forms like in any other sapphire controller.
+ * If you need access to the widget from within a form,
+ * you can use `$this->controller->getWidget()` inside the form logic.
+ * Note: Widget controllers currently only work on {@link Page} objects,
+ * because the logic is implemented in {@link ContentController->handleWidget()}.
+ * Copy this logic and the URL rules to enable it for other controllers.
+ * 
+ * @package sapphire
+ * @subpackage widgets
+ */
 class Widget_Controller extends Controller {
 	
+	/**
+	 * @var Widget
+	 */
+	protected $widget;
+	
+	function __construct($widget = null) {
+		// TODO This shouldn't be optional, is only necessary for editablesegment()
+		if($widget) {
+			$this->widget = $widget;
+			$this->failover = $widget;
+		}
+		
+		parent::__construct();
+	}
+	
+	function Link() {
+		return Controller::join_links(
+			Controller::curr()->Link(),
+			'widget',
+			($this->widget) ? $this->widget->ID : null
+		);
+	}
+	
+	/**
+	 * @return Widget
+	 */
+	function getWidget() {
+		return $this->widget;
+	}
+	
+	/**
+	 * Overloaded from {@link Widget->Content()}
+	 * to allow for controller/form linking.
+	 * 
+	 * @return string HTML
+	 */
+	function Content() {
+		return $this->renderWith($this->widget->class);
+	}
+	
+	/**
+	 * Overloaded from {@link Widget->WidgetHolder()}
+	 * to allow for controller/form linking.
+	 * 
+	 * @return string HTML
+	 */
+	function WidgetHolder() {
+		return $this->renderWith("WidgetHolder");
+	}
+	
+	/**
+	 * Uses the `WidgetEditor.ss` template and {@link Widget->editablesegment()}
+	 * to render a administrator-view of the widget. It is assumed that this
+	 * view contains form elements which are submitted and saved through {@link WidgetAreaEditor}
+	 * within the CMS interface.
+	 * 
+	 * @return string HTML
+	 */
 	function editablesegment() {
 		$className = $this->urlParams['ID'];
 		if(class_exists($className) && is_subclass_of($className, 'Widget')) {

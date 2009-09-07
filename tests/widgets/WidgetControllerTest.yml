@@ -1,0 +1,10 @@
+WidgetControllerTest_Widget:
+   widget1:
+      Title: Widget 1
+WidgetArea:
+   area1:
+      Widgets: =>WidgetControllerTest_Widget.widget1
+WidgetControllerTestPage:
+   page1:
+      Title: Page1
+      WidgetControllerTestSidebar: =>WidgetArea.area1

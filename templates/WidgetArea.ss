@@ -1,3 +1,3 @@
-<% control Widgets %>
+<% control WidgetControllers %>
 	$WidgetHolder
 <% end_control %>
