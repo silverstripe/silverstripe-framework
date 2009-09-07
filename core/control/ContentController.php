@@ -19,7 +19,12 @@
  * @subpackage control
  */
 class ContentController extends Controller {
+
 	protected $dataRecord;
+	
+	static $url_handlers = array(
+		'widget/$ID/$Action' => 'handleWidget'
+	);
 
 	/**
 	 * The ContentController will take the URLSegment parameter from the URL and use that to look
