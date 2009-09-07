@@ -94,12 +94,35 @@ class Controller extends RequestHandler {
 	}
 	
 	/**
-	 * Handles HTTP requests.
+	 * Executes this controller, and return an {@link HTTPResponse} object with the result.
 	 * 
-	 * If you are going to overload handleRequest, make sure that you start the method with $this->pushCurrent()
-	 * and end the method with $this->popCurrent().  Failure to do this will create weird session errors.
+	 * This method first does a few set-up activities:
+	 *  - Push this controller ont to the controller stack - 
+	 *    see {@link Controller::curr()} for information about this.
+	 *  - Call {@link init()}
+	 *  - Defer to {@link RequestHandler->handleRequest()} to determine which action
+	 *    should be executed
 	 * 
-	 * @param $request The {@link HTTPRequest} object that is responsible for distributing request parsing.
+	 * Note: $requestParams['executeForm'] support was removed, 
+	 * make the following change in your URLs: 
+	 * "/?executeForm=FooBar" -> "/FooBar" 
+	 * Also make sure "FooBar" is in the $allowed_actions of your controller class.
+	 * 
+	 * Note: You should rarely need to overload run() - 
+	 * this kind of change is only really appropriate for things like nested
+	 * controllers - {@link ModelAsController} and {@link RootURLController} 
+	 * are two examples here.  If you want to make more
+	 * orthodox functionality, it's better to overload {@link init()} or {@link index()}.
+	 * 
+	 * Important: If you are going to overload handleRequest, 
+	 * make sure that you start the method with $this->pushCurrent()
+	 * and end the method with $this->popCurrent().  
+	 * Failure to do this will create weird session errors.
+	 * 
+	 * @param $request The {@link HTTPRequest} object that is responsible 
+	 *  for distributing request parsing.
+	 * @return HTTPResponse The response that this controller produces, 
+	 *  including HTTP headers such as redirection info
 	 */
 	function handleRequest(HTTPRequest $request) {
 		if(!$request) user_error("Controller::handleRequest() not passed a request!", E_USER_ERROR);
@@ -215,32 +238,6 @@ class Controller extends RequestHandler {
 
 	protected $baseInitCalled = false;
 
-	/**
-	 * Executes this controller, and return an {@link HTTPResponse} object with the result.
-	 * 
-	 * This method first does a few set-up activities:
-	 *  - Push this controller ont to the controller stack - see {@link Controller::curr()} for information about this.
-	 *  - Call {@link init()}
-	 * 
-	 * Then it looks for the action method.  The action is taken from $this->urlParams['Action'] - for this reason, it's important
-	 * to have $Action included in your Director rule
-	 * 
-	 * $requestParams['executeForm'] support was removed, make the following change in your URLs: 
-	 *  "/?executeForm=FooBar" -> "/FooBar" 
-	 * Also make sure "FooBar" is in the $allowed_actions of your controller class.
-	 * 
-	 * NOTE: You should rarely need to overload run() - this kind of change is only really appropriate for things like nested
-	 * controllers - {@link ModelAsController} and {@link RootURLController} are two examples here.  If you want to make more
-	 * orthodox functionality, it's better to overload {@link init()} or {@link index()}.
-	 * 
-	 * Execute the appropriate action handler.  If none is given, use defaultAction to display
-	 * a template.  The default action will be appropriate in most cases where displaying data
-	 * is the core goal; the Viewer can call methods on the controller to get the data it needs.
-	 * 
-	 * @param array $requestParams GET and POST variables.
-	 * @return HTTPResponse The response that this controller produces, including HTTP headers such as redirection info
-	 */
-	
 	/**
 	 * Return the object that is going to own a form that's being processed, and handle its execution.
 	 * Note that the result needn't be an actual controller object.

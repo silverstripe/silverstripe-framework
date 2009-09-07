@@ -79,11 +79,15 @@ class RequestHandler extends ViewableData {
 	 *
 	 *  - ViewableData::handleRequest() iterates through each rule in {@link self::$url_handlers}.
 	 *  - If the rule matches, the named method will be called.
-	 *  - If there is still more URL to be processed, then handleRequest() is called on the object that that method returns.
+	 *  - If there is still more URL to be processed, then handleRequest() 
+	 *    is called on the object that that method returns.
 	 *
-	 * Once all of the URL has been processed, the final result is returned.  However, if the final result is an array, this
-	 * array is interpreted as being additional template data to customise the 2nd to last result with, rather than an object
-	 * in its own right.  This is most frequently used when a Controller's action will return an array of data with which to
+	 * Once all of the URL has been processed, the final result is returned.  
+	 * However, if the final result is an array, this
+	 * array is interpreted as being additional template data to customise the 
+	 * 2nd to last result with, rather than an object
+	 * in its own right.  This is most frequently used when a Controller's 
+	 * action will return an array of data with which to
 	 * customise the controller.
 	 * 
 	 * @param $params The parameters taken from the parsed URL of the parent url handler
