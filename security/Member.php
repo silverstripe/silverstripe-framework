@@ -377,6 +377,7 @@ class Member extends DataObject {
 		}
 
 		$e->populateTemplate($this);
+		$e->setTo($this->Email);
 		$e->send();
 	}
 
@@ -1283,11 +1284,11 @@ class Member_ProfileForm extends Form {
  */
 class Member_SignupEmail extends Email {
 	protected $from = '';  // setting a blank from address uses the site's default administrator email
-	protected $to = '$Email';
 	protected $subject = '';
 	protected $body = '';
 
 	function __construct() {
+		parent::__construct();
 		$this->subject = _t('Member.EMAILSIGNUPSUBJECT', "Thanks for signing up");
 		$this->body = '
 			<h1>' . _t('Member.GREETING','Welcome') . ', $FirstName.</h1>
@@ -1343,9 +1344,9 @@ class Member_ChangePasswordEmail extends Email {
     protected $from = '';   // setting a blank from address uses the site's default administrator email
     protected $subject = '';
     protected $ss_template = 'ChangePasswordEmail';
-    protected $to = '$Email';
     
     function __construct() {
+		parent::__construct();
     	$this->subject = _t('Member.SUBJECTPASSWORDCHANGED', "Your password has been changed", PR_MEDIUM, 'Email subject');
     }
 }
@@ -1361,9 +1362,9 @@ class Member_ForgotPasswordEmail extends Email {
     protected $from = '';  // setting a blank from address uses the site's default administrator email
     protected $subject = '';
     protected $ss_template = 'ForgotPasswordEmail';
-    protected $to = '$Email';
     
     function __construct() {
+		parent::__construct();
     	$this->subject = _t('Member.SUBJECTPASSWORDRESET', "Your password reset link", PR_MEDIUM, 'Email subject');
     }
 }
