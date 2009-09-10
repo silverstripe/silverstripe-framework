@@ -22,6 +22,8 @@ class Member extends DataObject {
 		'PasswordExpiry' => 'Date',
 		'LockedOutUntil' => 'SSDatetime',
 		'Locale' => 'Varchar(6)',
+		// handled in registerFailedLogin(), only used if $lock_out_after_incorrect_logins is set
+		'FailedLoginCount' => 'Int', 
 	);
 
 	static $belongs_many_many = array(
@@ -224,9 +226,7 @@ class Member extends DataObject {
 		
 		// Clear the incorrect log-in count
 		if(self::$lock_out_after_incorrect_logins) {
-			$failedLogins = Session::get('Member.FailedLogins');
-			$failedLogins[$this->Email] = 0;
-			Session::set('Member.FailedLogins', $failedLogins);
+			$this->FailedLoginCount = 0;
 		}
 		
 		// Don't set column if its not built yet (the login might be precursor to a /dev/build...)
@@ -1014,12 +1014,10 @@ class Member extends DataObject {
 	function registerFailedLogin() {
 		if(self::$lock_out_after_incorrect_logins) {
 			// Keep a tally of the number of failed log-ins so that we can lock people out
-			$failedLogins = Session::get('Member.FailedLogins');
-			if(!isset($failedLogins[$this->Email])) $failedLogins[$this->Email] = 0;
-			$failedLogins[$this->Email]++;
-			Session::set('Member.FailedLogins', $failedLogins);
+			$this->FailedLoginCount = $this->FailedLoginCount + 1;
+			$this->write();
 	
-			if($failedLogins[$this->Email] >= self::$lock_out_after_incorrect_logins) {
+			if($this->FailedLoginCount >= self::$lock_out_after_incorrect_logins) {
 				$this->LockedOutUntil = date('Y-m-d H:i:s', time() + 15*60);
 				$this->write();
 			}
