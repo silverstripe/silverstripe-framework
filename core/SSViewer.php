@@ -124,7 +124,7 @@ class SSViewer extends Object {
 			if(Director::isDev() || Permission::check('ADMIN')) {
 				self::flush_template_cache();
 			} else {
-				Security::permissionFailure(null, 'Please log in as an administrator to flush the template cache.');
+				return Security::permissionFailure(null, 'Please log in as an administrator to flush the template cache.');
 			}
 		}
 		

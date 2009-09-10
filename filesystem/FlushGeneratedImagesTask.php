@@ -17,7 +17,7 @@ class FlushGeneratedImagesTask extends BuildTask {
 	 */
 	public function init() {
 		if(!Director::is_cli() && !Director::isDev() && !Permission::check('ADMIN')) {
-			Security::permissionFailure();
+			return Security::permissionFailure();
 		}
 		
 		parent::init();

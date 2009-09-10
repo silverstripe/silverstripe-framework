@@ -101,7 +101,7 @@ class ContentController extends Controller {
 
 		// Check page permissions
 		if($this->dataRecord && $this->URLSegment != 'Security' && !$this->dataRecord->can('View')) {
-			Security::permissionFailure($this);
+			return Security::permissionFailure($this);
 		}
 
 		// Draft/Archive security check - only CMS users should be able to look at stage/archived content
@@ -109,8 +109,7 @@ class ContentController extends Controller {
 			if(!Permission::check('CMS_ACCESS_CMSMain')) {
 				$link = $this->Link();
 				$message = _t("ContentController.DRAFT_SITE_ACCESS_RESTRICTION", 'You must log in with your CMS password in order to view the draft or archived content.  <a href="%s">Click here to go back to the published site.</a>');
-				Security::permissionFailure($this, sprintf($message, "$link?stage=Live"));
-				return;
+				return Security::permissionFailure($this, sprintf($message, "$link?stage=Live"));
 			}
 		}		
 

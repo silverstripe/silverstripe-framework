@@ -47,7 +47,7 @@ class Filesystem extends Object {
 	 * Cleanup function to reset all the Filename fields.  Visit File/fixfiles to call.
 	 */
 	public function fixfiles() {
-		if(!Permission::check('ADMIN')) Security::permissionFailure($this);
+		if(!Permission::check('ADMIN')) return Security::permissionFailure($this);
 		
 		$files = DataObject::get("File");
 		foreach($files as $file) {
