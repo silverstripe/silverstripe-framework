@@ -192,8 +192,6 @@ class RequestHandler extends ViewableData {
 			}
 		}
 		
-		if($action == 'index') return true;
-		
 		if($allowedActions)  {
 			// convert all keys and values to lowercase for easier comparison (only if not set as boolean)
 			foreach($allowedActions as $key => $value) {

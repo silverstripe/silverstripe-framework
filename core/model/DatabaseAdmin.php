@@ -14,6 +14,7 @@ class DatabaseAdmin extends Controller {
 
 	/// SECURITY ///
 	static $allowed_actions = array(
+		'index',
 		'build',
 		'cleanup',
 		'testinstall',

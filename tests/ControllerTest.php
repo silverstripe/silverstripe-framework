@@ -41,6 +41,11 @@ class ControllerTest extends SapphireTest {
 			"test that a controller without a specified allowed_actions allows actions through"
 		);
 		
+		$response = Director::test("ControllerTest_FullSecuredController/index");
+		$this->assertEquals(403, $response->getStatusCode(),
+			"Actions can be globally disallowed by using asterisk (*) for index method"
+		);
+		
 		$response = Director::test("ControllerTest_FullSecuredController/adminonly");
 		$this->assertEquals(403, $response->getStatusCode(),
 			"Actions can be globally disallowed by using asterisk (*) instead of a method name"
