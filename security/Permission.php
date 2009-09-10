@@ -85,19 +85,17 @@ class Permission extends DataObject {
 
 
 	/**
-	 * Check that the current member has the given permission
+	 * Check that the current member has the given permission.
 	 * 
-	 * @param string $code Code of the permission to check
-	 * @param string $arg Optional argument (e.g. a permissions for a specific
-	 *                    page)
+	 * @param string $code Code of the permission to check (case-sensitive)
+	 * @param string $arg Optional argument (e.g. a permissions for a specific page)
 	 * @param int|Member $member Optional member instance or ID. If set to NULL, the permssion
-	 *                      will be checked for the current user
+	 *  will be checked for the current user
 	 * @param bool $strict Use "strict" checking (which means a permission
-	 *                     will be granted if the key does not exist at all)?
+	 *  will be granted if the key does not exist at all)?
 	 * @return int|bool The ID of the permission record if the permission
-	 *                  exists; FALSE otherwise. If "strict" checking is
-	 *                  disabled, TRUE will be returned if the permission does
-	 *                  not exist at all.
+	 *  exists; FALSE otherwise. If "strict" checking is
+	 *  disabled, TRUE will be returned if the permission does not exist at all.
 	 */
 	public static function check($code, $arg = "any", $member = null, $strict = true) {
 		if(!$member) {
@@ -125,18 +123,17 @@ class Permission extends DataObject {
 	}
 
 	/**
-	 * Check that the given member has the given permission
+	 * Check that the given member has the given permission.
+	 * 
 	 * @param int|Member memberID The ID of the member to check. Leave blank for the current member. 
-	 * 					Alternatively you can use a member object.
-	 * @param string|array $code Code of the permission to check
-	 * @param string $arg Optional argument (e.g. a permissions for a specific
-	 *                    page)
+	 *  Alternatively you can use a member object.
+	 * @param string|array $code Code of the permission to check (case-sensitive)
+	 * @param string $arg Optional argument (e.g. a permissions for a specific page)
 	 * @param bool $strict Use "strict" checking (which means a permission
-	 *                     will be granted if the key does not exist at all)?
+	 *  will be granted if the key does not exist at all)?
 	 * @return int|bool The ID of the permission record if the permission
-	 *                  exists; FALSE otherwise. If "strict" checking is
-	 *                  disabled, TRUE will be returned if the permission does
-	 *                  not exist at all.
+	 *  exists; FALSE otherwise. If "strict" checking is
+	 *  disabled, TRUE will be returned if the permission does not exist at all.
 	 */
 	public static function checkMember($member, $code, $arg = "any", $strict = true) {
 		if(!$member) {
@@ -155,7 +152,7 @@ class Permission extends DataObject {
 			// case and this keeps the code simpler
 			if(!is_array($code)) $code = array($code);
 			if(self::$admin_implies_all) $code[] = "ADMIN";
-			
+
 			// Multiple $code values - return true if at least one matches, ie, intersection exists
 			return (bool)array_intersect($code, self::$cache_permissions[$memberID]);
 		} 
