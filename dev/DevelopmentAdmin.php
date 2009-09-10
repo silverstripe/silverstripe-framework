@@ -69,7 +69,6 @@ class DevelopmentAdmin extends Controller {
 			"tests/all" => "Run all tests",
 			"jstests" => "See a list of JavaScript tests to run",
 			"jstests/all" => "Run all JavaScript tests",
-			"modules/add" => "Add a module, for example, 'sake dev/modules/add ecommerce'",
 			"tasks" => "See a list of build tasks to run",
 			"viewcode" => "Read source code in a literate programming style",
 		);
@@ -112,10 +111,6 @@ class DevelopmentAdmin extends Controller {
 	
 	function tasks() {
 		return new TaskRunner();
-	}
-	
-	function modules() {
-		return new ModuleManager();
 	}
 	
 	function viewmodel() {
