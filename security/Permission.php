@@ -500,22 +500,6 @@ class Permission extends DataObject {
 		asort($allCodes);
 		return $allCodes;
 	}
-	
-	/*
-	 * Controller action to list the codes available
-	 *
-	 * @see Permission::get_codes()
-	 */
-	public function listcodes() {
-		if(!Permission::check('ADMIN'))
-			Security::permissionFailure();
-
-		echo '<h1>'._t('Permission.PERMSDEFINED', 'The following permission codes are defined').'</h1>';
-		$codes = self::get_codes();
-		echo "<pre>";
-		print_r($codes);
-	}
-
 
 	/**
 	 * Declare an array of permissions for the system.
