@@ -653,7 +653,7 @@ $lang['en_US']['Security']['NOTERESETPASSWORD'] = 'Enter your e-mail address and
 $lang['en_US']['Security']['NOTHINGTOENCRYPT1'] = 'No passwords to encrypt';
 $lang['en_US']['Security']['NOTHINGTOENCRYPT2'] = 'There are no members with a clear text password that could be encrypted!';
 $lang['en_US']['Security']['PASSWORDSENTHEADER'] = 'Password reset link sent to \'%s\'';
-$lang['en_US']['Security']['PASSWORDSENTTEXT'] = 'Thank you! The password reset link has been sent to \'%s\'.';
+$lang['en_US']['Security']['PASSWORDSENTTEXT'] = 'Thank you! A reset link has been sent to \'%s\', provided an account exists for this email address.';
 $lang['en_US']['Security']['PERMFAILURE'] = ' This page is secured and you need administrator rights to access it. 
 				Enter your credentials below and we will send you right along.';
 $lang['en_US']['SecurityAdmin']['ADVANCEDONLY'] = 'This section is for advanced users only.

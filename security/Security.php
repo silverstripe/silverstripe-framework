@@ -469,7 +469,7 @@ class Security extends Controller {
 			'Title' => sprintf(_t('Security.PASSWORDSENTHEADER', "Password reset link sent to '%s'"), $email),
 			'Content' =>
 				"<p>" . 
-				sprintf(_t('Security.PASSWORDSENTTEXT', "Thank you! The password reset link has been sent to '%s'."), $email) .
+				sprintf(_t('Security.PASSWORDSENTTEXT', "Thank you! A reset link has been sent to  '%s', provided an account exists for this email address."), $email) .
 				"</p>",
 		));
 		

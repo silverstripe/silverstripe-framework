@@ -231,14 +231,9 @@ JS
 
 			Director::redirect('Security/passwordsent/' . urlencode($data['Email']));
 		} elseif($data['Email']) {
-			$this->sessionMessage(
-				_t('Member.ERRORSIGNUP', 'Sorry, but I don\'t recognise the e-mail address. Maybe you need ' .
-					'to sign up, or perhaps you used another e-mail address?'
-				),
-				'bad'
-			);
-			
-			Director::redirectBack();
+			// Avoid information disclosure by displaying the same status,
+			// regardless wether the email address actually exists
+			Director::redirect('Security/passwordsent/' . urlencode($data['Email']));
 		} else {
 			$this->sessionMessage(
 				_t('Member.ENTEREMAIL', 'Please enter an email address to get a password reset link.'),
