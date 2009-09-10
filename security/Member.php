@@ -217,7 +217,8 @@ class Member extends DataObject {
 		if($remember) {
 			$token = substr(md5(uniqid(rand(), true)), 0, 49 - strlen($this->ID));
 			$this->RememberLoginToken = $token;
-			Cookie::set('alc_enc', $this->ID . ':' . $token);
+			// Set cookie (with HTTPOnly flag if running on PHP 5.2 or newer)
+			Cookie::set('alc_enc', $this->ID . ':' . $token, 90, null, null, null, true);
 		} else {
 			$this->RememberLoginToken = null;
 			Cookie::set('alc_enc', null);
@@ -284,7 +285,7 @@ class Member extends DataObject {
 
 				$token = substr(md5(uniqid(rand(), true)), 0, 49 - strlen($member->ID));
 				$member->RememberLoginToken = $token;
-				Cookie::set('alc_enc', $member->ID . ':' . $token);
+				Cookie::set('alc_enc', $member->ID . ':' . $token, 90, null, null, null, true);
 
 				$member->NumVisit++;
 				$member->write();
