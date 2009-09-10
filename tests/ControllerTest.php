@@ -1,59 +1,69 @@
 <?php
 
-class ControllerTest extends SapphireTest {
-	static $fixture_file = null;
+class ControllerTest extends FunctionalTest {
+	static $fixture_file = 'sapphire/tests/ControllerTest.yml';
 	
 	function testDefaultAction() {
 		/* For a controller with a template, the default action will simple run that template. */
-		$response = Director::test("ControllerTest_Controller/");
+		$response = $this->get("ControllerTest_Controller/");
 		$this->assertRegExp("/This is the main template. Content is 'default content'/", $response->getBody());
 	}
 	
 	function testMethodActions() {
 		/* The Action can refer to a method that is called on the object.  If a method returns an array, then it will be 
 		used to customise the template data */
-		$response = Director::test("ControllerTest_Controller/methodaction");
+		$response = $this->get("ControllerTest_Controller/methodaction");
 		$this->assertRegExp("/This is the main template. Content is 'methodaction content'./", $response->getBody());
 		
 		/* If the method just returns a string, then that will be used as the response */
-		$response = Director::test("ControllerTest_Controller/stringaction");
+		$response = $this->get("ControllerTest_Controller/stringaction");
 		$this->assertRegExp("/stringaction was called./", $response->getBody());
 	}
 	
 	function testTemplateActions() {
 		/* If there is no method, it can be used to point to an alternative template. */
-		$response = Director::test("ControllerTest_Controller/templateaction");
+		$response = $this->get("ControllerTest_Controller/templateaction");
 		$this->assertRegExp("/This is the template for templateaction. Content is 'default content'./", $response->getBody());
 	}
 
 	function testAllowedActions() {
-		$response = Director::test("ControllerTest_SecuredController/methodaction");
+		$adminUser = $this->objFromFixture('Member', 'admin');
+		
+		$response = $this->get("ControllerTest_SecuredController/methodaction");
 		$this->assertEquals(200, $response->getStatusCode());
 		
-		$response = Director::test("ControllerTest_SecuredController/stringaction");
+		$response = $this->get("ControllerTest_SecuredController/stringaction");
 		$this->assertEquals(403, $response->getStatusCode());
 
-		$response = Director::test("ControllerTest_SecuredController/adminonly");
+		$response = $this->get("ControllerTest_SecuredController/adminonly");
 		$this->assertEquals(403, $response->getStatusCode());
 		
-		$response = Director::test('ControllerTest_UnsecuredController/stringaction');
+		$response = $this->get('ControllerTest_UnsecuredController/stringaction');
 		$this->assertEquals(200, $response->getStatusCode(), 
 			"test that a controller without a specified allowed_actions allows actions through"
 		);
 		
-		$response = Director::test("ControllerTest_FullSecuredController/index");
+		$response = $this->get("ControllerTest_FullSecuredController/index");
 		$this->assertEquals(403, $response->getStatusCode(),
 			"Actions can be globally disallowed by using asterisk (*) for index method"
 		);
 		
-		$response = Director::test("ControllerTest_FullSecuredController/adminonly");
+		$response = $this->get("ControllerTest_FullSecuredController/adminonly");
 		$this->assertEquals(403, $response->getStatusCode(),
 			"Actions can be globally disallowed by using asterisk (*) instead of a method name"
 		);
 		
-		$response = Director::test("ControllerTest_FullSecuredController/unsecuredaction");
+		$response = $this->get("ControllerTest_FullSecuredController/unsecuredaction");
 		$this->assertEquals(200, $response->getStatusCode(),
 			"Actions can be overridden to be allowed if globally disallowed by using asterisk (*)"
+		);
+		
+		$this->session()->inst_set('loggedInAs', $adminUser->ID);
+		$response = $this->get("ControllerTest_SecuredController/adminonly");
+		$this->assertEquals(
+			200, 
+			$response->getStatusCode(), 
+			"Permission codes are respected when set in \$allowed_actions"
 		);
 	}
 	
