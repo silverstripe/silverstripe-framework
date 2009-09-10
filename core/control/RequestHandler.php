@@ -193,9 +193,11 @@ class RequestHandler extends ViewableData {
 		}
 		
 		if($allowedActions)  {
-			// convert all keys and values to lowercase for easier comparison (only if not set as boolean)
+			// Convert all keys and values to lowercase for easier comparison.
+			// Exclude values set as booleans, or permission codes (permission checks are case sensitive)
 			foreach($allowedActions as $key => $value) {
-				$newAllowedActions[strtolower($key)] = (is_bool($value)) ? $value : strtolower($value);
+				if(is_numeric($key) || is_bool($value)) $value = strtolower($value);
+				$newAllowedActions[strtolower($key)] = $value;
 			}
 			$allowedActions = $newAllowedActions;
 			
