@@ -173,6 +173,16 @@ $lang['en_US']['DropdownField']['CHOOSE'] = array(
 );
 $lang['en_US']['EmailField']['VALIDATION'] = 'Please enter an email address.';
 $lang['en_US']['EmailField']['VALIDATIONJS'] = 'Please enter an email address.';
+$lang['en_US']['Email_BounceRecord']['PLURALNAME'] = array(
+	'Email Bounce Records',
+	50,
+	'Pural name of the object, used in dropdowns and to generally identify a collection of this object in the interface'
+);
+$lang['en_US']['Email_BounceRecord']['SINGULARNAME'] = array(
+	'Email Bounce Record',
+	50,
+	'Singular name of the object, used in dropdowns and to generally identify a single object in the interface'
+);
 $lang['en_US']['Enum']['ANY'] = 'Any';
 $lang['en_US']['ErrorPage']['400'] = '400 - Bad Request';
 $lang['en_US']['ErrorPage']['401'] = '401 - Unauthorized';
@@ -460,6 +470,16 @@ $lang['en_US']['Image']['SINGULARNAME'] = array(
 	'Singular name of the object, used in dropdowns and to generally identify a single object in the interface'
 );
 $lang['en_US']['ImageField']['IMAGE'] = 'Image';
+$lang['en_US']['Image_Cached']['PLURALNAME'] = array(
+	'Files',
+	50,
+	'Pural name of the object, used in dropdowns and to generally identify a collection of this object in the interface'
+);
+$lang['en_US']['Image_Cached']['SINGULARNAME'] = array(
+	'File',
+	50,
+	'Singular name of the object, used in dropdowns and to generally identify a single object in the interface'
+);
 $lang['en_US']['Image_iframe.ss']['TITLE'] = 'Image Uploading Iframe';
 $lang['en_US']['LoginAttempt']['Email'] = 'Email Address';
 $lang['en_US']['LoginAttempt']['IP'] = 'IP Address';
@@ -490,7 +510,6 @@ $lang['en_US']['Member']['ENTEREMAIL'] = 'Please enter an email address to get a
 $lang['en_US']['Member']['ERRORLOCKEDOUT'] = 'Your account has been temporarily disabled because of too many failed attempts at logging in. Please try again in 20 minutes.';
 $lang['en_US']['Member']['ERRORNEWPASSWORD'] = 'Your have entered your new password differently, try again';
 $lang['en_US']['Member']['ERRORPASSWORDNOTMATCH'] = 'Your current password does not match, please try again';
-$lang['en_US']['Member']['ERRORSIGNUP'] = 'Sorry, but I don\'t recognise the e-mail address. Maybe you need to sign up, or perhaps you used another e-mail address?';
 $lang['en_US']['Member']['ERRORWRONGCRED'] = 'That doesn\'t seem to be the right e-mail address or password. Please try again.';
 $lang['en_US']['Member']['FIRSTNAME'] = 'First Name';
 $lang['en_US']['Member']['GREETING'] = 'Welcome';
@@ -579,7 +598,6 @@ $lang['en_US']['MyNamespace']['MYENTITY'] = 'Counting %s things';
 $lang['en_US']['NumericField']['VALIDATION'] = '\'%s\' is not a number, only numbers can be accepted for this field';
 $lang['en_US']['NumericField']['VALIDATIONJS'] = 'is not a number, only numbers can be accepted for this field';
 $lang['en_US']['Permission']['FULLADMINRIGHTS'] = 'Full administrative rights';
-$lang['en_US']['Permission']['PERMSDEFINED'] = 'The following permission codes are defined';
 $lang['en_US']['Permission']['PLURALNAME'] = array(
 	'Permissions',
 	50,
@@ -621,6 +639,15 @@ $lang['en_US']['RedirectorPage']['YOURPAGE'] = 'Page on your website';
 $lang['en_US']['RelationComplexTableField.ss']['ADD'] = 'Add';
 $lang['en_US']['RelationComplexTableField.ss']['CSVEXPORT'] = 'Export to CSV';
 $lang['en_US']['RelationComplexTableField.ss']['NOTFOUND'] = 'No items found';
+$lang['en_US']['RemoveOrphanedPagesTask']['BUTTONRUN'] = 'Run';
+$lang['en_US']['RemoveOrphanedPagesTask']['CHOOSEOPERATION'] = 'Choose operation:';
+$lang['en_US']['RemoveOrphanedPagesTask']['DELETEWARNING'] = 'Warning: These operations are not reversible. Please handle with care.';
+$lang['en_US']['RemoveOrphanedPagesTask']['HEADER'] = 'Remove all orphaned pages task';
+$lang['en_US']['RemoveOrphanedPagesTask']['NONEFOUND'] = 'No orphans found';
+$lang['en_US']['RemoveOrphanedPagesTask']['NONEREMOVED'] = 'None removed';
+$lang['en_US']['RemoveOrphanedPagesTask']['OPERATION_REMOVE'] = 'Remove selected from all stages (WARNING: Will destroy all selected pages from both stage and live)';
+$lang['en_US']['RemoveOrphanedPagesTask']['SELECTALL'] = 'select all';
+$lang['en_US']['RemoveOrphanedPagesTask']['UNSELECTALL'] = 'unselect all';
 $lang['en_US']['SearchForm']['GO'] = 'Go';
 $lang['en_US']['SearchForm']['SEARCH'] = 'Search';
 $lang['en_US']['Security']['ALREADYLOGGEDIN'] = array(
@@ -653,7 +680,7 @@ $lang['en_US']['Security']['NOTERESETPASSWORD'] = 'Enter your e-mail address and
 $lang['en_US']['Security']['NOTHINGTOENCRYPT1'] = 'No passwords to encrypt';
 $lang['en_US']['Security']['NOTHINGTOENCRYPT2'] = 'There are no members with a clear text password that could be encrypted!';
 $lang['en_US']['Security']['PASSWORDSENTHEADER'] = 'Password reset link sent to \'%s\'';
-$lang['en_US']['Security']['PASSWORDSENTTEXT'] = 'Thank you! A reset link has been sent to \'%s\', provided an account exists for this email address.';
+$lang['en_US']['Security']['PASSWORDSENTTEXT'] = 'Thank you! A reset link has been sent to  \'%s\', provided an account exists for this email address.';
 $lang['en_US']['Security']['PERMFAILURE'] = ' This page is secured and you need administrator rights to access it. 
 				Enter your credentials below and we will send you right along.';
 $lang['en_US']['SecurityAdmin']['ADVANCEDONLY'] = 'This section is for advanced users only.
@@ -709,7 +736,7 @@ $lang['en_US']['SiteTree']['EDITANYONE'] = 'Anyone who can log-in to the CMS';
 $lang['en_US']['SiteTree']['EDITHEADER'] = 'Who can edit this page?';
 $lang['en_US']['SiteTree']['EDITONLYTHESE'] = 'Only these people (choose from list)';
 $lang['en_US']['SiteTree']['EDITORGROUPS'] = 'Editor Groups';
-$lang['en_US']['SiteTree']['EDIT_ALL_DESCRIPTION'] = 'Can edit any page on the site, regard of the settings on the Access tab';
+$lang['en_US']['SiteTree']['EDIT_ALL_DESCRIPTION'] = 'Can edit any page on the site, bypassing page specific security';
 $lang['en_US']['SiteTree']['Editors'] = 'Editors Groups';
 $lang['en_US']['SiteTree']['HASBROKENLINKS'] = 'This page has broken links.';
 $lang['en_US']['SiteTree']['HOMEPAGEFORDOMAIN'] = array(
@@ -757,6 +784,7 @@ $lang['en_US']['SiteTree']['PLURALNAME'] = array(
 	'Pural name of the object, used in dropdowns and to generally identify a collection of this object in the interface'
 );
 $lang['en_US']['SiteTree']['REMOVEDFROMDRAFT'] = 'Removed from draft site';
+$lang['en_US']['SiteTree']['REORGANISE_DESCRIPTION'] = 'Can reorganise the site tree';
 $lang['en_US']['SiteTree']['SHOWINMENUS'] = 'Show in menus?';
 $lang['en_US']['SiteTree']['SHOWINSEARCH'] = 'Show in search?';
 $lang['en_US']['SiteTree']['SINGULARNAME'] = array(
@@ -783,7 +811,7 @@ $lang['en_US']['SiteTree']['URLSegment'] = array(
 $lang['en_US']['SiteTree']['VALIDATIONURLSEGMENT1'] = 'Another page is using that URL. URL must be unique for each page';
 $lang['en_US']['SiteTree']['VALIDATIONURLSEGMENT2'] = 'URLs can only be made up of letters, digits and hyphens.';
 $lang['en_US']['SiteTree']['VIEWERGROUPS'] = 'Viewer Groups';
-$lang['en_US']['SiteTree']['VIEW_ALL_DESCRIPTION'] = 'Can view any page on the site, regard of the settings on the Access tab';
+$lang['en_US']['SiteTree']['VIEW_ALL_DESCRIPTION'] = 'Can view any page on the site, bypassing page specific security';
 $lang['en_US']['SiteTree']['Viewers'] = 'Viewers Groups';
 $lang['en_US']['SiteTree']['has_one_Parent'] = array(
 	'Parent Page',
