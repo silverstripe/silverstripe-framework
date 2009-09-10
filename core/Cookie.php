@@ -9,14 +9,20 @@ class Cookie extends Object {
 	
 	/**
 	 * Set a cookie variable
-	 * @param name The variable name
-	 * @param value The variable value.  May be an array or object if you wish.
-	 * @param expiryDays The expiry time, in days.  Defaults to 90.
+	 * 
+	 * @param string $name The variable name
+	 * @param string $value The variable value.  May be an array or object if you wish.
+	 * @param int $expiryDays The expiry time, in days.  Defaults to 90.
+	 * @param string $path See http://php.net/set_session
+	 * @param string $domain See http://php.net/set_session
+	 * @param boolean $secure See http://php.net/set_session
+	 * @param boolean $httpOnly See http://php.net/set_session (PHP 5.2+ only)
 	 */
-	static function set($name, $value, $expiryDays = 90) {
+	static function set($name, $value, $expiryDays = 90, $path = null, $domain = null, $secure = false, $httpOnly = false) {
 		if(!headers_sent($file, $line)) {
 			$expiry = $expiryDays > 0 ? time()+(86400*$expiryDays) : 0;
-			setcookie($name, $value, $expiry, Director::baseURL());
+			$path = ($path) ? $path : Director::baseURL();
+			setcookie($name, $value, $expiry, $path, $domain, $secure, $httpOnly);
 		} else {
 			if(self::$report_errors) user_error("Cookie '$name' can't be set. The site started outputting was content at line $line in $file", E_USER_WARNING);
 		}
