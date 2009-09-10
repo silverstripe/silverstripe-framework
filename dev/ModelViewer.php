@@ -21,7 +21,9 @@ class ModelViewer extends Controller {
 	
 	function init() {
 		parent::init();
-		if(!Permission::check("ADMIN")) Security::permissionFailure();
+
+		$canAccess = (Director::isDev() || Director::is_cli() || Permission::check("ADMIN"));
+		if(!$canAccess) return Security::permissionFailure($this);
 
 		// check for graphviz dependencies
 		$returnCode = 0;

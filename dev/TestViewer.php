@@ -66,6 +66,13 @@ class TestViewer extends Controller {
 			'*' => array('', 'potentialMethodCall'),
 		),
 	);
+	
+	function init() {
+		parent::init();
+		
+		$canAccess = (Director::isDev() || Director::is_cli() || Permission::check("ADMIN"));
+		if(!$canAccess) return Security::permissionFailure($this);
+	}
 
 	function createClass($token) {
 		$this->currentClass = array();

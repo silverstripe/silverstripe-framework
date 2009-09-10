@@ -13,8 +13,10 @@ class i18nTextCollectorTask extends BuildTask {
 	";
 	
 	function init() {
-		if(!Director::is_cli() && !Director::isDev() && !Permission::check("ADMIN")) Security::permissionFailure();
 		parent::init();
+		
+		$canAccess = (Director::isDev() || Director::is_cli() || Permission::check("ADMIN"));
+		if(!$canAccess) return Security::permissionFailure($this);
 	}
 	
 	/**

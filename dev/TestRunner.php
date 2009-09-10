@@ -59,6 +59,10 @@ class TestRunner extends Controller {
 	
 	function init() {
 		parent::init();
+		
+		$canAccess = (Director::isDev() || Director::is_cli() || Permission::check("ADMIN"));
+		if(!$canAccess) return Security::permissionFailure($this);
+		
 		ManifestBuilder::load_test_manifest();
 		if (!self::$default_reporter) self::set_reporter(Director::is_cli() ? 'CliDebugView' : 'DebugView');
 		

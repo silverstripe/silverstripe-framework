@@ -10,6 +10,13 @@ class TaskRunner extends Controller {
 		'$TaskName' => 'runTask'
 	);
 	
+	function init() {
+		parent::init();
+		
+		$canAccess = (Director::isDev() || Director::is_cli() || Permission::check("ADMIN"));
+		if(!$canAccess) return Security::permissionFailure($this);
+	}
+	
 	function index() {
 		$tasks = $this->getTasks();
 

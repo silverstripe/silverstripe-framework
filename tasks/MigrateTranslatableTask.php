@@ -42,8 +42,10 @@ class MigrateTranslatableTask extends BuildTask {
 	protected $description = "Migrates site translations from SilverStripe 2.1/2.2 to new database structure.";
 	
 	function init() {
-		if(!Director::is_cli() && !Director::isDev() && !Permission::check("ADMIN")) Security::permissionFailure();
 		parent::init();
+		
+		$canAccess = (Director::isDev() || Director::is_cli() || Permission::check("ADMIN"));
+		if(!$canAccess) return Security::permissionFailure($this);
 	}
 	
 	function run($request) {
