@@ -118,6 +118,7 @@ class FileIFrameField extends FileField {
 			|| ($data['FileSource'] == 'new' && (!isset($_FILES['Upload']) || !$_FILES['Upload']))
 			|| ($data['FileSource'] == 'existing' && (!isset($data['ExistingFile']) || !$data['ExistingFile']))
 		) {
+			$form->sessionMessage(_t('FileIFrameField.NOSOURCE', 'Please select a source file to attach'), 'required');
 			Director::redirectBack();
 			return;
 		}
