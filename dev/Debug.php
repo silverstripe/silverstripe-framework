@@ -648,7 +648,6 @@ function exceptionHandler($exception) {
  * @param int $errline
  */
 function errorHandler($errno, $errstr, $errfile, $errline) {
-	$bt = debug_backtrace();
 	switch($errno) {
 		case E_ERROR:
 		case E_CORE_ERROR:
