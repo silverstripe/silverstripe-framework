@@ -88,7 +88,7 @@ class ModelAsController extends Controller implements NestedController {
 	}
 	
 	protected function findOldPage($urlSegment) {
-		// Build the query by  replacing `SiteTree` with `SiteTree_versions` in a regular query.
+		// Build the query by  replacing "SiteTree" with "SiteTree_versions" in a regular query.
 		// Note that this should *really* be handled by a more full-featured data mapper; as it stands
 		// this is a bit of a hack.
 		$origStage = Versioned::current_stage();
