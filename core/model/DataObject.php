@@ -1116,7 +1116,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 				$sql = new SQLQuery();
 				$sql->delete = true;
 				$sql->from[$ancestor] = "\"$ancestor\"";
-				$sql->where[] = "ID = $this->ID";
+				$sql->where[] = "\"ID\" = $this->ID";
 				$this->extend('augmentSQL', $sql);
 				$sql->execute();
 			}
