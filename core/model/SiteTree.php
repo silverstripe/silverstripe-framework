@@ -85,7 +85,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	);
 
 	static $indexes = array(
-		"SearchFields" => Array('type'=>'fulltext', 'value'=>'Title, MenuTitle, Content, MetaTitle, MetaDescription, MetaKeywords'),
+		"SearchFields" => Array('type'=>'fulltext', 'name'=>'SearchFields', 'value'=>'Title, MenuTitle, Content, MetaTitle, MetaDescription, MetaKeywords'),
 		//"TitleSearchFields" => Array('type'=>'fulltext', 'value'=>'Title'),
 		//"ContentSearchFields" => Array('type'=>'fulltext', 'value'=>'Content'),
 		"URLSegment" => true,
@@ -918,9 +918,9 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 			
 			foreach(array('Stage', 'Live') as $stage) {
 				// Get the uninherited permissions
-				$uninheritedPermissions = Versioned::get_by_stage("SiteTree", $stage, "(CanEditType = 'LoggedInUsers' OR
-					(CanEditType = 'OnlyTheseUsers' AND \"SiteTree_EditorGroups\".SiteTreeID IS NOT NULL))
-					AND \"SiteTree\".ID IN ($SQL_idList)",
+				$uninheritedPermissions = Versioned::get_by_stage("SiteTree", $stage, "(\"CanEditType\" = 'LoggedInUsers' OR
+					(\"CanEditType\" = 'OnlyTheseUsers' AND \"SiteTree_EditorGroups\".\"SiteTreeID\" IS NOT NULL))
+					AND \"SiteTree\".\"ID\" IN ($SQL_idList)",
 					"",
 					"LEFT JOIN \"SiteTree_EditorGroups\" 
 					ON \"SiteTree_EditorGroups\".\"SiteTreeID\" = \"SiteTree\".\"ID\"
@@ -932,8 +932,8 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 				}
 
 				// Get permissions that are inherited
-				$potentiallyInherited = Versioned::get_by_stage("SiteTree", $stage, "CanEditType = 'Inherit'
-					AND \"SiteTree\".ID IN ($SQL_idList)");
+				$potentiallyInherited = Versioned::get_by_stage("SiteTree", $stage, "\"CanEditType\" = 'Inherit'
+					AND \"SiteTree\".\"ID\" IN ($SQL_idList)");
 
 				if($potentiallyInherited) {
 					// Group $potentiallyInherited by ParentID; we'll look at the permission of all those
@@ -1007,7 +1007,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 			$idList = implode(",", $editableIDs);
 		
 			// You can only delete pages whose children you can delete
-			$childRecords = DataObject::get("SiteTree", "ParentID IN ($idList)");
+			$childRecords = DataObject::get("SiteTree", "\"ParentID\" IN ($idList)");
 			if($childRecords) {
 				$children = $childRecords->map("ID", "ParentID");
 
