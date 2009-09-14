@@ -79,6 +79,11 @@ class CheckboxSetField extends OptionsetField {
 		
 		$odd = 0;
 		$options = '';
+		
+		if ($source == null) {
+			$source = array();
+			$options = "<li>No options available</li>";
+		}
 
 		foreach($source as $index => $item) {
 			if(is_a($item, 'DataObject')) {
