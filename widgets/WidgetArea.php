@@ -35,7 +35,9 @@ class WidgetArea extends DataObject {
 				$controllerClass = "{$widgetClass}_Controller";
 				if(class_exists($controllerClass)) break;
 			}
-			$controllers->push(new $controllerClass($widget));
+			$controller = new $controllerClass($widget);
+			$controller->init();
+			$controllers->push($controller);
 		}
 		
 		return $controllers;
