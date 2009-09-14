@@ -144,11 +144,11 @@ class Debug {
 			$file = basename($caller['file']);
 			if(Director::is_cli()) {
 				if($showHeader) echo "Debug (line $caller[line] of $file):\n ";
-				echo trim($message) . "\n";
+				echo $message . "\n";
 			} else {
 				echo "<p style=\"background-color: white; color: black; width: 95%; margin: 0.5em; padding: 0.3em; border: 1px #CCC solid\">\n";
 				if($showHeader) echo "<b>Debug (line $caller[line] of $file):</b>\n ";
-				echo Convert::raw2xml(trim($message)) . "</p>\n";
+				echo Convert::raw2xml($message) . "</p>\n";
 			}
 		}
 	}
