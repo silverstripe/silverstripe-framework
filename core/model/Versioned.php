@@ -506,20 +506,20 @@ class Versioned extends DataObjectDecorator {
 		return !$stagesAreEqual;
 	}
 	
-	function Versions($filter = "") {
-		return $this->allVersions($filter);
+	function Versions($filter = "", $sort = "", $limit = "", $join = "", $having = "") {
+		return $this->allVersions($filter, $sort, $limit, $join, $having);
 	}
 	
 	/**
 	 * Return a list of all the versions available.
 	 * @param string $filter
 	 */
-	function allVersions($filter = "") {
-		$query = $this->owner->extendedSQL($filter,"");
+	function allVersions($filter = "", $sort = "", $limit = "", $join = "", $having = "") {
+		$query = $this->owner->extendedSQL($filter, $sort, $limit, $join, $having);
 
-		foreach($query->from as $table => $join) {
-			if($join[0] == '"') $baseTable = str_replace('"','',$join);
-			else if (substr($join,0,5) != 'INNER') $query->from[$table] = "LEFT JOIN \"$table\" ON \"$table\".\"RecordID\" = \"{$baseTable}_versions\".\"RecordID\" AND \"$table\".\"Version\" = \"{$baseTable}_versions\".\"Version\"";
+		foreach($query->from as $table => $tableJoin) {
+			if($tableJoin[0] == '"') $baseTable = str_replace('"','',$tableJoin);
+			else if (substr($tableJoin,0,5) != 'INNER') $query->from[$table] = "LEFT JOIN \"$table\" ON \"$table\".\"RecordID\" = \"{$baseTable}_versions\".\"RecordID\" AND \"$table\".\"Version\" = \"{$baseTable}_versions\".\"Version\"";
 			$query->renameTable($table, $table . '_versions');
 		}
 		
@@ -529,7 +529,7 @@ class Versioned extends DataObjectDecorator {
 		}
 		
 		$query->where[] = "\"{$baseTable}_versions\".\"RecordID\" = '{$this->owner->ID}'";
-		$query->orderby = "\"{$baseTable}_versions\".\"LastEdited\" DESC, \"{$baseTable}_versions\".\"Version\" DESC";
+		$query->orderby = ($sort) ? $sort : "\"{$baseTable}_versions\".\"LastEdited\" DESC, \"{$baseTable}_versions\".\"Version\" DESC";
 		
 
 		$records = $query->execute();
