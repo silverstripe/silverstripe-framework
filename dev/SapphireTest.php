@@ -355,6 +355,8 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	 *      ), $members); 
 	 */
 	function assertDOSEquals($matches, $dataObjectSet) {
+		if(!$dataObjectSet) return false;
+		
 		$extracted = array();
 		foreach($dataObjectSet as $item) $extracted[] = $item->toMap();
 		
