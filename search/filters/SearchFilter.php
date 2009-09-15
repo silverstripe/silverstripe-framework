@@ -1,24 +1,53 @@
 <?php
 /**
- * @package sapphire
- * @subpackage search
- */
-
-/**
- * @todo documentation
+ * Base class for filtering implementations,
+ * which work together with {@link SearchContext}
+ * to create or amend a query for {@link DataObject} instances.
+ * See {@link SearchContext} for more information.
  *
  * @package sapphire
  * @subpackage search
  */
 abstract class SearchFilter extends Object {
 	
+	/**
+	 * @var string Classname of the inspected {@link DataObject}
+	 */
 	protected $model;
+	
+	/**
+	 * @var string
+	 */
 	protected $name;
+	
+	/**
+	 * @var string 
+	 */
+	protected $fullName;
+	
+	/**
+	 * @var mixed
+	 */
 	protected $value;
+	
+	/**
+	 * @var string Name of a has-one, has-many or many-many relation (not the classname).
+	 * Set in the constructor as part of the name in dot-notation, and used in 
+	 * {@link applyRelation()}.
+	 */
 	protected $relation;
 	
-	function __construct($name, $value = false) {
-		$this->addRelation($name);
+	/**
+	 * @param string $fullName Determines the name of the field, as well as the searched database 
+	 *  column. Can contain a relation name in dot notation, which will automatically join
+	 *  the necessary tables (e.g. "Comments.Name" to join the "Comments" has-many relationship and
+	 *  search the "Name" column when applying this filter to a SiteTree class).
+	 * @param mixed $value
+	 */
+	function __construct($fullName, $value = false) {
+		$this->fullName = $fullName;
+		// sets $this->name and $this->relation
+		$this->addRelation($fullName);
 		$this->value = $value;
 	}
 	
@@ -26,7 +55,7 @@ abstract class SearchFilter extends Object {
 	 * Called by constructor to convert a string pathname into
 	 * a well defined relationship sequence.
 	 *
-	 * @param unknown_type $name
+	 * @param string $name
 	 */
 	protected function addRelation($name) {
 		if (strstr($name, '.')) {
@@ -77,6 +106,16 @@ abstract class SearchFilter extends Object {
 	}
 	
 	/**
+	 * The full name passed to the constructor,
+	 * including any (optional) relations in dot notation.
+	 * 
+	 * @return string
+	 */
+	public function getFullName() {
+		return $this->fullName;
+	}
+	
+	/**
 	 * Normalizes the field name to table mapping.
 	 * 
 	 * @return string
@@ -113,7 +152,8 @@ abstract class SearchFilter extends Object {
 	
 	/**
 	 * Traverse the relationship fields, and add the table
-	 * mappings to the query object state.
+	 * mappings to the query object state. This has to be called
+	 * in any overloaded {@link SearchFilter->apply()} methods manually.
 	 * 
 	 * @todo try to make this implicitly triggered so it doesn't have to be manually called in child filters
 	 * @param SQLQuery $query

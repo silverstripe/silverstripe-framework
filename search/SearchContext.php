@@ -11,6 +11,14 @@
 * 
 * In case you need multiple contexts, consider namespacing your request parameters
 * by using {@link FieldSet->namespace()} on the $fields constructor parameter.
+* 
+* Each DataObject subclass can have multiple search contexts for different cases,
+* e.g. for a limited frontend search and a fully featured backend search.
+* By default, you can use {@link DataObject->getDefaultSearchContext()} which is automatically
+* scaffolded. It uses {@link DataObject::$searchable_fields} to determine which fields
+* to include.
+* 
+* @see http://doc.silverstripe.com/doku.php?id=searchcontext
 *
 * @package sapphire
 * @subpackage search
@@ -96,8 +104,12 @@ class SearchContext extends Object {
 	 * Returns a SQL object representing the search context for the given
 	 * list of query parameters.
 	 *
-	 * @param array $searchParams
-	 * @param string|array $sort Database column to sort on. Falls back to {@link DataObject::$default_sort} if not provided.
+	 * @param array $searchParams Map of search criteria, mostly taked from $_REQUEST.
+	 *  If a filter is applied to a relationship in dot notation,
+	 *  the parameter name should have the dots replaced with double underscores,
+	 *  for example "Comments__Name" instead of the filter name "Comments.Name".
+	 * @param string|array $sort Database column to sort on. 
+	 *  Falls back to {@link DataObject::$default_sort} if not provided.
 	 * @param string|array $limit 
 	 * @param SQLQuery $existingQuery
 	 * @return SQLQuery
@@ -124,7 +136,7 @@ class SearchContext extends Object {
 		} else {
 			$searchParamArray = $searchParams;
 		}
-		
+
  		foreach($searchParamArray as $key => $value) {
 			$key = str_replace('__', '.', $key);
 			if($filter = $this->getFilter($key)) {
@@ -219,7 +231,7 @@ class SearchContext extends Object {
 	 * @param SearchFilter $filter
 	 */
 	public function addFilter($filter) {
-		$this->filters[$filter->getName()] = $filter;
+		$this->filters[$filter->getFullName()] = $filter;
 	}
 	
 	/**
