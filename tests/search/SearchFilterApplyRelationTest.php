@@ -35,27 +35,27 @@ class SearchFilterApplyRelationTest extends SapphireTest{
 		$context->setFilters(null);
 		$context->addFilter($filter);
 		$params = array(
-			"Title" => "I am has_many object1",
+			"SearchFilterApplyRelationTest_HasManyGrantChildren__Title" => "I am has_many object1",
 		);
 		$results = $context->getResults($params);
 		$this->assertEquals(1, $results->count());
 		$this->assertEquals(array('1'), $results->column('ID'));
 		
 		$params = array(
-			"Title" => "I am has_many object3",
+			"SearchFilterApplyRelationTest_HasManyGrantChildren__Title" => "I am has_many object3",
 		);
 		$results = $context->getResults($params);
 		$this->assertEquals(1, $results->count());
 		$this->assertEquals(array('2'), $results->column('ID'));
 		
 		$params = array(
-			"Title" => "I am has_many object",
+			"SearchFilterApplyRelationTest_HasManyGrantChildren__Title" => "I am has_many object",
 		);
 		$results = $context->getResults($params);
 		$this->assertEquals(2, $results->count());
 		
 		$params = array(
-			"Title" => "not exist",
+			"SearchFilterApplyRelationTest_HasManyGrantChildren__Title" => "not exist",
 		);
 		$results = $context->getResults($params);
 		$this->assertEquals(0, $results->count());
@@ -69,25 +69,25 @@ class SearchFilterApplyRelationTest extends SapphireTest{
 		$context->setFilters(null);
 		$context->addFilter($filter);
 		$params = array(
-			"Title" => "I am many_many object1",
+			"ManyManyGrantChildren__Title" => "I am many_many object1",
 		);
 		$results = $context->getResults($params);
 		$this->assertEquals(2, $results->count());
 		
 		$params = array(
-			"Title" => "I am many_many object2",
+			"ManyManyGrantChildren__Title" => "I am many_many object2",
 		);
 		$results = $context->getResults($params);
 		$this->assertEquals(2, $results->count());
 		
 		$params = array(
-			"Title" => "I am many_many object",
+			"ManyManyGrantChildren__Title" => "I am many_many object",
 		);
 		$results = $context->getResults($params);
 		$this->assertEquals(2, $results->count());
 		
 		$params = array(
-			"Title" => "not exist",
+			"ManyManyGrantChildren__Title" => "not exist",
 		);
 		$results = $context->getResults($params);
 		$this->assertEquals(0, $results->count());
