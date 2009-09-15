@@ -182,6 +182,13 @@ class TableListField extends FormField {
 	protected $showPagination = false;
 	
 	/**
+	 * @var string Override the {@link Link()} method
+	 * for all pagination. Useful to force rendering of the field
+	 * in a different context.
+	 */
+	public $paginationBaseLink = null;
+	
+	/**
 	 * @var int Number of items to show on a single page (needed for pagination)
 	 */
 	protected $pageSize = 10;
@@ -757,7 +764,8 @@ JS
 		if(!isset($_REQUEST['ctf'][$this->Name()]['start']) || !is_numeric($_REQUEST['ctf'][$this->Name()]['start']) || $_REQUEST['ctf'][$this->Name()]['start'] == 0) {
 			return null;
 		}
-		$link = Controller::join_links($this->Link(), "?ctf[{$this->Name()}][start]={$start}");
+		$baseLink = ($this->paginationBaseLink) ? $this->paginationBaseLink : $this->Link();
+		$link = Controller::join_links($baseLink, "?ctf[{$this->Name()}][start]={$start}");
 		if($this->extraLinkParams) $link .= "&" . http_build_query($this->extraLinkParams);
 		return $link;
 	}
@@ -771,7 +779,8 @@ JS
 		
 		$start = ($_REQUEST['ctf'][$this->Name()]['start'] - $this->pageSize < 0)  ? 0 : $_REQUEST['ctf'][$this->Name()]['start'] - $this->pageSize;
 		
-		$link = Controller::join_links($this->Link(), "?ctf[{$this->Name()}][start]={$start}");
+		$baseLink = ($this->paginationBaseLink) ? $this->paginationBaseLink : $this->Link();
+		$link = Controller::join_links($baseLink, "?ctf[{$this->Name()}][start]={$start}");
 		if($this->extraLinkParams) $link .= "&" . http_build_query($this->extraLinkParams);
 		return $link;
 	}
@@ -783,7 +792,8 @@ JS
 		if($currentStart >= $start-1) {
 			return null;
 		}
-		$link = Controller::join_links($this->Link(), "?ctf[{$this->Name()}][start]={$start}");
+		$baseLink = ($this->paginationBaseLink) ? $this->paginationBaseLink : $this->Link();
+		$link = Controller::join_links($baseLink, "?ctf[{$this->Name()}][start]={$start}");
 		if($this->extraLinkParams) $link .= "&" . http_build_query($this->extraLinkParams);
 		return $link;
 	}
@@ -796,7 +806,8 @@ JS
 			return null;
 		}
 		
-		$link = Controller::join_links($this->Link(), "?ctf[{$this->Name()}][start]={$start}");
+		$baseLink = ($this->paginationBaseLink) ? $this->paginationBaseLink : $this->Link();
+		$link = Controller::join_links($baseLink, "?ctf[{$this->Name()}][start]={$start}");
 		if($this->extraLinkParams) $link .= "&" . http_build_query($this->extraLinkParams);
 		return $link;
 	}
