@@ -478,7 +478,7 @@ class RestfulServer extends Controller {
 	protected function getObjectQuery($className, $id, $params) {
 		$baseClass = ClassInfo::baseDataClass($className);
 		return singleton($className)->extendedSQL(
-			"\"$baseClass\".ID = {$id}"
+			"\"$baseClass\".\"ID\" = {$id}"
 		);
 	}
 	
