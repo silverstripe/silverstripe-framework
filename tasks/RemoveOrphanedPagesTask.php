@@ -88,7 +88,7 @@ in the other stage:<br />
 			$stageRecord = Versioned::get_one_by_stage(
 				$this->orphanedSearchClass, 
 				'Stage', 
-				sprintf('`%s`.`ID` = %d', 
+				sprintf("\"%s\".\"ID\" = %d", 
 					ClassInfo::baseDataClass($this->orphanedSearchClass), 
 					$orphan->ID
 				)
@@ -96,7 +96,7 @@ in the other stage:<br />
 			$liveRecord = Versioned::get_one_by_stage(
 				$this->orphanedSearchClass, 
 				'Live', 
-				sprintf('`%s`.`ID` = %d', 
+				sprintf("\"%s\".\"ID\" = %d", 
 					ClassInfo::baseDataClass($this->orphanedSearchClass), 
 					$orphan->ID
 				)
@@ -222,7 +222,7 @@ in the other stage:<br />
 			$stageRecord = Versioned::get_one_by_stage(
 				$this->orphanedSearchClass, 
 				'Stage', 
-				sprintf('`%s`.`ID` = %d', 
+				sprintf("\"%s\".\"ID\" = %d", 
 					ClassInfo::baseDataClass($this->orphanedSearchClass), 
 					$id
 				)
@@ -236,7 +236,7 @@ in the other stage:<br />
 			$liveRecord = Versioned::get_one_by_stage(
 				$this->orphanedSearchClass, 
 				'Live', 
-				sprintf('`%s`.`ID` = %d', 
+				sprintf("\"%s\".\"ID\" = %d", 
 					ClassInfo::baseDataClass($this->orphanedSearchClass), 
 					$id
 				)
@@ -269,7 +269,7 @@ in the other stage:<br />
 			$stageRecord = Versioned::get_one_by_stage(
 				$this->orphanedSearchClass, 
 				'Stage', 
-				sprintf('`%s`.`ID` = %d', 
+				sprintf("\"%s\".\"ID\" = %d", 
 					ClassInfo::baseDataClass($this->orphanedSearchClass), 
 					$id
 				)
@@ -287,7 +287,7 @@ in the other stage:<br />
 			$liveRecord = Versioned::get_one_by_stage(
 				$this->orphanedSearchClass, 
 				'Live', 
-				sprintf('`%s`.`ID` = %d', 
+				sprintf("\"%s\".\"ID\" = %d", 
 					ClassInfo::baseDataClass($this->orphanedSearchClass), 
 					$id
 				)
@@ -323,7 +323,7 @@ in the other stage:<br />
 	 */
 	function getOrphanedPages($class = 'SiteTree', $filter = '', $sort = null, $join = null, $limit = null) {
 		$filter .= ($filter) ? ' AND ' : '';
-		$filter .= sprintf('`%s`.`ParentID` != 0 AND `Parents`.`ID` IS NULL', $class);
+		$filter .= sprintf("\"%s\".\"ParentID\" != 0 AND \"Parents\".\"ID\" IS NULL", $class);
 		
 		$orphans = new DataObjectSet();
 		foreach(array('Stage', 'Live') as $stage) {
@@ -331,7 +331,7 @@ in the other stage:<br />
 			$table = $class;
 			$table .= ($stage == 'Live') ? '_Live' : '';
 			$joinByStage .= sprintf(
-				'LEFT JOIN `%s` AS `Parents` ON `%s`.`ParentID` = `Parents`.`ID`',
+				"LEFT JOIN \"%s\" AS \"Parents\" ON \"%s\".\"ParentID\" = \"Parents\".\"ID\"",
 				$table,
 				$table
 			);
