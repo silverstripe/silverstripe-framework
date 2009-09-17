@@ -365,7 +365,6 @@ abstract class Database {
 			}
 		}
 		
-
 		if($newTable || !isset($this->indexList[$table][$index_alt])) {
 			$this->transCreateIndex($table, $index, $spec);
 			Database::alteration_message("Index $table.$index: created as $spec","created");
@@ -418,9 +417,11 @@ abstract class Database {
 		}
 		
 		// Get the value of this field.
-		if(is_array($spec))
+		if(is_array($spec)){
 			$specValue=$spec['data_type'];
-		else $specValue=$spec;
+			if(isset($spec['precision']))
+				$specValue.='(' . $spec['precision'] . ')';
+		} else $specValue=$spec;
 
 		// We need to get db-specific versions of the ID column:
 		if($spec_orig==DB::getConn()->IdColumn() || $spec_orig==DB::getConn()->IdColumn(true))
