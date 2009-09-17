@@ -335,7 +335,7 @@ class Translatable extends DataObjectDecorator {
 		$translationGroupID = $this->getTranslationGroup();
 		if(is_numeric($translationGroupID)) {
 			$query = new SQLQuery(
-				'DISTINCT Locale',
+				'DISTINCT "Locale"',
 				sprintf(
 					'"%s" LEFT JOIN "%s" ON "%s"."OriginalID" = "%s"."ID"',
 					$baseDataClass,
@@ -1133,7 +1133,10 @@ class Translatable extends DataObjectDecorator {
 	 */
 	static function get_existing_content_languages($className = 'SiteTree', $where = '') {
 		$baseTable = ClassInfo::baseDataClass($className);
-		$query = new SQLQuery('Distinct Locale',$baseTable,$where,"",'Locale');
+		//We don't quote $where if it is empty:
+		if($where!='')
+			$where="\"$where\"";
+		$query = new SQLQuery("Distinct \"Locale\"","\"$baseTable\"",$where, '', "\"Locale\"");
 		$dbLangs = $query->execute()->column();
 		$langlist = array_merge((array)Translatable::default_locale(), (array)$dbLangs);
 		$returnMap = array();
