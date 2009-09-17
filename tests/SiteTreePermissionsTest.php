@@ -250,7 +250,7 @@ class SiteTreePermissionsTest extends FunctionalTest {
 		$page->deleteFromStage('Stage');
 
 		// Get the live version of the page
-		$page = Versioned::get_one_by_stage("SiteTree", "Live", "\"SiteTree\".ID = $pageID");
+		$page = Versioned::get_one_by_stage("SiteTree", "Live", "\"SiteTree\".\"ID\" = $pageID");
 		
 		// subadmin users
 		$subadminuser = $this->objFromFixture('Member', 'subadmin');
