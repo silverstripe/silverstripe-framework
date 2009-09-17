@@ -177,7 +177,7 @@ abstract class SearchFilter extends Object {
 							$ancestry = array_reverse($ancestry);
 							foreach($ancestry as $ancestor){
 								if($ancestor != $component){
-									$query->innerJoin($ancestor, "\"$component\".\"ID\" = \"$ancestor\".ID");
+									$query->innerJoin($ancestor, "\"$component\".\"ID\" = \"$ancestor\".\"ID\"");
 									$component=$ancestor;
 								}
 							}
@@ -198,7 +198,7 @@ abstract class SearchFilter extends Object {
 							$ancestry = array_reverse($ancestry);
 							foreach($ancestry as $ancestor){
 								if($ancestor != $component){
-									$query->innerJoin($ancestor, "\"$component\".\"ID\" = \"$ancestor\".ID");
+									$query->innerJoin($ancestor, "\"$component\".\"ID\" = \"$ancestor\".\"ID\"");
 									$component=$ancestor;
 								}
 							}
@@ -223,10 +223,11 @@ abstract class SearchFilter extends Object {
 					$newQuery = $model->{"{$rel}Query"}();
 					if($newQuery) {
 						// Get the table to join to
+						//DATABASE ABSTRACTION: I don't think we need this line anymore:
 						$newModel = str_replace('`','',array_shift($newQuery->from));
 						// Get the filter to use on the join
 					 	$ancestry = $model->getClassAncestry();
-						$newFilter = "(" . str_replace('$ID', "`{$ancestry[0]}`.`ID`" , implode(") AND (", $newQuery->where) ) . ")";
+						$newFilter = "(" . str_replace('$ID', "\"{$ancestry[0]}\".\"ID\"" , implode(") AND (", $newQuery->where) ) . ")";
 						$query->leftJoin($newModel, $newFilter);
 						$this->model = $newModel;
 					} else {
