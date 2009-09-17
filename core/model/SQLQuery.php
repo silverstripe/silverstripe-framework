@@ -384,7 +384,7 @@ class SQLQuery extends Object {
 	 * @return Query
 	 */
 	function execute() {
-		return DB::query($this->sql(), E_USER_ERROR, $params);
+		return DB::query($this->sql(), E_USER_ERROR);
 	}
 	
 	/**
