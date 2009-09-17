@@ -325,7 +325,7 @@ class TranslatableTest extends FunctionalTest {
 		$translatedPage->Title = 'De Modified';
 		$translatedPage->write();
 		$origPage->publish('Stage', 'Live');
-		$liveOrigPage = Versioned::get_one_by_stage('Page', 'Live', "\"SiteTree\".ID = {$origPage->ID}");
+		$liveOrigPage = Versioned::get_one_by_stage('Page', 'Live', "\"SiteTree\".\"ID\" = {$origPage->ID}");
 		$this->assertEquals(
 			$liveOrigPage->Title, 
 			'En Modified',
