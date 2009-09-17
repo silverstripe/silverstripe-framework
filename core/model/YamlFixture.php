@@ -201,7 +201,7 @@ class YamlFixture extends Object {
 						$obj->getManyManyComponents($fieldName)->setByIDList($parsedItems);
 					}
 				} elseif($obj->has_one($fieldName)) {
-					$obj->{$fieldName . 'ID'} = $this->parseFixtureVal($fieldVal);
+					$obj->{$fieldName . "\"ID\""} = $this->parseFixtureVal($fieldVal);
 				}
 			}
 			$obj->write();
