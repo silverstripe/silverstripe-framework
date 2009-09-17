@@ -1282,7 +1282,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		$id = $this->getField("ID");
 			
 		// get filter
-		$combinedFilter = "$joinField = '$id'";
+		$combinedFilter = "\"$joinField\" = '$id'";
 		if($filter) $combinedFilter .= " AND {$filter}";
 			
 		return singleton($componentClass)->extendedSQL($combinedFilter, $sort, $limit, $join);
@@ -3389,7 +3389,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		
 		return $entities;
 	}
-
+	
 }
 
 ?>
