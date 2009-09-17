@@ -806,7 +806,7 @@ class MySQLDatabase extends Database {
 
 		foreach($records as $record)
 			$objects[] = new $record['ClassName']($record);
-
+		
 		if(isset($objects)) $doSet = new DataObjectSet($objects);
 		else $doSet = new DataObjectSet();
 		
@@ -821,6 +821,13 @@ class MySQLDatabase extends Database {
 	 */
 	function now(){
 		return 'NOW()';
+	}
+	
+	/*
+	 * Returns the database-specific version of the random() function
+	 */
+	function random(){
+		return 'RAND()';
 	}
 	
 	/*
