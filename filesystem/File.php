@@ -25,7 +25,7 @@ class File extends DataObject {
 	);
 	
 	static $indexes = array(
-		"SearchFields" => Array('type'=>'fulltext', 'value'=>'Filename,Title,Content'),
+		"SearchFields" => Array('type'=>'fulltext','name'=>'SearchFields', 'value'=>'Filename,Title,Content'),
 	);
 	
 	static $has_one = array(
