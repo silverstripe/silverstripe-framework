@@ -220,7 +220,7 @@ class SiteTreeTest extends SapphireTest {
 		Versioned::reading_stage('Live');
 		$deletedPage = Versioned::get_latest_version('SiteTree', $page2ID);
 		$deletedPage->doRestoreToStage();
-		$this->assertTrue(!Versioned::get_one_by_stage("Page", "Live", "\"SiteTree\".ID = " . $page2ID));
+		$this->assertTrue(!Versioned::get_one_by_stage("Page", "Live", "\"SiteTree\".\"ID\" = " . $page2ID));
 
 		Versioned::reading_stage('Stage');
 		$requeriedPage = DataObject::get_by_id("Page", $page2ID);
@@ -279,7 +279,7 @@ class SiteTreeTest extends SapphireTest {
 	function testReadArchiveDate() {
 		Versioned::reading_archived_date('2009-07-02 14:05:07');
 		
-		DataObject::get('SiteTree', 'ParentID = 0');
+		DataObject::get('SiteTree', "\"ParentID\" = 0");
 		
 		Versioned::reading_archived_date(null);
 	}
@@ -321,15 +321,15 @@ class SiteTreeTest extends SapphireTest {
 		$about->write();
 		
 		// Check the version created
-		$savedVersion = DB::query("SELECT AuthorID, PublisherID FROM SiteTree_versions 
-			WHERE RecordID = $about->ID ORDER BY Version DESC LIMIT 1")->record();
+		$savedVersion = DB::query("SELECT \"AuthorID\", \"PublisherID\" FROM \"SiteTree_versions\" 
+			WHERE \"RecordID\" = $about->ID ORDER BY \"Version\" DESC LIMIT 1")->record();
 		$this->assertEquals($memberID, $savedVersion['AuthorID']);
 		$this->assertEquals(0, $savedVersion['PublisherID']);
 		
 		// Publish the page
 		$about->doPublish();
-		$publishedVersion = DB::query("SELECT AuthorID, PublisherID FROM SiteTree_versions 
-			WHERE RecordID = $about->ID ORDER BY Version DESC LIMIT 1")->record();
+		$publishedVersion = DB::query("SELECT \"AuthorID\", \"PublisherID\" FROM \"SiteTree_versions\" 
+			WHERE \"RecordID\" = $about->ID ORDER BY \"Version\" DESC LIMIT 1")->record();
 			
 		// Check the version created
 		$this->assertEquals($memberID, $publishedVersion['AuthorID']);
