@@ -87,6 +87,9 @@ class SQLQuery extends Object {
 	 * @param array $groupby An array of fields to group by.
 	 * @param array $having An array of having clauses.
 	 * @param string $limit A LIMIT clause.
+	 * 
+	 * TODO: perhaps we can quote things here instead of requiring all the parameters to be quoted
+	 * by this stage.
 	 */
 	function __construct($select = "*", $from = array(), $where = "", $orderby = "", $groupby = "", $having = "", $limit = "") {
 		$this->select($select);
@@ -157,7 +160,7 @@ class SQLQuery extends Object {
 	 * @return SQLQuery This instance 
 	 */
 	public function innerJoin($table, $onPredicate) {
-		$this->from[$table] = "INNER JOIN $table ON $onPredicate";
+		$this->from[$table] = "INNER JOIN \"$table\" ON $onPredicate";
 		return $this;
 	}
 	
@@ -207,7 +210,7 @@ class SQLQuery extends Object {
 		
 		// If sort contains a function call, let's move the sort clause into a separate selected field.
 		// Some versions of MySQL choke if you have a group function referenced directly in the ORDER BY
-		if($combinedOrderby && strpos($combinedOrderby,'(') !== false && strtoupper(trim($combinedOrderby)) != 'RAND()') {
+		if($combinedOrderby && strpos($combinedOrderby,'(') !== false && strtoupper(trim($combinedOrderby)) != DB::getConn()->random()) {
 			// Sort can be "Col1 DESC|ASC, Col2 DESC|ASC", we need to handle that
 			$sortParts = explode(",", $combinedOrderby);
 				
@@ -381,7 +384,7 @@ class SQLQuery extends Object {
 	 * @return Query
 	 */
 	function execute() {
-		return DB::query($this->sql());
+		return DB::query($this->sql(), E_USER_ERROR, $params);
 	}
 	
 	/**
