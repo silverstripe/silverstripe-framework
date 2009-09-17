@@ -76,7 +76,7 @@ class CsvBulkLoaderTest extends SapphireTest {
 		$this->assertEquals("1988-01-31", $obj->Birthday);
 		$this->assertEquals("1", $obj->IsRegistered);
 		
-		$obj2 = DataObject::get_one('CsvBulkLoaderTest_Player', "FirstName = 'Jane'");
+		$obj2 = DataObject::get_one('CsvBulkLoaderTest_Player', "\"FirstName\" = 'Jane'");
 		$this->assertNotNull($obj2);
 		$this->assertEquals('0', $obj2->IsRegistered);
 		
