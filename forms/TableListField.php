@@ -460,9 +460,9 @@ JS
 		if($this->customQuery) {
 			$query = clone $this->customQuery;
 			$baseClass = ClassInfo::baseDataClass($this->sourceClass);
-			$query->select[] = "{$baseClass}.ID AS \"ID\"";
-			$query->select[] = "{$baseClass}.ClassName AS \"ClassName\"";
-			$query->select[] = "{$baseClass}.ClassName AS \"RecordClassName\"";
+			$query->select[] = "\"{$baseClass}\".\"ID\" AS \"ID\"";
+			$query->select[] = "\"{$baseClass}\".\"ClassName\" AS \"ClassName\"";
+			$query->select[] = "\"{$baseClass}\".\"ClassName\" AS \"RecordClassName\"";
 		} else {
 			$query = singleton($this->sourceClass)->extendedSQL($this->sourceFilter(), $this->sourceSort, null, $this->sourceJoin);
 		}
@@ -483,14 +483,14 @@ JS
 		$baseClass = ClassInfo::baseDataClass($this->sourceClass);
 		if($this->customCsvQuery) {
 			$query = $this->customCsvQuery;
-			$query->select[] = "{$baseClass}.ID AS ID";
-			$query->select[] = "{$baseClass}.ClassName AS ClassName";
-			$query->select[] = "{$baseClass}.ClassName AS \"RecordClassName\"";
+			$query->select[] = "\"{$baseClass}\".\"ID\" AS \"ID\"";
+			$query->select[] = "\"{$baseClass}\".\"ClassName\" AS \"ClassName\"";
+			$query->select[] = "\"{$baseClass}\".\"ClassName\" AS \"RecordClassName\"";
 		} else if($this->customQuery) {
 			$query = $this->customQuery;
-			$query->select[] = "{$baseClass}.ID AS ID";
-			$query->select[] = "{$baseClass}.ClassName AS ClassName";
-			$query->select[] = "{$baseClass}.ClassName AS \"RecordClassName\"";
+			$query->select[] = "\"{$baseClass}\".\"ID\" AS \"ID\"";
+			$query->select[] = "\"{$baseClass}\".\"ClassName\" AS \"ClassName\"";
+			$query->select[] = "\"{$baseClass}\".\"ClassName\" AS \"RecordClassName\"";
 		} else {
 			$query = singleton($this->sourceClass)->extendedSQL($this->sourceFilter(), $this->sourceSort, null, $this->sourceJoin);
 		}
