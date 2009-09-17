@@ -317,10 +317,10 @@ class DataObjectTest extends SapphireTest {
 		$this->assertEquals($keysA, $keysB);
 		
 		/* If we perform the same random query twice, it shouldn't return the same results */
-		$itemsA = DataObject::get("PageComment", "", "RAND()");
+		$itemsA = DataObject::get("PageComment", "", DB::getConn()->random());
 		foreach($itemsA as $item) $keysA[] = $item->ID;
 
-		$itemsB = DataObject::get("PageComment", "", "RAND()");
+		$itemsB = DataObject::get("PageComment", "", DB::getConn()->random());
 		foreach($itemsB as $item) $keysB[] = $item->ID;
 		
 		$this->assertNotEquals($keysA, $keysB);
@@ -752,7 +752,7 @@ class DataObjectTest extends SapphireTest {
 		$obj2->write();
 		
 		// Check that the values of those fields are properly read from the database
-		$values = DataObject::get("DataObjectTest_Team", "DataObjectTest_Team.ID IN 
+		$values = DataObject::get("DataObjectTest_Team", "\"DataObjectTest_Team\".\"ID\" IN 
 			($obj1->ID, $obj2->ID)")->column("SubclassDatabaseField");
 		$this->assertEquals(array('obj1', 'obj2'), $values);
 	}
