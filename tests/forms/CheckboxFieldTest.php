@@ -79,7 +79,7 @@ class CheckboxFieldTest extends SapphireTest {
 		
 		/* Check that IsChecked column contains a 1 */
 		$this->assertEquals(
-			DB::query("SELECT IsChecked FROM CheckboxFieldTest_Article")->value(),
+			DB::query("SELECT \"IsChecked\" FROM \"CheckboxFieldTest_Article\"")->value(),
 			1,
 			'We have a 1 set in the database, because the field saved into as a 1'
 		);
@@ -103,7 +103,7 @@ class CheckboxFieldTest extends SapphireTest {
 		
 		/* Check that IsChecked column contains a 0 */
 		$this->assertEquals(
-			DB::query("SELECT IsChecked FROM CheckboxFieldTest_Article")->value(),
+			DB::query("SELECT \"IsChecked\" FROM \"CheckboxFieldTest_Article\"")->value(),
 			0,
 			'We have a 0 set in the database, because the field saved into as a 0'
 		);
