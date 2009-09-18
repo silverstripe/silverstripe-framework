@@ -149,6 +149,7 @@ class Email extends ViewableData {
 		if($cc != null) $this->cc = $cc;
 		if($bcc != null) $this->bcc = $bcc;
 		if($bounceHandlerURL != null) $this->setBounceHandlerURL($bounceHandlerURL);
+		parent::__construct();
 	}
 	
 	public function attachFileFromString($data, $filename, $mimetype = null) {

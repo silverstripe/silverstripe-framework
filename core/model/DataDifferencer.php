@@ -45,6 +45,7 @@ class DataDifferencer extends ViewableData {
 		if(!$toRecord) user_error("DataDifferencer constructed without a toRecord", E_USER_WARNING);
 		$this->fromRecord = $fromRecord;
 		$this->toRecord = $toRecord;
+		parent::__construct();
 	}
 	
 	/**

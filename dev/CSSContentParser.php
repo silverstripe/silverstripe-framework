@@ -45,9 +45,9 @@ class CSSContentParser extends Object {
 			$tidy = $content;
 		}
 		
-		
-		
 		$this->simpleXML = new SimpleXMLElement($tidy);
+		
+		parent::__construct();
 	}
 		
 	/**

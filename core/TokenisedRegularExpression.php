@@ -14,6 +14,7 @@ class TokenisedRegularExpression extends Object {
 	
 	function __construct($expression) {
 		$this->expression = $expression;
+		parent::__construct();
 	}
 	
 	function findAll($tokens) {

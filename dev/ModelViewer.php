@@ -117,6 +117,7 @@ class ModelViewer_Model extends ViewableData {
 	
 	function __construct($className) {
 		$this->className = $className;
+		parent::__construct();
 	}
 	
 	function getModule() {
