@@ -10,7 +10,7 @@ class DB {
 	 * The global database connection.
 	 * @var Database
 	 */
-	protected static $globalConn;
+	private static $connections = array();
 
 	/**
 	 * The last SQL query run.
@@ -27,18 +27,24 @@ class DB {
 	 * Set the global database connection.
 	 * Pass an object that's a subclass of Database.  This object will be used when {@link DB::query()}
 	 * is called.
-	 * @var Database $globalConn
+	 * @param $connection The connecton object to set as the connection.
+	 * @param $name The name to give to this connection.  If you omit this argument, the connection
+	 * will be the default one used by the ORM.  However, you can store other named connections to
+	 * be accessed through DB::getConn($name).  This is useful when you have an application that
+	 * needs to connect to more than one database.
 	 */
-	static function setConn($globalConn) {
-		DB::$globalConn = $globalConn;
+	static function setConn(Database $connection, $name = 'default') {
+		self::$connections[$name] = $connection;
 	}
 
 	/**
 	 * Get the global database connection.
+	 * @param $name An optional name given to a connection in the DB::setConn() call.  If omitted, 
+	 * the default connection is returned.
 	 * @return Database
 	 */
-	static function getConn() {
-		return DB::$globalConn;
+	static function getConn($name = 'default') {
+		return self::$connections[$name];
 	}
 	
 	/**
@@ -76,7 +82,7 @@ class DB {
 		$dbClass = $databaseConfig['type'];
 		$conn = new $dbClass($databaseConfig);
 
-		DB::setConn($conn);
+		self::setConn($conn);
 	}
 	
 	/**
@@ -94,7 +100,7 @@ class DB {
 	 * @return string $connect The connection string.
 	 **/
 	public function getConnect($parameters) {
-		return DB::$globalConn->getConnect($parameters);
+		return self::getConn()->getConnect($parameters);
 	}
 
 	/**
@@ -104,18 +110,18 @@ class DB {
 	 * @return Query
 	 */
 	static function query($sql, $errorLevel = E_USER_ERROR) {
-		DB::$lastQuery = $sql;
+		self::$lastQuery = $sql;
 		/* debug helper for query efficiency
 		if(substr(strtolower($sql),0,6) == 'select') {
 			$product = 1;
-			foreach(DB::$globalConn->query("explain " . $sql, $errorLevel) as $explainRow) {
+			foreach(self::getConn()->query("explain " . $sql, $errorLevel) as $explainRow) {
 				if($explainRow['rows']) $product *= $explainRow['rows'];
 			}
 			if($product > 100)
 			Debug::message("Cartesian product $product for SQL: $sql");
 		} */
 		
-		return DB::$globalConn->query($sql, $errorLevel);
+		return self::getConn()->query($sql, $errorLevel);
 	}
 
 	/**
@@ -127,8 +133,8 @@ class DB {
 	 * @param array $manipulation
 	 */
 	static function manipulate($manipulation) {
-		DB::$lastQuery = $manipulation;
-		return DB::$globalConn->manipulate($manipulation);
+		self::$lastQuery = $manipulation;
+		return self::getConn()->manipulate($manipulation);
 	}
 
 	/**
@@ -136,7 +142,7 @@ class DB {
 	 * @return int
 	 */
 	static function getGeneratedID($table) {
-		return DB::$globalConn->getGeneratedID($table);
+		return self::getConn()->getGeneratedID($table);
 	}
 
 	/**
@@ -144,7 +150,7 @@ class DB {
 	 * @return boolean
 	 */
 	static function isActive() {
-		if(DB::$globalConn) return DB::$globalConn->isActive();
+		if($conn = self::getConn()) return $conn->isActive();
 		else return false;
 	}
 
@@ -159,7 +165,7 @@ class DB {
 	 * @return boolean Returns true if successful
 	 */
 	static function createDatabase($connect, $username, $password, $database) {
-		return DB::$globalConn->createDatabase($connect, $username, $password, $database);
+		return self::getConn()->createDatabase($connect, $username, $password, $database);
 	}
 
 	/**
@@ -173,7 +179,7 @@ class DB {
 	 * @return The table name generated.  This may be different from the table name, for example with temporary tables.
 	 */
 	static function createTable($table, $fields = null, $indexes = null, $options = null) {
-		return DB::$globalConn->createTable($table, $fields, $indexes, $options);
+		return self::getConn()->createTable($table, $fields, $indexes, $options);
 	}
 
 	/**
@@ -183,7 +189,7 @@ class DB {
 	 * @param string $spec The field specification, eg 'INTEGER NOT NULL'
 	 */
 	static function createField($table, $field, $spec) {
-		return DB::$globalConn->createField($table, $field, $spec);
+		return self::getConn()->createField($table, $field, $spec);
 	}
 
 	/**
@@ -200,7 +206,7 @@ class DB {
 	 * @param string $options SQL statement to append to the CREATE TABLE call.
 	 */
 	static function requireTable($table, $fieldSchema = null, $indexSchema = null, $hasAutoIncPK=true, $options = null) {
-		return DB::$globalConn->requireTable($table, $fieldSchema, $indexSchema, $hasAutoIncPK, $options);
+		return self::getConn()->requireTable($table, $fieldSchema, $indexSchema, $hasAutoIncPK, $options);
 	}
 
 	/**
@@ -210,7 +216,7 @@ class DB {
 	 * @param string $spec The field specification.
 	 */
 	static function requireField($table, $field, $spec) {
-		return DB::$globalConn->requireField($table, $field, $spec);
+		return self::getConn()->requireField($table, $field, $spec);
 	}
 
 	/**
@@ -220,7 +226,7 @@ class DB {
 	 * @param string|boolean $spec The specification of the index. See requireTable() for more information.
 	 */
 	static function requireIndex($table, $index, $spec) {
-		return DB::$globalConn->requireIndex($table, $index, $spec);
+		return self::getConn()->requireIndex($table, $index, $spec);
 	}
 
 	/**
@@ -228,7 +234,7 @@ class DB {
 	 * @param string $table The table name.
 	 */
 	static function dontRequireTable($table) {
-		return DB::$globalConn->dontRequireTable($table);
+		return self::getConn()->dontRequireTable($table);
 	}
 	
 	/**
@@ -238,7 +244,7 @@ class DB {
 	 * @param string $fieldName
 	 */
 	static function dontRequireField($table, $fieldName) {
-		return DB::$globalConn->dontRequireField($table, $fieldName);
+		return self::getConn()->dontRequireField($table, $fieldName);
 	}
 
 	/**
@@ -247,7 +253,7 @@ class DB {
 	 * @return boolean Return true if the table has integrity after the method is complete.
 	 */
 	static function checkAndRepairTable($table) {
-		return DB::$globalConn->checkAndRepairTable($table);
+		return self::getConn()->checkAndRepairTable($table);
 	}
 
 	/**
@@ -255,7 +261,7 @@ class DB {
 	 * @return int
 	 */
 	static function affectedRows() {
-		return DB::$globalConn->affectedRows();
+		return self::getConn()->affectedRows();
 	}
 
 	/**
@@ -264,7 +270,7 @@ class DB {
 	 * @return array
 	 */
 	static function tableList() {
-		return DB::$globalConn->tableList();
+		return self::getConn()->tableList();
 	}
 	
 	/**
@@ -274,14 +280,14 @@ class DB {
 	 * @return array
 	 */
 	static function fieldList($table) {
-		return DB::$globalConn->fieldList($table);
+		return self::getConn()->fieldList($table);
 	}
 
 	/**
 	 * Enable supression of database messages.
 	 */
 	static function quiet() {
-		return DB::$globalConn->quiet();
+		return self::getConn()->quiet();
 	}
 }
 ?>
