@@ -44,7 +44,9 @@ class DB {
 	 * @return Database
 	 */
 	static function getConn($name = 'default') {
-		return self::$connections[$name];
+		if(isset(self::$connections[$name])) {
+			return self::$connections[$name];
+		}
 	}
 	
 	/**
