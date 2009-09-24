@@ -516,20 +516,32 @@ class Hierarchy extends DataObjectDecorator {
 		$join = "";
 
 		$baseClass = ClassInfo::baseDataClass($this->owner->class);
+
+		$filter = "\"{$baseClass}\".\"ParentID\" = " . (int)$this->owner->ID 
+			. " AND \"{$baseClass}\".\"ID\" != " . (int)$this->owner->ID;
 		
 		if($onlyDeletedFromStage) {
 			// Note that the lack of double-quotes around $baseClass are the only thing preventing
-			// it from being rewritten to {$baseClass}_Live.  This is brittle, won't work in
-			// postgres, and will need to be fixed *somehow*.  Also, this code should probably be
-			// refactored to be pushed into Versioned somehow; perhaps a "doesn't exist on stage X"
-			// option for get_by_stage.
+			// it from being rewritten to {$baseClass}_Live.  This is brittle and a little clumsy
 			$join = "LEFT JOIN {$baseClass} ON {$baseClass}.\"ID\" = \"{$baseClass}\".\"ID\"";
-			$extraFilter .=  " AND {$baseClass}.\"ID\" IS NULL";
+			$filter .=  " AND {$baseClass}.\"ID\" IS NULL";
 		}
+
+		$oldStage = Versioned::current_stage();
+		Versioned::reading_stage('Live');
 		
-		return Versioned::get_by_stage($baseClass, "Live", "\"{$baseClass}\".\"ParentID\" = "
-		 	. (int)$this->owner->ID . " AND \"{$baseClass}\".\"ID\" != " . (int)$this->owner->ID
-			. $extraFilter, null, $join);
+		$query = $this->owner->extendedSQL($filter, null, null, $join);
+
+		// Since we didn't include double quotes in the join & filter, we need to add them into the
+		// SQL now, after Versioned has done is query rewriting
+		$correctedSQL = str_replace(array("LEFT JOIN {$baseClass}", "{$baseClass}.\"ID\""),
+			array("LEFT JOIN \"{$baseClass}\"", "\"{$baseClass}\".\"ID\""), $query->sql());
+				
+		$result = $this->owner->buildDataObjectSet(DB::query($correctedSQL));
+		
+		Versioned::reading_stage($oldStage);
+		
+		return $result;
 	}
 	
 	/**
