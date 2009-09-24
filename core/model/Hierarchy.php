@@ -530,13 +530,15 @@ class Hierarchy extends DataObjectDecorator {
 		$oldStage = Versioned::current_stage();
 		Versioned::reading_stage('Live');
 		
-		$query = $this->owner->extendedSQL($filter, null, null, $join);
+		// Singleton is necessary and not $this->owner so as not to muck with Translatable's
+		// behaviour.
+		$query = singleton($baseClass)->extendedSQL($filter, null, null, $join);
 
 		// Since we didn't include double quotes in the join & filter, we need to add them into the
 		// SQL now, after Versioned has done is query rewriting
 		$correctedSQL = str_replace(array("LEFT JOIN {$baseClass}", "{$baseClass}.\"ID\""),
 			array("LEFT JOIN \"{$baseClass}\"", "\"{$baseClass}\".\"ID\""), $query->sql());
-				
+
 		$result = $this->owner->buildDataObjectSet(DB::query($correctedSQL));
 		
 		Versioned::reading_stage($oldStage);
