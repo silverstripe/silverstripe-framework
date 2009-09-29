@@ -161,7 +161,7 @@ class SQLQueryTest extends SapphireTest {
 		);
 		
 		$query = new SQLQuery();
-		$query->where[] = "MyTable.`ID`= 5";
+		$query->where[] = "MyTable.ID= 5";
 		$this->assertTrue(
 			$query->filtersOnID(),
 			"filtersOnID() is true with table and quoted column name "
