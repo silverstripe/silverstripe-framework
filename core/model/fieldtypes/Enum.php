@@ -42,7 +42,7 @@ class Enum extends DBField {
 	}
 	
 	function requireField(){
-		$parts=Array('datatype'=>'enum', 'enums'=>$this->enum, 'character set'=>'utf8', 'collate'=> 'utf8_general_ci', 'default'=>$this->default, 'table'=>$this->tableName);
+		$parts=Array('datatype'=>'enum', 'enums'=>$this->enum, 'character set'=>'utf8', 'collate'=> 'utf8_general_ci', 'default'=>$this->default, 'table'=>$this->tableName, 'arrayValue'=>$this->arrayValue);
 		$values=Array('type'=>'enum', 'parts'=>$parts);
 		DB::requireField($this->tableName, $this->name, $values);
 }
