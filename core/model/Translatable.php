@@ -871,6 +871,7 @@ class Translatable extends DataObjectDecorator {
 					_t('Translatable.NEWLANGUAGE', 'New language'), 
 					$alreadyTranslatedLocales,
 					'SiteTree',
+					'Locale-Native',
 					$this->owner
 				),
 				$createButton = new InlineFormAction('createtranslation',_t('Translatable.CREATEBUTTON', 'Create'))
