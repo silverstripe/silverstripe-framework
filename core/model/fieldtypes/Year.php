@@ -13,7 +13,7 @@
 class Year extends DBField {
 	
 	function requireField() {
-		$parts=Array('datatype'=>'year', 'precision'=>4);
+		$parts=Array('datatype'=>'year', 'precision'=>4, 'arrayValue'=>$this->arrayValue);
 		$values=Array('type'=>'year', 'parts'=>$parts);
 		DB::requireField($this->tableName, $this->name, $values);
 	}
