@@ -7,10 +7,8 @@
 class Int extends DBField {
 
 	function __construct($name, $defaultVal = 0) {
-		$this->defaultVal = is_int($defaultVal)
-			? $defaultVal
-			: 0;
-
+		$this->defaultVal = is_int($defaultVal) ? $defaultVal : 0;
+		
 		parent::__construct($name);
 	}
 
@@ -23,7 +21,7 @@ class Int extends DBField {
 	}
 
 	function requireField() {
-		$parts=Array('datatype'=>'int', 'precision'=>11, 'null'=>'not null', 'default'=>(int)$this->defaultVal);
+		$parts=Array('datatype'=>'int', 'precision'=>11, 'null'=>'not null', 'default'=>$this->defaultVal, 'arrayValue'=>$this->arrayValue);
 		$values=Array('type'=>'int', 'parts'=>$parts);
 		DB::requireField($this->tableName, $this->name, $values);
 	}
