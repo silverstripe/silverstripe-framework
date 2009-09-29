@@ -289,7 +289,19 @@ abstract class Database {
 		// Create custom fields
 		if($fieldSchema) {
 			foreach($fieldSchema as $fieldName => $fieldSpec) {
+				
+				//Is this an array field?
+				$arrayValue='';
+				if(strpos($fieldSpec, '[')!==false){
+					//If so, remove it and store that info separately
+					$pos=strpos($fieldSpec, '[');
+					$arrayValue=substr($fieldSpec, $pos);
+					$fieldSpec=substr($fieldSpec, 0, $pos);
+				}
+				
 				$fieldObj = eval(ViewableData::castingObjectCreator($fieldSpec));
+				$fieldObj->arrayValue=$arrayValue;
+				
 				$fieldObj->setTable($table);
 				$fieldObj->requireField();
 			}
