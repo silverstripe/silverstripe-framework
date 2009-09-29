@@ -48,7 +48,7 @@ class SSDatetime extends Date {
 	}
 
 	function requireField() {
-		$parts=Array('datatype'=>'datetime');
+		$parts=Array('datatype'=>'datetime', 'arrayValue'=>$this->arrayValue);
 		$values=Array('type'=>'SSDatetime', 'parts'=>$parts);
 		DB::requireField($this->tableName, $this->name, $values);
 	}
