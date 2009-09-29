@@ -220,7 +220,7 @@ class Date extends DBField {
 	}
 
 	function requireField() {
-		$parts=Array('datatype'=>'date');
+		$parts=Array('datatype'=>'date', 'arrayValue'=>$this->arrayValue);
 		$values=Array('type'=>'date', 'parts'=>$parts);
 		DB::requireField($this->tableName, $this->name, $values);
 	}
