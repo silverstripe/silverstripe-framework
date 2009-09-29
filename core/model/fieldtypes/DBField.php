@@ -21,6 +21,8 @@ abstract class DBField extends ViewableData {
 	
 	protected $name;
 	
+	protected $arrayValue;
+	
 	/**
 	 * Subclass of {@link SearchFilter} for usage in {@link defaultSearchFilter()}.
 	 *
