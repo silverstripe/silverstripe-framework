@@ -22,7 +22,7 @@ class HierarchyTest extends SapphireTest {
 			$page2->AllHistoricalChildren()->column('Title'));
 			
 		// Page 3 has been deleted; let's bring it back from the grave
-		$page3 = Versioned::get_including_deleted("SiteTree", "Title = 'Page 3'")->First();
+		$page3 = Versioned::get_including_deleted("SiteTree", "\"Title\" = 'Page 3'")->First();
 
 		// Check that both page 3 children are returned
 		$this->assertEquals(array("Page 3a", "Page 3b"), 
@@ -42,7 +42,7 @@ class HierarchyTest extends SapphireTest {
 		$this->objFromFixture('Page', 'page3')->markUnexpanded();
 		
 		// Query some pages in a different context and check their m
-		$pages = DataObject::get("Page");
+		$pages = DataObject::get("Page", '', '"ID" ASC');
 		$marked = $expanded = array();
 		foreach($pages as $page) {
 			if($page->isMarked()) $marked[] = $page->Title;
@@ -53,5 +53,5 @@ class HierarchyTest extends SapphireTest {
 		$this->assertEquals(array('Page 2', 'Page 2a', 'Page 2b'), $expanded);
 		
 	} 
-	
+		
 }
