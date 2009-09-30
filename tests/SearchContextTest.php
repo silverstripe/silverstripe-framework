@@ -99,7 +99,9 @@ class SearchContextTest extends SapphireTest {
 		$this->assertType('SearchContextTest_Project', $project);
 		$this->assertEquals("Blog Website", $project->Name);
 		$this->assertEquals(2, $project->Actions()->Count());
-		$this->assertEquals("Get RSS feeds working", $project->Actions()->First()->Description);
+		
+		//Disabled.  The record set returns two rows, and the order isn't guaranteed.
+		//$this->assertEquals("Get RSS feeds working", $project->Actions()->First()->Description);
 	}
 	
 	function testCanGenerateQueryUsingAllFilterTypes() {
