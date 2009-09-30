@@ -470,8 +470,9 @@ class Hierarchy extends DataObjectDecorator {
 	 * from both stage & live.
 	 */
 	public function AllHistoricalChildren() {
-		return Versioned::get_including_deleted(ClassInfo::baseDataClass($this->owner->class), 
-			"\"ParentID\" = " . (int)$this->owner->ID);
+		$baseClass=ClassInfo::baseDataClass($this->owner->class);
+		return Versioned::get_including_deleted($baseClass, 
+			"\"ParentID\" = " . (int)$this->owner->ID, "\"$baseClass\".\"ID\" ASC");
 	}
 
 	/**
