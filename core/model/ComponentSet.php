@@ -61,6 +61,30 @@ class ComponentSet extends DataObjectSet {
 	}
 	
 	/**
+	 * Get the ComponentSet specific information
+	 * 
+	 * Returns an array on the format array( 
+	 * 		'type' => <string>, 
+	 * 		'ownerObj' => <Object>, 
+	 * 		'ownerClass' => <string>, 
+	 * 		'tableName' => <string>, 
+	 * 		'childClass' => <string>, 
+	 * 		'joinField' => <string>|null );
+	 * 
+	 * @return array
+	 */
+	public function getComponentInfo() {
+		return array( 
+			'type' => $this->type,
+			'ownerObj' => $this->ownerObj,
+			'ownerClass' => $this->ownerClass,
+			'tableName' => $this->tableName,
+			'childClass' => $this->childClass,
+			'joinField' => $this->joinField 
+		);
+	}
+		
+	/**
 	 * Get an array of all the IDs in this component set, where the keys are the same as the
 	 * values.
 	 * @return array
