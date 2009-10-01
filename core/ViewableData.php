@@ -263,6 +263,10 @@ class ViewableData extends Object implements IteratorAggregate {
 	 * @return array
 	 */
 	public static function castingObjectCreatorPair($fieldSchema) {
+		//Remove any array brackets:
+		if(strpos($fieldSchema, '[')!==false)
+			$fieldSchema=substr($fieldSchema, 0, strpos($fieldSchema, '['));
+			
 		if(strpos($fieldSchema,'(') === false) {
 			return array(
 				'className' => $fieldSchema, 
