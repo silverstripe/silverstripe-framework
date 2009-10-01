@@ -36,7 +36,10 @@ class Float extends DBField {
 		if($value === true) {
 			return 1;
 		} if(!$value || !is_numeric($value)) {
-			return "0";
+			if(strpos($value, '[')===false)
+				return '0';
+			else
+				return addslashes($value);
 		} else {
 			return addslashes($value);
 		}
