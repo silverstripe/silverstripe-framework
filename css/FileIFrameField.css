@@ -1,4 +1,8 @@
+/*
+typography.css has been removed from sapphire, why shall we still has this? a dynamic typographp.css should be used by
+server side call, like Requirements::css(); 
 @import url("typography.css");
+*/
 
 html,body {
 	padding: 0;
