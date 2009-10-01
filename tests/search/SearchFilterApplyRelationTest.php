@@ -28,6 +28,9 @@ class SearchFilterApplyRelationTest extends SapphireTest{
 	}
 	
 	function testApplyRelationHasMany(){
+		$do1 = $this->objFromFixture('SearchFilterApplyRelationTest_DO', 'do1');
+		$do2 = $this->objFromFixture('SearchFilterApplyRelationTest_DO', 'do2');
+		
 		$all = singleton("SearchFilterApplyRelationTest_DO");
 		$context = $all->getDefaultSearchContext();
 			
@@ -39,14 +42,14 @@ class SearchFilterApplyRelationTest extends SapphireTest{
 		);
 		$results = $context->getResults($params);
 		$this->assertEquals(1, $results->count());
-		$this->assertEquals(array('1'), $results->column('ID'));
+		$this->assertEquals(array($do1->ID), $results->column('ID'));
 		
 		$params = array(
 			"SearchFilterApplyRelationTest_HasManyGrantChildren__Title" => "I am has_many object3",
 		);
 		$results = $context->getResults($params);
 		$this->assertEquals(1, $results->count());
-		$this->assertEquals(array('2'), $results->column('ID'));
+		$this->assertEquals(array($do2->ID), $results->column('ID'));
 		
 		$params = array(
 			"SearchFilterApplyRelationTest_HasManyGrantChildren__Title" => "I am has_many object",
