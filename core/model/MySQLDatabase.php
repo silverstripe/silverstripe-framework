@@ -28,6 +28,8 @@ class MySQLDatabase extends Database {
 	
 	private static $connection_charset = null;
 	
+	private $supportsTransactions=false;
+	
 	/**
 	 * Sets the character set for the MySQL database connection.
 	 * 
@@ -860,6 +862,43 @@ class MySQLDatabase extends Database {
 		$SQL_htmlEntityKeywords = Convert::raw2sql(htmlentities($keywords));
 
 		return "(MATCH ($fieldNames) AGAINST ('$SQL_keywords' $boolean) + MATCH ($fieldNames) AGAINST ('$SQL_htmlEntityKeywords' $boolean))";
+	}
+	
+	/*
+	 * Does this database support transactions?
+	 */
+	public function supportsTransactions(){
+		return $this->supportsTransactions;
+	}
+	/*
+	 * Start a prepared transaction
+	 * See http://developer.postgresql.org/pgdocs/postgres/sql-set-transaction.html for details on transaction isolation options
+	 */
+	public function startTransaction($transaction_mode=false, $session_characteristics=false){
+		//Transactions not set up for MySQL yet
+	}
+	
+	/*
+	 * Create a savepoint that you can jump back to if you encounter problems
+	 */
+	public function transactionSavepoint($savepoint){
+		//Transactions not set up for MySQL yet
+	}
+	
+	/*
+	 * Rollback or revert to a savepoint if your queries encounter problems
+	 * If you encounter a problem at any point during a transaction, you may
+	 * need to rollback that particular query, or return to a savepoint
+	 */
+	public function transactionRollback($savepoint=false){
+		//Transactions not set up for MySQL yet
+	}
+	
+	/*
+	 * Commit everything inside this transaction so far
+	 */
+	public function endTransaction(){
+		//Transactions not set up for MySQL yet
 	}
 }
 
