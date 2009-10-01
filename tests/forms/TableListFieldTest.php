@@ -25,6 +25,12 @@ class TableListFieldTest extends SapphireTest {
 	}
 	
 	function testUnpaginatedSourceItemGeneration() {
+		$item1 = $this->objFromFixture('TableListFieldTest_Obj', 'one');
+		$item2 = $this->objFromFixture('TableListFieldTest_Obj', 'two');
+		$item3 = $this->objFromFixture('TableListFieldTest_Obj', 'three');
+		$item4 = $this->objFromFixture('TableListFieldTest_Obj', 'four');
+		$item5 = $this->objFromFixture('TableListFieldTest_Obj', 'five');
+		
 		/* In this simple case, the source items should just list all the data objects specified */
 		$table = new TableListField("Tester", "TableListFieldTest_Obj", array(
 			"A" => "Col A",
@@ -41,13 +47,23 @@ class TableListFieldTest extends SapphireTest {
 		$items = $table->sourceItems();
 		$this->assertNotNull($items);
 		
-		//Disabled due to Postgres not liking the ID numbers to be dictated.
-		//The items are returned in the correct order, but with different keys.
-		//$itemMap = $items->toDropdownMap("ID", "A") ;
-		//$this->assertEquals(array(1 => "a1", 2 => "a2", 3 => "a3", 4 => "a4", 5 => "a5"), $itemMap);
+		$itemMap = $items->toDropdownMap("ID", "A") ;
+		$this->assertEquals(array(
+			$item1->ID => "a1", 
+			$item2->ID => "a2", 
+			$item3->ID => "a3", 
+			$item4->ID => "a4", 
+			$item5->ID => "a5"
+		), $itemMap);
 	}
 
 	function testFirstPageOfPaginatedSourceItemGeneration() {
+		$item1 = $this->objFromFixture('TableListFieldTest_Obj', 'one');
+		$item2 = $this->objFromFixture('TableListFieldTest_Obj', 'two');
+		$item3 = $this->objFromFixture('TableListFieldTest_Obj', 'three');
+		$item4 = $this->objFromFixture('TableListFieldTest_Obj', 'four');
+		$item5 = $this->objFromFixture('TableListFieldTest_Obj', 'five');
+		
 		/* With pagination enabled, only the first page of items should be shown */
 		$table = new TableListField("Tester", "TableListFieldTest_Obj", array(
 			"A" => "Col A",
@@ -67,13 +83,20 @@ class TableListFieldTest extends SapphireTest {
 		$items = $table->sourceItems();
 		$this->assertNotNull($items);
 
-		//Disabled due to Postgres not liking the ID numbers to be dictated.
-		//The items are returned in the correct order, but with different keys.
 		$itemMap = $items->toDropdownMap("ID", "A") ;
-		$this->assertEquals(array(1 => "a1", 2 => "a2"), $itemMap);
+		$this->assertEquals(array(
+			$item1->ID => "a1", 
+			$item2->ID => "a2"
+		), $itemMap);
 	}
 	
 	function testSecondPageOfPaginatedSourceItemGeneration() {
+		$item1 = $this->objFromFixture('TableListFieldTest_Obj', 'one');
+		$item2 = $this->objFromFixture('TableListFieldTest_Obj', 'two');
+		$item3 = $this->objFromFixture('TableListFieldTest_Obj', 'three');
+		$item4 = $this->objFromFixture('TableListFieldTest_Obj', 'four');
+		$item5 = $this->objFromFixture('TableListFieldTest_Obj', 'five');
+		
 		/* With pagination enabled, only the first page of items should be shown */
 		$table = new TableListField("Tester", "TableListFieldTest_Obj", array(
 			"A" => "Col A",
@@ -94,10 +117,8 @@ class TableListFieldTest extends SapphireTest {
 		$items = $table->sourceItems();
 		$this->assertNotNull($items);
 
-		//Disabled due to Postgres not liking the ID numbers to be dictated.
-		//The items are returned in the correct order, but with different keys.
-		//$itemMap = $items->toDropdownMap("ID", "A") ;
-		//$this->assertEquals(array(3 => "a3", 4 => "a4"), $itemMap);
+		$itemMap = $items->toDropdownMap("ID", "A") ;
+		$this->assertEquals(array($item3->ID => "a3", $item4->ID => "a4"), $itemMap);
 	}
 	
 	/**
