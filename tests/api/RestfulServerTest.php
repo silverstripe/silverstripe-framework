@@ -11,8 +11,11 @@ class RestfulServerTest extends SapphireTest {
 	static $fixture_file = 'sapphire/tests/api/RestfulServerTest.yml';
 
 	public function testApiAccess() {
+		$comment1 = $this->objFromFixture('RestfulServerTest_Comment', 'comment1');
+		$page1 = $this->objFromFixture('RestfulServerTest_Page', 'page1');
+		
 		// normal GET should succeed with $api_access enabled
-		$url = "/api/v1/RestfulServerTest_Comment/1";
+		$url = "/api/v1/RestfulServerTest_Comment/" . $comment1->ID;
 		$response = Director::test($url, null, null, 'GET');
 		$this->assertEquals($response->getStatusCode(), 200);
 		
@@ -20,7 +23,7 @@ class RestfulServerTest extends SapphireTest {
 		$_SERVER['PHP_AUTH_PW'] = 'user';
 		
 		// even with logged in user a GET with $api_access disabled should fail
-		$url = "/api/v1/RestfulServerTest_Page/1";
+		$url = "/api/v1/RestfulServerTest_Page/" . $page1->ID;
 		$response = Director::test($url, null, null, 'GET');
 		$this->assertEquals($response->getStatusCode(), 401);
 		
@@ -29,7 +32,9 @@ class RestfulServerTest extends SapphireTest {
 	}
 	
 	public function testApiAccessBoolean() {
-		$url = "/api/v1/RestfulServerTest_Comment/1";
+		$comment1 = $this->objFromFixture('RestfulServerTest_Comment', 'comment1');
+		
+		$url = "/api/v1/RestfulServerTest_Comment/" . $comment1->ID;
 		$response = Director::test($url, null, null, 'GET');
 		$this->assertContains('<ID>', $response->getBody());
 		$this->assertContains('<Name>', $response->getBody());
@@ -39,15 +44,18 @@ class RestfulServerTest extends SapphireTest {
 	}
 	
 	public function testAuthenticatedGET() {
+		$thing1 = $this->objFromFixture('RestfulServerTest_SecretThing', 'thing1');
+		$comment1 = $this->objFromFixture('RestfulServerTest_Comment', 'comment1');
+		
 		// @todo create additional mock object with authenticated VIEW permissions
-		$url = "/api/v1/RestfulServerTest_SecretThing/1";
+		$url = "/api/v1/RestfulServerTest_SecretThing/" . $thing1->ID;
 		$response = Director::test($url, null, null, 'GET');
 		$this->assertEquals($response->getStatusCode(), 401);
 		
 		$_SERVER['PHP_AUTH_USER'] = 'user@test.com';
 		$_SERVER['PHP_AUTH_PW'] = 'user';
 		
-		$url = "/api/v1/RestfulServerTest_Comment/1";
+		$url = "/api/v1/RestfulServerTest_Comment/" . $comment1->ID;
 		$response = Director::test($url, null, null, 'GET');
 		$this->assertEquals($response->getStatusCode(), 200);
 		
@@ -56,7 +64,9 @@ class RestfulServerTest extends SapphireTest {
 	}
 	
 	public function testAuthenticatedPUT() {
-		$url = "/api/v1/RestfulServerTest_Comment/1";
+		$comment1 = $this->objFromFixture('RestfulServerTest_Comment', 'comment1');
+		
+		$url = "/api/v1/RestfulServerTest_Comment/" . $comment1->ID;
 		$data = array('Comment' => 'created');
 		
 		$response = Director::test($url, $data, null, 'PUT');
@@ -87,8 +97,12 @@ class RestfulServerTest extends SapphireTest {
 		$responseArr = Convert::xml2array($response->getBody());
 		$ratingsArr = $responseArr['Ratings']['RestfulServerTest_AuthorRating'];
 		$this->assertEquals(count($ratingsArr), 2);
-		$this->assertEquals($ratingsArr[0]['@attributes']['id'], $rating1->ID);
-		$this->assertEquals($ratingsArr[1]['@attributes']['id'], $rating2->ID);
+		$ratingIDs = array(
+			$ratingsArr[0]['@attributes']['id'], 
+			$ratingsArr[1]['@attributes']['id']
+		);
+		$this->assertContains($rating1->ID, $ratingIDs);
+		$this->assertContains($rating2->ID, $ratingIDs);
 	}
 	
 	public function testGETManyManyRelationshipsXML() {
@@ -104,15 +118,21 @@ class RestfulServerTest extends SapphireTest {
 		$authorsArr = $arr['RestfulServerTest_Author'];
 		
 		$this->assertEquals(count($authorsArr), 2);
-		$this->assertEquals($authorsArr[0]['ID'], $author2->ID);
-		$this->assertEquals($authorsArr[1]['ID'], $author3->ID);
+		$ratingIDs = array(
+			$authorsArr[0]['ID'], 
+			$authorsArr[1]['ID']
+		);
+		$this->assertContains($author2->ID, $ratingIDs);
+		$this->assertContains($author3->ID, $ratingIDs);
 	}
 
 	public function testPUTWithFormEncoded() {
+		$comment1 = $this->objFromFixture('RestfulServerTest_Comment', 'comment1');
+		
 		$_SERVER['PHP_AUTH_USER'] = 'editor@test.com';
 		$_SERVER['PHP_AUTH_PW'] = 'editor';
 	
-		$url = "/api/v1/RestfulServerTest_Comment/1";
+		$url = "/api/v1/RestfulServerTest_Comment/" . $comment1->ID;
 		$body = 'Name=Updated Comment&Comment=updated';
 		$headers = array(
 			'Content-Type' => 'application/x-www-form-urlencoded'
@@ -121,7 +141,7 @@ class RestfulServerTest extends SapphireTest {
 		$this->assertEquals($response->getStatusCode(), 200); // Success
 		// Assumption: XML is default output
 		$responseArr = Convert::xml2array($response->getBody());
-		$this->assertEquals($responseArr['ID'], 1);
+		$this->assertEquals($responseArr['ID'], $comment1->ID);
 		$this->assertEquals($responseArr['Comment'], 'updated');
 		$this->assertEquals($responseArr['Name'], 'Updated Comment');
 	
@@ -130,6 +150,8 @@ class RestfulServerTest extends SapphireTest {
 	}
 	
 	public function testPOSTWithFormEncoded() {
+		$comment1 = $this->objFromFixture('RestfulServerTest_Comment', 'comment1');
+		
 		$_SERVER['PHP_AUTH_USER'] = 'editor@test.com';
 		$_SERVER['PHP_AUTH_PW'] = 'editor';
 	
@@ -142,7 +164,8 @@ class RestfulServerTest extends SapphireTest {
 		$this->assertEquals($response->getStatusCode(), 201); // Created
 		// Assumption: XML is default output
 		$responseArr = Convert::xml2array($response->getBody());
-		$this->assertEquals($responseArr['ID'], 2);
+		$this->assertTrue($responseArr['ID'] > 0);
+		$this->assertNotEquals($responseArr['ID'], $comment1->ID);
 		$this->assertEquals($responseArr['Comment'], 'created');
 		$this->assertEquals($responseArr['Name'], 'New Comment');
 	
@@ -151,25 +174,27 @@ class RestfulServerTest extends SapphireTest {
 	}
 	
 	public function testPUTwithJSON() {
+		$comment1 = $this->objFromFixture('RestfulServerTest_Comment', 'comment1');
+		
 		$_SERVER['PHP_AUTH_USER'] = 'editor@test.com';
 		$_SERVER['PHP_AUTH_PW'] = 'editor';
 		
 		// by mimetype
-		$url = "/api/v1/RestfulServerTest_Comment/1";
+		$url = "/api/v1/RestfulServerTest_Comment/" . $comment1->ID;
 		$body = '{"Comment":"updated"}';
 		$response = Director::test($url, null, null, 'PUT', $body, array('Content-Type'=>'application/json'));
 		$this->assertEquals($response->getStatusCode(), 200); // Updated
 		$obj = Convert::json2obj($response->getBody());
-		$this->assertEquals($obj->ID, 1);
+		$this->assertEquals($obj->ID, $comment1->ID);
 		$this->assertEquals($obj->Comment, 'updated');
 	
 		// by extension
-		$url = "/api/v1/RestfulServerTest_Comment/1.json";
+		$url = sprintf("/api/v1/RestfulServerTest_Comment/%d.json", $comment1->ID);
 		$body = '{"Comment":"updated"}';
 		$response = Director::test($url, null, null, 'PUT', $body);
 		$this->assertEquals($response->getStatusCode(), 200); // Updated
 		$obj = Convert::json2obj($response->getBody());
-		$this->assertEquals($obj->ID, 1);
+		$this->assertEquals($obj->ID, $comment1->ID);
 		$this->assertEquals($obj->Comment, 'updated');
 		
 		unset($_SERVER['PHP_AUTH_USER']);
@@ -177,25 +202,27 @@ class RestfulServerTest extends SapphireTest {
 	}
 	
 	public function testPUTwithXML() {
+		$comment1 = $this->objFromFixture('RestfulServerTest_Comment', 'comment1');
+		
 		$_SERVER['PHP_AUTH_USER'] = 'editor@test.com';
 		$_SERVER['PHP_AUTH_PW'] = 'editor';
 		
 		// by mimetype
-		$url = "/api/v1/RestfulServerTest_Comment/1";
+		$url = "/api/v1/RestfulServerTest_Comment/" . $comment1->ID;
 		$body = '<RestfulServerTest_Comment><Comment>updated</Comment></RestfulServerTest_Comment>';
 		$response = Director::test($url, null, null, 'PUT', $body, array('Content-Type'=>'text/xml'));
 		$this->assertEquals($response->getStatusCode(), 200); // Updated
 		$obj = Convert::xml2array($response->getBody());
-		$this->assertEquals($obj['ID'], 1);
+		$this->assertEquals($obj['ID'], $comment1->ID);
 		$this->assertEquals($obj['Comment'], 'updated');
 	
 		// by extension
-		$url = "/api/v1/RestfulServerTest_Comment/1.xml";
+		$url = sprintf("/api/v1/RestfulServerTest_Comment/%d.xml", $comment1->ID);
 		$body = '<RestfulServerTest_Comment><Comment>updated</Comment></RestfulServerTest_Comment>';
 		$response = Director::test($url, null, null, 'PUT', $body);
 		$this->assertEquals($response->getStatusCode(), 200); // Updated
 		$obj = Convert::xml2array($response->getBody());
-		$this->assertEquals($obj['ID'], 1);
+		$this->assertEquals($obj['ID'], $comment1->ID);
 		$this->assertEquals($obj['Comment'], 'updated');
 		
 		unset($_SERVER['PHP_AUTH_USER']);
@@ -203,13 +230,15 @@ class RestfulServerTest extends SapphireTest {
 	}
 		
 	public function testHTTPAcceptAndContentType() {
-		$url = "/api/v1/RestfulServerTest_Comment/1";
+		$comment1 = $this->objFromFixture('RestfulServerTest_Comment', 'comment1');
+		
+		$url = "/api/v1/RestfulServerTest_Comment/" . $comment1->ID;
 		
 		$headers = array('Accept' => 'application/json');
 		$response = Director::test($url, null, null, 'GET', null, $headers);
 		$this->assertEquals($response->getStatusCode(), 200); // Success
 		$obj = Convert::json2obj($response->getBody());
-		$this->assertEquals($obj->ID, 1);
+		$this->assertEquals($obj->ID, $comment1->ID);
 		$this->assertEquals($response->getHeader('Content-Type'), 'application/json');
 	}
 	
@@ -226,7 +255,9 @@ class RestfulServerTest extends SapphireTest {
 	}
 	
 	public function testMethodNotAllowed() {
-		$url = "/api/v1/RestfulServerTest_Comment/1";
+		$comment1 = $this->objFromFixture('RestfulServerTest_Comment', 'comment1');
+		
+		$url = "/api/v1/RestfulServerTest_Comment/" . $comment1->ID;
 		$response = Director::test($url, null, null, 'UNKNOWNHTTPMETHOD');
 		$this->assertEquals($response->getStatusCode(), 405);
 	}
