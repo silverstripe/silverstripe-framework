@@ -37,20 +37,23 @@ class SoapModelAccessTest extends SapphireTest {
 	}
 	
 	public function testAuthenticatedPUT() {
+		$comment1 = $this->objFromFixture('SoapModelAccessTest_Comment', 'comment1');
+		$comment1ID = $comment1->ID;
+		
 		// test wrong details
 		$c = $this->getTestSoapConnection();
 
 		$updateXML = <<<XML
 <?xml version="1.0" encoding="UTF-8"?>
 		<SoapModelAccessTest_Comment>
-			<ID>1</ID>
+			<ID>$comment1ID</ID>
 			<Name>Jimmy</Name>
 		</SoapModelAccessTest_Comment>			
 XML;
 
 		$soapResponse = $c->putXML(
 			"SoapModelAccessTest_Comment", 
-			1,
+			$comment1->ID,
 			null,
 			$updateXML,
 			'editor@test.com',
@@ -60,15 +63,15 @@ XML;
 		
 		// Check that the details weren't saved
 		$c = $this->getTestSoapConnection();
-		$soapResponse = $c->getXML("SoapModelAccessTest_Comment", 1, null, 'editor@test.com', 'editor');
+		$soapResponse = $c->getXML("SoapModelAccessTest_Comment", $comment1->ID, null, 'editor@test.com', 'editor');
 		$responseArr = Convert::xml2array($soapResponse);
-		$this->assertEquals(1, $responseArr['ID']);
+		$this->assertEquals($comment1->ID, $responseArr['ID']);
 		$this->assertEquals('Joe', $responseArr['Name']);
 
 		// Now do an update with the right password
 		$soapResponse = $c->putXML(
 			"SoapModelAccessTest_Comment", 
-			1,
+			$comment1->ID,
 			null,
 			$updateXML,
 			'editor@test.com',
@@ -77,9 +80,9 @@ XML;
 
 		// Check that the details were saved
 		$c = $this->getTestSoapConnection();
-		$soapResponse = $c->getXML("SoapModelAccessTest_Comment", 1, null, 'editor@test.com', 'editor');
+		$soapResponse = $c->getXML("SoapModelAccessTest_Comment", $comment1->ID, null, 'editor@test.com', 'editor');
 		$responseArr = Convert::xml2array($soapResponse);
-		$this->assertEquals(1, $responseArr['ID']);
+		$this->assertEquals($comment1->ID, $responseArr['ID']);
 		$this->assertEquals('Jimmy', $responseArr['Name']);
 	}
 	
