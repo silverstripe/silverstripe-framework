@@ -43,7 +43,7 @@ class SearchContextTest extends SapphireTest {
 		 	$context->getFilters()
 		 );
 	}
-
+	
 	function testDefaultFiltersDefinedWhenNotSetInDataObject() {
 		$book = singleton('SearchContextTest_Book');
 		$context = $book->getDefaultSearchContext();
@@ -69,7 +69,7 @@ class SearchContextTest extends SapphireTest {
 			$context->getFilters()
 		);
 	}
-
+	
 	function testUserDefinedFieldsAppearInSearchContext() {
 		$company = singleton('SearchContextTest_Company');
 		$context = $company->getDefaultSearchContext();
@@ -85,6 +85,8 @@ class SearchContextTest extends SapphireTest {
 	}
 	
 	function testRelationshipObjectsLinkedInSearch() {
+		$action3 = $this->objFromFixture('SearchContextTest_Action', 'action3');
+		
 		$project = singleton('SearchContextTest_Project');
 		$context = $project->getDefaultSearchContext();
 		
@@ -100,16 +102,17 @@ class SearchContextTest extends SapphireTest {
 		$this->assertEquals("Blog Website", $project->Name);
 		$this->assertEquals(2, $project->Actions()->Count());
 		
-		//Disabled.  The record set returns two rows, and the order isn't guaranteed.
-		//$this->assertEquals("Get RSS feeds working", $project->Actions()->First()->Description);
+		$this->assertEquals(
+			"Get RSS feeds working", 
+			$project->Actions()->find('ID', $action3->ID)->Description
+		);
 	}
 	
 	function testCanGenerateQueryUsingAllFilterTypes() {
 		$all = singleton("SearchContextTest_AllFilterTypes");
 		$context = $all->getDefaultSearchContext();
-		
 		$params = array(
-			"ExactMatch" => "Match Me Exactly",
+			"ExactMatch" => "Match me exactly",
 			"PartialMatch" => "partially",
 			"Negation" => "undisclosed",
 			"CollectionMatch" => "ExistingCollectionValue,NonExistingCollectionValue,4,Inline'Quotes'",
@@ -117,9 +120,8 @@ class SearchContextTest extends SapphireTest {
 			"EndsWith" => "ijkl",
 			"Fulltext" => "two"
 		);
-		
+
 		$results = $context->getResults($params);
-		
 		$this->assertEquals(1, $results->Count());
 		$this->assertEquals("Filtered value", $results->First()->HiddenValue);
 	}
