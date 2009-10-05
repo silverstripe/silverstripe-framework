@@ -789,6 +789,28 @@ class TranslatableTest extends FunctionalTest {
 		Translatable::set_allowed_locales($origAllowedLocales);
 	}
 	
+	function testLocalesForMember() {
+		$origAllowedLocales = Translatable::get_allowed_locales();
+		Translatable::set_allowed_locales(array('de_DE', 'ja_JP'));
+		
+		$cmseditor = $this->objFromFixture('Member', 'cmseditor');
+		$translator = $this->objFromFixture('Member', 'germantranslator');
+		
+		$this->assertEquals(
+			array('de_DE', 'ja_JP'), 
+			singleton('SiteTree')->getAllowedLocalesForMember($cmseditor),
+			'Members with TRANSLATE_ALL permission can edit all locales'
+		);
+		
+		$this->assertEquals(
+			array('de_DE'), 
+			singleton('SiteTree')->getAllowedLocalesForMember($translator),
+			'Members with TRANSLATE_<locale> permission cant edit all locales'
+		);
+		
+		Translatable::set_allowed_locales($origAllowedLocales);
+	}
+	
 	function testSavePageInCMS() {
 		$adminUser = $this->objFromFixture('Member', 'admin');
 		$enPage = $this->objFromFixture('Page', 'testpage_en');

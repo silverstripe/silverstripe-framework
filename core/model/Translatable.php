@@ -371,6 +371,27 @@ class Translatable extends DataObjectDecorator implements PermissionProvider {
 			return array();
 		};
 	}
+	
+	/**
+	 * Gets all locales that a member can access
+	 * as defined by {@link $allowed_locales}
+	 * and {@link canTranslate()}.
+	 * If {@link $allowed_locales} is not set and
+	 * the user has the `TRANSLATE_ALL` permission,
+	 * the method will return all available locales in the system.
+	 * 
+	 * @param Member $member
+	 * @return array Map of locales
+	 */
+	function getAllowedLocalesForMember($member) {
+		$locales = self::get_allowed_locales();
+		if(!$locales) $locales = i18n::get_common_locales();
+		if($locales) foreach($locales as $k => $locale) {
+			if(!$this->canTranslate($member, $locale)) unset($locales[$k]);
+		}
+
+		return $locales;
+	}
 
 	/**
 	 * Get a list of languages in which a given element has been translated.
