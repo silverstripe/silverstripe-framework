@@ -9,6 +9,18 @@
 class SiteTreePermissionsTest extends FunctionalTest {
 	static $fixture_file = "sapphire/tests/SiteTreePermissionsTest.yml";
 	
+	static function set_up_once() {
+		SiteTreeTest::set_up_once();
+
+		parent::set_up_once();
+	}
+	
+	static function tear_down_once() {
+		SiteTreeTest::tear_down_once();
+		
+		parent::tear_down_once();
+	}
+	
 	function setUp() {
 		parent::setUp();
 		
