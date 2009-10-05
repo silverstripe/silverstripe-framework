@@ -45,6 +45,10 @@ class TranslatableSearchFormTest extends FunctionalTest {
 		
 		$holderPage = $this->objFromFixture('SiteTree', 'searchformholder');
 		$this->mockController = new ContentController($holderPage);
+		
+		// whenever a translation is created, canTranslate() is checked
+		$admin = $this->objFromFixture('Member', 'admin');
+		$admin->logIn();
 	}
 	
 	static function tear_down_once() {
