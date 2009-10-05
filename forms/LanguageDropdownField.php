@@ -35,9 +35,19 @@ class LanguageDropdownField extends GroupedDropdownField {
 				($allowedLocales && !in_array($locale, $allowedLocales))
 				|| ($excludeLocales && in_array($locale, $excludeLocales))
 				|| ($usedLocalesWithTitle && array_key_exists($locale, $usedLocalesWithTitle))
-				|| ($instance && !$instance->canTranslate(null, $locale))
 			) {
 				unset($allLocalesWithTitle[$locale]);
+			}
+		}
+		// instance specific permissions
+		foreach($allLocalesWithTitle as $locale => $localeTitle) {
+			if($instance && !$instance->canTranslate(null, $locale)) {
+				unset($allLocalesWithTitle[$locale]);
+			}
+		}
+		foreach($usedLocalesWithTitle as $locale => $localeTitle) {
+			if($instance && !$instance->canTranslate(null, $locale)) {
+				unset($usedLocalesWithTitle[$locale]);
 			}
 		}
 
