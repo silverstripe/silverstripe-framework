@@ -85,30 +85,5 @@ class FormFieldTest extends SapphireTest {
 		}
 	}
 	
-	/**
-	 * Test to ensure that subclassing the form field FieldHolder updates the html
-	 * the field produces
-	 */
-	function testCustomFieldOverridesTemplate() {
-		$orignal = new TextField('Name');
-		$orignalHTML = $orignal->FieldHolder();
-		
-		Object::add_extension('FormField', 'FormFieldTest_CustomFormSubclass');
-		$textField = new TextField('Name');
-		$newHTML = $textField->FieldHolder();
-		
-		$this->assertNotSame($orignalHTML, $newHTML);
-		$this->assertSame($newHTML, '<li id="Name"></li>');
-	}
-}
-
-class FormFieldTest_CustomFormSubclass extends Extension implements TestOnly {
-	
-	function updateFieldHolder(array $array) {
-		extract($array);
-		return <<<HTML
-<li id="$Name"></li>
-HTML;
-	}
 }
 ?>

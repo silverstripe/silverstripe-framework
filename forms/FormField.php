@@ -405,23 +405,6 @@ class FormField extends RequestHandler {
 		// $MessageType is also used in {@link extraClass()} with a "holder-" prefix
 		$messageBlock = (!empty($Message)) ? "<span class=\"message $MessageType\">$Message</span>" : "";
 
-		$values = array(
-			'Title' => $Title,
-			'Message' => $Message,
-			'MessageType' => $MessageType,
-			'RightTitle' => $RightTitle,
-			'Type' => $Type,
-			'extraClass' => $extraClass,
-			'Name' => $Name,
-			'Field' => $Field
-		);
-		
-		// allow form field html to be decorated.
-		$subTemplates = $this->extend('updateFieldHolder', $values);
-		if($subTemplates && is_array($subTemplates)) {
-			return array_pop($subTemplates);
-		}
-
 		return <<<HTML
 <div id="$Name" class="field $Type $extraClass">$titleBlock<div class="middleColumn">$Field</div>$rightTitleBlock$messageBlock</div>
 HTML;
