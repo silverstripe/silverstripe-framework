@@ -1168,6 +1168,8 @@ class Translatable extends DataObjectDecorator implements PermissionProvider {
 	}
 	
 	function providePermissions() {
+		if(!Translatable::is_enabled()) return false;
+		
 		$locales = self::get_allowed_locales();
 		
 		$permissions = array();
