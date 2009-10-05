@@ -127,6 +127,16 @@
  * is stored and represented in UTF-8 (Unicode). Please make sure your database and
  * HTML-templates adjust to this.
  * 
+ * <h2>Permissions</h2>
+ * 
+ * Authors without administrative access need special permissions.
+ * 
+ * - TRANSLATE_ALL: Translate into all locales
+ * - Translate_<locale>: Translate a specific locale. Only available for all locales set in
+ *   `Translatable::set_allowed_locales()`.
+ * 
+ * Note: If user-specific view permissions are required, please overload `SiteTree->canView()`.
+ * 
  * <h2>Uninstalling/Disabling</h2>
  * 
  * Disabling Translatable after creating translations will lead to all
@@ -144,7 +154,7 @@
  * @package sapphire
  * @subpackage i18n
  */
-class Translatable extends DataObjectDecorator {
+class Translatable extends DataObjectDecorator implements PermissionProvider {
 
 	/**
 	 * The 'default' language.
@@ -1071,10 +1081,20 @@ class Translatable extends DataObjectDecorator {
 	function canTranslate($member = null, $locale) {
 		if(!$member || !(is_a($member, 'Member')) || is_numeric($member)) $member = Member::currentUser();
 
-		return (
+		// check for locale
+		$allowedLocale = (
 			!is_array(self::get_allowed_locales()) 
 			|| in_array($locale, self::get_allowed_locales())
 		);
+		if(!$allowedLocale) return false;
+		
+		// check for generic translation permission
+		if(Permission::checkMember($member, 'TRANSLATE_ALL')) return true;
+		
+		// check for locale specific translate permission
+		if(!Permission::checkMember($member, 'TRANSLATE_' . $locale)) return false;
+		
+		return true;
 	}
 	
 	/**
@@ -1124,6 +1144,31 @@ class Translatable extends DataObjectDecorator {
 				$translation->Link()
 			);
 		}
+	}
+	
+	function providePermissions() {
+		$locales = self::get_allowed_locales();
+		
+		$permissions = array();
+		if($locales) foreach($locales as $locale) {
+			$localeName = i18n::get_locale_name($locale);
+			$permissions['TRANSLATE_' . $locale] = sprintf(
+				_t(
+					'Translatable.TRANSLATEPERMISSION', 
+					'Translate %s', 
+					PR_MEDIUM, 
+					'Translate pages into a language'
+				),
+				$localeName
+			);
+		}
+		
+		$permissions['TRANSLATE_ALL'] = _t(
+			'Translatable.TRANSLATEALLPERMISSION', 
+			'Translate into all available languages'
+		);
+		
+		return $permissions;
 	}
 	
 	/**

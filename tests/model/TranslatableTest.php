@@ -59,7 +59,7 @@ class TranslatableTest extends FunctionalTest {
 		$cmseditor = $this->objFromFixture('Member', 'cmseditor');
 		$cmseditor->logIn();
 	}
-
+	
 	function testTranslationGroups() {
 		// first in french
 		$frPage = new SiteTree();
@@ -139,13 +139,13 @@ class TranslatableTest extends FunctionalTest {
 		$frPage->doUnpublish();
 		$this->assertEquals($frPage->getTranslationGroup(), $frTranslationGroup);
 	}
-
+	
 	function testGetTranslationOnSiteTree() {
 		$origPage = $this->objFromFixture('Page', 'testpage_en');
 		
 		$translatedPage = $origPage->createTranslation('fr_FR');
 		$getTranslationPage = $origPage->getTranslation('fr_FR');
-
+	
 		$this->assertNotNull($getTranslationPage);
 		$this->assertEquals($getTranslationPage->ID, $translatedPage->ID);
 	}
@@ -189,13 +189,13 @@ class TranslatableTest extends FunctionalTest {
 			'A translated page without an original doesn\'t return anything through getTranslatedLang()'
 		);
 	}
-
+	
 	function testTranslationCantHaveSameURLSegmentAcrossLanguages() {
 		$origPage = $this->objFromFixture('Page', 'testpage_en');
 		$translatedPage = $origPage->createTranslation('de_DE');
 		$translatedPage->URLSegment = 'testpage';
 		$translatedPage->write();
-
+	
 		$this->assertNotEquals($origPage->URLSegment, $translatedPage->URLSegment);
 	}
 	
@@ -341,7 +341,7 @@ class TranslatableTest extends FunctionalTest {
 		
 		$translatedPage->flushCache();
 		$origPage->flushCache();
-
+	
 		$this->assertNull($origPage->getTranslation('de_DE'));
 		$this->assertNotNull(DataObject::get_by_id('Page', $origPage->ID));
 	}
@@ -467,10 +467,10 @@ class TranslatableTest extends FunctionalTest {
 	function testCreateTranslationOnSiteTree() {
 		$origPage = $this->objFromFixture('Page', 'testpage_en');
 		$translatedPage = $origPage->createTranslation('de_DE');
-
+	
 		$this->assertEquals($translatedPage->Locale, 'de_DE');
 		$this->assertNotEquals($translatedPage->ID, $origPage->ID);
-
+	
 		$subsequentTranslatedPage = $origPage->createTranslation('de_DE');
 		$this->assertEquals(
 			$translatedPage->ID,
@@ -478,7 +478,7 @@ class TranslatableTest extends FunctionalTest {
 			'Subsequent calls to createTranslation() dont cause new records in database'
 		);
 	}
-
+	
 	function testTranslatablePropertiesOnDataObject() {
 		$origObj = $this->objFromFixture('TranslatableTest_DataObject', 'testobject_en');
 		$translatedObj = $origObj->createTranslation('fr_FR');
@@ -511,12 +511,12 @@ class TranslatableTest extends FunctionalTest {
 	function testCreateTranslationWithoutOriginal() {
 		$origParentPage = $this->objFromFixture('Page', 'testpage_en');
 		$translatedParentPage = $origParentPage->createTranslation('de_DE');
-
+	
 		$translatedPageWithoutOriginal = new SiteTree();
 		$translatedPageWithoutOriginal->ParentID = $translatedParentPage->ID;
 		$translatedPageWithoutOriginal->Locale = 'de_DE';
 		$translatedPageWithoutOriginal->write();
-
+	
 		Translatable::set_current_locale('de_DE');
 		$this->assertEquals(
 			$translatedParentPage->stageChildren()->column('ID'),
@@ -535,28 +535,28 @@ class TranslatableTest extends FunctionalTest {
 		$child1PageOrigID = $child1Page->ID;
 		$grandChild1Page = $this->objFromFixture('Page', 'grandchild1');
 		$grandChild2Page = $this->objFromFixture('Page', 'grandchild2');
-
+	
 		$this->assertFalse($grandChild1Page->hasTranslation('de_DE'));
 		$this->assertFalse($child1Page->hasTranslation('de_DE'));
 		$this->assertFalse($parentPage->hasTranslation('de_DE'));
-
+	
 		$translatedGrandChild1Page = $grandChild1Page->createTranslation('de_DE');
 		$translatedGrandChild2Page = $grandChild2Page->createTranslation('de_DE');
 		$translatedChildPage = $child1Page->getTranslation('de_DE');
 		$translatedParentPage = $parentPage->getTranslation('de_DE');
-
+	
 		$this->assertTrue($grandChild1Page->hasTranslation('de_DE'));
 		$this->assertEquals($translatedGrandChild1Page->ParentID, $translatedChildPage->ID);
-
+	
 		$this->assertTrue($grandChild2Page->hasTranslation('de_DE'));
 		$this->assertEquals($translatedGrandChild2Page->ParentID, $translatedChildPage->ID);
-
+	
 		$this->assertTrue($child1Page->hasTranslation('de_DE'));
 		$this->assertEquals($translatedChildPage->ParentID, $translatedParentPage->ID);
-
+	
 		$this->assertTrue($parentPage->hasTranslation('de_DE'));
 	}
-
+	
 	function testHierarchyAllChildrenIncludingDeleted() {
 		// Original tree in 'en_US':
 		//   parent
@@ -614,7 +614,7 @@ class TranslatableTest extends FunctionalTest {
 			),
 			"Showing AllChildrenIncludingDeleted() in default language doesnt show deleted children in other languages"
 		);
-
+	
 		// on original parent in translation mode
 		Translatable::set_current_locale('de_DE');
 		SiteTree::flush_and_destroy_cache();
@@ -640,7 +640,7 @@ class TranslatableTest extends FunctionalTest {
 		// reset language
 		Translatable::set_current_locale('en_US');
 	}
-
+	
 	function testRootUrlDefaultsToTranslatedUrlSegment() {
 		$origPage = $this->objFromFixture('Page', 'homepage_en');
 		$origPage->publish('Stage', 'Live');
@@ -726,8 +726,8 @@ class TranslatableTest extends FunctionalTest {
 		$this->assertNotNull($compareLive);
 		$this->assertEquals($compareLive->Title, 'Publiziert');
 	}
-
-	function testCanTranslate() {
+	
+	function testCanTranslateAllowedLocales() {
 		$origAllowedLocales = Translatable::get_allowed_locales();
 		
 		$cmseditor = $this->objFromFixture('Member', 'cmseditor');
@@ -735,17 +735,17 @@ class TranslatableTest extends FunctionalTest {
 		$testPage = $this->objFromFixture('Page', 'testpage_en');
 		$this->assertTrue(
 			$testPage->canTranslate($cmseditor, 'de_DE'),
-			"Users with canEdit() permission can create a new translation if locales are not limited"
+			"Users with canEdit() and TRANSLATE_ALL permission can create a new translation if locales are not limited"
 		);
 		
 		Translatable::set_allowed_locales(array('ja_JP'));
 		$this->assertTrue(
 			$testPage->canTranslate($cmseditor, 'ja_JP'),
-			"Users with canEdit() permission can create a new translation if locale is in Translatable::get_allowed_locales()"
+			"Users with canEdit() and TRANSLATE_ALL permission can create a new translation if locale is in Translatable::get_allowed_locales()"
 		);
 		$this->assertFalse(
 			$testPage->canTranslate($cmseditor, 'de_DE'),
-			"Users with canEdit() permission can't create a new translation if locale is not in Translatable::get_allowed_locales()"
+			"Users with canEdit() and TRANSLATE_ALL permission can't create a new translation if locale is not in Translatable::get_allowed_locales()"
 		);
 		
 		$this->assertType(
@@ -756,6 +756,35 @@ class TranslatableTest extends FunctionalTest {
 			$testPage->createTranslation('de_DE');
 			$this->setExpectedException("Exception");
 		} catch(Exception $e) {}
+		
+		Translatable::set_allowed_locales($origAllowedLocales);
+	}
+	
+	function testCanTranslatePermissionCodes() {
+		$origAllowedLocales = Translatable::get_allowed_locales();
+		
+		Translatable::set_allowed_locales(array('ja_JP','de_DE'));
+		
+		$cmseditor = $this->objFromFixture('Member', 'cmseditor');
+		
+		$testPage = $this->objFromFixture('Page', 'testpage_en');
+		$this->assertTrue(
+			$testPage->canTranslate($cmseditor, 'de_DE'),
+			"Users with TRANSLATE_ALL permission can create a new translation"
+		);
+		
+		$translator = $this->objFromFixture('Member', 'germantranslator');
+		
+		$testPage = $this->objFromFixture('Page', 'testpage_en');
+		$this->assertTrue(
+			$testPage->canTranslate($translator, 'de_DE'),
+			"Users with TRANSLATE_<locale> permission can create a new translation"
+		);
+		
+		$this->assertFalse(
+			$testPage->canTranslate($translator, 'ja_JP'),
+			"Users without TRANSLATE_<locale> permission can create a new translation"
+		);
 		
 		Translatable::set_allowed_locales($origAllowedLocales);
 	}
