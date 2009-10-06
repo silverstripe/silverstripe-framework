@@ -65,7 +65,9 @@ class HTTPResponse extends Object {
 	 * @see http://en.wikipedia.org/wiki/List_of_HTTP_headers
 	 * @var array
 	 */
-	protected $headers = array();
+	protected $headers = array(
+		"Content-Type" => "text/html; charset=\"utf-8\"",
+	);
 	
 	/**
 	 * @var string
