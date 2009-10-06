@@ -999,14 +999,12 @@ JS
 		unset($this->cachedSourceItems);
 		$oldShowPagination = $this->showPagination;
 		$this->showPagination = false;
-		$oldLimit = ini_get('max_execution_time');
-		set_time_limit(0);
-		
+
+		increase_time_limit_to();
 		
 		$result = $this->renderWith(array($this->template . '_printable', 'TableListField_printable'));
 		
 		$this->showPagination = $oldShowPagination;
-		set_time_limit($oldLimit);
 		
 		return $result;
 	}

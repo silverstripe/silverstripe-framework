@@ -882,7 +882,7 @@ class Requirements_Backend {
 				if($isJS && $this->combine_js_with_jsmin) {
 					require_once('thirdparty/jsmin/JSMin.php');
 					
-					set_time_limit(0);
+					increase_time_limit_to();
 					$fileContent = JSMin::minify($fileContent);
 				}
 				// write a header comment for each file for easier identification and debugging

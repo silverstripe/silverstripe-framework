@@ -22,17 +22,44 @@ class MemoryLimitTest extends SapphireTest {
 
 		increase_memory_limit_to('1G');
 		$this->assertEquals('1G', ini_get('memory_limit'));
+
+		// No argument means unlimited
+		increase_memory_limit_to();
+		$this->assertEquals(-1, ini_get('memory_limit'));
+	}
+
+	function testIncreaseTimeLimitTo() {
+		set_time_limit(6000);
+		
+		// It can go up
+		increase_time_limit_to(7000);
+		$this->assertEquals(7000, ini_get('max_execution_time'));
+
+		// But not down
+		increase_time_limit_to(5000);
+		$this->assertEquals(7000, ini_get('max_execution_time'));
+		
+		// 0/nothing means infinity
+		increase_time_limit_to();
+		$this->assertEquals(0, ini_get('max_execution_time'));
+
+		// Can't go down from there
+		increase_time_limit_to(10000);
+		$this->assertEquals(0, ini_get('max_execution_time'));
+		
 	}
 
 
 	///////////////////
 	
-	private $origLimit;
+	private $origMemLimit, $origTimeLimit;
 	
 	function setUp() {
-		$this->origLimit = ini_get('memory_limit');
+		$this->origMemLimit = ini_get('memory_limit');
+		$this->origTimeLimit = ini_get('max_execution_time');
 	}
 	function tearDown() {
-		ini_set('memory_limit', $this->origLimit);
+		ini_set('memory_limit', $this->origMemLimit);
+		set_time_limit($this->origTimeLimit);
 	}
 }

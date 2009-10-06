@@ -25,7 +25,7 @@ class i18nTextCollectorTask extends BuildTask {
 	 * @uses DataObject->collectI18nStatics()
 	 */	
 	public function run($request) {
-		set_time_limit(0);
+		increase_time_limit_to();
 		$c = new i18nTextCollector();
 		$restrictModules = ($request->getVar('module')) ? explode(',', $request->getVar('module')) : null;
 		return $c->run($restrictModules);

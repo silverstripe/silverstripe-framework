@@ -286,11 +286,16 @@ function _t($entity, $string = "", $priority = 40, $context = "") {
 
 /**
  * Increase the memory limit to the given level if it's currently too low.
- * @param A memory limit string, such as "64M"
+ * @param A memory limit string, such as "64M".  If omitted, unlimited memory will be set.
  */
-function increase_memory_limit_to($memoryLimit) {
+function increase_memory_limit_to($memoryLimit = -1) {
+	$curLimit = ini_get('memory_limit');
+	
+	// Can't go higher than infinite
+	if($curLimit == -1) return;
+	
 	// Increase the memory limit if it's too low
-	if(translate_memstring($memoryLimit) >  translate_memstring(ini_get('memory_limit'))) {
+	if($memoryLimit == -1 || translate_memstring($memoryLimit) > translate_memstring($curLimit)) {
 		ini_set('memory_limit', $memoryLimit);
 	}
 }
@@ -306,6 +311,24 @@ function translate_memstring($memString) {
 		case "g": return round(substr($memString, 0, -1)*1024*1024*1024);
 		default: return round($memString);
 	}
+}
+
+/**
+ * Increase the time limit of this script.  By default, the time will be unlimited.
+ * @param $timeLimit The time limit in seconds.  If omitted, no time limit will be set.
+ */
+function increase_time_limit_to($timeLimit = null) {
+	if(!ini_get('safe_mode')) {
+		if(!$timeLimit) {
+			set_time_limit(0);
+		} else {
+			$currTimeLimit = ini_get('max_execution_time');
+			if($currTimeLimit && $currTimeLimit < $timeLimit) {
+				set_time_limit($timeLimit);
+			}
+		}
+	}
+			
 }
 
 ?>

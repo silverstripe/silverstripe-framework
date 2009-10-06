@@ -12,9 +12,7 @@ class GD extends Object {
 	
 	function __construct($filename = null) {
 		// If we're working with image resampling, things could take a while.  Bump up the time-limit
-		if(ini_get("safe_mode") != "1") {
-			set_time_limit(300);
-		}
+		increase_time_limit_to(300);
 
 		if($filename) {
 			// We use getimagesize instead of extension checking, because sometimes extensions are wrong.
