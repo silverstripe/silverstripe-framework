@@ -422,14 +422,14 @@ class File extends DataObject {
 	}
 
 	function getFullPath() {
-		$baseFolder = Director::baseFolder();
+		$baseFolder = ASSETS_PATH;
 		
 		if(strpos($this->getFilename(), $baseFolder) === 0) {
 			// if path is absolute already, just return
 			return $this->getFilename();
 		} else {
 			// otherwise assume silverstripe-basefolder
-			return Director::baseFolder() . '/' . $this->getFilename();
+			return substr(ASSETS_PATH, 0, strlen(ASSETS_PATH) - strlen(ASSETS_DIR)) . $this->getFilename();
 		}
 	}
 

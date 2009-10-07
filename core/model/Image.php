@@ -98,7 +98,7 @@ class Image extends File {
 	 * @return string
 	 */
 	function getTag() {
-		if(file_exists("../" . $this->Filename)) {
+		if(file_exists($this->FullPath)) {
 			$url = $this->URL();
 			$title = ($this->Title) ? $this->Title : $this->Filename;
 			
