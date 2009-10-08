@@ -214,7 +214,7 @@ class MySQLDatabase extends Database {
 	 *   - 'temporary' - If true, then a temporary table will be created
 	 * @return The table name generated.  This may be different from the table name, for example with temporary tables.
 	 */
-	public function createTable($table, $fields = null, $indexes = null, $options = null) {
+	public function createTable($table, $fields = null, $indexes = null, $options = null, $advancedOptions = null) {
 		$fieldSchemas = $indexSchemas = "";
 		
 		$addOptions = empty($options[get_class($this)]) ? "ENGINE=MyISAM" : $options[get_class($this)];
@@ -244,7 +244,7 @@ class MySQLDatabase extends Database {
 	 * @param $alteredIndexes Updated indexes, a map of index name => index type
 	 * @param $alteredOptions
 	 */
-	public function alterTable($tableName, $newFields = null, $newIndexes = null, $alteredFields = null, $alteredIndexes = null, $alteredOptions = null) {
+	public function alterTable($tableName, $newFields = null, $newIndexes = null, $alteredFields = null, $alteredIndexes = null, $alteredOptions = null, $advancedOptions = null) {
 		$fieldSchemas = $indexSchemas = "";
 		$alterList = array();
 		
@@ -870,6 +870,22 @@ class MySQLDatabase extends Database {
 	public function supportsTransactions(){
 		return $this->supportsTransactions;
 	}
+	
+	/*
+	 * This is a quick lookup to discover if the database supports particular extensions
+	 * Currently, MySQL supports no extensions
+	 */
+	public function supportsExtensions($extensions=Array('partitions', 'tablespaces', 'clustering')){
+		if(isset($extensions['partitions']))
+			return false;
+		elseif(isset($extensions['tablespaces']))
+			return false;
+		elseif(isset($extensions['clustering']))
+			return false;
+		else
+			return false;
+	}
+	
 	/*
 	 * Start a prepared transaction
 	 * See http://developer.postgresql.org/pgdocs/postgres/sql-set-transaction.html for details on transaction isolation options
