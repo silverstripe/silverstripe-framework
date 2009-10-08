@@ -1739,6 +1739,23 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		
 		return isset($items) ? $items : null;
 	}
+	
+	/**
+	 * This returns an array (if it exists) describing the database extensions that are required, or false if none
+	 * 
+	 * This is experimental, and is currently only a Postgres-specific enhancement.
+	 * 
+	 * @return array or false
+	 */
+	function database_extensions($class){
+		
+		$extensions = Object::uninherited_static($class, 'database_extensions');
+		
+		if($extensions)
+			return $extensions;
+		else
+			return false;
+	}
 
 	/**
 	 * Generates a SearchContext to be used for building and processing
@@ -2833,11 +2850,13 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	public function requireTable() {
 		// Only build the table if we've actually got fields
 		$fields = self::database_fields($this->class);
+		$extensions = self::database_extensions($this->class);
+		
 		$indexes = $this->databaseIndexes();
 
 		if($fields) {
 			$hasAutoIncPK = ($this->class == ClassInfo::baseDataClass($this->class));
-			DB::requireTable($this->class, $fields, $indexes, $hasAutoIncPK, $this->stat('create_table_options'));
+			DB::requireTable($this->class, $fields, $indexes, $hasAutoIncPK, $this->stat('create_table_options'), $extensions);
 		} else {
 			DB::dontRequireTable($this->class);
 		}
@@ -2860,8 +2879,8 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 					"{$this->class}ID" => true,
 				(($this->class == $childClass) ? "ChildID" : "{$childClass}ID") => true,
 				);
-
-				DB::requireTable("{$this->class}_$relationship", $manymanyFields, $manymanyIndexes);
+				
+				DB::requireTable("{$this->class}_$relationship", $manymanyFields, $manymanyIndexes, true, null, $extensions);
 			}
 		}
 
