@@ -207,8 +207,8 @@ class DB {
 	 *     control over the index.
 	 * @param string $options SQL statement to append to the CREATE TABLE call.
 	 */
-	static function requireTable($table, $fieldSchema = null, $indexSchema = null, $hasAutoIncPK=true, $options = null) {
-		return self::getConn()->requireTable($table, $fieldSchema, $indexSchema, $hasAutoIncPK, $options);
+	static function requireTable($table, $fieldSchema = null, $indexSchema = null, $hasAutoIncPK=true, $options = null, $extensions=null) {
+		return self::getConn()->requireTable($table, $fieldSchema, $indexSchema, $hasAutoIncPK, $options, $extensions);
 	}
 
 	/**
