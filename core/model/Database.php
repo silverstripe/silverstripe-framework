@@ -78,12 +78,12 @@ abstract class Database {
 	 *   - 'temporary' - If true, then a temporary table will be created
 	 * @return The table name generated.  This may be different from the table name, for example with temporary tables.
 	 */
-	abstract function createTable($table, $fields = null, $indexes = null, $options = null);
+	abstract function createTable($table, $fields = null, $indexes = null, $options = null, $advancedOptions = null);
 	
 	/**
 	 * Alter a table's schema.
 	 */
-	abstract function alterTable($table, $newFields = null, $newIndexes = null, $alteredFields = null, $alteredIndexes = null);
+	abstract function alterTable($table, $newFields = null, $newIndexes = null, $alteredFields = null, $alteredIndexes = null, $alteredOptions=null, $advancedOptions=null);
 	
 	/**
 	 * Rename a table.
@@ -182,12 +182,12 @@ abstract class Database {
 		foreach($this->schemaUpdateTransaction as $tableName => $changes) {
 			switch($changes['command']) {
 				case 'create':
-					$this->createTable($tableName, $changes['newFields'], $changes['newIndexes'], $changes['options']);
+					$this->createTable($tableName, $changes['newFields'], $changes['newIndexes'], $changes['options'], @$changes['advancedOptions']);
 					break;
 				
 				case 'alter':
 					$this->alterTable($tableName, $changes['newFields'], $changes['newIndexes'],
-						$changes['alteredFields'], $changes['alteredIndexes'], $changes['alteredOptions']);
+						$changes['alteredFields'], $changes['alteredIndexes'], $changes['alteredOptions'], @$changes['advancedOptions']);
 					break;
 			}
 		}
@@ -200,17 +200,18 @@ abstract class Database {
 	 * @param string $table
 	 * @param string $options
 	 */
-	function transCreateTable($table, $options = null) {
-		$this->schemaUpdateTransaction[$table] = array('command' => 'create', 'newFields' => array(), 'newIndexes' => array(), 'options' => $options);
+	function transCreateTable($table, $options = null, $advanced_options = null) {
+		$this->schemaUpdateTransaction[$table] = array('command' => 'create', 'newFields' => array(), 'newIndexes' => array(), 'options' => $options, 'advancedOptions' => $advanced_options);
 	}
 	
 	/**
 	 * @param string $table
 	 * @param array $options
 	 */
-	function transAlterTable($table, $options) {
+	function transAlterTable($table, $options, $advanced_options) {
 		$this->transInitTable($table);
 		$this->schemaUpdateTransaction[$table]['alteredOptions'] = $options;
+		$this->schemaUpdateTransaction[$table]['advancedOptions'] = $advanced_options;
 	}
 	
 	function transCreateField($table, $field, $schema) {
@@ -258,29 +259,32 @@ abstract class Database {
 	 * @param string $indexSchema A list of indexes to create. See {@link requireIndex()}
 	 * @param array $options
 	 */
-	function requireTable($table, $fieldSchema = null, $indexSchema = null, $hasAutoIncPK=true, $options = null) {
+	function requireTable($table, $fieldSchema = null, $indexSchema = null, $hasAutoIncPK=true, $options = Array(), $extensions=false) {
+		
 		if(!isset($this->tableList[strtolower($table)])) {
-			$this->transCreateTable($table, $options);
+			$this->transCreateTable($table, $options, $extensions);
 			Database::alteration_message("Table $table: created","created");
 		} else {
 			$this->checkAndRepairTable($table, $options);
 			
 			// Check if options changed
-			if($options && isset($options[get_class($this)])) {
-				$tableOptionsChanged = false;
-				if(preg_match('/ENGINE=([^\s]*)/', $options[get_class($this)], $alteredEngineMatches)) {
-					$alteredEngine = $alteredEngineMatches[1];
-					$tableStatus = DB::query(sprintf(
-						'SHOW TABLE STATUS WHERE "Name" = \'%s\'',
-						$table
-					))->first();
-					$tableOptionsChanged = ($tableStatus['Engine'] != $alteredEngine);
-				}
-				
-				if($tableOptionsChanged) {
-					$this->transAlterTable($table, $options);
+			$tableOptionsChanged = false;
+			if(isset($options[get_class($this)]) || true) {
+				if(isset($options[get_class($this)])) {
+					if(preg_match('/ENGINE=([^\s]*)/', $options[get_class($this)], $alteredEngineMatches)) {
+						$alteredEngine = $alteredEngineMatches[1];
+						$tableStatus = DB::query(sprintf(
+							'SHOW TABLE STATUS WHERE "Name" = \'%s\'',
+							$table
+						))->first();
+						$tableOptionsChanged = ($tableStatus['Engine'] != $alteredEngine);
+					}
 				}
 			}
+			
+			if($tableOptionsChanged || ($extensions && DB::getConn()->supportsExtensions())) 
+				$this->transAlterTable($table, $options, $extensions);
+			
 		}
 
 		//DB ABSTRACTION: we need to convert this to a db-specific version:
@@ -306,7 +310,7 @@ abstract class Database {
 				$fieldObj->requireField();
 			}
 		}
-
+		
 		// Create custom indexes
 		if($indexSchema) {
 			foreach($indexSchema as $indexName => $indexDetails) {
