@@ -1361,7 +1361,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		if(!$t || $t == '-' || $t == '-1') {
 			$t = "page-$this->ID";
 		}
-		return $t;
+		return trim($t, '-');
 	}
 	
 	/**
