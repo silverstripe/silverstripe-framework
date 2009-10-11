@@ -1,8 +1,7 @@
 <?php
 /**
- * ModelAsController will hand over all control to the appopriate model object
- * It uses URLSegment to determine the right object.  Also, if (ModelClass)_Controller exists,
- * that controller will be used instead.  It should be a subclass of ContentController.
+ * ModelAsController deals with mapping the initial request to the first {@link SiteTree}/{@link ContentController}
+ * pair, which are then used to handle the request.
  *
  * @package sapphire
  * @subpackage control
@@ -13,132 +12,125 @@ class ModelAsController extends Controller implements NestedController {
 	 * Get the appropriate {@link ContentController} for handling a {@link SiteTree} object, link it to the object and
 	 * return it.
 	 *
-	 * @param SiteTree $siteTree The SiteTree object to find a controller for.
-	 * @param string $action The optional action that was requested, so that action-specific controllers work.
+	 * @param SiteTree $sitetree
+	 * @param string $action
 	 * @return ContentController
 	 */
-	public static function controller_for(SiteTree $siteTree, $action = null) {
-		$controller = "{$siteTree->class}_Controller";
+	public static function controller_for(SiteTree $sitetree, $action = null) {
+		$controller = "{$sitetree->class}_Controller";
 		
 		if($action && class_exists($controller . '_' . ucfirst($action))) {
 			$controller = $controller . '_' . ucfirst($action);
 		}
 		
-		return class_exists($controller) ? new $controller($siteTree) : $siteTree;
+		return class_exists($controller) ? new $controller($sitetree) : $sitetree;
 	}
 	
-	public function handleRequest($request) {
+	public function init() {
+		singleton('SiteTree')->extend('modelascontrollerInit', $this);
+	}
+	
+	/**
+	 * @uses ModelAsController::getNestedController()
+	 * @return HTTPResponse
+	 */
+	public function handleRequest(HTTPRequest $request) {
+		$this->request = $request;
+		
 		$this->pushCurrent();
-		
-		$this->request   = $request;
-		$this->urlParams = $request->allParams();
-		
 		$this->init();
-
-		// If the basic database hasn't been created, then build it.
+		
+		// If the database has not yet been created, redirect to the build page.
 		if(!DB::isActive() || !ClassInfo::hasTable('SiteTree')) {
 			$this->response = new HTTPResponse();
-			$this->redirect("dev/build?returnURL=" . (isset($_GET['url']) ? urlencode($_GET['url']) : ''));
+			$this->response->redirect('dev/build?returnURL=' . (isset($_GET['url']) ? urlencode($_GET['url']) : null));
 			$this->popCurrent();
+			
 			return $this->response;
 		}
-
+		
 		$result = $this->getNestedController();
 		
-		if(is_object($result) && $result instanceOf RequestHandler) {
-			$result = $result->handleRequest($request);
+		if($result instanceof RequestHandler) {
+			$result = $result->handleRequest($this->request);
 		}
 		
 		$this->popCurrent();
 		return $result;
 	}
 	
-	public function init() {
-		singleton('SiteTree')->extend('modelascontrollerInit', $this);
-	}
-
+	/**
+	 * @return ContentController
+	 */
 	public function getNestedController() {
-		if($this->urlParams['URLSegment']) {
-			$SQL_URLSegment = Convert::raw2sql($this->urlParams['URLSegment']);
-			$child = SiteTree::get_by_link($SQL_URLSegment);
-			if(!$child) {
-				if($child = $this->findOldPage($SQL_URLSegment)) {
-					$url = Controller::join_links(
-						Director::baseURL(),
-						$child->URLSegment,
-						isset($this->urlParams['Action']) ? $this->urlParams['Action'] : null,
-						isset($this->urlParams['ID']) ? $this->urlParams['ID'] : null,
-						isset($this->urlParams['OtherID']) ? $this->urlParams['OtherID'] : null
-					);
-
-					$response = new HTTPResponse();
-					$response->redirect($url, 301);
-					return $response;
-				}
-				
-				return ErrorPage::response_for(404, $this->request);
-			}
+		$request = $this->request;
 		
-			if($child) {
-				if(isset($_REQUEST['debug'])) Debug::message("Using record #$child->ID of type $child->class with URL {$this->urlParams['URLSegment']}");
+		if(!$URLSegment = $request->param('URLSegment')) {
+			throw new Exception('ModelAsController->getNestedController(): was not passed a URLSegment value.');
+		}
+		
+		$sitetree = DataObject::get_one('SiteTree', sprintf (
+			'"URLSegment" = \'%s\' %s', Convert::raw2sql($URLSegment), (SiteTree::nested_urls() ? 'AND "ParentID" = 0' : null)
+		));
+		
+		if(!$sitetree) {
+			// If a root page has been renamed, redirect to the new location.
+			if($redirect = $this->findOldPage($URLSegment)) {
+				$this->response = new HTTPResponse();
+				$this->response->redirect($redirect->Link (
+					Controller::join_links($request->param('Action'), $request->param('ID'), $request->param('OtherID'))
+				));
 				
-				// set language
-				if($child->Locale) Translatable::set_current_locale($child->Locale);
-				
-				$controllerClass = "{$child->class}_Controller";
-	
-				if($this->urlParams['Action'] && ClassInfo::exists($controllerClass.'_'.$this->urlParams['Action'])) {
-					$controllerClass = $controllerClass.'_'.$this->urlParams['Action'];	
-				}
-	
-				if(ClassInfo::exists($controllerClass)) {
-					$controller = new $controllerClass($child);
-				} else {
-					$controller = $child;
-				}
-			
-				return $controller;
-			} else {
-				return new HTTPResponse("The requested page couldn't be found.",404);
+				return $this->response;
 			}
 			
-		} else {
-			user_error("ModelAsController not geting a URLSegment.  It looks like the site isn't redirecting to home", E_USER_ERROR);
+			if($response = ErrorPage::response_for(404, $this->request)) {
+				return $response;
+			} else {
+				$this->httpError(404, 'The requested page could not be found.');
+			}
 		}
+		
+		if($sitetree->Locale) Translatable::set_current_locale($sitetree->Locale);
+		
+		if(isset($_REQUEST['debug'])) {
+			Debug::message("Using record #$sitetree->ID of type $sitetree->class with link {$sitetree->Link()}");
+		}
+		
+		return self::controller_for($sitetree, $this->request->param('Action'));
 	}
 	
-	protected function findOldPage($urlSegment) {
-		// Build the query by  replacing "SiteTree" with "SiteTree_versions" in a regular query.
-		// Note that this should *really* be handled by a more full-featured data mapper; as it stands
-		// this is a bit of a hack.
-		$origStage = Versioned::current_stage();
-		Versioned::reading_stage('Stage');
-		$versionedQuery = singleton('SiteTree')->extendedSQL('');
-		Versioned::reading_stage($origStage);
+	/**
+	 * @param string $URLSegment
+	 * @return SiteTree
+	 */
+	protected function findOldPage($URLSegment) {
+		$URLSegment = Convert::raw2sql($URLSegment);
 		
-		foreach($versionedQuery->from as $k => $v) {
-			$versionedQuery->renameTable($k, $k . '_versions');
+		// First look for a non-nested page that has a unique URLSegment and can be redirected to.
+		if(SiteTree::nested_urls() && $pages = DataObject::get('SiteTree', "\"URLSegment\" = '$URLSegment'")) {
+			if($pages->Count() == 1) return $pages->First();
 		}
-		$versionedQuery->select = array("\"SiteTree_versions\".\"RecordID\"");
-		$versionedQuery->where[] = "\"SiteTree_versions\".\"WasPublished\" = 1 AND \"URLSegment\" = '$urlSegment'";
-		$versionedQuery->orderby = "\"LastEdited\" DESC, \"SiteTree_versions\".\"WasPublished\"";
-		$versionedQuery->limit = 1;
-
-		$result = $versionedQuery->execute();
 		
-		if($result->numRecords() == 1 && $redirectPage = $result->nextRecord()) {
-			$redirectObj = DataObject::get_by_id('SiteTree', $redirectPage['RecordID']);
-			if($redirectObj) {
-				// Double-check by querying this page in the same way that getNestedController() does.  This
-				// will prevent query muck-ups from modules such as subsites
-				$doubleCheck = SiteTree::get_by_link($redirectObj->URLSegment);
-				if($doubleCheck) return $redirectObj;
+		// Get an old version of a page that has been renamed.
+		$query = new SQLQuery (
+			'"RecordID"',
+			'"SiteTree_versions"',
+			"\"URLSegment\" = '$URLSegment' AND \"WasPublished\"" . (SiteTree::nested_urls() ? ' AND "ParentID" = 0' : null),
+			'"LastEdited" DESC',
+			null,
+			null,
+			1
+		);
+		
+		if(($result = $query->execute()) && $result->numRecords()) {
+			$recordID = $result->column();
+			
+			if($oldPage = DataObject::get_by_id('SiteTree', $recordID[0])) {
+				// Run the page through an extra filter to ensure that all decorators are applied.
+				if(SiteTree::get_by_link($oldPage->RelativeLink())) return $oldPage;
 			}
 		}
-		
-		return false;
 	}
 	
 }
-
-?>
