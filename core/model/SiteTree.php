@@ -412,6 +412,15 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	}
 	
 	/**
+	 * Return a CSS identifier generated from this page's link.
+	 *
+	 * @return string The URL segment
+	 */
+	public function ElementName() {
+		return str_replace('/', '-', trim($this->RelativeLink(true), '/'));
+	}
+	
+	/**
 	 * Returns TRUE if this is the currently active page that is being used to handle a request.
 	 *
 	 * @return bool
@@ -466,16 +475,6 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		}
 	}
 	
-	/**
-	 * Get the URL segment for this page, eg 'home'
-	 *
-	 * @return string The URL segment
-	 */
-	public function ElementName() {
-		return $this->URLSegment;
-	}
-
-
 	/**
 	 * Check if this page is in the given current section.
 	 *
