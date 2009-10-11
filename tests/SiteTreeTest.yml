@@ -71,7 +71,11 @@ Page:
         Title: Controller
     numericonly:
         Title: 1930
-        
+
+SiteTreeTest_Conflicted:
+    parent:
+        Title: Parent
+
 ErrorPage:
     404:
         Title: Page not Found

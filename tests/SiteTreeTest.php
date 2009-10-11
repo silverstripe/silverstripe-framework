@@ -476,11 +476,94 @@ class SiteTreeTest extends SapphireTest {
 		$this->assertTrue($ceo->isSection());
 	}
 	
+	/**
+	 * @covers SiteTree::validURLSegment()
+	 */
+	public function testValidURLSegmentURLSegmentConflicts() {
+		$sitetree = new SiteTree();
+		SiteTree::disable_nested_urls();
+		
+		$sitetree->URLSegment = 'home';
+		$this->assertFalse($sitetree->validURLSegment(), 'URLSegment conflicts are recognised');
+		$sitetree->URLSegment = 'home-noconflict';
+		$this->assertTrue($sitetree->validURLSegment());
+		
+		$sitetree->ParentID   = $this->idFromFixture('Page', 'about');
+		$sitetree->URLSegment = 'home';
+		$this->assertFalse($sitetree->validURLSegment(), 'Conflicts are still recognised with a ParentID value');
+		
+		SiteTree::enable_nested_urls();
+		
+		$sitetree->ParentID   = 0;
+		$sitetree->URLSegment = 'home';
+		$this->assertFalse($sitetree->validURLSegment(), 'URLSegment conflicts are recognised');
+		
+		$sitetree->ParentID = $this->idFromFixture('Page', 'about');
+		$this->assertTrue($sitetree->validURLSegment(), 'URLSegments can be the same across levels');
+		
+		$sitetree->URLSegment = 'my-staff';
+		$this->assertFalse($sitetree->validURLSegment(), 'Nested URLSegment conflicts are recognised');
+		$sitetree->URLSegment = 'my-staff-noconflict';
+		$this->assertTrue($sitetree->validURLSegment());
+	}
+	
+	/**
+	 * @covers SiteTree::validURLSegment()
+	 */
+	public function testValidURLSegmentClassNameConflicts() {
+		$sitetree = new SiteTree();
+		$sitetree->URLSegment = 'Controller';
+		
+		$this->assertFalse($sitetree->validURLSegment(), 'Class name conflicts are recognised');
+	}
+	
+	/**
+	 * @covers SiteTree::validURLSegment()
+	 */
+	public function testValidURLSegmentControllerConflicts() {
+		SiteTree::enable_nested_urls();
+		
+		$sitetree = new SiteTree();
+		$sitetree->ParentID = $this->idFromFixture('SiteTreeTest_Conflicted', 'parent');
+		
+		$sitetree->URLSegment = 'index';
+		$this->assertFalse($sitetree->validURLSegment(), 'index is not a valid URLSegment');
+		
+		$sitetree->URLSegment = 'conflicted-action';
+		$this->assertFalse($sitetree->validURLSegment(), 'allowed_actions conflicts are recognised');
+		
+		$sitetree->URLSegment = 'conflicted-template';
+		$this->assertFalse($sitetree->validURLSegment(), 'Action-specific template conflicts are recognised');
+		
+		$sitetree->URLSegment = 'valid';
+		$this->assertTrue($sitetree->validURLSegment(), 'Valid URLSegment values are allowed');
+	}
+	
 }
 
-// We make these extend page since that's what all page types are expected to do
+/**#@+
+ * @ignore
+ */
+
 class SiteTreeTest_PageNode extends Page implements TestOnly { }
-class SiteTreeTest_PageNode_Controller extends Page_Controller implements TestOnly { 
+class SiteTreeTest_PageNode_Controller extends Page_Controller implements TestOnly {
 }
 
-?>
+class SiteTreeTest_Conflicted extends Page implements TestOnly { }
+class SiteTreeTest_Conflicted_Controller extends Page_Controller implements TestOnly {
+	
+	public static $allowed_actions = array (
+		'conflicted-action'
+	);
+	
+	public function hasActionTemplate($template) {
+		if($template == 'conflicted-template') {
+			return true;
+		} else {
+			return parent::hasActionTemplate($template);
+		}
+	}
+	 
+}
+
+/**#@-*/

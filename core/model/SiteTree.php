@@ -1288,19 +1288,13 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		
 		DataObject::set_context_obj($this);
 		
-		// Ensure URLSegment is unique
-		$count = 1;
-		$otherpage = false;
-		while((class_exists($this->URLSegment) && is_subclass_of($this->URLSegment, 'RequestHandler')) || $otherpage = SiteTree::get_by_link($this->URLSegment)) {
-			if($otherpage && $otherpage->ID == $this->ID) {
-				break;
-			}
-			
-			$otherpage = false;
+		// Ensure that this object has a non-conflicting URLSegment value.
+		$count = 2;
+		while(!$this->validURLSegment()) {
+			$this->URLSegment = preg_replace('/-[0-9]+$/', null, $this->URLSegment) . '-' . $count;
 			$count++;
-			$this->URLSegment = ereg_replace('-[0-9]+$','', $this->URLSegment) . "-$count";
 		}
-
+		
 		DataObject::set_context_obj(null);
 		
 		parent::onBeforeWrite();
@@ -1338,8 +1332,58 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		
 		parent::onAfterDelete();
 	}
-
-
+	
+	/**
+	 * Returns TRUE if this object has a URLSegment value that does not conflict with any other objects. This methods
+	 * checks for:
+	 *   - A page with the same URLSegment that has a conflict.
+	 *   - Conflicts with actions on the parent page.
+	 *   - A conflict caused by a root page having the same URLSegment as a class name.
+	 *   - Conflicts with action-specific templates on the parent page.
+	 *
+	 * @return bool
+	 */
+	public function validURLSegment() {
+		if(self::nested_urls() && $parent = $this->Parent()) {
+			if($this->URLSegment == 'index') return false;
+			
+			if($controller = ModelAsController::controller_for($parent)) {
+				$actions = Object::combined_static($controller->class, 'allowed_actions', 'RequestHandler');
+				
+				// check for a conflict with an entry in $allowed_actions
+				if(is_array($actions)) {
+					if(array_key_exists($this->URLSegment, $actions) || in_array($this->URLSegment, $actions)) {
+						return false;
+					}
+				}
+				
+				// check for a conflict with an action-specific template
+				if($controller->hasMethod('hasActionTemplate') && $controller->hasActionTemplate($this->URLSegment)) {
+					return false;
+				}
+			}
+		}
+		
+		if(!self::nested_urls() || !$this->ParentID) {
+			if(class_exists($this->URLSegment) && is_subclass_of($this->URLSegment, 'RequestHandler')) return false;
+		}
+		
+		$IDFilter     = ($this->ID) ? "AND \"SiteTree\".\"ID\" <> $this->ID" :  null;
+		$parentFilter = null;
+		
+		if(self::nested_urls()) {
+			if($this->ParentID) {
+				$parentFilter = " AND \"SiteTree\".\"ParentID\" = $this->ParentID";
+			} else {
+				$parentFilter = ' AND "SiteTree"."ParentID" = 0';
+			}
+		}
+		
+		return DB::query (
+			"SELECT COUNT(ID) FROM \"SiteTree\" WHERE \"URLSegment\" = '$this->URLSegment' $IDFilter $parentFilter"
+		)->value() < 1;
+	}
+	
 	/**
 	 * Generate a URL segment based on the title provided.
 	 * @param string $title Page title.
