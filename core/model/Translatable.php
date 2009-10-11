@@ -1219,28 +1219,21 @@ class Translatable extends DataObjectDecorator implements PermissionProvider {
 	}
 	
 	/**
-	 * Gets a URLSegment value for a homepage in another language.
-	 * The value is inferred by finding the homepage in default language
-	 * (as identified by RootURLController::$default_homepage_urlsegment).
-	 * Returns NULL if no translated page can be found.
-	 * 
-	 * @param string $locale
-	 * @return string|boolean URLSegment (e.g. "home")
+	 * @todo
+	 */
+	public static function get_homepage_link_by_locale($locale) {
+	}
+	
+	/**
+	 * @deprecated 2.4 Use {@link Translatable::get_homepage_link_by_locale()}
 	 */
 	static function get_homepage_urlsegment_by_locale($locale) {
-		$origHomepageObj = Translatable::get_one_by_locale(
-			'SiteTree',
-			Translatable::default_locale(),
-			sprintf('"URLSegment" = \'%s\'', RootURLController::get_default_homepage_urlsegment())
+		user_error (
+			'Translatable::get_homepage_urlsegment_by_locale() is deprecated, please use get_homepage_link_by_locale()',
+			E_USER_NOTICE
 		);
-		if($origHomepageObj) {
-			$translatedHomepageObj = $origHomepageObj->getTranslation($locale);
-			if($translatedHomepageObj) {
-				return $translatedHomepageObj->URLSegment;
-			}
-		}
 		
-		return null;
+		return self::get_homepage_link_by_locale($locale);
 	}
 	
 	/**

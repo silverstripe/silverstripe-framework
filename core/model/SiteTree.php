@@ -244,7 +244,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		if(trim($link, '/')) {
 			$link = trim(Director::makeRelative($link), '/');
 		} else {
-			$link = RootURLController::get_homepage_urlsegment();
+			$link = RootURLController::get_homepage_link();
 		}
 		
 		$parts = Convert::raw2sql(preg_split('|/+|', $link));
@@ -379,19 +379,32 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	/**
 	 * Return the link for this {@link SiteTree} object relative to the SilverStripe root.
 	 *
+	 * By default, it this page is the current home page, and there is no action specified then this will return a link
+	 * to the root of the site. However, if you set the $action parameter to TRUE then the link will not be rewritten
+	 * and returned in its full form.
+	 *
+	 * @uses RootURLController::get_homepage_link()
 	 * @param string $action
 	 * @return string
 	 */
 	public function RelativeLink($action = null) {
-		$action = str_replace('&', '&amp;', $action);
-		
 		if($this->ParentID && self::nested_urls()) {
 			$base = $this->Parent()->RelativeLink($this->URLSegment);
 		} else {
 			$base = $this->URLSegment;
 		}
 		
-		return "$base/$action";
+		if(!$action && $base == RootURLController::get_homepage_link()) {
+			$base = null;
+		}
+		
+		if(is_string($action)) {
+			$action = str_replace('&', '&amp;', $action);
+		} elseif($action === true) {
+			$action = null;
+		}
+		
+		return Controller::join_links($base, '/', $action);
 	}
 	
 	/**

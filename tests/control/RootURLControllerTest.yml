@@ -1,6 +1,9 @@
 Page:
     home:
         Title: Home
+    nested:
+        Title: Nested Home
+        Parent: =>Page.home
     page1:
         Title: First Page
         URLSegment: page1

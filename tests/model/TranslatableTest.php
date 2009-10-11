@@ -652,7 +652,7 @@ class TranslatableTest extends FunctionalTest {
 		// test with translatable
 		Translatable::set_current_locale('de_DE');		
 		$this->assertEquals(
-			RootURLController::get_homepage_urlsegment(), 
+			RootURLController::get_homepage_link(), 
 			'heim', 
 			'Homepage with different URLSegment in non-default language is found'
 		);

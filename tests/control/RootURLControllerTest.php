@@ -39,11 +39,33 @@ class RootURLControllerTest extends SapphireTest {
 			$_SERVER['HTTP_HOST'] = $domain;
 			$this->assertEquals(
 				$urlSegment, 
-				RootURLController::get_homepage_urlsegment(Translatable::default_locale()), 
+				RootURLController::get_homepage_link(), 
 				"Testing $domain matches $urlSegment"
 			);
 		}
 		
 		$_SERVER['HTTP_HOST'] = $originalHost;
 	}
+	
+	public function testGetHomepageLink() {
+		$default = $this->objFromFixture('Page', 'home');
+		$nested  = $this->objFromFixture('Page', 'nested');
+		
+		SiteTree::disable_nested_urls();
+		$this->assertEquals('home', RootURLController::get_homepage_link());
+		SiteTree::enable_nested_urls();
+		$this->assertEquals('home', RootURLController::get_homepage_link());
+		
+		$nested->HomepageForDomain = str_replace('www.', null, $_SERVER['HTTP_HOST']);
+		$nested->write();
+		
+		SiteTree::disable_nested_urls();
+		$this->assertEquals('nested-home', RootURLController::get_homepage_link());
+		SiteTree::enable_nested_urls();
+		$this->assertEquals('home/nested-home', RootURLController::get_homepage_link());
+		
+		$nested->HomepageForDomain = null;
+		$nested->write();
+	}
+	
 }
