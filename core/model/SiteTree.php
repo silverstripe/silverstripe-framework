@@ -1368,7 +1368,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		}
 		
 		return DB::query (
-			"SELECT COUNT(ID) FROM \"SiteTree\" WHERE \"URLSegment\" = '$this->URLSegment' $IDFilter $parentFilter"
+			"SELECT COUNT(\"ID\") FROM \"SiteTree\" WHERE \"URLSegment\" = '$this->URLSegment' $IDFilter $parentFilter"
 		)->value() < 1;
 	}
 	
