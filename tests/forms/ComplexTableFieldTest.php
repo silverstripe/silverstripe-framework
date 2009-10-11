@@ -6,6 +6,7 @@
 class ComplexTableFieldTest extends FunctionalTest {
 
 	static $fixture_file = 'sapphire/tests/forms/ComplexTableFieldTest.yml';
+	static $use_draft_site = true;
 	
 	/**
 	 * An instance of {@link Controller} used for
