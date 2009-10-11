@@ -177,6 +177,33 @@ class RequestHandler extends ViewableData {
 	}
 	
 	/**
+	 * Get a unified array of allowed actions on this controller (if such data is available) from both the controller
+	 * ancestry and any extensions.
+	 *
+	 * @return array|null
+	 */
+	public function allowedActions() {
+		$actions = Object::combined_static(get_class($this), 'allowed_actions', 'RequestHandler');
+		
+		foreach($this->extension_instances as $extension) {
+			if($extensionActions = Object::get_static(get_class($extension), 'allowed_actions')) {
+				$actions = array_merge($actions, $extensionActions);
+			}
+		}
+		
+		if($actions) {
+			// convert all keys and values to lowercase to allow for easier comparison, unless it is a permission code
+			array_change_key_case($actions, CASE_LOWER);
+			
+			foreach($actions as $key => $value) {
+				if(is_numeric($key)) $actions[$key] = strtolower($value);
+			}
+			
+			return $actions;
+		}
+	}
+	
+	/**
 	 * Checks if this request handler has a specific action (even if the current user cannot access it).
 	 *
 	 * @param string $action
@@ -186,7 +213,7 @@ class RequestHandler extends ViewableData {
 		if($action == 'index') return true;
 		
 		$action  = strtolower($action);
-		$actions = Object::combined_static($this->class, 'allowed_actions', 'RequestHandler');
+		$actions = $this->allowedActions();
 		
 		if(is_array($actions)) {
 			if(array_key_exists($action, $actions) || in_array($action, $actions)) {
@@ -207,25 +234,9 @@ class RequestHandler extends ViewableData {
 	 */
 	function checkAccessAction($action) {
 		$action            = strtolower($action);
-		$allowedActions    = Object::combined_static(get_class($this), 'allowed_actions');
-		$newAllowedActions = array();
-		
-		// merge in any $allowed_actions from extensions
-		if($this->extension_instances) foreach($this->extension_instances as $extension) {
-			if($extAccess = Object::get_static($extension->class, 'allowed_actions')) {
-				$allowedActions = array_merge($allowedActions, $extAccess);
-			}
-		}
+		$allowedActions    = $this->allowedActions();
 		
 		if($allowedActions)  {
-			// Convert all keys and values to lowercase for easier comparison.
-			// Exclude values set as booleans, or permission codes (permission checks are case sensitive)
-			foreach($allowedActions as $key => $value) {
-				if(is_numeric($key) || is_bool($value)) $value = strtolower($value);
-				$newAllowedActions[strtolower($key)] = $value;
-			}
-			$allowedActions = $newAllowedActions;
-			
 			// check for specific action rules first, and fall back to global rules defined by asterisk
 			foreach(array($action,'*') as $actionOrAll) {
 				// check if specific action is set
