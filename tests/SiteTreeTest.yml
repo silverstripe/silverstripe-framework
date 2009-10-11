@@ -35,6 +35,9 @@ Page:
         Title: Staff
         URLSegment: my-staff
         Parent: =>Page.about
+    ceo:
+        Title: CEO
+        Parent: =>Page.staff
     staffduplicate:
         Title: Staff
         URLSegment: my-staff

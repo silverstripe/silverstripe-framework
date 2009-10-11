@@ -433,6 +433,49 @@ class SiteTreeTest extends SapphireTest {
 		$this->assertEquals('', $parser->parse('[sitetree_link]Example Content[/sitetree_link]'));
 	}
 	
+	public function testIsCurrent() {
+		$aboutPage = $this->objFromFixture('Page', 'about');
+		$errorPage = $this->objFromFixture('ErrorPage', '404');
+		
+		Director::set_current_page($aboutPage);
+		$this->assertTrue($aboutPage->isCurrent(), 'Assert that basic isSection checks works.');
+		$this->assertFalse($errorPage->isCurrent());
+		
+		Director::set_current_page($errorPage);
+		$this->assertTrue($errorPage->isCurrent(), 'Assert isSection works on error pages.');
+		$this->assertFalse($aboutPage->isCurrent());
+		
+		Director::set_current_page($aboutPage);
+		$this->assertTrue (
+			DataObject::get_one('SiteTree', '"Title" = \'About Us\'')->isCurrent(),
+			'Assert that isCurrent works on another instance with the same ID.'
+		);
+		
+		Director::set_current_page($newPage = new SiteTree());
+		$this->assertTrue($newPage->isCurrent(), 'Assert that isCurrent works on unsaved pages.');
+	}
+	
+	public function testIsSection() {
+		$about = $this->objFromFixture('Page', 'about');
+		$staff = $this->objFromFixture('Page', 'staff');
+		$ceo   = $this->objFromFixture('Page', 'ceo');
+		
+		Director::set_current_page($about);
+		$this->assertTrue($about->isSection());
+		$this->assertFalse($staff->isSection());
+		$this->assertFalse($ceo->isSection());
+		
+		Director::set_current_page($staff);
+		$this->assertTrue($about->isSection());
+		$this->assertTrue($staff->isSection());
+		$this->assertFalse($ceo->isSection());
+		
+		Director::set_current_page($ceo);
+		$this->assertTrue($about->isSection());
+		$this->assertTrue($staff->isSection());
+		$this->assertTrue($ceo->isSection());
+	}
+	
 }
 
 // We make these extend page since that's what all page types are expected to do
