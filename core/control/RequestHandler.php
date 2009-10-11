@@ -236,8 +236,6 @@ class RequestHandler extends ViewableData {
 		$action            = strtolower($action);
 		$allowedActions    = $this->allowedActions();
 
-		if($action == 'index') return true;
-		
 		if($allowedActions)  {
 			// check for specific action rules first, and fall back to global rules defined by asterisk
 			foreach(array($action,'*') as $actionOrAll) {
@@ -250,16 +248,21 @@ class RequestHandler extends ViewableData {
 					} elseif(substr($test, 0, 2) == '->') {
 						// Case 2: Determined by custom method with "->" prefix
 						return $this->{substr($test, 2)}();
-					} elseif(Permission::check($test)) {
+					} else {
 						// Case 3: Value is a permission code to check the current member against
-						return true;
+						return Permission::check($test);
 					}
+					
 				} elseif((($key = array_search($actionOrAll, $allowedActions)) !== false) && is_numeric($key)) {
 					// Case 4: Allow numeric array notation (search for array value as action instead of key)
 					return true;
 				}
 			}
 		}
+		
+		// If we get here an the action is 'index', then it hasn't been specified, which means that
+		// it should be allowed.
+		if($action == 'index') return true;
 		
 		if($allowedActions === null || !$this->uninherited('allowed_actions')) {
 			// If no allowed_actions are provided, then we should only let through actions that aren't handled by magic methods
