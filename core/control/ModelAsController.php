@@ -69,9 +69,13 @@ class ModelAsController extends Controller implements NestedController {
 			throw new Exception('ModelAsController->getNestedController(): was not passed a URLSegment value.');
 		}
 		
+		Translatable::disable_locale_filter();
+		
 		$sitetree = DataObject::get_one('SiteTree', sprintf (
 			'"URLSegment" = \'%s\' %s', Convert::raw2sql($URLSegment), (SiteTree::nested_urls() ? 'AND "ParentID" = 0' : null)
 		));
+		
+		Translatable::enable_locale_filter();
 		
 		if(!$sitetree) {
 			// If a root page has been renamed, redirect to the new location.

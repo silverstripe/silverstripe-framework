@@ -189,11 +189,13 @@ class Translatable extends DataObjectDecorator implements PermissionProvider {
 	protected $original_values = null;
 	
 	/**
-	 * @var boolean Temporarily override the "auto-filter" for {@link get_current_locale()}
-	 * in {@link augmentSQL()}. IMPORTANT: You must set this value back to TRUE
-	 * after the temporary usage.
+	 * If this is set to TRUE then {@link augmentSQL()} will automatically add a filter
+	 * clause to limit queries to the current {@link get_current_locale()}. This camn be
+	 * disabled using {@link disable_locale_filter()}
+	 *
+	 * @var bool
 	 */
-	protected static $enable_lang_filter = true;
+	protected static $locale_filter_enabled = true;
 	
 	/**
 	 * @var array All locales in which a translation can be created.
@@ -208,9 +210,9 @@ class Translatable extends DataObjectDecorator implements PermissionProvider {
 	 * Reset static configuration variables to their default values
 	 */
 	static function reset() {
+		self::enable_locale_filter();
 		self::$default_locale = 'en_US';
 		self::$current_locale = null;
-		self::$enable_lang_filter = true;
 		self::$allowed_locales = null;
 	}
 	
@@ -281,7 +283,7 @@ class Translatable extends DataObjectDecorator implements PermissionProvider {
 	 * Set the reading language, either namespaced to 'site' (website content)
 	 * or 'cms' (management backend). This value is used in {@link augmentSQL()}
 	 * to "auto-filter" all SELECT queries by this language.
-	 * See {@link $enable_lang_filter} on how to override this behaviour temporarily.
+	 * See {@link disable_locale_filter()} on how to override this behaviour temporarily.
 	 * 
 	 * @param string $lang New reading language.
 	 */
@@ -325,6 +327,29 @@ class Translatable extends DataObjectDecorator implements PermissionProvider {
 		$result = DataObject::get($class, $filter, $sort, $join, $limit, $containerClass, $having);
 		self::set_current_locale($oldLang);
 		return $result;
+	}
+	
+	/**
+	 * @return bool
+	 */
+	public static function locale_filter_enabled() {
+		return self::$locale_filter_enabled;
+	}
+	
+	/**
+	 * Enables automatic filtering by locale. This is normally called after is has been
+	 * disabled using {@link disable_locale_filter()}.
+	 */
+	public static function enable_locale_filter() {
+		self::$locale_filter_enabled = true;
+	}
+	
+	/**
+	 * Disables automatic locale filtering in {@link augmentSQL()}. This can be re-enabled
+	 * using {@link enable_locale_filter()}.
+	 */
+	public static function disable_locale_filter() {
+		self::$locale_filter_enabled = false;
 	}
 	
 	/**
@@ -491,7 +516,7 @@ class Translatable extends DataObjectDecorator implements PermissionProvider {
 	 * It falls back to "Locale='' OR Lang IS NULL" and assumes that
 	 * this implies querying for the default language.
 	 * 
-	 * Use {@link $enable_lang_filter} to temporarily disable this "auto-filtering".
+	 * Use {@link disable_locale_filter()} to temporarily disable this "auto-filtering".
 	 */
 	function augmentSQL(SQLQuery &$query) {
 		// If the record is saved (and not a singleton), and has a locale,
@@ -503,7 +528,7 @@ class Translatable extends DataObjectDecorator implements PermissionProvider {
 		if(
 			$locale
 			// unless the filter has been temporarily disabled
-			&& self::$enable_lang_filter
+			&& self::locale_filter_enabled()
 			// DataObject::get_by_id() should work independently of language
 			&& !$query->filtersOnID() 
 			// the query contains this table
@@ -786,27 +811,40 @@ class Translatable extends DataObjectDecorator implements PermissionProvider {
 	}
 	
 	/**
-	 * Getter specifically for {@link SiteTree} subclasses
-	 * which is hooked in to {@link SiteTree::get_by_url()}.
-	 * Disables translatable to get the page independently
-	 * of the current language setting.
-	 * 
-	 * @param string $urlSegment
-	 * @param string $extraFilter
-	 * @param boolean $cache
-	 * @param string|array $orderby
-	 * @return DataObject
+	 * Attempt to get the page for a link in the default language that has been translated.
+	 *
+	 * @param string $URLSegment
+	 * @param int|null $parentID
+	 * @return SiteTree
 	 */
-	function alternateGetByUrl($urlSegment, $extraFilter, $cache = null, $orderby = null) {
-		$filter = sprintf("\"SiteTree\".\"URLSegment\" = '%s'", Convert::raw2sql($urlSegment));
-		if($extraFilter) $filter .= " AND $extraFilter";
-		self::$enable_lang_filter = false;
-		$record = DataObject::get_one('SiteTree', $filter);
-		self::$enable_lang_filter = true;
-
-		return $record;
+	public function alternateGetByLink($URLSegment, $parentID) {
+		// If the parentID value has come from a translated page, then we need to find the corresponding parentID value
+		// in the default Locale.
+		if (
+			is_int($parentID)
+			&& $parentID > 0
+			&& ($parent = DataObject::get_by_id('SiteTree', $parentID))
+			&& ($parent->isTranslation())
+		) {
+			$parentID = $parent->getTranslationGroup();
+		}
+		
+		// Find the locale language-independent of the page
+		self::disable_locale_filter();
+		$default = DataObject::get_one (
+			'SiteTree',
+			sprintf (
+				'"URLSegment" = \'%s\'%s',
+				Convert::raw2sql($URLSegment),
+				(is_int($parentID) ? " AND \"ParentID\" = $parentID" : null)
+			),
+			false
+		);
+		self::enable_locale_filter();
+		
+		return $default;
 	}
-
+	
 	//-----------------------------------------------------------------------------------------------//
 	
 	/**
@@ -985,7 +1023,7 @@ class Translatable extends DataObjectDecorator implements PermissionProvider {
 		if($this->owner->exists()) {
 			// HACK need to disable language filtering in augmentSQL(), 
 			// as we purposely want to get different language
-			self::$enable_lang_filter = false;
+			self::disable_locale_filter();
 			
 			$translationGroupID = $this->getTranslationGroup();
 			
@@ -1017,7 +1055,7 @@ class Translatable extends DataObjectDecorator implements PermissionProvider {
 				$translations = DataObject::get($this->owner->class, $filter, null, $join);
 			}
 
-			self::$enable_lang_filter = true;
+			self::enable_locale_filter();
 
 			return $translations;
 		}
@@ -1219,9 +1257,21 @@ class Translatable extends DataObjectDecorator implements PermissionProvider {
 	}
 	
 	/**
-	 * @todo
+	 * Get the RelativeLink value for a home page in another locale. This is found by searching for the default home
+	 * page in the default language, then returning the link to the translated version (if one exists).
+	 *
+	 * @return string
 	 */
 	public static function get_homepage_link_by_locale($locale) {
+		$originalLocale = self::get_current_locale();
+		
+		self::set_current_locale(self::default_locale());
+		$original = SiteTree::get_by_link(RootURLController::get_default_homepage_link());
+		self::set_current_locale($originalLocale);
+		
+		if($original) {
+			if($translation = $original->getTranslation($locale)) return trim($translation->RelativeLink(true), '/');
+		}
 	}
 	
 	/**

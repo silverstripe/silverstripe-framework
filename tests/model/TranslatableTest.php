@@ -641,7 +641,7 @@ class TranslatableTest extends FunctionalTest {
 		Translatable::set_current_locale('en_US');
 	}
 	
-	function testRootUrlDefaultsToTranslatedUrlSegment() {
+	function testRootUrlDefaultsToTranslatedLink() {
 		$origPage = $this->objFromFixture('Page', 'homepage_en');
 		$origPage->publish('Stage', 'Live');
 		$translationDe = $origPage->createTranslation('de_DE');
@@ -844,22 +844,64 @@ class TranslatableTest extends FunctionalTest {
 		Translatable::set_current_locale($origLocale);
 	}
 	
-	public function testSiteTreeGetByUrlFindsTranslationWithoutLocale() {
+	public function testAlternateGetByLink() {
+		$parent     = $this->objFromFixture('Page', 'parent');
+		$child      = $this->objFromFixture('Page', 'child1');
+		$grandchild = $this->objFromFixture('Page', 'grandchild1');
+		
+		$parentTranslation = $parent->createTranslation('en_AU');
+		$parentTranslation->write();
+		
+		$childTranslation = $child->createTranslation('en_AU');
+		$childTranslation->write();
+		
+		$grandchildTranslation = $grandchild->createTranslation('en_AU');
+		$grandchildTranslation->write();
+		
+		SiteTree::enable_nested_urls();
+		Translatable::set_current_locale('en_AU');
+		
+		$this->assertEquals (
+			$parentTranslation->ID,
+			Sitetree::get_by_link($parentTranslation->Link())->ID,
+			'Top level pages can be found.'
+		);
+		
+		$this->assertEquals (
+			$childTranslation->ID,
+			SiteTree::get_by_link($childTranslation->Link())->ID,
+			'Child pages can be found.'
+		);
+		
+		$this->assertEquals (
+			$grandchildTranslation->ID,
+			SiteTree::get_by_link($grandchildTranslation->Link())->ID,
+			'Grandchild pages can be found.'
+		);
+		
+		$this->assertEquals (
+			$childTranslation->ID,
+			SiteTree::get_by_link($parentTranslation->Link($child->URLSegment))->ID,
+			'Links can be made up of multiple languages'
+		);
+	}
+	
+	public function testSiteTreeGetByLinkFindsTranslationWithoutLocale() {
 		$parent = $this->objFromFixture('Page', 'parent');
 		
 		$parentTranslation = $parent->createTranslation('en_AU');
 		$parentTranslation->URLSegment = 'parent-en-AU';
 		$parentTranslation->write();
 		
-		$match = Sitetree::get_by_url($parentTranslation->URLSegment);
+		$match = Sitetree::get_by_link($parentTranslation->URLSegment);
 		$this->assertNotNull(
 			$match,
-			'SiteTree::get_by_url() doesnt need a locale setting to find translated pages'
+			'SiteTree::get_by_link() doesnt need a locale setting to find translated pages'
 		);
 		$this->assertEquals(
 			$parentTranslation->ID,
 			$match->ID,
-			'SiteTree::get_by_url() doesnt need a locale setting to find translated pages'
+			'SiteTree::get_by_link() doesnt need a locale setting to find translated pages'
 		);
 	}
 }

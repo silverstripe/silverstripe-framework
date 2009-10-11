@@ -262,11 +262,13 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		
 		// Attempt to grab an alternative page from decorators.
 		if(!$sitetree) {
-			if($alternatives = singleton('SiteTree')->extend('alternateGetByLink', $link, $filter, $cache, $order)) {
-				foreach($alternatives as $alternative) if($alternative) return $alternative;
+			$parentID = self::nested_urls() ? 0 : null;
+			
+			if($alternatives = singleton('SiteTree')->extend('alternateGetByLink', $URLSegment, $parentID)) {
+				foreach($alternatives as $alternative) if($alternative) $sitetree = $alternative;
 			}
 			
-			return false;
+			if(!$sitetree) return false;
 		}
 		
 		// Check if we have any more URL parts to parse.
@@ -279,11 +281,13 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 			);
 			
 			if(!$next) {
-				if($alternatives = singleton('SiteTree')->extend('alternateGetByLink', $link, $filter, $cache, $order)) {
-					foreach($alternatives as $alternative) if($alternative) return $alternative;
+				$parentID = (int) $sitetree->ID;
+				
+				if($alternatives = singleton('SiteTree')->extend('alternateGetByLink', $segment, $parentID)) {
+					foreach($alternatives as $alternative) if($alternative) $next = $alternative;
 				}
 				
-				return false;
+				if(!$next) return false;
 			}
 			
 			$sitetree->destroy();
