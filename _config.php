@@ -37,6 +37,11 @@ Director::addRules(1, array(
 ));
 
 /**
+ * Register the default internal shortcodes.
+ */
+ShortcodeParser::get('default')->register('sitetree_link', array('SiteTree', 'link_shortcode_handler'));
+
+/**
  * PHP 5.2 has a namespace conflict with our datetime class,
  * for legacy support, we use this overload method.
  * // ENFORCE STRONG_CREATE

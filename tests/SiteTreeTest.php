@@ -380,7 +380,42 @@ class SiteTreeTest extends SapphireTest {
 		$this->assertEquals($memberID, $publishedVersion['PublisherID']);
 		
 	}
-
+	
+	public function testLinkShortcodeHandler() {
+		$aboutPage = $this->objFromFixture('Page', 'about');
+		$errorPage = $this->objFromFixture('ErrorPage', '404');
+		
+		$parser = new ShortcodeParser();
+		$parser->register('sitetree_link', array('SiteTree', 'link_shortcode_handler'));
+		
+		$aboutShortcode = sprintf('[sitetree_link id=%d]', $aboutPage->ID);
+		$aboutEnclosed  = sprintf('[sitetree_link id=%d]Example Content[/sitetree_link]', $aboutPage->ID);
+		
+		$aboutShortcodeExpected = $aboutPage->Link();
+		$aboutEnclosedExpected  = sprintf('<a href="%s">Example Content</a>', $aboutPage->Link());
+		
+		$this->assertEquals($aboutShortcodeExpected, $parser->parse($aboutShortcode), 'Test that simple linking works.');
+		$this->assertEquals($aboutEnclosedExpected, $parser->parse($aboutEnclosed), 'Test enclosed content is linked.');
+		
+		$aboutPage->delete();
+		
+		$this->assertEquals($aboutShortcodeExpected, $parser->parse($aboutShortcode), 'Test that deleted pages still link.');
+		$this->assertEquals($aboutEnclosedExpected, $parser->parse($aboutEnclosed));
+		
+		$aboutShortcode = '[sitetree_link id="-1"]';
+		$aboutEnclosed  = '[sitetree_link id="-1"]Example Content[/sitetree_link]';
+		
+		$aboutShortcodeExpected = $errorPage->Link();
+		$aboutEnclosedExpected  = sprintf('<a href="%s">Example Content</a>', $errorPage->Link());
+		
+		$this->assertEquals($aboutShortcodeExpected, $parser->parse($aboutShortcode), 'Test link to 404 page if no suitable matches.');
+		$this->assertEquals($aboutEnclosedExpected, $parser->parse($aboutEnclosed));
+		
+		$this->assertEquals('', $parser->parse('[sitetree_link]'), 'Test that invalid ID attributes are not parsed.');
+		$this->assertEquals('', $parser->parse('[sitetree_link id="text"]'));
+		$this->assertEquals('', $parser->parse('[sitetree_link]Example Content[/sitetree_link]'));
+	}
+	
 }
 
 // We make these extend page since that's what all page types are expected to do
