@@ -235,6 +235,8 @@ class RequestHandler extends ViewableData {
 	function checkAccessAction($action) {
 		$action            = strtolower($action);
 		$allowedActions    = $this->allowedActions();
+
+		if($action == 'index') return true;
 		
 		if($allowedActions)  {
 			// check for specific action rules first, and fall back to global rules defined by asterisk
