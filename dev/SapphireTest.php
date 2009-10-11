@@ -59,7 +59,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 		Member::set_password_validator(null);
 		Cookie::set_report_errors(false);
 		
-		// Reset Translatable and Versioned
+		RootURLController::reset();
 		Translatable::reset();
 		Versioned::reset();
 		DataObject::reset();

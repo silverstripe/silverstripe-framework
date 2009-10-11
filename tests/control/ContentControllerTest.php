@@ -13,6 +13,7 @@ class ContentControllerTest extends FunctionalTest {
 	 * Test that nested pages, basic actions, and nested/non-nested URL switching works properly
 	 */
 	public function testNestedPages() {
+		RootURLController::reset();
 		SiteTree::enable_nested_urls();
 		
 		$this->assertEquals('Home Page', $this->get('/')->getBody());
@@ -27,6 +28,7 @@ class ContentControllerTest extends FunctionalTest {
 		$this->assertEquals('Third Level Page', $this->get('/home/second-level/third-level/index/')->getBody());
 		$this->assertEquals('Third Level Page', $this->get('/home/second-level/third-level/second-index/')->getBody());
 		
+		RootURLController::reset();
 		SiteTree::disable_nested_urls();
 		
 		$this->assertEquals('Home Page', $this->get('/')->getBody());

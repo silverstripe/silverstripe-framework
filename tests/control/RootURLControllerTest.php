@@ -36,7 +36,9 @@ class RootURLControllerTest extends SapphireTest {
 		);
 		
 		foreach($tests as $domain => $urlSegment) {
+			RootURLController::reset();
 			$_SERVER['HTTP_HOST'] = $domain;
+			
 			$this->assertEquals(
 				$urlSegment, 
 				RootURLController::get_homepage_link(), 
@@ -59,8 +61,11 @@ class RootURLControllerTest extends SapphireTest {
 		$nested->HomepageForDomain = str_replace('www.', null, $_SERVER['HTTP_HOST']);
 		$nested->write();
 		
+		RootURLController::reset();
 		SiteTree::disable_nested_urls();
 		$this->assertEquals('nested-home', RootURLController::get_homepage_link());
+		
+		RootURLController::reset();
 		SiteTree::enable_nested_urls();
 		$this->assertEquals('home/nested-home', RootURLController::get_homepage_link());
 		

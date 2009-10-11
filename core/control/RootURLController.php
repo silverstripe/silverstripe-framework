@@ -16,28 +16,41 @@ class RootURLController extends Controller {
 	protected static $default_homepage_link = 'home';
 	
 	/**
+	 * @var string
+	 */
+	protected static $cached_homepage_link;
+	
+	/**
 	 * Get the full form (e.g. /home/) relative link to the home page for the current HTTP_HOST value. Note that the
 	 * link is trimmed of leading and trailing slashes before returning to ensure consistency.
 	 *
 	 * @return string
 	 */
 	public static function get_homepage_link() {
-		$host     = str_replace('www.', null, $_SERVER['HTTP_HOST']);
-		$SQL_host = Convert::raw2sql($host);
-		
-		$candidates = DataObject::get('SiteTree', "\"HomepageForDomain\" LIKE '%$SQL_host%'");
-		
-		if($candidates) foreach($candidates as $candidate) {
-			if(preg_match('/(,|^) *' . preg_quote($host) . ' *(,|$)/', $candidate->HomepageForDomain)) {
-				return trim($candidate->RelativeLink(true), '/');
+		if(!self::$cached_homepage_link) {
+			$host       = str_replace('www.', null, $_SERVER['HTTP_HOST']);
+			$SQL_host   = Convert::raw2sql($host);
+			$candidates = DataObject::get('SiteTree', "\"HomepageForDomain\" LIKE '%$SQL_host%'");
+			
+			if($candidates) foreach($candidates as $candidate) {
+				if(preg_match('/(,|^) *' . preg_quote($host) . ' *(,|$)/', $candidate->HomepageForDomain)) {
+					self::$cached_homepage_link = trim($candidate->RelativeLink(true), '/');
+				}
+			}
+			
+			if(!self::$cached_homepage_link) {
+				if (
+					Object::has_extension('SiteTree', 'Translatable')
+					&& $link = Translatable::get_homepage_link_by_locale(Translatable::get_current_locale())
+				) {
+					self::$cached_homepage_link = $link;
+				} else {
+					self::$cached_homepage_link = self::get_default_homepage_link();
+				}
 			}
 		}
 		
-		if(Object::has_extension('SiteTree', 'Translatable')) {
-			if($link = Translatable::get_homepage_link_by_locale(Translatable::get_current_locale())) return $link;
-		}
-		
-		return self::get_default_homepage_link();
+		return self::$cached_homepage_link;
 	}
 	
 	/**
@@ -64,6 +77,13 @@ class RootURLController extends Controller {
 		}
 		
 		return false;
+	}
+	
+	/**
+	 * Resets the cached homepage link value - useful for testing.
+	 */
+	public static function reset() {
+		self::$cached_homepage_link = null;
 	}
 	
 	/**
