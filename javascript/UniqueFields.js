@@ -37,15 +37,7 @@ UniqueFormField.prototype = {
 	}
 }
 
-UniqueTextField = Class.extend('UniqueFormField');
-UniqueTextField.applyTo('input.UniqueTextField');
-UniqueTextField.prototype = {
-	initialize: function() {
-		this.onblur = this.validate.bind(this);
-	}
-}
-
-UniqueRestrictedTextField = Class.extend('UniqueTextField');
+UniqueRestrictedTextField = Class.extend('UniqueFormField');
 UniqueRestrictedTextField.applyTo('input.UniqueRestrictedTextField');
 UniqueRestrictedTextField.prototype = {
 	initialize: function() {
@@ -77,13 +69,8 @@ UniqueRestrictedTextField.prototype = {
 				return escaped;
 		}
 		
-		var parts = escaped.match( /(.*)(\d+)$/ );
+		var prefix = escaped;
 		
-		if( parts )
-			prefix = parts[1];
-		else
-			prefix = escaped;
-			
 		if( prefix.charAt(prefix.length-1) != this.charReplacement )
 			prefix = prefix + this.charReplacement;
 
