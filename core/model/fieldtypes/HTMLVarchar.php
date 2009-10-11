@@ -11,7 +11,7 @@ class HTMLVarchar extends Varchar {
 	public static $escape_type = 'xml';
 	
 	public function forTemplate() {
-		return $this->value;
+		return ShortcodeParser::get_active()->parse($this->value);
 	}
 	
 	public function hasValue() {

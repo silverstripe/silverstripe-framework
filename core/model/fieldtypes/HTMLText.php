@@ -112,7 +112,7 @@ class HTMLText extends Text {
 	}	
 	
 	public function forTemplate() {
-		return $this->value;
+		return ShortcodeParser::get_active()->parse($this->value);
 	}
 	
 	public function hasValue() {
