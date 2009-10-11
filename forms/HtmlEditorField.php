@@ -32,18 +32,32 @@ class HtmlEditorField extends TextareaField {
 	 * @return string
 	 */
 	function Field() {
+		// mark up broken links
+		$value  = new SS_HTMLValue($this->value);
+		
+		if($links = $value->getElementsByTagName('a')) foreach($links as $link) {
+			$matches = array();
+			
+			if(preg_match('/\[sitetree_link id=([0-9]+)\]/i', $link->getAttribute('href'), $matches)) {
+				if(!DataObject::get_by_id('SiteTree', $matches[1])) {
+					$class = $link->getAttribute('class');
+					$link->setAttribute('class', ($class ? "$class ss-broken" : 'ss-broken'));
+				}
+			}
+		}
+		
 		return $this->createTag (
 			'textarea',
 			array (
 				'class'   => $this->extraClass(),
 				'rows'    => $this->rows,
 				'cols'    => $this->cols,
-				'style'   => "width: 97%; height: " . ($this->rows * 16) . "px", // Prevents horizontal scrollbars
+				'style'   => 'width: 97%; height: ' . ($this->rows * 16) . 'px', // prevents horizontal scrollbars
 				'tinymce' => 'true',
 				'id'      => $this->id(),
 				'name'    => $this->name
 			),
-			htmlentities($this->value, ENT_COMPAT, 'UTF-8')
+			htmlentities($value->getContent(), ENT_COMPAT, 'UTF-8')
 		);
 	}
 	
@@ -54,35 +68,38 @@ class HtmlEditorField extends TextareaField {
 			);
 		}
 		
-		$value = $this->value ? $this->value : '<p></p>';
-		$value = preg_replace('/src="([^\?]*)\?r=[0-9]+"/i', 'src="$1"', $value);
-		
 		$linkedPages = array();
 		$linkedFiles = array();
 		
-		$document = new DOMDocument(null, 'UTF-8');
-		$document->strictErrorChecking = false;
-		$document->loadHTML($value);
+		$htmlValue = new SS_HTMLValue($this->value);
 		
 		// Populate link tracking for internal links & links to asset files.
-		if($links = $document->getElementsByTagName('a')) foreach($links as $link) {
-			$link = Director::makeRelative($link->getAttribute('href'));
+		if($links = $htmlValue->getElementsByTagName('a')) foreach($links as $link) {
+			$href = Director::makeRelative($link->getAttribute('href'));
 			
-			if(preg_match('/\[sitetree_link id=([0-9]+)\]/i', $link, $matches)) {
+			if(preg_match('/\[sitetree_link id=([0-9]+)\]/i', $href, $matches)) {
 				$ID = $matches[1];
+				
+				// clear out any broken link classes
+				if($class = $link->getAttribute('class')) {
+					$link->setAttribute('class', preg_replace('/(^ss-broken|ss-broken$| ss-broken )/', null, $class));
+				}
 				
 				if($page = DataObject::get_by_id('SiteTree', $ID)) {
 					$linkedPages[] = $page->ID;
 				} else {
 					$record->HasBrokenLink = true;
 				}
-			} elseif($link[0] != '/' && $file = File::find($link)) {
+			} elseif($href[0] != '/' && $file = File::find($href)) {
 				$linkedFiles[] = $file->ID;
 			}
 		}
 		
 		// Resample images, add default attributes and add to assets tracking.
-		if($images = $document->getElementsByTagName('img')) foreach($images as $img) {
+		if($images = $htmlValue->getElementsByTagName('img')) foreach($images as $img) {
+			// strip any ?r=n data from the src attribute
+			$img->setAttribute('src', preg_replace('/([^\?]*)\?r=[0-9]+$/i', '$1', $img->getAttribute('src')));
+			
 			if(!$image = File::find($path = Director::makeRelative($img->getAttribute('src')))) {
 				if(substr($path, 0, strlen(ASSETS_DIR) + 1) == ASSETS_DIR . '/') {
 					$record->HasBrokenFile = true;
@@ -124,7 +141,7 @@ class HtmlEditorField extends TextareaField {
 			}
 		}
 		
-		$record->{$this->name} = substr(simplexml_import_dom($document)->body->asXML(), 6, -7);
+		$record->{$this->name} = $htmlValue->getContent();
 	}
 	
 	/**

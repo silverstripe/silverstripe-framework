@@ -13,10 +13,6 @@ class HtmlEditorFieldTest extends FunctionalTest {
 		$sitetree = new SiteTree();
 		$editor   = new HtmlEditorField('Content');
 		
-		$editor->setValue('Un-enclosed Content');
-		$editor->saveInto($sitetree);
-		$this->assertEquals('<p>Un-enclosed Content</p>', $sitetree->Content, 'Un-enclosed content is put in p tags.');
-		
 		$editor->setValue('<p class="foo">Simple Content</p>');
 		$editor->saveInto($sitetree);
 		$this->assertEquals('<p class="foo">Simple Content</p>', $sitetree->Content, 'Attributes are preserved.');
@@ -32,7 +28,7 @@ class HtmlEditorFieldTest extends FunctionalTest {
 		
 		$editor->setValue(null);
 		$editor->saveInto($sitetree);
-		$this->assertEquals('<p/>', $sitetree->Content, 'Doesn\'t choke on null values.');
+		$this->assertEquals('', $sitetree->Content, "Doesn't choke on empty/null values.");
 	}
 	
 	public function testLinkTracking() {
