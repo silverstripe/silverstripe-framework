@@ -264,30 +264,47 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	}
 	
 	/**
-	 * Get the URL for this page.
+	 * Return the link for this {@link SiteTree} object, with the {@link Director::baseURL()} included.
 	 *
-	 * @param string $action An action to include in the link
-	 * @return string The URL for this page
+	 * @param string $action
+	 * @return string
 	 */
 	public function Link($action = null) {
-		if($action == "index") {
-			$action = "";
-		}
-		if($this->URLSegment == 'home' && !$action) return Director::baseURL();
-		else return Director::baseURL() . $this->URLSegment . "/$action";
+		return Controller::join_links(Director::baseURL(), $this->RelativeLink($action));
 	}
 	
-
-
 	/**
-	 * Get the absolute URL for this page by stage
+	 * Get the absolute URL for this page, including protocol and host.
+	 *
+	 * @param string $action
+	 * @return string
 	 */
-	public function AbsoluteLink() {
-		if($this->hasMethod('alternateAbsoluteLink')) return $this->alternateAbsoluteLink();
-		else return Director::absoluteURL($this->Link());
+	public function AbsoluteLink($action = null) {
+		if($this->hasMethod('alternateAbsoluteLink')) {
+			return $this->alternateAbsoluteLink($action);
+		} else {
+			return Director::absoluteURL($this->Link($action));
+		}
 	}
 	
+	/**
+	 * Return the link for this {@link SiteTree} object relative to the SilverStripe root.
+	 *
+	 * @param string $action
+	 * @return string
+	 */
+	public function RelativeLink($action = null) {
+		$action = str_replace('&', '&amp;', $action);
 		
+		if($this->ParentID && self::nested_urls()) {
+			$base = $this->Parent()->RelativeLink($this->URLSegment);
+		} else {
+			$base = $this->URLSegment;
+		}
+		
+		return "$base/$action";
+	}
+	
 	/**
 	 * Returns link/current, depending on whether you're on the current page.
 	 * This is useful for css styling of menus.

@@ -42,23 +42,17 @@ class ContentController extends Controller {
 		$this->failover = $this->dataRecord;
 		parent::__construct();
 	}
-
+	
+	/**
+	 * Return the link to this controller, but force the expanded link to be returned so that form methods and
+	 * similar will function properly.
+	 *
+	 * @return string
+	 */
 	public function Link($action = null) {
-		return Director::baseURL() . $this->RelativeLink($action);
+		return $this->data()->Link(($action ? $action : true));
 	}
-	public function RelativeLink($action = null) {
-
-		if($this->URLSegment){
-			if($action == "index") $action = "";
-
-			// '&' in a URL is apparently naughty
-			$action = preg_replace('/&/', '&amp;', $action);
-			return $this->URLSegment . "/$action";
-		} else {
-			user_error("ContentController::RelativeLink() No URLSegment given on a '$this->class' object.  Perhaps you should overload it?", E_USER_WARNING);
-		}
-	}
-
+	
 	//----------------------------------------------------------------------------------//
 	// These flexible data methods remove the need for custom code to do simple stuff
 
