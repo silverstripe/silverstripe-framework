@@ -29,6 +29,8 @@ class ModelAsController extends Controller implements NestedController {
 	
 	public function handleRequest($request) {
 		$this->pushCurrent();
+		
+		$this->request   = $request;
 		$this->urlParams = $request->allParams();
 		
 		$this->init();
@@ -74,7 +76,7 @@ class ModelAsController extends Controller implements NestedController {
 					return $response;
 				}
 				
-				$child = $this->get404Page();
+				return ErrorPage::response_for(404, $this->request);
 			}
 		
 			if($child) {
@@ -137,15 +139,6 @@ class ModelAsController extends Controller implements NestedController {
 		return false;
 	}
 	
-	protected function get404Page() {
-		$page = DataObject::get_one("ErrorPage", "\"ErrorCode\" = '404'");
-		if($page) {
-			return $page;
-		} else {
-			// @deprecated 2.5 Use ErrorPage class
-			return DataObject::get_one("SiteTree", "\"URLSegment\" = '404'");
-		}
-	}
 }
 
 ?>

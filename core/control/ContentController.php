@@ -154,6 +154,14 @@ class ContentController extends Controller {
 
 		return new $controllerClass($widget);
 	}
+	
+	/**
+	 * @uses ErrorPage::response_for()
+	 * @return HTTPResponse
+	 */
+	public function httpError($code, $message = null) {
+		return ($resp = ErrorPage::response_for($code, $this->request)) ? $resp : parent::httpError($code, $message); 
+	}
 
 	/**
 	 * Get the project name

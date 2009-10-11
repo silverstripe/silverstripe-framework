@@ -25,6 +25,46 @@ class ErrorPage extends Page {
 	protected static $static_filepath = ASSETS_PATH;
 	
 	/**
+	 * Get a {@link HTTPResponse} that is suitable for responding to a reques that has thrown a specific error code.
+	 *
+	 * @param int $statusCode The HTTP error code.
+	 * @param HTTPRequest $request The request object that triggered the error.
+	 * @return HTTPResponse
+	 */
+	public static function response_for($statusCode, HTTPRequest $request = null) {
+		$errorPage = null;
+		
+		// First attempt to dynamically generate the error page, then fall back on using a cached version.
+		if (
+			(!$request || !$request->isMedia()) && !$errorPage = DataObject::get_one('ErrorPage', "\"ErrorCode\" = $statusCode")
+		) {
+			$cachedPath = self::get_filepath_for_errorcode($statusCode, Translatable::get_current_locale());
+			
+			if(file_exists($cachedPath)) {
+				$response = new HTTPResponse();	
+				
+				$response->setStatusCode($statusCode);
+				$response->setBody(file_get_contents($cachedPath));
+				
+				return $response;
+			}
+		}
+		
+		// If the request is for a simple media type, or there was no matching dynamic or cached error page just return
+		// a simple error string to avoid clogging up server resources.
+		if(!$errorPage) {
+			$response = new HTTPResponse();
+			
+			$response->setStatusCode($statusCode);
+			$response->setBody(sprintf('Error %s: %s', $response->getStatusCode(), $response->getStatusDescription()));
+			
+			return $response;
+		}
+		
+		return ModelAsController::controller_for($errorPage)->handleRequest(new HTTPRequest('GET', ''));
+	}
+	
+	/**
 	 * Ensures that there is always a 404 page
 	 * by checking if there's an instance of
 	 * ErrorPage with a 404 error code. If there
