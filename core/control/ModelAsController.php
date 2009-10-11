@@ -9,6 +9,24 @@
  */
 class ModelAsController extends Controller implements NestedController {
 	
+	/**
+	 * Get the appropriate {@link ContentController} for handling a {@link SiteTree} object, link it to the object and
+	 * return it.
+	 *
+	 * @param SiteTree $siteTree The SiteTree object to find a controller for.
+	 * @param string $action The optional action that was requested, so that action-specific controllers work.
+	 * @return ContentController
+	 */
+	public static function controller_for(SiteTree $siteTree, $action = null) {
+		$controller = "{$siteTree->class}_Controller";
+		
+		if($action && class_exists($controller . '_' . ucfirst($action))) {
+			$controller = $controller . '_' . ucfirst($action);
+		}
+		
+		return class_exists($controller) ? new $controller($siteTree) : $siteTree;
+	}
+	
 	public function handleRequest($request) {
 		$this->pushCurrent();
 		$this->urlParams = $request->allParams();
