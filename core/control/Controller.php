@@ -198,7 +198,7 @@ class Controller extends RequestHandler {
 				return $result;
 			}
 		} else {
-			if($this->action == 'index' || $this->hasActionTemplate($this->action)) {
+			if($this->action == 'index' || $this->hasAction($this->action)) {
 				return $this->getViewer($this->action)->process($this);
 			} else {
 				return $this->httpError(404, "The action '$this->action' does not exist in class $this->class");
@@ -305,16 +305,18 @@ class Controller extends RequestHandler {
 		}
 		return new SSViewer($templates);
 	}
-
+	
+	public function hasAction($action) {
+		return parent::hasAction($action) || $this->hasActionTemplate($action);
+	}
+	
 	/**
 	 * Returns TRUE if this controller has a template that is specifically designed to handle a specific action.
 	 *
 	 * @param string $action
 	 * @return bool
 	 */
-	public function hasActionTemplate($action = null) {
-		if(!$action) $action = $this->action;
-		
+	public function hasActionTemplate($action) {
 		if(isset($this->templates[$action])) return true;
 		
 		$parentClass = $this->class;

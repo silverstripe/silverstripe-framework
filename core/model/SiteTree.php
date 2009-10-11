@@ -1343,28 +1343,13 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	 *   - A page with the same URLSegment that has a conflict.
 	 *   - Conflicts with actions on the parent page.
 	 *   - A conflict caused by a root page having the same URLSegment as a class name.
-	 *   - Conflicts with action-specific templates on the parent page.
 	 *
 	 * @return bool
 	 */
 	public function validURLSegment() {
 		if(self::nested_urls() && $parent = $this->Parent()) {
-			if($this->URLSegment == 'index') return false;
-			
 			if($controller = ModelAsController::controller_for($parent)) {
-				$actions = Object::combined_static($controller->class, 'allowed_actions', 'RequestHandler');
-				
-				// check for a conflict with an entry in $allowed_actions
-				if(is_array($actions)) {
-					if(array_key_exists($this->URLSegment, $actions) || in_array($this->URLSegment, $actions)) {
-						return false;
-					}
-				}
-				
-				// check for a conflict with an action-specific template
-				if($controller->hasMethod('hasActionTemplate') && $controller->hasActionTemplate($this->URLSegment)) {
-					return false;
-				}
+				if($controller instanceof Controller && $controller->hasAction($this->URLSegment)) return false;
 			}
 		}
 		

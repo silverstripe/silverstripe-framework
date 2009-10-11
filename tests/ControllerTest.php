@@ -103,6 +103,18 @@ class ControllerTest extends FunctionalTest {
 		
 		$this->assertEquals('/admin/action', Controller::join_links('/admin', 'action'));
 	}
+	
+	/**
+	 * @covers Controller::hasAction()
+	 */
+	public function testHasAction() {
+		$controller = new ControllerTest_HasAction();
+		
+		$this->assertFalse($controller->hasAction('undefined'), 'undefined actions do not exist');
+		$this->assertTrue($controller->hasAction('allowed_action'), 'allowed actions are recognised');
+		$this->assertTrue($controller->hasAction('template_action'), 'action-specific templates are recognised');
+	}
+	
 }
 
 /**
@@ -165,3 +177,15 @@ class ControllerTest_FullSecuredController extends Controller {
 }
 
 class ControllerTest_UnsecuredController extends ControllerTest_SecuredController {}
+
+class ControllerTest_HasAction extends Controller {
+	
+	public static $allowed_actions = array (
+		'allowed_action'
+	);
+	
+	protected $templates = array (
+		'template_action' => 'template'
+	);
+	
+}

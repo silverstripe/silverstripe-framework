@@ -177,6 +177,31 @@ class RequestHandler extends ViewableData {
 	}
 	
 	/**
+	 * Checks if this request handler has a specific action (even if the current user cannot access it).
+	 *
+	 * @param string $action
+	 * @return bool
+	 */
+	public function hasAction($action) {
+		if($action == 'index') return true;
+		
+		$action  = strtolower($action);
+		$actions = Object::combined_static($this->class, 'allowed_actions', 'RequestHandler');
+		
+		if(is_array($actions)) {
+			if(array_key_exists($action, $actions) || in_array($action, $actions)) {
+				return true;
+			}
+		}
+		
+		if(!is_array($actions) || !$this->uninherited('allowed_actions')) {
+			if($action != 'init' && $action != 'run' && method_exists($this, $action)) return true;
+		}
+		
+		return false;
+	}
+	
+	/**
 	 * Check that the given action is allowed to be called from a URL.
 	 * It will interrogate {@link self::$allowed_actions} to determine this.
 	 */

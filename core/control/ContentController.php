@@ -168,30 +168,33 @@ class ContentController extends Controller {
 	 * @return HTTPResponse
 	 */
 	public function handleRequest(HTTPRequest $request) {
-		Director::set_current_page($this->data());
-		$response = parent::handleRequest($request);
+		$child  = null;
+		$action = $request->param('Action');
 		
-		// If the default handler returns an error, due to the action not existing, attempt to fall over to a child
-		// SiteTree object, then use its corresponding ContentController to handle the request. This allows for the
-		// building of nested chains of controllers corresponding to a nested URL.
-		if(SiteTree::nested_urls() && $response instanceof HTTPResponse && $response->isError()) {
+		// If nested URLs are enabled, and there is no action handler for the current request then attempt to pass
+		// control to a child controller. This allows for the creation of chains of controllers which correspond to a
+		// nested URL.
+		if($action && SiteTree::nested_urls() && !$this->hasAction($action)) {
 			Translatable::disable_locale_filter();
 			
 			$child = DataObject::get_one('SiteTree', sprintf (
-				"\"ParentID\" = %s AND \"URLSegment\" = '%s'",
-				$this->ID,
-				Convert::raw2sql($request->param('Action'))
+				"\"ParentID\" = %s AND \"URLSegment\" = '%s'", $this->ID, Convert::raw2sql($action)
 			));
 			
 			Translatable::enable_locale_filter();
-			
-			if($child && $child->canView()) {
-				$request->shiftAllParams();
-				return ModelAsController::controller_for($child)->handleRequest($request);
-			}
 		}
 		
-		Director::set_current_page(null);
+		if($child) {
+			$request->shiftAllParams();
+			$request->shift();
+			
+			$response = ModelAsController::controller_for($child)->handleRequest($request);
+		} else {
+			Director::set_current_page($this->data());
+			$response = parent::handleRequest($request);
+			Director::set_current_page(null);
+		}
+		
 		return $response;
 	}
 	
