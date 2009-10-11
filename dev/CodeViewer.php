@@ -6,6 +6,12 @@
  * @subpackage tools
  */
 class CodeViewer extends Controller {
+	
+	public static $url_handlers = array (
+		''       => 'browse',
+		'$Class' => 'viewClass'
+	);
+	
 	/**
 	 * Define a simple finite state machine.
 	 * Top keys are the state names.  'start' is the first state, and 'die' is the error state.
@@ -77,7 +83,52 @@ class CodeViewer extends Controller {
 		if(!Permission::check('ADMIN')) return Security::permissionFailure();
 		ManifestBuilder::load_test_manifest();
 	}
-
+	
+	public function browse() {
+		$classes = ClassInfo::subclassesFor('SapphireTest');
+		
+		array_shift($classes);
+		ksort($classes);
+		
+		$result  ='<h1>View any of the following test classes</h1>';
+		$result .='<ul>';
+		foreach($classes as $class) {
+			$result .="<li><a href=\"{$this->Link($class)}\">$class</a></li>";
+		}
+		$result .='</ul>';
+		
+		$result .='<h1>View any of the following other classes</h1>';
+		
+		$classes = array_keys(ClassInfo::allClasses());
+		sort($classes);
+		
+		$result .='<ul>';
+		foreach($classes as $class) {
+			$result .="<li><a href=\"{$this->Link($class)}\">$class</a></li>";
+		}
+		$result .='</ul>';
+		
+		return $this->customise(array (
+			'Content' => $result
+		))->renderWith('CodeViewer');
+	}
+	
+	public function viewClass(HTTPRequest $request) {
+		$class = $request->param('Class');
+		
+		if(!class_exists($class)) {
+			throw new Exception('CodeViewer->viewClass(): not passed a valid class to view (does the class exist?)');
+		}
+		
+		return $this->customise(array (
+			'Content' => $this->testAnalysis(getClassFile($class))
+		))->renderWith('CodeViewer');
+	}
+	
+	public function Link($action = null) {
+		return Controller::join_links(Director::absoluteBaseURL(), 'dev/viewcode/', $action);
+	}
+	
 	protected $classComment, $methodComment;
 
 	function saveClassComment($token) {
@@ -210,32 +261,6 @@ class CodeViewer extends Controller {
 	protected $classes = array();
 	protected $currentMethod, $currentClass;
 	
-	function Content() {
-		$className = $this->urlParams['ID'];
-		if($className && ClassInfo::exists($className)) {
-			return $this->testAnalysis(getClassFile($className));
-		} else {
-			$result = "<h1>View any of the following test classes</h1>";
-			$classes = ClassInfo::subclassesFor('SapphireTest');
-			ksort($classes);
-			foreach($classes as $className) {
-				if($className == 'SapphireTest') continue;
-				$result .= "<li><a href=\"dev/viewcode/show/$className\">$className</a></li>";
-			}
-
-			$result .= "<h1>View any of the following other classes</h1>";
-			global $_CLASS_MANIFEST;
-			$classes = array_keys(ClassInfo::allClasses());
-			sort($classes);
-			foreach($classes as $className) {
-				if(preg_match('/^[A-Za-z][A-Za-z0-9]*$/', $className) && isset($_CLASS_MANIFEST[$className])) {
-					$result .= "<li><a href=\"dev/viewcode/show/$className\">$className</a></li>";
-				}
-			}
-			return $result;
-		}
-	}
-		
 	function testAnalysis($file) {
 		$content = file_get_contents($file);
 		$tokens = token_get_all($content);
