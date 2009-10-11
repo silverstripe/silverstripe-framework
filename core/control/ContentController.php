@@ -63,7 +63,7 @@ class ContentController extends Controller {
 	 * @return DataObjectSet
 	 */
 	public function ChildrenOf($parentRef) {
-		$parent = SiteTree::get_by_url($parentRef);
+		$parent = SiteTree::get_by_link($parentRef);
 		
 		if(!$parent && is_numeric($parentRef)) {
 			$parent = DataObject::get_by_id('SiteTree', Convert::raw2sql($parentRef));

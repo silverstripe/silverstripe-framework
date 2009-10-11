@@ -42,6 +42,28 @@ class ContentControllerTest extends FunctionalTest {
 		$this->assertEquals('Third Level Page', $this->get('/third-level/second-index/')->getBody());
 	}
 	
+	/**
+	 * Tests {@link ContentController::ChildrenOf()}
+	 */
+	public function testChildrenOf() {
+		$controller = new ContentController();
+		
+		SiteTree::enable_nested_urls();
+		
+		$this->assertEquals(1, $controller->ChildrenOf('/')->Count());
+		$this->assertEquals(1, $controller->ChildrenOf('/home/')->Count());
+		$this->assertEquals(2, $controller->ChildrenOf('/home/second-level/')->Count());
+		$this->assertEquals(0, $controller->ChildrenOf('/home/second-level/third-level/')->Count());
+		
+		SiteTree::disable_nested_urls();
+		
+		$this->assertEquals(1, $controller->ChildrenOf('/')->Count());
+		$this->assertEquals(1, $controller->ChildrenOf('/home/')->Count());
+		$this->assertEquals(2, $controller->ChildrenOf('/second-level/')->Count());
+		$this->assertEquals(0, $controller->ChildrenOf('/third-level/')->Count());
+	}
+
+	
 }
 
 class ContentControllerTest_Page extends Page {
