@@ -559,7 +559,7 @@ class Controller extends RequestHandler {
 			}
 			if($arg) {
 				if($result && substr($result,-1) != '/' && $arg[0] != '/') $result .= "/$arg";
-				else $result .= $arg;
+				else $result .= (substr($result, -1) == '/' && $arg[0] == '/') ? ltrim($arg, '/') : $arg;
 			}
 		}
 		

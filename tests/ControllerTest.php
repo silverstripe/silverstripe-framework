@@ -96,6 +96,12 @@ class ControllerTest extends FunctionalTest {
 		
 		/* Note, however, that it doesn't deal with duplicates very well. */
 		$this->assertEquals("admin/crm?flush=1&flush=1", Controller::join_links("admin/crm?flush=1", "?flush=1"));
+		
+		$this->assertEquals (
+			'admin/action', Controller::join_links('admin/', '/', '/action'), 'Test that multiple slashes are trimmed.'
+		);
+		
+		$this->assertEquals('/admin/action', Controller::join_links('/admin', 'action'));
 	}
 }
 
