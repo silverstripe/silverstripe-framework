@@ -559,7 +559,23 @@ class Hierarchy extends DataObjectDecorator {
 			return DataObject::get_one($this->owner->class, $filter);
 		}
 	}
-
+	
+	/**
+	 * Return all the parents of this class in a set ordered from the lowest to highest parent.
+	 *
+	 * @return DataObjectSet
+	 */
+	public function getAncestors() {
+		$ancestors = new DataObjectSet();
+		$object    = $this->owner;
+		
+		while($object = $object->getParent()) {
+			$ancestors->push($object);
+		}
+		
+		return $ancestors;
+	}
+	
 	/**
 	 * Get the next node in the tree of the type. If there is no instance of the className descended from this node,
 	 * then search the parents.
