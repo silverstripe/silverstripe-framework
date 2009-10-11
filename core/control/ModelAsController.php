@@ -88,7 +88,7 @@ class ModelAsController extends Controller implements NestedController {
 				return $this->response;
 			}
 			
-			if($response = ErrorPage::response_for(404, $this->request)) {
+			if($response = ErrorPage::response_for(404)) {
 				return $response;
 			} else {
 				$this->httpError(404, 'The requested page could not be found.');

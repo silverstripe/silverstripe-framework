@@ -116,6 +116,54 @@ class ContentController extends Controller {
 	}
 	
 	/**
+	 * This acts the same as {@link Controller::handleRequest()}, but if an action cannot be found this will attempt to
+	 * fall over to a child controller in order to provide functionality for nested URLs.
+	 *
+	 * @return HTTPResponse
+	 */
+	public function handleRequest(HTTPRequest $request) {
+		$child  = null;
+		$action = $request->param('Action');
+		
+		// If nested URLs are enabled, and there is no action handler for the current request then attempt to pass
+		// control to a child controller. This allows for the creation of chains of controllers which correspond to a
+		// nested URL.
+		if($action && SiteTree::nested_urls() && !$this->hasAction($action)) {
+			Translatable::disable_locale_filter();
+			
+			$child = DataObject::get_one('SiteTree', sprintf (
+				"\"ParentID\" = %s AND \"URLSegment\" = '%s'", $this->ID, Convert::raw2sql($action)
+			));
+			
+			Translatable::enable_locale_filter();
+		}
+		
+		if($child) {
+			$request->shiftAllParams();
+			$request->shift();
+			
+			$response = ModelAsController::controller_for($child)->handleRequest($request);
+		} else {
+			Director::set_current_page($this->data());
+			$response = parent::handleRequest($request);
+			Director::set_current_page(null);
+		}
+		
+		return $response;
+	}
+	
+	/**
+	 * @uses ErrorPage::response_for()
+	 */
+	public function httpError($code, $message = null) {
+		if($this->request->isMedia() || !$response = ErrorPage::response_for($code)) {
+			parent::httpError($code, $message);
+		} else {
+			throw new HTTPResponse_Exception($response);
+		}
+	}
+	
+	/**
 	 * Handles widgets attached to a page through one or more {@link WidgetArea} elements.
 	 * Iterated through each $has_one relation with a {@link WidgetArea}
 	 * and looks for connected widgets by their database identifier.
@@ -159,51 +207,6 @@ class ContentController extends Controller {
 		);
 
 		return new $controllerClass($widget);
-	}
-	
-	/**
-	 * This acts the same as {@link Controller::handleRequest()}, but if an action cannot be found this will attempt to
-	 * fall over to a child controller in order to provide functionality for nested URLs.
-	 *
-	 * @return HTTPResponse
-	 */
-	public function handleRequest(HTTPRequest $request) {
-		$child  = null;
-		$action = $request->param('Action');
-		
-		// If nested URLs are enabled, and there is no action handler for the current request then attempt to pass
-		// control to a child controller. This allows for the creation of chains of controllers which correspond to a
-		// nested URL.
-		if($action && SiteTree::nested_urls() && !$this->hasAction($action)) {
-			Translatable::disable_locale_filter();
-			
-			$child = DataObject::get_one('SiteTree', sprintf (
-				"\"ParentID\" = %s AND \"URLSegment\" = '%s'", $this->ID, Convert::raw2sql($action)
-			));
-			
-			Translatable::enable_locale_filter();
-		}
-		
-		if($child) {
-			$request->shiftAllParams();
-			$request->shift();
-			
-			$response = ModelAsController::controller_for($child)->handleRequest($request);
-		} else {
-			Director::set_current_page($this->data());
-			$response = parent::handleRequest($request);
-			Director::set_current_page(null);
-		}
-		
-		return $response;
-	}
-	
-	/**
-	 * @uses ErrorPage::response_for()
-	 * @return HTTPResponse
-	 */
-	public function httpError($code, $message = null) {
-		return ($resp = ErrorPage::response_for($code, $this->request)) ? $resp : parent::httpError($code, $message); 
 	}
 
 	/**
