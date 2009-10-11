@@ -8,6 +8,16 @@
  */
 class HTMLVarchar extends Varchar {
 	
+	public static $escape_type = 'xml';
+	
+	public function forTemplate() {
+		return $this->value;
+	}
+	
+	public function hasValue() {
+		return parent::hasValue() && $this->value != '<p></p>';
+	}
+	
 	public function scaffoldFormField($title = null, $params = null) {
 		return new HtmlEditorField($this->name, $title, 1);
 	}

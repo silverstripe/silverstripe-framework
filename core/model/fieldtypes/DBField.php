@@ -24,6 +24,13 @@ abstract class DBField extends ViewableData {
 	protected $arrayValue;
 	
 	/**
+	 * The escape type for this field when inserted into a template - either "xml" or "raw".
+	 *
+	 * @var string
+	 */
+	public static $escape_type = 'raw';
+	
+	/**
 	 * Subclass of {@link SearchFilter} for usage in {@link defaultSearchFilter()}.
 	 *
 	 * @var string
@@ -105,6 +112,13 @@ abstract class DBField extends ViewableData {
 	}
 	
 	/**
+	 * @return bool
+	 */
+	public function exists() {
+		return $this->hasValue();
+	}
+	
+	/**
 	 * Return an encoding of the given value suitable
 	 * for inclusion in a SQL statement. If necessary,
 	 * this should include quotes.
@@ -155,8 +169,11 @@ abstract class DBField extends ViewableData {
 		$this->tableName = $tableName;
 	}
 	
-	function forTemplate() {
-		return $this->value;
+	/**
+	 * @return string
+	 */
+	public function forTemplate() {
+		return $this->XML();
 	}
 
 	function HTMLATT() {

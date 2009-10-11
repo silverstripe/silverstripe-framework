@@ -90,6 +90,11 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		$cache_has_own_table       = array(),
 		$cache_has_own_table_field = array();
 	
+	public static $casting_properties = array (
+		'db',
+		'casting'
+	);
+	
 	/**
 	 * True if this DataObject has been destroyed.
 	 * @var boolean

@@ -1,1230 +1,923 @@
 <?php
 /**
- * Generic class for all data that will be accessed from a view.
- * 
- * View interrogate their controllers to provide them with the data they need.  They to this by
- * calling the methods provided by the ViewableData base-class, from which most Sapphire objects
- * are inherited.
- * 
- * ViewableData cover page controls, controllers, and data objects.  It's the basic unit of
- * data exchange.  More specifically, it's anything that can be put into a view.
- * 
- * If any public method on this class is prefixed with an underscore, 
- * the results are cached in memory through {@link cachedCall()}.
- * 
+ * A ViewableData object is any object that can be rendered into a template/view.
+ *
+ * A view interrogates the object being currently rendered in order to get data to render into the template. This data
+ * is provided and automatically escaped by ViewableData. Any class that needs to be available to a view (controllers,
+ * {@link DataObject}s, page controls) should inherit from this class.
+ *
  * @package sapphire
  * @subpackage view
  */
 class ViewableData extends Object implements IteratorAggregate {
-	/**
-	 * The iterator position.
-	 * @var int
-	 */
-	protected $iteratorPos;
-
-	/**
-	 * Total number of items in the iterator.
-	 * @var int
-	 */
-	protected $iteratorTotalItems;
 	
 	/**
-	 * Failover object.
+	 * An array of objects to cast certain fields to. This is set up as an array in the format:
+	 *
+	 * <code>
+	 * public static $casting = array (
+	 *     'FieldName' => 'ClassToCastTo(Arguments)'
+	 * );
+	 * </code>
+	 *
+	 * @var array
+	 */
+	public static $casting = array (
+		'BaseHref'   => 'Varchar',
+		'CSSClasses' => 'Varchar'
+	);
+	
+	/**
+	 * The default object to cast scalar fields to if casting information is not specified, and casting to an object
+	 * is required.
+	 *
+	 * @var string
+	 */
+	public static $default_cast = 'HTMLVarchar';
+	
+	/**
+	 * An array of static property names to search for properties to get casting information from.
+	 *
+	 * @var array
+	 */
+	public static $casting_properties = array('casting');
+	
+	/**
+	 * @var array
+	 */
+	private static $casting_cache = array();
+	
+	// -----------------------------------------------------------------------------------------------------------------
+	
+	/**
+	 * @var int
+	 */
+	protected $iteratorPos, $iteratorTotalItems;
+	
+	/**
+	 * A failover object to attempt to get data from if it is not present on this object.
+	 *
 	 * @var ViewableData
 	 */
 	protected $failover;
 	
 	/**
-	 * A cast of this object's controls in object format
-	 * @var array
+	 * @var ViewableData
 	 */
-	protected $_object_cache = array();
+	protected $customisedObject;
 	
 	/**
-	 * A cast of this object's controls in XML-safe format
 	 * @var array
 	 */
-	protected $_xml_cache = array();
-
-	/**
-	 * A cast of this object's controls in their native format (used by cachedCall)
-	 * @var array
-	 */
-	protected $_natural_cache = array();
+	private $objCache = array();
+	
+	// -----------------------------------------------------------------------------------------------------------------
 	
 	/**
-	 * @var $customisedObj ViewableData_Customised|ViewableData_ObjectCustomised
-	 * Saves past customisations to make them available on subsequent rendering-calls.
-	 * E.g. This enables LeftAndMain to access customisations on controller-actions in
-	 * Left() and Right().
+	 * Converts a field spec into an object creator. For example: "Int" becomes "new Int($fieldName);" and "Varchar(50)"
+	 * becomes "new Varchar($fieldName, 50);".
+	 *
+	 * @param string $fieldSchema The field spec
+	 * @return string
 	 */
-	protected $customisedObj;
-
-
+	public static function castingObjectCreator($fieldSchema) {
+		if(strpos($fieldSchema, '(') === false) {
+			return "return Object::create('{$fieldSchema}', \$fieldName);";
+		} else {
+			return 'return Object::create(' . preg_replace('/^([^(]+)\(/', '\'$1\', $fieldName, ', $fieldSchema) . ';';
+		}
+	}
+	
 	/**
-	 * Define custom methods for this object.  Called once per class.
-	 * Implements failover and cached methods.
+	 * Convert a field schema (e.g. "Varchar(50)") into a casting object creator array that contains both a className
+	 * and castingHelper constructor code. See {@link castingObjectCreator} for more information about the constructor.
+	 *
+	 * @param string $fieldSchema
+	 * @return array
 	 */
-	function defineMethods() {
-		// Set up failover
-		if($this->failover) {
-			$this->addMethodsFrom('failover');
+	public static function castingObjectCreatorPair($fieldSchema) {
+		if(strpos($fieldSchema, '(') === false) {
+			return array (
+				'className'     => $fieldSchema,
+				'castingHelper' => self::castingObjectCreator($fieldSchema)
+			);
 		}
 		
-		if(isset($_GET['debugfailover'])) {
-			Debug::message("$this->class / $this->failover");
+		if(preg_match('/^([^(]+)\(/', $fieldSchema, $parts)) {
+			return array (
+				'className'     => $parts[1],
+				'castingHelper' => self::castingObjectCreator($fieldSchema)
+			);
 		}
-
-		// Set up cached methods
-		$methodNames = get_class_methods($this);
-		foreach($methodNames as $methodName) {
-			if($methodName[0] == "_" && $methodName[1] != "_") {
-				$trimmedName = substr($methodName,1);
-				$this->createMethod($trimmedName, "return \$obj->cachedCall('$methodName', '$trimmedName', \$args);");
+		
+		throw new InvalidArgumentException("ViewableData::castingObjectCreatorPair(): bad field schema '$fieldSchema'");
+	}
+	
+	// FIELD GETTERS & SETTERS -----------------------------------------------------------------------------------------
+	
+	/**
+	 * Check if a field exists on this object or its failover.
+	 *
+	 * @param string $property
+	 * @return bool
+	 */
+	public function __isset($property) {
+		return $this->hasField($property) || ($this->failover && $this->failover->hasField($property));
+	}
+	
+	/**
+	 * Get the value of a property/field on this object. This will check if a method called get{$property} exists, then
+	 * check if a field is available using {@link ViewableData::getField()}, then fall back on a failover object.
+	 *
+	 * @param string $property
+	 * @return mixed
+	 */
+	public function __get($property) {
+		if($this->hasMethod($method = "get$property")) {
+			return $this->$method();
+		} elseif($this->hasField($property)) {
+			return $this->getField($property);
+		} elseif($this->failover) {
+			return $this->failover->$property;
+		}
+	}
+	
+	/**
+	 * Set a property/field on this object. This will check for the existence of a method called set{$property}, then
+	 * use the {@link ViewableData::setField()} method.
+	 *
+	 * @param string $property
+	 * @param mixed $value
+	 */
+	public function __set($property, $value) {
+		if($this->hasMethod($method = "set$property")) {
+			$this->$method($value);
+		} else {
+			$this->setField($property, $value);
+		}
+	}
+	
+	/**
+	 * Check if a field exists on this object. This should be overloaded in child classes.
+	 *
+	 * @param string $field
+	 * @return bool
+	 */
+	public function hasField($field) {
+		return property_exists($this, $field);
+	}
+	
+	/**
+	 * Get the value of a field on this object. This should be overloaded in child classes.
+	 *
+	 * @param string $field
+	 * @return mixed
+	 */
+	public function getField($field) {
+		return $this->$field;
+	}
+	
+	/**
+	 * Set a field on this object. This should be overloaded in child classes.
+	 *
+	 * @param string $field
+	 * @param mixed $value
+	 */
+	public function setField($field, $value) {
+		$this->$field = $value;
+	}
+	
+	// -----------------------------------------------------------------------------------------------------------------
+	
+	/**
+	 * Add methods from the {@link ViewableData::$failover} object, as well as wrapping any methods prefixed with an
+	 * underscore into a {@link ViewableData::cachedCall()}.
+	 */
+	public function defineMethods() {
+		if($this->failover) {
+			$this->addMethodsFrom('failover');
+			
+			if(isset($_REQUEST['debugfailover'])) {
+				Debug::message("$this->class created with a failover class of {$this->failover->class}");
 			}
 		}
+		
+		foreach($this->allMethodNames() as $method) {
+			if($method[0] == '_' && $method[1] != '_') {
+				$this->createMethod (
+					substr($method, 1), "return \$obj->cachedCall('$method', '" . substr($method, 1) . "', \$args);"
+				);
+			}
+		}
+		
 		parent::defineMethods();
 	}
 	
 	/**
-	 * Returns a "1 record iterator"
-	 * Views <%control %> tags operate by looping over an item for as many instances as are 
-	 * available.  When you stick a single ViewableData object in a control tag, the foreach()
-	 * loop still needs to work.  We do this by creating an iterator that only returns one record.
-	 * This will always return the current ViewableData object.
-	 * @return ViewableData_Iterator A 1 record iterator
+	 * Merge some arbitrary data in with this object. This method returns a {@link ViewableData_Customised} instance
+	 * with references to both this and the new custom data.
+	 *
+	 * Note that any fields you specify will take precedence over the fields on this object.
+	 *
+	 * @param array|ViewableData $data
+	 * @return ViewableData_Customised
 	 */
-	function getIterator() {
-		return new ViewableData_Iterator($this);
-	}
-	
-	/**
-	 * Accessor overloader.
-	 * Allows default getting of fields via $this->getVal(), or mediation via a 
-	 * getParamName() method.
-	 * @param string $field The field name.
-	 * @return mixed The field.
-	 */
-	public function __get($field) {
-		if($this->hasMethod($funcName = "get$field")) {
-			return $this->$funcName();
-		} else if($this->hasField($field)) {
-			return $this->getField($field);
-		} else if($this->failover) {
-			return $this->failover->$field;
-		}
-	}
-
-	/**
-	 * Setter overloader.
-	 * Allows default setting of fields in $this->setValue(), or mediation via a 
-	 * getParamName() method.
-	 * @param string $field The field name.
-	 * @param mixed $val The field value.
-	 */
-	public function __set($field, $val) {
-		if($this->hasMethod($funcName = "set$field")) {
-			return $this->$funcName($val);
-		} else {
-			$this->setField($field, $val);
-		}
-	}
-
-	/**
-	 * Is-set overloader.
-	 * Will check to see if the given field exists on this object.  Calls the hasField() method,
-	 * as well as checking failover classes.
-	 * @param string $field The field name.
-	 * @return boolean True if field exists
-	 */
-	public function __isset($field) {
-		if($this->hasField($field)) {
-			return true;
+	public function customise($data) {
+		if(is_array($data) && (empty($data) || ArrayLib::is_associative($data))) {
+			$data = new ArrayData($data);
 		}
 		
-		if($this->failover && $this->failover->hasField($field)) {
-			return true;
+		if($data instanceof ViewableData) {
+			return new ViewableData_Customised($this, $data);
 		}
 		
-		return false;
+		throw new InvalidArgumentException (
+			'ViewableData->customise(): $data must be an associative array or a ViewableData instance'
+		);
 	}
 	
 	/**
-	 * Get a field by it's name. This should be overloaded in child classes.
-	 * @param string $field fieldname
+	 * @param ViewableData $object
 	 */
-	protected function getField($field) {
+	public function setCustomisedObj(ViewableData $object) {
+		$this->customisedObject = $object;
 	}
 	
-	/**
-	 * Set a fields value. This should be overloaded in child classes.
-	 * @param string $field The field name.
-	 * @param mixed $val The field value.
-	 */
-	protected function setField($field, $val) {
-		$this->$field = $val;
-	}
+	// CASTING ---------------------------------------------------------------------------------------------------------
 	
 	/**
-	 * Checks if a field exists on this object. This should be overloaded in child classes.
-	 * @param string $field The field name
-	 * @return boolean
-	 */
-	public function hasField($field) {
-	}
-
-	/**
-	 * Cache used by castingHelperPair().
-	 * @var array
-	 */
-	protected static $castingHelperPair_cache;
-
-	/**
-	 * Returns the "casting helper" for the given field and the casting class name.  A casting helper 
-	 * is a piece of PHP code that, when evaluated, will create an object to represent the value.
-	 * 
-	 * The return value is an map containing two values:
-	 *  - className: The name of the class (eg: 'Varchar')
-	 *  - castingHelper: The casting helper (eg: 'return new Varchar($fieldName);')
-	 * 
-	 * @param string $field The field name
+	 * Get the class a field on this object would be casted to, as well as the casting helper for casting a field to
+	 * an object (see {@link ViewableData::castingHelper()} for information on casting helpers).
+	 *
+	 * The returned array contains two keys:
+	 *  - className: the class the field would be casted to (e.g. "Varchar")
+	 *  - castingHelper: the casting helper for casting the field (e.g. "return new Varchar($fieldName)")
+	 *
+	 * @param string $field
 	 * @return array
 	 */
 	public function castingHelperPair($field) {
-		$class = $this->class;
-		
-		if(!isset(self::$castingHelperPair_cache[$class])) {
+		if(!isset(self::$casting_cache[$this->class])) {
 			if($this->failover) {
-				$this->failover->buildCastingHelperCache(self::$castingHelperPair_cache[$class]);
+				$this->failover->buildCastingCache(self::$casting_cache[$this->class]);
 			}
-			$this->buildCastingHelperCache(self::$castingHelperPair_cache[$class]);
-			self::$castingHelperPair_cache[$class]['ClassName'] = array("className" => "Varchar", "castingHelper" => "return new Varchar(\$fieldName);");
+			
+			$this->buildCastingCache(self::$casting_cache[$this->class]);
 		}
-
-		return isset(self::$castingHelperPair_cache[$class][$field]) ? self::$castingHelperPair_cache[$class][$field] : null;
-	}
-	
-	/**
-	 * A helper function used by castingHelperPair() to build the cache.
-	 * @param array
-	 */
-	public function buildCastingHelperCache(&$cache) {
-		$class = $this->class ? $this->class : get_class($this);
-		$classes = ClassInfo::ancestry($class);
 		
-		foreach($classes as $componentClass) {
-			if($componentClass == "ViewableData") $isViewableData = true;
-			if($componentClass == "DataObject") $isDataObject = true;
-
-			if(isset($isDataObject) && $isDataObject) {
-				$fields = Object::uninherited_static($componentClass, 'db');
-				if($fields) foreach($fields as $fieldName => $fieldSchema) {
-					$cache[$fieldName] = ViewableData::castingObjectCreatorPair($fieldSchema);
-				}
-			}
-			if(isset($isViewableData) && $isViewableData) {
-				$fields = Object::uninherited_static($componentClass, 'casting');
-				if($fields) foreach($fields as $fieldName => $fieldSchema) {
-					$cache[$fieldName] = ViewableData::castingObjectCreatorPair($fieldSchema);
-				}
-			}
-		}
+		if(isset(self::$casting_cache[$this->class][$field])) return self::$casting_cache[$this->class][$field];
 	}
 	
 	/**
-	 * Returns the "casting helper" for the given field.  A casting helper 
-	 * is a piece of PHP code that, when evaluated, will create an object to represent the value.
-	 * @param string $field The field name.
+	 * Return the "casting helper" (a piece of PHP code that when evaluated creates a casted value object) for a field
+	 * on this object.
+	 *
+	 * @param string $field
 	 * @return string
 	 */
 	public function castingHelper($field) {
-		$pair = $this->castingHelperPair($field);
-		return $pair['castingHelper'];
+		if($pair = $this->castingHelperPair($field)) return $pair['castingHelper'];
 	}
 	
 	/**
-	 * Converts a field spec into an object creator.
-	 * For example: "Int" becomes "new Int($fieldName);" and "Varchar(50)" becomes "new Varchar($fieldName, 50);"
-	 * @param string $fieldSchema The field spec.
+	 * Get the class name a field on this object will be casted to
+	 *
+	 * @param string $field
 	 * @return string
 	 */
-	public static function castingObjectCreator($fieldSchema) {
-		if(strpos($fieldSchema,'(') === false) {
-			return "return Object::create('{$fieldSchema}',\$fieldName);";
-		} else {
-			return "return new " . ereg_replace('^([^(]+)\\(','\\1($fieldName,', $fieldSchema) . ';';
-		}
-	}
-
-	/**
-	 * Converts a field spec into an object creator pair; this is a map containing className and castingHelper.
-	 * See {@link castingObjectCreator} for more information.
-	 * @param string $fieldSchema The field spec.
-	 * @return array
-	 */
-	public static function castingObjectCreatorPair($fieldSchema) {
-		//Remove any array brackets:
-		if(strpos($fieldSchema, '[')!==false)
-			$fieldSchema=substr($fieldSchema, 0, strpos($fieldSchema, '['));
-			
-		if(strpos($fieldSchema,'(') === false) {
-			return array(
-				'className' => $fieldSchema, 
-				'castingHelper' => "return Object::create('{$fieldSchema}',\$fieldName);"
-			);
-		} else if(ereg('^([^(]+)\\(', $fieldSchema, $parts)) {
-			return array(
-				'className' => $parts[1],
-				'castingHelper' => "return new " . ereg_replace('^([^(]+)\\(','\\1($fieldName,', $fieldSchema) . ';',
-			);
-		} else {
-			user_error("castingObjectCreatorPair: Bad field schema '$fieldSchema' in class $this->class", E_USER_WARNING);
-		}
+	public function castingClass($field) {
+		if($pair = $this->castingHelperPair($field)) return $pair['className'];
 	}
 	
 	/**
 	 * Return the string-format type for the given field.
 	 *
-	 * @param string $fieldName 
+	 * @param string $field
 	 * @return string 'xml'|'raw'
 	 */
-	function escapeTypeForField($fieldName) {
-		$helperPair = $this->castingHelperPair($fieldName);
-		$castedClass = $helperPair['className'];
-		if(!$castedClass || $castedClass == 'HTMLText' || $castedClass == 'HTMLVarchar') return "xml";
-		else return "raw";
+	public function escapeTypeForField($field) {
+		if(!$class = $this->castingClass($field)) {
+			$class = self::$default_cast;
+		}
+		
+		return Object::get_static($class, 'escape_type');
 	}
 	
 	/**
-	 * Return the object version of the given field/method.
-	 * @param string $fieldName The name of the field/method.
-	 * @param array $args The arugments.
-	 * @param boolean $forceReturnObject If true, this method will *always* return an object.  If there's
-	 * no sensible one available, it will return new ViewableData()
-	 * @return mixed;
+	 * Save the casting cache for this object (including data from any failovers) into a variable
+	 *
+	 * @param reference $cache
 	 */
-	public function obj($fieldName, $args = null, $forceReturnObject = false) {
-		if(isset($_GET['debug_profile'])) {
-			Profiler::mark("template($fieldName)", " on $this->class object");
-		}
+	public function buildCastingCache(&$cache) {
+		$ancestry = array_reverse(ClassInfo::ancestry($this->class));
+		$merge    = true;
 		
-		if($args) {
-			$identifier = $fieldName . ',' . implode(',', $args);
-		} else {
-			$identifier = $fieldName;
-		}
-		
-		// Fix for PHP 5.3 - $args cannot be null
-		if(is_null($args))
-			$args=Array();
-		
-		if(isset($this->_object_cache[$identifier])) {
-			$fieldObj = $this->_object_cache[$identifier];
-		} else {
-			if($this->hasMethod($fieldName)) {
-				$val = call_user_func_array(array(&$this, $fieldName), $args);
-			} else {
-				$val = $this->$fieldName;
-			}
-
-			$this->_natural_cache[$identifier] = $val;
-
-			if(is_object($val)) {
-				$fieldObj = $val;
+		foreach($ancestry as $class) {
+			if(!isset(self::$casting_cache[$class]) && $merge) {
+				if($class) $mergeFields = Object::get_static($class, 'casting_properties');
 				
-			} else {
-				$helperPair = $this->castingHelperPair($fieldName);
-				if(!$helperPair && $this->failover) {
-					$helperPair = $this->failover->castingHelperPair($fieldName);
-				}
-				
-				$constructor = $helperPair['castingHelper'];
-
-				
-				if($constructor) {
-					$fieldObj = eval($constructor);
-					if($this->hasMethod('getAllFields')) {
-						$fieldObj->setValue($val, $this->getAllFields());
-					} else {
-						$fieldObj->setValue($val);
+				if($mergeFields) foreach($mergeFields as $field) {
+					$casting = Object::uninherited_static($class, $field);
+					
+					if($casting) foreach($casting as $field => $cast) {
+						if(!isset($cache[$field])) $cache[$field] = self::castingObjectCreatorPair($cast);
 					}
 				}
+				
+				if($class == 'ViewableData') $merge = false;
+			} elseif($merge) {
+				$cache = ($cache) ? array_merge(self::$casting_cache[$class], $cache) : self::$casting_cache[$class];
 			}
-
-			$this->_object_cache[$identifier] = isset($fieldObj) ? $fieldObj : null;
+			
+			if($class == 'ViewableData') $merge = false;
 		}
-		
-		if(!isset($fieldObj) && $forceReturnObject){
-			$fieldObj = new ViewableData();
-		}
-
-		if(isset($_GET['debug_profile'])) {
-			Profiler::unmark("template($fieldName)", " on $this->class object");
-		}
-		
-		return isset($fieldObj) ? $fieldObj : null;
 	}
 	
-	/**
-	 * Return the value (non-object) version of the given field/method.
-	 * @deprecated ViewableData->val() is deprecated, use XML_val() instead
-	 */
-	public function val($fieldName, $args = null) {
-		return $this->XML_val($fieldName, $args);
-	}
+	// TEMPLATE ACCESS LAYER -------------------------------------------------------------------------------------------
 	
 	/**
-	 * Returns the value of the given field / method in an XML-safe format.
-	 * @param string $fieldName The field name.
-	 * @param array $args The arguments.
-	 * @param boolean $cache Cache calls to this function.
+	 * Render this object into the template, and get the result as a string. You can pass one of the following as the
+	 * $template parameter:
+	 *  - a template name (e.g. Page)
+	 *  - an array of possible template names - the first valid one will be used
+	 *  - an SSViewer instance
+	 *
+	 * @param string|array|SSViewer $template the template to render into
+	 * @param array $customFields fields to customise() the object with before rendering
 	 * @return string
-	 */	
-	public function XML_val($fieldName, $args = null, $cache = false) {
-		if(isset($_GET['debug_profile'])) {
-			Profiler::mark("template($fieldName)", " on $this->class object");
-		}
-
-		if($cache) {
-			if($args) {
-				$identifier = $fieldName . ',' . implode(',', $args);
-			} else {
-				$identifier = $fieldName;
-			}
-			
-			if(isset($this->_xml_cache[$identifier])) {
-				if(isset($_GET['debug_profile'])) {
-					Profiler::unmark("template($fieldName)", " on $this->class object");
-				}
-				return $this->_xml_cache[$identifier];
-			}
+	 */
+	public function renderWith($template, $customFields = null) {
+		if(!is_object($template)) {
+			$template = new SSViewer($template);
 		}
 		
-		// Fix for PHP 5.3 - $args cannot be null
-		if(is_null($args))
-			$args=Array();
+		$data = ($this->customisedObject) ? $this->customisedObject : $this;
 		
-		// This will happen when cachedCall was called on an object; don't bother re-calling the method, just
-		// do the conversion step below				
-		if($cache && isset($this->_object_cache[$identifier])) {
-			$val = $this->_object_cache[$identifier];
-			
-		// Get the field / method
-		} else {
-			if($this->hasMethod($fieldName)) {
-				$val = call_user_func_array(array(&$this, $fieldName), $args);
-			} else {
-				$val = $this->$fieldName;
-			}
-			
-			if(isset($identifier)) {
-				$this->_natural_cache[$identifier] = $val;
-			}
+		if(is_array($customFields) || $customFields instanceof ViewableData) {
+			$data = $data->customise($customFields);
 		}
 		
-		// Case 1: object; converted to XML_val() by
-		if(is_object($val)) {
-			if($cache) {
-				$this->_object_cache[$identifier] = $val;
-			}
-			
-			$val = $val->forTemplate();
-			
-			if($cache) {
-				$this->_xml_cache[$identifier] = $val;
-			}
-		} else {
-			// Identify the 'casted class' of this field, which will give us some hints about what kind of
-			// data has been returned
-			if(isset($_GET['debug_profile'])) {
-				Profiler::mark('casting cost');
-			}
-			
-			// Case 2: Check if the value is raw and must be made XML-safe
-			if($this->escapeTypeForField($fieldName) != 'xml') $val = Convert::raw2xml($val);
-			
-			if(isset($_GET['debug_profile'])) {
-				Profiler::unmark('casting cost');
-			}
-			
-			if($cache) {
-				$this->_xml_cache[$identifier] = $val;
-			}
+		if($template instanceof SSViewer) {
+			return $template->process($data);
 		}
 		
-		if(isset($_GET['debug_profile'])) {
-			Profiler::unmark("template($fieldName)", " on $this->class object");
-		}
-		
-		return $val;
+		throw new UnexpectedValueException (
+			"ViewableData::renderWith(): unexpected $template->class object, expected an SSViewer instance"
+		);
 	}
 	
 	/**
-	 * Return a named array of calls to XML_val with different parameters.
-	 * Each value in the array is used as the first argument to XML_val.  The result is a named array of the return values.
-	 * 
-	 * The intended use-case is when converting simple templates to PHP methods to optimise code, as we did in the form classes.
-	 * If you're calling renderWith more than a few times on a very simple template, this can be useful.
-	 * 
-	 * extract(getXMLValues(array('Title','Field','Message')))
-	 * // You can now use $Title, $Field, and $Message as you would in a template
-	 * 
-	 * @param array $elementList The list of field names.
+	 * Get the value of a field on this object, automatically inserting the value into any available casting objects
+	 * that have been specified.
+	 *
+	 * @param string $fieldName
+	 * @param array $arguments
+	 * @param bool $forceReturnedObject if TRUE, the value will ALWAYS be casted to an object before being returned,
+	 *        even if there is no explicit casting information
+	 * @param string $cacheName a custom cache name
+	 */
+	public function obj($fieldName, $arguments = null, $forceReturnedObject = true, $cache = false, $cacheName = null) {
+		if(isset($_REQUEST['debug_profile'])) {
+			Profiler::mark("obj.$fieldName", "on a $this->class object");
+		}
+		
+		if(!$cacheName) $cacheName = $arguments ? $fieldName . implode(',', $arguments) : $fieldName;
+		
+		if(!isset($this->objCache[$cacheName]) || !$cache) {
+			if($this->hasMethod($fieldName)) {
+				$value = call_user_func_array(array($this, $fieldName), (is_array($arguments) ? $arguments : array()));
+			} else {
+				$value = $this->$fieldName;
+			}
+			
+			if(!is_object($value) && ($this->castingClass($fieldName) || $forceReturnedObject)) {
+				if(!$castConstructor = $this->castingHelper($fieldName)) {
+					$castConstructor = self::castingObjectCreator($this->stat('default_cast'));
+				}
+				
+				$valueObject = eval($castConstructor);
+				$valueObject->setValue($value, ($this->hasMethod('getAllFields') ? $this->getAllFields() : null));
+				
+				$value = $valueObject;
+			}
+			
+			if($cache) $this->objCache[$cacheName] = $value;
+		} else {
+			$value = $this->objCache[$cacheName];
+		}
+		
+		if(isset($_REQUEST['debug_profile'])) {
+			Profiler::unmark("obj.$fieldName", "on a $this->class object");
+		}
+		
+		if(!is_object($value) && $forceReturnedObject) {
+			$default = Object::get_static('ViewableData', 'default_cast');
+			$value   = new $default();
+		}
+		
+		return $value;
+	}
+	
+	/**
+	 * A simple wrapper around {@link ViewableData::obj()} that automatically caches the result so it can be used again
+	 * without re-running the method.
+	 *
+	 * @param string $field
+	 * @param array $arguments
+	 * @param string $identifier an optional custom cache identifier
+	 */
+	public function cachedCall($field, $arguments = null, $identifier = null) {
+		return $this->obj($field, $arguments, false, true, $identifier);
+	}
+	
+	/**
+	 * Checks if a given method/field has a valid value. If the result is an object, this will return the result of the
+	 * exists method, otherwise will check if the result is not just an empty paragraph tag.
+	 *
+	 * @param string $field
+	 * @param array $argument
+	 * @param bool $cache
+	 * @return bool
+	 */
+	public function hasValue($field, $arguments = null, $cache = true) {
+		$result = $cache ? $this->cachedCall($field, $arguments) : $this->obj($field, $arguments, false, false);
+		
+		if(is_object($result)) {
+			return $result->exists();
+		} else {
+			return ($result && $result !== '<p></p>');
+		}
+	}
+	
+	/**#@+
+	 * @param string $field
+	 * @param array $arguments
+	 * @param bool $cache
+	 * @return string
+	 */
+	
+	/**
+	 * Get the string value of a field on this object that has been suitable escaped to be inserted directly into a
+	 * template.
+	 */
+	public function XML_val($field, $arguments = null, $cache = false) {
+		if($result = $this->obj($field, $arguments, false, $cache)) {
+			return is_object($result) ? $result->forTemplate() : $result;
+		}
+	}
+	
+	/**
+	 * Return the value of the field without any escaping being applied.
+	 */
+	public function RAW_val($field, $arguments = null, $cache = true) {
+		return Convert::xml2raw($this->XML_val($field, $arguments, $cache));
+	}
+	
+	/**
+	 * Returnt he value of a field in an SQL-safe format.
+	 */
+	public function SQL_val($field, $arguments = null, $cache = true) {
+		return Convert::xml2sql($this->XML_val($field, $arguments, $cache));
+	}
+	
+	/**
+	 * Return the value of a field in a JavaScript-save format.
+	 */
+	public function JS_val($field, $arguments = null, $cache = true) {
+		return Convert::xml2js($this->XML_val($field, $arguments, $cache));
+	}
+	
+	/**
+	 * Return the value of a field escaped suitable to be inserted into an XML node attribute.
+	 */
+	public function ATT_val($field, $arguments = null, $cache = true) {
+		return Convert::xml2att($this->XML_val($field, $arguments, $cache));
+	}
+	
+	/**#@-*/
+	
+	/**
+	 * Get an array of XML-escaped values by field name
+	 *
+	 * @param array $elements an array of field names
 	 * @return array
 	 */
-	public function getXMLValues($elementList) {
-		foreach($elementList as $elementName) {
-			$result[$elementName] = $this->XML_val($elementName);
+	public function getXMLValues($fields) {
+		$result = array();
+		
+		foreach($fields as $field) {
+			$result[$field] = $this->XML_val($field);
 		}
 		
 		return $result;
 	}
-
+	
+	// ITERATOR SUPPORT ------------------------------------------------------------------------------------------------
+	
 	/**
-	 * Return the value of the given field without any escaping.
-	 * @param string $fieldName The field name.
-	 * @param array $args The arguments.
-	 * @return string
+	 * Return a single-item iterator so you can iterate over the fields of a single record.
+	 *
+	 * This is useful so you can use a single record inside a <% control %> block in a template - and then use
+	 * to access individual fields on this object.
+	 *
+	 * @return ArrayIterator
 	 */
-	public function RAW_val($fieldName, $args = null) {
-		return Convert::xml2raw($this->XML_val($fieldName, $args));
+	public function getIterator() {
+		return new ArrayIterator(array($this));
 	}
 	
-	/**
-	 * Return the value of the given field in an SQL safe format.
-	 * @param string $fieldName The field name.
-	 * @param array $args The arguments.
-	 * @return string
+	/** 
+	 * Set the current iterator properties - where we are on the iterator.
+	 *
+	 * @param int $pos position in iterator
+	 * @param int $totalItems total number of items
 	 */
-	public function SQL_val($fieldName, $args = null) {
-		return Convert::xml2sql($this->XML_val($fieldName, $args));
-	}
-	
-	/**
-	 * Return the value of the given field in an JavaScript safe format.
-	 * @param string $fieldName The field name.
-	 * @param array $args The arguments.
-	 * @return string
-	 */
-	public function JS_val($fieldName, $args = null) {
-		return Convert::xml2js($this->XML_val($fieldName, $args));
-	}
-	
-	/**
-	 * Return the value of the given field in an XML attribute safe format.
-	 * @param string $fieldName The field name.
-	 * @param array $args The arguments.
-	 * @return string
-	 */
-	public function ATT_val($fieldName, $args = null) {
-		return Convert::xml2att($this->XML_val($fieldName, $args));
-	}
-	
-	/**
-	 * SSViewer's data-access method.
-	 * All template calls to ViewableData are fed through this function.  It takes care of caching
-	 * data, and linking up parents to support Menu1_Menu2() syntax for nested data.
-	 * @param string $funcName the method to call
-	 * @param string $identifier
-	 * @param array $args The arguments
-	 * @return mixed
-	 */
-	function cachedCall($funcName, $identifier = null, $args = null) {
-		if(isset($_GET['debug_profile'])) {
-			Profiler::mark("template($funcName)", " on $this->class");
-		}
-		
-		if(!$identifier) {
-			if($args) {
-				$identifier = $funcName . ',' . implode(',', $args);
-			} else {
-				$identifier = $funcName;
-			}
-		}
-		
-		// Fix for PHP 5.3 - $args cannot be null
-		if(is_null($args))
-			$args=Array();
-				
-		if(isset($this->_natural_cache[$identifier])) {
-			if(isset($_GET['debug_profile'])) {
-				Profiler::unmark("template($funcName)", " on $this->class");
-			}
-			return $this->_natural_cache[$identifier];
-		}
-		
-		if($this->hasMethod($funcName)) {
-			$val = call_user_func_array(array(&$this, $funcName), $args);
-		} else {
-			$val = $this->$funcName;
-		}
-		
-		$this->_natural_cache[$identifier] = $val;
-		
-		if(is_object($val)) {
-			$this->_object_cache[$identifier] = $val;
-		} else {
-			$helperPair = $this->castingHelperPair($funcName);
-			$castedClass = $helperPair['className'];
-			if($castedClass && $castedClass != 'HTMLText' && $castedClass != 'HTMLVarchar' && $castedClass != 'Text') {
-				$val = Convert::raw2xml($val);
-			}
-			
-			$this->_xml_cache[$identifier] = $val;
-		}
-		
-		if(isset($_GET['debug_profile'])) {
-			Profiler::unmark("template($funcName)", " on $this->class");
-		}
-			
-		return $val;
-	}	
-	
-	/**
-	 * @param $obj ViewableData_Customised|ViewableData_ObjectCustomised
-	 */
-	function setCustomisedObj($obj) {
-		$this->customisedObj = $obj;
-	}
-	
-	/**
-	 * Returns true if the given method/parameter has a value
-	 * If the item is an object, it will use the exists() method to determine existence
-	 * @param string $funcName The function name.
-	 * @param array $args The arguments.
-	 * @return boolean
-	 */
-	function hasValue($funcName, $args = null) {
-		$test = $this->cachedCall($funcName, null, $args); 
-		
-		if(is_object($test)) {
-			return $test->exists();
-		} else if($test && $test !== '<p></p>') {
-			return true;
-		}
-	}
-	
-	/**
-	 * Set up the "iterator properties" for this object.
-	 * These are properties that give information about where we are in the set.
-	 * @param int $pos Position in iterator
-	 * @param int $totalItems Total number of items
-	 */
-	function iteratorProperties($pos, $totalItems) {
-		$this->iteratorPos = $pos;
+	public function iteratorProperties($pos, $totalItems) {
+		$this->iteratorPos        = $pos;
 		$this->iteratorTotalItems = $totalItems;
-	} 
+	}
 	
 	/**
-	 * Returns true if this item is the first in the container set.
-	 * @return boolean
+	 * Returns true if this object is the first in a set.
+	 *
+	 * @return bool
 	 */
-	function First() {
+	public function First() {
 		return $this->iteratorPos == 0;
 	}
-
+	
 	/**
-	 * Returns true if this item is the last in the container set.
-	 * @return boolean
+	 * Returns true if this object is the last in a set.
+	 *
+	 * @return bool
 	 */
-	function Last() {
+	public function Last() {
 		return $this->iteratorPos == $this->iteratorTotalItems - 1;
 	}
 	
 	/**
-	 * Returns 'first' if this item is the first in the container set.
-	 * Returns 'last' if this item is the last in the container set.
+	 * Returns 'first' or 'last' if this is the first or last object in the set.
+	 *
+	 * @return string|null
 	 */
-	function FirstLast() {
-		if($this->iteratorPos == 0) {
-			return "first";
-		} else if($this->iteratorPos == $this->iteratorTotalItems - 1) {
-			return "last";
-		} else {
-			return "";
-		}
+	public function FirstLast() {
+		if($this->First()) return 'first';
+		if($this->Last())  return 'last';
 	}
 	
 	/**
-	 * Returns 'middle' if this item is between first and last.
-	 * @return boolean
+	 * Return true if this object is between the first & last objects.
+	 *
+	 * @return bool
 	 */
-	function MiddleString(){
-		if($this->Middle())
-			return "middle";
-		else
-			return "";
-	}
-
-	/**
-	 * Returns true if this item is one of the middle items in the container set.
-	 * @return boolean
-	 */
-	function Middle() {
-		return $this->iteratorPos > 0 && $this->iteratorPos < $this->iteratorTotalItems - 1;
-	}
-
-	/**
-	 * Returns true if this item is an even item in the container set.
-	 * @return boolean
-	 */
-	function Even() {
-		return (bool)($this->iteratorPos % 2);
+	public function Middle() {
+		return !$this->First() && !$this->Last();
 	}
 	
 	/**
-	 * Returns true if this item is an even item in the container set.
-	 * @return boolean
+	 * Return 'middle' if this object is between the first & last objects.
+	 *
+	 * @return string|null
 	 */
-	function Odd() {
-		return (bool)!$this->Even();
+	public function MiddleString() {
+		if($this->Middle()) return 'middle';
 	}
 	
 	/**
-	 * Returns 'even' if this item is an even item in the container set.
-	 * Returns 'odd' if this item is an odd item in the container set.
+	 * Return true if this object is an even item in the set.
+	 *
+	 * @return bool
+	 */
+	public function Even() {
+		return (bool) ($this->iteratorPos % 2);
+	}
+	
+	/**
+	 * Return true if this is an odd item in the set.
+	 *
+	 * @return bool
+	 */
+	public function Odd() {
+		return !$this->Even();
+	}
+	
+	/**
+	 * Return 'even' or 'odd' if this object is in an even or odd position in the set respectively.
+	 *
 	 * @return string
 	 */
-	function EvenOdd() {
-		return $this->Even() ? 'even' : 'odd';
+	public function EvenOdd() {
+		return ($this->Even()) ? 'even' : 'odd';
 	}
-		
+	
 	/**
-	 * Returns the numerical number of this item in the dataset.
-	 * The count starts from $startIndex, which defaults to 1.
+	 * Return the numerical position of this object in the container set. The count starts at $startIndex.
+	 *
 	 * @param int $startIndex Number to start count from.
 	 * @return int
 	 */
-	function Pos($startIndex = 1) {
+	public function Pos($startIndex = 1) {
 		return $this->iteratorPos + $startIndex;
 	}
 	
 	/**
 	 * Return the total number of "sibling" items in the dataset.
+	 *
 	 * @return int
 	 */
-	function TotalItems() {
+	public function TotalItems() {
 		return $this->iteratorTotalItems;
 	}
 	
-	/**
-	 * Returns the currently logged in user.
-	 * @return Member
-	 */
-	function CurrentMember() {
-		return Member::currentUser();
-	}
+	// UTILITY METHODS -------------------------------------------------------------------------------------------------
 	
 	/**
-	 * Returns the Security ID.
-	 * This is used to prevent CRSF attacks in forms.
-	 * @return int
-	 */
-	function SecurityID() {
-		if(Session::get('SecurityID')) {
-			$securityID = Session::get('SecurityID');
-		} else {
-			$securityID = rand();
-			Session::set('SecurityID', $securityID);
-		}
-		
-		return $securityID;
-	}
-
-    /**
-     * Checks if the current user has the given permission.
-     * Can be used to implement security-specific sections within templates
-     * @return int The Permission record-ID if the permission can be found, null otherwise
-     */
-    function HasPerm($permCode) {
-        return Permission::check($permCode);
-    }
-	
-	/**
-	 * Add some arbitrary data to this viewabledata object.  Returns a new object with the
-	 * merged data.
-	 * @param mixed $data The data to add.
-	 * @return ViewableData
-	 */
-	function customise($data) {
-		if(is_array($data)) {
-			return new ViewableData_Customised($this, $data);
-		} else if(is_object($data)) {
-			return new ViewableData_ObjectCustomised($this, $data);
-		} else {
-			return $this;
-		}
-	}
-	
-	/**
-	 * Render this data using the given template, and return the result as a string
-	 * You can pass one of the following:
-	 *  - A template name.
-	 *  - An array of template names.  The first template that exists will be used.
-	 *  - An SSViewer object.
-	 * @param string|array|SSViewer The template.
-	 * @return string
-	 */
-	function renderWith($template, $params = null) {
-		if(!is_object($template)) {
-			$template = new SSViewer($template);
-		}
-		
-		
-		// if the object is already customised (e.g. through Controller->run()), use it
-		$obj = ($this->customisedObj) ? $this->customisedObj : $this;
-		
-		if($params) $obj = $this->customise($params);
-		
-		if(is_a($template,'SSViewer')) {
-			return $template->process($obj);
-		} else {
-			user_error("ViewableData::renderWith() Was passed a $template->class object instead of a SSViewer object", E_USER_ERROR);
-		}
-	}
-
-	/**
-	 * Return the site's absolute base URL, with a slash on the end.
-	 * @return string
-	 */
-	function BaseHref() {
-		return Director::absoluteBaseURL();
-	}
-	
-  /**
-   * When rendering some objects it is necessary to iterate over the object being rendered, to
-   * do this, you need access to itself.
-   *
-   * @return ViewableData
-   */
-  function Me() {
-    return $this;
-  }
-	
-	/**
-	 * Returns wether the current request is triggered
-	 * by an XMLHTTPRequest object.
+	 * When rendering some objects it is necessary to iterate over the object being rendered, to do this, you need
+	 * access to itself.
 	 *
-	 * @return bool
-	 */
-	function IsAjax() {
-		return Director::is_ajax();
-	}
-	
-	/**
-	 * @return string Locale configured in environment settings or user profile (e.g. 'en_US')
-	 */
-	function i18nLocale() {
-		return i18n::get_locale();
-	}
-
-	/**
-	 * Return a Debugger object.
-	 * This is set up like so that you can put $Debug.Content into your template to get debugging
-	 * information about $Content.
-	 * @return ViewableData_Debugger
-	 */
-	function Debug() {
-		$d = new ViewableData_Debugger($this);
-		return $d->forTemplate();
-	}
-
-	/**
-	 * Returns the current controller
-	 * @return Controller
-	 */
-	function CurrentPage() {
-		return Controller::curr();
-	}
-	
-	/**
-	 * Returns the top level ViewableData being rendered.
 	 * @return ViewableData
 	 */
-	function Top() {
-		return SSViewer::topLevel();
-	}
-
-
-	/**
-	 * Returns the root directory of the theme we're working with.
-	 * This can be useful for referencing images within the theme.  For example, you might put a reference to 
-	 * <img src="$ThemeDir/images/something.gif"> in your template.
-	 * 
-	 * If your image is within a subtheme, such as mytheme_forum, you can set the subtheme parameter.  For example, 
-	 * <img src="$ThemeDir(forum)/images/something.gif">
-	 * 
-	 * We don't recommend that you use this method when no theme is selected.  That is, we recommend that you only put
-	 * $ThemeDir into your theme templates.  However, if no theme is selected, this will be the project folder/
-	 * 
-	 * @param subtheme The subtheme name.
-	 */
-	public function ThemeDir($subtheme = null) {
-		$theme = SSViewer::current_theme();
-		if($theme) {
-			return "themes/$theme" . ($subtheme ? "_$subtheme" : "");
-		} else {
-			return project();
-		}
+	public function Me() {
+		return $this;
 	}
 	
 	/**
-	 * Get part of class ancestry for css-class-usage.
-	 * Avoids having to subclass just to built templates with new css-classes,
-	 * and allows for versatile css inheritance and overrides.
-	 * 
-	 * <code>
-	 * <body class="$CSSClasses">
-	 * </code>
-	 * 
-	 * @uses ClassInfo
-	 * 
-	 * @param string Classname to stop traversing upwards the ancestry (Default: ViewableData)
-	 * @return string space-separated attribute encoded classes
-	 */	
-	function CSSClasses($stopAtClass = false) {
-		global $_ALL_CLASSES;
-		if(!$stopAtClass) $stopAtClass = 'ViewableData';
+	 * Return the directory if the current active theme (relative to the site root).
+	 *
+	 * This method is useful for things such as accessing theme images from your template without hardcoding the theme
+	 * page - e.g. <img src="$ThemeDir/images/something.gif">.
+	 *
+	 * This method should only be used when a theme is currently active. However, it will fall over to the current
+	 * project directory.
+	 *
+	 * @param string $subtheme the subtheme path to get
+	 * @return string
+	 */
+	public function ThemeDir($subtheme = false) {
+		if($theme = SSViewer::current_theme()) {
+			return THEMES_DIR . "/$theme" . ($subtheme ? "_$subtheme" : null);
+		}
 		
-		$classes = array();
-		$classAnchestry = ClassInfo::ancestry($this->class);
-		$viewableDataAnchestry = ClassInfo::ancestry($stopAtClass);
-	  	foreach($classAnchestry as $anchestor) {
-				if(!in_array($anchestor, $viewableDataAnchestry)) $classes[] = $anchestor;
+		return project();
+	}
+	
+	/**
+	 * Get part of the current classes ancestry to be used as a CSS class.
+	 *
+	 * This method returns an escaped string of CSS classes representing the current classes ancestry until it hits a
+	 * stop point - e.g. "Page DataObject ViewableData".
+	 *
+	 * @param string $stopAtClass the class to stop at (default: ViewableData)
+	 * @return string
+	 * @uses ClassInfo
+	 */
+	public function CSSClasses($stopAtClass = 'ViewableData') {
+		$classes       = array();
+		$classAncestry = array_reverse(ClassInfo::ancestry($this->class));
+		$stopClasses   = ClassInfo::ancestry($stopAtClass);
+		
+		foreach($classAncestry as $class) {
+			if(in_array($class, $stopClasses)) break;
+			$classes[] = $class;
 		}
 		
 		// optionally add template identifier
 		if(isset($this->template) && !in_array($this->template, $classes)) {
 			$classes[] = $this->template;
 		}
-
-		return Convert::raw2att(implode(" ", $classes));
+		
+		return Convert::raw2att(implode(' ', $classes));
 	}
-
-	/**
-	 * Object-casting information for class methods
-	 * @var mixed
-	 */
-	public static $casting = array(
-		'BaseHref' => 'Varchar',
-		'CSSClasses' => 'Varchar',
-	);
 	
 	/**
-	 * Keep a record of the parent node of this data node.
-	 * @var mixed
+	 * @see Member::currentUser()
 	 */
-	protected $parent = null;
+	public function CurrentMember() {
+		return Member::currentUser();
+	}
 	
 	/**
-	 * Keep a record of the parent node of this data node.
-	 * @var mixed
+	 * Return a CSRF-preventing ID to insert into a form.
+	 *
+	 * @return string
 	 */
-	protected $namedAs = null;
+	public function SecurityID() {
+		if(!$id = Session::get('SecurityID')) {
+			$id = rand();
+			Session::set('SecurityID', $id);
+		}
+		
+		return $id;
+	}
+	
+	/**
+	 * @see Permission::check()
+	 */
+	public function HasPerm($code) {
+		return Permission::check($code);
+	}
+	
+	/**
+	 * @see Director::absoluteBaseURL()
+	 */
+	public function BaseHref() {
+		return Director::absoluteBaseURL();
+	}
+	
+	/**
+	 * @see Director::is_ajax()
+	 */
+	public function IsAjax() {
+		return Director::is_ajax();
+	}
+	
+	/**
+	 * @see i18n::get_locale()
+	 */
+	public function i18nLocale() {
+		return i18n::get_locale();
+	}
+	
+	/**
+	 * Return debug information about this object that can be rendered into a template
+	 *
+	 * @return ViewableData_Debugger
+	 */
+	public function Debug() {
+		return new ViewableData_Debugger($this);
+	}
+	
+	/**
+	 * @see Controller::curr()
+	 */
+	public function CurrentPage() {
+		return Controller::curr();
+	}
+	
+	/**
+	 * @see SSViewer::topLevel()
+	 */
+	public function Top() {
+		return SSViewer::topLevel();
+	}
+	
+	// DEPRECATED ------------------------------------------------------------------------------------------------------
+	
+	/**
+	 * @deprecated 2.3 use {@link ViewableData::XML_val()}
+	 * @todo this cannot throw an error yet, as alot of core classes still use it
+	 */
+	public function val($field, $arguments = null) {
+		return $this->XML_val($field, $arguments);
+	}
+	
 }
 
 /**
- * A ViewableData object that has been customised with extra data. Use
- * ViewableData->customise() to create.
  * @package sapphire
  * @subpackage view
  */
 class ViewableData_Customised extends ViewableData {
-	public function castingHelperPair($field) {
-		return $this->obj->castingHelperPair($field);
-	}
+	
+	/**
+	 * @var ViewableData
+	 */
+	protected $original, $customised;
+	
+	/**
+	 * Instantiate a new customised ViewableData object
+	 *
+	 * @param ViewableData $originalObject
+	 * @param ViewableData $customisedObject
+	 */
+	public function __construct(ViewableData $originalObject, ViewableData $customisedObject) {
+		$this->original   = $originalObject;
+		$this->customised = $customisedObject;
 		
-	function __construct($obj, $extraData) {
-		$this->obj = $obj;
-		$this->obj->setCustomisedObj($this);
-		$this->extraData = $extraData;
+		$this->original->setCustomisedObj($this);
 		
 		parent::__construct();
 	}
 	
-	function __call($funcName, $args) {
-		if(isset($this->extraData[$funcName])) {
-			return $this->extraData[$funcName];
-		} else {
-			return call_user_func_array(array(&$this->obj, $funcName), $args);
+	public function __call($method, $arguments) {
+		if($this->customised->hasMethod($method)) {
+			return call_user_func_array(array($this->customised, $method), $arguments);
 		}
-	}
-	
-	
-	function __get($fieldName) {
-		if(isset($this->extraData[$fieldName])) {
-			return $this->extraData[$fieldName];
-		}
-		return $this->obj->$fieldName;
-	}
-	
-	function __set($fieldName, $val) {
-		if(isset($this->extraData[$fieldName])) unset($this->extraData[$fieldName]);
-		return $this->obj->$fieldName = $val;
-	}
-	
-
-	function hasMethod($funcName) {
-		return isset($this->extraData[$funcName]) || $this->obj->hasMethod($funcName);
-	}
-	
-	
-	function XML_val($fieldName, $args = null, $cache = false) {
-		if(isset($this->extraData[$fieldName])) {
-			if(isset($_GET['debug_profile'])) {
-				Profiler::mark("template($fieldName)", " on $this->class object");
-			}
-			
-			if(is_object($this->extraData[$fieldName])) {
-				$val = $this->extraData[$fieldName]->forTemplate();
-			} else {
-				$val = $this->extraData[$fieldName];
-			}
-			
-			if(isset($_GET['debug_profile'])) {
-				Profiler::unmark("template($fieldName)", " on $this->class object");
-			}
-			
-			return $val;
-		} else {
-			return $this->obj->XML_val($fieldName, $args, $cache);
-		}
-	}
-	
-	function obj($fieldName, $args = null, $forceReturnObject = false) {
-		if(isset($this->extraData[$fieldName])) {
-			if(!is_object($this->extraData[$fieldName])) {
-				user_error("ViewableData_Customised::obj() '$fieldName' was requested from the array data as an object but it's not an object.  I can't cast it.", E_USER_WARNING);
-			}
-			return $this->extraData[$fieldName];
-		} else {
-			return $this->obj->obj($fieldName, $args, $forceReturnObject);
-		}
-	}
-
-	function cachedCall($funcName, $identifier = null, $args = null) {
-		if(isset($this->extraData[$funcName])) {
-			return $this->extraData[$funcName];
-		} else {
-			return $this->obj->cachedCall($funcName, $identifier, $args);
-		}
-	}
-	
-	function customise($data) {
-		if(is_array($data)) {
-			$this->extraData = array_merge($this->extraData, $data);
-			return $this;
-		} else {
-			return parent::customise($data);
-		}
-	}
-
-	/**
-	 * Original ViewableData object
-	 * @var ViewableDate
-	 */
-	protected $obj;
-	/**
-	 * Array containing the extra data
-	 * @var array
-	 */
-	protected $extraData;
-}
-
-/**
- * A ViewableData object that has been customised with an extra object. Use
- * ViewableData->customise() to create.
- * @package sapphire
- * @subpackage view
- */
-class ViewableData_ObjectCustomised extends ViewableData {
-	function __construct($obj, $extraObj) {
-		$this->obj = $obj;
-		$this->extraObj = $extraObj;
-		$this->obj->setCustomisedObj($this);
 		
-		parent::__construct();
+		return call_user_func_array(array($this->original, $method), $arguments);
 	}
 	
-	function __call($funcName, $args) {
-		if($this->extraObj->hasMethod($funcName)) {
-			return call_user_func_array(array(&$this->extraObj, $funcName), $args);
-		} else {
-			return call_user_func_array(array(&$this->obj, $funcName), $args);
+	public function __get($property) {
+		if(isset($this->customised->$property)) {
+			return $this->customised->$property;
 		}
+		
+		return $this->original->$property;
 	}
 	
-	function __get($fieldName) {
-		if($this->extraObj->hasField($fieldName)) {
-			return $this->extraObj->$fieldName;
-		} else {
-			return $this->obj->$fieldName;
-		}
+	public function __set($property, $value) {
+		$this->customised->$property = $this->original->$property = $value;
 	}
 	
-	function __set($fieldName, $val) {
-		$this->extraObj->$fieldName = $val;
-		$this->obj->$fieldName = $val;
+	public function hasMethod($method) {
+		return $this->customised->hasMethod($method) || $this->original->hasMethod($method);
 	}
 	
-	function hasMethod($funcName) {
-		return $this->extraObj->hasMethod($funcName) || $this->obj->hasMethod($funcName);
-	}
-	
-
-	function cachedCall($funcName, $identifier = null, $args = null) {
-		$result = $this->extraObj->cachedCall($funcName, $identifier, $args);
+	public function cachedCall($field, $arguments = null, $identifier = null) {
+		$result = $this->customised->cachedCall($field, $arguments, $identifier);
 		
 		if(!$result) {
-			$result = $this->obj->cachedCall($funcName, $identifier, $args);
+			$result = $this->original->cachedCall($field, $arguments, $identifier);
 		}
 		
 		return $result;
 	}
 	
-	function obj($fieldName, $args = null, $forceReturnObject = false) {
-		if($this->extraObj->hasMethod($fieldName) || $this->extraObj->hasField($fieldName)) {
-			return $this->extraObj->obj($fieldName, $args, $forceReturnObject);
-		} else {
-			return $this->obj->obj($fieldName, $args, $forceReturnObject);
+	public function obj($fieldName, $arguments = null, $forceReturnedObject = true, $cache = false, $cacheName = null) {
+		if($this->customised->hasField($fieldName) || $this->customised->hasMethod($fieldName)) {
+			return $this->customised->obj($fieldName, $arguments, $forceReturnedObject, $cache, $cacheName);
 		}
+		
+		return $this->original->obj($fieldName, $arguments, $forceReturnedObject, $cache, $cacheName);
 	}
-
-	/**
-	 * The extra object.
-	 * @var ViewableData
-	 */
-	protected $extraObj;
 	
-	/**
-	 * The original object.
-	 * @var ViewableData
-	 */
-	protected $obj;
 }
 
 /**
- * Debugger helper.
+ * Allows you to render debug information about a {@link ViewableData} object into a template.
+ *
  * @package sapphire
  * @subpackage view
- * @todo Finish this off
  */
 class ViewableData_Debugger extends ViewableData {
+	
 	/**
-	 * The original object
 	 * @var ViewableData
 	 */
-	protected $obj;
+	protected $object;
 	
-	function __construct($obj) {
-		$this->obj = $obj;
+	/**
+	 * @param ViewableData $object
+	 */
+	public function __construct(ViewableData $object) {
+		$this->object = $object;
 		parent::__construct();
 	}
 	
 	/**
-	 * Return debugging information, as XHTML. If a field name is passed,
-	 * it will show debugging information on that field, otherwise it will show
-	 * information on all methods and fields.
-	 * @var string $field The field name.
+	 * Return debugging information, as XHTML. If a field name is passed, it will show debugging information on that
+	 * field, otherwise it will show information on all methods and fields.
+	 *
+	 * @param string $field the field name
 	 * @return string
 	 */
-	function forTemplate($field = null) {
-		if($field) {
-			return "<b>Info on $field:<br/>" . 
-				($this->obj->hasMethod($field) ? "Has method '$field'.  " : "") . 
-				($this->obj->hasField($field) ? "Has field '$field'.  " : "");
-
-		} else {
-			echo "<b>Debug: all methods available in {$this->obj->class}</b><br/>";
-			echo "<ul>";
-			$names = $this->obj->allMethodNames();
-			foreach($names as $name) {
-				if(strtoupper($name[0]) == $name[0] && $name[0] != "_") {
-					echo "<li>\$$name</li>";
+	public function forTemplate($field = null) {
+		// debugging info for a specific field
+		if($field) return "<b>Debugging Information for {$this->class}->{$field}</b><br/>" .
+			($this->object->hasMethod($field)? "Has method '$field'<br/>" : null)             .
+			($this->object->hasField($field) ? "Has field '$field'<br/>"  : null)             ;
+		
+		// debugging information for the entire class
+		$reflector = new ReflectionObject($this->object);
+		$debug     = "<b>Debugging Information: all methods available in '{$this->object->class}'</b><br/><ul>";
+		
+		foreach($this->object->allMethodNames() as $method) {
+			// check that the method is public
+			if($method[0] === strtoupper($method[0]) && $method[0] != '_') {
+				if($reflector->hasMethod($method) && $method = $reflector->getMethod($method)) {
+					if($method->isPublic()) {
+						$debug .= "<li>\${$method->getName()}";
+						
+						if(count($method->getParameters())) {
+							$debug .= ' <small>(' . implode(', ', $method->getParameters()) . ')</small>';
+						}
+						
+						$debug .= '</li>';
+					}
+				} else {
+					$debug .= "<li>\$$method</li>";
 				}
-			}
-			echo "</ul>";
-			if($this->obj->hasMethod('getAllFields')) {
-				echo "<b>Debug: all fields available in {$this->obj->class}</b><br/>";
-				echo "<ul>";
-
-				$data = $this->obj->getAllFields();
-				foreach($data as $key => $val) {
-					echo "<li>\$$key</li>";
-				}
-				echo "</ul>";
 			}
 		}
 		
-		if($this->obj->hasMethod('data')) {
-			if($this->obj->data() != $this->obj) {
-				$d = new ViewableData_Debugger($this->obj->data());
-				echo $d->forTemplate();
+		$debug .= '</ul>';
+		
+		if($this->object->hasMethod('getAllFields')) {
+			$debug .= "<b>Debugging Information: all fields available in '{$this->object->class}'</b><br/><ul>";
+			
+			foreach($this->object->getAllFields() as $field => $value) {
+				$debug .= "<li>\$$field</li>";
 			}
+			
+			$debug .= "</ul>";
 		}
+		
+		// check for an extra attached data
+		if($this->object->hasMethod('data') && $this->object->data() != $this->object) {
+			$debug .= Object::create('ViewableData_Debugger', $this->object->data())->forTemplate();
+		}
+		
+		return $debug;
 	}
+
 }
-
-/**
- * Implementation of a "1 record iterator"
- * Views <%control %> tags operate by looping over an item for as many instances as are 
- * available.  When you stick a single ViewableData object in a control tag, the foreach()
- * loop still needs to work.  We do this by creating an iterator that only returns one record.
- * This will always return the current ViewableData object.
- */
-class ViewableData_Iterator implements Iterator {
-	function __construct($viewableData) {
-		$this->viewableData = $viewableData;
-		$this->show = true;
-	}
-
-	/** 
-	 * Internal state toggler
-	 * @var bool
-	 */
-	private $show;
-
-	/** 
-	 * This will always return the current ViewableData object.
-	 */
-	public function current() { 
-		if($this->show) {
-			return $this->viewableData;
-		}
-	}
-	
-	/** 
-	 * Rewinds the iterator back to the start.
-	 */
-	public function rewind() { 
-		$this->show = true;
-	}
-	
-	/** 
-	 * Return the key for the current object.
-	 */
-	public function key() { 
-		return 0;
-	}
-	
-	/** 
-	 * Get the next object.
-	 */
-	public function next() {
-		if($this->show) {
-			$this->show = false;
-			return $this->viewableData;
-		} else {
-			return null;
-		}
-	}
-	
-	/** 
-	 * Check if there is a current object.
-	 */
-	public function valid() { 
-		return $this->show;
-	}
-}
-
-?>

@@ -762,6 +762,33 @@ class DataObjectTest extends SapphireTest {
 		$this->assertEquals('DataObjectTest_Player', $d->ClassName);
 	}
 	
+	public function testHasValue() {
+		$team = new DataObjectTest_Team();
+		$this->assertFalse($team->hasValue('Title', null, false));
+		$this->assertFalse($team->hasValue('DatabaseField', null, false));
+		
+		$team->Title = 'hasValue';
+		$this->assertTrue($team->hasValue('Title', null, false));
+		$this->assertFalse($team->hasValue('DatabaseField', null, false));
+		
+		$team->DatabaseField = '<p></p>';
+		$this->assertTrue($team->hasValue('Title', null, false));
+		$this->assertFalse (
+			$team->hasValue('DatabaseField', null, false),
+			'Test that a blank paragraph on a HTML field is not a valid value.'
+		);
+		
+		$team->Title = '<p></p>';
+		$this->assertTrue (
+			$team->hasValue('Title', null, false),
+			'Test that an empty paragraph is a value for non-HTML fields.'
+		);
+		
+		$team->DatabaseField = 'hasValue';
+		$this->assertTrue($team->hasValue('Title', null, false));
+		$this->assertTrue($team->hasValue('DatabaseField', null, false));
+	}
+	
 }
 
 class DataObjectTest_Player extends Member implements TestOnly {
@@ -779,7 +806,7 @@ class DataObjectTest_Team extends DataObject implements TestOnly {
 
 	static $db = array(
 		'Title' => 'Varchar', 
-		'DatabaseField' => 'Varchar'
+		'DatabaseField' => 'HTMLVarchar'
 	);
 
 	static $has_one = array(

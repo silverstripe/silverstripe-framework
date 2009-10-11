@@ -7,7 +7,9 @@
  * @subpackage model
  */
 class HTMLText extends Text {
-
+	
+	public static $escape_type = 'xml';
+	
 	/**
 	 * Limit this field's content by a number of characters.
 	 * This makes use of strip_tags() to avoid malforming the
@@ -108,6 +110,14 @@ class HTMLText extends Text {
 		/* If we didn't find a sentence ending, use the summary. We re-call rather than using paragraph so that Summary will limit the result this time */
 		return $this->Summary();
 	}	
+	
+	public function forTemplate() {
+		return $this->value;
+	}
+	
+	public function hasValue() {
+		return parent::hasValue() && $this->value != '<p></p>';
+	}
 	
 	public function scaffoldFormField($title = null, $params = null) {
 		return new HtmlEditorField($this->name, $title);
