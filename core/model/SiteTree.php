@@ -1471,7 +1471,10 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 					),
 					$tabMeta = new Tab('Metadata',
 						new FieldGroup(_t('SiteTree.URL', "URL"),
-							new LabelField('BaseUrlLabel',Director::absoluteBaseURL()),
+							new LabelField('BaseUrlLabel',Controller::join_links (
+								Director::absoluteBaseURL(),
+								(self::nested_urls() && $this->ParentID ? $this->Parent->RelativeLink(true) : null)
+							)),
 							new UniqueRestrictedTextField("URLSegment",
 								"URLSegment",
 								"SiteTree",
@@ -1485,6 +1488,9 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 								50
 							),
 							new LabelField('TrailingSlashLabel',"/")
+						),
+						new LiteralField('LinkChangeNote', self::nested_urls() && count($this->Children()) ?
+							'<p>' . $this->fieldLabel('LinkChangeNote'). '</p>' : null
 						),
 						new HeaderField('MetaTagsHeader',$this->fieldLabel('MetaTagsHeader')),
 						new TextField("MetaTitle", $this->fieldLabel('MetaTitle')),
@@ -1616,6 +1622,9 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		$labels['CanEditType'] = _t('SiteTree.Editors', 'Editors Groups');
 		$labels['ToDo'] = _t('SiteTree.ToDo', 'Todo Notes');
 		$labels['Comments'] = _t('SiteTree.Comments', 'Comments');
+		$labels['LinkChangeNote'] = _t (
+			'SiteTree.LINKCHANGENOTE', 'Changing this page\'s link will also affect the links of all child pages.'
+		);
 		
 		if($includerelations){
 			$labels['Parent'] = _t('SiteTree.has_one_Parent', 'Parent Page', PR_MEDIUM, 'The parent page in the site hierarchy');
