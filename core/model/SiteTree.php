@@ -1303,26 +1303,6 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 
 		DataObject::set_context_obj(null);
 		
-		// If the URLSegment has been changed, rewrite links
-		if($this->isChanged('URLSegment', 2)) {
-			if($this->hasMethod('BackLinkTracking')) {
-				$links = $this->BackLinkTracking();
-				if($links) {
-					foreach($links as $link) {
-						$link->rewriteLink($this->original['URLSegment'] . '/', $this->URLSegment . '/');
-						$link->write();
-					}
-				}
-			}
-		}
-
-		// If this is a new page, it does not have a parent, and the edit type is
-		// set to inherit, change it to logged in users only (otherwise only admins
-		// will be able to edit it)
-		if ($this->ID == 0 && $this->ParentID == 0 && $this->CanEditType == 'Inherit') {
-			$this->CanEditType = 'LoggedInUsers';
-		}
-		
 		parent::onBeforeWrite();
 	}
 	
@@ -1387,24 +1367,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		
 		return self::get_by_link($link);
 	}
-
-	/**
-	 * Replace a URL in html content with a new URL.
-	 * @param string $old The old URL
-	 * @param string $new The new URL
-	 */
-	function rewriteLink($old, $new) {
-		$fields = $this->getCMSFields(null)->dataFields();
-		foreach($fields as $field) {
-			if(is_a($field, 'HtmlEditorField')) {
-				$fieldName = $field->Name();
-				$field->setValue($this->$fieldName);
-				$field->rewriteLink($old, $new);
-				$field->saveInto($this);
-			}
-		}
-	}
-
+	
 	/**
 	 * Returns a FieldSet with which to create the CMS editing form.
 	 *
