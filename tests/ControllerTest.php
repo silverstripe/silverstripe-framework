@@ -25,7 +25,12 @@ class ControllerTest extends FunctionalTest {
 		$response = $this->get("ControllerTest_Controller/templateaction");
 		$this->assertRegExp("/This is the template for templateaction. Content is 'default content'./", $response->getBody());
 	}
-
+	
+	public function testUndefinedActions() {
+		$response = Director::test('ControllerTest_UnsecuredController/undefinedaction');
+		$this->assertEquals(404, $response->getStatusCode(), 'Undefined actions return a not found response.');
+	}
+	
 	function testAllowedActions() {
 		$adminUser = $this->objFromFixture('Member', 'admin');
 		
