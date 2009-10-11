@@ -168,6 +168,8 @@ class ContentController extends Controller {
 	 * @return HTTPResponse
 	 */
 	public function handleRequest(HTTPRequest $request) {
+		Director::set_current_page($this->data());
+		
 		$response = parent::handleRequest($request);
 		
 		// If the default handler returns an error, due to the action not existing, attempt to fall over to a child
@@ -183,6 +185,8 @@ class ContentController extends Controller {
 				}
 			}
 		}
+		
+		Director::set_current_page(null);
 		
 		return $response;
 	}

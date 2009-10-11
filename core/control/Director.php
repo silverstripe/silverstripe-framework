@@ -13,11 +13,14 @@
  */
 class Director {
 	
-	static private $urlSegment;
-	
 	static private $urlParams;
 
 	static private $rules = array();
+	
+	/**
+	 * @var SiteTree
+	 */
+	private static $current_page;
 	
 	/**
 	 * @deprecated 2.4
@@ -274,17 +277,6 @@ class Director {
 						return "redirect:" . Director::absoluteURL($arguments['Redirect'], true);
 
 					} else {
-						/*
-						if(isset($arguments['Action'])) {
-							$arguments['Action'] = str_replace('-','',$arguments['Action']);
-						}
-						
-						if(isset($arguments['Action']) && ClassInfo::exists($controller.'_'.$arguments['Action']))
-							$controller = $controller.'_'.$arguments['Action'];
-						*/
-
-						if(isset($arguments['URLSegment'])) self::$urlSegment = $arguments['URLSegment'] . "/";
-						
 						Director::$urlParams = $arguments;
 						
 						$controllerObj = new $controller();
@@ -296,7 +288,7 @@ class Director {
 			}
 		}
 	}
-
+	
 	/**
 	 * Returns the urlParam with the given name
 	 */
@@ -310,19 +302,35 @@ class Director {
 	static function urlParams() {
 		return Director::$urlParams;
 	}
-
+	
 	/**
-	 * Returns the dataobject of the current page.
-	 * This will only return a value if you are looking at a SiteTree page
+	 * Return the {@link SiteTree} object that is currently being viewed. If there is no sitetree object to return,
+	 * then this will return the current controller.
+	 *
+	 * @return SiteTree
+	 */
+	public static function get_current_page() {
+		return self::$current_page ? self::$current_page : Controller::curr();
+	}
+	
+	/**
+	 * Set the currently active {@link SiteTree} object that is being used to respond to the request.
+	 *
+	 * @param SiteTree $page
+	 */
+	public static function set_current_page($page) {
+		self::$current_page = $page;
+	}
+	
+	/**
+	 * @deprecated 2.4 Use {@link Director::get_current_page()}.
 	 */
 	static function currentPage() {
-		if(isset(Director::$urlParams['URLSegment'])) {
-			$SQL_urlSegment = Convert::raw2sql(Director::$urlParams['URLSegment']);
-
-			return SiteTree::get_by_link($SQL_urlSegment);
-		} else {
-			return Controller::curr();
-		}
+		user_error (
+			'Director::currentPage() is deprecated, please use Director::get_current_page()', E_USER_NOTICE
+		);
+		
+		return self::get_current_page();
 	}
 
 	/**

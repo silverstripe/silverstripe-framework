@@ -453,7 +453,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	 * @return boolean True if we are in the given section.
 	 */
 	public function InSection($sectionName) {
-		$page = Director::currentPage();
+		$page = Director::get_current_page();
 		while($page) {
 			if($sectionName == $page->URLSegment)
 				return true;
@@ -558,13 +558,13 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	 */
 	protected function prepareCurrentAndSection() {
 		if(!self::$currentPageID || Director::urlParam('URLSegment') != self::$currentPageIDSetFromURLSegment) {
-			self::$currentPageID = Director::currentPage() ? Director::currentPage()->ID : null;
+			self::$currentPageID = Director::get_current_page() ? Director::get_current_page()->ID : null;
 			self::$currentPageIDSetFromURLSegment = Director::urlParam('URLSegment');
 			
 			if(!isset(self::$currentPageID)) {
 				self::$currentPageID = -1;
-				$nextID = (Director::currentPage() && isset(Director::currentPage()->Parent->ID))
-					? Director::currentPage()->Parent->ID
+				$nextID = (Director::get_current_page() && isset(Director::get_current_page()->Parent->ID))
+					? Director::get_current_page()->Parent->ID
 					: null;
 			} else {
 				$nextID = SiteTree::$currentPageID;
