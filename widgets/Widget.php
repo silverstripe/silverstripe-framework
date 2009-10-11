@@ -154,11 +154,9 @@ class Widget_Controller extends Controller {
 		parent::__construct();
 	}
 	
-	function Link() {
-		return Controller::join_links(
-			Controller::curr()->Link(),
-			'widget',
-			($this->widget) ? $this->widget->ID : null
+	public function Link($action = null) {
+		return Controller::curr()->Link (
+			Controller::join_links('widget', ($this->widget ? $this->widget->ID : null), $action)
 		);
 	}
 	

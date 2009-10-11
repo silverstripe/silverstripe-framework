@@ -682,8 +682,8 @@ class ComplexTableField_ItemRequest extends RequestHandler {
 		'' => 'index',
 	);
 	
-	function Link() {
-		return $this->ctf->Link() . '/item/' . $this->itemID;
+	function Link($action = null) {
+		return Controller::join_links($this->ctf->Link(), '/item/', $this->itemID, $action);
 	}
 	
 	function __construct($ctf, $itemID) {
@@ -997,8 +997,8 @@ class ComplexTableField_Item extends TableListField_Item {
 		parent::__construct($item, $parent);
 	}
 
-	function Link() {
-		return $this->parent->Link() . '/item/' . $this->item->ID;
+	function Link($action = null) {
+		return Controller::join_links($this->parent->Link(), '/item/', $this->item->ID, $action);
 	}
 
 	function EditLink() {

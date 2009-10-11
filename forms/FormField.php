@@ -84,8 +84,8 @@ class FormField extends RequestHandler {
 	/**
 	 * Return a Link to this field
 	 */
-	function Link() {
-		return Controller::join_links($this->form->FormAction(), 'field/' . $this->name);
+	function Link($action = null) {
+		return Controller::join_links($this->form->FormAction(), 'field/' . $this->name, $action);
 	}
 	
 	/**

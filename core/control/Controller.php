@@ -405,13 +405,6 @@ class Controller extends RequestHandler {
 	}
 
 	/**
-	 * Returns an absolute link to this controller
-	 */
-	function AbsoluteLink() {
-		return Director::absoluteURL($this->Link());
-	}
-
-	/**
 	 * Returns the currently logged in user
 	 */
 	function CurrentMember() {

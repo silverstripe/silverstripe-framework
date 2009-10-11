@@ -1318,11 +1318,11 @@ class TableListField_Item extends ViewableData {
 		}
 	}
 	
-	function Link() {
+	function Link($action = null) {
  		if($this->parent->getForm()) {
 			$parentUrlParts = parse_url($this->parent->Link());
 			$queryPart = (isset($parentUrlParts['query'])) ? '?' . $parentUrlParts['query'] : null;
-			return Controller::join_links($parentUrlParts['path'], 'item', $this->item->ID, $queryPart);
+			return Controller::join_links($parentUrlParts['path'], 'item', $this->item->ID, $action, $queryPart);
 		} else {
 			// allow for instanciation of this FormField outside of a controller/form
 			// context (e.g. for unit tests)

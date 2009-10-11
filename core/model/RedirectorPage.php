@@ -51,8 +51,8 @@ class RedirectorPage extends Page {
 	 * Return the normal link directly to this page.  Once you visit this link, a 30x redirection
 	 * will take you to your final destination.
 	 */
-	function regularLink() {
-		return parent::Link();
+	function regularLink($action = null) {
+		return parent::Link($action);
 	}
 	
 	/**

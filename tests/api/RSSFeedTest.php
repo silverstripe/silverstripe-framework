@@ -67,8 +67,8 @@ class RSSFeedTest_ItemA extends ViewableData {
 		return "ItemA AltContent";
 	}
 	
-	function Link() {
-		return "item-a/";
+	function Link($action = null) {
+		return Controller::join_links("item-a/", $action);
 	}
 }
 

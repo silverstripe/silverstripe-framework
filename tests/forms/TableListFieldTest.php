@@ -206,8 +206,8 @@ class TableListFieldTest_CsvExport extends DataObject implements TestOnly {
 }
 
 class TableListFieldTest_TestController extends Controller {
-	function Link() {
-		return "TableListFieldTest_TestController/";
+	function Link($action = null) {
+		return Controller::join_links("TableListFieldTest_TestController/", $action);
 	}
 	function TestForm() {
 		$table = new TableListField("Table", "TableListFieldTest_Obj", array(

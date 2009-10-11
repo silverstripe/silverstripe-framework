@@ -67,8 +67,8 @@ class SOAPModelAccess extends SapphireSoapServer {
 		),
 	);
 	
-	function Link() {
-		return "soap/v1/";
+	function Link($action = null) {
+		return Controller::join_links("soap/v1/", $action);
 	}
 	
 	/**

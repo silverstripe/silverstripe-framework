@@ -284,8 +284,8 @@ class FormTest_Controller extends Controller {
 
 	protected $template = 'BlankPage';
 	
-	function Link() {
-		return Controller::join_links('FormTest_Controller', $this->request->latestParam('Action'), $this->request->latestParam('ID'));
+	function Link($action = null) {
+		return Controller::join_links('FormTest_Controller', $this->request->latestParam('Action'), $this->request->latestParam('ID'), $action);
 	}
 	
 	function Form() {

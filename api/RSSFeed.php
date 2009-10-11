@@ -158,10 +158,11 @@ class RSSFeed extends ViewableData {
 	/**
 	 * Get the URL of this feed
 	 *
+	 * @param string $action
 	 * @return string Returns the URL of the feed.
 	 */
-	function Link() {
-		return Director::absoluteURL($this->link);
+	function Link($action = null) {
+		return Controller::join_links(Director::absoluteURL($this->link), $action);
 	}
 
 	/**

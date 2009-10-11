@@ -284,11 +284,10 @@ class TableFieldTest extends SapphireTest {
  * Stub controller
  */
 class TableFieldTest_Controller extends Controller {
-	function Link() {
-		return 'TableFieldTest/';
+	function Link($action = null) {
+		return Controller::join_links('TableFieldTest/', $action);
 	}
 }
-
 class TableFieldTest_Object extends DataObject implements TestOnly {
 	static $has_many = array(
 		"HasManyRelations" => 'TableFieldTest_HasManyRelation'
