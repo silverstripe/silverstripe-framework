@@ -142,10 +142,9 @@ TreeDropdownField.prototype = {
 	},
 	
 	ajaxGetTree: function(after) {
-		var ajaxURL = this.helperURLBase() + 'gettree?forceValues=' + this.inputTag.value;
+		var ajaxURL = this.helperURLBase() + 'tree/';
 		ajaxURL += $('SecurityID') ? '&SecurityID=' + $('SecurityID').value : '';
 		if($('Form_EditForm_Locale')) ajaxURL += "&locale=" + $('Form_EditForm_Locale').value;
-		
 		new Ajax.Request(ajaxURL, {
 			method : 'get', 
 			onSuccess : after,
@@ -165,7 +164,7 @@ TreeDropdownField.prototype = {
 		this.tree = Tree.create(this.itemTree.getElementsByTagName('ul')[0], { 
 			ajaxExpansion: this.ajaxExpansion, 
 			getIdx: function() {
-				return this.id.replace(this.options.idxBase,'');
+				return this.getElementsByTagName('a')[0].getAttribute('rel');
 			},
 			idxBase : 'selector-' + this.inputTag.name + '-',
 			dropdownField : this,
@@ -190,7 +189,7 @@ TreeDropdownField.prototype = {
 		var ul = this.treeNodeHolder();
 		ul.innerHTML = ss.i18n._t('LOADING', 'Loading...');
 		
-		var ajaxURL = this.options.dropdownField.helperURLBase() + 'getsubtree?&SubtreeRootID=' + this.getIdx();
+		var ajaxURL = this.options.dropdownField.helperURLBase() + 'tree/' + this.getIdx();
 		ajaxURL += $('SecurityID') ? '&SecurityID=' + $('SecurityID').value : '';
 		if($('Form_EditForm_Locale')) ajaxURL += "&locale=" + $('Form_EditForm_Locale').value;
 		
@@ -230,12 +229,6 @@ TreeDropdownField.prototype = {
 			
 		} else {
 			this.humanItems.innerHTML = this.inputTag.value ? this.inputTag.value : '(Choose)';
-			/*
-			new Ajax.Request(this.options.dropdownField.helperURLBase() + '&methodName=findsubtreefor&ID=' + this.getIdx(), {
-				onSuccess : this.installSubtree.bind(this),
-				onFailure : function(response) { errorMessage('error loading subtree', response); }
-			});
-			*/			
 		}
 	},
 	setValueFromTree: function(treeID, title) {
