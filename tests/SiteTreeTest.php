@@ -272,20 +272,37 @@ class SiteTreeTest extends SapphireTest {
 		$this->assertEquals('Page', $requeriedPage->class);
 		
 	}
-
-	/**
-	 * Test SiteTree::get_by_url()
-	 */
-	function testGetByURL() {
-		// Test basic get by url
-		$this->assertEquals($this->idFromFixture('Page', 'home'), SiteTree::get_by_url("home")->ID);
-
-		// Test the extraFilter argument
-		// Note: One day, it would be more appropriate to return null instead of false for queries such as these
-		$this->assertFalse(SiteTree::get_by_url("home", "1 = 2"));
+	
+	public function testGetByLink() {
+		$home     = $this->objFromFixture('Page', 'home');
+		$about    = $this->objFromFixture('Page', 'about');
+		$staff    = $this->objFromFixture('Page', 'staff');
+		$product  = $this->objFromFixture('Page', 'product1');
+		$notFound = $this->objFromFixture('ErrorPage', '404');
+		
+		SiteTree::disable_nested_urls();
+		
+		$this->assertEquals($home->ID, SiteTree::get_by_link('/', false)->ID);
+		$this->assertEquals($home->ID, SiteTree::get_by_link('/home/', false)->ID);
+		$this->assertEquals($about->ID, SiteTree::get_by_link($about->Link(), false)->ID);
+		$this->assertEquals($staff->ID, SiteTree::get_by_link($staff->Link(), false)->ID);
+		$this->assertEquals($product->ID, SiteTree::get_by_link($product->Link(), false)->ID);
+		$this->assertEquals($notFound->ID, SiteTree::get_by_link($notFound->Link(), false)->ID);
+		
+		SiteTree::enable_nested_urls();
+		
+		$this->assertEquals($home->ID, SiteTree::get_by_link('/', false)->ID);
+		$this->assertEquals($home->ID, SiteTree::get_by_link('/home/', false)->ID);
+		$this->assertEquals($about->ID, SiteTree::get_by_link($about->Link(), false)->ID);
+		$this->assertEquals($staff->ID, SiteTree::get_by_link($staff->Link(), false)->ID);
+		$this->assertEquals($product->ID, SiteTree::get_by_link($product->Link(), false)->ID);
+		$this->assertEquals($notFound->ID, SiteTree::get_by_link($notFound->Link(), false)->ID);
+		
+		$this->assertEquals (
+			$staff->ID, SiteTree::get_by_link('/my-staff/', false)->ID, 'Assert a unique URLSegment can be used for b/c.'
+		);
 	}
 	
-
 	function testDeleteFromStageOperatesRecursively() {
 		$pageAbout = $this->objFromFixture('Page', 'about');
 		$pageStaff = $this->objFromFixture('Page', 'staff');

@@ -228,6 +228,72 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	}
 	
 	/**
+	 * Fetches the {@link SiteTree} object that maps to a link.
+	 *
+	 * If you have enabled {@link SiteTree::nested_urls()} on this site, then you can use a nested link such as
+	 * "about-us/staff/", and this function will traverse down the URL chain and grab the appropriate link.
+	 *
+	 * Note that if no model can be found, this method will fall over to a decorated alternateGetByLink method provided
+	 * by a decorator attached to {@link SiteTree}
+	 *
+	 * @param string $link
+	 * @param bool $cache
+	 * @return SiteTree
+	 */
+	public static function get_by_link($link, $cache = true) {
+		if(trim($link, '/')) {
+			$link = trim(Director::makeRelative($link), '/');
+		} else {
+			$link = RootURLController::get_homepage_urlsegment();
+		}
+		
+		$parts = Convert::raw2sql(preg_split('|/+|', $link));
+		
+		// Grab the initial root level page to traverse down from.
+		$URLSegment = array_shift($parts);
+		$sitetree   = DataObject::get_one (
+			'SiteTree', "\"URLSegment\" = '$URLSegment'" . (self::nested_urls() ? ' AND "ParentID" = 0' : ''), $cache
+		);
+		
+		/// Fall back on a unique URLSegment for b/c.
+		if(!$sitetree && self::nested_urls() && $pages = DataObject::get('SiteTree', "\"URLSegment\" = '$URLSegment'")) {
+			return ($pages->Count() == 1) ? $pages->First() : null;
+		}
+		
+		// Attempt to grab an alternative page from decorators.
+		if(!$sitetree) {
+			if($alternatives = singleton('SiteTree')->extend('alternateGetByLink', $link, $filter, $cache, $order)) {
+				foreach($alternatives as $alternative) if($alternative) return $alternative;
+			}
+			
+			return false;
+		}
+		
+		// Check if we have any more URL parts to parse.
+		if(!self::nested_urls() || !count($parts)) return $sitetree;
+		
+		// Traverse down the remaining URL segments and grab the relevant SiteTree objects.
+		foreach($parts as $segment) {
+			$next = DataObject::get_one (
+				'SiteTree', "\"URLSegment\" = '$segment' AND \"ParentID\" = $sitetree->ID", $cache
+			);
+			
+			if(!$next) {
+				if($alternatives = singleton('SiteTree')->extend('alternateGetByLink', $link, $filter, $cache, $order)) {
+					foreach($alternatives as $alternative) if($alternative) return $alternative;
+				}
+				
+				return false;
+			}
+			
+			$sitetree->destroy();
+			$sitetree = $next;
+		}
+		
+		return $sitetree;
+	}
+	
+	/**
 	 * Return a subclass map of SiteTree
 	 * that shouldn't be hidden through
 	 * {@link SiteTree::$hide_ancestor}
@@ -1365,27 +1431,14 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	}
 	
 	/**
-	 * Return the SiteTree object with the given URL segment.
-	 *
-	 * @param string $urlSegment The URL segment, eg 'home'
-	 * @param string $extraFilter
-	 * @param boolean $cache
-	 * @param string $orderby
-	 * @return SiteTree The object with the given URL segment
+	 * @deprecated 2.4 Use {@link SiteTree::get_by_link()}.
 	 */
-	public static function get_by_url($urlSegment, $extraFilter = "", $cache = true, $orderby = "") {
-		$filter = sprintf("\"URLSegment\" = '%s'", Convert::raw2sql($urlSegment));
-		if($extraFilter) $filter .= " AND $extraFilter";
-		$matchedPage = DataObject::get_one("SiteTree", $filter, $cache, $orderby);
-		if($matchedPage) {
-			return $matchedPage;
-		} else {
-			$alternativeMatches = singleton('SiteTree')->extend('alternateGetByUrl', $urlSegment, $extraFilter, $cache, $orderby);
-			if($alternativeMatches) foreach($alternativeMatches as $alternativeMatch) {
-				if($alternativeMatch) return $alternativeMatch;
-			} 
-			return false;
-		} 
+	public static function get_by_url($link) {
+		user_error (
+			'SiteTree::get_by_url() is deprecated, please use SiteTree::get_by_link()', E_USER_NOTICE
+		);
+		
+		return self::get_by_link($link);
 	}
 
 	/**
