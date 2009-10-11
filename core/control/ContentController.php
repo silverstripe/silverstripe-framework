@@ -156,6 +156,32 @@ class ContentController extends Controller {
 	}
 	
 	/**
+	 * This acts the same as {@link Controller::handleRequest()}, but if an action cannot be found this will attempt to
+	 * fall over to a child controller in order to provide functionality for nested URLs.
+	 *
+	 * @return HTTPResponse
+	 */
+	public function handleRequest(HTTPRequest $request) {
+		$response = parent::handleRequest($request);
+		
+		// If the default handler returns an error, due to the action not existing, attempt to fall over to a child
+		// SiteTree object, then use its corresponding ContentController to handle the request. This allows for the
+		// building of nested chains of controllers corresponding to a nested URL.
+		if(SiteTree::nested_urls() && $response instanceof HTTPResponse && $response->isError()) {
+			$SQL_URLParam = Convert::raw2sql($request->param('Action'));
+			
+			if($SQL_URLParam && $nextPage = DataObject::get_one('SiteTree', "\"ParentID\" = $this->ID AND \"URLSegment\" = '$SQL_URLParam'")) {
+				if($nextPage->canView()) {
+					$request->shiftAllParams();
+					return ModelAsController::controller_for($nextPage)->handleRequest($request);
+				}
+			}
+		}
+		
+		return $response;
+	}
+	
+	/**
 	 * @uses ErrorPage::response_for()
 	 * @return HTTPResponse
 	 */

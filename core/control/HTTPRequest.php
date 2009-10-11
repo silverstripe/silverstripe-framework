@@ -381,6 +381,24 @@ class HTTPRequest extends Object implements ArrayAccess {
 	function allParams() {
 		return $this->allParams;
 	}
+	
+	/**
+	 * Shift all the parameter values down a key space, and return the shifted value.
+	 *
+	 * @return string
+	 */
+	public function shiftAllParams() {
+		$keys   = array_keys($this->allParams);
+		$values = array_values($this->allParams);
+		$value  = array_shift($values);
+		
+		foreach($keys as $position => $key) {
+			$this->allParams[$key] = isset($values[$position]) ? $values[$position] : null;
+		}
+		
+		return $value;
+	}
+	
 	function latestParams() {
 		return $this->latestParams;
 	}

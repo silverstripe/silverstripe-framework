@@ -1,0 +1,16 @@
+ContentControllerTest_Page:
+  root_page:
+    Title: Home Page
+    URLSegment: home
+  second_level_page:
+    Title: Second Level Page
+    URLSegment: second-level
+    Parent: =>ContentControllerTest_Page.root_page
+  third_level_page:
+    Title: Third Level Page
+    URLSegment: third-level
+    Parent: =>ContentControllerTest_Page.second_level_page
+  third_level_page_2:
+    Title: Third Level Page Two
+    URLSegment: third-level-2
+    Parent: =>ContentControllerTest_Page.second_level_page
