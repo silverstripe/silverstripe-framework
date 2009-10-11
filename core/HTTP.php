@@ -99,27 +99,33 @@ class HTTP {
 		$url = self::setGetVar($varname, $varvalue, $currentURL);
 		return Convert::xml2raw($url);
 	}
-
-	static function findByTagAndAttribute($content, $attribs) {
-		$regExps = array();
+	
+	/**
+	 * Search for all tags with a specific attribute, then return the value of that attribute in a flat array.
+	 *
+	 * @param string $content
+	 * @param array $attributes an array of tags to attributes, for example "[a] => 'href', [div] => 'id'"
+	 * @return array
+	 */
+	public static function findByTagAndAttribute($content, $attributes) {
+		$regexes = array();
 		
-		foreach($attribs as $tag => $attrib) {
-			$tagPrefix = (is_numeric($tag)) ? '' : "$tag ";
-			
-			$regExps[] = "/(<{$tagPrefix}[^>]*$attrib *= *\")([^\"]*)(\")/ie";
-			$regExps[] = "/(<{$tagPrefix}[^>]*$attrib *= *')([^']*)(')/ie";
-			$regExps[] = "/(<{$tagPrefix}[^>]*$attrib *= *)([^\"' ]*)( )/ie";
+		foreach($attributes as $tag => $attribute) {
+			$regexes[] = "/<{$tag} [^>]*$attribute *= *([\"'])(.*?)\\1[^>]*>/i";
+			$regexes[] = "/<{$tag} [^>]*$attribute *= *([^ \"'>]+)/i";
 		}
-
-		if($regExps) {
-			foreach($regExps as $regExp) {
-				$content = preg_replace($regExp, '$items[] = "$2"', $content);
-			}
-		}
-
-		return isset($items) ? $items : null;
+		
+		$result = array();
+		
+		if($regexes) foreach($regexes as $regex) {
+			if(preg_match_all($regex, $content, $matches)) {
+				$result = array_merge_recursive($result, (isset($matches[2]) ? $matches[2] : $matches[1]));
+ 			}
+ 		}
+		
+		return count($result) ? $result : null;
 	}
-
+	
 	static function getLinksIn($content) {
 		return self::findByTagAndAttribute($content, array("a" => "href"));
 	}
