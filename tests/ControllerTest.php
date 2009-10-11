@@ -38,7 +38,7 @@ class ControllerTest extends FunctionalTest {
 		$this->assertEquals(200, $response->getStatusCode());
 		
 		$response = $this->get("ControllerTest_SecuredController/stringaction");
-		$this->assertEquals(403, $response->getStatusCode());
+		$this->assertEquals(404, $response->getStatusCode());
 
 		$response = $this->get("ControllerTest_SecuredController/adminonly");
 		$this->assertEquals(403, $response->getStatusCode());
@@ -113,6 +113,13 @@ class ControllerTest extends FunctionalTest {
 		$this->assertFalse($controller->hasAction('undefined'), 'undefined actions do not exist');
 		$this->assertTrue($controller->hasAction('allowed_action'), 'allowed actions are recognised');
 		$this->assertTrue($controller->hasAction('template_action'), 'action-specific templates are recognised');
+		
+		$unsecured = new ControllerTest_HasAction_Unsecured();
+		
+		$this->assertTrue (
+			$unsecured->hasAction('defined_action'),
+			'Without an allowed_actions, any defined methods are recognised as actions'
+		);
 	}
 	
 }
@@ -187,5 +194,11 @@ class ControllerTest_HasAction extends Controller {
 	protected $templates = array (
 		'template_action' => 'template'
 	);
+	
+}
+
+class ControllerTest_HasAction_Unsecured extends ControllerTest_HasAction {
+	
+	public function defined_action() {  }
 	
 }

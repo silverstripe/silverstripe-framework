@@ -183,6 +183,10 @@ class Controller extends RequestHandler {
 		$this->requestParams = $request->requestVars();
 		if(!$this->action) $this->action = 'index';
 		
+		if(!$this->hasAction($this->action)) {
+			$this->httpError(404, "The action '$this->action' does not exist in class $this->class");
+		}
+		
 		// run & init are manually disabled, because they create infinite loops and other dodgy situations 
 		if(!$this->checkAccessAction($this->action) || in_array(strtolower($this->action), array('run', 'init'))) {
 			return $this->httpError(403, "Action '$this->action' isn't allowed on class $this->class");
@@ -198,11 +202,7 @@ class Controller extends RequestHandler {
 				return $result;
 			}
 		} else {
-			if($this->action == 'index' || $this->hasAction($this->action)) {
-				return $this->getViewer($this->action)->process($this);
-			} else {
-				return $this->httpError(404, "The action '$this->action' does not exist in class $this->class");
-			}
+			return $this->getViewer($this->action)->process($this);
 		}
 	}
 

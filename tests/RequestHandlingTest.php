@@ -86,7 +86,7 @@ class RequestHandlingTest extends SapphireTest {
 	function testDisallowedExtendedActions() {
 		/* Actions on magic methods are only accessible if explicitly allowed on the controller. */
 		$response = Director::test("testGoodBase1/extendedMethod");
-		$this->assertEquals(403, $response->getStatusCode());
+		$this->assertEquals(404, $response->getStatusCode());
 		
 		/* Actions on an extension are allowed because they specifically provided appropriate allowed_actions items */
 		$response = Director::test("testGoodBase1/otherExtendedMethod");
@@ -94,7 +94,7 @@ class RequestHandlingTest extends SapphireTest {
 
 		/* The failoverMethod action wasn't explicitly listed and so isnt' allowed */
 		$response = Director::test("testGoodBase1/failoverMethod");
-		$this->assertEquals(403, $response->getStatusCode());
+		$this->assertEquals(404, $response->getStatusCode());
 		
 		/* However, on RequestHandlingTest_AllowedController it has been explicitly allowed */
 		$response = Director::test("RequestHandlingTest_AllowedController/failoverMethod");
