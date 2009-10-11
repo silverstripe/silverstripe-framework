@@ -1344,7 +1344,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		// Ensure URLSegment is unique
 		$count = 1;
 		$otherpage = false;
-		while((class_exists($this->URLSegment) && is_subclass_of($this->URLSegment, 'RequestHandler')) || $otherpage = SiteTree::get_by_url($this->URLSegment)) {
+		while((class_exists($this->URLSegment) && is_subclass_of($this->URLSegment, 'RequestHandler')) || $otherpage = SiteTree::get_by_link($this->URLSegment)) {
 			if($otherpage && $otherpage->ID == $this->ID) {
 				break;
 			}

@@ -55,22 +55,28 @@ class ContentController extends Controller {
 	
 	//----------------------------------------------------------------------------------//
 	// These flexible data methods remove the need for custom code to do simple stuff
-
-	/*
-	 * Return the children of the given page.
-	 * $parentRef can be a page number or a URLSegment
+	
+	/**
+	 * Return the children of a given page. The parent reference can either be a page link or an ID.
+	 *
+	 * @param string|int $parentRef
+	 * @return DataObjectSet
 	 */
 	public function ChildrenOf($parentRef) {
-		$SQL_parentRef = Convert::raw2sql($parentRef);
-		$parent = DataObject::get_one('SiteTree', "\"URLSegment\" = '$SQL_parentRef'");
-
-		if(!$parent && is_numeric($parentRef)) $parent = DataObject::get_by_id('SiteTree', $SQL_parentRef);
+		$parent = SiteTree::get_by_url($parentRef);
+		
+		if(!$parent && is_numeric($parentRef)) {
+			$parent = DataObject::get_by_id('SiteTree', Convert::raw2sql($parentRef));
+		}
+		
 		if($parent) return $parent->Children();
 	}
-
-	public function Page($url) {
-		$SQL_url = Convert::raw2sql($url);
-		return DataObject::get_one('SiteTree', "\"URLSegment\" = '$SQL_url'");
+	
+	/**
+	 * @return DataObjectSet
+	 */
+	public function Page($link) {
+		return SiteTree::get_by_link($link);
 	}
 
 	public function init() {

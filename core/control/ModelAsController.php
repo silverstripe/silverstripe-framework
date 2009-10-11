@@ -60,7 +60,7 @@ class ModelAsController extends Controller implements NestedController {
 	public function getNestedController() {
 		if($this->urlParams['URLSegment']) {
 			$SQL_URLSegment = Convert::raw2sql($this->urlParams['URLSegment']);
-			$child = SiteTree::get_by_url($SQL_URLSegment);
+			$child = SiteTree::get_by_link($SQL_URLSegment);
 			if(!$child) {
 				if($child = $this->findOldPage($SQL_URLSegment)) {
 					$url = Controller::join_links(
@@ -131,7 +131,7 @@ class ModelAsController extends Controller implements NestedController {
 			if($redirectObj) {
 				// Double-check by querying this page in the same way that getNestedController() does.  This
 				// will prevent query muck-ups from modules such as subsites
-				$doubleCheck = SiteTree::get_by_url($redirectObj->URLSegment);
+				$doubleCheck = SiteTree::get_by_link($redirectObj->URLSegment);
 				if($doubleCheck) return $redirectObj;
 			}
 		}

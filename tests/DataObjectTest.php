@@ -49,7 +49,6 @@ class DataObjectTest extends SapphireTest {
 	 *       - Limit
 	 *       - Container class
 	 *   - DataObject::get_by_id()
-	 *   - DataObject::get_by_url()
 	 *   - DataObject::get_one()
 	 *        - With and without caching
 	 *        - With and without ordering
@@ -97,10 +96,6 @@ class DataObjectTest extends SapphireTest {
 		$homepageID = $this->idFromFixture('Page', 'home');
 		$page = DataObject::get_by_id('Page', $homepageID);
 		$this->assertEquals('Home', $page->Title);
-		
-		// Test get_by_url()
-		$page = SiteTree::get_by_url('home');
-		$this->assertEquals($homepageID, $page->ID);
 		
 		// Test get_one() without caching
 		$comment1 = DataObject::get_one('PageComment', "\"Name\"='Joe'", false);

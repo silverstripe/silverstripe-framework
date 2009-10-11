@@ -319,7 +319,7 @@ class Director {
 		if(isset(Director::$urlParams['URLSegment'])) {
 			$SQL_urlSegment = Convert::raw2sql(Director::$urlParams['URLSegment']);
 
-			return SiteTree::get_by_url($SQL_urlSegment);
+			return SiteTree::get_by_link($SQL_urlSegment);
 		} else {
 			return Controller::curr();
 		}
