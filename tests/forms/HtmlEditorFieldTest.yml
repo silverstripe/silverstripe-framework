@@ -1,0 +1,15 @@
+SiteTree:
+  home:
+    Title: Home Page
+  about:
+    Title: About Us
+  contact:
+    Title: Contact Us
+
+File:
+  example_file:
+    Name: example.pdf
+
+Image:
+  example_image:
+    Name: example.jpg

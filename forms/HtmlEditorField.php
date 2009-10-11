@@ -1,203 +1,142 @@
 <?php
 /**
- * A WYSIWYG editor field, powered by tinymce.
- * tinymce editor fields are created from <textarea> tags which are then converted with javascript.
- * The {@link Requirements} system is used to ensure that all necessary javascript is included.
- * Caution: Only works within the CMS with a global tinymce-menubar, see {@link CMSMain}
- * 
- * 
+ * A TinyMCE-powered WYSIWYG HTML editor field with image and link insertion and tracking capabilities. Editor fields
+ * are created from <textarea> tags, which are then converted with JavaScript.
+ *
  * @package forms
  * @subpackage fields-formattedinput
  */
 class HtmlEditorField extends TextareaField {
 	
 	/**
-	 * Includes the javascript neccesary for this field to work in the current output.
-	 * NOTE: If you are loading a form that includes an HtmlEditorField via Ajax this function must be called in the requesting page, because
-	 * javascript is not sent via ajax
+	 * Includes the JavaScript neccesary for this field to work using the {@link Requirements} system.
 	 */
-	static function include_js() {
-		Requirements::javascript(MCE_ROOT . "tiny_mce_src.js");
+	public static function include_js() {
+		Requirements::javascript(MCE_ROOT . 'tiny_mce_src.js');
 		Requirements::customScript(HtmlEditorConfig::get_active()->generateJS(), 'htmlEditorConfig');
 	}
-		
+	
 	/**
-	 * Construct a new HtmlEditor field
+	 * @see TextareaField::__construct()
 	 */
-	function __construct($name, $title = null, $rows = 30, $cols = 20, $value = "", $form = null) {
+	public function __construct($name, $title = null, $rows = 30, $cols = 20, $value = '', $form = null) {
 		parent::__construct($name, $title, $rows, $cols, $value, $form);
-		$this->extraClass = 'typography';
+		
+		$this->addExtraClass('typography');
+		$this->addExtraClass('htmleditor');
+		
+		self::include_js();
 	}
 	
 	/**
-	 * Returns the a <textarea> field with tinymce="true" set on it
+	 * @return string
 	 */
 	function Field() {
-		// Make sure the nessecary javascript is included
-		self::include_js();
-
-		// Don't allow unclosed tags - they will break the whole application ;-)		
-		$cleanVal = $this->value;
-		$lPos = strrpos($cleanVal,'<');
-		$rPos = strrpos($cleanVal,'>');
-		if(($lPos > $rPos) || ($rPos === false && $lPos !== false)) $cleanVal .= '>';
-		
-		// Remove broken link classes, we'll add them now
-		$cleanVal = eregi_replace('class="([^"]*) *broken *( [^"]*)?"','class="\\1\\2"', $cleanVal);
-		
-		// Mark up broken links
-		$links = HTTP::getLinksIn($cleanVal);
-		if($links) {
-			$links = array_unique($links);
-			foreach($links as $link) {
-				$originalLink = $link;
-				$link = Director::makeRelative($link);
-				$broken = false;
-				if(ereg('^([A-Za-z0-9_\-]+)/?(#.*)?$', $link, $parts)) {
-					if(!DataObject::get_one("SiteTree", "\"URLSegment\" = '$parts[1]'", false)) {
-						$broken = true;
-						// Prevents execution timeouts if a page has 50 identical broken links by only highlighting them once
-						$alreadyHighlighted[$parts[1]] = true;
-					}
-				} else if($link == '' || $link[0] == '/') {
-					$broken = true;
-				} else if(ereg('^assets/',$link)) {
-					$link = str_replace(array('%20', '%5C', '%27'), array(' ', '\\', '\''), $link);
-					$link = Convert::raw2sql($link);
-					if(!DataObject::get_one("File", "\"Filename\" = '$link'", false)) {
-						$broken = true;
-					}
-				}
-	
-				// Add a class.  Note that this might create multiple class attributes, which are stripped below
-				if($broken) $cleanVal = eregi_replace("(<a)([^>]*href=\"{$originalLink}[^\"]*\"[^>]*>)",'\\1 class="broken"\\2', $cleanVal);
-			}
-		}
-		
-		// Combined multiple classes into a single class
-		while( eregi('(<a[^>]*)class="([^"]*)"([^>]*)class="([^"]*)"([^>]*>)', $cleanVal) )
-			$cleanVal = eregi_replace('(<a[^>]*)class="([^"]*)"([^>]*)class="([^"]*)"([^>]*>)','\\1class="\\2 \\4"\\3\\5', $cleanVal);
-		
-		// We can't use htmlentities as that messes with unicode
-		$cleanVal = str_replace(array("&","<",">"),array("&amp;","&lt;","&gt;"),$cleanVal);
-		// 97% instead of 100% to prevent horizontal scrollbars in IE7
-		$style = "width: 97%; height: " . ($this->rows * 16) . "px";
-		$class = "htmleditor";
-		$class = ($this->extraClass)?$class." ".$this->extraClass:$class;
-		
-		return "<textarea class=\"$class\" rows=\"$this->rows\" cols=\"$this->cols\" style=\"$style\" tinymce=\"true\" id=\"" . $this->id() . "\" name=\"{$this->name}\">$cleanVal</textarea>";
-	}
-
-	/**	
-	 * This function has been created to explicit the functionnality.
-	 */
-	function setCSSClass($class){
-		$this->extraClass = $class;
+		return $this->createTag (
+			'textarea',
+			array (
+				'class'   => $this->extraClass(),
+				'rows'    => $this->rows,
+				'cols'    => $this->cols,
+				'style'   => "width: 97%; height: " . ($this->rows * 16) . "px", // Prevents horizontal scrollbars
+				'tinymce' => 'true',
+				'id'      => $this->id(),
+				'name'    => $this->name
+			),
+			htmlentities($this->value, ENT_COMPAT, 'UTF-8')
+		);
 	}
 	
-	function saveInto($record) {
+	public function saveInto($record) {
 		if($record->escapeTypeForField($this->name) != 'xml') {
-			user_error("HTMLEditorField should save into an HTMLText or HTMLVarchar field.  
-				If you don't, your template won't display properly.  
-				This changed in version 2.2.2, so please update 
-				your database field '$this->name'", 
-				E_USER_WARNING
+			throw new Exception (
+				'HtmlEditorField->saveInto(): This field should save into a HTMLText or HTMLVarchar field.'
 			);
 		}
 		
-		$content = $this->value;
+		$value = $this->value ? $this->value : '<p></p>';
+		$value = preg_replace('/src="([^\?]*)\?r=[0-9]+"/i', 'src="$1"', $value);
 		
-		$content = preg_replace('/mce_real_src="[^"]+"/i', "", $content);
-		
-		$content = eregi_replace('(<img[^>]* )width=([0-9]+)( [^>]*>|>)','\\1width="\\2"\\3', $content);
-		$content = eregi_replace('(<img[^>]* )height=([0-9]+)( [^>]*>|>)','\\1height="\\2"\\3', $content);
-		$content = eregi_replace('src="([^\?]*)\?r=[0-9]+"','src="\\1"', $content);
-		$content = eregi_replace('mce_src="([^\?]*)\?r=[0-9]+"','mce_src="\\1"', $content);
-		
-		$content = preg_replace_callback('/(<img[^>]* )(width="|height="|src=")([^"]+)("[^>]* )(width="|height="|src=")([^"]+)("[^>]* )(width="|height="|src=")([^"]+)("[^>]*>)/i', "HtmlEditorField_dataValue_processImage", $content);
-		
-		// If we don't have a containing block element, add a p tag.
-		if(!ereg("^[ \t\r\n]*<", $content)) $content = "<p>$content</p>";
-
-		$links = HTTP::getLinksIn($content);
 		$linkedPages = array();
+		$linkedFiles = array();
 		
-		if($links) foreach($links as $link) {
-			$link = Director::makeRelative($link);
+		$document = new DOMDocument(null, 'UTF-8');
+		$document->strictErrorChecking = false;
+		$document->loadHTML($value);
+		
+		// Populate link tracking for internal links & links to asset files.
+		if($links = $document->getElementsByTagName('a')) foreach($links as $link) {
+			$link = Director::makeRelative($link->getAttribute('href'));
 			
-			if(preg_match('/^([A-Za-z0-9_-]+)\/?(#.*)?$/', $link, $parts)) {
-				$candidatePage = DataObject::get_one("SiteTree", "\"URLSegment\" = '" . urldecode( $parts[1] ). "'", false);
-				if($candidatePage) {
-					$linkedPages[] = $candidatePage->ID;
-					// This caused bugs in the publication script
-					// $candidatePage->destroy();
-				} else {
-					$record->HasBrokenLink = 1;
-				}
-
-			} else if($link == '' || $link[0] == '/') {
-				$record->HasBrokenLink = 1;
-
-			} else if($candidateFile = DataObject::get_one("File", "\"Filename\" = '" . Convert::raw2sql(urldecode($link)) . "'", false)) {
-				$linkedFiles[] = $candidateFile->ID;
-				// $candidateFile->destroy();
-			}
-		}
-		
-		$images = HTTP::getImagesIn($content);
-		if($images) {
-			foreach($images as $image) {
-				$image = Director::makeRelative($image);
-				if(substr($image,0,7) == 'assets/') {
-					$candidateImage = DataObject::get_one("File", "\"Filename\" = '$image'");
-					if($candidateImage) $linkedFiles[] = $candidateImage->ID;
-					else $record->HasBrokenFile = 1;
-				}
-			}
-		}
+			if(preg_match('/\[sitetree_link id=([0-9]+)\]/i', $link, $matches)) {
+				$ID = $matches[1];
 				
-		$fieldName = $this->name;
-		if($record->ID && $record->hasMethod('LinkTracking') && $linkTracking = $record->LinkTracking()) {
-			$linkTracking->removeByFilter("\"FieldName\" = '$fieldName' AND \"SiteTreeID\" = $record->ID");
-			
-			if(isset($linkedPages)) foreach($linkedPages as $item) {
-				$linkTracking->add($item, array("FieldName" => $fieldName));
+				if($page = DataObject::get_by_id('SiteTree', $ID)) {
+					$linkedPages[] = $page->ID;
+				} else {
+					$record->HasBrokenLink = true;
+				}
+			} elseif($link[0] != '/' && $file = File::find($link)) {
+				$linkedFiles[] = $file->ID;
 			}
-			
-			// $linkTracking->destroy();
-		}
-		if($record->ID && $record->hasMethod('ImageTracking') && $imageTracking = $record->ImageTracking()) {
-			$imageTracking->removeByFilter("\"FieldName\" = '$fieldName'");
-			if(isset($linkedFiles)) foreach($linkedFiles as $item) {
-				$imageTracking->add($item, array("FieldName" => $fieldName));
-			}
-			// $imageTracking->destroy();
 		}
 		
-		// Sometimes clients will double-escape %20.  Fix this up with this dirty hack
-		$content = str_replace('%2520', '%20', $content);
+		// Resample images, add default attributes and add to assets tracking.
+		if($images = $document->getElementsByTagName('img')) foreach($images as $img) {
+			if(!$image = File::find($path = Director::makeRelative($img->getAttribute('src')))) {
+				if(substr($path, 0, strlen(ASSETS_DIR) + 1) == ASSETS_DIR . '/') {
+					$record->HasBrokenFile = true;
+				}
+				
+				continue;
+			}
 			
-		$record->$fieldName = $content;
-	}
-	
-	function rewriteLink($old, $new) {
-		$bases[] = "";
-		$bases[] = Director::baseURL();
-		$bases[] = Director::absoluteBaseURL();
-		foreach($bases as $base) {
-			$this->value = ereg_replace("(href=\"?)$base$old","\\1$new", $this->value);
+			// Resample the images if the width & height have changed.
+			$width  = $img->getAttribute('width');
+			$height = $img->getAttribute('height');
+			
+			if($width && $height && ($width != $image->getWidth() || $height != $image->getHeight())) {
+				$img->setAttribute('src', $image->ResizedImage($width, $height)->getRelativePath());
+			}
+			
+			// Add default empty title & alt attributes.
+			if(!$img->getAttribute('alt')) $img->setAttribute('alt', '');
+			if(!$img->getAttribute('title')) $img->setAttribute('title', '');
+			
+			// Add to the tracked files.
+			$linkedFiles[] = $image->ID;
 		}
 		
-		$this->value = ereg_replace("(href=\"?)$base$old","\\1$new", $this->value);
-		return $this->value;
+		// Save file & link tracking data.
+		if($record->ID && $record->many_many('LinkTracking') && $tracker = $record->LinkTracking()) {
+			$tracker->removeByFilter(sprintf('"FieldName" = \'%s\' AND "SiteTreeID" = %d', $this->name, $record->ID));
+			
+			if($linkedPages) foreach($linkedPages as $item) {
+				$tracker->add($item, array('FieldName' => $this->name));
+			}
+		}
+		
+		if($record->ID && $record->many_many('ImageTracking') && $tracker = $record->ImageTracking()) {
+			$tracker->removeByFilter(sprintf('"FieldName" = \'%s\' AND "SiteTreeID" = %d', $this->name, $record->ID));
+			
+			if($linkedFiles) foreach($linkedFiles as $item) {
+				$tracker->add($item, array('FieldName' => $this->name));
+			}
+		}
+		
+		$record->{$this->name} = substr(simplexml_import_dom($document)->body->asXML(), 6, -7);
 	}
 	
-	function performReadonlyTransformation() {
-		$field = new HtmlEditorField_readonly($this->name, $this->title, $this->value);
+	/**
+	 * @return HtmlEditorField_Readonly
+	 */
+	public function performReadonlyTransformation() {
+		$field = new HtmlEditorField_Readonly($this->name, $this->title, $this->value);
 		$field->setForm($this->form);
 		$field->dontEscape = true;
 		return $field;
 	}
+	
 }
 
 /**
@@ -205,7 +144,7 @@ class HtmlEditorField extends TextareaField {
  * @package forms
  * @subpackage fields-formattedinput
  */
-class HtmlEditorField_readonly extends ReadonlyField {
+class HtmlEditorField_Readonly extends ReadonlyField {
 	function Field() {
 		$valforInput = $this->value ? Convert::raw2att($this->value) : "";
 		return "<span class=\"readonly typography\" id=\"" . $this->id() . "\">" . ( $this->value && $this->value != '<p></p>' ? $this->value : '<i>(not set)</i>' ) . "</span><input type=\"hidden\" name=\"".$this->name."\" value=\"".$valforInput."\" />";
@@ -213,54 +152,6 @@ class HtmlEditorField_readonly extends ReadonlyField {
 	function Type() {
 		return 'htmleditorfield readonly';
 	}
-}
-
-/**
- * Proccesses HTML images into the correct proportions from 
- * the regular expression evaluated on the save.
- */
-function HtmlEditorField_dataValue_processImage($parts) {
-	
-	// The info could be in any order
-	$info[$parts[2]] = $parts[3]; $partSource[$parts[2]] = 3;
-	$info[$parts[5]] = $parts[6]; $partSource[$parts[5]] = 6;
-	$info[$parts[8]] = $parts[9]; $partSource[$parts[8]] = 9;
-	$src = Director::makeRelative($info['src="']);
-	
-
-	if(substr($src,0,10) == '../assets/') $src = substr($src,3);
-	
-	$width = $info['width="'];
-	$height = $info['height="'];
-	
-	if(!$width || !$height) {
-		user_error("Can't find width/height in $text", E_USER_ERROR);
-	}
-	
-	// find the image inserted from the HTML editor
-	$image = Image::find(urldecode($src));
-	
-	// If we have an image, insert the resampled one into the src attribute; otherwise, leave the img src alone.
-	if($image && ($image instanceof Image) && ($image->getWidth() != $width) && ($image->getHeight() != $height)) {
-		// If we have an image, generate the resized image.
-		$resizedImage = $image->getFormattedImage('ResizedImage', $width, $height);
-		if($resizedImage) $parts[$partSource['src="']] = $resizedImage->getRelativePath();
-	}
-	
-	$parts[0] = "";
-	$result = implode("", $parts);
-
-	// Insert an empty alt tag if there isn't one
-	if(strpos($result, "alt=") === false) {
-		$result = substr_replace($result, ' alt="" />', -3);
-	}
-	
-	// Insert an empty title tag if there isn't one (IE shows the alt as title if no title tag)
-	if(strpos($result, "title=") === false) {
-		$result = substr_replace($result, ' title="" />', -3);
-	}
-
-	return $result;
 }
 
 /**
