@@ -196,6 +196,11 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	);
 	
 	/**
+	 * @see SiteTree::nested_urls()
+	 */
+	private static $nested_urls = false;
+	
+	/**
 	 * This controls whether of not extendCMSFields() is called by getCMSFields.
 	 */
 	private static $runCMSFieldsExtensions = true;
@@ -204,7 +209,24 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	 * Cache for canView/Edit/Publish/Delete permissions
 	 */
 	private static $cache_permissions = array();
-
+	
+	/**
+	 * Returns TRUE if nested URLs (e.g. page/sub-page/) are currently enabled on this site.
+	 *
+	 * @return bool
+	 */
+	public static function nested_urls() {
+		return self::$nested_urls;
+	}
+	
+	public static function enable_nested_urls() {
+		self::$nested_urls = true;
+	}
+	
+	public static function disable_nested_urls() {
+		self::$nested_urls = false;
+	}
+	
 	/**
 	 * Return a subclass map of SiteTree
 	 * that shouldn't be hidden through
