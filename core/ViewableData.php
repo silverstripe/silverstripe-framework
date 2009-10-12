@@ -36,13 +36,6 @@ class ViewableData extends Object implements IteratorAggregate {
 	public static $default_cast = 'HTMLVarchar';
 	
 	/**
-	 * An array of static property names to search for properties to get casting information from.
-	 *
-	 * @var array
-	 */
-	public static $casting_properties = array('casting');
-	
-	/**
 	 * @var array
 	 */
 	private static $casting_cache = array();
@@ -314,7 +307,11 @@ class ViewableData extends Object implements IteratorAggregate {
 		
 		foreach($ancestry as $class) {
 			if(!isset(self::$casting_cache[$class]) && $merge) {
-				if($class) $mergeFields = Object::get_static($class, 'casting_properties');
+				if($class instanceof DataObject) {
+					$mergeFields = array('db', 'casting');
+				} else {
+					$mergeFields = array('casting');
+				}
 				
 				if($mergeFields) foreach($mergeFields as $field) {
 					$casting = Object::uninherited_static($class, $field);
@@ -329,7 +326,7 @@ class ViewableData extends Object implements IteratorAggregate {
 				$cache = ($cache) ? array_merge(self::$casting_cache[$class], $cache) : self::$casting_cache[$class];
 			}
 			
-			if($class == 'ViewableData') $merge = false;
+			if($class == 'ViewableData') break;
 		}
 	}
 	
@@ -383,9 +380,9 @@ class ViewableData extends Object implements IteratorAggregate {
 		
 		if(!$cacheName) $cacheName = $arguments ? $fieldName . implode(',', $arguments) : $fieldName;
 		
-		if(!isset($this->objCache[$cacheName]) || !$cache) {
+		if(!isset($this->objCache[$cacheName])) {
 			if($this->hasMethod($fieldName)) {
-				$value = call_user_func_array(array($this, $fieldName), (is_array($arguments) ? $arguments : array()));
+				$value = $arguments ? call_user_func_array(array($this, $fieldName), $arguments) : $this->$fieldName();
 			} else {
 				$value = $this->$fieldName;
 			}
