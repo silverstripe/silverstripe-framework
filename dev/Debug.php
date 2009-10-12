@@ -47,6 +47,16 @@ class Debug {
 	 * name, but with the suffix ".full" added.
 	 */
 	protected static $log_errors_to = null;
+
+	/**
+	 * The header of the message shown to users on the live site when a fatal error occurs.
+	 */
+	public static $friendly_error_header = 'There has been an error';
+
+	/**
+	 * The body of the message shown to users on the live site when a fatal error occurs.
+	 */
+	public static $friendly_error_detail = 'The website server has not been able to respond to your request.';
 	
 	/**
 	 * Show the contents of val in a debug-friendly way.
@@ -304,8 +314,8 @@ class Debug {
 	 * @return string HTML error message for non-ajax requests, plaintext for ajax-request.
 	 */
 	static function friendlyError($statusCode = 500, $friendlyErrorMessage = null, $friendlyErrorDetail = null) {
-		if(!$friendlyErrorMessage) $friendlyErrorMessage = 'There has been an error';
-		if(!$friendlyErrorDetail) $friendlyErrorDetail = 'The website server has not been able to respond to your request.';
+		if(!$friendlyErrorMessage) $friendlyErrorMessage = self::$friendly_error_header;
+		if(!$friendlyErrorDetail) $friendlyErrorDetail = self::$friendly_error_detail;
 
 		if(!headers_sent()) header($_SERVER['SERVER_PROTOCOL'] . " $statusCode $friendlyErrorMessage");
 
