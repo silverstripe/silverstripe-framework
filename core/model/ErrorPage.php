@@ -127,11 +127,14 @@ class ErrorPage extends Page {
 		$response = Director::test(Director::makeRelative($this->Link()));
 
 		$errorContent = $response->getBody();
+		// Make the base tag dynamic.
+		$errorContent = preg_replace('/<base[^>]+href="' . str_replace('/','\\/', Director::absoluteBaseURL()) . '"[^>]*>/i', '<base href="$BaseURL" />', $errorContent);
 		
 		// Check we have an assets base directory, creating if it we don't
 		if(!file_exists(ASSETS_PATH)) {
 			mkdir(ASSETS_PATH, 02775);
 		}
+
 
 		// if the page is published in a language other than default language,
 		// write a specific language version of the HTML page

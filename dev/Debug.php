@@ -324,7 +324,10 @@ class Debug {
 		} else {
 			$errorFilePath = ErrorPage::get_filepath_for_errorcode($statusCode, Translatable::get_current_locale());
 			if(file_exists($errorFilePath)) {
-				echo file_get_contents($errorFilePath);
+				$content = file_get_contents(ASSETS_PATH . "/error-$statusCode.html");
+				// $BaseURL is left dynamic in error-###.html, so that multi-domain sites don't get broken
+				echo str_replace('$BaseURL', Director::absoluteBaseURL(), $content);
+
 			} else {
 				$renderer = new DebugView();
 				$renderer->writeHeader();
