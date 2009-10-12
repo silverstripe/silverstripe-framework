@@ -93,6 +93,35 @@ class Member extends DataObject {
 	protected static $lock_out_after_incorrect_logins = null;
 	
 	/**
+	 * If this is set, then a session cookie with the given name will be set on log-in,
+	 * and cleared on logout.
+	 */
+	protected static $login_marker_cookie = null;
+
+	/**
+	 * If this is called, then a session cookie will be set to "1" whenever a user
+	 * logs in.  This lets 3rd party tools, such as apache's mod_rewrite, detect
+	 * whether a user is logged in or not and alter behaviour accordingly.
+	 * 
+	 * One known use of this is to bypass static caching for logged in users.  This is
+	 * done by putting this into _config.php
+	 * <pre>
+	 * Member::set_login_marker_cookie("SS_LOGGED_IN");
+	 * </pre>
+	 * 
+	 * And then adding this condition to each of the rewrite rules that make use of
+	 * the static cache.
+	 * <pre>
+	 * RewriteCond %{HTTP_COOKIE} !SS_LOGGED_IN=1
+	 * </pre>
+	 * 
+	 * @param $cookieName string The name of the cookie to set.
+	 */
+	static function set_login_marker_cookie($cookieName) {
+		self::$login_marker_cookie = $cookieName;
+	} 
+	
+	/**
 	 * This method is used to initialize the static database members
 	 *
 	 * Since PHP doesn't support any expressions for the initialization of
@@ -211,6 +240,8 @@ class Member extends DataObject {
 		self::session_regenerate_id();
 
 		Session::set("loggedInAs", $this->ID);
+		// This lets apache rules detect whether the user has logged in
+		if(self::$login_marker_cookie) Cookie::set(self::$login_marker_cookie, 1, 0);
 
 		$this->NumVisit++;
 
@@ -282,6 +313,8 @@ class Member extends DataObject {
 			if($member) {
 				self::session_regenerate_id();
 				Session::set("loggedInAs", $member->ID);
+				// This lets apache rules detect whether the user has logged in
+				if(self::$login_marker_cookie) Cookie::set(self::$login_marker_cookie, 1, 0);
 
 				$token = substr(md5(uniqid(rand(), true)), 0, 49 - strlen($member->ID));
 				$member->RememberLoginToken = $token;
@@ -301,6 +334,7 @@ class Member extends DataObject {
 	 */
 	function logOut() {
 		Session::clear("loggedInAs");
+		if(self::$login_marker_cookie) Cookie::set(self::$login_marker_cookie, null, 0);
 		self::session_regenerate_id();
 
 		$this->extend('memberLoggedOut');
