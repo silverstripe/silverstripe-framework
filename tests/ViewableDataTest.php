@@ -15,15 +15,6 @@ class ViewableDataTest extends SapphireTest {
 		$this->assertFalse($caster->obj('noCastingInformation', null, false) instanceof ViewableData_Caster);
 	}
 	
-	public function testCastingProperties() {
-		$caster = new ViewableData_CastingProperties();
-		$caster->buildCastingCache($cache);
-		
-		$this->assertTrue(isset($cache['Foo']));
-		$this->assertEquals('Bar', $cache['Foo']['className']);
-		$this->assertEquals('Bar', $caster->castingClass('Foo'));
-	}
-	
 	public function testCastingXMLVal() {
 		$caster = new ViewableDataTest_Castable();
 		
@@ -91,18 +82,6 @@ class ViewableDataTest_Castable extends ViewableData {
 	public function castedUnsafeXML() {
 		return $this->unsafeXML();
 	}
-	
-}
-
-class ViewableData_CastingProperties extends ViewableData {
-	
-	public static $casting_properties = array (
-		'test'
-	);
-	
-	public static $test = array (
-		'Foo' => 'Bar'
-	);
 	
 }
 
