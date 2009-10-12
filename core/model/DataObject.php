@@ -2116,8 +2116,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	public function hasField($field) {
 		return (
 			array_key_exists($field, $this->record) 
-			|| $this->hasDatabaseField($field) 
-			|| array_key_exists($field, $this->db()) // Needed for composite fields
+			|| $this->db($field)
 			|| $this->hasMethod("get{$field}")
 		);
 	}
