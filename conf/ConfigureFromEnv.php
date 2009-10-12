@@ -54,6 +54,10 @@ if(defined('SS_ENVIRONMENT_FILE')) {
 	}
 }
 
+if(defined('SS_USE_BASIC_AUTH') && SS_USE_BASIC_AUTH) {
+	BasicAuth::enable();
+}
+
 if(defined('SS_ENVIRONMENT_TYPE')) {
 	Director::set_environment_type(SS_ENVIRONMENT_TYPE);
 }
