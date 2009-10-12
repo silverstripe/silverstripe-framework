@@ -10,7 +10,8 @@
  * @package sapphire
  * @subpackage model
  */
-class SQLQuery extends Object {
+class SQLQuery {
+	
 	/**
 	 * An array of fields to select.
 	 * @var array
@@ -100,8 +101,6 @@ class SQLQuery extends Object {
 		$this->groupby($groupby);
 		$this->having($having);
 		$this->limit($limit);
-
-		parent::__construct();
 	}
 	
 	/**

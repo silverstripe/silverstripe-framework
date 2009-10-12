@@ -47,7 +47,7 @@
  * @package sapphire
  * @subpackage view
  */
-class SSViewer extends Object {
+class SSViewer {
 	
 	/**
 	 * @var boolean $source_file_comments
@@ -173,8 +173,6 @@ class SSViewer extends Object {
 		}
 
 		if(!$this->chosenTemplates) user_error("None of these templates can be found: ". implode(".ss, ", $templateList) . ".ss", E_USER_WARNING);
-
-		parent::__construct();
 	}
 	
 	/**
