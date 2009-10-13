@@ -503,9 +503,6 @@ abstract class Object {
 	public function __construct() {
 		$this->class = get_class($this);
 		
-		// Don't do magic methods and/or extensions on extensions themselves.
-		if($this instanceof Extension) return;
-		
 		// Don't bother checking some classes that should never be extended
 		static $notExtendable = array('Object', 'ViewableData', 'DataObject', 'RequestHandler');
 		
