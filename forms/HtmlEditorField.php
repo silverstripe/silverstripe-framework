@@ -77,21 +77,23 @@ class HtmlEditorField extends TextareaField {
 		if($links = $htmlValue->getElementsByTagName('a')) foreach($links as $link) {
 			$href = Director::makeRelative($link->getAttribute('href'));
 			
-			if(preg_match('/\[sitetree_link id=([0-9]+)\]/i', $href, $matches)) {
-				$ID = $matches[1];
-				
-				// clear out any broken link classes
-				if($class = $link->getAttribute('class')) {
-					$link->setAttribute('class', preg_replace('/(^ss-broken|ss-broken$| ss-broken )/', null, $class));
+			if($href) {
+				if(preg_match('/\[sitetree_link id=([0-9]+)\]/i', $href, $matches)) {
+					$ID = $matches[1];
+					
+					// clear out any broken link classes
+					if($class = $link->getAttribute('class')) {
+						$link->setAttribute('class', preg_replace('/(^ss-broken|ss-broken$| ss-broken )/', null, $class));
+					}
+					
+					if($page = DataObject::get_by_id('SiteTree', $ID)) {
+						$linkedPages[] = $page->ID;
+					} else {
+						$record->HasBrokenLink = true;
+					}
+				} elseif($href[0] != '/' && $file = File::find($href)) {
+					$linkedFiles[] = $file->ID;
 				}
-				
-				if($page = DataObject::get_by_id('SiteTree', $ID)) {
-					$linkedPages[] = $page->ID;
-				} else {
-					$record->HasBrokenLink = true;
-				}
-			} elseif($href[0] != '/' && $file = File::find($href)) {
-				$linkedFiles[] = $file->ID;
 			}
 		}
 		
