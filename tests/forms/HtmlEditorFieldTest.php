@@ -120,4 +120,16 @@ class HtmlEditorFieldTest extends FunctionalTest {
 		$this->assertEquals("<p>First Paragraph</p>\n\n<p>Second Paragraph</p>", $sitetree->Content);
 	}
 	
+	public function testSavingLinksWithoutHref() {
+		$sitetree = $this->objFromFixture('SiteTree', 'home');
+		$editor   = new HtmlEditorField('Content');
+		
+		$editor->setValue('<p><a name="example-anchor"></a></p>');
+		$editor->saveInto($sitetree);
+		
+		$this->assertEquals (
+			'<p><a name="example-anchor"/></p>', $sitetree->Content, 'Saving a link without a href attribute works'
+		);
+	}
+	
 }
