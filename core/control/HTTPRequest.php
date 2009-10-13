@@ -14,7 +14,7 @@
  * @package sapphire
  * @subpackage control
  */
-class HTTPRequest extends Object implements ArrayAccess {
+class HTTPRequest implements ArrayAccess {
 
 	/**
 	 * @var string $url
@@ -102,8 +102,6 @@ class HTTPRequest extends Object implements ArrayAccess {
 		$this->getVars = (array)$getVars;
 		$this->postVars = (array)$postVars;
 		$this->body = $body;
-		
-		parent::__construct();
 	}
 	
 	function isGET() {

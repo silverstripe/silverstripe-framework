@@ -5,7 +5,7 @@
  * @package sapphire
  * @subpackage control
  */
-class HTTPResponse extends Object {
+class HTTPResponse {
 	protected static $status_codes = array(
 		100 => 'Continue',
 		101 => 'Switching Protocols',
@@ -81,7 +81,6 @@ class HTTPResponse extends Object {
 	 * @param $statusDescription The text to be given alongside the status code.  This can be accessed by javascript
 	 */
 	function __construct($body = null, $statusCode = null, $statusDescription = null) {
-		parent::__construct();
 		$this->body = $body;
 		if($statusCode) $this->setStatusCode($statusCode, $statusDescription);
 	}
