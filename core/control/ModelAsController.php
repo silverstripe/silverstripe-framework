@@ -120,7 +120,7 @@ class ModelAsController extends Controller implements NestedController {
 		$query = new SQLQuery (
 			'"RecordID"',
 			'"SiteTree_versions"',
-			"\"URLSegment\" = '$URLSegment' AND \"WasPublished\"" . (SiteTree::nested_urls() ? ' AND "ParentID" = 0' : null),
+			"\"URLSegment\" = '$URLSegment' AND \"WasPublished\" = 1" . (SiteTree::nested_urls() ? ' AND "ParentID" = 0' : null),
 			'"LastEdited" DESC',
 			null,
 			null,
