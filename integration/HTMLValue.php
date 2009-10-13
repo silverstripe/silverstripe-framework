@@ -45,10 +45,17 @@ class SS_HTMLValue extends ViewableData {
 	 * @return bool
 	 */
 	public function setContent($content) {
-		return $this->getDocument()->loadHTML(
-			'<html><head><meta http-equiv="content-type" content="text/html; charset=utf-8"></head>' .
-			"<body>$content</body></html>"
-		);
+		//This is a patch to prevent invalid HTML returning warnings.
+		//Error messages are disabled, and then re-enabled
+		$old_level=error_reporting();
+		error_reporting(0);
+		$value=$this->getDocument()->loadHTML(
+				'<html><head><meta http-equiv="content-type" content="text/html; charset=utf-8"></head>' .
+				"<body>$content</body></html>");
+		error_reporting($old_level);
+		return $value;
+		
+		
 	}
 	
 	/**
