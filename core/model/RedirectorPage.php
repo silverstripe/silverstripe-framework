@@ -16,6 +16,10 @@ class RedirectorPage extends Page {
 		"ExternalURL" => "Varchar(255)",
 	);
 	
+	static $defaults = array(
+		"RedirectionType" => "Internal"
+	);
+	
 	static $has_one = array(
 		"LinkTo" => "SiteTree",
 	);

@@ -641,9 +641,9 @@ class DataObjectTest extends SapphireTest {
 		$changedFields = $changedPage->getChangedFields();
 		
 		// Don't write the record, it will reset changed fields
-		
 		$this->assertType('RedirectorPage', $changedPage);
 		$this->assertEquals($changedPage->ClassName, 'RedirectorPage');
+		$this->assertEquals($changedPage->RedirectionType, 'Internal');
 		//$this->assertEquals($changedPage->RecordClassName, 'RedirectorPage');
 		$this->assertContains('ClassName', array_keys($changedFields));
 		$this->assertEquals($changedFields['ClassName']['before'], 'Page');

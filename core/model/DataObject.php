@@ -410,11 +410,16 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	}
 
 	/**
-	 * Create a new instance of a different class from this object's record
+	 * Create a new instance of a different class from this object's record.
 	 * This is useful when dynamically changing the type of an instance. Specifically,
 	 * it ensures that the instance of the class is a match for the className of the
 	 * record. Don't set the {@link DataObject->class} or {@link DataObject->ClassName}
 	 * property manually before calling this method, as it will confuse change detection.
+	 * 
+	 * If the new class is different to the original class, defaults are populated again
+	 * because this will only occur automatically on instantiation of a DataObject if
+	 * there is no record, or the record has no ID. In this case, we do have an ID but
+	 * we still need to repopulate the defaults.
 	 *
 	 * @param string $newClassName The name of the new class
 	 *
@@ -425,12 +430,14 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		$newInstance = new $newClassName(array_merge(
 			$this->record,
 			array(
-				'ClassName'=>$originalClass,
-				'RecordClassName'=>$originalClass,
+				'ClassName' => $originalClass,
+				'RecordClassName' => $originalClass,
 			)
 		));
-		if($newClassName != $this->ClassName) {
+		
+		if($newClassName != $originalClass) {
 			$newInstance->setClassName($newClassName);
+			$newInstance->populateDefaults();
 			$newInstance->forceChange();
 		}
 

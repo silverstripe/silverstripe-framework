@@ -684,8 +684,8 @@ class TranslatableTest extends FunctionalTest {
 		$translatedPageID = $translatedPage->ID;
 		
 		// change page type
-		$origPage->ClassName = 'RedirectorPage';
-		$origPage->write();
+		$newPage = $origPage->newClassInstance('RedirectorPage');
+		$newPage->write();
 		
 		// re-fetch original page with new instance
 		$origPageChanged = DataObject::get_by_id('RedirectorPage', $origPageID);

@@ -767,6 +767,7 @@ class Translatable extends DataObjectDecorator implements PermissionProvider {
 				if($translations) foreach($translations as $translation) {
 					$translation->setClassName($this->owner->ClassName);
 					$translation = $translation->newClassInstance($translation->ClassName);
+					$translation->populateDefaults();
 					$translation->forceChange();
 					$translation->write();
 				}
