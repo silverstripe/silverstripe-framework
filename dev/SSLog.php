@@ -14,7 +14,7 @@
  * 
  * Example usage of logging errors by email notification:
  * <code>
- * $logEmailWriter = new SSErrorEmailWriter('my@email.com');
+ * $logEmailWriter = new SSLogEmailWriter('my@email.com');
  * SSLog::add_writer($logEmailWriter, SSLog::ERR);
  * </code>
  * 
@@ -31,7 +31,7 @@
  * 
  * Formatters are added to writers like this:
  * <code>
- * $logEmailWriter = new SSErrorEmailWriter('my@email.com');
+ * $logEmailWriter = new SSLogEmailWriter('my@email.com');
  * $myEmailFormatter = new MyLogEmailFormatter();
  * $logEmailWriter->setFormatter($myEmailFormatter);
  * </code>
