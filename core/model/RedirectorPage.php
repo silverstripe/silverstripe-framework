@@ -121,10 +121,9 @@ class RedirectorPage extends Page {
 		return $fields;
 	}
 	
+	// Don't cache RedirectorPages
 	function subPagesToCache() {
-		$urls = parent::subPagesToCache();
-		$urls[] = $this->URLSegment . '/';
-		return $urls;
+		return array();
 	}
 }
 
