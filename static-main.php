@@ -14,6 +14,7 @@
  */
 
 $cacheOn = true;
+$cacheDebug = false;
 $hostmapLocation = '../subsites/host-map.php';
 
 if ($cacheOn) {
@@ -38,10 +39,12 @@ if ($cacheOn) {
 	} elseif (file_exists('../cache/'.$cacheDir.$file.'.php')) {
 		header('X-cache: hit at '.date('r'));
 		include_once '../cache/'.$cacheDir.$file.'.php';
+		if ($cacheDebug) echo "<h1>File was cached</h1>";
 	} else {
 		header('X-cache: miss at '.date('r') . ' on ' . $cacheDir . $file);
 		// No cache hit... fallback!!!
 		include 'main.php';
+		if ($cacheDebug) echo "<h1>File was !NOT! cached</h1>";
 	}
 } else {
 	include 'main.php';
