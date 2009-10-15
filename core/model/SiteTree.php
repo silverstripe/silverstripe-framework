@@ -1665,9 +1665,18 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 
 		if(!Permission::check('SITETREE_GRANT_ACCESS')) {
 			$fields->makeFieldReadonly($viewersOptionsField);
-			$fields->makeFieldReadonly($viewerGroupsField);
+			if($this->CanViewType == 'OnlyTheseUsers') {
+				$fields->makeFieldReadonly($viewerGroupsField);
+			} else {
+				$fields->removeByName('ViewerGroups');
+			}
+			
 			$fields->makeFieldReadonly($editorsOptionsField);
-			$fields->makeFieldReadonly($editorGroupsField);
+			if($this->CanEditType == 'OnlyTheseUsers') {
+				$fields->makeFieldReadonly($editorGroupsField);
+			} else {
+				$fields->removeByName('EditorGroups');
+			}
 		}
 		
 		$tabContent->setTitle(_t('SiteTree.TABCONTENT', "Content"));
