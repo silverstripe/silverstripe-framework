@@ -669,6 +669,29 @@ class DataObjectTest extends SapphireTest {
 		$this->assertEquals($playerExtraFields, array(
 			'Position' => 'Varchar(100)'
 		));
+		
+		// Iterate through a many-many relationship and confirm that extra fields are included
+		$newTeam = new DataObjectTest_Team();
+		$newTeam->Title = "New team";
+		$newTeam->write();
+		$newTeamID = $newTeam->ID;
+		
+		$newPlayer = new DataObjectTest_Player();
+		$newPlayer->FirstName = "Sam";
+		$newPlayer->Surname = "Minnee";
+		$newPlayer->write();
+
+		// The idea of Sam as a prop is essentially humourous.
+		$newTeam->Players()->add($newPlayer, array("Position" => "Prop"));
+
+		// Requery and uncache everything
+		$newTeam->flushCache();
+		$newTeam = DataObject::get_by_id('DataObjectTest_Team', $newTeamID);
+		
+		// Check that the Position many_many_extraField is extracted.
+		$player = $newTeam->Players()->First();
+		$this->assertEquals('Sam', $player->FirstName);
+		$this->assertEquals("Prop", $player->Position);
 	}
 	
 	/**
