@@ -1,0 +1,10 @@
+# These need to come first so that SiteTree has the link meta-data written.
+File:
+   file1:
+      Filename: assets/testscript-test-file.pdf
+
+Page:   
+   page1:
+      Title: page1
+      URLSegment: page1
+      Content: <p><img src="assets/testscript-test-file.pdf" /></p>

@@ -380,15 +380,9 @@ class File extends DataObject {
 	
 		$pages = $this->BackLinkTracking();
 
+		$summary = "";
 		if($pages) {
-			foreach($pages as $page) {
-				$fieldName = $page->FieldName; // extracted from the many-many join
-				if($fieldName) {
-					$text = $page->$fieldName;
-					$page->$fieldName = str_replace($old, $new, $page->$fieldName);
-					$page->write();
-				}
-			}
+			foreach($pages as $page) $page->rewriteFileURL($old,$new);
 		}
 		
 		if(class_exists('Subsite')) Subsite::disable_subsite_filter(false);

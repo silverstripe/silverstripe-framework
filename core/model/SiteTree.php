@@ -1470,6 +1470,54 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	}
 	
 	/**
+	 * Replace a URL in html content with a new URL.
+	 * @param string $old The old URL
+	 * @param string $new The new URL
+	 */
+	function rewriteLink($old, $new) {
+		$fields = $this->getCMSFields(null)->dataFields();
+		foreach($fields as $field) {
+			if(is_a($field, 'HtmlEditorField')) {
+				$fieldName = $field->Name();
+				$field->setValue($this->$fieldName);
+				$field->rewriteLink($old, $new);
+				$field->saveInto($this);
+			}
+		}
+	}
+	
+	/**
+	 * Rewrite a file URL on this page, after its been renamed.
+	 * Triggers the onRenameLinkedAsset action on extensions.
+	 */
+	function rewriteFileURL($old, $new) {
+		Debug::message("Rewriting $old to $new");
+		
+		// TODO: Check all HTMLText fields
+		$fieldName = "Content";
+		if($fieldName) {
+			$original = clone $this;
+
+			// Draft site
+			$this->$fieldName = str_replace($old, $new, $this->$fieldName, $numReplaced);
+			if($numReplaced) $this->write();
+			
+			// Published site
+			$published = DB::query("SELECT * FROM  \"SiteTree_Live\" WHERE ID = $this->ID")->record();
+			$origPublished = $published;
+			$published[$fieldName] = str_replace($old, $new, $published[$fieldName], $numReplaced);
+			if($numReplaced) {
+				DB::query("UPDATE \"SiteTree_Live\" SET \"$fieldName\" = '" 
+					. Convert::raw2sql($published[$fieldName]) . "' WHERE ID = $this->ID");
+
+				$publishedClass = $origPublished['ClassName'];
+				$origPublishedObj = new $publishedClass($origPublished);
+				$this->extend('onRenameLinkedAsset', $origPublishedObj);
+			}
+		}
+	}
+
+	/**
 	 * Returns a FieldSet with which to create the CMS editing form.
 	 *
 	 * You can override this in your child classes to add extra fields - first
@@ -1876,6 +1924,8 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 
 		// Handle activities undertaken by decorators
 		$this->extend('onAfterPublish', $original);
+		
+		return true;
 	}
 	
 	/**
