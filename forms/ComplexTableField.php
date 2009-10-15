@@ -427,16 +427,17 @@ JS;
 	
 	/**
 	 * Returns the db-fieldname of the currently used relationship.
+	 * Note: constructed resolve ambiguous cases in the same manner as
+	 * DataObject::getComponentJoinField()
 	 */
 	function getParentIdNameRelation($parentClass, $childClass, $relation) {
 		if($this->parentIdName) return $this->parentIdName;
 		
-		$relations = singleton($parentClass)->$relation();
-		$classes = ClassInfo::ancestry($childClass);
-		if($relations) {
-			foreach($relations as $k => $v) {
-				if(array_key_exists($v, $classes)) return $k . 'ID';
-			}
+		$relations = array_flip(singleton($parentClass)->$relation());
+		
+		$classes = array_reverse(ClassInfo::ancestry($childClass));
+		foreach($classes as $class) {
+			if(isset($relations[$class])) return $relations[$class] . 'ID';
 		}
 		return false;
 	}
