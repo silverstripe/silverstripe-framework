@@ -2,6 +2,13 @@
 
 class SiteTreeBacklinksTest extends SapphireTest {
 	static $fixture_file = "sapphire/tests/SiteTreeBacklinksTest.yml";
+	
+	function setUp() {
+		parent::setUp();
+		// Log in as admin so that we don't run into permission issues.  That's not what we're
+		// testing here.
+		$this->logInWithPermssion('ADMIN');
+	}
 
 	function testSavingPageWithLinkAddsBacklink() {
 		// load page 1
@@ -69,8 +76,8 @@ class SiteTreeBacklinksTest extends SapphireTest {
 		// publish page 1 & 3
 		$page1 = $this->objFromFixture('Page', 'page1');
 		$page3 = $this->objFromFixture('Page', 'page3');
-		$page1->doPublish();
-		$page3->doPublish();
+		$this->assertTrue($page1->doPublish());
+		$this->assertTrue($page3->doPublish());
 		
 		// load pages from live
 		$page1live = Versioned::get_one_by_stage('Page', 'Live', '"SiteTree"."ID" = ' . $page1->ID);
@@ -100,8 +107,8 @@ class SiteTreeBacklinksTest extends SapphireTest {
 		$page1 = $this->objFromFixture('Page', 'page1');
 		$page3 = $this->objFromFixture('Page', 'page3');
 		
-		$page1->doPublish();
-		$page3->doPublish();
+		$this->assertTrue($page1->doPublish());
+		$this->assertTrue($page3->doPublish());
 		
 		// load page 3 from live
 		$page3live = Versioned::get_one_by_stage('Page', 'Live', '"SiteTree"."ID" = ' . $page3->ID);
@@ -121,7 +128,7 @@ class SiteTreeBacklinksTest extends SapphireTest {
 		
 		
 		// publish page 1
-		$page1->doPublish();
+		$this->assertTrue($page1->doPublish());
 		
 		// assert hyperlink to page 1's new published url exists
 		$page3live = Versioned::get_one_by_stage('Page', 'Live', '"SiteTree"."ID" = ' . $page3->ID);
@@ -133,8 +140,8 @@ class SiteTreeBacklinksTest extends SapphireTest {
 		// publish page 1 & 3
 		$page1 = $this->objFromFixture('Page', 'page1');
 		$page3 = $this->objFromFixture('Page', 'page3');
-		$page1->doPublish();
-		$page3->doPublish();
+		$this->assertTrue($page1->doPublish());
+		$this->assertTrue($page3->doPublish());
 		
 		// assert hyperlink to page 1's current url exists
 		$links = HTTP::getLinksIn($page3->Content);
@@ -152,7 +159,7 @@ class SiteTreeBacklinksTest extends SapphireTest {
 		$this->assertContains('new-url-segment/', $links, 'Assert hyperlink to page 1\'s current draft url exists on page 3');
 		
 		// publish page 3
-		$page3->doPublish();
+		$this->assertTrue($page3->doPublish());
 		
 		// assert page 3 on published site contains old page 1 url
 		$page3live = Versioned::get_one_by_stage('Page', 'Live', '"SiteTree"."ID" = ' . $page3->ID);
@@ -160,7 +167,7 @@ class SiteTreeBacklinksTest extends SapphireTest {
 		$this->assertContains('page1/', $links, 'Assert hyperlink to page 1\'s current published url exists on page 3');
 		
 		// publish page 1
-		$page1->doPublish();
+		$this->assertTrue($page1->doPublish());
 		
 		// assert page 3 on published site contains new page 1 url
 		$page3live = Versioned::get_one_by_stage('Page', 'Live', '"SiteTree"."ID" = ' . $page3->ID);
