@@ -26,6 +26,11 @@ class ViewableDataTest extends SapphireTest {
 		$this->assertEquals('&lt;foo&gt;', $caster->XML_val('castedUnsafeXML'));
 	}
 	
+	public function testUncastedXMLVal() {
+		$caster = new ViewableDataTest_Castable();
+		$this->assertEquals($caster->XML_val('uncastedZeroValue'), 0);
+	}
+	
 	public function testArrayCustomise() {
 		$viewableData    = new ViewableDataTest_Castable();
 		$newViewableData = $viewableData->customise(array (
@@ -66,6 +71,8 @@ class ViewableDataTest_Castable extends ViewableData {
 	);
 	
 	public $test = 'test';
+	
+	public $uncastedZeroValue = 0;
 	
 	public function alwaysCasted() {
 		return 'alwaysCasted';

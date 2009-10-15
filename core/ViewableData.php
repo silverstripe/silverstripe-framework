@@ -454,9 +454,8 @@ class ViewableData extends Object implements IteratorAggregate {
 	 * template.
 	 */
 	public function XML_val($field, $arguments = null, $cache = false) {
-		if($result = $this->obj($field, $arguments, false, $cache)) {
-			return is_object($result) ? $result->forTemplate() : $result;
-		}
+		$result = $this->obj($field, $arguments, false, $cache);
+		return is_object($result) ? $result->forTemplate() : $result;
 	}
 	
 	/**
