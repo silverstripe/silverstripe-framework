@@ -1347,6 +1347,8 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		
 		$this->LinkTracking()->setByIDList($linkedPages);
 		$this->ImageTracking()->setByIDList($linkedFiles);
+		
+		$this->extend('augmentSyncLinkTracking');
 	}
 	
 	function onAfterWrite() {
