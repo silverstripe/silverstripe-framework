@@ -263,6 +263,7 @@ TreeMultiselectField.prototype = {
 	newTreeReady: function (response) {
 		this.TreeDropdownField.newTreeReady(response);
 		MultiselectTree.create(this.tree);
+		this.tree.options.onselect = this.updateVal.bind(this);
 	
 		// Select the appropriate items
 		var selectedItems = this.inputTag.value.split(/ *, */);
@@ -272,16 +273,22 @@ TreeMultiselectField.prototype = {
 		var allNodes = this.tree.getElementsByTagName('li');
 		for(i=0;i<allNodes.length;i++) {
 			if(isSelected[allNodes[i].getIdx()]) {
-				this.tree.multiselect_handleSelectionChange(allNodes[i]);
+				this.tree.selectNode(allNodes[i]);
 			}
 		}
 	},
 	
 	hideTree: function() {
 		this.TreeDropdownField.hideTree();
+		if(this.tree) this.updateVal();
+	},
 
+	/**
+	 * Update the inputTag and humanItems from the currently selected nodes.
+	 */
+	updateVal: function() {
 		var internalVal = humanVal = ""; 
-				
+		
 		for(i in this.tree.selectedNodes) {
 			internalVal += (internalVal?',':'') + i;
 			humanVal += (humanVal?', ':'') + this.tree.selectedNodes[i];
@@ -289,9 +296,27 @@ TreeMultiselectField.prototype = {
 		
 		this.inputTag.value = internalVal;
 		this.humanItems.innerHTML = humanVal;
-	}
-	
+	},
+
+	updateTreeLabel: function() {
+		var treeNode;
 		
+		if(this.inputTag.value) {
+			var innerHTML = '';
+			var selectedItems = this.inputTag.value.split(/ *, */);
+			for(i=0;i<selectedItems.length;i++) {
+				if(treeNode = $('selector-' + this.inputTag.name + '-' + selectedItems[i])) {
+					innerHTML += (innerHTML?', ':'') + treeNode.getTitle();
+				} else {
+					innerHTML += selectedItems[i];
+				}
+			}
+			this.humanItems.innerHTML = innerHTML;
+		} else {
+			this.humanItems.innerHTML = '(Choose)';
+		}
+	}
+
 }
 
 TreeMultiselectField.applyTo('div.TreeDropdownField.multiple');
