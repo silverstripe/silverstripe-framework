@@ -28,6 +28,7 @@ class Group extends DataObject {
 	
 	static $many_many = array(
 		"Members" => "Member",
+		"Roles" => "PermissionRole",
 	);
 	
 	static $extensions = array(

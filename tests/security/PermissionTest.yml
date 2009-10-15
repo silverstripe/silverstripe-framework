@@ -1,0 +1,52 @@
+PermissionRole:
+   author:
+      Title: Author
+   access:
+      Title: Access Administrator
+   
+PermissionRoleCode:
+   author1:
+      Role: =>PermissionRole.author
+      Code: CMS_ACCESS_CMSMain
+   author2:
+      Role: =>PermissionRole.author
+      Code: CMS_ACCESS_AssetAdmin
+   access1:
+      Role: =>PermissionRole.access
+      Code: CMS_ACCESS_SecurityAdmin
+   access2:
+      Role: =>PermissionRole.access
+      Code: EDIT_PERMISSIONS
+
+Member:
+   author:
+      FirstName: Test
+      Surname: Author
+   access:
+      FirstName: Test
+      Surname: Access Administrator
+   globalauthor:
+      FirstName: Test
+      Surname: Global Author
+      
+Group:
+   author:
+      Title: Authors
+      Members: =>Member.author
+      Roles: =>PermissionRole.author
+   access:
+      Title: Access Administrators + Authors
+      Members: =>Member.access
+      Roles: =>PermissionRole.access,=>PermissionRole.author
+   globalauthor:
+      Parent: =>Group.author
+      Title: Global Authors
+      Members: =>Member.globalauthor
+
+Permission:
+   extra1:
+      Code: SITETREE_VIEW_ALL
+      Group: =>Group.author
+   globalauthor:
+      Code: SITETREE_EDIT_ALL
+      Group: =>Group.globalauthor

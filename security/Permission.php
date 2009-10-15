@@ -232,11 +232,20 @@ class Permission extends DataObject {
 			$groupCSV = implode(", ", $groupList);
 
 			// Raw SQL for efficiency
-			return DB::query("
+			return array_unique(DB::query("
 				SELECT \"Code\"
 				FROM \"Permission\"
 				WHERE \"Type\" = " . self::GRANT_PERMISSION . " AND \"GroupID\" IN ($groupCSV)
-			")->column();
+				
+				UNION
+				
+				SELECT \"Code\"
+				FROM \"PermissionRoleCode\" AS PRC
+				INNER JOIN \"PermissionRole\" AS PR ON PRC.\"RoleID\" = PR.\"ID\"
+				INNER JOIN \"Group_Roles\" AS GR ON GR.\"PermissionRoleID\" = PR.\"ID\"
+				WHERE \"GroupID\" IN ($groupCSV)
+			")->column());
+
 		} else {
 			return array();
 		}
