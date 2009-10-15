@@ -132,4 +132,42 @@ class HtmlEditorFieldTest extends FunctionalTest {
 		);
 	}
 	
+	public function testBrokenLinkTracking() {
+		$sitetree = new SiteTree();
+		$editor   = new HtmlEditorField('Content');
+		
+		$this->assertFalse((bool) $sitetree->HasBrokenLink);
+		
+		$editor->setValue('<p><a href="[sitetree_link id=0]">Broken Link</a></p>');
+		$editor->saveInto($sitetree);
+		
+		$this->assertTrue($sitetree->HasBrokenLink);
+		
+		$editor->setValue(sprintf (
+			'<p><a href="[sitetree_link id=%d]">Working Link</a></p>',
+			$this->idFromFixture('SiteTree', 'home')
+		));
+		$editor->saveInto($sitetree);
+		
+		$this->assertFalse((bool) $sitetree->HasBrokenLink);
+	}
+	
+	public function testBrokenLinkHighlighting() {
+		$sitetree = new SiteTree();
+		$editor   = new HtmlEditorField('Content');
+		
+		$editor->setValue('<a href="[sitetree_link id=0]">Broken Link</a>');
+		
+		$element = new SimpleXMLElement(html_entity_decode((string) new SimpleXMLElement($editor->Field())));
+		$this->assertContains('ss-broken', (string) $element['class'], 'A broken link class is added to broken links');
+		
+		$editor->setValue(sprintf (
+			'<a href="[sitetree_link id=%d]">Working Link</a>',
+			$this->idFromFixture('SiteTree', 'home')
+		));
+		
+		$element = new SimpleXMLElement(html_entity_decode((string) new SimpleXMLElement($editor->Field())));
+		$this->assertNotContains('ss-broken', (string) $element['class']);
+	}
+	
 }
