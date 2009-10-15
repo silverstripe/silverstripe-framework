@@ -94,7 +94,12 @@ class RedirectorPage extends Page {
 	
 	function syncLinkTracking() {
 		if ($this->RedirectionType == 'Internal') {
-			$this->HasBrokenLink = DataObject::get_by_id('SiteTree', $this->LinkToID) ? false : true;
+			if($this->LinkToID) {
+				$this->HasBrokenLink = DataObject::get_by_id('SiteTree', $this->LinkToID) ? false : true;
+			} else {
+				// An incomplete redirector page definitely has a broken link
+				$this->HasBrokenLink = true;
+			}
 		} else {
 			// TODO implement checking of a remote site
 			$this->HasBrokenLink = false;
