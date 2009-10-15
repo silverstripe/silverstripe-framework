@@ -102,7 +102,8 @@ class DirectorTest extends SapphireTest {
 		//$this->assertEquals(Director::makeRelative("$siteUrlNoProtocol/testpage"), 'testpage');
 		$this->assertEquals(Director::makeRelative('ftp://test.com'), 'ftp://test.com');
 		$this->assertEquals(Director::makeRelative('http://test.com'), 'http://test.com');
-		$this->assertEquals(Director::makeRelative('/relative'), '/relative');
+		// the below is not a relative URL, test makes no sense
+		// $this->assertEquals(Director::makeRelative('/relative'), '/relative');
 		$this->assertEquals(Director::makeRelative('relative'), 'relative');
 		$this->assertEquals(Director::makeRelative("$siteUrl/?url=http://test.com"), '?url=http://test.com');
 	}
