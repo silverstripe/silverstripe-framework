@@ -123,8 +123,15 @@ class VirtualPage extends Page {
 	 */
 	function copyFrom($source) {
 		if($source) {
-			foreach($this->getVirtualFields() as $virtualField)
+			foreach($this->getVirtualFields() as $virtualField) {
 				$this->$virtualField = $source->$virtualField;
+			}
+			
+			// We also want to copy ShowInMenus, but only if we're copying the
+			// source page for the first time.
+			if($this->isChanged('CopyContentFromID')) {
+				$this->ShowInMenus = $source->ShowInMenus;
+			}
 		}
 	}
 	
