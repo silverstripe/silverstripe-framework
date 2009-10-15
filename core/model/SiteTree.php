@@ -1021,7 +1021,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 				if($potentiallyInherited) {
 					// Group $potentiallyInherited by ParentID; we'll look at the permission of all those
 					// parents and then see which ones the user has permission on
-					$canEditSiteConfig = SiteConfig::current_site_config()->canEdit($member);
+					$canEditSiteConfig = SiteConfig::current_site_config()->canEdit($memberID);
 					foreach($potentiallyInherited as $item) {
 						if ($item->ParentID) $groupedByParent[$item->ParentID][] = $item->ID;
 						else $result[$item->ID] = $canEditSiteConfig;
