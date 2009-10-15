@@ -530,7 +530,10 @@ JS
 	function performReadonlyTransformation() {
 		$clone = clone $this;
 		$clone->setShowPagination(false);
-		$clone->setPermissions(array('show'));
+		
+		// Only include the show action if it was in the original CTF.
+		$clone->setPermissions(in_array('show', $this->permissions) ? array('show') : array());
+
 		$clone->addExtraClass( 'readonly' );
 		$clone->setReadonly(true);
 		return $clone;
