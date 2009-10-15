@@ -134,11 +134,13 @@ class CheckboxSetField extends OptionsetField {
 	 */
 	function saveInto(DataObject $record) {
 		$fieldname = $this->name ;
-		
+		var_dump($this);die();
 		if($fieldname && $record && ($record->has_many($fieldname) || $record->many_many($fieldname))) {
 			$idList = array();
 			if($this->value) foreach($this->value as $id => $bool) {
-			   if($bool) $idList[] = $id;
+			   if($bool) {
+					$idList[] = $id;
+				}
 			}
 			$record->$fieldname()->setByIDList($idList);
 		} elseif($fieldname && $record) {
