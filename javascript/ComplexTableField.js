@@ -20,7 +20,7 @@ ComplexTableField.prototype = {
 		if(defaultAction) {
 			rules['#'+this.id+' table.data tbody td'] = {
 				onclick: function(e) {
-					var link = $$('.'+defaultAction, Event.element(e).parentNode)[0].getAttribute('href');
+					var link = $$('.'+defaultAction, Event.element(e).parentNode)[0].href;
 					this.openPopup(null, link);
 					return false;
 				}.bind(this)
