@@ -1804,6 +1804,8 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	 * @uses SiteTreeDecorator->onAfterPublish()
 	 */
 	function doPublish() {
+		if (!$this->canPublish()) return false;
+		
 		$original = Versioned::get_one_by_stage("SiteTree", "Live", "\"SiteTree\".\"ID\" = $this->ID");
 		if(!$original) $original = new SiteTree();
 
@@ -1875,6 +1877,8 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	 * @uses SiteTreeDecorator->onAfterUnpublish()
 	 */
 	function doUnpublish() {
+		if (!$this->canPublish()) return false;
+		
 		$this->extend('onBeforeUnpublish');
 		
 		// Call delete on a cloned object so that this one doesn't lose its ID
