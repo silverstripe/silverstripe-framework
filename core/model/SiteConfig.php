@@ -5,7 +5,7 @@
  *
  * @author Tom Rix
  */
-class SiteConfig extends DataObject {
+class SiteConfig extends DataObject implements PermissionProvider {
 	static $db = array(
 		"Title" => "Varchar(255)",
 		"Tagline" => "Varchar(255)",
@@ -53,7 +53,7 @@ class SiteConfig extends DataObject {
 		$editorsOptionsSource["OnlyTheseUsers"] = _t('SiteTree.EDITONLYTHESE', "Only these people (choose from list)");
 		$editorsOptionsField->setSource($editorsOptionsSource);
 
-		if(!Permission::check('ADMIN')) {
+		if (!Permission::check('ADMIN') && !Permission::check('EDIT_SITECONFIG')) {
 			$fields->makeFieldReadonly($viewersOptionsField);
 			$fields->makeFieldReadonly($viewerGroupsField);
 			$fields->makeFieldReadonly($editorsOptionsField);
@@ -73,7 +73,7 @@ class SiteConfig extends DataObject {
 	 * @return Fieldset
 	 */
 	function getFormActions() {
-		if(Permission::check('ADMIN')) {
+		if (!Permission::check('ADMIN') && !Permission::check('EDIT_SITECONFIG')) {
 			$actions = new FieldSet(
 				new FormAction('save_siteconfig', 'Save')
 			);
@@ -148,5 +148,11 @@ class SiteConfig extends DataObject {
 		if($this->CanEditType == 'OnlyTheseUsers' && $member && $member->inGroups($this->EditorGroups())) return true;
 		
 		return false;
+	}
+	
+	function providePermissions() {
+		return array(
+			'EDIT_SITECONFIG' => 'Edit site config details, including top level page permissions'
+		);
 	}
 }
