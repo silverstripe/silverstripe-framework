@@ -71,6 +71,9 @@ class HtmlEditorField extends TextareaField {
 		$linkedPages = array();
 		$linkedFiles = array();
 		
+		$record->HasBrokenFile = false;
+		$record->HasBrokenLink = false;
+		
 		$htmlValue = new SS_HTMLValue($this->value);
 		
 		// Populate link tracking for internal links & links to asset files.
