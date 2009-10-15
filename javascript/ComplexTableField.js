@@ -14,10 +14,10 @@ ComplexTableField.prototype = {
 		
 		// Assume that the delete link uses the deleteRecord method
 		rules['#'+this.id+' table.data a.deletelink'] = {onclick: this.deleteRecord.bind(this)};
-		rules['#'+this.id+' table.data tbody td'] = {onclick: this.openPopup.bind(this)};
 		
 		// invoke row action-link based on default-action set in classname
-		if(typeof defaultAction != 'undefined' && defaultAction) {
+		defaultAction = this.getDefaultAction();
+		if(defaultAction) {
 			rules['#'+this.id+' table.data tbody td'] = {
 				onclick: function(e) {
 					var link = $$('.'+defaultAction, Event.element(e).parentNode)[0].getAttribute('href');
