@@ -192,8 +192,9 @@ class RequestHandler extends ViewableData {
 		}
 		
 		if($actions) {
-			// convert all keys and values to lowercase to allow for easier comparison, unless it is a permission code
-			array_change_key_case($actions, CASE_LOWER);
+			// convert all keys and values to lowercase to 
+			// allow for easier comparison, unless it is a permission code
+			$actions = array_change_key_case($actions, CASE_LOWER);
 			
 			foreach($actions as $key => $value) {
 				if(is_numeric($key)) $actions[$key] = strtolower($value);
