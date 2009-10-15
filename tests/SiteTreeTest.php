@@ -93,16 +93,18 @@ class SiteTreeTest extends SapphireTest {
 	 * Test that field which are set and then cleared are also transferred to the published site.
 	 */
 	function testPublishDeletedFields() {
+		$this->logInWithPermssion('ADMIN');
+		
 		$obj = $this->objFromFixture('Page', 'about');
 		$obj->MetaTitle = "asdfasdf";
 		$obj->write();
-		$obj->doPublish();
+		$this->assertTrue($obj->doPublish());
 		
 		$this->assertEquals('asdfasdf', DB::query("SELECT \"MetaTitle\" FROM \"SiteTree_Live\" WHERE \"ID\" = '$obj->ID'")->value());
 
 		$obj->MetaTitle = null;
 		$obj->write();
-		$obj->doPublish();
+		$this->assertTrue($obj->doPublish());
 
 		$this->assertNull(DB::query("SELECT \"MetaTitle\" FROM \"SiteTree_Live\" WHERE \"ID\" = '$obj->ID'")->value());
 		
@@ -316,6 +318,8 @@ class SiteTreeTest extends SapphireTest {
 	}
 
 	function testDeleteFromLiveOperatesRecursively() {
+		$this->logInWithPermssion('ADMIN');
+		
 		$pageAbout = $this->objFromFixture('Page', 'about');
 		$pageAbout->doPublish();
 		$pageStaff = $this->objFromFixture('Page', 'staff');

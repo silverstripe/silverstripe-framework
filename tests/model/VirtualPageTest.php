@@ -30,6 +30,8 @@ class VirtualPageTest extends SapphireTest {
 	 * are published
 	 */
 	function testPublishingSourcePagePublishesVirtualPages() {
+		$this->logInWithPermssion('ADMIN');
+
 		$master = $this->objFromFixture('Page', 'master');
 		$master->Title = "New title";
 		$master->MenuTitle = "New menutitle";
