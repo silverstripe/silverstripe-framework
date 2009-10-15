@@ -73,7 +73,7 @@ class SiteConfig extends DataObject implements PermissionProvider {
 	 * @return Fieldset
 	 */
 	function getFormActions() {
-		if (!Permission::check('ADMIN') && !Permission::check('EDIT_SITECONFIG')) {
+		if (Permission::check('ADMIN') || Permission::check('EDIT_SITECONFIG')) {
 			$actions = new FieldSet(
 				new FormAction('save_siteconfig', 'Save')
 			);
