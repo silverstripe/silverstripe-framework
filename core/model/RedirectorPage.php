@@ -92,6 +92,15 @@ class RedirectorPage extends Page {
 		}
 	}
 	
+	function syncLinkTracking() {
+		if ($this->RedirectionType == 'Internal') {
+			$this->HasBrokenLink = DataObject::get_by_id('SiteTree', $this->LinkToID) ? false : true;
+		} else {
+			// TODO implement checking of a remote site
+			$this->HasBrokenLink = false;
+		}
+	}
+	
 	function getCMSFields() {
 		Requirements::javascript(SAPPHIRE_DIR . "/javascript/RedirectorPage.js");
 		

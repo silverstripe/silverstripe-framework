@@ -1334,7 +1334,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 				if($candidateFile) {
 					$linkedFiles[] = $candidateFile->ID;
 				} else {
-					$this->HasBrokenLink = true;
+					$this->HasBrokenFile = true;
 				}
 			} else if($link == '' || $link[0] == '/') {
 				$this->HasBrokenLink = true;

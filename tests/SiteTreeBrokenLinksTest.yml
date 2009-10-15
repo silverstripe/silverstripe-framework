@@ -1,0 +1,27 @@
+Page:
+    content:
+        Title: ContentPage
+        Content: This is some happy content.
+    about:
+        Title: About
+        URLSegment: about
+        Content: about us here
+    brokenInternalRedirector:
+        RedirectionType: Internal
+        Title: RedirectorPageToBrokenInteralPage
+        LinkToID: 0
+    workingInternalRedirector:
+        RedirectionType: Internal
+        Title: RedirectorPageToBrokenInteralPage
+        LinkTo: =>Page.content
+
+File:
+    privacypolicy:
+        Name: privacypolicy.pdf
+        Title: privacypolicy.pdf
+        Filename: assets/privacypolicy.pdf
+    	
+ErrorPage:
+    404:
+        Title: Page not Found
+        ErrorCode: 404
