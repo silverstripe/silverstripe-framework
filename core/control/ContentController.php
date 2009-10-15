@@ -25,7 +25,11 @@ class ContentController extends Controller {
 	static $url_handlers = array(
 		'widget/$ID/$Action' => 'handleWidget'
 	);
-
+	
+	public static $allowed_actions = array (
+		'PageComments'
+	);
+	
 	/**
 	 * The ContentController will take the URLSegment parameter from the URL and use that to look
 	 * up a SiteTree record.
