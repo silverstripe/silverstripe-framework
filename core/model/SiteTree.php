@@ -1034,7 +1034,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 			$combinedStageResult = $combinedStageResult + $result;
 		}
 
-		return $combinedStageResult;
+		return isset($combinedStageResult) ? $combinedStageResult : array();
 		
 		
 		/*
