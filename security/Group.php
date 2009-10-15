@@ -100,7 +100,7 @@ class Group extends DataObject {
 			$fields->removeFieldFromTab('Root', 'Permissions');
 			$fields->removeFieldFromTab('Root', 'IP Addresses');
 		}
-		
+
 		if(Permission::check('EDIT_PERMISSIONS') && DataObject::get('PermissionRole')) {
 			$fields->addFieldToTab(_t('SecurityAdmin.ROLES', 'Roles'),
 				new LiteralField(
