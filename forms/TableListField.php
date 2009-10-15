@@ -37,6 +37,8 @@ class TableListField extends FormField {
 	
 	protected $fieldList;
 	
+	protected $disableSorting = false;
+	
 	/**
 	 * @var $fieldListCsv array
 	 */
@@ -342,6 +344,10 @@ JS
 		}
 		return new DataObjectSet($headings);
 	}
+	
+	function disableSorting($to = true) {
+		$this->disableSorting = $to;
+	}
 
 	/**
 	 * Determines if a field is "sortable".
@@ -352,7 +358,7 @@ JS
 	 * @return bool
 	 */	
 	function isFieldSortable($fieldName) {
-		if($this->customSourceItems) {
+		if($this->customSourceItems || $this->disableSorting) {
 			return false;
 		}
 		
@@ -362,8 +368,14 @@ JS
 			$query = $this->__cachedQuery = $this->getQuery();
 		}
 		$sql = $query->sql();
+		
+		$selects = $query->select;
+		foreach($selects as $i => $sel) {
+			if (preg_match('/"(.+?)"\."(.+?)"/', $sel, $matches)) $selects[$i] = $matches[2];
+		}
+		
 		$SQL_fieldName = Convert::raw2sql($fieldName);
-		return (in_array($SQL_fieldName,$query->select) || stripos($sql,"AS {$SQL_fieldName}"));
+		return (in_array($SQL_fieldName,$selects) || stripos($sql,"AS {$SQL_fieldName}"));
 	}
 	
 	/**

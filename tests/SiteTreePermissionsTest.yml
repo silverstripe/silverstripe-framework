@@ -1,3 +1,9 @@
+SiteConfig:
+   default:
+      Title: My test site
+      Tagline: There is no doubt this is a great test site
+      CanViewType: Anyone
+      CanEditType: LoggedInUsers
 Permission:
    cmsmain1:
       Code: CMS_ACCESS_CMSMain
@@ -50,6 +56,10 @@ Page:
       CanEditType: OnlyTheseUsers
       EditorGroups: =>Group.subadmingroup
       URLSegment: restrictedEditOnlySubadminGroup
+   inheritWithNoParent:
+      CanEditType: Inherit
+      CanViewType: Inherit
+      URLSegment: inheritWithNoParent
    parent_restrictedViewOnlySubadminGroup:
       CanViewType: OnlyTheseUsers
       ViewerGroups: =>Group.subadmingroup

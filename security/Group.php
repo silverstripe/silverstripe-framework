@@ -101,6 +101,21 @@ class Group extends DataObject {
 			$fields->removeFieldFromTab('Root', 'IP Addresses');
 		}
 		
+		if(Permission::check('EDIT_PERMISSIONS') && DataObject::get('PermissionRole')) {
+			$fields->addFieldToTab(_t('SecurityAdmin.ROLES', 'Roles'),
+				new LiteralField(
+					"", 
+					"<p>" . 
+					_t('SecurityAdmin.ROLESDESCRIPTION',
+						"This section allows you to add roles to this group. Roles are logical groupings of permissions, which can be editied in the Roles tab"
+					) . 
+					"</p>"
+				)
+			);
+			
+			$fields->addFieldToTab(_t('SecurityAdmin.ROLES', 'Roles'), new CheckboxSetField('Roles', 'Roles', DataObject::get('PermissionRole')));
+		}
+		
 		$memberList->setController($this);
 		$memberList->setPermissions(array('show', 'edit', 'delete', 'export', 'add'));
 		$memberList->setParentClass('Group');

@@ -16,6 +16,8 @@
 $cacheOn = true;
 $cacheDebug = false;
 $hostmapLocation = '../subsites/host-map.php';
+date_default_timezone_set('Pacific/Auckland');
+
 
 if ($cacheOn) {
 	if (file_exists($hostmapLocation)) {
@@ -34,14 +36,14 @@ if ($cacheOn) {
 	$file = $file ? $file : 'index';
 	
 	if (file_exists('../cache/'.$cacheDir.$file.'.html')) {
-		header('X-cache: hit at '.date('r'));
+		header('X-cache: hit at '.@date('r'));
 		echo file_get_contents('../cache/'.$cacheDir.$file.'.html');
 	} elseif (file_exists('../cache/'.$cacheDir.$file.'.php')) {
-		header('X-cache: hit at '.date('r'));
+		header('X-cache: hit at '.@date('r'));
 		include_once '../cache/'.$cacheDir.$file.'.php';
 		if ($cacheDebug) echo "<h1>File was cached</h1>";
 	} else {
-		header('X-cache: miss at '.date('r') . ' on ' . $cacheDir . $file);
+		header('X-cache: miss at '.@date('r') . ' on ' . $cacheDir . $file);
 		// No cache hit... fallback!!!
 		include 'main.php';
 		if ($cacheDebug) echo "<h1>File was !NOT! cached</h1>";
