@@ -217,6 +217,7 @@ class TableListFieldTest_TestController extends Controller {
 			"D" => "Col D",
 			"E" => "Col E",
 		));
+		$table->disableSorting();
 
 		// A TableListField must be inside a form for its links to be generated
 		return new Form($this, "TestForm", new FieldSet(
