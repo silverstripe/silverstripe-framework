@@ -90,6 +90,11 @@ class File extends DataObject {
 	function TreeTitle() {
 		return $this->Name;
 	}
+	
+	// Used by AssetTableField
+	function BackLinkTrackingCount() {
+		return $this->BackLinkTracking()->Count();
+	}
 
 	/**
 	 * Event handler called before deleting from the database.

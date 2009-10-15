@@ -328,7 +328,7 @@ class Folder extends File {
 			$this,
 			"Files",
 			"File", 
-			array("Title" => _t('Folder.TITLE', "Title"), "Filename" => _t('Folder.FILENAME', "Filename")), 
+			array("Title" => _t('Folder.TITLE', "Title"), "Filename" => _t('Folder.FILENAME', "Filename")),
 			""
 		);
 		$fileList->setFolder($this);
