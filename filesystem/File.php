@@ -376,6 +376,8 @@ class File extends DataObject {
 	 * Rewrite links to the $old file to now point to the $new file
 	 */
 	protected function updateLinks($old, $new) {
+		if(class_exists('Subsite')) Subsite::disable_subsite_filter(true);
+	
 		$pages = $this->BackLinkTracking();
 
 		if($pages) {
@@ -388,6 +390,8 @@ class File extends DataObject {
 				}
 			}
 		}
+		
+		if(class_exists('Subsite')) Subsite::disable_subsite_filter(false);
 	}
 
 	function setParentID($parentID) {
