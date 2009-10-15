@@ -139,13 +139,13 @@ class ComplexTableField extends TableListField {
 		'edit' => array(
 			'label' => 'Edit',
 			'icon' => 'cms/images/edit.gif', 
-			'icon_disabled' => 'cms/images/show_disabled.png',
+			'icon_disabled' => 'cms/images/edit_disabled.gif',
 			'class' => 'popuplink editlink',
 		),
 		'delete' => array(
 			'label' => 'Delete',
 			'icon' => 'cms/images/delete.gif', 
-			'icon_disabled' => 'cms/images/show_disabled.png',
+			'icon_disabled' => 'cms/images/delete_disabled.gif',
 			'class' => 'popuplink deletelink',
 		),
 	);
