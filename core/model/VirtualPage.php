@@ -48,6 +48,12 @@ class VirtualPage extends Page {
 		return $this->CopyContentFrom();
 	}
 	
+	function allowedChildren() {
+		if($this->CopyContentFrom()) {
+			return $this->CopyContentFrom()->allowedChildren();
+		}
+	}
+	
 		
 	/**
 	 * Generate the CMS fields from the fields from the original page.
@@ -117,7 +123,7 @@ class VirtualPage extends Page {
 	 */
 	function copyFrom($source) {
 		if($source) {
-			foreach($this->getVirtualFields() AS $virtualField)
+			foreach($this->getVirtualFields() as $virtualField)
 				$this->$virtualField = $source->$virtualField;
 		}
 	}
