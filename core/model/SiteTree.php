@@ -1892,6 +1892,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		// Call delete on a cloned object so that this one doesn't lose its ID
 		$this->flushCache();
 		$clone = DataObject::get_by_id("SiteTree", $this->ID);
+		if (!$clone) $clone = Versioned::get_one_by_stage('SiteTree', 'Live', '"SiteTree_Live"."ID" = ' . $this->ID);
 		$clone->deleteFromStage('Live');
 
 		$this->Status = "Unpublished";
