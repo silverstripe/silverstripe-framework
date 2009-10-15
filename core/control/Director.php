@@ -202,10 +202,7 @@ class Director {
 		if (@parse_url($url, PHP_URL_HOST) != '') {
 			$bits = parse_url($url);
 			$_SERVER['HTTP_HOST'] = $bits['host'];
-			// Implementing a custom absolute->relative code snippet as
-			// Director::makeRelative() chokes on a url like http://localhost
-			// it will just return the original string, not /, or ''.
-			$url = (isset($bits['path']) ? $bits['path'] : '/') . (isset($bits['query']) ? '?'.$bits['query'] : '') . (isset($bits['fragment']) ? '#'.$bits['fragment'] : '');
+			$url = Director::makeRelative($url);
 		}
 
 		$urlWithQuerystring = $url;
@@ -487,6 +484,8 @@ class Director {
 		if(preg_match('/^https?[^:]*:\/\//',$url)) {
 			$base1 = self::absoluteBaseURL();
 			if(substr($url,0,strlen($base1)) == $base1) return substr($url,strlen($base1));
+			// Convert http://www.mydomain.com/mysitedir to ''
+			else if(substr($base1,-1)=="/" && $url == substr($base1,0,-1)) return "";
 		}
 		
 		// test for base folder, e.g. /var/www
