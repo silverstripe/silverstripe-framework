@@ -101,20 +101,20 @@ class Group extends DataObject {
 			$fields->removeFieldFromTab('Root', 'IP Addresses');
 		}
 
-		if(Permission::check('EDIT_PERMISSIONS') && DataObject::get('PermissionRole')) {
-			$fields->addFieldToTab(_t('SecurityAdmin.ROLES', 'Roles'),
-				new LiteralField(
-					"", 
-					"<p>" . 
-					_t('SecurityAdmin.ROLESDESCRIPTION',
-						"This section allows you to add roles to this group. Roles are logical groupings of permissions, which can be editied in the Roles tab"
-					) . 
-					"</p>"
-				)
+		if(Permission::check('APPLY_ROLES') && DataObject::get('PermissionRole')) { 
+			$fields->addFieldToTab('Root.' . _t('SecurityAdmin.ROLES', 'Roles'), 
+				new LiteralField( 
+					"",  
+					"<p>" .  
+					_t('SecurityAdmin.ROLESDESCRIPTION', 
+						"This section allows you to add roles to this group. Roles are logical groupings of permissions, which can be editied in the Roles tab" 
+					) .  
+					 "</p>" 
+				) 
 			);
-			
-			$fields->addFieldToTab(_t('SecurityAdmin.ROLES', 'Roles'), new CheckboxSetField('Roles', 'Roles', DataObject::get('PermissionRole')));
-		}
+			$roleData = Permission::check('ADMIN') ? DataObject::get('PermissionRole') : DataObject::get('PermissionRole', 'OnlyAdminCanApply = 0');
+			$fields->addFieldToTab('Root.' . _t('SecurityAdmin.ROLES', 'Roles'), new CheckboxSetField('Roles', 'Roles', $roleData)); 
+		} 
 		
 		$memberList->setController($this);
 		$memberList->setPermissions(array('show', 'edit', 'delete', 'export', 'add'));
