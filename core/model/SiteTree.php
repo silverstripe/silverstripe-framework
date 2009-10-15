@@ -1491,8 +1491,6 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	 * Triggers the onRenameLinkedAsset action on extensions.
 	 */
 	function rewriteFileURL($old, $new) {
-		Debug::message("Rewriting $old to $new");
-		
 		// TODO: Check all HTMLText fields
 		$fieldName = "Content";
 		if($fieldName) {
