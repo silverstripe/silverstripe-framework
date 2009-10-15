@@ -1299,8 +1299,49 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		}
 		
 		DataObject::set_context_obj(null);
-		
+
+		$this->syncLinkTracking();
+
 		parent::onBeforeWrite();
+	}
+	
+	function syncLinkTracking() {
+		// Set LinkTracking appropriately
+		$links = HTTP::getLinksIn($this->Content);
+		$linkedPages = array();
+		$linkedFiles = array();
+		$this->HasBrokenLink = false;
+		$this->HasBrokenFile = false;
+		
+		if($links) foreach($links as $link) {
+			if(preg_match('/^([A-Za-z0-9_-]+)\/?(#.*)?$/', $link, $parts)) {
+				$candidatePage = DataObject::get_one("SiteTree", "\"URLSegment\" = '" . urldecode( $parts[1] ). "'", false);
+				if($candidatePage) {
+					$linkedPages[] = $candidatePage->ID;
+				} else {
+					$this->HasBrokenLink = true;
+				}
+			} else if($link == '' || $link[0] == '/') {
+				$this->HasBrokenLink = true;
+			} else if($candidateFile = DataObject::get_one("File", "\"Filename\" = '" . Convert::raw2sql(urldecode($link)) . "'", false)) {
+				$linkedFiles[] = $candidateFile->ID;
+			}
+		}
+		
+		$images = HTTP::getImagesIn($this->Content);
+		if($images) {
+			foreach($images as $image) {
+				$image = Director::makeRelative($image);
+				if(substr($image,0,7) == 'assets/') {
+					$candidateImage = DataObject::get_one("File", "\"Filename\" = '$image'");
+					if($candidateImage) $linkedFiles[] = $candidateImage->ID;
+					else $this->HasBrokenFile = true;
+				}
+			}
+		}
+		
+		$this->LinkTracking()->setByIDList($linkedPages);
+		$this->ImageTracking()->setByIDList($linkedFiles);
 	}
 	
 	function onAfterWrite() {
@@ -1312,6 +1353,19 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		if($linkedPages) foreach($linkedPages as $page) {
 			$page->copyFrom($page->CopyContentFrom());
 			$page->write();
+		}
+		
+		// If the URLSegment has been changed, rewrite links
+		if($this->isChanged('URLSegment', 2)) {
+			if($this->hasMethod('BackLinkTracking')) {
+				$links = $this->BackLinkTracking();
+				if($links) {
+					foreach($links as $link) {
+						$link->rewriteLink($this->original['URLSegment'] . '/', $this->URLSegment . '/');
+						$link->write();
+					}
+				}
+			}
 		}
 		
 		parent::onAfterWrite();
@@ -1739,11 +1793,11 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 
 		// Handle activities undertaken by decorators
 		$this->extend('onBeforePublish', $original);
-		
 		$this->Status = "Published";
 		//$this->PublishedByID = Member::currentUser()->ID;
 		$this->write();
 		$this->publish("Stage", "Live");
+
 
 		if(DB::getConn() instanceof MySQLDatabase) {
 			// Special syntax for MySQL (grr!)
@@ -1768,6 +1822,31 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 			$page->copyFrom($page->CopyContentFrom());
 			$page->doPublish();
 		}
+		
+		// Fix links that are different on staging vs live
+		$needsWriting = false;
+		$this->syncLinkTracking();
+		foreach($this->LinkTracking() as $linkedPage) {
+			$livePage = Versioned::get_one_by_stage('Page', 'Live', '"SiteTree"."ID" = ' . $linkedPage->ID);
+			if($livePage && $livePage->URLSegment != $linkedPage->URLSegment) {
+
+				$needsWriting = true;
+				$this->rewriteLink($linkedPage->URLSegment . '/', $livePage->URLSegment . '/');
+			}
+		}
+		if($needsWriting) {
+			$this->writeToStage('Live');
+		}
+		
+		// If this url has changed, then we need to fix pages linked to this one
+		if($original->URLSegment && $original->URLSegment != $this->URLSegment) {
+			foreach($this->BackLinkTracking() as $linkedPage) {
+				$linkedPageLive = Versioned::get_one_by_stage('Page', 'Live', '"SiteTree"."ID" = ' . $linkedPage->ID);
+				$linkedPageLive->rewriteLink($original->URLSegment . '/', $this->URLSegment . '/');
+				$linkedPageLive->writeToStage('Live');
+			}
+		}
+		
 
 		// Handle activities undertaken by decorators
 		$this->extend('onAfterPublish', $original);
