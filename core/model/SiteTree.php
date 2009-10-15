@@ -1323,7 +1323,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 				}
 			} else if($link == '' || $link[0] == '/') {
 				$this->HasBrokenLink = true;
-			} else if($candidateFile = DataObject::get_one("File", "\"Filename\" = '" . Convert::raw2sql(urldecode($link)) . "'", false)) {
+			} else if($candidateFile = File::find(Convert::raw2sql(urldecode($link)))) {
 				$linkedFiles[] = $candidateFile->ID;
 			}
 		}
@@ -1333,7 +1333,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 			foreach($images as $image) {
 				$image = Director::makeRelative($image);
 				if(substr($image,0,7) == 'assets/') {
-					$candidateImage = DataObject::get_one("File", "\"Filename\" = '$image'");
+					$candidateImage = File::find($image);
 					if($candidateImage) $linkedFiles[] = $candidateImage->ID;
 					else $this->HasBrokenFile = true;
 				}
