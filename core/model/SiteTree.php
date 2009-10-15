@@ -752,7 +752,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		// check for inherit
 		if($this->CanViewType == 'Inherit') {
 			if($this->ParentID) return $this->Parent()->canView($member);
-			else return true;
+			else return SiteConfig::current_site_config()->canView($member);
 		}
 		
 		// check for any logged-in users
@@ -1021,8 +1021,10 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 				if($potentiallyInherited) {
 					// Group $potentiallyInherited by ParentID; we'll look at the permission of all those
 					// parents and then see which ones the user has permission on
+					$canEditSiteConfig = SiteConfig::current_site_config()->canEdit($member);
 					foreach($potentiallyInherited as $item) {
-						$groupedByParent[$item->ParentID][] = $item->ID;
+						if ($item->ParentID) $groupedByParent[$item->ParentID][] = $item->ID;
+						else $result[$item->ID] = $canEditSiteConfig;
 					}
 
 					$actuallyInherited = self::can_edit_multiple(array_keys($groupedByParent), $memberID);

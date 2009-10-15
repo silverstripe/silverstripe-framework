@@ -402,6 +402,10 @@ HTML;
 			}
 		}
 	}
+	
+	function SiteConfig() {
+		return SiteConfig::current_site_config();
+	}
 
 	/**
 	 * Returns the xml:lang and lang attributes
