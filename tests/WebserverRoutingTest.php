@@ -17,7 +17,7 @@ class WebserverRoutingTest extends SapphireTest {
 	function testCanAccessWebserverThroughCurl() {
 		if(!function_exists('curl_init')) return;
 		
-		$url = Director::absoluteBaseURL() . 'WebserverRoutingTest_Controller/?usetestmanifest=1';
+		$url = Director::absoluteBaseURL() . 'WebserverRoutingTest_Controller/?usetestmanifest=1&flush=1';
 		
 		$ch = curl_init();
 		curl_setopt ($ch, CURLOPT_URL,$url );
