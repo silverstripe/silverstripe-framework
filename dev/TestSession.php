@@ -134,7 +134,7 @@ class TestSession {
 		require_once("thirdparty/simpletest/page.php");
 		require_once("thirdparty/simpletest/form.php");
 
-		$builder = &new SimplePageBuilder();
+		$builder = new SimplePageBuilder();
 		if($this->lastResponse) {
 			$page = &$builder->parse(new TestSession_STResponseWrapper($this->lastResponse));
 			$builder->free();
