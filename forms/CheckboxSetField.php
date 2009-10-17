@@ -80,7 +80,7 @@ class CheckboxSetField extends OptionsetField {
 		$odd = 0;
 		$options = '';
 
-		foreach($source as $index => $item) {
+		if($source) foreach($source as $index => $item) {
 			if(is_a($item, 'DataObject')) {
 				$key = $item->ID;
 				$value = $item->Title;
