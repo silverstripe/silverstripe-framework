@@ -27,6 +27,52 @@ class SiteTreeActionsTest extends FunctionalTest {
 		
 		parent::tear_down_once();
 	}
+	
+	function testActionsReadonly() {
+		if(class_exists('SiteTreeCMSWorkflow')) return true;
+		
+		$page = new SiteTreeActionsTest_Page();
+		$page->CanEditType = 'LoggedInUsers';
+		$page->write();
+		$page->doPublish();
+	
+		$readonlyEditor = $this->objFromFixture('Member', 'cmsreadonlyeditor');
+		$this->session()->inst_set('loggedInAs', $readonlyEditor->ID);
+	
+		$actionsArr = $page->getCMSActions()->column('Name');
+	
+		$this->assertNotContains('action_save',$actionsArr);
+		$this->assertNotContains('action_publish',$actionsArr);
+		$this->assertNotContains('action_unpublish',$actionsArr);
+		$this->assertNotContains('action_delete',$actionsArr);
+		$this->assertNotContains('action_deletefromlive',$actionsArr);
+		$this->assertNotContains('action_rollback',$actionsArr);
+		$this->assertNotContains('action_revert',$actionsArr);
+	}
+	
+	function testActionsNoDeletePublishedRecord() {
+		if(class_exists('SiteTreeCMSWorkflow')) return true;
+		
+		$page = new SiteTreeActionsTest_Page();
+		$page->CanEditType = 'LoggedInUsers';
+		$pageID = $page->ID;
+		$page->write();
+		$page->doPublish();
+		$page->deleteFromStage('Stage');
+		
+		// Get the live version of the page
+		$page = Versioned::get_one_by_stage("SiteTree", "Live", "\"SiteTree\".\"ID\" = $pageID");
+	
+		$editor = $this->objFromFixture('Member', 'cmsnodeleteeditor');
+		$this->session()->inst_set('loggedInAs', $editor->ID);
+	
+		$actionsArr = $page->getCMSActions()->column('Name');
+	
+		$this->assertContains('action_save',$actionsArr);
+		$this->assertContains('action_publish',$actionsArr);
+		$this->assertNotContains('action_delete',$actionsArr);
+		$this->assertNotContains('action_deletefromlive',$actionsArr);
+	}
 
 	function testActionsPublishedRecord() {
 		if(class_exists('SiteTreeCMSWorkflow')) return true;
@@ -76,7 +122,7 @@ class SiteTreeActionsTest extends FunctionalTest {
 		$this->assertNotContains('action_rollback',$actionsArr);
 		$this->assertContains('action_revert',$actionsArr);
 	}
-
+	
 	function testActionsChangedOnStageRecord() {
 		if(class_exists('SiteTreeCMSWorkflow')) return true;
 		
@@ -100,6 +146,16 @@ class SiteTreeActionsTest extends FunctionalTest {
 		$this->assertNotContains('action_deletefromlive',$actionsArr);
 		$this->assertContains('action_rollback',$actionsArr);
 		$this->assertNotContains('action_revert',$actionsArr);
+	}
+}
+
+class SiteTreeActionsTest_Page extends Page implements TestOnly {
+	function canEdit($member = null) {
+		return Permission::checkMember($member, 'SiteTreeActionsTest_Page_CANEDIT');
+	}
+	
+	function canDelete($member = null) {
+		return Permission::checkMember($member, 'SiteTreeActionsTest_Page_CANDELETE');
 	}
 }
 ?>

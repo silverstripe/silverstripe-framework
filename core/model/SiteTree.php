@@ -1826,16 +1826,20 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 				if($this->ExistsOnLive) {
 					// "restore"
 					$actions->push(new FormAction('revert',_t('CMSMain.RESTORE','Restore')));
-					// "delete from live"
-					$actions->push(new FormAction('deletefromlive',_t('CMSMain.DELETEFP','Delete from the published site')));
+					if($this->canDelete()) {
+						// "delete from live"
+						$actions->push(new FormAction('deletefromlive',_t('CMSMain.DELETEFP','Delete from the published site')));
+					}
 				} else {
 					// "restore"
 					$actions->push(new FormAction('restore',_t('CMSMain.RESTORE','Restore')));
 				}
 			} else {
-				// "delete"
-				$actions->push($deleteAction = new FormAction('delete',_t('CMSMain.DELETE','Delete from the draft site')));
-				$deleteAction->addExtraClass('delete');
+				if($this->canDelete()) {
+					// "delete"
+					$actions->push($deleteAction = new FormAction('delete',_t('CMSMain.DELETE','Delete from the draft site')));
+					$deleteAction->addExtraClass('delete');
+				}
 			
 				// "save"
 				$actions->push(new FormAction('save',_t('CMSMain.SAVE','Save')));
