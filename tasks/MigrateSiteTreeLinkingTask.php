@@ -31,10 +31,11 @@ class MigrateSiteTreeLinkingTask extends BuildTask {
 			foreach($tracking as $link) {
 				$linked = DataObject::get_by_id('SiteTree', $link['ChildID']);
 				
-				$page->{$link['FieldName']} = preg_replace (
+				// TOOD: Replace in all HTMLText fields
+				$page->Content = preg_replace (
 					"/href *= *([\"']?){$linked->URLSegment}\/?/i",
 					"href=$1[sitetree_link id={$linked->ID}]",
-					$page->{$link['FieldName']},
+					$page->Content,
 					-1,
 					$replaced
 				);
