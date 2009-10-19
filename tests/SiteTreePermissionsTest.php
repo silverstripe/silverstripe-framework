@@ -258,6 +258,8 @@ class SiteTreePermissionsTest extends FunctionalTest {
 		$page = $this->objFromFixture('Page', 'restrictedEditLoggedInUsers');
 		$pageID = $page->ID;
 		
+		$this->logInWithPermssion("ADMIN");
+		
 		$page->doPublish();
 		$page->deleteFromStage('Stage');
 

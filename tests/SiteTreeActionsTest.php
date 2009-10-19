@@ -31,13 +31,13 @@ class SiteTreeActionsTest extends FunctionalTest {
 	function testActionsReadonly() {
 		if(class_exists('SiteTreeCMSWorkflow')) return true;
 		
+		$readonlyEditor = $this->objFromFixture('Member', 'cmsreadonlyeditor');
+		$this->session()->inst_set('loggedInAs', $readonlyEditor->ID);
+	
 		$page = new SiteTreeActionsTest_Page();
 		$page->CanEditType = 'LoggedInUsers';
 		$page->write();
 		$page->doPublish();
-	
-		$readonlyEditor = $this->objFromFixture('Member', 'cmsreadonlyeditor');
-		$this->session()->inst_set('loggedInAs', $readonlyEditor->ID);
 	
 		$actionsArr = $page->getCMSActions()->column('Name');
 	
@@ -52,38 +52,43 @@ class SiteTreeActionsTest extends FunctionalTest {
 	
 	function testActionsNoDeletePublishedRecord() {
 		if(class_exists('SiteTreeCMSWorkflow')) return true;
+
+		$this->logInWithPermssion('ADMIN');
 		
 		$page = new SiteTreeActionsTest_Page();
 		$page->CanEditType = 'LoggedInUsers';
-		$pageID = $page->ID;
 		$page->write();
+		$pageID = $page->ID;
 		$page->doPublish();
 		$page->deleteFromStage('Stage');
 		
 		// Get the live version of the page
 		$page = Versioned::get_one_by_stage("SiteTree", "Live", "\"SiteTree\".\"ID\" = $pageID");
-	
+		$this->assertType("SiteTree", $page);
+		
+		// Check that someone without the right permission can't delete the page
 		$editor = $this->objFromFixture('Member', 'cmsnodeleteeditor');
 		$this->session()->inst_set('loggedInAs', $editor->ID);
-	
+
 		$actionsArr = $page->getCMSActions()->column('Name');
-	
-		$this->assertContains('action_save',$actionsArr);
-		$this->assertContains('action_publish',$actionsArr);
-		$this->assertNotContains('action_delete',$actionsArr);
 		$this->assertNotContains('action_deletefromlive',$actionsArr);
+
+		// Check that someone with the right permission can delete the page
+ 		$this->objFromFixture('Member', 'cmseditor')->logIn();
+		$actionsArr = $page->getCMSActions()->column('Name');
+		$this->assertContains('action_deletefromlive',$actionsArr);
 	}
 
 	function testActionsPublishedRecord() {
 		if(class_exists('SiteTreeCMSWorkflow')) return true;
+
+		$author = $this->objFromFixture('Member', 'cmseditor');
+		$this->session()->inst_set('loggedInAs', $author->ID);
 		
 		$page = new Page();
 		$page->CanEditType = 'LoggedInUsers';
 		$page->write();
 		$page->doPublish();
-	
-		$author = $this->objFromFixture('Member', 'cmseditor');
-		$this->session()->inst_set('loggedInAs', $author->ID);
 	
 		$actionsArr = $page->getCMSActions()->column('Name');
 	
@@ -98,6 +103,9 @@ class SiteTreeActionsTest extends FunctionalTest {
 	
 	function testActionsDeletedFromStageRecord() {
 		if(class_exists('SiteTreeCMSWorkflow')) return true;
+
+		$author = $this->objFromFixture('Member', 'cmseditor');
+		$this->session()->inst_set('loggedInAs', $author->ID);
 		
 		$page = new Page();
 		$page->CanEditType = 'LoggedInUsers';
@@ -108,9 +116,6 @@ class SiteTreeActionsTest extends FunctionalTest {
 		
 		// Get the live version of the page
 		$page = Versioned::get_one_by_stage("SiteTree", "Live", "\"SiteTree\".\"ID\" = $pageID");
-		
-		$author = $this->objFromFixture('Member', 'cmseditor');
-		$this->session()->inst_set('loggedInAs', $author->ID);
 		
 		$actionsArr = $page->getCMSActions()->column('Name');
 		
@@ -126,6 +131,9 @@ class SiteTreeActionsTest extends FunctionalTest {
 	function testActionsChangedOnStageRecord() {
 		if(class_exists('SiteTreeCMSWorkflow')) return true;
 		
+		$author = $this->objFromFixture('Member', 'cmseditor');
+		$this->session()->inst_set('loggedInAs', $author->ID);
+		
 		$page = new Page();
 		$page->CanEditType = 'LoggedInUsers';
 		$page->write();
@@ -133,9 +141,6 @@ class SiteTreeActionsTest extends FunctionalTest {
 		$page->Content = 'Changed on Stage';
 		$page->write();
 		$page->flushCache();
-		
-		$author = $this->objFromFixture('Member', 'cmseditor');
-		$this->session()->inst_set('loggedInAs', $author->ID);
 		
 		$actionsArr = $page->getCMSActions()->column('Name');
 		
