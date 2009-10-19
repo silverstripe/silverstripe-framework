@@ -1370,19 +1370,6 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 			$page->write();
 		}
 		
-		// If the URLSegment has been changed, rewrite links
-		if($this->isChanged('URLSegment', 2)) {
-			if($this->hasMethod('BackLinkTracking')) {
-				$links = $this->BackLinkTracking();
-				if($links) {
-					foreach($links as $link) {
-						$link->rewriteLink($this->original['URLSegment'] . '/', $this->URLSegment . '/');
-						$link->write();
-					}
-				}
-			}
-		}
-		
 		parent::onAfterWrite();
 	}
 	
@@ -1469,23 +1456,6 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		);
 		
 		return self::get_by_link($link);
-	}
-	
-	/**
-	 * Replace a URL in html content with a new URL.
-	 * @param string $old The old URL
-	 * @param string $new The new URL
-	 */
-	function rewriteLink($old, $new) {
-		$fields = $this->getCMSFields(null)->dataFields();
-		foreach($fields as $field) {
-			if(is_a($field, 'HtmlEditorField')) {
-				$fieldName = $field->Name();
-				$field->setValue($this->$fieldName);
-				$field->rewriteLink($old, $new);
-				$field->saveInto($this);
-			}
-		}
 	}
 	
 	/**
