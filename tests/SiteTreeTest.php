@@ -26,10 +26,6 @@ class SiteTreeTest extends SapphireTest {
 		if(self::$origTranslatableSettings['has_extension']) 
 			Object::remove_extension('SiteTree', 'Translatable');
 
-		// clear singletons, they're caching old extension info which is used in DatabaseAdmin->doBuild()
-		global $_SINGLETONS;
-		$_SINGLETONS = array();
-
 		// recreate database with new settings
 		$dbname = self::create_temp_db();
 		DB::set_alternative_database_name($dbname);
@@ -43,10 +39,6 @@ class SiteTreeTest extends SapphireTest {
 
 		Translatable::set_default_locale(self::$origTranslatableSettings['default_locale']);
 		Translatable::set_current_locale(self::$origTranslatableSettings['default_locale']);
-		
-		// clear singletons, they're caching old extension info which is used in DatabaseAdmin->doBuild()
-		global $_SINGLETONS;
-		$_SINGLETONS = array();
 		
 		self::kill_temp_db();
 		self::create_temp_db();

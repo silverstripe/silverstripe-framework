@@ -29,10 +29,6 @@ class TranslatableSearchFormTest extends FunctionalTest {
 		if(!self::$origTranslatableSettings['has_extension']) Object::add_extension('SiteTree', 'Translatable');
 		Object::add_extension('TranslatableTest_DataObject', 'Translatable');
 		
-		// clear singletons, they're caching old extension info which is used in DatabaseAdmin->doBuild()
-		global $_SINGLETONS;
-		$_SINGLETONS = array();
-
 		// recreate database with new settings
 		$dbname = self::create_temp_db();
 		DB::set_alternative_database_name($dbname);

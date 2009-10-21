@@ -79,9 +79,6 @@ class ObjectTest extends SapphireTest {
 	}
 	
 	function testStaticGetterMethod() {
-		static $_SINGLETONS;
-		$_SINGLETONS= null;
-		
 		$obj = singleton('ObjectTest_MyObject');
 		$this->assertEquals(
 			ObjectTest_MyObject::$mystaticProperty,
@@ -91,9 +88,6 @@ class ObjectTest extends SapphireTest {
 	}
 	
 	function testStaticInheritanceGetters() {
-		static $_SINGLETONS;
-		$_SINGLETONS = null;
-		
 		$obj = singleton('ObjectTest_MyObject');
 		$subObj = singleton('ObjectTest_MyObject');
 		$this->assertEquals(
@@ -104,9 +98,6 @@ class ObjectTest extends SapphireTest {
 	}
 	
 	function testStaticSettingOnSingletons() {
-		static $_SINGLETONS;
-		$_SINGLETONS = null;
-		
 		$singleton1 = singleton('ObjectTest_MyObject');
 		$singleton2 = singleton('ObjectTest_MyObject');
 		$singleton1->set_stat('mystaticProperty', 'changed');
@@ -118,9 +109,6 @@ class ObjectTest extends SapphireTest {
 	}
 	
 	function testStaticSettingOnInstances() {
-		static $_SINGLETONS;
-		$_SINGLETONS = null;
-		
 		$instance1 = new ObjectTest_MyObject();
 		$instance2 = new ObjectTest_MyObject();
 		$instance1->set_stat('mystaticProperty', 'changed');
