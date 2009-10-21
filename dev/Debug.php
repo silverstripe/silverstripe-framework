@@ -383,16 +383,17 @@ class Debug {
 		$reporter->writeHeader($httpRequest);
 		$reporter->writeError($httpRequest, $errno, $errstr, $errfile, $errline, $errcontext);
 
-		$lines = file($errfile);
+		if(file_exists($errfile)) {
+			$lines = file($errfile);
 
-		// Make the array 1-based
-		array_unshift($lines,"");
-		unset($lines[0]);
+			// Make the array 1-based
+			array_unshift($lines,"");
+			unset($lines[0]);
 
-		$offset = $errline-10;
-		$lines = array_slice($lines, $offset, 16, true);
-		$reporter->writeSourceFragment($lines, $errline);
-
+			$offset = $errline-10;
+			$lines = array_slice($lines, $offset, 16, true);
+			$reporter->writeSourceFragment($lines, $errline);
+		}
 		$reporter->writeTrace(($errcontext ? $errcontext : debug_backtrace()));
 		$reporter->writeFooter();
 		exit(1);
