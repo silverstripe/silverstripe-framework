@@ -115,13 +115,16 @@ class VirtualPage extends Page {
 				&& $this instanceof VirtualPage
 			) {
 				$source = DataObject::get_one("SiteTree",sprintf('"SiteTree"."ID" = %d', $this->CopyContentFromID));
-				$this->copyFrom($source);
-				$this->URLSegment = $source->URLSegment . '-' . $this->ID;			
+				if($source) {
+					$this->copyFrom($source);
+					$this->URLSegment = $source->URLSegment . '-' . $this->ID;
+				}
 			}
 		}
 		
 		parent::onBeforeWrite();
 	}
+	
 	/**
 	 * Ensure we have an up-to-date version of everything.
 	 */
