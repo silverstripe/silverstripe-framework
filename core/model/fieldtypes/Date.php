@@ -14,9 +14,12 @@
 class Date extends DBField {
 	
 	function setValue($value) {
-		if(is_array($value) && $value['Day'] && $value['Month'] && $value['Year']) {
-			$this->value = $value['Year'] . '-' . $value['Month'] . '-' . $value['Day'];
-			return;
+		// @todo This needs tidy up (what if you only specify a month and a year, for example?)
+		if(is_array($value)) {
+			if(!empty($value['Day']) && !empty($value['Month']) && !empty($value['Year'])) {
+				$this->value = $value['Year'] . '-' . $value['Month'] . '-' . $value['Day'];
+				return;
+			}
 		}
 		
 		// Default to NZ date format - strtotime expects a US date
