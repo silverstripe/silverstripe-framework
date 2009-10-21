@@ -173,7 +173,9 @@ class Member extends DataObject {
 		$file = '';
 		$line = '';
 		
-		if(!headers_sent($file, $line)) session_regenerate_id(true);
+		// @ is to supress win32 warnings/notices when session wasn't cleaned up properly
+		// There's nothing we can do about this, because it's an operating system function!
+		if(!headers_sent($file, $line)) @session_regenerate_id(true);
 	}
 	
 	/**
