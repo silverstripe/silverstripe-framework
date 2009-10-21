@@ -16,7 +16,21 @@ class FileIFrameField extends FileField {
 		'DeleteFileForm'
 	);
 	
-	protected $canUploadNewImage = true;	//flag that controls whether or not new images can be uploaded by the user from their local computer
+	/**
+	 * Flag that controls whether or not new files
+	 * can be uploaded by the user from their local computer.
+	 * 
+	 * @var boolean
+	 */
+	protected $canUploadNewFile = true;	
+	
+	/** 
+	 * Sets whether or not files can be uploaded into the CMS from the user's local computer 
+	 * @param boolean $can
+	 */
+	public function setCanUploadNewFile($can) {
+		$this->canUploadNewFile = $can;
+	}
 	
 	/**
 	 * The data class that this field is editing.
@@ -108,7 +122,7 @@ class FileIFrameField extends FileField {
 		$fileSources = array();
 		
 		if(singleton($this->dataClass())->canCreate()) {
-			if ($this->canUploadNewImage) {	//allow local image uploading only if this flag is true
+			if($this->canUploadNewFile) {
 				$fileSources["new//$uploadFile"] = new FileField('Upload', '');
 			}
 		}
@@ -162,7 +176,7 @@ class FileIFrameField extends FileField {
 			$fileObject->write();
 		}
 		
-		// attach an existing image from the assets store
+		// attach an existing file from the assets store
 		if($data['FileSource'] == 'existing') {
 			$fileObject = DataObject::get_by_id('File', $data['ExistingFile']);
 			
@@ -231,10 +245,4 @@ class FileIFrameField extends FileField {
 		return _t('FileIFrameField.FILE', 'File');
 	}
 	
-	/** 
-	 * Sets whether or not files can be uploaded into the CMS from the user's local computer 
-	 */
-	public function setCanUploadNewImage($can) {
-		$this->canUploadNewImage = $can;
-	}
 }
