@@ -406,13 +406,13 @@ abstract class Database {
 		//on how they are structured.  This needs to be tidied up.
 		$fieldValue = null;
 		$newTable = false;
-
+		
 		Profiler::mark('requireField');
 		
 		// backwards compatibility patch for pre 2.4 requireField() calls
 		$spec_orig=$spec;
+		
 		if(!is_string($spec)) {
-			// TODO: This is tempororary
 			$spec['parts']['name'] = $field;
 			$spec_orig['parts']['name'] = $field;
 			//Convert the $spec array into a database-specific string
@@ -431,13 +431,12 @@ abstract class Database {
 		if(!$newTable && !isset($this->fieldList[$table])) {
 			$this->fieldList[$table] = $this->fieldList($table);
 		}
-		
-		// Get the value of this field.
-		if(is_array($spec)){
-			$specValue=$spec['data_type'];
-			if(isset($spec['precision']))
-				$specValue.='(' . $spec['precision'] . ')';
-		} else $specValue=$spec;
+
+		if(is_array($spec)) {
+			$specValue = DB::getConn()->$spec_orig['type']($spec_orig['parts']);
+		} else {
+			$specValue = $spec;
+		}
 
 		// We need to get db-specific versions of the ID column:
 		if($spec_orig==DB::getConn()->IdColumn() || $spec_orig==DB::getConn()->IdColumn(true))
@@ -500,7 +499,7 @@ abstract class Database {
 			Profiler::mark('alterField');
 			$this->transAlterField($table, $field, $spec_orig);
 			Profiler::unmark('alterField');
-			Database::alteration_message("Field $table.$field: changed to $spec_orig <i style=\"color: #AAA\">(from {$fieldValue})</i>","changed");
+			Database::alteration_message("Field $table.$field: changed to $specValue <i style=\"color: #AAA\">(from {$fieldValue})</i>","changed");
 		}
 		Profiler::unmark('requireField');
 	}
