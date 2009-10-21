@@ -102,9 +102,18 @@ class Filesystem extends Object {
 
 	/**
 	 * This function ensures the file table is correct with the files in the assets folder.
+	 * 
+	 * If a Folder record ID is given, all of that folder's children will be synchronised.
+	 * If the given Folder ID isn't found, or not specified at all, then everything will
+	 * be synchronised from the root folder (singleton Folder).
+	 * 
+	 * @param int $folderID Folder ID to sync along with all it's children
 	 */
-	static function sync() {
-		$results = singleton('Folder')->syncChildren();
+	static function sync($folderID = null) {
+		$folder = DataObject::get_by_id('Folder', (int) $folderID);
+		if(!($folder && $folder->exists())) $folder = singleton('Folder');
+		
+		$results = $folder->syncChildren();
 		$finished = false;
 		while(!$finished) {
 			$orphans = DB::query("SELECT \"C\".\"ID\" FROM \"File\" AS \"C\" 
