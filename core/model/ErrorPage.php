@@ -58,7 +58,8 @@ class ErrorPage extends Page {
 	function requireDefaultRecords() {
 		parent::requireDefaultRecords();
 
-		if(!DataObject::get_one('ErrorPage', "\"ErrorCode\" = '404'")) {
+		$errorPage = DataObject::get_one('ErrorPage', "\"ErrorCode\" = '404'");
+		if(!($errorPage && $errorPage->exists())) {
 			$errorpage = new ErrorPage();
 			$errorpage->ErrorCode = 404;
 			$errorpage->Title = _t('ErrorPage.DEFAULTERRORPAGETITLE', 'Page not found');
