@@ -117,6 +117,7 @@ class Folder extends File {
 				
 				// Clean up the child record from memory after use. Important!
 				$child->destroy();
+				$child = null;
 			}
 			
 			// Iterate through the unwanted children, removing them all
