@@ -44,6 +44,10 @@ class SiteTreeTest extends SapphireTest {
 		Translatable::set_default_locale(self::$origTranslatableSettings['default_locale']);
 		Translatable::set_current_locale(self::$origTranslatableSettings['default_locale']);
 		
+		// clear singletons, they're caching old extension info which is used in DatabaseAdmin->doBuild()
+		global $_SINGLETONS;
+		$_SINGLETONS = array();
+		
 		self::kill_temp_db();
 		self::create_temp_db();
 		
