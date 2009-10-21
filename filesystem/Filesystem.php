@@ -104,7 +104,7 @@ class Filesystem extends Object {
 	 * This function ensures the file table is correct with the files in the assets folder.
 	 */
 	static function sync() {
-		singleton('Folder')->syncChildren();
+		$results = singleton('Folder')->syncChildren();
 		$finished = false;
 		while(!$finished) {
 			$orphans = DB::query("SELECT \"C\".\"ID\" FROM \"File\" AS \"C\" 
@@ -119,7 +119,11 @@ class Filesystem extends Object {
 				unset($file);
 			}
 		}
-
+		
+		return _t(
+			'Filesystem.SYNCRESULTS',
+			sprintf('Sync complete: %s items created, %d items deleted', (int) $results['added'], (int) $results['deleted'])
+		);
 	}
 	
 }
