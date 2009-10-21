@@ -114,6 +114,9 @@ class Folder extends File {
 					$added += $childResult['added'];
 					$deleted += $childResult['deleted'];
 				}
+				
+				// Clean up the child record from memory after use. Important!
+				$child->destroy();
 			}
 			
 			// Iterate through the unwanted children, removing them all
