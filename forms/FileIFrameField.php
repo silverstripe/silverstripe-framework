@@ -17,6 +17,19 @@ class FileIFrameField extends FileField {
 	);
 	
 	/**
+	 * The data class that this field is editing.
+	 * @return string Class name
+	 */
+	public function dataClass() {
+		if($this->form && $this->form->getRecord()) {
+			$class = $this->form->getRecord()->has_one($this->Name());
+			return ($class) ? $class : 'File';
+		} else {
+			return 'File';
+		}
+	}
+	
+	/**
 	 * @return string
 	 */
 	public function Field() {
@@ -58,7 +71,7 @@ class FileIFrameField extends FileField {
 	 * @return File|null
 	 */
 	public function AttachedFile() {
-		return $this->form->getRecord()->has_one($this->Name()) ? $this->form->getRecord()->{$this->Name()}() : null;
+		return $this->form->getRecord() ? $this->form->getRecord()->{$this->Name()}() : null;
 	}
 	
 	/**
@@ -92,11 +105,11 @@ class FileIFrameField extends FileField {
 		
 		$fileSources = array();
 		
-		if(singleton('File')->canCreate()) {
+		if(singleton($this->dataClass())->canCreate()) {
 			$fileSources["new//$uploadFile"] = new FileField('Upload', '');
 		}
 		
-		$fileSources["existing//$selectFile"] = new TreeDropdownField('ExistingFile', '', 'File');
+		$fileSources["existing//$selectFile"] = new TreeDropdownField('ExistingFile', '', $this->dataClass());
 		
 		return new Form (
 			$this,
@@ -123,11 +136,7 @@ class FileIFrameField extends FileField {
 			return;
 		}
 		
-		if($this->form->getRecord()->has_one($this->Name())) {
-			$desiredClass = $this->form->getRecord()->has_one($this->Name());
-		} else {
-			$desiredClass = 'File';
-		}
+		$desiredClass = $this->dataClass();
 		
 		// upload a new file
 		if($data['FileSource'] == 'new') {
