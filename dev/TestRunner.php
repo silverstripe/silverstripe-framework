@@ -122,7 +122,6 @@ class TestRunner extends Controller {
 	}
 	
 	function coverage() {
-		ManifestBuilder::load_all_classes();
 		$tests = ClassInfo::subclassesFor('SapphireTest');
 		array_shift($tests);
 		unset($tests['FunctionalTest']);
