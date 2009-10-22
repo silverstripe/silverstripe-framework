@@ -51,7 +51,16 @@ class HierarchyTest extends SapphireTest {
 		
 		$this->assertEquals(array('Page 2', 'Page 3', 'Page 2a', 'Page 2b'), $marked);
 		$this->assertEquals(array('Page 2', 'Page 2a', 'Page 2b'), $expanded);
-		
-	} 
+	}
+	
+	function testNumChildren() {
+		$this->assertEquals($this->objFromFixture('Page', 'page1')->numChildren(), 0);
+		$this->assertEquals($this->objFromFixture('Page', 'page2')->numChildren(), 2);
+		$this->assertEquals($this->objFromFixture('Page', 'page3')->numChildren(), 2);
+		$this->assertEquals($this->objFromFixture('Page', 'page2a')->numChildren(), 0);
+		$this->assertEquals($this->objFromFixture('Page', 'page2b')->numChildren(), 0);
+		$this->assertEquals($this->objFromFixture('Page', 'page3a')->numChildren(), 0);
+		$this->assertEquals($this->objFromFixture('Page', 'page3b')->numChildren(), 0);
+	}
 		
 }

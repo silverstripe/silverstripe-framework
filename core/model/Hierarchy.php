@@ -475,17 +475,31 @@ class Hierarchy extends DataObjectDecorator {
 			"\"ParentID\" = " . (int)$this->owner->ID, "\"$baseClass\".\"ID\" ASC");
 	}
 
+	
+	/**
+	 * Cache for numChildren().
+	 */
+	private static $num_children_cache = array();
+	
 	/**
 	 * Return the number of children
 	 * @return int
 	 */
 	public function numChildren() {
 		$baseClass = ClassInfo::baseDataClass($this->owner->class);
-		// We build the query in an extension-friendly way.
-		$query = new SQLQuery("COUNT(*)","\"$baseClass\"","\"ParentID\" = " . (int)$this->owner->ID);
-		$this->owner->extend('augmentSQL', $query);
-		$this->owner->extend('augmentNumChildrenCountQuery', $query); 
-		return $query->execute()->value();
+		
+		// Build the cache for this class if it doesn't exist.
+		if(!isset(self::$num_children_cache[$baseClass])) {
+			// We build the query in an extension-friendly way.
+			$query = new SQLQuery("ParentID, COUNT(*)","\"$baseClass\"", "", "", "ParentID");
+			$this->owner->extend('augmentSQL', $query);
+			$this->owner->extend('augmentNumChildrenCountQuery', $query);
+			 
+			self::$num_children_cache[$baseClass] = $query->execute()->map();
+		}
+		
+		// If theres no value in the cache, it just means that it doesn't have any children.
+		return isset(self::$num_children_cache[$baseClass][$this->owner->ID]) ? self::$num_children_cache[$baseClass][$this->owner->ID] : 0;
 	}
 
 	/**
