@@ -26,7 +26,7 @@ SiteTree:
     Content: <a href="admin">Admin</a>
   no_links:
     Title: No Links
-    URLSemgment: No Links
+    URLSegment: No Links
 
 SiteTree_LinkTracking:
   home_about:
