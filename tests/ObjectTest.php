@@ -9,6 +9,13 @@
  */
 class ObjectTest extends SapphireTest {
 	
+	function setUp() {
+		parent::setUp();
+		
+		global $_SINGLETONS;
+		$_SINGLETONS = array();
+	}
+	
 	function testHasmethodBehaviour() {
 		/* SiteTree should have all of the methods that Versioned has, because Versioned is listed in SiteTree's
 		 * extensions */

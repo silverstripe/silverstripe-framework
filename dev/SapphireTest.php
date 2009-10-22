@@ -65,11 +65,6 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 		DataObject::reset();
 		SiteTree::reset();
 		Controller::curr()->setSession(new Session(array()));
-		
-		// clear singletons, they're caching old extension info 
-		// which is used in DatabaseAdmin->doBuild()
-		global $_SINGLETONS;
-		$_SINGLETONS = array();
 
 		$className = get_class($this);
 		$fixtureFile = eval("return {$className}::\$fixture_file;");
@@ -119,6 +114,10 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	 * for tearing down the state again.
 	 */
 	static function set_up_once() {	
+		// clear singletons, they're caching old extension info 
+		// which is used in DatabaseAdmin->doBuild()
+		global $_SINGLETONS;
+		$_SINGLETONS = array();
 	}
 	
 	/**
@@ -228,11 +227,6 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	}
 	
 	function tearDown() {
-		// clear singletons, they're caching old extension info 
-		// which is used in DatabaseAdmin->doBuild()
-		global $_SINGLETONS;
-		$_SINGLETONS = array();
-		
 		// Restore email configuration
 		Email::set_mailer($this->originalMailer);
 		$this->originalMailer = null;
@@ -250,6 +244,10 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	}
 	
 	static function tear_down_once() {
+		// clear singletons, they're caching old extension info 
+		// which is used in DatabaseAdmin->doBuild()
+		global $_SINGLETONS;
+		$_SINGLETONS = array();
 	}
 	
 	/**

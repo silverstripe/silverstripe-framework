@@ -15,11 +15,13 @@ class TranslatableTest extends FunctionalTest {
 	static protected $origTranslatableSettings = array();
 	
 	static function set_up_once() {
+		parent::set_up_once();
+		
 		// needs to recreate the database schema with language properties
 		self::kill_temp_db();
 
 		// store old defaults	
-		self::$origTranslatableSettings['has_extension'] = singleton('SiteTree')->hasExtension('Translatable');
+		self::$origTranslatableSettings['has_extension'] = Object::has_extension('SiteTree', 'Translatable');
 		self::$origTranslatableSettings['default_locale'] = Translatable::default_locale();
 
 		// overwrite locale
@@ -28,12 +30,10 @@ class TranslatableTest extends FunctionalTest {
 		// refresh the decorated statics - different fields in $db with Translatable enabled
 		if(!self::$origTranslatableSettings['has_extension']) Object::add_extension('SiteTree', 'Translatable');
 		Object::add_extension('TranslatableTest_DataObject', 'Translatable');
-
+		
 		// recreate database with new settings
 		$dbname = self::create_temp_db();
 		DB::set_alternative_database_name($dbname);
-
-		parent::set_up_once();
 	}
 	
 	static function tear_down_once() {
@@ -832,7 +832,7 @@ class TranslatableTest extends FunctionalTest {
 		));
 		$form->saveInto($frPage);
 		$frPage->write();
-
+	
 		$this->assertEquals('Translated', $frPage->Title);
 		$this->assertEquals(array($group->ID), $frPage->ViewerGroups()->column('ID'));
 		

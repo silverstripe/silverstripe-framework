@@ -15,11 +15,13 @@ class TranslatableSearchFormTest extends FunctionalTest {
 	static protected $origTranslatableSettings = array();
 	
 	static function set_up_once() {
+		parent::set_up_once();
+		
 		// needs to recreate the database schema with language properties
 		self::kill_temp_db();
 		
 		// store old defaults	
-		self::$origTranslatableSettings['has_extension'] = singleton('SiteTree')->hasExtension('Translatable');
+		self::$origTranslatableSettings['has_extension'] = Object::has_extension('SiteTree', 'Translatable');
 		self::$origTranslatableSettings['default_locale'] = Translatable::default_locale();
 		
 		// overwrite locale
@@ -32,8 +34,6 @@ class TranslatableSearchFormTest extends FunctionalTest {
 		// recreate database with new settings
 		$dbname = self::create_temp_db();
 		DB::set_alternative_database_name($dbname);
-
-		parent::set_up_once();
 	}
 	
 	function setUp() {
