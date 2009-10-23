@@ -134,6 +134,8 @@ JS
 				&& Director::is_site_url($_REQUEST['BackURL'])
 			) {
 				Director::redirect($_REQUEST['BackURL']);
+			} elseif (Security::default_login_dest()) {
+				Director::redirect(Director::absoluteBaseURL() . Security::default_login_dest());
 			} else {
 				$member = Member::currentUser();
 				if($member) {
