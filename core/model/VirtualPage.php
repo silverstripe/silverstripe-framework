@@ -54,11 +54,12 @@ class VirtualPage extends Page {
 		}
 	}
 	
-	function syncLinkTracking() {
-		$this->HasBrokenLink = DataObject::get_by_id('SiteTree', $this->CopyContentFromID) ? false : true;
+	public function syncLinkTracking() {
+		if($this->CopyContentFromID) {
+			$this->HasBrokenLink = !(bool) DataObject::get_by_id('SiteTree', $this->CopyContentFromID);
+		}
 	}
 	
-		
 	/**
 	 * Generate the CMS fields from the fields from the original page.
 	 */

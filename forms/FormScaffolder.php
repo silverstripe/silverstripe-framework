@@ -118,7 +118,7 @@ class FormScaffolder extends Object {
 						);
 					}
 					$relationshipFields = singleton($component)->summaryFields();
-					$foreignKey = $this->obj->getComponentJoinField($relationship);
+					$foreignKey = $this->obj->getRemoteJoinField($relationship);
 					$ctf = new ComplexTableField(
 						$this,
 						$relationship,

@@ -807,6 +807,47 @@ class DataObjectTest extends SapphireTest {
 		$this->assertTrue($team->hasValue('DatabaseField', null, false));
 	}
 	
+	public function testHasMany() {
+		$company = new DataObjectTest_Company();
+		
+		$this->assertEquals (
+			array (
+				'CurrentStaff'     => 'DataObjectTest_Staff',
+				'PreviousStaff'    => 'DataObjectTest_Staff'
+			),
+			$company->has_many(),
+			'has_many strips field name data by default.'
+		);
+		
+		$this->assertEquals (
+			'DataObjectTest_Staff',
+			$company->has_many('CurrentStaff'),
+			'has_many strips field name data by default on single relationships.'
+		);
+		
+		$this->assertEquals (
+			array (
+				'CurrentStaff'     => 'DataObjectTest_Staff.CurrentCompany',
+				'PreviousStaff'    => 'DataObjectTest_Staff.PreviousCompany'
+			),
+			$company->has_many(null, false),
+			'has_many returns field name data when $classOnly is false.'
+		);
+		
+		$this->assertEquals (
+			'DataObjectTest_Staff.CurrentCompany',
+			$company->has_many('CurrentStaff', false),
+			'has_many returns field name data on single records when $classOnly is false.'
+		);
+	}
+	
+	public function testGetRemoteJoinField() {
+		$company = new DataObjectTest_Company();
+		
+		$this->assertEquals('CurrentCompanyID', $company->getRemoteJoinField('CurrentStaff'));
+		$this->assertEquals('PreviousCompanyID', $company->getRemoteJoinField('PreviousStaff'));
+	}
+	
 }
 
 class DataObjectTest_Player extends Member implements TestOnly {
@@ -919,6 +960,20 @@ class DataObjectTest_ValidatedObject extends DataObject implements TestOnly {
 			return new ValidationResult(false, "This object needs a name. Otherwise it will have an identity crisis!");
 		}
 	}
+}
+
+class DataObjectTest_Company extends DataObject {
+	public static $has_many = array (
+		'CurrentStaff'     => 'DataObjectTest_Staff.CurrentCompany',
+		'PreviousStaff'    => 'DataObjectTest_Staff.PreviousCompany'
+	);
+}
+
+class DataObjectTest_Staff extends DataObject {
+	public static $has_one = array (
+		'CurrentCompany'  => 'DataObjectTest_Company',
+		'PreviousCompany' => 'DataObjectTest_Company'
+	);
 }
 
 DataObject::add_extension('DataObjectTest_Team', 'DataObjectTest_Team_Decorator');

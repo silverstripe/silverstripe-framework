@@ -187,7 +187,7 @@ abstract class SearchFilter extends Object {
 				} elseif ($component = $model->has_many($rel)) {
 					if(!$query->isJoinedTo($component)) {
 					 	$ancestry = $model->getClassAncestry();
-						$foreignKey = $model->getComponentJoinField($rel);
+						$foreignKey = $model->getRemoteJoinField($rel);
 						$query->leftJoin($component, "\"$component\".\"{$foreignKey}\" = \"{$ancestry[0]}\".\"ID\"");
 						/**
 						 * add join clause to the component's ancestry classes so that the search filter could search on its 
