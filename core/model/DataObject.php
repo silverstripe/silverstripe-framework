@@ -483,6 +483,9 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 				$this->addWrapperMethod($relationship, 'getComponent');
 			}
 		}
+		if($belongsTo = $this->belongs_to()) foreach(array_keys($belongsTo) as $relationship) {
+			$this->addWrapperMethod($relationship, 'getComponent');
+		}
 	}
 
 	/**
@@ -1192,31 +1195,36 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		if(isset($this->components[$componentName])) {
 			return $this->components[$componentName];
 		}
-
-		if($componentClass = $this->has_one($componentName)) {
-			$childID = $this->getField($componentName . 'ID');
-
-			if($childID && is_numeric($childID)) {
-				$component = DataObject::get_by_id($componentClass,$childID);
+		
+		if($class = $this->has_one($componentName)) {
+			$joinField = $componentName . 'ID';
+			$joinID    = $this->getField($joinField);
+			
+			if($joinID) {
+				$component = DataObject::get_by_id($class, $joinID);
 			}
-
-			// If no component exists, create placeholder object
-			if(!isset($component)) {
-				$component = new $componentClass();
-				// We may have had an orphaned ID that needs to be cleaned up
-				$this->setField($componentName . 'ID', 0);
+			
+			if(!isset($component) || !$component) {
+				$component = new $class();
 			}
-
-			// If no component exists, create placeholder object
-			if(!$component) {
-				$component = new $componentClass();
+		} elseif($class = $this->belongs_to($componentName)) {
+			$joinField = $this->getRemoteJoinField($componentName, 'belongs_to');
+			$joinID    = $this->ID;
+			
+			if($joinID) {
+				$component = DataObject::get_one($class, "\"$joinField\" = $joinID");
 			}
-
-			$this->components[$componentName] = $component;
-			return $component;
+			
+			if(!isset($component) || !$component) {
+				$component = new $class();
+				$component->$joinField = $this->ID;
+			}
 		} else {
-			user_error("DataObject::getComponent(): Unknown 1-to-1 component '$componentName' on class '$this->class'", E_USER_ERROR);
+			throw new Exception("DataObject->getComponent(): Could not find component '$componentName'.");
 		}
+		
+		$this->components[$componentName] = $component;
+		return $component;
 	}
 
 	/**
@@ -1248,7 +1256,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			user_error("DataObject::getComponents(): Unknown 1-to-many component '$componentName' on class '$this->class'", E_USER_ERROR);
 		}
 
-		$joinField = $this->getRemoteJoinField($componentName);
+		$joinField = $this->getRemoteJoinField($componentName, 'has_many');
 
 		if($this->isInDB()) { //Check to see whether we should query the db
 			$query = $this->getComponentsQuery($componentName, $filter, $sort, $join, $limit);
@@ -1288,7 +1296,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			user_error("DataObject::getComponentsQuery(): Unknown 1-to-many component '$componentName' on class '$this->class'", E_USER_ERROR);
 		}
 
-		$joinField = $this->getRemoteJoinField($componentName);
+		$joinField = $this->getRemoteJoinField($componentName, 'has_many');
 
 		$id = $this->getField("ID");
 			
@@ -1304,20 +1312,21 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * field can be found it defaults to 'ParentID'.
 	 *
 	 * @param string $component
+	 * @param string $type the join type - either 'has_many' or 'belongs_to'
 	 * @return string
 	 */
-	public function getRemoteJoinField($component) {
-		$remoteClass = $this->has_many($component, false);
+	public function getRemoteJoinField($component, $type = 'has_many') {
+		$remoteClass = $this->$type($component, false);
 		
 		if(!$remoteClass) {
-			throw new Exception("Unknown has_many component '$component' on class '$this->class'");
+			throw new Exception("Unknown $type component '$component' on class '$this->class'");
 		}
 		
 		if($fieldPos = strpos($remoteClass, '.')) {
 			return substr($remoteClass, $fieldPos + 1) . 'ID';
 		}
 		
-		$remoteRelations = array_flip(Object::combined_static($this->has_many($component), 'has_one', 'DataObject'));
+		$remoteRelations = array_flip(Object::combined_static($remoteClass, 'has_one', 'DataObject'));
 		
 		// look for remote has_one joins on this class or any parent classes
 		foreach(array_reverse(ClassInfo::ancestry($this)) as $class) {
@@ -1480,7 +1489,34 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		}
 		return isset($items) ? $items : null;
 	}
-
+	
+	/**
+	 * Returns the class of a remote belongs_to relationship. If no component is specified a map of all components and
+	 * their class name will be returned.
+	 *
+	 * @param string $component
+	 * @param bool $classOnly If this is TRUE, than any has_many relationships in the form "ClassName.Field" will have
+	 *        the field data stripped off. It defaults to TRUE.
+	 * @return string|array
+	 */
+	public function belongs_to($component = null, $classOnly = true) {
+		$belongsTo = Object::combined_static($this->class, 'belongs_to', 'DataObject');
+		
+		if($component) {
+			if($belongsTo && array_key_exists($component, $belongsTo)) {
+				$belongsTo = $belongsTo[$component];
+			} else {
+				return false;
+			}
+		}
+		
+		if($belongsTo && $classOnly) {
+			return preg_replace('/(.+)?\..+/', '$1', $belongsTo);
+		} else {
+			return $belongsTo ? $belongsTo : array();
+		}
+	}
+	
 	/**
 	 * Return all of the database fields defined in self::$db and all the parent classes.
 	 * Doesn't include any fields specified by self::$has_one.  Use $this->has_one() to get these fields
@@ -3240,12 +3276,28 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	public static $default_records = null;
 
 	/**
-	 * one-to-one relationship definitions.
-	 * This is a map from component name to data type.
+	 * One-to-zero relationship defintion. This is a map of component name to data type. In order to turn this into a
+	 * true one-to-one relationship you can add a {@link DataObject::$belongs_to} relationship on the child class.
+	 *
+	 * Note that you cannot have a has_one and belongs_to relationship with the same name.
+	 *
 	 *	@var array
 	 */
 	public static $has_one = null;
-
+	
+	/**
+	 * A meta-relationship that allows you to define the reverse side of a {@link DataObject::$has_one}.
+	 *
+	 * This does not actually create any data structures, but allows you to query the other object in a one-to-one
+	 * relationship from the child object. If you have multiple belongs_to links to another object you can use the
+	 * syntax "ClassName.HasOneName" to specify which foreign has_one key on the other object to use.
+	 *
+	 * Note that you cannot have a has_one and belongs_to relationship with the same name.
+	 *
+	 * @var array
+	 */
+	public static $belongs_to;
+	
 	/**
 	 * This defines a one-to-many relationship. It is a map of component name to the remote data class.
 	 *

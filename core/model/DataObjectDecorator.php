@@ -23,7 +23,8 @@ abstract class DataObjectDecorator extends Extension {
 	 */
 	protected static $decoratable_statics = array(
 		'db' => true, 
-		'has_one' => true, 
+		'has_one' => true,
+		'belongs_to' => true,
 		'indexes' => true, 
 		'defaults' => true, 
 		'has_many' => true, 

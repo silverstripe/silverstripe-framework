@@ -846,6 +846,41 @@ class DataObjectTest extends SapphireTest {
 		
 		$this->assertEquals('CurrentCompanyID', $company->getRemoteJoinField('CurrentStaff'));
 		$this->assertEquals('PreviousCompanyID', $company->getRemoteJoinField('PreviousStaff'));
+		
+		$ceo = new DataObjectTest_CEO();
+		
+		$this->assertEquals('CEOID', $ceo->getRemoteJoinField('Company', 'belongs_to'));
+		$this->assertEquals('PreviousCEOID', $ceo->getRemoteJoinField('PreviousCompany', 'belongs_to'));
+	}
+	
+	public function testBelongsTo() {
+		$company = new DataObjectTest_Company();
+		$ceo     = new DataObjectTest_CEO();
+		
+		$company->write();
+		$ceo->write();
+		
+		$company->CEOID = $ceo->ID;
+		$company->write();
+		
+		$this->assertEquals($company->ID, $ceo->Company()->ID, 'belongs_to returns the right results.');
+		
+		$ceo = new DataObjectTest_CEO();
+		$ceo->write();
+		
+		$this->assertTrue (
+			$ceo->Company() instanceof DataObjectTest_Company,
+			'DataObjects across belongs_to relations are automatically created.'
+		);
+		$this->assertEquals($ceo->ID, $ceo->Company()->CEOID, 'Remote IDs are automatically set.');
+		
+		$ceo->write(false, false, false, true);
+		$this->assertTrue($ceo->Company()->isInDB(), 'write() writes belongs_to components to the database.');
+		
+		$newCEO = DataObject::get_by_id('DataObjectTest_CEO', $ceo->ID);
+		$this->assertEquals (
+			$ceo->Company()->ID, $newCEO->Company()->ID, 'belongs_to can be retrieved from the database.'
+		);
 	}
 	
 }
@@ -963,6 +998,11 @@ class DataObjectTest_ValidatedObject extends DataObject implements TestOnly {
 }
 
 class DataObjectTest_Company extends DataObject {
+	public static $has_one = array (
+		'CEO'         => 'DataObjectTest_CEO',
+		'PreviousCEO' => 'DataObjectTest_CEO'
+	);
+	
 	public static $has_many = array (
 		'CurrentStaff'     => 'DataObjectTest_Staff.CurrentCompany',
 		'PreviousStaff'    => 'DataObjectTest_Staff.PreviousCompany'
@@ -973,6 +1013,13 @@ class DataObjectTest_Staff extends DataObject {
 	public static $has_one = array (
 		'CurrentCompany'  => 'DataObjectTest_Company',
 		'PreviousCompany' => 'DataObjectTest_Company'
+	);
+}
+
+class DataObjectTest_CEO extends DataObjectTest_Staff {
+	public static $belongs_to = array (
+		'Company'        => 'DataObjectTest_Company.CEO',
+		'AnotherCompany' => 'DataObjectTest_Company.PreviousCEO'
 	);
 }
 
