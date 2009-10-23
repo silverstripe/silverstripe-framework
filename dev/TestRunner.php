@@ -44,6 +44,8 @@ class TestRunner extends Controller {
 		'endsession' => 'endsession',
 		'cleanupdb' => 'cleanupdb',
 		'module/$ModuleName' => 'module',
+		'all' => 'all',
+		'build' => 'build',
 		'$TestCase' => 'only',
 	);
 	
@@ -76,9 +78,29 @@ class TestRunner extends Controller {
 	}
 	
 	/**
-	 * Run all test classes
+	 * Run test classes that should be run with every commit.
+	 * Currently excludes PhpSyntaxTest
 	 */
-	function all() {		
+	function all() {
+		$tests = ClassInfo::subclassesFor('SapphireTest');
+		array_shift($tests);
+		unset($tests['FunctionalTest']);
+		
+		// Remove tests that don't need to be executed every time
+		unset($tests['PhpSyntaxTest']);
+		
+		foreach($tests as $class => $v) {
+			$reflection = new ReflectionClass($class);
+			if(!$reflection->isInstantiable()) unset($tests[$class]);
+		}
+	
+		$this->runTests($tests);
+	}
+	
+	/**
+	 * Run test classes that should be run before build - i.e., everything possible.
+	 */
+	function build() {
 		$tests = ClassInfo::subclassesFor('SapphireTest');
 		array_shift($tests);
 		unset($tests['FunctionalTest']);
@@ -88,7 +110,9 @@ class TestRunner extends Controller {
 		}
 	
 		$this->runTests($tests);
+		
 	}
+	
 	
 	/**
 	 * Browse all enabled test cases in the environment
