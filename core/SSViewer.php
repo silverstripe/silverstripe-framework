@@ -276,7 +276,15 @@ class SSViewer {
 			return null;
 		}
 		
-		return file_get_contents(SSViewer::getTemplateFile($identifier));
+		$content = file_get_contents(SSViewer::getTemplateFile($identifier));
+
+		// Remove UTF-8 byte order mark
+		// This is only necessary if you don't have zend-multibyte enabled.
+		if(substr($content, 0,3) == pack("CCC", 0xef, 0xbb, 0xbf)) {
+			$content = substr($content, 3);
+		}
+
+		return $content;
 	}
 	
 	/**
@@ -374,8 +382,13 @@ class SSViewer {
 	}
 
 	static function parseTemplateContent($content, $template="") {			
-		// Add template filename comments on dev sites
+		// Remove UTF-8 byte order mark:
+		// This is only necessary if you don't have zend-multibyte enabled.
+		if(substr($content, 0,3) == pack("CCC", 0xef, 0xbb, 0xbf)) {
+			$content = substr($content, 3);
+		}
 
+		// Add template filename comments on dev sites
 		if(Director::isDev() && self::$source_file_comments && $template && stripos($content, "<?xml") === false) {
 			// If this template is a full HTML page, then put the comments just inside the HTML tag to prevent any IE glitches
 			if(stripos($content, "<html") !== false) {
