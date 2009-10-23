@@ -85,7 +85,7 @@ class HtmlEditorConfig {
 	 * Holder list of enabled plugins
 	 */
 	protected $plugins = array(
-		'blockquote', 'contextmenu', 'table', 'emotions', 'paste', '../../tinymce_advcode', 'spellchecker'
+		'contextmenu', 'table', 'emotions', 'paste', '../../tinymce_advcode', 'spellchecker'
 	);
 
 	/**
