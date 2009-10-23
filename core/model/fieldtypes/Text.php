@@ -4,19 +4,19 @@
  * @package sapphire
  * @subpackage model
  */
-class Text extends DBField {
+class Text extends StringField {
 	static $casting = array(
 		"AbsoluteLinks" => "HTMLText",
 	);
 	
+ 	/**
+ 	 * (non-PHPdoc)
+ 	 * @see DBField::requireField()
+ 	 */
 	function requireField() {
 		$parts=Array('datatype'=>'mediumtext', 'character set'=>'utf8', 'collate'=>'utf8_general_ci', 'arrayValue'=>$this->arrayValue);
 		$values=Array('type'=>'text', 'parts'=>$parts);
 		DB::requireField($this->tableName, $this->name, $values, $this->default);
-	}
-	
-	function hasValue() {
-		return ($this->value || $this->value == '0');
 	}
 	
 	/**
@@ -42,13 +42,25 @@ class Text extends DBField {
 		return $ret;
 	}
 	
+	/**
+	 * Return the value of the field stripped of html tags
+	 * @return string
+	 */
 	function NoHTML() {
 		return strip_tags($this->value);
 	}
+	/**
+	 * Return the value of the field with XML tags escaped.
+	 * @return string
+	 */
 	function EscapeXML() {
 		return str_replace(array('&','<','>','"'), array('&amp;','&lt;','&gt;','&quot;'), $this->value);
 	}
 	
+	/**
+	 * Return the value of the field with relative links converted to absolute urls.
+	 * @return string
+	 */
 	function AbsoluteLinks() {
 		return HTTP::absoluteURLs($this->value);
 	}
@@ -292,10 +304,23 @@ class Text extends DBField {
 		}
 	}
 	
+	/**
+	 * (non-PHPdoc)
+	 * @see DBField::scaffoldFormField()
+	 */
 	public function scaffoldFormField($title = null, $params = null) {
-		return new TextareaField($this->name, $title);
+		if($this->nullifyEmpty) {
+			// We can have an empty field so we need to let the user specifically set null value in the field.
+			return new NullableField(new TextareaField($this->name, $title));
+		} else {
+			return new TextareaField($this->name, $title);
+		}
 	}
 	
+	/**
+	 * (non-PHPdoc)
+	 * @see DBField::scaffoldSearchField()
+	 */
 	public function scaffoldSearchField($title = null, $params = null) {
 		return new TextField($this->name, $title);
 	}

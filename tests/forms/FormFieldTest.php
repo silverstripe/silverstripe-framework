@@ -34,8 +34,11 @@ class FormFieldTest extends SapphireTest {
 			if($constructor->getNumberOfRequiredParameters() > 1) continue;
 			if($fieldClass == 'CompositeField' || is_subclass_of($fieldClass, 'CompositeField')) continue;
 			
-			$instance = new $fieldClass("{$fieldClass}_instance");
-			
+			if ( $fieldClass = 'NullableField' ) {
+				$instance = new $fieldClass(new TextField("{$fieldClass}_instance"));
+			} else {
+				$instance = new $fieldClass("{$fieldClass}_instance");
+			}
 			$isReadonlyBefore = $instance->isReadonly();
 			$readonlyInstance = $instance->performReadonlyTransformation();
 			$this->assertEquals(
@@ -64,8 +67,12 @@ class FormFieldTest extends SapphireTest {
 			if($constructor->getNumberOfRequiredParameters() > 1) continue;
 			if($fieldClass == 'CompositeField' || is_subclass_of($fieldClass, 'CompositeField')) continue;
 			
-			$instance = new $fieldClass("{$fieldClass}_instance");
-			
+			if ( $fieldClass = 'NullableField' ) {
+				$instance = new $fieldClass(new TextField("{$fieldClass}_instance"));
+			} else {
+				$instance = new $fieldClass("{$fieldClass}_instance");
+			}
+						
 			$isDisabledBefore = $instance->isDisabled();
 			$disabledInstance = $instance->performDisabledTransformation();
 			$this->assertEquals(

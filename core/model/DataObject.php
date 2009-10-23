@@ -3419,6 +3419,21 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		return $entities;
 	}
 	
+	/**
+ 	 * Returns true if the given method/parameter has a value
+ 	 * (Uses the DBField::hasValue if the parameter is a database field)
+ 	 * @param string $funcName The function name.
+ 	 * @param array $args The arguments.
+ 	 * @return boolean
+ 	 */
+ 	function hasValue($funcName, $args = null) {
+ 		$field = $this->dbObject($funcName);
+ 		if ( $field ) {
+ 			return $field->hasValue();
+ 		} else {
+ 			return parent::hasValue($funcName, $args);
+ 		}
+ 	}	
 }
 
 ?>
