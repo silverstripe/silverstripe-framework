@@ -507,7 +507,7 @@ class MySQLDatabase extends Database {
 		$tables = array();
 		foreach($this->query("SHOW TABLES") as $record) {
 			$table = reset($record);
-			$tables[$table] = $table;
+			$tables[strtolower($table)] = $table;
 		}
 		return $tables;
 	}
