@@ -1018,8 +1018,8 @@ class DataObjectTest_Staff extends DataObject {
 
 class DataObjectTest_CEO extends DataObjectTest_Staff {
 	public static $belongs_to = array (
-		'Company'        => 'DataObjectTest_Company.CEO',
-		'AnotherCompany' => 'DataObjectTest_Company.PreviousCEO'
+		'Company'         => 'DataObjectTest_Company.CEO',
+		'PreviousCompany' => 'DataObjectTest_Company.PreviousCEO'
 	);
 }
 
