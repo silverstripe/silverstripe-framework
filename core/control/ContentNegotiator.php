@@ -51,7 +51,7 @@ class ContentNegotiator {
 	    return self::$encoding;
 	}
 	
-	static function process(HTTPResponse $response) {
+	static function process(SS_HTTPResponse $response) {
 		if(!self::enabled_for($response)) return;
 
 		$mimes = array(
@@ -100,11 +100,11 @@ class ContentNegotiator {
 	 * Assumes that a correct doctype is set, and doesn't change or append to it.
 	 * Replaces a few common tags and entities with their XHTML representations (<br>, <img>, &nbsp;).
 	 *
-	 * @param $response HTTPResponse
+	 * @param $response SS_HTTPResponse
 	 * @return string
 	 * @todo More flexible tag and entity parsing through regular expressions or tag definition lists
 	 */
-	function xhtml(HTTPResponse $response) {
+	function xhtml(SS_HTTPResponse $response) {
 		$content = $response->getBody();
 		
 		// Only serve "pure" XHTML if the XML header is present
@@ -130,7 +130,7 @@ class ContentNegotiator {
 	 * Replaces all occurrences of "application/xhtml+xml" with "text/html" in the template.
 	 * Removes "xmlns" attributes and any <?xml> Pragmas.
 	 */
-	function html(HTTPResponse $response) {
+	function html(SS_HTTPResponse $response) {
 		$response->addHeader("Content-Type", "text/html; charset=" . self::$encoding);
 		$response->addHeader("Vary", "Accept");
 

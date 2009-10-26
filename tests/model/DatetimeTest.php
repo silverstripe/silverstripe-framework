@@ -1,6 +1,6 @@
 <?php
 /**
- * Tests for {@link SSDatetime} class.
+ * Tests for {@link SS_Datetime} class.
  * 
  * @todo Current date comparisons are slightly dodgy, as they only compare
  *  the current date (not hour, minute, second) and assume that the date
@@ -10,10 +10,10 @@
  * @package sapphire
  * @subpackage tests
  */
-class SSDatetimeTest extends SapphireTest {
+class SS_DatetimeTest extends SapphireTest {
 	function testNowWithSystemDate() {
-		$systemDatetime = DBField::create('SSDatetime', date('Y-m-d H:i:s'));
-		$nowDatetime = SSDatetime::now();
+		$systemDatetime = DBField::create('SS_Datetime', date('Y-m-d H:i:s'));
+		$nowDatetime = SS_Datetime::now();
 		
 		$this->assertEquals($systemDatetime->Date(), $nowDatetime->Date());
 	}
@@ -21,16 +21,16 @@ class SSDatetimeTest extends SapphireTest {
 	function testNowWithMockDate() {
 		// Test setting
 		$mockDate = '2001-12-31 22:10:59';
-		SSDatetime::set_mock_now($mockDate);
-		$systemDatetime = DBField::create('SSDatetime', date('Y-m-d H:i:s'));
-		$nowDatetime = SSDatetime::now();
+		SS_Datetime::set_mock_now($mockDate);
+		$systemDatetime = DBField::create('SS_Datetime', date('Y-m-d H:i:s'));
+		$nowDatetime = SS_Datetime::now();
 		$this->assertNotEquals($systemDatetime->Date(), $nowDatetime->Date());
 		$this->assertEquals($nowDatetime->getValue(), $mockDate);
 		
 		// Test clearing
-		SSDatetime::clear_mock_now();
-		$systemDatetime = DBField::create('SSDatetime', date('Y-m-d H:i:s'));
-		$nowDatetime = SSDatetime::now();
+		SS_Datetime::clear_mock_now();
+		$systemDatetime = DBField::create('SS_Datetime', date('Y-m-d H:i:s'));
+		$nowDatetime = SS_Datetime::now();
 		$this->assertEquals($systemDatetime->Date(), $nowDatetime->Date());
 	}
 }

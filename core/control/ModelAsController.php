@@ -32,9 +32,9 @@ class ModelAsController extends Controller implements NestedController {
 	
 	/**
 	 * @uses ModelAsController::getNestedController()
-	 * @return HTTPResponse
+	 * @return SS_HTTPResponse
 	 */
-	public function handleRequest(HTTPRequest $request) {
+	public function handleRequest(SS_HTTPRequest $request) {
 		$this->request = $request;
 		
 		$this->pushCurrent();
@@ -42,7 +42,7 @@ class ModelAsController extends Controller implements NestedController {
 		
 		// If the database has not yet been created, redirect to the build page.
 		if(!DB::isActive() || !ClassInfo::hasTable('SiteTree')) {
-			$this->response = new HTTPResponse();
+			$this->response = new SS_HTTPResponse();
 			$this->response->redirect('dev/build?returnURL=' . (isset($_GET['url']) ? urlencode($_GET['url']) : null));
 			$this->popCurrent();
 			
@@ -80,7 +80,7 @@ class ModelAsController extends Controller implements NestedController {
 		if(!$sitetree) {
 			// If a root page has been renamed, redirect to the new location.
 			if($redirect = $this->findOldPage($URLSegment)) {
-				$this->response = new HTTPResponse();
+				$this->response = new SS_HTTPResponse();
 				$this->response->redirect($redirect->Link (
 					Controller::join_links($request->param('Action'), $request->param('ID'), $request->param('OtherID'))
 				));

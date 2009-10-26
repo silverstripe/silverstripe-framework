@@ -32,7 +32,7 @@ class ScaffoldingComplexTableField_Popup extends ComplexTableField_Popup {
 	/**
 	 * Handle a generic action passed in by the URL mapping.
 	 *
-	 * @param HTTPRequest $request
+	 * @param SS_HTTPRequest $request
 	 */
 	public function handleAction($request) {
 		$action = str_replace("-","_",$request->param('Action'));
@@ -63,7 +63,7 @@ class ScaffoldingComplexTableField_Popup extends ComplexTableField_Popup {
 	/**
 	 * Action to render results for an autocomplete filter.
 	 *
-	 * @param HTTPRequest $request
+	 * @param SS_HTTPRequest $request
 	 * @return void
 	 */	
 	function filter($request) {

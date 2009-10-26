@@ -315,7 +315,7 @@ class RestfulService extends ViewableData {
 	}
 }
 
-class RestfulService_Response extends HTTPResponse {
+class RestfulService_Response extends SS_HTTPResponse {
 	protected $simpleXML;
 	
 	function __construct($body, $statusCode = 200, $headers = null) {

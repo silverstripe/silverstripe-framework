@@ -18,8 +18,8 @@ class Controller extends RequestHandler {
 	
 	/**
 	 * @var array $requestParams Contains all GET and POST parameters
-	 * passed to the current {@link HTTPRequest}.
-	 * @uses HTTPRequest->requestVars()
+	 * passed to the current {@link SS_HTTPRequest}.
+	 * @uses SS_HTTPRequest->requestVars()
 	 */
 	protected $requestParams;
 	
@@ -46,13 +46,13 @@ class Controller extends RequestHandler {
 	protected $basicAuthEnabled = true;
 
 	/**
-	 * @var HTTPResponse $response The response object that the controller returns.
+	 * @var SS_HTTPResponse $response The response object that the controller returns.
 	 * Set in {@link handleRequest()}.
 	 */
 	protected $response;
 	
 	/**
-	 * @var HTTPRequest $request The request object that the controller was called with.
+	 * @var SS_HTTPRequest $request The request object that the controller was called with.
 	 * Set in {@link handleRequest()}. Useful to generate the {}
 	 */
 	protected $request;
@@ -94,7 +94,7 @@ class Controller extends RequestHandler {
 	}
 	
 	/**
-	 * Executes this controller, and return an {@link HTTPResponse} object with the result.
+	 * Executes this controller, and return an {@link SS_HTTPResponse} object with the result.
 	 * 
 	 * This method first does a few set-up activities:
 	 *  - Push this controller ont to the controller stack - 
@@ -119,18 +119,18 @@ class Controller extends RequestHandler {
 	 * and end the method with $this->popCurrent().  
 	 * Failure to do this will create weird session errors.
 	 * 
-	 * @param $request The {@link HTTPRequest} object that is responsible 
+	 * @param $request The {@link SS_HTTPRequest} object that is responsible 
 	 *  for distributing request parsing.
-	 * @return HTTPResponse The response that this controller produces, 
+	 * @return SS_HTTPResponse The response that this controller produces, 
 	 *  including HTTP headers such as redirection info
 	 */
-	function handleRequest(HTTPRequest $request) {
+	function handleRequest(SS_HTTPRequest $request) {
 		if(!$request) user_error("Controller::handleRequest() not passed a request!", E_USER_ERROR);
 		
 		$this->pushCurrent();
 		$this->urlParams = $request->allParams();
 		$this->request = $request;
-		$this->response = new HTTPResponse();
+		$this->response = new SS_HTTPResponse();
 		
 		$this->extend('onBeforeInit');
 
@@ -148,8 +148,8 @@ class Controller extends RequestHandler {
 		}
 
 		$body = parent::handleRequest($request);
-		if($body instanceof HTTPResponse) {
-			if(isset($_REQUEST['debug_request'])) Debug::message("Request handler returned HTTPResponse object to $this->class controller; returning it without modification.");
+		if($body instanceof SS_HTTPResponse) {
+			if(isset($_REQUEST['debug_request'])) Debug::message("Request handler returned SS_HTTPResponse object to $this->class controller; returning it without modification.");
 			$this->response = $body;
 			
 		} else {
@@ -218,7 +218,7 @@ class Controller extends RequestHandler {
 	}
 	
 	/**
-	 * Returns the HTTPResponse object that this controller is building up.
+	 * Returns the SS_HTTPResponse object that this controller is building up.
 	 * Can be used to set the status code and headers
 	 */
 	function getResponse() {
@@ -229,7 +229,7 @@ class Controller extends RequestHandler {
 	 * Get the request with which this controller was called (if any).
 	 * Usually set in {@link handleRequest()}.
 	 *
-	 * @return HTTPRequest
+	 * @return SS_HTTPRequest
 	 */
 	function getRequest() {
 		return $this->request;

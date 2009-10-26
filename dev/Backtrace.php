@@ -3,7 +3,7 @@
  * @package sapphire
  * @subpackage dev
  */
-class SSBacktrace {
+class SS_Backtrace {
 	
 	/**
 	 * Return debug_backtrace() results with functions filtered
@@ -26,9 +26,9 @@ class SSBacktrace {
 	 */
 	static function filter_backtrace($bt, $ignoredFunctions = null) {
 		$defaultIgnoredFunctions = array(
-			'SSLog::log',
-			'SSBacktrace::backtrace',
-			'SSBacktrace::filtered_backtrace',
+			'SS_Log::log',
+			'SS_Backtrace::backtrace',
+			'SS_Backtrace::filtered_backtrace',
 			'Zend_Log_Writer_Abstract->write',
 			'Zend_Log->log',
 			'Zend_Log->__call',

@@ -7,16 +7,16 @@
  * PHP's built-in date() and strtotime() function according to your system locale.
  * 
  * For all computations involving the current date and time,
- * please use {@link SSDatetime::now()} instead of PHP's built-in date() and time()
+ * please use {@link SS_Datetime::now()} instead of PHP's built-in date() and time()
  * methods. This ensures that all time-based computations are testable with mock dates
- * through {@link SSDatetime::set_mock_now()}.
+ * through {@link SS_Datetime::set_mock_now()}.
  * 
  * @todo Add localization support, see http://open.silverstripe.com/ticket/2931
  * 
  * @package sapphire
  * @subpackage model
  */
-class SSDatetime extends Date {
+class SS_Datetime extends Date {
 	
 	function setValue($value) {
 		// Default to NZ date format - strtotime expects a US date
@@ -49,7 +49,7 @@ class SSDatetime extends Date {
 
 	function requireField() {
 		$parts=Array('datatype'=>'datetime', 'arrayValue'=>$this->arrayValue);
-		$values=Array('type'=>'SSDatetime', 'parts'=>$parts);
+		$values=Array('type'=>'SS_Datetime', 'parts'=>$parts);
 		DB::requireField($this->tableName, $this->name, $values);
 	}
 	
@@ -70,13 +70,13 @@ class SSDatetime extends Date {
 	 * Returns either the current system date as determined
 	 * by date(), or a mocked date through {@link set_mock_now()}.
 	 * 
-	 * @return SSDatetime
+	 * @return SS_Datetime
 	 */
 	static function now() {
 		if(self::$mock_now) {
 			return self::$mock_now;
 		} else {
-			return DBField::create('SSDatetime', date('Y-m-d H:i:s'));
+			return DBField::create('SS_Datetime', date('Y-m-d H:i:s'));
 		}
 	}
 	
@@ -85,15 +85,15 @@ class SSDatetime extends Date {
 	 * Use {@link clear_mock_now()} to revert to the current system date.
 	 * Caution: This sets a fixed date that doesn't increment with time.
 	 * 
-	 * @param SSDatetime|string $datetime Either in object format, or as a SSDatetime compatible string.
+	 * @param SS_Datetime|string $datetime Either in object format, or as a SS_Datetime compatible string.
 	 */
 	static function set_mock_now($datetime) {
-		if($datetime instanceof SSDatetime) {
+		if($datetime instanceof SS_Datetime) {
 			self::$mock_now = $datetime;
 		} elseif(is_string($datetime)) {
-			self::$mock_now = DBField::create('SSDatetime', $datetime);
+			self::$mock_now = DBField::create('SS_Datetime', $datetime);
 		} else {
-			throw new Exception('SSDatetime::set_mock_now(): Wrong format: ' . $datetime);
+			throw new Exception('SS_Datetime::set_mock_now(): Wrong format: ' . $datetime);
 		}
 	}
 	

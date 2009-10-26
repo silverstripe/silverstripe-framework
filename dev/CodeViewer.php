@@ -113,7 +113,7 @@ class CodeViewer extends Controller {
 		))->renderWith('CodeViewer');
 	}
 	
-	public function viewClass(HTTPRequest $request) {
+	public function viewClass(SS_HTTPRequest $request) {
 		$class = $request->param('Class');
 		
 		if(!class_exists($class)) {

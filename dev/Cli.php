@@ -6,7 +6,7 @@
  * @package sapphire
  * @subpackage dev
  */
-class SSCli extends Object {
+class SS_Cli extends Object {
 	/**
 	 * Returns true if the current STDOUT supports the use of colour control codes.
 	 */

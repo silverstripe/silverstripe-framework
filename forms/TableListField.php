@@ -401,7 +401,7 @@ JS
 	 * Caution: Other parameters such as {@sourceFilter} will be ignored.
 	 * Please use this only as a fallback for really complex queries (e.g. involving HAVING and GROUPBY).  
 	 * 
-	 * @param $query Query
+	 * @param $query SS_Query
 	 */
 	function setCustomQuery($query) {
 		$this->customQuery = $query;
@@ -921,7 +921,7 @@ JS
 		$fileName = "export-$now.csv";
 		
 		if($fileData = $this->generateExportFileData($numColumns, $numRows)){
-			return HTTPRequest::send_file($fileData, $fileName);
+			return SS_HTTPRequest::send_file($fileData, $fileName);
 		}else{
 			user_error("No records found", E_USER_ERROR);
 		}

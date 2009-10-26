@@ -30,7 +30,7 @@ class ClassInfo {
 	private static $_cache_all_tables = null;
 	
 	/**
-	 * @todo Move this to Database or DB
+	 * @todo Move this to SS_Database or DB
 	 */
 	static function hasTable($class) {
 		if(DB::isActive()) {

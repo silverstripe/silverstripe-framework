@@ -4,7 +4,7 @@ class HTTPRequestTest extends SapphireTest {
 	static $fixture_file = null;
 	
 	function testMatch() {
-		$request = new HTTPRequest("GET", "admin/crm/add");
+		$request = new SS_HTTPRequest("GET", "admin/crm/add");
 		
 		/* When a rule matches, but has no variables, array("_matched" => true) is returned. */
 		$this->assertEquals(array("_matched" => true), $request->match('admin/crm', true));
@@ -16,7 +16,7 @@ class HTTPRequestTest extends SapphireTest {
 	}
 	
 	public function testHttpMethodOverrides() {
-		$request = new HTTPRequest(
+		$request = new SS_HTTPRequest(
 			'GET',
 			'admin/crm'
 		);
@@ -25,7 +25,7 @@ class HTTPRequestTest extends SapphireTest {
 			'GET with no method override'
 		);
 
-		$request = new HTTPRequest(
+		$request = new SS_HTTPRequest(
 			'POST',
 			'admin/crm'
 		);
@@ -34,7 +34,7 @@ class HTTPRequestTest extends SapphireTest {
 			'POST with no method override'
 		);
 
-		$request = new HTTPRequest(
+		$request = new SS_HTTPRequest(
 			'GET',
 			'admin/crm',
 			array('_method' => 'DELETE')
@@ -44,7 +44,7 @@ class HTTPRequestTest extends SapphireTest {
 			'GET with invalid POST method override'
 		);
 		
-		$request = new HTTPRequest(
+		$request = new SS_HTTPRequest(
 			'POST',
 			'admin/crm',
 			array(),
@@ -55,7 +55,7 @@ class HTTPRequestTest extends SapphireTest {
 			'POST with valid method override to DELETE'
 		);
 		
-		$request = new HTTPRequest(
+		$request = new SS_HTTPRequest(
 			'POST',
 			'admin/crm',
 			array(),
@@ -66,7 +66,7 @@ class HTTPRequestTest extends SapphireTest {
 			'POST with valid method override to PUT'
 		);
 		
-		$request = new HTTPRequest(
+		$request = new SS_HTTPRequest(
 			'POST',
 			'admin/crm',
 			array(),
@@ -77,7 +77,7 @@ class HTTPRequestTest extends SapphireTest {
 			'POST with valid method override to HEAD '
 		);
 		
-		$request = new HTTPRequest(
+		$request = new SS_HTTPRequest(
 			'POST',
 			'admin/crm',
 			array(),
@@ -88,7 +88,7 @@ class HTTPRequestTest extends SapphireTest {
 			'POST with valid method override to HEAD'
 		);
 		
-		$request = new HTTPRequest(
+		$request = new SS_HTTPRequest(
 			'POST',
 			'admin/crm',
 			array('_method' => 'head')

@@ -229,7 +229,7 @@ class DatabaseAdmin extends Controller {
 	
 	/**
 	 * Clear all data out of the database
-	 * @todo Move this code into Database class, for DB abstraction
+	 * @todo Move this code into SS_Database class, for DB abstraction
 	 */
 	function clearAllData() {
 		$tables = DB::getConn()->tableList();

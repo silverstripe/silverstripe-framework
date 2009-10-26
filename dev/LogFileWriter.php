@@ -8,7 +8,7 @@
  * logs to.
  * 
  * @uses error_log() built-in PHP function.
- * @see SSLog for more information on using writers.
+ * @see SS_Log for more information on using writers.
  * 
  * @package sapphire
  * @subpackage dev
@@ -16,7 +16,7 @@
 
 require_once 'Zend/Log/Writer/Abstract.php';
 
-class SSLogFileWriter extends Zend_Log_Writer_Abstract {
+class SS_LogFileWriter extends Zend_Log_Writer_Abstract {
 
 	/**
 	 * The path to the file that errors will be stored in.
@@ -52,7 +52,7 @@ class SSLogFileWriter extends Zend_Log_Writer_Abstract {
 	 */
 	public function _write($event) {
 		if(!$this->_formatter) {
-			$formatter = new SSLogErrorFileFormatter();
+			$formatter = new SS_LogErrorFileFormatter();
 			$this->setFormatter($formatter);
 		}
 		$message = $this->_formatter->format($event);

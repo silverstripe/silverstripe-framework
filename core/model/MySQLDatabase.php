@@ -7,7 +7,7 @@
  * @package sapphire
  * @subpackage model
  */
-class MySQLDatabase extends Database {
+class MySQLDatabase extends SS_Database {
 	/**
 	 * Connection to the DBMS.
 	 * @var resource
@@ -261,7 +261,7 @@ class MySQLDatabase extends Database {
 		
 		if($alteredOptions && isset($alteredOptions[get_class($this)])) {
 			$this->query(sprintf("ALTER TABLE \"%s\" %s", $tableName, $alteredOptions[get_class($this)]));
-			Database::alteration_message(
+			SS_Database::alteration_message(
 				sprintf("Table %s options changed: %s", $tableName, $alteredOptions[get_class($this)]),
 				"changed"
 			);
@@ -281,7 +281,7 @@ class MySQLDatabase extends Database {
 	 */
 	public function checkAndRepairTable($tableName) {
 		if(!$this->runTableCheckCommand("CHECK TABLE \"$tableName\"")) {
-			Database::alteration_message("Table $tableName: repaired","repaired");
+			SS_Database::alteration_message("Table $tableName: repaired","repaired");
 			return $this->runTableCheckCommand("REPAIR TABLE \"$tableName\" USE_FRM");
 		} else {
 			return true;
@@ -368,7 +368,7 @@ class MySQLDatabase extends Database {
 	 * 
 	 * @param string $tableName The name of the table.
 	 * @param string $indexName The name of the index.
-	 * @param string $indexSpec The specification of the index, see {@link Database::requireIndex()} for more details.
+	 * @param string $indexSpec The specification of the index, see {@link SS_Database::requireIndex()} for more details.
 	 */
 	public function createIndex($tableName, $indexName, $indexSpec) {
 		$this->query("ALTER TABLE \"$tableName\" ADD " . $this->getIndexSqlDefinition($indexName, $indexSpec));
@@ -442,7 +442,7 @@ class MySQLDatabase extends Database {
 	 * Alter an index on a table.
 	 * @param string $tableName The name of the table.
 	 * @param string $indexName The name of the index.
-	 * @param string $indexSpec The specification of the index, see {@link Database::requireIndex()} for more details.
+	 * @param string $indexSpec The specification of the index, see {@link SS_Database::requireIndex()} for more details.
 	 */
 	public function alterIndex($tableName, $indexName, $indexSpec) {
 		
@@ -630,7 +630,7 @@ class MySQLDatabase extends Database {
 	 * @param array $values Contains a tokenised list of info about this data type
 	 * @return string
 	 */
-	public function ssdatetime($values){
+	public function ss_datetime($values){
 		//For reference, this is what typically gets passed to this function:
 		//$parts=Array('datatype'=>'datetime');
 		//DB::requireField($this->tableName, $this->name, $values);
@@ -923,7 +923,7 @@ class MySQLDatabase extends Database {
  * @package sapphire
  * @subpackage model
  */
-class MySQLQuery extends Query {
+class MySQLQuery extends SS_Query {
 	/**
 	 * The MySQLDatabase object that created this result set.
 	 * @var MySQLDatabase

@@ -42,11 +42,13 @@ Director::addRules(1, array(
 ShortcodeParser::get('default')->register('sitetree_link', array('SiteTree', 'link_shortcode_handler'));
 
 /**
- * PHP 5.2 has a namespace conflict with our datetime class,
- * for legacy support, we use this overload method.
- * // ENFORCE STRONG_CREATE
+ * PHP 5.2 introduced a conflict with the Datetime field type, which was renamed to SSDatetime. This was later renamed
+ * to SS_Datetime to be consistent with other namespaced classes.
+ *
+ * Overload both of these to support legacy code.
  */
-Object::useCustomClass('Datetime','SSDatetime',true);
+Object::useCustomClass('SSDatetime', 'SS_Datetime', true);
+Object::useCustomClass('Datetime',   'SS_Datetime', true);
 
 
 /**

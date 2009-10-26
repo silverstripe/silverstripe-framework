@@ -171,8 +171,8 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			return array_merge (
 				array (
 					'ClassName'  => "Enum('" . implode(', ', ClassInfo::subclassesFor($class)) . "')",
-					'Created'    => 'SSDatetime',
-					'LastEdited' => 'SSDatetime'
+					'Created'    => 'SS_Datetime',
+					'LastEdited' => 'SS_Datetime'
 				),
 				self::custom_database_fields($class)
 			);
@@ -317,12 +317,12 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			foreach($record as $k => $v) {
 				if($v) {
 					if($k == 'Created' || $k == 'LastEdited') {
-						$fieldtype = 'SSDatetime';
+						$fieldtype = 'SS_Datetime';
 					} else {
 						$fieldtype = $this->db($k);
 					}
 				
-					// MSSQLDatabase::date() uses datetime for the data type for "Date" and "SSDatetime"
+					// MSSQLDatabase::date() uses datetime for the data type for "Date" and "SS_Datetime"
 					switch($fieldtype) {
 						case "Date":
 							$v = preg_replace('/:[0-9][0-9][0-9]([ap]m)$/i', ' \\1', $v);
@@ -330,7 +330,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 							break;
 					
 						case "Datetime":
-						case "SSDatetime":
+						case "SS_Datetime":
 							$v = preg_replace('/:[0-9][0-9][0-9]([ap]m)$/i', ' \\1', $v);
 							$record[$k] = date('Y-m-d H:i:s', strtotime($v));
 							break;
@@ -2136,8 +2136,8 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		static $fixedFields = array(
 			'ID' => 'Int',
 			'ClassName' => 'Enum',
-			'LastEdited' => 'SSDatetime',
-			'Created' => 'SSDatetime',
+			'LastEdited' => 'SS_Datetime',
+			'Created' => 'SS_Datetime',
 		);
 		
 		if(isset($fixedFields[$field])) return true;
@@ -2155,8 +2155,8 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		// Add base fields which are not defined in static $db
 		if($field == "ID") return "Int";
 		if($field == "ClassName" && get_parent_class($this) == "DataObject") return "Enum";
-		if($field == "LastEdited" && get_parent_class($this) == "DataObject") return "SSDatetime";
-		if($field == "Created" && get_parent_class($this) == "DataObject") return "SSDatetime";
+		if($field == "LastEdited" && get_parent_class($this) == "DataObject") return "SS_Datetime";
+		if($field == "Created" && get_parent_class($this) == "DataObject") return "SS_Datetime";
 
 		// Add fields from Versioned decorator
 		if($field == "Version") return $this->hasExtension('Versioned') ? "Int" : false;
@@ -2633,9 +2633,9 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	}
 
 	/**
-	 * Take a database {@link Query} and instanciate an object for each record.
+	 * Take a database {@link SS_Query} and instanciate an object for each record.
 	 *
-	 * @param Query|array $records The database records, a {@link Query} object or an array of maps.
+	 * @param SS_Query|array $records The database records, a {@link SS_Query} object or an array of maps.
 	 * @param string $containerClass The class to place all of the objects into.
 	 *
 	 * @return mixed The new objects in an object of type $containerClass
@@ -2909,7 +2909,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 					$obj = new $className($record);
 					$obj->write();
 				}
-				Database::alteration_message("Added default records to $className table","created");
+				SS_Database::alteration_message("Added default records to $className table","created");
 			}
 		}
 
@@ -3211,8 +3211,8 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @var array
 	 */
 	public static $casting = array(
-		"LastEdited" => "SSDatetime",
-		"Created" => "SSDatetime",
+		"LastEdited" => "SS_Datetime",
+		"Created" => "SS_Datetime",
 		"Title" => 'Text',
 	);
 	
@@ -3220,7 +3220,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * Specify custom options for a CREATE TABLE call.
 	 * Can be used to specify a custom storage engine for specific database table.
 	 * All options have to be keyed for a specific database implementation,
-	 * identified by their class name (extending from {@link Database}).
+	 * identified by their class name (extending from {@link SS_Database}).
 	 * 
 	 * <code>
 	 * array(
@@ -3240,7 +3240,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	/**
 	 * If a field is in this array, then create a database index
 	 * on that field. This is a map from fieldname to index type.
-	 * See {@link Database->requireIndex()} and custom subclasses for details on the array notation.
+	 * See {@link SS_Database->requireIndex()} and custom subclasses for details on the array notation.
 	 * 
 	 * @var array
 	 */

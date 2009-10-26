@@ -6,32 +6,32 @@
  * subclasses for output.
  * 
  * These priorities are currently supported:
- *  - SSLog::ERR
- *  - SSLog::WARN
- *  - SSLog::NOTICE
+ *  - SS_Log::ERR
+ *  - SS_Log::WARN
+ *  - SS_Log::NOTICE
  * 
- * You can add an error writer by calling {@link SSLog::add_writer()}
+ * You can add an error writer by calling {@link SS_Log::add_writer()}
  * 
  * Example usage of logging errors by email notification:
  * <code>
- * $logEmailWriter = new SSLogEmailWriter('my@email.com');
- * SSLog::add_writer($logEmailWriter, SSLog::ERR);
+ * $logEmailWriter = new SS_LogEmailWriter('my@email.com');
+ * SS_Log::add_writer($logEmailWriter, SS_Log::ERR);
  * </code>
  * 
  * Example usage of logging errors by file:
  * <code>
- *	$logFileWriter = new SSLogFileWriter('/var/log/silverstripe/errors.log');
- *	SSLog::add_writer($logFileWriter, SSLog::ERR);
+ *	$logFileWriter = new SS_LogFileWriter('/var/log/silverstripe/errors.log');
+ *	SS_Log::add_writer($logFileWriter, SS_Log::ERR);
  * </code>
  *
  * Each writer object can be assigned a formatter. The formatter is
  * responsible for formatting the message before giving it to the writer.
- * {@link SSLogErrorEmailFormatter} is such an example that formats errors
+ * {@link SS_LogErrorEmailFormatter} is such an example that formats errors
  * into HTML for human readability in an email client.
  * 
  * Formatters are added to writers like this:
  * <code>
- * $logEmailWriter = new SSLogEmailWriter('my@email.com');
+ * $logEmailWriter = new SS_LogEmailWriter('my@email.com');
  * $myEmailFormatter = new MyLogEmailFormatter();
  * $logEmailWriter->setFormatter($myEmailFormatter);
  * </code>
@@ -42,7 +42,7 @@
 
 require_once 'Zend/Log.php';
 
-class SSLog {
+class SS_Log {
 
 	const ERR = Zend_Log::ERR;
 	const WARN = Zend_Log::WARN;
@@ -50,13 +50,13 @@ class SSLog {
 
 	/**
 	 * Logger class to use.
-	 * @see SSLog::get_logger()
+	 * @see SS_Log::get_logger()
 	 * @var string
 	 */
-	public static $logger_class = 'SSZendLog';
+	public static $logger_class = 'SS_ZendLog';
 
 	/**
-	 * @see SSLog::get_logger()
+	 * @see SS_Log::get_logger()
 	 * @var object
 	 */
 	protected static $logger;
@@ -100,7 +100,7 @@ class SSLog {
 	/**
 	 * Add a writer instance to the logger.
 	 * @param object $writer Zend_Log_Writer_Abstract instance
-	 * @param const $priority Priority. Possible values: SSLog::ERR or SSLog::WARN
+	 * @param const $priority Priority. Possible values: SS_Log::ERR or SS_Log::WARN
 	 * @param $comparison Priority comparison operator.  Acts on the integer values of the error
 	 * levels, where more serious errors are lower numbers.  By default this is "=", which means only
 	 * the given priority will be logged.  Set to "<=" if you want to track errors of *at least* 
@@ -120,7 +120,7 @@ class SSLog {
 	 * error code, error line, error context (backtrace).
 	 * 
 	 * @param string|array $message String of error message, or array of variables
-	 * @param const $priority Priority. Possible values: SSLog::ERR or SSLog::WARN
+	 * @param const $priority Priority. Possible values: SS_Log::ERR or SS_Log::WARN
 	 */
 	public static function log($message, $priority) {
 		try {

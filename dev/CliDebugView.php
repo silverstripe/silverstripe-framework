@@ -28,8 +28,8 @@ class CliDebugView extends DebugView {
 	 */
 	public function writeError($httpRequest, $errno, $errstr, $errfile, $errline, $errcontext) {
 		$errorType = self::$error_types[$errno];
-		echo SSCli::text("ERROR [" . $errorType['title'] . "]: $errstr\nIN $httpRequest\n", "red", null, true);
-		echo SSCli::text("Line $errline in $errfile\n\n", "red");
+		echo SS_Cli::text("ERROR [" . $errorType['title'] . "]: $errstr\nIN $httpRequest\n", "red", null, true);
+		echo SS_Cli::text("Line $errline in $errfile\n\n", "red");
 	}
 
 	/**
@@ -50,7 +50,7 @@ class CliDebugView extends DebugView {
 	 * Write a backtrace
 	 */
 	function writeTrace() {
-		SSBacktrace::backtrace();
+		SS_Backtrace::backtrace();
 	}
 
 	/**

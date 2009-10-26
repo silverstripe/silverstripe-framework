@@ -1,9 +1,9 @@
 <?php
 /**
  * Extensions to Zend_Log to make it work nicer
- * with {@link SSLog}.
+ * with {@link SS_Log}.
  * 
- * Please refer to {@link SSLog} for information on
+ * Please refer to {@link SS_Log} for information on
  * setting up logging for your projects.
  * 
  * @package sapphire
@@ -12,7 +12,7 @@
 
 require_once 'Zend/Log.php';
 
-class SSZendLog extends Zend_Log {
+class SS_ZendLog extends Zend_Log {
 
 	/**
 	 * Get all writers in this logger.

@@ -108,15 +108,15 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	);
 
 	static $many_many_extraFields = array(
-		"UsersCurrentlyEditing" => array("LastPing" => "SSDatetime"),
+		"UsersCurrentlyEditing" => array("LastPing" => "SS_Datetime"),
 		"LinkTracking" => array("FieldName" => "Varchar"),
 		"ImageTracking" => array("FieldName" => "Varchar")
 	);
 
 	static $casting = array(
 		"Breadcrumbs" => "HTMLText",
-		"LastEdited" => "SSDatetime",
-		"Created" => "SSDatetime",
+		"LastEdited" => "SS_Datetime",
+		"Created" => "SS_Datetime",
 	);
 
 	static $defaults = array(
@@ -1236,7 +1236,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 				$homepage->write();
 				$homepage->publish("Stage", "Live");
 				$homepage->flushCache();
-				Database::alteration_message("Home page created","created");		
+				SS_Database::alteration_message("Home page created","created");		
 			}
 
 			if(DB::query("SELECT COUNT(*) FROM \"SiteTree\"")->value() == 1) {
@@ -1247,7 +1247,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 				$aboutus->Status = "Published";
 				$aboutus->write();
 				$aboutus->publish("Stage", "Live");
-				Database::alteration_message("About Us created","created");
+				SS_Database::alteration_message("About Us created","created");
 
 				$contactus = new Page();
 				$contactus->Title = _t('SiteTree.DEFAULTCONTACTTITLE', 'Contact Us');
@@ -1268,7 +1268,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 			// only execute command if fields haven't been renamed to _obsolete_<fieldname> already by the task
 			if(array_key_exists('Viewers', $conn->fieldList('SiteTree'))) {
 				$task = new UpgradeSiteTreePermissionSchemaTask();
-				$task->run(new HTTPRequest('GET','/'));
+				$task->run(new SS_HTTPRequest('GET','/'));
 			}
 		}
 	}

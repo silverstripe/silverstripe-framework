@@ -77,7 +77,7 @@ class Director {
 	 * Process the given URL, creating the appropriate controller and executing it.
 	 * 
 	 * Request processing is handled as folows:
-	 *  - Director::direct() creates a new HTTPResponse object and passes this to Director::handleRequest().
+	 *  - Director::direct() creates a new SS_HTTPResponse object and passes this to Director::handleRequest().
 	 *  - Director::handleRequest($request) checks each of the Director rules and identifies a controller to handle this 
 	 *    request.
 	 *  - Controller::handleRequest($request) is then called.  This will find a rule to handle the URL, and call the rule
@@ -108,7 +108,7 @@ class Director {
 			}
 		}
 		
-		$req = new HTTPRequest(
+		$req = new SS_HTTPRequest(
 			(isset($_SERVER['X-HTTP-Method-Override'])) ? $_SERVER['X-HTTP-Method-Override'] : $_SERVER['REQUEST_METHOD'],
 			$url, 
 			$_GET, 
@@ -129,17 +129,17 @@ class Director {
 
 		// Return code for a redirection request
 		if(is_string($result) && substr($result,0,9) == 'redirect:') {
-			$response = new HTTPResponse();
+			$response = new SS_HTTPResponse();
 			$response->redirect(substr($result, 9));
 			$response->output();
 
 		// Handle a controller
 		} else if($result) {
-			if($result instanceof HTTPResponse) {
+			if($result instanceof SS_HTTPResponse) {
 				$response = $result;
 				
 			} else {
-				$response = new HTTPResponse();
+				$response = new SS_HTTPResponse();
 				$response->setBody($result);
 			}
 			
@@ -170,7 +170,7 @@ class Director {
 	 *  Overwritten by $postVars['_method'] if present.
 	 * @param string $body The HTTP body
 	 * @param array $headers HTTP headers with key-value pairs
-	 * @return HTTPResponse
+	 * @return SS_HTTPResponse
 	 * 
 	 * @uses getControllerForURL() The rule-lookup logic is handled by this.
 	 * @uses Controller::run() Controller::run() handles the page logic for a Director::direct() call.
@@ -219,7 +219,7 @@ class Director {
 		$_COOKIE = array();
 		$_SERVER['REQUEST_URI'] = Director::baseURL() . $urlWithQuerystring;
 
-		$req = new HTTPRequest($httpMethod, $url, $getVars, $postVars, $body);
+		$req = new SS_HTTPRequest($httpMethod, $url, $getVars, $postVars, $body);
 		if($headers) foreach($headers as $k => $v) $req->addHeader($k, $v);
 		$result = Director::handleRequest($req, $session);
 		
@@ -242,11 +242,11 @@ class Director {
 	}
 		
 	/**
-	 * Handle an HTTP request, defined with a HTTPRequest object.
+	 * Handle an HTTP request, defined with a SS_HTTPRequest object.
 	 *
-	 * @return HTTPResponse|string
+	 * @return SS_HTTPResponse|string
 	 */
-	protected static function handleRequest(HTTPRequest $request, Session $session) {
+	protected static function handleRequest(SS_HTTPRequest $request, Session $session) {
 		krsort(Director::$rules);
 
 		if(isset($_REQUEST['debug'])) Debug::show(Director::$rules);
@@ -732,7 +732,7 @@ class Director {
 	 */
 	static function set_environment_type($et) {
 		if($et != 'dev' && $et != 'test' && $et != 'live') {
-			SSBacktrace::backtrace();
+			SS_Backtrace::backtrace();
 			user_error("Director::set_environment_type passed '$et'.  It should be passed dev, test, or live", E_USER_WARNING);
 		} else {
 			self::$environment_type = $et;

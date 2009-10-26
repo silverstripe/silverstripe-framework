@@ -25,11 +25,11 @@ class CliTestReporter extends SapphireTestReporter {
 		
 		echo "\n\n";
 		if ($failCount == 0) {
-			echo SSCli::text(" ALL TESTS PASS ", "white", "green");
+			echo SS_Cli::text(" ALL TESTS PASS ", "white", "green");
 		}  else {
-			echo SSCli::text(" AT LEAST ONE FAILURE ", "white", "red");
+			echo SS_Cli::text(" AT LEAST ONE FAILURE ", "white", "red");
 		}
-		echo "\n\n$testCount tests run: " . SSCli::text("$passCount passes", null) . ", ". SSCli::text("$failCount fails", null) . ", and 0 exceptions\n";
+		echo "\n\n$testCount tests run: " . SS_Cli::text("$passCount passes", null) . ", ". SS_Cli::text("$failCount fails", null) . ", and 0 exceptions\n";
 		
 		if(function_exists('memory_get_peak_usage')) {
 			echo "Maximum memory usage: " . number_format(memory_get_peak_usage()/(1024*1024), 1) . "M\n\n";
@@ -54,11 +54,11 @@ class CliTestReporter extends SapphireTestReporter {
 	public function endTest( PHPUnit_Framework_Test $test, $time) {
 		// Status indicator, a la PHPUnit
 		switch($this->currentTest['status']) {
-			case TEST_FAILURE: echo SSCli::text("F","red", null, true); break;
-			case TEST_ERROR: echo SSCli::text("E","red", null, true); break;
-			case TEST_INCOMPLETE: echo SSCli::text("I","yellow"); break;
-			case TEST_SUCCESS: echo SSCli::text(".","green"); break;
-			default: echo SSCli::text("?", "yellow"); break;
+			case TEST_FAILURE: echo SS_Cli::text("F","red", null, true); break;
+			case TEST_ERROR: echo SS_Cli::text("E","red", null, true); break;
+			case TEST_INCOMPLETE: echo SS_Cli::text("I","yellow"); break;
+			case TEST_SUCCESS: echo SS_Cli::text(".","green"); break;
+			default: echo SS_Cli::text("?", "yellow"); break;
 		}
 		
 		static $colCount = 0;
@@ -89,9 +89,9 @@ class CliTestReporter extends SapphireTestReporter {
 				
 			}
 			
-			echo "\n\n" . SSCli::text($this->testNameToPhrase($test['name']) . "\n". $test['message'] . "\n", 'red', null, true);
-			echo SSCli::text("In line {$test['exception']['line']} of {$test['exception']['file']}" . "\n\n", 'red');
-			echo SSBacktrace::get_rendered_backtrace($filteredTrace, true);
+			echo "\n\n" . SS_Cli::text($this->testNameToPhrase($test['name']) . "\n". $test['message'] . "\n", 'red', null, true);
+			echo SS_Cli::text("In line {$test['exception']['line']} of {$test['exception']['file']}" . "\n\n", 'red');
+			echo SS_Backtrace::get_rendered_backtrace($filteredTrace, true);
 			echo "\n--------------------\n";
 		}
 	}

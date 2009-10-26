@@ -380,7 +380,7 @@ class SQLQuery {
 	
 	/**
 	 * Execute this query.
-	 * @return Query
+	 * @return SS_Query
 	 */
 	function execute() {
 		return DB::query($this->sql(), E_USER_ERROR);

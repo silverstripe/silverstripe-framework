@@ -13,14 +13,14 @@ class Member extends DataObject {
 		'Password' => 'Varchar(64)', // support for up to SHA256!
 		'RememberLoginToken' => 'Varchar(50)',
 		'NumVisit' => 'Int',
-		'LastVisited' => 'SSDatetime',
+		'LastVisited' => 'SS_Datetime',
 		'Bounced' => 'Boolean', // Note: This does not seem to be used anywhere.
 		'AutoLoginHash' => 'Varchar(30)',
-		'AutoLoginExpired' => 'SSDatetime',
+		'AutoLoginExpired' => 'SS_Datetime',
 		'PasswordEncryption' => "Enum('none', 'none')",
 		'Salt' => 'Varchar(50)',
 		'PasswordExpiry' => 'Date',
-		'LockedOutUntil' => 'SSDatetime',
+		'LockedOutUntil' => 'SS_Datetime',
 		'Locale' => 'Varchar(6)',
 		// handled in registerFailedLogin(), only used if $lock_out_after_incorrect_logins is set
 		'FailedLoginCount' => 'Int', 
@@ -954,7 +954,7 @@ class Member extends DataObject {
 		
 		if(!DB::query("SELECT * FROM \"Member\"")->value() && isset($_REQUEST['username']) && isset($_REQUEST['password'])) {
 			Security::findAnAdministrator($_REQUEST['username'], $_REQUEST['password']);
-			Database::alteration_message("Added admin account","created");
+			SS_Database::alteration_message("Added admin account","created");
 		}
 	}
 	

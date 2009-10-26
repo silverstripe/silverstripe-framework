@@ -3,7 +3,7 @@
  * Sends an error message to an email whenever an error occurs
  * in sapphire.
  * 
- * @see SSLog for more information on using writers.
+ * @see SS_Log for more information on using writers.
  * 
  * @package sapphire
  * @subpackage dev
@@ -11,7 +11,7 @@
 
 require_once 'Zend/Log/Writer/Abstract.php';
 
-class SSLogEmailWriter extends Zend_Log_Writer_Abstract {
+class SS_LogEmailWriter extends Zend_Log_Writer_Abstract {
 
 	protected $emailAddress;
 
@@ -29,7 +29,7 @@ class SSLogEmailWriter extends Zend_Log_Writer_Abstract {
 	public function _write($event) {
 		// If no formatter set up, use the default
 		if(!$this->_formatter) {
-			$formatter = new SSLogErrorEmailFormatter();
+			$formatter = new SS_LogErrorEmailFormatter();
 			$this->setFormatter($formatter);
 		}
 

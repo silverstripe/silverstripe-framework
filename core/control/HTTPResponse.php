@@ -1,11 +1,11 @@
 <?php
 /**
- * Represenets an HTTPResponse returned by a controller.
+ * Represents a response returned by a controller.
  *
  * @package sapphire
  * @subpackage control
  */
-class HTTPResponse {
+class SS_HTTPResponse {
 	protected static $status_codes = array(
 		100 => 'Continue',
 		101 => 'Switching Protocols',
@@ -214,7 +214,7 @@ class HTTPResponse {
 	 */
 	public function getLinks() {
 		user_error (
-			'HTTPResponse->getLinks() is deprecated, please use HTTP::getLinksIn() or DOMDocument.', E_USER_NOTICE
+			'SS_HTTPResponse->getLinks() is deprecated, please use HTTP::getLinksIn() or DOMDocument.', E_USER_NOTICE
 		);
 		
 		$attributes = array('id', 'href', 'class');
@@ -238,46 +238,46 @@ class HTTPResponse {
 }
 
 /**
- * A {@link HTTPResponse} encapsulated in an exception, which can interrupt the processing flow and be caught by the
+ * A {@link SS_HTTPResponse} encapsulated in an exception, which can interrupt the processing flow and be caught by the
  * {@link RequestHandler} and returned to the user.
  *
  * Example Usage:
  * <code>
- * throw new HTTPResponse_Exception('This request was invalid.', 400);
- * throw new HTTPResponse_Exception(new HTTPResponse('There was an internal server error.', 500));
+ * throw new SS_HTTPResponse_Exception('This request was invalid.', 400);
+ * throw new SS_HTTPResponse_Exception(new SS_HTTPResponse('There was an internal server error.', 500));
  * </code>
  *
  * @package sapphire
  * @subpackage control
  */
-class HTTPResponse_Exception extends Exception {
+class SS_HTTPResponse_Exception extends Exception {
 	
 	protected $response;
 	
 	/**
-	 * @see HTTPResponse::__construct();
+	 * @see SS_HTTPResponse::__construct();
 	 */
 	 public function __construct($body = null, $statusCode = null, $statusDescription = null) {
-	 	if($body instanceof HTTPResponse) {
+	 	if($body instanceof SS_HTTPResponse) {
 	 		$this->setResponse($body);
 	 	} else {
-	 		$this->setResponse(new HTTPResponse($body, $statusCode, $statusDescription));
+	 		$this->setResponse(new SS_HTTPResponse($body, $statusCode, $statusDescription));
 	 	}
 	 	
 	 	parent::__construct($this->getResponse()->getBody(), $this->getResponse()->getStatusCode());
 	 }
 	 
 	 /**
-	  * @return HTTPResponse
+	  * @return SS_HTTPResponse
 	  */
 	 public function getResponse() {
 	 	return $this->response;
 	 }
 	 
 	 /**
-	  * @param HTTPResponse $response
+	  * @param SS_HTTPResponse $response
 	  */
-	 public function setResponse(HTTPResponse $response) {
+	 public function setResponse(SS_HTTPResponse $response) {
 	 	$this->response = $response;
 	 }
 	

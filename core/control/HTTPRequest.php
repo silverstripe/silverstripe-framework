@@ -4,7 +4,7 @@
  * Represents a HTTP-request, including a URL that is tokenised for parsing, and a request method (GET/POST/PUT/DELETE).
  * This is used by {@link RequestHandler} objects to decide what to do.
  * 
- * The intention is that a single HTTPRequest object can be passed from one object to another, each object calling
+ * The intention is that a single SS_HTTPRequest object can be passed from one object to another, each object calling
  * match() to get the information that they need out of the URL.  This is generally handled by 
  * {@link RequestHandler::handleRequest()}.
  * 
@@ -14,7 +14,7 @@
  * @package sapphire
  * @subpackage control
  */
-class HTTPRequest implements ArrayAccess {
+class SS_HTTPRequest implements ArrayAccess {
 
 	/**
 	 * @var string $url
@@ -85,7 +85,7 @@ class HTTPRequest implements ArrayAccess {
 	protected $unshiftedButParsedParts = 0;
 	
 	/**
-	 * Construct a HTTPRequest from a URL relative to the site root.
+	 * Construct a SS_HTTPRequest from a URL relative to the site root.
 	 */
 	function __construct($httpMethod, $url, $getVars = array(), $postVars = array(), $body = null) {
 		$this->httpMethod = strtoupper(self::detect_method($httpMethod, $postVars));
@@ -176,7 +176,7 @@ class HTTPRequest implements ArrayAccess {
 	}
 	
 	/**
-	 * Checks if the {@link HTTPRequest->getExtension()} on this request matches one of the more common media types
+	 * Checks if the {@link SS_HTTPRequest->getExtension()} on this request matches one of the more common media types
 	 * embedded into a webpage - e.g. css, png.
 	 *
 	 * This is useful for things like determining wether to display a fully rendered error page or not. Note that the
@@ -265,12 +265,12 @@ class HTTPRequest implements ArrayAccess {
 	function offsetUnset($offset) {}
 	
 	/**
-	 * Construct an HTTPResponse that will deliver a file to the client
+	 * Construct an SS_HTTPResponse that will deliver a file to the client
 	 */
 	static function send_file($fileData, $fileName, $mimeType = null) {
 		if(!$mimeType) $mimeType = HTTP::getMimeType($fileName);
 
-		$response = new HTTPResponse($fileData);
+		$response = new SS_HTTPResponse($fileData);
 		$response->addHeader("Content-Type", "$mimeType; name=\"" . addslashes($fileName) . "\"");
 		$response->addHeader("Content-disposition", "attachment; filename=" . addslashes($fileName));
 		$response->addHeader("Content-Length", strlen($fileData));

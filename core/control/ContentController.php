@@ -123,9 +123,9 @@ class ContentController extends Controller {
 	 * This acts the same as {@link Controller::handleRequest()}, but if an action cannot be found this will attempt to
 	 * fall over to a child controller in order to provide functionality for nested URLs.
 	 *
-	 * @return HTTPResponse
+	 * @return SS_HTTPResponse
 	 */
-	public function handleRequest(HTTPRequest $request) {
+	public function handleRequest(SS_HTTPRequest $request) {
 		$child  = null;
 		$action = $request->param('Action');
 		
@@ -163,7 +163,7 @@ class ContentController extends Controller {
 		if($this->request->isMedia() || !$response = ErrorPage::response_for($code)) {
 			parent::httpError($code, $message);
 		} else {
-			throw new HTTPResponse_Exception($response);
+			throw new SS_HTTPResponse_Exception($response);
 		}
 	}
 	

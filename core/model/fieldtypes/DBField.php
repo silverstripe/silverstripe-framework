@@ -159,7 +159,7 @@ abstract class DBField extends ViewableData {
 	 * gets you the default representations
 	 * of all columns.
 	 *
-	 * @param Query $query
+	 * @param SS_Query $query
 	 */
 	function addToQuery(&$query) {
 		

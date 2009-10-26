@@ -153,7 +153,7 @@ class DebugView {
 	 */
 	function writeTrace($trace) {
 		echo '<h3>Trace</h3>';
-		echo SSBacktrace::get_rendered_backtrace($trace);
+		echo SS_Backtrace::get_rendered_backtrace($trace);
 		echo '</div>';
 	}
 	

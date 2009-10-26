@@ -12,8 +12,8 @@
  * Uncaught exceptions are currently passed to the debug
  * reporter as standard PHP errors.
  * 
- * Errors handled by this class are passed along to {@link SSLog}.
- * For configuration information, see the {@link SSLog}
+ * Errors handled by this class are passed along to {@link SS_Log}.
+ * For configuration information, see the {@link SS_Log}
  * class documentation.
  * 
  * @todo add support for user defined config: Debug::die_on_notice(true | false)
@@ -207,7 +207,7 @@ class Debug {
 		if(error_reporting() == 0) return;
 		
 		// Send out the error details to the logger for writing
-		SSLog::log(
+		SS_Log::log(
 			array(
 				'errno' => $errno,
 				'errstr' => $errstr,
@@ -215,7 +215,7 @@ class Debug {
 				'errline' => $errline,
 				'errcontext' => $errcontext
 			),
-			SSLog::NOTICE
+			SS_Log::NOTICE
 		);
 		
 		if(Director::isDev()) {
@@ -239,7 +239,7 @@ class Debug {
 		}
 
 		// Send out the error details to the logger for writing
-		SSLog::log(
+		SS_Log::log(
 			array(
 				'errno' => $errno,
 				'errstr' => $errstr,
@@ -247,7 +247,7 @@ class Debug {
 				'errline' => $errline,
 				'errcontext' => $errcontext
 			),
-			SSLog::WARN
+			SS_Log::WARN
 		);
 		
 		if(self::$log_errors_to) {
@@ -276,7 +276,7 @@ class Debug {
 		}
 		
 		// Send out the error details to the logger for writing
-		SSLog::log(
+		SS_Log::log(
 			array(
 				'errno' => $errno,
 				'errstr' => $errstr,
@@ -284,7 +284,7 @@ class Debug {
 				'errline' => $errline,
 				'errcontext' => $errcontext
 			),
-			SSLog::ERR
+			SS_Log::ERR
 		);
 		
 		if(self::$log_errors_to) {
@@ -301,7 +301,7 @@ class Debug {
 	
 	/**
 	 * Render a user-facing error page, using the default HTML error template
-	 * rendered by {@link ErrorPage} if it exists. Doesn't use the standard {@link HTTPResponse} class
+	 * rendered by {@link ErrorPage} if it exists. Doesn't use the standard {@link SS_HTTPResponse} class
 	 * the keep dependencies minimal. 
 	 * 
 	 * @uses ErrorPage
@@ -429,8 +429,8 @@ class Debug {
 	 * @deprecated 2.5
 	 * To create error logs by email, use this code instead:
 	 * <code>
-	 * $emailWriter = new SSLogEmailWriter('my@email.com');
-	 * SSLog::add_writer($emailWriter, SSLog::ERR);
+	 * $emailWriter = new SS_LogEmailWriter('my@email.com');
+	 * SS_Log::add_writer($emailWriter, SS_Log::ERR);
 	 * </code>
 	 * 
 	 * @param string $emailAddress
@@ -443,12 +443,12 @@ class Debug {
 	 * @return boolean
 	 */
 	static function emailError($emailAddress, $errno, $errstr, $errfile, $errline, $errcontext, $errorType = "Error") {
-		user_error('Debug::send_errors_to() and Debug::emailError() is deprecated. Please use SSLog instead.
-			See the class documentation in SSLog.php for more information.', E_USER_NOTICE);
-		$priority = ($errorType == 'Error') ? SSLog::ERR : SSLog::WARN;
-		$writer = new SSLogEmailWriter($emailAddress);
-		SSLog::add_writer($writer, $priority);
-		SSLog::log(
+		user_error('Debug::send_errors_to() and Debug::emailError() is deprecated. Please use SS_Log instead.
+			See the class documentation in SS_Log.php for more information.', E_USER_NOTICE);
+		$priority = ($errorType == 'Error') ? SS_Log::ERR : SS_Log::WARN;
+		$writer = new SS_LogEmailWriter($emailAddress);
+		SS_Log::add_writer($writer, $priority);
+		SS_Log::log(
 			array(
 				'errno' => $errno,
 				'errstr' => $errstr,
@@ -458,7 +458,7 @@ class Debug {
 			),
 			$priority
 		);
-		SSLog::remove_writer($writer);
+		SS_Log::remove_writer($writer);
 	}
 	
 	/**
@@ -469,15 +469,15 @@ class Debug {
 	 * 
 	 * @todo Detect script path for CLI errors
 	 * @todo Log detailed errors to full file
-	 * @deprecated 2.5 See SSLog on setting up error file logging
+	 * @deprecated 2.5 See SS_Log on setting up error file logging
 	 */
 	protected static function log_error_if_necessary($errno, $errstr, $errfile, $errline, $errcontext, $errtype) {
-		user_error('Debug::log_error_if_necessary() and Debug::log_errors_to() are deprecated. Please use SSLog instead.
-			See the class documentation in SSLog.php for more information.', E_USER_NOTICE);
-		$priority = ($errtype == 'Error') ? SSLog::ERR : SSLog::WARN;
-		$writer = new SSLogFileWriter('../' . self::$log_errors_to);
-		SSLog::add_writer($writer, $priority);
-		SSLog::log(
+		user_error('Debug::log_error_if_necessary() and Debug::log_errors_to() are deprecated. Please use SS_Log instead.
+			See the class documentation in SS_Log.php for more information.', E_USER_NOTICE);
+		$priority = ($errtype == 'Error') ? SS_Log::ERR : SS_Log::WARN;
+		$writer = new SS_LogFileWriter('../' . self::$log_errors_to);
+		SS_Log::add_writer($writer, $priority);
+		SS_Log::log(
 			array(
 				'errno' => $errno,
 				'errstr' => $errstr,
@@ -487,12 +487,12 @@ class Debug {
 			),
 			$priority
 		);
-		SSLog::remove_writer($writer);
+		SS_Log::remove_writer($writer);
 	}
 	
 	/**
 	 * @param string $server IP-Address or domain
-	 * @deprecated 2.5 See SSLog on setting up error email notification
+	 * @deprecated 2.5 See SS_Log on setting up error email notification
 	 */
 	static function set_custom_smtp_server($server) {
 		self::$custom_smtp_server = $server;
@@ -500,7 +500,7 @@ class Debug {
 
 	/**
 	 * @return string
-	 * @deprecated 2.5 See SSLog on setting up error email notification
+	 * @deprecated 2.5 See SS_Log on setting up error email notification
 	 */
 	static function get_custom_smtp_server() {
 		return self::$custom_smtp_server;
@@ -511,7 +511,7 @@ class Debug {
 	 * Can be used like so:
 	 * if(Director::isLive()) Debug::send_errors_to("sam@silverstripe.com");
 	 * 
-	 * @deprecated 2.5 See SSLog on setting up error email notification
+	 * @deprecated 2.5 See SS_Log on setting up error email notification
 	 * 
 	 * @param string $emailAddress The email address to send errors to
 	 * @param string $sendWarnings Set to true to send warnings as well as errors (Default: false)
@@ -523,7 +523,7 @@ class Debug {
 	
 	/**
 	 * @return string
-	 * @deprecated 2.5 See SSLog on setting up error email notification
+	 * @deprecated 2.5 See SS_Log on setting up error email notification
 	 */
 	static function get_send_errors_to() {
 		return self::$send_errors_to;
@@ -531,7 +531,7 @@ class Debug {
 	
 	/**
 	 * @param string $emailAddress
-	 * @deprecated 2.5 See SSLog on setting up error email notification
+	 * @deprecated 2.5 See SS_Log on setting up error email notification
 	 */
 	static function send_warnings_to($emailAddress) {
 		self::$send_warnings_to = $emailAddress;
@@ -539,7 +539,7 @@ class Debug {
 
 	/**
 	 * @return string
-	 * @deprecated 2.5 See SSLog on setting up error email notification
+	 * @deprecated 2.5 See SS_Log on setting up error email notification
 	 */
 	static function get_send_warnings_to() {
 		return self::$send_warnings_to;
@@ -547,7 +547,7 @@ class Debug {
 	
 	/**
 	 * Call this to enable logging of errors.
-	 * @deprecated 2.5 See SSLog on setting up error file logging
+	 * @deprecated 2.5 See SS_Log on setting up error file logging
 	 */
 	static function log_errors_to($logFile = ".sserrors") {
 		self::$log_errors_to = $logFile;
@@ -564,19 +564,19 @@ class Debug {
 	}
 	
 	/**
-	 * @deprecated 2.5 Please use {@link SSBacktrace::backtrace()}
+	 * @deprecated 2.5 Please use {@link SS_Backtrace::backtrace()}
 	 */
 	static function backtrace($returnVal = false, $ignoreAjax = false) {
-		user_error('Debug::backtrace() is deprecated. Please use SSBacktrace::backtrace() instead', E_USER_NOTICE);
-		return SSBacktrace::backtrace($returnVal, $ignoreAjax);
+		user_error('Debug::backtrace() is deprecated. Please use SS_Backtrace::backtrace() instead', E_USER_NOTICE);
+		return SS_Backtrace::backtrace($returnVal, $ignoreAjax);
 	}
 	
 	/**
-	 * @deprecated 2.5 Please use {@link SSBacktrace::get_rendered_backtrace()}
+	 * @deprecated 2.5 Please use {@link SS_Backtrace::get_rendered_backtrace()}
 	 */
 	static function get_rendered_backtrace($bt, $plainText = false) {
-		user_error('Debug::get_rendered_backtrace() is deprecated. Please use SSBacktrace::get_rendered_backtrace() instead', E_USER_NOTICE);
-		return SSBacktrace::get_rendered_backtrace($bt, $plainText);
+		user_error('Debug::get_rendered_backtrace() is deprecated. Please use SS_Backtrace::get_rendered_backtrace() instead', E_USER_NOTICE);
+		return SS_Backtrace::get_rendered_backtrace($bt, $plainText);
 	}
 	
 	/**

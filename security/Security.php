@@ -146,7 +146,7 @@ class Security extends Controller {
 		if(!$controller) $controller = Controller::curr();
 		
 		if(Director::is_ajax()) {
-			$response = ($controller) ? $controller->getResponse() : new HTTPResponse();
+			$response = ($controller) ? $controller->getResponse() : new SS_HTTPResponse();
 			$response->setStatusCode(403);
 			$response->setBody('NOTLOGGEDIN:');
 			return $response;
@@ -184,7 +184,7 @@ class Security extends Controller {
 
 			// Work out the right message to show
 			if(Member::currentUser()) {
-				$response = ($controller) ? $controller->getResponse() : new HTTPResponse();
+				$response = ($controller) ? $controller->getResponse() : new SS_HTTPResponse();
 				$response->setStatusCode(403);
 
 				// Replace %s with the log in link
@@ -294,10 +294,10 @@ class Security extends Controller {
 		$eventResults = $this->extend('onBeforeSecurityLogin');
 		// If there was a redirection, return
 		if(Director::redirected_to()) return;
-		// If there was an HTTPResponse object returned, then return that
+		// If there was an SS_HTTPResponse object returned, then return that
 		else if($eventResults) {
 			foreach($eventResults as $result) {
-				if($result instanceof HTTPResponse) return $result;
+				if($result instanceof SS_HTTPResponse) return $result;
 			}
 		}
 		
@@ -446,7 +446,7 @@ class Security extends Controller {
 	 * Show the "password sent" page, after a user has requested
 	 * to reset their password.
 	 *
-	 * @param HTTPRequest $request The HTTPRequest for this action. 
+	 * @param SS_HTTPRequest $request The SS_HTTPRequest for this action. 
 	 * @return string Returns the "password sent" page as HTML code.
 	 */
 	public function passwordsent($request) {

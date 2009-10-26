@@ -44,10 +44,10 @@ class SapphireREPL extends Controller {
 
 			echo "Sapphire Interactive Command-line (REPL interface). Type help for hints.\n\n";
 			while(true) {
-				echo SSCli::text("?> ", "cyan");
-				echo SSCli::start_colour("yellow");
+				echo SS_Cli::text("?> ", "cyan");
+				echo SS_Cli::start_colour("yellow");
 				$command = trim(fgets(STDIN, 4096));
-				echo SSCli::end_colour();
+				echo SS_Cli::end_colour();
 
 				if ( $command == 'help' || $command == '?' ) {
 					print "help or ? to exit\n" ;
@@ -71,7 +71,7 @@ class SapphireREPL extends Controller {
 					echo "\n";
 				}
 				catch( Exception $__repl_exception ) {
-					echo SSCli::start_colour("red");
+					echo SS_Cli::start_colour("red");
 					printf( '%s (code: %d) got thrown'.PHP_EOL, get_class($__repl_exception), $__repl_exception->getCode() );
 					print $__repl_exception;
 					echo "\n";

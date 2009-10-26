@@ -25,22 +25,22 @@ class ErrorPage extends Page {
 	protected static $static_filepath = ASSETS_PATH;
 	
 	/**
-	 * Get a {@link HTTPResponse} to response to a HTTP error code if an {@link ErrorPage} for that code is present.
+	 * Get a {@link SS_HTTPResponse} to response to a HTTP error code if an {@link ErrorPage} for that code is present.
 	 *
 	 * @param int $statusCode
-	 * @return HTTPResponse
+	 * @return SS_HTTPResponse
 	 */
 	public static function response_for($statusCode) {
 		// first attempt to dynamically generate the error page
 		if($errorPage = DataObject::get_one('ErrorPage', "\"ErrorCode\" = $statusCode")) {
-			return ModelAsController::controller_for($errorPage)->handleRequest(new HTTPRequest('GET', ''));
+			return ModelAsController::controller_for($errorPage)->handleRequest(new SS_HTTPRequest('GET', ''));
 		}
 		
 		// then fall back on a cached version
 		$cachedPath = self::get_filepath_for_errorcode($statusCode, Translatable::get_current_locale());
 		
 		if(file_exists($cachedPath)) {
-			$response = new HTTPResponse();	
+			$response = new SS_HTTPResponse();	
 			
 			$response->setStatusCode($statusCode);
 			$response->setBody(file_get_contents($cachedPath));
@@ -68,7 +68,7 @@ class ErrorPage extends Page {
 			$errorpage->Status = 'New page';
 			$errorpage->write();
 			
-			Database::alteration_message('404 page created', 'created');
+			SS_Database::alteration_message('404 page created', 'created');
 		}
 	}
 

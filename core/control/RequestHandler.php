@@ -6,7 +6,7 @@
  * Any RequestHandler object can be made responsible for handling its own segment of the URL namespace.
  * The {@link Director} begins the URL parsing process; it will parse the beginning of the URL to identify which
  * controller is being used.  It will then call {@link handleRequest()} on that Controller, passing it the parameters that it
- * parsed from the URL, and the {@link HTTPRequest} that contains the remainder of the URL to be parsed.
+ * parsed from the URL, and the {@link SS_HTTPRequest} that contains the remainder of the URL to be parsed.
  *
  * You can use ?debug_request=1 to view information about the different components and rule matches for a specific URL.
  *
@@ -44,7 +44,7 @@ class RequestHandler extends ViewableData {
 	 * The default URL handling rules.  This specifies that the next component of the URL corresponds to a method to
 	 * be called on this RequestHandlingData object.
 	 *
-	 * The keys of this array are parse rules.  See {@link HTTPRequest::match()} for a description of the rules available.
+	 * The keys of this array are parse rules.  See {@link SS_HTTPRequest::match()} for a description of the rules available.
 	 * 
 	 * The values of the array are the method to be called if the rule matches.  If this value starts with a '$', then the
 	 * named parameter of the parsed URL wil be used to determine the method name.
@@ -91,10 +91,10 @@ class RequestHandler extends ViewableData {
 	 * customise the controller.
 	 * 
 	 * @param $params The parameters taken from the parsed URL of the parent url handler
-	 * @param $request The {@link HTTPRequest} object that is reponsible for distributing URL parsing
-	 * @uses HTTPRequest
-	 * @uses HTTPRequest->match()
-	 * @return HTTPResponse|RequestHandler|string|array
+	 * @param $request The {@link SS_HTTPRequest} object that is reponsible for distributing URL parsing
+	 * @uses SS_HTTPRequest
+	 * @uses SS_HTTPRequest->match()
+	 * @return SS_HTTPResponse|RequestHandler|string|array
 	 */
 	function handleRequest($request) {
 		// $handlerClass is used to step up the class hierarchy to implement url_handlers inheritance
@@ -133,14 +133,14 @@ class RequestHandler extends ViewableData {
 						
 						try {
 							$result = $this->$action($request);
-						} catch(HTTPResponse_Exception $responseException) {
+						} catch(SS_HTTPResponse_Exception $responseException) {
 							$result = $responseException->getResponse();
 						}
 					} else {
 						return $this->httpError(403, "Action '$action' isn't allowed on class $this->class");
 					}
 				
-					if($result instanceof HTTPResponse && $result->isError()) {
+					if($result instanceof SS_HTTPResponse && $result->isError()) {
 						if(isset($_REQUEST['debug_request'])) Debug::message("Rule resulted in HTTP error; breaking");
 						return $result;
 					}
@@ -276,21 +276,21 @@ class RequestHandler extends ViewableData {
 	}
 	
 	/**
-	 * Throws a HTTP error response encased in a {@link HTTPResponse_Exception}, which is later caught in
+	 * Throws a HTTP error response encased in a {@link SS_HTTPResponse_Exception}, which is later caught in
 	 * {@link RequestHandler::handleAction()} and returned to the user.
 	 *
 	 * @param int $errorCode
 	 * @param string $errorMessage
-	 * @uses HTTPResponse_Exception
+	 * @uses SS_HTTPResponse_Exception
 	 */
 	public function httpError($errorCode, $errorMessage = null) {
-		throw new HTTPResponse_Exception($errorMessage, $errorCode);
+		throw new SS_HTTPResponse_Exception($errorMessage, $errorCode);
 	}
 	
 	/**
-	 * Returns the HTTPRequest object that this controller is using.
+	 * Returns the SS_HTTPRequest object that this controller is using.
 	 *
-	 * @return HTTPRequest
+	 * @return SS_HTTPRequest
 	 */
 	function getRequest() {
 		return $this->request;

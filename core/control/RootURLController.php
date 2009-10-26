@@ -98,23 +98,23 @@ class RootURLController extends Controller {
 	}
 	
 	/**
-	 * @param HTTPRequest $request
-	 * @return HTTPResponse
+	 * @param SS_HTTPRequest $request
+	 * @return SS_HTTPResponse
 	 */
-	public function handleRequest(HTTPRequest $request) {
+	public function handleRequest(SS_HTTPRequest $request) {
 		self::$is_at_root = true;
 		
 		$this->pushCurrent();
 		$this->init();
 		
 		if(!DB::isActive() || !ClassInfo::hasTable('SiteTree')) {
-			$this->response = new HTTPResponse();
+			$this->response = new SS_HTTPResponse();
 			$this->response->redirect('dev/build/?returnURL=');
 			
 			return $this->response;
 		}
 			
-		$request = new HTTPRequest (
+		$request = new SS_HTTPRequest (
 			$request->httpMethod(), self::get_homepage_link() . '/', $request->getVars(), $request->postVars()
 		);
 		$request->match('$URLSegment//$Action', true);

@@ -8,7 +8,7 @@
 
 require_once 'Zend/Log/Formatter/Interface.php';
 
-class SSLogErrorFileFormatter implements Zend_Log_Formatter_Interface {
+class SS_LogErrorFileFormatter implements Zend_Log_Formatter_Interface {
 
 	public function format($event) {
 		$errno = $event['message']['errno'];

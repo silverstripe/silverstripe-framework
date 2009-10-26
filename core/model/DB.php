@@ -8,7 +8,7 @@
 class DB {
 	/**
 	 * The global database connection.
-	 * @var Database
+	 * @var SS_Database
 	 */
 	private static $connections = array();
 
@@ -25,7 +25,7 @@ class DB {
 
 	/**
 	 * Set the global database connection.
-	 * Pass an object that's a subclass of Database.  This object will be used when {@link DB::query()}
+	 * Pass an object that's a subclass of SS_Database.  This object will be used when {@link DB::query()}
 	 * is called.
 	 * @param $connection The connecton object to set as the connection.
 	 * @param $name The name to give to this connection.  If you omit this argument, the connection
@@ -33,7 +33,7 @@ class DB {
 	 * be accessed through DB::getConn($name).  This is useful when you have an application that
 	 * needs to connect to more than one database.
 	 */
-	static function setConn(Database $connection, $name = 'default') {
+	static function setConn(SS_Database $connection, $name = 'default') {
 		self::$connections[$name] = $connection;
 	}
 
@@ -41,7 +41,7 @@ class DB {
 	 * Get the global database connection.
 	 * @param $name An optional name given to a connection in the DB::setConn() call.  If omitted, 
 	 * the default connection is returned.
-	 * @return Database
+	 * @return SS_Database
 	 */
 	static function getConn($name = 'default') {
 		if(isset(self::$connections[$name])) {
@@ -67,9 +67,9 @@ class DB {
 
 	/**
 	 * Connect to a database.
-	 * Given the database configuration, this method will create the correct subclass of Database,
+	 * Given the database configuration, this method will create the correct subclass of SS_Database,
 	 * and set it as the global connection.
-	 * @param array $database A map of options. The 'type' is the name of the subclass of Database to use. For the rest of the options, see the specific class.
+	 * @param array $database A map of options. The 'type' is the name of the subclass of SS_Database to use. For the rest of the options, see the specific class.
 	 */
 	static function connect($databaseConfig) {
 		// This is used by TestRunner::startsession() to test up a test session using an alt
@@ -109,7 +109,7 @@ class DB {
 	 * Execute the given SQL query.
 	 * @param string $sql The SQL query to execute
 	 * @param int $errorLevel The level of error reporting to enable for the query
-	 * @return Query
+	 * @return SS_Query
 	 */
 	static function query($sql, $errorLevel = E_USER_ERROR) {
 		self::$lastQuery = $sql;
@@ -161,9 +161,9 @@ class DB {
 	 * initial database connection is not successful because the database
 	 * does not exist.
 	 * @param string $connect Connection string
-	 * @param string $username Database username
-	 * @param string $password Database Password
-	 * @param string $database Database to which to create
+	 * @param string $username SS_Database username
+	 * @param string $password SS_Database Password
+	 * @param string $database SS_Database to which to create
 	 * @return boolean Returns true if successful
 	 */
 	static function createDatabase($connect, $username, $password, $database) {
@@ -240,7 +240,7 @@ class DB {
 	}
 	
 	/**
-	 * See {@link Database->dontRequireField()}.
+	 * See {@link SS_Database->dontRequireField()}.
 	 * 
 	 * @param string $table The table name.
 	 * @param string $fieldName

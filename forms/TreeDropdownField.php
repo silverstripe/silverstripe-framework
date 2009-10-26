@@ -117,10 +117,10 @@ class TreeDropdownField extends FormField {
 	/**
 	 * Get the whole tree of a part of the tree via an AJAX request.
 	 *
-	 * @param HTTPRequest $request
+	 * @param SS_HTTPRequest $request
 	 * @return string
 	 */
-	public function tree(HTTPRequest $request) {
+	public function tree(SS_HTTPRequest $request) {
 		$isSubTree = false;
 		
 		if($ID = (int) $request->param('ID')) {

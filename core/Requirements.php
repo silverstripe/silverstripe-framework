@@ -217,7 +217,7 @@ class Requirements {
 		return self::backend()->includeInHTML($templateFile, $content);
 	}
 	
-	static function include_in_response(HTTPResponse $response) {
+	static function include_in_response(SS_HTTPResponse $response) {
 		return self::backend()->include_in_response($response);
 	}
 	
@@ -643,7 +643,7 @@ class Requirements_Backend {
 	/**
 	 * Attach requirements inclusion to X-Include-JS and X-Include-CSS headers on the HTTP response
 	 */
-	function include_in_response(HTTPResponse $response) {
+	function include_in_response(SS_HTTPResponse $response) {
 		$this->process_combined_files(); 
 		$jsRequirements = array();
 		$cssRequirements = array();

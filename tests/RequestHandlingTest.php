@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Tests for RequestHandler and HTTPRequest.
+ * Tests for RequestHandler and SS_HTTPRequest.
  * We've set up a simple URL handling model based on 
  */
 class RequestHandlingTest extends SapphireTest {
@@ -195,11 +195,11 @@ class RequestHandlingTest_Controller extends Controller {
 	}
 	
 	public function throwexception() {
-		throw new HTTPResponse_Exception('This request was invalid.', 400);
+		throw new SS_HTTPResponse_Exception('This request was invalid.', 400);
 	}
 	
 	public function throwresponseexception() {
-		throw new HTTPResponse_Exception(new HTTPResponse('There was an internal server error.', 500));
+		throw new SS_HTTPResponse_Exception(new SS_HTTPResponse('There was an internal server error.', 500));
 	}
 	
 	public function throwhttperror() {

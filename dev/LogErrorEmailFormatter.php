@@ -7,7 +7,7 @@
 
 require_once 'Zend/Log/Formatter/Interface.php';
 
-class SSLogErrorEmailFormatter implements Zend_Log_Formatter_Interface {
+class SS_LogErrorEmailFormatter implements Zend_Log_Formatter_Interface {
 
 	public function format($event) {
 		switch($event['priorityName']) {
@@ -39,9 +39,9 @@ class SSLogErrorEmailFormatter implements Zend_Log_Formatter_Interface {
 		$data .= "<p style=\"color: white; background-color: $colour; margin: 0\">$errorType: $errstr<br /> At line $errline in $errfile\n<br />\n<br />\n</p>\n";
 
 		// Get a backtrace, filtering out debug method calls
-		$data .= SSBacktrace::backtrace(true, false, array(
-			'SSLogErrorEmailFormatter->format',
-			'SSLogEmailWriter->_write'
+		$data .= SS_Backtrace::backtrace(true, false, array(
+			'SS_LogErrorEmailFormatter->format',
+			'SS_LogEmailWriter->_write'
 		));
 
 		$data .= "</div>\n";

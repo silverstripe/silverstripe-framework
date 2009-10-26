@@ -5,7 +5,7 @@
  * @package sapphire
  * @subpackage model
  */
-abstract class Database {
+abstract class SS_Database {
 	/**
 	 * This constant was added in SilverStripe 2.4 to indicate that SQL-queries
 	 * should now use ANSI-compatible syntax.  The most notable affect of this
@@ -30,10 +30,10 @@ abstract class Database {
 	/**
 	 * Execute the given SQL query.
 	 * This abstract function must be defined by subclasses as part of the actual implementation.
-	 * It should return a subclass of Query as the result.
+	 * It should return a subclass of SS_Query as the result.
 	 * @param string $sql The SQL query to execute
 	 * @param int $errorLevel The level of error reporting to enable for the query
-	 * @return Query
+	 * @return SS_Query
 	 */
 	abstract function query($sql, $errorLevel = E_USER_ERROR);
 	
@@ -264,7 +264,7 @@ abstract class Database {
 		
 		if(!isset($this->tableList[strtolower($table)])) {
 			$this->transCreateTable($table, $options, $extensions);
-			Database::alteration_message("Table $table: created","created");
+			SS_Database::alteration_message("Table $table: created","created");
 		} else {
 			$this->checkAndRepairTable($table, $options);
 			
@@ -331,7 +331,7 @@ abstract class Database {
 				$suffix = $suffix ? ($suffix+1) : 2;
 			}
 			$this->renameTable($table, "_obsolete_{$table}$suffix");
-			Database::alteration_message("Table $table: renamed to _obsolete_{$table}$suffix","obsolete");
+			SS_Database::alteration_message("Table $table: renamed to _obsolete_{$table}$suffix","obsolete");
 		}
 	}
 	
@@ -384,11 +384,11 @@ abstract class Database {
 		
 		if($newTable || !isset($this->indexList[$table][$index_alt])) {
 			$this->transCreateIndex($table, $index, $spec);
-			Database::alteration_message("Index $table.$index: created as $spec","created");
+			SS_Database::alteration_message("Index $table.$index: created as $spec","created");
 		} else if($array_spec != DB::getConn()->convertIndexSpec($spec)) {
 			$this->transAlterIndex($table, $index, $spec);
 			$spec_msg=DB::getConn()->convertIndexSpec($spec);
-			Database::alteration_message("Index $table.$index: changed to $spec_msg <i style=\"color: #AAA\">(from {$array_spec})</i>","changed");			
+			SS_Database::alteration_message("Index $table.$index: changed to $spec_msg <i style=\"color: #AAA\">(from {$array_spec})</i>","changed");			
 		}
 	}
 
@@ -464,7 +464,7 @@ abstract class Database {
 			
 			$this->transCreateField($table, $field, $spec_orig);
 			Profiler::unmark('createField');
-			Database::alteration_message("Field $table.$field: created as $spec_orig","created");
+			SS_Database::alteration_message("Field $table.$field: created as $spec_orig","created");
 		} else if($fieldValue != $specValue) {
 			// If enums are being modified, then we need to fix existing data in the table.
 			// Update any records where the enum is set to a legacy value to be set to the default.
@@ -494,13 +494,13 @@ abstract class Database {
 					$query .= "'{$holder[$i]}')";
 					DB::query($query);
 					$amount = DB::affectedRows();
-					Database::alteration_message("Changed $amount rows to default value of field $field (Value: $default)");
+					SS_Database::alteration_message("Changed $amount rows to default value of field $field (Value: $default)");
 				}
 			}
 			Profiler::mark('alterField');
 			$this->transAlterField($table, $field, $spec_orig);
 			Profiler::unmark('alterField');
-			Database::alteration_message("Field $table.$field: changed to $specValue <i style=\"color: #AAA\">(from {$fieldValue})</i>","changed");
+			SS_Database::alteration_message("Field $table.$field: changed to $specValue <i style=\"color: #AAA\">(from {$fieldValue})</i>","changed");
 		}
 		Profiler::unmark('requireField');
 	}
@@ -519,7 +519,7 @@ abstract class Database {
 				$suffix = $suffix ? ($suffix+1) : 2;
 			}
 			$this->renameField($table, $fieldName, "_obsolete_{$fieldName}$suffix");
-			Database::alteration_message("Field $table.$fieldName: renamed to $table._obsolete_{$fieldName}$suffix","obsolete");
+			SS_Database::alteration_message("Field $table.$fieldName: renamed to $table._obsolete_{$fieldName}$suffix","obsolete");
 		}
 	}
 
@@ -540,7 +540,7 @@ abstract class Database {
 					$fieldList[] = "\"$fieldName\" = $fieldVal";
 					$columnList[] = "\"$fieldName\"";
 
-					// Empty strings inserted as null in INSERTs.  Replacement of Database::replace_with_null().
+					// Empty strings inserted as null in INSERTs.  Replacement of SS_Database::replace_with_null().
 					if($fieldVal === "''") $valueList[] = "null";
 					else $valueList[] = $fieldVal;
 				}
@@ -575,7 +575,7 @@ abstract class Database {
 
 					default:
 						$sql = null;
-						user_error("Database::manipulate() Can't recognise command '$writeInfo[command]'", E_USER_ERROR);
+						user_error("SS_Database::manipulate() Can't recognise command '$writeInfo[command]'", E_USER_ERROR);
 				}
 			}
 		}
@@ -590,7 +590,7 @@ abstract class Database {
 		if(is_array($array)) {
 			foreach($array as $key => $value) {
 				if(is_array($value)) {
-					array_walk($array, array(Database, 'replace_with_null'));
+					array_walk($array, array(SS_Database, 'replace_with_null'));
 				}
 			}
 		}
@@ -614,11 +614,11 @@ abstract class Database {
 	 * Enable supression of database messages.
 	 */
 	function quiet() {
-		Database::$supressOutput = true;
+		SS_Database::$supressOutput = true;
 	}
 	
 	static function alteration_message($message,$type=""){
-		if(!Database::$supressOutput) {
+		if(!SS_Database::$supressOutput) {
 			$color = "";
 			switch ($type){
 				case "created":
@@ -692,15 +692,15 @@ abstract class Database {
 /**
  * Abstract query-result class.
  * Once again, this should be subclassed by an actual database implementation.  It will only
- * ever be constructed by a subclass of Database.  The result of a database query - an iteratable object that's returned by DB::Query
+ * ever be constructed by a subclass of SS_Database.  The result of a database query - an iteratable object that's returned by DB::SS_Query
  *
- * Primarily, the Query class takes care of the iterator plumbing, letting the subclasses focusing
+ * Primarily, the SS_Query class takes care of the iterator plumbing, letting the subclasses focusing
  * on providing the specific data-access methods that are required: {@link nextRecord()}, {@link numRecords()}
  * and {@link seek()}
  * @package sapphire
  * @subpackage model
  */
-abstract class Query implements Iterator {
+abstract class SS_Query implements Iterator {
 	/**
 	 * The current record in the interator.
 	 * @var array
