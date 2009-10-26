@@ -11,11 +11,11 @@ class HierarchyTest extends SapphireTest {
 		$this->objFromFixture('Page', 'page2b')->delete();
 		$this->objFromFixture('Page', 'page3a')->delete();
 		$this->objFromFixture('Page', 'page3')->delete();
-
+	
 		// Check that page1-3 appear at the top level of the AllHistoricalChildren tree
 		$this->assertEquals(array("Page 1", "Page 2", "Page 3"), 
 			singleton('Page')->AllHistoricalChildren()->column('Title'));
-
+	
 		// Check that both page 2 children are returned
 		$page2 = $this->objFromFixture('Page', 'page2');
 		$this->assertEquals(array("Page 2a", "Page 2b"), 
@@ -23,7 +23,7 @@ class HierarchyTest extends SapphireTest {
 			
 		// Page 3 has been deleted; let's bring it back from the grave
 		$page3 = Versioned::get_including_deleted("SiteTree", "\"Title\" = 'Page 3'")->First();
-
+	
 		// Check that both page 3 children are returned
 		$this->assertEquals(array("Page 3a", "Page 3b"), 
 			$page3->AllHistoricalChildren()->column('Title'));
@@ -61,6 +61,22 @@ class HierarchyTest extends SapphireTest {
 		$this->assertEquals($this->objFromFixture('Page', 'page2b')->numChildren(), 0);
 		$this->assertEquals($this->objFromFixture('Page', 'page3a')->numChildren(), 0);
 		$this->assertEquals($this->objFromFixture('Page', 'page3b')->numChildren(), 0);
+		
+		$page1 = $this->objFromFixture('Page', 'page1');
+		$this->assertEquals($page1->numChildren(), 0);
+		$page1Child1 = new Page();
+		$page1Child1->ParentID = $page1->ID;
+		$page1Child1->write();
+		$this->assertEquals($page1->numChildren(false), 1,
+			'numChildren() caching can be disabled through method parameter'
+		);
+		$page1Child2 = new Page();
+		$page1Child2->ParentID = $page1->ID;
+		$page1Child2->write();
+		$page1->flushCache();
+		$this->assertEquals($page1->numChildren(), 2,
+			'numChildren() caching can be disabled by flushCache()'
+		);
 	}
 		
 }

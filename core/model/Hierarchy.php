@@ -6,8 +6,15 @@
  * @subpackage model
  */
 class Hierarchy extends DataObjectDecorator {
+	
 	protected $markedNodes;
+	
 	protected $markingFilter;
+	
+	/**
+	 * @var Int
+	 */
+	protected $_cache_numChildren;
 	
 	function augmentSQL(SQLQuery &$query) {
 	}
@@ -474,32 +481,34 @@ class Hierarchy extends DataObjectDecorator {
 		return Versioned::get_including_deleted($baseClass, 
 			"\"ParentID\" = " . (int)$this->owner->ID, "\"$baseClass\".\"ID\" ASC");
 	}
-
 	
 	/**
-	 * Cache for numChildren().
-	 */
-	private static $num_children_cache = array();
-	
-	/**
-	 * Return the number of children
+	 * Return the number of direct children.
+	 * By default, values are cached after the first invocation.
+	 * Can be augumented by {@link augmentNumChildrenCountQuery()}.
+	 * 
+	 * @param Boolean $cache
 	 * @return int
 	 */
-	public function numChildren() {
+	public function numChildren($cache = true) {
 		$baseClass = ClassInfo::baseDataClass($this->owner->class);
 		
 		// Build the cache for this class if it doesn't exist.
-		if(!isset(self::$num_children_cache[$baseClass])) {
+		if(!$cache || !is_numeric($this->_cache_numChildren)) {
 			// We build the query in an extension-friendly way.
-			$query = new SQLQuery("ParentID, COUNT(*)","\"$baseClass\"", "", "", "ParentID");
+			$query = new SQLQuery(
+				"COUNT(*)",
+				"\"$baseClass\"", 
+				sprintf('"ParentID" = %d', $this->owner->ID)
+			);
 			$this->owner->extend('augmentSQL', $query);
 			$this->owner->extend('augmentNumChildrenCountQuery', $query);
 			 
-			self::$num_children_cache[$baseClass] = $query->execute()->map();
+			$this->_cache_numChildren = (int)$query->execute()->value();
 		}
-		
+
 		// If theres no value in the cache, it just means that it doesn't have any children.
-		return isset(self::$num_children_cache[$baseClass][$this->owner->ID]) ? self::$num_children_cache[$baseClass][$this->owner->ID] : 0;
+		return $this->_cache_numChildren;
 	}
 
 	/**
@@ -657,6 +666,7 @@ class Hierarchy extends DataObjectDecorator {
 		$this->_cache_children = null;
 		$this->_cache_allChildrenIncludingDeleted = null;
 		$this->_cache_allChildren = null;
+		$this->_cache_numChildren = null;
 	}
 }
 
