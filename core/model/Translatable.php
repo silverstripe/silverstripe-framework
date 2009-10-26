@@ -618,7 +618,7 @@ class Translatable extends DataObjectDecorator implements PermissionProvider {
 				unset($obj);
 			}
 		}
-		SS_Database::alteration_message(sprintf(
+		DB::alteration_message(sprintf(
 			"Added default locale '%s' to table %s","changed",
 			Translatable::default_locale(),
 			$this->owner->class

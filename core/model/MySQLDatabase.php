@@ -261,7 +261,7 @@ class MySQLDatabase extends SS_Database {
 		
 		if($alteredOptions && isset($alteredOptions[get_class($this)])) {
 			$this->query(sprintf("ALTER TABLE \"%s\" %s", $tableName, $alteredOptions[get_class($this)]));
-			SS_Database::alteration_message(
+			DB::alteration_message(
 				sprintf("Table %s options changed: %s", $tableName, $alteredOptions[get_class($this)]),
 				"changed"
 			);
@@ -281,7 +281,7 @@ class MySQLDatabase extends SS_Database {
 	 */
 	public function checkAndRepairTable($tableName) {
 		if(!$this->runTableCheckCommand("CHECK TABLE \"$tableName\"")) {
-			SS_Database::alteration_message("Table $tableName: repaired","repaired");
+			DB::alteration_message("Table $tableName: repaired","repaired");
 			return $this->runTableCheckCommand("REPAIR TABLE \"$tableName\" USE_FRM");
 		} else {
 			return true;

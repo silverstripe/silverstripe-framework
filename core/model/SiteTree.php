@@ -1236,7 +1236,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 				$homepage->write();
 				$homepage->publish("Stage", "Live");
 				$homepage->flushCache();
-				SS_Database::alteration_message("Home page created","created");		
+				DB::alteration_message("Home page created","created");		
 			}
 
 			if(DB::query("SELECT COUNT(*) FROM \"SiteTree\"")->value() == 1) {
@@ -1247,7 +1247,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 				$aboutus->Status = "Published";
 				$aboutus->write();
 				$aboutus->publish("Stage", "Live");
-				SS_Database::alteration_message("About Us created","created");
+				DV::alteration_message("About Us created","created");
 
 				$contactus = new Page();
 				$contactus->Title = _t('SiteTree.DEFAULTCONTACTTITLE', 'Contact Us');

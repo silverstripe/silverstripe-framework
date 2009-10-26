@@ -68,7 +68,7 @@ class ErrorPage extends Page {
 			$errorpage->Status = 'New page';
 			$errorpage->write();
 			
-			SS_Database::alteration_message('404 page created', 'created');
+			DB::alteration_message('404 page created', 'created');
 		}
 	}
 

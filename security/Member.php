@@ -954,7 +954,7 @@ class Member extends DataObject {
 		
 		if(!DB::query("SELECT * FROM \"Member\"")->value() && isset($_REQUEST['username']) && isset($_REQUEST['password'])) {
 			Security::findAnAdministrator($_REQUEST['username'], $_REQUEST['password']);
-			SS_Database::alteration_message("Added admin account","created");
+			DB::alteration_message("Added admin account","created");
 		}
 	}
 	

@@ -107,7 +107,7 @@ class SiteConfig extends DataObject implements PermissionProvider {
 		$siteConfig = DataObject::get_one('SiteConfig');
 		if(!$siteConfig) {
 			self::make_site_config();
-			Database::alteration_message("Added default site config","created");
+			DB::alteration_message("Added default site config","created");
 		}
 	}
 	

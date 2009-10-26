@@ -7,6 +7,15 @@
  */
 class DB {
 	/**
+	 * This constant was added in SilverStripe 2.4 to indicate that SQL-queries
+	 * should now use ANSI-compatible syntax.  The most notable affect of this
+	 * change is that table and field names should be escaped with double quotes
+	 * and not backticks
+	 */
+	const USE_ANSI_SQL = true;
+	
+
+	/**
 	 * The global database connection.
 	 * @var SS_Database
 	 */
@@ -291,5 +300,13 @@ class DB {
 	static function quiet() {
 		return self::getConn()->quiet();
 	}
+	
+	/**
+	 * Show a message about database alteration.
+	 */
+	static function alteration_message($message,$type="") {
+		return self::getConn()->alterationMessage($message, $type);
+	}
+	
 }
 ?>

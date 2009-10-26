@@ -2907,7 +2907,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 					$obj = new $className($record);
 					$obj->write();
 				}
-				SS_Database::alteration_message("Added default records to $className table","created");
+				DB::alteration_message("Added default records to $className table","created");
 			}
 		}
 

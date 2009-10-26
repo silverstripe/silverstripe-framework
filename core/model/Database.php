@@ -7,14 +7,6 @@
  */
 abstract class SS_Database {
 	/**
-	 * This constant was added in SilverStripe 2.4 to indicate that SQL-queries
-	 * should now use ANSI-compatible syntax.  The most notable affect of this
-	 * change is that table and field names should be escaped with double quotes
-	 * and not backticks
-	 */
-	const USE_ANSI_SQL = true;
-	
-	/**
 	 * Connection object to the database.
 	 * @param resource
 	 */
@@ -25,7 +17,7 @@ abstract class SS_Database {
 	 * will be displayed, eg creation of tables.
 	 * @param boolean
 	 */
-	public static $supressOutput = false;
+	protected $supressOutput = false;
 	
 	/**
 	 * Execute the given SQL query.
@@ -264,7 +256,7 @@ abstract class SS_Database {
 		
 		if(!isset($this->tableList[strtolower($table)])) {
 			$this->transCreateTable($table, $options, $extensions);
-			SS_Database::alteration_message("Table $table: created","created");
+			$this->alterationMessage("Table $table: created","created");
 		} else {
 			$this->checkAndRepairTable($table, $options);
 			
@@ -331,7 +323,7 @@ abstract class SS_Database {
 				$suffix = $suffix ? ($suffix+1) : 2;
 			}
 			$this->renameTable($table, "_obsolete_{$table}$suffix");
-			SS_Database::alteration_message("Table $table: renamed to _obsolete_{$table}$suffix","obsolete");
+			$this->alterationMessage("Table $table: renamed to _obsolete_{$table}$suffix","obsolete");
 		}
 	}
 	
@@ -384,11 +376,11 @@ abstract class SS_Database {
 		
 		if($newTable || !isset($this->indexList[$table][$index_alt])) {
 			$this->transCreateIndex($table, $index, $spec);
-			SS_Database::alteration_message("Index $table.$index: created as $spec","created");
+			$this->alterationMessage("Index $table.$index: created as $spec","created");
 		} else if($array_spec != DB::getConn()->convertIndexSpec($spec)) {
 			$this->transAlterIndex($table, $index, $spec);
 			$spec_msg=DB::getConn()->convertIndexSpec($spec);
-			SS_Database::alteration_message("Index $table.$index: changed to $spec_msg <i style=\"color: #AAA\">(from {$array_spec})</i>","changed");			
+			$this->alterationMessage("Index $table.$index: changed to $spec_msg <i style=\"color: #AAA\">(from {$array_spec})</i>","changed");			
 		}
 	}
 
@@ -464,7 +456,7 @@ abstract class SS_Database {
 			
 			$this->transCreateField($table, $field, $spec_orig);
 			Profiler::unmark('createField');
-			SS_Database::alteration_message("Field $table.$field: created as $spec_orig","created");
+			$this->alterationMessage("Field $table.$field: created as $spec_orig","created");
 		} else if($fieldValue != $specValue) {
 			// If enums are being modified, then we need to fix existing data in the table.
 			// Update any records where the enum is set to a legacy value to be set to the default.
@@ -494,13 +486,13 @@ abstract class SS_Database {
 					$query .= "'{$holder[$i]}')";
 					DB::query($query);
 					$amount = DB::affectedRows();
-					SS_Database::alteration_message("Changed $amount rows to default value of field $field (Value: $default)");
+					$this->alterationMessage("Changed $amount rows to default value of field $field (Value: $default)");
 				}
 			}
 			Profiler::mark('alterField');
 			$this->transAlterField($table, $field, $spec_orig);
 			Profiler::unmark('alterField');
-			SS_Database::alteration_message("Field $table.$field: changed to $specValue <i style=\"color: #AAA\">(from {$fieldValue})</i>","changed");
+			$this->alterationMessage("Field $table.$field: changed to $specValue <i style=\"color: #AAA\">(from {$fieldValue})</i>","changed");
 		}
 		Profiler::unmark('requireField');
 	}
@@ -519,7 +511,7 @@ abstract class SS_Database {
 				$suffix = $suffix ? ($suffix+1) : 2;
 			}
 			$this->renameField($table, $fieldName, "_obsolete_{$fieldName}$suffix");
-			SS_Database::alteration_message("Field $table.$fieldName: renamed to $table._obsolete_{$fieldName}$suffix","obsolete");
+			$this->alterationMessage("Field $table.$fieldName: renamed to $table._obsolete_{$fieldName}$suffix","obsolete");
 		}
 	}
 
@@ -614,11 +606,14 @@ abstract class SS_Database {
 	 * Enable supression of database messages.
 	 */
 	function quiet() {
-		SS_Database::$supressOutput = true;
+		$this->supressOutput = true;
 	}
 	
-	static function alteration_message($message,$type=""){
-		if(!SS_Database::$supressOutput) {
+	/**
+	 * Show a message about database alteration
+	 */
+	function alterationMessage($message,$type=""){
+		if(!$this->supressOutput) {
 			$color = "";
 			switch ($type){
 				case "created":
