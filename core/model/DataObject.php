@@ -2708,8 +2708,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			return;
 		}
 
-		if(!self::$cache_get_one) return;
-
 		$classes = ClassInfo::ancestry($this->class);
 		foreach($classes as $class) {
 			if(isset(self::$cache_get_one[$class])) unset(self::$cache_get_one[$class]);
