@@ -77,7 +77,7 @@ class Controller extends RequestHandler {
 	function init() {
 		// Test and development sites should be secured, via basic-auth
 		if(Director::isTest() && $this->basicAuthEnabled && Security::database_is_ready()) {
-			BasicAuth::requireLogin("SilverStripe test website.  Use your  CMS login", "ADMIN");
+			BasicAuth::requireLogin("SilverStripe test website. Use your CMS login", "ADMIN");
 		}		
 
 		// Directly access the session variable just in case the Group or Member tables don't yet exist

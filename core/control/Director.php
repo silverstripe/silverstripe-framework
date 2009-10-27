@@ -793,7 +793,7 @@ class Director {
 		// Use ?isDev=1 to get development access on the live server
 		if(isset($_GET['isDev'])) {
 			if(Security::database_is_ready()) {
-				BasicAuth::requireLogin("SilverStripe developer access.  Use your CMS login", "ADMIN");
+				BasicAuth::requireLogin("SilverStripe developer access. Use your CMS login", "ADMIN");
 				$_SESSION['isDev'] = $_GET['isDev'];
 			} else {
 				if($firstTimeCheckingGetVar && DB::connection_attempted()) {
@@ -826,7 +826,7 @@ class Director {
 		// Use ?isTest=1 to get test access on the live server, or explicitly set your environment
 		if(isset($_GET['isTest'])) {
 			if(Security::database_is_ready()) {
-				BasicAuth::requireLogin("SilverStripe developer access.  Use your CMS login", "ADMIN");
+				BasicAuth::requireLogin("SilverStripe developer access. Use your CMS login", "ADMIN");
 				$_SESSION['isTest'] = $_GET['isTest'];
 			} else {
 				return true;
