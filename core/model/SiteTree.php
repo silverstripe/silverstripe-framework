@@ -1247,7 +1247,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 				$aboutus->Status = "Published";
 				$aboutus->write();
 				$aboutus->publish("Stage", "Live");
-				DV::alteration_message("About Us created","created");
+				DB::alteration_message("About Us created","created");
 
 				$contactus = new Page();
 				$contactus->Title = _t('SiteTree.DEFAULTCONTACTTITLE', 'Contact Us');
