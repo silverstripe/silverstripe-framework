@@ -231,15 +231,4 @@ class Profiler {
             $this->running[$name] += $this->elapsedTime($name);
     }
 }
-
-function profiler_start($name) {
-    if (array_key_exists("midcom_profiler",$GLOBALS))
-      $GLOBALS["midcom_profiler"]->startTimer ($name);
-}
-
-function profiler_stop($name) {
-    if (array_key_exists("midcom_profiler",$GLOBALS))
-      $GLOBALS["midcom_profiler"]->stopTimer ($name);
-}
-
 ?>
