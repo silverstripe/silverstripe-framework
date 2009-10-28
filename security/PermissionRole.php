@@ -27,20 +27,11 @@ class PermissionRole extends DataObject {
 		$fields->removeFieldFromTab('Root', 'Codes');
 		$fields->removeFieldFromTab('Root', 'Groups');
 		
-		$fields->addFieldToTab('Root.Main', new TableField(
-			"Codes",
-			"PermissionRoleCode",
-			array(
-		        "Code" => _t('SecurityAdmin.CODE', 'Code'),
-		        "Arg" => _t('SecurityAdmin.OPTIONALID', 'Optional ID'),
-			),
-			array(
-				"Code" => "PermissionDropdownField",
-				"Arg" => "TextField",
-			),
-			"RoleID",
-			$this->ID
-		));
+		$fields->addFieldToTab('Root.Main', new PermissionCheckboxSetField(
+			'Codes',
+			'Permissions',
+			'PermissionRoleCode',
+			'RoleID'));
 		
 		return $fields;
 	}

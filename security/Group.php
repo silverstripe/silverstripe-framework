@@ -80,22 +80,13 @@ class Group extends DataObject {
 						"</p>"
 					),
 					new DropdownField('HtmlEditorConfig', 'HTML Editor Configuration', HtmlEditorConfig::get_available_configs_map()),
-					new TableField(
-						"Permissions",
-						"Permission",
-						array(
-						        "Code" => _t('SecurityAdmin.CODE', 'Code'),
-						        "Arg" => _t('SecurityAdmin.OPTIONALID', 'Optional ID'),
-						),
-						array(
-							"Code" => "PermissionDropdownField",
-							"Arg" => "TextField",
-						),
-						"GroupID",
-						$this->ID
-					)
+					new PermissionCheckboxSetField(
+						'Permissions',
+						'Permissions',
+						'Permission',
+						'GroupID')
 				),
-				
+
 				new Tab(_t('SecurityAdmin.ROLES', 'Roles'),
 					new LiteralField(
 						"", 

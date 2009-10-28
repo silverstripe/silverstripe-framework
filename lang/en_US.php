@@ -169,7 +169,7 @@ $lang['en_US']['DateField']['VALIDDATEFORMAT'] = 'Please enter a valid date form
 $lang['en_US']['DropdownField']['CHOOSE'] = array(
 	'(Choose)',
 	PR_MEDIUM,
-	'Start-value of a dropdown'
+	'start value of a dropdown'
 );
 $lang['en_US']['EmailField']['VALIDATION'] = 'Please enter an email address.';
 $lang['en_US']['EmailField']['VALIDATIONJS'] = 'Please enter an email address.';
@@ -254,6 +254,7 @@ $lang['en_US']['FileIFrameField']['DELETE'] = 'Delete %s';
 $lang['en_US']['FileIFrameField']['FILE'] = 'File';
 $lang['en_US']['FileIFrameField']['FROMCOMPUTER'] = 'From your Computer';
 $lang['en_US']['FileIFrameField']['FROMFILESTORE'] = 'From the File Store';
+$lang['en_US']['FileIFrameField']['NOSOURCE'] = 'Please select a source file to attach';
 $lang['en_US']['FileIFrameField']['REPLACE'] = 'Replace %s';
 $lang['en_US']['FileIFrameField.ss']['TITLE'] = 'Image Uploading Iframe';
 $lang['en_US']['Folder']['CREATED'] = 'First Uploaded';
@@ -342,98 +343,30 @@ $lang['en_US']['Group']['many_many_Members'] = array(
 	PR_MEDIUM,
 	'One group has many members'
 );
-$lang['en_US']['HtmlEditorField']['ANCHOR'] = 'Insert/edit anchor';
 $lang['en_US']['HtmlEditorField']['ANCHORVALUE'] = 'Anchor';
-$lang['en_US']['HtmlEditorField']['BULLETLIST'] = 'Bullet-point list';
-$lang['en_US']['HtmlEditorField']['BUTTONALIGNCENTER'] = 'Align center';
-$lang['en_US']['HtmlEditorField']['BUTTONALIGNJUSTIFY'] = 'Justify';
-$lang['en_US']['HtmlEditorField']['BUTTONALIGNLEFT'] = 'Align left';
-$lang['en_US']['HtmlEditorField']['BUTTONALIGNRIGHT'] = 'Align right';
-$lang['en_US']['HtmlEditorField']['BUTTONBOLD'] = 'Bold (Ctrl+B)';
 $lang['en_US']['HtmlEditorField']['BUTTONINSERTFLASH'] = 'Insert Flash';
 $lang['en_US']['HtmlEditorField']['BUTTONINSERTIMAGE'] = 'Insert image';
 $lang['en_US']['HtmlEditorField']['BUTTONINSERTLINK'] = 'Insert link';
-$lang['en_US']['HtmlEditorField']['BUTTONITALIC'] = 'Italic (Ctrl+I)';
 $lang['en_US']['HtmlEditorField']['BUTTONREMOVELINK'] = 'Remove link';
-$lang['en_US']['HtmlEditorField']['BUTTONSTRIKE'] = 'strikethrough';
-$lang['en_US']['HtmlEditorField']['BUTTONUNDERLINE'] = 'Underline (Ctrl+U)';
 $lang['en_US']['HtmlEditorField']['CAPTIONTEXT'] = 'Caption text';
-$lang['en_US']['HtmlEditorField']['CHARMAP'] = 'Insert symbol';
 $lang['en_US']['HtmlEditorField']['CLOSE'] = 'close';
-$lang['en_US']['HtmlEditorField']['COPY'] = 'Copy (Ctrl+C)';
 $lang['en_US']['HtmlEditorField']['CREATEFOLDER'] = 'Create Folder';
 $lang['en_US']['HtmlEditorField']['CSSCLASS'] = 'Alignment / style';
 $lang['en_US']['HtmlEditorField']['CSSCLASSCENTER'] = 'Centered, on its own.';
 $lang['en_US']['HtmlEditorField']['CSSCLASSLEFT'] = 'On the left, with text wrapping around.';
 $lang['en_US']['HtmlEditorField']['CSSCLASSLEFTALONE'] = 'On the left, on its own.';
 $lang['en_US']['HtmlEditorField']['CSSCLASSRIGHT'] = 'On the right, with text wrapping around.';
-$lang['en_US']['HtmlEditorField']['CUT'] = 'Cut (Ctrl+X)';
-$lang['en_US']['HtmlEditorField']['DELETECOL'] = 'Delete column';
-$lang['en_US']['HtmlEditorField']['DELETEROW'] = 'Delete row';
-$lang['en_US']['HtmlEditorField']['EDITCODE'] = 'Edit HTML Code';
 $lang['en_US']['HtmlEditorField']['EMAIL'] = 'Email address';
 $lang['en_US']['HtmlEditorField']['FILE'] = 'File';
 $lang['en_US']['HtmlEditorField']['FLASH'] = 'Flash';
 $lang['en_US']['HtmlEditorField']['FOLDER'] = 'Folder';
 $lang['en_US']['HtmlEditorField']['FOLDERCANCEL'] = 'Cancel';
-$lang['en_US']['HtmlEditorField']['FORMATADDR'] = array(
-	'Address',
-	PR_MEDIUM,
-	'<address> tag'
-);
-$lang['en_US']['HtmlEditorField']['FORMATH1'] = array(
-	'Heading 1',
-	PR_MEDIUM,
-	'<h1> tag'
-);
-$lang['en_US']['HtmlEditorField']['FORMATH2'] = array(
-	'Heading 2',
-	PR_MEDIUM,
-	'<h2> tag'
-);
-$lang['en_US']['HtmlEditorField']['FORMATH3'] = array(
-	'Heading 3',
-	PR_MEDIUM,
-	'<h3> tag'
-);
-$lang['en_US']['HtmlEditorField']['FORMATH4'] = array(
-	'Heading 4',
-	PR_MEDIUM,
-	'<h4> tag'
-);
-$lang['en_US']['HtmlEditorField']['FORMATH5'] = array(
-	'Heading 5',
-	PR_MEDIUM,
-	'<h5> tag'
-);
-$lang['en_US']['HtmlEditorField']['FORMATH6'] = array(
-	'Heading 6',
-	PR_MEDIUM,
-	'<h6> tag'
-);
-$lang['en_US']['HtmlEditorField']['FORMATP'] = array(
-	'Paragraph',
-	PR_MEDIUM,
-	'<p> tag'
-);
-$lang['en_US']['HtmlEditorField']['FORMATPRE'] = array(
-	'Preformatted',
-	PR_MEDIUM,
-	'<pre> tag'
-);
-$lang['en_US']['HtmlEditorField']['HR'] = 'Insert horizontal line';
 $lang['en_US']['HtmlEditorField']['IMAGE'] = 'Image';
 $lang['en_US']['HtmlEditorField']['IMAGEALTTEXT'] = 'Alternative text (alt) - shown if image cannot be displayed';
 $lang['en_US']['HtmlEditorField']['IMAGEDIMENSIONS'] = 'Dimensions';
 $lang['en_US']['HtmlEditorField']['IMAGEHEIGHTPX'] = 'Height';
 $lang['en_US']['HtmlEditorField']['IMAGETITLE'] = 'Title text (tooltip) - for additional information about the image';
 $lang['en_US']['HtmlEditorField']['IMAGEWIDTHPX'] = 'Width';
-$lang['en_US']['HtmlEditorField']['INDENT'] = 'Increase indent';
-$lang['en_US']['HtmlEditorField']['INSERTCOLAFTER'] = 'Insert column after';
-$lang['en_US']['HtmlEditorField']['INSERTCOLBEF'] = 'Insert column before';
-$lang['en_US']['HtmlEditorField']['INSERTROWAFTER'] = 'Insert row after';
-$lang['en_US']['HtmlEditorField']['INSERTROWBEF'] = 'Insert row before';
-$lang['en_US']['HtmlEditorField']['INSERTTABLE'] = 'Insert table';
 $lang['en_US']['HtmlEditorField']['LINK'] = 'Link';
 $lang['en_US']['HtmlEditorField']['LINKANCHOR'] = 'Anchor on this page';
 $lang['en_US']['HtmlEditorField']['LINKDESCR'] = 'Link description';
@@ -445,20 +378,10 @@ $lang['en_US']['HtmlEditorField']['LINKOPENNEWWIN'] = 'Open link in a new window
 $lang['en_US']['HtmlEditorField']['LINKTEXT'] = 'Link text';
 $lang['en_US']['HtmlEditorField']['LINKTO'] = 'Link to';
 $lang['en_US']['HtmlEditorField']['OK'] = 'Ok';
-$lang['en_US']['HtmlEditorField']['OL'] = 'Numbered list';
-$lang['en_US']['HtmlEditorField']['OUTDENT'] = 'Decrease outdent';
 $lang['en_US']['HtmlEditorField']['PAGE'] = 'Page';
-$lang['en_US']['HtmlEditorField']['PASTE'] = 'Paste (Ctrl+V)';
-$lang['en_US']['HtmlEditorField']['PASTETEXT'] = 'Paste plain text';
-$lang['en_US']['HtmlEditorField']['PASTEWORD'] = 'Paste from Word';
-$lang['en_US']['HtmlEditorField']['REDO'] = 'Redo (Ctrl+Y)';
 $lang['en_US']['HtmlEditorField']['SEARCHFILENAME'] = 'Search by file name';
-$lang['en_US']['HtmlEditorField']['SELECTALL'] = 'Select All (Ctrl+A)';
-$lang['en_US']['HtmlEditorField']['UNDO'] = 'Undo (Ctrl+Z)';
-$lang['en_US']['HtmlEditorField']['UNLINK'] = 'Remove link';
 $lang['en_US']['HtmlEditorField']['UPLOAD'] = 'Upload';
 $lang['en_US']['HtmlEditorField']['URL'] = 'URL';
-$lang['en_US']['HtmlEditorField']['VISUALAID'] = 'Show/hide guidelines';
 $lang['en_US']['Image']['PLURALNAME'] = array(
 	'Files',
 	50,
@@ -595,6 +518,10 @@ $lang['en_US']['MoneyField']['FIELDLABELAMOUNT'] = 'Amount';
 $lang['en_US']['MoneyField']['FIELDLABELCURRENCY'] = 'Currency';
 $lang['en_US']['MyEntity']['MyNamespace'] = 'My default natural language value';
 $lang['en_US']['MyNamespace']['MYENTITY'] = 'Counting %s things';
+$lang['en_US']['NullableField']['IsNullLabel'] = array(
+	'Is Null',
+	PR_HIGH
+);
 $lang['en_US']['NumericField']['VALIDATION'] = '\'%s\' is not a number, only numbers can be accepted for this field';
 $lang['en_US']['NumericField']['VALIDATIONJS'] = 'is not a number, only numbers can be accepted for this field';
 $lang['en_US']['Permission']['FULLADMINRIGHTS'] = 'Full administrative rights';
@@ -605,6 +532,26 @@ $lang['en_US']['Permission']['PLURALNAME'] = array(
 );
 $lang['en_US']['Permission']['SINGULARNAME'] = array(
 	'Permission',
+	50,
+	'Singular name of the object, used in dropdowns and to generally identify a single object in the interface'
+);
+$lang['en_US']['PermissionRole']['PLURALNAME'] = array(
+	'Permission Rols',
+	50,
+	'Pural name of the object, used in dropdowns and to generally identify a collection of this object in the interface'
+);
+$lang['en_US']['PermissionRole']['SINGULARNAME'] = array(
+	'Permission Role',
+	50,
+	'Singular name of the object, used in dropdowns and to generally identify a single object in the interface'
+);
+$lang['en_US']['PermissionRoleCode']['PLURALNAME'] = array(
+	'Permission Role Cods',
+	50,
+	'Pural name of the object, used in dropdowns and to generally identify a collection of this object in the interface'
+);
+$lang['en_US']['PermissionRoleCode']['SINGULARNAME'] = array(
+	'Permission Role Code',
 	50,
 	'Singular name of the object, used in dropdowns and to generally identify a single object in the interface'
 );
@@ -700,8 +647,20 @@ $lang['en_US']['SecurityAdmin']['IPADDRESSESHELP'] = '<p>You can restrict this g
 $lang['en_US']['SecurityAdmin']['MEMBERS'] = 'Members';
 $lang['en_US']['SecurityAdmin']['OPTIONALID'] = 'Optional ID';
 $lang['en_US']['SecurityAdmin']['PERMISSIONS'] = 'Permissions';
+$lang['en_US']['SecurityAdmin']['ROLES'] = 'Roles';
+$lang['en_US']['SecurityAdmin']['ROLESDESCRIPTION'] = 'This section allows you to add roles to this group. Roles are logical groupings of permissions, which can be editied in the Roles tab';
 $lang['en_US']['SecurityAdmin']['VIEWUSER'] = 'View User';
 $lang['en_US']['SimpleImageField']['NOUPLOAD'] = 'No Image Uploaded';
+$lang['en_US']['SiteConfig']['PLURALNAME'] = array(
+	'Site Configs',
+	50,
+	'Pural name of the object, used in dropdowns and to generally identify a collection of this object in the interface'
+);
+$lang['en_US']['SiteConfig']['SINGULARNAME'] = array(
+	'Site Config',
+	50,
+	'Singular name of the object, used in dropdowns and to generally identify a single object in the interface'
+);
 $lang['en_US']['SiteTree']['ACCESSANYONE'] = 'Anyone';
 $lang['en_US']['SiteTree']['ACCESSHEADER'] = 'Who can view this page?';
 $lang['en_US']['SiteTree']['ACCESSLOGGEDIN'] = 'Logged-in users';
@@ -736,7 +695,7 @@ $lang['en_US']['SiteTree']['EDITANYONE'] = 'Anyone who can log-in to the CMS';
 $lang['en_US']['SiteTree']['EDITHEADER'] = 'Who can edit this page?';
 $lang['en_US']['SiteTree']['EDITONLYTHESE'] = 'Only these people (choose from list)';
 $lang['en_US']['SiteTree']['EDITORGROUPS'] = 'Editor Groups';
-$lang['en_US']['SiteTree']['EDIT_ALL_DESCRIPTION'] = 'Can edit any page on the site, bypassing page specific security';
+$lang['en_US']['SiteTree']['EDIT_ALL_DESCRIPTION'] = 'Edit any page';
 $lang['en_US']['SiteTree']['Editors'] = 'Editors Groups';
 $lang['en_US']['SiteTree']['HASBROKENLINKS'] = 'This page has broken links.';
 $lang['en_US']['SiteTree']['HOMEPAGEFORDOMAIN'] = array(
@@ -751,6 +710,7 @@ $lang['en_US']['SiteTree']['HTMLEDITORTITLE'] = array(
 );
 $lang['en_US']['SiteTree']['HomepageForDomain'] = 'Hompage for this domain';
 $lang['en_US']['SiteTree']['INHERIT'] = 'Inherit from parent page';
+$lang['en_US']['SiteTree']['LINKCHANGENOTE'] = 'Changing this page\'s link will also affect the links of all child pages.';
 $lang['en_US']['SiteTree']['MENUTITLE'] = 'Navigation label';
 $lang['en_US']['SiteTree']['METADESC'] = 'Description';
 $lang['en_US']['SiteTree']['METAEXTRA'] = 'Custom Meta Tags';
@@ -777,14 +737,14 @@ $lang['en_US']['SiteTree']['PARENTTYPE'] = array(
 );
 $lang['en_US']['SiteTree']['PARENTTYPE_ROOT'] = 'Top-level page';
 $lang['en_US']['SiteTree']['PARENTTYPE_SUBPAGE'] = 'Sub-page underneath a parent page (choose below)';
-$lang['en_US']['SiteTree']['PERMISSION_GRANTACCESS_DESCRIPTION'] = 'Control which groups can access or edit certain pages';
+$lang['en_US']['SiteTree']['PERMISSION_GRANTACCESS_DESCRIPTION'] = 'Manage access rights for content';
 $lang['en_US']['SiteTree']['PLURALNAME'] = array(
 	'Site Tres',
 	50,
 	'Pural name of the object, used in dropdowns and to generally identify a collection of this object in the interface'
 );
 $lang['en_US']['SiteTree']['REMOVEDFROMDRAFT'] = 'Removed from draft site';
-$lang['en_US']['SiteTree']['REORGANISE_DESCRIPTION'] = 'Can reorganise the site tree';
+$lang['en_US']['SiteTree']['REORGANISE_DESCRIPTION'] = 'Change site structure';
 $lang['en_US']['SiteTree']['SHOWINMENUS'] = 'Show in menus?';
 $lang['en_US']['SiteTree']['SHOWINSEARCH'] = 'Show in search?';
 $lang['en_US']['SiteTree']['SINGULARNAME'] = array(
@@ -811,7 +771,7 @@ $lang['en_US']['SiteTree']['URLSegment'] = array(
 $lang['en_US']['SiteTree']['VALIDATIONURLSEGMENT1'] = 'Another page is using that URL. URL must be unique for each page';
 $lang['en_US']['SiteTree']['VALIDATIONURLSEGMENT2'] = 'URLs can only be made up of letters, digits and hyphens.';
 $lang['en_US']['SiteTree']['VIEWERGROUPS'] = 'Viewer Groups';
-$lang['en_US']['SiteTree']['VIEW_ALL_DESCRIPTION'] = 'Can view any page on the site, bypassing page specific security';
+$lang['en_US']['SiteTree']['VIEW_ALL_DESCRIPTION'] = 'View any page';
 $lang['en_US']['SiteTree']['Viewers'] = 'Viewers Groups';
 $lang['en_US']['SiteTree']['has_one_Parent'] = array(
 	'Parent Page',
@@ -846,6 +806,12 @@ $lang['en_US']['Translatable']['CREATEBUTTON'] = 'Create';
 $lang['en_US']['Translatable']['EXISTING'] = 'Existing translations:';
 $lang['en_US']['Translatable']['NEWLANGUAGE'] = 'New language';
 $lang['en_US']['Translatable']['NOTICENEWPAGE'] = 'Please save this page before creating a translation';
+$lang['en_US']['Translatable']['TRANSLATEALLPERMISSION'] = 'Translate into all available languages';
+$lang['en_US']['Translatable']['TRANSLATEPERMISSION'] = array(
+	'Translate %s',
+	PR_MEDIUM,
+	'Translate pages into a language'
+);
 $lang['en_US']['Translatable']['TRANSLATIONS'] = 'Translations';
 $lang['en_US']['TreeSelectorField']['CANCEL'] = 'cancel';
 $lang['en_US']['TreeSelectorField']['SAVE'] = 'save';

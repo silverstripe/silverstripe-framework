@@ -480,31 +480,78 @@ class Permission extends DataObject {
 		$classes = ClassInfo::implementorsOf('PermissionProvider');
 
 		$allCodes = array();
-		if($blankItemText){
-			$allCodes[''] = ($blankItemText === true)
-				? '(select)'
-				: $blankItemText;
-		}
-		$allCodes['ADMIN'] = _t('Permission.FULLADMINRIGHTS', 'Full administrative rights');
+		// if($blankItemText){
+		// 	$allCodes[''] = ($blankItemText === true)
+		// 		? '(select)'
+		// 		: $blankItemText;
+		// }
+		
+		$allCodes['Other']['ADMIN'] = array(
+			'name' => _t('Permission.FULLADMINRIGHTS', 'Full administrative rights'),
+			'help' => null,
+			'sort' => 0
+		);
 
 		if($classes) foreach($classes as $class) {
 			$SNG = singleton($class);
 			if($SNG instanceof TestOnly) continue;
+			
 			$someCodes = $SNG->providePermissions();
-			if($someCodes) foreach($someCodes as $k => $v) {
-				$allCodes[$k] = $v;
+			if($someCodes) {
+				foreach($someCodes as $k => $v) {
+					if (is_array($v)) {
+						// There must be a category and name key.
+						if (!isset($v['category'])) user_error("The permission $k must have a category key", E_USER_WARNING);
+						if (!isset($v['name'])) user_error("The permission $k must have a name key", E_USER_WARNING);
+						
+						if (!isset($allCodes[$v['category']])) $allCodes[$v['category']] = array();
+						
+						$allCodes[$v['category']][$k] = array(
+							'name' => $v['name'],
+							'help' => isset($v['help']) ? $v['help'] : null,
+							'sort' => isset($v['sort']) ? $v['sort'] : 0
+						);
+						
+					} else {
+						$allCodes['Other'][$k] = array(
+							'name' => $v,
+							'help' => null,
+							'sort' => 0
+						);
+					}
+				}
 			}
 		}
 
 		$otherPerms = DB::query("SELECT DISTINCT \"Code\" From \"Permission\"")
 			->column();
 		if($otherPerms) foreach($otherPerms as $otherPerm) {
-			if(!array_key_exists($otherPerm, $allCodes))
-				$allCodes[$otherPerm] = $otherPerm;
+			if(!array_key_exists($otherPerm, $allCodes['Other']))
+				$allCodes['Other'][$otherPerm] = $otherPerm;
 		}
 		
-		asort($allCodes);
+		ksort($allCodes);
+
+		foreach($allCodes as $category => $permissions) {
+			uasort($permissions, array(__CLASS__, 'sort_permissions'));
+			$allCodes[$category] = $permissions;
+		}
+		
 		return $allCodes;
+	}
+	
+	/**
+	 * Sort permissions based on their sort value, or name
+	 *
+	 */
+	static function sort_permissions($a, $b) {
+		if ($a['sort'] == $b['sort']) {
+			// Same sort value, do alpha instead
+			return strcmp($a['name'], $b['name']);
+		} else {
+			// Just numeric.
+			return $a['sort'] < $b['sort'] ? -1 : 1;
+		}
 	}
 
 	/**
