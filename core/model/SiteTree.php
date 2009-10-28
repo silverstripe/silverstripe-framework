@@ -2333,19 +2333,19 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		return array(
 			'SITETREE_GRANT_ACCESS' => _t(
 				'SiteTree.PERMISSION_GRANTACCESS_DESCRIPTION',
-				'Control which groups can access or edit certain pages'
+				'Manage access rights for content'
 			),
 			'SITETREE_VIEW_ALL' => _t(
 				'SiteTree.VIEW_ALL_DESCRIPTION',
-				'Can view any page on the site, regardless of the settings on the Access tab'
+				'View any page'
 			),
 			'SITETREE_EDIT_ALL' => _t(
 				'SiteTree.EDIT_ALL_DESCRIPTION',
-				'Can edit any page on the site, regardless of the settings on the Access tab'
+				'Edit any page'
 			),
 			'SITETREE_REORGANISE' => _t(
 				'SiteTree.REORGANISE_DESCRIPTION',
-				'Can reorganise the site tree'
+				'Change site structure'
 			),
 		);
 	}
