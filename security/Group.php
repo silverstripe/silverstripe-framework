@@ -87,18 +87,6 @@ class Group extends DataObject {
 						'GroupID')
 				),
 
-				new Tab(_t('SecurityAdmin.ROLES', 'Roles'),
-					new LiteralField(
-						"", 
-						"<p>" . 
-						_t('SecurityAdmin.ROLESDESCRIPTION',
-							"This section allows you to add roles to this group. Roles are logical groupings of permissions, which can be editied in the Roles tab"
-						) . 
-						"</p>"
-					),
-					new CheckboxSetField('Roles', 'Roles', DataObject::get('PermissionRole'))
-				),
-
 				new Tab(_t('Security.IPADDRESSES', 'IP Addresses'),
 					new LiteralField("", _t('SecurityAdmin.IPADDRESSESHELP',"<p>You can restrict this group to a particular 
 						IP address range (one range per line). <br />Ranges can be in any of the following forms: <br />
