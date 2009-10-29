@@ -2331,22 +2331,28 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 
 	function providePermissions() {
 		return array(
-			'SITETREE_GRANT_ACCESS' => _t(
-				'SiteTree.PERMISSION_GRANTACCESS_DESCRIPTION',
-				'Manage access rights for content'
+			'SITETREE_GRANT_ACCESS' => array(
+				'name' => _t('SiteTree.PERMISSION_GRANTACCESS_DESCRIPTION', 'Manage access rights for content'),
+				'category' => 'Roles and access permissions',
+				'sort' => 100
 			),
-			'SITETREE_VIEW_ALL' => _t(
-				'SiteTree.VIEW_ALL_DESCRIPTION',
-				'View any page'
+			'SITETREE_VIEW_ALL' => array(
+				'name' => _t('SiteTree.VIEW_ALL_DESCRIPTION', 'View any page'),
+				'category' => 'Content permissions',
+				'sort' => -100,
+				'help' => 'Ability to view any page on the site, regardless of the settings on the Access tab.  Requires "Access to Site Content."'
 			),
-			'SITETREE_EDIT_ALL' => _t(
-				'SiteTree.EDIT_ALL_DESCRIPTION',
-				'Edit any page'
+			'SITETREE_EDIT_ALL' => array(
+				'name' => _t('SiteTree.EDIT_ALL_DESCRIPTION', 'Edit any page'),
+				'category' => 'Content permissions',
+				'sort' => -50,
+				'help' => 'Ability to edit any page on the site, regardless of the settings on the Access tab.  Requires "Access to Site Content."'
 			),
-			'SITETREE_REORGANISE' => _t(
-				'SiteTree.REORGANISE_DESCRIPTION',
-				'Change site structure'
-			),
+			'SITETREE_REORGANISE' => array(
+				'name' => _t('SiteTree.REORGANISE_DESCRIPTION', 'Change site structure'),
+				'category' => 'Content permissions',
+				'sort' => 100
+			)
 		);
 	}
 	

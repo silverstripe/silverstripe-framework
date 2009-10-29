@@ -46,8 +46,10 @@ class PermissionCheckboxSetField extends CheckboxSetField {
 			
 					
 					$checked = in_array($key, $values) ? ' checked="checked"' : '';
+					
+					$title = $permission['help'] ? 'title="'.htmlentities($permission['help']).'" ' : '';
 			
-					$options .= "<li class=\"$extraClass\"><input id=\"$itemID\" name=\"$this->name[$key]\" type=\"checkbox\" value=\"$key\"$checked class=\"checkbox\" /> <label for=\"$itemID\">$value</label></li>\n"; 
+					$options .= "<li class=\"$extraClass\"><input id=\"$itemID\" name=\"$this->name[$key]\" type=\"checkbox\" value=\"$key\"$checked class=\"checkbox\" /> <label {$title}for=\"$itemID\">$value</label></li>\n"; 
 				}
 			}
 		}

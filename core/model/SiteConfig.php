@@ -154,7 +154,12 @@ class SiteConfig extends DataObject implements PermissionProvider {
 	
 	function providePermissions() {
 		return array(
-			'EDIT_SITECONFIG' => 'Manage site configuration'
+			'EDIT_SITECONFIG' => array(
+				'name' => 'Manage site configuration',
+				'category' => 'Roles and access permissions',
+				'help' => 'Ability to edit global access settings/top-level page permissions.',
+				'sort' => 400
+			)
 		);
 	}
 }

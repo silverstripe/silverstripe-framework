@@ -486,10 +486,10 @@ class Permission extends DataObject {
 		// 		: $blankItemText;
 		// }
 		
-		$allCodes['Other']['ADMIN'] = array(
+		$allCodes['Roles and access permissions']['ADMIN'] = array(
 			'name' => _t('Permission.FULLADMINRIGHTS', 'Full administrative rights'),
 			'help' => null,
-			'sort' => 0
+			'sort' => 100000
 		);
 
 		if($classes) foreach($classes as $class) {
@@ -523,11 +523,17 @@ class Permission extends DataObject {
 			}
 		}
 
-		$otherPerms = DB::query("SELECT DISTINCT \"Code\" From \"Permission\"")
-			->column();
+		$flatCodeArray = array();
+		foreach($allCodes as $category) foreach($category as $code => $permission) $flatCodeArray[] = $code;
+		$otherPerms = DB::query("SELECT DISTINCT \"Code\" From \"Permission\"")->column();
+			
 		if($otherPerms) foreach($otherPerms as $otherPerm) {
-			if(!array_key_exists($otherPerm, $allCodes['Other']))
-				$allCodes['Other'][$otherPerm] = $otherPerm;
+			if(!in_array($otherPerm, $flatCodeArray))
+				$allCodes['Other'][$otherPerm] = array(
+					'name' => $otherPerm,
+					'help' => null,
+					'sort' => 0
+				);
 		}
 		
 		ksort($allCodes);
