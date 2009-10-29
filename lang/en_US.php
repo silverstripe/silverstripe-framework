@@ -633,7 +633,6 @@ $lang['en_US']['Security']['PERMFAILURE'] = ' This page is secured and you need 
 $lang['en_US']['SecurityAdmin']['ADVANCEDONLY'] = 'This section is for advanced users only.
 							See <a href="http://doc.silverstripe.com/doku.php?id=permissions:codes" target="_blank">this page</a>
 							for more information.';
-$lang['en_US']['SecurityAdmin']['CODE'] = 'Code';
 $lang['en_US']['SecurityAdmin']['GROUPNAME'] = 'Group name';
 $lang['en_US']['SecurityAdmin']['IPADDRESSESHELP'] = '<p>You can restrict this group to a particular 
 						IP address range (one range per line). <br />Ranges can be in any of the following forms: <br />
@@ -645,7 +644,6 @@ $lang['en_US']['SecurityAdmin']['IPADDRESSESHELP'] = '<p>You can restrict this g
 						people from logging in.  This is because the same user might have to log in to access parts of the
 						system without IP address restrictions.';
 $lang['en_US']['SecurityAdmin']['MEMBERS'] = 'Members';
-$lang['en_US']['SecurityAdmin']['OPTIONALID'] = 'Optional ID';
 $lang['en_US']['SecurityAdmin']['PERMISSIONS'] = 'Permissions';
 $lang['en_US']['SecurityAdmin']['ROLES'] = 'Roles';
 $lang['en_US']['SecurityAdmin']['ROLESDESCRIPTION'] = 'This section allows you to add roles to this group. Roles are logical groupings of permissions, which can be editied in the Roles tab';
