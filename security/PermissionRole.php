@@ -9,6 +9,7 @@
 class PermissionRole extends DataObject {
 	static $db = array(
 		"Title" => "Varchar",
+		"OnlyAdminCanApply" => "Boolean"
 	);
 	
 	static $has_many = array(
