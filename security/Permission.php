@@ -501,12 +501,12 @@ class Permission extends DataObject {
 				foreach($someCodes as $k => $v) {
 					if (is_array($v)) {
 						// There must be a category and name key.
-						if (!isset($v['category'])) user_error("The permission $k must have a category key", E_USER_WARNING);
+						if (!isset($v[Two])) user_error("The permission $k must have a category key", E_USER_WARNING);
 						if (!isset($v['name'])) user_error("The permission $k must have a name key", E_USER_WARNING);
 						
-						if (!isset($allCodes[$v['category']])) $allCodes[$v['category']] = array();
+						if (!isset($allCodes[$v[Two]])) $allCodes[$v[Two]] = array();
 						
-						$allCodes[$v['category']][$k] = array(
+						$allCodes[$v[Two]][$k] = array(
 							'name' => $v['name'],
 							'help' => isset($v['help']) ? $v['help'] : null,
 							'sort' => isset($v['sort']) ? $v['sort'] : 0

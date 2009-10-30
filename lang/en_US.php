@@ -555,6 +555,8 @@ $lang['en_US']['PermissionRoleCode']['SINGULARNAME'] = array(
 	50,
 	'Singular name of the object, used in dropdowns and to generally identify a single object in the interface'
 );
+$lang['en_US']['Permissions']['CONTENT_CATEGORY'] = 'Content permissions';
+$lang['en_US']['Permissions']['PERMISSIONS_CATEGORY'] = 'Roles and access permissions';
 $lang['en_US']['PhoneNumberField']['VALIDATION'] = 'Please enter a valid phone number';
 $lang['en_US']['QueuedEmail']['PLURALNAME'] = array(
 	'Queued Emails',
@@ -649,6 +651,8 @@ $lang['en_US']['SecurityAdmin']['ROLES'] = 'Roles';
 $lang['en_US']['SecurityAdmin']['ROLESDESCRIPTION'] = 'This section allows you to add roles to this group. Roles are logical groupings of permissions, which can be editied in the Roles tab';
 $lang['en_US']['SecurityAdmin']['VIEWUSER'] = 'View User';
 $lang['en_US']['SimpleImageField']['NOUPLOAD'] = 'No Image Uploaded';
+$lang['en_US']['SiteConfig']['EDIT_PERMISSION'] = 'Manage site configuration';
+$lang['en_US']['SiteConfig']['EDIT_PERMISSION_HELP'] = 'Ability to edit global access settings/top-level page permissions.';
 $lang['en_US']['SiteConfig']['PLURALNAME'] = array(
 	'Site Configs',
 	50,
@@ -694,6 +698,7 @@ $lang['en_US']['SiteTree']['EDITHEADER'] = 'Who can edit this page?';
 $lang['en_US']['SiteTree']['EDITONLYTHESE'] = 'Only these people (choose from list)';
 $lang['en_US']['SiteTree']['EDITORGROUPS'] = 'Editor Groups';
 $lang['en_US']['SiteTree']['EDIT_ALL_DESCRIPTION'] = 'Edit any page';
+$lang['en_US']['SiteTree']['EDIT_ALL_HELP'] = 'Ability to edit any page on the site, regardless of the settings on the Access tab.  Requires "Access to Site Content."';
 $lang['en_US']['SiteTree']['Editors'] = 'Editors Groups';
 $lang['en_US']['SiteTree']['HASBROKENLINKS'] = 'This page has broken links.';
 $lang['en_US']['SiteTree']['HOMEPAGEFORDOMAIN'] = array(
@@ -770,6 +775,7 @@ $lang['en_US']['SiteTree']['VALIDATIONURLSEGMENT1'] = 'Another page is using tha
 $lang['en_US']['SiteTree']['VALIDATIONURLSEGMENT2'] = 'URLs can only be made up of letters, digits and hyphens.';
 $lang['en_US']['SiteTree']['VIEWERGROUPS'] = 'Viewer Groups';
 $lang['en_US']['SiteTree']['VIEW_ALL_DESCRIPTION'] = 'View any page';
+$lang['en_US']['SiteTree']['VIEW_ALL_HELP'] = 'Ability to view any page on the site, regardless of the settings on the Access tab.  Requires "Access to Site Content."';
 $lang['en_US']['SiteTree']['Viewers'] = 'Viewers Groups';
 $lang['en_US']['SiteTree']['has_one_Parent'] = array(
 	'Parent Page',
