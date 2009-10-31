@@ -517,7 +517,7 @@ class SSViewer {
 		$content = ereg_replace('<' . '% +sprintf\(_t\((\'([^\']*)\'|"([^"]*)")(([^)]|\)[^ ]|\) +[^% ])*)\),\<\?= +([^\?]*) +\?\>) +%' . '>', '<?= sprintf(_t(\'\\2\\3\'\\4),\\6) ?>', $content);
 
 		// </base> isnt valid html? !? 
-		$content = ereg_replace('<' . '% +base_tag +%' . '>', '<base href="<?= Director::absoluteBaseURL(); ?>" />', $content);
+		$content = ereg_replace('<' . '% +base_tag +%' . '>', '<?= SSViewer::get_base_tag($val); ?>', $content);
 
 		$content = ereg_replace('<' . '% +current_page +%' . '>', '<?= $_SERVER[SCRIPT_URL] ?>', $content);
 		
@@ -567,6 +567,24 @@ class SSViewer {
 	 */
 	public function setTemplateFile($type, $file) {
 		$this->chosenTemplates[$type] = $file;
+	}
+	
+	/**
+	 * Return an appropriate base tag for the given template.
+	 * It will be closed on an XHTML document, and unclosed on an HTML document.
+	 * 
+	 * @param $contentGeneratedSoFar The content of the template generated so far; it should contain
+	 * the DOCTYPE declaration.
+	 */
+	static function get_base_tag($contentGeneratedSoFar) {
+		$base = Director::absoluteBaseURL();
+		
+		// Is the document XHTML?
+		if(preg_match('/<!DOCTYPE[^>]+xhtml/i', $contentGeneratedSoFar)) {
+			return "<base href=\"$base\"></base>";
+		} else {
+			return "<base href=\"$base\"><!--[if lte IE 6]></base><![endif]-->";
+		}
 	}
 }
 

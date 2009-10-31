@@ -69,6 +69,44 @@ SS
 			"Object method calls in dot notation work with two arguments"
 		);
 	}
+	
+	function testBaseTagGeneration() {
+		// XHTML wil have a closed base tag
+		$tmpl1 = SSViewer::fromString('<?xml version="1.0" encoding="UTF-8"?>
+			<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+			<html>
+				<head><% base_tag %></head>
+				<body><p>test</p><body>
+			</html>');
+		$this->assertRegExp('/<head><base href=".*"><\/base><\/head>/', $tmpl1->process(new ViewableData()));
+			
+		// HTML4 and 5 will only have it for IE
+		$tmpl2 = SSViewer::fromString('<!DOCTYPE html>
+			<html>
+				<head><% base_tag %></head>
+				<body><p>test</p><body>
+			</html>');
+		$this->assertRegExp('/<head><base href=".*"><!--\[if lte IE 6\]><\/base><!\[endif\]--><\/head>/', $tmpl2->process(new ViewableData()));
+			
+			
+		$tmpl3 = SSViewer::fromString('<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+			<html>
+				<head><% base_tag %></head>
+				<body><p>test</p><body>
+			</html>');
+		$this->assertRegExp('/<head><base href=".*"><!--\[if lte IE 6\]><\/base><!\[endif\]--><\/head>/', $tmpl3->process(new ViewableData()));
+
+		// Check that the content negotiator converts to the equally legal formats
+		$negotiator = new ContentNegotiator();
+		
+		$response = new SS_HTTPResponse($tmpl1->process(new ViewableData()));
+		$negotiator->html($response);
+		$this->assertRegExp('/<head><base href=".*"><!--\[if lte IE 6\]><\/base><!\[endif\]--><\/head>/', $response->getBody());
+
+		$response = new SS_HTTPResponse($tmpl1->process(new ViewableData()));
+		$negotiator->xhtml($response);
+		$this->assertRegExp('/<head><base href=".*"><\/base><\/head>/', $response->getBody());
+	}
 }
 
 class SSViewerTest_ViewableData extends ViewableData implements TestOnly {

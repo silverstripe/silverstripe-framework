@@ -111,6 +111,10 @@ class ContentNegotiator {
 		if(substr($content,0,5) == '<' . '?xml' ) {
 			$response->addHeader("Content-Type", "application/xhtml+xml; charset=" . self::$encoding);
 			$response->addHeader("Vary" , "Accept");
+
+			// Fix base tag
+			$content = preg_replace('/<base href="([^"]*)"><!--\[if[[^\]*]\]><\/base><!\[endif\]-->/', 
+				'<base href="$1"></base>', $content);
 			
 			$content = str_replace('&nbsp;','&#160;', $content);
 			$content = str_replace('<br>','<br />', $content);
@@ -136,6 +140,10 @@ class ContentNegotiator {
 
 		$content = $response->getBody();
 		$hasXMLHeader = (substr($content,0,5) == '<' . '?xml' );
+
+		// Fix base tag
+		$content = preg_replace('/<base href="([^"]*)"><\/base>/', 
+			'<base href="$1"><!--[if lte IE 6]></base><![endif]-->', $content);
 
 		$content = ereg_replace("<\\?xml[^>]+\\?>\n?",'',$content);
 		$content = str_replace(array('/>','xml:lang','application/xhtml+xml'),array('>','lang','text/html'), $content);
