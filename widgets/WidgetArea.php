@@ -46,6 +46,13 @@ class WidgetArea extends DataObject {
 	function forTemplate() {
 		return $this->renderWith($this->class); 
 	}
+	
+	function onBeforeDelete() {
+		parent::onBeforeDelete();
+		foreach($this->Widgets() as $widget) {
+			$widget->delete();
+		}
+	}
 }
 
 ?>
