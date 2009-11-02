@@ -2372,6 +2372,11 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		} else if(preg_match('/ID$/', $fieldName) && $this->has_one(substr($fieldName,0,-2))) {
 			$val = (isset($this->record[$fieldName])) ? $this->record[$fieldName] : null;
 			return DBField::create('ForeignKey', $val, $fieldName, $this);
+			
+		// Special case for ClassName
+		} else if($fieldName == 'ClassName') {
+			$val = get_class($this);
+			return DBField::create('Varchar', $val, $fieldName, $this);
 		}
 	}
 
