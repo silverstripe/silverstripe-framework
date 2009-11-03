@@ -1516,7 +1516,7 @@ class Member_Validator extends RequiredFields {
 		// Execute the validators on the extensions
 		if($this->extension_instances) {
 			foreach($this->extension_instances as $extension) {
-				if($extension->hasMethod('updatePHP')) {
+				if(method_exists($extension, 'hasMethod') && $extension->hasMethod('updatePHP')) {
 					$valid &= $extension->updatePHP($data, $this->form);
 				}
 			}
@@ -1539,7 +1539,7 @@ class Member_Validator extends RequiredFields {
 		// Execute the validators on the extensions
 		if($this->extension_instances) {
 			foreach($this->extension_instances as $extension) {
-				if($extension->hasMethod('updateJavascript')) {
+				if(method_exists($extension, 'hasMethod') && $extension->hasMethod('updateJavascript')) {
 					$extension->updateJavascript($js, $this->form);
 				}
 			}
