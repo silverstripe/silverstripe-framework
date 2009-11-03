@@ -80,10 +80,11 @@ class Varchar extends StringField {
 	 * @see DBField::scaffoldFormField()
 	 */
 	public function scaffoldFormField($title = null, $params = null) {
-		if ( !$this->nullifyEmpty ) {
-			// We can have an empty field so we need to let the user specifically set null value in the field.
+		if(!$this->nullifyEmpty) {
+			// Allow the user to select if it's null instead of automatically assuming empty string is
 			return new NullableField(new TextField($this->name, $title));
 		} else {
+			// Automatically determine null (empty string)
 			return parent::scaffoldFormField($title);
 		}
 	}
