@@ -84,7 +84,8 @@ class Group extends DataObject {
 						'Permissions',
 						'Permissions',
 						'Permission',
-						'GroupID')
+						'GroupID',
+						$this)
 				),
 
 				new Tab(_t('Security.IPADDRESSES', 'IP Addresses'),
@@ -108,15 +109,15 @@ class Group extends DataObject {
 			$fields->removeFieldFromTab('Root', 'Permissions');
 			$fields->removeFieldFromTab('Root', 'IP Addresses');
 		} else {
-			$parentGroups = $this->getAllParents();
-			if ($parentGroups) {
-				foreach ($parentGroups as $parent) {
-					if ($parent->Permissions()->Count()) {
-						$permissionsTab->push(new HeaderField('PermissionHeader-'.$parent->ID, 'Permissions inherited from '.$parent->Title));
-						$permissionsTab->push(new LiteralField('PermissionList-'.$parent->ID, join(', ', $parent->Permissions()->column('Code'))));
-					}
-				}
-			}
+			// $parentGroups = $this->getAllParents();
+			// if ($parentGroups) {
+			// 	foreach ($parentGroups as $parent) {
+			// 		if ($parent->Permissions()->Count()) {
+			// 			$permissionsTab->push(new HeaderField('PermissionHeader-'.$parent->ID, 'Permissions inherited from '.$parent->Title));
+			// 			$permissionsTab->push(new LiteralField('PermissionList-'.$parent->ID, join(', ', $parent->Permissions()->column('Code'))));
+			// 		}
+			// 	}
+			// }
 		}
 
 		if(Permission::check('APPLY_ROLES') && DataObject::get('PermissionRole')) { 
@@ -133,15 +134,15 @@ class Group extends DataObject {
 			$roleData = Permission::check('ADMIN') ? DataObject::get('PermissionRole') : DataObject::get('PermissionRole', 'OnlyAdminCanApply = 0');
 			$fields->addFieldToTab('Root.' . _t('SecurityAdmin.ROLES', 'Roles'), new CheckboxSetField('Roles', 'Roles', $roleData)); 
 			
-			$parentGroups = $this->getAllParents();
-			if ($parentGroups) {
-				foreach ($parentGroups as $parent) {
-					if ($parent->Roles()->Count()) {
-						$fields->addFieldToTab('Root.' . _t('SecurityAdmin.ROLES', 'Roles'), new HeaderField('RolesHeader-'.$parent->ID, 'Roles inherited from '.$parent->Title));
-						$fields->addFieldToTab('Root.' . _t('SecurityAdmin.ROLES', 'Roles'), new LiteralField('RolesList-'.$parent->ID, join(', ', $parent->Roles()->column('Title'))));
-					}
-				}
-			}
+			// $parentGroups = $this->getAllParents();
+			// if ($parentGroups) {
+			// 	foreach ($parentGroups as $parent) {
+			// 		if ($parent->Roles()->Count()) {
+			// 			$fields->addFieldToTab('Root.' . _t('SecurityAdmin.ROLES', 'Roles'), new HeaderField('RolesHeader-'.$parent->ID, 'Roles inherited from '.$parent->Title));
+			// 			$fields->addFieldToTab('Root.' . _t('SecurityAdmin.ROLES', 'Roles'), new LiteralField('RolesList-'.$parent->ID, join(', ', $parent->Roles()->column('Title'))));
+			// 		}
+			// 	}
+			// }
 			
 		} 
 		

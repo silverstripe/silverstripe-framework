@@ -1,9 +1,10 @@
 <?php
 
 class PermissionCheckboxSetField extends CheckboxSetField {
-	function __construct($name, $title, $managedClass, $filterField) {
+	function __construct($name, $title, $managedClass, $filterField, $record = null) {
 		$this->filterField = $filterField;
 		$this->managedClass = $managedClass;
+		$this->record = $record;
 		parent::__construct($name, $title, Permission::get_codes(true)); 
 	}
 
@@ -31,6 +32,40 @@ class PermissionCheckboxSetField extends CheckboxSetField {
 		$odd = 0;
 		$options = '';
 
+		$inheritedItems = array();
+		if ($this->record) {
+			if ($this->record->Roles()->Count()) {
+				foreach($this->record->Roles() as $role) {
+					foreach($role->Codes() as $code) {
+						if (!isset($inheritedItems[$code->Code])) $inheritedItems[$code->Code] = array();
+						$inheritedItems[$code->Code][] = 'from role '.$role->Title;
+					}
+				}
+			}
+			
+			$parentGroups = $this->record->getAllParents();
+			if ($parentGroups) {
+				foreach ($parentGroups as $parent) {
+					if ($parent->Roles()->Count()) {
+						foreach($parent->Roles() as $role) {
+							if ($role->Codes()) {
+								foreach($role->Codes() as $code) {
+									if (!isset($inheritedItems[$code->Code])) $inheritedItems[$code->Code] = array();
+									$inheritedItems[$code->Code][] = 'role '.$role->Title.' on group '.$parent->Title;
+								}
+							}
+						}
+					}
+					if ($parent->Permissions()->Count()) {
+						foreach($parent->Permissions() as $permission) {
+							if (!isset($inheritedItems[$permission->Code])) $inheritedItems[$permission->Code] = array();
+							$inheritedItems[$permission->Code][] = 'group '.$parent->Title;
+						}
+					}
+				}
+			}
+		}
+		
 		if($source) {
 			foreach($source as $categoryName => $permissions) {
 				$options .= "<li><h5>$categoryName</h5></li>";
@@ -42,14 +77,19 @@ class PermissionCheckboxSetField extends CheckboxSetField {
 					$extraClass = $odd ? 'odd' : 'even';
 					$extraClass .= ' val' . str_replace(' ', '', $key);
 					$itemID = $this->id() . '_' . ereg_replace('[^a-zA-Z0-9]+', '', $key);
-					$checked = '';
+					$checked = $disabled = $inheritMessage = '';
 			
-					
 					$checked = in_array($key, $values) ? ' checked="checked"' : '';
-					
-					$title = $permission['help'] ? 'title="'.htmlentities($permission['help']).'" ' : '';
 			
-					$options .= "<li class=\"$extraClass\"><input id=\"$itemID\" name=\"$this->name[$key]\" type=\"checkbox\" value=\"$key\"$checked class=\"checkbox\" /> <label {$title}for=\"$itemID\">$value</label></li>\n"; 
+					$title = $permission['help'] ? 'title="'.htmlentities($permission['help']).'" ' : '';
+					
+					if (isset($inheritedItems[$code])) {
+						$disabled = ' disabled="true"';
+						$inheritMessage = ' inherited from '.join(', ', $inheritedItems[$code]).'';
+						$options .= "<li class=\"$extraClass\"><label {$title}for=\"$itemID\">$value is $inheritMessage</label></li>\n"; 
+					} else {
+						$options .= "<li class=\"$extraClass\"><input id=\"$itemID\"$disabled name=\"$this->name[$key]\" type=\"checkbox\" value=\"$key\"$checked class=\"checkbox\" /> <label {$title}for=\"$itemID\">$value$inheritMessage</label></li>\n"; 
+					}
 				}
 			}
 		}
