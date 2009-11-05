@@ -50,7 +50,7 @@ if(defined('SS_ENVIRONMENT_FILE')) {
 		'SS_DATABASE_PASSWORD',
 		'SS_DATABASE_USERNAME', 
 		'SS_ENVIRONMENT_TYPE',) as $reqDefine) {
-		if(!defined($reqDefine)) user_error("$reqDefine must be defined in your _ss_environment.php.  See http://doc.silverstripe.com/doku.php?id=environment-management for more infomration", E_USER_ERROR);
+		if(!defined($reqDefine)) user_error("$reqDefine must be defined in your _ss_environment.php.  See http://doc.silverstripe.org/doku.php?id=environment-management for more infomration", E_USER_ERROR);
 	}
 }
 
@@ -94,7 +94,7 @@ if(defined('SS_SEND_ALL_EMAILS_TO')) {
 }
 
 if(defined('SS_DEFAULT_ADMIN_USERNAME')) {
-	if(!defined('SS_DEFAULT_ADMIN_PASSWORD')) user_error("SS_DEFAULT_ADMIN_PASSWORD must be defined in your _ss_environment.php, if SS_DEFAULT_ADMIN_USERNAME is defined.  See http://doc.silverstripe.com/doku.php?id=environment-management for more infomration", E_USER_ERROR);
+	if(!defined('SS_DEFAULT_ADMIN_PASSWORD')) user_error("SS_DEFAULT_ADMIN_PASSWORD must be defined in your _ss_environment.php, if SS_DEFAULT_ADMIN_USERNAME is defined.  See http://doc.silverstripe.org/doku.php?id=environment-management for more infomration", E_USER_ERROR);
 	Security::setDefaultAdmin(SS_DEFAULT_ADMIN_USERNAME, SS_DEFAULT_ADMIN_PASSWORD);
 }
 if(defined('SS_USE_BASIC_AUTH') && SS_USE_BASIC_AUTH) {

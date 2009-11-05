@@ -1230,7 +1230,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 				$homepage = new Page();
 
 				$homepage->Title = _t('SiteTree.DEFAULTHOMETITLE', 'Home');
-				$homepage->Content = _t('SiteTree.DEFAULTHOMECONTENT', '<p>Welcome to SilverStripe! This is the default homepage. You can edit this page by opening <a href="admin/">the CMS</a>. You can now access the <a href="http://doc.silverstripe.com">developer documentation</a>, or begin <a href="http://doc.silverstripe.com/doku.php?id=tutorials">the tutorials.</a></p>');
+				$homepage->Content = _t('SiteTree.DEFAULTHOMECONTENT', '<p>Welcome to SilverStripe! This is the default homepage. You can edit this page by opening <a href="admin/">the CMS</a>. You can now access the <a href="http://doc.silverstripe.org">developer documentation</a>, or begin <a href="http://doc.silverstripe.org/doku.php?id=tutorials">the tutorials.</a></p>');
 				$homepage->URLSegment = "home";
 				$homepage->Status = "Published";
 				$homepage->write();

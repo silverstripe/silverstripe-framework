@@ -37,14 +37,14 @@
 							<?php if(isset($hasErrorOtherThanDatabase)) { ?>
 								<p class="error">
 									You aren't currently able to install the software.  Please <a href="#requirements">see below</a> for details.<br />
-									If you are having problems meeting the requirements, see the <a href="http://doc.silverstripe.com/doku.php?id=server-requirements">server requirements wiki page</a>.
+									If you are having problems meeting the requirements, see the <a href="http://doc.silverstripe.org/doku.php?id=server-requirements">server requirements wiki page</a>.
 								</p>
 							<?php } else { ?>
 								<?php if($req->hasWarnings()) { ?>
 									<p class="warning">
 										There are some issues that we recommend you look at before installing, however, you are still able to install the software.
 										Please see below for details.<br />
-										If you are having problems meeting the requirements, see the <a href="http://doc.silverstripe.com/doku.php?id=server-requirements">server requirements wiki page</a>.
+										If you are having problems meeting the requirements, see the <a href="http://doc.silverstripe.org/doku.php?id=server-requirements">server requirements wiki page</a>.
 									</p>
 								<?php } else if(!$dbReq->hasErrors()) { ?>
 									<p class="good">
@@ -143,7 +143,7 @@
 127.0.0.1</textarea></span>
 							</p>
 							<p class="devHelp">
-								SilverStripe allows you to run a site in <a href="http://doc.silverstripe.com/doku.php?id=devmode">development mode</a>.
+								SilverStripe allows you to run a site in <a href="http://doc.silverstripe.org/doku.php?id=configuration">development mode</a>.
 								This shows all error messages in the web browser instead of emailing them to the administrator, and allows
 								the database to be built without logging in as administrator. Please enter the host/domain names for servers
 								you will be using for development.
@@ -166,7 +166,7 @@
 			
 			<div id="Footer">
 				<div class="footerTop"><!-- --></div>
-				<p><a href="http://www.silverstripe.com">SilverStripe Open Source CMS</a> | Copyright &copy; 2008 SilverStripe Limited</p>
+				<p><a href="http://www.silverstripe.org">SilverStripe Open Source CMS</a> | Copyright &copy; 2008 SilverStripe Limited</p>
 			</div>
 		</div>
 	</body>

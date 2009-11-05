@@ -88,7 +88,7 @@ class SearchForm extends Form {
 	 * @return DataObjectSet
 	 */
 	public function getResults($pageLength = null, $data = null){
-	 	// legacy usage: $data was defaulting to $_REQUEST, parameter not passed in doc.silverstripe.com tutorials
+	 	// legacy usage: $data was defaulting to $_REQUEST, parameter not passed in doc.silverstripe.org tutorials
 		if(!isset($data) || !is_array($data)) $data = $_REQUEST;
 		
 		// set language (if present)
@@ -160,7 +160,7 @@ class SearchForm extends Form {
 	 * @return string
 	 */
 	public function getSearchQuery($data = null) {
-		// legacy usage: $data was defaulting to $_REQUEST, parameter not passed in doc.silverstripe.com tutorials
+		// legacy usage: $data was defaulting to $_REQUEST, parameter not passed in doc.silverstripe.org tutorials
 		if(!isset($data)) $data = $_REQUEST;
 		
 		return Convert::raw2xml($data['Search']);

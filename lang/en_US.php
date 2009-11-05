@@ -633,7 +633,7 @@ $lang['en_US']['Security']['PASSWORDSENTTEXT'] = 'Thank you! A reset link has be
 $lang['en_US']['Security']['PERMFAILURE'] = ' This page is secured and you need administrator rights to access it. 
 				Enter your credentials below and we will send you right along.';
 $lang['en_US']['SecurityAdmin']['ADVANCEDONLY'] = 'This section is for advanced users only.
-							See <a href="http://doc.silverstripe.com/doku.php?id=permissions:codes" target="_blank">this page</a>
+							See <a href="http://doc.silverstripe.org/doku.php?id=permissions:codes" target="_blank">this page</a>
 							for more information.';
 $lang['en_US']['SecurityAdmin']['GROUPNAME'] = 'Group name';
 $lang['en_US']['SecurityAdmin']['IPADDRESSESHELP'] = '<p>You can restrict this group to a particular 
@@ -690,7 +690,7 @@ $lang['en_US']['SiteTree']['DEFAULTABOUTCONTENT'] = '<p>You can fill this page o
 $lang['en_US']['SiteTree']['DEFAULTABOUTTITLE'] = 'About Us';
 $lang['en_US']['SiteTree']['DEFAULTCONTACTCONTENT'] = '<p>You can fill this page out with your own content, or delete it and create your own pages.<br /></p>';
 $lang['en_US']['SiteTree']['DEFAULTCONTACTTITLE'] = 'Contact Us';
-$lang['en_US']['SiteTree']['DEFAULTHOMECONTENT'] = '<p>Welcome to SilverStripe! This is the default homepage. You can edit this page by opening <a href="admin/">the CMS</a>. You can now access the <a href="http://doc.silverstripe.com">developer documentation</a>, or begin <a href="http://doc.silverstripe.com/doku.php?id=tutorials">the tutorials.</a></p>';
+$lang['en_US']['SiteTree']['DEFAULTHOMECONTENT'] = '<p>Welcome to SilverStripe! This is the default homepage. You can edit this page by opening <a href="admin/">the CMS</a>. You can now access the <a href="http://doc.silverstripe.org">developer documentation</a>, or begin <a href="http://doc.silverstripe.org/doku.php?id=tutorials">the tutorials.</a></p>';
 $lang['en_US']['SiteTree']['DEFAULTHOMETITLE'] = 'Home';
 $lang['en_US']['SiteTree']['DELETEDPAGE'] = 'Deleted page';
 $lang['en_US']['SiteTree']['EDITANYONE'] = 'Anyone who can log-in to the CMS';
