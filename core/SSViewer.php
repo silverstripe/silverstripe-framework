@@ -195,6 +195,9 @@ class SSViewer {
 	 * The following options are available:
 	 *  - rewriteHashlinks: If true (the default), <a href="#..."> will be rewritten to contain the 
 	 *    current URL.  This lets it play nicely with our <base> tag.
+	 *  - If rewriteHashlinks = 'php' then, a piece of PHP script will be inserted before the hash 
+	 *    links: "<?php echo $_SERVER['REQUEST_URI']; ?>".  This is useful if you're generating a 
+	 *    page that will be saved to a .php file and may be accessed from different URLs.
 	 */
 	public static function setOption($optionName, $optionVal) {
 		SSViewer::$options[$optionName] = $optionVal;
@@ -373,7 +376,11 @@ class SSViewer {
 		// If we have our crazy base tag, then fix # links referencing the current page.
 		if($this->rewriteHashlinks && self::$options['rewriteHashlinks']) {
 			if(strpos($output, '<base') !== false) {
-				$thisURLRelativeToBase = Director::makeRelative(Director::absoluteURL($_SERVER['REQUEST_URI']));
+				if(SSViewer::$options['rewriteHashlinks'] === 'php') { 
+					$thisURLRelativeToBase = "<?php echo \$_SERVER['REQUEST_URI']; ?>"; 
+				} else { 
+					$thisURLRelativeToBase = Director::makeRelative(Director::absoluteURL($_SERVER['REQUEST_URI'])); 
+				}
 				$output = preg_replace('/(<a[^>+]href *= *)"#/i', '\\1"' . $thisURLRelativeToBase . '#', $output);
 			}
 		}
