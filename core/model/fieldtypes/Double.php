@@ -7,7 +7,14 @@
 class Double extends DBField {
 	
 	function requireField() {
-		DB::requireField($this->tableName, $this->name, "double");
+	
+		// HACK: MSSQL does not support double so we're usinf float instead
+		// @todo This should go into MSSQLDatabase ideally somehow
+		if(DB::getConn() instanceof MSSQLDatabase) {
+			DB::requireField($this->tableName, $this->name, "float");
+		} else {
+			DB::requireField($this->tableName, $this->name, "double");
+		}
 	}
 	
 	function Nice() {
