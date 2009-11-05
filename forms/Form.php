@@ -1267,7 +1267,7 @@ class Form extends RequestHandler {
 	}
 }
 
-class Form_FieldMap extends Object {
+class Form_FieldMap extends ViewableData {
 	protected $form;
 	
 	function __construct($form) {
@@ -1275,6 +1275,13 @@ class Form_FieldMap extends Object {
 		parent::__construct();
 	}
 	
+	/**
+	 * Ensure that all potential method calls get passed to __call(), therefore to dataFieldByName
+	 */
+	function hasMethod($method) {
+		return true;
+	}
+
 	function __call($method, $args = null) {
 		return $this->form->dataFieldByName($method);
 	}
