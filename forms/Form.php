@@ -977,7 +977,7 @@ class Form extends RequestHandler {
 
 		if($dataFields) foreach($dataFields as $field) {
 			// Skip fields that have been exlcuded
-			if($fieldList && !in_array($field->Name(), $fieldList)) continue;
+			if($fieldList && is_array($fieldList) && !in_array($field->Name(), $fieldList)) continue;
 
 
 			$saveMethod = "save{$field->Name()}";
