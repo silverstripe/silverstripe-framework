@@ -27,7 +27,8 @@ class ContentController extends Controller {
 	);
 	
 	public static $allowed_actions = array (
-		'PageComments'
+		'PageComments',
+		'successfullyinstalled'
 	);
 	
 	/**
