@@ -62,7 +62,7 @@ define('MCE_ROOT', 'jsparty/tiny_mce/');
  * Change this to something different for increase security (you can
  * override it in mysite/_config.php to ease upgrades).
  * For more information see:
- * {@link http://doc.silverstripe.com/doku.php?id=email_bouncehandler}
+ * {@link http://doc.silverstripe.org/doku.php?id=email_bouncehandler}
  */
 define('EMAIL_BOUNCEHANDLER_KEY', '1aaaf8fb60ea253dbf6efa71baaacbb3');
 

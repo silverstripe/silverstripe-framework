@@ -46,7 +46,7 @@ class DevelopmentAdmin extends Controller {
 			}
 			else {
 				echo 'Warning: You probably want to define $_FILE_TO_URL_MAPPING in '.
-					'your _ss_environment.php as instructed on the "sake" page of the doc.silverstripe.com wiki' . "\n";
+					'your _ss_environment.php as instructed on the "sake" page of the doc.silverstripe.org wiki' . "\n";
 			}
 		}
 		

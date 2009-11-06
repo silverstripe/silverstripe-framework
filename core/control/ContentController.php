@@ -440,7 +440,7 @@ HTML;
 		$password = Session::get('password');
 		$title->setValue("Installation Successful");
 		global $project;
-		$tutorialOnly = ($project == 'tutorial') ? "<p>This website is a simplistic version of a SilverStripe 2 site. To extend this, please take a look at <a href=\"http://doc.silverstripe.com/doku.php?id=tutorial:1-building-a-basic-site\">our new tutorials</a>.</p>" : '';
+		$tutorialOnly = ($project == 'tutorial') ? "<p>This website is a simplistic version of a SilverStripe 2 site. To extend this, please take a look at <a href=\"http://doc.silverstripe.org/doku.php?id=tutorials\">our new tutorials</a>.</p>" : '';
 		$content->setValue(<<<HTML
 			<p style="margin: 1em 0"><b>Congratulations, SilverStripe has been successfully installed.</b></p>
 			

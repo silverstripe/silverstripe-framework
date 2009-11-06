@@ -145,7 +145,7 @@
  * or manually filter out translated objects through their "Locale" property
  * in the database.
  * 
- * @see http://doc.silverstripe.com/doku.php?id=multilingualcontent
+ * @see http://doc.silverstripe.org/doku.php?id=multilingualcontent
  *
  * @author Ingo Schommer <ingo (at) silverstripe (dot) com>
  * @author Michael Gall <michael (at) wakeless (dot) net>
