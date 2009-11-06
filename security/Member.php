@@ -10,14 +10,18 @@ class Member extends DataObject {
 		'FirstName' => 'Varchar',
 		'Surname' => 'Varchar',
 		'Email' => 'Varchar',
-		'Password' => 'Varchar(64)', // support for up to SHA256!
+		'Password' => 'Varchar(160)',
 		'RememberLoginToken' => 'Varchar(50)',
 		'NumVisit' => 'Int',
 		'LastVisited' => 'SS_Datetime',
 		'Bounced' => 'Boolean', // Note: This does not seem to be used anywhere.
 		'AutoLoginHash' => 'Varchar(30)',
 		'AutoLoginExpired' => 'SS_Datetime',
-		'PasswordEncryption' => "Enum('none', 'none')",
+		// This is an arbitrary code pointing to a PasswordEncryptor instance,
+		// not an actual encryption algorithm.
+		// Warning: Never change this field after its the first password hashing without
+		// providing a new cleartext password as well.
+		'PasswordEncryption' => "Varchar(50)",
 		'Salt' => 'Varchar(50)',
 		'PasswordExpiry' => 'Date',
 		'LockedOutUntil' => 'SS_Datetime',
@@ -98,6 +102,9 @@ class Member extends DataObject {
 	 */
 	protected static $login_marker_cookie = null;
 
+	public static function init_db_fields() {
+	}
+
 	/**
 	 * If this is called, then a session cookie will be set to "1" whenever a user
 	 * logs in.  This lets 3rd party tools, such as apache's mod_rewrite, detect
@@ -120,24 +127,6 @@ class Member extends DataObject {
 	static function set_login_marker_cookie($cookieName) {
 		self::$login_marker_cookie = $cookieName;
 	} 
-	
-	/**
-	 * This method is used to initialize the static database members
-	 *
-	 * Since PHP doesn't support any expressions for the initialization of
-	 * static member variables we need a method that does that.
-	 *
-	 * This method adds all supported encryption algorithms to the
-	 * PasswordEncryption Enum field.
-	 *
-	 * @todo Maybe it would be useful to define this in DataObject and call
-	 *       it automatically?
-	 */
-	public static function init_db_fields() {
-		self::$db['PasswordEncryption'] = "Enum(array('none', '" .
-			implode("', '", array_map("addslashes", Security::get_encryption_algorithms())) .
-			"'), 'none')";
-	}
 
 	/**
 	 * Check if the passed password matches the stored one
@@ -147,10 +136,17 @@ class Member extends DataObject {
 	 */
 	public function checkPassword($password) {
 		// Only confirm that the password matches if the user isn't locked out
-		if(!$this->isLockedOut()) {
-			$encryption_details = Security::encrypt_password($password, $this->Salt, $this->PasswordEncryption);
-			return ($this->Password === $encryption_details['password']);
-		}
+		if($this->isLockedOut()) return false;
+		
+		$spec = Security::encrypt_password(
+			$password, 
+			$this->Salt, 
+			$this->PasswordEncryption,
+			$this
+		);
+		$e = $spec['encryptor'];
+		
+		return $e->compare($this->Password, $spec['password']);
 	}
 	
 	/**
@@ -538,10 +534,18 @@ class Member extends DataObject {
 			$this->sendInfo('changePassword');
 		}
 		
-		// The test on $this->ID is used for when records are initially created
+		// The test on $this->ID is used for when records are initially created.
+		// Note that this only works with cleartext passwords, as we can't rehash
+		// existing passwords.
 		if(!$this->ID || $this->isChanged('Password')) {
 			// Password was changed: encrypt the password according the settings
-			$encryption_details = Security::encrypt_password($this->Password);
+			$encryption_details = Security::encrypt_password(
+				$this->Password, // this is assumed to be cleartext
+				$this->Salt,
+				$this->PasswordEncryption,
+				$this
+			);
+			// Overwrite the Password property with the hashed value
 			$this->Password = $encryption_details['password'];
 			$this->Salt = $encryption_details['salt'];
 			$this->PasswordEncryption = $encryption_details['algorithm'];
@@ -1033,6 +1037,12 @@ class Member extends DataObject {
 		return $valid;
 	}	
 	
+	/**
+	 * Change password. This will cause rehashing according to
+	 * the `PasswordEncryption` property.
+	 * 
+	 * @param String $password Cleartext password
+	 */
 	function changePassword($password) {
 		$this->Password = $password;
 		$valid = $this->validate();

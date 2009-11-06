@@ -35,11 +35,20 @@ class MemberPassword extends DataObject {
 	}
 	
 	/**
-	 * Check if the given password is the same as the one stored in this record
+	 * Check if the given password is the same as the one stored in this record.
+	 * See {@link Member->checkPassword()}.
+	 * 
+	 * @param String $password Cleartext password
+	 * @return Boolean
 	 */	
 	function checkPassword($password) {
-		$encryption_details = Security::encrypt_password($password, $this->Salt, $this->PasswordEncryption);
-		return ($this->Password === $encryption_details['password']);
+		$spec = Security::encrypt_password(
+			$password, 
+			$this->Salt, 
+			$this->PasswordEncryption
+		);
+		$e = $spec['encryptor'];
+		return $e->compare($this->Password, $spec['password']);
 	}
 	
 	
