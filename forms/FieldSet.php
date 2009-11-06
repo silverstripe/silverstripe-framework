@@ -418,7 +418,7 @@ class FieldSet extends DataObjectSet {
 	 * @return FieldSet
 	 */
 	function HiddenFields() {
-		$hiddenFields = new FieldSet();
+		$hiddenFields = new HiddenFieldSet();
 		$dataFields = $this->dataFields();
 		
 		if($dataFields) foreach($dataFields as $field) {
@@ -532,6 +532,20 @@ class FieldSet extends DataObjectSet {
 		return false;
 	}
 	
+}
+
+/**
+ * A fieldset designed to store a list of hidden fields.  When inserted into a template, only the
+ * input tags will be included
+ */
+class HiddenFieldSet extends FieldSet {
+	function forTemplate() {
+		$output = "";
+		foreach($this as $field) {
+			$output .= $field->Field();
+		}
+		return $output;
+	}
 }
 
 ?>
