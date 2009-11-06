@@ -905,8 +905,10 @@ class Form extends RequestHandler {
 	 *  a property or array-key of the passed {@link $data} argument are "left alone",
 	 *  meaning they retain any previous values (if present). If this flag is set to true,
 	 *  those fields are overwritten with null regardless if they have a match in {@link $data}.
+	 * @param $fieldList An optional list of fields to process.  This can be useful when you have a 
+	 * form that has some fields that save to one object, and some that save to another.
 	 */
-	function loadDataFrom($data, $clearMissingFields = false) {
+	function loadDataFrom($data, $clearMissingFields = false, $fieldList = null) {
 		if(!is_object($data) && !is_array($data)) {
 			user_error("Form::loadDataFrom() not passed an array or an object", E_USER_WARNING);
 			return false;
@@ -919,6 +921,9 @@ class Form extends RequestHandler {
 		$dataFields = $this->fields->dataFields();
 		if($dataFields) foreach($dataFields as $field) {
 			$name = $field->Name();
+			
+			// Skip fields that have been exlcuded
+			if($fieldList && !in_array($name, $fieldList)) continue;
 			
 			// First check looks for (fieldname)_unchanged, an indicator that we shouldn't overwrite the field value
 			if(is_array($data) && isset($data[$name . '_unchanged'])) continue;
@@ -961,12 +966,20 @@ class Form extends RequestHandler {
 	/**
 	 * Save the contents of this form into the given data object.
 	 * It will make use of setCastedField() to do this.
+	 * 
+	 * @param $dataObject The object to save data into
+	 * @param $fieldList An optional list of fields to process.  This can be useful when you have a 
+	 * form that has some fields that save to one object, and some that save to another.
 	 */
-	function saveInto(DataObjectInterface $dataObject) {
+	function saveInto(DataObjectInterface $dataObject, $fieldList = null) {
 		$dataFields = $this->fields->saveableFields();
 		$lastField = null;
 
 		if($dataFields) foreach($dataFields as $field) {
+			// Skip fields that have been exlcuded
+			if($fieldList && !in_array($field->Name(), $fieldList)) continue;
+
+
 			$saveMethod = "save{$field->Name()}";
 
 			if($field->Name() == "ClassName"){
