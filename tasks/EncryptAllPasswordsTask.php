@@ -55,6 +55,7 @@ class EncryptAllPasswordsTask extends DailyTask {
 			// automatically encrypted according to the settings, this will do all
 			// the work for us
 			$member->PasswordEncryption = $algo;
+			$member->forceChange();
 			$member->write();
 			
 			$this->debugMessage(sprintf('Encrypted credentials for member #%d;', $member->ID));

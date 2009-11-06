@@ -8,6 +8,16 @@
  */
 class MemberAuthenticator extends Authenticator {
 
+	/**
+	 * @var Array Contains encryption algorithm identifiers.
+	 *  If set, will migrate to new precision-safe password hashing
+	 *  upon login. See http://open.silverstripe.org/ticket/3004.
+	 */
+	static $migrate_legacy_hashes = array(
+		'md5' => 'md5_v2.4', 
+		'sha1' => 'sha1_v2.4'
+	);
+
   /**
    * Method to authenticate an user
    *
@@ -27,7 +37,11 @@ class MemberAuthenticator extends Authenticator {
 	if(Security::check_default_admin($RAW_data['Email'], $RAW_data['Password'])) {
 		$member = Security::findAnAdministrator();
 	} else {
-		$member = DataObject::get_one("Member", "\"Email\" = '$SQL_user' AND \"Password\" IS NOT NULL");
+		$member = DataObject::get_one(
+			"Member", 
+			"\"Email\" = '$SQL_user' AND \"Password\" IS NOT NULL"
+		);
+		
 		if($member && ($member->checkPassword($RAW_data['Password']) == false)) { 
 			if($member->isLockedOut()) $isLockedOut = true;
 			$member->registerFailedLogin();
@@ -71,6 +85,21 @@ class MemberAuthenticator extends Authenticator {
 		$attempt->Email = $RAW_data['Email'];
 		$attempt->IP = Controller::curr()->getRequest()->getIP();
 		$attempt->write();
+	}
+	
+	// Legacy migration to precision-safe password hashes.
+	// A login-event with cleartext passwords is the only time
+	// when we can rehash passwords to a different hashing algorithm,
+	// bulk-migration doesn't work due to the nature of hashing.
+	// See PasswordEncryptor_LegacyPHPHash class.
+	if(
+		$member // only migrate after successful login
+		&& self::$migrate_legacy_hashes
+		&& array_key_exists($member->PasswordEncryption, self::$migrate_legacy_hashes)
+	) {
+		$member->Password = $RAW_data['Password'];
+		$member->PasswordEncryption = self::$migrate_legacy_hashes[$member->PasswordEncryption];
+		$member->write();
 	}
 
     if($member) {
