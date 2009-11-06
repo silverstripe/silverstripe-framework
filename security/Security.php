@@ -883,68 +883,15 @@ class Security extends Controller {
 								 'algorithm' => $algorithm);
 	}
 
-
-	/**
-	 * Encrypt all passwords
-	 *
-	 * Action to encrypt all *clear text* passwords in the database according
-	 * to the current settings.
-	 * If the current settings are so that passwords shouldn't be encrypted,
-	 * an explanation will be printed out.
-	 *
-	 * To run this action, the user needs to have administrator rights!
-	 */
-	public function encryptallpasswords() {
-		// Only administrators can run this method
-		if(!Permission::check("ADMIN")) {
-			Security::permissionFailure($this,
-				_t('Security.PERMFAILURE',' This page is secured and you need administrator rights to access it. 
-				Enter your credentials below and we will send you right along.'));
-			return;
-		}
-
-
-		if(self::$encryptPasswords == false) {
-		        print '<h1>'._t('Security.ENCDISABLED1', 'Password encryption disabled!')."</h1>\n";
-			print '<p>'._t('Security.ENCDISABLED2', 'To encrypt your passwords change your password settings by adding')."\n";
-			print "<pre>Security::encrypt_passwords(true);</pre>\n"._t('Security.ENCDISABLED3', 'to mysite/_config.php')."</p>";
-
-			return;
-		}
-
-
-		// Are there members with a clear text password?
-		$members = DataObject::get("Member",
-			"\"PasswordEncryption\" = 'none' AND \"Password\" IS NOT NULL");
-
-		if(!$members) {
-		        print '<h1>'._t('Security.NOTHINGTOENCRYPT1', 'No passwords to encrypt')."</h1>\n";
-			print '<p>'._t('Security.NOTHINGTOENCRYPT2', 'There are no members with a clear text password that could be encrypted!')."</p>\n";
-
-			return;
-		}
-
-		// Encrypt the passwords...
-		print '<h1>'._t('Security.ENCRYPT', 'Encrypting all passwords').'</h1>';
-		print '<p>'.sprintf(_t('Security.ENCRYPTWITH', 'The passwords will be encrypted using the &quot;%s&quot; algorithm'), htmlentities(self::$encryptionAlgorithm));
-
-		print (self::$useSalt)
-		        ? _t('Security.ENCRYPTWITHSALT', 'with a salt to increase the security.')."</p>\n"
-		        : _t('Security.ENCRYPTWITHOUTSALT', 'without using a salt to increase the security.')."</p><p>\n";
-
-		foreach($members as $member) {
-			// Force the update of the member record, as new passwords get
-			// automatically encrypted according to the settings, this will do all
-			// the work for us
-			$member->forceChange();
-			$member->write();
-
-			print '  '._t('Security.ENCRYPTEDMEMBERS', 'Encrypted credentials for member &quot;');
-			print htmlentities($member->getTitle()) . '&quot; ('._t('Security.ID', 'ID:').' ' . $member->ID .
-			        '; '._t('Security.EMAIL', 'E-Mail:').' ' . htmlentities($member->Email) . ")<br />\n";
-		}
-
-		print '</p>';
+		// New salts will only need to be generated if the password is hashed for the first time
+		$salt = ($salt) ? $salt : $e->salt($password);
+		
+		return array(
+			'password' => $e->encrypt($password, $salt),
+			'salt' => $salt,
+			'algorithm' => $algorithm,
+			'encryptor' => $e
+		);
 	}
 	
 	/**
