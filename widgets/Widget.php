@@ -155,9 +155,13 @@ class Widget_Controller extends Controller {
 	}
 	
 	public function Link($action = null) {
-		return Controller::curr()->Link (
-			Controller::join_links('widget', ($this->widget ? $this->widget->ID : null), $action)
-		);
+		$segment = Controller::join_links('widget', ($this->widget ? $this->widget->ID : null), $action);
+		
+		if(Director::get_current_page()) {
+			return Director::get_current_page()->Link($segment);
+		} else {
+			return Controller::curr()->Link($segment);
+		}
 	}
 	
 	/**
