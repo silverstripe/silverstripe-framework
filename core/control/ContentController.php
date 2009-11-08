@@ -23,7 +23,7 @@ class ContentController extends Controller {
 	protected $dataRecord;
 	
 	static $url_handlers = array(
-		'widget/$ID/$Action' => 'handleWidget'
+		'widget/$ID!' => 'handleWidget'
 	);
 	
 	public static $allowed_actions = array (
