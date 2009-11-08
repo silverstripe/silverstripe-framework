@@ -33,7 +33,7 @@ class ViewableData extends Object implements IteratorAggregate {
 	 *
 	 * @var string
 	 */
-	public static $default_cast = 'HTMLVarchar';
+	public static $default_cast = 'HTMLText';
 	
 	/**
 	 * @var array
