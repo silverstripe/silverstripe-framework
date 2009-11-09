@@ -76,4 +76,19 @@ abstract class StringField extends DBField {
 		}
 	}
 
+	
+	/**
+	 * Return another DBField object with this value in lowercase.
+	 */
+	function Lower() {
+		return DBField::create(get_class($this), strtolower($this->value), $this->name);
+	}
+
+	/**
+	 * Return another DBField object with this value in uppercase.
+	 */
+	function Upper() {
+		return DBField::create(get_class($this), strtoupper($this->value), $this->name);
+	}
+
 }
