@@ -224,7 +224,10 @@ class Session {
 	 */
 	public static function destroy($removeCookie = true) {
 		if(session_id()) {
-			if($removeCookie) unset($_COOKIE[session_name()]);
+			if($removeCookie) {
+				setcookie(session_name(), '');
+				unset($_COOKIE[session_name()]);
+			}
 			session_destroy();
 		}
 	}
