@@ -5,6 +5,18 @@
  */
 class SiteTreeBrokenLinksTest extends SapphireTest {
 	static $fixture_file = 'sapphire/tests/SiteTreeBrokenLinksTest.yml';
+	
+	static function set_up_once() {
+		SiteTreeTest::set_up_once();
+
+		parent::set_up_once();
+	}
+	
+	static function tear_down_once() {
+		SiteTreeTest::tear_down_once();
+		
+		parent::tear_down_once();
+	}
 
 	function testBrokenLinksBetweenPages() {
 		$obj = $this->objFromFixture('Page','content');
