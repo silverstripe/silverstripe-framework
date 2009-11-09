@@ -249,6 +249,39 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 		
 		return $dbname;
 	}
+	
+	/**
+	 * Create a member and group with the given permission code, and log in with it.
+	 * Returns the member ID.
+	 */
+	function logInWithPermssion($permCode = "ADMIN") {
+		if(!isset($this->cache_generatedMembers[$permCode])) {
+			$group = new Group();
+			$group->Title = "$permCode group";
+			$group->write();
+
+			$permission = new Permission();
+			$permission->Code = $permCode;
+			$permission->write();
+			$group->Permissions()->add($permission);
+			
+			$member = new Member();
+			$member->FirstName = $permCode;
+			$member->Surname = "User";
+			$member->Email = "$permCode@example.org";
+			$member->write();
+			$group->Members()->add($member);
+			
+			$this->cache_generatedMembers[$permCode] = $member;
+		}
+		
+		$this->cache_generatedMembers[$permCode]->logIn();
+	}
+	
+	/**
+	 * Cache for logInWithPermission()
+	 */
+	protected $cache_generatedMembers = array();
 }
 
 ?>
