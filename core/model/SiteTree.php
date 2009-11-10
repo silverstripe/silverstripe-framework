@@ -100,7 +100,6 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		"ImageTracking" => "File",
 		"ViewerGroups" => "Group",
 		"EditorGroups" => "Group",
-		"UsersCurrentlyEditing" => "Member",
 	);
 
 	static $belongs_many_many = array(
@@ -108,7 +107,6 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	);
 
 	static $many_many_extraFields = array(
-		"UsersCurrentlyEditing" => array("LastPing" => "SS_Datetime"),
 		"LinkTracking" => array("FieldName" => "Varchar"),
 		"ImageTracking" => array("FieldName" => "Varchar")
 	);
@@ -1579,7 +1577,6 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		$fields = new FieldSet(
 			// Add a field with a bit of metadata for concurrent editing. The fact that we're using
 			// non-standard attributes does not really matter, all modern UA's just ignore em.
-			new LiteralField("SiteTree_Alert", '<div deletedfromstage="'.((int) $this->getIsDeletedFromStage()).'" id="SiteTree_Alert"></div>'),
 			new TabSet("Root",
 				$tabContent = new TabSet('Content',
 					$tabMain = new Tab('Main',

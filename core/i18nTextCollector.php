@@ -27,7 +27,7 @@
  * @uses i18nEntityProvider
  * @uses i18n
  */
-class i18nTextCollector extends Object {
+class i18nTextCollector extends BuildTask {
 	
 	protected $defaultLocale;
 	
@@ -75,13 +75,13 @@ class i18nTextCollector extends Object {
 		$entitiesByModule = array();
 		
 		//Search for and process existent modules, or use the passed one instead
-		if($restrictToModules && count($restrictToModules)) {
-			foreach($restrictToModules as $restrictToModule) {
-				$modules[] = basename($restrictToModule);
-			}
-		} else {
+		// if($restrictToModules && count($restrictToModules)) {
+		// 	foreach($restrictToModules as $restrictToModule) {
+		// 		$modules[] = basename($restrictToModule);
+		// 	}
+		// } else {
 			$modules = scandir($this->basePath);
-		}
+		// }
 
 		foreach($modules as $module) {
 			// Only search for calls in folder with a _config.php file (which means they are modules)  
