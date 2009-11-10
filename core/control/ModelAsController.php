@@ -49,10 +49,14 @@ class ModelAsController extends Controller implements NestedController {
 			return $this->response;
 		}
 		
-		$result = $this->getNestedController();
+		try {
+			$result = $this->getNestedController();
 		
-		if($result instanceof RequestHandler) {
-			$result = $result->handleRequest($this->request);
+			if($result instanceof RequestHandler) {
+				$result = $result->handleRequest($this->request);
+			}
+		} catch(SS_HTTPResponse_Exception $responseException) {
+			$result = $responseException->getResponse();
 		}
 		
 		$this->popCurrent();
