@@ -13,10 +13,10 @@
  * The collector needs to be run whenever you make new translatable
  * entities available. Please don't alter the arrays in language tables manually.
  * 
- * Usage through URL: http://localhost/dev/tasks/i18nTextCollector
- * Usage through URL (module-specific): http://localhost/dev/tasks/i18nTextCollector/?module=mymodule
- * Usage on CLI: sake dev/tasks/i18nTextCollector
- * Usage on CLI (module-specific): sake dev/tasks/i18nTextCollector module=mymodule
+ * Usage through URL: http://localhost/dev/tasks/i18nTextCollectorTast
+ * Usage through URL (module-specific): http://localhost/dev/tasks/i18nTextCollectorTask/?module=mymodule
+ * Usage on CLI: sake dev/tasks/i18nTextCollectorTask
+ * Usage on CLI (module-specific): sake dev/tasks/i18nTextCollectorTask module=mymodule
  *
  * Requires PHP 5.1+ due to class_implements() limitations
  * 
@@ -27,7 +27,7 @@
  * @uses i18nEntityProvider
  * @uses i18n
  */
-class i18nTextCollector extends BuildTask {
+class i18nTextCollector extends Object {
 	
 	protected $defaultLocale;
 	
@@ -75,13 +75,13 @@ class i18nTextCollector extends BuildTask {
 		$entitiesByModule = array();
 		
 		//Search for and process existent modules, or use the passed one instead
-		// if($restrictToModules && count($restrictToModules)) {
-		// 	foreach($restrictToModules as $restrictToModule) {
-		// 		$modules[] = basename($restrictToModule);
-		// 	}
-		// } else {
+		if($restrictToModules && count($restrictToModules)) {
+			foreach($restrictToModules as $restrictToModule) {
+				$modules[] = basename($restrictToModule);
+			}
+		} else {
 			$modules = scandir($this->basePath);
-		// }
+		}
 
 		foreach($modules as $module) {
 			// Only search for calls in folder with a _config.php file (which means they are modules)  
