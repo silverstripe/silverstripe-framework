@@ -1175,7 +1175,10 @@ class Translatable extends DataObjectDecorator implements PermissionProvider {
 	 * @return boolean
 	 */
 	function hasTranslation($locale) {
-		return (array_search($locale, $this->getTranslatedLocales()) !== false);
+		return (
+			$this->owner->Locale == $locale
+			|| array_search($locale, $this->getTranslatedLocales()) !== false
+		);
 	}
 	
 	function AllChildrenIncludingDeleted($context = null) {
