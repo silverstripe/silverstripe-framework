@@ -427,7 +427,7 @@ class Security extends Controller {
 	 * @return Form Returns the lost password form
 	 */
 	public function LostPasswordForm() {
-		return new MemberLoginForm(
+		return Object::create('MemberLoginForm',
 			$this,
 			'LostPasswordForm',
 			new FieldSet(
