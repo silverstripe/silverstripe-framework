@@ -97,8 +97,11 @@ class Date extends DBField {
 	 * strftime obeys the current LC_TIME/LC_ALL when printing lexical values
 	 * like day- and month-names
 	 */
-	function FormatI18N($formattingString) {
-		if($this->value) return strftime($formattingString, strtotime($this->value));
+	function FormatI18N($formattingString) {		
+		if($this->value) {
+			$fecfrm = strftime($formattingString, strtotime($this->value));
+			return utf8_encode($fecfrm);
+		}
 	}
 	
 	/*
