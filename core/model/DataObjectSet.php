@@ -203,7 +203,7 @@ class DataObjectSet extends ViewableData implements IteratorAggregate, Countable
 	 * @return int
 	 */
 	public function CurrentPage() {
-			return floor($this->pageStart / $this->pageLength) + 1;
+		return floor($this->pageStart / $this->pageLength) + 1;
 	}
 	
 	/**
