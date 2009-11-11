@@ -273,8 +273,7 @@ TreeMultiselectField.prototype = {
 		var allNodes = this.tree.getElementsByTagName('li');
 		for(i=0;i<allNodes.length;i++) {
 			if(isSelected[allNodes[i].getIdx()]) {
-				this.tree.multiselect_handleSelectionChange(allNodes[i]); 
-				// this.tree.selectNode(allNodes[i]);
+				this.tree.selectNode(allNodes[i]);
 			}
 		}
 	},
