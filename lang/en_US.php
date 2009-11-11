@@ -607,18 +607,8 @@ $lang['en_US']['Security']['ALREADYLOGGEDIN'] = array(
 $lang['en_US']['Security']['BUTTONSEND'] = 'Send me the password reset link';
 $lang['en_US']['Security']['CHANGEPASSWORDBELOW'] = 'You can change your password below.';
 $lang['en_US']['Security']['CHANGEPASSWORDHEADER'] = 'Change your password';
-$lang['en_US']['Security']['EMAIL'] = 'E-Mail:';
-$lang['en_US']['Security']['ENCDISABLED1'] = 'Password encryption disabled!';
-$lang['en_US']['Security']['ENCDISABLED2'] = 'To encrypt your passwords change your password settings by adding';
-$lang['en_US']['Security']['ENCDISABLED3'] = 'to mysite/_config.php';
-$lang['en_US']['Security']['ENCRYPT'] = 'Encrypting all passwords';
-$lang['en_US']['Security']['ENCRYPTEDMEMBERS'] = 'Encrypted credentials for member &quot;';
-$lang['en_US']['Security']['ENCRYPTWITH'] = 'The passwords will be encrypted using the &quot;%s&quot; algorithm';
-$lang['en_US']['Security']['ENCRYPTWITHOUTSALT'] = 'without using a salt to increase the security.';
-$lang['en_US']['Security']['ENCRYPTWITHSALT'] = 'with a salt to increase the security.';
 $lang['en_US']['Security']['ENTERNEWPASSWORD'] = 'Please enter a new password.';
 $lang['en_US']['Security']['ERRORPASSWORDPERMISSION'] = 'You must be logged in in order to change your password!';
-$lang['en_US']['Security']['ID'] = 'ID:';
 $lang['en_US']['Security']['IPADDRESSES'] = 'IP Addresses';
 $lang['en_US']['Security']['LOGGEDOUT'] = 'You have been logged out.  If you would like to log in again, enter your credentials below.';
 $lang['en_US']['Security']['LOGIN'] = 'Log in';
@@ -626,14 +616,10 @@ $lang['en_US']['Security']['LOSTPASSWORDHEADER'] = 'Lost Password';
 $lang['en_US']['Security']['NOTEPAGESECURED'] = 'That page is secured. Enter your credentials below and we will send you right along.';
 $lang['en_US']['Security']['NOTERESETLINKINVALID'] = '<p>The password reset link is invalid or expired.</p><p>You can request a new one <a href="%s">here</a> or change your password after you <a href="%s">logged in</a>.</p>';
 $lang['en_US']['Security']['NOTERESETPASSWORD'] = 'Enter your e-mail address and we will send you a link with which you can reset your password';
-$lang['en_US']['Security']['NOTHINGTOENCRYPT1'] = 'No passwords to encrypt';
-$lang['en_US']['Security']['NOTHINGTOENCRYPT2'] = 'There are no members with a clear text password that could be encrypted!';
 $lang['en_US']['Security']['PASSWORDSENTHEADER'] = 'Password reset link sent to \'%s\'';
 $lang['en_US']['Security']['PASSWORDSENTTEXT'] = 'Thank you! A reset link has been sent to  \'%s\', provided an account exists for this email address.';
-$lang['en_US']['Security']['PERMFAILURE'] = ' This page is secured and you need administrator rights to access it. 
-				Enter your credentials below and we will send you right along.';
 $lang['en_US']['SecurityAdmin']['ADVANCEDONLY'] = 'This section is for advanced users only.
-							See <a href="http://doc.silverstripe.org/doku.php?id=permissions:codes" target="_blank">this page</a>
+							See <a href="http://doc.silverstripe.com/doku.php?id=permissions:codes" target="_blank">this page</a>
 							for more information.';
 $lang['en_US']['SecurityAdmin']['GROUPNAME'] = 'Group name';
 $lang['en_US']['SecurityAdmin']['IPADDRESSESHELP'] = '<p>You can restrict this group to a particular 
