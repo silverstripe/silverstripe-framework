@@ -246,13 +246,17 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 	 * @return Form
 	 */
 	function ImageForm() {
-		Requirements::javascript(THIRDPARTY_DIR . "/behaviour.js");
+		Requirements::javascript(THIRDPARTY_DIR . "/behaviour.js");	
+		Requirements::javascript(THIRDPARTY_DIR . '/SWFUpload/swfupload.js');
 		Requirements::javascript(THIRDPARTY_DIR . "/tiny_mce_improvements.js");
-		Requirements::css('cms/css/TinyMCEImageEnhancement.css');
-		Requirements::javascript('cms/javascript/TinyMCEImageEnhancement.js');
-		Requirements::javascript(THIRDPARTY_DIR . '/SWFUpload/SWFUpload.js');
 		Requirements::javascript(CMS_DIR . '/javascript/Upload.js');
+		Requirements::css(CMS_DIR .'/css/TinyMCEImageEnhancement.css');
+		Requirements::javascript(CMS_DIR . '/javascript/TinyMCEImageEnhancement.js');
 
+		/**
+		 * @todo Adding folders via this screen is not enabled just yet as it is still
+		 *			a bit too buggy - wrossiter (09/11/09)
+		 */
 		$form = new Form(
 			$this->controller,
 			"{$this->name}/ImageForm",
@@ -260,15 +264,17 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 				new LiteralField('Heading', '<h2><img src="cms/images/closeicon.gif" alt="' . _t('HtmlEditorField.CLOSE', 'close') . '" title="' . _t('HtmlEditorField.CLOSE', 'close') . '" />' . _t('HtmlEditorField.IMAGE', 'Image') . '</h2>'),
 				new TreeDropdownField('FolderID', _t('HtmlEditorField.FOLDER', 'Folder'), 'Folder'),
 				new LiteralField('AddFolderOrUpload',
-					'<div style="clear:both;"></div><div id="AddFolderGroup" style="display: none">
+					'<div id="AddFolderGroup" style="display: none;">
 						<a style="" href="#" id="AddFolder" class="link">' . _t('HtmlEditorField.CREATEFOLDER','Create Folder') . '</a>
 						<input style="display: none; margin-left: 2px; width: 94px;" id="NewFolderName" class="addFolder" type="text">
 						<a style="display: none;" href="#" id="FolderOk" class="link addFolder">' . _t('HtmlEditorField.OK','Ok') . '</a>
 						<a style="display: none;" href="#" id="FolderCancel" class="link addFolder">' . _t('HtmlEditorField.FOLDERCANCEL','Cancel') . '</a>
 					</div>
-					<div id="PipeSeparator" style="display: none">|</div>
-					<div id="UploadGroup" class="group" style="display: none; margin-top: 2px;">
-						<a href="#" id="UploadFiles" class="link">' . _t('HtmlEditorField.UPLOAD','Upload') . '</a>
+					<div id="UploadGroup" class="group" style="display: none; margin: 0 0 0 5px; clear: both; padding-top: 3px">
+						<a href="#" id="SWFUploadButton" class="link">' . _t('HtmlEditorField.UPLOAD','Upload') . '</a>
+					</div>
+					<div id="UploadFiles">
+					
 					</div>'
 				),
 				new TextField('getimagesSearch', _t('HtmlEditorField.SEARCHFILENAME', 'Search by file name')),
@@ -304,9 +310,9 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 
 	function FlashForm() {
 		Requirements::javascript(THIRDPARTY_DIR . "/behaviour.js");
-		Requirements::javascript(THIRDPARTY_DIR . "/tiny_mce_improvements.js");
-		Requirements::javascript(THIRDPARTY_DIR . '/SWFUpload/SWFUpload.js');
 		Requirements::javascript(CMS_DIR . '/javascript/Upload.js');
+		Requirements::javascript(THIRDPARTY_DIR . "/tiny_mce_improvements.js");
+		Requirements::javascript(THIRDPARTY_DIR . '/SWFUpload/swfupload.js');
 
 		$form = new Form(
 			$this->controller,
