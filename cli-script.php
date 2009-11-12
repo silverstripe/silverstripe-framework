@@ -23,7 +23,6 @@ if(isset($_SERVER['HTTP_HOST'])) {
 $_SERVER['SCRIPT_FILENAME'] = __FILE__;
 chdir(dirname($_SERVER['SCRIPT_FILENAME']));
 
-date_default_timezone_set('Pacific/Auckland');
 /**
  * Process arguments and load them into the $_GET and $_REQUEST arrays
  * For example,
