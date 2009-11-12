@@ -15,12 +15,16 @@ class MigrateSiteTreeLinkingTask extends BuildTask {
 		$pages = 0;
 		$links = 0;
 		
-		$linkedPages = DataObject::get (
+		$linkedPages = DataObject::get(
 			'SiteTree',
 			null,
 			null,
 			'INNER JOIN "SiteTree_LinkTracking" ON "SiteTree_LinkTracking"."SiteTreeID" = "SiteTree"."ID"'
 		);
+		
+		// Databases like MSSQL will give duplicate results - remove them
+		// This would normally be fixed by using SELECT DISTINCT, but DataObject::get() doesn't support it
+		$linkedPages->removeDuplicates();
 		
 		if($linkedPages) foreach($linkedPages as $page) {
 			$tracking = DB::query(sprintf (
