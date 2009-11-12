@@ -326,6 +326,7 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 			)
 		);
 		$form->loadDataFrom($this);
+		$form->disableSecurityToken();
 		return $form;
 	}
 }
