@@ -11,7 +11,7 @@
 			$EditFileForm
 		</div>
 		
-		<% if AttachedFile.ID %>
+		<% if AttachedFile %>
 			<div class="mainblock">
 				$AttachedFile.CMSThumbnail
 				
