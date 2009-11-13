@@ -270,12 +270,15 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 						<a style="display: none;" href="#" id="FolderOk" class="link addFolder">' . _t('HtmlEditorField.OK','Ok') . '</a>
 						<a style="display: none;" href="#" id="FolderCancel" class="link addFolder">' . _t('HtmlEditorField.FOLDERCANCEL','Cancel') . '</a>
 					</div>
-					<div id="UploadGroup" class="group" style="display: none; margin: 0 0 0 5px; clear: both; padding-top: 3px">
+					<![if !IE]>
+					<div id="UploadGroup" class="group" style="margin: 0 0 0 5px; clear: both; padding-top: 3px">
 						<a href="#" id="SWFUploadButton" class="link">' . _t('HtmlEditorField.UPLOAD','Upload') . '</a>
 					</div>
+					
 					<div id="UploadFiles">
 					
-					</div>'
+					</div>
+					<![endif]>'
 				),
 				new TextField('getimagesSearch', _t('HtmlEditorField.SEARCHFILENAME', 'Search by file name')),
 				new ThumbnailStripField('FolderImages', 'FolderID', 'getimages'),
