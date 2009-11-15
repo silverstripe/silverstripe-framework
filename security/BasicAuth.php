@@ -15,7 +15,7 @@ class BasicAuth extends Object {
 	/**
 	 * Flag set by {@link self::protect_entire_site()}
 	 */
-	private static $entire_site_protected = true;
+	private static $entire_site_protected = false;
 
 	/**
 	 * Require basic authentication.  Will request a username and password if none is given.
