@@ -52,15 +52,7 @@ class RestfulService extends ViewableData {
 	protected function constructURL(){
 		return "$this->baseURL" . ($this->queryString ? "?$this->queryString" : "");
 	}
-	
-	/**
-	 * @deprecated Use RestfulService::request()
-	 */
-	public function connect($subURL = '') {
-		user_error("RestfulService::connect is deprecated; use RestfulService::request", E_USER_NOTICE);
-		return $this->request($subURL)->getBody();
-	}
-	
+		
 	/**
 	 * Makes a request to the RESTful server, and return a {@link RestfulService_Response} object for parsing of the result.
 	 * @todo Better POST, PUT, DELETE, and HEAD support
