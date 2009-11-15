@@ -223,16 +223,5 @@ class ClassInfo {
 		return $matchedClasses;
 	}
 	
-	/////////////////////////////////////////////////////////////////////////////
-	// DEPRECATED
-	
-	/**
-	 * @deprecated Use Security::database_is_ready() instead.
-	 */
-	static function ready() {
-		user_error("ClassInfo::ready() deprectaed - use Security::database_is_ready()", E_USER_NOTICE);
-		return Security::database_is_ready();
-	}
-	
 }
 ?>
