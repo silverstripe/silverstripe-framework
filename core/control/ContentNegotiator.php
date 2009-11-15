@@ -166,13 +166,9 @@ class ContentNegotiator {
 		self::$enabled = true;
 	}
 
-	/**
-	 * @deprecated in 2.3
-	 */
 	static function disable() {
 		self::$enabled = false;
 	}
-	
 	
 	/**
 	 * Returns true if negotation is enabled for the given response.
@@ -189,5 +185,4 @@ class ContentNegotiator {
 	}
 	
 }
-
 ?>
