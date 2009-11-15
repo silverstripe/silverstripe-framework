@@ -39,7 +39,7 @@ class WebserverRoutingTest extends SapphireTest {
  */
 class WebserverRoutingTest_Controller extends Controller {
 	function index() {
-		BasicAuth::disable();
+		BasicAuth::protect_entire_site(false);
 		
 		return "ok";
 	}

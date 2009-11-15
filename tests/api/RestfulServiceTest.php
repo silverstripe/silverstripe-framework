@@ -95,7 +95,7 @@ class RestfulServiceTest extends SapphireTest {
 class RestfulServiceTest_Controller extends Controller {
 	public function index() {
 		ContentNegotiator::disable();
-		BasicAuth::disable();
+		BasicAuth::protect_entire_site(false);
 		
 		$request = '';
 		foreach ($this->request->requestVars() as $key=>$value) {
@@ -126,7 +126,7 @@ XML;
 	
 	public function invalid() {
 		ContentNegotiator::disable();
-		BasicAuth::disable();
+		BasicAuth::protect_entire_site(false);
 		$out = <<<XML
 <?xml version="1.0"?>
 <test>

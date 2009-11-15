@@ -90,7 +90,7 @@ class BasicAuth extends Object {
 	 * @deprecated Use BasicAuth::protect_entire_site() instead.
 	 */
 	static function enable() {
-		user_error("BasicAuth::enable() is deprated.  Use BasicAuth::protect_entire_site() instead.", E_USER_NOTICE);
+		user_error("BasicAuth::enable() is deprecated.  Use BasicAuth::protect_entire_site() instead.", E_USER_NOTICE);
 		return self::protect_entire_site();
 	}
 
@@ -98,7 +98,7 @@ class BasicAuth extends Object {
 	 * @deprecated Use BasicAuth::protect_entire_site(false) instead.
 	 */
 	static function disable() {
-		user_error("BasicAuth::disable() is deprated.  Use BasicAuth::protect_entire_site(false) instead.", E_USER_NOTICE);
+		user_error("BasicAuth::disable() is deprecated.  Use BasicAuth::protect_entire_site(false) instead.", E_USER_NOTICE);
 		return self::protect_entire_site(false);
 	}
 

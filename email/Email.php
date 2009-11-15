@@ -634,7 +634,7 @@ class Email_Template extends Email {
 class Email_BounceHandler extends Controller {
 	
 	function init() {
-		BasicAuth::disable();
+		BasicAuth::protect_entire_site(false);
 		parent::init();
 	}
 	
