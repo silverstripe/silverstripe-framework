@@ -92,7 +92,7 @@ if(defined('SS_DEFAULT_ADMIN_USERNAME')) {
 	Security::setDefaultAdmin(SS_DEFAULT_ADMIN_USERNAME, SS_DEFAULT_ADMIN_PASSWORD);
 }
 if(defined('SS_USE_BASIC_AUTH') && SS_USE_BASIC_AUTH) {
-	BasicAuth::enable();
+	BasicAuth::protect_entire_site();
 }
 
 if(defined('SS_ERROR_LOG')) {

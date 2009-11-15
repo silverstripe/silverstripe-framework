@@ -6,7 +6,6 @@
  */
 abstract class CliController extends Controller {
     function init() {
-		$this->disableBasicAuth();
 		parent::init();
 		// Unless called from the command line, all CliControllers need ADMIN privileges
 		if(!Director::is_cli() && !Permission::check("ADMIN")) return Security::permissionFailure();

@@ -75,10 +75,7 @@ class Controller extends RequestHandler {
 	 * @uses BasicAuth::requireLogin()
 	 */
 	function init() {
-		// Test and development sites should be secured, via basic-auth
-		if(Director::isTest() && $this->basicAuthEnabled && Security::database_is_ready()) {
-			BasicAuth::requireLogin("SilverStripe test website.  Use your  CMS login", "ADMIN");
-		}		
+		if($this->basicAuthEnabled) BasicAuth::protect_site_if_necessary();
 
 		// Directly access the session variable just in case the Group or Member tables don't yet exist
 		if(Session::get('loggedInAs') && Security::database_is_ready()) {
@@ -327,9 +324,9 @@ class Controller extends RequestHandler {
 	}
   
 	/**
-	 * Call this to disable basic authentication on test sites.
-	 * must be called in the init() method
-	 * @deprecated Use BasicAuth::disable() instead?  This is used in CliController - it should be updated.
+	 * Call this to disable site-wide basic authentication for a specific contoller.
+	 * This must be called before Controller::init().  That is, you must call it in your controller's
+	 * init method before it calls parent::init().
 	 */
 	function disableBasicAuth() {
 		$this->basicAuthEnabled = false;

@@ -1,17 +1,21 @@
 <?php
 /**
  * Provides an interface to HTTP basic authentication.
+ * 
+ * This utility class can be used to secure any request with basic authentication.  To do so,
+ * {@link BasicAuth::requireLogin()} from your Controller's init() method or action handler method.
+ * 
+ * It also has a function to protect your entire site.  See {@link BasicAuth::protect_entire_site()}
+ * for more information.
+ * 
  * @package sapphire
  * @subpackage security
  */
 class BasicAuth extends Object {
-	
 	/**
-	 * Site-wide basic auth is disabled by default but can be enabled as needed in _config.php by calling BasicAuth::enable()
-	 * @var boolean
+	 * Flag set by {@link self::protect_entire_site()}
 	 */
-	static protected $enabled = false;
-	static protected $autologin = false;
+	private static $entire_site_protected = true;
 
 	/**
 	 * Require basic authentication.  Will request a username and password if none is given.
@@ -23,9 +27,7 @@ class BasicAuth extends Object {
 	 * @return Member $member 
 	 */
 	static function requireLogin($realm, $permissionCode) {
-		if(!self::$enabled) return true;
 		if(!Security::database_is_ready() || Director::is_cli()) return true;
-		
 		
 		if(isset($_SERVER['PHP_AUTH_USER']) && isset($_SERVER['PHP_AUTH_PW'])) {
 			$member = MemberAuthenticator::authenticate(array(
@@ -35,9 +37,6 @@ class BasicAuth extends Object {
 			
 			if($member) {
 				$authenticated = true;
-				if(self::$autologin) {
-					$member->logIn();
-				}
 			}
 		}
 		
@@ -68,12 +67,49 @@ class BasicAuth extends Object {
 		
 		return $member;
 	}
+		
+	/**
+	 * Enable protection of the entire site with basic authentication.
+	 * 
+	 * This log-in uses the Member database for authentication, but doesn't interfere with the
+	 * regular log-in form. This can be useful for test sites, where you want to hide the site
+	 * away from prying eyes, but still be able to test the regular log-in features of the site.
+	 * 
+	 * If you are including conf/ConfigureFromEnv.php in your _config.php file, you can also enable
+	 * this feature by adding this line to your _ss_environment.php:
+	 * 
+	 * define('SS_USE_BASIC_AUTH', true);
+	 * 
+	 * @param $protect Set this to false to disable protection.
+	 */
+	static function protect_entire_site($protect = true) {
+		return self::$entire_site_protected = $protect;
+	}
 	
-	static function enable($auto = false) {
-		self::$enabled = true;
-		self::$autologin = $auto;
+	/**
+	 * @deprecated Use BasicAuth::protect_entire_site() instead.
+	 */
+	static function enable() {
+		user_error("BasicAuth::enable() is deprated.  Use BasicAuth::protect_entire_site() instead.", E_USER_NOTICE);
+		return self::protect_entire_site();
 	}
+
+	/**
+	 * @deprecated Use BasicAuth::protect_entire_site(false) instead.
+	 */
 	static function disable() {
-		self::$enabled = false;
+		user_error("BasicAuth::disable() is deprated.  Use BasicAuth::protect_entire_site(false) instead.", E_USER_NOTICE);
+		return self::protect_entire_site(false);
 	}
+
+	/**
+	 * Call {@link BasicAuth::requireLogin()} if {@link BasicAuth::protect_entire_site()} has been called.
+	 * This is a helper function used by Controller.
+	 */
+	static function protect_site_if_necessary() {
+		if(self::$entire_site_protected) {
+			self::requireLogin("SilverStripe test website. Use your CMS login.", "ADMIN");
+		}
+	}
+
 }

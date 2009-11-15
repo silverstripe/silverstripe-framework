@@ -398,6 +398,16 @@ class Debug {
 	 * @todo Log detailed errors to full file
 	 */
 	protected static function log_error_if_necessary($errno, $errstr, $errfile, $errline, $errcontext, $errtype) {
+		if(class_exists('SS_Log')) {
+			SS_Log::log(array(
+				'errno' => $errno,
+				'errstr' => $errstr,
+				'errfile' => $errfile,
+				'errline' => $errline,
+				'errcontext' => $errcontext
+			), $errtype);
+		}
+		
 		if(self::$log_errors_to) {
 			$shortFile = "../" . self::$log_errors_to;
 			$fullFile = $shortFile . '.full';
