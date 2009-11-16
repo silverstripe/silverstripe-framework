@@ -262,18 +262,19 @@ class Group extends DataObject {
 		$chunkToAdd = array(array("ID" => $this->ID));
 		
 		while($chunkToAdd) {
-			$idList = null;
+			$idList = array();
 			foreach($chunkToAdd as $item) {
 				$idList[] = $item['ID'];
 				$familyIDs[] = $item['ID'];
 			}
-			$idList = implode(',',$idList);
+			$idList = implode(',', $idList);
 			
 			// Get the children of *all* the groups identified in the previous chunk.
 			// This minimises the number of SQL queries necessary			
 			$sql = $this->extendedSQL("\"ParentID\" IN ($idList)", "");
-			$chunkToAdd = $sql->execute();
-			if(!$chunkToAdd->column()) $chunkToAdd = null;
+			$dbResult = $sql->execute();
+			$chunkToAdd = array();
+			foreach($dbResult as $item) $chunkToAdd[] = $item;
 		}
 		
 		return $familyIDs;
