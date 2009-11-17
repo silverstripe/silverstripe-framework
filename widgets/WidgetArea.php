@@ -28,7 +28,8 @@ class WidgetArea extends DataObject {
 	 */
 	function WidgetControllers() {
 		$controllers = new DataObjectSet();
-		foreach($this->Widgets() as $widget) {
+		// var_dump($this->Items());
+		foreach($this->ItemsToRender() as $widget) {
 			// find controller
 			$controllerClass = '';
 			foreach(array_reverse(ClassInfo::ancestry($widget->class)) as $widgetClass) {
@@ -39,8 +40,16 @@ class WidgetArea extends DataObject {
 			$controller->init();
 			$controllers->push($controller);
 		}
-		
+
 		return $controllers;
+	}
+	
+	function Items() {
+		return $this->Widgets();
+	}
+	
+	function ItemsToRender() {
+		return $this->Items();
 	}
 	
 	function forTemplate() {

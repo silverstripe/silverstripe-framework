@@ -35,6 +35,10 @@ TreeDropdownField.prototype = {
 		}
 	},
 	
+	getName: function() {
+		return this.inputTag.name;
+	},
+	
 	refresh: function() {
 		this.createTreeNode();
 		
@@ -45,7 +49,7 @@ TreeDropdownField.prototype = {
 	},
 	
 	helperURLBase: function() {
-		return this.ownerForm().action + '/field/' + this.inputTag.name + '/';
+		return this.ownerForm().action + '/field/' + this.getName() + '/';
 	},
 	ownerForm: function() {
 		var f =this.parentNode;
@@ -166,7 +170,7 @@ TreeDropdownField.prototype = {
 			getIdx: function() {
 				return this.getElementsByTagName('a')[0].getAttribute('rel');
 			},
-			idxBase : 'selector-' + this.inputTag.name + '-',
+			idxBase : 'selector-' + this.getName() + '-',
 			dropdownField : this,
 			onselect : this.tree_click
 		});
@@ -200,12 +204,14 @@ TreeDropdownField.prototype = {
 	},
 	
 	setValue: function(val) {
+		this.inputTag = this.getElementsByTagName('input')[0];
+
 		if(this.inputTag.value != val) {
 			this.inputTag.value = val;
 			this.notify('Change', val);
 			
 			// If the tree item is already downloaded, just update the label
-			if($('selector-' + this.inputTag.name + '-' + this.inputTag.value)) {
+			if($('selector-' + this.getName() + '-' + this.inputTag.value)) {
 				this.updateTreeLabel();
 				
 			// Otherwise, update the tree with ajax
@@ -220,7 +226,7 @@ TreeDropdownField.prototype = {
 	},
 	updateTreeLabel: function() {
 		var treeNode;
-		if(treeNode = $('selector-' + this.inputTag.name + '-' + this.inputTag.value)) {
+		if(treeNode = $('selector-' + this.getName() + '-' + this.inputTag.value)) {
 			this.humanItems.innerHTML = treeNode.getTitle();
 
 			if(treeNode.tree.selected && treeNode.tree.selected.removeNodeClass) treeNode.tree.selected.removeNodeClass('current');
@@ -233,7 +239,7 @@ TreeDropdownField.prototype = {
 	},
 	setValueFromTree: function(treeID, title) {
 		this.humanItems.innerHTML = title;
-		this.inputTag.value = treeID.replace('selector-' + this.inputTag.name + '-','');
+		this.inputTag.value = treeID.replace('selector-' + this.getName() + '-','');
 		this.notify('Change', this.inputTag.value);
 
 		this.hideTree();
@@ -306,7 +312,7 @@ TreeMultiselectField.prototype = {
 			var innerHTML = '';
 			var selectedItems = this.inputTag.value.split(/ *, */);
 			for(i=0;i<selectedItems.length;i++) {
-				if(treeNode = $('selector-' + this.inputTag.name + '-' + selectedItems[i])) {
+				if(treeNode = $('selector-' + this.getName() + '-' + selectedItems[i])) {
 					innerHTML += (innerHTML?', ':'') + treeNode.getTitle();
 				} else {
 					innerHTML += selectedItems[i];
