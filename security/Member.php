@@ -998,6 +998,9 @@ class Member extends DataObject {
 		$results = $this->extend('canEdit', $member);
 		if($results && is_array($results)) if(!min($results)) return false;
 		
+		// No member found
+		if(!($member && $member->exists())) return false;
+		
 		return $this->canView($member);
 	}
 	
@@ -1011,6 +1014,9 @@ class Member extends DataObject {
 		// decorated access checks
 		$results = $this->extend('canDelete', $member);
 		if($results && is_array($results)) if(!min($results)) return false;
+		
+		// No member found
+		if(!($member && $member->exists())) return false;
 		
 		return $this->canEdit($member);
 	}
