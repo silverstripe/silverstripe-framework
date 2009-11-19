@@ -707,7 +707,7 @@ class Versioned extends DataObjectDecorator {
 		if(!$className) {
 			Debug::show($query->sql());
 			Debug::show($record);
-			user_error("Versioned::get_version: Couldn't get $class.$id, version $version", E_USER_ERROR);
+			user_error("Versioned::get_version: Couldn't get $class.$id", E_USER_ERROR);
 		}
 
 		Versioned::$reading_stage = $oldStage;
@@ -771,7 +771,7 @@ class Versioned extends DataObjectDecorator {
 		$baseTable = ClassInfo::baseDataClass($class);
 		$query = singleton($class)->buildVersionSQL("`{$baseTable}`.RecordID = $id AND `{$baseTable}`.Version = $version");
 		$record = $query->execute()->record();
-		$className = $record[ClassName];
+		$className = $record['ClassName'];
 		if(!$className) {
 			Debug::show($query->sql());
 			Debug::show($record);
