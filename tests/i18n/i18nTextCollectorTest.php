@@ -280,10 +280,12 @@ _t(
 Line 2'
 );
 PHP;
+
+		$eol = PHP_EOL;
 		$this->assertEquals(
 			$c->collectFromCode($php, 'mymodule'),
 			array(
-				'Test.NEWLINESINGLEQUOTE' => array("Line 1\nLine 2",null,null)
+				'Test.NEWLINESINGLEQUOTE' => array("Line 1{$eol}Line 2",null,null)
 			)
 		);
 
@@ -297,7 +299,7 @@ PHP;
 		$this->assertEquals(
 			$c->collectFromCode($php, 'mymodule'),
 			array(
-				'Test.NEWLINEDOUBLEQUOTE' => array("Line 1\nLine 2",null,null)
+				'Test.NEWLINEDOUBLEQUOTE' => array("Line 1{$eol}Line 2",null,null)
 			)
 		);
 	}
@@ -312,18 +314,18 @@ PHP;
 		
 		$this->assertEquals(
 			$c->langArrayCodeForEntitySpec('Test.SIMPLE', array('Simple Value')),
-			"\$lang['{$locale}']['Test']['SIMPLE'] = 'Simple Value';\n"
+			"\$lang['{$locale}']['Test']['SIMPLE'] = 'Simple Value';" . PHP_EOL
 		);
 		
 		$this->assertEquals(
 			// single quotes should be properly escaped by the parser already
 			$c->langArrayCodeForEntitySpec('Test.ESCAPEDSINGLEQUOTES', array("Value with \'Escaped Single Quotes\'")),
-			"\$lang['{$locale}']['Test']['ESCAPEDSINGLEQUOTES'] = 'Value with \'Escaped Single Quotes\'';\n"
+			"\$lang['{$locale}']['Test']['ESCAPEDSINGLEQUOTES'] = 'Value with \'Escaped Single Quotes\'';" . PHP_EOL
 		);
 		
 		$this->assertEquals(
 			$c->langArrayCodeForEntitySpec('Test.DOUBLEQUOTES', array('Value with "Double Quotes"')),
-			"\$lang['{$locale}']['Test']['DOUBLEQUOTES'] = 'Value with \"Double Quotes\"';\n"
+			"\$lang['{$locale}']['Test']['DOUBLEQUOTES'] = 'Value with \"Double Quotes\"';" . PHP_EOL
 		);
 		
 		$php = <<<PHP

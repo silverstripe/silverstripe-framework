@@ -298,7 +298,8 @@ class i18nTextCollector extends Object {
 
 		
 		// remove starting comma and any newlines
-		$prio = ($regs[10]) ? trim(preg_replace('/\n/','',substr($regs[10],1))) : null;
+		$eol = PHP_EOL;
+		$prio = ($regs[10]) ? trim(preg_replace("/$eol/", '', substr($regs[10],1))) : null;
 		
 		// remove wrapping quotes
 		$comment = ($regs[12]) ? substr($regs[12],1,-1) : null;
@@ -320,6 +321,7 @@ class i18nTextCollector extends Object {
 	 */
 	public function langArrayCodeForEntitySpec($entityFullName, $entitySpec) {
 		$php = '';
+		$eol = PHP_EOL;
 		
 		$entityParts = explode('.', $entityFullName);
 		if(count($entityParts) > 1) {
@@ -338,15 +340,15 @@ class i18nTextCollector extends Object {
 		
 		$php .= '$lang[\'' . $this->defaultLocale . '\'][\'' . $namespace . '\'][\'' . $entity . '\'] = ';
 		if ($prio) {
-			$php .= "array(\n\t'" . $value . "',\n\t" . $prio;
+			$php .= "array($eol\t'" . $value . "',$eol\t" . $prio;
 			if ($comment) {
-				$php .= ",\n\t'" . $comment . '\''; 
+				$php .= ",$eol\t'" . $comment . '\''; 
 			}
-			$php .= "\n);";
+			$php .= "$eol);";
 		} else {
 			$php .= '\'' . $value . '\';';
 		}
-		$php .= "\n";
+		$php .= "$eol";
 		
 		return $php;
 	}
@@ -358,6 +360,7 @@ class i18nTextCollector extends Object {
 		// Write each module language file
 		if($entitiesByModule) foreach($entitiesByModule as $module => $entities) {
 			$php = '';
+			$eol = PHP_EOL;
 			
 			// Create folder for lang files
 			$langFolder = $this->baseSavePath . '/' . $module . '/lang';
@@ -380,7 +383,7 @@ class i18nTextCollector extends Object {
 					user_error('i18nTextCollector->writeMasterStringFile(): Invalid PHP language file. Error: ' . $e->toString(), E_USER_ERROR);
 				}
 				
-				fwrite($fh, "<"."?php\n\nglobal \$lang;\n\n" . $php . "\n?".">");
+				fwrite($fh, "<"."?php{$eol}{$eol}global \$lang;{$eol}{$eol}" . $php . "{$eol}?".">");
 				fclose($fh);
 				
 				//Debug::message("Created file: $langFolder/" . $this->defaultLocale . ".php", false);

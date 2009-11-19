@@ -16,6 +16,7 @@ SELECT Test.Foo, Test.Bar
 FROM Test
 WHERE 'From' = "Where"
 SQL;
+
 		$this->assertEquals($formatter->formatPlain($sqlBefore), $sqlAfter,
 			'correct replacement of newlines and don\'t replace non-uppercase tokens'
 		);
