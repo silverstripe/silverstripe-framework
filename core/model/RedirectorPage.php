@@ -13,7 +13,7 @@ class RedirectorPage extends Page {
 	
 	static $db = array(
 		"RedirectionType" => "Enum('Internal,External','Internal')",
-		"ExternalURL" => "Varchar(255)",
+		"ExternalURL" => "Varchar(2083)" // 2083 is the maximum length of a URL in Internet Explorer.
 	);
 	
 	static $defaults = array(
