@@ -69,7 +69,9 @@ class PermissionCheckboxSetField extends CheckboxSetField {
 		if($source) {
 			foreach($source as $categoryName => $permissions) {
 				$options .= "<li><h5>$categoryName</h5></li>";
+				$hiddens = Permission::$hidden_permissions;
 				foreach($permissions as $code => $permission) {
+					if(in_array($code, $hiddens)) continue;
 					$key = $code;
 					$value = $permission['name'];
 			
