@@ -40,6 +40,7 @@ class TreeDropdownField extends FormField {
 		
 		Requirements::add_i18n_javascript(SAPPHIRE_DIR . '/javascript/lang');
 		
+		Requirements::javascript(THIRDPARTY_DIR . '/prototype.js');
 		Requirements::javascript(THIRDPARTY_DIR . '/behaviour.js');
 		Requirements::javascript(THIRDPARTY_DIR . '/tree/tree.js');
 		Requirements::javascript(SAPPHIRE_DIR   . '/javascript/TreeSelectorField.js');
@@ -123,7 +124,7 @@ class TreeDropdownField extends FormField {
 	public function tree(SS_HTTPRequest $request) {
 		$isSubTree = false;
 		
-		if($ID = (int) $request->param('ID')) {
+		if($ID = (int) $request->latestparam('ID')) {
 			$obj       = DataObject::get_by_id($this->sourceObject, $ID);
 			$isSubTree = true;
 			
