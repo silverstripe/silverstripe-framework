@@ -1,17 +1,19 @@
-	<ul class="tabstrip">
+<div class="ss-tabset">
+	<ul>
 	<% control Tabs %>
 		<li class="$FirstLast $MiddleString"><a href="#$id" id="tab-$id">$Title</a></li>
 	<% end_control %>
 	</ul>
-	
+
 	<% control Tabs %>
-		<div class="tab" id="$id">
-		<% if Tabs %>
-			$FieldHolder
-		<% else %>
-			<% control Fields %>
-			$FieldHolder
-			<% end_control %>
-		<% end_if %>
-		</div>
+	<div class="tab" id="$id">
+	<% if Tabs %>
+		$FieldHolder
+	<% else %>
+		<% control Fields %>
+		$FieldHolder
+		<% end_control %>
+	<% end_if %>
+	</div>
 	<% end_control %>
+</div>

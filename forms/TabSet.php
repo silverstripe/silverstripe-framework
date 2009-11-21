@@ -49,15 +49,14 @@ class TabSet extends CompositeField {
 	 * The HTML is a standardised format, containing a &lt;ul;
 	 */
 	public function FieldHolder() {
-		Requirements::javascript(THIRDPARTY_DIR . "/loader.js");
-		Requirements::javascript(THIRDPARTY_DIR . "/prototype.js");
-		Requirements::javascript(THIRDPARTY_DIR . "/behaviour.js");
-		Requirements::javascript(THIRDPARTY_DIR . "/prototype_improvements.js");
-		Requirements::javascript(THIRDPARTY_DIR . "/jquery/jquery.js");
+		Requirements::javascript(THIRDPARTY_DIR . "/jquery/jquery-latest.js");
 		Requirements::javascript(THIRDPARTY_DIR . "/jquery/jquery_improvements.js");
-		Requirements::javascript(THIRDPARTY_DIR . '/jquery/plugins/livequery/jquery.livequery.js');
-		Requirements::javascript(THIRDPARTY_DIR . "/tabstrip/tabstrip.js");
-		Requirements::css(THIRDPARTY_DIR . "/tabstrip/tabstrip.css");
+		Requirements::javascript(THIRDPARTY_DIR . '/jquery/ui/jquery-ui.js');
+		Requirements::javascript(THIRDPARTY_DIR . '/jquery/ui/ui.core.js');
+		Requirements::javascript(THIRDPARTY_DIR . '/jquery/ui/ui.tabs.js');
+		Requirements::javascript(SAPPHIRE_DIR . '/javascript/TabSet.js');
+		Requirements::css(THIRDPARTY_DIR . '/jquery/themes/smoothness/ui.all.css');
+		Requirements::css(THIRDPARTY_DIR . '/jquery/themes/smoothness/ui.tabs.css');
 		
 		return $this->renderWith("TabSetFieldHolder");
 	}
