@@ -201,7 +201,7 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 	 */
 	function LinkForm() {
 		Requirements::javascript(SAPPHIRE_DIR . "/thirdparty/behaviour/behaviour.js");
-		Requirements::javascript(THIRDPARTY_DIR . "/tiny_mce_improvements.js");
+		Requirements::javascript(SAPPHIRE_DIR . "/javascript/tiny_mce_improvements.js");
 
 		$form = new Form(
 			$this->controller,
@@ -255,7 +255,7 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 	 */
 	function ImageForm() {
 		Requirements::javascript(SAPPHIRE_DIR . "/thirdparty/behaviour/behaviour.js");
-		Requirements::javascript(THIRDPARTY_DIR . "/tiny_mce_improvements.js");
+		Requirements::javascript(SAPPHIRE_DIR . "/javascript/tiny_mce_improvements.js");
 		Requirements::css('cms/css/TinyMCEImageEnhancement.css');
 		Requirements::javascript('cms/javascript/TinyMCEImageEnhancement.js');
 		Requirements::javascript(CMS_DIR . '/javascript/Upload.js');
@@ -325,7 +325,7 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 
 	function FlashForm() {
 		Requirements::javascript(SAPPHIRE_DIR . "/thirdparty/behaviour/behaviour.js");
-		Requirements::javascript(THIRDPARTY_DIR . "/tiny_mce_improvements.js");
+		Requirements::javascript(SAPPHIRE_DIR . "/javascript/tiny_mce_improvements.js");
 		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/swfupload/swfupload.js');
 		Requirements::javascript(CMS_DIR . '/javascript/Upload.js');
 
