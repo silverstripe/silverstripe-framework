@@ -588,6 +588,7 @@ Observable.prototype = {
 			throw("Observeable.stopObserving: couldn't find '" + observerCode + "'");
 	},
 	notify : function(event, arg) {
+		if(typeof(jQuery) != 'undefined' && typeof(jQuery.livequery) != 'undefined') jQuery(this).trigger(event, arg);  
 		var i, returnVal = true;
 		if(this.observers && this.observers[event]) {
 			for(i=0;i<this.observers[event].length;i++) {
