@@ -1651,13 +1651,14 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 						$this->fieldLabel('ClassName'), 
 						$this->getClassDropdown()
 					),
-					
-					new OptionsetField("ParentType", "Page location", array(
-						"root" => _t("SiteTree.PARENTTYPE_ROOT", "Top-level page"),
-						"subpage" => _t("SiteTree.PARENTTYPE_SUBPAGE", "Sub-page underneath a parent page (choose below)"),
-					)),
-					new TreeDropdownField("ParentID", $this->fieldLabel('ParentID'), 'SiteTree'),
-					
+					$parentIdComposite = new CompositeField(
+						new OptionsetField("ParentType", "Page location", array(
+							"root" => _t("SiteTree.PARENTTYPE_ROOT", "Top-level page"),
+							"subpage" => _t("SiteTree.PARENTTYPE_SUBPAGE", "Sub-page underneath a parent page (choose below)"),
+						)),
+						new TreeDropdownField("ParentID", $this->fieldLabel('ParentID'), 'SiteTree')
+					),
+
 					new CheckboxField("ShowInMenus", $this->fieldLabel('ShowInMenus')),
 					new CheckboxField("ShowInSearch", $this->fieldLabel('ShowInSearch')),
 					/*, new TreeMultiselectField("MultipleParents", "Page appears within", "SiteTree")*/
@@ -1715,6 +1716,8 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		$editorsOptionsSource["LoggedInUsers"] = _t('SiteTree.EDITANYONE', "Anyone who can log-in to the CMS");
 		$editorsOptionsSource["OnlyTheseUsers"] = _t('SiteTree.EDITONLYTHESE', "Only these people (choose from list)");
 		$editorsOptionsField->setSource($editorsOptionsSource);
+		
+		$parentIdComposite->addExtraClass('parentTypeSelector');
 
 		if(!Permission::check('SITETREE_GRANT_ACCESS')) {
 			$fields->makeFieldReadonly($viewersOptionsField);
