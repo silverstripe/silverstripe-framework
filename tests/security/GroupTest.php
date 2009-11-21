@@ -62,13 +62,9 @@ class GroupTest extends FunctionalTest {
 	      $form->saveInto($member);
 	      $updatedGroups = $member->Groups();
 
-	      $controlGroups = new Member_GroupSet(
-	         $adminGroup,
-	         $parentGroup
-	      );
 	      $this->assertEquals(
-	         $updatedGroups->Map('ID','ID'),
-	         $controlGroups->Map('ID','ID'),
+			array($adminGroup->ID, $parentGroup->ID),
+	         $updatedGroups->column(),
 	         "Adding a toplevel group works"
 	      );
 
@@ -82,12 +78,9 @@ class GroupTest extends FunctionalTest {
 	      $form->saveInto($member);
 	      $member->flushCache();
 	      $updatedGroups = $member->Groups();
-	      $controlGroups = new Member_GroupSet(
-	         $adminGroup
-	      );
 	      $this->assertEquals(
-	         $updatedGroups->Map('ID','ID'),
-	         $controlGroups->Map('ID','ID'),
+			array($adminGroup->ID),
+	         $updatedGroups->column(),
 	         "Removing a previously added toplevel group works"
 	      );
 
