@@ -342,7 +342,7 @@ class Security extends Controller {
 			Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-ui/ui.core.js');
 			Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-ui/ui.tabs.js');
 			
-			Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-concrete/dist/jquery.concrete-latest.js');
+			Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-concrete/dist/jquery.concrete-dist.js');
 			
 			Requirements::css(THIRDPARTY_DIR . '/jquery/themes/smoothness/ui.all.css');
 			Requirements::css(THIRDPARTY_DIR . '/jquery/themes/smoothness/ui.tabs.css');

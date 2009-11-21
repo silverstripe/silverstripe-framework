@@ -58,7 +58,7 @@ class TabSet extends CompositeField {
 		Requirements::css(SAPPHIRE_DIR . '/thirdparty/jquery-ui-themes/smoothness/ui.all.css');
 		Requirements::css(SAPPHIRE_DIR . '/thirdparty/jquery-ui-themes/smoothness/ui.tabs.css');
 		
-		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-concrete/dist/jquery.concrete-latest.js');
+		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-concrete/dist/jquery.concrete-dist.js');
 		
 		Requirements::javascript(SAPPHIRE_DIR . '/javascript/TabSet.js');
 		

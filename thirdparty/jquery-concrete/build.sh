@@ -1,17 +1,7 @@
 #!/bin/sh
 
-VER=$1
-
-# Get the version - a tag if possible, otherwise a short ref (not well tested code)
-if [ "$VER " = " " ] ; then \
-	VER=`git rev-parse --abbrev-ref=strict HEAD`
-fi
-if [ "$VER" = "master" ] ; then \
-	VER=`git show --pretty=format:"%h" --quiet`
-fi
-
 # Specify the output file's name
-FILE="dist/jquery.concrete-$VER.js"
+FILE="dist/jquery.concrete-dist.js"
 
 mkdir -p dist
 rm dist/*.js
@@ -37,8 +27,6 @@ do \
   echo ';' >> $FILE
   echo >> $FILE
 done
-
-ln -s `basename "$FILE"` dist/jquery.concrete-latest.js
 
 # cp LICENSE /tmp/
 # cp $FILE /tmp/
