@@ -1,0 +1,8 @@
+--- 
+format: 1
+handler: 
+  commit: 2d129e2754ba864a5c538c3be3355e24f49f1939
+  branch: master
+lock: false
+repository_url: git://github.com/hafriedlander/jquery.selector.git
+repository_class: Piston::Git::Repository

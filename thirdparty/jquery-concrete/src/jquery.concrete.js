@@ -10,7 +10,10 @@ var console;
 
 	/** Utility to optionally display warning messages depending on level */
 	var warn = function(message, level) {
-		if (level <= $.concrete.warningLevel && console && console.log) console.log(message);
+		if (level <= $.concrete.warningLevel && console && console.log) { 
+			console.warn(message);
+			if (console.trace) console.trace();
+		}
 	}
 
    /** A property definition */
@@ -100,16 +103,28 @@ var console;
 			name = name || '__base';
 			
 			this.name = name;
-			this.proxies = {};
 			this.store = {};
 			
 			namespaces[name] = this;
 			
-			var self = this;
-			this.$ = function() {
-				var jq = $.apply(window, arguments);
-				jq.namespace = self;
-				return jq;
+			if (name == "__base") {
+				this.injectee = $.fn
+				this.$ = $;
+			}
+			else {
+				// We're in a namespace, so we build a Class that subclasses the jQuery Object Class to inject namespace functions into
+				var subfn = function(jq){
+					this.selector = jq.selector; this.context = jq.context; this.setArray($.makeArray(jq));
+				}
+				this.injectee = subfn.prototype = new $();
+				
+				// And then we provide an overriding $ that returns objects of our new Class
+				this.$ = function() {
+					return new subfn($.apply(window, arguments));
+				}
+				// Copy static functions through from $ to this.$ so e.g. $.ajax still works
+				// @bug, @cantfix: Any class functions added to $ after this call won't get mirrored through 
+				$.extend(this.$, $);
 			}
 		},
 		
@@ -148,7 +163,7 @@ var console;
 			var one = this.one(name, 'func');
 			
 			var prxy = function() {
-				var rv, ctx = $(this.__context || this); 
+				var rv, ctx = $(this); 
 				
 				var i = ctx.length;
 				while (i--) rv = one(ctx[i], arguments);
@@ -158,40 +173,23 @@ var console;
 			return prxy;
 		},
 		
-		build_jquery_injection: function(name) {
-			if (!$.fn[name]) {
-				$.fn[name] = function() {
-					// Try bound namespace
-					var namespace = this.namespace;
-					// If that doesn't exist, or doesn't have function, try root namespace
-					if (!namespace || !namespace.proxies[name]) namespace = namespaces.__base;
-					// If that doesn't exist, throw error
-					if (!namespace.proxies[name]) {
-						throw new ReferenceError('Concrete function '+name+' not found in ' + (this.namespace ? ('namespace '+this.namespace.name+' or root namespace') : 'root namespace'));
-					}
-					
-					namespace.__context = null;
-					return namespace.proxies[name].apply(this, arguments);
-				}
-				$.fn[name].concrete = true;
-			}
-			
-			if (!$.fn[name].concrete) {
-				warn('Warning: Concrete function '+name+' clashes with regular jQuery function - concrete function will not be callable directly on jQuery object', $.concrete.WARN_LEVEL_IMPORTANT);
-			}
-		},
-		
 		bind_proxy: function(selector, name, func) {
 			var funcs = this.store[name] || (this.store[name] = []) ;
 			
 			var rule = funcs[funcs.length] = Rule(selector, name); rule.func = func;
 			funcs.sort(Rule.compare);
 			
-			if (!this.proxies[name]) this.proxies[name] = this.build_proxy(name);
-			this.build_jquery_injection(name);
+			if (!this.injectee.hasOwnProperty(name)) {
+				this.injectee[name] = this.build_proxy(name);
+				this.injectee[name].concrete = true;
+			}
+
+			if (!this.injectee[name].concrete) {
+				warn('Warning: Concrete function '+name+' clashes with regular jQuery function - concrete function will not be callable directly on jQuery object', $.concrete.WARN_LEVEL_IMPORTANT);
+			}
 		},
 		
-		bind_event: function(selector, name, func) {
+		bind_event: function(selector, name, func, event) {
 			var funcs = this.store[name] || (this.store[name] = []) ;
 			
 			var rule = funcs[funcs.length] = Rule(selector, name); rule.func = func;
@@ -199,7 +197,7 @@ var console;
 			
 			if (!funcs.proxy) { 
 				funcs.proxy = this.build_proxy(name);
-				$(selector.selector).live(match[1], funcs.proxy);
+				$(selector.selector).live(event, funcs.proxy);
 			}
 		},
 		
@@ -240,22 +238,36 @@ var console;
 		},
 		
 		add: function(selector, data) {
-			for (var k in data) {
-				var v = data[k];
+			var k, v, match, event;
+			
+			for (k in data) {
+				v = data[k];
 				
 				if ($.isFunction(v)) {
 					if (k == 'onmatch' || k == 'onunmatch') {
 						this.bind_condesc(selector, k, v);
 					}
 					else if (match = k.match(/^on(.*)/)) {
-						this.bind_event(selector, k, v);
+						event = match[1];
+						
+						if (!$.fn.liveHover && $.concrete.event_needs_extensions[event]) {
+							warn('Event '+event+' requires live-extensions to function, which does not seem to be present', $.concrete.WARN_LEVEL_IMPORTANT);
+						}
+						else if (event == 'submit') {
+							warn('Event submit not currently supported', $.concrete.WARN_LEVEL_IMPORTANT);
+						}
+						else if (event == 'focus' || event == 'blur') {
+							warn('Event '+event+' not supported - use focusin / focusout instead', $.concrete.WARN_LEVEL_IMPORTANT);
+						}
+						
+						this.bind_event(selector, k, v, event);
 					}
 					else {
 						this.bind_proxy(selector, k, v);
 					}
 				}
 				else {
-					var g, s;
+					var g, s, p;
 
 					if (k.charAt(0) != k.charAt(0).toUpperCase()) warn('Concrete property '+k+' does not start with a capital letter', $.concrete.WARN_LEVEL_BESTPRACTISE);
 					
@@ -263,7 +275,7 @@ var console;
 						g = v.getter(); s = v.setter();
 					}
 					else {
-						var p = $.property({initial: v}); g = p.getter(); s = p.setter(); 
+						p = $.property({initial: v}); g = p.getter(); s = p.setter(); 
 					}
 					
 					g.pname = s.pname = k;
@@ -314,8 +326,7 @@ var console;
 			i++
 		}
 		
-		namespace.proxies.__context = this;
-		return namespace.proxies;
+		return namespace.$(this);
 	}
 	
 	/**
@@ -364,7 +375,12 @@ var console;
 		/** 
 		 * Warning level. Set to a higher level to get warnings dumped to console.
 		 */
-		warningLevel: 0
+		warningLevel: 0,
+		
+		/**
+		 * These events need the live-extensions plugin
+		 */
+		event_needs_extensions: { mouseenter: true, mouseleave: true, change: true, focusin: true, focusout: true }
 	}
 	
 	var check_id = null;
