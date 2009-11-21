@@ -80,6 +80,13 @@ class Image extends File {
 			return true;
 		}		
 	}
+	
+	function onBeforeDelete() {
+		parent::onBeforeDelete();
+		
+		// Delete the temp verions of this file in assets/_resampled
+		$this->deleteFormattedImages();
+	}
 
 	/**
 	 * Get the relative URL for this Image.
