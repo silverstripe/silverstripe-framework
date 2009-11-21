@@ -208,6 +208,7 @@ TreeDropdownField.prototype = {
 
 		if(this.inputTag.value != val) {
 			this.inputTag.value = val;
+			jQuery(this).trigger('ss.TreeDropdownField.change', {val: val});
 			this.notify('Change', val);
 			
 			// If the tree item is already downloaded, just update the label
@@ -240,6 +241,7 @@ TreeDropdownField.prototype = {
 	setValueFromTree: function(treeID, title) {
 		this.humanItems.innerHTML = title;
 		this.inputTag.value = treeID.replace('selector-' + this.getName() + '-','');
+		jQuery(this).trigger('ss.TreeDropdownField.change', {val: this.inputTag.value});
 		this.notify('Change', this.inputTag.value);
 
 		this.hideTree();
