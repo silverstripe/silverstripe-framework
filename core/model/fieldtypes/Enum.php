@@ -74,6 +74,13 @@ class Enum extends DBField {
 	function enumValues($hasEmpty = false) {
 		return ($hasEmpty) ? array_merge(array('' => ''), ArrayLib::valuekey($this->enum)) : ArrayLib::valuekey($this->enum);
 	}
+	
+	function Lower() {
+		return StringField::Lower();
+	}
+	function Upper() {
+		return StringField::Upper();
+	}
 }
 
 ?>
