@@ -1,11 +1,32 @@
 <?php
 
 class PermissionCheckboxSetField extends CheckboxSetField {
+	
+	/**
+	 * @var Array Filter certain permission codes from the output.
+	 * Useful to simplify the interface
+	 */
+	protected $hiddenPermissions = array();
+	
 	function __construct($name, $title, $managedClass, $filterField, $record = null) {
 		$this->filterField = $filterField;
 		$this->managedClass = $managedClass;
 		$this->record = $record;
 		parent::__construct($name, $title, Permission::get_codes(true)); 
+	}
+	
+	/**
+	 * @param Array $codes
+	 */
+	function setHiddenPermissions($codes) {
+		$this->hiddenPermissions = $codes;
+	}
+	
+	/**
+	 * @return Array
+	 */
+	function getHiddenPermissions() {
+		return $this->hiddenPermissions;
 	}
 
 	function Field() {
@@ -69,9 +90,8 @@ class PermissionCheckboxSetField extends CheckboxSetField {
 		if($source) {
 			foreach($source as $categoryName => $permissions) {
 				$options .= "<li><h5>$categoryName</h5></li>";
-				$hiddens = Permission::$hidden_permissions;
 				foreach($permissions as $code => $permission) {
-					if(in_array($code, $hiddens)) continue;
+					if(in_array($code, $this->hiddenPermissions)) continue;
 					$key = $code;
 					$value = $permission['name'];
 			
