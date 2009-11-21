@@ -881,7 +881,7 @@ class Requirements_Backend {
 				// if we have a javascript file and jsmin is enabled, minify the content
 				$isJS = stripos($file, '.js');
 				if($isJS && $this->combine_js_with_jsmin) {
-					require_once('thirdparty/jsmin/JSMin.php');
+					require_once('thirdparty/jsmin/jsmin.php');
 					
 					increase_time_limit_to();
 					$fileContent = JSMin::minify($fileContent);
