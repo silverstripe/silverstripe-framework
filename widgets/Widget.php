@@ -208,7 +208,12 @@ class Widget_Controller extends Controller {
 			user_error("Bad widget class: $className", E_USER_WARNING);
 			return "Bad widget class name given";
 		}
-	}
-	
+	}	
 }
+
+class Widget_TreeDropdownField extends TreeDropdownField {
+	function FieldHolder() {}
+	function Field() {}
+}
+
 ?>
