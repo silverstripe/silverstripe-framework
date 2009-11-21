@@ -265,12 +265,12 @@ $lang['en_US']['Folder']['FILENAME'] = 'Filename';
 $lang['en_US']['Folder']['FILESTAB'] = 'Files';
 $lang['en_US']['Folder']['LASTEDITED'] = 'Last Updated';
 $lang['en_US']['Folder']['PLURALNAME'] = array(
-	'Files',
+	'Folders',
 	50,
 	'Pural name of the object, used in dropdowns and to generally identify a collection of this object in the interface'
 );
 $lang['en_US']['Folder']['SINGULARNAME'] = array(
-	'File',
+	'Folder',
 	50,
 	'Singular name of the object, used in dropdowns and to generally identify a single object in the interface'
 );

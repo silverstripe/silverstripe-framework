@@ -5,6 +5,10 @@
  * @subpackage filesystem
  */
 class Folder extends File {
+
+	static $singular_name = "Folder";
+
+	static $plural_name = "Folders";
 	
 	/*
 	 * Find the given folder or create it, recursively.
