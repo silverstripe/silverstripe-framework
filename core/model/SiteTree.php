@@ -1498,7 +1498,6 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		require_once("forms/Form.php");
 		Requirements::javascript(SAPPHIRE_DIR . "/thirdparty/prototype/prototype.js");
 		Requirements::javascript(SAPPHIRE_DIR . "/thirdparty/behaviour/behaviour.js");
-		Requirements::javascript(CMS_DIR . "/javascript/SitetreeAccess.js");
 		Requirements::add_i18n_javascript(SAPPHIRE_DIR . '/javascript/lang');
 		Requirements::javascript(SAPPHIRE_DIR . '/javascript/UpdateURL.js');
 
