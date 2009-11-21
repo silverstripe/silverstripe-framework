@@ -1,6 +1,9 @@
 /**
  * On-demand JavaScript handler
  * Based on http://plugins.jquery.com/files/issues/jquery.ondemand.js_.txt and modified to integrate with Sapphire
+ * 
+ * Modified 2009-08-03 by Ingo Schommer, SilverStripe Ltd. - Renamed property "queue" to "ondemand_queue"
+ * to make compatible with jQuery 1.3
  */
 (function($){
 
@@ -16,7 +19,7 @@
 			routeCss	: ''	// choice of using this config or full path in scriptUrl argument
 		},						// previously were useless for users which don't use '_js/' and '_css/' folders.  (by PGA)
 
-		queue : [],
+		ondemand_queue : [],
 		pending : null,
 		loaded_list : null,		// loaded files list - to protect against loading existed file again  (by PGA)
 		
@@ -60,7 +63,7 @@
 
 			if(this.pending)
 			{
-				this.queue.push(_request);
+				this.ondemand_queue.push(_request);
 				return;
 			}
 
@@ -114,9 +117,9 @@
 			this.loaded_list[this.pending.url] = 1;			// adding loaded file to loaded list  (by PGA)
 			this.pending = null;
 
-			if(this.queue.length > 0)
+			if(this.ondemand_queue.length > 0)
 			{
-				var request = this.queue.shift();
+				var request = this.ondemand_queue.shift();
 				this.requireJs(request.url, request.callback, request.opts, request.obj, request.scope);
 			}
 		},
