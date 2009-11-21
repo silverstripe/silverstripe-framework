@@ -102,7 +102,6 @@ class FormResponse {
 		$JS_content = Convert::raw2js($content);
 		self::$rules[] = "\$('{$id}').loadNewPage('{$JS_content}');";
 		self::$rules[] = "\$('{$id}').initialize();";
-		self::$rules[] = "if(typeof onload_init_tabstrip != 'undefined') onload_init_tabstrip();";
 	}
 	
 	/**
