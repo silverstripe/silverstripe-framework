@@ -82,7 +82,13 @@ class Permission extends DataObject {
 	 * @var bool
 	 */
 	static $admin_implies_all = true;
-
+	
+	/**
+	 * a list of permission codes which doesn't appear in the Permission list
+	 * when make the {@link PermissionCheckboxSetField}
+	 * @var array;
+	 */
+	static $hidden_permissions = array();
 
 	/**
 	 * Check that the current member has the given permission.
@@ -558,6 +564,26 @@ class Permission extends DataObject {
 			// Just numeric.
 			return $a['sort'] < $b['sort'] ? -1 : 1;
 		}
+	}
+	
+	/**
+	 * add a permission represented by the $code to the {@link slef::$hidden_permissions} list
+	 *
+	 * @param $code string - the permissions code
+	 * @return void
+	 */
+	static function add_to_hidden_permissions($code){
+		self::$hidden_permissions[] = $code;
+	}
+	
+	/**
+	 * remove a permission represented by the $code from the {@link slef::$hidden_permissions} list
+	 *
+	 * @param $code string - the permissions code
+	 * @return void
+	 */
+	static function remove_from_hidden_permissions($code){
+		self::$hidden_permissions = array_diff(self::$hidden_permissions, array($code));
 	}
 
 	/**
