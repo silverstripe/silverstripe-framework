@@ -1,0 +1,150 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" 
+										"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<script src="http://code.jquery.com/jquery-latest.js"></script>
+	<script type='text/javascript' src='http://getfirebug.com/releases/lite/1.2/firebug-lite-compressed.js'></script>
+	<script type="text/javascript" src="../jquery.fitheighttoparent.js"></script>
+	
+	<link rel="stylesheet" href="http://dev.jquery.com/view/trunk/qunit/testsuite.css" type="text/css" media="screen" />
+
+	<style type="text/css">
+		.outer {background: #333;}
+		.inner {background: #f0f;}
+		.sibling {background: #bbb;}
+		
+		#test1-parent {height: 200px; margin: 10px 0; padding: 15px 10px; border: 5px solid #000;}
+		#test1-sibling-before {height: 20px; margin: 3px 0; padding: 2px 0;} 
+		#test1-sibling-after {height: 30px; margin: 3px 0; padding: 2px 0;}
+		
+		#test2-parent {height: 200px; margin: 10px 0; padding: 15px 10px; }
+		#test2-sibling-absolute {height: 20px; position: absolute;}
+		
+		#test3-parent {height: 200px; margin: 10px 0; padding: 15px 10px; }
+		#test3-sibling {height: 20px;}
+		#test3-sibling-hidden {height: 30px; display: none;}
+		
+		#test4-parent {height: 200px; margin: 10px 0; padding: 15px 10px; }
+		#test4-sibling {height: 20px;}
+		#test4 {margin: 15px 0; padding: 10px 0;border: 5px solid #000;}
+		
+		#test5-parent {height: 200px; margin: 10px 0; padding: 15px 10px; }
+		#test5-sibling {height: 20px;}
+		#test5 {margin: 15px 0; padding: 10px 0;border: 5px solid #000;}
+		
+		#test6-parent {height: 200px; margin: 10px 0; padding: 15px 10px; position: relative; width: 100%;}
+		#test6-sibling {height: 20px;}
+		#test6 {overflow: auto; }
+	</style>
+
+	<script>
+	$(document).ready(function(){
+
+		test("with inline siblings, margins/paddings/borders on parent", function() {
+			equals(
+				jQuery('#test1').fitHeightToParent().height(), 
+				130
+			);
+		});
+		
+		test("with absolute siblings", function() {
+			equals(
+				jQuery('#test2').fitHeightToParent().height(), 
+				200
+			);
+		});
+		
+		test("with hidden siblings", function() {
+			equals(
+				jQuery('#test3').fitHeightToParent().height(), 
+				180
+			);
+		});
+		
+		test("with margins/paddings/borders on resized element", function() {
+			equals(
+				jQuery('#test4').fitHeightToParent().height(), 
+				120
+			);
+		});
+		
+		test("form with fieldset", function() {
+			equals(
+				jQuery('#test5').fitHeightToParent().height(), 
+				120
+			);
+		});
+		
+		test("overflow auto with long inner element", function() {
+			equals(
+				jQuery('#test6').fitHeightToParent().height(), 
+				180
+			);
+		});
+
+	});
+	</script>
+	
+</head>
+<body>
+	
+<script type="text/javascript" src="http://jqueryjs.googlecode.com/svn/trunk/qunit/testrunner.js"></script>
+	<h1>jquery.fitheighttoparent unit test</h1>
+	<h2 id="banner"></h2>
+	<h2 id="userAgent"></h2>
+
+	<ol id="tests"></ol>
+
+	<div id="main"></div>
+ 
+	<div id="test1-parent" class="outer">
+		<div id="test1-sibling-before" class="sibling"></div>
+		<div id="test1" class="inner">
+			<p>test 1</p>
+		</div>
+		<div id="test1-sibling-after" class="sibling"></div>
+	</div>
+	
+	<div id="test2-parent" class="outer">
+		<div id="test2-sibling-absolute" class="sibling"></div>
+		<div id="test2" class="inner">
+			<p>test 2</p>
+		</div>
+	</div>
+	
+	<div id="test3-parent" class="outer">
+		<div id="test3-sibling" class="sibling"></div>
+		<div id="test3" class="inner">
+			<p>test 3</p>
+		</div>
+		<div id="test3-sibling-hidden" class="sibling"></div>
+	</div>
+	
+	<div id="test4-parent" class="outer">
+		<div id="test4-sibling" class="sibling"></div>
+		<div id="test4" class="inner">
+			<p>test 4</p>
+		</div>
+	</div>
+	
+	<form action="#" method="POST" id="test5-parent" class="outer">
+		<fieldset id="test5" class="inner">
+			<p>test 5</p>
+			<input type="text">
+		</fieldset>
+		<div id="test5-sibling" class="sibling"></div>
+	</form>
+	
+	<div id="test6-parent" class="outer">
+		<div id="test6-sibling" class="sibling"></div>
+		<div id="test6" class="inner">
+<p>test 6</p>
+<p>Suspendisse vestibulum dignissim quam. Integer vel augue. Phasellus nulla purus, interdum ac, venenatis non, varius rutrum, leo. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Duis a eros. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos hymenaeos. Fusce magna mi, porttitor quis, convallis eget, sodales ac, urna. Phasellus luctus venenatis magna. Vivamus eget lacus. Nunc tincidunt convallis tortor. Duis eros mi, dictum vel, fringilla sit amet, fermentum id, sem. Phasellus nunc enim, faucibus ut, laoreet in, consequat id, metus. Vivamus dignissim. Cras lobortis tempor velit. Phasellus nec diam ac nisl lacinia tristique. Nullam nec metus id mi dictum dignissim. Nullam quis wisi non sem lobortis condimentum. Phasellus pulvinar, nulla non aliquam eleifend, tortor wisi scelerisque felis, in sollicitudin arcu ante lacinia leo.</p>
+<p>
+Suspendisse vestibulum dignissim quam. Integer vel augue. Phasellus nulla purus, interdum ac, venenatis non, varius rutrum, leo. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Duis a eros. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos hymenaeos. Fusce magna mi, porttitor quis, convallis eget, sodales ac, urna. Phasellus luctus venenatis magna. Vivamus eget lacus. Nunc tincidunt convallis tortor. Duis eros mi, dictum vel, fringilla sit amet, fermentum id, sem. Phasellus nunc enim, faucibus ut, laoreet in, consequat id, metus. Vivamus dignissim. Cras lobortis tempor velit. Phasellus nec diam ac nisl lacinia tristique. Nullam nec metus id mi dictum dignissim. Nullam quis wisi non sem lobortis condimentum. Phasellus pulvinar, nulla non aliquam eleifend, tortor wisi scelerisque felis, in sollicitudin arcu ante lacinia leo.</p>
+<p>
+Suspendisse vestibulum dignissim quam. Integer vel augue. Phasellus nulla purus, interdum ac, venenatis non, varius rutrum, leo. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Duis a eros. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos hymenaeos. Fusce magna mi, porttitor quis, convallis eget, sodales ac, urna. Phasellus luctus venenatis magna. Vivamus eget lacus. Nunc tincidunt convallis tortor. Duis eros mi, dictum vel, fringilla sit amet, fermentum id, sem. Phasellus nunc enim, faucibus ut, laoreet in, consequat id, metus. Vivamus dignissim. Cras lobortis tempor velit. Phasellus nec diam ac nisl lacinia tristique. Nullam nec metus id mi dictum dignissim. Nullam quis wisi non sem lobortis condimentum. Phasellus pulvinar, nulla non aliquam eleifend, tortor wisi scelerisque felis, in sollicitudin arcu ante lacinia leo.</p>
+		</div>
+	</div>
+</body>
+</html>
