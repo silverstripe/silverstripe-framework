@@ -106,13 +106,11 @@ var console;
 			namespaces[name] = this;
 			
 			var self = this;
-			
 			this.$ = function() {
 				var jq = $.apply(window, arguments);
 				jq.namespace = self;
 				return jq;
 			}
-			$.extend(this.$, $);
 		},
 		
 		/**
@@ -163,7 +161,15 @@ var console;
 		build_jquery_injection: function(name) {
 			if (!$.fn[name]) {
 				$.fn[name] = function() {
-					var namespace = (this.namespace && this.namespace.proxies[name]) ? this.namespace : namespaces.__base;
+					// Try bound namespace
+					var namespace = this.namespace;
+					// If that doesn't exist, or doesn't have function, try root namespace
+					if (!namespace || !namespace.proxies[name]) namespace = namespaces.__base;
+					// If that doesn't exist, throw error
+					if (!namespace.proxies[name]) {
+						throw new ReferenceError('Concrete function '+name+' not found in ' + (this.namespace ? ('namespace '+this.namespace.name+' or root namespace') : 'root namespace'));
+					}
+					
 					namespace.__context = null;
 					return namespace.proxies[name].apply(this, arguments);
 				}
