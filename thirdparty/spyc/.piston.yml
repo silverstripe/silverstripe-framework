@@ -1,0 +1,8 @@
+--- 
+format: 1
+handler: 
+  piston:remote-revision: 78
+  piston:uuid: 705174c8-340b-11de-9d05-31133e6853b1
+lock: false
+repository_url: http://spyc.googlecode.com/svn/trunk
+repository_class: Piston::Svn::Repository
