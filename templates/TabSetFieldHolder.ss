@@ -1,4 +1,4 @@
-<div class="ss-tabset">
+<div class="ss-tabset" id="$id">
 	<ul>
 	<% control Tabs %>
 		<li class="$FirstLast $MiddleString"><a href="#$id" id="tab-$id">$Title</a></li>

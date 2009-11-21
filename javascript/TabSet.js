@@ -12,7 +12,7 @@
 
 			// Initialize jQuery UI tabs
 			this.tabs({
-				cookie: $.cookie ? { expires: 30, path: '/' } : false
+				cookie: $.cookie ? { expires: 30, path: '/', name: 'ui-tabs-' + this.attr('id') } : false
 			});
 		},
 			
@@ -26,7 +26,7 @@
 			$(this).find('ul a').each(function() {
 				var href = $(this).attr('href').replace(/.*(#.*)/, '$1');
 				if(href) $(this).attr('href', href);
-			})
+			});
 		}
 	});
 })(jQuery);
