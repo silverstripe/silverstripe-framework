@@ -306,6 +306,10 @@ function behaveAs(element, behaviourClass, arg1, arg2, arg3, arg4, arg5, arg6) {
 	return element;
 }
 
+Function.prototype.create = function(item, arg1, arg2, arg3, arg4, arg5, arg6) {
+	return behaveAs(item, this, arg1, arg2, arg3, arg4, arg5, arg6);
+}
+
 /*
    The following code is Copyright (C) Simon Willison 2004.
 
