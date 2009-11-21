@@ -75,7 +75,6 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		"Sort" => "Int",
 		"HasBrokenFile" => "Boolean",
 		"HasBrokenLink" => "Boolean",
-		"Status" => "Varchar",
 		"ReportClass" => "Varchar",
 		"CanViewType" => "Enum('Anyone, LoggedInUsers, OnlyTheseUsers, Inherit', 'Inherit')",
 		"CanEditType" => "Enum('LoggedInUsers, OnlyTheseUsers, Inherit', 'Inherit')",
@@ -120,7 +119,6 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	static $defaults = array(
 		"ShowInMenus" => 1,
 		"ShowInSearch" => 1,
-		"Status" => "New page",
 		"CanViewType" => "Inherit",
 		"CanEditType" => "Inherit"
 	);
@@ -1230,7 +1228,6 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 				$homepage->Title = _t('SiteTree.DEFAULTHOMETITLE', 'Home');
 				$homepage->Content = _t('SiteTree.DEFAULTHOMECONTENT', '<p>Welcome to SilverStripe! This is the default homepage. You can edit this page by opening <a href="admin/">the CMS</a>. You can now access the <a href="http://doc.silverstripe.org">developer documentation</a>, or begin <a href="http://doc.silverstripe.org/doku.php?id=tutorials">the tutorials.</a></p>');
 				$homepage->URLSegment = "home";
-				$homepage->Status = "Published";
 				$homepage->write();
 				$homepage->publish("Stage", "Live");
 				$homepage->flushCache();
@@ -1242,7 +1239,6 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 				$aboutus->Title = _t('SiteTree.DEFAULTABOUTTITLE', 'About Us');
 				$aboutus->Content = _t('SiteTree.DEFAULTABOUTCONTENT', '<p>You can fill this page out with your own content, or delete it and create your own pages.<br /></p>');
 				$aboutus->URLSegment = "about-us";
-				$aboutus->Status = "Published";
 				$aboutus->write();
 				$aboutus->publish("Stage", "Live");
 				DB::alteration_message("About Us created","created");
@@ -1251,7 +1247,6 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 				$contactus->Title = _t('SiteTree.DEFAULTCONTACTTITLE', 'Contact Us');
 				$contactus->Content = _t('SiteTree.DEFAULTCONTACTCONTENT', '<p>You can fill this page out with your own content, or delete it and create your own pages.<br /></p>');
 				$contactus->URLSegment = "contact-us";
-				$contactus->Status = "Published";
 				$contactus->write();
 				$contactus->publish("Stage", "Live");
 
@@ -1572,11 +1567,6 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		if($this->HasBrokenLink || $this->HasBrokenFile) {
 			$statusMessage[] = _t('SiteTree.HASBROKENLINKS', "This page has broken links.");
 		}
-
-		$message = "STATUS: $this->Status<br />";
-		if(isset($statusMessage)) {
-			$message .= "NOTE: " . implode("<br />", $statusMessage);
-		}
 		
 		$backLinksNote = '';
 		$backLinksTable = new LiteralField('BackLinksNote', '<p>' . _t('NOBACKLINKEDPAGES', 'There are no pages linked to this page.') . '</p>');
@@ -1690,7 +1680,6 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 					$editorGroupsField = new TreeMultiselectField("EditorGroups", $this->fieldLabel('EditorGroups'))
 				)
 			)
-			//new NamedLabelField("Status", $message, "pageStatusMessage", true)
 		);
 		
 		$viewersOptionsSource = array();
@@ -1860,7 +1849,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 
 		// Handle activities undertaken by decorators
 		$this->extend('onBeforePublish', $original);
-		$this->Status = "Published";
+		
 		//$this->PublishedByID = Member::currentUser()->ID;
 		$this->write();
 		$this->publish("Stage", "Live");
@@ -1938,7 +1927,6 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		if (!$clone) $clone = Versioned::get_one_by_stage('SiteTree', 'Live', '"SiteTree_Live"."ID" = ' . $this->ID);
 		$clone->deleteFromStage('Live');
 
-		$this->Status = "Unpublished";
 		$this->write();
 		
 		$this->extend('onAfterUnpublish');
@@ -1950,7 +1938,6 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	 */
 	function doRollbackTo($version) {
 		$this->publish($version, "Stage", true);
-		$this->Status = "Saved (update)";
 		$this->writeWithoutVersion();
 	}
 	
@@ -1962,7 +1949,6 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 
 		// Use a clone to get the updates made by $this->publish
 		$clone = DataObject::get_by_id("SiteTree", $this->ID);
-		$clone->Status = "Published";
 		$clone->writeWithoutVersion();
 		
 		$this->extend('onAfterRevertToLive');
