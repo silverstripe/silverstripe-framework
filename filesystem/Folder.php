@@ -10,6 +10,38 @@ class Folder extends File {
 
 	static $plural_name = "Folders";
 	
+	function populateDefaults() {
+		parent::populateDefaults();
+		
+		if(!$this->Name) $this->Name = _t('AssetAdmin.NEWFOLDER',"NewFolder");
+	}
+	
+	function onBeforeWrite() {
+		// Ensure folders can't contain path information, just a name
+		$this->Name = basename($this->Name);
+		
+		// Get the folder to be created
+		if($this->ParentID) {
+			if(!is_numeric($this->ParentID)) $this->ParentID = 0;
+			$parentObj = DataObject::get_by_id($this->class, $this->ParentID);
+		}
+		// TODO Check that the $parentObj matches the ASSETS_PATH
+		if(isset($parentObj->ID)) $path = $parentObj->FullPath . $this->Name;
+		else $path = ASSETS_PATH . '/' . $this->Name;
+
+		// Ensure uniqueness
+		$i = 2;
+		$basePath = $path . '-';
+		while(file_exists($path)) {
+			$path = $basePath . $i;
+			$i++;
+		}
+
+		Filesystem::makeFolder($path);
+		
+		parent::onBeforeWrite();
+	}
+	
 	/*
 	 * Find the given folder or create it, recursively.
 	 * 
@@ -31,7 +63,7 @@ class Folder extends File {
 				$item->Name = $part;
 				$item->Title = $part;
 				$item->write();
-				if(!file_exists($item->getFullPath())) mkdir($item->getFullPath(),Filesystem::$folder_create_mask);
+				if(!file_exists($item->getFullPath())) Filesystem::makeFolder($item->getFullPath());
 			}
 			$parentID = $item->ID;
 		}
