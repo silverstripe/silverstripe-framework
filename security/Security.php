@@ -327,7 +327,6 @@ class Security extends Controller {
 		// only display tabs when more than one authenticator is provided
 		// to save bandwidth and reduce the amount of custom styling needed 
 		if(count($forms) > 1) {
-			Requirements::javascript(SAPPHIRE_DIR . "/thirdparty/prototype/loader.js");
 			Requirements::javascript(SAPPHIRE_DIR . "/thirdparty/prototype/prototype.js");
 			Requirements::javascript(SAPPHIRE_DIR . "/thirdparty/behaviour/behaviour.js");
 			Requirements::javascript(SAPPHIRE_DIR . "/javascript/prototype_improvements.js");
@@ -411,7 +410,6 @@ class Security extends Controller {
 	public function lostpassword() {
 		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/prototype/prototype.js');
 		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/behaviour/behaviour.js');
-		Requirements::javascript(THIRDPARTY_DIR . '/loader.js');
 		Requirements::javascript(SAPPHIRE_DIR . '/javascript/prototype_improvements.js');
 		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/scriptaculous/effects.js');
 
@@ -469,7 +467,6 @@ class Security extends Controller {
 	 */
 	public function passwordsent($request) {
 		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/behaviour/behaviour.js');
-		Requirements::javascript(THIRDPARTY_DIR . '/loader.js');
 		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/prototype/prototype.js');
 		Requirements::javascript(SAPPHIRE_DIR . '/javascript/prototype_improvements.js');
 		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/scriptaculous/effects.js');
