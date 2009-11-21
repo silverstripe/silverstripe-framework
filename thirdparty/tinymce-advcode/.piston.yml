@@ -1,0 +1,8 @@
+--- 
+format: 1
+handler: 
+  commit: 1af68f76ab6bd5008a06706a3cfa02feb7bd4835
+  branch: master
+lock: false
+repository_url: git://github.com/dinsley/tinymce-codepress.git
+repository_class: Piston::Git::Repository

@@ -1,0 +1,11 @@
+tinymce-codepress
+---------------------
+
+Provides syntax highlighting in the HTML source editing dialog with Codepress.
+
+Installation:
+  * Rename directory to 'advcode' in TinyMCE plugins directory.
+  * Add 'advcode' plugin to TinyMCE init configuration.
+  * Replace the existing source editing button with 'advcode' in your toolbar configuration.
+
+
