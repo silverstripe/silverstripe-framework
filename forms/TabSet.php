@@ -54,9 +54,12 @@ class TabSet extends CompositeField {
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery/ui/jquery-ui.js');
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery/ui/ui.core.js');
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery/ui/ui.tabs.js');
-		Requirements::javascript(SAPPHIRE_DIR . '/javascript/TabSet.js');
+		Requirements::javascript(THIRDPARTY_DIR . '/jquery/plugins/fitheighttoparent/jquery.fitheighttoparent.js');
+		
 		Requirements::css(THIRDPARTY_DIR . '/jquery/themes/smoothness/ui.all.css');
 		Requirements::css(THIRDPARTY_DIR . '/jquery/themes/smoothness/ui.tabs.css');
+		
+		Requirements::javascript(SAPPHIRE_DIR . '/javascript/TabSet.js');
 		
 		return $this->renderWith("TabSetFieldHolder");
 	}

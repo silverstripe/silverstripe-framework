@@ -327,33 +327,45 @@ class Security extends Controller {
 		// only display tabs when more than one authenticator is provided
 		// to save bandwidth and reduce the amount of custom styling needed 
 		if(count($forms) > 1) {
-			Requirements::javascript(THIRDPARTY_DIR . "/loader.js");
-			Requirements::javascript(THIRDPARTY_DIR . "/prototype.js");
-			Requirements::javascript(THIRDPARTY_DIR . "/behaviour.js");
-			Requirements::javascript(THIRDPARTY_DIR . "/prototype_improvements.js");
-			Requirements::javascript(THIRDPARTY_DIR . "/scriptaculous/effects.js");
+			Requirements::javascript(SAPPHIRE_DIR . "/thirdparty/prototype/loader.js");
+			Requirements::javascript(SAPPHIRE_DIR . "/thirdparty/prototype/prototype.js");
+			Requirements::javascript(SAPPHIRE_DIR . "/thirdparty/behaviour/behaviour.js");
+			Requirements::javascript(SAPPHIRE_DIR . "/javascript/prototype_improvements.js");
+			Requirements::javascript(SAPPHIRE_DIR . "/thirdparty/scriptaculous/effects.js");
 			Requirements::css(SAPPHIRE_DIR . "/css/Form.css");
 			
 			// Needed because the <base href=".."> in the template makes problems
 			// with the tabstrip library otherwise
 			$link_base = Director::absoluteURL($this->Link("login"));
 			
-			Requirements::javascript(THIRDPARTY_DIR . "/jquery/jquery.js");
-			Requirements::javascript(THIRDPARTY_DIR . "/jquery/jquery_improvements.js");
-			Requirements::javascript(THIRDPARTY_DIR . '/jquery/plugins/livequery/jquery.livequery.js');
-			Requirements::javascript(THIRDPARTY_DIR . "/tabstrip/tabstrip.js");
-			Requirements::css(THIRDPARTY_DIR . "/tabstrip/tabstrip.css");
+			Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery/jquery.js');
+			Requirements::javascript(SAPPHIRE_DIR . "/javascript/jquery_improvements.js");
+			Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-ui/jquery-ui.js');
+			Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-ui/ui.core.js');
+			Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-ui/ui.tabs.js');
+			
+			// concrete
+			Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-concrete/jquery.class.js');
+			Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-concrete/jquery.selector.js');
+			Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-concrete/jquery.selector.specifity.js');
+			Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-concrete/jquery.selector.matches.js');
+			Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-concrete/jquery.dat.js');
+			Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-concrete/jquery.concrete.js');
+			
+			Requirements::css(SAPPHIRE_DIR . '/thirdparty/jquery-ui-themes/smoothness/ui.all.css');
+			Requirements::css(SAPPHIRE_DIR . '/thirdparty/jquery-ui-themes/smoothness/ui.tabs.css');
 			
 			$content = '<div id="Form_EditForm">';
-			$content .= '<ul class="tabstrip">';
+			$content .= '<div class="ss-tabset">';
+			$content .= '<ul>';
 			$content_forms = '';
 
 			foreach($forms as $form) {
-				$content .= "<li><a href=\"$link_base#{$form->FormName()}_tab\">{$form->getAuthenticator()->get_name()}</a></li>\n";
+				$content .= "<li><a href=\"#{$form->FormName()}_tab\">{$form->getAuthenticator()->get_name()}</a></li>\n";
 				$content_forms .= '<div class="tab" id="' . $form->FormName() . '_tab">' . $form->forTemplate() . "</div>\n";
 			}
 
-			$content .= "</ul>\n" . $content_forms . "\n</div>\n";
+			$content .= "</ul>\n" . $content_forms . "\n</div>\n</div>\n";
 		} else {
 			$content .= $forms[0]->forTemplate();
 		}

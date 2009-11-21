@@ -162,3 +162,7 @@ form .message {
 #ForgotPassword {
 	margin-top: 1em;
 }
+
+.typography .ss-tabset ul {
+	margin: 0;
+}
