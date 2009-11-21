@@ -1621,18 +1621,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 								Director::absoluteBaseURL(),
 								(self::nested_urls() && $this->ParentID ? $this->Parent->RelativeLink(true) : null)
 							)),
-							new UniqueRestrictedTextField("URLSegment",
-								"URLSegment",
-								"SiteTree",
-								_t('SiteTree.VALIDATIONURLSEGMENT1', "Another page is using that URL. URL must be unique for each page"),
-								"[^A-Za-z0-9-]+",
-								"-",
-								_t('SiteTree.VALIDATIONURLSEGMENT2', "URLs can only be made up of letters, digits and hyphens."),
-								"",
-								"",
-								"",
-								50
-							),
+							new TextField("URLSegment","URLSegment"),
 							new LabelField('TrailingSlashLabel',"/")
 						),
 						new LiteralField('LinkChangeNote', self::nested_urls() && count($this->Children()) ?
