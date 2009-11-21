@@ -6,15 +6,17 @@
 	 * 
 	 * @author Ingo Schommer, SilverStripe Ltd.
 	 */
-	$('.calendardate').concrete('ss', {
-		onmatch: function() {
-			this.find('input').each(function() {
-				var conf = $(this).metadata();
-				if(conf.minDate) conf.minDate = new Date(Date.parse(conf.minDate));
+	$('.calendardate').concrete('ss', function($){
+		return {
+			onmatch: function() {
+				this.find('input').each(function() {
+					var conf = $(this).metadata();
+					if(conf.minDate) conf.minDate = new Date(Date.parse(conf.minDate));
 				
-				//
-				$(this).datepicker(conf);
-			});
-		}
-	})
+					//
+					$(this).datepicker(conf);
+				});
+			}
+		};
+	});
 }(jQuery));
