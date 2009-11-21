@@ -167,13 +167,13 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	 * -openfolder.gif and -closedfolder.gif will be appended to the base name
 	 * that you provide there.
 	 * If you prefer, you can pass an array:
-	 * array("jsparty\tree\images\page", $option).
+	 * array("sapphire\javascript\tree\images\page", $option).
 	 * $option can be either "file" or "folder" to force the icon to always
 	 * be a file or folder, regardless of whether the page has children or not
 	 *
 	 * @var string|array
 	 */
-	static $icon = array("jsparty/tree/images/page", "file");
+	static $icon = array("sapphire/javascript/tree/images/page", "file");
 
 
 	static $extensions = array(
@@ -1496,9 +1496,8 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	 */
 	function getCMSFields() {
 		require_once("forms/Form.php");
-		Requirements::javascript(THIRDPARTY_DIR . "/prototype.js");
-		Requirements::javascript(THIRDPARTY_DIR . "/behaviour.js");
-		Requirements::javascript(THIRDPARTY_DIR . "/behaviour_improvements.js");
+		Requirements::javascript(SAPPHIRE_DIR . "/thirdparty/prototype/prototype.js");
+		Requirements::javascript(SAPPHIRE_DIR . "/thirdparty/behaviour/behaviour.js");
 		Requirements::javascript(CMS_DIR . "/javascript/SitetreeAccess.js");
 		Requirements::add_i18n_javascript(SAPPHIRE_DIR . '/javascript/lang');
 		Requirements::javascript(SAPPHIRE_DIR . '/javascript/UpdateURL.js');

@@ -200,7 +200,7 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 	 * @return Form
 	 */
 	function LinkForm() {
-		Requirements::javascript(THIRDPARTY_DIR . "/behaviour.js");
+		Requirements::javascript(SAPPHIRE_DIR . "/thirdparty/behaviour/behaviour.js");
 		Requirements::javascript(THIRDPARTY_DIR . "/tiny_mce_improvements.js");
 
 		$form = new Form(
@@ -253,12 +253,12 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 	 * @return Form
 	 */
 	function ImageForm() {
-		Requirements::javascript(THIRDPARTY_DIR . "/behaviour.js");
+		Requirements::javascript(SAPPHIRE_DIR . "/thirdparty/behaviour/behaviour.js");
 		Requirements::javascript(THIRDPARTY_DIR . "/tiny_mce_improvements.js");
 		Requirements::css('cms/css/TinyMCEImageEnhancement.css');
 		Requirements::javascript('cms/javascript/TinyMCEImageEnhancement.js');
 		Requirements::javascript(CMS_DIR . '/javascript/Upload.js');
-		Requirements::javascript(THIRDPARTY_DIR . '/SWFUpload/SWFUpload.js');
+		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/swfupload/swfupload.js');
 
 		/**
 		 * @todo Adding folders via this screen is not enabled just yet as it is still
@@ -322,10 +322,10 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 	}
 
 	function FlashForm() {
-		Requirements::javascript(THIRDPARTY_DIR . "/behaviour.js");
+		Requirements::javascript(SAPPHIRE_DIR . "/thirdparty/behaviour/behaviour.js");
 		Requirements::javascript(THIRDPARTY_DIR . "/tiny_mce_improvements.js");
+		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/swfupload/swfupload.js');
 		Requirements::javascript(CMS_DIR . '/javascript/Upload.js');
-		Requirements::javascript(THIRDPARTY_DIR . '/SWFUpload/SWFUpload.js');
 
 		$form = new Form(
 			$this->controller,

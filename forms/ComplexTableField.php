@@ -1072,11 +1072,11 @@ class ComplexTableField_Popup extends Form {
 		Requirements::css(SAPPHIRE_DIR . '/css/ComplexTableField_popup.css');
 		Requirements::css(CMS_DIR . '/css/typography.css');
 		Requirements::css(CMS_DIR . '/css/cms_right.css');
-		Requirements::javascript(THIRDPARTY_DIR . "/prototype.js");
-		Requirements::javascript(THIRDPARTY_DIR . "/behaviour.js");
-		Requirements::javascript(THIRDPARTY_DIR . "/prototype_improvements.js");
-		Requirements::javascript(THIRDPARTY_DIR . "/scriptaculous/scriptaculous.js");
-		Requirements::javascript(THIRDPARTY_DIR . "/scriptaculous/controls.js");
+		Requirements::javascript(SAPPHIRE_DIR . "/thirdparty/prototype/prototype.js");
+		Requirements::javascript(SAPPHIRE_dir . "/thirdparty/behaviour/behaviour.js");
+		Requirements::javascript(SAPPHIRE_DIR . "/javascript/prototype_improvements.js");
+		Requirements::javascript(SAPPHIRE_DIR . "/thirdparty/scriptaculous/scriptaculous.js");
+		Requirements::javascript(SAPPHIRE_DIR . "/thirdparty/scriptaculous/scriptaculous/controls.js");
 		Requirements::javascript(THIRDPARTY_DIR . "/layout_helpers.js");
 		Requirements::add_i18n_javascript(SAPPHIRE_DIR . '/javascript/lang');
 		Requirements::javascript(SAPPHIRE_DIR . "/javascript/ComplexTableField_popup.js");

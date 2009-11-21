@@ -338,19 +338,19 @@ class Security extends Controller {
 			// with the tabstrip library otherwise
 			$link_base = Director::absoluteURL($this->Link("login"));
 			
-			Requirements::javascript(THIRDPARTY_DIR . "/jquery/jquery-latest.js");
-			Requirements::javascript(THIRDPARTY_DIR . "/jquery/jquery_improvements.js");
-			Requirements::javascript(THIRDPARTY_DIR . '/jquery/ui/jquery-ui.js');
-			Requirements::javascript(THIRDPARTY_DIR . '/jquery/ui/ui.core.js');
-			Requirements::javascript(THIRDPARTY_DIR . '/jquery/ui/ui.tabs.js');
+			Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery/jquery.js');
+			Requirements::javascript(SAPPHIRE_DIR . "/javascript/jquery_improvements.js");
+			Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-ui/jquery-ui.js');
+			Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-ui/ui.core.js');
+			Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-ui/ui.tabs.js');
 			
 			// concrete
-			Requirements::javascript(THIRDPARTY_DIR . '/jquery/plugins/concrete/jquery.class.js');
-			Requirements::javascript(THIRDPARTY_DIR . '/jquery/plugins/concrete/jquery.selector.js');
-			Requirements::javascript(THIRDPARTY_DIR . '/jquery/plugins/concrete/jquery.selector.specifity.js');
-			Requirements::javascript(THIRDPARTY_DIR . '/jquery/plugins/concrete/jquery.selector.matches.js');
-			Requirements::javascript(THIRDPARTY_DIR . '/jquery/plugins/concrete/jquery.dat.js');
-			Requirements::javascript(THIRDPARTY_DIR . '/jquery/plugins/concrete/jquery.concrete.js');
+			Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-concrete/jquery.class.js');
+			Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-concrete/jquery.selector.js');
+			Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-concrete/jquery.selector.specifity.js');
+			Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-concrete/jquery.selector.matches.js');
+			Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-concrete/jquery.dat.js');
+			Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-concrete/jquery.concrete.js');
 			
 			Requirements::css(THIRDPARTY_DIR . '/jquery/themes/smoothness/ui.all.css');
 			Requirements::css(THIRDPARTY_DIR . '/jquery/themes/smoothness/ui.tabs.css');
@@ -407,11 +407,11 @@ class Security extends Controller {
 	 * @return string Returns the "lost password" page as HTML code.
 	 */
 	public function lostpassword() {
-		Requirements::javascript(THIRDPARTY_DIR . '/prototype.js');
-		Requirements::javascript(THIRDPARTY_DIR . '/behaviour.js');
+		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/prototype/prototype.js');
+		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/behaviour/behaviour.js');
 		Requirements::javascript(THIRDPARTY_DIR . '/loader.js');
-		Requirements::javascript(THIRDPARTY_DIR . '/prototype_improvements.js');
-		Requirements::javascript(THIRDPARTY_DIR . '/scriptaculous/effects.js');
+		Requirements::javascript(SAPPHIRE_DIR . '/javascript/prototype_improvements.js');
+		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/scriptaculous/effects.js');
 
 		$tmpPage = new Page();
 		$tmpPage->Title = _t('Security.LOSTPASSWORDHEADER', 'Lost Password');
@@ -466,11 +466,11 @@ class Security extends Controller {
 	 * @return string Returns the "password sent" page as HTML code.
 	 */
 	public function passwordsent($request) {
-		Requirements::javascript(THIRDPARTY_DIR . '/behaviour.js');
+		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/behaviour/behaviour.js');
 		Requirements::javascript(THIRDPARTY_DIR . '/loader.js');
-		Requirements::javascript(THIRDPARTY_DIR . '/prototype.js');
-		Requirements::javascript(THIRDPARTY_DIR . '/prototype_improvements.js');
-		Requirements::javascript(THIRDPARTY_DIR . '/scriptaculous/effects.js');
+		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/prototype/prototype.js');
+		Requirements::javascript(SAPPHIRE_DIR . '/javascript/prototype_improvements.js');
+		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/scriptaculous/effects.js');
 
 		$tmpPage = new Page();
 		$tmpPage->Title = _t('Security.LOSTPASSWORDHEADER');

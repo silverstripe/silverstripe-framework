@@ -49,23 +49,23 @@ class TabSet extends CompositeField {
 	 * The HTML is a standardised format, containing a &lt;ul;
 	 */
 	public function FieldHolder() {
-		Requirements::javascript(THIRDPARTY_DIR . "/jquery/jquery-latest.js");
-		Requirements::javascript(THIRDPARTY_DIR . "/jquery/jquery_improvements.js");
-		Requirements::javascript(THIRDPARTY_DIR . '/jquery/ui/jquery-ui.js');
-		Requirements::javascript(THIRDPARTY_DIR . '/jquery/ui/ui.core.js');
-		Requirements::javascript(THIRDPARTY_DIR . '/jquery/ui/ui.tabs.js');
+		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery/jquery.js');
+		Requirements::javascript(SAPPHIRE_DIR . "/javascript/jquery_improvements.js");
+		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-ui/jquery-ui.js');
+		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-ui/ui.core.js');
+		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-ui/ui.tabs.js');
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery/plugins/fitheighttoparent/jquery.fitheighttoparent.js');
 		
-		Requirements::css(THIRDPARTY_DIR . '/jquery/themes/smoothness/ui.all.css');
-		Requirements::css(THIRDPARTY_DIR . '/jquery/themes/smoothness/ui.tabs.css');
+		Requirements::css(SAPPHIRE_DIR . '/thirdparty/jquery-ui-themes/smoothness/ui.all.css');
+		Requirements::css(SAPPHIRE_DIR . '/thirdparty/jquery-ui-themes/smoothness/ui.tabs.css');
 		
 		// concrete
-		Requirements::javascript(THIRDPARTY_DIR . '/jquery/plugins/concrete/jquery.class.js');
-		Requirements::javascript(THIRDPARTY_DIR . '/jquery/plugins/concrete/jquery.selector.js');
-		Requirements::javascript(THIRDPARTY_DIR . '/jquery/plugins/concrete/jquery.selector.specifity.js');
-		Requirements::javascript(THIRDPARTY_DIR . '/jquery/plugins/concrete/jquery.selector.matches.js');
-		Requirements::javascript(THIRDPARTY_DIR . '/jquery/plugins/concrete/jquery.dat.js');
-		Requirements::javascript(THIRDPARTY_DIR . '/jquery/plugins/concrete/jquery.concrete.js');
+		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-concrete/jquery.class.js');
+		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-concrete/jquery.selector.js');
+		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-concrete/jquery.selector.specifity.js');
+		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-concrete/jquery.selector.matches.js');
+		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-concrete/jquery.dat.js');
+		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-concrete/jquery.concrete.js');
 		
 		Requirements::javascript(SAPPHIRE_DIR . '/javascript/TabSet.js');
 		

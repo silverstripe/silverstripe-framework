@@ -79,8 +79,9 @@ class SelectionGroup extends CompositeField {
 	}
 	
 	function FieldHolder() {
-		Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
-		Requirements::javascript(THIRDPARTY_DIR . '/jquery/plugins/livequery/jquery.livequery.js');
+		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/prototype/prototype.js');
+		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/behaviour/behaviour.js');
+		Requirements::javascript(SAPPHIRE_DIR . '/javascript/prototype_improvements.js');
 		Requirements::javascript(SAPPHIRE_DIR . '/javascript/SelectionGroup.js');
 		Requirements::css(SAPPHIRE_DIR . '/css/SelectionGroup.css');
 		
