@@ -11,7 +11,9 @@
 			this.rewriteHashlinks();
 
 			// Initialize jQuery UI tabs
-			this.tabs();
+			this.tabs({
+				cookie: $.cookie ? { expires: 30, path: '/' } : false
+			});
 		},
 			
 		/**
