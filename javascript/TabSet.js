@@ -27,13 +27,6 @@
 				var href = $(this).attr('href').replace(/.*(#.*)/, '$1');
 				if(href) $(this).attr('href', href);
 			})
-		},
-		
-		/**
-		 * If tab has no nested tabs, set overflow to auto
-		 */
-		setOverflows: function() {
-			$(this).find('.tab').not(':has(.tab)').css('overflow', 'auto');
 		}
 	});
 })(jQuery);
