@@ -106,11 +106,13 @@ var console;
 			namespaces[name] = this;
 			
 			var self = this;
+			
 			this.$ = function() {
 				var jq = $.apply(window, arguments);
 				jq.namespace = self;
 				return jq;
 			}
+			$.extend(this.$, $);
 		},
 		
 		/**
