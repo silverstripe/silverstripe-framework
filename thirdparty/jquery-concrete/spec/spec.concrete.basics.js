@@ -2,71 +2,77 @@
 describe 'Concrete'
   describe 'Basics'
     before
-	 	$.concrete.warningLevel = $.concrete.WARN_LEVEL_BESTPRACTISE;
-      $('body').append('<div id="dom_test"></div>')
+      $.concrete.warningLevel = $.concrete.WARN_LEVEL_BESTPRACTISE;
+      $('body').append('<div id="dom_test"></div>');
     end
     after
-      $('#dom_test').remove()
+      $('#dom_test').remove();
     end
   
     before_each
-      $.concrete.clear_all_rules()
-      $('#dom_test').html('<div id="a" class="a b c"></div><div id="b" class="c d e"></div>')
+      $.concrete.clear_all_rules();
+      $('#dom_test').html('<div id="a" class="a b c"></div><div id="b" class="c d e"></div>');
     end
 
     it 'can attach and call a base function'
       $('#a').concrete({
         foo: function(){return this.attr('id');}
       });
-	   $('.a').foo().should.equal 'a'
+      $('.a').foo().should.equal 'a'
     end
 
     it 'can attach and call several base functions'
       $('#a').concrete({
         foo: function(){return 'foo_' + this.attr('id');},
         bar: function(){return 'bar_' + this.attr('id');}
-      });
-	   $('.a').foo().should.equal 'foo_a'
-	   $('.a').bar().should.equal 'bar_a'
+      }); 
+      $('.a').foo().should.equal 'foo_a'
+      $('.a').bar().should.equal 'bar_a'
     end
-	 
+
     it 'can attach and call a namespaced function'
-      $('#a').concrete('bar', function($){return{
-        foo: function(){return this.attr('id');}
-      }});
-		$('.a').concrete('bar').foo().should.equal 'a'
+      $.concrete('bar', function($){
+        $('#a').concrete({
+          foo: function(){return this.attr('id');}
+        });
+      });
+      $('.a').concrete('bar').foo().should.equal 'a'
     end
-	
+
     it 'can attach and call a nested namespaced function'
-      $('#a').concrete('qux.baz.bar', function($){return{ 
-        foo: function(){return this.attr('id');}
-      }});
-		$('.a').concrete('qux.baz.bar').foo().should.equal 'a'
+      $.concrete('qux.baz.bar', function($){
+        $('#a').concrete({
+          foo: function(){return this.attr('id');}
+        });
+      });
+      $('.a').concrete('qux.baz.bar').foo().should.equal 'a'
     end
-	 
-	 it 'can call two functions on two elements'
+
+    it 'can call two functions on two elements'
       var res = []
       $('#a').concrete({
-        foo: function(){res.push(this.attr('id'));},
-		})
+        foo: function(){res.push(this.attr('id'));}
+      });
       $('#b.c').concrete({
-        foo: function(){res.push(this.attr('id'));},
-		})
+        foo: function(){res.push(this.attr('id'));}
+      });
       $('#dom_test div').foo();
       res.should.eql ['b', 'a']
     end
-	 
-	 it 'can call two namespaced functions on two elements'
+
+    it 'can call two namespaced functions on two elements'
       var res = []
-      $('#a').concrete('bar', function($){return{
-        foo: function(){res.push(this.attr('id'));},
-		}})
-      $('#b.c').concrete('bar', function($){return{
-        foo: function(){res.push(this.attr('id'));},
-		}})
+      $.concrete('bar', function($){
+        $('#a').concrete({
+          foo: function(){res.push(this.attr('id'));}
+        });
+        $('#b.c').concrete({
+          foo: function(){res.push(this.attr('id'));}
+        });
+      });
       $('#dom_test div').concrete('bar').foo();
       res.should.eql ['b', 'a']
     end
-	 
+
   end
 end

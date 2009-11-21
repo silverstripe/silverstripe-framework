@@ -163,11 +163,13 @@ h2. Namespaces
 To avoid name clashes, to allow multiple bindings to the same event, and to generally seperate a set of functions from other code you can use namespaces
 
 <pre><code>
-  $('div').concrete('foo.bar', function($){ return {
+  $.concrete('foo.bar', function($){
+    $('div').concrete({
       baz: function(){}
-  }});
+    });
+  });
 </code></pre>
-  
+
 You can then call these functions like this:
 
 <pre><code>
@@ -182,9 +184,11 @@ This is particularly useful for events, because given this:
     onclick: function(){ this.css({backgroundColor: 'blue'}); }
   });
   
-  $('div').concrete('foo', function($){ return {
+  $.concrete('foo', function($){
+    $('div').concrete({
       onclick: function(){ this.css({color: 'green'}); }
-  }});
+    });
+  });
 </code></pre>
   
 Clicking on a div will change the background **and** foreground color.
@@ -199,9 +203,11 @@ Inside a namespace definition, functions remember the namespace they are in, and
 Where they don't exist, they will be looked up in the base namespace
 
 <pre><code>
-  $('div').concrete('foo', {
-    bar: function() { this.baz(); this.qux(); }
-    baz: function() { console.log('baz'); }
+  $.concrete('foo', function($){
+    $('div').concrete({
+      bar: function() { this.baz(); this.qux(); }
+      baz: function() { console.log('baz'); }
+    })
   })
   
   $('div').concrete({
@@ -220,12 +226,15 @@ Note that 'exists' means that a function is declared in this namespace for _any_
 And the concrete definitions
 
 <pre><code>
-  $('div').concrete('foo', {
-    bar: function() { this.baz(); }
+  $.concrete('foo', function($){
+    $('div').concrete({
+      bar: function() { this.baz(); }
+    });
+    $('span').concrete({
+      baz: function() { console.log('a'); }
+    });
   })
   
-  $('span').concrete('foo' {
-    baz: function() { console.log('a'); }
   
   $('div').concrete({
     baz: function() { console.log('b'); }
@@ -234,17 +243,7 @@ And the concrete definitions
 
 Then doing $('div').bar(); will _not_ display b. Even though the span rule could never match a div, because baz is defined for some rule in the foo namespace, the base namespace will never be checked
 
-h4. Cleaner namespace blocks
-
-When declaring a lot of namespaces, you can declare the namespace seperately from the concrete definitions, like so
-
-<pre><code>
-  $.concrete('foo', function($){
-    $('div').concrete({
-      bar: function() { .. }
-    })
-  })
-</code></pre>
+h4. Nesting namespace blocks
 
 You can also nest declarations. In this next example, we're defining the functions $().concrete('zap').bar() and $().concrete('zap.pow').baz()
 
@@ -268,8 +267,10 @@ Inside a namespace, namespace lookups are by default relative to the current nam
 In some situations (such as the last example) you may want to force using the base namespace. In this case you can call concrete with the first argument being the base namespace code '.'. For example, if the first definition in the previous example was
 
 <pre><code>
-  $('div').concrete('foo', {
-    bar: function() { this.concrete('.').baz(); }
+  $.concrete('foo', function($){
+    $('div').concrete({
+      bar: function() { this.concrete('.').baz(); }
+    })
   })
 </code></pre>
 
@@ -280,11 +281,15 @@ h4. Using
 Sometimes a block outside of a namespace will need to refer to that namespace repeatedly. By passing a function to the concrete function, you can change the looked-up namespace
 
 <pre><code>
-  $('div').concrete('foo', {
-    bar: function() { console.log('a'); }
+  $.concrete('foo', function($){
+    $('div').concrete({
+      bar: function() { console.log('a'); }
+    })
   })
   
   $('div').concrete('foo', function(){
+    this.bar();
+    this.bar();
     this.bar();
   });
 </code></pre>

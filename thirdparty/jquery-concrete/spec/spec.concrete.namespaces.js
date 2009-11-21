@@ -109,7 +109,7 @@ describe 'Concrete'
     it 'internal to namespace, will look up functions in base when not present in namespace'
       var res = []
       $('#a').concrete({
-        foo: function(){res.push(1);},
+        foo: function(){res.push(1);}
       })
       $('#a').concrete('bar', function($){return{
         bar: function(){res.push(2); this.foo();}
@@ -121,10 +121,10 @@ describe 'Concrete'
     it 'internal to namespace, will not look up functions in base if present in namespace, even when not applicable to selector'
       var res = []
       $('#a').concrete('bar', function($){return{
-        foo: function(){this.bar();},
+        foo: function(){this.bar();}
       }})
       $('#a').concrete({
-        bar: function(){res.push(1);},
+        bar: function(){res.push(1);}
       })
       $('span').concrete('bar', function($){return{
         bar: function(){res.push(2);}
@@ -227,10 +227,10 @@ describe 'Concrete'
     it 'using block functions'
       var res = []
       $('#a').concrete({
-        foo: function(){res.push(1);},
+        foo: function(){res.push(1);}
       })
       $('#a').concrete('bar', function($){return{
-        foo: function(){res.push(3);},
+        foo: function(){res.push(3);}
       }})
       
       $('#dom_test div').foo();

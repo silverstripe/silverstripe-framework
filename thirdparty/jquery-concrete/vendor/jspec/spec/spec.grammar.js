@@ -216,3 +216,11 @@ describe 'Grammar'
   end
   
 end
+
+__END__
+
+describe 'Grammar'
+  it 'should consider everything below __END__ a comment'
+    
+  end
+end

@@ -1,6 +1,6 @@
 
 describe 'JSpec'
-  describe '.mockRequest'
+  describe 'Mock XHR'
     before
       responseFrom = function(path) {
         request = new XMLHttpRequest
@@ -8,6 +8,11 @@ describe 'JSpec'
         request.send(null)
         return request.responseText
       }
+    end
+    
+    it 'should provide snake DSL methods'
+      mock_request.should.equal mockRequest
+      unmock_request.should.equal unmockRequest
     end
     
     it 'should mock XMLHttpRequests if unmockRequest() is called or the spec block has finished'

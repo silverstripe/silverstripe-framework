@@ -33,6 +33,7 @@ and much more.
 * Method Stubbing
 * Shared behaviors
 * Profiling
+* Interactive Shell
 * Ruby on Rails Integration
 * Tiny (15 kb compressed, 1300-ish LOC)
 
@@ -42,12 +43,18 @@ Simply download JSpec and include JSpec.css and JSpec.js in your markup.
 Head over to the downloads section on Github, clone this public repo, or 
 add JSpec as a git submodule with in your project. Alternatively JSpec is
 also available as a Ruby Gem (though this is not required), which also 
-provides the `jspec` executable. To install execute:
-  $ gem sources -a http://gems.github.com    (if you have not previously done so)
-  $ sudo gem install visionmedia-jspec 
+provides the `jspec` executable. First install [Gemcutter](http://gemcutter.org/) then execute:
+  $ sudo gem install jspec 
 
 At which point you may:
   $ jspec init myproject
+
+By default, the command above will use absolute path for all JSpec library files.
+This behavior can be a problem when you're working across different computers or
+operating systems. You can freeze the library or symlink it.
+
+  $ jspec init myproject --freeze
+  $ jspec init myproject --symlink
 
 JSpec scripts should NOT be referenced via the <script> tag, they should be
 loaded using the exec method (unless you are using the grammar-less alternative).
@@ -125,9 +132,10 @@ JSpec.options hash, by passing string-based option values via the
 query string, or passing a hash to run(). For example 
 JSpec.options.failuresOnly = true, and ?failuresOnly=1 will both work.
 
-* profile {bool} when enabled, uses console.time() in order to display performance information in your console log as specs are completed. (DOM, Console)
-* failuresOnly {bool} displays only failing specs, making them quick to discover and fix (DOM, Terminal)
-* reportToId {string} an element id to report to when using the DOM formatter (DOM)
+* profile       {bool} when enabled, uses console.time() in order to display performance information in your console log as specs are completed. (DOM, Console)
+* failuresOnly {bool} displays only failing specs, making them quick to discover and fix (DOM, Terminal, Server)
+* reportToId   {string} an element id to report to when using the DOM formatter (DOM)
+* verbose      {bool} verbose server output, defaults to false (Server)
   
 == Matchers
 
@@ -188,6 +196,44 @@ JSpec.options.failuresOnly = true, and ?failuresOnly=1 will both work.
   - be_disabled
   - be_selected
   - be_checked
+  
+== Async Support With Mock Timers
+
+The javascript mock timers library is available at http://github.com/visionmedia/js-mock-timers
+although it is already bundled with JSpec at lib/jspec.timers.js
+
+Timers return ids and may be passed to clearInterval(), however
+they do not execute in threads, they must be manually scheduled and
+controlled via the tick() function.
+
+  setTimeout(function(){
+    alert('Wahoo!')
+  }, 400)
+  
+  tick(200) // Nothing happens
+  tick(400) // Wahoo!
+  
+setInterval() works as expected, although it persists, where as setTimeout() 
+is destroyed after a single call. As conveyed by the last tick() call below,
+a large increment in milliseconds may cause the callbacks to be called several times
+to 'catch up'.
+
+  progress = ''
+  var id = setInterval(function(){
+    progress += '.'
+  }, 100)
+  
+  tick(50),  print(progress) // ''
+  tick(50),  print(progress) // '.'
+  tick(100), print(progress) // '..'
+  tick(100), print(progress) // '...'
+  tick(300), print(progress) // '......'
+  
+  clearInterval(id)
+  
+  tick(800) // Nothing happens
+  
+You may also reset at any time using resetTimers()
 
 == Proxy Assertions
 
@@ -242,9 +288,9 @@ on any object when using the JSpec grammar:
 
   * Core
 
-  - an_instance_of   used in conjunction with the 'receive' matcher
-  - mockRequest      mock a request (requires jspec.xhr.js)
-  - unmockRequest    unmock requests (requests jspec.xhr.js)
+  - an_instance_of                 used in conjunction with the 'receive' matcher
+  - mockRequest, mock_request      mock a request (requires jspec.xhr.js)
+  - unmockRequest, unmock_request  unmock requests (requests jspec.xhr.js)
                 
   * jQuery      
                 
@@ -530,11 +576,13 @@ example view lib/jspec.jquery.js.
 
 The following methods or properties are utilized by JSpec:
 
-  - init      : called to initialize a module
-  - utilities : hash of utility functions merged with JSpec.defaultContext
-  - matchers  : hash of matchers merged with JSpec's core matchers via JSpec.addMatchers()
-  - DSLs      : hash of DSL methods; for example DSLs.snake contains before_each, after_each, etc.
-                Where as DSLs.camel may contain beforeEach, afterEach, etc.
+  - name       : module name string
+  - init       : called to initialize a module
+  - formatters : hash of formatters merged with JSpec.formatters
+  - utilities  : hash of utility functions merged with JSpec.defaultContext
+  - matchers   : hash of matchers merged with JSpec's core matchers via JSpec.addMatchers()
+  - DSLs       : hash of DSL methods; for example DSLs.snake contains before_each, after_each, etc.
+                 Where as DSLs.camel may contain beforeEach, afterEach, etc.
 
 Below is a list of hooks, descriptions, and valid return values which
 may simply be implemented as module methods. beforeSuite, afterSuite, beforeSpec, and afterSpec have lower
@@ -545,7 +593,6 @@ anything that has been done by a Module.
   - loading(file)                    : loading a file                                   : returning 'stop' will prevent loading
   - executing(file)                  : executing a file                                 : returning 'stop' will prevent execution 
   - posting(data, url)               : posting data to a url                            : returning 'stop' will prevent request
-  - reportingToServer(url)           : reporting to server url                          : returning 'stop' will prevent reporting to server
   - preprocessing(input)             : before input string is preprocessed              : return input string for next hook to preprocess
   - stubbing(object, method, result) : called when stubbing an object's method, and return value (result). : (no return value)
   - requiring(dependency, message)   : requiring a dependency                           : (no return value) 
@@ -631,13 +678,49 @@ back to the terminal. It is essentially the same as using the DOM formatter
 and auto-testing each browser, however results are centralized to the terminal,
 removing the need to manually view each browser's output.
 
-Initialize project with:
-  $ jspec init myproject 
+When utilizing the server if a file named spec/jspec.rb (or jspec/jspec.rb for rails)
+is present, then it will be loaded before the server is started. This allows you to
+add Sinatra routes, support additional Browsers, etc.
 
-Run with:
+Run with all supported browsers:
   $ jspec run --server
   
+Run with specific browsers:
+  $ jspec run --browsers Safari,Firefox,Chrome,Explorer
   
+Run with alternative browser names:
+  $ jspec run --browsers safari,ff,chrome,ie
+  
+Browsers supported in core:
+  Browser::Safari
+  Browser::Chrome
+  Browser::Opera
+  Browser::Firefox
+  Browser::IE
+  
+Supplied routes:
+  /slow/NUMBER
+  /status/NUMBER
+  
+For example $.get('/slow/4', function(){}) will take 4 seconds
+to reply, where as $.get('/status/404', function(){}) will respond
+with an 404 status code. Add additional Sinatra routes to the jspec.rb
+file to add your own functionality.
+
+== Interactive Shell
+
+JSpec provides an interactive shell through Rhino, utilize with:
+
+$ jspec shell
+
+Or to specify additional files to load:
+
+$ jspec shell lib/*.js
+
+Or view additional shell help
+
+$ jspec help shell
+
 == Ruby on Rails
 
 No additional gems are required for JSpec to work with rails, although 
@@ -660,6 +743,17 @@ Or run via the terminal using Rhino:
 
   $ jspec run --rhino
   
+== Support Browsers
+
+Browsers below are supported and can be found in server/browsers.rb, however
+your spec/server.rb file may support additional browsers.
+
+* Safari
+* Chrome
+* Firefox
+* Opera
+* Internet Explorer
+  
 == Known Issues
 
 * Tabs may cause a parse error. To prevent this use 'soft tabs' (setting in your IDE/Editor)
@@ -677,8 +771,13 @@ Or run via the terminal using Rhino:
     return 'html'
   })
   
+== Additional JSpec Modules
+
+* JSocka stubbing http://github.com/gisikw/jsocka/tree/master
+  
 == More Information
 
+* IRC Channel irc://irc.freenode.net#jspec
 * Featured article in JSMag: http://www.jsmag.com/main.issues.description/id=21/
 * Syntax comparison with other frameworks http://gist.github.com/92283
 * Get the TextMate bundle at https://github.com/visionmedia/jspec.tmbundle/tree
@@ -694,7 +793,9 @@ JSpec more enjoyable, and bug free ;)
 * Lawrence Pit
 * mpd@jesters-court.ne
 * kevin.gisi@gmail.com
+* tony_t_tubbs@yahoo.com
 * enno84@gmx.net
+* fnando
 
 == License 
 

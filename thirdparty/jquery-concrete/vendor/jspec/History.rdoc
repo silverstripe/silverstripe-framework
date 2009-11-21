@@ -1,4 +1,83 @@
 
+=== 2.11.7 / 2009-10-15
+
+* Fixed minor grammar issues for windows users [thanks Tony]
+* Fixes installation issue when XCode is not present; changed dependency json -> json_pure [thanks esbie]
+* Fixed Chrome#visit; latest builds of Chrome for the mac are now "Google Chrome"
+
+=== 2.11.6 / 2009-10-12
+
+* Added Tony to contributor list
+* Removed JSpec.paramsFor()
+* Removed module contexts [#72]
+* Fixed some css styling issues in IE8 [#71]
+* Fixed; DOM formatter supporting \r\n \r \n for EOL in the body source [Thanks Tony]
+* Fixed "Access is denied" error in IE
+* Fixed some css support for older browsers [Thanks Tony]
+
+=== 2.11.5 / 2009-10-10
+
+* Fixed dependencies (created by github's gem builder removal)
+
+=== 2.11.4 / 2009-10-10
+
+* Updated installation docs
+* Removed namespaced dependencies (thanks alot github...)
+
+=== 2.11.3 / 2009-09-30
+
+* Updated to mock timers 1.0.1
+  fixes an issue where setTimeout(function(){}, 0); tick(100) is never called
+
+=== 2.11.2 / 2009-09-21
+
+* Fixed example path in rails template
+
+=== 2.11.1 / 2009-09-10
+
+* Fixed JSpec root when using --symlink, --freeze [#36]
+* Added __END__ to the grammar (works like Ruby's __END__)
+
+=== 2.11.0 / 2009-09-04
+
+* Added --symlink switch (links the current version of JSpec to ./spec/lib) [#4]
+* Added --freeze switch (copies the current version of JSpec to ./spec/lib) [#4]
+
+=== 2.10.1 / 2009-09-02
+
+* Added `jspec shell` sub command (interactive Rhino shell through JSpec)
+* Added jspec.shell.js
+
+=== 2.10.0 / 2009-08-27
+
+* Added Async support via mock timers (lib/jspec.timers.js) [#19]
+* IRC channel up and running! irc://irc.freenode.net#jspec
+
+=== 2.9.1 / 2009-08-21
+
+* Added module support for formatters
+
+=== 2.9.0 / 2009-08-21
+
+* Server output matching Rhino when using verbose or failuresOnly options
+* Added mock_request() and unmock_request() as aliases for mockRequest() and unmockRequest()
+* Added JSpec.JSON.encode()
+* Added default Sinatra routes /slow/NUMBER and /status/NUMBER for simulating
+  slow reponses and HTTP status codes.
+* Added server support for loading spec/jspec.rb (or jspec/jspec.rb for rails)
+  Allowing additional browser support to be plugged in, as well as Sinatra routes.
+* Added dependency for Sinatra (new server)
+* Added a new Ruby server
+* Added support for --bind and --server on various platforms
+* Added Google Chrome support
+* Added Internet Explorer support
+* Change; --server without --browsers defaults to all supported browsers
+* Removed JSpec.reportToServer()
+  Now utilizes JSpec.formatters.Server to handle this 
+  functionality.
+* Fixed Server output escaping (removed html escaping from puts()) [#13]
+* Fixed JSpec.load(); returns responseText when 2xx or 0 (for file://)
+
 === 2.8.4 / 2009-08-02
 
 * Fixed error thrown when a module has no utilities

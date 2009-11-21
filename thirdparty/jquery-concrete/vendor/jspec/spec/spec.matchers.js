@@ -299,6 +299,7 @@ describe 'Matchers'
         addPets  : function(a, b) { return ['izzy', a, b] }
       }
     end
+    
     it 'should pass when the method is invoked'
       personWithPets.should.receive('getPets')
       personWithPets.getPets()

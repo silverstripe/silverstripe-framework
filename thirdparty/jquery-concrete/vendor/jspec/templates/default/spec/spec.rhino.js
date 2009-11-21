@@ -4,5 +4,5 @@ load('lib/yourlib.core.js')
 
 JSpec
 .exec('spec/spec.core.js')
-.run({ formatter : JSpec.formatters.Terminal })
+.run({ formatter: JSpec.formatters.Terminal })
 .report()

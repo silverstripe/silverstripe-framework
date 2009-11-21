@@ -1,13 +1,13 @@
 <html>
 	<head>
-		<script src="jspec.js"></script>
-		<script src="../public/javascripts/application.js"></script>
+		<script src="/jspec/jspec.js"></script>
+		<script src="/public/javascripts/application.js"></script>
 		<script>
 			function runSuites() {
 				JSpec
 				.exec('spec.application.js')
-				.run()
-				.reportToServer()
+				.run({ formatter: JSpec.formatters.Server, verbose: true, failuresOnly: true })
+				.report()
 			}
 		</script>
 	</head>

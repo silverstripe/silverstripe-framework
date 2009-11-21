@@ -19,22 +19,6 @@ describe 'JSpec'
       it 'should run afterSuite'
         addedAfterSuite.should.be_true
       end
-    
-      it 'should run in context with JSpec'
-        hook('checkJSpecContext')[0].should.equal JSpec.each
-      end
-      
-      it 'should run in context to JSpecs default context'
-        hook('checkContext')[0].should.eql fixture('test')
-      end
-      
-      it 'should run in context to the module itself'
-        hook('checkModuleContext')[0].should.eql 'ExampleModule'
-      end
-      
-      it 'should run in context to the modules utilities'
-        hook('checkUtilityContext')[0].should.eql 'foo'
-      end
     end
     
     describe '.hook()'

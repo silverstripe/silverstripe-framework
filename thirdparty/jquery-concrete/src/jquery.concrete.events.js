@@ -144,6 +144,7 @@
 		order: 40,
 		
 		bind: function(selector, k, v){
+			var match, event;
 			if ($.isFunction(v) && (match = k.match(/^on(.*)/))) {
 				event = match[1];
 				this.bind_event(selector, k, v, event);

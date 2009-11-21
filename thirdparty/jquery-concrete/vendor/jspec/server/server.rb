@@ -1,100 +1,88 @@
 
-require 'rubygems'
-require 'rack'
-require 'server/browsers'
+$:.unshift File.dirname(__FILE__) 
+
+require 'sinatra'
+require 'thread'
+require 'browsers'
+require 'helpers'
+require 'routes'
 
 module JSpec
   class Server
-    attr_reader :responses, :browsers, :root
     
-    def initialize options = {}
-      @responses = []
-      @browsers = options.delete :browsers
-      @root = options.delete :root
-    end
+    ##
+    # Suite HTML.
     
-    def call env
-      request = Rack::Request.new env
-      path = request.path_info
-      body = case path
-      when '/'
-        agent = env['HTTP_USER_AGENT']
-        responses << browser(agent)
-        display_results browser(agent), request['failures'], request['passes']
-        type = 'text/plain'
-        'close'
-      when /jspec/
-        type = 'application/javascript'
-        File.read File.join(JSPEC_ROOT, 'lib', File.basename(path))
-      else
-        type = Rack::Mime.mime_type File.extname(path)
-        File.read File.join(root, path) rescue ''
-      end
-      [200, { 'Content-Type' => type, 'Content-Length' => body.length.to_s }, body]
-    end
-
-    def display_results browser, failures, passes
-      puts '%-14s - passes: %s failures: %s' % [bold(browser), green(passes), red(failures)]
-    end
-
-    def browser string
-      case string
-      when /Safari/  ; :Safari
-      when /Firefox/ ; :Firefox
-      when /MSIE/    ; :MSIE
-      when /Opera/   ; :Opera
-      end
-    end
-
-    def bold string
-      color string, 1
-    end
-
-    def red string
-      color string, 31
-    end
-
-    def green string
-      color string, 32
-    end
-
-    def color string, code
-      "\e[#{code}m#{string}\e[m"
+    attr_accessor :suite
+    
+    ##
+    # Host string.
+    
+    attr_reader :host
+    
+    ##
+    # Port number.
+    
+    attr_reader :port
+    
+    ##
+    # Server instance.
+    
+    attr_reader :server
+    
+    ##
+    # Initialize.
+    
+    def initialize suite, port
+      @suite, @port, @host = suite, port, :localhost
     end
     
-    def when_finished &block
-      Thread.new {
-        sleep 0.1 while responses.length < browsers.length
-        yield
-      }
+    ##
+    # URI formed by the given host and port.
+    
+    def uri
+      'http://%s:%d' % [host, port]
     end
     
-    def self.start options, spec
-      app = Rack::Builder.new do
-        server = JSpec::Server.new :browsers => options.browsers, :root => '.'
-        server.when_finished { exit }
-        run server
-      end
-      unless options.server_only
-        Thread.new { 
-          sleep 2
-          puts "Running browsers: #{options.browsers.join(', ')}\n\n"
-          run_browsers options.browsers, spec
+    ##
+    # Start the server with _browsers_ which defaults to all supported browsers.
+    
+    def start browsers = nil
+      browsers ||= Browser.subclasses.map { |browser| browser.new }
+      browsers.map do |browser|
+        Thread.new {
+          sleep 1
+          if browser.supported?
+            browser.setup
+            browser.visit uri + '/' + suite
+            browser.teardown
+          end
         }
-      end
-      puts "JSpec server started\n"
-      Rack::Handler::Mongrel.run app, :Port => 4444
-      self
+      end.push(Thread.new {
+        start!
+      }).reverse.each { |thread| thread.join }
     end
     
-    def self.run_browsers browsers, spec
-      browsers.each do |name|
-        browser(name).open "http://localhost:4444/#{spec}"
+    private
+    
+    #:nodoc:
+    
+    def start!
+      Sinatra::Application.class_eval do
+        begin
+          $stderr.puts 'Started JSpec server at http://%s:%d' % [host, port.to_i]
+          detect_rack_handler.run self, :Host => host, :Port => port do |server|
+            trap 'INT' do
+              server.respond_to?(:stop!) ? server.stop! : server.stop
+            end
+          end
+        rescue Errno::EADDRINUSE
+          raise "Port #{port} already in use"
+        rescue Errno::EACCES
+          raise "Permission Denied on port #{port}"
+        end
       end
     end
     
-    def self.browser name
-      eval("JSpec::Browser::#{name}").new
-    end
   end
 end

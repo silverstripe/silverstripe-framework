@@ -1,7 +1,7 @@
 
 load('lib/jspec.js')
 load('lib/jspec.xhr.js')
-load('spec/modules.js')
+load('spec/helpers.js')
 load('spec/spec.grammar-less.js')
 
 JSpec
