@@ -338,22 +338,24 @@ class Security extends Controller {
 			// with the tabstrip library otherwise
 			$link_base = Director::absoluteURL($this->Link("login"));
 			
-			Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery/jquery.js');
-			Requirements::javascript(SAPPHIRE_DIR . "/javascript/jquery_improvements.js");
-			Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-ui/jquery-ui.js');
-			Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-ui/ui.core.js');
-			Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-ui/ui.tabs.js');
+			Requirements::javascript(THIRDPARTY_DIR . "/jquery/jquery-latest.js");
+			Requirements::javascript(THIRDPARTY_DIR . "/jquery/jquery_improvements.js");
+			Requirements::javascript(THIRDPARTY_DIR . '/jquery/ui/jquery-ui.js');
+			Requirements::javascript(THIRDPARTY_DIR . '/jquery/ui/ui.core.js');
+			Requirements::javascript(THIRDPARTY_DIR . '/jquery/ui/ui.tabs.js');
 			
 			// concrete
-			Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-concrete/jquery.class.js');
-			Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-concrete/jquery.selector.js');
-			Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-concrete/jquery.selector.specifity.js');
-			Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-concrete/jquery.selector.matches.js');
-			Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-concrete/jquery.dat.js');
-			Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-concrete/jquery.concrete.js');
+			Requirements::javascript(THIRDPARTY_DIR . '/jquery/plugins/concrete/jquery.class.js');
+			Requirements::javascript(THIRDPARTY_DIR . '/jquery/plugins/concrete/jquery.selector.js');
+			Requirements::javascript(THIRDPARTY_DIR . '/jquery/plugins/concrete/jquery.selector.specifity.js');
+			Requirements::javascript(THIRDPARTY_DIR . '/jquery/plugins/concrete/jquery.selector.matches.js');
+			Requirements::javascript(THIRDPARTY_DIR . '/jquery/plugins/concrete/jquery.dat.js');
+			Requirements::javascript(THIRDPARTY_DIR . '/jquery/plugins/concrete/jquery.concrete.js');
 			
-			Requirements::css(SAPPHIRE_DIR . '/thirdparty/jquery-ui-themes/smoothness/ui.all.css');
-			Requirements::css(SAPPHIRE_DIR . '/thirdparty/jquery-ui-themes/smoothness/ui.tabs.css');
+			Requirements::css(THIRDPARTY_DIR . '/jquery/themes/smoothness/ui.all.css');
+			Requirements::css(THIRDPARTY_DIR . '/jquery/themes/smoothness/ui.tabs.css');
+			
+			Requirements::javascript(SAPPHIRE_DIR . '/javascript/TabSet.js');
 			
 			$content = '<div id="Form_EditForm">';
 			$content .= '<div class="ss-tabset">';
