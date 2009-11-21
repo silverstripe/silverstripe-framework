@@ -1,0 +1,73 @@
+.clr {
+	clear:both;
+}
+
+/* SWFUpload CSS */
+
+.swfuploadbtn {
+	display: block;
+	width: 100px;
+	padding: 0 0 0 20px;
+	line-height: 16px;
+}
+
+
+.browsebtn {
+	background: url(swfupload.v102.add.png) no-repeat 0 0px;
+}
+
+.uploadbtn { 
+	display: none;
+	background: url(swfupload.v102.accept.png) no-repeat 0 0px; 
+}
+
+.cancelbtn { 
+	display: block;
+	width: 16px;
+	height: 16px;
+	float: right;
+	background: url(swfupload.v102.cancel.png) no-repeat; 
+}
+
+#cancelqueuebtn {
+	display: none;
+	background-image: url(swfupload.v102.cancel.png);
+	background-repeat: no-repeat;
+	background-position: 0px 0px;
+	background-attachment: scroll;
+	margin: 10px 0;
+	line-height: 16px;
+}
+
+#SWFUploadFileListingFiles ul {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+.SWFUploadFileItem {
+	display: block;
+	width: 230px;
+	height: 70px;
+	float: left;
+	background: #eaefea;
+	margin: 0 10px 10px 0;
+	padding: 5px;
+}
+.fileUploading { background: #fee727; }
+.uploadCompleted { background: #d2fa7c; }
+.uploadCancelled { background: #f77c7c; }
+
+.uploadCompleted .cancelbtn, .uploadCancelled .cancelbtn {
+	display: none;
+	
+}
+
+span.progressBar {
+	width: 200px;
+	display: block;
+	font-size: 10px;
+	height: 4px;
+	margin-top: 2px;
+	margin-bottom: 10px;
+	background-color: #CCC;
+}

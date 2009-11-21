@@ -1,0 +1,8 @@
+--- 
+format: 1
+handler: 
+  piston:remote-revision: 854
+  piston:uuid: 46bd1c57-1c41-0410-9cc9-652e43039c97
+lock: false
+repository_url: http://swfupload.googlecode.com/svn/swfupload/tags/swfupload_v2.0.1/FlashDevelop
+repository_class: Piston::Svn::Repository

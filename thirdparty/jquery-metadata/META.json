@@ -1,0 +1,33 @@
+{
+	"name": "jQuery-Metadata",
+	"version": 2.0,
+	"author": [
+		"John Resig <jeresig@gmail.com>",
+		"Jörn Zaefferer <joern.zaefferer@gmail.com>",
+		"Paul McLanahan <pmclanahan@gmail.com>"
+	],
+	"abstract": "Quietly extract JSON metadata contained within DOM elements.",
+	"license": "mit, gpl",
+	"distribution_type": "extension",
+	"requires": {
+		"jQuery": 1.2
+	},
+	"build_requires": {
+		"jQuery-testrunner": 0
+	},
+	"provides": {
+		"jQuery.Metadata": {
+			"version": 2.0,
+			"file": "jquery.metadata.js"
+		}
+	},
+	"keywords": [
+		"data",
+		"utility"
+	],
+	"meta-spec": {
+		"version": 1.3,
+		"url": "http://module-build.sourceforge.net/META-spec-v1.3.html"
+	},
+	"generated_by": "John Resig"
+}

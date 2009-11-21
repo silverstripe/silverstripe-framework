@@ -1,0 +1,8 @@
+--- 
+format: 1
+handler: 
+  piston:remote-revision: 6522
+  piston:uuid: c715fcbe-d12f-0410-84c4-316a508785bb
+lock: false
+repository_url: http://jqueryjs.googlecode.com/svn/tags/plugins/metadata/2.0/
+repository_class: Piston::Svn::Repository
