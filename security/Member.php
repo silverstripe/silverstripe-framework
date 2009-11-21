@@ -1325,7 +1325,6 @@ class Member_ProfileForm extends Form {
 		Requirements::javascript(SAPPHIRE_DIR . "/javascript/prototype_improvements.js");
 		Requirements::javascript(SAPPHIRE_DIR . "/thirdparty/scriptaculous/scriptaculous.js");
 		Requirements::javascript(SAPPHIRE_DIR . "/thirdparty/scriptaculous/controls.js");
-		Requirements::javascript(THIRDPARTY_DIR . "/layout_helpers.js");
 		Requirements::css(SAPPHIRE_DIR . "/css/Form.css");
 		
 		Requirements::css(SAPPHIRE_DIR . "/css/MemberProfileForm.css");

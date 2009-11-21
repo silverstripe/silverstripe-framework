@@ -1077,7 +1077,6 @@ class ComplexTableField_Popup extends Form {
 		Requirements::javascript(SAPPHIRE_DIR . "/javascript/prototype_improvements.js");
 		Requirements::javascript(SAPPHIRE_DIR . "/thirdparty/scriptaculous/scriptaculous.js");
 		Requirements::javascript(SAPPHIRE_DIR . "/thirdparty/scriptaculous/scriptaculous/controls.js");
-		Requirements::javascript(THIRDPARTY_DIR . "/layout_helpers.js");
 		Requirements::add_i18n_javascript(SAPPHIRE_DIR . '/javascript/lang');
 		Requirements::javascript(SAPPHIRE_DIR . "/javascript/ComplexTableField_popup.js");
 
