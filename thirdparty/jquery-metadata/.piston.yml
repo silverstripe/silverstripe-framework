@@ -1,0 +1,8 @@
+--- 
+format: 1
+handler: 
+  commit: 0dbb5ec89ce8f493e33b83433b03d6feaec867fc
+  branch: master
+lock: false
+repository_url: git://github.com/jquery/jquery-metadata.git
+repository_class: Piston::Git::Repository
