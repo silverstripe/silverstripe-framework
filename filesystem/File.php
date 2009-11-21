@@ -389,7 +389,7 @@ class File extends DataObject {
 	}
 
 	function setParentID($parentID) {
-		$this->setField('ParentID', $parentID);
+		$this->setField('ParentID', (int)$parentID);
 
 		if($this->Name) $this->resetFilename();
 		else $this->autosetFilename();
