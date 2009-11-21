@@ -111,6 +111,14 @@ class RedirectorPage extends Page {
 		
 		$fields = parent::getCMSFields();
 		$fields->removeByName('Content', true);
+		
+		// Remove all metadata fields, does not apply for redirector pages
+		$fields->removeByName('MetaTagsHeader');
+		$fields->removeByName('MetaTitle');
+		$fields->removeByName('MetaKeywords');
+		$fields->removeByName('MetaDescription');
+		$fields->removeByName('ExtraMeta');
+		
 		$fields->addFieldsToTab('Root.Content.Main',
 			array(
 				new HeaderField('RedirectorDescHeader',_t('RedirectorPage.HEADER', "This page will redirect users to another page")),
