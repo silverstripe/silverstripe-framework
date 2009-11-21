@@ -6,12 +6,13 @@ UniqueFormField.prototype = {
 		
 		if( this.restrictedValues[suggested] || suggested == null ) {
 			suggested = this.suggestNewValue();
-			statusMessage(ss.i18n.sprintf(
+			var message = i18n.sprintf(
 				ss.i18n._t('UNIQUEFIELD.SUGGESTED', "Changed value to '%s' : %s"),
 				suggested,
 				this.restrictedMessage
-			));
-    		this.value = suggested;
+			);
+			jQuery(this).trigger('validate', {message: message, suggested: suggested});
+			this.value = suggested;
 		}
 	},
 	suggestNewValue: function() {
@@ -108,11 +109,13 @@ UniqueRestrictedTextField.prototype = {
 				message = this.charMessage;
 
 			suggested = this.suggestNewValue();
-			statusMessage(ss.i18n.sprintf(
+			var message = ss.i18n.sprintf(
 				ss.i18n._t('UNIQUEFIELD.SUGGESTED', "Changed value to '%s' : %s"),
 				suggested,
 				message
-			));
+			);
+			
+			jQuery(this).trigger('validate', {message: message, suggested: suggested});
 		}
 		
 		this.value = suggested;
