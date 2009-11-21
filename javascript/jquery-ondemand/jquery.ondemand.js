@@ -1,6 +1,9 @@
 /**
  * On-demand JavaScript handler
- * Based on http://plugins.jquery.com/files/issues/jquery.ondemand.js_.txt and modified to integrate with Sapphire
+ * Based on http://plugins.jquery.com/files/issues/jquery.ondemand.js_.txt 
+ * and modified to integrate with SilverStripe and prototype.js.
+ * Adds capabilities for custom X-Include-CSS and X-Include-JS HTTP headers
+ * to request loading of externals alongside an ajax response.
  * 
  * Modified 2009-08-03 by Ingo Schommer, SilverStripe Ltd. - Renamed property "queue" to "ondemand_queue"
  * to make compatible with jQuery 1.3
@@ -15,14 +18,17 @@
 	$.extend({
 
 		requireConfig : {
-			routeJs		: '',	// empty default paths give more flexibility and user has
-			routeCss	: ''	// choice of using this config or full path in scriptUrl argument
-		},						// previously were useless for users which don't use '_js/' and '_css/' folders.  (by PGA)
+			// empty default paths give more flexibility and user has
+			routeJs		: '',	
+			// choice of using this config or full path in scriptUrl argument
+			// previously were useless for users which don't use '_js/' and '_css/' folders.  (by PGA)
+			routeCss	: ''	
+		},
 
 		ondemand_queue : [],
 		pending : null,
-		loaded_list : null,		// loaded files list - to protect against loading existed file again  (by PGA)
-		
+		// loaded files list - to protect against loading existed file again  (by PGA)
+		loaded_list : null,
 		
 		// Added by SRM: Initialise the loaded_list with the scripts included on first load
 		initialiseItemLoadedList : function() {
@@ -60,8 +66,7 @@
 				scope		: scope
 			}
 
-			if(this.pending)
-			{
+			if(this.pending) {
 				this.ondemand_queue.push(_request);
 				return;
 			}
@@ -70,15 +75,17 @@
 			
 			this.initialiseItemLoadedList();
 
-			if (this.loaded_list[this.pending.url] != undefined) {		// if required file exists  (by PGA)
-				this.requestComplete();									// => request complete
+			// if required file exists  (by PGA)
+			if (this.loaded_list[this.pending.url] != undefined) {		
+				// => request complete
+				this.requestComplete();									
 				return;
 			}
 
-			var _this		= this;
-			var _url		= (isExternalScript(scriptUrl)) ? scriptUrl : $.requireConfig.routeJs + scriptUrl;
-			var _head 		= document.getElementsByTagName('head')[0];
-			var _scriptTag 	= document.createElement('script');
+			var _this = this;
+			var _url = (isExternalScript(scriptUrl)) ? scriptUrl : $.requireConfig.routeJs + scriptUrl;
+			var _head = document.getElementsByTagName('head')[0];
+			var _scriptTag = document.createElement('script');
 
 				// Firefox, Opera
 				$(_scriptTag).bind('load', function(){
@@ -98,8 +105,7 @@
 				_head.appendChild(_scriptTag);
 		},
 
-		requestComplete : function()
-		{
+		requestComplete : function() {
 
 			if(this.pending.callback){
 				if(this.pending.obj){
@@ -112,12 +118,12 @@
 					this.pending.callback.call();
 				}
 			}
-
-			this.loaded_list[this.pending.url] = 1;			// adding loaded file to loaded list  (by PGA)
+			
+			// adding loaded file to loaded list  (by PGA)
+			this.loaded_list[this.pending.url] = 1;			
 			this.pending = null;
 
-			if(this.ondemand_queue.length > 0)
-			{
+			if(this.ondemand_queue.length > 0) {
 				var request = this.ondemand_queue.shift();
 				this.requireJs(request.url, request.callback, request.opts, request.obj, request.scope);
 			}
