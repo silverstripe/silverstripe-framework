@@ -241,6 +241,7 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 		
 		$contentComposite->addExtraClass('content');
 		
+		$form->unsetValidator();
 		$form->loadDataFrom($this);
 		
 		return $form;
@@ -315,6 +316,7 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 		
 		$contentComposite->addExtraClass('content');
 		
+		$form->unsetValidator();
 		$form->disableSecurityToken();
 		$form->loadDataFrom($this);
 		
@@ -351,6 +353,8 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 		);
 		
 		$contentComposite->addExtraClass('content');
+		
+		$form->unsetValidator();
 		
 		$form->loadDataFrom($this);
 		$form->disableSecurityToken();
