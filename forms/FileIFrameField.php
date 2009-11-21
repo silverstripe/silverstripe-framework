@@ -51,7 +51,7 @@ class FileIFrameField extends FileField {
 	public function Field() {
 		Requirements::css(THIRDPARTY_DIR . '/jquery/themes/default/ui.all.css');
 		Requirements::add_i18n_javascript(SAPPHIRE_DIR . '/javascript/lang');
-		Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
+		Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery-latest.js');
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery/ui/ui.core.js');
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery/ui/ui.dialog.js');
 		
@@ -97,7 +97,7 @@ class FileIFrameField extends FileField {
 		// clear the requirements added by any parent controllers
 		Requirements::clear();
 		Requirements::add_i18n_javascript('sapphire/javascript/lang');
-		Requirements::javascript('jsparty/jquery/jquery.js');
+		Requirements::javascript('jsparty/jquery/jquery-latest.js');
 		Requirements::javascript('sapphire/javascript/FileIFrameField.js');
 		
 		Requirements::css('cms/css/typography.css');

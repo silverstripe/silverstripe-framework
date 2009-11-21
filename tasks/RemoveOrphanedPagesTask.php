@@ -61,7 +61,7 @@ in the other stage:<br />
 	}
 	
 	function index() {
-		Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
+		Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery-latest.js');
 		Requirements::customCSS('#OrphanIDs .middleColumn {width: auto;}');
 		Requirements::customCSS('#OrphanIDs label {display: inline;}');
 		
