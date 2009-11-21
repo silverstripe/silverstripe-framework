@@ -40,7 +40,12 @@ class PopupDateTimeField extends CalendarDateField {
 
 		$futureClass = $this->futureOnly ? ' futureonly' : '';
 
-		$innerHTMLDate = parent::HTMLField( $id . '_Date', $this->name . '[Date]', $date );
+		$innerHTMLDate = sprintf(
+			'<input type="text" id="%s" name="%s" value="%s" />', 
+			$id . '_Date', 
+			$this->name . '[Date]', 
+			$date
+		);
 		$innerHTMLTime = DropdownTimeField::HTMLField( $id . '_Time', $this->name . '[Time]', $time );
 
 		return <<<HTML
