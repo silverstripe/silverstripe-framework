@@ -2150,16 +2150,6 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		return $this->stat('default_parent');
 	}
 
-
-	/**
-	 * Function to clean up the currently loaded page after a reorganise has
-	 * been called. It should return a piece of JavaScript to be executed on
-	 * the client side, to clean up the results of the reorganise.
-	 */
-	function cmsCleanup_parentChanged() {
-	}
-
-
 	/**
 	 * Get the title for use in menus for this page. If the MenuTitle
 	 * field is set it returns that, else it returns the Title field.

@@ -314,14 +314,6 @@ class Folder extends File {
 	}
 	
 	/**
-	 * This isn't a decendant of SiteTree, but needs this in case
-	 * the group is "reorganised";
-	 */
-	function cmsCleanup_parentChanged(){
-		
-	}
-
-	/**
 	 * Return the FieldSet used to edit this folder in the CMS.
 	 * You can modify this fieldset by subclassing folder, or by creating a {@link DataObjectDecorator}
 	 * and implemeting updateCMSFields(FieldSet $fields) on that decorator.	

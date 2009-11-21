@@ -293,13 +293,6 @@ class Group extends DataObject {
 	}
 	
 	/**
-	 * This isn't a decendant of SiteTree, but needs this in case
-	 * the group is "reorganised";
-	 */
-	function cmsCleanup_parentChanged() {
-	}
-	
-	/**
 	 * Override this so groups are ordered in the CMS
 	 */
 	public function stageChildren() {
