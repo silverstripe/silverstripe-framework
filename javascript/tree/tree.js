@@ -901,27 +901,36 @@ MultiselectTree = Class.create();
 MultiselectTree.prototype = {
 	initialize: function() {
 		Element.addClassName(this, 'multiselect');
-		this.MultiselectTree_observer = this.observeMethod('NodeClicked', this.multiselect_handleSelectionChange.bind(this));
+		this.MultiselectTree_observer = this.observeMethod('NodeClicked', this.multiselect_onClick.bind(this));
 		this.selectedNodes = { }
 	},
 	destroyDraggable: function() {
 		this.stopObserving(this.MultiselectTree_observer);
 	},
-	
-	multiselect_handleSelectionChange : function(selectedNode) {
-		var idx = this.getIdxOf(selectedNode);
-		if(selectedNode.selected) {
-			selectedNode.removeNodeClass('selected');
-			selectedNode.selected = false;
-			delete this.selectedNodes[idx];
 
+	multiselect_onClick : function(selectedNode) {
+		if(selectedNode.selected) {
+			this.deselectNode(selectedNode);
 		} else {
-			selectedNode.addNodeClass('selected');
-			selectedNode.selected = true;
-			this.selectedNodes[idx] = selectedNode.aTag.innerHTML;
+			this.selectNode(selectedNode);
 		}
-		
-		return false;
+
+		// Trigger the onselect event
+		return true;
+	},
+
+	selectNode: function(selectedNode) {
+		var idx = this.getIdxOf(selectedNode);
+		selectedNode.addNodeClass('selected');
+		selectedNode.selected = true;
+		this.selectedNodes[idx] = selectedNode.aTag.innerHTML;
+	},
+
+	deselectNode : function(selectedNode) {
+		var idx = this.getIdxOf(selectedNode);
+		selectedNode.removeNodeClass('selected');
+		selectedNode.selected = false;
+		delete this.selectedNodes[idx];
 	}
-	
+
 }
