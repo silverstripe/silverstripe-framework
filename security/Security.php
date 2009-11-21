@@ -355,6 +355,8 @@ class Security extends Controller {
 			Requirements::css(THIRDPARTY_DIR . '/jquery/themes/smoothness/ui.all.css');
 			Requirements::css(THIRDPARTY_DIR . '/jquery/themes/smoothness/ui.tabs.css');
 			
+			Requirements::css(SAPPHIRE_DIR . '/css/Security_login.css');
+			
 			Requirements::javascript(SAPPHIRE_DIR . '/javascript/TabSet.js');
 			
 			$content = '<div id="Form_EditForm">';

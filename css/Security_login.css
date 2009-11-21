@@ -1,84 +1,17 @@
-html {
-	width : 100%;
-	height : 100%;
+#Remember {
+	margin: 0.5em 0 0.5em 11em !important;
 }
-
-body {
-	text-align: center;
-	width : 100%;
-	height : 100%;
-	overflow : hidden;
-	background-color : #EFEFEF !important;
+	p#Remember label {
+		display: inline-block;
+		margin: 0;
+	}
+	#Remember input {
+		float: left;
+		margin: 0 5px 0 0;
+	}
+#MemberLoginForm_LoginForm .Actions {
+	padding-left: 12em;
 }
-
-#all {
-	width: 500px;
-	border: 1px #333333 solid;
-	background-color : white;
-	text-align: left;
-	float:left;
-	position : absolute;
- 	top : 50px;
-	font-family : Verdana, Geneva, Arial, Helvetica, sans-serif;
-	
-}
-
-#intro {
-	margin : 10px;
-	padding-left : 10px;
-	padding-right : 10px;
-	font-size : 11px;
-
-}
-
-h1{
-	color : white;
-	font-size : 12px;
-	border-bottom : 1px solid #333333;
-	background-image : url(../../cms/images/textures/obar.gif);
-	background-repeat : repeat-x;
-	height : 18px;
-	margin-top : 0px;
-	padding-top : 4px;
-	padding-left : 10px;
-	
-}
-
-#supported {
-	display : none;
-	padding : 10px;
-}
-
-#noSupport {
-	margin : 10px;
-	padding : 10px;
-}
-
-form div.field input{
-	height : 26px;
-	font-size : 18px;
-	font-weight : lighter;
-	width : 300px;
-
-
-}
-
-form div.field input.checkbox{
-	height : 26px;
-	font-size : 18px;
-	font-weight : lighter;
-	width : 16px;
-
-
-}
-
-fieldset{
-	border : 3px solid #CCCCCC;
-}
-
-form label.left {
-	float: left;
-	width: 8em;
-	font-size : 16px;
-	margin-top : 6px;
+#ForgotPassword {
+	margin-top: 1em;
 }
