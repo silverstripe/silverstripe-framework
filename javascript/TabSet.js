@@ -35,8 +35,3 @@
 		}
 	});
 })(jQuery);
-
-jQuery(document).ready(function() {
-	// @todo remove
-	jQuery.concrete.triggerMatching();
-});
