@@ -5,45 +5,64 @@
  * @subpackage fields-datetime
  */
 class CalendarDateField extends DateField {
+	
 	protected $futureOnly;
-	
-	static function HTMLField( $id, $name, $val ) {
-		return <<<HTML
-			<input type="text" id="$id" name="$name" value="$val" />
-			<img src="sapphire/images/calendar-icon.gif" id="$id-icon" alt="Calendar icon" />
-			<div class="calendarpopup" id="$id-calendar"></div>
-HTML;
-	}
-	
+		
 	function Field() {
-		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/prototype/prototype.js');
-		Requirements::javascript(SAPPHIRE_DIR . "/thirdparty/behaviour/behaviour.js");
-		Requirements::javascript(THIRDPARTY_DIR . "/calendar/calendar.js");
-		Requirements::javascript(THIRDPARTY_DIR . "/calendar/lang/calendar-en.js");
-		Requirements::javascript(THIRDPARTY_DIR . "/calendar/calendar-setup.js");
-		Requirements::css(SAPPHIRE_DIR . "/css/CalendarDateField.css");
-		Requirements::css(THIRDPARTY_DIR . "/calendar/calendar-win2k-1.css");
+		// javascript: core
+		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery/jquery.js');
+		Requirements::javascript(SAPPHIRE_DIR . '/javascript/jquery_improvements.js');
+		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-ui/ui.core.js');
+		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-ui/ui.datepicker.js');
+		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-metadata/jquery.metadata.js');
+		
+		// javascript: localized datepicker
+		// Include 
+		$candidates = array(
+			i18n::convert_rfc1766(i18n::get_locale()), 
+			i18n::get_lang_from_locale(i18n::get_locale())
+		);
+		foreach($candidates as $candidate) {
+			$datePickerI18nPath = sprintf(SAPPHIRE_DIR . '/thirdparty/jquery-ui/i18n/ui.datepicker-%s.js', $candidate);
+			if(Director::fileExists($datePickerI18nPath)) Requirements::javascript($datePickerI18nPath);
+		}
+		
+		
+		// javascript: concrete
+		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-concrete/jquery.class.js');
+		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-concrete/jquery.selector.js');
+		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-concrete/jquery.selector.specifity.js');
+		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-concrete/jquery.selector.matches.js');
+		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-concrete/jquery.dat.js');
+		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-concrete/jquery.concrete.js');
+		
+		// javascript: custom
+		Requirements::javascript(SAPPHIRE_DIR . '/javascript/CalendarDateField.js');
 
-		$id = $this->id();
-		$val = $this->attrValue();
+		// css: core
+		Requirements::css(SAPPHIRE_DIR . '/thirdparty/jquery-ui-themes/smoothness/ui.all.css');
 		
-		$futureClass = $this->futureOnly ? ' futureonly' : '';
+		// clientside config
+		// TODO Abstract this into FormField to make generic configuration interface
+		$jsConfig = Convert::raw2json(array(
+			'minDate' => $this->futureOnly ? SSDatetime::now()->format('m/d/Y') : null
+		));
+
+		$this->addExtraClass($jsConfig);
 		
-		$innerHTML = self::HTMLField( $id, $this->name, $val );
-		
-		return <<<HTML
-			<div class="calendardate$futureClass">
-				$innerHTML
-			</div>
-HTML;
+		return parent::Field();
 	}
 	
 	/**
-	 * Sets the field so that only future dates can be set on them
+	 * Sets the field so that only future dates can be set on them.
+	 * Only applies for JavaScript value, no server-side validation.
+	 * 
+	 * @deprecated 2.4
 	 */
 	function futureDateOnly() {
 		$this->futureOnly = true;
 	}
+	
 }
 
 ?>
