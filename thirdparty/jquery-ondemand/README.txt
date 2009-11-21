@@ -1,1 +1,0 @@
-See http://plugins.jquery.com/project/ondemandjs
