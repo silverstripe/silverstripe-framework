@@ -180,6 +180,15 @@ class Group extends DataObject {
 		return $labels;
 	}
 	
+	function populateDefaults() {
+		parent::populateDefaults();
+		
+		if(!$this->Title) $this->Title = sprintf(
+			_t('GROUP.NEWITEM',"New %s"), 
+			singleton($this->class)->i18n_singular_name()
+		);
+	}
+	
 	/**
 	 * Add a member to a group.
 	 *
@@ -313,7 +322,7 @@ class Group extends DataObject {
 	
 	function onBeforeWrite() {
 		parent::onBeforeWrite();
-		
+
 		if(stripos($this->Code, 'new-') === 0) {
 			$this->setCode($this->Title);
 		}
