@@ -380,6 +380,10 @@ JS;
 		return $fieldset;
 	}
 
+	function setController($controller) {
+		$this->controller = $controller;
+	}
+
 	/**
 	 * Determines on which relation-class the DetailForm is saved
 	 * by looking at the surrounding form-record.
