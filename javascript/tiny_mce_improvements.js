@@ -103,7 +103,7 @@ LinkForm.prototype = {
 		
 		switch(Form.Element.getValue(this.elements.LinkType)) {
 			case 'internal':
-				href = this.elements.internal.value + '/';
+				href = '[sitetree_link id=' + this.elements.internal.value + ']';
 				if(this.elements.Anchor.value) href += '#' + this.elements.Anchor.value;
 				if($('Form_EditorToolbarLinkForm_TargetBlank')) {
 					if($('Form_EditorToolbarLinkForm_TargetBlank').checked) target = '_blank';
@@ -318,7 +318,7 @@ LinkForm.prototype = {
 				Description: title,
 				TargetBlank: target ? true : false
 			}
-		} else if(href.match(/^([^\/:]+)\/?(#.*)?$/)) {
+		} else if(href.match(/^\[sitetree_link id=([0-9]+)\]?(#.*)?$/)) {
 			return {
 				LinkType: 'internal',
 				internal: RegExp.$1,
