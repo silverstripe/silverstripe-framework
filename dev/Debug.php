@@ -317,7 +317,15 @@ class Debug {
 		if(!$friendlyErrorMessage) $friendlyErrorMessage = self::$friendly_error_header;
 		if(!$friendlyErrorDetail) $friendlyErrorDetail = self::$friendly_error_detail;
 
-		if(!headers_sent()) header($_SERVER['SERVER_PROTOCOL'] . " $statusCode $friendlyErrorMessage");
+		if(!headers_sent()) {
+			$currController = Controller::curr();
+			if($currController) {
+				$response = $currController->getResponse();
+				$response->setStatusCode($statusCode, $friendlyErrorMessage);
+			} else {
+				header($_SERVER['SERVER_PROTOCOL'] . " $statusCode $friendlyErrorMessage");
+			}
+		}
 
 		if(Director::is_ajax()) {
 			echo $friendlyErrorMessage;
