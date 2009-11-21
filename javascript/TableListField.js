@@ -122,7 +122,7 @@ TableListField.prototype = {
 		this._summarise();
 	},
 	
-	refresh: function(e) {
+	refresh: function(e, params, oncomplete) {
 		if(e) {
 			var el = Event.element(e);
 			if(el.nodeName != "a") el = Event.findElement(e,"a");
@@ -134,12 +134,13 @@ TableListField.prototype = {
     		new Ajax.Request( 
     			el.getAttribute('href'), 
     			{
-    				postBody: 'update=1',
+    				postBody: 'update=1' + (params) ? '&' + params : '',
     				onComplete: function(response) {
     					Element.replace(this.id, response.responseText);
 						// reapply behaviour and reattach methods to TF container node
 						// e.g. <div class="TableListField">
     					Behaviour.apply($(this.id), true);
+							if(oncomplete) oncomplete.apply(response);
     				}.bind(this)
     			}
     		);
