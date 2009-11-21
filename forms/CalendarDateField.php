@@ -28,13 +28,7 @@ class CalendarDateField extends DateField {
 		}
 		
 		
-		// javascript: concrete
-		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-selector/src/jquery.class.js');
-		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-selector/src/jquery.selector.js');
-		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-selector/src/jquery.selector.specifity.js');
-		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-selector/src/jquery.selector.matches.js');
-		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-concrete/src/jquery.dat.js');
-		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-concrete/src/jquery.concrete.js');
+		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-concrete/dist/jquery.concrete-latest.js');
 		
 		// javascript: custom
 		Requirements::javascript(SAPPHIRE_DIR . '/javascript/CalendarDateField.js');

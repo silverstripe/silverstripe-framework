@@ -1,0 +1,16 @@
+<html>
+	<head>
+		<script src="jspec.js"></script>
+		<script src="../lib/yourlib.core.js"></script>
+		<script>
+			function runSuites() {
+				JSpec
+				.exec('spec.core.js')
+				.run()
+				.reportToServer()
+			}
+		</script>
+	</head>
+	<body class="jspec" onLoad="runSuites();">
+	</body>
+</html>

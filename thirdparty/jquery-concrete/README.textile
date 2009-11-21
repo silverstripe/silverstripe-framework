@@ -1,8 +1,16 @@
 h1. Concrete - Support for ConcreteUI programming in jQuery
 
-A basic desire for jQuery programming is some sort of OO or other organisational method for code. For your consideration,
-we provide a library for ConcreteUI style programming. In ConcreteUI you attach behavioral code to DOM objects. Concrete extends this
-concept beyond what is provided by other libraries to provide a very easy to use system with class like, ploymorphic, namespaced properties
+By Hamish Friedlander, with thanks to "SilverStripe":http://www.silverstripe.com/
+
+Concrete tries to provide a new model of code organisation - a replacement for Object Oriented programming that is focused on adding functions to groups of DOM elements based on the structure and contents of those DOM elements. It's a merging of the model and view layer that initially seems weird, but can give very powerful results.
+
+We're standing on the shoulders of giants here - combining ideas from Prototype's behaviour & lowpro and jQuery's effen & livequery (who themselves stole ideals from Self's Morphic UI and others), but extending & combining the concepts presented in those tools to provide a complete alternative to traditional OO concepts - self-aware methods, inheritance, polymorphisim and namespacing without a single class definition.
+
+h2. Getting Started
+
+* Walk through the "Tutorial":http://hafriedlander.github.com/jquery.concrete/tutorial/
+* Watch the "Screencast":http://www.vimeo.com/6353390 (shot during a introductory developer meeting at SilverStripe)
+* Join the "Google Group":http://groups.google.com/group/jquery-concrete and let us know what you think, or what other features you'd like to see
 
 h2. Basic use
 
@@ -226,17 +234,46 @@ And the concrete definitions
 
 Then doing $('div').bar(); will _not_ display b. Even though the span rule could never match a div, because baz is defined for some rule in the foo namespace, the base namespace will never be checked
 
-h4. Forcing base
+h4. Cleaner namespace blocks
 
-In some situations (such as the last example) you may want to force using the base namespace. In this case you can call concrete without any arguments. For example, if the first definition in the previous example was
+When declaring a lot of namespaces, you can declare the namespace seperately from the concrete definitions, like so
 
 <pre><code>
-  $('div').concrete('foo', {
-    bar: function() { this.concrete().baz(); }
+  $.concrete('foo', function($){
+    $('div').concrete({
+      bar: function() { .. }
+    })
   })
 </code></pre>
 
-Then b _would_ be output to the console. It is up to the developer to decide when they need to be explicit about using the base namespace
+You can also nest declarations. In this next example, we're defining the functions $().concrete('zap').bar() and $().concrete('zap.pow').baz()
+
+<pre><code>
+  $.concrete('zap', function($){
+    $('div').concrete({
+      bar: function() { .. }
+    })
+    $.concrete('pow', function($){
+      $('div').concrete({
+        baz: function() { .. }
+      })
+    })
+  })
+</code></pre>
+
+h4. Calling to another namespace (and forcing base)
+
+Inside a namespace, namespace lookups are by default relative to the current namespace.
+
+In some situations (such as the last example) you may want to force using the base namespace. In this case you can call concrete with the first argument being the base namespace code '.'. For example, if the first definition in the previous example was
+
+<pre><code>
+  $('div').concrete('foo', {
+    bar: function() { this.concrete('.').baz(); }
+  })
+</code></pre>
+
+Then b _would_ be output to the console.
 
 h4. Using
 
@@ -252,8 +289,19 @@ Sometimes a block outside of a namespace will need to refer to that namespace re
   });
 </code></pre>
   
-This equivilent to /with/ in javascript, and just like /with/, care should be taken to only use this construct in situations that merit it.
+This equivalent to /with/ in javascript, and just like /with/, care should be taken to only use this construct in situations that merit it.
 
+h2. License
+
+Copyright (C) 2009 Hamish Friedlander (hamish@silverstripe.com) and SilverStripe Limited (www.silverstripe.com). All rights reserved.
+
+Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+    * Neither the name of Hamish Friedlander nor SilverStripe nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
 

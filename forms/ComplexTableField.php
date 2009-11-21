@@ -1073,7 +1073,7 @@ class ComplexTableField_Popup extends Form {
 		Requirements::css(CMS_DIR . '/css/typography.css');
 		Requirements::css(CMS_DIR . '/css/cms_right.css');
 		Requirements::javascript(SAPPHIRE_DIR . "/thirdparty/prototype/prototype.js");
-		Requirements::javascript(SAPPHIRE_dir . "/thirdparty/behaviour/behaviour.js");
+		Requirements::javascript(SAPPHIRE_DIR . "/thirdparty/behaviour/behaviour.js");
 		Requirements::javascript(SAPPHIRE_DIR . "/javascript/prototype_improvements.js");
 		Requirements::javascript(SAPPHIRE_DIR . "/thirdparty/scriptaculous/scriptaculous.js");
 		Requirements::javascript(SAPPHIRE_DIR . "/thirdparty/scriptaculous/scriptaculous/controls.js");

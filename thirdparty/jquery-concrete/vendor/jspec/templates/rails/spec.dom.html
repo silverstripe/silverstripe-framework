@@ -1,0 +1,20 @@
+<html>
+	<head>
+		<link type="text/css" rel="stylesheet" href="JSPEC_ROOT/lib/jspec.css" />
+		<script src="JSPEC_ROOT/lib/jspec.js"></script>
+		<script src="../public/javascripts/application.js"></script>
+		<script>
+			function runSuites() {
+				JSpec
+				.exec('spec.application.js')
+				.run()
+				.report()
+			}
+		</script>
+	</head>
+	<body class="jspec" onLoad="runSuites();">
+		<div id="jspec-top"><h2 id="jspec-title">JSpec <em><script>document.write(JSpec.version)</script></em></h2></div>
+		<div id="jspec"></div>
+		<div id="jspec-bottom"></div>
+	</body>
+</html>

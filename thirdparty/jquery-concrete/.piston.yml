@@ -1,8 +1,8 @@
 --- 
 format: 1
 handler: 
-  commit: c857ed5d684031115a2bb369f601c7147a2c69bc
+  commit: 488376e8aa3c046cbf60adf43c42c76b5031fe20
   branch: master
 lock: false
-repository_url: git://github.com/hafriedlander/jquery.concrete.git
 repository_class: Piston::Git::Repository
+repository_url: git://github.com/hafriedlander/jquery.concrete.git
