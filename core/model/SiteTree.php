@@ -1446,7 +1446,39 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	}
 	
 	/**
+	 * @return string
+	 */
+	function getStageURLSegment() {
+		$stageRecord = Versioned::get_one_by_stage(
+			'SiteTree', 
+			'Stage', 
+			"\"SiteTree\".\"ID\" = $this->ID"
+		);
+		return ($stageRecord) ? $stageRecord->URLSegment : null;
+	}
+	
+	/**
+	 * @return string
+	 */
+	function getLiveURLSegment() {
+		$liveRecord = Versioned::get_one_by_stage(
+			'SiteTree', 
+			'Live', 
+			"\"SiteTree\".\"ID\" = $this->ID"
+		);
+		return ($liveRecord) ? $liveRecord->URLSegment : null;
+	}
+	
+	/**
+	 * Return the SiteTree object with the given URL segment.
+	 * 
 	 * @deprecated 2.4 Use {@link SiteTree::get_by_link()}.
+	 *
+	 * @param string $urlSegment The URL segment, eg 'home'
+	 * @param string $extraFilter
+	 * @param boolean $cache
+	 * @param string $orderby
+	 * @return SiteTree The object with the given URL segment
 	 */
 	public static function get_by_url($link) {
 		user_error (
