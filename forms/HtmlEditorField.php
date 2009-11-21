@@ -207,32 +207,39 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 			$this->controller,
 			"{$this->name}/LinkForm", 
 			new FieldSet(
-				new LiteralField('Heading', '<h2><img src="cms/images/closeicon.gif" alt="' . _t('HtmlEditorField.CLOSE', 'close').'" title="' . _t('HtmlEditorField.CLOSE', 'close') . '" />' . _t('HtmlEditorField.LINK', 'Link') . '</h2>'),
-				new OptionsetField(
-					'LinkType',
-					_t('HtmlEditorField.LINKTO', 'Link to'), 
-					array(
-						'internal' => _t('HtmlEditorField.LINKINTERNAL', 'Page on the site'),
-						'external' => _t('HtmlEditorField.LINKEXTERNAL', 'Another website'),
-						'anchor' => _t('HtmlEditorField.LINKANCHOR', 'Anchor on this page'),
-						'email' => _t('HtmlEditorField.LINKEMAIL', 'Email address'),
-						'file' => _t('HtmlEditorField.LINKFILE', 'Download a file'),			
-					)
+				new LiteralField(
+					'Heading', 
+					sprintf('<h3>%s</h3>', _t('HtmlEditorField.LINK', 'Link'))
 				),
-				new TreeDropdownField('internal', _t('HtmlEditorField.PAGE', "Page"), 'SiteTree', 'ID', 'MenuTitle'),
-				new TextField('external', _t('HtmlEditorField.URL', 'URL'), 'http://'),
-				new EmailField('email', _t('HtmlEditorField.EMAIL', 'Email address')),
-				new TreeDropdownField('file', _t('HtmlEditorField.FILE', 'File'), 'File', 'Filename'),
-				new TextField('Anchor', _t('HtmlEditorField.ANCHORVALUE', 'Anchor')),
-				new TextField('LinkText', _t('HtmlEditorField.LINKTEXT', 'Link text')),
-				new TextField('Description', _t('HtmlEditorField.LINKDESCR', 'Link description')),
-				new CheckboxField('TargetBlank', _t('HtmlEditorField.LINKOPENNEWWIN', 'Open link in a new window?'))
+				$contentComposite = new CompositeField(
+					new OptionsetField(
+						'LinkType',
+						_t('HtmlEditorField.LINKTO', 'Link to'), 
+						array(
+							'internal' => _t('HtmlEditorField.LINKINTERNAL', 'Page on the site'),
+							'external' => _t('HtmlEditorField.LINKEXTERNAL', 'Another website'),
+							'anchor' => _t('HtmlEditorField.LINKANCHOR', 'Anchor on this page'),
+							'email' => _t('HtmlEditorField.LINKEMAIL', 'Email address'),
+							'file' => _t('HtmlEditorField.LINKFILE', 'Download a file'),			
+						)
+					),
+					new TreeDropdownField('internal', _t('HtmlEditorField.PAGE', "Page"), 'SiteTree', 'URLSegment', 'MenuTitle'),
+					new TextField('external', _t('HtmlEditorField.URL', 'URL'), 'http://'),
+					new EmailField('email', _t('HtmlEditorField.EMAIL', 'Email address')),
+					new TreeDropdownField('file', _t('HtmlEditorField.FILE', 'File'), 'File', 'Filename'),
+					new TextField('Anchor', _t('HtmlEditorField.ANCHORVALUE', 'Anchor')),
+					new TextField('LinkText', _t('HtmlEditorField.LINKTEXT', 'Link text')),
+					new TextField('Description', _t('HtmlEditorField.LINKDESCR', 'Link description')),
+					new CheckboxField('TargetBlank', _t('HtmlEditorField.LINKOPENNEWWIN', 'Open link in a new window?'))
+				)
 			),
 			new FieldSet(
 				new FormAction('insert', _t('HtmlEditorField.BUTTONINSERTLINK', 'Insert link')),
 				new FormAction('remove', _t('HtmlEditorField.BUTTONREMOVELINK', 'Remove link'))
 			)
 		);
+		
+		$contentComposite->addExtraClass('content');
 		
 		$form->loadDataFrom($this);
 		
@@ -246,12 +253,12 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 	 * @return Form
 	 */
 	function ImageForm() {
-		Requirements::javascript(THIRDPARTY_DIR . "/behaviour.js");	
-		Requirements::javascript(THIRDPARTY_DIR . '/SWFUpload/swfupload.js');
+		Requirements::javascript(THIRDPARTY_DIR . "/behaviour.js");
 		Requirements::javascript(THIRDPARTY_DIR . "/tiny_mce_improvements.js");
+		Requirements::css('cms/css/TinyMCEImageEnhancement.css');
+		Requirements::javascript('cms/javascript/TinyMCEImageEnhancement.js');
 		Requirements::javascript(CMS_DIR . '/javascript/Upload.js');
-		Requirements::css(CMS_DIR .'/css/TinyMCEImageEnhancement.css');
-		Requirements::javascript(CMS_DIR . '/javascript/TinyMCEImageEnhancement.js');
+		Requirements::javascript(THIRDPARTY_DIR . '/SWFUpload/SWFUpload.js');
 
 		/**
 		 * @todo Adding folders via this screen is not enabled just yet as it is still
@@ -261,49 +268,52 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 			$this->controller,
 			"{$this->name}/ImageForm",
 			new FieldSet(
-				new LiteralField('Heading', '<h2><img src="cms/images/closeicon.gif" alt="' . _t('HtmlEditorField.CLOSE', 'close') . '" title="' . _t('HtmlEditorField.CLOSE', 'close') . '" />' . _t('HtmlEditorField.IMAGE', 'Image') . '</h2>'),
-				new TreeDropdownField('FolderID', _t('HtmlEditorField.FOLDER', 'Folder'), 'Folder'),
-				new LiteralField('AddFolderOrUpload',
-					'<div id="AddFolderGroup" style="display: none;">
-						<a style="" href="#" id="AddFolder" class="link">' . _t('HtmlEditorField.CREATEFOLDER','Create Folder') . '</a>
-						<input style="display: none; margin-left: 2px; width: 94px;" id="NewFolderName" class="addFolder" type="text">
-						<a style="display: none;" href="#" id="FolderOk" class="link addFolder">' . _t('HtmlEditorField.OK','Ok') . '</a>
-						<a style="display: none;" href="#" id="FolderCancel" class="link addFolder">' . _t('HtmlEditorField.FOLDERCANCEL','Cancel') . '</a>
-					</div>
-					<![if !IE]>
-					<div id="UploadGroup" class="group" style="margin: 0 0 0 5px; clear: both; padding-top: 3px">
-						<a href="#" id="SWFUploadButton" class="link">' . _t('HtmlEditorField.UPLOAD','Upload') . '</a>
-					</div>
-					
-					<div id="UploadFiles">
-					
-					</div>
-					<![endif]>'
+				new LiteralField(
+					'Heading', 
+					sprintf('<h3>%s</h3>', _t('HtmlEditorField.IMAGE', 'Image'))
 				),
-				new TextField('getimagesSearch', _t('HtmlEditorField.SEARCHFILENAME', 'Search by file name')),
-				new ThumbnailStripField('FolderImages', 'FolderID', 'getimages'),
-				new TextField('AltText', _t('HtmlEditorField.IMAGEALTTEXT', 'Alternative text (alt) - shown if image cannot be displayed'), '', 80),
-				new TextField('ImageTitle', _t('HtmlEditorField.IMAGETITLE', 'Title text (tooltip) - for additional information about the image')),
-				new TextField('CaptionText', _t('HtmlEditorField.CAPTIONTEXT', 'Caption text')),
-				new DropdownField(
-					'CSSClass',
-					_t('HtmlEditorField.CSSCLASS', 'Alignment / style'),
-					array(
-						'left' => _t('HtmlEditorField.CSSCLASSLEFT', 'On the left, with text wrapping around.'),
-						'leftAlone' => _t('HtmlEditorField.CSSCLASSLEFTALONE', 'On the left, on its own.'),
-						'right' => _t('HtmlEditorField.CSSCLASSRIGHT', 'On the right, with text wrapping around.'),
-						'center' => _t('HtmlEditorField.CSSCLASSCENTER', 'Centered, on its own.'),
+				$contentComposite = new CompositeField(
+					new TreeDropdownField('FolderID', _t('HtmlEditorField.FOLDER', 'Folder'), 'Folder'),
+					new LiteralField('AddFolderOrUpload',
+						'<div style="clear:both;"></div><div id="AddFolderGroup" style="display: none">
+							<a style="" href="#" id="AddFolder" class="link">' . _t('HtmlEditorField.CREATEFOLDER','Create Folder') . '</a>
+							<input style="display: none; margin-left: 2px; width: 94px;" id="NewFolderName" class="addFolder" type="text">
+							<a style="display: none;" href="#" id="FolderOk" class="link addFolder">' . _t('HtmlEditorField.OK','Ok') . '</a>
+							<a style="display: none;" href="#" id="FolderCancel" class="link addFolder">' . _t('HtmlEditorField.FOLDERCANCEL','Cancel') . '</a>
+						</div>
+						<div id="UploadGroup" class="group" style="display: none; margin-top: 2px;">
+							<a href="#" id="SWFUploadButton" class="link">' . _t('HtmlEditorField.UPLOAD','Upload') . '</a>
+						</div>'
+						<div id="UploadFiles"> 
+						</div>
+					),
+					new TextField('getimagesSearch', _t('HtmlEditorField.SEARCHFILENAME', 'Search by file name')),
+					new ThumbnailStripField('FolderImages', 'FolderID', 'getimages'),
+					new TextField('AltText', _t('HtmlEditorField.IMAGEALTTEXT', 'Alternative text (alt) - shown if image cannot be displayed'), '', 80),
+					new TextField('ImageTitle', _t('HtmlEditorField.IMAGETITLE', 'Title text (tooltip) - for additional information about the image')),
+					new TextField('CaptionText', _t('HtmlEditorField.CAPTIONTEXT', 'Caption text')),
+					new DropdownField(
+						'CSSClass',
+						_t('HtmlEditorField.CSSCLASS', 'Alignment / style'),
+						array(
+							'left' => _t('HtmlEditorField.CSSCLASSLEFT', 'On the left, with text wrapping around.'),
+							'leftAlone' => _t('HtmlEditorField.CSSCLASSLEFTALONE', 'On the left, on its own.'),
+							'right' => _t('HtmlEditorField.CSSCLASSRIGHT', 'On the right, with text wrapping around.'),
+							'center' => _t('HtmlEditorField.CSSCLASSCENTER', 'Centered, on its own.'),
+						)
+					),
+					new FieldGroup(_t('HtmlEditorField.IMAGEDIMENSIONS', 'Dimensions'),
+						new TextField('Width', _t('HtmlEditorField.IMAGEWIDTHPX', 'Width'), 100),
+						new TextField('Height', " x " . _t('HtmlEditorField.IMAGEHEIGHTPX', 'Height'), 100)
 					)
-				),
-				new FieldGroup(_t('HtmlEditorField.IMAGEDIMENSIONS', 'Dimensions'),
-					new TextField('Width', _t('HtmlEditorField.IMAGEWIDTHPX', 'Width'), 100),
-					new TextField('Height', " x " . _t('HtmlEditorField.IMAGEHEIGHTPX', 'Height'), 100)
 				)
 			),
 			new FieldSet(
 				new FormAction('insertimage', _t('HtmlEditorField.BUTTONINSERTIMAGE', 'Insert image'))
 			)
 		);
+		
+		$contentComposite->addExtraClass('content');
 		
 		$form->disableSecurityToken();
 		$form->loadDataFrom($this);
@@ -313,27 +323,35 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 
 	function FlashForm() {
 		Requirements::javascript(THIRDPARTY_DIR . "/behaviour.js");
-		Requirements::javascript(CMS_DIR . '/javascript/Upload.js');
 		Requirements::javascript(THIRDPARTY_DIR . "/tiny_mce_improvements.js");
-		Requirements::javascript(THIRDPARTY_DIR . '/SWFUpload/swfupload.js');
+		Requirements::javascript(CMS_DIR . '/javascript/Upload.js');
+		Requirements::javascript(THIRDPARTY_DIR . '/SWFUpload/SWFUpload.js');
 
 		$form = new Form(
 			$this->controller,
 			"{$this->name}/FlashForm", 
 			new FieldSet(
-				new LiteralField('Heading', '<h2><img src="cms/images/closeicon.gif" alt="'._t('HtmlEditorField.CLOSE', 'close').'" title="'._t('HtmlEditorField.CLOSE', 'close').'" />'._t('HtmlEditorField.FLASH', 'Flash').'</h2>'),
-				new TreeDropdownField("FolderID", _t('HtmlEditorField.FOLDER'), "Folder"),
-				new TextField('getflashSearch', _t('HtmlEditorField.SEARCHFILENAME', 'Search by file name')),
-				new ThumbnailStripField("Flash", "FolderID", "getflash"),
-				new FieldGroup(_t('HtmlEditorField.IMAGEDIMENSIONS', "Dimensions"),
-					new TextField("Width", _t('HtmlEditorField.IMAGEWIDTHPX', "Width"), 100),
-					new TextField("Height", "x " . _t('HtmlEditorField.IMAGEHEIGHTPX', "Height"), 100)
+				new LiteralField(
+					'Heading', 
+					sprintf('<h3>%s</h3>', _t('HtmlEditorField.FLASH', 'Flash'))
+				),
+				$contentComposite = new CompositeField(
+					new TreeDropdownField("FolderID", _t('HtmlEditorField.FOLDER'), "Folder"),
+					new TextField('getflashSearch', _t('HtmlEditorField.SEARCHFILENAME', 'Search by file name')),
+					new ThumbnailStripField("Flash", "FolderID", "getflash"),
+					new FieldGroup(_t('HtmlEditorField.IMAGEDIMENSIONS', "Dimensions"),
+						new TextField("Width", _t('HtmlEditorField.IMAGEWIDTHPX', "Width"), 100),
+						new TextField("Height", "x " . _t('HtmlEditorField.IMAGEHEIGHTPX', "Height"), 100)
+					)
 				)
 			),
 			new FieldSet(
 				new FormAction("insertflash", _t('HtmlEditorField.BUTTONINSERTFLASH', 'Insert Flash'))
 			)
 		);
+		
+		$contentComposite->addExtraClass('content');
+		
 		$form->loadDataFrom($this);
 		$form->disableSecurityToken();
 		return $form;
