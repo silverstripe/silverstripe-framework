@@ -306,7 +306,7 @@ class Group extends DataObject {
 		return DataObject::get('Group', "\"Group\".\"ParentID\" = " . (int)$this->ID . " AND \"Group\".\"ID\" != " . (int)$this->ID, '"Sort"');
 	}
 	
-	public function TreeTitle() {
+	public function getTreeTitle() {
         if($this->hasMethod('alternateTreeTitle')) return $this->alternateTreeTitle();
 		else return $this->Title;
 	}

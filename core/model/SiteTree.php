@@ -2202,7 +2202,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	 *
 	 * @return string
 	 */
-	function TreeTitle() {
+	function getTreeTitle() {
 		if($this->IsDeletedFromStage) {
 			if($this->ExistsOnLive) {
 				$tag ="del title=\"" . _t('SiteTree.REMOVEDFROMDRAFT', 'Removed from draft site') . "\"";
