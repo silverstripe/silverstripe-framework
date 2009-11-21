@@ -852,8 +852,8 @@ Ajax.Request.prototype = Object.extend(new Ajax.Base(), {
 	    }
 	    
         // jquery ondemand integration patch
-	    if(typeof prototypeOnDemandHandler != 'undefined') {
-	        prototypeOnDemandHandler(this.transport, completeHandler);
+	    if(typeof jQuery != 'undefined' && typeof jQuery.processOnDemandHeaders != 'undefined') {
+	        jQuery.processOnDemandHeaders(this.transport, prototypeAjax.transport.status, completeHandler);
 	    } else {
 	        completeHandler();
 	    }
