@@ -2243,7 +2243,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	 * @return string
 	 */
 	function CMSTreeClasses($controller) {
-		$classes = $this->class;
+		$classes = sprintf('class-%s', $this->class);
 		if($this->HasBrokenFile || $this->HasBrokenLink)
 			$classes .= " BrokenLink";
 
