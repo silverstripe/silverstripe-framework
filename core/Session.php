@@ -202,17 +202,33 @@ class Session {
 		Session::set("FormInfo.$formname.type", $type);
 	}
 
-	public static function start() {
+	/**
+	 * Initialize session.
+	 * @param string $sid Start the session with a specific ID
+	 */
+	public static function start($sid = null) {
 		self::load_config();
 		
 		if(!session_id() && !headers_sent()) {
 			session_set_cookie_params(self::$timeout, Director::baseURL());
 			// @ is to supress win32 warnings/notices when session wasn't cleaned up properly
 			// There's nothing we can do about this, because it's an operating system function!
+			if($sid) session_id($sid);
 			@session_start();
 		}
 	}
-	
+
+	/**
+	 * Destroy the active session.
+	 * @param bool $removeCookie If set to TRUE, removes the user's cookie, FALSE does not remove
+	 */
+	public static function destroy($removeCookie = true) {
+		if(session_id()) {
+			if($removeCookie) unset($_COOKIE[session_name()]);
+			session_destroy();
+		}
+	}
+
 	/**
 	 * Use the Session::$session_ips array to set timeouts based on IP address or IP address
 	 * range.
