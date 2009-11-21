@@ -257,9 +257,9 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 		Requirements::javascript(SAPPHIRE_DIR . "/thirdparty/behaviour/behaviour.js");
 		Requirements::javascript(SAPPHIRE_DIR . "/javascript/tiny_mce_improvements.js");
 		Requirements::css('cms/css/TinyMCEImageEnhancement.css');
-		Requirements::javascript('cms/javascript/TinyMCEImageEnhancement.js');
 		Requirements::javascript(CMS_DIR . '/javascript/Upload.js');
-		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/swfupload/swfupload.js');
+		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/swfupload/swfupload/swfupload.js');
+		Requirements::javascript('cms/javascript/TinyMCEImageEnhancement.js');
 
 		/**
 		 * @todo Adding folders via this screen is not enabled just yet as it is still
@@ -282,11 +282,10 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 							<a style="display: none;" href="#" id="FolderOk" class="link addFolder">' . _t('HtmlEditorField.OK','Ok') . '</a>
 							<a style="display: none;" href="#" id="FolderCancel" class="link addFolder">' . _t('HtmlEditorField.FOLDERCANCEL','Cancel') . '</a>
 						</div>
-						<div id="UploadGroup" class="group" style="display: none; margin-top: 2px;">
+						<div id="UploadGroup" class="group">
 							<a href="#" id="SWFUploadButton" class="link">' . _t('HtmlEditorField.UPLOAD','Upload') . '</a>
-						</div>'
-						<div id="UploadFiles"> 
-						</div>
+						</div>' .
+						'<div id="UploadFiles"></div>'
 					),
 					new TextField('getimagesSearch', _t('HtmlEditorField.SEARCHFILENAME', 'Search by file name')),
 					new ThumbnailStripField('FolderImages', 'FolderID', 'getimages'),
@@ -326,7 +325,7 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 	function FlashForm() {
 		Requirements::javascript(SAPPHIRE_DIR . "/thirdparty/behaviour/behaviour.js");
 		Requirements::javascript(SAPPHIRE_DIR . "/javascript/tiny_mce_improvements.js");
-		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/swfupload/swfupload.js');
+		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/swfupload/swfupload/swfupload.js');
 		Requirements::javascript(CMS_DIR . '/javascript/Upload.js');
 
 		$form = new Form(
