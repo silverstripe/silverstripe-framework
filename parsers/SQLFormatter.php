@@ -45,8 +45,9 @@ class SQLFormatter extends Object {
 	 * messing with possible content fragments in the query.
 	 */
 	protected function addNewlines($sql, $useHtmlFormatting = false) {
+		$eol = PHP_EOL;
 		foreach(self::$newline_before_tokens as $token) {
-			$breakToken = ($useHtmlFormatting) ? "<br />\n" : "\n";
+			$breakToken = ($useHtmlFormatting) ? "<br />$eol" : $eol;
 			$sql = preg_replace('/[^\n](' . $token . ')/', $breakToken . '$1', $sql);
 		}
 		
