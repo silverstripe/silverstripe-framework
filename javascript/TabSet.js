@@ -1,18 +1,42 @@
-jQuery(document).ready(function () {
+(function($){
 	/**
-	 * Replace prefixes for all hashlinks in tabs.
-	 * SSViewer rewrites them from "#Root_MyTab" to
-	 * e.g. "/admin/#Root_MyTab" which makes them
-	 * unusable for jQuery UI.
+	 * Lightweight wrapper around jQuery UI tabs.
+	 * Ensures that anchor links are set properly,
+	 * and any nested tabs are scrolled if they have
+	 * their height explicitly set. This is important
+	 * for forms inside the CMS layout.
 	 */
-	jQuery('.ss-tabset > ul a').each(function() {
-		var href = jQuery(this).attr('href').replace(/.*(#.*)/, '$1');
-		jQuery(this).attr('href', href);
-	})
-	
-	// Initialize tabset
-	jQuery('.ss-tabset').tabs();
-	
-	// if tab has no nested tabs, set overflow to auto
-	jQuery('.ss-tabset .tab').not(':has(.tab)').css('overflow', 'auto');
+	$('.ss-tabset').concrete({
+		onmatch: function() {
+			this.rewriteHashlinks();
+
+			// Initialize jQuery UI tabs
+			this.tabs();
+		},
+			
+		/**
+		 * Replace prefixes for all hashlinks in tabs.
+		 * SSViewer rewrites them from "#Root_MyTab" to
+		 * e.g. "/admin/#Root_MyTab" which makes them
+		 * unusable for jQuery UI.
+		 */
+		rewriteHashlinks: function() {
+			$(this).find('ul a').each(function() {
+				var href = $(this).attr('href').replace(/.*(#.*)/, '$1');
+				if(href) $(this).attr('href', href);
+			})
+		},
+		
+		/**
+		 * If tab has no nested tabs, set overflow to auto
+		 */
+		setOverflows: function() {
+			$(this).find('.tab').not(':has(.tab)').css('overflow', 'auto');
+		}
+	});
+})(jQuery);
+
+jQuery(document).ready(function() {
+	// @todo remove
+	jQuery.concrete.triggerMatching();
 });
