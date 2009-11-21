@@ -1,4 +1,4 @@
-<div id="$id" class="$CSSClasses field">
+<div id="$id" class="$CSSClasses $extraClass field">
 	<% if Print %><% else %><% include TableListField_PageControls %><% end_if %>
 	<table class="data">
 		<thead>
