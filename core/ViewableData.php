@@ -816,9 +816,9 @@ class ViewableData_Customised extends ViewableData {
 	}
 	
 	public function cachedCall($field, $arguments = null, $identifier = null) {
-		$result = $this->customised->cachedCall($field, $arguments, $identifier);
-		
-		if(!$result) {
+		if($this->customised->hasMethod($field) || $this->customised->hasField($field)) {
+			$result = $this->customised->cachedCall($field, $arguments, $identifier);
+		} else {
 			$result = $this->original->cachedCall($field, $arguments, $identifier);
 		}
 		
