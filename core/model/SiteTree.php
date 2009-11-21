@@ -154,11 +154,6 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	static $single_instance_only = false;
 	
 	/**
-	 * This is used as a CSS class to indicate a sitetree node is a single_instance_only page type
-	 */
-	static $single_instance_only_css_class = 'singleinstanceonly';
-	
-	/**
 	 * Icon to use in the CMS
 	 *
 	 * This should be the base filename.  The suffixes -file.gif,
@@ -2236,7 +2231,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 			$classes .= " notinmenu";
 			
 		if($this->stat('single_instance_only'))
-			$classes .= " " . $this->stat('single_instance_only_css_class');
+			$classes .= " singleinstance";
 			
 		//TODO: Add integration
 		/*
