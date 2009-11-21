@@ -944,18 +944,25 @@ class Translatable extends DataObjectDecorator implements PermissionProvider {
 			'Root',
 			new Tab('Translations', _t('Translatable.TRANSLATIONS', 'Translations'),
 				new HeaderField('CreateTransHeader', _t('Translatable.CREATE', 'Create new translation'), 2),
-				$langDropdown = new LanguageDropdownField(
-					"NewTransLang", 
-					_t('Translatable.NEWLANGUAGE', 'New language'), 
-					$alreadyTranslatedLocales,
-					'SiteTree',
-					'Locale-Native',
-					$this->owner
-				),
-				$createButton = new InlineFormAction('createtranslation',_t('Translatable.CREATEBUTTON', 'Create'))
+				$createTranslationComposite = new CompositeField(
+					$langDropdown = new LanguageDropdownField(
+						"NewTransLang", 
+						_t('Translatable.NEWLANGUAGE', 'New language'), 
+						$alreadyTranslatedLocales,
+						'SiteTree',
+						'Locale-Native',
+						$this->owner
+					),
+					$createButton = new InlineFormAction(
+						'createtranslation',
+						_t('Translatable.CREATEBUTTON', 'Create')
+					)
+				)
 			)
 		);
 		$createButton->includeDefaultJS(false);
+		$createTranslationComposite->addExtraClass('createTranslation');
+		$createTranslationComposite->addExtraClass("{url:'/admin/createtranslation'}");
 
 		if($alreadyTranslatedLocales) {
 			$fields->addFieldToTab(
