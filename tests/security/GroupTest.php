@@ -93,8 +93,8 @@ class GroupTest extends FunctionalTest {
 		
 		$adminGroup->delete();
 		
-		$this->assertNull(DataObject::get('Group', "\"ID\"={$adminGroup->ID}"), 'Group is removed');
-		$this->assertNull(DataObject::get('Permission',"\"GroupID\"={$adminGroup->ID}"), 'Permissions removed along with the group');
+		$this->assertEquals(0, DataObject::get('Group', "\"ID\"={$adminGroup->ID}")->count(), 'Group is removed');
+		$this->assertEquals(0, DataObject::get('Permission',"\"GroupID\"={$adminGroup->ID}")->count(), 'Permissions removed along with the group');
 	}
 	
 	function testCollateAncestorIDs() {

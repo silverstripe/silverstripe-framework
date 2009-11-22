@@ -155,7 +155,6 @@ class Group extends DataObject {
 		$memberList->setPermissions(array('edit', 'delete', 'export', 'add', 'inlineadd'));
 		$memberList->setParentClass('Group');
 		$memberList->setPopupCaption(_t('SecurityAdmin.VIEWUSER', 'View User'));
-		$memberList->setRelationAutoSetting(false);
 
 		$fields->push($idField = new HiddenField("ID"));
 		

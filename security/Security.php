@@ -668,32 +668,30 @@ class Security extends Controller {
 			Subsite::changeSubsite(0);
 		}
 
+		$member = null;
+
 		// find a group with ADMIN permission
 		$adminGroup = DataObject::get('Group', 
 								"\"Permission\".\"Code\" = 'ADMIN'", 
 								"\"Group\".\"ID\"", 
 								"JOIN \"Permission\" ON \"Group\".\"ID\"=\"Permission\".\"GroupID\"", 
-								'1');
+								'1')->First();
 		
 		if(is_callable('Subsite::changeSubsite')) {
 			Subsite::changeSubsite($origSubsite);
 		}
+		
 		if ($adminGroup) {
-			$adminGroup = $adminGroup->First();
-
-			if($adminGroup->Members()->First()) {
-				$member = $adminGroup->Members()->First();
-			}
+		    $member = $adminGroup->Members()->First();
 		}
 
 		if(!$adminGroup) {
 			singleton('Group')->requireDefaultRecords();
 		}
 		
-		if(!isset($member)) {
+		if(!$member) {
 			singleton('Member')->requireDefaultRecords();
-			$members = Permission::get_members_by_permission('ADMIN');
-			$member = $members->First();
+			$member = Permission::get_members_by_permission('ADMIN')->First();
 		}
 
 		return $member;

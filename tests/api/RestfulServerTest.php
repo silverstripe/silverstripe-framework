@@ -121,7 +121,7 @@ class RestfulServerTest extends SapphireTest {
 		
 		$url = "/api/v1/RestfulServerTest_Author/" . $author4->ID . '/RelatedAuthors';
 		$response = Director::test($url, null, null, 'GET');
-		$this->assertEquals($response->getStatusCode(), 200);
+		$this->assertEquals(200, $response->getStatusCode());
 		$arr = Convert::xml2array($response->getBody());
 		$authorsArr = $arr['RestfulServerTest_Author'];
 		

@@ -484,11 +484,9 @@ class Hierarchy extends DataExtension {
 	 */
 	public function numHistoricalChildren() {
 		if(!$this->owner->hasExtension('Versioned')) throw new Exception('Hierarchy->AllHistoricalChildren() only works with Versioned extension applied');
-		
-		$query = Versioned::get_including_deleted_query(ClassInfo::baseDataClass($this->owner->class), 
-			"\"ParentID\" = " . (int)$this->owner->ID);
-			
-		return $query->unlimitedRowCount();
+
+	    return Versioned::get_including_deleted(ClassInfo::baseDataClass($this->owner->class), 
+			"\"ParentID\" = " . (int)$this->owner->ID)->count();
 	}
 
 	/**
@@ -500,20 +498,11 @@ class Hierarchy extends DataExtension {
 	 * @return int
 	 */
 	public function numChildren($cache = true) {
-		$baseClass = ClassInfo::baseDataClass($this->owner->class);
-		
 		// Build the cache for this class if it doesn't exist.
 		if(!$cache || !is_numeric($this->_cache_numChildren)) {
-			// We build the query in an extension-friendly way.
-			$query = new SQLQuery(
-				"COUNT(*)",
-				"\"$baseClass\"", 
-				sprintf('"ParentID" = %d', $this->owner->ID)
-			);
-			$this->owner->extend('augmentSQL', $query);
-			$this->owner->extend('augmentNumChildrenCountQuery', $query);
-			 
-			$this->_cache_numChildren = (int)$query->execute()->value();
+			// Hey, this is efficient now!
+			// We call stageChildren(), because Children() has canView() filtering
+			$this->_cache_numChildren = (int)$this->owner->stageChildren(true)->Count();
 		}
 
 		// If theres no value in the cache, it just means that it doesn't have any children.
@@ -540,7 +529,6 @@ class Hierarchy extends DataExtension {
 			. (int)$this->owner->ID . " AND \"{$baseClass}\".\"ID\" != " . (int)$this->owner->ID
 			. $extraFilter, "");
 			
-		if(!$staged) $staged = new DataObjectSet();
 		$this->owner->extend("augmentStageChildren", $staged, $showAll);
 		return $staged;
 	}

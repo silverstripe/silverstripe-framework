@@ -126,7 +126,7 @@ class DataObjectSet extends ViewableData implements IteratorAggregate, Countable
 	 * Destory all of the DataObjects in this set.
 	 */
 	public function destroy() {
-		foreach($this->items as $item) {
+		foreach($this as $item) {
 			$item->destroy();
 		}
 	}
@@ -144,14 +144,10 @@ class DataObjectSet extends ViewableData implements IteratorAggregate, Countable
 	 * @return array
 	 */
 	public function toArray($index = null) {
-		if(!$index) {
-			return $this->items;
-		}
-		
 		$map = array();
-		
-		foreach($this->items as $item) {
-			$map[$item->$index] = $item;
+		foreach($this as $item) {
+			if($index) $map[$item->$index] = $item;
+			else $map[] = $item;
 		}
 			
 		return $map;
@@ -169,7 +165,7 @@ class DataObjectSet extends ViewableData implements IteratorAggregate, Countable
 		
 		$map = array();
 		
-		foreach( $this->items as $item ) {
+		foreach( $this as $item ) {
 			$map[$item->$index] = $item->getAllFields();
 		}
 		
@@ -584,7 +580,7 @@ class DataObjectSet extends ViewableData implements IteratorAggregate, Countable
 	 * @return boolean
 	 */
 	public function exists() {
-		return (bool)$this->items;
+		return $this->count() > 0;
 	}
 	
 	/**
@@ -616,7 +612,7 @@ class DataObjectSet extends ViewableData implements IteratorAggregate, Countable
 	 * @return int
 	 */
 	public function TotalItems() {
-		return $this->totalSize ? $this->totalSize : sizeof($this->items);
+		return $this->totalSize ? $this->totalSize : $this->Count();
 	}
 	
 	/**
@@ -632,9 +628,9 @@ class DataObjectSet extends ViewableData implements IteratorAggregate, Countable
 	 * @return string
 	 */
 	public function UL() {
-		if($this->items) {
+		if($this->exists()) {
 			$result = "<ul id=\"Menu1\">\n";
-			foreach($this->items as $item) {
+			foreach($this as $item) {
 				$result .= "<li onclick=\"location.href = this.getElementsByTagName('a')[0].href\"><a href=\"$item->Link\">$item->Title</a></li>\n";
 			}
 			$result .= "</ul>\n";
@@ -662,29 +658,27 @@ class DataObjectSet extends ViewableData implements IteratorAggregate, Countable
 	 */
 	public function map($index = 'ID', $titleField = 'Title', $emptyString = null, $sort = false) {
 		$map = array();
-		
-		if($this->items) {
-			foreach($this->items as $item) {
-				$map[$item->$index] = ($item->hasMethod($titleField)) ? $item->$titleField() : $item->$titleField;
-			}
+		foreach($this as $item) {
+			$map[$item->$index] = ($item->hasMethod($titleField)) 
+				? $item->$titleField() : $item->$titleField;
 		}
+		if($emptyString) $map = array('' => $emptyString) + $map;
 		
-		if($emptyString) $map = array('' => "$emptyString") + $map;
 		if($sort) asort($map);
 		
 		return $map;
 	}
-	
-	/**
-	 * Find an item in this list where the field $key is equal to $value
-	 * Eg: $doSet->find('ID', 4);
-	 * @return ViewableData The first matching item.
-	 */
-	public function find($key, $value) {
-		foreach($this->items as $item) {
-			if($item->$key == $value) return $item;
-		}
-	}
+    
+    /**
+     * Find an item in this list where the field $key is equal to $value
+     * Eg: $doSet->find('ID', 4);
+     * @return ViewableData The first matching item.
+     */
+    public function find($key, $value) {
+        foreach($this as $item) {
+            if($item->$key == $value) return $item;
+        }
+    }
 	
 	/**
 	 * Return a column of the given field
@@ -693,7 +687,7 @@ class DataObjectSet extends ViewableData implements IteratorAggregate, Countable
 	 */
 	public function column($value = "ID") {
 		$list = array();
-		foreach($this->items as $item ){
+		foreach($this as $item ){
 			$list[] = ($item->hasMethod($value)) ? $item->$value() : $item->$value;
 		}
 		return $list;
@@ -705,11 +699,9 @@ class DataObjectSet extends ViewableData implements IteratorAggregate, Countable
 	 * @param string $index The field name to index the array by.
 	 * @return array
 	 */
-	public function groupBy($index) {
-		$result = array();
-		foreach($this->items as $item) {
+	public function groupBy($index){
+		foreach($this as $item ){
 			$key = ($item->hasMethod($index)) ? $item->$index() : $item->$index;
-			
 			if(!isset($result[$key])) {
 				$result[$key] = new DataObjectSet();
 			}
@@ -898,7 +890,7 @@ class DataObjectSet extends ViewableData implements IteratorAggregate, Countable
 
 		// Put this item into the array indexed by $groupField.
 		// the keys are later used to retrieve the top-level records
-		foreach( $this->items as $item ) {
+		foreach( $this as $item ) {
 			$groupedSet[$item->$groupField][] = $item;
 		}
 
@@ -994,7 +986,7 @@ class DataObjectSet extends ViewableData implements IteratorAggregate, Countable
 	 */
 	function containsIDs($idList) {
 		foreach($idList as $item) $wants[$item] = true;
-		foreach($this->items as $item) if($item) unset($wants[$item->ID]);
+		foreach($this as $item) if($item) unset($wants[$item->ID]);
 		return !$wants;
 	}
 	
@@ -1004,7 +996,7 @@ class DataObjectSet extends ViewableData implements IteratorAggregate, Countable
 	 * @param $idList An array of object IDs
 	 */
 	function onlyContainsIDs($idList) {
-		return $this->containsIDs($idList) && sizeof($idList) == sizeof($this->items); 
+		return $this->containsIDs($idList) && sizeof($idList) == $this->count(); 
 	}
 	
 }

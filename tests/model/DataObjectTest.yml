@@ -6,7 +6,7 @@ DataObjectTest_Team:
       
 DataObjectTest_Player:
 	captain1:
-		FirstName: Captain 1
+		FirstName: Captain
 		ShirtNumber: 007
 		FavouriteTeam: =>DataObjectTest_Team.team1
 		Teams: =>DataObjectTest_Team.team1

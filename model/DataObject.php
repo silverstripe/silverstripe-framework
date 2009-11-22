@@ -444,7 +444,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	private function duplicateRelations($sourceObject, $destinationObject, $name) {
 		$relations = $sourceObject->$name();
 		if ($relations) {
-			if ($relations instanceOf ComponentSet) {   //many-to-something relation
+			if ($relations instanceOf RelationList) {   //many-to-something relation
 				if ($relations->Count() > 0) {  //with more than one thing it is related to
 					foreach($relations as $relation) {
 						$destinationObject->$name()->add($relation);
@@ -1192,18 +1192,19 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			user_error("$this->class has a broken onBeforeDelete() function.  Make sure that you call parent::onBeforeDelete().", E_USER_ERROR);
 		}
 		
-		// Deleting a record without an ID shouldn't do anything
-		if(!$this->ID) throw new Exception("DataObject::delete() called on a DataObject without an ID");
-		
-		foreach($this->getClassAncestry() as $ancestor) {
-			if(self::has_own_table($ancestor)) {
-				$sql = new SQLQuery();
-				$sql->delete = true;
-				$sql->from[$ancestor] = "\"$ancestor\"";
-				$sql->where[] = "\"ID\" = $this->ID";
-				$this->extend('augmentSQL', $sql);
-				$sql->execute();
-			}
+        // Deleting a record without an ID shouldn't do anything
+        if(!$this->ID) throw new Exception("DataObject::delete() called on a DataObject without an ID");
+
+		// TODO: This is quite ugly.  To improve:
+		//  - move the details of the delete code in the DataQuery system
+		//  - update the code to just delete the base table, and rely on cascading deletes in the DB to do the rest
+		//    obviously, that means getting requireTable() to configure cascading deletes ;-)
+		$srcQuery = DataList::create($this->class)->filter("ID = $this->ID")->dataQuery()->query();
+		foreach($srcQuery->queriedTables() as $table) {
+			$query = new SQLQuery("*", array('"'.$table.'"'));
+			$query->where("\"ID\" = $this->ID");
+			$query->delete = true;
+			$query->execute();
 		}
 		// Remove this item out of any caches
 		$this->flushCache();
@@ -2590,162 +2591,12 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	}
 
 	/**
-	 * Build a {@link SQLQuery} object to perform the given query.
-	 *
-	 * @param string $filter A filter to be inserted into the WHERE clause.
-	 * @param string|array $sort A sort expression to be inserted into the ORDER BY clause. If omitted, self::$default_sort will be used.
-	 * @param string|array $limit A limit expression to be inserted into the LIMIT clause.
-	 * @param string $join A single join clause. This can be used for filtering, only 1 instance of each DataObject will be returned.
-	 * @param boolean $restictClasses Restrict results to only objects of either this class of a subclass of this class
-	 * @param string $having A filter to be inserted into the HAVING clause.
-	 *
-	 * @return SQLQuery Query built.
+	 * @deprecated 2.5 Use DataObject::get() instead, with the new data mapper there's no reason not to.
 	 */
 	public function buildSQL($filter = "", $sort = "", $limit = "", $join = "", $restrictClasses = true, $having = "") {
-		// Cache the big hairy part of buildSQL
-		if(!isset(self::$cache_buildSQL_query[$this->class])) {
-			// Get the tables to join to
-			$tableClasses = ClassInfo::dataClassesFor($this->class);
-			if(!$tableClasses) {
-				if (!DB::getConn()) {
-					throw new Exception('DataObjects have been requested before'
-						. ' a DB connection has been made. Please ensure you'
-						. ' are not querying the database in _config.php.');
-				} else {
-					user_error("DataObject::buildSQL: Can't find data classes (classes linked to tables) for $this->class. Please ensure you run dev/build after creating a new DataObject.", E_USER_ERROR);
-				}
-			}
+		user_error("DataObject::buildSQL() deprecated; just use DataObject::get() with the new data mapper", E_USER_NOTICE);
+		return $this->extendedSQL($filter, $sort, $limit, $join, $having);
 
-			$baseClass = array_shift($tableClasses);
-
-
-			// $collidingFields will keep a list fields that appear in mulitple places in the class
-			// heirarchy for this table.  They will be dealt with more explicitly in the SQL query
-			// to ensure that junk data from other tables doesn't corrupt data objects
-			$collidingFields = array();
-
-			// Build our intial query
-			$query = new SQLQuery(array());
-			$query->from("\"$baseClass\"");
-
-			// Add SQL for multi-value fields on the base table
-			$databaseFields = self::database_fields($baseClass);
-			if($databaseFields) foreach($databaseFields as $k => $v) {
-				if(!in_array($k, array('ClassName', 'LastEdited', 'Created')) && ClassInfo::classImplements($v, 'CompositeDBField')) {
-					$this->dbObject($k)->addToQuery($query);
-				} else {
-					$query->select[$k] = "\"$baseClass\".\"$k\"";
-				}
-			}
-			// Join all the tables
-			if($tableClasses && self::$subclass_access) {
-				foreach($tableClasses as $tableClass) {
-					$query->from[$tableClass] = "LEFT JOIN \"$tableClass\" ON \"$tableClass\".\"ID\" = \"$baseClass\".\"ID\"";
-
-					// Add SQL for multi-value fields
-					$databaseFields = self::database_fields($tableClass);
-					$compositeFields = self::composite_fields($tableClass, false);
-					if($databaseFields) foreach($databaseFields as $k => $v) {
-						if(!isset($compositeFields[$k])) {
-							// Update $collidingFields if necessary
-							if(isset($query->select[$k])) {
-								if(!isset($collidingFields[$k])) $collidingFields[$k] = array($query->select[$k]);
-								$collidingFields[$k][] = "\"$tableClass\".\"$k\"";
-								
-							} else {
-								$query->select[$k] = "\"$tableClass\".\"$k\"";
-							}
-						}
-					}
-					if($compositeFields) foreach($compositeFields as $k => $v) {
-						$dbO = $this->dbObject($k);
-						if($dbO) $dbO->addToQuery($query);
-					}
-				}
-			}
-			
-			// Resolve colliding fields
-			if($collidingFields) {
-				foreach($collidingFields as $k => $collisions) {
-					$caseClauses = array();
-					foreach($collisions as $collision) {
-						if(preg_match('/^"([^"]+)"/', $collision, $matches)) {
-							$collisionBase = $matches[1];
-							$collisionClasses = ClassInfo::subclassesFor($collisionBase);
-							$caseClauses[] = "WHEN \"$baseClass\".\"ClassName\" IN ('"
-								. implode("', '", $collisionClasses) . "') THEN $collision";
-						} else {
-							user_error("Bad collision item '$collision'", E_USER_WARNING);
-						}
-					}
-					$query->select[$k] = "CASE " . implode( " ", $caseClauses) . " ELSE NULL END"
-						.  " AS \"$k\"";
-				}
-			}
-			
-
-			$query->select[] = "\"$baseClass\".\"ID\"";
-			$query->select[] = "CASE WHEN \"$baseClass\".\"ClassName\" IS NOT NULL THEN \"$baseClass\".\"ClassName\" ELSE '$baseClass' END AS \"RecordClassName\"";
-
-			// Get the ClassName values to filter to
-			$classNames = ClassInfo::subclassesFor($this->class);
-
-			if(!$classNames) {
-				user_error("DataObject::get() Can't find data sub-classes for '$callerClass'");
-			}
-
-			// If querying the base class, don't bother filtering on class name
-			if($restrictClasses && $this->class != $baseClass) {
-				// Get the ClassName values to filter to
-				$classNames = ClassInfo::subclassesFor($this->class);
-				if(!$classNames) {
-					user_error("DataObject::get() Can't find data sub-classes for '$callerClass'");
-				}
-
-				$query->where[] = "\"$baseClass\".\"ClassName\" IN ('" . implode("','", $classNames) . "')";
-			}
-			self::$cache_buildSQL_query[$this->class] = clone $query;
-		} else {
-			$query = clone self::$cache_buildSQL_query[$this->class];
-			
-		}
-		
-		// Find a default sort
-		if(!$sort) {
-			$sort = $this->stat('default_sort');
-		}
-		// Add quoting to sort expression if it's a simple column name
-		if(preg_match('/^[A-Z][A-Z0-9_]*$/i', $sort)) $sort = "\"$sort\"";
-
-		$query->where($filter);
-		$query->orderby($sort);
-		$query->limit($limit);
-		
-
-		if($having) {
-			$query->having[] = $having;
-		}
-
-		if($join) {
-			$query->from[] = $join;
-			// In order to group by unique columns we have to group by everything listed in the select
-			foreach($query->select as $field) {
-				// Skip the _SortColumns; these are only going to be aggregate functions
-				if(preg_match('/AS\s+\"?_SortColumn/', $field, $matches)) {
-				
-				// Identify columns with aliases, and ignore the alias.  Making use of the alias in
-				// group by was causing problems when those queries were subsequently passed into
-				// SQLQuery::unlimitedRowCount.
-				} else if(preg_match('/^(.*)\s+AS\s+(\"[^"]+\")\s*$/', $field, $matches)) {
-					$query->groupby[] = $matches[1];
-				// Otherwise just use the field as is
-				} else {
-					$query->groupby[] = $field;
-				}
-			}
-		}
-
-		return $query;
 	}
 	
 	/**
@@ -2754,21 +2605,11 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	private static $cache_buildSQL_query;
 
 	/**
-	 * Like {@link buildSQL}, but applies the extension modifications.
-	 * 
-	 * @uses DataExtension->augmentSQL()
-	 *
-	 * @param string $filter A filter to be inserted into the WHERE clause.
-	 * @param string|array $sort A sort expression to be inserted into the ORDER BY clause. If omitted, self::$default_sort will be used.
-	 * @param string|array $limit A limit expression to be inserted into the LIMIT clause.
-	 * @param string $join A single join clause. This can be used for filtering, only 1 instance of each DataObject will be returned.
-	 * @param string $having A filter to be inserted into the HAVING clause.
-	 * @return SQLQuery Query built
+	 * @deprecated 2.5 Use DataObject::get() instead, with the new data mapper there's no reason not to.
 	 */
-	public function extendedSQL($filter = "", $sort = "", $limit = "", $join = "", $having = ""){
-		$query = $this->buildSQL($filter, $sort, $limit, $join, true, $having);
-		$this->extend('augmentSQL', $query);
-		return $query;
+	public function extendedSQL($filter = "", $sort = "", $limit = "", $join = ""){
+		$dataList = DataObject::get($this->class, $filter, $sort, $join, $limit);
+		return $dataList->dataQuery()->query();
 	}
 
 	/**
@@ -2784,13 +2625,35 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 *
 	 * @return mixed The objects matching the filter, in the class specified by $containerClass
 	 */
-	public static function get($callerClass, $filter = "", $sort = "", $join = "", $limit = "", $containerClass = "DataObjectSet") {
-		return singleton($callerClass)->instance_get($filter, $sort, $join, $limit, $containerClass);
+	public static function get($callerClass, $filter = "", $sort = "", $join = "", $limit = "", $containerClass = "DataList") {
+		// Deprecated 2.5?
+		// Todo: Make the $containerClass method redundant
+		if($containerClass != "DataList") user_error("The DataObject::get() \$containerClass argument has been deprecated", E_USER_NOTICE);
+		$result = DataList::create($callerClass)->filter($filter)->sort($sort)->join($join)->limit($limit);
+		return $result;
+	}
+	
+	/**
+	 * @deprecated 
+	 */
+	public function Aggregate($class = null) {
+	    if($class) return new DataList($class);
+	    else if(isset($this)) return new DataList(get_class($this));
+	    else throw new InvalidArgumentException("DataObject::aggregate() must be called as an instance method or passed a classname");
+	}
+
+	/**
+	 * @deprecated 
+	 */
+	public function RelationshipAggregate($relationship) {
+	    return $this->$relationship();
 	}
 
 	/**
 	 * The internal function that actually performs the querying for get().
 	 * DataObject::get("Table","filter") is the same as singleton("Table")->instance_get("filter")
+	 *
+	 * @deprecated 2.5 Use DataObject::get()
 	 *
 	 * @param string $filter A filter to be inserted into the WHERE clause.
 	 * @param string $sort A sort expression to be inserted into the ORDER BY clause.  If omitted, self::$default_sort will be used.
@@ -2801,22 +2664,15 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @return mixed The objects matching the filter, in the class specified by $containerClass
 	 */
 	public function instance_get($filter = "", $sort = "", $join = "", $limit="", $containerClass = "DataObjectSet") {
-		if(!DB::isActive()) {
-			user_error("DataObjects have been requested before the database is ready. Please ensure your database connection details are correct, your database has been built, and that you are not trying to query the database in _config.php.", E_USER_ERROR);
-		}
-		
-		$query = $this->extendedSQL($filter, $sort, $limit, $join);
-		
-		$records = $query->execute();
-		
-		$ret = $this->buildDataObjectSet($records, $containerClass, $query, $this->class);
-		if($ret) $ret->parseQueryLimit($query);
+		user_error("instance_get deprecated", E_USER_NOTICE);
+		return self::get($this->class, $filter, $sort, $join, $limit, $containerClass);
 
-		return $ret;
 	}
 
 	/**
 	 * Take a database {@link SS_Query} and instanciate an object for each record.
+	 * 
+	 * @deprecated 2.5 Use DataObject::get(), you don't need to side-step it any more
 	 *
 	 * @param SS_Query|array $records The database records, a {@link SS_Query} object or an array of maps.
 	 * @param string $containerClass The class to place all of the objects into.
@@ -2824,6 +2680,8 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @return mixed The new objects in an object of type $containerClass
 	 */
 	function buildDataObjectSet($records, $containerClass = "DataObjectSet", $query = null, $baseClass = null) {
+		user_error('buildDataObjectSet is deprecated; use DataList to do your querying', E_USER_NOTICE);
+		
 		foreach($records as $record) {
 			if(empty($record['RecordClassName'])) {
 				$record['RecordClassName'] = $record['ClassName'];
@@ -2879,7 +2737,9 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			] = false;
 		}
 		if(!$cache || !isset(DataObject::$cache_get_one[$callerClass][$cacheKey])) {
-			$item = $SNG->instance_get_one($filter, $orderby);
+			$dl = DataList::create($callerClass)->filter($filter)->sort($orderby);
+			$item = $dl->First();
+
 			if($cache) {
 				DataObject::$cache_get_one[$callerClass][$cacheKey] = $item;
 				if(!DataObject::$cache_get_one[$callerClass][$cacheKey]) {
@@ -2935,6 +2795,8 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 
 	/**
 	 * Does the hard work for get_one()
+	 *
+	 * @deprecated 2.5 Use DataObject::get_one() instead
 	 * 
 	 * @uses DataExtension->augmentSQL()
 	 *
@@ -2943,35 +2805,8 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @return DataObject The first item matching the query
 	 */
 	public function instance_get_one($filter, $orderby = null) {
-		if(!DB::isActive()) {
-			user_error("DataObjects have been requested before the database is ready. Please ensure your database connection details are correct, your database has been built, and that you are not trying to query the database in _config.php.", E_USER_ERROR);
-		}
-		
-		$query = $this->buildSQL($filter);
-		$query->limit = "1";
-		if($orderby) {
-			$query->orderby = $orderby;
-		}
-
-		$this->extend('augmentSQL', $query);
-
-		$records = $query->execute();
-		$records->rewind();
-		$record = $records->current();
-
-		if($record) {
-			// Mid-upgrade, the database can have invalid RecordClassName values that need to be guarded against.
-			if(class_exists($record['RecordClassName'])) {
-				$record = new $record['RecordClassName']($record);
-			} else {
-				$record = new $this->class($record);
-			}
-
-			// Rather than restrict classes at the SQL-query level, we now check once the object has been instantiated
-			// This lets us check up on weird errors where the class has been incorrectly set, and give warnings to our
-			// developers
-			return $record;
-		}
+		user_error("DataObjct::instance_get_one is deprecated", E_USER_NOTICE);
+		return DataObject::get_one($this->class, $filter, true, $orderby);
 	}
 
 	/**

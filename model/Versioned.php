@@ -106,9 +106,31 @@ class Versioned extends DataExtension {
 		);
 	}
 	
-	function augmentSQL(SQLQuery &$query) {
-		// Get the content at a specific date
-		if($date = Versioned::current_archived_date()) {
+	
+	/**
+	 * Amend freshly created DataQuery objects with versioned-specific information 
+	 */
+	function augmentDataQueryCreation(SQLQuery &$query, DataQuery &$dataQuery) {
+		if($date = Versioned::$reading_archived_date) {
+			$dataQuery->setQueryParam('Versioned.mode', 'archive');
+			$dataQuery->setQueryParam('Versioned.date', Versioned::$reading_archived_date);
+
+		} else if(Versioned::$reading_stage && Versioned::$reading_stage != $this->defaultStage && array_search(Versioned::$reading_stage,$this->stages) !== false) {
+			$dataQuery->setQueryParam('Versioned.mode', 'stage');
+			$dataQuery->setQueryParam('Versioned.stage', Versioned::$reading_stage);
+		}
+		
+	}
+
+	/**
+	 * Augment the the SQLQuery that is created by the DataQuery
+	 * @todo Should this all go into VersionedDataQuery?
+	 */
+	function augmentSQL(SQLQuery &$query, DataQuery &$dataQuery) {
+		switch($dataQuery->getQueryParam('Versioned.mode')) {
+		// Reading a specific data from the archive
+		case 'archive':
+			$date = $dataQuery->getQueryParam('Versioned.date');
 			foreach($query->from as $table => $dummy) {
 				if(!isset($baseTable)) {
 					$baseTable = $table;
@@ -132,13 +154,24 @@ class Versioned extends DataExtension {
 			$query->from[$archiveTable] = "INNER JOIN \"$archiveTable\"
 				ON \"$archiveTable\".\"ID\" = \"{$baseTable}_versions\".\"RecordID\" 
 				AND \"$archiveTable\".\"Version\" = \"{$baseTable}_versions\".\"Version\"";
-
-		// Get a specific stage
-		} else if(Versioned::current_stage() && Versioned::current_stage() != $this->defaultStage 
-					&& array_search(Versioned::current_stage(), $this->stages) !== false) {
-			foreach($query->from as $table => $dummy) {
-				$query->renameTable($table, $table . '_' . Versioned::current_stage());
+			break;
+		
+		// Reading a specific stage (Stage or Live)
+		case 'stage':
+			$stage = $dataQuery->getQueryParam('Versioned.stage');
+			if($stage && ($stage != $this->defaultStage)) {
+				foreach($query->from as $table => $dummy) {
+					// Only rewrite table names that are actually part of the subclass tree
+					// This helps prevent rewriting of other tables that get joined in, in
+					// particular, many_many tables
+					if(class_exists($table) && ($table == $this->owner->class 
+							|| is_subclass_of($table, $this->owner->class) 
+							|| is_subclass_of($this->owner->class, $table))) {
+						$query->renameTable($table, $table . '_' . $stage);
+					}
+				}
 			}
+			break;
 		}
 	}
 	
@@ -846,11 +879,11 @@ class Versioned extends DataExtension {
 	 * @param string $containerClass The container class for the result set (default is DataObjectSet)
 	 * @return DataObjectSet
 	 */
-	static function get_by_stage($class, $stage, $filter = '', $sort = '', $join = '', $limit = '', $containerClass = 'DataObjectSet') {
-		$oldMode = Versioned::get_reading_mode();
-		Versioned::reading_stage($stage);
+	static function get_by_stage($class, $stage, $filter = '', $sort = '', $join = '', $limit = '', $containerClass = 'DataList') {
 		$result = DataObject::get($class, $filter, $sort, $join, $limit, $containerClass);
-		Versioned::set_reading_mode($oldMode);
+		$dq = $result->dataQuery();
+		$dq->setQueryParam('Versioned.mode', 'stage');
+		$dq->setQueryParam('Versioned.stage', $stage);
 		return $result;
 	}
 	
@@ -959,20 +992,6 @@ class Versioned extends DataExtension {
 	 * In particular, this will query deleted records as well as active ones.
 	 */
 	static function get_including_deleted($class, $filter = "", $sort = "") {
-		$query = self::get_including_deleted_query($class, $filter, $sort);
-		
-		// Process into a DataObjectSet
-		$SNG = singleton($class);
-		return $SNG->buildDataObjectSet($query->execute(), 'DataObjectSet', null, $class);
-	}
-	
-	/**
-	 * Return the query for the equivalent of a DataObject::get() call, querying the latest
-	 * version of each page stored in the (class)_versions tables.
-	 *
-	 * In particular, this will query deleted records as well as active ones.
-	 */
-	static function get_including_deleted_query($class, $filter = "", $sort = "") {
 		$oldMode = Versioned::get_reading_mode();
 		Versioned::set_reading_mode('');
 
@@ -985,6 +1004,9 @@ class Versioned extends DataExtension {
 		$query->from[$archiveTable] = "INNER JOIN \"$archiveTable\"
 			ON \"$archiveTable\".\"ID\" = \"{$baseTable}_versions\".\"RecordID\"
 			AND \"$archiveTable\".\"Version\" = \"{$baseTable}_versions\".\"Version\"";
+		
+		// Process into a DataObjectSet
+		$result = $SNG->buildDataObjectSet($query->execute(), 'DataObjectSet', null, $class);
 
 		Versioned::set_reading_mode($oldMode);
 		return $query;

@@ -64,4 +64,19 @@ class PermissionTest extends SapphireTest {
 			'Member is found via a permission attached to a role');
 		$this->assertNotContains($accessAuthor->ID, $resultIDs);
 	}
+
+	
+	function testHiddenPermissions(){
+		$permissionCheckboxSet = new PermissionCheckboxSetField('Permissions','Permissions','Permission','GroupID');
+		$this->assertContains('CMS_ACCESS_CMSMain', $permissionCheckboxSet->Field());
+		$this->assertContains('CMS_ACCESS_AssetAdmin', $permissionCheckboxSet->Field());
+		
+		Permission::add_to_hidden_permissions('CMS_ACCESS_CMSMain');
+		Permission::add_to_hidden_permissions('CMS_ACCESS_AssetAdmin');
+		$this->assertNotContains('CMS_ACCESS_CMSMain', $permissionCheckboxSet->Field());
+		$this->assertNotContains('CMS_ACCESS_AssetAdmin', $permissionCheckboxSet->Field());
+		
+		Permission::remove_from_hidden_permissions('CMS_ACCESS_AssetAdmin');
+		$this->assertContains('CMS_ACCESS_AssetAdmin', $permissionCheckboxSet->Field());
+	}	
 }

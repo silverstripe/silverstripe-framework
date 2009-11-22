@@ -137,14 +137,6 @@ class DataObjectTest extends SapphireTest {
 		$this->assertEquals('Joe', $comments->First()->Name);
 		$this->assertEquals('Phil', $comments->Last()->Name);
 		
-		// Test container class
-		$comments = DataObject::get('DataObjectTest_TeamComment', '', '', '', '', 'DataObjectSet');
-		$this->assertEquals('DataObjectSet', get_class($comments));
-		
-		$comments = DataObject::get('DataObjectTest_TeamComment', '', '', '', '', 'ComponentSet');
-		$this->assertEquals('ComponentSet', get_class($comments));
-		
-		
 		// Test get_by_id()
 		$captain1ID = $this->idFromFixture('DataObjectTest_Player', 'captain1');
 		$captain1 = DataObject::get_by_id('DataObjectTest_Player', $captain1ID);
@@ -182,7 +174,7 @@ class DataObjectTest extends SapphireTest {
 		/* Test that fields / has_one relations from the parent table and the subclass tables are extracted */
 		$captain1 = $this->objFromFixture("DataObjectTest_Player", "captain1");
 		// Base field
-		$this->assertEquals('Captain 1', $captain1->FirstName);
+		$this->assertEquals('Captain', $captain1->FirstName);
 		// Subclass field
 		$this->assertEquals('007', $captain1->ShirtNumber);
 		// Subclass has_one relation
@@ -197,6 +189,25 @@ class DataObjectTest extends SapphireTest {
 		$this->assertEquals($this->idFromFixture('DataObjectTest_Team', 'team1'), $captain1->FavouriteTeam()->ID);
 	}
 	
+	function testLimitAndCount() {
+		$players = DataObject::get("DataObjectTest_Player");
+		
+		// There's 4 records in total
+		$this->assertEquals(4, $players->count());
+		
+		// Testing "## offset ##" syntax
+		$this->assertEquals(4, $players->limit("20 OFFSET 0")->count());
+		$this->assertEquals(0, $players->limit("20 OFFSET 20")->count());
+		$this->assertEquals(2, $players->limit("2 OFFSET 0")->count());
+		$this->assertEquals(1, $players->limit("5 OFFSET 3")->count());
+
+		// Testing "##, ##" syntax
+		$this->assertEquals(4, $players->limit("20")->count());
+		$this->assertEquals(4, $players->limit("0, 20")->count());
+		$this->assertEquals(0, $players->limit("20, 20")->count());
+		$this->assertEquals(2, $players->limit("0, 2")->count());
+		$this->assertEquals(1, $players->limit("3, 5")->count());
+	}
 
 	/**
 	 * Test writing of database columns which don't correlate to a DBField,
@@ -221,26 +232,26 @@ class DataObjectTest extends SapphireTest {
 		$team = $this->objFromFixture('DataObjectTest_Team', 'team1');
 		
 		// Test getComponents() gets the ComponentSet of the other side of the relation
-		$this->assertTrue($page->Comments()->Count() == 2);
+		$this->assertTrue($team->Comments()->Count() == 2);
 		
 		// Test the IDs on the DataObjects are set correctly
-		foreach($page->Comments() as $comment) {
-			$this->assertTrue($comment->ParentID == $page->ID);
+		foreach($team->Comments() as $comment) {
+			$this->assertEquals($team->ID, $comment->TeamID);
 		}
 		
 		// Test that we can add and remove items that already exist in the database
-		$newComment = new PageComment();
+		$newComment = new DataObjectTest_TeamComment();
 		$newComment->Name = "Automated commenter";
 		$newComment->Comment = "This is a new comment";
 		$newComment->write();
-		$page->Comments()->add($newComment);
-		$this->assertEquals($page->ID, $newComment->ParentID);
+		$team->Comments()->add($newComment);
+		$this->assertEquals($team->ID, $newComment->TeamID);
 		
-		$comment1 = $this->fixture->objFromFixture('PageComment', 'comment1');
-		$comment2 = $this->fixture->objFromFixture('PageComment', 'comment2');
-		$page->Comments()->remove($comment2);
+		$comment1 = $this->fixture->objFromFixture('DataObjectTest_TeamComment', 'comment1');
+		$comment2 = $this->fixture->objFromFixture('DataObjectTest_TeamComment', 'comment2');
+		$team->Comments()->remove($comment2);
 
-		$commentIDs = $page->Comments()->column('ID');
+		$commentIDs = $team->Comments()->column('ID');
 		$this->assertEquals(array($comment1->ID, $newComment->ID), $commentIDs);
 	}
 
@@ -421,17 +432,22 @@ class DataObjectTest extends SapphireTest {
 		$obj->FirstName = "New Player"; 
 		$this->assertTrue($obj->isChanged());
 		
-		$page->write(); 
-		$this->assertFalse($page->isChanged());
+		$obj->write(); 
+		$this->assertFalse($obj->isChanged());
 
 		/* If we perform the same random query twice, it shouldn't return the same results */
 		$itemsA = DataObject::get("DataObjectTest_TeamComment", "", DB::getConn()->random());
-		foreach($itemsA as $item) $keysA[] = $item->ID;
-
 		$itemsB = DataObject::get("DataObjectTest_TeamComment", "", DB::getConn()->random());
+		$itemsC = DataObject::get("DataObjectTest_TeamComment", "", DB::getConn()->random());
+		$itemsD = DataObject::get("DataObjectTest_TeamComment", "", DB::getConn()->random());
+		foreach($itemsA as $item) $keysA[] = $item->ID;
 		foreach($itemsB as $item) $keysB[] = $item->ID;
+		foreach($itemsC as $item) $keysC[] = $item->ID;
+		foreach($itemsD as $item) $keysD[] = $item->ID;
 		
-		$this->assertNotEquals($keysA, $keysB);
+		// These shouldn't all be the same (run it 4 times to minimise chance of an accidental collision)
+		// There's about a 1 in a billion chance of an accidental collision
+		$this->assertTrue($keysA != $keysB || $keysB != $keysC || $keysC != $keysD);
 	}
 	
 	function testWriteSavesToHasOneRelations() {
@@ -815,8 +831,8 @@ class DataObjectTest extends SapphireTest {
 	 */
 	function testManyManyUnlimitedRowCount() {
 		$player = $this->objFromFixture('DataObjectTest_Player', 'player2');
-		$query = $player->getManyManyComponentsQuery('Teams');
-		$this->assertEquals(2, $query->unlimitedRowCount());
+		// TODO: What's going on here?
+		$this->assertEquals(2, $player->Teams()->dataQuery()->query()->unlimitedRowCount());
 	}
 	
 	/**

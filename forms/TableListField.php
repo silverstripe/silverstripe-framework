@@ -496,12 +496,19 @@ JS
 			$query = singleton($this->sourceClass)->extendedSQL($this->sourceFilter(), $this->sourceSort, null, $this->sourceJoin);
 		}
 		
-		if(!empty($_REQUEST['ctf'][$this->Name()]['sort'])) {
-			$column = $_REQUEST['ctf'][$this->Name()]['sort'];
-			$dir = 'ASC';
-			if(!empty($_REQUEST['ctf'][$this->Name()]['dir'])) {
-				$dir = $_REQUEST['ctf'][$this->Name()]['dir'];
-				if(strtoupper(trim($dir)) == 'DESC') $dir = 'DESC';
+		if(!$this->dataList) {
+			user_error(get_class($this). ' is missing a DataList', E_USER_ERROR);
+		}
+		
+		$dl = clone $this->dataList;
+		
+		if(isset($_REQUEST['ctf'][$this->Name()]['sort'])) {
+			$query = $this->dataList->dataQuery()->query();
+			$SQL_sort = Convert::raw2sql($_REQUEST['ctf'][$this->Name()]['sort']);
+			$sql = $query->sql();
+			// see {isFieldSortable}
+			if(in_array($SQL_sort,$query->select) || stripos($sql,"AS {$SQL_sort}")) {
+				$dl->sort($SQL_sort);
 			}
 			if($query->canSortBy($column)) $query->orderby = $column.' '.$dir;
 		}
@@ -1208,17 +1215,6 @@ JS
 	function BaseLink() {
 		user_error("TableListField::BaseLink() deprecated, use Link() instead", E_USER_NOTICE);
 		return $this->Link();
-	}
-	
-	/**
-	 * @return Int
-	 */
-	function sourceID() {
-		$idField = $this->form->dataFieldByName('ID');
-		if(!isset($idField)) {
-			user_error("TableListField needs a formfield named 'ID' to be present", E_USER_ERROR);
-		}
-		return $idField->Value();
 	}
 	
 	/**

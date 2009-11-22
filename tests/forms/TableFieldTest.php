@@ -110,7 +110,7 @@ class TableFieldTest extends SapphireTest {
 			new FieldSet()
 		);
 		
-		$this->assertEquals($tableField->sourceItems()->Count(), 2);
+		$this->assertEquals(2, $tableField->sourceItems()->Count());
 		
 		// We have replicated the array structure that the specific layout of the form generates.
 		$tableField->setValue(array(

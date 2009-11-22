@@ -142,8 +142,7 @@ class HtmlEditorField extends TextareaField {
 		// Save file & link tracking data.
 		if(class_exists('SiteTree')) {
 			if($record->ID && $record->many_many('LinkTracking') && $tracker = $record->LinkTracking()) {
-				$filter = sprintf('"FieldName" = \'%s\' AND "SiteTreeID" = %d', $this->name, $record->ID);
-				DB::query("DELETE FROM \"$tracker->tableName\" WHERE $filter");
+			    $tracker->removeByFilter(sprintf('"FieldName" = \'%s\' AND "SiteTreeID" = %d', $this->name, $record->ID));
 
 				if($linkedPages) foreach($linkedPages as $item) {
 					$SQL_fieldName = Convert::raw2sql($this->name);
@@ -151,10 +150,9 @@ class HtmlEditorField extends TextareaField {
 						VALUES ($record->ID, $item, '$SQL_fieldName')");
 				}
 			}
-
+		
 			if($record->ID && $record->many_many('ImageTracking') && $tracker = $record->ImageTracking()) {
-				$filter = sprintf('"FieldName" = \'%s\' AND "SiteTreeID" = %d', $this->name, $record->ID);
-				DB::query("DELETE FROM \"$tracker->tableName\" WHERE $filter");
+			    $tracker->removeByFilter(sprintf('"FieldName" = \'%s\' AND "SiteTreeID" = %d', $this->name, $record->ID));
 
 				$fieldName = $this->name;
 				if($linkedFiles) foreach($linkedFiles as $item) {

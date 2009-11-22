@@ -139,16 +139,15 @@ class Member extends DataObject {
 		// Default groups should've been built by Group->requireDefaultRecords() already
 		
 		// Find or create ADMIN group
-		$adminGroups = Permission::get_groups_by_permission('ADMIN');
-		if(!$adminGroups) {
+		$adminGroup = Permission::get_groups_by_permission('ADMIN')->First();
+		if(!$adminGroup) {
 			singleton('Group')->requireDefaultRecords();
-			$adminGroups = Permission::get_groups_by_permission('ADMIN');
+			$adminGroup = Permission::get_groups_by_permission('ADMIN')->First();
 		}
-		$adminGroup = $adminGroups->First();
 		
 		// Add a default administrator to the first ADMIN group found (most likely the default
 		// group created through Group->requireDefaultRecords()).
-		$admins = Permission::get_members_by_permission('ADMIN');
+		$admins = Permission::get_members_by_permission('ADMIN')->First();
 		if(!$admins) {
 			// Leave 'Email' and 'Password' are not set to avoid creating
 			// persistent logins in the database. See Security::setDefaultAdmin().
@@ -156,7 +155,7 @@ class Member extends DataObject {
 			$admin->FirstName = _t('Member.DefaultAdminFirstname', 'Default Admin');
 			$admin->write();
 			$admin->Groups()->add($adminGroup);
-		}		
+		}
 	}
 
 	/**
