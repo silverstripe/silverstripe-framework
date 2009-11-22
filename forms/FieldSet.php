@@ -179,7 +179,10 @@ class FieldSet extends DataObjectSet {
 		
 		foreach($this->items as $i => $child) {
 			if(is_object($child)){
-				if(($child->Name() == $fieldName || $child->Title() == $fieldName) && (!$dataFieldOnly || $child->hasData())) {
+				$childName = $child->Name();
+				if(!$childName) $childName = $child->Title();
+				
+				if(($childName == $fieldName) && (!$dataFieldOnly || $child->hasData())) {
 					array_splice( $this->items, $i, 1 );
 					break;
 				} else if($child->isComposite()) {
