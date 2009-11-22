@@ -1144,7 +1144,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			$this->extend('onAfterSkippedWrite');
 		}
 
-		// Write ComponentSets as necessary
+		// Write relations as necessary
 		if($writeComponents) {
 			$this->writeComponents(true);
 		}
@@ -1307,10 +1307,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	protected $componentCache;
 
 	/**
-	 * Returns a one-to-many component, as a ComponentSet.
-	 * The return value will be cached on this object instance,
-	 * but only when no related objects are found (to avoid unnecessary empty checks in the database).
-	 * If related objects exist, no caching is applied.
+	 * Returns a one-to-many relation as a HasManyList
 	 *
 	 * @param string $componentName Name of the component
 	 * @param string $filter A filter to be inserted into the WHERE clause
@@ -1318,47 +1315,27 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @param string $join A single join clause. This can be used for filtering, only 1 instance of each DataObject will be returned.
 	 * @param string|array $limit A limit expression to be inserted into the LIMIT clause
 	 *
-	 * @return ComponentSet The components of the one-to-many relationship.
+	 * @return HasManyList The components of the one-to-many relationship.
 	 */
 	public function getComponents($componentName, $filter = "", $sort = "", $join = "", $limit = "") {
 		$result = null;
-
-		$sum = md5("{$filter}_{$sort}_{$join}_{$limit}");
-		if(isset($this->componentCache[$componentName . '_' . $sum]) && false != $this->componentCache[$componentName . '_' . $sum]) {
-			return $this->componentCache[$componentName . '_' . $sum];
-		}
 
 		if(!$componentClass = $this->has_many($componentName)) {
 			user_error("DataObject::getComponents(): Unknown 1-to-many component '$componentName' on class '$this->class'", E_USER_ERROR);
 		}
 
 		$joinField = $this->getRemoteJoinField($componentName, 'has_many');
+		
+		$result = new HasManyList($componentClass, $joinField);
+		if($this->ID) $result->setForeignID($this->ID);
 
-		if($this->isInDB()) { //Check to see whether we should query the db
-			$query = $this->getComponentsQuery($componentName, $filter, $sort, $join, $limit);
-			$result = $this->buildDataObjectSet($query->execute(), 'ComponentSet', $query, $componentClass);
-			if($result) $result->parseQueryLimit($query);
-		}
-
-		if(!$result) {
-			// If this record isn't in the database, then we want to hold onto this specific ComponentSet,
-			// because it's the only copy of the data that we have.
-			$result = new ComponentSet();
-			$this->setComponent($componentName . '_' . $sum, $result);
-		}
-
-		$result->setComponentInfo("1-to-many", $this, null, null, $componentClass, $joinField);
+		$result = $result->filter($filter)->limit($limit)->sort($sort)->join($join);
 
 		return $result;
 	}
 
 	/**
 	 * Get the query object for a $has_many Component.
-	 *
-	 * Use {@link DataObjectSet->setComponentInfo()} to attach metadata to the
-	 * resultset you're building with this query.
-	 * Use {@link DataObject->buildDataObjectSet()} to build a set out of the {@link SQLQuery}
-	 * object, and pass "ComponentSet" as a $containerClass.
 	 *
 	 * @param string $componentName
 	 * @param string $filter
@@ -1419,149 +1396,30 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * and {@link getManyManyComponents()}.
 	 *
 	 * @param string $componentName Name of the component
-	 * @param DataObject|ComponentSet $componentValue Value of the component
+	 * @param DataObject|HasManyList|ManyManyList $componentValue Value of the component
 	 */
 	public function setComponent($componentName, $componentValue) {
 		$this->componentCache[$componentName] = $componentValue;
 	}
 
 	/**
-	 * Returns a many-to-many component, as a ComponentSet.
-	 * The return value will be cached on this object instance,
-	 * but only when no related objects are found (to avoid unnecessary empty checks in the database).
-	 * If related objects exist, no caching is applied.
-	 * 
+	 * Returns a many-to-many component, as a ManyManyList.
 	 * @param string $componentName Name of the many-many component
-	 * @return ComponentSet The set of components
+	 * @return ManyManyList The set of components
 	 *
 	 * @todo Implement query-params
 	 */
 	public function getManyManyComponents($componentName, $filter = "", $sort = "", $join = "", $limit = "") {
-		$sum = md5("{$filter}_{$sort}_{$join}_{$limit}");
-		if(isset($this->componentCache[$componentName . '_' . $sum]) && false != $this->componentCache[$componentName . '_' . $sum]) {
-			return $this->componentCache[$componentName . '_' . $sum];
-		}
-
 		list($parentClass, $componentClass, $parentField, $componentField, $table) = $this->many_many($componentName);
-
-		// Join expression is done on SiteTree.ID even if we link to Page; it helps work around
-		// database inconsistencies
-		$componentBaseClass = ClassInfo::baseDataClass($componentClass);
-
-		if($this->ID && is_numeric($this->ID)) {
-				
-			if($componentClass) {
-				$query = $this->getManyManyComponentsQuery($componentName, $filter, $sort, $join, $limit);
-				$records = $query->execute();
-				$result = $this->buildDataObjectSet($records, "ComponentSet", $query, $componentBaseClass);
-				if($result) $result->parseQueryLimit($query); // for pagination support
-				if(!$result) {
-					$result = new ComponentSet();
-				}
-			}
-		} else {
-			$result = new ComponentSet();
-		}
-		$result->setComponentInfo("many-to-many", $this, $parentClass, $table, $componentClass);
-
-		// If this record isn't in the database, then we want to hold onto this specific ComponentSet,
-		// because it's the only copy of the data that we have.
-		if(!$this->isInDB()) {
-			$this->setComponent($componentName . '_' . $sum, $result);
-		}
-
-		return $result;
-	}
-
-	/**
-	 * Get the query object for a $many_many Component.
-	 * Use {@link DataObjectSet->setComponentInfo()} to attach metadata to the
-	 * resultset you're building with this query.
-	 * Use {@link DataObject->buildDataObjectSet()} to build a set out of the {@link SQLQuery}
-	 * object, and pass "ComponentSet" as a $containerClass.
-	 *
-	 * @param string $componentName
-	 * @param string $filter
-	 * @param string|array $sort
-	 * @param string $join
-	 * @param string|array $limit
-	 * @return SQLQuery
-	 */
-	public function getManyManyComponentsQuery($componentName, $filter = "", $sort = "", $join = "", $limit = "") {
-		list($parentClass, $componentClass, $parentField, $componentField, $table) = $this->many_many($componentName);
-
-		$componentObj = singleton($componentClass);
-
-		// Join expression is done on SiteTree.ID even if we link to Page; it helps work around
-		// database inconsistencies
-		$componentBaseClass = ClassInfo::baseDataClass($componentClass);
-
-
-		$query = $componentObj->extendedSQL(
-			"\"$table\".\"$parentField\" = $this->ID", // filter 
-			$sort,
-			$limit,
-			"INNER JOIN \"$table\" ON \"$table\".\"$componentField\" = \"$componentBaseClass\".\"ID\"" // join
-		);
 		
-		foreach((array)$this->many_many_extraFields($componentName) as $extraField => $extraFieldType) {
-			$query->select[] = "\"$table\".\"$extraField\"";
-			$query->groupby[] = "\"$table\".\"$extraField\"";
-		}
+		$result = new ManyManyList($componentClass, $table, $componentField, $parentField,
+			$this->many_many_extraFields($componentName));
 
-		if($filter) $query->where[] = $filter;
-		if($join) $query->from[] = $join;
-
-		return $query;
-	}
-
-	/**
-	 * Pull out a join clause for a many-many relationship.
-	 *
-	 * @param string $componentName The many_many or belongs_many_many relation to join to.
-	 * @param string $baseTable The classtable that will already be included in the SQL query to which this join will be added.
-	 * @return string SQL join clause
-	 */
-	function getManyManyJoin($componentName, $baseTable) {
-		if(!$componentClass = $this->many_many($componentName)) {
-			user_error("DataObject::getComponents(): Unknown many-to-many component '$componentName' on class '$this->class'", E_USER_ERROR);
-		}
-		$classes = array_reverse(ClassInfo::ancestry($this->class));
-
-		list($parentClass, $componentClass, $parentField, $componentField, $table) = $this->many_many($componentName);
-
-		$baseComponentClass = ClassInfo::baseDataClass($componentClass);
-		if($baseTable == $parentClass) {
-			return "LEFT JOIN \"$table\" ON (\"$table\".\"$parentField\" = \"$parentClass\".\"ID\" AND \"$table\".\"$componentField\" = '{$this->ID}')";
-		} else {
-			return "LEFT JOIN \"$table\" ON (\"$table\".\"$componentField\" = \"$baseComponentClass\".\"ID\" AND \"$table\".\"$parentField\" = '{$this->ID}')";
-		}
-	}
-
-	function getManyManyFilter($componentName, $baseTable) {
-		list($parentClass, $componentClass, $parentField, $componentField, $table) = $this->many_many($componentName);
-
-		return "\"$table\".\"$parentField\" = '{$this->ID}'";
-	}
-
-	/**
-	 * Return an aggregate object. An aggregate object returns the result of running some SQL aggregate function on a field of 
-	 * this dataobject type.
-	 * 
-	 * It can be called with no arguments, in which case it returns an object that calculates aggregates on this object's type,
-	 * or with an argument (possibly statically), in which case it returns an object for that type
-	 */
-	function Aggregate($type = null, $filter = '') {
-		return new Aggregate($type ? $type : $this->class, $filter);
-	}
-	
-	/**
-	 * Return an relationship aggregate object. A relationship aggregate does the same thing as an aggregate object, but operates
-	 * on a has_many rather than directly on the type specified
-	 */
-	function RelationshipAggregate($object = null, $relationship = '', $filter = '') {
-		if (is_string($object)) { $filter = $relationship; $relationship = $object; $object = $this; }
-		return new Aggregate_Relationship($object ? $object : $this->owner, $relationship, $filter);
+		// If this is called on a singleton, then we return an 'orphaned relation' that can have the
+		// foreignID set elsewhere.
+		if($this->ID) $result->setForeignID($this->ID);
+			
+		return $result->filter($filter)->sort($sort)->limit($limit);
 	}
 	
 	/**
@@ -2560,7 +2418,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 
 		$object = $component->dbObject($fieldName);
 
-		if (!($object instanceof DBField) && !($object instanceof ComponentSet)) {
+		if (!($object instanceof DBField) && !($object instanceof DataList)) {
 			// Todo: come up with a broader range of exception objects to describe differnet kinds of errors programatically
 			throw new Exception("Unable to traverse to related object field [$fieldPath] on [$this->class]");
 		}
