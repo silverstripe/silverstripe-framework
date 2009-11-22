@@ -503,6 +503,63 @@ class SQLQuery {
 		return (in_array($SQL_fieldName,$selects) || stripos($sql,"AS {$SQL_fieldName}"));
 	}
 
+
+	/**
+	 * Return the number of rows in this query if the limit were removed.  Useful in paged data sets.
+	 * @return int
+	 * 
+	 * TODO Respect HAVING and GROUPBY, which can affect the result-count
+	 */
+	function count( $column = null) {
+		// Choose a default column
+		if($column == null) {
+			if($this->groupby) {
+				$column = 'DISTINCT ' . implode(", ", $this->groupby);
+			} else {
+				$column = '*';
+			}
+		}
+
+		$clone = clone $this;
+		$clone->select = array("count($column)");
+		$clone->limit = null;
+		$clone->orderby = null;
+		$clone->groupby = null;
+		
+		$count = $clone->execute()->value();
+		// If there's a limit set, then that limit is going to heavily affect the count
+		if($this->limit) {
+			if($count >= ($this->limit['start'] + $this->limit['limit']))
+				return $this->limit['limit'];
+			else
+				return max(0, $count - $this->limit['start']);
+			
+		// Otherwise, the count is going to be the output of the SQL query
+		} else {
+			return $count;
+		}
+	}
+	
+	/**
+	 * Returns a query that returns only the first row of this query
+	 */
+	function firstRow() {
+		$query = clone $this;
+		$offset = $this->limit ? $this->limit['start'] : 0;
+		$query->limit(array('start' => $offset, 'limit' => 1));
+		return $query;
+	}
+
+	/**
+	 * Returns a query that returns only the last row of this query
+	 */
+	function lastRow() {
+		$query = clone $this;
+		$offset = $this->limit ? $this->limit['start'] : 0;
+		$query->limit(array('start' => $this->count() + $offset - 1, 'limit' => 1));
+		return $query;
+	}
+
 }
 
 ?>
