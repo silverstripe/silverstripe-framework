@@ -177,6 +177,26 @@ class DataObjectTest extends SapphireTest {
 		$comment = DataObject::get_one('DataObjectTest_TeamComment', '', true, '"Name" DESC');
 		$this->assertEquals('Phil', $comment->Name);
 	}
+	
+	function testGetSubclassFields() {
+		/* Test that fields / has_one relations from the parent table and the subclass tables are extracted */
+		$captain1 = $this->objFromFixture("DataObjectTest_Player", "captain1");
+		// Base field
+		$this->assertEquals('Captain 1', $captain1->FirstName);
+		// Subclass field
+		$this->assertEquals('007', $captain1->ShirtNumber);
+		// Subclass has_one relation
+		$this->assertEquals($this->idFromFixture('DataObjectTest_Team', 'team1'), $captain1->FavouriteTeamID);
+	}
+	
+	function testGetHasOneRelations() {
+		$captain1 = $this->objFromFixture("DataObjectTest_Player", "captain1");
+		/* There will be a field called (relname)ID that contains the ID of the object linked to via the has_one relation */
+		$this->assertEquals($this->idFromFixture('DataObjectTest_Team', 'team1'), $captain1->FavouriteTeamID);
+		/* There will be a method called $obj->relname() that returns the object itself */
+		$this->assertEquals($this->idFromFixture('DataObjectTest_Team', 'team1'), $captain1->FavouriteTeam()->ID);
+	}
+	
 
 	/**
 	 * Test writing of database columns which don't correlate to a DBField,
@@ -201,12 +221,27 @@ class DataObjectTest extends SapphireTest {
 		$team = $this->objFromFixture('DataObjectTest_Team', 'team1');
 		
 		// Test getComponents() gets the ComponentSet of the other side of the relation
-		$this->assertTrue($team->getComponents('Comments')->Count() == 2);
+		$this->assertTrue($page->Comments()->Count() == 2);
 		
 		// Test the IDs on the DataObjects are set correctly
-		foreach($team->getComponents('Comments') as $comment) {
-			$this->assertTrue($comment->TeamID == $team->ID);
+		foreach($page->Comments() as $comment) {
+			$this->assertTrue($comment->ParentID == $page->ID);
 		}
+		
+		// Test that we can add and remove items that already exist in the database
+		$newComment = new PageComment();
+		$newComment->Name = "Automated commenter";
+		$newComment->Comment = "This is a new comment";
+		$newComment->write();
+		$page->Comments()->add($newComment);
+		$this->assertEquals($page->ID, $newComment->ParentID);
+		
+		$comment1 = $this->fixture->objFromFixture('PageComment', 'comment1');
+		$comment2 = $this->fixture->objFromFixture('PageComment', 'comment2');
+		$page->Comments()->remove($comment2);
+
+		$commentIDs = $page->Comments()->column('ID');
+		$this->assertEquals(array($comment1->ID, $newComment->ID), $commentIDs);
 	}
 
 	function testHasOneRelationship() {
@@ -272,6 +307,14 @@ class DataObjectTest extends SapphireTest {
 	      $compareTeams->column('ID'),
 	      "Removing single record as ID from many_many"
 	   );
+	
+		// Set a many-many relationship by and idList
+		$player1->Teams()->setByIdList(array($team1->ID, $team2->ID));
+		$this->assertEquals(array($team1->ID, $team2->ID), $player1->Teams()->column());
+		$player1->Teams()->setByIdList(array($team1->ID));
+		$this->assertEquals(array($team1->ID), $player1->Teams()->column());
+		$player1->Teams()->setByIdList(array($team2->ID));
+		$this->assertEquals(array($team2->ID), $player1->Teams()->column());
 	}
 	
 	/**
@@ -378,8 +421,17 @@ class DataObjectTest extends SapphireTest {
 		$obj->FirstName = "New Player"; 
 		$this->assertTrue($obj->isChanged());
 		
-		$obj->write(); 
-		$this->assertFalse($obj->isChanged());
+		$page->write(); 
+		$this->assertFalse($page->isChanged());
+
+		/* If we perform the same random query twice, it shouldn't return the same results */
+		$itemsA = DataObject::get("DataObjectTest_TeamComment", "", DB::getConn()->random());
+		foreach($itemsA as $item) $keysA[] = $item->ID;
+
+		$itemsB = DataObject::get("DataObjectTest_TeamComment", "", DB::getConn()->random());
+		foreach($itemsB as $item) $keysB[] = $item->ID;
+		
+		$this->assertNotEquals($keysA, $keysB);
 	}
 	
 	function testWriteSavesToHasOneRelations() {
@@ -1003,7 +1055,8 @@ class DataObjectTest extends SapphireTest {
 
 class DataObjectTest_Player extends Member implements TestOnly {
 	static $db = array(
-		'IsRetired' => 'Boolean'
+		'IsRetired' => 'Boolean',
+		'ShirtNumber' => 'Varchar',
 	);
 	
 	static $has_one = array(
