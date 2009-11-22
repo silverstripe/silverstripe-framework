@@ -186,12 +186,28 @@ class SQLQuery {
 	
 	/**
 	 * Pass LIMIT clause either as SQL snippet or in array format.
+	 * Internally, limit will always be stored as a map containing the keys 'start' and 'limit'
 	 *
 	 * @param string|array $limit
 	 * @return SQLQuery This instance
 	 */
 	public function limit($limit) {
-		$this->limit = $limit;
+		if($limit && is_numeric($limit)) {
+			$this->limit = array(
+				'start' => 0,
+				'limit' => $limit,
+			);
+		} else if($limit && is_string($limit)) {
+			if(strpos($limit,',') !== false) list($start, $innerLimit) = explode(',', $limit, 2);
+			else list($innerLimit, $start) = explode(' OFFSET ', strtoupper($limit), 2);
+			$this->limit = array(
+				'start' => trim($start),
+				'limit' => trim($innerLimit),
+			);
+			
+		} else {
+			$this->limit = $limit;
+		}
 		
 		return $this;
 	}
