@@ -28,10 +28,6 @@
  
 class TableField extends TableListField {
 	
-	protected $sourceClass;
-	
-	protected $sourceFilter;
-	
 	protected $fieldList;
 	
 	/**
@@ -52,10 +48,6 @@ class TableField extends TableListField {
 	 * preset relations or other default data.
 	 */
 	protected $fieldTypes;
-	
-	protected $sourceSort;
-	
-	protected $sourceJoin;
 
 	/**
 	 * @var $template string Template-Overrides
@@ -105,8 +97,6 @@ class TableField extends TableListField {
 	 *
 	 * @var boolean
 	 */
-	protected $relationAutoSetting = true;
-
 	function __construct($name, $sourceClass, $fieldList = null, $fieldTypes, $filterField = null, 
 						$sourceFilter = null, $editExisting = true, $sourceSort = null, $sourceJoin = null) {
 		
@@ -174,6 +164,9 @@ class TableField extends TableListField {
 			$rows = $this->sortData(ArrayLib::invert($this->value));
 			// ignore all rows which are already saved
 			if(isset($rows['new'])) {
+				if($sourceItems instanceof DataList) $sourceItems = $sourceItems->toDataObjectSet();
+	
+	
 				$newRows = $this->sortData($rows['new']);
 				// iterate over each value (not each row)
 				$i = 0;
@@ -189,7 +182,7 @@ class TableField extends TableListField {
 					}
 
 					// generate a temporary DataObject container (not saved in the database)
-					$sourceClass = $this->sourceClass;
+					$sourceClass = $this->sourceClass();
 					$sourceItems->push(new $sourceClass($newRow));
 
 					$i++;
@@ -264,17 +257,10 @@ class TableField extends TableListField {
 				$savedObjIds = $this->saveData($newFields,false);
  			}
 
-			// Optionally save the newly created records into a relationship
-			// on $record. This assumes the name of this formfield instance
-			// is set to a relationship name on $record.
-			if($this->relationAutoSetting) {
-				$relationName = $this->Name();
-				if($record->has_many($relationName) || $record->many_many($relationName)) {
-					if($savedObjIds) foreach($savedObjIds as $id => $status) {
-						$record->$relationName()->add($id);
-					}	
-				}
-			}
+			// Add the new records to the DataList
+			if($savedObjIds) foreach($savedObjIds as $id => $status) {
+				$this->getDataList()->add($id);
+			}	
 
 			// Update the internal source items cache
 			$this->value = null;
@@ -386,9 +372,9 @@ class TableField extends TableListField {
 
 			// either look for an existing object, or create a new one
 			if($existingValues) {
-				$obj = DataObject::get_by_id($this->sourceClass, $objectid);
+				$obj = DataObject::get_by_id($this->sourceClass(), $objectid);
 			} else {
-				$sourceClass = $this->sourceClass;
+				$sourceClass = $this->sourceClass();
 				$obj = new $sourceClass();
 			}
 
@@ -489,13 +475,6 @@ class TableField extends TableListField {
 		Requirements::css(SAPPHIRE_DIR . '/css/TableListField.css');
 		
 		return $this->renderWith($this->template);
-	}
-	
-	/**
-	 * @return Int
-	 */
-	function sourceID() {
-		return $this->filterField;
 	}
 		
 	function setTransformationConditions($conditions) {
@@ -600,20 +579,6 @@ JS;
 	
 	function setRequiredFields($fields) {
 		$this->requiredFields = $fields;
-	}
-	
-	/**
-	 * @param boolean $value 
-	 */
-	function setRelationAutoSetting($value) {
-		$this->relationAutoSetting = $value;
-	}
-	
-	/**
-	 * @return boolean
-	 */
-	function getRelationAutoSetting() {
-		return $this->relationAutoSetting;
 	}
 }
 

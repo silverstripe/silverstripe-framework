@@ -166,7 +166,13 @@ class TableFieldTest extends SapphireTest {
 		$this->assertNotContains($perm1->ID, $tableField->sourceItems()->column('ID'));
 	}
 
+	/**
+	 * Relation auto-setting is now the only option
+	 */
 	function testAutoRelationSettingOn() {
+		$o = new TableFieldTest_Object();
+		$o->write();
+
 		$tf = new TableField(
 			'HasManyRelations',
 			'TableFieldTest_HasManyRelation',
@@ -180,69 +186,16 @@ class TableFieldTest extends SapphireTest {
 		
 		// Test with auto relation setting
 		$form = new Form(new TableFieldTest_Controller(), "Form", new FieldSet($tf), new FieldSet());
+		$form->loadDataFrom($o);
+		
 		$tf->setValue(array(
 			'new' => array(
 				'Value' => array('one','two',)
 			)
 		));
-		$tf->setRelationAutoSetting(true);
-		$o = new TableFieldTest_Object();
-		$o->write();
-		$form->saveInto($o);
-		$this->assertEquals($o->HasManyRelations()->Count(), 2);
-	}
-	
-	function testAutoRelationSettingOff() {
-		$tf = new TableField(
-			'HasManyRelations',
-			'TableFieldTest_HasManyRelation',
-			array(
-				'Value' => 'Value'
-			),
-			array(
-				'Value' => 'TextField'
-			)
-		);
 		
-		// Test with auto relation setting
-		$form = new Form(new TableFieldTest_Controller(), "Form", new FieldSet($tf), new FieldSet());
-		$tf->setValue(array(
-			'new' => array(
-				'Value' => array('one','two',)
-			)
-		));
-		$tf->setRelationAutoSetting(false);
-		$o = new TableFieldTest_Object();
-		$o->write();
 		$form->saveInto($o);
-		$this->assertEquals($o->HasManyRelations()->Count(), 0);
-	}
-	
-	function testDataValue() {
-		$tf = new TableField(
-			'TestTableField',
-			'TestTableField',
-			array(
-				'Currency' => 'Currency'
-			),
-			array(
-				'Currency' => 'CurrencyField'
-			)
-		);
-		$form = new Form(new TableFieldTest_Controller(), "Form", new FieldSet($tf), new FieldSet());
-		$tf->setValue(array(
-			'new' => array(
-				'Currency' => array(
-					'$1,234.56',
-					'1234.57',
-				)
-			)
-		));
-		$data = $form->getData();
-		
-		// @todo Fix getData()
-		//$this->assertEquals($data['TestTableField']['new']['Currency'][0], 1234.56);
-		//$this->assertEquals($data['TestTableField']['new']['Currency'][1], 1234.57);
+		$this->assertEquals(2, $o->HasManyRelations()->Count());
 	}
 
 	function testHasItemsWhenSetAsArray() {

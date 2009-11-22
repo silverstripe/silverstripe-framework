@@ -118,6 +118,7 @@ class ComplexTableFieldTest_Controller extends Controller {
 				new FormAction('doSubmit', 'Submit')
 			)
 		);
+		$form->loadDataFrom($team);
 		
 		$form->disableSecurityToken();
 		
@@ -148,6 +149,7 @@ class ComplexTableFieldTest_Controller extends Controller {
 				new FormAction('doSubmit', 'Submit')
 			)
 		);
+		$form->loadDataFrom($team);
 		
 		$form->disableSecurityToken();
 		

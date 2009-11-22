@@ -39,7 +39,7 @@ class ComplexTableField extends TableListField {
     
 	protected $detailFormFields;
 	
-	protected $viewAction, $sourceJoin, $sourceItems;
+	protected $viewAction;
 
 	/**
 	 * @var Controller
@@ -118,14 +118,6 @@ class ComplexTableField extends TableListField {
 	 * @var $detailFormValidator Validator
 	 */
 	protected $detailFormValidator = null;
-	
-	/**
-	 * Automatically detect a has-one relationship
-	 * in the popup (=child-class) and save the relation ID.
-	 *
-	 * @var boolean
-	 */
-	protected $relationAutoSetting = true;
 	
 	/**
 	 * Default size for the popup box
@@ -210,31 +202,6 @@ class ComplexTableField extends TableListField {
 		parent::__construct($name, $sourceClass, $fieldList, $sourceFilter, $sourceSort, $sourceJoin);
 	}
 
-	/**
-	 * Return the record filter for this table.
-	 * It will automatically add a relation filter if relationAutoSetting is true, and it can determine an appropriate
-	 * filter.
-	 */
-	function sourceFilter() {
-		$sourceFilter = parent::sourceFilter();
-		
-		if($this->relationAutoSetting
-			 	&& $this->getParentClass() 
-				&& ($filterKey = $this->getParentIdName($this->getParentClass(), $this->sourceClass()))
-				&& ($filterValue = $this->sourceID()) ) {
-					
-			$newFilter = "\"$filterKey\" = '" . Convert::raw2sql($filterValue) . "'";
-
-			if($sourceFilter && is_array($sourceFilter)) {
-				// Note that the brackets below are taken into account when building this
-				$sourceFilter = implode(") AND (", $sourceFilter);
-			}
-
-			$sourceFilter = $sourceFilter ? "($sourceFilter) AND ($newFilter)" : $newFilter;
-		}
-		return $sourceFilter;
-	}
-
 	function isComposite() {
 		return false;
 	}
@@ -277,26 +244,22 @@ JS;
 		return $this->renderWith($this->template);
 	}
 
-	function sourceClass() {
-		return $this->sourceClass;
-	}
-
 	/**
 	 * @return DataObjectSet
 	 */
 	function Items() {
-		$this->sourceItems = $this->sourceItems();
+		$sourceItems = $this->sourceItems();
 
-		if(!$this->sourceItems) {
+		if(!$sourceItems) {
 			return null;
 		}
 
 		$pageStart = (isset($_REQUEST['ctf'][$this->Name()]['start']) && is_numeric($_REQUEST['ctf'][$this->Name()]['start'])) ? $_REQUEST['ctf'][$this->Name()]['start'] : 0;
-		$this->sourceItems->setPageLimits($pageStart, $this->pageSize, $this->totalCount);
+		$sourceItems->setPageLimits($pageStart, $this->pageSize, $this->totalCount);
 
 		$output = new DataObjectSet();
-		foreach($this->sourceItems as $pageIndex=>$item) {
-			$output->push(new $this->itemClass($item, $this));
+		foreach($sourceItems as $pageIndex=>$item) {
+			$output->push(Object::create($this->itemClass,$item, $this, $pageStart+$pageIndex));
 		}
 		return $output;
 	}
@@ -547,27 +510,12 @@ JS;
 
 		if($this->getParentClass()) {
 			$detailFields->push(new HiddenField('ctf[parentClass]', '', $this->getParentClass()));
-
-			if($manyManyRelationName && $this->relationAutoSetting) {
-				$detailFields->push(new HiddenField('ctf[manyManyRelation]', '', $manyManyRelationName));
-			}
 			
-			if($hasManyRelationName && $this->relationAutoSetting) {
-				$detailFields->push(new HiddenField('ctf[hasManyRelation]', '', $hasManyRelationName));
-			}
-			
-			if($manyManyRelationName || $hasManyRelationName) {
-				$detailFields->push(new HiddenField('ctf[sourceID]', '', $this->sourceID()));
-			}
-			
+			// Hack for model admin: model admin will have included a dropdown for the relation itself
 			$parentIdName = $this->getParentIdName($this->getParentClass(), $this->sourceClass());
-			
 			if($parentIdName) {
-				if($this->relationAutoSetting) {
-					// Hack for model admin: model admin will have included a dropdown for the relation itself
-					$detailFields->removeByName($parentIdName);
-					$detailFields->push(new HiddenField($parentIdName, '', $this->sourceID()));
-				}
+				$detailFields->removeByName($parentIdName);
+				$detailFields->push(new HiddenField($parentIdName, '', $this->sourceID()));
 			}
 		} 
 		
@@ -614,16 +562,10 @@ JS;
 	}
 	
 	/**
-	 * By default, a ComplexTableField will assume that the field name is the name of a has-many relation on the object being
-	 * edited.  It will identify the foreign key in the object being listed, and filter on that column, as well as auto-setting
-	 * that column for newly created records.
-	 * 
-	 * Calling $this->setRelationAutoSetting(false) will disable this functionality.
-	 *
-	 * @param boolean $value Should the relation auto-setting functionality be enabled?
+	 * @deprecated
 	 */
 	function setRelationAutoSetting($value) {
-		$this->relationAutoSetting = $value;
+		user_error("ComplexTableField::setRelationAutoSetting() is deprecated; manipulate the DataList instead", E_USER_WARNING);
 	}
 	
 	/**
@@ -648,21 +590,8 @@ JS;
 			return Director::redirectBack();
 		}
 
-		// Save the many many relationship if it's available
-		if(isset($data['ctf']['manyManyRelation'])) {
-			$parentRecord = DataObject::get_by_id($data['ctf']['parentClass'], (int) $data['ctf']['sourceID']);
-			$relationName = $data['ctf']['manyManyRelation'];
-			$componentSet = $parentRecord ? $parentRecord->getManyManyComponents($relationName) : null;
-			if($componentSet) $componentSet->add($childData);
-		}
-		
-		if(isset($data['ctf']['hasManyRelation'])) {
-			$parentRecord = DataObject::get_by_id($data['ctf']['parentClass'], (int) $data['ctf']['sourceID']);
-			$relationName = $data['ctf']['hasManyRelation'];
-			
-			$componentSet = $parentRecord ? $parentRecord->getComponents($relationName) : null;
-			if($componentSet) $componentSet->add($childData);
-		}
+		// Save this item into the given relationship
+		$this->getDataList()->add($childData);
 		
 		$referrer = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : null;
 		
@@ -830,14 +759,9 @@ class ComplexTableField_ItemRequest extends TableListField_ItemRequest {
 			$form->sessionMessage($e->getResult()->message(), 'bad');
 			return Director::redirectBack();
 		}
-		
-		// Save the many many relationship if it's available
-		if(isset($data['ctf']['manyManyRelation'])) {
-			$parentRecord = DataObject::get_by_id($data['ctf']['parentClass'], (int) $data['ctf']['sourceID']);
-			$relationName = $data['ctf']['manyManyRelation'];
-			$componentSet = $parentRecord->getManyManyComponents($relationName);
-			$componentSet->add($dataObject);
-		}
+
+		// Save this item into the given relationship
+		$this->ctf->getDataList()->add($childData);
 		
 		$referrer = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : null;
 		

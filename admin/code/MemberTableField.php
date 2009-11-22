@@ -104,12 +104,15 @@ class MemberTableField extends ComplexTableField {
 		}
 		
 		if($this->group) {
+		    user_error("MemberTableField's group setting doesn't yet work in the new-orm branch", E_USER_WARNING);
+			/*
 			$groupIDs = array($this->group->ID);
 			if($this->group->AllChildren()) $groupIDs = array_merge($groupIDs, $this->group->AllChildren()->column('ID'));
 			$this->sourceFilter[] = sprintf(
 				'"Group_Members"."GroupID" IN (%s)', 
 				implode(',', $groupIDs)
 			);
+			*/
 		}
 
 		$this->sourceJoin = " INNER JOIN \"Group_Members\" ON \"MemberID\"=\"Member\".\"ID\"";
