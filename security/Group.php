@@ -206,38 +206,20 @@ class Group extends DataObject {
 	 * @param $join string SQL
 	 * @return ComponentSet
 	 */
-	public function Members($limit = "", $offset = "", $filter = "", $sort = "", $join = "") {
-		$table = "Group_Members";
-		if($filter) $filter = is_array($filter) ? $filter : array($filter);
-		
-		if( is_numeric( $limit ) ) {
-			if( is_numeric( $offset ) )
-				$limit = "$limit OFFSET $offset";
-			else
-				$limit = "$limit OFFSET 0";
-		} else {
-			$limit = "";
-		}
-		
-		// Get all of groups that this group contains
-		$groupFamily = implode(", ", $this->collateFamilyIDs());
-		
-		$filter[] = "\"$table\".\"GroupID\" IN ($groupFamily)";
-		$join .= " INNER JOIN \"$table\" ON \"$table\".\"MemberID\" = \"Member\".\"ID\"" . Convert::raw2sql($join);
-		
-		$result = singleton("Member")->instance_get(
-			$filter, 
-			$sort,
-			$join, 
-			$limit,
-			"ComponentSet" // datatype
-			);
-			
-		if(!$result) $result = new ComponentSet();
+	public function Members($filter = "", $sort = "", $join = "", $limit = "") {
+		// Get a DataList of the relevant groups
+		$groups = DataList::create("Group")->byIDs($this->collateFamilyIDs());
 
-		$result->setComponentInfo("many-to-many", $this, "Group", $table, "Member");
-		foreach($result as $item) $item->GroupID = $this->ID;
-		return $result;
+		// Call the relation method on the DataList to get the members from all the groups
+		return $groups->relation('DirectMembers')
+			->filter($filter)->sort($sort)->join($join)->limit($limit);
+	}
+	
+	/**
+	 * Return only the members directly added to this group
+	 */
+	public function DirectMembers() {
+		return $this->getManyManyComponents('Members');
 	}
 	
 	public function map($filter = "", $sort = "", $blank="") {

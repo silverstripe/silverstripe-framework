@@ -941,40 +941,22 @@ class Member extends DataObject {
 	 * Get a "many-to-many" map that holds for all members their group
 	 * memberships
 	 *
-	 * @return Member_GroupSet Returns a map holding for all members their
-	 *                         group memberships.
+	 * @todo Push all this logic into Member_GroupSet's getIterator()?
 	 */
 	public function Groups() {
-		$groups = $this->getManyManyComponents("Groups");
-		$groupIDs = $groups->column();
-		$collatedGroups = array();
-
-		if($groups) {
-			foreach($groups as $group) {
-				$collatedGroups = array_merge((array)$collatedGroups, $group->collateAncestorIDs());
-			}
+		$groups = new Member_GroupSet('Group', 'Group_Members', 'GroupID', 'MemberID');
+		if($this->ID) $groups->setForeignID($this->ID);
+		
+		// Filter out groups that aren't allowed from this IP
+		$ip = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : null;
+		$disallowedGroups = array();
+		foreach($groups as $group) {
+			if(!$group->allowedIPAddress($ip)) $disallowedGroups[] = $groupID;
 		}
+		if($disallowedGroups) $group->filter("\"Group\".\"ID\" NOT IN (" .
+			implode(',',$disallowedGroups) . ")");
 
-		$table = "Group_Members";
-
-		if(count($collatedGroups) > 0) {
-			$collatedGroups = implode(", ", array_unique($collatedGroups));
-
-			$unfilteredGroups = singleton('Group')->instance_get("\"Group\".\"ID\" IN ($collatedGroups)", "\"Group\".\"ID\"", "", "", "Member_GroupSet");
-			$result = new ComponentSet();
-			
-			// Only include groups where allowedIPAddress() returns true
-			$ip = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : null;
-			foreach($unfilteredGroups as $group) {
-				if($group->allowedIPAddress($ip)) $result->push($group);
-			}
-		} else {
-			$result = new Member_GroupSet();
-		}
-
-		$result->setComponentInfo("many-to-many", $this, "Member", $table, "Group");
-
-		return $result;
+		return $groups;
 	}
 
 
@@ -1414,38 +1396,52 @@ class Member extends DataObject {
 }
 
 /**
- * Special kind of {@link ComponentSet} that has special methods for
- * manipulating a user's membership
+ * Represents a set of Groups attached to a member.
+ * Handles the hierarchy logic.
  * @package sapphire
  * @subpackage security
  */
-class Member_GroupSet extends ComponentSet {
+class Member_GroupSet extends ManyManyList {
+	function __construct($dataClass, $joinTable, $localKey, $foreignKey, $extraFields = array()) {
+		// Bypass the many-many constructor
+		DataList::__construct($dataClass);
+
+		$this->joinTable = $joinTable;
+		$this->localKey = $localKey;
+		$this->foreignKey = $foreignKey;
+		$this->extraFields = $extraFields;
+	}
+	
 	/**
-	 * Control group membership with a number of checkboxes.
-	 *  - If the checkbox fields are present in $data, then the member will be
-	 *    added to the group with the same codename.
-	 *  - If the checkbox fields are *NOT* present in $data, then the member
-	 *    will be removed from the group with the same codename.
-	 *
-	 * @param array $checkboxes An array list of the checkbox fieldnames (only
-	 *               	          values are used). E.g. array(0, 1, 2)
-	 * @param array $data The form data. Uually in the format array(0 => 2)
-	 *                    (just pass the checkbox data from your form)
+	 * Link this group set to a specific member.
+	 */
+	public function setForeignID($id) {
+		// Turn a 1-element array into a simple value
+		if(is_array($id) && sizeof($id) == 1) $id = reset($id);
+		$this->foreignID = $id;
+		
+		// Find directly applied groups
+		$manymanyFilter = $this->foreignIDFilter();
+		$groupIDs = DB::query('SELECT "GroupID" FROM Group_Members WHERE ' . $manymanyFilter)->column();
+
+		// Get all ancestors
+		$allGroupIDs = array();
+		while($groupIDs) {
+			$allGroupIDs = array_merge($allGroupIDs, $groupIDs);
+			$groupIDs = DataObject::get("Group")->byIDs($groupIDs)->column("ParentID");
+			$groupIDs = array_filter($groupIDs);
+		}
+		
+		// Add a filter to this DataList
+		if($allGroupIDs) $this->byIDs($allGroupIDs);
+		else $this->byIDs(array(0));
+	}
+	
+	/**
+	 * @deprecated Use setByIdList() and/or a CheckboxSetField
 	 */
 	function setByCheckboxes(array $checkboxes, array $data) {
-		foreach($checkboxes as $checkbox) {
-			if($data[$checkbox]) {
-				$add[] = $checkbox;
-			} else {
-				$remove[] = $checkbox;
-			}
-		}
-
-		if($add)
-			$this->addManyByCodename($add);
-
-		if($remove)
-			$this->removeManyByCodename($remove);
+		user_error("Member_GroupSet is deprecated and no longer works", E_USER_WARNING);
 	}
 
 
@@ -1515,108 +1511,45 @@ class Member_GroupSet extends ComponentSet {
 
 
 	/**
-	 * Adds this member to the groups based on the group IDs
-	 *
-	 * @param array $ids Group identifiers.
+	 * @deprecated Use DataList::addMany
 	 */
-	function addManyByGroupID($groupIds){
-		$groups = $this->getGroupsFromIDs($groupIds);
-		if($groups) {
-			foreach($groups as $group) {
-				$this->add($group);
-			}
-		}
+	function addManyByGroupID($ids){
+		user_error('addManyByGroupID is deprecated, use addMany', E_USER_NOTICE);
+		return $this->addMany($ids);
 	}
 
 
 	/**
-	 * Removes the member from many groups based on the group IDs
-	 *
-	 * @param array $ids Group identifiers.
+	 * @deprecated Use DataList::removeMany
 	 */
 	function removeManyByGroupID($groupIds) {
-	 	$groups = $this->getGroupsFromIDs($groupIds);
-	 	if($groups) {
-			foreach($groups as $group) {
-				$this->remove($group);
-			}
-		}
+		user_error('removeManyByGroupID is deprecated, use removeMany', E_USER_NOTICE);
+		return $this->removeMany($ids);
 	}
 
 
 	/**
-	 * Returns the groups from an array of group IDs
-	 *
-	 * @param array $ids Group identifiers.
-	 * @return mixed Returns the groups from the array of Group IDs.
+	 * @deprecated Use DataObject::get("Group")->byIds()
 	 */
-	function getGroupsFromIDs($ids){
-		if($ids && count($ids) > 1) {
-			return DataObject::get("Group", "\"ID\" IN (" . implode(",", $ids) . ")");
-		} else {
-			return DataObject::get_by_id("Group", $ids[0]);
-		}
+	function getGroupsFromIDs($ids) {
+		user_error('getGroupsFromIDs is deprecated, use DataObject::get("Group")->byIds()', E_USER_NOTICE);
+		return DataObject::get("Group")->byIDs($ids);
 	}
 
 
 	/**
-	 * Adds this member to the groups based on the group codenames
-	 *
-	 * @param array $codenames Group codenames
+	 * @deprecated Group.Code is deprecated
 	 */
 	function addManyByCodename($codenames) {
-		$groups = $this->codenamesToGroups($codenames);
-		if($groups) {
-			foreach($groups as $group){
-				$this->add($group);
-			}
-		}
+		user_error("addManyByCodename is deprecated and no longer works", E_USER_WARNING);
 	}
 
 
 	/**
-	 * Removes this member from the groups based on the group codenames
-	 *
-	 * @param array $codenames Group codenames
+	 * @deprecated Group.Code is deprecated
 	 */
 	function removeManyByCodename($codenames) {
-		$groups = $this->codenamesToGroups($codenames);
-		if($groups) {
-			foreach($groups as $group) {
-				$this->remove($group);
-			}
-		}
-	}
-
-
-	/**
-	 * Helper function to return the appropriate groups via a codenames
-	 *
-	 * @param array $codenames Group codenames
-	 * @return array Returns the the appropriate groups.
-	 */
-	protected function codenamesToGroups($codenames) {
-		$list = "'" . implode("', '", $codenames) . "'";
-		$output = DataObject::get("Group", "\"Code\" IN ($list)");
-
-		// Some are missing - throw warnings
-		if(!$output || ($output->Count() != sizeof($list))) {
-			foreach($codenames as $codename)
-				$missing[$codename] = $codename;
-
-			if($output) {
-				foreach($output as $record)
-					unset($missing[$record->Code]);
-			}
-
-			if($missing)
-				user_error("The following group-codes aren't matched to any groups: " .
-									 implode(", ", $missing) .
-									 ".  You probably need to link up the correct group codes in phpMyAdmin",
-									 E_USER_WARNING);
-		}
-
-		return $output;
+		user_error("removeManyByCodename is deprecated and no longer works", E_USER_WARNING);
 	}
 }
 
