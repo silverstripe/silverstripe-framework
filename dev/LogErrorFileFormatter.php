@@ -36,7 +36,7 @@ class SS_LogErrorFileFormatter implements Zend_Log_Formatter_Interface {
 			$urlSuffix = " (http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI])";
 		}
 
-		return '[' . date('d-M-Y h:i:s') . "] $errtype at $relfile line $errline: $errstr$urlSuffix\n";
+		return '[' . date('d-M-Y h:i:s') . "] $errtype at $relfile line $errline: $errstr$urlSuffix" . PHP_EOL;
 	}
 
 }
