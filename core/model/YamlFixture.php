@@ -1,6 +1,6 @@
 <?php
 
-require_once 'thirdparty/spyc/Spyc.php';
+require_once 'thirdparty/spyc/spyc.php';
 
 /**
  * Uses the Spyc library to parse a YAML document (see http://yaml.org).
