@@ -2555,24 +2555,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	}
 
 	/**
-	 * Get a bunch of fields in an HTML LI, like this:
-	 *  - name: value
-	 *  - name: value
-	 *  - name: value
-	 *
-	 * @deprecated 2.3 Use custom code
-	 * @return string The fields as an HTML unordered list
-	 */
-	function listOfFields() {
-		$fields = func_get_args();
-		$result = "<ul>\n";
-		foreach($fields as $field)
-		$result .= "<li><b>$field:</b> " . $this->$field . "</li>\n";
-		$result .= "</ul>";
-		return $result;
-	}
-
-	/**
 	 * Return all objects matching the filter
 	 * sub-classes are automatically selected and included
 	 *
