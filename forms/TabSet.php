@@ -49,13 +49,13 @@ class TabSet extends CompositeField {
 	 * The HTML is a standardised format, containing a &lt;ul;
 	 */
 	public function FieldHolder() {
-		Requirements::javascript(THIRDPARTY_DIR . "/loader.js");
-		Requirements::javascript(THIRDPARTY_DIR . "/prototype.js");
-		Requirements::javascript(THIRDPARTY_DIR . "/behaviour.js");
-		Requirements::javascript(THIRDPARTY_DIR . "/prototype_improvements.js");
+		Requirements::javascript(SAPPHIRE_DIR . '/javascript/loader.js');
+		Requirements::javascript(SAPPHIRE_DIR . "/thirdparty/prototype/prototype.js");
+		Requirements::javascript(SAPPHIRE_DIR . "/thirdparty/behaviour/behaviour.js");
+		Requirements::javascript(SAPPHIRE_DIR . "/javascript/prototype_improvements.js");
 		Requirements::javascript(THIRDPARTY_DIR . "/jquery/jquery.js");
-		Requirements::javascript(THIRDPARTY_DIR . "/jquery/jquery_improvements.js");
-		Requirements::javascript(THIRDPARTY_DIR . '/jquery/plugins/livequery/jquery.livequery.js');
+		Requirements::javascript(SAPPHIRE_DIR . "/javascript/jquery_improvements.js");
+		Requirements::javascript(THIRDPARTY_DIR . '/jquery-livequery/jquery.livequery.js');
 		Requirements::javascript(THIRDPARTY_DIR . "/tabstrip/tabstrip.js");
 		Requirements::css(THIRDPARTY_DIR . "/tabstrip/tabstrip.css");
 		

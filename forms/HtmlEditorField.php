@@ -200,8 +200,8 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 	 * @return Form
 	 */
 	function LinkForm() {
-		Requirements::javascript(THIRDPARTY_DIR . "/behaviour.js");
-		Requirements::javascript(THIRDPARTY_DIR . "/tiny_mce_improvements.js");
+		Requirements::javascript(SAPPHIRE_DIR . "/thirdparty/behaviour/behaviour.js");
+		Requirements::javascript(SAPPHIRE_DIR . "/javascript/tiny_mce_improvements.js");
 
 		$form = new Form(
 			$this->controller,
@@ -246,9 +246,9 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 	 * @return Form
 	 */
 	function ImageForm() {
-		Requirements::javascript(THIRDPARTY_DIR . "/behaviour.js");	
-		Requirements::javascript(THIRDPARTY_DIR . '/SWFUpload/swfupload.js');
-		Requirements::javascript(THIRDPARTY_DIR . "/tiny_mce_improvements.js");
+		Requirements::javascript(SAPPHIRE_DIR . "/thirdparty/behaviour/behaviour.js");	
+		Requirements::javascript(CMS_DIR . '/thirdparty/swfupload/swfupload.js');
+		Requirements::javascript(SAPPHIRE_DIR . "/javascript/tiny_mce_improvements.js");
 		Requirements::javascript(CMS_DIR . '/javascript/Upload.js');
 		Requirements::css(CMS_DIR .'/css/TinyMCEImageEnhancement.css');
 		Requirements::javascript(CMS_DIR . '/javascript/TinyMCEImageEnhancement.js');
@@ -309,10 +309,10 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 	}
 
 	function FlashForm() {
-		Requirements::javascript(THIRDPARTY_DIR . "/behaviour.js");
+		Requirements::javascript(SAPPHIRE_DIR . "/thirdparty/behaviour/behaviour.js");
 		Requirements::javascript(CMS_DIR . '/javascript/Upload.js');
-		Requirements::javascript(THIRDPARTY_DIR . "/tiny_mce_improvements.js");
-		Requirements::javascript(THIRDPARTY_DIR . '/SWFUpload/swfupload.js');
+		Requirements::javascript(SAPPHIRE_DIR . "/javascript/tiny_mce_improvements.js");
+		Requirements::javascript(CMS_DIR . '/thirdparty/swfupload/swfupload.js');
 
 		$form = new Form(
 			$this->controller,

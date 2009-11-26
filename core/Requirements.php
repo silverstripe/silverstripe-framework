@@ -137,7 +137,7 @@ class Requirements {
 	 * Register the given stylesheet file as required.
 	 * See {@link Requirements_Backend::css()}
 	 * 
-	 * @param $file String Filenames should be relative to the base, eg, 'jsparty/tree/tree.css'
+	 * @param $file String Filenames should be relative to the base, eg, 'sapphire/javascript/tree/tree.css'
 	 * @param $media String Comma-separated list of media-types (e.g. "screen,projector") 
 	 * @see http://www.w3.org/TR/REC-CSS2/media.html
 	 */
@@ -476,7 +476,7 @@ class Requirements_Backend {
 	/**
 	 * Register the given stylesheet file as required.
 	 * 
-	 * @param $file String Filenames should be relative to the base, eg, 'jsparty/tree/tree.css'
+	 * @param $file String Filenames should be relative to the base, eg, 'sapphire/javascript/tree/tree.css'
 	 * @param $media String Comma-separated list of media-types (e.g. "screen,projector") 
 	 * @see http://www.w3.org/TR/REC-CSS2/media.html
 	 */

@@ -289,8 +289,8 @@ class ContentController extends Controller {
 		if(Director::isDev() || Permission::check('CMS_ACCESS_CMSMain')) {
 			Requirements::css(SAPPHIRE_DIR . '/css/SilverStripeNavigator.css');
 
-			Requirements::javascript(THIRDPARTY_DIR . '/behaviour.js');
-			// Requirements::javascript(THIRDPARTY_DIR . '/prototype.js');
+			Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/prototype/behaviour.js');
+			// Requirements::javascript(THIRDPARTY_DIR . '/prototype/prototype.js');
 			Requirements::customScript(<<<JS
 				Behaviour.register({
 					'#switchView a' :  {

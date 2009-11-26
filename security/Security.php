@@ -327,10 +327,10 @@ class Security extends Controller {
 		// only display tabs when more than one authenticator is provided
 		// to save bandwidth and reduce the amount of custom styling needed 
 		if(count($forms) > 1) {
-			Requirements::javascript(THIRDPARTY_DIR . "/loader.js");
-			Requirements::javascript(THIRDPARTY_DIR . "/prototype.js");
-			Requirements::javascript(THIRDPARTY_DIR . "/behaviour.js");
-			Requirements::javascript(THIRDPARTY_DIR . "/prototype_improvements.js");
+			Requirements::javascript(SAPPHIRE_DIR . '/javascript/loader.js');
+			Requirements::javascript(SAPPHIRE_DIR . "/thirdparty/prototype/prototype.js");
+			Requirements::javascript(SAPPHIRE_DIR . "/thirdparty/behaviour/behaviour.js");
+			Requirements::javascript(SAPPHIRE_DIR . "/javascript/prototype_improvements.js");
 			Requirements::javascript(THIRDPARTY_DIR . "/scriptaculous/effects.js");
 			Requirements::css(SAPPHIRE_DIR . "/css/Form.css");
 			
@@ -339,8 +339,8 @@ class Security extends Controller {
 			$link_base = Director::absoluteURL($this->Link("login"));
 			
 			Requirements::javascript(THIRDPARTY_DIR . "/jquery/jquery.js");
-			Requirements::javascript(THIRDPARTY_DIR . "/jquery/jquery_improvements.js");
-			Requirements::javascript(THIRDPARTY_DIR . '/jquery/plugins/livequery/jquery.livequery.js');
+			Requirements::javascript(SAPPHIRE_DIR . "/javascript/jquery_improvements.js");
+			Requirements::javascript(THIRDPARTY_DIR . '/jquery-livequery/jquery.livequery.js');
 			Requirements::javascript(THIRDPARTY_DIR . "/tabstrip/tabstrip.js");
 			Requirements::css(THIRDPARTY_DIR . "/tabstrip/tabstrip.css");
 			
@@ -393,10 +393,10 @@ class Security extends Controller {
 	 * @return string Returns the "lost password" page as HTML code.
 	 */
 	public function lostpassword() {
-		Requirements::javascript(THIRDPARTY_DIR . '/prototype.js');
-		Requirements::javascript(THIRDPARTY_DIR . '/behaviour.js');
-		Requirements::javascript(THIRDPARTY_DIR . '/loader.js');
-		Requirements::javascript(THIRDPARTY_DIR . '/prototype_improvements.js');
+		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/prototype/prototype.js');
+		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/behaviour/behaviour.js');
+		Requirements::javascript(SAPPHIRE_DIR . '/javascript/loader.js');
+		Requirements::javascript(SAPPHIRE_DIR . '/javascript/prototype_improvements.js');
 		Requirements::javascript(THIRDPARTY_DIR . '/scriptaculous/effects.js');
 
 		$tmpPage = new Page();
@@ -452,10 +452,10 @@ class Security extends Controller {
 	 * @return string Returns the "password sent" page as HTML code.
 	 */
 	public function passwordsent($request) {
-		Requirements::javascript(THIRDPARTY_DIR . '/behaviour.js');
-		Requirements::javascript(THIRDPARTY_DIR . '/loader.js');
-		Requirements::javascript(THIRDPARTY_DIR . '/prototype.js');
-		Requirements::javascript(THIRDPARTY_DIR . '/prototype_improvements.js');
+		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/behaviour/behaviour.js');
+		Requirements::javascript(SAPPHIRE_DIR . '/javascript/loader.js');
+		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/prototype/prototype.js');
+		Requirements::javascript(SAPPHIRE_DIR . '/javascript/prototype_improvements.js');
 		Requirements::javascript(THIRDPARTY_DIR . '/scriptaculous/effects.js');
 
 		$tmpPage = new Page();
