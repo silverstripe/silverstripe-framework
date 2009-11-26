@@ -131,17 +131,19 @@ class HtmlEditorField extends TextareaField {
 		
 		// Save file & link tracking data.
 		if($record->ID && $record->many_many('LinkTracking') && $tracker = $record->LinkTracking()) {
-			$tracker->removeByFilter(sprintf('"FieldName" = \'%s\' AND "SiteTreeID" = %d', $this->name, $record->ID));
-			
+			$filter = sprintf('"FieldName" = \'%s\' AND "SiteTreeID" = %d', $this->name, $record->ID);
+			DB::query("DELETE FROM \"$tracker->tableName\" WHERE $filter");
+
 			if($linkedPages) foreach($linkedPages as $item) {
 				$tracker->add($item, array('FieldName' => $this->name));
 			}
 		}
 		
 		if($record->ID && $record->many_many('ImageTracking') && $tracker = $record->ImageTracking()) {
-			$tracker->removeByFilter(sprintf('"FieldName" = \'%s\' AND "SiteTreeID" = %d', $this->name, $record->ID));
-		
-		$fieldName = $this->name;
+			$filter = sprintf('"FieldName" = \'%s\' AND "SiteTreeID" = %d', $this->name, $record->ID);
+			DB::query("DELETE FROM \"$tracker->tableName\" WHERE $filter");
+
+			$fieldName = $this->name;
 			if($linkedFiles) foreach($linkedFiles as $item) {
 				$tracker->add($item, array('FieldName' => $this->name));
 			}
@@ -149,7 +151,7 @@ class HtmlEditorField extends TextareaField {
 		
 		$record->{$this->name} = $htmlValue->getContent();
 	}
-	
+
 	/**
 	 * @return HtmlEditorField_Readonly
 	 */

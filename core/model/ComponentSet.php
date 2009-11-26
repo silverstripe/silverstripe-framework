@@ -255,17 +255,7 @@ class ComponentSet extends DataObjectSet {
 			DB::query("DELETE FROM \"$this->tableName\" WHERE \"$parentField\" = {$this->ownerObj->ID} AND \"$childField\" IN ($itemCSV)");
 		}
 	}
-	
-	/**
-	 * Remove all items that match the SQL filter.
-	 * @deprecated 2.3 Not flexible enough, use custom code
-	 * @param string $filter Filter to be inserted into the WHERE clause
-	 */
-	function removeByFilter($filter) {
-		$parentField = $this->ownerClass . 'ID';
-		DB::query("DELETE FROM \"$this->tableName\" WHERE \"$parentField\" = {$this->ownerObj->ID} AND $filter");
-	}
-	
+
 	/**
 	 * Remove all items in this set.
 	 */
