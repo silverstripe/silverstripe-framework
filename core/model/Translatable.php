@@ -1210,7 +1210,7 @@ class Translatable extends DataObjectDecorator implements PermissionProvider {
 	}
 	
 	function providePermissions() {
-		if(!Translatable::is_enabled()) return false;
+		if(!Object::has_extension('SiteTree', 'Translatable')) return false;
 		
 		$locales = self::get_allowed_locales();
 		
