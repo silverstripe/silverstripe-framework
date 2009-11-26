@@ -45,7 +45,7 @@ class ContentNegotiator {
 	static function set_encoding($encoding) {
 		self::$encoding = $encoding;
 	}
-	
+
 	/**
 	 * Return the character encoding set bhy ContentNegotiator::set_encoding().  It's recommended that all classes that need to
 	 * specify the character set make use of this function.
@@ -53,7 +53,28 @@ class ContentNegotiator {
 	static function get_encoding() {
 	    return self::$encoding;
 	}
-	
+
+	/**
+	 * Enable content negotiation for all templates, not just those with the xml header.
+	 */
+	static function enable() {
+		self::$enabled = true;
+	}
+
+	/**
+	 * Returns true if negotation is enabled for the given response.
+	 * By default, negotiation is only enabled for pages that have the xml header.
+	 */
+	static function enabled_for($response) {
+		$contentType = $response->getHeader("Content-Type");
+		
+		// Disable content negotation for other content types
+		if($contentType && substr($contentType, 0,9) != 'text/html' && substr($contentType, 0,21) != 'application/xhtml+xml') return false;
+
+		if(self::$enabled) return true;
+		else return (substr($response->getBody(),0,5) == '<' . '?xml');
+	}
+
 	static function process(SS_HTTPResponse $response) {
 		if(!self::enabled_for($response)) return;
 
@@ -159,28 +180,5 @@ class ContentNegotiator {
 		
 		$response->setBody($content);
 	}
-
-	/**
-	 * Enable content negotiation for all templates, not just those with the xml header.
-	 */
-	static function enable() {
-		self::$enabled = true;
-	}
-
-	/**
-	 * Returns true if negotation is enabled for the given response.
-	 * By default, negotiation is only enabled for pages that have the xml header.
-	 */
-	static function enabled_for($response) {
-		$contentType = $response->getHeader("Content-Type");
-		
-		// Disable content negotation for other content types
-		if($contentType && substr($contentType, 0,9) != 'text/html' && substr($contentType, 0,21) != 'application/xhtml+xml') return false;
-
-		if(self::$enabled) return true;
-		else return (substr($response->getBody(),0,5) == '<' . '?xml');
-	}
 	
 }
-
-?>

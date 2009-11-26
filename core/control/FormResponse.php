@@ -76,7 +76,6 @@ class FormResponse {
 		if(isset($_REQUEST['forcehtml'])) {
 			return self::$non_ajax_content;			
 		} else if(isset($_REQUEST['forceajax']) || Director::is_ajax()) {
-			ContentNegotiator::disable();
 			$response = Controller::curr()->getResponse();
 			$response->addHeader('Content-Type', 'text/javascript');
 			return self::get_javascript();
