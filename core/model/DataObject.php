@@ -530,10 +530,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * Get the translated user friendly singular name of this DataObject
 	 * same as singular_name() but runs it through the translating function
 	 *
-	 * NOTE:
-	 * It uses as default text if no translation found the $add_action when
-	 * defined or else the default text is singular_name()
-	 *
 	 * Translating string is in the form:
 	 *     $this->class.SINGULARNAME
 	 * Example:
@@ -823,10 +819,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 */
 	protected function onBeforeWrite() {
 		$this->brokenOnWrite = false;
-
-		// DEPRECATED 2.3: use onBeforeWrite()
-		$dummy = null;
-		$this->extend('augmentBeforeWrite', $dummy);
 		
 		$dummy = null;
 		$this->extend('onBeforeWrite', $dummy);
@@ -841,10 +833,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @uses DataObjectDecorator->onAfterWrite()
 	 */
 	protected function onAfterWrite() {
-		// DEPRECATED 2.3: use onAfterWrite()
-		$dummy = null;
-		$this->extend('augmentAfterWrite', $dummy);
-		
 		$dummy = null;
 		$this->extend('onAfterWrite', $dummy);
 	}
@@ -901,9 +889,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 				break;
 			}
 		}
-		
-		// DEPRECATED 2.3: use populateDefaults()
-		$this->extend('augmentPopulateDefaults');
 		
 		$this->extend('populateDefaults');
 	}
@@ -2333,16 +2318,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	}
 
 	/**
-	 * @deprecated 2.3 (For external use) Please use hasField(), hasDatabaseField(), hasOwnTableDatabaseField() instead
-	 *
-	 * @param string $field Name of the field
-	 * @return string The field type of the given field
-	 */
-	public function fieldExists($field) {
-		return $this->hasOwnTableDatabaseField($field);
-	}
-
-	/**
 	 * Return the DBField object that represents the given field.
 	 * This works similarly to obj() with 2 key differences:
 	 *   - it still returns an object even when the field has no value.
@@ -2573,24 +2548,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		$query = $this->buildSQL($filter, $sort, $limit, $join, true, $having);
 		$this->extend('augmentSQL', $query);
 		return $query;
-	}
-
-	/**
-	 * Get a bunch of fields in an HTML LI, like this:
-	 *  - name: value
-	 *  - name: value
-	 *  - name: value
-	 *
-	 * @deprecated 2.3 Use custom code
-	 * @return string The fields as an HTML unordered list
-	 */
-	function listOfFields() {
-		$fields = func_get_args();
-		$result = "<ul>\n";
-		foreach($fields as $field)
-		$result .= "<li><b>$field:</b> " . $this->$field . "</li>\n";
-		$result .= "</ul>";
-		return $result;
 	}
 
 	/**
@@ -2915,9 +2872,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 				DB::alteration_message("Added default records to $className table","created");
 			}
 		}
-
-		// DEPRECATED 2.3: Use requireDefaultRecords()
-		$this->extend('augmentDefaultRecords', $dummy);
 		
 		// Let any extentions make their own database default data
 		$this->extend('requireDefaultRecords', $dummy);

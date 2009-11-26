@@ -1415,14 +1415,6 @@ class Member_SignupEmail extends Email {
 			</ul>
 		';
 	}
-
-	function MemberData() {
-		return $this->template_data->listOfFields(
-			"FirstName", "Surname", "Email",
-			"Phone", "Mobile", "Street",
-			"Suburb", "City", "Postcode"
-		);
-	}
 }
 
 

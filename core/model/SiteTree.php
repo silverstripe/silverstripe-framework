@@ -136,15 +136,6 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	static $default_sort = "Sort";
 
 	/**
-	 * The text shown in the create page dropdown. If
-	 * this is not set, default to "Create a ClassName".
-	 * 
-	 * @deprecated 2.3 Use "<myclassname>.TITLE" in the i18n language tables instead
-	 * @var string
-	 */
-	static $add_action = null;
-
-	/**
 	 * If this is false, the class cannot be created in the CMS.
 	 * @var boolean
 	*/
@@ -667,10 +658,6 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 			return $this->$method($member);
 		}
 		
-		// DEPRECATED 2.3: Use can()
-		$results = $this->extend('alternateCan', $member);
-		if($results && is_array($results)) if(!min($results)) return false;
-		
 		$results = $this->extend('can', $member);
 		if($results && is_array($results)) if(!min($results)) return false;
 
@@ -700,10 +687,6 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		}
 
 		if($member && Permission::checkMember($member, "ADMIN")) return true;
-		
-		// DEPRECATED 2.3: use canAddChildren() instead
-		$results = $this->extend('alternateCanAddChildren', $member);
-		if($results && is_array($results)) if(!min($results)) return false;
 		
 		$results = $this->extend('canAddChildren', $member);
 		if($results && is_array($results)) if(!min($results)) return false;
@@ -735,10 +718,6 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 
 		// admin override
 		if($member && Permission::checkMember($member, array("ADMIN", "SITETREE_VIEW_ALL"))) return true;
-		
-		// DEPRECATED 2.3: use canView() instead
-		$results = $this->extend('alternateCanView', $member);
-		if($results && is_array($results)) if(!min($results)) return false;
 		
 		// decorated access checks
 		$results = $this->extend('canView', $member);
@@ -795,10 +774,6 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 			return true;
 		}
 		
-		// DEPRECATED 2.3: use canDelete() instead
-		$results = $this->extend('alternateCanDelete', $memberID);
-		if($results && is_array($results)) if(!min($results)) return false;
-		
 		// decorated access checks
 		$results = $this->extend('canDelete', $memberID);
 		if($results && is_array($results)) if(!min($results)) return false;
@@ -839,10 +814,6 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 
 		if($member && Permission::checkMember($member, "ADMIN")) return true;
 		
-		// DEPRECATED 2.3: use canCreate() instead
-		$results = $this->extend('alternateCanCreate', $member);
-		if($results && is_array($results)) if(!min($results)) return false;
-		
 		// decorated permission checks
 		$results = $this->extend('canCreate', $member);
 		if($results && is_array($results)) if(!min($results)) return false;
@@ -875,10 +846,6 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		else $memberID = Member::currentUserID();
 		
 		if($memberID && Permission::checkMember($memberID, array("ADMIN", "SITETREE_EDIT_ALL"))) return true;
-
-		// DEPRECATED 2.3: use canEdit() instead
-		$results = $this->extend('alternateCanEdit', $memberID);
-		if($results && is_array($results)) if(!min($results)) return false;
 		
 		// decorated access checks
 		$results = $this->extend('canEdit', $memberID);
@@ -913,10 +880,6 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		if(!$member || !(is_a($member, 'Member')) || is_numeric($member)) $member = Member::currentUser();
 		
 		if($member && Permission::checkMember($member, "ADMIN")) return true;
-		
-		// DEPRECATED 2.3: use canPublish() instead
-		$results = $this->extend('alternateCanPublish', $member);
-		if($results && is_array($results)) if(!min($results)) return false;
 		
 		// If we have a result, then that means at least one decorator specified alternateCanPublish
 		// Allow the permission check only if *all* voting decorators allow it.
@@ -1186,9 +1149,6 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		// get the "long" lang name suitable for the HTTP content-language flag (with hyphens instead of underscores)
 		$currentLang = ($this->hasExtension('Translatable')) ? Translatable::get_current_locale() : i18n::get_locale();
 		$tags .= "<meta http-equiv=\"Content-Language\" content=\"". i18n::convert_rfc1766($currentLang) ."\"/>\n";
-		
-		// DEPRECATED 2.3: Use MetaTags
-		$this->extend('updateMetaTags', $tags);
 		
 		$this->extend('MetaTags', $tags);
 
@@ -2352,10 +2312,13 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		);
 	}
 	
+	/**
+	 * Return the translated Singular name 
+	 * 
+	 * @return String
+	 */
 	function i18n_singular_name() {
-		$addAction = $this->stat('add_action');
-		$name = (!empty($addAction)) ? $addAction : $this->singular_name();
-		return _t($this->class.'.SINGULARNAME', $name);
+		return _t($this->class.'.SINGULARNAME', $this->singular_name());
 	}
 	
 	/**

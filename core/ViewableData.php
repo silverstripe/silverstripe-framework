@@ -752,17 +752,6 @@ class ViewableData extends Object implements IteratorAggregate {
 	public function Top() {
 		return SSViewer::topLevel();
 	}
-	
-	// DEPRECATED ------------------------------------------------------------------------------------------------------
-	
-	/**
-	 * @deprecated 2.3 use {@link ViewableData::XML_val()}
-	 * @todo this cannot throw an error yet, as alot of core classes still use it
-	 */
-	public function val($field, $arguments = null) {
-		return $this->XML_val($field, $arguments);
-	}
-	
 }
 
 /**
