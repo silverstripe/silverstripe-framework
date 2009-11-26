@@ -1,0 +1,104 @@
+/* Caution! Ensure accessibility in print and other media types... */
+@media projection, screen { /* Use class for showing/hiding tab content, so that visibility can be better controlled in different media types... */
+    .ui-tabs-hide {
+        display: none;
+    }
+}
+
+/* Hide useless elements in print layouts... */
+@media print {
+    .ui-tabs-nav {
+        display: none;
+    }
+}
+
+/* Skin */
+.ui-tabs-nav {
+    list-style: none;
+    margin: 0;
+    padding: 0 0 0 3px;
+
+	border-bottom: 1px #AAA solid;
+	padding: 0;
+	margin: 0 !important;
+	clear: left;
+	float: left;
+	width: 100%;
+	/* Need this to stop tabs from disappearing sometimes */
+	position: relative;
+}
+.ui-tabs-nav:after { /* clearing without presentational markup, IE gets extra treatment */
+    display: block;
+    clear: both;
+    content: " ";
+}
+
+/* If I just say li I get into problems with ".ul-tabs-nav .ui-tabs-selected" below */
+.ui-tabs-nav li {
+	float: left;
+	list-style: none;
+	background: url(images/norm_li_bg.gif) no-repeat left 3px;
+	margin: 0 2px 0 0;
+	padding: 0 0 0 9px;
+	cursor: pointer;
+	position: relative;
+	top: 1px;
+}
+.ui-tabs-nav a, .ui-tabs-nav a span {
+}
+.ui-tabs-nav a {
+	background: url(images/norm_a_bg.gif) no-repeat right 3px;
+	display: block;
+	float: left;
+	outline: none;
+	padding: 7px 9px 3px 0;
+	text-decoration: none;
+	color: #555;
+	font-size: 11px;
+	font-weight: bold;
+}
+
+.ui-tabs-nav li.ui-tabs-selected {
+	background: url(images/sel_li_bg.gif) no-repeat left top;
+	top: 1px;
+}
+.ui-tabs-nav li.ui-tabs-selected a {
+	background: url(images/sel_a_bg.gif) no-repeat right top;
+	padding: 6px 9px 5px 0;
+	color: #0074c6;
+}
+
+.ui-tabs-nav .ui-tabs-selected a:link, .ui-tabs-nav .ui-tabs-selected a:visited,
+.ui-tabs-nav .ui-tabs-disabled a:link, .ui-tabs-nav .ui-tabs-disabled a:visited { /* @ Opera, use pseudo classes otherwise it confuses cursor... */
+    cursor: text;
+}
+.ui-tabs-nav a:hover, .ui-tabs-nav a:focus, .ui-tabs-nav a:active,
+.ui-tabs-nav .ui-tabs-unselect a:hover, .ui-tabs-nav .ui-tabs-unselect a:focus, .ui-tabs-nav .ui-tabs-unselect a:active { /* @ Opera, we need to be explicit again here now... */
+    cursor: pointer;
+}
+.ui-tabs-disabled {
+    opacity: .4;
+    filter: alpha(opacity=40);
+}
+.ui-tabs-nav .ui-tabs-disabled a:link, .ui-tabs-nav .ui-tabs-disabled a:visited {
+    color: #000;
+}
+.ui-tabs-panel {
+	clear: left;
+	overflow: auto;
+	border: 1px solid #aaa;
+	border-top: none;
+	position: relative;
+	top: 0;
+	margin: 0;
+	padding: 10px;
+}
+
+
+/* Additional IE specific bug fixes... */
+* html .ui-tabs-nav { /* auto clear @ IE 6 & IE 7 Quirks Mode */
+    display: inline-block;
+}
+*:first-child+html .ui-tabs-nav  { /* auto clear @ IE 7 Standards Mode - do not group selectors, otherwise IE 6 will ignore complete rule (because of the unknown + combinator)... */
+    display: inline-block;
+}
