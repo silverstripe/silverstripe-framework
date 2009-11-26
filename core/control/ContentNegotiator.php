@@ -33,8 +33,11 @@
  * but still find it useful to have self-closing tags removed.
  */
 class ContentNegotiator {
+
 	protected static $encoding = 'utf-8';
-	
+
+	protected static $enabled = false;
+
 	/**
 	 * Set the character set encoding for this page.  By default it's utf-8, but you could change it to, say, windows-1252, to
 	 * improve interoperability with extended characters being imported from windows excel.
@@ -157,8 +160,6 @@ class ContentNegotiator {
 		$response->setBody($content);
 	}
 
-	protected static $enabled = false;
-	
 	/**
 	 * Enable content negotiation for all templates, not just those with the xml header.
 	 */
@@ -166,14 +167,6 @@ class ContentNegotiator {
 		self::$enabled = true;
 	}
 
-	/**
-	 * @deprecated in 2.3
-	 */
-	static function disable() {
-		self::$enabled = false;
-	}
-	
-	
 	/**
 	 * Returns true if negotation is enabled for the given response.
 	 * By default, negotiation is only enabled for pages that have the xml header.
