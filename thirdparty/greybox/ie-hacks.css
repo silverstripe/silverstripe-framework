@@ -1,6 +1,0 @@
-#GB_window {
-  position: absolute;
-  margin-top: expression(0 - parseInt(this.offsetHeight / 2) +
-    (boxMargin = document.documentElement &&
-    document.documentElement.scrollTop || document.body.scrollTop) + 'px');
-}
