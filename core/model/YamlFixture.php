@@ -146,7 +146,8 @@ class YamlFixture extends Object {
 		DataObject::set_validation_enabled(false);
 		
 		$parser = new Spyc();
-		$fixtureContent = $parser->load(Director::baseFolder().'/'.$this->fixtureFile);
+		$fixtureContent = $parser->loadFile(Director::baseFolder().'/'.$this->fixtureFile);
+
 		$this->fixtureDictionary = array();
 		foreach($fixtureContent as $dataClass => $items) {
 			if(ClassInfo::exists($dataClass)) {
