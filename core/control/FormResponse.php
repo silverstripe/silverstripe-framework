@@ -76,7 +76,6 @@ class FormResponse {
 		if(isset($_REQUEST['forcehtml'])) {
 			return self::$non_ajax_content;			
 		} else if(isset($_REQUEST['forceajax']) || Director::is_ajax()) {
-			ContentNegotiator::disable();
 			// TODO figure out a way to stay backwards-compatible with Ajax.Evaluator and still use the automatic evaluating of Prototype
 			//header("Content-type: text/javascript");
 			return self::get_javascript();
