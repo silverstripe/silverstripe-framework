@@ -106,7 +106,7 @@ class Image extends File {
 	 */
 	function getTag() {
 		if(file_exists(Director::baseFolder()."/".$this->Filename)) {
-			$url = $this->URL();
+			$url = $this->getURL();
 			$title = ($this->Title) ? $this->Title : $this->Filename;
 			
 			if ($this->Title) {
@@ -127,7 +127,7 @@ class Image extends File {
 	 * @return string
 	 */
 	function forTemplate() {
-		return $this->Tag();
+		return $this->getTag();
 	}
 		
 	/**
