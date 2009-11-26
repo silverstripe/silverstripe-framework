@@ -823,10 +823,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 */
 	protected function onBeforeWrite() {
 		$this->brokenOnWrite = false;
-
-		// DEPRECATED 2.3: use onBeforeWrite()
-		$dummy = null;
-		$this->extend('augmentBeforeWrite', $dummy);
 		
 		$dummy = null;
 		$this->extend('onBeforeWrite', $dummy);
@@ -841,10 +837,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @uses DataObjectDecorator->onAfterWrite()
 	 */
 	protected function onAfterWrite() {
-		// DEPRECATED 2.3: use onAfterWrite()
-		$dummy = null;
-		$this->extend('augmentAfterWrite', $dummy);
-		
 		$dummy = null;
 		$this->extend('onAfterWrite', $dummy);
 	}
@@ -901,9 +893,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 				break;
 			}
 		}
-		
-		// DEPRECATED 2.3: use populateDefaults()
-		$this->extend('augmentPopulateDefaults');
 		
 		$this->extend('populateDefaults');
 	}
@@ -2915,9 +2904,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 				DB::alteration_message("Added default records to $className table","created");
 			}
 		}
-
-		// DEPRECATED 2.3: Use requireDefaultRecords()
-		$this->extend('augmentDefaultRecords', $dummy);
 		
 		// Let any extentions make their own database default data
 		$this->extend('requireDefaultRecords', $dummy);

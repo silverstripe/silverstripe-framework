@@ -338,10 +338,6 @@ class Group extends DataObject {
 	public function canEdit($member = null) {
 		if(!$member || !(is_a($member, 'Member')) || is_numeric($member)) $member = Member::currentUser();
 		
-		// DEPRECATED 2.3: use canView() instead
-		$results = $this->extend('alternateCanView', $member);
-		if($results && is_array($results)) if(!min($results)) return false;
-		
 		// decorated access checks
 		$results = $this->extend('canEdit', $member);
 		if($results && is_array($results)) if(!min($results)) return false;
@@ -371,10 +367,6 @@ class Group extends DataObject {
 	 */
 	public function canView($member = null) {
 		if(!$member || !(is_a($member, 'Member')) || is_numeric($member)) $member = Member::currentUser();
-		
-		// DEPRECATED 2.3: use canView() instead
-		$results = $this->extend('alternateCanView', $member);
-		if($results && is_array($results)) if(!min($results)) return false;
 		
 		// decorated access checks
 		$results = $this->extend('canView', $member);
