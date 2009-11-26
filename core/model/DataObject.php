@@ -2322,16 +2322,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	}
 
 	/**
-	 * @deprecated 2.3 (For external use) Please use hasField(), hasDatabaseField(), hasOwnTableDatabaseField() instead
-	 *
-	 * @param string $field Name of the field
-	 * @return string The field type of the given field
-	 */
-	public function fieldExists($field) {
-		return $this->hasOwnTableDatabaseField($field);
-	}
-
-	/**
 	 * Return the DBField object that represents the given field.
 	 * This works similarly to obj() with 2 key differences:
 	 *   - it still returns an object even when the field has no value.
