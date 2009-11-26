@@ -132,8 +132,6 @@ class RestfulServer extends Controller {
 	 * Since no $Action url-param is set, all requests are sent here.
 	 */
 	function index() {
-		ContentNegotiator::disable();
-		
 		if(!isset($this->urlParams['ClassName'])) return $this->notFound();
 		$className = $this->urlParams['ClassName'];
 		$id = (isset($this->urlParams['ID'])) ? $this->urlParams['ID'] : null;

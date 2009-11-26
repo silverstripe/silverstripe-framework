@@ -5,9 +5,6 @@
  * By default, ContentNegotiator will comply to the Accept headers the clients
  * sends along with the HTTP request, which is most likely "application/xhtml+xml"
  * (see "Order of selection" below).
- * 
- * IMPORTANT: This conversion happens by default to all template output unless
- * explicitly disabled through ContentNegotiator::disable().
  *
  * Order of selection between html or xhtml is as follows:
  * - if PHP has already sent the HTTP headers, default to "html" (we can't send HTTP Content-Type headers any longer)
