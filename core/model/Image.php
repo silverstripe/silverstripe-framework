@@ -448,26 +448,6 @@ class Image extends File {
 			return self::ORIENTATION_SQUARE;
 		}
 	}
-	
-	
-	
-	// ###################
-	// DEPRECATED
-	// ###################
-	
-	/**
-	 * @deprecated Use getTag() instead
-	 */
-	function Tag() {
-		return $this->getTag();
-	}
-	
-	/**
-	 * @deprecated Use getURL() instead
-	 */
-	function URL() {
-		return $this->getURL();
-	}
 }
 
 /**
