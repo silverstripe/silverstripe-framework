@@ -1,0 +1,8 @@
+--- 
+format: 1
+handler: 
+  piston:remote-revision: 1066
+  piston:uuid: bc5a781e-4c0c-0410-b2a3-81dd18052d85
+lock: false
+repository_class: Piston::Svn::Repository
+repository_url: http://svn.simplepie.org/simplepie/tags/1.0/
