@@ -6,8 +6,6 @@
 * @package cms
 */
 class VirtualPage extends Page {
-
-	static $add_action = "Virtual page (another page's content)";
 	
 	static $icon = array("cms/images/treeicons/page-shortcut-gold","file");
 	

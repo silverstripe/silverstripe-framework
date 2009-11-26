@@ -530,10 +530,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * Get the translated user friendly singular name of this DataObject
 	 * same as singular_name() but runs it through the translating function
 	 *
-	 * NOTE:
-	 * It uses as default text if no translation found the $add_action when
-	 * defined or else the default text is singular_name()
-	 *
 	 * Translating string is in the form:
 	 *     $this->class.SINGULARNAME
 	 * Example:

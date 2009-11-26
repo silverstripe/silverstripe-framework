@@ -134,15 +134,6 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	static $default_sort = "Sort";
 
 	/**
-	 * The text shown in the create page dropdown. If
-	 * this is not set, default to "Create a ClassName".
-	 * 
-	 * @deprecated 2.3 Use "<myclassname>.TITLE" in the i18n language tables instead
-	 * @var string
-	 */
-	static $add_action = null;
-
-	/**
 	 * If this is false, the class cannot be created in the CMS.
 	 * @var boolean
 	*/
@@ -2315,10 +2306,13 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		);
 	}
 	
+	/**
+	 * Return the translated Singular name 
+	 * 
+	 * @return String
+	 */
 	function i18n_singular_name() {
-		$addAction = $this->stat('add_action');
-		$name = (!empty($addAction)) ? $addAction : $this->singular_name();
-		return _t($this->class.'.SINGULARNAME', $name);
+		return _t($this->class.'.SINGULARNAME', $this->singular_name());
 	}
 	
 	/**
