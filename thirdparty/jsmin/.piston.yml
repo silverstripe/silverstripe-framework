@@ -1,0 +1,8 @@
+--- 
+format: 1
+handler: 
+  piston:remote-revision: 8
+  piston:uuid: d4d03eb5-ab2f-0410-8b36-bd473e2d5c71
+lock: false
+repository_class: Piston::Svn::Repository
+repository_url: http://jsmin-php.googlecode.com/svn/trunk
