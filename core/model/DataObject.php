@@ -2882,6 +2882,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	}
 	
 	/**
+	 * @deprecated 2.5 use self::database_fields() 
 	 * @see DataObject::database_fields()
 	 */
 	public function databaseFields() {
@@ -2891,6 +2892,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	}
 	
 	/**
+	 * @deprecated 2.5 use self::custom_database_fields()
 	 * @see DataObject::custom_database_fields()
 	 */
 	public function customDatabaseFields() {
