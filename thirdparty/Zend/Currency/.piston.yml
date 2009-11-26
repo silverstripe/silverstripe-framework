@@ -1,0 +1,8 @@
+--- 
+format: 1
+handler: 
+  piston:remote-revision: 17373
+  piston:uuid: 44c647ce-9c0f-0410-b52a-842ac1e357ba
+lock: false
+repository_url: http://framework.zend.com/svn/framework/standard/tags/release-1.8.1/library/Zend/Currency
+repository_class: Piston::Svn::Repository
