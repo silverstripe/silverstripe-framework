@@ -180,5 +180,5 @@ class ContentNegotiator {
 		
 		$response->setBody($content);
 	}
-	
+
 }
