@@ -342,7 +342,7 @@ HTML;
 	}
 	
 	function setUp() {
-		SapphireTest::create_temp_db();
+		// The first DB test will sort out the DB, we don't have to
 		SSViewer::flush_template_cache();
 	}
 	
