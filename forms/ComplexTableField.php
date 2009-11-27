@@ -814,7 +814,7 @@ class ComplexTableField_ItemRequest extends RequestHandler {
 		$referrer = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : null;
 		
 		$closeLink = sprintf(
-			'<small><a href="' . $referrer . '" onclick="javascript:window.top.GB_hide(); return false;">(%s)</a></small>',
+			'<small><a href="' . str_replace('%', '%%', $referrer) . '" onclick="javascript:window.top.GB_hide(); return false;">(%s)</a></small>',
 			_t('ComplexTableField.CLOSEPOPUP', 'Close Popup')
 		);
 		$message = sprintf(
