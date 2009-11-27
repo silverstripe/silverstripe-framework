@@ -92,6 +92,84 @@ SS
 		);
 	}
 	
+	function testControlWhitespace() {
+		$this->assertEquals(
+			'before[out:SingleItem.Test]after
+				beforeTestafter',
+			$this->render('before<% control SingleItem %>$Test<% end_control %>after
+				before<% control SingleItem %>Test<% end_control %>after')
+		);
+
+		// The control tags are removed from the output, but no whitespace
+		// This is a quirk that could be changed, but included in the test to make the current
+		// behaviour explicit
+		$this->assertEquals(
+			'before
+
+[out:SingleItem.ItemOnItsOwnLine]
+
+after',
+			$this->render('before
+<% control SingleItem %>
+$ItemOnItsOwnLine
+<% end_control %>
+after')
+		);
+
+		// The whitespace within the control tags is preserve in a loop
+		// This is a quirk that could be changed, but included in the test to make the current
+		// behaviour explicit
+		$this->assertEquals(
+			'before
+
+[out:Loop3.ItemOnItsOwnLine]
+
+[out:Loop3.ItemOnItsOwnLine]
+
+[out:Loop3.ItemOnItsOwnLine]
+
+after',
+			$this->render('before
+<% control Loop3 %>
+$ItemOnItsOwnLine
+<% end_control %>
+after')
+		);
+	}
+
+	function testControls() {
+		// Single item controls
+		$this->assertEquals(
+			'a[out:Foo.Bar.Item]b
+				[out:Foo.Bar(Arg1).Item]
+				[out:Foo(Arg1).Item]
+				[out:Foo(Arg1,Arg2).Item]
+				[out:Foo(Arg1,Arg2,Arg3).Item]',
+			$this->render('<% control Foo.Bar %>a{$Item}b<% end_control %>
+				<% control Foo.Bar(Arg1) %>$Item<% end_control %>
+				<% control Foo(Arg1) %>$Item<% end_control %>
+				<% control Foo(Arg1, Arg2) %>$Item<% end_control %>
+				<% control Foo(Arg1, Arg2, Arg3) %>$Item<% end_control %>')
+		);
+
+		// Loop controls
+		$this->assertEquals('a[out:Foo.Loop2.Item]ba[out:Foo.Loop2.Item]b',
+			$this->render('<% control Foo.Loop2 %>a{$Item}b<% end_control %>'));
+
+		$this->assertEquals('[out:Foo.Loop2(Arg1).Item][out:Foo.Loop2(Arg1).Item]',
+			$this->render('<% control Foo.Loop2(Arg1) %>$Item<% end_control %>'));
+
+		$this->assertEquals('[out:Loop2(Arg1).Item][out:Loop2(Arg1).Item]',
+			$this->render('<% control Loop2(Arg1) %>$Item<% end_control %>'));
+
+		$this->assertEquals('[out:Loop2(Arg1,Arg2).Item][out:Loop2(Arg1,Arg2).Item]',
+			$this->render('<% control Loop2(Arg1, Arg2) %>$Item<% end_control %>'));
+
+		$this->assertEquals('[out:Loop2(Arg1,Arg2,Arg3).Item][out:Loop2(Arg1,Arg2,Arg3).Item]',
+			$this->render('<% control Loop2(Arg1, Arg2, Arg3) %>$Item<% end_control %>'));
+
+	}
+
 	function testBaseTagGeneration() {
 		// XHTML wil have a closed base tag
 		$tmpl1 = '<?xml version="1.0" encoding="UTF-8"?>
