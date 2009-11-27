@@ -50,16 +50,45 @@ SS
 	
 	function testObjectDotArguments() {
 		$this->assertEquals(
-			$this->render("\$TestObject.methodWithOneArgument(one)"),
-			"TestObject.methodWithOneArgument(one)",
-			"Object method calls in dot notation work with one argument"
+			'[out:TestObject.methodWithOneArgument(one)]
+				[out:TestObject.methodWithTwoArguments(one,two)]
+				[out:TestMethod(Arg1,Arg2).Bar.Val]
+				[out:TestMethod(Arg1,Arg2).Bar]
+				[out:TestMethod(Arg1,Arg2)]
+				[out:TestMethod(Arg1).Bar.Val]
+				[out:TestMethod(Arg1).Bar]
+				[out:TestMethod(Arg1)]',
+			$this->render('$TestObject.methodWithOneArgument(one)
+				$TestObject.methodWithTwoArguments(one,two)
+				$TestMethod(Arg1, Arg2).Bar.Val
+				$TestMethod(Arg1, Arg2).Bar
+				$TestMethod(Arg1, Arg2)
+				$TestMethod(Arg1).Bar.Val
+				$TestMethod(Arg1).Bar
+				$TestMethod(Arg1)')
 		);
-		
-		// two arguments
+	}
+
+	function testEscapedArguments() {
 		$this->assertEquals(
-			$this->render("\$TestObject.methodWithTwoArguments(one,two)"),
-			"TestObject.methodWithTwoArguments(one,two)",
-			"Object method calls in dot notation work with two arguments"
+			'[out:Foo(Arg1,Arg2).Bar.Val].Suffix
+				[out:Foo(Arg1,Arg2).Val]_Suffix
+				[out:Foo(Arg1,Arg2)]/Suffix
+				[out:Foo(Arg1).Bar.Val]textSuffix
+				[out:Foo(Arg1).Bar].Suffix
+				[out:Foo(Arg1)].Suffix
+				[out:Foo.Bar.Val].Suffix
+				[out:Foo.Bar].Suffix
+				[out:Foo].Suffix',
+			$this->render('{$Foo(Arg1, Arg2).Bar.Val}.Suffix
+				{$Foo(Arg1, Arg2).Val}_Suffix
+				{$Foo(Arg1, Arg2)}/Suffix
+				{$Foo(Arg1).Bar.Val}textSuffix
+				{$Foo(Arg1).Bar}.Suffix
+				{$Foo(Arg1)}.Suffix
+				{$Foo.Bar.Val}.Suffix
+				{$Foo.Bar}.Suffix
+				{$Foo}.Suffix')
 		);
 	}
 	
