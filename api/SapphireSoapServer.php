@@ -27,7 +27,6 @@ class SapphireSoapServer extends Controller {
 	);
 	
 	function wsdl() {
-		ContentNegotiator::disable();
 		$this->getResponse()->addHeader("Content-Type", "text/xml"); 
 		
 		return array();
