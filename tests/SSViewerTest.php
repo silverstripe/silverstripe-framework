@@ -170,6 +170,79 @@ after')
 
 	}
 
+	function testIfBlocks() {
+		// Basic test
+		$this->assertEquals('AC',
+			$this->render('A<% if NotSet %>B$NotSet<% end_if %>C'));
+
+		// else_if
+		$this->assertEquals('ACD',
+			$this->render('A<% if NotSet %>B<% else_if IsSet %>C<% end_if %>D'));
+		$this->assertEquals('AD',
+			$this->render('A<% if NotSet %>B<% else_if AlsoNotset %>C<% end_if %>D'));
+		$this->assertEquals('ADE',
+			$this->render('A<% if NotSet %>B<% else_if AlsoNotset %>C<% else_if IsSet %>D<% end_if %>E'));
+
+		$this->assertEquals('ADE',
+			$this->render('A<% if NotSet %>B<% else_if AlsoNotset %>C<% else_if IsSet %>D<% end_if %>E'));
+
+		// Dot syntax
+		$this->assertEquals('ACD',
+			$this->render('A<% if Foo.NotSet %>B<% else_if Foo.IsSet %>C<% end_if %>D'));
+
+		// Broken currently
+		//$this->assertEquals('ACD',
+		//	$this->render('A<% if Foo.Bar.NotSet %>B<% else_if Foo.Bar.IsSet %>C<% end_if %>D'));
+
+		// Params
+		$this->assertEquals('ACD',
+			$this->render('A<% if NotSet(Param) %>B<% else %>C<% end_if %>D'));
+		$this->assertEquals('ABD',
+			$this->render('A<% if IsSet(Param) %>B<% else %>C<% end_if %>D'));
+
+		// Or
+		$this->assertEquals('ABD',
+			$this->render('A<% if IsSet || NotSet %>B<% else_if A %>C<% end_if %>D'));
+		$this->assertEquals('ACD',
+			$this->render('A<% if NotSet || AlsoNotSet %>B<% else_if IsSet %>C<% end_if %>D'));
+		$this->assertEquals('AD',
+			$this->render('A<% if NotSet || AlsoNotSet %>B<% else_if NotSet3 %>C<% end_if %>D'));
+
+		// Broken currently
+		//$this->assertEquals('ACD',
+		//	$this->render('A<% if NotSet || AlsoNotSet %>B<% else_if IsSet || NotSet %>C<% end_if %>D'));
+		//$this->assertEquals('AD',
+		//	$this->render('A<% if NotSet || AlsoNotSet %>B<% else_if NotSet2 || NotSet3 %>C<% end_if %>D'));
+
+		// And
+		$this->assertEquals('ABD',
+			$this->render('A<% if IsSet && AlsoSet %>B<% else_if A %>C<% end_if %>D'));
+		$this->assertEquals('ACD',
+			$this->render('A<% if IsSet && NotSet %>B<% else_if IsSet %>C<% end_if %>D'));
+		$this->assertEquals('AD',
+			$this->render('A<% if NotSet && NotSet2 %>B<% else_if NotSet3 %>C<% end_if %>D'));
+
+		// Broken currently
+		//$this->assertEquals('ACD',
+		//	$this->render('A<% if IsSet && NotSet %>B<% else_if IsSet && AlsoSet %>C<% end_if %>D'));
+		//$this->assertEquals('AD',
+		//	$this->render('A<% if NotSet && NotSet2 %>B<% else_if IsSet && NotSet3 %>C<% end_if %>D'));
+
+		// Equality
+		$this->assertEquals('ABC',
+			$this->render('A<% if RawVal == RawVal %>B<% end_if %>C'));
+		$this->assertEquals('ACD',
+			$this->render('A<% if Right == Wrong %>B<% else_if RawVal == RawVal %>C<% end_if %>D'));
+		$this->assertEquals('ABC',
+			$this->render('A<% if Right != Wrong %>B<% end_if %>C'));
+		$this->assertEquals('AD',
+			$this->render('A<% if Right == Wrong %>B<% else_if RawVal != RawVal %>C<% end_if %>D'));
+
+		// Else
+		$this->assertEquals('ADE',
+			$this->render('A<% if Right == Wrong %>B<% else_if RawVal != RawVal %>C<% else %>D<% end_if %>E'));
+	}
+
 	function testBaseTagGeneration() {
 		// XHTML wil have a closed base tag
 		$tmpl1 = '<?xml version="1.0" encoding="UTF-8"?>
