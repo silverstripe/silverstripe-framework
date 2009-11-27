@@ -109,8 +109,7 @@ class RootURLController extends Controller {
 		
 		if(!DB::isActive() || !ClassInfo::hasTable('SiteTree')) {
 			$this->response = new SS_HTTPResponse();
-			$this->response->redirect('dev/build/?returnURL=');
-			
+			$this->response->redirect(Director::absoluteBaseURL() . 'dev/build?returnURL=' . (isset($_GET['url']) ? urlencode($_GET['url']) : null));
 			return $this->response;
 		}
 			
