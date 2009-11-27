@@ -20,6 +20,13 @@ ComplexTableField.prototype = {
 		if(defaultAction) {
 			rules['#'+this.id+' table.data tbody td'] = {
 				onclick: function(e) {
+					var elt = Event.element(e);
+					// Check the tag, as otherwise this
+					// function can take over checkbox
+					// click actions etc. See ticket #4737
+					if (elt.tagName != 'TD' && elt.tagName != 'TR') {
+						return;
+					}
 					var link = $$('.'+defaultAction, Event.element(e).parentNode)[0].href;
 					this.openPopup(null, link);
 					return false;
