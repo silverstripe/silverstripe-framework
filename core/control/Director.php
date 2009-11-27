@@ -417,15 +417,6 @@ class Director {
 	}
 
 	/**
-	 * Returns a URL to composed of the given segments - usually controller, action, parameter
-	 * @deprecated 2.3 Use Controller::join_links()
-	 */
-	static function link() {
-		$parts = func_get_args();
-		return Director::baseURL() . implode("/",$parts) . (sizeof($parts) > 2 ? "" : "/");
-	}
-
-	/**
 	 * Returns the root URL for the site.
 	 * It will be automatically calculated unless it is overridden with {@link setBaseURL()}.
 	 */
