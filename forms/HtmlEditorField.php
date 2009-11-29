@@ -225,10 +225,10 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 							'file' => _t('HtmlEditorField.LINKFILE', 'Download a file'),			
 						)
 					),
-					new TreeDropdownField('internal', _t('HtmlEditorField.PAGE', "Page"), 'SiteTree', 'URLSegment', 'MenuTitle'),
+					new TreeDropdownField('internal', _t('HtmlEditorField.PAGE', "Page"), 'SiteTree', 'URLSegment', 'MenuTitle', true),
 					new TextField('external', _t('HtmlEditorField.URL', 'URL'), 'http://'),
 					new EmailField('email', _t('HtmlEditorField.EMAIL', 'Email address')),
-					new TreeDropdownField('file', _t('HtmlEditorField.FILE', 'File'), 'File', 'Filename'),
+					new TreeDropdownField('file', _t('HtmlEditorField.FILE', 'File'), 'File', 'Filename', 'Title', true),
 					new TextField('Anchor', _t('HtmlEditorField.ANCHORVALUE', 'Anchor')),
 					new TextField('LinkText', _t('HtmlEditorField.LINKTEXT', 'Link text')),
 					new TextField('Description', _t('HtmlEditorField.LINKDESCR', 'Link description')),
