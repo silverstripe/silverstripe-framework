@@ -282,7 +282,7 @@ class MySQLDatabase extends SS_Database {
 	public function checkAndRepairTable($tableName) {
 		if(!$this->runTableCheckCommand("CHECK TABLE \"$tableName\"")) {
 			if($this->runTableCheckCommand("CHECK TABLE \"".strtolower($tableName)."\"")){
-				Database::alteration_message("Table $tableName: renamed from lowercase","repaired");
+				DB::alteration_message("Table $tableName: renamed from lowercase","repaired");
 				return $this->renameTable(strtolower($tableName),$tableName);
 			}
 
