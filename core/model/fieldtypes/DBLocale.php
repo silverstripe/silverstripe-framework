@@ -14,11 +14,16 @@ class DBLocale extends Varchar {
 	}
 
 	/**
-	 * See {@link getShortName()}.
+	 * See {@link getShortName()} and {@link getNativeName()}.
 	 * 
+	 * @param Boolean $showNative Show a localized version of the name instead, based on the 
+	 *  field's locale value.
 	 * @return String
 	 */
-	function Nice() {
+	function Nice($showNative=false) {
+		if ($showNative) {
+			return $this->getNativeName();
+		}
 		return $this->getShortName();
 	}
 	
@@ -37,8 +42,22 @@ class DBLocale extends Varchar {
 		return (isset($common_names[$this->value])) ? $common_names[$this->value] : false;
 	}
 	
+	/**
+	 * @return String
+	 */
 	function getLongName() {
 		return i18n::get_locale_name($this->value);
+	}
+
+	/**
+	 * Returns the localized name based on the field's value.
+	 * Example: "de_DE" returns "Deutsch".
+	 * 
+	 * @return String
+	 */
+	function getNativeName() {
+		$common_names = i18n::get_common_locales(true);
+		return (isset($common_names[$this->value])) ? $common_names[$this->value] : false;
 	}
 }
 ?>
