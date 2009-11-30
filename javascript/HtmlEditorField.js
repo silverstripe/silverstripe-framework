@@ -2,6 +2,8 @@
  * Simple TinyMCE initialisation
  */
 if((typeof tinyMCE != 'undefined')) {
+	tinymce.PluginManager.load('advcode', '/some/dir/someplugin/editor_plugin.js');
+	
 	tinyMCE.init({
 		mode : "specific_textareas",
 		editor_selector : "htmleditor",
@@ -13,7 +15,7 @@ if((typeof tinyMCE != 'undefined')) {
 		theme_advanced_toolbar_location : "top",
 		theme_advanced_toolbar_align : "left",
 		theme_advanced_toolbar_parent : "right",
-		plugins : "contextmenu,table,emotions,paste,../../tinymce-advcode,spellchecker",	
+		plugins : "contextmenu,table,emotions,paste,-advcode,spellchecker",	
 		blockquote_clear_tag : "p",
 		table_inline_editing : true,
 		theme_advanced_buttons1 : "bold,italic,underline,strikethrough,separator,justifyleft,justifycenter,justifyright,justifyfull,formatselect,separator,bullist,numlist,outdent,indent,blockquote,hr,charmap",

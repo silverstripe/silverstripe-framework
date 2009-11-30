@@ -1,5 +1,5 @@
 (function() {
-  tinymce.PluginManager.requireLangPack('../../tinymce-advcode');
+  tinymce.PluginManager.requireLangPack('advcode');
   
   tinymce.create('tinymce.plugins.AdvancedCodePlugin', {
     init : function(ed, url) {
@@ -37,5 +37,5 @@
   });
 
   // Register plugin
-  tinymce.PluginManager.add('../../tinymce-advcode', tinymce.plugins.AdvancedCodePlugin);
+  tinymce.PluginManager.add('advcode', tinymce.plugins.AdvancedCodePlugin);
 })();
