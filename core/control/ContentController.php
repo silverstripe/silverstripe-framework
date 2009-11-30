@@ -289,24 +289,21 @@ class ContentController extends Controller {
 		if(Director::isDev() || Permission::check('CMS_ACCESS_CMSMain')) {
 			Requirements::css(SAPPHIRE_DIR . '/css/SilverStripeNavigator.css');
 
-			Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/prototype/behaviour.js');
-			// Requirements::javascript(THIRDPARTY_DIR . '/prototype/prototype.js');
+			Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery/jquery.js');
 			Requirements::customScript(<<<JS
-				Behaviour.register({
-					'#switchView a' :  {
-						onclick : function() {
-							var w = window.open(this.href,windowName(this.target));
-							w.focus();
-							return false;
-						}
-					}
-				});
+				(function($) {
+					$('#switchView a').click(function() {
+						var w = window.open(this.href,windowName(this.target));
+						w.focus();
+						return false;
+					});
 
-				function windowName(suffix) {
-					var base = document.getElementsByTagName('base')[0].href.replace('http://','').replace(/\//g,'_').replace(/\./g,'_');
-					return base + suffix;
-				}
-				window.name = windowName('site');
+					function windowName(suffix) {
+						var base = document.getElementsByTagName('base')[0].href.replace('http://','').replace(/\//g,'_').replace(/\./g,'_');
+						return base + suffix;
+					}
+					window.name = windowName('site');
+				})(jQuery);
 JS
 			);
 
