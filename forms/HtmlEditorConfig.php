@@ -78,14 +78,15 @@ class HtmlEditorConfig {
 
 		'safari_warning' => false,
 		'relative_urls' => true,
-		'verify_html' => true
+		'verify_html' => true,
+		
 	);
 	
 	/**
 	 * Holder list of enabled plugins
 	 */
 	protected $plugins = array(
-		'contextmenu', 'table', 'emotions', 'paste', '../../tinymce_advcode', 'spellchecker'
+		'contextmenu', 'table', 'emotions', 'paste', '../../tinymce-advcode', 'spellchecker'
 	);
 
 	/**

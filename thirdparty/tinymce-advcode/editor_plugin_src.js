@@ -1,5 +1,6 @@
 (function() {
-  tinymce.PluginManager.requireLangPack('../../tinymce_advcode');
+  tinymce.PluginManager.requireLangPack('advcode');
+  
   tinymce.create('tinymce.plugins.AdvancedCodePlugin', {
     init : function(ed, url) {
       // Register commands
@@ -29,12 +30,12 @@
         longname : 'Advanced Code Editor',
         author : 'Daniel Insley',
         authorurl : 'http://www.danielinsley.com',
-        infourl : 'http://www.danielinsley.com/2008/1/14/tinymce-syntax-highlighted-code-editor',
+        infourl : 'http://github.com/dinsley/tinymce-codepress/tree/master',
         version : tinymce.majorVersion + "." + tinymce.minorVersion
       };
     }
   });
 
   // Register plugin
-  tinymce.PluginManager.add('../../tinymce_advcode', tinymce.plugins.AdvancedCodePlugin);
+  tinymce.PluginManager.add('advcode', tinymce.plugins.AdvancedCodePlugin);
 })();
