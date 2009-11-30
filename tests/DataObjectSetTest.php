@@ -84,15 +84,15 @@ class DataObjectSetTest extends SapphireTest {
 			}
 		}
 		
-		$this->assertEquals(2, $multiplesOf3);
+		$this->assertEquals(3, $multiplesOf3);
 		
-		$this->assertFalse($commArr[0]->IsMultipleOf3);
+		$this->assertTrue($commArr[0]->IsMultipleOf3);
 		$this->assertFalse($commArr[1]->IsMultipleOf3);
-		$this->assertTrue($commArr[2]->IsMultipleOf3);
-		$this->assertFalse($commArr[3]->IsMultipleOf3);
+		$this->assertFalse($commArr[2]->IsMultipleOf3);
+		$this->assertTrue($commArr[3]->IsMultipleOf3);
 		$this->assertFalse($commArr[4]->IsMultipleOf3);
-		$this->assertTrue($commArr[5]->IsMultipleOf3);
-		$this->assertFalse($commArr[6]->IsMultipleOf3);
+		$this->assertFalse($commArr[5]->IsMultipleOf3);
+		$this->assertTrue($commArr[6]->IsMultipleOf3);
 	}
 
 	/**
