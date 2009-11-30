@@ -4,6 +4,8 @@
  * @subpackage tests
  */
 class CheckboxFieldTest extends SapphireTest {
+	
+	protected $usesDatabase = true;
 
 	function testFieldValueTrue() {
 		/* Create the field, and set the value as boolean true */

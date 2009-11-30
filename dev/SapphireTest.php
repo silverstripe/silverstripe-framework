@@ -22,6 +22,13 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	 */
 	static $fixture_file = null;
 	
+	/**
+	 * @var Boolean If set to TRUE, this will force a test database to be generated
+	 * in {@link setUp()}. Note that this flag is overruled by the presence of a 
+	 * {@link $fixture_file}, which always forces a database build.
+	 */
+	protected $usesDatabase = null;
+	
 	protected $originalMailer;
 	protected $originalMemberPasswordValidator;
 	protected $originalRequirements;
@@ -70,7 +77,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 		$fixtureFile = eval("return {$className}::\$fixture_file;");
 		
 		// Set up fixture
-		if($fixtureFile) {
+		if($fixtureFile || $this->usesDatabase) {
 			if(substr(DB::getConn()->currentDatabase(),0,5) != 'tmpdb') {
 				//echo "Re-creating temp database... ";
 				self::create_temp_db();
