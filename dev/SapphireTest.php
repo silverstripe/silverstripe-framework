@@ -71,6 +71,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 		Versioned::reset();
 		DataObject::reset();
 		SiteTree::reset();
+		Hierarchy::reset();
 		Controller::curr()->setSession(new Session(array()));
 
 		$className = get_class($this);
