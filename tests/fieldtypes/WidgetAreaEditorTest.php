@@ -9,6 +9,8 @@ class WidgetAreaEditorTest extends SapphireTest {
 	 */
 	protected $widgetToTest = 'WidgetAreaEditorTest_TestWidget';
 	
+	protected $usesDatabase = true;
+	
 	function testFillingOneArea() {
 		$oldRequest = $_REQUEST;
 		

@@ -5,6 +5,8 @@
  */
 class ModelAsControllerTest extends SapphireTest {
 	
+	protected $usesDatabase = true;
+	
 	public function testFindOldPage() {
 		$page = new Page();
 		$page->Title      = 'Test Page';

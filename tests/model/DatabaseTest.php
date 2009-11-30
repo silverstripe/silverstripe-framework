@@ -5,6 +5,8 @@
  */
 class DatabaseTest extends SapphireTest {
 	
+	protected $usesDatabase = true;
+	
 	function testDontRequireField() {
 		$conn = DB::getConn();
 		$this->assertArrayHasKey(
