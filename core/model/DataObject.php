@@ -2136,7 +2136,8 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 *
 	 * @param string $field Name of the field
 	 * @return string The field type of the given field
-	 */	public function hasOwnTableDatabaseField($field) {
+	 */
+	public function hasOwnTableDatabaseField($field) {
 		// Add base fields which are not defined in static $db
 		if($field == "ID") return "Int";
 		if($field == "ClassName" && get_parent_class($this) == "DataObject") return "Enum";
