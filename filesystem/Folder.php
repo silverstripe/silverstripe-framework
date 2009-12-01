@@ -201,7 +201,7 @@ class Folder extends File {
 			return $this->constructChild(basename($file));
 		} else {
 			if(!file_exists($tmpFile['tmp_name'])) user_error("Folder::addUploadToFolder: '$tmpFile[tmp_name]' doesn't exist", E_USER_ERROR);
-			else user_error("Folder::addUploadToFolder: Couldn't copy '$tmpFile[tmp_name]' to '$fullFilename'", E_USER_ERROR);
+			else user_error("Folder::addUploadToFolder: Couldn't copy '$tmpFile[tmp_name]' to '$base/$file'", E_USER_ERROR);
 			return false;
 		}
 	}
