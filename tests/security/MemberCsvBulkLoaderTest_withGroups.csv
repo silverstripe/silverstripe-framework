@@ -1,0 +1,3 @@
+FirstName,Surname,Email,Password,PasswordEncryption,Salt,PasswordExpiry,Groups
+author1_first,author1_last,author1@test.com,21bb196c4d488023cb4e4b9df5f687c9a4d40172,sha1_v2.4,c23a94a878aa825cee69136bfd6185a874bc68801257978194,,existinggroup
+author2_first,author2_last,author2@test.com,069b6b22dcaded75c045b7e5ceb5d1dd743f9cac,sha1_v2.4,7e8ea602668b5631bac4baaf7174f9966b6d34571257978210,,"existinggroup,newgroup"
