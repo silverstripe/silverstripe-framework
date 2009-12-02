@@ -58,7 +58,60 @@ LinkForm.prototype = {
 		}
 	},
 	
+	getAnchors: function() {
+		var raw = tinyMCE.activeEditor.getContent().match(/name="([a-zA-Z0-9-_]+?)"/gim);
+		if (raw.length) {
+			var anchors = new Array();
+			for(var i = 0; i < raw.length; i++) {
+				anchors.push(raw[i].substr(6).replace(/"$/, ''));
+			}
+			return anchors;
+		} else { return false; }
+	},
+	
+	drawAnchorHelpers: function(anchors) {
+		
+		if (!$('Form_EditorToolbarLinkForm_AnchorSelector')) {
+			var fieldHolder = $('Form_EditorToolbarLinkForm_Anchor').parentNode;
+			var anchorSelector = document.createElement('select');
+			anchorSelector.id = 'Form_EditorToolbarLinkForm_AnchorSelector';
+			fieldHolder.appendChild(anchorSelector);
+		} else {
+			var anchorSelector = $('Form_EditorToolbarLinkForm_AnchorSelector');
+			if (anchorSelector.hasChildNodes()) {
+				while (anchorSelector.childNodes.length >= 1) {
+					anchorSelector.removeChild(anchorSelector.firstChild);       
+				} 
+			}
+		}
+		
+		var opt = document.createElement('option');
+		opt.value = '';
+		opt.appendChild(document.createTextNode('Select an anchor'));
+		anchorSelector.appendChild(opt);
+		
+		anchorSelector.onchange = function(e) {
+			if (!e) e = window.event;
+			$('Form_EditorToolbarLinkForm_Anchor').value = e.target.options[e.target.selectedIndex].value;
+		}
+		
+		for (var i = 0; i < anchors.length; i++) {
+			var opt = document.createElement('option');
+			opt.value = anchors[i];
+			opt.appendChild(document.createTextNode(anchors[i]));
+			anchorSelector.appendChild(opt);
+		}
+		
+		
+	},
+	
 	toggle: function(ed) {
+		var anchors = this.getAnchors();
+		// Change this to false to disable anchor hinting
+		if (anchors && true) {
+			// Draw anchors list
+			this.drawAnchorHelpers(anchors);
+		}
 		this.ToolbarForm.toggle(ed);
 		this.respondToNodeChange(ed);
 	},
