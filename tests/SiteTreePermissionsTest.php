@@ -30,6 +30,18 @@ class SiteTreePermissionsTest extends FunctionalTest {
 		$this->autoFollowRedirection = false;
 	}
 	
+	function testCanViewStage() {
+		$page = $this->objFromFixture('Page', 'standardpage');
+		$editor = $this->objFromFixture('Member', 'editor');
+		$websiteuser = $this->objFromFixture('Member', 'websiteuser');
+		
+		$this->assertTrue($page->canViewStage('Live', $websiteuser));
+		$this->assertFalse($page->canViewStage('Stage', $websiteuser));
+		
+		$this->assertTrue($page->canViewStage('Live', $editor));
+		$this->assertTrue($page->canViewStage('Stage', $editor));
+	}
+	
 	function testAccessTabOnlyDisplaysWithGrantAccessPermissions() {
 		$page = $this->objFromFixture('Page', 'standardpage');
 		

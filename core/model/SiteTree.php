@@ -740,6 +740,28 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		
 		return false;
 	}
+	
+	/**
+	 * Determines permissions for a specific stage (see {@link Versioned}).
+	 * Usually the stage is read from {@link Versioned::current_stage()}.
+	 * Falls back to {@link canView}.
+	 * 
+	 * @todo Implement in CMS UI.
+	 * 
+	 * @param String $stage
+	 * @param Member $member
+	 * @return boolean
+	 */
+	function canViewStage($stage, $member = null) {
+		if(!$member) $member = Member::currentUser();
+
+		if(
+			strtolower($stage) == 'stage' && 
+			!Permission::checkMember($member, 'CMS_ACCESS_CMSMain')
+		) return false;
+		
+		return $this->canView($member);
+	}
 
 	/**
 	 * This function should return true if the current user can delete this
