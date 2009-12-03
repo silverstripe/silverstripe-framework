@@ -3,7 +3,7 @@
  * @package sapphire
  * @subpackage tests
  */
-class MemberTest extends SapphireTest {
+class MemberTest extends FunctionalTest {
 	static $fixture_file = 'sapphire/tests/security/MemberTest.yml';
 	
 	function setUp() {
@@ -300,4 +300,83 @@ class MemberTest extends SapphireTest {
 			'Non-existant group returns false'
 		);
 	}
+
+	/**
+	 * Tests that the user is able to view their own record, and in turn, they can
+	 * edit and delete their own record too.
+	 */
+	public function testCanManipulateOwnRecord() {
+		$extensions = $this->removeExtensions(Object::get_extensions('Member'));
+		$member = $this->objFromFixture('Member', 'test');
+		$member2 = $this->objFromFixture('Member', 'staffmember');
+		
+		$this->session()->inst_set('loggedInAs', null);
+		
+		/* Not logged in, you can't view, delete or edit the record */
+		$this->assertFalse($member->canView());
+		$this->assertFalse($member->canDelete());
+		$this->assertFalse($member->canEdit());
+		
+		/* Logged in users can edit their own record */
+		$this->session()->inst_set('loggedInAs', $member->ID);
+		$this->assertTrue($member->canView());
+		$this->assertTrue($member->canDelete());
+		$this->assertTrue($member->canEdit());
+		
+		/* Other uses cannot view, delete or edit others records */
+		$this->session()->inst_set('loggedInAs', $member2->ID);
+		$this->assertFalse($member->canView());
+		$this->assertFalse($member->canDelete());
+		$this->assertFalse($member->canEdit());
+
+		$this->addExtensions($extensions);
+		$this->session()->inst_set('loggedInAs', null);
+	}
+
+	public function testAuthorisedMembersCanManipulateOthersRecords() {
+		$extensions = $this->removeExtensions(Object::get_extensions('Member'));
+		$member = $this->objFromFixture('Member', 'test');
+		$member2 = $this->objFromFixture('Member', 'staffmember');
+		
+		/* Group members with SecurityAdmin permissions can manipulate other records */
+		$this->session()->inst_set('loggedInAs', $member->ID);
+		$this->assertTrue($member2->canView());
+		$this->assertTrue($member2->canDelete());
+		$this->assertTrue($member2->canEdit());
+		
+		$this->addExtensions($extensions);
+		$this->session()->inst_set('loggedInAs', null);
+	}
+
+	/**
+	 * Add the given array of member extensions as class names.
+	 * This is useful for re-adding extensions after being removed
+	 * in a test case to produce an unbiased test.
+	 * 
+	 * @param array $extensions
+	 * @return array The added extensions
+	 */
+	protected function addExtensions($extensions) {
+		if($extensions) foreach($extensions as $extension) {
+			Object::add_extension('Member', $extension);
+		}
+		return $extensions;
+	}
+
+	/**
+	 * Remove given extensions from Member. This is useful for
+	 * removing extensions that could produce a biased
+	 * test result, as some extensions applied by project
+	 * code or modules can do this.
+	 * 
+	 * @param array $extensions
+	 * @return array The removed extensions
+	 */
+	protected function removeExtensions($extensions) {
+		if($extensions) foreach($extensions as $extension) {
+			Object::remove_extension('Member', $extension);
+		}
+		return $extensions;
+	}
+
 }
