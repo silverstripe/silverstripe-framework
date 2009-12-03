@@ -233,7 +233,7 @@ class TestRunner extends Controller {
 
 		self::$default_reporter->writeHeader("Sapphire Test Runner");
 		if (count($classList) > 1) { 
-			self::$default_reporter->writeInfo("All Tests", "Running test cases: " . implode(",", $classList));
+			self::$default_reporter->writeInfo("All Tests", "Running test cases: ",implode(", ", $classList));
 		} else {
 			self::$default_reporter->writeInfo($classList[0], "");
 		}
