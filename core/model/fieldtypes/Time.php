@@ -25,7 +25,7 @@ class Time extends DBField {
 	 * @return string Time in 12 hour format
 	 */
 	function Nice() {
-		return date('g:ia', strtotime($this->value));
+		if($this->value) return date('g:ia', strtotime($this->value));
 	}
 
 	/**
@@ -35,7 +35,7 @@ class Time extends DBField {
 	 * @return string Time in 24 hour format
 	 */
 	function Nice24() {
-		return date('H:i', strtotime($this->value));
+		if($this->value) return date('H:i', strtotime($this->value));
 	}
 	
 	/**
