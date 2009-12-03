@@ -36,9 +36,9 @@ class SimpleImageField extends FileField {
 		if($imageField && $imageField->exists()) {
 			$html .= '<div class="thumbnail">';
 			if($imageField->hasMethod('Thumbnail') && $imageField->Thumbnail()) {
-	      		$html .= "<img src=\"".$imageField->Thumbnail()->URL()."\" />";
+	      		$html .= "<img src=\"".$imageField->Thumbnail()->getURL()."\" />";
 			} else if($imageField->CMSThumbnail()) {
-				$html .= "<img src=\"".$imageField->CMSThumbnail()->URL()."\" />";
+				$html .= "<img src=\"".$imageField->CMSThumbnail()->getURL()."\" />";
 			}
 			$html .= '</div>';
 		}
