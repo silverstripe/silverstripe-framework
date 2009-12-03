@@ -60,7 +60,7 @@ LinkForm.prototype = {
 	
 	getAnchors: function() {
 		var raw = tinyMCE.activeEditor.getContent().match(/name="([a-zA-Z0-9-_]+?)"/gim);
-		if (raw.length) {
+		if (raw && raw.length) {
 			var anchors = new Array();
 			for(var i = 0; i < raw.length; i++) {
 				anchors.push(raw[i].substr(6).replace(/"$/, ''));
