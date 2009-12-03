@@ -63,7 +63,6 @@ class ErrorPage extends Page {
 			$errorpage = new ErrorPage();
 			$errorpage->ErrorCode = 404;
 			$errorpage->Title = _t('ErrorPage.DEFAULTERRORPAGETITLE', 'Page not found');
-			$errorpage->URLSegment = 'page-not-found';
 			$errorpage->Content = _t('ErrorPage.DEFAULTERRORPAGECONTENT', '<p>Sorry, it seems you were trying to access a page that doesn\'t exist.</p><p>Please check the spelling of the URL you were trying to access and try again.</p>');
 			$errorpage->Status = 'New page';
 			$errorpage->write();
