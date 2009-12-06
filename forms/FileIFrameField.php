@@ -127,7 +127,7 @@ class FileIFrameField extends FileField {
 			}
 		}
 		
-		$fileSources["existing//$selectFile"] = new TreeDropdownField('ExistingFile', '', $this->dataClass());
+		$fileSources["existing//$selectFile"] = new TreeDropdownField('ExistingFile', '', 'File');
 		
 		return new Form (
 			$this,
