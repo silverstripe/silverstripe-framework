@@ -65,7 +65,6 @@ class TestRunner extends Controller {
 		$canAccess = (Director::isDev() || Director::is_cli() || Permission::check("ADMIN"));
 		if(!$canAccess) return Security::permissionFailure($this);
 		
-		ManifestBuilder::load_test_manifest();
 		if (!self::$default_reporter) self::set_reporter(Director::is_cli() ? 'CliDebugView' : 'DebugView');
 		
 		if(!hasPhpUnit()) {
@@ -82,6 +81,7 @@ class TestRunner extends Controller {
 	 * Currently excludes PhpSyntaxTest
 	 */
 	function all() {
+		ManifestBuilder::load_test_manifest();
 		$tests = ClassInfo::subclassesFor('SapphireTest');
 		array_shift($tests);
 		unset($tests['FunctionalTest']);
@@ -101,6 +101,7 @@ class TestRunner extends Controller {
 	 * Run test classes that should be run before build - i.e., everything possible.
 	 */
 	function build() {
+		ManifestBuilder::load_test_manifest();
 		$tests = ClassInfo::subclassesFor('SapphireTest');
 		array_shift($tests);
 		unset($tests['FunctionalTest']);
@@ -118,6 +119,7 @@ class TestRunner extends Controller {
 	 * Browse all enabled test cases in the environment
 	 */
 	function browse() {
+		ManifestBuilder::load_test_manifest();
 		self::$default_reporter->writeHeader();
 		self::$default_reporter->writeInfo('Available Tests', false);
 		if(Director::is_cli()) {
@@ -146,6 +148,9 @@ class TestRunner extends Controller {
 	}
 	
 	function coverage() {
+		ManifestBuilder::load_test_manifest();
+		ManifestBuilder::load_all_classes();
+
 		$tests = ClassInfo::subclassesFor('SapphireTest');
 		array_shift($tests);
 		unset($tests['FunctionalTest']);
@@ -161,6 +166,7 @@ class TestRunner extends Controller {
 	 * Run only a single test class or a comma-separated list of tests
 	 */
 	function only($request) {
+		ManifestBuilder::load_test_manifest();
 		if($request->param('TestCase') == 'all') {
 			$this->all();
 		} else {
@@ -180,6 +186,7 @@ class TestRunner extends Controller {
 	 * A module is generally a toplevel folder, e.g. "mysite" or "sapphire".
 	 */
 	function module($request) {
+		ManifestBuilder::load_test_manifest();
 		$classNames = array();
 		$moduleNames = explode(',', $request->param('ModuleName'));
 		foreach($moduleNames as $moduleName) {
