@@ -511,7 +511,7 @@ class Requirements_Backend {
 	 */
 	function clear($fileOrID = null) {
 		if($fileOrID) {
-			foreach(array('javascript','css', 'customScript', 'customCSS') as $type) {
+			foreach(array('javascript','css', 'customScript', 'customCSS', 'customHeadTags') as $type) {
 				if(isset($this->{$type}[$fileOrID])) {
 					$this->disabled[$type][$fileOrID] = $this->{$type}[$fileOrID];
 					unset($this->{$type}[$fileOrID]);
