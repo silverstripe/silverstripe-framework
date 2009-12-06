@@ -191,7 +191,6 @@ class Group extends DataObject {
 		$group = DataObject::get_one('Group', "\"Code\" = '" . Convert::raw2sql($groupcode). "'");
 		if($group) {
 			$member->Groups()->add($group);
-			$member->write();
 		}
 		else {
 			$group = new Group();
@@ -200,7 +199,6 @@ class Group extends DataObject {
 			$group->write();
 			
 			$member->Groups()->add($group);
-			$member->write();
 		}
 	}
 	
