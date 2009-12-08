@@ -40,9 +40,10 @@ class TestSession {
 	 * Submit a get request
 	 * @uses Director::test()
 	 */
-	function get($url) {
-		$headers = ($this->lastUrl) ? array('Referer'=>$this->lastUrl) : null;
-		$this->lastResponse = Director::test($url, null, $this->session, null, null, $headers);
+	function get($url, $session = null, $headers = null, $cookies = null) {
+		$headers = (array) $headers;
+		if($this->lastUrl) $headers['Referer'] = $this->lastUrl;
+		$this->lastResponse = Director::test($url, null, $session ? $session : $this->session, null, null, $headers, $cookies);
 		$this->lastUrl = $url;
 		if(!$this->lastResponse) user_error("Director::test($url) returned null", E_USER_WARNING);
 		return $this->lastResponse;
@@ -52,9 +53,10 @@ class TestSession {
 	 * Submit a post request
 	 * @uses Director::test()
 	 */
-	function post($url, $data, $headers = null) {
-		$headers = ($this->lastUrl) ? array('Referer'=>$this->lastUrl) : null;
-		$this->lastResponse = Director::test($url, $data, $this->session, null, null, $headers);
+	function post($url, $data, $headers = null, $session = null, $body = null, $cookies = null) {
+		$headers = (array) $headers;
+		if($this->lastUrl) $headers['Referer'] = $this->lastUrl;
+		$this->lastResponse = Director::test($url, $data, $session ? $session : $this->session, null, $body, $headers, $cookies);
 		$this->lastUrl = $url;
 		if(!$this->lastResponse) user_error("Director::test($url) returned null", E_USER_WARNING);
 		return $this->lastResponse;

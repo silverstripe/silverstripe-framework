@@ -170,12 +170,13 @@ class Director {
 	 *  Overwritten by $postVars['_method'] if present.
 	 * @param string $body The HTTP body
 	 * @param array $headers HTTP headers with key-value pairs
+	 * @param array $cookies to populate $_COOKIE
 	 * @return SS_HTTPResponse
 	 * 
 	 * @uses getControllerForURL() The rule-lookup logic is handled by this.
 	 * @uses Controller::run() Controller::run() handles the page logic for a Director::direct() call.
 	 */
-	static function test($url, $postVars = null, $session = null, $httpMethod = null, $body = null, $headers = null) {
+	static function test($url, $postVars = null, $session = null, $httpMethod = null, $body = null, $headers = null, $cookies = null) {
 		// These are needed so that calling Director::test() doesnt muck with whoever is calling it.
 		// Really, it's some inapproriate coupling and should be resolved by making less use of statics
 		$oldStage = Versioned::current_stage();
@@ -216,7 +217,7 @@ class Director {
 		$_GET = (array)$getVars; 
 		$_POST = (array)$postVars; 
 		$_SESSION = $session ? $session->inst_getAll() : array();
-		$_COOKIE = array();
+		$_COOKIE = (array) $cookies;
 		$_SERVER['REQUEST_URI'] = Director::baseURL() . $urlWithQuerystring;
 
 		$req = new SS_HTTPRequest($httpMethod, $url, $getVars, $postVars, $body);
