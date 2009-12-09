@@ -122,7 +122,13 @@ class PermissionCheckboxSetField extends CheckboxSetField {
 	function saveInto(DataObject $record) {
 		$fieldname = $this->name;
 		$managedClass = $this->managedClass;
-		$record->$fieldname()->removeAll();
+
+		// remove all permissions and re-add them afterwards
+		$permissions = $record->$fieldname();
+		foreach ( $permissions as $permission ) {
+			$permission->delete();
+		}
+		
 		if($fieldname && $record && ($record->has_many($fieldname) || $record->many_many($fieldname))) {
 			$idList = array();
 			if($this->value) foreach($this->value as $id => $bool) {
