@@ -122,5 +122,50 @@ class DirectorTest extends SapphireTest {
 		$this->assertFalse(Director::is_site_url("http://test.com/?url=$siteUrl"));
 	}
 	
+	public function testResetGlobalsAfterTestRequest() {
+
+		$_GET = array('somekey' => 'getvalue');
+		$_POST = array('somekey' => 'postvalue');
+		$_COOKIE = array('somekey' => 'cookievalue');
+
+		$getresponse = Director::test('errorpage');
+
+		$this->assertEquals('getvalue', $_GET['somekey'], '$_GET reset to original value after Director::test()');
+		$this->assertEquals('postvalue', $_POST['somekey'], '$_POST reset to original value after Director::test()');
+		$this->assertEquals('cookievalue', $_COOKIE['somekey'], '$_COOKIE reset to original value after Director::test()');
+	}
+	
+	public function testTestRequestCarriesGlobals() {
+
+		$fixture = array('somekey' => 'sometestvalue');
+	
+		foreach(array('get', 'post') as $method) {
+
+			foreach(array('return%sValue', 'returnRequestValue', 'returnCookieValue') as $testfunction) {
+
+				$url = 'DirectorTestRequest_Controller/' . sprintf($testfunction, ucfirst($method)) . '?' . http_build_query($fixture);
+				$getresponse = Director::test($url, $fixture, null, strtoupper($method), null, null, $fixture);
+
+				$this->assertType('SS_HTTPResponse', $getresponse, 'Director::test() returns SS_HTTPResponse');
+				$this->assertEquals($fixture['somekey'], $getresponse->getBody(), 'Director::test() ' . $function);
+
+			}
+
+		}
+	}
+	
 }
+
+class DirectorTestRequest_Controller extends Controller implements TestOnly {
+
+	public function returnGetValue($request)		{ return $_GET['somekey']; }
+
+	public function returnPostValue($request)		{ return $_POST['somekey']; }
+
+	public function returnRequestValue($request)	{ return $_REQUEST['somekey']; }
+
+	public function returnCookieValue($request)		{ return $_COOKIE['somekey']; }
+
+}
+
 ?>
