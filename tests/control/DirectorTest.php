@@ -128,7 +128,7 @@ class DirectorTest extends SapphireTest {
 		$_POST = array('somekey' => 'postvalue');
 		$_COOKIE = array('somekey' => 'cookievalue');
 
-		$getresponse = Director::test('errorpage');
+		$getresponse = Director::test('errorpage?somekey=sometestgetvalue', array('somekey' => 'sometestpostvalue'), null, null, null, null, array('somekey' => 'sometestcookievalue'));
 
 		$this->assertEquals('getvalue', $_GET['somekey'], '$_GET reset to original value after Director::test()');
 		$this->assertEquals('postvalue', $_POST['somekey'], '$_POST reset to original value after Director::test()');
