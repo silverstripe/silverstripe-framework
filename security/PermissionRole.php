@@ -36,4 +36,14 @@ class PermissionRole extends DataObject {
 		
 		return $fields;
 	}
+	
+	function onAfterDelete() {
+		parent::onAfterDelete();
+		
+		// Delete associated permission codes
+		$codes = $this->Codes();
+		foreach ( $codes as $code ) {
+			$code->delete();
+		}
+	}
 }
