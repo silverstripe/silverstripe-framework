@@ -1,0 +1,10 @@
+Group:
+    group:
+        Code: group
+    untouchable:
+        Code: untouchable
+
+Permission:
+    perm1:
+        Code: ADMIN
+        Group: =>Group.untouchable
