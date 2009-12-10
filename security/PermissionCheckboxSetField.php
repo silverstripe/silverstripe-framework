@@ -119,6 +119,11 @@ class PermissionCheckboxSetField extends CheckboxSetField {
 		return "<ul id=\"{$this->id()}\" class=\"optionset checkboxsetfield{$this->extraClass()}\">\n$options</ul>\n"; 
 	}
 	
+	/**
+	 * Update the permission set associated with $record DataObject
+	 *
+	 * @param DataObject $record
+	 */
 	function saveInto(DataObject $record) {
 		$fieldname = $this->name;
 		$managedClass = $this->managedClass;
