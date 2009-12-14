@@ -150,16 +150,20 @@ div.TreeDropdownField a.editLink {
 }
 
 .mainblock {
-	float: left; 
-	border: 1px #CCC solid; 
-	padding: 5px; 
+	float: left;
+	border: 1px solid #ccc; 
+	padding: 5px;
 	margin-right: 5px;
 	height: 140px;
 	position: relative;
 }
-	
 	.mainblock.editform {
-		width: 290px;
+		width: 250px;
+	}
+	.mainblock.attached {
+		position: absolute;
+		left: 270px;
+		width: 100px;
 	}
 
 .mainblock form fieldset {
