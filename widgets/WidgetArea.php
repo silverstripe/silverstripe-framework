@@ -18,6 +18,8 @@ class WidgetArea extends DataObject {
 	
 	static $belongs_many_many = array();
 	
+	public $template = __CLASS__;
+	
 	/**
 	 * Used in template instead of {@link Widgets()}
 	 * to wrap each widget in its controller, making
@@ -45,15 +47,19 @@ class WidgetArea extends DataObject {
 	}
 	
 	function Items() {
-		return $this->Widgets();
+		return $this->getComponents('Widgets');
 	}
 	
 	function ItemsToRender() {
-		return $this->Items();
+		return $this->getComponents('Widgets', "Widget.Enabled = 1");
 	}
 	
 	function forTemplate() {
-		return $this->renderWith($this->class); 
+		return $this->renderWith($this->template); 
+	}
+	
+	function setTemplate($template) {
+		$this->template = $template;
 	}
 	
 	function onBeforeDelete() {
