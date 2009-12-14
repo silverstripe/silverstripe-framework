@@ -1209,7 +1209,7 @@ class Translatable extends DataObjectDecorator implements PermissionProvider {
 		$translations = $this->owner->getTranslations();
 		if($translations) foreach($translations as $translation) {
 			$tags .= sprintf($template,
-				$translation->Title,
+				Convert::raw2xml($translation->Title),
 				i18n::convert_rfc1766($translation->Locale),
 				$translation->Link()
 			);
