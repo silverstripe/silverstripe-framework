@@ -491,10 +491,11 @@ JS
 	function getCsvQuery() {
 		$baseClass = ClassInfo::baseDataClass($this->sourceClass);
 		if($this->customCsvQuery || $this->customQuery) {
-			$query = $this->customCsvQuery;
+			$query = $this->customCsvQuery ? $this->customCsvQuery : $this->customQuery;
 		} else {
 			$query = singleton($this->sourceClass)->extendedSQL($this->sourceFilter(), $this->sourceSort, null, $this->sourceJoin);
 		}
+		
 		return clone $query;
 	}
 	
