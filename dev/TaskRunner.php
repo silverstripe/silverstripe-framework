@@ -51,7 +51,7 @@ class TaskRunner extends Controller {
 		if (class_exists($taskName) && is_subclass_of($taskName, 'BuildTask')) {
 			$title = singleton($taskName)->getTitle();
 			if(Director::is_cli()) echo "Running task '$title'...\n\n";
-			else echo "<h1>Running task '$title'...</h1>\n";
+			elseif(!Director::is_ajax()) echo "<h1>Running task '$title'...</h1>\n";
 
 			$task = new $taskName();
 			if ($task->isEnabled()) $task->run($request);
