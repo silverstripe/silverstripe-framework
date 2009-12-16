@@ -121,6 +121,22 @@ class FunctionalTest extends SapphireTest {
 	function content() {
 		return $this->mainSession->lastContent();
 	}
+
+	/**
+	 * Find an attribute in a SimpleXMLElement object by name.
+	 * @param SimpleXMLElement object
+	 * @param string $attribute Name of attribute to find
+	 * @return SimpleXMLElement object of the attribute
+	 */
+	function findAttribute($object, $attribute) {
+		$found = false;
+		foreach($object->attributes() as $a => $b) {
+			if($a == $attribute) {
+				$found = $b;
+			}
+		}
+		return $found;
+	}
 	
 	/**
 	 * Return a CSSContentParser for the most recent content.
