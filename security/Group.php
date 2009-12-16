@@ -336,6 +336,16 @@ class Group extends DataObject {
 		}
 	}
 	
+	function onAfterDelete() {
+		parent::onAfterDelete();
+		
+		// Delete associated permissions
+		$permissions = $this->Permissions();
+		foreach ( $permissions as $permission ) {
+			$permission->delete();
+		}
+	}
+	
 	/**
 	 * Checks for permission-code CMS_ACCESS_SecurityAdmin.
 	 * If the group has ADMIN permissions, it requires the user to have ADMIN permissions as well.
