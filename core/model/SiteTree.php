@@ -1584,7 +1584,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 						new FieldGroup(_t('SiteTree.URL', "URL"),
 							new LabelField('BaseUrlLabel',Controller::join_links (
 								Director::absoluteBaseURL(),
-								(self::nested_urls() && $this->ParentID ? $this->Parent->RelativeLink(true) : null)
+								(self::nested_urls() && $this->ParentID ? $this->Parent()->RelativeLink(true) : null)
 							)),
 							new TextField("URLSegment","URLSegment"),
 							new LabelField('TrailingSlashLabel',"/")
