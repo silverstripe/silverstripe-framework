@@ -1,4 +1,11 @@
+Permission:
+   security-admin:
+      Code: CMS_ACCESS_SecurityAdmin
 Group:
+   securityadminsgroup:
+      Title: securityadminsgroup
+      Code: securityadminsgroup
+      Permissions: =>Permission.security-admin
    staffgroup:
       Title: staffgroup
       Code: staffgroup
@@ -21,6 +28,7 @@ Member:
       Email: sam@silverstripe.com
       Password: 1nitialPassword
       PasswordExpiry: 2030-01-01
+      Groups: =>Group.securityadminsgroup
    expiredpassword:
       FirstName: Test
       Surname: User

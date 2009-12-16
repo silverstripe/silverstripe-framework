@@ -972,10 +972,13 @@ class Member extends DataObject {
 		
 		// decorated access checks
 		$results = $this->extend('canView', $member);
-		if($results && is_array($results)) if(!min($results)) return false;
+		if($results && is_array($results)) {
+			if(!min($results)) return false;
+			else return true;
+		}
 		
 		// members can usually edit their own record
-		if($this->ID == $member->ID) return true;
+		if($member && $this->ID == $member->ID) return true;
 		
 		if(
 			Permission::checkMember($member, 'ADMIN')
@@ -996,7 +999,10 @@ class Member extends DataObject {
 		
 		// decorated access checks
 		$results = $this->extend('canEdit', $member);
-		if($results && is_array($results)) if(!min($results)) return false;
+		if($results && is_array($results)) {
+			if(!min($results)) return false;
+			else return true;
+		}
 		
 		// No member found
 		if(!($member && $member->exists())) return false;
@@ -1013,7 +1019,10 @@ class Member extends DataObject {
 		
 		// decorated access checks
 		$results = $this->extend('canDelete', $member);
-		if($results && is_array($results)) if(!min($results)) return false;
+		if($results && is_array($results)) {
+			if(!min($results)) return false;
+			else return true;
+		}
 		
 		// No member found
 		if(!($member && $member->exists())) return false;
