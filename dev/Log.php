@@ -14,16 +14,19 @@
  * 
  * Example usage of logging errors by email notification:
  * <code>
- * $logEmailWriter = new SS_LogEmailWriter('my@email.com');
- * SS_Log::add_writer($logEmailWriter, SS_Log::ERR);
+ * SS_Log::add_writer(new SS_LogEmailWriter('my@email.com'), SS_Log::ERR);
  * </code>
  * 
  * Example usage of logging errors by file:
  * <code>
- *	$logFileWriter = new SS_LogFileWriter('/var/log/silverstripe/errors.log');
- *	SS_Log::add_writer($logFileWriter, SS_Log::ERR);
+ *	SS_Log::add_writer(new SS_LogFileWriter('/var/log/silverstripe/errors.log'), SS_Log::ERR);
  * </code>
  *
+ * Example usage of logging at warnings and errors by setting the priority to '<=':
+ * <code>
+ * SS_Log::add_writer(new SS_LogEmailWriter('my@email.com'), SS_Log::WARN, '<=');
+ * </code>
+ *	
  * Each writer object can be assigned a formatter. The formatter is
  * responsible for formatting the message before giving it to the writer.
  * {@link SS_LogErrorEmailFormatter} is such an example that formats errors
@@ -100,7 +103,7 @@ class SS_Log {
 	/**
 	 * Add a writer instance to the logger.
 	 * @param object $writer Zend_Log_Writer_Abstract instance
-	 * @param const $priority Priority. Possible values: SS_Log::ERR or SS_Log::WARN
+	 * @param const $priority Priority. Possible values: SS_Log::ERR, SS_Log::WARN or SS_Log::NOTICE
 	 * @param $comparison Priority comparison operator.  Acts on the integer values of the error
 	 * levels, where more serious errors are lower numbers.  By default this is "=", which means only
 	 * the given priority will be logged.  Set to "<=" if you want to track errors of *at least* 
@@ -120,7 +123,7 @@ class SS_Log {
 	 * error code, error line, error context (backtrace).
 	 * 
 	 * @param string|array $message String of error message, or array of variables
-	 * @param const $priority Priority. Possible values: SS_Log::ERR or SS_Log::WARN
+	 * @param const $priority Priority. Possible values: SS_Log::ERR, SS_Log::WARN or SS_Log::NOTICE
 	 */
 	public static function log($message, $priority) {
 		try {
