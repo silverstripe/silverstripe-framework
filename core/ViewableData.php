@@ -628,7 +628,7 @@ class ViewableData extends Object implements IteratorAggregate {
 	 * @param int $startIndex Number to start count from.
 	 * @return int
 	 */
-	public function Modulus($mod, $startIndex = 1) {
+	public function Modulus($mod, $startIndex = 0) {
 		return ($this->iteratorPos + $startIndex) % $mod;
 	}
 	
