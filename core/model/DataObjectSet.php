@@ -97,6 +97,13 @@ class DataObjectSet extends ViewableData implements IteratorAggregate, Countable
 			$item->destroy();
 		}
 	}
+
+	/**
+	 * Removes all the items in this set.
+	 */
+	public function emptyItems() {
+		$this->items = array();
+	}
 	
 	/**
 	 * Convert this DataObjectSet to an array of DataObjects.
