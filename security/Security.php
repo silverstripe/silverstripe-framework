@@ -608,13 +608,18 @@ class Security extends Controller {
 	 *                privileges.
 	 */
 	static function findAnAdministrator($username = 'admin', $password = 'password') {
-		$permission = DataObject::get_one("Permission", "\"Code\" = 'ADMIN'", true, "\"Permission\".\"ID\"");
-
-		$adminGroup = null;
+		// coupling to subsites module
 		$subsiteCheck = class_exists('GroupSubsites') ?  ' AND "Group"."SubsiteID" = 0' : '';
-		if($permission) $adminGroup = DataObject::get_one("Group", "\"Group\".\"ID\" = '{$permission->GroupID}'$subsiteCheck", true, "\"Group\".\"ID\"");
 		
-		if($adminGroup) {
+		// find a group with ADMIN permission
+		$adminGroup = DataObject::get('Group', 
+								"\"Permission\".\"Code\" = 'ADMIN'$subsiteCheck", 
+								"\"Group\".\"ID\"", 
+								"JOIN \"Permission\" ON \"Group\".\"ID\"=\"Permission\".\"GroupID\"", 
+								'1');
+		if ($adminGroup) {
+			$adminGroup = $adminGroup->First();
+
 			if($adminGroup->Members()->First()) {
 				$member = $adminGroup->Members()->First();
 			}
