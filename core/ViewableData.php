@@ -620,7 +620,23 @@ class ViewableData extends Object implements IteratorAggregate {
 	public function TotalItems() {
 		return $this->iteratorTotalItems;
 	}
+
+	/**
+	 * Returns the modulus of the numerical position of the item in the data set.
+	 * The count starts from $startIndex, which defaults to 1.
+	 * @param int $Mod The number to perform Mod operation to.
+	 * @param int $startIndex Number to start count from.
+	 * @return int
+	 */
+	public function Modulus($mod, $startIndex = 1) {
+		return ($this->iteratorPos + $startIndex) % $mod;
+	}
 	
+	public function MultipleOf($factor, $offset = 1) {
+		return ($this->Modulus($factor, $offset) == 0);
+	}
+
+
 	// UTILITY METHODS -------------------------------------------------------------------------------------------------
 	
 	/**
