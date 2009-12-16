@@ -87,7 +87,12 @@ class HtmlEditorConfig {
 	 * Holder list of enabled plugins
 	 */
 	protected $plugins = array(
-		'contextmenu', 'table', 'emotions', 'paste', '../../tinymce-advcode', 'spellchecker'
+		'contextmenu' => null, 
+		'table' => null, 
+		'emotions' => null, 
+		'paste' => null, 
+		'advcode' => '../../../sapphire/thirdparty/tinymce-advcode/editor_plugin_src.js', 
+		'spellchecker' => null
 	);
 
 	/**
@@ -130,16 +135,26 @@ class HtmlEditorConfig {
 	}
 	
 	/**
-	 * Enable one or several plugins. Will maintain unique list if already enabled plugin is re-passed
+	 * Enable one or several plugins. Will maintain unique list if already 
+	 * enabled plugin is re-passed. If passed in as a map of plugin-name to path,
+	 * the plugin will be loaded by tinymce.PluginManager.load() instead of through tinyMCE.init().
+	 * Keep in mind that these externals plugins require a dash-prefix in their name.
+	 * 
+	 * @see http://wiki.moxiecode.com/index.php/TinyMCE:API/tinymce.PluginManager/load
+	 * 
 	 * @param[0..] a string, or several strings, or a single array of strings - The plugins to enable
 	 * @return null
 	 */
 	function enablePlugins() {
 		$plugins = func_get_args();
-		if (is_array($plugins[0])) $plugins = $plugins[0];
-		
-		foreach ($plugins as $plugin) {
-			if (!in_array($plugin, $this->plugins)) $this->plugins[] = $plugin;
+		if (is_array(current($plugins))) $plugins = current($plugins);
+		foreach ($plugins as $plugin => $path) {
+			// if plugins are passed without a path
+			if(is_numeric($plugin)) {
+				$plugin = $path;
+				$path = null;
+			}
+			if (!array_key_exists($plugin, $this->plugins)) $this->plugins[$plugin] = $path;
 		}
 	}
 
@@ -150,14 +165,20 @@ class HtmlEditorConfig {
 	 */
 	function disablePlugins() {
 		$plugins = func_get_args();
-		if (is_array($plugins[0])) $plugins = $plugins[0];
+		if (is_array(current($plugins))) $plugins = current($plugins);
 		
 		foreach ($plugins as $plugin) {
-			if (($idx = array_search($plugin, $this->plugins)) !== false) {
-				array_splice($this->plugins, $idx, 1);
-				continue;	
+			if(array_key_exists($plugin, $this->plugins)) {
+				unset($this->plugins[$plugin]);
 			}
 		}
+	}
+	
+	/**
+	 * @return Array
+	 */
+	function getPlugins() {
+		return $this->plugins;
 	}
 	
 	/**
@@ -254,7 +275,23 @@ class HtmlEditorConfig {
 	 */
 	function generateJS() {
 		$config = $this->settings;
-		$config['plugins'] = implode(',', $this->plugins);
+		
+		// plugins
+		$internalPlugins = array();
+		$externalPluginsJS = '';
+		foreach($this->plugins as $plugin => $path) {
+			if(!$path) {
+				$internalPlugins[] = $plugin;
+			} else {
+				$internalPlugins[] = '-' . $plugin;
+				$externalPluginsJS .= sprintf(
+					'tinymce.PluginManager.load("%s", "%s");' . "\n",
+					$plugin,
+					$path
+				);
+			}
+		}
+		$config['plugins'] = implode(',', $internalPlugins);
 		
 		foreach ($this->buttons as $i=>$buttons) {
 			$config['theme_advanced_buttons'.$i] = implode(',', $buttons);
@@ -262,6 +299,7 @@ class HtmlEditorConfig {
 		
 		return "
 if((typeof tinyMCE != 'undefined')) {
+	$externalPluginsJS
 	tinyMCE.init(" . Convert::raw2json($config) . ");
 }
 ";
