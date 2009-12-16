@@ -71,7 +71,7 @@ class Profiler {
     	if(!self::$inst) self::$inst = new Profiler(true,true);
     	
     	echo "<div style=\"position: absolute; z-index: 100000; top: 20px; left: 20px; background-color: white; padding: 20px; border: 1px #AAA solid; height: 80%; overflow: auto;\">";
-    	echo "<p><a href=\"#\" onclick=\"this.parentNode.style.display = 'none'\">(Click to close)</a></p>";
+    	echo "<p><a href=\"#\" onclick=\"this.parentNode.parentNode.style.display = 'none'; return false;\">(Click to close)</a></p>";
     	self::$inst->printTimers();
     	if($showTrace) self::$inst->printTrace();
     	echo "</div>";
