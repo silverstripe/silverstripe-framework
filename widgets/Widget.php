@@ -12,7 +12,12 @@
  */
 class Widget extends DataObject {
 	static $db = array(
-		"Sort" => "Int"
+		"Sort" => "Int",
+		"Enabled" => "Boolean"
+	);
+	
+	static $defaults = array(
+		'Enabled' => true
 	);
 	
 	static $has_one = array(
@@ -22,7 +27,6 @@ class Widget extends DataObject {
 	static $has_many = array();
 	static $many_many = array();
 	static $belongs_many_many = array();
-	static $defaults = array();
 	
 	static $default_sort = "Sort";
 	
