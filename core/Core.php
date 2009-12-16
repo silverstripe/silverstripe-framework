@@ -179,22 +179,7 @@ Debug::loadErrorHandlers();
 ///////////////////////////////////////////////////////////////////////////////
 // HELPER FUNCTIONS
 
-/**
- * Returns the temporary folder that sapphire/silverstripe should use for its cache files
- * This is loaded into the TEMP_FOLDER define on start up
- */
-function getTempFolder() {
-	if(preg_match('/^(.*)\/sapphire\/[^\/]+$/', $_SERVER['SCRIPT_FILENAME'], $matches)) {
-		$cachefolder = "silverstripe-cache" . str_replace(array(' ',"/",":", "\\"),"-", $matches[1]);
-	} else {
-		$cachefolder = "silverstripe-cache";
-	}
-	
-	$ssTmp = BASE_PATH . "/silverstripe-cache";
-    if(@file_exists($ssTmp)) {
-    	return $ssTmp;
-    }
-	
+function getSysTempDir() {
     if(function_exists('sys_get_temp_dir')) {
         $sysTmp = sys_get_temp_dir();
     } elseif(isset($_ENV['TMP'])) {
@@ -204,6 +189,26 @@ function getTempFolder() {
         unlink($tmpFile);
         $sysTmp = dirname($tmpFile);
     }
+	return $sysTmp;
+}
+
+/**
+ * Returns the temporary folder that sapphire/silverstripe should use for its cache files
+ * This is loaded into the TEMP_FOLDER define on start up
+ */
+function getTempFolder() {
+	if(preg_match('/^(.*)[\/\\\\]sapphire[\/\\\\][^\/\\\\]+$/', $_SERVER['SCRIPT_FILENAME'], $matches)) {
+		$cachefolder = "silverstripe-cache" . str_replace(array(' ', "/", ":", "\\"), "-", $matches[1]);
+	} else {
+		$cachefolder = "silverstripe-cache";
+	}
+	
+	$ssTmp = BASE_PATH . "/silverstripe-cache";
+    if(@file_exists($ssTmp)) {
+    	return $ssTmp;
+    }
+	
+    $sysTmp = getSysTempDir();
 
     $worked = true;
     $ssTmp = "$sysTmp/$cachefolder";
