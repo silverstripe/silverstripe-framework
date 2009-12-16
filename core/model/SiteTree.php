@@ -1215,7 +1215,6 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 				$aboutus = new Page();
 				$aboutus->Title = _t('SiteTree.DEFAULTABOUTTITLE', 'About Us');
 				$aboutus->Content = _t('SiteTree.DEFAULTABOUTCONTENT', '<p>You can fill this page out with your own content, or delete it and create your own pages.<br /></p>');
-				$aboutus->URLSegment = "about-us";
 				$aboutus->write();
 				$aboutus->publish("Stage", "Live");
 				DB::alteration_message("About Us created","created");
@@ -1223,7 +1222,6 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 				$contactus = new Page();
 				$contactus->Title = _t('SiteTree.DEFAULTCONTACTTITLE', 'Contact Us');
 				$contactus->Content = _t('SiteTree.DEFAULTCONTACTCONTENT', '<p>You can fill this page out with your own content, or delete it and create your own pages.<br /></p>');
-				$contactus->URLSegment = "contact-us";
 				$contactus->write();
 				$contactus->publish("Stage", "Live");
 
