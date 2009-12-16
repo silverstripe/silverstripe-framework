@@ -1,0 +1,7 @@
+PermissionRole:
+   role:
+      Title: role
+PermissionRoleCode:
+   code:
+      Code: ADMIN
+      Role: =>PermissionRole.role

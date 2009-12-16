@@ -77,6 +77,15 @@ class GroupTest extends FunctionalTest {
 	      // Test adding child group
 
 	   }
+	
+	function testDelete() {
+		$adminGroup = $this->objFromFixture('Group', 'admingroup');
+		
+		$adminGroup->delete();
+		
+		$this->assertNull(DataObject::get('Group', "ID={$adminGroup->ID}"), 'Group is removed');
+		$this->assertNull(DataObject::get('Permission',"GroupID={$adminGroup->ID}"), 'Permissions removed along with the group');
+	}
 }
 
 class GroupTest_Member extends Member implements TestOnly {
