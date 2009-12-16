@@ -343,7 +343,7 @@ class Geoip extends Object {
 		$status = true;
 		
 		foreach ($checks as $url => $expectedResponse) {
-			$response = ip2country($url);
+			$response = self::ip2country($url);
 			
 			if(!$response && $expectedResponse) {
 				user_error("ip2country_check failed sanity check: ip2country($url) returned false. Expected code: '$expectedResponse'", E_USER_WARNING);
