@@ -122,10 +122,19 @@ class SS_Log {
 	 * along a list of debug information for the writer to handle, such as
 	 * error code, error line, error context (backtrace).
 	 * 
-	 * @param string|array $message String of error message, or array of variables
+	 * @param mixed $message Exception object or array of error context variables
 	 * @param const $priority Priority. Possible values: SS_Log::ERR, SS_Log::WARN or SS_Log::NOTICE
 	 */
 	public static function log($message, $priority) {
+		if($message instanceof Exception) {
+			$message = array(
+				'errno' => '',
+				'errstr' => $message->getMessage(),
+				'errfile' => $message->getFile(),
+				'errline' => $message->getLine(),
+				'errcontext' => $message->getTrace()
+			);
+		}
 		try {
 			self::get_logger()->log($message, $priority);
 		} catch(Exception $e) {
