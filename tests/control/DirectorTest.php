@@ -147,7 +147,7 @@ class DirectorTest extends SapphireTest {
 				$getresponse = Director::test($url, $fixture, null, strtoupper($method), null, null, $fixture);
 
 				$this->assertType('SS_HTTPResponse', $getresponse, 'Director::test() returns SS_HTTPResponse');
-				$this->assertEquals($fixture['somekey'], $getresponse->getBody(), 'Director::test() ' . $function);
+				$this->assertEquals($fixture['somekey'], $getresponse->getBody(), 'Director::test() ' . $testfunction);
 
 			}
 
