@@ -131,13 +131,12 @@ class ModelAsController extends Controller implements NestedController {
 			1
 		);
 		
-		if(($result = $query->execute()) && $result->numRecords()) {
-			$recordID = $result->column();
-			
-			if($oldPage = DataObject::get_by_id('SiteTree', $recordID[0])) {
-				// Run the page through an extra filter to ensure that all decorators are applied.
-				if(SiteTree::get_by_link($oldPage->RelativeLink())) return $oldPage;
-			}
+		$record = $query->execute()->first();
+		if(!$record) return false;
+		
+		if($oldPage = DataObject::get_by_id('SiteTree', $record['RecordID'])) {
+			// Run the page through an extra filter to ensure that all decorators are applied.
+			if(SiteTree::get_by_link($oldPage->RelativeLink())) return $oldPage;
 		}
 	}
 	
