@@ -614,30 +614,50 @@ abstract class SS_Database {
 	 */
 	function alterationMessage($message,$type=""){
 		if(!$this->supressOutput) {
-			$color = "";
-			switch ($type){
-				case "created":
-					$color = "green";
-					break;
-				case "obsolete":
-					$color = "red";
-					break;
-				case "error":
-					$color = "red";
-					break;
-				case "deleted":
-					$color = "red";
-					break;						
-				case "changed":
-					$color = "blue";
-					break;
-				case "repaired":
-					$color = "blue";
-					break;
-				default:
-					$color="";
+			if(Director::is_cli()) {
+				switch ($type){
+					case "created":
+					case "changed":
+					case "repaired":
+						$sign = "+";
+						break;
+					case "obsolete":
+					case "deleted":
+						$sign = '-';
+						break;
+					case "error":
+						$sign = "!";
+						break;
+					default:
+						$sign=" ";
+				}
+				$message = strip_tags($message);
+				echo "  $sign $message\n";
+			} else {
+				switch ($type){
+					case "created":
+						$color = "green";
+						break;
+					case "obsolete":
+						$color = "red";
+						break;
+					case "error":
+						$color = "red";
+						break;
+					case "deleted":
+						$color = "red";
+						break;						
+					case "changed":
+						$color = "blue";
+						break;
+					case "repaired":
+						$color = "blue";
+						break;
+					default:
+						$color="";
+				}
+				echo "<li style=\"color: $color\">$message</li>";
 			}
-			echo (Director::is_cli()) ? " * ".strip_tags($message)."\n" : "<li style=\"color: $color\">$message</li>";
 		}
 	}
 
