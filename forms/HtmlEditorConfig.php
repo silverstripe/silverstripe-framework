@@ -110,7 +110,7 @@ class HtmlEditorConfig {
 	 * @return mixed - The value of the specified option 
 	 */
 	function getOption($k) {
-		return $this->settings[$k];
+		if(isset($this->settings[$k])) return $this->settings[$k];
 	}
 	
 	/**
