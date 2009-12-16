@@ -348,6 +348,45 @@ class MemberTest extends FunctionalTest {
 		$this->session()->inst_set('loggedInAs', null);
 	}
 
+	public function testDecoratedCan() {
+		$extensions = $this->removeExtensions(Object::get_extensions('Member'));
+		$member = $this->objFromFixture('Member', 'test');
+		
+		/* Normal behaviour is that you can't view a member unless canView() on an extension returns true */
+		$this->assertFalse($member->canView());
+		$this->assertFalse($member->canDelete());
+		$this->assertFalse($member->canEdit());
+		
+		/* Apply a decorator that allows viewing in any case (most likely the case for member profiles) */
+		Object::add_extension('Member', 'MemberTest_ViewingAllowedExtension');
+		$member2 = $this->objFromFixture('Member', 'staffmember');
+		
+		$this->assertTrue($member2->canView());
+		$this->assertFalse($member2->canDelete());
+		$this->assertFalse($member2->canEdit());
+
+		/* Apply a decorator that denies viewing of the Member */
+		Object::remove_extension('Member', 'MemberTest_ViewingAllowedExtension');
+		Object::add_extension('Member', 'MemberTest_ViewingDeniedExtension');
+		$member3 = $this->objFromFixture('Member', 'managementmember');
+		
+		$this->assertFalse($member3->canView());
+		$this->assertFalse($member3->canDelete());
+		$this->assertFalse($member3->canEdit());
+
+		/* Apply a decorator that allows viewing and editing but denies deletion */
+		Object::remove_extension('Member', 'MemberTest_ViewingDeniedExtension');
+		Object::add_extension('Member', 'MemberTest_EditingAllowedDeletingDeniedExtension');
+		$member4 = $this->objFromFixture('Member', 'accountingmember');
+		
+		$this->assertTrue($member4->canView());
+		$this->assertFalse($member4->canDelete());
+		$this->assertTrue($member4->canEdit());
+		
+		Object::remove_extension('Member', 'MemberTest_EditingAllowedDeletingDeniedExtension');
+		$this->addExtensions($extensions);
+	}
+
 	/**
 	 * Add the given array of member extensions as class names.
 	 * This is useful for re-adding extensions after being removed
@@ -377,6 +416,35 @@ class MemberTest extends FunctionalTest {
 			Object::remove_extension('Member', $extension);
 		}
 		return $extensions;
+	}
+
+}
+class MemberTest_ViewingAllowedExtension extends DataObjectDecorator implements TestOnly {
+
+	public function canView() {
+		return true;
+	}
+
+}
+class MemberTest_ViewingDeniedExtension extends DataObjectDecorator implements TestOnly {
+
+	public function canView() {
+		return false;
+	}
+
+}
+class MemberTest_EditingAllowedDeletingDeniedExtension extends DataObjectDecorator implements TestOnly {
+
+	public function canView() {
+		return true;
+	}
+
+	public function canEdit() {
+		return true;
+	}
+
+	public function canDelete() {
+		return false;
 	}
 
 }
