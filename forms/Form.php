@@ -225,7 +225,7 @@ class Form extends RequestHandler {
 			$securityID = Session::get('SecurityID');
 
 			if(!$securityID || !isset($vars['SecurityID']) || $securityID != $vars['SecurityID']) {
-				$this->httpError(400, "SecurityID doesn't match, possible CRSF attack.");
+				$this->httpError(400, "SecurityID doesn't match, possible CSRF attack.");
 			}
 		}
 		
