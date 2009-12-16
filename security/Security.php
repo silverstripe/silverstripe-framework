@@ -611,7 +611,8 @@ class Security extends Controller {
 		$permission = DataObject::get_one("Permission", "\"Code\" = 'ADMIN'", true, "\"Permission\".\"ID\"");
 
 		$adminGroup = null;
-		if($permission) $adminGroup = DataObject::get_one("Group", "\"Group\".\"ID\" = '{$permission->GroupID}'", true, "\"Group\".\"ID\"");
+		$subsiteCheck = class_exists('GroupSubsites') ?  ' AND "Group"."SubsiteID" = 0' : '';
+		if($permission) $adminGroup = DataObject::get_one("Group", "\"Group\".\"ID\" = '{$permission->GroupID}'$subsiteCheck", true, "\"Group\".\"ID\"");
 		
 		if($adminGroup) {
 			if($adminGroup->Members()->First()) {
