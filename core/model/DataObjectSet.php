@@ -5,7 +5,7 @@
  * @package sapphire
  * @subpackage model
  */
-class DataObjectSet extends ViewableData implements IteratorAggregate, Countable {
+class DataObjectSet extends ViewableData implements IteratorAggregate, Countable, ArrayAccess {
 	/**
 	 * The DataObjects in this set.
 	 * @var array
@@ -83,10 +83,43 @@ class DataObjectSet extends ViewableData implements IteratorAggregate, Countable
 					$this->items[$i] = $item;
 				}
 			}
-
-			
 		}
 		parent::__construct();
+	}
+	
+	/**
+	 * Necessary for interface ArrayAccess. Returns whether an item with $key exists
+	 * @param mixed $key
+	 * @return bool
+	 */
+	public function offsetExists($key) {
+		return isset($this->items[$key]);
+	}
+
+	/**
+	 * Necessary for interface ArrayAccess. Returns item stored in array with index $key
+	 * @param mixed $key
+	 * @return DataObject
+	 */
+	public function offsetGet($key) {
+		return $this->items[$key];
+	}
+	
+	/**
+	 * Necessary for interface ArrayAccess. Set an item with the key in $key
+	 * @param mixed $key
+	 * @param mixed $value
+	 */
+	public function offsetSet($key, $value) {
+		$this->items[$key] = $value;
+	}
+
+	/**
+	 * Necessary for interface ArrayAccess. Unset an item with the key in $key
+	 * @param mixed $key
+	 */
+	public function offsetUnset($key) {
+		unset($this->items[$key]);
 	}
 	
 	/**
@@ -97,7 +130,7 @@ class DataObjectSet extends ViewableData implements IteratorAggregate, Countable
 			$item->destroy();
 		}
 	}
-
+	
 	/**
 	 * Removes all the items in this set.
 	 */

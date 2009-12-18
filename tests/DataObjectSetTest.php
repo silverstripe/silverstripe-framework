@@ -9,6 +9,34 @@ class DataObjectSetTest extends SapphireTest {
 	
 	static $fixture_file = 'sapphire/tests/DataObjectTest.yml';
 	
+	function testArrayAccessExists() {
+		$set = new DataObjectSet(array(
+			$one = new DataObject(array('Title' => 'one')),
+			$two = new DataObject(array('Title' => 'two')),
+			$three = new DataObject(array('Title' => 'three'))
+		));
+		$this->assertEquals(count($set), 3);
+		$this->assertTrue(isset($set[0]), 'First item in the set is set');
+		$this->assertEquals($one, $set[0], 'First item in the set is accessible by array notation');
+	}
+	
+	function testArrayAccessUnset() {
+		$set = new DataObjectSet(array(
+			$one = new DataObject(array('Title' => 'one')),
+			$two = new DataObject(array('Title' => 'two')),
+			$three = new DataObject(array('Title' => 'three'))
+		));
+		unset($set[0]);
+		$this->assertEquals(count($set), 2);
+	}
+	
+	function testArrayAccessSet() {
+		$set = new DataObjectSet();
+		$this->assertEquals(0, count($set));
+		$set['testing!'] = $test = new DataObject(array('Title' => 'I\'m testing!'));
+		$this->assertEquals($test, $set['testing!'], 'Set item is accessible by the key we set it as');
+	}
+	
 	function testIterator() {
 		$set = new DataObjectSet(array(
 			$one = new DataObject(array('Title'=>'one')),
@@ -112,8 +140,6 @@ class DataObjectSetTest extends SapphireTest {
 		$comments = DataObject::get('PageComment', '', "\"ID\" ASC");
 		
 		/* The first object is Joe's comment */
-		//Disabled due to Postgres not liking the ID values to be dictated
-		//$this->assertEquals($comments->First()->ID, 1, 'The first object has an ID of "1"');
 		$this->assertEquals($comments->First()->Name, 'Joe', 'The first object has a Name field value of "Joe"');
 	}
 	
@@ -124,8 +150,6 @@ class DataObjectSetTest extends SapphireTest {
 		$comments = DataObject::get('PageComment', '', "\"ID\" ASC");
 		
 		/* The last object is Dean's comment */
-		//Disabled due to Postgres not liking the ID values to be dictated
-		//$this->assertEquals($comments->Last()->ID, 8, 'The last object has an ID of "8"');
 		$this->assertEquals($comments->Last()->Name, 'Dean', 'The last object has a Name field value of "Dean"');
 	}
 	
@@ -154,19 +178,12 @@ class DataObjectSetTest extends SapphireTest {
 		$this->assertEquals(count($map), 9, 'There are 9 items in the map. 8 are records. 1 is the empty value');
 		
 		/* We have the same map as our expected map, asserted above */
-		//Disabled due to Postgres not liking the ID values to be dictated 
-		//$this->assertSame($expectedMap, $map, 'The map we generated is exactly the same as the asserted one');
 		
 		/* toDropDownMap() is an alias of map() - let's make a map from that */
 		$map2 = $comments->toDropDownMap('ID', 'Title', '(Select one)');
 		
 		/* There are 9 items in the map. 8 are records. 1 is the empty value */
 		$this->assertEquals(count($map), 9, 'There are 9 items in the map. 8 are records. 1 is the empty value.');
-		
-		/* We have the same map as our expected map, asserted above */
-		//Disabled due to Postgres not liking the ID values to be dictated
-		//We could possibly fix this problem by changing 'assertSame' to not check the keys
-		//$this->assertSame($expectedMap, $map2, 'The map we generated is exactly the same as the asserted one');
 	}
 	
 }
