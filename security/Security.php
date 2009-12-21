@@ -189,8 +189,15 @@ class Security extends Controller {
 				$response = ($controller) ? $controller->getResponse() : new SS_HTTPResponse();
 				$response->setStatusCode(403);
 
+				//If 'alreadyLoggedIn' is not specified in the array, then use the default
+				//which should have been specified in the lines above
+				if(isset($messageSet['alreadyLoggedIn']))
+					$message=$messageSet['alreadyLoggedIn'];
+				else
+					$message=$messageSet['default'];
+
 				// Replace %s with the log in link
-				$body = sprintf($messageSet['alreadyLoggedIn'], 
+				$body = sprintf($message, 
 					Controller::join_links(Director::baseURL(), 'Security/login',
 					'?BackURL=' . urlencode($_SERVER['REQUEST_URI'])));
 				
