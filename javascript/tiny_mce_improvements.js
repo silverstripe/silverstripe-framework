@@ -242,20 +242,24 @@ LinkForm.prototype = {
 				else ed.dom.setAttrib(e, k, v);
 			});
 		};
+		
+		function replace() {
+			tinymce.each(ed.dom.select('a'), function(e) {
+				if (e.href == 'javascript:mctmp(0);') set(e);
+			});			
+		}
 
 	    if(attributes.innerHTML && !ed.selection.getContent()) {
             if(tinymce.isIE) var rng = ed.selection.getRng();
 	        e = ed.getDoc().createElement('a');
-	        e.innerHTML = attributes.innerHTML;
-	        e.href = attributes.href;
+	        e.href = 'javascript:mctmp(0);';
 	        s.setNode(e);
 	        if(tinymce.isIE) tinyMCE.activeEditor.selection.setRng(rng);
+			replace();
         }
 		if (!e) {
 			ed.execCommand('CreateLink', false, 'javascript:mctmp(0);');
-			tinymce.each(ed.dom.select('a'), function(e) {
-				if (e.href == 'javascript:mctmp(0);') set(e);
-			});
+			replace();
 		} else {
 			if (attributes.href)
 				set(e);
