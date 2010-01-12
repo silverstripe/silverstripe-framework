@@ -66,7 +66,7 @@ class File extends DataObject {
 	 * $allowed_extensions will be applied to users with admin privileges as
 	 * well.
 	 */
-	public static $apply_restrictions_to_admin = false;
+	public static $apply_restrictions_to_admin = true;
 
 	
 	/**
