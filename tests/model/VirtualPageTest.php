@@ -125,5 +125,30 @@ class VirtualPageTest extends SapphireTest {
 		$p->doPublish();
 		$this->assertTrue($vp->canPublish());
 	}
+
+	function testCanDeleteOrphanedVirtualPagesFromLive() {
+		// An unpublished source page
+		$p = new Page();
+		$p->Content = "test content";
+		$p->write();
+		$p->doPublish();
+		
+		// With no source page, we can't publish
+		$vp = new VirtualPage();
+		$vp->CopyContentFromID = $p->ID;
+		$vp->write();
+
+		// Delete the source page
+		$this->assertTrue($vp->canPublish());
+		$this->assertTrue($p->doDeleteFromLive());
+		
+		// Confirm that we can unpublish, but not publish
+		$this->assertTrue($vp->canDeleteFromLive());
+		$this->assertFalse($vp->canPublish());
+		
+		// Confirm that the action really works
+		$this->assertTrue($vp->doDeleteFromLive());
+		$this->assertNull(DB::query("SELECT \"ID\" FROM \"SiteTree_Live\" WHERE \"ID\" = $vp->ID")->value());
+	}
 	
 }

@@ -66,8 +66,18 @@ class VirtualPage extends Page {
 	}
 	
 	/**
+	 * Return true if we can delete this page from the live site, which is different from can
+	 * we publish it.
+	 */
+	public function canDeleteFromLive($member = null) {
+		return parent::canPublish($member);
+	}
+	
+	/**
 	 * Returns true if is page is publishable by anyone at all
 	 * Return false if the source page isn't published yet.
+	 * 
+	 * Note that isPublishable doesn't affect ete from live, only publish.
 	 */
 	public function isPublishable() {
 		// No source
