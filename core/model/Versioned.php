@@ -154,6 +154,14 @@ class Versioned extends DataObjectDecorator {
 	 * @todo Reduce the coupling between this and SapphireTest, somehow.
 	 */
 	public static function on_db_reset() {
+		// Drop all temporary tables
+		$db = DB::getConn();
+		foreach(self::$archive_tables as $tableName) {
+			if(method_exists($db, 'dropTable')) $db->dropTable($tableName);
+			else $db->query("DROP TABLE \"$tableName\"");
+		}
+
+		// Remove references to them
 		self::$archive_tables = array();
 	}
 	

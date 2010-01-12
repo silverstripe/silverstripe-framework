@@ -111,10 +111,9 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 			}
 
 			singleton('DataObject')->flushCache();
-
-			$dbadmin = new DatabaseAdmin();
-			$dbadmin->clearAllData();
 			
+			self::empty_temp_db();
+
 			$fixtureFiles = (is_array($fixtureFile)) ? $fixtureFile : array($fixtureFile);
 			
 			$i = 0;
@@ -329,6 +328,9 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 		// Mark test as no longer being run - we use originalIsRunningTest to allow for nested SapphireTest calls
 		self::$is_running_test = $this->originalIsRunningTest;
 		$this->originalIsRunningTest = null;
+
+		// Reset mocked datetime
+		SSDatetime::clear_mock_now();
 	}
 	/**
 	 * Clear the log of emails sent
@@ -548,6 +550,20 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 				// The versioned class keeps a static cache of information about temporary tables.
 				Versioned::on_db_reset();
 			}
+		}
+	}
+	
+	/**
+	 * Remove all content from the temporary database.
+	 */
+	static function empty_temp_db() {
+		if(self::using_temp_db()) {
+			$dbadmin = new DatabaseAdmin();
+			$dbadmin->clearAllData();
+
+			// Todo: it would be good to remove this inappropriate coupling, somehow.
+			// The versioned class keeps a static cache of information about temporary tables.
+			Versioned::on_db_reset();
 		}
 	}
 	
