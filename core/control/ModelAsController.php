@@ -17,7 +17,8 @@ class ModelAsController extends Controller implements NestedController {
 	 * @return ContentController
 	 */
 	public static function controller_for(SiteTree $sitetree, $action = null) {
-		$controller = "{$sitetree->class}_Controller";
+		if($sitetree->class == 'SiteTree') $controller = "ContentController";
+		else $controller = "{$sitetree->class}_Controller";
 		
 		if($action && class_exists($controller . '_' . ucfirst($action))) {
 			$controller = $controller . '_' . ucfirst($action);
@@ -54,6 +55,9 @@ class ModelAsController extends Controller implements NestedController {
 		
 			if($result instanceof RequestHandler) {
 				$result = $result->handleRequest($this->request);
+			} else if(!($result instanceof HTTPResponse)) {
+				user_error("ModelAsController::getNestedController() returned bad object type '" . 
+					get_class($result)."'", E_USER_WARNING);
 			}
 		} catch(SS_HTTPResponse_Exception $responseException) {
 			$result = $responseException->getResponse();
