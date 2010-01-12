@@ -128,7 +128,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 				$i++;
 			}
 			
-			
+			$this->logInWithPermssion("ADMIN");
 		}
 		
 		// Set up email
