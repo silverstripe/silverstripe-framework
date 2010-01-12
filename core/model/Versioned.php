@@ -906,6 +906,13 @@ class Versioned extends DataObjectDecorator {
 	function flushCache() {
 		self::$cache_versionnumber = array();
 	}
+
+	/**
+	 * Return a piece of text to keep DataObject cache keys appropriately specific
+	 */
+	function cacheKeyComponent() {
+		return 'stage-'.self::current_stage();
+	}
 }
 
 /**

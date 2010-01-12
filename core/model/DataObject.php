@@ -2646,21 +2646,29 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @return DataObject The first item matching the query
 	 */
 	public static function get_one($callerClass, $filter = "", $cache = true, $orderby = "") {
-		$sum = md5("{$filter}_{$orderby}");
-		// Flush destroyed items out of the cache
-		if($cache && isset(DataObject::$cache_get_one[$callerClass][$sum]) && DataObject::$cache_get_one[$callerClass][$sum] instanceof DataObject && DataObject::$cache_get_one[$callerClass][$sum]->destroyed) {
-			DataObject::$cache_get_one[$callerClass][$sum] = false;
+		$SNG = singleton($callerClass);
+
+		$cacheKey = "{$filter}-{$orderby}";
+		if($extra = $SNG->extend('cacheKeyComponent')) {
+			$cacheKey .= '-' . implode("-", $extra);
 		}
-		if(!$cache || !isset(DataObject::$cache_get_one[$callerClass][$sum])) {
-			$item = singleton($callerClass)->instance_get_one($filter, $orderby);
+		$cacheKey = md5($cacheKey);
+		
+		// Flush destroyed items out of the cache
+		if($cache && isset(DataObject::$cache_get_one[$callerClass][$cacheKey]) && DataObject::$cache_get_one[$callerClass][$cacheKey] instanceof DataObject && DataObject::$cache_get_one[$callerClass][$cacheKey]->destroyed) {
+			DataObject::$cache_get_one[$callerClass][$cacheKey
+			] = false;
+		}
+		if(!$cache || !isset(DataObject::$cache_get_one[$callerClass][$cacheKey])) {
+			$item = $SNG->instance_get_one($filter, $orderby);
 			if($cache) {
-				DataObject::$cache_get_one[$callerClass][$sum] = $item;
-				if(!DataObject::$cache_get_one[$callerClass][$sum]) {
-					DataObject::$cache_get_one[$callerClass][$sum] = false;
+				DataObject::$cache_get_one[$callerClass][$cacheKey] = $item;
+				if(!DataObject::$cache_get_one[$callerClass][$cacheKey]) {
+					DataObject::$cache_get_one[$callerClass][$cacheKey] = false;
 				}
 			}
 		}
-		return $cache ? DataObject::$cache_get_one[$callerClass][$sum] : $item;
+		return $cache ? DataObject::$cache_get_one[$callerClass][$cacheKey] : $item;
 	}
 
 	/**
