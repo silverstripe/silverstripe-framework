@@ -579,7 +579,6 @@ class Versioned extends DataObjectDecorator {
 			$_GET['stage'] = ucfirst(strtolower($_GET['stage']));
 			Session::set('currentStage', $_GET['stage']);
 			Session::clear('archiveDate');
-			Cookie::set('bypassStaticCache', '1', 0);
 		}
 		if(isset($_GET['archiveDate'])) {
 			Session::set('archiveDate', $_GET['archiveDate']);
@@ -591,6 +590,12 @@ class Versioned extends DataObjectDecorator {
 			Versioned::reading_stage(Session::get('currentStage'));
 		} else {
 			Versioned::reading_stage("Live");
+		}
+
+		if(Versioned::current_stage() == 'Live') {
+			Cookie::set('bypassStaticCache', null, 0);
+		} else {
+			Cookie::set('bypassStaticCache', '1', 0);
 		}
 	}
 	
@@ -815,6 +820,20 @@ class Versioned extends DataObjectDecorator {
 	 * In particular, this will query deleted records as well as active ones.
 	 */
 	static function get_including_deleted($class, $filter = "", $sort = "") {
+		$query = self::get_including_deleted_query($class, $filter, $sort);
+		
+		// Process into a DataObjectSet
+		$SNG = singleton($class);
+		return $SNG->buildDataObjectSet($query->execute(), 'DataObjectSet', null, $class);
+	}
+	
+	/**
+	 * Return the query for the equivalent of a DataObject::get() call, querying the latest
+	 * version of each page stored in the (class)_versions tables.
+	 *
+	 * In particular, this will query deleted records as well as active ones.
+	 */
+	static function get_including_deleted_query($class, $filter = "", $sort = "") {
 		$oldStage = Versioned::$reading_stage;
 		Versioned::$reading_stage = null;
 
@@ -827,12 +846,9 @@ class Versioned extends DataObjectDecorator {
 		$query->from[$archiveTable] = "INNER JOIN \"$archiveTable\"
 			ON \"$archiveTable\".\"ID\" = \"{$baseTable}_versions\".\"RecordID\"
 			AND \"$archiveTable\".\"Version\" = \"{$baseTable}_versions\".\"Version\"";
-		
-		// Process into a DataObjectSet
-		$result = $SNG->buildDataObjectSet($query->execute(), 'DataObjectSet', null, $class);
 
 		Versioned::$reading_stage = $oldStage;
-		return $result;
+		return $query;
 	}
 	
 	/**

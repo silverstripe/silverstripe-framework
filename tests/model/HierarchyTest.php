@@ -16,10 +16,17 @@ class HierarchyTest extends SapphireTest {
 		$this->assertEquals(array("Page 1", "Page 2", "Page 3"), 
 			singleton('Page')->AllHistoricalChildren()->column('Title'));
 	
+		// Check numHistoricalChildren
+		$this->assertEquals(3, singleton('Page')->numHistoricalChildren());
+
 		// Check that both page 2 children are returned
 		$page2 = $this->objFromFixture('Page', 'page2');
 		$this->assertEquals(array("Page 2a", "Page 2b"), 
 			$page2->AllHistoricalChildren()->column('Title'));
+
+		// Check numHistoricalChildren
+		$this->assertEquals(2, $page2->numHistoricalChildren());
+
 			
 		// Page 3 has been deleted; let's bring it back from the grave
 		$page3 = Versioned::get_including_deleted("SiteTree", "\"Title\" = 'Page 3'")->First();
@@ -27,6 +34,9 @@ class HierarchyTest extends SapphireTest {
 		// Check that both page 3 children are returned
 		$this->assertEquals(array("Page 3a", "Page 3b"), 
 			$page3->AllHistoricalChildren()->column('Title'));
+			
+		// Check numHistoricalChildren
+		$this->assertEquals(2, $page3->numHistoricalChildren());
 		
 	}
 	

@@ -37,9 +37,9 @@ class Hierarchy extends DataObjectDecorator {
 	 * @param int $minNodeCount
 	 * @return string
 	 */
-	public function getChildrenAsUL($attributes = "", $titleEval = '"<li>" . $child->Title', $extraArg = null, $limitToMarked = false, $childrenMethod = "AllChildrenIncludingDeleted", $rootCall = true, $minNodeCount = 30) {
+	public function getChildrenAsUL($attributes = "", $titleEval = '"<li>" . $child->Title', $extraArg = null, $limitToMarked = false, $childrenMethod = "AllChildrenIncludingDeleted", $numChildrenMethod = "numChildren", $rootCall = true, $minNodeCount = 30) {
 		if($limitToMarked && $rootCall) {
-			$this->markingFinished();
+			$this->markingFinished($numChildrenMethod);
 		}
 		
 		if($this->owner->hasMethod($childrenMethod)) {
@@ -60,7 +60,7 @@ class Hierarchy extends DataObjectDecorator {
 				if(!$limitToMarked || $child->isMarked()) {
 					$foundAChild = true;
 					$output .= eval("return $titleEval;") . "\n" . 
-					$child->getChildrenAsUL("", $titleEval, $extraArg, $limitToMarked, $childrenMethod, false, $minNodeCount) . "</li>\n";
+					$child->getChildrenAsUL("", $titleEval, $extraArg, $limitToMarked, $childrenMethod, $numChildrenMethod, false, $minNodeCount) . "</li>\n";
 				}
 			}
 			
@@ -83,7 +83,7 @@ class Hierarchy extends DataObjectDecorator {
 	 * @param int $minNodeCount The minimum amount of nodes to mark.
 	 * @return int The actual number of nodes marked.
 	 */
-	public function markPartialTree($minNodeCount = 30, $context = null, $childrenMethod = "AllChildrenIncludingDeleted") {
+	public function markPartialTree($minNodeCount = 30, $context = null, $childrenMethod = "AllChildrenIncludingDeleted", $numChildrenMethod = "numChildren") {
 		if(!is_numeric($minNodeCount)) $minNodeCount = 30;
 
 		$this->markedNodes = array($this->owner->ID => $this->owner);
@@ -91,7 +91,7 @@ class Hierarchy extends DataObjectDecorator {
 
 		// foreach can't handle an ever-growing $nodes list
 		while(list($id, $node) = each($this->markedNodes)) {
-			$this->markChildren($node, $context, $childrenMethod);
+			$this->markChildren($node, $context, $childrenMethod, $numChildrenMethod);
 			if($minNodeCount && sizeof($this->markedNodes) >= $minNodeCount) {
 				break;
 			}
@@ -154,7 +154,7 @@ class Hierarchy extends DataObjectDecorator {
 	 * Mark all children of the given node that match the marking filter.
 	 * @param DataObject $node Parent node.
 	 */
-	public function markChildren($node, $context = null, $childrenMethod = "AllChildrenIncludingDeleted") {
+	public function markChildren($node, $context = null, $childrenMethod = "AllChildrenIncludingDeleted", $numChildrenMethod = "numChildren") {
 		if($node->hasMethod($childrenMethod)) {
 			$children = $node->$childrenMethod($context);
 		} else {
@@ -166,7 +166,7 @@ class Hierarchy extends DataObjectDecorator {
 		if($children) {
 			foreach($children as $child) {
 				if(!$this->markingFilter || $this->markingFilterMatches($child)) {
-					if($child->numChildren()) {
+					if($child->$numChildrenMethod()) {
 						$child->markUnexpanded();
 					} else {
 						$child->markExpanded();
@@ -181,11 +181,11 @@ class Hierarchy extends DataObjectDecorator {
 	 * Ensure marked nodes that have children are also marked expanded.
 	 * Call this after marking but before iterating over the tree.
 	 */
-	protected function markingFinished() {
+	protected function markingFinished($numChildrenMethod = "numChildren") {
 		// Mark childless nodes as expanded.
 		if($this->markedNodes) {
 			foreach($this->markedNodes as $id => $node) {
-				if(!$node->isExpanded() && !$node->numChildren()) {
+				if(!$node->isExpanded() && !$node->$numChildrenMethod()) {
 					$node->markExpanded();
 				}
 			}
@@ -482,6 +482,16 @@ class Hierarchy extends DataObjectDecorator {
 			"\"ParentID\" = " . (int)$this->owner->ID, "\"$baseClass\".\"ID\" ASC");
 	}
 	
+	/**
+	 * Return the number of children that this page ever had, including pages that were deleted
+	 */
+	public function numHistoricalChildren() {
+		$query = Versioned::get_including_deleted_query(ClassInfo::baseDataClass($this->owner->class), 
+			"ParentID = " . (int)$this->owner->ID);
+			
+		return $query->unlimitedRowCount();
+	}
+
 	/**
 	 * Return the number of direct children.
 	 * By default, values are cached after the first invocation.
