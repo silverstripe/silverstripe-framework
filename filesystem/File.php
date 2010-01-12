@@ -628,7 +628,7 @@ class File extends DataObject {
 	}
 	
 	function validate() {
-		if(!File::$apply_restrictions_to_admin && Permission::check('ADMIN')) {
+		if(File::$apply_restrictions_to_admin || !Permission::check('ADMIN')) {
 			$extension = strtolower(pathinfo($this->Name, PATHINFO_EXTENSION));
 			
 			if($extension && !in_array($extension, self::$allowed_extensions)) {
