@@ -70,6 +70,69 @@ class SiteTreeBrokenLinksTest extends SapphireTest {
 		$this->assertFalse($obj->HasBrokenFile, 'Page does NOT have a broken file');
 	}
 	
+	function testDeletingMarksBackLinkedPagesAsBroken() {
+		$this->logInWithPermssion('ADMIN');
+		
+		// Set up two published pages with a link from content -> about
+		$linkDest = $this->objFromFixture('Page','about');
+		$linkDest->doPublish();
+		
+		$linkSrc = $this->objFromFixture('Page','content');
+		$linkSrc->Content = "<p><a href=\"" . $linkDest->URLSegment . "/\">about us</a></p>";
+		$linkSrc->write();
+		$linkSrc->doPublish();
+		
+		// Confirm no broken link
+		$this->assertEquals(0, (int)$linkSrc->HasBrokenLink);
+		$this->assertEquals(0, DB::query("SELECT \"HasBrokenLink\" FROM \"SiteTree_Live\" 
+			WHERE \"ID\" = $linkSrc->ID")->value());
+		
+		// Delete page from draft
+		$linkDestID = $linkDest->ID;
+		$linkDest->delete();
+
+		// Confirm draft has broken link, and published doesn't
+		$linkSrc->flushCache();
+		$linkSrc = $this->objFromFixture('Page', 'content');
+
+		$this->assertEquals(1, (int)$linkSrc->HasBrokenLink);
+		$this->assertEquals(0, DB::query("SELECT \"HasBrokenLink\" FROM \"SiteTree_Live\" 
+			WHERE \"ID\" = $linkSrc->ID")->value());
+			
+		// Delete from live
+		$linkDest = Versioned::get_one_by_stage("SiteTree", "Live", "\"SiteTree\".\"ID\" = $linkDestID");
+		$linkDest->doDeleteFromLive();
+
+		// Confirm both draft and published have broken link
+		$linkSrc->flushCache();
+		$linkSrc = $this->objFromFixture('Page', 'content');
+
+		$this->assertEquals(1, (int)$linkSrc->HasBrokenLink);
+		$this->assertEquals(1, DB::query("SELECT \"HasBrokenLink\" FROM \"SiteTree_Live\" 
+			WHERE \"ID\" = $linkSrc->ID")->value());
+	}
+
+	function testPublishingSourceBeforeDestHasBrokenLink() {
+		$this->logInWithPermssion('ADMIN');
+		
+		// Set up two draft pages with a link from content -> about
+		$linkDest = $this->objFromFixture('Page','about');
+		// Ensure that it's not on the published site
+		$linkDest->doDeleteFromLive();
+		
+		$linkSrc = $this->objFromFixture('Page','content');
+		$linkSrc->Content = "<p><a href=\"" . $linkDest->URLSegment . "/\">about us</a></p>";
+		$linkSrc->write();
+		
+		// Publish the source of the link, while the dest is still unpublished. 
+		$linkSrc->doPublish();
+		
+		// Verify that the link isn't broken on draft but is broken on published
+		$this->assertEquals(0, (int)$linkSrc->HasBrokenLink);
+		$this->assertEquals(1, DB::query("SELECT \"HasBrokenLink\" FROM \"SiteTree_Live\" 
+			WHERE \"ID\" = $linkSrc->ID")->value());
+	}
+	
 }
 
 ?>
