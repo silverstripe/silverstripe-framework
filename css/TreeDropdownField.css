@@ -52,6 +52,7 @@ div.TreeDropdownField div.tree_holder iframe {
 	display:none;/* IE5*/
 	display/**/:block;/* IE5*/
 	position:absolute;
+	border-style: none;
 	top:0;
 	left:0;
 	z-index:-1;
