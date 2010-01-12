@@ -46,6 +46,19 @@ class File extends DataObject {
 	static $extensions = array(
 		"Hierarchy",
 	);
+	
+	/**
+	 * @see Upload->allowedExtensions
+	 * @var array
+	 */
+	public static $allowed_extensions = array();
+	
+	/**
+	 * If this is true, then restrictions set in $allowed_max_file_size and
+	 * $allowed_extensions will be applied to users with admin privileges as
+	 * well.
+	 */
+	public static $apply_restrictions_to_admin = false;
 
 	
 	/**
@@ -615,8 +628,8 @@ class File extends DataObject {
 	}
 	
 	function validate() {
-		if(!AssetAdmin::$apply_restrictions_to_admin && Permission::check('ADMIN')) {
-			if(!in_array(strtolower(pathinfo($this->Name, PATHINFO_EXTENSION)), AssetAdmin::$allowed_extensions)) {
+		if(!File::$apply_restrictions_to_admin && Permission::check('ADMIN')) {
+			if(!in_array(strtolower(pathinfo($this->Name, PATHINFO_EXTENSION)), self::$allowed_extensions)) {
 				$message = sprintf(
 					_t(
 						'File.INVALIDEXTENSION', 
@@ -624,7 +637,7 @@ class File extends DataObject {
 						PR_MEDIUM,
 						'Argument 1: Comma-separated list of valid extensions'
 					),
-					implode(',',AssetAdmin::$allowed_extensions)
+					implode(',',self::$allowed_extensions)
 				);
 				return new ValidationResult(false, $message);
 			}
