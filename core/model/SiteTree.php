@@ -2278,14 +2278,6 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		if(!$this->canAddChildren())
 			$classes .= " nochildren";
 
-		if(
-			!$this->canDelete()
-			// @todo Temporary workaround for UI-problem: We can't distinguish batch selection for publication from
-			// the delete selection (see http://open.silverstripe.com/ticket/3109 and http://open.silverstripe.com/ticket/3302)
-			|| !$this->canPublish()
-		)
-			$classes .= " nodelete";
-
 		if($controller->isCurrentPage($this))
 			$classes .= " current";
 
