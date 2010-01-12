@@ -341,6 +341,8 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 				new FormAction("insertflash", _t('HtmlEditorField.BUTTONINSERTFLASH', 'Insert Flash'))
 			)
 		);
+
+	$form->disableSecurityToken();
 		$form->loadDataFrom($this);
 		$form->disableSecurityToken();
 		return $form;
