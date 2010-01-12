@@ -408,6 +408,7 @@ abstract class Object {
 		$subclasses[] = $class;
 		if($subclasses) foreach($subclasses as $subclass) {
 			unset(self::$classes_constructed[$subclass]);
+			unset(self::$extra_methods[$subclass]);
 		}
 		
 		// merge with existing static vars
@@ -476,6 +477,16 @@ abstract class Object {
 		// unset singletons to avoid side-effects
 		global $_SINGLETONS;
 		$_SINGLETONS = array();
+
+		// unset some caches
+		self::$cached_statics[$class]['extensions'] = null;
+		$subclasses = ClassInfo::subclassesFor($class);
+		$subclasses[] = $class;
+		if($subclasses) foreach($subclasses as $subclass) {
+			unset(self::$classes_constructed[$subclass]);
+			unset(self::$extra_methods[$subclass]);
+		}
+		
 	}
 	
 	/**
@@ -540,6 +551,12 @@ abstract class Object {
 	 * @return mixed
 	 */
 	public function __call($method, $arguments) {
+		// If the method cache was cleared by an an Object::add_extension() / Object::remove_extension()
+		// call, then we should rebuild it.
+		if(empty(self::$cached_statics[get_class($this)])) {
+			$this->defineMethods();
+		}
+		
 		$method = strtolower($method);
 		
 		if(isset(self::$extra_methods[$this->class][$method])) {
@@ -583,6 +600,7 @@ abstract class Object {
 			}
 		} else {
 			// Please do not change the exception code number below.
+			
 			throw new Exception("Object->__call(): the method '$method' does not exist on '$this->class'", 2175);
 		}
 	}
