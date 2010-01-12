@@ -488,7 +488,7 @@ class Permission extends DataObject {
 			'help' => null,
 			'sort' => 100000
 		);
-
+		
 		if($classes) foreach($classes as $class) {
 			$SNG = singleton($class);
 			if($SNG instanceof TestOnly) continue;
@@ -532,6 +532,9 @@ class Permission extends DataObject {
 					'sort' => 0
 				);
 		}
+
+		// Don't let people hijack ADMIN rights
+		if(!Permission::check("ADMIN")) unset($allCodes['ADMIN']);
 		
 		ksort($allCodes);
 
