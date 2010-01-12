@@ -579,6 +579,7 @@ class Versioned extends DataObjectDecorator {
 			$_GET['stage'] = ucfirst(strtolower($_GET['stage']));
 			Session::set('currentStage', $_GET['stage']);
 			Session::clear('archiveDate');
+			Cookie::set('bypassStaticCache', '1', 0);
 		}
 		if(isset($_GET['archiveDate'])) {
 			Session::set('archiveDate', $_GET['archiveDate']);

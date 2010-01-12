@@ -18,8 +18,7 @@ $cacheDebug = false;
 $hostmapLocation = '../subsites/host-map.php';
 date_default_timezone_set('Pacific/Auckland');
 
-
-if ($cacheOn) {
+if ($cacheOn && empty($_COOKIE['bypassStaticCache'])) {
 	if (file_exists($hostmapLocation)) {
 		include_once $hostmapLocation;
 		$subsiteHostmap['default'] = isset($subsiteHostmap['default']) ? $subsiteHostmap['default'] : '';
