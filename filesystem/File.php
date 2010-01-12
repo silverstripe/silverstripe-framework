@@ -51,7 +51,15 @@ class File extends DataObject {
 	 * @see Upload->allowedExtensions
 	 * @var array
 	 */
-	public static $allowed_extensions = array();
+	public static $allowed_extensions = array(
+		'html','htm','xhtml','js','css',
+		'png','gif','jpg','jpeg',
+		'mov','mkv','mp3','m4a',
+		'doc','docx','txt','rtf','xls','xlsx','pages',
+		'ppt','pptx','pps','csv',
+		'zip','zipx','sit','sitx','gz','pkg','dmg','hqx',
+		'xml','pdf',
+	);
 	
 	/**
 	 * If this is true, then restrictions set in $allowed_max_file_size and
@@ -269,14 +277,6 @@ class File extends DataObject {
 		parent::onBeforeWrite();
 
 		if(!$this->Name) $this->Name = "new-" . strtolower($this->class);
-
-		if($brokenPages = $this->BackLinkTracking()) {
-			foreach($brokenPages as $brokenPage) {
-				Notifications::event("BrokenLink", $brokenPage, $brokenPage->OwnerID);
-				$brokenPage->HasBrokenFile = true;
-				$brokenPage->write();
-			}
-		}
 	}
 
 	/**
@@ -629,7 +629,11 @@ class File extends DataObject {
 	
 	function validate() {
 		if(!File::$apply_restrictions_to_admin && Permission::check('ADMIN')) {
-			if(!in_array(strtolower(pathinfo($this->Name, PATHINFO_EXTENSION)), self::$allowed_extensions)) {
+			$extension = strtolower(pathinfo($this->Name, PATHINFO_EXTENSION));
+			
+			if($extension && !in_array($extension, self::$allowed_extensions)) {
+				$exts =  self::$allowed_extensions;
+				sort($exts);
 				$message = sprintf(
 					_t(
 						'File.INVALIDEXTENSION', 
@@ -637,7 +641,7 @@ class File extends DataObject {
 						PR_MEDIUM,
 						'Argument 1: Comma-separated list of valid extensions'
 					),
-					implode(',',self::$allowed_extensions)
+					implode(', ',$exts)
 				);
 				return new ValidationResult(false, $message);
 			}

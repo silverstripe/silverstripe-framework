@@ -91,6 +91,13 @@ if(!isset($_SERVER['HTTP_HOST'])) {
 		if($_GET) stripslashes_recursively($_GET);
 		if($_POST) stripslashes_recursively($_POST);
 	}
+	
+	/**
+	 * Fix HTTP_HOST from reverse proxies
+	 */
+	if (isset($_SERVER['HTTP_X_FORWARDED_HOST'])) {
+		$_SERVER['HTTP_HOST'] = $_SERVER['HTTP_X_FORWARDED_HOST'];
+	}
 }
 
 /**

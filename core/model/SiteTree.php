@@ -1331,6 +1331,8 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 			}
 		}
 		
+		echo "=======\nUPDATING LINK TRACKING FOR $this->Title\n=========\n";
+		SSBacktrace::backtrace();
 		$this->LinkTracking()->setByIDList($linkedPages);
 		$this->ImageTracking()->setByIDList($linkedFiles);
 		
@@ -1463,29 +1465,29 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	 */
 	function rewriteFileURL($old, $new) {
 		$fields = $this->inheritedDatabaseFields();
-		foreach($fields as $fieldName => $fieldType) {
-			if ($fieldType != 'HTMLText') continue;
-			
-			$original = clone $this;
-
-			// Draft site
-			$this->$fieldName = str_replace($old, $new, $this->$fieldName, $numReplaced);
-			if($numReplaced) $this->write();
-			
+		// Update the content without actually creating a new version
+		foreach(array("SiteTree_Live", "SiteTree") as $table) {
 			// Published site
-			$published = DB::query("SELECT * FROM  \"SiteTree_Live\" WHERE \"ID\" = $this->ID")->record();
+			$published = DB::query("SELECT * FROM  \"$table\" WHERE \"ID\" = $this->ID")->record();
 			$origPublished = $published;
-			
-			// TODO: This doesn't work for HTMLText fields on other tables.
-			if(isset($published[$fieldName])) {
-				$published[$fieldName] = str_replace($old, $new, $published[$fieldName], $numReplaced);
-				if($numReplaced) {
-					DB::query("UPDATE \"SiteTree_Live\" SET \"$fieldName\" = '" 
-						. Convert::raw2sql($published[$fieldName]) . "' WHERE \"ID\" = $this->ID");
 
-					$publishedClass = $origPublished['ClassName'];
-					$origPublishedObj = new $publishedClass($origPublished);
-					$this->extend('onRenameLinkedAsset', $origPublishedObj);
+			foreach($fields as $fieldName => $fieldType) {
+				if ($fieldType != 'HTMLText') continue;
+
+				// TODO: This doesn't work for HTMLText fields on other tables.
+				if(isset($published[$fieldName])) {
+					$published[$fieldName] = str_replace($old, $new, $published[$fieldName], $numReplaced);
+					if($numReplaced) {
+						DB::query("UPDATE \"$table\" SET \"$fieldName\" = '" 
+							. Convert::raw2sql($published[$fieldName]) . "' WHERE \"ID\" = $this->ID");
+							
+						// Tell static caching to update itself
+						if($table == 'SiteTree_Live') {
+							$publishedClass = $origPublished['ClassName'];
+							$origPublishedObj = new $publishedClass($origPublished);
+							$this->extend('onRenameLinkedAsset', $origPublishedObj);
+						}
+					}
 				}
 			}
 		}
