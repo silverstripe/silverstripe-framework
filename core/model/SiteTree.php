@@ -1430,7 +1430,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	 * Triggers the onRenameLinkedAsset action on extensions.
 	 */
 	function rewriteFileURL($old, $new) {
-		$fields = self::database_fields();
+		$fields = $this->inheritedDatabaseFields();
 		foreach($fields as $fieldName => $fieldType) {
 			if ($fieldType != 'HTMLText') continue;
 			
