@@ -9,53 +9,44 @@ class TranslatableTest extends FunctionalTest {
 	
 	static $fixture_file = 'sapphire/tests/model/TranslatableTest.yml';
 	
-	/**
-	 * @todo Necessary because of monolithic Translatable design
-	 */
-	static protected $origTranslatableSettings = array();
+	protected $requiredExtensions = array(
+		'SiteTree' => array('Translatable'),
+		'TranslatableTest_DataObject' => array('Translatable'),
+	);
+
+	protected $illegalExtensions = array(
+		'SiteTree' => array(
+			'SiteTreeCMSThreeStepWorkflow',
+			'SiteTreeCMSWorkflow'
+		),
+		'WorkflowRequest' => array(
+			'WorkflowThreeStepRequest'
+		),
+		'LeftAndMain' => array(
+			'LeftAndMainCMSThreeStepWorkflow'
+		),
+	);
 	
-	static function set_up_once() {
-		parent::set_up_once();
-		
-		// needs to recreate the database schema with language properties
-		self::kill_temp_db();
+	private $origLocale;
 
-		// store old defaults	
-		self::$origTranslatableSettings['has_extension'] = Object::has_extension('SiteTree', 'Translatable');
-		self::$origTranslatableSettings['default_locale'] = Translatable::default_locale();
-
-		// overwrite locale
-		Translatable::set_default_locale("en_US");
-
-		// refresh the decorated statics - different fields in $db with Translatable enabled
-		if(!self::$origTranslatableSettings['has_extension']) Object::add_extension('SiteTree', 'Translatable');
-		Object::add_extension('TranslatableTest_DataObject', 'Translatable');
-		
-		// recreate database with new settings
-		$dbname = self::create_temp_db();
-		DB::set_alternative_database_name($dbname);
-	}
-	
-	static function tear_down_once() {
-		if(!self::$origTranslatableSettings['has_extension']) Object::remove_extension('SiteTree', 'Translatable');
-
-		Translatable::set_default_locale(self::$origTranslatableSettings['default_locale']);
-		Translatable::set_current_locale(self::$origTranslatableSettings['default_locale']);
-		
-		self::kill_temp_db();
-		self::create_temp_db();
-		
-		parent::tear_down_once();
-	}
-	
 	function setUp() {
 		parent::setUp();
 		
 		// whenever a translation is created, canTranslate() is checked
 		$cmseditor = $this->objFromFixture('Member', 'cmseditor');
 		$cmseditor->logIn();
+		
+		$this->origLocale = Translatable::default_locale();
+		Translatable::set_default_locale("en_US");
 	}
 	
+	function tearDown() {
+		Translatable::set_default_locale($this->origLocale);
+		Translatable::set_current_locale($this->origLocale);
+
+		parent::tearDown();
+	}
+
 	function testTranslationGroups() {
 		// first in french
 		$frPage = new SiteTree();

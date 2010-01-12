@@ -8,33 +8,10 @@ class TranslatableSearchFormTest extends FunctionalTest {
 	static $fixture_file = 'sapphire/tests/search/TranslatableSearchFormTest.yml';
 	
 	protected $mockController;
-	
-	/**
-	 * @todo Necessary because of monolithic Translatable design
-	 */
-	static protected $origTranslatableSettings = array();
-	
-	static function set_up_once() {
-		parent::set_up_once();
-		
-		// needs to recreate the database schema with language properties
-		self::kill_temp_db();
-		
-		// store old defaults	
-		self::$origTranslatableSettings['has_extension'] = Object::has_extension('SiteTree', 'Translatable');
-		self::$origTranslatableSettings['default_locale'] = Translatable::default_locale();
-		
-		// overwrite locale
-		Translatable::set_default_locale("en_US");
 
-		// refresh the decorated statics - different fields in $db with Translatable enabled
-		if(!self::$origTranslatableSettings['has_extension']) Object::add_extension('SiteTree', 'Translatable');
-		Object::add_extension('TranslatableTest_DataObject', 'Translatable');
-		
-		// recreate database with new settings
-		$dbname = self::create_temp_db();
-		DB::set_alternative_database_name($dbname);
-	}
+	protected $requiredExtensions = array(
+		'SiteTree' => array('Translatable'),
+	);
 	
 	function setUp() {
 		parent::setUp();
@@ -47,16 +24,7 @@ class TranslatableSearchFormTest extends FunctionalTest {
 		$admin->logIn();
 	}
 	
-	static function tear_down_once() {
-		if(!self::$origTranslatableSettings['has_extension']) Object::remove_extension('SiteTree', 'Translatable');
-
-		Translatable::set_default_locale(self::$origTranslatableSettings['default_locale']);
-		
-		self::kill_temp_db();
-		self::create_temp_db();
-		
-		parent::tear_down_once();
-	}
+	
 		
 	function testPublishedPagesMatchedByTitleInDefaultLanguage() {
 		$sf = new SearchForm($this->mockController, 'SearchForm');
