@@ -413,22 +413,10 @@ class Permission extends DataObject {
 	 *                       permission.
 	 */
 	public static function get_members_by_permission($code) {
+		$toplevelGroups = self::get_groups_by_permission($code);
+		if (!$toplevelGroups) return false;
+
 		$groupIDs = array();
-        
-        $SQL_codeList = (is_array($code)) ? implode("','", Convert::raw2sql($code)) : Convert::raw2sql($code);
-
-		$SQL_filter = "\"Permission\".\"Code\" IN ('" . $SQL_codeList . "') " .
-			"AND \"Permission\".\"Type\" = " . self::GRANT_PERMISSION;
-		
-		$toplevelGroups = DataObject::get(
-			'Group', 
-			$SQL_filter, // filter
-			null, // limit
-			"LEFT JOIN \"Permission\" ON \"Group\".\"ID\" = \"Permission\".\"GroupID\""
-		);
-		if(!$toplevelGroups)
-			return false;
-
 		foreach($toplevelGroups as $group) {
 			$familyIDs = $group->collateFamilyIDs();
 			if(is_array($familyIDs)) {
@@ -438,7 +426,7 @@ class Permission extends DataObject {
 
 		if(!count($groupIDs))
 			return false;
-
+			
 		$members = DataObject::get(
 			Object::getCustomClass('Member'),
 			$_filter = "\"Group\".\"ID\" IN (" . implode(",",$groupIDs) . ")",
@@ -446,6 +434,7 @@ class Permission extends DataObject {
 			$_join = "LEFT JOIN \"Group_Members\" ON \"Member\".\"ID\" = \"Group_Members\".\"MemberID\" " . 
 				"LEFT JOIN \"Group\" ON \"Group_Members\".\"GroupID\" = \"Group\".\"ID\" "
 		);
+		
 		return $members;
 	}
 
@@ -460,12 +449,14 @@ class Permission extends DataObject {
 		$SQLa_codes = Convert::raw2sql($codes);
 		$SQL_codes = join("','", $SQLa_codes);
 		
-		return DataObject::get(
-			'Group',
-			"\"Permission\".\"Code\" IN ('$SQL_codes')",
+		// Via Roles are groups that have the permission via a role
+		return DataObject::get('Group',
+			"PermissionRoleCode.`Code` IN ('$SQL_codes') OR Permission.`Code` IN ('$SQL_codes')",
 			"",
-			"LEFT JOIN \"Permission\" ON \"Group\".\"ID\" = \"Permission\".\"GroupID\""
-		);
+			"LEFT JOIN Permission ON Permission.GroupID = `Group`.ID
+			LEFT JOIN Group_Roles ON Group_Roles.GroupID = `Group`.ID
+			LEFT JOIN PermissionRole ON Group_Roles.PermissionRoleID = PermissionRole.ID
+			LEFT JOIN PermissionRoleCode ON PermissionRoleCode.RoleID = PermissionRole.ID");
 	}
 
 
