@@ -972,7 +972,10 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 			$combinedStageResult = array();
 
 			foreach(array('Stage', 'Live') as $stage) {
-				$result = array_fill_keys($ids, false);
+				// Start by filling the array with the pages that actually exist
+				$table = ($stage=='Stage') ? "SiteTree" : "SiteTree_$stage";
+				$result = DB::query("SELECT \"ID\",0 FROM \"$table\" 
+						WHERE \"ID\" IN (".implode(", ", $ids).")")->map();
 				
 				// Get the uninherited permissions
 				$uninheritedPermissions = Versioned::get_by_stage("SiteTree", $stage, "(\"CanEditType\" = 'LoggedInUsers' OR
@@ -1013,6 +1016,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 				}
 				
 				$combinedStageResult = $combinedStageResult + $result;
+				
 			}
 		}
 		
