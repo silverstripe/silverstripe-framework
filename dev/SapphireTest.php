@@ -174,6 +174,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 			// rebuild the db schema
 			$dbadmin = new DatabaseAdmin();
 			$dbadmin->doBuild(true, false, true);
+			singleton('DataObject')->flushCache();
 		}
 		// clear singletons, they're caching old extension info 
 		// which is used in DatabaseAdmin->doBuild()
