@@ -4,6 +4,16 @@ class SearchContextTest extends SapphireTest {
 	
 	static $fixture_file = 'sapphire/tests/SearchContextTest.yml';
 
+	protected $extraDataObjects = array(
+		'SearchContextTest_Person',
+		'SearchContextTest_Book',
+		'SearchContextTest_Company',
+		'SearchContextTest_Project',
+		'SearchContextTest_Deadline',
+		'SearchContextTest_Action',
+		'SearchContextTest_AllFilterTypes',
+	);
+
 	function testResultSetFilterReturnsExpectedCount() {
 		$person = singleton('SearchContextTest_Person');
 		$context = $person->getDefaultSearchContext();

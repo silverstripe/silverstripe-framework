@@ -10,6 +10,14 @@ class RestfulServerTest extends SapphireTest {
 	
 	static $fixture_file = 'sapphire/tests/api/RestfulServerTest.yml';
 
+	protected $extraDataObjects = array(
+		'RestfulServerTest_Comment',
+		'RestfulServerTest_SecretThing',
+		'RestfulServerTest_Page',
+		'RestfulServerTest_Author',
+		'RestfulServerTest_AuthorRating',
+	);
+
 	public function testApiAccess() {
 		$comment1 = $this->objFromFixture('RestfulServerTest_Comment', 'comment1');
 		$page1 = $this->objFromFixture('RestfulServerTest_Page', 'page1');

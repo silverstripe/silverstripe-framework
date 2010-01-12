@@ -4,6 +4,12 @@
  * @subpackage tests
  */
 class MoneyFieldTest extends SapphireTest {
+	
+	protected $extraDataObjects = array(
+		'MoneyFieldTest_Object',
+		'MoneyFieldTest_CustomSetter_Object',
+	);
+
 	function testSaveInto() {
 		$o = new MoneyFieldTest_Object();
 		

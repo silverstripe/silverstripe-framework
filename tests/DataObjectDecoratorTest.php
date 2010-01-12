@@ -1,6 +1,14 @@
 <?php
+
 class DataObjectDecoratorTest extends SapphireTest {
 	static $fixture_file = 'sapphire/tests/DataObjectDecoratorTest.yml';
+	
+	protected $extraDataObjects = array(
+		'DataObjectDecoratorTest_Member',
+		'DataObjectDecoratorTest_Player',
+		'DataObjectDecoratorTest_RelatedObject',
+		'DataObjectDecoratorTest_MyObject',
+	);
 	
 	function testOneToManyAssociationWithDecorator() {
 		// Fails in RestfulServerTest
@@ -66,8 +74,7 @@ class DataObjectDecoratorTest extends SapphireTest {
 		Object::add_extension('DataObjectDecoratorTest_Player', 'DataObjectDecoratorTest_PlayerDecorator');
 		
 		// Now that we've just added the decorator, we need to rebuild the database
-		$da = new DatabaseAdmin();
-		$da->doBuild(true, false, true);
+		$this->resetDBSchema(true);
 		
 		// Create a test record with decorated fields, writing to the DB
 		$player = new DataObjectDecoratorTest_Player();

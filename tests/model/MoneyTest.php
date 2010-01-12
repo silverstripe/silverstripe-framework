@@ -14,6 +14,10 @@
 class MoneyTest extends SapphireTest {
 	
 	static $fixture_file = 'sapphire/tests/model/MoneyTest.yml';
+
+	protected $extraDataObjects = array(
+		'MoneyTest_DataObject',
+	);
 	
 	function testMoneyFieldsReturnedAsObjects() {
 		$obj = $this->objFromFixture('MoneyTest_DataObject', 'test1');

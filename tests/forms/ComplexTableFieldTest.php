@@ -8,6 +8,12 @@ class ComplexTableFieldTest extends FunctionalTest {
 	static $fixture_file = 'sapphire/tests/forms/ComplexTableFieldTest.yml';
 	static $use_draft_site = true;
 	
+	protected $extraDataObjects = array(
+		'ComplexTableFieldTest_Player',
+		'ComplexTableFieldTest_Team',
+		'ComplexTableFieldTest_Sponsor',
+	);
+	
 	/**
 	 * An instance of {@link Controller} used for
 	 * running tests against.

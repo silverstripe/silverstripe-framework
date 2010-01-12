@@ -8,6 +8,12 @@
 class DataObjectSetTest extends SapphireTest {
 	
 	static $fixture_file = 'sapphire/tests/DataObjectTest.yml';
+
+	protected $extraDataObjects = array(
+		'DataObjectTest_Team',
+		'DataObjectTest_SubTeam',
+		'DataObjectTest_Player',
+	);
 	
 	function testIterator() {
 		$set = new DataObjectSet(array(

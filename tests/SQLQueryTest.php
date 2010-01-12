@@ -3,6 +3,10 @@
 class SQLQueryTest extends SapphireTest {
 	
 	static $fixture_file = null;
+
+	protected $extraDataObjects = array(
+		'SQLQueryTest_DO',
+	);
 	
 	function testEmptyQueryReturnsNothing() {
 		$query = new SQLQuery();

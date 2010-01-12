@@ -3,6 +3,11 @@
 class TableFieldTest extends SapphireTest {
 	static $fixture_file = 'sapphire/tests/forms/TableFieldTest.yml';
 
+	protected $extraDataObjects = array(
+		'TableFieldTest_Object',
+		'TableFieldTest_HasManyRelation',
+	);
+
 	function testAdd() {
 		$group = $this->objFromFixture('Group','group1_no_perms');
 		

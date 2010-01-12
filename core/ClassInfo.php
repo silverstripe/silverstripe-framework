@@ -46,6 +46,10 @@ class ClassInfo {
 		}
 	}
 	
+	static function reset_db_cache() {
+		self::$_cache_all_tables = null;
+	}
+	
 	/**
 	 * Returns the manifest of all classes which are present in the database.
 	 */
@@ -70,15 +74,15 @@ class ClassInfo {
 		
 		if(!$_ALL_CLASSES['parents'][$class]) user_error("ClassInfo::dataClassesFor() no parents for $class", E_USER_WARNING);
 		foreach($_ALL_CLASSES['parents'][$class] as $subclass) {
-			if(DataObject::has_own_table($subclass)) $dataClasses[] = $subclass;
+			if(self::hasTable($subclass)) $dataClasses[] = $subclass;
 		}
 		
-		if(DataObject::has_own_table($class)) $dataClasses[] = $class;
+		if(self::hasTable($class)) $dataClasses[] = $class;
 
 		if(isset($_ALL_CLASSES['children'][$class]))
 		foreach($_ALL_CLASSES['children'][$class] as $subclass)
 		{
-			if(DataObject::has_own_table($subclass)) $dataClasses[] = $subclass;
+			if(self::hasTable($subclass)) $dataClasses[] = $subclass;
 		}
 			
 		return $dataClasses;

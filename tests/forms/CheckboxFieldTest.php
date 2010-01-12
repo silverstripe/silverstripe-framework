@@ -5,6 +5,10 @@
  */
 class CheckboxFieldTest extends SapphireTest {
 
+	protected $extraDataObjects = array(
+		'CheckboxFieldTest_Article',
+	);
+
 	function testFieldValueTrue() {
 		/* Create the field, and set the value as boolean true */
 		$field = new CheckboxField('IsChecked', 'Checked');

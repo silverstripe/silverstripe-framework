@@ -7,6 +7,12 @@
 class CsvBulkLoaderTest extends SapphireTest {
 	static $fixture_file = 'sapphire/tests/dev/CsvBulkLoaderTest.yml';
 
+	protected $extraDataObjects = array(
+		'CsvBulkLoaderTest_Team',
+		'CsvBulkLoaderTest_Player',
+		'CsvBulkLoaderTest_PlayerContract',
+	);
+
 	// /**
 	//  * Test plain import with column auto-detection
 	//  */

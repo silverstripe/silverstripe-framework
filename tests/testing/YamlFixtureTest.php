@@ -2,6 +2,11 @@
 
 class YamlFixtureTest extends SapphireTest {
 	static $fixture_file = 'sapphire/tests/testing/YamlFixtureTest.yml';
+
+	protected $extraDataObjects = array(
+		'YamlFixtureTest_DataObject',
+		'YamlFixtureTest_DataObjectRelation',
+	);
 	
 	function testSQLInsert() {
 		$object1 = DataObject::get_by_id("YamlFixtureTest_DataObject", $this->idFromFixture("YamlFixtureTest_DataObject", "testobject1"));
@@ -11,7 +16,7 @@ class YamlFixtureTest extends SapphireTest {
 	}
 }
 
-class YamlFixtureTest_DataObject extends DataObject {
+class YamlFixtureTest_DataObject extends DataObject implements TestOnly {
 	static $db = array(
 		"Name" => "Varchar"
 	);
@@ -20,7 +25,7 @@ class YamlFixtureTest_DataObject extends DataObject {
 	);
 }
 
-class YamlFixtureTest_DataObjectRelation extends DataObject {
+class YamlFixtureTest_DataObjectRelation extends DataObject implements TestOnly {
 	static $db = array(
 		"Name" => "Varchar"
 	);
