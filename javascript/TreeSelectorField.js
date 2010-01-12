@@ -6,14 +6,23 @@ TreeDropdownField.prototype = {
 	initialize: function() {
 		// Hook up all the fieldy bits
 		this.editLink = this.getElementsByTagName('a')[0];
-		this.humanItems = this.getElementsByTagName('span')[0];
-		this.inputTag = this.getElementsByTagName('input')[0];
+		if (this.getElementsByTagName('span').length > 0) {
+			// no filter, humanItems is a span
+			this.humanItems = this.getElementsByTagName('span')[0];
+			this.inputTag = this.getElementsByTagName('input')[0];
+		}
+		else {
+			// filter is present, humanItems is an input
+			this.inputTag = this.getElementsByTagName('input')[0];
+			this.humanItems = this.getElementsByTagName('input')[1];
+			this.humanItems.onkeyup = this.filter_onkeyup;
+		}
 		this.editLink.treeDropdownField = this;
 		this.humanItems.treeDropdownField = this;
 		this.inputTag.treeDropdownField = this;
 		
 		this.editLink.onclick = this.edit_click;
-		this.humanItems.onclick = this.edit_click;
+		this.humanItems.onclick = this.human_click;
 		this.inputTag.setValue = this.setValue.bind(this);
 	},
 
@@ -75,8 +84,16 @@ TreeDropdownField.prototype = {
 			this.appendChild(this.itemTree);
 		}
 	},
-	
+
+	deleteTreeNode: function() {
+		if (!this.itemTree) return;
+		var parent = this.itemTree.parentNode;
+		parent.removeChild(this.itemTree);
+		this.itemTree = null;
+	},
+
 	showTree: function () {
+		if (!this.treeShown) this.saveCurrentState();
 		this.treeShown = true;
 		
 		if(this.itemTree) {
@@ -94,7 +111,17 @@ TreeDropdownField.prototype = {
 			}).bind(this));
 		}
 	},
-	
+
+	saveCurrentState: function() {
+		this.origHumanText = this.getHumanText();
+		this.defaultCleared = false;
+		this.filtered = false;
+	},
+
+	restoreOriginalState: function() {
+		this.setHumanText(this.origHumanText);
+	},
+
 	/**
 	 * If this control is inside an iframe, stretch the iframe out to fit the tree.
 	 */
@@ -149,13 +176,19 @@ TreeDropdownField.prototype = {
 		var ajaxURL = this.helperURLBase() + 'tree/';
 		ajaxURL += $('SecurityID') ? '&SecurityID=' + $('SecurityID').value : '';
 		if($('Form_EditForm_Locale')) ajaxURL += "&locale=" + $('Form_EditForm_Locale').value;
+		if (this.filter() != null) ajaxURL += "&filter=" + this.filter(); 
 		new Ajax.Request(ajaxURL, {
 			method : 'get', 
 			onSuccess : after,
 			onFailure : function(response) { errorMessage("Error getting data", response); }
 		})
 	},
-	
+
+	filter: function() {
+		if (this.humanItems.nodeName != 'INPUT' || !this.filtered) return null;
+		return this.humanItems.value;
+	},
+
 	/**
 	 * Called once the tree has been delivered from ajax
 	 */
@@ -196,6 +229,7 @@ TreeDropdownField.prototype = {
 		var ajaxURL = this.options.dropdownField.helperURLBase() + 'tree/' + this.getIdx();
 		ajaxURL += $('SecurityID') ? '&SecurityID=' + $('SecurityID').value : '';
 		if($('Form_EditForm_Locale')) ajaxURL += "&locale=" + $('Form_EditForm_Locale').value;
+		if (this.filter() != null) ajaxURL += "&filter=" + this.filter(); 
 		
 		new Ajax.Request(ajaxURL, {
 			onSuccess : this.installSubtree.bind(this),
@@ -225,30 +259,74 @@ TreeDropdownField.prototype = {
 		}
 	},
 	updateTreeLabel: function() {
+		if (this.humanItems.nodeName == 'INPUT') return; // don't update the filter
 		var treeNode;
 		if(treeNode = $('selector-' + this.getName() + '-' + this.inputTag.value)) {
-			this.humanItems.innerHTML = treeNode.getTitle();
+			this.setHumanText(treeNode.getTitle());
 
 			if(treeNode.tree.selected && treeNode.tree.selected.removeNodeClass) treeNode.tree.selected.removeNodeClass('current');
 			treeNode.addNodeClass('current');
 			this.tree.selected = treeNode;
 			
 		} else {
-			this.humanItems.innerHTML = this.inputTag.value ? this.inputTag.value : '(Choose)';
+			this.setHumanText(this.inputTag.value ? this.inputTag.value : '(Choose)');
 		}
 	},
+
+	getHumanText: function() {
+		return this.humanItems.nodeName == 'INPUT' ? this.humanItems.value : this.humanItems.innerHTML;
+	},
+
+	setHumanText: function (s) {
+		if (this.humanItems.nodeName == 'INPUT')
+			this.humanItems.value = s;
+		else
+			this.humanItems.innerHTML = s;
+	},
+
 	setValueFromTree: function(treeID, title) {
-		this.humanItems.innerHTML = title;
+		this.setHumanText(title);
 		this.inputTag.value = treeID.replace('selector-' + this.getName() + '-','');
 		this.notify('Change', this.inputTag.value);
 
 		this.hideTree();
 	},
-	
+
 	edit_click : function() {
+		if (this.treeDropdownField.treeShown) this.treeDropdownField.restoreOriginalState();
 		this.treeDropdownField.toggleTree();
 		return false;
 	},
+
+	filter_onkeyup: function(e) {
+		if(typeof window.event!="undefined") e=window.event; //code for IE
+		if (e.keyCode == 27) { // esc, cancel the selection and hide the tree.
+			this.treeDropdownField.restoreOriginalState();
+			this.treeDropdownField.hideTree();
+		}
+		else {
+			this.treeDropdownField.filtered = true;
+			this.treeDropdownField.deleteTreeNode();
+			this.treeDropdownField.showTree();
+		}
+	},
+
+	human_click: function() {
+		if (this.treeDropdownField.humanItems.nodeName != 'INPUT') {
+			if (this.treeDropdownField.treeShown) this.treeDropdownField.restoreOriginalState();
+			this.treeDropdownField.toggleTree();
+			return false;
+		}
+
+		if (!this.treeDropdownField.treeShown) this.treeDropdownField.toggleTree();
+		if (!this.treeDropdownField.defaultCleared) {
+			this.treeDropdownField.defaultCleared = true;
+			this.treeDropdownField.setHumanText('');
+		}
+
+		return false;
+	},
+	
 	tree_click : function() {
 		this.options.dropdownField.setValueFromTree(this.id, this.getTitle());
 
@@ -301,7 +379,7 @@ TreeMultiselectField.prototype = {
 		}
 		
 		this.inputTag.value = internalVal;
-		this.humanItems.innerHTML = humanVal;
+		this.setHumanText(humanVal);
 	},
 
 	updateTreeLabel: function() {
@@ -317,9 +395,9 @@ TreeMultiselectField.prototype = {
 					innerHTML += selectedItems[i];
 				}
 			}
-			this.humanItems.innerHTML = innerHTML;
+			this.setHumanText(innerHTML);
 		} else {
-			this.humanItems.innerHTML = '(Choose)';
+			this.setHumanText('(Choose)');
 		}
 	}
 

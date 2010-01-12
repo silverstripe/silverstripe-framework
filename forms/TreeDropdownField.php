@@ -27,10 +27,11 @@ class TreeDropdownField extends FormField {
 	 * @param string $keyField to field on the source class to save as the field value (default ID).
 	 * @param string $labelField the field name to show as the human-readable value on the tree (default Title).
 	 */
-	public function __construct($name, $title = null, $sourceObject = 'Group', $keyField = 'ID', $labelField = 'Title') {
+	public function __construct($name, $title = null, $sourceObject = 'Group', $keyField = 'ID', $labelField = 'Title', $showFilter = false) {
 		$this->sourceObject = $sourceObject;
 		$this->keyField     = $keyField;
 		$this->labelField   = $labelField;
+		$this->showFilter	= $showFilter;
 		
 		if(!Object::has_extension($this->sourceObject, 'Hierarchy')) {
 			throw new Exception (
@@ -97,12 +98,21 @@ class TreeDropdownField extends FormField {
 					'name'  => $this->name,
 					'value' => $this->value
 				)
-			) . $this->createTag (
-				'span',
-				array (
-					'class' => 'items'
-				),
-				$title
+			) . ($this->showFilter ?
+					$this->createTag(
+						'input',
+						array(
+							'class' => 'items',
+							'value' => '(Choose or type filter)' 
+						)
+					) :
+					$this->createTag (
+						'span',
+						array (
+							'class' => 'items'
+						),
+						$title
+					)					
 			) . $this->createTag (
 				'a',
 				array (
@@ -111,7 +121,7 @@ class TreeDropdownField extends FormField {
 					'class' => 'editLink'
 				),
 				'&nbsp;'
-			)
+			) 
 		);
 	}
 	
@@ -123,7 +133,9 @@ class TreeDropdownField extends FormField {
 	 */
 	public function tree(SS_HTTPRequest $request) {
 		$isSubTree = false;
-		
+
+		$this->filter = Convert::Raw2SQL($request->getVar('filter'));
+
 		if($ID = (int) $request->latestparam('ID')) {
 			$obj       = DataObject::get_by_id($this->sourceObject, $ID);
 			$isSubTree = true;
@@ -140,12 +152,9 @@ class TreeDropdownField extends FormField {
 			
 			if(!$this->baseID || !$obj) $obj = singleton($this->sourceObject);
 		}
-		
-		if($this->filterCallback) {
-			$obj->setMarkingFilterFunction($this->filterCallback);
-		} elseif($this->sourceObject == 'Folder') {
-			$obj->setMarkingFilter('ClassName', 'Folder');
-		}
+
+		if ($this->filterCallback || $this->sourceObject == 'Folder' || $this->filter != "")
+			$obj->setMarkingFilterFunction(array($this, "filterMarking"));
 		
 		$obj->markPartialTree();
 		
@@ -164,7 +173,24 @@ class TreeDropdownField extends FormField {
 		
 		return $obj->getChildrenAsUL('class="tree"', $eval, null, true);
 	}
-	
+
+	/**
+	 * Marking function for the tree, which combines different filters sensibly. If a filter function has been set,
+	 * that will be called. If the source is a folder, automatically filter folder. And if filter text is set, filter on that
+	 * too. Return true if all applicable conditions are true, false otherwise.
+	 * @param $node
+	 * @return unknown_type
+	 */
+	function filterMarking($node) {
+		if ($this->filterCallback && !call_user_func($this->filterCallback, $node)) return false;
+		if ($this->sourceObject == "Folder" && $node->ClassName != 'Folder') return false;
+		if ($this->filter != "") {
+			$f = $this->labelField;
+			return (strpos(strtoupper($node->$f), strtoupper($this->filter)) === FALSE)  ? false : true;
+		}
+		return true;
+	}
+
 	/**
 	 * Get the object where the $keyField is equal to a certain value
 	 *
