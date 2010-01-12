@@ -75,4 +75,55 @@ class VirtualPageTest extends SapphireTest {
 		$this->assertEquals("My Other Page Nav", $vp->MenuTitle);
 	}
 	
+	/**
+	 * Virtual pages are always supposed to chose the same content as the published source page.
+	 * This means that when you publish them, they should show the published content of the source
+	 * page, not the draft content at the time when you clicked 'publish' in the CMS.
+	 */
+	function testPublishingAVirtualPageCopiedPublishedContentNotDraftContent() {
+		$p = new Page();
+		$p->Content = "published content";
+		$p->write();
+		$p->doPublish();
+		
+		// Don't publish this change - published page will still say 'published content'
+		$p->Content = "draft content";
+		$p->write();
+		
+		$vp = new VirtualPage();
+		$vp->CopyContentFromID = $p->ID;
+		$vp->write();
+		
+		$vp->doPublish();
+		
+		// The draft content of the virtual page should say 'draft content'
+		$this->assertEquals('draft content',
+			DB::query('SELECT "Content" from "SiteTree" WHERE ID = ' . $vp->ID)->value());
+
+		// The published content of the virtual page should say 'published content'
+		$this->assertEquals('published content',
+			DB::query('SELECT "Content" from "SiteTree_Live" WHERE ID = ' . $vp->ID)->value());
+	}
+
+	function testCantPublishVirtualPagesBeforeTheirSource() {
+		// An unpublished source page
+		$p = new Page();
+		$p->Content = "test content";
+		$p->write();
+		
+		// With no source page, we can't publish
+		$vp = new VirtualPage();
+		$vp->write();
+		$this->assertFalse($vp->canPublish());
+
+		// When the source page isn't published, we can't publish
+		$vp->CopyContentFromID = $p->ID;
+		$vp->write();
+		$this->assertFalse($vp->canPublish());
+		
+		// Once the source page gets published, then we can publish
+		$p->doPublish();
+		$this->assertTrue($vp->canPublish());
+	}
+	
 }
