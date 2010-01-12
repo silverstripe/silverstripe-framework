@@ -65,7 +65,7 @@ class DataDifferencer extends ViewableData {
 	function diffedData() {
 		if($this->fromRecord) {
 			$diffed = clone $this->fromRecord;
-			$fields = array_keys($diffed->getAllFields());
+			$fields = array_keys($diffed->getAllFields() + $this->toRecord->getAllFields());
 		} else {
 			$diffed = clone $this->toRecord;
 			$fields = array_keys($this->toRecord->getAllFields());

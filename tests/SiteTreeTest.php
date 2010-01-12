@@ -402,6 +402,24 @@ class SiteTreeTest extends SapphireTest {
 		$this->objFromFixture('Member','editor')->logIn();
 		$this->assertTrue($page->canEdit());
 	}
+	
+	function testCompareVersions() {
+		$page = new Page();
+		$page->write();
+		$this->assertEquals(1, $page->Version);
+		
+		$page->Content = "<p>This is a test</p>";
+		$page->write();
+		$this->assertEquals(2, $page->Version);
+		
+		$diff = $page->compareVersions(1, 2);
+		
+		$processedContent = trim($diff->Content);
+		$processedContent = preg_replace('/\s*</','<',$processedContent);
+		$processedContent = preg_replace('/>\s*/','>',$processedContent);
+		$this->assertEquals("<ins><p>This is a test</p></ins>", $processedContent);
+		
+	}
 
 	function testAuthorIDAndPublisherIDFilledOutOnPublish() {
 		// Ensure that we have a member ID who is doing all this work
