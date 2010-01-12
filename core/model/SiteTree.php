@@ -1971,6 +1971,15 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		$this->Status = "Unpublished";
 		$this->write();
 		
+		// Unpublish all virtual pages that point here
+		// This coupling to the subsites module is frustrating, but difficult to avoid.
+		if(class_exists('Subsite')) {
+			$virtualPages = Subsite::get_from_all_subsites('VirtualPage', "CopyContentFromID = {$this->ID}");
+		} else {
+			$virtualPages = DataObject::get('VirtualPage', "CopyContentFromID = {$this->ID}");
+		}
+		if ($virtualPages) foreach($virtualPages as $vp) $vp->doUnpublish();
+		
 		$this->extend('onAfterUnpublish');
 	}
 	
