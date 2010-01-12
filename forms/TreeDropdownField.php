@@ -204,5 +204,34 @@ class TreeDropdownField extends FormField {
 			return DataObject::get_one($this->sourceObject, "\"{$this->keyField}\" = '" . Convert::raw2sql($key) . "'");
 		}
 	}
+
+	/**
+	 * Changes this field to the readonly field.
+	 */
+	function performReadonlyTransformation() {
+		return new TreeDropdownField_Readonly($this->name, $this->title, $this->sourceObject, $this->keyField, $this->labelField);
+	}
+}
+
+class TreeDropdownField_Readonly extends TreeDropdownField {
+	protected $readonly = true;
 	
+	function Field() {
+		$fieldName = $this->labelField;
+		if($this->value) {
+			$keyObj = $this->getByKey($this->value);
+			$obj = $keyObj ? $keyObj->$fieldName : '';
+		} else {
+			$obj = null;
+		}
+
+		$source = array(
+			$this->value => $obj
+		);
+
+		$field = new LookupField($this->name, $this->title, $source);
+		$field->setValue($this->value);
+		$field->setForm($this->form);
+		return $field->Field();
+	}
 }
