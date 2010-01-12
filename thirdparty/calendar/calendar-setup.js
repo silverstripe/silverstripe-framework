@@ -1,4 +1,4 @@
-CalendarBehaviour = {
+var CalendarBehaviour = {
 		initialise: function () {
 		  this.calendarObj = Calendar.setup({
 		    inputField  : this.id,         // ID of the input field
