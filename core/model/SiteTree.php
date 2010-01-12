@@ -1951,10 +1951,14 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	}
 	
 	function doDeleteFromLive() {
+		$this->extend('onBeforeUnpublish');
+
 		$origStage = Versioned::current_stage();
 		Versioned::reading_stage('Live');
 		$this->delete();
-		Versioned::reading_stage($origStage);		
+		Versioned::reading_stage($origStage);
+
+		$this->extend('onAfterUnpublish');
 	}
 
 	/**
