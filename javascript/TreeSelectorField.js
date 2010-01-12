@@ -229,7 +229,8 @@ TreeDropdownField.prototype = {
 		var ajaxURL = this.options.dropdownField.helperURLBase() + 'tree/' + this.getIdx();
 		ajaxURL += $('SecurityID') ? '&SecurityID=' + $('SecurityID').value : '';
 		if($('Form_EditForm_Locale')) ajaxURL += "&locale=" + $('Form_EditForm_Locale').value;
-		if (this.filter() != null) ajaxURL += "&filter=" + this.filter(); 
+		// ajaxExpansion is called in context of TreeNode, not Tree, so filter() doesn't exist.
+		if (this.filter && this.filter() != null) ajaxURL += "&filter=" + this.filter();
 		
 		new Ajax.Request(ajaxURL, {
 			onSuccess : this.installSubtree.bind(this),
