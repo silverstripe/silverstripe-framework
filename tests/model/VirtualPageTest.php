@@ -26,17 +26,25 @@ class VirtualPageTest extends SapphireTest {
 	}
 
 	/**
-	 * Test that, after you publish the source page of a virtual page, all the virtual pages
-	 * are published
+	 * Test that, after you publish the source page of a virtual page, all the already published
+	 * virtual pages are published
 	 */
-	function testPublishingSourcePagePublishesVirtualPages() {
+	function testPublishingSourcePagePublishesAlreadyPublishedVirtualPages() {
 		$this->logInWithPermssion('ADMIN');
 
 		$master = $this->objFromFixture('Page', 'master');
+		$master->doPublish();
+
 		$master->Title = "New title";
 		$master->MenuTitle = "New menutitle";
 		$master->Content = "<p>New content</p>";
 		$master->write();
+
+		$vp1 = DataObject::get_by_id("VirtualPage", $this->idFromFixture('VirtualPage', 'vp1'));
+		$vp2 = DataObject::get_by_id("VirtualPage", $this->idFromFixture('VirtualPage', 'vp2'));
+		$this->assertTrue($vp1->doPublish());
+		$this->assertTrue($vp2->doPublish());
+
 		$master->doPublish();
 
 		Versioned::reading_stage("Live");
@@ -133,7 +141,6 @@ class VirtualPageTest extends SapphireTest {
 		$p->write();
 		$p->doPublish();
 		
-		// With no source page, we can't publish
 		$vp = new VirtualPage();
 		$vp->CopyContentFromID = $p->ID;
 		$vp->write();
@@ -149,6 +156,66 @@ class VirtualPageTest extends SapphireTest {
 		// Confirm that the action really works
 		$this->assertTrue($vp->doDeleteFromLive());
 		$this->assertNull(DB::query("SELECT \"ID\" FROM \"SiteTree_Live\" WHERE \"ID\" = $vp->ID")->value());
+	}
+	
+	function testVirtualPagesArentInappropriatelyPublished() {
+		// Fixture
+		$p = new Page();
+		$p->Content = "test content";
+		$p->write();
+		$vp = new VirtualPage();
+		$vp->CopyContentFromID = $p->ID;
+		$vp->write();
+
+		// VP is oragne
+		$this->assertTrue($vp->IsAddedToStage);
+
+		// VP is still orange after we publish
+		$p->doPublish();
+		$this->fixVersionNumberCache($vp);
+		$this->assertTrue($vp->IsAddedToStage);
+		
+		// A new VP created after P's initial construction
+		$vp2 = new VirtualPage();
+		$vp2->CopyContentFromID = $p->ID;
+		$vp2->write();
+		$this->assertTrue($vp2->IsAddedToStage);
+		
+		// Also remains orange after a republish
+		$p->Content = "new content";
+		$p->write();
+		$p->doPublish();
+		$this->fixVersionNumberCache($vp2);
+		$this->assertTrue($vp2->IsAddedToStage);
+		
+		// VP is now published
+		$vp->doPublish();
+
+		$this->fixVersionNumberCache($vp);
+		$this->assertTrue($vp->ExistsOnLive);
+		$this->assertFalse($vp->IsModifiedOnStage);
+		
+		// P edited, VP and P both go green
+		$p->Content = "third content";
+		$p->write();
+
+		$this->fixVersionNumberCache($vp, $p);
+		$this->assertTrue($p->IsModifiedOnStage);
+		$this->assertTrue($vp->IsModifiedOnStage);
+
+		// Publish, VP goes black
+		$p->doPublish();
+		$this->fixVersionNumberCache($vp);
+		$this->assertTrue($vp->ExistsOnLive);
+		$this->assertFalse($vp->IsModifiedOnStage);
+	}
+	
+	function fixVersionNumberCache($page) {
+		$pages = func_get_args();
+		foreach($pages as $p) {
+			Versioned::prepopulate_versionnumber_cache('SiteTree', 'Stage', array($p->ID));
+			Versioned::prepopulate_versionnumber_cache('SiteTree', 'Live', array($p->ID));
+		}
 	}
 	
 }
