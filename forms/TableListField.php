@@ -1124,7 +1124,7 @@ JS
 		
 		if(isset($_REQUEST['ctf'][$this->Name()]['start']) && is_numeric($_REQUEST['ctf'][$this->Name()]['start'])) {
 			$start = ($_REQUEST['ctf'][$this->Name()]['start'] < 0)  ? 0 : $_REQUEST['ctf'][$this->Name()]['start'];
-			$link .= "/?ctf[{$this->Name()}][start]={$start}";
+			$link = Controller::join_links($link, "?ctf[{$this->Name()}][start]={$start}");
 		}
 
 		if($this->extraLinkParams) $link .= "&" . http_build_query($this->extraLinkParams);
@@ -1417,7 +1417,7 @@ class TableListField_ItemRequest extends RequestHandler {
 	);
 	
 	function Link() {
-		return $this->ctf->Link() . '/item/' . $this->itemID;
+		return Controller::join_links($this->ctf->Link(), 'item/' . $this->itemID);
 	}
 	
 	function __construct($ctf, $itemID) {
