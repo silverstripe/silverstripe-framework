@@ -904,6 +904,15 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		return $this->canEdit($member);
 	}
 	
+	public function canDeleteFromLive($member = null) {
+		// If we have a result, then that means at least one decorator specified canDeleteFromLive
+		// Allow the permission check only if *all* voting decorators allow it.
+		$results = $this->extend('canDeleteFromLive', $member);
+		if($results && is_array($results)) if(!min($results)) return false;
+
+		return $this->canPublish($member);
+	}
+	
 	/**
 	 * Stub method to get the site config, provided so it's easy to override
 	 */
@@ -1916,7 +1925,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	 * @uses SiteTreeDecorator->onAfterUnpublish()
 	 */
 	function doUnpublish() {
-		if (!$this->canPublish()) return false;
+		if (!$this->canDeleteFromLive()) return false;
 		
 		$this->extend('onBeforeUnpublish');
 		
@@ -1991,6 +2000,8 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		Versioned::reading_stage($origStage);
 
 		$this->extend('onAfterUnpublish');
+		
+		return true;
 	}
 
 	/**
