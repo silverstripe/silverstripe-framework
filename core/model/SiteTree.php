@@ -1578,7 +1578,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 				'BackLinkTracking',
 				'SiteTree',
 				array(
-					'Title' => 'Title'
+					'Title' => 'Title',
 				),
 				'"ChildID" = ' . $this->ID,
 				'',
@@ -1593,10 +1593,28 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 			));
 		}
 		
+		$virtualPagesNote = new LiteralField('BackLinksNote', '<p>' . _t('SiteTree.VIRTUALPAGESLINKING', 'The following virtual pages pull from this page:') . '</p>');
+		$virtualPagesTable = new TableListField(
+			'VirtualPageTracking',
+			'SiteTree',
+			array(
+				'Title' => 'Title',
+				'AbsoluteLink' => 'URL'
+			),
+			'"CopyContentFromID" = ' . $this->ID,
+			''//,
+			// 'LEFT JOIN "SiteTree_LinkTracking" ON "SiteTree"."ID" = "SiteTree_LinkTracking"."SiteTreeID"'
+		);
+		$virtualPagesTable->setFieldFormatting(array(
+			'Title' => '<a href=\"admin/show/$ID\">$Title</a>'
+		));
+		$virtualPagesTable->setPermissions(array(
+			'show',
+			'export'
+		));
+		
 		// Lay out the fields
 		$fields = new FieldSet(
-			// Add a field with a bit of metadata for concurrent editing. The fact that we're using
-			// non-standard attributes does not really matter, all modern UA's just ignore em.
 			new TabSet("Root",
 				$tabContent = new TabSet('Content',
 					$tabMain = new Tab('Main',
@@ -1672,6 +1690,10 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 					$tabBacklinks = new Tab('Backlinks',
 						$backLinksNote,
 						$backLinksTable
+					),
+					$tabVirtualPages = new Tab('VirtualPages',
+						$virtualPagesNote,
+						$virtualPagesTable
 					)
 				),
 				$tabAccess = new Tab('Access',
