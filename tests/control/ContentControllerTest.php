@@ -76,12 +76,15 @@ class ContentControllerTest extends FunctionalTest {
 			$parentID = $page->ID;
 
 			$page = new ContentControllerTest_Page();
+			$page->ParentID = $parentID;
 			$page->Title      = "Page Level $i";
 			$page->URLSegment = "level-$i";
 			$page->write();
+
+			$relativeLink = Director::makeRelative($page->Link());
+			$this->assertEquals($page->Title, $this->get($relativeLink)->getBody());
 		}
 
-		$this->assertEquals($page->Title, $this->get($page->Link())->getBody());
 
 		SiteTree::disable_nested_urls();
 	}
