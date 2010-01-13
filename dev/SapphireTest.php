@@ -330,7 +330,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 		$this->originalIsRunningTest = null;
 
 		// Reset mocked datetime
-		SSDatetime::clear_mock_now();
+		SS_Datetime::clear_mock_now();
 	}
 	/**
 	 * Clear the log of emails sent
@@ -543,12 +543,12 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 			$dbConn = DB::getConn();
 			$dbName = $dbConn->currentDatabase();
 			if($dbName && DB::getConn()->databaseExists($dbName)) {
-				// echo "Deleted temp database " . $dbConn->currentDatabase() . "\n";
-				$dbConn->dropDatabase();
-
 				// Todo: it would be good to remove this inappropriate coupling, somehow.
 				// The versioned class keeps a static cache of information about temporary tables.
 				Versioned::on_db_reset();
+
+				// echo "Deleted temp database " . $dbConn->currentDatabase() . "\n";
+				$dbConn->dropDatabase();
 			}
 		}
 	}
