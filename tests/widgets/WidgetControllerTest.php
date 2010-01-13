@@ -5,6 +5,11 @@
  */
 class WidgetControllerTest extends FunctionalTest {
 	static $fixture_file = 'sapphire/tests/widgets/WidgetControllerTest.yml';
+
+	protected $extraDataObjects = array(
+		'WidgetControllerTestPage',
+		'WidgetControllerTest_Widget',
+	);
 	
 	function testWidgetFormRendering() {
 		$page = $this->objFromFixture('WidgetControllerTestPage', 'page1');

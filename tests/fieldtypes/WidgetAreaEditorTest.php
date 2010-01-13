@@ -8,6 +8,11 @@ class WidgetAreaEditorTest extends SapphireTest {
 	 * This is the widget you want to use for your unit tests.
 	 */
 	protected $widgetToTest = 'WidgetAreaEditorTest_TestWidget';
+
+	protected $extraDataObjects = array(
+		'WidgetAreaEditorTest_FakePage',
+		'WidgetAreaEditorTest_TestWidget',
+	);
 	
 	function testFillingOneArea() {
 		$oldRequest = $_REQUEST;
