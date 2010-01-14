@@ -81,7 +81,7 @@ class VirtualPage extends Page {
 	 */
 	public function isPublishable() {
 		// No source
-		if(!$this->CopyContentFrom()) {
+		if(!$this->CopyContentFrom() || !$this->CopyContentFrom()->ID) {
 			return false;
 		}
 		
