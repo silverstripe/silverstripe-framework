@@ -18,19 +18,6 @@ class TranslatableTest extends FunctionalTest {
 		'SiteTree' => array('Translatable'),
 		'TranslatableTest_DataObject' => array('Translatable'),
 	);
-
-	protected $illegalExtensions = array(
-		'SiteTree' => array(
-			'SiteTreeCMSThreeStepWorkflow',
-			'SiteTreeCMSWorkflow'
-		),
-		'WorkflowRequest' => array(
-			'WorkflowThreeStepRequest'
-		),
-		'LeftAndMain' => array(
-			'LeftAndMainCMSThreeStepWorkflow'
-		),
-	);
 	
 	private $origLocale;
 
