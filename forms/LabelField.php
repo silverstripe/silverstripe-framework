@@ -37,8 +37,7 @@ class LabelField extends DatalessField {
 	function Field() {
 		$attributes = array(
 			'class' => $this->extraClass(),
-			'id' => $this->id(),
-			'name' => $this->Name(),
+			'id' => $this->id()
 		);
 		return $this->createTag(
 			'label',
