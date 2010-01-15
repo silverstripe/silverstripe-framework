@@ -82,18 +82,6 @@ class Image extends File {
 	}
 
 	/**
-	 * Get the relative URL for this Image.
-	 * Overwrites File->URL() which returns an absolute URL.
-	 * 
-	 * @todo Refactor to return absolute URL like {@link File}
-	 * @uses Director::baseURL()
-	 * @return string
-	 */
-	function getURL() {
-		return Director::baseURL() . $this->Filename;
-	}
-	
-	/**
 	 * Return an XHTML img tag for this Image.
 	 * @return string
 	 */

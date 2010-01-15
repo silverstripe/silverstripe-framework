@@ -421,13 +421,13 @@ class File extends DataObject {
 	}
 	
 	/**
-	 * Gets the absolute URL accessible through the web.
+	 * Gets the relative URL accessible through the web.
 	 * 
-	 * @uses Director::absoluteBaseURL()
+	 * @uses Director::baseURL()
 	 * @return string
 	 */
 	function getURL() {
-		return Director::absoluteBaseURL() . $this->getFilename();
+		return Director::baseURL() . $this->getFilename();
 	}
 
 	/**
