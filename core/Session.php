@@ -11,9 +11,11 @@
  * 
  * The instance object is basically just a way of manipulating a set of nested maps, and isn't specific to session data.
  * This class is currently really basic and could do with a more well-thought-out implementation
+ *
  * @package sapphire
  * @subpackage control
  */
+
 class Session {
 	
 	/**
@@ -22,6 +24,23 @@ class Session {
 	static protected $timeout = 0;
 	
 	static protected $session_ips = array();
+	
+	/**
+	 * Session data
+	 */
+	protected $data = array();
+	protected $changedData = array();
+	
+	/**
+	 * Create a new session object, with the given starting data
+	 *
+	 * @param $data Can be an array of data (such as $_SESSION) or another Session object to clone.
+	 */
+	function __construct($data) {
+		if($data instanceof Session) $data = $data->inst_getAll();
+		
+		$this->data = $data;
+	}
 	
 	/**
 	 * Provide an <code>array</code> of rules specifing timeouts for IPv4 address ranges or
@@ -47,39 +66,57 @@ class Session {
 		}
 	}
 	
-	public static function set($name, $val) {
-		return Controller::curr()->getSession()->inst_set($name, $val);
-	}
 	public static function addToArray($name, $val) {
 		return Controller::curr()->getSession()->inst_addToArray($name, $val);
 	}
+	
+	/**
+	 * Set a key/value pair in the session
+	 *
+	 * @param string $name Key
+	 * @param string $val Value
+	 */
+	public static function set($name, $val) {
+		return Controller::curr()->getSession()->inst_set($name, $val);
+	}
+	
+	/**
+	 * Return a specific value by session key
+	 *
+	 * @param string $name Key to lookup
+	 */
 	public static function get($name) {
 		return Controller::curr()->getSession()->inst_get($name);
 	}
-	public static function clear($name) {
-		return Controller::curr()->getSession()->inst_clear($name);
-	}
+	
+	/**
+	 * Return all the values in session
+	 */
 	public static function getAll() {
 		return Controller::curr()->getSession()->inst_getAll();
 	}
-	public static function save() {
-		return Controller::curr()->getSession()->inst_save();
-	}
-
-	/**
-	 * Session data
-	 */
-	protected $data = array();
-	protected $changedData = array();
 	
 	/**
-	 * Create a new session object, with the given starting data
-	 * @param $data Can be an array of data (such as $_SESSION) or another Session object to clone.
+	 * Clear a given session key, value pair.
+	 *
+	 * @param string $name Key to lookup
 	 */
-	function __construct($data) {
-		if($data instanceof Session) $data = $data->inst_getAll();
-		
-		$this->data = $data;
+	public static function clear($name) {
+		return Controller::curr()->getSession()->inst_clear($name);
+	}
+	
+	/**
+	 * Clear all the values
+	 */
+	public static function clearAll() {
+		return Controller::curr()->getSession()->inst_clearAll();
+	}
+	
+	/**
+	 * Save all the values in our session to $_SESSION
+	 */
+	public static function save() {
+		return Controller::curr()->getSession()->inst_save();
 	}
 
 	public function inst_set($name, $val) {
@@ -157,11 +194,19 @@ class Session {
 			$var = &$var[$n];
 			$diffVar = &$diffVar[$n];
 		}
-			
+
 		$var = null;
 		$diffVar = null;
 	}
-		
+	
+	public function inst_clearAll() {
+		if($this->data && is_array($this->data)) {
+			foreach(array_keys($this->data) as $key) {
+				$this->inst_clear($key);
+			}
+		}
+	}
+	
 	public function inst_getAll() {
 		return $this->data;
 	}
@@ -204,6 +249,7 @@ class Session {
 
 	/**
 	 * Initialize session.
+	 *
 	 * @param string $sid Start the session with a specific ID
 	 */
 	public static function start($sid = null) {
@@ -220,6 +266,7 @@ class Session {
 
 	/**
 	 * Destroy the active session.
+	 *
 	 * @param bool $removeCookie If set to TRUE, removes the user's cookie, FALSE does not remove
 	 */
 	public static function destroy($removeCookie = true) {
@@ -258,7 +305,7 @@ class Session {
 	}
 	
 	/**
-	 * Enter description here...
+	 * Set the timeout of a Session value
 	 *
 	 * @param int $timeout Time until a session expires in seconds. Defaults to expire when browser is closed.
 	 */
@@ -270,4 +317,3 @@ class Session {
 		return self::$timeout;
 	}
 }
-?>
