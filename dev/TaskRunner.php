@@ -19,7 +19,6 @@ class TaskRunner extends Controller {
 			$renderer->writeHeader();
 			$renderer->writeInfo("Sapphire Development Tools: Tasks", Director::absoluteBaseURL());
 			$base = Director::baseURL();
-			if(strpos($base,-1) != '/') $base .= '/';
 			
 			echo "<ul>";
 			foreach($tasks as $task) {
