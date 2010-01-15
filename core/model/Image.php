@@ -704,7 +704,7 @@ class Image_Uploader extends Controller {
 	 * Save the data in this form.
 	 */
 	function save($data, $form) {
-		if($data['ImageSource'] != 'existing' && $data['Upload']['size'] == 0) {
+		if(!isset($data['ImageSource']) || ($data['ImageSource'] != 'existing' && $data['Upload']['size'] == 0)) {
 			// No image has been uploaded
 			Director::redirectBack();
 			return;
