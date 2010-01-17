@@ -18,7 +18,12 @@ class TreeDropdownField extends FormField {
 	/**
 	 * @ignore
 	 */
-	protected $sourceObject, $keyField, $labelField, $filterCallback, $baseID = 0;
+	protected $sourceObject, $keyField, $labelField, $filterCallback, $searchCallback, $baseID = 0;
+	
+	/**
+	 * Used by field search to leave only the relevant entries
+	 */
+	protected $searchIds = null, $searchExpanded = array();
 	
 	/**
 	 * @param string $name the field name
@@ -27,11 +32,11 @@ class TreeDropdownField extends FormField {
 	 * @param string $keyField to field on the source class to save as the field value (default ID).
 	 * @param string $labelField the field name to show as the human-readable value on the tree (default Title).
 	 */
-	public function __construct($name, $title = null, $sourceObject = 'Group', $keyField = 'ID', $labelField = 'Title', $showFilter = false) {
+	public function __construct($name, $title = null, $sourceObject = 'Group', $keyField = 'ID', $labelField = 'Title', $showSearch = false) {
 		$this->sourceObject = $sourceObject;
 		$this->keyField     = $keyField;
 		$this->labelField   = $labelField;
-		$this->showFilter	= $showFilter;
+		$this->showSearch	= $showSearch;
 		
 		if(!Object::has_extension($this->sourceObject, 'Hierarchy')) {
 			throw new Exception (
@@ -75,6 +80,19 @@ class TreeDropdownField extends FormField {
 	}
 	
 	/**
+	 * Set a callback used to search the hierarchy globally, before even applying the filter.
+	 *
+	 * @param callback $callback
+	 */
+	public function setSearchFunction($callback) {
+		if(!is_callable($callback, true)) {
+			throw new InvalidArgumentException('TreeDropdownField->setSearchFunction(): not passed a valid callback');
+		}
+		
+		$this->searchCallback = $callback;
+	}
+	
+	/**
 	 * @return string
 	 */
 	public function Field() {
@@ -98,12 +116,12 @@ class TreeDropdownField extends FormField {
 					'name'  => $this->name,
 					'value' => $this->value
 				)
-			) . ($this->showFilter ?
+			) . ($this->showSearch ?
 					$this->createTag(
 						'input',
 						array(
 							'class' => 'items',
-							'value' => '(Choose or type filter)' 
+							'value' => '(Choose or type search)' 
 						)
 					) :
 					$this->createTag (
@@ -134,7 +152,7 @@ class TreeDropdownField extends FormField {
 	public function tree(SS_HTTPRequest $request) {
 		$isSubTree = false;
 
-		$this->filter = Convert::Raw2SQL($request->getVar('filter'));
+		$this->search = Convert::Raw2SQL($request->getVar('search'));
 
 		if($ID = (int) $request->latestparam('ID')) {
 			$obj       = DataObject::get_by_id($this->sourceObject, $ID);
@@ -153,7 +171,10 @@ class TreeDropdownField extends FormField {
 			if(!$this->baseID || !$obj) $obj = singleton($this->sourceObject);
 		}
 
-		if ($this->filterCallback || $this->sourceObject == 'Folder' || $this->filter != "")
+		if ( $this->search != "" )
+			$this->populateIDs();
+		
+		if ($this->filterCallback || $this->sourceObject == 'Folder' || $this->search != "" )
 			$obj->setMarkingFilterFunction(array($this, "filterMarking"));
 		
 		$obj->markPartialTree();
@@ -176,7 +197,7 @@ class TreeDropdownField extends FormField {
 
 	/**
 	 * Marking function for the tree, which combines different filters sensibly. If a filter function has been set,
-	 * that will be called. If the source is a folder, automatically filter folder. And if filter text is set, filter on that
+	 * that will be called. If the source is a folder, automatically filter folder. And if search text is set, filter on that
 	 * too. Return true if all applicable conditions are true, false otherwise.
 	 * @param $node
 	 * @return unknown_type
@@ -184,11 +205,41 @@ class TreeDropdownField extends FormField {
 	function filterMarking($node) {
 		if ($this->filterCallback && !call_user_func($this->filterCallback, $node)) return false;
 		if ($this->sourceObject == "Folder" && $node->ClassName != 'Folder') return false;
-		if ($this->filter != "") {
-			$f = $this->labelField;
-			return (strpos(strtoupper($node->$f), strtoupper($this->filter)) === FALSE)  ? false : true;
+		if ($this->search != "") {
+			return isset($this->searchIds[$node->ID]) && $this->searchIds[$node->ID] ? true : false;
 		}
+		
 		return true;
+	}
+	
+	/**
+	 * Populate $this->searchIds with the IDs of the pages matching the searched parameter and their parents.
+	 * Reverse-constructs the tree starting from the leaves. Initially taken from CMSSiteTreeFilter.
+	 */
+	protected function populateIDs() {
+		if ( $this->searchCallback )
+			$res = call_user_func($this->searchCallback, $this->sourceObject, $this->labelField, $this->search);
+		else
+			$res = DataObject::get($this->sourceObject, "$this->labelField LIKE '%$this->search%'");
+		
+		if( $res ) {
+			/* And keep a record of parents we don't need to get parents of themselves, as well as IDs to mark */
+			foreach($res as $row) {
+				if ($row->ParentID) $parents[$row->ParentID] = true;
+				$this->searchIds[$row->ID] = true;
+			}
+		
+			while (!empty($parents)) {
+				$res = DB::query('SELECT "ParentID", "ID" FROM '.$this->sourceObject.' WHERE "ID" in ('.implode(',',array_keys($parents)).')');
+				$parents = array();
+
+				foreach($res as $row) {
+					if ($row['ParentID']) $parents[$row['ParentID']] = true;
+					$this->searchIds[$row['ID']] = true;
+					$this->searchExpanded[$row['ID']] = true;
+				}
+			}
+		}
 	}
 
 	/**

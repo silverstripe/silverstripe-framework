@@ -7,15 +7,15 @@ TreeDropdownField.prototype = {
 		// Hook up all the fieldy bits
 		this.editLink = this.getElementsByTagName('a')[0];
 		if (this.getElementsByTagName('span').length > 0) {
-			// no filter, humanItems is a span
+			// no search, humanItems is a span
 			this.humanItems = this.getElementsByTagName('span')[0];
 			this.inputTag = this.getElementsByTagName('input')[0];
 		}
 		else {
-			// filter is present, humanItems is an input
+			// search is present, humanItems is an input
 			this.inputTag = this.getElementsByTagName('input')[0];
 			this.humanItems = this.getElementsByTagName('input')[1];
-			this.humanItems.onkeyup = this.filter_onkeyup;
+			this.humanItems.onkeyup = this.search_onkeyup;
 		}
 		this.editLink.treeDropdownField = this;
 		this.humanItems.treeDropdownField = this;
@@ -115,7 +115,7 @@ TreeDropdownField.prototype = {
 	saveCurrentState: function() {
 		this.origHumanText = this.getHumanText();
 		this.defaultCleared = false;
-		this.filtered = false;
+		this.searched = false;
 	},
 
 	restoreOriginalState: function() {
@@ -176,7 +176,7 @@ TreeDropdownField.prototype = {
 		var ajaxURL = this.helperURLBase() + 'tree/';
 		ajaxURL += $('SecurityID') ? '&SecurityID=' + $('SecurityID').value : '';
 		if($('Form_EditForm_Locale')) ajaxURL += "&locale=" + $('Form_EditForm_Locale').value;
-		if (this.filter() != null) ajaxURL += "&filter=" + this.filter(); 
+		if (this.search() != null) ajaxURL += "&search=" + this.search(); 
 		new Ajax.Request(ajaxURL, {
 			method : 'get', 
 			onSuccess : after,
@@ -184,8 +184,8 @@ TreeDropdownField.prototype = {
 		})
 	},
 
-	filter: function() {
-		if (this.humanItems.nodeName != 'INPUT' || !this.filtered) return null;
+	search: function() {
+		if (this.humanItems.nodeName != 'INPUT' || !this.searched) return null;
 		return this.humanItems.value;
 	},
 
@@ -229,8 +229,8 @@ TreeDropdownField.prototype = {
 		var ajaxURL = this.options.dropdownField.helperURLBase() + 'tree/' + this.getIdx();
 		ajaxURL += $('SecurityID') ? '&SecurityID=' + $('SecurityID').value : '';
 		if($('Form_EditForm_Locale')) ajaxURL += "&locale=" + $('Form_EditForm_Locale').value;
-		// ajaxExpansion is called in context of TreeNode, not Tree, so filter() doesn't exist.
-		if (this.filter && this.filter() != null) ajaxURL += "&filter=" + this.filter();
+		// ajaxExpansion is called in context of TreeNode, not Tree, so search() doesn't exist.
+		if (this.search && this.search() != null) ajaxURL += "&search=" + this.search();
 		
 		new Ajax.Request(ajaxURL, {
 			onSuccess : this.installSubtree.bind(this),
@@ -260,7 +260,7 @@ TreeDropdownField.prototype = {
 		}
 	},
 	updateTreeLabel: function() {
-		if (this.humanItems.nodeName == 'INPUT') return; // don't update the filter
+		if ( this.searched || (this.humanItems.nodeName == 'INPUT' && !this.inputTag.value) ) return; // don't update the search
 		var treeNode;
 		if(treeNode = $('selector-' + this.getName() + '-' + this.inputTag.value)) {
 			this.setHumanText(treeNode.getTitle());
@@ -299,16 +299,20 @@ TreeDropdownField.prototype = {
 		return false;
 	},
 
-	filter_onkeyup: function(e) {
+	search_onkeyup: function(e) {
 		if(typeof window.event!="undefined") e=window.event; //code for IE
 		if (e.keyCode == 27) { // esc, cancel the selection and hide the tree.
 			this.treeDropdownField.restoreOriginalState();
 			this.treeDropdownField.hideTree();
 		}
 		else {
-			this.treeDropdownField.filtered = true;
-			this.treeDropdownField.deleteTreeNode();
-			this.treeDropdownField.showTree();
+			var that = this;
+			clearTimeout(this.timeout);
+			this.timeout = setTimeout(function() {
+				that.treeDropdownField.searched = true;
+				that.treeDropdownField.deleteTreeNode();
+				that.treeDropdownField.showTree();
+			}, 750);
 		}
 	},
 
