@@ -9,17 +9,19 @@
  */
 class CurrencyField extends TextField {
 	/**
-	 * allows the value to be set ( not including $ signs and number format...)
+	 * allows the value to be set. removes the first character
+	 * if it is not a number (probably a currency symbol)
 	 */
 	function setValue($val) {
-		$this->value = '$' . number_format(ereg_replace('[^0-9.]',"",$val), 2);
+		$this->value = preg_replace('/^[^\d]/', '', $val);
 	}
 	/**
 	 * Overwrite the datavalue before saving to the db ;-)
+	 * return 0.00 if no value, or value is non-numeric
 	 */
 	function dataValue() {
-		if($this->value){
-			return preg_replace('/[^0-9.]/',"", $this->value);
+		if($this->value && is_numeric($this->value)){
+			return $this->value;
 		}else{
 			return 0.00;
 		}
