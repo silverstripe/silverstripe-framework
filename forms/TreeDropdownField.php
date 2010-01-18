@@ -26,11 +26,14 @@ class TreeDropdownField extends FormField {
 	protected $searchIds = null, $searchExpanded = array();
 	
 	/**
+	 * CAVEAT: for search to work properly $labelField must be a database field, or you need to setSearchFunction.
+	 *
 	 * @param string $name the field name
 	 * @param string $title the field label
 	 * @param string $souceClass the class to display in the tree, must have the "Hierachy" extension.
 	 * @param string $keyField to field on the source class to save as the field value (default ID).
 	 * @param string $labelField the field name to show as the human-readable value on the tree (default Title).
+	 * @param string $showSearch enable the ability to search the tree by entering the text in the input field.
 	 */
 	public function __construct($name, $title = null, $sourceObject = 'Group', $keyField = 'ID', $labelField = 'Title', $showSearch = false) {
 		$this->sourceObject = $sourceObject;
@@ -80,7 +83,7 @@ class TreeDropdownField extends FormField {
 	}
 	
 	/**
-	 * Set a callback used to search the hierarchy globally, before even applying the filter.
+	 * Set a callback used to search the hierarchy globally, even before applying the filter.
 	 *
 	 * @param callback $callback
 	 */
@@ -171,6 +174,7 @@ class TreeDropdownField extends FormField {
 			if(!$this->baseID || !$obj) $obj = singleton($this->sourceObject);
 		}
 
+		// pre-process the tree - search needs to operate globally, not locally as marking filter does
 		if ( $this->search != "" )
 			$this->populateIDs();
 		
@@ -214,21 +218,22 @@ class TreeDropdownField extends FormField {
 	
 	/**
 	 * Populate $this->searchIds with the IDs of the pages matching the searched parameter and their parents.
-	 * Reverse-constructs the tree starting from the leaves. Initially taken from CMSSiteTreeFilter.
+	 * Reverse-constructs the tree starting from the leaves. Initially taken from CMSSiteTreeFilter, but modified
+	 * with pluggable search function.
 	 */
 	protected function populateIDs() {
+		// get all the leaves to be displayed
 		if ( $this->searchCallback )
 			$res = call_user_func($this->searchCallback, $this->sourceObject, $this->labelField, $this->search);
 		else
 			$res = DataObject::get($this->sourceObject, "$this->labelField LIKE '%$this->search%'");
 		
 		if( $res ) {
-			/* And keep a record of parents we don't need to get parents of themselves, as well as IDs to mark */
+			// iteratively fetch the parents in bulk, until all the leaves can be accessed using the tree control
 			foreach($res as $row) {
 				if ($row->ParentID) $parents[$row->ParentID] = true;
 				$this->searchIds[$row->ID] = true;
 			}
-		
 			while (!empty($parents)) {
 				$res = DB::query('SELECT "ParentID", "ID" FROM '.$this->sourceObject.' WHERE "ID" in ('.implode(',',array_keys($parents)).')');
 				$parents = array();
