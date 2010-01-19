@@ -14,6 +14,26 @@ class RestfulService extends ViewableData {
 	protected $cache_expire;
 	protected $authUsername, $authPassword;
 	protected $customHeaders = array();
+	protected $proxy;
+	protected static $default_proxy;
+	
+	/**
+	 * Sets default proxy settings for outbound RestfulService connections
+	 *
+	 * @param string $proxy The URL of the proxy to use.
+	 * @param int $port Proxy port
+	 * @param string $user The proxy auth user name
+	 * @param string $password The proxy auth password
+	 * @param boolean $socks Set true to use socks5 proxy instead of http
+	 */
+	static function set_default_proxy($proxy, $port = 80, $user = "", $password = "", $socks = false) {
+		self::$default_proxy = array(
+			CURLOPT_PROXY => $proxy,
+			CURLOPT_PROXYUSERPWD => "{$user}:{$password}",
+			CURLOPT_PROXYPORT => $port,
+			CURLOPT_PROXYTYPE => ($socks ? CURLPROXY_SOCKS5 : CURLPROXY_HTTP)
+		);
+	}
 	
 	/**
  	* Creates a new restful service.
@@ -23,6 +43,7 @@ class RestfulService extends ViewableData {
 	function __construct($base, $expiry=3600){
 		$this->baseURL = $base;
 		$this->cache_expire = $expiry;
+		$this->proxy = self::$default_proxy;
 		parent::__construct();
 	}
 	
@@ -32,6 +53,24 @@ class RestfulService extends ViewableData {
  	*/
 	function setQueryString($params=NULL){
 		$this->queryString = http_build_query($params,'','&');
+	}
+
+	/**
+	 * Set proxy settings for this RestfulService instance
+	 *
+	 * @param string $proxy The URL of the proxy to use.
+	 * @param int $port Proxy port
+	 * @param string $user The proxy auth user name
+	 * @param string $password The proxy auth password
+	 * @param boolean $socks Set true to use socks5 proxy instead of http
+	 */
+	 function setProxy($proxy, $port = 80, $user = "", $password = "", $socks = false) {
+		$this->proxy = array(
+			CURLOPT_PROXY => $proxy,
+			CURLOPT_PROXYUSERPWD => "{$user}:{$password}",
+			CURLOPT_PROXYPORT => $port,
+			CURLOPT_PROXYTYPE => ($socks ? CURLPROXY_SOCKS5 : CURLPROXY_HTTP)			
+		);
 	}
 	
 	/**
@@ -119,7 +158,12 @@ class RestfulService extends ViewableData {
 				curl_setopt($ch, CURLOPT_POST, 1);
 				curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
 			}
-		
+			
+			// Apply proxy settings
+			if(is_array($this->proxy)) {
+				curl_setopt_array($ch, $this->proxy);
+			}
+
 			// Run request
 			curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 			$responseBody = curl_exec($ch);
