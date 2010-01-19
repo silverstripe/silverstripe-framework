@@ -406,13 +406,38 @@ HTML;
 	}
 
 	/**
-	 * Returns the xml:lang and lang attributes
+	 * Returns the xml:lang and lang attributes.
+	 * 
+	 * @deprecated 2.5 Use ContentLocale() instead and write attribute names suitable to XHTML/HTML
+	 * templates directly in the template.
 	 */
 	function LangAttributes() {
-		$lang = Translatable::get_current_locale();
-		return "xml:lang=\"$lang\" lang=\"$lang\"";	
+		$locale = $this->ContentLocale();
+		return "xml:lang=\"$locale\" lang=\"$locale\"";	
 	}
-
+	
+	/**
+	 * Returns an RFC1766 compliant locale string, e.g. 'fr-CA'.
+	 * Inspects the associated {@link dataRecord} for a {@link SiteTree->Locale} value if present,
+	 * and falls back to {@link Translatable::get_current_locale()} or {@link i18n::default_locale()},
+	 * depending if Translatable is enabled.
+	 * 
+	 * Suitable for insertion into lang= and xml:lang=
+	 * attributes in HTML or XHTML output.
+	 * 
+	 * @return string
+	 */
+	function ContentLocale() {
+		if($this->dataRecord && $this->dataRecord->hasExtension('Translatable')) {
+			$locale = $this->dataRecord->Locale;
+		} elseif(Object::has_extension('SiteTree', 'Translatable')) {
+			$locale = Translatable::get_current_locale();
+		} else {
+			$locale = i18n::default_locale();
+		}
+		
+		return i18n::convert_rfc1766($locale);
+	}
 
 	/**
 	 * This action is called by the installation system
