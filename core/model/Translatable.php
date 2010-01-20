@@ -129,7 +129,8 @@
  * 
  * <h2>Permissions</h2>
  * 
- * Authors without administrative access need special permissions.
+ * Authors without administrative access need special permissions to edit locales other than
+ * the default locale.
  * 
  * - TRANSLATE_ALL: Translate into all locales
  * - Translate_<locale>: Translate a specific locale. Only available for all locales set in
@@ -1146,7 +1147,11 @@ class Translatable extends DataObjectDecorator implements PermissionProvider {
 			!is_array(self::get_allowed_locales()) 
 			|| in_array($locale, self::get_allowed_locales())
 		);
+
 		if(!$allowedLocale) return false;
+		
+		// By default, anyone who can edit a page can edit the default locale
+		if($locale == self::default_locale()) return true;
 		
 		// check for generic translation permission
 		if(Permission::checkMember($member, 'TRANSLATE_ALL')) return true;
