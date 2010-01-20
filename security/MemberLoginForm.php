@@ -52,9 +52,11 @@ class MemberLoginForm extends LoginForm {
 			);
 		} else {
 			if(!$fields) {
+				$label=singleton('Member')->fieldLabel(Member::get_unique_identifier_field());
 				$fields = new FieldSet(
 					new HiddenField("AuthenticationMethod", null, $this->authenticator_class, $this),
-					new TextField("Email", _t('Member.EMAIL', 'Email'), Session::get('SessionForms.MemberLoginForm.Email'), null, $this),
+					//Regardless of what the unique identifer field is (usually 'Email'), it will be held in the 'Email' value, below:
+					new TextField("Email", $label, Session::get('SessionForms.MemberLoginForm.Email'), null, $this),
 					new PasswordField("Password", _t('Member.PASSWORD', 'Password'))
 				);
 				if(Security::$autologin_enabled) {

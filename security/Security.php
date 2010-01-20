@@ -592,7 +592,7 @@ class Security extends Controller {
 				&& !empty(self::$default_username) && !empty(self::$default_password)) {
 			$member = self::findAnAdministrator();
 		} else {
-			$member = DataObject::get_one("Member", 	"\"Email\" = '$SQL_email' AND \"Password\" IS NOT NULL");
+			$member = DataObject::get_one("Member", 	"\"" . Member::get_unique_identifier_field() . "\" = '$SQL_email' AND \"Password\" IS NOT NULL");
 			if($member && ($member->checkPassword($RAW_password) == false)) {
 				$member = null;
 			}
@@ -810,7 +810,7 @@ class Security extends Controller {
 		$salt = ($salt) ? $salt : $e->salt($password);
 		
 		return array(
-			'password' => $e->encrypt($password, $salt),
+			'password' => $e->encrypt($password, $salt, $member),
 			'salt' => $salt,
 			'algorithm' => $algorithm,
 			'encryptor' => $e
