@@ -47,16 +47,6 @@ class TreeDropdownField extends FormField {
 			);
 		}
 		
-		Requirements::add_i18n_javascript(SAPPHIRE_DIR . '/javascript/lang');
-		
-		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/prototype/prototype.js');
-		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/behaviour/behaviour.js');
-		Requirements::javascript(SAPPHIRE_DIR . '/javascript/tree/tree.js');
-		Requirements::javascript(SAPPHIRE_DIR   . '/javascript/TreeSelectorField.js');
-		
-		Requirements::css(SAPPHIRE_DIR . '/javascript/tree/tree.css');
-		Requirements::css(SAPPHIRE_DIR . '/css/TreeDropdownField.css');
-		
 		parent::__construct($name, $title);
 	}
 	
@@ -99,6 +89,16 @@ class TreeDropdownField extends FormField {
 	 * @return string
 	 */
 	public function Field() {
+		Requirements::add_i18n_javascript(SAPPHIRE_DIR . '/javascript/lang');
+		
+		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/prototype/prototype.js');
+		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/behaviour/behaviour.js');
+		Requirements::javascript(SAPPHIRE_DIR . '/javascript/tree/tree.js');
+		Requirements::javascript(SAPPHIRE_DIR . '/javascript/TreeSelectorField.js');
+		
+		Requirements::css(SAPPHIRE_DIR . '/javascript/tree/tree.css');
+		Requirements::css(SAPPHIRE_DIR . '/css/TreeDropdownField.css');
+	
 		if($this->Value() && $record = $this->objectForKey($this->Value())) {
 			$title = $record->{$this->labelField};
 		} else {
