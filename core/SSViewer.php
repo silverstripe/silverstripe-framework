@@ -313,9 +313,11 @@ class SSViewer {
 	/**
 	 * The process() method handles the "meat" of the template processing.
 	 */
-	public function process($item) {
+	public function process($item, $cache = null) {
 		SSViewer::$topLevel[] = $item;
-
+		
+		if (!$cache) $cache = Cache::factory('cacheblock');
+		
 		if(isset($this->chosenTemplates['main'])) {
 			$template = $this->chosenTemplates['main'];
 		} else {
@@ -356,14 +358,15 @@ class SSViewer {
 			if(isset($this->chosenTemplates[$subtemplate])) {
 				$subtemplateViewer = new SSViewer($this->chosenTemplates[$subtemplate]);
 				$item = $item->customise(array(
-					$subtemplate => $subtemplateViewer->process($item)
+					$subtemplate => $subtemplateViewer->process($item, $cache)
 				));
 			}
 		}
 		
 		$itemStack = array();
 		$val = "";
-
+		$valStack = array();
+		
 		include($cacheFile);
 
 		$output = $val;		
@@ -456,6 +459,9 @@ class SSViewer {
 		$content = ereg_replace('<!-- +pc +([A-Za-z0-9_(),]+) +-->', '<' . '% control \\1 %' . '>', $content);
 		$content = ereg_replace('<!-- +pc_end +-->', '<' . '% end_control %' . '>', $content);
 		
+		// < % cacheblock key, key.. % >
+		$content = SSViewer_PartialParser::parse($template, $content);
+
 		// < % control Foo % >
 		$content = ereg_replace('<' . '% +control +([A-Za-z0-9_]+) +%' . '>', '<? array_push($itemStack, $item); if($loop = $item->obj("\\1")) foreach($loop as $key => $item) { ?>', $content);
 		// < % control Foo.Bar % >
@@ -608,7 +614,7 @@ class SSViewer_FromString extends SSViewer {
 	}
 	
 	public function process($item) {
-		$template = SSViewer::parseTemplateContent($this->content);
+		$template = SSViewer::parseTemplateContent($this->content, "string sha1=".sha1($this->content));
 
 		$tmpFile = tempnam(TEMP_FOLDER,"");
 		$fh = fopen($tmpFile, 'w');
@@ -627,7 +633,10 @@ class SSViewer_FromString extends SSViewer {
 
 		$itemStack = array();
 		$val = "";
-
+		$valStack = array();
+		
+		$cache = Cache::factory('cacheblock');
+		
 		include($tmpFile);
 		unlink($tmpFile);
 		
@@ -635,7 +644,105 @@ class SSViewer_FromString extends SSViewer {
 		return $val;
 	}
 }
+
+/**
+ * Handle the parsing for cacheblock tags.
+ * 
+ * Needs to be handled differently from the other tags, because cacheblock can take any number of arguments
+ * 
+ * This shouldn't be used as an example of how to add functionality to SSViewer - the eventual plan is to re-write
+ * SSViewer using a proper parser (probably http://github.com/hafriedlander/php-peg), so that extra functionality
+ * can be added without relying on ad-hoc parsers like this.
+ */
+class SSViewer_PartialParser {
+ 	
+	static $opening_tag = '/< % [ \t]+ cacheblock [ \t]+ ([^%]+ [ \t]+)? % >/xS';
 	
+	static $argument_splitter = '/^\s* 
+		( (\w+) \s* ( \( ([^\)]*) \) )? ) |  # A property lookup or a function call
+		( \' [^\']+ \' ) |                   # A string surrounded by \'
+		( " [^"]+ " )                        # A string surrounded by "
+	\s*/xS';
+	
+	static $closing_tag = '/< % [ \t]+ end_cacheblock [ \t]+ % >/xS';
+	
+	static function parse($template, $content) {
+		$parser = new SSViewer_PartialParser($template);
+		
+		$content = $parser->replaceOpeningTags($content);
+		$content = $parser->replaceClosingTags($content);
+		return $content;
+	}
+	
+	function __construct($template) {
+		$this->template = $template;
+		$this->cacheblocks = 0;
+	}
+	
+	function replaceOpeningTags($content) {
+		return preg_replace_callback(self::$opening_tag, array($this, 'replaceOpeningTagsCallback'), $content);
+	}
+	
+	function replaceOpeningTagsCallback($matches) {
+		$this->cacheblocks += 1;
+		$key = $this->key($matches);
+		
+		return '<? if ($partial = $cache->load('.$key.')) { $val .= $partial; } else { $valStack[] = $val; $val = ""; ?>';
+	}
+	
+	function key($matches) {
+		$parts = array();
+		$parts[] = "'".preg_replace('/[^\w+]/', '_', $this->template)."'";
+
+		// If there weren't any arguments, that'll do
+		if (!@$matches[1]) return $parts[0];
+		
+		$current = 'preg_replace(\'/[^\w+]/\', \'_\', $item->';
+		$keyspec = $matches[1];
+		
+		while (strlen($keyspec) && preg_match(self::$argument_splitter, $keyspec, $submatch)) {
+			$joiner = substr($keyspec, strlen($submatch[0]), 1);
+			$keyspec = substr($keyspec, strlen($submatch[0]) + 1);
+			
+			// If it's a property lookup or a function call
+			if ($submatch[1]) {
+				// Get the property
+				$what = $submatch[2];
+				$args = array();
+				
+				// Extract any arguments passed to the function call
+				if (@$submatch[3]) {
+					foreach (explode(',', $submatch[4]) as $arg) {
+						$args[] = is_numeric($arg) ? (string)$arg : '"'.$arg.'"';
+					}
+				}
+				
+				$args = empty($args) ? 'null' : 'array('.implode(',',$args).')';
+			
+				// If this fragment ended with '.', then there's another lookup coming, so return an obj for that lookup
+				if ($joiner == '.') {
+					$current .= "obj(\"$what\", $args, true)->";
+				}
+				// Otherwise this is the end of the lookup chain, so add the resultant value to the key array and reset the key-get php fragement
+				else {
+					$parts[] = $current . "XML_val(\"$what\", $args, true))"; $current = 'preg_replace(\'/[^\w+]/\', \'_\', $item->';
+				}
+			}
+			
+			// Else it's a quoted string of some kind
+			else if ($submatch[5] || $submatch[6]) {
+				$parts[] = $submatch[5] ? $submatch[5] : $submatch[6];
+			}
+			
+		}
+		
+		return implode(".'_'.", $parts);
+	}	
+	
+	function replaceClosingTags($content) {
+		return preg_replace(self::$closing_tag, '<? $cache->save($val); $val = array_pop($valStack) . $val; } ?>', $content);
+	}
+}
 
 function supressOutput() {
 	return "";
