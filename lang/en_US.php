@@ -663,6 +663,12 @@ $lang['en_US']['SiteConfig']['SINGULARNAME'] = array(
 	50,
 	'Singular name of the object, used in dropdowns and to generally identify a single object in the interface'
 );
+$lang['en_US']['SiteConfig']['SITENAMEDEFAULT'] = 'Your Site Name';
+$lang['en_US']['SiteConfig']['SITETAGLINE'] = 'Site Tagline/Slogan';
+$lang['en_US']['SiteConfig']['SITETITLE'] = 'Site title';
+$lang['en_US']['SiteConfig']['TAGLINEDEFAULT'] = 'your tagline here';
+$lang['en_US']['SiteConfig']['TOPLEVELCREATE'] = 'Who can create pages in the root of the site?';
+$lang['en_US']['SiteConfig']['VIEWHEADER'] = 'Who can view pages on this site?';
 $lang['en_US']['SiteTree']['ACCESSANYONE'] = 'Anyone';
 $lang['en_US']['SiteTree']['ACCESSHEADER'] = 'Who can view this page?';
 $lang['en_US']['SiteTree']['ACCESSLOGGEDIN'] = 'Logged-in users';
@@ -764,6 +770,7 @@ $lang['en_US']['SiteTree']['TABMETA'] = 'Metadata';
 $lang['en_US']['SiteTree']['TABREPORTS'] = 'Reports';
 $lang['en_US']['SiteTree']['TODOHELP'] = '<p>You can use this to keep track of work that needs to be done to the content of your site.  To see all your pages with to do information, open the \'Site Reports\' window on the left and select \'To Do\'</p>';
 $lang['en_US']['SiteTree']['TOPLEVEL'] = 'Site Content (Top Level)';
+$lang['en_US']['SiteTree']['TOPLEVELCREATORGROUPS'] = 'Top level creators';
 $lang['en_US']['SiteTree']['ToDo'] = 'Todo Notes';
 $lang['en_US']['SiteTree']['URL'] = 'URL';
 $lang['en_US']['SiteTree']['URLSegment'] = array(

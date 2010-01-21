@@ -1,7 +1,14 @@
 <?php
-
 /**
- * Sitewide configuration
+ * Sitewide configuration.
+ * 
+ * h2. Translation
+ * 
+ * To enable translation of configurations alongside the {@link Translatable} extension.
+ * This also allows assigning language-specific toplevel permissions for viewing and editing
+ * pages, in addition to the normal `TRANSLATE_*`/`TRANSLATE_ALL` permissions.
+ * 
+ * 	Object::add_extension('SiteConig', 'Translatable');
  *
  * @author Tom Rix
  * @package cms
@@ -60,6 +67,13 @@ class SiteConfig extends DataObject {
 		$editorsOptionsField->setSource($editorsOptionsSource);
 		
 		$topLevelCreatorsOptionsField->setSource($editorsOptionsSource);
+		
+		// Translatable doesn't handle updateCMSFields on DataObjects,  
+		// so add it here to save the current Locale,  
+		// because onBeforeWrite does not work. 
+		if(Object::has_extension('SiteConfig',"Translatable")){ 
+			$fields->push(new HiddenField("Locale"));  
+		}
 
 		if (!Permission::check('EDIT_SITECONFIG')) {
 			$fields->makeFieldReadonly($viewersOptionsField);
@@ -96,16 +110,22 @@ class SiteConfig extends DataObject {
 	}
 	
 	/**
-	 * Get the current sites SiteConfig
+	 * Get the current sites SiteConfig, and creates a new one
+	 * through {@link make_site_config()} if none is found.
 	 *
+	 * @param string $locale
 	 * @return SiteConfig
 	 */
-	static function current_site_config() {
-		$siteConfig = DataObject::get_one('SiteConfig');
-		if (!$siteConfig) {
-			self::make_site_config();
+	static function current_site_config($locale = null) {
+		if(Object::has_extension('SiteConfig',"Translatable")){
+			$locale = isset($locale) ? $locale : Translatable::get_current_locale();
+			$siteConfig = Translatable::get_one_by_locale('SiteConfig', $locale);
+		} else {
 			$siteConfig = DataObject::get_one('SiteConfig');
 		}
+		
+		if (!$siteConfig) $siteConfig = self::make_site_config($locale);
+		
 		return $siteConfig;
 	}
 	
@@ -122,18 +142,37 @@ class SiteConfig extends DataObject {
 	}
 	
 	/**
-	 * Make a default site config if there isn't on already
-	 *
-	 * @return void
+	 * Create SiteConfig with defaults from language file.
+	 * if Translatable is enabled on SiteConfig, see if one already exist
+	 * and use those values for the translated defaults. 
+	 * 
+	 * @param string $locale
+	 * @return SiteConfig
 	 */
-	static function make_site_config() {
-		if(!DataObject::get_one('SiteConfig')){
-			$siteConfig = new SiteConfig();
-			$siteConfig->Title = 'Your Site Name';
-			$siteConfig->Tagline = 'your tagline here';
-			$siteConfig->write();
+	static function make_site_config($locale = null) {
+		if(!$locale) $locale = Translatable::get_current_locale();
+		
+		$siteConfig = new SiteConfig();
+		$siteConfig->Title = _t('SiteConfig.SITENAMEDEFAULT',"Your Site Name");
+		$siteConfig->Tagline = _t('SiteConfig.TAGLINEDEFAULT',"your tagline here");
+
+		if($siteConfig->hasExtension('Translatable')){
+			$defaultConfig = DataObject::get_one('SiteConfig');
+			if($defaultConfig){
+				$siteConfig->Title = $defaultConfig->Title;
+				$siteConfig->Tagline = $defaultConfig->Tagline;
+			}
+			
+			// TODO Copy view/edit group settings
+			
+			// set the correct Locale
+			$siteConfig->Locale = $locale;
 		}
-	}
+
+		$siteConfig->write();
+		
+		return $siteConfig;
+ 	}
 	
 	/**
 	 * Can a user view pages on this site? This method is only
@@ -144,17 +183,15 @@ class SiteConfig extends DataObject {
 	 * @return boolean
 	 */
 	public function canView($member = null) {
-		if ($this->CanViewType == 'Anyone') return true;
-		
-		if(!$member || !(is_a($member, 'Member')) || is_numeric($member)) {
-			$member = Member::currentUserID();
-		}
+		if(!$member) $member = Member::currentUserID();
+		if($member && is_numeric($member)) $member = DataObject::get_by_id('Member', $member);
+
+		if (!$this->CanViewType || $this->CanViewType == 'Anyone') return true;
 				
 		// check for any logged-in users
 		if($this->CanViewType == 'LoggedInUsers' && $member) return true;
-		
+
 		// check for specific groups
-		if($member && is_numeric($member)) $member = DataObject::get_by_id('Member', $member);
 		if($this->CanViewType == 'OnlyTheseUsers' && $member && $member->inGroups($this->ViewerGroups())) return true;
 		
 		return false;
@@ -169,18 +206,15 @@ class SiteConfig extends DataObject {
 	 * @return boolean
 	 */
 	public function canEdit($member = null) {
-		if(!$member || !(is_a($member, 'Member')) || is_numeric($member)) {
-			$member = Member::currentUserID();
-		}
+		if(!$member) $member = Member::currentUserID();
+		if($member && is_numeric($member)) $member = DataObject::get_by_id('Member', $member);
 
 		// check for any logged-in users
-		if($this->CanEditType == 'LoggedInUsers' && $member) return true;
-		
+		if(!$this->CanEditType || $this->CanEditType == 'LoggedInUsers' && $member) return true;
+
 		// check for specific groups
-		if($member && is_numeric($member)) $member = DataObject::get_by_id('Member', $member);
 		if($this->CanEditType == 'OnlyTheseUsers' && $member && $member->inGroups($this->EditorGroups())) return true;
 		
-
 		return false;
 	}
 	

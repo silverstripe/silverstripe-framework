@@ -76,6 +76,12 @@
  * <h2>Usage for SiteTree</h2>
  * 
  * Translatable can be used for subclasses of {@link SiteTree} as well. 
+ * 
+ * <code>
+ * Object::add_extension('SiteTree', 'Translatable');
+ * Object::add_extension('SiteConig', 'Translatable');
+ * </code>
+ * 
  * If a child page translation is requested without the parent
  * page already having a translation in this language, the extension
  * will recursively create translations up the tree.
@@ -1167,7 +1173,6 @@ class Translatable extends DataObjectDecorator implements PermissionProvider {
 	 */
 	function canEdit($member) {
 		if(!$this->owner->Locale) return true;
-		
 		return $this->owner->canTranslate($member, $this->owner->Locale);
 	}
 	
@@ -1218,6 +1223,11 @@ class Translatable extends DataObjectDecorator implements PermissionProvider {
 		if(!Object::has_extension('SiteTree', 'Translatable')) return false;
 		
 		$locales = self::get_allowed_locales();
+		
+		// Fall back to any locales used in existing translations (see #4939)
+		if(!$locales) {
+			$locales = DB::query('SELECT "Locale" FROM "SiteTree" GROUP BY "Locale"')->column();
+		}
 		
 		$permissions = array();
 		if($locales) foreach($locales as $locale) {

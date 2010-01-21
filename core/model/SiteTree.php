@@ -734,7 +734,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		// check for inherit
 		if($this->CanViewType == 'Inherit') {
 			if($this->ParentID) return $this->Parent()->canView($member);
-			else return SiteConfig::current_site_config()->canView($member);
+			else return $this->getSiteConfig()->canView($member);
 		}
 		
 		// check for any logged-in users
@@ -857,7 +857,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		// decorated access checks
 		$results = $this->extend('canEdit', $memberID);
 		if($results && is_array($results)) if(!min($results)) return false;
-		
+
 		if($this->ID) {
 			// Check cache (the can_edit_multiple call below will also do this, but this is quicker)
 			if(isset(self::$cache_permissions['edit'][$this->ID])) {
@@ -866,14 +866,14 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		
 			// Regular canEdit logic is handled by can_edit_multiple
 			$results = self::can_edit_multiple(array($this->ID), $memberID);
-		
+
 			// If this page no longer exists in stage/live results won't contain the page.
 			// Fail-over to false
 			return isset($results[$this->ID]) ? $results[$this->ID] : false;
 			
 		// Default for unsaved pages
 		} else {
-			return $this->SiteConfig->canEdit();
+			return $this->getSiteConfig()->canEdit($member);
 		}
 	}
 
@@ -918,8 +918,13 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	 * Stub method to get the site config, provided so it's easy to override
 	 */
 	function getSiteConfig() {
-		if ($this->hasMethod('alternateSiteConfig')) return $this->alternateSiteConfig();
-		return SiteConfig::current_site_config();
+		if ($this->hasMethod('alternateSiteConfig')) {
+			return $this->alternateSiteConfig();
+		} elseif($this->hasExtension('Translatable')) {
+			 return SiteConfig::current_site_config($this->Locale);
+		} else {
+			return SiteConfig::current_site_config();
+		}
 	}
 
 
