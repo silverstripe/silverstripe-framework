@@ -49,11 +49,13 @@ class MemberAuthenticatorTest extends SapphireTest {
 	
 	function testCustomIdentifierField(){
 		
+		$origField = Member::get_unique_identifier_field();
 		Member::set_unique_identifier_field('Username');
+
 		$label=singleton('Member')->fieldLabel(Member::get_unique_identifier_field());
 		
 		$this->assertEquals($label, 'Username');
-
 		
+		Member::set_unique_identifier_field($origField);
 	}
 }
