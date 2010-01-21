@@ -275,7 +275,7 @@ class TreeDropdownField_Readonly extends TreeDropdownField {
 	function Field() {
 		$fieldName = $this->labelField;
 		if($this->value) {
-			$keyObj = $this->getByKey($this->value);
+			$keyObj = $this->objectForKey($this->value);
 			$obj = $keyObj ? $keyObj->$fieldName : '';
 		} else {
 			$obj = null;
