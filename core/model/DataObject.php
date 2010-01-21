@@ -374,7 +374,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		$this->record = null;
 		$this->original = null;
 		$this->changed = null;
-		$this->flushCache();
+		$this->flushCache(false);
 	}
 
 	/**
@@ -1442,6 +1442,26 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		return "\"$table\".\"$parentField\" = '{$this->ID}'";
 	}
 
+	/**
+	 * Return an aggregate object. An aggregate object returns the result of running some SQL aggregate function on a field of 
+	 * this dataobject type.
+	 * 
+	 * It can be called with no arguments, in which case it returns an object that calculates aggregates on this object's type,
+	 * or with an argument (possibly statically), in which case it returns an object for that type
+	 */
+	function Aggregate($type = null, $filter = '') {
+		return new Aggregate($type ? $type : $this->class, $filter);
+	}
+	
+	/**
+	 * Return an relationship aggregate object. A relationship aggregate does the same thing as an aggregate object, but operates
+	 * on a has_many rather than directly on the type specified
+	 */
+	function RelationshipAggregate($object = null, $relationship = '', $filter = '') {
+		if (is_string($object)) { $filter = $relationship; $relationship = $object; $object = $this; }
+		return new Aggregate_Relationship($object ? $object : $this->owner, $relationship, $filter);
+	}
+	
 	/**
 	 * Return the class of a one-to-one component.  If $component is null, return all of the one-to-one components and their classes.
 	 *
@@ -2673,8 +2693,15 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 
 	/**
 	 * Flush the cached results for all relations (has_one, has_many, many_many)
+	 * Also clears any cached aggregate data
+	 * 
+	 * @param boolean $persistant When true will also clear persistant data stored in the Cache system.
+	 *                            When false will just clear session-local cached data 
+	 * 
 	 */
-	public function flushCache() {
+	public function flushCache($persistant=true) {
+		if($persistant) Aggregate::flushCache($this->class);
+		
 		if($this->class == 'DataObject') {
 			DataObject::$cache_get_one = array();
 			return;
