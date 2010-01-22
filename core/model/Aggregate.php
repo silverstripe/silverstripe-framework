@@ -87,7 +87,7 @@ class Aggregate extends ViewableData {
 		$table = null;
 		
 		foreach (ClassInfo::ancestry($this->type, true) as $class) {
-			$fields = DataObject::custom_database_fields($class);
+			$fields = DataObject::database_fields($class);
 			if (array_key_exists($attribute, $fields)) { $table = $class; break; }
 		}
 		

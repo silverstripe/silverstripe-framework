@@ -88,6 +88,23 @@ class AggregateTest extends SapphireTest {
 	/* */
 	
 	/**
+	 * Test base-level field access - was failing due to use of custom_database_fields, not just database_fields
+	 * @return unknown_type
+	 */
+	function testBaseFieldAggregate() {
+		$this->assertEquals(
+			DataObject::Aggregate('AggregateTest_Foo')->Max('LastEdited'),
+			DataObject::get_one('AggregateTest_Foo', '', '', 'LastEdited DESC')->LastEdited
+		);
+		
+		$this->assertEquals(
+			DataObject::Aggregate('AggregateTest_Foo')->Max('Created'),
+			DataObject::get_one('AggregateTest_Foo', '', '', 'Created DESC')->Created
+		);
+	}
+	/* */
+
+	/**
 	 * Test aggregation takes place on the passed type & it's children only
 	 */
 	function testChildAggregate() {
