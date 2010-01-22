@@ -386,14 +386,19 @@ class SS_HTTPRequest implements ArrayAccess {
 	 * @return string
 	 */
 	public function shiftAllParams() {
-		$keys   = array_keys($this->allParams);
-		$values = array_values($this->allParams);
-		$value  = array_shift($values);
-		
+		$keys     = array_keys($this->allParams);
+		$values   = array_values($this->allParams);
+		$value    = array_shift($values);
+
+		// push additional unparsed URL parts onto the parameter stack
+		if(array_key_exists($this->unshiftedButParsedParts, $this->dirParts)) {
+			$values[] = $this->dirParts[$this->unshiftedButParsedParts];
+		}
+
 		foreach($keys as $position => $key) {
 			$this->allParams[$key] = isset($values[$position]) ? $values[$position] : null;
 		}
-		
+
 		return $value;
 	}
 	

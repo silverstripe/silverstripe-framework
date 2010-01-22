@@ -65,25 +65,43 @@ class ContentControllerTest extends FunctionalTest {
 		$this->assertEquals(0, $controller->ChildrenOf('/third-level/')->Count());
 	}
 
-	
+	public function testDeepNestedURLs() {
+		SiteTree::enable_nested_urls();
+
+		$page = new Page();
+		$page->URLSegment = 'base-page';
+		$page->write();
+
+		for($i = 0; $i < 10; $i++) {
+			$parentID = $page->ID;
+
+			$page = new ContentControllerTest_Page();
+			$page->Title      = "Page Level $i";
+			$page->URLSegment = "level-$i";
+			$page->write();
+		}
+
+		$this->assertEquals($page->Title, $this->get($page->Link())->getBody());
+
+		SiteTree::disable_nested_urls();
+	}
+
 }
 
-class ContentControllerTest_Page extends Page {
-	
+class ContentControllerTest_Page extends Page {  }
+
+class ContentControllerTest_Page_Controller extends Page_Controller {
+
 	public static $allowed_actions = array (
 		'second_index'
 	);
-	
-}
 
-class ContentControllerTest_Page_Controller extends Page_Controller {
-	
 	public function index() {
 		return $this->Title;
 	}
-	
+
 	public function second_index() {
 		return $this->index();
 	}
-	
+
 }
