@@ -310,6 +310,10 @@ class File extends DataObject {
 		$name = ereg_replace(' +','-',trim($name));
 		$name = ereg_replace('[^A-Za-z0-9.+_\-]','',$name);
 
+		while($name[0] == '_' || $name[0] == '.') {
+			$name = substr($name, 1);
+		}
+
 		// We might have just turned it blank, so check again.
 		if(!$name) $name = 'new-folder';
 

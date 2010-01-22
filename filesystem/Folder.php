@@ -83,12 +83,10 @@ class Folder extends File {
 		if(file_exists($baseDir)) {
 			$actualChildren = scandir($baseDir);
 			foreach($actualChildren as $actualChild) {
-				if($actualChild[0] == '.') continue; // ignore hidden files
-				if(substr($actualChild,0,6) == 'Thumbs') continue; // ignore windows cache stuff
-				if($actualChild == '_resampled') continue; // ignore the resampled copies of images
-                if($actualChild == '_tmp') continue; // ignore tmp folder for PhotoEditor.
-				
-				
+				if($actualChild[0] == '.' || $actualChild[0] == '_' || substr($actualChild,0,6) == 'Thumbs') {
+					continue;
+				}
+
 				// A record with a bad class type doesn't deserve to exist. It must be purged!
 				if(isset($hasDbChild[$actualChild])) {
 					$child = $hasDbChild[$actualChild];
@@ -185,6 +183,10 @@ class Folder extends File {
 		$file = str_replace(' ', '-',$tmpFile['name']);
 		$file = ereg_replace('[^A-Za-z0-9+.-]+','',$file);
 		$file = ereg_replace('-+', '-',$file);
+
+		while($file[0] == '_' || $file[0] == '.') {
+			$file = substr($file, 1);
+		}
 
 		$file = $this->RelativePath . $file;
 		Filesystem::makeFolder(dirname("$base/$file"));
