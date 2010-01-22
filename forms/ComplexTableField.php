@@ -716,7 +716,7 @@ class ComplexTableField_ItemRequest extends RequestHandler {
 		}
 
 		$this->methodName = "show";
-		echo $this->renderWith($this->ctf->templatePopup);
+		return $this->renderWith($this->ctf->templatePopup);
 	}
 	
 	/**
@@ -743,7 +743,7 @@ class ComplexTableField_ItemRequest extends RequestHandler {
 
 		$this->methodName = "edit";
 
-		echo $this->renderWith($this->ctf->templatePopup);
+		return $this->renderWith($this->ctf->templatePopup);
 	}
 
 	function delete() {
