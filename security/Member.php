@@ -416,7 +416,6 @@ class Member extends DataObject {
 		$e->send();
 	}
 
-
 	/**
 	 * Returns the fields for the member form - used in the registration/profile module.
 	 * It should return fields that are editable by the admin and the logged-in user. 
@@ -424,15 +423,39 @@ class Member extends DataObject {
 	 * @return FieldSet Returns a {@link FieldSet} containing the fields for
 	 *                  the member form.
 	 */
-	function getMemberFormFields() {
-		$fields = new FieldSet(
-			new TextField("FirstName", _t('Member.FIRSTNAME', 'First Name')),
-			new TextField("Surname", _t('Member.SURNAME', "Surname")),
-			new TextField("Email", _t('Member.EMAIL', "Email", PR_MEDIUM, 'Noun')),
-			new TextField("Password", _t('Member.PASSWORD', 'Password'))
-		);
-		
-		$this->extend('augmentMemberFormFields', $fields);
+	public function getMemberFormFields() {
+		$fields = parent::getFrontendFields();
+
+		$fields->replaceField('Password', $password = new ConfirmedPasswordField (
+			'Password',
+			$this->fieldLabel('Password'),
+			null,
+			null,
+			(bool) $this->ID
+		));
+		$password->setCanBeEmpty(true);
+
+		$fields->replaceField('Locale', new DropdownField (
+			'Locale',
+			$this->fieldLabel('Locale'),
+			i18n::get_existing_translations(),
+			(($this->Locale) ? $this->Locale : i18n::get_locale())
+		));
+
+		$fields->removeByName('RememberLoginToken');
+		$fields->removeByName('NumVisit');
+		$fields->removeByName('LastVisited');
+		$fields->removeByName('Bounced');
+		$fields->removeByName('AutoLoginHash');
+		$fields->removeByName('AutoLoginExpired');
+		$fields->removeByName('PasswordEncryption');
+		$fields->removeByName('Salt');
+		$fields->removeByName('PasswordExpiry');
+		$fields->removeByName('FailedLoginCount');
+		$fields->removeByName('LastViewed');
+		$fields->removeByName('LockedOutUntil');
+
+		$this->extend('updateMemberFormFields', $fields);
 		return $fields;
 	}
 
