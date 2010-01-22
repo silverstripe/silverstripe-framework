@@ -809,9 +809,9 @@ class ComplexTableField_ItemRequest extends RequestHandler {
 	 */
 	function saveComplexTableField($data, $form, $request) {
 		$dataObject = $this->dataObj();
-		$form->saveInto($dataObject);
-		
+
 		try {
+			$form->saveInto($dataObject);
 			$dataObject->write();
 		} catch(ValidationException $e) {
 			$form->sessionMessage($e->getResult()->message(), 'bad');
