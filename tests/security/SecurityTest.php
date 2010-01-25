@@ -260,6 +260,19 @@ class SecurityTest extends FunctionalTest {
 		$this->assertEquals($attempt->Email, 'sam@silverstripe.com');
 		$this->assertEquals($attempt->Member(), $member);
 	}
+	
+	function testDatabaseIsReadyWithInsufficientMemberColumns() {
+		// Assumption: The database has been built correctly by the test runner,
+		// and has all columns present in the ORM
+		DB::getConn()->renameField('Member', 'Email', 'Email_renamed');
+		
+		// Email column is now missing, which means we're not ready to do permission checks
+		$this->assertFalse(Security::database_is_ready());
+		
+		// Rebuild the database (which re-adds the Email column), and try again
+		$this->resetDBSchema(true);
+		$this->assertTrue(Security::database_is_ready());
+	}
 
 	/**
 	 * Execute a log-in form using Director::test().

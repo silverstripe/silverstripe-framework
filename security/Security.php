@@ -826,6 +826,8 @@ class Security extends Controller {
 	
 	/**
 	 * Checks the database is in a state to perform security checks.
+	 * See {@link DatabaseAdmin->init()} for more information.
+	 * 
 	 * @return bool
 	 */
 	public static function database_is_ready() {
@@ -833,10 +835,21 @@ class Security extends Controller {
 		$requiredTables[] = 'Group';
 		$requiredTables[] = 'Permission';
 		
-		foreach($requiredTables as $table) if(!ClassInfo::hasTable($table)) return false;
+		foreach($requiredTables as $table) {
+			// if any of the tables aren't created in the database
+			if(!ClassInfo::hasTable($table)) return false;
 		
-		return (($permissionFields = DB::fieldList('Permission')) && isset($permissionFields['Type'])) &&
-			(($memberFields = DB::fieldList('Member')) && isset($memberFields['RememberLoginToken']));
+			// if any of the tables don't have all fields mapped as table columns
+			$dbFields = DB::fieldList($table);
+			if(!$dbFields) return false;
+			
+			$objFields = DataObject::database_fields($table);
+			$missingFields = array_diff_key($objFields, $dbFields);
+			
+			if($missingFields) return false;
+		}
+		
+		return true;
 	}
 	
 	/**
