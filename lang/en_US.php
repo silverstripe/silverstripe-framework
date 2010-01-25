@@ -50,7 +50,6 @@ $lang['en_US']['BBCodeParser']['UNDERLINEEXAMPLE'] = 'Underlined';
 $lang['en_US']['BBCodeParser']['UNORDERED'] = 'Unordered list';
 $lang['en_US']['BBCodeParser']['UNORDEREDDESCRIPTION'] = 'Unordered list';
 $lang['en_US']['BBCodeParser']['UNORDEREDEXAMPLE1'] = 'unordered item 1';
-$lang['en_US']['BankAccountField']['VALIDATIONJS'] = 'Please enter a valid bank number';
 $lang['en_US']['BasicAuth']['ENTERINFO'] = 'Please enter a username and password.';
 $lang['en_US']['BasicAuth']['ERRORNOTADMIN'] = 'That user is not an administrator.';
 $lang['en_US']['BasicAuth']['ERRORNOTREC'] = 'That username / password isn\'t recognised';
@@ -93,11 +92,6 @@ $lang['en_US']['CompositeDateField']['MONTHJS'] = 'month';
 $lang['en_US']['CompositeDateField']['VALIDATIONJS1'] = 'Please ensure you have set the';
 $lang['en_US']['CompositeDateField']['VALIDATIONJS2'] = 'correctly.';
 $lang['en_US']['CompositeDateField']['YEARJS'] = 'year';
-$lang['en_US']['ConfirmedFormAction']['CONFIRMATION'] = array(
-	'Are you sure?',
-	PR_MEDIUM,
-	'Confirmation popup before executing the form action'
-);
 $lang['en_US']['ConfirmedPasswordField']['ATLEAST'] = 'Passwords must be at least %s characters long.';
 $lang['en_US']['ConfirmedPasswordField']['BETWEEN'] = 'Passwords must be %s to %s characters long.';
 $lang['en_US']['ConfirmedPasswordField']['HAVETOMATCH'] = 'Passwords have to match.';
@@ -293,7 +287,6 @@ $lang['en_US']['Form']['LANGAOTHER'] = 'Other languages';
 $lang['en_US']['Form']['LANGAVAIL'] = 'Available languages';
 $lang['en_US']['Form']['NOTSET'] = '(not set)';
 $lang['en_US']['Form']['VALIDATIONALLDATEVALUES'] = 'Please ensure you have set all date values';
-$lang['en_US']['Form']['VALIDATIONBANKACC'] = 'Please enter a valid bank number';
 $lang['en_US']['Form']['VALIDATIONCREDITNUMBER'] = 'Please ensure you have entered the %s credit card number correctly.';
 $lang['en_US']['Form']['VALIDATIONFAILED'] = 'Validation failed';
 $lang['en_US']['Form']['VALIDATIONNOTUNIQUE'] = 'The value entered is not unique';
@@ -303,8 +296,6 @@ $lang['en_US']['Form']['VALIDATIONSTRONGPASSWORD'] = 'Passwords must have at lea
 $lang['en_US']['Form']['VALIDATOR'] = 'Validator';
 $lang['en_US']['Form']['VALIDCURRENCY'] = 'Please enter a valid currency.';
 $lang['en_US']['FormField']['NONE'] = 'none';
-$lang['en_US']['GSTNumberField']['VALIDATION'] = 'Please enter a valid GST Number';
-$lang['en_US']['GSTNumberField']['VALIDATIONJS'] = 'Please enter a valid GST Number';
 $lang['en_US']['Group']['Code'] = array(
 	'Group Code',
 	PR_MEDIUM,
@@ -434,7 +425,6 @@ $lang['en_US']['Member']['ERRORLOCKEDOUT'] = 'Your account has been temporarily 
 $lang['en_US']['Member']['ERRORNEWPASSWORD'] = 'Your have entered your new password differently, try again';
 $lang['en_US']['Member']['ERRORPASSWORDNOTMATCH'] = 'Your current password does not match, please try again';
 $lang['en_US']['Member']['ERRORWRONGCRED'] = 'That doesn\'t seem to be the right e-mail address or password. Please try again.';
-$lang['en_US']['Member']['FIRSTNAME'] = 'First Name';
 $lang['en_US']['Member']['GREETING'] = 'Welcome';
 $lang['en_US']['Member']['INTERFACELANG'] = array(
 	'Interface Language',
@@ -475,7 +465,6 @@ $lang['en_US']['Member']['SUBJECTPASSWORDRESET'] = array(
 	PR_MEDIUM,
 	'Email subject'
 );
-$lang['en_US']['Member']['SURNAME'] = 'Surname';
 $lang['en_US']['Member']['USERDETAILS'] = array(
 	'User Details',
 	PR_MEDIUM,
@@ -607,18 +596,8 @@ $lang['en_US']['Security']['ALREADYLOGGEDIN'] = array(
 $lang['en_US']['Security']['BUTTONSEND'] = 'Send me the password reset link';
 $lang['en_US']['Security']['CHANGEPASSWORDBELOW'] = 'You can change your password below.';
 $lang['en_US']['Security']['CHANGEPASSWORDHEADER'] = 'Change your password';
-$lang['en_US']['Security']['EMAIL'] = 'E-Mail:';
-$lang['en_US']['Security']['ENCDISABLED1'] = 'Password encryption disabled!';
-$lang['en_US']['Security']['ENCDISABLED2'] = 'To encrypt your passwords change your password settings by adding';
-$lang['en_US']['Security']['ENCDISABLED3'] = 'to mysite/_config.php';
-$lang['en_US']['Security']['ENCRYPT'] = 'Encrypting all passwords';
-$lang['en_US']['Security']['ENCRYPTEDMEMBERS'] = 'Encrypted credentials for member &quot;';
-$lang['en_US']['Security']['ENCRYPTWITH'] = 'The passwords will be encrypted using the &quot;%s&quot; algorithm';
-$lang['en_US']['Security']['ENCRYPTWITHOUTSALT'] = 'without using a salt to increase the security.';
-$lang['en_US']['Security']['ENCRYPTWITHSALT'] = 'with a salt to increase the security.';
 $lang['en_US']['Security']['ENTERNEWPASSWORD'] = 'Please enter a new password.';
 $lang['en_US']['Security']['ERRORPASSWORDPERMISSION'] = 'You must be logged in in order to change your password!';
-$lang['en_US']['Security']['ID'] = 'ID:';
 $lang['en_US']['Security']['IPADDRESSES'] = 'IP Addresses';
 $lang['en_US']['Security']['LOGGEDOUT'] = 'You have been logged out.  If you would like to log in again, enter your credentials below.';
 $lang['en_US']['Security']['LOGIN'] = 'Log in';
@@ -626,14 +605,10 @@ $lang['en_US']['Security']['LOSTPASSWORDHEADER'] = 'Lost Password';
 $lang['en_US']['Security']['NOTEPAGESECURED'] = 'That page is secured. Enter your credentials below and we will send you right along.';
 $lang['en_US']['Security']['NOTERESETLINKINVALID'] = '<p>The password reset link is invalid or expired.</p><p>You can request a new one <a href="%s">here</a> or change your password after you <a href="%s">logged in</a>.</p>';
 $lang['en_US']['Security']['NOTERESETPASSWORD'] = 'Enter your e-mail address and we will send you a link with which you can reset your password';
-$lang['en_US']['Security']['NOTHINGTOENCRYPT1'] = 'No passwords to encrypt';
-$lang['en_US']['Security']['NOTHINGTOENCRYPT2'] = 'There are no members with a clear text password that could be encrypted!';
 $lang['en_US']['Security']['PASSWORDSENTHEADER'] = 'Password reset link sent to \'%s\'';
 $lang['en_US']['Security']['PASSWORDSENTTEXT'] = 'Thank you! A reset link has been sent to  \'%s\', provided an account exists for this email address.';
-$lang['en_US']['Security']['PERMFAILURE'] = ' This page is secured and you need administrator rights to access it. 
-				Enter your credentials below and we will send you right along.';
 $lang['en_US']['SecurityAdmin']['ADVANCEDONLY'] = 'This section is for advanced users only.
-							See <a href="http://doc.silverstripe.org/doku.php?id=permissions:codes" target="_blank">this page</a>
+							See <a href="http://doc.silverstripe.com/doku.php?id=permissions:codes" target="_blank">this page</a>
 							for more information.';
 $lang['en_US']['SecurityAdmin']['GROUPNAME'] = 'Group name';
 $lang['en_US']['SecurityAdmin']['IPADDRESSESHELP'] = '<p>You can restrict this group to a particular 
@@ -651,6 +626,7 @@ $lang['en_US']['SecurityAdmin']['ROLES'] = 'Roles';
 $lang['en_US']['SecurityAdmin']['ROLESDESCRIPTION'] = 'This section allows you to add roles to this group. Roles are logical groupings of permissions, which can be editied in the Roles tab';
 $lang['en_US']['SecurityAdmin']['VIEWUSER'] = 'View User';
 $lang['en_US']['SimpleImageField']['NOUPLOAD'] = 'No Image Uploaded';
+$lang['en_US']['SiteConfig']['EDITHEADER'] = 'Who can edit pages on this site?';
 $lang['en_US']['SiteConfig']['EDIT_PERMISSION'] = 'Manage site configuration';
 $lang['en_US']['SiteConfig']['EDIT_PERMISSION_HELP'] = 'Ability to edit global access settings/top-level page permissions.';
 $lang['en_US']['SiteConfig']['PLURALNAME'] = array(
@@ -783,6 +759,7 @@ $lang['en_US']['SiteTree']['VALIDATIONURLSEGMENT2'] = 'URLs can only be made up 
 $lang['en_US']['SiteTree']['VIEWERGROUPS'] = 'Viewer Groups';
 $lang['en_US']['SiteTree']['VIEW_ALL_DESCRIPTION'] = 'View any page';
 $lang['en_US']['SiteTree']['VIEW_ALL_HELP'] = 'Ability to view any page on the site, regardless of the settings on the Access tab.  Requires "Access to Site Content."';
+$lang['en_US']['SiteTree']['VIRTUALPAGESLINKING'] = 'The following virtual pages pull from this page:';
 $lang['en_US']['SiteTree']['Viewers'] = 'Viewers Groups';
 $lang['en_US']['SiteTree']['has_one_Parent'] = array(
 	'Parent Page',
