@@ -24,7 +24,7 @@ Behaviour.register({
 				el = _CURRENT_FORM.elements[fieldName];
 				if(!el || !el.value) return true;
 				
-			 	if(el.value.match(/^\s*([0-9]+(\.[0-9]+)?\s*$)/)) { 
+			 	if(el.value.match(/^\s*(\-?[0-9]+(\.[0-9]+)?\s*$)/)) { 
 			 		return true;
 			 	} else {
 					validationError(el, "'" + el.value + "' $error","validation");
