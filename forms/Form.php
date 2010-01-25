@@ -144,8 +144,8 @@ class Form extends RequestHandler {
 	function __construct($controller, $name, FieldSet $fields, FieldSet $actions, $validator = null) {
 		parent::__construct();
 
-		foreach($fields as $field) $field->setForm($this);
-		foreach($actions as $action) $actions->setForm($this);
+		$fields->setForm($this);
+		$actions->setForm($this);
 
 		$this->fields = $fields;
 		$this->actions = $actions;
