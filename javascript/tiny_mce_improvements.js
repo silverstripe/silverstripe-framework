@@ -646,12 +646,6 @@ function reselectImage(transport) {
 
 		$('Image').reapplyBehaviour();
       this.addToTinyMCE = this.addToTinyMCE.bind(this);
-      var childNodes = $('Image').childNodes[0].childNodes;
-      var newImages = $A(childNodes).slice(childNodes.length - this.filesUploaded);
-      newImages.each(function(item) {
-          tinyMCEImageEnhancement.addToTinyMCE(item.childNodes[0]);
-      });
-      tinyMCEImageEnhancement.processInProgress = false;  
 }
 
 function imageEditorClosed() {

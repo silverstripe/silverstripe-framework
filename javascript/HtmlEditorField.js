@@ -1,29 +1,61 @@
 /**
- * Simple TinyMCE initialisation
+ * Functions for HtmlEditorFields in the back end.
+ * Includes the JS for the ImageUpload forms. 
+ * 
+ * Relies on the jquery.form.js plugin to power the 
+ * ajax / iframe submissions
  */
-if((typeof tinyMCE != 'undefined')) {
-	tinymce.PluginManager.load('advcode', '/some/dir/someplugin/editor_plugin.js');
-	
-	tinyMCE.init({
-		mode : "specific_textareas",
-		editor_selector : "htmleditor",
-		width: "100%",
-		auto_resize : false,
-		theme : "advanced",
 
-		theme_advanced_layout_manager: "SimpleLayout",
-		theme_advanced_toolbar_location : "top",
-		theme_advanced_toolbar_align : "left",
-		theme_advanced_toolbar_parent : "right",
-		plugins : "contextmenu,table,emotions,paste,-advcode,spellchecker",	
-		blockquote_clear_tag : "p",
-		table_inline_editing : true,
-		theme_advanced_buttons1 : "bold,italic,underline,strikethrough,separator,justifyleft,justifycenter,justifyright,justifyfull,formatselect,separator,bullist,numlist,outdent,indent,blockquote,hr,charmap",
-		theme_advanced_buttons2 : "undo,redo,separator,cut,copy,paste,pastetext,pasteword,spellchecker,separator,advcode,search,replace,selectall,visualaid,separator,tablecontrols",
-		theme_advanced_buttons3 : "",
+(function($) {
+	$(document).ready(function() {
 
-		safari_warning : false,
-		relative_urls : true,
-		verify_html : true
+		$("#Form_EditorToolbarImageForm .showUploadField a").click(function() {
+			if($(this).hasClass("showing")) {
+				$("#Form_EditorToolbarImageForm_Files-0").parents('.file').hide();
+				$(this).text(ss.i18n._t('HtmlEditorField.ShowUploadForm', 'Upload File')).removeClass("showing");	
+			}
+			else {
+				$("#Form_EditorToolbarImageForm_Files-0").parents('.file').show();
+				$(this).text(ss.i18n._t('HtmlEditorField.HideUploadForm', 'Hide Upload Form')).addClass("showing");
+			}
+		}).show();
+		
+		$("#Form_EditorToolbarImageForm_Files-0").change(function() {
+			$("#contentPanel form").ajaxForm({
+				url: 'admin/assets/UploadForm?action_doUpload=1',
+				iframe: true,
+				
+				beforeSubmit: function(data) {
+					$("#UploadFormResponse").text("Uploading File...").addClass("loading").show();
+					$("#Form_EditorToolbarImageForm_Files-0").parents('.file').hide();
+				},
+				success: function(data) {
+					$("#UploadFormResponse").text(data).removeClass("loading");
+					$("#Form_EditorToolbarImageForm_Files-0").val("").parents('.file').show();
+					
+					$("#FolderImages").html('<h2>'+ ss.i18n._t('HtmlEditorField.Loading', 'Loading') + '</h2>');
+					
+					var ajaxURL = 'admin/EditorToolbar/ImageForm';
+					
+					$.get(ajaxURL, {
+						action_callfieldmethod: "1",
+						fieldName: "FolderImages",
+						ajax: "1",
+						methodName: "getimages",
+						folderID: $("#Form_EditorToolbarImageForm_FolderID").val(),
+						searchText: $("#Form_EditorToolbarImageForm_getimagesSearch").val(),
+						cacheKillerDate: parseInt((new Date()).getTime()),
+						cacheKillerRand: parseInt(10000 * Math.random())
+					},
+					function(data) {
+						$("#FolderImages").html(data);
+						
+						$("#FolderImages").each(function() {
+							Behaviour.apply(this);
+						})
+					});
+				}
+			}).submit();
+		});
 	});
-}
+})(jQuery);
