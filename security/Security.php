@@ -603,12 +603,19 @@ class Security extends Controller {
 
 
 	/**
-	 * Return a member with administrator privileges
-	 *
-	 * @return Member Returns a member object that has administrator
-	 *                privileges.
+	 * Return an existing member with administrator privileges, or create one of necessary.
+	 * 
+	 * Will create a default 'Administrators' group if no group is found
+	 * with an ADMIN permission. Will create a new 'Admin' member with administrative permissions
+	 * if no existing Member with these permissions is found. 
+	 * 
+	 * Important: Any newly created administrator accounts will NOT have valid
+	 * login credentials (Email/Password properties), which means they can't be used for login
+	 * purposes outside of any default credentials set through {@link Security::setDefaultAdmin()}.
+	 * 
+	 * @return Member 
 	 */
-	static function findAnAdministrator($username = 'admin', $password = 'password') {
+	static function findAnAdministrator() {
 		// coupling to subsites module
 		$subsiteCheck = class_exists('GroupSubsites') ?  ' AND "Group"."SubsiteID" = 0' : '';
 		
@@ -635,10 +642,10 @@ class Security extends Controller {
 		}
 		
 		if(!isset($member)) {
+			// Leave 'Email' and 'Password' are not set to avoid creating
+			// persistent logins in the database. See Security::setDefaultAdmin().
 			$member = Object::create('Member');
-			$member->FirstName = $member->Surname = 'Admin';
-			$member->Email = $username;
-			$member->Password = $password;
+			$member->FirstName = 'Default Admin';
 			$member->write();
 			$member->Groups()->add($adminGroup);
 		}
@@ -650,13 +657,13 @@ class Security extends Controller {
 	/**
 	 * Set a default admin in dev-mode
 	 * 
-	 * This will set a static default-admin (e.g. "td") which is not existing
+	 * This will set a static default-admin which is not existing
 	 * as a database-record. By this workaround we can test pages in dev-mode
 	 * with a unified login. Submitted login-credentials are first checked
-	 * against this static information in {@authenticate()}.
+	 * against this static information in {@link Security::authenticate()}.
 	 *
 	 * @param string $username The user name
-	 * @param string $password The password in cleartext
+	 * @param string $password The password (in cleartext)
 	 */
 	public static function setDefaultAdmin($username, $password) {
 		// don't overwrite if already set

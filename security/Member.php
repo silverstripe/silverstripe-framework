@@ -975,15 +975,6 @@ class Member extends DataObject {
 		}
 		return $labels;
 	}
-
-	function requireDefaultRecords() {
-		parent::requireDefaultRecords();
-		
-		if(!DB::query("SELECT * FROM \"Member\"")->value() && isset($_REQUEST['username']) && isset($_REQUEST['password'])) {
-			Security::findAnAdministrator($_REQUEST['username'], $_REQUEST['password']);
-			DB::alteration_message("Added admin account","created");
-		}
-	}
 	
 	/**
 	 * Users can view their own record.
