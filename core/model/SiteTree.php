@@ -1223,7 +1223,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		
 		// default pages
 		if($this->class == 'SiteTree') {
-			if(!DataObject::get_one("SiteTree", "\"URLSegment\" = 'home'")) {
+			if(!SiteTree::get_by_link('home')) {
 				$homepage = new Page();
 
 				$homepage->Title = _t('SiteTree.DEFAULTHOMETITLE', 'Home');
