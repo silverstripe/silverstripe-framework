@@ -280,6 +280,19 @@ abstract class Object {
 				if($parentProp == $classProp) $classProp = null;
 			}
 			
+			// Add data from extra_statics if it has been applied to this specific class (it
+			// wouldn't make sense to have them inherit in this method).  This is kept separate
+			// from the equivalent get_static code because it's so much simpler
+			if(isset(self::$extra_statics[$class][$name])) {
+				$toMerge = self::$extra_statics[$class][$name];
+				
+				if(is_array($toMerge) && is_array($classProp)) {
+					$classProp = array_merge($toMerge, $classProp);
+				} elseif(!$classProp) {
+					$classProp = $toMerge;
+				}
+			}
+			
 			self::$cached_uninherited_statics[$class][$name] = true;
 			self::$uninherited_statics[$class][$name] = $classProp;
 		}
@@ -355,8 +368,11 @@ abstract class Object {
 		if ($replace) {
 			self::set_static($class, $name, $value);
 			self::$replaced_statics[$class][$name] = true;
+			
+		// Clear caches
 		} else {
 			self::$cached_statics[$class][$name] = null;
+			self::$cached_uninherited_statics[$class][$name] = null;
 		}
 	}
 	

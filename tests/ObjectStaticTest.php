@@ -70,14 +70,25 @@ class ObjectStaticTest extends SapphireTest {
 	}
 	
 	/**
-	 * Confirms that Object::add_static_var() doesn't work for uninherited stats
+	 * Checks that Object::add_static_var() also works for uninherited stats
 	 */
-	public function testAddStaticVarDoesntWorkFor() {
+	public function testAddStaticVarWorksForUninheritedStatics() {
 		Object::add_static_var('ObjectStaticTest_First', 'first', array('test_1b'));
 		Object::add_static_var('ObjectStaticTest_Second', 'first', array('test_2b'));
 		
-		$this->assertNotContains('test_1b', Object::uninherited_static('ObjectStaticTest_First', 'first'));
-		$this->assertNotContains('test_2b', Object::uninherited_static('ObjectStaticTest_Second', 'first'));
+		// Check that it can be applied to parent and subclasses, and queried directly
+		$this->assertContains('test_1b', Object::uninherited_static('ObjectStaticTest_First', 'first'));
+		$this->assertContains('test_2b', Object::uninherited_static('ObjectStaticTest_Second', 'first'));
+
+		// But it won't affect subclasses - this is *uninherited* static
+		$this->assertNotContains('test_2b', Object::uninherited_static('ObjectStaticTest_Third', 'first'));
+		$this->assertNotContains('test_2b', Object::uninherited_static('ObjectStaticTest_Fourth', 'first'));
+
+		// Subclasses that don't have the static explicitly defined should allow definition, also
+		// This also checks that add_static_var can be called after the first uninherited_static() 
+		// call (which can be buggy due to caching) 
+		Object::add_static_var('ObjectStaticTest_Fourth', 'first', array('test_4b'));
+		$this->assertContains('test_4b', Object::uninherited_static('ObjectStaticTest_Fourth', 'first'));
 	}
 	
 }
