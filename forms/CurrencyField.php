@@ -12,7 +12,8 @@ class CurrencyField extends TextField {
 	 * allows the value to be set ( not including $ signs and number format...)
 	 */
 	function setValue($val) {
-		$this->value = '$' . number_format(ereg_replace('[^0-9.]',"",$val), 2);
+		$value = ($val) ? $val : 0.00;
+		$this->value = '$' . number_format(ereg_replace('[^0-9.]', '', $value), 2);
 	}
 	/**
 	 * Overwrite the datavalue before saving to the db ;-)
