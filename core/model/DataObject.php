@@ -2459,6 +2459,12 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 
 			$baseClass = array_shift($tableClasses);
 
+
+			// $collidingFields will keep a list fields that appear in mulitple places in the class
+			// heirarchy for this table.  They will be dealt with more explicitly in the SQL query
+			// to ensure that junk data from other tables doesn't corrupt data objects
+			$collidingFields = array();
+
 			// Build our intial query
 			$query = new SQLQuery(array());
 			$query->from("\"$baseClass\"");
@@ -2469,7 +2475,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 				if(!in_array($k, array('ClassName', 'LastEdited', 'Created')) && ClassInfo::classImplements($v, 'CompositeDBField')) {
 					$this->dbObject($k)->addToQuery($query);
 				} else {
-					$query->select[] = "\"$baseClass\".\"$k\"";
+					$query->select[$k] = "\"$baseClass\".\"$k\"";
 				}
 			}
 			// Join all the tables
@@ -2482,7 +2488,14 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 					$compositeFields = self::composite_fields($tableClass, false);
 					if($databaseFields) foreach($databaseFields as $k => $v) {
 						if(!isset($compositeFields[$k])) {
-							$query->select[] = "\"$tableClass\".\"$k\"";
+							// Update $collidingFields if necessary
+							if(isset($query->select[$k])) {
+								if(!isset($collidingFields[$k])) $collidingFields[$k] = array($query->select[$k]);
+								$collidingFields[$k][] = "\"$tableClass\".\"$k\"";
+								
+							} else {
+								$query->select[$k] = "\"$tableClass\".\"$k\"";
+							}
 						}
 					}
 					if($compositeFields) foreach($compositeFields as $k => $v) {
@@ -2491,6 +2504,26 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 					}
 				}
 			}
+			
+			// Resolve colliding fields
+			if($collidingFields) {
+				foreach($collidingFields as $k => $collisions) {
+					$caseClauses = array();
+					foreach($collisions as $collision) {
+						if(preg_match('/^"([^"]+)"/', $collision, $matches)) {
+							$collisionBase = $matches[1];
+							$collisionClasses = ClassInfo::subclassesFor($collisionBase);
+							$caseClauses[] = "WHEN \"$baseClass\".\"ClassName\" IN ('"
+								. implode("', '", $collisionClasses) . "') THEN $collision";
+						} else {
+							user_error("Bad collision item '$collision'", E_USER_WARNING);
+						}
+					}
+					$query->select[$k] = "CASE " . implode( " ", $caseClauses) . " ELSE NULL END"
+						.  " AS \"$k\"";
+				}
+			}
+			
 
 			$query->select[] = "\"$baseClass\".\"ID\"";
 			$query->select[] = "CASE WHEN \"$baseClass\".\"ClassName\" IS NOT NULL THEN \"$baseClass\".\"ClassName\" ELSE '$baseClass' END AS \"RecordClassName\"";

@@ -18,6 +18,41 @@ class DataObjectTest extends SapphireTest {
 		'DataObjectTest_Player',
 	);
 
+	
+	function testDataIntegrityWhenTwoSubclassesHaveSameField() {
+		// Save data into DataObjectTest_SubTeam.SubclassDatabaseField
+		$obj = new DataObjectTest_SubTeam();
+		$obj->SubclassDatabaseField = "obj-SubTeam";
+		$obj->write();
+		
+		// Change the class
+		$obj->ClassName = 'OtherSubclassWithSameField';
+		$obj->write();
+		$obj->flushCache();
+		
+		
+		
+		
+		// Re-fetch from the database and confirm that the data is sourced from 
+		// OtherSubclassWithSameField.SubclassDatabaseField
+		$obj = DataObject::get_by_id('DataObjectTest_Team', $obj->ID);
+		$this->assertNull($obj->SubclassDatabaseField);
+		
+		// Confirm that save the object in the other direction.
+		$obj->SubclassDatabaseField = 'obj-Other';
+		$obj->write();
+
+		$obj->ClassName = 'DataObjectTest_SubTeam';
+		$obj->write();
+		$obj->flushCache();
+
+		// If we restore the class, the old value has been lying dormant and will be available again.
+		// NOTE: This behaviour is volatile; we may change this in the future to clear fields that
+		// are no longer relevant when changing ClassName
+		$obj = DataObject::get_by_id('DataObjectTest_Team', $obj->ID);
+		$this->assertEquals('obj-SubTeam', $obj->SubclassDatabaseField);
+	}
+
 	/**
 	 * Test deletion of DataObjects
 	 *   - Deleting using delete() on the DataObject
