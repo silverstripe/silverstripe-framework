@@ -162,17 +162,21 @@ class DataObjectDecoratorTest_Player extends DataObject implements TestOnly {
 
 class DataObjectDecoratorTest_PlayerDecorator extends DataObjectDecorator implements TestOnly {
 	
-	function extraStatics() {
-		return array(
-			'db' => array(
-				'Address' => 'Text',
-				'DateBirth' => 'Date',
-				'Status' => "Enum('Shooter,Goalie')"
-			),
-			'defaults' => array(
-				'Status' => 'Goalie'
-			)
-		);
+	function extraStatics($class) {
+		// Only add these extensions if the $class is set to DataObjectDecoratorTest_Player, to
+		// test that the argument works.
+		if($class == 'DataObjectDecoratorTest_Player') {
+			return array(
+				'db' => array(
+					'Address' => 'Text',
+					'DateBirth' => 'Date',
+					'Status' => "Enum('Shooter,Goalie')"
+				),
+				'defaults' => array(
+					'Status' => 'Goalie'
+				)
+			);
+		}
 	}
 	
 }
