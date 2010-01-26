@@ -363,6 +363,7 @@ TreeMultiselectField.prototype = {
 		for(i=0;i<allNodes.length;i++) {
 			if(isSelected[allNodes[i].getIdx()]) {
 				this.tree.selectNode(allNodes[i]);
+				allNodes[i].expose();
 			}
 		}
 	},
