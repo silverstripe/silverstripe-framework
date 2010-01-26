@@ -173,6 +173,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 		
 		// If we have made changes to the extensions present, then migrate the database schema.
 		if($this->extensionsToReapply || $this->extensionsToRemove || $this->extraDataObjects) {
+			if(!self::using_temp_db()) self::create_temp_db();
 			$this->resetDBSchema(true);
 		}
 		// clear singletons, they're caching old extension info 
