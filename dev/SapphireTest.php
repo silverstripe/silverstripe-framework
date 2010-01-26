@@ -581,7 +581,8 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 		$dbConn->selectDatabase($dbname);
 		$dbConn->createDatabase();
 		
-		singleton('SapphireTest')->resetDBSchema();
+		$st = new SapphireTest();
+		$st->resetDBSchema();
 		
 		return $dbname;
 	}
