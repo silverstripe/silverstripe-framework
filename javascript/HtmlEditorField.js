@@ -8,7 +8,14 @@
 
 (function($) {
 	$(document).ready(function() {
-
+		/**
+		 * On page refresh load the initial images (in root)
+		 */
+		if($("#FolderImages").length > 0) loadImages();
+		
+		/**
+		 * Show / Hide the Upload Form 
+		 */
 		$("#Form_EditorToolbarImageForm .showUploadField a").click(function() {
 			if($(this).hasClass("showing")) {
 				$("#Form_EditorToolbarImageForm_Files-0").parents('.file').hide();
@@ -20,6 +27,9 @@
 			}
 		}).show();
 		
+		/**
+		 * On folder change - lookup the new images
+		 */
 		$("#Form_EditorToolbarImageForm_Files-0").change(function() {
 			$("#contentPanel form").ajaxForm({
 				url: 'admin/assets/UploadForm?action_doUpload=1',
@@ -35,27 +45,34 @@
 					
 					$("#FolderImages").html('<h2>'+ ss.i18n._t('HtmlEditorField.Loading', 'Loading') + '</h2>');
 					
-					var ajaxURL = 'admin/EditorToolbar/ImageForm';
-					
-					$.get(ajaxURL, {
-						action_callfieldmethod: "1",
-						fieldName: "FolderImages",
-						ajax: "1",
-						methodName: "getimages",
-						folderID: $("#Form_EditorToolbarImageForm_FolderID").val(),
-						searchText: $("#Form_EditorToolbarImageForm_getimagesSearch").val(),
-						cacheKillerDate: parseInt((new Date()).getTime()),
-						cacheKillerRand: parseInt(10000 * Math.random())
-					},
-					function(data) {
-						$("#FolderImages").html(data);
-						
-						$("#FolderImages").each(function() {
-							Behaviour.apply(this);
-						})
-					});
+					loadImages();
 				}
 			}).submit();
 		});
+		
+		/**
+		 * Loads images from getimages() to the thumbnail view. It's called on
+		 *
+		 *
+		 */
+		function loadImages(sel) {
+			$.get('admin/EditorToolbar/ImageForm', {
+				action_callfieldmethod: "1",
+				fieldName: "FolderImages",
+				ajax: "1",
+				methodName: "getimages",
+				folderID: $("#Form_EditorToolbarImageForm_FolderID").val(),
+				searchText: $("#Form_EditorToolbarImageForm_getimagesSearch").val(),
+				cacheKillerDate: parseInt((new Date()).getTime()),
+				cacheKillerRand: parseInt(10000 * Math.random())
+			},
+			function(data) {
+				$("#FolderImages").html(data);
+				
+				$("#FolderImages").each(function() {
+					Behaviour.apply(this);
+				})
+			});	
+		}
 	});
 })(jQuery);
