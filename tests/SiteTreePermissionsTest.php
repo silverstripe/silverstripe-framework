@@ -96,7 +96,6 @@ class SiteTreePermissionsTest extends FunctionalTest {
 		$this->assertFalse($page->canEdit());
 	}
 
-/*	
 	function testAccessTabOnlyDisplaysWithGrantAccessPermissions() {
 		$page = $this->objFromFixture('Page', 'standardpage');
 		
@@ -340,58 +339,7 @@ class SiteTreePermissionsTest extends FunctionalTest {
 			'Authenticated members can edit a page that was deleted from stage and marked as "Editable by logged in users" if they have cms permissions and belong to any of these groups'
 		);
 	}
-	
-	function testInheritCanViewFromSiteConfig() {
-		$page = $this->objFromFixture('Page', 'inheritWithNoParent');
-		$siteconfig = $this->objFromFixture('SiteConfig', 'default');
-		$editor = $this->objFromFixture('Member', 'editor');
-		$editorGroup = $this->objFromFixture('Group', 'editorgroup');
-		
-		$siteconfig->CanViewType = 'Anyone';
-		$siteconfig->write();
-		$this->assertTrue($page->canView(FALSE), 'Anyone can view a page when set to inherit from the SiteConfig, and SiteConfig has canView set to LoggedInUsers');
-		
-		$siteconfig->CanViewType = 'LoggedInUsers';
-		$siteconfig->write();
-		$this->assertFalse($page->canView(FALSE), 'Anonymous can\'t view a page when set to inherit from the SiteConfig, and SiteConfig has canView set to LoggedInUsers');
-		
-		$siteconfig->CanViewType = 'LoggedInUsers';
-		$siteconfig->write();
-		$this->assertTrue($page->canView($editor), 'Users can view a page when set to inherit from the SiteConfig, and SiteConfig has canView set to LoggedInUsers');
-		
-		$siteconfig->CanViewType = 'OnlyTheseUsers';
-		$siteconfig->ViewerGroups()->add($editorGroup);
-		$siteconfig->ViewerGroups()->write();
-		$siteconfig->write();
-		$this->assertTrue($page->canView($editor), 'Editors can view a page when set to inherit from the SiteConfig, and SiteConfig has canView set to OnlyTheseUsers');
-		$this->assertFalse($page->canView(FALSE), 'Anonymous can\'t view a page when set to inherit from the SiteConfig, and SiteConfig has canView set to OnlyTheseUsers');
-	}
-	
-	function testInheritCanEditFromSiteConfig() {
-		$page = $this->objFromFixture('Page', 'inheritWithNoParent');
-		$siteconfig = $this->objFromFixture('SiteConfig', 'default');
-		$editor = $this->objFromFixture('Member', 'editor');
-		$user = $this->objFromFixture('Member', 'websiteuser');
-		$editorGroup = $this->objFromFixture('Group', 'editorgroup');
-		
-		$siteconfig->CanEditType = 'LoggedInUsers';
-		$siteconfig->write();
-		
-		$this->assertFalse($page->canEdit(FALSE), 'Anonymous can\'t edit a page when set to inherit from the SiteConfig, and SiteConfig has canEdit set to LoggedInUsers');
-		$this->session()->inst_set('loggedInAs', $editor->ID);
-		$this->assertTrue($page->canEdit(), 'Users can edit a page when set to inherit from the SiteConfig, and SiteConfig has canEdit set to LoggedInUsers');
-		
-		$siteconfig->CanEditType = 'OnlyTheseUsers';
-		$siteconfig->EditorGroups()->add($editorGroup);
-		$siteconfig->EditorGroups()->write();
-		$siteconfig->write();
-		$this->assertTrue($page->canEdit($editor), 'Editors can edit a page when set to inherit from the SiteConfig, and SiteConfig has canEdit set to OnlyTheseUsers');
-		$this->session()->inst_set('loggedInAs', null);
-		$this->assertFalse($page->canEdit(FALSE), 'Anonymous can\'t edit a page when set to inherit from the SiteConfig, and SiteConfig has canEdit set to OnlyTheseUsers');
-		$this->session()->inst_set('loggedInAs', $user->ID);
-		$this->assertFalse($page->canEdit($user), 'Website user can\'t edit a page when set to inherit from the SiteConfig, and SiteConfig has canEdit set to OnlyTheseUsers');
-	}
-*/
+
 	function testInheritCanViewFromSiteConfig() {
 		$page = $this->objFromFixture('Page', 'inheritWithNoParent');
 		$siteconfig = $this->objFromFixture('SiteConfig', 'default');
