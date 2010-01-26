@@ -189,22 +189,10 @@ LinkForm.prototype = {
 				}
 				break;
 		}
-		
+
 		if(this.originalSelection) {
 		    tinyMCE.activeEditor.selection.setRng(this.originalSelection);
 		}
-		/*
-			 else {
-				var mceInst = tinyMCE.activeEditor;
-				var sel = mceInst.getSel();
-				if(sel.addRange && sel.removeAllRanges) {
-					sel.removeAllRanges();
-					sel.addRange(this.originalSelection);
-				}
-				mceInst.selectedElement = mceInst.getFocusElement();
-			}
-		}
-		*/
 		
 		var attributes = {
 		    href : href, 
@@ -213,23 +201,15 @@ LinkForm.prototype = {
 		    innerHTML : this.elements.LinkText.value ? this.elements.LinkText.value : "Your Link"
 		};
 
-        // Remove the old link while preserving the selection
-        if(tinyMCE.activeEditor.selection.getContent() != "") {
-            var rng = tinyMCE.activeEditor.selection.getRng();
-            tinyMCE.activeEditor.selection.setRng(rng);
-            tinyMCE.activeEditor.execCommand('unlink');
-            tinyMCE.activeEditor.selection.setRng(rng);
-        }
-
         // Add the new link
-		this.ssInsertLink(tinyMCE.activeEditor, attributes);
+		this.ssInsertLink(tinyMCE.activeEditor, attributes, this);
 	},
 	
 	/**
 	 * Insert a link into the given editor.
 	 * Replaces mceInsertLink in that innerHTML can also be set
 	 */
-	ssInsertLink: function(ed, attributes) {
+	ssInsertLink: function(ed, attributes, linkFormObj) {
 	    var v = attributes;
 		var s = ed.selection, e = ed.dom.getParent(s.getNode(), 'A');
 
@@ -241,12 +221,16 @@ LinkForm.prototype = {
 			    if(k == 'innerHTML') e.innerHTML = v;
 				else ed.dom.setAttrib(e, k, v);
 			});
+			try {
+				s.select(e);
+				if(linkFormObj) linkFormObj.updateSelection(ed);
+			} catch(er) {}
 		};
 		
 		function replace() {
 			tinymce.each(ed.dom.select('a'), function(e) {
 				if (e.href == 'javascript:mctmp(0);') set(e);
-			});			
+			});
 		}
 
 	    if(attributes.innerHTML && !ed.selection.getContent()) {
