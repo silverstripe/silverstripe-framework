@@ -16,8 +16,8 @@ HTML;
 	}
 	
 	function Field() {
-		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/prototype/prototype.js');
-		Requirements::javascript(SAPPHIRE_DIR . "/thirdparty/behaviour/behaviour.js");
+		Requirements::javascript(THIRDPARTY_DIR . '/prototype/prototype.js');
+		Requirements::javascript(THIRDPARTY_DIR . '/behaviour/behaviour.js');
 		Requirements::javascript(THIRDPARTY_DIR . "/calendar/calendar.js");
 		Requirements::javascript(THIRDPARTY_DIR . "/calendar/lang/calendar-en.js");
 		Requirements::javascript(THIRDPARTY_DIR . "/calendar/calendar-setup.js");
