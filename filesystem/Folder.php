@@ -329,7 +329,6 @@ class Folder extends File {
 	 * and implemeting updateCMSFields(FieldSet $fields) on that decorator.	
 	 */
 	function getCMSFields() {
-		$nameField = ($this->ID > 0) ? new TextField("Name") : new HiddenField("Name");
 		$fileList = new AssetTableField(
 			$this,
 			"Files",
@@ -340,7 +339,7 @@ class Folder extends File {
 		$fileList->setFolder($this);
 		$fileList->setPopupCaption(_t('Folder.VIEWEDITASSET', "View/Edit Asset"));
 
-		$nameField = ($this->ID && $this->ID != "root") ? new TextField("Name", _t('Folder.TITLE')) : new HiddenField("Name");
+		$titleField = ($this->ID && $this->ID != "root") ? new TextField("Title", _t('Folder.TITLE')) : new HiddenField("Title");
 		if( $this->canEdit() ) {
 			$deleteButton = new InlineFormAction('deletemarked',_t('Folder.DELSELECTED','Delete selected files'), 'delete');
 			$deleteButton->includeDefaultJS(false);
@@ -349,10 +348,10 @@ class Folder extends File {
 		}
 
 		$fields = new FieldSet(
-			new HiddenField("Title"),
+			new HiddenField("Name"),
 			new TabSet("Root", 
 				new Tab("Files", _t('Folder.FILESTAB', "Files"),
-					$nameField,
+					$titleField,
 					$fileList,
 					$deleteButton,
 					new HiddenField("FileIDs"),
