@@ -11,7 +11,7 @@
 		/**
 		 * On page refresh load the initial images (in root)
 		 */
-		if($("#FolderImages").length > 0) loadImages();
+		if($("#FolderImages").length > 0 && $("body.CMSMain").length > 0) loadImages();
 		
 		/**
 		 * Show / Hide the Upload Form 
@@ -55,7 +55,7 @@
 		 *
 		 *
 		 */
-		function loadImages(sel) {
+		function loadImages() {
 			$.get('admin/EditorToolbar/ImageForm', {
 				action_callfieldmethod: "1",
 				fieldName: "FolderImages",
