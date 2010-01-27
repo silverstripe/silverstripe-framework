@@ -56,62 +56,78 @@ LinkForm.prototype = {
  			$('Form_EditorToolbarLinkForm_TargetBlank').checked = (linkType == 'file');
  		    }
 		}
-	},
-	
-	getAnchors: function() {
-		var raw = tinyMCE.activeEditor.getContent().match(/name="([a-zA-Z0-9-_]+?)"/gim);
-		if (raw && raw.length) {
-			var anchors = new Array();
-			for(var i = 0; i < raw.length; i++) {
-				anchors.push(raw[i].substr(6).replace(/"$/, ''));
-			}
-			return anchors;
-		} else { return false; }
-	},
-	
-	drawAnchorHelpers: function(anchors) {
 		
-		if (!$('Form_EditorToolbarLinkForm_AnchorSelector')) {
-			var fieldHolder = $('Form_EditorToolbarLinkForm_Anchor').parentNode;
-			var anchorSelector = document.createElement('select');
-			anchorSelector.id = 'Form_EditorToolbarLinkForm_AnchorSelector';
-			fieldHolder.appendChild(anchorSelector);
-		} else {
-			var anchorSelector = $('Form_EditorToolbarLinkForm_AnchorSelector');
-			if (anchorSelector.hasChildNodes()) {
-				while (anchorSelector.childNodes.length >= 1) {
-					anchorSelector.removeChild(anchorSelector.firstChild);       
-				} 
+		if (jQuery('#Form_EditorToolbarLinkForm_AnchorSelector')) {
+			if ( linkType=='anchor' ) {
+				jQuery('#Form_EditorToolbarLinkForm_AnchorSelector').show();
+				jQuery('#Form_EditorToolbarLinkForm_AnchorRefresh').show();
+			} else {
+				jQuery('#Form_EditorToolbarLinkForm_AnchorSelector').hide();
+				jQuery('#Form_EditorToolbarLinkForm_AnchorRefresh').hide();
 			}
 		}
-		
-		var opt = document.createElement('option');
-		opt.value = '';
-		opt.appendChild(document.createTextNode('Select an anchor'));
-		anchorSelector.appendChild(opt);
-		
-		anchorSelector.onchange = function(e) {
-			if (!e) e = window.event;
-			$('Form_EditorToolbarLinkForm_Anchor').value = e.target.options[e.target.selectedIndex].value;
-		}
-		
-		for (var i = 0; i < anchors.length; i++) {
-			var opt = document.createElement('option');
-			opt.value = anchors[i];
-			opt.appendChild(document.createTextNode(anchors[i]));
-			anchorSelector.appendChild(opt);
-		}
-		
-		
+	},
+
+	addAnchorSelector: function() {
+		(function($) { 
+			if (!$('#Form_EditorToolbarLinkForm_AnchorSelector').length) {
+				// this function collects the anchors in the currently active editor and regenerates the dropdown
+				var refreshAnchors = function(selector) {
+					var anchors = new Array();
+					var raw = tinyMCE.activeEditor.getContent().match(/name="([a-zA-Z0-9-_]+?)"/gim);
+					if (raw && raw.length) {
+						for(var i = 0; i < raw.length; i++) {
+							anchors.push(raw[i].substr(6).replace(/"$/, ''));
+						}
+					}
+
+					selector.empty();
+					selector.append($('<option value="" selected="1">Select an anchor</option>'));
+					for (var i = 0; i < anchors.length; i++) {
+						selector.append($('<option value="'+anchors[i]+'">'+anchors[i]+'</option>'));
+					}
+				}
+
+				// refresh the anchor selector on click, or in case of IE - button click
+				if( !tinymce.isIE ) {
+					var anchorSelector = $('<select id="Form_EditorToolbarLinkForm_AnchorSelector"></select>');
+					$('#Form_EditorToolbarLinkForm_Anchor').parent().append(anchorSelector);
+
+					anchorSelector.focus(function(e) {
+						refreshAnchors($(this));
+					});
+				} else {
+					var buttonRefresh = $('<a id="Form_EditorToolbarLinkForm_AnchorRefresh" title="Refresh the anchor list" alt="Refresh the anchor list" class="buttonRefresh"><span></span></a>');
+					var anchorSelector = $('<select id="Form_EditorToolbarLinkForm_AnchorSelector" class="hasRefreshButton"></select>');
+
+					$('#Form_EditorToolbarLinkForm_Anchor').parent().append(buttonRefresh).append(anchorSelector);
+
+					// :hover class does not work on IE6 on dynamically created elements, have to simulate
+					buttonRefresh.mouseover(function(e) {
+						buttonRefresh.addClass('buttonRefreshHover');
+					});
+					buttonRefresh.mouseout(function(e) {
+						buttonRefresh.removeClass('buttonRefreshHover');
+					});
+					buttonRefresh.click(function(e) {
+						var anchorSelector = $('#Form_EditorToolbarLinkForm_AnchorSelector');
+						refreshAnchors(anchorSelector);
+					});
+				}
+
+				// initialization
+				refreshAnchors(anchorSelector);
+
+				// copy the value from dropdown to the text field
+				anchorSelector.change(function(e) {
+					$('#Form_EditorToolbarLinkForm_Anchor').val($(this).val());
+				});
+			}
+		})(jQuery);	
 	},
 	
 	toggle: function(ed) {
-		var anchors = this.getAnchors();
-		// Change this to false to disable anchor hinting
-		if (anchors && true) {
-			// Draw anchors list
-			this.drawAnchorHelpers(anchors);
-		}
+		this.addAnchorSelector();
 		this.ToolbarForm.toggle(ed);
 		this.respondToNodeChange(ed);
 	},
