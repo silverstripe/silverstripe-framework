@@ -56,7 +56,7 @@ HTML;
 	
 	function validate($validator) 
  	{ 
- 		if(!empty ($this->value) && !preg_match('/^[0-90-9]{2,4}\-[0-9]{1,2}\-[0-90-9]{1,2}$/', $this->value)) 
+ 		if(!empty ($this->value) && !preg_match('/^([0-9][0-9]){1,2}\-[0-9]{1,2}\-[0-9]{1,2}$/', $this->value)) 
  		{ 
  			$validator->validationError( 
  				$this->name,  
@@ -83,7 +83,7 @@ Behaviour.register({
 			if(day_value || month_value || year_value){
 				var value = day_value + '/' + month_value + '/' + year_value;
 
-				if(value && value.length > 0 && !value.match(/^[0-9]{1,2}\/[0-9]{1,2}\/[0-90-9]{2,4}\$/)) {
+				if(value && value.length > 0 && !value.match(/^[0-9]{1,2}\/[0-9]{1,2}\/([0-9][0-9]){1,2}\$/)) {
 					validationError(_CURRENT_FORM.elements[fieldName+'[Day]'],"$error","validation",false);
 					return false;
 				}
