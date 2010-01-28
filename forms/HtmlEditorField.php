@@ -280,7 +280,8 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 				new CompositeField(new FieldSet(
 					new LiteralField('ShowUpload', '<p class="showUploadField"><a href="#">'. _t('HtmlEditorField.SHOWUPLOADFORM', 'Upload File') .'</a></p>'),
 					new FileField("Files[0]" , _t('AssetAdmin.CHOOSEFILE','Choose file: ')),
-					new LiteralField('Response', '<div id="UploadFormResponse"></div>')
+					new LiteralField('Response', '<div id="UploadFormResponse"></div>'),
+					new HiddenField('UploadMode', 'Upload Mode', 'CMSEditor') // used as a hook for doUpload switching
 				)),
 				new TextField('getimagesSearch', _t('HtmlEditorField.SEARCHFILENAME', 'Search by file name')),
 				new ThumbnailStripField('FolderImages', 'FolderID', 'getimages'),
