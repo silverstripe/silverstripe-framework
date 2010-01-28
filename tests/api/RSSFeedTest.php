@@ -13,7 +13,8 @@ class RSSFeedTest extends SapphireTest {
 
 		$origServer = $_SERVER;
 		$_SERVER['HTTP_HOST'] = 'www.example.org';
-		$_SERVER['SCRIPT_NAME'] = '/sapphire/main.php';
+
+		Director::setBaseURL('/');
 		
 		$rssFeed = new RSSFeed($list, "http://www.example.com", "Test RSS Feed", "Test RSS Feed Description");
 		$content = $rssFeed->feedContent();
@@ -44,6 +45,7 @@ class RSSFeedTest extends SapphireTest {
 		$this->assertContains('<description>ItemB AltContent</description>', $content);
 		$this->assertContains('<description>ItemC AltContent</description>', $content);
 		
+		Director::setBaseURL(null);
 		$_SERVER = $origServer;
 	}
 	

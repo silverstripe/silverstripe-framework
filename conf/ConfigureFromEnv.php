@@ -65,8 +65,8 @@ if(!isset($database) || !$database) {
 	// if SS_DATABASE_CHOOSE_NAME 
 	if(defined('SS_DATABASE_CHOOSE_NAME') && SS_DATABASE_CHOOSE_NAME) {
 		$loopCount = (int)SS_DATABASE_CHOOSE_NAME;
-		$databaseDir = dirname($_SERVER['SCRIPT_FILENAME']);
-		for($i=0;$i<$loopCount;$i++) $databaseDir = dirname($databaseDir);
+		$databaseDir = BASE_PATH;
+		for($i=0;$i<$loopCount-1;$i++) $databaseDir = dirname($databaseDir);
 		$database = "SS_" . basename($databaseDir);
 		$database = str_replace('.','',$database);
 	}

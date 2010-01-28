@@ -429,7 +429,7 @@ class Director {
 	static function baseURL() {
 		if(self::$alternateBaseURL) return self::$alternateBaseURL;
 		else {
-			$base = dirname(dirname($_SERVER['SCRIPT_NAME']));
+			$base = BASE_URL;
 			if($base == '/' || $base == '/.' || $base == '\\') $baseURL = '/';
 			else $baseURL = $base . '/';
 			
@@ -452,7 +452,7 @@ class Director {
 	 */
 	static function baseFolder() {
 		if(self::$alternateBaseFolder) return self::$alternateBaseFolder;
-		else return dirname(dirname($_SERVER['SCRIPT_FILENAME']));
+		else return BASE_PATH;
 	}
 
 	/**
@@ -646,8 +646,7 @@ class Director {
 	 * @return boolean
 	 */
 	public static function is_cli() {
-		return (!isset($_SERVER['HTTP_HOST']) && preg_match('/install\.php/', $_SERVER['SCRIPT_NAME'])) 
-			|| preg_match('/cli-script\.php/', $_SERVER['SCRIPT_NAME']);
+		return (php_sapi_name() == "cli");
 	}
 
 	////////////////////////////////////////////////////////////////////////////////////////////

@@ -117,8 +117,27 @@ if(!isset($_SERVER['HTTP_HOST'])) {
 /**
  * Define system paths
  */
-define('BASE_PATH', rtrim(dirname(dirname($_SERVER['SCRIPT_FILENAME'])), DIRECTORY_SEPARATOR));
-define('BASE_URL', rtrim(dirname(dirname($_SERVER['SCRIPT_NAME'])), DIRECTORY_SEPARATOR));
+if(!defined('BASE_PATH')) {
+	// Assuming that this file is sapphire/core/Core.php we can then determine the base path
+	define('BASE_PATH', rtrim(dirname(dirname(dirname(__FILE__)))), DIRECTORY_SEPARATOR);
+}
+if(!defined('BASE_URL')) {
+	// Determine the base URL by comparing SCRIPT_NAME to SCRIPT_FILENAME and getting the common
+	// elements
+	if(substr($_SERVER['SCRIPT_FILENAME'],0,strlen(BASE_PATH)) == BASE_PATH) {
+		$urlSegmentToRemove = substr($_SERVER['SCRIPT_FILENAME'],strlen(BASE_PATH));
+		if(substr($_SERVER['SCRIPT_NAME'],-strlen($urlSegmentToRemove)) == $urlSegmentToRemove) {
+			$baseURL = substr($_SERVER['SCRIPT_NAME'], 0, -strlen($urlSegmentToRemove));
+			define('BASE_URL', rtrim($baseURL, DIRECTORY_SEPARATOR));
+		} 
+	}
+	
+	// If that didn't work, failover to the old syntax.  Hopefully this isn't necessary, and maybe
+	// if can be phased out?
+	if(!defined('BASE_URL')) {
+		define('BASE_URL', rtrim(dirname(dirname($_SERVER['SCRIPT_NAME'])), DIRECTORY_SEPARATOR));
+	}
+}
 define('MODULES_DIR', 'modules');
 define('MODULES_PATH', BASE_PATH . '/' . MODULES_DIR);
 define('THEMES_DIR', 'themes');
@@ -222,10 +241,15 @@ function getSysTempDir() {
 /**
  * Returns the temporary folder that sapphire/silverstripe should use for its cache files
  * This is loaded into the TEMP_FOLDER define on start up
+ * 
+ * @param $base The base path to use as the basis for the temp folder name.  Defaults to BASE_PATH,
+ * which is usually fine; however, the $base argument can be used to help test.
  */
-function getTempFolder() {
-	if(preg_match('/^(.*)[\/\\\\]sapphire[\/\\\\][^\/\\\\]+$/', $_SERVER['SCRIPT_FILENAME'], $matches)) {
-		$cachefolder = "silverstripe-cache" . str_replace(array(' ', "/", ":", "\\"), "-", $matches[1]);
+function getTempFolder($base = null) {
+	if(!$base) $base = BASE_PATH;
+	
+	if($base) {
+		$cachefolder = "silverstripe-cache" . str_replace(array(' ', "/", ":", "\\"), "-", $base);
 	} else {
 		$cachefolder = "silverstripe-cache";
 	}
