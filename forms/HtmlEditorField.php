@@ -207,6 +207,15 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 		$this->controller = $controller;
 		$this->name = $name;
 	}
+
+	/**
+	 * Searches the SiteTree for display in the dropdown
+	 *  
+	 * @return callback
+	 */	
+	function siteTreeSearchCallback($sourceObject, $labelField, $search) {
+		return DataObject::get($sourceObject, "\"MenuTitle\" LIKE '%$search%' OR \"Title\" LIKE '%$search%'");
+	}
 	
 	/**
 	 * Return a {@link Form} instance allowing a user to
@@ -215,6 +224,10 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 	 * @return Form
 	 */
 	function LinkForm() {
+		$siteTree = new TreeDropdownField('internal', _t('HtmlEditorField.PAGE', "Page"), 'SiteTree', 'ID', 'MenuTitle', true);
+		// mimic the SiteTree::getMenuTitle(), which is bypassed when the search is performed
+		$siteTree->setSearchFunction(array($this, 'siteTreeSearchCallback'));
+		
 		$form = new Form(
 			$this->controller,
 			"{$this->name}/LinkForm", 
@@ -231,7 +244,7 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 						'file' => _t('HtmlEditorField.LINKFILE', 'Download a file'),			
 					)
 				),
-				new TreeDropdownField('internal', _t('HtmlEditorField.PAGE', "Page"), 'SiteTree', 'ID', 'MenuTitle', true),
+				$siteTree,
 				new TextField('external', _t('HtmlEditorField.URL', 'URL'), 'http://'),
 				new EmailField('email', _t('HtmlEditorField.EMAIL', 'Email address')),
 				new TreeDropdownField('file', _t('HtmlEditorField.FILE', 'File'), 'File', 'Filename', 'Title', true),
