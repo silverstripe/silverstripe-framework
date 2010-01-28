@@ -1896,24 +1896,10 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		$this->write();
 		$this->publish("Stage", "Live");
 
-
-		if(DB::getConn() instanceof MySQLDatabase) {
-			// Special syntax for MySQL (grr!)
-			// More ANSI-compliant syntax
-			DB::query("UPDATE \"SiteTree_Live\", \"SiteTree\"
-				SET \"SiteTree_Live\".\"Sort\" = \"SiteTree\".\"Sort\"
-				WHERE \"SiteTree_Live\".\"ID\" = \"SiteTree\".\"ID\"
-				AND \"SiteTree_Live\".\"ParentID\" = " . sprintf('%d', $this->ParentID) );
+		DB::query("UPDATE \"SiteTree_Live\"
+			SET \"Sort\" = (SELECT \"SiteTree\".\"Sort\" FROM \"SiteTree\" WHERE \"SiteTree_Live\".\"ID\" = \"SiteTree\".\"ID\")
+			WHERE EXISTS (SELECT \"SiteTree\".\"Sort\" FROM \"SiteTree\" WHERE \"SiteTree_Live\".\"ID\" = \"SiteTree\".\"ID\") AND \"ParentID\" = " . sprintf('%d', $this->ParentID) );
 			
-		} else {
-			// More ANSI-compliant syntax
-			DB::query("UPDATE \"SiteTree_Live\"
-				SET \"Sort\" = \"SiteTree\".\"Sort\"
-				FROM \"SiteTree\"
-				WHERE \"SiteTree_Live\".\"ID\" = \"SiteTree\".\"ID\"
-				AND \"SiteTree_Live\".\"ParentID\" = " . sprintf('%d', $this->ParentID) );
-		}
-
 		// Publish any virtual pages that might need publishing
 		$linkedPages = DataObject::get("VirtualPage", "\"CopyContentFromID\" = $this->ID");
 		if($linkedPages) foreach($linkedPages as $page) {
