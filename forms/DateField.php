@@ -96,7 +96,7 @@ JS;
 			return true;
 		}
 		
-		if(!empty ($this->value) && !preg_match('/^[0-9]{1,2}\/[0-9]{1,2}\/[0-90-9]{2,4}$/', $this->value))
+		if(!empty ($this->value) && is_string($this->value) && !preg_match('/^[0-9]{1,2}\/[0-9]{1,2}\/[0-90-9]{2,4}$/', $this->value))
 		{
 			$validator->validationError(
 				$this->name, 

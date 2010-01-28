@@ -103,26 +103,25 @@ class CompositeDateField extends DateField {
 Behaviour.register({
 	"#$formID": {
 		validateCompositeDateField: function(fieldName) {
-			var el = _CURRENT_FORM.elements[fieldName];
-			if(!el || !el.value) return true;
-		
-			// Creditcards are split into multiple values, so get the inputs from the form.
-			dateParts = $(fieldName).getElementsByTagName('select');
-			
-			// Concatenate the string values from the parts of the input.
-			for(i=0; i < dateParts.length ; i++ ){
-				// The default selected value is 'NotSet'
-				if(dateParts[i].value == 'NotSet'){
-					switch(i){
-						case 0: err = "$day"; break;
-						case 1: err = "$month"; break;
-						case 2: err = "$year"; break;
-					}
-					validationError(dateParts[i],"$error1 '" + err + "' $error2","validation");
-					return false;
-				}
+			var day_value = \$F(_CURRENT_FORM.elements[fieldName+'[date]']);
+			var month_value = \$F(_CURRENT_FORM.elements[fieldName+'[month]']);
+			var year_value = \$F(_CURRENT_FORM.elements[fieldName+'[year]']);
+			if(day_value == 'NotSet' && month_value == 'NotSet' && year_value == 'NotSet') return true;
+			else if(day_value == 'NotSet') {
+				var err = "$day";
+				var el = _CURRENT_FORM.elements[fieldName+'[date]'];
+			} else if(month_value == 'NotSet') {
+				var err = "$month";
+				var el = _CURRENT_FORM.elements[fieldName+'[month]'];
+			} else if(year_value == 'NotSet') {
+				var err = "$year";
+				var el = _CURRENT_FORM.elements[fieldName+'[year]'];
+			} else {
+				return true;
 			}
-			return true;			
+			
+			validationError(el,"$error1 '" + err + "' $error2","validation");
+			return false;
 		}
 	}
 });

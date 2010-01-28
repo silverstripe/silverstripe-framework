@@ -72,21 +72,23 @@ HTML;
 	function jsValidation() {
 		$formID = $this->form->FormName(); 
 		$error = _t('DateField.VALIDATIONJS', 'Please enter a valid date format (DD/MM/YYYY).');
+		$error = 'Please enter a valid date format (DD/MM/YYYY) from dmy.';
 		$jsFunc =<<<JS
 Behaviour.register({
 	"#$formID": {
 		validateDMYDate: function(fieldName) {
-			var value = \$F(_CURRENT_FORM.elements[fieldName+'[Day]']) 
-				+ '/' 
-				+ \$F(_CURRENT_FORM.elements[fieldName+'[Month]']) 
-				+ '/' 
-				+ \$F(_CURRENT_FORM.elements[fieldName+'[Year]'])
-			;
+			var day_value = \$F(_CURRENT_FORM.elements[fieldName+'[Day]']);
+			var month_value = \$F(_CURRENT_FORM.elements[fieldName+'[Month]']);
+			var year_value = \$F(_CURRENT_FORM.elements[fieldName+'[Year]']);
+			if(day_value || month_value || year_value){
+				var value = day_value + '/' + month_value + '/' + year_value;
 
-			if(value && value.length > 0 && !value.match(/^[0-9]{1,2}\/[0-9]{1,2}\/[0-90-9]{2,4}\$/)) {
-				validationError(_CURRENT_FORM.elements[fieldName+'[Day]'],"$error","validation",false);
-				return false;
+				if(value && value.length > 0 && !value.match(/^[0-9]{1,2}\/[0-9]{1,2}\/[0-90-9]{2,4}\$/)) {
+					validationError(_CURRENT_FORM.elements[fieldName+'[Day]'],"$error","validation",false);
+					return false;
+				}
 			}
+			
 			return true;
 		}
 	}
