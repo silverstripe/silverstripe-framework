@@ -49,7 +49,7 @@ class FileIFrameField extends FileField {
 	 * @return string
 	 */
 	public function Field() {
-		Requirements::css(THIRDPARTY_DIR . '/jquery/themes/default/ui.all.css');
+		Requirements::css(THIRDPARTY_DIR . '/jquery-ui-themes/default/ui.all.css');
 		Requirements::add_i18n_javascript(SAPPHIRE_DIR . '/javascript/lang');
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery-ui/ui.core.js');
