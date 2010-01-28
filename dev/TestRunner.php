@@ -309,7 +309,7 @@ HTML;
 				$fixtureFile = $_GET['fixture'];
 			
 				// Validate fixture file
-				$realFile = realpath('../' . $fixtureFile);
+				$realFile = realpath(BASE_PATH.'/'.$fixtureFile);
 				$baseDir = realpath(Director::baseFolder());
 				if(!$realFile || !file_exists($realFile)) {
 					return "<p>Fixture file doesn't exist</p>";

@@ -103,14 +103,14 @@ class FileTest extends SapphireTest {
 		$fileIDs = $this->allFixtureIDs('Folder');
 		foreach($fileIDs as $fileID) {
 			$file = DataObject::get_by_id('Folder', $fileID);
-			if(!file_exists("../$file->Filename")) mkdir("../$file->Filename");
+			if(!file_exists(BASE_PATH."/$file->Filename")) mkdir(BASE_PATH."/$file->Filename");
 		}
 		
 		/* Create a test files for each of the fixture references */
 		$fileIDs = $this->allFixtureIDs('File');
 		foreach($fileIDs as $fileID) {
 			$file = DataObject::get_by_id('File', $fileID);
-			$fh = fopen("../$file->Filename", "w");
+			$fh = fopen(BASE_PATH."/$file->Filename", "w");
 			fwrite($fh, str_repeat('x',1000000));
 			fclose($fh);
 		}
@@ -121,14 +121,14 @@ class FileTest extends SapphireTest {
 		$fileIDs = $this->allFixtureIDs('File');
 		foreach($fileIDs as $fileID) {
 			$file = DataObject::get_by_id('File', $fileID);
-			if(file_exists("../$file->Filename")) unlink("../$file->Filename");
+			if(file_exists(BASE_PATH."/$file->Filename")) unlink(BASE_PATH."/$file->Filename");
 		}
 
 		/* Remove the test folders that we've crated */
 		$fileIDs = $this->allFixtureIDs('Folder');
 		foreach($fileIDs as $fileID) {
 			$file = DataObject::get_by_id('Folder', $fileID);
-			if(file_exists("../$file->Filename")) rmdir("../$file->Filename");
+			if(file_exists(BASE_PATH."/$file->Filename")) rmdir(BASE_PATH."/$file->Filename");
 		}
 		
 		parent::tearDown();

@@ -499,11 +499,11 @@ HTML
 		);
 
 		foreach($installfiles as $installfile) {
-			if(file_exists('../' . $installfile)) {
-				@unlink('../' . $installfile);
+			if(file_exists(BASE_PATH . '/' . $installfile)) {
+				@unlink(BASE_PATH . '/' . $installfile);
 			}
 
-			if(file_exists('../' . $installfile)) {
+			if(file_exists(BASE_PATH . '/' . $installfile)) {
 				$unsuccessful[] = $installfile;
 			}
 		}
