@@ -281,6 +281,12 @@ class SSViewer {
 		
 		$content = file_get_contents(SSViewer::getTemplateFile($identifier));
 
+		// $content = "<!-- getTemplateContent() :: identifier: $identifier -->". $content; 
+		// Adds an i18n namespace to all <% _t(...) %> calls without an existing one
+		// to avoid confusion when using the include in different contexts.
+		// Entities without a namespace are deprecated, but widely used.
+		$content = ereg_replace('<' . '% +_t\((\'([^\.\']*)\'|"([^\."]*)")(([^)]|\)[^ ]|\) +[^% ])*)\) +%' . '>', '<?= _t(\''. $identifier . '.ss' . '.\\2\\3\'\\4) ?>', $content);
+
 		// Remove UTF-8 byte order mark
 		// This is only necessary if you don't have zend-multibyte enabled.
 		if(substr($content, 0,3) == pack("CCC", 0xef, 0xbb, 0xbf)) {
@@ -519,7 +525,10 @@ class SSViewer {
 		// CAUTION: No spaces allowed between arguments for all i18n calls!
 		ereg('.*[\/](.*)',$template,$path);
 		
-		// i18n _t(...) - with entity only (no dots in namespace), meaning the current template filename will be added as a namespace
+		// i18n _t(...) - with entity only (no dots in namespace), 
+		// meaning the current template filename will be added as a namespace. 
+		// This applies only to "root" templates, not includes which should always have their namespace set already.
+		// See getTemplateContent() for more information.
 		$content = ereg_replace('<' . '% +_t\((\'([^\.\']*)\'|"([^\."]*)")(([^)]|\)[^ ]|\) +[^% ])*)\) +%' . '>', '<?= _t(\''. $path[1] . '.\\2\\3\'\\4) ?>', $content);
 		// i18n _t(...)
 		$content = ereg_replace('<' . '% +_t\((\'([^\']*)\'|"([^"]*)")(([^)]|\)[^ ]|\) +[^% ])*)\) +%' . '>', '<?= _t(\'\\2\\3\'\\4) ?>', $content);
