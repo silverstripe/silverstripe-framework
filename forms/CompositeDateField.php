@@ -93,6 +93,9 @@ class CompositeDateField extends DateField {
 	}
 	
 	function jsValidation() {
+		if(Validator::get_javascript_validator_handler() == 'none') {
+			return '';
+		}
 		$formID = $this->form->FormName();
 		$error1 = _t('CompositeDateField.VALIDATIONJS1', 'Please ensure you have set the');
 		$error2 = _t('CompositeDateField.VALIDATIONJS2', 'correctly.');
@@ -106,8 +109,7 @@ Behaviour.register({
 			var day_value = \$F(_CURRENT_FORM.elements[fieldName+'[date]']);
 			var month_value = \$F(_CURRENT_FORM.elements[fieldName+'[month]']);
 			var year_value = \$F(_CURRENT_FORM.elements[fieldName+'[year]']);
-			if(day_value == 'NotSet' && month_value == 'NotSet' && year_value == 'NotSet') return true;
-			else if(day_value == 'NotSet') {
+			if(day_value == 'NotSet') {
 				var err = "$day";
 				var el = _CURRENT_FORM.elements[fieldName+'[date]'];
 			} else if(month_value == 'NotSet') {
@@ -133,6 +135,9 @@ JS;
 	}
 	
 	function validate($validator) {
+		if(Validator::get_javascript_validator_handler() == 'none') {
+			return true;
+		}
 		// TODO Implement server-side validation
 		if($this->value == null) {
 			$validator->validationError($this->name,_t('Form.VALIDATIONALLDATEVALUES',"Please ensure you have set all date values"),"validation");
