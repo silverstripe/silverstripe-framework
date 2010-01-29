@@ -114,8 +114,6 @@ TreeDropdownField.prototype = {
 
 	saveCurrentState: function() {
 		this.origHumanText = this.getHumanText();
-		this.defaultCleared = false;
-		this.searched = false;
 	},
 
 	restoreOriginalState: function() {
@@ -324,7 +322,7 @@ TreeDropdownField.prototype = {
 		}
 
 		if (!this.treeDropdownField.treeShown) this.treeDropdownField.toggleTree();
-		if (!this.treeDropdownField.defaultCleared) {
+		if (!this.treeDropdownField.defaultCleared || !this.treeDropdownField.searched) {
 			this.treeDropdownField.defaultCleared = true;
 			this.treeDropdownField.setHumanText('');
 		}
@@ -338,7 +336,8 @@ TreeDropdownField.prototype = {
 		if(this.tree.selected && this.tree.selected.removeNodeClass) this.tree.selected.removeNodeClass('current');
 		this.addNodeClass('current');
 		this.tree.selected = this;
-
+		
+		this.options.dropdownField.searched = false;
 	}
 }
 
