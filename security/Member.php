@@ -102,9 +102,6 @@ class Member extends DataObject {
 	 */
 	protected static $login_marker_cookie = null;
 
-	public static function init_db_fields() {
-	}
-
 	/**
 	 * If this is called, then a session cookie will be set to "1" whenever a user
 	 * logs in.  This lets 3rd party tools, such as apache's mod_rewrite, detect
@@ -1579,7 +1576,4 @@ class Member_Validator extends RequiredFields {
 		return $js;
 	}
 }
-// Initialize the static DB variables to add the supported encryption
-// algorithms to the PasswordEncryption Enum field
-Member::init_db_fields();
 ?>
