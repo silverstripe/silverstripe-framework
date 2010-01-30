@@ -461,28 +461,21 @@ class Permission extends DataObject {
 
 
 	/**
-	 * Get a list of all available permission codes
+	 * Get a list of all available permission codes, both defined through the
+	 * {@link PermissionProvider} interface, and all not explicitly defined codes existing
+	 * as a {@link Permission} database record. By default, the results are
+	 * grouped as denoted by {@link Permission_Group}.
 	 *
-	 * @param bool|string $blankItemText Text for permission with the empty
-	 *                                   code (""). If set to TRUE it will be
-	 *                                   set to "(select)"; if set to NULL or
-	 *                                   FALSE the empty permission is not
-	 *                                   included in the list.
+	 * @param bool $grouped Group results into an array of permission groups.
 	 * @return array Returns an array of all available permission codes. The
-	 *               array indicies are the permission codes as used in
-	 *               {@link Permission::check()}. The value is a description
-	 *               suitable for using in an interface.
+	 *  array indicies are the permission codes as used in
+	 *  {@link Permission::check()}. The value is a description
+	 *  suitable for using in an interface.
 	 */
-	public static function get_codes($blankItemText = null) {
+	public static function get_codes($grouped = true) {
 		$classes = ClassInfo::implementorsOf('PermissionProvider');
 
 		$allCodes = array();
-		// if($blankItemText){
-		// 	$allCodes[''] = ($blankItemText === true)
-		// 		? '(select)'
-		// 		: $blankItemText;
-		// }
-		
 		$allCodes['Roles and access permissions']['ADMIN'] = array(
 			'name' => _t('Permission.FULLADMINRIGHTS', 'Full administrative rights'),
 			'help' => null,
@@ -522,7 +515,7 @@ class Permission extends DataObject {
 
 		$flatCodeArray = array();
 		foreach($allCodes as $category) foreach($category as $code => $permission) $flatCodeArray[] = $code;
-		$otherPerms = DB::query("SELECT DISTINCT \"Code\" From \"Permission\"")->column();
+		$otherPerms = DB::query("SELECT DISTINCT \"Code\" From \"Permission\" WHERE \"Code\" != ''")->column();
 			
 		if($otherPerms) foreach($otherPerms as $otherPerm) {
 			if(!in_array($otherPerm, $flatCodeArray))
@@ -538,12 +531,17 @@ class Permission extends DataObject {
 		
 		ksort($allCodes);
 
+		$returnCodes = array();
 		foreach($allCodes as $category => $permissions) {
-			uasort($permissions, array(__CLASS__, 'sort_permissions'));
-			$allCodes[$category] = $permissions;
+			if($grouped) {
+				uasort($permissions, array(__CLASS__, 'sort_permissions'));
+				$returnCodes[$category] = $permissions;
+			} else {
+				$returnCodes = array_merge($returnCodes, $permissions);
+			}
 		}
 		
-		return $allCodes;
+		return $returnCodes;
 	}
 	
 	/**
