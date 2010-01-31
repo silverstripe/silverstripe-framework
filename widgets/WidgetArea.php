@@ -30,7 +30,7 @@ class WidgetArea extends DataObject {
 	 */
 	function WidgetControllers() {
 		$controllers = new DataObjectSet();
-		// var_dump($this->Items());
+
 		foreach($this->ItemsToRender() as $widget) {
 			// find controller
 			$controllerClass = '';
