@@ -55,7 +55,22 @@ class DatabaseTest extends SapphireTest {
 				"MySQLDatabase tables can be changed to InnoDB through DataObject::\$create_table_options"
 			);
 		}
+	}
+	
+	function testSchemaUpdateChecking() {
+		$db = DB::getConn();
+
+		// Initially, no schema changes necessary
+		$db->beginSchemaUpdate();
+		$this->assertFalse($db->doesSchemaNeedUpdating());
 		
+		// If we make a change, then the schema will need updating
+		$db->transCreateTable("TestTable");
+		$this->assertTrue($db->doesSchemaNeedUpdating());
+
+		// If we make cancel the change, then schema updates are no longer necessary
+		$db->cancelSchemaUpdate();
+		$this->assertFalse($db->doesSchemaNeedUpdating());
 	}
 	
 }
