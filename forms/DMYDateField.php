@@ -56,9 +56,6 @@ HTML;
 	
 	function validate($validator) 
  	{ 
-		if(Validator::get_javascript_validator_handler() == 'none') {
-			return true;
-		}
  		if(!empty ($this->value) && !preg_match('/^([0-9][0-9]){1,2}\-[0-9]{1,2}\-[0-9]{1,2}$/', $this->value)) 
  		{ 
  			$validator->validationError( 

@@ -135,9 +135,6 @@ JS;
 	}
 	
 	function validate($validator) {
-		if(Validator::get_javascript_validator_handler() == 'none') {
-			return true;
-		}
 		// TODO Implement server-side validation
 		if($this->value == null) {
 			$validator->validationError($this->name,_t('Form.VALIDATIONALLDATEVALUES',"Please ensure you have set all date values"),"validation");
