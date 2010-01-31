@@ -727,6 +727,7 @@ class MySQLDatabase extends SS_Database {
 		$classnameinfo = DB::query("DESCRIBE \"$tableName\" \"$fieldName\"")->first();
 		preg_match_all("/'[^,]+'/", $classnameinfo["Type"], $matches);
 		
+		$classes = array();
 		foreach($matches[0] as $value) {
 			$classes[] = trim($value, "'");
 		}
