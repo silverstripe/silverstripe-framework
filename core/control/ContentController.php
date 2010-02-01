@@ -111,9 +111,12 @@ class ContentController extends Controller {
 
 		// Draft/Archive security check - only CMS users should be able to look at stage/archived content
 		if($this->URLSegment != 'Security' && !Session::get('unsecuredDraftSite') && (Versioned::current_archived_date() || (Versioned::current_stage() && Versioned::current_stage() != 'Live'))) {
-			if(!Permission::check('CMS_ACCESS_CMSMain')) {
+			if(!Permission::check('CMS_ACCESS_CMSMain') && !Permission::check('VIEW_DRAFT_CONTENT')) {
 				$link = $this->Link();
 				$message = _t("ContentController.DRAFT_SITE_ACCESS_RESTRICTION", 'You must log in with your CMS password in order to view the draft or archived content.  <a href="%s">Click here to go back to the published site.</a>');
+				Session::clear('currentStage');
+				Session::clear('archiveDate');
+				
 				return Security::permissionFailure($this, sprintf($message, "$link?stage=Live"));
 			}
 		}		
@@ -286,7 +289,7 @@ class ContentController extends Controller {
 	public function SilverStripeNavigator() {
 		$member = Member::currentUser();
 
-		if(Director::isDev() || Permission::check('CMS_ACCESS_CMSMain')) {
+		if(Director::isDev() || Permission::check('CMS_ACCESS_CMSMain') || Permission::check('VIEW_DRAFT_CONTENT')) {
 			Requirements::css(SAPPHIRE_DIR . '/css/SilverStripeNavigator.css');
 
 			Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery/jquery.js');
