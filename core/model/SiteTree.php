@@ -2393,6 +2393,11 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 				'name' => _t('SiteTree.REORGANISE_DESCRIPTION', 'Change site structure'),
 				'category' => _t('Permissions.CONTENT_CATEGORY', 'Content permissions'),
 				'sort' => 100
+			),
+			'VIEW_DRAFT_CONTENT' => array(
+				'name' => _t('SiteTree.VIEW_DRAFT_CONTENT', 'View draft content'),
+				'category' => _t('Permissions.CONTENT_CATEGORY', 'Content permissions'),
+				'sort' => 100
 			)
 		);
 	}
