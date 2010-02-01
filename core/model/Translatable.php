@@ -587,6 +587,22 @@ class Translatable extends DataObjectDecorator implements PermissionProvider {
 		// @todo This relies on the Locale attribute being on the base data class, and not any subclasses
 		if($this->owner->class != ClassInfo::baseDataClass($this->owner->class)) return false;
 		
+		// Permissions: If a group doesn't have any specific TRANSLATE_<locale> edit rights,
+		// but has CMS_ACCESS_CMSMain (general CMS access), then assign TRANSLATE_ALL permissions as a default.
+		// Auto-setting permissions based on these intransparent criteria is a bit hacky,
+		// but unavoidable until we can determine when a certain permission code was made available first 
+		// (see http://open.silverstripe.org/ticket/4940)
+		$groups = Permission::get_groups_by_permission(array('CMS_ACCESS_CMSMain','CMS_ACCESS_LeftAndMain','ADMIN'));
+		if($groups) foreach($groups as $group) {
+			$codes = $group->Permissions()->column('Code');
+			$hasTranslationCode = false;
+			foreach($codes as $code) {
+				if(preg_match('/^TRANSLATE_/', $code)) $hasTranslationCode = true;
+			}
+			// Only add the code if no more restrictive code exists 
+			if(!$hasTranslationCode) Permission::grant($group->ID, 'TRANSLATE_ALL');
+		}
+		
 		// If the Translatable extension was added after the first records were already
 		// created in the database, make sure to update the Locale property if
 		// if wasn't set before
