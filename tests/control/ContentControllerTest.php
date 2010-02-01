@@ -12,53 +12,54 @@ class ContentControllerTest extends FunctionalTest {
 	/**
 	 * Test that nested pages, basic actions, and nested/non-nested URL switching works properly
 	 */
+
 	public function testNestedPages() {
 		RootURLController::reset();
 		SiteTree::enable_nested_urls();
-		
+
 		$this->assertEquals('Home Page', $this->get('/')->getBody());
 		$this->assertEquals('Home Page', $this->get('/home/index/')->getBody());
 		$this->assertEquals('Home Page', $this->get('/home/second-index/')->getBody());
-		
+
 		$this->assertEquals('Second Level Page', $this->get('/home/second-level/')->getBody());
 		$this->assertEquals('Second Level Page', $this->get('/home/second-level/index/')->getBody());
 		$this->assertEquals('Second Level Page', $this->get('/home/second-level/second-index/')->getBody());
-		
+
 		$this->assertEquals('Third Level Page', $this->get('/home/second-level/third-level/')->getBody());
 		$this->assertEquals('Third Level Page', $this->get('/home/second-level/third-level/index/')->getBody());
 		$this->assertEquals('Third Level Page', $this->get('/home/second-level/third-level/second-index/')->getBody());
-		
+
 		RootURLController::reset();
 		SiteTree::disable_nested_urls();
-		
+
 		$this->assertEquals('Home Page', $this->get('/')->getBody());
 		$this->assertEquals('Home Page', $this->get('/home/')->getBody());
 		$this->assertEquals('Home Page', $this->get('/home/second-index/')->getBody());
-		
+
 		$this->assertEquals('Second Level Page', $this->get('/second-level/')->getBody());
 		$this->assertEquals('Second Level Page', $this->get('/second-level/index/')->getBody());
 		$this->assertEquals('Second Level Page', $this->get('/second-level/second-index/')->getBody());
-		
+
 		$this->assertEquals('Third Level Page', $this->get('/third-level/')->getBody());
 		$this->assertEquals('Third Level Page', $this->get('/third-level/index/')->getBody());
 		$this->assertEquals('Third Level Page', $this->get('/third-level/second-index/')->getBody());
 	}
-	
+
 	/**
 	 * Tests {@link ContentController::ChildrenOf()}
 	 */
 	public function testChildrenOf() {
 		$controller = new ContentController();
-		
+
 		SiteTree::enable_nested_urls();
-		
+
 		$this->assertEquals(1, $controller->ChildrenOf('/')->Count());
 		$this->assertEquals(1, $controller->ChildrenOf('/home/')->Count());
 		$this->assertEquals(2, $controller->ChildrenOf('/home/second-level/')->Count());
 		$this->assertEquals(0, $controller->ChildrenOf('/home/second-level/third-level/')->Count());
-		
+
 		SiteTree::disable_nested_urls();
-		
+
 		$this->assertEquals(1, $controller->ChildrenOf('/')->Count());
 		$this->assertEquals(1, $controller->ChildrenOf('/home/')->Count());
 		$this->assertEquals(2, $controller->ChildrenOf('/second-level/')->Count());
@@ -87,6 +88,20 @@ class ContentControllerTest extends FunctionalTest {
 
 
 		SiteTree::disable_nested_urls();
+	}
+
+	public function testViewDraft(){
+		
+		// test when user does not have permission, should get login form
+		$this->logInWithPermssion('editor');
+		$this->assertEquals('403', $this->get('/contact/?stage=Stage')->getstatusCode());
+		
+		
+		// test when user does have permission, should show page title and header ok.
+		$this->logInWithPermssion('admin');
+		$this->assertEquals('200', $this->get('/contact/?stage=Stage')->getstatusCode());
+		
+		
 	}
 
 }
