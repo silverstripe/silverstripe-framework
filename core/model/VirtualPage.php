@@ -30,7 +30,8 @@ class VirtualPage extends Page {
 			"Sort",
 			"Status",
 			'ShowInMenus',
-			'ShowInSearch'
+			'ShowInSearch',
+			'Locale'
 		);
 
 		$allFields = $this->db();
