@@ -55,12 +55,19 @@ class FileIFrameField extends FileField {
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery-ui/ui.core.js');
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery-ui/ui.dialog.js');
 		
+		
 		if($this->form->getRecord() && $this->form->getRecord()->exists()) {
+			$record = $this->form->getRecord();
+			if(Object::has_extension('SiteTree', 'Translatable') && $record->Locale){
+				$iframe = "iframe?locale=".$record->Locale;
+			}else{
+				$iframe = "iframe";
+			}
 			return $this->createTag (
 				'iframe',
 				array (
 					'name'  => $this->Name() . '_iframe',
-					'src'   => Controller::join_links($this->Link(), 'iframe'),
+					'src'   => Controller::join_links($this->Link(), $iframe),
 					'style' => 'height: 152px; width: 100%; border: none;'
 				)
 			) . $this->createTag (
