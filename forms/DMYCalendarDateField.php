@@ -17,7 +17,6 @@ class DMYCalendarDateField extends CalendarDateField {
 		Requirements::css(SAPPHIRE_DIR . "/css/CalendarDateField.css");
 		Requirements::css(THIRDPARTY_DIR . "/calendar/calendar-win2k-1.css");
 		Requirements::javascript(SAPPHIRE_DIR . "/javascript/NumericField.js");
-		Requirements::javascript(SAPPHIRE_DIR . "/javascript/CalendarDateField.js");
 
 		$field = DateField::Field();
 
@@ -75,7 +74,7 @@ Behaviour.register({
 
 			var value = day_value + '/' + month_value + '/' + year_value;
 
-			if(value && value.length > 0 && !value.match(/^[0-9]{1,2}\/[0-9]{1,2}\/([0-9][0-9]){1,2}\$/)) {
+			if(value && value.length > 0 && !value.match(/^[0-9]{1,2}\/[0-9]{1,2}\/[1-2]([0-9]){3}\$/)) {
 				validationError(_CURRENT_FORM.elements[fieldName+'[Day]'],"$error","validation",false);
 				return false;
 			}
