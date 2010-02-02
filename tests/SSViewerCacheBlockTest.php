@@ -22,8 +22,8 @@ class SSViewerCacheBlockTest extends SapphireTest {
 	protected function _reset($cacheOn = true) {
 		$this->data = new SSViewerCacheBlockTest_Model();
 		
-		Cache::factory('cacheblock')->clean();
-		Cache::set_cache_lifetime('cacheblock', $cacheOn ? 600 : -1);
+		SS_Cache::factory('cacheblock')->clean();
+		SS_Cache::set_cache_lifetime('cacheblock', $cacheOn ? 600 : -1);
 	}
 	
 	protected function _runtemplate($template, $data = null) {

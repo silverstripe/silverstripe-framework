@@ -1,7 +1,7 @@
 <?php 
 
 /**
- * Cache provides a bunch of static functions wrapping the Zend_Cache system in something a little more
+ * SS_Cache provides a bunch of static functions wrapping the Zend_Cache system in something a little more
  * easy to use with the SilverStripe config system.
  * 
  * A Zend_Cache has both a frontend (determines how to get the value to cache, and how to serialize it for storage)
@@ -16,7 +16,7 @@
  * 
  * USING A CACHE
  * 
- * $cache = Cache::factory('foo') ; // foo is any name (try to be specific), and is used to get configuration & storage info
+ * $cache = SS_Cache::factory('foo') ; // foo is any name (try to be specific), and is used to get configuration & storage info
  * 
  * if (!($result = $cache->load($cachekey))) {
  * 	$result = caluate some how;
@@ -32,34 +32,34 @@
  * 
  * (in _config.php)
  * 
- * if (Director::isDev()) Cache::set_cache_lifetime('any', -1, 100);
+ * if (Director::isDev()) SS_Cache::set_cache_lifetime('any', -1, 100);
  * 
  * USING MEMCACHED AS STORE
  * 
  * (in _config.php)
  * 
- * Cache::add_backend('primary_memcached', 'Memcached',
+ * SS_Cache::add_backend('primary_memcached', 'Memcached',
  * 	array('host' => 'localhost', 'port' => 11211, 'persistent' => true, 'weight' => 1, 'timeout' => 5, 'retry_interval' => 15, 'status' => true, 'failure_callback' => '' )
  * );
  * 
- * Cache::pick_backend('primary_memcached', 'any', 10);
- * Cache::pick_backend('default', 'aggregate', 20); // Aggregate needs a backend with tag support, which memcached doesn't provide
+ * SS_Cache::pick_backend('primary_memcached', 'any', 10);
+ * SS_Cache::pick_backend('default', 'aggregate', 20); // Aggregate needs a backend with tag support, which memcached doesn't provide
  * 
  * USING APC AND FILE AS TWO LEVEL STORE
  * 
  * (in _config.php)
  * 
- * Cache::add_backend('two-level', 'TwoLevels' array(
+ * SS_Cache::add_backend('two-level', 'TwoLevels' array(
  * 	'slow_backend' => 'File',
  * 	'fast_backend' => 'Apc',
  * 	'slow_backend_options' => array('cache_dir' => TEMP_FOLDER . DIRECTORY_SEPARATOR . 'cache')
  * ));
  * 
- * Cache::pick_backend('two-level', 'any', 10); // No need for special backend for aggregate - TwoLevels with a File slow backend supports tags
+ * SS_Cache::pick_backend('two-level', 'any', 10); // No need for special backend for aggregate - TwoLevels with a File slow backend supports tags
  * 
  * @author hfried
  */
-class Cache {
+class SS_Cache {
 	
 	protected static $backends = array();
 	protected static $backend_picks = array();

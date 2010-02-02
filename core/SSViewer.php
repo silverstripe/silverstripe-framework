@@ -322,7 +322,7 @@ class SSViewer {
 	public function process($item, $cache = null) {
 		SSViewer::$topLevel[] = $item;
 		
-		if (!$cache) $cache = Cache::factory('cacheblock');
+		if (!$cache) $cache = SS_Cache::factory('cacheblock');
 		
 		if(isset($this->chosenTemplates['main'])) {
 			$template = $this->chosenTemplates['main'];
@@ -644,7 +644,7 @@ class SSViewer_FromString extends SSViewer {
 		$val = "";
 		$valStack = array();
 		
-		$cache = Cache::factory('cacheblock');
+		$cache = SS_Cache::factory('cacheblock');
 		
 		include($tmpFile);
 		unlink($tmpFile);
