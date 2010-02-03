@@ -897,9 +897,9 @@ class Member extends DataObject {
 	 */
 	public function getCMSFields() {
 		$fields = parent::getCMSFields();
-		
+
 		$mainFields = $fields->fieldByName("Root")->fieldByName("Main")->Children;
-		
+
 		$password = new ConfirmedPasswordField(
 			'Password', 
 			null, 
@@ -958,9 +958,9 @@ class Member extends DataObject {
 	function fieldLabels($includerelations = true) {
 		$labels = parent::fieldLabels($includerelations);
 		
-		$labels['FirstName'] = _t('Member.FIRSTNAME');
-		$labels['Surname'] = _t('Member.SURNAME');
-		$labels['Email'] = _t('Member.EMAIL');
+		$labels['FirstName'] = _t('Member.FIRSTNAME', 'First Name');
+		$labels['Surname'] = _t('Member.SURNAME', 'Surname');
+		$labels['Email'] = _t('Member.EMAIL', 'Email');
 		$labels['Password'] = _t('Member.db_Password', 'Password');
 		$labels['NumVisit'] = _t('Member.db_NumVisit', 'Number of Visits');
 		$labels['LastVisited'] = _t('Member.db_LastVisited', 'Last Visited Date');
