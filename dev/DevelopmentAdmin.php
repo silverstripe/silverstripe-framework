@@ -63,9 +63,10 @@ class DevelopmentAdmin extends Controller {
 	function index() {
 		$actions = array(
 			"build" => "Build/rebuild this environment (formerly db/build).  Call this whenever you have updated your project sources",
-			"reset" => "Reset this environment - truncate the database and rebuild.  This is useful after testing to start with a fresh working copy",
 			"tests" => "See a list of unit tests to run",
 			"tests/all" => "Run all tests",
+			"tests/startsession" => "Start a test session in your browser (gives you a temporary database with default content)",
+			"tests/endsession" => "Ends a test session",
 			"jstests" => "See a list of JavaScript tests to run",
 			"jstests/all" => "Run all JavaScript tests",
 			"modules/add" => "Add a module, for example, 'sake dev/modules/add ecommerce'",
@@ -140,84 +141,13 @@ class DevelopmentAdmin extends Controller {
 	}
 	
 	function reset() {
-		global $databaseConfig;
-		$databaseName = $databaseConfig['database'];
+		$link = BASE_URL.'/dev/tests/startsession';
 		
-		if(Director::is_cli()) {
-			echo "\nPlease run dev/reset from your web browser.\n";
-		} else {
-			$renderer = new DebugView();
-			$renderer->writeHeader();
-			$renderer->writeInfo('Database reset', 'Completely truncate and rebuild the current database');
-			echo '<div style="margin: 0 2em">';
+		return "<p>The dev/reset feature has been removed.  If you are trying to test your site " .
+			"with a clean datababase, we recommend that you use " .
+			"<a href=\"$link\">dev/test/startsession</a> ".
+			"instead.</P>";
 
-			if(isset($_GET['done'])) {
-				echo "<p style=\"color: green\"><b>$databaseName</b> has been completely truncated and rebuilt.</p>";
-				echo "<p>Note: If you had <i>SS_DEFAULT_ADMIN_USERNAME</i> and <i>SS_DEFAULT_ADMIN_PASSWORD</i>
-						defined in your <b>_ss_environment.php</b> file, a default admin Member record has been created
-						with those credentials.</p>";
-			} else {
-				echo $this->ResetForm()->renderWith('Form');
-			}
-
-			echo '</div>';
-			$renderer->writeFooter();
-		}
-	}
-	
-	function ResetForm() {
-		global $databaseConfig;
-		$databaseName = $databaseConfig['database'];
-		
-		if(!Session::get('devResetRandNumber')) {
-			$rand = rand(5,500);
-			Session::set('devResetRandNumber', $rand);
-		} else {
-			$rand = Session::get('devResetRandNumber');
-		}
-		
-		$form = new Form(
-			$this,
-			'ResetForm',
-			new FieldSet(
-				new LiteralField('ResetWarning', "<p style=\"color: red\">WARNING: This will completely
-					destroy ALL existing data in <b>$databaseName</b>! &nbsp; Press the button below to
-					confirm this action.</p>"),
-				new HiddenField('devResetRandNumber', '', $rand)
-			),
-			new FieldSet(
-				new FormAction('doReset', 'Reset and completely rebuild the database')
-			)
-		);
-		
-		$form->setFormAction(Director::absoluteBaseURL() . 'dev/ResetForm');
-		
-		return $form;
-	}
-	
-	function doReset($data, $form, $request) {
-		if(!isset($data['devResetRandNumber'])) {
-			Director::redirectBack();
-			return false;
-		}
-		
-		// Avoid accidental database resets by checking the posted number to the one in session
-		if(Session::get('devResetRandNumber') != $data['devResetRandNumber']) {
-			Director::redirectBack();
-			return false;
-		}
-		
-		$da = new DatabaseAdmin();
-		$da->clearAllData();
-		
-		// If _ss_environment.php has some constants set for default admin, set these up in the request
-		$_REQUEST['username'] = defined('SS_DEFAULT_ADMIN_USERNAME') ? SS_DEFAULT_ADMIN_USERNAME : null;
-		$_REQUEST['password'] = defined('SS_DEFAULT_ADMIN_PASSWORD') ? SS_DEFAULT_ADMIN_PASSWORD : null;
-		
-		$da->build();
-		
-		Session::clear('devResetRandNumber');
-		Director::redirect(Director::absoluteBaseURL() . 'dev/reset?done=1');
 	}
 	
 	function errors() {
