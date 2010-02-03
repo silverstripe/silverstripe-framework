@@ -183,8 +183,10 @@ class TreeDropdownField extends FormField {
 		
 		$obj->markPartialTree();
 		
-		if($forceValues = $this->value) {
-			if(($values = preg_split('/,\s*/', $forceValues)) && count($values)) foreach($values as $value) {
+		// allow to pass values to be selected within the ajax request
+		if( isset($_REQUEST['forceValue']) || $this->value ) {
+			$forceValue = ( isset($_REQUEST['forceValue']) ? $_REQUEST['forceValue'] : $this->value);
+			if(($values = preg_split('/,\s*/', $forceValue)) && count($values)) foreach($values as $value) {
 				$obj->markToExpose($this->objectForKey($value));
 			}
 		}
