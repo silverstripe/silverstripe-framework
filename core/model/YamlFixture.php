@@ -179,7 +179,7 @@ class YamlFixture extends Object {
 			}
 			
 			// Populate the dictionary with the ID
-			foreach($fields as $fieldName => $fieldVal) {
+			if($fields) foreach($fields as $fieldName => $fieldVal) {
 				if($obj->many_many($fieldName) || $obj->has_many($fieldName) || $obj->has_one($fieldName)) continue;
 				$obj->$fieldName = $this->parseFixtureVal($fieldVal);
 			}
@@ -189,7 +189,7 @@ class YamlFixture extends Object {
 			$this->fixtureDictionary[$dataClass][$identifier] = $obj->ID;
 			
 			// Populate all relations
-			foreach($fields as $fieldName => $fieldVal) {
+			if($fields) foreach($fields as $fieldName => $fieldVal) {
 				if($obj->many_many($fieldName) || $obj->has_many($fieldName)) {
 					$parsedItems = array();
 					$items = preg_split('/ *, */',trim($fieldVal));
