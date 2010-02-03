@@ -31,8 +31,10 @@ class MultiEnum extends Enum {
 	}
 
 	function requireField(){
-		$defaultClause = $this->default ? " default '". Convert::raw2sql($this->default) . "'" : "";
-		DB::requireField($this->tableName, $this->name, "set('" . implode("','", $this->enum) . "') character set utf8 collate utf8_general_ci$defaultClause");
+
+		$values=array('type'=>'set', 'parts'=>array('enums'=>$this->enum, 'character set'=>'utf8', 'collate'=> 'utf8_general_ci', 'default'=>Convert::raw2sql($this->default), 'table'=>$this->tableName, 'arrayValue'=>$this->arrayValue));
+		DB::requireField($this->tableName, $this->name, $values);
+
 	}
 	
 	
