@@ -475,35 +475,36 @@ abstract class SS_Database {
 			Profiler::unmark('createField');
 			$this->alterationMessage("Field $table.$field: created as $spec_orig","created");
 		} else if($fieldValue != $specValue) {
-			// If enums are being modified, then we need to fix existing data in the table.
+			// If enums/sets are being modified, then we need to fix existing data in the table.
 			// Update any records where the enum is set to a legacy value to be set to the default.
 			// One hard-coded exception is SiteTree - the default for this is Page.
-			
-			if(substr($specValue, 0, 4) == "enum") {
-				$newStr = preg_replace("/(^enum\s*\(')|('$\).*)/i","",$spec_orig);
-				$new = preg_split("/'\s*,\s*'/", $newStr);
+			foreach(array('enum','set') as $enumtype) {
+				if(preg_match("/^$enumtype/i",$specValue)) {
+					$newStr = preg_replace("/(^$enumtype\s*\(')|('$\).*)/i","",$spec_orig);
+					$new = preg_split("/'\s*,\s*'/", $newStr);
 				
-				$oldStr = preg_replace("/(^enum\s*\(')|('$\).*)/i","", $fieldValue);
-				$old = preg_split("/'\s*,\s*'/", $newStr);
+					$oldStr = preg_replace("/(^$enumtype\s*\(')|('$\).*)/i","", $fieldValue);
+					$old = preg_split("/'\s*,\s*'/", $newStr);
 
-				$holder = array();
-				foreach($old as $check) {
-					if(!in_array($check, $new)) {
-						$holder[] = $check;
+					$holder = array();
+					foreach($old as $check) {
+						if(!in_array($check, $new)) {
+							$holder[] = $check;
+						}
 					}
-				}
-				if(count($holder)) {
-					$default = explode('default ', $spec_orig);
-					$default = $default[1];
-					if($default == "'SiteTree'") $default = "'Page'";
-					$query = "UPDATE \"$table\" SET $field=$default WHERE $field IN (";
-					for($i=0;$i+1<count($holder);$i++) {
-						$query .= "'{$holder[$i]}', ";
+					if(count($holder)) {
+						$default = explode('default ', $spec_orig);
+						$default = $default[1];
+						if($default == "'SiteTree'") $default = "'Page'";
+						$query = "UPDATE \"$table\" SET $field=$default WHERE $field IN (";
+						for($i=0;$i+1<count($holder);$i++) {
+							$query .= "'{$holder[$i]}', ";
+						}
+						$query .= "'{$holder[$i]}')";
+						DB::query($query);
+						$amount = DB::affectedRows();
+						$this->alterationMessage("Changed $amount rows to default value of field $field (Value: $default)");
 					}
-					$query .= "'{$holder[$i]}')";
-					DB::query($query);
-					$amount = DB::affectedRows();
-					$this->alterationMessage("Changed $amount rows to default value of field $field (Value: $default)");
 				}
 			}
 			Profiler::mark('alterField');
