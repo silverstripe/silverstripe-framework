@@ -600,6 +600,20 @@ class MySQLDatabase extends SS_Database {
 	}
 	
 	/**
+	 * Return a set type-formatted string
+	 * 
+	 * @param array $values Contains a tokenised list of info about this data type
+	 * @return string
+	 */
+	public function set($values){
+		//For reference, this is what typically gets passed to this function:
+		//$parts=Array('datatype'=>'enum', 'enums'=>$this->enum, 'character set'=>'utf8', 'collate'=> 'utf8_general_ci', 'default'=>$this->default);
+		//DB::requireField($this->tableName, $this->name, "enum('" . implode("','", $this->enum) . "') character set utf8 collate utf8_general_ci default '{$this->default}'");
+		$default = empty($values['default']) ? '' : " default '$values[default]'";
+		return 'set(\'' . implode('\',\'', $values['enums']) . '\') character set utf8 collate utf8_general_ci' . $default;
+	}
+	
+	/**
 	 * Return a float type-formatted string
 	 * For MySQL, we simply return the word 'date', no other parameters are necessary
 	 * 
@@ -921,6 +935,89 @@ class MySQLDatabase extends SS_Database {
 	 */
 	public function endTransaction(){
 		//Transactions not set up for MySQL yet
+	}
+
+	/**
+	 * Function to return an SQL datetime expression that can be used with SQLite3
+	 * used for querying a datetime in a certain format
+	 * @param string $date to be formated, can be either 'now', literal datetime like '1973-10-14 10:30:00' or field name, e.g. '"SiteTree"."Created"'
+	 * @param string $format to be used, supported specifiers:
+	 * %Y = Year (four digits)
+	 * %m = Month (01..12)
+	 * %d = Day (01..31)
+	 * %H = Hour (00..23)
+	 * %i = Minutes (00..59)
+	 * %s = Seconds (00..59)
+	 * %U = unix timestamp, can only be used on it's own
+	 * @return string SQL datetime expression to query for a formatted datetime
+	 */
+	function formattedDatetimeClause($date, $format) {
+
+		preg_match_all('/%(.)/', $format, $matches);
+		foreach($matches[1] as $match) if(array_search($match, array('Y','m','d','H','i','s','U')) === false) user_error('formattedDatetimeClause(): unsupported format character %' . $match, E_USER_WARNING);
+
+		if(preg_match('/^now$/i', $date)) {
+			$date = "NOW()";
+		} else if(preg_match('/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/i', $date)) {
+			$date = "'$date'";
+		}
+
+		if($format == '%U') return "UNIX_TIMESTAMP($date)";
+		
+		return "DATE_FORMAT($date, '$format')";
+		
+	}
+	
+	/**
+	 * Function to return an SQL datetime expression that can be used with SQLite3
+	 * used for querying a datetime addition
+	 * @param string $date, can be either 'now', literal datetime like '1973-10-14 10:30:00' or field name, e.g. '"SiteTree"."Created"'
+	 * @param string $interval to be added, use the format [sign][integer] [qualifier], e.g. -1 Day, +15 minutes, +1 YEAR
+	 * supported qualifiers:
+	 * - years
+	 * - months
+	 * - days
+	 * - hours
+	 * - minutes
+	 * - seconds
+	 * This includes the singular forms as well
+	 * @return string SQL datetime expression to query for a datetime (YYYY-MM-DD hh:mm:ss) which is the result of the addition
+	 */
+	function datetimeIntervalClause($date, $interval) {
+
+		$interval = preg_replace('/(year|month|day|hour|minute|second)s/i', '$1', $interval);
+
+		if(preg_match('/^now$/i', $date)) {
+			$date = "NOW()";
+		} else if(preg_match('/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/i', $date)) {
+			$date = "'$date'";
+		}
+
+		return "$date + INTERVAL $interval";
+	}
+
+	/**
+	 * Function to return an SQL datetime expression that can be used with SQLite3
+	 * used for querying a datetime substraction
+	 * @param string $date1, can be either 'now', literal datetime like '1973-10-14 10:30:00' or field name, e.g. '"SiteTree"."Created"'
+	 * @param string $date2 to be substracted of $date1, can be either 'now', literal datetime like '1973-10-14 10:30:00' or field name, e.g. '"SiteTree"."Created"'
+	 * @return string SQL datetime expression to query for the interval between $date1 and $date2 in seconds which is the result of the substraction
+	 */
+	function datetimeDifferenceClause($date1, $date2) {
+
+		if(preg_match('/^now$/i', $date1)) {
+			$date1 = "NOW()";
+		} else if(preg_match('/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/i', $date1)) {
+			$date1 = "'$date1'";
+		}
+
+		if(preg_match('/^now$/i', $date2)) {
+			$date2 = "NOW()";
+		} else if(preg_match('/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/i', $date2)) {
+			$date2 = "'$date2'";
+		}
+
+		return "UNIX_TIMESTAMP($date1) - UNIX_TIMESTAMP($date2)";
 	}
 }
 
