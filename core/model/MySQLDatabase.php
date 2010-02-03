@@ -842,9 +842,7 @@ class MySQLDatabase extends SS_Database {
 	}
 	
 	/**
-	 * Because NOW() doesn't always work...
-	 * MSSQL, I'm looking at you
-	 *
+	 * MySQL uses NOW() to return the current date/time.
 	 */
 	function now(){
 		return 'NOW()';
