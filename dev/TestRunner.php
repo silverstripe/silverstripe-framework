@@ -300,39 +300,51 @@ class TestRunner extends Controller {
 				return <<<HTML
 <form action="$me">				
 	<p>Enter a fixture file name to start a new test session.  Don't forget to visit dev/tests/endsession when you're done!</p>
-	<p>Fixture file: <input id="fixture-file" name="fixture" /></p>
+	<p>Fixture file (leave blank to start with default set-up): <input id="fixture-file" name="fixture" /></p>
 	<input type="hidden" name="flush" value="1">
 	<p><input id="start-session" value="Start test session" type="submit" /></p>
 </form>
 HTML;
 			} else {
 				$fixtureFile = $_GET['fixture'];
-			
-				// Validate fixture file
-				$realFile = realpath(BASE_PATH.'/'.$fixtureFile);
-				$baseDir = realpath(Director::baseFolder());
-				if(!$realFile || !file_exists($realFile)) {
-					return "<p>Fixture file doesn't exist</p>";
-				} else if(substr($realFile,0,strlen($baseDir)) != $baseDir) {
-					return "<p>Fixture file must be inside $baseDir</p>";
-				} else if(substr($realFile,-4) != '.yml') {
-					return "<p>Fixture file must be a .yml file</p>";
-				} else if(!preg_match('/^([^\/.][^\/]+)\/tests\//', $fixtureFile)) {
-					return "<p>Fixture file must be inside the tests subfolder of one of your modules.</p>";
+				
+				if($fixtureFile) {
+					// Validate fixture file
+					$realFile = realpath(BASE_PATH.'/'.$fixtureFile);
+					$baseDir = realpath(Director::baseFolder());
+					if(!$realFile || !file_exists($realFile)) {
+						return "<p>Fixture file doesn't exist</p>";
+					} else if(substr($realFile,0,strlen($baseDir)) != $baseDir) {
+						return "<p>Fixture file must be inside $baseDir</p>";
+					} else if(substr($realFile,-4) != '.yml') {
+						return "<p>Fixture file must be a .yml file</p>";
+					} else if(!preg_match('/^([^\/.][^\/]+)\/tests\//', $fixtureFile)) {
+						return "<p>Fixture file must be inside the tests subfolder of one of your modules.</p>";
+					}
 				}
 
 				$dbname = SapphireTest::create_temp_db();
 
 				DB::set_alternative_database_name($dbname);
-			
-				$fixture = new YamlFixture($_GET['fixture']);
-				$fixture->saveIntoDatabase();
+				
+				// Fixture
+				if($fixtureFile) {
+					$fixture = new YamlFixture($fixtureFile);
+					$fixture->saveIntoDatabase();
+					
+				// If no fixture, then use defaults
+				} else {
+					$dataClasses = ClassInfo::subclassesFor('DataObject');
+					array_shift($dataClasses);
+					foreach($dataClasses as $dataClass) singleton($dataClass)->requireDefaultRecords();
+				}
 				
 				return "<p>Started testing session with fixture '$fixtureFile'.  Time to start testing; where would you like to start?</p>
 					<ul>
 						<li><a id=\"home-link\" href=\"" .Director::baseURL() . "\">Homepage - published site</a></li>
 						<li><a id=\"draft-link\" href=\"" .Director::baseURL() . "?stage=Stage\">Homepage - draft site</a></li>
 						<li><a id=\"admin-link\" href=\"" .Director::baseURL() . "admin/\">CMS Admin</a></li>
+						<li><a id=\"endsession-link\" href=\"" .Director::baseURL() . "dev/tests/endsession\">End your test session</a></li>
 					</ul>";
 			}
 						
@@ -345,7 +357,11 @@ HTML;
 		SapphireTest::kill_temp_db();
 		DB::set_alternative_database_name(null);
 
-		return "<p>Test session ended.</p>";
+		return "<p>Test session ended.</p>
+			<ul>
+				<li><a id=\"home-link\" href=\"" .Director::baseURL() . "\">Return to your site</a></li>
+				<li><a id=\"startsession-link\" href=\"" .Director::baseURL() . "dev/tests/startsession\">Start a new test session</a></li>
+			</ul>";
 	}
 	
 	function setUp() {
