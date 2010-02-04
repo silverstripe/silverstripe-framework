@@ -1,6 +1,30 @@
 <?php
 
 class SSViewerTest extends SapphireTest {
+	
+	/**
+	 * Tests for {@link SSViewer::current_theme()} for different behaviour
+	 * of user defined themes via {@link SiteConfig} and default theme
+	 * when no user themes are defined.
+	 */
+	function testCurrentTheme() {
+		$config = SiteConfig::current_site_config();
+		$oldTheme = $config->Theme;
+		$config->Theme = '';
+		$config->write();
+
+		SSViewer::set_theme('mytheme');
+		$this->assertEquals('mytheme', SSViewer::current_theme(), 'Current theme is the default - user has not defined one');
+
+		$config->Theme = 'myusertheme';
+		$config->write();
+		$this->assertEquals('myusertheme', SSViewer::current_theme(), 'Current theme is a user defined one');
+
+		// Set the theme back to the original
+		$config->Theme = $oldTheme;
+		$config->write();
+	}
+	
 	/**
 	 * Test that a template without a <head> tag still renders.
 	 */

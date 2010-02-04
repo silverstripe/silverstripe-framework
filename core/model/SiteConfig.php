@@ -17,6 +17,7 @@ class SiteConfig extends DataObject {
 	static $db = array(
 		"Title" => "Varchar(255)",
 		"Tagline" => "Varchar(255)",
+		"Theme" => "Varchar(255)",
 		"CanViewType" => "Enum('Anyone, LoggedInUsers, OnlyTheseUsers', 'Anyone')",
 		"CanEditType" => "Enum('LoggedInUsers, OnlyTheseUsers', 'LoggedInUsers')",
 		"CanCreateTopLevelType" => "Enum('LoggedInUsers, OnlyTheseUsers', 'LoggedInUsers')",
@@ -27,6 +28,12 @@ class SiteConfig extends DataObject {
 		"EditorGroups" => "Group",
 		"CreateTopLevelGroups" => "Group"
 	);
+	
+	protected static $disabled_themes = array();
+	
+	public static function disable_theme($theme) {
+		self::$disabled_themes[$theme] = $theme;
+	}
 	
 	/**
 	 * Get the fields that are sent to the CMS. In
@@ -39,7 +46,8 @@ class SiteConfig extends DataObject {
 			new TabSet("Root",
 				new Tab('Main',
 					$titleField = new TextField("Title", _t('SiteConfig.SITETITLE', "Site title")),
-					$taglineField = new TextField("Tagline", _t('SiteConfig.SITETAGLINE', "Site Tagline/Slogan"))
+					$taglineField = new TextField("Tagline", _t('SiteConfig.SITETAGLINE', "Site Tagline/Slogan")),
+					new DropdownField("Theme", _t('SiteConfig.THEME', 'Theme'), $this->getAvailableThemes(), '', null, _t('SiteConfig.DEFAULTTHEME', '(Use default theme)'))
 				),
 				new Tab('Access',
 					new HeaderField('WhoCanViewHeader', _t('SiteConfig.VIEWHEADER', "Who can view pages on this site?"), 2),
@@ -88,6 +96,19 @@ class SiteConfig extends DataObject {
 
 		$this->extend('updateEditFormFields', $fields);
 		return $fields;
+	}
+
+	/**
+	 * Get all available themes that haven't been marked as disabled.
+	 * @param string $baseDir Optional alternative theme base directory for testing
+	 * @return array of theme directory names
+	 */
+	public function getAvailableThemes($baseDir = null) {
+		$themes = ManifestBuilder::get_themes($baseDir);
+		foreach(self::$disabled_themes as $theme) {
+			if(isset($themes[$theme])) unset($themes[$theme]);
+		}
+		return $themes;
 	}
 	
 	/**

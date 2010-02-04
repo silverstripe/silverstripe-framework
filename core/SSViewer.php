@@ -88,6 +88,11 @@ class SSViewer {
 	protected static $current_theme = null;
 	
 	/**
+	 * @var string
+	 */
+	protected static $cached_theme = null;
+	
+	/**
 	 * Create a template from a string instead of a .ss file
 	 * 
 	 * @return SSViewer
@@ -106,8 +111,18 @@ class SSViewer {
 	/**
 	 * @return string 
 	 */
-	static function current_theme() {
-		return self::$current_theme;
+	static function current_theme($cached = true) {
+		if($cached && self::$cached_theme) {
+			// First case is to return the cached user theme so we don't requery SiteConfig again
+			return self::$cached_theme;
+		} else {
+			// Need to refresh the cache from the SiteConfig
+			$theme = SiteConfig::current_site_config()->Theme;
+			self::$cached_theme = $theme;
+		}
+		// Fall back to the default SSViewer::set_theme() behaviour
+		if(!$theme) $theme = self::$current_theme;
+		return $theme;
 	}
 	
 	/**
@@ -141,13 +156,13 @@ class SSViewer {
 				else $templateFolder = null;
 
 				// Use the theme template if available
-				if(self::$current_theme && isset($_TEMPLATE_MANIFEST[$template]['themes'][self::$current_theme])) {
+				if(self::current_theme() && isset($_TEMPLATE_MANIFEST[$template]['themes'][self::current_theme()])) {
 					$this->chosenTemplates = array_merge(
-						$_TEMPLATE_MANIFEST[$template]['themes'][self::$current_theme], 
+						$_TEMPLATE_MANIFEST[$template]['themes'][self::current_theme()], 
 						$this->chosenTemplates
 					);
 					
-					if(isset($_GET['debug_request'])) Debug::message("Found template '$template' from main theme '" . self::$current_theme . "': " . var_export($_TEMPLATE_MANIFEST[$template]['themes'][self::$current_theme], true));
+					if(isset($_GET['debug_request'])) Debug::message("Found template '$template' from main theme '" . self::current_theme() . "': " . var_export($_TEMPLATE_MANIFEST[$template]['themes'][self::current_theme()], true));
 				}
 				
 				// Fall back to unthemed base templates
@@ -257,8 +272,8 @@ class SSViewer {
 	 */
 	public static function getTemplateFileByType($identifier, $type) {
 		global $_TEMPLATE_MANIFEST;
-		if(self::$current_theme && isset($_TEMPLATE_MANIFEST[$identifier]['themes'][self::$current_theme][$type])) {
-			return $_TEMPLATE_MANIFEST[$identifier]['themes'][self::$current_theme][$type];
+		if(self::current_theme() && isset($_TEMPLATE_MANIFEST[$identifier]['themes'][self::current_theme()][$type])) {
+			return $_TEMPLATE_MANIFEST[$identifier]['themes'][self::current_theme()][$type];
 		} else if(isset($_TEMPLATE_MANIFEST[$identifier][$type])){
 			return $_TEMPLATE_MANIFEST[$identifier][$type];
 		} else {
