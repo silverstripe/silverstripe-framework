@@ -19,7 +19,7 @@ class ModelAsController extends Controller implements NestedController {
 	public static function controller_for(SiteTree $sitetree, $action = null) {
 		if($sitetree->class == 'SiteTree') $controller = "ContentController";
 		else $controller = "{$sitetree->class}_Controller";
-		
+
 		if($action && class_exists($controller . '_' . ucfirst($action))) {
 			$controller = $controller . '_' . ucfirst($action);
 		}
@@ -29,6 +29,7 @@ class ModelAsController extends Controller implements NestedController {
 	
 	public function init() {
 		singleton('SiteTree')->extend('modelascontrollerInit', $this);
+		parent::init();
 	}
 	
 	/**
@@ -39,11 +40,14 @@ class ModelAsController extends Controller implements NestedController {
 		$this->request = $request;
 		
 		$this->pushCurrent();
+
+		// Create a response just in case init() decides to redirect
+		$this->response = new SS_HTTPResponse();
+
 		$this->init();
 		
 		// If the database has not yet been created, redirect to the build page.
 		if(!DB::isActive() || !ClassInfo::hasTable('SiteTree')) {
-			$this->response = new SS_HTTPResponse();
 			$this->response->redirect(Director::absoluteBaseURL() . 'dev/build?returnURL=' . (isset($_GET['url']) ? urlencode($_GET['url']) : null));
 			$this->popCurrent();
 			
