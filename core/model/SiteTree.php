@@ -1043,7 +1043,6 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 						else $result[$item->ID] = $siteConfigPermission;
 					}
 
-					$actuallyInherited = self::can_edit_multiple(array_keys($groupedByParent), $memberID);
 					$actuallyInherited = self::batch_permission_check(array_keys($groupedByParent), $memberID, $typeField, $groupJoinTable, $siteConfigMethod);
 					if($actuallyInherited) {
 						$parentIDs = array_keys(array_filter($actuallyInherited));
