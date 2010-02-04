@@ -967,7 +967,7 @@ JS
 					}
 					
 					$value = str_replace(array("\r", "\n"), "\n", $value);
-					$tmpColumnData = "\"" . str_replace("\"", "\"\"", $value) . "\"";
+					$tmpColumnData = '"' . str_replace('"', '\"', $value) . '"';
 					$columnData[] = $tmpColumnData;
 				}
 				$fileData .= implode($separator, $columnData);
