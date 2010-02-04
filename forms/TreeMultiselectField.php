@@ -101,6 +101,7 @@ HTML;
 		$field = new TreeMultiselectField_Readonly($this->name, $this->title, $this->sourceObject, $this->keyField, $this->labelField);
 		$field->addExtraClass($this->extraClass());
 		$field->setForm($this->form);
+		$field->setValue($this->value);
 		return $field;
 	}
 }
