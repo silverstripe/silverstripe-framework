@@ -1242,7 +1242,7 @@ class TableListField_Item extends ViewableData {
 
 			// This supports simple FieldName syntax
 			if(strpos($fieldName,'.') === false) {
-				$value = ($this->item->XML_val($fieldName) && $xmlSafe) ? $this->item->XML_val($fieldName) : $this->item->$fieldName;
+				$value = ($this->item->XML_val($fieldName) && $xmlSafe) ? $this->item->XML_val($fieldName) : $this->item->RAW_val($fieldName);
 			// This support the syntax fieldName = Relation.RelatedField
 			} else {					
 				$fieldNameParts = explode('.', $fieldName)	;
