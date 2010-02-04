@@ -59,7 +59,7 @@ class PermissionTest extends SapphireTest {
 
 		$result = Permission::get_members_by_permission(array('CMS_ACCESS_SecurityAdmin'));
 
-		$this->assertEquals($result->First(),$accessMember);
-		$this->assertNotEquals($result->First(),$accessAuthor);
+		$this->assertEquals($result->First(),$accessMember, "Member is found via a permission attached to a role");
+		$this->assertNotEquals($result->First(),$accessAuthor, "Member is not found via a permission attached to a role");
 	}
 }
