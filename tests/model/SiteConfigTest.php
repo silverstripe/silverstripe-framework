@@ -73,6 +73,8 @@ class SiteConfigTest extends SapphireTest {
 		SiteConfig::disable_theme('darkshades');
 		$themes = $config->getAvailableThemes($testThemeBaseDir);
 		$this->assertFalse(in_array('darkshades', $themes), 'Darkshades was disabled - it is no longer available');
+		
+		Filesystem::removeFolder($testThemeBaseDir);
 	}
 	
 }
