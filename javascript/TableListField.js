@@ -17,15 +17,15 @@ TableListField.prototype = {
 		rules['#'+this.id+' th'] = {
 			initialize: function() {
 				var sortLinks = $$('span.sortLinkHidden a', this);
-				if(sortLinks) Element.hide(sortLinks[0]);
+				if(sortLinks) sortLinks[0].style.visibility = 'hidden';
 			},	
 			onmouseover: function(e) {
 				var sortLinks = $$('span.sortLinkHidden a', this);
-				if(sortLinks) Element.show(sortLinks[0]);
+				if(sortLinks) sortLinks[0].style.visibility = 'visible';
 			},
 			onmouseout: function(e) {
 				var sortLinks = $$('span.sortLinkHidden a', this);
-				if(sortLinks) Element.hide(sortLinks[0]);
+				if(sortLinks) sortLinks[0].style.visibility = 'hidden';
 			}
 		};
 		
