@@ -21,10 +21,8 @@
 
 .calendarpopup {
 	position: absolute;
-	left: 9em;
-	_left: 1.3em;
-	top: -0.15em;
-	_top: 4em;
+	left: 0em;
+	top: 2em;
 	display: none;
 	z-index: 2;
 }
