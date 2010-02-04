@@ -852,23 +852,8 @@ JS
 		if($this->customSourceItems) {
 			return $this->customSourceItems->Count();
 		}
-		$countQuery = $this->getQuery();
-		$countQuery->orderby = array();
-		$baseClass = ClassInfo::baseDataClass($this->sourceClass);
 
-		// we can't clear the select if we're relying on its output by a HAVING clause
-		if(count($countQuery->having) || count($countQuery->groupby)) {
-			$records = $countQuery->execute();
-			// TODO figure out how to use COUNT and GROUBY together to produce a single rowcount
-			$this->totalCount = $records->numRecords();
-		} else {
-			$countQuery->select = array();
-			$countQuery->groupby = array();
-			$countQuery->select[] = "COUNT(DISTINCT \"{$baseClass}\".\"ID\") AS \"TotalCount\"";
-			$records = $countQuery->execute();
-			$record = $records->nextRecord();
-			$this->totalCount = $record['TotalCount'];
-		}
+		$this->totalCount = $this->getQuery()->unlimitedRowCount();
 		return $this->totalCount;
 	}
 	
