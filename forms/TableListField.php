@@ -319,10 +319,13 @@ JS
 			if($this->form) {
 				$sortLink = $this->Link();
 				$sortLink = HTTP::setGetVar("ctf[{$this->Name()}][sort]", $fieldName, $sortLink);
-				if(isset($_REQUEST['ctf'][$this->Name()]['dir'])) {
-					$XML_sort = (isset($_REQUEST['ctf'][$this->Name()]['dir'])) ? Convert::raw2xml($_REQUEST['ctf'][$this->Name()]['dir']) : null;
-					$sortLink = HTTP::setGetVar("ctf[{$this->Name()}][dir]", $XML_sort, $sortLink);
-				}
+	
+				// Apply sort direction
+				$dir = isset($_REQUEST['ctf'][$this->Name()]['dir']) ? $_REQUEST['ctf'][$this->Name()]['dir'] : null;
+				$dir = trim(strtolower($dir));
+				$newDir = ($dir == 'desc') ? null : 'desc';
+				$sortLink = HTTP::setGetVar("ctf[{$this->Name()}][dir]", Convert::raw2xml($newDir), $sortLink);
+
 				if(isset($_REQUEST['ctf'][$this->Name()]['search']) && is_array($_REQUEST['ctf'][$this->Name()]['search'])) {
 					foreach($_REQUEST['ctf'][$this->Name()]['search'] as $parameter => $value) {
 						$XML_search = Convert::raw2xml($value);
@@ -480,13 +483,13 @@ JS
 			$query = singleton($this->sourceClass)->extendedSQL($this->sourceFilter(), $this->sourceSort, null, $this->sourceJoin);
 		}
 		
-		if(isset($_REQUEST['ctf'][$this->Name()]['sort'])) {
-			$SQL_sort = Convert::raw2sql($_REQUEST['ctf'][$this->Name()]['sort']);
-			$sql = $query->sql();
-			// see {isFieldSortable}
-			if(in_array($SQL_sort,$query->select) || stripos($sql,"AS {$SQL_sort}")) {
-				$query->orderby = $SQL_sort;
+		if(!empty($_REQUEST['ctf'][$this->Name()]['sort'])) {
+			$sort = $_REQUEST['ctf'][$this->Name()]['sort'];
+			if(!empty($_REQUEST['ctf'][$this->Name()]['dir'])) {
+				$dir = $_REQUEST['ctf'][$this->Name()]['dir'];
+				if(strtoupper(trim($dir)) == 'DESC') $sort .= ' DESC';
 			}
+			if($query->canSortBy($sort)) $query->orderby = $sort;
 		}
 		
 		return $query;
