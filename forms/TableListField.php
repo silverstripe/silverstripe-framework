@@ -362,20 +362,9 @@ JS
 			return false;
 		}
 		
-		if($this->__cachedQuery) {
-			$query = $this->__cachedQuery;
-		} else {
-			$query = $this->__cachedQuery = $this->getQuery();
-		}
-		$sql = $query->sql();
-		
-		$selects = $query->select;
-		foreach($selects as $i => $sel) {
-			if (preg_match('/"(.+?)"\."(.+?)"/', $sel, $matches)) $selects[$i] = $matches[2];
-		}
-		
-		$SQL_fieldName = Convert::raw2sql($fieldName);
-		return (in_array($SQL_fieldName,$selects) || stripos($sql,"AS {$SQL_fieldName}"));
+		if(!$this->__cachedQuery) $this->__cachedQuery = $this->getQuery();
+
+		return $this->__cachedQuery->canSortBy($fieldName);
 	}
 	
 	/**
