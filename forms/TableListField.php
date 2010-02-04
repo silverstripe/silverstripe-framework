@@ -486,12 +486,13 @@ JS
 		}
 		
 		if(!empty($_REQUEST['ctf'][$this->Name()]['sort'])) {
-			$sort = $_REQUEST['ctf'][$this->Name()]['sort'];
+			$column = $_REQUEST['ctf'][$this->Name()]['sort'];
+			$dir = 'ASC';
 			if(!empty($_REQUEST['ctf'][$this->Name()]['dir'])) {
 				$dir = $_REQUEST['ctf'][$this->Name()]['dir'];
-				if(strtoupper(trim($dir)) == 'DESC') $sort .= ' DESC';
+				if(strtoupper(trim($dir)) == 'DESC') $dir = 'DESC';
 			}
-			if($query->canSortBy($sort)) $query->orderby = $sort;
+			if($query->canSortBy($column)) $query->orderby = $column.' '.$dir;
 		}
 		
 		return $query;
