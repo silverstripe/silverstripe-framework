@@ -278,7 +278,7 @@ class FunctionalTest extends SapphireTest {
 	 * This is helpful if you're not testing publication functionality and don't want "stage management" cluttering your test.
 	 */
 	function useDraftSite() {
-		$this->session()->inst_set('currentStage', 'Stage');
+		$this->session()->inst_set('readingMode', 'Stage.Stage');
 		$this->session()->inst_set('unsecuredDraftSite', true);
 	}
 

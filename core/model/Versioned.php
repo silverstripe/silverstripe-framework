@@ -73,11 +73,9 @@ class Versioned extends DataObjectDecorator {
 	 * Reset static configuration variables to their default values
 	 */
 	static function reset() {
-		self::$reading_stage = null;
-		self::$reading_archived_date = null;
+		self::$reading_mode = '';
 
-		Session::clear('currentStage');
-		Session::clear('archiveDate');
+		Session::clear('readingMode');
 	}
 	
 	/**
@@ -110,7 +108,7 @@ class Versioned extends DataObjectDecorator {
 	
 	function augmentSQL(SQLQuery &$query) {
 		// Get the content at a specific date
-		if($date = Versioned::$reading_archived_date) {
+		if($date = Versioned::current_archived_date()) {
 			foreach($query->from as $table => $dummy) {
 				if(!isset($baseTable)) {
 					$baseTable = $table;
@@ -136,10 +134,10 @@ class Versioned extends DataObjectDecorator {
 				AND \"$archiveTable\".\"Version\" = \"{$baseTable}_versions\".\"Version\"";
 
 		// Get a specific stage
-		} else if(Versioned::$reading_stage && Versioned::$reading_stage != $this->defaultStage 
-					&& array_search(Versioned::$reading_stage,$this->stages) !== false) {
+		} else if(Versioned::current_stage() && Versioned::current_stage() != $this->defaultStage 
+					&& array_search(Versioned::current_stage(), $this->stages) !== false) {
 			foreach($query->from as $table => $dummy) {
-				$query->renameTable($table, $table . '_' . Versioned::$reading_stage);
+				$query->renameTable($table, $table . '_' . Versioned::current_stage());
 			}
 		}
 	}
@@ -382,8 +380,8 @@ class Versioned extends DataObjectDecorator {
 			if(isset($manipulation[$table]['fields']['Version'])) $thisVersion = $manipulation[$table]['fields']['Version'];
 			
 			// If we're editing Live, then use (table)_Live instead of (table)
-			if(Versioned::$reading_stage && Versioned::$reading_stage != $this->defaultStage) {
-				$newTable = $table . '_' . Versioned::$reading_stage;
+			if(Versioned::current_stage() && Versioned::current_stage() != $this->defaultStage) {
+				$newTable = $table . '_' . Versioned::current_stage();
 				$manipulation[$newTable] = $manipulation[$table];
 				unset($manipulation[$table]);
 			}
@@ -470,8 +468,8 @@ class Versioned extends DataObjectDecorator {
 			// Mark this version as having been published at some stage
 			DB::query("UPDATE \"{$extTable}_versions\" SET \"WasPublished\" = '1', \"PublisherID\" = $publisherID WHERE \"RecordID\" = $from->ID AND \"Version\" = $from->Version");
 
-			$oldStage = Versioned::$reading_stage;
-			Versioned::$reading_stage = $toStage;
+			$oldMode = Versioned::get_reading_mode();
+			Versioned::reading_stage($toStage);
 
 			$conn = DB::getConn();
 			if(method_exists($conn, 'allowPrimaryKeyEditing')) $conn->allowPrimaryKeyEditing($baseClass, true);
@@ -480,7 +478,7 @@ class Versioned extends DataObjectDecorator {
 
 			$from->destroy();
 			
-			Versioned::$reading_stage = $oldStage;
+			Versioned::set_reading_mode($oldMode);
 		} else {
 			user_error("Can't find {$this->owner->URLSegment}/{$this->owner->ID} in stage $fromStage", E_USER_WARNING);
 		}
@@ -585,17 +583,14 @@ class Versioned extends DataObjectDecorator {
 	static function choose_site_stage() {
 		if(isset($_GET['stage'])) {
 			$_GET['stage'] = ucfirst(strtolower($_GET['stage']));
-			Session::set('currentStage', $_GET['stage']);
-			Session::clear('archiveDate');
+			Session::set('readingMode', 'Stage.' . $_GET['stage']);
 		}
 		if(isset($_GET['archiveDate'])) {
-			Session::set('archiveDate', $_GET['archiveDate']);
+			Session::set('readingMode', 'Archive.' . $_GET['archiveDate']);
 		}
 		
-		if(Session::get('archiveDate')) {
-			Versioned::reading_archived_date(Session::get('archiveDate'));
-		} else if(Session::get('currentStage')) {
-			Versioned::reading_stage(Session::get('currentStage'));
+		if(Session::get('readingMode')) {
+			Versioned::set_reading_mode(Session::get('readingMode'));
 		} else {
 			Versioned::reading_stage("Live");
 		}
@@ -605,6 +600,21 @@ class Versioned extends DataObjectDecorator {
 		} else {
 			Cookie::set('bypassStaticCache', '1', 0);
 		}
+	}
+	
+	/**
+	 * Set the current reading mode.
+	 */
+	static function set_reading_mode($mode) {
+		Versioned::$reading_mode = $mode;
+	}
+	
+	/**
+	 * Get the current reading mode.
+	 * @return string
+	 */
+	static function get_reading_mode() {
+		return Versioned::$reading_mode;
 	}
 	
 	/**
@@ -620,7 +630,8 @@ class Versioned extends DataObjectDecorator {
 	 * @return string
 	 */
 	static function current_stage() {
-		return Versioned::$reading_stage;
+		$parts = explode('.', Versioned::get_reading_mode());
+		if($parts[0] == 'Stage') return $parts[1];
 	}
 	
 	/**
@@ -628,7 +639,8 @@ class Versioned extends DataObjectDecorator {
 	 * @return string
 	 */
 	static function current_archived_date() {
-		return Versioned::$reading_archived_date;
+		$parts = explode('.', Versioned::get_reading_mode());
+		if($parts[0] == 'Archive') return $parts[1];
 	}
 	
 	/**
@@ -636,7 +648,7 @@ class Versioned extends DataObjectDecorator {
 	 * @param string $stage New reading stage.
 	 */
 	static function reading_stage($stage) {
-		Versioned::$reading_stage = $stage;
+		Versioned::set_reading_mode('Stage.' . $stage);
 	}
 	
 	/**
@@ -644,8 +656,9 @@ class Versioned extends DataObjectDecorator {
 	 * @param string $date New reading archived date.
 	 */
 	static function reading_archived_date($date) {
-		Versioned::$reading_archived_date = $date;
+		Versioned::set_reading_mode('Archive.' . $date);
 	}
+	
 	
 	/**
 	 * Get a singleton instance of a class in the given stage.
@@ -658,13 +671,14 @@ class Versioned extends DataObjectDecorator {
 	 * @return DataObject
 	 */
 	static function get_one_by_stage($class, $stage, $filter = '', $cache = true, $orderby = '') {
-		$oldStage = Versioned::$reading_stage;
-		Versioned::$reading_stage = $stage;
+		$oldMode = Versioned::get_reading_mode();
+		Versioned::reading_stage($stage);
+		
 		singleton($class)->flushCache();
 		$result = DataObject::get_one($class, $filter, $cache, $orderby);
 		singleton($class)->flushCache();
 
-		Versioned::$reading_stage = $oldStage;
+		Versioned::set_reading_mode($oldMode);
 		return $result;
 	}
 	
@@ -733,26 +747,26 @@ class Versioned extends DataObjectDecorator {
 	 * @return DataObjectSet
 	 */
 	static function get_by_stage($class, $stage, $filter = '', $sort = '', $join = '', $limit = '', $containerClass = 'DataObjectSet') {
-		$oldStage = Versioned::$reading_stage;
-		Versioned::$reading_stage = $stage;
+		$oldMode = Versioned::get_reading_mode();
+		Versioned::reading_stage($stage);
 		$result = DataObject::get($class, $filter, $sort, $join, $limit, $containerClass);
-		Versioned::$reading_stage = $oldStage;
+		Versioned::set_reading_mode($oldMode);
 		return $result;
 	}
 	
 	function deleteFromStage($stage) {
-		$oldStage = Versioned::$reading_stage;
-		Versioned::$reading_stage = $stage;
+		$oldMode = Versioned::get_reading_mode();
+		Versioned::reading_stage($stage);
 		$result = $this->owner->delete();
-		Versioned::$reading_stage = $oldStage;
+		Versioned::set_reading_mode($oldMode);
 		return $result;
 	}
 	
 	function writeToStage($stage, $forceInsert = false) {
-		$oldStage = Versioned::$reading_stage;
-		Versioned::$reading_stage = $stage;
+		$oldMode = Versioned::get_reading_mode();
+		Versioned::reading_stage($stage);
 		$result = $this->owner->write(false, $forceInsert);
-		Versioned::$reading_stage = $oldStage;
+		Versioned::set_reading_mode($oldMode);
 		return $result;
 	}
 		
@@ -800,8 +814,8 @@ class Versioned extends DataObjectDecorator {
 	 * @return DataObject
 	 */
 	static function get_latest_version($class, $id) {
-		$oldStage = Versioned::$reading_stage;
-		Versioned::$reading_stage = null;
+		$oldMode = Versioned::get_reading_mode();
+		Versioned::set_reading_mode('');
 
 		$baseTable = ClassInfo::baseDataClass($class);
 		$query = singleton($class)->buildVersionSQL("\"{$baseTable}\".\"RecordID\" = $id", "\"{$baseTable}\".\"Version\" DESC");
@@ -816,7 +830,7 @@ class Versioned extends DataObjectDecorator {
 			user_error("Versioned::get_version: Couldn't get $class.$id", E_USER_ERROR);
 		}
 
-		Versioned::$reading_stage = $oldStage;
+		Versioned::set_reading_mode($oldMode);
 
 		return new $className($record);
 	}
@@ -842,8 +856,8 @@ class Versioned extends DataObjectDecorator {
 	 * In particular, this will query deleted records as well as active ones.
 	 */
 	static function get_including_deleted_query($class, $filter = "", $sort = "") {
-		$oldStage = Versioned::$reading_stage;
-		Versioned::$reading_stage = null;
+		$oldMode = Versioned::get_reading_mode();
+		Versioned::set_reading_mode('');
 
 		$SNG = singleton($class);
 		
@@ -855,7 +869,7 @@ class Versioned extends DataObjectDecorator {
 			ON \"$archiveTable\".\"ID\" = \"{$baseTable}_versions\".\"RecordID\"
 			AND \"$archiveTable\".\"Version\" = \"{$baseTable}_versions\".\"Version\"";
 
-		Versioned::$reading_stage = $oldStage;
+		Versioned::set_reading_mode($oldMode);
 		return $query;
 	}
 	
@@ -863,8 +877,8 @@ class Versioned extends DataObjectDecorator {
 	 * @return DataObject
 	 */
 	static function get_version($class, $id, $version) {
-		$oldStage = Versioned::$reading_stage;
-		Versioned::$reading_stage = null;
+		$oldMode = Versioned::get_reading_mode();
+		Versioned::set_reading_mode('');
 
 		$baseTable = ClassInfo::baseDataClass($class);
 		$query = singleton($class)->buildVersionSQL("\"{$baseTable}\".\"RecordID\" = $id AND \"{$baseTable}\".\"Version\" = $version");
@@ -876,8 +890,7 @@ class Versioned extends DataObjectDecorator {
 			user_error("Versioned::get_version: Couldn't get $class.$id, version $version", E_USER_ERROR);
 		}
 
-		Versioned::$reading_stage = $oldStage;
-
+		Versioned::set_reading_mode($oldMode);
 		return new $className($record);
 	}
 
@@ -904,8 +917,7 @@ class Versioned extends DataObjectDecorator {
 		self::choose_site_stage();
 	}
 	
-	protected static $reading_stage = null;
-	protected static $reading_archived_date = null;
+	protected static $reading_mode = null;
 	
 	function updateFieldLabels(&$labels) {
 		$labels['Versions'] = _t('Versioned.has_many_Versions', 'Versions', PR_MEDIUM, 'Past Versions of this page');
