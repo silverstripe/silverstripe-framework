@@ -1009,6 +1009,7 @@ JS
 		$this->showPagination = false;
 
 		increase_time_limit_to();
+		$this->Print = true;
 		
 		$result = $this->renderWith(array($this->template . '_printable', 'TableListField_printable'));
 		
