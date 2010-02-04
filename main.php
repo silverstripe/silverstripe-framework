@@ -119,5 +119,7 @@ Director::direct($url);
 
 if (isset($_GET['debug_profile'])) {
 	Profiler::unmark('all_execution');
-	Profiler::show(isset($_GET['profile_trace']));
+	if(!Director::isLive()) {
+		Profiler::show(isset($_GET['profile_trace']));
+	}
 }
