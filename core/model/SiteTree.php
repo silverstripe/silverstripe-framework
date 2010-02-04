@@ -1414,9 +1414,9 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 
 		// This coupling to the subsites module is frustrating, but difficult to avoid.
 		if(class_exists('Subsite')) {
-			$virtualPages = Subsite::get_from_all_subsites('VirtualPage', "SiteTree$suffix.ID = SiteTree$suffix.ID AND CopyContentFromID = {$this->ID}");
+			$virtualPages = Subsite::get_from_all_subsites('VirtualPage', "\"SiteTree$suffix\".\"ID\" = \"SiteTree$suffix\".\"ID\" AND \"CopyContentFromID\" = {$this->ID}");
 		} else {
-			$virtualPages = DataObject::get('VirtualPage', "SiteTree$suffix.ID = SiteTree$suffix.ID AND CopyContentFromID = {$this->ID}");
+			$virtualPages = DataObject::get('VirtualPage', "\"SiteTree$suffix\".\"ID\" = \"SiteTree$suffix\".\"ID\" AND \"CopyContentFromID\" = {$this->ID}");
 		}
 		if(class_exists('Subsite')) {
 			$redirectorPages = Subsite::get_from_all_subsites('RedirectorPage', "SiteTree$suffix.ID = SiteTree$suffix.ID AND LinkToID = {$this->ID}");
