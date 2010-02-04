@@ -149,6 +149,34 @@ class ManifestBuilder {
  	}
 	
 	/**
+	 * Get themes from a particular directory.
+	 * 
+	 * @param string $baseDir Optional: Absolute path to theme directory for testing e.g. "/Users/sharvey/Sites/test24/themes"
+	 * @param boolean $includeSubThemes If set to TRUE, sub-themes such as "blackcandy_blog" are included too
+	 * @return array indexed array of theme directories
+	 */
+	public static function get_themes($baseDir = null, $includeSubThemes = false) {
+		// If no base directory specified, the default is the project root
+		if(!$baseDir) $baseDir = BASE_PATH . DIRECTORY_SEPARATOR . THEMES_DIR;
+		$themes = array();
+		$handle = opendir($baseDir);
+		if($handle) {
+			while(false !== ($file = readdir($handle))) {
+				$fullPath = $baseDir . DIRECTORY_SEPARATOR . $file;
+				if(strpos($file, '.') === false && is_dir($fullPath)) {
+					$include = $includeSubThemes ? true : false;
+					if(strpos($file, '_') === false) {
+						$include = true;
+					}
+					if($include) $themes[] = $file;
+				}
+			}
+			closedir($handle);
+		}
+		return $themes;
+	}
+	
+	/**
 	 * Return an array containing information for the manifest
 	 * @param $baseDir The root directory to analyse
 	 * @param $excludedFolders An array folder names to exclude.  These don't care about where the
@@ -206,17 +234,14 @@ class ManifestBuilder {
 					if(preg_match("/\\\$project\s*=\s*[^\n\r]+[\n\r]/", file_get_contents("$baseDir/$filename/_config.php"), $parts)) {
 						eval($parts[0]);
 					}
-
 				}
 			}
 		}
 
 		// Get themes
 		if(file_exists("$baseDir/themes")) {
-			$themeDirs = scandir("$baseDir/themes");
+			$themeDirs = self::get_themes("$baseDir/themes", true);
 			foreach($themeDirs as $themeDir) {
-				if(substr($themeDir,0,1) == '.') continue;
-				// The theme something_forum is understood as being a part of the theme something
 				$themeName = strtok($themeDir, '_');
 				ManifestBuilder::getTemplateManifest($baseDir, "themes/$themeDir", $excludedFolders, $templateManifest, $cssManifest, $themeName);
 			}
