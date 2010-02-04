@@ -398,6 +398,25 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	}
 	
 	/**
+	 * Get the absolute URL for this page on the Live site.
+	 */
+	public function getAbsoluteLiveLink($includeStageEqualsLive = true) {
+		$live = Versioned::get_one_by_stage('SiteTree', 'Live', '"SiteTree"."ID" = ' . $this->ID);
+		
+		if($live) {
+			$link = $live->AbsoluteLink();
+			
+			if($includeStageEqualsLive) {
+				$link .= '?stage=Live';
+			}
+			
+			return $link;
+			
+		}
+	}
+	
+		
+	/**
 	 * Return a CSS identifier generated from this page's link.
 	 *
 	 * @return string The URL segment
