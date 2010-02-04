@@ -140,15 +140,15 @@ class ManifestBuilderTest extends SapphireTest {
 		mkdir($testThemeBaseDir . $ds . 'darkshades_blog');
 		
 		$this->assertEquals(array(
-			'blackcandy',
-			'darkshades'
+			'blackcandy' => 'blackcandy',
+			'darkshades' => 'darkshades'
 		), ManifestBuilder::get_themes($testThemeBaseDir), 'Our test theme directory contains 2 themes');
 		
 		$this->assertEquals(array(
-			'blackcandy',
-			'blackcandy_blog',
-			'darkshades',
-			'darkshades_blog'
+			'blackcandy' => 'blackcandy',
+			'blackcandy_blog' => 'blackcandy_blog',
+			'darkshades' => 'darkshades',
+			'darkshades_blog' => 'darkshades_blog'
 		), ManifestBuilder::get_themes($testThemeBaseDir, true), 'Our test theme directory contains 2 themes and 2 sub-themes');
 
 		// Remove all the test themes we created
