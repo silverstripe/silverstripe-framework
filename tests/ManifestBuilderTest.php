@@ -130,20 +130,8 @@ class ManifestBuilderTest extends SapphireTest {
 	function testThemeRetrieval() {
 		$ds = DIRECTORY_SEPARATOR;
 		$testThemeBaseDir = TEMP_FOLDER . $ds . 'test-themes';
-
-		// If the test directory somehow exists after a failed test, remove all the files and directories inside
-		if(file_exists($testThemeBaseDir)) {
-			$handle = opendir($testThemeBaseDir);
-			while(false !== ($file = readdir($handle))) {
-				$fullPath = $testThemeBaseDir . $ds . $file;
-				if(strpos($file, '.') === false) {
-					if(is_dir($fullPath)) rmdir($fullPath);
-					else unlink($fullPath);
-				}
-			}
-			closedir($handle);
-			rmdir($testThemeBaseDir);
-		}
+		
+		if(file_exists($testThemeBaseDir)) Filesystem::removeFolder($testThemeBaseDir);
 		
 		mkdir($testThemeBaseDir);
 		mkdir($testThemeBaseDir . $ds . 'blackcandy');
@@ -164,16 +152,7 @@ class ManifestBuilderTest extends SapphireTest {
 		), ManifestBuilder::get_themes($testThemeBaseDir, true), 'Our test theme directory contains 2 themes and 2 sub-themes');
 
 		// Remove all the test themes we created
-		$handle = opendir($testThemeBaseDir);
-		while(false !== ($file = readdir($handle))) {
-			$fullPath = $testThemeBaseDir . $ds . $file;
-			if(strpos($file, '.') === false) {
-				if(is_dir($fullPath)) rmdir($fullPath);
-				else unlink($fullPath);
-			}
-		}
-		closedir($handle);
-		rmdir($testThemeBaseDir);
+		Filesystem::removeFolder($testThemeBaseDir);
 	}
 
 	function tearDown() { 
