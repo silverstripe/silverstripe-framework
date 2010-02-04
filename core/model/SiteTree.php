@@ -1581,13 +1581,15 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 				'SiteTree',
 				array(
 					'Title' => 'Title',
+					'AbsoluteLink' => 'URL'
 				),
 				'"ChildID" = ' . $this->ID,
 				'',
 				'LEFT JOIN "SiteTree_LinkTracking" ON "SiteTree"."ID" = "SiteTree_LinkTracking"."SiteTreeID"'
 			);
 			$backLinksTable->setFieldFormatting(array(
-				'Title' => '<a href=\"admin/show/$ID\">$Title</a>'
+				'Title' => '<a href=\"admin/show/$ID\">$Title</a>',
+				'AbsoluteLink' => '<a href=\"$value\">$value</a>',
 			));
 			$backLinksTable->setPermissions(array(
 				'show',
