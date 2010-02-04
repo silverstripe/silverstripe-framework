@@ -20,7 +20,7 @@ class PermissionRole extends DataObject {
 		"Groups" => "Group",
 	);
 	
-	static $default_sort = 'Title';
+	static $default_sort = "\"Title\"";
 	
 	function getCMSFields() {
 		$fields = parent::getCMSFields();

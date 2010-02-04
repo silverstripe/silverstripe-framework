@@ -28,7 +28,7 @@ class Widget extends DataObject {
 	static $many_many = array();
 	static $belongs_many_many = array();
 	
-	static $default_sort = "Sort";
+	static $default_sort = "\"Sort\"";
 	
 	static $title = "Widget Title";
 	static $cmsTitle = "Name of this widget";
