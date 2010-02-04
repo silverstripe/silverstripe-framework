@@ -188,7 +188,8 @@ class ViewableData extends Object implements IteratorAggregate {
 	 */
 	public function defineMethods() {
 		if($this->failover) {
-			$this->addMethodsFrom('failover');
+			if(is_object($this->failover)) $this->addMethodsFrom('failover');
+			else user_error("ViewableData::\$failover set to a non-object", E_USER_WARNING);
 			
 			if(isset($_REQUEST['debugfailover'])) {
 				Debug::message("$this->class created with a failover class of {$this->failover->class}");
