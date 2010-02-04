@@ -21,6 +21,7 @@ HTML;
 		Requirements::javascript(THIRDPARTY_DIR . "/calendar/calendar.js");
 		Requirements::javascript(THIRDPARTY_DIR . "/calendar/lang/calendar-en.js");
 		Requirements::javascript(THIRDPARTY_DIR . "/calendar/calendar-setup.js");
+		Requirements::javascript(SAPPHIRE_DIR . "/javascript/CalendarDateField.js");
 		Requirements::css(SAPPHIRE_DIR . "/css/CalendarDateField.css");
 		Requirements::css(THIRDPARTY_DIR . "/calendar/calendar-win2k-1.css");
 
