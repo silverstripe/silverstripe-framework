@@ -74,7 +74,9 @@ LinkForm.prototype = {
 				// this function collects the anchors in the currently active editor and regenerates the dropdown
 				var refreshAnchors = function(selector) {
 					var anchors = new Array();
-					var raw = tinyMCE.activeEditor.getContent().match(/name="([a-zA-Z0-9-_]+?)"/gim);
+					// name attribute is defined as CDATA, should accept all characters and entities
+					// http://www.w3.org/TR/1999/REC-html401-19991224/struct/links.html#h-12.2
+					var raw = tinyMCE.activeEditor.getContent().match(/name="([^"]+?)"|name='([^']+?)'/gim);
 					if (raw && raw.length) {
 						for(var i = 0; i < raw.length; i++) {
 							anchors.push(raw[i].substr(6).replace(/"$/, ''));
