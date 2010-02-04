@@ -16,6 +16,7 @@ class TranslatableTest extends FunctionalTest {
 	
 	protected $requiredExtensions = array(
 		'SiteTree' => array('Translatable'),
+		'SiteConfig' => array('Translatable'),
 		'TranslatableTest_DataObject' => array('Translatable'),
 	);
 	
