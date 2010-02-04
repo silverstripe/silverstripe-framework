@@ -137,11 +137,11 @@ class TableListFieldTest extends SapphireTest {
 		$ajaxResponse = Director::test($table->Link())->getBody();
 
 		// Check that the column headings have been rendered
-        $this->assertRegExp('/<th[^>]*>\s*Col A\s*<\/th>/', $ajaxResponse);
-        $this->assertRegExp('/<th[^>]*>\s*Col B\s*<\/th>/', $ajaxResponse);
-        $this->assertRegExp('/<th[^>]*>\s*Col C\s*<\/th>/', $ajaxResponse);
-        $this->assertRegExp('/<th[^>]*>\s*Col D\s*<\/th>/', $ajaxResponse);
-        $this->assertRegExp('/<th[^>]*>\s*Col E\s*<\/th>/', $ajaxResponse);
+        $this->assertRegExp('/<th[^>]*>.*Col A.*<\/th>/si', $ajaxResponse);
+        $this->assertRegExp('/<th[^>]*>.*Col B.*<\/th>/si', $ajaxResponse);
+        $this->assertRegExp('/<th[^>]*>.*Col C.*<\/th>/si', $ajaxResponse);
+        $this->assertRegExp('/<th[^>]*>.*Col D.*<\/th>/si', $ajaxResponse);
+        $this->assertRegExp('/<th[^>]*>.*Col E.*<\/th>/si', $ajaxResponse);
 	}
 	
 	function testCsvExport() {
@@ -173,10 +173,11 @@ class TableListFieldTest extends SapphireTest {
 			array('Col A', 'Col B')
 		);
 		
-		$csvRow = fgetcsv($csvFile);
+		// fgetcsv doesn't handle escaped quotes in the string in PHP 5.2, so we're asserting the
+		// raw string instead.
 		$this->assertEquals(
-			$csvRow,
-			array('"A field, with a comma"', 'A second field')
+			'"\"A field, with a comma\"","A second field"',
+			trim(fgets($csvFile))
 		);
 		
 		fclose($csvFile);
