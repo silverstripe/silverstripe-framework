@@ -817,6 +817,10 @@ class DataObjectSet extends ViewableData implements IteratorAggregate, Countable
 	*/
 	public function sort($fieldname, $direction = "ASC") {
 		if($this->items) {
+			if (preg_match('/(.+?)(\s+?)(A|DE)SC$/', $fieldname, $matches)) {
+				$fieldname = $matches[1];
+				$direction = $matches[3].'SC';
+			}
 			column_sort($this->items, $fieldname, $direction, false);
 		}
 	}
