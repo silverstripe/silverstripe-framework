@@ -641,6 +641,8 @@ $lang['en_US']['SiteConfig']['SINGULARNAME'] = array(
 );
 $lang['en_US']['SiteConfig']['SITENAMEDEFAULT'] = 'Your Site Name';
 $lang['en_US']['SiteConfig']['SITETAGLINE'] = 'Site Tagline/Slogan';
+$lang['en_US']['SiteConfig']['THEME'] = 'Theme';
+$lang['en_US']['SiteConfig']['DEFAULTTHEME'] = '(Use default theme)';
 $lang['en_US']['SiteConfig']['SITETITLE'] = 'Site title';
 $lang['en_US']['SiteConfig']['TAGLINEDEFAULT'] = 'your tagline here';
 $lang['en_US']['SiteConfig']['TOPLEVELCREATE'] = 'Who can create pages in the root of the site?';
