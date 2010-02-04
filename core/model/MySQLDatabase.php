@@ -942,7 +942,7 @@ class MySQLDatabase extends SS_Database {
 	}
 
 	/**
-	 * Function to return an SQL datetime expression that can be used with SQLite3
+	 * Function to return an SQL datetime expression that can be used with MySQL
 	 * used for querying a datetime in a certain format
 	 * @param string $date to be formated, can be either 'now', literal datetime like '1973-10-14 10:30:00' or field name, e.g. '"SiteTree"."Created"'
 	 * @param string $format to be used, supported specifiers:
@@ -973,7 +973,7 @@ class MySQLDatabase extends SS_Database {
 	}
 	
 	/**
-	 * Function to return an SQL datetime expression that can be used with SQLite3
+	 * Function to return an SQL datetime expression that can be used with MySQL
 	 * used for querying a datetime addition
 	 * @param string $date, can be either 'now', literal datetime like '1973-10-14 10:30:00' or field name, e.g. '"SiteTree"."Created"'
 	 * @param string $interval to be added, use the format [sign][integer] [qualifier], e.g. -1 Day, +15 minutes, +1 YEAR
@@ -1001,7 +1001,7 @@ class MySQLDatabase extends SS_Database {
 	}
 
 	/**
-	 * Function to return an SQL datetime expression that can be used with SQLite3
+	 * Function to return an SQL datetime expression that can be used with MySQL
 	 * used for querying a datetime substraction
 	 * @param string $date1, can be either 'now', literal datetime like '1973-10-14 10:30:00' or field name, e.g. '"SiteTree"."Created"'
 	 * @param string $date2 to be substracted of $date1, can be either 'now', literal datetime like '1973-10-14 10:30:00' or field name, e.g. '"SiteTree"."Created"'
