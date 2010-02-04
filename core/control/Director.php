@@ -139,7 +139,10 @@ class Director {
 			
 			// ?debug_memory=1 will output the number of bytes of memory used for this request
 			if(isset($_REQUEST['debug_memory']) && $_REQUEST['debug_memory']) {
-				echo number_format(memory_get_peak_usage(),0);
+				Debug::message(sprintf(
+					"Peak memory usage in bytes: %s", 
+					number_format(memory_get_peak_usage(),0)
+				));
 			} else {
 				$response->output();
 			}
