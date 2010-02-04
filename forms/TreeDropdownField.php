@@ -30,7 +30,10 @@ class TreeDropdownField extends FormField {
 	 *
 	 * @param string $name the field name
 	 * @param string $title the field label
-	 * @param string $souceClass the class to display in the tree, must have the "Hierachy" extension.
+	 * @param sourceObject The object-type to list in the tree.  Must be a 'hierachy' object.  Alternatively,
+	 * you can set this to an array of key/value pairs, like a dropdown source.  In this case, the field
+	 * will act like show a flat list of tree items, without any hierachy.   This is most useful in
+	 * conjunction with TreeMultiselectField, for presenting a set of checkboxes in a compact view.
 	 * @param string $keyField to field on the source class to save as the field value (default ID).
 	 * @param string $labelField the field name to show as the human-readable value on the tree (default Title).
 	 * @param string $showSearch enable the ability to search the tree by entering the text in the input field.
@@ -109,7 +112,8 @@ class TreeDropdownField extends FormField {
 			'div',
 			array (
 				'id'    => "TreeDropdownField_{$this->id()}",
-				'class' => 'TreeDropdownField single' . ($this->extraClass() ? " {$this->extraClass()}" : '')
+				'class' => 'TreeDropdownField single' . ($this->extraClass() ? " {$this->extraClass()}" : ''),
+				'href' => $this->Link(),
 			),
 			$this->createTag (
 				'input',
@@ -153,6 +157,17 @@ class TreeDropdownField extends FormField {
 	 * @return string
 	 */
 	public function tree(SS_HTTPRequest $request) {
+		// Array sourceObject is an explicit list of values - construct a "flat tree"
+		if(is_array($this->sourceObject)) {
+			$output = "<ul class=\"tree\">\n";
+			foreach($this->sourceObject as $k => $v) {
+				$output .= '<li id="selector-' . $this->name . '-' . $k  . '"><a>' . $v . '</a>';
+			}
+			$output .= "</ul>";
+			return $output;
+		}
+		
+		// Regular source specification
 		$isSubTree = false;
 
 		$this->search = Convert::Raw2SQL($request->getVar('search'));

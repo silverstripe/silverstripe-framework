@@ -15,7 +15,20 @@ class TreeMultiselectField extends TreeDropdownField {
 	 * Return this field's linked items
 	 */
 	function getItems() {
-		if($this->form) {
+		// If the value has been set, use that
+		if($this->value != 'unchanged' && is_array($this->sourceObject)) {
+			$items = array();
+			$values = is_array($this->value) ? $this->value : preg_split('/ *, */', trim($this->value));
+			foreach($values as $value) {
+				$item = new stdClass;
+				$item->ID = $value;
+				$item->Title = $this->sourceObject[$value];
+				$items[] = $item;
+			}
+			return $items;
+			
+		// Otherwise, look data up from the linked relation
+		} else if($this->form) {
 			$fieldName = $this->name;
 			$record = $this->form->getRecord();
 			if(is_object($record) && $record->hasMethod($fieldName)) 
@@ -47,7 +60,7 @@ class TreeMultiselectField extends TreeDropdownField {
 		$id = $this->id();
 		
 		return <<<HTML
-			<div class="TreeDropdownField multiple"><input id="$id" type="hidden" name="$this->name" value="$value" /><span class="items">$itemList</span><a href="#" title="open" class="editLink">&nbsp;</a></div>		
+			<div class="TreeDropdownField multiple" href="{$this->Link()}"><input id="$id" type="hidden" name="$this->name" value="$value" /><span class="items">$itemList</span><a href="#" title="open" class="editLink">&nbsp;</a></div>		
 HTML;
 	}
 
