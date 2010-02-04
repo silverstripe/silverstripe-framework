@@ -444,7 +444,8 @@ JS
 			$dataQuery = $this->getQuery();
 			
 			// we don't limit when doing certain actions        T
-			if(!isset($_REQUEST['methodName']) || !in_array($_REQUEST['methodName'],array('printall','export'))) {
+			$methodName = array_pop(explode('/', $_REQUEST['url']));
+			if(!$methodName || !in_array($methodName,array('printall','export'))) {
 				$dataQuery->limit(array(
 					'limit' => $SQL_limit,
 					'start' => (isset($SQL_start)) ? $SQL_start : null 
