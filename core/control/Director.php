@@ -482,7 +482,7 @@ class Director {
 	 * Force the site to run on SSL.  To use, call from _config.php
 	 */
 	static function forceSSL() {
-		if(!isset($_SERVER['HTTPS']) && !Director::isDev()){
+		if(!isset($_SERVER['HTTPS']) && !Director::isDev() && !Director::is_cli()){
 			$destURL = str_replace('http:','https:',Director::absoluteURL($_SERVER['REQUEST_URI']));
 
 			header("Location: $destURL");
