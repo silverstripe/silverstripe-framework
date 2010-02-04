@@ -403,16 +403,31 @@ JS
 	 * 
 	 * @param $query SS_Query
 	 */
-	function setCustomQuery($query) {
-		$this->customQuery = $query;
+	function setCustomQuery(SQLQuery $query) {
+		// The type-hinting above doesn't seem to work consistently
+		if($query instanceof SQLQuery) {
+			$this->customQuery = $query;
+		} else {
+			user_error('TableList::setCustomQuery() should be passed a SQLQuery', E_USER_WARNING);
+		}
 	}
 
-	function setCustomCsvQuery($query) {
-		$this->customCsvQuery = $query;
+	function setCustomCsvQuery(SQLQuery $query) {
+		// The type-hinting above doesn't seem to work consistently
+		if($query instanceof SQLQuery) {
+			$this->customCsvQuery = $query;
+		} else {
+			user_error('TableList::setCustomCsvQuery() should be passed a SQLQuery', E_USER_WARNING);
+		}
 	}
 	
-	function setCustomSourceItems($items) {
-		$this->customSourceItems = $items;
+	function setCustomSourceItems(DataObjectSet $items) {
+		// The type-hinting above doesn't seem to work consistently
+		if($items instanceof DataObjectSet) {
+			$this->customSourceItems = $items;
+		} else {
+			user_error('TableList::setCustomSourceItems() should be passed a DataObjectSet', E_USER_WARNING);
+		}
 	}
 	
 	function sourceItems() {
