@@ -12,12 +12,17 @@ class SSViewerTest extends SapphireTest {
 		$oldTheme = $config->Theme;
 		$config->Theme = '';
 		$config->write();
-
+		
 		SSViewer::set_theme('mytheme');
 		$this->assertEquals('mytheme', SSViewer::current_theme(), 'Current theme is the default - user has not defined one');
 
 		$config->Theme = 'myusertheme';
 		$config->write();
+
+		// Pretent to load the page
+		$c = new ContentController();
+		$c->init();
+
 		$this->assertEquals('myusertheme', SSViewer::current_theme(), 'Current theme is a user defined one');
 
 		// Set the theme back to the original

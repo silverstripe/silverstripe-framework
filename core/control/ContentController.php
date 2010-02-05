@@ -119,8 +119,12 @@ class ContentController extends Controller {
 				
 				return Security::permissionFailure($this, sprintf($message, "$link?stage=Live"));
 			}
-		}		
+		}
 
+		// Use theme from the site config
+		if(($config = SiteConfig::current_site_config()) && $config->Theme) {
+			SSViewer::set_theme($config->Theme);
+		}
 	}
 	
 	/**

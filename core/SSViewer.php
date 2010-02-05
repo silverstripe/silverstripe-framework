@@ -88,11 +88,6 @@ class SSViewer {
 	protected static $current_theme = null;
 	
 	/**
-	 * @var string
-	 */
-	protected static $cached_theme = null;
-	
-	/**
 	 * Create a template from a string instead of a .ss file
 	 * 
 	 * @return SSViewer
@@ -111,18 +106,8 @@ class SSViewer {
 	/**
 	 * @return string 
 	 */
-	static function current_theme($cached = true) {
-		if($cached && self::$cached_theme) {
-			// First case is to return the cached user theme so we don't requery SiteConfig again
-			return self::$cached_theme;
-		} else {
-			// Need to refresh the cache from the SiteConfig
-			$theme = SiteConfig::current_site_config()->Theme;
-			self::$cached_theme = $theme;
-		}
-		// Fall back to the default SSViewer::set_theme() behaviour
-		if(!$theme) $theme = self::$current_theme;
-		return $theme;
+	static function current_theme() {
+		return self::$current_theme;
 	}
 	
 	/**
@@ -187,7 +172,8 @@ class SSViewer {
 
 		}
 
-		if(!$this->chosenTemplates) user_error("None of these templates can be found: ". implode(".ss, ", $templateList) . ".ss", E_USER_WARNING);
+		if(!$this->chosenTemplates) user_error("None of these templates can be found in theme '"
+			. self::current_theme() . "': ". implode(".ss, ", $templateList) . ".ss", E_USER_WARNING);
 	}
 	
 	/**
@@ -637,7 +623,7 @@ class SSViewer_FromString extends SSViewer {
 		$this->content = $content;
 	}
 	
-	public function process($item) {
+	public function process($item, $cache = null) {
 		$template = SSViewer::parseTemplateContent($this->content, "string sha1=".sha1($this->content));
 
 		$tmpFile = tempnam(TEMP_FOLDER,"");
