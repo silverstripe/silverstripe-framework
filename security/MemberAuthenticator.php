@@ -42,7 +42,7 @@ class MemberAuthenticator extends Authenticator {
 			"Member", 
 			"\"" . Member::get_unique_identifier_field() . "\" = '$SQL_user' AND \"Password\" IS NOT NULL"
 		);
-		$result = $member->checkPassword($RAW_data['Password']);
+		$result = ($member) ? $member->checkPassword($RAW_data['Password']) : false;
 
 		if($member && !$result->valid()) { 
 			$member->registerFailedLogin();

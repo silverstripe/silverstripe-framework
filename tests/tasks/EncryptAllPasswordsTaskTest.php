@@ -16,6 +16,7 @@ class EncryptAllPasswordsTaskTest extends SapphireTest {
 		$m = DataObject::get_by_id('Member', $m->ID);
 		$this->assertEquals($m->PasswordEncryption, 'sha1_v2.4');
 		$this->assertNotEquals($m->Password, 'plain');
-		$this->assertTrue($m->checkPassword('plain'));
+		$result = $m->checkPassword('plain');
+		$this->assertTrue($result->valid());
 	}
 }
