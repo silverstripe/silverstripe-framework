@@ -32,6 +32,7 @@ class MemberAuthenticator extends Authenticator {
   public static function authenticate($RAW_data, Form $form = null) {
     $SQL_user = Convert::raw2sql($RAW_data['Email']);
 	$isLockedOut = false;
+	$result = null;
 
 	// Default login (see Security::setDefaultAdmin())
 	if(Security::check_default_admin($RAW_data['Email'], $RAW_data['Password'])) {
@@ -41,9 +42,9 @@ class MemberAuthenticator extends Authenticator {
 			"Member", 
 			"\"" . Member::get_unique_identifier_field() . "\" = '$SQL_user' AND \"Password\" IS NOT NULL"
 		);
-		
-		if($member && ($member->checkPassword($RAW_data['Password']) == false)) { 
-			if($member->isLockedOut()) $isLockedOut = true;
+		$result = $member->checkPassword($RAW_data['Password']);
+
+		if($member && !$result->valid()) { 
 			$member->registerFailedLogin();
 			$member = false;
 		}
@@ -102,22 +103,14 @@ class MemberAuthenticator extends Authenticator {
 		$member->write();
 	}
 
-    if($member) {
-		Session::clear("BackURL");
-    } else if($isLockedOut) {
-		if($form) $form->sessionMessage(
-			_t('Member.ERRORLOCKEDOUT', "Your account has been temporarily disabled because of too many failed attempts at logging in. Please try again in 20 minutes."),
-			"bad"
-		);
-    } else {
-		if($form) $form->sessionMessage(
-			_t('Member.ERRORWRONGCRED', "That doesn't seem to be the right e-mail address or password. Please try again."),
-			"bad"
-		);
-	}
+		if($member) {
+			Session::clear('BackURL');
+		} else {
+			if($form && $result) $form->sessionMessage($result->message(), 'bad');
+		}
 
-    return $member;
-  }
+		return $member;
+	}
 
 
   /**

@@ -126,15 +126,14 @@ class Member extends DataObject {
 	} 
 
 	/**
-	 * Check if the passed password matches the stored one
+	 * Check if the passed password matches the stored one (if the member is not locked out).
 	 *
-	 * @param string $password The clear text password to check
-	 * @return bool Returns TRUE if the passed password is valid, otherwise FALSE.
+	 * @param  string $password
+	 * @return ValidationResult
 	 */
 	public function checkPassword($password) {
-		// Only confirm that the password matches if the user isn't locked out
-		if($this->isLockedOut()) return false;
-		
+		$result = $this->canLogIn();
+
 		$spec = Security::encrypt_password(
 			$password, 
 			$this->Salt, 
@@ -142,10 +141,40 @@ class Member extends DataObject {
 			$this
 		);
 		$e = $spec['encryptor'];
-		
-		return $e->compare($this->Password, $spec['password']);
+
+		if(!$e->compare($this->Password, $spec['password'])) {
+			$result->error(_t (
+				'Member.ERRORWRONGCRED',
+				'That doesn\'t seem to be the right e-mail address or password. Please try again.'
+			));
+		}
+
+		return $result;
 	}
-	
+
+	/**
+	 * Returns a valid {@link ValidationResult} if this member can currently log in, or an invalid
+	 * one with error messages to display if the member is locked out.
+	 *
+	 * You can hook into this with a "canLogIn" method on an attached extension.
+	 *
+	 * @return ValidationResult
+	 */
+	public function canLogIn() {
+		$result = new ValidationResult();
+
+		if($this->isLockedOut()) {
+			$result->error(_t (
+				'Member.ERRORLOCKEDOUT',
+				'Your account has been temporarily disabled because of too many failed attempts at ' .
+				'logging in. Please try again in 20 minutes.'
+			));
+		}
+
+		$this->extend('canLogIn', $result);
+		return $result;
+	}
+
 	/**
 	 * Returns true if this user is locked out
 	 */
