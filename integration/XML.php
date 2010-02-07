@@ -13,7 +13,7 @@ class XML extends Object {
 	
 	function tidyXHTML($content) {
 		$cleanFile = TEMP_FOLDER . "/cleaner.tmp";
-		$fh = fopen($cleanFile,"w");
+		$fh = fopen($cleanFile,"wb");
 		fwrite($fh, $content);
 		fclose($fh);
 		
