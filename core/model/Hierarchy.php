@@ -416,7 +416,7 @@ class Hierarchy extends DataObjectDecorator {
 		// Cache the allChildren data, so that future requests will return the references to the same
 		// object.  This allows the mark..() system to work appropriately.
 		if(!$this->_cache_allChildren) {
-			$this->_cache_allChildren = $this->owner ? $this->owner->stageChildren(true) : null;
+			$this->_cache_allChildren = $this->owner->stageChildren(true);
 		}
 		
 		return $this->_cache_allChildren;
