@@ -26,11 +26,14 @@ class HTTPTest extends SapphireTest {
 	 * Tests {@link HTTP::setGetVar()}
 	 */
 	public function testSetGetVar() {
-		// HACK No easy way to get the current URL without the query string or fragment
-		$base = Director::absoluteBaseURL() . 'dev/tests/HTTPTest';
+		$currentURL = Director::absoluteURL($_SERVER['REQUEST_URI']);
 
+		// Hackery to work around volatile URL formats in test invocation
+		$expected = $currentURL;
+		$expected .= (strpos($currentURL, '?') === FALSE) ? '?' : '&';
+		$expected .= 'foo=bar';
 		$this->assertEquals(
-			$base . '?foo=bar',
+			$expected,
 			HTTP::setGetVar('foo', 'bar'),
 			'Omitting a URL falls back to current URL'
 		);
