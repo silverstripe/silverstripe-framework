@@ -8,6 +8,7 @@
 <body>
 	<h1>$Title</h1>
 	$Content
+	$Form
 	
 	<p><i>Generated with the default ContentController.ss template</i></p>
 </body>
