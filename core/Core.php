@@ -23,7 +23,6 @@
 
 if(defined('E_DEPRECATED')) error_reporting(E_ALL ^ E_DEPRECATED);
 else error_reporting(E_ALL);
-
 /*
  * This is for versions of PHP prior to version 5.2
  * Creating this here will allow both web requests and cron jobs to inherit it.
@@ -60,7 +59,7 @@ foreach($envFiles as $envFile) {
 if(!isset($_SERVER['HTTP_HOST'])) {
 	// HTTP_HOST, REQUEST_PORT, SCRIPT_NAME, and PHP_SELF
 	if(isset($_FILE_TO_URL_MAPPING)) {
-		$fullPath = $testPath = $_SERVER['SCRIPT_FILENAME'];
+		$fullPath = $testPath = realpath($_SERVER['SCRIPT_FILENAME']);
 		while($testPath && $testPath != "/"  && !preg_match('/^[A-Z]:\\\\$/', $testPath)) {
 			if(isset($_FILE_TO_URL_MAPPING[$testPath])) {
 				$url = $_FILE_TO_URL_MAPPING[$testPath] 
