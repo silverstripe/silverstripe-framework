@@ -73,26 +73,59 @@ class HTTP {
 		return $content;
 	}
 
+	/**
+	 * Will try to include a GET parameter for an existing URL,
+	 * preserving existing parameters and fragments.
+	 * If no URL is given, falls back to $_SERVER['REQUEST_URI'].
+	 * 
+	 * CAUTION: If the URL is determined to be relative,
+	 * it is prepended with Director::absoluteBaseURL().
+	 * This method will always return an absolute URL because
+	 * Director::makeRelative() can lead to inconsistent results.
+	 * 
+	 * @param String $varname
+	 * @param String $varvalue
+	 * @param String $currentURL Relative or absolute URL (Optional).
+	 * @return String Absolute URL
+	 */
 	public static function setGetVar($varname, $varvalue, $currentURL = null) {
-		$scriptbase = $currentURL ? $currentURL : $_SERVER['REQUEST_URI'];
-		
-		$scriptbase = str_replace('&amp;', '&', $scriptbase);
-		$scriptbase = preg_replace('/\?' . quotemeta($varname) . '=([^&]*)&/', '?', $scriptbase);
-		$scriptbase = preg_replace('/([\?&]+)' . quotemeta($varname) . '=([^&]*)/', null, $scriptbase);
-		
-		$suffix = '';
-		if(($hashPos = strpos($scriptbase,'#')) !== false) {
-			$suffix .= substr($scriptbase, $hashPos);
-			$scriptbase = substr($scriptbase, 0, $hashPos);
+		$uri = $currentURL ? $currentURL : Director::makeRelative($_SERVER['REQUEST_URI']);
+
+		// We need absolute URLs for parse_url()
+		if(Director::is_relative_url($uri)) $uri = Director::absoluteBaseURL() . $uri;
+
+		// try to parse uri
+		$parts = parse_url($uri);
+		if(!$parts) {
+			throw new InvalidArgumentException("Can't parse URL: " . $uri);
 		}
 
-		if($varvalue !== null) {
-			$scriptbase .= (strrpos($scriptbase,'?') !== false) ? '&' : '?';
-			$scriptbase .= "$varname=" . (isset($urlEncodeVarValue) ? urlencode($varvalue) : $varvalue);
-		}
+		// Parse params and add new variable
+		$params = array();
+		if(isset($parts['query'])) parse_str($parts['query'], $params);
+		$params[$varname] = $varvalue;
 
-		$scriptbase = str_replace('&','&amp;',$scriptbase);
-		return $scriptbase . $suffix;
+		// Recompile Uri
+		$newUri = $parts['scheme'] . '://' . (
+			isset($parts['user']) && $parts['user'] != '' && isset($parts['pass']) 
+				? $parts['user'] . ':' . $parts['pass'] . '@' 
+				: ''
+			) .
+			$parts['host'] . (
+				isset($parts['path']) && $parts['path'] != ''
+				? $parts['path']
+				: ''
+			) . (
+				($params)
+				? '?' . http_build_query($params)
+				: ''
+			) . (
+				isset($parts['fragment']) && $parts['fragment'] != ''
+				? '#' . $parts['fragment']
+			: ''
+		);
+
+		return $newUri;
 	}
 
 	static function RAW_setGetVar($varname, $varvalue, $currentURL = null) {
