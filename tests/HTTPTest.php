@@ -26,14 +26,15 @@ class HTTPTest extends SapphireTest {
 	 * Tests {@link HTTP::setGetVar()}
 	 */
 	public function testSetGetVar() {
-		$currentURL = Director::absoluteURL($_SERVER['REQUEST_URI']);
-
 		// Hackery to work around volatile URL formats in test invocation
-		$expected = $currentURL;
-		$expected .= (strpos($currentURL, '?') === FALSE) ? '?' : '&';
-		$expected .= 'foo=bar';
-		$this->assertEquals(
-			$expected,
+		$expectedPath = preg_replace('/\?.*/', '', $_SERVER['REQUEST_URI']);
+		$this->assertContains(
+			$expectedPath,
+			HTTP::setGetVar('foo', 'bar'),
+			'Omitting a URL falls back to current URL'
+		);
+		$this->assertContains(
+			'foo=bar',
 			HTTP::setGetVar('foo', 'bar'),
 			'Omitting a URL falls back to current URL'
 		);
