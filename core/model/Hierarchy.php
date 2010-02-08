@@ -369,7 +369,7 @@ class Hierarchy extends DataObjectDecorator {
 					continue;
 				}
 				$idList[] = $child->ID;
-				$child->loadDescendantIDListInto($idList);
+				$child->getExtensionInstance('Hierarchy')->loadDescendantIDListInto($idList);
 			}
 		}
 	}
@@ -413,7 +413,7 @@ class Hierarchy extends DataObjectDecorator {
 		// Cache the allChildren data, so that future requests will return the references to the same
 		// object.  This allows the mark..() system to work appropriately.
 		if(!$this->_cache_allChildren) {
-			$this->_cache_allChildren = $this->owner->stageChildren(true);
+			$this->_cache_allChildren = $this->owner ? $this->owner->stageChildren(true) : null;
 		}
 		
 		return $this->_cache_allChildren;
