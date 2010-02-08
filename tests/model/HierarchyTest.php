@@ -51,7 +51,27 @@ class HierarchyTest extends SapphireTest {
 		
 		$this->assertEquals(array('Page 2', 'Page 3', 'Page 2a', 'Page 2b'), $marked);
 		$this->assertEquals(array('Page 2', 'Page 2a', 'Page 2b'), $expanded);
+	}
+			
+	function testLoadDescendantIDListInto() {
+		$page2 = $this->objFromFixture('Page', 'page2');
+		$page2a = $this->objFromFixture('Page', 'page2a');
+		$page2b = $this->objFromFixture('Page', 'page2b');
+		$page2aa = $this->objFromFixture('Page', 'page2aa');
+		$page2ab = $this->objFromFixture('Page', 'page2ab');
 		
-	} 
-	
+		$page2IdList = $page2->getDescendantIDList();
+		$page2aIdList = $page2a->getDescendantIDList();
+		
+		$this->assertContains($page2a->ID, $page2IdList);
+		$this->assertContains($page2b->ID, $page2IdList);
+		$this->assertContains($page2aa->ID, $page2IdList);
+		$this->assertContains($page2ab->ID, $page2IdList);
+		$this->assertEquals(4, count($page2IdList));
+		
+		$this->assertContains($page2aa->ID, $page2aIdList);
+		$this->assertContains($page2ab->ID, $page2aIdList);
+		$this->assertEquals(2, count($page2aIdList));
+	}
+
 }

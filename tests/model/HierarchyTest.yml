@@ -17,3 +17,15 @@ Page:
    page3b:
       Parent: =>Page.page3
       Title: Page 3b
+   page2aa:
+      Parent: =>Page.page2a
+      Title: Page 2aa
+   page2ab:
+      Parent: =>Page.page2a
+      Title: Page 2ab
+   page3aa:
+      Parent: =>Page.page3a
+      Title: Page 3aa
+   page3ab:
+      Parent: =>Page.page3a
+      Title: Page 3ab
