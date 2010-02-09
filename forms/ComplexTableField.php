@@ -288,7 +288,7 @@ JS;
 
 		$output = new DataObjectSet();
 		foreach($this->sourceItems as $pageIndex=>$item) {
-			$output->push(Object::create($this->itemClass,$item, $this));
+			$output->push(new $this->itemClass($item, $this));
 		}
 		return $output;
 	}
@@ -591,8 +591,7 @@ JS;
 		$fields = $this->getFieldsFor($childData);
 		$validator = $this->getValidatorFor($childData);
 
-		$form = Object::create(
-			$this->popupClass,
+		$form = new $this->popupClass(
 			$this,
 			'AddForm',
 			$fields,
@@ -787,10 +786,14 @@ class ComplexTableField_ItemRequest extends RequestHandler {
 		$validator = $this->ctf->getValidatorFor($childData);
 		$readonly = ($this->methodName == "show");
 
-		$form = Object::create(
-				$this->ctf->popupClass,
-				$this, "DetailForm", 
-				$fields, $validator, $readonly, $childData);
+		$form = new $this->ctf->popupClass(
+			$this,
+			"DetailForm", 
+			$fields,
+			$validator,
+			$readonly,
+			$childData
+		);
 	
 		$form->loadDataFrom($childData);
 		if ($readonly) $form->makeReadonly();
