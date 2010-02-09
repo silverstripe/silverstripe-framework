@@ -319,7 +319,9 @@ class Security extends Controller {
 		$tmpPage = new Page();
 		$tmpPage->Title = _t('Security.LOGIN', 'Log in');
 		$tmpPage->URLSegment = "Security";
-		$tmpPage->ID = -1; // Set the page ID to -1 so we dont get the top level pages as its children
+		// Set the page ID to -1 so we dont get the top level pages as its children
+		// Set to -2 for logged in people, to help the partial cacher
+		$tmpPage->ID = -1 - (bool)Member::currentUserID();
 
 		$controller = new Page_Controller($tmpPage);
 		$controller->init();
