@@ -288,7 +288,7 @@ JS;
 
 		$output = new DataObjectSet();
 		foreach($this->sourceItems as $pageIndex=>$item) {
-			$output->push(Object::create($this->itemClass,$item, $this, $pageStart+$pageIndex));
+			$output->push(Object::create($this->itemClass,$item, $this));
 		}
 		return $output;
 	}
@@ -996,17 +996,6 @@ class ComplexTableField_ItemRequest extends RequestHandler {
  * @subpackage fields-relational
  */
 class ComplexTableField_Item extends TableListField_Item {
-	/**
-	 * Needed to transfer pagination-status from overview.
-	 */
-	protected $start;
-
-	function __construct(DataObject $item, ComplexTableField $parent, $start) {
-		$this->start = $start;
-
-		parent::__construct($item, $parent);
-	}
-
 	function Link($action = null) {
 		return Controller::join_links($this->parent->Link(), '/item/', $this->item->ID, $action);
 	}
