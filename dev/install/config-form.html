@@ -129,7 +129,7 @@
 							<?php } ?>
 			
 							<div id="database_credentials" class="section">
-								<?php if($usingEnv) { ?>
+								<?php if($envFileExists) { ?>
 								<div id="use_environment_field" class="field">
 									<input id="use_environment" type="checkbox" name="useEnv" <?php if($usingEnv) echo "checked=\"checked\"" ?> onclick="toggleDisabledFields(this);">
 									<label for="use_environment">Use _ss_environment file for configuration</label>
