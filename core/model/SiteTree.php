@@ -1978,17 +1978,17 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		// Unpublish all virtual pages that point here
 		// This coupling to the subsites module is frustrating, but difficult to avoid.
 		if(class_exists('Subsite')) {
-			$virtualPages = Subsite::get_from_all_subsites('VirtualPage', "CopyContentFromID = {$this->ID}");
+			$virtualPages = Subsite::get_from_all_subsites('VirtualPage', "\"CopyContentFromID\" = {$this->ID}");
 		} else {
-			$virtualPages = DataObject::get('VirtualPage', "CopyContentFromID = {$this->ID}");
+			$virtualPages = DataObject::get('VirtualPage', "\"CopyContentFromID\" = {$this->ID}");
 		}
 		if ($virtualPages) foreach($virtualPages as $vp) $vp->doUnpublish();
 		
 		$suffix = Versioned::current_stage() == 'Live' ? '_Live' : '';
 		if(class_exists('Subsite')) {
-			$redirectorPages = Subsite::get_from_all_subsites('RedirectorPage', "SiteTree$suffix.ID = SiteTree$suffix.ID AND LinkToID = {$this->ID}");
+			$redirectorPages = Subsite::get_from_all_subsites('RedirectorPage', "\"SiteTree$suffix\".\"ID\" = \"SiteTree$suffix\".\"ID\" AND \"LinkToID\" = {$this->ID}");
 		} else {
-			$redirectorPages = DataObject::get('RedirectorPage', "SiteTree$suffix.ID = SiteTree$suffix.ID AND LinkToID = {$this->ID}");
+			$redirectorPages = DataObject::get('RedirectorPage', "\"SiteTree$suffix\".\"ID\" = \"SiteTree$suffix\".\"ID\" AND \"LinkToID\" = {$this->ID}");
 		}
 
 		if($redirectorPages) foreach($redirectorPages as $page) {
