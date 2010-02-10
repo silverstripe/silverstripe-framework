@@ -109,7 +109,7 @@ class RestfulService extends ViewableData {
 	 *
 	 * This is a replacement of {@link connect()}.
 	 */
-	public function request($subURL = '', $method = "GET", $data = null, $headers = null) {
+	public function request($subURL = '', $method = "GET", $data = null, $headers = null, $curlOptions = array()) {
 		$url = $this->baseURL . $subURL; // Url for the request
 		if($this->queryString) {
 			if(strpos($url, '?') !== false) {
@@ -163,6 +163,9 @@ class RestfulService extends ViewableData {
 			if(is_array($this->proxy)) {
 				curl_setopt_array($ch, $this->proxy);
 			}
+			
+			// Set any custom options passed to the request() function
+			curl_setopt_array($ch, $curlOptions);
 
 			// Run request
 			curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
