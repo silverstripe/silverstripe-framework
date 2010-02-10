@@ -101,11 +101,11 @@
 			
 							<p id="mysql_credentials">
 								<label for="mysql_server">MySQL server:</label>
-								<span class="middleColumn"><input id="mysql_server" class="text" type="text" name="mysql[server]" value="<?php echo $databaseConfig['server']; ?>" /></span>
+								<span class="middleColumn"><input<?php if (defined('SS_DATABASE_SERVER')) echo ' disabled="true"'; ?> id="mysql_server" class="text" type="text" name="mysql[server]" value="<?php echo $databaseConfig['server']; ?>" /></span>
 								<label for="mysql_username">MySQL username:</label>
-								<span class="middleColumn"><input id="mysql_username" class="text" type="text" name="mysql[username]" value="<?php echo $databaseConfig['username']; ?>"  /></span>
+								<span class="middleColumn"><input<?php if (defined('SS_DATABASE_USERNAME')) echo ' disabled="true"'; ?> id="mysql_username" class="text" type="text" name="mysql[username]" value="<?php echo $databaseConfig['username']; ?>"  /></span>
 								<label for="mysql_password">MySQL password:</label>
-								<span class="middleColumn"><input id="mysql_password" class="text" type="password" name="mysql[password]" value="<?php echo $databaseConfig['password']; ?>" /></span>
+								<span class="middleColumn"><input<?php if (defined('SS_DATABASE_PASSWORD')) echo ' disabled="true"'; ?> id="mysql_password" class="text" type="password" name="mysql[password]" value="<?php echo $databaseConfig['password']; ?>" /></span>
 								<label for="mysql_database">MySQL database:</label>
 								<span class="middleColumn"><input id="mysql_database" class="text" type="text" name="mysql[database]" value="<?php echo $databaseConfig['database']; ?>" onchange="this.value = this.value.replace(/[\/\\:*?&quot;<>|. \t]+/g,'');" /></span>
 								<input type="submit" class="action" value="Re-check requirements" />
