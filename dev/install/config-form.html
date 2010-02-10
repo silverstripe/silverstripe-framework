@@ -3,12 +3,46 @@
 	<head>
 		<title>SilverStripe CMS Installation</title>
 		<meta http-equiv="Content-type" content="text/html; charset=utf-8">
-		<script type="text/js">
+		<script type="text/javascript">
 			function show(id) {
 				document.getElementById(id).style.display = '';
 			}
 			function hide(id) {
 				document.getElementById(id).style.display = 'none';
+			}
+			function getElementsByClassName(classname, node) {
+				if(!node) node = document.getElementsByTagName("body")[0];
+				var a = [];
+				var re = new RegExp('\\b' + classname + '\\b');
+				var els = node.getElementsByTagName("*");
+				for(var i=0,j=els.length; i<j; i++)
+				if(re.test(els[i].className))a.push(els[i]);
+				return a;
+			}
+			function toggleDisabledFields(el) {
+				if(!el.checked) {
+					// Go through each environment supported field and enable
+					document.getElementById('db_server').disabled = '';
+					document.getElementById('db_username').disabled = '';
+					document.getElementById('db_password').disabled = '';
+					document.getElementById('admin_username').disabled = '';
+					document.getElementById('admin_password').disabled = '';
+					var dbs = getElementsByClassName('databaseClass');
+					for(var i = 0; i < dbs.length; i++) {
+						dbs[i].disabled = '';
+					}
+				} else {
+					// Go through each environment supported field and disable
+					document.getElementById('db_server').disabled = 'disabled';
+					document.getElementById('db_username').disabled = 'disabled';
+					document.getElementById('db_password').disabled = 'disabled';
+					document.getElementById('admin_username').disabled = 'disabled';
+					document.getElementById('admin_password').disabled = 'disabled';
+					var dbs = getElementsByClassName('databaseClass');
+					for(var i = 0; i < dbs.length; i++) {
+						dbs[i].disabled = 'disabled';
+					}
+				}
 			}
 		</script>
 		<link rel="stylesheet" type="text/css" href="themes/blackcandy/css/layout.css">
@@ -85,7 +119,7 @@
 			
 							<h4 class="sectionHeading">Database</h4>
 							<?php if($dbReq->hasErrors()) { ?>
-								<p class="error"><!--  class="error" -->
+								<p class="error">
 									These database details don't appear to be correct.  Please enter the correct details before installing.
 								</p>
 							<?php } else { ?>
@@ -95,44 +129,52 @@
 							<?php } ?>
 			
 							<div id="database_credentials" class="section">
-								<label>Database type:</label>
-								<ul id="database_selection" class="field">
-								<?php
-								foreach($foundDatabaseClasses as $class => $title) {
-									$checked = ($databaseConfig['type'] == $class) ? ' checked="checked"' : '';
-									$disabled = '';
-									global $usingEnv;
-									if($usingEnv) {
-										// All are disabled by default when environment is used
-										$disabled = 'disabled="disabled"';
-										// If SS_DATABASE_CLASS is specified, check the database in the list
-										if(defined('SS_DATABASE_CLASS') && SS_DATABASE_CLASS == $class) {
-											$checked = ' checked="checked"';
+								<?php if($usingEnv) { ?>
+								<div id="use_environment_field" class="field">
+									<input id="use_environment" type="checkbox" name="useEnv" <?php if($shouldUseEnv) echo "checked=\"checked\""?> onclick="toggleDisabledFields(this);">
+									<label for="use_environment">Use _ss_environment file for configuration</label>
+								</div>
+								<?php } ?>
+								
+								<div class="field">
+									<label>Database type:</label>
+									<ul id="database_selection">
+										<?php
+										foreach($foundDatabaseClasses as $class => $title) {
+											$checked = ($databaseConfig['type'] == $class) ? ' checked="checked"' : '';
+											$disabled = '';
+											if($usingEnv && $shouldUseEnv) {
+												// All are disabled by default when environment is used
+												$disabled = 'disabled="disabled"';
+												// If SS_DATABASE_CLASS is specified, check the database in the list
+												if(defined('SS_DATABASE_CLASS') && SS_DATABASE_CLASS == $class) {
+													$checked = ' checked="checked"';
+												}
+											}
+											echo "<li>";
+											echo "<input id=\"$class\" class=\"databaseClass\" type=\"radio\" name=\"db[type]\" value=\"$class\"$checked $disabled>";
+											echo "<label class=\"left\" for=\"$class\">$title</label>";
+											echo "</li>";
 										}
-									}
-									echo "<li>";
-									echo "<input id=\"$class\" type=\"radio\" name=\"db[type]\" value=\"$class\"$checked $disabled>";
-									echo "<label class=\"left\" for=\"$class\">$title</label>";
-									echo "</li>";
-								}
-								?>
-								</ul>
+										?>
+									</ul>
+								</div>
 								<div class="field">
 									<label for="db_server">Database server:</label>
 									<span class="middleColumn">
-										<input id="db_server" class="text" type="text" name="db[server]" value="<?php echo $databaseConfig['server']; ?>" <?php if(defined('SS_DATABASE_SERVER')) echo 'disabled="disabled"'; ?>>
+										<input id="db_server" class="text" type="text" name="db[server]" value="<?php echo $databaseConfig['server']; ?>" <?php if($shouldUseEnv && defined('SS_DATABASE_SERVER')) echo 'disabled="disabled"'; ?>>
 									</span>
 								</div>
 								<div class="field">
 									<label for="db_username">Database username:</label>
 									<span class="middleColumn">
-										<input id="db_username" class="text" type="text" name="db[username]" value="<?php echo $databaseConfig['username']; ?>" <?php if(defined('SS_DATABASE_USERNAME')) echo 'disabled="disabled"'; ?>>
+										<input id="db_username" class="text" type="text" name="db[username]" value="<?php echo $databaseConfig['username']; ?>" <?php if($shouldUseEnv && defined('SS_DATABASE_USERNAME')) echo 'disabled="disabled"'; ?>>
 									</span>
 								</div>
 								<div class="field">
 									<label for="db_password">Database password:</label>
 									<span class="middleColumn">
-										<input id="db_password" class="text" type="password" name="db[password]" value="<?php echo $databaseConfig['password']; ?>" <?php if(defined('SS_DATABASE_PASSWORD')) echo 'disabled="disabled"'; ?>>
+										<input id="db_password" class="text" type="password" name="db[password]" value="<?php echo $databaseConfig['password']; ?>" <?php if($shouldUseEnv && defined('SS_DATABASE_PASSWORD')) echo 'disabled="disabled"'; ?>>
 									</span>
 								</div>
 								<div class="field">
@@ -159,13 +201,13 @@
 								<div class="field">
 									<label for="admin_username">Administrator email:</label>
 									<span class="middleColumn">
-										<input type="text" class="text" name="admin[username]" id="admin_username" value="<?php echo $adminConfig['username']; ?>" <?php if(defined('SS_DEFAULT_ADMIN_USERNAME')) echo 'disabled="disabled"' ?>>
+										<input type="text" class="text" name="admin[username]" id="admin_username" value="<?php echo $adminConfig['username']; ?>" <?php if($shouldUseEnv && defined('SS_DEFAULT_ADMIN_USERNAME')) echo 'disabled="disabled"' ?>>
 									</span>
 								</div>
 								<div class="field">
 									<label for="admin_password">Administrator password:</label>
 									<span class="middleColumn">
-										<input type="password" class="text" name="admin[password]" id="admin_password" value="<?php echo $adminConfig['password']; ?>" <?php if(defined('SS_DEFAULT_ADMIN_PASSWORD')) echo 'disabled="disabled"' ?>>
+										<input type="password" class="text" name="admin[password]" id="admin_password" value="<?php echo $adminConfig['password']; ?>" <?php if($shouldUseEnv && defined('SS_DEFAULT_ADMIN_PASSWORD')) echo 'disabled="disabled"' ?>>
 									</span>
 								</div>
 								<div class="field">

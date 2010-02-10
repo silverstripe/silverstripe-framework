@@ -127,6 +127,11 @@ div.section {
 	margin: 5px 0;
 }
 
+#use_environment_field input {
+	float: left;
+	margin-right: 5px;
+}
+
 #database_credentials {
 	margin: 0;
 	line-height: 1;
