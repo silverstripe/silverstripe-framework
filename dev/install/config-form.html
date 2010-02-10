@@ -1,7 +1,8 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
 	<head>
 		<title>SilverStripe CMS Installation</title>
+		<meta http-equiv="Content-type" content="text/html; charset=utf-8">
 		<script type="text/js">
 			function show(id) {
 				document.getElementById(id).style.display = '';
@@ -10,11 +11,11 @@
 				document.getElementById(id).style.display = 'none';
 			}
 		</script>
-		<link rel="stylesheet" type="text/css" href="themes/blackcandy/css/layout.css" />
-		<link rel="stylesheet" type="text/css" href="themes/blackcandy/css/typography.css" />
-		<link rel="stylesheet" type="text/css" href="themes/blackcandy/css/form.css" />
-		<link rel="stylesheet" type="text/css" href="sapphire/dev/install/install.css" />
-		<link rel="shortcut icon" href="favicon.ico" />
+		<link rel="stylesheet" type="text/css" href="themes/blackcandy/css/layout.css">
+		<link rel="stylesheet" type="text/css" href="themes/blackcandy/css/typography.css">
+		<link rel="stylesheet" type="text/css" href="themes/blackcandy/css/form.css">
+		<link rel="stylesheet" type="text/css" href="sapphire/dev/install/install.css">
+		<link rel="shortcut icon" href="favicon.ico">
 	</head>
 
 	<body>
@@ -36,14 +37,14 @@
 						<form action="install.php" method="post">
 							<?php if(isset($hasErrorOtherThanDatabase)) { ?>
 								<p class="error">
-									You aren't currently able to install the software.  Please <a href="#requirements">see below</a> for details.<br />
+									You aren't currently able to install the software.  Please <a href="#requirements">see below</a> for details.<br>
 									If you are having problems meeting the requirements, see the <a href="http://doc.silverstripe.org/doku.php?id=server-requirements">server requirements wiki page</a>.
 								</p>
 							<?php } else { ?>
 								<?php if($req->hasWarnings()) { ?>
 									<p class="warning">
 										There are some issues that we recommend you look at before installing, however, you are still able to install the software.
-										Please see below for details.<br />
+										Please see below for details.<br>
 										If you are having problems meeting the requirements, see the <a href="http://doc.silverstripe.org/doku.php?id=server-requirements">server requirements wiki page</a>.
 									</p>
 								<?php } else if(!$dbReq->hasErrors()) { ?>
@@ -55,33 +56,33 @@
 									<b>Template to install:</b>
 								</p>
 								<ul id="Themes">
-									<li><input type="radio" name="template" value="blackcandy" id="BlackCandy" <?php if(!isset($_POST['template']) || $_POST['template'] == 'blackcandy') {?>checked="checked"<?php }?> /><label for="BlackCandy">BlackCandy, default template ready to use.</label></li>
-									<li><input type="radio" name="template" value="tutorial" id="EmptyTemplate" <?php if(isset($_POST['template']) && $_POST['template'] == 'tutorial') {?>checked="checked"<?php }?>/><label for="EmptyTemplate">Empty template, ready to begin the tutorial.</label></li>
+									<li><input type="radio" name="template" value="blackcandy" id="BlackCandy" <?php if(!isset($_POST['template']) || $_POST['template'] == 'blackcandy') {?>checked="checked"<?php }?>><label for="BlackCandy">BlackCandy, default template ready to use.</label></li>
+									<li><input type="radio" name="template" value="tutorial" id="EmptyTemplate" <?php if(isset($_POST['template']) && $_POST['template'] == 'tutorial') {?>checked="checked"<?php }?>><label for="EmptyTemplate">Empty template, ready to begin the tutorial.</label></li>
 								</ul>
 								<p>You can change the template or download another from the SilverStripe website after installation.</p>
 			
-								<input type="checkbox" id="stats" name="stats" checked="checked"><label for="stats">Send information on my webserver to SilverStripe (this is only version information, used for statistical purposes)</label><br />
+								<input type="checkbox" id="stats" name="stats" checked="checked"><label for="stats">Send information on my webserver to SilverStripe (this is only version information, used for statistical purposes)</label><br>
 								
 								
 								<?php if($alreadyInstalled) { ?>
 									<p class="warning">
 										<strong>Note:</strong> It seems as though SilverStripe is already installed here.  If you ask me to install, I will overwrite
 										the <strong>.htaccess</strong> and <strong>mysite/_config.php</strong> files. 
-										<br />
-									<input type="checkbox" id="ReIn" name="force_reinstall" onclick="document.getElementById('install_button').disabled = !this.checked" /><label for="ReIn">That's okay, please re-install SilverStripe and overwrite these files.</label>
+										<br>
+									<input type="checkbox" id="ReIn" name="force_reinstall" onclick="document.getElementById('install_button').disabled = !this.checked"><label for="ReIn">That's okay, please re-install SilverStripe and overwrite these files.</label>
 									</p>
 								<?php } ?>
 			
 								<p>
 									<?php if($alreadyInstalled) { ?>
-										<input id="install_button" type="submit" disabled="disabled" class="action" name="go" value="Install SilverStripe" onclick="document.getElementById('saving_top').style.display = ''; this.value = 'Installing SilverStripe...'" />
+										<input id="install_button" type="submit" disabled="disabled" class="action" name="go" value="Install SilverStripe" onclick="document.getElementById('saving_top').style.display = ''; this.value = 'Installing SilverStripe...'">
 									<?php } else { ?>
-										<input id="install_button" type="submit" class="action" name="go" value="Install SilverStripe" onclick="document.getElementById('saving_top').style.display = ''; this.value = 'Installing SilverStripe...'" />
+										<input id="install_button" type="submit" class="action" name="go" value="Install SilverStripe" onclick="document.getElementById('saving_top').style.display = ''; this.value = 'Installing SilverStripe...'">
 									<?php } ?>
 									
 									<span id="saving_top" style="display: none">
 										&nbsp;
-										<img src="cms/images/network-save.gif" />
+										<img src="cms/images/network-save.gif">
 										(this will take a minute or so)
 									</span>
 								</p>
@@ -99,7 +100,7 @@
 							<?php } ?>
 			
 							<div id="database_credentials" class="section">
-								<label for="db_class">Database type:</label>
+								<label>Database type:</label>
 								<br><br>
 								<ul id="database_selection" class="field">
 								<?php
@@ -118,21 +119,21 @@
 									}
 									
 									echo "<li>";
-									echo "<input id=\"$class\" type=\"radio\" name=\"db[type]\" value=\"$class\"$checked $disabled />";
+									echo "<input id=\"$class\" type=\"radio\" name=\"db[type]\" value=\"$class\"$checked $disabled>";
 									echo "<label class=\"left\" for=\"$class\">$title</label>";
 									echo "</li>";
 								}
 								?>
 								</ul>
 								<label for="db_server">Database server:</label>
-								<span class="middleColumn"><input id="db_server" class="text" type="text" name="db[server]" value="<?php echo $databaseConfig['server']; ?>" <?php if(defined('SS_DATABASE_SERVER')) echo 'disabled="disabled"'; ?> /></span>
+								<span class="middleColumn"><input id="db_server" class="text" type="text" name="db[server]" value="<?php echo $databaseConfig['server']; ?>" <?php if(defined('SS_DATABASE_SERVER')) echo 'disabled="disabled"'; ?>></span>
 								<label for="db_username">Database username:</label>
-								<span class="middleColumn"><input id="db_username" class="text" type="text" name="db[username]" value="<?php echo $databaseConfig['username']; ?>" <?php if(defined('SS_DATABASE_USERNAME')) echo 'disabled="disabled"'; ?> /></span>
+								<span class="middleColumn"><input id="db_username" class="text" type="text" name="db[username]" value="<?php echo $databaseConfig['username']; ?>" <?php if(defined('SS_DATABASE_USERNAME')) echo 'disabled="disabled"'; ?>></span>
 								<label for="db_password">Database password:</label>
-								<span class="middleColumn"><input id="db_password" class="text" type="password" name="db[password]" value="<?php echo $databaseConfig['password']; ?>" <?php if(defined('SS_DATABASE_PASSWORD')) echo 'disabled="disabled"'; ?> /></span>
+								<span class="middleColumn"><input id="db_password" class="text" type="password" name="db[password]" value="<?php echo $databaseConfig['password']; ?>" <?php if(defined('SS_DATABASE_PASSWORD')) echo 'disabled="disabled"'; ?>></span>
 								<label for="db_database">Database name:</label>
-								<span class="middleColumn"><input id="db_database" class="text" type="text" name="db[database]" value="<?php echo $databaseConfig['database']; ?>" onchange="this.value = this.value.replace(/[\/\\:*?&quot;<>|. \t]+/g,'');" /></span>
-								<input type="submit" class="action" value="Re-check requirements" />
+								<span class="middleColumn"><input id="db_database" class="text" type="text" name="db[database]" value="<?php echo $databaseConfig['database']; ?>" onchange="this.value = this.value.replace(/[\/\\:*?&quot;<>|. \t]+/g,'');"></span>
+								<input type="submit" class="action" value="Re-check requirements">
 							</div>
 							<p class="database">SilverStripe stores its content in a relational SQL database.  Please provide the username and password to connect to the server here.  If this account has permission to create databases, then we will create the database for you; otherwise, you must give the name of a database that already exists.</p>
 							<?php $dbReq->showTable("Database Configuration"); ?>
@@ -140,13 +141,13 @@
 							<h4 class="sectionHeading">SilverStripe Administration Account</h4>
 							<div id="AdminAccount" class="section">
 								<label for="admin_username">Administrator email:</label>
-								<span class="middleColumn"><input type="text" class="text" name="admin[username]" id="admin_username" value="<?php echo $adminConfig['username']; ?>" <?php if(defined('SS_DEFAULT_ADMIN_USERNAME')) echo 'disabled="disabled"' ?> /></span>
+								<span class="middleColumn"><input type="text" class="text" name="admin[username]" id="admin_username" value="<?php echo $adminConfig['username']; ?>" <?php if(defined('SS_DEFAULT_ADMIN_USERNAME')) echo 'disabled="disabled"' ?>></span>
 								<label for="admin_password">Administrator password:</label>
-								<span class="middleColumn"><input type="password" class="text" name="admin[password]" id="admin_password" value="<?php echo $adminConfig['password']; ?>" <?php if(defined('SS_DEFAULT_ADMIN_PASSWORD')) echo 'disabled="disabled"' ?> /></span>
+								<span class="middleColumn"><input type="password" class="text" name="admin[password]" id="admin_password" value="<?php echo $adminConfig['password']; ?>" <?php if(defined('SS_DEFAULT_ADMIN_PASSWORD')) echo 'disabled="disabled"' ?>></span>
 								<label for="admin_firstname">Administrator first name:</label>
-								<span class="middleColumn"><input type="text" class="text" name="admin[firstname]" id="admin_firstname" value="<?php echo $adminConfig['firstname']; ?>" /></span>
+								<span class="middleColumn"><input type="text" class="text" name="admin[firstname]" id="admin_firstname" value="<?php echo $adminConfig['firstname']; ?>"></span>
 								<label for="admin_surname">Administrator surname:</label>
-								<span class="middleColumn"><input type="text" class="text" name="admin[surname]" id="admin_surname" value="<?php echo $adminConfig['surname']; ?>" /></span>
+								<span class="middleColumn"><input type="text" class="text" name="admin[surname]" id="admin_surname" value="<?php echo $adminConfig['surname']; ?>"></span>
 							</div>
 							
 							<p class="adminAcc">
@@ -155,9 +156,9 @@
 							</p>
 							
 							<h4 class="sectionHeading">Development Servers</h4>
-							<div id="DevSites" class="section">
+							<div class="section">
 								<label for="devsites">Development servers:</label>
-								<span class="middleColumn"><textarea name="devsites" id="devsites" rows="5" />localhost
+								<span class="middleColumn"><textarea name="devsites" id="devsites" rows="5" cols="10">localhost
 127.0.0.1</textarea></span>
 							</div>
 							
