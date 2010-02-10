@@ -1,0 +1,3 @@
+ID,ClassName,Title,Code,IPRestrictions,HtmlEditorConfig,ParentID,ParentCode,PermissionCodes
+2,Group,New Group 1,newgroup1,1.2.3.4,NULL,0,,"CODE1"
+3,Group,Existing Group,existinggroup,1.2.3.5,NULL,2,,"CODE1,CODE2"
