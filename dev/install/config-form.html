@@ -150,7 +150,12 @@
 								</div>
 							</div>
 							
-							<p class="database">SilverStripe stores its content in a relational SQL database.  Please provide the username and password to connect to the server here.  If this account has permission to create databases, then we will create the database for you; otherwise, you must give the name of a database that already exists.</p>
+							<p id="dbHelp" class="helpText">
+								SilverStripe stores its content in a relational SQL database. Please provide the username and password to connect to the server here.
+								If this account has permission to create databases, then we will create the database for you; otherwise, you must give the name of a
+								database that already exists.
+							</p>
+							
 							<?php $dbReq->showTable("Database Configuration"); ?>
 							
 							<h4 class="sectionHeading">SilverStripe Administration Account</h4>
@@ -181,8 +186,8 @@
 								</div>
 							</div>
 							
-							<p class="adminAcc">
-								We will set up 1 administrator account for you automatically.  Enter the email address and password.  If you'd
+							<p id="adminAcc" class="helpText">
+								We will set up 1 administrator account for you automatically. Enter the email address and password. If you'd
 								rather log-in with a username instead of an email address, enter that instead.
 							</p>
 							
@@ -196,7 +201,7 @@
 								</span>
 							</div>
 							
-							<p class="devHelp">
+							<p id="devHelp" class="helpText">
 								SilverStripe allows you to run a site in <a href="http://doc.silverstripe.org/doku.php?id=configuration">development mode</a>.
 								This shows all error messages in the web browser instead of emailing them to the administrator, and allows
 								the database to be built without logging in as administrator. Please enter the host/domain names for servers
