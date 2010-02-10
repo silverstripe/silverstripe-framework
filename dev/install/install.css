@@ -33,6 +33,10 @@ ul#Themes{
 	color: red;
 }
 
+h4.sectionHeading {
+	margin-top: 20px;
+}
+
 p.error {
 	padding: 0.5em;
 	background-color: #ffe9e9;
@@ -99,20 +103,47 @@ table.testResults {
 .clear {
 	clear: both;
 }
-p.mysql,
-p.adminAcc,
-p.devHelp {
+#adminAcc,
+#devHelp {
 	padding-top: 20px;
 }
-p#mysql_credentials,
-p#AdminAccount,
-p#DevSites {
+
+div.section {
+	margin-top: 30px;
 	width: 330px;
-	margin-top: 0;
 	float: left;
+	overflow: hidden;
 }
+
 #Layout input.action {
 	text-align: center;
-	width: 160px;
-	font-size: 1em;
+	font-size: 13px;
+	width: 220px;
+	font-weight: bold;
+	margin: 5px 0;
 }
+
+#database_credentials {
+	margin: 0;
+	line-height: 1;
+}
+
+#database_selection {
+	width: 200px;
+	overflow: hidden;
+	margin: 0;
+}
+	#database_selection li {
+		float: left;
+		width: 200px;
+	}
+		#database_selection li input {
+			float: left;
+		}
+		#database_selection li label {
+			float: left;
+			margin: 0;
+			margin-left: 5px;
+			font-weight: bold;
+		}
+

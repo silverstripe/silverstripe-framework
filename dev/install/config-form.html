@@ -87,8 +87,7 @@
 								</p>
 							<?php } ?>
 			
-							<input type="hidden" name="database" value="MySQLDatabase" />
-							<h4>MySQL Database</h4>			
+							<h4 class="sectionHeading">Database</h4>
 							<?php if($dbReq->hasErrors()) { ?>
 								<p class="error"><!--  class="error" -->
 									These database details don't appear to be correct.  Please enter the correct details before installing.
@@ -99,49 +98,69 @@
 								</p>
 							<?php } ?>
 			
-							<p id="mysql_credentials">
-								<label for="mysql_server">MySQL server:</label>
-								<span class="middleColumn"><input<?php if (defined('SS_DATABASE_SERVER')) echo ' disabled="true"'; ?> id="mysql_server" class="text" type="text" name="mysql[server]" value="<?php echo $databaseConfig['server']; ?>" /></span>
-								<label for="mysql_username">MySQL username:</label>
-								<span class="middleColumn"><input<?php if (defined('SS_DATABASE_USERNAME')) echo ' disabled="true"'; ?> id="mysql_username" class="text" type="text" name="mysql[username]" value="<?php echo $databaseConfig['username']; ?>"  /></span>
-								<label for="mysql_password">MySQL password:</label>
-								<span class="middleColumn"><input<?php if (defined('SS_DATABASE_PASSWORD')) echo ' disabled="true"'; ?> id="mysql_password" class="text" type="password" name="mysql[password]" value="<?php echo $databaseConfig['password']; ?>" /></span>
-								<label for="mysql_database">MySQL database:</label>
-								<span class="middleColumn"><input id="mysql_database" class="text" type="text" name="mysql[database]" value="<?php echo $databaseConfig['database']; ?>" onchange="this.value = this.value.replace(/[\/\\:*?&quot;<>|. \t]+/g,'');" /></span>
+							<div id="database_credentials" class="section">
+								<label for="db_class">Database type:</label>
+								<br><br>
+								<ul id="database_selection" class="field">
+								<?php
+								foreach($foundDatabaseClasses as $class => $title) {
+									$checked = ($databaseConfig['type'] == $class) ? ' checked="checked"' : '';
+									
+									$disabled = '';
+									global $usingEnv;
+									if($usingEnv) {
+										// All are disabled by default when environment is used
+										$disabled = 'disabled="disabled"';
+										// If SS_DATABASE_CLASS is specified, check the database in the list
+										if(defined('SS_DATABASE_CLASS') && SS_DATABASE_CLASS == $class) {
+											$checked = ' checked="checked"';
+										}
+									}
+									
+									echo "<li>";
+									echo "<input id=\"$class\" type=\"radio\" name=\"db[type]\" value=\"$class\"$checked $disabled />";
+									echo "<label class=\"left\" for=\"$class\">$title</label>";
+									echo "</li>";
+								}
+								?>
+								</ul>
+								<label for="db_server">Database server:</label>
+								<span class="middleColumn"><input id="db_server" class="text" type="text" name="db[server]" value="<?php echo $databaseConfig['server']; ?>" <?php if(defined('SS_DATABASE_SERVER')) echo 'disabled="disabled"'; ?> /></span>
+								<label for="db_username">Database username:</label>
+								<span class="middleColumn"><input id="db_username" class="text" type="text" name="db[username]" value="<?php echo $databaseConfig['username']; ?>" <?php if(defined('SS_DATABASE_USERNAME')) echo 'disabled="disabled"'; ?> /></span>
+								<label for="db_password">Database password:</label>
+								<span class="middleColumn"><input id="db_password" class="text" type="password" name="db[password]" value="<?php echo $databaseConfig['password']; ?>" <?php if(defined('SS_DATABASE_PASSWORD')) echo 'disabled="disabled"'; ?> /></span>
+								<label for="db_database">Database name:</label>
+								<span class="middleColumn"><input id="db_database" class="text" type="text" name="db[database]" value="<?php echo $databaseConfig['database']; ?>" onchange="this.value = this.value.replace(/[\/\\:*?&quot;<>|. \t]+/g,'');" /></span>
 								<input type="submit" class="action" value="Re-check requirements" />
-							</p>
-							<p class="mysql">SilverStripe stores its content in a MySQL database.  Please provide the username and password to connect to the server here.  If this account has permission to create databases, then we will create the database for you; otherwise, you must give the name of a database that already exists.</p>
-							<div class="clear"><!--  --></div>
-							<h5>Details</h5>
-							<?php $dbReq->showTable("MySQL Configuration"); ?>
-			
-							<br />
-			
-							<h4>SilverStripe Administration Account</h4>
-			
-							<p id="AdminAccount">
+							</div>
+							<p class="database">SilverStripe stores its content in a relational SQL database.  Please provide the username and password to connect to the server here.  If this account has permission to create databases, then we will create the database for you; otherwise, you must give the name of a database that already exists.</p>
+							<?php $dbReq->showTable("Database Configuration"); ?>
+
+							<h4 class="sectionHeading">SilverStripe Administration Account</h4>
+							<div id="AdminAccount" class="section">
 								<label for="admin_username">Administrator email:</label>
-								<span class="middleColumn"><input type="text" class="text" name="admin[username]" id="admin_username" value="<?php echo $adminConfig['username']; ?>" /></span>
+								<span class="middleColumn"><input type="text" class="text" name="admin[username]" id="admin_username" value="<?php echo $adminConfig['username']; ?>" <?php if(defined('SS_DEFAULT_ADMIN_USERNAME')) echo 'disabled="disabled"' ?> /></span>
 								<label for="admin_password">Administrator password:</label>
-								<span class="middleColumn"><input type="password" class="text" name="admin[password]" id="admin_password" value="<?php echo $adminConfig['password']; ?>" /></span>
+								<span class="middleColumn"><input type="password" class="text" name="admin[password]" id="admin_password" value="<?php echo $adminConfig['password']; ?>" <?php if(defined('SS_DEFAULT_ADMIN_PASSWORD')) echo 'disabled="disabled"' ?> /></span>
 								<label for="admin_firstname">Administrator first name:</label>
 								<span class="middleColumn"><input type="text" class="text" name="admin[firstname]" id="admin_firstname" value="<?php echo $adminConfig['firstname']; ?>" /></span>
 								<label for="admin_surname">Administrator surname:</label>
 								<span class="middleColumn"><input type="text" class="text" name="admin[surname]" id="admin_surname" value="<?php echo $adminConfig['surname']; ?>" /></span>
-							</p>
+							</div>
+							
 							<p class="adminAcc">
 								We will set up 1 administrator account for you automatically.  Enter the email address and password.  If you'd
 								rather log-in with a username instead of an email address, enter that instead.
 							</p>
-			
-							<br />
 							
-							<h4>Development Servers</h4>
-							<p id="DevSites">
+							<h4 class="sectionHeading">Development Servers</h4>
+							<div id="DevSites" class="section">
 								<label for="devsites">Development servers:</label>
 								<span class="middleColumn"><textarea name="devsites" id="devsites" rows="5" />localhost
 127.0.0.1</textarea></span>
-							</p>
+							</div>
+							
 							<p class="devHelp">
 								SilverStripe allows you to run a site in <a href="http://doc.silverstripe.org/doku.php?id=configuration">development mode</a>.
 								This shows all error messages in the web browser instead of emailing them to the administrator, and allows
@@ -149,14 +168,8 @@
 								you will be using for development.
 							</p>
 							
-							<br />
-							
-			
 							<h4 id="requirements">Requirements</h4>
-							<?php
-								$req->showTable();
-				?>
-			
+							<?php $req->showTable(); ?>
 						</form>
 					</div>
 				</div>
