@@ -118,27 +118,36 @@ abstract class BulkLoader extends ViewableData {
 	 */
 	public $duplicateChecks = array();
 	
+	/**
+	 * @var Boolean $clearBeforeImport Delete ALL records before importing.
+	 */
+	public $deleteExistingRecords = false;
+	
 	function __construct($objectClass) {
 		$this->objectClass = $objectClass;
 		parent::__construct();
 	}
 	
 	/*
-	 * Load the given file via {@link self::processAll()} and {@link self::processRecord()}. Optionally truncates (clear) the table before it imports. 
+	 * Load the given file via {@link self::processAll()} and {@link self::processRecord()}.
+	 * Optionally truncates (clear) the table before it imports. 
 	 *  
 	 * @return BulkLoader_Result See {@link self::processAll()}
 	 */
-	public function load($filepath, $memory_limit='512M', $clear_table_before_import=false) {
+	public function load($filepath) {
 		ini_set('max_execution_time', 3600);
+		increase_memory_limit_to('512M');
 		
-		increase_memory_limit_to($memory_limit);
-		
-		if ($clear_table_before_import) { 
-			$objectSet = DataObject::get($this->objectClass);       //get all instances of the to be imported data object 
-			if (!empty($objectSet)) { 
-				foreach($objectSet as $obj) { 
-					$obj->delete(); //deleting objects ensures that versions are also deleted (truncating would just delete the main table); performance is slower, however 
-				} 
+		//get all instances of the to be imported data object 
+		if($this->deleteExistingRecords) { 
+			$q = singleton($this->objectClass)->buildSQL();
+			$q->select = array('"ID"');
+			$ids = $q->execute()->column('ID');
+			foreach($ids as $id) { 
+				$obj = DataObject::get_by_id($this->objectClass, $id);
+				$obj->delete(); 
+				$obj->destroy();
+				unset($obj);
 			} 
 		} 
 		

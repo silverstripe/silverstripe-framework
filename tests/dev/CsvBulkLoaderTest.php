@@ -13,128 +13,129 @@ class CsvBulkLoaderTest extends SapphireTest {
 		'CsvBulkLoaderTest_PlayerContract',
 	);
 
-	// /**
-	//  * Test plain import with column auto-detection
-	//  */
-	// function testLoad() {
-	// 	$loader = new CsvBulkLoader('CsvBulkLoaderTest_Player');
-	// 	$filepath = Director::baseFolder() . '/sapphire/tests/dev/CsvBulkLoaderTest_PlayersWithHeader.csv';
-	// 	$file = fopen($filepath, 'r');
-	// 	$compareCount = $this->getLineCount($file);
-	// 	fgetcsv($file); // pop header row
-	// 	$compareRow = fgetcsv($file);
-	// 	$results = $loader->load($filepath);
-	// 
-	// 	// Test that right amount of columns was imported
-	// 	$this->assertEquals(4, $results->Count(), 'Test correct count of imported data');
-	// 	
-	// 	// Test that columns were correctly imported
-	// 	$obj = DataObject::get_one("CsvBulkLoaderTest_Player", "\"FirstName\" = 'John'");
-	// 	$this->assertNotNull($obj);
-	// 	$this->assertEquals("He's a good guy", $obj->Biography);
-	// 	$this->assertEquals("1988-01-31", $obj->Birthday);
-	// 	$this->assertEquals("1", $obj->IsRegistered);
-	// 	
-	// 	fclose($file);
-	// }
-	// 
-	// /** 
-	//  * Test plain import with clear_table_before_import  
-	//  	 */ 
-	// function testClearTableBeforeImport() { 
-	// 	$loader = new CsvBulkLoader('CsvBulkLoaderTest_Player'); 
-	// 	$filepath = Director::baseFolder() . '/sapphire/tests/dev/CsvBulkLoaderTest_PlayersWithHeader.csv'; 
-	// 	$results1 = $loader->load($filepath, '512MB', false);   //leave existing data there on first CSV import 
-	// 	$this->assertEquals(4, $results1->Count(), 'Test correct count of imported data on first load'); 
-	// 
-	// 	$results2 = $loader->load($filepath, '512MB', true);    //delete existing data before doing second CSV import 
-	// 	$resultDataObject = DataObject::get('CsvBulkLoaderTest_Player');        //get all instances of the loaded DataObject from the database and count them 
-	// 
-	// 	$this->assertEquals(4, $resultDataObject->Count(), 'Test if existing data is deleted before new data is added'); 
-	//  	}
-	// 
-	// /**
-	//  * Test import with manual column mapping
-	//  */
-	// function testLoadWithColumnMap() {
-	// 	$loader = new CsvBulkLoader('CsvBulkLoaderTest_Player');
-	// 	$filepath = Director::baseFolder() . '/sapphire/tests/dev/CsvBulkLoaderTest_Players.csv';
-	// 	$file = fopen($filepath, 'r');
-	// 	$compareCount = $this->getLineCount($file);
-	// 	$compareRow = fgetcsv($file);
-	// 	$loader->columnMap = array(
-	// 		'FirstName',
-	// 		'Biography',
-	// 		null, // ignored column
-	// 		'Birthday',
-	// 		'IsRegistered'
-	// 	);
-	// 	$loader->hasHeaderRow = false;
-	// 	$results = $loader->load($filepath);
-	// 
-	// 	// Test that right amount of columns was imported
-	// 	$this->assertEquals(4, $results->Count(), 'Test correct count of imported data');
-	// 	
-	// 	// Test that columns were correctly imported
-	// 	$obj = DataObject::get_one("CsvBulkLoaderTest_Player", "\"FirstName\" = 'John'");
-	// 	$this->assertNotNull($obj);
-	// 	$this->assertEquals("He's a good guy", $obj->Biography);
-	// 	$this->assertEquals("1988-01-31", $obj->Birthday);
-	// 	$this->assertEquals("1", $obj->IsRegistered);
-	// 	
-	// 	$obj2 = DataObject::get_one('CsvBulkLoaderTest_Player', "\"FirstName\" = 'Jane'");
-	// 	$this->assertNotNull($obj2);
-	// 	$this->assertEquals('0', $obj2->IsRegistered);
-	// 	
-	// 	fclose($file);
-	// }
-	// 
-	// /**
-	//  * Test import with manual column mapping and custom column names
-	//  */
-	// function testLoadWithCustomHeaderAndRelation() {
-	// 	$loader = new CsvBulkLoader('CsvBulkLoaderTest_Player');
-	// 	$filepath = Director::baseFolder() . '/sapphire/tests/dev/CsvBulkLoaderTest_PlayersWithCustomHeaderAndRelation.csv';
-	// 	$file = fopen($filepath, 'r');
-	// 	$compareCount = $this->getLineCount($file);
-	// 	fgetcsv($file); // pop header row
-	// 	$compareRow = fgetcsv($file);
-	// 	$loader->columnMap = array(
-	// 		'first name' => 'FirstName',
-	// 		'bio' => 'Biography',
-	// 		'bday' => 'Birthday',
-	// 		'teamtitle' => 'Team.Title', // test existing relation
-	// 		'teamsize' => 'Team.TeamSize', // test existing relation
-	// 		'salary' => 'Contract.Amount' // test relation creation
-	// 	);
-	// 	$loader->hasHeaderRow = true;
-	// 	$loader->relationCallbacks = array(
-	// 		'Team.Title' => array(
-	// 			'relationname' => 'Team',
-	// 			'callback' => 'getTeamByTitle'
-	// 		),
-	// 		// contract should be automatically discovered
-	// 	);
-	// 	$results = $loader->load($filepath);
-	// 	
-	// 	// Test that right amount of columns was imported
-	// 	$this->assertEquals(1, $results->Count(), 'Test correct count of imported data');
-	// 	
-	// 	// Test of augumenting existing relation (created by fixture)
-	// 	$testTeam = DataObject::get_one('CsvBulkLoaderTest_Team', null, null, '"Created" DESC');
-	// 	$this->assertEquals('20', $testTeam->TeamSize, 'Augumenting existing has_one relation works');
-	// 	
-	// 	// Test of creating relation
-	// 	$testContract = DataObject::get_one('CsvBulkLoaderTest_PlayerContract');
-	// 	$testPlayer = Dataobject::get_one("CsvBulkLoaderTest_Player", "\"FirstName\" = 'John'");
-	// 	$this->assertEquals($testPlayer->ContractID, $testContract->ID, 'Creating new has_one relation works');
-	// 	
-	// 	// Test nested setting of relation properties
-	// 	$contractAmount = DBField::create('Currency', $compareRow[5])->RAW();
-	// 	$this->assertEquals($testPlayer->Contract()->Amount, $contractAmount, 'Setting nested values in a relation works');
-	// 	
-	// 	fclose($file);
-	// }
+	/**
+	 * Test plain import with column auto-detection
+	 */
+	function testLoad() {
+		$loader = new CsvBulkLoader('CsvBulkLoaderTest_Player');
+		$filepath = Director::baseFolder() . '/sapphire/tests/dev/CsvBulkLoaderTest_PlayersWithHeader.csv';
+		$file = fopen($filepath, 'r');
+		$compareCount = $this->getLineCount($file);
+		fgetcsv($file); // pop header row
+		$compareRow = fgetcsv($file);
+		$results = $loader->load($filepath);
+	
+		// Test that right amount of columns was imported
+		$this->assertEquals(4, $results->Count(), 'Test correct count of imported data');
+		
+		// Test that columns were correctly imported
+		$obj = DataObject::get_one("CsvBulkLoaderTest_Player", "\"FirstName\" = 'John'");
+		$this->assertNotNull($obj);
+		$this->assertEquals("He's a good guy", $obj->Biography);
+		$this->assertEquals("1988-01-31", $obj->Birthday);
+		$this->assertEquals("1", $obj->IsRegistered);
+		
+		fclose($file);
+	}
+	
+	/** 
+	 * Test plain import with clear_table_before_import  
+	 	 */ 
+	function testDeleteExistingRecords() { 
+		$loader = new CsvBulkLoader('CsvBulkLoaderTest_Player'); 
+		$filepath = Director::baseFolder() . '/sapphire/tests/dev/CsvBulkLoaderTest_PlayersWithHeader.csv'; 
+		$loader->deleteExistingRecords = true;
+		$results1 = $loader->load($filepath);
+		$this->assertEquals(4, $results1->Count(), 'Test correct count of imported data on first load'); 
+	
+		$results2 = $loader->load($filepath, '512MB', true);    //delete existing data before doing second CSV import 
+		$resultDataObject = DataObject::get('CsvBulkLoaderTest_Player');        //get all instances of the loaded DataObject from the database and count them 
+	
+		$this->assertEquals(4, $resultDataObject->Count(), 'Test if existing data is deleted before new data is added'); 
+	 	}
+	
+	/**
+	 * Test import with manual column mapping
+	 */
+	function testLoadWithColumnMap() {
+		$loader = new CsvBulkLoader('CsvBulkLoaderTest_Player');
+		$filepath = Director::baseFolder() . '/sapphire/tests/dev/CsvBulkLoaderTest_Players.csv';
+		$file = fopen($filepath, 'r');
+		$compareCount = $this->getLineCount($file);
+		$compareRow = fgetcsv($file);
+		$loader->columnMap = array(
+			'FirstName',
+			'Biography',
+			null, // ignored column
+			'Birthday',
+			'IsRegistered'
+		);
+		$loader->hasHeaderRow = false;
+		$results = $loader->load($filepath);
+	
+		// Test that right amount of columns was imported
+		$this->assertEquals(4, $results->Count(), 'Test correct count of imported data');
+		
+		// Test that columns were correctly imported
+		$obj = DataObject::get_one("CsvBulkLoaderTest_Player", "\"FirstName\" = 'John'");
+		$this->assertNotNull($obj);
+		$this->assertEquals("He's a good guy", $obj->Biography);
+		$this->assertEquals("1988-01-31", $obj->Birthday);
+		$this->assertEquals("1", $obj->IsRegistered);
+		
+		$obj2 = DataObject::get_one('CsvBulkLoaderTest_Player', "\"FirstName\" = 'Jane'");
+		$this->assertNotNull($obj2);
+		$this->assertEquals('0', $obj2->IsRegistered);
+		
+		fclose($file);
+	}
+	
+	/**
+	 * Test import with manual column mapping and custom column names
+	 */
+	function testLoadWithCustomHeaderAndRelation() {
+		$loader = new CsvBulkLoader('CsvBulkLoaderTest_Player');
+		$filepath = Director::baseFolder() . '/sapphire/tests/dev/CsvBulkLoaderTest_PlayersWithCustomHeaderAndRelation.csv';
+		$file = fopen($filepath, 'r');
+		$compareCount = $this->getLineCount($file);
+		fgetcsv($file); // pop header row
+		$compareRow = fgetcsv($file);
+		$loader->columnMap = array(
+			'first name' => 'FirstName',
+			'bio' => 'Biography',
+			'bday' => 'Birthday',
+			'teamtitle' => 'Team.Title', // test existing relation
+			'teamsize' => 'Team.TeamSize', // test existing relation
+			'salary' => 'Contract.Amount' // test relation creation
+		);
+		$loader->hasHeaderRow = true;
+		$loader->relationCallbacks = array(
+			'Team.Title' => array(
+				'relationname' => 'Team',
+				'callback' => 'getTeamByTitle'
+			),
+			// contract should be automatically discovered
+		);
+		$results = $loader->load($filepath);
+		
+		// Test that right amount of columns was imported
+		$this->assertEquals(1, $results->Count(), 'Test correct count of imported data');
+		
+		// Test of augumenting existing relation (created by fixture)
+		$testTeam = DataObject::get_one('CsvBulkLoaderTest_Team', null, null, '"Created" DESC');
+		$this->assertEquals('20', $testTeam->TeamSize, 'Augumenting existing has_one relation works');
+		
+		// Test of creating relation
+		$testContract = DataObject::get_one('CsvBulkLoaderTest_PlayerContract');
+		$testPlayer = Dataobject::get_one("CsvBulkLoaderTest_Player", "\"FirstName\" = 'John'");
+		$this->assertEquals($testPlayer->ContractID, $testContract->ID, 'Creating new has_one relation works');
+		
+		// Test nested setting of relation properties
+		$contractAmount = DBField::create('Currency', $compareRow[5])->RAW();
+		$this->assertEquals($testPlayer->Contract()->Amount, $contractAmount, 'Setting nested values in a relation works');
+		
+		fclose($file);
+	}
 	
 	/**
 	 * Test import with custom identifiers by importing the data.
