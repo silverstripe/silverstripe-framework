@@ -17,7 +17,6 @@
 		<link rel="stylesheet" type="text/css" href="sapphire/dev/install/install.css">
 		<link rel="shortcut icon" href="favicon.ico">
 	</head>
-
 	<body>
 		<div id="BgContainer">
 			<div id="Container">
@@ -101,12 +100,10 @@
 			
 							<div id="database_credentials" class="section">
 								<label>Database type:</label>
-								<br><br>
 								<ul id="database_selection" class="field">
 								<?php
 								foreach($foundDatabaseClasses as $class => $title) {
 									$checked = ($databaseConfig['type'] == $class) ? ' checked="checked"' : '';
-									
 									$disabled = '';
 									global $usingEnv;
 									if($usingEnv) {
@@ -117,7 +114,6 @@
 											$checked = ' checked="checked"';
 										}
 									}
-									
 									echo "<li>";
 									echo "<input id=\"$class\" type=\"radio\" name=\"db[type]\" value=\"$class\"$checked $disabled>";
 									echo "<label class=\"left\" for=\"$class\">$title</label>";
@@ -125,29 +121,64 @@
 								}
 								?>
 								</ul>
-								<label for="db_server">Database server:</label>
-								<span class="middleColumn"><input id="db_server" class="text" type="text" name="db[server]" value="<?php echo $databaseConfig['server']; ?>" <?php if(defined('SS_DATABASE_SERVER')) echo 'disabled="disabled"'; ?>></span>
-								<label for="db_username">Database username:</label>
-								<span class="middleColumn"><input id="db_username" class="text" type="text" name="db[username]" value="<?php echo $databaseConfig['username']; ?>" <?php if(defined('SS_DATABASE_USERNAME')) echo 'disabled="disabled"'; ?>></span>
-								<label for="db_password">Database password:</label>
-								<span class="middleColumn"><input id="db_password" class="text" type="password" name="db[password]" value="<?php echo $databaseConfig['password']; ?>" <?php if(defined('SS_DATABASE_PASSWORD')) echo 'disabled="disabled"'; ?>></span>
-								<label for="db_database">Database name:</label>
-								<span class="middleColumn"><input id="db_database" class="text" type="text" name="db[database]" value="<?php echo $databaseConfig['database']; ?>" onchange="this.value = this.value.replace(/[\/\\:*?&quot;<>|. \t]+/g,'');"></span>
-								<input type="submit" class="action" value="Re-check requirements">
+								<div class="field">
+									<label for="db_server">Database server:</label>
+									<span class="middleColumn">
+										<input id="db_server" class="text" type="text" name="db[server]" value="<?php echo $databaseConfig['server']; ?>" <?php if(defined('SS_DATABASE_SERVER')) echo 'disabled="disabled"'; ?>>
+									</span>
+								</div>
+								<div class="field">
+									<label for="db_username">Database username:</label>
+									<span class="middleColumn">
+										<input id="db_username" class="text" type="text" name="db[username]" value="<?php echo $databaseConfig['username']; ?>" <?php if(defined('SS_DATABASE_USERNAME')) echo 'disabled="disabled"'; ?>>
+									</span>
+								</div>
+								<div class="field">
+									<label for="db_password">Database password:</label>
+									<span class="middleColumn">
+										<input id="db_password" class="text" type="password" name="db[password]" value="<?php echo $databaseConfig['password']; ?>" <?php if(defined('SS_DATABASE_PASSWORD')) echo 'disabled="disabled"'; ?>>
+									</span>
+								</div>
+								<div class="field">
+									<label for="db_database">Database name:</label>
+									<span class="middleColumn">
+										<input id="db_database" class="text" type="text" name="db[database]" value="<?php echo $databaseConfig['database']; ?>" onchange="this.value = this.value.replace(/[\/\\:*?&quot;<>|. \t]+/g,'');">
+									</span>
+								</div>
+								<div class="action">
+									<input type="submit" class="action" value="Re-check requirements">
+								</div>
 							</div>
+							
 							<p class="database">SilverStripe stores its content in a relational SQL database.  Please provide the username and password to connect to the server here.  If this account has permission to create databases, then we will create the database for you; otherwise, you must give the name of a database that already exists.</p>
 							<?php $dbReq->showTable("Database Configuration"); ?>
-
+							
 							<h4 class="sectionHeading">SilverStripe Administration Account</h4>
 							<div id="AdminAccount" class="section">
-								<label for="admin_username">Administrator email:</label>
-								<span class="middleColumn"><input type="text" class="text" name="admin[username]" id="admin_username" value="<?php echo $adminConfig['username']; ?>" <?php if(defined('SS_DEFAULT_ADMIN_USERNAME')) echo 'disabled="disabled"' ?>></span>
-								<label for="admin_password">Administrator password:</label>
-								<span class="middleColumn"><input type="password" class="text" name="admin[password]" id="admin_password" value="<?php echo $adminConfig['password']; ?>" <?php if(defined('SS_DEFAULT_ADMIN_PASSWORD')) echo 'disabled="disabled"' ?>></span>
-								<label for="admin_firstname">Administrator first name:</label>
-								<span class="middleColumn"><input type="text" class="text" name="admin[firstname]" id="admin_firstname" value="<?php echo $adminConfig['firstname']; ?>"></span>
-								<label for="admin_surname">Administrator surname:</label>
-								<span class="middleColumn"><input type="text" class="text" name="admin[surname]" id="admin_surname" value="<?php echo $adminConfig['surname']; ?>"></span>
+								<div class="field">
+									<label for="admin_username">Administrator email:</label>
+									<span class="middleColumn">
+										<input type="text" class="text" name="admin[username]" id="admin_username" value="<?php echo $adminConfig['username']; ?>" <?php if(defined('SS_DEFAULT_ADMIN_USERNAME')) echo 'disabled="disabled"' ?>>
+									</span>
+								</div>
+								<div class="field">
+									<label for="admin_password">Administrator password:</label>
+									<span class="middleColumn">
+										<input type="password" class="text" name="admin[password]" id="admin_password" value="<?php echo $adminConfig['password']; ?>" <?php if(defined('SS_DEFAULT_ADMIN_PASSWORD')) echo 'disabled="disabled"' ?>>
+									</span>
+								</div>
+								<div class="field">
+									<label for="admin_firstname">Administrator first name:</label>
+									<span class="middleColumn">
+										<input type="text" class="text" name="admin[firstname]" id="admin_firstname" value="<?php echo $adminConfig['firstname']; ?>">
+									</span>
+								</div>
+								<div class="field">
+									<label for="admin_surname">Administrator surname:</label>
+									<span class="middleColumn">
+										<input type="text" class="text" name="admin[surname]" id="admin_surname" value="<?php echo $adminConfig['surname']; ?>">
+									</span>
+								</div>
 							</div>
 							
 							<p class="adminAcc">
@@ -158,8 +189,11 @@
 							<h4 class="sectionHeading">Development Servers</h4>
 							<div class="section">
 								<label for="devsites">Development servers:</label>
-								<span class="middleColumn"><textarea name="devsites" id="devsites" rows="5" cols="10">localhost
-127.0.0.1</textarea></span>
+								<span class="middleColumn">
+									<textarea name="devsites" id="devsites" rows="5" cols="10">localhost
+127.0.0.1
+									</textarea>
+								</span>
 							</div>
 							
 							<p class="devHelp">
@@ -174,7 +208,6 @@
 						</form>
 					</div>
 				</div>
-				
 				<div class="clear"><!-- --></div>
 			</div>
 			
