@@ -47,21 +47,17 @@
 										If you are having problems meeting the requirements, see the <a href="http://doc.silverstripe.org/doku.php?id=server-requirements">server requirements wiki page</a>.
 									</p>
 								<?php } else if(!$dbReq->hasErrors()) { ?>
-									<p class="good">
-										You're ready to install! &nbsp;&nbsp; 
-									</p>
-								<?php } ?>					
-								<p>
-									<b>Template to install:</b>
-								</p>
+									<p class="good">You're ready to install!</p>
+								<?php } ?>
+								
+								<h3>Template to install:</h3>
 								<ul id="Themes">
 									<li><input type="radio" name="template" value="blackcandy" id="BlackCandy" <?php if(!isset($_POST['template']) || $_POST['template'] == 'blackcandy') {?>checked="checked"<?php }?>><label for="BlackCandy">BlackCandy, default template ready to use.</label></li>
 									<li><input type="radio" name="template" value="tutorial" id="EmptyTemplate" <?php if(isset($_POST['template']) && $_POST['template'] == 'tutorial') {?>checked="checked"<?php }?>><label for="EmptyTemplate">Empty template, ready to begin the tutorial.</label></li>
 								</ul>
 								<p>You can change the template or download another from the SilverStripe website after installation.</p>
-			
-								<input type="checkbox" id="stats" name="stats" checked="checked"><label for="stats">Send information on my webserver to SilverStripe (this is only version information, used for statistical purposes)</label><br>
 								
+								<input type="checkbox" id="stats" name="stats" checked="checked"><label for="stats">Send information on my webserver to SilverStripe (this is only version information, used for statistical purposes)</label><br>
 								
 								<?php if($alreadyInstalled) { ?>
 									<p class="warning">
@@ -71,7 +67,7 @@
 									<input type="checkbox" id="ReIn" name="force_reinstall" onclick="document.getElementById('install_button').disabled = !this.checked"><label for="ReIn">That's okay, please re-install SilverStripe and overwrite these files.</label>
 									</p>
 								<?php } ?>
-			
+								
 								<p>
 									<?php if($alreadyInstalled) { ?>
 										<input id="install_button" type="submit" disabled="disabled" class="action" name="go" value="Install SilverStripe" onclick="document.getElementById('saving_top').style.display = ''; this.value = 'Installing SilverStripe...'">

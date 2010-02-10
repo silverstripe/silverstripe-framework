@@ -15,8 +15,7 @@ ul#Themes{
 	}
 	ul#Themes input {
 		float: left;
-		width: 10px;
-		height: 10px;
+		margin-right: 5px;
 	}
 	ul#Themes label {
 		margin: -2px 5px 0 15px;
