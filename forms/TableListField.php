@@ -77,6 +77,11 @@ class TableListField extends FormField {
 	protected $template = "TableListField";
 	
 	/**
+	 * @var $itemClass string Class name for each item/row
+	 */
+	public $itemClass = 'TableListField_Item';
+	
+	/**
 	 * @var bool Do we use checkboxes to mark records, or delete them one by one?
 	 */
 	public $Markable;
@@ -457,8 +462,7 @@ JS
 	function Items() {
 		$fieldItems = new DataObjectSet();
 		if($items = $this->sourceItems()) foreach($items as $item) {
-			$fieldItem = new TableListField_Item($item, $this);
-			if($item) $fieldItems->push(new TableListField_Item($item, $this));
+			if($item) $fieldItems->push(new $this->itemClass($item, $this));
 		}
 		return $fieldItems;
 	}
@@ -659,7 +663,7 @@ JS
 		foreach($groupedItems as $key => $group) {
 			$fieldItems = new DataObjectSet();
 			foreach($group as $item) {
-				if($item) $fieldItems->push(new TableListField_Item($item, $this));
+				if($item) $fieldItems->push(new $this->itemClass($item, $this));
 			}
 			$groupedArrItems->push(new ArrayData(array(
 				'Items' => $fieldItems,
@@ -957,7 +961,7 @@ JS
 					$className = isset($item['RecordClassName']) ? $item['RecordClassName'] : $item['ClassName'];
 					$item = new $className($item);
 				}
-				$fieldItem = new TableListField_Item($item, $this);
+				$fieldItem = new $this->itemClass($item, $this);
 				
 				$fields = $fieldItem->Fields(false);
 				$columnData = array();
