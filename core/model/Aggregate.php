@@ -70,6 +70,7 @@ class Aggregate extends ViewableData {
 		$singleton = singleton($this->type);
 		$query = $singleton->buildSQL($this->filter);
 		$query->select = array($attr);
+		$query->orderby = null;
 		$singleton->extend('augmentSQL', $query);
 		return $query;
 	}
