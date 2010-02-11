@@ -127,6 +127,10 @@ div.section {
 	margin: 5px 0;
 }
 
+#use_environment_field {
+	margin-bottom: 25px;
+}
+
 #use_environment_field input {
 	float: left;
 	margin-right: 5px;
