@@ -181,7 +181,9 @@ TreeDropdownField.prototype = {
 	},
 	
 	ajaxGetTree: function(after) {
-		var ajaxURL = this.buildURL('tree?forceValues=' + this.inputTag.value);
+		var baseTags = document.getElementsByTagName('base');
+		var base = (baseTags) ? baseTags[0].href : '';
+		var ajaxURL = base + this.buildURL('tree?forceValues=' + this.inputTag.value);
 		ajaxURL += $('SecurityID') ? '&SecurityID=' + $('SecurityID').value : '';
 		if($('Form_EditForm_Locale')) ajaxURL += "&locale=" + $('Form_EditForm_Locale').value;
 		if ( this.inputTag.value ) ajaxURL += '&forceValue=' + this.inputTag.value;
