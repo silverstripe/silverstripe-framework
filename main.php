@@ -108,6 +108,11 @@ require_once("core/model/DB.php");
 if(!isset($databaseConfig) || !isset($databaseConfig['database']) || !$databaseConfig['database']) {
 	$s = (isset($_SERVER['SSL']) || (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off')) ? 's' : '';
 	$installURL = "http$s://" . $_SERVER['HTTP_HOST'] . dirname(dirname($_SERVER['SCRIPT_NAME'])) . '/install.php';
+	
+	// The above dirname() will equate to "\" on Windows when installing directly from http://localhost (not using
+	// a sub-directory), this really messes things up in some browsers. Let's get rid of the backslashes
+	$installURL = str_replace('\\', '', $installURL);
+	
 	header("Location: $installURL");
 	die();
 }
