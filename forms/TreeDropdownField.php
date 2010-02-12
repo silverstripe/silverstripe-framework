@@ -97,6 +97,8 @@ class TreeDropdownField extends FormField {
 		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/prototype/prototype.js');
 		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/behaviour/behaviour.js');
 		Requirements::javascript(SAPPHIRE_DIR . '/javascript/tree/tree.js');
+		// needed for errorMessage()
+		Requirements::javascript(SAPPHIRE_DIR . '/javascript/LeftAndMain.js');
 		Requirements::javascript(SAPPHIRE_DIR . '/javascript/TreeSelectorField.js');
 		
 		Requirements::css(SAPPHIRE_DIR . '/javascript/tree/tree.css');

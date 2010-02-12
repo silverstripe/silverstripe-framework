@@ -42,8 +42,18 @@ class TreeMultiselectField extends TreeDropdownField {
 	function Field() {
 		$value = '';
 		$itemList = '';
+		
 		Requirements::add_i18n_javascript(SAPPHIRE_DIR . '/javascript/lang');
-		Requirements::javascript(SAPPHIRE_DIR . "/javascript/TreeSelectorField.js");
+
+		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/prototype/prototype.js');
+		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/behaviour/behaviour.js');
+		Requirements::javascript(SAPPHIRE_DIR . '/javascript/tree/tree.js');
+		// needed for errorMessage()
+		Requirements::javascript(SAPPHIRE_DIR . '/javascript/LeftAndMain.js');
+		Requirements::javascript(SAPPHIRE_DIR . '/javascript/TreeSelectorField.js');
+
+		Requirements::css(SAPPHIRE_DIR . '/javascript/tree/tree.css');
+		Requirements::css(SAPPHIRE_DIR . '/css/TreeDropdownField.css');
 		
 		$items = $this->getItems();
 		if($items) {
