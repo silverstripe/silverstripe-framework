@@ -27,7 +27,6 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	protected $originalRequirements;
 	protected $originalIsRunningTest;
 	protected $originalTheme;
-	protected $originalNestedURLsState;
 	
 	protected $mailer;
 	
@@ -102,9 +101,6 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 		Controller::curr()->setSession(new Session(array()));
 		
 		$this->originalTheme = SSViewer::current_theme();
-		
-		// Save nested_urls state, so we can restore it later
-		$this->originalNestedURLsState = SiteTree::nested_urls();
 
 		$className = get_class($this);
 		$fixtureFile = eval("return {$className}::\$fixture_file;");
@@ -342,12 +338,6 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 
 		// Reset mocked datetime
 		SS_Datetime::clear_mock_now();
-		
-		// Restore nested_urls state
-		if ( $this->originalNestedURLsState )
-			SiteTree::enable_nested_urls();
-		else
-			SiteTree::disable_nested_urls();
 	}
 	/**
 	 * Clear the log of emails sent
