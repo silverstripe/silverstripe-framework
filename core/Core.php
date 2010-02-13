@@ -134,7 +134,7 @@ if(!defined('BASE_URL')) {
 	// If that didn't work, failover to the old syntax.  Hopefully this isn't necessary, and maybe
 	// if can be phased out?
 	if(!defined('BASE_URL')) {
-		$dir = strpos($_SERVER['SCRIPT_NAME'], 'index.php')
+		$dir = strpos($_SERVER['SCRIPT_NAME'], 'index.php') !== false
 			? dirname($_SERVER['SCRIPT_NAME'])
 			: dirname(dirname($_SERVER['SCRIPT_NAME']));
 		define('BASE_URL', rtrim($dir, DIRECTORY_SEPARATOR));
