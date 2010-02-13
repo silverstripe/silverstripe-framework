@@ -134,7 +134,10 @@ if(!defined('BASE_URL')) {
 	// If that didn't work, failover to the old syntax.  Hopefully this isn't necessary, and maybe
 	// if can be phased out?
 	if(!defined('BASE_URL')) {
-		define('BASE_URL', rtrim(dirname(dirname($_SERVER['SCRIPT_NAME'])), DIRECTORY_SEPARATOR));
+		$dir = strpos($_SERVER['SCRIPT_NAME'], 'index.php')
+			? dirname($_SERVER['SCRIPT_NAME'])
+			: dirname(dirname($_SERVER['SCRIPT_NAME']));
+		define('BASE_URL', rtrim($dir, DIRECTORY_SEPARATOR));
 	}
 }
 define('MODULES_DIR', 'modules');
