@@ -965,6 +965,11 @@ class Member extends DataObject {
 		$mainFields->removeByName('PasswordEncryption');
 		$mainFields->removeByName('PasswordExpiry');
 		$mainFields->removeByName('LockedOutUntil');
+		
+		if(!self::$lock_out_after_incorrect_logins) {
+			$mainFields->removeByName('FailedLoginCount');
+		}
+		
 		$mainFields->removeByName('Salt');
 		$mainFields->removeByName('NumVisit');
 		$mainFields->removeByName('LastVisited');
