@@ -875,7 +875,7 @@ class TranslatableTest extends FunctionalTest {
 		);
 		
 		$this->assertEquals (
-			$childTranslation->ID,
+			$child->ID,
 			SiteTree::get_by_link($parentTranslation->Link($child->URLSegment))->ID,
 			'Links can be made up of multiple languages'
 		);
