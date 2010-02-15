@@ -235,8 +235,10 @@
 							<div class="section">
 								<label for="devsites">Development servers:</label>
 								<span class="middleColumn">
-									<textarea name="devsites" id="devsites" rows="5" cols="10">localhost
-127.0.0.1</textarea>
+									<textarea name="devsites" id="devsites" rows="5" cols="10">
+<?php if(@$_POST['devsites']) echo $_POST['devsites'];
+else echo 'localhost
+127.0.0.1'; ?></textarea>
 								</span>
 							</div>
 							
