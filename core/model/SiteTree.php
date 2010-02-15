@@ -1959,7 +1959,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 
 		// NOTE: if you change the path here, you must also change it in sapphire/static-main.php
 		if (self::$write_homepage_map) {
-			if ($usingStaticPublishing && $map = self::generate_homemage_domain_map()) {
+			if ($usingStaticPublishing && $map = SiteTree::generate_homepage_domain_map()) {
 				@file_put_contents(BASE_PATH.'/'.ASSETS_DIR.'/_homepage-map.php', "<?php\n\$homepageMap = ".var_export($map, true)."; ?>");
 			} else { if (file_exists(BASE_PATH.'/'.ASSETS_DIR.'/_homepage-map.php')) unlink(BASE_PATH.'/'.ASSETS_DIR.'/_homepage-map.php'); }
 		}
