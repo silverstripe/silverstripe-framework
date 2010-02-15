@@ -170,6 +170,11 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	 */
 	public static $breadcrumbs_delimiter = " &raquo; ";
 	
+	/**
+	 * Whether or not to write the homepage map for static publisher
+	 */
+	public static $write_homepage_map = true;
+	
 	static $searchable_fields = array(
 		'Title',
 		'Content',
@@ -1948,11 +1953,32 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 			}
 		}
 		
+		// Check to write CMS homepage map.
+		$usingStaticPublishing = false;
+		foreach(ClassInfo::subclassesFor('StaticPublisher') as $class) if ($this->hasExtension($class)) $usingStaticPublishing = true;
 
+		// NOTE: if you change the path here, you must also change it in sapphire/static-main.php
+		if (self::$write_homepage_map) {
+			if ($usingStaticPublishing && $map = self::generate_homemage_domain_map()) {
+				@file_put_contents(BASE_PATH.'/'.ASSETS_DIR.'/_homepage-map.php', "<?php\n\$homepageMap = ".var_export($map, true)."; ?>");
+			} else { if (file_exists(BASE_PATH.'/'.ASSETS_DIR.'/_homepage-map.php')) unlink(BASE_PATH.'/'.ASSETS_DIR.'/_homepage-map.php'); }
+		}
+		
 		// Handle activities undertaken by decorators
 		$this->extend('onAfterPublish', $original);
 		
 		return true;
+	}
+	
+	static function generate_homepage_domain_map() {
+		$domainSpecificHomepages = Versioned::get_by_stage('Page', 'Live', "HomepageForDomain != ''", 'URLSegment ASC');
+		if (!$domainSpecificHomepages) return false;
+		
+		$map = array();
+		foreach($domainSpecificHomepages->map('URLSegment', 'HomepageForDomain') as $url => $domains) {
+			foreach(explode(',', $domains) as $domain) $map[$domain] = $url;
+		}
+		return $map;
 	}
 	
 	/**
