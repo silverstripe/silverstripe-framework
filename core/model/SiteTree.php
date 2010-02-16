@@ -200,15 +200,11 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	 */
 	private static $enforce_strict_hierarchy = true;
 	
-	/**
-	 * Getter and setter for enforce_strict_hierarchy. With no
-	 * args it returns current value. Pass arg to set.
-	 *
-	 * @return bool
-	 */
-	public static function enforce_strict_hierarchy() {
-		$args = func_get_args();
-		if (count($args)) self::$enforce_strict_hierarchy = (bool) $args[0];
+	public static function set_enforce_strict_hierarchy($to) {
+		self::$enforce_strict_hierarchy = $to;
+	}
+	
+	public static function get_enforce_strict_hierarchy() {
 		return self::$enforce_strict_hierarchy;
 	}
 
@@ -1403,7 +1399,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		parent::onBeforeDelete();
 		
 		// If deleting this page, delete all its children.
-		if(SiteTree::enforce_strict_hierarchy() && $children = $this->Children()) {
+		if(SiteTree::get_enforce_strict_hierarchy() && $children = $this->Children()) {
 			foreach($children as $child) {
 				$child->delete();
 			}
