@@ -972,11 +972,17 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	/**
 	 * Pre-populate the cache of canEdit, canView, canDelete, canPublish permissions.
 	 * This method will use the static can_(perm)_multiple method for efficiency.
+	 * 
+	 * @param $permission String The permission: edit, view, publish, approve, etc.
+	 * @param $ids array An array of page IDs
+	 * @param $batchCallBack The function/static method to call to calculate permissions.  Defaults
+	 * to 'SiteTree::can_(permission)_multiple'
 	 */
-	static function prepopuplate_permission_cache($permission = 'edit', $ids) {
-		$methodName = "can_{$permission}_multiple";
-		if(is_callable(array('SiteTree', $methodName))) {
-			$permissionValues = call_user_func(array('SiteTree', $methodName), $ids, 
+	static function prepopuplate_permission_cache($permission = 'CanEditType', $ids, $batchCallback = null) {
+		if(!$batchCallback) $batchCallback = "SiteTree::can_{$permission}_multiple";
+		
+		if(is_callable($batchCallback)) {
+			$permissionValues = call_user_func($batchCallback, $ids, 
 				Member::currentUserID(), false);
 				
 			if(!isset(self::$cache_permissions[$permission])) {
@@ -987,8 +993,8 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 				+ self::$cache_permissions[$permission];
 			
 		} else {
-			user_error("SiteTree::prepopuplate_permission_cache passed bad permission '$permission'"
-				, E_USER_WARNING);
+			user_error("SiteTree::prepopuplate_permission_cache can't calculate '$permission' "
+				. "with callback '$batchCallback'", E_USER_WARNING);
 		}
 	}
 	
