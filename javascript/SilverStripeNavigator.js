@@ -19,6 +19,13 @@ function windowName(suffix) {
 		}
 	);
 	
+	$('#SilverStripeNavigatorLinkPopup a.close').livequery('click',
+		function() {
+			$('#SilverStripeNavigatorLinkPopup').hide();
+			return false;
+		}
+	);
+	
 	$('#SilverStripeNavigatorLinkPopup input').livequery('focus',
 		function() {
 			this.select();
