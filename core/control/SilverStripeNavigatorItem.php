@@ -91,6 +91,7 @@ class SilverStripeNavigatorItem_StageLink extends SilverStripeNavigatorItem {
 	static $priority = 20;
 
 	function getHTML($page) {
+		// TODO cmsworkflow module coupling
 		if(Versioned::current_stage() == 'Stage' && !(ClassInfo::exists('SiteTreeFutureState') && SiteTreeFutureState::get_future_datetime())) {
 			return "<a class=\"current\">". _t('ContentController.DRAFTSITE', 'Draft Site') ."</a>";
 		} else {
