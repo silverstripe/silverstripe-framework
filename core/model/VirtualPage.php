@@ -148,6 +148,15 @@ class VirtualPage extends Page {
 		if($this->extension_instances['Versioned']->migratingVersion
 			&& Versioned::current_stage() == 'Live') {
 			$performCopyFrom = true;
+			
+			$stageSourceVersion = DB::query("SELECT Version FROM SiteTree WHERE ID = $this->CopyContentFromID")->value();
+			$liveSourceVersion = DB::query("SELECT Version FROM SiteTree_Live WHERE ID = $this->CopyContentFromID")->value();
+			
+			// We're going to create a new VP record in SiteTree_versions because the published
+			// version might not exist, unless we're publishing the latest version
+			if($stageSourceVersion != $liveSourceVersion) {
+				$this->extension_instances['Versioned']->migratingVersion = null;
+			}
 
 		// On regular write, this will copy from draft source.  This is only executed when the source
 		// page changeds

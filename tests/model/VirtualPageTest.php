@@ -214,6 +214,7 @@ class VirtualPageTest extends SapphireTest {
 		$source = $this->objFromFixture('Page', 'master');
 		$source->Title = "T0";
 		$source->write();
+		$source->doPublish();
 		
 		// Creating a new VP to ensure that Version #s are out of alignment
 		$vp = new VirtualPage();
@@ -231,6 +232,20 @@ class VirtualPageTest extends SapphireTest {
 			WHERE \"RecordID\" = $vp->ID AND \"Title\" = 'T2'")->value());
 		$this->assertEquals($vp->ID, DB::query("SELECT \"RecordID\" FROM \"SiteTree_versions\"
 			WHERE \"RecordID\" = $vp->ID AND \"Version\" = $vp->Version")->value());
+			
+		$vp->doPublish();
+			
+		// Check that the published content is copied from the published page, with a legal
+		// version
+		$liveVersion = DB::query("SELECT Version FROM \"SiteTree_Live\" WHERE ID = $vp->ID")->value();
+
+		$this->assertEquals("T0", DB::query("SELECT \"Title\" FROM \"SiteTree_Live\" 
+				WHERE \"ID\" = $vp->ID")->value());
+
+		// SiteTree_Live.Version should reference a legal entry in SiteTree_versions for the
+		// virtual page
+		$this->assertEquals("T0", DB::query("SELECT \"Title\" FROM \"SiteTree_versions\" 
+				WHERE \"RecordID\" = $vp->ID AND \"Version\" = $liveVersion")->value());
 	}
 	
 	function fixVersionNumberCache($page) {
