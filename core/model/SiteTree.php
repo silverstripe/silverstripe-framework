@@ -1093,9 +1093,12 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 
 		if(isset($combinedStageResult)) {
 			// Cache results
-			foreach($combinedStageResult as $id => $val) {
+			// TODO - Caching permissions is breaking unit tests. One possible issue
+			// is the cache needs to be flushed when permission on a page is changed,
+			// but this only solved some of the failing unit tests. Disabled for now.
+			/*foreach($combinedStageResult as $id => $val) {
 				self::$cache_permissions[$typeField][$id] = $val;
-			}
+			}*/
 			return $combinedStageResult;
 		} else {
 			array();
