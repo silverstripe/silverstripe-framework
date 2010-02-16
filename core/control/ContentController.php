@@ -302,7 +302,7 @@ class ContentController extends Controller {
 			Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery/jquery.js');
 			Requirements::customScript(<<<JS
 				(function($) {
-					$('#switchView a').click(function() {
+					$('#switchView a.newWindow').click(function() {
 						var w = window.open(this.href,windowName(this.target));
 						w.focus();
 						return false;
@@ -341,7 +341,8 @@ JS
 					
 					$text = $obj->getHTML($this->dataRecord);
 					if($text) $items .= $text;
-					if(!$message) $message = $obj->getMessage($this);
+					$newMessage = $obj->getMessage($this);
+					if($newMessage) $message = $newMessage;
 				}
 			}
 
