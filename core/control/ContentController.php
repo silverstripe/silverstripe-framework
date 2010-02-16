@@ -312,6 +312,8 @@ class ContentController extends Controller {
 			}
 			$viewPageIn = _t('ContentController.VIEWPAGEIN', 'View Page in:');
 			
+			Requirements::customScript("window.name = windowName('site');");
+			
 			return <<<HTML
 				<div id="SilverStripeNavigator">
 					<div class="holder">
