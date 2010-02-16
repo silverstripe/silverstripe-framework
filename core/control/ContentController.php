@@ -296,29 +296,7 @@ class ContentController extends Controller {
 		$items = '';
 		$message = '';
 
-		if(Director::isDev() || Permission::check('CMS_ACCESS_CMSMain') || Permission::check('VIEW_DRAFT_CONTENT')) {
-			Requirements::css(SAPPHIRE_DIR . '/css/SilverStripeNavigator.css');
-
-			Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery/jquery.js');
-			Requirements::customScript(<<<JS
-				(function($) {
-					$('#switchView a.newWindow').click(function() {
-						var w = window.open(this.href,windowName(this.target));
-						w.focus();
-						return false;
-					});
-
-					function windowName(suffix) {
-						var base = document.getElementsByTagName('base')[0].href.replace('http://','').replace(/\//g,'_').replace(/\./g,'_');
-						return base + suffix;
-					}
-					window.name = windowName('site');
-				})(jQuery);
-JS
-			);
-			
-
-			
+		if(Director::isDev() || Permission::check('CMS_ACCESS_CMSMain') || Permission::check('VIEW_DRAFT_CONTENT')) {			
 			if($this->dataRecord) {
 				$return = $nav = SilverStripeNavigator::get_for_record($this->dataRecord);
 				$items = $return['items'];
