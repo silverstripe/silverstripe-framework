@@ -740,8 +740,14 @@ class Member extends DataObject {
 	 * @return String SQL
 	 */
 	static function get_title_sql($tableName = 'Member') {
+	
 		if (self::$title_format) {
-			return "CONCAT(".join("'".self::$title_format['sep']."'", self::$title_format['columns']).")";
+			$columnsWithTablename = array();
+			foreach(self::$title_format['columns'] as $column) {
+				$columnsWithTablename[] = "$tableName.$column";
+			}
+		
+			return "CONCAT(".join("'".self::$title_format['sep']."'", $columnsWithTablename).")";
 		} else {
 			return "CONCAT($tableName.Surname, ' ', $tableName.FirstName)";
 		}
