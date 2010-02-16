@@ -196,6 +196,23 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	public static $cache_permissions = array();
 	
 	/**
+	 * @see SiteTree::enforce_strict_hierarchy()
+	 */
+	private static $enforce_strict_hierarchy = true;
+	
+	/**
+	 * Getter and setter for enforce_strict_hierarchy. With no
+	 * args it returns current value. Pass arg to set.
+	 *
+	 * @return bool
+	 */
+	public static function enforce_strict_hierarchy() {
+		$args = func_get_args();
+		if (count($args)) self::$enforce_strict_hierarchy = (bool) $args[0];
+		return self::$enforce_strict_hierarchy;
+	}
+
+	/**
 	 * Returns TRUE if nested URLs (e.g. page/sub-page/) are currently enabled on this site.
 	 *
 	 * @return bool
@@ -1380,7 +1397,8 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		parent::onBeforeDelete();
 		
 		// If deleting this page, delete all its children.
-		if($children = $this->Children()) {
+		if(SiteTree::enforce_strict_hierarchy() && $children = $this->Children()) {
+		// if($children = $this->Children()) {
 			foreach($children as $child) {
 				$child->delete();
 			}
