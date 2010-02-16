@@ -72,7 +72,12 @@ class Member extends DataObject {
 		'FirstName' => 'First Name',
 		'Surname' => 'Last Name',
 		'Email' => 'Email',
-	);	
+	);
+	
+	/**
+	 * @var Array See {@link set_title_columns()}
+	 */
+	static $title_format = null;
 	
 	/**
 	 * The unique field used to identify this member.
@@ -682,16 +687,36 @@ class Member extends DataObject {
 	function isAdmin() {
 		return Permission::checkMember($this, 'ADMIN');
 	}
+	
+	/**
+	 * @param Array $columns Column names on the Member record to show in {@link getTitle()}.
+	 * @param String $sep Separator
+	 */
+	static function set_title_columns($columns, $sep = ' ') {
+		if (!is_array($columns)) $columns = array($columns);
+		self::$title_format = array('columns' => $columns, 'sep' => $sep);
+	}
 
 	//------------------- HELPER METHODS -----------------------------------//
 
 	/**
-	 * Get the complete name of the member
+	 * Get the complete name of the member, by default in the format "<Surname>, <FirstName>".
+	 * Falls back to showing either field on its own.
+	 * 
+	 * You can overload this getter with {@link set_title_format()}
+	 * and {@link set_title_sql()}.
 	 *
 	 * @return string Returns the first- and surname of the member. If the ID
-	 *                of the member is equal 0, only the surname is returned.
+	 *  of the member is equal 0, only the surname is returned.
 	 */
 	public function getTitle() {
+		if (self::$title_format) {
+			$values = array();
+			foreach(self::$title_format['columns'] as $col) {
+				$values[] = $this->getField($col);
+			}
+			return join(self::$title_format['sep'], $values);
+		}
 		if($this->getField('ID') === 0)
 			return $this->getField('Surname');
 		else{
@@ -704,6 +729,21 @@ class Member extends DataObject {
 			}else{
 				return null;
 			}
+		}
+	}
+	
+	/**
+	 * Return a SQL CONCAT() fragment suitable for a SELECT statement.
+	 * Useful for custom queries which assume a certain member title format.
+	 * 
+	 * @param String $tableName
+	 * @return String SQL
+	 */
+	static function get_title_sql($tableName = 'Member') {
+		if (self::$title_format) {
+			return "CONCAT(".join('"'.self::$title_format['sep'].'"', self::$title_format['columns']).")";
+		} else {
+			return "CONCAT($tableName.Surname, \" \", $tableName.FirstName)";
 		}
 	}
 
