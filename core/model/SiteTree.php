@@ -997,20 +997,23 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	static function batch_permission_check($ids, $memberID, $typeField, $groupJoinTable, $siteConfigMethod, $globalPermission = 'CMS_ACCESS_CMSMain', $useCached = true) {
 		// Sanitise the IDs
 		$ids = array_filter($ids, 'is_numeric');
+		
+		// This is the name used on the permission cache
+		// converts something like 'CanEditType' to 'edit'.
+		$cacheKey = strtolower(substr($typeField, 3, -4));
 
 		// Default result: nothing editable
 		$result = array_fill_keys($ids, false);
 		if($ids) {
 
 			// Look in the cache for values
-			if($useCached && isset(self::$cache_permissions[$typeField])) {
-				$cachedValues = array_intersect_key(self::$cache_permissions[$typeField], $result);
+			if($useCached && isset(self::$cache_permissions[$cacheKey])) {
+				$cachedValues = array_intersect_key(self::$cache_permissions[$cacheKey], $result);
 			
 				// If we can't find everything in the cache, then look up the remainder separately
-				$uncachedValues = array_diff_key($result, self::$cache_permissions[$typeField]);
+				$uncachedValues = array_diff_key($result, self::$cache_permissions[$cacheKey]);
 				if($uncachedValues) {
 					$cachedValues = self::batch_permission_check(array_keys($uncachedValues), $memberID, $typeField, $groupJoinTable, $siteConfigMethod, $globalPermission, false) + $cachedValues;
-					// $cachedValues = self::can_edit_multiple(array_keys($uncachedValues), $memberID, false) + $cachedValues;
 				}
 				return $cachedValues;
 			}
