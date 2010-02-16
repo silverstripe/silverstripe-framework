@@ -1813,6 +1813,41 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		return $fields;
 	}
 	
+	function getNavigatorItems() {
+		$items = '';
+		$message = '';
+	
+		$navItemClasses = ClassInfo::subclassesFor('SilverStripeNavigatorItem');
+		array_shift($navItemClasses);
+		
+		// Sort menu items according to priority
+		$menuPriority = array();
+		$i = 0;
+		foreach($navItemClasses as $navItemClass) {
+			if($navItemClass == 'SilverStripeNavigatorItem') continue;
+			
+			$i++;
+			$obj = new $navItemClass();
+			// This funny litle formula ensures that the first item added with the same priority will be left-most.
+			$priority = Object::get_static($navItemClass, 'priority');
+			$menuPriority[$priority * 100 - 1] = $obj;
+		}
+		ksort($menuPriority);
+		
+		foreach($menuPriority as $obj) {
+			
+			$text = $obj->getHTML($this);
+			if($text) $items .= $text;
+			$newMessage = $obj->getMessage($this);
+			if($newMessage) $message = $newMessage;
+		}
+		
+		return array(
+			'items' => $items,
+			'message' => $message
+		);
+	}
+	
 	/**
 	 *
 	 * @param boolean $includerelations a boolean value to indicate if the labels returned include relation fields

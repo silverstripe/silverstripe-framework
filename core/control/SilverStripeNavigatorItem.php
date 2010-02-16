@@ -1,15 +1,66 @@
 <?php
+/**
+ * @package cms
+ * @subpackage content
+ */
+class SilverStripeNavigator {
 
+	/**
+	 * @param SiteTree $record
+	 * @return Array template data
+	 */
+	static function get_for_record($record) {
+		$items = '';
+		$message = '';
+	
+		$navItemClasses = ClassInfo::subclassesFor('SilverStripeNavigatorItem');
+		array_shift($navItemClasses);
+		
+		// Sort menu items according to priority
+		$menuPriority = array();
+		$i = 0;
+		foreach($navItemClasses as $navItemClass) {
+			if($navItemClass == 'SilverStripeNavigatorItem') continue;
+			
+			$i++;
+			$obj = new $navItemClass();
+			// This funny litle formula ensures that the first item added with the same priority will be left-most.
+			$priority = Object::get_static($navItemClass, 'priority');
+			$menuPriority[$priority * 100 - 1] = $obj;
+		}
+		ksort($menuPriority);
+		
+		foreach($menuPriority as $obj) {
+			
+			$text = $obj->getHTML($record);
+			if($text) $items .= $text;
+			$newMessage = $obj->getMessage($record);
+			if($newMessage) $message = $newMessage;
+		}
+		
+		return array(
+			'items' => $items,
+			'message' => $message
+		);
+	}
+}
 
 /**
  * Navigator items are links that appear in the $SilverStripeNavigator bar.
  * To add an item, extends this class.
+ * 
+ * @package cms
+ * @subpackage content
  */
 class SilverStripeNavigatorItem extends Object {
 	function getHTML($controller) {}
 	function getMessage($controller) {}
 }
 
+/**
+ * @package cms
+ * @subpackage content
+ */
 class SilverStripeNavigatorItem_CMSLink extends SilverStripeNavigatorItem {
 	static $priority = 10;	
 	
@@ -32,6 +83,10 @@ class SilverStripeNavigatorItem_CMSLink extends SilverStripeNavigatorItem {
 
 }
 
+/**
+ * @package cms
+ * @subpackage content
+ */
 class SilverStripeNavigatorItem_StageLink extends SilverStripeNavigatorItem {
 	static $priority = 20;
 
@@ -51,6 +106,10 @@ class SilverStripeNavigatorItem_StageLink extends SilverStripeNavigatorItem {
 	}
 }
 
+/**
+ * @package cms
+ * @subpackage content
+ */
 class SilverStripeNavigatorItem_LiveLink extends SilverStripeNavigatorItem {
 	static $priority = 30;
 
@@ -70,6 +129,10 @@ class SilverStripeNavigatorItem_LiveLink extends SilverStripeNavigatorItem {
 	}
 }
 
+/**
+ * @package cms
+ * @subpackage content
+ */
 class SilverStripeNavigatorItem_ArchiveLink extends SilverStripeNavigatorItem {
 	static $priority = 40;
 

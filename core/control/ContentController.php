@@ -320,30 +320,9 @@ JS
 
 			
 			if($this->dataRecord) {
-				$navItemClasses = ClassInfo::subclassesFor('SilverStripeNavigatorItem');
-				array_shift($navItemClasses);
-				
-				// Sort menu items according to priority
-				$menuPriority = array();
-				$i = 0;
-				foreach($navItemClasses as $navItemClass) {
-					if($navItemClass == 'SilverStripeNavigatorItem') continue;
-					
-					$i++;
-					$obj = new $navItemClass();
-					// This funny litle formula ensures that the first item added with the same priority will be left-most.
-					$priority = Object::get_static($navItemClass, 'priority');
-					$menuPriority[$priority * 100 - 1] = $obj;
-				}
-				ksort($menuPriority);
-				
-				foreach($menuPriority as $obj) {
-					
-					$text = $obj->getHTML($this->dataRecord);
-					if($text) $items .= $text;
-					$newMessage = $obj->getMessage($this);
-					if($newMessage) $message = $newMessage;
-				}
+				$return = $nav = SilverStripeNavigator::get_for_record($this->dataRecord);
+				$items = $return['items'];
+				$message = $return['message'];
 			}
 
 			if($member) {
