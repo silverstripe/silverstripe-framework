@@ -75,7 +75,7 @@ class FormField extends RequestHandler {
 		$this->name = $name;
 		$this->title = ($title === null) ? $name : $title;
 
-		if(isset($value)) $this->value = $value;
+		if($value) $this->setValue($value);
 		if($form) $this->setForm($form);
 
 		parent::__construct();
