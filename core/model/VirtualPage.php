@@ -181,6 +181,8 @@ class VirtualPage extends Page {
 				$this->updateImageTracking();
 			}
 		}
+		
+		FormResponse::add("$('Form_EditForm').reloadIfSetTo($this->ID);");
 	}
 	
 	/**
