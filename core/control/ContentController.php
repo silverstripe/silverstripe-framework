@@ -293,6 +293,8 @@ class ContentController extends Controller {
 
 	public function SilverStripeNavigator() {
 		$member = Member::currentUser();
+		$items = '';
+		$message = '';
 
 		if(Director::isDev() || Permission::check('CMS_ACCESS_CMSMain') || Permission::check('VIEW_DRAFT_CONTENT')) {
 			Requirements::css(SAPPHIRE_DIR . '/css/SilverStripeNavigator.css');
@@ -314,55 +316,44 @@ class ContentController extends Controller {
 				})(jQuery);
 JS
 			);
+			
 
-			if($this->dataRecord){
-				$thisPage = $this->dataRecord->Link();
-				$cmsLink = 'admin/show/' . $this->dataRecord->ID;
-				$cmsLink = "<a href=\"$cmsLink\" target=\"cms\">". _t('ContentController.CMS', 'CMS') ."</a>";
-			} else {
-				/**
-				 * HGS: If this variable is missing a notice is raised. Subclasses of ContentController
-				 * are required to implement RelativeLink anyway, so this should work even if the
-				 * dataRecord isn't set.
-				 */
-				$thisPage = $this->Link();
-				$cmsLink = '';
-			}
-
-			$archiveLink = "";
-
-			if($date = Versioned::current_archived_date()) {
-				$dateObj = Object::create('Datetime', $date, null);
-				// $dateObj->setVal($date);
-
-				$archiveLink = "<a class=\"current\">". _t('ContentController.ARCHIVEDSITE', 'Archived Site') ."</a>";
-				$liveLink = "<a href=\"$thisPage?stage=Live\" target=\"site\" style=\"left : -3px;\">". _t('ContentController.PUBLISHEDSITE', 'Published Site') ."</a>";
-				$stageLink = "<a href=\"$thisPage?stage=Stage\" target=\"site\" style=\"left : -1px;\">". _t('ContentController.DRAFTSITE', 'Draft Site') ."</a>";
-				$message = "<div id=\"SilverStripeNavigatorMessage\" title=\"". _t('ContentControl.NOTEWONTBESHOWN', 'Note: this message will not be shown to your visitors') ."\">". _t('ContentController.ARCHIVEDSITEFROM', 'Archived site from') ."<br>" . $dateObj->Nice() . "</div>";
-
-			} else if(Versioned::current_stage() == 'Stage') {
-				$stageLink = "<a class=\"current\">". _t('ContentController.DRAFTSITE', 'Draft Site') ."</a>";
-				$liveLink = "<a href=\"$thisPage?stage=Live\" target=\"site\" style=\"left : -3px;\">". _t('ContentController.PUBLISHEDSITE', 'Published Site') ."</a>";
-				$message = "<div id=\"SilverStripeNavigatorMessage\" title=\"". _t('ContentControl.NOTEWONTBESHOWN', 'Note: this message will not be shown to your visitors') ."\">".  _t('ContentController.DRAFTSITE', 'Draft Site') ."</div>";
-
-			} else {
-				$liveLink = "<a class=\"current\">". _t('ContentController.PUBLISHEDSITE', 'Published Site') ."</a>";
-				$stageLink = "<a href=\"$thisPage?stage=Stage\" target=\"site\" style=\"left : -1px;\">". _t('ContentController.DRAFTSITE', 'Draft Site') ."</a>";
-				$message = "<div id=\"SilverStripeNavigatorMessage\" title=\"". _t('ContentControl.NOTEWONTBESHOWN', 'Note: this message will not be shown to your visitors') ."\">".  _t('ContentController.PUBLISHEDSITE', 'Published Site') ."</div>";
+			
+			if($this->dataRecord) {
+				$navItemClasses = ClassInfo::subclassesFor('SilverStripeNavigatorItem');
+				array_shift($navItemClasses);
+				
+				// Sort menu items according to priority
+				$menuPriority = array();
+				$i = 0;
+				foreach($navItemClasses as $navItemClass) {
+					if($navItemClass == 'SilverStripeNavigatorItem') continue;
+					
+					$i++;
+					$obj = new $navItemClass();
+					// This funny litle formula ensures that the first item added with the same priority will be left-most.
+					$priority = Object::get_static($navItemClass, 'priority');
+					$menuPriority[$priority * 100 - 1] = $obj;
+				}
+				ksort($menuPriority);
+				
+				foreach($menuPriority as $obj) {
+					
+					$text = $obj->getHTML($this->dataRecord);
+					if($text) $items .= $text;
+					if(!$message) $message = $obj->getMessage($this);
+				}
 			}
 
 			if($member) {
 				$firstname = Convert::raw2xml($member->FirstName);
-				$surname = Convert::raw2xml($member->Surame);
+				$surname = Convert::raw2xml($member->Surname);
 				$logInMessage = _t('ContentController.LOGGEDINAS', 'Logged in as') ." {$firstname} {$surname} - <a href=\"Security/logout\">". _t('ContentController.LOGOUT', 'Log out'). "</a>";
 			} else {
 				$logInMessage = _t('ContentController.NOTLOGGEDIN', 'Not logged in') ." - <a href=\"Security/login\">". _t('ContentController.LOGIN', 'Login') ."</a>";
 			}
 			$viewPageIn = _t('ContentController.VIEWPAGEIN', 'View Page in:');
-			/**
-			 * HGS: cmsLink is now only set if there is a dataRecord. You can't view the page in the
-			 * CMS if there is no dataRecord
-			 */
+			
 			return <<<HTML
 				<div id="SilverStripeNavigator">
 					<div class="holder">
@@ -372,11 +363,7 @@ JS
 
 					<div id="switchView" class="bottomTabs">
 						<div class="blank">$viewPageIn </div>
-						$cmsLink
-						$stageLink
-						<div class="blank" style="width:1em;"> </div>
-						$liveLink
-						$archiveLink
+						$items
 					</div>
 					</div>
 				</div>
