@@ -94,7 +94,7 @@ class SilverStripeNavigatorItem_StageLink extends SilverStripeNavigatorItem {
 		if(Versioned::current_stage() == 'Stage' && !(ClassInfo::exists('SiteTreeFutureState') && SiteTreeFutureState::get_future_datetime())) {
 			return "<a class=\"current\">". _t('ContentController.DRAFTSITE', 'Draft Site') ."</a>";
 		} else {
-			$thisPage = $page->Link();
+			$thisPage = $page->AbsoluteLink();
 			return "<a href=\"$thisPage?stage=Stage\" class=\"newWindow\" target=\"site\" style=\"left : -1px;\">". _t('ContentController.DRAFTSITE', 'Draft Site') ."</a>";
 		}
 	}
@@ -123,7 +123,7 @@ class SilverStripeNavigatorItem_LiveLink extends SilverStripeNavigatorItem {
 		if(Versioned::current_stage() == 'Live') {
 			return "<a class=\"current\">". _t('ContentController.PUBLISHEDSITE', 'Published Site') ."</a>";
 		} else {
-			$thisPage = $page->Link();
+			$thisPage = $page->AbsoluteLink();
 			return "<a href=\"$thisPage?stage=Live\" class=\"newWindow\" target=\"site\" style=\"left : -3px;\">". _t('ContentController.PUBLISHEDSITE', 'Published Site') ."</a>";
 		}
 	}
