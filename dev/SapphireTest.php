@@ -569,9 +569,12 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 			$dbConn = DB::getConn();
 			$dbName = $dbConn->currentDatabase();
 			if($dbName && DB::getConn()->databaseExists($dbName)) {
-				// Todo: it would be good to remove this inappropriate coupling, somehow.
-				// The versioned class keeps a static cache of information about temporary tables.
-				Versioned::on_db_reset();
+				// Some DataObjectsDecorators keep a static cache of information that needs to 
+				// be reset whenever the database is killed
+				foreach(ClassInfo::subclassesFor('DataObjectDecorator') as $class) {
+					$toCall = array($class, 'on_db_reset');
+					if(is_callable($toCall)) call_user_func($toCall);
+				}
 
 				// echo "Deleted temp database " . $dbConn->currentDatabase() . "\n";
 				$dbConn->dropDatabase();
@@ -586,10 +589,13 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 		if(self::using_temp_db()) {
 			$dbadmin = new DatabaseAdmin();
 			$dbadmin->clearAllData();
-
-			// Todo: it would be good to remove this inappropriate coupling, somehow.
-			// The versioned class keeps a static cache of information about temporary tables.
-			Versioned::on_db_reset();
+			
+			// Some DataObjectsDecorators keep a static cache of information that needs to 
+			// be reset whenever the database is cleaned out
+			foreach(ClassInfo::subclassesFor('DataObjectDecorator') as $class) {
+				$toCall = array($class, 'on_db_reset');
+				if(is_callable($toCall)) call_user_func($toCall);
+			}
 		}
 	}
 	
