@@ -1064,18 +1064,24 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 					// Group $potentiallyInherited by ParentID; we'll look at the permission of all those
 					// parents and then see which ones the user has permission on
 					$siteConfigPermission = SiteConfig::current_site_config()->{$siteConfigMethod}($memberID);
+					$groupedByParent = array();
 					foreach($potentiallyInherited as $item) {
-						if (!isset($groupedByParent[$item->ParentID])) $groupedByParent[$item->ParentID] = array(); 
-						if ($item->ParentID) $groupedByParent[$item->ParentID][] = $item->ID;
-						else $result[$item->ID] = $siteConfigPermission;
+						if($item->ParentID) {
+							if(!isset($groupedByParent[$item->ParentID])) $groupedByParent[$item->ParentID] = array();
+							$groupedByParent[$item->ParentID][] = $item->ID;
+						} else {
+							$result[$item->ID] = $siteConfigPermission;
+						}
 					}
 
-					$actuallyInherited = self::batch_permission_check(array_keys($groupedByParent), $memberID, $typeField, $groupJoinTable, $siteConfigMethod);
-					if($actuallyInherited) {
-						$parentIDs = array_keys(array_filter($actuallyInherited));
-						foreach($parentIDs as $parentID) {
-							// Set all the relevant items in $result to true
-							$result = array_fill_keys($groupedByParent[$parentID], true) + $result;
+					if($groupedByParent) {
+						$actuallyInherited = self::batch_permission_check(array_keys($groupedByParent), $memberID, $typeField, $groupJoinTable, $siteConfigMethod);
+						if($actuallyInherited) {
+							$parentIDs = array_keys(array_filter($actuallyInherited));
+							foreach($parentIDs as $parentID) {
+								// Set all the relevant items in $result to true
+								$result = array_fill_keys($groupedByParent[$parentID], true) + $result;
+							}
 						}
 					}
 				}
@@ -1084,8 +1090,16 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 				
 			}
 		}
-		
-		return isset($combinedStageResult) ? $combinedStageResult : array();
+
+		if(isset($combinedStageResult)) {
+			// Cache results
+			foreach($combinedStageResult as $id => $val) {
+				self::$cache_permissions[$typeField][$id] = $val;
+			}
+			return $combinedStageResult;
+		} else {
+			array();
+		}
 	}
 	
 	/**
