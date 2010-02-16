@@ -1813,56 +1813,6 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		return $fields;
 	}
 	
-	function getNavigatorItems() {
-		Requirements::css(SAPPHIRE_DIR . '/css/SilverStripeNavigator.css');
-		Requirements::javascript(THIRDPARTY_DIR . '/behaviour.js');
-		// Requirements::javascript(THIRDPARTY_DIR . '/prototype.js');
-		Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
-		Requirements::javascript(THIRDPARTY_DIR . '/jquery/plugins/livequery/jquery.livequery.js');
-		Requirements::javascript(SAPPHIRE_DIR . '/javascript/SilverStripeNavigator.js');
-	
-		$items = '';
-		$message = '';
-		$link = '';
-	
-		$navItemClasses = ClassInfo::subclassesFor('SilverStripeNavigatorItem');
-		array_shift($navItemClasses);
-		
-		// Sort menu items according to priority
-		$menuPriority = array();
-		$i = 0;
-		foreach($navItemClasses as $navItemClass) {
-			if($navItemClass == 'SilverStripeNavigatorItem') continue;
-			
-			$i++;
-			$obj = new $navItemClass();
-			// This funny litle formula ensures that the first item added with the same priority will be left-most.
-			$priority = Object::get_static($navItemClass, 'priority');
-			$menuPriority[$priority * 100 - 1] = $obj;
-		}
-		ksort($menuPriority);
-		
-		foreach($menuPriority as $obj) {
-			
-			$text = $obj->getHTML($this);
-			if($text) $items .= $text;
-			$newMessage = $obj->getMessage($this);
-			if($newMessage) $message = $newMessage;
-			$newLink = $obj->getLink($this);
-			if($newLink) $link = $newLink;
-		}
-		
-		if($link) {
-			$data = new ArrayData(array('Link' => $link));
-			$items .= $data->renderWith(array('SilverStripeNavigatorLink'));
-		}
-		
-		return array(
-			'items' => $items,
-			'message' => $message
-		);
-	}
-	
 	/**
 	 *
 	 * @param boolean $includerelations a boolean value to indicate if the labels returned include relation fields
