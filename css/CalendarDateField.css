@@ -1,18 +1,6 @@
-#right form .calendardate, .calendardate {
-	position: relative;
-}
-#right form .calendardate input, .calendardate input {
-	width: 8em;
-}
-
 .calendardate .calendar table {
 	width: 200px;
 }
-
-#SiteTreeFilterDate {
-	width: 68px;
-}
-
 .calendardate img {
 	position: relative;
 	top: 2px;
@@ -26,8 +14,6 @@
 	display: none;
 	z-index: 2;
 }
-
-
 
 .calendarpopup.focused {
 	display: block;
