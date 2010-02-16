@@ -14,10 +14,14 @@ class SilverStripeNavigatorItem_CMSLink extends SilverStripeNavigatorItem {
 	static $priority = 10;	
 	
 	function getHTML($controller) {
-		$cmsLink = 'admin/show/' . $controller->ID;
-		$cmsLink = "<a href=\"$cmsLink\" target=\"cms\">". _t('ContentController.CMS', 'CMS') ."</a>";
+		if(is_a(Controller::curr(), 'CMSMain')) {
+			return '<a class="current">CMS</a>';
+		} else {
+			$cmsLink = 'admin/show/' . $controller->ID;
+			$cmsLink = "<a href=\"$cmsLink\" target=\"cms\">". _t('ContentController.CMS', 'CMS') ."</a>";
 	
-		return $cmsLink;
+			return $cmsLink;
+		}
 	}
 }
 
