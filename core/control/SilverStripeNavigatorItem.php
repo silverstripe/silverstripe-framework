@@ -23,6 +23,13 @@ class SilverStripeNavigatorItem_CMSLink extends SilverStripeNavigatorItem {
 			return $cmsLink;
 		}
 	}
+	
+	function getLink($page) {
+		if(is_a(Controller::curr(), 'CMSMain')) {
+			return Controller::curr()->AbsoluteLink() . 'show/' . $page->ID;
+		}
+	}
+
 }
 
 class SilverStripeNavigatorItem_StageLink extends SilverStripeNavigatorItem {
