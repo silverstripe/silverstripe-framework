@@ -354,6 +354,29 @@ class SiteTreeTest extends SapphireTest {
 		SiteTree::enforce_strict_hierarchy(true);
 	}
 	
+	function testUnpublishDoesNotDeleteChildrenWithLooseHierachyOn() {
+		SiteTree::enforce_strict_hierarchy(false);
+		$this->logInWithPermssion('ADMIN');
+		
+		$pageAbout = $this->objFromFixture('Page', 'about');
+		$pageAbout->doPublish();
+		$pageStaff = $this->objFromFixture('Page', 'staff');
+		$pageStaff->doPublish();
+		$pageStaffDuplicate = $this->objFromFixture('Page', 'staffduplicate');
+		$pageStaffDuplicate->doPublish();
+		
+		$parentPage = $this->objFromFixture('Page', 'about');
+		$parentPage->doUnpublish();
+		
+		Versioned::reading_stage('Live');
+		$this->assertFalse(DataObject::get_by_id('Page', $pageAbout->ID));
+		$this->assertTrue(DataObject::get_by_id('Page', $pageStaff->ID) instanceof Page);
+		$this->assertTrue(DataObject::get_by_id('Page', $pageStaffDuplicate->ID) instanceof Page);
+		Versioned::reading_stage('Stage');
+		SiteTree::enforce_strict_hierarchy(true);
+	}
+	
+	
 	function testDeleteFromLiveOperatesRecursivelyStrict() {
 		$this->logInWithPermssion('ADMIN');
 		
