@@ -29,12 +29,11 @@ class MoneyField extends FormField {
 	protected $fieldCurrency = null;
 	
 	function __construct($name, $title = null, $value = "", $form = null) {
-		parent::__construct($name, $title, $value, $form);
-		
 		// naming with underscores to prevent values from actually being saved somewhere
 		$this->fieldAmount = new NumericField("{$name}[Amount]", _t('MoneyField.FIELDLABELAMOUNT', 'Amount'));
 		$this->fieldCurrency = $this->FieldCurrency();
-		$this->setValue($value);
+		
+		parent::__construct($name, $title, $value, $form);
 	}
 	
 	/**
