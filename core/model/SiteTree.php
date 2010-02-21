@@ -1447,9 +1447,9 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 			$virtualPages = DataObject::get('VirtualPage', "\"SiteTree$suffix\".\"ID\" = \"SiteTree$suffix\".\"ID\" AND \"CopyContentFromID\" = {$this->ID}");
 		}
 		if(class_exists('Subsite')) {
-			$redirectorPages = Subsite::get_from_all_subsites('RedirectorPage', "SiteTree$suffix.ID = SiteTree$suffix.ID AND LinkToID = {$this->ID}");
+			$redirectorPages = Subsite::get_from_all_subsites('RedirectorPage', "\"SiteTree$suffix\".\"ID\" = \"SiteTree$suffix\".\"ID\" AND \"LinkToID\" = {$this->ID}");
 		} else {
-			$redirectorPages = DataObject::get('RedirectorPage', "SiteTree$suffix.ID = SiteTree$suffix.ID AND LinkToID = {$this->ID}");
+			$redirectorPages = DataObject::get('RedirectorPage', "\"SiteTree$suffix\".\"ID\" = \"SiteTree$suffix\".\"ID\" AND \"LinkToID\" = {$this->ID}");
 		}
 		
 		if($virtualPages) foreach($virtualPages as $page) {
