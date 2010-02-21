@@ -53,7 +53,7 @@ class SiteTreeActionsTest extends FunctionalTest {
 	function testActionsNoDeletePublishedRecord() {
 		if(class_exists('SiteTreeCMSWorkflow')) return true;
 
-		$this->logInWithPermssion('ADMIN');
+		$this->logInWithPermission('ADMIN');
 		
 		$page = new SiteTreeActionsTest_Page();
 		$page->CanEditType = 'LoggedInUsers';

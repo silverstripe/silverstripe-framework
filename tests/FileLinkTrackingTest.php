@@ -8,7 +8,7 @@ class FileLinkTrackingTest extends SapphireTest {
 	
 	function setUp() {
 		parent::setUp();
-		$this->logInWithPermssion('ADMIN');
+		$this->logInWithPermission('ADMIN');
 		touch(Director::baseFolder() . '/assets/testscript-test-file.pdf');
 	}
 	function tearDown() {

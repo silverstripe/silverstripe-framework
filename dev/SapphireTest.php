@@ -134,7 +134,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 				$i++;
 			}
 			
-			$this->logInWithPermssion("ADMIN");
+			$this->logInWithPermission("ADMIN");
 		}
 		
 		// Set up email
@@ -673,7 +673,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	 * Create a member and group with the given permission code, and log in with it.
 	 * Returns the member ID.
 	 */
-	function logInWithPermssion($permCode = "ADMIN") {
+	function logInWithPermission($permCode = "ADMIN") {
 		if(!isset($this->cache_generatedMembers[$permCode])) {
 			$group = new Group();
 			$group->Title = "$permCode group";

@@ -93,12 +93,12 @@ class ContentControllerTest extends FunctionalTest {
 	public function testViewDraft(){
 		
 		// test when user does not have permission, should get login form
-		$this->logInWithPermssion('EDITOR');
+		$this->logInWithPermission('EDITOR');
 		$this->assertEquals('403', $this->get('/contact/?stage=Stage')->getstatusCode());
 		
 		
 		// test when user does have permission, should show page title and header ok.
-		$this->logInWithPermssion('ADMIN');
+		$this->logInWithPermission('ADMIN');
 		$this->assertEquals('200', $this->get('/contact/?stage=Stage')->getstatusCode());
 		
 		

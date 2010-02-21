@@ -20,7 +20,7 @@ class SiteTreeBacklinksTest extends SapphireTest {
 		
 		// Log in as admin so that we don't run into permission issues.  That's not what we're
 		// testing here.
-		$this->logInWithPermssion('ADMIN');
+		$this->logInWithPermission('ADMIN');
 	}
 
 	function testSavingPageWithLinkAddsBacklink() {

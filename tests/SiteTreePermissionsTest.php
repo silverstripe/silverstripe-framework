@@ -32,7 +32,7 @@ class SiteTreePermissionsTest extends FunctionalTest {
 
 	function testPermissionCheckingWorksOnDeletedPages() {
 		// Set up fixture - a published page deleted from draft
-		$this->logInWithPermssion("ADMIN");
+		$this->logInWithPermission("ADMIN");
 		$page = $this->objFromFixture('Page','restrictedEditOnlySubadminGroup');
 		$pageID = $page->ID;
 		$this->assertTrue($page->doPublish());
@@ -58,7 +58,7 @@ class SiteTreePermissionsTest extends FunctionalTest {
 	
 	function testPermissionCheckingWorksOnUnpublishedPages() {
 		// Set up fixture - an unpublished page
-		$this->logInWithPermssion("ADMIN");
+		$this->logInWithPermission("ADMIN");
 		$page = $this->objFromFixture('Page','restrictedEditOnlySubadminGroup');
 		$pageID = $page->ID;
 		$page->doUnpublish();
@@ -80,7 +80,7 @@ class SiteTreePermissionsTest extends FunctionalTest {
 
 	function testCanEditOnPageDeletedFromStageAndLiveReturnsFalse() {
 		// Find a page that exists and delete it from both stage and published
-		$this->logInWithPermssion("ADMIN");
+		$this->logInWithPermission("ADMIN");
 		$page = $this->objFromFixture('Page','restrictedEditOnlySubadminGroup');
 		$pageID = $page->ID;
 		$page->doUnpublish();
@@ -324,7 +324,7 @@ class SiteTreePermissionsTest extends FunctionalTest {
 		$page = $this->objFromFixture('Page', 'restrictedEditLoggedInUsers');
 		$pageID = $page->ID;
 		
-		$this->logInWithPermssion("ADMIN");
+		$this->logInWithPermission("ADMIN");
 		
 		$page->doPublish();
 		$page->deleteFromStage('Stage');
