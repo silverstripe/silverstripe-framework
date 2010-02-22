@@ -30,7 +30,7 @@ class PermissionRole extends DataObject {
 		
 		$fields->addFieldToTab('Root.Main', new PermissionCheckboxSetField(
 			'Codes',
-			'Permissions',
+			singleton('Permission')->i18n_plural_name(),
 			'PermissionRoleCode',
 			'RoleID'));
 		
