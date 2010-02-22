@@ -1787,14 +1787,14 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		}
 		
 		$viewersOptionsSource = array();
-		if($this->Parent()->ID || $this->CanViewType == 'Inherit') $viewersOptionsSource["Inherit"] = _t('SiteTree.INHERIT', "Inherit from parent page");
+		$viewersOptionsSource["Inherit"] = _t('SiteTree.INHERIT', "Inherit from parent page");
 		$viewersOptionsSource["Anyone"] = _t('SiteTree.ACCESSANYONE', "Anyone");
 		$viewersOptionsSource["LoggedInUsers"] = _t('SiteTree.ACCESSLOGGEDIN', "Logged-in users");
 		$viewersOptionsSource["OnlyTheseUsers"] = _t('SiteTree.ACCESSONLYTHESE', "Only these people (choose from list)");
 		$viewersOptionsField->setSource($viewersOptionsSource);
 		
 		$editorsOptionsSource = array();
-		if($this->Parent()->ID || $this->CanEditType == 'Inherit') $editorsOptionsSource["Inherit"] = _t('SiteTree.INHERIT', "Inherit from parent page");
+		$editorsOptionsSource["Inherit"] = _t('SiteTree.INHERIT', "Inherit from parent page");
 		$editorsOptionsSource["LoggedInUsers"] = _t('SiteTree.EDITANYONE', "Anyone who can log-in to the CMS");
 		$editorsOptionsSource["OnlyTheseUsers"] = _t('SiteTree.EDITONLYTHESE', "Only these people (choose from list)");
 		$editorsOptionsField->setSource($editorsOptionsSource);
