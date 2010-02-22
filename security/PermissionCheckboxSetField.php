@@ -80,7 +80,11 @@ class PermissionCheckboxSetField extends FormField {
 		// Get existing values from the form record (assuming the formfield name is a join field on the record)
 		if(is_object($this->form)) {
 			$record = $this->form->getRecord();
-			if($record && !$records->find('ID', $record->ID)) {
+			if(
+				$record 
+				&& (is_a($record, 'Group') || is_a($record, 'PermissionRole')) 
+				&& !$records->find('ID', $record->ID)
+			) {
 				$records->push($record);
 			}
 		}
