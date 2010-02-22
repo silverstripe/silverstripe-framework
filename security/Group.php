@@ -35,20 +35,6 @@ class Group extends DataObject {
 		"Hierarchy",
 	);
 	
-	function getAllParents() {
-		$doSet = new DataObjectSet();
-
-		$parentID = $this->ParentID;
-		
-		while($parentID) {
-			$parent = DataObject::get_by_id('Group', $parentID);
-			$doSet->push($parent);
-			$parentID = $parent->ParentID;
-		}
-		
-		return $doSet;
-	}
-	
 	/**
 	 * Caution: Only call on instances, not through a singleton.
 	 *
@@ -110,7 +96,7 @@ class Group extends DataObject {
 			$fields->removeFieldFromTab('Root', 'Permissions');
 			$fields->removeFieldFromTab('Root', 'IP Addresses');
 		} else {
-			// $parentGroups = $this->getAllParents();
+			// $parentGroups = $this->getAncestors();
 			// if ($parentGroups) {
 			// 	foreach ($parentGroups as $parent) {
 			// 		if ($parent->Permissions()->Count()) {
@@ -135,7 +121,7 @@ class Group extends DataObject {
 			$roleData = Permission::check('ADMIN') ? DataObject::get('PermissionRole') : DataObject::get('PermissionRole', 'OnlyAdminCanApply = 0');
 			$fields->addFieldToTab('Root.' . _t('SecurityAdmin.ROLES', 'Roles'), new CheckboxSetField('Roles', 'Roles', $roleData)); 
 			
-			// $parentGroups = $this->getAllParents();
+			// $parentGroups = $this->getAncestors();
 			// if ($parentGroups) {
 			// 	foreach ($parentGroups as $parent) {
 			// 		if ($parent->Roles()->Count()) {
