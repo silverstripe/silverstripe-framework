@@ -1164,7 +1164,9 @@ class Member extends DataObject {
 	
 	/**
 	 * Get the HtmlEditorConfig for this user to be used in the CMS.
-	 * This is set by the group.
+	 * This is set by the group. If multiple configurations are set,
+	 * the one with the highest priority wins.
+	 * 
 	 * @return string
 	 */
 	function getHtmlEditorConfigForCMS() {
@@ -1173,9 +1175,11 @@ class Member extends DataObject {
 		
 		foreach($this->Groups() as $group) {
 			$configName = $group->HtmlEditorConfig;
-			$config = HtmlEditorConfig::get($group->HtmlEditorConfig);
-			if($config && $config->getOption('priority') > $currentPriority) {
-				$currentName = $configName;
+			if($configName) {
+				$config = HtmlEditorConfig::get($group->HtmlEditorConfig);
+				if($config && $config->getOption('priority') > $currentPriority) {
+					$currentName = $configName;
+				}
 			}
 		}
 		
