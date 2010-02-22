@@ -160,6 +160,8 @@ class TreeDropdownField extends FormField {
 		
 		if($forceValues = $this->value) {
 			if(($values = preg_split('/,\s*/', $forceValues)) && count($values)) foreach($values as $value) {
+				if(!is_numeric($value)) continue;
+				
 				$obj->markToExpose($this->objectForKey($value));
 			}
 		}

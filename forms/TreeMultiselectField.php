@@ -39,19 +39,21 @@ class TreeMultiselectField extends TreeDropdownField {
 		// needed for errorMessage()
 		Requirements::javascript(SAPPHIRE_DIR . '/javascript/LeftAndMain.js');
 		Requirements::javascript(SAPPHIRE_DIR . "/javascript/TreeSelectorField.js");
-		
+
 		// Any field values have priority over the relation getters
 		if($this->value) {
 			$items = new DataObjectSet();
 			$ids = explode(',', $this->value);
 			foreach($ids as $id) {
+				if(!is_numeric($id)) continue;
+				
 				$item = DataObject::get_by_id($this->sourceObject, $id);
 				if($item) $items->push($item);
 			}
 		} else {
 			$items = $this->getItems();
 		}
-		
+
 		if($items && $items->Count()) {
 			foreach($items as $item) {
 				$titleArray[] =$item->Title;
