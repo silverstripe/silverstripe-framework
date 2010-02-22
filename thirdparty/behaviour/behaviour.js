@@ -364,6 +364,16 @@ document.getElementsBySelector = function(selector, parentNode) {
         return new Array();
        }
 
+		// currentContext limitation: for "body.class #Something" selectors.
+		var foundInContext = false;
+		for (var h = 0; h < currentContext.length; h++) {
+			if(currentContext[i] == document || hasAncestor(element, currentContext[i])) {
+				foundInContext = true;
+			}
+		}
+		if(!foundInContext) return new Array();
+   
+
 
       // Set currentContext to contain just this element
       currentContext = new Array(element);
