@@ -42,6 +42,8 @@ class SiteConfig extends DataObject {
 	 * @return Fieldset
 	 */
 	function getFormFields() {
+		Requirements::javascript(CMS_DIR . "/javascript/SitetreeAccess.js");
+
 		$fields = new FieldSet(
 			new TabSet("Root",
 				new Tab('Main',
