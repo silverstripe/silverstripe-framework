@@ -38,14 +38,16 @@ class MemberTest extends FunctionalTest {
 			$member->PasswordEncryption, 
 			'sha1_v2.4'
 		);
-		$this->assertTrue($member->checkPassword("mynewpassword"));
+		$result = $member->checkPassword('mynewpassword');
+		$this->assertTrue($result->valid());
 	}
 	
 	function testSetPassword() {
 		$member = $this->objFromFixture('Member', 'test');
 		$member->Password = "test1";
 		$member->write();
-		$this->assertTrue($member->checkPassword("test1"));
+		$result = $member->checkPassword('test1');
+		$this->assertTrue($result->valid());
 	}
 	
 	/**

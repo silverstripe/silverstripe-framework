@@ -154,7 +154,7 @@ class SecurityTest extends FunctionalTest {
 			/* THE FIRST 4 TIMES, THE MEMBER SHOULDN'T BE LOCKED OUT */
 			if($i < 5) {
 				$this->assertNull($member->LockedOutUntil);
-				$this->assertTrue(false !== stripos($this->loginErrorMessage(), _t('Member.ERRORWRONGCRED')));
+				$this->assertContains($this->loginErrorMessage(), _t('Member.ERRORWRONGCRED'));
 			}
 			
 			/* AFTER THAT THE USER IS LOCKED OUT FOR 15 MINUTES */
@@ -165,7 +165,8 @@ class SecurityTest extends FunctionalTest {
 			}
 			
 			if($i > 5) {
-				$this->assertTrue(false !== stripos($this->loginErrorMessage(), _t('Member.ERRORLOCKEDOUT')));
+				$this->assertContains(_t('Member.ERRORLOCKEDOUT'), $this->loginErrorMessage());
+				// $this->assertTrue(false !== stripos($this->loginErrorMessage(), _t('Member.ERRORLOCKEDOUT')));
 			}
 		}
 		

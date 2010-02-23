@@ -22,7 +22,8 @@ class MemberAuthenticatorTest extends SapphireTest {
 		
 		$member = DataObject::get_by_id('Member', $member->ID);
 		$this->assertEquals($member->PasswordEncryption, "sha1_v2.4");
-		$this->assertTrue($member->checkPassword('mypassword'));
+		$result = $member->checkPassword('mypassword');
+		$this->assertTrue($result->valid());
 	}
 	
 	function testNoLegacyPasswordHashMigrationOnIncompatibleAlgorithm() {
@@ -42,6 +43,7 @@ class MemberAuthenticatorTest extends SapphireTest {
 		
 		$member = DataObject::get_by_id('Member', $member->ID);
 		$this->assertEquals($member->PasswordEncryption, "crc32");
-		$this->assertTrue($member->checkPassword('mypassword'));
+		$result = $member->checkPassword('mypassword');
+		$this->assertTrue($result->valid());
 	}
 }
