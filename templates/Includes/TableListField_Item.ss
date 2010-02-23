@@ -6,7 +6,7 @@
 						<% control Actions %>
 							<td width="16">
 								<% if IsAllowed %>
-								<a class="$Class" href="$Link">
+								<a class="$Class" href="$Link"<% if TitleText %> title="$TitleText"<% end_if %>>
 									<% if Icon %><img src="$Icon" alt="$Label" /><% else %>$Label<% end_if %>
 								</a>
 								<% else %>
