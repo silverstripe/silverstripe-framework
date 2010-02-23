@@ -6,6 +6,13 @@ html>body div.TreeDropdownField {
 	position:relative;
 }
 
+div.TreeDropdownField {
+	width: 27.7em;
+	background: #fff;
+	font-size: 12px;
+	height: 21px;
+}
+
 div.TreeDropdownField span.items {
 	height: 14px;
 	border: 1px #7f9db9 solid;
@@ -39,6 +46,10 @@ div.TreeDropdownField div.tree_holder ul.tree a {
 	font-size: 12px;
 }
 
+div.TreeDropdownField div.tree_holder ul.tree {
+	margin-top: 0;
+}
+
 html>body div.TreeDropdownField div.tree_holder {
 	top: 20px;
 	left: 0px;
@@ -59,6 +70,7 @@ div.TreeDropdownField div.tree_holder iframe {
 	filter:mask();
 	width:31em;/*must have for any big value*/
 	height:200px/*must have for any big value*/;
+	border: none;
 }
 
 div.TreeDropdownField a.editLink {
