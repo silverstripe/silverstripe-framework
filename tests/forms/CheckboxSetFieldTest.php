@@ -11,6 +11,42 @@ class CheckboxSetFieldTest extends SapphireTest {
 		'CheckboxSetFieldTest_Tag',
 	);
 	
+	function testSetDefaultItems() {
+		$f = new CheckboxSetField(
+			'Test', 
+			false, 
+			array(0 => 'Zero', 1 => 'One', 2 => 'Two', 3 => 'Three')
+		);
+		
+		$f->setValue(array(0,1));
+		$f->setDefaultItems(array(2));
+		$p = new CSSContentParser($f->Field());
+		$item0 = $p->getBySelector('#Test_0');
+		$item1 = $p->getBySelector('#Test_1');
+		$item2 = $p->getBySelector('#Test_2');
+		$item3 = $p->getBySelector('#Test_3');
+		$this->assertEquals(
+			(string)$item0[0]['checked'],
+			'checked',
+			'Selected through value'
+		);
+		$this->assertEquals(
+			(string)$item1[0]['checked'],
+			'checked',
+			'Selected through value'
+		);
+		$this->assertEquals(
+			(string)$item2[0]['checked'],
+			'checked',
+			'Selected through default items'
+		);
+		$this->assertEquals(
+			(string)$item3[0]['checked'],
+			'',
+			'Not selected by either value or default items'
+		);
+	}
+	
 	function testAddExtraClass() {
 		/* CheckboxSetField has an extra class name and is in the HTML the field returns */
 		$cboxSetField = new CheckboxSetField('FeelingOk', 'Are you feeling ok?', array(0 => 'No', 1 => 'Yes'), '', null, '(Select one)');
@@ -36,7 +72,7 @@ class CheckboxSetFieldTest extends SapphireTest {
 			'Nothing should go into manymany join table for a saved field without any ticked boxes'
 		);	
 	}
-
+	
 	function testSaveWithArrayValueSet() {
 		$article = $this->objFromFixture('CheckboxSetFieldTest_Article', 'articlewithouttags');
 		$articleWithTags = $this->objFromFixture('CheckboxSetFieldTest_Article', 'articlewithtags');
@@ -76,7 +112,7 @@ class CheckboxSetFieldTest extends SapphireTest {
 		$articleWithTags = $this->objFromFixture('CheckboxSetFieldTest_Article', 'articlewithtags');
 		$tag1 = $this->objFromFixture('CheckboxSetFieldTest_Tag', 'tag1');
 		$tag2 = $this->objFromFixture('CheckboxSetFieldTest_Tag', 'tag2');
-
+	
 		$field = new CheckboxSetField("Tags", "Test field", DataObject::get("CheckboxSetFieldTest_Tag")->map());
 		$form = new Form(
 			new Controller(), 

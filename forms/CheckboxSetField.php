@@ -21,6 +21,11 @@ class CheckboxSetField extends OptionsetField {
 	protected $disabled = false;
 	
 	/**
+	 * @var Array
+	 */
+	protected $defaultItems = array();
+	
+	/**
 	 * @todo Explain different source data that can be used with this field,
 	 * e.g. SQLMap, DataObjectSet or an array.
 	 * 
@@ -31,7 +36,7 @@ class CheckboxSetField extends OptionsetField {
 
 		$source = $this->source;
 		$values = $this->value;
-		
+
 		// Get values from the join, if available
 		if(is_object($this->form)) {
 			$record = $this->form->getRecord();
@@ -101,10 +106,10 @@ class CheckboxSetField extends OptionsetField {
 			$checked = '';
 			
 			if(isset($items)) {
-				$checked = (in_array($key, $items)) ? ' checked="checked"' : '';
+				$checked = (in_array($key, $items) || in_array($key, $this->defaultItems)) ? ' checked="checked"' : '';
 			}
-			
-			$disabled = ($this->disabled) ? $disabled = ' disabled="disabled"' : '';
+
+			$disabled = ($this->disabled || in_array($key, $this->disabledItems)) ? $disabled = ' disabled="disabled"' : '';
 			$options .= "<li class=\"$extraClass\"><input id=\"$itemID\" name=\"$this->name[$key]\" type=\"checkbox\" value=\"$key\"$checked $disabled class=\"checkbox\" /> <label for=\"$itemID\">$value</label></li>\n"; 
 		}
 		
@@ -113,6 +118,24 @@ class CheckboxSetField extends OptionsetField {
 	
 	function setDisabled($val) {
 		$this->disabled = $val;
+	}
+	
+	/**
+	 * Default selections, regardless of the {@link setValue()} settings.
+	 * Note: Items marked as disabled through {@link setDisabledItems()} can still be
+	 * selected by default through this method.
+	 * 
+	 * @param Array $items Collection of array keys, as defined in the $source array
+	 */
+	function setDefaultItems($items) {
+		$this->defaultItems = $items;
+	}
+	
+	/**
+	 * @return Array
+	 */
+	function getDefaultItems() {
+		return $this->defaultItems;
 	}
 	
 	/**

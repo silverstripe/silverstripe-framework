@@ -8,6 +8,11 @@
 class OptionsetField extends DropdownField {
 	
 	/**
+	 * @var Array
+	 */
+	protected $disabledItems = array();
+	
+	/**
 	 * Creates a new optionset field.
 	 * @param name The field name
 	 * @param title The field title
@@ -62,6 +67,23 @@ class OptionsetField extends DropdownField {
 		$field->setForm($this->form);
 		$field->setReadonly(true);
 		return $field;
+	}
+	
+	/**
+	 * Mark certain elements as disabled,
+	 * regardless of the {@link setDisabled()} settings.
+	 * 
+	 * @param array $items Collection of array keys, as defined in the $source array
+	 */
+	function setDisabledItems($items) {
+		$this->disabledItems = $items;
+	}
+	
+	/**
+	 * @return Array
+	 */
+	function getDisabledItems() {
+		return $this->disabledItems;
 	}
 	
 	function ExtraOptions() {
