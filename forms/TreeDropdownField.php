@@ -204,6 +204,8 @@ class TreeDropdownField extends FormField {
 		if( isset($_REQUEST['forceValue']) || $this->value ) {
 			$forceValue = ( isset($_REQUEST['forceValue']) ? $_REQUEST['forceValue'] : $this->value);
 			if(($values = preg_split('/,\s*/', $forceValue)) && count($values)) foreach($values as $value) {
+				if(!is_numeric($value)) continue;
+				
 				$obj->markToExpose($this->objectForKey($value));
 			}
 		}
