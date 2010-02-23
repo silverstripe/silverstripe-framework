@@ -78,7 +78,6 @@ class Group extends DataObject {
 						) . 
 						"</p>"
 					),
-					new DropdownField('HtmlEditorConfig', 'HTML Editor Configuration', HtmlEditorConfig::get_available_configs_map()),
 					new PermissionCheckboxSetField(
 						'Permissions',
 						singleton('Permission')->i18n_plural_name(),
@@ -103,7 +102,19 @@ class Group extends DataObject {
 			)
 		);
 		
-		
+		// Only add a dropdown for HTML editor configurations if more than one is available.
+		// Otherwise Member->getHtmlEditorConfigForCMS() will default to the 'cms' configuration.
+		$editorConfigMap = HtmlEditorConfig::get_available_configs_map();
+		if(count($editorConfigMap) > 1) {
+			$fields->addFieldToTab('Root.Permissions',
+				new DropdownField(
+					'HtmlEditorConfig', 
+					'HTML Editor Configuration', 
+					$editorConfigMap
+				),
+				'Permissions'
+			);
+		}
 
 		if(!Permission::check('EDIT_PERMISSIONS')) {
 			$fields->removeFieldFromTab('Root', 'Permissions');
