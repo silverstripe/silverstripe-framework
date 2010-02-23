@@ -95,10 +95,11 @@ class Group extends DataObject {
 					new DropdownField('HtmlEditorConfig', 'HTML Editor Configuration', HtmlEditorConfig::get_available_configs_map()),
 					new PermissionCheckboxSetField(
 						'Permissions',
-						'Permissions',
+						singleton('Permission')->i18n_plural_name(),
 						'Permission',
 						'GroupID',
-						$this)
+						$this
+					)
 				),
 
 				new Tab(_t('Security.IPADDRESSES', 'IP Addresses'),
