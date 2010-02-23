@@ -58,4 +58,20 @@ class MemberCsvBulkLoaderTest extends SapphireTest {
 		$this->assertEquals($created[0]->Groups()->column('ID'), array($existinggroup->ID));
 		$this->assertEquals($created[1]->Groups()->column('ID'), array($existinggroup->ID, $newgroup->ID));
 	}
+	
+	function testCleartextPasswordsAreHashedWithDefaultAlgo() {
+		$loader = new MemberCsvBulkLoader();
+		
+		$results = $loader->load('sapphire/tests/security/MemberCsvBulkLoaderTest_cleartextpws.csv');
+		
+		$member = $results->Created()->First();
+		$memberID = $member->ID;
+		DataObject::flush_and_destroy_cache();
+		$member = DataObject::get_by_id('Member', $memberID);
+
+		// TODO Direct getter doesn't work, wtf!
+		$this->assertEquals(Security::get_password_encryption_algorithm(), $member->getField('PasswordEncryption'));
+		$result = $member->checkPassword('mypassword');
+		$this->assertTrue($result->valid());
+	}
 }
