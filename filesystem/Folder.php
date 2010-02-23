@@ -12,6 +12,9 @@ class Folder extends File {
 	 * @param $folderPath string Absolute or relative path to the file
 	 */
 	static function findOrMake($folderPath) {
+		// Create assets directory, if it is missing
+		if(!file_exists(ASSETS_PATH)) mkdir(ASSETS_PATH,Filesystem::$folder_create_mask);
+
 		$folderPath = trim(Director::makeRelative($folderPath));
 		// replace leading and trailing slashes
 		$folderPath = preg_replace('/^\/?(.*)\/?$/', '$1', $folderPath);
