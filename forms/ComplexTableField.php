@@ -985,7 +985,7 @@ class ComplexTableField_Item extends TableListField_Item {
 	 */
 	protected $start;
 
-	function __construct(DataObject $item, ComplexTableField $parent, $start) {
+	function __construct(DataObject $item, ComplexTableField $parent, $start = 0) {
 		$this->start = $start;
 
 		parent::__construct($item, $parent);
