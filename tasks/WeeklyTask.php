@@ -12,4 +12,3 @@
 class WeeklyTask extends ScheduledTask {
 
 }
-?>

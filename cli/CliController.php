@@ -10,26 +10,27 @@
  * @subpackage cron
  */
 abstract class CliController extends Controller {
-    function init() {
+
+	function init() {
 		parent::init();
 		// Unless called from the command line, all CliControllers need ADMIN privileges
-		if(!Director::is_cli() && !Permission::check("ADMIN")) return Security::permissionFailure();
-    }
-  
-    function index() {
-        foreach( ClassInfo::subclassesFor( $this->class ) as $subclass ) {
-        	echo $subclass . "\n";
-        
-            $task = new $subclass();
+		if(!Director::is_cli() && !Permission::check("ADMIN")) {
+			return Security::permissionFailure();
+		}
+	}
+
+	function index() {
+		foreach(ClassInfo::subclassesFor($this->class) as $subclass) {
+			echo $subclass . "\n";
+			$task = new $subclass();
 			$task->init();
-            $task->process();
-        }
-    }
-    
+			$task->process();
+		}
+	}
+
 	/**
 	 * Overload this method to contain the task logic.
 	 */
-    function process() {}
-}
+	function process() {}
 
-?>
+}
