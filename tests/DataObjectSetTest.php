@@ -13,6 +13,7 @@ class DataObjectSetTest extends SapphireTest {
 		'DataObjectTest_Team',
 		'DataObjectTest_SubTeam',
 		'DataObjectTest_Player',
+		'DataObjectSetTest_TeamComment'
 	);
 	
 	function testIterator() {
@@ -191,5 +192,46 @@ class DataObjectSetTest extends SapphireTest {
 		//$this->assertSame($expectedMap, $map2, 'The map we generated is exactly the same as the asserted one');
 	}
 	
+	function testRemoveDuplicates() {
+		$pageComments = DataObject::get('PageComment');
+		$teamComments = DataObject::get('DataObjectSetTest_TeamComment');
+
+		/* Test default functionality (remove by ID). We'd expect to loose all our
+		 * team comments as they have the same IDs as the first three page comments */
+
+		$allComments = new DataObjectSet();
+		$allComments->merge($pageComments);
+		$allComments->merge($teamComments);
+
+		$allComments->removeDuplicates();
+
+		$this->assertEquals($allComments->Count(), 8, 'Standard functionality is to remove duplicate IDs');
+
+		/* Now test removing duplicates based on a common field. In this case we shall
+		 * use 'Name', so we can get all the unique commentators */
+
+
+		$allComments = new DataObjectSet();
+		$allComments->merge($pageComments);
+		$allComments->merge($teamComments);
+
+		$allComments->removeDuplicates('Name');
+
+		$this->assertEquals($allComments->Count(), 7, 'There are 7 uniquely named commentators');
+	}
+}
+
+/**
+ * @package sapphire
+ * @subpackage tests
+ */
+class DataObjectSetTest_TeamComment extends DataObject implements TestOnly {
+	static $db = array(
+		'Name' => 'Varchar',
+		'Comment' => 'Text',
+		);
+	static $has_one = array(
+		'Team' => 'DataObjectTest_Team',
+	);
 }
 ?>

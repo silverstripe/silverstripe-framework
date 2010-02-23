@@ -826,16 +826,17 @@ class DataObjectSet extends ViewableData implements IteratorAggregate, Countable
 	}
 
 	/**
-	* Remove duplicates from this set based on the dataobjects ID.
-	* Assumes all items contained in the set all have IDs.
+	* Remove duplicates from this set based on the dataobjects field.
+	* Assumes all items contained in the set all have that field.
+	* @param string $field the field to check for duplicates
 	*/
-	public function removeDuplicates() {
+	public function removeDuplicates($field = 'ID') {
 		$exists = array();
 		foreach($this->items as $key => $item) {
-			if(isset($exists[$item->ID])) {
+			if(isset($exists[$item->$field])) {
 				unset($this->items[$key]);
 			}
-			$exists[$item->ID] = true;
+			$exists[$item->$field] = true;
 		}	
 	}
 	
