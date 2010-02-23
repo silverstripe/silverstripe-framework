@@ -524,6 +524,22 @@ $lang['en_US']['Permission']['SINGULARNAME'] = array(
 	50,
 	'Singular name of the object, used in dropdowns and to generally identify a single object in the interface'
 );
+$lang['en_US']['PermissionCheckboxSetField']['AssignedTo'] = 'assigned to "%s"';
+$lang['en_US']['PermissionCheckboxSetField']['FromGroup'] = array(
+	'inherited from group "%s"',
+	PR_MEDIUM,
+	'A permission inherited from a certain group'
+);
+$lang['en_US']['PermissionCheckboxSetField']['FromRole'] = array(
+	'inherited from role "%s"',
+	PR_MEDIUM,
+	'A permission inherited from a certain permission role'
+);
+$lang['en_US']['PermissionCheckboxSetField']['FromRoleOnGroup'] = array(
+	'inherited from role "%s" on group "%s"',
+	PR_MEDIUM,
+	'A permission inherited from a role on a certain group'
+);
 $lang['en_US']['PermissionRole']['PLURALNAME'] = array(
 	'Permission Rols',
 	50,
