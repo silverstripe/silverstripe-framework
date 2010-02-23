@@ -60,7 +60,14 @@ TreeDropdownField.prototype = {
 	// Build a URL from the field's base URL and the given sub URL
 	buildURL: function(subURL) {
 		var baseURL = jQuery(this).attr('href');
-		if (!baseURL) baseURL = this.ownerForm().action + '/field/' + this.getName() + '/';
+		if (!baseURL) {
+			// Occurs if treedropdown has no form e.g. treefields in widget areas.
+			baseURL = this.ownerForm().action + '/field/' + this.getName() + '/';
+			var baseTags = document.getElementsByTagName('base');
+			var base = (baseTags) ? baseTags[0].href : '';
+			if (base == baseURL.substring(0, base.length))
+				baseURL = baseURL.substring(base.length);
+		}
 		var subHasQuerystring = subURL.match(/\?/);
 		
 		if(baseURL.match(/^(.*)\?(.*)$/)) {
