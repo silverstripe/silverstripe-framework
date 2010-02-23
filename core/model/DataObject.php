@@ -3083,9 +3083,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			if($ancestorClass == 'ViewableData') break;
 			$types = array(
 				'db'        => (array) Object::uninherited_static($ancestorClass, 'db'),
-				'has_one'   => (array) Object::uninherited_static($ancestorClass, 'has_one'),
-				'has_many'  => (array) Object::uninherited_static($ancestorClass, 'has_many'),
-				'many_many' => (array) Object::uninherited_static($ancestorClass, 'many_many')
 			);
 			if($includerelations){
 				$types['has_one'] = (array)singleton($ancestorClass)->uninherited('has_one', true);
