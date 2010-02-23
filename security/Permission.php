@@ -476,7 +476,8 @@ class Permission extends DataObject {
 		$classes = ClassInfo::implementorsOf('PermissionProvider');
 
 		$allCodes = array();
-		$allCodes['Roles and access permissions']['ADMIN'] = array(
+		$adminCategory = _t('Permission.AdminGroup', 'Administrator');
+		$allCodes[$adminCategory]['ADMIN'] = array(
 			'name' => _t('Permission.FULLADMINRIGHTS', 'Full administrative rights'),
 			'help' => null,
 			'sort' => 100000
