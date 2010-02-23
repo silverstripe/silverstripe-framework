@@ -357,6 +357,9 @@ LinkForm.prototype = {
 		
 		var linkText = ed.selection.getContent({format : 'html'}).replace(/<\/?a[^>]*>/ig,'');
 		
+		// Get rid of TinyMCE's temporary URLs
+		if(href.match(/^javascript:\s*mctmp/)) href = '';
+		
 		if(href.match(/^mailto:(.*)$/)) {
 			return {
 				LinkType: 'email',
