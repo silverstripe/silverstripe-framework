@@ -108,16 +108,6 @@ class Group extends DataObject {
 		if(!Permission::check('EDIT_PERMISSIONS')) {
 			$fields->removeFieldFromTab('Root', 'Permissions');
 			$fields->removeFieldFromTab('Root', 'IP Addresses');
-		} else {
-			// $parentGroups = $this->getAncestors();
-			// if ($parentGroups) {
-			// 	foreach ($parentGroups as $parent) {
-			// 		if ($parent->Permissions()->Count()) {
-			// 			$permissionsTab->push(new HeaderField('PermissionHeader-'.$parent->ID, 'Permissions inherited from '.$parent->Title));
-			// 			$permissionsTab->push(new LiteralField('PermissionList-'.$parent->ID, join(', ', $parent->Permissions()->column('Code'))));
-			// 		}
-			// 	}
-			// }
 		}
 
 		if(Permission::check('APPLY_ROLES') && DataObject::get('PermissionRole')) { 
@@ -131,19 +121,23 @@ class Group extends DataObject {
 					 "</p>" 
 				) 
 			);
-			$roleData = Permission::check('ADMIN') ? DataObject::get('PermissionRole') : DataObject::get('PermissionRole', 'OnlyAdminCanApply = 0');
-			$fields->addFieldToTab('Root.' . _t('SecurityAdmin.ROLES', 'Roles'), new CheckboxSetField('Roles', 'Roles', $roleData)); 
 			
-			// $parentGroups = $this->getAncestors();
-			// if ($parentGroups) {
-			// 	foreach ($parentGroups as $parent) {
-			// 		if ($parent->Roles()->Count()) {
-			// 			$fields->addFieldToTab('Root.' . _t('SecurityAdmin.ROLES', 'Roles'), new HeaderField('RolesHeader-'.$parent->ID, 'Roles inherited from '.$parent->Title));
-			// 			$fields->addFieldToTab('Root.' . _t('SecurityAdmin.ROLES', 'Roles'), new LiteralField('RolesList-'.$parent->ID, join(', ', $parent->Roles()->column('Title'))));
-			// 		}
-			// 	}
-			// }
-			
+			// Add roles (and disable all checkboxes for inherited roles)
+			$allRoles = Permission::check('ADMIN') ? DataObject::get('PermissionRole') : DataObject::get('PermissionRole', 'OnlyAdminCanApply = 0');
+			$groupRoles = $this->Roles();
+			$inheritedRoles = new DataObjectSet();
+			$ancestors = $this->getAncestors();
+			foreach($ancestors as $ancestor) {
+				$ancestorRoles = $ancestor->Roles();
+				if($ancestorRoles) $inheritedRoles->merge($ancestorRoles);
+			}
+			$fields->findOrMakeTab('Root.Roles', 'Root.' . _t('SecurityAdmin.ROLES', 'Roles'));
+			$fields->addFieldToTab(
+				'Root.Roles',
+				$rolesField = new CheckboxSetField('Roles', 'Roles', $allRoles)
+			);
+			$rolesField->setDefaultItems($inheritedRoles->column('ID'));
+			$rolesField->setDisabledItems($inheritedRoles->column('ID'));
 		} 
 		
 		$memberList->setController($this);
