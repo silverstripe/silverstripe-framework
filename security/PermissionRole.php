@@ -32,7 +32,8 @@ class PermissionRole extends DataObject {
 			'Codes',
 			singleton('Permission')->i18n_plural_name(),
 			'PermissionRoleCode',
-			'RoleID'));
+			'RoleID'
+		));
 		
 		return $fields;
 	}

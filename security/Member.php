@@ -1030,6 +1030,22 @@ class Member extends DataObject {
 			$groupsField = new TreeMultiselectField('Groups', false, 'Group');
 			$fields->findOrMakeTab('Root.Groups', singleton('Group')->i18n_plural_name());
 			$fields->addFieldToTab('Root.Groups', $groupsField);
+			
+			// Add permission field (readonly to avoid complicated group assignment logic).
+			// This should only be available for existing records, as new records start
+			// with no permissions until they have a group assignment anyway.
+			if($this->ID) {
+				$permissionsField = new PermissionCheckboxSetField_Readonly(
+					'Permissions',
+					singleton('Permission')->i18n_plural_name(),
+					'Permission',
+					'GroupID',
+					// we don't want parent relationships, they're automatically resolved in the field
+					$this->getManyManyComponents('Groups')
+				);
+				$fields->findOrMakeTab('Root.Permissions', singleton('Permission')->i18n_plural_name());
+				$fields->addFieldToTab('Root.Permissions', $permissionsField);
+			}
 		}
 
 		$this->extend('updateCMSFields', $fields);
