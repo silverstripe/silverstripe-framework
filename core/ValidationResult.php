@@ -34,9 +34,6 @@ class ValidationResult extends Object {
 	 * @param $code An optional error code string, that can be accessed with {@link $this->codeList()}.
 	 */
 	function error($message, $code = null) {
-		$message = trim($message);
-		if(substr($message,-1) == '.') $message = substr($message,0,-1);
-		
 		$this->isValid = false;
 		
 		if($code) {
