@@ -1021,9 +1021,16 @@ class Member extends DataObject {
 		$mainFields->removeByName('LastVisited');
 	
 		$fields->removeByName('Subscriptions');
+
 		// Groups relation will get us into logical conflicts because
 		// Members are displayed within  group edit form in SecurityAdmin
 		$fields->removeByName('Groups');
+		
+		if(Permission::check('EDIT_PERMISSIONS')) {
+			$groupsField = new TreeMultiselectField('Groups', false, 'Group');
+			$fields->findOrMakeTab('Root.Groups', singleton('Group')->i18n_plural_name());
+			$fields->addFieldToTab('Root.Groups', $groupsField);
+		}
 
 		$this->extend('updateCMSFields', $fields);
 		
