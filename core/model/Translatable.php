@@ -1152,6 +1152,14 @@ class Translatable extends DataObjectDecorator implements PermissionProvider {
 		
 		$newTranslation->ID = 0;
 		$newTranslation->Locale = $locale;
+		
+		$originalPage = $this->getTranslation(self::default_locale());
+		if ($originalPage) {
+			$urlSegment = $originalPage->URLSegment;
+		} else {
+			$urlSegment = $newTranslation->URLSegment;
+		}
+		$newTranslation->URLSegment = $urlSegment . '-' . i18n::convert_rfc1766($locale);
 		// hacky way to set an existing translation group in onAfterWrite()
 		$translationGroupID = $this->getTranslationGroup();
 		$newTranslation->_TranslationGroupID = $translationGroupID ? $translationGroupID : $this->owner->ID;
@@ -1452,6 +1460,39 @@ class Translatable extends DataObjectDecorator implements PermissionProvider {
 	 */
 	function cacheKeyComponent() {
 		return 'locale-'.self::get_current_locale();
+	}
+	
+	/**
+	 * Extends the SiteTree::validURLSegment() method, to do checks appropriate
+	 * to Translatable
+	 * 
+	 * @return bool
+     */
+	public function augmentValidURLSegment() {
+		if (self::locale_filter_enabled()) {
+			self::disable_locale_filter();
+			$reEnableFilter = true;
+		}
+		$IDFilter     = ($this->owner->ID) ? "AND \"SiteTree\".\"ID\" <> {$this->owner->ID}" :  null;
+		$parentFilter = null;
+
+		if(SiteTree::nested_urls()) {
+			if($this->owner->ParentID) {
+				$parentFilter = " AND \"SiteTree\".\"ParentID\" = {$this->owner->ParentID}";
+			} else {
+				$parentFilter = ' AND "SiteTree"."ParentID" = 0';
+			}
+		}
+
+		$existingPage = DataObject::get_one(
+			'SiteTree',
+			"\"URLSegment\" = '{$this->owner->URLSegment}' $IDFilter $parentFilter",
+			false // disable get_one cache, as this otherwise may pick up results from when locale_filter was on
+		);
+		if ($reEnableFilter) {
+			self::enable_locale_filter();
+		}
+		return !$existingPage;
 	}
 		
 }
