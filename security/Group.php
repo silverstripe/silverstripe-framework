@@ -325,6 +325,14 @@ class Group extends DataObject {
 		else return htmlspecialchars($this->Title, ENT_QUOTES);
 	}
 	
+	function CMSTreeClasses($controller) {
+		$classes = $this->class;
+
+		if(!$this->canEdit()) $classes .= " disabled";
+
+		return $classes;
+	}
+	
 	/**
 	 * Overloaded to ensure the code is always descent.
 	 */
