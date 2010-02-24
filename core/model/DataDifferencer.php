@@ -111,11 +111,9 @@ class DataDifferencer extends ViewableData {
 				$changedFields->push(new ArrayData(array(
 					'Name' => $field,
 					'Title' => $base->fieldLabel($field),
-					'Diff' => new SS_HTMLValue( 
-						$this->fromRecord
-							? Diff::compareHTML($this->fromRecord->$field, $this->toRecord->$field)
-							: "<ins>" . $this->toRecord->$field . "</ins>"
-						),
+					'Diff' => $this->fromRecord
+						? Diff::compareHTML($this->fromRecord->$field, $this->toRecord->$field)
+						: "<ins>" . $this->toRecord->$field . "</ins>",
 					'From' => $this->fromRecord ? $this->fromRecord->$field : null,
 					'To' => $this->toRecord ? $this->toRecord->$field : null,
 				)));
