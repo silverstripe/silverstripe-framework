@@ -176,8 +176,7 @@ class Folder extends File {
 		if(!is_array($tmpFile)) {
 			user_error("Folder::addUploadToFolder() Not passed an array.  Most likely, the form hasn't got the right enctype", E_USER_ERROR);
 		}
-		
-		if(!$tmpFile['size']) {
+		if(!isset($tmpFile['size'])) {
 			return;
 		}
 		
@@ -196,19 +195,34 @@ class Folder extends File {
 		$file = $this->RelativePath . $file;
 		Filesystem::makeFolder(dirname("$base/$file"));
 		
-		while(file_exists("$base/$file")) {
-			$i = isset($i) ? ($i+1) : 2;
+		$doubleBarrelledExts = array('.gz', '.bz', '.bz2');
+		
+		$ext = "";
+		if(preg_match('/^(.*)(\.[^.]+)$/', $file, $matches)) {
+			$file = $matches[1];
+			$ext = $matches[2];
+			// Special case for double-barrelled 
+			if(in_array($ext, $doubleBarrelledExts) && preg_match('/^(.*)(\.[^.]+)$/', $file, $matches)) {
+				$file = $matches[1];
+				$ext = $matches[2] . $ext;
+			}
+		}
+		$origFile = $file;
+
+		$i = 1;
+		while(file_exists("$base/$file$ext")) {
+			$i++;
 			$oldFile = $file;
-			$file = ereg_replace('[0-9]*(\.[^.]+$)',$i . '\\1', $file);
-			if($oldFile == $file && $i > 2) user_error("Couldn't fix $file with $i", E_USER_ERROR);
+			$file = "$origFile-$i";
+			if($oldFile == $file && $i > 2) user_error("Couldn't fix $file$ext with $i", E_USER_ERROR);
 		}
 		
-		if (move_uploaded_file($tmpFile['tmp_name'], "$base/$file")) {
+		if (move_uploaded_file($tmpFile['tmp_name'], "$base/$file$ext")) {
 			// Update with the new image
-			return $this->constructChild(basename($file));
+			return $this->constructChild(basename($file . $ext));
 		} else {
 			if(!file_exists($tmpFile['tmp_name'])) user_error("Folder::addUploadToFolder: '$tmpFile[tmp_name]' doesn't exist", E_USER_ERROR);
-			else user_error("Folder::addUploadToFolder: Couldn't copy '$tmpFile[tmp_name]' to '$base/$file'", E_USER_ERROR);
+			else user_error("Folder::addUploadToFolder: Couldn't copy '$tmpFile[tmp_name]' to '$base/$file$ext'", E_USER_ERROR);
 			return false;
 		}
 	}
