@@ -13,6 +13,11 @@ require_once 'Zend/Log/Writer/Abstract.php';
 
 class SS_LogEmailWriter extends Zend_Log_Writer_Abstract {
 
+	/**
+	 * @var $send_from Email address to send log information from
+	 */
+	protected static $send_from = 'errors@silverstripe.com';
+
 	protected $emailAddress;
 
 	protected $customSmtpServer;
@@ -20,6 +25,14 @@ class SS_LogEmailWriter extends Zend_Log_Writer_Abstract {
 	public function __construct($emailAddress, $customSmtpServer = false) {
 		$this->emailAddress = $emailAddress;
 		$this->customSmtpServer = $customSmtpServer;
+	}
+
+	public static function set_send_from($address) {
+		self::$send_from = $address;
+	}
+
+	public static function get_send_from() {
+		return self::$send_from;
 	}
 
 	/**
@@ -41,7 +54,12 @@ class SS_LogEmailWriter extends Zend_Log_Writer_Abstract {
 		// override the SMTP server with a custom one if required
 		if($this->customSmtpServer) ini_set('SMTP', $this->customSmtpServer);
 
-		mail($this->emailAddress, $subject, $data, "Content-type: text/html\nFrom: errors@silverstripe.com");
+		mail(
+			$this->emailAddress,
+			$subject,
+			$data,
+			"Content-type: text/html\nFrom: " . self::$send_from
+		);
 
 		// reset the SMTP server to the original
 		if($this->customSmtpServer) ini_set('SMTP', $originalSMTP);
