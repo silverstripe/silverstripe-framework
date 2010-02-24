@@ -1499,7 +1499,16 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 			'SiteTree', 
 			"\"URLSegment\" = '$this->URLSegment' $IDFilter $parentFilter"
 		);
-		return !($existingPage);
+		if ($existingPage) {
+			return false;
+		}
+
+		$values = $this->extend('augmentValidURLSegment');
+		if (count($values) && !min($values)) {
+			return false;
+		}
+		
+		return true;
 	}
 	
 	/**
