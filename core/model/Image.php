@@ -168,16 +168,6 @@ class Image extends File {
 		}
 	}
 	
-	/**
-	 * Delete any formatted images generated, as well
-	 * as the source which is deleted in {@link Image::onBeforeDelete()}
-	 * (calling parent)
-	 */
-	public function onBeforeDelete() {
-		parent::onBeforeDelete();
-		$this->deleteFormattedImages();
-	}
-	
 	public function SetWidth($width) {
 		return $this->getFormattedImage('SetWidth', $width);
 	}
