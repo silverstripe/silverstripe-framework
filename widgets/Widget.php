@@ -35,7 +35,9 @@ class Widget extends DataObject {
 	static $description = "Description of what this widget does.";
 	
 	function getCMSFields() {
-		return new FieldSet();
+		$fields = new FieldSet();
+		$this->extend('updateCMSFields', $fields);
+		return $fields;
 	}
 	
 	/**
