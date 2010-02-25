@@ -36,16 +36,16 @@ class JSONDataFormatter extends DataFormatter {
 		$className = $obj->class;
 		$id = $obj->ID;
 		
-		$json = "{\n  className : \"$className\",\n";
+		$json = "{\n  \"className\" : \"$className\",\n";
 		foreach($this->getFieldsForObj($obj) as $fieldName => $fieldType) {
 			// Field filtering
 			if($fields && !in_array($fieldName, $fields)) continue;
 
 			$fieldValue = $obj->$fieldName;
 			if(is_object($fieldValue) && is_subclass_of($fieldValue, 'Object') && $fieldValue->hasMethod('toJSON')) {
-				$jsonParts[] = "$fieldName : " . $fieldValue->toJSON();
+				$jsonParts[] = "\"$fieldName\" : " . $fieldValue->toJSON();
 			} else {
-				$jsonParts[] = "$fieldName : " . Convert::raw2json($fieldValue);
+				$jsonParts[] = "\"$fieldName\" : " . Convert::raw2json($fieldValue);
 			}
 		}
 
@@ -63,7 +63,7 @@ class JSONDataFormatter extends DataFormatter {
 				} else {
 					$href = Director::absoluteURL(self::$api_base . "$className/$id/$relName");
 				}
-				$jsonParts[] = "$relName : { className : \"$relClass\", href : \"$href.json\", id : \"{$obj->$fieldName}\" }";
+				$jsonParts[] = "$relName : { \"className\" : \"$relClass\", \"href\" : \"$href.json\", \"id\" : \"{$obj->$fieldName}\" }";
 			}
 	
 			foreach($obj->has_many() as $relName => $relClass) {
@@ -78,7 +78,7 @@ class JSONDataFormatter extends DataFormatter {
 				foreach($items as $item) {
 					//$href = Director::absoluteURL(self::$api_base . "$className/$id/$relName/$item->ID");
 					$href = Director::absoluteURL(self::$api_base . "$relClass/$item->ID");
-					$jsonInnerParts[] = "{ className : \"$relClass\", href : \"$href.json\", id : \"{$obj->$fieldName}\" }";
+					$jsonInnerParts[] = "{ \"className\" : \"$relClass\", \"href\" : \"$href.json\", \"id\" : \"{$obj->$fieldName}\" }";
 				}
 				$jsonParts[] = "$relName : [\n    " . implode(",\n    ", $jsonInnerParts) . "  \n  ]";
 			}
@@ -95,7 +95,7 @@ class JSONDataFormatter extends DataFormatter {
 				foreach($items as $item) {
 					//$href = Director::absoluteURL(self::$api_base . "$className/$id/$relName/$item->ID");
 					$href = Director::absoluteURL(self::$api_base . "$relClass/$item->ID");
-					$jsonInnerParts[] = "    { className : \"$relClass\", href : \"$href.json\", id : \"{$obj->$fieldName}\" }";
+					$jsonInnerParts[] = "    { \"className\" : \"$relClass\", \"href\" : \"$href.json\", \"id\" : \"{$obj->$fieldName}\" }";
 				}
 				$jsonParts[] = "$relName : [\n    " . implode(",\n    ", $jsonInnerParts) . "\n  ]";
 			}
@@ -115,10 +115,10 @@ class JSONDataFormatter extends DataFormatter {
 			if($item->canView()) $jsonParts[] = $this->convertDataObject($item, $fields);
 		}
 		$json = "{\n";
-		$json .= 'totalSize: ';
+		$json .= '\"totalSize\": ';
 		$json .= (is_numeric($this->totalSize)) ? $this->totalSize : 'null';
 		$json .= ",\n";
-		$json .= "items: [\n" . implode(",\n", $jsonParts) . "\n]\n";
+		$json .= "\"items\": [\n" . implode(",\n", $jsonParts) . "\n]\n";
 		$json .= "}\n";
 
 		return $json;
