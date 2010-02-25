@@ -7,9 +7,6 @@ class UploadTest extends SapphireTest {
 	static $fixture_file = 'sapphire/tests/filesystem/UploadTest.yml';
 
 	function testUpload() {
-		// For some reason, this isn't working in cli-script.php
-		/*
-		
 		// create tmp file
 		$tmpFileName = 'UploadTest_testUpload.txt';
 		$tmpFilePath = TEMP_FOLDER . '/' . $tmpFileName;
@@ -57,7 +54,6 @@ class UploadTest extends SapphireTest {
 		$file2->delete();
 		
 		unlink($tmpFilePath);
-		*/
 	}
 	
 	function testAllowedFilesize() {
