@@ -1473,7 +1473,7 @@ Calendar.prototype.parseDate = function(str, fmt) {
 };
 
 Calendar.prototype.hideShowCovered = function () {
-	if (!Calendar.is_ie && !Calendar.is_opera)
+	if (!Calendar.is_ie)
 		return;
 	function getVisib(obj){
 		var value = obj.style.visibility;
