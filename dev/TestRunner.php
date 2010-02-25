@@ -39,7 +39,9 @@ class TestRunner extends Controller {
 	
 	static $url_handlers = array(
 		'' => 'browse',
-		'coverage' => 'coverage',
+		'coverage/module/$ModuleName' => 'coverageModule',
+		'coverage/$TestCase' => 'coverageOnly',
+		'coverage' => 'coverageAll',
 		'startsession' => 'startsession',
 		'endsession' => 'endsession',
 		'cleanupdb' => 'cleanupdb',
@@ -80,7 +82,7 @@ class TestRunner extends Controller {
 	 * Run test classes that should be run with every commit.
 	 * Currently excludes PhpSyntaxTest
 	 */
-	function all() {
+	function all($coverage = false) {
 		ManifestBuilder::load_test_manifest();
 		$tests = ClassInfo::subclassesFor('SapphireTest');
 		array_shift($tests);
@@ -94,7 +96,7 @@ class TestRunner extends Controller {
 			if(!$reflection->isInstantiable()) unset($tests[$class]);
 		}
 	
-		$this->runTests($tests);
+		$this->runTests($tests, $coverage);
 	}
 	
 	/**
@@ -147,15 +149,27 @@ class TestRunner extends Controller {
 		self::$default_reporter->writeFooter();
 	}
 	
-	function coverage() {
-		ManifestBuilder::load_test_manifest();
-		ManifestBuilder::load_all_classes();
-
-		$tests = ClassInfo::subclassesFor('SapphireTest');
-		array_shift($tests);
-		unset($tests['FunctionalTest']);
+	/**
+	 * Run a coverage test across all modules
+	 */
+	function coverageAll() {
+	  ManifestBuilder::load_all_classes();
+		$this->all(true);
+	}
 	
-		$this->runTests($tests, true);
+	/**
+	 * Run only a single coverage test class or a comma-separated list of tests
+	 */
+	function coverageOnly($request) {
+		$this->only($request, true);
+	}
+	
+	/**
+	 * Run coverage tests for one or more "modules".
+	 * A module is generally a toplevel folder, e.g. "mysite" or "sapphire".
+	 */
+	function coverageModule($request) {
+		$this->module($request, true);
 	}
 	
 	function cleanupdb() {
@@ -165,7 +179,7 @@ class TestRunner extends Controller {
 	/**
 	 * Run only a single test class or a comma-separated list of tests
 	 */
-	function only($request) {
+	function only($request, $coverage = false) {
 		ManifestBuilder::load_test_manifest();
 		if($request->param('TestCase') == 'all') {
 			$this->all();
@@ -177,7 +191,7 @@ class TestRunner extends Controller {
 				}
 			}
 			
-			$this->runTests($classNames);
+			$this->runTests($classNames, $coverage);
 		}
 	}
 	
@@ -185,7 +199,7 @@ class TestRunner extends Controller {
 	 * Run tests for one or more "modules".
 	 * A module is generally a toplevel folder, e.g. "mysite" or "sapphire".
 	 */
-	function module($request) {
+	function module($request, $coverage = false) {
 		ManifestBuilder::load_test_manifest();
 		$classNames = array();
 		$moduleNames = explode(',', $request->param('ModuleName'));
@@ -198,7 +212,7 @@ class TestRunner extends Controller {
 			}
 		}
 
-		$this->runTests($classNames);
+		$this->runTests($classNames, $coverage);
 	}
 
 	/**
