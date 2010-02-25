@@ -440,22 +440,13 @@ ImageForm = Class.extend('ToolbarForm');
 ImageForm.prototype = {
 	initialize: function() {
 		var __form = this;
-		
-		this.elements.AltText.onkeyup = function() {
-			__form.update_params('AltText');
-		};
-		this.elements.ImageTitle.onkeyup = function() {
-			__form.update_params('ImageTitle');
-		};
-		this.elements.ImageTitle.onkeyup = function() {
-			__form.update_params('ImageTitle');
-		};
-		this.elements.Width.onchange = function() {
-			__form.update_params('Width');
-		};
-		this.elements.Height.onchange = function() {
-			__form.update_params('Height');
-		};
+
+		this.elements.AltText.onkeyup =  function() { __form.update_params('AltText'); };
+		this.elements.ImageTitle.onkeyup =  function() { __form.update_params('ImageTitle'); };
+		this.elements.CaptionText.onkeyup =  function() { __form.update_params('CaptionText'); };
+		this.elements.AltText.onchange = function() { __form.update_params('AltText'); };
+		this.elements.Width.onchange = function() { __form.update_params('Width'); };
+		this.elements.Height.onchange = function() { __form.update_params('Height'); };
 	},
 	destroy: function() {
 		this.ToolbarForm = null;
@@ -469,35 +460,71 @@ ImageForm.prototype = {
 		this.elements.Height.onchange = null;
 	},
 	update_params: function(updatedFieldName) {
-		if(tinyMCE.imgElement) {
-			tinyMCE.imgElement.alt = this.elements.AltText.value;
-			tinyMCE.imgElement.title = this.elements.ImageTitle.value;
-			tinyMCE.imgElement.className = this.elements.CSSClass.value;
+		var ed = tinyMCE.activeEditor;
+		var imgElement = ed.selection.getNode();
+		if (!imgElement || imgElement.tagName != 'IMG') {
+			imgElement = this.selectedNode;
+		}
+		if(imgElement && imgElement.tagName == 'IMG') {
+			imgElement.alt = this.elements.AltText.value;
+			imgElement.title = this.elements.ImageTitle.value;
+			imgElement.className = this.elements.CSSClass.value;
+
+			var captionElement = imgElement.nextSibling;
+			if (captionElement && captionElement.tagName == 'P') {
+				if (typeof(captionElement.textContent) != 'undefined') {
+					captionElement.textContent = this.elements.CaptionText.value;
+				} else {
+					captionElement.innerText = this.elements.CaptionText.value;
+				}
+			}
 			
 			// Proportionate updating of heights
 			if(updatedFieldName == 'Width') {
-				tinyMCE.imgElement.width = this.elements.Width.value;
-				tinyMCE.imgElement.removeAttribute('height');
-				this.elements.Height.value = tinyMCE.imgElement.height;
+				imgElement.width = this.elements.Width.value;
+				imgElement.removeAttribute('height');
+				this.elements.Height.value = imgElement.height;
 				
 			} else if(updatedFieldName == 'Height') {
-				tinyMCE.imgElement.height = this.elements.Height.value;
-				tinyMCE.imgElement.removeAttribute('width');
-				this.elements.Width.value = tinyMCE.imgElement.width;
+				imgElement.height = this.elements.Height.value;
+				imgElement.removeAttribute('width');
+				this.elements.Width.value = imgElement.width;
+			}
+		} else if (this.selectedImageWidth && this.selectedImageHeight) {
+			// Proportionate updating of heights
+			var w = this.elements.Width.value, h = this.elements.Height.value;
+			var aspect = this.selectedImageHeight / this.selectedImageWidth;
+			if(updatedFieldName == 'Width') {
+				this.elements.Height.value = Math.floor(w * aspect);
+			} else if(updatedFieldName == 'Height') {
+				this.elements.Width.value = Math.floor(h / aspect);
 			}
 		}
 	},
-	respondToNodeChange: function() {
-		if(tinyMCE.imgElement) {
-			this.elements.AltText.value = tinyMCE.imgElement.alt;
-			this.elements.ImageTitle.value = tinyMCE.imgElement.title;
-			this.elements.CSSClass.value = tinyMCE.imgElement.className;
-			this.elements.Width.value = tinyMCE.imgElement.style.width ? parseInt(tinyMCE.imgElement.style.width) : tinyMCE.imgElement.width;
-			this.elements.Height.value = tinyMCE.imgElement.style.height ? parseInt(tinyMCE.imgElement.style.height) : tinyMCE.imgElement.height;
+	respondToNodeChange: function(ed) {
+		var imgElement = ed.selection.getNode();
+		if(imgElement && imgElement.tagName == 'IMG') {
+			this.selectedNode = imgElement;
+			this.elements.AltText.value = imgElement.alt;
+			var captionElement = imgElement.nextSibling;
+			if (captionElement && captionElement.tagName == 'P') {
+				this.elements.CaptionText.value = captionElement.innerText || captionElement.textContent;
+			} else {
+				this.elements.CaptionText.disabled = 'disabled';
+			}
+			this.elements.ImageTitle.value = imgElement.title;
+			this.elements.CSSClass.value = imgElement.className;
+			this.elements.CSSClass.disabled = 'disabled';
+			this.elements.Width.value = imgElement.style.width ? parseInt(imgElement.style.width) : imgElement.width;
+			this.elements.Height.value = imgElement.style.height ? parseInt(imgElement.style.height) : imgElement.height;
 		} else {
+			this.selectedNode = null;
 			this.elements.AltText.value = '';
 			this.elements.ImageTitle.value = '';
 			this.elements.CSSClass.value = 'left';
+			this.elements.CaptionText.value = '';
+			this.elements.CaptionText.disabled = '';
+			this.elements.CSSClass.disabled = '';
 		}
 	},
 	
@@ -512,8 +539,8 @@ ImageForm.prototype = {
 		
 		try {
 			var imgTag = image.getElementsByTagName('img')[0];
-			$('Form_EditorToolbarImageForm_Width').value = imgTag.className.match(/destwidth=([0-9.\-]+)([, ]|$)/) ? RegExp.$1 : null;
-			$('Form_EditorToolbarImageForm_Height').value = imgTag.className.match(/destheight=([0-9.\-]+)([, ]|$)/) ? RegExp.$1 : null;
+			this.selectedImageWidth = $('Form_EditorToolbarImageForm_Width').value = imgTag.className.match(/destwidth=([0-9.\-]+)([, ]|$)/) ? RegExp.$1 : null;
+			this.selectedImageHeight = $('Form_EditorToolbarImageForm_Height').value = imgTag.className.match(/destheight=([0-9.\-]+)([, ]|$)/) ? RegExp.$1 : null;
 		} catch(er) {
 		}
 	},
