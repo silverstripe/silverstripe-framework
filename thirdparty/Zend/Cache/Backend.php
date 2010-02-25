@@ -147,7 +147,6 @@ class Zend_Cache_Backend
      */
     static function getTmpDir()
     {
-		return TEMP_FOLDER;
         if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
             // windows...
             foreach (array($_ENV, $_SERVER) as $tab) {
