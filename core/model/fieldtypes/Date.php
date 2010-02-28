@@ -128,6 +128,10 @@ class Date extends DBField {
 		if($this->value) return date('r', strtotime($this->value));
 	}
 	
+	function Rfc2822() {
+		if($this->value) return date('Y-m-d g:i:s', strtotime($this->value));
+	}
+	
 	function Rfc3339() {
 		$timestamp = ($this->value) ? strtotime($this->value) : false;
 		if(!$timestamp) return false;
