@@ -40,7 +40,7 @@ class TestRunner extends Controller {
 	static $url_handlers = array(
 		'' => 'browse',
 		'coverage/module/$ModuleName' => 'coverageModule',
-		'coverage/$TestCase' => 'coverageOnly',
+		'coverage/$TestCase!' => 'coverageOnly',
 		'coverage' => 'coverageAll',
 		'startsession' => 'startsession',
 		'endsession' => 'endsession',
@@ -153,7 +153,7 @@ class TestRunner extends Controller {
 	 * Run a coverage test across all modules
 	 */
 	function coverageAll() {
-	  ManifestBuilder::load_all_classes();
+		ManifestBuilder::load_all_classes();
 		$this->all(true);
 	}
 	
@@ -391,14 +391,14 @@ HTML;
 
 // This class is here to help with documentation.
 if(!hasPhpUnit()) {
-/**
- * PHPUnit is a testing framework that can be installed using PEAR.
- * It's not bundled with Sapphire, you will need to install it yourself.
- * 
- * @package sapphire
- * @subpackage testing
- */
-class PHPUnit_Framework_TestCase {
-	
-}
+	/**
+	 * PHPUnit is a testing framework that can be installed using PEAR.
+	 * It's not bundled with Sapphire, you will need to install it yourself.
+	 * 
+	 * @package sapphire
+	 * @subpackage testing
+	 */
+	class PHPUnit_Framework_TestCase {
+
+	}
 }
