@@ -1032,6 +1032,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 			// Get the groups that the given member belongs to
 			$groupIDs = DataObject::get_by_id('Member', $memberID)->Groups()->column("ID");
 			$SQL_groupList = implode(", ", $groupIDs);
+			if (!$SQL_groupList) $SQL_groupList = '0';
 			
 			$combinedStageResult = array();
 
