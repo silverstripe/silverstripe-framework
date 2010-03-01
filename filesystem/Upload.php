@@ -14,10 +14,15 @@ class Upload extends Controller {
 	
 	/**
 	 * A File object
-	 *
 	 * @var File
 	 */
 	protected $file;
+	
+	/**
+	 * An instance of Upload_Validator
+	 * @var Upload_Validator
+	 */
+	protected $validator;
 	
 	/**
 	 * Information about the temporary file produced
@@ -26,28 +31,6 @@ class Upload extends Controller {
 	 * @var array
 	 */
 	protected $tmpFile;
-
-	/**
-	 * Restrict filesize for either all filetypes
-	 * or a specific extension, with extension-name
-	 * as array-key and the size-restriction in bytes as array-value.
-	 * 
-	 * @var array 
-	 */
-	public $allowedMaxFileSize = array();
-
-	/**
-	 * @var array Collection of extensions. 
-	 * Extension-names are treated case-insensitive.
-	 * 
-	 * Example:
-	 * <code>
-	 * 	array("jpg","GIF")
-	 * </code>
-	 * 
-	 * @var array
-	 */
-	public $allowedExtensions = array();
 	
 	/**
 	 * Processing errors that can be evaluated,
@@ -64,6 +47,21 @@ class Upload extends Controller {
 	 * @var string
 	 */
 	public static $uploads_folder = "Uploads"; 
+	
+	public function __construct() {
+		parent::__construct();
+		$this->validator = new Upload_Validator();
+	}
+	
+	/**
+	 * Set a different instance than {@link Upload_Validator}
+	 * for this upload session.
+	 * 
+	 * @param object $validator
+	 */
+	public function setValidator($validator) {
+		$this->validator = $validator;
+	}
 	
 	/**
 	 * Save an file passed from a form post into this object.
@@ -147,7 +145,6 @@ class Upload extends Controller {
 	 */
 	public function loadIntoFile($tmpFile, $file, $folderPath = false) {
 		$this->file = $file;
-		
 		return $this->load($tmpFile, $folderPath);
 	}
 	
@@ -162,44 +159,13 @@ class Upload extends Controller {
 	 * @return boolean
 	 */
 	public function validate($tmpFile) {
-		// we don't validate for empty upload fields yet
-		if(!isset($tmpFile['name']) || empty($tmpFile['name'])) return true;
-
-		if(isset($tmpFile['tmp_name']) && !is_uploaded_file($tmpFile['tmp_name']) && !SapphireTest::is_running_test()) {
-			$this->errors[] = _t('File.NOVALIDUPLOAD', 'File is not a valid upload');
-			return false;
+		$validator = $this->validator;
+		$validator->setTmpFile($tmpFile);
+		$isValid = $validator->validate();
+		if($validator->getErrors()) {
+			$this->errors = array_merge($this->errors, $validator->getErrors());
 		}
-
-		$pathInfo = pathinfo($tmpFile['name']);
-		// filesize validation
-		if(!$this->isValidSize($tmpFile)) {
-			$this->errors[] = sprintf(
-				_t(
-					'File.TOOLARGE', 
-					'Filesize is too large, maximum %s allowed.',
-					PR_MEDIUM,
-					'Argument 1: Filesize (e.g. 1MB)'
-				),
-				File::format_size($this->getAllowedMaxFileSize($pathInfo['extension']))
-			);
-			return false;
-		}
-
-		// extension validation
-		if(!$this->isValidExtension($tmpFile)) {
-			$this->errors[] = sprintf(
-				_t(
-					'File.INVALIDEXTENSION', 
-					'Extension is not allowed (valid: %s)',
-					PR_MEDIUM,
-					'Argument 1: Comma-separated list of valid extensions'
-				),
-				implode(',',$this->allowedExtensions)
-			);
-			return false;
-		}
-		
-		return true;
+		return $isValid;
 	}
 	
 	/**
@@ -221,6 +187,167 @@ class Upload extends Controller {
 		$this->file = $file;
 	}
 	
+	/**
+	 * Get maximum file size for all or specified file extension.
+	 * 
+	 * @deprecated 2.5 Please use Upload_Validator::getAllowedMaxFileSize() instead
+	 * 
+	 * @param string $ext
+	 * @return int Filesize in bytes
+	 */
+	public function getAllowedMaxFileSize($ext = null) {
+		user_error('Upload::getAllowedMaxFileSize() is deprecated. Please use Upload_Validator::getAllowedMaxFileSize() instead', E_USER_NOTICE);
+		return $this->validator->getAllowedMaxFileSize($ext);
+	}
+	
+	/**
+	 * Set filesize maximums (in bytes).
+	 * Automatically converts extensions to lowercase
+	 * for easier matching.
+	 * 
+	 * Example: 
+	 * <code>
+	 * array('*' => 200, 'jpg' => 1000)
+	 * </code>
+	 *
+	 * @deprecated 2.5 Please use Upload_Validator::setAllowedMaxFileSize() instead
+	 *
+	 * @param array|int $rules
+	 */
+	public function setAllowedMaxFileSize($rules) {
+		user_error('Upload::setAllowedMaxFileSize() is deprecated. Please use Upload_Validator::setAllowedMaxFileSize() instead', E_USER_NOTICE);
+		$this->validator->setAllowedMaxFileSize($rules);
+	}
+	
+	/**
+	 * @deprecated 2.5 Please use Upload_Validator::getAllowedExtensions() instead
+	 * @return array
+	 */
+	public function getAllowedExtensions() {
+		user_error('Upload::getAllowedExtensions() is deprecated. Please use Upload_Validator::getAllowedExtensions() instead', E_USER_NOTICE);
+		return $this->validator->getAllowedExtensions();
+	}
+	
+	/**
+	 * @deprecated 2.5 Please use Upload_Validator::setAllowedExtensions() instead
+	 * @param array $rules
+	 */
+	public function setAllowedExtensions($rules) {
+		user_error('Upload::setAllowedExtensions() is deprecated. Please use Upload_Validator::setAllowedExtensions() instead', E_USER_NOTICE);
+		$this->validator->setAllowedExtensions($rules);
+	}
+	
+	/**
+	 * Determines if the bytesize of an uploaded
+	 * file is valid - can be defined on an
+	 * extension-by-extension basis in {$allowedMaxFileSize}
+	 * 
+	 * @deprecated 2.5 Please use Upload_Validator::isValidExtension() instead
+	 *
+	 * @param array $tmpFile
+	 * @return boolean
+	 */
+	public function isValidSize($tmpFile) {
+		user_error('Upload::isValidSize() is deprecated. Please use Upload_Validator::isValidSize() instead', E_USER_NOTICE);
+		$validator = new Upload_Validator();
+		$validator->setTmpFile($tmpFile);
+		return $validator->isValidSize();
+	}
+	
+	/**
+	 * Determines if the temporary file has a valid extension
+	 * 
+	 * @deprecated 2.5 Please use Upload_Validator::isValidExtension() instead
+	 * 
+	 * @param array $tmpFile
+	 * @return boolean
+	 */
+	public function isValidExtension($tmpFile) {
+		user_error('Upload::isValidExtension() is deprecated. Please use Upload_Validator::isValidExtension() instead', E_USER_NOTICE);
+		$validator = new Upload_Validator();
+		$validator->setTmpFile($tmpFile);
+		return $validator->isValidExtension();
+	}
+	
+	/**
+	 * Clear out all errors (mostly set by {loadUploaded()})
+	 */
+	public function clearErrors() {
+		$this->errors = array();
+	}
+	
+	/**
+	 * Determines wether previous operations caused an error.
+	 * 
+	 * @return boolean
+	 */
+	public function isError() {
+		return (count($this->errors));		
+	}
+	
+	/**
+	 * Return all errors that occurred while processing so far
+	 * (mostly set by {loadUploaded()})
+	 *
+	 * @return array
+	 */
+	public function getErrors() {
+		return $this->errors;		
+	}
+	
+}
+class Upload_Validator {
+
+	/**
+	 * Information about the temporary file produced
+	 * by the PHP-runtime.
+	 *
+	 * @var array
+	 */
+	protected $tmpFile;
+
+	protected $errors = array();
+
+	/**
+	 * Restrict filesize for either all filetypes
+	 * or a specific extension, with extension-name
+	 * as array-key and the size-restriction in bytes as array-value.
+	 * 
+	 * @var array 
+	 */
+	public $allowedMaxFileSize = array();
+
+	/**
+	 * @var array Collection of extensions. 
+	 * Extension-names are treated case-insensitive.
+	 * 
+	 * Example:
+	 * <code>
+	 * 	array("jpg","GIF")
+	 * </code>
+	 * 
+	 * @var array
+	 */
+	public $allowedExtensions = array();
+
+	/**
+	 * Return all errors that occurred while validating
+	 * the temporary file.
+	 *
+	 * @return array
+	 */
+	public function getErrors() {
+		return $this->errors;		
+	}
+
+	/**
+	 * Set information about temporary file produced by PHP.
+	 * @param array $tmpFile
+	 */
+	public function setTmpFile($tmpFile) {
+		$this->tmpFile = $tmpFile;
+	}
+
 	/**
 	 * Get maximum file size for all or specified file extension.
 	 *
@@ -253,7 +380,7 @@ class Upload extends Controller {
 			// make sure all extensions are lowercase
 			$rules = array_change_key_case($rules, CASE_LOWER);
 			$this->allowedMaxFileSize = $rules;
-		} elseif((int)$rules > 0) {
+		} elseif((int) $rules > 0) {
 			$this->allowedMaxFileSize['*'] = (int)$rules;
 		}
 	}
@@ -282,53 +409,70 @@ class Upload extends Controller {
 	 * file is valid - can be defined on an
 	 * extension-by-extension basis in {$allowedMaxFileSize}
 	 *
-	 * @param array $tmpFile
 	 * @return boolean
 	 */
-	public function isValidSize($tmpFile) {
-		$pathInfo = pathinfo($tmpFile['name']);
+	public function isValidSize() {
+		$pathInfo = pathinfo($this->tmpFile['name']);
 		$extension = isset($pathInfo['extension']) ? strtolower($pathInfo['extension']) : null;
 		$maxSize = $this->getAllowedMaxFileSize($extension);
-		return (!$tmpFile['size'] || !$maxSize || (int)$tmpFile['size'] < $maxSize);
+		return (!$this->tmpFile['size'] || !$maxSize || (int) $this->tmpFile['size'] < $maxSize);
 	}
 	
 	/**
 	 * Determines if the temporary file has a valid extension
-	 *
-	 * @param array $tmpFile
 	 * @return boolean
 	 */
-	public function isValidExtension($tmpFile) {
-		$pathInfo = pathinfo($tmpFile['name']);
+	public function isValidExtension() {
+		$pathInfo = pathinfo($this->tmpFile['name']);
 		return (!count($this->allowedExtensions) || in_array(strtolower($pathInfo['extension']), $this->allowedExtensions));
-	}
-	
-	
-	/**
-	 * Clear out all errors (mostly set by {loadUploaded()})
-	 */
-	public function clearErrors() {
-		$this->errors = array();
-	}
+	}	
 	
 	/**
-	 * Determines wether previous operations caused an error.
+	 * Run through the rules for this validator checking against
+	 * the temporary file set by {@link setTmpFile()} to see if
+	 * the file is deemed valid or not.
 	 * 
 	 * @return boolean
 	 */
-	public function isError() {
-		return (count($this->errors));		
+	public function validate() {
+		// we don't validate for empty upload fields yet
+		if(!isset($this->tmpFile['name']) || empty($this->tmpFile['name'])) return true;
+
+		if(isset($this->tmpFile['tmp_name']) && !is_uploaded_file($this->tmpFile['tmp_name']) && !SapphireTest::is_running_test()) {
+			$this->errors[] = _t('File.NOVALIDUPLOAD', 'File is not a valid upload');
+			return false;
+		}
+
+		$pathInfo = pathinfo($this->tmpFile['name']);
+		// filesize validation
+		if(!$this->isValidSize()) {
+			$this->errors[] = sprintf(
+				_t(
+					'File.TOOLARGE', 
+					'Filesize is too large, maximum %s allowed.',
+					PR_MEDIUM,
+					'Argument 1: Filesize (e.g. 1MB)'
+				),
+				File::format_size($this->getAllowedMaxFileSize($pathInfo['extension']))
+			);
+			return false;
+		}
+
+		// extension validation
+		if(!$this->isValidExtension()) {
+			$this->errors[] = sprintf(
+				_t(
+					'File.INVALIDEXTENSION', 
+					'Extension is not allowed (valid: %s)',
+					PR_MEDIUM,
+					'Argument 1: Comma-separated list of valid extensions'
+				),
+				implode(',', $this->allowedExtensions)
+			);
+			return false;
+		}
+		
+		return true;
 	}
-	
-	/**
-	 * Return all errors that occurred while processing so far
-	 * (mostly set by {loadUploaded()})
-	 *
-	 * @return array
-	 */
-	public function getErrors() {
-		return $this->errors;		
-	}
-	
+
 }
-?>

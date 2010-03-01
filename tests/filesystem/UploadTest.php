@@ -24,8 +24,11 @@ class UploadTest extends SapphireTest {
 			'error' => UPLOAD_ERR_OK,
 		);
 		
+		$v = new UploadTest_Validator();
+		
 		// test upload into default folder
 		$u1 = new Upload();
+		$u1->setValidator($v);
 		$u1->load($tmpFile);
 		$file1 = $u1->getFile();
 		$this->assertTrue(
@@ -65,4 +68,47 @@ class UploadTest extends SapphireTest {
 	}
 	
 }
-?>
+class UploadTest_Validator extends Upload_Validator implements TestOnly {
+
+	/**
+	 * Looser check validation that doesn't do is_upload_file()
+	 * checks as we're faking a POST request that PHP didn't generate
+	 * itself.
+	 * 
+	 * @return boolean
+	 */
+	public function validate() {
+		$pathInfo = pathinfo($this->tmpFile['name']);
+		// filesize validation
+		
+		if(!$this->isValidSize()) {
+			$this->errors[] = sprintf(
+				_t(
+					'File.TOOLARGE', 
+					'Filesize is too large, maximum %s allowed.',
+					PR_MEDIUM,
+					'Argument 1: Filesize (e.g. 1MB)'
+				),
+				File::format_size($this->getAllowedMaxFileSize($pathInfo['extension']))
+			);
+			return false;
+		}
+
+		// extension validation
+		if(!$this->isValidExtension()) {
+			$this->errors[] = sprintf(
+				_t(
+					'File.INVALIDEXTENSION', 
+					'Extension is not allowed (valid: %s)',
+					PR_MEDIUM,
+					'Argument 1: Comma-separated list of valid extensions'
+				),
+				implode(',', $this->allowedExtensions)
+			);
+			return false;
+		}
+		
+		return true;
+	}
+
+}
