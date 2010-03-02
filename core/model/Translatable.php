@@ -978,7 +978,7 @@ class Translatable extends DataObjectDecorator implements PermissionProvider {
 					_t('Translatable.NEWLANGUAGE', 'New language'), 
 					$alreadyTranslatedLocales,
 					'SiteTree',
-					'Locale-Native',
+					'Locale-English',
 					$this->owner
 				),
 				$createButton = new InlineFormAction('createtranslation',_t('Translatable.CREATEBUTTON', 'Create'))
