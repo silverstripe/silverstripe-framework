@@ -977,6 +977,9 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	static function prepopuplate_permission_cache($permission = 'CanEditType', $ids, $batchCallback = null) {
 		if(!$batchCallback) $batchCallback = "SiteTree::can_{$permission}_multiple";
 		
+		//PHP 5.1 requires an array rather than a string for the call_user_func function
+		$batchCallback=explode('::', $batchCallback);
+		
 		if(is_callable($batchCallback)) {
 			$permissionValues = call_user_func($batchCallback, $ids, 
 				Member::currentUserID(), false);
