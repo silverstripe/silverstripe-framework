@@ -1320,6 +1320,8 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	//------------------------------------------------------------------------------------//
 
 	protected function onBeforeWrite() {
+		parent::onBeforeWrite();
+		
 		// If Sort hasn't been set, make this page come after it's siblings
 		if(!$this->Sort && $this->ParentID) {
 			$this->Sort = DB::query("SELECT MAX(\"Sort\") + 1 FROM \"SiteTree\" WHERE \"ParentID\" = $this->ParentID")->value();
@@ -1352,8 +1354,6 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		DataObject::set_context_obj(null);
 
 		$this->syncLinkTracking();
-
-		parent::onBeforeWrite();
 	}
 	
 	function syncLinkTracking() {
