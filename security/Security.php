@@ -619,14 +619,22 @@ class Security extends Controller {
 	 */
 	static function findAnAdministrator() {
 		// coupling to subsites module
-		$subsiteCheck = class_exists('GroupSubsites') ?  ' AND "Group"."SubsiteID" = 0' : '';
-		
+		$origSubsite = null;
+		if(is_callable('Subsite::changeSubsite')) {
+			$origSubsite = Subsite::currentSubsiteID();
+			Subsite::changeSubsite(0);
+		}
+
 		// find a group with ADMIN permission
 		$adminGroup = DataObject::get('Group', 
-								"\"Permission\".\"Code\" = 'ADMIN'$subsiteCheck", 
+								"\"Permission\".\"Code\" = 'ADMIN'", 
 								"\"Group\".\"ID\"", 
 								"JOIN \"Permission\" ON \"Group\".\"ID\"=\"Permission\".\"GroupID\"", 
 								'1');
+		
+		if(is_callable('Subsite::changeSubsite')) {
+			Subsite::changeSubsite($origSubsite);
+		}
 		if ($adminGroup) {
 			$adminGroup = $adminGroup->First();
 
