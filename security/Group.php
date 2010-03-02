@@ -343,7 +343,7 @@ class Group extends DataObject {
 	function onBeforeWrite() {
 		parent::onBeforeWrite();
 		
-		if(stripos($this->Code, 'new-') === 0) {
+		if(stripos($this->Code, _t('SecurityAdmin.NEWGROUPPREFIX','new-')) === 0) {
 			$this->setCode($this->Title);
 		}
 	}
