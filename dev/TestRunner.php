@@ -262,7 +262,7 @@ class TestRunner extends Controller {
 		$results = new PHPUnit_Framework_TestResult();		
 		$results->addListener($reporter);
 
-		if($coverage) {
+		if($coverage === true) {
 			$results->collectCodeCoverageInformation(true);
 			$suite->run($results);
 
