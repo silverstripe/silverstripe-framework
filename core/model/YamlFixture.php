@@ -175,7 +175,12 @@ class YamlFixture extends Object {
 			// Call $this->write().  (For example, in FileTest)
 			if(isset($fields['ID'])) {
 				$obj->ID = $fields['ID'];
+				
+				// The database needs to allow inserting values into the foreign key column (ID in our case)
+				$conn = DB::getConn();
+				if(method_exists($conn, 'allowPrimaryKeyEditing')) $conn->allowPrimaryKeyEditing($dataClass, true);
 				$obj->write(false, true);
+				if(method_exists($conn, 'allowPrimaryKeyEditing')) $conn->allowPrimaryKeyEditing($dataClass, false);
 			}
 			
 			// Populate the dictionary with the ID
