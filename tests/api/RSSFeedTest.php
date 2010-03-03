@@ -59,13 +59,13 @@ class RSSFeedTest_ItemA extends ViewableData {
 		'AltContent' => 'Text',
 	);
 	
-	function Title() {
+	function getTitle() {
 		return "ItemA";
 	}
-	function Content() {
+	function getContent() {
 		return "ItemA Content";
 	}
-	function AltContent() {
+	function getAltContent() {
 		return "ItemA AltContent";
 	}
 	

@@ -276,8 +276,7 @@ class RSSFeed_Entry extends ViewableData {
 	 * @return string Returns the author of the entry.
 	 */
 	function Author() {
-		if($this->authorField)
-			return $this->failover->obj($this->authorField);
+		if($this->authorField) return $this->failover->obj($this->authorField);
 	}
 
 	/**
@@ -287,7 +286,10 @@ class RSSFeed_Entry extends ViewableData {
 	function rssField($fieldName, $defaultClass = 'Varchar') {
 		if($fieldName) {
 			if($this->failover->castingHelperPair($fieldName)) {
-				return $this->failover->obj($fieldName);
+				$value = $this->failover->$fieldName;
+				$obj = $this->failover->obj($fieldName);
+				$obj->setValue($value);
+				return $obj;
 			} else {
 				$obj = new $defaultClass($fieldName);
 				$obj->setValue($this->failover->XML_val($fieldName));
