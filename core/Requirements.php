@@ -10,27 +10,19 @@ class Requirements {
 	
 	/**
 	 * Enable combining of css/javascript files.
-	 *
-	 * @var boolean
+	 * @param boolean $enable
 	 */
-	private static $combined_files_enabled = true;
-	
 	public static function set_combined_files_enabled($enable) {
-		self::$combined_files_enabled = (bool) $enable;
-	}
-	
-	public static function get_combined_files_enabled() {
-		return self::$combined_files_enabled;
+		self::backend()->set_combined_files_enabled($enable);
 	}
 
 	/**
-	 * Do we want requirements to suffix onto the requirement link
-	 * tags for caching or is it disabled. Getter / Setter available
-	 * through {@link Requirements::set_suffix_requirements()}
-	 *
-	 * @var bool
+	 * Checks whether combining of css/javascript files is enabled.
+	 * @return boolean
 	 */
-	private static $suffix_requirements = true;
+	public static function get_combined_files_enabled() {
+	  return self::backend()->get_combined_files_enabled();
+	}
 	
 	/**
 	 * Set whether we want to suffix requirements with the time / 
@@ -39,7 +31,7 @@ class Requirements {
 	 * @param bool
 	 */
 	public static function set_suffix_requirements($var) {
-		self::$suffix_requirements = $var;
+		self::backend()->set_suffix_requirements($var);
 	}
 	
 	/**
@@ -48,7 +40,7 @@ class Requirements {
 	 * @return bool
 	 */
 	public static function get_suffix_requirements() {
-		return self::$suffix_requirements;
+		return self::backend()->get_suffix_requirements();
 	}
 	
 	/**
@@ -57,10 +49,10 @@ class Requirements {
 	 * @var Requirements
 	 */
 	private static $backend = null;
+	
 	public static function backend() {
 		if(!self::$backend) {
 			self::$backend = new Requirements_Backend();
-
 		}
 		return self::$backend;
 	}
@@ -73,7 +65,6 @@ class Requirements {
 	public static function set_backend(Requirements_Backend $backend) {
 		self::$backend = $backend;
 	}
-
 	
 	/**
 	 * Register the given javascript file as required.
@@ -84,7 +75,6 @@ class Requirements {
 	static function javascript($file) {		
 		self::backend()->javascript($file);
 	}
-	
 	
 	/**
 	 * Add the javascript code to the header of the page
@@ -119,8 +109,6 @@ class Requirements {
 	static function insertHeadTags($html, $uniquenessID = null) {
 		self::backend()->insertHeadTags($html, $uniquenessID);
 	}
-
-	 
 	
 	/**
 	 * Load the given javascript template with the page.
@@ -194,7 +182,6 @@ class Requirements {
 	static function unblock_all() {
 		self::backend()->unblock_all();
 	}
-	
 	
 	/**
 	 * Restore requirements cleared by call to Requirements::clear
@@ -305,16 +292,33 @@ class Requirements {
 }
 
 class Requirements_Backend {
-		/**
+
+	/**
+	 * Do we want requirements to suffix onto the requirement link
+	 * tags for caching or is it disabled. Getter / Setter available
+	 * through {@link Requirements::set_suffix_requirements()}
+	 *
+	 * @var bool
+	 */
+	protected $suffix_requirements = true;
+
+	/**
+	 * Enable combining of css/javascript files.
+	 *
+	 * @var boolean
+	 */
+	protected $combined_files_enabled = true;
+
+	/**
 	 * Paths to all required .js files relative to the webroot.
-	 * 
+	 *
 	 * @var array $javascript
 	 */
 	protected $javascript = array();
 
 	/**
 	 * Paths to all required .css files relative to the webroot.
-	 * 
+	 *
 	 * @var array $css
 	 */
 	protected $css = array();
@@ -329,7 +333,7 @@ class Requirements_Backend {
 
 	/**
 	 * All custom CSS rules which are inserted
-	 * directly at the bottom of the HTML <head> tag. 
+	 * directly at the bottom of the HTML <head> tag.
 	 *
 	 * @var array $customCSS
 	 */
@@ -338,7 +342,7 @@ class Requirements_Backend {
 	/**
 	 * All custom HTML markup which is added before
 	 * the closing <head> tag, e.g. additional metatags.
-	 * This is preferred to entering tags directly into 
+	 * This is preferred to entering tags directly into
 	 */
 	protected $customHeadTags = array();
 
@@ -349,7 +353,7 @@ class Requirements_Backend {
 	 * @var array $disabled
 	 */
 	protected $disabled = array();
-	
+
 	/**
 	 * The filepaths (relative to webroot) or
 	 * uniquenessIDs of any included requirements
@@ -357,18 +361,18 @@ class Requirements_Backend {
 	 * This is useful to e.g. prevent core classes to modifying
 	 * Requirements without subclassing the entire functionality.
 	 * Use {@link unblock()} or {@link unblock_all()} to revert changes.
-	 * 
+	 *
 	 * @var array $blocked
 	 */
 	protected $blocked = array();
-	
+
 	/**
 	 * See {@link combine_files()}.
-	 * 
+	 *
 	 * @var array $combine_files
 	 */
 	public $combine_files = array();
-	
+
 	/**
 	 * Using the JSMin library to minify any
 	 * javascript file passed to {@link combine_files()}.
@@ -376,7 +380,7 @@ class Requirements_Backend {
 	 * @var boolean
 	 */
 	public $combine_js_with_jsmin = true;
-	
+
 	/**
 	 * Put all javascript includes at the bottom of the template
 	 * before the closing <body> tag instead of the <head> tag.
@@ -392,6 +396,33 @@ class Requirements_Backend {
 	 */
 	public $write_js_to_body = true;
 
+	function set_combined_files_enabled($enable) {
+	  $this->combined_files_enabled = (bool) $enable;
+	}
+	
+	function get_combined_files_enabled() {
+	  return $this->combined_files_enabled;
+	}
+	
+	/**
+	 * Set whether we want to suffix requirements with the time / 
+	 * location on to the requirements
+	 * 
+	 * @param bool
+	 */
+	function set_suffix_requirements($var) {
+		$this->suffix_requirements = $var;
+	}
+	
+	/**
+	 * Return whether we want to suffix requirements
+	 * 
+	 * @return bool
+	 */
+	function get_suffix_requirements() {
+		return $this->suffix_requirements;
+	}
+	
 	/**
 	 * Set whether you want the files written to the head or the body. It
 	 * writes to the body by default which can break some scripts
@@ -580,7 +611,7 @@ class Requirements_Backend {
  			$this->process_combined_files(); 
 	
 			foreach(array_diff_key($this->javascript,$this->blocked) as $file => $dummy) { 
-				$path = self::path_for_file($file);
+				$path = $this->path_for_file($file);
 				if($path) {
 					$jsRequirements .= "<script type=\"text/javascript\" src=\"$path\"></script>\n";
 				}
@@ -597,7 +628,7 @@ class Requirements_Backend {
 			}
 			
 			foreach(array_diff_key($this->css,$this->blocked) as $file => $params) {  					
-				$path = self::path_for_file($file);
+				$path = $this->path_for_file($file);
 				if($path) {
 					$media = (isset($params['media']) && !empty($params['media'])) ? " media=\"{$params['media']}\"" : "";
 					$requirements .= "<link rel=\"stylesheet\" type=\"text/css\"{$media} href=\"$path\" />\n";
@@ -692,7 +723,7 @@ class Requirements_Backend {
 	 * @param string $fileOrUrl
 	 * @return string|boolean 
 	 */
-	protected static function path_for_file($fileOrUrl) {
+	protected function path_for_file($fileOrUrl) {
 		if(preg_match('/^http[s]?/', $fileOrUrl)) {
 			return $fileOrUrl;
 		} elseif(Director::fileExists($fileOrUrl)) {
@@ -703,7 +734,7 @@ class Requirements_Backend {
 				$suffix = '&' . substr($fileOrUrl, strpos($fileOrUrl, '?')+1);
 				$fileOrUrl = substr($fileOrUrl, 0, strpos($fileOrUrl, '?'));
 			}
-			if(Requirements::get_suffix_requirements()) {
+			if($this->suffix_requirements) {
 				$mtimesuffix = "?m=" . filemtime(Director::baseFolder() . '/' . $fileOrUrl);
 			}
 			return "{$prefix}{$fileOrUrl}{$mtimesuffix}{$suffix}";
@@ -771,7 +802,7 @@ class Requirements_Backend {
 		foreach($this->combine_files as $_combinedFileName => $_files) {
 			$duplicates = array_intersect($_files, $files);
 			if($duplicates) {
-				user_error("Requirements::combine_files(): Already included files " . implode(',', $duplicates) . " in combined file '{$_combinedFileName}'", E_USER_NOTICE);
+				user_error("Requirements_Backend::combine_files(): Already included files " . implode(',', $duplicates) . " in combined file '{$_combinedFileName}'", E_USER_NOTICE);
 				return false;
 			}
 		}
@@ -817,7 +848,7 @@ class Requirements_Backend {
 		if(class_exists('SapphireTest',false)) $runningTest = SapphireTest::is_running_test();
 		else $runningTest = false;
 		
-		if((Director::isDev() && !$runningTest) || !Requirements::get_combined_files_enabled()) {
+		if((Director::isDev() && !$runningTest) || !$this->combined_files_enabled) {
 			return;
 		}
 		
@@ -826,7 +857,7 @@ class Requirements_Backend {
 		foreach($this->combine_files as $combinedFile => $sourceItems) {
 			foreach($sourceItems as $sourceItem) {
 				if(isset($combinerCheck[$sourceItem]) && $combinerCheck[$sourceItem] != $combinedFile){ 
-					user_error("Requirements::process_combined_files - file '$sourceItem' appears in two combined files:" .	" '{$combinerCheck[$sourceItem]}' and '$combinedFile'", E_USER_WARNING);
+					user_error("Requirements_Backend::process_combined_files - file '$sourceItem' appears in two combined files:" .	" '{$combinerCheck[$sourceItem]}' and '$combinedFile'", E_USER_WARNING);
 				}
 				$combinerCheck[$sourceItem] = $combinedFile;
 				
@@ -942,7 +973,7 @@ class Requirements_Backend {
 		
 		if($theme && isset($_CSS_MANIFEST[$name]) && isset($_CSS_MANIFEST[$name]['themes']) 
 			&& isset($_CSS_MANIFEST[$name]['themes'][$theme])) 
-			Requirements::css($_CSS_MANIFEST[$name]['themes'][$theme], $media);
+			$this->css($_CSS_MANIFEST[$name]['themes'][$theme], $media);
 
 		else if(isset($_CSS_MANIFEST[$name]) && isset($_CSS_MANIFEST[$name]['unthemed'])) $this->css($_CSS_MANIFEST[$name]['unthemed'], $media);
 		// Normal requirements fails quietly when there is no css - we should do the same
