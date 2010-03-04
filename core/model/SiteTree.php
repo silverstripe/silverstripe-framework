@@ -1533,17 +1533,6 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	}
 	
 	/**
-	 * @deprecated 2.4 Use {@link SiteTree::get_by_link()}.
-	 */
-	public static function get_by_url($link) {
-		user_error (
-			'SiteTree::get_by_url() is deprecated, please use SiteTree::get_by_link()', E_USER_NOTICE
-		);
-		
-		return self::get_by_link($link);
-	}
-	
-	/**
 	 * Rewrite a file URL on this page, after its been renamed.
 	 * Triggers the onRenameLinkedAsset action on extensions.
 	 */

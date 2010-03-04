@@ -749,7 +749,7 @@ class Translatable extends DataObjectDecorator implements PermissionProvider {
 	 * but this involves complicated special cases in AllChildrenIncludingDeleted().
 	 * 
 	 * {@link SiteTree->onBeforeWrite()} will ensure that each translation will get
-	 * a unique URL across languages, by means of {@link SiteTree::get_by_url()}
+	 * a unique URL across languages, by means of {@link SiteTree::get_by_link()}
 	 * and {@link Translatable->alternateGetByURL()}.
 	 */
 	function onBeforeWrite() {
