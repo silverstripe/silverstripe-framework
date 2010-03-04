@@ -416,7 +416,7 @@ class Director {
 	}
 
 	/**
-	 * @deprecated 2.3 Use Controller->redirectBack()
+	 * @deprecated 2.5 Use Controller->redirectBack()
 	 */
 	static function redirectBack() {
 		Controller::curr()->redirectBack();
