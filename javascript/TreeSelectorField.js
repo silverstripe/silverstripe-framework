@@ -211,8 +211,6 @@ TreeDropdownField.prototype = {
 	 * Called once the tree has been delivered from ajax
 	 */
 	newTreeReady: function (response, keepTreeHidden) {
-		// alert('newTreeReady');
-
 		this.itemTree.innerHTML = response.responseText;
 		// HACK IE6: see http://www.hedgerwow.com/360/bugs/css-select-free.html
 		this.itemTree.appendChild(document.createElement('iframe'));
@@ -377,10 +375,13 @@ TreeMultiselectField.prototype = {
 		var selectedItems = this.inputTag.value.split(/ *, */);
 		var i, isSelected = {};
 		for(i=0;i<selectedItems.length;i++) isSelected[selectedItems[i]] = true;
-		
+
 		var allNodes = this.tree.getElementsByTagName('li');
+		
 		for(i=0;i<allNodes.length;i++) {
-			if(isSelected[allNodes[i].getIdx()]) {
+			allNodes[i].id.match(/([^-]+)-(\d+)$/);
+			var idx = RegExp.$2
+			if(isSelected[idx]) {
 				this.tree.selectNode(allNodes[i]);
 				allNodes[i].expose();
 			}

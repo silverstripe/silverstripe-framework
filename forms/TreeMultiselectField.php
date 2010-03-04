@@ -28,12 +28,21 @@ class TreeMultiselectField extends TreeDropdownField {
 			return $items;
 			
 		// Otherwise, look data up from the linked relation
+		} if($this->value != 'unchanged' && is_string($this->value)) {
+			$items = new DataObjectSet();
+			$ids = explode(',', $this->value);
+			foreach($ids as $id) {
+				if(!is_numeric($id)) continue;
+				$item = DataObject::get_by_id($this->sourceObject, $id);
+				if($item) $items->push($item);
+			}
+			return $items;
 		} else if($this->form) {
 			$fieldName = $this->name;
 			$record = $this->form->getRecord();
 			if(is_object($record) && $record->hasMethod($fieldName)) 
 				return $record->$fieldName();
-		}
+		}	
 	}
 	/**
 	 * We overwrite the field attribute to add our hidden fields, as this 
@@ -55,25 +64,15 @@ class TreeMultiselectField extends TreeDropdownField {
 		Requirements::css(SAPPHIRE_DIR . '/javascript/tree/tree.css');
 		Requirements::css(SAPPHIRE_DIR . '/css/TreeDropdownField.css');
 
-		// Any field values have priority over the relation getters
-		if($this->value) {
-			$items = new DataObjectSet();
-			$ids = explode(',', $this->value);
-			foreach($ids as $id) {
-				if(!is_numeric($id)) continue;
-				
-				$item = DataObject::get_by_id($this->sourceObject, $id);
-				if($item) $items->push($item);
-			}
-		} else {
-			$items = $this->getItems();
-		}
 
-		if($items && $items->Count()) {
-			foreach($items as $item) {
-				$titleArray[] =$item->Title;
+		$items = $this->getItems();
+
+		if($items && count($items)) {
+			foreach($items as $id => $item) {
+				$titleArray[] = $item->Title;
 				$idArray[] = $item->ID;
 			}
+				
 			if(isset($titleArray)) {
 				$itemList = implode(", ", $titleArray);
 				$value = implode(",", $idArray);
