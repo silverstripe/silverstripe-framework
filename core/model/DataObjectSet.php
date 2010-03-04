@@ -595,33 +595,6 @@ class DataObjectSet extends ViewableData implements IteratorAggregate, Countable
 	}
 
 	/**
-	 * Returns the dataset as an array of ID => "FirstName Surname"
-	 * 
-	 * @deprecated 2.4 Please use map() instead, pointing the title
-	 * to a method name that does the concatenation of values.
-	 * 
-	 * @param string $key Field name to index the array.
-	 * @param array $values An array of fieldnames to insert in array
-	 * @param boolean $withdash Add dashes inbetween values
-	 * @return array
-	 */
-	public function map_multiple($key = "ID", $values = array("FirstName", "Surname"), $withdash = false){
-		foreach($this->items as $item) {
-			$mapValues = array();
-			foreach($values as $value) {
-				$mapValues[] = $item->$value;
-			}
-			
-			if($withdash) {
-				$map[$item->$key] = implode(" - ", $mapValues);
-			} else {
-				$map[$item->$key] = implode(" ", $mapValues);
-			}
-		}
-		return $map;
-	}
-
-	/**
 	 * Returns an array of ID => Title for the items in this set.
 	 * 
 	 * @param string $index The field to use as a key for the array
@@ -642,21 +615,6 @@ class DataObjectSet extends ViewableData implements IteratorAggregate, Countable
 		if($emptyString) $map = array('' => "$emptyString") + $map;
 		if($sort) asort($map);
 		
-		return $map;
-	}
-	
-	/**
-	 * Temporary filter method for filtering a list based on multiple fields of the DataObject.
-	 * 
-	 * Question: should any args be passed to the filter function?
-	 * 
-	 * @deprecated 2.4 Please use map() instead
-	 */
-	public function filter_map($key, $value) {
-		$map = array();
-		foreach($this->items as $object) {
-			$map[$object->$key] = ($object->hasMethod($value)) ? $object->$value() : $object->$value;
-		}
 		return $map;
 	}
     
