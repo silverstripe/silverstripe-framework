@@ -87,7 +87,7 @@ class Upload extends Controller {
 		if(!$this->file) $this->file = new File();
 		
 		if(!is_array($tmpFile)) {
-			user_error("File::loadUploaded() Not passed an array.  Most likely, the form hasn't got the right enctype", E_USER_ERROR);
+			user_error("Upload::load() Not passed an array.  Most likely, the form hasn't got the right enctype", E_USER_ERROR);
 		}
 		
 		if(!$tmpFile['size']) {
