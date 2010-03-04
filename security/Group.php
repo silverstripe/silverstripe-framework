@@ -423,7 +423,7 @@ class Group extends DataObject {
 	 * Filters to only those groups that the current user can edit
 	 */
 	function AllChildrenIncludingDeleted() {
-		$extInstance = $this->extInstance('Hierarchy');
+		$extInstance = $this->getExtensionInstance('Hierarchy');
 		$extInstance->setOwner($this);
 		$children = $extInstance->AllChildrenIncludingDeleted();
 		$extInstance->clearOwner();
