@@ -20,8 +20,16 @@
  * @subpackage fields-files
  */
 class SimpleImageField extends FileField {
-  
+	/**
+	 * @deprecated 2.5
+	 */
 	public $allowedExtensions = array('jpg','gif','png');
+
+	function __constructor($name, $title = null, $value = null, $form = null, $rightTitle = null, $folderName = null) {
+		parent::__constructor($name, $title, $value, $form, $rightTitle, $folderName);
+		
+		$this->getValidator()->setAllowedExtensions(array('jpg','gif','png'));
+	}
 
 	function Field() {
 	    if($this->form) $record = $this->form->getRecord();
@@ -55,7 +63,7 @@ class SimpleImageField extends FileField {
 			array(
 				"type" => "hidden", 
 				"name" => "MAX_FILE_SIZE", 
-				"value" => $this->getAllowedMaxFileSize(),
+				"value" => $this->getValidator()->getAllowedMaxFileSize(),
 				"tabindex" => $this->getTabIndex()
 			)
 		);

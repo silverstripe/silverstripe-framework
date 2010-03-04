@@ -18,7 +18,8 @@ class FileField extends FormField {
 	 * Restrict filesize for either all filetypes
 	 * or a specific extension, with extension-name
 	 * as array-key and the size-restriction in bytes as array-value.
-	 * 
+	 *
+	 * @deprecated 2.5
 	 * @var array 
 	 */
 	public $allowedMaxFileSize = array();
@@ -31,7 +32,8 @@ class FileField extends FormField {
 	 * <code>
 	 * 	array("jpg","GIF")
 	 * </code>
-	 * 
+	 *
+	 * @deprecated 2.5
 	 * @var array
 	 */
 	public $allowedExtensions = array();
@@ -95,7 +97,7 @@ class FileField extends FormField {
 		  	array(
 		  		"type" => "hidden", 
 		  		"name" => "MAX_FILE_SIZE", 
-		  		"value" => $this->getAllowedMaxFileSize(),
+		  		"value" => $this->getValidator()->getAllowedMaxFileSize(),
 				"tabindex" => $this->getTabIndex()
 		  	)
 		);
@@ -113,8 +115,6 @@ class FileField extends FormField {
 			$file = new File();
 		}
 		
-		$this->upload->setAllowedExtensions($this->allowedExtensions);
-		$this->upload->setAllowedMaxFileSize($this->allowedMaxFileSize);
 		$this->upload->loadIntoFile($_FILES[$this->name], $file, $this->folderName);
 		if($this->upload->isError()) return false;
 		
@@ -133,20 +133,35 @@ class FileField extends FormField {
 	}
 	
 	/**
+	 * Get custom validator for this field
+	 * 
+	 * @param object $validator
+	 */
+	public function getValidator() {
+		return $this->upload->getValidator();
+	}
+	
+	/**
+	 * Set custom validator for this field
+	 * 
+	 * @param object $validator
+	 */
+	public function setValidator($validator) {
+		$this->upload->setValidator($validator);
+	}
+	
+	/**
 	 * Get maximum file size for all or specified file extension.
 	 * Falls back to the default filesize restriction ('*')
 	 * if the extension was not found.
 	 *
+	 * @deprecated 2.5
 	 * @param string $ext
 	 * @return int Filesize in bytes (0 means no filesize set)
 	 */
 	public function getAllowedMaxFileSize($ext = null) {
-		$ext = strtolower($ext);
-		if(isset($ext) && isset($this->allowedMaxFileSize[$ext])) {
-			return $this->allowedMaxFileSize[$ext];   
-		} else {
-			return (isset($this->allowedMaxFileSize['*'])) ? $this->allowedMaxFileSize['*'] : 0;
-		}
+		user_error('Upload::getAllowedMaxFileSize() is deprecated. Please use Upload_Validator::getAllowedMaxFileSize() instead', E_USER_NOTICE);
+		$this->getValidator()->getAllowedMaxFileSize($ext);
 	}
 	
 	/**
@@ -159,35 +174,30 @@ class FileField extends FormField {
 	 * array('*' => 200, 'jpg' => 1000)
 	 * </code>
 	 *
+	 * @deprecated 2.5
 	 * @param unknown_type $rules
 	 */
 	public function setAllowedMaxFileSize($rules) {
-		if(is_array($rules)) {
-			// make sure all extensions are lowercase
-			$rules = array_change_key_case($rules, CASE_LOWER);
-			$this->allowedMaxFileSize = $rules;
-		} else {
-			$this->allowedMaxFileSize['*'] = (int)$rules;
-		}
+		user_error('Upload::setAllowedMaxFileSize() is deprecated. Please use Upload_Validator::setAllowedMaxFileSize() instead', E_USER_NOTICE);
+		$this->getValidator()->setAllowedMaxFileSize($rules);
 	}
 	
 	/**
+	 * @deprecated 2.5
 	 * @return array
 	 */
 	public function getAllowedExtensions() {
-		return $this->allowedExtensions;
+		user_error('Upload::getAllowedExtensions() is deprecated. Please use Upload_Validator::getAllowedExtensions() instead', E_USER_NOTICE);
+		return $this->getValidator()->getAllowedExtensions();
 	}
 	
 	/**
+	 * @deprecated 2.5
 	 * @param array $rules
 	 */
 	public function setAllowedExtensions($rules) {
-		if(!is_array($rules)) return false;
-		
-		// make sure all rules are lowercase
-		foreach($rules as &$rule) $rule = strtolower($rule);
-		
-		$this->allowedExtensions = $rules;
+		user_error('Upload::setAllowedExtensions() is deprecated. Please use Upload_Validator::setAllowedExtensions() instead', E_USER_NOTICE);
+		$this->getValidator()->setAllowedExtensions($rules);
 	}
 	
 	/**
@@ -208,8 +218,6 @@ class FileField extends FormField {
 		if(!isset($_FILES[$this->name])) return true;
 		
 		$tmpFile = $_FILES[$this->name];
-		$this->upload->setAllowedExtensions($this->allowedExtensions);
-		$this->upload->setAllowedMaxFileSize($this->allowedMaxFileSize);
 
 		$valid = $this->upload->validate($tmpFile);
 		if(!$valid) {
