@@ -70,4 +70,6 @@ PasswordEncryptor::register('md5', 'PasswordEncryptor_LegacyPHPHash("md5")');
 PasswordEncryptor::register('sha1','PasswordEncryptor_LegacyPHPHash("sha1")');
 PasswordEncryptor::register('md5_v2.4', 'PasswordEncryptor_PHPHash("md5")');
 PasswordEncryptor::register('sha1_v2.4','PasswordEncryptor_PHPHash("sha1")');
-?>
+
+// Set the default folder for where combined JS/CSS files should live
+Requirements::set_combined_files_folder('assets/.combinedfiles');
