@@ -178,9 +178,6 @@ class RequirementsTest extends SapphireTest {
 		
 		$backend->block(SAPPHIRE_DIR . '/tests/forms/a.css');
 		$this->assertTrue(count($backend->get_css()) == 0, "There should be nothing in required css after file has been blocked.");
-		
-		
-		
 	}
 	
 }
