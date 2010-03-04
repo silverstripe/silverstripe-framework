@@ -44,12 +44,6 @@ class TreeDropdownField extends FormField {
 		$this->labelField   = $labelField;
 		$this->showSearch	= $showSearch;
 		
-		if(!Object::has_extension($this->sourceObject, 'Hierarchy')) {
-			throw new Exception (
-				"TreeDropdownField: the source class '$this->sourceObject' must have the Hierarchy extension applied"
-			);
-		}
-		
 		parent::__construct($name, $title);
 	}
 	
