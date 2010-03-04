@@ -41,6 +41,7 @@ class RequirementsTest extends SapphireTest {
 
 	protected function setupCombinedRequirements($backend) {
 		$backend->clear();
+		$backend->setCombinedFilesFolder('assets');
 
 		// clearing all previously generated requirements (just in case)
 		$backend->clear_combined_files();
@@ -64,11 +65,12 @@ class RequirementsTest extends SapphireTest {
 	function testCombinedJavascript() {
 		$backend = new Requirements_Backend;
 		$backend->set_combined_files_enabled(true);
+		$backend->setCombinedFilesFolder('assets');
 
 		$this->setupCombinedRequirements($backend);
 		
-		$combinedFilePath = Director::baseFolder() . '/' . 'RequirementsTest_bc.js';
-		
+		$combinedFilePath = Director::baseFolder() . '/assets/' . 'RequirementsTest_bc.js';
+
 		$html = $backend->includeInHTML(false, self::$html_template);
 
 		/* COMBINED JAVASCRIPT FILE IS INCLUDED IN HTML HEADER */
@@ -94,8 +96,8 @@ class RequirementsTest extends SapphireTest {
 	function testBlockedCombinedJavascript() {
 		$backend = new Requirements_Backend;
 		$backend->set_combined_files_enabled(true);
-
-		$combinedFilePath = Director::baseFolder() . '/' . 'RequirementsTest_bc.js';
+		$backend->setCombinedFilesFolder('assets');
+		$combinedFilePath = Director::baseFolder() . '/assets/' . 'RequirementsTest_bc.js';
 
 		/* BLOCKED COMBINED FILES ARE NOT INCLUDED */
 		$this->setupCombinedRequirements($backend);

@@ -23,7 +23,15 @@ class Requirements {
 	public static function get_combined_files_enabled() {
 	  return self::backend()->get_combined_files_enabled();
 	}
-	
+
+	/**
+	 * Set the relative folder e.g. "assets" for where to store combined files
+	 * @param string $folder Path to folder
+	 */
+	public static function set_combined_files_folder($folder) {
+		self::backend()->setCombinedFilesFolder($folder);
+	}
+
 	/**
 	 * Set whether we want to suffix requirements with the time / 
 	 * location on to the requirements
@@ -381,6 +389,8 @@ class Requirements_Backend {
 	 */
 	public $combine_js_with_jsmin = true;
 
+	protected $combinedFilesFolder;
+
 	/**
 	 * Put all javascript includes at the bottom of the template
 	 * before the closing <body> tag instead of the <head> tag.
@@ -397,11 +407,15 @@ class Requirements_Backend {
 	public $write_js_to_body = true;
 
 	function set_combined_files_enabled($enable) {
-	  $this->combined_files_enabled = (bool) $enable;
+		$this->combined_files_enabled = (bool) $enable;
 	}
 	
 	function get_combined_files_enabled() {
-	  return $this->combined_files_enabled;
+		return $this->combined_files_enabled;
+	}
+
+	function setCombinedFilesFolder($folder) {
+		$this->combinedFilesFolder = $folder;
 	}
 	
 	/**
@@ -610,7 +624,7 @@ class Requirements_Backend {
 			// Combine files - updates $this->javascript and $this->css 
  			$this->process_combined_files(); 
 	
-			foreach(array_diff_key($this->javascript,$this->blocked) as $file => $dummy) { 
+			foreach(array_diff_key($this->javascript,$this->blocked) as $file => $dummy) {
 				$path = $this->path_for_file($file);
 				if($path) {
 					$jsRequirements .= "<script type=\"text/javascript\" src=\"$path\"></script>\n";
@@ -825,8 +839,9 @@ class Requirements_Backend {
 	 */
 	function delete_combined_files($combinedFileName = null) {
 		$combinedFiles = ($combinedFileName) ? array($combinedFileName => null) : $this->combine_files;
+		$combinedFolder = ($this->combinedFilesFolder) ? (Director::baseFolder() . '/' . $this->combinedFilesFolder) : Director::baseFolder();
 		foreach($combinedFiles as $combinedFile => $sourceItems) {
-			$filePath = Director::baseFolder() . '/' . $combinedFile;
+			$filePath = $combinedFolder . '/' . $combinedFile;
 			if(file_exists($filePath)) {
 				unlink($filePath);
 			}
@@ -836,7 +851,6 @@ class Requirements_Backend {
 	function clear_combined_files() {
 		$this->combine_files = array();
 	}
-	
 
 	/**
 	 * See {@link combine_files()}
@@ -863,14 +877,17 @@ class Requirements_Backend {
 				
 			}
 		}
-		
+
+		// Work out the relative URL for the combined files from the base folder
+		$combinedFilesFolder = ($this->combinedFilesFolder) ? ($this->combinedFilesFolder . '/') : '';
+
 		// Figure out which ones apply to this pageview
 		$combinedFiles = array();
 		$newJSRequirements = array();
 		$newCSSRequirements = array();
 		foreach($this->javascript as $file => $dummy) {
 			if(isset($combinerCheck[$file])) {
-				$newJSRequirements[$combinerCheck[$file]] = true;
+				$newJSRequirements[$combinedFilesFolder . $combinerCheck[$file]] = true;
 				$combinedFiles[$combinerCheck[$file]] = true;
 			} else {
 				$newJSRequirements[$file] = true;
@@ -879,7 +896,7 @@ class Requirements_Backend {
 		
 		foreach($this->css as $file => $params) {
 			if(isset($combinerCheck[$file])) {
-				$newCSSRequirements[$combinerCheck[$file]] = true;
+				$newCSSRequirements[$combinedFilesFolder . $combinerCheck[$file]] = true;
 				$combinedFiles[$combinerCheck[$file]] = true;
 			} else {
 				$newCSSRequirements[$file] = $params;
@@ -888,7 +905,7 @@ class Requirements_Backend {
 
 		// Process the combined files
 		$base = Director::baseFolder() . '/';
-		foreach(array_diff_key($combinedFiles,$this->blocked) as $combinedFile => $dummy) {
+		foreach(array_diff_key($combinedFiles, $this->blocked) as $combinedFile => $dummy) {
 			$fileList = $this->combine_files[$combinedFile];
 
 			 // Determine if we need to build the combined include
@@ -921,12 +938,14 @@ class Requirements_Backend {
 				// also the semicolon between each file is required for jQuery to be combinable properly
 				$combinedData .= "/****** FILE: $file *****/\n" . $fileContent . "\n".($isJS ? ';' : '')."\n";
 			}
-			if(!file_exists(dirname($base . $combinedFile))) {
-				Filesystem::makeFolder(dirname($base . $combinedFile));
+
+			$combinedFilePath = Director::baseFolder() . '/' . $this->combinedFilesFolder . '/' . $combinedFile;
+			if(!file_exists(dirname($combinedFilePath))) {
+				Filesystem::makeFolder(dirname($combinedFilePath));
 			}
 			
 			$successfulWrite = false;
-			$fh = fopen($base . $combinedFile, 'w');
+			$fh = fopen($combinedFilePath, 'wb');
 			if($fh) {
 				if(fwrite($fh, $combinedData) == strlen($combinedData)) $successfulWrite = true;
 				fclose($fh);
@@ -935,7 +954,7 @@ class Requirements_Backend {
 
 			// Unsuccessful write - just include the regular JS files, rather than the combined one
 			if(!$successfulWrite) {
-				user_error("Requirements_Backend::process_combined_files(): Couldn't create '$base$combinedFile'", E_USER_WARNING);
+				user_error("Requirements_Backend::process_combined_files(): Couldn't create '$combinedFilePath'", E_USER_WARNING);
 				return;
 			}
 		}
