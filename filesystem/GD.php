@@ -89,8 +89,8 @@ class GD extends Object {
 			}
 			
 			imagecopyresampled($newGD, $this->gd, 0,0, $srcX, $srcY, $width, $height, $srcWidth, $srcHeight);
-		}			
-		$output = new GD();
+		}
+		$output = clone $this;
 		$output->setGD($newGD);
 		return $output;
 	}
@@ -132,7 +132,7 @@ class GD extends Object {
 
 		imagecopyresampled($newGD, $this->gd, 0,0, 0, 0, $width, $height, $this->width, $this->height);
 
-		$output = new GD();
+		$output = clone $this;
 		$output->setGD($newGD);
 		return $output;
 	}
@@ -148,13 +148,13 @@ class GD extends Object {
 	function rotate($angle) {
 		if(!$this->gd) return;
 		
-        if(function_exists("imagerotate")) {
+		if(function_exists("imagerotate")) {
 		    $newGD = imagerotate($this->gd, $angle,0);
 		} else {
 		    //imagerotate is not included in PHP included in Ubuntu
 			$newGD = $this->rotatePixelByPixel($angle);	
 		}
-		$output = new GD();
+		$output = clone $this;
 		$output->setGD($newGD);
 		return $output;
 	}
@@ -216,7 +216,7 @@ class GD extends Object {
 		$newGD = imagecreatetruecolor($width, $height);
 		imagecopyresampled($newGD, $this->gd, 0, 0, $left, $top, $width, $height, $width, $height);
 		
-		$output = new GD();
+		$output = clone $this;
 		$output->setGD($newGD);
 		return $output;
 	}
@@ -328,8 +328,8 @@ class GD extends Object {
 			}
 			
 			imagecopyresampled($newGD, $this->gd, $destX, $destY, 0, 0, $destWidth, $destHeight, $this->width, $this->height);
-		}			
-		$output = new GD();
+		}
+		$output = clone $this;
 		$output->setGD($newGD);
 		return $output;
 	}
@@ -360,11 +360,8 @@ class GD extends Object {
 			}
 		}
 		
-		// imagecopyresampled($newGD, $this->gd, 0,0, $srcX, $srcY, $width, $height, $srcWidth, $srcHeight);
-		
-		$output = new GD();
+		$output = clone $this;
 		$output->setGD($newGD);
-		if($this->quality) $output->setQuality($this->quality);
 		return $output;
 	}
 	
