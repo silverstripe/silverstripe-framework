@@ -110,18 +110,6 @@ class Image extends File {
 	function forTemplate() {
 		return $this->getTag();
 	}
-		
-	/**
-	 * Load a recently uploaded image into this image field.
-	 * @param array $tmpFile The array entry from $_FILES
-	 * @return boolean Returns true if successful
-	 */
-	function loadUploaded($tmpFile) {
-		if(parent::loadUploaded($tmpFile) === true) {
-			$this->deleteFormattedImages();
-			return true;
-		}
-	}
 
 	function loadUploadedImage($tmpFile) {
 		if(!is_array($tmpFile)) {
