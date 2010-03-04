@@ -262,6 +262,8 @@ class SiteConfig extends DataObject {
 		if(!$member || !(is_a($member, 'Member')) || is_numeric($member)) {
 			$member = Member::currentUserID();
 		}
+		
+		if (Permission::check('ADMIN')) return true;
 
 		// check for any logged-in users
 		if($this->CanCreateTopLevelType == 'LoggedInUsers' && $member) return true;
