@@ -617,17 +617,17 @@ class DataObjectSet extends ViewableData implements IteratorAggregate, Countable
 		
 		return $map;
 	}
-    
-    /**
-     * Find an item in this list where the field $key is equal to $value
-     * Eg: $doSet->find('ID', 4);
-     * @return ViewableData The first matching item.
-     */
-    public function find($key, $value) {
-        foreach($this->items as $item) {
-            if($item->$key == $value) return $item;
-        }
-    }
+	
+	/**
+	 * Find an item in this list where the field $key is equal to $value
+	 * Eg: $doSet->find('ID', 4);
+	 * @return ViewableData The first matching item.
+	 */
+	public function find($key, $value) {
+		foreach($this->items as $item) {
+			if($item->$key == $value) return $item;
+		}
+	}
 	
 	/**
 	 * Return a column of the given field
