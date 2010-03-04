@@ -236,23 +236,6 @@ class File extends DataObject {
 
 		return SAPPHIRE_DIR . "/images/app_icons/{$ext}_32.gif";
 	}
-
-	/**
-	 * Save an file passed from a form post into this object.
-	 * DEPRECATED Please instanciate an Upload-object instead and pass the file
-	 * via {Upload->loadIntoFile()}.
-	 * 
-	 * @param $tmpFile array Indexed array that PHP generated for every file it uploads.
-	 * @return Boolean|string Either success or error-message.
-	 */
-	function loadUploaded($tmpFile) {
-		user_error('File::loadUploaded is deprecated, please use the Upload class directly.', E_USER_NOTICE);
-		
-		$upload = new Upload();
-		$upload->loadIntoFile($tmpFile, $this);
-		
-		return $upload->isError();
-	}
 	
 	/**
 	 * Should be called after the file was uploaded 
