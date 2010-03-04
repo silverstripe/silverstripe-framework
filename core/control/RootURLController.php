@@ -87,17 +87,6 @@ class RootURLController extends Controller {
 	}
 	
 	/**
-	 * @deprecated 2.4 Use {@link RootURLController::get_homepage_link()}
-	 */
-	public static function get_homepage_urlsegment() {
-		user_error (
-			'RootURLController::get_homepage_urlsegment() is deprecated, please use get_homepage_link()', E_USER_NOTICE
-		);
-		
-		return self::get_homepage_link();
-	}
-	
-	/**
 	 * @param SS_HTTPRequest $request
 	 * @return SS_HTTPResponse
 	 */
