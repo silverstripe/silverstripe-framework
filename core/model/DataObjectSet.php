@@ -179,6 +179,18 @@ class DataObjectSet extends ViewableData implements IteratorAggregate, Countable
 		$this->pageLength = $pageLength;
 		$this->totalSize = $totalSize;
 	}
+	
+	/**
+	 * Get the page limits
+	 * @return array
+	 */
+	public function getPageLimits() {
+		return array(
+			'pageStart' => $this->pageStart,
+			'pageLength' => $this->pageLength,
+			'totalSize' => $this->totalSize,
+		);
+	}
 
 	/**
 	 * Use the limit from the given query to add prev/next buttons to this DataObjectSet.
@@ -190,7 +202,7 @@ class DataObjectSet extends ViewableData implements IteratorAggregate, Countable
 				$length = $query->limit['limit'];
 				$start = $query->limit['start'];
 			} else if(stripos($query->limit, 'OFFSET')) {
-				list($length, $start) = preg_split("/ +OFFSET +/", trim($query->limit));
+				list($length, $start) = preg_split("/ +OFFSET +/i", trim($query->limit));
 			} else {
 				$result = preg_split("/ *, */", trim($query->limit));
 				$start = $result[0];
@@ -438,11 +450,7 @@ class DataObjectSet extends ViewableData implements IteratorAggregate, Countable
 		if($key == null) {
 			array_unshift($this->items, $item);
 		} else {
-			// Not very efficient :-(
-			$newItems = array();
-			$newItems[$key] = $item;
-			foreach($this->items as $k => $v) $newItems[$k] = $v;
-			$this->items = $newItems;
+			$this->items = array_merge(array($key=>$item), $this->items); 
 		}
 	}
 
@@ -487,9 +495,9 @@ class DataObjectSet extends ViewableData implements IteratorAggregate, Countable
 	 */
 	public function merge($anotherSet){
 		if($anotherSet) {
-			foreach($anotherSet->items as $item){
+			foreach($anotherSet as $item){
 				$this->push($item);
-			}	
+			}
 		}
 	}
 
@@ -501,13 +509,8 @@ class DataObjectSet extends ViewableData implements IteratorAggregate, Countable
 	 * @return DataObjectSet
 	 */
 	public function getRange($offset, $length) {
-		$set = new DataObjectSet();
-		$offset = (int)$offset;
-		$length = (int)$length;
-		for($i=$offset; $i<($offset+$length); $i++) {
-			if(isset($this->items[$i])) $set->push($this->items[$i]);
-		}
-		return $set;
+		$set = array_slice($this->items, (int)$offset, (int)$length);
+		return new DataObjectSet($set);
 	}
 
 	/**
@@ -524,7 +527,7 @@ class DataObjectSet extends ViewableData implements IteratorAggregate, Countable
 	 * @return boolean
 	 */
 	public function exists() {
-		return sizeof($this->items) > 0;
+		return (bool)$this->items;
 	}
 	
 	/**
@@ -536,7 +539,7 @@ class DataObjectSet extends ViewableData implements IteratorAggregate, Countable
 			return null;
 
 		$keys = array_keys($this->items);
-		return sizeof($keys) > 0 ? $this->items[$keys[0]] : null;
+		return $this->items[$keys[0]];
 	}
 	
 	/**

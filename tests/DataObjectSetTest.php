@@ -219,6 +219,111 @@ class DataObjectSetTest extends SapphireTest {
 
 		$this->assertEquals($allComments->Count(), 7, 'There are 7 uniquely named commentators');
 	}
+
+	/**
+	 * Test {@link DataObjectSet->parseQueryLimit()}
+	 */
+	function testParseQueryLimit() {
+		// Create empty objects, because they don't need to have contents
+		$sql = new SQLQuery('*', '"Member"');
+		$max = $sql->unlimitedRowCount();
+		$set = new DataObjectSet();
+		
+		// Test handling an array
+		$set->parseQueryLimit($sql->limit(array('limit'=>5, 'start'=>2)));
+		$expected = array(
+			'pageStart' => 2,
+			'pageLength' => 5,
+			'totalSize' => $max,
+		);
+		$this->assertEquals($expected, $set->getPageLimits(), 'The page limits match expected values.');
+		
+		// Test handling OFFSET string
+		// uppercase
+		$set->parseQueryLimit($sql->limit('3 OFFSET   1'));
+		$expected = array(
+			'pageStart' => 1,
+			'pageLength' => 3,
+			'totalSize' => $max,
+		);
+		$this->assertEquals($expected, $set->getPageLimits(), 'The page limits match expected values.');
+		// and lowercase
+		$set->parseQueryLimit($sql->limit('32   offset   3'));
+		$expected = array(
+			'pageStart' => 3,
+			'pageLength' => 32,
+			'totalSize' => $max,
+		);
+		$this->assertEquals($expected, $set->getPageLimits(), 'The page limits match expected values.');
+		
+		// Finally check MySQL LIMIT syntax
+		$set->parseQueryLimit($sql->limit('7, 7'));
+		$expected = array(
+			'pageStart' => 7,
+			'pageLength' => 7,
+			'totalSize' => $max,
+		);
+		$this->assertEquals($expected, $set->getPageLimits(), 'The page limits match expected values.');
+	}
+
+	/**
+	 * Test {@link DataObjectSet->insertFirst()}
+	 */
+	function testInsertFirst() {
+		// Get one comment
+		$comment = DataObject::get_one('PageComment', 'Name = \'Joe\'');
+		// Get all other comments
+		$set = DataObject::get('PageComment', 'Name != \'Joe\'');
+		
+		// Duplicate so we can use it later without another lookup
+		$otherSet = clone $set;
+		// insert without a key
+		$otherSet->insertFirst($comment);
+		$this->assertEquals($comment, $otherSet->First(), 'Comment should be first');
+		
+		// Give us another copy
+		$otherSet = clone $set;
+		// insert with a numeric key
+		$otherSet->insertFirst($comment, 2);
+		$this->assertEquals($comment, $otherSet->First(), 'Comment should be first');
+		
+		// insert with a non-numeric key
+		$set->insertFirst($comment, 'SomeRandomKey');
+		$this->assertEquals($comment, $set->First(), 'Comment should be first');
+	}
+
+	/**
+	 * Test {@link DataObjectSet->getRange()}
+	 */
+	function testGetRange() {
+		$comments = DataObject::get('PageComment', '', "\"ID\" ASC");
+		
+		// Make sure we got all 8 comments
+		$this->assertEquals($comments->Count(), 8, 'Eight comments in the database.');
+		
+		// Grab a range
+		$range = $comments->getRange(1, 5);
+		$this->assertEquals($range->Count(), 5, 'Five comments in the range.');
+		
+		// And now grab a range that shouldn't be full. Remember counting starts at 0.
+		$range = $comments->getRange(7, 5);
+		$this->assertEquals($range->Count(), 1, 'One comment in the range.');
+		// Make sure it's the last one
+		$this->assertEquals($range->First(), $comments->Last(), 'The only item in the range should be the last one.');
+	}
+
+	/**
+	 * Test {@link DataObjectSet->exists()}
+	 */
+	function testExists() {
+		// Test an empty set
+		$set = new DataObjectSet();
+		$this->assertFalse($set->exists(), 'Empty set doesn\'t exist.');
+		// Test a non-empty set
+		$set = DataObject::get('PageComment', '', "\"ID\" ASC");
+		$this->assertTrue($set->exists(), 'Non-empty set does exist.');
+	}
+
 }
 
 /**
