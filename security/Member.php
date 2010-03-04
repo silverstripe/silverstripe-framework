@@ -107,6 +107,15 @@ class Member extends DataObject {
 	 */
 	protected static $login_marker_cookie = null;
 
+
+	/**
+	 * Ensure the locale is set to something sensible by default.
+	 */
+	public function populateDefaults() {
+		parent::populateDefaults();
+		$this->Locale = i18n::get_locale();
+	}
+
 	/**
 	 * If this is called, then a session cookie will be set to "1" whenever a user
 	 * logs in.  This lets 3rd party tools, such as apache's mod_rewrite, detect
@@ -469,8 +478,7 @@ class Member extends DataObject {
 		$fields->replaceField('Locale', new DropdownField (
 			'Locale',
 			$this->fieldLabel('Locale'),
-			i18n::get_existing_translations(),
-			(($this->Locale) ? $this->Locale : i18n::get_locale())
+			i18n::get_existing_translations()
 		));
 
 		$fields->removeByName('RememberLoginToken');
@@ -996,12 +1004,10 @@ class Member extends DataObject {
 			'Email'
 		);
 		
-		$locale = ($this->Locale) ? $this->Locale : i18n::get_locale();
 		$mainFields->replaceField('Locale', new DropdownField(
 			"Locale", 
 			_t('Member.INTERFACELANG', "Interface Language", PR_MEDIUM, 'Language of the CMS'), 
-			i18n::get_existing_translations(), 
-			$locale
+			i18n::get_existing_translations()
 		));
 		
 		$mainFields->removeByName('Bounced');
@@ -1682,5 +1688,6 @@ class Member_Validator extends RequiredFields {
 
 		return $js;
 	}
+
 }
 ?>
