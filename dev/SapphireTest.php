@@ -121,17 +121,19 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 			
 			self::empty_temp_db();
 
-			$fixtureFiles = (is_array($fixtureFile)) ? $fixtureFile : array($fixtureFile);
-			
-			$i = 0;
-			foreach($fixtureFiles as $fixtureFilePath) {
-				$fixture = new YamlFixture($fixtureFilePath);
-				$fixture->saveIntoDatabase();
-				$this->fixtures[] = $fixture;
-				
-				// backwards compatibility: Load first fixture into $this->fixture
-				if($i == 0) $this->fixture = $fixture;
-				$i++;
+			if($fixtureFile) {
+				$fixtureFiles = (is_array($fixtureFile)) ? $fixtureFile : array($fixtureFile);
+
+				$i = 0;
+				foreach($fixtureFiles as $fixtureFilePath) {
+					$fixture = new YamlFixture($fixtureFilePath);
+					$fixture->saveIntoDatabase();
+					$this->fixtures[] = $fixture;
+
+					// backwards compatibility: Load first fixture into $this->fixture
+					if($i == 0) $this->fixture = $fixture;
+					$i++;
+				}
 			}
 			
 			$this->logInWithPermission("ADMIN");
