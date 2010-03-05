@@ -859,7 +859,7 @@ class Requirements_Backend {
 	function process_combined_files() {
 		// The class_exists call prevents us from loading SapphireTest.php (slow) just to know that
 		// SapphireTest isn't running :-)
-		if(class_exists('SapphireTest',false)) $runningTest = SapphireTest::is_running_test();
+		if(class_exists('SapphireTest', false)) $runningTest = SapphireTest::is_running_test();
 		else $runningTest = false;
 		
 		if((Director::isDev() && !$runningTest) || !$this->combined_files_enabled) {
@@ -924,7 +924,7 @@ class Requirements_Backend {
 			if(!$refresh) continue;
 
 			$combinedData = "";
-			foreach(array_diff($fileList,$this->blocked) as $file) {
+			foreach(array_diff($fileList, $this->blocked) as $file) {
 				$fileContent = file_get_contents($base . $file);
 				// if we have a javascript file and jsmin is enabled, minify the content
 				$isJS = stripos($file, '.js');

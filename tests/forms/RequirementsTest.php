@@ -148,7 +148,7 @@ class RequirementsTest extends SapphireTest {
 
 		$backend->javascript(SAPPHIRE_DIR . '/tests/forms/RequirementsTest_a.js?test=1&test=2&test=3');
 		$backend->css(SAPPHIRE_DIR . '/tests/forms/RequirementsTest_a.css?test=1&test=2&test=3');
-		Requirements::delete_combined_files('RequirementsTest_bc.js'); 
+		$backend->delete_combined_files('RequirementsTest_bc.js');
 
 		$html = $backend->includeInHTML(false, self::$html_template);
 
