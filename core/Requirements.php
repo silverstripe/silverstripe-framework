@@ -389,7 +389,12 @@ class Requirements_Backend {
 	 */
 	public $combine_js_with_jsmin = true;
 
-	protected $combinedFilesFolder;
+	/**
+	 * By default, combined files are stored in assets/_combinedfiles.
+	 * Set this by calling Requirements::set_combined_files_folder()
+	 * @var string
+	 */
+	protected $combinedFilesFolder = 'assets/_combinedfiles';
 
 	/**
 	 * Put all javascript includes at the bottom of the template
