@@ -12,7 +12,7 @@ class SS_Cli extends Object {
 	 */
 	static function supports_colour() {
 		if(!defined('STDOUT')) define('STDOUT', fopen("php://stdout","w"));
-		return @posix_isatty(STDOUT);
+		return function_exists('posix_isatty') ? @posix_isatty(STDOUT) : false;
 	}
 	
 	/**
