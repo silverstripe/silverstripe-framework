@@ -702,7 +702,7 @@ class Requirements_Backend {
 			$path = $this->path_for_file($file);
 			if($path) $jsRequirements[] = $path;
 		}
-
+		
 		$response->addHeader('X-Include-JS', implode(',', $jsRequirements));
 
 		foreach(array_diff_key($this->css,$this->blocked) as $file => $params) {  					
@@ -912,9 +912,10 @@ class Requirements_Backend {
 		$base = Director::baseFolder() . '/';
 		foreach(array_diff_key($combinedFiles, $this->blocked) as $combinedFile => $dummy) {
 			$fileList = $this->combine_files[$combinedFile];
+			$combinedFilePath = $base . '/' . $combinedFilesFolder . '/' . $combinedFile;
 
 			 // Determine if we need to build the combined include
-			if(file_exists($base . $combinedFile) && !isset($_GET['flush'])) {
+			if(file_exists($combinedFilePath) && !isset($_GET['flush'])) {
 				// file exists, check modification date of every contained file
 				$srcLastMod = 0;
 				foreach($fileList as $file) {
