@@ -921,7 +921,7 @@ class Requirements_Backend {
 				foreach($fileList as $file) {
 					$srcLastMod = max(filemtime($base . $file), $srcLastMod);
 				}
-				$refresh = $srcLastMod > filemtime($base . $combinedFile);
+				$refresh = $srcLastMod > filemtime($combinedFilePath);
 			} else {
 				// file doesn't exist, or refresh was explicitly required
 				$refresh = true;
