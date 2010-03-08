@@ -51,7 +51,7 @@ class WidgetArea extends DataObject {
 	}
 	
 	function ItemsToRender() {
-		return $this->getComponents('Widgets', "Widget.Enabled = 1");
+		return $this->getComponents('Widgets', "\"Widget\".\"Enabled\" = 1");
 	}
 	
 	function forTemplate() {
