@@ -20,7 +20,7 @@
  * @package sapphire
  * @subpackage misc
  */
-class Convert extends Object {
+class Convert {
 	
 	/**
 	 * Convert a value to be suitable for an XML attribute.
