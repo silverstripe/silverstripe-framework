@@ -1224,17 +1224,15 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		}
 		$version = new SapphireInfo();
 
-		$tags .= "<meta name=\"generator\" http-equiv=\"generator\" content=\"SilverStripe - http://www.silverstripe.com\" />\n";
+		$tags .= "<meta name=\"generator\" content=\"SilverStripe - http://www.silverstripe.com\" />\n";
 
 		$charset = ContentNegotiator::get_encoding();
 		$tags .= "<meta http-equiv=\"Content-type\" content=\"text/html; charset=$charset\" />\n";
 		if($this->MetaKeywords) {
-			$tags .= "<meta name=\"keywords\" http-equiv=\"keywords\" content=\"" .
-				Convert::raw2att($this->MetaKeywords) . "\" />\n";
+			$tags .= "<meta name=\"keywords\" content=\"" . Convert::raw2att($this->MetaKeywords) . "\" />\n";
 		}
 		if($this->MetaDescription) {
-			$tags .= "<meta name=\"description\" http-equiv=\"description\" content=\"" .
-				Convert::raw2att($this->MetaDescription) . "\" />\n";
+			$tags .= "<meta name=\"description\" content=\"" . Convert::raw2att($this->MetaDescription) . "\" />\n";
 		}
 		if($this->ExtraMeta) { 
 			$tags .= $this->ExtraMeta . "\n";
