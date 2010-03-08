@@ -4,7 +4,7 @@
  * @package sapphire
  * @subpackage misc
  */
-class Cookie extends Object {
+class Cookie {
 	static $report_errors = true;
 	
 	/**
