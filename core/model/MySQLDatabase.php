@@ -857,6 +857,21 @@ class MySQLDatabase extends SS_Database {
 	}
 	
 	/*
+	 * This is a lookup table for data types.
+	 * For instance, Postgres uses 'INT', while MySQL uses 'UNSIGNED'
+	 * So this is a DB-specific list of equivilents.
+	 */
+	function dbDataType($type){
+		$values=Array(
+			'unsigned integer'=>'UNSIGNED'
+		);
+		
+		if(isset($values[$type]))
+			return $values[$type];
+		else return '';
+	}
+	
+	/*
 	 * This will return text which has been escaped in a database-friendly manner
 	 * Using PHP's addslashes method won't work in MSSQL
 	 */
