@@ -11,7 +11,7 @@
  * @package sapphire
  * @subpackage security
  */
-class BasicAuth extends Object {
+class BasicAuth {
 	/**
 	 * Flag set by {@link self::protect_entire_site()}
 	 */
