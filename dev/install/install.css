@@ -36,32 +36,32 @@ h4.sectionHeading {
 	margin-top: 20px;
 }
 
-p.error {
+.error {
 	padding: 0.5em;
 	background-color: #ffe9e9;
 	border: 1px #ff8e8e solid;
 	color: #f03838;
 }
-p.warning {
+.warning {
 	padding: 0.5em;
 	background-color: #fef1e1;
 	border: 1px #ffc28b solid;
 	color: #cb6a1c;
 }
-	p.warning label {
+	.warning label {
 		display: inline;
 		margin-left: 5px;
 		color: #cb6a1c
 	}
-p.good {
+.good {
 	padding: 0.5em;
 	background-color: #e2fee1;
 	border: 1px #43cb3e solid;
 	color: #359318;
 }
-p.error a,
-p.warning a,
-p.good a {
+.error a,
+.warning a,
+.good a {
 	color: inherit;
 	text-decoration: underline;
 }
@@ -110,7 +110,7 @@ table.testResults {
 .helpText {
 	float: right;
 	padding-right: 40px;
-	width: 360px;
+	width: 290px;
 }
 
 div.section {
@@ -139,25 +139,34 @@ div.section {
 #database_credentials {
 	margin: 0;
 	line-height: 1;
+	width: 400px;
 }
 
 #database_selection {
-	width: 200px;
+	width: 400px;
 	overflow: hidden;
 	margin: 0;
 	margin-top: 15px;
 }
 	#database_selection li {
 		float: left;
-		width: 200px;
+		width: 430px;
 	}
 		#database_selection li input {
 			float: left;
 		}
 		#database_selection li label {
 			float: left;
-			margin: 0;
+			margin: 0 6px 0 0;
 			margin-left: 5px;
 			font-weight: bold;
 		}
 
+.databaseError {
+	clear:both;
+	overflow: hidden;
+	width: 350px;
+	margin: 25px;
+	margin-bottom: 0;
+	display: none;
+}
