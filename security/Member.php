@@ -1471,9 +1471,7 @@ class Member_ProfileForm extends Form {
 			new FormAction('dosave',_t('CMSMain.SAVE'))
 		);
 		
-		$validator = new RequiredFields(
-		
-		);
+		$validator = new Member_Validator();
 		
 		parent::__construct($controller, $name, $fields, $actions, $validator);
 		
@@ -1481,8 +1479,12 @@ class Member_ProfileForm extends Form {
 	}
 	
 	function dosave($data, $form) {
-		$SQL_data = Convert::raw2sql($data);
+		// don't allow ommitting or changing the ID
+		if(!isset($data['ID']) || $data['ID'] != Member::currentUserID()) {
+			return Director::redirectBack();
+		}
 		
+		$SQL_data = Convert::raw2sql($data);
 		$member = DataObject::get_by_id("Member", $SQL_data['ID']);
 		
 		if($SQL_data['Locale'] != $member->Locale) {
