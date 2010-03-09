@@ -564,27 +564,33 @@ class Member extends DataObject {
 	 */
 	function onBeforeWrite() {
 		if($this->SetPassword) $this->Password = $this->SetPassword;
+
+		// If a member with the same "unique identifier" already exists with a different ID, don't allow merging.
+		// Note: This does not a full replacement for safeguards in the controller layer (e.g. in a registration form), 
+		// but rather a last line of defense against data inconsistencies.
 		$identifierField = self::$unique_identifier_field;
 		if($this->$identifierField) {
-			$idClause = ($this->ID) ? " AND \"Member\".\"ID\" <> $this->ID" : '';
-			$SQL_identifierField = Convert::raw2sql($this->$identifierField);
-			
-			$existingRecord = DataObject::get_one('Member', "\"$identifierField\" = '{$SQL_identifierField}'{$idClause}");
+			// Note: Same logic as Member_Validator class
+			$idClause = ($this->ID) ? sprintf(" AND \"Member\".\"ID\" <> %d", (int)$this->ID) : '';
+			$existingRecord = DataObject::get_one(
+				'Member', 
+				sprintf(
+					"\"%s\" = '%s' %s",
+					$identifierField,
+					Convert::raw2sql($this->$identifierField),
+					$idClause
+				)
+			);
 			if($existingRecord) {
-				$newID = $existingRecord->ID;
-				if($this->ID) {
-					DB::query("UPDATE \"Group_Members\" SET \"MemberID\" = $newID WHERE \"MemberID\" = $this->ID");
-				}
-				$this->ID = $newID;
-				// Merge existing data into the local record
-
-				foreach($existingRecord->getAllFields() as $k => $v) {
-					if(!$this->isChanged($k)) $this->record[$k] = $v;
-				}
-				$existingRecord->destroy();
+				throw new ValidationException(sprintf(
+					'Can\'t overwrite existing member #%d with identical $unique_identifier_field (%s = %s))',
+					$existingRecord->ID,
+					$identifierField,
+					$this->$identifierField
+				));
 			}
 		}
-		
+
 		// We don't send emails out on dev/tests sites to prevent accidentally spamming users.
 		// However, if TestMailer is in use this isn't a risk.
 		if(
@@ -595,7 +601,7 @@ class Member extends DataObject {
 		) {
 			$this->sendInfo('changePassword');
 		}
-		
+
 		// The test on $this->ID is used for when records are initially created.
 		// Note that this only works with cleartext passwords, as we can't rehash
 		// existing passwords.
@@ -611,7 +617,7 @@ class Member extends DataObject {
 			$this->Password = $encryption_details['password'];
 			$this->Salt = $encryption_details['salt'];
 			$this->PasswordEncryption = $encryption_details['algorithm'];
-			
+
 			// If we haven't manually set a password expiry
 			if(!$this->isChanged('PasswordExpiry')) {
 				// then set it for us
@@ -622,7 +628,7 @@ class Member extends DataObject {
 				}
 			}
 		}
-		
+
 		// save locale
 		if(!$this->Locale) {
 			$this->Locale = i18n::get_locale();

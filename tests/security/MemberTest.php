@@ -6,10 +6,49 @@
 class MemberTest extends FunctionalTest {
 	static $fixture_file = 'sapphire/tests/security/MemberTest.yml';
 	
+	protected $orig = array();
+	
 	function setUp() {
 		parent::setUp();
 		
+		$this->orig['Member_unique_identifier_field'] = Member::get_unique_identifier_field();
+		Member::set_unique_identifier_field('Email');
 		Member::set_password_validator(null);
+	}
+	
+	function tearDown() {
+		Member::set_unique_identifier_field($this->orig['Member_unique_identifier_field']);
+		
+		parent::tearDown();
+	}
+
+	/**
+	 * @expectedException ValidationException
+	 */
+	function testWriteDoesntMergeNewRecordWithExistingMember() {
+		$m1 = new Member();
+		$m1->Email = 'member@test.com';
+		$m1->write();
+		
+		$m2 = new Member();
+		$m2->Email = 'member@test.com';
+		$m2->write();
+	}
+	
+	/**
+	 * @expectedException ValidationException
+	 */
+	function testWriteDoesntMergeExistingMemberOnIdentifierChange() {
+		$m1 = new Member();
+		$m1->Email = 'member@test.com';
+		$m1->write();
+		
+		$m2 = new Member();
+		$m2->Email = 'member_new@test.com';
+		$m2->write();
+		
+		$m2->Email = 'member@test.com';
+		$m2->write();
 	}
 	
 	function testDefaultPasswordEncryptionOnMember() {
