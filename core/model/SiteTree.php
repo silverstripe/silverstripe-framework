@@ -2017,7 +2017,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	}
 	
 	static function generate_homepage_domain_map() {
-		$domainSpecificHomepages = Versioned::get_by_stage('Page', 'Live', "HomepageForDomain != ''", 'URLSegment ASC');
+		$domainSpecificHomepages = Versioned::get_by_stage('Page', 'Live', "\"HomepageForDomain\" != ''", "\"URLSegment\" ASC");
 		if (!$domainSpecificHomepages) return false;
 		
 		$map = array();
