@@ -47,14 +47,14 @@ if ($cacheOn && empty($_COOKIE['bypassStaticCache'])) {
 	$file = preg_replace('/[^a-zA-Z0-9]/si', '_', $file);
 
 	if (file_exists('../cache/'.$cacheDir.$file.'.html')) {
-		header('X-cache: hit at '.@date('r'));
+		header('X-SilverStripe-Cache: hit at '.@date('r'));
 		echo file_get_contents('../cache/'.$cacheDir.$file.'.html');
 	} elseif (file_exists('../cache/'.$cacheDir.$file.'.php')) {
-		header('X-cache: hit at '.@date('r'));
+		header('X-SilverStripe-Cache: hit at '.@date('r'));
 		include_once '../cache/'.$cacheDir.$file.'.php';
 	if ($cacheDebug) echo "<h1>File was cached</h1>";
 	} else {
-		header('X-cache: miss at '.@date('r') . ' on ' . $cacheDir . $file);
+		header('X-SilverStripe-Cache: miss at '.@date('r') . ' on ' . $cacheDir . $file);
 		// No cache hit... fallback!!!
 		include 'main.php';
 		if ($cacheDebug) echo "<h1>File was !NOT! cached</h1>";
