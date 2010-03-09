@@ -686,7 +686,9 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 			$permission->write();
 			$group->Permissions()->add($permission);
 			
-			$member = new Member();
+			$member = DataObject::get_one('Member', sprintf('"Email" = \'%s\'', "$permCode@example.org"));
+			if(!$member) $member = new Member();
+			
 			$member->FirstName = $permCode;
 			$member->Surname = "User";
 			$member->Email = "$permCode@example.org";

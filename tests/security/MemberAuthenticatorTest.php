@@ -9,7 +9,7 @@ class MemberAuthenticatorTest extends SapphireTest {
 		
 		$field=Member::get_unique_identifier_field();
 		
-		$member->$field = 'test@test.com';
+		$member->$field = 'test1@test.com';
 		$member->PasswordEncryption = "sha1";
 		$member->Password = "mypassword";
 		$member->write();
@@ -32,7 +32,7 @@ class MemberAuthenticatorTest extends SapphireTest {
 		$field=Member::get_unique_identifier_field();
 		
 		$member = new Member();
-		$member->$field = 'test@test.com';
+		$member->$field = 'test2@test.com';
 		$member->PasswordEncryption = "crc32";
 		$member->Password = "mypassword";
 		$member->write();
