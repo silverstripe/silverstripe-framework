@@ -153,7 +153,7 @@
 										<?php
 										foreach($databaseClasses as $class => $details) {
 											$checked = ($databaseConfig['type'] == $class) ? ' checked="checked"' : '';
-											$disabled = $halp = '';
+											$disabled = $help = '';
 											if($usingEnv) {
 												// All are disabled by default when environment is used
 												$disabled = 'disabled="disabled"';
