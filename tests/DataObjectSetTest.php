@@ -271,9 +271,9 @@ class DataObjectSetTest extends SapphireTest {
 	 */
 	function testInsertFirst() {
 		// Get one comment
-		$comment = DataObject::get_one('PageComment', 'Name = \'Joe\'');
+		$comment = DataObject::get_one('PageComment', '"Name" = \'Joe\'');
 		// Get all other comments
-		$set = DataObject::get('PageComment', 'Name != \'Joe\'');
+		$set = DataObject::get('PageComment', '"Name" != \'Joe\'');
 		
 		// Duplicate so we can use it later without another lookup
 		$otherSet = clone $set;
