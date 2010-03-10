@@ -188,13 +188,12 @@ TreeDropdownField.prototype = {
 	},
 	
 	ajaxGetTree: function(after) {
-		var baseTags = document.getElementsByTagName('base');
-		var base = (baseTags) ? baseTags[0].href : '';
-		var ajaxURL = base + this.buildURL('tree?forceValues=' + this.inputTag.value);
-		ajaxURL += $('SecurityID') ? '&SecurityID=' + $('SecurityID').value : '';
+		var ajaxURL = this.buildURL('tree?forceValues=' + this.inputTag.value); 
+		var secId = jQuery('[@name=SecurityID]'); 
+		ajaxURL += secId.length ? '&SecurityID=' + secId.val() : '';
 		if($('Form_EditForm_Locale')) ajaxURL += "&locale=" + $('Form_EditForm_Locale').value;
-		if ( this.inputTag.value ) ajaxURL += '&forceValue=' + this.inputTag.value;
-		if (this.search() != null) ajaxURL += "&search=" + this.search(); 
+		if(this.inputTag.value) ajaxURL += '&forceValue=' + this.inputTag.value;
+		if(this.search() != null) ajaxURL += "&search=" + this.search(); 
 		new Ajax.Request(ajaxURL, {
 			method : 'get', 
 			onSuccess : after,
