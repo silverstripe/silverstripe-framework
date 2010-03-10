@@ -191,7 +191,7 @@ class VirtualPage extends Page {
 			}
 		}
 		
-		FormResponse::add("$('Form_EditForm').reloadIfSetTo($this->ID);");
+		FormResponse::add("$('Form_EditForm').reloadIfSetTo($this->ID);", $this->ID."_VirtualPage_onAfterWrite");
 	}
 	
 	/**
