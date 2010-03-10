@@ -1080,7 +1080,12 @@ class ComplexTableField_Popup extends Form {
 		Requirements::javascript(SAPPHIRE_DIR . "/javascript/ComplexTableField_popup.js");
 
 		// Append requirements from instance callbacks
-		$callback = $this->getParentController()->getParentController()->requirementsForPopupCallback;
+		$parent = $this->getParentController();
+		if($parent instanceof ComplexTableField) {
+			$callback = $parent->requirementsForPopupCallback;
+		} else {
+			$callback = $parent->getParentController()->requirementsForPopupCallback;
+		}
 		if($callback) call_user_func($callback, $this);
 
 		// Append requirements from DataObject
