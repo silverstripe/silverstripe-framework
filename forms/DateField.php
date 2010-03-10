@@ -363,7 +363,7 @@ JS;
 			if(Zend_Date::isDate($min, $this->getConfig('datavalueformat'))) {
 				$minDate = new Zend_Date($min, $this->getConfig('datavalueformat'));
 			} else {
-				$minDate = new Zend_Date(strftime('%F', strtotime($min)), $this->getConfig('datavalueformat'));
+				$minDate = new Zend_Date(strftime('%Y-%m-%d', strtotime($min)), $this->getConfig('datavalueformat'));
 			}
 			if(!$this->valueObj->isLater($minDate) && !$this->valueObj->equals($minDate)) {
 				$validator->validationError(
@@ -383,7 +383,7 @@ JS;
 			if(Zend_Date::isDate($min, $this->getConfig('datavalueformat'))) {
 				$maxDate = new Zend_Date($max, $this->getConfig('datavalueformat'));
 			} else {
-				$maxDate = new Zend_Date(strftime('%F', strtotime($max)), $this->getConfig('datavalueformat'));
+				$maxDate = new Zend_Date(strftime('%Y-%m-%d', strtotime($max)), $this->getConfig('datavalueformat'));
 			}
 			if(!$this->valueObj->isEarlier($maxDate) && !$this->valueObj->equals($maxDate)) {
 				$validator->validationError(
