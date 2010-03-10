@@ -644,20 +644,13 @@ class Security extends Controller {
 		}
 
 		if(!$adminGroup) {
-			$adminGroup = Object::create('Group');
-			$adminGroup->Title = 'Administrators';
-			$adminGroup->Code = "administrators";
-			$adminGroup->write();
-			Permission::grant($adminGroup->ID, "ADMIN");
+			singleton('Group')->requireDefaultRecords();
 		}
 		
 		if(!isset($member)) {
-			// Leave 'Email' and 'Password' are not set to avoid creating
-			// persistent logins in the database. See Security::setDefaultAdmin().
-			$member = Object::create('Member');
-			$member->FirstName = 'Default Admin';
-			$member->write();
-			$member->Groups()->add($adminGroup);
+			singleton('Member')->requireDefaultRecords();
+			$members = Permission::get_members_by_permission('ADMIN');
+			$member = $members->First();
 		}
 
 		return $member;

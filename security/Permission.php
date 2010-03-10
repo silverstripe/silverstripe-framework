@@ -370,41 +370,6 @@ class Permission extends DataObject {
 		return $perm;
 	}
 
-
-	/**
-	 * Add default records to database.
-	 *
-	 * This function is called whenever the database is built, after the
-	 * database tables have all been created.
-	 */
-	public function requireDefaultRecords() {
-		parent::requireDefaultRecords();
-
-		// Add default content if blank
-		if(!DB::query("SELECT \"ID\" FROM \"Permission\"")->value() && array_key_exists('CanCMSAdmin', DB::fieldList('Group'))) {
-			$admins = DB::query("SELECT \"ID\" FROM \"Group\" WHERE \"CanCMSAdmin\" = 1")
-				->column();
-
-			if(isset($admins)) {
-				foreach($admins as $admin)
-					Permission::grant($admin, "ADMIN");
-			}
-
-			$authors = DB::query("SELECT \"ID\" FROM \"Group\" WHERE \"CanCMS\" = 1")
-				->column();
-			if(isset($authors)) {
-				foreach($authors as $author) {
-					Permission::grant($author, "CMS_ACCESS_CMSMain");
-					Permission::grant($author, "CMS_ACCESS_AssetAdmin");
-					Permission::grant($author, "CMS_ACCESS_NewsletterAdmin");
-					Permission::grant($author, "CMS_ACCESS_ReportAdmin");
-				}
-			}
-
-		}
-	}
-
-
 	/**
 	 * Returns all members for a specific permission.
 	 * 

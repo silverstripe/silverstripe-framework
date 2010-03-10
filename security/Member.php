@@ -115,6 +115,32 @@ class Member extends DataObject {
 		parent::populateDefaults();
 		$this->Locale = i18n::get_locale();
 	}
+	
+	function requireDefaultRecords() {
+		// Default groups should've been built by Group->requireDefaultRecords() already
+		
+		// Find or create ADMIN group
+		$adminGroups = Permission::get_groups_by_permission('ADMIN');
+		if($adminGroups) {
+			singleton('Group')->requireDefaultRecords();
+			$adminGroups = Permission::get_groups_by_permission('ADMIN');
+			$adminGroup = $adminGroups->First();
+		} else {
+			$adminGroup = $adminGroups->First();
+		}
+		
+		// Add a default administrator to the first ADMIN group found (most likely the default
+		// group created through Group->requireDefaultRecords()).
+		$admins = Permission::get_members_by_permission('ADMIN');
+		if(!$admins) {
+			// Leave 'Email' and 'Password' are not set to avoid creating
+			// persistent logins in the database. See Security::setDefaultAdmin().
+			$admin = Object::create('Member');
+			$admin->FirstName = _t('Member.DefaultAdminFirstname', 'Default Admin');
+			$admin->write();
+			$admin->Groups()->add($adminGroup);
+		}		
+	}
 
 	/**
 	 * If this is called, then a session cookie will be set to "1" whenever a user

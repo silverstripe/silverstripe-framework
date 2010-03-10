@@ -450,6 +450,44 @@ class Group extends DataObject {
 		}
 		return false;
 	}
+	
+	/**
+	 * Add default records to database.
+	 *
+	 * This function is called whenever the database is built, after the
+	 * database tables have all been created.
+	 */
+	public function requireDefaultRecords() {
+		parent::requireDefaultRecords();
+		
+		// Add default author group if no other group exists
+		$allGroups = DataObject::get('Group');
+		if(!$allGroups) {
+			$authorGroup = new Group();
+			$authorGroup->Code = 'content-authors';
+			$authorGroup->Title = _t('Group.DefaultGroupTitleContentAuthors', 'Content Authors');
+			$authorGroup->Sort = 1;
+			$authorGroup->write();
+			Permission::grant($authorGroup->ID, 'CMS_ACCESS_CMSMain');
+			Permission::grant($authorGroup->ID, 'CMS_ACCESS_AssetAdmin');
+			Permission::grant($authorGroup->ID, 'CMS_ACCESS_CommentAdmin');
+			Permission::grant($authorGroup->ID, 'CMS_ACCESS_ReportAdmin');
+			Permission::grant($authorGroup->ID, 'SITETREE_REORGANISE');
+		}
+	
+		// Add default admin group if none with permission code ADMIN exists
+		$adminGroups = Permission::get_groups_by_permission('ADMIN');
+		if(!$adminGroups) {
+			$adminGroup = new Group();
+			$adminGroup->Code = 'administrators';
+			$adminGroup->Title = _t('Group.DefaultGroupTitleAdministrators', 'Administrators');
+			$adminGroup->Sort = 0;
+			$adminGroup->write();
+			Permission::grant($adminGroup->ID, 'ADMIN');
+		}		
+		
+		// Members are populated through Member->requireDefaultRecords()
+	}
 }
 	
 ?>
