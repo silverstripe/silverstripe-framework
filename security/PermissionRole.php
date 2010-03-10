@@ -22,18 +22,26 @@ class PermissionRole extends DataObject {
 	
 	static $default_sort = 'Title';
 	
+	static $singular_name = 'Role';
+
+	static $plural_name = 'Roles';
+	
 	function getCMSFields() {
 		$fields = parent::getCMSFields();
 		
 		$fields->removeFieldFromTab('Root', 'Codes');
 		$fields->removeFieldFromTab('Root', 'Groups');
 		
-		$fields->addFieldToTab('Root.Main', new PermissionCheckboxSetField(
-			'Codes',
-			singleton('Permission')->i18n_plural_name(),
-			'PermissionRoleCode',
-			'RoleID'
-		));
+		$fields->addFieldToTab(
+			'Root.Main', 
+			$permissionField = new PermissionCheckboxSetField(
+				'Codes',
+				singleton('Permission')->i18n_plural_name(),
+				'PermissionRoleCode',
+				'RoleID'
+			)
+		);
+		$permissionField->setHiddenPermissions(SecurityAdmin::$hidden_permissions);
 		
 		return $fields;
 	}
