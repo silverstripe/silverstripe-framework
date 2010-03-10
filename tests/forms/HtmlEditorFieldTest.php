@@ -9,6 +9,10 @@ class HtmlEditorFieldTest extends FunctionalTest {
 	
 	public static $use_draft_site = true;
 	
+	protected $requiredExtensions = array(
+		'HtmlEditorField_Toolbar' => array('HtmlEditorFieldTest_DummyImageFormFieldExtension')
+	);
+	
 	public function testBasicSaving() {
 		$sitetree = new SiteTree();
 		$editor   = new HtmlEditorField('Content');
@@ -169,5 +173,28 @@ class HtmlEditorFieldTest extends FunctionalTest {
 		$element = new SimpleXMLElement(html_entity_decode((string) new SimpleXMLElement($editor->Field())));
 		$this->assertNotContains('ss-broken', (string) $element['class']);
 	}
-	
+
+	public function testExtendImageFormFields() {
+		$controller = new ContentController();
+
+		$toolbar = new HtmlEditorField_Toolbar($controller, 'DummyToolbar');
+
+		$imageForm = $toolbar->ImageForm();
+		$this->assertTrue(HtmlEditorFieldTest_DummyImageFormFieldExtension::$update_called);
+		$this->assertEquals($imageForm->Fields(), HtmlEditorFieldTest_DummyImageFormFieldExtension::$fields);
+	}
+}
+
+/**
+ * @package sapphire
+ * @subpackage tests
+ */
+class HtmlEditorFieldTest_DummyImageFormFieldExtension extends Extension implements TestOnly {
+	public static $fields = null;
+	public static $update_called = false;
+
+	public function updateImageForm($form) {
+		self::$update_called = true;
+		self::$fields = $form->Fields();
+	}
 }
