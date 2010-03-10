@@ -33,6 +33,8 @@ class VirtualPage extends Page {
 			// 'Locale'
 			'ShowInSearch',
 			'Version',
+			"Embargo",
+			"Expiry",
 		);
 
 		$allFields = $this->db();
