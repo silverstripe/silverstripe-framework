@@ -35,8 +35,7 @@ class ComplexTableField extends TableListField {
 	 *  - A FieldSet object: Use that field set directly.
 	 *  - A method name, eg, 'getCMSFields': Call that method on the child object to get the fields.
 	 */
-     
-    protected $addTitle;
+	protected $addTitle;
     
 	protected $detailFormFields;
 	
@@ -107,6 +106,13 @@ class ComplexTableField extends TableListField {
 	 * This is set by javascript and used by greybox.
 	 */
 	protected $popupCaption = null;
+	
+	/**
+	 * @var callback A function callback invoked
+	 * after initializing the popup and its base calls to
+	 * the {@link Requirements} class.
+	 */
+	public $requirementsForPopupCallback = null;
 
 	/**
 	 * @var $detailFormValidator Validator
@@ -682,7 +688,7 @@ JS;
 /**
  * @todo Tie this into ComplexTableField_Item better.
  */
-class ComplexTableField_ItemRequest extends RequestHandler {
+class ComplexTableField_ItemRequest extends TableListField_ItemRequest {
 	protected $ctf;
 	protected $itemID;
 	protected $methodName;
@@ -695,14 +701,7 @@ class ComplexTableField_ItemRequest extends RequestHandler {
 	function Link($action = null) {
 		return Controller::join_links($this->ctf->Link(), '/item/', $this->itemID, $action);
 	}
-	
-	function __construct($ctf, $itemID) {
-		$this->ctf = $ctf;
-		$this->itemID = $itemID;
 		
-		parent::__construct();
-	}
-	
 	function index() {
 		return $this->show();
 	}
@@ -1080,11 +1079,24 @@ class ComplexTableField_Popup extends Form {
 		Requirements::add_i18n_javascript(SAPPHIRE_DIR . '/javascript/lang');
 		Requirements::javascript(SAPPHIRE_DIR . "/javascript/ComplexTableField_popup.js");
 
+		// Append requirements from instance callbacks
+		$callback = $this->getParentController()->getParentController()->requirementsForPopupCallback;
+		if($callback) call_user_func($callback, $this);
+
+		// Append requirements from DataObject
+		// DEPRECATED 2.4 Use ComplexTableField->requirementsForPopupCallback
  		if($this->dataObject->hasMethod('getRequirementsForPopup')) {
 			$this->dataObject->getRequirementsForPopup();
 		}
 		
 		return $ret;
+	}
+	
+	/**
+	 * @return ComplexTableField_ItemRequest
+	 */
+	function getParentController() {
+		return $this->controller;
 	}
 }
 
