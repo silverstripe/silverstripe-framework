@@ -2474,6 +2474,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		return array(
 			'SITETREE_GRANT_ACCESS' => array(
 				'name' => _t('SiteTree.PERMISSION_GRANTACCESS_DESCRIPTION', 'Manage access rights for content'),
+				'help' => _t('SiteTree.PERMISSION_GRANTACCESS_HELP',  'Allow setting of page-specific access restrictions in the "Pages" section.'),
 				'category' => _t('Permissions.PERMISSIONS_CATEGORY', 'Roles and access permissions'),
 				'sort' => 100
 			),
@@ -2481,22 +2482,24 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 				'name' => _t('SiteTree.VIEW_ALL_DESCRIPTION', 'View any page'),
 				'category' => _t('Permissions.CONTENT_CATEGORY', 'Content permissions'),
 				'sort' => -100,
-				'help' => _t('SiteTree.VIEW_ALL_HELP', 'Ability to view any page on the site, regardless of the settings on the Access tab.  Requires "Access to Site Content."')
+				'help' => _t('SiteTree.VIEW_ALL_HELP', 'Ability to view any page on the site, regardless of the settings on the Access tab.  Requires the "Access to Site Content" permission')
 			),
 			'SITETREE_EDIT_ALL' => array(
 				'name' => _t('SiteTree.EDIT_ALL_DESCRIPTION', 'Edit any page'),
 				'category' => _t('Permissions.CONTENT_CATEGORY', 'Content permissions'),
 				'sort' => -50,
-				'help' => _t('SiteTree.EDIT_ALL_HELP', 'Ability to edit any page on the site, regardless of the settings on the Access tab.  Requires "Access to Site Content."')
+				'help' => _t('SiteTree.EDIT_ALL_HELP', 'Ability to edit any page on the site, regardless of the settings on the Access tab.  Requires the "Access to Site Content" permission')
 			),
 			'SITETREE_REORGANISE' => array(
 				'name' => _t('SiteTree.REORGANISE_DESCRIPTION', 'Change site structure'),
 				'category' => _t('Permissions.CONTENT_CATEGORY', 'Content permissions'),
+				'help' => _t('SiteTree.REORGANISE_HELP', 'Rearrange pages in the site tree through drag&drop.'),
 				'sort' => 100
 			),
 			'VIEW_DRAFT_CONTENT' => array(
 				'name' => _t('SiteTree.VIEW_DRAFT_CONTENT', 'View draft content'),
 				'category' => _t('Permissions.CONTENT_CATEGORY', 'Content permissions'),
+				'help' => _t('SiteTree.VIEW_DRAFT_CONTENT_HELP', 'Applies to viewing pages outside of the CMS in draft mode. Useful for external collaborators without CMS access.'),
 				'sort' => 100
 			)
 		);

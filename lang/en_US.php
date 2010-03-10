@@ -26,6 +26,7 @@ $lang['en_US']['AdvancedSearchForm']['SEARCHBY'] = 'SEARCH BY';
 $lang['en_US']['AdvancedSearchForm']['SORTBY'] = 'SORT RESULTS BY';
 $lang['en_US']['AdvancedSearchForm']['TO'] = 'To';
 $lang['en_US']['AdvancedSearchForm']['WITHOUT'] = 'Without the Words';
+$lang['en_US']['AssetAdmin']['CHOOSEFILE'] = 'Choose file: ';
 $lang['en_US']['BBCodeParser']['ALIGNEMENT'] = 'Alignment';
 $lang['en_US']['BBCodeParser']['ALIGNEMENTEXAMPLE'] = 'right aligned';
 $lang['en_US']['BBCodeParser']['BOLD'] = 'Bold Text';
@@ -85,13 +86,6 @@ $lang['en_US']['ComplexTableField.ss']['SORTASC'] = 'Sort ascending';
 $lang['en_US']['ComplexTableField.ss']['SORTDESC'] = 'Sort descending';
 $lang['en_US']['ComplexTableField_popup.ss']['NEXT'] = 'Next';
 $lang['en_US']['ComplexTableField_popup.ss']['PREVIOUS'] = 'Previous';
-$lang['en_US']['CompositeDateField']['DAY'] = 'Day';
-$lang['en_US']['CompositeDateField']['DAYJS'] = 'day';
-$lang['en_US']['CompositeDateField']['MONTH'] = 'Month';
-$lang['en_US']['CompositeDateField']['MONTHJS'] = 'month';
-$lang['en_US']['CompositeDateField']['VALIDATIONJS1'] = 'Please ensure you have set the';
-$lang['en_US']['CompositeDateField']['VALIDATIONJS2'] = 'correctly.';
-$lang['en_US']['CompositeDateField']['YEARJS'] = 'year';
 $lang['en_US']['ConfirmedPasswordField']['ATLEAST'] = 'Passwords must be at least %s characters long.';
 $lang['en_US']['ConfirmedPasswordField']['BETWEEN'] = 'Passwords must be %s to %s characters long.';
 $lang['en_US']['ConfirmedPasswordField']['HAVETOMATCH'] = 'Passwords have to match.';
@@ -123,7 +117,6 @@ $lang['en_US']['CreditCardField']['VALIDATIONJS1'] = 'Please ensure you have ent
 $lang['en_US']['CreditCardField']['VALIDATIONJS2'] = 'credit card number correctly.';
 $lang['en_US']['CurrencyField']['CURRENCYSYMBOL'] = '$';
 $lang['en_US']['CurrencyField']['VALIDATIONJS'] = 'Please enter a valid currency.';
-$lang['en_US']['DMYDateField']['VALIDDATEFORMAT'] = 'Please enter a valid date format (DD-MM-YYYY).';
 $lang['en_US']['DataObject']['PLURALNAME'] = array(
 	'Data Objects',
 	50,
@@ -159,7 +152,9 @@ $lang['en_US']['Date']['YEARS'] = ' years';
 $lang['en_US']['DateField']['NOTSET'] = 'not set';
 $lang['en_US']['DateField']['TODAY'] = 'today';
 $lang['en_US']['DateField']['VALIDATIONJS'] = 'Please enter a valid date format (DD/MM/YYYY).';
-$lang['en_US']['DateField']['VALIDDATEFORMAT'] = 'Please enter a valid date format (DD/MM/YYYY).';
+$lang['en_US']['DateField']['VALIDDATEFORMAT'] = 'Please enter a valid time format.';
+$lang['en_US']['DateField']['VALIDDATEMAXDATE'] = 'Your date has to be older or matching the maximum allowed date (%s)';
+$lang['en_US']['DateField']['VALIDDATEMINDATE'] = 'Your date has to be newer or matching the minimum allowed date (%s)';
 $lang['en_US']['DropdownField']['CHOOSE'] = array(
 	'(Choose)',
 	PR_MEDIUM,
@@ -281,12 +276,9 @@ $lang['en_US']['ForgotPasswordEmail.ss']['HELLO'] = 'Hi';
 $lang['en_US']['ForgotPasswordEmail.ss']['TEXT1'] = 'Here is your';
 $lang['en_US']['ForgotPasswordEmail.ss']['TEXT2'] = 'password reset link';
 $lang['en_US']['ForgotPasswordEmail.ss']['TEXT3'] = 'for';
-$lang['en_US']['Form']['DATENOTSET'] = '(No date set)';
 $lang['en_US']['Form']['FIELDISREQUIRED'] = '%s is required.';
 $lang['en_US']['Form']['LANGAOTHER'] = 'Other languages';
 $lang['en_US']['Form']['LANGAVAIL'] = 'Available languages';
-$lang['en_US']['Form']['NOTSET'] = '(not set)';
-$lang['en_US']['Form']['VALIDATIONALLDATEVALUES'] = 'Please ensure you have set all date values';
 $lang['en_US']['Form']['VALIDATIONCREDITNUMBER'] = 'Please ensure you have entered the %s credit card number correctly.';
 $lang['en_US']['Form']['VALIDATIONFAILED'] = 'Validation failed';
 $lang['en_US']['Form']['VALIDATIONNOTUNIQUE'] = 'The value entered is not unique';
@@ -341,7 +333,6 @@ $lang['en_US']['HtmlEditorField']['BUTTONINSERTLINK'] = 'Insert link';
 $lang['en_US']['HtmlEditorField']['BUTTONREMOVELINK'] = 'Remove link';
 $lang['en_US']['HtmlEditorField']['CAPTIONTEXT'] = 'Caption text';
 $lang['en_US']['HtmlEditorField']['CLOSE'] = 'close';
-$lang['en_US']['HtmlEditorField']['CREATEFOLDER'] = 'Create Folder';
 $lang['en_US']['HtmlEditorField']['CSSCLASS'] = 'Alignment / style';
 $lang['en_US']['HtmlEditorField']['CSSCLASSCENTER'] = 'Centered, on its own.';
 $lang['en_US']['HtmlEditorField']['CSSCLASSLEFT'] = 'On the left, with text wrapping around.';
@@ -351,7 +342,6 @@ $lang['en_US']['HtmlEditorField']['EMAIL'] = 'Email address';
 $lang['en_US']['HtmlEditorField']['FILE'] = 'File';
 $lang['en_US']['HtmlEditorField']['FLASH'] = 'Flash';
 $lang['en_US']['HtmlEditorField']['FOLDER'] = 'Folder';
-$lang['en_US']['HtmlEditorField']['FOLDERCANCEL'] = 'Cancel';
 $lang['en_US']['HtmlEditorField']['IMAGE'] = 'Image';
 $lang['en_US']['HtmlEditorField']['IMAGEALTTEXT'] = 'Alternative text (alt) - shown if image cannot be displayed';
 $lang['en_US']['HtmlEditorField']['IMAGEDIMENSIONS'] = 'Dimensions';
@@ -368,10 +358,9 @@ $lang['en_US']['HtmlEditorField']['LINKINTERNAL'] = 'Page on the site';
 $lang['en_US']['HtmlEditorField']['LINKOPENNEWWIN'] = 'Open link in a new window?';
 $lang['en_US']['HtmlEditorField']['LINKTEXT'] = 'Link text';
 $lang['en_US']['HtmlEditorField']['LINKTO'] = 'Link to';
-$lang['en_US']['HtmlEditorField']['OK'] = 'Ok';
 $lang['en_US']['HtmlEditorField']['PAGE'] = 'Page';
 $lang['en_US']['HtmlEditorField']['SEARCHFILENAME'] = 'Search by file name';
-$lang['en_US']['HtmlEditorField']['UPLOAD'] = 'Upload';
+$lang['en_US']['HtmlEditorField']['SHOWUPLOADFORM'] = 'Upload File';
 $lang['en_US']['HtmlEditorField']['URL'] = 'URL';
 $lang['en_US']['Image']['PLURALNAME'] = array(
 	'Files',
@@ -425,6 +414,7 @@ $lang['en_US']['Member']['ERRORLOCKEDOUT'] = 'Your account has been temporarily 
 $lang['en_US']['Member']['ERRORNEWPASSWORD'] = 'Your have entered your new password differently, try again';
 $lang['en_US']['Member']['ERRORPASSWORDNOTMATCH'] = 'Your current password does not match, please try again';
 $lang['en_US']['Member']['ERRORWRONGCRED'] = 'That doesn\'t seem to be the right e-mail address or password. Please try again.';
+$lang['en_US']['Member']['FIRSTNAME'] = 'First Name';
 $lang['en_US']['Member']['GREETING'] = 'Welcome';
 $lang['en_US']['Member']['INTERFACELANG'] = array(
 	'Interface Language',
@@ -465,6 +455,7 @@ $lang['en_US']['Member']['SUBJECTPASSWORDRESET'] = array(
 	PR_MEDIUM,
 	'Email subject'
 );
+$lang['en_US']['Member']['SURNAME'] = 'Surname';
 $lang['en_US']['Member']['USERDETAILS'] = array(
 	'User Details',
 	PR_MEDIUM,
@@ -513,7 +504,9 @@ $lang['en_US']['NullableField']['IsNullLabel'] = array(
 );
 $lang['en_US']['NumericField']['VALIDATION'] = '\'%s\' is not a number, only numbers can be accepted for this field';
 $lang['en_US']['NumericField']['VALIDATIONJS'] = 'is not a number, only numbers can be accepted for this field';
+$lang['en_US']['Permission']['AdminGroup'] = 'Administrator';
 $lang['en_US']['Permission']['FULLADMINRIGHTS'] = 'Full administrative rights';
+$lang['en_US']['Permission']['FULLADMINRIGHTS_HELP'] = 'Implies and overrules all other assigned permissions.';
 $lang['en_US']['Permission']['PLURALNAME'] = array(
 	'Permissions',
 	50,
@@ -541,12 +534,12 @@ $lang['en_US']['PermissionCheckboxSetField']['FromRoleOnGroup'] = array(
 	'A permission inherited from a role on a certain group'
 );
 $lang['en_US']['PermissionRole']['PLURALNAME'] = array(
-	'Permission Rols',
+	'Roles',
 	50,
 	'Pural name of the object, used in dropdowns and to generally identify a collection of this object in the interface'
 );
 $lang['en_US']['PermissionRole']['SINGULARNAME'] = array(
-	'Permission Role',
+	'Role',
 	50,
 	'Singular name of the object, used in dropdowns and to generally identify a single object in the interface'
 );
@@ -623,9 +616,6 @@ $lang['en_US']['Security']['NOTERESETLINKINVALID'] = '<p>The password reset link
 $lang['en_US']['Security']['NOTERESETPASSWORD'] = 'Enter your e-mail address and we will send you a link with which you can reset your password';
 $lang['en_US']['Security']['PASSWORDSENTHEADER'] = 'Password reset link sent to \'%s\'';
 $lang['en_US']['Security']['PASSWORDSENTTEXT'] = 'Thank you! A reset link has been sent to  \'%s\', provided an account exists for this email address.';
-$lang['en_US']['SecurityAdmin']['ADVANCEDONLY'] = 'This section is for advanced users only.
-							See <a href="http://doc.silverstripe.com/doku.php?id=permissions:codes" target="_blank">this page</a>
-							for more information.';
 $lang['en_US']['SecurityAdmin']['GROUPNAME'] = 'Group name';
 $lang['en_US']['SecurityAdmin']['IPADDRESSESHELP'] = '<p>You can restrict this group to a particular 
 						IP address range (one range per line). <br />Ranges can be in any of the following forms: <br />
@@ -637,11 +627,16 @@ $lang['en_US']['SecurityAdmin']['IPADDRESSESHELP'] = '<p>You can restrict this g
 						people from logging in.  This is because the same user might have to log in to access parts of the
 						system without IP address restrictions.';
 $lang['en_US']['SecurityAdmin']['MEMBERS'] = 'Members';
+$lang['en_US']['SecurityAdmin']['NEWGROUPPREFIX'] = 'new-';
 $lang['en_US']['SecurityAdmin']['PERMISSIONS'] = 'Permissions';
 $lang['en_US']['SecurityAdmin']['ROLES'] = 'Roles';
 $lang['en_US']['SecurityAdmin']['ROLESDESCRIPTION'] = 'This section allows you to add roles to this group. Roles are logical groupings of permissions, which can be editied in the Roles tab';
 $lang['en_US']['SecurityAdmin']['VIEWUSER'] = 'View User';
+$lang['en_US']['SilverStripeNavigatorLink']['ShareInstructions'] = 'To share a this to this page, copy and paste the link below.';
+$lang['en_US']['SilverStripeNavigatorLink']['ShareLink'] = 'Share link';
+$lang['en_US']['SilverStripeNavigatorLinkl']['CloseLink'] = 'Close';
 $lang['en_US']['SimpleImageField']['NOUPLOAD'] = 'No Image Uploaded';
+$lang['en_US']['SiteConfig']['DEFAULTTHEME'] = '(Use default theme)';
 $lang['en_US']['SiteConfig']['EDITHEADER'] = 'Who can edit pages on this site?';
 $lang['en_US']['SiteConfig']['EDIT_PERMISSION'] = 'Manage site configuration';
 $lang['en_US']['SiteConfig']['EDIT_PERMISSION_HELP'] = 'Ability to edit global access settings/top-level page permissions.';
@@ -657,10 +652,9 @@ $lang['en_US']['SiteConfig']['SINGULARNAME'] = array(
 );
 $lang['en_US']['SiteConfig']['SITENAMEDEFAULT'] = 'Your Site Name';
 $lang['en_US']['SiteConfig']['SITETAGLINE'] = 'Site Tagline/Slogan';
-$lang['en_US']['SiteConfig']['THEME'] = 'Theme';
-$lang['en_US']['SiteConfig']['DEFAULTTHEME'] = '(Use default theme)';
 $lang['en_US']['SiteConfig']['SITETITLE'] = 'Site title';
 $lang['en_US']['SiteConfig']['TAGLINEDEFAULT'] = 'your tagline here';
+$lang['en_US']['SiteConfig']['THEME'] = 'Theme';
 $lang['en_US']['SiteConfig']['TOPLEVELCREATE'] = 'Who can create pages in the root of the site?';
 $lang['en_US']['SiteConfig']['VIEWHEADER'] = 'Who can view pages on this site?';
 $lang['en_US']['SiteTree']['ACCESSANYONE'] = 'Anyone';
@@ -698,7 +692,7 @@ $lang['en_US']['SiteTree']['EDITHEADER'] = 'Who can edit this page?';
 $lang['en_US']['SiteTree']['EDITONLYTHESE'] = 'Only these people (choose from list)';
 $lang['en_US']['SiteTree']['EDITORGROUPS'] = 'Editor Groups';
 $lang['en_US']['SiteTree']['EDIT_ALL_DESCRIPTION'] = 'Edit any page';
-$lang['en_US']['SiteTree']['EDIT_ALL_HELP'] = 'Ability to edit any page on the site, regardless of the settings on the Access tab.  Requires "Access to Site Content."';
+$lang['en_US']['SiteTree']['EDIT_ALL_HELP'] = 'Ability to edit any page on the site, regardless of the settings on the Access tab.  Requires the "Access to Site Content" permission';
 $lang['en_US']['SiteTree']['Editors'] = 'Editors Groups';
 $lang['en_US']['SiteTree']['HASBROKENLINKS'] = 'This page has broken links.';
 $lang['en_US']['SiteTree']['HOMEPAGEFORDOMAIN'] = array(
@@ -741,6 +735,7 @@ $lang['en_US']['SiteTree']['PARENTTYPE'] = array(
 $lang['en_US']['SiteTree']['PARENTTYPE_ROOT'] = 'Top-level page';
 $lang['en_US']['SiteTree']['PARENTTYPE_SUBPAGE'] = 'Sub-page underneath a parent page (choose below)';
 $lang['en_US']['SiteTree']['PERMISSION_GRANTACCESS_DESCRIPTION'] = 'Manage access rights for content';
+$lang['en_US']['SiteTree']['PERMISSION_GRANTACCESS_HELP'] = 'Allow setting of page-specific access restrictions in the "Pages" section.';
 $lang['en_US']['SiteTree']['PLURALNAME'] = array(
 	'Site Tres',
 	50,
@@ -748,6 +743,7 @@ $lang['en_US']['SiteTree']['PLURALNAME'] = array(
 );
 $lang['en_US']['SiteTree']['REMOVEDFROMDRAFT'] = 'Removed from draft site';
 $lang['en_US']['SiteTree']['REORGANISE_DESCRIPTION'] = 'Change site structure';
+$lang['en_US']['SiteTree']['REORGANISE_HELP'] = 'Rearrange pages in the site tree through drag&drop.';
 $lang['en_US']['SiteTree']['SHOWINMENUS'] = 'Show in menus?';
 $lang['en_US']['SiteTree']['SHOWINSEARCH'] = 'Show in search?';
 $lang['en_US']['SiteTree']['SINGULARNAME'] = array(
@@ -776,7 +772,9 @@ $lang['en_US']['SiteTree']['VALIDATIONURLSEGMENT1'] = 'Another page is using tha
 $lang['en_US']['SiteTree']['VALIDATIONURLSEGMENT2'] = 'URLs can only be made up of letters, digits and hyphens.';
 $lang['en_US']['SiteTree']['VIEWERGROUPS'] = 'Viewer Groups';
 $lang['en_US']['SiteTree']['VIEW_ALL_DESCRIPTION'] = 'View any page';
-$lang['en_US']['SiteTree']['VIEW_ALL_HELP'] = 'Ability to view any page on the site, regardless of the settings on the Access tab.  Requires "Access to Site Content."';
+$lang['en_US']['SiteTree']['VIEW_ALL_HELP'] = 'Ability to view any page on the site, regardless of the settings on the Access tab.  Requires the "Access to Site Content" permission';
+$lang['en_US']['SiteTree']['VIEW_DRAFT_CONTENT'] = 'View draft content';
+$lang['en_US']['SiteTree']['VIEW_DRAFT_CONTENT_HELP'] = 'Applies to viewing pages outside of the CMS in draft mode. Useful for external collaborators without CMS access.';
 $lang['en_US']['SiteTree']['VIRTUALPAGESLINKING'] = 'The following virtual pages pull from this page:';
 $lang['en_US']['SiteTree']['Viewers'] = 'Viewers Groups';
 $lang['en_US']['SiteTree']['has_one_Parent'] = array(
@@ -829,6 +827,7 @@ $lang['en_US']['Versioned']['has_many_Versions'] = array(
 $lang['en_US']['VirtualPage']['CHOOSE'] = 'Choose a page to link to';
 $lang['en_US']['VirtualPage']['EDITCONTENT'] = 'click here to edit the content';
 $lang['en_US']['VirtualPage']['HEADER'] = 'This is a virtual page';
+$lang['en_US']['VirtualPage']['NOTFOUND'] = 'We could not find the content for this virtual page.';
 $lang['en_US']['VirtualPage']['PLURALNAME'] = array(
 	'Virtual Pags',
 	50,
