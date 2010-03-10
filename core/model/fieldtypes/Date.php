@@ -129,7 +129,7 @@ class Date extends DBField {
 	}
 	
 	function Rfc2822() {
-		if($this->value) return date('Y-m-d g:i:s', strtotime($this->value));
+		if($this->value) return date('Y-m-d H:i:s', strtotime($this->value));
 	}
 	
 	function Rfc3339() {
