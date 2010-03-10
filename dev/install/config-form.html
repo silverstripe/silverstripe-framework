@@ -266,15 +266,31 @@
 								rather log-in with a username instead of an email address, enter that instead.
 							</p>
 							
-							<h4 class="sectionHeading">Development Servers</h4>
+							<h4 class="sectionHeading">Server configuration</h4>
 							<div class="section">
-								<label for="devsites">Development servers:</label>
-								<span class="middleColumn">
-									<textarea name="devsites" id="devsites" rows="5" cols="10">
+								<div class="field">
+									<label for="devsites">Development servers:</label>
+									<span class="middleColumn">
+										<textarea name="devsites" id="devsites" rows="5" cols="10">
 <?php if(@$_POST['devsites']) echo $_POST['devsites'];
 else echo 'localhost
 127.0.0.1'; ?></textarea>
-								</span>
+									</span>
+								</div>
+								<div class="field">
+									<label for="locale">Locale:</label>
+									<span class="middleColumn">
+										<select name="locale" id="locale">
+<?php
+$selectedLocale = isset($_POST['locale']) ? $_POST['locale'] : $defaultLocale;
+foreach($locales as $code => $details) {
+	$selected = $code == $selectedLocale ? ' selected="true"' : '';
+	echo "<option$selected value=\"$code\">{$details[0]} - {$details[1]}</option>\n";
+}
+?>
+										</select> 
+									</span>
+								</div>
 							</div>
 							
 							<p id="devHelp" class="helpText">
