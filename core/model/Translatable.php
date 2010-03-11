@@ -245,7 +245,7 @@ class Translatable extends DataObjectDecorator implements PermissionProvider {
 		} else {
 			self::set_current_locale(self::default_locale());
 		}
-		
+
 		return self::$current_locale; 
 	}
 		
@@ -728,9 +728,12 @@ class Translatable extends DataObjectDecorator implements PermissionProvider {
 		return false;
 	}
 
+	/**
+	 * Note: The bulk of logic is in ModelAsController->getNestedController()
+	 * and ContentController->handleRequest()
+	 */
 	function contentcontrollerInit($controller) {
-		Translatable::choose_site_locale();
-		$controller->Locale = Translatable::get_current_locale();
+		$controller->Locale = Translatable::choose_site_locale();
 	}
 	
 	function modelascontrollerInit($controller) {

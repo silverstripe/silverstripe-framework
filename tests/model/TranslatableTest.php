@@ -21,6 +21,8 @@ class TranslatableTest extends FunctionalTest {
 	);
 	
 	private $origLocale;
+	
+	protected $autoFollowRedirection = false;
 
 	function setUp() {
 		parent::setUp();
@@ -38,6 +40,25 @@ class TranslatableTest extends FunctionalTest {
 		Translatable::set_current_locale($this->origLocale);
 
 		parent::tearDown();
+	}
+	
+	function testLocaleGetParamRedirectsToTranslation() {
+		$origPage = $this->objFromFixture('Page', 'testpage_en');
+		$origPage->publish('Stage', 'Live');
+		$translatedPage = $origPage->createTranslation('de_DE');
+		$translatedPage->URLSegment = 'ueber-uns';
+		$translatedPage->write();
+		$translatedPage->publish('Stage', 'Live');
+		
+		$response = $this->get($origPage->URLSegment);
+		$this->assertEquals(200, $response->getStatusCode(), 'Page request without Locale GET param doesnt redirect');
+		
+		$response = $this->get(Controller::join_links($origPage->URLSegment, '?locale=de_DE'));
+		$this->assertEquals(301, $response->getStatusCode(), 'Locale GET param causes redirect if it exists');
+		$this->assertContains($translatedPage->URLSegment, $response->getHeader('Location'));
+		
+		$response = $this->get(Controller::join_links($origPage->URLSegment, '?locale=xx_XX'));
+		$this->assertEquals(200, $response->getStatusCode(), 'Locale GET param without existing translation shows original page');
 	}
 
 	function testTranslationGroups() {
@@ -174,7 +195,7 @@ class TranslatableTest extends FunctionalTest {
 		$origPage = $this->objFromFixture('Page', 'testpage_en');
 		$translatedPage = $origPage->createTranslation('de_DE');
 		$this->assertEquals($translatedPage->URLSegment, 'testpage-de-DE');
-
+	
 		$translatedPage->URLSegment = 'testpage';
 		$translatedPage->write();
 	
@@ -692,7 +713,7 @@ class TranslatableTest extends FunctionalTest {
 			$enPage = new $type();
 			$enPage->Locale = 'en_US';
 			$enPage->write();
-
+	
 			$dePage = $enPage->createTranslation('de_DE');
 			$dePage->write();
 			$this->assertEquals('de_DE', $dePage->Locale, "Page type $type retains Locale property");
@@ -875,7 +896,7 @@ class TranslatableTest extends FunctionalTest {
 			SiteTree::get_by_link($grandchildTranslation->Link())->ID,
 			'Grandchild pages can be found.'
 		);
-
+	
 		// TODO Re-enable test after clarifying with ajshort (see r88503).
 		// Its unclear if this is valid behaviour, and/or necessary for translated nested URLs
 		// to work properly

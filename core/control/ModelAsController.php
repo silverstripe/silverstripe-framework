@@ -87,12 +87,16 @@ class ModelAsController extends Controller implements NestedController {
 			throw new Exception('ModelAsController->getNestedController(): was not passed a URLSegment value.');
 		}
 		
+		// Find page by link, regardless of current locale settings
 		Translatable::disable_locale_filter();
-		
-		$sitetree = DataObject::get_one('SiteTree', sprintf (
-			'"URLSegment" = \'%s\' %s', Convert::raw2sql($URLSegment), (SiteTree::nested_urls() ? 'AND "ParentID" = 0' : null)
-		));
-		
+		$sitetree = DataObject::get_one(
+			'SiteTree', 
+			sprintf(
+				'"URLSegment" = \'%s\' %s', 
+				Convert::raw2sql($URLSegment), 
+				(SiteTree::nested_urls() ? 'AND "ParentID" = 0' : null)
+			)
+		);
 		Translatable::enable_locale_filter();
 		
 		if(!$sitetree) {
@@ -113,6 +117,7 @@ class ModelAsController extends Controller implements NestedController {
 			}
 		}
 		
+		// Enforce current locale setting to the loaded SiteTree object
 		if($sitetree->Locale) Translatable::set_current_locale($sitetree->Locale);
 		
 		if(isset($_REQUEST['debug'])) {
