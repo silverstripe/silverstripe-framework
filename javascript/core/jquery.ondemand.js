@@ -168,3 +168,11 @@
     }
 
 })(jQuery);
+
+/**
+ * This is the on-demand handler used by our patched version of prototype.
+ * once we get rid of all uses of prototype, we can remove this
+ */
+function prototypeOnDemandHandler(xml, status, callback) {
+    jQuery.processOnDemandHeaders(xml, status, callback);
+}
