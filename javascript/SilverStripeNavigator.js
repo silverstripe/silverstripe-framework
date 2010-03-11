@@ -4,7 +4,7 @@ function windowName(suffix) {
 }
 
 (function($) {
-	$('#switchView a.newWindow').livequery('click',
+	$('#switchView a.newWindow').live('click',
 		function() {
 			var w = window.open(this.href, windowName(this.target));
 			w.focus();
@@ -12,21 +12,21 @@ function windowName(suffix) {
 		}
 	);
 
-	$('#SilverStripeNavigatorLink').livequery('click',
+	$('#SilverStripeNavigatorLink').live('click',
 		function() {
 			$('#SilverStripeNavigatorLinkPopup').toggle();
 			return false;
 		}
 	);
 	
-	$('#SilverStripeNavigatorLinkPopup a.close').livequery('click',
+	$('#SilverStripeNavigatorLinkPopup a.close').live('click',
 		function() {
 			$('#SilverStripeNavigatorLinkPopup').hide();
 			return false;
 		}
 	);
 	
-	$('#SilverStripeNavigatorLinkPopup input').livequery('focus',
+	$('#SilverStripeNavigatorLinkPopup input').live('focus',
 		function() {
 			this.select();
 		}
