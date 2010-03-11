@@ -1,6 +1,6 @@
 (function($) {
 $(document).ready(function() {
-	$('ul.SelectionGroup input.selector').livequery('click', function(){
+	$('ul.SelectionGroup input.selector').live('click', function(){
 		var li = $(this).parent('li')
 		li.addClass('selected');
 		
