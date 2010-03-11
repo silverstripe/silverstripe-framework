@@ -587,7 +587,7 @@ class ManifestBuilder {
 	 * @param string $class
 	 * @param array $results
 	 */
-	function up_children($class) {
+	static function up_children($class) {
 		$children = self::get_Children($class);
 		$results = $children;
 			foreach($children as $className) {
@@ -596,5 +596,3 @@ class ManifestBuilder {
 			return $results;;
 	}
 }
-
-?>
