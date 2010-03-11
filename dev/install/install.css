@@ -103,7 +103,8 @@ table.testResults {
 	clear: both;
 }
 #adminAcc,
-#devHelp {
+#devHelp,
+#localeHelp {
 	padding-top: 20px;
 }
 
@@ -111,12 +112,27 @@ table.testResults {
 	float: right;
 	padding-right: 40px;
 	width: 290px;
+	margin-bottom: 0;
 }
 
-div.section {
-	width: 330px;
+.section {
 	float: left;
 	overflow: hidden;
+}
+
+.fields {
+	float: left;
+	margin-right: 20px;
+}
+
+#localeHelp,
+#localeSection {
+	height: 15em;
+}
+
+#devHelp,
+#devSection {
+	height: 18em;
 }
 
 #Layout input.action {
@@ -139,34 +155,28 @@ div.section {
 #database_credentials {
 	margin: 0;
 	line-height: 1;
-	width: 400px;
 }
 
 #database_selection {
-	width: 400px;
 	overflow: hidden;
 	margin: 0;
 	margin-top: 15px;
 }
 	#database_selection li {
-		float: left;
-		width: 430px;
 	}
 		#database_selection li input {
-			float: left;
+			margin-right: 5px;;
 		}
 		#database_selection li label {
-			float: left;
-			margin: 0 6px 0 0;
-			margin-left: 5px;
+			display: inline;
 			font-weight: bold;
 		}
 
 .databaseError {
 	clear:both;
 	overflow: hidden;
-	width: 350px;
-	margin: 25px;
+	width: 250px;
+	margin: 10px;
 	margin-bottom: 0;
 	display: none;
 }
