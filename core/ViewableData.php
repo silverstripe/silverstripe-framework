@@ -429,7 +429,7 @@ class ViewableData extends Object implements IteratorAggregate {
 	 * exists method, otherwise will check if the result is not just an empty paragraph tag.
 	 *
 	 * @param string $field
-	 * @param array $argument
+	 * @param array $arguments
 	 * @param bool $cache
 	 * @return bool
 	 */
