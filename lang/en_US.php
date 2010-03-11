@@ -293,6 +293,8 @@ $lang['en_US']['Group']['Code'] = array(
 	PR_MEDIUM,
 	'Programmatical code identifying a group'
 );
+$lang['en_US']['Group']['DefaultGroupTitleAdministrators'] = 'Administrators';
+$lang['en_US']['Group']['DefaultGroupTitleContentAuthors'] = 'Content Authors';
 $lang['en_US']['Group']['Description'] = 'Description';
 $lang['en_US']['Group']['IPRestrictions'] = 'IP Address Restrictions';
 $lang['en_US']['Group']['Locked'] = array(
@@ -405,6 +407,7 @@ $lang['en_US']['Member']['BUTTONLOSTPASSWORD'] = 'I\'ve lost my password';
 $lang['en_US']['Member']['CONFIRMNEWPASSWORD'] = 'Confirm New Password';
 $lang['en_US']['Member']['CONFIRMPASSWORD'] = 'Confirm Password';
 $lang['en_US']['Member']['CONTACTINFO'] = 'Contact Information';
+$lang['en_US']['Member']['DefaultAdminFirstname'] = 'Default Admin';
 $lang['en_US']['Member']['EMAIL'] = 'Email';
 $lang['en_US']['Member']['EMAILSIGNUPINTRO1'] = 'Thanks for signing up to become a new member, your details are listed below for future reference.';
 $lang['en_US']['Member']['EMAILSIGNUPINTRO2'] = 'You can login to the website using the credentials listed below';
