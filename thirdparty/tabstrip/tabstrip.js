@@ -1,12 +1,12 @@
+var _CUR_TABS = [];
+var _TABS_ON_PAGE = [];
+var _TAB_DIVS_ON_PAGE = [];
+
 // jQuery loader
 jQuery('ul.tabstrip').livequery(function() {
     initTabstrip(this);
     if(window.ontabschanged) window.ontabschanged();
 });
-
-var _CUR_TABS = [];
-var _TABS_ON_PAGE = [];
-var _TAB_DIVS_ON_PAGE = [];
 
 function initTabstrip(tabstrip, namedAnchors) {
 	
