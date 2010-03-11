@@ -2,14 +2,16 @@ var _CUR_TABS = [];
 var _TABS_ON_PAGE = [];
 var _TAB_DIVS_ON_PAGE = [];
 
-// jQuery loader
-jQuery('ul.tabstrip').livequery(function() {
-    initTabstrip(this);
-    if(window.ontabschanged) window.ontabschanged();
+Behaviour.register({
+	'ul.tabstrip': {
+		initialize: function() {
+			initTabstrip(this);
+	    if(window.ontabschanged) window.ontabschanged();
+		}
+	}
 });
 
 function initTabstrip(tabstrip, namedAnchors) {
-	
 	var i, anchor, container, anchorName, li;
 	var childAnchors = tabstrip.getElementsByTagName('a');
 	var base, curTab = null, curURL = window.location.href;
