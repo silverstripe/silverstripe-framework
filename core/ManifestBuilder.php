@@ -83,7 +83,7 @@ class ManifestBuilder {
 			// Build the manifest, including the tests/ folders
 			$manifestInfo = self::get_manifest_info(BASE_PATH);
 			$manifest = self::generate_php_file($manifestInfo);
-			if($fh = fopen($testManifestFile, "w")) {
+			if($fh = fopen($testManifestFile, 'wb')) {
 				fwrite($fh, $manifest);
 				fclose($fh);
 			} else {
@@ -110,7 +110,7 @@ class ManifestBuilder {
 		$manifestInfo = self::get_manifest_info(BASE_PATH, array("tests"));
 
 		$manifest = self::generate_php_file($manifestInfo);
-		if($fh = fopen(MANIFEST_FILE, "w")) {
+		if($fh = fopen(MANIFEST_FILE, 'wb')) {
 			fwrite($fh, $manifest);
 			fclose($fh);
 		} else {
@@ -427,8 +427,8 @@ class ManifestBuilder {
 			$cacheContent = '<?php
 				$classes = ' . var_export($classes,true) . ';
 				$interfaces = ' . var_export($interfaces,true) . ';';
-				
-			if($fh = fopen($parseCacheFile,'wb')) {
+
+			if($fh = fopen($parseCacheFile, 'wb')) {
 				fwrite($fh, $cacheContent);
 				fclose($fh);
 			}
