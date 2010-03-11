@@ -794,11 +794,11 @@ class DataObjectSet extends ViewableData implements IteratorAggregate, Countable
 	public function removeDuplicates($field = 'ID') {
 		$exists = array();
 		foreach($this->items as $key => $item) {
-			if(isset($exists[$item->$field])) {
+			if(isset($exists[$fullkey = ClassInfo::baseDataClass($item) . ":" . $item->$field])) {
 				unset($this->items[$key]);
 			}
-			$exists[$item->$field] = true;
-		}	
+			$exists[$fullkey] = true;
+		}
 	}
 	
 	/**

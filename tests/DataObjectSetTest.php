@@ -191,8 +191,10 @@ class DataObjectSetTest extends SapphireTest {
 		//We could possibly fix this problem by changing 'assertSame' to not check the keys
 		//$this->assertSame($expectedMap, $map2, 'The map we generated is exactly the same as the asserted one');
 	}
-	
+
 	function testRemoveDuplicates() {
+		// Note that PageComment and DataObjectSetTest_TeamComment are both descendants of DataObject, and don't
+		// share an inheritance relationship below that.
 		$pageComments = DataObject::get('PageComment');
 		$teamComments = DataObject::get('DataObjectSetTest_TeamComment');
 
@@ -205,11 +207,10 @@ class DataObjectSetTest extends SapphireTest {
 
 		$allComments->removeDuplicates();
 
-		$this->assertEquals($allComments->Count(), 8, 'Standard functionality is to remove duplicate IDs');
+		$this->assertEquals($allComments->Count(), 11, 'Standard functionality is to remove duplicate base class/IDs');
 
 		/* Now test removing duplicates based on a common field. In this case we shall
 		 * use 'Name', so we can get all the unique commentators */
-
 
 		$allComments = new DataObjectSet();
 		$allComments->merge($pageComments);
@@ -217,7 +218,20 @@ class DataObjectSetTest extends SapphireTest {
 
 		$allComments->removeDuplicates('Name');
 
-		$this->assertEquals($allComments->Count(), 7, 'There are 7 uniquely named commentators');
+		$this->assertEquals($allComments->Count(), 9, 'There are 9 uniquely named commentators');
+
+		// Ensure that duplicates are removed where the base data class is the same.
+		$mixedSet = new DataObjectSet();
+		$mixedSet->push(new SiteTree(array('ID' => 1)));
+		$mixedSet->push(new Page(array('ID' => 1)));		// dup: same base class and ID
+		$mixedSet->push(new Page(array('ID' => 1)));		// dup: more than one dup of the same object
+		$mixedSet->push(new Page(array('ID' => 2)));		// not dup: same type again, but different ID
+		$mixedSet->push(new PageComment(array('ID' => 1))); // not dup: different base type, same ID
+		$mixedSet->push(new SiteTree(array('ID' => 1)));	// dup: another dup, not consequetive.
+
+		$mixedSet->removeDuplicates('ID');
+
+		$this->assertEquals($mixedSet->Count(), 3, 'There are 3 unique data objects in a very mixed set');
 	}
 
 	/**
