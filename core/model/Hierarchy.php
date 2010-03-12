@@ -378,18 +378,6 @@ class Hierarchy extends DataObjectDecorator {
 	}
 	
 	/**
-	 * Cached result for AllChildren().
-	 * @var DataObjectSet
-	 */
-	protected $_cache_allChildren;
-	
-	/**
-	 * Cached result for AllChildrenIncludingDeleted().
-	 * @var DataObjectSet
-	 */
-	protected $_cache_allChildrenIncludingDeleted;
-	
-	/**
 	 * Get the children for this DataObject.
 	 * @return DataObjectSet
 	 */
@@ -413,13 +401,7 @@ class Hierarchy extends DataObjectDecorator {
 	 * @return DataObjectSet
 	 */
 	public function AllChildren() {
-		// Cache the allChildren data, so that future requests will return the references to the same
-		// object.  This allows the mark..() system to work appropriately.
-		if(!$this->_cache_allChildren) {
-			$this->_cache_allChildren = $this->owner->stageChildren(true);
-		}
-		
-		return $this->_cache_allChildren;
+		return $this->owner->stageChildren(true);
 	}
 
 	/**
@@ -446,33 +428,28 @@ class Hierarchy extends DataObjectDecorator {
 		$idxStageChildren = array();
 		$idxLiveChildren = array();
 		
-		// Cache the allChildren data, so that future requests will return the references to the same
-		// object.  This allows the mark..() system to work appropriately.
-		if(!$this->_cache_allChildrenIncludingDeleted) {
-			$baseClass = ClassInfo::baseDataClass($this->owner->class);
-			if($baseClass) {
-				$stageChildren = $this->owner->stageChildren(true);
-				$this->_cache_allChildrenIncludingDeleted = $stageChildren;
-				
-				// Add live site content that doesn't exist on the stage site, if required.
-				if($this->owner->hasExtension('Versioned')) {
-					// Next, go through the live children.  Only some of these will be listed					
-					$liveChildren = $this->owner->liveChildren(true, true);
-					if($liveChildren) {
-						foreach($liveChildren as $child) {
-							$this->_cache_allChildrenIncludingDeleted->push($child);
-						}
+		$baseClass = ClassInfo::baseDataClass($this->owner->class);
+		if($baseClass) {
+			$stageChildren = $this->owner->stageChildren(true);
+			
+			// Add live site content that doesn't exist on the stage site, if required.
+			if($this->owner->hasExtension('Versioned')) {
+				// Next, go through the live children.  Only some of these will be listed					
+				$liveChildren = $this->owner->liveChildren(true, true);
+				if($liveChildren) {
+					foreach($liveChildren as $child) {
+						$stageChildren->push($child);
 					}
 				}
-
-				$this->owner->extend("augmentAllChildrenIncludingDeleted", $stageChildren, $context); 
-				
-			} else {
-				user_error("Hierarchy::AllChildren() Couldn't determine base class for '{$this->owner->class}'", E_USER_ERROR);
 			}
+
+			$this->owner->extend("augmentAllChildrenIncludingDeleted", $stageChildren, $context); 
+			
+		} else {
+			user_error("Hierarchy::AllChildren() Couldn't determine base class for '{$this->owner->class}'", E_USER_ERROR);
 		}
 		
-		return $this->_cache_allChildrenIncludingDeleted;
+		return $stageChildren;
 	}
 	
 	/**
@@ -642,14 +619,7 @@ class Hierarchy extends DataObjectDecorator {
 		$nextNode = null;
 		$baseClass = ClassInfo::baseDataClass($this->owner->class);
 		
-		// Try searching for the next node of the given class in each of the children, but treat each
-		// child as the root of the search. This will stop the recursive call from searching backwards.
-		// If afterNode is given, then only search for the nodes after 
-		if(!$afterNode || $afterNode->ParentID != $this->owner->ID) {
-			$children = $this->_cache_allChildren;
-		} else {
-			$children = DataObject::get(ClassInfo::baseDataClass($this->owner->class), "\"$baseClass\".\"ParentID\"={$this->owner->ID}" . ( ( $afterNode ) ? " AND \"Sort\" > " . sprintf( '%d', $afterNode->Sort ) : "" ), '"Sort" ASC');
-		}
+		$children = DataObject::get(ClassInfo::baseDataClass($this->owner->class), "\"$baseClass\".\"ParentID\"={$this->owner->ID}" . ( ( $afterNode ) ? " AND \"Sort\" > " . sprintf( '%d', $afterNode->Sort ) : "" ), '"Sort" ASC');
 		
 		// Try all the siblings of this node after the given node
 		/*if( $siblings = DataObject::get( ClassInfo::baseDataClass($this->owner->class), "\"ParentID\"={$this->owner->ParentID}" . ( $afterNode ) ? "\"Sort\" > {$afterNode->Sort}" : "" , '\"Sort\" ASC' ) )
@@ -677,8 +647,6 @@ class Hierarchy extends DataObjectDecorator {
 	
 	function flushCache() {
 		$this->_cache_children = null;
-		$this->_cache_allChildrenIncludingDeleted = null;
-		$this->_cache_allChildren = null;
 		$this->_cache_numChildren = null;
 	}
 }
