@@ -911,6 +911,11 @@ class Requirements_Backend {
 		// Process the combined files
 		$base = Director::baseFolder() . '/';
 		foreach(array_diff_key($combinedFiles, $this->blocked) as $combinedFile => $dummy) {
+			if(!is_writable($base . $combinedFile)) {
+				user_error("Requirements_Backend::process_combined_files(): Couldn't create '$base$combinedFile'", E_USER_WARNING);
+				continue;
+			}
+
 			$fileList = $this->combine_files[$combinedFile];
 			$combinedFilePath = $base . $this->combinedFilesFolder . '/' . $combinedFile;
 
