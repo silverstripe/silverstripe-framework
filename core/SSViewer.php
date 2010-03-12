@@ -388,6 +388,15 @@ class SSViewer {
 		return $output;
 	}
 
+	/**
+	 * Execute the given template, passing it the given data.
+	 * Used by the <% include %> template tag to process templates.
+	 */
+	static function execute_template($template, $data) {
+		$v = new SSViewer($template);
+		return $v->process($data);
+	}
+
 	static function parseTemplateContent($content, $template="") {			
 		// Remove UTF-8 byte order mark:
 		// This is only necessary if you don't have zend-multibyte enabled.
@@ -404,21 +413,6 @@ class SSViewer {
 			} else {
 				$content = "<!-- template $template -->\n" . $content . "\n<!-- end template $template -->";
 			}
-		}
-		
-		while(true) {
-			$oldContent = $content;
-			
-			// Add include filename comments on dev sites
-			if(Director::isDev() && self::$source_file_comments) $replacementCode = 'return "<!-- include " . SSViewer::getTemplateFile($matches[1]) . " -->\n" 
-				. SSViewer::getTemplateContent($matches[1]) 
-				. "\n<!-- end include " . SSViewer::getTemplateFile($matches[1]) . " -->";';
-			else $replacementCode = 'return SSViewer::getTemplateContent($matches[1]);';
-			
-			$content = preg_replace_callback('/<' . '% include +([A-Za-z0-9_]+) +%' . '>/', create_function(
-				'$matches', $replacementCode
-				), $content);
-			if($oldContent == $content) break;
 		}
 		
 		// $val, $val.property, $val(param), etc.
@@ -531,6 +525,17 @@ class SSViewer {
 		// add all requirements to the $requirements array
 		preg_match_all('/<% require ([a-zA-Z]+)\(([^\)]+)\) %>/', $content, $requirements);
 		$content = preg_replace('/<% require .* %>/', null, $content);
+
+		
+		// Add include filename comments on dev sites
+		if(Director::isDev() && self::$source_file_comments) $replacementCode = 'return "<!-- include " . SSViewer::getTemplateFile($matches[1]) . " -->\n" 
+			. "<?= SSViewer::parse_template(\\"" . $matches[1] . "\", \$item); ?>"
+			. "\n<!-- end include " . SSViewer::getTemplateFile($matches[1]) . " -->";';
+		else $replacementCode = 'return "<?= SSViewer::execute_template(\\"" . $matches[1] . "\", \$item); ?>";';
+		
+		$content = preg_replace_callback('/<' . '% include +([A-Za-z0-9_]+) +%' . '>/', create_function(
+			'$matches', $replacementCode
+			), $content);
 		
 		// legacy
 		$content = ereg_replace('<!-- +if +([A-Za-z0-9_]+) +-->', '<? if($item->cachedCall("\\1")) { ?>', $content);

@@ -280,6 +280,32 @@ after')
 		$negotiator->xhtml($response);
 		$this->assertRegExp('/<head><base href=".*"><\/base><\/head>/', $response->getBody());
 	}
+
+	
+	function testRecursiveInclude() {
+		$view = new SSViewer(array('SSViewerTestRecursiveInclude'));
+		
+		$data = new ArrayData(array(
+			'Title' => 'A',
+			'Children' => new DataObjectSet(array(
+				new ArrayData(array(
+					'Title' => 'A1',
+					'Children' => new DataObjectSet(array(
+						new ArrayData(array( 'Title' => 'A1 i', )),
+						new ArrayData(array( 'Title' => 'A1 ii', )),
+					)),
+				)),
+				new ArrayData(array( 'Title' => 'A2', )),
+				new ArrayData(array( 'Title' => 'A3', )),
+			)),
+		));
+		
+		$result = $view->process($data);
+		// We don't care about whitespace
+		$rationalisedResult = trim(preg_replace('/\s+/', ' ', $result));
+		
+		$this->assertEquals('A A1 A1 i A1 ii A2 A3', $rationalisedResult);
+	}
 }
 
 /**
