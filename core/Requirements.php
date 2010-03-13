@@ -911,13 +911,22 @@ class Requirements_Backend {
 		// Process the combined files
 		$base = Director::baseFolder() . '/';
 		foreach(array_diff_key($combinedFiles, $this->blocked) as $combinedFile => $dummy) {
-			if(!is_writable($base . $combinedFile)) {
-				user_error("Requirements_Backend::process_combined_files(): Couldn't create '$base$combinedFile'", E_USER_WARNING);
-				continue;
-			}
-
 			$fileList = $this->combine_files[$combinedFile];
 			$combinedFilePath = $base . $this->combinedFilesFolder . '/' . $combinedFile;
+
+
+			// Make the folder if necessary
+			if(!file_exists(dirname($combinedFilePath))) {
+				Filesystem::makeFolder(dirname($combinedFilePath));
+			}
+			
+			// If the file isn't writebale, don't even bother trying to make the combined file
+			// Complex test because is_writable fails if the file doesn't exist yet.
+			if((file_exists($combinedFilePath) && !is_writable($combinedFilePath)) ||
+				(!file_exists($combinedFilePath) && !is_writable(dirname($combinedFilePath)))) {
+				user_error("Requirements_Backend::process_combined_files(): Couldn't create '$combinedFilePath'", E_USER_WARNING);
+				continue;
+			}
 
 			 // Determine if we need to build the combined include
 			if(file_exists($combinedFilePath) && !isset($_GET['flush'])) {
@@ -950,10 +959,6 @@ class Requirements_Backend {
 				$combinedData .= "/****** FILE: $file *****/\n" . $fileContent . "\n".($isJS ? ';' : '')."\n";
 			}
 
-			if(!file_exists(dirname($combinedFilePath))) {
-				Filesystem::makeFolder(dirname($combinedFilePath));
-			}
-			
 			$successfulWrite = false;
 			$fh = fopen($combinedFilePath, 'wb');
 			if($fh) {
@@ -965,7 +970,7 @@ class Requirements_Backend {
 			// Unsuccessful write - just include the regular JS files, rather than the combined one
 			if(!$successfulWrite) {
 				user_error("Requirements_Backend::process_combined_files(): Couldn't create '$combinedFilePath'", E_USER_WARNING);
-				return;
+				continue;
 			}
 		}
 
