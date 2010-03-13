@@ -104,8 +104,7 @@ class HtmlEditorField extends TextareaField {
 		if($images = $htmlValue->getElementsByTagName('img')) foreach($images as $img) {
 			// strip any ?r=n data from the src attribute
 			$img->setAttribute('src', preg_replace('/([^\?]*)\?r=[0-9]+$/i', '$1', $img->getAttribute('src')));
-			
-			if(!$image = File::find($path = Director::makeRelative($img->getAttribute('src')))) {
+			if(!$image = File::find($path = urldecode(Director::makeRelative($img->getAttribute('src'))))) {
 				if(substr($path, 0, strlen(ASSETS_DIR) + 1) == ASSETS_DIR . '/') {
 					$record->HasBrokenFile = true;
 				}
