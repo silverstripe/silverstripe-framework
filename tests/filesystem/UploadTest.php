@@ -57,6 +57,7 @@ class UploadTest extends SapphireTest {
 		$file2->delete();
 		
 		unlink($tmpFilePath);
+		rmdir(Director::baseFolder() . '/assets/' . $customFolder);
 	}
 	
 	function testAllowedFilesize() {
