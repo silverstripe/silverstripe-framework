@@ -1226,7 +1226,6 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 				? $this->MetaTitle
 				: $this->Title) . "</title>\n";
 		}
-		$version = new SapphireInfo();
 
 		$tags .= "<meta name=\"generator\" content=\"SilverStripe - http://www.silverstripe.com\" />\n";
 
