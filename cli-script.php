@@ -65,7 +65,12 @@ require_once("core/model/DB.php");
 DB::connect($databaseConfig);
 
 // Get the request URL from the querystring arguments
-$url = $_SERVER['argv'][1];
+$url = isset($_SERVER['argv'][1]) ? $_SERVER['argv'][1] : null;
+if(!$url) {
+	echo 'Please specify an argument to cli-script.php/sake. For more information, visit http://doc.silverstripe.org/doku.php?id=sake';
+	die();
+}
+
 $_SERVER['REQUEST_URI'] = BASE_URL . '/' . $url;
 
 // Direct away - this is the "main" function, that hands control to the apporopriate controller
