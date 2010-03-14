@@ -36,7 +36,7 @@ class UploadTest extends SapphireTest {
 			'File upload to standard directory in /assets'
 		);
 		$this->assertTrue(
-			(strpos($file1->getFullPath(),Director::baseFolder() . '/assets/' . Upload::$uploads_folder) !== false),	
+			(strpos($file1->getFullPath(), Director::baseFolder() . '/assets/' . Upload::$uploads_folder) !== false),	
 			'File upload to standard directory in /assets'
 		);
 		$file1->delete();
@@ -51,7 +51,7 @@ class UploadTest extends SapphireTest {
 			'File upload to custom directory in /assets'
 		);
 		$this->assertTrue(
-			(strpos($file2->getFullPath(),Director::baseFolder() . '/assets/' . $customFolder) !== false),
+			(strpos($file2->getFullPath(), Director::baseFolder() . '/assets/' . $customFolder) !== false),
 			'File upload to custom directory in /assets'
 		);
 		$file2->delete();
@@ -63,8 +63,67 @@ class UploadTest extends SapphireTest {
 		// @todo
 	}
 
-	function testAllowedExtensions() {
-		// @todo
+	function testUploadDoesNotAllowUnknownExtension() {
+		// create tmp file
+		$tmpFileName = 'UploadTest_testUpload.php';
+		$tmpFilePath = TEMP_FOLDER . '/' . $tmpFileName;
+		$tmpFileContent = '';
+		for($i=0; $i<10000; $i++) $tmpFileContent .= '0';
+		file_put_contents($tmpFilePath, $tmpFileContent);
+		
+		// emulates the $_FILES array
+		$tmpFile = array(
+			'name' => $tmpFileName,
+			'type' => 'text/plaintext',
+			'size' => filesize($tmpFilePath),
+			'tmp_name' => $tmpFilePath,
+			'extension' => 'txt',
+			'error' => UPLOAD_ERR_OK,
+		);
+		
+		$v = new UploadTest_Validator();
+		$v->setAllowedExtensions(array('txt'));
+		
+		// test upload into default folder
+		$u = new Upload();
+		$u->setValidator($v);
+		$result = $u->load($tmpFile);
+		
+		$this->assertFalse($result, 'Load failed because extension was not accepted');
+		$this->assertEquals(1, count($u->getErrors()), 'There is a single error of the file extension');
+	}
+	
+	function testUploadAcceptsAllowedExtension() {
+		// create tmp file
+		$tmpFileName = 'UploadTest_testUpload.txt';
+		$tmpFilePath = TEMP_FOLDER . '/' . $tmpFileName;
+		$tmpFileContent = '';
+		for($i=0; $i<10000; $i++) $tmpFileContent .= '0';
+		file_put_contents($tmpFilePath, $tmpFileContent);
+		
+		// emulates the $_FILES array
+		$tmpFile = array(
+			'name' => $tmpFileName,
+			'type' => 'text/plaintext',
+			'size' => filesize($tmpFilePath),
+			'tmp_name' => $tmpFilePath,
+			'extension' => 'txt',
+			'error' => UPLOAD_ERR_OK,
+		);
+		
+		$v = new UploadTest_Validator();
+		$v->setAllowedExtensions(array('txt'));
+		
+		// test upload into default folder
+		$u = new Upload();
+		$u->setValidator($v);
+		$u->load($tmpFile);
+		$file = $u->getFile();
+		$this->assertTrue(
+			file_exists($file->getFullPath()), 
+			'File upload to custom directory in /assets'
+		);
+		$file->delete();
 	}
 	
 }
