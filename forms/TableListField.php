@@ -1008,7 +1008,7 @@ JS
 		Requirements::css(CMS_DIR . '/css/cms_right.css');
 		Requirements::css(SAPPHIRE_DIR . '/css/TableListField_print.css');
 		
-		unset($this->cachedSourceItems);
+		$this->cachedSourceItems = null;
 		$oldShowPagination = $this->showPagination;
 		$this->showPagination = false;
 
