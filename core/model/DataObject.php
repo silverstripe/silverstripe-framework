@@ -462,7 +462,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 				$class = get_class($instance);
 				user_error("DataObject::defineMethods(): Please ensure {$class}::__construct() calls parent::__construct()", E_USER_ERROR);
 			}
-			DataObjectDecorator::load_extra_statics($this->class, $instance->class);
 		}
 
 		// Set up accessors for joined items

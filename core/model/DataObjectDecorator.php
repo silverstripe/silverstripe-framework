@@ -48,8 +48,15 @@ abstract class DataObjectDecorator extends Extension {
 		if(!empty(self::$extra_statics_loaded[$class][$extension])) return;
 		self::$extra_statics_loaded[$class][$extension] = true;
 		
+		if(preg_match('/^([^(]*)/', $extension, $matches)) {
+			$extensionClass = $matches[1];
+		} else {
+			user_error("Bad extenion '$extension' - can't find classname", E_USER_WARNING);
+			return;
+		}
+		
 		// @deprecated 2.4 - use extraStatics() now, not extraDBFields()
-		if(method_exists($extension, 'extraDBFields')) {
+		if(method_exists($extensionClass, 'extraDBFields')) {
 			user_error('DataObjectDecorator::extraDBFields() is deprecated. Please use extraStatics() instead.', E_USER_NOTICE); 
 			$extraStaticsMethod = 'extraDBFields';
 		} else {
@@ -57,9 +64,9 @@ abstract class DataObjectDecorator extends Extension {
 		}
 		
 		// If the extension has been manually applied to a subclass, we should ignore that.
-		if(Object::has_extension(get_parent_class($class), $extension)) return;
+		if(Object::has_extension(get_parent_class($class), $extensionClass)) return;
 		
-		$statics = call_user_func(array($extension, $extraStaticsMethod), $class);
+		$statics = call_user_func(array($extensionClass, $extraStaticsMethod), $class, $extension);
 		
 		if($statics) {
 			foreach($statics as $name => $newVal) {
