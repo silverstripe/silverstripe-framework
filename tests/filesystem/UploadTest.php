@@ -61,12 +61,8 @@ class UploadTest extends SapphireTest {
 	}
 	
 	function testAllowedFilesize() {
-		// @todo
-	}
-
-	function testUploadDoesNotAllowUnknownExtension() {
 		// create tmp file
-		$tmpFileName = 'UploadTest_testUpload.php';
+		$tmpFileName = 'UploadTest_testUpload.txt';
 		$tmpFilePath = TEMP_FOLDER . '/' . $tmpFileName;
 		$tmpFileContent = '';
 		for($i=0; $i<10000; $i++) $tmpFileContent .= '0';
@@ -83,6 +79,64 @@ class UploadTest extends SapphireTest {
 		);
 		
 		$v = new UploadTest_Validator();
+		$v->setAllowedMaxFileSize(array('txt' => 10));
+		
+		// test upload into default folder
+		$u1 = new Upload();
+		$u1->setValidator($v);
+		$result = $u1->load($tmpFile);
+		
+		$this->assertFalse($result, 'Load failed because size was too big');
+	}
+
+	function testAllowedSizeOnFileWithNoExtension() {
+		// create tmp file
+		$tmpFileName = 'UploadTest_testUpload';
+		$tmpFilePath = TEMP_FOLDER . '/' . $tmpFileName;
+		$tmpFileContent = '';
+		for($i=0; $i<10000; $i++) $tmpFileContent .= '0';
+		file_put_contents($tmpFilePath, $tmpFileContent);
+		
+		// emulates the $_FILES array
+		$tmpFile = array(
+			'name' => $tmpFileName,
+			'type' => 'text/plaintext',
+			'size' => filesize($tmpFilePath),
+			'tmp_name' => $tmpFilePath,
+			'extension' => '',
+			'error' => UPLOAD_ERR_OK,
+		);
+		
+		$v = new UploadTest_Validator();
+		$v->setAllowedMaxFileSize(array('' => 10));
+		
+		// test upload into default folder
+		$u1 = new Upload();
+		$u1->setValidator($v);
+		$result = $u1->load($tmpFile);
+		
+		$this->assertFalse($result, 'Load failed because size was too big');
+	}
+
+	function testUploadDoesNotAllowUnknownExtension() {
+		// create tmp file
+		$tmpFileName = 'UploadTest_testUpload.php';
+		$tmpFilePath = TEMP_FOLDER . '/' . $tmpFileName;
+		$tmpFileContent = '';
+		for($i=0; $i<10000; $i++) $tmpFileContent .= '0';
+		file_put_contents($tmpFilePath, $tmpFileContent);
+		
+		// emulates the $_FILES array
+		$tmpFile = array(
+			'name' => $tmpFileName,
+			'type' => 'text/plaintext',
+			'size' => filesize($tmpFilePath),
+			'tmp_name' => $tmpFilePath,
+			'extension' => 'php',
+			'error' => UPLOAD_ERR_OK,
+		);
+		
+		$v = new UploadTest_Validator();
 		$v->setAllowedExtensions(array('txt'));
 		
 		// test upload into default folder
@@ -91,7 +145,6 @@ class UploadTest extends SapphireTest {
 		$result = $u->load($tmpFile);
 		
 		$this->assertFalse($result, 'Load failed because extension was not accepted');
-		$this->assertEquals(1, count($u->getErrors()), 'There is a single error of the file extension');
 	}
 	
 	function testUploadAcceptsAllowedExtension() {
@@ -141,7 +194,7 @@ class UploadTest extends SapphireTest {
 			'type' => 'text/plaintext',
 			'size' => filesize($tmpFilePath),
 			'tmp_name' => $tmpFilePath,
-			'extension' => 'txt',
+			'extension' => '',
 			'error' => UPLOAD_ERR_OK,
 		);
 
@@ -171,7 +224,7 @@ class UploadTest extends SapphireTest {
 			'type' => 'text/plaintext',
 			'size' => filesize($tmpFilePath),
 			'tmp_name' => $tmpFilePath,
-			'extension' => 'txt',
+			'extension' => 'tar.gz',
 			'error' => UPLOAD_ERR_OK,
 		);
 		
@@ -260,6 +313,8 @@ class UploadTest_Validator extends Upload_Validator implements TestOnly {
 		// filesize validation
 		
 		if(!$this->isValidSize()) {
+			$ext = (isset($pathInfo['extension'])) ? $pathInfo['extension'] : '';
+			$arg = File::format_size($this->getAllowedMaxFileSize($ext));
 			$this->errors[] = sprintf(
 				_t(
 					'File.TOOLARGE', 
@@ -267,7 +322,7 @@ class UploadTest_Validator extends Upload_Validator implements TestOnly {
 					PR_MEDIUM,
 					'Argument 1: Filesize (e.g. 1MB)'
 				),
-				File::format_size($this->getAllowedMaxFileSize($pathInfo['extension']))
+				$arg
 			);
 			return false;
 		}

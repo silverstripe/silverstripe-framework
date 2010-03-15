@@ -466,6 +466,8 @@ class Upload_Validator {
 		$pathInfo = pathinfo($this->tmpFile['name']);
 		// filesize validation
 		if(!$this->isValidSize()) {
+			$ext = (isset($pathInfo['extension'])) ? $pathInfo['extension'] : '';
+			$arg = File::format_size($this->getAllowedMaxFileSize($ext));
 			$this->errors[] = sprintf(
 				_t(
 					'File.TOOLARGE', 
@@ -473,7 +475,7 @@ class Upload_Validator {
 					PR_MEDIUM,
 					'Argument 1: Filesize (e.g. 1MB)'
 				),
-				File::format_size($this->getAllowedMaxFileSize($pathInfo['extension']))
+				$arg
 			);
 			return false;
 		}
