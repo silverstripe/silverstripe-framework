@@ -464,7 +464,7 @@ $lang['de_DE']['Security']['NOTERESETLINKINVALID'] = '<p>Der Passwort-Reset Link
 $lang['de_DE']['Security']['NOTERESETPASSWORD'] = 'Geben Sie Ihre E-Mail-Adresse ein und wir werden Ihnen einen Link zuschicken, mit dem Sie Ihr Passwort zurücksetzen können.';
 $lang['de_DE']['Security']['NOTHINGTOENCRYPT1'] = 'Keine Passwörter zum Verschlüsseln';
 $lang['de_DE']['Security']['NOTHINGTOENCRYPT2'] = 'Es gibt keine Mitglieder mit Klartextpasswörtern, die verschlüsselt werden könnten.';
-$lang['de_DE']['Security']['PASSWORDSENTHEADER'] = 'Link zur Passwortrücksetzung versandt an &s';
+$lang['de_DE']['Security']['PASSWORDSENTHEADER'] = 'Link zur Passwortrücksetzung versandt an %s';
 $lang['de_DE']['Security']['PASSWORDSENTTEXT'] = 'Vielen Dank! Ein Link zum Zurücksetzen wurde an \'%s\' verschickt - unter der Voraussetzung, dass für diese E-Mail-Adresse ein Benutzerkonto existiert.';
 $lang['de_DE']['Security']['PERMFAILURE'] = 'Diese Seite ist geschützt. Sie benötigen Administratorrechte, um darauf zuzugreifen. Bitte melden Sie sich an und Sie werden sofort weitergeleitet.';
 $lang['de_DE']['SecurityAdmin']['ADVANCEDONLY'] = 'Dieser Abschnitt ist nur für fortgeschrittene Nutzer geeignet. Lesen Sie <a href="http://doc.silverstripe.com/doku.php?id=permissions:codes" target="_blank">diese Seite</a> für weitere Informationen.';
