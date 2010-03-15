@@ -39,7 +39,7 @@ DatabaseAdapterRegistry::register(
 		'missingExtensionText' => 'The <a href="http://php.net/manual/en/book.sqlite3.php">SQLite3</a> and <a href="http://php.net/manual/en/book.pdo.php">PDO</a> classes are not available. Please install or enable them and refresh this page.',
 		'fields' => array(
 			'path' => array(
-				'title' => 'Database path',
+				'title' => 'Database path <small>(absolute path, writeable by the webserver user. Recommended to be outside of your webroot)</small>',
 				'default' => realpath(dirname($_SERVER['SCRIPT_FILENAME'])) . '/assets/.sqlitedb'
 			),
 			'database' => array(
