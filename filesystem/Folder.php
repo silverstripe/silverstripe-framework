@@ -213,12 +213,11 @@ class Folder extends File {
 		while(file_exists("$base/$file$ext")) {
 			$i++;
 			$oldFile = $file;
-			$file = "$origFile-$i";
 			
 			if(strpos($file, '.') !== false) {
-				$file = ereg_replace('[0-9]*(\.[^.]+$)',$i . '\\1', $file);
-			} else if (strpos($file, '_') !== false) {
-				$file = ereg_replace('_([^_]+$)', '_'.$i, $file);
+				$file = ereg_replace('[0-9]*(\.[^.]+$)', $i . '\\1', $file);
+			} elseif(strpos($file, '_') !== false) {
+				$file = ereg_replace('_([^_]+$)', '_' . $i, $file);
 			} else {
 				$file .= "_$i";
 			}
