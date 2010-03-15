@@ -85,9 +85,6 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	);
 
 	static $indexes = array(
-		"SearchFields" => Array('type'=>'fulltext', 'name'=>'SearchFields', 'value'=>'Title, MenuTitle, Content, MetaTitle, MetaDescription, MetaKeywords'),
-		//"TitleSearchFields" => Array('type'=>'fulltext', 'value'=>'Title'),
-		//"ContentSearchFields" => Array('type'=>'fulltext', 'value'=>'Content'),
 		"URLSegment" => true,
 	);
 

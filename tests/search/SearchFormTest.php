@@ -12,6 +12,18 @@ class SearchFormTest extends FunctionalTest {
 	
 	protected $mockController;
 	
+	protected $requiredExtensions = array(
+		"SiteTree" => array(
+			"MySQLFulltextSearchable('Title,MenuTitle,Content,MetaTitle,MetaDescription,MetaKeywords')",
+		),
+		"File" => array(
+			"MySQLFulltextSearchable('Filename,Title,Content')",
+		),
+		"ContentController" => array(
+			"ContentControllerSearchExtension",
+		),
+	);
+	
 	function setUp() {
 		parent::setUp();
 		

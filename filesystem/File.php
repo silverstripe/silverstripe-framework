@@ -24,10 +24,6 @@ class File extends DataObject {
 		"Sort" => "Int"
 	);
 	
-	static $indexes = array(
-		"SearchFields" => Array('type'=>'fulltext','name'=>'SearchFields', 'value'=>'Filename,Title,Content'),
-	);
-	
 	static $has_one = array(
 		"Parent" => "File",
 		"Owner" => "Member"
