@@ -24,8 +24,11 @@
 					});
 				} else {
 					checkboxes.each(function() {
-						$(this).attr('checked', $(this).data('SecurityAdmin.oldChecked'));
-						$(this).attr('disabled', $(this).data('SecurityAdmin.oldDisabled'));
+						// only update attributes if previous values have been saved
+						var oldChecked = $(this).data('SecurityAdmin.oldChecked');
+						var oldDisabled = $(this).data('SecurityAdmin.oldDisabled');
+						if(oldChecked != null) $(this).attr('checked', oldChecked);
+						if(oldDisabled != null) $(this).attr('disabled', oldDisabled);
 					});
 				}
 			}
