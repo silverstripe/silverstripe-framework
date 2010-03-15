@@ -33,6 +33,13 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	
 	protected static $is_running_test = false;
 	
+	/**
+	 * By default, setUp() does not require default records. Pass
+	 * class names in here, and the require/augment default records
+	 * function will be called on them.
+	 */
+	protected $requireDefaultRecordsFrom = array();
+	
 	
 	/**
 	 * A list of extensions that can't be applied during the execution of this run.  If they are
@@ -120,6 +127,12 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 			singleton('DataObject')->flushCache();
 			
 			self::empty_temp_db();
+			
+			foreach($this->requireDefaultRecordsFrom as $className) {
+				$instance = singleton($className);
+				if (method_exists($instance, 'requireDefaultRecords')) $instance->requireDefaultRecords();
+				if (method_exists($instance, 'augmentDefaultRecords')) $instance->augmentDefaultRecords();
+			}
 
 			if($fixtureFile) {
 				$fixtureFiles = (is_array($fixtureFile)) ? $fixtureFile : array($fixtureFile);
