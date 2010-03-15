@@ -152,6 +152,10 @@ table.testResults {
 	margin-right: 5px;
 }
 
+.dbfields {
+	margin: 10px;
+}
+
 #database_credentials {
 	margin: 0;
 	line-height: 1;

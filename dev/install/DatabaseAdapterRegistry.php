@@ -10,6 +10,31 @@
  */
 class DatabaseAdapterRegistry {
 	
+	static $default_fields = array(
+		'server' => array(
+			'title' => 'Database server', 
+			'envVar' => 'SS_DATABASE_SERVER', 
+			'default' => 'localhost'
+		),
+		'username' => array(
+			'title' => 'Database username', 
+			'envVar' => 'SS_DATABASE_USERNAME', 
+			'default' => 'root'
+		),
+		'password' => array(
+			'title' => 'Database password', 
+			'envVar' => 'SS_DATABASE_PASSWORD', 
+			'default' => 'password'
+		),
+		'database' => array(
+			'title' => 'Database name', 
+			'default' => 'SS_mysite',
+			'attributes' => array(
+				"onchange" => "this.value = this.value.replace(/[\/\\:*?&quot;<>|. \t]+/g,'');"
+			)
+		),
+	);
+	
 	/**
 	 * Internal array of registered database adapters
 	 */
@@ -31,6 +56,9 @@ class DatabaseAdapterRegistry {
 		
 		$config['missingModuleText'] = $missingModuleText;
 		$config['missingExtensionText'] = $missingExtensionText;
+		
+		// set default fields if none are defined already
+		if(!isset($config['fields'])) $config['fields'] = self::$default_fields;
 		
 		self::$adapters[$config['class']] = $config;
 	}
