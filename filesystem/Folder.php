@@ -214,6 +214,15 @@ class Folder extends File {
 			$i++;
 			$oldFile = $file;
 			$file = "$origFile-$i";
+			
+			if(strpos($file, '.') !== false) {
+				$file = ereg_replace('[0-9]*(\.[^.]+$)',$i . '\\1', $file);
+			} else if (strpos($file, '_') !== false) {
+				$file = ereg_replace('_([^_]+$)', '_'.$i, $file);
+			} else {
+				$file .= "_$i";
+			}
+			
 			if($oldFile == $file && $i > 2) user_error("Couldn't fix $file$ext with $i", E_USER_ERROR);
 		}
 		
