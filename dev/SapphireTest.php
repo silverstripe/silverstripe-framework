@@ -607,7 +607,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 			
 			// Some DataObjectsDecorators keep a static cache of information that needs to 
 			// be reset whenever the database is cleaned out
-			foreach(ClassInfo::subclassesFor('DataObjectDecorator') as $class) {
+			foreach(array_merge(ClassInfo::subclassesFor('DataObjectDecorator'), ClassInfo::subclassesFor('DataObject')) as $class) {
 				$toCall = array($class, 'on_db_reset');
 				if(is_callable($toCall)) call_user_func($toCall);
 			}
