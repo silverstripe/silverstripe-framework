@@ -638,12 +638,15 @@ class File extends DataObject {
 	 * Similar to {@link getCMSFields()}, but a more restricted
 	 * set of fields which can be reliably set on any file type.
 	 * 
+	 * Needs to be enabled through {@link AssetAdmin::$metadata_upload_enabled}
+	 * 
 	 * @return FieldSet
 	 */
 	function uploadMetadataFields() {
 		$fields = new FieldSet();
 		$fields->push(new TextField('Title', $this->fieldLabel('Title')));
 		$this->extend('updateUploadMetadataFields', $fields);
+		
 		return $fields;
 	}
 	
