@@ -151,6 +151,7 @@ class HtmlEditorFieldTest extends FunctionalTest {
 			'<p><a href="[sitetree_link id=%d]">Working Link</a></p>',
 			$this->idFromFixture('SiteTree', 'home')
 		));
+		$sitetree->HasBrokenLink = false;
 		$editor->saveInto($sitetree);
 		
 		$this->assertFalse((bool) $sitetree->HasBrokenLink);

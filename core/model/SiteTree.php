@@ -1391,9 +1391,8 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		$this->HasBrokenLink = false;
 		$this->HasBrokenFile = false;
 		
-		$formFields = $this->getCMSFields(null);
 		foreach($htmlFields as $field) {
-			$formField = $formFields->dataFieldByName($field);
+			$formField = new HTMLEditorField($field);
 			$formField->setValue($this->$field);
 			$formField->saveInto($this);
 		}
@@ -2040,7 +2039,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	 * @uses SiteTreeDecorator->onAfterUnpublish()
 	 */
 	function doUnpublish() {
-            	if(!$this->canDeleteFromLive()) return false;
+		if(!$this->canDeleteFromLive()) return false;
 		if(!$this->ID) return false;
 		
 		$this->extend('onBeforeUnpublish');
