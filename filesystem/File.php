@@ -126,13 +126,23 @@ class File extends DataObject {
 		if($this->Filename && $this->Name && file_exists($this->getFullPath()) && !is_dir($this->getFullPath())) {
 			unlink($this->getFullPath());
 		}
+	}
+	
+	protected function onAfterDelete() {
+		parent::onAfterDelete();
 
 		if($brokenPages = $this->BackLinkTracking()) {
-			foreach($brokenPages as $brokenPage) {
-				Notifications::event("BrokenLink", $brokenPage, $brokenPage->OwnerID);
-				$brokenPage->HasBrokenFile = true;
-				$brokenPage->write();
-			}
+			$origStage = Versioned::current_stage();
+
+			// This will syncLinkTracking on draft
+			Versioned::reading_stage('Stage');
+			foreach($brokenPages as $brokenPage) $brokenPage->write();
+
+			// This will syncLinkTracking on published
+			Versioned::reading_stage('Live');
+			foreach($brokenPages as $brokenPage) $brokenPage->write();
+
+			Versioned::reading_stage($origStage);
 		}
 	}
 	

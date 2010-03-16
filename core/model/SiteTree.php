@@ -1355,6 +1355,24 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		DataObject::set_context_obj(null);
 
 		$this->syncLinkTracking();
+
+		// Check to see if we've only altered fields that shouldn't affect versioning
+		$fieldsIgnoredByVersioning = array('HasBrokenLink', 'Status', 'HasBrokenFile', 'ToDo');
+		$changedFields = array_keys($this->getChangedFields(true, 2));
+
+		// This more rigorous check is inline with the test that write()
+		// does to dedcide whether or not to write to the DB.  We use that
+		// to avoid cluttering the system with a migrateVersion() call
+		// that doesn't get used
+		$oneChangedFields = array_keys($this->getChangedFields(true, 1));
+
+		if($oneChangedFields && !array_diff($changedFields, $fieldsIgnoredByVersioning)) {
+			// This will have the affect of preserving the versioning
+			$this->migrateVersion($this->Version);
+		}
+
+
+		parent::onBeforeWrite();
 	}
 	
 	function syncLinkTracking() {
@@ -1373,46 +1391,12 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		$this->HasBrokenLink = false;
 		$this->HasBrokenFile = false;
 		
+		$formFields = $this->getCMSFields(null);
 		foreach($htmlFields as $field) {
-			// Set LinkTracking appropriately
-			$links = HTTP::getLinksIn($this->$field);
-		
-			if($links) foreach($links as $link) {
-				if(preg_match('/^([A-Za-z0-9_-]+)\/?(#.*)?$/', $link, $parts)) {
-					$candidatePage = DataObject::get_one("SiteTree", "\"URLSegment\" = '" . urldecode( $parts[1] ). "'", false);
-					if($candidatePage) {
-						$linkedPages[] = $candidatePage->ID;
-					} else {
-						$this->HasBrokenLink = true;
-					}
-				} else if(substr($link,0,7) == 'assets/') {
-					$candidateFile = File::find(Convert::raw2sql(urldecode($link)));
-					if($candidateFile) {
-						$linkedFiles[] = $candidateFile->ID;
-					} else {
-						$this->HasBrokenFile = true;
-					}
-				} else if($link == '' || $link[0] == '/') {
-					$this->HasBrokenLink = true;
-				}
-			}
-		
-			$images = HTTP::getImagesIn($this->$field);
-			if($images) {
-				foreach($images as $image) {
-					$image = Director::makeRelative($image);
-					if(substr($image,0,7) == 'assets/') {
-						$candidateImage = File::find($image);
-						if($candidateImage) $linkedFiles[] = $candidateImage->ID;
-						else $this->HasBrokenFile = true;
-					}
-				}
-			}
+			$formField = $formFields->dataFieldByName($field);
+			$formField->setValue($this->$field);
+			$formField->saveInto($this);
 		}
-		
-		$this->LinkTracking()->setByIDList($linkedPages);
-		$this->ImageTracking()->setByIDList($linkedFiles);
-		
 		$this->extend('augmentSyncLinkTracking');
 	}
 	
@@ -1421,7 +1405,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		$this->flushCache();
 		
 		// Update any virtual pages that might need updating
-		$linkedPages = DataObject::get("VirtualPage", "\"CopyContentFromID\" = $this->ID");
+		$linkedPages = $this->VirtualPages();
 		if($linkedPages) foreach($linkedPages as $page) {
 			$page->copyFrom($page->CopyContentFrom());
 			$page->write();
@@ -1446,32 +1430,9 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		// Need to flush cache to avoid outdated versionnumber references
 		$this->flushCache();
 		
-		// Need to mark pages linking to this one as broken
-		foreach($this->BackLinkTracking() as $page) {
-			// $page->write() calls syncLinkTracking, which does all the hard work for us.
-			$page->write();
-		}
-		
-		// Also write all VPs pointing here
-		$suffix = Versioned::current_stage() == 'Live' ? '_Live' : '';
-
-		// This coupling to the subsites module is frustrating, but difficult to avoid.
-		if(class_exists('Subsite')) {
-			$virtualPages = Subsite::get_from_all_subsites('VirtualPage', "\"SiteTree$suffix\".\"ID\" = \"SiteTree$suffix\".\"ID\" AND \"CopyContentFromID\" = {$this->ID}");
-		} else {
-			$virtualPages = DataObject::get('VirtualPage', "\"SiteTree$suffix\".\"ID\" = \"SiteTree$suffix\".\"ID\" AND \"CopyContentFromID\" = {$this->ID}");
-		}
-		if(class_exists('Subsite')) {
-			$redirectorPages = Subsite::get_from_all_subsites('RedirectorPage', "\"SiteTree$suffix\".\"ID\" = \"SiteTree$suffix\".\"ID\" AND \"LinkToID\" = {$this->ID}");
-		} else {
-			$redirectorPages = DataObject::get('RedirectorPage', "\"SiteTree$suffix\".\"ID\" = \"SiteTree$suffix\".\"ID\" AND \"LinkToID\" = {$this->ID}");
-		}
-		
-		if($virtualPages) foreach($virtualPages as $page) {
-			// $page->write() calls syncLinkTracking, which does all the hard work for us.
-			$page->write();
-		}
-		if($redirectorPages) foreach($redirectorPages as $page) {
+		// Need to mark pages depending to this one as broken
+		$dependentPages = $this->DependentPages();
+		if($dependentPages) foreach($dependentPages as $page) {
 			// $page->write() calls syncLinkTracking, which does all the hard work for us.
 			$page->write();
 		}
@@ -1576,6 +1537,76 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 			}
 		}
 	}
+	
+	/**
+	 * Returns the pages that depend on this page.
+	 * This includes virtual pages, pages that link to it, etc.
+	 * 
+	 * @param $includeVirtuals Set to false to exlcude virtual pages.
+	 */
+	function DependentPages($includeVirtuals = true) {
+		if(is_callable('Subsite::disable_subsite_filter')) Subsite::disable_subsite_filter(true);
+		
+		// Content links
+		$items = $this->BackLinkTracking();
+		if(!$items) $items = new DataObjectSet();
+		else foreach($items as $item) $item->DependentLinkType = 'Content link';
+		
+		// Virtual pages
+		if($includeVirtuals) {
+			$virtuals = $this->VirtualPages();
+			if($virtuals) {
+				foreach($virtuals as $item) $item->DependentLinkType = 'Virtual page';
+				$items->merge($virtuals);
+			}
+		}
+
+		// Redirector pages
+		$redirectors = DataObject::get("RedirectorPage", "\"RedirectionType\" = 'Internal' AND \"LinkToID\" = $this->ID");
+		if($redirectors) {
+			foreach($redirectors as $item) $item->DependentLinkType = 'Redirector page';
+			$items->merge($redirectors);
+		}
+
+		if(is_callable('Subsite::disable_subsite_filter')) Subsite::disable_subsite_filter(false);
+		return $items;
+	}
+	
+	/**
+	 * Return the number of {@link DependentPages()}
+	 * 
+	 * @param $includeVirtuals Set to false to exlcude virtual pages.
+	 */
+	function DependentPagesCount($includeVirtuals = true) {
+		$links = DB::query("SELECT COUNT(*) FROM \"SiteTree_LinkTracking\" 
+			INNER JOIN \"SiteTree\" ON \"SiteTree\".\"ID\" = \"SiteTree_LinkTracking\".\"SiteTreeID\"
+			WHERE \"ChildID\" = $this->ID ")->value();
+		if($includeVirtuals) {
+			$virtuals = DB::query("SELECT COUNT(*) FROM \"VirtualPage\" 
+			INNER JOIN \"SiteTree\" ON \"SiteTree\".\"ID\" = \"VirtualPage\".\"ID\"
+			WHERE \"CopyContentFromID\" = $this->ID")->value();
+		} else {
+			$virtuals = 0;
+		}
+		$redirectors = DB::query("SELECT COUNT(*) FROM \"RedirectorPage\" 
+			INNER JOIN \"SiteTree\" ON \"SiteTree\".\"ID\" = \"RedirectorPage\".\"ID\"
+			WHERE \"RedirectionType\" = 'Internal' AND \"LinkToID\" = $this->ID")->value();
+			
+			
+		return 0 + $links + $virtuals + $redirectors;
+	}
+	
+	/**
+	 * Return all virtual pages that link to this page
+	 */
+	function VirtualPages() {
+		if(!$this->ID) return null;
+		if(class_exists('Subsite')) {
+			return Subsite::get_from_all_subsites('VirtualPage', "\"CopyContentFromID\" = " . (int)$this->ID);
+		} else {
+			return DataObject::get('VirtualPage', "\"CopyContentFromID\" = " . (int)$this->ID);
+		}
+	}
 
 	/**
 	 * Returns a FieldSet with which to create the CMS editing form.
@@ -1597,7 +1628,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		// Status / message
 		// Create a status message for multiple parents
 		if($this->ID && is_numeric($this->ID)) {
-			$linkedPages = DataObject::get("VirtualPage", "\"CopyContentFromID\" = $this->ID");
+			$linkedPages = $this->VirtualPages();
 		}
 		
 		$parentPageLinks = array();
@@ -1639,51 +1670,36 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 			$message .= "NOTE: " . implode("<br />", $statusMessage);
 		}
 		
-		$backLinksNote = '';
-		$backLinksTable = new LiteralField('BackLinksNote', '<p>' . _t('NOBACKLINKEDPAGES', 'There are no pages linked to this page.') . '</p>');
+		$dependentNote = '';
+		$dependentTable = new LiteralField('DependentNote', '<p></p>');
 		
 		// Create a table for showing pages linked to this one
-		if($this->BackLinkTracking() && $this->BackLinkTracking()->Count() > 0) {
-			$backLinksNote = new LiteralField('BackLinksNote', '<p>' . _t('SiteTree.PAGESLINKING', 'The following pages link to this page:') . '</p>');
-			$backLinksTable = new TableListField(
-				'BackLinkTracking',
-				'SiteTree',
-				array(
-					'Title' => 'Title',
-					'AbsoluteLink' => 'URL'
-				),
-				'"ChildID" = ' . $this->ID,
-				'',
-				'LEFT JOIN "SiteTree_LinkTracking" ON "SiteTree"."ID" = "SiteTree_LinkTracking"."SiteTreeID"'
+		$dependentPagesCount = $this->DependentPagesCount();
+		if($dependentPagesCount) {
+			$dependentColumns = array(
+				'Title' => 'Title',
+				'Subsite.Title' => 'Subsite',
+				'AbsoluteLink' => 'URL',
+				'DependentLinkType' => 'Link type',
 			);
-			$backLinksTable->setFieldFormatting(array(
+			if(!class_exists('Subsite')) unset($dependentColumns['Subsite.Title']);
+			
+			$dependentNote = new LiteralField('DependentNote', '<p>' . _t('SiteTree.DEPENDENT_NOTE', 'The following pages depend on this page. This includes virtual pages, redirector pages, and pages with content links.') . '</p>');
+			$dependentTable = new TableListField(
+				'DependentPages',
+				'SiteTree',
+				$dependentColumns
+			);
+			$dependentTable->setCustomSourceItems($this->DependentPages());
+			$dependentTable->setFieldFormatting(array(
 				'Title' => '<a href=\"admin/show/$ID\">$Title</a>',
 				'AbsoluteLink' => '<a href=\"$value\">$value</a>',
 			));
-			$backLinksTable->setPermissions(array(
+			$dependentTable->setPermissions(array(
 				'show',
 				'export'
 			));
 		}
-		
-		$virtualPagesNote = new LiteralField('BackLinksNote', '<p>' . _t('SiteTree.VIRTUALPAGESLINKING', 'The following virtual pages pull from this page:') . '</p>');
-		$virtualPagesTable = new TableListField(
-			'VirtualPageTracking',
-			'SiteTree',
-			array(
-				'Title' => 'Title',
-				'AbsoluteLink' => 'URL'
-			),
-			'"CopyContentFromID" = ' . $this->ID,
-			''
-		);
-		$virtualPagesTable->setFieldFormatting(array(
-			'Title' => '<a href=\"admin/show/$ID\">$Title</a>'
-		));
-		$virtualPagesTable->setPermissions(array(
-			'show',
-			'export'
-		));
 		
 		// Lay out the fields
 		$fields = new FieldSet(
@@ -1758,11 +1774,9 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 					new LiteralField("ToDoHelp", _t('SiteTree.TODOHELP', "<p>You can use this to keep track of work that needs to be done to the content of your site.  To see all your pages with to do information, open the 'Site Reports' window on the left and select 'To Do'</p>")),
 					new TextareaField("ToDo", "")
 				),
-				$tabReports = new TabSet('Reports',
-					$tabBacklinks = new Tab('Backlinks',
-						$backLinksNote,
-						$backLinksTable
-					)
+				$tabDependent = new Tab('Dependent',
+					$dependentNote,
+					$dependentTable
 				),
 				$tabAccess = new Tab('Access',
 					new HeaderField('WhoCanViewHeader',_t('SiteTree.ACCESSHEADER', "Who can view this page?"), 2),
@@ -1789,12 +1803,9 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		 */
 		$parentIDField->setFilterFunction(create_function('$node', "return \$node->ID != {$this->ID};"));
 		
-		if ($virtualPagesTable->TotalCount()) {
-			$rootTab->push($tabVirtualPages = new Tab('VirtualPages',
-				$virtualPagesNote,
-				$virtualPagesTable
-			));
-		}
+		// Conditional dependent pages tab
+		if($dependentPagesCount) $tabDependent->setTitle(_t('SiteTree.TABDEPENDENT', "Dependent pages") . " ($dependentPagesCount)");
+		else $fields->removeFieldFromTab('Root', 'Dependent');
 		
 		// Make page location fields read-only if the user doesn't have the appropriate permission
 		if(!Permission::check("SITETREE_REORGANISE")) {
@@ -1839,9 +1850,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		$tabMain->setTitle(_t('SiteTree.TABMAIN', "Main"));
 		$tabMeta->setTitle(_t('SiteTree.TABMETA', "Metadata"));
 		$tabBehaviour->setTitle(_t('SiteTree.TABBEHAVIOUR', "Behaviour"));
-		$tabReports->setTitle(_t('SiteTree.TABREPORTS', "Reports"));
 		$tabAccess->setTitle(_t('SiteTree.TABACCESS', "Access"));
-		$tabBacklinks->setTitle(_t('SiteTree.TABBACKLINKS', "BackLinks"));
 		
 		if(self::$runCMSFieldsExtensions) {
 			$this->extend('updateCMSFields', $fields);
@@ -1981,38 +1990,21 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 			WHERE EXISTS (SELECT \"SiteTree\".\"Sort\" FROM \"SiteTree\" WHERE \"SiteTree_Live\".\"ID\" = \"SiteTree\".\"ID\") AND \"ParentID\" = " . sprintf('%d', $this->ParentID) );
 			
 		// Publish any virtual pages that might need publishing
-		$linkedPages = DataObject::get("VirtualPage", "\"CopyContentFromID\" = $this->ID");
+		$linkedPages = $this->VirtualPages();
 		if($linkedPages) foreach($linkedPages as $page) {
 			$page->copyFrom($page->CopyContentFrom());
 			$page->write();
 			if($page->ExistsOnLive) $page->doPublish();
 		}
 		
-		// Fix links that are different on staging vs live
-		$needsWriting = false;
-		$this->syncLinkTracking();
-		foreach($this->LinkTracking() as $linkedPage) {
-			$livePage = Versioned::get_one_by_stage('Page', 'Live', '"SiteTree"."ID" = ' . $linkedPage->ID);
-			if($livePage && $livePage->URLSegment != $linkedPage->URLSegment) {
-
-				$needsWriting = true;
-				$this->rewriteLink($linkedPage->URLSegment . '/', $livePage->URLSegment . '/');
-			}
+		// Need to update pages linking to this one as no longer broken, on the live site
+		$origMode = Versioned::get_reading_mode();
+		Versioned::reading_stage('Live');
+		foreach($this->DependentPages(false) as $page) {
+			// $page->write() calls syncLinkTracking, which does all the hard work for us.
+			$page->write();
 		}
-		if($needsWriting) {
-			$this->writeToStage('Live');
-		}
-		
-		// If this url has changed, then we need to fix pages linked to this one
-		if($original->URLSegment && $original->URLSegment != $this->URLSegment) {
-			foreach($this->BackLinkTracking() as $linkedPage) {
-				$linkedPageLive = Versioned::get_one_by_stage('Page', 'Live', '"SiteTree"."ID" = ' . $linkedPage->ID);
-				if($linkedPageLive) {
-					$linkedPageLive->rewriteLink($original->URLSegment . '/', $this->URLSegment . '/');
-					$linkedPageLive->writeToStage('Live');
-				}
-			}
-		}
+		Versioned::set_reading_mode($origMode);
 		
 		// Check to write CMS homepage map.
 		$usingStaticPublishing = false;
@@ -2049,41 +2041,41 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	 * @uses SiteTreeDecorator->onAfterUnpublish()
 	 */
 	function doUnpublish() {
-		if (!$this->canDeleteFromLive()) return false;
+            	if(!$this->canDeleteFromLive()) return false;
+		if(!$this->ID) return false;
 		
 		$this->extend('onBeforeUnpublish');
 		
-		// Call delete on a cloned object so that this one doesn't lose its ID
-		$this->flushCache();
-		$clone = DataObject::get_by_id("SiteTree", $this->ID);
-		if (!$clone) $clone = Versioned::get_one_by_stage('SiteTree', 'Live', '"SiteTree_Live"."ID" = ' . $this->ID);
-		$clone->deleteFromStage('Live');
+		$origStage = Versioned::current_stage();
+		Versioned::reading_stage('Live');
 
-		$this->Status = "Unpublished";
-		$this->write();
-		
-		// Unpublish all virtual pages that point here
-		// This coupling to the subsites module is frustrating, but difficult to avoid.
-		if(class_exists('Subsite')) {
-			$virtualPages = Subsite::get_from_all_subsites('VirtualPage', "\"CopyContentFromID\" = {$this->ID}");
-		} else {
-			$virtualPages = DataObject::get('VirtualPage', "\"CopyContentFromID\" = {$this->ID}");
-		}
-		if ($virtualPages) foreach($virtualPages as $vp) $vp->doUnpublish();
-		
-		$suffix = Versioned::current_stage() == 'Live' ? '_Live' : '';
-		if(class_exists('Subsite')) {
-			$redirectorPages = Subsite::get_from_all_subsites('RedirectorPage', "\"SiteTree$suffix\".\"ID\" = \"SiteTree$suffix\".\"ID\" AND \"LinkToID\" = {$this->ID}");
-		} else {
-			$redirectorPages = DataObject::get('RedirectorPage', "\"SiteTree$suffix\".\"ID\" = \"SiteTree$suffix\".\"ID\" AND \"LinkToID\" = {$this->ID}");
-		}
+		// We should only unpublish virtualpages that exist on live
+		$virtualPages = $this->VirtualPages();
 
-		if($redirectorPages) foreach($redirectorPages as $page) {
+		// This way our ID won't be unset
+		$clone = clone $this;
+		$clone->delete();
+
+		// Rewrite backlinks
+		$dependentPages = $this->DependentPages(false);
+		if($dependentPages) foreach($dependentPages as $page) {
 			// $page->write() calls syncLinkTracking, which does all the hard work for us.
 			$page->write();
 		}
-		
+		Versioned::reading_stage($origStage);
+
+		// Unpublish any published virtual pages
+		if ($virtualPages) foreach($virtualPages as $vp) $vp->doUnpublish();
+
+		// If we're on the draft site, then we can update the status.
+		// Otherwise, these lines will resurrect an inappropriate record
+		if(Versioned::current_stage() != 'Live') {
+			$this->Status = "Unpublished";
+			$this->write();
+		}
+
 		$this->extend('onAfterUnpublish');
+
 		return true;
 	}
 	
@@ -2107,6 +2099,12 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		$clone = DataObject::get_by_id("SiteTree", $this->ID);
 		$clone->Status = "Published";
 		$clone->writeWithoutVersion();
+
+		// Need to update pages linking to this one as no longer broken
+		foreach($this->DependentPages(false) as $page) {
+			// $page->write() calls syncLinkTracking, which does all the hard work for us.
+			$page->write();
+		}
 		
 		$this->extend('onAfterRevertToLive');
 	}
@@ -2131,23 +2129,23 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		$this->writeWithoutVersion();
 		
 		$result = DataObject::get_by_id($this->class, $this->ID);
+
+		// Need to update pages linking to this one as no longer broken
+		foreach($result->DependentPages(false) as $page) {
+			// $page->write() calls syncLinkTracking, which does all the hard work for us.
+			$page->write();
+		}
 		
 		Versioned::reading_stage($oldStage);
 		
 		return $result;
 	}
-	
+
+	/**
+	 * Synonym of {@link doUnpublish}
+	 */
 	function doDeleteFromLive() {
-		$this->extend('onBeforeUnpublish');
-
-		$origStage = Versioned::current_stage();
-		Versioned::reading_stage('Live');
-		$this->delete();
-		Versioned::reading_stage($origStage);
-
-		$this->extend('onAfterUnpublish');
-		
-		return true;
+		return $this->doUnpublish();
 	}
 
 	/**
