@@ -1358,41 +1358,54 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	}
 	
 	function syncLinkTracking() {
-		// Set LinkTracking appropriately
-		$links = HTTP::getLinksIn($this->Content);
+		// Build a list of HTMLText fields
+		$allFields = $this->db();
+		$htmlFields = array();
+		foreach($allFields as $field => $fieldSpec) {
+			if(preg_match('/([^(]+)/', $fieldSpec, $matches)) {
+				$class = $matches[0];
+				if($class == 'HTMLText' || is_subclass_of($class, 'HTMLText')) $htmlFields[] = $field;
+			}
+		}
+
 		$linkedPages = array();
 		$linkedFiles = array();
 		$this->HasBrokenLink = false;
 		$this->HasBrokenFile = false;
 		
-		if($links) foreach($links as $link) {
-			if(preg_match('/^([A-Za-z0-9_-]+)\/?(#.*)?$/', $link, $parts)) {
-				$candidatePage = DataObject::get_one("SiteTree", "\"URLSegment\" = '" . urldecode( $parts[1] ). "'", false);
-				if($candidatePage) {
-					$linkedPages[] = $candidatePage->ID;
-				} else {
+		foreach($htmlFields as $field) {
+			// Set LinkTracking appropriately
+			$links = HTTP::getLinksIn($this->$field);
+		
+			if($links) foreach($links as $link) {
+				if(preg_match('/^([A-Za-z0-9_-]+)\/?(#.*)?$/', $link, $parts)) {
+					$candidatePage = DataObject::get_one("SiteTree", "\"URLSegment\" = '" . urldecode( $parts[1] ). "'", false);
+					if($candidatePage) {
+						$linkedPages[] = $candidatePage->ID;
+					} else {
+						$this->HasBrokenLink = true;
+					}
+				} else if(substr($link,0,7) == 'assets/') {
+					$candidateFile = File::find(Convert::raw2sql(urldecode($link)));
+					if($candidateFile) {
+						$linkedFiles[] = $candidateFile->ID;
+					} else {
+						$this->HasBrokenFile = true;
+					}
+				} else if($link == '' || $link[0] == '/') {
 					$this->HasBrokenLink = true;
 				}
-			} else if(substr($link,0,7) == 'assets/') {
-				$candidateFile = File::find(Convert::raw2sql(urldecode($link)));
-				if($candidateFile) {
-					$linkedFiles[] = $candidateFile->ID;
-				} else {
-					$this->HasBrokenFile = true;
-				}
-			} else if($link == '' || $link[0] == '/') {
-				$this->HasBrokenLink = true;
 			}
-		}
 		
-		$images = HTTP::getImagesIn($this->Content);
-		if($images) {
-			foreach($images as $image) {
-				$image = Director::makeRelative($image);
-				if(substr($image,0,7) == 'assets/') {
-					$candidateImage = File::find($image);
-					if($candidateImage) $linkedFiles[] = $candidateImage->ID;
-					else $this->HasBrokenFile = true;
+			$images = HTTP::getImagesIn($this->$field);
+			if($images) {
+				foreach($images as $image) {
+					$image = Director::makeRelative($image);
+					if(substr($image,0,7) == 'assets/') {
+						$candidateImage = File::find($image);
+						if($candidateImage) $linkedFiles[] = $candidateImage->ID;
+						else $this->HasBrokenFile = true;
+					}
 				}
 			}
 		}
@@ -1994,8 +2007,10 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		if($original->URLSegment && $original->URLSegment != $this->URLSegment) {
 			foreach($this->BackLinkTracking() as $linkedPage) {
 				$linkedPageLive = Versioned::get_one_by_stage('Page', 'Live', '"SiteTree"."ID" = ' . $linkedPage->ID);
-				$linkedPageLive->rewriteLink($original->URLSegment . '/', $this->URLSegment . '/');
-				$linkedPageLive->writeToStage('Live');
+				if($linkedPageLive) {
+					$linkedPageLive->rewriteLink($original->URLSegment . '/', $this->URLSegment . '/');
+					$linkedPageLive->writeToStage('Live');
+				}
 			}
 		}
 		
