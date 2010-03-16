@@ -462,13 +462,13 @@ class SSViewer {
 		$content = preg_replace(array_keys($replacements), array_values($replacements), $content);
 		$content = str_replace('{dlr}','$',$content);
 
+		// Cache block
+		$content = SSViewer_PartialParser::process($template, $content);
+
 		// legacy
 		$content = ereg_replace('<!-- +pc +([A-Za-z0-9_(),]+) +-->', '<' . '% control \\1 %' . '>', $content);
 		$content = ereg_replace('<!-- +pc_end +-->', '<' . '% end_control %' . '>', $content);
 		
-		// < % cacheblock key, key.. % >
-		$content = SSViewer_PartialParser::parse($template, $content);
-
 		// < % control Foo % >
 		$content = ereg_replace('<' . '% +control +([A-Za-z0-9_]+) +%' . '>', '<? array_push($itemStack, $item); if($loop = $item->obj("\\1")) foreach($loop as $key => $item) { ?>', $content);
 		// < % control Foo.Bar % >
@@ -666,91 +666,219 @@ class SSViewer_FromString extends SSViewer {
  */
 class SSViewer_PartialParser {
  	
-	static $opening_tag = '/< % [ \t]+ cacheblock [ \t]+ ([^%]+ [ \t]+)? % >/xS';
+	static $tag = '/< % [ \t]+ (cached|cacheblock|uncached|end_cached|end_cacheblock|end_uncached) [ \t]+ ([^%]+ [ \t]+)? % >/xS';
 	
-	static $argument_splitter = '/^\s* 
-		( (\w+) \s* ( \( ([^\)]*) \) )? ) |  # A property lookup or a function call
-		( \' [^\']+ \' ) |                   # A string surrounded by \'
-		( " [^"]+ " )                        # A string surrounded by "
-	\s*/xS';
+	static $argument_splitter = '/^\s*
+		# The argument itself
+		(
+			(?P<conditional> if | unless ) |                     # The if or unless keybreak
+			(?P<property> (?P<identifier> \w+) \s*               # A property lookup or a function call
+				( \( (?P<arguments> [^\)]*) \) )?
+			) |
+			(?P<sqstring> \' (\\\'|[^\'])+ \' ) |                # A string surrounded by \'
+			(?P<dqstring> " (\\"|[^"])+ " )                      # A string surrounded by "
+		)
+		# Some seperator after the argument
+		(
+			\s*(?P<comma>,)\s* |                                 # A comma (maybe with whitespace before or after)
+			(?P<fullstop>\.)                                     # A period (no whitespace before)
+		)?
+	/xS';
 	
-	static $closing_tag = '/< % [ \t]+ end_cacheblock [ \t]+ % >/xS';
-	
-	static function parse($template, $content) {
-		$parser = new SSViewer_PartialParser($template);
-		
-		$content = $parser->replaceOpeningTags($content);
-		$content = $parser->replaceClosingTags($content);
-		return $content;
+	static function process($template, $content) {
+		$parser = new SSViewer_PartialParser($template, $content, 0, array(), 'if', 'false');
+		$parser->parse();
+		return $parser->generate();
 	}
 	
-	function __construct($template) {
+	function __construct($template, $content, $offset, $keyparts, $conditional, $condition) {
 		$this->template = $template;
-		$this->cacheblocks = 0;
-	}
-	
-	function replaceOpeningTags($content) {
-		return preg_replace_callback(self::$opening_tag, array($this, 'replaceOpeningTagsCallback'), $content);
-	}
-	
-	function replaceOpeningTagsCallback($matches) {
-		$this->cacheblocks += 1;
-		$key = $this->key($matches);
-		
-		return '<? if ($partial = $cache->load('.$key.')) { $val .= $partial; } else { $valStack[] = $val; $val = ""; ?>';
-	}
-	
-	function key($matches) {
-		$parts = array();
-		$parts[] = "'".preg_replace('/[^\w+]/', '_', $this->template)."'";
+		$this->content = $content;
+		$this->offset = $offset;
 
-		// If there weren't any arguments, that'll do
-		if (!@$matches[1]) return $parts[0];
+		$this->keyparts = $keyparts;
+		$this->conditional = $conditional;
+		$this->condition = $condition;
 		
-		$current = 'preg_replace(\'/[^\w+]/\', \'_\', $item->';
-		$keyspec = $matches[1];
+		$this->blocks = array();
+	}
+
+	function controlcheck($text) {
+		$ifs = preg_match_all('/<'.'% +if +/', $text, $matches);
+		$end_ifs = preg_match_all('/<'.'% +end_if +/', $text, $matches);
+
+		if ($ifs != $end_ifs) throw new Exception('You can\'t have cached or uncached blocks within condition structures');
+
+		$controls = preg_match_all('/<'.'% +control +/', $text, $matches);
+		$end_controls = preg_match_all('/<'.'% +end_control +/', $text, $matches);
+
+		if ($controls != $end_controls) throw new Exception('You can\'t have cached or uncached blocks within control structures');
+	}
+
+	function parse() {
+		$current_tag_offset = 0;
 		
-		while (strlen($keyspec) && preg_match(self::$argument_splitter, $keyspec, $submatch)) {
-			$joiner = substr($keyspec, strlen($submatch[0]), 1);
-			$keyspec = substr($keyspec, strlen($submatch[0]) + 1);
-			
+		while (preg_match(self::$tag, $this->content, $matches, PREG_OFFSET_CAPTURE, $this->offset)) {
+			$tag = $matches[1][0];
+
+			$startpos = $matches[0][1];
+			$endpos = $matches[0][1] + strlen($matches[0][0]);
+
+			switch($tag) {
+				case 'cached':
+				case 'uncached':
+				case 'cacheblock':
+
+					$pretext = substr($this->content, $this->offset, $startpos - $this->offset);
+					$this->controlcheck($pretext);
+					$this->blocks[] = $pretext;
+
+					if ($tag == 'cached' || $tag == 'cacheblock') {
+						list($keyparts, $conditional, $condition) = $this->parseargs(@$matches[2][0]);
+					}
+					else {
+						$keyparts = array(); $conditional = 'if'; $condition = 'false';
+					}
+
+					$parser = new SSViewer_PartialParser($this->template, $this->content, $endpos, $keyparts, $conditional, $condition);
+					$parser->parse();
+					$this->blocks[] = $parser;
+					$this->offset = $parser->offset;
+					break;
+
+				case 'end_cached':
+				case 'end_cacheblock':
+				case 'end_uncached':
+					$this->blocks[] = substr($this->content, $this->offset, $startpos - $this->offset);
+					$this->content = null;
+
+					$this->offset = $endpos;
+					return $this;
+			}
+		}
+
+		$this->blocks[] = substr($this->content, $this->offset);
+		$this->content = null;
+	}
+
+	function parseargs($string) {
+		preg_match_all(self::$argument_splitter, $string, $matches, PREG_SET_ORDER);
+
+		$parts = array();
+		$conditional = null; $condition = null;
+
+		$current = '$item->';
+
+		while (strlen($string) && preg_match(self::$argument_splitter, $string, $match)) {
+
+			$string = substr($string, strlen($match[0]));
+
+			// If this is a conditional keyword, break, and the next loop will grab the conditional
+			if (@$match['conditional']) {
+				$conditional = $match['conditional'];
+				continue;
+			}
+
 			// If it's a property lookup or a function call
-			if ($submatch[1]) {
+			if (@$match['property']) {
 				// Get the property
-				$what = $submatch[2];
+				$what = $match['identifier'];
 				$args = array();
-				
+
 				// Extract any arguments passed to the function call
-				if (@$submatch[3]) {
-					foreach (explode(',', $submatch[4]) as $arg) {
+				if (@$match['arguments']) {
+					foreach (explode(',', $match['arguments']) as $arg) {
 						$args[] = is_numeric($arg) ? (string)$arg : '"'.$arg.'"';
 					}
 				}
-				
+
 				$args = empty($args) ? 'null' : 'array('.implode(',',$args).')';
-			
+
 				// If this fragment ended with '.', then there's another lookup coming, so return an obj for that lookup
-				if ($joiner == '.') {
-					$current .= "obj(\"$what\", $args, true)->";
+				if (@$match['fullstop']) {
+					$current .= "obj('$what', $args, true)->";
 				}
 				// Otherwise this is the end of the lookup chain, so add the resultant value to the key array and reset the key-get php fragement
 				else {
-					$parts[] = $current . "XML_val(\"$what\", $args, true))"; $current = 'preg_replace(\'/[^\w+]/\', \'_\', $item->';
+					$accessor = $current . "XML_val('$what', $args, true)"; $current = '$item->';
+
+					// If we've hit a conditional already, this is the condition. Set it and be done.
+					if ($conditional) {
+						$condition = $accessor;
+						break;
+					}
+					// Otherwise we're another key component. Add it to array.
+					else $parts[] = $accessor;
 				}
 			}
-			
+
 			// Else it's a quoted string of some kind
-			else if ($submatch[5] || $submatch[6]) {
-				$parts[] = $submatch[5] ? $submatch[5] : $submatch[6];
-			}
-			
+			else if (@$match['sqstring']) $parts[] = $match['sqstring'];
+			else if (@$match['dqstring']) $parts[] = $match['dqstring'];
 		}
-		
-		return implode(".'_'.", $parts);
-	}	
-	
-	function replaceClosingTags($content) {
-		return preg_replace(self::$closing_tag, '<? $cache->save($val); $val = array_pop($valStack) . $val; } ?>', $content);
+
+		if ($conditional && !$condition) {
+			throw new Exception("You need to have a condition after the conditional $conditional in your cache block");
+		}
+
+		return array($parts, $conditional, $condition);
+	}
+
+	function key() {
+		if (empty($this->keyparts)) return "''";
+		return 'sha1(' . implode(".'_'.", $this->keyparts) . ')';
+	}
+
+	function generate() {
+
+		$res = array();
+		$key = $this->key();
+
+		$condition = "";
+
+		switch ($this->conditional) {
+			case 'if':
+				$condition = "{$this->condition} && ";
+				break;
+			case 'unless':
+				$condition = "!({$this->condition}) && ";
+				break;
+		}
+
+		/* Output this set of blocks */
+
+		foreach ($this->blocks as $i => $block) {
+			if ($block instanceof SSViewer_PartialParser)
+				$res[] = $block->generate();
+			else {
+				// Include the template name and this cache block's current contents as a sha hash, so we get auto-seperation
+				// of cache blocks, and invalidation of the cache when the template changes
+				$partialkey = "'".sha1($this->template . $block)."_'.$key.'_$i'";
+
+				$knownUncached = array(
+					'if' => array('false', '0'),
+					'unless' => array('true', '1')
+				);
+
+				// Optimized version if we know condition is false
+				if ($this->conditional && in_array($this->condition, $knownUncached[$this->conditional])) {
+					$res[] = $block;
+				}
+				else {
+					// Try to load from cache
+					$res[] = "<?\n".'if ('.$condition.' ($partial = $cache->load('.$partialkey.'))) $val .= $partial;'."\n";
+
+					// Cache miss - regenerate
+					$res[] = "else {\n";
+					$res[] = '$oldval = $val; $val = "";'."\n";
+					$res[] = "\n?>" . $block . "<?\n";
+					$res[] = $condition . ' $cache->save($val); $val = $oldval . $val ;'."\n";
+					$res[] = "}\n?>";
+				}
+			}
+		}
+
+		return implode('', $res);
 	}
 }
 

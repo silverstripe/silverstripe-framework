@@ -10,7 +10,14 @@ class SSViewerCacheBlockTest_Model extends DataObject implements TestOnly {
 	function Foo() {
 		return 'Bar';
 	}
-	
+
+	function True() {
+		return true;
+	}
+
+	function False() {
+		return false;
+	}
 }
 
 class SSViewerCacheBlockTest extends SapphireTest {
@@ -28,45 +35,179 @@ class SSViewerCacheBlockTest extends SapphireTest {
 	
 	protected function _runtemplate($template, $data = null) {
 		if ($data === null) $data = $this->data;
-		if (is_array($data)) $data = new ArrayData($data);
+		if (is_array($data)) $data = $this->data->customise($data);
 		
 		$viewer = SSViewer::fromString($template);
 		return $viewer->process($data);
 	}
 	
 	function testParsing() {
-		// Make sure an empty cacheblock parses
+
+		// ** Trivial checks **
+
+		// Make sure an empty cached block parses
+		$this->_reset();
+		$this->assertEquals($this->_runtemplate('<% cached %><% end_cached %>'), '');
+
+		// Make sure an empty cacheblock block parses
 		$this->_reset();
 		$this->assertEquals($this->_runtemplate('<% cacheblock %><% end_cacheblock %>'), '');
-		
+
+		// Make sure an empty uncached block parses
+		$this->_reset();
+		$this->assertEquals($this->_runtemplate('<% uncached %><% end_uncached %>'), '');
+
+		// ** Argument checks **
+
 		// Make sure a simple cacheblock parses
 		$this->_reset();
-		$this->assertEquals($this->_runtemplate('<% cacheblock %>Yay<% end_cacheblock %>'), 'Yay');
+		$this->assertEquals($this->_runtemplate('<% cached %>Yay<% end_cached %>'), 'Yay');
 
 		// Make sure a moderately complicated cacheblock parses
 		$this->_reset();
-		$this->assertEquals($this->_runtemplate('<% cacheblock \'block\', Foo, "jumping" %>Yay<% end_cacheblock %>'), 'Yay');
+		$this->assertEquals($this->_runtemplate('<% cached \'block\', Foo, "jumping" %>Yay<% end_cached %>'), 'Yay');
 		
 		// Make sure a complicated cacheblock parses
 		$this->_reset();
-		$this->assertEquals($this->_runtemplate('<% cacheblock \'block\', Foo, Test.Test(4).Test(jumping).Foo %>Yay<% end_cacheblock %>'), 'Yay');
+		$this->assertEquals($this->_runtemplate('<% cached \'block\', Foo, Test.Test(4).Test(jumping).Foo %>Yay<% end_cached %>'), 'Yay');
+
+		// ** Conditional Checks **
+
+		// Make sure a cacheblock with a simple conditional parses
+		$this->_reset();
+		$this->assertEquals($this->_runtemplate('<% cached if true %>Yay<% end_cached %>'), 'Yay');
+
+		// Make sure a cacheblock with a complex conditional parses
+		$this->_reset();
+		$this->assertEquals($this->_runtemplate('<% cached if Test.Test(yank).Foo %>Yay<% end_cached %>'), 'Yay');
+
+		// Make sure a cacheblock with a complex conditional and arguments parses
+		$this->_reset();
+		$this->assertEquals($this->_runtemplate('<% cached Foo, Test.Test(4).Test(jumping).Foo if Test.Test(yank).Foo %>Yay<% end_cached %>'), 'Yay');
 	}
 
 	/**
 	 * Test that cacheblocks actually cache
 	 */
 	function testBlocksCache() {
-		// First, run twice without caching, to prove $Increment actually increments
+		// First, run twice without caching, to prove we get two different values
 		$this->_reset(false);
 				
-		$this->assertEquals($this->_runtemplate('<% cacheblock %>$Foo<% end_cacheblock %>', array('Foo' => 1)), '1');
-		$this->assertEquals($this->_runtemplate('<% cacheblock %>$Foo<% end_cacheblock %>', array('Foo' => 2)), '2');
+		$this->assertEquals($this->_runtemplate('<% cached %>$Foo<% end_cached %>', array('Foo' => 1)), '1');
+		$this->assertEquals($this->_runtemplate('<% cached %>$Foo<% end_cached %>', array('Foo' => 2)), '2');
 		
 		// Then twice with caching, should get same result each time
 		$this->_reset(true);
 				
-		$this->assertEquals($this->_runtemplate('<% cacheblock %>$Foo<% end_cacheblock %>', array('Foo' => 1)), '1');
-		$this->assertEquals($this->_runtemplate('<% cacheblock %>$Foo<% end_cacheblock %>', array('Foo' => 2)), '1');
+		$this->assertEquals($this->_runtemplate('<% cached %>$Foo<% end_cached %>', array('Foo' => 1)), '1');
+		$this->assertEquals($this->_runtemplate('<% cached %>$Foo<% end_cached %>', array('Foo' => 2)), '1');
 	}
-	
+
+	/**
+	 * Test that cacheblocks conditionally cache with if
+	 */
+	function testBlocksConditionallyCacheWithIf() {
+		// First, run twice with caching
+		$this->_reset(true);
+
+		$this->assertEquals($this->_runtemplate('<% cached if True %>$Foo<% end_cached %>', array('Foo' => 1)), '1');
+		$this->assertEquals($this->_runtemplate('<% cached if True %>$Foo<% end_cached %>', array('Foo' => 2)), '1');
+
+		// Then twice without caching
+		$this->_reset(true);
+
+		$this->assertEquals($this->_runtemplate('<% cached if False %>$Foo<% end_cached %>', array('Foo' => 1)), '1');
+		$this->assertEquals($this->_runtemplate('<% cached if False %>$Foo<% end_cached %>', array('Foo' => 2)), '2');
+
+		// Then once cached, once not (and the opposite)
+		$this->_reset(true);
+
+		$this->assertEquals($this->_runtemplate('<% cached if Cache %>$Foo<% end_cached %>', array('Foo' => 1, 'Cache' => true )), '1');
+		$this->assertEquals($this->_runtemplate('<% cached if Cache %>$Foo<% end_cached %>', array('Foo' => 2, 'Cache' => false)), '2');
+
+		$this->_reset(true);
+
+		$this->assertEquals($this->_runtemplate('<% cached if Cache %>$Foo<% end_cached %>', array('Foo' => 1, 'Cache' => false)), '1');
+		$this->assertEquals($this->_runtemplate('<% cached if Cache %>$Foo<% end_cached %>', array('Foo' => 2, 'Cache' => true )), '2');
+	}
+
+	/**
+	 * Test that cacheblocks conditionally cache with unless
+	 */
+	function testBlocksConditionallyCacheWithUnless() {
+		// First, run twice with caching
+		$this->_reset(true);
+
+		$this->assertEquals($this->_runtemplate('<% cached unless False %>$Foo<% end_cached %>', array('Foo' => 1)), '1');
+		$this->assertEquals($this->_runtemplate('<% cached unless False %>$Foo<% end_cached %>', array('Foo' => 2)), '1');
+
+		// Then twice without caching
+		$this->_reset(true);
+
+		$this->assertEquals($this->_runtemplate('<% cached unless True %>$Foo<% end_cached %>', array('Foo' => 1)), '1');
+		$this->assertEquals($this->_runtemplate('<% cached unless True %>$Foo<% end_cached %>', array('Foo' => 2)), '2');
+	}
+
+	/**
+	 * Test that nested uncached blocks work
+	 */
+	function testNestedUncachedBlocks() {
+		// First, run twice with caching, to prove we get the same result back normally
+		$this->_reset(true);
+
+		$this->assertEquals($this->_runtemplate('<% cached %> A $Foo B <% end_cached %>', array('Foo' => 1)), ' A 1 B ');
+		$this->assertEquals($this->_runtemplate('<% cached %> A $Foo B <% end_cached %>', array('Foo' => 2)), ' A 1 B ');
+
+		// Then add uncached to the nested block
+		$this->_reset(true);
+
+		$this->assertEquals($this->_runtemplate('<% cached %> A <% uncached %>$Foo<% end_uncached %> B <% end_cached %>', array('Foo' => 1)), ' A 1 B ');
+		$this->assertEquals($this->_runtemplate('<% cached %> A <% uncached %>$Foo<% end_uncached %> B <% end_cached %>', array('Foo' => 2)), ' A 2 B ');
+	}
+
+	/**
+	 * Test that nested blocks with different keys works
+	 */
+	function testNestedBlocks() {
+		$this->_reset(true);
+
+		$template = '<% cached Foo %> $Fooa <% cached Bar %>$Bara<% end_cached %> $Foob <% end_cached %>';
+
+		// Do it the first time to load the cache
+		$this->assertEquals($this->_runtemplate($template, array('Foo' => 1, 'Fooa' => 1, 'Foob' => 3, 'Bar' => 1, 'Bara' => 2)), ' 1 2 3 ');
+
+		// Do it again, the input values are ignored as the cache is hit for both elements
+		$this->assertEquals($this->_runtemplate($template, array('Foo' => 1, 'Fooa' => 9, 'Foob' => 9, 'Bar' => 1, 'Bara' => 9)), ' 1 2 3 ');
+
+		// Do it again with a new key for Bar, Bara is picked up, Fooa and Foob are not
+		$this->assertEquals($this->_runtemplate($template, array('Foo' => 1, 'Fooa' => 9, 'Foob' => 9, 'Bar' => 2, 'Bara' => 9)), ' 1 9 3 ');
+
+		// Do it again with a new key for Foo, Fooa and Foob are picked up, Bara are not
+		$this->assertEquals($this->_runtemplate($template, array('Foo' => 2, 'Fooa' => 9, 'Foob' => 9, 'Bar' => 2, 'Bara' => 1)), ' 9 9 9 ');
+	}
+
+	/**
+     * @expectedException Exception
+     */
+	function testErrorMessageForCacheWithinControl() {
+		$this->_reset(true);
+		$this->_runtemplate('<% control Foo %><% cached %>$Bar<% end_cached %><% end_control %>');
+	}
+
+	/**
+     * @expectedException Exception
+     */
+	function testErrorMessageForCacheWithinIf() {
+		$this->_reset(true);
+		$this->_runtemplate('<% if Foo %><% cached %>$Bar<% end_cached %><% end_if %>');
+	}
+
+	/**
+     * @expectedException Exception
+     */
+	function testErrorMessageForInvalidConditional() {
+		$this->_reset(true);
+		$this->_runtemplate('<% cached Foo if %>$Bar<% end_cached %>');
+	}
+
 }
