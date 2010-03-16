@@ -8,13 +8,16 @@ class VersionedTest extends SapphireTest {
 	);
 	
 	function testForceChangeUpdatesVersion() {
-		$page = $this->objFromFixture('Page', 'page3');
-		$oldVersion = $page->Version;
-		$page->forceChange();
-		$page->write();
+		$obj = new VersionedTest_DataObject();
+		$obj->Name = "test";
+		$obj->write();
+		
+		$oldVersion = $obj->Version;
+		$obj->forceChange();
+		$obj->write();
 
 		$this->assertTrue(
-			($page->Version > $oldVersion),
+			($obj->Version > $oldVersion),
 			"A object Version is increased when just calling forceChange() without any other changes"
 		);
 	}
