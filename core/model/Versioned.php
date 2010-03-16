@@ -334,6 +334,7 @@ class Versioned extends DataObjectDecorator {
 			
 			if($this->migratingVersion) {
 				$manipulation[$table]['fields']['Version'] = $this->migratingVersion;
+				$this->migrateVersion(null);
 			}
 
 			// If we haven't got a version #, then we're creating a new version.
