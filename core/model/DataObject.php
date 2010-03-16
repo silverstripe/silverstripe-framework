@@ -1956,10 +1956,8 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		
 		// Otherwise, we need to determine if this is a complex field
 		if(self::is_composite_field($this->class, $field)) {
-			$helperPair = $this->castingHelperPair($field);
-			$constructor = $helperPair['castingHelper'];
-			$fieldName = $field;
-			$fieldObj = eval($constructor);
+			$helper = $this->castingHelper($field);
+			$fieldObj = Object::create_from_string($helper, $field);
 			
 			// write value only if either the field value exists,
 			// or a valid record has been loaded from the database
@@ -2105,7 +2103,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		}
 		$castingHelper = $this->castingHelper($fieldName);
 		if($castingHelper) {
-			$fieldObj = eval($castingHelper);
+			$fieldObj = Object::create_from_string($castingHelper, $fieldName);
 			$fieldObj->setValue($val);
 			$fieldObj->saveInto($this);
 		} else {
@@ -2358,9 +2356,8 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			return new PrimaryKey($fieldName, $this);
 			
 		// General casting information for items in $db or $casting
-		} else if($helperPair = $this->castingHelperPair($fieldName)) {
-			$constructor = $helperPair['castingHelper'];
-			$obj = eval($constructor);
+		} else if($helper = $this->castingHelper($fieldName)) {
+			$obj = Object::create_from_string($helper, $fieldName);
 			$obj->setValue($this->$fieldName, $this->record, false);
 			return $obj;
 			
@@ -2394,8 +2391,8 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 				$component = singleton($rel);
 			} elseif ($rel = $component->many_many($relation)) {
 				$component = singleton($rel[1]);
-			} elseif($info = $this->castingHelperPair($relation)) {
-				$component = singleton($info['className']);
+			} elseif($className = $this->castingClass($relation)) {
+				$component = $className;
 			}
 		}
 

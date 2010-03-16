@@ -313,7 +313,7 @@ abstract class SS_Database {
 					$fieldSpec=substr($fieldSpec, 0, $pos);
 				}
 				
-				$fieldObj = eval(ViewableData::castingObjectCreator($fieldSpec));
+				$fieldObj = Object::create_from_string($fieldSpec, $fieldName);
 				$fieldObj->arrayValue=$arrayValue;
 				
 				$fieldObj->setTable($table);

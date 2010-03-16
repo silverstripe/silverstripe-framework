@@ -285,7 +285,7 @@ class RSSFeed_Entry extends ViewableData {
 	 */
 	function rssField($fieldName, $defaultClass = 'Varchar') {
 		if($fieldName) {
-			if($this->failover->castingHelperPair($fieldName)) {
+			if($this->failover->castingHelper($fieldName)) {
 				$value = $this->failover->$fieldName;
 				$obj = $this->failover->obj($fieldName);
 				$obj->setValue($value);
