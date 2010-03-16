@@ -46,6 +46,31 @@ class VirtualPage extends Page {
 		return $virtualFields;
 	}
 
+	function CopyContentFrom() {
+		if(empty($this->record['CopyContentFromID'])) return new SiteTree();
+		
+		if(!isset($this->components['CopyContentFrom'])) {
+			$this->components['CopyContentFrom'] = DataObject::get_by_id("SiteTree", 
+				$this->record['CopyContentFromID']);
+
+			// Don't let VirtualPages point to other VirtualPages
+			if($this->components['CopyContentFrom'] instanceof VirtualPage) {
+				$this->components['CopyContentFrom'] = null;
+			}
+				
+			// has_one component semantics incidate than an empty object should be returned
+			if(!$this->components['CopyContentFrom']) {
+				$this->components['CopyContentFrom'] = new SiteTree();
+			}
+		}
+		
+		return $this->components['CopyContentFrom'];
+	}
+	function setCopyContentFromID($val) {
+		if(DataObject::get_by_id('SiteTree', $val) instanceof VirtualPage) $val = 0;
+		return $this->setField("CopyContentFromID", $val);
+	}
+ 
 	function ContentSource() {
 		return $this->CopyContentFrom();
 	}
@@ -59,6 +84,8 @@ class VirtualPage extends Page {
 	public function syncLinkTracking() {
 		if($this->CopyContentFromID) {
 			$this->HasBrokenLink = !(bool) DataObject::get_by_id('SiteTree', $this->CopyContentFromID);
+		} else {
+			$this->HasBrokenLink = true;
 		}
 	}
 	
@@ -110,7 +137,8 @@ class VirtualPage extends Page {
 			_t('VirtualPage.CHOOSE', "Choose a page to link to"), 
 			"SiteTree"
 		);
-		$copyContentFromField->setFilterFunction(create_function('$item', 'return $item->ClassName != "VirtualPage";'));
+		// filter doesn't let you select children of virtual pages as as source page
+		//$copyContentFromField->setFilterFunction(create_function('$item', 'return !($item instanceof VirtualPage);'));
 		
 		// Setup virtual fields
 		if($virtualFields = $this->getVirtualFields()) {
@@ -129,7 +157,7 @@ class VirtualPage extends Page {
 		$fields->addFieldToTab("Root.Content.Main", $copyContentFromField, "Title");
 		
 		// Create links back to the original object in the CMS
-		if($this->CopyContentFromID) {
+		if($this->CopyContentFrom()->ID) {
 			$linkToContent = "<a class=\"cmsEditlink\" href=\"admin/show/$this->CopyContentFromID\">" . 
 				_t('VirtualPage.EDITCONTENT', 'click here to edit the content') . "</a>";
 			$fields->addFieldToTab("Root.Content.Main", 
@@ -149,15 +177,17 @@ class VirtualPage extends Page {
 		// On regular write, this will copy from published source.  This happens on every publish
 		if($this->extension_instances['Versioned']->migratingVersion
 			&& Versioned::current_stage() == 'Live') {
-			$performCopyFrom = true;
+			if($this->CopyContentFromID) {
+				$performCopyFrom = true;
 			
 			$stageSourceVersion = DB::query("SELECT \"Version\" FROM \"SiteTree\" WHERE \"ID\" = $this->CopyContentFromID")->value();
 			$liveSourceVersion = DB::query("SELECT \"Version\" FROM \"SiteTree_Live\" WHERE \"ID\" = $this->CopyContentFromID")->value();
 			
-			// We're going to create a new VP record in SiteTree_versions because the published
-			// version might not exist, unless we're publishing the latest version
-			if($stageSourceVersion != $liveSourceVersion) {
-				$this->extension_instances['Versioned']->migratingVersion = null;
+				// We're going to create a new VP record in SiteTree_versions because the published
+				// version might not exist, unless we're publishing the latest version
+				if($stageSourceVersion != $liveSourceVersion) {
+					$this->extension_instances['Versioned']->migratingVersion = null;
+				}
 			}
 
 		// On regular write, this will copy from draft source.  This is only executed when the source
@@ -173,7 +203,7 @@ class VirtualPage extends Page {
 			$source = DataObject::get_one("SiteTree",sprintf('"SiteTree"."ID" = %d', $this->CopyContentFromID));
 			// Leave the updating of image tracking until after write, in case its a new record
 			$this->copyFrom($source, false);
-			$this->URLSegment = $source->URLSegment . '-' . $this->ID;
+			$this->URLSegment = $source->URLSegment;
 		}
 		
 		parent::onBeforeWrite();
@@ -234,18 +264,13 @@ class VirtualPage extends Page {
 	 * @return mixed
 	 */
 	function __get($field) {
-		$return = parent::__get($field);
-		if ($return === null) {
-			if($this->copyContentFrom()->hasMethod($funcName = "get$field")) {
-				$return = $this->copyContentFrom()->$funcName();
-			} else if($this->copyContentFrom()->hasField($field)) {
-				$return = $this->copyContentFrom()->getField($field);
-			} else if($field == 'Content') {
-				return '<p>' . _t('VirtualPage.NOTFOUND', 'We could not find the content for this virtual page.') . '</p>';
-			}
+		if(parent::hasMethod($funcName = "get$field")) {
+			return $this->$funcName();
+		} else if(parent::hasField($field)) {
+			return $this->getField($field);
+		} else {
+			return $this->copyContentFrom()->$field;
 		}
-		
-		return $return;
 	}
 	
 	/**
@@ -255,17 +280,22 @@ class VirtualPage extends Page {
 	 * @param string $args 
 	 */
 	function __call($method, $args) {
-		try {
+		if(parent::hasMethod($method)) {
 			return parent::__call($method, $args);
-		} catch (Exception $e) {
-			// Hack... detect exception type. We really should use exception subclasses.
-			// if the exception isn't a 'no method' error, rethrow it
-			if ($e->getCode() !== 2175) throw $e;
-			$original = $this->copyContentFrom();
-			return call_user_func_array(array($original, $method), $args);
+		} else {
+			return call_user_func_array(array($this->copyContentFrom(), $method), $args);
 		}
 	}
-	
+
+	public function hasField($field) {
+		return (
+			array_key_exists($field, $this->record) 
+			|| $this->hasDatabaseField($field) 
+			|| array_key_exists($field, $this->db()) // Needed for composite fields
+			|| parent::hasMethod("get{$field}")
+			|| $this->CopyContentFrom()->hasField($field)
+		);
+	}	
 	/**
 	 * Overwrite to also check for method on the original data object
 	 *
@@ -273,9 +303,8 @@ class VirtualPage extends Page {
 	 * @return bool 
 	 */
 	function hasMethod($method) {
-		$haveIt = parent::hasMethod($method);
-		if (!$haveIt) $haveIt = $this->copyContentFrom()->hasMethod($method);		
-		return $haveIt;
+		if(parent::hasMethod($method)) return true;
+		return $this->copyContentFrom()->hasMethod($method);
 	}
 }
 
