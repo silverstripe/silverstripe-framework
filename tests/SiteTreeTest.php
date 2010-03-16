@@ -658,6 +658,33 @@ class SiteTreeTest extends SapphireTest {
 		$this->assertTrue($sitetree->validURLSegment(), 'Valid URLSegment values are allowed');
 	}
 	
+	public function testVersionsAreCreated() {
+		$p = new Page();
+		$p->Content = "one";
+		$p->write();
+		$this->assertEquals(1, $p->Version);
+		
+		// No changes don't bump version
+		$p->write();
+		$this->assertEquals(1, $p->Version);
+
+		$p->Content = "two";
+		$p->write();
+		$this->assertEquals(2, $p->Version);
+
+		// Only change meta-data don't bump version
+		$p->HasBrokenLink = true;
+		$p->write();
+		$p->HasBrokenLink = false;
+		$p->write();
+		$this->assertEquals(2, $p->Version);
+
+		$p->Content = "three";
+		$p->write();
+		$this->assertEquals(3, $p->Version);
+
+	}
+	
 }
 
 /**#@+
