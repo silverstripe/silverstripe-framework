@@ -12,7 +12,6 @@ $lang['en_US']['Page']['SINGULARNAME'] = array(
 	50,
 	'Singular name of the object, used in dropdowns and to generally identify a single object in the interface'
 );
-$lang['en_US']['']['NOBACKLINKEDPAGES'] = 'There are no pages linked to this page.';
 $lang['en_US']['AdvancedSearchForm']['ALLWORDS'] = 'All Words';
 $lang['en_US']['AdvancedSearchForm']['ATLEAST'] = 'At Least One Of the Words';
 $lang['en_US']['AdvancedSearchForm']['EXACT'] = 'Exact Phrase';
@@ -690,6 +689,9 @@ $lang['en_US']['SiteTree']['DEFAULTCONTACTTITLE'] = 'Contact Us';
 $lang['en_US']['SiteTree']['DEFAULTHOMECONTENT'] = '<p>Welcome to SilverStripe! This is the default homepage. You can edit this page by opening <a href="admin/">the CMS</a>. You can now access the <a href="http://doc.silverstripe.org">developer documentation</a>, or begin <a href="http://doc.silverstripe.org/doku.php?id=tutorials">the tutorials.</a></p>';
 $lang['en_US']['SiteTree']['DEFAULTHOMETITLE'] = 'Home';
 $lang['en_US']['SiteTree']['DELETEDPAGE'] = 'Deleted page';
+$lang['en_US']['SiteTree']['DEPENDENT_NOTE'] = 'The following pages depend on this page. This includes virtual pages, redirector pages, and pages with content links.';
+$lang['en_US']['SiteTree']['DependtPageColumnLinkType'] = 'Link type';
+$lang['en_US']['SiteTree']['DependtPageColumnURL'] = 'URL';
 $lang['en_US']['SiteTree']['EDITANYONE'] = 'Anyone who can log-in to the CMS';
 $lang['en_US']['SiteTree']['EDITHEADER'] = 'Who can edit this page?';
 $lang['en_US']['SiteTree']['EDITONLYTHESE'] = 'Only these people (choose from list)';
@@ -720,7 +722,6 @@ $lang['en_US']['SiteTree']['METATITLE'] = 'Title';
 $lang['en_US']['SiteTree']['MODIFIEDONDRAFT'] = 'Modified on draft site';
 $lang['en_US']['SiteTree']['NOTEUSEASHOMEPAGE'] = 'Use this page as the \'home page\' for the following domains: 
 							(separate multiple domains with commas)';
-$lang['en_US']['SiteTree']['PAGESLINKING'] = 'The following pages link to this page:';
 $lang['en_US']['SiteTree']['PAGETITLE'] = 'Page name';
 $lang['en_US']['SiteTree']['PAGETYPE'] = array(
 	'Page type',
@@ -755,12 +756,11 @@ $lang['en_US']['SiteTree']['SINGULARNAME'] = array(
 	'Singular name of the object, used in dropdowns and to generally identify a single object in the interface'
 );
 $lang['en_US']['SiteTree']['TABACCESS'] = 'Access';
-$lang['en_US']['SiteTree']['TABBACKLINKS'] = 'BackLinks';
 $lang['en_US']['SiteTree']['TABBEHAVIOUR'] = 'Behaviour';
 $lang['en_US']['SiteTree']['TABCONTENT'] = 'Content';
+$lang['en_US']['SiteTree']['TABDEPENDENT'] = 'Dependent pages';
 $lang['en_US']['SiteTree']['TABMAIN'] = 'Main';
 $lang['en_US']['SiteTree']['TABMETA'] = 'Metadata';
-$lang['en_US']['SiteTree']['TABREPORTS'] = 'Reports';
 $lang['en_US']['SiteTree']['TODOHELP'] = '<p>You can use this to keep track of work that needs to be done to the content of your site.  To see all your pages with to do information, open the \'Site Reports\' window on the left and select \'To Do\'</p>';
 $lang['en_US']['SiteTree']['TOPLEVEL'] = 'Site Content (Top Level)';
 $lang['en_US']['SiteTree']['TOPLEVELCREATORGROUPS'] = 'Top level creators';
@@ -778,7 +778,6 @@ $lang['en_US']['SiteTree']['VIEW_ALL_DESCRIPTION'] = 'View any page';
 $lang['en_US']['SiteTree']['VIEW_ALL_HELP'] = 'Ability to view any page on the site, regardless of the settings on the Access tab.  Requires the "Access to Site Content" permission';
 $lang['en_US']['SiteTree']['VIEW_DRAFT_CONTENT'] = 'View draft content';
 $lang['en_US']['SiteTree']['VIEW_DRAFT_CONTENT_HELP'] = 'Applies to viewing pages outside of the CMS in draft mode. Useful for external collaborators without CMS access.';
-$lang['en_US']['SiteTree']['VIRTUALPAGESLINKING'] = 'The following virtual pages pull from this page:';
 $lang['en_US']['SiteTree']['Viewers'] = 'Viewers Groups';
 $lang['en_US']['SiteTree']['has_one_Parent'] = array(
 	'Parent Page',
@@ -830,7 +829,6 @@ $lang['en_US']['Versioned']['has_many_Versions'] = array(
 $lang['en_US']['VirtualPage']['CHOOSE'] = 'Choose a page to link to';
 $lang['en_US']['VirtualPage']['EDITCONTENT'] = 'click here to edit the content';
 $lang['en_US']['VirtualPage']['HEADER'] = 'This is a virtual page';
-$lang['en_US']['VirtualPage']['NOTFOUND'] = 'We could not find the content for this virtual page.';
 $lang['en_US']['VirtualPage']['PLURALNAME'] = array(
 	'Virtual Pags',
 	50,

@@ -1677,12 +1677,11 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		$dependentPagesCount = $this->DependentPagesCount();
 		if($dependentPagesCount) {
 			$dependentColumns = array(
-				'Title' => 'Title',
-				'Subsite.Title' => 'Subsite',
-				'AbsoluteLink' => 'URL',
-				'DependentLinkType' => 'Link type',
+				'Title' => $this->fieldLabel('Title'),
+				'AbsoluteLink' => _t('SiteTree.DependtPageColumnURL', 'URL'),
+				'DependentLinkType' => _t('SiteTree.DependtPageColumnLinkType', 'Link type'),
 			);
-			if(!class_exists('Subsite')) unset($dependentColumns['Subsite.Title']);
+			if(class_exists('Subsite')) $dependentColumns['Subsite.Title'] = singleton('Subsite')->i18n_singular_name();
 			
 			$dependentNote = new LiteralField('DependentNote', '<p>' . _t('SiteTree.DEPENDENT_NOTE', 'The following pages depend on this page. This includes virtual pages, redirector pages, and pages with content links.') . '</p>');
 			$dependentTable = new TableListField(
