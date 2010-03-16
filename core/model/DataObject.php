@@ -1119,6 +1119,8 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 				$sql->execute();
 			}
 		}
+		// Remove this item out of any caches
+		$this->flushCache();
 		
 		$this->onAfterDelete();
 
@@ -2011,8 +2013,12 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		}
 		
 		if($databaseFieldsOnly) {
-			$customDatabaseFields = self::custom_database_fields($this->class);
-			$fields = array_intersect_key($this->changed, $customDatabaseFields);
+			$databaseFields = $this->inheritedDatabaseFields();
+			$databaseFields['ID'] = true;
+			$databaseFields['LastEdited'] = true;
+			$databaseFields['Created'] = true;
+			$databaseFields['ClassName'] = true;
+			$fields = array_intersect_key((array)$this->changed, $databaseFields);
 		} else {
 			$fields = $this->changed;
 		}
