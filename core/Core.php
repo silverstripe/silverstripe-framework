@@ -293,7 +293,9 @@ function getTempFolder($base = null) {
  */
 function __autoload($className) {
 	global $_CLASS_MANIFEST;
-	if(isset($_CLASS_MANIFEST[$className])) include_once($_CLASS_MANIFEST[$className]);
+	$lClassName = strtolower($className);
+	if(isset($_CLASS_MANIFEST[$lClassName])) include_once($_CLASS_MANIFEST[$lClassName]);
+	else if(isset($_CLASS_MANIFEST[$className])) include_once($_CLASS_MANIFEST[$className]);
 }
 
 /**
@@ -301,8 +303,9 @@ function __autoload($className) {
  */
 function getClassFile($className) {
 	global $_CLASS_MANIFEST;
-	if(($pos = strpos($className,'_')) !== false) $className = substr($className,0,$pos);
-	if($_CLASS_MANIFEST[$className]) return $_CLASS_MANIFEST[$className];
+	$lClassName = strtolower($className);
+	if(isset($_CLASS_MANIFEST[$lClassName])) return $_CLASS_MANIFEST[$lClassName];
+	else if(isset($_CLASS_MANIFEST[$className])) return $_CLASS_MANIFEST[$className];
 }
 
 /**
