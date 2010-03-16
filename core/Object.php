@@ -150,6 +150,11 @@ abstract class Object {
 		$class = null;
 		$args = array();
 		$passedBracket = false;
+		
+		// Keep track of the current bucket that we're putting data into
+		$bucket = &$args;
+		$bucketStack = array();
+		
 		foreach($tokens as $token) {
 			$tName = is_array($token) ? $token[0] : $token;
 			// Get the class naem
@@ -165,15 +170,15 @@ abstract class Object {
 						case "'": $argString = str_replace(array("\\\\", "\\'"),array("\\", "'"), substr($argString,1,-1)); break;
 						default: throw new Exception("Bad T_CONSTANT_ENCAPSED_STRING arg $argString");
 					}
-					$args[] = $argString;
+					$bucket[] = $argString;
 					break;
 			
 				case T_DNUMBER:
-					$args[] = (double)$token[1];
+					$bucket[] = (double)$token[1];
 					break;
 
 				case T_LNUMBER:
-					$args[] = (int)$token[1];
+					$bucket[] = (int)$token[1];
 					break;
 			
 				case T_STRING:
@@ -182,8 +187,21 @@ abstract class Object {
 						case 'false': $args[] = false; break;
 						default: throw new Exception("Bad T_STRING arg '{$token[1]}'");
 					}
+				
+				case T_ARRAY:
+					// Add an empty array to the bucket
+					$bucket[] = array();
+					$bucketStack[] = &$bucket;
+					$bucket = &$bucket[sizeof($bucket)-1];
+
 				}
 
+			} else {
+				if($tName == ')') {
+					// Pop-by-reference
+					$bucket = &$bucketStack[sizeof($bucketStack)-1];
+					array_pop($bucketStack);
+				}
 			}
 		}
 	
