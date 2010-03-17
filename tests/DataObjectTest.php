@@ -16,6 +16,7 @@ class DataObjectTest extends SapphireTest {
 		'DataObjectTest_FieldlessSubTable',
 		'DataObjectTest_ValidatedObject',
 		'DataObjectTest_Player',
+		'DataObjectSetTest_TeamComment'
 	);
 
 	
