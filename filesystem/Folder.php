@@ -305,7 +305,7 @@ class Folder extends File {
 	public function hasChildFolders() {
 		$SQL_folderClasses = Convert::raw2sql(ClassInfo::subclassesFor('Folder'));
 		
-		return (bool)DB::query("SELECT COUNT(*) FROM \"File\" WHERE ParentID = " . (int)$this->ID
+		return (bool)DB::query("SELECT COUNT(*) FROM \"File\" WHERE \"ParentID\" = " . (int)$this->ID
 			. " AND \"ClassName\" IN ('" . implode("','", $SQL_folderClasses) . "')")->value();
 	}
 	
