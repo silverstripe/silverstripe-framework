@@ -11,6 +11,9 @@ class SS_Cli extends Object {
 	 * Returns true if the current STDOUT supports the use of colour control codes.
 	 */
 	static function supports_colour() {
+		// Special case for buildbot
+		if(isset($_ENV['_']) && strpos($_ENV['_'],'buildbot') !== false) return false;
+
 		if(!defined('STDOUT')) define('STDOUT', fopen("php://stdout","w"));
 		return function_exists('posix_isatty') ? @posix_isatty(STDOUT) : false;
 	}
