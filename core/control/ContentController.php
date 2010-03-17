@@ -335,6 +335,7 @@ HTML;
 			$fourohfour->publish("Stage", "Live");
 		}
 		
+		// TODO Allow this to work when allow_url_fopen=0
 		if(isset($_SESSION['StatsID']) && $_SESSION['StatsID']) {
 			$url = 'http://ss2stat.silverstripe.com/Installation/installed?ID=' . $_SESSION['StatsID'];
 			@file_get_contents($url);
@@ -355,8 +356,7 @@ HTML;
 				&nbsp; &nbsp; Email: $username<br />
 				&nbsp; &nbsp; Password: $password<br />
 			</p>
-			<div style="background:#ddd; border:1px solid #ccc; padding:5px; margin:5px;"><img src="cms/images/dialogs/alert.gif" style="border: none; margin-right: 10px; float: left;" /><p style="color:red;">For security reasons you should now delete the install files, unless you are planning to reinstall later. The web server also now only needs write access to the "assets" folder, you can remove write access from all other folders.</p>
-					<div style="margin-left: auto; margin-right: auto; width: 50%;"><p><a href="home/deleteinstallfiles" style="text-align: center;">Click here to delete the install files.</a></p></div></div>
+			<div style="background:#ddd; border:1px solid #ccc; padding:5px; margin:5px;"><img src="cms/images/dialogs/alert.gif" style="border: none; margin-right: 10px; float: left;" /><p style="color:red;">For security reasons you should now delete the install files, unless you are planning to reinstall later (<em>requires admin login, see above</em>). The web server also now only needs write access to the "assets" folder, you can remove write access from all other folders. <a href="home/deleteinstallfiles" style="text-align: center;">Click here to delete the install files.</a></p>
 HTML
 );
 
@@ -367,14 +367,18 @@ HTML
 	}
 
 	function deleteinstallfiles() {
+		if(!Permission::check("ADMIN")) return Security::permissionFailure($this);
+		
 		$title = new Varchar("Title");
 		$content = new HTMLText("Content");
 		$tempcontent = '';
 		$username = Session::get('username');
 		$password = Session::get('password');
 
+		// We can't delete index.php as it might be necessary for URL routing without mod_rewrite.
+		// There's no safe way to detect usage of mod_rewrite across webservers,
+		// so we have to assume the file is required.
 		$installfiles = array(
-			'index.php',
 			'install.php',
 			'rewritetest.php',
 			'config-form.css',
