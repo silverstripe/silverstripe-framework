@@ -2067,7 +2067,8 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 
 		// If we're on the draft site, then we can update the status.
 		// Otherwise, these lines will resurrect an inappropriate record
-		if(Versioned::current_stage() != 'Live') {
+		if(DB::query("SELECT \"ID\" FROM \"SiteTree\" WHERE \"ID\" = $this->ID")->value()
+			&& Versioned::current_stage() != 'Live') {
 			$this->Status = "Unpublished";
 			$this->write();
 		}
