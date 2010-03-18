@@ -104,6 +104,7 @@ class FileIFrameField extends FileField {
 		// clear the requirements added by any parent controllers
 		Requirements::clear();
 		Requirements::add_i18n_javascript('sapphire/javascript/lang');
+		Requirements::javascript(THIRDPARTY_DIR . '/prototype/prototype.js');
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
 		Requirements::javascript('sapphire/javascript/FileIFrameField.js');
 		
