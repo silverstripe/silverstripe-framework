@@ -444,7 +444,7 @@ HTML;
 				&nbsp; &nbsp; Email: $username<br />
 				&nbsp; &nbsp; Password: $password<br />
 			</p>
-			<div style="background:#ddd; border:1px solid #ccc; padding:5px; margin:5px;"><img src="cms/images/dialogs/alert.gif" style="border: none; margin-right: 10px; float: left;" /><p style="color:red;">For security reasons you should now delete the install files, unless you are planning to reinstall later (<em>requires admin login, see above</em>). The web server also now only needs write access to the "assets" folder, you can remove write access from all other folders. <a href="home/deleteinstallfiles" style="text-align: center;">Click here to delete the install files.</a></p>
+			<div style="background:#ddd; border:1px solid #ccc; padding:5px; margin:5px;"><img src="cms/images/dialogs/alert.gif" style="border: none; margin-right: 10px; float: left;" /><p style="color:red;">For security reasons you should now delete the install files, unless you are planning to reinstall later (<em>requires admin login, see above</em>). The web server also now only needs write access to the "assets" folder, you can remove write access from all other folders. <a href="home/deleteinstallfiles" style="text-align: center;">Click here to delete the install files.</a></p></div>
 HTML
 );
 
