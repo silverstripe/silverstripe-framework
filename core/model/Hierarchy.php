@@ -503,11 +503,18 @@ class Hierarchy extends DataObjectDecorator {
 
 	/**
 	 * Return children from the stage site
+	 * 
 	 * @param showAll Inlcude all of the elements, even those not shown in the menus.
+	 *   (only applicable when extension is applied to {@link SiteTree}).
 	 * @return DataObjectSet
 	 */
 	public function stageChildren($showAll = false) {
-		$extraFilter = $showAll ? '' : " AND \"ShowInMenus\"=1";
+		if($this->owner->db('ShowInMenus')) {
+			$extraFilter = ($showAll) ? '' : " AND \"ShowInMenus\"=1";
+		} else {
+			$extraFilter = '';
+		}
+		
 		$baseClass = ClassInfo::baseDataClass($this->owner->class);
 		
 		$staged = DataObject::get($baseClass, "\"{$baseClass}\".\"ParentID\" = " 
@@ -521,12 +528,18 @@ class Hierarchy extends DataObjectDecorator {
 
 	/**
 	 * Return children from the live site, if it exists.
+	 * 
 	 * @param boolean $showAll Include all of the elements, even those not shown in the menus.
+	 *   (only applicable when extension is applied to {@link SiteTree}).
 	 * @param boolean $onlyDeletedFromStage Only return items that have been deleted from stage
 	 * @return DataObjectSet
 	 */
 	public function liveChildren($showAll = false, $onlyDeletedFromStage = false) {
-		$extraFilter = $showAll ? '' : " AND \"ShowInMenus\"=1";
+		if($this->owner->db('ShowInMenus')) {
+			$extraFilter = ($showAll) ? '' : " AND \"ShowInMenus\"=1";
+		} else {
+			$extraFilter = '';
+		}
 		$join = "";
 
 		$baseClass = ClassInfo::baseDataClass($this->owner->class);
