@@ -245,7 +245,7 @@ class ViewableData extends Object implements IteratorAggregate {
 	 * @return string
 	 */
 	public function castingHelper($field) {
-		if($this instanceof DataObject && ($fieldSpec = $this->db($field))) {
+		if($this->hasMethod('db') && $fieldSpec = $this->db($field)) {
 			return $fieldSpec;
 		}
 		
@@ -441,6 +441,7 @@ class ViewableData extends Object implements IteratorAggregate {
 	 */
 	public function XML_val($field, $arguments = null, $cache = false) {
 		$result = $this->obj($field, $arguments, false, $cache);
+
 		return is_object($result) ? $result->forTemplate() : $result;
 	}
 	
