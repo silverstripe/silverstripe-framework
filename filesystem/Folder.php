@@ -1,6 +1,7 @@
 <?php
 /**
- * Represents a folder in the assets directory.
+ * Represents a folder in the assets/ directory.
+ * 
  * @package sapphire
  * @subpackage filesystem
  */
@@ -18,11 +19,13 @@ class Folder extends File {
 		$folderPath = trim(Director::makeRelative($folderPath));
 		// replace leading and trailing slashes
 		$folderPath = preg_replace('/^\/?(.*)\/?$/', '$1', $folderPath);
-		
 		$parts = explode("/",$folderPath);
+
 		$parentID = 0;
 
 		foreach($parts as $part) {
+			if(!$part) continue; // happens for paths with a trailing slash
+			
 			$item = DataObject::get_one("Folder", "\"Name\" = '$part' AND \"ParentID\" = $parentID");
 			if(!$item) {
 				$item = new Folder();
@@ -235,7 +238,10 @@ class Folder extends File {
 		}
 	}
 	
-
+	function validate() {
+		return new ValidationResult(true);
+	}
+	
 	//-------------------------------------------------------------------------------------------------
 	// Data Model Definition
 

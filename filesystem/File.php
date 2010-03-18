@@ -1,10 +1,10 @@
 <?php
 /**
  * This class handles the representation of a File within Sapphire
- * Note: The files are stored in the "/assets/" directory, but sapphire
+ * Note: The files are stored in the assets/ directory, but sapphire
  * looks at the db object to gather information about a file such as URL
- *
- * It then uses this for all processing functions (like image manipulation)
+ * It then uses this for all processing functions (like image manipulation).
+ * 
  * @package sapphire
  * @subpackage filesystem
  */
@@ -443,6 +443,11 @@ class File extends DataObject {
 		}
 	}
 
+	/**
+	 * Returns 
+	 * 
+	 * @return String
+	 */
 	function getRelativePath() {
 		if($this->ParentID) {
 			$p = DataObject::get_by_id('Folder', $this->ParentID);
