@@ -37,7 +37,6 @@ class ManifestBuilder {
 		'cli-script.php',
 		'install.php',
 		'index.php',
-		'rewritetest.php',
 	);
 
 	/**
