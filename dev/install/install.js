@@ -31,9 +31,28 @@ $(document).ready(function() {
 	 */
 	$('#ReIn').click(function() {
 		$('#install_button').attr('disabled', !$(this).is(':checked'));
-	})
+	});
+	
 	$('#install_button').click(function() {
 		$('#saving_top').hide(); 
 		$(this).val('Installing SilverStripe...');
-	})
+	});
+	
+	/**
+	 * Show all the requirements 
+	 */
+	$('h5.requirement a').click(function() {
+		if($(this).text() == 'Hide All Requirements') {
+			// hide the shown requirements
+			$(this).parents('h5').next('table.testResults').find('.good').hide();
+			$(this).text('See All Requirements');
+		}
+		else {
+			// show the requirements.
+			$(this).parents('h5').next('table.testResults').find('.good').show();
+			$(this).text('Hide All Requirements');			
+		}
+		
+		return false;
+	});
 });

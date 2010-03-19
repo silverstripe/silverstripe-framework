@@ -32,17 +32,6 @@ ul#Themes{
 	ul#Themes label {
 		margin: -2px 5px 0 15px;
 	}
-.good td {
-	color: green;
-}
-
-.warning td {
-	color: #ef7f24;
-}
-.testResults .error td {
-	border: 1px #CCC solid;
-	color: red;
-}
 
 h4.sectionHeading {
 	margin-top: 20px;
@@ -50,13 +39,13 @@ h4.sectionHeading {
 
 .error {
 	padding: 0.5em;
-	background-color: #ffe9e9;
+	background-color: #fdf5f5;
 	border: 1px #ff8e8e solid;
 	color: #f03838;
 }
 .warning {
 	padding: 0.5em;
-	background-color: #fef1e1;
+	background-color: #fcf8f2;
 	border: 1px #ffc28b solid;
 	color: #cb6a1c;
 }
@@ -83,7 +72,7 @@ p.error a:hover {
 span.middleColumn {
 	width: 297px;
 	margin-right: 0;
-	margin-top: 0;
+	margin-top: 5px;
 	padding: 4px;
 }
 input.text, textarea, select {
@@ -107,13 +96,72 @@ table.testResults {
 }
 #Layout h4 {
 	font-size: 2em;
+	margin-top: 18px;
+	line-height: 1.4;
 	clear: left;
 }
-.testResults td {
-	border: 1px #CCC solid;
-	width: 400px;
-	padding: 4px;
+
+/**
+ * Requirements and test results
+ * ------------------------------------------------ */
+table.testResults {
+	margin-top: 0;
 }
+	table.testResults td {
+		border: 1px #CCC solid;
+		border-top: none;
+		width: 400px;
+		padding: 6px;
+	}
+		table.testResults tr.good {
+			display: none;
+			border: none;
+		}
+			table.testResults tr.good td {
+				color: green;
+			}
+
+			table.testResults tr.warning {
+				border: none;
+			}
+				table.testResults tr.warning td {
+					color: #ef7f24;
+				}
+			table.testResults tr.error {
+				border: none;
+			}
+					table.testResult tr.error {
+						color: red;
+					}
+
+h5.requirement {
+	padding: 10px;
+	background: #f1f1f1;
+	border: 1px solid #ccc;
+	border-width: 0 1px 1px 1px;
+	margin: 0;
+}	
+	h5.requirement span {
+		float: right;
+	}
+		h5.requirement.good {
+			color: #359318;
+		}
+		h5.requirement.warning {
+			color: #cb6a1c;
+		}
+		h5.requirement.error {
+			color: #F03838;
+		}
+	h5.requirement a {
+		font-size: 9px;
+		float: right;
+		line-height: 19px;
+		margin: 0 0 0 30px;
+		color: #666;
+		text-decoration: none;
+		font-weight: normal;
+	}
 .clear {
 	clear: both;
 }
@@ -127,26 +175,19 @@ table.testResults {
 	margin-bottom: 0;
 }
 
-.helpText {
+#Layout .helpText {
 	float: right;
-	padding-right: 40px;
-	width: 290px;
-	margin-bottom: 0;
+	width: 330px;
+	padding-right: 90px;
 }
 
 .section {
-	float: left;
 	overflow: hidden;
 }
 
 .fields {
 	float: left;
-	margin-right: 20px;
-}
-
-#localeHelp,
-#localeSection {
-	height: 15em;
+	width: 330px;
 }
 
 #devHelp,
@@ -198,7 +239,8 @@ table.testResults {
 .databaseError {
 	clear:both;
 	overflow: hidden;
-	width: 250px;
+	width: 290px;
+	line-height: 1.2;
 	margin: 10px;
 	margin-bottom: 0;
 	display: none;
