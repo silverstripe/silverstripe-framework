@@ -400,10 +400,11 @@ class Folder extends File {
 					new LiteralField("UploadIframe",
 						$this->getUploadIframe()
 					)
-				),
+				)
+				/* // commenting out unused files tab till bugs are fixed
 				new Tab("UnusedFiles", _t('Folder.UNUSEDFILESTAB', "Unused files"),
 					new Folder_UnusedAssetsField($this)
-				)
+				) */
 			),
 			new HiddenField("ID")
 		);
