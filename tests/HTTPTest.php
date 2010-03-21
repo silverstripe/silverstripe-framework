@@ -53,9 +53,7 @@ class HTTPTest extends SapphireTest {
 		
 		// TODO This should test the absolute URL, but we can't get it reliably
 		// with port and auth URI parts.
-		$expectedBasePath = Director::baseURL();
-		
-		foreach(array($expectedPath, 'foo=bar') as $e) {
+		foreach(array(Director::makeRelative($expectedPath), 'foo=bar') as $e) {
 			$this->assertContains(
 				$e,
 				HTTP::setGetVar('foo', 'bar'),
@@ -63,21 +61,16 @@ class HTTPTest extends SapphireTest {
 			);
 		}
 
-		foreach(array($expectedBasePath, '/relative/url?foo=bar') as $e) {
-			$this->assertContains(
-				$e,
-				HTTP::setGetVar('foo', 'bar', 'relative/url'),
-				'Relative URL without slash prefix returns URL with absolute base'
-			);
-		}
+		$this->assertEquals(
+			'relative/url?foo=bar', 
+			HTTP::setGetVar('foo', 'bar', 'relative/url'),
+			'Relative URL without existing query params');
 		
-		foreach(array($expectedBasePath, '/relative/url?baz=buz&amp;foo=bar') as $e) {
-			$this->assertContains(
-				$e,
-				HTTP::setGetVar('foo', 'bar', '/relative/url?baz=buz'),
-				'Relative URL with existing query params, and new added key'
-			);
-		}
+		$this->assertEquals(
+			'relative/url?baz=buz&amp;foo=bar',
+			HTTP::setGetVar('foo', 'bar', '/relative/url?baz=buz'),
+			'Relative URL with existing query params, and new added key'
+		);
 
 		$this->assertEquals(
 			'http://test.com/?foo=new&amp;buz=baz',
