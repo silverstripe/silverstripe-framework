@@ -48,7 +48,11 @@ class GroupCsvBulkLoaderTest extends SapphireTest {
 		$updated = $results->Updated()->toArray();
 		$this->assertEquals(count($updated), 1);
 		$this->assertEquals($updated[0]->Code, 'existinggroup');
-		$this->assertEquals($updated[0]->Permissions()->column('Code'), array('CODE1', 'CODE2'));
+		$array1=$updated[0]->Permissions()->column('Code');
+		$array2=array('CODE1', 'CODE2');
+		sort($array1);
+		sort($array2);
+		$this->assertEquals($array1, $array2);
 	}
 	
 }
