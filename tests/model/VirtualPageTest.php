@@ -106,11 +106,11 @@ class VirtualPageTest extends SapphireTest {
 		
 		// The draft content of the virtual page should say 'draft content'
 		$this->assertEquals('draft content',
-			DB::query('SELECT "Content" from "SiteTree" WHERE ID = ' . $vp->ID)->value());
+			DB::query('SELECT "Content" from "SiteTree" WHERE "ID" = ' . $vp->ID)->value());
 
 		// The published content of the virtual page should say 'published content'
 		$this->assertEquals('published content',
-			DB::query('SELECT "Content" from "SiteTree_Live" WHERE ID = ' . $vp->ID)->value());
+			DB::query('SELECT "Content" from "SiteTree_Live" WHERE "ID" = ' . $vp->ID)->value());
 	}
 
 	function testCantPublishVirtualPagesBeforeTheirSource() {
@@ -237,7 +237,7 @@ class VirtualPageTest extends SapphireTest {
 
 		// Check that the published content is copied from the published page, with a legal
 		// version
-		$liveVersion = DB::query("SELECT Version FROM \"SiteTree_Live\" WHERE ID = $vp->ID")->value();
+		$liveVersion = DB::query("SELECT \"Version\" FROM \"SiteTree_Live\" WHERE \"ID\" = $vp->ID")->value();
 
 		$this->assertEquals("T0", DB::query("SELECT \"Title\" FROM \"SiteTree_Live\" 
 				WHERE \"ID\" = $vp->ID")->value());
