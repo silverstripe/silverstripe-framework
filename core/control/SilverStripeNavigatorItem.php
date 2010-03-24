@@ -95,8 +95,11 @@ class SilverStripeNavigatorItem_StageLink extends SilverStripeNavigatorItem {
 		if(Versioned::current_stage() == 'Stage' && !(ClassInfo::exists('SiteTreeFutureState') && SiteTreeFutureState::get_future_datetime())) {
 			return "<a class=\"current\">". _t('ContentController.DRAFTSITE', 'Draft Site') ."</a>";
 		} else {
-			$thisPage = $page->AbsoluteLink();
-			return "<a href=\"$thisPage?stage=Stage\" class=\"newWindow\" target=\"site\" style=\"left : -1px;\">". _t('ContentController.DRAFTSITE', 'Draft Site') ."</a>";
+			$draftPage = Versioned::get_one_by_stage('SiteTree', 'Stage', '"SiteTree"."ID" = ' . $page->ID);
+			if($draftPage) {
+				$pageLink = $draftPage->AbsoluteLink();
+				return "<a href=\"$pageLink?stage=Stage\" class=\"newWindow\" target=\"site\" style=\"left : -1px;\">". _t('ContentController.DRAFTSITE', 'Draft Site') ."</a>";
+			}
 		}
 	}
 	
@@ -126,8 +129,8 @@ class SilverStripeNavigatorItem_LiveLink extends SilverStripeNavigatorItem {
 		} else {
 			$livePage = Versioned::get_one_by_stage('SiteTree', 'Live', '"SiteTree"."ID" = ' . $page->ID);
 			if($livePage) {
-				$thisPage = $livePage->AbsoluteLink();
-				return "<a href=\"$thisPage?stage=Live\" class=\"newWindow\" target=\"site\" style=\"left : -3px;\">". _t('ContentController.PUBLISHEDSITE', 'Published Site') ."</a>";
+				$pageLink = $livePage->AbsoluteLink();
+				return "<a href=\"$pageLink?stage=Live\" class=\"newWindow\" target=\"site\" style=\"left : -3px;\">". _t('ContentController.PUBLISHEDSITE', 'Published Site') ."</a>";
 			}
 		}
 	}
@@ -155,13 +158,21 @@ class SilverStripeNavigatorItem_ArchiveLink extends SilverStripeNavigatorItem {
 	function getHTML($page) {
 		if(Versioned::current_archived_date()) {
 			return "<a class=\"current\">". _t('ContentController.ARCHIVEDSITE', 'Archived Site') ."</a>";
+		} else {
+			// Display the archive link if the page currently displayed in the CMS is other version than live and draft
+			$currentDraft = Versioned::get_one_by_stage('SiteTree', 'Draft', '"SiteTree"."ID" = ' . $page->ID);
+			$currentLive = Versioned::get_one_by_stage('SiteTree', 'Live', '"SiteTree"."ID" = ' . $page->ID);
+			if ($currentDraft && $page->Version!=$currentDraft->Version && $page->Version!=$currentLive->Version) {
+				$pageLink = $page->AbsoluteLink();
+				return "<a href=\"$pageLink?archiveDate={$page->LastEdited}\" class=\"newWindow\" target=\"site\" style=\"left : -3px;\">". _t('ContentController.ARCHIVEDSITE', 'Archived Site') ."</a>";
+			}
 		}
 	}
 	
 	function getMessage($page) {
 		if($date = Versioned::current_archived_date()) {
-			$dateObj = Object::create('Datetime', $date, null);
-			
+			$dateObj = Object::create('Datetime');
+			$dateObj->setValue($date);
 			return "<div id=\"SilverStripeNavigatorMessage\" title=\"". _t('ContentControl.NOTEWONTBESHOWN', 'Note: this message will not be shown to your visitors') ."\">". _t('ContentController.ARCHIVEDSITEFROM', 'Archived site from') ."<br>" . $dateObj->Nice() . "</div>";
 		}
 	}
