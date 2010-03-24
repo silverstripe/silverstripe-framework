@@ -534,6 +534,10 @@ class Versioned extends DataObjectDecorator {
 	 * @param string $filter
 	 */
 	function allVersions($filter = "", $sort = "", $limit = "", $join = "", $having = "") {
+		// Make sure the table names are not postfixed (e.g. _Live)
+		$oldMode = self::get_reading_mode();
+		self::reading_stage('Stage');
+
 		$query = $this->owner->extendedSQL($filter, $sort, $limit, $join, $having);
 
 		foreach($query->from as $table => $tableJoin) {
@@ -558,6 +562,7 @@ class Versioned extends DataObjectDecorator {
 			$versions->push(new Versioned_Version($record));
 		}
 		
+		Versioned::set_reading_mode($oldMode);
 		return $versions;
 	}
 	
