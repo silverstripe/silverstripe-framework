@@ -1382,7 +1382,9 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		foreach($allFields as $field => $fieldSpec) {
 			if(preg_match('/([^(]+)/', $fieldSpec, $matches)) {
 				$class = $matches[0];
-				if($class == 'HTMLText' || is_subclass_of($class, 'HTMLText')) $htmlFields[] = $field;
+				if(class_exists($class)){
+					if($class == 'HTMLText' || is_subclass_of($class, 'HTMLText')) $htmlFields[] = $field;
+				}
 			}
 		}
 
