@@ -42,7 +42,7 @@
 										If you are having problems meeting the requirements, see the <a href="http://doc.silverstripe.org/doku.php?id=server-requirements">server requirements wiki page</a>.
 									</p>
 								<?php } else if(!$dbReq->hasErrors() && !$adminReq->hasErrors()) { ?>
-									<p class="good">You're ready to install!</p>
+									<p class="goodInstall"><em class="inlineBarText">You're ready to install!. Please confirm the configuration options below.</em> <a href="#install">Install SilverStripe</a></p>
 								<?php } ?>
 								
 								<?php if($dbReq->hasErrors()) { ?>
@@ -56,40 +56,25 @@
 										Please <a href="#AdminAccount">enter an email address and password</a> for the default administrator account before installing.
 									</p>
 								<?php } ?>
-								
-								<p id="stats-container">
-									<input type="checkbox" id="stats" name="stats" checked="checked">
-										<label for="stats">Send information about my webserver to silverstripe.org<br />
-											<small>(anonymized version information, used for statistical purposes)</small>
-									</label><p>
-								
-								<?php if($alreadyInstalled) { ?>
-									<p class="warning">
-										<strong>Note:</strong> It seems as though SilverStripe is already installed here.<br />
-										If you ask me to install, I will overwrite the <strong>.htaccess</strong> and <strong>mysite/_config.php</strong> files. 
-										<br />
-									<input type="checkbox" id="ReIn" name="force_reinstall"><label for="ReIn">That's okay, please re-install SilverStripe and overwrite these files.</label>
-									</p>
-								<?php } ?>
-								
-								<p>
-									<?php if($alreadyInstalled) { ?>
-										<input id="install_button" type="submit" disabled="disabled" class="action" name="go" value="Install SilverStripe">
-									<?php } else { ?>
-										<input id="install_button" type="submit" class="action" name="go" value="Install SilverStripe">
-									<?php } ?>
-									
-									<span id="saving_top" style="display: none">
-										&nbsp;
-										<img src="cms/images/network-save.gif">
-										(this will take a minute or so)
-									</span>
-								</p>
-								
 							<?php } ?>
-			
-							<h4 class="sectionHeading">Database</h4>
+							
+							
+							<h4 id="requirements"><em class="inlineBarText">Requirements</em> <span>Step: 1 of 5</span></h4>
+							<?php $req->showTable(); ?>
+							
+							<p>
+								Read more about our <a href="http://doc.silverstripe.org/doku.php?id=server-requirements" target="_blank">server requirements</a>.
+							</p>
+							
+							<div class="action">
+								<input type="submit" class="action" value="Re-check requirements">
+							</div>
+							
+							<h4 class="sectionHeading"><em class="inlineBarText">Database</em> <span>Step: 2 of 5</span></h4>
 							<div id="database_credentials" class="section">
+								
+								<?php $dbReq->showTable("Database Configuration"); ?>
+								
 								<p id="dbHelp" class="helpText">
 									SilverStripe stores its content in a relational SQL database. Please provide the username and password to connect to the server here.
 									If this account has permission to create databases, then we will create the database for you; otherwise, you must give the name of a
@@ -198,9 +183,7 @@
 							
 							<div class="clear"><!-- --></div>
 							
-							<?php $dbReq->showTable("Database Configuration"); ?>
-							
-							<h4>CMS Admin Account</h4>
+							<h4><em class="inlineBarText">CMS Admin Account</em> <span>Step: 3 of 5</span></h4>
 						
 							<div id="AdminAccount" class="section">
 								
@@ -248,24 +231,50 @@
 								</div>
 							</div>
 							
-							<h4>Theme</h4>
+							<h4><em class="inlineBarText">Theme</em> <span>Step: 4 of 5</span></h4>
 							<p>You can change the theme or <a href="http://silverstripe.org/themes">download</a> another from the SilverStripe website after installation.</p>
 							<ul id="Themes">
 								<li><input type="radio" name="template" value="blackcandy" id="BlackCandy" <?php if(!isset($_POST['template']) || $_POST['template'] == 'blackcandy') {?>checked="checked"<?php }?>><label for="BlackCandy"><a href="http://silverstripe.org/blackcandy/">BlackCandy</a> - our default theme ready to use.</label></li>
 								<li><input type="radio" name="template" value="tutorial" id="EmptyTemplate" <?php if(isset($_POST['template']) && $_POST['template'] == 'tutorial') {?>checked="checked"<?php }?>><label for="EmptyTemplate">Empty template - ready to begin the <a href="http://doc.silverstripe.org/doku.php?id=tutorials" target="_blank">tutorial</a>.</label></li>
 							</ul>
 							
-	
-							<h4 id="requirements">Requirements</h4>
-							<?php $req->showTable(); ?>
+							<h4 id="install"><em class="inlineBarText">Confirm Install</em> <span>Step: 5 of 5</span></h4>
 							
-							<p>
-								Read more about our <a href="http://doc.silverstripe.org/doku.php?id=server-requirements" target="_blank">server requirements</a>.
-							</p>
-							
-							<div class="action">
-								<input type="submit" class="action" value="Re-check requirements">
-							</div>
+							<?php if(isset($hasErrorOtherThanDatabase)) { ?>
+								<p class="error">
+									You aren't currently able to install the software.  Please <a href="#requirements">see above</a> for details.<br>
+									If you are having problems meeting the requirements, see the <a href="http://doc.silverstripe.org/doku.php?id=server-requirements">server requirements wiki page</a>.
+								</p>
+							<?php } else { ?>
+								<p id="stats-container">
+									<input type="checkbox" id="stats" name="stats" checked="checked">
+										<label for="stats">Send information about my webserver to silverstripe.org<br />
+											<small>(anonymized version information, used for statistical purposes)</small>
+									</label><p>
+								
+								<?php if($alreadyInstalled) { ?>
+									<p class="warning">
+										<strong>Note:</strong> It seems as though SilverStripe is already installed here.<br />
+										If you ask me to install, I will overwrite the <strong>.htaccess</strong> and <strong>mysite/_config.php</strong> files. 
+										<br />
+									<input type="checkbox" id="ReIn" name="force_reinstall"><label for="ReIn">That's okay, please re-install SilverStripe and overwrite these files.</label>
+									</p>
+								<?php } ?>
+								
+								<p>
+									<?php if($alreadyInstalled) { ?>
+										<input id="install_button" type="submit" disabled="disabled" class="action" name="go" value="Install SilverStripe">
+									<?php } else { ?>
+										<input id="install_button" type="submit" class="action" name="go" value="Install SilverStripe">
+									<?php } ?>
+									
+									<span id="saving_top" style="display: none">
+										&nbsp;
+										<img src="cms/images/network-save.gif">
+										(this will take a minute or so)
+									</span>
+								</p>
+							<?php } ?>
 						</form>
 					</div>
 				</div>
