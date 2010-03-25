@@ -395,8 +395,9 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		
 		// Unset base for homepage URLSegments in their default language.
 		// Homepages with action parameters or in different languages
-		// need to retain their URLSegment.
-		if(!$action && $base == RootURLController::get_homepage_link()) {
+		// need to retain their URLSegment. We can only do this if the homepage
+		// is on the root level.
+		if(!$action && $base == RootURLController::get_homepage_link() && !$this->ParentID) {
 			$base = null;
 			if($this->hasExtension('Translatable') && $this->Locale != Translatable::default_locale()){ 
 				$base = $this->URLSegment; 
