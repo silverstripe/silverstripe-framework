@@ -114,7 +114,8 @@ class Group extends DataObject {
 		// Only show the "Roles" tab if permissions are granted to edit them,
 		// and at least one role exists
 		if(Permission::check('APPLY_ROLES') && DataObject::get('PermissionRole')) { 
-			$fields->addFieldToTab('Root.' . _t('SecurityAdmin.ROLES', 'Roles'), 
+			$fields->findOrMakeTab('Root.Roles', _t('SecurityAdmin.ROLES', 'Roles'));
+			$fields->addFieldToTab('Root.Roles', 
 				new LiteralField( 
 					"",  
 					"<p>" .  
