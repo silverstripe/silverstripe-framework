@@ -103,7 +103,16 @@ class RedirectorPage extends Page {
 			$this->HasBrokenLink = false;
 		}
 	}
-	
+
+	function onBeforeWrite() {
+		parent::onBeforeWrite();
+
+		// Prefix the URL with "http://" if no prefix is found
+		if($this->ExternalURL && (strpos($this->ExternalURL, '://') === false)) {
+			$this->ExternalURL = 'http://' . $this->ExternalURL;
+		}
+	}
+
 	function getCMSFields() {
 		Requirements::javascript(SAPPHIRE_DIR . "/javascript/RedirectorPage.js");
 		
@@ -162,4 +171,3 @@ class RedirectorPage_Controller extends Page_Controller {
 			"</p>";
 	}
 }
-?>

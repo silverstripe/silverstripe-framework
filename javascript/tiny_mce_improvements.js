@@ -201,7 +201,11 @@ LinkForm.prototype = {
 
 			case 'external':
 			default:
-				href = this.elements.external.value; 
+				href = this.elements.external.value;
+				// Prefix the URL with "http://" if no prefix is found
+				if(href.indexOf('://') == -1) {
+					href = 'http://' + href;
+				}
 				if($('Form_EditorToolbarLinkForm_TargetBlank')) {
 				    if($('Form_EditorToolbarLinkForm_TargetBlank').checked) target = '_blank';
 				}
