@@ -15,7 +15,8 @@ class RedirectorPage extends Page {
 	);
 	
 	static $defaults = array(
-		"RedirectionType" => "Internal"
+		"RedirectionType" => "Internal",
+		"ExternalURL" => "http://"
 	);
 	
 	static $has_one = array(
