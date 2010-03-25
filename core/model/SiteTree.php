@@ -1322,10 +1322,11 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 
 	protected function onBeforeWrite() {
 		parent::onBeforeWrite();
-		
+
 		// If Sort hasn't been set, make this page come after it's siblings
-		if(!$this->Sort && $this->ParentID) {
-			$this->Sort = DB::query("SELECT MAX(\"Sort\") + 1 FROM \"SiteTree\" WHERE \"ParentID\" = $this->ParentID")->value();
+		if(!$this->Sort) {
+			$parentID = ($this->ParentID) ? $this->ParentID : 0;
+			$this->Sort = DB::query("SELECT MAX(\"Sort\") + 1 FROM \"SiteTree\" WHERE \"ParentID\" = $parentID")->value();
 		}
 
 		// If there is no URLSegment set, generate one from Title
