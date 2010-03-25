@@ -1275,34 +1275,37 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		if($this->class == 'SiteTree') {
 			if(!SiteTree::get_by_link('home')) {
 				$homepage = new Page();
-
 				$homepage->Title = _t('SiteTree.DEFAULTHOMETITLE', 'Home');
 				$homepage->Content = _t('SiteTree.DEFAULTHOMECONTENT', '<p>Welcome to SilverStripe! This is the default homepage. You can edit this page by opening <a href="admin/">the CMS</a>. You can now access the <a href="http://doc.silverstripe.org">developer documentation</a>, or begin <a href="http://doc.silverstripe.org/doku.php?id=tutorials">the tutorials.</a></p>');
-				$homepage->URLSegment = "home";
-				$homepage->Status = "Published";
+				$homepage->URLSegment = 'home';
+				$homepage->Status = 'Published';
+				$homepage->Sort = 1;
 				$homepage->write();
-				$homepage->publish("Stage", "Live");
+				$homepage->publish('Stage', 'Live');
 				$homepage->flushCache();
-				DB::alteration_message("Home page created","created");		
+				DB::alteration_message('Home page created', 'created');
 			}
 
 			if(DB::query("SELECT COUNT(*) FROM \"SiteTree\"")->value() == 1) {
 				$aboutus = new Page();
 				$aboutus->Title = _t('SiteTree.DEFAULTABOUTTITLE', 'About Us');
 				$aboutus->Content = _t('SiteTree.DEFAULTABOUTCONTENT', '<p>You can fill this page out with your own content, or delete it and create your own pages.<br /></p>');
-				$aboutus->Status = "Published";
+				$aboutus->Status = 'Published';
+				$aboutus->Sort = 2;
 				$aboutus->write();
-				$aboutus->publish("Stage", "Live");
-				DB::alteration_message("About Us created","created");
+				$aboutus->publish('Stage', 'Live');
+				$aboutus->flushCache();
+				DB::alteration_message('About Us page created', 'created');
 
 				$contactus = new Page();
 				$contactus->Title = _t('SiteTree.DEFAULTCONTACTTITLE', 'Contact Us');
 				$contactus->Content = _t('SiteTree.DEFAULTCONTACTCONTENT', '<p>You can fill this page out with your own content, or delete it and create your own pages.<br /></p>');
-				$contactus->Status = "Published";
+				$contactus->Status = 'Published';
+				$contactus->Sort = 3;
 				$contactus->write();
-				$contactus->publish("Stage", "Live");
-
+				$contactus->publish('Stage', 'Live');
 				$contactus->flushCache();
+				DB::alteration_message('Contact Us page created', 'created');
 			}
 		}
 		
