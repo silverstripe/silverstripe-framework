@@ -86,10 +86,7 @@ function getFittingHeight(el, tweakVal, ignoreElements) {
 		tweakVal += getDimension(el.parentNode,'borderTopWidth');
 		tweakVal += getDimension(el.parentNode,'borderBottomWidth');
 	}
-	
-	//console.log(el.id + ': ' + el.parentNode.id+'.offsetHeight=' + el.parentNode.offsetHeight 
-	//	+ ', otherHeight=' + otherHeight + ', tweakVal='  + tweakVal)
-	
+		
 	if(el.parentNode && el.parentNode.offsetHeight - otherHeight - tweakVal < 0) {
 		return 0;
 	}else{

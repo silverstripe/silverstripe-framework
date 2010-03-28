@@ -100,13 +100,9 @@ HasManyFileFieldUploadButton.prototype = {
 		ids = serverData.match(idregex);
 		fileid = ids[1];
 		
-		console.log(serverData);
-		
 		nameregex = /\/\* Names: ([^\s]+) \*\//;
 		names = serverData.match(nameregex);
 		name = names[1];
-		
-		console.log(name);
 		
 		fieldid = this.parentNode.parentNode.id;
 		list = this.parentNode.parentNode.list;

@@ -156,7 +156,6 @@ LinkForm.prototype = {
 			if(data) {
 				for(i in data) {
 					if(this.elements[i]) {
-						// console.log('setting ' + i + ' to ' + this.elements[i] );
 						Form.Element.setValue(this.elements[i], data[i]);
 					}
 				}

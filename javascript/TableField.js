@@ -60,9 +60,7 @@ TableField.prototype = {
 			|| params["childID"] <= 0 || (recordID <= 0 || recordID == false)
 		){
 			if( row.parentNode.getElementsByTagName('tr').length > 1 ) {
-				try { Effect.FadeOut(row); } catch (e) { 
-					//console.log(e); 
-				}
+				Effect.FadeOut(row);
 			} else {
 				// clear all fields in the row
 				var fields = row.getElementsByTagName('input');
@@ -122,7 +120,6 @@ TableField.prototype = {
 			for(var i = 0; i < elements.length;i++){
 				if(elements[i].type != "hidden"){
 					if(elements[i].value != null && elements[i].value != ""){
-						//console.log(elements[i].id + ' has value');
 						isEmpty = false;
 					}
 				}
