@@ -4,6 +4,11 @@
  * Extension to provide a search interface when applied to ContentController
  */
 class ContentControllerSearchExtension extends Extension { 
+	static $allowed_actions = array(
+		'SearchForm',
+		'results',
+	);
+	
 	/**
 	 * Site search form
 	 */
