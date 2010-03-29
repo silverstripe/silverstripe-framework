@@ -121,13 +121,11 @@ class Member extends DataObject {
 		
 		// Find or create ADMIN group
 		$adminGroups = Permission::get_groups_by_permission('ADMIN');
-		if($adminGroups) {
+		if(!$adminGroups) {
 			singleton('Group')->requireDefaultRecords();
 			$adminGroups = Permission::get_groups_by_permission('ADMIN');
-			$adminGroup = $adminGroups->First();
-		} else {
-			$adminGroup = $adminGroups->First();
 		}
+		$adminGroup = $adminGroups->First();
 		
 		// Add a default administrator to the first ADMIN group found (most likely the default
 		// group created through Group->requireDefaultRecords()).
