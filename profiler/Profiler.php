@@ -204,7 +204,7 @@ class Profiler {
     *
     */
     function getMicroTime(){
-        $tmp=split(" ",microtime());
+        $tmp=explode(' ', microtime());
         $rt=$tmp[0]+$tmp[1];
         return $rt;
     }
