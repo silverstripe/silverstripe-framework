@@ -83,13 +83,30 @@ class HTTPTest extends SapphireTest {
 			HTTP::setGetVar('foo', 'new', 'http://test.com/?foo=&foo=old'),
 			'Absolute URL and empty query param'
 		);
-
+		// http_build_query() escapes angular brackets, they should be correctly urldecoded by the browser client
 		$this->assertEquals(
-			// http_build_query() escapes angular brackets, they should be correctly urldecoded by the browser client
 			'http://test.com/?foo%5Btest%5D=one&amp;foo%5Btest%5D=two',
 			HTTP::setGetVar('foo[test]', 'two', 'http://test.com/?foo[test]=one'),
 			'Absolute URL and PHP array query string notation'
 		);
+	
+		$urls = array(
+			'http://www.test.com:8080',
+			'http://test.com:3000/',
+			'http://test.com:3030/baz/',
+			'http://baz:foo@test.com',
+			'http://baz@test.com/',
+			'http://baz:foo@test.com:8080',
+			'http://baz@test.com:8080'
+		);
+		
+		foreach($urls as $testURL) {
+			$this->assertEquals(
+				$testURL .'?foo=bar',
+				HTTP::setGetVar('foo', 'bar', $testURL),
+				'Absolute URL and Port Number'
+			);
+		}
 	}
 	
 }
