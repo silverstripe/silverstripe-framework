@@ -16,7 +16,8 @@ ComplexTableField.prototype = {
 		rules['#'+this.id+' table.data a.deletelink'] = {onclick: this.deleteRecord.bind(this)};
 		
 		// invoke row action-link based on default-action set in classname
-		defaultAction = this.getDefaultAction();
+		var defaultAction = this.getDefaultAction();
+
 		if(defaultAction) {
 			rules['#'+this.id+' table.data tbody td'] = {
 				onclick: function(e) {
@@ -27,6 +28,7 @@ ComplexTableField.prototype = {
 					if (elt.tagName != 'TD' && elt.tagName != 'TR') {
 						return;
 					}
+					
 					var link = $$('.'+defaultAction, Event.element(e).parentNode)[0].href;
 					this.openPopup(null, link);
 					return false;
