@@ -544,9 +544,9 @@ class SSViewer {
 
 		$content = ereg_replace('<' . '% +current_page +%' . '>', '<?= $_SERVER[SCRIPT_URL] ?>', $content);
 		
-		// add all requirements to the $requirements array
-		preg_match_all('/<% require ([a-zA-Z]+)\(([^\)]+)\) %>/', $content, $requirements);
-		$content = preg_replace('/<% require .* %>/', null, $content);
+		// change < % require x() % > calls to corresponding Requirement::x() ones, including 0, 1 or 2 options
+		$content = preg_replace('/<% +require +([a-zA-Z]+)(?:\(([^),]+)\))? +%>/', '<? Requirements::\\1("\\2"); ?>', $content);
+		$content = preg_replace('/<% +require +([a-zA-Z]+)\(([^),]+), *([^),]+)\) +%>/', '<? Requirements::\\1("\\2", "\\3"); ?>', $content);
 		
 		// legacy
 		$content = ereg_replace('<!-- +if +([A-Za-z0-9_]+) +-->', '<? if($item->cachedCall("\\1")) { ?>', $content);
@@ -565,9 +565,6 @@ class SSViewer {
 		$content = str_replace('?>',";\n \$val .= <<<SSVIEWER\n", $content);
 		
 		$output  = "<?php\n";
-		for($i = 0; $i < count($requirements[0]); $i++) {
-			$output .= 'Requirements::' . $requirements[1][$i] . '(\'' . $requirements[2][$i] . "');\n";
-		}
 		$output .= '$val .= <<<SSVIEWER' . "\n" . $content . "\nSSVIEWER;\n"; 
 		
 		// Protect xml header @sam why is this run twice ?
