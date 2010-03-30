@@ -418,10 +418,20 @@ class ManifestBuilder {
 		// were upgrading their sites
 		$fileMD5 = md5($file);
 		$parseCacheFile = TEMP_FOLDER . "/manifestClassParse-" . str_replace(array("/", ":", "\\", "."), "_", basename($filename)) . "-$fileMD5";
-		if(!file_exists($parseCacheFile)) {
+		if(file_exists($parseCacheFile)) {
+			include($parseCacheFile);
+			// Check for a bad cache file
+			if(!isset($classes) || !isset($interfaces) || !is_array($classes) || !is_array($interfaces)) {
+				unset($classes);
+				unset($interfaces);
+			}
+		}
+		
+		// Either the parseCacheFile doesn't exist, or its bad
+		if(!isset($classes)) {
 			$tokens = token_get_all($file);
-			$classes = self::getClassDefParser()->findAll($tokens);
-			$interfaces = self::getInterfaceDefParser()->findAll($tokens);
+			$classes = (array)self::getClassDefParser()->findAll($tokens);
+			$interfaces = (array)self::getInterfaceDefParser()->findAll($tokens);
 			
 			$cacheContent = '<?php
 				$classes = ' . var_export($classes,true) . ';
@@ -431,9 +441,6 @@ class ManifestBuilder {
 				fwrite($fh, $cacheContent);
 				fclose($fh);
 			}
-			
-		} else {
-			include($parseCacheFile);
 		}
 
 		foreach($classes as $class) {
@@ -456,7 +463,7 @@ class ManifestBuilder {
 			
 			self::$classArray[$className] = $class;
 		}
-
+		
 		foreach($interfaces as $interface) {
 			$className = $interface['interfaceName'];
 			unset($interface['interfaceName']);
