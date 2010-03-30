@@ -177,6 +177,9 @@ class ErrorPage extends Page {
 	 * @return String
 	 */
 	static function get_filepath_for_errorcode($statusCode, $locale = null) {
+		if (singleton('ErrorPage')->hasMethod('alternateFilepathForErrorcode')) {
+			return singleton('ErrorPage')-> alternateFilepathForErrorcode($statusCode, $locale);
+		}
 		if(singleton('SiteTree')->hasExtension('Translatable') && $locale && $locale != Translatable::default_locale()) {
 			return self::$static_filepath . "/error-{$statusCode}-{$locale}.html";
 		} else {
