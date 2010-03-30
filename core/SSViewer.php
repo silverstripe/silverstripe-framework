@@ -686,33 +686,21 @@ class SSViewer_PartialParser {
 	/xS';
 	
 	static function process($template, $content) {
-		$parser = new SSViewer_PartialParser($template, $content, 0, array(), 'if', 'false');
+		$parser = new SSViewer_PartialParser($template, $content, 0);
 		$parser->parse();
 		return $parser->generate();
 	}
 	
-	function __construct($template, $content, $offset, $keyparts, $conditional, $condition) {
+	function __construct($template, $content, $offset) {
 		$this->template = $template;
 		$this->content = $content;
 		$this->offset = $offset;
 
-		$this->keyparts = $keyparts;
-		$this->conditional = $conditional;
-		$this->condition = $condition;
-		
 		$this->blocks = array();
 	}
 
 	function controlcheck($text) {
-		$ifs = preg_match_all('/<'.'% +if +/', $text, $matches);
-		$end_ifs = preg_match_all('/<'.'% +end_if +/', $text, $matches);
-
-		if ($ifs != $end_ifs) throw new Exception('You can\'t have cached or uncached blocks within condition structures');
-
-		$controls = preg_match_all('/<'.'% +control +/', $text, $matches);
-		$end_controls = preg_match_all('/<'.'% +end_control +/', $text, $matches);
-
-		if ($controls != $end_controls) throw new Exception('You can\'t have cached or uncached blocks within control structures');
+		// NOP - hook for Cached_PartialParser
 	}
 
 	function parse() {
@@ -735,12 +723,12 @@ class SSViewer_PartialParser {
 
 					if ($tag == 'cached' || $tag == 'cacheblock') {
 						list($keyparts, $conditional, $condition) = $this->parseargs(@$matches[2][0]);
+						$parser = new SSViewer_Cached_PartialParser($this->template, $this->content, $endpos, $keyparts, $conditional, $condition);
 					}
 					else {
-						$keyparts = array(); $conditional = 'if'; $condition = 'false';
+						$parser = new SSViewer_PartialParser($this->template, $this->content, $endpos);
 					}
 
-					$parser = new SSViewer_PartialParser($this->template, $this->content, $endpos, $keyparts, $conditional, $condition);
 					$parser->parse();
 					$this->blocks[] = $parser;
 					$this->offset = $parser->offset;
@@ -824,13 +812,49 @@ class SSViewer_PartialParser {
 		return array($parts, $conditional, $condition);
 	}
 
+	function generate() {
+		$res = array();
+
+		foreach ($this->blocks as $i => $block) {
+			if ($block instanceof SSViewer_PartialParser)
+				$res[] = $block->generate();
+			else {
+				$res[] = $block;
+			}
+		}
+
+		return implode('', $res);
+	}
+}
+
+class SSViewer_Cached_PartialParser extends SSViewer_PartialParser {
+
+	function __construct($template, $content, $offset, $keyparts, $conditional, $condition) {
+		$this->keyparts = $keyparts;
+		$this->conditional = $conditional;
+		$this->condition = $condition;
+
+		parent::__construct($template, $content, $offset);
+	}
+
+	function controlcheck($text) {
+		$ifs = preg_match_all('/<'.'% +if +/', $text, $matches);
+		$end_ifs = preg_match_all('/<'.'% +end_if +/', $text, $matches);
+
+		if ($ifs != $end_ifs) throw new Exception('You can\'t have cached or uncached blocks within condition structures');
+
+		$controls = preg_match_all('/<'.'% +control +/', $text, $matches);
+		$end_controls = preg_match_all('/<'.'% +end_control +/', $text, $matches);
+
+		if ($controls != $end_controls) throw new Exception('You can\'t have cached or uncached blocks within control structures');
+	}
+
 	function key() {
 		if (empty($this->keyparts)) return "''";
 		return 'sha1(' . implode(".'_'.", $this->keyparts) . ')';
 	}
 
 	function generate() {
-
 		$res = array();
 		$key = $this->key();
 
@@ -855,26 +879,15 @@ class SSViewer_PartialParser {
 				// of cache blocks, and invalidation of the cache when the template changes
 				$partialkey = "'".sha1($this->template . $block)."_'.$key.'_$i'";
 
-				$knownUncached = array(
-					'if' => array('false', '0'),
-					'unless' => array('true', '1')
-				);
+				// Try to load from cache
+				$res[] = "<?\n".'if ('.$condition.' ($partial = $cache->load('.$partialkey.'))) $val .= $partial;'."\n";
 
-				// Optimized version if we know condition is false
-				if ($this->conditional && in_array($this->condition, $knownUncached[$this->conditional])) {
-					$res[] = $block;
-				}
-				else {
-					// Try to load from cache
-					$res[] = "<?\n".'if ('.$condition.' ($partial = $cache->load('.$partialkey.'))) $val .= $partial;'."\n";
-
-					// Cache miss - regenerate
-					$res[] = "else {\n";
-					$res[] = '$oldval = $val; $val = "";'."\n";
-					$res[] = "\n?>" . $block . "<?\n";
-					$res[] = $condition . ' $cache->save($val); $val = $oldval . $val ;'."\n";
-					$res[] = "}\n?>";
-				}
+				// Cache miss - regenerate
+				$res[] = "else {\n";
+				$res[] = '$oldval = $val; $val = "";'."\n";
+				$res[] = "\n?>" . $block . "<?\n";
+				$res[] = $condition . ' $cache->save($val); $val = $oldval . $val ;'."\n";
+				$res[] = "}\n?>";
 			}
 		}
 
