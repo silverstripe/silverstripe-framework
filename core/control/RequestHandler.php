@@ -279,7 +279,7 @@ class RequestHandler extends ViewableData {
 				} else {
 					throw new Exception("method_exists() true but ReflectionClass can't find method - PHP is b0kred");
 				}
-			}	else	if(!$this->hasMethod($action)){
+			} else if(!$this->hasMethod($action)){
 				// Return true so that a template can handle this action
 				return true;
 			}
