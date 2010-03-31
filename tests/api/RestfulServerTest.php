@@ -106,8 +106,8 @@ class RestfulServerTest extends SapphireTest {
 		$ratingsArr = $responseArr['Ratings']['RestfulServerTest_AuthorRating'];
 		$this->assertEquals(count($ratingsArr), 2);
 		$ratingIDs = array(
-			$ratingsArr[0]['@attributes']['id'], 
-			$ratingsArr[1]['@attributes']['id']
+			(int)$ratingsArr[0]['@attributes']['id'], 
+			(int)$ratingsArr[1]['@attributes']['id']
 		);
 		$this->assertContains($rating1->ID, $ratingIDs);
 		$this->assertContains($rating2->ID, $ratingIDs);
@@ -127,8 +127,8 @@ class RestfulServerTest extends SapphireTest {
 		
 		$this->assertEquals(count($authorsArr), 2);
 		$ratingIDs = array(
-			$authorsArr[0]['ID'], 
-			$authorsArr[1]['ID']
+			(int)$authorsArr[0]['ID'], 
+			(int)$authorsArr[1]['ID']
 		);
 		$this->assertContains($author2->ID, $ratingIDs);
 		$this->assertContains($author3->ID, $ratingIDs);

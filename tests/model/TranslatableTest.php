@@ -263,8 +263,7 @@ class TranslatableTest extends FunctionalTest {
 		$this->assertEquals($resultPagesCustomLang->Count(), 1);
 		$this->assertNotContains($origTestPage->ID, $resultPagesCustomLang->column('ID'));
 		$this->assertNotContains($otherTestPage->ID, $resultPagesCustomLang->column('ID'));
-		// casting as a workaround for types not properly set on duplicated dataobjects from createTranslation()
-		$this->assertContains((string)$translatedPage->ID, $resultPagesCustomLang->column('ID'));
+		$this->assertContains($translatedPage->ID, $resultPagesCustomLang->column('ID'));
 		
 		Translatable::set_current_locale('en_US');
 	}
