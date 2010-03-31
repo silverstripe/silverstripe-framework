@@ -451,6 +451,19 @@ ImageForm.prototype = {
 		this.elements.Width.onchange = function() { __form.update_params('Width'); };
 		this.elements.Height.onchange = function() { __form.update_params('Height'); };
 	},
+	toggle: function(ed) {
+		this.ToolbarForm.toggle(ed);
+		
+		this.resetFields();
+	},
+	resetFields: function() {
+		this.elements.AltText.value = '';
+		this.elements.ImageTitle.value = '';
+		this.elements.CSSClass.value = 'left';
+		this.elements.CaptionText.value = '';
+		this.elements.CaptionText.disabled = '';
+		this.elements.CSSClass.disabled = '';
+	},
 	destroy: function() {
 		this.ToolbarForm = null;
 		this.onsubmit = null;
@@ -522,12 +535,6 @@ ImageForm.prototype = {
 			this.elements.Height.value = imgElement.style.height ? parseInt(imgElement.style.height) : imgElement.height;
 		} else {
 			this.selectedNode = null;
-			this.elements.AltText.value = '';
-			this.elements.ImageTitle.value = '';
-			this.elements.CSSClass.value = 'left';
-			this.elements.CaptionText.value = '';
-			this.elements.CaptionText.disabled = '';
-			this.elements.CSSClass.disabled = '';
 		}
 	},
 	
@@ -651,6 +658,13 @@ ImageThumbnail.prototype = {
 		if(el && el.nodeName == 'IMG') {
 			ed.dom.setAttribs(el, attributes);
 		} else {
+			// Focus gets saved in tinymce_ssbuttons when opening the sidebar.
+			// Unless the focus has changed in the meantime, reset it to the previous position.
+			// This is necessary because IE can lose its focus if any of the sidebar input fields are used.
+			if(ed.ss_focus_bookmark) {
+				ed.selection.moveToBookmark(ed.ss_focus_bookmark);
+				delete ed.ss_focus_bookmark;
+			}
 			ed.execCommand('mceInsertContent', false, html, {
 				skip_undo : 1
 			});
