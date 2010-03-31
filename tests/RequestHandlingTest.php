@@ -122,6 +122,11 @@ class RequestHandlingTest extends SapphireTest {
 		$this->assertEquals('This page does not exist.', $response->getBody());
 	}
 	
+	function testMethodsOnParentClassesOfRequestHandlerDeclined() {
+		$response = Director::test('testGoodBase1/getSecurityID');
+		$this->assertEquals(403, $response->getStatusCode());
+	}
+	
 }
 
 /**
