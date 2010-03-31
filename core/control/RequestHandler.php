@@ -145,9 +145,10 @@ class RequestHandler extends ViewableData {
 					}
 				
 					// If we return a RequestHandler, call handleRequest() on that, even if there is no more URL to parse.
-					// It might have its own handler.  However, we only do this if we haven't just parsed an empty rule ourselves,
-					// to prevent infinite loops
-					if(!$request->isEmptyPattern($rule) && is_object($result) && $result instanceof RequestHandler) {
+					// It might have its own handler. However, we only do this if we haven't just parsed an empty rule ourselves,
+					// to prevent infinite loops. Also prevent further handling of controller actions which return themselves
+					// to avoid infinite loops.
+					if($this !== $result && !$request->isEmptyPattern($rule) && is_object($result) && $result instanceof RequestHandler) {
 						$returnValue = $result->handleRequest($request);
 
 						// Array results can be used to handle 
