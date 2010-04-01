@@ -11,7 +11,7 @@
  *  - SS_DATABASE_CLASS:    The database class to use, MySQLDatabase, MSSQLDatabase, etc. defaults to
  *                          MySQLDatabase
  *  - SS_DATABASE_SERVER:   The database server to use, defaulting to localhost
- *  - SS_DATABASE_USERNAME: The databsae username (mandatory)
+ *  - SS_DATABASE_USERNAME: The database username (mandatory)
  *  - SS_DATABASE_PASSWORD: The database password (mandatory)
  *  - SS_DATABASE_SUFFIX:   A suffix to add to the database name.
  *  - SS_DATABASE_PREFIX:   A prefix to add to the database name.
