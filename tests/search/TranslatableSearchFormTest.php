@@ -12,10 +12,10 @@ class TranslatableSearchFormTest extends FunctionalTest {
 	protected $requiredExtensions = array(
 		'SiteTree' => array(
 			'Translatable',
-			"MySQLFulltextSearchable('Title,MenuTitle,Content,MetaTitle,MetaDescription,MetaKeywords')",
+			"FulltextSearchable('Title,MenuTitle,Content,MetaTitle,MetaDescription,MetaKeywords')",
 		),
 		"File" => array(
-			"MySQLFulltextSearchable('Filename,Title,Content')",
+			"FulltextSearchable('Filename,Title,Content')",
 		),
 		"ContentController" => array(
 			"ContentControllerSearchExtension",
