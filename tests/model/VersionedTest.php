@@ -85,7 +85,7 @@ class VersionedTest extends SapphireTest {
 		$changedVersion = $page1->Version;
 
 		$page1->doRollbackTo($origVersion);
-		$page1 = Versioned::get_one_by_stage('Page', 'Stage', $page1->ID);
+		$page1 = Versioned::get_one_by_stage('Page', 'Stage', sprintf('"SiteTree"."ID" = %d', $page1->ID));
 		
 		$this->assertTrue($page1->Version > $changedVersion, 'Create a new higher version number');
 		$this->assertEquals('orig', $page1->Content, 'Copies the content from the old version');
