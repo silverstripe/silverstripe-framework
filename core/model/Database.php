@@ -720,6 +720,48 @@ abstract class SS_Database {
 		return $text;
 	}
 	
+	/**
+	 * Function to return an SQL datetime expression that can be used with the adapter in use
+	 * used for querying a datetime in a certain format
+	 * @param string $date to be formated, can be either 'now', literal datetime like '1973-10-14 10:30:00' or field name, e.g. '"SiteTree"."Created"'
+	 * @param string $format to be used, supported specifiers:
+	 * %Y = Year (four digits)
+	 * %m = Month (01..12)
+	 * %d = Day (01..31)
+	 * %H = Hour (00..23)
+	 * %i = Minutes (00..59)
+	 * %s = Seconds (00..59)
+	 * %U = unix timestamp, can only be used on it's own
+	 * @return string SQL datetime expression to query for a formatted datetime
+	 */
+	abstract function formattedDatetimeClause($date, $format);
+
+	/**
+	 * Function to return an SQL datetime expression that can be used with the adapter in use
+	 * used for querying a datetime addition
+	 * @param string $date, can be either 'now', literal datetime like '1973-10-14 10:30:00' or field name, e.g. '"SiteTree"."Created"'
+	 * @param string $interval to be added, use the format [sign][integer] [qualifier], e.g. -1 Day, +15 minutes, +1 YEAR
+	 * supported qualifiers:
+	 * - years
+	 * - months
+	 * - days
+	 * - hours
+	 * - minutes
+	 * - seconds
+	 * This includes the singular forms as well
+	 * @return string SQL datetime expression to query for a datetime (YYYY-MM-DD hh:mm:ss) which is the result of the addition
+	 */
+	abstract function datetimeIntervalClause($date, $interval);
+
+	/**
+	 * Function to return an SQL datetime expression that can be used with the adapter in use
+	 * used for querying a datetime substraction
+	 * @param string $date1, can be either 'now', literal datetime like '1973-10-14 10:30:00' or field name, e.g. '"SiteTree"."Created"'
+	 * @param string $date2 to be substracted of $date1, can be either 'now', literal datetime like '1973-10-14 10:30:00' or field name, e.g. '"SiteTree"."Created"'
+	 * @return string SQL datetime expression to query for the interval between $date1 and $date2 in seconds which is the result of the substraction
+	 */
+	abstract function datetimeDifferenceClause($date1, $date2);
+
 }
 
 /**
