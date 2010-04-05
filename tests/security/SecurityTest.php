@@ -247,6 +247,9 @@ class SecurityTest extends FunctionalTest {
 		$this->assertTrue(is_object($attempt));
 		$this->assertEquals($attempt->Status, 'Failure');
 		$this->assertEquals($attempt->Email, 'wronguser@silverstripe.com');
+		$this->assertNotNull(
+			$this->loginErrorMessage(), 'An invalid email returns a message.'
+		);
 	}
 	
 	function testSuccessfulLoginAttempts() {
