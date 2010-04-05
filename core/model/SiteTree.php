@@ -1328,8 +1328,6 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	//------------------------------------------------------------------------------------//
 
 	protected function onBeforeWrite() {
-		parent::onBeforeWrite();
-
 		// If Sort hasn't been set, make this page come after it's siblings
 		if(!$this->Sort) {
 			$parentID = ($this->ParentID) ? $this->ParentID : 0;
