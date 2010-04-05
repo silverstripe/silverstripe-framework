@@ -10,6 +10,10 @@ class DataObjectDecoratorTest extends SapphireTest {
 		'DataObjectDecoratorTest_MyObject',
 	);
 	
+	protected $requiredExtensions = array(
+		'DataObject' => array( 'DataObjectDecoratorTest_AppliedToDO' ),
+	);
+	
 	function testOneToManyAssociationWithDecorator() {
 		// Fails in RestfulServerTest
 		// Error: Object::__call() Method 'RelatedObjects' not found in class 'RestfulServerTest_Comment' 
@@ -141,6 +145,17 @@ class DataObjectDecoratorTest extends SapphireTest {
 		$this->assertNotNull($member->dbObject('Website'));
 		$this->assertType('Varchar', $member->dbObject('Website'));
 	}	
+	
+	function testDecoratorCanBeAppliedToDataObject() {
+		$do = new DataObject();
+		$mo = new DataObjectDecoratorTest_MyObject();
+
+		$this->assertTrue($do->hasMethod('testMethodApplied'));
+		$this->assertTrue($mo->hasMethod('testMethodApplied'));
+
+		$this->assertEquals("hello world", $mo->testMethodApplied());
+		$this->assertEquals("hello world", $do->testMethodApplied());
+	}
 }
 
 class DataObjectDecoratorTest_Member extends DataObject implements TestOnly {
@@ -284,6 +299,12 @@ class DataObjectDecoratorTest_Faves extends DataObjectDecorator implements TestO
 				'Faves' => 'Page'
 			)
 		);
+	}
+}
+
+class DataObjectDecoratorTest_AppliedToDO extends DataObjectDecorator implements TestOnly {
+	public function testMethodApplied() {
+		return "hello world";
 	}
 }
 
