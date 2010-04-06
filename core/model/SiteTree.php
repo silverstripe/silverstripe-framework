@@ -1328,6 +1328,8 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	//------------------------------------------------------------------------------------//
 
 	protected function onBeforeWrite() {
+		parent::onBeforeWrite();
+
 		// If Sort hasn't been set, make this page come after it's siblings
 		if(!$this->Sort) {
 			$parentID = ($this->ParentID) ? $this->ParentID : 0;
@@ -1376,9 +1378,6 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 			// This will have the affect of preserving the versioning
 			$this->migrateVersion($this->Version);
 		}
-
-
-		parent::onBeforeWrite();
 	}
 	
 	function syncLinkTracking() {
