@@ -237,7 +237,12 @@ class Security extends Controller {
 				return call_user_func(array($authenticator, 'get_login_form'), $this);
 			}
 		}
-
+		else {
+			if($authenticator = Authenticator::get_default_authenticator()) {
+				return call_user_func(array($authenticator, 'get_login_form'), $this);
+			}
+		}
+		
 		user_error('Passed invalid authentication method', E_USER_ERROR);
 	}
 
