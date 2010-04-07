@@ -5,7 +5,8 @@
  * It does all the specific checking for MySQLDatabase
  * to ensure that the configuration is setup correctly.
  * 
- * @package mssql
+ * @package sapphire
+ * @subpackage dev
  */
 class MySQLDatabaseConfigurationHelper implements DatabaseConfigurationHelper {
 
