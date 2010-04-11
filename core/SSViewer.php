@@ -121,7 +121,7 @@ class SSViewer {
 		
 		// flush template manifest cache if requested
 		if (isset($_GET['flush']) && $_GET['flush'] == 'all') {
-			if(Director::isDev() || Permission::check('ADMIN')) {
+			if(Director::isDev() || Director::is_cli() || Permission::check('ADMIN')) {
 				self::flush_template_cache();
 			} else {
 				return Security::permissionFailure(null, 'Please log in as an administrator to flush the template cache.');
