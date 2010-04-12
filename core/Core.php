@@ -155,7 +155,7 @@ require_once("core/Session.php");
 // Add after the "." path but before other paths (so that they take precedence over the PEAR 
 // include paths)
 set_include_path(str_replace('.' . PATH_SEPARATOR, '.' . PATH_SEPARATOR 
-	. BASE_PATH . '/sapphire/parsers'
+	. BASE_PATH . '/sapphire/parsers' . PATH_SEPARATOR
 	. BASE_PATH . '/sapphire/thirdparty' . PATH_SEPARATOR
 	, get_include_path())); 
 
