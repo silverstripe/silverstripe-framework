@@ -1375,7 +1375,8 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		
 		// Also write all VPs pointing here
 		$suffix = Versioned::current_stage() == 'Live' ? '_Live' : '';
-		foreach(DataObject::get('VirtualPage', "SiteTree$suffix.ID = SiteTree$suffix.ID AND CopyContentFromID = {$this->ID}") as $page) {
+		$virtualPages = DataObject::get('VirtualPage', "SiteTree$suffix.ID = SiteTree$suffix.ID AND CopyContentFromID = {$this->ID}");
+		if($virtualPages) foreach($virtualPages as $page) {
 			// $page->write() calls syncLinkTracking, which does all the hard work for us.
 			$page->write();
 		}
