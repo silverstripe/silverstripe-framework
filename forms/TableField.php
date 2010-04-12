@@ -298,6 +298,7 @@ class TableField extends TableListField {
 			}
 
 			// Update the internal source items cache
+			$this->value = null;
 			$items = $this->sourceItems();
 			
 			FormResponse::update_dom_id($this->id(), $this->FieldHolder());
