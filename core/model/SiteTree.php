@@ -1717,6 +1717,16 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 			)
 		);
 		
+		// Make page location fields read-only if the user doesn't have the appropriate permission
+		if(!Permission::check("SITETREE_REORGANISE")) {
+			$fields->makeFieldReadonly('ParentType');
+			if($this->ParentType == 'root') {
+				$fields->removeByName('ParentID');
+			} else {
+				$fields->makeFieldReadonly('ParentID');
+			}
+		}
+		
 		$viewersOptionsSource = array();
 		if($this->Parent()->ID || $this->CanViewType == 'Inherit') $viewersOptionsSource["Inherit"] = _t('SiteTree.INHERIT', "Inherit from parent page");
 		$viewersOptionsSource["Anyone"] = _t('SiteTree.ACCESSANYONE', "Anyone");
