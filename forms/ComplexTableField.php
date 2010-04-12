@@ -832,7 +832,7 @@ class ComplexTableField_ItemRequest extends RequestHandler {
 		$message = sprintf(
 			_t('ComplexTableField.SUCCESSEDIT', 'Saved %s %s %s'),
 			$dataObject->singular_name(),
-			'<a href="' . $this->Link() . '">"' . $dataObject->Title . '"</a>',
+			'<a href="' . $this->Link() . '">"' . htmlspecialchars($dataObject->Title, ENT_QUOTES) . '"</a>',
 			$closeLink
 		);
 		

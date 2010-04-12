@@ -323,8 +323,8 @@ class Group extends DataObject {
 	}
 	
 	public function getTreeTitle() {
-        if($this->hasMethod('alternateTreeTitle')) return $this->alternateTreeTitle();
-		else return $this->Title;
+	    if($this->hasMethod('alternateTreeTitle')) return $this->alternateTreeTitle();
+		else return htmlspecialchars($this->Title, ENT_QUOTES);
 	}
 	
 	/**
