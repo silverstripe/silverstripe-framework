@@ -107,7 +107,10 @@ HTML;
 	 * Changes this field to the readonly field.
 	 */
 	function performReadonlyTransformation() {
-		return new TreeMultiselectField_Readonly($this->name, $this->title, $this->sourceObject, $this->keyField, $this->labelField);
+		$field = new TreeMultiselectField_Readonly($this->name, $this->title, $this->sourceObject, $this->keyField, $this->labelField);
+		$field->addExtraClass($this->extraClass());
+		$field->setForm($this->form);
+		return $field;
 	}
 }
 
