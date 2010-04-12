@@ -99,7 +99,7 @@ class DropdownField extends FormField {
 						'selected' => $selected,
 						'value' => $value
 					),
-					$title
+					Convert::raw2xml($title)
 				);
 			}
 		}
