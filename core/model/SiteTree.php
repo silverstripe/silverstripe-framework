@@ -1375,7 +1375,14 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		
 		// Also write all VPs pointing here
 		$suffix = Versioned::current_stage() == 'Live' ? '_Live' : '';
-		$virtualPages = DataObject::get('VirtualPage', "SiteTree$suffix.ID = SiteTree$suffix.ID AND CopyContentFromID = {$this->ID}");
+
+		// This coupling to the subsites module is frustrating, but difficult to avoid.
+		if(class_exists('Subsite')) {
+			$virtualPages = Subsite::get_from_all_subsites('VirtualPage', "SiteTree$suffix.ID = SiteTree$suffix.ID AND CopyContentFromID = {$this->ID}");
+		} else {
+			$virtualPages = DataObject::get('VirtualPage', "SiteTree$suffix.ID = SiteTree$suffix.ID AND CopyContentFromID = {$this->ID}");
+		}
+		
 		if($virtualPages) foreach($virtualPages as $page) {
 			// $page->write() calls syncLinkTracking, which does all the hard work for us.
 			$page->write();
