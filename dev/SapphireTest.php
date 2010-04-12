@@ -569,11 +569,12 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 		while(!$dbname || $dbConn->databaseExists($dbname)) {
 			$dbname = 'tmpdb' . rand(1000000,9999999);
 		}
-		
+
 		$dbConn->selectDatabase($dbname);
 		$dbConn->createDatabase();
-		
-		singleton('SapphireTest')->resetDBSchema();
+
+		$st = new SapphireTest();
+		$st->resetDBSchema();
 		
 		return $dbname;
 	}
