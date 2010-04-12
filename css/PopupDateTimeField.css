@@ -9,10 +9,13 @@
 }
 
 .popupdatetime ul li .calendarpopup {
-	top: -0.7em;
+	top: 2em;
+	left: -1px;
+	
 	padding-top: 30px;
 }
 
 .popupdatetime ul li .dropdownpopup {
-	top: -0.5em;
+	top: 2em;
+	left: -1px;
 }
