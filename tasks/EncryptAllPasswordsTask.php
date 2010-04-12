@@ -12,7 +12,7 @@
  * @package sapphire
  * @subpackage tasks
  */
-class EncryptAllPasswordsTask extends DailyTask {
+class EncryptAllPasswordsTask extends BuildTask {
 	protected $title = 'Encrypt all passwords tasks';
 	
 	protected $description = 'Convert all plaintext passwords on the Member table to the default encryption/hashing algorithm. Note: This mainly applies to passwords in SilverStripe 2.1 or earlier, passwords in newer versions are hashed by default.';
@@ -25,7 +25,7 @@ class EncryptAllPasswordsTask extends DailyTask {
 		}
 	}
 	
-	public function run($request = null) {
+	public function run($request) {
 		$algo = Security::get_password_encryption_algorithm();
 		if($algo == 'none') {
 			$this->debugMessage('Password encryption disabled');
