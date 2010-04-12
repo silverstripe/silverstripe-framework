@@ -30,7 +30,7 @@ class DevelopmentAdmin extends Controller {
 		global $_FILE_TO_URL_MAPPING;
 		if(Director::is_cli()) {
 			if(isset($_FILE_TO_URL_MAPPING)) {
-				$fullPath = $testPath = $_SERVER['SCRIPT_FILENAME'];
+				$fullPath = $testPath = BASE_PATH;
 				while($testPath && $testPath != "/" && !preg_match('/^[A-Z]:\\\\$/', $testPath)) {
 					$matched = false;
 					if(isset($_FILE_TO_URL_MAPPING[$testPath])) {
