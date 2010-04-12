@@ -365,6 +365,43 @@ class SiteTreeTest extends SapphireTest {
 		// Can't edit a child of that page that has its permissions overridden
 		$this->assertFalse($product4->canEdit($editor));
 	}
+	
+	function testEditPermissionsOnDraftVsLive() {
+		// Create an inherit-permission page
+		$page = new Page();
+		$page->write();
+		$page->CanEditType = "Inherit";
+		$page->doPublish();
+		$pageID = $page->ID;
+		
+		// Lock down the site config
+		$sc = $page->SiteConfig;
+		$sc->CanEditType = 'OnlyTheseUsers';
+		$sc->EditorGroups()->add($this->idFromFixture('Group', 'admins'));
+		$sc->write();
+		
+		// Confirm that Member.editor can't edit the page
+		$this->objFromFixture('Member','editor')->logIn();
+		$this->assertFalse($page->canEdit());
+		
+		// Change the page to be editable by Group.editors, but do not publish
+		$this->objFromFixture('Member','admin')->logIn();
+		$page->CanEditType = 'OnlyTheseUsers';
+		$page->EditorGroups()->add($this->idFromFixture('Group', 'editors'));
+		$page->write();
+		
+		// Confirm that Member.editor can now edit the page
+		$this->objFromFixture('Member','editor')->logIn();
+		$this->assertTrue($page->canEdit());
+		
+		// Publish the changes to the page
+		$this->objFromFixture('Member','admin')->logIn();
+		$page->doPublish();
+		
+		// Confirm that Member.editor can still edit the page
+		$this->objFromFixture('Member','editor')->logIn();
+		$this->assertTrue($page->canEdit());
+	}
 
 	function testAuthorIDAndPublisherIDFilledOutOnPublish() {
 		// Ensure that we have a member ID who is doing all this work

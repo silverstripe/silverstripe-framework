@@ -983,10 +983,12 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 			// Get the groups that the given member belongs to
 			$groupIDs = DataObject::get_by_id('Member', $memberID)->Groups()->column("ID");
 			$SQL_groupList = implode(", ", $groupIDs);
-
-			$combinedStageResult = array();
 			
+			$combinedStageResult = array();
+
 			foreach(array('Stage', 'Live') as $stage) {
+				$result = array_fill_keys($ids, false);
+				
 				// Get the uninherited permissions
 				$uninheritedPermissions = Versioned::get_by_stage("SiteTree", $stage, "(\"CanEditType\" = 'LoggedInUsers' OR
 					(\"CanEditType\" = 'OnlyTheseUsers' AND \"SiteTree_EditorGroups\".\"SiteTreeID\" IS NOT NULL))
@@ -995,7 +997,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 					"LEFT JOIN \"SiteTree_EditorGroups\" 
 					ON \"SiteTree_EditorGroups\".\"SiteTreeID\" = \"SiteTree\".\"ID\"
 					AND \"SiteTree_EditorGroups\".\"GroupID\" IN ($SQL_groupList)");
-
+				
 				if($uninheritedPermissions) {
 					// Set all the relevant items in $result to true
 					$result = array_fill_keys($uninheritedPermissions->column('ID'), true) + $result;
@@ -1024,13 +1026,12 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 						}
 					}
 				}
+				
+				$combinedStageResult = $combinedStageResult + $result;
 			}
-
-			$combinedStageResult = $combinedStageResult + $result;
 		}
-
-		return isset($combinedStageResult) ? $combinedStageResult : array();
 		
+		return isset($combinedStageResult) ? $combinedStageResult : array();
 		
 		/*
 		// check for empty spec
