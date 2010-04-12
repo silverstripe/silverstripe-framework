@@ -111,7 +111,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 		$fixtureFile = eval("return {$className}::\$fixture_file;");
 		
 		// Set up fixture
-		if($fixtureFile || $this->usesDatabase) {
+		if($fixtureFile || $this->usesDatabase || !self::using_temp_db()) {
 			if(substr(DB::getConn()->currentDatabase(),0,5) != 'tmpdb') {
 				//echo "Re-creating temp database... ";
 				self::create_temp_db();
