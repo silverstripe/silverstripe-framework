@@ -66,6 +66,7 @@ DataObjectTest_SubTeam:
       DecoratedHasOneRelationship: =>DataObjectTest_Player.player1
    subteam3_with_empty_fields:
       Title: Subteam 3
+      
 DataObjectSetTest_TeamComment:
   comment1:
     Name: Joe
