@@ -13,6 +13,7 @@ class DataObjectSetTest extends SapphireTest {
 		'DataObjectTest_Team',
 		'DataObjectTest_SubTeam',
 		'DataObjectTest_Player',
+		'DataObjectSetTest_TeamComment'
 	);
 	
 	function testArrayAccessExists() {
