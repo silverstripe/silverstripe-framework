@@ -85,7 +85,7 @@ class i18nTest extends SapphireTest {
 		
 		$lang['en_US']['i18nTest_DataObject']['MyProperty'] = 'MyProperty';
 		$lang['de_DE']['i18nTest_DataObject']['MyProperty'] = 'Mein Attribut';
-
+	
 		$this->assertEquals(
 			$obj->fieldLabel('MyProperty'),
 			'Mein Attribut'
@@ -142,9 +142,9 @@ class i18nTest extends SapphireTest {
 		$lang['en_US']['i18nTestModule.ss']['LAYOUTTEMPLATENONAMESPACE'] = 'Layout Template no namespace';
 		$lang['en_US']['i18nTestModule']['SPRINTFNAMESPACE'] = 'My replacement: %s';
 		$lang['en_US']['i18nTestModule']['WITHNAMESPACE'] = 'Include Entity with Namespace';
-		$lang['en_US']['i18nTestModule.ss']['NONAMESPACE'] = 'Include Entity without Namespace';
+		$lang['en_US']['i18nTestModuleInclude.ss']['NONAMESPACE'] = 'Include Entity without Namespace';
 		$lang['en_US']['i18nTestModuleInclude.ss']['SPRINTFINCLUDENAMESPACE'] = 'My include replacement: %s';
-		$lang['en_US']['i18nTestModule.ss']['SPRINTFINCLUDENONAMESPACE'] = 'My include replacement no namespace: %s';
+		$lang['en_US']['i18nTestModuleInclude.ss']['SPRINTFINCLUDENONAMESPACE'] = 'My include replacement no namespace: %s';
 		$viewer = new SSViewer('i18nTestModule');
 		$parsedHtml = $viewer->process(new ArrayData(array('TestProperty' => 'TestPropertyValue')));
 		$this->assertContains(
@@ -163,9 +163,9 @@ class i18nTest extends SapphireTest {
 		$lang['de_DE']['i18nTestModule.ss']['LAYOUTTEMPLATENONAMESPACE'] = 'TRANS Layout Template no namespace';
 		$lang['de_DE']['i18nTestModule']['SPRINTFNAMESPACE'] = 'TRANS My replacement: %s';
 		$lang['de_DE']['i18nTestModule']['WITHNAMESPACE'] = 'TRANS Include Entity with Namespace';
-		$lang['de_DE']['i18nTestModule.ss']['NONAMESPACE'] = 'TRANS Include Entity without Namespace';
+		$lang['de_DE']['i18nTestModuleInclude.ss']['NONAMESPACE'] = 'TRANS Include Entity without Namespace';
 		$lang['de_DE']['i18nTestModuleInclude.ss']['SPRINTFINCLUDENAMESPACE'] = 'TRANS My include replacement: %s';
-		$lang['de_DE']['i18nTestModule.ss']['SPRINTFINCLUDENONAMESPACE'] = 'TRANS My include replacement no namespace: %s';
+		$lang['de_DE']['i18nTestModuleInclude.ss']['SPRINTFINCLUDENONAMESPACE'] = 'TRANS My include replacement no namespace: %s';
 		$viewer = new SSViewer('i18nTestModule');
 		$parsedHtml = $viewer->process(new ArrayData(array('TestProperty' => 'TestPropertyValue')));
 		$this->assertContains(
