@@ -1940,7 +1940,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 				if($this->ExistsOnLive) {
 					// "restore"
 					$actions->push(new FormAction('revert',_t('CMSMain.RESTORE','Restore')));
-					if($this->canDelete()) {
+					if($this->canDelete() && $this->canDeleteFromLive()) {
 						// "delete from live"
 						$actions->push(new FormAction('deletefromlive',_t('CMSMain.DELETEFP','Delete from the published site')));
 					}
