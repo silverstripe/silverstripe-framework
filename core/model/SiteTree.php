@@ -904,6 +904,14 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		// Normal case
 		return $this->canEdit($member);
 	}
+	
+	/**
+	 * Stub method to get the site config, provided so it's easy to override
+	 */
+	function getSiteConfig() {
+		if ($this->hasMethod('alternateSiteConfig')) return $this->alternateSiteConfig();
+		return SiteConfig::current_site_config();
+	}
 
 
 	/**

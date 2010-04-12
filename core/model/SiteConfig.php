@@ -53,7 +53,7 @@ class SiteConfig extends DataObject implements PermissionProvider {
 		$editorsOptionsSource["OnlyTheseUsers"] = _t('SiteTree.EDITONLYTHESE', "Only these people (choose from list)");
 		$editorsOptionsField->setSource($editorsOptionsSource);
 
-		if (!Permission::check('ADMIN') && !Permission::check('EDIT_SITECONFIG')) {
+		if (!Permission::check('EDIT_SITECONFIG')) {
 			$fields->makeFieldReadonly($viewersOptionsField);
 			$fields->makeFieldReadonly($viewerGroupsField);
 			$fields->makeFieldReadonly($editorsOptionsField);
