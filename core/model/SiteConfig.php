@@ -4,18 +4,21 @@
  * Sitewide configuration
  *
  * @author Tom Rix
+ * @package cms
  */
-class SiteConfig extends DataObject implements PermissionProvider {
+class SiteConfig extends DataObject {
 	static $db = array(
 		"Title" => "Varchar(255)",
 		"Tagline" => "Varchar(255)",
 		"CanViewType" => "Enum('Anyone, LoggedInUsers, OnlyTheseUsers', 'Anyone')",
-		"CanEditType" => "Enum('LoggedInUsers, OnlyTheseUsers', 'LoggedInUsers')"
+		"CanEditType" => "Enum('LoggedInUsers, OnlyTheseUsers', 'LoggedInUsers')",
+		"CanCreateTopLevelType" => "Enum('LoggedInUsers, OnlyTheseUsers', 'LoggedInUsers')",
 	);
 	
 	static $many_many = array(
 		"ViewerGroups" => "Group",
-		"EditorGroups" => "Group"
+		"EditorGroups" => "Group",
+		"CreateTopLevelGroups" => "Group"
 	);
 	
 	/**
@@ -28,16 +31,19 @@ class SiteConfig extends DataObject implements PermissionProvider {
 		$fields = new FieldSet(
 			new TabSet("Root",
 				new Tab('Main',
-					$titleField = new TextField("Title", "Title"),
-					$taglineField = new TextField("Tagline", "Tagline")
+					$titleField = new TextField("Title", _t('SiteConfig.SITETITLE', "Site title")),
+					$taglineField = new TextField("Tagline", _t('SiteConfig.SITETAGLINE', "Site Tagline/Slogan"))
 				),
 				new Tab('Access',
-					new HeaderField('WhoCanViewHeader', "Who can view pages on this site?", 2),
+					new HeaderField('WhoCanViewHeader', _t('SiteConfig.VIEWHEADER', "Who can view pages on this site?"), 2),
 					$viewersOptionsField = new OptionsetField("CanViewType"),
 					$viewerGroupsField = new TreeMultiselectField("ViewerGroups", _t('SiteTree.VIEWERGROUPS', "Viewer Groups")),
-					new HeaderField('WhoCanEditHeader', "Who can edit pages on this site?", 2),
+					new HeaderField('WhoCanEditHeader', _t('SiteConfig.EDITHEADER', "Who can edit pages on this site?"), 2),
 					$editorsOptionsField = new OptionsetField("CanEditType"),
-					$editorGroupsField = new TreeMultiselectField("EditorGroups", _t('SiteTree.EDITORGROUPS', "Editor Groups"))
+					$editorGroupsField = new TreeMultiselectField("EditorGroups", _t('SiteTree.EDITORGROUPS', "Editor Groups")),
+					new HeaderField('WhoCanCreateTopLevelHeader', _t('SiteConfig.TOPLEVELCREATE', "Who can create pages in the root of the site?"), 2),
+					$topLevelCreatorsOptionsField = new OptionsetField("CanCreateTopLevelType"),
+					$topLevelCreatorsGroupsField = new TreeMultiselectField("CreateTopLevelGroups", _t('SiteTree.TOPLEVELCREATORGROUPS', "Top level creators"))
 				)
 			)
 		);
@@ -52,12 +58,16 @@ class SiteConfig extends DataObject implements PermissionProvider {
 		$editorsOptionsSource["LoggedInUsers"] = _t('SiteTree.EDITANYONE', "Anyone who can log-in to the CMS");
 		$editorsOptionsSource["OnlyTheseUsers"] = _t('SiteTree.EDITONLYTHESE', "Only these people (choose from list)");
 		$editorsOptionsField->setSource($editorsOptionsSource);
+		
+		$topLevelCreatorsOptionsField->setSource($editorsOptionsSource);
 
 		if (!Permission::check('EDIT_SITECONFIG')) {
 			$fields->makeFieldReadonly($viewersOptionsField);
 			$fields->makeFieldReadonly($viewerGroupsField);
 			$fields->makeFieldReadonly($editorsOptionsField);
 			$fields->makeFieldReadonly($editorGroupsField);
+			$fields->makeFieldReadonly($topLevelCreatorsOptionsField);
+			$fields->makeFieldReadonly($topLevelCreatorsGroupsField);
 			$fields->makeFieldReadonly($taglineField);
 			$fields->makeFieldReadonly($titleField);
 		}
@@ -111,6 +121,11 @@ class SiteConfig extends DataObject implements PermissionProvider {
 		}
 	}
 	
+	/**
+	 * Make a default site config if there isn't on already
+	 *
+	 * @return void
+	 */
 	static function make_site_config() {
 		if(!DataObject::get_one('SiteConfig')){
 			$siteConfig = new SiteConfig();
@@ -120,6 +135,14 @@ class SiteConfig extends DataObject implements PermissionProvider {
 		}
 	}
 	
+	/**
+	 * Can a user view pages on this site? This method is only
+	 * called if a page is set to Inherit, but there is nothing
+	 * to inherit from.
+	 *
+	 * @param mixed $member 
+	 * @return boolean
+	 */
 	public function canView($member = null) {
 		if ($this->CanViewType == 'Anyone') return true;
 		
@@ -137,11 +160,19 @@ class SiteConfig extends DataObject implements PermissionProvider {
 		return false;
 	}
 	
+	/**
+	 * Can a user edit pages on this site? This method is only
+	 * called if a page is set to Inherit, but there is nothing
+	 * to inherit from.
+	 *
+	 * @param mixed $member 
+	 * @return boolean
+	 */
 	public function canEdit($member = null) {
 		if(!$member || !(is_a($member, 'Member')) || is_numeric($member)) {
 			$member = Member::currentUserID();
 		}
-				
+
 		// check for any logged-in users
 		if($this->CanEditType == 'LoggedInUsers' && $member) return true;
 		
@@ -149,6 +180,7 @@ class SiteConfig extends DataObject implements PermissionProvider {
 		if($member && is_numeric($member)) $member = DataObject::get_by_id('Member', $member);
 		if($this->CanEditType == 'OnlyTheseUsers' && $member && $member->inGroups($this->EditorGroups())) return true;
 		
+
 		return false;
 	}
 	
@@ -161,5 +193,27 @@ class SiteConfig extends DataObject implements PermissionProvider {
 				'sort' => 400
 			)
 		);
+	}
+	
+	/**
+	 * Can a user create pages in the root of this site?
+	 *
+	 * @param mixed $member 
+	 * @return boolean
+	 */
+	public function canCreateTopLevel($member = null) {
+		if(!$member || !(is_a($member, 'Member')) || is_numeric($member)) {
+			$member = Member::currentUserID();
+		}
+
+		// check for any logged-in users
+		if($this->CanCreateTopLevelType == 'LoggedInUsers' && $member) return true;
+		
+		// check for specific groups
+		if($member && is_numeric($member)) $member = DataObject::get_by_id('Member', $member);
+		if($this->CanCreateTopLevelType == 'OnlyTheseUsers' && $member && $member->inGroups($this->CreateTopLevelGroups())) return true;
+		
+
+		return false;
 	}
 }

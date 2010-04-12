@@ -23,6 +23,7 @@ div.TreeDropdownField span.items {
 	background-color: #fff;
 	margin:0;
 	font-size: 12px;
+	overflow:hidden;
 }
 
 div.TreeDropdownField div.tree_holder {

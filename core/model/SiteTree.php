@@ -630,6 +630,9 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	 *
 	 * @uses DataObjectDecorator->can()
 	 *
+	 * If a page is set to inherit, but has no parent, it inherits from
+	 * {@link SiteConfig}
+	 *
 	 * @param string $perm The permission to be checked, such as 'View'.
 	 * @param Member $member The member whose permissions need checking.
 	 *                       Defaults to the currently logged in user.

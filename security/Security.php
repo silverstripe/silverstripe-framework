@@ -150,7 +150,7 @@ class Security extends Controller {
 		if(Director::is_ajax()) {
 			$response = ($controller) ? $controller->getResponse() : new SS_HTTPResponse();
 			$response->setStatusCode(403);
-			$response->setBody('NOTLOGGEDIN:');
+			if(!Member::currentUser()) $response->setBody('NOTLOGGEDIN:');
 			return $response;
 		} else {
 			// Prepare the messageSet provided
