@@ -91,6 +91,7 @@ TimeBehaviour = {
 		if( this.selectTag.selectedIndex != null ) {
 			var timeValue = this.selectTag.options[ this.selectTag.selectedIndex ].value;
 			this.value = timeValue;
+			if(this.onchange) this.onchange();
 		}
 		this.close();
 	}
