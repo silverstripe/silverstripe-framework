@@ -316,7 +316,7 @@ class VirtualPage_Controller extends Page_Controller {
 	}
 	
 	/**
-	 * Also check the original objects' original controller for the method
+	 * Also check the original object's original controller for the method
 	 *
 	 * @param string $method 
 	 * @return bool 
@@ -347,7 +347,11 @@ class VirtualPage_Controller extends Page_Controller {
 			// if the exception isn't a 'no method' error, rethrow it
 			if ($e->getCode() !== 2175) throw $e;
 			$original = $this->copyContentFrom();
-			return call_user_func_array(array($original, $method), $args);
+			$originalClass = get_class($original);
+			if ($originalClass == 'SiteTree') $name = 'ContentController';
+			else $name = $originalClass."_Controller";
+			$controller = new $name($this->dataRecord->copyContentFrom());
+			return call_user_func_array(array($controller, $method), $args);
 		}
 	}
 }
