@@ -161,7 +161,7 @@ class PasswordEncryptor_PHPHash extends PasswordEncryptor {
  */
 class PasswordEncryptor_LegacyPHPHash extends PasswordEncryptor_PHPHash {
 	function encrypt($password, $salt = null, $member = null) {
-		$password = parent::encrypt($password . $salt, $member, $salt);
+		$password = parent::encrypt($password, $salt, $member);
 		
 		// Legacy fix: This shortening logic is producing unpredictable results.
 		// 
