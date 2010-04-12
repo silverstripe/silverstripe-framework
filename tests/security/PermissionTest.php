@@ -3,6 +3,16 @@
 class PermissionTest extends SapphireTest {
 	static $fixture_file = 'sapphire/tests/security/PermissionTest.yml';
 	
+	function testGetCodesGrouped() {
+		$codes = Permission::get_codes();
+		$this->assertArrayNotHasKey('SITETREE_VIEW_ALL', $codes);
+	}
+	
+	function testGetCodesUngrouped() {
+		$codes = Permission::get_codes(null, false);
+		$this->assertArrayHasKey('SITETREE_VIEW_ALL', $codes);
+	}
+		
 	function testDirectlyAppliedPermissions() {
 		$member = $this->objFromFixture('Member', 'author');
 		$this->assertTrue(Permission::checkMember($member, "SITETREE_VIEW_ALL"));
@@ -14,7 +24,7 @@ class PermissionTest extends SapphireTest {
 		$this->assertTrue(Permission::checkMember($member, "CMS_ACCESS_AssetAdmin"));
 		$this->assertFalse(Permission::checkMember($member, "CMS_ACCESS_SecurityAdmin"));
 	}
-
+	
 	function testPermissionAreInheritedFromMultipleRoles() {
 		$member = $this->objFromFixture('Member', 'access');
 		$this->assertTrue(Permission::checkMember($member, "CMS_ACCESS_CMSMain"));
@@ -33,7 +43,7 @@ class PermissionTest extends SapphireTest {
 		// Check that roles from parent groups are there
 		$this->assertTrue(Permission::checkMember($member, "CMS_ACCESS_CMSMain"));
 		$this->assertTrue(Permission::checkMember($member, "CMS_ACCESS_AssetAdmin"));
-
+	
 		// Check that permissions from parent groups are there
 		$this->assertTrue(Permission::checkMember($member, "SITETREE_VIEW_ALL"));
 		
