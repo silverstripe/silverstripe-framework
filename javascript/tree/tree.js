@@ -724,23 +724,10 @@ DraggableTreeNode.prototype = {
 		this.aTag._onclick_before_draggable = this.aTag.onclick;
 		this.aTag.baseClick = this.aTag.onclick;
 		
-		this.aTag.onclick = this.aTagOnClick.bindAsEventListener(this.aTag);
-		
 		if(this.options.onParentChanged) this.onParentChanged = this.options.onParentChanged;
 		if(this.options.onOrderChanged) this.onOrderChanged = this.options.onOrderChanged;
 	},
 	
-	aTagOnClick: function(event) {
-		//  This will be bound to the <a> tag, not the <li>.
-		if(this.treeNode.wasDragged) {
-			Event.stop(event); 
-			return false;
-		} else {
-			this.treeNode.anchorWasClicked = true;
-			this.treeNode.wasDragged = false;
-			return this.baseClick(event);
-		}
-	},
 	/**
 	 * Remove all the draggy stuff
 	 */
