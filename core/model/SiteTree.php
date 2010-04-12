@@ -1911,7 +1911,8 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		$linkedPages = DataObject::get("VirtualPage", "\"CopyContentFromID\" = $this->ID");
 		if($linkedPages) foreach($linkedPages as $page) {
 			$page->copyFrom($page->CopyContentFrom());
-			$page->doPublish();
+			$page->write();
+			if($page->ExistsOnLive) $page->doPublish();
 		}
 		
 		// Fix links that are different on staging vs live
