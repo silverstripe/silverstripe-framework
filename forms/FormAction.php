@@ -77,7 +77,8 @@ class FormAction extends FormField {
 				'class' => 'action' . ($this->extraClass() ? $this->extraClass() : ''),
 				'id' => $this->id(),
 				'type' => 'submit',
-				'name' => $this->action
+				'name' => $this->action,
+				'tabindex' => $this->getTabIndex()
 			);
 			if($this->isReadonly()) {
 				$attributes['disabled'] = 'disabled';
@@ -91,7 +92,8 @@ class FormAction extends FormField {
 				'id' => $this->id(),
 				'type' => 'submit',
 				'name' => $this->action,
-				'value' => ($this->dontEscape) ? $this->Title() : $this->attrTitle()
+				'value' => ($this->dontEscape) ? $this->Title() : $this->attrTitle(),
+				'tabindex' => $this->getTabIndex()
 			);
 			if($this->isReadonly()) {
 				$attributes['disabled'] = 'disabled';
