@@ -1366,6 +1366,12 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		// Need to flush cache to avoid outdated versionnumber references
 		$this->flushCache();
 		
+		// Need to mark pages linking to this one as broken
+		foreach($this->BackLinkTracking() as $page) {
+			// $page->write() calls syncLinkTracking, which does all the hard work for us.
+			$page->write();
+		}
+		
 		parent::onAfterDelete();
 	}
 	
