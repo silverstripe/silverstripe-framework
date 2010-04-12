@@ -40,8 +40,9 @@ class FormAction extends FormField {
 	 */
 	function __construct($action, $title = "", $form = null, $extraData = null, $extraClass = '') {
 		$this->extraData = $extraData;
-		$this->extraClass = ' '.$extraClass;
+		$this->addExtraClass($extraClass); 
 		$this->action = "action_$action";
+		
 		parent::__construct($this->action, $title, null, $form);
 	}
 	
