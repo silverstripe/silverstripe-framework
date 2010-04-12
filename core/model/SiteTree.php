@@ -1587,7 +1587,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 					$tabMain = new Tab('Main',
 						new TextField("Title", $this->fieldLabel('Title')),
 						new TextField("MenuTitle", $this->fieldLabel('MenuTitle')),
-						new HtmlEditorField("Content", _t('SiteTree.HTMLEDITORTITLE', "Content", PR_MEDIUM, 'HTML editor title')),
+						new HtmlEditorField("Content", _t('SiteTree.HTMLEDITORTITLE', "Content", PR_MEDIUM, 'HTML editor title'))
 					),
 					$tabMeta = new Tab('Metadata',
 						new FieldGroup(_t('SiteTree.URL', "URL"),
