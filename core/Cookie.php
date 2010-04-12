@@ -22,7 +22,11 @@ class Cookie extends Object {
 		if(!headers_sent($file, $line)) {
 			$expiry = $expiryDays > 0 ? time()+(86400*$expiryDays) : 0;
 			$path = ($path) ? $path : Director::baseURL();
-			setcookie($name, $value, $expiry, $path, $domain, $secure, $httpOnly);
+			// Versions of PHP prior to 5.2 do not support the $httpOnly value
+			if(version_compare(phpversion(), 5.2, '<'))
+				setcookie($name, $value, $expiry, $path, $domain, $secure);
+			else
+				setcookie($name, $value, $expiry, $path, $domain, $secure, $httpOnly);
 		} else {
 			if(self::$report_errors) user_error("Cookie '$name' can't be set. The site started outputting was content at line $line in $file", E_USER_WARNING);
 		}
