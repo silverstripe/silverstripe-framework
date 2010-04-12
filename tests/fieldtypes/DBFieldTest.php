@@ -10,10 +10,33 @@
 class DBFieldTest extends SapphireTest {
 	
 	/**
+	 * Test the nullValue() method on DBField.
+	 */
+	function testNullValue() {
+		/* Float and Double use 0 for "null" value representation */
+		$this->assertEquals(0, singleton('Float')->nullValue());
+		$this->assertEquals(0, singleton('Double')->nullValue());
+	}
+	
+	/**
 	 * Test the prepValueForDB() method on DBField.
 	 */
 	function testPrepValueForDB() {
 		
+		/* Float behaviour, asserting we have 0 */
+		$this->assertEquals('0', singleton('Float')->prepValueForDB(0));
+		$this->assertEquals('0', singleton('Float')->prepValueForDB(null));
+		$this->assertEquals('0', singleton('Float')->prepValueForDB(false));
+		$this->assertEquals('0', singleton('Float')->prepValueForDB(''));
+		$this->assertEquals('0', singleton('Float')->prepValueForDB('0'));
+
+		/* Double behaviour, asserting we have 0 */
+		$this->assertEquals('0', singleton('Double')->prepValueForDB(0));
+		$this->assertEquals('0', singleton('Double')->prepValueForDB(null));
+		$this->assertEquals('0', singleton('Double')->prepValueForDB(false));
+		$this->assertEquals('0', singleton('Double')->prepValueForDB(''));
+		$this->assertEquals('0', singleton('Double')->prepValueForDB('0'));
+
 		/* Integer behaviour, asserting we have 0 */
 		$this->assertEquals('0', singleton('Int')->prepValueForDB(0));
 		$this->assertEquals('0', singleton('Int')->prepValueForDB(null));
