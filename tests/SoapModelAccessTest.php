@@ -12,6 +12,11 @@ class SoapModelAccessTest extends SapphireTest {
 	
 	static $fixture_file = 'sapphire/tests/SoapModelAccessTest.yml';
 
+	protected $extraDataObjects = array(
+		'SoapModelAccessTest_Comment',
+		'SoapModelAccessTest_Page',
+	);
+
 	public function getTestSoapConnection() {
 		// We can't actually test the SOAP server itself because there's not currently a way of putting it into "test mode"
 		return new SOAPModelAccess();

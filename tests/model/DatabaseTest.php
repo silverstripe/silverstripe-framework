@@ -4,6 +4,10 @@
  * @subpackage Testing
  */
 class DatabaseTest extends SapphireTest {
+
+	protected $extraDataObjects = array(
+		'DatabaseTest_MyObject',
+	);
 	
 	protected $usesDatabase = true;
 	
@@ -21,9 +25,7 @@ class DatabaseTest extends SapphireTest {
 			'Field is renamed to _obsolete_<fieldname> through dontRequireField()'
 		);
 		
-		// tested schema updates, so need to rebuild the database
-		self::kill_temp_db();
-		self::create_temp_db();
+		$this->resetDBSchema(true);
 	}
 	
 	function testRenameField() {
@@ -41,10 +43,8 @@ class DatabaseTest extends SapphireTest {
 			$conn->fieldList('DatabaseTest_MyObject'),
 			'Old fieldname isnt preserved through renameField()'
 		);
-		
-		// tested schema updates, so need to rebuild the database
-		self::kill_temp_db();
-		self::create_temp_db();
+
+		$this->resetDBSchema(true);
 	}
 	
 	function testMySQLCreateTableOptions() {

@@ -4,6 +4,12 @@
  * @subpackage tests
  */
 class CompositeDBFieldTest extends SapphireTest {
+
+	protected $extraDataObjects = array(
+		'CompositeDBFieldTest_DataObject',
+		'SubclassedDBFieldObject',
+	);
+
 	function testHasDatabaseFieldOnDataObject() {
 		$obj = singleton('CompositeDBFieldTest_DataObject');
 		

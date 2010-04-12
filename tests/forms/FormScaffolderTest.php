@@ -10,6 +10,13 @@
 class FormScaffolderTest extends SapphireTest {
 	
 	static $fixture_file = 'sapphire/tests/forms/FormScaffolderTest.yml';
+
+	protected $extraDataObjects = array(
+		'FormScaffolderTest_Article',
+		'FormScaffolderTest_Tag',
+		'FormScaffolderTest_Author',
+	);
+	
 	
 	function testGetCMSFieldsSingleton() {
 		$fields = singleton('FormScaffolderTest_Article')->getCMSFields();

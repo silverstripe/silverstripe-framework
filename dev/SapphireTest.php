@@ -60,6 +60,13 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	);
 	
 	/**
+	 * By default, the test database won't contain any DataObjects that have the interface TestOnly.
+	 * This variable lets you define additional TestOnly DataObjects to set up for this test.
+	 * Set it to an array of DataObject subclass names.
+	 */
+	protected $extraDataObjects = array();
+	
+	/**
 	 * We need to disabling backing up of globals to avoid overriding
 	 * the few globals SilverStripe relies on, like $lang for the i18n subsystem.
 	 * 
@@ -174,15 +181,8 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 		}
 		
 		// If we have made changes to the extensions present, then migrate the database schema.
-		if($this->extensionsToReapply || $this->extensionsToRemove) {
-			// clear singletons, they're caching old extension info which is used in DatabaseAdmin->doBuild()
-			global $_SINGLETONS;
-			$_SINGLETONS = array();
-			
-			// rebuild the db schema
-			$dbadmin = new DatabaseAdmin();
-			$dbadmin->doBuild(true, false, true);
-			singleton('DataObject')->flushCache();
+		if($this->extensionsToReapply || $this->extensionsToRemove || $this->extraDataObjects) {
+			$this->resetDBSchema(true);
 		}
 		// clear singletons, they're caching old extension info 
 		// which is used in DatabaseAdmin->doBuild()
@@ -209,14 +209,10 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 					Object::add_extension($class, $extension);
 				}
 			}
-			
-			// clear singletons, they're caching old extension info which is used in DatabaseAdmin->doBuild()
-			global $_SINGLETONS;
-			$_SINGLETONS = array();
-			
-			// rebuild the db schema
-			$dbadmin = new DatabaseAdmin();
-			$dbadmin->doBuild(true, false, true);
+		}
+		
+		if($this->extensionsToReapply || $this->extensionsToRemove || $this->extraDataObjects) {
+			$this->resetDBSchema();
 		}
 	}
 	
@@ -576,9 +572,8 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 		
 		$dbConn->selectDatabase($dbname);
 		$dbConn->createDatabase();
-
-		$dbadmin = new DatabaseAdmin();
-		$dbadmin->doBuild(true, false, true);
+		
+		singleton('SapphireTest')->resetDBSchema();
 		
 		return $dbname;
 	}
@@ -590,6 +585,46 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 				echo "<li>Dropped databse \"$dbName\"\n";
 				flush();
 			}
+		}
+	}
+	
+	/**
+	 * Reset the testing database's schema.
+	 * @param $includeExtraDataObjects If true, the extraDataObjects tables will also be included
+	 */
+	function resetDBSchema($includeExtraDataObjects = false) {
+		if(self::using_temp_db()) {
+			// clear singletons, they're caching old extension info which is used in DatabaseAdmin->doBuild()
+			global $_SINGLETONS;
+			$_SINGLETONS = array();
+
+			$dataClasses = ClassInfo::subclassesFor('DataObject');
+			array_shift($dataClasses);
+
+			$conn = DB::getConn();
+			$conn->beginSchemaUpdate();
+			DB::quiet();
+
+			foreach($dataClasses as $dataClass) {
+				// Check if class exists before trying to instantiate - this sidesteps any manifest weirdness
+				if(class_exists($dataClass)) {
+					$SNG = singleton($dataClass);
+					if(!($SNG instanceof TestOnly)) $SNG->requireTable();
+				}
+			}
+
+			// If we have additional dataobjects which need schema, do so here:
+			if($includeExtraDataObjects && $this->extraDataObjects) {
+				foreach($this->extraDataObjects as $dataClass) {
+					$SNG = singleton($dataClass);
+					if(singleton($dataClass) instanceof DataObject) $SNG->requireTable();
+				}
+			}
+
+			$conn->endSchemaUpdate();
+
+			ClassInfo::reset_db_cache();
+			singleton('DataObject')->flushCache();
 		}
 	}
 	

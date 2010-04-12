@@ -6,6 +6,11 @@
 class FormTest extends FunctionalTest {
 	
 	static $fixture_file = 'sapphire/tests/forms/FormTest.yml';
+
+	protected $extraDataObjects = array(
+		'FormTest_Player',
+		'FormTest_Team',
+	);
 	
 	public function testLoadDataFromRequest() {
 		$form = new Form(

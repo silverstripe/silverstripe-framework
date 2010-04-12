@@ -2,6 +2,10 @@
 
 class VersionedTest extends SapphireTest {
 	static $fixture_file = 'sapphire/tests/model/VersionedTest.yml';
+
+	protected $extraDataObjects = array(
+		'VersionedTest_DataObject',
+	);
 	
 	function testForceChangeUpdatesVersion() {
 		$page = $this->objFromFixture('Page', 'page3');
@@ -52,7 +56,7 @@ class VersionedTest extends SapphireTest {
 
 }
 
-class VersionedTest_DataObject extends DataObject {
+class VersionedTest_DataObject extends DataObject implements TestOnly {
 	static $db = array(
 		"Name" => "Varchar",
 	);
@@ -62,7 +66,7 @@ class VersionedTest_DataObject extends DataObject {
 	);
 }
 
-class VersionedTest_Subclass extends VersionedTest_DataObject {
+class VersionedTest_Subclass extends VersionedTest_DataObject implements TestOnly {
 	static $db = array(
 		"ExtraField" => "Varchar",
 	);

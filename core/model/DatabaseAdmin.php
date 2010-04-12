@@ -225,6 +225,7 @@ class DatabaseAdmin extends Controller {
 		}
 		
 		if(!$quiet) echo "<p>Database build completed!</p>";
+		ClassInfo::reset_db_cache();
 	}
 	
 	/**

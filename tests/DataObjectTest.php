@@ -7,6 +7,17 @@ class DataObjectTest extends SapphireTest {
 	
 	static $fixture_file = 'sapphire/tests/DataObjectTest.yml';
 
+	protected $extraDataObjects = array(
+		'DataObjectTest_Team',
+		'DataObjectTest_Fixture',
+		'DataObjectTest_SubTeam',
+		'OtherSubclassWithSameField',
+		'DataObjectTest_FieldlessTable',
+		'DataObjectTest_FieldlessSubTable',
+		'DataObjectTest_ValidatedObject',
+		'DataObjectTest_Player',
+	);
+
 	/**
 	 * Test deletion of DataObjects
 	 *   - Deleting using delete() on the DataObject
@@ -949,7 +960,7 @@ class DataObjectTest_SubTeam extends DataObjectTest_Team implements TestOnly {
 		'SubclassDatabaseField' => 'Varchar'
 	);
 }
-class OtherSubclassWithSameField extends DataObjectTest_Team {
+class OtherSubclassWithSameField extends DataObjectTest_Team implements TestOnly {
 	static $db = array(
 		'SubclassDatabaseField' => 'Varchar',
 	);

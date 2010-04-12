@@ -8,6 +8,11 @@
 class TranslatableTest extends FunctionalTest {
 	
 	static $fixture_file = 'sapphire/tests/model/TranslatableTest.yml';
+
+	protected $extraDataObjects = array(
+		'TranslatableTest_DataObject',
+		'TranslatableTest_Page',
+	);
 	
 	protected $requiredExtensions = array(
 		'SiteTree' => array('Translatable'),

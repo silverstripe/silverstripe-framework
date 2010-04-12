@@ -38,12 +38,12 @@ class CliTestReporter extends SapphireTestReporter {
 		// Use sake dev/tests/all --showslow to show slow tests
 		if((isset($_GET['args']) && is_array($_GET['args']) && in_array('--showslow', $_GET['args'])) || isset($_GET['showslow'])) {
 			$avgSpeed = round(array_sum($this->testSpeeds) / count($this->testSpeeds), 3);
-			echo "Slow tests (more than twice the average $avgSpeed seconds):\n";
+			echo "Slow tests (more than the average $avgSpeed seconds):\n";
 
 			arsort($this->testSpeeds);
 			foreach($this->testSpeeds as $k => $v) {
 				// Ignore below-average speeds
-				if($v < $avgSpeed*2) break;
+				if($v < $avgSpeed) break;
 
 				echo " - $k: " . round($v,3) . "\n";
 			}

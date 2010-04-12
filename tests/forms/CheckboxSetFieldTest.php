@@ -4,8 +4,12 @@
  * @subpackage tests
  */
 class CheckboxSetFieldTest extends SapphireTest {
-	
 	static $fixture_file = 'sapphire/tests/forms/CheckboxSetFieldTest.yml';
+
+	protected $extraDataObjects = array(
+		'CheckboxSetFieldTest_Article',
+		'CheckboxSetFieldTest_Tag',
+	);
 	
 	function testSetDefaultItems() {
 		$f = new CheckboxSetField(

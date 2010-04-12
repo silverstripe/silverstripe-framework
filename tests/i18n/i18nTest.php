@@ -17,6 +17,11 @@ class i18nTest extends SapphireTest {
 	 * /i18ntestmodule which contains some files with _t() calls.
 	 */
 	protected $alternateBasePath;
+
+	protected $extraDataObjects = array(
+		'i18nTest_DataObject'
+	);
+
 	
 	function setUp() {
 		parent::setUp();
