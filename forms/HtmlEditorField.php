@@ -117,16 +117,24 @@ class HtmlEditorField extends TextareaField {
 			$width  = $img->getAttribute('width');
 			$height = $img->getAttribute('height');
 			
-			if($width && $height && ($width != $image->getWidth() || $height != $image->getHeight())) {
-				$img->setAttribute('src', $image->ResizedImage($width, $height)->getRelativePath());
+			if($image){
+				if($width && $height && ($width != $image->getWidth() || $height != $image->getHeight())) {
+					//Make sure that the resized image actually returns an image:
+					$resized=$image->ResizedImage($width, $height);
+					if($resized)
+						$img->setAttribute('src', $resized->getRelativePath());
+				}
 			}
 			
 			// Add default empty title & alt attributes.
 			if(!$img->getAttribute('alt')) $img->setAttribute('alt', '');
 			if(!$img->getAttribute('title')) $img->setAttribute('title', '');
 			
-			// Add to the tracked files.
-			$linkedFiles[] = $image->ID;
+			//If the src attribute is not set, then we won't add this to the list:
+			if($img->getAttribute('src')){
+				// Add to the tracked files.
+				$linkedFiles[] = $image->ID;
+			}
 		}
 		
 		// Save file & link tracking data.
