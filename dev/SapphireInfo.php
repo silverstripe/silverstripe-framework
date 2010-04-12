@@ -17,7 +17,7 @@ class SapphireInfo extends Controller {
 	}
 	
 	function Version() {
-		$sapphireVersionFile = file_get_contents('../sapphire/silverstripe_version');
+		$sapphireVersionFile = file_get_contents(BASE_PATH . '/sapphire/silverstripe_version');
 
 		if(strstr($sapphireVersionFile, "/sapphire/trunk")) {
 			$sapphireVersion = "trunk";

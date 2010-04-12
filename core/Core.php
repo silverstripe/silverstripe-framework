@@ -155,23 +155,25 @@ increase_memory_limit_to('64M');
 ///////////////////////////////////////////////////////////////////////////////
 // INCLUDES
 
+/**
+ * Add sapphire/parsers and sapphire/thirdparty include paths, as well as adding a fixed reference
+ * to BASEPATH/sapphrie in case we chdir()
+ */
+
+// Add after the "." path but before other paths (so that they take precedence over the PEAR 
+// include paths)
+set_include_path(str_replace('.' . PATH_SEPARATOR, '.' . PATH_SEPARATOR 
+	. BASE_PATH . '/sapphire' . PATH_SEPARATOR
+	. BASE_PATH . '/sapphire/parsers' . PATH_SEPARATOR
+	. BASE_PATH . '/sapphire/thirdparty' . PATH_SEPARATOR
+	, get_include_path())); 
+
 require_once("core/ManifestBuilder.php");
 require_once("core/ClassInfo.php");
 require_once('core/Object.php');
 require_once('core/control/Director.php');
 require_once('filesystem/Filesystem.php');
 require_once("core/Session.php");
-
-/**
- * Add sapphire/parsers and sapphire/thirdparty include paths
- */
-
-// Add after the "." path but before other paths (so that they take precedence over the PEAR 
-// include paths)
-set_include_path(str_replace('.' . PATH_SEPARATOR, '.' . PATH_SEPARATOR 
-	. BASE_PATH . '/sapphire/parsers' . PATH_SEPARATOR
-	. BASE_PATH . '/sapphire/thirdparty' . PATH_SEPARATOR
-	, get_include_path())); 
 
 ///////////////////////////////////////////////////////////////////////////////
 // MANIFEST

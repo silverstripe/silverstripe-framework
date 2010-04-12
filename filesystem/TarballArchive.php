@@ -22,7 +22,8 @@ class TarballArchive extends Archive {
 	
 	function listing() {
 		// Call tar on the command line to get the info we need
-		$command = "tar -tv{$this->compressionModifiers}f ../$this->filename";
+		$base = BASE_PATH;
+		$command = "tar -tv{$this->compressionModifiers}f $base/$this->filename";
 		$consoleList = `$command`;
 		
 		$listing = array();

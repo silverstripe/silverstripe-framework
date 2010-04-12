@@ -98,5 +98,5 @@ if(defined('SS_USE_BASIC_AUTH') && SS_USE_BASIC_AUTH) {
 }
 
 if(defined('SS_ERROR_LOG')) {
-	SS_Log::add_writer(new SS_LogFileWriter('../' . SS_ERROR_LOG), SS_Log::WARN, '<=');
+	SS_Log::add_writer(new SS_LogFileWriter(BASE_PATH . '/' . SS_ERROR_LOG), SS_Log::WARN, '<=');
 }
