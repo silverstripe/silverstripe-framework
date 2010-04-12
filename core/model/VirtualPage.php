@@ -62,6 +62,14 @@ class VirtualPage extends Page {
 	 * We can only publish the page if there is a published source page
 	 */
 	public function canPublish($member = null) {
+		return $this->isPublishable() && parent::canPublish($member);
+	}
+	
+	/**
+	 * Returns true if is page is publishable by anyone at all
+	 * Return false if the source page isn't published yet.
+	 */
+	public function isPublishable() {
 		// No source
 		if(!$this->CopyContentFrom()) {
 			return false;
@@ -72,8 +80,8 @@ class VirtualPage extends Page {
 			return false;
 		}
 		
-		// Default behaviour
-		return parent::canPublish($member);
+		// Default - publishable
+		return true;
 	}
 		
 	/**
