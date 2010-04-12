@@ -171,6 +171,9 @@ abstract class SS_Database {
 		$this->schemaUpdateTransaction = array();
 	}
 	
+	/**
+	 * Completes a schema-updated transaction, executing all the schema chagnes.
+	 */
 	function endSchemaUpdate() {
 		foreach($this->schemaUpdateTransaction as $tableName => $changes) {
 			switch($changes['command']) {
@@ -185,6 +188,20 @@ abstract class SS_Database {
 			}
 		}
 		$this->schemaUpdateTransaction = null;
+	}
+
+	/**
+	 * Cancels the schema updates requested after a beginSchemaUpdate() call.
+	 */
+	function cancelSchemaUpdate() {
+		$this->schemaUpdateTransaction = null;
+	}
+
+	/**
+	 * Returns true if schema modifications were requested after a beginSchemaUpdate() call.
+	 */
+	function doesSchemaNeedUpdating() {
+		return (bool)$this->schemaUpdateTransaction;
 	}
 	
 	// Transactional schema altering functions - they don't do anyhting except for update schemaUpdateTransaction
