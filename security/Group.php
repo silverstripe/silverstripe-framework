@@ -35,6 +35,19 @@ class Group extends DataObject {
 		"Hierarchy",
 	);
 	
+	function getAllChildren() {
+		$doSet = new DataObjectSet();
+
+		if ($children = DataObject::get('Group', 'ParentID = '.$this->ID)) {
+			foreach($children as $child) {
+				$doSet->push($child);
+				$doSet->merge($child->getAllChildren());
+			}
+		}
+		
+		return $doSet;
+	}
+	
 	/**
 	 * Caution: Only call on instances, not through a singleton.
 	 *
