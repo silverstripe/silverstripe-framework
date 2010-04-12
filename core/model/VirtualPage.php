@@ -59,6 +59,24 @@ class VirtualPage extends Page {
 	}
 	
 	/**
+	 * We can only publish the page if there is a published source page
+	 */
+	public function canPublish($member = null) {
+		// No source
+		if(!$this->CopyContentFrom()) {
+			return false;
+		}
+		
+		// Unpublished source
+		if(!Versioned::get_versionnumber_by_stage('SiteTree', 'Live', $this->CopyContentFromID)) {
+			return false;
+		}
+		
+		// Default behaviour
+		return parent::canPublish($member);
+	}
+		
+	/**
 	 * Generate the CMS fields from the fields from the original page.
 	 */
 	function getCMSFields($cms = null) {
@@ -106,19 +124,25 @@ class VirtualPage extends Page {
 	 * We have to change it to copy all the content from the original page first.
 	 */
 	function onBeforeWrite() {
-		// Don't do this stuff when we're publishing
-		if(!$this->extension_instances['Versioned']->migratingVersion) {
-	 		if(
-				$this->isChanged('CopyContentFromID')
-	 			&& $this->CopyContentFromID != 0 
-				&& $this instanceof VirtualPage
-			) {
-				$source = DataObject::get_one("SiteTree",sprintf('"SiteTree"."ID" = %d', $this->CopyContentFromID));
-				if($source) {
-					$this->copyFrom($source, false);
-					$this->URLSegment = $source->URLSegment . '-' . $this->ID;
-				}
-			}
+		// On regular write, this will copy from published source.  This happens on every publish
+		if($this->extension_instances['Versioned']->migratingVersion
+			&& Versioned::current_stage() == 'Live') {
+			$performCopyFrom = true;
+
+		// On regular write, this will copy from draft source.  This is only executed when the source
+		// page changeds
+		} else {
+			$performCopyFrom = $this->isChanged('CopyContentFromID') && $this->CopyContentFromID != 0;
+		}
+		
+		// On publish, this will copy from published source
+ 		if($performCopyFrom && $this instanceof VirtualPage) {
+			// This flush is needed because the get_one cache doesn't respect site version :-(
+			singleton('SiteTree')->flushCache();
+			$source = DataObject::get_one("SiteTree",sprintf('"SiteTree"."ID" = %d', $this->CopyContentFromID));
+			// Leave the updating of image tracking until after write, in case its a new record
+			$this->copyFrom($source, false);
+			$this->URLSegment = $source->URLSegment . '-' . $this->ID;
 		}
 		
 		parent::onBeforeWrite();
