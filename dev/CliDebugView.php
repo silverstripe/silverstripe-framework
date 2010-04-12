@@ -49,8 +49,9 @@ class CliDebugView extends DebugView {
 	/**
 	 * Write a backtrace
 	 */
-	function writeTrace() {
-		SS_Backtrace::backtrace();
+	function writeTrace($trace = null) {
+		echo "Trace\n=====\n";
+		echo SS_Backtrace::get_rendered_backtrace($trace ? $trace : debug_backtrace(), true);
 	}
 
 	/**
