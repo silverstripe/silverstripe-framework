@@ -124,6 +124,22 @@ class Date extends DBField {
 		if($this->value) return date('r', strtotime($this->value));
 	}
 	
+	function Rfc3339() {
+		$timestamp = ($this->value) ? strtotime($this->value) : false;
+		if(!$timestamp) return false;
+		
+		$date = date('Y-m-d\TH:i:s', $timestamp);
+		
+		$matches = array();
+		if(preg_match('/^([\-+])(\d{2})(\d{2})$/', date('O', $timestamp), $matches)) {
+			$date .= $matches[1].$matches[2].':'.$matches[3];
+		} else {
+			$date .= 'Z';
+		}
+		
+		return $date;
+	}
+	
 	/**
 	 * Returns the number of seconds/minutes/hours/days or months since the timestamp
 	 */
