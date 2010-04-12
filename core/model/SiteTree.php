@@ -1485,14 +1485,18 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 			// Published site
 			$published = DB::query("SELECT * FROM  \"SiteTree_Live\" WHERE \"ID\" = $this->ID")->record();
 			$origPublished = $published;
-			$published[$fieldName] = str_replace($old, $new, $published[$fieldName], $numReplaced);
-			if($numReplaced) {
-				DB::query("UPDATE \"SiteTree_Live\" SET \"$fieldName\" = '" 
-					. Convert::raw2sql($published[$fieldName]) . "' WHERE \"ID\" = $this->ID");
+			
+			// TODO: This doesn't work for HTMLText fields on other tables.
+			if(isset($published[$fieldName])) {
+				$published[$fieldName] = str_replace($old, $new, $published[$fieldName], $numReplaced);
+				if($numReplaced) {
+					DB::query("UPDATE \"SiteTree_Live\" SET \"$fieldName\" = '" 
+						. Convert::raw2sql($published[$fieldName]) . "' WHERE \"ID\" = $this->ID");
 
-				$publishedClass = $origPublished['ClassName'];
-				$origPublishedObj = new $publishedClass($origPublished);
-				$this->extend('onRenameLinkedAsset', $origPublishedObj);
+					$publishedClass = $origPublished['ClassName'];
+					$origPublishedObj = new $publishedClass($origPublished);
+					$this->extend('onRenameLinkedAsset', $origPublishedObj);
+				}
 			}
 		}
 	}
