@@ -95,7 +95,7 @@ ComplexTableField.prototype = {
 				var table = Event.findElement(e,"table");
 				if(Event.element(e).nodeName == "IMG") {
 					link = Event.findElement(e,"a");
-					popupLink = link.href+"?ajax=1";
+					popupLink = link.href + (link.href.match(/\?/) ? "&ajax=1" : "?ajax=1");
 				} else {
 					el = Event.findElement(e,"tr");
 					var link = $$("a",el)[0];

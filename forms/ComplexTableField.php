@@ -354,7 +354,7 @@ JS;
 
 
 	function AddLink() {
-		return $this->Link() . '/add';
+		return Controller::join_links($this->Link(), 'add');
 	}
 
 	/**
@@ -390,16 +390,18 @@ JS;
 	}
 
 	/**
-	 * Return the record in which the CTF resides
+	 * Return the record in which the CTF resides, if it exists.
 	 */
 	function getParentRecord() {
 		if($this->form && $record = $this->form->getRecord()) {
 			return $record;
 		} else {
-			if($this->sourceID()) {
-				$parentClass = DataObject::get_by_id($this->getParentClass(), $this->sourceID());
-			} else {
-				$parentClass = singleton($this->getParentClass());
+			$parentID = (int)$this->sourceID();
+			$parentClass = $this->getParentClass();
+			
+			if($parentClass) {
+				if($parentID) return DataObject::get_by_id($parentClass, $parentID);
+				else return singleton($parentClass);
 			}
 		}
 	}
@@ -660,10 +662,12 @@ JS;
 			_t('ComplexTableField.CLOSEPOPUP', 'Close Popup')
 		);
 		
+		$editLink = Controller::join_links($this->Link(), 'item/' . $childData->ID . '/edit');
+		
 		$message = sprintf(
 			_t('ComplexTableField.SUCCESSADD', 'Added %s %s %s'),
 			$childData->singular_name(),
-			'<a href="' . $this->Link() . '/item/' . $childData->ID . '/edit">' . $childData->Title . '</a>',
+			'<a href="' . $editLink . '">' . $childData->Title . '</a>',
 			$closeLink
 		);
 		
@@ -1007,15 +1011,15 @@ class ComplexTableField_Item extends TableListField_Item {
 	}
 
 	function EditLink() {
-		return $this->Link() . "/edit";
+		return Controller::join_links($this->Link(), "edit");
 	}
 
 	function ShowLink() {
-		return $this->Link() . "/show";
+		return Controller::join_links($this->Link(), "show");
 	}
 
 	function DeleteLink() {
-		return $this->Link() . "/delete";
+		return Controller::join_links($this->Link(), "delete");
 	}
 	
 	/**
