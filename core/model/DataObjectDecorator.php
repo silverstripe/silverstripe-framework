@@ -59,7 +59,7 @@ abstract class DataObjectDecorator extends Extension {
 		// If the extension has been manually applied to a subclass, we should ignore that.
 		if(Object::has_extension(get_parent_class($class), $extension)) return;
 		
-		$statics = call_user_func(array($extension, $extraStaticsMethod));
+		$statics = call_user_func(array($extension, $extraStaticsMethod), $class);
 		
 		if($statics) {
 			foreach($statics as $name => $newVal) {
