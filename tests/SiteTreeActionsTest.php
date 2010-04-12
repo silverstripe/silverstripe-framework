@@ -89,7 +89,7 @@ class SiteTreeActionsTest extends FunctionalTest {
 		$page->CanEditType = 'LoggedInUsers';
 		$page->write();
 		$page->doPublish();
-	
+
 		$actionsArr = $page->getCMSActions()->column('Name');
 	
 		$this->assertContains('action_save',$actionsArr);
@@ -116,6 +116,7 @@ class SiteTreeActionsTest extends FunctionalTest {
 		
 		// Get the live version of the page
 		$page = Versioned::get_one_by_stage("SiteTree", "Live", "\"SiteTree\".\"ID\" = $pageID");
+		$this->assertType('SiteTree', $page);
 		
 		$actionsArr = $page->getCMSActions()->column('Name');
 		
