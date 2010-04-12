@@ -13,6 +13,7 @@ class CurrencyField extends TextField {
 	 * if it is not a number (probably a currency symbol)
 	 */
 	function setValue($val) {
+		if(!$val) $val = 0.00;
 		$this->value = preg_replace('/^[^\d]/', '', $val);
 	}
 	/**
