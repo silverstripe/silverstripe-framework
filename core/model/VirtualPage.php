@@ -115,7 +115,7 @@ class VirtualPage extends Page {
 			) {
 				$source = DataObject::get_one("SiteTree",sprintf('"SiteTree"."ID" = %d', $this->CopyContentFromID));
 				if($source) {
-					$this->copyFrom($source);
+					$this->copyFrom($source, false);
 					$this->URLSegment = $source->URLSegment . '-' . $this->ID;
 				}
 			}
@@ -124,10 +124,25 @@ class VirtualPage extends Page {
 		parent::onBeforeWrite();
 	}
 	
+	function onAfterWrite() {
+		parent::onAfterWrite();
+
+		// Don't do this stuff when we're publishing
+		if(!$this->extension_instances['Versioned']->migratingVersion) {
+	 		if(
+				$this->isChanged('CopyContentFromID')
+	 			&& $this->CopyContentFromID != 0 
+				&& $this instanceof VirtualPage
+			) {
+				$this->updateImageTracking();
+			}
+		}
+	}
+	
 	/**
 	 * Ensure we have an up-to-date version of everything.
 	 */
-	function copyFrom($source) {
+	function copyFrom($source, $updateImageTracking = true) {
 		if($source) {
 			foreach($this->getVirtualFields() as $virtualField) {
 				$this->$virtualField = $source->$virtualField;
@@ -138,7 +153,20 @@ class VirtualPage extends Page {
 			if($this->isChanged('CopyContentFromID')) {
 				$this->ShowInMenus = $source->ShowInMenus;
 			}
+			
+			if($updateImageTracking) $this->updateImageTracking();
 		}
+	}
+	
+	function updateImageTracking() {
+		// Doesn't work on unsaved records
+		if(!$this->ID) return;
+
+		// Remove CopyContentFrom() from the cache
+		unset($this->components['CopyContentFrom']);
+		
+		// Update ImageTracking
+		$this->ImageTracking()->setByIdList($this->CopyContentFrom()->ImageTracking()->column('ID'));
 	}
 	
 	/**
