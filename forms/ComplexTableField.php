@@ -390,6 +390,21 @@ JS;
 	}
 
 	/**
+	 * Return the record in which the CTF resides
+	 */
+	function getParentRecord() {
+		if($this->form && $record = $this->form->getRecord()) {
+			return $record;
+		} else {
+			if($this->sourceID()) {
+				$parentClass = DataObject::get_by_id($this->getParentClass(), $this->sourceID());
+			} else {
+				$parentClass = singleton($this->getParentClass());
+			}
+		}
+	}
+
+	/**
 	 * (Optional) Setter for a correct parent-relation-class.
 	 * Defaults to the record loaded into the surrounding form as a fallback.
 	 * Caution: Please use the classname, not the actual column-name in the database.
@@ -472,11 +487,7 @@ JS;
 	function getFieldsFor($childData) {
 		// See if our parent class has any many_many relations by this source class
 		if($this->getParentClass()) {
-			if($this->sourceID()) {
-				$parentClass = DataObject::get_by_id($this->getParentClass(), $this->sourceID());
-			} else {
-				$parentClass = singleton($this->getParentClass());
-			}
+			$parentClass = $this->getParentRecord();
 			
 			$manyManyRelations = $parentClass->many_many();
 			$manyManyRelationName = null;
