@@ -90,12 +90,12 @@ ul.tree a {
 	ul.tree a:hover {
 		text-decoration: underline;
 	}
-	
+
+ul.tree span.a.spanClosed a, ul.tree span.a.Folder a {
+	background-image: url(images/page-closedfolder.png);
+}	
 ul.tree span.a.children a {
 	background-image: url(images/page-openfolder.png);
-}
-ul.tree span.a.spanClosed a, ul.tree span.a.unexpanded a {
-	background-image: url(images/page-closedfolder.png);
 }
 
 /* Unformatted tree */
