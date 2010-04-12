@@ -63,7 +63,9 @@ class Folder extends File {
 				$item->Name = $part;
 				$item->Title = $part;
 				$item->write();
-				if(!file_exists($item->getFullPath())) Filesystem::makeFolder($item->getFullPath());
+			}
+			if(!file_exists($item->getFullPath())) {
+				mkdir($item->getFullPath(),Filesystem::$folder_create_mask);
 			}
 			$parentID = $item->ID;
 		}
