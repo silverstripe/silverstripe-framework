@@ -618,6 +618,24 @@ class File extends DataObject {
 		return $labels;
 	}
 	
+	function validate() {
+		if(!AssetAdmin::$apply_restrictions_to_admin && Permission::check('ADMIN')) {
+			if(!in_array(strtolower(pathinfo($this->Name, PATHINFO_EXTENSION)), AssetAdmin::$allowed_extensions)) {
+				$message = sprintf(
+					_t(
+						'File.INVALIDEXTENSION', 
+						'Extension is not allowed (valid: %s)',
+						PR_MEDIUM,
+						'Argument 1: Comma-separated list of valid extensions'
+					),
+					implode(',',AssetAdmin::$allowed_extensions)
+				);
+				return new ValidationResult(false, $message);
+			}
+		}
+		return new ValidationResult(true);
+	}
+	
 }
 
 ?>
