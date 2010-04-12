@@ -869,15 +869,21 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		$results = $this->extend('canEdit', $memberID);
 		if($results && is_array($results)) if(!min($results)) return false;
 		
-		// Check cache (the can_edit_multiple call below will also do this, but this is quicker)
-		if(isset(self::$cache_permissions['edit'][$this->ID])) {
-			return self::$cache_permissions['edit'][$this->ID];
+		if($this->ID) {
+			// Check cache (the can_edit_multiple call below will also do this, but this is quicker)
+			if(isset(self::$cache_permissions['edit'][$this->ID])) {
+				return self::$cache_permissions['edit'][$this->ID];
+			}
+		
+			// Regular canEdit logic is handled by can_edit_multiple
+			$results = self::can_edit_multiple(array($this->ID), $memberID);
+		
+			return $results[$this->ID];
+			
+		// Default for unsaved pages
+		} else {
+			return $this->SiteConfig->canEdit();
 		}
-		
-		// Regular canEdit logic is handled by can_edit_multiple
-		$results = self::can_edit_multiple(array($this->ID), $memberID);
-		
-		return $results[$this->ID];
 	}
 
 	/**
