@@ -1421,7 +1421,7 @@ class Translatable extends DataObjectDecorator implements PermissionProvider {
 	 * Return a piece of text to keep DataObject cache keys appropriately specific
 	 */
 	function cacheKeyComponent() {
-		return 'locale-'.self::get_current_locale()();
+		return 'locale-'.self::get_current_locale();
 	}
 		
 }
