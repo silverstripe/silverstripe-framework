@@ -1341,8 +1341,6 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 			}
 		}
 		
-		echo "=======\nUPDATING LINK TRACKING FOR $this->Title\n=========\n";
-		SS_Backtrace::backtrace();
 		$this->LinkTracking()->setByIDList($linkedPages);
 		$this->ImageTracking()->setByIDList($linkedFiles);
 		
