@@ -2,11 +2,12 @@
 class SecurityDefaultAdminTest extends SapphireTest {
 	
 	function setUp() {
+		parent::setUp();
+
 		// TODO Workaround to force database clearing with no fixture present, 
 		// and avoid sideeffects from other tests
+		if(!self::using_temp_db()) self::create_temp_db();
 		self::empty_temp_db();
-		
-		parent::setUp();
 	}
 	
 	function testCheckDefaultAdmin() {
