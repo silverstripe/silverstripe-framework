@@ -1,0 +1,86 @@
+Permission:
+  cmsmain1:
+    Code: CMS_ACCESS_CMSMain
+  cmsmain2:
+    Code: CMS_ACCESS_CMSMain
+  translate_all1:
+    Code: TRANSLATE_ALL
+  translate_all2:
+    Code: TRANSLATE_ALL
+Group:
+  translators_de:
+    Code: translators_de
+    Permissions: =>Permission.cmsmain1,=>Permission.translate_all1
+  translators_en:
+    Code: translators_en
+    Permissions: =>Permission.cmsmain2,=>Permission.translate_all2
+Member:
+  translator_de:
+    Email: translator_de@test.com
+    Password: test
+    Groups: =>Group.translators_de
+  translator_en:
+    Email: translator_en@test.com
+    Password: test
+    Groups: =>Group.translators_en
+  websiteuser:
+    Email: websiteuser@test.com
+    Password: test
+Page:
+  root_en:
+    URLSegment: root-en
+    Locale: en_US
+SiteConfig:
+  en_US:
+    Title: My test site
+    Locale: en_US
+    CanEditType: OnlyTheseUsers
+    EditorGroups: =>Group.translators_en
+  de_DE:
+    Title: Meine Test Seite
+    Locale: de_DE
+    CanEditType: OnlyTheseUsers
+    EditorGroups: =>Group.translators_de
+Permission:
+  cmsmain1:
+    Code: CMS_ACCESS_CMSMain
+  cmsmain2:
+    Code: CMS_ACCESS_CMSMain
+  translate_all1:
+    Code: TRANSLATE_ALL
+  translate_all2:
+    Code: TRANSLATE_ALL
+Group:
+  translators_de:
+    Code: translators_de
+    Permissions: =>Permission.cmsmain1,=>Permission.translate_all1
+  translators_en:
+    Code: translators_en
+    Permissions: =>Permission.cmsmain2,=>Permission.translate_all2
+Member:
+  translator_de:
+    Email: translator_de@test.com
+    Password: test
+    Groups: =>Group.translators_de
+  translator_en:
+    Email: translator_en@test.com
+    Password: test
+    Groups: =>Group.translators_en
+  websiteuser:
+    Email: websiteuser@test.com
+    Password: test
+Page:
+  root_en:
+    URLSegment: root-en
+    Locale: en_US
+SiteConfig:
+  en_US:
+    Title: My test site
+    Locale: en_US
+    CanEditType: OnlyTheseUsers
+    EditorGroups: =>Group.translators_en
+  de_DE:
+    Title: Meine Test Seite
+    Locale: de_DE
+    CanEditType: OnlyTheseUsers
+    EditorGroups: =>Group.translators_de
