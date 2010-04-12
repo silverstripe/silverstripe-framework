@@ -496,11 +496,14 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	 * @return SiteTree The duplicated object.
 	 */
 	 public function duplicate($doWrite = true) {
+		
+		$this->extend('onBeforeDuplicate', $page);
 		$page = parent::duplicate(false);
 		$page->Sort = 0;
 		if($doWrite) {
 			$page->write();
 		}
+		$this->extend('onAfterDuplicate', $page);
 		return $page;
 	}
 
