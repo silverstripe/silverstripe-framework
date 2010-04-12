@@ -38,6 +38,27 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	
 	protected static $is_running_test = false;
 	
+	
+	/**
+	 * A list of extensions that can't be applied during the execution of this run.  If they are
+	 * applied, they will be temporarily removed and a database migration called.
+	 * 
+	 * The keys of the are the classes that the extensions can't be applied the extensions to, and
+	 * the values are an array of illegal extensions on that class.
+	 */
+	protected $illegalExtensions = array(
+	);
+
+	/**
+	 * A list of extensions that must be applied during the execution of this run.  If they are
+	 * not applied, they will be temporarily added and a database migration called.
+	 * 
+	 * The keys of the are the classes to apply the extensions to, and the values are an array
+	 * of illegal required extensions on that class.
+	 */
+	protected $requiredExtensions = array(
+	);
+	
 	/**
 	 * We need to disabling backing up of globals to avoid overriding
 	 * the few globals SilverStripe relies on, like $lang for the i18n subsystem.
@@ -45,6 +66,11 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	 * @see http://sebastian-bergmann.de/archives/797-Global-Variables-and-PHPUnit.html
 	 */
 	protected $backupGlobals = FALSE;
+
+	/** 
+	 * Helper arrays for illegalExtensions/requiredExtensions code
+	 */
+	private $extensionsToReapply = array(), $extensionsToRemove = array();
 	
 	public static function is_running_test() {
 		return self::$is_running_test;
@@ -118,14 +144,79 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	 * This is different to {@link setUp()}, which gets called once
 	 * per method. Useful to initialize expensive operations which
 	 * don't change state for any called method inside the test,
-	 * e.g. dynamically adding an extension. See {@link tear_down_once()}
+	 * e.g. dynamically adding an extension. See {@link tearDownOnce()}
 	 * for tearing down the state again.
 	 */
-	static function set_up_once() {	
+	function setUpOnce() {
+		// Remove any illegal extensions that are present
+		foreach($this->illegalExtensions as $class => $extensions) {
+			foreach($extensions as $extension) {
+				if (Object::has_extension($class, $extension)) {
+					if(!isset($this->extensionsToReapply[$class])) $this->extensionsToReapply[$class] = array();
+					$this->extensionsToReapply[$class][] = $extension;
+					Object::remove_extension($class, $extension);
+					$isAltered = true;
+				}
+			}
+		}
+
+		// Add any required extensions that aren't present
+		foreach($this->requiredExtensions as $class => $extensions) {
+			$this->extensionsToRemove[$class] = array();
+			foreach($extensions as $extension) {
+				if(!Object::has_extension($class, $extension)) {
+					if(!isset($this->extensionsToRemove[$class])) $this->extensionsToReapply[$class] = array();
+					$this->extensionsToRemove[$class][] = $extension;
+					Object::add_extension($class, $extension);
+					$isAltered = true;
+				}
+			}
+		}
+		
+		// If we have made changes to the extensions present, then migrate the database schema.
+		if($this->extensionsToReapply || $this->extensionsToRemove) {
+			// clear singletons, they're caching old extension info which is used in DatabaseAdmin->doBuild()
+			global $_SINGLETONS;
+			$_SINGLETONS = array();
+			
+			// rebuild the db schema
+			$dbadmin = new DatabaseAdmin();
+			$dbadmin->doBuild(true, false, true);
+		}
 		// clear singletons, they're caching old extension info 
 		// which is used in DatabaseAdmin->doBuild()
 		global $_SINGLETONS;
 		$_SINGLETONS = array();
+	}
+	
+	/**
+	 * tearDown method that's called once per test class rather once per test method.
+	 */
+	function tearDownOnce() {
+		// If we have made changes to the extensions present, then migrate the database schema.
+		if($this->extensionsToReapply || $this->extensionsToRemove) {
+			// Remove extensions added for testing
+			foreach($this->extensionsToRemove as $class => $extensions) {
+				foreach($extensions as $extension) {
+					Object::remove_extension($class, $extension);
+				}
+			}
+
+			// Reapply ones removed
+			foreach($this->extensionsToReapply as $class => $extensions) {
+				foreach($extensions as $extension) {
+					Object::add_extension($class, $extension);
+				}
+			}
+			
+			// clear singletons, they're caching old extension info which is used in DatabaseAdmin->doBuild()
+			global $_SINGLETONS;
+			$_SINGLETONS = array();
+			
+			// rebuild the db schema
+			$dbadmin = new DatabaseAdmin();
+			$dbadmin->doBuild(true, false, true);
+		}
 	}
 	
 	/**
@@ -250,14 +341,6 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 		self::$is_running_test = $this->originalIsRunningTest;
 		$this->originalIsRunningTest = null;
 	}
-	
-	static function tear_down_once() {
-		// clear singletons, they're caching old extension info 
-		// which is used in DatabaseAdmin->doBuild()
-		global $_SINGLETONS;
-		$_SINGLETONS = array();
-	}
-	
 	/**
 	 * Clear the log of emails sent
 	 */
