@@ -7,6 +7,11 @@ class ComponentSetTest extends SapphireTest {
 	
 	static $fixture_file = 'sapphire/tests/model/ComponentSetTest.yml';
 	
+	protected $extraDataObjects = array(
+		'ComponentSetTest_Player',
+		'ComponentSetTest_Team'
+	);
+	
 	function testSetByIDListManyMany() {
 		$team1 = $this->objFromFixture('ComponentSetTest_Team', 'team1');
 		$player1_team1 = $this->objFromFixture('ComponentSetTest_Player', 'player1_team1');
