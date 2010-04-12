@@ -65,19 +65,6 @@ if (function_exists('mb_http_output')) {
 	mb_internal_encoding('UTF-8');
 }
 
-/*
- * This is for versions of PHP prior to version 5.2
- */
-if (!function_exists('array_fill_keys')) {
-	function array_fill_keys($keys,$value) {
-		//Sometimes we get passed an empty array, and if that's the case, you'll get an error message
-		if(sizeof($keys)==0)
-			return Array();
-		else
-			return array_combine($keys,array_fill(0,count($keys),$value));
-	}
-}
-
 Session::start();
 
 // IIS will sometimes generate this.
