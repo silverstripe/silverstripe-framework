@@ -803,7 +803,10 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		
 		// Regular canEdit logic is handled by can_edit_multiple
 		$results = self::can_delete_multiple(array($this->ID), $memberID);
-		return $results[$this->ID];
+		
+		// If this page no longer exists in stage/live results won't contain the page.
+		// Fail-over to false
+		return isset($results[$this->ID]) ? $results[$this->ID] : false;
 	}
 
 	/**
@@ -878,7 +881,9 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 			// Regular canEdit logic is handled by can_edit_multiple
 			$results = self::can_edit_multiple(array($this->ID), $memberID);
 		
-			return $results[$this->ID];
+			// If this page no longer exists in stage/live results won't contain the page.
+			// Fail-over to false
+			return isset($results[$this->ID]) ? $results[$this->ID] : false;
 			
 		// Default for unsaved pages
 		} else {
@@ -995,6 +1000,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 			foreach(array('Stage', 'Live') as $stage) {
 				// Start by filling the array with the pages that actually exist
 				$table = ($stage=='Stage') ? "SiteTree" : "SiteTree_$stage";
+				
 				$result = array_fill_keys(DB::query("SELECT \"ID\" FROM \"$table\" 
 						WHERE \"ID\" IN (".implode(", ", $ids).")")->column(), false);
 				
