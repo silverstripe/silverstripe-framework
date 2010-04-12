@@ -139,11 +139,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	*/
 	static $can_create = true;
 
-	/**
-	 * If this is true, users can create only one instance of this class in the CMS. 
-	 */
-	static $single_instance_only = false;
-	
+
 	/**
 	 * Icon to use in the CMS
 	 *
@@ -832,8 +828,6 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	 * @return boolean True if the current user can create pages on this class.
 	 */
 	public function canCreate($member = null) {
-		if($this->stat('single_instance_only') && DataObject::get_one($this->class)) return false;
-		
 		if(!$member || !(is_a($member, 'Member')) || is_numeric($member)) {
 			$member = Member::currentUserID();
 		}
@@ -846,6 +840,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		
 		return $this->stat('can_create') != false || Director::isDev();
 	}
+
 
 	/**
 	 * This function should return true if the current user can edit this
@@ -2314,9 +2309,6 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 
 		if(!$this->ShowInMenus) 
 			$classes .= " notinmenu";
-			
-		if($this->stat('single_instance_only'))
-			$classes .= " singleinstance";
 			
 		//TODO: Add integration
 		/*
