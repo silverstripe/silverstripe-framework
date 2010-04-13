@@ -43,7 +43,7 @@ class MemberLoginForm extends LoginForm {
 			$backURL = Session::get('BackURL');
 		}
 
-		if($checkCurrentUser && Member::currentUserID() && Member::logged_in_session_exists()) {
+		if($checkCurrentUser && Member::currentUser() && Member::logged_in_session_exists()) {
 			$fields = new FieldSet(
 				new HiddenField("AuthenticationMethod", null, $this->authenticator_class, $this)
 			);
