@@ -681,6 +681,21 @@ class TranslatableTest extends FunctionalTest {
 		);
 	}
 	
+	function testLocalePersistsInAllPageTypes() {
+		$types = ClassInfo::subclassesFor('SiteTree');
+		foreach($types as $type) {
+			if(singleton($type) instanceof TestOnly) continue;
+			
+			$enPage = new $type();
+			$enPage->Locale = 'en_US';
+			$enPage->write();
+
+			$dePage = $enPage->createTranslation('de_DE');
+			$dePage->write();
+			$this->assertEquals('de_DE', $dePage->Locale, "Page type $type retains Locale property");
+		}
+	}
+	
 	function testGetTranslationByStage() {
 		$publishedPage = new SiteTree();
 		$publishedPage->Locale = 'en_US';
