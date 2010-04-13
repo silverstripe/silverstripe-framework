@@ -2569,7 +2569,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 
 		if($join) {
 			$query->from[] = $join;
-			if(DB::getConn() instanceof MySQLDatabase) {
+			if(DB::getConn() instanceof MySQLDatabase || DB::getConn() instanceof SQLite3Database) {
 				// TODO: This needs to be resolved for all databases
 				$query->groupby[] = reset($query->from) . ".\"ID\"";
 				/* this needs to be fixed - this doesn't work when you add additional fields from other tables into the mix.
