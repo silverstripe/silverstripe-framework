@@ -261,6 +261,13 @@ class VirtualPage extends Page {
 		if (!$haveIt) $haveIt = $this->copyContentFrom()->hasMethod($method);		
 		return $haveIt;
 	}
+	
+	/**
+	 * If we ever get this far, it means that the VP failed.
+	 */
+	function Content() {
+		return '<p>'._t('VirtualPage.NOTFOUND', 'We could not find the content for this virtual page.').'</p>';
+	}
 }
 
 /**
