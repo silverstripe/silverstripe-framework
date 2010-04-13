@@ -1661,8 +1661,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 				'AbsoluteLink' => 'URL'
 			),
 			'"CopyContentFromID" = ' . $this->ID,
-			''//,
-			// 'LEFT JOIN "SiteTree_LinkTracking" ON "SiteTree"."ID" = "SiteTree_LinkTracking"."SiteTreeID"'
+			''
 		);
 		$virtualPagesTable->setFieldFormatting(array(
 			'Title' => '<a href=\"admin/show/$ID\">$Title</a>'
@@ -1674,7 +1673,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		
 		// Lay out the fields
 		$fields = new FieldSet(
-			new TabSet("Root",
+			$rootTab = new TabSet("Root",
 				$tabContent = new TabSet('Content',
 					$tabMain = new Tab('Main',
 						new TextField("Title", $this->fieldLabel('Title')),
@@ -1739,10 +1738,6 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 					$tabBacklinks = new Tab('Backlinks',
 						$backLinksNote,
 						$backLinksTable
-					),
-					$tabVirtualPages = new Tab('VirtualPages',
-						$virtualPagesNote,
-						$virtualPagesTable
 					)
 				),
 				$tabAccess = new Tab('Access',
@@ -1761,6 +1756,13 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 				)
 			)
 		);
+		
+		if ($virtualPagesTable->TotalCount()) {
+			$rootTab->push($tabVirtualPages = new Tab('VirtualPages',
+				$virtualPagesNote,
+				$virtualPagesTable
+			));
+		}
 		
 		// Make page location fields read-only if the user doesn't have the appropriate permission
 		if(!Permission::check("SITETREE_REORGANISE")) {
