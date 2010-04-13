@@ -33,6 +33,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	protected $originalMemberPasswordValidator;
 	protected $originalRequirements;
 	protected $originalIsRunningTest;
+	protected $originalTheme;
 	
 	protected $mailer;
 	
@@ -106,6 +107,8 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 		SiteTree::reset();
 		Hierarchy::reset();
 		Controller::curr()->setSession(new Session(array()));
+		
+		$this->originalTheme = SSViewer::current_theme();
 
 		$className = get_class($this);
 		$fixtureFile = eval("return {$className}::\$fixture_file;");
@@ -337,6 +340,9 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 		// Mark test as no longer being run - we use originalIsRunningTest to allow for nested SapphireTest calls
 		self::$is_running_test = $this->originalIsRunningTest;
 		$this->originalIsRunningTest = null;
+
+		// Reset theme setting
+		SSViewer::set_theme($this->originalTheme);
 
 		// Reset mocked datetime
 		SS_Datetime::clear_mock_now();

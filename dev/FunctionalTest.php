@@ -42,8 +42,6 @@ class FunctionalTest extends SapphireTest {
 	 */
 	protected $cssParser = null;
 	
-	private $originalTheme = null;
-	
 	/**
 	 * If this is true, then 30x Location headers will be automatically followed.
 	 * If not, then you will have to manaully call $this->mainSession->followRedirection() to follow them.  However, this will let you inspect
@@ -63,10 +61,7 @@ class FunctionalTest extends SapphireTest {
 		$this->mainSession = new TestSession();
 
 		// Disable theme, if necessary
-		if($this->stat('disable_themes')) {
-			$this->originalTheme = SSViewer::current_theme();
-			SSViewer::set_theme(null);
-		}
+		if($this->stat('disable_themes')) SSViewer::set_theme(null);
 		
 		// Switch to draft site, if necessary
 		if($this->stat('use_draft_site')) {
@@ -77,11 +72,6 @@ class FunctionalTest extends SapphireTest {
 	function tearDown() {
 		parent::tearDown();
 		unset($this->mainSession);
-
-		// Re-enable theme, if previously disabled
-		if($this->stat('disable_themes')) {
-			SSViewer::set_theme($this->originalTheme);
-		}
 	}
 
 	/**
