@@ -30,7 +30,7 @@ class Enum extends DBField {
 				if(in_array($default, $enum)) {
 					$this->default = $default;
 				} else {
-					user_error("Enum::__construct() The default value does not match any item in the enumeration", E_USER_ERROR);
+					user_error("Enum::__construct() The default value '$default' does not match any item in the enumeration", E_USER_ERROR);
 				}
 				
 			// By default, set the default value to the first item
