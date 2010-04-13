@@ -1,5 +1,5 @@
 (function($){
-	$.concrete('ss', function($){
+	$.entwine('ss', function($){
 		/**
 		 * Lightweight wrapper around jQuery UI tabs.
 		 * Ensures that anchor links are set properly,
@@ -7,7 +7,7 @@
 		 * their height explicitly set. This is important
 		 * for forms inside the CMS layout.
 		 */
-		$('.ss-tabset').concrete({
+		$('.ss-tabset').entwine({
 			onmatch: function() {
 				this.rewriteHashlinks();
 

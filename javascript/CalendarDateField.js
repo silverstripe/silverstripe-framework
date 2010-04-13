@@ -1,5 +1,5 @@
 (function($) {
-	$.concrete('ss', function($){
+	$.entwine('ss', function($){
 		/**
 		 * Formats a <input type="text"> field with a jQuery UI datepicker.
 		 * 
@@ -7,7 +7,7 @@
 		 * 
 		 * @author Ingo Schommer, SilverStripe Ltd.
 		 */
-		$('.calendardate').concrete({
+		$('.calendardate').entwine({
 			onmatch: function() {
 				this.find('input').each(function() {
 					var conf = $(this).metadata();

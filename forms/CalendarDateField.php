@@ -28,7 +28,7 @@ class CalendarDateField extends DateField {
 		}
 		
 		
-		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-concrete/dist/jquery.concrete-dist.js');
+		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-entwine/dist/jquery.entwine-dist.js');
 		
 		// javascript: custom
 		Requirements::javascript(SAPPHIRE_DIR . '/javascript/CalendarDateField.js');
