@@ -488,9 +488,7 @@ JS;
 		
 	function getFieldsFor($childData) {
 		// See if our parent class has any many_many relations by this source class
-		if($this->getParentClass()) {
-			$parentClass = $this->getParentRecord();
-			
+		if($parentClass = $this->getParentRecord()) {
 			$manyManyRelations = $parentClass->many_many();
 			$manyManyRelationName = null;
 			$manyManyComponentSet = null;
