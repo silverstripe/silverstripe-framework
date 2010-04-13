@@ -88,5 +88,15 @@ class HierarchyTest extends SapphireTest {
 			'numChildren() caching can be disabled by flushCache()'
 		);
 	}
-		
+
+	function testLoadDescendantIDListInto() {
+		$page2 = $this->objFromFixture('Page', 'page2');
+		$idList = $page2->getDescendantIDList();
+		$page2a = $this->objFromFixture('Page', 'page2a');
+		$page2b = $this->objFromFixture('Page', 'page2b');
+		$this->assertContains($page2a->ID, $idList, 'Page 2a is a descendant of Page 2');
+		$this->assertContains($page2b->ID, $idList, 'Page 2b is a descendant of Page 2');
+		$this->assertEquals(2, count($idList), 'There are 2 descendants of Page 2');
+	}
+
 }
