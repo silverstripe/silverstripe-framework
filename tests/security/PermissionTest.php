@@ -50,4 +50,14 @@ class PermissionTest extends SapphireTest {
 		// Check that a random permission that shouldn't be there isn't
 		$this->assertFalse(Permission::checkMember($member, "CMS_ACCESS_SecurityAdmin"));
 	}
+	/**
+	 * Ensure the the get_*_by_permission functions are permission role aware
+	 */
+	function testGettingMembersByPermission() {
+		$accessMember = $this->objFromFixture('Member', 'access');
+		
+		$result = Permission::get_members_by_permission(array('CMS_ACCESS_SecurityAdmin'));
+		
+		$this->assertContains($result, $accessMember, 'Member is found via a permission attached to a role');
+	}
 }
