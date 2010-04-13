@@ -1296,6 +1296,6 @@ class Form_FieldMap extends ViewableData {
 	}
 
 	function __call($method, $args = null) {
-		return $this->form->dataFieldByName($method);
+		return $this->form->Fields()->fieldByName($method);
 	}
 }
