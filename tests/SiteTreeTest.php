@@ -137,13 +137,13 @@ class SiteTreeTest extends SapphireTest {
 		$s->Title = "V2";
 		$s->write();
 		
-		$oldStage = Versioned::current_stage();
+		$oldMode = Versioned::get_reading_mode();
 		Versioned::reading_stage('Live');
 		
 		$checkSiteTree = DataObject::get_one("SiteTree", "\"URLSegment\" = 'get-one-test-page'");
 		$this->assertEquals("V1", $checkSiteTree->Title);
 
-		Versioned::reading_stage($oldStage);
+		Versioned::set_reading_mode($oldMode);
 	}
 	
 	function testChidrenOfRootAreTopLevelPages() {
