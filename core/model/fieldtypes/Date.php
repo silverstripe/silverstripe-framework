@@ -75,10 +75,17 @@ class Date extends DBField {
 	
 	
 	/**
-	 * Returns the date in the format 24 May 2006
+	 * Returns the date in the format 24 December 2006
 	 */
 	function Long() {
 		if($this->value) return date('j F Y', strtotime($this->value));
+	}
+	
+	/**
+	 * Returns the date in the format 24 Dec 2006
+	 */
+	function Full() {
+		if($this->value) return date('j M Y', strtotime($this->value));
 	}
 	
 	/**
