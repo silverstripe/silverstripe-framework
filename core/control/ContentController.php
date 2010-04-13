@@ -109,11 +109,9 @@ class ContentController extends Controller {
 		if($this->dataRecord && $this->URLSegment != 'Security' && !$this->dataRecord->can('View')) {
 			return Security::permissionFailure($this);
 		}
-var_dump(Versioned::current_stage());
+
 		// Draft/Archive security check - only CMS users should be able to look at stage/archived content
 		if($this->URLSegment != 'Security' && !Session::get('unsecuredDraftSite') && (Versioned::current_archived_date() || (Versioned::current_stage() && Versioned::current_stage() != 'Live'))) {
-			var_dump($this->URLSegment);
-			var_dump($this->dataRecord->canViewStage(Versioned::current_stage()));
 			if(!$this->dataRecord->canViewStage(Versioned::current_stage())) {
 				$link = $this->Link();
 				$message = _t("ContentController.DRAFT_SITE_ACCESS_RESTRICTION", 'You must log in with your CMS password in order to view the draft or archived content.  <a href="%s">Click here to go back to the published site.</a>');
