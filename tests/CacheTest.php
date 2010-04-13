@@ -3,25 +3,25 @@
 class CacheTest extends SapphireTest {
 
 	function testCacheBasics() {
-		$cache = Cache::factory('test');
+		$cache = SS_Cache::factory('test');
 		
 		$cache->save('Good', 'cachekey');
 		$this->assertEquals('Good', $cache->load('cachekey'));
 	}
 	
 	function testCacheCanBeDisabled() {
-		Cache::set_cache_lifetime('test', -1, 10);
+		SS_Cache::set_cache_lifetime('test', -1, 10);
 		
-		$cache = Cache::factory('test');
+		$cache = SS_Cache::factory('test');
 		
 		$cache->save('Good', 'cachekey');
 		$this->assertFalse($cache->load('cachekey'));
 	}
 	
 	function testCacheLifetime() {
-		Cache::set_cache_lifetime('test', 4, 20);
+		SS_Cache::set_cache_lifetime('test', 4, 20);
 		
-		$cache = Cache::factory('test');
+		$cache = SS_Cache::factory('test');
 		
 		$cache->save('Good', 'cachekey');
 		$this->assertEquals('Good', $cache->load('cachekey'));
@@ -32,8 +32,8 @@ class CacheTest extends SapphireTest {
 	}
 	
 	function testCacheSeperation() {
-		$cache1 = Cache::factory('test1');
-		$cache2 = Cache::factory('test2');
+		$cache1 = SS_Cache::factory('test1');
+		$cache2 = SS_Cache::factory('test2');
 		
 		$cache1->save('Foo', 'cachekey');
 		$cache2->save('Bar', 'cachekey');

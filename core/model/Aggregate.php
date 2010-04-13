@@ -33,7 +33,7 @@ class Aggregate extends ViewableData {
 	
 	/** Build & cache the cache object */
 	protected static function cache() {
-		return self::$cache ? self::$cache : (self::$cache = Cache::factory('aggregate'));
+		return self::$cache ? self::$cache : (self::$cache = SS_Cache::factory('aggregate'));
 	}
 	
 	/** Clear the aggregate cache for a given type, or pass nothing to clear all aggregate caches */
