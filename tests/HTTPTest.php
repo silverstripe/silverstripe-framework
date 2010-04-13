@@ -47,19 +47,51 @@ class HTTPTest extends SapphireTest {
 	 * Tests {@link HTTP::setGetVar()}
 	 */
 	public function testSetGetVar() {
-		$expected = array (
-			'/?foo=bar'         => array('foo', 'bar', '/'),
-			'/?baz=buz&foo=bar' => array('foo', 'bar', '/?baz=buz'),
-			'/?buz=baz&foo=baz' => array('foo', 'baz', '/?foo=bar&buz=baz'),
-			'/?foo=var'         => array('foo', 'var', '/?foo=&foo=bar'),
-			'/?foo[test]=var'   => array('foo[test]', 'var', '/?foo[test]=another')
+		// HACK No easy way to get the current URL without the query string or fragment
+		$base = Director::absoluteBaseURL() . 'dev/tests/HTTPTest';
+
+		$this->assertEquals(
+			$base . '?foo=bar',
+			HTTP::setGetVar('foo', 'bar'),
+			'Omitting a URL falls back to current URL'
+	);
+
+		$this->assertEquals(
+			Director::absoluteBaseURL() . 'relative/url?foo=bar',
+			HTTP::setGetVar('foo', 'bar', 'relative/url'),
+			'Relative URL without slash prefix returns URL with absolute base'
 		);
-		
-		foreach($expected as $result => $args) {
-			$this->assertEquals(
-				call_user_func_array(array('HTTP', 'setGetVar'), $args), str_replace('&', '&amp;', $result)
-			);
-		}
+
+		$this->assertEquals(
+			Director::absoluteBaseURL() . '/relative/url?foo=bar',
+			HTTP::setGetVar('foo', 'bar', '/relative/url'),
+			'Relative URL with slash prefix returns URL with absolute base'
+		);
+
+		$this->assertEquals(
+			Director::absoluteBaseURL() . '/relative/url?baz=buz&foo=bar',
+			HTTP::setGetVar('foo', 'bar', '/relative/url?baz=buz'),
+			'Relative URL with existing query params, and new added key'
+		);
+
+		$this->assertEquals(
+			'http://test.com/?foo=new&buz=baz',
+			HTTP::setGetVar('foo', 'new', 'http://test.com/?foo=old&buz=baz'),
+			'Absolute URL without path and multipe existing query params, overwriting an existing parameter'
+		);
+
+		$this->assertEquals(
+			'http://test.com/?foo=new',
+			HTTP::setGetVar('foo', 'new', 'http://test.com/?foo=&foo=old'),
+			'Absolute URL and empty query param'
+		);
+
+		$this->assertEquals(
+			// http_build_query() escapes angular brackets, they should be correctly urldecoded by the browser client
+			'http://test.com/?foo%5Btest%5D=one&foo%5Btest%5D=two',
+			HTTP::setGetVar('foo[test]', 'two', 'http://test.com/?foo[test]=one'),
+			'Absolute URL and PHP array query string notation'
+		);
 	}
 	
 }
