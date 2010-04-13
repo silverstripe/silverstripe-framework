@@ -10,7 +10,7 @@ Page:
    page3:
       Title: page3
       URLSegment: page3
-      Content: <p><a href="page1/">Testing page 1 link</a></p>
+      Content: '<p><a href="page1/">Testing page 1 link</a></p>'
       LinkTracking: =>Page.page1
    
 
