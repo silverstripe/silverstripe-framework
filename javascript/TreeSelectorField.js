@@ -171,9 +171,10 @@ TreeDropdownField.prototype = {
 	},
 	
 	ajaxGetTree: function(after) {
-		var ajaxURL = this.helperURLBase() + 'tree/';
+		var ajaxURL = this.helperURLBase() + 'tree?';
 		ajaxURL += $('SecurityID') ? '&SecurityID=' + $('SecurityID').value : '';
 		if($('Form_EditForm_Locale')) ajaxURL += "&locale=" + $('Form_EditForm_Locale').value;
+		if ( this.inputTag.value ) ajaxURL += '&forceValue=' + this.inputTag.value;
 		if (this.search() != null) ajaxURL += "&search=" + this.search(); 
 		new Ajax.Request(ajaxURL, {
 			method : 'get', 
