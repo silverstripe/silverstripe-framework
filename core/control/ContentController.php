@@ -405,7 +405,7 @@ HTML;
 		} elseif(Object::has_extension('SiteTree', 'Translatable')) {
 			$locale = Translatable::get_current_locale();
 		} else {
-			$locale = i18n::default_locale();
+			$locale = i18n::get_locale();
 		}
 		
 		return i18n::convert_rfc1766($locale);
