@@ -448,6 +448,24 @@ class SQLQuery {
 		$clone->groupby = null;
 		return $clone->execute()->value();
 	}
+
+	/**
+	 * Returns true if this query can be sorted by the given field.
+	 * Note that the implementation of this method is a little crude at the moment, it wil return
+	 * "false" more often that is strictly necessary.
+	 */
+	function canSortBy($fieldName) {
+		$sql = $this->sql();
+	
+		$selects = $this->select;
+		foreach($selects as $i => $sel) {
+			if (preg_match('/"(.*)"\."(.*)"/', $sel, $matches)) $selects[$i] = $matches[2];
+		}
+	
+		$SQL_fieldName = Convert::raw2sql($fieldName);
+		return (in_array($SQL_fieldName,$selects) || stripos($sql,"AS {$SQL_fieldName}"));
+	}
+
 }
 
 ?>
