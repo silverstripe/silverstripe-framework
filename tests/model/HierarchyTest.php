@@ -89,7 +89,7 @@ class HierarchyTest extends SapphireTest {
 		);
 	}
 
-	function testLoadDescendantIDListInto() {
+	function testLoadDescendantIDListIntoArray() {
 		$page2 = $this->objFromFixture('Page', 'page2');
 		$idList = $page2->getDescendantIDList();
 		$page2a = $this->objFromFixture('Page', 'page2a');
