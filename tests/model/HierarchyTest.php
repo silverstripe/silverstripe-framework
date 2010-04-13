@@ -101,7 +101,9 @@ class HierarchyTest extends SapphireTest {
 		
 		$this->assertContains($page2a->ID, $page2IdList);
 		$this->assertContains($page2b->ID, $page2IdList);
-		$this->assertEquals(2, count($page2IdList));
+		$this->assertContains($page2aa->ID, $page2IdList);
+		$this->assertContains($page2ab->ID, $page2IdList);
+		$this->assertEquals(4, count($page2IdList));
 		
 		$this->assertContains($page2aa->ID, $page2aIdList);
 		$this->assertContains($page2ab->ID, $page2aIdList);
