@@ -582,7 +582,12 @@ class MySQLDatabase extends SS_Database {
 			$precision = $values['precision'];
 		}
 
-		return 'decimal(' . $precision . ') not null';
+		$defaultValue = '';
+		if(isset($values['default']) && is_numeric($values['default'])) {
+			$defaultValue = ' default ' . $values['default'];
+		}
+
+		return 'decimal(' . $precision . ') not null' . $defaultValue;
 	}
 	
 	/**
