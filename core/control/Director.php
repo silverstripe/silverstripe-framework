@@ -598,7 +598,7 @@ class Director {
 	 * </code>
 	 */
 	static function forceSSL() {
-		if((!isset($_SERVER['HTTPS']) || $_SERVER['HTTPS'] == 'off') && !Director::isDev()) {
+		if((!isset($_SERVER['HTTPS']) || $_SERVER['HTTPS'] == 'off') && !Director::isDev() && !Director::is_cli()) {
 			$destURL = str_replace('http:', 'https:', Director::absoluteURL($_SERVER['REQUEST_URI']));
 
 			header("Location: $destURL", true, 301);
