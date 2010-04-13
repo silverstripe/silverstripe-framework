@@ -535,10 +535,15 @@ class Controller extends RequestHandler {
 	}
 	
 	/**
-	 * Joins two link segments together, putting a slash between them if necessary.
-	 * Use this for building the results of Link() methods.
-	 *
-	 * If either of the links have query strings, then they will be combined and put at the end of the resulting url.
+	 * Joins two or more link segments together, putting a slash between them if necessary.
+	 * Use this for building the results of {@link Link()} methods.
+	 * If either of the links have query strings, 
+	 * then they will be combined and put at the end of the resulting url.
+	 * 
+	 * Caution: All parameters are expected to be URI-encoded already.
+	 * 
+	 * @param String 
+	 * @return String
 	 */
 	static function join_links() {
 		$args = func_get_args();
