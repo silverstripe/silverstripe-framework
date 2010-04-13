@@ -153,7 +153,7 @@ class ManifestBuilder {
 	 * 
 	 * @param string $baseDir Optional: Absolute path to theme directory for testing e.g. "/Users/sharvey/Sites/test24/themes"
 	 * @param boolean $includeSubThemes If set to TRUE, sub-themes such as "blackcandy_blog" are included too
-	 * @return array indexed array of theme directories
+	 * @return array Listing of theme directories
 	 */
 	public static function get_themes($baseDir = null, $includeSubThemes = false) {
 		// If no base directory specified, the default is the project root
@@ -168,7 +168,7 @@ class ManifestBuilder {
 					if(strpos($file, '_') === false) {
 						$include = true;
 					}
-					if($include) $themes[] = $file;
+					if($include) $themes[$file] = $file;
 				}
 			}
 			closedir($handle);

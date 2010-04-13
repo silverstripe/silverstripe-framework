@@ -37,15 +37,17 @@ table.CMSList thead th {
 	background-repeat: repeat-x;
 	background-position: left bottom;
 	background-color: #ebeadb;
-	height: 24px;
 	border-right: 1px solid #aca899;
 	border-left: 1px solid #ffffff;
+	white-space: nowrap;
+	padding: 3px;
+	font-size: 12px;
+	text-align: left;
 }
 
 table.TableField thead th span, 
 .TableListField table.data thead th span {
-	display: block;
-	float: left;
+	font-size: 12px;
 }
 
 table.TableField thead th a, 
@@ -57,8 +59,6 @@ table.CMSList thead th a {
 table.TableField thead th span.sortLink, 
 .TableListField table.data thead th span.sortLink, 
 table.CMSList thead th span.sortLink {
-	width: 16px;
-	height: 16px;
 	overflow: hidden;
 }
 
