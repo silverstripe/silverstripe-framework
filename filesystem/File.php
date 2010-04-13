@@ -54,7 +54,7 @@ class File extends DataObject {
 	public static $allowed_extensions = array(
 		'html','htm','xhtml','js','css',
 		'png','gif','jpg','jpeg',
-		'mov','mkv','mp3','m4a','swf',
+		'mov','mkv','mp3','m4a','swf','flv'
 		'doc','docx','txt','rtf','xls','xlsx','pages',
 		'ppt','pptx','pps','csv',
 		'zip','zipx','sit','sitx','gz','pkg','dmg','hqx',
