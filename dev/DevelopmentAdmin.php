@@ -19,8 +19,6 @@ class DevelopmentAdmin extends Controller {
 	function init() {
 		parent::init();
 		
-		BasicAuth::requireLogin('ADMIN', "SilverStripe Developer Access");
-		
 		// We allow access to this controller regardless of live-status or ADMIN permission only
 		// if on CLI.  Access to this controller is always allowed in "dev-mode", or of the user is ADMIN.
 		$canAccess = (Director::isDev() || Director::is_cli() || Permission::check("ADMIN"));
