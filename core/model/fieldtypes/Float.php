@@ -7,7 +7,7 @@
 class Float extends DBField {
 
 	function __construct($name, $defaultVal = 0) {
-		$this->defaultVal = is_float($defaultVal) ? $defaultVal : (float)0;
+		$this->defaultVal = is_float($defaultVal) ? $defaultVal : (float) 0;
 		
 		parent::__construct($name);
 	}
