@@ -127,6 +127,55 @@ class ManifestBuilderTest extends SapphireTest {
 		global $project;
 	}
 
+	function testThemeRetrieval() {
+		$ds = DIRECTORY_SEPARATOR;
+		$testThemeBaseDir = TEMP_FOLDER . $ds . 'test-themes';
+
+		// If the test directory somehow exists after a failed test, remove all the files and directories inside
+		if(file_exists($testThemeBaseDir)) {
+			$handle = opendir($testThemeBaseDir);
+			while(false !== ($file = readdir($handle))) {
+				$fullPath = $testThemeBaseDir . $ds . $file;
+				if(strpos($file, '.') === false) {
+					if(is_dir($fullPath)) rmdir($fullPath);
+					else unlink($fullPath);
+				}
+			}
+			closedir($handle);
+			rmdir($testThemeBaseDir);
+		}
+		
+		mkdir($testThemeBaseDir);
+		mkdir($testThemeBaseDir . $ds . 'blackcandy');
+		mkdir($testThemeBaseDir . $ds . 'blackcandy_blog');
+		mkdir($testThemeBaseDir . $ds . 'darkshades');
+		mkdir($testThemeBaseDir . $ds . 'darkshades_blog');
+		
+		$this->assertEquals(array(
+			'blackcandy',
+			'darkshades'
+		), ManifestBuilder::get_themes($testThemeBaseDir), 'Our test theme directory contains 2 themes');
+		
+		$this->assertEquals(array(
+			'blackcandy',
+			'blackcandy_blog',
+			'darkshades',
+			'darkshades_blog'
+		), ManifestBuilder::get_themes($testThemeBaseDir, true), 'Our test theme directory contains 2 themes and 2 sub-themes');
+
+		// Remove all the test themes we created
+		$handle = opendir($testThemeBaseDir);
+		while(false !== ($file = readdir($handle))) {
+			$fullPath = $testThemeBaseDir . $ds . $file;
+			if(strpos($file, '.') === false) {
+				if(is_dir($fullPath)) rmdir($fullPath);
+				else unlink($fullPath);
+			}
+		}
+		closedir($handle);
+		rmdir($testThemeBaseDir);
+	}
+
 	function tearDown() { 
 		global $_CLASS_MANIFEST, $_ALL_CLASSES, $project;
 
