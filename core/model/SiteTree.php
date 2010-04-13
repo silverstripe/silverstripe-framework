@@ -767,7 +767,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 
 		if(
 			strtolower($stage) == 'stage' && 
-			!Permission::checkMember($member, 'CMS_ACCESS_CMSMain')
+			!(Permission::check('CMS_ACCESS_CMSMain') || Permission::check('VIEW_DRAFT_CONTENT'))
 		) return false;
 		
 		return $this->canView($member);
