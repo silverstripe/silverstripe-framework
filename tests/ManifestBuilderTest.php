@@ -107,7 +107,7 @@ class ManifestBuilderTest extends SapphireTest {
 			} else {
 				touch($baseFolder . $item);
 				if($itemContent) {
-					$fh = fopen($baseFolder . $item, 'w');
+					$fh = fopen($baseFolder . $item, 'wb');
 					fwrite($fh, $itemContent);
 					fclose($fh);
 				}

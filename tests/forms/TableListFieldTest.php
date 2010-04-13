@@ -162,11 +162,11 @@ class TableListFieldTest extends SapphireTest {
 		
 		// Create a temporary file and write the CSV to it.
 		$csvFileName = tempnam(TEMP_FOLDER, 'csv-export');
-		$csvFile = fopen($csvFileName, 'w');
+		$csvFile = fopen($csvFileName, 'wb');
 		fwrite($csvFile, $csvOutput);
 		fclose($csvFile);
 		
-		$csvFile = fopen($csvFileName, 'r');
+		$csvFile = fopen($csvFileName, 'rb');
 		$csvRow = fgetcsv($csvFile);
 		$this->assertEquals(
 			$csvRow,
