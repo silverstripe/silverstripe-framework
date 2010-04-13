@@ -98,6 +98,8 @@ class FileTest extends SapphireTest {
 	
 	function setUp() {
 		parent::setUp();
+		
+		if(!file_exists(ASSETS_PATH)) mkdir(ASSETS_PATH);
 
 		/* Create a test folders for each of the fixture references */
 		$fileIDs = $this->allFixtureIDs('Folder');
