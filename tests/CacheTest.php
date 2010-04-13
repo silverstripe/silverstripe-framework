@@ -19,14 +19,14 @@ class CacheTest extends SapphireTest {
 	}
 	
 	function testCacheLifetime() {
-		SS_Cache::set_cache_lifetime('test', 4, 20);
+		SS_Cache::set_cache_lifetime('test', 0.5, 20);
 		
 		$cache = SS_Cache::factory('test');
 		
 		$cache->save('Good', 'cachekey');
 		$this->assertEquals('Good', $cache->load('cachekey'));
 		
-		sleep(8);
+		sleep(1);
 		
 		$this->assertFalse($cache->load('cachekey'));
 	}
