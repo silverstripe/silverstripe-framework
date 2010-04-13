@@ -890,6 +890,12 @@ class Translatable extends DataObjectDecorator implements PermissionProvider {
 		// Don't apply these modifications for normal DataObjects - they rely on CMSMain logic
 		if(!($this->owner instanceof SiteTree)) return;
 		
+		// Don't allow translation of virtual pages because of data inconsistencies (see #5000)
+		$excludedPageTypes = array('VirtualPage');
+		foreach($excludedPageTypes as $excludedPageType) {
+			if(is_a($this->owner, $excludedPageType)) return;
+		}
+		
 		$excludeFields = array(
 			'ViewerGroups',
 			'EditorGroups',

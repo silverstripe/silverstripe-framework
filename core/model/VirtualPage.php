@@ -31,7 +31,7 @@ class VirtualPage extends Page {
 			"Status",
 			'ShowInMenus',
 			'ShowInSearch',
-			'Locale'
+			// 'Locale'
 		);
 
 		$allFields = $this->db();
