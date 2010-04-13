@@ -23,8 +23,10 @@ class SiteTreeTest extends SapphireTest {
 		Translatable::set_default_locale("en_US");
 
 		// refresh the decorated statics - different fields in $db with Translatable enabled
-		if(self::$origTranslatableSettings['has_extension']) 
+		if(self::$origTranslatableSettings['has_extension']) {
 			Object::remove_extension('SiteTree', 'Translatable');
+			Object::remove_extension('SiteConfig', 'Translatable');
+		}
 
 		// recreate database with new settings
 		$dbname = self::create_temp_db();
@@ -34,8 +36,11 @@ class SiteTreeTest extends SapphireTest {
 	}
 	
 	static function tear_down_once() {
-		if(self::$origTranslatableSettings['has_extension']) 
+		if(self::$origTranslatableSettings['has_extension']) {
 			Object::add_extension('SiteTree', 'Translatable');
+			Object::add_extension('SiteConfig', 'Translatable');
+		}
+			
 
 		Translatable::set_default_locale(self::$origTranslatableSettings['default_locale']);
 		Translatable::set_current_locale(self::$origTranslatableSettings['default_locale']);
