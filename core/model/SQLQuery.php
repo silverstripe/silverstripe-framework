@@ -455,6 +455,8 @@ class SQLQuery {
 	 * "false" more often that is strictly necessary.
 	 */
 	function canSortBy($fieldName) {
+		$fieldName = preg_replace('/(\s+?)(A|DE)SC$/', '', $fieldName);
+		
 		$sql = $this->sql();
 	
 		$selects = $this->select;

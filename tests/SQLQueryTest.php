@@ -50,6 +50,13 @@ class SQLQueryTest extends SapphireTest {
 		$this->assertEquals("SELECT Name, Meta FROM MyTable WHERE (Name = 'Name') AND (Meta = 'Test')", $query->sql());
 	}
 	
+	function testCanSortBy() {
+		$query = new SQLQuery();
+		$query->select("Name","Meta")->from("MyTable")->where("Name", "Name")->where("Meta", "Test");
+		$this->assertTrue($query->canSortBy('Name ASC'));
+		$this->assertTrue($query->canSortBy('Name'));
+	}
+	
 	function testSelectWithChainedFilterParameters() {
 		$query = new SQLQuery();
 		$query->select(array("Name","Meta"))->from("MyTable");
