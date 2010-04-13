@@ -363,7 +363,7 @@ class Hierarchy extends DataObjectDecorator {
 	 * @var array $idList Array to put results in.
 	 */
 	public function loadDescendantIDListInto(&$idList) {
-		if($children = $this->_cache_allChildren) {
+		if($children = $this->AllChildren()) {
 			foreach($children as $child) {
 				if(in_array($child->ID, $idList)) {
 					continue;
