@@ -57,8 +57,17 @@ TreeDropdownField.prototype = {
 		}).bind(this));
 	},
 	
-	helperURLBase: function() {
-		return this.ownerForm().action + '/field/' + this.getName() + '/';
+	// Build a URL from the field's base URL and the given sub URL
+	buildURL: function(subURL) {
+		var baseURL = jQuery(this).attr('href');
+		var subHasQuerystring = subURL.match(/\?/);
+		
+		if(baseURL.match(/^(.*)\?(.*)$/)) {
+			if(subHasQuerystring) return RegExp.$1 + '/' + subURL + '&' + RegExp.$2
+			else return RegExp.$1 + '/' + subURL + '?' + RegExp.$2
+		} else {
+			return baseURL + '/' + subURL;
+		}
 	},
 	ownerForm: function() {
 		var f =this.parentNode;
@@ -171,7 +180,7 @@ TreeDropdownField.prototype = {
 	},
 	
 	ajaxGetTree: function(after) {
-		var ajaxURL = this.helperURLBase() + 'tree?';
+		var ajaxURL = this.buildURL('tree?forceValues=' + this.inputTag.value);
 		ajaxURL += $('SecurityID') ? '&SecurityID=' + $('SecurityID').value : '';
 		if($('Form_EditForm_Locale')) ajaxURL += "&locale=" + $('Form_EditForm_Locale').value;
 		if ( this.inputTag.value ) ajaxURL += '&forceValue=' + this.inputTag.value;
@@ -225,7 +234,7 @@ TreeDropdownField.prototype = {
 		var ul = this.treeNodeHolder();
 		ul.innerHTML = ss.i18n._t('LOADING', 'Loading...');
 		
-		var ajaxURL = this.options.dropdownField.helperURLBase() + 'tree/' + this.getIdx();
+		var ajaxURL = this.options.dropdownField.buildURL('tree/' + this.getIdx());
 		ajaxURL += $('SecurityID') ? '&SecurityID=' + $('SecurityID').value : '';
 		if($('Form_EditForm_Locale')) ajaxURL += "&locale=" + $('Form_EditForm_Locale').value;
 		// ajaxExpansion is called in context of TreeNode, not Tree, so search() doesn't exist.
