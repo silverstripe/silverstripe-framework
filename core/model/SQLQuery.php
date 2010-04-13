@@ -426,6 +426,12 @@ class SQLQuery {
 	 * TODO Respect HAVING and GROUPBY, which can affect the result-count
 	 */
 	function unlimitedRowCount( $column = null) {
+		// we can't clear the select if we're relying on its output by a HAVING clause
+		if(count($this->having)) {
+			$records = $this->execute();
+			return $records->numRecords();
+		}
+
 		// Choose a default column
 		if($column == null) {
 			if($this->groupby) {
