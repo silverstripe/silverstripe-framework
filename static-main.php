@@ -20,7 +20,10 @@ $homepageMapLocation = '../assets/_homepage-map.php';
 date_default_timezone_set('Pacific/Auckland');
 
 if ($cacheOn && empty($_COOKIE['bypassStaticCache'])) {
-	if (file_exists($hostmapLocation)) {
+	if (isset($_GET['cacheSubdir']) && !preg_match('/[^a-zA-Z0-9\-_]/', $_GET['cacheSubdir'])) {
+		$cacheDir = $_GET['cacheSubdir'];
+	}
+	else if (file_exists($hostmapLocation)) {
 		include_once $hostmapLocation;
 		$subsiteHostmap['default'] = isset($subsiteHostmap['default']) ? $subsiteHostmap['default'] : '';
 
