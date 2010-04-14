@@ -159,6 +159,8 @@ class ManifestBuilder {
 		// If no base directory specified, the default is the project root
 		if(!$baseDir) $baseDir = BASE_PATH . DIRECTORY_SEPARATOR . THEMES_DIR;
 		$themes = array();
+		if(!file_exists($baseDir)) return $themes;
+
 		$handle = opendir($baseDir);
 		if($handle) {
 			while(false !== ($file = readdir($handle))) {
