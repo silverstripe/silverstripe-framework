@@ -23,42 +23,39 @@ class MySQLDatabaseConfigurationHelper implements DatabaseConfigurationHelper {
 	/**
 	 * Ensure that the database server exists.
 	 * @param array $databaseConfig Associative array of db configuration, e.g. "server", "username" etc
-	 * @return array Result - e.g. array('okay' => true, 'error' => 'details of error')
+	 * @return array Result - e.g. array('success' => true, 'error' => 'details of error')
 	 */
 	public function requireDatabaseServer($databaseConfig) {
-		$okay = false;
+		$success = false;
 		$conn = @mysql_connect($databaseConfig['server'], null, null);
 		if($conn || mysql_errno() < 2000) {
-			$okay = true;
+			$success = true;
 		} else {
-			$okay = false;
+			$success = false;
 			$error = mysql_error();
 		}
 		return array(
-			'okay' => $okay,
+			'success' => $success,
 			'error' => $error
 		);
 	}
 
 	/**
 	 * Ensure a database connection is possible using credentials provided.
-	 * The established connection resource is returned with the results as well.
-	 * 
 	 * @param array $databaseConfig Associative array of db configuration, e.g. "server", "username" etc
-	 * @return array Result - e.g. array('okay' => true, 'connection' => mysql link, 'error' => 'details of error')
+	 * @return array Result - e.g. array('success' => true, 'error' => 'details of error')
 	 */
 	public function requireDatabaseConnection($databaseConfig) {
-		$okay = false;
+		$success = false;
 		$conn = @mysql_connect($databaseConfig['server'], $databaseConfig['username'], $databaseConfig['password']);
 		if($conn) {
-			$okay = true;
+			$success = true;
 		} else {
-			$okay = false;
+			$success = false;
 			$error = mysql_error();
 		}
 		return array(
-			'okay' => $okay,
-			'connection' => $conn,
+			'success' => $success,
 			'error' => $error
 		);
 	}
@@ -68,25 +65,25 @@ class MySQLDatabaseConfigurationHelper implements DatabaseConfigurationHelper {
 	 * or be able to create one if it doesn't exist.
 	 * 
 	 * @param array $databaseConfig Associative array of db configuration, e.g. "server", "username" etc
-	 * @return array Result - e.g. array('okay' => true, 'existsAlready' => 'true')
+	 * @return array Result - e.g. array('success' => true, 'alreadyExists' => 'true')
 	 */
 	public function requireDatabaseOrCreatePermissions($databaseConfig) {
-		$okay = false;
-		$existsAlready = false;
+		$success = false;
+		$alreadyExists = false;
 		$conn = @mysql_connect($databaseConfig['server'], $databaseConfig['username'], $databaseConfig['password']);
 		if(@mysql_select_db($databaseConfig['database'], $conn)) {
-			$okay = true;
-			$existsAlready = true;
+			$success = true;
+			$alreadyExists = true;
 		} else {
 			if(@mysql_query("CREATE DATABASE testing123", $conn)) {
 				mysql_query("DROP DATABASE testing123", $conn);
-				$okay = true;
-				$existsAlready = false;
+				$success = true;
+				$alreadyExists = false;
 			}
 		}
 		return array(
-			'okay' => $okay,
-			'existsAlready' => $existsAlready
+			'success' => $success,
+			'alreadyExists' => $alreadyExists
 		);
 	}
 
