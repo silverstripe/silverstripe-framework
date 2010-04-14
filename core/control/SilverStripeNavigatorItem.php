@@ -123,8 +123,11 @@ class SilverStripeNavigatorItem_LiveLink extends SilverStripeNavigatorItem {
 		if(Versioned::current_stage() == 'Live') {
 			return "<a class=\"current\">". _t('ContentController.PUBLISHEDSITE', 'Published Site') ."</a>";
 		} else {
-			$thisPage = $page->AbsoluteLink();
-			return "<a href=\"$thisPage?stage=Live\" class=\"newWindow\" target=\"site\" style=\"left : -3px;\">". _t('ContentController.PUBLISHEDSITE', 'Published Site') ."</a>";
+			$livePage = Versioned::get_one_by_stage('SiteTree', 'Live', '"SiteTree"."ID" = ' . $page->ID);
+			if($livePage) {
+				$thisPage = $livePage->AbsoluteLink();
+				return "<a href=\"$thisPage?stage=Live\" class=\"newWindow\" target=\"site\" style=\"left : -3px;\">". _t('ContentController.PUBLISHEDSITE', 'Published Site') ."</a>";
+			}
 		}
 	}
 	
