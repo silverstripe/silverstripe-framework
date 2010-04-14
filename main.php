@@ -107,7 +107,7 @@ require_once("core/model/DB.php");
 // Redirect to the installer if no database is selected
 if(!isset($databaseConfig) || !isset($databaseConfig['database']) || !$databaseConfig['database']) {
 	$s = (isset($_SERVER['SSL']) || (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off')) ? 's' : '';
-	$installURL = "http$s://" . $_SERVER['HTTP_HOST'] . dirname(dirname($_SERVER['SCRIPT_NAME'])) . '/install.php';
+	$installURL = "http$s://" . $_SERVER['HTTP_HOST'] . BASE_URL . '/install.php';
 	
 	// The above dirname() will equate to "\" on Windows when installing directly from http://localhost (not using
 	// a sub-directory), this really messes things up in some browsers. Let's get rid of the backslashes
