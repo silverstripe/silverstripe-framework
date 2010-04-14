@@ -48,6 +48,7 @@ class DateField extends TextField {
 	protected $config = array(
 		'showcalendar' => false,
 		'dmyfields' => false,
+		'dmyseparator' => '&nbsp;<span class="separator">/</span>&nbsp;',
 		'dateformat' => null,
 		'datavalueformat' => 'yyyy-MM-dd',
 		'min' => null,
@@ -101,13 +102,15 @@ class DateField extends TextField {
 			$fieldYear->addExtraClass('year');
 			$fieldYear->setMaxLength(4);
 			
-			// TODO Locale specific ordering of fields
-			$sep = '&nbsp;<span class="separator">/</span>&nbsp;';
-			$html = $fieldDay->Field() . 
-				$sep . 
-				$fieldMonth->Field() . 
-				$sep . 
-				$fieldYear->Field();
+			// order fields depending on format
+			$sep = $this->getConfig('dmyseparator');
+			$format = $this->getConfig('dateformat');
+			$fields = array();
+			$fields[stripos($format, 'd')] = $fieldDay->Field();
+			$fields[stripos($format, 'm')] = $fieldMonth->Field();
+			$fields[stripos($format, 'y')] = $fieldYear->Field();
+			ksort($fields);
+			$html = implode($sep, $fields);
 		} 
 		// Default text input field
 		else {
