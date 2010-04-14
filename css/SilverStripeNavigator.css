@@ -85,9 +85,9 @@
 #SilverStripeNavigatorLinkPopup {
 	display: none;
 	position: absolute;
-	top: -50px;
-	height: 40px;
-	width: 280px;
+	top: -60px;
+	height: 50px;
+	width: 350px;
 	left: 200px;
 	background-color: white;
 	border: 1px solid black;
@@ -99,3 +99,13 @@
 #SilverStripeNavigatorLinkPopup input {
 	width: 250px;
 }
+
+#SilverStripeNavigatorLinkPopup a.close {
+	color: blue;
+	text-align: right;
+	width: 80%;
+	border: none !important;
+	cursor: pointer;
+}
+
+
