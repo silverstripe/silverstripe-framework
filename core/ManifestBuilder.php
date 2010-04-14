@@ -574,7 +574,7 @@ class ManifestBuilder {
 	 */
 	static function has_been_included() {
 		global $_CLASS_MANIFEST, $_TEMPLATE_MANIFEST, $_CSS_MANIFEST, $_ALL_CLASSES;
-		return (bool)(empty($_CLASS_MANIFEST) && empty($_TEMPLATE_MANIFEST) && empty($_CSS_MANIFEST) && empty($_ALL_CLASSES));
+		return (bool)!(empty($_CLASS_MANIFEST) && empty($_TEMPLATE_MANIFEST) && empty($_CSS_MANIFEST) && empty($_ALL_CLASSES));
 	}
 
 	/**
