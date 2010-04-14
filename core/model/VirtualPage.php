@@ -226,6 +226,8 @@ class VirtualPage extends Page {
 				$return = $this->copyContentFrom()->$funcName();
 			} else if($this->copyContentFrom()->hasField($field)) {
 				$return = $this->copyContentFrom()->getField($field);
+			} else if($field == 'Content') {
+				return '<p>' . _t('VirtualPage.NOTFOUND', 'We could not find the content for this virtual page.') . '</p>';
 			}
 		}
 		
@@ -260,13 +262,6 @@ class VirtualPage extends Page {
 		$haveIt = parent::hasMethod($method);
 		if (!$haveIt) $haveIt = $this->copyContentFrom()->hasMethod($method);		
 		return $haveIt;
-	}
-	
-	/**
-	 * If we ever get this far, it means that the VP failed.
-	 */
-	function Content() {
-		return '<p>'._t('VirtualPage.NOTFOUND', 'We could not find the content for this virtual page.').'</p>';
 	}
 }
 
