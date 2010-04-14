@@ -307,7 +307,7 @@ class SiteTreeTest extends SapphireTest {
 	}
 	
 	function testDeleteFromStageOperatesRecursively() {
-		SiteTree::enforce_strict_hierarchy(false);
+		SiteTree::set_enforce_strict_hierarchy(false);
 		$pageAbout = $this->objFromFixture('Page', 'about');
 		$pageStaff = $this->objFromFixture('Page', 'staff');
 		$pageStaffDuplicate = $this->objFromFixture('Page', 'staffduplicate');
@@ -317,7 +317,7 @@ class SiteTreeTest extends SapphireTest {
 		$this->assertFalse(DataObject::get_by_id('Page', $pageAbout->ID));
 		$this->assertTrue(DataObject::get_by_id('Page', $pageStaff->ID) instanceof Page);
 		$this->assertTrue(DataObject::get_by_id('Page', $pageStaffDuplicate->ID) instanceof Page);
-		SiteTree::enforce_strict_hierarchy(true);
+		SiteTree::set_enforce_strict_hierarchy(true);
 	}
 	
 	function testDeleteFromStageOperatesRecursivelyStrict() {
@@ -333,7 +333,7 @@ class SiteTreeTest extends SapphireTest {
 	}
 	
 	function testDeleteFromLiveOperatesRecursively() {
-		SiteTree::enforce_strict_hierarchy(false);
+		SiteTree::set_enforce_strict_hierarchy(false);
 		$this->logInWithPermssion('ADMIN');
 		
 		$pageAbout = $this->objFromFixture('Page', 'about');
@@ -351,11 +351,11 @@ class SiteTreeTest extends SapphireTest {
 		$this->assertTrue(DataObject::get_by_id('Page', $pageStaff->ID) instanceof Page);
 		$this->assertTrue(DataObject::get_by_id('Page', $pageStaffDuplicate->ID) instanceof Page);
 		Versioned::reading_stage('Stage');
-		SiteTree::enforce_strict_hierarchy(true);
+		SiteTree::set_enforce_strict_hierarchy(true);
 	}
 	
 	function testUnpublishDoesNotDeleteChildrenWithLooseHierachyOn() {
-		SiteTree::enforce_strict_hierarchy(false);
+		SiteTree::set_enforce_strict_hierarchy(false);
 		$this->logInWithPermssion('ADMIN');
 		
 		$pageAbout = $this->objFromFixture('Page', 'about');
@@ -373,7 +373,7 @@ class SiteTreeTest extends SapphireTest {
 		$this->assertTrue(DataObject::get_by_id('Page', $pageStaff->ID) instanceof Page);
 		$this->assertTrue(DataObject::get_by_id('Page', $pageStaffDuplicate->ID) instanceof Page);
 		Versioned::reading_stage('Stage');
-		SiteTree::enforce_strict_hierarchy(true);
+		SiteTree::set_enforce_strict_hierarchy(true);
 	}
 	
 	
