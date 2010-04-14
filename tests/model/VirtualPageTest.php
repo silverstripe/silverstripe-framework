@@ -210,6 +210,29 @@ class VirtualPageTest extends SapphireTest {
 		$this->assertFalse($vp->IsModifiedOnStage);
 	}
 	
+	function testVirtualPagesCreateVersionRecords() {
+		$source = $this->objFromFixture('Page', 'master');
+		$source->Title = "T0";
+		$source->write();
+		
+		// Creating a new VP to ensure that Version #s are out of alignment
+		$vp = new VirtualPage();
+		$vp->CopyContentFromID = $source->ID;
+		$vp->write();
+
+		$source->Title = "T1";
+		$source->write();
+		$source->Title = "T2";
+		$source->write();
+		
+		$this->assertEquals($vp->ID, DB::query("SELECT \"RecordID\" FROM \"SiteTree_versions\"
+			WHERE \"RecordID\" = $vp->ID AND \"Title\" = 'T1'")->value());
+		$this->assertEquals($vp->ID, DB::query("SELECT \"RecordID\" FROM \"SiteTree_versions\" 
+			WHERE \"RecordID\" = $vp->ID AND \"Title\" = 'T2'")->value());
+		$this->assertEquals($vp->ID, DB::query("SELECT \"RecordID\" FROM \"SiteTree_versions\"
+			WHERE \"RecordID\" = $vp->ID AND \"Version\" = $vp->Version")->value());
+	}
+	
 	function fixVersionNumberCache($page) {
 		$pages = func_get_args();
 		foreach($pages as $p) {
