@@ -298,6 +298,12 @@ class ContentController extends Controller {
 
 		if(Director::isDev() || Permission::check('CMS_ACCESS_CMSMain') || Permission::check('VIEW_DRAFT_CONTENT')) {			
 			if($this->dataRecord) {
+				Requirements::css(SAPPHIRE_DIR . '/css/SilverStripeNavigator.css');
+				Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/behaviour/behaviour.js');
+				Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery/jquery.js');
+				Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-livequery/jquery.livequery.js');
+				Requirements::javascript(SAPPHIRE_DIR . '/javascript/SilverStripeNavigator.js');
+				
 				$return = $nav = SilverStripeNavigator::get_for_record($this->dataRecord);
 				$items = $return['items'];
 				$message = $return['message'];
