@@ -81,3 +81,21 @@
 	padding-bottom:4px;
 	padding-right:20px;
 }
+
+#SilverStripeNavigatorLinkPopup {
+	display: none;
+	position: absolute;
+	top: -50px;
+	height: 40px;
+	width: 280px;
+	left: 200px;
+	background-color: white;
+	border: 1px solid black;
+	z-index: 100;
+	color: black;
+	padding: 5px;
+}
+
+#SilverStripeNavigatorLinkPopup input {
+	width: 250px;
+}

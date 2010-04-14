@@ -1848,8 +1848,16 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	}
 	
 	function getNavigatorItems() {
+		Requirements::css(SAPPHIRE_DIR . '/css/SilverStripeNavigator.css');
+		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/behaviour/behaviour.js');
+		// Requirements::javascript(THIRDPARTY_DIR . '/prototype.js');
+		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery/jquery.js');
+		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-livequery/jquery.livequery.js');
+		Requirements::javascript(SAPPHIRE_DIR . '/javascript/SilverStripeNavigator.js');
+	
 		$items = '';
 		$message = '';
+		$link = '';
 	
 		$navItemClasses = ClassInfo::subclassesFor('SilverStripeNavigatorItem');
 		array_shift($navItemClasses);
@@ -1874,6 +1882,13 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 			if($text) $items .= $text;
 			$newMessage = $obj->getMessage($this);
 			if($newMessage) $message = $newMessage;
+			$newLink = $obj->getLink($this);
+			if($newLink) $link = $newLink;
+		}
+		
+		if($link) {
+			$data = new ArrayData(array('Link' => $link));
+			$items .= $data->renderWith(array('SilverStripeNavigatorLink'));
 		}
 		
 		return array(
