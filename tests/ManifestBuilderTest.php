@@ -5,7 +5,7 @@
  */
 class ManifestBuilderTest extends SapphireTest {
 	function testManifest() {
-		$baseFolder = TEMP_FOLDER . '/manifest-test';
+		$baseFolder = TEMP_FOLDER . '/manifest-test-asdfasdfasdf';
 		$manifestInfo = ManifestBuilder::get_manifest_info($baseFolder);
 		global $project;
 		
@@ -32,7 +32,7 @@ class ManifestBuilderTest extends SapphireTest {
 	}
 	
 	function testManifestIgnoresClassesInComments() {
-		$baseFolder = TEMP_FOLDER . '/manifest-test';
+		$baseFolder = TEMP_FOLDER . '/manifest-test-asdfasdfasdf';
 		global $project;
 
 		$manifestInfo = ManifestBuilder::get_manifest_info($baseFolder);
@@ -49,7 +49,7 @@ class ManifestBuilderTest extends SapphireTest {
 	}
 
 	function testManifestIgnoresClassesInStrings() {
-		$baseFolder = TEMP_FOLDER . '/manifest-test';
+		$baseFolder = TEMP_FOLDER . '/manifest-test-asdfasdfasdf';
 		$manifestInfo = ManifestBuilder::get_manifest_info($baseFolder);
 
 		/* If a class defintion is listed in a single quote string, then it shouldn't be inlcuded.  Here we have put a class definition for  MyClass_InSingleQuoteString inside a single-quoted string */
@@ -70,7 +70,7 @@ class ManifestBuilderTest extends SapphireTest {
 
 
 	function testClassNamesDontHaveToBeTheSameAsFileNames() {
-		$baseFolder = TEMP_FOLDER . '/manifest-test';
+		$baseFolder = TEMP_FOLDER . '/manifest-test-asdfasdfasdf';
 		$manifestInfo = ManifestBuilder::get_manifest_info($baseFolder);
 		
 		$this->assertContains('BaseClass', array_keys($manifestInfo['globals']['_ALL_CLASSES']['exists']));
@@ -88,7 +88,7 @@ class ManifestBuilderTest extends SapphireTest {
 		include('tests/ManifestBuilderTest.fixture.inc');		
 
 		// Build the fixture specified above
-		$baseFolder = TEMP_FOLDER . '/manifest-test/';
+		$baseFolder = TEMP_FOLDER . '/manifest-test-asdfasdfasdf/';
 
 		if(file_exists($baseFolder)) Filesystem::removeFolder($baseFolder);
 		mkdir($baseFolder);
@@ -165,7 +165,7 @@ class ManifestBuilderTest extends SapphireTest {
 		$_ALL_CLASSES = $this->originalAllClasses;
 
 		// Kill the folder after we're done
-		$baseFolder = TEMP_FOLDER . '/manifest-test/';
+		$baseFolder = TEMP_FOLDER . '/manifest-test-asdfasdfasdf/';
 		Filesystem::removeFolder($baseFolder);
 		
 		parent::tearDown();
