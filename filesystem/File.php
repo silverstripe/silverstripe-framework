@@ -662,7 +662,7 @@ class File extends DataObject {
 	 */
 	function uploadMetadataFields() {
 		$fields = new FieldSet();
-		$fields->push(new TextField('Title'));
+		$fields->push(new TextField('Title', $this->fieldLabel('Title')));
 		$this->extend('updateUploadMetadataFields', $fields);
 		return $fields;
 	}
