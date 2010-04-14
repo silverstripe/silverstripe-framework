@@ -46,12 +46,12 @@ class SiteConfig extends DataObject {
 
 		$fields = new FieldSet(
 			new TabSet("Root",
-				new Tab('Main',
+				$tabMain = new Tab('Main',
 					$titleField = new TextField("Title", _t('SiteConfig.SITETITLE', "Site title")),
 					$taglineField = new TextField("Tagline", _t('SiteConfig.SITETAGLINE', "Site Tagline/Slogan")),
 					new DropdownField("Theme", _t('SiteConfig.THEME', 'Theme'), $this->getAvailableThemes(), '', null, _t('SiteConfig.DEFAULTTHEME', '(Use default theme)'))
 				),
-				new Tab('Access',
+				$tabAccess = new Tab('Access',
 					new HeaderField('WhoCanViewHeader', _t('SiteConfig.VIEWHEADER', "Who can view pages on this site?"), 2),
 					$viewersOptionsField = new OptionsetField("CanViewType"),
 					$viewerGroupsField = new TreeMultiselectField("ViewerGroups", _t('SiteTree.VIEWERGROUPS', "Viewer Groups")),
@@ -95,7 +95,8 @@ class SiteConfig extends DataObject {
 			$fields->makeFieldReadonly($taglineField);
 			$fields->makeFieldReadonly($titleField);
 		}
-
+		$tabMain->setTitle(_t('SiteConfig.TABMAIN', "Main"));
+		$tabAccess->setTitle(_t('SiteConfig.TABACCESS', "Access"));
 		$this->extend('updateCMSFields', $fields);
 		
 		return $fields;

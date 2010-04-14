@@ -20,7 +20,7 @@ $lang['pl_PL']['AdvancedSearchForm']['ALLWORDS'] = 'Wszystkich Słów';
 $lang['pl_PL']['AdvancedSearchForm']['ATLEAST'] = 'Co Najmniej Jednego Ze Słów';
 $lang['pl_PL']['AdvancedSearchForm']['EXACT'] = 'Dokładnego Wyrażenia';
 $lang['pl_PL']['AdvancedSearchForm']['FROM'] = 'Z';
-$lang['pl_PL']['AdvancedSearchForm']['GO'] = 'Idź';
+$lang['pl_PL']['AdvancedSearchForm']['GO'] = 'Ok';
 $lang['pl_PL']['AdvancedSearchForm']['LASTUPDATED'] = 'Daty ostatniej edycji';
 $lang['pl_PL']['AdvancedSearchForm']['LASTUPDATEDHEADER'] = 'OSTATNIE EDYTOWANE';
 $lang['pl_PL']['AdvancedSearchForm']['PAGETITLE'] = 'Tytuł strony';
@@ -324,8 +324,8 @@ $lang['pl_PL']['LoginAttempt']['Status'] = 'Status';
 $lang['pl_PL']['Member']['ADDRESS'] = 'Adres';
 $lang['pl_PL']['Member']['belongs_many_many_Groups'] = 'Grupy';
 $lang['pl_PL']['Member']['BUTTONCHANGEPASSWORD'] = 'Zmień hasło';
-$lang['pl_PL']['Member']['BUTTONLOGIN'] = 'Zalogowany';
-$lang['pl_PL']['Member']['BUTTONLOGINOTHER'] = 'Zalogowany jako ktoś inny';
+$lang['pl_PL']['Member']['BUTTONLOGIN'] = 'Zaloguj';
+$lang['pl_PL']['Member']['BUTTONLOGINOTHER'] = 'Zaloguj jako ktoś inny';
 $lang['pl_PL']['Member']['BUTTONLOSTPASSWORD'] = 'Zgubiłem hasło';
 $lang['pl_PL']['Member']['CONFIRMNEWPASSWORD'] = 'Potwierdź nowe hasło';
 $lang['pl_PL']['Member']['CONFIRMPASSWORD'] = 'Potwierdź hasło';
@@ -397,7 +397,7 @@ $lang['pl_PL']['RemoveOrphanedPagesTask']['BUTTONRUN'] = 'Uruchom';
 $lang['pl_PL']['RemoveOrphanedPagesTask']['CHOOSEOPERATION'] = 'Wybierz operacje:';
 $lang['pl_PL']['RemoveOrphanedPagesTask']['SELECTALL'] = 'zaznacz wszystkie';
 $lang['pl_PL']['RemoveOrphanedPagesTask']['UNSELECTALL'] = 'odznacz wszystkie';
-$lang['pl_PL']['SearchForm']['GO'] = 'Idź';
+$lang['pl_PL']['SearchForm']['GO'] = 'Ok';
 $lang['pl_PL']['SearchForm']['SEARCH'] = 'Szukaj';
 $lang['pl_PL']['Security']['ALREADYLOGGEDIN'] = 'Nie masz dostępu do tej strony. Jeśli posiadasz inne konto, które umożliwi Ci dostęp do tej strony, możesz się zalogować poniżej';
 $lang['pl_PL']['Security']['BUTTONSEND'] = 'Wyślij mi link do zresetowania hasła';
@@ -441,6 +441,29 @@ $lang['pl_PL']['SecurityAdmin']['OPTIONALID'] = 'Opcjonalne ID';
 $lang['pl_PL']['SecurityAdmin']['PERMISSIONS'] = 'Zezwolenia';
 $lang['pl_PL']['SecurityAdmin']['VIEWUSER'] = 'Zobacz Użytkownika';
 $lang['pl_PL']['SimpleImageField']['NOUPLOAD'] = 'Nie wgrano zdjęć';
+$lang['pl_PL']['SiteConfig']['DEFAULTTHEME'] = '(Użyj domyślnego szablonu)';
+$lang['pl_PL']['SiteConfig']['EDITHEADER'] = 'Kto może edytować strony tego serwisu?';
+$lang['pl_PL']['SiteConfig']['EDIT_PERMISSION'] = 'Zarządzanie konfiguracją strony';
+$lang['pl_PL']['SiteConfig']['EDIT_PERMISSION_HELP'] = 'Możliwość edycji globalnych ustawień bezpieczeństwa/uprawnień do stron pierwszego poziomu.';
+$lang['pl_PL']['SiteConfig']['PLURALNAME'] = array(
+	'Konfiguracje serwisu',
+	50,
+	'Pural name of the object, used in dropdowns and to generally identify a collection of this object in the interface'
+);
+$lang['pl_PL']['SiteConfig']['SINGULARNAME'] = array(
+	'Konfiguracja serwisu',
+	50,
+	'Singular name of the object, used in dropdowns and to generally identify a single object in the interface'
+);
+$lang['pl_PL']['SiteConfig']['SITENAMEDEFAULT'] = 'Nazwa twojego serwisu';
+$lang['pl_PL']['SiteConfig']['SITETAGLINE'] = 'Slogan serwisu';
+$lang['pl_PL']['SiteConfig']['SITETITLE'] = 'Tytuł serwisu';
+$lang['pl_PL']['SiteConfig']['TABACCESS'] = 'Dostęp';
+$lang['pl_PL']['SiteConfig']['TABMAIN'] = 'Główny';
+$lang['pl_PL']['SiteConfig']['TAGLINEDEFAULT'] = 'napisz swój slogan tutaj';
+$lang['pl_PL']['SiteConfig']['THEME'] = 'Szablon';
+$lang['pl_PL']['SiteConfig']['TOPLEVELCREATE'] = 'Kto może tworzyć strony w korzeniu serwisu?';
+$lang['pl_PL']['SiteConfig']['VIEWHEADER'] = 'Kto może oglądać strony serwisu?';
 $lang['pl_PL']['SiteTree']['ACCESSANYONE'] = 'Ktokolwiek';
 $lang['pl_PL']['SiteTree']['ACCESSHEADER'] = 'Kto może zobaczyć tę stronę?';
 $lang['pl_PL']['SiteTree']['ACCESSLOGGEDIN'] = 'Tylko zarejestrowani użytkownicy';
@@ -487,6 +510,12 @@ $lang['pl_PL']['SiteTree']['PAGESLINKING'] = 'Następujące strony mają adres:'
 $lang['pl_PL']['SiteTree']['PAGETITLE'] = 'Nazwa strony';
 $lang['pl_PL']['SiteTree']['PAGETYPE'] = 'Rodzaj strony';
 $lang['pl_PL']['SiteTree']['PARENTID'] = 'Strona nadrzędna';
+$lang['pl_PL']['SiteTree']['PARENTTYPE'] = array(
+	'Położenie strony',
+	PR_MEDIUM
+);
+$lang['pl_PL']['SiteTree']['PARENTTYPE_ROOT'] = 'Strona najwyższego poziomu';
+$lang['pl_PL']['SiteTree']['PARENTTYPE_SUBPAGE'] = 'Podstrona innej strony (wybierz poniżej)';
 $lang['pl_PL']['SiteTree']['PLURALNAME'] = 'Drzewa stron';
 $lang['pl_PL']['SiteTree']['REMOVEDFROMDRAFT'] = 'Usunięto z roboczej strony';
 $lang['pl_PL']['SiteTree']['SHOWINMENUS'] = 'Pokazuj w menu?';
