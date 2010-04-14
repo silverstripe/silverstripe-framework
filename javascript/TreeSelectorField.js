@@ -60,6 +60,7 @@ TreeDropdownField.prototype = {
 	// Build a URL from the field's base URL and the given sub URL
 	buildURL: function(subURL) {
 		var baseURL = jQuery(this).attr('href');
+		if (!baseURL) baseURL = this.ownerForm().action + '/field/' + this.getName() + '/';
 		var subHasQuerystring = subURL.match(/\?/);
 		
 		if(baseURL.match(/^(.*)\?(.*)$/)) {
