@@ -71,7 +71,7 @@ class SiteTreeBrokenLinksTest extends SapphireTest {
 	}
 	
 	function testDeletingMarksBackLinkedPagesAsBroken() {
-		$this->logInWithPermssion('ADMIN');
+		$this->logInWithPermission('ADMIN');
 		
 		// Set up two published pages with a link from content -> about
 		$linkDest = $this->objFromFixture('Page','about');
@@ -113,7 +113,7 @@ class SiteTreeBrokenLinksTest extends SapphireTest {
 	}
 
 	function testPublishingSourceBeforeDestHasBrokenLink() {
-		$this->logInWithPermssion('ADMIN');
+		$this->logInWithPermission('ADMIN');
 		
 		// Set up two draft pages with a link from content -> about
 		$linkDest = $this->objFromFixture('Page','about');

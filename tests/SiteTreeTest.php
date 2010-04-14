@@ -94,7 +94,7 @@ class SiteTreeTest extends SapphireTest {
 	 * Test that field which are set and then cleared are also transferred to the published site.
 	 */
 	function testPublishDeletedFields() {
-		$this->logInWithPermssion('ADMIN');
+		$this->logInWithPermission('ADMIN');
 		
 		$obj = $this->objFromFixture('Page', 'about');
 		$obj->MetaTitle = "asdfasdf";
@@ -334,7 +334,7 @@ class SiteTreeTest extends SapphireTest {
 	
 	function testDeleteFromLiveOperatesRecursively() {
 		SiteTree::set_enforce_strict_hierarchy(false);
-		$this->logInWithPermssion('ADMIN');
+		$this->logInWithPermission('ADMIN');
 		
 		$pageAbout = $this->objFromFixture('Page', 'about');
 		$pageAbout->doPublish();
@@ -356,7 +356,7 @@ class SiteTreeTest extends SapphireTest {
 	
 	function testUnpublishDoesNotDeleteChildrenWithLooseHierachyOn() {
 		SiteTree::set_enforce_strict_hierarchy(false);
-		$this->logInWithPermssion('ADMIN');
+		$this->logInWithPermission('ADMIN');
 		
 		$pageAbout = $this->objFromFixture('Page', 'about');
 		$pageAbout->doPublish();
@@ -378,7 +378,7 @@ class SiteTreeTest extends SapphireTest {
 	
 	
 	function testDeleteFromLiveOperatesRecursivelyStrict() {
-		$this->logInWithPermssion('ADMIN');
+		$this->logInWithPermission('ADMIN');
 		
 		$pageAbout = $this->objFromFixture('Page', 'about');
 		$pageAbout->doPublish();

@@ -30,7 +30,7 @@ class VirtualPageTest extends SapphireTest {
 	 * virtual pages are published
 	 */
 	function testPublishingSourcePagePublishesAlreadyPublishedVirtualPages() {
-		$this->logInWithPermssion('ADMIN');
+		$this->logInWithPermission('ADMIN');
 
 		$master = $this->objFromFixture('Page', 'master');
 		$master->doPublish();
