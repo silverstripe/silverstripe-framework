@@ -957,7 +957,7 @@ JS
 					$className = isset($item['RecordClassName']) ? $item['RecordClassName'] : $item['ClassName'];
 					$item = new $className($item);
 				}
-				$fieldItem = new $this->itemClass($item, $this, null);
+				$fieldItem = new $this->itemClass($item, $this);
 				
 				$fields = $fieldItem->Fields(false);
 				$columnData = array();
