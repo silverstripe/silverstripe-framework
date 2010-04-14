@@ -81,13 +81,6 @@ class Image extends File {
 		}		
 	}
 	
-	function onBeforeDelete() {
-		parent::onBeforeDelete();
-		
-		// Delete the temp verions of this file in assets/_resampled
-		$this->deleteFormattedImages();
-	}
-
 	/**
 	 * Return an XHTML img tag for this Image.
 	 * @return string
