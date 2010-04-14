@@ -32,8 +32,8 @@ class AdvancedSearchForm extends SearchForm {
 				),
 				$chooseDate = new CompositeField(
 					new HeaderField('LastUpdatedHeader',_t('AdvancedSearchForm.LASTUPDATEDHEADER', 'LAST UPDATED')),
-					new CompositeDateField("From", _t('AdvancedSearchForm.FROM', 'From')),
-					new CompositeDateField("To", _t('AdvancedSearchForm.TO', 'To'))
+					new DateField("From", _t('AdvancedSearchForm.FROM', 'From')),
+					new DateField("To", _t('AdvancedSearchForm.TO', 'To'))
 				)					
 			);
 			

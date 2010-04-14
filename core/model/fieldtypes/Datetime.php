@@ -58,7 +58,7 @@ class SS_Datetime extends Date {
 	}
 	
 	public function scaffoldFormField($title = null, $params = null) {
-		return new PopupDateTimeField($this->name, $title);
+		return new DatetimeField($this->name, $title);
 	}
 	
 	/**
