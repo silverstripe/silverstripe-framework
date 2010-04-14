@@ -108,8 +108,12 @@ table.testResults {
 	padding-top: 20px;
 }
 
+.helpText {
+	float: right;
+	width: 380px;
+}
+
 div.section {
-	margin-top: 30px;
 	width: 330px;
 	float: left;
 	overflow: hidden;
