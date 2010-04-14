@@ -45,7 +45,13 @@ class ModelAsController extends Controller implements NestedController {
 		$this->response = new SS_HTTPResponse();
 
 		$this->init();
-		
+
+		// If we had a redirection or something, halt processing.
+		if($this->response->isFinished()) {
+			$this->popCurrent();
+			return $this->response;
+		}
+
 		// If the database has not yet been created, redirect to the build page.
 		if(!DB::isActive() || !ClassInfo::hasTable('SiteTree')) {
 			$this->response->redirect(Director::absoluteBaseURL() . 'dev/build?returnURL=' . (isset($_GET['url']) ? urlencode($_GET['url']) : null));
