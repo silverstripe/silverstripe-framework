@@ -414,9 +414,12 @@ class ManifestBuilder {
 		if(!$file) return;
 		
 		// We cache the parse results of each file, since only a few files will have changed between flushings
-		// And, although it's accurate, TokenisedRegularExpression isn't particularly fast
-		$parseCacheFile = TEMP_FOLDER . "/manifestClassParse-" . str_replace(array("/",":", "\\"),"_", realpath($filename));
-		if(!file_exists($parseCacheFile) || filemtime($parseCacheFile) < filemtime($filename)) {
+		// And, although it's accurate, TokenisedRegularExpression isn't particularly fast.
+		// We use an MD5 of the file as a part of the cache key because using datetime caused problems when users
+		// were upgrading their sites
+		$fileMD5 = md5($file);
+		$parseCacheFile = TEMP_FOLDER . "/manifestClassParse-" . str_replace(array("/",":", "\\"),"_", realpath($filename)) . "-$fileMD5";
+		if(!file_exists($parseCacheFile)) {
 			$tokens = token_get_all($file);
 			$classes = self::getClassDefParser()->findAll($tokens);
 			$interfaces = self::getInterfaceDefParser()->findAll($tokens);
