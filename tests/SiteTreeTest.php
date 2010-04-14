@@ -307,6 +307,20 @@ class SiteTreeTest extends SapphireTest {
 	}
 	
 	function testDeleteFromStageOperatesRecursively() {
+		SiteTree::enforce_strict_hierarchy(false);
+		$pageAbout = $this->objFromFixture('Page', 'about');
+		$pageStaff = $this->objFromFixture('Page', 'staff');
+		$pageStaffDuplicate = $this->objFromFixture('Page', 'staffduplicate');
+		
+		$pageAbout->delete();
+		
+		$this->assertFalse(DataObject::get_by_id('Page', $pageAbout->ID));
+		$this->assertTrue(DataObject::get_by_id('Page', $pageStaff->ID) instanceof Page);
+		$this->assertTrue(DataObject::get_by_id('Page', $pageStaffDuplicate->ID) instanceof Page);
+		SiteTree::enforce_strict_hierarchy(true);
+	}
+	
+	function testDeleteFromStageOperatesRecursivelyStrict() {
 		$pageAbout = $this->objFromFixture('Page', 'about');
 		$pageStaff = $this->objFromFixture('Page', 'staff');
 		$pageStaffDuplicate = $this->objFromFixture('Page', 'staffduplicate');
@@ -317,8 +331,30 @@ class SiteTreeTest extends SapphireTest {
 		$this->assertFalse(DataObject::get_by_id('Page', $pageStaff->ID));
 		$this->assertFalse(DataObject::get_by_id('Page', $pageStaffDuplicate->ID));
 	}
-
+	
 	function testDeleteFromLiveOperatesRecursively() {
+		SiteTree::enforce_strict_hierarchy(false);
+		$this->logInWithPermssion('ADMIN');
+		
+		$pageAbout = $this->objFromFixture('Page', 'about');
+		$pageAbout->doPublish();
+		$pageStaff = $this->objFromFixture('Page', 'staff');
+		$pageStaff->doPublish();
+		$pageStaffDuplicate = $this->objFromFixture('Page', 'staffduplicate');
+		$pageStaffDuplicate->doPublish();
+		
+		$parentPage = $this->objFromFixture('Page', 'about');
+		$parentPage->doDeleteFromLive();
+		
+		Versioned::reading_stage('Live');
+		$this->assertFalse(DataObject::get_by_id('Page', $pageAbout->ID));
+		$this->assertTrue(DataObject::get_by_id('Page', $pageStaff->ID) instanceof Page);
+		$this->assertTrue(DataObject::get_by_id('Page', $pageStaffDuplicate->ID) instanceof Page);
+		Versioned::reading_stage('Stage');
+		SiteTree::enforce_strict_hierarchy(true);
+	}
+	
+	function testDeleteFromLiveOperatesRecursivelyStrict() {
 		$this->logInWithPermssion('ADMIN');
 		
 		$pageAbout = $this->objFromFixture('Page', 'about');
