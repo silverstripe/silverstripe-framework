@@ -931,7 +931,6 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	 * @return boolean True if the current user can publish this page.
 	 */
 	public function canPublish($member = null) {
-		return false;
 		if(!$member || !(is_a($member, 'Member')) || is_numeric($member)) $member = Member::currentUser();
 		
 		if($member && Permission::checkMember($member, "ADMIN")) return true;
