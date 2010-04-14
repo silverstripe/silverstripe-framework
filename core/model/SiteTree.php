@@ -1754,9 +1754,8 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 							"root" => _t("SiteTree.PARENTTYPE_ROOT", "Top-level page"),
 							"subpage" => _t("SiteTree.PARENTTYPE_SUBPAGE", "Sub-page underneath a parent page (choose below)"),
 						)),
-						new TreeDropdownField("ParentID", $this->fieldLabel('ParentID'), 'SiteTree')
+						$parentIDField = new TreeDropdownField("ParentID", $this->fieldLabel('ParentID'), 'SiteTree')
 					),
-
 					new CheckboxField("ShowInMenus", $this->fieldLabel('ShowInMenus')),
 					new CheckboxField("ShowInSearch", $this->fieldLabel('ShowInSearch')),
 					/*, new TreeMultiselectField("MultipleParents", "Page appears within", "SiteTree")*/
@@ -1800,6 +1799,13 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 				)
 			)
 		);
+
+
+		/*
+		 * This filter ensures that the ParentID dropdown selection does not show this node,
+		 * or its descendents, as this causes vanishing bugs.
+		 */
+		$parentIDField->setFilterFunction(create_function('$node', "return \$node->ID != {$this->ID};"));
 		
 		if ($virtualPagesTable->TotalCount()) {
 			$rootTab->push($tabVirtualPages = new Tab('VirtualPages',
