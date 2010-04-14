@@ -110,7 +110,8 @@ table.testResults {
 
 .helpText {
 	float: right;
-	width: 380px;
+	padding-right: 40px;
+	width: 360px;
 }
 
 div.section {
