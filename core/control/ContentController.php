@@ -106,7 +106,7 @@ class ContentController extends Controller {
 		if(Director::redirected_to()) return;
 
 		// Check page permissions
-		if($this->dataRecord && $this->URLSegment != 'Security' && !$this->dataRecord->can('View')) {
+		if($this->dataRecord && $this->URLSegment != 'Security' && !$this->dataRecord->canView()) {
 			return Security::permissionFailure($this);
 		}
 
@@ -279,7 +279,7 @@ class ContentController extends Controller {
 		// We might need to create a show in menu permission
  		if(isset($result)) {
 			foreach($result as $page) {
-				if($page->can('view')) {
+				if($page->canView()) {
 					$visible[] = $page;
 				}
 			}
