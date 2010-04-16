@@ -323,20 +323,20 @@ JS
 			// sorting links (only if we have a form to refresh with)
 			if($this->form) {
 				$sortLink = $this->Link();
-				$sortLink = HTTP::setGetVar("ctf[{$this->Name()}][sort]", $fieldName, $sortLink);
+				$sortLink = HTTP::setGetVar("ctf[{$this->Name()}][sort]", $fieldName, $sortLink,'&');
 	
 				// Apply sort direction to the current sort field
 				if(!empty($_REQUEST['ctf'][$this->Name()]['sort']) && ($_REQUEST['ctf'][$this->Name()]['sort'] == $fieldName)) {
 					$dir = isset($_REQUEST['ctf'][$this->Name()]['dir']) ? $_REQUEST['ctf'][$this->Name()]['dir'] : null;
 					$dir = trim(strtolower($dir));
 					$newDir = ($dir == 'desc') ? null : 'desc';
-					$sortLink = HTTP::setGetVar("ctf[{$this->Name()}][dir]", Convert::raw2xml($newDir), $sortLink);
+					$sortLink = HTTP::setGetVar("ctf[{$this->Name()}][dir]", Convert::raw2xml($newDir), $sortLink,'&');
 				}
 
 				if(isset($_REQUEST['ctf'][$this->Name()]['search']) && is_array($_REQUEST['ctf'][$this->Name()]['search'])) {
 					foreach($_REQUEST['ctf'][$this->Name()]['search'] as $parameter => $value) {
 						$XML_search = Convert::raw2xml($value);
-						$sortLink = HTTP::setGetVar("ctf[{$this->Name()}][search][$parameter]", $XML_search, $sortLink);
+						$sortLink = HTTP::setGetVar("ctf[{$this->Name()}][search][$parameter]", $XML_search, $sortLink,'&');
 					}
 				}
 			} else {
