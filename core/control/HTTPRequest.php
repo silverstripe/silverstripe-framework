@@ -91,7 +91,9 @@ class SS_HTTPRequest implements ArrayAccess {
 		$this->httpMethod = strtoupper(self::detect_method($httpMethod, $postVars));
 		$this->url = $url;
 		
-		$this->url = preg_replace(array('/\/+/','/^\//', '/\/$/'),array('/','',''), $this->url);
+		if(Director::is_relative_url($url)) {
+			$this->url = preg_replace(array('/\/+/','/^\//', '/\/$/'),array('/','',''), $this->url);
+		}
 		if(preg_match('/^(.*)\.([A-Za-z][A-Za-z0-9]*)$/', $this->url, $matches)) {
 			$this->url = $matches[1];
 			$this->extension = $matches[2];
