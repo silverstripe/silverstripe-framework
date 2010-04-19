@@ -456,7 +456,7 @@ class ManifestBuilder {
 			
 			if(isset(self::$classArray[$className])) {
 				$file1 = self::$classArray[$className]['file'];
-				$file2 = $class[$className];
+				$file2 = $class['file'];
 				user_error("There are two files both containing the same class: '$file1' and " .
 					"'$file2'. This might mean that the wrong code is being used.", E_USER_WARNING);
 			}
