@@ -2060,13 +2060,18 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * Uses {@link getChangedFields()} to determine if fields have been changed
 	 * since loading them from the database.
 	 * 
-	 * @param string $fieldName Name of the database field
+	 * @param string $fieldName Name of the database field to check, will check for any if not given
 	 * @param int $changeLevel See {@link getChangedFields()}
 	 * @return boolean
 	 */
-	function isChanged($fieldName, $changeLevel = 1) {
+	function isChanged($fieldName = null, $changeLevel = 1) {
 		$changed = $this->getChangedFields(false, $changeLevel);
-		return array_key_exists($fieldName, $changed);
+		if(!isset($fieldName)) {
+			return !empty($changed);
+		} 
+		else {
+			return array_key_exists($fieldName, $changed);
+		}
 	}
 
 	/**
