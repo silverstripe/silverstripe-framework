@@ -7,7 +7,7 @@
  */
 class Folder extends File {
 	
-	static $default_sort = "Sort";
+	static $default_sort = "\"Sort\"";
 	
 	/*
 	 * Find the given folder or create it, recursively.

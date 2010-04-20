@@ -10,7 +10,7 @@
  */
 class File extends DataObject {
 
-	static $default_sort = "Name";
+	static $default_sort = "\"Name\"";
 
 	static $singular_name = "File";
 

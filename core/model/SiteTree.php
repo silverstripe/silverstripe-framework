@@ -130,7 +130,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		"Stage",  "Live"
 	);
 
-	static $default_sort = "Sort";
+	static $default_sort = "\"Sort\"";
 
 	/**
 	 * If this is false, the class cannot be created in the CMS.
