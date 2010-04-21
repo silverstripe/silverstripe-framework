@@ -14,7 +14,22 @@ class ViewableDataTest extends SapphireTest {
 		$this->assertTrue($caster->obj('alwaysCasted', null, false) instanceof ViewableDataTest_RequiresCasting);
 		$this->assertFalse($caster->obj('noCastingInformation', null, false) instanceof ViewableData_Caster);
 	}
-	
+
+	public function testFailoverRequiresCasting() {
+		$caster = new ViewableDataTest_Castable();
+		$container = new ViewableDataTest_Container($caster);
+
+		$this->assertTrue($container->obj('alwaysCasted') instanceof ViewableDataTest_RequiresCasting);
+		$this->assertTrue($caster->obj('alwaysCasted', null, false) instanceof ViewableDataTest_RequiresCasting);
+
+		/* @todo - This currently fails, because the default_cast static variable is always taken from the topmost object,
+		 * not the failover object the field actually came from. Should we fix this, or declare current behaviour as correct?
+
+		$this->assertTrue($container->obj('noCastingInformation') instanceof ViewableData_Caster);
+		$this->assertFalse($caster->obj('noCastingInformation', null, false) instanceof ViewableData_Caster);
+		*/
+	}
+
 	public function testCastingXMLVal() {
 		$caster = new ViewableDataTest_Castable();
 		
@@ -149,6 +164,14 @@ class ViewableData_Caster extends ViewableData {
 	
 	public function setValue() {}
 	
+}
+
+class ViewableDataTest_Container extends ViewableData {
+
+	public function __construct($failover) {
+		$this->failover = $failover;
+		parent::__construct();
+	}
 }
 
 /**#@-*/
