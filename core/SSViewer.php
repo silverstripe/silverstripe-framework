@@ -88,6 +88,11 @@ class SSViewer {
 	protected static $current_theme = null;
 	
 	/**
+	 * @var string
+	 */
+	protected static $current_custom_theme = null;
+	
+	/**
 	 * Create a template from a string instead of a .ss file
 	 * 
 	 * @return SSViewer
@@ -101,6 +106,9 @@ class SSViewer {
 	 */
 	static function set_theme($theme) {
 		self::$current_theme = $theme;
+		//Static publishing needs to have a theme set, otherwise it defaults to the content controller theme
+		if(!is_null($theme))
+			self::$current_custom_theme=$theme;
 	}
 	
 	/**
@@ -108,6 +116,13 @@ class SSViewer {
 	 */
 	static function current_theme() {
 		return self::$current_theme;
+	}
+	
+	/**
+	 * @return string
+	 */
+	static function current_custom_theme(){
+		return self::$current_custom_theme;
 	}
 	
 	/**
