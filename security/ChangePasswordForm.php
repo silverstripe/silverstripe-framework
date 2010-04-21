@@ -47,7 +47,7 @@ class ChangePasswordForm extends Form {
 	function doChangePassword(array $data) {
 		if($member = Member::currentUser()) {
 			// The user was logged in, check the current password
-			if(isset($data['OldPassword']) && $member->checkPassword($data['OldPassword']) == false) {
+			if(empty($data['OldPassword']) || !$member->checkPassword($data['OldPassword'])->valid()) {
 				$this->clearMessage();
 				$this->sessionMessage(
 					_t('Member.ERRORPASSWORDNOTMATCH', "Your current password does not match, please try again"), 
@@ -72,7 +72,15 @@ class ChangePasswordForm extends Form {
 		}
 
 		// Check the new password
-		if($data['NewPassword1'] == $data['NewPassword2']) {
+		if(empty($data['NewPassword1'])) {
+			$this->clearMessage();
+			$this->sessionMessage(
+				_t('Member.EMPTYNEWPASSWORD', "The new password can't be empty, please try again"),
+				"bad");
+			Director::redirectBack();
+			return;
+		}
+		else if($data['NewPassword1'] == $data['NewPassword2']) {
 			$isValid = $member->changePassword($data['NewPassword1']);
 			if($isValid->valid()) {
 				$this->clearMessage();
@@ -85,14 +93,16 @@ class ChangePasswordForm extends Form {
 
 			} else {
 				$this->clearMessage();
-				$this->sessionMessage(nl2br("We couldn't accept that password:\n" . $isValid->starredList()), "bad");
+				$this->sessionMessage(
+					_t('Member.INVALIDNEWPASSWORD', "We couldn't accept that password: %s", nl2br("\n".$isValid->starredList())), 
+					"bad");
 				Director::redirectBack();
 			}
 
 		} else {
 			$this->clearMessage();
 			$this->sessionMessage(
-				_t('Member.ERRORNEWPASSWORD', "Your have entered your new password differently, try again"),
+				_t('Member.ERRORNEWPASSWORD', "You have entered your new password differently, try again"),
 				"bad");
 			Director::redirectBack();
 		}
