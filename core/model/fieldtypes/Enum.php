@@ -8,6 +8,8 @@ class Enum extends DBField {
 	
 	protected $enum, $default;
 	
+	public static $default_search_filter_class = 'ExactMatchFilter';
+	
 	/**
 	 * Create a new Enum field.
 	 * You should create an enum field like this: 
