@@ -20,6 +20,12 @@ class ChangePasswordForm extends Form {
 	 *                                     form - a {@link FieldSet} of
 	 */
 	function __construct($controller, $name, $fields = null, $actions = null) {
+		if(isset($_REQUEST['BackURL'])) {
+			$backURL = $_REQUEST['BackURL'];
+		} else {
+			$backURL = Session::get('BackURL');
+		}
+		
 		if(!$fields) {
 			$fields = new FieldSet();
 			if(Member::currentUser() && (!isset($_REQUEST['h']) || !Member::member_from_autologinhash($_REQUEST['h']))) {
@@ -33,6 +39,10 @@ class ChangePasswordForm extends Form {
 			$actions = new FieldSet(
 				new FormAction("doChangePassword", _t('Member.BUTTONCHANGEPASSWORD', "Change Password"))
 			);
+		}
+
+		if(isset($backURL)) {
+			$fields->push(new HiddenField('BackURL', 'BackURL', $backURL));
 		}
 
 		parent::__construct($controller, $name, $fields, $actions);
@@ -88,9 +98,19 @@ class ChangePasswordForm extends Form {
 					_t('Member.PASSWORDCHANGED', "Your password has been changed, and a copy emailed to you."),
 					"good");
 				Session::clear('AutoLoginHash');
-				$redirectURL = HTTP::setGetVar('BackURL', urlencode(Director::absoluteBaseURL()), Security::Link('login'));
-				Director::redirect($redirectURL);
-
+				
+				if (isset($_REQUEST['BackURL']) 
+					&& $_REQUEST['BackURL'] 
+					// absolute redirection URLs may cause spoofing 
+					&& Director::is_site_url($_REQUEST['BackURL'])
+				) {
+					Director::redirect($_REQUEST['BackURL']);
+				}
+				else {
+					// Redirect to default location - the login form saying "You are logged in as..."
+					$redirectURL = HTTP::setGetVar('BackURL', urlencode(Director::absoluteBaseURL()), Security::Link('login'));
+					Director::redirect($redirectURL);					
+				}
 			} else {
 				$this->clearMessage();
 				$this->sessionMessage(
