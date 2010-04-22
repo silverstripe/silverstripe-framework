@@ -32,6 +32,37 @@
 					});
 				}
 			}
+		},
+		/**
+		 * Automatically check all "CMS section" checkboxes when "Access to all CMS interfaces" is ticked.
+		 * 
+		 * @todo This should really be abstracted into a declarative dependency system
+		 * instead of custom logic.
+		 */
+		'.permissioncheckboxset .valCMS_ACCESS_LeftAndMain input': {
+			initialize: function() {
+				this.toggleCheckboxes();
+			},
+			onclick: function(e) {
+				this.toggleCheckboxes();
+			},
+			toggleCheckboxes: function() {
+				var checkboxes = $(this).parents('.field:eq(0)').find('li').filter(function(i) {
+					return ($(this).attr('class').match(/CMS_ACCESS_/));
+				}).find('.checkbox').not(this);
+
+				if($(this).is(':checked')) {
+					checkboxes.each(function() {
+						$(this).attr('disabled', 'disabled');
+						$(this).attr('checked', 'checked');
+					});
+				} else {
+					checkboxes.each(function() {
+						$(this).attr('checked', '');
+						$(this).attr('disabled', '');
+					});
+				}
+			}
 		}
 	});
 }(jQuery));
