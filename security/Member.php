@@ -605,12 +605,17 @@ class Member extends DataObject {
 				)
 			);
 			if($existingRecord) {
-				throw new ValidationException(sprintf(
-					'Can\'t overwrite existing member #%d with identical $unique_identifier_field (%s = %s))',
+				throw new ValidationException(new ValidationResult(false, sprintf(
+					_t(
+						'Member.ValidationIdentifierFailed', 
+						'Can\'t overwrite existing member #%d with identical identifier (%s = %s))', 
+						PR_MEDIUM,
+						'The values in brackets show a fieldname mapped to a value, usually denoting an existing email address'
+					),
 					$existingRecord->ID,
 					$identifierField,
 					$this->$identifierField
-				));
+				)));
 			}
 		}
 
