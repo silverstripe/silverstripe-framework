@@ -1,7 +1,9 @@
 <?php
-
 /**
  * A PermissionRoleCode represents a single permission code assigned to a {@link PermissionRole}.
+ * 
+ * @package sapphire
+ * @subpackage security
  */
 class PermissionRoleCode extends DataObject {
 	static $db = array(

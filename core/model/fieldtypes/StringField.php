@@ -1,7 +1,7 @@
 <?php
 /**
  * An abstract base class for the string field types (i.e. Varchar and Text)
- * @package silverstripe
+ * @package sapphire
  * @subpackage model
  * @author Pete Bacon Darwin
  *
