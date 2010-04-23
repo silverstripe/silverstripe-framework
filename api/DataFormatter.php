@@ -121,7 +121,7 @@ abstract class DataFormatter extends Object {
 	/**
 	 * Get a DataFormatter object suitable for handling the given mimetype.
 	 * 
-	 * @string $mimeType
+	 * @param string $mimeType
 	 * @return DataFormatter
 	 */
 	static function for_mimetype($mimeType) {

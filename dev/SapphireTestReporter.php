@@ -232,7 +232,7 @@ class SapphireTestReporter implements PHPUnit_Framework_TestListener {
 	/**
 	 * Upon completion of a test suite adds the suite to the suties performed
 	 * 
-	 * @acces public
+	 * @access public
 	 * @param obj PHPUnit_Framework_TestSuite, current suite that is being run
 	 * @return void
 	 */

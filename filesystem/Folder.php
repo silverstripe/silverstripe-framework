@@ -483,6 +483,10 @@ HTML;
 	}
 }
 
+/**
+ * @package sapphire
+ * @subpackage filesystem
+ */
 class Folder_UnusedAssetsField extends CompositeField {
 	protected $folder;
 	

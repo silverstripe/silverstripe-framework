@@ -9,6 +9,7 @@
 
 /**
  * Execution time profiler.
+ * 
  * @package sapphire
  * @subpackage misc
  */

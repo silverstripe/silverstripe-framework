@@ -993,6 +993,9 @@ function column_sort_callback_basic($a, $b) {
 
 /**
  * An Iterator for a DataObjectSet
+ * 
+ * @package sapphire
+ * @subpackage model
  */
 class DataObjectSet_Iterator implements Iterator {
 	function __construct($items) {

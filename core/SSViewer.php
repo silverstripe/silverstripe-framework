@@ -842,6 +842,10 @@ class SSViewer_PartialParser {
 	}
 }
 
+/**
+ * @package sapphire
+ * @subpackage view
+ */
 class SSViewer_Cached_PartialParser extends SSViewer_PartialParser {
 
 	function __construct($template, $content, $offset, $keyparts, $conditional, $condition) {

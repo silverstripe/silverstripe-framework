@@ -17,13 +17,17 @@ require_once 'thirdparty/spyc/spyc.php';
  *   However, if you want to define a relationship, you can do so using "=>"
  * 
  * There are a couple of lines like this:
- * @example Parent: =>Page.about
+ * <code>
+ * Parent: =>Page.about
+ * </code>
  * This will tell the system to set the ParentID database field to the ID of the Page object with the identifier ÒaboutÓ. 
  * This can be used on any has-one or many-many relationship. 
  * Note that we use the name of the relationship (Parent), and not the name of the database field (ParentID)
  *
  * On many-many relationships, you should specify a comma separated list of values.
- * @example MyRelation: =>Class.inst1,=>Class.inst2,=>Class.inst3
+ * <code>
+ * MyRelation: =>Class.inst1,=>Class.inst2,=>Class.inst3
+ * </code>
  * An crucial thing to note is that the YAML file specifies DataObjects, not database records. 
  * The database is populated by instantiating DataObject objects, setting the fields listed, and calling write(). 
  * This means that any onBeforeWrite() or default value logic will be executed as part of the test. 

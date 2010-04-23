@@ -1,7 +1,9 @@
 <?php
-
 /**
  * Extension to provide a search interface when applied to ContentController
+ * 
+ * @package sapphire
+ * @subpackage search
  */
 class ContentControllerSearchExtension extends Extension { 
 	static $allowed_actions = array(
