@@ -32,9 +32,6 @@ class FileField extends FormField {
 	 * <code>
 	 * 	array("jpg","GIF")
 	 * </code>
-	 *
-	 * @deprecated 2.5
-	 * @var array
 	 */
 	public $allowedExtensions = array();
 	

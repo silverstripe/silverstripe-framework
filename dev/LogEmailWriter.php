@@ -1,4 +1,6 @@
 <?php
+require_once 'Zend/Log/Writer/Abstract.php';
+
 /**
  * Sends an error message to an email whenever an error occurs
  * in sapphire.
@@ -8,9 +10,6 @@
  * @package sapphire
  * @subpackage dev
  */
-
-require_once 'Zend/Log/Writer/Abstract.php';
-
 class SS_LogEmailWriter extends Zend_Log_Writer_Abstract {
 
 	/**

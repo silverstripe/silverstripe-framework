@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Utility class to render views of the differences between two data objects (or two versions of the
  * same data object).
@@ -30,6 +29,9 @@
  * <code>
  * $diff->ignoreFields('AuthorID', 'Status');
  * </code>
+ * 
+ * @package sapphire
+ * @subpackage misc
  */
 class DataDifferencer extends ViewableData {
 	protected $fromRecord;

@@ -83,6 +83,10 @@ class ModelViewer extends Controller {
 	}
 }
 
+/**
+ * @package sapphire
+ * @subpackage tools
+ */
 class ModelViewer_Module extends ModelViewer {
 	static $url_handlers = array(
 		'graph' => 'graph',
@@ -111,6 +115,9 @@ class ModelViewer_Module extends ModelViewer {
 
 /**
  * Represents a single model in the model viewer 
+ * 
+ * @package sapphire
+ * @subpackage tools
  */
 class ModelViewer_Model extends ViewableData {
 	protected $className;
@@ -169,6 +176,10 @@ class ModelViewer_Model extends ViewableData {
 	}
 }
 
+/**
+ * @package sapphire
+ * @subpackage tools
+ */
 class ModelViewer_Field extends ViewableData {
 	public $Model, $Name, $Type;
 	
@@ -181,6 +192,10 @@ class ModelViewer_Field extends ViewableData {
 	}
 }
 
+/**
+ * @package sapphire
+ * @subpackage tools
+ */
 class ModelViewer_Relation extends ViewableData {
 	public $Model, $Name, $RelationType, $RelatedClass;
 	

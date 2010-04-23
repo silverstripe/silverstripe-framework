@@ -275,7 +275,10 @@ class BulkLoader_Result extends Object {
 	 * the import of this object. This information is stored
 	 * in a custom object property "_BulkLoaderMessage".
 	 *
-	 * @example array(array('ID'=>1, 'ClassName'=>'Member', 'Message'=>'Updated existing record based on ParentID relation'))
+	 * Example:
+	 * <code>
+	 * array(array('ID'=>1, 'ClassName'=>'Member', 'Message'=>'Updated existing record based on ParentID relation'))
+	 * </code>
 	 */   
 	protected $created = array();
    

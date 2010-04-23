@@ -213,6 +213,10 @@ class Widget_Controller extends Controller {
 	}	
 }
 
+/**
+ * @package sapphire
+ * @subpackage widgets
+ */
 class Widget_TreeDropdownField extends TreeDropdownField {
 	function FieldHolder() {}
 	function Field() {}

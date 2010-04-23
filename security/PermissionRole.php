@@ -1,10 +1,12 @@
 <?php
-
 /**
  * A PermissionRole represents a collection of permission codes that can be applied to groups.
  * 
  * Because permission codes are very granular, this lets website administrators create more
  * business-oriented units of access control - Roles - and assign those to groups.
+ * 
+ * @package sapphire
+ * @subpackage security
  */
 class PermissionRole extends DataObject {
 	static $db = array(

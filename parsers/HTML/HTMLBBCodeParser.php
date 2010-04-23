@@ -324,7 +324,7 @@ class SSHTMLBBCodeParser
      * $_preparsed variable. The method uses _buildTag() to check if a tag is
      * valid and to build the actual tag to be added to the tag array.
      *
-     * @todo: - rewrite whole method, as this one is old and probably slow
+     * @todo - rewrite whole method, as this one is old and probably slow
      *       - see if a recursive method would be better than an iterative one
      *
      * @return   none

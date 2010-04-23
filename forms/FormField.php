@@ -593,8 +593,9 @@ HTML;
 	 * words. Also resolves combined fieldnames with dot syntax
 	 * to spaced words.
 	 * 
-	 * @example 'TotalAmount' will return 'Total Amount'
-	 * @example 'Organisation.ZipCode' will return 'Organisation Zip Code'
+	 * Examples:
+	 * - 'TotalAmount' will return 'Total Amount'
+	 * - 'Organisation.ZipCode' will return 'Organisation Zip Code'
 	 *
 	 * @param string $fieldName
 	 * @return string

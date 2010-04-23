@@ -286,6 +286,10 @@ class TreeDropdownField extends FormField {
 	}
 }
 
+/**
+ * @package forms
+ * @subpackage fields-relational
+ */
 class TreeDropdownField_Readonly extends TreeDropdownField {
 	protected $readonly = true;
 	

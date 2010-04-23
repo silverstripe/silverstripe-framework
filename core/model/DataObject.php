@@ -3089,8 +3089,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 *
 	 * @param boolean $includerelations a boolean value to indicate if the labels returned include relation fields
 	 * 
-	 * @return array of all element labels if no argument given
-	 * @return string of label if field
+	 * @return array|string Array of all element labels if no argument given, otherwise the label of the field
 	 */
 	public function fieldLabels($includerelations = true) {
 		$customLabels = $this->stat('field_labels');

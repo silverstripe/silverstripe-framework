@@ -9,6 +9,8 @@
  * SQL syntax used: Column IN ('val1','val2')
  * 
  * @todo Add negation (NOT IN)6
+ * @package sapphire
+ * @subpackage search
  */
 class ExactMatchMultiFilter extends SearchFilter {
 	

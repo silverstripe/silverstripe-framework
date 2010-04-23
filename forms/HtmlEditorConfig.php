@@ -7,6 +7,8 @@
  * the currently active config using set_active. Whichever config is active when HtmlEditorField#Field is called wins.
  *  
  * @author "Hamish Friedlander" <hamish@silverstripe.com>
+ * @package forms
+ * @subpackage fields-formattedinput
  */
 class HtmlEditorConfig {
 
@@ -141,7 +143,7 @@ class HtmlEditorConfig {
 	 * 
 	 * @see http://wiki.moxiecode.com/index.php/TinyMCE:API/tinymce.PluginManager/load
 	 * 
-	 * @param[0..] a string, or several strings, or a single array of strings - The plugins to enable
+	 * @param String [0..] a string, or several strings, or a single array of strings - The plugins to enable
 	 * @return null
 	 */
 	function enablePlugins() {
@@ -159,7 +161,7 @@ class HtmlEditorConfig {
 
 	/**
 	 * Enable one or several plugins. Will properly handle being passed a plugin that is already disabled
-	 * @param[0..] a string, or several strings, or a single array of strings - The plugins to disable
+	 * @param String [0..] a string, or several strings, or a single array of strings - The plugins to disable
 	 * @return null
 	 */
 	function disablePlugins() {
@@ -182,8 +184,9 @@ class HtmlEditorConfig {
 	
 	/**
 	 * Totally re-set the buttons on a given line
-	 * @param[0] integer from 1..3 - The line number to redefine
-	 * @param[1..] a string or several strings, or a single array of strings - The button names to make this line contain 
+	 * 
+	 * @param integer from 1..3 - The line number to redefine
+	 * @param string  a string or several strings, or a single array of strings - The button names to make this line contain 
 	 * @return null
 	 */
 	function setButtonsForLine() {
@@ -199,8 +202,8 @@ class HtmlEditorConfig {
 	
 	/**
 	 * Add buttons to the end of a line
-	 * @param[0] integer from 1..3
-	 * @param[1..] a string, or several strings, or a single array of strings - The button names to add to the end of this line 
+	 * @param integer from 1..3
+	 * @param string a string, or several strings, or a single array of strings - The button names to add to the end of this line 
 	 * @return null
 	 */
 	function addButtonsToLine() {
@@ -234,8 +237,8 @@ class HtmlEditorConfig {
 	
 	/**
 	 * Insert buttons before the first occurance of another button
-	 * @param[0] string - the name of the button to insert other buttons before
-	 * @param[1..] a string, or several strings, or a single array of strings - the button names to insert before that button 
+	 * @param string - the name of the button to insert other buttons before
+	 * @param string a string, or several strings, or a single array of strings - the button names to insert before that button 
 	 * @return boolean - true if insertion occured, false if it did not (because the given button name was not found)
 	 */
 	function insertButtonsBefore() {
@@ -246,8 +249,8 @@ class HtmlEditorConfig {
 	
 	/**
 	 * Insert buttons after the first occurance of another button
-	 * @param[0] string - the name of the button to insert other buttons after
-	 * @param[1..] a string, or several strings, or a single array of strings - the button names to insert after that button 
+	 * @param string - the name of the button to insert other buttons after
+	 * @param string a string, or several strings, or a single array of strings - the button names to insert after that button 
 	 * @return boolean - true if insertion occured, false if it did not (because the given button name was not found)
 	 */
 	function insertButtonsAfter() {
@@ -258,7 +261,7 @@ class HtmlEditorConfig {
 	
 	/**
 	 * Remove the first occurance of buttons
-	 * @param[0..] string - the name of the buttons to remove
+	 * @param string one or more strings - the name of the buttons to remove
 	 * @return null
 	 */
 	function removeButtons() {

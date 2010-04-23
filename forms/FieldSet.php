@@ -540,6 +540,9 @@ class FieldSet extends DataObjectSet {
 /**
  * A fieldset designed to store a list of hidden fields.  When inserted into a template, only the
  * input tags will be included
+ * 
+ * @package forms
+ * @subpackage fields-structural
  */
 class HiddenFieldSet extends FieldSet {
 	function forTemplate() {

@@ -233,8 +233,8 @@ class CodeViewer extends Controller {
 	}
 	
 	/**
-	 * Finish the <pre> block in method content.
-	 * Will remove whitespace and <pre></pre> blocks
+	 * Finish the "pre" block in method content.
+	 * Will remove whitespace and empty "pre" blocks
 	 */
 	function closeOffMethodContentPre() {
 		$this->currentMethod['content'] = trim($this->currentMethod['content']);

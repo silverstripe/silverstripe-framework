@@ -675,6 +675,9 @@ class SSViewer_FromString extends SSViewer {
  * This shouldn't be used as an example of how to add functionality to SSViewer - the eventual plan is to re-write
  * SSViewer using a proper parser (probably http://github.com/hafriedlander/php-peg), so that extra functionality
  * can be added without relying on ad-hoc parsers like this.
+ * 
+ * @package sapphire
+ * @subpackage view
  */
 class SSViewer_PartialParser {
  	

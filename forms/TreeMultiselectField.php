@@ -2,6 +2,7 @@
 /**
  * This formfield represents many-many joins using a tree selector shown in a dropdown styled element
  * which can be added to any form usually in the CMS. 
+ * 
  * @package forms
  * @subpackage fields-relational
  */
@@ -129,6 +130,10 @@ HTML;
 	}
 }
 
+/**
+ * @package forms
+ * @subpackage fields-relational
+ */
 class TreeMultiselectField_Readonly extends TreeMultiselectField {
 	
 	protected $readonly = true;

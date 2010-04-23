@@ -88,7 +88,7 @@ class SearchContext extends Object {
 	}
 	
 	/**
-	 * @refactor move to SQLQuery
+	 * @todo move to SQLQuery
 	 * @todo fix hack
 	 */
 	protected function applyBaseTableFields() {

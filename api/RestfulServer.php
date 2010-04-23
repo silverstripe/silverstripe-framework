@@ -1,8 +1,5 @@
 <?php
 /**
- * @package sapphire
- * @subpackage api
- *
  * Sapphire's generic RESTful server.
  * 
  * This class gives your application a RESTful API for free.  All you have to do is define static $api_access = true on
@@ -86,6 +83,9 @@
  * @todo i18n integration (e.g. Page/1.xml?lang=de_DE)
  * @todo Access to decoratable methods/relations like SiteTree/1/Versions or SiteTree/1/Version/22
  * @todo Respect $api_access array notation in search contexts
+ * 
+ * @package sapphire
+ * @subpackage api
  */
 class RestfulServer extends Controller {
 	static $url_handlers = array(
@@ -585,6 +585,9 @@ class RestfulServer extends Controller {
 
 /**
  * Restful server handler for a DataObjectSet
+ * 
+ * @package sapphire
+ * @subpackage api
  */
 class RestfulServer_List {
 	static $url_handlers = array(
@@ -602,6 +605,9 @@ class RestfulServer_List {
 
 /**
  * Restful server handler for a single DataObject
+ * 
+ * @package sapphire
+ * @subpackage api
  */
 class RestfulServer_Item {
 	static $url_handlers = array(
