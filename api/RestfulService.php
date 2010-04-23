@@ -3,6 +3,7 @@
  * RestfulService class allows you to consume various RESTful APIs.
  * Through this you could connect and aggregate data of various web services.
  * For more info visit wiki documentation - http://doc.silverstripe.org/doku.php?id=restfulservice  
+ * 
  * @package sapphire
  * @subpackage integration
  */
@@ -354,6 +355,10 @@ class RestfulService extends ViewableData {
 	}
 }
 
+/**
+ * @package sapphire
+ * @subpackage integration
+ */
 class RestfulService_Response extends SS_HTTPResponse {
 	protected $simpleXML;
 	

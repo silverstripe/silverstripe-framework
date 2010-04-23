@@ -26,6 +26,8 @@
  * backend (and the two-level backend with the File backend as the slow store) meets this requirement
  * 
  * @author hfried
+ * @package sapphire
+ * @subpackage core
  */
 class Aggregate extends ViewableData {
 
@@ -119,6 +121,8 @@ class Aggregate extends ViewableData {
  * A subclass of Aggregate that calculates aggregates for the result of a has_many query.
  * 
  * @author hfried
+ * @package sapphire
+ * @subpackage core
  */
 class Aggregate_Relationship extends Aggregate {
 

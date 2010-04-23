@@ -595,5 +595,4 @@ class ManifestBuilder {
 			return $results;;
 	}
 }
-
 ?>

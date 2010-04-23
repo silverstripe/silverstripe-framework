@@ -1280,6 +1280,10 @@ class Form extends RequestHandler {
 	}
 }
 
+/**
+ * @package forms
+ * @subpackage core
+ */
 class Form_FieldMap extends ViewableData {
 	protected $form;
 	

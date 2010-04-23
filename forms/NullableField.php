@@ -15,7 +15,8 @@
  * $field->setIsNullLabel(_T(SOME_MODULE_ISNULL_LABEL, "Is Null");
  * 
  * @author Pete Bacon Darwin
- *
+ * @package forms
+ * @subpackage fields-basic
  */
 class NullableField extends FormField {
 	/**
@@ -57,7 +58,6 @@ class NullableField extends FormField {
 	/**
 	 * Set the label used for the Is Null checkbox.
 	 * @param $isNulLabel string
-	 * @return 
 	 */
 	function setIsNullLabel(string $isNulLabel){
 		$this->isNullLabel = $isNulLabel;

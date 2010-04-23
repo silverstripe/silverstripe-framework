@@ -85,7 +85,7 @@ abstract class DataFormatter extends Object {
 	/**
 	 * Get a DataFormatter object suitable for handling the given file extension.
 	 * 
-	 * @string $extension
+	 * @param string $extension
 	 * @return DataFormatter
 	 */
 	static function for_extension($extension) {

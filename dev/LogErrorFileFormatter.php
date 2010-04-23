@@ -1,13 +1,12 @@
 <?php
+require_once 'Zend/Log/Formatter/Interface.php';
+
 /**
  * Formats SS error entries in an error file log.
  * Format: [d-M-Y h:i:s] <type> at <file> line <line>: <errormessage> <url>
  * @package sapphire
  * @subpackage dev
  */
-
-require_once 'Zend/Log/Formatter/Interface.php';
-
 class SS_LogErrorFileFormatter implements Zend_Log_Formatter_Interface {
 
 	public function format($event) {

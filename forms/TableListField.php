@@ -149,7 +149,7 @@ class TableListField extends FormField {
 	 * @var $customSourceItems DataObjectSet Use the manual setting of a result-set only as a last-resort
 	 * for sets which can't be resolved in a single query.
 	 *
-	 * @todo: Add pagination support for customSourceItems.
+	 * @todo Add pagination support for customSourceItems.
 	 */
 	protected $customSourceItems;
 	
@@ -1407,6 +1407,10 @@ class TableListField_Item extends ViewableData {
 	}
 }
 
+/**
+ * @package forms
+ * @subpackage fields-relational
+ */
 class TableListField_ItemRequest extends RequestHandler {
 	protected $ctf;
 	protected $itemID;

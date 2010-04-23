@@ -1,5 +1,4 @@
 <?php 
-
 /**
  * SS_Cache provides a bunch of static functions wrapping the Zend_Cache system in something a little more
  * easy to use with the SilverStripe config system.
@@ -58,6 +57,8 @@
  * SS_Cache::pick_backend('two-level', 'any', 10); // No need for special backend for aggregate - TwoLevels with a File slow backend supports tags
  * 
  * @author hfried
+ * @package sapphire
+ * @subpackage core
  */
 class SS_Cache {
 	

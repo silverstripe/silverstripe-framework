@@ -44,8 +44,6 @@ class Upload extends Controller {
 	 * <code>
 	 * 	array("jpg","GIF")
 	 * </code>
-	 * 
-	 * @var array
 	 */
 	public $allowedExtensions = array();
 	

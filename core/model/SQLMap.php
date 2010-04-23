@@ -2,6 +2,7 @@
 /**
  * This is a class used to represent key->value pairs generated from database queries.
  * The query isn't actually executed until you need it.
+ * 
  * @package sapphire
  * @subpackage model
  */
@@ -83,6 +84,10 @@ class SQLMap extends Object implements IteratorAggregate {
 	}
 }
 
+/**
+ * @package sapphire
+ * @subpackage model
+ */
 class SQLMap_Iterator extends Object implements Iterator {
 	protected $items;
 	protected $keyField, $titleField;

@@ -679,6 +679,8 @@ JS;
 
 /**
  * @todo Tie this into ComplexTableField_Item better.
+ * @package forms
+ * @subpackage fields-relational
  */
 class ComplexTableField_ItemRequest extends RequestHandler {
 	protected $ctf;

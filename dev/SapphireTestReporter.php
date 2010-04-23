@@ -1,21 +1,4 @@
 <?php
-
-/**
- * Gathers details about PHPUnit2 test suites as they 
- * are been executed. This does not actually format any output
- * but simply gathers extended information about the overall 
- * results of all suites & their tests for use elsewhere.
- *
- * Changelog:
- *  0.6 First created [David Spurr]
- *  0.7 Added fix to getTestException provided [Glen Ogilvie]
- * 
- * @package sapphire
- * @subpackage testing
- *
- * @version 0.7 2006-03-12
- * @author David Spurr
- */
 require_once 'PHPUnit/Framework/TestResult.php';
 require_once 'PHPUnit/Framework/TestListener.php';
 
@@ -40,6 +23,22 @@ define('TEST_SUCCESS', 1);
 define('TEST_INCOMPLETE', 2);
 /**#@-*/
 
+/**
+ * Gathers details about PHPUnit2 test suites as they 
+ * are been executed. This does not actually format any output
+ * but simply gathers extended information about the overall 
+ * results of all suites & their tests for use elsewhere.
+ *
+ * Changelog:
+ *  0.6 First created [David Spurr]
+ *  0.7 Added fix to getTestException provided [Glen Ogilvie]
+ * 
+ * @package sapphire
+ * @subpackage testing
+ *
+ * @version 0.7 2006-03-12
+ * @author David Spurr
+ */
 class SapphireTestReporter implements PHPUnit_Framework_TestListener {
 	/**
 	 * Holds array of suites and total number of tests run
