@@ -54,7 +54,7 @@ Behaviour.register({
 			if(!el || !el.value) return true;
 			
 			var value = \$F(el);
-			if(value.length > 0 && !value.match(/^\s*\\$?(\d{1,3}(\,\d{3})*|(\d+))(\.\d{2})?\s*\$/)) {
+			if(value.length > 0 && !value.match(/^\s*\\\\$?(\d{1,3}(\,\d{3})*|(\d+))(\.\d{2})?\s*\$/)) {
 				validationError(el,"$error","validation",false);
 				return false;
 			}
