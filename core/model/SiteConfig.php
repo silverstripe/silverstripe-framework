@@ -13,7 +13,7 @@
  * @author Tom Rix
  * @package cms
  */
-class SiteConfig extends DataObject {
+class SiteConfig extends DataObject implements PermissionProvider {
 	static $db = array(
 		"Title" => "Varchar(255)",
 		"Tagline" => "Varchar(255)",
