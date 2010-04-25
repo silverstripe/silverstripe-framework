@@ -351,7 +351,7 @@ JS;
 
 		// date format
 		if($this->getConfig('dmyfields')) {
-			$valid = ($this->validateArrayValue($this->value));
+			$valid = (!$this->value || $this->validateArrayValue($this->value));
 		} else {
 			$valid = (Zend_Date::isDate($this->value, $this->getConfig('dateformat'), $this->locale));
 		}
