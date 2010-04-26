@@ -3,30 +3,166 @@
  * @package sapphire
  * @subpackage tests
  */
-class ModelAsControllerTest extends SapphireTest {
+class ModelAsControllerTest extends FunctionalTest {
 	
-	public function testFindOldPage() {
+	protected $autoFollowRedirection = false;
+
+	protected function generateNestedPagesFixture() {
+		$level1 = new Page();
+		$level1->Title      = 'First Level';
+		$level1->URLSegment = 'level1';
+		$level1->write();
+		$level1->publish('Stage', 'Live');
+		
+		$level1->URLSegment = 'newlevel1';
+		$level1->write();
+		$level1->publish('Stage', 'Live');
+		
+		$level2 = new Page();
+		$level2->Title      = 'Second Level';
+		$level2->URLSegment = 'level2';
+		$level2->ParentID = $level1->ID;
+		$level2->write();
+		$level2->publish('Stage', 'Live');
+		
+		$level2->URLSegment = 'newlevel2';
+		$level2->write();
+		$level2->publish('Stage', 'Live');
+		
+		$level3 = New Page();
+		$level3->Title = "Level 3";
+		$level3->URLSegment = 'level3';
+		$level3->ParentID = $level2->ID;
+		$level3->write();
+		$level3->publish('Stage','Live');
+						
+		$level3->URLSegment = 'newlevel3';
+		$level3->write();
+		$level3->publish('Stage','Live');
+	}
+	
+	/**
+	 * We're building up a page hierarchy ("nested URLs") and rename
+	 * all the individual pages afterwards. The assumption is that
+	 * all pages will be found by their old segments.
+	 * 
+	 * Original: level1/level2/level3
+	 * Republished as: newlevel1/newlevel2/newlevel3
+	 */
+	public function testRedirectsNestedRenamedPages(){
+		$this->generateNestedPagesFixture();
+		
+		// check a first level URLSegment 
+		$response = $this->get('level1/action');
+		$this->assertEquals($response->getStatusCode(),301);
+		$this->assertEquals(
+			Controller::join_links(Director::baseURL() . 'newlevel1/action'),
+			$response->getHeader('Location')
+		);
+		
+		// check second level URLSegment 
+		$response = $this->get('newlevel1/level2');
+		$this->assertEquals($response->getStatusCode(),301 );
+		$this->assertEquals(
+			Controller::join_links(Director::baseURL() . 'newlevel1/newlevel2/'),
+			$response->getHeader('Location')
+		);
+		
+		// check third level URLSegment 
+		$response = $this->get('newlevel1/newlevel2/level3');
+		$this->assertEquals($response->getStatusCode(), 301);
+		$this->assertEquals(
+			Controller::join_links(Director::baseURL() . 'newlevel1/newlevel2/newlevel3/'),
+			$response->getHeader('Location')
+		);
+	}
+	
+	function testDoesntRedirectToNestedChildrenOutsideOfOwnHierarchy() {
+		$this->generateNestedPagesFixture();
+		
+		$otherParent = new Page(array(
+			'URLSegment' => 'otherparent'
+		));
+		$otherParent->write();
+		$otherParent->publish('Stage', 'Live');
+		
+		$response = $this->get('level1/otherparent');
+		$this->assertEquals($response->getStatusCode(), 301);
+		
+		$response = $this->get('newlevel1/otherparent');
+		$this->assertEquals(
+			$response->getStatusCode(), 
+			404,
+			'Requesting an unrelated page on a renamed parent should be interpreted as a missing action, not a redirect'
+		);
+	}
+	
+	function testRedirectsNestedRenamedPagesWithGetParameters() {
+		$this->generateNestedPagesFixture();
+		
+		// check third level URLSegment 
+		$response = $this->get('newlevel1/newlevel2/level3/?foo=bar&test=test');
+		$this->assertEquals($response->getStatusCode(), 301);
+		$this->assertEquals(
+			Controller::join_links(Director::baseURL() . 'newlevel1/newlevel2/newlevel3/', '?foo=bar&test=test'),
+			$response->getHeader('Location')
+		);
+	}
+	
+	function testDoesntRedirectToNestedRenamedPageWhenNewExists() {
+		$this->generateNestedPagesFixture();
+		
+		$otherLevel1 = new Page(array(
+			'Title' => "Other Level 1",
+			'URLSegment' => 'level1'
+		));
+		$otherLevel1->write();
+		$otherLevel1->publish('Stage', 'Live');
+		
+		$response = $this->get('level1');
+		$this->assertEquals(
+			$response->getStatusCode(), 
+			200
+		);
+		
+		$response = $this->get('level1/newlevel2');
+		$this->assertEquals(
+			$response->getStatusCode(), 
+			404, 
+			'The old newlevel2/ URLSegment is checked as an action on the new page, which shouldnt exist.'
+		);
+	}
+	
+	function testFindOldPage(){
 		$page = new Page();
-		$page->Title      = 'Test Page';
-		$page->URLSegment = 'test-page';
+		$page->Title      = 'First Level';
+		$page->URLSegment = 'oldurl';
 		$page->write();
 		$page->publish('Stage', 'Live');
 		
-		$page->URLSegment = 'test';
+		$page->URLSegment = 'newurl';
 		$page->write();
 		$page->publish('Stage', 'Live');
 		
-		$router   = new ModelAsController();
-		$request  = new SS_HTTPRequest(
-			'GET', 'test-page/action/id/otherid'
-		);
-		$request->match('$URLSegment/$Action/$ID/$OtherID');
-		$response = $router->handleRequest($request);
+		$response = ModelAsController::find_old_page('oldurl');
+		$this->assertEquals('First Level',$response->Title);
 		
-		$this->assertEquals (
-			$response->getHeader('Location'),
-			Controller::join_links(Director::baseURL() . 'test/action/id/otherid')
-		);
+		$page2 = new Page();
+		$page2->Title      = 'Second Level Page';
+		$page2->URLSegment = 'oldpage2';
+		$page2->ParentID = $page->ID;
+		$page2->write();
+		$page2->publish('Stage', 'Live');
+		
+		$page2->URLSegment = 'newpage2';
+		$page2->write();
+		$page2->publish('Stage', 'Live');
+		
+		$response = ModelAsController::find_old_page('oldpage2',$page2->ParentID);
+		$this->assertEquals('Second Level Page',$response->Title);
+		
+		$response = ModelAsController::find_old_page('oldpage2',$page2->ID);
+		$this->assertEquals(false, $response );
 	}
 	
 }

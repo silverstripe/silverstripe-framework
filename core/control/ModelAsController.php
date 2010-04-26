@@ -62,7 +62,7 @@ class ModelAsController extends Controller implements NestedController {
 		
 		try {
 			$result = $this->getNestedController();
-		
+			
 			if($result instanceof RequestHandler) {
 				$result = $result->handleRequest($this->request);
 			} else if(!($result instanceof SS_HTTPResponse)) {
@@ -86,7 +86,7 @@ class ModelAsController extends Controller implements NestedController {
 		if(!$URLSegment = $request->param('URLSegment')) {
 			throw new Exception('ModelAsController->getNestedController(): was not passed a URLSegment value.');
 		}
-		
+
 		// Find page by link, regardless of current locale settings
 		Translatable::disable_locale_filter();
 		$sitetree = DataObject::get_one(
@@ -101,11 +101,26 @@ class ModelAsController extends Controller implements NestedController {
 		
 		if(!$sitetree) {
 			// If a root page has been renamed, redirect to the new location.
-			if($redirect = $this->findOldPage($URLSegment)) {
+			// See ContentController->handleRequest() for similiar logic.
+			$redirect = self::find_old_page($URLSegment);
+			if($redirect = self::find_old_page($URLSegment)) {
+				$params = $request->getVars();
+				if(isset($params['url'])) unset($params['url']);
 				$this->response = new SS_HTTPResponse();
-				$this->response->redirect($redirect->Link (
-					Controller::join_links($request->param('Action'), $request->param('ID'), $request->param('OtherID'))
-				));
+				$this->response->redirect(
+					Controller::join_links(
+						$redirect->Link(
+							Controller::join_links(
+								$request->param('Action'), 
+								$request->param('ID'), 
+								$request->param('OtherID')
+							)
+						),
+						// Needs to be in separate join links to avoid urlencoding
+						($params) ? '?' . http_build_query($params) : null
+					),
+					301
+				);
 				
 				return $this->response;
 			}
@@ -128,22 +143,27 @@ class ModelAsController extends Controller implements NestedController {
 	}
 	
 	/**
-	 * @param string $URLSegment
+	 * @param string $URLSegment A subset of the url. i.e in /home/contact/ home and contact are URLSegment.
+	 * @param int $parentID The ID of the parent of the page the URLSegment belongs to. 
 	 * @return SiteTree
 	 */
-	protected function findOldPage($URLSegment) {
+	static function find_old_page($URLSegment,$parentID = 0) {
 		$URLSegment = Convert::raw2sql($URLSegment);
 		
 		// First look for a non-nested page that has a unique URLSegment and can be redirected to.
-		if(SiteTree::nested_urls() && $pages = DataObject::get('SiteTree', "\"URLSegment\" = '$URLSegment'")) {
-			if($pages->Count() == 1) return $pages->First();
+		if(SiteTree::nested_urls()) {
+			$pages = DataObject::get(
+				'SiteTree', 
+				"\"URLSegment\" = '$URLSegment'" . ((SiteTree::nested_urls()) ? ' AND "ParentID" = ' . (int)$parentID : '')
+			);
+			if($pages && $pages->Count() == 1) return $pages->First();
 		}
 		
 		// Get an old version of a page that has been renamed.
 		$query = new SQLQuery (
 			'"RecordID"',
 			'"SiteTree_versions"',
-			"\"URLSegment\" = '$URLSegment' AND \"WasPublished\" = 1" . (SiteTree::nested_urls() ? ' AND "ParentID" = 0' : null),
+			"\"URLSegment\" = '$URLSegment' AND \"WasPublished\" = 1" . (SiteTree::nested_urls() ? ' AND "ParentID" = ' . (int)$parentID : ''),
 			'"LastEdited" DESC',
 			null,
 			null,
