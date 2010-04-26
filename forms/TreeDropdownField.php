@@ -243,7 +243,7 @@ class TreeDropdownField extends FormField {
 		if ( $this->searchCallback )
 			$res = call_user_func($this->searchCallback, $this->sourceObject, $this->labelField, $this->search);
 		else
-			$res = DataObject::get($this->sourceObject, "$this->labelField LIKE '%$this->search%'");
+			$res = DataObject::get($this->sourceObject, "\"$this->labelField\" LIKE '%$this->search%'");
 		
 		if( $res ) {
 			// iteratively fetch the parents in bulk, until all the leaves can be accessed using the tree control
@@ -252,7 +252,7 @@ class TreeDropdownField extends FormField {
 				$this->searchIds[$row->ID] = true;
 			}
 			while (!empty($parents)) {
-				$res = DB::query('SELECT "ParentID", "ID" FROM '.$this->sourceObject.' WHERE "ID" in ('.implode(',',array_keys($parents)).')');
+				$res = DB::query('SELECT "ParentID", "ID" FROM \"' . $this->sourceObject . '\" WHERE "ID" in ('.implode(',',array_keys($parents)).')');
 				$parents = array();
 
 				foreach($res as $row) {
