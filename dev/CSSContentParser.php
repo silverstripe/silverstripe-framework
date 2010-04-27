@@ -34,6 +34,7 @@ class CSSContentParser extends Object {
 			$tidy->cleanRepair();
 			$tidy = str_replace('xmlns="http://www.w3.org/1999/xhtml"','',$tidy);
 			$tidy = str_replace('&#160;','',$tidy);
+
 		} elseif(@shell_exec('which tidy')) {
 			// using tiny through cli
 			$CLI_content = escapeshellarg($content);
@@ -45,7 +46,7 @@ class CSSContentParser extends Object {
 			$tidy = $content;
 		}
 		
-		$this->simpleXML = new SimpleXMLElement($tidy);
+		$this->simpleXML = simplexml_load_string($tidy, 'SimpleXMLElement', LIBXML_NOWARNING);
 		
 		parent::__construct();
 	}
