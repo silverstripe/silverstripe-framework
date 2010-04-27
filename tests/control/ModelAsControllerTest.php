@@ -7,6 +7,36 @@ class ModelAsControllerTest extends FunctionalTest {
 	
 	protected $autoFollowRedirection = false;
 
+	protected $orig = array();
+
+	/**
+	 * New tests require nested urls to be enabled, but the site might not 
+	 * support nested URLs. 
+	 * This setup will enable nested-urls for this test and resets the state
+	 * after the tests have been performed.
+	 */
+	function setUp() {
+		parent::setUp();
+
+		$this->orig['nested_urls'] = SiteTree::nested_urls();
+		SiteTree::enable_nested_urls();
+	}
+
+	/**
+	 * New tests require nested urls to be enabled, but the site might not 
+	 * support nested URLs. 
+	 * This setup will enable nested-urls for this test and resets the state
+	 * after the tests have been performed.
+	 */
+	function tearDown() {
+		
+		if (isset($this->orig['nested_urls']) && !$this->orig['nested_urls']) {
+			SiteTree::disable_nested_urls();
+		}
+		parent::tearDown();		
+	}
+
+
 	protected function generateNestedPagesFixture() {
 		$level1 = new Page();
 		$level1->Title      = 'First Level';
@@ -45,6 +75,8 @@ class ModelAsControllerTest extends FunctionalTest {
 	 * We're building up a page hierarchy ("nested URLs") and rename
 	 * all the individual pages afterwards. The assumption is that
 	 * all pages will be found by their old segments.
+	 *
+	 * NOTE: This test requires nested_urls
 	 * 
 	 * Original: level1/level2/level3
 	 * Republished as: newlevel1/newlevel2/newlevel3
@@ -97,6 +129,11 @@ class ModelAsControllerTest extends FunctionalTest {
 		);
 	}
 	
+	/**
+	 *
+	 * NOTE: This test requires nested_urls
+	 * 
+	 */
 	function testRedirectsNestedRenamedPagesWithGetParameters() {
 		$this->generateNestedPagesFixture();
 		
@@ -109,6 +146,11 @@ class ModelAsControllerTest extends FunctionalTest {
 		);
 	}
 	
+	/**
+	 *
+	 * NOTE: This test requires nested_urls
+	 * 
+	 */
 	function testDoesntRedirectToNestedRenamedPageWhenNewExists() {
 		$this->generateNestedPagesFixture();
 		
@@ -133,6 +175,11 @@ class ModelAsControllerTest extends FunctionalTest {
 		);
 	}
 	
+	/**
+	 *
+	 * NOTE: This test requires nested_urls
+	 * 
+	 */
 	function testFindOldPage(){
 		$page = new Page();
 		$page->Title      = 'First Level';
