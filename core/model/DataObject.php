@@ -1419,7 +1419,10 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			$limit,
 			"INNER JOIN \"$table\" ON \"$table\".\"$componentField\" = \"$componentBaseClass\".\"ID\"" // join
 		);
-		array_unshift($query->select, "\"$table\".*");
+		
+		foreach((array)$this->many_many_extraFields($componentName) as $extraField => $extraFieldType) {
+			$query->select[] = "\"$table\".\"$extraField\"";
+		}
 
 		if($filter) $query->where[] = $filter;
 		if($join) $query->from[] = $join;
@@ -1636,15 +1639,19 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 					$candidateManyMany = $SNG_candidate->stat('belongs_many_many');
 					
 					// Find the relation given the class
+					$relationName = null;
 					if($candidateManyMany) foreach($candidateManyMany as $relation => $relatedClass) {
 						if($relatedClass == $class) {
 							$relationName = $relation;
+							break;
 						}
 					}
 					
-					$extraFields = $SNG_candidate->stat('many_many_extraFields');
-					if(isset($extraFields[$relationName])) {
-						return $extraFields[$relationName];
+					if($relationName) {
+						$extraFields = $SNG_candidate->stat('many_many_extraFields');
+						if(isset($extraFields[$relationName])) {
+							return $extraFields[$relationName];
+						}
 					}
 				}
 								
@@ -2589,13 +2596,17 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 
 		if($join) {
 			$query->from[] = $join;
-			if(DB::getConn() instanceof MySQLDatabase || DB::getConn() instanceof SQLite3Database) {
-				// TODO: This needs to be resolved for all databases
-				$query->groupby[] = reset($query->from) . ".\"ID\"";
-				/* this needs to be fixed - this doesn't work when you add additional fields from other tables into the mix.
-				$fields = $this->databaseFields();
-				foreach(array_keys($fields) as $field) $query->groupby[] = "\"$field\"";
-				*/
+			// In order to group by unique columns we have to group by everything listed in the select
+			foreach($query->select as $field) {
+				// Identify columns with aliases, and ignore the alias.  Making use of the alias in
+				// group by was causing problems when those queries were subsequently passed into
+				// SQLQuery::unlimitedRowCount.
+				if(preg_match('/^(.*)\s+AS\s+(\"[^"]+\")\s*$/', $field, $matches)) {
+					$query->groupby[] = $matches[1];
+				// Otherwise just use the field as is
+				} else {
+					$query->groupby[] = $field;
+				}
 			}
 		}
 
