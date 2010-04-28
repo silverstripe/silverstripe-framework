@@ -25,7 +25,7 @@ class ContentControllerPermissionTest extends FunctionalTest {
 		// should redirect to login
 		$this->assertEquals($response->getStatusCode(), 302);
 		
-		$this->logInWithPermssion('CMS_ACCESS_CMSMain');
+		$this->logInWithPermission('CMS_ACCESS_CMSMain');
 		
 		$response = $this->get('/testpage/?stage=Stage');
 		$this->assertEquals($response->getStatusCode(), 200);
