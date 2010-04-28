@@ -742,6 +742,16 @@ class DataObjectTest extends SapphireTest {
 	}
 	
 	/**
+	 * Check that the queries generated for many-many relation queries can have unlimitedRowCount
+	 * called on them.
+	 */
+	function testManyManyUnlimitedRowCount() {
+		$player = $this->objFromFixture('DataObjectTest_Player', 'player2');
+		$query = $player->getManyManyComponentsQuery('Teams');
+		$this->assertEquals(2, $query->unlimitedRowCount());
+	}
+	
+	/**
 	 * Tests that singular_name() generates sensible defaults.
 	 */
 	public function testSingularName() {
