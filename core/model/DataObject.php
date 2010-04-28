@@ -1422,6 +1422,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		
 		foreach((array)$this->many_many_extraFields($componentName) as $extraField => $extraFieldType) {
 			$query->select[] = "\"$table\".\"$extraField\"";
+			$query->groupby[] = "\"$table\".\"$extraField\"";
 		}
 
 		if($filter) $query->where[] = $filter;
