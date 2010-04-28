@@ -739,6 +739,10 @@ class DataObjectTest extends SapphireTest {
 		$player = $newTeam->Players()->First();
 		$this->assertEquals('Sam', $player->FirstName);
 		$this->assertEquals("Prop", $player->Position);
+		
+		// Check that ordering a many-many relation by an aggregate column doesn't fail
+		$player = $this->objFromFixture('DataObjectTest_Player', 'player2');
+		$player->Teams("", "count(DISTINCT \"DataObjectTest_Team_Players\".\"DataObjectTest_PlayerID\") DESC");
 	}
 	
 	/**

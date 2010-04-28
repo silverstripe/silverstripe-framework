@@ -2599,10 +2599,13 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			$query->from[] = $join;
 			// In order to group by unique columns we have to group by everything listed in the select
 			foreach($query->select as $field) {
+				// Skip the _SortColumns; these are only going to be aggregate functions
+				if(preg_match('/AS\s+\"?_SortColumn/', $field, $matches)) {
+				
 				// Identify columns with aliases, and ignore the alias.  Making use of the alias in
 				// group by was causing problems when those queries were subsequently passed into
 				// SQLQuery::unlimitedRowCount.
-				if(preg_match('/^(.*)\s+AS\s+(\"[^"]+\")\s*$/', $field, $matches)) {
+				} else if(preg_match('/^(.*)\s+AS\s+(\"[^"]+\")\s*$/', $field, $matches)) {
 					$query->groupby[] = $matches[1];
 				// Otherwise just use the field as is
 				} else {
