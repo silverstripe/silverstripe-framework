@@ -40,17 +40,22 @@
 		 * instead of custom logic.
 		 */
 		'.permissioncheckboxset .valCMS_ACCESS_LeftAndMain input': {
-			initialize: function() {
-				this.toggleCheckboxes();
-			},
-			onclick: function(e) {
-				this.toggleCheckboxes();
-			},
-			toggleCheckboxes: function() {
-				var checkboxes = $(this).parents('.field:eq(0)').find('li').filter(function(i) {
+			getCheckboxesExceptThisOne: function() {
+				return $(this).parents('.field:eq(0)').find('li').filter(function(i) {
 					return ($(this).attr('class').match(/CMS_ACCESS_/));
 				}).find('.checkbox').not(this);
-
+			},
+			initialize: function() {
+				var checkboxes = this.getCheckboxesExceptThisOne();
+				if($(this).is(':checked')) {
+					checkboxes.each(function() {
+						$(this).attr('disabled', 'disabled');
+						$(this).attr('checked', 'checked');
+					});
+				}
+			},
+			onclick: function(e) {
+				var checkboxes = this.getCheckboxesExceptThisOne();
 				if($(this).is(':checked')) {
 					checkboxes.each(function() {
 						$(this).attr('disabled', 'disabled');
