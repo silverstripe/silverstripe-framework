@@ -346,6 +346,14 @@ class DataObjectTest extends SapphireTest {
 		$page->Title = null;
 		$this->assertTrue($page->isChanged('Title', 1));
 		$this->assertTrue($page->isChanged('Title', 2));
+		
+		/* Test when there's not field provided */ 
+		$page = $this->objFromFixture('Page', 'home');
+		$page->Title = "New Page Title"; 
+		$this->assertTrue($page->isChanged());
+		
+		$page->write(); 
+		$this->assertFalse($page->isChanged());
 	}
 	
 	function testRandomSort() {
