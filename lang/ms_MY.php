@@ -143,7 +143,6 @@ $lang['ms_MY']['HtmlEditorField']['BUTTONALIGNJUSTIFY'] = 'Justify';
 $lang['ms_MY']['HtmlEditorField']['BUTTONALIGNLEFT'] = 'Align left';
 $lang['ms_MY']['HtmlEditorField']['BUTTONALIGNRIGHT'] = 'Jajar kanan';
 $lang['ms_MY']['HtmlEditorField']['BUTTONBOLD'] = 'Bold (Ctrl+B)';
-$lang['ms_MY']['HtmlEditorField']['BUTTONEDITIMAGE'] = 'Sunting imej';
 $lang['ms_MY']['HtmlEditorField']['BUTTONINSERTFLASH'] = 'Masukkan Flash';
 $lang['ms_MY']['HtmlEditorField']['BUTTONINSERTIMAGE'] = 'Masukkan imej';
 $lang['ms_MY']['HtmlEditorField']['BUTTONINSERTLINK'] = 'Masukkan pautan';

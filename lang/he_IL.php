@@ -116,7 +116,6 @@ $lang['he_IL']['HtmlEditorField']['BUTTONALIGNLEFT'] = 'יישר לשמאל';
 $lang['he_IL']['HtmlEditorField']['BUTTONALIGNRIGHT'] = 'יישר לימין';
 $lang['he_IL']['HtmlEditorField']['BUTTONBOLD'] = 'מודגש (Ctrl+B)
 ';
-$lang['he_IL']['HtmlEditorField']['BUTTONEDITIMAGE'] = 'ערוך תמונה';
 $lang['he_IL']['HtmlEditorField']['BUTTONINSERTFLASH'] = 'הכנס פלאש';
 $lang['he_IL']['HtmlEditorField']['BUTTONINSERTIMAGE'] = 'הכנס תמונה';
 $lang['he_IL']['HtmlEditorField']['BUTTONINSERTLINK'] = 'הכנס קישור';

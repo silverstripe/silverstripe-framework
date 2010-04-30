@@ -93,7 +93,6 @@ $lang['zh_CN']['HtmlEditorField']['BUTTONALIGNJUSTIFY'] = '两端对齐';
 $lang['zh_CN']['HtmlEditorField']['BUTTONALIGNLEFT'] = '左端对齐';
 $lang['zh_CN']['HtmlEditorField']['BUTTONALIGNRIGHT'] = '右端对齐';
 $lang['zh_CN']['HtmlEditorField']['BUTTONBOLD'] = '粗体（Ctrl+B）';
-$lang['zh_CN']['HtmlEditorField']['BUTTONEDITIMAGE'] = '编辑图像';
 $lang['zh_CN']['HtmlEditorField']['BUTTONINSERTFLASH'] = '插入Flash动画';
 $lang['zh_CN']['HtmlEditorField']['BUTTONINSERTIMAGE'] = '插入图像';
 $lang['zh_CN']['HtmlEditorField']['BUTTONINSERTLINK'] = '插入链接';

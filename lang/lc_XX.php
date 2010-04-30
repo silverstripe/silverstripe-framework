@@ -76,7 +76,6 @@ $lang['lc_XX']['HtmlEditorField']['BUTTONALIGNJUSTIFY'] = 'JUSTIFY';
 $lang['lc_XX']['HtmlEditorField']['BUTTONALIGNLEFT'] = 'ALIGN LEFT';
 $lang['lc_XX']['HtmlEditorField']['BUTTONALIGNRIGHT'] = 'ALIGN RITE';
 $lang['lc_XX']['HtmlEditorField']['BUTTONBOLD'] = 'BOLD (HIT TEH KEYZ: CONTROLZ+B)';
-$lang['lc_XX']['HtmlEditorField']['BUTTONEDITIMAGE'] = 'EDIT TEH PIKSHUR';
 $lang['lc_XX']['HtmlEditorField']['BUTTONINSERTFLASH'] = 'ADD SUM COOL FLASH STUFF';
 $lang['lc_XX']['HtmlEditorField']['BUTTONINSERTIMAGE'] = 'INSERT PIKSHUR';
 $lang['lc_XX']['HtmlEditorField']['BUTTONINSERTLINK'] = 'INSERT LINK';

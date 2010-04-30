@@ -72,7 +72,6 @@ $lang['ne_NP']['HtmlEditorField']['BUTTONALIGNJUSTIFY'] = 'भरिएको';
 $lang['ne_NP']['HtmlEditorField']['BUTTONALIGNLEFT'] = 'बाँया समरेखित ';
 $lang['ne_NP']['HtmlEditorField']['BUTTONALIGNRIGHT'] = 'दाँया समरेखित';
 $lang['ne_NP']['HtmlEditorField']['BUTTONBOLD'] = 'बोल्ड (कन्ट्रोल‍+B)';
-$lang['ne_NP']['HtmlEditorField']['BUTTONEDITIMAGE'] = 'तस्बिर मिलाउ';
 $lang['ne_NP']['HtmlEditorField']['BUTTONINSERTFLASH'] = 'फ्लश हाल';
 $lang['ne_NP']['HtmlEditorField']['BUTTONINSERTIMAGE'] = 'तस्बिर हाल';
 $lang['ne_NP']['HtmlEditorField']['BUTTONINSERTLINK'] = 'लिन्क राखनुहोस्';

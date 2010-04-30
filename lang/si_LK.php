@@ -133,7 +133,6 @@ $lang['si_LK']['HtmlEditorField']['BUTTONALIGNJUSTIFY'] = 'සාධාරණී
 $lang['si_LK']['HtmlEditorField']['BUTTONALIGNLEFT'] = 'වමට අලයින් කරන්න';
 $lang['si_LK']['HtmlEditorField']['BUTTONALIGNRIGHT'] = 'දකුනට අලයින් කරන්න';
 $lang['si_LK']['HtmlEditorField']['BUTTONBOLD'] = 'තද (Ctrl+B)';
-$lang['si_LK']['HtmlEditorField']['BUTTONEDITIMAGE'] = 'පි0තුරය වෙනස්  කරන්න';
 $lang['si_LK']['HtmlEditorField']['BUTTONINSERTFLASH'] = 'Flash ඇතුල් කරන්න';
 $lang['si_LK']['HtmlEditorField']['BUTTONINSERTIMAGE'] = 'පි0තුරයක් ඇතුල් කරන්න';
 $lang['si_LK']['HtmlEditorField']['BUTTONINSERTLINK'] = 'බැදීමක් යොදන්න';

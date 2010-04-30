@@ -98,7 +98,6 @@ $lang['hr_HR']['HtmlEditorField']['BUTTONALIGNJUSTIFY'] = 'Justify';
 $lang['hr_HR']['HtmlEditorField']['BUTTONALIGNLEFT'] = 'Lijevo poravnanje';
 $lang['hr_HR']['HtmlEditorField']['BUTTONALIGNRIGHT'] = 'Desno poravnanje';
 $lang['hr_HR']['HtmlEditorField']['BUTTONBOLD'] = 'Bold (Ctrl+B)';
-$lang['hr_HR']['HtmlEditorField']['BUTTONEDITIMAGE'] = 'Uredi sliku';
 $lang['hr_HR']['HtmlEditorField']['BUTTONINSERTFLASH'] = 'Umetni Flash';
 $lang['hr_HR']['HtmlEditorField']['BUTTONINSERTIMAGE'] = 'Umetni sliku';
 $lang['hr_HR']['HtmlEditorField']['BUTTONINSERTLINK'] = 'Ubaci vezu';

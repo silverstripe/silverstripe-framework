@@ -156,7 +156,6 @@ $lang['pt_PT']['HtmlEditorField']['BUTTONALIGNJUSTIFY'] = 'Justificado';
 $lang['pt_PT']['HtmlEditorField']['BUTTONALIGNLEFT'] = 'Alinhar à Esquerda';
 $lang['pt_PT']['HtmlEditorField']['BUTTONALIGNRIGHT'] = 'Alinhar à Direita';
 $lang['pt_PT']['HtmlEditorField']['BUTTONBOLD'] = 'Negrito (Ctrl+B)';
-$lang['pt_PT']['HtmlEditorField']['BUTTONEDITIMAGE'] = 'Editar imagem';
 $lang['pt_PT']['HtmlEditorField']['BUTTONINSERTFLASH'] = 'Inserir Flash';
 $lang['pt_PT']['HtmlEditorField']['BUTTONINSERTIMAGE'] = 'Inserir imagem';
 $lang['pt_PT']['HtmlEditorField']['BUTTONINSERTLINK'] = 'Inserir link';
