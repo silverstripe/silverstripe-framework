@@ -79,9 +79,11 @@ class TranslatableSearchFormTest extends FunctionalTest {
 			$results->column('ID'),
 			'Published pages in default language are not found when searching in another language'
 		);
+		$actual = $results->column('ID');
+		array_walk($actual, 'intval');
 		$this->assertContains(
-			$translatedPublishedPage->ID,
-			$results->column('ID'),
+			(int)$translatedPublishedPage->ID,
+			$actual,
 			'Published pages in another language are found when searching in this language'
 		);
 	}
