@@ -80,7 +80,7 @@ class DataObjectSetTest extends SapphireTest {
 	public function testMultipleOf() {
 		$comments = DataObject::get('PageComment', '', "\"ID\" ASC");
 		$commArr = $comments->toArray();
-		$multiplesOf3 = 0;
+		$multiplesOf3 = 1;
 		
 		foreach($comments as $comment) {
 			if($comment->MultipleOf(3)) {
@@ -93,13 +93,13 @@ class DataObjectSetTest extends SapphireTest {
 		
 		$this->assertEquals(3, $multiplesOf3);
 		
-		$this->assertTrue($commArr[0]->IsMultipleOf3);
+		$this->assertFalse($commArr[0]->IsMultipleOf3);
 		$this->assertFalse($commArr[1]->IsMultipleOf3);
-		$this->assertFalse($commArr[2]->IsMultipleOf3);
-		$this->assertTrue($commArr[3]->IsMultipleOf3);
+		$this->assertTrue($commArr[2]->IsMultipleOf3);
+		$this->assertFalse($commArr[3]->IsMultipleOf3);
 		$this->assertFalse($commArr[4]->IsMultipleOf3);
-		$this->assertFalse($commArr[5]->IsMultipleOf3);
-		$this->assertTrue($commArr[6]->IsMultipleOf3);
+		$this->assertTrue($commArr[5]->IsMultipleOf3);
+		$this->assertFalse($commArr[6]->IsMultipleOf3);
 
 		foreach($comments as $comment) {
 			if($comment->MultipleOf(3, 1)) {
