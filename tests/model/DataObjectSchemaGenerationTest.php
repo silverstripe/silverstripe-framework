@@ -29,10 +29,6 @@ class DataObjectSchemaGenerationTest extends SapphireTest {
 
 class DataObjectSchemaGenerationTest_DO extends DataObject implements TestOnly {
 	static $db = array(
-		'MultiEnum1' => 'MultiEnum("A, B, C, D","")',
-		'MultiEnum2' => 'MultiEnum("A, B, C, D","A")',
-		'MultiEnum3' => 'MultiEnum("A, B, C, D","A, B")',
-
 		'Enum1' => 'Enum("A, B, C, D","")',
 		'Enum2' => 'Enum("A, B, C, D","A")',
 	);
