@@ -280,7 +280,11 @@ class Form extends RequestHandler {
 			} else {
 				if($this->getRedirectToFormOnValidationError()) {
 					if($pageURL = $request->getHeader('Referer')) {
-						return Director::redirect($pageURL . '#' . $this->FormName());
+						if(Director::is_site_url($pageURL)) {
+							// Remove existing pragmas
+							$pageURL = preg_replace('/(#.*)/', '', $pageURL);
+							return Director::redirect($pageURL . '#' . $this->FormName());
+						}
 					}
 				}
 				return Director::redirectBack();
