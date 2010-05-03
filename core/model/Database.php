@@ -284,7 +284,7 @@ abstract class SS_Database {
 					if(preg_match('/ENGINE=([^\s]*)/', $options[get_class($this)], $alteredEngineMatches)) {
 						$alteredEngine = $alteredEngineMatches[1];
 						$tableStatus = DB::query(sprintf(
-							'SHOW TABLE STATUS WHERE "Name" = \'%s\'',
+							'SHOW TABLE STATUS LIKE \'%s\'',
 							$table
 						))->first();
 						$tableOptionsChanged = ($tableStatus['Engine'] != $alteredEngine);
