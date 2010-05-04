@@ -209,7 +209,19 @@ class UploadTest extends SapphireTest {
 		$this->assertEquals(1, count($u->getErrors()), 'There is a single error of the file extension');
 		
 	}
-	
+
+	// Delete files in the default uploads directory that match the name pattern.
+	// @param String $namePattern	A regular expression applied to files in the directory. If the name matches
+	// the pattern, it is deleted. Directories, . and .. are excluded.
+	function deleteTestUploadFiles($namePattern) {
+		$tmpFolder = ASSETS_PATH . "/" . Upload::$uploads_folder;
+		$files = scandir($tmpFolder);
+		foreach ($files as $f) {
+			if ($f == "." || $f == ".." || is_dir("$tmpFolder/$f")) continue;
+			if (preg_match($namePattern, $f)) unlink("$tmpFolder/$f");
+		}
+	}
+
 	function testUploadTarGzFileTwiceAppendsNumber() {
 		// create tmp file
 		$tmpFileName = 'UploadTest_testUpload.tar.gz';
@@ -227,7 +239,10 @@ class UploadTest extends SapphireTest {
 			'extension' => 'tar.gz',
 			'error' => UPLOAD_ERR_OK,
 		);
-		
+
+		// Make sure there are none here, otherwise they get renamed incorrectly for the test.
+		$this->deleteTestUploadFiles("/UploadTesttestUpload.*tar\.gz/");
+
 		// test upload into default folder
 		$u = new Upload();
 		$u->load($tmpFile);
@@ -269,15 +284,18 @@ class UploadTest extends SapphireTest {
 			'error' => UPLOAD_ERR_OK,
 		);
 		
+		// Make sure there are none here, otherwise they get renamed incorrectly for the test.
+		$this->deleteTestUploadFiles("/UploadTesttestUpload.*/");
+
 		$v = new UploadTest_Validator();
 		$v->setAllowedExtensions(array(''));
-		
+
 		// test upload into default folder
 		$u = new Upload();
 		$u->setValidator($v);
 		$u->load($tmpFile);
 		$file = $u->getFile();
-		
+
 		$this->assertEquals(
 			'UploadTesttestUpload',
 			$file->Name,
