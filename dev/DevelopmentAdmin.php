@@ -12,6 +12,7 @@ class DevelopmentAdmin extends Controller {
 	
 	static $url_handlers = array(
 		'' => 'index',
+		'build/defaults' => 'buildDefaults',
 		'$Action' => '$Action',
 		'$Action//$Action/$ID' => 'handleAction',
 	);
@@ -134,7 +135,31 @@ class DevelopmentAdmin extends Controller {
 			$renderer->writeFooter();
 		}
 	}
-	
+
+	/**
+	 * Build the default data, calling requireDefaultRecords on all
+	 * DataObject classes
+	 * Should match the $url_handlers rule:
+	 *		'build/defaults' => 'buildDefaults',
+	 */
+	function buildDefaults() {
+		$da = new DatabaseAdmin();
+
+		if (!Director::is_cli()) {
+			$renderer = new DebugView();
+			$renderer->writeHeader();
+			$renderer->writeInfo("Defaults Builder", Director::absoluteBaseURL());
+			echo "<div style=\"margin: 0 2em\">";
+		}
+
+		$da->buildDefaults();
+
+		if (!Director::is_cli()) {
+			echo "</div>";
+			$renderer->writeFooter();
+		}
+	}
+
 	function reset() {
 		$link = BASE_URL.'/dev/tests/startsession';
 		
