@@ -94,6 +94,24 @@ class ViewableDataTest extends SapphireTest {
 		$this->assertEquals($data->ATT_val('test'), '&quot;this is a test&quot;');
 	}
 
+	public function testCastingClass() {
+		$expected = array(
+			'NonExistant'   => null,
+			'Field'         => 'CastingType',
+			'Argument'      => 'ArgumentType',
+			'ArrayArgument' => 'ArrayArgumentType'
+		);
+		$obj = new ViewableDataTest_CastingClass();
+
+		foreach($expected as $field => $class) {
+			$this->assertEquals(
+				$class,
+				$obj->castingClass($field),
+				"castingClass() returns correct results for ::\$$field"
+			);
+		}
+	}
+
 }
 
 /**#@+
@@ -172,6 +190,14 @@ class ViewableDataTest_Container extends ViewableData {
 		$this->failover = $failover;
 		parent::__construct();
 	}
+}
+
+class ViewableDataTest_CastingClass extends ViewableData {
+	public static $casting = array(
+		'Field'         => 'CastingType',
+		'Argument'      => 'ArgumentType(Argument)',
+		'ArrayArgument' => 'ArrayArgumentType(array(foo, bar))'
+	);
 }
 
 /**#@-*/

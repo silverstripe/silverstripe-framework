@@ -267,7 +267,7 @@ class ViewableData extends Object implements IteratorAggregate {
 		
 		$bPos = strpos($spec,'(');
 		if($bPos === false) return $spec;
-		else return substr($spec, 0, $bPos-1);
+		else return substr($spec, 0, $bPos);
 	}
 	
 	/**
