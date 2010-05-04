@@ -39,6 +39,7 @@ class SS_HTTPResponse {
 		415 => 'Unsupported Media Type',
 		416 => 'Request Range Not Satisfiable',
 		417 => 'Expectation Failed',
+		422 => 'Unprocessable Entity',
 		500 => 'Internal Server Error',
 		501 => 'Not Implemented',
 		502 => 'Bad Gateway',
