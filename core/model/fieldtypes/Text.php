@@ -1,6 +1,18 @@
 <?php
 /**
- * Represents a long text field.
+ * Represents a variable-length string of up to 2 megabytes, designed to store raw text
+ * 
+ * Example definition via {@link DataObject::$db}:
+ * <code>
+ * static $db = array(
+ * 	"MyDescription" => "Text",
+ * );
+ * </code>
+ * 
+ * @see HTMLText
+ * @see HTMLVarchar
+ * @see Varchar
+ * 
  * @package sapphire
  * @subpackage model
  */

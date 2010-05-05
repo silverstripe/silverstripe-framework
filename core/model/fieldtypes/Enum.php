@@ -1,6 +1,8 @@
 <?php
 /**
- * Represents an enumeration field.
+ * Class Enum represents an enumeration of a set of strings.
+ * See {@link DropdownField} for a {@link FormField} to select enum values.
+ * 
  * @package sapphire
  * @subpackage model
  */
@@ -12,10 +14,17 @@ class Enum extends DBField {
 	
 	/**
 	 * Create a new Enum field.
-	 * You should create an enum field like this: 
-	 *      		"MyField" => "Enum('Val1, Val2, Val3', 'Val1')"
-	 *	or: 		"MyField" => "Enum(Array('Val1', 'Val2', 'Val3'), 'Val1')"
-	 *  but NOT: 	"MyField" => "Enum('Val1', 'Val2', 'Val3', 'Val1')"
+	 * 
+	 * Example usage in {@link DataObject::$db} with comma-separated string notation ('Val1' is default)
+	 * <code>
+	 *  "MyField" => "Enum('Val1, Val2, Val3', 'Val1')"
+	 * </code>
+	 * 
+	 * Example usage in in {@link DataObject::$db} with array notation ('Val1' is default)
+	 * <code>
+	 * "MyField" => "Enum(array('Val1', 'Val2', 'Val3'), 'Val1')"
+	 * </code>
+	 * 
 	 * @param enum: A string containing a comma separated list of options or an array of Vals.
 	 * @param default The default option, which is either NULL or one of the items in the enumeration.
 	 */

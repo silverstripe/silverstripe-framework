@@ -1,6 +1,11 @@
 <?php
 /**
- * Represents a short text field.
+ * Class Varchar represents a variable-length string of up to 255 characters, designed to store raw text
+ * 
+ * @see HTMLText
+ * @see HTMLVarchar
+ * @see Text
+ * 
  * @package sapphire
  * @subpackage model
  */
@@ -10,6 +15,7 @@ class Varchar extends StringField {
 	 
  	/**
  	 * Construct a new short text field
+ 	 * 
  	 * @param $name string The name of the field
  	 * @param $size int The maximum size of the field, in terms of characters
  	 * @param $options array Optional parameters, e.g. array("nullifyEmpty"=>false). See {@link StringField::setOptions()} for information on the available options

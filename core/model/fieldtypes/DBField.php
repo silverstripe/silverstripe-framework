@@ -3,12 +3,25 @@
  * Single field in the database.
  * Every field from the database is represented as a sub-class of DBField.
  * 
- * <h2>Multi-value DBField objects</h2>
+ * <b>Multi-value DBField objects</b>
+ * 
  * Sometimes you will want to make DBField classes that don't have a 1-1 match to database fields.  To do this, there are a
  * number of fields for you to overload.
  *  - Overload {@link writeToManipulation} to add the appropriate references to the INSERT or UPDATE command
  *  - Overload {@link addToQuery} to add the appropriate items to a SELECT query's field list
  *  - Add appropriate accessor methods 
+ * 
+ * <b>Subclass Example</b>
+ * 
+ * The class is easy to overload with custom types, e.g. the MySQL "BLOB" type (http://dev.mysql.com/doc/refman/5.0/en/blob.html).
+ * 
+ * <code>
+ * class Blob extends DBField {                                                                                                   
+ * 	function requireField() {                                                                                                         
+ * 		DB::requireField($this->tableName, $this->name, "blob");
+ *  }
+ * }
+ * </code>
  * 
  * @package sapphire
  * @subpackage model

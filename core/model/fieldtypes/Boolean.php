@@ -1,6 +1,7 @@
 <?php
 /**
  * Represents a boolean field.
+ * 
  * @package sapphire
  * @subpackage model
  */

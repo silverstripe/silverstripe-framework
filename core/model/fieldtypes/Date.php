@@ -6,6 +6,13 @@
  * Alternatively you can set a timestamp that is evaluated through
  * PHP's built-in date() function according to your system locale.
  * 
+ * Example definition via {@link DataObject::$db}:
+ * <code>
+ * static $db = array(
+ * 	"Expires" => "Date",
+ * );
+ * </code>
+ * 
  * @todo Add localization support, see http://open.silverstripe.com/ticket/2931
  * 
  * @package sapphire
@@ -41,6 +48,9 @@ class Date extends DBField {
 		if($this->value) return date('d/m/Y', strtotime($this->value));
 	}
 	
+	/**
+	 * Returns the date in US format: “01/18/2006”
+	 */
 	function NiceUS() {
 		if($this->value) return date('m/d/Y', strtotime($this->value));
 	}
@@ -91,7 +101,7 @@ class Date extends DBField {
 	/**
 	 * Return the date using a particular formatting string.
 	 * 
-	 * @param string $format Format code string. e.g. "d M Y"
+	 * @param string $format Format code string. e.g. "d M Y" (see http://php.net/date)
 	 * @return string The date in the requested format
 	 */
 	function Format($format) {

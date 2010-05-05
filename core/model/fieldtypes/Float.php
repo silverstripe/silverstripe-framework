@@ -1,6 +1,7 @@
 <?php
 /**
  * Represents a floating point field.
+ * 
  * @package sapphire
  * @subpackage model
  */
@@ -18,6 +19,11 @@ class Float extends DBField {
 		DB::requireField($this->tableName, $this->name, $values);
 	}
 	
+	/**
+	 * Returns the number, with commas and decimal places as appropriate, eg “1,000.00”.
+	 * 
+	 * @uses number_format()
+	 */
 	function Nice() {
 		return number_format($this->value, 2);
 	}

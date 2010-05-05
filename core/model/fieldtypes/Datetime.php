@@ -11,6 +11,13 @@
  * methods. This ensures that all time-based computations are testable with mock dates
  * through {@link SS_Datetime::set_mock_now()}.
  * 
+ * Example definition via {@link DataObject::$db}:
+ * <code>
+ * static $db = array(
+ *  "Expires" => "SSDatetime",
+ * );
+ * </code>
+ * 
  * @todo Add localization support, see http://open.silverstripe.com/ticket/2931
  * 
  * @package sapphire
@@ -31,6 +38,9 @@ class SS_Datetime extends Date {
 		}
 	}
 
+	/**
+	 * Returns the date in the raw SQL-format, e.g. “2006-01-18 16:32:04”
+	 */
 	function Nice() {
 		return date('d/m/Y g:ia', strtotime($this->value));
 	}

@@ -1,6 +1,7 @@
 <?php
 /**
- * Represents an integer field.
+ * Represents a signed 32 bit integer field.
+ * 
  * @package sapphire
  * @subpackage model
  */
@@ -12,6 +13,9 @@ class Int extends DBField {
 		parent::__construct($name);
 	}
 
+	/**
+	 * Returns the number, with commas added as appropriate, eg “1,000”.
+	 */
 	function Formatted() {
 		return number_format($this->value);
 	}
