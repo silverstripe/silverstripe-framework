@@ -2,6 +2,7 @@
 /**
  * Global database interface, complete with static methods.
  * Use this class for interacting with the database.
+ * 
  * @package sapphire
  * @subpackage model
  */
@@ -132,6 +133,38 @@ class DB {
 	 * and the values are map containing 'command' and 'fields'.  Command should be 'insert' or 'update',
 	 * and fields should be a map of field names to field values, including quotes.  The field value can
 	 * also be a SQL function or similar.
+	 * 
+	 * Example:
+	 * <code>
+	 * array(
+	 *   // Command: insert
+	 *   "table name" => array(
+	 *      "command" => "insert",
+	 *      "fields" => array(
+	 *         "ClassName" => "'MyClass'", // if you're setting a literal, you need to escape and provide quotes
+	 *         "Created" => "now()", // alternatively, you can call DB functions
+	 *         "ID" => 234,
+	 *       ),
+	 *      "id" => 234 // an alternative to providing ID in the fields list
+	 *    ),
+	 * 
+	 *   // Command: update
+	 *   "other table" => array(
+	 *      "command" => "update",
+	 *      "fields" => array(
+	 *         "ClassName" => "'MyClass'",
+	 *         "LastEdited" => "now()",
+	 *       ),
+	 *      "where" => "ID = 234",
+	 *      "id" => 234 // an alternative to providing a where clause
+	 *    ),
+	 * )
+	 * </code>
+	 * 
+	 * You'll note that only one command on a given table can be called.  
+	 * That's a limitation of the system that's due to it being written for {@link DataObject::write()}, 
+	 * which needs to do a single write on a number of different tables.
+	 * 
 	 * @param array $manipulation
 	 */
 	static function manipulate($manipulation) {
