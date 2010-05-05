@@ -1,6 +1,60 @@
 <?php
 /**
- * Base class for XML parsers
+ * XML Class handles parsing xml data within SilverStripe. For reading a RESTFul Service such as flickr or last.fm you should use RestfulService which provides a nicer interface to managing external RSS Feeds. 
+ * 
+ * 
+ * <b>Building XML parsers with the XML class</b>
+ * 
+ * To use the XML parser, you need to create a subclass.  Then you define process_XXX functions to process different tags.  The parser walks sequentially through the file and calls the process_XXX functions when it hits different tags.
+ * 
+ *   * **process_(tagname):** This will be called when the parser finds the start tag.  It will be passed the attributes of the tag.
+ *   * **process_(tagname)_end:** This will be called when the parser finds the closng tag.  It will be passed the attributes and the content of the tag.
+ *   
+ *   * **process_tag :** This will be called if it is implemented and a method has not been created already for the tag being parsed. It is passed the tag name and attributes of the tag.
+ * 
+ *   * **process_tag_end:** This will be called if it is implemented and a method has not been created already for the tag being parsed. It is passed the tag name, the content of the tag and the attributes of the tag.
+ * 
+ * 
+ * The idea is that within this function, you build up $this->result with a useful representation of the XML data.  It could be an array structure, an object, or something else.
+ * 
+ * There are a couple of methods on the XML object that will help with 
+ * 
+ *   * **$this->inContext('(tag)', '(tag).(class)'):** This will return true if the current tag has the specified tags as ancestors, in the order that you've specified.
+ * 
+ * Finally, there are public methods that can be called on an instantiated XML subclass.  This is how you will make use of your new parser.
+ * 
+ *   * **$parser->tidyXHTML($content):** This will run "tidy -asxhtml" on your content.  This is useful if you're wanting to use the XML parser to parse HTML that may or may not be XML compliant.
+ *   * **$parser->parse($content):** This will call the parser on the given XML content, and return the $this->result object that gets built.
+ * 
+ * <b>Example</b>
+ * 
+ * <code>
+ * class DeliciousHtmlParser extends XML {
+ * 	protected $currentItem = 0;
+ * 	
+ * 	function process_li($attributes) {
+ * 		if($attributes['class'] == "post") {
+ * 			$this->currentItem = sizeof($this->parsed);
+ * 		}
+ * 	}
+ * 	
+ * 	function process_a_end($content, $attributes) {
+ * 		if($this->inContext('li.post','h4.desc')) {
+ * 			$this->parsed[$this->currentItem][link] = $attributes[href];
+ * 			$this->parsed[$this->currentItem][title] = $content;
+ * 		
+ * 		} else if($this->inContext('li.post','div.meta') && $attributes['class'] == 'tag') {
+ * 			$this->parsed[$this->currentItem][tags][] = $content;
+ * 		}
+ * 	}
+ * }
+ * 
+ * $html = file_get_contents("http://del.icio.us/$user/?setcount=100");
+ * $parser = new DeliciousHtmlParser();
+ * $tidyHtml = $parser->tidyXHTML($html);
+ * $result = $parser->parse($tidyHtml);
+ * </code>
+ * 
  * @package sapphire
  * @subpackage misc
  */
