@@ -42,6 +42,7 @@ class TestRunner extends Controller {
 		'coverage/module/$ModuleName' => 'coverageModule',
 		'coverage/$TestCase!' => 'coverageOnly',
 		'coverage' => 'coverageAll',
+		'sessionloadyml' => 'sessionloadyml',
 		'startsession' => 'startsession',
 		'endsession' => 'endsession',
 		'cleanupdb' => 'cleanupdb',
@@ -377,7 +378,50 @@ HTML;
 				<li><a id=\"startsession-link\" href=\"" .Director::baseURL() . "dev/tests/startsession\">Start a new test session</a></li>
 			</ul>";
 	}
-	
+
+	function sessionloadyml() {
+		// Load incremental YAML fixtures
+		// TODO: We will probably have to filter out the admin member here,
+		// as it is supplied by Bare.yml
+		if(Director::isLive()) {
+			return "<p>sessionloadyml can only be used on dev and test sites</p>";
+		}
+		if (!SapphireTest::using_temp_db()) {
+			return "<p>Please load /dev/tests/startsession first</p>";
+		}
+
+		$fixtureFile = isset($_GET['fixture']) ? $_GET['fixture'] : null;
+		if (empty($fixtureFile)) {
+			$me = Director::baseURL() . "/dev/tests/sessionloadyml";
+			return <<<HTML
+				<form action="$me">
+					<p>Enter a fixture file name to load a new YAML fixture into the session.</p>
+					<p>Fixture file <input id="fixture-file" name="fixture" /></p>
+					<input type="hidden" name="flush" value="1">
+					<p><input id="session-load-yaml" value="Load yml fixture" type="submit" /></p>
+				</form>
+HTML;
+		}
+		// Validate fixture file
+		$realFile = realpath(BASE_PATH.'/'.$fixtureFile);
+		$baseDir = realpath(Director::baseFolder());
+		if(!$realFile || !file_exists($realFile)) {
+			return "<p>Fixture file doesn't exist</p>";
+		} else if(substr($realFile,0,strlen($baseDir)) != $baseDir) {
+			return "<p>Fixture file must be inside $baseDir</p>";
+		} else if(substr($realFile,-4) != '.yml') {
+			return "<p>Fixture file must be a .yml file</p>";
+		} else if(!preg_match('/^([^\/.][^\/]+)\/tests\//', $fixtureFile)) {
+			return "<p>Fixture file must be inside the tests subfolder of one of your modules.</p>";
+		}
+
+		// Fixture
+		$fixture = new YamlFixture($fixtureFile);
+		$fixture->saveIntoDatabase();
+
+		return "<p>Loaded fixture '$fixtureFile' into session</p>";
+	}
+
 	function setUp() {
 		// The first DB test will sort out the DB, we don't have to
 		SSViewer::flush_template_cache();
