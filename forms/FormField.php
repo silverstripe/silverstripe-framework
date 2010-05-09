@@ -1,9 +1,19 @@
 <?php
 /**
- * Represents a field in a form.  
+ * Represents a field in a form. 
+ *  
  * A FieldSet contains a number of FormField objects which make up the whole of a form.
  * In addition to single fields, FormField objects can be "composite", for example, the {@link TabSet}
  * field.  Composite fields let us define complex forms without having to resort to custom HTML.
+ * 
+ * <b>Subclassing</b>
+ * 
+ * Define a {@link dataValue()} method that returns a value suitable for inserting into a single database field. 
+ * For example, you might tidy up the format of a date or currency field.
+ * Define {@link saveInto()} to totally customise saving. 
+ * For example, data might be saved to the filesystem instead of the data record, 
+ * or saved to a component of the data record instead of the data record itself.
+ * 
  * @package forms
  * @subpackage core
  */
