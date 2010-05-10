@@ -4,9 +4,13 @@
  * The SSViewer class handles rendering of .ss templates.  In addition to a full template in
  * the views folder, a template in views/Content or views/Layout will be rendered into $Content and
  * $Layout, respectively.
+ * 
+ * <b>Caching</b>
  *
  * Compiled templates are cached.  If you put ?flush=1 on your URL, it will force the template to be recompiled.  This
  * is a hack; the system should really detect when a page needs re-fetching.
+ * 
+ * <b>Manifest File and Structure</b>
  * 
  * Works with the global $_TEMPLATE_MANIFEST which is compiled by {@link ManifestBuilder->getTemplateManifest()}.
  * This associative array lists all template filepaths by "identifier", meaning the name
@@ -43,7 +47,9 @@
  * )
  * </code>
  *
- * @todo Fix the broken caching.
+ * @see http://doc.silverstripe.org/themes
+ * @see http://doc.silverstripe.org/themes:developing
+ * 
  * @package sapphire
  * @subpackage view
  */
@@ -102,7 +108,7 @@ class SSViewer {
 	}
 	
 	/**
-	 * @param string $theme
+	 * @param string $theme The "base theme" name (without underscores). 
 	 */
 	static function set_theme($theme) {
 		self::$current_theme = $theme;
