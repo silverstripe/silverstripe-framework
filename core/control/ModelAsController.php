@@ -150,7 +150,7 @@ class ModelAsController extends Controller implements NestedController {
 	static function find_old_page($URLSegment,$parentID = 0, $ignoreNestedURLs = false) {
 		$URLSegment = Convert::raw2sql($URLSegment);
 		
-		$useParentIDFilter = SiteTree::nested_urls() && !$ignoreNestedURLs;
+		$useParentIDFilter = SiteTree::nested_urls() && $parentID;
 				
 		// First look for a non-nested page that has a unique URLSegment and can be redirected to.
 		if(SiteTree::nested_urls()) {
@@ -176,12 +176,6 @@ class ModelAsController extends Controller implements NestedController {
 		if($record && ($oldPage = DataObject::get_by_id('SiteTree', $record['RecordID']))) {
 			// Run the page through an extra filter to ensure that all decorators are applied.
 			if(SiteTree::get_by_link($oldPage->RelativeLink())) return $oldPage;
-		}
-		
-		// Otherwise, if nested URLs is enabled, look for a page anywhere in the site that may be
-		// left from pre-nested-URLs days
-		if(SiteTree::nested_urls() && !$ignoreNestedURLs && $parentID == 0) {
-			return self::find_old_page($URLSegment, $parentID, true);
 		}
 	}
 	

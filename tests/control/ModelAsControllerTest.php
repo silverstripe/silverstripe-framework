@@ -5,6 +5,8 @@
  */
 class ModelAsControllerTest extends FunctionalTest {
 	
+	static $fixture_file = 'sapphire/tests/ModelAsControllerTest.yml';
+	
 	protected $autoFollowRedirection = false;
 
 	protected $orig = array();
