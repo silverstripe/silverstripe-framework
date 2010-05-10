@@ -107,8 +107,26 @@ class ModelAsControllerTest extends FunctionalTest {
 			Controller::join_links(Director::baseURL() . 'newlevel1/newlevel2/newlevel3/'),
 			$response->getHeader('Location')
 		);
+		
+		$response = $this->get('newlevel1/newlevel2/level3');
 	}
-	
+
+	public function testRedirectionForPreNestedurlsBookmarks(){
+		$this->generateNestedPagesFixture();
+
+		// Up-to-date URLs will be redirected to the appropriate subdirectory
+		$response = $this->get('newlevel3');
+		$this->assertEquals(301, $response->getStatusCode());
+		$this->assertEquals(Director::baseURL() . 'newlevel1/newlevel2/newlevel3/',
+			$response->getHeader("Location"));
+
+		// So will the legacy ones
+		$response = $this->get('level3');
+		$this->assertEquals(301, $response->getStatusCode());
+		$this->assertEquals(Director::baseURL() . 'newlevel1/newlevel2/newlevel3/',
+			$response->getHeader("Location"));
+	}
+
 	function testDoesntRedirectToNestedChildrenOutsideOfOwnHierarchy() {
 		$this->generateNestedPagesFixture();
 		
@@ -120,7 +138,7 @@ class ModelAsControllerTest extends FunctionalTest {
 		
 		$response = $this->get('level1/otherparent');
 		$this->assertEquals($response->getStatusCode(), 301);
-		
+
 		$response = $this->get('newlevel1/otherparent');
 		$this->assertEquals(
 			$response->getStatusCode(), 
