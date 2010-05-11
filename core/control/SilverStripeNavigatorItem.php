@@ -97,8 +97,8 @@ class SilverStripeNavigatorItem_StageLink extends SilverStripeNavigatorItem {
 		} else {
 			$draftPage = Versioned::get_one_by_stage('SiteTree', 'Stage', '"SiteTree"."ID" = ' . $page->ID);
 			if($draftPage) {
-				$pageLink = $draftPage->AbsoluteLink();
-				return "<a href=\"$pageLink?stage=Stage\" class=\"newWindow\" target=\"site\" style=\"left : -1px;\">". _t('ContentController.DRAFTSITE', 'Draft Site') ."</a>";
+				$pageLink = Controller::join_links($draftPage->AbsoluteLink(), "?stage=Stage");
+				return "<a href=\"$pageLink\" class=\"newWindow\" target=\"site\" style=\"left : -1px;\">". _t('ContentController.DRAFTSITE', 'Draft Site') ."</a>";
 			}
 		}
 	}
@@ -111,7 +111,7 @@ class SilverStripeNavigatorItem_StageLink extends SilverStripeNavigatorItem {
 	
 	function getLink($page) {
 		if(Versioned::current_stage() == 'Stage') {
-			return $page->AbsoluteLink() . '?stage=Stage';
+			return Controller::join_links($page->AbsoluteLink(), '?stage=Stage');
 		}
 	}
 }
@@ -129,8 +129,8 @@ class SilverStripeNavigatorItem_LiveLink extends SilverStripeNavigatorItem {
 		} else {
 			$livePage = Versioned::get_one_by_stage('SiteTree', 'Live', '"SiteTree"."ID" = ' . $page->ID);
 			if($livePage) {
-				$pageLink = $livePage->AbsoluteLink();
-				return "<a href=\"$pageLink?stage=Live\" class=\"newWindow\" target=\"site\" style=\"left : -3px;\">". _t('ContentController.PUBLISHEDSITE', 'Published Site') ."</a>";
+				$pageLink = Controller::join_links($livePage->AbsoluteLink(), "?stage=Live");
+				return "<a href=\"$pageLink\" class=\"newWindow\" target=\"site\" style=\"left : -3px;\">". _t('ContentController.PUBLISHEDSITE', 'Published Site') ."</a>";
 			}
 		}
 	}
@@ -143,7 +143,7 @@ class SilverStripeNavigatorItem_LiveLink extends SilverStripeNavigatorItem {
 	
 	function getLink($page) {
 		if(Versioned::current_stage() == 'Live') {
-			return $page->AbsoluteLink() . '?stage=Live';
+			return Controller::join_links($page->AbsoluteLink(), '?stage=Live');
 		}
 	}
 }
