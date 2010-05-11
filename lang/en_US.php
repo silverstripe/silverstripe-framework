@@ -414,10 +414,7 @@ $lang['en_US']['Member']['INTERFACELANG'] = array(
 	PR_MEDIUM,
 	'Language of the CMS'
 );
-$lang['en_US']['Member']['INVALIDNEWPASSWORD'] = array(
-	'We couldn\'t accept that password: %s',
-	nl2br("\n".$isValid->starredList(
-);
+$lang['en_US']['Member']['INVALIDNEWPASSWORD'] = 'We couldn\'t accept that password: %s';
 $lang['en_US']['Member']['LOGGEDINAS'] = 'You\'re logged in as %s.';
 $lang['en_US']['Member']['MOBILE'] = 'Mobile';
 $lang['en_US']['Member']['NAME'] = 'Name';

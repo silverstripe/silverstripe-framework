@@ -114,8 +114,9 @@ class ChangePasswordForm extends Form {
 			} else {
 				$this->clearMessage();
 				$this->sessionMessage(
-					_t('Member.INVALIDNEWPASSWORD', "We couldn't accept that password: %s", nl2br("\n".$isValid->starredList())), 
-					"bad");
+					sprintf(_t('Member.INVALIDNEWPASSWORD', "We couldn't accept that password: %s"), nl2br("\n".$isValid->starredList())), 
+					"bad"
+				);
 				Director::redirectBack();
 			}
 
