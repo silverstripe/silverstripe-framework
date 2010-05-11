@@ -549,7 +549,13 @@ class Controller extends RequestHandler {
 		$args = func_get_args();
 		$result = "";
 		$querystrings = array();
+		$fragmentIdentifier = null;
 		foreach($args as $arg) {
+			// Find fragment identifier - keep the last one
+			if(strpos($arg,'#') !== false) {
+				list($arg, $fragmentIdentifier) = explode('#',$arg,2);
+			}
+			// Find querystrings
 			if(strpos($arg,'?') !== false) {
 				list($arg, $suffix) = explode('?',$arg,2);
 				$querystrings[] = $suffix;
@@ -561,6 +567,7 @@ class Controller extends RequestHandler {
 		}
 		
 		if($querystrings) $result .= '?' . implode('&', $querystrings);
+		if($fragmentIdentifier) $result .= "#$fragmentIdentifier";
 		
 		return $result;
 	}
