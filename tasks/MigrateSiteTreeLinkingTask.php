@@ -24,7 +24,7 @@ class MigrateSiteTreeLinkingTask extends BuildTask {
 		
 		// Databases like MSSQL will give duplicate results - remove them
 		// This would normally be fixed by using SELECT DISTINCT, but DataObject::get() doesn't support it
-		$linkedPages->removeDuplicates();
+		if($linkedPages) $linkedPages->removeDuplicates();
 		
 		if($linkedPages) foreach($linkedPages as $page) {
 			$tracking = DB::query(sprintf (
