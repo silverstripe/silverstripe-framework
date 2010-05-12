@@ -731,8 +731,9 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 
 		if($member && Permission::checkMember($member, "ADMIN")) return true;
 		
-		$results = $this->extend('canAddChildren', $member);
-		if($results && is_array($results)) if(!min($results)) return false;
+		// Standard mechanism for accepting permission changes from decorators
+		$extended = $this->extendedCan('canAddChildren', $member);
+		if($extended !== null) return $extended;
 		
 		return $this->canEdit($member) && $this->stat('allowed_children') != 'none';
 	}
@@ -761,10 +762,10 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 
 		// admin override
 		if($member && Permission::checkMember($member, array("ADMIN", "SITETREE_VIEW_ALL"))) return true;
-		
-		// decorated access checks
-		$results = $this->extend('canView', $member);
-		if($results && is_array($results)) if(!min($results)) return false;
+
+		// Standard mechanism for accepting permission changes from decorators
+		$extended = $this->extendedCan('canView', $member);
+		if($extended != null) return $extended;
 		
 		// check for empty spec
 		if(!$this->CanViewType || $this->CanViewType == 'Anyone') return true;
@@ -817,9 +818,9 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 			return true;
 		}
 		
-		// decorated access checks
-		$results = $this->extend('canDelete', $memberID);
-		if($results && is_array($results)) if(!min($results)) return false;
+		// Standard mechanism for accepting permission changes from decorators
+		$extended = $this->extendedCan('canDelete', $memberID);
+		if($extended !== null) return $extended;
 		
 		// Check cache (the can_edit_multiple call below will also do this, but this is quicker)
 		if(isset(self::$cache_permissions['delete'][$this->ID])) {
@@ -858,9 +859,9 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 
 		if($member && Permission::checkMember($member, "ADMIN")) return true;
 		
-		// decorated permission checks
-		$results = $this->extend('canCreate', $member);
-		if($results && is_array($results)) if(!min($results)) return false;
+		// Standard mechanism for accepting permission changes from decorators
+		$extended = $this->extendedCan('canCreate', $member);
+		if($extended !== null) return $extended;
 		
 		return $this->stat('can_create') != false || Director::isDev();
 	}
@@ -892,9 +893,9 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		
 		if($memberID && Permission::checkMember($memberID, array("ADMIN", "SITETREE_EDIT_ALL"))) return true;
 		
-		// decorated access checks
-		$results = $this->extend('canEdit', $memberID);
-		if($results && is_array($results)) if(!min($results)) return false;
+		// Standard mechanism for accepting permission changes from decorators
+		$extended = $this->extendedCan('canEdit', $memberID);
+		if($extended !== null) return $extended;
 
 		if($this->ID) {
 			// Check cache (the can_edit_multiple call below will also do this, but this is quicker)
@@ -933,21 +934,19 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		if(!$member || !(is_a($member, 'Member')) || is_numeric($member)) $member = Member::currentUser();
 		
 		if($member && Permission::checkMember($member, "ADMIN")) return true;
-		
-		// If we have a result, then that means at least one decorator specified alternateCanPublish
-		// Allow the permission check only if *all* voting decorators allow it.
-		$results = $this->extend('canPublish', $member);
-		if($results && is_array($results)) if(!min($results)) return false;
 
-		// Normal case
+		// Standard mechanism for accepting permission changes from decorators
+		$extended = $this->extendedCan('canPublish', $member);
+		if($extended !== null) return $extended;
+
+		// Normal case - fail over to canEdit()
 		return $this->canEdit($member);
 	}
 	
 	public function canDeleteFromLive($member = null) {
-		// If we have a result, then that means at least one decorator specified canDeleteFromLive
-		// Allow the permission check only if *all* voting decorators allow it.
-		$results = $this->extend('canDeleteFromLive', $member);
-		if($results && is_array($results)) if(!min($results)) return false;
+		// Standard mechanism for accepting permission changes from decorators
+		$extended = $this->extendedCan('canDeleteFromLive', $member);
+		if($extended !==null) return $extended;
 
 		return $this->canPublish($member);
 	}
@@ -1570,7 +1569,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		}
 
 		// Redirector pages
-		$redirectors = DataObject::get("RedirectorPage", "\"RedirectionType\" = 'Internal' AND \"LinkToID\" = $this->ID");
+		$redirectors = DataObject::get("RedirectorPage", "\"RedirectorPage\".\"RedirectionType\" = 'Internal' AND \"LinkToID\" = $this->ID");
 		if($redirectors) {
 			foreach($redirectors as $item) $item->DependentLinkType = 'Redirector page';
 			$items->merge($redirectors);

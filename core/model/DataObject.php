@@ -2321,6 +2321,38 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	}
 
 	/**
+	 * Process tri-state responses from permission-alterting decorators.  The decorators are
+	 * expected to return one of 3 values
+	 * 
+	 *  - false: Disallow this permission, regardless of what other decorators say
+	 *  - true: Allow this permission, as long as no other decorators return false
+	 *  - NULL: Don't affect the outcome
+	 * 
+	 * This method itself returns a tri-state value, and is designed to be used like this:
+	 *
+	 * $extended = $this->extendedCan('canDoSomething', $member);
+	 * if($extended !== null) return $extended;
+	 * else return $normalValue;
+	 */
+	public function extendedCan($methodName, $member) {
+		$results = $this->extend($methodName, $member);
+		if($results && is_array($results)) {
+			// Remove NULLs
+			$results = array_filter($results, array($this,'isNotNull'));
+			// If there are any non-NULL responses, then return the lowest one of them.
+			// If any explicitly deny the permission, then we don't get access 
+			if($results) return min($results);
+		}
+		return null;
+	}
+	/**
+	 * Helper functon for extendedCan
+	 */
+	private function isNotNull($value) {
+		return !is_null($value);
+	}
+
+	/**
 	 * @param Member $member
 	 * @return boolean
 	 */
