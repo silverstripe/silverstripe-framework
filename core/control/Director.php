@@ -190,7 +190,7 @@ class Director {
 		$existingRequestVars = $_REQUEST; 
 		$existingGetVars = $_GET; 
 		$existingPostVars = $_POST; 
-		$existingSessionVars = $_SESSION; 
+		$existingSessionVars = isset($_SESSION) ? $_SESSION : array();
 		$existingCookies = $_COOKIE;
 		$existingServer = $_SERVER;
 		$existingCookieReportErrors = Cookie::report_errors();
