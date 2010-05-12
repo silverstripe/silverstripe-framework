@@ -5,8 +5,13 @@
  * 
  * Usage:
  * 
+ * <code>
  * $tr = new Transliterator();
  * $ascii = $tr->toASCII($unicode);
+ * </code>
+ * 
+ * @package sapphire
+ * @subpackage model
  */
 class Transliterator {
 	/**
