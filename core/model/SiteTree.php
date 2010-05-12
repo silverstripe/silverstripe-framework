@@ -1496,11 +1496,18 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	
 	/**
 	 * Generate a URL segment based on the title provided.
+	 * 
+	 * If {@link Extension}s wish to alter URL segment generation, they can do so by defining
+	 * updateURLSegment(&$url, $title).  $url will be passed by reference and should be modified.
+	 * $title will contain the title that was originally used as the source of this generated URL.
+	 * This lets decorators either start from scratch, or incrementally modify the generated URL.
+	 * 
 	 * @param string $title Page title.
 	 * @return string Generated url segment
 	 */
 	function generateURLSegment($title){
-		$t = strtolower($title);
+		$t = mb_strtolower($title);
+		$t = Object::create('Transliterator')->toASCII($title);
 		$t = str_replace('&amp;','-and-',$t);
 		$t = str_replace('&','-and-',$t);
 		$t = ereg_replace('[^A-Za-z0-9]+','-',$t);
@@ -1508,7 +1515,12 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		if(!$t || $t == '-' || $t == '-1') {
 			$t = "page-$this->ID";
 		}
-		return trim($t, '-');
+		$t = trim($t, '-');
+		
+		// Hook for decorators
+		$this->extend('updateURLSegment', $t, $title);
+		
+		return $t;
 	}
 	
 	/**
