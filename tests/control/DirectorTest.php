@@ -7,6 +7,20 @@
  */
 class DirectorTest extends SapphireTest {
 	
+	function setUp() {
+		parent::setUp();
+		
+		Director::addRules(99, array(
+			'DirectorTestRule/$Action/$ID/$OtherID' => 'DirectorTestRequest_Controller'
+		));
+	}
+	
+	function tearDown() {
+		// TODO Remove director rule, currently API doesnt allow this
+		
+		parent::tearDown();
+	}
+	
 	public function testFileExists() {
 		$tempFileName = 'DirectorTest_testFileExists.tmp';
 		$tempFilePath = TEMP_FOLDER . '/' . $tempFileName;
@@ -152,6 +166,28 @@ class DirectorTest extends SapphireTest {
 			}
 
 		}
+	}
+	
+	function testURLParam() {
+		Director::test('DirectorTestRule/myaction/myid/myotherid');
+		// TODO Works on the assumption that urlParam() is not unset after a test run, which is dodgy
+		$this->assertEquals(Director::urlParam('Action'), 'myaction');
+		$this->assertEquals(Director::urlParam('ID'), 'myid');
+		$this->assertEquals(Director::urlParam('OtherID'), 'myotherid');
+	}
+	
+	function testURLParams() {
+		Director::test('DirectorTestRule/myaction/myid/myotherid');
+		// TODO Works on the assumption that urlParam() is not unset after a test run, which is dodgy
+		$this->assertEquals(
+			Director::urlParams(), 
+			array(
+				'Controller' => 'DirectorTestRequest_Controller',
+				'Action' => 'myaction', 
+				'ID' => 'myid', 
+				'OtherID' => 'myotherid'
+			)
+		);
 	}
 	
 }
