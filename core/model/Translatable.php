@@ -1205,8 +1205,8 @@ class Translatable extends DataObjectDecorator implements PermissionProvider {
 	 * @return boolean
 	 */
 	function canEdit($member) {
-		if(!$this->owner->Locale) return true;
-		return $this->owner->canTranslate($member, $this->owner->Locale);
+		if(!$this->owner->Locale) return null;
+		return $this->owner->canTranslate($member, $this->owner->Locale) ? null : false;
 	}
 	
 	/**
