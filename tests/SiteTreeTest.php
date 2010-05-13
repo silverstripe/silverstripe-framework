@@ -6,6 +6,10 @@
 class SiteTreeTest extends SapphireTest {
 	static $fixture_file = 'sapphire/tests/SiteTreeTest.yml';
 	
+	protected $illegalExtensions = array(
+		'SiteTree' => array('SiteTreeSubsites')
+	);
+	
 	/**
 	 * @todo Necessary because of monolithic Translatable design
 	 */
@@ -102,20 +106,20 @@ class SiteTreeTest extends SapphireTest {
 		$this->assertTrue($obj->doPublish());
 		
 		$this->assertEquals('asdfasdf', DB::query("SELECT \"MetaTitle\" FROM \"SiteTree_Live\" WHERE \"ID\" = '$obj->ID'")->value());
-
+	
 		$obj->MetaTitle = null;
 		$obj->write();
 		$this->assertTrue($obj->doPublish());
-
+	
 		$this->assertNull(DB::query("SELECT \"MetaTitle\" FROM \"SiteTree_Live\" WHERE \"ID\" = '$obj->ID'")->value());
 		
 	}
 	
 	function testParentNodeCachedInMemory() {
 		$parent = new SiteTree();
-     	$parent->Title = 'Section Title';
-     	$child = new SiteTree();
-     	$child->Title = 'Page Title';
+	     	$parent->Title = 'Section Title';
+	     	$child = new SiteTree();
+	     	$child->Title = 'Page Title';
 		$child->setParent($parent);
 		
 		$this->assertType("SiteTree", $child->Parent);
@@ -125,7 +129,7 @@ class SiteTreeTest extends SapphireTest {
 	function testParentModelReturnType() {
 		$parent = new SiteTreeTest_PageNode();
 		$child = new SiteTreeTest_PageNode();
-
+	
 		$child->setParent($parent);
 		$this->assertType('SiteTreeTest_PageNode', $child->Parent);
 	}
@@ -147,7 +151,7 @@ class SiteTreeTest extends SapphireTest {
 		
 		$checkSiteTree = DataObject::get_one("SiteTree", "\"URLSegment\" = 'get-one-test-page'");
 		$this->assertEquals("V1", $checkSiteTree->Title);
-
+	
 		Versioned::set_reading_mode($oldMode);
 	}
 	
@@ -166,16 +170,16 @@ class SiteTreeTest extends SapphireTest {
 		$this->assertContains('Home', $stageChildren);
 		$this->assertContains('Products', $stageChildren);
 		$this->assertNotContains('Staff', $stageChildren);
-
+	
 		$this->assertContains('Home', $liveChildren);
 		$this->assertContains('Products', $liveChildren);
 		$this->assertNotContains('Staff', $liveChildren);
-
+	
 		$this->assertContains('Home', $allChildren);
 		$this->assertContains('Products', $allChildren);
 		$this->assertNotContains('Staff', $allChildren);
 	}
-
+	
 	function testCanSaveBlankToHasOneRelations() {
 		/* DataObject::write() should save to a has_one relationship if you set a field called (relname)ID */
 		$page = new SiteTree();
@@ -183,7 +187,7 @@ class SiteTreeTest extends SapphireTest {
 		$page->ParentID = $parentID;
 		$page->write();
 		$this->assertEquals($parentID, DB::query("SELECT \"ParentID\" FROM \"SiteTree\" WHERE \"ID\" = $page->ID")->value());
-
+	
 		/* You should then be able to save a null/0/'' value to the relation */
 		$page->ParentID = null;
 		$page->write();
@@ -255,8 +259,8 @@ class SiteTreeTest extends SapphireTest {
 		$this->assertEquals($pageID, $requeriedPage->ID);
 		$this->assertEquals('About Us', $requeriedPage->Title);
 		$this->assertEquals('Page', $requeriedPage->class);
-
-
+	
+	
 		$page2 = $this->objFromFixture('Page', 'products');
 		$page2ID = $page2->ID;
 		$page2->doUnpublish();
@@ -268,7 +272,7 @@ class SiteTreeTest extends SapphireTest {
 		$deletedPage = Versioned::get_latest_version('SiteTree', $page2ID);
 		$deletedPage->doRestoreToStage();
 		$this->assertTrue(!Versioned::get_one_by_stage("Page", "Live", "\"SiteTree\".\"ID\" = " . $page2ID));
-
+	
 		Versioned::reading_stage('Stage');
 		$requeriedPage = DataObject::get_by_id("Page", $page2ID);
 		$this->assertEquals('Products', $requeriedPage->Title);
