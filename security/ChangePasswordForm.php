@@ -108,7 +108,7 @@ class ChangePasswordForm extends Form {
 				}
 				else {
 					// Redirect to default location - the login form saying "You are logged in as..."
-					$redirectURL = HTTP::setGetVar('BackURL', urlencode(Director::absoluteBaseURL()), Security::Link('login'));
+					$redirectURL = HTTP::setGetVar('BackURL', Director::absoluteBaseURL(), Security::Link('login'));
 					Director::redirect($redirectURL);					
 				}
 			} else {
