@@ -209,6 +209,30 @@ class i18nTest extends SapphireTest {
 		$this->assertEquals('de_DE', i18n::get_locale_from_lang('de_DE'));
 		$this->assertEquals('xy_XY', i18n::get_locale_from_lang('xy'));
 	}
+
+	function testRegisteredPlugin() {
+		global $lang;
+
+		$lang = array(); // clear translations
+		i18n::register_plugin("testPlugin", array("i18nTest", "translationTestPlugin"));
+
+		// We have to simulate what include_by_locale() does, including loading translation provider data.
+		$lang['en_US']["i18nTestProvider"]["foo"] = "bar_en";
+		$lang['de_DE']["i18nTestProvider"]["foo"] = "bar_de";
+		i18n::plugins_load('en_US');
+
+		i18n::set_locale('en_US');
+		$this->assertEquals(_t("i18nTestProvider.foo"), "baz_en");
+		i18n::set_locale('de_DE');
+		$this->assertEquals(_t("i18nTestProvider.foo"), "bar_de");
+		i18n::unregister_plugin("testTranslator");
+	}
+
+	static function translationTestPlugin($locale) {
+		$result = array();
+		$result["en_US"]["i18nTestProvider"]["foo"] = "baz_en";
+		return $result;
+	}
 }
 
 class i18nTest_DataObject extends DataObject implements TestOnly {
