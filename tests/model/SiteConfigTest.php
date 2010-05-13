@@ -15,6 +15,10 @@ class SiteConfigTest extends SapphireTest {
 		'SiteConfig' => array('Translatable'),
 	);
 	
+	protected $illegalExtensions = array(
+		'SiteTree' => array('SiteTreeSubsites')
+	);
+	
 	private $origLocale;
 
 	function setUp() {
