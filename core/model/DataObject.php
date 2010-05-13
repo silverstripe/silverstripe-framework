@@ -2265,6 +2265,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	
 	/**
 	 * Returns true if the member is allowed to do the given action.
+	 * See {@link extendedCan()} for a more versatile tri-state permission control.
 	 *
 	 * @param string $perm The permission to be checked, such as 'View'.
 	 * @param Member $member The member whose permissions need checking.  Defaults to the currently logged
@@ -2332,7 +2333,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 
 	/**
 	 * Process tri-state responses from permission-alterting decorators.  The decorators are
-	 * expected to return one of 3 values
+	 * expected to return one of three values:
 	 * 
 	 *  - false: Disallow this permission, regardless of what other decorators say
 	 *  - true: Allow this permission, as long as no other decorators return false
@@ -2340,9 +2341,15 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * 
 	 * This method itself returns a tri-state value, and is designed to be used like this:
 	 *
+	 * <code>
 	 * $extended = $this->extendedCan('canDoSomething', $member);
 	 * if($extended !== null) return $extended;
 	 * else return $normalValue;
+	 * </code>
+	 * 
+	 * @param String $methodName Method on the same object, e.g. {@link canEdit()}
+	 * @param Member|int $member
+	 * @return boolean|null
 	 */
 	public function extendedCan($methodName, $member) {
 		$results = $this->extend($methodName, $member);
@@ -2355,8 +2362,12 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		}
 		return null;
 	}
+	
 	/**
 	 * Helper functon for extendedCan
+	 * 
+	 * @param Mixed $value
+	 * @return boolean
 	 */
 	private function isNotNull($value) {
 		return !is_null($value);
