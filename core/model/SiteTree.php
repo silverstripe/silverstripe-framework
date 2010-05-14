@@ -1506,7 +1506,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	 * @return string Generated url segment
 	 */
 	function generateURLSegment($title){
-		$t = mb_strtolower($title);
+		$t = (function_exists('mb_strtolower')) ? mb_strtolower($title) : strtolower($title);
 		$t = Object::create('Transliterator')->toASCII($t);
 		$t = str_replace('&amp;','-and-',$t);
 		$t = str_replace('&','-and-',$t);
