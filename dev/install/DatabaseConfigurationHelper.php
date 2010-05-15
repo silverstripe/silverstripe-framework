@@ -31,13 +31,6 @@ interface DatabaseConfigurationHelper {
 	public function requireDatabaseConnection($databaseConfig);
 
 	/**
-	 * Ensure that the database version is correct.
-	 * @param array $databaseConfig Associative array of db configuration, e.g. "server", "username" etc
-	 * @return array Result - e.g. array('success' => true, 'error' => 'details of error')
-	 */
-	public function requireDatabaseVersion($databaseConfig);
-
-	/**
 	 * Ensure that the database connection is able to use an existing database,
 	 * or be able to create one if it doesn't exist.
 	 * 
