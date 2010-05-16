@@ -70,7 +70,14 @@ class Date extends DBField {
 	}
 	
 	/**
-	 * Returns the month
+	 * Returns a full textual representation of a month, such as January.
+	 */
+	function Month() {
+		if($this->value) return date('F', strtotime($this->value));
+	}
+	
+	/**
+	 * Returns the short version of the month such as Jan
 	 */
 	function ShortMonth() {
 		if($this->value) return date('M', strtotime($this->value));
@@ -347,6 +354,4 @@ class Date extends DBField {
 	public function scaffoldFormField($title = null, $params = null) {
 		return new DateField($this->name, $title);
 	}
-	
 }
-?>
