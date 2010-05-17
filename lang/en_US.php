@@ -2,6 +2,16 @@
 
 global $lang;
 
+$lang['en_US']['Page']['PLURALNAME'] = array(
+	'Pags',
+	50,
+	'Pural name of the object, used in dropdowns and to generally identify a collection of this object in the interface'
+);
+$lang['en_US']['Page']['SINGULARNAME'] = array(
+	'Page',
+	50,
+	'Singular name of the object, used in dropdowns and to generally identify a single object in the interface'
+);
 $lang['en_US']['AdvancedSearchForm']['ALLWORDS'] = 'All Words';
 $lang['en_US']['AdvancedSearchForm']['ATLEAST'] = 'At Least One Of the Words';
 $lang['en_US']['AdvancedSearchForm']['EXACT'] = 'Exact Phrase';
