@@ -29,7 +29,7 @@ $(document).ready(function() {
 	/**
 	 * Install button
 	 */
-	$('#ReIn').click(function() {
+	$('#reinstall_confirmation').click(function() {
 		$('#install_button').attr('disabled', !$(this).is(':checked'));
 	});
 	
