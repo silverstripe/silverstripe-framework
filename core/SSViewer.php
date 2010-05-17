@@ -381,7 +381,8 @@ class SSViewer {
 			echo "</pre>";
 		}
 		
-		
+		// Makes the rendered sub-templates available on the parent item,
+		// through $Content and $Layout placeholders.
 		foreach(array('Content', 'Layout') as $subtemplate) {
 			if(isset($this->chosenTemplates[$subtemplate])) {
 				$subtemplateViewer = new SSViewer($this->chosenTemplates[$subtemplate]);
