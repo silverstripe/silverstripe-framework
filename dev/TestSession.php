@@ -71,6 +71,9 @@ class TestSession {
 		$page = $this->lastPage();
 		if($page) {
 			$form = $page->getFormById($formID);
+			if (!$form) {
+				user_error("TestSession::submitForm failed to find the form {$formID}");
+			}
 
 			foreach($data as $k => $v) {
 				$form->setField(new SimpleByName($k), $v);
