@@ -1,14 +1,22 @@
 <?php
 /**
- * The SSViewer executes a .ss template file.
- * The SSViewer class handles rendering of .ss templates.  In addition to a full template in
- * the views folder, a template in views/Content or views/Layout will be rendered into $Content and
+ * Parses a template file with an *.ss file extension.
+ * 
+ * In addition to a full template in the templates/ folder, a template in 
+ * templates/Content or templates/Layout will be rendered into $Content and
  * $Layout, respectively.
+ * 
+ * A single template can be parsed by multiple nested {@link SSViewer} instances
+ * through $Layout/$Content placeholders, as well as <% include MyTemplateFile %> template commands.
+ * 
+ * <b>Themes</b>
+ * 
+ * See http://doc.silverstripe.org/themes and http://doc.silverstripe.org/themes:developing
  * 
  * <b>Caching</b>
  *
- * Compiled templates are cached.  If you put ?flush=1 on your URL, it will force the template to be recompiled.  This
- * is a hack; the system should really detect when a page needs re-fetching.
+ * Compiled templates are cached via {@link SS_Cache}, usually on the filesystem.  
+ * If you put ?flush=all on your URL, it will force the template to be recompiled.  
  * 
  * <b>Manifest File and Structure</b>
  * 
@@ -79,7 +87,7 @@ class SSViewer {
 	
 	/**
 	 * @var array $chosenTemplates Associative array for the different
-	 * template containers: "main" and "Layout".
+	 * template containers: "main" and "Layout". Values are absolute file paths to *.ss files.
 	 */
 	private $chosenTemplates = array();
 	
@@ -132,14 +140,16 @@ class SSViewer {
 	}
 	
 	/**
-	 * Pass the SilverStripe template to be used.
-	 * 
-	 * @param string|array $templateList
-	 *   If passed as a string with .ss extension, used as the "main" template
+	 * @param string|array $templateList If passed as a string with .ss extension, used as the "main" template.
+	 *  If passed as an array, it can be used for template inheritance (first found template "wins").
+	 *  Usually the array values are PHP class names, which directly correlate to template names.
+	 *  <code>
+	 *  array('MySpecificPage', 'MyPage', 'Page')
+	 *  </code>
 	 */
 	public function __construct($templateList) {
 		global $_TEMPLATE_MANIFEST;
-		
+
 		// flush template manifest cache if requested
 		if (isset($_GET['flush']) && $_GET['flush'] == 'all') {
 			if(Director::isDev() || Director::is_cli() || Permission::check('ADMIN')) {
@@ -195,6 +205,7 @@ class SSViewer {
 
 		if(!$this->chosenTemplates) user_error("None of these templates can be found in theme '"
 			. self::current_theme() . "': ". implode(".ss, ", $templateList) . ".ss", E_USER_WARNING);
+			
 	}
 	
 	/**
@@ -340,6 +351,16 @@ class SSViewer {
 	
 	/**
 	 * The process() method handles the "meat" of the template processing.
+	 * It takes care of caching the output (via {@link SS_Cache}),
+	 * as well as replacing the special "$Content" and "$Layout"
+	 * placeholders with their respective subtemplates.
+	 * The method injects extra HTML in the header via {@link Requirements::includeInHTML()}.
+	 * 
+	 * Note: You can call this method indirectly by {@link ViewableData->renderWith()}.
+	 * 
+	 * @param ViewableData $item
+	 * @param SS_Cache $cache Optional cache backend
+	 * @return String Parsed template output.
 	 */
 	public function process($item, $cache = null) {
 		SSViewer::$topLevel[] = $item;
