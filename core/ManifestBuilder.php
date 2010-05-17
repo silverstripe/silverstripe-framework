@@ -380,6 +380,8 @@ class ManifestBuilder {
 
 		foreach(self::$classArray as $class => $info) {
 			$allClasses['exists'][$class] = $class;
+			// Class names are converted to lowercase for lookup to adhere to PHP's case-insensitive
+			// way of dealing with them.
 			$allClasses['file'][strtolower($class)] = $info['file'];
 		}
 
