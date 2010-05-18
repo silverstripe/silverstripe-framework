@@ -1765,7 +1765,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 						$this->getClassDropdown()
 					),
 					
-					new OptionsetField("ParentType", "Page location", array(
+					new OptionsetField("ParentType", _t("SiteTree.PAGELOCATION", "Page location"), array(
 						"root" => _t("SiteTree.PARENTTYPE_ROOT", "Top-level page"),
 						"subpage" => _t("SiteTree.PARENTTYPE_SUBPAGE", "Sub-page underneath a parent page (choose below)"),
 					)),

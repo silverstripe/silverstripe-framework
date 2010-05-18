@@ -732,6 +732,7 @@ $lang['en_US']['SiteTree']['METATITLE'] = 'Title';
 $lang['en_US']['SiteTree']['MODIFIEDONDRAFT'] = 'Modified on draft site';
 $lang['en_US']['SiteTree']['NOTEUSEASHOMEPAGE'] = 'Use this page as the \'home page\' for the following domains: 
 							(separate multiple domains with commas)';
+$lang['en_US']['SiteTree']['PAGELOCATION'] = 'Page location';
 $lang['en_US']['SiteTree']['PAGETITLE'] = 'Page name';
 $lang['en_US']['SiteTree']['PAGETYPE'] = array(
 	'Page type',
