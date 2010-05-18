@@ -1790,7 +1790,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 				),
 				$tabToDo = new Tab($this->ToDo ? 'To-do **' : 'To-do',
 					new LiteralField("ToDoHelp", _t('SiteTree.TODOHELP', "<p>You can use this to keep track of work that needs to be done to the content of your site.  To see all your pages with to do information, open the 'Site Reports' window on the left and select 'To Do'</p>")),
-					new TextareaField("ToDo", "")
+					new TextareaField("ToDo", "", 10)
 				),
 				$tabDependent = new Tab('Dependent',
 					$dependentNote,
