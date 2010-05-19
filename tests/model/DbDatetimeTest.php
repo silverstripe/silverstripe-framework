@@ -1,7 +1,7 @@
 <?php
 
 class DbDatetimeTest extends FunctionalTest {
-	static $fixture_file = 'sqlite3/tests/DbDatetimeTest.yml';
+	static $fixture_file = 'sapphire/tests/model/DbDatetimeTest.yml';
 	
 	/**
 	 * Check if dates match more or less. This takes into the account the db query
