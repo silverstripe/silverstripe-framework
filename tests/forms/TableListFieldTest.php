@@ -150,11 +150,13 @@ class TableListFieldTest extends SapphireTest {
 		
 		$table->addSelectOptions(array("F"=>"FieldF"));
 		$tableHTML = $table->FieldHolder();
-		$this->assertContains('rel="F"', $tableHTML);
 		
-		$this->assertRegExp('/<tr[^>]*id="record-Tester-' . $obj1->ID . '"[^>]*>[^<]*<td[^>]*class="markingcheckbox F"[^>]*>/si', $tableHTML);
-		$this->assertRegExp('/<tr[^>]*id="record-Tester-' . $obj1->ID . '"[^>]*>[^<]*<td[^>]*class="markingcheckbox"[^>]*>/si', $tableHTML);
-		$this->assertRegExp('/<tr[^>]*id="record-Tester-' . $obj3->ID . '"[^>]*>[^<]*<td[^>]*class="markingcheckbox F"[^>]*>/si', $tableHTML);
+		$p = new CSSContentParser($tableHTML);
+		$this->assertContains('rel="F"', $tableHTML);
+		$tbody = $p->getByXpath('//tbody');
+		$this->assertContains('markingcheckbox F', (string)$tbody[0]->tr[0]->td[0]['class']);
+		$this->assertContains('markingcheckbox', (string)$tbody[0]->tr[1]->td[0]['class']);
+		$this->assertContains('markingcheckbox F', (string)$tbody[0]->tr[2]->td[0]['class']);
 	}
 	
 	/**
