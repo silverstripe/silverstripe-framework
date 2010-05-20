@@ -140,6 +140,9 @@ class TableListFieldTest extends SapphireTest {
 	}
 	
 	function testSelectOptionsRendering() {
+		$obj1 = $this->objFromFixture('TableListFieldTest_Obj', 'one');
+		$obj2 = $this->objFromFixture('TableListFieldTest_Obj', 'two');
+		$obj3 = $this->objFromFixture('TableListFieldTest_Obj', 'three');
 		$table = new TableListField("Tester", "TableListFieldTest_Obj", array(
 			"A" => "Col A",
 		));
@@ -149,9 +152,9 @@ class TableListFieldTest extends SapphireTest {
 		$tableHTML = $table->FieldHolder();
 		$this->assertContains('rel="F"', $tableHTML);
 		
-		$this->assertRegExp('/<tr[^>]*id="record-Tester-1"[^>]*>[^<]*<td[^>]*class="markingcheckbox F"[^>]*>/si', $tableHTML);
-		$this->assertRegExp('/<tr[^>]*id="record-Tester-2"[^>]*>[^<]*<td[^>]*class="markingcheckbox"[^>]*>/si', $tableHTML);
-		$this->assertRegExp('/<tr[^>]*id="record-Tester-3"[^>]*>[^<]*<td[^>]*class="markingcheckbox F"[^>]*>/si', $tableHTML);
+		$this->assertRegExp('/<tr[^>]*id="record-Tester-' . $obj1->ID . '"[^>]*>[^<]*<td[^>]*class="markingcheckbox F"[^>]*>/si', $tableHTML);
+		$this->assertRegExp('/<tr[^>]*id="record-Tester-' . $obj1->ID . '"[^>]*>[^<]*<td[^>]*class="markingcheckbox"[^>]*>/si', $tableHTML);
+		$this->assertRegExp('/<tr[^>]*id="record-Tester-' . $obj3->ID . '"[^>]*>[^<]*<td[^>]*class="markingcheckbox F"[^>]*>/si', $tableHTML);
 	}
 	
 	/**
