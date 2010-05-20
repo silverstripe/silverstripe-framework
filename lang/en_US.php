@@ -804,6 +804,7 @@ $lang['en_US']['TableField.ss']['ADDITEM'] = 'Add %s';
 $lang['en_US']['TableField.ss']['CSVEXPORT'] = 'Export to CSV';
 $lang['en_US']['TableListField']['CSVEXPORT'] = 'Export to CSV';
 $lang['en_US']['TableListField']['PRINT'] = 'Print';
+$lang['en_US']['TableListField']['SELECT'] = 'Select:';
 $lang['en_US']['TableListField.ss']['NOITEMSFOUND'] = 'No items found';
 $lang['en_US']['TableListField.ss']['SORTASC'] = 'Sort in ascending order';
 $lang['en_US']['TableListField.ss']['SORTDESC'] = 'Sort in descending order';
