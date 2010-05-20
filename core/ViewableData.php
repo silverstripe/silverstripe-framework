@@ -423,9 +423,10 @@ class ViewableData extends Object implements IteratorAggregate {
 	public function hasValue($field, $arguments = null, $cache = true) {
 		$result = $cache ? $this->cachedCall($field, $arguments) : $this->obj($field, $arguments, false, false);
 		
-		if(is_object($result)) {
+		if(is_object($result) && $result instanceof Object) {
 			return $result->exists();
 		} else {
+			// Empty paragraph checks are a workaround for TinyMCE
 			return ($result && $result !== '<p></p>');
 		}
 	}
@@ -443,7 +444,7 @@ class ViewableData extends Object implements IteratorAggregate {
 	 */
 	public function XML_val($field, $arguments = null, $cache = false) {
 		$result = $this->obj($field, $arguments, false, $cache);
-		return is_object($result) ? $result->forTemplate() : $result;
+		return (is_object($result) && $result instanceof Object) ? $result->forTemplate() : $result;
 	}
 	
 	/**
