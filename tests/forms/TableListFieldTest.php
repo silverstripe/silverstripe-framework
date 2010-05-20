@@ -212,6 +212,63 @@ class TableListFieldTest extends SapphireTest {
 		
 		unlink($csvFileName);
 	}
+	
+	function testPreservedSortOptionsInPaginationLink() {
+		$item1 = $this->objFromFixture('TableListFieldTest_Obj', 'one');
+		$item2 = $this->objFromFixture('TableListFieldTest_Obj', 'two');
+		$item3 = $this->objFromFixture('TableListFieldTest_Obj', 'three');
+		$item4 = $this->objFromFixture('TableListFieldTest_Obj', 'four');
+		$item5 = $this->objFromFixture('TableListFieldTest_Obj', 'five');
+		
+		/* With pagination enabled, only the first page of items should be shown */
+		$table = new TableListField("Tester", "TableListFieldTest_Obj", array(
+			"A" => "Col A",
+			"B" => "Col B",
+			"C" => "Col C",
+			"D" => "Col D",
+			"E" => "Col E",
+		));
+		// A TableListField must be inside a form for its links to be generated
+		$form = new Form(new TableListFieldTest_TestController(), "TestForm", new FieldSet(
+			$table
+		), new FieldSet());
+
+		$table->ShowPagination = true;
+		$table->PageSize = 2;
+		
+		// first page & sort A column by ASC
+		$_REQUEST['ctf']['Tester']['start'] = 0; 
+		$_REQUEST['ctf']['Tester']['sort'] = 'A';
+		$this->assertContains('&ctf[Tester][sort]=A', $table->NextLink());
+		$this->assertNotContains('ctf[Tester][dir]', $table->NextLink());
+		$this->assertContains('&ctf[Tester][sort]=A', $table->LastLink());
+		$this->assertNotContains('ctf[Tester][dir]', $table->LastLink());
+		
+		// second page & sort A column by ASC
+		$_REQUEST['ctf']['Tester']['start'] = 2; 
+		$this->assertContains('&ctf[Tester][sort]=A', $table->PrevLink());
+		$this->assertNotContains('&ctf[Tester][dir]', $table->PrevLink());
+		$this->assertContains('&ctf[Tester][sort]=A', $table->FirstLink());
+		$this->assertNotContains('&ctf[Tester][dir]', $table->FirstLink());
+
+		// first page & sort A column by DESC
+		$_REQUEST['ctf']['Tester']['start'] = 0; 
+		$_REQUEST['ctf']['Tester']['sort'] = 'A';
+		$_REQUEST['ctf']['Tester']['dir'] = 'desc';
+		$this->assertContains('&ctf[Tester][sort]=A', $table->NextLink());
+		$this->assertContains('&ctf[Tester][dir]=desc', $table->NextLink());
+		$this->assertContains('&ctf[Tester][sort]=A', $table->LastLink());
+		$this->assertContains('&ctf[Tester][dir]=desc', $table->LastLink());
+		
+		// second page & sort A column by DESC
+		$_REQUEST['ctf']['Tester']['start'] = 2; 
+		$this->assertContains('&ctf[Tester][sort]=A', $table->PrevLink());
+		$this->assertContains('&ctf[Tester][dir]=desc', $table->PrevLink());
+		$this->assertContains('&ctf[Tester][sort]=A', $table->FirstLink());
+		$this->assertContains('&ctf[Tester][dir]=desc', $table->FirstLink());
+		
+		unset($_REQUEST['ctf']);
+	}
 }
 
 class TableListFieldTest_Obj extends DataObject implements TestOnly {
