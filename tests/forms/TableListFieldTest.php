@@ -22,7 +22,7 @@ class TableListFieldTest extends SapphireTest {
 		), new FieldSet());
 		
 		$result = $table->FieldHolder();
-
+	
 		// Do a quick check to ensure that some of the D() and getE() values got through
 		$this->assertRegExp('/>\s*a2\s*</', $result);
 		$this->assertRegExp('/>\s*a2\/b2\/c2\s*</', $result);
@@ -36,7 +36,7 @@ class TableListFieldTest extends SapphireTest {
 		$item4 = $this->objFromFixture('TableListFieldTest_Obj', 'four');
 		$item5 = $this->objFromFixture('TableListFieldTest_Obj', 'five');
 		
-		/* In this simple case, the source items should just list all the data objects specified */
+		// In this simple case, the source items should just list all the data objects specified 
 		$table = new TableListField("Tester", "TableListFieldTest_Obj", array(
 			"A" => "Col A",
 			"B" => "Col B",
@@ -48,7 +48,7 @@ class TableListFieldTest extends SapphireTest {
 		$form = new Form(new TableListFieldTest_TestController(), "TestForm", new FieldSet(
 			$table
 		), new FieldSet());
-
+	
 		$items = $table->sourceItems();
 		$this->assertNotNull($items);
 		
@@ -61,7 +61,7 @@ class TableListFieldTest extends SapphireTest {
 			$item5->ID => "a5"
 		), $itemMap);
 	}
-
+	
 	function testFirstPageOfPaginatedSourceItemGeneration() {
 		$item1 = $this->objFromFixture('TableListFieldTest_Obj', 'one');
 		$item2 = $this->objFromFixture('TableListFieldTest_Obj', 'two');
@@ -69,7 +69,7 @@ class TableListFieldTest extends SapphireTest {
 		$item4 = $this->objFromFixture('TableListFieldTest_Obj', 'four');
 		$item5 = $this->objFromFixture('TableListFieldTest_Obj', 'five');
 		
-		/* With pagination enabled, only the first page of items should be shown */
+		// With pagination enabled, only the first page of items should be shown 
 		$table = new TableListField("Tester", "TableListFieldTest_Obj", array(
 			"A" => "Col A",
 			"B" => "Col B",
@@ -81,13 +81,13 @@ class TableListFieldTest extends SapphireTest {
 		$form = new Form(new TableListFieldTest_TestController(), "TestForm", new FieldSet(
 			$table
 		), new FieldSet());
-
+	
 		$table->ShowPagination = true;
 		$table->PageSize = 2;
 		
 		$items = $table->sourceItems();
 		$this->assertNotNull($items);
-
+	
 		$itemMap = $items->toDropdownMap("ID", "A") ;
 		$this->assertEquals(array(
 			$item1->ID => "a1", 
@@ -102,7 +102,7 @@ class TableListFieldTest extends SapphireTest {
 		$item4 = $this->objFromFixture('TableListFieldTest_Obj', 'four');
 		$item5 = $this->objFromFixture('TableListFieldTest_Obj', 'five');
 		
-		/* With pagination enabled, only the first page of items should be shown */
+		// With pagination enabled, only the first page of items should be shown
 		$table = new TableListField("Tester", "TableListFieldTest_Obj", array(
 			"A" => "Col A",
 			"B" => "Col B",
@@ -114,16 +114,44 @@ class TableListFieldTest extends SapphireTest {
 		$form = new Form(new TableListFieldTest_TestController(), "TestForm", new FieldSet(
 			$table
 		), new FieldSet());
-
+	
 		$table->ShowPagination = true;
 		$table->PageSize = 2;
 		$_REQUEST['ctf']['Tester']['start'] = 2;
 		
 		$items = $table->sourceItems();
 		$this->assertNotNull($items);
-
+	
 		$itemMap = $items->toDropdownMap("ID", "A") ;
 		$this->assertEquals(array($item3->ID => "a3", $item4->ID => "a4"), $itemMap);
+	}
+	
+	function testSelectOptionsAddRemove() {
+		$table = new TableListField("Tester", "TableListFieldTest_Obj", array(
+			"A" => "Col A",
+		));
+		$this->assertNull($table->SelectOptions(), 'Empty by default');
+		
+		$table->addSelectOptions(array("F"=>"FieldF", 'G'=>'FieldG'));
+		$this->assertEquals($table->SelectOptions()->map('Key', 'Value'), array("F"=>"FieldF",'G'=>'FieldG'));
+		
+		$table->removeSelectOptions(array("F"));
+		$this->assertEquals($table->SelectOptions()->map('Key', 'Value'), array("G"=>"FieldG"));		
+	}
+	
+	function testSelectOptionsRendering() {
+		$table = new TableListField("Tester", "TableListFieldTest_Obj", array(
+			"A" => "Col A",
+		));
+		$table->Markable = true;
+		
+		$table->addSelectOptions(array("F"=>"FieldF"));
+		$tableHTML = $table->FieldHolder();
+		$this->assertContains('rel="F"', $tableHTML);
+		
+		$this->assertRegExp('/<tr[^>]*id="record-Tester-1"[^>]*>[^<]*<td[^>]*class="markingcheckbox F"[^>]*>/si', $tableHTML);
+		$this->assertRegExp('/<tr[^>]*id="record-Tester-2"[^>]*>[^<]*<td[^>]*class="markingcheckbox"[^>]*>/si', $tableHTML);
+		$this->assertRegExp('/<tr[^>]*id="record-Tester-3"[^>]*>[^<]*<td[^>]*class="markingcheckbox F"[^>]*>/si', $tableHTML);
 	}
 	
 	/**
@@ -191,6 +219,7 @@ class TableListFieldTest_Obj extends DataObject implements TestOnly {
 		"A" => "Varchar",
 		"B" => "Varchar",
 		"C" => "Varchar",
+		"F" => "Boolean",
 	);
 	static $default_sort = "A";
 	

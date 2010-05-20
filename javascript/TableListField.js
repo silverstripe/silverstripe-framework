@@ -5,7 +5,7 @@ TableListField.prototype = {
 	
 	initialize: function() {
 		var rules = {};
-		
+
 		rules['#'+this.id+' table.data a.deletelink'] = {
 			onclick: this.deleteRecord.bind(this)
 		};
@@ -36,7 +36,12 @@ TableListField.prototype = {
 			    // do nothing for clicks in marking box cells (e.g. if checkbox is missed)
 			}
 		};
-
+		
+		// rules for selection options on click event
+		rules['#'+this.id+' .selectOptions a'] = {
+			onclick: this.markRecords.bind(this)
+		};
+		
 		// initialize summary (if needed)
 		// TODO Breaks with nested divs
 		var summaryCols = $$('tfoot tr.summary td', this);
@@ -120,6 +125,50 @@ TableListField.prototype = {
 		var el =$('record-' + this.id + '-' + id);
 		if(el) el.parentNode.removeChild(el);
 		this._summarise();
+	},
+	
+	/**
+	 * according to the clicked element in "Select bar", mark records that have same class as the element.
+	 */
+	markRecords: function(e){
+		var el = Event.element(e);
+		if(el.nodeName != "a") el = Event.findElement(e,"a");
+
+		if(el.rel == "all"){
+			this.markAll();
+		}else if(el.rel == 'none') {
+			this.unmarkAll();
+		}else{
+			this.unmarkAll();
+			var records = $$('#' + this.id + ' td.' + el.rel + ' input.checkbox');
+			var i=0;
+			for(i; i<records.length; i++){
+				records[i].checked = 'checked';
+			}
+		}
+		return false;
+	},
+	
+	/**
+	 * mark all record in current view of the table
+	 */
+	markAll: function(e){
+		var records = $$('#'+this.id+' td.markingcheckbox input.checkbox');
+		var i=0;
+		for(i; i<records.length; i++){
+			records[i].checked = 'checked';
+		}
+	},
+	
+	/**
+	 * unmark all records in current view of the table
+	 */
+	unmarkAll: function(e){
+		var records = $$('#'+this.id+' td.markingcheckbox input.checkbox');
+		var i=0;
+		for(i; i<records.length; i++){
+			records[i].checked = '';
+		}
 	},
 	
 	refresh: function(e) {

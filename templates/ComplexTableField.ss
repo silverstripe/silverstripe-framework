@@ -1,5 +1,8 @@
 <div id="$id" class="$CSSClasses field" href="$CurrentLink">
   <div class="middleColumn">
+		<% if Markable %>
+			<% include TableListField_SelectOptions %>
+		<% end_if %>
 	<% include TableListField_PageControls %>
 	<table class="data">
 		<thead>

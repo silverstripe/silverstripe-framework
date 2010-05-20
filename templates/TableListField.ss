@@ -1,5 +1,10 @@
 <div id="$id" class="$CSSClasses field">
-	<% if Print %><% else %><% include TableListField_PageControls %><% end_if %>
+	<% if Print %><% else %>
+		<% if Markable %>
+			<% include TableListField_SelectOptions %>
+		<% end_if %>
+		<% include TableListField_PageControls %>
+	<% end_if %>
 	<table class="data">
 		<thead>
 			<tr>

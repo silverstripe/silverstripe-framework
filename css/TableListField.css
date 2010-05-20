@@ -181,6 +181,18 @@ form .TableField .message {
 	width: auto;
 }
 
+.TableListField .selectOptions {
+	overflow: auto;
+	font: 1.3em;
+	margin: 0;
+	padding: 0;
+}
+
+.TableListField .selectOptions li {
+	float: left;
+	margin: 0px 5px;
+}
+
 .TableListField .PageControls {
 	margin: 5px 0;
 	text-align:center;

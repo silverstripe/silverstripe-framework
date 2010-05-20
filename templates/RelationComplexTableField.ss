@@ -1,4 +1,7 @@
 <div id="$id" class="$CSSClasses" href="$CurrentLink">
+	<% if Markable %>
+		<% include TableListField_SelectOptions %>
+	<% end_if %>
 	<% include TableListField_PageControls %>
 	<table class="data">
 		<thead>
