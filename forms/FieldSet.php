@@ -335,7 +335,8 @@ class FieldSet extends DataObjectSet {
 		$i = 0;
 		foreach($this->items as $child) {
 			if($name == $child->Name() || $name == $child->id) {
-				array_splice($this->items, $i, 0, array($item));
+				// On PHP 5.2.6, using $this->items directly in array_splice can segfault
+				$itms = $this->items; array_splice($itms, $i, 0, array($item));
 				return $item;
 			} elseif($child->isComposite()) {
 				$ret = $child->insertBefore($item, $name);
