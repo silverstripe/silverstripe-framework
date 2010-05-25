@@ -83,8 +83,8 @@ class GroupTest extends FunctionalTest {
 		
 		$adminGroup->delete();
 		
-		$this->assertNull(DataObject::get('Group', "ID={$adminGroup->ID}"), 'Group is removed');
-		$this->assertNull(DataObject::get('Permission',"GroupID={$adminGroup->ID}"), 'Permissions removed along with the group');
+		$this->assertNull(DataObject::get('Group', "\"ID\"={$adminGroup->ID}"), 'Group is removed');
+		$this->assertNull(DataObject::get('Permission',"\"GroupID\"={$adminGroup->ID}"), 'Permissions removed along with the group');
 	}
 }
 
