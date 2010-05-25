@@ -53,11 +53,12 @@ class File extends DataObject {
 	 */
 	public static $allowed_extensions = array(
 		'html','htm','xhtml','js','css',
-		'png','gif','jpg','jpeg',
-		'mov','mkv','mp3','m4a','swf','flv',
+		'bmp','png','gif','jpg','jpeg','ico','pcx','tif','tiff',
+		'au','mid','midi','mpa','mp3','ogg','m4a','ra','wma','wav','cda',
+		'avi','mpg','mpeg','asf','wmv','m4v','mov','mkv','mp4','swf','flv','ram','rm',
 		'doc','docx','txt','rtf','xls','xlsx','pages',
 		'ppt','pptx','pps','csv',
-		'zip','zipx','sit','sitx','gz','pkg','dmg','hqx',
+		'cab','arj','tar','zip','zipx','sit','sitx','gz','tgz','bz2','ace','arc','pkg','dmg','hqx','jar',
 		'xml','pdf',
 	);
 	
