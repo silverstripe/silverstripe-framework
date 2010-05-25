@@ -7,7 +7,7 @@ var Class = {
   },
   
   extend: function(baseClassName) {
-  	constructor = function() {
+  	var constructor = function() {
   		var i;
   		
 			/*		
