@@ -2,7 +2,7 @@
 /**
  * Text field that automatically checks that the value entered is unique for the given
  * set of fields in a given set of tables
- * @deprecated 2.3
+ * @deprecated 2.5
  * @package forms
  * @subpackage fields-formattedinput
  */
