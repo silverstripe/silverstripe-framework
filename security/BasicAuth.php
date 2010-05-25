@@ -28,6 +28,7 @@ class BasicAuth extends Object {
 	 */
 	static function requireLogin($realm, $permissionCode) {
 		if(!Security::database_is_ready() || Director::is_cli()) return true;
+		$authenticated = false;
 		
 		if(isset($_SERVER['PHP_AUTH_USER']) && isset($_SERVER['PHP_AUTH_PW'])) {
 			$member = MemberAuthenticator::authenticate(array(
@@ -35,13 +36,11 @@ class BasicAuth extends Object {
 				'Password' => $_SERVER['PHP_AUTH_PW'],
 			), null);
 			
-			if($member) {
-				$authenticated = true;
-			}
+			if($member || Member::currentUser()) $authenticated = true;
 		}
 		
 		// If we've failed the authentication mechanism, then show the login form
-		if(!isset($authenticated)) {
+		if(!$authenticated) {
 			header("WWW-Authenticate: Basic realm=\"$realm\"");
 			header($_SERVER['SERVER_PROTOCOL'] . ' 401 Unauthorized');
 
