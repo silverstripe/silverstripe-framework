@@ -122,10 +122,6 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		"CanEditType" => "Inherit"
 	);
 
-	static $has_one = array(
-		"Parent" => "SiteTree"
-	);
-
 	static $versioning = array(
 		"Stage",  "Live"
 	);

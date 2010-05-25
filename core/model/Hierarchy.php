@@ -24,6 +24,15 @@ class Hierarchy extends DataObjectDecorator {
 	
 	function augmentWrite(&$manipulation) {
 	}
+	
+	function extraStatics($class = null) {
+		return array(
+			'has_one' => array(
+				// TODO this method is called *both* statically and on an instance
+				"Parent" => ($class) ? $class : $this->owner->class
+			)
+		);
+	}
 
 	/**
 	 * Returns the children of this DataObject as an XHTML UL. This will be called recursively on each child,
