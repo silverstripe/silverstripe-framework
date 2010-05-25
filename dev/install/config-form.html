@@ -307,8 +307,8 @@ else echo 'localhost
 				if (e.target.parentNode.childNodes[0].getAttribute('notavailable')) {
 					// Show the warning for this adapter
 					getElementsByClassName('databaseError', e.target.parentNode)[0].style.display = 'block';
+					return false;
 				}
-				return false;
 			}
 			for(var i = 0; i < children.length; i++) {
 				if (children[i].nodeType != 3) {
