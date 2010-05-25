@@ -86,21 +86,21 @@ class FormAction extends FormField {
 				$attributes['class'] = $attributes['class'] . ' disabled';
 			}
 			
-			return $this->createTag('button', $attributes, $this->buttonContent ? $this->buttonContent : $this->attrTitle());
+			return $this->createTag('button', $attributes, $this->buttonContent ? $this->buttonContent : $this->Title());
 		} else {
 			$attributes = array(
 				'class' => 'action' . ($this->extraClass() ? $this->extraClass() : ''),
 				'id' => $this->id(),
 				'type' => 'submit',
 				'name' => $this->action,
-				'value' => ($this->dontEscape) ? $this->Title() : $this->attrTitle(),
+				'value' => $this->Title(),
 				'tabindex' => $this->getTabIndex()
 			);
 			if($this->isReadonly()) {
 				$attributes['disabled'] = 'disabled';
 				$attributes['class'] = $attributes['class'] . ' disabled';
 			}
-			$attributes['title'] = ($this->description) ? $this->description : ($this->dontEscape) ? $this->Title() : $this->attrTitle();
+			$attributes['title'] = ($this->description) ? $this->description : $this->Title();
 			
 			return $this->createTag('input', $attributes);
 		}
