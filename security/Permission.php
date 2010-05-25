@@ -479,7 +479,10 @@ class Permission extends DataObject {
 		$adminCategory = _t('Permission.AdminGroup', 'Administrator');
 		$allCodes[$adminCategory]['ADMIN'] = array(
 			'name' => _t('Permission.FULLADMINRIGHTS', 'Full administrative rights'),
-			'help' => null,
+			'help' => _t(
+				'Permission.FULLADMINRIGHTS_HELP',
+				'Implies and overrules all other assigned permissions.'
+			),
 			'sort' => 100000
 		);
 		
