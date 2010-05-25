@@ -63,6 +63,7 @@ class FileIFrameField extends FileField {
 			}else{
 				$iframe = "iframe";
 			}
+			
 			return $this->createTag (
 				'iframe',
 				array (
@@ -135,15 +136,22 @@ class FileIFrameField extends FileField {
 		}
 		
 		$fileSources["existing//$selectFile"] = new TreeDropdownField('ExistingFile', '', 'File');
+
+		$fields = new FieldSet (
+			new HeaderField('EditFileHeader', $title),
+			new SelectionGroup('FileSource', $fileSources)
+		);
+		
+		// locale needs to be passed through from the iframe source
+		if(isset($_GET['locale'])) {
+			$fields->push(new HiddenField('locale', '', $_GET['locale']));
+		}
 		
 		return new Form (
 			$this,
 			'EditFileForm',
-			new FieldSet (
-				new HeaderField('EditFileHeader', $title),
-				new SelectionGroup('FileSource', $fileSources)
-			),
-			new FieldSet (
+			$fields,
+			new FieldSet(
 				new FormAction('save', $title)
 			)
 		);
