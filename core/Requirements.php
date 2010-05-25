@@ -995,5 +995,3 @@ class Requirements_Backend {
 	}
 	
 }
-
-?>
