@@ -26,7 +26,7 @@ class Decimal extends DBField {
 	}
 	
 	function requireField() {
-		$parts=Array('datatype'=>'decimal', 'precision'=>"$this->wholeSize,$this->decimalSize", 'default'=>$this->defaultValue, 'arrayValue'=>$this->arrayValue);
+		$parts=Array('datatype'=>'decimal', 'precision'=>"$this->wholeSize,$this->decimalSize", 'default'=>(double)$this->defaultValue, 'arrayValue'=>$this->arrayValue);
 		$values=Array('type'=>'decimal', 'parts'=>$parts);
 		DB::requireField($this->tableName, $this->name, $values);
 	}
