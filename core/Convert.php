@@ -140,8 +140,7 @@ class Convert extends Object {
 	}
 	
 	/**
-	 * Uses the PHP 5.2 native json_encode function if available,
-	 * otherwise falls back to the Services_JSON class.
+	 * Convert an array into a JSON encoded string.
 	 * 
 	 * @see http://pear.php.net/pepr/pepr-proposal-show.php?id=198
 	 * @uses Director::baseFolder()
@@ -161,8 +160,7 @@ class Convert extends Object {
 	}
 	
 	/**
-	 * Uses the PHP 5.2 native json_decode function if available,
-	 * otherwise falls back to the Services_JSON class.
+	 * Convert a JSON encoded string into an object.
 	 * 
 	 * @see http://pear.php.net/pepr/pepr-proposal-show.php?id=198
 	 * @uses Director::baseFolder()
@@ -172,13 +170,9 @@ class Convert extends Object {
 	 * @return mixed JSON safe string
 	 */
 	static function json2obj($val) {
-		if(function_exists('json_decode')) {
-			return json_decode($val);
-		} else {
-			require_once(Director::baseFolder() . '/sapphire/thirdparty/json/JSON.php');
-			$json = new Services_JSON();
-			return $json->decode($val);
-		}
+		require_once(Director::baseFolder() . '/sapphire/thirdparty/json/JSON.php');
+		$json = new Services_JSON();
+		return $json->decode($val);
 	}
 
 	/**
