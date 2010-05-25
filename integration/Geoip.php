@@ -5,7 +5,7 @@
  * @package sapphire
  * @subpackage misc
  */
-class Geoip extends Object {
+class Geoip {
 	
 	public static $default_country_code = false;
 
