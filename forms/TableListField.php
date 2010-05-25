@@ -1484,5 +1484,12 @@ class TableListField_ItemRequest extends RequestHandler {
 		}
 		return false;
 	}
+	
+	/**
+	 * @return TableListField
+	 */
+	function getParentController() {
+		return $this->ctf;
+	}
 }
 ?>
