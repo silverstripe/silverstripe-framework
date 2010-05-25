@@ -600,6 +600,8 @@ JS;
 			$childData
 		);
 
+		$form->loadDataFrom($childData);
+
 		return $form;
 	}
 	
