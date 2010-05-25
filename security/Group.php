@@ -38,7 +38,7 @@ class Group extends DataObject {
 	function getAllChildren() {
 		$doSet = new DataObjectSet();
 
-		if ($children = DataObject::get('Group', 'ParentID = '.$this->ID)) {
+		if ($children = DataObject::get('Group', '"ParentID" = '.$this->ID)) {
 			foreach($children as $child) {
 				$doSet->push($child);
 				$doSet->merge($child->getAllChildren());
