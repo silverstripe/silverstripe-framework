@@ -1013,9 +1013,9 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 
 						// Add the class name to the base object
 						if($idx == 0) {
-							$manipulation[$class]['fields']["LastEdited"] = SS_Datetime::now()->URLDate();
+							$manipulation[$class]['fields']["LastEdited"] = "'".SS_Datetime::now()->Rfc2822()."'";
 							if($dbCommand == 'insert') {
-								$manipulation[$class]['fields']["Created"] = SS_Datetime::now()->URLDate();
+								$manipulation[$class]['fields']["Created"] = "'".SS_Datetime::now()->Rfc2822()."'";
 								//echo "<li>$this->class - " .get_class($this);
 								$manipulation[$class]['fields']["ClassName"] = "'$this->class'";
 							}
@@ -1057,9 +1057,9 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			$this->flushCache();
 
 			if(!isset($this->record['Created'])) {
-				$this->record['Created'] = SS_Datetime::now()->URLDate();
+				$this->record['Created'] = SS_Datetime::now()->Rfc2822();
 			}
-			$this->record['LastEdited'] = SS_Datetime::now()->URLDate();
+			$this->record['LastEdited'] = SS_Datetime::now()->Rfc2822();
 		}
 
 		// Write ComponentSets as necessary
