@@ -167,9 +167,6 @@ class FileIFrameField extends FileField {
 		if($data['FileSource'] == 'new') {
 			$fileObject = Object::create($desiredClass);
 			
-			$this->upload->setAllowedExtensions($this->allowedExtensions);
-			$this->upload->setAllowedMaxFileSize($this->allowedMaxFileSize);
-			
 			$this->upload->loadIntoFile($_FILES['Upload'], $fileObject, $this->folderName);
 			
 			if($this->upload->isError()) {

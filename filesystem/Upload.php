@@ -54,6 +54,15 @@ class Upload extends Controller {
 	}
 	
 	/**
+	 * Get current validator
+	 * 
+	 * @return object $validator
+	 */
+	public function getValidator() {
+		return $this->validator;
+	}
+	
+	/**
 	 * Set a different instance than {@link Upload_Validator}
 	 * for this upload session.
 	 * 
