@@ -694,6 +694,7 @@ class i18n extends Object {
 		'cy_GB' => array('Welsh', 'Welsh/Cymraeg'),
 		'da_DK' => array('Danish', 'dansk'),
 		'nl_NL' => array('Dutch', 'Nederlands'),
+		'en_NZ' => array('English (NZ)', 'English (NZ)'),
 		'en_US' => array('English (US)', 'English (US)'),
 		'en_GB' => array('English (UK)', 'English (UK)'),
 		'eo_XX' => array('Esperanto', 'Esperanto'),
