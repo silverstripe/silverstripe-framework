@@ -11,6 +11,5 @@
  * @subpackage cron
  */
 class DailyTask extends ScheduledTask {
-	
+
 }
-?>

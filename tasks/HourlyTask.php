@@ -12,4 +12,3 @@
 class HourlyTask extends ScheduledTask {
 	
 }
-?>
