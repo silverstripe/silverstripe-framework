@@ -28,6 +28,7 @@ class MySQLDatabaseConfigurationHelper implements DatabaseConfigurationHelper {
 	 */
 	public function requireDatabaseServer($databaseConfig) {
 		$success = false;
+		$error = '';
 		$conn = @mysql_connect($databaseConfig['server'], null, null);
 		if($conn || mysql_errno() < 2000) {
 			$success = true;
@@ -48,6 +49,7 @@ class MySQLDatabaseConfigurationHelper implements DatabaseConfigurationHelper {
 	 */
 	public function requireDatabaseConnection($databaseConfig) {
 		$success = false;
+		$error = '';
 		$conn = @mysql_connect($databaseConfig['server'], $databaseConfig['username'], $databaseConfig['password']);
 		if($conn) {
 			$success = true;
