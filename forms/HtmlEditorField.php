@@ -269,6 +269,8 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 		$form->unsetValidator();
 		$form->loadDataFrom($this);
 		
+		$this->extend('updateLinkForm', $form);
+		
 		return $form;
 	}
 
@@ -279,50 +281,57 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 	 * @return Form
 	 */
 	function ImageForm() {
-		$form = new Form(
-			$this->controller,
-			"{$this->name}/ImageForm",
-			new FieldSet(
-				new LiteralField(
-					'Heading', 
-					sprintf('<h3>%s</h3>', _t('HtmlEditorField.IMAGE', 'Image'))
-				),
-				
-				$contentComposite = new CompositeField(
-					new TreeDropdownField('FolderID', _t('HtmlEditorField.FOLDER', 'Folder'), 'Folder'),
-					new CompositeField(new FieldSet(
-						new LiteralField('ShowUpload', '<p class="showUploadField"><a href="#">'. _t('HtmlEditorField.SHOWUPLOADFORM', 'Upload File') .'</a></p>'),
-						new FileField("Files[0]" , _t('AssetAdmin.CHOOSEFILE','Choose file: ')),
-							new LiteralField('Response', '<div id="UploadFormResponse"></div>'),
-							new HiddenField('UploadMode', 'Upload Mode', 'CMSEditor') // used as a hook for doUpload switching
-					)),
-					new TextField('getimagesSearch', _t('HtmlEditorField.SEARCHFILENAME', 'Search by file name')),
-					new ThumbnailStripField('FolderImages', 'FolderID', 'getimages'),
-					new TextField('AltText', _t('HtmlEditorField.IMAGEALTTEXT', 'Alternative text (alt) - shown if image cannot be displayed'), '', 80),
-					new TextField('ImageTitle', _t('HtmlEditorField.IMAGETITLE', 'Title text (tooltip) - for additional information about the image')),
-					new TextField('CaptionText', _t('HtmlEditorField.CAPTIONTEXT', 'Caption text')),
-					new DropdownField(
-						'CSSClass',
-						_t('HtmlEditorField.CSSCLASS', 'Alignment / style'),
-						array(
-							'left' => _t('HtmlEditorField.CSSCLASSLEFT', 'On the left, with text wrapping around.'),
-							'leftAlone' => _t('HtmlEditorField.CSSCLASSLEFTALONE', 'On the left, on its own.'),
-							'right' => _t('HtmlEditorField.CSSCLASSRIGHT', 'On the right, with text wrapping around.'),
-							'center' => _t('HtmlEditorField.CSSCLASSCENTER', 'Centered, on its own.'),
-						)
-					),
-					new FieldGroup(_t('HtmlEditorField.IMAGEDIMENSIONS', 'Dimensions'),
-						new TextField('Width', _t('HtmlEditorField.IMAGEWIDTHPX', 'Width'), 100),
-						new TextField('Height', " x " . _t('HtmlEditorField.IMAGEHEIGHTPX', 'Height'), 100)
-					)
-				)
+		$fields = new FieldSet(
+			new LiteralField(
+				'Heading', 
+				sprintf('<h3>%s</h3>', _t('HtmlEditorField.IMAGE', 'Image'))
 			),
-			new FieldSet(
-				new FormAction('insertimage', _t('HtmlEditorField.BUTTONINSERTIMAGE', 'Insert image'))
+			
+			$contentComposite = new CompositeField(
+				new TreeDropdownField('FolderID', _t('HtmlEditorField.FOLDER', 'Folder'), 'Folder'),
+				new CompositeField(new FieldSet(
+					new LiteralField('ShowUpload', '<p class="showUploadField"><a href="#">'. _t('HtmlEditorField.SHOWUPLOADFORM', 'Upload File') .'</a></p>'),
+					new FileField("Files[0]" , _t('AssetAdmin.CHOOSEFILE','Choose file: ')),
+						new LiteralField('Response', '<div id="UploadFormResponse"></div>'),
+						new HiddenField('UploadMode', 'Upload Mode', 'CMSEditor') // used as a hook for doUpload switching
+				)),
+				new TextField('getimagesSearch', _t('HtmlEditorField.SEARCHFILENAME', 'Search by file name')),
+				new ThumbnailStripField('FolderImages', 'FolderID', 'getimages'),
+				new TextField('AltText', _t('HtmlEditorField.IMAGEALTTEXT', 'Alternative text (alt) - shown if image cannot be displayed'), '', 80),
+				new TextField('ImageTitle', _t('HtmlEditorField.IMAGETITLE', 'Title text (tooltip) - for additional information about the image')),
+				new TextField('CaptionText', _t('HtmlEditorField.CAPTIONTEXT', 'Caption text')),
+				new DropdownField(
+					'CSSClass',
+					_t('HtmlEditorField.CSSCLASS', 'Alignment / style'),
+					array(
+						'left' => _t('HtmlEditorField.CSSCLASSLEFT', 'On the left, with text wrapping around.'),
+						'leftAlone' => _t('HtmlEditorField.CSSCLASSLEFTALONE', 'On the left, on its own.'),
+						'right' => _t('HtmlEditorField.CSSCLASSRIGHT', 'On the right, with text wrapping around.'),
+						'center' => _t('HtmlEditorField.CSSCLASSCENTER', 'Centered, on its own.'),
+					)
+				),
+				new FieldGroup(_t('HtmlEditorField.IMAGEDIMENSIONS', 'Dimensions'),
+					new TextField('Width', _t('HtmlEditorField.IMAGEWIDTHPX', 'Width'), 100),
+					new TextField('Height', " x " . _t('HtmlEditorField.IMAGEHEIGHTPX', 'Height'), 100)
+				)
 			)
 		);
 		
+		$actions = new FieldSet(
+			new FormAction('insertimage', _t('HtmlEditorField.BUTTONINSERTIMAGE', 'Insert image'))
+		);
+		
+		$form = new Form(
+			$this->controller,
+			"{$this->name}/ImageForm",
+			$fields,
+			$actions
+		);
+		
 		$contentComposite->addExtraClass('content');
+		
+		// Allow other people to extend the fields being added to the imageform 
+		$this->extend('updateImageForm', $form);
 		
 		$form->unsetValidator();
 		$form->disableSecurityToken();
@@ -353,14 +362,15 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 			new FieldSet(
 				new FormAction("insertflash", _t('HtmlEditorField.BUTTONINSERTFLASH', 'Insert Flash'))
 			)
-		);
-		
+		);		
 		$contentComposite->addExtraClass('content');
 		
-		$form->unsetValidator();
+		$this->extend('updateFlashForm', $form);
 		
+		$form->unsetValidator();
 		$form->loadDataFrom($this);
 		$form->disableSecurityToken();
+		
 		return $form;
 	}
 }
