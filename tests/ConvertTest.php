@@ -49,5 +49,33 @@ class ConvertTest extends SapphireTest {
 		$val2 = 'This is some normal text.';
 		$this->assertEquals('This is some normal text.', Convert::xml2raw($val2), 'Normal text is not escaped');
 	}
-	
+
+	function testArray2JSON() {
+		$val = array(
+			'Joe' => 'Bloggs',
+			'Tom' => 'Jones',
+			'My' => array(
+				'Complicated' => 'Structure'
+			)
+		);
+		$encoded = Convert::array2json($val);
+		$this->assertEquals('{"Joe":"Bloggs","Tom":"Jones","My":{"Complicated":"Structure"}}', $encoded, 'Array is encoded in JSON');
+	}
+
+	function testJSON2Array() {
+		$val = '{"Joe":"Bloggs","Tom":"Jones","My":{"Complicated":"Structure"}}';
+		$decoded = Convert::json2array($val);
+		$this->assertEquals(3, count($decoded), '3 items in the decoded array');
+		$this->assertContains('Bloggs', $decoded, 'Contains "Bloggs" value in decoded array');
+		$this->assertContains('Jones', $decoded, 'Contains "Jones" value in decoded array');
+	}
+
+	function testJSON2Obj() {
+		$val = '{"Joe":"Bloggs","Tom":"Jones","My":{"Complicated":"Structure"}}';
+		$obj = Convert::json2obj($val);
+		$this->assertEquals('Bloggs', $obj->Joe);
+		$this->assertEquals('Jones', $obj->Tom);
+		$this->assertEquals('Structure', $obj->My->Complicated);
+	}
+
 }

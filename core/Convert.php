@@ -105,7 +105,7 @@ class Convert extends Object {
 		if(function_exists('json_encode')) {
 			return json_encode($val);	
 		} else {
-			require_once(Director::baseFolder() . '/sapphire/thirdparty/json/JSON.php');			
+			require_once(Director::baseFolder() . '/sapphire/thirdparty/json/JSON.php');
 			$json = new Services_JSON();
 			return $json->encode($val);
 		}
@@ -140,6 +140,23 @@ class Convert extends Object {
 	}
 	
 	/**
+	 * Uses the PHP 5.2 native json_encode function if available,
+	 * otherwise falls back to the Services_JSON class.
+	 * 
+	 * @param array $val Array to convert
+	 * @return string JSON encoded string
+	 */
+	static function array2json($val) {
+		if(function_exists('json_encode')) {
+			return json_encode($val);
+		} else {
+			require_once(Director::baseFolder() . '/sapphire/thirdparty/json/JSON.php');
+			$json = new Services_JSON();
+			return $json->encode($val);
+		}
+	}
+	
+	/**
 	 * Uses the PHP 5.2 native json_decode function if available,
 	 * otherwise falls back to the Services_JSON class.
 	 * 
@@ -149,9 +166,13 @@ class Convert extends Object {
 	 * @return mixed JSON safe string
 	 */
 	static function json2obj($val) {
-		require_once(Director::baseFolder() . '/sapphire/thirdparty/json/JSON.php');			
-		$json = new Services_JSON();
-		return $json->decode($val);
+		if(function_exists('json_decode')) {
+			return json_decode($val);
+		} else {
+			require_once(Director::baseFolder() . '/sapphire/thirdparty/json/JSON.php');
+			$json = new Services_JSON();
+			return $json->decode($val);
+		}
 	}
 
 	/**
@@ -203,21 +224,6 @@ class Convert extends Object {
 			return $r;
 		}
 		return (string) $xml;
-	}
-
-	static function array2json( $array ) {
-		if(function_exists("json_encode")) {
-			return json_encode($array);
-		}
-		$result = array();
-		
-		foreach( $array as $key => $value )
-			if( is_array( $value ) )
-				$result[] = "'$key':" . Convert::array2json( $value );
-			else
-				$result[] = "'$key':'$value'";
-			
-		return '{' . implode( ', ', $result ) . '}';
 	}
 	
 	/**
@@ -334,5 +340,3 @@ class Convert extends Object {
 	}
 
 }
-
-?>
