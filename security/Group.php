@@ -68,19 +68,9 @@ class Group extends DataObject {
 				),
 
 				$permissionsTab = new Tab(_t('SecurityAdmin.PERMISSIONS', 'Permissions'),
-					new LiteralField(
-						"", 
-						"<p>" . 
-						_t('SecurityAdmin.ADVANCEDONLY',
-							"This section is for advanced users only.
-							See <a href=\"http://doc.silverstripe.com/doku.php?id=permissions:codes\" target=\"_blank\">this page</a>
-							for more information."
-						) . 
-						"</p>"
-					),
 					new PermissionCheckboxSetField(
 						'Permissions',
-						singleton('Permission')->i18n_plural_name(),
+						false,
 						'Permission',
 						'GroupID',
 						$this
@@ -121,6 +111,8 @@ class Group extends DataObject {
 			$fields->removeFieldFromTab('Root', 'IP Addresses');
 		}
 
+		// Only show the "Roles" tab if permissions are granted to edit them,
+		// and at least one role exists
 		if(Permission::check('APPLY_ROLES') && DataObject::get('PermissionRole')) { 
 			$fields->addFieldToTab('Root.' . _t('SecurityAdmin.ROLES', 'Roles'), 
 				new LiteralField( 
