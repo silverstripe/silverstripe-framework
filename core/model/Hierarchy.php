@@ -490,7 +490,7 @@ class Hierarchy extends DataObjectDecorator {
 	 */
 	public function numHistoricalChildren() {
 		$query = Versioned::get_including_deleted_query(ClassInfo::baseDataClass($this->owner->class), 
-			"ParentID = " . (int)$this->owner->ID);
+			"\"ParentID\" = " . (int)$this->owner->ID);
 			
 		return $query->unlimitedRowCount();
 	}
