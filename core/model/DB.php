@@ -110,7 +110,7 @@ class DB {
 	 * @param array $parameters The connection details.
 	 * @return string $connect The connection string.
 	 **/
-	public function getConnect($parameters) {
+	public static function getConnect($parameters) {
 		return self::getConn()->getConnect($parameters);
 	}
 
