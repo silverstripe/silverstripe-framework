@@ -1006,6 +1006,7 @@ abstract class Object {
 	 * @deprecated 2.4 Use getExtensionInstance
 	 */
 	public function extInstance($extension) {
+		user_error('Object::extInstance() is deprecated. Please use Object::getExtensionInstance() instead.', E_USER_NOTICE);
 		return $this->getExtensionInstance($extension);
 	}
 	

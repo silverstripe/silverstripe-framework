@@ -290,13 +290,13 @@ class ObjectTest extends SapphireTest {
 	}
 	
 	/**
-	 * Tests {@link Object::hasExtension() and Object::extInstance()}
+	 * Tests {@link Object::hasExtension() and Object::getExtensionInstance()}
 	 */
 	public function testExtInstance() {
 		$obj = new ObjectTest_ExtensionTest2();
 		
 		$this->assertTrue($obj->hasExtension('ObjectTest_Extension'));
-		$this->assertTrue($obj->extInstance('ObjectTest_Extension') instanceof ObjectTest_Extension);
+		$this->assertTrue($obj->getExtensionInstance('ObjectTest_Extension') instanceof ObjectTest_Extension);
 	}
 	
 	public function testCacheToFile() {
