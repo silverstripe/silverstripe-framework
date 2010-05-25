@@ -57,6 +57,8 @@ class MySQLDatabaseConfigurationHelper implements DatabaseConfigurationHelper {
 			if(!$success) {
 				$error = "Your MySQL server version is $version. It's recommended you use at least MySQL 5.0.";
 			}
+		} else {
+			$error = "Could not determine your MySQL version.";
 		}
 		return array(
 			'success' => $success,
