@@ -4,7 +4,7 @@
  * @package sapphire
  * @subpackage misc
  */
-class ArrayLib extends Object {
+class ArrayLib {
 	
 	/**
 	 * Inverses the first and second level keys of an associative
