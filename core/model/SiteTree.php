@@ -1574,25 +1574,6 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	}
 	
 	/**
-	 * Return the SiteTree object with the given URL segment.
-	 * 
-	 * @deprecated 2.4 Use {@link SiteTree::get_by_link()}.
-	 *
-	 * @param string $urlSegment The URL segment, eg 'home'
-	 * @param string $extraFilter
-	 * @param boolean $cache
-	 * @param string $orderby
-	 * @return SiteTree The object with the given URL segment
-	 */
-	public static function get_by_url($link) {
-		user_error (
-			'SiteTree::get_by_url() is deprecated, please use SiteTree::get_by_link()', E_USER_NOTICE
-		);
-		
-		return self::get_by_link($link);
-	}
-	
-	/**
 	 * Rewrite a file URL on this page, after its been renamed.
 	 * Triggers the onRenameLinkedAsset action on extensions.
 	 */
