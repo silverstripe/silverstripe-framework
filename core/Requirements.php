@@ -917,7 +917,7 @@ class Requirements_Backend {
 		$base = Director::baseFolder() . '/';
 		foreach(array_diff_key($combinedFiles, $this->blocked) as $combinedFile => $dummy) {
 			$fileList = $this->combine_files[$combinedFile];
-			$combinedFilePath = $base . '/' . $combinedFilesFolder . '/' . $combinedFile;
+			$combinedFilePath = $base . '/' . $this->combinedFilesFolder . '/' . $combinedFile;
 
 			 // Determine if we need to build the combined include
 			if(file_exists($combinedFilePath) && !isset($_GET['flush'])) {
@@ -950,7 +950,6 @@ class Requirements_Backend {
 				$combinedData .= "/****** FILE: $file *****/\n" . $fileContent . "\n".($isJS ? ';' : '')."\n";
 			}
 
-			$combinedFilePath = Director::baseFolder() . '/' . $this->combinedFilesFolder . '/' . $combinedFile;
 			if(!file_exists(dirname($combinedFilePath))) {
 				Filesystem::makeFolder(dirname($combinedFilePath));
 			}
