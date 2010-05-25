@@ -143,6 +143,10 @@ class Convert extends Object {
 	 * Uses the PHP 5.2 native json_encode function if available,
 	 * otherwise falls back to the Services_JSON class.
 	 * 
+	 * @see http://pear.php.net/pepr/pepr-proposal-show.php?id=198
+	 * @uses Director::baseFolder()
+	 * @uses Services_JSON
+	 * 
 	 * @param array $val Array to convert
 	 * @return string JSON encoded string
 	 */
@@ -161,6 +165,8 @@ class Convert extends Object {
 	 * otherwise falls back to the Services_JSON class.
 	 * 
 	 * @see http://pear.php.net/pepr/pepr-proposal-show.php?id=198
+	 * @uses Director::baseFolder()
+	 * @uses Services_JSON
 	 *
 	 * @param string $val
 	 * @return mixed JSON safe string
