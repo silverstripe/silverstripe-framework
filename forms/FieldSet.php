@@ -56,6 +56,11 @@ class FieldSet extends DataObjectSet {
 		return $this->sequentialSaveableSet;
 	}
 	
+	protected function flushFieldsCache() {
+		$this->sequentialSet = null;
+		$this->sequentialSaveableSet = null;
+	}
+	
 	protected function collateDataFields(&$list, $saveableOnly = false) {
 		foreach($this as $field) {
 			if($field->isComposite()) $field->collateDataFields($list, $saveableOnly);
@@ -89,7 +94,7 @@ class FieldSet extends DataObjectSet {
 	 */
 	public function addFieldToTab($tabName, $field, $insertBefore = null) {
 		// This is a cache that must be flushed
-		$this->sequentialSet = null;
+		$this->flushFieldsCache();
 
 		// Find the tab
 		$tab = $this->findOrMakeTab($tabName);
@@ -108,7 +113,7 @@ class FieldSet extends DataObjectSet {
 	 * @param array $fields An array of {@link FormField} objects.
 	 */
 	public function addFieldsToTab($tabName, $fields) {
-		$this->sequentialSet = null;
+		$this->flushFieldsCache();
 
 		// Find the tab
 		$tab = $this->findOrMakeTab($tabName);
@@ -132,8 +137,7 @@ class FieldSet extends DataObjectSet {
 	 * @param string $fieldName The name of the field
 	 */
 	public function removeFieldFromTab($tabName, $fieldName) {
-		// This is a cache that must be flushed
-		$this->sequentialSet = null;
+		$this->flushFieldsCache();
 
 		// Find the tab
 		$tab = $this->findOrMakeTab($tabName);
@@ -147,8 +151,7 @@ class FieldSet extends DataObjectSet {
 	 * @param array $fields A list of fields, e.g. array('Name', 'Email')
 	 */
 	public function removeFieldsFromTab($tabName, $fields) {
-		// This is a cache that must be flushed
-		$this->sequentialSet = null;
+		$this->flushFieldsCache();
 
 		// Find the tab
 		$tab = $this->findOrMakeTab($tabName);
@@ -170,6 +173,7 @@ class FieldSet extends DataObjectSet {
 		if(!$fieldName) {
 			user_error('FieldSet::removeByName() was called with a blank field name.', E_USER_WARNING);
 		}
+		$this->flushFieldsCache();
 		
 		foreach($this->items as $i => $child) {
 			if(is_object($child)){
@@ -192,7 +196,7 @@ class FieldSet extends DataObjectSet {
 	 * 					 FALSE field wasn't found, nothing changed
 	 */
 	public function replaceField($fieldName, $newField) {
-		if($this->sequentialSet) $this->sequentialSet = null;
+		$this->flushFieldsCache();
 		foreach($this->items as $i => $field) {
 			if(is_object($field)) {
 				if($field->Name() == $fieldName && $field->hasData()) {
@@ -384,7 +388,7 @@ class FieldSet extends DataObjectSet {
 	 * Handler method called before the FieldSet is going to be manipulated.
 	 */
 	protected function onBeforeInsert($item) {
-		if($this->sequentialSet) $this->sequentialSet = null;
+		$this->flushFieldsCache();
 		if($item->Name()) $this->rootFieldSet()->removeByName($item->Name(), true);
 	}
 		
@@ -435,7 +439,7 @@ class FieldSet extends DataObjectSet {
 	 * @return FieldSet
 	 */
 	function transform($trans) {
-		$this->sequentialSet = null;
+		$this->flushFieldsCache();
 		$newFields = new FieldSet();
 		foreach($this as $field) {
 			$newFields->push($field->transform($trans));
@@ -509,8 +513,7 @@ class FieldSet extends DataObjectSet {
 		// Update our internal $this->items parameter.
 		$this->items = $fields;
 		
-		// Re-set an internal cache
-		$this->sequentialSet = null;
+		$this->flushFieldsCache();
 	}
 	
 	/**
