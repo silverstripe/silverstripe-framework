@@ -149,8 +149,8 @@ class VirtualPage extends Page {
 			&& Versioned::current_stage() == 'Live') {
 			$performCopyFrom = true;
 			
-			$stageSourceVersion = DB::query("SELECT Version FROM SiteTree WHERE ID = $this->CopyContentFromID")->value();
-			$liveSourceVersion = DB::query("SELECT Version FROM SiteTree_Live WHERE ID = $this->CopyContentFromID")->value();
+			$stageSourceVersion = DB::query("SELECT \"Version\" FROM \"SiteTree\" WHERE \"ID\" = $this->CopyContentFromID")->value();
+			$liveSourceVersion = DB::query("SELECT \"Version\" FROM \"SiteTree_Live\" WHERE \"ID\" = $this->CopyContentFromID")->value();
 			
 			// We're going to create a new VP record in SiteTree_versions because the published
 			// version might not exist, unless we're publishing the latest version
