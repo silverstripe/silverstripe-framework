@@ -66,7 +66,19 @@ class Session {
 		}
 	}
 	
+	/**
+	 * @deprecated 2.5 Use Session::add_to_array($name, $val) instead
+	 */
 	public static function addToArray($name, $val) {
+		user_error('Session::addToArray() is deprecated. Please use Session::add_to_array() instead.', E_USER_NOTICE); 
+		
+		return Session::add_to_array($name, $val);
+	}
+	
+	/**
+	 * Add a value to a specific key in the session array
+	 */
+	public static function add_to_array($name, $val) {
 		return Controller::curr()->getSession()->inst_addToArray($name, $val);
 	}
 	
@@ -91,9 +103,20 @@ class Session {
 	
 	/**
 	 * Return all the values in session
+	 *
+	 * @return Array
+	 */
+	public static function get_all() {
+		return Controller::curr()->getSession()->inst_getAll();
+	}
+	
+	/**
+	 * @deprecated 2.5 Use Session::get_all()
 	 */
 	public static function getAll() {
-		return Controller::curr()->getSession()->inst_getAll();
+		user_error('Session::getAll() is deprecated. Please use Session::get_all() instead.', E_USER_NOTICE); 
+		
+		return Session::get_all();
 	}
 	
 	/**
@@ -108,8 +131,17 @@ class Session {
 	/**
 	 * Clear all the values
 	 */
-	public static function clearAll() {
+	public static function clear_all() {
 		return Controller::curr()->getSession()->inst_clearAll();
+	}
+	
+	/**
+	 * @deprecated 2.5 Use Session::clear_all()
+	 */
+	public static function clearAll() {
+		user_error('Session::clearAll() is deprecated. Please use Session::clear_all() instead.', E_USER_NOTICE); 
+		
+		return Session::clear_all();
 	}
 	
 	/**

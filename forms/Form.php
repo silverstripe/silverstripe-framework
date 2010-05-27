@@ -358,7 +358,7 @@ class Form extends RequestHandler {
 	 * and used the next time this form is displayed.
 	 */
 	function addErrorMessage($fieldName, $message, $messageType) {
-		Session::addToArray("FormInfo.{$this->FormName()}.errors",  array(
+		Session::add_to_array("FormInfo.{$this->FormName()}.errors",  array(
 			'fieldName' => $fieldName,
 			'message' => $message,
 			'messageType' => $messageType,
