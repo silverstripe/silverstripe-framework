@@ -91,6 +91,7 @@ class TableListField extends FormField {
 	/**
 	 * @var array See {@link SelectOptions()}
 	 */
+	
 	protected $selectOptions = array();
 	
 	/**
@@ -1477,7 +1478,7 @@ class TableListField_Item extends ViewableData {
 	 */
 	function SelectOptionClasses(){
 		$tagArray = array('markingcheckbox');
-		$options = $this->parent->selectOptions;
+		$options = $this->parent->SelectOptions();
 		if(!empty($options)){
 			foreach($options as $optionKey => $optionTitle){
 				if($optionKey !== 'all' && $optionKey !== 'none'){
