@@ -114,6 +114,9 @@ class RequestHandler extends ViewableData {
 				if($params = $request->match($rule, true)) {
 					// FIXME: This unnecessary coupling was added to fix a bug in Image_Uploader.
 					if($this instanceof Controller) $this->urlParams = $request->allParams();
+					
+					// Backwards compatible setting of url parameters, please use SS_HTTPRequest->latestParam() instead
+					Director::setUrlParams($request->latestParams());
 				
 					if(isset($_REQUEST['debug_request'])) {
 						Debug::message("Rule '$rule' matched to action '$action' on $this->class.  Latest request params: " . var_export($request->latestParams(), true));

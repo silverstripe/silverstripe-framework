@@ -275,8 +275,6 @@ class Director {
 						return "redirect:" . Director::absoluteURL($arguments['Redirect'], true);
 
 					} else {
-						Director::$urlParams = $arguments;
-						
 						$controllerObj = new $controller();
 						$controllerObj->setSession($session);
 
@@ -294,16 +292,29 @@ class Director {
 	
 	/**
 	 * Returns the urlParam with the given name
+	 * 
+	 * @deprecated 3.0 Use SS_HTTPRequest->latestParam()
 	 */
 	static function urlParam($name) {
 		if(isset(Director::$urlParams[$name])) return Director::$urlParams[$name];
 	}
 	
 	/**
-	 * Returns an array of urlParams
+	 * Returns an array of urlParams.
+	 * 
+	 * @deprecated 3.0 Use SS_HTTPRequest->latestParams()
 	 */
 	static function urlParams() {
 		return Director::$urlParams;
+	}
+
+	/**
+	 * Set url parameters (should only be called internally by RequestHandler->handleRequest()).
+	 * 
+	 * @param $params array
+	 */
+	static function setUrlParams($params) {
+		Director::$urlParams = $params;
 	}
 	
 	/**
