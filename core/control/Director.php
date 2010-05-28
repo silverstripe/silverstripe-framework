@@ -275,6 +275,7 @@ class Director {
 						return "redirect:" . Director::absoluteURL($arguments['Redirect'], true);
 
 					} else {
+						Director::$urlParams = $arguments;
 						$controllerObj = new $controller();
 						$controllerObj->setSession($session);
 
