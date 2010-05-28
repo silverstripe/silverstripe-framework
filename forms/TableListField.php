@@ -1478,7 +1478,7 @@ class TableListField_Item extends ViewableData {
 	 */
 	function SelectOptionClasses(){
 		$tagArray = array('markingcheckbox');
-		$options = $this->parent->selectOptions;
+		$options = $this->parent->SelectOptions();
 		if($options && $options->exists()){
 			foreach($options as $option){
 				if($option->Key !== 'all' && $option->Key !== 'none'){
