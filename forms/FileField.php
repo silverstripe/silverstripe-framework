@@ -91,15 +91,6 @@ class FileField extends FormField {
 				"id" => $this->id(),
 				"tabindex" => $this->getTabIndex()
 			)
-		) . 
-		$this->createTag(
-			'input', 
-		  	array(
-		  		"type" => "hidden", 
-		  		"name" => "MAX_FILE_SIZE", 
-		  		"value" => $this->getValidator()->getAllowedMaxFileSize(),
-				"tabindex" => $this->getTabIndex()
-		  	)
 		);
 	}
 	
