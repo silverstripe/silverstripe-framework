@@ -600,7 +600,7 @@ class SiteTreeTest extends SapphireTest {
 	}
 	
 	/**
-	 * @covers SiteTree::validURLSegment()
+	 * @covers SiteTree::validURLSegment
 	 */
 	public function testValidURLSegmentURLSegmentConflicts() {
 		$sitetree = new SiteTree();
@@ -631,7 +631,7 @@ class SiteTreeTest extends SapphireTest {
 	}
 	
 	/**
-	 * @covers SiteTree::validURLSegment()
+	 * @covers SiteTree::validURLSegment
 	 */
 	public function testValidURLSegmentClassNameConflicts() {
 		$sitetree = new SiteTree();
@@ -641,7 +641,7 @@ class SiteTreeTest extends SapphireTest {
 	}
 	
 	/**
-	 * @covers SiteTree::validURLSegment()
+	 * @covers SiteTree::validURLSegment
 	 */
 	public function testValidURLSegmentControllerConflicts() {
 		SiteTree::enable_nested_urls();
