@@ -1122,6 +1122,9 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			user_error("$this->class has a broken onBeforeDelete() function.  Make sure that you call parent::onBeforeDelete().", E_USER_ERROR);
 		}
 		
+		// Deleting a record without an ID shouldn't do anything
+		if(!$this->ID) throw new Exception("DataObject::delete() called on a DataObject without an ID");
+		
 		foreach($this->getClassAncestry() as $ancestor) {
 			if(self::has_own_table($ancestor)) {
 				$sql = new SQLQuery();
