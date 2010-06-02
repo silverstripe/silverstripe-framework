@@ -90,6 +90,32 @@ class VersionedTest extends SapphireTest {
 		$this->assertTrue($page1->Version > $changedVersion, 'Create a new higher version number');
 		$this->assertEquals('orig', $page1->Content, 'Copies the content from the old version');
 	}
+	
+	function testDeleteFromStage() {
+		$page1 = $this->objFromFixture('Page', 'page1');
+		$pageID = $page1->ID;
+		
+		$page1->Content = 'orig';
+		$page1->write();
+		$page1->publish('Stage', 'Live');
+		
+		$this->assertEquals(1, DB::query('SELECT COUNT(*) FROM "SiteTree" WHERE "ID" = '.$pageID)->value());
+		$this->assertEquals(1, DB::query('SELECT COUNT(*) FROM "SiteTree_Live" WHERE "ID" = '.$pageID)->value());
+		
+		$page1->deleteFromStage('Live');
+		
+		// Confirm that deleteFromStage() doesn't manipulate the original record
+		$this->assertEquals($pageID, $page1->ID);
+
+		$this->assertEquals(1, DB::query('SELECT COUNT(*) FROM "SiteTree" WHERE "ID" = '.$pageID)->value());
+		$this->assertEquals(0, DB::query('SELECT COUNT(*) FROM "SiteTree_Live" WHERE "ID" = '.$pageID)->value());
+
+		$page1->delete();
+
+		$this->assertEquals(0, $page1->ID);
+		$this->assertEquals(0, DB::query('SELECT COUNT(*) FROM "SiteTree" WHERE "ID" = '.$pageID)->value());
+		$this->assertEquals(0, DB::query('SELECT COUNT(*) FROM "SiteTree_Live" WHERE "ID" = '.$pageID)->value());
+	}
 
 }
 
