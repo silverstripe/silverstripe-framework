@@ -62,7 +62,7 @@ class DevelopmentAdmin extends Controller {
 	
 	function index() {
 		$actions = array(
-			"build" => "Build/rebuild this environment (formerly db/build).  Call this whenever you have updated your project sources",
+			"build" => "Build/rebuild this environment.  Call this whenever you have updated your project sources",
 			"buildcache" => "Rebuild the static cache, if you're using StaticPublisher",
 			"tests" => "See a list of unit tests to run",
 			"tests/all" => "Run all tests",
@@ -125,7 +125,7 @@ class DevelopmentAdmin extends Controller {
 		} else {
 			$renderer = new DebugView();
 			$renderer->writeHeader();
-			$renderer->writeInfo("Environment Builder (formerly db/build)", Director::absoluteBaseURL());
+			$renderer->writeInfo("Environment Builder", Director::absoluteBaseURL());
 			echo "<div style=\"margin: 0 2em\">";
 
 			$da = new DatabaseAdmin();
