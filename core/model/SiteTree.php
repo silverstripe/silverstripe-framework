@@ -2463,7 +2463,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		$stageVersion = Versioned::get_versionnumber_by_stage('SiteTree', 'Stage', $this->ID);
 		$liveVersion =	Versioned::get_versionnumber_by_stage('SiteTree', 'Live', $this->ID);
 
-		return ($stageVersion != $liveVersion);
+		return ($stageVersion && $stageVersion != $liveVersion);
 	}
 	
 	/**
