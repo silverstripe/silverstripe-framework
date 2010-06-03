@@ -73,6 +73,11 @@ class DatabaseTest extends SapphireTest {
 		$this->assertFalse($db->doesSchemaNeedUpdating());
 	}
 	
+	function testHasTable() {
+		$this->assertTrue(DB::getConn()->hasTable('DatabaseTest_MyObject'));
+		$this->assertFalse(DB::getConn()->hasTable('asdfasdfasdf'));
+	}
+	
 }
 
 class DatabaseTest_MyObject extends DataObject implements TestOnly {
