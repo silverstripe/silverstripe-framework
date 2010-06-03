@@ -28,6 +28,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	protected $originalIsRunningTest;
 	protected $originalTheme;
 	protected $originalNestedURLsState;
+	protected $originalMemoryLimit;
 	
 	protected $mailer;
 	
@@ -157,6 +158,9 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 		$this->mailer = new TestMailer();
 		Email::set_mailer($this->mailer);
 		Email::send_all_emails_to(null);
+		
+		// Preserve memory settings
+		$this->originalMemoryLimit = ini_get('memory_limit');
 	}
 	
 	/**
@@ -337,6 +341,9 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	}
 	
 	function tearDown() {
+		// Preserve memory settings
+		ini_set('memory_limit', $this->originalMemoryLimit);
+
 		// Restore email configuration
 		Email::set_mailer($this->originalMailer);
 		$this->originalMailer = null;
