@@ -82,6 +82,9 @@ class MemoryLimitTest extends SapphireTest {
 		$exts = get_loaded_extensions();
 		// see http://www.hardened-php.net/suhosin/configuration.html#suhosin.memory_limit
 		if(in_array('suhosin', $exts)) return false;
+
+		// We can't change memory limit in safe mode
+		if(strtolower(ini_get('safe_mode')) == 'on') return false;
 		
 		return true;
 	}
