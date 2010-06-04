@@ -342,7 +342,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	
 	function tearDown() {
 		// Preserve memory settings
-		ini_set('memory_limit', $this->originalMemoryLimit);
+		ini_set('memory_limit', ($this->originalMemoryLimit) ? $this->originalMemoryLimit : -1);
 
 		// Restore email configuration
 		Email::set_mailer($this->originalMailer);
