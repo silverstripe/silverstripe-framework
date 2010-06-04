@@ -266,9 +266,12 @@ class Text extends StringField {
 	 * @param boolean $string Supplied string ("keywords")
 	 * @param boolean $striphtml Strip HTML?
 	 * @param boolean $highlight Add a highlight <span> element around search query?
+	 * @param String prefix text
+	 * @param String suffix 
+	 * 
 	 * @return string
 	 */
-	function ContextSummary($characters = 500, $string = false, $striphtml = true, $highlight = true) {
+	function ContextSummary($characters = 500, $string = false, $striphtml = true, $highlight = true, $prefix = "... ", $suffix = "...") {
 		if(!$string) $string = $_REQUEST['Search'];	// Use the default "Search" request variable (from SearchForm)
 
 		// Remove HTML tags so we don't have to deal with matching tags
@@ -279,23 +282,29 @@ class Text extends StringField {
 		
 		// We want to search string to be in the middle of our block to give it some context
 		$position = max(0, $position - ($characters / 2));
-		
+
 		if($position > 0) {
 			// We don't want to start mid-word
 			$position = max((int) strrpos(substr($text, 0, $position), ' '), (int) strrpos(substr($text, 0, $position), "\n"));
 		}
-		
+
 		$summary = substr($text, $position, $characters);
 		$stringPieces = explode(' ', $string);
 		
 		if($highlight) {
 			// Add a span around all key words from the search term as well
-			if($stringPieces) foreach($stringPieces as $stringPiece) {
-				$summary = str_ireplace($stringPiece, "<span class=\"highlight\">$stringPiece</span>", $summary);
+			if($stringPieces) {
+				foreach($stringPieces as $stringPiece) {
+					$summary = str_ireplace($stringPiece, "<span class=\"highlight\">$stringPiece</span>", $summary);
+				}
 			}
 		}
+		$summary = trim($summary);
 		
-		return trim($summary);
+		if($position > 0) $summary = $prefix . $summary;
+		if(strlen($this->value) > ($characters + $position)) $summary = $summary . $suffix;
+		
+		return $summary;
 	}
 	
 	/**

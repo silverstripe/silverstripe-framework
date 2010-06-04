@@ -122,7 +122,5 @@ class TextTest extends SapphireTest {
 			'This is <span class="highlight">some</span> <span class="highlight">test</span> text. <span class="highlight">test</span> <span class="highlight">test</span> what if you have',
 			$textObj->ContextSummary(50, $testKeywords2)
 		);
-	}
-	
+	}	
 }
-?>
