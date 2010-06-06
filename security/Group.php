@@ -180,25 +180,12 @@ class Group extends DataObject {
 	}
 	
 	/**
-	 * Add a member to a group. This will create the group if the given 
-	 * group code doesn't work.
-	 *
-	 * @param DataObject $member
-	 * @param string $groupcode
+	 * @deprecated 2.5
 	 */
-	static function addToGroupByName($member, $groupcode) {
-		$group = DataObject::get_one('Group', "\"Code\" = '" . Convert::raw2sql($groupcode). "'");
-		if($group) {
-			$member->Groups()->add($group);
-		}
-		else {
-			$group = new Group();
-			$group->Code = $groupcode;
-			$group->Title = $groupcode;
-			$group->write();
-			
-			$member->Groups()->add($group);
-		}
+	public static function addToGroupByName($member, $groupcode) {
+		user_error('Group::addToGroupByName is deprecated. Please use $member->addToGroupByCode($groupcode)', E_USER_NOTICE);
+		
+		return $member->addToGroupByCode($groupcode);
 	}
 	
 	/**

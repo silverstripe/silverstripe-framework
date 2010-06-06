@@ -20,7 +20,10 @@ Group:
    ceogroup:
       Title: ceogroup
       Code: ceogroup
-      Parent: =>Group.managementgroup
+      Parent: =>Group.managementgroup 
+   memberlessgroup:
+      Title: Memberless Group
+      code: memberless
 Member:
    test:
       FirstName: Test
@@ -52,3 +55,5 @@ Member:
    ceomember:
       Email: ceomember@test.com
       Groups: =>Group.ceogroup
+   grouplessmember: 
+      FirstName: Groupless Member
