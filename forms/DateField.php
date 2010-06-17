@@ -218,7 +218,7 @@ class DateField extends TextField {
 	}
 	
 	function performReadonlyTransformation() {
-		$field = new DateField_Disabled($this->name, $this->title, $this->valueObj);
+		$field = new DateField_Disabled($this->name, $this->title, $this->dataValue());
 		$field->setForm($this->form);
 		$field->readonly = true;
 		
