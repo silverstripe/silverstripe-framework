@@ -52,11 +52,16 @@ class PasswordValidator extends Object {
 		$this->historicalPasswordCount = $count;
 	}
 	
+	/**
+	 * @param String $password
+	 * @param Member $member
+	 * @return ValidationResult
+	 */
 	function validate($password, $member) {
 		$valid = new ValidationResult();
 		
 		if($this->minLength) {
-			if(strlen($password) < $this->minLength) $valid->error("Password is too short, it must be 7 or more characters long.", "TOO_SHORT");
+			if(strlen($password) < $this->minLength) $valid->error(sprintf("Password is too short, it must be %s or more characters long.", $this->minLength), "TOO_SHORT");
 		}
 
 		if($this->minScore) {
