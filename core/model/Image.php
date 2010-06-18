@@ -415,6 +415,12 @@ class Image extends File {
 			return self::ORIENTATION_SQUARE;
 		}
 	}
+	
+	protected function onBeforeDelete() { 
+		parent::onBeforeDelete(); 
+
+		$this->deleteFormattedImages();
+	}
 }
 
 /**
