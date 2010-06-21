@@ -123,12 +123,16 @@ class ErrorPage extends Page {
 	function doPublish() {
 		parent::doPublish();
 
-		// Run the page
+		// Run the page (reset the theme, it might've been disabled by LeftAndMain::init())
+		$oldTheme = SSViewer::current_theme();
+		SSViewer::set_theme(SSViewer::current_custom_theme());
 		$response = Director::test(Director::makeRelative($this->Link()));
+		SSViewer::set_theme($oldTheme);
 
 		$errorContent = $response->getBody();
+		
 		// Make the base tag dynamic.
-		$errorContent = preg_replace('/<base[^>]+href="' . str_replace('/','\\/', Director::absoluteBaseURL()) . '"[^>]*>/i', '<base href="$BaseURL" />', $errorContent);
+		// $errorContent = preg_replace('/<base[^>]+href="' . str_replace('/','\\/', Director::absoluteBaseURL()) . '"[^>]*>/i', '<base href="$BaseURL" />', $errorContent);
 		
 		// Check we have an assets base directory, creating if it we don't
 		if(!file_exists(ASSETS_PATH)) {
