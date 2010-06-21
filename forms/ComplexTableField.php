@@ -650,16 +650,16 @@ JS;
 		if(isset($data['ctf']['manyManyRelation'])) {
 			$parentRecord = DataObject::get_by_id($data['ctf']['parentClass'], (int) $data['ctf']['sourceID']);
 			$relationName = $data['ctf']['manyManyRelation'];
-			$componentSet = $parentRecord->getManyManyComponents($relationName);
-			$componentSet->add($childData);
+			$componentSet = $parentRecord ? $parentRecord->getManyManyComponents($relationName) : null;
+			if($componentSet) $componentSet->add($childData);
 		}
 		
 		if(isset($data['ctf']['hasManyRelation'])) {
 			$parentRecord = DataObject::get_by_id($data['ctf']['parentClass'], (int) $data['ctf']['sourceID']);
 			$relationName = $data['ctf']['hasManyRelation'];
 			
-			$componentSet = $parentRecord->getComponents($relationName);
-			$componentSet->add($childData);
+			$componentSet = $parentRecord ? $parentRecord->getComponents($relationName) : null;
+			if($componentSet) $componentSet->add($childData);
 		}
 		
 		$referrer = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : null;
