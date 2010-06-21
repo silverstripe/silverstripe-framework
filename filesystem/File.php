@@ -5,6 +5,10 @@
  * looks at the db object to gather information about a file such as URL
  * It then uses this for all processing functions (like image manipulation).
  * 
+ * Caution: It is recommended to disable any script execution in the "assets/"
+ * directory in the webserver configuration, to reduce the risk of exploits.
+ * See http://doc.silverstripe.org/secure-development#filesystem
+ * 
  * @package sapphire
  * @subpackage filesystem
  */
@@ -44,8 +48,7 @@ class File extends DataObject {
 	);
 	
 	/**
-	 * @see Upload->allowedExtensions
-	 * @var array
+	 * @var array List of allowed file extensions, enforced through {@link validate()}.
 	 */
 	public static $allowed_extensions = array(
 		'','html','htm','xhtml','js','css',
@@ -59,8 +62,8 @@ class File extends DataObject {
 	);
 	
 	/**
-	 * If this is true, then restrictions set in $allowed_max_file_size and
-	 * $allowed_extensions will be applied to users with admin privileges as
+	 * @var If this is true, then restrictions set in {@link $allowed_max_file_size} and
+	 * {@link $allowed_extensions} will be applied to users with admin privileges as
 	 * well.
 	 */
 	public static $apply_restrictions_to_admin = true;

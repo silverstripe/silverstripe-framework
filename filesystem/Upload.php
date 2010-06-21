@@ -5,6 +5,15 @@
  * and either creates a new or uses an existing File-object
  * for syncing with the database.
  * 
+ * <b>Validation</b>
+ * 
+ * By default, a user can upload files without extension limitations,
+ * which can be a security risk if the webserver is not properly secured.
+ * Use {@link setAllowedExtensions()} to limit this list,
+ * and ensure the "assets/" directory does not execute scripts
+ * (see http://doc.silverstripe.org/secure-development#filesystem).
+ * {@link File::$allowed_extensions} provides a good start for a list of "safe" extensions.
+ * 
  * @package sapphire
  * @subpackage filesystem
  * 
@@ -409,7 +418,13 @@ class Upload_Validator {
 	}
 	
 	/**
-	 * @param array $rules
+	 * Limit allowed file extensions. Empty by default, allowing all extensions.
+	 * To allow files without an extension, use an empty string.
+	 * See {@link File::$allowed_extensions} to get a good standard set of
+	 * extensions that are typically not harmful in a webserver context.
+	 * See {@link setAllowedMaxFileSize()} to limit file size by extension.
+	 * 
+	 * @param array $rules List of extensions
 	 */
 	public function setAllowedExtensions($rules) {
 		if(!is_array($rules)) return false;
@@ -423,7 +438,7 @@ class Upload_Validator {
 	/**
 	 * Determines if the bytesize of an uploaded
 	 * file is valid - can be defined on an
-	 * extension-by-extension basis in {$allowedMaxFileSize}
+	 * extension-by-extension basis in {@link $allowedMaxFileSize}
 	 *
 	 * @return boolean
 	 */
