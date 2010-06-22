@@ -486,6 +486,7 @@ class Security extends Controller {
 				"<p>" . 
 				sprintf(_t('Security.PASSWORDSENTTEXT', "Thank you! A reset link has been sent to  '%s', provided an account exists for this email address."), $email) .
 				"</p>",
+			'Email' => $email
 		));
 		
 		//Controller::$currentController = $controller;
