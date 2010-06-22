@@ -53,6 +53,21 @@ class TestRunner extends Controller {
 	);
 	
 	/**
+	 * @var Array Blacklist certain directories for the coverage report.
+	 * Filepaths are relative to the webroot, without leading slash.
+	 * 
+	 * @see http://www.phpunit.de/manual/current/en/appendixes.configuration.html#appendixes.configuration.blacklist-whitelist
+	 */
+	static $coverage_filter_dirs = array(
+		'cms/thirdparty',
+		'cms/tests',
+		'cms/lang',
+		'sapphire/thirdparty',
+		'sapphire/tests',
+		'sapphire/lang',
+	);
+	
+	/**
 	 * Override the default reporter with a custom configured subclass.
 	 *
 	 * @param string $reporter
@@ -264,6 +279,10 @@ class TestRunner extends Controller {
 		$results->addListener($reporter);
 
 		if($coverage === true) {
+			foreach(self::$coverage_filter_dirs as $dir) {
+				PHPUnit_Util_Filter::addDirectoryToFilter(BASE_PATH . '/' . $dir);
+			}
+			
 			$results->collectCodeCoverageInformation(true);
 			$suite->run($results);
 
