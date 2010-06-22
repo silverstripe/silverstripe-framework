@@ -317,7 +317,14 @@ class Debug {
 		if(!$friendlyErrorMessage) $friendlyErrorMessage = self::$friendly_error_header;
 		if(!$friendlyErrorDetail) $friendlyErrorDetail = self::$friendly_error_detail;
 
-		if(!headers_sent()) header($_SERVER['SERVER_PROTOCOL'] . " $statusCode $friendlyErrorMessage");
+		if(!headers_sent()) {
+			header(sprintf('%s %d %s',
+				$_SERVER['SERVER_PROTOCOL'],
+				$statusCode,
+				// Ensure the error message complies with the HTTP 1.1 spec
+				strip_tags(str_replace(array("\n", "\r"), '', $friendlyErrorMessage))
+			));
+		}
 
 		if(Director::is_ajax()) {
 			echo $friendlyErrorMessage;
