@@ -1,6 +1,9 @@
 <?php
 /**
  * Autocompleting text field, using script.aculo.us
+ * 
+ * @deprecated 2.4 Use third-party alternatives like http://code.google.com/p/ss-module-formfields/ or http://silverstripe.org/tag-field-module/
+ * 
  * @package forms
  * @subpackage fields-formattedinput
  */
