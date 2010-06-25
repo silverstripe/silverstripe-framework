@@ -189,5 +189,11 @@ class DropdownField extends FormField {
 		if($this->extraClass) $ret .= " $this->extraClass";
 		return $ret;
 	}
+	
+	/**
+	 * Set form being disabled
+	 */
+	function setDisabled($disabled = true) {
+		$this->disabled = $disabled;
+	}
 }
-?>
