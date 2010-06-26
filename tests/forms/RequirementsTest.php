@@ -63,6 +63,24 @@ class RequirementsTest extends SapphireTest {
 			)
 		);
 	}
+	
+	protected function setupCombinedNonrequiredRequirements($backend) {
+			$backend->clear();
+			$backend->setCombinedFilesFolder('assets');
+	
+			// clearing all previously generated requirements (just in case)
+			$backend->clear_combined_files();
+			$backend->delete_combined_files('RequirementsTest_bc.js');
+	
+			// require files as combined includes
+			$backend->combine_files(
+				'RequirementsTest_bc.js',
+				array(
+					SAPPHIRE_DIR . '/tests/forms/RequirementsTest_b.js',
+					SAPPHIRE_DIR . '/tests/forms/RequirementsTest_c.js'
+				)
+			);
+		}
 
 	function testCombinedJavascript() {
 		$backend = new Requirements_Backend;
@@ -91,6 +109,33 @@ class RequirementsTest extends SapphireTest {
 		
 		/* NORMAL REQUIREMENTS ARE STILL INCLUDED */
 		$this->assertTrue((bool)preg_match('/src=".*\/RequirementsTest_a\.js/', $html), 'normal requirements are still included');
+
+		$backend->delete_combined_files('RequirementsTest_bc.js');
+		
+		// Then do it again, this time not requiring the files beforehand
+		$backend = new Requirements_Backend;
+		$backend->set_combined_files_enabled(true);
+		$backend->setCombinedFilesFolder('assets');
+
+		$this->setupCombinedNonrequiredRequirements($backend);
+		
+		$combinedFilePath = Director::baseFolder() . '/assets/' . 'RequirementsTest_bc.js';
+
+		$html = $backend->includeInHTML(false, self::$html_template);
+
+		/* COMBINED JAVASCRIPT FILE IS INCLUDED IN HTML HEADER */
+		$this->assertTrue((bool)preg_match('/src=".*\/RequirementsTest_bc\.js/', $html), 'combined javascript file is included in html header');
+		
+		/* COMBINED JAVASCRIPT FILE EXISTS */
+		$this->assertTrue(file_exists($combinedFilePath), 'combined javascript file exists');
+		
+		/* COMBINED JAVASCRIPT HAS CORRECT CONTENT */
+		$this->assertTrue((strpos(file_get_contents($combinedFilePath), "alert('b')") !== false), 'combined javascript has correct content');
+		$this->assertTrue((strpos(file_get_contents($combinedFilePath), "alert('c')") !== false), 'combined javascript has correct content');
+		
+		/* COMBINED FILES ARE NOT INCLUDED TWICE */
+		$this->assertFalse((bool)preg_match('/src=".*\/RequirementsTest_b\.js/', $html), 'combined files are not included twice');
+		$this->assertFalse((bool)preg_match('/src=".*\/RequirementsTest_c\.js/', $html), 'combined files are not included twice');
 
 		$backend->delete_combined_files('RequirementsTest_bc.js');
 	}
