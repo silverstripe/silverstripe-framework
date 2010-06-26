@@ -373,10 +373,8 @@ class Director {
 			}
 		}
 
-		$s = (isset($_SERVER['SSL']) || (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off')) ? 's' : '';
-		
 		if(isset($_SERVER['HTTP_HOST'])) {
-			return "http$s://" . $_SERVER['HTTP_HOST'];
+			return Director::protocol() . $_SERVER['HTTP_HOST'];
 		} else {
 			global $_FILE_TO_URL_MAPPING;
 			if(Director::is_cli() && isset($_FILE_TO_URL_MAPPING)) $errorSuggestion = '  You probably want to define '.
@@ -391,6 +389,14 @@ class Director {
 		}
 	}
 
+	/**
+	 * Return the current protocol that the site is running under 
+	 *
+	 * @return String
+	 */
+	static function protocol() {
+		return (isset($_SERVER['SSL']) || (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off')) ? 'https://' : 'http://';
+	}
 
 	/**
 	 * Redirect to another page.
@@ -593,9 +599,8 @@ class Director {
 		$login = "";
 		
 	 	if(isset($_SERVER['PHP_AUTH_USER'])) $login = "$_SERVER[PHP_AUTH_USER]:$_SERVER[PHP_AUTH_PW]@";
-	 	if(isset($_SERVER['SSL']) && $_SERVER['SSL'] != 'Off') $s = "s";
-		
-	 	return "http$s://" . $login .  $_SERVER['HTTP_HOST'] . Director::baseURL();
+
+	 	return Director::protocol() . $login .  $_SERVER['HTTP_HOST'] . Director::baseURL();
 	 }
 
 	/**
@@ -607,7 +612,7 @@ class Director {
 	 * </code>
 	 */
 	static function forceSSL() {
-		if((!isset($_SERVER['HTTPS']) || $_SERVER['HTTPS'] == 'off') && !Director::isDev() && !Director::is_cli()) {
+		if((Director::protocol() != "https://") && !Director::isDev() && !Director::is_cli()) {
 			$destURL = str_replace('http:', 'https:', Director::absoluteURL($_SERVER['REQUEST_URI']));
 
 			header("Location: $destURL", true, 301);
@@ -620,11 +625,7 @@ class Director {
 	 */
 	static function forceWWW() {
 		if(!Director::isDev() && !Director::isTest() && strpos($_SERVER['HTTP_HOST'], 'www') !== 0) {
-			if(isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off') {
-				$destURL = str_replace('https://', 'https://www.', Director::absoluteURL($_SERVER['REQUEST_URI']));
-			} else {
-				$destURL = str_replace('http://', 'http://www.', Director::absoluteURL($_SERVER['REQUEST_URI']));
-			}
+			str_replace(Director::protocol(), Director::protocol() . 'www.', Director::absoluteURL($_SERVER['REQUEST_URI']));
 
 			header("Location: $destURL", true, 301);
 			die("<h1>Your browser is not accepting header redirects</h1><p>Please <a href=\"$destURL\">click here</a>");
