@@ -452,10 +452,25 @@ class SS_HTTPRequest implements ArrayAccess {
 	/**
 	 * Shift one or more parts off the beginning of the URL.
 	 * If you specify shifting more than 1 item off, then the items will be returned as an array
+	 *
+	 * @param int $count Shift Count
+	 *
+	 * @return String|Array
 	 */
 	function shift($count = 1) {
+		$return = array();
+		
 		if($count == 1) return array_shift($this->dirParts);
-		else for($i=0;$i<$count;$i++) $return[] = array_shift($this->dirParts);
+		
+		for($i=0;$i<$count;$i++) {
+			$value = array_shift($this->dirParts);
+			
+			if(!$value) break;
+			
+			$return[] = $value;
+		}
+		
+		return $return;
 	}
 
 	/**
