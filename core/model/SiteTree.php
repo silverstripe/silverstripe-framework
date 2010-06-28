@@ -1225,7 +1225,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 				: $this->Title) . "</title>\n";
 		}
 
-		$tags .= "<meta name=\"generator\" content=\"SilverStripe - http://www.silverstripe.com\" />\n";
+		$tags .= "<meta name=\"generator\" content=\"SilverStripe - http://silverstripe.org\" />\n";
 
 		$charset = ContentNegotiator::get_encoding();
 		$tags .= "<meta http-equiv=\"Content-type\" content=\"text/html; charset=$charset\" />\n";
