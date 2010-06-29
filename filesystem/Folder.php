@@ -30,7 +30,7 @@ class Folder extends File {
 	 */
 	static function findOrMake($folderPath) {
 		// Create assets directory, if it is missing
-		if(!file_exists(ASSETS_PATH)) mkdir(ASSETS_PATH,Filesystem::$folder_create_mask);
+		if(!file_exists(ASSETS_PATH)) Filesystem::makeFolder(ASSETS_PATH);
 
 		$folderPath = trim(Director::makeRelative($folderPath));
 		// replace leading and trailing slashes
@@ -51,7 +51,7 @@ class Folder extends File {
 				$item->write();
 			}
 			if(!file_exists($item->getFullPath())) {
-				mkdir($item->getFullPath(),Filesystem::$folder_create_mask);
+				Filesystem::makeFolder($item->getFullPath());
 			}
 			$parentID = $item->ID;
 		}
