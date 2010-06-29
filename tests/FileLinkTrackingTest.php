@@ -9,7 +9,10 @@ class FileLinkTrackingTest extends SapphireTest {
 	function setUp() {
 		parent::setUp();
 		$this->logInWithPermission('ADMIN');
-		touch(Director::baseFolder() . '/assets/testscript-test-file.pdf');
+		
+		$fh = fopen(Director::baseFolder() . '/assets/testscript-test-file.pdf', "w");
+		fwrite($fh, str_repeat('x',1000000));
+		fclose($fh);
 	}
 	function tearDown() {
 		parent::tearDown();
