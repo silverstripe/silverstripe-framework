@@ -598,12 +598,19 @@ class File extends DataObject {
 	/**
 	 * Gets the extension of a filepath or filename,
 	 * by stripping away everything before the last "dot".
+	 * Caution: Only returns the last extension in "double-barrelled"
+	 * extensions (e.g. "gz" for "tar.gz").
+	 * 
+	 * Examples:
+	 * - "myfile" returns ""
+	 * - "myfile.txt" returns "txt"
+	 * - "myfile.tar.gz" returns "gz"
 	 *
 	 * @param string $filename
 	 * @return string
 	 */
 	public static function get_file_extension($filename) {
-		return strtolower(substr($filename,strrpos($filename,'.')+1));
+		return pathinfo($filename, PATHINFO_EXTENSION);
 	}
 	
 	/**
@@ -737,8 +744,9 @@ class File extends DataObject {
 	
 	function validate() {
 		if(File::$apply_restrictions_to_admin || !Permission::check('ADMIN')) {
-			$extension = strtolower(pathinfo($this->Name, PATHINFO_EXTENSION));
-			
+			// Extension validation
+			// TODO Merge this with Upload_Validator
+			$extension = $this->getExtension();
 			if($extension && !in_array($extension, self::$allowed_extensions)) {
 				$exts =  self::$allowed_extensions;
 				sort($exts);
