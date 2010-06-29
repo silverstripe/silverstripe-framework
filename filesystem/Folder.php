@@ -25,7 +25,8 @@ class Folder extends File {
 	 * Find the given folder or create it both as {@link Folder} database records
 	 * and on the filesystem. If necessary, creates parent folders as well.
 	 * 
-	 * @param $folderPath string Absolute or relative path to the file
+	 * @param $folderPath string Absolute or relative path to the file.
+	 *  If path is relative, its interpreted relative to the "assets/" directory.
 	 * @return Folder
 	 */
 	static function findOrMake($folderPath) {
@@ -38,10 +39,9 @@ class Folder extends File {
 		$parts = explode("/",$folderPath);
 
 		$parentID = 0;
-
+		$item = null;
 		foreach($parts as $part) {
 			if(!$part) continue; // happens for paths with a trailing slash
-			
 			$item = DataObject::get_one("Folder", "\"Name\" = '$part' AND \"ParentID\" = $parentID");
 			if(!$item) {
 				$item = new Folder();
@@ -55,6 +55,7 @@ class Folder extends File {
 			}
 			$parentID = $item->ID;
 		}
+
 		return $item;
 	}
 	

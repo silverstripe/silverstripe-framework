@@ -43,10 +43,16 @@ class FolderTest extends SapphireTest {
 		$this->assertNotNull($parentFolder);
 		$this->assertEquals($parentFolder->ID, $folder->ParentID);
 		
-		$path = '/FolderTest/testFindOrMake';
+		$path = '/FolderTest/testFindOrMake'; // no trailing slash
 		$folder = Folder::findOrMake($path);
 		$this->assertEquals(ASSETS_DIR . $path . '/',$folder->getRelativePath(),
 			'Path information is correctly saved to database (without trailing slash)'
+		);
+		
+		$path = '/assets/'; // relative to "assets/" folder, should produce "assets/assets/"
+		$folder = Folder::findOrMake($path);
+		$this->assertEquals(ASSETS_DIR . $path,$folder->getRelativePath(),
+			'A folder named "assets/" within "assets/" is allowed'
 		);
 	}
 	
