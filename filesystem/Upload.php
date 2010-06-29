@@ -507,7 +507,7 @@ class Upload_Validator {
 					PR_MEDIUM,
 					'Argument 1: Comma-separated list of valid extensions'
 				),
-				implode(',', $this->allowedExtensions)
+				wordwrap(implode(', ', $this->allowedExtensions))
 			);
 			return false;
 		}
