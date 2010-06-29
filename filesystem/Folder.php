@@ -7,6 +7,10 @@
  * a folder object also updates all associated children
  * (both {@link File} and {@link Folder} records).
  * 
+ * Deleting a folder will also remove the folder from the filesystem,
+ * including any subfolders and contained files. Use {@link deleteDatabaseOnly()}
+ * to avoid touching the filesystem.
+ * 
  * See {@link File} documentation for more details about the
  * relationship between the database and filesystem in the sapphire file APIs.
  * 
@@ -260,8 +264,7 @@ class Folder extends File {
 	function getRelativePath() {
 		return parent::getRelativePath() . "/";
 	}
-	
-	
+		
 	function onBeforeDelete() {
 		if($this->ID && ($children = $this->AllChildren())) {
 			foreach($children as $child) {
@@ -280,6 +283,7 @@ class Folder extends File {
 			if( !$files || ( count( $files ) == 1 && preg_match( '/\/_resampled$/', $files[0] ) ) )
 				Filesystem::removeFolder( $this->getFullPath() );
 		}
+		
 		parent::onBeforeDelete();
 	}
 	
@@ -328,33 +332,16 @@ class Folder extends File {
 	}
 	
 	/**
-	 * Overload autosetFilename() to call autosetFilename() on all the children, too
+	 * Overloaded to call recursively on all contained {@link File} records.
 	 */
-	public function autosetFilename() {
-		parent::autosetFilename();
+	public function updateFilesystem() {
+		parent::updateFilesystem();
 
+		// Note: Folders will have been renamed on the filesystem already at this point,
+		// File->updateFilesystem() needs to take this into account.
 		if($this->ID && ($children = $this->AllChildren())) {
-			$this->write();
-
 			foreach($children as $child) {
-				$child->autosetFilename();
-				$child->write();
-			}
-		}
-	}
-
-	/**
-	 * Overload resetFilename() to call resetFilename() on all the children, too.
-	 * Pass renamePhysicalFile = false, since the folder renaming will have taken care of this
-	 */
-	protected function resetFilename($renamePhysicalFile = true) {
-		parent::resetFilename($renamePhysicalFile);
-
-		if($this->ID && ($children = $this->AllChildren())) {
-			$this->write();
-
-			foreach($children as $child) {
-				$child->resetFilename(false);
+				$child->updateFilesystem();
 				$child->write();
 			}
 		}

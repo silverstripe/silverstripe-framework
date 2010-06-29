@@ -180,7 +180,9 @@ class File extends DataObject {
 	protected function onBeforeDelete() {
 		parent::onBeforeDelete();
 
-		$this->autosetFilename();
+		// ensure that the record is synced with the filesystem before deleting
+		$this->updateFilesystem();
+
 		if($this->Filename && $this->Name && file_exists($this->getFullPath()) && !is_dir($this->getFullPath())) {
 			unlink($this->getFullPath());
 		}
@@ -334,13 +336,76 @@ class File extends DataObject {
 	/**
 	 * Event handler called before deleting from the database.
 	 * You can overload this to clean up or otherwise process data before delete this
-	 * record.  Don't forget to call parent::onBeforeWrite(), though!
+	 * record. 
 	 */
 	protected function onBeforeWrite() {
 		parent::onBeforeWrite();
 
 		// Set default name
-		if(!$this->Name) $this->Name = "new-" . strtolower($this->class);
+		if(!$this->getField('Name')) $this->Name = "new-" . strtolower($this->class);
+		
+		// Set name on filesystem. If the current object is a "Folder", will also update references
+		// to subfolders and contained file records (both in database and filesystem)
+		$this->updateFilesystem();
+	}
+	
+	/**
+	 * Moving the file if appropriate according to updated database content.
+	 * Throws an Exception if the new file already exists.
+	 * 
+	 * Caution: This method should just be called during a {@link write()} invocation,
+	 * as it relies on {@link DataObject->isChanged()}, which is reset after a {@link write()} call.
+	 * Might be called as {@link File->updateFilesystem()} from within {@link Folder->updateFilesystem()},
+	 * so it has to handle both files and folders.
+	 * 
+	 * Assumes that the "Filename" property was previously updated, either directly or indirectly.
+	 * (it might have been influenced by {@link setName()} or {@link setParentID()} before).
+	 */
+	public function updateFilesystem() {
+		// Regenerate "Filename", just to be sure
+		$this->setField('Filename', $this->getRelativePath());
+		
+		// If certain elements are changed, update the filesystem reference
+		if(!$this->isChanged('Filename')) return false;
+		
+		$changedFields = $this->getChangedFields();
+		$pathBefore = $changedFields['Filename']['before'];
+		$pathAfter = $changedFields['Filename']['after'];
+		
+		// If the file or folder didn't exist before, don't rename - its created
+		if(!$pathBefore) return;
+		
+		$pathBeforeAbs = Director::getAbsFile($pathBefore);
+		$pathAfterAbs = Director::getAbsFile($pathAfter);
+		
+		// TODO Fix Filetest->testCreateWithFilenameWithSubfolder() to enable this
+		// // Create parent folders recursively in database and filesystem
+		// if(!is_a($this, 'Folder')) {
+		// 	$folder = Folder::findOrMake(dirname($pathAfterAbs));
+		// 	if($folder) $this->ParentID = $folder->ID;
+		// }
+		
+		// Check that original file or folder exists, and rename on filesystem if required.
+		// The folder of the path might've already been renamed by Folder->updateFilesystem()
+		// before any filesystem update on contained file or subfolder records is triggered.
+		if(!file_exists($pathAfterAbs)) {
+			if(!is_a($this, 'Folder')) {
+				// Only throw a fatal error if *both* before and after paths don't exist.
+				if(!file_exists($pathBeforeAbs)) throw new Exception("Cannot move $pathBefore to $pathAfter - $pathBefore doesn't exist");
+				
+				// Check that target directory (not the file itself) exists.
+				// Only check if we're dealing with a file, otherwise the folder will need to be created
+				if(!file_exists(dirname($pathAfterAbs))) throw new Exception("Cannot move $pathBefore to $pathAfter - Directory " . dirname($pathAfter) . " doesn't exist");
+			} 
+			
+			// Rename file or folder
+			$success = rename($pathBeforeAbs, $pathAfterAbs);
+			if(!$success) throw new Exception("Cannot move $pathBeforeAbs to $pathAfterAbs");
+		}
+		
+		
+		// Update any database references
+		$this->updateLinks($pathBefore, $pathAfter);
 	}
 
 	/**
@@ -362,10 +427,12 @@ class File extends DataObject {
 
 	/**
 	 * Setter function for Name. Automatically sets a default title,
-	 * and removes characters that migh be invalid on the filesystem.
+	 * and removes characters that might be invalid on the filesystem.
 	 * Also adds a suffix to the name if the filename already exists
 	 * on the filesystem, and is associated to a different {@link File} database record
 	 * in the same folder. This means "myfile.jpg" might become "myfile-1.jpg".
+	 * 
+	 * Does not change the filesystem itself, please use {@link write()} for this.
 	 * 
 	 * @param String $name
 	 */
@@ -404,59 +471,11 @@ class File extends DataObject {
 		// Update actual field value
 		$this->setField('Name', $name);
 		
-		
-		if($oldName && $oldName != $this->Name) {
-			$this->resetFilename();
-		} else {
-			$this->autosetFilename();
-		}
-		
+		// Ensure that the filename is updated as well (only in-memory)
+		// Important: Circumvent the getter to avoid infinite loops
+		$this->setField('Filename', $this->getRelativePath());
 		
 		return $this->getField('Name');
-	}
-
-	/**
-	 * Change the "Filename" property based on the current "Name" property, moving the file if appropriate.
-	 * Throws an Exception if the new file already exists.
-	 * 
-	 * Caution: This method should just be called during a {@link write()} invocation,
-	 * otherwise the database and filesystem might become out of sync.
-	 * 
-	 * @param Boolean $renamePhysicalFile FALSE to avoiding renaming the file on the filesystem.
-	 *  Used when calling {@link resetFilename()} on the children of a folder.
-	 */
-	protected function resetFilename($renamePhysicalFile = true) {
-		$oldFilename = $this->getField('Filename'); // call without getter to get old value
-		$newFilename = $this->getRelativePath(); // calculated from $this->Name
-
-		if($this->Name && $this->Filename && file_exists(Director::getAbsFile($oldFilename)) && strpos($oldFilename, '//') === false) {
-			if($renamePhysicalFile) {
-				$from = Director::getAbsFile($oldFilename);
-				$to = Director::getAbsFile($newFilename);
-
-				// Error checking
-				if(!file_exists($from)) throw new Exception("Cannot move $oldFilename to $newFilename - $oldFilename doesn't exist");
-				if(!file_exists(dirname($to))) throw new Exception("Cannot move $oldFilename to $newFilename - " . dirname($newFilename) . " doesn't exist");
-								
-				// Rename file
-				$success = rename($from, $to);
-				if(!$success) throw new Exception("Cannot move $oldFilename to $newFilename");
-			}
-			
-			$this->updateLinks($oldFilename, $newFilename);
-		} else {
-			// If the old file doesn't exist, maybe it's already been renamed.
-			if(file_exists(Director::getAbsFile($newFilename))) $this->updateLinks($oldFilename, $newFilename);
-		}
-
-		$this->setField('Filename', $newFilename);
-	}
-
-	/**
-	 * Set the Filename field without manipulating the filesystem.
-	 */
-	protected function autosetFilename() {
-		$this->setField('Filename', $this->getRelativePath());
 	}
 
 	/**
@@ -480,11 +499,14 @@ class File extends DataObject {
 		if(class_exists('Subsite')) Subsite::disable_subsite_filter(false);
 	}
 
+	/**
+	 * Does not change the filesystem itself, please use {@link write()} for this.
+	 */
 	function setParentID($parentID) {
 		$this->setField('ParentID', $parentID);
 
-		if($this->Name) $this->resetFilename();
-		else $this->autosetFilename();
+		// Don't change on the filesystem, we'll handle that in onBeforeWrite()
+		$this->setField('Filename', $this->getRelativePath()); 
 
 		return $this->getField('ParentID');
 	}
@@ -538,9 +560,9 @@ class File extends DataObject {
 
 	/**
 	 * Returns path relative to webroot.
+	 * Serves as a "fallback" method to create the "Filename" property if it isn't set.
 	 * If no {@link Folder} is set ("ParentID" property),
 	 * defaults to a filename relative to the ASSETS_DIR (usually "assets/").
-	 * Use {@link getFullPath()} to
 	 * 
 	 * @return String
 	 */
@@ -564,6 +586,7 @@ class File extends DataObject {
 	}
 
 	function getFilename() {
+		// Default behaviour: Return field if its set
 		if($this->getField('Filename')) {
 			return $this->getField('Filename');
 		} else {
@@ -571,6 +594,9 @@ class File extends DataObject {
 		}
 	}
 
+	/**
+	 * Does not change the filesystem itself, please use {@link write()} for this.
+	 */
 	function setFilename($val) {
 		$this->setField('Filename', $val);
 		
@@ -759,6 +785,10 @@ class File extends DataObject {
 				return new ValidationResult(false, $message);
 			}
 		}
+		
+		// We aren't validating for an existing "Filename" on the filesystem.
+		// A record should still be saveable even if the underlying record has been removed.
+		
 		return new ValidationResult(true);
 	}
 

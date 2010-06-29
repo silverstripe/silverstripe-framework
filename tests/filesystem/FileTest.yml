@@ -1,3 +1,13 @@
+Folder:
+   subfolder:
+      Name: FileTest-subfolder
+   folder1:
+      Name: FileTest-folder1
+   folder2:
+      Name: FileTest-folder2
+   folder1-subfolder1:
+      Name: FileTest-folder1-subfolder1
+      ParentID: =>Folder.folder1
 File:
    asdf:
       Filename: assets/FileTest.txt
@@ -8,7 +18,13 @@ File:
    setfromname:
       Name: FileTest.png
       ParentID: 0
-
-Folder:
-   subfolder:
-      Name: subfolder
+   subfolderfile:
+      Filename: assets/FileTest-subfolder/FileTestSubfolder.txt
+      ParentID: =>Folder.subfolder
+   subfolderfile-setfromname:
+      Name: FileTestSubfolder2.txt
+      ParentID: =>Folder.subfolder
+   file1-folder1:
+      Filename: assets/FileTest-folder1/File1.txt
+      Name: File1.txt
+      ParentID: =>Folder.folder1

@@ -34,6 +34,7 @@ class FileLinkTrackingTest extends SapphireTest {
 		
 		$file = $this->objFromFixture('File', 'file1');
 		$file->Name = 'renamed-test-file.pdf';
+		$file->write();
 		
 		$this->assertContains('<img src="assets/renamed-test-file.pdf"',
 			DB::query("SELECT \"Content\" FROM \"SiteTree\" WHERE \"ID\" = $page->ID")->value());
@@ -55,6 +56,7 @@ class FileLinkTrackingTest extends SapphireTest {
 		// Rename the file
 		$file = $this->objFromFixture('File', 'file1');
 		$file->Name = 'renamed-test-file.pdf';
+		$file->write();
 		
 		// Verify that the draft and publish virtual pages both have the corrected link
 		$this->assertContains('<img src="assets/renamed-test-file.pdf"',
@@ -72,6 +74,7 @@ class FileLinkTrackingTest extends SapphireTest {
 		// Rename the file
 		$file = $this->objFromFixture('File', 'file1');
 		$file->Name = 'renamed-test-file.pdf';
+		$file->write();
 
 		// Caching hack
 		Versioned::prepopulate_versionnumber_cache('SiteTree', 'Stage', array($page->ID));
@@ -92,6 +95,9 @@ class FileLinkTrackingTest extends SapphireTest {
 		$file->Name = 'renamed-test-file.pdf';
 		$file->write();
 
+		// TODO Workaround for bug in DataObject->getChangedFields(), which returns stale data,
+		// and influences File->updateFilesystem()
+		$file = DataObject::get_by_id('File', $file->ID);
 		$file->Name = 'renamed-test-file-second-time.pdf';
 		$file->write();
 		

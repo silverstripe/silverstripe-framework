@@ -8,13 +8,29 @@
  */
 class FolderTest extends SapphireTest {
 	
-	function tearDown() {
-		$testPath = ASSETS_PATH . '/FolderTest';
-		if(file_exists($testPath)) Filesystem::removeFolder($testPath);
+	static $fixture_file = 'sapphire/tests/filesystem/FileTest.yml'; 
+	
+	function testCreateFromNameAndParentIDSetsFilename() {
+		$folder1 = $this->objFromFixture('Folder', 'folder1');
+		$newFolder = new Folder();
+		$newFolder->Name = 'CreateFromNameAndParentID';
+		$newFolder->ParentID = $folder1->ID;
+		$newFolder->write();
 		
-		parent::tearDown();
+		$this->assertEquals($folder1->Filename . 'CreateFromNameAndParentID/', $newFolder->Filename);
 	}
 	
+	function testAllChildrenIncludesFolders() {
+		$folder1 = $this->objFromFixture('Folder', 'folder1');
+		$subfolder1 = $this->objFromFixture('Folder', 'folder1-subfolder1');
+		$file1 = $this->objFromFixture('File', 'file1-folder1');
+		
+		$children = $folder1->allChildren();
+		$this->assertEquals(2, $children->Count());
+		$this->assertContains($subfolder1->ID, $children->column('ID'));
+		$this->assertContains($file1->ID, $children->column('ID'));
+	}
+		
 	function testFindOrMake() {
 		$path = '/FolderTest/testFindOrMake/';
 		$folder = Folder::findOrMake($path);
@@ -33,4 +49,201 @@ class FolderTest extends SapphireTest {
 			'Path information is correctly saved to database (without trailing slash)'
 		);
 	}
+	
+	/**
+	 * @see FileTest->testSetNameChangesFilesystemOnWrite()
+	 */
+	function testSetNameChangesFilesystemOnWrite() {
+		$folder1 = $this->objFromFixture('Folder', 'folder1');
+		$subfolder1 = $this->objFromFixture('Folder', 'folder1-subfolder1');
+		$file1 = $this->objFromFixture('File', 'file1-folder1');
+		$oldPathFolder1 = $folder1->getFullPath();
+		$oldPathSubfolder1 = $subfolder1->getFullPath();
+		$oldPathFile1 = $file1->getFullPath();
+	
+		// Before write()
+		$folder1->Name = 'FileTest-folder1-renamed';
+		$this->assertFileExists($oldPathFolder1, 'Old path is still present');
+		$this->assertFileNotExists($folder1->getFullPath(), 'New path is updated in memory, not written before write() is called');
+		$this->assertFileExists($oldPathFile1, 'Old file is still present');
+		// TODO setters currently can't update in-memory
+		// $this->assertFileNotExists($file1->getFullPath(), 'New path on contained files is updated in memory, not written before write() is called');
+		// $this->assertFileNotExists($subfolder1->getFullPath(), 'New path on subfolders is updated in memory, not written before write() is called');
+	
+		$folder1->write();
+		
+		// After write()
+		
+		// Reload state
+		clearstatcache();
+		DataObject::flush_and_destroy_cache();
+		$folder1 = DataObject::get_by_id('Folder', $folder1->ID);
+		$file1 = DataObject::get_by_id('File', $file1->ID);
+		$subfolder1 = DataObject::get_by_id('Folder', $subfolder1->ID);
+		
+		$this->assertFileNotExists($oldPathFolder1, 'Old path is removed after write()');
+		$this->assertFileExists($folder1->getFullPath(), 'New path is created after write()');
+		$this->assertFileNotExists($oldPathFile1, 'Old file is removed after write()');
+		$this->assertFileExists($file1->getFullPath(), 'New file path is created after write()');
+		$this->assertFileNotExists($oldPathSubfolder1, 'Subfolder is removed after write()');
+		$this->assertFileExists($subfolder1->getFullPath(), 'New subfolder path is created after write()');
+		
+		// Clean up after ourselves - tearDown() doesn't like renamed fixtures
+		$folder1->delete(); // implicitly deletes subfolder as well
+	}
+	
+	/**
+	 * @see FileTest->testSetParentIDChangesFilesystemOnWrite()
+	 */
+	function testSetParentIDChangesFilesystemOnWrite() {
+		$folder1 = $this->objFromFixture('Folder', 'folder1');
+		$folder2 = $this->objFromFixture('Folder', 'folder2');
+		$oldPathFolder1 = $folder1->getFullPath();
+		
+		// set ParentID
+		$folder1->ParentID = $folder2->ID;
+	
+		// Before write()
+		$this->assertFileExists($oldPathFolder1, 'Old path is still present');
+		$this->assertFileNotExists($folder1->getFullPath(), 'New path is updated in memory, not written before write() is called');
+	
+		$folder1->write();
+		
+		// After write()
+		clearstatcache();
+		$this->assertFileNotExists($oldPathFolder1, 'Old path is removed after write()');
+		$this->assertFileExists($folder1->getFullPath(), 'New path is created after write()');
+	}
+	
+	/**
+	 * @see FileTest->testLinkAndRelativeLink()
+	 */
+	function testLinkAndRelativeLink() {
+		$folder = $this->objFromFixture('Folder', 'folder1');
+		$this->assertEquals(ASSETS_DIR . '/FileTest-folder1/', $folder->RelativeLink());
+		$this->assertEquals(Director::baseURL() . ASSETS_DIR . '/FileTest-folder1/', $folder->Link());
+	}
+	
+	/**
+	 * @see FileTest->testGetRelativePath()
+	 */
+	function testGetRelativePath() {
+		$rootfolder = $this->objFromFixture('Folder', 'folder1');
+		$this->assertEquals('assets/FileTest-folder1/', $rootfolder->getRelativePath(), 'Folder in assets/');
+	}
+	
+	/**
+	 * @see FileTest->testGetFullPath()
+	 */
+	function testGetFullPath() {
+		$rootfolder = $this->objFromFixture('Folder', 'folder1');
+		$this->assertEquals(ASSETS_PATH . '/FileTest-folder1/', $rootfolder->getFullPath(), 'File in assets/ folder');
+	}
+		
+	function testDeleteAlsoRemovesFilesystem() {
+		$path = '/FolderTest/DeleteAlsoRemovesFilesystemAndChildren'; 
+		$folder = Folder::findOrMake($path);
+		$this->assertFileExists(ASSETS_PATH . $path);
+		
+		$folder->delete();
+		
+		$this->assertFileNotExists(ASSETS_PATH . $path);
+	}
+	
+	function testDeleteAlsoRemovesSubfoldersInDatabaseAndFilesystem() {
+		$path = '/FolderTest/DeleteAlsoRemovesSubfoldersInDatabaseAndFilesystem'; 
+		$subfolderPath = $path . '/subfolder';
+		$folder = Folder::findOrMake($path);
+		$subfolder = Folder::findOrMake($subfolderPath);
+		$subfolderID = $subfolder->ID;
+		
+		$folder->delete();
+		
+		$this->assertFileNotExists(ASSETS_PATH . $path);
+		$this->assertFileNotExists(ASSETS_PATH . $subfolderPath, 'Subfolder removed from filesystem');
+		$this->assertFalse(DataObject::get_by_id('Folder', $subfolderID), 'Subfolder removed from database');
+	}
+	
+	function testDeleteAlsoRemovesContainedFilesInDatabaseAndFilesystem() {
+		$path = '/FolderTest/DeleteAlsoRemovesContainedFilesInDatabaseAndFilesystem'; 
+		$folder = Folder::findOrMake($path);
+		
+		$file = $this->objFromFixture('File', 'gif');
+		$file->ParentID = $folder->ID;
+		$file->write();
+		$fileID = $file->ID;
+		$fileAbsPath = $file->getFullPath();
+		$this->assertFileExists($fileAbsPath);
+		
+		$folder->delete();
+		
+		$this->assertFileNotExists($fileAbsPath, 'Contained files removed from filesystem');
+		$this->assertFalse(DataObject::get_by_id('File', $fileID), 'Contained files removed from database');
+		
+	}
+	
+	/**
+	 * @see FileTest->testDeleteDatabaseOnly()
+	 */
+	function testDeleteDatabaseOnly() {
+		$subfolder = $this->objFromFixture('Folder', 'subfolder');
+		$subfolderID = $subfolder->ID;
+		$subfolderFile = $this->objFromFixture('File', 'subfolderfile');
+		$subfolderFileID = $subfolderFile->ID;
+		
+		$subfolder->deleteDatabaseOnly();
+		
+		DataObject::flush_and_destroy_cache();
+		
+		$this->assertFileExists($subfolder->getFullPath());
+		$this->assertFalse(DataObject::get_by_id('Folder', $subfolderID));
+		
+		$this->assertFileExists($subfolderFile->getFullPath());
+		$this->assertFalse(DataObject::get_by_id('File', $subfolderFileID));
+	}
+		
+	function setUp() {
+		parent::setUp();
+		
+		if(!file_exists(ASSETS_PATH)) mkdir(ASSETS_PATH);
+
+		// Create a test folders for each of the fixture references
+		$folderIDs = $this->allFixtureIDs('Folder');
+		foreach($folderIDs as $folderID) {
+			$folder = DataObject::get_by_id('Folder', $folderID);
+			if(!file_exists(BASE_PATH."/$folder->Filename")) mkdir(BASE_PATH."/$folder->Filename");
+		}
+		
+		// Create a test files for each of the fixture references
+		$fileIDs = $this->allFixtureIDs('File');
+		foreach($fileIDs as $fileID) {
+			$file = DataObject::get_by_id('File', $fileID);
+			$fh = fopen(BASE_PATH."/$file->Filename", "w");
+			fwrite($fh, str_repeat('x',1000000));
+			fclose($fh);
+		}
+	} 
+	
+	function tearDown() {
+		$testPath = ASSETS_PATH . '/FolderTest';
+		if(file_exists($testPath)) Filesystem::removeFolder($testPath);
+		
+		/* Remove the test files that we've created */
+		$fileIDs = $this->allFixtureIDs('File');
+		foreach($fileIDs as $fileID) {
+			$file = DataObject::get_by_id('File', $fileID);
+			if($file && file_exists(BASE_PATH."/$file->Filename")) unlink(BASE_PATH."/$file->Filename");
+		}
+		
+		// Remove the test folders that we've crated
+		$folderIDs = $this->allFixtureIDs('Folder');
+		foreach($folderIDs as $folderID) {
+			$folder = DataObject::get_by_id('Folder', $folderID);
+			// Might have been removed during test
+			if($folder && file_exists(BASE_PATH."/$folder->Filename")) Filesystem::removeFolder(BASE_PATH."/$folder->Filename");
+		}
+		
+		parent::tearDown();
+	}
+	
 }
