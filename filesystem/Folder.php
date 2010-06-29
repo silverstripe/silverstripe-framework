@@ -1,6 +1,14 @@
 <?php
 /**
  * Represents a folder in the assets/ directory.
+ * The folder path is stored in the "Filename" property.
+ * 
+ * Updating the "Name" or "Filename" properties on
+ * a folder object also updates all associated children
+ * (both {@link File} and {@link Folder} records).
+ * 
+ * See {@link File} documentation for more details about the
+ * relationship between the database and filesystem in the sapphire file APIs.
  * 
  * @package sapphire
  * @subpackage filesystem
@@ -9,10 +17,12 @@ class Folder extends File {
 	
 	static $default_sort = "\"Sort\"";
 	
-	/*
-	 * Find the given folder or create it, recursively.
+	/**
+	 * Find the given folder or create it both as {@link Folder} database records
+	 * and on the filesystem. If necessary, creates parent folders as well.
 	 * 
 	 * @param $folderPath string Absolute or relative path to the file
+	 * @return Folder
 	 */
 	static function findOrMake($folderPath) {
 		// Create assets directory, if it is missing

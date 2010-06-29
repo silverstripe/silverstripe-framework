@@ -1,13 +1,62 @@
 <?php
 /**
- * This class handles the representation of a File within Sapphire
+ * This class handles the representation of a file on the filesystem within the framework.
+ * Most of the methods also handle the {@link Folder} subclass.
+ * 
  * Note: The files are stored in the assets/ directory, but sapphire
  * looks at the db object to gather information about a file such as URL
  * It then uses this for all processing functions (like image manipulation).
  * 
+ * <b>Security</b>
+ * 
  * Caution: It is recommended to disable any script execution in the "assets/"
  * directory in the webserver configuration, to reduce the risk of exploits.
  * See http://doc.silverstripe.org/secure-development#filesystem
+ * 
+ * <b>Properties</b>
+ * 
+ * - "Name": File name (including extension) or folder name.
+ *   Should be the same as the actual filesystem. 
+ * - "Title": Optional title of the file (for display purposes only).
+ *   Defaults to "Name".
+ * - "Filename": Path of the file or folder, relative to the webroot.
+ *   Usually starts with the "assets/" directory, and has no trailing slash.
+ *   Defaults to the "assets/" directory plus "Name" property if not set.
+ *   Setting the "Filename" property will override the "Name" property.
+ *   The value should be in sync with "ParentID".
+ * - "Content": Typically unused, but handy for a textual representation of
+ *   files, e.g. for fulltext indexing of PDF documents.
+ * - "ParentID": Points to a {@link Folder} record. Should be in sync with
+ *   "Filename". A ParentID=0 value points to the "assets/" folder, not the webroot.
+ * 
+ * <b>Synchronization</b>
+ * 
+ * Changes to a File database record can change the filesystem entry, 
+ * but not the other way around. If the filesystem path is renamed outside
+ * of SilverStripe, there's no way for the database to recover this linkage.
+ * New physical files on the filesystem can be "discovered" via {@link Filesystem::sync()},
+ * the equivalent {@link File} and {@link Folder} records are automatically 
+ * created by this method.
+ * 
+ * Certain property changes within the File API that can cause a "delayed" filesystem change:
+ * The change is enforced in {@link onBeforeWrite()} later on.
+ * - setParentID()
+ * - setFilename()
+ * - setName()
+ * It is recommended that you use {@link write()} directly after setting any of these properties,
+ * otherwise getters like {@link getFullPath()} and {@link getRelativePath()}
+ * will result paths that are inconsistent with the filesystem.
+ * 
+ * Caution: Calling {@link delete()} will also delete from the filesystem.
+ * Call {@link deleteDatabaseOnly()} if you want to avoid this.
+ * 
+ * <b>Creating Files and Folders</b>
+ * 
+ * Typically both files and folders should be created first on the filesystem,
+ * and then reflected in as database records. Folders can be created recursively
+ * from sapphire both in the database and filesystem through {@link Folder::findOrMake()}.
+ * Ensure that you always set a "Filename" property when writing to the database,
+ * leaving it out can lead to unexpected results.
  * 
  * @package sapphire
  * @subpackage filesystem
@@ -79,16 +128,18 @@ class File extends DataObject {
 	
 	/**
 	 * Find a File object by the given filename.
+	 * 
+	 * @param String $filename Matched against the "Name" property.
 	 * @return mixed null if not found, File object of found file
 	 */
 	static function find($filename) {
 		// Get the base file if $filename points to a resampled file
 		$filename = ereg_replace('_resampled/[^-]+-','',$filename);
 
+		// Split to folders and the actual filename, and traverse the structure.
 		$parts = explode("/", $filename);
 		$parentID = 0;
 		$item = null;
-
 		foreach($parts as $part) {
 			if($part == ASSETS_DIR && !$parentID) continue;
 			$SQL_part = Convert::raw2sql($part);
@@ -112,7 +163,11 @@ class File extends DataObject {
 		return $this->Title;
 	}
 	
-	// Used by AssetTableField
+	/**
+	 * @todo Unnecessary shortcut for AssetTableField, coupled with cms module.
+	 * 
+	 * @return Integer
+	 */
 	function BackLinkTrackingCount() {
 		return $this->BackLinkTracking()->Count();
 	}
@@ -120,7 +175,7 @@ class File extends DataObject {
 	/**
 	 * Event handler called before deleting from the database.
 	 * You can overload this to clean up or otherwise process data before delete this
-	 * record.  Don't forget to call parent::onBeforeDelete(), though!
+	 * record.  Don't forget to call {@link parent::onBeforeDelete()}, though!
 	 */
 	protected function onBeforeDelete() {
 		parent::onBeforeDelete();
@@ -131,6 +186,9 @@ class File extends DataObject {
 		}
 	}
 	
+	/**
+	 * Updates link tracking.
+	 */
 	protected function onAfterDelete() {
 		parent::onAfterDelete();
 
@@ -204,6 +262,14 @@ class File extends DataObject {
 		return $this->canEdit($member);
 	}
 	
+	/**
+	 * Returns a category based on the file extension.
+	 * This can be useful when grouping files by type,
+	 * showing icons on filelinks, etc.
+	 * Possible group values are: "audio", "mov", "zip", "image".
+	 * 
+	 * @return String
+	 */
 	public function appCategory() {
 		$ext = $this->Extension;
 		switch($ext) {
@@ -232,7 +298,11 @@ class File extends DataObject {
 	}
 
 	/**
-	 * Return the URL of an icon for the file type
+	 * Return the relative URL of an icon for the file type,
+	 * based on the {@link appCategory()} value.
+	 * Images are searched for in "sapphire/images/app_icons/".
+	 * 
+	 * @return String 
 	 */
 	function Icon() {
 		$ext = $this->Extension;
@@ -269,6 +339,7 @@ class File extends DataObject {
 	protected function onBeforeWrite() {
 		parent::onBeforeWrite();
 
+		// Set default name
 		if(!$this->Name) $this->Name = "new-" . strtolower($this->class);
 	}
 
@@ -290,19 +361,25 @@ class File extends DataObject {
 	}
 
 	/**
-	 * Setter function for Name.
-	 * Automatically sets a default title.
+	 * Setter function for Name. Automatically sets a default title,
+	 * and removes characters that migh be invalid on the filesystem.
+	 * Also adds a suffix to the name if the filename already exists
+	 * on the filesystem, and is associated to a different {@link File} database record
+	 * in the same folder. This means "myfile.jpg" might become "myfile-1.jpg".
+	 * 
+	 * @param String $name
 	 */
 	function setName($name) {
 		$oldName = $this->Name;
 
-		// It can't be blank
+		// It can't be blank, default to Title
 		if(!$name) $name = $this->Title;
 
 		// Fix illegal characters
-		$name = ereg_replace(' +','-',trim($name));
-		$name = ereg_replace('[^A-Za-z0-9.+_\-]','',$name);
+		$name = ereg_replace(' +','-',trim($name)); // Replace any spaces
+		$name = ereg_replace('[^A-Za-z0-9.+_\-]','',$name); // Replace non alphanumeric characters
 
+		// Remove all leading dots or underscores
 		while(!empty($name) && ($name[0] == '_' || $name[0] == '.')) {
 			$name = substr($name, 1);
 		}
@@ -326,27 +403,36 @@ class File extends DataObject {
 			}
 		}
 
+		// Update title
 		if(!$this->getField('Title')) $this->__set('Title', str_replace(array('-','_'),' ',ereg_replace('\.[^.]+$','',$name)));
+		
+		// Update actual field value
 		$this->setField('Name', $name);
-
-
+		
+		
 		if($oldName && $oldName != $this->Name) {
 			$this->resetFilename();
 		} else {
 			$this->autosetFilename();
 		}
-
-
+		
+		
 		return $this->getField('Name');
 	}
 
 	/**
-	 * Change a filename, moving the file if appropriate.
-	 * @param $renamePhysicalFile Set this to false if you don't want to rename the physical file. Used when calling resetFilename() on the children of a folder.
+	 * Change the "Filename" property based on the current "Name" property, moving the file if appropriate.
+	 * Throws an Exception if the new file already exists.
+	 * 
+	 * Caution: This method should just be called during a {@link write()} invocation,
+	 * otherwise the database and filesystem might become out of sync.
+	 * 
+	 * @param Boolean $renamePhysicalFile FALSE to avoiding renaming the file on the filesystem.
+	 *  Used when calling {@link resetFilename()} on the children of a folder.
 	 */
 	protected function resetFilename($renamePhysicalFile = true) {
-		$oldFilename = $this->getField('Filename');
-		$newFilename = $this->getRelativePath();
+		$oldFilename = $this->getField('Filename'); // call without getter to get old value
+		$newFilename = $this->getRelativePath(); // calculated from $this->Name
 
 		if($this->Name && $this->Filename && file_exists(Director::getAbsFile($oldFilename)) && strpos($oldFilename, '//') === false) {
 			if($renamePhysicalFile) {
@@ -383,7 +469,12 @@ class File extends DataObject {
 	}
 
 	/**
-	 * Rewrite links to the $old file to now point to the $new file
+	 * Rewrite links to the $old file to now point to the $new file.
+	 * 
+	 * @uses SiteTree->rewriteFileURL()
+	 * 
+	 * @param String $old File path relative to the webroot
+	 * @param String $new File path relative to the webroot
 	 */
 	protected function updateLinks($old, $new) {
 		if(class_exists('Subsite')) Subsite::disable_subsite_filter(true);
@@ -434,6 +525,12 @@ class File extends DataObject {
 		return "$this->Name";
 	}
 
+	/**
+	 * Returns an absolute filesystem path to the file.
+	 * Use {@link getRelativePath()} to get the same path relative to the webroot.
+	 * 
+	 * @return String 
+	 */
 	function getFullPath() {
 		$baseFolder = Director::baseFolder();
 		
@@ -447,7 +544,10 @@ class File extends DataObject {
 	}
 
 	/**
-	 * Returns 
+	 * Returns path relative to webroot.
+	 * If no {@link Folder} is set ("ParentID" property),
+	 * defaults to a filename relative to the ASSETS_DIR (usually "assets/").
+	 * Use {@link getFullPath()} to
 	 * 
 	 * @return String
 	 */
@@ -463,6 +563,9 @@ class File extends DataObject {
 		}
 	}
 
+	/**
+	 * @todo Coupling with cms module, remove this method.
+	 */
 	function DeleteLink() {
 		return Director::absoluteBaseURL()."admin/assets/removefile/".$this->ID;
 	}
@@ -477,13 +580,20 @@ class File extends DataObject {
 
 	function setFilename($val) {
 		$this->setField('Filename', $val);
+		
+		// "Filename" is the "master record" (existing on the filesystem), 
+		// meaning we have to adjust the "Name" property in the database as well.
 		$this->setField('Name', basename($val));
 	}
 
-	/*
-	 * FIXME This overrides getExtension() in DataObject, but it does something completely different.
+	/**
+	 * Returns the file extension
+	 * 
+	 * @todo This overrides getExtension() in DataObject, but it does something completely different.
 	 * This should be renamed to getFileExtension(), but has not been yet as it may break
 	 * legacy code.
+	 * 
+	 * @return String
 	 */
 	function getExtension() {
 		return self::get_file_extension($this->getField('Filename'));

@@ -73,6 +73,8 @@ class Image extends File {
 	
 	/**
 	 * An image exists if it has a filename.
+	 * Does not do any filesystem checks.
+	 * 
 	 * @return boolean
 	 */
 	public function exists() {
@@ -82,7 +84,9 @@ class Image extends File {
 	}
 
 	/**
-	 * Return an XHTML img tag for this Image.
+	 * Return an XHTML img tag for this Image,
+	 * or NULL if the image file doesn't exist on the filesystem.
+	 * 
 	 * @return string
 	 */
 	function getTag() {
@@ -100,6 +104,7 @@ class Image extends File {
 	
 	/**
 	 * Return an XHTML img tag for this Image.
+	 * 
 	 * @return string
 	 */
 	function forTemplate() {
