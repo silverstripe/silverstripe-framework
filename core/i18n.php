@@ -75,6 +75,16 @@ class i18n extends Object {
 	protected static $js_i18n = true;
 	
 	/**
+	 * @var string
+	 */
+	protected static $date_format;
+	
+	/**
+	 * @var string
+	 */
+	protected static $time_format;
+	
+	/**
 	 * Use javascript i18n through the ss.i18n class (enabled by default).
 	 * If set to TRUE, includes javascript requirements for the base library
 	 * (sapphire/javascript/i18n.js) and all necessary lang files (e.g. sapphire/lang/de_DE.js)
@@ -100,7 +110,37 @@ class i18n extends Object {
 	public static function get_js_i18n() {
 		return self::$js_i18n;
 	}
-
+	
+	/**
+	 * @param string ISO date format
+	 */
+	public static function set_date_format($format) {
+		self::$date_format = $format;
+	}
+	
+	/**
+	 * @return string ISO date format
+	 */
+	public static function get_date_format() {
+		require_once 'Zend/Date.php';
+		return (self::$date_format) ? self::$date_format : Zend_Locale_Format::getDateFormat(self::get_locale());
+	}
+	
+	/**
+	 * @param string ISO time format
+	 */
+	public static function set_time_format($format) {
+		self::$time_format = $format;
+	}
+	
+	/**
+	 * @return string ISO time format
+	 */
+	public static function get_time_format() {
+		require_once 'Zend/Date.php';
+		return (self::$time_format) ? self::$time_format : Zend_Locale_Format::getTimeFormat(self::get_locale());
+	}
+	
 	/**
 	 * An exhaustive list of possible locales (code => language and country)
 	 *

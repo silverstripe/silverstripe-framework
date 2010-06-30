@@ -57,3 +57,8 @@ Member:
       Groups: =>Group.ceogroup
    grouplessmember: 
       FirstName: Groupless Member
+   noformatmember:
+      Email: noformat@test.com
+   delocalemember:
+      Email: delocalemember@test.com
+      Locale: de_DE

@@ -53,7 +53,7 @@ class TimeField extends TextField {
 		}
 		
 		if(!$this->getConfig('timeformat')) {
-			$this->setConfig('timeformat', Zend_Locale_Format::getDateFormat($this->locale));
+			$this->setConfig('timeformat', i18n::get_time_format());
 		}
 		
 		parent::__construct($name,$title,$value);

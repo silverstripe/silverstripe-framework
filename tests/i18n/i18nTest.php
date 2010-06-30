@@ -53,6 +53,8 @@ class i18nTest extends SapphireTest {
 			'main' => $this->alternateBasePath . '/i18ntestmodule/templates/i18nTestModule.ss',
 			'Layout' => $this->alternateBasePath . '/i18ntestmodule/templates/Layout/i18nTestModule.ss',
 		);
+		
+		$this->originalLocale = i18n::get_locale();
 	}
 	
 	function tearDown() {
@@ -66,9 +68,39 @@ class i18nTest extends SapphireTest {
 		unset($_TEMPLATE_MANIFEST['i18nTestModule.ss']);
 		unset($_TEMPLATE_MANIFEST['i18nTestModuleInclude.ss']);
 		
-		i18n::set_locale('en_US');
+		i18n::set_locale($this->originalLocale);
 		
 		parent::tearDown();
+	}
+	
+	function testDateFormatFromLocale() {
+		i18n::set_locale('en_US');
+		$this->assertEquals('MMM d, yyyy', i18n::get_date_format());
+		i18n::set_locale('en_NZ');
+		$this->assertEquals('d/MM/yyyy', i18n::get_date_format());
+		i18n::set_locale('en_US');
+	}
+	
+	function testTimeFormatFromLocale() {
+		i18n::set_locale('en_US');
+		$this->assertEquals('h:mm:ss a', i18n::get_time_format());
+		i18n::set_locale('de_DE');
+		$this->assertEquals('HH:mm:ss', i18n::get_time_format());
+		i18n::set_locale('en_US');
+	}
+	
+	function testDateFormatCustom() {
+		i18n::set_locale('en_US');
+		$this->assertEquals('MMM d, yyyy', i18n::get_date_format());
+		i18n::set_date_format('d/MM/yyyy');
+		$this->assertEquals('d/MM/yyyy', i18n::get_date_format());
+	}
+	
+	function testTimeFormatCustom() {
+		i18n::set_locale('en_US');
+		$this->assertEquals('h:mm:ss a', i18n::get_time_format());
+		i18n::set_time_format('HH:mm:ss');
+		$this->assertEquals('HH:mm:ss', i18n::get_time_format());
 	}
 	
 	function testGetExistingTranslations() {

@@ -263,7 +263,19 @@ class MemberTest extends FunctionalTest {
 		$this->assertFalse($member->isPasswordExpired());
 		
 	}
-	
+
+	function testMemberWithNoDateFormatFallsbackToGlobalLocaleDefaultFormat() {
+		$member = $this->objFromFixture('Member', 'noformatmember');
+		$this->assertEquals('MMM d, yyyy', $member->DateFormat);
+		$this->assertEquals('h:mm:ss a', $member->TimeFormat);
+	}
+
+	function testMemberWithNoDateFormatFallsbackToTheirLocaleDefaultFormat() {
+		$member = $this->objFromFixture('Member', 'delocalemember');
+		$this->assertEquals('dd.MM.yyyy', $member->DateFormat);
+		$this->assertEquals('HH:mm:ss', $member->TimeFormat);
+	}
+
 	function testInGroups() {
 		$staffmember = $this->objFromFixture('Member', 'staffmember');
 		$managementmember = $this->objFromFixture('Member', 'managementmember');

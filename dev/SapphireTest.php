@@ -96,6 +96,9 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 		$this->originalIsRunningTest = self::$is_running_test;
 		self::$is_running_test = true;
 		
+		i18n::set_date_format(null);
+		i18n::set_time_format(null);
+		
 		// Remove password validation
 		$this->originalMemberPasswordValidator = Member::password_validator();
 		$this->originalRequirements = Requirements::backend();

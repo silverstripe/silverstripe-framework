@@ -27,7 +27,10 @@ class Member extends DataObject {
 		'LockedOutUntil' => 'SS_Datetime',
 		'Locale' => 'Varchar(6)',
 		// handled in registerFailedLogin(), only used if $lock_out_after_incorrect_logins is set
-		'FailedLoginCount' => 'Int', 
+		'FailedLoginCount' => 'Int',
+		// In ISO format
+		'DateFormat' => 'Varchar(30)',
+		'TimeFormat' => 'Varchar(30)',
 	);
 
 	static $belongs_many_many = array(
@@ -798,7 +801,7 @@ class Member extends DataObject {
 			}
 		}
 	}
-	
+
 	/**
 	 * Return a SQL CONCAT() fragment suitable for a SELECT statement.
 	 * Useful for custom queries which assume a certain member title format.
@@ -856,6 +859,42 @@ class Member extends DataObject {
 	 */
 	public function splitName($name) {
 		return $this->setName($name);
+	}
+
+	/**
+	 * Override the default getter for DateFormat so the
+	 * default format for the user's locale is used
+	 * if the user has not defined their own.
+	 * 
+	 * @return string ISO date format
+	 */
+	public function getDateFormat() {
+		if($this->getField('DateFormat')) {
+			return $this->getField('DateFormat');
+		} elseif($this->getField('Locale')) {
+			require_once 'Zend/Date.php';
+			return Zend_Locale_Format::getDateFormat($this->Locale);
+		} else {
+			return i18n::get_date_format();
+		}
+	}
+
+	/**
+	 * Override the default getter for TimeFormat so the
+	 * default format for the user's locale is used
+	 * if the user has not defined their own.
+	 * 
+	 * @return string ISO date format
+	 */
+	public function getTimeFormat() {
+		if($this->getField('TimeFormat')) {
+			return $this->getField('TimeFormat');
+		} elseif($this->getField('Locale')) {
+			require_once 'Zend/Date.php';
+			return Zend_Locale_Format::getTimeFormat($this->Locale);
+		} else {
+			return i18n::get_time_format();
+		}
 	}
 
 	//---------------------------------------------------------------------//
@@ -1040,6 +1079,8 @@ class Member extends DataObject {
 	 *                  editing this member.
 	 */
 	public function getCMSFields() {
+		require_once('Zend/Date.php');
+		
 		$fields = parent::getCMSFields();
 
 		$mainFields = $fields->fieldByName("Root")->fieldByName("Main")->Children;
@@ -1114,7 +1155,41 @@ class Member extends DataObject {
 				$fields->addFieldToTab('Root.Permissions', $permissionsField);
 			}
 		}
-
+		
+		$defaultDateFormat = Zend_Locale_Format::getDateFormat($this->Locale);
+		$dateFormatMap = array(
+			'MMM d, yyyy' => Zend_Date::now()->toString('MMM d, yyyy'),
+			'yyyy/MM/dd' => Zend_Date::now()->toString('yyyy/MM/dd'),
+			'MM/dd/yyyy' => Zend_Date::now()->toString('MM/dd/yyyy'),
+			'dd/MM/yyyy' => Zend_Date::now()->toString('dd/MM/yyyy'),
+		);
+		$dateFormatMap[$defaultDateFormat] = Zend_Date::now()->toString($defaultDateFormat)
+			. sprintf(' (%s)', _t('Member.DefaultDateTime', 'default'));
+		$mainFields->push(
+			$dateFormatField = new Member_DatetimeOptionsetField(
+				'DateFormat',
+				$this->fieldLabel('DateFormat'),
+				$dateFormatMap
+			)
+		);
+		$dateFormatField->setValue($this->DateFormat);
+		
+		$defaultTimeFormat = Zend_Locale_Format::getTimeFormat($this->Locale);
+		$timeFormatMap = array(
+			'h:mm a' => Zend_Date::now()->toString('h:mm a'),
+			'H:mm' => Zend_Date::now()->toString('H:mm'),
+		);
+		$timeFormatMap[$defaultTimeFormat] = Zend_Date::now()->toString($defaultTimeFormat)
+			. sprintf(' (%s)', _t('Member.DefaultDateTime', 'default'));
+		$mainFields->push(
+			$timeFormatField = new Member_DatetimeOptionsetField(
+				'TimeFormat',
+				$this->fieldLabel('TimeFormat'),
+				$timeFormatMap
+			)
+		);
+		$timeFormatField->setValue($this->TimeFormat);
+		
 		$this->extend('updateCMSFields', $fields);
 		
 		return $fields;
@@ -1525,7 +1600,7 @@ class Member_ProfileForm extends Form {
 		Requirements::css(SAPPHIRE_DIR . "/css/MemberProfileForm.css");
 		
 		
-		$fields = singleton('Member')->getCMSFields();
+		$fields = $member->getCMSFields();
 		$fields->push(new HiddenField('ID','ID',$member->ID));
 
 		$actions = new FieldSet(
@@ -1753,4 +1828,110 @@ class Member_Validator extends RequiredFields {
 	}
 
 }
-?>
+/**
+ * @package sapphire
+ * @subpackage security
+ */
+class Member_DatetimeOptionsetField extends OptionsetField {
+
+	function Field() {
+		Requirements::css(SAPPHIRE_DIR . '/css/MemberDatetimeOptionsetField.css');
+		Requirements::javascript(THIRDPARTY_DIR . '/thirdparty/jquery/jquery.js');
+		Requirements::javascript(SAPPHIRE_DIR . '/javascript/MemberDatetimeOptionsetField.js');
+
+		$options = '';
+		$odd = 0;
+		$source = $this->getSource();
+
+		foreach($source as $key => $value) {
+			$itemID = $this->id() . "_" . ereg_replace('[^a-zA-Z0-9]+', '', $key);
+			if($key == $this->value) {
+				$useValue = false;
+				$checked = " checked=\"checked\"";
+			} else {
+				$checked = "";
+			}
+
+			$odd = ($odd + 1) % 2;
+			$extraClass = $odd ? "odd" : "even";
+			$extraClass .= " val" . preg_replace('/[^a-zA-Z0-9\-\_]/', '_', $key);
+			$disabled = ($this->disabled || in_array($key, $this->disabledItems)) ? "disabled=\"disabled\"" : "";
+			
+			$options .= "<li class=\"".$extraClass."\"><input id=\"$itemID\" name=\"$this->name\" type=\"radio\" value=\"$key\"$checked $disabled class=\"radio\" /> <label title=\"$key\" for=\"$itemID\">$value</label></li>\n"; 
+		}
+
+		// Add "custom" input field
+		$value = ($this->value && !array_key_exists($this->value, $this->source)) ? $this->value : null;
+		$checked = ($value) ? " checked=\"checked\"" : '';
+		$options .= "<li class=\"valCustom\">"
+			. sprintf("<input id=\"%s_custom\" name=\"%s\" type=\"radio\" value=\"__custom__\" class=\"radio\" %s />", $itemID, $this->name, $checked)
+			. sprintf('<label for="%s_custom">%s:</label>', $itemID, _t('MemberDatetimeOptionsetField.Custom', 'Custom'))
+			. sprintf("<input class=\"customFormat\" name=\"%s_custom\" value=\"%s\" />\n", $this->name, $value)
+			. sprintf("<input type=\"hidden\" class=\"formatValidationURL\" value=\"%s\" />", $this->Link() . '/validate');
+		$options .= ($value) ? sprintf(
+			'<span class="preview">(%s: "%s")</span>',
+			_t('MemberDatetimeOptionsetField.Preview', 'Preview'),
+			Zend_Date::now()->toString($value)
+		) : '';
+		$options .= "<a class=\"formattingHelpToggle\" href=\"#\">toggle formatting help</a>";
+		$options .= "<div class=\"formattingHelpText\">";
+		$options .= $this->getFormattingHelpText();
+		$options .= "</div>";
+		$options .= "</li>\n";
+
+		$id = $this->id();
+		return "<ul id=\"$id\" class=\"optionset {$this->extraClass()}\">\n$options</ul>\n";
+	}
+
+	/**
+	 * @todo Put this text into a template?
+	 */
+	function getFormattingHelpText() {
+		return '<ul>
+<li>YYYY = four-digit year</li>
+<li>YY   = two-digit year</li>
+<li>MMMM = full name of month (e.g. June)</li>
+<li>MMM  = shortened name of month (e.g. Jun)</li>
+<li>MM   = two-digit month (01=January, etc.)</li>
+<li>M    = day of month without leading zero</li>
+<li>dd   = two-digit day of month (01 through 31)</li>
+<li>d   = day of month without leading zero</li>
+<li>hh   = two digits of hour (00 through 23)</li>
+<li>h    = hour without leading zero</li>
+<li>mm   = two digits of minute (00 through 59)</li>
+<li>m    = minute without leading zero</li>
+<li>ss   = two digits of second (00 through 59)</li>
+<li>s    = one or more digits representing a decimal fraction of a second</li>
+<li>a    = AM or PM</li>
+</ul>';
+	}
+
+	function setValue($value) {
+		if($value == '__custom__') {
+			$value = isset($_REQUEST[$this->name . '_custom']) ? $_REQUEST[$this->name . '_custom'] : null;
+		}
+		if($value) {
+			parent::setValue($value);
+		}
+	}
+
+	function validate() {
+		$value = isset($_POST[$this->name . '_custom']) ? $_POST[$this->name . '_custom'] : null;
+		if(!$value) return true; // no custom value, don't validate
+
+		// Check that the current date with the date format is valid or not
+		$validator = $this->form ? $this->form->getValidator() : null;
+		require_once 'Zend/Date.php';
+		$date = Zend_Date::now()->toString($value);
+		$valid = Zend_Date::isDate($date, $value);
+		if($valid) {
+			return true;
+		} else {
+			if($validator) {
+				$validator->validationError($this->name, _t('Member.DATEFORMATBAD',"Date format is invalid"), "validation", false);
+			}
+			return false;
+		}
+	}
+
+}
