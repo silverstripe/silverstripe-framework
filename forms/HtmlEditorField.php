@@ -254,7 +254,8 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 				new TextField('Anchor', _t('HtmlEditorField.ANCHORVALUE', 'Anchor')),
 				new TextField('LinkText', _t('HtmlEditorField.LINKTEXT', 'Link text')),
 				new TextField('Description', _t('HtmlEditorField.LINKDESCR', 'Link description')),
-				new CheckboxField('TargetBlank', _t('HtmlEditorField.LINKOPENNEWWIN', 'Open link in a new window?'))
+				new CheckboxField('TargetBlank', _t('HtmlEditorField.LINKOPENNEWWIN', 'Open link in a new window?')),
+				new HiddenField('Locale', null, $this->controller->Locale)
 			),
 			new FieldSet(
 				new FormAction('insert', _t('HtmlEditorField.BUTTONINSERTLINK', 'Insert link')),
