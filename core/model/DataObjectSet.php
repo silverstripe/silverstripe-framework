@@ -491,6 +491,9 @@ class DataObjectSet extends ViewableData implements IteratorAggregate, Countable
 	
 	/**
 	 * Merge another set onto the end of this set.
+	 * To merge without causing duplicates, consider calling
+	 * {@link removeDuplicates()} after this method on the new set.
+	 * 
 	 * @param DataObjectSet $anotherSet Set to mege onto this set.
 	 */
 	public function merge($anotherSet){
@@ -789,6 +792,8 @@ class DataObjectSet extends ViewableData implements IteratorAggregate, Countable
 	/**
 	* Remove duplicates from this set based on the dataobjects field.
 	* Assumes all items contained in the set all have that field.
+	* Useful after merging to sets via {@link merge()}.
+	* 
 	* @param string $field the field to check for duplicates
 	*/
 	public function removeDuplicates($field = 'ID') {
