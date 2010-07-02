@@ -179,7 +179,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	private static $nested_urls = false;
 	
 	/**
-	 * @see SiteTree::disable_create_defaultpages()
+	 * @see SiteTree::set_create_defaultpages()
 	*/
 	private static $create_default_pages = true;
 	
@@ -224,10 +224,10 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	}
 	
 	/**
-	 * Disables the (re)creation of default pages on /dev/build
+	 * @param bool $option
+	 * Set the (re)creation of default pages on /dev/build
 	 */
-	
-	public static function set_create_defaultpages($option = true) {
+	public static function set_create_default_pages($option = true) {
 		self::$create_default_pages = $option;
 	}
 	
