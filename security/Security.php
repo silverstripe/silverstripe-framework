@@ -99,6 +99,12 @@ class Security extends Controller {
 	protected static $login_recording = false;
 	
 	/**
+	 * @var boolean If set to TRUE or FALSE, {@link database_is_ready()}
+	 * will always return FALSE. Used for unit testing.
+	 */
+	static $force_database_is_ready = null;
+	
+	/**
 	 * Set location of word list file
 	 * 
 	 * @param string $wordListFile Location of word list file
@@ -839,6 +845,9 @@ class Security extends Controller {
 	 * @return bool
 	 */
 	public static function database_is_ready() {
+		// Used for unit tests
+		if(self::$force_database_is_ready !== NULL) return self::$force_database_is_ready;
+		
 		$requiredTables = ClassInfo::dataClassesFor('Member');
 		$requiredTables[] = 'Group';
 		$requiredTables[] = 'Permission';

@@ -32,6 +32,9 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	
 	protected $mailer;
 	
+	/**
+	 * @var boolean
+	 */
 	protected static $is_running_test = false;
 	
 	/**
@@ -82,6 +85,15 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	 */
 	private $extensionsToReapply = array(), $extensionsToRemove = array();
 	
+	/**
+	 * Determines if unit tests are currently run (via {@link TestRunner}).
+	 * This is used as a cheap replacement for fully mockable state
+	 * in certain contiditions (e.g. access checks).
+	 * Caution: When set to FALSE, certain controllers might bypass
+	 * access checks, so this is a very security sensitive setting.
+	 * 
+	 * @return boolean
+	 */
 	public static function is_running_test() {
 		return self::$is_running_test;
 	}

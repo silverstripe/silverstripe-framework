@@ -32,7 +32,9 @@ class DatabaseAdmin extends Controller {
 		$canAccess = (
 			Director::isDev() 
 			|| !Security::database_is_ready() 
-			|| Director::is_cli() 
+			// We need to ensure that DevelopmentAdminTest can simulate permission failures when running
+			// "dev/tests" from CLI. 
+			|| (Director::is_cli() && !SapphireTest::is_running_test())
 			|| Permission::check("ADMIN")
 		);
 		if(!$canAccess) {
