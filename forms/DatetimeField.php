@@ -47,7 +47,9 @@ class DatetimeField extends FormField {
 	}
 	
 	function Field() {
-		return $this->dateField->Field() . $this->timeField->Field();
+		Requirements::css(SAPPHIRE_DIR . '/css/DatetimeField.css');
+		
+		return $this->dateField->FieldHolder() . $this->timeField->FieldHolder();
 	}
 	
 	/**
