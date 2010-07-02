@@ -264,14 +264,11 @@ class Convert {
 		
 		$data = preg_replace("/<style(^A-Za-z0-9>][^>]*)?>.*?<\/style[^>]*>/i","", $data);
 		$data = preg_replace("/<script(^A-Za-z0-9>][^>]*)?>.*?<\/script[^>]*>/i","", $data);
-		// TODO Deal with attributes inside tags
+
 		if($config['ReplaceBoldAsterisk']) {
-			$data = str_ireplace(
-				array('<strong>','</strong>','<b>','</b>'),
-				'*',
-				$data
-			);
+			$data = preg_replace('%<(strong|b)( [^>]*)?>|</(strong|b)>%i','*',$data);
 		}
+		
 		// Expand hyperlinks
 		if(!$preserveLinks && !$config['PreserveLinks']) {
 			$data = preg_replace('/<a[^>]*href\s*=\s*"([^"]*)">(.*?)<\/a>/ie', "Convert::html2raw('\\2').'[\\1]'", $data);
