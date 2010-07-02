@@ -1555,7 +1555,11 @@ class i18n extends Object {
 	 */
 	static function get_language_name($code, $native = false) {
 		$langs = self::$common_languages;
-		return ($native ? $langs[$code][1] : $langs[$code][0]);
+		if($native) {
+			return (isset($langs[$code][1])) ? $langs[$code][1] : false;
+		} else {
+			return (isset($langs[$code][0])) ? $langs[$code][0] : false;
+		}
 	}
 	
 	/**
