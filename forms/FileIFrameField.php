@@ -49,10 +49,10 @@ class FileIFrameField extends FileField {
 	 * @return string
 	 */
 	public function Field() {
-		Requirements::css(THIRDPARTY_DIR . '/jquery-ui-themes/base/jquery.ui.all.css');
 		Requirements::add_i18n_javascript(SAPPHIRE_DIR . '/javascript/lang');
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
-		Requirements::javascript(THIRDPARTY_DIR . '/jquery-ui/jquery-ui-1.8rc3.custom.js');
+		Requirements::css('http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.1/themes/base/jquery-ui.css');
+		Requirements::javascript('http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.1/jquery-ui.min.js');
 		
 		
 		if($this->form->getRecord() && $this->form->getRecord()->exists()) {
