@@ -9,13 +9,13 @@ require_once 'Zend/Date.php';
  * # Configuration
  * 
  * - 'showcalendar' (boolean): Determines if a calendar picker is shown.
- *    By default, "DHTML Calendar" is used,see http://www.dynarch.com/projects/calendar.
- *    CAUTION: Only works in NZ date format, see calendar-setup.js
+ *    By default, jQuery UI datepicker is used (see {@link DateField_View_JQuery}).
+ * - 'jslocale' (string): Overwrites the "Locale" value set in this class.
+ *    Only useful in combination with {@link DateField_View_JQuery}.
  * - 'dmyfields' (boolean): Show three input fields for day, month and year separately.
  *    CAUTION: Might not be useable in combination with 'showcalendar', depending on the used javascript library
  * - 'dateformat' (string): Date format compatible with Zend_Date.
- *    Usually set to default format for {@link locale}
- *    through {@link Zend_Locale_Format::getDateFormat()}.
+ *    Usually set to default format for {@link locale} through {@link Zend_Locale_Format::getDateFormat()}.
  * - 'datavalueformat' (string): Internal ISO format string used by {@link dataValue()} to save the
  *    date to a database.
  * - 'min' (string): Minimum allowed date value (in ISO format, or strtotime() compatible).
@@ -52,6 +52,7 @@ class DateField extends TextField {
 	 */
 	protected $config = array(
 		'showcalendar' => false,
+		'jslocale' => null,
 		'dmyfields' => false,
 		'dmyseparator' => '&nbsp;<span class="separator">/</span>&nbsp;',
 		'dateformat' => null,
@@ -85,7 +86,13 @@ class DateField extends TextField {
 	}
 
 	function FieldHolder() {
-		return parent::FieldHolder();
+		// TODO Replace with properly extensible view helper system 
+		$d = Object::create('DateField_View_JQuery', $this); 
+		$d->onBeforeRender(); 
+		$html = parent::FieldHolder(); 
+		$html = $d->onAfterRender($html); 
+		
+		return $html;
 	}
 
 	function Field() {
@@ -120,42 +127,9 @@ class DateField extends TextField {
 			$html = parent::Field();
 		}
 		
-		$html = $this->FieldDriver($html);
-		
-		// wrap in additional div for legacy reasons and to apply behaviour correctly
-		if($this->getConfig('showcalendar')) $html = sprintf('<div class="calendardate">%s</div>', $html);
-		
 		return $html;
 	}
-	
-	/**
-	 * Caution: API might change. This will evolve into a pluggable
-	 * API for 'form field drivers' which can add their own
-	 * markup and requirements. 
-	 * 
-	 * @param String $html
-	 * @return $html
-	 */
-	protected function FieldDriver($html) {
-		// Optionally add a "DHTML" calendar icon. Mainly legacy, a date picker
-		// should be unobtrusively added by javascript (e.g. jQuery UI).
-		// CAUTION: Only works in NZ date format, see calendar-setup.js
-		if($this->getConfig('showcalendar')) {
-			Requirements::javascript(THIRDPARTY_DIR . '/prototype/prototype.js');
-			Requirements::javascript(THIRDPARTY_DIR . '/behaviour/behaviour.js');
-			Requirements::javascript(THIRDPARTY_DIR . "/calendar/calendar.js");
-			Requirements::javascript(THIRDPARTY_DIR . "/calendar/lang/calendar-en.js");
-			Requirements::javascript(THIRDPARTY_DIR . "/calendar/calendar-setup.js");
-			Requirements::css(SAPPHIRE_DIR . "/css/DateField.css");
-			Requirements::css(THIRDPARTY_DIR . "/calendar/calendar-win2k-1.css");
-			
-			$html .= sprintf('<img src="sapphire/images/calendar-icon.gif" id="%s-icon" alt="Calendar icon" />', $this->id());
-			$html .= sprintf('<div class="calendarpopup" id="%s-calendar"></div>', $this->id());
-		}
 		
-		return $html;
-	}
-	
 	/**
 	 * Sets the internal value to ISO date format.
 	 * 
@@ -442,9 +416,6 @@ JS;
 					throw new InvalidArgumentException('Date "%s" is not a valid maximum date format (%s) or strtotime() argument', $val, $format);
 				}
 				break;
-			case 'showcalendar':
-				$this->config['dateformat'] = Zend_Locale_Format::getDateFormat('en_NZ');
-				break;
 		}
 		
 		$this->config[$name] = $val;
@@ -498,4 +469,165 @@ class DateField_Disabled extends DateField {
 	}
 }
 
+/**
+ * Preliminary API to separate optional view properties
+ * like calendar popups from the actual datefield logic.
+ * 
+ * Caution: This API is highly volatile, and might change without prior deprecation.
+ * 
+ * @package sapphire
+ * @subpackage forms
+ */
+class DateField_View_JQuery {
+	
+	protected $field;
+	
+	/**
+	 * @var array Maps values from {@link i18n::$all_locales()} to 
+	 * localizations existing in jQuery UI.
+	 */
+	static $locale_map = array(
+		'en_GB' => 'en-GB',
+		'fr_CH' => 'fr-CH',
+		'pt_BR' => 'pt-BR',
+		'sr_SR' => 'sr-SR',
+		'zh_CN' => 'zh-CN',
+		'zh_HK' => 'zh-HK',
+		'zh_TW' => 'zh-TW',
+	);
+	
+	/**
+	 * @param DateField $field
+	 */
+	function __construct($field) {
+		$this->field = $field;
+	}
+	
+	/**
+	 * @return DateField
+	 */
+	function getField() {
+		return $this->field;
+	}
+	
+	/**
+	 * 
+	 */
+	function onBeforeRender() {
+		if($this->getField()->getConfig('showcalendar')) {
+			// Inject configuration into existing HTML
+			$format = self::convert_iso_to_jquery_format($this->getField()->getConfig('dateformat'));
+			$this->getField()->addExtraClass(str_replace('"', '\'', Convert::raw2json(array('dateFormat' => $format))));
+		}
+	}
+	
+	/**
+	 * @param String $html
+	 * @return 
+	 */
+	function onAfterRender($html) {
+		if($this->getField()->getConfig('showcalendar')) {
+			Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
+			Requirements::javascript(SAPPHIRE_DIR . '/javascript/jquery_improvements.js');	
+			Requirements::css('http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.1/themes/smoothness/jquery-ui.css');
+			Requirements::javascript('http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.1/jquery-ui.min.js');
+			
+			// Include language files (if required)
+			$lang = $this->getLang();
+			if($lang != 'en') {
+				// TODO Check for existence of locale to avoid unnecessary 404s from the CDN
+				Requirements::javascript(
+					sprintf(
+						'http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.1/i18n/jquery.ui.datepicker-%s.min.js',
+						// can be a mix between names (e.g. 'de') and combined locales (e.g. 'zh-TW')
+						$lang
+					));
+			}
+			
+			Requirements::javascript(THIRDPARTY_DIR . "/jquery-metadata/jquery.metadata.js");
+			Requirements::javascript(SAPPHIRE_DIR . "/javascript/DateField.js");
+		}
+		
+		return $html;
+	}
+	
+	/**
+	 * Determines which language to use for jQuery UI, which
+	 * can be different from the value set in i18n.
+	 * 
+	 * @return String
+	 */
+	protected function getLang() {
+		$locale = $this->getField()->getLocale();
+		if($this->getField()->getConfig('jslocale')) {
+			// Undocumented config property for now, might move to the jQuery view helper
+			$lang = $this->getField()->getConfig('jslocale');
+		} else if(array_key_exists($locale, self::$locale_map)) {
+			// Specialized mapping for combined lang properties
+			$lang = self::$locale_map[$locale];
+		} else {
+			// Fall back to default lang (meaning "en_US" turns into "en")
+			$lang = i18n::get_lang_from_locale($locale);
+		}
+		
+		return $lang;
+	}
+	
+	/**
+	 * Convert iso to jquery UI date format.
+	 * Needs to be consistent with Zend formatting, otherwise validation will fail.
+	 * Removes all time settings like hour/minute/second from the format.
+	 * See http://docs.jquery.com/UI/Datepicker/formatDate
+	 * 
+	 * @param String $format
+	 * @return String
+	 */
+	static function convert_iso_to_jquery_format($format) {
+		$convert = array(
+			'/([^d])d([^d])/' => '$1d$2',
+		  '/^d([^d])/' => 'd$1',
+		  '/([^d])d$/' => '$1d',
+		  '/dd/' => 'dd',
+		  '/EEEE/' => 'DD',
+		  '/EEE/' => 'D',
+		  '/SS/' => '',
+		  '/eee/' => 'd',
+		  '/e/' => 'N',
+		  '/D/' => '',
+		  '/w/' => '',
+		  '/([^M])M([^M])/' => '$1m$2',
+		  '/^M([^M])/' => 'm$1',
+		  '/([^M])M$/' => '$1m',
+		  '/MMMM/' => 'MM',
+		  '/MMM/' => 'M',
+		  '/MM/' => 'mm',
+		  '/l/' => '',
+		  '/YYYY/' => 'yy',
+		  '/yyyy/' => 'yy',
+		  '/[^y]yy[^y]/' => 'y',
+		  '/a/' => '',
+		  '/B/' => '',
+		  '/hh/' => '',
+		  '/h/' => '',
+		  '/([^H])H([^H])/' => '',
+		  '/^H([^H])/' => '',
+		  '/([^H])H$/' => '',
+		  '/HH/' => '',
+		  // '/mm/' => '',
+		  '/ss/' => '',
+		  '/zzzz/' => '',
+		  '/I/' => '',
+		  '/ZZZZ/' => '',
+		  '/Z/' => '',
+		  '/z/' => '',
+		  '/X/' => '',
+		  '/r/' => '',
+		  '/U/' => '',
+		);
+		$patterns = array_keys($convert);
+		$replacements = array_values($convert);
+		
+		return preg_replace($patterns, $replacements, $format);
+	}
+}
 ?>
