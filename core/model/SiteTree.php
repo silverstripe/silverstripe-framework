@@ -224,8 +224,9 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	}
 	
 	/**
-	 * @param bool $option
 	 * Set the (re)creation of default pages on /dev/build
+	 *
+	 * @param bool $option
 	 */
 	public static function set_create_default_pages($option = true) {
 		self::$create_default_pages = $option;
