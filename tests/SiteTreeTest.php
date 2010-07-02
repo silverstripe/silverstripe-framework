@@ -54,6 +54,27 @@ class SiteTreeTest extends SapphireTest {
 		
 		parent::tear_down_once();
 	}
+	
+	function testCreateDefaultpages() {
+			$remove = DataObject::get('SiteTree');
+			if($remove) foreach($remove as $page) $page->delete();
+			// Make sure the table is empty
+			$this->assertEquals(DB::query('SELECT COUNT(ID) FROM "SiteTree"')->value(), 0);
+			
+			// Disable the creation
+			SiteTree::set_create_defaultpages(false);
+			singleton('SiteTree')->requireDefaultRecords();
+			
+			// The table should still be empty
+			$this->assertEquals(DB::query('SELECT COUNT(ID) FROM "SiteTree"')->value(), 0);
+			
+			// Enable the creation
+			SiteTree::set_create_defaultpages(true);
+			singleton('SiteTree')->requireDefaultRecords();
+			
+			// The table should now have three rows (home, about-us, contact-us)
+			$this->assertEquals(DB::query('SELECT COUNT(ID) FROM "SiteTree"')->value(), 3);
+	}
 
 	/**
 	 * Test generation of the URLSegment values.

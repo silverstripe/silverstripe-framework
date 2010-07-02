@@ -179,6 +179,11 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	private static $nested_urls = false;
 	
 	/**
+	 * @see SiteTree::disable_create_defaultpages()
+	*/
+	private static $create_default_pages = true;
+	
+	/**
 	 * This controls whether of not extendCMSFields() is called by getCMSFields.
 	 */
 	private static $runCMSFieldsExtensions = true;
@@ -216,6 +221,14 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	
 	public static function disable_nested_urls() {
 		self::$nested_urls = false;
+	}
+	
+	/**
+	 * Disables the (re)creation of default pages on /dev/build
+	 */
+	
+	public static function set_create_defaultpages($option = true) {
+		self::$create_default_pages = $option;
 	}
 	
 	/**
@@ -1272,7 +1285,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		parent::requireDefaultRecords();
 		
 		// default pages
-		if($this->class == 'SiteTree') {
+		if($this->class == 'SiteTree' && self::$create_default_pages) {
 			if(!SiteTree::get_by_link('home')) {
 				$homepage = new Page();
 				$homepage->Title = _t('SiteTree.DEFAULTHOMETITLE', 'Home');
