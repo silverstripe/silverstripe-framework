@@ -351,7 +351,7 @@ JS
 			
 			$headings[] = new ArrayData(array(
 				"Name" => $fieldName, 
-				"Title" => ($this->sourceClass) ? singleton($this->sourceClass)->fieldLabel($fieldName) : $fieldTitle,
+				"Title" => ($this->sourceClass) ? singleton($this->sourceClass)->fieldLabel($fieldTitle) : $fieldTitle,
 				"IsSortable" => $isSortable,
 				"SortLink" => $sortLink,
 				"SortBy" => $isSorted,
