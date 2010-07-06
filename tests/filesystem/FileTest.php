@@ -60,6 +60,11 @@ class FileTest extends SapphireTest {
 		$v = $file->validate();
 		$this->assertTrue($v->valid());
 		
+		// Capital extension is valid as well
+		$file->Name = 'asdf.TXT';
+		$v = $file->validate();
+		$this->assertTrue($v->valid());
+		
 		File::$allowed_extensions = $origExts;
 	}
 	
