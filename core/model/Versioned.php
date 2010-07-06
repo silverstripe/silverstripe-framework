@@ -396,6 +396,11 @@ class Versioned extends DataObjectDecorator {
 			
 			// If we're editing Live, then use (table)_Live instead of (table)
 			if(Versioned::current_stage() && Versioned::current_stage() != $this->defaultStage) {
+				// If the record has already been inserted in the (table), get rid of it. 
+				if($manipulation[$table]['command']=='insert') {
+					DB::query("DELETE FROM \"{$table}\" WHERE \"ID\"='$id'");
+				}
+				
 				$newTable = $table . '_' . Versioned::current_stage();
 				$manipulation[$newTable] = $manipulation[$table];
 				unset($manipulation[$table]);
