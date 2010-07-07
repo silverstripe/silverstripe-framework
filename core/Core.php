@@ -1,4 +1,4 @@
-	<?php
+<?php
 /**
  * This file is the Sapphire bootstrap.  It will get your environment ready to call Director::direct().
  *
