@@ -5,6 +5,42 @@
  * 
  * Note: the child fields within a field group aren't rendered using FieldHolder().  Instead,
  * SmallFieldHolder() is called, which just prefixes $Field with a <label> tag, if the Title is set.
+ * 
+ * <b>Usage</b>
+ * 
+ * <code>
+ * new FieldGroup(
+ * 	new FieldGroup(
+ * 		new HeaderField('FieldGroup 1'),
+ * 		new TextField('Firstname')
+ * 	),
+ * 	new FieldGroup(
+ * 		new HeaderField('FieldGroup 2'),
+ * 		new TextField('Surname')
+ * 	)
+ * )
+ * </code>
+ * 
+ * <b>Adding to existing FieldGroup instances</b>
+ * 
+ * <code>
+ * function getCMSFields() {
+ * 	$fields = parent::getCMSFields();
+ * 	
+ * 	$fields->addFieldToTab(
+ * 		'Root.Content.Main', 
+ * 		new FieldGroup(
+ * 			new TimeField("StartTime","What's the start time?"),
+ * 			new TimeField("EndTime","What's the end time?")
+ * 		),
+ * 		'Content'
+ * 	);	
+ * 	
+ * 	return $fields;
+ * 		
+ * }
+ * </code>
+ * 
  * @package forms
  * @subpackage fields-structural
  */

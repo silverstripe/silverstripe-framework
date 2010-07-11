@@ -9,6 +9,34 @@
  * 
  * CAUTION: Doesn't work in the CMS due to ajax submission, please use {@link FileIFrameField} instead.
  * 
+ * <b>Usage</p>
+ * 
+ * If you want to implement a FileField into a form element, you need to pass it an array of source data.
+ * 
+ * <code>
+ * class ExampleForm_Controller extends Page_Controller {
+ * 
+ * 	public function Form() {
+ * 		$fields = new FieldSet(
+ * 			new TextField('MyName'),
+ * 			new FileField('MyFile')
+ * 		);
+ * 		$actions = new FieldSet(
+ * 			new FormAction('doUpload', 'Upload file')
+ * 		);
+ *    $validator = new RequiredFields(array('MyName', 'MyFile'));
+ * 
+ * 		return new Form($this, 'Form', $fields, $actions, $validator);
+ * 	}
+ * 
+ * 	function doUpload($data, $form) {
+ * 		$file = $data['MyFile'];
+ * 		$content = file_get_contents($file['tmp_name']);
+ * 		// ... process content
+ * 	}
+ * }
+ * </code>
+ * 
  * @package forms
  * @subpackage fields-files
  */

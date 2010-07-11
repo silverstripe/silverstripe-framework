@@ -17,6 +17,14 @@ if(!defined('MANIFEST_FILE')) define("MANIFEST_FILE", TEMP_FOLDER . "/manifest-"
  * This information is cached so that it need not be regenerated on every
  * pageview.
  * 
+ * <b>Autoloading</b>
+ * 
+ * Sapphire class autoloader.  Requires the ManifestBuilder to work.
+ * $_CLASS_MANIFEST must have been loaded up by ManifestBuilder for this to successfully load classes.  
+ * Classes will be loaded from any PHP file within the application. If your class contains an underscore, 
+ * for example, Page_Controller, then the filename is expected to be the stuff before the underscore.  
+ * In this case, Page.php.
+ * 
  * @see main.php, __autoload(), SSViewer, Requirements::themedCSS()
  * @package sapphire
  * @subpackage core
