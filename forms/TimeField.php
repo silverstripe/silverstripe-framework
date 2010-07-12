@@ -77,7 +77,7 @@ class TimeField extends TextField {
 			Requirements::javascript(SAPPHIRE_DIR . '/javascript/TimeField_dropdown.js');
 			Requirements::css(SAPPHIRE_DIR . '/css/TimeField_dropdown.css');
 			
-			$html .= sprintf('<img src="sapphire/images/clock-icon.gif" id="%s-icon"/>', $this->id());
+			$html .= sprintf('<img class="timeIcon" src="sapphire/images/clock-icon.gif" id="%s-icon"/>', $this->id());
 			$html .= sprintf('<div class="dropdownpopup" id="%s-dropdowntime"></div>', $this->id());
 			$html = '<div class="dropdowntime">' . $html . '</div>';
 		}
