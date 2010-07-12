@@ -49,7 +49,7 @@ class DatetimeField extends FormField {
 	function Field() {
 		Requirements::css(SAPPHIRE_DIR . '/css/DatetimeField.css');
 		
-		return $this->dateField->FieldHolder() . $this->timeField->FieldHolder();
+		return $this->dateField->FieldHolder() . $this->timeField->FieldHolder() . '<div class="clear"><!-- --></div>';
 	}
 	
 	/**
