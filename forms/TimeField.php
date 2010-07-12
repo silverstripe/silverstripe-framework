@@ -146,7 +146,10 @@ class TimeField extends TextField {
 		if(!Zend_Date::isDate($this->value, $this->getConfig('timeformat'), $this->locale)) {
 			$validator->validationError(
 				$this->name, 
-				_t('TimeField.VALIDATEFORMAT', sprintf("Please enter a valid time format (%s)", $this->getConfig('timeformat'))), 
+				sprintf(
+					_t('TimeField.VALIDATEFORMAT', "Please enter a valid time format (%s)"), 
+					$this->getConfig('timeformat')
+				), 
 				"validation", 
 				false
 			);

@@ -125,6 +125,9 @@ class DateFieldTest extends SapphireTest {
 		$f->setValue(array());
 		$this->assertTrue($f->validate(new RequiredFields()), 'Empty array values are validating TRUE');
 		
+		$f->setValue(array('day' => null, 'month' => null, 'year' => null));
+		$this->assertTrue($f->validate(new RequiredFields()), 'Empty array values with keys are validating TRUE');
+		
 		// TODO Fix array validation
 		// $f = new DateField('Date', 'Date', array('day' => 9999, 'month' => 9999, 'year' => 9999));
 		// $this->assertFalse($f->validate(new RequiredFields()));

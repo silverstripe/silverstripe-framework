@@ -150,7 +150,7 @@ class DatetimeField extends FormField {
 	function validate($validator) {
 		$dateValid = $this->dateField->validate($validator);
 		$timeValid = $this->timeField->validate($validator);
-		
+
 		return ($dateValid && $timeValid);
 	}
 	
