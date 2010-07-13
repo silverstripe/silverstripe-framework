@@ -287,7 +287,7 @@ class Versioned extends DataObjectDecorator {
 				
 					$versionIndexes = array_merge(
 						array(
-							'RecordID_Version' => array('type' => 'unique', 'value' => 'RecordID, Version'),
+							'RecordID_Version' => array('type' => 'unique', 'value' => 'RecordID,Version'),
 							'RecordID' => true,
 							'Version' => true,
 						),
