@@ -280,7 +280,11 @@ class Director {
 						$controllerObj = new $controller();
 						$controllerObj->setSession($session);
 
-						$result = $controllerObj->handleRequest($request);
+						try {
+							$result = $controllerObj->handleRequest($request);
+						} catch(SS_HTTPResponse_Exception $responseException) {
+							$result = $responseException->getResponse();
+						}
 						if(!is_object($result) || $result instanceof SS_HTTPResponse) return $result;
 						
 						user_error("Bad result from url " . $request->getURL() . " handled by " . 

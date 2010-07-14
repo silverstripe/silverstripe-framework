@@ -6,30 +6,45 @@
  * {@link BasicAuth::requireLogin()} from your Controller's init() method or action handler method.
  * 
  * It also has a function to protect your entire site.  See {@link BasicAuth::protect_entire_site()}
- * for more information.
+ * for more information. You can control this setting on controller-level by using {@link Controller->basicAuthEnabled}.
  * 
  * @package sapphire
  * @subpackage security
  */
 class BasicAuth {
 	/**
-	 * Flag set by {@link self::protect_entire_site()}
+	 * @var Boolean Flag set by {@link self::protect_entire_site()}
 	 */
 	private static $entire_site_protected = false;
+	
+	/**
+	 * @var String|array Holds a {@link Permission} code that is required
+	 * when calling {@link protect_site_if_necessary()}. Set this value through 
+	 * {@link protect_entire_site()}.
+	 */
+	private static $entire_site_protected_code = 'ADMIN';
+	
+	/**
+	 * @var String Message that shows in the authentication box.
+	 * Set this value through {@link protect_entire_site()}.
+	 */
+	private static $entire_site_protected_message = "SilverStripe test website. Use your CMS login.";
 
 	/**
 	 * Require basic authentication.  Will request a username and password if none is given.
 	 * 
 	 * Used by {@link Controller::init()}.
 	 * 
+	 * @throws SS_HTTPResponse_Exception
+	 * 
 	 * @param string $realm
-	 * @param string|array $permissionCode
+	 * @param string|array $permissionCode Optional
 	 * @param boolean $tryUsingSessionLogin If true, then the method with authenticate against the
-	 * session log-in if those credentials are disabled.
+	 *  session log-in if those credentials are disabled.
 	 * @return Member $member 
 	 */
-	static function requireLogin($realm, $permissionCode, $tryUsingSessionLogin = true) {
-		if(!Security::database_is_ready() || Director::is_cli()) return true;
+	static function requireLogin($realm, $permissionCode = null, $tryUsingSessionLogin = true) {
+		if(!Security::database_is_ready()) return true;
 		
 		$member = null;
 		if(isset($_SERVER['PHP_AUTH_USER']) && isset($_SERVER['PHP_AUTH_PW'])) {
@@ -43,27 +58,33 @@ class BasicAuth {
 		
 		// If we've failed the authentication mechanism, then show the login form
 		if(!$member) {
-			header("WWW-Authenticate: Basic realm=\"$realm\"");
-			header($_SERVER['SERVER_PROTOCOL'] . ' 401 Unauthorized');
+			$response = new SS_HTTPResponse(null, 401);
+			$response->addHeader('WWW-Authenticate', "Basic realm=\"$realm\"");
 
 			if(isset($_SERVER['PHP_AUTH_USER'])) {
-				echo _t('BasicAuth.ERRORNOTREC', "That username / password isn't recognised");
+				$response->setBody(_t('BasicAuth.ERRORNOTREC', "That username / password isn't recognised"));
 			} else {
-				echo _t('BasicAuth.ENTERINFO', "Please enter a username and password.");
+				$response->setBody(_t('BasicAuth.ENTERINFO', "Please enter a username and password."));
 			}
 			
-			die();
+			// Exception is caught by RequestHandler->handleRequest() and will halt further execution
+			$e = new SS_HTTPResponse_Exception(null, 401);
+			$e->setResponse($response);
+			throw $e;
 		}
 		
-		if(!Permission::checkMember($member->ID, $permissionCode)) {
-			header("WWW-Authenticate: Basic realm=\"$realm\"");
-			header($_SERVER['SERVER_PROTOCOL'] . ' 401 Unauthorized');
+		if($permissionCode && !Permission::checkMember($member->ID, $permissionCode)) {
+			$response = new SS_HTTPResponse(null, 401);
+			$response->addHeader('WWW-Authenticate', "Basic realm=\"$realm\"");
 
 			if(isset($_SERVER['PHP_AUTH_USER'])) {
-				echo _t('BasicAuth.ERRORNOTADMIN', "That user is not an administrator.");
+				$response->setBody(_t('BasicAuth.ERRORNOTADMIN', "That user is not an administrator."));
 			}
 			
-			die();
+			// Exception is caught by RequestHandler->handleRequest() and will halt further execution
+			$e = new SS_HTTPResponse_Exception(null, 401);
+			$e->setResponse($response);
+			throw $e;
 		}
 		
 		return $member;
@@ -81,10 +102,15 @@ class BasicAuth {
 	 * 
 	 * define('SS_USE_BASIC_AUTH', true);
 	 * 
-	 * @param $protect Set this to false to disable protection.
+	 * @param boolean $protect Set this to false to disable protection.
+	 * @param String $code {@link Permission} code that is required from the user.
+	 *  Defaults to "ADMIN". Set to NULL to just require a valid login, regardless
+	 *  of the permission codes a user has.
 	 */
-	static function protect_entire_site($protect = true) {
-		return self::$entire_site_protected = $protect;
+	static function protect_entire_site($protect = true, $code = 'ADMIN', $message = null) {
+		self::$entire_site_protected = $protect;
+		self::$entire_site_protected_code = $code;
+		if($message) self::$entire_site_protected_message = $message;
 	}
 	
 	/**
@@ -105,13 +131,14 @@ class BasicAuth {
 
 	/**
 	 * Call {@link BasicAuth::requireLogin()} if {@link BasicAuth::protect_entire_site()} has been called.
-	 * This is a helper function used by Controller.
+	 * This is a helper function used by {@link Controller::init()}.
+	 * 
+	 * If you want to enabled protection (rather than enforcing it),
+	 * please use {@link protect_entire_site()}.
 	 */
 	static function protect_site_if_necessary() {
 		if(self::$entire_site_protected) {
-			// The test-site protection should ignore the session log-in; otherwise it's difficult
-			// to test the log-in features of your site
-			self::requireLogin("SilverStripe test website. Use your CMS login.", "ADMIN", false);
+			self::requireLogin(self::$entire_site_protected_message, self::$entire_site_protected_code, false);
 		}
 	}
 
