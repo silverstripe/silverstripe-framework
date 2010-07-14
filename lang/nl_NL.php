@@ -406,6 +406,7 @@ $lang['nl_NL']['MoneyField']['FIELDLABELAMOUNT'] = 'Aantal';
 $lang['nl_NL']['MoneyField']['FIELDLABELCURRENCY'] = 'Valuta';
 $lang['nl_NL']['MyEntity']['MyNamespace'] = 'Mijn taal instelling';
 $lang['nl_NL']['MyNamespace']['MYENTITY'] = 'Telt %s onderdelen';
+$lang['nl_NL']['NullableField']['IsNullLabel'] = 'is nul';
 $lang['nl_NL']['NumericField']['VALIDATION'] = '\'%s\' is geen cijfer, alleen cijfers worden geaccepteerd voor dit veld';
 $lang['nl_NL']['NumericField']['VALIDATIONJS'] = 'is geen nummer, alleen nummers zijn toegelaten in dit veld';
 $lang['nl_NL']['Page']['PLURALNAME'] = 'Pagina\'s';
