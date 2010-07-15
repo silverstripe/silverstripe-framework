@@ -31,10 +31,7 @@ class Director {
 
 	static $alternateBaseURL;
 	
-	static $dev_servers = array(
-		'localhost',
-		'127.0.0.1'
-	);
+	static $dev_servers = array();
 	
 	static $test_servers = array();
 	
