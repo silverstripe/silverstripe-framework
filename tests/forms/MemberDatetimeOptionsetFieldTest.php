@@ -47,7 +47,7 @@ class MemberDatetimeOptionsetFieldTest extends SapphireTest {
 		$field = $this->createDateFormatFieldForMember($this->objFromFixture('Member', 'noformatmember'));
 		$field->setForm(new Form(new MemberDatetimeOptionsetFieldTest_Controller(), 'Form', new FieldSet(), new FieldSet())); // fake form
 		$parser = new CSSContentParser($field->Field());
-		$xmlArr = $parser->getBySelector('#Form_Form_DateFormat_MMMdyyyy');
+		$xmlArr = $parser->getBySelector('#Form_Form_DateFormat_MMM_d__yyyy');
 		$this->assertEquals('checked', (string) $xmlArr[0]['checked']);
 	}
 
@@ -55,7 +55,7 @@ class MemberDatetimeOptionsetFieldTest extends SapphireTest {
 		$field = $this->createTimeFormatFieldForMember($this->objFromFixture('Member', 'noformatmember'));
 		$field->setForm(new Form(new MemberDatetimeOptionsetFieldTest_Controller(), 'Form', new FieldSet(), new FieldSet())); // fake form
 		$parser = new CSSContentParser($field->Field());
-		$xmlArr = $parser->getBySelector('#Form_Form_TimeFormat_hmmssa');
+		$xmlArr = $parser->getBySelector('#Form_Form_TimeFormat_h_mm_ss_a');
 		$this->assertEquals('checked', (string) $xmlArr[0]['checked']);
 	}
 
@@ -65,7 +65,7 @@ class MemberDatetimeOptionsetFieldTest extends SapphireTest {
 		$field = $this->createDateFormatFieldForMember($member);
 		$field->setForm(new Form(new MemberDatetimeOptionsetFieldTest_Controller(), 'Form', new FieldSet(), new FieldSet())); // fake form
 		$parser = new CSSContentParser($field->Field());
-		$xmlArr = $parser->getBySelector('#Form_Form_DateFormat_MMddyyyy');
+		$xmlArr = $parser->getBySelector('#Form_Form_DateFormat_MM_dd_yyyy');
 		$this->assertEquals('checked', (string) $xmlArr[0]['checked']);
 	}
 

@@ -1845,7 +1845,8 @@ class Member_DatetimeOptionsetField extends OptionsetField {
 		$source = $this->getSource();
 
 		foreach($source as $key => $value) {
-			$itemID = $this->id() . "_" . ereg_replace('[^a-zA-Z0-9]+', '', $key);
+			// convert the ID to an HTML safe value (colons are not replaced, as they are valid in an ID attribute)
+			$itemID = $this->id() . '_' . preg_replace('/[^\.a-zA-Z0-9\-\_]/', '_', $key);
 			if($key == $this->value) {
 				$useValue = false;
 				$checked = " checked=\"checked\"";
@@ -1857,8 +1858,9 @@ class Member_DatetimeOptionsetField extends OptionsetField {
 			$extraClass = $odd ? "odd" : "even";
 			$extraClass .= " val" . preg_replace('/[^a-zA-Z0-9\-\_]/', '_', $key);
 			$disabled = ($this->disabled || in_array($key, $this->disabledItems)) ? "disabled=\"disabled\"" : "";
-			
-			$options .= "<li class=\"".$extraClass."\"><input id=\"$itemID\" name=\"$this->name\" type=\"radio\" value=\"$key\"$checked $disabled class=\"radio\" /> <label title=\"$key\" for=\"$itemID\">$value</label></li>\n"; 
+			$ATT_key = Convert::raw2att($key);
+
+			$options .= "<li class=\"".$extraClass."\"><input id=\"$itemID\" name=\"$this->name\" type=\"radio\" value=\"$key\"$checked $disabled class=\"radio\" /> <label title=\"$ATT_key\" for=\"$itemID\">$value</label></li>\n"; 
 		}
 
 		// Add "custom" input field
