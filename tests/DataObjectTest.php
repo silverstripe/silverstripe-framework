@@ -952,6 +952,24 @@ class DataObjectTest extends SapphireTest {
 		);
 	}
 	
+	public function testInvalidate() {
+		$do = new DataObjectTest_Fixture();
+		$do->write();
+		
+		$do->delete();
+
+		try {
+			// Prohibit invalid object manipulation
+			$do->delete();
+			$do->write();
+			$do->duplicate();
+		}
+		catch(Exception $e) {
+			return;
+		}
+		
+		$this->fail('Should throw an exception');
+	}
 }
 
 class DataObjectTest_Player extends Member implements TestOnly {
