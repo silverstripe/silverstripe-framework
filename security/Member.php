@@ -1845,7 +1845,7 @@ class Member_DatetimeOptionsetField extends OptionsetField {
 		$source = $this->getSource();
 
 		foreach($source as $key => $value) {
-			// convert the ID to an HTML safe value (colons are not replaced, as they are valid in an ID attribute)
+			// convert the ID to an HTML safe value (dots are not replaced, as they are valid in an ID attribute)
 			$itemID = $this->id() . '_' . preg_replace('/[^\.a-zA-Z0-9\-\_]/', '_', $key);
 			if($key == $this->value) {
 				$useValue = false;
