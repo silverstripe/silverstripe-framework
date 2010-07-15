@@ -407,6 +407,11 @@ PHP;
 	}
 	
 	function testCollectFromFilesystemAndWriteMasterTables() {
+		$defaultlocal = i18n::default_locale();
+		$local = i18n::get_locale();
+		i18n::set_locale('en_US');  //set the locale to the US locale expected in the asserts
+		i18n::set_default_locale('en_US');
+
 		$c = new i18nTextCollector();
 		$c->basePath = $this->alternateBasePath;
 		$c->baseSavePath = $this->alternateBaseSavePath;
@@ -466,6 +471,9 @@ PHP;
 			"\$lang['en_US']['i18nOtherModule']['MAINTEMPLATE'] = 'Main Template Other Module';",
 			$otherModuleLangFileContent
 		);
+
+		i18n::set_locale($local);  //set the locale to the US locale expected in the asserts
++		i18n::set_default_locale($defaultlocal);
 	}
 	
 	function testCollectFromEntityProvidersInCustomObject() {

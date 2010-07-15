@@ -7,7 +7,22 @@ class MemberTest extends FunctionalTest {
 	static $fixture_file = 'sapphire/tests/security/MemberTest.yml';
 	
 	protected $orig = array();
-	
+	protected $local = null; 
+
+	function __construct() {
+		parent::__construct();
+
+		//Setting the locale has to happen in the constructor (using the setUp and tearDown methods doesn't work)
+		//This is because the test relies on the yaml file being interpreted according to a particular date format
+		//and this setup occurs before the setUp method is run 
+		$this->local = i18n::default_locale();
+		i18n::set_default_locale('en_US');
+	}
+
+	function __destruct() {
+        i18n::set_default_locale($this->local);
+    }
+
 	function setUp() {
 		parent::setUp();
 		
@@ -18,7 +33,7 @@ class MemberTest extends FunctionalTest {
 	
 	function tearDown() {
 		Member::set_unique_identifier_field($this->orig['Member_unique_identifier_field']);
-		
+
 		parent::tearDown();
 	}
 

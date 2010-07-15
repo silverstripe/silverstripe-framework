@@ -74,6 +74,9 @@ class MoneyTest extends SapphireTest {
      * is re-read properly.
      */
     function testGettingWrittenDataObject() {
+	    $local = i18n::get_locale();
+		i18n::set_locale('en_US');  //make sure that the $ amount is not prefixed by US$, as it would be in non-US locale
+
 		$obj = new MoneyTest_DataObject();
 		
 		$m = new Money();
@@ -93,6 +96,8 @@ class MoneyTest extends SapphireTest {
 		$this->assertEquals("$987.65", $moneyTest->MyMoney->Nice(),
 			"Money field not added to data object properly when read."
 		);
+
+	    i18n::set_locale($local);
     }
 	
 	public function testToCurrency() {
