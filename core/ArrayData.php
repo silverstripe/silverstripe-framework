@@ -14,6 +14,10 @@
  */
 class ArrayData extends ViewableData {
 
+	/**
+	 * @var array 
+	 * @see ArrayData::_construct()
+	 */
 	protected $array;
 	
 	/**
@@ -35,12 +39,27 @@ class ArrayData extends ViewableData {
 		parent::__construct();
 	}
 	
+	/**
+	 * Get the source array
+	 *
+	 * @return array
+	 */
+	public function getArray() {
+		return $this->array;
+	}
+	
+	/**
+	 * Get a value from a given field
+	 *
+	 * @param string $f field key
+	 * @return mixed
+	 */
 	public function getField($f) {
 		if((is_object($this->array[$f]) && !$this->array[$f] instanceof ViewableData) || (is_array($this->array[$f]) && ArrayLib::is_associative($this->array[$f]))) {
 			return new ArrayData($this->array[$f]);
-		} else {
-			return $this->array[$f];
 		}
+	
+		return $this->array[$f];
 	}
 	
 	/**
@@ -53,6 +72,12 @@ class ArrayData extends ViewableData {
 		$this->array[$field] = $value;
 	}
 	
+	/**
+	 * Check array to see if field isset
+	 *
+	 * @param string Field Key
+	 * @return bool
+	 */
 	public function hasField($f) {
 		return isset($this->array[$f]);
 	}
@@ -79,7 +104,4 @@ class ArrayData extends ViewableData {
 	function forTemplate() {
 		return var_export($this->array, true);
 	}
-	
 }
-
-?>

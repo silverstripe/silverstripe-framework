@@ -84,6 +84,18 @@ class ArrayDataTest extends SapphireTest {
 		$this->assertTrue($arrayData->hasField('d'));
 		$this->assertEquals('Delta', $arrayData->getField('d'));
 	}
+	
+	function testGetArray() {
+		$array = array(
+			'Foo' => 'Foo',
+			'Bar' => 'Bar',
+			'Baz' => 'Baz'
+		);
+		
+		$arrayData = new ArrayData($array);
+		
+		$this->assertEquals($arrayData->getArray(), $array);
+	}
 
 }
 
