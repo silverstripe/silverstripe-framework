@@ -51,7 +51,7 @@ class Filesystem extends Object {
 		
 		$files = DataObject::get("File");
 		foreach($files as $file) {
-			$file->resetFilename();
+			$file->updateFilesystem();
 			echo "<li>", $file->Filename;
 			$file->write();
 		}

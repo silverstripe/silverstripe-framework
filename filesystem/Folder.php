@@ -6,31 +6,41 @@
  */
 class Folder extends File {
 	
-	/*
-	 * Find the given folder or create it, recursively.
+	/**
+	 * Find the given folder or create it both as {@link Folder} database records
+	 * and on the filesystem. If necessary, creates parent folders as well.
 	 * 
-	 * @param $folderPath string Absolute or relative path to the file
+	 * @param $folderPath string Absolute or relative path to the file.
+	 *  If path is relative, its interpreted relative to the "assets/" directory.
+	 * @return Folder
 	 */
 	static function findOrMake($folderPath) {
+		// Create assets directory, if it is missing
+		if(!file_exists(ASSETS_PATH)) Filesystem::makeFolder(ASSETS_PATH);
+
 		$folderPath = trim(Director::makeRelative($folderPath));
 		// replace leading and trailing slashes
 		$folderPath = preg_replace('/^\/?(.*)\/?$/', '$1', $folderPath);
-		
 		$parts = explode("/",$folderPath);
-		$parentID = 0;
 
+		$parentID = 0;
+		$item = null;
 		foreach($parts as $part) {
-			$item = DataObject::get_one("Folder", "Name = '$part' AND ParentID = $parentID");
+			if(!$part) continue; // happens for paths with a trailing slash
+			$item = DataObject::get_one("Folder", "`Name` = '$part' AND `ParentID` = $parentID");
 			if(!$item) {
 				$item = new Folder();
 				$item->ParentID = $parentID;
 				$item->Name = $part;
 				$item->Title = $part;
 				$item->write();
-				if(!file_exists($item->getFullPath())) mkdir($item->getFullPath(),Filesystem::$folder_create_mask);
+			}
+			if(!file_exists($item->getFullPath())) {
+				Filesystem::makeFolder($item->getFullPath());
 			}
 			$parentID = $item->ID;
 		}
+
 		return $item;
 	}
 	
@@ -201,6 +211,9 @@ class Folder extends File {
 		}
 	}
 	
+	function validate() {
+		return new ValidationResult(true);
+	}
 
 	//-------------------------------------------------------------------------------------------------
 	// Data Model Definition
@@ -261,37 +274,31 @@ class Folder extends File {
 	 * Returns true if this folder has children
 	 */
 	public function hasChildren() {
-		return $this->ID && $this->myChildren() && $this->myChildren()->Count() > 0;	
-	}
-	
-	/**
-	 * Overload autosetFilename() to call autosetFilename() on all the children, too
-	 */
-	public function autosetFilename() {
-		parent::autosetFilename();
-
-		if($this->ID && ($children = $this->AllChildren())) {
-			$this->write();
-
-			foreach($children as $child) {
-				$child->autosetFilename();
-				$child->write();
-			}
-		}
+		return (bool)DB::query("SELECT COUNT(*) FROM `File` WHERE `ParentID` = "
+			. (int)$this->ID)->value();
 	}
 
 	/**
-	 * Overload resetFilename() to call resetFilename() on all the children, too.
-	 * Pass renamePhysicalFile = false, since the folder renaming will have taken care of this
+	 * Returns true if this folder has children
 	 */
-	protected function resetFilename($renamePhysicalFile = true) {
-		parent::resetFilename($renamePhysicalFile);
+	public function hasChildFolders() {
+		$SQL_folderClasses = Convert::raw2sql(ClassInfo::subclassesFor('Folder'));
+		
+		return (bool)DB::query("SELECT COUNT(*) FROM `File` WHERE `ParentID` = " . (int)$this->ID
+			. " AND `ClassName` IN ('" . implode("','", $SQL_folderClasses) . "')")->value();
+	}
 
+	/**
+	 * Overloaded to call recursively on all contained {@link File} records.
+	 */
+	public function updateFilesystem() {
+		parent::updateFilesystem();
+
+		// Note: Folders will have been renamed on the filesystem already at this point,
+		// File->updateFilesystem() needs to take this into account.
 		if($this->ID && ($children = $this->AllChildren())) {
-			$this->write();
-
 			foreach($children as $child) {
-				$child->resetFilename(false);
+				$child->updateFilesystem();
 				$child->write();
 			}
 		}

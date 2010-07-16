@@ -47,6 +47,26 @@ class File extends DataObject {
 		"Hierarchy",
 	);
 
+	/**
+	 * @var array List of allowed file extensions, enforced through {@link validate()}.
+	 */
+	public static $allowed_extensions = array(
+		'','html','htm','xhtml','js','css',
+		'bmp','png','gif','jpg','jpeg','ico','pcx','tif','tiff',
+		'au','mid','midi','mpa','mp3','ogg','m4a','ra','wma','wav','cda',
+		'avi','mpg','mpeg','asf','wmv','m4v','mov','mkv','mp4','swf','flv','ram','rm',
+		'doc','docx','txt','rtf','xls','xlsx','pages',
+		'ppt','pptx','pps','csv',
+		'cab','arj','tar','zip','zipx','sit','sitx','gz','tgz','bz2','ace','arc','pkg','dmg','hqx','jar',
+		'xml','pdf',
+	);
+	
+	/**
+	 * @var If this is true, then restrictions set in {@link $allowed_max_file_size} and
+	 * {@link $allowed_extensions} will be applied to users with admin privileges as
+	 * well.
+	 */
+	public static $apply_restrictions_to_admin = true;
 	
 	/**
 	 * Cached result of a "SHOW FIELDS" call
@@ -99,7 +119,9 @@ class File extends DataObject {
 	protected function onBeforeDelete() {
 		parent::onBeforeDelete();
 
-		$this->autosetFilename();
+		// ensure that the record is synced with the filesystem before deleting
+		$this->updateFilesystem();
+		
 		if($this->Filename && $this->Name && file_exists($this->getFullPath()) && !is_dir($this->getFullPath())) {
 			unlink($this->getFullPath());
 		}
@@ -245,12 +267,17 @@ class File extends DataObject {
 	/**
 	 * Event handler called before deleting from the database.
 	 * You can overload this to clean up or otherwise process data before delete this
-	 * record.  Don't forget to call parent::onBeforeDelete(), though!
+	 * record. 
 	 */
 	protected function onBeforeWrite() {
 		parent::onBeforeWrite();
 
-		if(!$this->Name) $this->Name = "new-" . strtolower($this->class);
+		// Set default name
+		if(!$this->getField('Name')) $this->Name = "new-" . strtolower($this->class);
+		
+		// Set name on filesystem. If the current object is a "Folder", will also update references
+		// to subfolders and contained file records (both in database and filesystem)
+		$this->updateFilesystem();
 
 		if($brokenPages = $this->BackLinkTracking()) {
 			foreach($brokenPages as $brokenPage) {
@@ -311,56 +338,70 @@ class File extends DataObject {
 			}
 		}
 
+		// Update title
 		if(!$this->getField('Title')) $this->__set('Title', str_replace(array('-','_'),' ',ereg_replace('\.[^.]+$','',$name)));
+		
+		// Update actual field value
 		$this->setField('Name', $name);
-
-
-		if($oldName && $oldName != $this->Name) {
-			$this->resetFilename();
-		} else {
-			$this->autosetFilename();
-		}
-
+		
+		// Ensure that the filename is updated as well (only in-memory)
+		// Important: Circumvent the getter to avoid infinite loops
+		$this->setField('Filename', $this->getRelativePath());
 
 		return $this->getField('Name');
 	}
 
 	/**
-	 * Change a filename, moving the file if appropriate.
-	 * @param $renamePhysicalFile Set this to false if you don't want to rename the physical file. Used when calling resetFilename() on the children of a folder.
+	 * Moving the file if appropriate according to updated database content.
+	 * Throws an Exception if the new file already exists.
+	 * 
+	 * Caution: This method should just be called during a {@link write()} invocation,
+	 * as it relies on {@link DataObject->getChangedFields()}, which is reset after a {@link write()} call.
+	 * Might be called as {@link File->updateFilesystem()} from within {@link Folder->updateFilesystem()},
+	 * so it has to handle both files and folders.
+	 * 
+	 * Assumes that the "Filename" property was previously updated, either directly or indirectly.
+	 * (it might have been influenced by {@link setName()} or {@link setParentID()} before).
 	 */
-	protected function resetFilename($renamePhysicalFile = true) {
-		$oldFilename = $this->getField('Filename');
-		$newFilename = $this->getRelativePath();
-
-		if($this->Name && $this->Filename && file_exists(Director::getAbsFile($oldFilename)) && strpos($oldFilename, '//') === false) {
-			if($renamePhysicalFile) {
-				$from = Director::getAbsFile($oldFilename);
-				$to = Director::getAbsFile($newFilename);
-
-				// Error checking
-				if(!file_exists($from)) user_error("Cannot move $oldFilename to $newFilename - $oldFilename doesn't exist", E_USER_WARNING);
-				else if(!file_exists(dirname($to))) user_error("Cannot move $oldFilename to $newFilename - " . dirname($newFilename) . " doesn't exist", E_USER_WARNING);
-				else if(!rename($from, $to)) user_error("Cannot move $oldFilename to $newFilename", E_USER_WARNING);
-
-				else $this->updateLinks($oldFilename, $newFilename);
-
-			} else {
-				$this->updateLinks($oldFilename, $newFilename);
-			}
-		} else {
-			// If the old file doesn't exist, maybe it's already been renamed.
-			if(file_exists(Director::getAbsFile($newFilename))) $this->updateLinks($oldFilename, $newFilename);
-		}
-
-		$this->setField('Filename', $newFilename);
-	}
-
-	/**
-	 * Set the Filename field without manipulating the filesystem.
-	 */
-	protected function autosetFilename() {
+	public function updateFilesystem() {
+		$changedFields = $this->getChangedFields();
+		
+		// Regenerate "Filename", just to be sure
 		$this->setField('Filename', $this->getRelativePath());
+		
+		// If certain elements are changed, update the filesystem reference
+		if(!isset($changedFields['Filename'])) return false;
+		
+		$pathBefore = $changedFields['Filename']['before'];
+		$pathAfter = $changedFields['Filename']['after'];
+		
+		// If the file or folder didn't exist before, don't rename - its created
+		if(!$pathBefore) return;
+		
+		$pathBeforeAbs = Director::getAbsFile($pathBefore);
+		$pathAfterAbs = Director::getAbsFile($pathAfter);
+
+		// Check that original file or folder exists, and rename on filesystem if required.
+		// The folder of the path might've already been renamed by Folder->updateFilesystem()
+		// before any filesystem update on contained file or subfolder records is triggered.
+		if(!file_exists($pathAfterAbs)) {
+			if(!is_a($this, 'Folder')) {
+				// Only throw a fatal error if *both* before and after paths don't exist.
+				if(!file_exists($pathBeforeAbs)) throw new Exception("Cannot move $pathBefore to $pathAfter - $pathBefore doesn't exist");
+				
+				// Check that target directory (not the file itself) exists.
+				// Only check if we're dealing with a file, otherwise the folder will need to be created
+				if(!file_exists(dirname($pathAfterAbs))) throw new Exception("Cannot move $pathBefore to $pathAfter - Directory " . dirname($pathAfter) . " doesn't exist");
+			} 
+			
+			// Rename file or folder
+			$success = rename($pathBeforeAbs, $pathAfterAbs);
+			if(!$success) throw new Exception("Cannot move $pathBeforeAbs to $pathAfterAbs");
+		}
+		
+		
+		// Update any database references
+		$this->updateLinks($pathBeforeAbs, $pathAfterAbs);
 	}
 
 	function setField( $field, $value ) {
@@ -385,11 +426,14 @@ class File extends DataObject {
 		}
 	}
 
+	/**
+	 * Does not change the filesystem itself, please use {@link write()} for this.
+	 */
 	function setParentID($parentID) {
 		$this->setField('ParentID', $parentID);
 
-		if($this->Name) $this->resetFilename();
-		else $this->autosetFilename();
+		// Don't change on the filesystem, we'll handle that in onBeforeWrite()
+		$this->setField('Filename', $this->getRelativePath()); 
 
 		return $this->getField('ParentID');
 	}
@@ -436,7 +480,7 @@ class File extends DataObject {
 	function getRelativePath() {
 
 		if($this->ParentID) {
-			$p = DataObject::get_one('Folder', "ID={$this->ParentID}");
+			$p = DataObject::get_by_id('Folder', $this->ParentID);
 
 			if($p && $p->ID) return $p->getRelativePath() . $this->getField("Name");
 			else return ASSETS_DIR . "/" . $this->getField("Name");
@@ -454,6 +498,7 @@ class File extends DataObject {
 	}
 
 	function getFilename() {
+		// Default behaviour: Return field if its set
 		if($this->getField('Filename')) {
 			return $this->getField('Filename');
 		} else {
@@ -461,6 +506,9 @@ class File extends DataObject {
 		}
 	}
 
+	/**
+	 * Does not change the filesystem itself, please use {@link write()} for this.
+	 */
 	function setFilename($val) {
 		$this->setField('Filename', $val);
 		$this->setField('Name', basename($val));
@@ -478,12 +526,19 @@ class File extends DataObject {
 	/**
 	 * Gets the extension of a filepath or filename,
 	 * by stripping away everything before the last "dot".
+	 * Caution: Only returns the last extension in "double-barrelled"
+	 * extensions (e.g. "gz" for "tar.gz").
+	 * 
+	 * Examples:
+	 * - "myfile" returns ""
+	 * - "myfile.txt" returns "txt"
+	 * - "myfile.tar.gz" returns "gz"
 	 *
 	 * @param string $filename
 	 * @return string
 	 */
 	public static function get_file_extension($filename) {
-		return strtolower(substr($filename,strrpos($filename,'.')+1));
+		return pathinfo($filename, PATHINFO_EXTENSION);
 	}
 	
 	/**
@@ -611,6 +666,33 @@ class File extends DataObject {
 		$labels['Sort'] = _t('File.Sort', 'Sort Order');
 		
 		return $labels;
+	}
+	
+	function validate() {
+		if(File::$apply_restrictions_to_admin || !Permission::check('ADMIN')) {
+			// Extension validation
+			// TODO Merge this with Upload_Validator
+			$extension = $this->getExtension();
+			if($extension && !in_array($extension, self::$allowed_extensions)) {
+				$exts =  self::$allowed_extensions;
+				sort($exts);
+				$message = sprintf(
+					_t(
+						'File.INVALIDEXTENSION', 
+						'Extension is not allowed (valid: %s)',
+						PR_MEDIUM,
+						'Argument 1: Comma-separated list of valid extensions'
+					),
+					implode(', ',$exts)
+				);
+				return new ValidationResult(false, $message);
+			}
+		}
+		
+		// We aren't validating for an existing "Filename" on the filesystem.
+		// A record should still be saveable even if the underlying record has been removed.
+		
+		return new ValidationResult(true);
 	}
 	
 }
