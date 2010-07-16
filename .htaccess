@@ -1,4 +1,9 @@
-<Files cli-script.php>
-Order deny,allow
-Deny from all
+<Files *.php>
+	Deny from all
+</Files>
+<Files static-main.php>
+	Allow from all
+</Files>
+<Files main.php>
+	Allow from all
 </Files>
