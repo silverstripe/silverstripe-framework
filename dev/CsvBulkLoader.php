@@ -1,7 +1,7 @@
 <?php
 /**
- * Uses the fgetcsv() function to process CSV input.
- * The input is expected to be UTF8.
+ * Utility class to facilitate complex CSV-imports by defining column-mappings and custom converters. 
+ * Uses the fgetcsv() function to process CSV input. Accepts a file-handler as input.
  * 
  * @see http://rfc.net/rfc4180.html
  * @package cms
