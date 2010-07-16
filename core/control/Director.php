@@ -766,6 +766,11 @@ class Director {
 	/**
 	 * Specify HTTP_HOST values that are development environments.
 	 * For information about environment types, see {@link Director::set_environment_type()}.
+	 * 
+	 * CAUTION: Domain information can easily be spoofed in HTTP requests,
+	 * we recommend to set this mode via {@link Director::set_environment_type()}
+	 * or an _ss_environment.php instead.
+	 * 
 	 * @param $servers array An array of HTTP_HOST values that should be treated as development environments.
 	 */
 	static function set_dev_servers($servers) {
@@ -775,6 +780,11 @@ class Director {
 	/**
 	 * Specify HTTP_HOST values that are test environments.
 	 * For information about environment types, see {@link Director::set_environment_type()}.
+	 * 
+	 * CAUTION: Domain information can easily be spoofed in HTTP requests,
+	 * we recommend to set this mode via {@link Director::set_environment_type()}
+	 * or an _ss_environment.php instead.
+	 * 
 	 * @param $servers array An array of HTTP_HOST values that should be treated as test environments.
 	 */
 	static function set_test_servers($servers) {
