@@ -222,7 +222,7 @@ class TreeDropdownField extends FormField {
 		if( isset($_REQUEST['forceValue']) || $this->value ) {
 			$forceValue = ( isset($_REQUEST['forceValue']) ? $_REQUEST['forceValue'] : $this->value);
 			if(($values = preg_split('/,\s*/', $forceValue)) && count($values)) foreach($values as $value) {
-				if(!is_numeric($value)) continue;
+				if(!$value) continue;
 				
 				$obj->markToExpose($this->objectForKey($value));
 			}
@@ -274,7 +274,7 @@ class TreeDropdownField extends FormField {
 				$this->searchIds[$row->ID] = true;
 			}
 			while (!empty($parents)) {
-				$res = DB::query('SELECT "ParentID", "ID" FROM \"' . $this->sourceObject . '\" WHERE "ID" in ('.implode(',',array_keys($parents)).')');
+				$res = DB::query('SELECT "ParentID", "ID" FROM "' . $this->sourceObject . '" WHERE "ID" in ('.implode(',',array_keys($parents)).')');
 				$parents = array();
 
 				foreach($res as $row) {
