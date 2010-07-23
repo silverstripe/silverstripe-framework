@@ -107,7 +107,7 @@ SS
 				<head><% base_tag %></head>
 				<body><p>test</p><body>
 			</html>');
-		$this->assertRegExp('/<head><base href=".*"><\/base><\/head>/', $tmpl1->process(new ViewableData()));
+		$this->assertRegExp('/<head><base href=".*" \/><\/head>/', $tmpl1->process(new ViewableData()));
 			
 		// HTML4 and 5 will only have it for IE
 		$tmpl2 = SSViewer::fromString('<!DOCTYPE html>
@@ -134,7 +134,7 @@ SS
 
 		$response = new SS_HTTPResponse($tmpl1->process(new ViewableData()));
 		$negotiator->xhtml($response);
-		$this->assertRegExp('/<head><base href=".*"><\/base><\/head>/', $response->getBody());
+		$this->assertRegExp('/<head><base href=".*" \/><\/head>/', $response->getBody());
 	}
 }
 
