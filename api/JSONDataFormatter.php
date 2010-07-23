@@ -63,7 +63,7 @@ class JSONDataFormatter extends DataFormatter {
 				} else {
 					$href = Director::absoluteURL(self::$api_base . "$className/$id/$relName");
 				}
-				$jsonParts[] = "$relName : { \"className\" : \"$relClass\", \"href\" : \"$href.json\", \"id\" : \"{$obj->$fieldName}\" }";
+				$jsonParts[] = "\"$relName\" : { \"className\" : \"$relClass\", \"href\" : \"$href.json\", \"id\" : \"{$obj->$fieldName}\" }";
 			}
 	
 			foreach($obj->has_many() as $relName => $relClass) {
@@ -80,7 +80,7 @@ class JSONDataFormatter extends DataFormatter {
 					$href = Director::absoluteURL(self::$api_base . "$relClass/$item->ID");
 					$jsonInnerParts[] = "{ \"className\" : \"$relClass\", \"href\" : \"$href.json\", \"id\" : \"{$obj->$fieldName}\" }";
 				}
-				$jsonParts[] = "$relName : [\n    " . implode(",\n    ", $jsonInnerParts) . "  \n  ]";
+				$jsonParts[] = "\"$relName\" : [\n    " . implode(",\n    ", $jsonInnerParts) . "  \n  ]";
 			}
 	
 			foreach($obj->many_many() as $relName => $relClass) {
@@ -97,7 +97,7 @@ class JSONDataFormatter extends DataFormatter {
 					$href = Director::absoluteURL(self::$api_base . "$relClass/$item->ID");
 					$jsonInnerParts[] = "    { \"className\" : \"$relClass\", \"href\" : \"$href.json\", \"id\" : \"{$obj->$fieldName}\" }";
 				}
-				$jsonParts[] = "$relName : [\n    " . implode(",\n    ", $jsonInnerParts) . "\n  ]";
+				$jsonParts[] = "\"$relName\" : [\n    " . implode(",\n    ", $jsonInnerParts) . "\n  ]";
 			}
 		}
 		
