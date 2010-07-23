@@ -2208,8 +2208,9 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		if($field == "Created" && get_parent_class($this) == "DataObject") return "SS_Datetime";
 
 		// Add fields from Versioned decorator
-		if($field == "Version") return $this->hasExtension('Versioned') ? "Int" : false;
-		
+		if($field == 'Version' && $this->hasExtension('Versioned')) { 
+			return 'Int';
+		}
 		// get cached fieldmap
 		$fieldMap = isset(self::$cache_has_own_table_field[$this->class]) ? self::$cache_has_own_table_field[$this->class] : null;
 		

@@ -159,6 +159,33 @@ class VersionedTest extends SapphireTest {
 		
 		Versioned::reading_stage($origStage);
 	}
+	
+	/**
+	 * @covers DataObject::hasOwnTableDatabaseField()
+	 */
+	public function testHasOwnTableDatabaseFieldWithVersioned() {
+		$noversion    = new DataObject();
+		$versioned    = new VersionedTest_DataObject();
+		$versionedSub = new VersionedTest_Subclass();
+		$versionField = new VersionedTest_UnversionedWithField();
+
+		$this->assertFalse(
+			(bool) $noversion->hasOwnTableDatabaseField('Version'),
+			'Plain models have no version field.'
+		);
+		$this->assertEquals(
+			'Int', $versioned->hasOwnTableDatabaseField('Version'),
+			'The versioned ext adds an Int version field.'
+		);
+		$this->assertEquals(
+			'Int', $versionedSub->hasOwnTableDatabaseField('Version'),
+			'Sub-classes of a versioned model have a Version field.'
+		);
+		$this->assertEquals(
+			'Varchar', $versionField->hasOwnTableDatabaseField('Version'),
+			'Models w/o Versioned can have their own Version field.'
+		);
+	}
 }
 
 class VersionedTest_DataObject extends DataObject implements TestOnly {
@@ -175,4 +202,11 @@ class VersionedTest_Subclass extends VersionedTest_DataObject implements TestOnl
 	static $db = array(
 		"ExtraField" => "Varchar",
 	);
+}
+
+/**
+ * @ignore
+ */
+class VersionedTest_UnversionedWithField extends DataObject implements TestOnly {
+	public static $db = array('Version' => 'Varchar(255)');
 }
