@@ -1605,7 +1605,7 @@ class Member_ProfileForm extends Form {
 		$fields->push(new HiddenField('ID','ID',$member->ID));
 
 		$actions = new FieldSet(
-			new FormAction('dosave',_t('CMSMain.SAVE'))
+			new FormAction('dosave',_t('CMSMain.SAVE', 'Save'))
 		);
 		
 		$validator = new Member_Validator();
