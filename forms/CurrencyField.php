@@ -13,14 +13,14 @@ class CurrencyField extends TextField {
 	 */
 	function setValue($val) {
 		$value = ($val) ? $val : 0.00;
-		$this->value = '$' . number_format(ereg_replace('[^0-9.]', '', $value), 2);
+		$this->value = '$' . number_format((double)preg_replace('/[^0-9.\-]/', '', $value), 2);
 	}
 	/**
 	 * Overwrite the datavalue before saving to the db ;-)
 	 */
 	function dataValue() {
 		if($this->value){
-			return preg_replace('/[^0-9.]/',"", $this->value);
+			return preg_replace('/[^0-9.\-]/','', $this->value);
 		}else{
 			return 0.00;
 		}
@@ -54,7 +54,7 @@ Behaviour.register({
 			if(!el || !el.value) return true;
 			
 			var value = \$F(el);
-			if(value.length > 0 && !value.match(/^\s*\\\\$?(\d{1,3}(\,\d{3})*|(\d+))(\.\d{2})?\s*\$/)) {
+			if(value.length > 0 && !value.match(/^\s*(-?\\\$?|\\\$-?)?(\d{1,3}(\,\d{3})*|(\d+))(\.\d{2})?\s*\$/)) {
 				validationError(el,"$error","validation",false);
 				return false;
 			}
@@ -72,7 +72,7 @@ JS;
 	}
 
 	function validate($validator) {
-		if(!empty ($this->value) && !preg_match('/^\s*\$?(\d{1,3}(\,\d{3})*|(\d+))(\.\d{2})?\s*$/', $this->value)) {
+		if(!empty ($this->value) && !preg_match('/^\s*(\-?\$?|\$\-?)?(\d{1,3}(\,\d{3})*|(\d+))(\.\d{2})?\s*$/', $this->value)) {
 			$validator->validationError($this->name, _t('Form.VALIDCURRENCY', "Please enter a valid currency."), "validation", false);
 			return false;
 		}
