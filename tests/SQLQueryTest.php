@@ -208,6 +208,30 @@ class SQLQueryTest extends SapphireTest {
 			"filtersOnFK() is true with table and quoted column name "
 		);
 	}
+
+	public function testInnerJoin() {
+		$query = new SQLQuery();
+		$query->from( 'MyTable' );
+		$query->innerJoin( 'MyOtherTable', 'MyOtherTable.ID = 2' );
+		$query->leftJoin( 'MyLastTable', 'MyOtherTable.ID = MyLastTable.ID' );
+
+		$this->assertEquals( 'SELECT * FROM MyTable '.
+			'INNER JOIN "MyOtherTable" AS "MyOtherTable" ON MyOtherTable.ID = 2 '.
+			'LEFT JOIN "MyLastTable" AS "MyLastTable" ON MyOtherTable.ID = MyLastTable.ID',
+			$query->sql()
+		);
+
+		$query = new SQLQuery();
+		$query->from( 'MyTable' );
+		$query->innerJoin( 'MyOtherTable', 'MyOtherTable.ID = 2', 'table1' );
+		$query->leftJoin( 'MyLastTable', 'MyOtherTable.ID = MyLastTable.ID', 'table2' );
+
+		$this->assertEquals( 'SELECT * FROM MyTable '.
+			'INNER JOIN "MyOtherTable" AS "table1" ON MyOtherTable.ID = 2 '.
+			'LEFT JOIN "MyLastTable" AS "table2" ON MyOtherTable.ID = MyLastTable.ID',
+			$query->sql()
+		);
+	}
 }
 
 class SQLQueryTest_DO extends DataObject implements TestOnly {
