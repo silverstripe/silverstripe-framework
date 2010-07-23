@@ -763,7 +763,7 @@ class MySQLDatabase extends SS_Database {
 	public function searchEngine($classesToSearch, $keywords, $start, $pageLength, $sortBy = "Relevance DESC", $extraFilter = "", $booleanSearch = false, $alternativeFileFilter = "", $invertedMatch = false) {
 		$fileFilter = '';	 	
 	 	$keywords = Convert::raw2sql($keywords);
-		$htmlEntityKeywords = htmlentities($keywords);
+		$htmlEntityKeywords = htmlentities($keywords,ENT_NOQUOTES);
 		
 		$extraFilters = array('SiteTree' => '', 'File' => '');
 	 	
