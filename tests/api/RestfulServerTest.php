@@ -176,6 +176,7 @@ class RestfulServerTest extends SapphireTest {
 		$this->assertNotEquals($responseArr['ID'], $comment1->ID);
 		$this->assertEquals($responseArr['Comment'], 'created');
 		$this->assertEquals($responseArr['Name'], 'New Comment');
+		$this->assertEquals($response->getHeader('Location'), Controller::join_links(Director::absoluteBaseURL(), $url, $responseArr['ID']));
 	
 		unset($_SERVER['PHP_AUTH_USER']);
 		unset($_SERVER['PHP_AUTH_PW']);
@@ -201,6 +202,7 @@ class RestfulServerTest extends SapphireTest {
 		$body = '{"Comment":"updated"}';
 		$response = Director::test($url, null, null, 'PUT', $body);
 		$this->assertEquals($response->getStatusCode(), 200); // Updated
+		$this->assertEquals($response->getHeader('Location'), Controller::join_links(Director::absoluteBaseURL(), $url));
 		$obj = Convert::json2obj($response->getBody());
 		$this->assertEquals($obj->ID, $comment1->ID);
 		$this->assertEquals($obj->Comment, 'updated');
@@ -229,6 +231,7 @@ class RestfulServerTest extends SapphireTest {
 		$body = '<RestfulServerTest_Comment><Comment>updated</Comment></RestfulServerTest_Comment>';
 		$response = Director::test($url, null, null, 'PUT', $body);
 		$this->assertEquals($response->getStatusCode(), 200); // Updated
+		$this->assertEquals($response->getHeader('Location'), Controller::join_links(Director::absoluteBaseURL(), $url));
 		$obj = Convert::xml2array($response->getBody());
 		$this->assertEquals($obj['ID'], $comment1->ID);
 		$this->assertEquals($obj['Comment'], 'updated');
