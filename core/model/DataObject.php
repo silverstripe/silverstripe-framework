@@ -1635,7 +1635,8 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 
 		foreach($classes as $class) {
 			if(in_array($class, array('ViewableData', 'Object', 'DataObject'))) continue;
-			
+			$relationName = null;
+
 			// Find extra fields for one component
 			if($component) {
 				$SNG_class = singleton($class);
@@ -1653,7 +1654,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 					$candidateManyMany = $SNG_candidate->stat('belongs_many_many');
 					
 					// Find the relation given the class
-					$relationName = null;
 					if($candidateManyMany) foreach($candidateManyMany as $relation => $relatedClass) {
 						if($relatedClass == $class) {
 							$relationName = $relation;
