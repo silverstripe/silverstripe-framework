@@ -644,7 +644,7 @@ class SSViewer {
 		
 		// Is the document XHTML?
 		if(preg_match('/<!DOCTYPE[^>]+xhtml/i', $contentGeneratedSoFar)) {
-			return "<base href=\"$base\"></base>";
+			return "<base href=\"$base\" />";
 		} else {
 			return "<base href=\"$base\"><!--[if lte IE 6]></base><![endif]-->";
 		}
