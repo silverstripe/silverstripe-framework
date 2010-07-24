@@ -646,7 +646,7 @@ class Director {
 		if($matched && !isset($_SERVER['HTTPS'])) {
 			$destURL = str_replace('http:', 'https:', Director::absoluteURL($_SERVER['REQUEST_URI']));
 
-			header("Location: $destURL");
+			if(!headers_sent()) header("Location: $destURL");
 			if(SapphireTest::is_running_test()) {
 				return $destURL;
 			} else {
