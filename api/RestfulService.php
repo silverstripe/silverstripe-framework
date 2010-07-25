@@ -109,17 +109,12 @@ class RestfulService extends ViewableData {
 	 * @todo Pass the response headers to RestfulService_Response
 	 *
 	 * This is a replacement of {@link connect()}.
+	 *
+	 * @return RestfulService_Response - If curl request produces error, the returned response's status code will be 500
 	 */
 	public function request($subURL = '', $method = "GET", $data = null, $headers = null, $curlOptions = array()) {
-		$url = $this->baseURL . $subURL; // Url for the request
-		if($this->queryString) {
-			if(strpos($url, '?') !== false) {
-				$url .= '&' . $this->queryString;
-			} else {
-				$url .= '?' . $this->queryString;
-			}
-		}
-		$url = str_replace(' ', '%20', $url); // Encode spaces
+		
+		$url = $this->getAbsoluteRequestURL($subURL); 
 		$method = strtoupper($method);
 		
 		assert(in_array($method, array('GET','POST','PUT','DELETE','HEAD','OPTIONS')));
@@ -179,23 +174,51 @@ class RestfulService extends ViewableData {
 				$responseBody = curl_exec($ch);
 				$curlError = curl_error($ch);
 			}
+
+			$statusCode = curl_getinfo($ch, CURLINFO_HTTP_CODE); 			
+			if($curlError !== '' || $statusCode == 0) $statusCode = 500;
 			
-			if($responseBody === false) {
-				user_error("Curl Error:" . $curlError, E_USER_WARNING);
-				return;
-			}
-
-			$statusCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-			$response = new RestfulService_Response($responseBody, curl_getinfo($ch, CURLINFO_HTTP_CODE));
-		
+			$response = new RestfulService_Response($responseBody, $statusCode);		
 			curl_close($ch);
-
-			// Serialise response object and write to cache
-			$store = serialize($response);
-			file_put_contents($cache_path,$store);
+			
+			if($curlError === '' && !$response->isError()) {
+				// Serialise response object and write to cache
+				$store = serialize($response);
+				file_put_contents($cache_path, $store);
+			}
+			else {
+				// In case of curl or/and http indicate error, populate response's cachedBody property 
+				// with cached response body with the cache file exists 
+				if (@file_exists($cache_path)) {
+					$store = file_get_contents($cache_path);
+					$cachedResponse = unserialize($store);
+					
+					$response->setCachedBody($cachedResponse->getBody()); 
+				}
+				else {
+					$response->setCachedBody(false); 
+				}
+			}
 		}
 
 		return $response;
+	}
+	
+	/** 
+	 * Returns a full request url
+	 * @param string 
+	 */ 
+	function getAbsoluteRequestURL($subURL) {
+		$url = $this->baseURL . $subURL; // Url for the request
+		if($this->queryString) {
+			if(strpos($url, '?') !== false) {
+				$url .= '&' . $this->queryString;
+			} else {
+				$url .= '?' . $this->queryString;
+			}
+		}
+		
+		return str_replace(' ', '%20', $url); // Encode spaces
 	}
 	
 	/**
@@ -370,6 +393,12 @@ class RestfulService extends ViewableData {
 class RestfulService_Response extends SS_HTTPResponse {
 	protected $simpleXML;
 	
+	/**
+	 * @var boolean It should be populated with cached content 
+	 * when a request referring to this response was unsuccessful
+	 */
+	protected $cachedBody = false;  
+	
 	function __construct($body, $statusCode = 200, $headers = null) {
 		$this->setbody($body);
 		$this->setStatusCode($statusCode);
@@ -386,6 +415,20 @@ class RestfulService_Response extends SS_HTTPResponse {
 			}
 		}
 		return $this->simpleXML;
+	}
+	
+	/**
+	 * @return string
+	 */
+	function getCachedBody() {
+		return $this->cachedBody;
+	}
+	
+	/**
+	 * @param string
+	 */
+	function setCachedBody($content) {
+		$this->cachedBody = $content; 
 	}
 	
 	/**
