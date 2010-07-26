@@ -108,6 +108,8 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 		$this->originalIsRunningTest = self::$is_running_test;
 		self::$is_running_test = true;
 		
+		// i18n needs to be set to the defaults or tests fail
+		i18n::set_locale(i18n::default_locale());
 		i18n::set_date_format(null);
 		i18n::set_time_format(null);
 		
