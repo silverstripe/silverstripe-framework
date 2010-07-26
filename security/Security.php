@@ -296,11 +296,12 @@ class Security extends Controller {
 	 *                           they should go.
 	 */
 	public function logout($redirect = true) {
-		if($member = Member::currentUser())
-			$member->logOut();
+		$member = Member::currentUser();
+		if($member) $member->logOut();
 
-		if($redirect)
-			Director::redirectBack();
+		Session::clear_all();
+
+		if($redirect) Director::redirectBack();
 	}
 
 
