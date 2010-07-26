@@ -642,6 +642,9 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	 * @todo Make this db agnostic
 	 */
 	static function create_temp_db() {
+		// Disable PHPUnit error handling
+		restore_error_handler();
+		
 		// Create a temporary database
 		$dbConn = DB::getConn();
 		$dbname = 'tmpdb' . rand(1000000,9999999);
@@ -654,6 +657,9 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 		
 		$st = new SapphireTest();
 		$st->resetDBSchema();
+		
+		// Reinstate PHPUnit error handling
+		set_error_handler(array('PHPUnit_Util_ErrorHandler', 'handleError'));
 		
 		return $dbname;
 	}
