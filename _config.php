@@ -63,7 +63,9 @@ define('MCE_ROOT', 'sapphire/thirdparty/tinymce/');
  * For more information see:
  * {@link http://doc.silverstripe.org/doku.php?id=email_bouncehandler}
  */
-define('EMAIL_BOUNCEHANDLER_KEY', '1aaaf8fb60ea253dbf6efa71baaacbb3');
+if(!defined('EMAIL_BOUNCEHANDLER_KEY')) {
+	define('EMAIL_BOUNCEHANDLER_KEY', '1aaaf8fb60ea253dbf6efa71baaacbb3');
+}
 
 PasswordEncryptor::register('none', 'PasswordEncryptor_None');
 PasswordEncryptor::register('md5', 'PasswordEncryptor_LegacyPHPHash("md5")');
