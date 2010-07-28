@@ -54,25 +54,38 @@ class ErrorPage extends Page {
 	/**
 	 * Ensures that there is always a 404 page
 	 * by checking if there's an instance of
-	 * ErrorPage with a 404 error code. If there
+	 * ErrorPage with a 404 and 500 error code. If there
 	 * is not, one is created when the DB is built.
 	 */
 	function requireDefaultRecords() {
 		parent::requireDefaultRecords();
 
-		$errorPage = DataObject::get_one('ErrorPage', "\"ErrorCode\" = '404'");
-		if(!($errorPage && $errorPage->exists())) {
-			$errorpage = new ErrorPage();
-			$errorpage->ErrorCode = 404;
-			$errorpage->Title = _t('ErrorPage.DEFAULTERRORPAGETITLE', 'Page not found');
-			$errorpage->Content = _t('ErrorPage.DEFAULTERRORPAGECONTENT', '<p>Sorry, it seems you were trying to access a page that doesn\'t exist.</p><p>Please check the spelling of the URL you were trying to access and try again.</p>');
-			$errorpage->Status = 'New page';
-			$errorpage->write();
-			
+		$pageNotFoundErrorPage = DataObject::get_one('ErrorPage', "\"ErrorCode\" = '404'");
+		if(!($pageNotFoundErrorPage && $pageNotFoundErrorPage->exists())) {
+			$pageNotFoundErrorPage = new ErrorPage();
+			$pageNotFoundErrorPage->ErrorCode = 404;
+			$pageNotFoundErrorPage->Title = _t('ErrorPage.DEFAULTERRORPAGETITLE', 'Page not found');
+			$pageNotFoundErrorPage->Content = _t('ErrorPage.DEFAULTERRORPAGECONTENT', '<p>Sorry, it seems you were trying to access a page that doesn\'t exist.</p><p>Please check the spelling of the URL you were trying to access and try again.</p>');
+			$pageNotFoundErrorPage->Status = 'New page';
+			$pageNotFoundErrorPage->write();
+			$pageNotFoundErrorPage->publish('Stage', 'Live');
+
 			DB::alteration_message('404 page created', 'created');
 		}
-	}
 
+		$serverErrorPage = DataObject::get_one('ErrorPage', "\"ErrorCode\" = '500'");
+		if(!($serverErrorPage && $serverErrorPage->exists())) {
+			$serverErrorPage = new ErrorPage();
+			$serverErrorPage->ErrorCode = 500;
+			$serverErrorPage->Title = _t('ErrorPage.DEFAULTSERVERERRORPAGETITLE', 'Server error');
+			$serverErrorPage->Content = _t('ErrorPage.DEFAULTSERVERERRORPAGECONTENT', '<p>Sorry, there was a problem with handling your request.</p>');
+			$serverErrorPage->Status = 'New page';
+			$serverErrorPage->write();
+			$serverErrorPage->publish('Stage', 'Live');
+
+			DB::alteration_message('500 page created', 'created');
+		}
+	}
 
 	function getCMSFields() {
 		$fields = parent::getCMSFields();
