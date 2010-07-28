@@ -22,6 +22,8 @@ class ErrorPage extends Page {
 		"ShowInSearch" => 0
 	);
 	
+	static $icon = array("sapphire/javascript/tree/images/page", "file");
+	
 	protected static $static_filepath = ASSETS_PATH;
 	
 	/**
