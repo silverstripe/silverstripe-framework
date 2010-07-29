@@ -7,8 +7,15 @@
  */
 class DirectorTest extends SapphireTest {
 
+	protected static $originalRequestURI;
+
 	function setUp() {
 		parent::setUp();
+
+		// Hold the original request URI once so it doesn't get overwritten
+		if(!self::$originalRequestURI) {
+			self::$originalRequestURI = $_SERVER['REQUEST_URI'];
+		}
 		
 		Director::addRules(99, array(
 			'DirectorTestRule/$Action/$ID/$OtherID' => 'DirectorTestRequest_Controller'
@@ -17,6 +24,9 @@ class DirectorTest extends SapphireTest {
 	
 	function tearDown() {
 		// TODO Remove director rule, currently API doesnt allow this
+		
+		// Reinstate the original REQUEST_URI after it was modified by some tests
+		$_SERVER['REQUEST_URI'] = self::$originalRequestURI;
 		
 		parent::tearDown();
 	}
@@ -191,49 +201,35 @@ class DirectorTest extends SapphireTest {
 	}
 
 	function testForceSSLProtectsEntireSite() {
-		$originalURI = $_SERVER['REQUEST_URI'];
 		$_SERVER['REQUEST_URI'] = Director::baseURL() . 'admin';
 		$output = Director::forceSSL();
 		$this->assertEquals($output, 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
 
-		$_SERVER['REQUEST_URI'] = $originalURI;
 		$_SERVER['REQUEST_URI'] = Director::baseURL() . 'some-url';
 		$output = Director::forceSSL();
 		$this->assertEquals($output, 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
-
-		$_SERVER['REQUEST_URI'] = $originalURI;
 	}
 
 	function testForceSSLOnTopLevelPagePattern() {
-		$originalURI = $_SERVER['REQUEST_URI'];
 		$_SERVER['REQUEST_URI'] = Director::baseURL() . 'admin';
 		$output = Director::forceSSL(array('/^admin/'));
 		$this->assertEquals($output, 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
-
-		$_SERVER['REQUEST_URI'] = $originalURI;
 	}
 
 	function testForceSSLOnSubPagesPattern() {
-		$originalURI = $_SERVER['REQUEST_URI'];
 		$_SERVER['REQUEST_URI'] = Director::baseURL() . 'Security/login';
 		$output = Director::forceSSL(array('/^Security/'));
 		$this->assertEquals($output, 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
-
-		$_SERVER['REQUEST_URI'] = $originalURI;
 	}
 
 	function testForceSSLWithPatternDoesNotMatchOtherPages() {
-		$originalURI = $_SERVER['REQUEST_URI'];
 		$_SERVER['REQUEST_URI'] = Director::baseURL() . 'normal-page';
 		$output = Director::forceSSL(array('/^admin/'));
 		$this->assertFalse($output);
 
-		$_SERVER['REQUEST_URI'] = $originalURI;
 		$_SERVER['REQUEST_URI'] = Director::baseURL() . 'just-another-page/sub-url';
 		$output = Director::forceSSL(array('/^admin/', '/^Security/'));
 		$this->assertFalse($output);
-
-		$_SERVER['REQUEST_URI'] = $originalURI;
 	}
 
 }
@@ -249,5 +245,3 @@ class DirectorTestRequest_Controller extends Controller implements TestOnly {
 	public function returnCookieValue($request)		{ return $_COOKIE['somekey']; }
 
 }
-
-?>
