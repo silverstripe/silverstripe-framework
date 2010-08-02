@@ -329,10 +329,6 @@ class Director {
 	 * @deprecated 2.4 Use {@link Director::get_current_page()}.
 	 */
 	static function currentPage() {
-		user_error (
-			'Director::currentPage() is deprecated, please use Director::get_current_page()', E_USER_NOTICE
-		);
-		
 		return self::get_current_page();
 	}
 
