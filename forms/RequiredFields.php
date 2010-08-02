@@ -100,7 +100,10 @@ JS;
 		if($this->required) {
 			foreach($this->required as $fieldName) { 
 				$formField = $fields->dataFieldByName($fieldName);
-				if($formField && !strlen($data[$fieldName])) {
+				
+				// we need to check if $data[$fieldName] is an array (FileFiled case)
+				if(($formField && $data[$fieldName] == "") || 
+				   (is_array($data[$fieldName]) && $data[$fieldName]['name'] == "")) {
 					$errorMessage = sprintf(_t('Form.FIELDISREQUIRED', '%s is required').'.', strip_tags('"' . ($formField->Title() ? $formField->Title() : $fieldName) . '"'));
 					if($msg = $formField->getCustomValidationMessage()) {
 						$errorMessage = $msg;
