@@ -38,24 +38,24 @@ class DateFieldTest extends SapphireTest {
 	function testValidateMinDateStrtotime() {
 		$f = new DateField('Date');
 		$f->setConfig('min', '-7 days');
-		$f->setValue(strftime('%F', strtotime('-8 days')));
+		$f->setValue(strftime('%Y-%m-%d', strtotime('-8 days')));
 		$this->assertFalse($f->validate(new RequiredFields()), 'Date below min date, with strtotime');
 		
 		$f = new DateField('Date');
 		$f->setConfig('min', '-7 days');
-		$f->setValue(strftime('%F', strtotime('-7 days')));
+		$f->setValue(strftime('%Y-%m-%d', strtotime('-7 days')));
 		$this->assertTrue($f->validate(new RequiredFields()), 'Date matching min date, with strtotime');
 	}
 	
 	function testValidateMaxDateStrtotime() {
 		$f = new DateField('Date');
 		$f->setConfig('max', '7 days');
-		$f->setValue(strftime('%F', strtotime('8 days')));
+		$f->setValue(strftime('%Y-%m-%d', strtotime('8 days')));
 		$this->assertFalse($f->validate(new RequiredFields()), 'Date above max date, with strtotime');
 		
 		$f = new DateField('Date');
 		$f->setConfig('max', '7 days');
-		$f->setValue(strftime('%F', strtotime('7 days')));
+		$f->setValue(strftime('%Y-%m-%d', strtotime('7 days')));
 		$this->assertTrue($f->validate(new RequiredFields()), 'Date matching max date, with strtotime');
 	}
 	
