@@ -1006,13 +1006,16 @@ Ajax.Evaluator = function(response) {
 	
 }
 
-document.getElementsByClassName = function(className, parentElement) {
-  var children = ($(parentElement) || document.body).getElementsByTagName('*');
-  return $A(children).inject([], function(elements, child) {
-    if (child.className.match(new RegExp("(^|\\s)" + className + "(\\s|$)")))
-      elements.push(child);
-    return elements;
-  });
+// Only define this if no native (and significantly faster) implementation exists.
+if(!document.getElementsByClassName) {
+	document.getElementsByClassName = function(className, parentElement) {
+	  var children = ($(parentElement) || document.body).getElementsByTagName('*');
+	  return $A(children).inject([], function(elements, child) {
+	    if (child.className.match(new RegExp("(^|\\s)" + className + "(\\s|$)")))
+	      elements.push(child);
+	    return elements;
+	  });
+	}
 }
 
 /*--------------------------------------------------------------------------*/
