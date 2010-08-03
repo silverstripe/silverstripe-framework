@@ -418,7 +418,7 @@ class ManifestBuilder {
 		// We use an MD5 of the file as a part of the cache key because using datetime caused problems when users
 		// were upgrading their sites
 		$fileMD5 = md5($file);
-		$parseCacheFile = TEMP_FOLDER . "/manifestClassParse-" . str_replace(array("/",":", "\\"),"_", realpath($filename)) . "-$fileMD5";
+		$parseCacheFile = TEMP_FOLDER . "/manifestClassParse-" . str_replace(array("/", ":", "\\", "."), "_", basename($filename)) . "-$fileMD5";
 		if(!file_exists($parseCacheFile)) {
 			$tokens = token_get_all($file);
 			$classes = self::getClassDefParser()->findAll($tokens);
@@ -427,7 +427,8 @@ class ManifestBuilder {
 			$cacheContent = '<?php
 				$classes = ' . var_export($classes,true) . ';
 				$interfaces = ' . var_export($interfaces,true) . ';';
-			if($fh = fopen($parseCacheFile,'w')) {
+				
+			if($fh = fopen($parseCacheFile,'wb')) {
 				fwrite($fh, $cacheContent);
 				fclose($fh);
 			}
