@@ -178,15 +178,6 @@ class Group extends DataObject {
 		return $labels;
 	}
 	
-	function populateDefaults() {
-		parent::populateDefaults();
-		
-		if(!$this->Title) $this->Title = sprintf(
-			_t('GROUP.NEWITEM',"New %s"), 
-			singleton($this->class)->i18n_singular_name()
-		);
-	}
-	
 	/**
 	 * Add a member to a group. This will create the group if the given 
 	 * group code doesn't work.
@@ -308,13 +299,20 @@ class Group extends DataObject {
 	}
 	
 	/**
+	 * This isn't a decendant of SiteTree, but needs this in case
+	 * the group is "reorganised";
+	 */
+	function cmsCleanup_parentChanged() {
+	}
+	
+	/**
 	 * Override this so groups are ordered in the CMS
 	 */
 	public function stageChildren() {
 		return DataObject::get('Group', "\"Group\".\"ParentID\" = " . (int)$this->ID . " AND \"Group\".\"ID\" != " . (int)$this->ID, '"Sort"');
 	}
 	
-	public function getTreeTitle() {
+	public function TreeTitle() {
 	    if($this->hasMethod('alternateTreeTitle')) return $this->alternateTreeTitle();
 		else return htmlspecialchars($this->Title, ENT_QUOTES);
 	}
@@ -328,7 +326,7 @@ class Group extends DataObject {
 	
 	function onBeforeWrite() {
 		parent::onBeforeWrite();
-
+		
 		if(stripos($this->Code, _t('SecurityAdmin.NEWGROUPPREFIX','new-')) === 0) {
 			$this->setCode($this->Title);
 		}
@@ -445,6 +443,44 @@ class Group extends DataObject {
 		return false;
 	}
 	
+	/**
+	 * Add default records to database.
+	 *
+	 * This function is called whenever the database is built, after the
+	 * database tables have all been created.
+	 */
+	public function requireDefaultRecords() {
+		parent::requireDefaultRecords();
+		
+		// Add default author group if no other group exists
+		$allGroups = DataObject::get('Group');
+		if(!$allGroups) {
+			$authorGroup = new Group();
+			$authorGroup->Code = 'content-authors';
+			$authorGroup->Title = _t('Group.DefaultGroupTitleContentAuthors', 'Content Authors');
+			$authorGroup->Sort = 1;
+			$authorGroup->write();
+			Permission::grant($authorGroup->ID, 'CMS_ACCESS_CMSMain');
+			Permission::grant($authorGroup->ID, 'CMS_ACCESS_AssetAdmin');
+			Permission::grant($authorGroup->ID, 'CMS_ACCESS_CommentAdmin');
+			Permission::grant($authorGroup->ID, 'CMS_ACCESS_ReportAdmin');
+			Permission::grant($authorGroup->ID, 'SITETREE_REORGANISE');
+		}
+	
+		// Add default admin group if none with permission code ADMIN exists
+		$adminGroups = Permission::get_groups_by_permission('ADMIN');
+		if(!$adminGroups) {
+			$adminGroup = new Group();
+			$adminGroup->Code = 'administrators';
+			$adminGroup->Title = _t('Group.DefaultGroupTitleAdministrators', 'Administrators');
+			$adminGroup->Sort = 0;
+			$adminGroup->write();
+			Permission::grant($adminGroup->ID, 'ADMIN');
+		}		
+		
+		// Members are populated through Member->requireDefaultRecords()
+	}
+
 	/**
 	 * @return String
 	 */
