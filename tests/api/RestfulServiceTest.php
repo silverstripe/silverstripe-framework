@@ -60,6 +60,13 @@ class RestfulServiceTest extends SapphireTest {
 			$this->assertContains("<post_item name=\"$key\">$value</post_item>", $responseBody);
 		}
 	}
+
+	function testPutData() {
+		$service = new RestfulServiceTest_MockRestfulService(Director::absoluteBaseURL(), 0);
+		$data = 'testPutData';
+		$responseBody = $service->request('RestfulServiceTest_Controller/', 'PUT', $data)->getBody();
+		$this->assertContains("<body>$data</body>", $responseBody);
+	}
 	
 	function testConnectionDoesntCacheWithDifferentUrl() {
 		$service = new RestfulServiceTest_MockRestfulService(Director::absoluteBaseURL());
@@ -143,6 +150,7 @@ class RestfulServiceTest_Controller extends Controller {
 		foreach ($this->request->postVars() as $key => $value) {
 			$post .= "\t\t<post_item name=\"$key\">$value</post_item>\n";
 		}
+		$body = $this->request->getBody();
 		
 		$out = <<<XML
 <?xml version="1.0"?>
@@ -150,6 +158,7 @@ class RestfulServiceTest_Controller extends Controller {
 	<request>$request</request>
 	<get>$get</get>
 	<post>$post</post>
+	<body>$body</body>
 </test>
 XML;
 		$this->response->setBody($out);
@@ -245,10 +254,14 @@ class RestfulServiceTest_MockRestfulService extends RestfulService {
 		}
 
 		// Custom for mock implementation: Use Director::test()
-		$getVars = ($method == 'GET') ? $data : null;
-		$postVars = ($method == 'POST') ? $data : null;
-		$responseFromDirector = Director::test($url, $postVars, $this->session, $method, $getVars, $headers);
-
+		$body = null;
+		$postVars = null;
+		
+		if($method!='POST') $body = $data;
+		else $postVars = $data;
+		
+		$responseFromDirector = Director::test($url, $postVars, $this->session, $method, $body, $headers);
+		
 		$response = new RestfulService_Response(
 			$responseFromDirector->getBody(), 
 			$responseFromDirector->getStatusCode()

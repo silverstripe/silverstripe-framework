@@ -149,10 +149,19 @@ class RestfulService extends ViewableData {
 			// Add authentication
 			if($this->authUsername) curl_setopt($ch, CURLOPT_USERPWD, "$this->authUsername:$this->authPassword");
 		
-			// Add fields to POST requests
+			// Add fields to POST and PUT requests
 			if($method == 'POST') {
 				curl_setopt($ch, CURLOPT_POST, 1);
 				curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+			}
+			else if($method == 'PUT') {
+				$put = fopen("php://temp", 'r+');				
+				fwrite($put, $data);
+				fseek($put, 0); 
+				
+				curl_setopt($ch, CURLOPT_PUT, 1);
+				curl_setopt($ch, CURLOPT_INFILE, $put);
+				curl_setopt($ch, CURLOPT_INFILESIZE, strlen($data)); 
 			}
 			
 			// Apply proxy settings
