@@ -246,9 +246,9 @@ class Permission extends DataObject {
 				UNION
 				
 				SELECT \"Code\"
-				FROM \"PermissionRoleCode\" AS PRC
-				INNER JOIN \"PermissionRole\" AS PR ON PRC.\"RoleID\" = PR.\"ID\"
-				INNER JOIN \"Group_Roles\" AS GR ON GR.\"PermissionRoleID\" = PR.\"ID\"
+				FROM \"PermissionRoleCode\" PRC
+				INNER JOIN \"PermissionRole\" PR ON PRC.\"RoleID\" = PR.\"ID\"
+				INNER JOIN \"Group_Roles\" GR ON GR.\"PermissionRoleID\" = PR.\"ID\"
 				WHERE \"GroupID\" IN ($groupCSV)
 			")->column());
 
