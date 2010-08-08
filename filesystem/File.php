@@ -518,7 +518,7 @@ class File extends DataObject {
 	 * @return string
 	 */
 	function getAbsoluteURL() {
-		return Director::absoluteBaseURL() . $this->getURL();
+		return Director::absoluteBaseURL() . $this->getFilename();
 	}
 	
 	/**
