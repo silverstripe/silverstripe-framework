@@ -169,7 +169,12 @@ class File extends DataObject {
 	 * @return Integer
 	 */
 	function BackLinkTrackingCount() {
-		return $this->BackLinkTracking()->Count();
+		$pages = $this->BackLinkTracking();
+		if($pages) {
+			return $pages->Count();
+		} else {
+			return 0;
+		}
 	}
 
 	/**
@@ -194,7 +199,8 @@ class File extends DataObject {
 	protected function onAfterDelete() {
 		parent::onAfterDelete();
 
-		if($brokenPages = $this->BackLinkTracking()) {
+		$brokenPages = $this->BackLinkTracking();
+		if($brokenPages) {
 			$origStage = Versioned::current_stage();
 
 			// This will syncLinkTracking on draft
