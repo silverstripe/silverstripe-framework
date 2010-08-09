@@ -44,7 +44,7 @@ abstract class StringField extends DBField {
 	 * @param $value boolean True if empty strings are to be converted to null
 	 */
 	function setNullifyEmpty($value) {
-		$this->nullifyEmpty == $value ? true : false;
+		$this->nullifyEmpty = ($value ? true : false);
 	}
 	/**
 	 * Get whether this field stores empty strings rather than converting them to null
