@@ -775,7 +775,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 
 		// Standard mechanism for accepting permission changes from decorators
 		$extended = $this->extendedCan('canView', $member);
-		if($extended != null) return $extended;
+		if($extended !== null) return $extended;
 		
 		// check for empty spec
 		if(!$this->CanViewType || $this->CanViewType == 'Anyone') return true;
