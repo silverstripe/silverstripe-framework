@@ -161,7 +161,7 @@ class VersionedTest extends SapphireTest {
 	}
 	
 	/**
-	 * @covers DataObject::hasOwnTableDatabaseField()
+	 * Tests DataObject::hasOwnTableDatabaseField
 	 */
 	public function testHasOwnTableDatabaseFieldWithVersioned() {
 		$noversion    = new DataObject();
