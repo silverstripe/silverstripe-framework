@@ -46,6 +46,7 @@ class TestRunner extends Controller {
 		'startsession' => 'startsession',
 		'endsession' => 'endsession',
 		'cleanupdb' => 'cleanupdb',
+		'emptydb' => 'emptydb',
 		'module/$ModuleName' => 'module',
 		'all' => 'all',
 		'build' => 'build',
@@ -384,6 +385,24 @@ HTML;
 						
 		} else {
 			return "<p>startession can only be used on dev and test sites</p>";
+		}
+	}
+	
+	function emptydb() {
+		if(SapphireTest::using_temp_db()) {
+			SapphireTest::empty_temp_db();
+
+			if(isset($_GET['fixture']) && ($fixtureFile = $_GET['fixture'])) {
+				$fixture = new YamlFixture($fixtureFile);
+				$fixture->saveIntoDatabase();
+				return "<p>Re-test the test database with fixture '$fixtureFile'.  Time to start testing; where would you like to start?</p>";
+
+			} else {
+				return "<p>Re-test the test database.  Time to start testing; where would you like to start?</p>";
+			}
+			
+		} else {
+			return "<p>dev/tests/emptydb can only be used with a temporary database. Perhaps you should use dev/tests/startsession first?</p>";
 		}
 	}
 	
