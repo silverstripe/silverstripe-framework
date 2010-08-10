@@ -103,7 +103,7 @@ class CheckboxField_Readonly extends ReadonlyField {
 	}
 	
 	function setValue($val) {
-		$this->value = ($val) ? _t('CheckboxField.YES', 'Yes') : _t('CheckboxField.NO', 'No');
+		$this->value = (int)($val) ? _t('CheckboxField.YES', 'Yes') : _t('CheckboxField.NO', 'No');
 	}
 }
 
