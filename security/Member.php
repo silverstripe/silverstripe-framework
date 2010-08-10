@@ -975,7 +975,7 @@ class Member extends DataObject {
 			$blankMember->Surname = $blank;
 			$blankMember->ID = 0;
 
-			$ret->getItems()->shift($blankMember);
+			$ret->getItems()->unshift($blankMember);
 		}
 
 		return $ret;

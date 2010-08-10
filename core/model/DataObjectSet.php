@@ -458,10 +458,32 @@ class DataObjectSet extends ViewableData implements IteratorAggregate, Countable
 	 * Insert a DataObject at the beginning of this set.
 	 * @param DataObject $item Item to insert.
 	 */
-	public function shift($item) {
-		array_unshift($this->items, $item);
+	public function unshift($item) {
+		$this->insertFirst($item);
 	}
-	
+
+	/**
+	 * Remove a DataObject from the beginning of this set and return it.
+	 * This is the equivalent of pop() but acts on the head of the set.
+	 * Opposite of unshift().
+	 * 
+	 * @return DataObject (or null if there are no items in the set)
+	 */
+	public function shift() {
+		return array_shift($this->items);
+	}
+
+	/**
+	 * Remove a DataObject from the end of this set and return it.
+	 * This is the equivalent of shift() but acts on the tail of the set.
+	 * Opposite of push().
+	 * 
+	 * @return DataObject (or null if there are no items in the set)
+	 */
+	public function pop() {
+		return array_pop($this->items);
+	}
+
 	/**
 	 * Remove a DataObject from this set.
 	 * @param DataObject $itemObject Item to remove.

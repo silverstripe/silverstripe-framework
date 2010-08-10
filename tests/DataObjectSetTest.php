@@ -338,6 +338,40 @@ class DataObjectSetTest extends SapphireTest {
 		$this->assertTrue($set->exists(), 'Non-empty set does exist.');
 	}
 
+	/**
+	 * Test {@link DataObjectSet->shift()}
+	 */
+	function testShift() {
+		$set = new DataObjectSet();
+		$set->push(new ArrayData(array('Name' => 'Joe')));
+		$set->push(new ArrayData(array('Name' => 'Bob')));
+		$set->push(new ArrayData(array('Name' => 'Ted')));
+		$this->assertEquals('Joe', $set->shift()->Name);
+	}
+
+	/**
+	 * Test {@link DataObjectSet->unshift()}
+	 */
+	function testUnshift() {
+		$set = new DataObjectSet();
+		$set->push(new ArrayData(array('Name' => 'Joe')));
+		$set->push(new ArrayData(array('Name' => 'Bob')));
+		$set->push(new ArrayData(array('Name' => 'Ted')));
+		$set->unshift(new ArrayData(array('Name' => 'Steve')));
+		$this->assertEquals('Steve', $set->First()->Name);
+	}
+
+	/**
+	 * Test {@link DataObjectSet->pop()}
+	 */
+	function testPop() {
+		$set = new DataObjectSet();
+		$set->push(new ArrayData(array('Name' => 'Joe')));
+		$set->push(new ArrayData(array('Name' => 'Bob')));
+		$set->push(new ArrayData(array('Name' => 'Ted')));
+		$this->assertEquals('Ted', $set->pop()->Name);
+	}
+
 }
 
 /**

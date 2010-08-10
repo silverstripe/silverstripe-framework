@@ -241,7 +241,7 @@ class Group extends DataObject {
 			$blankGroup->Title = $blank;
 			$blankGroup->ID = 0;
 
-			$ret->getItems()->shift($blankGroup);
+			$ret->getItems()->unshift($blankGroup);
 		}
 		return $ret;
 	}
