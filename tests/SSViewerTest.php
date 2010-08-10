@@ -2,67 +2,6 @@
 
 class SSViewerTest extends SapphireTest {
 	
-	function testControlBlockDataObjectSet() {
-		$viewer = SSViewer::fromString(<<<SS
-		<% control TestSet %>
-			Test: \$TestValue
-		<% end_control %>
-SS
-);
-		$data = new ArrayData(array(
-			'TestSet' => new DataObjectSet(array(
-				new ArrayData(array(
-					'TestValue' => '1'
-				)),
-				new ArrayData(array(
-					'TestValue' => '2'
-				)),
-			))
-		));
-		$out = $viewer->process($data);
-		$this->assertEquals('Test:1Test:2', str_replace(array(' ', "\t", PHP_EOL), '', $out));
-	}
-	
-	function testControlBlockNullValueDoesntLoop() {
-		$viewer = SSViewer::fromString(<<<SS
-		<% control NullValue %>
-			notdisplayed
-		<% end_control %>
-SS
-);
-		$data = new ArrayData(array(
-			'NullValue' => null
-		));
-		$out = $viewer->process($data);
-		$this->assertNotContains('notdisplayed', str_replace(array(' ', "\t", PHP_EOL), '', $out));
-	}
-	
-	function testControlBlockFalseValueDoesntLoop() {
-		$viewer = SSViewer::fromString(<<<SS
-		<% control FalseValue %>
-			notdisplayed
-		<% end_control %>
-SS
-);
-		$data = new ArrayData(array(
-			'FalseValue' => null
-		));
-		$out = $viewer->process($data);
-		$this->assertNotContains('notdisplayed', str_replace(array(' ', "\t", PHP_EOL), '', $out));
-	}
-	
-	function testControlBlockMethodReturningNullDoesntLoop() {
-		$viewer = SSViewer::fromString(<<<SS
-		<% control methodNull %>
-			notdisplayed
-		<% end_control %>
-SS
-);
-		$data = new SSViewerTest_ViewableData();
-		$out = $viewer->process($data);
-		$this->assertNotContains('notdisplayed', str_replace(array(' ', "\t", PHP_EOL), '', $out));
-	}
-	
 	/**
 	 * Tests for {@link SSViewer::current_theme()} for different behaviour
 	 * of user defined themes via {@link SiteConfig} and default theme
@@ -206,9 +145,5 @@ class SSViewerTest_ViewableData extends ViewableData implements TestOnly {
 	
 	function methodWithTwoArguments($arg1, $arg2) {
 		return "arg1:{$arg1},arg2:{$arg2}";
-	}
-	
-	function methodNull() {
-		return null;
 	}
 }
