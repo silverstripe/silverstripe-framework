@@ -2,8 +2,7 @@
 require_once 'Zend/Log/Writer/Abstract.php';
 
 /**
- * Sends an error message to an email whenever an
- * error occurs in sapphire.
+ * Writes an error message to a file.
  * 
  * Note: You need to make sure your web server is able
  * to write to the file path that you specify to write
