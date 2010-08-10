@@ -26,3 +26,7 @@ Given /load the fixture file "([^"]+)"/ do |fileName|
 end
 
 startSession()
+
+Before do
+  Given "I visit /dev/tests/emptydb?fixture=sapphire/tests/Bare.yml"
+end
