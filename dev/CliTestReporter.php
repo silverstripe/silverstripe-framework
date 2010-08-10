@@ -6,6 +6,16 @@
  * @subpackage testing
  */
 class CliTestReporter extends SapphireTestReporter {
+	
+	protected $verboseOutput = false;
+	
+	/**
+	 * If you set this to true, then the output for the test runner will be more verbose, listing
+	 * every single test name.
+	 */
+	public function setVerboseOutput($verboseOutput) {
+		$this->verboseOutput = $verboseOutput;
+	}
 
 	/**
 	 * Display error bar if it exists
@@ -50,6 +60,12 @@ class CliTestReporter extends SapphireTestReporter {
 		}
 		echo "\n";
 	}
+
+
+	public function startTest(PHPUnit_Framework_Test $test) {
+		parent::startTest($test);
+		if($this->verboseOutput) echo " - {$this->currentTest['name']}: ";
+	}
 	
 	public function endTest( PHPUnit_Framework_Test $test, $time) {
 		// Status indicator, a la PHPUnit
@@ -63,7 +79,13 @@ class CliTestReporter extends SapphireTestReporter {
 		
 		static $colCount = 0;
 		$colCount++;
-		if($colCount % 80 == 0) echo " - $colCount\n";
+		
+		// We don't need row breaking for verbose output; each test is on its own line
+		if($this->verboseOutput) {
+			echo "\n";
+		} else {
+			if($colCount % 80 == 0) echo " - $colCount\n";
+		}
 
 		parent::endTest($test, $time);
 		$this->writeTest($this->currentTest);
