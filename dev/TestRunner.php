@@ -266,16 +266,8 @@ class TestRunner extends Controller {
 		restore_error_handler();
 
 		/*, array("reportDirectory" => "/Users/sminnee/phpunit-report")*/
-		if(Director::is_cli()) {
-			$reporter = new CliTestReporter();
-			// sake dev/tests/all --verbose will give you better output
-			if(isset($_GET['args']) && (in_array('-v', $_GET['args']) || in_array('--verbose', $_GET['args']))) {
-				$reporter->setVerboseOutput(true);
-			}
-			
-		} else {
-			$reporter = new SapphireTestReporter();
-		}
+		if(Director::is_cli()) $reporter = new CliTestReporter();
+		else $reporter = new SapphireTestReporter();
 
 		self::$default_reporter->writeHeader("Sapphire Test Runner");
 		if (count($classList) > 1) { 

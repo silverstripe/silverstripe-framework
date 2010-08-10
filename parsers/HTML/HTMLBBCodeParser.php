@@ -18,7 +18,7 @@
 //
 // $Id: BBCodeParser.php,v 1.17 2007/07/02 18:46:30 cweiske Exp $
 //
-// Modified by SilverStripe www.silverstripe.com
+// Modified by SilverStripe silverstripe.com
 
 /**
  * @package  sapphire
