@@ -609,9 +609,8 @@ $lang['en_US']['SearchForm']['GO'] = 'Go';
 $lang['en_US']['SearchForm']['SEARCH'] = 'Search';
 $lang['en_US']['SearchForm']['SearchResults'] = 'Search Results';
 $lang['en_US']['Security']['ALREADYLOGGEDIN'] = array(
-	'You don\'t have access to this page.  If you have another account that can access that page, you can <a href="%s">log in again</a>.',
-	PR_MEDIUM,
-	'%s will be replaced with a link to log in.'
+	'You don\'t have access to this page.  If you have another account that can access that page, you can log in again below</a>.',
+	PR_MEDIUM
 );
 $lang['en_US']['Security']['BUTTONSEND'] = 'Send me the password reset link';
 $lang['en_US']['Security']['CHANGEPASSWORDBELOW'] = 'You can change your password below.';
