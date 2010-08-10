@@ -111,6 +111,21 @@ class Member extends DataObject {
 	protected static $login_marker_cookie = null;
 
 	/**
+	 * Indicates that when a {@link Member} logs in, Member:session_regenerate_id()
+	 * should be called as a security precaution.
+	 * 
+	 * This doesn't always work, especially if you're trying to set session cookies
+	 * across an entire site using the domain parameter to session_set_cookie_params()
+	 * 
+	 * @var boolean
+	 */
+	protected static $session_regenerate_id = true;
+
+	public static function set_session_regenerate_id($bool) {
+		self::$session_regenerate_id = $bool;
+	}
+
+	/**
 	 * Ensure the locale is set to something sensible by default.
 	 */
 	public function populateDefaults() {
@@ -229,6 +244,8 @@ class Member extends DataObject {
 	 * quirky problems (such as using the Windmill 0.3.6 proxy).
 	 */
 	static function session_regenerate_id() {
+		if(!self::$session_regenerate_id) return;
+
 		// This can be called via CLI during testing.
 		if(Director::is_cli()) return;
 		
