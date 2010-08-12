@@ -488,6 +488,20 @@ class MemberTest extends FunctionalTest {
 	}
 
 	/**
+	 * Tests for {@link Member::getName()} and {@link Member::setName()}
+	 */
+	function testName() {
+		$member = $this->objFromFixture('Member', 'test');
+		$member->setName('Test Some User');
+		$this->assertEquals('Test Some User', $member->getName());
+		$member->setName('Test');
+		$this->assertEquals('Test', $member->getName());
+		$member->FirstName = 'Test';
+		$member->Surname = '';
+		$this->assertEquals('Test', $member->getName());
+	}
+
+	/**
 	 * Add the given array of member extensions as class names.
 	 * This is useful for re-adding extensions after being removed
 	 * in a test case to produce an unbiased test.
