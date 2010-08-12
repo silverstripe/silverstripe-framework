@@ -849,7 +849,7 @@ class Member extends DataObject {
 	 * @return string Returns the first- and surname of the member.
 	 */
 	public function getName() {
-		return ($this->Surname) ? $this->FirstName . ' ' . $this->Surname : $this->FirstName;
+		return ($this->Surname) ? trim($this->FirstName . ' ' . $this->Surname) : $this->FirstName;
 	}
 
 
