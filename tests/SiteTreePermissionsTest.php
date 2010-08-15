@@ -335,6 +335,7 @@ class SiteTreePermissionsTest extends FunctionalTest {
 
 		// Get the live version of the page
 		$page = Versioned::get_one_by_stage("SiteTree", "Live", "\"SiteTree\".\"ID\" = $pageID");
+		$this->assertTrue(is_object($page), 'Versioned::get_one_by_stage() is returning an object');
 
 		// subadmin users
 		$subadminuser = $this->objFromFixture('Member', 'subadmin');
