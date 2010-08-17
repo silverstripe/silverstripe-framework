@@ -38,7 +38,7 @@ class SQLMap extends Object implements IteratorAggregate {
 	public function getItem($id) {
 		if($id) {
 			$baseTable = reset($this->query->from);
-			$this->query->where[] = "$baseTable.ID = $id";
+			$this->query->where[] = "$baseTable.\"ID\" = $id";
 			$record = $this->query->execute()->first();
 			if($record) {
 				$className = $record['ClassName'];
