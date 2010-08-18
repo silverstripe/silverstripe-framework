@@ -496,7 +496,9 @@ class Director {
 		// Only bother comparing the URL to the absolute version if $url looks like a URL.
 		if(preg_match('/^https?[^:]*:\/\//',$url)) {
 			$base1 = self::absoluteBaseURL();
-			if(substr($url,0,strlen($base1)) == $base1) return substr($url,strlen($base1));
+			// If we are already looking at baseURL, return '' (substr will return false)
+			if($url == $base1) return '';
+			else if(substr($url,0,strlen($base1)) == $base1) return substr($url,strlen($base1));
 			// Convert http://www.mydomain.com/mysitedir to ''
 			else if(substr($base1,-1)=="/" && $url == substr($base1,0,-1)) return "";
 		}
@@ -643,7 +645,7 @@ class Director {
 			$matched = true;
 		}
 
-		if($matched && !isset($_SERVER['HTTPS'])) {
+		if($matched && (!isset($_SERVER['HTTPS']) || $_SERVER['HTTPS'] == 'off')) {
 			$destURL = str_replace('http:', 'https:', Director::absoluteURL($_SERVER['REQUEST_URI']));
 
 			// This coupling to SapphireTest is necessary to test the destination URL and to not interfere with tests
