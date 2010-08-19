@@ -32,11 +32,11 @@ DatabaseAdapterRegistry::register(
 
 DatabaseAdapterRegistry::register(
 	array(
-		'class' => 'SQLite3Database',
+		'class' => 'SQLiteDatabase',
 		'title' => 'SQLite 3.3+',
 		'helperPath' => 'sqlite3/code/SQLiteDatabaseConfigurationHelper.php',
 		'supported' => (class_exists('SQLite3') || class_exists('PDO')),
-		'missingExtensionText' => 'The <a href="http://php.net/manual/en/book.sqlite3.php">SQLite3</a> and <a href="http://php.net/manual/en/book.pdo.php">PDO</a> classes are not available. Please install or enable them and refresh this page.',
+		'missingExtensionText' => 'The <a href="http://php.net/manual/en/book.sqlite3.php">SQLite3</a> and <a href="http://php.net/manual/en/book.pdo.php">PDO</a> classes are not available. Please install or enable one of them and refresh this page.',
 		'fields' => array(
 			'path' => array(
 				'title' => 'Database path<br /><small>Absolute path, writeable by the webserver user.<br />Recommended to be outside of your webroot</small>',
