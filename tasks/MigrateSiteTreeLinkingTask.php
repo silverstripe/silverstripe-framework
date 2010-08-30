@@ -27,13 +27,10 @@ class MigrateSiteTreeLinkingTask extends BuildTask {
 		if($linkedPages) $linkedPages->removeDuplicates();
 		
 		if($linkedPages) foreach($linkedPages as $page) {
-			$tracking = DB::query(sprintf (
-				'SELECT "ChildID", "FieldName" FROM "SiteTree_LinkTracking" WHERE "SiteTreeID" = %d',
-				$page->ID
-			));
-			
-			foreach($tracking as $link) {
-				$linked = DataObject::get_by_id('SiteTree', $link['ChildID']);
+			$tracking = DB::query(sprintf('SELECT "ChildID", "FieldName" FROM "SiteTree_LinkTracking" WHERE "SiteTreeID" = %d', $page->ID))->map();
+
+			foreach($tracking as $childID => $fieldName) {
+				$linked = DataObject::get_by_id('SiteTree', $childID);
 				
 				// TOOD: Replace in all HTMLText fields
 				$page->Content = preg_replace (
@@ -48,8 +45,8 @@ class MigrateSiteTreeLinkingTask extends BuildTask {
 					$links += $replaced;
 				}
 			}
-			$page->write();
 			
+			$page->write();
 			$pages++;
 		}
 		
