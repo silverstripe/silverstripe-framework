@@ -22,10 +22,6 @@ class MigrateSiteTreeLinkingTask extends BuildTask {
 			'INNER JOIN "SiteTree_LinkTracking" ON "SiteTree_LinkTracking"."SiteTreeID" = "SiteTree"."ID"'
 		);
 		
-		// Databases like MSSQL will give duplicate results - remove them
-		// This would normally be fixed by using SELECT DISTINCT, but DataObject::get() doesn't support it
-		if($linkedPages) $linkedPages->removeDuplicates();
-		
 		if($linkedPages) foreach($linkedPages as $page) {
 			$tracking = DB::query(sprintf('SELECT "ChildID", "FieldName" FROM "SiteTree_LinkTracking" WHERE "SiteTreeID" = %d', $page->ID))->map();
 
