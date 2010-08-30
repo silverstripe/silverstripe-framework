@@ -62,7 +62,7 @@ class Versioned extends DataObjectDecorator {
 	 * @var array $indexes_for_versions_table
 	 */
 	static $indexes_for_versions_table = array(
-		'RecordID_Version' => '(RecordID, Version)',
+		'RecordID_Version' => '(RecordID,Version)',
 		'RecordID' => true,
 		'Version' => true,
 		'AuthorID' => true,
@@ -287,7 +287,7 @@ class Versioned extends DataObjectDecorator {
 				
 					$versionIndexes = array_merge(
 						array(
-							'RecordID_Version' => array('type' => 'unique', 'value' => 'RecordID, Version'),
+							'RecordID_Version' => array('type' => 'unique', 'value' => 'RecordID,Version'),
 							'RecordID' => true,
 							'Version' => true,
 						),
