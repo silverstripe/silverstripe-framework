@@ -943,7 +943,7 @@ abstract class SS_Query implements Iterator {
 	 * @return boolean
 	 */
 	public function valid() {
-		if(!$this->currentRecord) $this->next();
+		if(!$this->queryHasBegun) $this->next();
 	 	return $this->currentRecord !== false;
 	}
 
