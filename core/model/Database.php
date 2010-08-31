@@ -880,6 +880,7 @@ abstract class SS_Query implements Iterator {
 			
 			$first = false;
 		}
+		$result .= "</table>\n";
 		
 		if($first) return "No records found";
 		return $result;
