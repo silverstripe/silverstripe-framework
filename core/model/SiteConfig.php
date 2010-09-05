@@ -95,6 +95,14 @@ class SiteConfig extends DataObject implements PermissionProvider {
 			$fields->makeFieldReadonly($taglineField);
 			$fields->makeFieldReadonly($titleField);
 		}
+
+		if(file_exists(BASE_PATH . '/install.php')) {
+			$fields->addFieldToTab("Root.Main", new LiteralField("InstallWarningHeader", 
+				"<p class=\"message warning\">" . _t("SiteTree.REMOVE_INSTALL_WARNING", 
+				"Warning: You should remove install.php from this SilverStripe install for security reasons.")
+				. "</p>"), "Title");
+		}
+		
 		$tabMain->setTitle(_t('SiteConfig.TABMAIN', "Main"));
 		$tabAccess->setTitle(_t('SiteConfig.TABACCESS', "Access"));
 		$this->extend('updateCMSFields', $fields);
