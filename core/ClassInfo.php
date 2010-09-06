@@ -52,9 +52,10 @@ class ClassInfo {
 	
 	/**
 	 * Returns the manifest of all classes which are present in the database.
+	 * @param string $class Class name to check enum values for ClassName field
 	 */
-	static function getValidSubClasses(){
-		return DB::getConn()->enumValuesForField("SiteTree", "ClassName");
+	static function getValidSubClasses($class = 'SiteTree') {
+		return DB::getConn()->enumValuesForField($class, 'ClassName');
 	}
 
 	/**
