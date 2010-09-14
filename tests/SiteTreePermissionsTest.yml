@@ -83,3 +83,6 @@ Page:
       CanEditType: OnlyTheseUsers
       EditorGroups: =>Group.subadmingroup
       URLSegment: deleteTestChildPage
+   draftOnlyPage:
+       CanViewType: Anyone
+       URLSegment: draft-only
