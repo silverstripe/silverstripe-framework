@@ -22,7 +22,6 @@ class HtmlEditorField extends TextareaField {
 	public function __construct($name, $title = null, $rows = 30, $cols = 20, $value = '', $form = null) {
 		parent::__construct($name, $title, $rows, $cols, $value, $form);
 		
-		$this->addExtraClass('typography');
 		$this->addExtraClass('htmleditor');
 		
 		self::include_js();
