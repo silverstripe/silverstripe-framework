@@ -60,7 +60,12 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	 * not applied, they will be temporarily added and a database migration called.
 	 * 
 	 * The keys of the are the classes to apply the extensions to, and the values are an array
-	 * of illegal required extensions on that class.
+	 * of required extensions on that class.
+	 * 
+	 * Example:
+	 * <code>
+	 * array("MyTreeDataObject" => array("Versioned", "Hierarchy"))
+	 * </code>
 	 */
 	protected $requiredExtensions = array(
 	);
