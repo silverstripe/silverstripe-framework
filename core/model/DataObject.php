@@ -408,13 +408,10 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		// DO NOT copy has_many relations, because copying the relation would result in us changing the has_one relation
 		// on the other side of this relation to point at the copy and no longer the original (being a has_one, it can
 		// only point at one thing at a time). So, all relations except has_many can and are copied
-		if ($sourceObject::$has_one) foreach($sourceObject::$has_one as $name => $type) {
+		if ($sourceObject->has_one()) foreach($sourceObject->has_one() as $name => $type) {
 			$this->duplicateRelations($sourceObject, $destinationObject, $name);
 		}
-		if ($sourceObject::$many_many) foreach($sourceObject::$many_many as $name => $type) {
-			$this->duplicateRelations($sourceObject, $destinationObject, $name);
-		}
-		if ($sourceObject::$belongs_many_many) foreach($sourceObject::$belongs_many_many as $name => $type) {
+		if ($sourceObject->many_many()) foreach($sourceObject->many_many() as $name => $type) { //many_many include belongs_many_many
 			$this->duplicateRelations($sourceObject, $destinationObject, $name);
 		}
 
