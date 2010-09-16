@@ -31,7 +31,7 @@ class MoneyField extends FormField {
 	function __construct($name, $title = null, $value = "", $form = null) {
 		// naming with underscores to prevent values from actually being saved somewhere
 		$this->fieldAmount = new NumericField("{$name}[Amount]", _t('MoneyField.FIELDLABELAMOUNT', 'Amount'));
-		$this->fieldCurrency = $this->FieldCurrency();
+		$this->fieldCurrency = $this->FieldCurrency($name);
 		
 		parent::__construct($name, $title, $value, $form);
 	}
@@ -47,19 +47,20 @@ class MoneyField extends FormField {
 	}
 	
 	/**
+	 * @param string $name - Name of field
 	 * @return FormField
 	 */
-	protected function FieldCurrency() {
+	protected function FieldCurrency($name) {
 		$allowedCurrencies = $this->getAllowedCurrencies();
 		if($allowedCurrencies) {
 			$field = new DropdownField(
-				"{$this->name}[Currency]", 
+				"{$name}[Currency]", 
 				_t('MoneyField.FIELDLABELCURRENCY', 'Currency'),
 				ArrayLib::is_associative($allowedCurrencies) ? $allowedCurrencies : array_combine($allowedCurrencies,$allowedCurrencies)
 			);
 		} else {
 			$field = new TextField(
-				"{$this->name}[Currency]", 
+				"{$name}[Currency]", 
 				_t('MoneyField.FIELDLABELCURRENCY', 'Currency')
 			);
 		}
@@ -136,7 +137,7 @@ class MoneyField extends FormField {
 		
 		// @todo Has to be done twice in case allowed currencies changed since construction
 		$oldVal = $this->fieldCurrency->Value();
-		$this->fieldCurrency = $this->FieldCurrency();
+		$this->fieldCurrency = $this->FieldCurrency($this->name);
 		$this->fieldCurrency->setValue($oldVal);
 	}
 	
