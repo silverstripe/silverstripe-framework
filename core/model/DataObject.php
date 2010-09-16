@@ -379,7 +379,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 
 	/**
 	 * Create a duplicate of this node.
-	 * Caution: Doesn't duplicate relations.
+	 * Note: now also duplicates relations.
 	 *
 	 * @param $doWrite Perform a write() operation before returning the object.  If this is true, it will create the duplicate in the database.
 	 * @return DataObject A duplicate of this node. The exact type will be the type of this node.
@@ -388,10 +388,55 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		$className = $this->class;
 		$clone = new $className( $this->record );
 		$clone->ID = 0;
-		if($doWrite) $clone->write();
+
+		if($doWrite) {
+			$clone->write();
+
+			$this->duplicateManyManyRelations($this, $clone);
+		}
 		return $clone;
 	}
 
+	/**
+	 * Copies the many_many and belongs_many_many relations from one object to another instance of the name of object
+	 * The destinationObject must be written to the database already and have an ID. Writing is performed automatically when adding the new relations.
+	 * @return DataObject with the new many_many relations copied in */
+	protected function duplicateManyManyRelations($sourceObject, $destinationObject) {
+		if (!$destinationObject || $destinationObject->ID < 1) user_error("Can't duplicate relations for an object that has not been written to the database", E_USER_ERROR);
+
+		//duplicate complex relations
+		// DO NOT copy has_many relations, because copying the relation would result in us changing the has_one relation
+		// on the other side of this relation to point at the copy and no longer the original (being a has_one, it can
+		// only point at one thing at a time). So, all relations except has_many can and are copied
+		if ($sourceObject::$has_one) foreach($sourceObject::$has_one as $name => $type) {
+			$this->duplicateRelations($sourceObject, $destinationObject, $name);
+		}
+		if ($sourceObject::$many_many) foreach($sourceObject::$many_many as $name => $type) {
+			$this->duplicateRelations($sourceObject, $destinationObject, $name);
+		}
+		if ($sourceObject::$belongs_many_many) foreach($sourceObject::$belongs_many_many as $name => $type) {
+			$this->duplicateRelations($sourceObject, $destinationObject, $name);
+		}
+
+		return $destinationObject;
+	}
+
+	/** Helper function to duplicate relations from one object to another */
+	private function duplicateRelations($sourceObject, $destinationObject, $name) {
+		$relations = $sourceObject->$name();
+		if ($relations) {
+			if ($relations instanceOf ComponentSet) {   //many-to-something relation
+				if ($relations->Count() > 0) {  //with more than one thing it is related to
+					foreach($relations as $relation) {
+						$destinationObject->$name()->add($relation);
+					}
+				}
+			} else {    //one-to-one relation
+				$destinationObject->$name = $relations;
+			}
+		}
+	}
+	
 	/**
 	 * Set the ClassName attribute. {@link $class} is also updated.
 	 * Warning: This will produce an inconsistent record, as the object

@@ -538,6 +538,8 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		
 		if($doWrite) {
 			$page->write();
+
+			$page = $this->duplicateManyManyRelations($this, $page);
 		}
 		$this->extend('onAfterDuplicate', $page);
 		
