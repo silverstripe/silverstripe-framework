@@ -400,7 +400,11 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	/**
 	 * Copies the many_many and belongs_many_many relations from one object to another instance of the name of object
 	 * The destinationObject must be written to the database already and have an ID. Writing is performed automatically when adding the new relations.
-	 * @return DataObject with the new many_many relations copied in */
+	 *
+	 * @param $sourceObject the source object to duplicate from
+	 * @param $destinationObject the destination object to populate with the duplicated relations
+	 * @return DataObject with the new many_many relations copied in
+	 */
 	protected function duplicateManyManyRelations($sourceObject, $destinationObject) {
 		if (!$destinationObject || $destinationObject->ID < 1) user_error("Can't duplicate relations for an object that has not been written to the database", E_USER_ERROR);
 
@@ -418,7 +422,12 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		return $destinationObject;
 	}
 
-	/** Helper function to duplicate relations from one object to another */
+	/**
+	 * Helper function to duplicate relations from one object to another
+	 * @param $sourceObject the source object to duplicate from
+	 * @param $destinationObject the destination object to populate with the duplicated relations
+	 * @param $name the name of the relation to duplicate (e.g. members) 
+	 */
 	private function duplicateRelations($sourceObject, $destinationObject, $name) {
 		$relations = $sourceObject->$name();
 		if ($relations) {
