@@ -151,8 +151,8 @@ class DateField extends TextField {
 					$this->value = $this->valueObj->toArray();
 				}
 				// load ISO date from database (usually through Form->loadDataForm())
-				else if(!empty($val) && Zend_Date::isDate($val, $this->getConfig('datavalueformat'))) {
-					$this->valueObj = new Zend_Date($val, $this->getConfig('datavalueformat'));
+				else if(!empty($val) && Zend_Date::isDate($val, $this->getConfig('datavalueformat'), $this->locale)) {
+					$this->valueObj = new Zend_Date($val, $this->getConfig('datavalueformat'), $this->locale);
 					$this->value = $this->valueObj->toArray();
 				}
 				else {
@@ -166,12 +166,13 @@ class DateField extends TextField {
 				// (en_NZ for 3rd of April, definetly not yyyy-MM-dd)
 				if(!empty($val) && Zend_Date::isDate($val, $this->getConfig('dateformat'), $this->locale)) {
 					$this->valueObj = new Zend_Date($val, $this->getConfig('dateformat'), $this->locale);
-					$this->value = $this->valueObj->get($this->getConfig('dateformat'));
+					$this->value = $this->valueObj->get($this->getConfig('dateformat'), $this->locale);
+					
 				}
 				// load ISO date from database (usually through Form->loadDataForm())
 				else if(!empty($val) && Zend_Date::isDate($val, $this->getConfig('datavalueformat'))) {
 					$this->valueObj = new Zend_Date($val, $this->getConfig('datavalueformat'));
-					$this->value = $this->valueObj->get($this->getConfig('dateformat'));
+					$this->value = $this->valueObj->get($this->getConfig('dateformat'), $this->locale);
 				}
 				else {
 					$this->value = $val;
