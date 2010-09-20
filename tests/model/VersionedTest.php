@@ -31,7 +31,7 @@ class VersionedTest extends SapphireTest {
 		DB::query("DELETE FROM \"VersionedTest_DataObject_versions\" WHERE \"RecordID\" = $obj->ID");
 		
 		// insert a record with no primary key (ID)
-		DB::query("INSERT INTO \"VersionedTest_DataObject_versions\" (RecordID) VALUES ($obj->ID)");
+		DB::query("INSERT INTO \"VersionedTest_DataObject_versions\" (\"RecordID\") VALUES ($obj->ID)");
 	
 		// run the script which should clean that up
 		$obj->augmentDatabase();

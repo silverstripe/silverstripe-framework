@@ -337,7 +337,7 @@ class Versioned extends DataObjectDecorator {
 
 								if(is_array($effectedIDs)) {
 									foreach($effectedIDs as $key => $value) {
-										DB::query("DELETE FROM \"{$table}_versions\" WHERE \"{$table}_versions\".ID = '$value'");
+										DB::query("DELETE FROM \"{$table}_versions\" WHERE \"{$table}_versions\".\"ID\" = '$value'");
 									}
 								}
 							}
