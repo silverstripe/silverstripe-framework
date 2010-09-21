@@ -241,7 +241,10 @@ class Session {
 	 * Clear all the values
 	 */
 	public static function clear_all() {
-		return self::current_session()->inst_clearAll();
+		$ret = self::current_session()->inst_clearAll();
+		self::$default_session = null;
+		
+		return $ret;
 	}
 	
 	/**
