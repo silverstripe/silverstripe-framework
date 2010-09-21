@@ -20,16 +20,6 @@ class TestRunner extends Controller {
 	/** @ignore */
 	private static $default_reporter;
 	
-	public static $phpunit_wrapper = null;
-
-	static function set_phpunit_wrapper($value) {
-		self::$phpunit_wrapper = $value; 
-	}
-	
-	static function get_phpunit_wrapper() {
-		return self::$phpunit_wrapper;
-	}
-	
 	static $url_handlers = array(
 		'' => 'browse',
 		'coverage/module/$ModuleName' => 'coverageModule',
@@ -79,7 +69,7 @@ class TestRunner extends Controller {
 		
 		if (!self::$default_reporter) self::set_reporter(Director::is_cli() ? 'CliDebugView' : 'DebugView');
 		
-		if(!PhpUnitWrapper::hasPhpUnit()) {
+		if(!PhpUnitWrapper::has_php_unit()) {
 			die("Please install PHPUnit using pear");
 		}
 	}
@@ -271,7 +261,7 @@ class TestRunner extends Controller {
 		}
 
 		// perform unit tests (use PhpUnitWrapper or derived versions)
-		$phpunitwrapper = TestRunner::get_phpunit_wrapper();
+		$phpunitwrapper = PhpUnitWrapper::inst();
 		$phpunitwrapper->setSuite($suite);
 		$phpunitwrapper->setCoverageStatus($coverage);
 

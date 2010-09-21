@@ -1,4 +1,8 @@
 <?php
+/**
+* @package sapphire
+* @subpackage dev
+*/
 
 /**
  * This method checks if a given filename exists in the include path (defined
@@ -15,95 +19,181 @@ function fileExistsInIncludePath($filename) {
 	return false;
 }
 
+/**
+ * PHPUnit Wrapper class.
+ * Base class for PHPUnit wrapper classes to support different PHPUnit versions.
+ * The current implementation supports PHPUnit 3.4 and PHPUnit 3.5.
+ */
 class PhpUnitWrapper implements IPhpUnitWrapper {
 	
+	/**
+	 * Flag if coverage report shall be generated or not.
+	 * @var boolean
+	 */	
 	private $coverage = false;
-
+	
+	/**
+	 * PHPUnit-TestSuite class. The tests, added to this suite are performed
+	 * in this test-run.
+	 * @var PHPUnit_Framework_TestSuite
+	 */	
 	private $suite = null;
 
+	/**
+	 * @var PHPUnit_Framework_TestResult
+	 */
 	private $results = null;
-	
-	protected $version = 'none';
-	
+
+	/**
+	 * @var PHPUnit_Framework_TestListener
+	 */	
 	private $reporter = null;
 	
-	public function getVersion() {
-		return $this->version;
-	}
+	/**
+	 * Shows the version, implemented by the phpunit-wrapper class instance.
+	 * This instance implements no phpunit, the version is null.
+	 * @var String
+	 */	
+	protected $version = null;
+			
+	private static $phpunit_wrapper = null;
 
-	public function getFrameworkTestResults() {
-		return $this->results;
-	}
-	
-	public function setFrameworkTestResults($value) {
-		$this->results = $value;
-	}	
-	
+	/** 
+	 * Getter for $coverage (@see $coverage).
+	 * @return boolean
+	 */
 	public function getCoverageStatus() {
 		return $this->coverage;
 	}
 	
+	/** 
+	 * Setter for $coverage (@see $coverage).
+	 * @parameter $value Boolean
+	 */	
 	public function setCoverageStatus($value) {
 		$this->coverage = $value;
 	}
 
+	/** 
+	 * Getter for $suite (@see $suite).
+	 * @return PHPUnit_Framework_TestSuite
+	 */	
 	public function getSuite() {
 		return $this->suite;
 	}
-
-	public function setReporter($value) {
-		$this->reporter = $value;
-	}
 	
-	public function getReporter() {
-		return $this->reporter;
-	}
-
+	/** 
+	 * Setter for $suite (@see $suite).
+	 * @param $value PHPUnit_Framework_TestSuite
+	 */
 	public function setSuite($value) {
 		$this->suite = $value;
 	}
 	
+	/** 
+	 * Getter for $reporter (@see $reporter).
+	 * @return PHPUnit_Framework_TestListener
+	 */
+	public function getReporter() {
+		return $this->reporter;
+	}
+		
+	/** 
+	 * Setter for $reporter (@see $reporter).
+	 * @param $value PHPUnit_Framework_TestListener
+	 */
+	public function setReporter($value) {
+		$this->reporter = $value;
+	}
+	
+	/** 
+	 * Getter for $results (@see $results).
+	 * @return PHPUnit_Framework_TestResult
+	 */
+	public function getFrameworkTestResults() {
+		return $this->results;
+	}
+	
+	/** 
+	 * Setter for $results (@see $results).
+	 * @param $value PHPUnit_Framework_TestResult
+	 */
+	public function setFrameworkTestResults($value) {
+		$this->results = $value;
+	}	
+
+	/** 
+	 * Getter for $version (@see $version).
+	 * @return String
+	 */	
+	public function getVersion() {
+		return $this->version;
+	}
 
 	/**
+	 * Loads and initiates phpunit, based on the available phpunit version.
 	 *
+	 * @return PhpUnitWrapper Instance of the php-wrapper class
 	 */
-	static function getPhpUnit_Version() {
-		$result = 'none';
-
-		if (TestRunner::get_phpunit_wrapper() == null) {
+	static function inst() {
+		
+		if (self::$phpunit_wrapper == null) {
 			 if (fileExistsInIncludePath("/PHPUnit/Autoload.php")) {
-			 	TestRunner::set_phpunit_wrapper(new PhpUnitWrapper_3_5());
+			 	self::$phpunit_wrapper = new PhpUnitWrapper_3_5();
 			 } else 
 			 if (fileExistsInIncludePath("/PHPUnit/Framework.php")) {
-			 	TestRunner::set_phpunit_wrapper(new PhpUnitWrapper_3_4());
+			 	self::$phpunit_wrapper = new PhpUnitWrapper_3_4();
 			 } else {
-			 	TestRunner::set_phpunit_wrapper(new PhpUnitWrapper());
+			 	self::$phpunit_wrapper = new PhpUnitWrapper();
 			 } 
-			TestRunner::get_phpunit_wrapper()->init();
+			self::$phpunit_wrapper->init();
 
-		}
-		$result = TestRunner::get_phpunit_wrapper()->getVersion();
-		return $result;
-	}
+		}		
+		return self::$phpunit_wrapper;
+	}	
 
 	/**
 	 * Returns true if one of the two supported PHPUNIT versions is installed.
+	 *
+	 * @return boolean true if PHPUnit has been installed on the environment.
 	 */
-	static function hasPhpUnit() {
-		return (self::getPhpUnit_Version() != 'none');
+	static function has_php_unit() {
+		return (Bool) self::inst()->getVersion();
 	}
 	
+	/** 
+	 * Implements method, defined in the interface IPhpUnitWrapper:init (@see IPhpUnitWrapper).
+	 * This wrapper class doesn't require any initialisation.
+	 */ 
 	public function init() {
 	}
 
+	/**
+	 * This method is called before the unittests are performed. 
+	 * This wrapper implements the non-PHPUnit version which means that unit tests
+	 * can not be performed. 
+	 * @throws PhpUnitWrapper_Excption
+	 */
 	protected function beforeRunTests() {
-		// throw new PhpUnitWrapper_Excption('Method \'beforeRunTests\' not implemented in PhpUnitWrapper.');
+		throw new PhpUnitWrapper_Exception('Method \'beforeRunTests\' not implemented in PhpUnitWrapper.');
 	}
 	
+	/**
+	 * This method is called after the unittests are performed. 
+	 * This wrapper implements the non-PHPUnit version which means that unit tests
+	 * can not be performed. 
+	 * @throws PhpUnitWrapper_Excption
+	 */
 	protected function afterRunTests() {
-		// throw new PhpUnitWrapper_Excption('Method \'afterRunTests\' not implemented in PhpUnitWrapper.');
+		throw new PhpUnitWrapper_Exception('Method \'afterRunTests\' not implemented in PhpUnitWrapper.');
 	}
 
+	/**
+	 * Perform all tests, added to the suite and initialises Sapphire to collect
+	 * the results of the unit tests.
+	 *
+	 * This method calls @see beforeRunTests and @see afterRunTests.
+	 */
 	public function runTests() {
 		
 		if(Director::is_cli()) {
@@ -121,19 +211,30 @@ class PhpUnitWrapper implements IPhpUnitWrapper {
 		$this->getSuite()->run($this->getFrameworkTestResults());
 		$this->aferRunTests();
 	}
-
 }
 
+/** 
+ * Interface, implementing the general PHPUnit wrapper API.
+ */
 interface IPhpUnitWrapper {
 
 	public function init();
 
 	public function runTests();
-	
 }
 
-// This class is here to help with documentation.
-if(!PhpUnitWrapper::hasPhpUnit()) {
+
+/**
+ * PHPUnitWrapper Exception class
+ */ 
+class PhpUnitWrapper_Exception extends Exception {}
+
+
+// If PHPUnit is not installed on the local environment, declare the class to 
+// ensure that missing class declarations are available to avoind any PHP fatal
+// errors.
+//
+if(!PhpUnitWrapper::has_php_unit()) {
 	/**
 	 * PHPUnit is a testing framework that can be installed using PEAR.
 	 * It's not bundled with Sapphire, you will need to install it yourself.
