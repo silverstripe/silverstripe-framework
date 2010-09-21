@@ -5,10 +5,27 @@
  * It takes care of:
  *  - Including _ss_environment.php
  *  - Normalisation of $_SERVER values
- *  - Initialisation of TEMP_FOLDER, BASE_URL, BASE_PATH, and other SilverStripe defines
+ *  - Initialisation of necessary constants (mostly paths)
  *  - Checking of PHP memory limit
  *  - Including all the files needed to get the manifest built
  *  - Building and including the manifest
+ * 
+ * Initialized constants:
+ * - BASE_URL: Full URL to the webroot, e.g. "http://my-host.com/my-webroot" (no trailing slash).
+ * - BASE_PATH: Absolute path to the webroot, e.g. "/var/www/my-webroot" (no trailing slash).
+ *   See Director::baseFolder(). Can be overwritten by Director::setBaseFolder().
+ * - TEMP_FOLDER: Absolute path to temporary folder, used for manifest and template caches. Example: "/var/tmp"
+ *   See getTempFolder(). No trailing slash.
+ * - MODULES_DIR: Not used at the moment
+ * - MODULES_PATH: Not used at the moment
+ * - THEMES_DIR: Path relative to webroot, e.g. "themes"
+ * - THEMES_PATH: Absolute filepath, e.g. "/var/www/my-webroot/themes"
+ * - CMS_DIR: Path relative to webroot, e.g. "cms"
+ * - CMS_PATH: Absolute filepath, e.g. "/var/www/my-webroot/cms"
+ * - SAPPHIRE_DIR: Path relative to webroot, e.g. "sapphire"
+ * - SAPPHIRE_PATH:Absolute filepath, e.g. "/var/www/my-webroot/sapphire"
+ * - THIRDPARTY_DIR: Path relative to webroot, e.g. "sapphire/thirdparty"
+ * - THIRDPARTY_PATH: Absolute filepath, e.g. "/var/www/my-webroot/sapphire/thirdparty"
  * 
  * @todo This file currently contains a lot of bits and pieces, and its various responsibilities should probably be
  * moved into different subsystems.
