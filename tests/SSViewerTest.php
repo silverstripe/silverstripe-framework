@@ -21,7 +21,7 @@ class SSViewerTest extends SapphireTest {
 
 		// Pretent to load the page
 		$c = new ContentController();
-		$c->init();
+		$c->handleRequest(new SS_HTTPRequest('GET', '/'));
 
 		$this->assertEquals('myusertheme', SSViewer::current_theme(), 'Current theme is a user defined one');
 
