@@ -6,8 +6,6 @@
 $_SERVER['SCRIPT_FILENAME'] = dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR . 'cli-script.php'; 
 $_SERVER['SCRIPT_NAME'] = '.' . DIRECTORY_SEPARATOR . 'sapphire' . DIRECTORY_SEPARATOR . 'cli-script.php'; 
 
-// Change to 
-chdir(dirname($_SERVER['SCRIPT_FILENAME']));
 define('BASE_PATH', rtrim(dirname(dirname(dirname(__FILE__)))), DIRECTORY_SEPARATOR);
 
 // Copied from cli-script.php, to enable same behaviour through phpunit runner.
@@ -27,7 +25,7 @@ if(isset($_SERVER['argv'][2])) {
 }
 
 if(!class_exists('Object')) {
-	require_once("core/Core.php");
+	require_once("sapphire/core/Core.php");
 	global $databaseConfig;
 	DB::connect($databaseConfig);
 }
