@@ -189,6 +189,28 @@ set_include_path(str_replace('.' . PATH_SEPARATOR, '.' . PATH_SEPARATOR
 	. BASE_PATH . '/sapphire/thirdparty' . PATH_SEPARATOR
 	, get_include_path())); 
 
+/**
+ * Sapphire class autoloader.  Requires the ManifestBuilder to work.
+ * $_CLASS_MANIFEST must have been loaded up by ManifestBuilder for this to successfully load
+ * classes.  Classes will be loaded from any PHP file within the application.
+ * If your class contains an underscore, for example, Page_Controller, then the filename is
+ * expected to be the stuff before the underscore.  In this case, Page.php.
+ * 
+ * Class names are converted to lowercase for lookup to adhere to PHP's case-insensitive
+ * way of dealing with them.
+ */
+function sapphire_autoload($className)
+{
+	global $_CLASS_MANIFEST;
+	$lClassName = strtolower($className);
+	if(isset($_CLASS_MANIFEST[$lClassName])) include_once($_CLASS_MANIFEST[$lClassName]);
+	else if(isset($_CLASS_MANIFEST[$className])) include_once($_CLASS_MANIFEST[$className]);
+
+}
+
+spl_autoload_register('sapphire_autoload');
+
+
 require_once("core/ManifestBuilder.php");
 require_once("core/ClassInfo.php");
 require_once('core/Object.php');
@@ -282,23 +304,6 @@ function getTempFolder($base = null) {
     }
     
     return $ssTmp;
-}
-
-/**
- * Sapphire class autoloader.  Requires the ManifestBuilder to work.
- * $_CLASS_MANIFEST must have been loaded up by ManifestBuilder for this to successfully load
- * classes.  Classes will be loaded from any PHP file within the application.
- * If your class contains an underscore, for example, Page_Controller, then the filename is
- * expected to be the stuff before the underscore.  In this case, Page.php.
- * 
- * Class names are converted to lowercase for lookup to adhere to PHP's case-insensitive
- * way of dealing with them.
- */
-function __autoload($className) {
-	global $_CLASS_MANIFEST;
-	$lClassName = strtolower($className);
-	if(isset($_CLASS_MANIFEST[$lClassName])) include_once($_CLASS_MANIFEST[$lClassName]);
-	else if(isset($_CLASS_MANIFEST[$className])) include_once($_CLASS_MANIFEST[$className]);
 }
 
 /**
