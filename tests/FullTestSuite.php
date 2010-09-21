@@ -1,14 +1,5 @@
 <?php
-
-
-if(!class_exists('Object')) {
-	require_once("sapphire/core/Core.php");
-	global $databaseConfig;
-	DB::connect($databaseConfig);
-}
-
-//$c = new Controller;
-//$c->pushCurrent();
+@require_once('sapphire/tests/bootstrap.php');
 
 class FullTestSuite {
 	public static function get_tests() {
