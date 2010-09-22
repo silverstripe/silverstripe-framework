@@ -2,6 +2,7 @@
 @require_once('sapphire/tests/bootstrap.php');
 
 class FullTestSuite {
+
 	public static function get_tests() {
 		ManifestBuilder::load_test_manifest();
 		$tests = ClassInfo::subclassesFor('SapphireTest');
@@ -17,18 +18,18 @@ class FullTestSuite {
 				unset($tests[$class]);
 			}
 		}
+		
 		return $tests;
 	}
 
-    public static function suite()
-    {
-        $suite = new PHPUnit_Framework_TestSuite();
+	public static function suite() {
+		$suite = new PHPUnit_Framework_TestSuite();
 		$classList = self::get_tests();
- 		foreach($classList as $className) {
+		foreach($classList as $className) {
 			$suite->addTest(new SapphireTestSuite($className));
 		}
 
-        return $suite;
-    }
+		return $suite;
+	}
 }
 
