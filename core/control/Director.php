@@ -61,7 +61,7 @@ class Director {
 	/**
 	 * Add URL matching rules to the Director.
 	 * 
-	 * The director is responsible for turning URLs into Controller objects.  It does thi
+	 * The director is responsible for turning URLs into Controller objects.
 	 * 
 	 * @param $priority The priority of the rules; higher values will get your rule checked first.  
 	 * We recommend priority 100 for your site's rules.  The built-in rules are priority 10, standard modules are priority 50.
@@ -73,7 +73,7 @@ class Director {
 	/**
 	 * Process the given URL, creating the appropriate controller and executing it.
 	 * 
-	 * Request processing is handled as folows:
+	 * Request processing is handled as follows:
 	 *  - Director::direct() creates a new SS_HTTPResponse object and passes this to Director::handleRequest().
 	 *  - Director::handleRequest($request) checks each of the Director rules and identifies a controller to handle this 
 	 *    request.
@@ -162,7 +162,7 @@ class Director {
 	 * @param string $url The URL to visit
 	 * @param array $postVars The $_POST & $_FILES variables
 	 * @param Session $session The {@link Session} object representing the current session.  By passing the same object to multiple
-	 * calls of Director::test(), you can simulate a peristed session.
+	 * calls of Director::test(), you can simulate a persisted session.
 	 * @param string $httpMethod The HTTP method, such as GET or POST.  It will default to POST if postVars is set, GET otherwise.
 	 *  Overwritten by $postVars['_method'] if present.
 	 * @param string $body The HTTP body
@@ -175,7 +175,7 @@ class Director {
 	 */
 	static function test($url, $postVars = null, $session = null, $httpMethod = null, $body = null, $headers = null, $cookies = null) {
 		// These are needed so that calling Director::test() doesnt muck with whoever is calling it.
-		// Really, it's some inapproriate coupling and should be resolved by making less use of statics
+		// Really, it's some inappropriate coupling and should be resolved by making less use of statics
 		$oldStage = Versioned::current_stage();
 		$getVars = array();
 		
@@ -234,7 +234,7 @@ class Director {
 		Requirements::set_backend($existingRequirementsBackend);
 
 		// These are needed so that calling Director::test() doesnt muck with whoever is calling it.
-		// Really, it's some inapproriate coupling and should be resolved by making less use of statics
+		// Really, it's some inappropriate coupling and should be resolved by making less use of statics
 		Versioned::reading_stage($oldStage);
 		
 		return $result;
@@ -321,7 +321,7 @@ class Director {
 	}
 	
 	/**
-	 * Return the {@link SiteTree} object that is currently being viewed. If there is no sitetree object to return,
+	 * Return the {@link SiteTree} object that is currently being viewed. If there is no SiteTree object to return,
 	 * then this will return the current controller.
 	 *
 	 * @return SiteTree
@@ -906,4 +906,3 @@ class Director {
 	}
 
 }
-?>
