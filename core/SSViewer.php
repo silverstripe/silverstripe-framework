@@ -374,7 +374,7 @@ class SSViewer {
 		}
 		
 		if(isset($_GET['debug_profile'])) Profiler::mark("SSViewer::process", " for $template");
-		$cacheFile = TEMP_FOLDER . "/.cache" . str_replace(array('\\','/',':'),'.',realpath($template));
+		$cacheFile = TEMP_FOLDER . "/.cache" . str_replace(array('\\','/',':'), '.', Director::makeRelative(realpath($template)));
 
 		$lastEdited = filemtime($template);
 
