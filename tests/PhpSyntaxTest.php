@@ -3,6 +3,8 @@
  * @package sapphire
  * @subpackage tests
  * 
+ * @group sanitychecks
+ * 
  * Test the syntax of the PHP files with various settings
  */
 class PhpSyntaxTest extends SapphireTest {
