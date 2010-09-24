@@ -73,7 +73,9 @@ class ManyManyComplexTableField extends HasManyComplexTableField {
 		
 	function getQuery() {
 		$query = parent::getQuery();
-		$query->select[] = "CASE WHEN \"{$this->manyManyParentClass}ID\" IS NULL THEN '0' ELSE '1' END AS Checked";
+		$query->select[] = "CASE WHEN \"{$this->manyManyParentClass}ID\" IS NULL THEN '0' ELSE '1' END AS \"Checked\"";
+		$query->groupby[] = "\"{$this->manyManyParentClass}ID\""; // necessary for Postgres
+
 		return $query;
 	}
 		
