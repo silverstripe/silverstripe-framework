@@ -401,7 +401,11 @@ HTML;
 	}
 	
 	function SiteConfig() {
-		return SiteConfig::current_site_config();
+		if(method_exists($this->dataRecord, 'getSiteConfig')) {
+			return $this->dataRecord->getSiteConfig();
+		} else {
+			return SiteConfig::current_site_config();
+		}
 	}
 
 	/**
