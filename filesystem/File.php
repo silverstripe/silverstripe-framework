@@ -340,18 +340,22 @@ class File extends DataObject {
 	}
 
 	/**
-	 * Event handler called before deleting from the database.
-	 * You can overload this to clean up or otherwise process data before delete this
-	 * record. 
+	 * Make sure the file has a name
 	 */
 	protected function onBeforeWrite() {
 		parent::onBeforeWrite();
 
 		// Set default name
 		if(!$this->getField('Name')) $this->Name = "new-" . strtolower($this->class);
+	}
+
+	/**
+	 * Set name on filesystem. If the current object is a "Folder", will also update references
+	 * to subfolders and contained file records (both in database and filesystem)
+	 */
+	protected function onAfterWrite() {
+		parent::onAfterWrite();
 		
-		// Set name on filesystem. If the current object is a "Folder", will also update references
-		// to subfolders and contained file records (both in database and filesystem)
 		$this->updateFilesystem();
 	}
 	
@@ -574,7 +578,7 @@ class File extends DataObject {
 	 */
 	function getRelativePath() {
 		if($this->ParentID) {
-			$p = DataObject::get_by_id('Folder', $this->ParentID);
+			$p = DataObject::get_by_id('Folder', $this->ParentID, false); // Don't use the cache, the parent has just been changed
 			if($p && $p->exists()) return $p->getRelativePath() . $this->getField("Name");
 			else return ASSETS_DIR . "/" . $this->getField("Name");
 		} else if($this->getField("Name")) {

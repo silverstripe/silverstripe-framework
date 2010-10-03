@@ -120,6 +120,39 @@ class FolderTest extends SapphireTest {
 		$this->assertFileNotExists($oldPathFolder1, 'Old path is removed after write()');
 		$this->assertFileExists($folder1->getFullPath(), 'New path is created after write()');
 	}
+
+	/**
+	 * Tests for the bug #5994 - Moving folder after executing Folder::findOrMake will not set the Filenames properly
+	 */
+	function testFindOrMakeFolderThenMove() {
+		$folder1 = $this->objFromFixture('Folder', 'folder1');
+		Folder::findOrMake($folder1->Filename);
+		$folder2 = $this->objFromFixture('Folder', 'folder2');
+		
+		// set ParentID
+		$folder1->ParentID = $folder2->ID;
+		$folder1->write();
+		
+		// Check if the file in the folder moved along
+		$file1 = DataObject::get_by_id('File', $this->idFromFixture('File', 'file1-folder1'), false);
+		$this->assertFileExists($file1->getFullPath());
+		$this->assertEquals($file1->Filename, 'assets/FileTest-folder2/FileTest-folder1/File1.txt', 'The file DataObject has updated path');
+	}
+
+	/**
+	 * Tests for the bug #5994 - if you don't execute get_by_id prior to the rename or move, it will fail.
+	 */
+	function testRenameFolderAndCheckTheFile() {
+		$folder1 = DataObject::get_one('Folder', 'ID='.$this->idFromFixture('Folder', 'folder1'));
+		
+		$folder1->Name = 'FileTest-folder1-changed';
+		$folder1->write();
+		
+		// Check if the file in the folder moved along
+		$file1 = DataObject::get_by_id('File', $this->idFromFixture('File', 'file1-folder1'), false);
+		$this->assertFileExists($file1->getFullPath());
+		$this->assertEquals($file1->Filename, 'assets/FileTest-folder1-changed/File1.txt', 'The file DataObject path uses renamed folder');
+	}
 	
 	/**
 	 * @see FileTest->testLinkAndRelativeLink()
