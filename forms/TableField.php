@@ -150,28 +150,7 @@ class TableField extends TableListField {
 	function ItemCount() {
 		return count($this->fieldList);
 	}
-	
-	/**
-	 * Returns the databased saved items, from DataObjects
-	 * 
-	 * @return DataObjectSet
-	 */
-	function sourceItems() {
-		if($this->customSourceItems) {
-			$items = $this->customSourceItems;
-		} elseif($this->cachedSourceItems) {
-			$items = $this->cachedSourceItems;
-		} else {
-			// get query
-			$dataQuery = $this->getQuery();
-			// get data
-			$records = $dataQuery->execute();
-			$items = singleton($this->sourceClass)->buildDataObjectSet($records);
-		}
-
-		return $items;
-	}
-	
+		
 	/**
 	 * Displays the items from {@link sourceItems()} using the encapsulation object.
 	 * If the field value has been set as an array (e.g. after a failed validation),
