@@ -72,7 +72,7 @@ class File extends DataObject {
 	static $db = array(
 		"Name" => "Varchar(255)",
 		"Title" => "Varchar(255)",
-		"Filename" => "Varchar(255)",
+		"Filename" => "Text",
 		"Content" => "Text",
 		"Sort" => "Int"
 	);
