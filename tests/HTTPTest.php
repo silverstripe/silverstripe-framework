@@ -71,7 +71,7 @@ class HTTPTest extends SapphireTest {
 			);
 		}
 		
-		foreach(array($expectedBasePath, '/relative/url?baz=buz&foo=bar') as $e) {
+		foreach(array($expectedBasePath, '/relative/url?baz=buz&amp;foo=bar') as $e) {
 			$this->assertContains(
 				$e,
 				HTTP::setGetVar('foo', 'bar', '/relative/url?baz=buz'),
@@ -80,7 +80,7 @@ class HTTPTest extends SapphireTest {
 		}
 
 		$this->assertEquals(
-			'http://test.com/?foo=new&buz=baz',
+			'http://test.com/?foo=new&amp;buz=baz',
 			HTTP::setGetVar('foo', 'new', 'http://test.com/?foo=old&buz=baz'),
 			'Absolute URL without path and multipe existing query params, overwriting an existing parameter'
 		);
@@ -93,7 +93,7 @@ class HTTPTest extends SapphireTest {
 
 		$this->assertEquals(
 			// http_build_query() escapes angular brackets, they should be correctly urldecoded by the browser client
-			'http://test.com/?foo%5Btest%5D=one&foo%5Btest%5D=two',
+			'http://test.com/?foo%5Btest%5D=one&amp;foo%5Btest%5D=two',
 			HTTP::setGetVar('foo[test]', 'two', 'http://test.com/?foo[test]=one'),
 			'Absolute URL and PHP array query string notation'
 		);
