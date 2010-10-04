@@ -234,7 +234,7 @@ class VirtualPageTest extends SapphireTest {
 			WHERE \"RecordID\" = $vp->ID AND \"Version\" = $vp->Version")->value());
 			
 		$vp->doPublish();
-			
+
 		// Check that the published content is copied from the published page, with a legal
 		// version
 		$liveVersion = DB::query("SELECT Version FROM \"SiteTree_Live\" WHERE ID = $vp->ID")->value();
@@ -255,5 +255,64 @@ class VirtualPageTest extends SapphireTest {
 			Versioned::prepopulate_versionnumber_cache('SiteTree', 'Live', array($p->ID));
 		}
 	}
-	
+
+	function testUnpublishingSourcePageOfAVirtualPageAlsoUnpublishesVirtualPage() {
+		// Create page and virutal page
+		$p = new Page();
+		$p->Title = "source";
+		$p->write();
+		$this->assertTrue($p->doPublish());
+		$vp = new VirtualPage();
+		$vp->CopyContentFromID = $p->ID;
+		$vp->write();
+		$this->assertTrue($vp->doPublish());
+		
+		// All is fine, the virtual page doesn't have a broken link
+		$this->assertFalse($vp->HasBrokenLink);
+		
+		// Unpublish the source page, confirm that the virtual page has also been unpublished
+		$p->doUnpublish();
+		$vpLive = Versioned::get_one_by_stage('SiteTree', 'Live', '"SiteTree"."ID" = ' . $vp->ID);
+		$this->assertFalse($vpLive);
+		
+		// Delete from draft, confirm that the virtual page has a broken link on the draft site
+		$p->delete();
+		$vp->flushCache();
+		$vp = DataObject::get_by_id('SiteTree', $vp->ID);
+		$this->assertEquals(1, $vp->HasBrokenLink);
+	}	
+
+	function testDeletingFromLiveSourcePageOfAVirtualPageAlsoUnpublishesVirtualPage() {
+		// Create page and virutal page
+		$p = new Page();
+		$p->Title = "source";
+		$p->write();
+		$this->assertTrue($p->doPublish());
+		$vp = new VirtualPage();
+		$vp->CopyContentFromID = $p->ID;
+		$vp->write();
+		$this->assertTrue($vp->doPublish());
+		
+		// All is fine, the virtual page doesn't have a broken link
+		$this->assertFalse($vp->HasBrokenLink);
+		
+		// Delete the source page from draft, confirm that this creates a broken link
+		$pID = $p->ID;
+		$p->delete();
+		$vp->flushCache();
+		$vp = DataObject::get_by_id('SiteTree', $vp->ID);
+		$this->assertEquals(1, $vp->HasBrokenLink);
+		
+		// Delete the source page form live, confirm that the virtual page has also been unpublished
+		$pLive = Versioned::get_one_by_stage('SiteTree', 'Live', '"SiteTree"."ID" = ' . $pID);
+		$this->assertTrue($pLive->doDeleteFromLive());
+		$vpLive = Versioned::get_one_by_stage('SiteTree', 'Live', '"SiteTree"."ID" = ' . $vp->ID);
+		$this->assertFalse($vpLive);
+		
+		// Delete from draft, confirm that the virtual page has a broken link on the draft site
+		$pLive->delete();
+		$vp->flushCache();
+		$vp = DataObject::get_by_id('SiteTree', $vp->ID);
+		$this->assertEquals(1, $vp->HasBrokenLink);
+	}	
 }
