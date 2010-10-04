@@ -37,11 +37,11 @@ class SiteConfig extends DataObject {
 	
 	/**
 	 * Get the fields that are sent to the CMS. In
-	 * your decorators: updateEditFormFields(&$fields)
+	 * your decorators: updateCMSFields(&$fields)
 	 *
 	 * @return Fieldset
 	 */
-	function getFormFields() {
+	function getCMSFields() {
 		$fields = new FieldSet(
 			new TabSet("Root",
 				new Tab('Main',
@@ -94,7 +94,8 @@ class SiteConfig extends DataObject {
 			$fields->makeFieldReadonly($titleField);
 		}
 
-		$this->extend('updateEditFormFields', $fields);
+		$this->extend('updateCMSFields', $fields);
+		
 		return $fields;
 	}
 
@@ -117,7 +118,7 @@ class SiteConfig extends DataObject {
 	 *
 	 * @return Fieldset
 	 */
-	function getFormActions() {
+	function getCMSActions() {
 		if (Permission::check('ADMIN') || Permission::check('EDIT_SITECONFIG')) {
 			$actions = new FieldSet(
 				new FormAction('save_siteconfig', 'Save')
@@ -126,7 +127,8 @@ class SiteConfig extends DataObject {
 			$actions = new FieldSet();
 		}
 		
-		$this->extend('updateEditFormActions', $actions);
+		$this->extend('updateCMSActions', $actions);
+		
 		return $actions;
 	}
 	
