@@ -142,12 +142,11 @@ class ContentController extends Controller {
 		// control to a child controller. This allows for the creation of chains of controllers which correspond to a
 		// nested URL.
 		if($action && SiteTree::nested_urls() && !$this->hasAction($action)) {
+			// See ModelAdController->getNestedController() for similar logic
 			Translatable::disable_locale_filter();
-			
 			$child = DataObject::get_one('SiteTree', sprintf (
 				"\"ParentID\" = %s AND \"URLSegment\" = '%s'", $this->ID, Convert::raw2sql($action)
 			));
-			
 			Translatable::enable_locale_filter();
 		}
 		
@@ -157,6 +156,18 @@ class ContentController extends Controller {
 			
 			$response = ModelAsController::controller_for($child)->handleRequest($request);
 		} else {
+			// If a specific locale is requested, and it doesn't match the page found by URLSegment,
+			// look for a translation and redirect (see #5001). Only happens on the last child in
+			// a potentially nested URL chain.
+			if($request->getVar('locale') && $this->dataRecord && $this->dataRecord->Locale != $request->getVar('locale')) {
+				$translation = $this->dataRecord->getTranslation($request->getVar('locale'));
+				if($translation) {
+					$response = new SS_HTTPResponse();
+					$response->redirect($translation->Link(), 301);
+					throw new SS_HTTPResponse_Exception($response);
+				}
+			}
+			
 			Director::set_current_page($this->data());
 			$response = parent::handleRequest($request);
 			Director::set_current_page(null);
