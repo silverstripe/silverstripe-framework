@@ -6,7 +6,7 @@ DatabaseAdapterRegistry::register(
 		'class' => 'MySQLDatabase',
 		'title' => 'MySQL 4.1+',
 		'helperPath' => 'sapphire/dev/install/MySQLDatabaseConfigurationHelper.php',
-		'supported' => function_exists('mysql_connect')
+		'supported' => function_exists('mysql_connect'),
 	)
 );
 
@@ -36,6 +36,19 @@ DatabaseAdapterRegistry::register(
 		'title' => 'SQLite 3.3+',
 		'helperPath' => 'sqlite3/code/SQLiteDatabaseConfigurationHelper.php',
 		'supported' => (class_exists('SQLite3') || class_exists('PDO')),
-		'missingExtensionText' => 'The <a href="http://php.net/manual/en/book.sqlite3.php">SQLite3</a> and <a href="http://php.net/manual/en/book.pdo.php">PDO</a> classes are not available. Please install or enable them and refresh this page.'
+		'missingExtensionText' => 'The <a href="http://php.net/manual/en/book.sqlite3.php">SQLite3</a> and <a href="http://php.net/manual/en/book.pdo.php">PDO</a> classes are not available. Please install or enable them and refresh this page.',
+		'fields' => array(
+			'path' => array(
+				'title' => 'Database path',
+				'default' => realpath(dirname($_SERVER['SCRIPT_FILENAME'])) . '/assets/.sqlitedb'
+			),
+			'database' => array(
+				'title' => 'Database name', 
+				'default' => 'SS_mysite',
+				'attributes' => array(
+					"onchange" => "this.value = this.value.replace(/[\/\\:*?&quot;<>|. \t]+/g,'');"
+				)
+			)
+		)
 	)
 );

@@ -3,53 +3,8 @@
 	<head>
 		<title>SilverStripe CMS / Framework Installation</title>
 		<meta http-equiv="Content-type" content="text/html; charset=utf-8">
-		<script type="text/javascript">
-			function $(id) {
-				return document.getElementById(id);
-			}
-			function show(id) {
-				document.getElementById(id).style.display = '';
-			}
-			function hide(id) {
-				document.getElementById(id).style.display = 'none';
-			}
-			function getElementsByClassName(classname, node) {
-				if(!node) node = document.getElementsByTagName("body")[0];
-				var a = [];
-				var re = new RegExp('\\b' + classname + '\\b');
-				var els = node.getElementsByTagName("*");
-				for(var i=0,j=els.length; i<j; i++)
-				if(re.test(els[i].className))a.push(els[i]);
-				return a;
-			}
-			function toggleDisabledFields(el) {
-				if(!el.checked) {
-					// Go through each environment supported field and enable
-					document.getElementById('db_server').disabled = '';
-					document.getElementById('db_username').disabled = '';
-					document.getElementById('db_password').disabled = '';
-					document.getElementById('admin_username').disabled = '';
-					document.getElementById('admin_password').disabled = '';
-					document.getElementById('devsites').disabled = '';
-					var dbs = getElementsByClassName('databaseClass');
-					for(var i = 0; i < dbs.length; i++) {
-						dbs[i].disabled = '';
-					}
-				} else {
-					// Go through each environment supported field and disable
-					document.getElementById('db_server').disabled = 'disabled';
-					document.getElementById('db_username').disabled = 'disabled';
-					document.getElementById('db_password').disabled = 'disabled';
-					document.getElementById('admin_username').disabled = 'disabled';
-					document.getElementById('admin_password').disabled = 'disabled';
-					document.getElementById('devsites').disabled = 'disabled';
-					var dbs = getElementsByClassName('databaseClass');
-					for(var i = 0; i < dbs.length; i++) {
-						dbs[i].disabled = 'disabled';
-					}
-				}
-			}
-		</script>
+		<script type="text/javascript" src="sapphire/thirdparty/jquery/jquery.js"></script>
+		<script type="text/javascript" src="sapphire/dev/install/install.js"></script>
 		<link rel="stylesheet" type="text/css" href="themes/blackcandy/css/layout.css">
 		<link rel="stylesheet" type="text/css" href="themes/blackcandy/css/typography.css">
 		<link rel="stylesheet" type="text/css" href="themes/blackcandy/css/form.css">
@@ -119,15 +74,15 @@
 										<strong>Note:</strong> It seems as though SilverStripe is already installed here.  If you ask me to install, I will overwrite
 										the <strong>.htaccess</strong> and <strong>mysite/_config.php</strong> files. 
 										<br>
-									<input type="checkbox" id="ReIn" name="force_reinstall" onclick="document.getElementById('install_button').disabled = !this.checked"><label for="ReIn">That's okay, please re-install SilverStripe and overwrite these files.</label>
+									<input type="checkbox" id="ReIn" name="force_reinstall"><label for="ReIn">That's okay, please re-install SilverStripe and overwrite these files.</label>
 									</p>
 								<?php } ?>
 								
 								<p>
 									<?php if($alreadyInstalled) { ?>
-										<input id="install_button" type="submit" disabled="disabled" class="action" name="go" value="Install SilverStripe" onclick="document.getElementById('saving_top').style.display = ''; this.value = 'Installing SilverStripe...'">
+										<input id="install_button" type="submit" disabled="disabled" class="action" name="go" value="Install SilverStripe">
 									<?php } else { ?>
-										<input id="install_button" type="submit" class="action" name="go" value="Install SilverStripe" onclick="document.getElementById('saving_top').style.display = ''; this.value = 'Installing SilverStripe...'">
+										<input id="install_button" type="submit" class="action" name="go" value="Install SilverStripe">
 									<?php } ?>
 									
 									<span id="saving_top" style="display: none">
@@ -150,7 +105,7 @@
 								<div class="fields">
 									<?php if($envFileExists) { ?>
 									<div id="use_environment_field" class="field">
-										<input id="use_environment" type="checkbox" name="useEnv" <?php if($usingEnv) echo "checked=\"checked\"" ?> onclick="toggleDisabledFields(this);">
+										<input id="use_environment" type="checkbox" name="useEnv" <?php if($usingEnv) echo "checked=\"checked\"" ?>>
 										<label for="use_environment">Use _ss_environment file for configuration</label>
 									</div>
 									<?php } ?>
@@ -160,7 +115,7 @@
 										<ul id="database_selection">
 											<?php
 											foreach($databaseClasses as $class => $details) {
-												$checked = ($databaseConfig['type'] == $class) ? ' checked="checked"' : '';
+												$checked = ($databaseConfig['type'] == $class || $type == $class) ? ' checked="checked"' : '';
 												$disabled = $help = '';
 												if($usingEnv) {
 													// All are disabled by default when environment is used
@@ -192,35 +147,54 @@
 												if ($help) {
 													echo '<div class="error databaseError">'.$help.'</div>';
 												}
+
+												// generate db-specific config fields
+												echo '<div class="dbfields">';
+												if(isset($details['fields'])) foreach($details['fields'] as $fieldName => $fieldSpec) {
+													$fieldTitle = $fieldSpec['title'];
+													
+													// values
+													$defaultValue = (isset($fieldSpec['default'])) ? $fieldSpec['default'] : null;
+													if($usingEnv && isset($fieldSpec['envVar']) && defined($fieldSpec['envVar'])) {
+														$value = constant($fieldSpec['envVar']);
+													} else {
+														$value = (isset($databaseConfig[$class][$fieldName])) ? $databaseConfig[$class][$fieldName] : $defaultValue;
+													}
+													
+													// attributes
+													$attrs = array(
+														'id' => "db_{$class}_{$fieldName}",
+														'class' => 'text',
+														'type' => 'text',
+														'name' => "db[$class][$fieldName]",
+														'value' => $value,
+													);
+													if($usingEnv && isset($fieldSpec['envVar']) && defined($fieldSpec['envVar'])) {
+														$attrs['disabled'] = 'disabled';
+													}
+													if(isset($fieldSpec['envVar'])) {
+														$attrs['class'] .= ' configured-by-env';
+													}
+													$attrHTML = '';
+													foreach($attrs as $attrName => $attrValue) $attrHTML .= "$attrName=\"$attrValue\" ";
+													if(isset($fieldSpec['attributes'])) $attrs = array_merge($attrs, $fieldSpec['attributes']);
+													
+													// html
+													echo "<div class=\"field\">";
+													echo "<label for=\"db_$class_$fieldName\">$fieldTitle:</label>";
+													echo "<span class=\"middleColumn\">";
+													echo "<input $attrHTML>";
+													echo "</span>";
+													echo "</div>";
+												}
+												echo '</div>';
+												
 												echo "</li>";
 											}
 											?>
 										</ul>
 									</div>
-									<div class="field">
-										<label for="db_server">Database server:</label>
-										<span class="middleColumn">
-											<input id="db_server" class="text" type="text" name="db[server]" value="<?php echo $databaseConfig['server']; ?>" <?php if($usingEnv && defined('SS_DATABASE_SERVER')) echo 'disabled="disabled"'; ?>>
-										</span>
-									</div>
-									<div class="field">
-										<label for="db_username">Database username:</label>
-										<span class="middleColumn">
-											<input id="db_username" class="text" type="text" name="db[username]" value="<?php echo $databaseConfig['username']; ?>" <?php if($usingEnv && defined('SS_DATABASE_USERNAME')) echo 'disabled="disabled"'; ?>>
-										</span>
-									</div>
-									<div class="field">
-										<label for="db_password">Database password:</label>
-										<span class="middleColumn">
-											<input id="db_password" class="text" type="password" name="db[password]" value="<?php echo $databaseConfig['password']; ?>" <?php if($usingEnv && defined('SS_DATABASE_PASSWORD')) echo 'disabled="disabled"'; ?>>
-										</span>
-									</div>
-									<div class="field">
-										<label for="db_database">Database name:</label>
-										<span class="middleColumn">
-											<input id="db_database" class="text" type="text" name="db[database]" value="<?php echo $databaseConfig['database']; ?>" onchange="this.value = this.value.replace(/[\/\\:*?&quot;<>|. \t]+/g,'');">
-										</span>
-									</div>
+									
 									<div class="action">
 										<input type="submit" class="action" value="Re-check requirements">
 									</div>
@@ -240,13 +214,13 @@
 									<div class="field">
 										<label for="admin_username">Administrator email:</label>
 										<span class="middleColumn">
-											<input type="text" class="text" name="admin[username]" id="admin_username" value="<?php echo $adminConfig['username']; ?>" <?php if($usingEnv && defined('SS_DEFAULT_ADMIN_USERNAME')) echo 'disabled="disabled"' ?>>
+											<input type="text" class="text configured-by-env" name="admin[username]" id="admin_username" value="<?php echo $adminConfig['username']; ?>" <?php if($usingEnv && defined('SS_DEFAULT_ADMIN_USERNAME')) echo 'disabled="disabled"' ?>>
 										</span>
 									</div>
 									<div class="field">
 										<label for="admin_password">Administrator password:</label>
 										<span class="middleColumn">
-											<input type="password" class="text" name="admin[password]" id="admin_password" value="<?php echo $adminConfig['password']; ?>" <?php if($usingEnv && defined('SS_DEFAULT_ADMIN_PASSWORD')) echo 'disabled="disabled"' ?>>
+											<input type="password" class="text configured-by-env" name="admin[password]" id="admin_password" value="<?php echo $adminConfig['password']; ?>" <?php if($usingEnv && defined('SS_DEFAULT_ADMIN_PASSWORD')) echo 'disabled="disabled"' ?>>
 										</span>
 									</div>
 									<div class="field">
@@ -273,7 +247,7 @@
 									<div class="field">
 										<label for="devsites">Development servers:</label>
 										<span class="middleColumn">
-											<textarea name="devsites" id="devsites" rows="5" cols="10">
+											<textarea name="devsites" id="devsites" class="configured-by-env" rows="5" cols="10">
 <?php if(@$_POST['devsites']) echo $_POST['devsites'];
 else echo 'localhost
 127.0.0.1'; ?></textarea>
@@ -327,24 +301,5 @@ else echo 'localhost
 				<p><a href="http://www.silverstripe.org">SilverStripe Open Source CMS / Framework</a> | Copyright &copy; 2010 SilverStripe Limited</p>
 			</div>
 		</div>
-		<script type="text/javascript">
-			var children = $('database_selection').childNodes;
-			var disabledAdapterClick = function(e) {
-				// Hide all existing warnings
-				var elements = getElementsByClassName('databaseError');
-				for(var i = 0; i < elements.length; i++) elements[i].style.display = 'none';
-				if (this.parentNode.childNodes[0].getAttribute('notavailable')) {
-					// Show the warning for this adapter
-					getElementsByClassName('databaseError', this.parentNode)[0].style.display = 'block';
-					return false;
-				}
-			}
-			for(var i = 0; i < children.length; i++) {
-				if (children[i].nodeType != 3) {
-					children[i].childNodes[0].nextSibling.onclick = disabledAdapterClick;
-					children[i].childNodes[0].onclick = disabledAdapterClick;
-				}
-			}
-		</script>
 	</body>
 </html>
