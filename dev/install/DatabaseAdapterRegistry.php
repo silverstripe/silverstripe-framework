@@ -35,6 +35,10 @@ class DatabaseAdapterRegistry {
 		self::$adapters[$config['class']] = $config;
 	}
 	
+	static function unregister($class) {
+		if(isset($adapters[$class])) unset($adapters[$class]);
+	}
+	
 	static function autodiscover() {
 		foreach(glob(dirname(__FILE__) . '/../../../*', GLOB_ONLYDIR) as $directory) {
 			if(file_exists($directory . '/_register_database.php')) include_once($directory . '/_register_database.php');
