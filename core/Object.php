@@ -439,7 +439,7 @@ abstract class Object {
 		
 		// load statics now for DataObject classes
 		if(ClassInfo::is_subclass_of($class, 'DataObject')) {
-			DataObjectDecorator::load_extra_statics($class, $extensionClass);
+			DataObjectDecorator::load_extra_statics($class, $extension);
 		}
 	}
 
@@ -456,10 +456,7 @@ abstract class Object {
 		if(is_subclass_of($class, 'DataObject')) {
 			$extensions = Object::uninherited_static($class, 'extensions');
 			if($extensions) foreach($extensions as $extension) {
-				if(preg_match('/^([^(]*)/', $extension, $matches)) {
-					$extensionClass = $matches[1];
-					DataObjectDecorator::load_extra_statics($class, $extensionClass);
-				}
+				DataObjectDecorator::load_extra_statics($class, $extension);
 			}
 		}
 	}
