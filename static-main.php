@@ -43,8 +43,8 @@ if ($cacheOn && empty($_COOKIE['bypassStaticCache'])) {
 		include_once $homepageMapLocation;
 		$file = isset($homepageMap[$_SERVER['HTTP_HOST']]) ? $homepageMap[$_SERVER['HTTP_HOST']] : $file;
 	}
-
-	$file = preg_replace('/[^a-zA-Z0-9]/si', '_', $file);
+	
+	$file = preg_replace('/[^a-zA-Z0-9\/\-_]/si', '-', $file);
 
 	if (file_exists('../cache/'.$cacheDir.$file.'.html')) {
 		header('X-SilverStripe-Cache: hit at '.@date('r'));
