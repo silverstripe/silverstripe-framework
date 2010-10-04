@@ -136,6 +136,9 @@ class Debug {
 
 		} else if (is_object($val)) {
 			$val = var_export($val, true);
+		} else if (is_bool($val)) {
+			$val = $val ? 'true' : 'false';
+			$val = '(bool) ' . $val;
 		} else {
 			if(!Director::is_cli() && !Director::is_ajax()) {
 				$val = "<pre style=\"font-family: Courier new\">" . htmlentities($val) . "</pre>\n";
