@@ -86,19 +86,14 @@ class Image extends File {
 	 * @return string
 	 */
 	function getTag() {
-		if(file_exists(Director::baseFolder()."/".$this->Filename)) {
+		if(file_exists(Director::baseFolder() . '/' . $this->Filename)) {
 			$url = $this->getURL();
 			$title = ($this->Title) ? $this->Title : $this->Filename;
-			
-			if ($this->Title) {
-				$title = $this->Title;
+			if($this->Title) {
+				$title = Convert::raw2att($this->Title);
+			} else {
+				if(preg_match("/([^\/]*)\.[a-zA-Z0-9]{1,6}$/", $title, $matches)) $title = Convert::raw2att($matches[1]);
 			}
-			else { 
-				// use the file name (without path and extension) for alt atttribute when the title is not defined
-				$title = $this->Filename;
-				if (preg_match("/([^\/]*)\.[a-zA-Z0-9]{1,6}$/", $title, $matches)) $title = $matches[1]; 
-			}
-			
 			return "<img src=\"$url\" alt=\"$title\" />";
 		}
 	}
@@ -257,7 +252,10 @@ class Image extends File {
 				$this->generateFormattedImage($format, $arg1, $arg2);
 			}
 			
-			return new Image_Cached($cacheFile);
+			$cached = new Image_Cached($cacheFile);
+			// Pass through the title so the templates can use it
+			$cached->Title = $this->Title;
+			return $cached;
 		}
 	}
 	
