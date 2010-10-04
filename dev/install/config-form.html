@@ -140,91 +140,92 @@
 			
 							<h4 class="sectionHeading">Database</h4>
 							<div id="database_credentials" class="section">
-								<?php if($envFileExists) { ?>
-								<div id="use_environment_field" class="field">
-									<input id="use_environment" type="checkbox" name="useEnv" <?php if($usingEnv) echo "checked=\"checked\"" ?> onclick="toggleDisabledFields(this);">
-									<label for="use_environment">Use _ss_environment file for configuration</label>
-								</div>
-								<?php } ?>
+								<p id="dbHelp" class="helpText">
+									SilverStripe stores its content in a relational SQL database. Please provide the username and password to connect to the server here.
+									If this account has permission to create databases, then we will create the database for you; otherwise, you must give the name of a
+									database that already exists.<br><br>
+									<strong>Other databases:</strong><br>
+									Databases in the list that are greyed out cannot currently be used. Click on them for more information and possible remedies.
+								</p>
+								<div class="fields">
+									<?php if($envFileExists) { ?>
+									<div id="use_environment_field" class="field">
+										<input id="use_environment" type="checkbox" name="useEnv" <?php if($usingEnv) echo "checked=\"checked\"" ?> onclick="toggleDisabledFields(this);">
+										<label for="use_environment">Use _ss_environment file for configuration</label>
+									</div>
+									<?php } ?>
 								
-								<div class="field">
-									<label>Database type:</label>
-									<ul id="database_selection">
-										<?php
-										foreach($databaseClasses as $class => $details) {
-											$checked = ($databaseConfig['type'] == $class) ? ' checked="checked"' : '';
-											$disabled = $help = '';
-											if($usingEnv) {
-												// All are disabled by default when environment is used
-												$disabled = 'disabled="disabled"';
-												// If SS_DATABASE_CLASS is specified, check the database in the list
-												if(defined('SS_DATABASE_CLASS') && SS_DATABASE_CLASS == $class) {
-													$checked = ' checked="checked"';
-												}
-											} else {
-												$disabled = !$details['supported'] || !$details['hasModule'] ? 'notavailable="true"' : '';
-												if ($disabled) {
-													if (!$details['supported'] && !$details['hasModule']) {
-														$help = 'PHP does not have the required extension, and SilverStripe does not have the correct module installed';
-														$helpText = '<li style="width:auto">'.$details['missingExtensionText'].'</li>';
-														$helpText .= '<li style="width:auto">'.$details['missingModuleText'].'</li>';
-													} else if ($details['supported'] && !$details['hasModule']) {
-														$help = 'PHP has the required extension, but SilverStripe is missing the module';
-														$helpText = '<li style="width:auto">'.$details['missingModuleText'].'</li>';
-													} else if (!$details['supported'] && $details['hasModule']) {
-														$help = 'SilverStripe has the module installed, but PHP is missing the required extension';
-														$helpText = '<li style="width:auto">'.$details['missingExtensionText'].'</li>';
+									<div class="field">
+										<label>Database type:</label>
+										<ul id="database_selection">
+											<?php
+											foreach($databaseClasses as $class => $details) {
+												$checked = ($databaseConfig['type'] == $class) ? ' checked="checked"' : '';
+												$disabled = $help = '';
+												if($usingEnv) {
+													// All are disabled by default when environment is used
+													$disabled = 'disabled="disabled"';
+													// If SS_DATABASE_CLASS is specified, check the database in the list
+													if(defined('SS_DATABASE_CLASS') && SS_DATABASE_CLASS == $class) {
+														$checked = ' checked="checked"';
 													}
-													$help .= "<ul>$helpText</ul>";
+												} else {
+													$disabled = !$details['supported'] || !$details['hasModule'] ? 'notavailable="true"' : '';
+													if ($disabled) {
+														if (!$details['supported'] && !$details['hasModule']) {
+															$help = 'PHP does not have the required extension, and SilverStripe does not have the correct module installed';
+															$helpText = '<li style="width:auto">'.$details['missingExtensionText'].'</li>';
+															$helpText .= '<li style="width:auto">'.$details['missingModuleText'].'</li>';
+														} else if ($details['supported'] && !$details['hasModule']) {
+															$help = 'PHP has the required extension, but SilverStripe is missing the module';
+															$helpText = '<li style="width:auto">'.$details['missingModuleText'].'</li>';
+														} else if (!$details['supported'] && $details['hasModule']) {
+															$help = 'SilverStripe has the module installed, but PHP is missing the required extension';
+															$helpText = '<li style="width:auto">'.$details['missingExtensionText'].'</li>';
+														}
+														$help .= "<ul>$helpText</ul>";
+													}
 												}
+												echo "<li>";
+												echo "<input id=\"$class\" class=\"databaseClass\" type=\"radio\" name=\"db[type]\" value=\"$class\"$checked $disabled>";
+												echo "<label class=\"left\" ".($help ? 'style="font-weight:normal;color:grey" ' : 'style="color:green"')."for=\"$class\">{$details['title']}</label>";
+												if ($help) {
+													echo '<div class="error databaseError">'.$help.'</div>';
+												}
+												echo "</li>";
 											}
-											echo "<li>";
-											echo "<input id=\"$class\" class=\"databaseClass\" type=\"radio\" name=\"db[type]\" value=\"$class\"$checked $disabled>";
-											echo "<label class=\"left\" ".($help ? 'style="font-weight:normal;color:grey" ' : 'style="color:green"')."for=\"$class\">{$details['title']}</label>";
-											if ($help) {
-												echo '<div class="error databaseError">'.$help.'</div>';
-											}
-											echo "</li>";
-										}
-										?>
-									</ul>
-								</div>
-								<div class="field">
-									<label for="db_server">Database server:</label>
-									<span class="middleColumn">
-										<input id="db_server" class="text" type="text" name="db[server]" value="<?php echo $databaseConfig['server']; ?>" <?php if($usingEnv && defined('SS_DATABASE_SERVER')) echo 'disabled="disabled"'; ?>>
-									</span>
-								</div>
-								<div class="field">
-									<label for="db_username">Database username:</label>
-									<span class="middleColumn">
-										<input id="db_username" class="text" type="text" name="db[username]" value="<?php echo $databaseConfig['username']; ?>" <?php if($usingEnv && defined('SS_DATABASE_USERNAME')) echo 'disabled="disabled"'; ?>>
-									</span>
-								</div>
-								<div class="field">
-									<label for="db_password">Database password:</label>
-									<span class="middleColumn">
-										<input id="db_password" class="text" type="password" name="db[password]" value="<?php echo $databaseConfig['password']; ?>" <?php if($usingEnv && defined('SS_DATABASE_PASSWORD')) echo 'disabled="disabled"'; ?>>
-									</span>
-								</div>
-								<div class="field">
-									<label for="db_database">Database name:</label>
-									<span class="middleColumn">
-										<input id="db_database" class="text" type="text" name="db[database]" value="<?php echo $databaseConfig['database']; ?>" onchange="this.value = this.value.replace(/[\/\\:*?&quot;<>|. \t]+/g,'');">
-									</span>
-								</div>
-								<div class="action">
-									<input type="submit" class="action" value="Re-check requirements">
+											?>
+										</ul>
+									</div>
+									<div class="field">
+										<label for="db_server">Database server:</label>
+										<span class="middleColumn">
+											<input id="db_server" class="text" type="text" name="db[server]" value="<?php echo $databaseConfig['server']; ?>" <?php if($usingEnv && defined('SS_DATABASE_SERVER')) echo 'disabled="disabled"'; ?>>
+										</span>
+									</div>
+									<div class="field">
+										<label for="db_username">Database username:</label>
+										<span class="middleColumn">
+											<input id="db_username" class="text" type="text" name="db[username]" value="<?php echo $databaseConfig['username']; ?>" <?php if($usingEnv && defined('SS_DATABASE_USERNAME')) echo 'disabled="disabled"'; ?>>
+										</span>
+									</div>
+									<div class="field">
+										<label for="db_password">Database password:</label>
+										<span class="middleColumn">
+											<input id="db_password" class="text" type="password" name="db[password]" value="<?php echo $databaseConfig['password']; ?>" <?php if($usingEnv && defined('SS_DATABASE_PASSWORD')) echo 'disabled="disabled"'; ?>>
+										</span>
+									</div>
+									<div class="field">
+										<label for="db_database">Database name:</label>
+										<span class="middleColumn">
+											<input id="db_database" class="text" type="text" name="db[database]" value="<?php echo $databaseConfig['database']; ?>" onchange="this.value = this.value.replace(/[\/\\:*?&quot;<>|. \t]+/g,'');">
+										</span>
+									</div>
+									<div class="action">
+										<input type="submit" class="action" value="Re-check requirements">
+									</div>
 								</div>
 							</div>
-							
-							<p id="dbHelp" class="helpText">
-								SilverStripe stores its content in a relational SQL database. Please provide the username and password to connect to the server here.
-								If this account has permission to create databases, then we will create the database for you; otherwise, you must give the name of a
-								database that already exists.<br><br>
-								<strong>Other databases:</strong><br>
-								Databases in the list that are greyed out cannot currently be used. Click on them for more information and possible remedies.
-							</p>
 							
 							<div class="clear"><!-- --></div>
 							
@@ -232,74 +233,87 @@
 							
 							<h4 class="sectionHeading">SilverStripe Administration Account</h4>
 							<div id="AdminAccount" class="section">
-								<div class="field">
-									<label for="admin_username">Administrator email:</label>
-									<span class="middleColumn">
-										<input type="text" class="text" name="admin[username]" id="admin_username" value="<?php echo $adminConfig['username']; ?>" <?php if($usingEnv && defined('SS_DEFAULT_ADMIN_USERNAME')) echo 'disabled="disabled"' ?>>
-									</span>
-								</div>
-								<div class="field">
-									<label for="admin_password">Administrator password:</label>
-									<span class="middleColumn">
-										<input type="password" class="text" name="admin[password]" id="admin_password" value="<?php echo $adminConfig['password']; ?>" <?php if($usingEnv && defined('SS_DEFAULT_ADMIN_PASSWORD')) echo 'disabled="disabled"' ?>>
-									</span>
-								</div>
-								<div class="field">
-									<label for="admin_firstname">Administrator first name:</label>
-									<span class="middleColumn">
-										<input type="text" class="text" name="admin[firstname]" id="admin_firstname" value="<?php echo $adminConfig['firstname']; ?>">
-									</span>
-								</div>
-								<div class="field">
-									<label for="admin_surname">Administrator surname:</label>
-									<span class="middleColumn">
-										<input type="text" class="text" name="admin[surname]" id="admin_surname" value="<?php echo $adminConfig['surname']; ?>">
-									</span>
-								</div>
-								<div class="action">
-									<input type="submit" class="action" value="Re-check requirements">
+								<p id="adminAcc" class="helpText">
+									We will set up 1 administrator account for you automatically. Enter the email address and password. If you'd	rather log-in with a username instead of an email address, enter that instead.
+								</p>
+								<div class="fields">
+									<div class="field">
+										<label for="admin_username">Administrator email:</label>
+										<span class="middleColumn">
+											<input type="text" class="text" name="admin[username]" id="admin_username" value="<?php echo $adminConfig['username']; ?>" <?php if($usingEnv && defined('SS_DEFAULT_ADMIN_USERNAME')) echo 'disabled="disabled"' ?>>
+										</span>
+									</div>
+									<div class="field">
+										<label for="admin_password">Administrator password:</label>
+										<span class="middleColumn">
+											<input type="password" class="text" name="admin[password]" id="admin_password" value="<?php echo $adminConfig['password']; ?>" <?php if($usingEnv && defined('SS_DEFAULT_ADMIN_PASSWORD')) echo 'disabled="disabled"' ?>>
+										</span>
+									</div>
+									<div class="field">
+										<label for="admin_firstname">Administrator first name:</label>
+										<span class="middleColumn">
+											<input type="text" class="text" name="admin[firstname]" id="admin_firstname" value="<?php echo $adminConfig['firstname']; ?>">
+										</span>
+									</div>
+									<div class="field">
+										<label for="admin_surname">Administrator surname:</label>
+										<span class="middleColumn">
+											<input type="text" class="text" name="admin[surname]" id="admin_surname" value="<?php echo $adminConfig['surname']; ?>">
+										</span>
+									</div>
+									<div class="action">
+										<input type="submit" class="action" value="Re-check requirements">
+									</div>
 								</div>
 							</div>
-							
-							<p id="adminAcc" class="helpText">
-								We will set up 1 administrator account for you automatically. Enter the email address and password. If you'd
-								rather log-in with a username instead of an email address, enter that instead.
-							</p>
 							
 							<h4 class="sectionHeading">Server configuration</h4>
-							<div class="section">
-								<div class="field">
-									<label for="devsites">Development servers:</label>
-									<span class="middleColumn">
-										<textarea name="devsites" id="devsites" rows="5" cols="10">
-<?php if(@$_POST['devsites']) echo $_POST['devsites'];
-else echo 'localhost
-127.0.0.1'; ?></textarea>
-									</span>
+							<div id="devSection" class="section">
+								<div class="fields">
+									<div class="field">
+										<label for="devsites">Development servers:</label>
+										<span class="middleColumn">
+											<textarea name="devsites" id="devsites" rows="5" cols="10">
+	<?php if(@$_POST['devsites']) echo $_POST['devsites'];
+	else echo 'localhost
+	127.0.0.1'; ?></textarea>
+										</span>
+									</div>
 								</div>
-								<div class="field">
-									<label for="locale">Locale:</label>
-									<span class="middleColumn">
-										<select name="locale" id="locale">
-<?php
-$selectedLocale = isset($_POST['locale']) ? $_POST['locale'] : $defaultLocale;
-foreach($locales as $code => $details) {
-	$selected = $code == $selectedLocale ? ' selected="true"' : '';
-	echo "<option$selected value=\"$code\">{$details[0]} - {$details[1]}</option>\n";
-}
-?>
-										</select> 
-									</span>
-								</div>
+								<p id="devHelp" class="helpText">
+									SilverStripe allows you to run a site in <a href="http://doc.silverstripe.org/doku.php?id=configuration">development mode</a>.
+									This shows all error messages in the web browser instead of emailing them to the administrator, and allows
+									the database to be built without logging in as administrator. Please enter the host/domain names for servers
+									you will be using for development.
+								</p>
 							</div>
 							
-							<p id="devHelp" class="helpText">
-								SilverStripe allows you to run a site in <a href="http://doc.silverstripe.org/doku.php?id=configuration">development mode</a>.
-								This shows all error messages in the web browser instead of emailing them to the administrator, and allows
-								the database to be built without logging in as administrator. Please enter the host/domain names for servers
-								you will be using for development.
-							</p>
-							
+							<div id="localeSection" class="section">
+								<div class="fields">
+									<div class="field">
+										<label for="locale">Default language:</label>
+										<span class="middleColumn">
+											<select name="locale" id="locale">
+	<?php
+	$selectedLocale = isset($_POST['locale']) ? $_POST['locale'] : $defaultLocale;
+	foreach($locales as $code => $details) {
+		$selected = $code == $selectedLocale ? ' selected="true"' : '';
+		echo "<option$selected value=\"$code\">{$details[0]} - {$details[1]}</option>\n";
+	}
+	?>
+											</select> 
+										</span>
+									</div>
+								</div>
+								<p id="localeHelp" class="helpText">
+									Determines the default "locale" settings (for dates, currencies, etc.), 
+									as well as setting the default language of the CMS interface.
+									This can be customized for any CMS user.
+									<br />
+									Caution: Not all aspects of the interface might be localized yet.
+								</p>
+							</div>
+
 							<h4 id="requirements">Requirements</h4>
 							<?php $req->showTable(); ?>
 						</form>
