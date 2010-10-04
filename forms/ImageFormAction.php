@@ -23,7 +23,6 @@ class ImageFormAction extends FormAction {
 	}
 	function Field() {
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
-		Requirements::javascript(THIRDPARTY_DIR . '/jquery-livequery/jquery.livequery.js');
 		Requirements::javascript(SAPPHIRE_DIR . '/javascript/ImageFormAction.js');
 		
 		$classClause = '';
