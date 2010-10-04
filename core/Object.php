@@ -134,7 +134,7 @@ abstract class Object {
 				if($firstArg !== null) array_unshift($args, $firstArg);
 				array_unshift($args, $class);
 				
-				self::$_cache_inst_args[$classSpec.$firstArg] = call_user_func_array('Object::create', $args);
+				self::$_cache_inst_args[$classSpec.$firstArg] = call_user_func_array(array('Object','create'), $args);
 			}
 		}
 		
