@@ -74,11 +74,7 @@ class ViewableData extends Object implements IteratorAggregate {
 	 * @return string
 	 */
 	public static function castingObjectCreator($fieldSchema) {
-		if(strpos($fieldSchema, '(') === false) {
-			return "return Object::create('{$fieldSchema}', \$fieldName);";
-		} else {
-			return 'return Object::create(' . preg_replace('/^([^(]+)\(/', '\'$1\', $fieldName, ', $fieldSchema) . ';';
-		}
+		user_error("Deprecated in a breaking way, use Object::create_from_string()", E_USER_WARNING);
 	}
 	
 	/**
@@ -89,21 +85,7 @@ class ViewableData extends Object implements IteratorAggregate {
 	 * @return array
 	 */
 	public static function castingObjectCreatorPair($fieldSchema) {
-		if(strpos($fieldSchema, '(') === false) {
-			return array (
-				'className'     => $fieldSchema,
-				'castingHelper' => self::castingObjectCreator($fieldSchema)
-			);
-		}
-		
-		if(preg_match('/^([^(]+)\(/', $fieldSchema, $parts)) {
-			return array (
-				'className'     => $parts[1],
-				'castingHelper' => self::castingObjectCreator($fieldSchema)
-			);
-		}
-		
-		throw new InvalidArgumentException("ViewableData::castingObjectCreatorPair(): bad field schema '$fieldSchema'");
+		user_error("Deprecated in a breaking way, use Object::create_from_string()", E_USER_WARNING);
 	}
 	
 	// FIELD GETTERS & SETTERS -----------------------------------------------------------------------------------------
@@ -251,15 +233,8 @@ class ViewableData extends Object implements IteratorAggregate {
 	 * @return array
 	 */
 	public function castingHelperPair($field) {
-		if(!isset(self::$casting_cache[$this->class])) {
-			if($this->failover) {
-				$this->failover->buildCastingCache(self::$casting_cache[$this->class]);
-			}
-			
-			$this->buildCastingCache(self::$casting_cache[$this->class]);
-		}
-		
-		if(isset(self::$casting_cache[$this->class][$field])) return self::$casting_cache[$this->class][$field];
+		user_error("castingHelperPair() Deprecated, use castingHelper() instead", E_USER_NOTICE);
+		return $this->castingHelper($field);
 	}
 	
 	/**
@@ -270,7 +245,12 @@ class ViewableData extends Object implements IteratorAggregate {
 	 * @return string
 	 */
 	public function castingHelper($field) {
-		if($pair = $this->castingHelperPair($field)) return $pair['castingHelper'];
+		if($this instanceof DataObject && ($fieldSpec = $this->db($field))) {
+			return $fieldSpec;
+		}
+		
+		$specs = Object::combined_static(get_class($this), 'casting');
+		if(isset($specs[$field])) return $specs[$field];
 	}
 	
 	/**
@@ -280,7 +260,12 @@ class ViewableData extends Object implements IteratorAggregate {
 	 * @return string
 	 */
 	public function castingClass($field) {
-		if($pair = $this->castingHelperPair($field)) return $pair['className'];
+		$spec = $this->castingHelper($field);
+		if(!$spec) return null;
+		
+		$bPos = strpos($spec,'(');
+		if($bPos === false) return $spec;
+		else return substr($spec, 0, $bPos-1);
 	}
 	
 	/**
@@ -386,10 +371,10 @@ class ViewableData extends Object implements IteratorAggregate {
 			
 			if(!is_object($value) && ($this->castingClass($fieldName) || $forceReturnedObject)) {
 				if(!$castConstructor = $this->castingHelper($fieldName)) {
-					$castConstructor = self::castingObjectCreator($this->stat('default_cast'));
+					$castConstructor = $this->stat('default_cast');
 				}
 				
-				$valueObject = eval($castConstructor);
+				$valueObject = Object::create_from_string($castConstructor, $fieldName);
 				$valueObject->setValue($value, ($this->hasMethod('getAllFields') ? $this->getAllFields() : null));
 				
 				$value = $valueObject;

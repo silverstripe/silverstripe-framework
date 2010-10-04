@@ -96,6 +96,100 @@ abstract class Object {
 		}
 	}
 	
+	private static $_cache_inst_args = array();
+	
+	/**
+	 * Create an object from a string representation.  It treats it as a PHP constructor without the
+	 * 'new' keyword.  It also manages to construct the object without the use of eval().
+	 * 
+	 * Construction itself is done with Object::create(), so that Object::useCustomClass() calls
+	 * are respected.
+	 * 
+	 * `Object::create_from_string("Versioned('Stage','Live')")` will return the result of
+	 * `Object::create('Versioned', 'Stage', 'Live);`
+	 * 
+	 * It is designed for simple, clonable objects.  The first time this method is called for a given
+	 * string it is cached, and clones of that object are returned.
+	 * 
+	 * If you pass the $firstArg argument, this will be prepended to the constructor arguments. It's
+	 * impossible to pass null as the firstArg argument.
+	 * 
+	 * `Object::create_from_string("Varchar(50)", "MyField")` will return the result of
+	 * `Object::create('Vachar', 'MyField', '50');`
+	 * 
+	 * Arguments are always strings, although this is a quirk of the current implementation rather
+	 * than something that can be relied upon.
+	 */
+	static function create_from_string($classSpec, $firstArg = null) {
+		if(!isset(self::$_cache_inst_args[$classSpec.$firstArg])) {
+			// an $extension value can contain parameters as a string,
+			// e.g. "Versioned('Stage','Live')"
+			if(strpos($classSpec,'(') === false) {
+				if($firstArg === null) self::$_cache_inst_args[$classSpec.$firstArg] = Object::create($classSpec);
+				else self::$_cache_inst_args[$classSpec.$firstArg] = Object::create($classSpec, $firstArg);
+								
+			} else {
+				list($class, $args) = self::parse_class_spec($classSpec);
+				
+				if($firstArg !== null) array_unshift($args, $firstArg);
+				array_unshift($args, $class);
+				
+				self::$_cache_inst_args[$classSpec.$firstArg] = call_user_func_array('Object::create', $args);
+			}
+		}
+		
+		return clone self::$_cache_inst_args[$classSpec.$firstArg];
+	}
+	
+	/**
+	 * Parses a class-spec, such as "Versioned('Stage','Live')", as passed to create_from_string().
+	 * Returns a 2-elemnent array, with classname and arguments
+	 */
+	static function parse_class_spec($classSpec) {
+		$tokens = token_get_all("<?php $classSpec");
+		$class = null;
+		$args = array();
+		$passedBracket = false;
+		foreach($tokens as $token) {
+			$tName = is_array($token) ? $token[0] : $token;
+			// Get the class naem
+			if($class == null && is_array($token) && $token[0] == T_STRING) {
+				$class = $token[1];
+			// Get arguments
+			} else if(is_array($token)) {
+				switch($token[0]) {
+				case T_CONSTANT_ENCAPSED_STRING:
+					$argString = $token[1];
+					switch($argString[0]) {
+						case '"': $argString = stripcslashes(substr($argString,1,-1)); break;
+						case "'": $argString = str_replace(array("\\\\", "\\'"),array("\\", "'"), substr($argString,1,-1)); break;
+						default: throw new Exception("Bad T_CONSTANT_ENCAPSED_STRING arg $argString");
+					}
+					$args[] = $argString;
+					break;
+			
+				case T_DNUMBER:
+					$args[] = (double)$token[1];
+					break;
+
+				case T_LNUMBER:
+					$args[] = (int)$token[1];
+					break;
+			
+				case T_STRING:
+					switch($token[1]) {
+						case 'true': $args[] = true; break;
+						case 'false': $args[] = false; break;
+						default: throw new Exception("Bad T_STRING arg '{$token[1]}'");
+					}
+				}
+
+			}
+		}
+	
+		return array($class, $args);
+	}
+	
 	/**
 	 * Similar to {@link Object::create()}, except that classes are only overloaded if you set the $strong parameter to
 	 * TRUE when using {@link Object::useCustomClass()}
@@ -535,11 +629,7 @@ abstract class Object {
 			
 			if($extensions = self::uninherited_static($class, 'extensions')) {
 				foreach($extensions as $extension) {
-					// an $extension value can contain parameters as a string,
-					// e.g. "Versioned('Stage','Live')"
-					if(strpos($extension,'(') === false) $instance = new $extension();
-					else $instance = eval("return new $extension;");
-				
+					$instance = self::create_from_string($extension);
 					$instance->setOwner(null, $class);
 					$this->extension_instances[$instance->class] = $instance;
 				}
@@ -551,7 +641,6 @@ abstract class Object {
 			self::$classes_constructed[$this->class] = true;
 		}
 	}
-	
 	
 	/**
 	 * Attemps to locate and call a method dynamically added to a class at runtime if a default cannot be located

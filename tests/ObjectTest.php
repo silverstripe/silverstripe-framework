@@ -335,7 +335,21 @@ class ObjectTest extends SapphireTest {
 			array('ExtendTest(test)', 'ExtendTest2(modified)')
 		);
 	}
-	
+
+	public function testParseClassSpec() {
+		$this->assertEquals(
+			array('Versioned',array('Stage', 'Live')),
+			Object::parse_class_spec("Versioned('Stage','Live')")
+		);
+		$this->assertEquals(
+			array('Versioned',array('Stage,Live', 'Stage')),
+			Object::parse_class_spec("Versioned('Stage,Live','Stage')")
+		);
+		$this->assertEquals(
+			array('Versioned',array('Stage\'Stage,Live\'Live', 'Live')),
+			Object::parse_class_spec("Versioned('Stage\'Stage,Live\'Live','Live')")
+		);
+	}
 }
 
 /**#@+
