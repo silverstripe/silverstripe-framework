@@ -151,8 +151,7 @@ $lang['en_US']['Date']['YEARS'] = ' years';
 $lang['en_US']['DateField']['NOTSET'] = 'not set';
 $lang['en_US']['DateField']['TODAY'] = 'today';
 $lang['en_US']['DateField']['VALIDATIONJS'] = 'Please enter a valid date format (DD/MM/YYYY).';
-$lang['en_US']['DateField']['VALIDDATEFORMAT'] = 'Please enter a valid time format.';
-$lang['en_US']['DateField']['VALIDDATEFORMAT2'] = 'Please enter a valid date format (%s)';
+$lang['en_US']['DateField']['VALIDDATEFORMAT2'] = 'Please enter a valid date format (%s).';
 $lang['en_US']['DateField']['VALIDDATEMAXDATE'] = 'Your date has to be older or matching the maximum allowed date (%s)';
 $lang['en_US']['DateField']['VALIDDATEMINDATE'] = 'Your date has to be newer or matching the minimum allowed date (%s)';
 $lang['en_US']['DropdownField']['CHOOSE'] = array(
@@ -199,6 +198,8 @@ $lang['en_US']['ErrorPage']['505'] = '505 - HTTP Version Not Supported';
 $lang['en_US']['ErrorPage']['CODE'] = 'Error code';
 $lang['en_US']['ErrorPage']['DEFAULTERRORPAGECONTENT'] = '<p>Sorry, it seems you were trying to access a page that doesn\'t exist.</p><p>Please check the spelling of the URL you were trying to access and try again.</p>';
 $lang['en_US']['ErrorPage']['DEFAULTERRORPAGETITLE'] = 'Page not found';
+$lang['en_US']['ErrorPage']['DEFAULTSERVERERRORPAGECONTENT'] = '<p>Sorry, there was a problem with handling your request.</p>';
+$lang['en_US']['ErrorPage']['DEFAULTSERVERERRORPAGETITLE'] = 'Server error';
 $lang['en_US']['ErrorPage']['ERRORFILEPROBLEM'] = 'Error opening file "%s" for writing. Please check file permissions.';
 $lang['en_US']['ErrorPage']['PLURALNAME'] = array(
 	'Error Pags',
@@ -276,7 +277,7 @@ $lang['en_US']['ForgotPasswordEmail.ss']['HELLO'] = 'Hi';
 $lang['en_US']['ForgotPasswordEmail.ss']['TEXT1'] = 'Here is your';
 $lang['en_US']['ForgotPasswordEmail.ss']['TEXT2'] = 'password reset link';
 $lang['en_US']['ForgotPasswordEmail.ss']['TEXT3'] = 'for';
-$lang['en_US']['Form']['FIELDISREQUIRED'] = '%s is required.';
+$lang['en_US']['Form']['FIELDISREQUIRED'] = '%s is required';
 $lang['en_US']['Form']['LANGAOTHER'] = 'Other languages';
 $lang['en_US']['Form']['LANGAVAIL'] = 'Available languages';
 $lang['en_US']['Form']['VALIDATIONCREDITNUMBER'] = 'Please ensure you have entered the %s credit card number correctly.';
@@ -408,6 +409,7 @@ $lang['en_US']['Member']['CONFIRMNEWPASSWORD'] = 'Confirm New Password';
 $lang['en_US']['Member']['CONFIRMPASSWORD'] = 'Confirm Password';
 $lang['en_US']['Member']['CONTACTINFO'] = 'Contact Information';
 $lang['en_US']['Member']['DefaultAdminFirstname'] = 'Default Admin';
+$lang['en_US']['Member']['DefaultDateTime'] = 'default';
 $lang['en_US']['Member']['EMAIL'] = 'Email';
 $lang['en_US']['Member']['EMAILSIGNUPINTRO1'] = 'Thanks for signing up to become a new member, your details are listed below for future reference.';
 $lang['en_US']['Member']['EMAILSIGNUPINTRO2'] = 'You can login to the website using the credentials listed below';
@@ -494,6 +496,85 @@ $lang['en_US']['Member']['db_PasswordExpiry'] = array(
 	'Password expiry date'
 );
 $lang['en_US']['MemberAuthenticator']['TITLE'] = 'E-mail &amp; Password';
+$lang['en_US']['MemberDatetimeOptionsetField']['AMORPM'] = array(
+	'AM (Ante meridiem) or PM (Post meridiem)',
+	40,
+	'Help text describing what "a" means in ISO date formatting'
+);
+$lang['en_US']['MemberDatetimeOptionsetField']['Custom'] = 'Custom';
+$lang['en_US']['MemberDatetimeOptionsetField']['DATEFORMATBAD'] = 'Date format is invalid';
+$lang['en_US']['MemberDatetimeOptionsetField']['DAYNOLEADING'] = array(
+	'Day of month without leading zero',
+	40,
+	'Help text describing what "d" means in ISO date formatting'
+);
+$lang['en_US']['MemberDatetimeOptionsetField']['DIGITSDECFRACTIONSECOND'] = array(
+	'One or more digits representing a decimal fraction of a second',
+	40,
+	'Help text describing what "s" means in ISO date formatting'
+);
+$lang['en_US']['MemberDatetimeOptionsetField']['FOURDIGITYEAR'] = array(
+	'Four-digit year',
+	40,
+	'Help text describing what "YYYY" means in ISO date formatting'
+);
+$lang['en_US']['MemberDatetimeOptionsetField']['FULLNAMEMONTH'] = array(
+	'Full name of month (e.g. June)',
+	40,
+	'Help text describing what "MMMM" means in ISO date formatting'
+);
+$lang['en_US']['MemberDatetimeOptionsetField']['HOURNOLEADING'] = array(
+	'Hour without leading zero',
+	40,
+	'Help text describing what "h" means in ISO date formatting'
+);
+$lang['en_US']['MemberDatetimeOptionsetField']['MINUTENOLEADING'] = array(
+	'Minute without leading zero',
+	40,
+	'Help text describing what "m" means in ISO date formatting'
+);
+$lang['en_US']['MemberDatetimeOptionsetField']['MONTHNOLEADING'] = array(
+	'Month digit without leading zero',
+	40,
+	'Help text describing what "M" means in ISO date formatting'
+);
+$lang['en_US']['MemberDatetimeOptionsetField']['Preview'] = 'Preview';
+$lang['en_US']['MemberDatetimeOptionsetField']['SHORTMONTH'] = array(
+	'Short name of month (e.g. Jun)',
+	40,
+	'Help text letting describing what "MMM" means in ISO date formatting'
+);
+$lang['en_US']['MemberDatetimeOptionsetField']['TOGGLEHELP'] = 'Toggle formatting help';
+$lang['en_US']['MemberDatetimeOptionsetField']['TWODIGITDAY'] = array(
+	'Two-digit day of month',
+	40,
+	'Help text describing what "dd" means in ISO date formatting'
+);
+$lang['en_US']['MemberDatetimeOptionsetField']['TWODIGITHOUR'] = array(
+	'Two digits of hour (00 through 23)',
+	40,
+	'Help text describing what "hh" means in ISO date formatting'
+);
+$lang['en_US']['MemberDatetimeOptionsetField']['TWODIGITMINUTE'] = array(
+	'Two digits of minute (00 through 59)',
+	40,
+	'Help text describing what "mm" means in ISO date formatting'
+);
+$lang['en_US']['MemberDatetimeOptionsetField']['TWODIGITMONTH'] = array(
+	'Two-digit month (01=January, etc.)',
+	40,
+	'Help text describing what "MM" means in ISO date formatting'
+);
+$lang['en_US']['MemberDatetimeOptionsetField']['TWODIGITSECOND'] = array(
+	'Two digits of second (00 through 59)',
+	40,
+	'Help text describing what "ss" means in ISO date formatting'
+);
+$lang['en_US']['MemberDatetimeOptionsetField']['TWODIGITYEAR'] = array(
+	'Two-digit year',
+	40,
+	'Help text describing what "YY" means in ISO date formatting'
+);
 $lang['en_US']['MemberPassword']['PLURALNAME'] = array(
 	'Member Passwords',
 	50,
@@ -609,8 +690,9 @@ $lang['en_US']['SearchForm']['GO'] = 'Go';
 $lang['en_US']['SearchForm']['SEARCH'] = 'Search';
 $lang['en_US']['SearchForm']['SearchResults'] = 'Search Results';
 $lang['en_US']['Security']['ALREADYLOGGEDIN'] = array(
-	'You don\'t have access to this page.  If you have another account that can access that page, you can log in again below</a>.',
-	PR_MEDIUM
+	'You don\'t have access to this page.  If you have another account that can access that page, you can log in again below.',
+	PR_MEDIUM,
+	'%s will be replaced with a link to log in.'
 );
 $lang['en_US']['Security']['BUTTONSEND'] = 'Send me the password reset link';
 $lang['en_US']['Security']['CHANGEPASSWORDBELOW'] = 'You can change your password below.';
@@ -757,6 +839,7 @@ $lang['en_US']['SiteTree']['PLURALNAME'] = array(
 	'Pural name of the object, used in dropdowns and to generally identify a collection of this object in the interface'
 );
 $lang['en_US']['SiteTree']['REMOVEDFROMDRAFT'] = 'Removed from draft site';
+$lang['en_US']['SiteTree']['REMOVE_INSTALL_WARNING'] = 'Warning: You should remove install.php from this SilverStripe install for security reasons.';
 $lang['en_US']['SiteTree']['REORGANISE_DESCRIPTION'] = 'Change site structure';
 $lang['en_US']['SiteTree']['REORGANISE_HELP'] = 'Rearrange pages in the site tree through drag&drop.';
 $lang['en_US']['SiteTree']['SHOWINMENUS'] = 'Show in menus?';
@@ -772,6 +855,7 @@ $lang['en_US']['SiteTree']['TABCONTENT'] = 'Content';
 $lang['en_US']['SiteTree']['TABDEPENDENT'] = 'Dependent pages';
 $lang['en_US']['SiteTree']['TABMAIN'] = 'Main';
 $lang['en_US']['SiteTree']['TABMETA'] = 'Metadata';
+$lang['en_US']['SiteTree']['TABTODO'] = 'To-do';
 $lang['en_US']['SiteTree']['TODOHELP'] = '<p>You can use this to keep track of work that needs to be done to the content of your site.  To see all your pages with to do information, open the \'Site Reports\' window on the left and select \'To Do\'</p>';
 $lang['en_US']['SiteTree']['TOPLEVEL'] = 'Site Content (Top Level)';
 $lang['en_US']['SiteTree']['TOPLEVELCREATORGROUPS'] = 'Top level creators';
