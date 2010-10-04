@@ -125,7 +125,7 @@ class FormScaffolder extends Object {
 						$component,
 						$relationshipFields,
 						"getCMSFields", 
-						"$foreignKey = " . $this->obj->ID
+						"\"$foreignKey\" = " . $this->obj->ID
 					);
 					$ctf->setPermissions(TableListField::permissions_for_object($component));
 					if($this->tabbed) {
