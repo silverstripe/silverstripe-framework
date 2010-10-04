@@ -312,7 +312,6 @@ class Member extends DataObject {
 		if($remember) {
 			$token = substr(md5(uniqid(rand(), true)), 0, 49 - strlen($this->ID));
 			$this->RememberLoginToken = $token;
-			// Set cookie (with HTTPOnly flag if running on PHP 5.2 or newer)
 			Cookie::set('alc_enc', $this->ID . ':' . $token, 90, null, null, null, true);
 		} else {
 			$this->RememberLoginToken = null;
@@ -378,11 +377,11 @@ class Member extends DataObject {
 				self::session_regenerate_id();
 				Session::set("loggedInAs", $member->ID);
 				// This lets apache rules detect whether the user has logged in
-				if(self::$login_marker_cookie) Cookie::set(self::$login_marker_cookie, 1, 0);
+				if(self::$login_marker_cookie) Cookie::set(self::$login_marker_cookie, 1, 0, null, null, false, true);
 
 				$token = substr(md5(uniqid(rand(), true)), 0, 49 - strlen($member->ID));
 				$member->RememberLoginToken = $token;
-				Cookie::set('alc_enc', $member->ID . ':' . $token, 90, null, null, null, true);
+				Cookie::set('alc_enc', $member->ID . ':' . $token, 90, null, null, false, true);
 
 				$member->NumVisit++;
 				$member->write();
