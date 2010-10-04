@@ -37,6 +37,11 @@ require_once 'Zend/Date.php';
  * 	$f->setLocale('de_DE');
  * 	$f->setConfig('dmyfields');
  * 
+ * # Validation
+ * 
+ * Caution: JavaScript validation is only supported for the 'en_NZ' locale at the moment,
+ * it will be disabled automatically for all other locales.
+ * 
  * @package forms
  * @subpackage fields-datetime
  */
@@ -221,6 +226,9 @@ class DateField extends TextField {
 	}
 	
 	function jsValidation() {
+		// JavaScript validation of locales other than en_NZ are not supported at the moment...
+		if($this->getLocale() != 'en_NZ') return;
+		
 		$formID = $this->form->FormName();
 
 		if(Validator::get_javascript_validator_handler() == 'none') return true;
