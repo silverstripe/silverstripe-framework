@@ -441,7 +441,7 @@ class Upload_Validator {
 		
 		// Special case for filenames without an extension
 		if(!isset($pathInfo['extension'])) {
-			return (in_array('', $this->allowedExtensions, true)) ? true : false;
+			return in_array('', $this->allowedExtensions, true);
 		} else {
 			return (!count($this->allowedExtensions) || in_array(strtolower($pathInfo['extension']), $this->allowedExtensions));
 		}
