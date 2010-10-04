@@ -127,8 +127,12 @@ class Upload extends Controller {
 			if(substr($relativeFilePath, strlen($relativeFilePath) - strlen('.tar.gz')) == '.tar.gz' ||
 				substr($relativeFilePath, strlen($relativeFilePath) - strlen('.tar.bz2')) == '.tar.bz2') {
 					$relativeFilePath = ereg_replace('[0-9]*(\.tar\.[^.]+$)',$i . '\\1', $relativeFilePath);
-			} else {
+			} else if (strpos($relativeFilePath, '.') !== false) {
 				$relativeFilePath = ereg_replace('[0-9]*(\.[^.]+$)',$i . '\\1', $relativeFilePath);
+			} else if (strpos($relativeFilePath, '_') !== false) {
+				$relativeFilePath = ereg_replace('_([^_]+$)', '_'.$i, $relativeFilePath);
+			} else {
+				$relativeFilePath .= "_$i";
 			}
 			if($oldFilePath == $relativeFilePath && $i > 2) user_error("Couldn't fix $relativeFilePath with $i tries", E_USER_ERROR);
 		}
@@ -433,7 +437,13 @@ class Upload_Validator {
 	 */
 	public function isValidExtension() {
 		$pathInfo = pathinfo($this->tmpFile['name']);
-		return (!count($this->allowedExtensions) || in_array(strtolower($pathInfo['extension']), $this->allowedExtensions));
+		
+		// Special case for filenames with an extension
+		if(!isset($pathInfo['extension'])) {
+			return (in_array('', $this->allowedExtensions, true)) ? true : false;
+		} else {
+			return (!count($this->allowedExtensions) || in_array(strtolower($pathInfo['extension']), $this->allowedExtensions));
+		}
 	}	
 	
 	/**

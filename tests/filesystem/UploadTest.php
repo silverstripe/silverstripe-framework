@@ -127,6 +127,124 @@ class UploadTest extends SapphireTest {
 		$file->delete();
 	}
 	
+	function testUploadDeniesNoExtensionFilesIfNoEmptyStringSetForValidatorExtensions() {
+		// create tmp file
+		$tmpFileName = 'UploadTest_testUpload';
+		$tmpFilePath = TEMP_FOLDER . '/' . $tmpFileName;
+		$tmpFileContent = '';
+		for($i=0; $i<10000; $i++) $tmpFileContent .= '0';
+		file_put_contents($tmpFilePath, $tmpFileContent);
+		
+		// emulates the $_FILES array
+		$tmpFile = array(
+			'name' => $tmpFileName,
+			'type' => 'text/plaintext',
+			'size' => filesize($tmpFilePath),
+			'tmp_name' => $tmpFilePath,
+			'extension' => 'txt',
+			'error' => UPLOAD_ERR_OK,
+		);
+
+		$v = new UploadTest_Validator();
+		$v->setAllowedExtensions(array('txt'));
+		
+		// test upload into default folder
+		$u = new Upload();
+		$result = $u->load($tmpFile);
+		
+		$this->assertFalse($result, 'Load failed because extension was not accepted');
+		$this->assertEquals(1, count($u->getErrors()), 'There is a single error of the file extension');
+		
+	}
+	
+	function testUploadTarGzFileTwiceAppendsNumber() {
+		// create tmp file
+		$tmpFileName = 'UploadTest_testUpload.tar.gz';
+		$tmpFilePath = TEMP_FOLDER . '/' . $tmpFileName;
+		$tmpFileContent = '';
+		for($i=0; $i<10000; $i++) $tmpFileContent .= '0';
+		file_put_contents($tmpFilePath, $tmpFileContent);
+		
+		// emulates the $_FILES array
+		$tmpFile = array(
+			'name' => $tmpFileName,
+			'type' => 'text/plaintext',
+			'size' => filesize($tmpFilePath),
+			'tmp_name' => $tmpFilePath,
+			'extension' => 'txt',
+			'error' => UPLOAD_ERR_OK,
+		);
+		
+		// test upload into default folder
+		$u = new Upload();
+		$u->load($tmpFile);
+		$file = $u->getFile();
+		$this->assertEquals(
+			'UploadTesttestUpload.tar.gz',
+			$file->Name,
+			'File has a name without a number because it\'s not a duplicate'
+		);
+		
+		$u = new Upload();
+		$u->load($tmpFile);
+		$file2 = $u->getFile();
+		$this->assertEquals(
+			'UploadTesttestUpload2.tar.gz',
+			$file2->Name,
+			'File receives a number attached to the end before the extension'
+		);
+		
+		$file->delete();
+		$file2->delete();
+	}
+	
+	function testUploadFileWithNoExtensionTwiceAppendsNumber() {
+		// create tmp file
+		$tmpFileName = 'UploadTest_testUpload';
+		$tmpFilePath = TEMP_FOLDER . '/' . $tmpFileName;
+		$tmpFileContent = '';
+		for($i=0; $i<10000; $i++) $tmpFileContent .= '0';
+		file_put_contents($tmpFilePath, $tmpFileContent);
+		
+		// emulates the $_FILES array
+		$tmpFile = array(
+			'name' => $tmpFileName,
+			'type' => 'text/plaintext',
+			'size' => filesize($tmpFilePath),
+			'tmp_name' => $tmpFilePath,
+			'extension' => 'txt',
+			'error' => UPLOAD_ERR_OK,
+		);
+		
+		$v = new UploadTest_Validator();
+		$v->setAllowedExtensions(array(''));
+		
+		// test upload into default folder
+		$u = new Upload();
+		$u->setValidator($v);
+		$u->load($tmpFile);
+		$file = $u->getFile();
+		
+		$this->assertEquals(
+			'UploadTesttestUpload',
+			$file->Name,
+			'File is uploaded without extension'
+		);
+		
+		$u = new Upload();
+		$u->setValidator($v);
+		$u->load($tmpFile);
+		$file2 = $u->getFile();
+		$this->assertEquals(
+			'UploadTesttestUpload_2',
+			$file2->Name,
+			'File receives a number attached to the end'
+		);
+		
+		$file->delete();
+		$file2->delete();
+	}
+
 }
 class UploadTest_Validator extends Upload_Validator implements TestOnly {
 
