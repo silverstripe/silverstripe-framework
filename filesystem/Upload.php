@@ -438,7 +438,7 @@ class Upload_Validator {
 	public function isValidExtension() {
 		$pathInfo = pathinfo($this->tmpFile['name']);
 		
-		// Special case for filenames with an extension
+		// Special case for filenames without an extension
 		if(!isset($pathInfo['extension'])) {
 			return (in_array('', $this->allowedExtensions, true)) ? true : false;
 		} else {
