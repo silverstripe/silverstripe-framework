@@ -90,13 +90,12 @@ class RequestHandler extends ViewableData {
 	 * action will return an array of data with which to
 	 * customise the controller.
 	 * 
-	 * @param $params The parameters taken from the parsed URL of the parent url handler
 	 * @param $request The {@link SS_HTTPRequest} object that is reponsible for distributing URL parsing
 	 * @uses SS_HTTPRequest
 	 * @uses SS_HTTPRequest->match()
 	 * @return SS_HTTPResponse|RequestHandler|string|array
 	 */
-	function handleRequest($request) {
+	function handleRequest(SS_HTTPRequest $request) {
 		// $handlerClass is used to step up the class hierarchy to implement url_handlers inheritance
 		$handlerClass = ($this->class) ? $this->class : get_class($this);
 	
