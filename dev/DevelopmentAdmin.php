@@ -22,7 +22,14 @@ class DevelopmentAdmin extends Controller {
 		// We allow access to this controller regardless of live-status or ADMIN permission only
 		// if on CLI.  Access to this controller is always allowed in "dev-mode", or of the user is ADMIN.
 		$canAccess = (Director::isDev() || Director::is_cli() || Permission::check("ADMIN"));
-		if(!$canAccess) return Security::permissionFailure($this);
+		// Special case for dev/build: Allow unauthenticated building of database, emulate DatabaseAdmin->init()
+		// permission restrictions (see #4957)
+		// TODO Decouple sub-controllers like DatabaseAdmin instead of weak URL checking
+		$requestedDevBuild = (stripos($this->request->getURL(), 'dev/build') === 0 && !Security::database_is_ready());
+		
+		if(!$canAccess && !$requestedDevBuild) {
+			return Security::permissionFailure($this);
+		}
 		
 		// check for valid url mapping
 		// lacking this information can cause really nasty bugs,
