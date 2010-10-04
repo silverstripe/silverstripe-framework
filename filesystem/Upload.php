@@ -433,6 +433,7 @@ class Upload_Validator {
 	
 	/**
 	 * Determines if the temporary file has a valid extension
+	 * An empty string in the validation map indicates files without an extension.
 	 * @return boolean
 	 */
 	public function isValidExtension() {
