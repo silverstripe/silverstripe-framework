@@ -200,7 +200,7 @@ class CheckboxSetField extends OptionsetField {
 	}
 	
 	/**
-	 * Return the CheckboxSetField value as an array 
+	 * Return the CheckboxSetField value as a string 
 	 * selected item keys.
 	 * 
 	 * @return string
