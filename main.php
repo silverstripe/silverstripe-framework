@@ -92,7 +92,8 @@ require_once("core/Session.php");
 
  // If this is a dev site, enable php error reporting
 if(Director::isDev()) {
-	error_reporting(E_ALL);
+	if(defined('E_DEPRECATED')) error_reporting(E_ALL ^ E_DEPRECATED);
+	else error_reporting(E_ALL);
 }
 
 Session::start();
