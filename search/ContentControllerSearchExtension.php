@@ -28,7 +28,7 @@ class ContentControllerSearchExtension extends Extension {
 			new FormAction('results', _t('SearchForm.GO', 'Go'))
 		);
 		$form = new SearchForm($this->owner, 'SearchForm', $fields, $actions);
-		$form->classesToSearch(FulltextSearchable::$searchableClasses);
+		$form->classesToSearch(FulltextSearchable::get_searchable_classes());
 		return $form;
 	}
 
