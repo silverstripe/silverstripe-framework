@@ -39,6 +39,10 @@ class TestRunner extends Controller {
 		parent::init();
 		ManifestBuilder::load_test_manifest();
 		if (!self::$default_reporter) self::set_reporter(Director::is_cli() ? 'CliDebugView' : 'DebugView');
+		
+		if(!PhpUnitWrapper::has_php_unit()) {
+			die("Please install PHPUnit using pear");
+		}
 	}
 	
 	public function Link() {
@@ -49,15 +53,11 @@ class TestRunner extends Controller {
 	 * Run all test classes
 	 */
 	function all() {
-		if(hasPhpUnit()) {
-			$tests = ClassInfo::subclassesFor('SapphireTest');
-			array_shift($tests);
-			unset($tests['FunctionalTest']);
-		
-			$this->runTests($tests);
-		} else {
-			echo "Please install PHPUnit using pear";
-		}
+		$tests = ClassInfo::subclassesFor('SapphireTest');
+		array_shift($tests);
+		unset($tests['FunctionalTest']);
+	
+		$this->runTests($tests);
 	}
 	
 	/**
@@ -91,7 +91,7 @@ class TestRunner extends Controller {
 	}
 	
 	function coverage() {
-		if(!PhpUnitWrapper::hasPhpUnit()) {
+		if(!PhpUnitWrapper::has_php_unit()) {
 			ManifestBuilder::load_all_classes();
 			$tests = ClassInfo::subclassesFor('SapphireTest');
 			array_shift($tests);
@@ -283,6 +283,4 @@ HTML;
 		SapphireTest::kill_temp_db();
 		DB::set_alternative_database_name(null);
 	}
-}
-
 }
