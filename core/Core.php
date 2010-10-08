@@ -131,6 +131,21 @@ define('PR_LOW',10);
 
 increase_memory_limit_to('64M');
 
+/**
+ * Sapphire class autoloader.  Requires the ManifestBuilder to work.
+ * $_CLASS_MANIFEST must have been loaded up by ManifestBuilder for this to successfully load
+ * classes.  Classes will be loaded from any PHP file within the application.
+ * If your class contains an underscore, for example, Page_Controller, then the filename is
+ * expected to be the stuff before the underscore.  In this case, Page.php.
+ */
+function sapphire_autoload($className) {
+	global $_CLASS_MANIFEST;
+	if(($pos = strpos($className,'_')) !== false) $className = substr($className,0,$pos);
+	if(isset($_CLASS_MANIFEST[$className])) include_once($_CLASS_MANIFEST[$className]);
+}
+
+spl_autoload_register('sapphire_autoload');
+
 ///////////////////////////////////////////////////////////////////////////////
 // INCLUDES
 
@@ -217,19 +232,6 @@ function getTempFolder() {
     }
     
     return $ssTmp;
-}
-
-/**
- * Sapphire class autoloader.  Requires the ManifestBuilder to work.
- * $_CLASS_MANIFEST must have been loaded up by ManifestBuilder for this to successfully load
- * classes.  Classes will be loaded from any PHP file within the application.
- * If your class contains an underscore, for example, Page_Controller, then the filename is
- * expected to be the stuff before the underscore.  In this case, Page.php.
- */
-function __autoload($className) {
-	global $_CLASS_MANIFEST;
-	if(($pos = strpos($className,'_')) !== false) $className = substr($className,0,$pos);
-	if(isset($_CLASS_MANIFEST[$className])) include_once($_CLASS_MANIFEST[$className]);
 }
 
 /**
