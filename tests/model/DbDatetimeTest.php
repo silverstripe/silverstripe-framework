@@ -8,7 +8,7 @@ class DbDatetimeTest extends FunctionalTest {
 	 * can overflow to the next second giving offset readings.
 	 */
 	private function matchesRoughly($date1, $date2, $comment = '') {
-		$allowedDifference = 5; // seconds
+		$allowedDifference = 15; // seconds
 		
 		$time1 = is_numeric($date1) ? $date1 : strtotime($date1);
 		$time2 = is_numeric($date2) ? $date2 : strtotime($date2);
