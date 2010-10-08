@@ -7,7 +7,7 @@
 /**
  * PHPUnit Wrapper class. Implements the correct behaviour for PHPUnit V3.4.
  */
-class PhpUnitWrapper_3_4 extends PhpUnitWrapper {
+class PhpUnitWrapper34 extends PhpUnitWrapper {
 
 	protected $version = 'PhpUnit V3.4';
 

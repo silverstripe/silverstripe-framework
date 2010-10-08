@@ -4,7 +4,7 @@
 * @subpackage dev
 */
 
-class PhpUnitWrapper_3_5 extends PhpUnitWrapper {
+class PhpUnitWrapper35 extends PhpUnitWrapper {
 
 	protected $version = 'PhpUnit V3.5';
 	
