@@ -61,29 +61,59 @@ class ErrorPage extends Page {
 		parent::requireDefaultRecords();
 
 		$pageNotFoundErrorPage = DataObject::get_one('ErrorPage', "\"ErrorCode\" = '404'");
-		if(!($pageNotFoundErrorPage && $pageNotFoundErrorPage->exists())) {
-			$pageNotFoundErrorPage = new ErrorPage();
-			$pageNotFoundErrorPage->ErrorCode = 404;
-			$pageNotFoundErrorPage->Title = _t('ErrorPage.DEFAULTERRORPAGETITLE', 'Page not found');
-			$pageNotFoundErrorPage->Content = _t('ErrorPage.DEFAULTERRORPAGECONTENT', '<p>Sorry, it seems you were trying to access a page that doesn\'t exist.</p><p>Please check the spelling of the URL you were trying to access and try again.</p>');
-			$pageNotFoundErrorPage->Status = 'New page';
-			$pageNotFoundErrorPage->write();
-			$pageNotFoundErrorPage->publish('Stage', 'Live');
+		$pageNotFoundErrorPageExists = ($pageNotFoundErrorPage && $pageNotFoundErrorPage->exists()) ? true : false;
+		$pageNotFoundErrorPagePath = self::get_filepath_for_errorcode(404);
+		if(!($pageNotFoundErrorPageExists && file_exists($pageNotFoundErrorPagePath))) {
+			if(!$pageNotFoundErrorPageExists) {
+				$pageNotFoundErrorPage = new ErrorPage();
+				$pageNotFoundErrorPage->ErrorCode = 404;
+				$pageNotFoundErrorPage->Title = _t('ErrorPage.DEFAULTERRORPAGETITLE', 'Page not found');
+				$pageNotFoundErrorPage->Content = _t('ErrorPage.DEFAULTERRORPAGECONTENT', '<p>Sorry, it seems you were trying to access a page that doesn\'t exist.</p><p>Please check the spelling of the URL you were trying to access and try again.</p>');
+				$pageNotFoundErrorPage->Status = 'New page';
+				$pageNotFoundErrorPage->write();
+				$pageNotFoundErrorPage->publish('Stage', 'Live');
+			}
 
-			DB::alteration_message('404 page created', 'created');
+			// Ensure a static error page is created from latest error page content
+			$response = Director::test(Director::makeRelative($pageNotFoundErrorPage->Link()));
+			if($fh = fopen($pageNotFoundErrorPagePath, 'w')) {
+				$written = fwrite($fh, $response->getBody());
+				fclose($fh);
+			}
+
+			if($written) {
+				DB::alteration_message('404 error page created', 'created');
+			} else {
+				DB::alteration_message(sprintf('404 error page could not be created at %s. Please check permissions', $pageNotFoundErrorPagePath), 'error');
+			}
 		}
 
 		$serverErrorPage = DataObject::get_one('ErrorPage', "\"ErrorCode\" = '500'");
-		if(!($serverErrorPage && $serverErrorPage->exists())) {
-			$serverErrorPage = new ErrorPage();
-			$serverErrorPage->ErrorCode = 500;
-			$serverErrorPage->Title = _t('ErrorPage.DEFAULTSERVERERRORPAGETITLE', 'Server error');
-			$serverErrorPage->Content = _t('ErrorPage.DEFAULTSERVERERRORPAGECONTENT', '<p>Sorry, there was a problem with handling your request.</p>');
-			$serverErrorPage->Status = 'New page';
-			$serverErrorPage->write();
-			$serverErrorPage->publish('Stage', 'Live');
+		$serverErrorPageExists = ($serverErrorPage && $serverErrorPage->exists()) ? true : false;
+		$serverErrorPagePath = self::get_filepath_for_errorcode(500);
+		if(!($serverErrorPageExists && file_exists($serverErrorPagePath))) {
+			if(!$serverErrorPageExists) {
+				$serverErrorPage = new ErrorPage();
+				$serverErrorPage->ErrorCode = 500;
+				$serverErrorPage->Title = _t('ErrorPage.DEFAULTSERVERERRORPAGETITLE', 'Server error');
+				$serverErrorPage->Content = _t('ErrorPage.DEFAULTSERVERERRORPAGECONTENT', '<p>Sorry, there was a problem with handling your request.</p>');
+				$serverErrorPage->Status = 'New page';
+				$serverErrorPage->write();
+				$serverErrorPage->publish('Stage', 'Live');
+			}
 
-			DB::alteration_message('500 page created', 'created');
+			// Ensure a static error page is created from latest error page content
+			$response = Director::test(Director::makeRelative($serverErrorPage->Link()));
+			if($fh = fopen($serverErrorPagePath, 'w')) {
+				$written = fwrite($fh, $response->getBody());
+				fclose($fh);
+			}
+
+			if($written) {
+				DB::alteration_message('500 error page created', 'created');
+			} else {
+				DB::alteration_message(sprintf('500 error page could not be created at %s. Please check permissions', $serverErrorPagePath), 'error');
+			}
 		}
 	}
 
