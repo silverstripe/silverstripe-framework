@@ -210,8 +210,11 @@ class DateField extends TextField {
 		if(Validator::get_javascript_validator_handler() == 'none') return true;
 
 		if($this->getConfig('dmyfields')) {
-			$error = _t('DateField.VALIDATIONJS', 'Please enter a valid date format (DD/MM/YYYY).');
-			$error = 'Please enter a valid date format (DD/MM/YYYY) from dmy.';
+			$error = _t('DateField.VALIDATIONJS', 'Please enter a valid date format.');
+			// Remove hardcoded date formats from translated strings
+			$error = preg_replace('/\(.*\)/', '', $error);
+			$error .= ' (' . $this->getConfig('dateformat') .')';
+			
 			$jsFunc =<<<JS
 Behaviour.register({
 	"#$formID": {
@@ -497,6 +500,8 @@ class DateField_View_JQuery {
 	 */
 	static $locale_map = array(
 		'en_GB' => 'en-GB',
+		'en_US' => 'en-US', 
+		'en_NZ' => 'en-GB', 
 		'fr_CH' => 'fr-CH',
 		'pt_BR' => 'pt-BR',
 		'sr_SR' => 'sr-SR',
