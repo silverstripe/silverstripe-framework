@@ -55,7 +55,6 @@
 		 * Loads images from getimages() to the thumbnail view. It's called on
 		 */
 		function loadImages(params) {
-			console.debug(this);
 			$.get('admin/EditorToolbar/ImageForm', {
 				action_callfieldmethod: "1",
 				fieldName: "FolderImages",
