@@ -142,10 +142,10 @@ $lang['en_US']['Date']['TIMEDIFFAGO'] = array(
 	PR_MEDIUM,
 	'Natural language time difference, e.g. 2 hours ago'
 );
-$lang['en_US']['Date']['TIMEDIFFAWAY'] = array(
-	'%s away',
+$lang['en_US']['Date']['TIMEDIFFIN'] = array(
+	'in %s',
 	PR_MEDIUM,
-	'Natural language time difference, e.g. 2 hours away'
+	'Natural language time difference, e.g. in 2 hours'
 );
 $lang['en_US']['Date']['YEAR'] = ' year';
 $lang['en_US']['Date']['YEARS'] = ' years';

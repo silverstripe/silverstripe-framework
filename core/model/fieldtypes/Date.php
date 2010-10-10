@@ -169,10 +169,10 @@ class Date extends DBField {
 			} else {
 				return sprintf(
 					_t(
-						'Date.TIMEDIFFAWAY',
-						"%s away",
+						'Date.TIMEDIFFIN',
+						"in %s",
 						PR_MEDIUM,
-						'Natural language time difference, e.g. 2 hours away'
+						'Natural language time difference, e.g. in 2 hours'
 					),
 					$this->TimeDiff()
 				);
