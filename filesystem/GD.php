@@ -27,12 +27,17 @@ class GD extends Object {
 		$this->quality = self::$default_quality;
 		parent::__construct();
 	}
-	protected function setGD($gd) {
+
+	public function setGD($gd) {
 		$this->gd = $gd;
 		$this->width = imagesx($gd);
 		$this->height = imagesy($gd);
 	}
-	
+
+	public function getGD() {
+		return $this->gd;
+	}
+
 	/**
 	 * Set the default image quality.
 	 * @param quality int A number from 0 to 100, 100 being the best quality.
