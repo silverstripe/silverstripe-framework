@@ -38,4 +38,15 @@ class SS_HTMLValueTest extends SapphireTest {
 		}
 	}
 	
+	public function testMixedNewlines() {
+		$value = new SS_HTMLValue();
+		$eol = PHP_EOL;
+		$value->setContent("<p>paragraph</p>{$eol}<ul><li>1</li>\r\n</ul>");
+		$this->assertEquals(
+			"<p>paragraph</p>{$eol}<ul><li>1</li>{$eol}</ul>", 
+			$value->getContent(),
+			'Newlines get converted'
+		);
+	}
+	
 }
