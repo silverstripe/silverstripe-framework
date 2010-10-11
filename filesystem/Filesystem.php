@@ -32,21 +32,20 @@ class Filesystem extends Object {
 	 * @param String $folder Absolute folder path
 	 * @param Boolean $contentsOnly If this is true then the contents of the folder will be removed but not the folder itself
 	 */
-	static function removeFolder( $folder, $contentsOnly = false ) {
-		
+	static function removeFolder($folder, $contentsOnly = false) {
+
 		// remove a file encountered by a recursive call.
-		if( !is_dir( $folder ) || is_link($folder) )
-			unlink( $folder );
-		else {
-			
-			$dir = opendir( $folder );
-			
-			while( $file = readdir( $dir ) )
-				if( !preg_match( '/\.{1,2}$/', $file ) )
-					self::removeFolder( $folder.'/'.$file );
-			
+		if(is_file($folder) || is_link($folder)) {
+			unlink($folder);
+		} else {
+			$dir = opendir($folder);
+			while($file = readdir($dir)) {
+				if(($file == '.' || $file == '..')) continue;
+				else {
+					self::removeFolder($folder . '/' . $file);
+				}
+			}
 			closedir($dir);
-			
 			if(!$contentsOnly) rmdir($folder);
 		}
 	}
