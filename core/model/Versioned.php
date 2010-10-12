@@ -335,7 +335,7 @@ class Versioned extends DataObjectDecorator {
 			if($this->migratingVersion) {
 				$manipulation[$table]['fields']['Version'] = $this->migratingVersion;
 			}
-				
+
 			// If we haven't got a version #, then we're creating a new version.
 			// Otherwise, we're just copying a version to another table
 			if(!isset($manipulation[$table]['fields']['Version'])) {
@@ -389,6 +389,14 @@ class Versioned extends DataObjectDecorator {
 		
 		// Add the new version # back into the data object, for accessing after this write
 		if(isset($thisVersion)) $this->owner->Version = str_replace("'","",$thisVersion);
+	}
+
+	/**
+	 * If a write was skipped, then we need to ensure that we don't leave a migrateVersion()
+	 * value lying around for the next write.
+	 */
+	function onAfterSkippedWrite() {
+		$this->migrateVersion(null);
 	}
 	
 	/**

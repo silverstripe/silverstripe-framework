@@ -971,6 +971,8 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		if(self::get_validation_enabled()) {
 			$valid = $this->validate();
 			if(!$valid->valid()) {
+				// Used by DODs to clean up after themselves, eg, Versioned
+				$this->extend('onAfterSkippedWrite');
 				throw new ValidationException($valid, "Validation error writing a $this->class object: " . $valid->message() . ".  Object not written.", E_USER_WARNING);
 				return false;
 			}
@@ -1101,6 +1103,8 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 				$this->changed = null;
 			} elseif ( $showDebug ) {
 				echo "<b>Debug:</b> no changes for DataObject<br />";
+				// Used by DODs to clean up after themselves, eg, Versioned
+				$this->extend('onAfterSkippedWrite');
 			}
 
 			// Clears the cache for this object so get_one returns the correct object.
@@ -1110,6 +1114,9 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 				$this->record['Created'] = SS_Datetime::now()->Rfc2822();
 			}
 			$this->record['LastEdited'] = SS_Datetime::now()->Rfc2822();
+		} else {
+			// Used by DODs to clean up after themselves, eg, Versioned
+			$this->extend('onAfterSkippedWrite');
 		}
 
 		// Write ComponentSets as necessary
