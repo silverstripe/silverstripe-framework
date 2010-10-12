@@ -2,9 +2,19 @@ body {
 	text-align: center;
 }
 
+#Container .typography p {
+	margin-left: 0;
+	margin-right: 0;
+}
+
 #Container * {
 	text-align: left;
 }
+
+#Header p {
+	margin-left: 30px;
+}
+
 ul#Themes{
 	list-style: none;
 	margin: 5px;
@@ -12,6 +22,8 @@ ul#Themes{
 	ul#Themes li {
 		clear: both;
 		padding: 3px 0;
+		margin-left: 0;
+		padding-left: 0;
 	}
 	ul#Themes input {
 		float: left;
@@ -69,8 +81,9 @@ p.error a:hover {
 	text-decoration: none;
 }
 span.middleColumn {
-	width: 312px;
+	width: 297px;
 	margin-right: 0;
+	margin-top: 0;
 	padding: 4px;
 }
 input.text, textarea, select {
@@ -79,11 +92,13 @@ input.text, textarea, select {
 	color: #000;
 	font-size: 1.2em;
 	font-weight: bold;
-	width: 305px;
+	width: 290px;
+}
+#stats-container label {
+	display: inline;
 }
 #stats {
-	float: left;
-	margin: 5px;
+	margin-right: 5px;
 }
 table.testResults {
 	border-collapse: collapse;
@@ -106,6 +121,10 @@ table.testResults {
 #devHelp,
 #localeHelp {
 	padding-top: 20px;
+}
+
+.typography label {
+	margin-bottom: 0;
 }
 
 .helpText {
@@ -164,16 +183,16 @@ table.testResults {
 #database_selection {
 	overflow: hidden;
 	margin: 0;
-	margin-top: 15px;
 }
 	#database_selection li {
+		margin-left: 0;
+		padding-left: 0;
 	}
 		#database_selection li input {
 			margin-right: 5px;;
 		}
 		#database_selection li label {
 			display: inline;
-			font-weight: bold;
 		}
 
 .databaseError {
@@ -184,3 +203,11 @@ table.testResults {
 	margin-bottom: 0;
 	display: none;
 }
+
+	.databaseError ul {
+		margin-bottom: 0;
+	}
+	.databaseError ul, .databaseError li {
+		margin-left: 0;
+		padding-left: 0;
+	}
