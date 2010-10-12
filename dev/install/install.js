@@ -15,7 +15,7 @@ $(document).ready(function() {
 	/**
 	 * Hide all existing database warnings, and show only current one
 	 */
-	$('#database_selection li label, input').click(function(e) {
+	$('#database_selection li label, input:radio').click(function(e) {
 		$('.dbfields').hide();
 		// only show fields if there's no db error
 		if(!$('.databaseError', $(this).parent()).length) $('.dbfields', $(this).parent()).show();
