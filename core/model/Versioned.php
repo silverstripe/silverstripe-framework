@@ -410,9 +410,13 @@ class Versioned extends DataObjectDecorator {
 	 * @return boolean Returns false if the field isn't in the table, true otherwise
 	 */
 	function hasVersionField($table) {
-		
-		$tableParts = explode('_',$table);
-		return ('DataObject' == get_parent_class($tableParts[0]));
+		$rPos = strrpos($table,'_');
+		if(($rPos !== false) && in_array(substr($table,$rPos), $this->stages)) {
+			$tableWithoutStage = substr($table,0,$rPos);
+		} else {
+			$tableWithoutStage = $table;
+		}
+		return ('DataObject' == get_parent_class($tableWithoutStage));
 	}
 	function extendWithSuffix($table) {
 		foreach (Versioned::$versionableExtensions as $versionableExtension => $suffixes) {
