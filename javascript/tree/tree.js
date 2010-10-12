@@ -147,6 +147,8 @@ Tree.prototype = {
 	 * If 'before' is specified, then it will be inserted before that.
 	 */
 	appendTreeNode : function(child, before) {
+		if(!child) return;
+
 		// Remove from the old parent node - this will ensure that the classes of the old tree
 		// item are updated accordingly
 		if(child.parentTreeNode) {
