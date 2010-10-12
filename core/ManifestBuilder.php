@@ -381,7 +381,7 @@ class ManifestBuilder {
 
 		foreach(self::$classArray as $class => $info) {
 			$allClasses['exists'][$class] = $class;
-			$allClasses['file'][$class] = $info['file'];
+			$allClasses['file'][strtolower($class)] = $info['file'];
 		}
 
 		// Build a map of classes and their subclasses
