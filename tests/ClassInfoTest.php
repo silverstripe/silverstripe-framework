@@ -23,7 +23,7 @@ class ClassInfoTest extends SapphireTest {
 		
 		$classes = ClassInfo::classes_for_folder('sapphire/tests');
 		$this->assertContains(
-			'ClassInfoTest',
+			'classinfotest',
 			$classes,
 			'ClassInfo::classes_for_folder() returns classes matching the filename'
 		);

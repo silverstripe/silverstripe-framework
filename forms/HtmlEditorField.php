@@ -71,9 +71,6 @@ class HtmlEditorField extends TextareaField {
 		$linkedPages = array();
 		$linkedFiles = array();
 		
-		$record->HasBrokenFile = false;
-		$record->HasBrokenLink = false;
-		
 		$htmlValue = new SS_HTMLValue($this->value);
 		
 		// Populate link tracking for internal links & links to asset files.
@@ -89,13 +86,18 @@ class HtmlEditorField extends TextareaField {
 						$link->setAttribute('class', preg_replace('/(^ss-broken|ss-broken$| ss-broken )/', null, $class));
 					}
 					
-					if($page = DataObject::get_by_id('SiteTree', $ID)) {
-						$linkedPages[] = $page->ID;
+					$linkedPages[] = $ID;
+					if(!DataObject::get_by_id('SiteTree', $ID))  $record->HasBrokenLink = true;
+
+				} else if(substr($href, 0, strlen(ASSETS_DIR) + 1) == ASSETS_DIR.'/') {
+					$candidateFile = File::find(Convert::raw2sql(urldecode($href)));
+					if($candidateFile) {
+						$linkedFiles[] = $candidateFile->ID;
 					} else {
-						$record->HasBrokenLink = true;
+						$record->HasBrokenFile = true;
 					}
-				} elseif($href[0] != '/' && $file = File::find($href)) {
-					$linkedFiles[] = $file->ID;
+				} else if($href == '' || $href[0] == '/') {
+					$record->HasBrokenLink = true;
 				}
 			}
 		}
@@ -142,7 +144,9 @@ class HtmlEditorField extends TextareaField {
 			DB::query("DELETE FROM \"$tracker->tableName\" WHERE $filter");
 
 			if($linkedPages) foreach($linkedPages as $item) {
-				$tracker->add($item, array('FieldName' => $this->name));
+				$SQL_fieldName = Convert::raw2sql($this->name);
+				DB::query("INSERT INTO \"SiteTree_LinkTracking\" (\"SiteTreeID\",\"ChildID\", \"FieldName\")
+					VALUES ($record->ID, $item, '$SQL_fieldName')");
 			}
 		}
 		
