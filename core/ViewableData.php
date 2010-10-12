@@ -391,7 +391,7 @@ class ViewableData extends Object implements IteratorAggregate {
 		
 		if(!is_object($value) && $forceReturnedObject) {
 			$default = Object::get_static('ViewableData', 'default_cast');
-			$value   = new $default();
+			$value   = new $default($fieldName);
 		}
 		
 		return $value;
