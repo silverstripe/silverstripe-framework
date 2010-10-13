@@ -115,6 +115,14 @@ class SecurityTest extends FunctionalTest {
 		$this->assertNotRegExp('/^' . preg_quote('http://myspoofedhost.com', '/') . '/', $response->getHeader('Location'),
 			"Redirection to external links in login form BackURL gets prevented as a measure against spoofing attacks"
 		);
+
+		// Test external redirection on ChangePasswordForm
+		$this->get('Security/changepassword?BackURL=http://myspoofedhost.com');
+		$changedResponse = $this->doTestChangepasswordForm('1nitialPassword', 'changedPassword');
+		$this->assertNotRegExp('/^' . preg_quote('http://myspoofedhost.com', '/') . '/', $changedResponse->getHeader('Location'),
+			"Redirection to external links in change password form BackURL gets prevented as a measure against spoofing attacks"
+		);
+				
 		// Log the user out
 		$this->session()->inst_set('loggedInAs', null);
 	}
@@ -140,8 +148,31 @@ class SecurityTest extends FunctionalTest {
 		$this->assertEquals(302, $expiredResponse->getStatusCode());
 		$this->assertEquals(Director::baseURL() . 'Security/changepassword', $expiredResponse->getHeader('Location'));
 		$this->assertEquals($this->idFromFixture('Member', 'expiredpassword'), $this->session()->inst_get('loggedInAs'));
+
+		// Make sure it redirects correctly after the password has been changed
+		$this->mainSession->followRedirection();
+		$changedResponse = $this->doTestChangepasswordForm('1nitialPassword', 'changedPassword');
+		$this->assertEquals(302, $changedResponse->getStatusCode());
+		$this->assertEquals(Director::baseURL() . 'test/link', $changedResponse->getHeader('Location'));
 	}
 	
+	function testChangePassword() {
+		$goodResponse = $this->doTestLoginForm('sam@silverstripe.com' , '1nitialPassword');
+		
+		// Change the password
+		$this->get('Security/changepassword?BackURL=test/back');
+		$changedResponse = $this->doTestChangepasswordForm('1nitialPassword', 'changedPassword');
+		$this->assertEquals(302, $changedResponse->getStatusCode());
+		$this->assertEquals(Director::baseURL() . 'test/back', $changedResponse->getHeader('Location'));
+		$this->assertEquals($this->idFromFixture('Member', 'test'), $this->session()->inst_get('loggedInAs'));
+		
+		// Check if we can login with the new password
+		$goodResponse = $this->doTestLoginForm('sam@silverstripe.com' , 'changedPassword');
+		$this->assertEquals(302, $goodResponse->getStatusCode());
+		$this->assertEquals(Director::baseURL() . 'test/link', $goodResponse->getHeader('Location'));
+		$this->assertEquals($this->idFromFixture('Member', 'test'), $this->session()->inst_get('loggedInAs'));
+	}
+		
 	function testRepeatedLoginAttemptsLockingPeopleOut() {
 		Member::lock_out_after_incorrect_logins(5);
 		
@@ -298,6 +329,22 @@ class SecurityTest extends FunctionalTest {
 				'action_dologin' => 1,
 			)
 		); 
+	}
+	
+	/**
+	 * Helper method to execute a change password form
+	 */
+	function doTestChangepasswordForm($oldPassword, $newPassword) {
+		return $this->submitForm(
+			"ChangePasswordForm_ChangePasswordForm", 
+			null,
+			array(
+				'OldPassword' => $oldPassword, 
+				'NewPassword1' => $newPassword, 
+				'NewPassword2' => $newPassword,
+				'action_doChangePassword' => 1,
+			)
+		);
 	}
 	
 	/**
