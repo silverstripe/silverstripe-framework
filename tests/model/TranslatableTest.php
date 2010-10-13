@@ -60,7 +60,7 @@ class TranslatableTest extends FunctionalTest {
 		$response = $this->get(Controller::join_links($origPage->URLSegment, '?locale=xx_XX'));
 		$this->assertEquals(200, $response->getStatusCode(), 'Locale GET param without existing translation shows original page');
 	}
-
+	
 	function testTranslationGroups() {
 		// first in french
 		$frPage = new SiteTree();
@@ -95,9 +95,11 @@ class TranslatableTest extends FunctionalTest {
 		);
 		
 		// test english
+		$expected = $enPage->getTranslations()->column('Locale');
+		sort($expected);
 		$this->assertEquals(
-			$enPage->getTranslations()->column('Locale'),
-			array('fr_FR','es_ES')
+			$expected,
+			array('es_ES', 'fr_FR')
 		);
 		$this->assertNotNull($frPage->getTranslation('fr_FR'));
 		$this->assertEquals(
@@ -113,7 +115,7 @@ class TranslatableTest extends FunctionalTest {
 		// test spanish
 		$this->assertEquals(
 			$esPage->getTranslations()->column('Locale'),
-			array('fr_FR','en_US')
+			array('en_US', 'fr_FR')
 		);
 		$this->assertNotNull($esPage->getTranslation('fr_FR'));
 		$this->assertEquals(
@@ -249,10 +251,12 @@ class TranslatableTest extends FunctionalTest {
 			'Page',
 			sprintf("\"SiteTree\".\"MenuTitle\" = '%s'", 'A Testpage')
 		);
+		$resultPagesDefaultLangIDs = $resultPagesDefaultLang->column('ID');
+		array_walk($resultPagesDefaultLangIDs, 'intval');
 		$this->assertEquals($resultPagesDefaultLang->Count(), 2);
-		$this->assertContains($origTestPage->ID, $resultPagesDefaultLang->column('ID'));
-		$this->assertContains($otherTestPage->ID, $resultPagesDefaultLang->column('ID'));
-		$this->assertNotContains($translatedPage->ID, $resultPagesDefaultLang->column('ID'));
+		$this->assertContains((int)$origTestPage->ID, $resultPagesDefaultLangIDs);
+		$this->assertContains((int)$otherTestPage->ID, $resultPagesDefaultLangIDs);
+		$this->assertNotContains((int)$translatedPage->ID, $resultPagesDefaultLangIDs);
 		
 		// test in custom language
 		Translatable::set_current_locale('de_DE');
@@ -260,10 +264,12 @@ class TranslatableTest extends FunctionalTest {
 			'Page',
 			sprintf("\"SiteTree\".\"MenuTitle\" = '%s'", 'A Testpage')
 		);
+		$resultPagesCustomLangIDs = $resultPagesCustomLang->column('ID');
+		array_walk($resultPagesCustomLangIDs, 'intval');
 		$this->assertEquals($resultPagesCustomLang->Count(), 1);
-		$this->assertNotContains($origTestPage->ID, $resultPagesCustomLang->column('ID'));
-		$this->assertNotContains($otherTestPage->ID, $resultPagesCustomLang->column('ID'));
-		$this->assertContains($translatedPage->ID, $resultPagesCustomLang->column('ID'));
+		$this->assertNotContains((int)$origTestPage->ID, $resultPagesCustomLangIDs);
+		$this->assertNotContains((int)$otherTestPage->ID, $resultPagesCustomLangIDs);
+		$this->assertContains((int)$translatedPage->ID, $resultPagesCustomLangIDs);
 		
 		Translatable::set_current_locale('en_US');
 	}
@@ -367,13 +373,16 @@ class TranslatableTest extends FunctionalTest {
 		$child4PageTranslated->write();
 		
 		Translatable::set_current_locale('en_US');
+		$actual = $parentPage->Children()->column('ID');
+		sort($actual);
+		$expected = array(
+			$child1Page->ID, 
+			$child2Page->ID,
+			$child3Page->ID
+		);
 		$this->assertEquals(
-			$parentPage->Children()->column('ID'),
-			array(
-				$child1Page->ID, 
-				$child2Page->ID,
-				$child3Page->ID
-			),
+			$actual,
+			$expected,
 			"Showing Children() in default language doesnt show children in other languages"
 		);
 		
@@ -420,13 +429,17 @@ class TranslatableTest extends FunctionalTest {
 			"Showing liveChildren() in default language doesnt show children in other languages"
 		);
 		$this->assertNotNull($parentPage->stageChildren());
+		$actual = $parentPage->stageChildren()->column('ID');
+		sort($actual);
+		$expected = array(
+			$child1Page->ID, 
+			$child2Page->ID,
+			$child3Page->ID
+		);
+		sort($expected);
 		$this->assertEquals(
-			$parentPage->stageChildren()->column('ID'),
-			array(
-				$child1Page->ID, 
-				$child2Page->ID,
-				$child3Page->ID
-			),
+			$actual,
+			$expected,
 			"Showing stageChildren() in default language doesnt show children in other languages"
 		);
 		
@@ -612,13 +625,17 @@ class TranslatableTest extends FunctionalTest {
 		SiteTree::flush_and_destroy_cache();
 		$parentPage = $this->objFromFixture('Page', 'parent');
 		$children = $parentPage->AllChildrenIncludingDeleted();
+		$expected = array(
+			$child2PageID,
+			$child3PageID,
+			$child1PageID // $child1Page was deleted from stage, so the original record doesn't have the ID set
+		);
+		sort($expected);
+		$actual = $parentPage->AllChildrenIncludingDeleted()->column('ID');
+		sort($actual);
 		$this->assertEquals(
-			$parentPage->AllChildrenIncludingDeleted()->column('ID'),
-			array(
-				$child2PageID,
-				$child3PageID,
-				$child1PageID // $child1Page was deleted from stage, so the original record doesn't have the ID set
-			),
+			$actual,
+			$expected,
 			"Showing AllChildrenIncludingDeleted() in default language doesnt show deleted children in other languages"
 		);
 	
