@@ -1685,7 +1685,7 @@ class i18n extends Object {
 	}
 	
 	/**
-	 * @deprecated 2.4 Use Translatable::set_default_locale()
+	 * @deprecated 2.4 Use Translatable::set_default_locale() or i18n::set_default_locale()
 	 * @param $lang String
 	 */
 	static function set_default_lang($lang) {
@@ -1693,15 +1693,25 @@ class i18n extends Object {
 	}
 	
 	/**
-	 * @deprecated 2.4 Use Translatable::default_locale()
+	 * @deprecated 2.4 Use Translatable::default_locale() or i18n::default_locale()
 	 * @return String
 	 */
 	static function default_lang() {
 		return Translatable::default_locale();
 	}
 	
+	/**
+	 * @return String
+	 */
 	static function default_locale() {
 		return self::$default_locale;
+	}
+	
+	/**
+	 * @param String $locale
+	 */
+	static function set_default_locale($locale) {
+		self::$default_locale = $locale;
 	}
 	
 	/**
