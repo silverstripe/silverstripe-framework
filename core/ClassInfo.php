@@ -35,7 +35,7 @@ class ClassInfo {
 	static function hasTable($class) {
 		if(DB::isActive()) {
 			// Cache the list of all table names to reduce on DB traffic
-			if(self::$_cache_all_tables === null) {
+			if(empty(self::$_cache_all_tables)) {
 				self::$_cache_all_tables = array();
 				$tables = DB::query(DB::getConn()->allTablesSQL())->column();
 				foreach($tables as $table) self::$_cache_all_tables[strtolower($table)] = true;
