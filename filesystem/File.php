@@ -106,7 +106,7 @@ class File extends DataObject {
 	}
 
 	function getTreeTitle() {
-		return $this->Name;
+		return $this->Title;
 	}
 	
 	// Used by AssetTableField
