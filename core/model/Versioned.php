@@ -387,7 +387,7 @@ class Versioned extends DataObjectDecorator {
 				unset($manipulation[$table]);
 			}
 		}
-		
+
 		// Add the new version # back into the data object, for accessing after this write
 		if(isset($thisVersion)) $this->owner->Version = str_replace("'","",$thisVersion);
 	}
@@ -476,7 +476,12 @@ class Versioned extends DataObjectDecorator {
 		$publisherID = isset(Member::currentUser()->ID) ? Member::currentUser()->ID : 0;
 		if($from) {
 			$from->forceChange();
-			if(!$createNewVersion) $from->migrateVersion($from->Version);
+			if($createNewVersion) {
+				$latest = self::get_latest_version($baseClass, $this->owner->ID);
+				$this->owner->Version = $latest->Version + 1;
+			} else {
+				$from->migrateVersion($from->Version);
+			}
 			
 			// Mark this version as having been published at some stage
 			DB::query("UPDATE \"{$extTable}_versions\" SET \"WasPublished\" = '1', \"PublisherID\" = $publisherID WHERE \"RecordID\" = $from->ID AND \"Version\" = $from->Version");

@@ -15,7 +15,7 @@ class VersionedTest extends SapphireTest {
 		$oldVersion = $obj->Version;
 		$obj->forceChange();
 		$obj->write();
-
+	
 		$this->assertTrue(
 			($obj->Version > $oldVersion),
 			"A object Version is increased when just calling forceChange() without any other changes"
@@ -28,7 +28,7 @@ class VersionedTest extends SapphireTest {
 	function testGetIncludingDeleted() {
 		// Delete a page
 		$this->objFromFixture('Page', 'page3')->delete();
-
+	
 		// Get all items, ignoring deleted
 		$remainingPages = DataObject::get("SiteTree", "\"ParentID\" = 0", "\"SiteTree\".\"ID\" ASC");
 		// Check that page 3 has gone
@@ -51,10 +51,44 @@ class VersionedTest extends SapphireTest {
 		$obj = new VersionedTest_DataObject();
 		// Check that the Version column is added as a full-fledged column
 		$this->assertType('Int', $obj->dbObject('Version'));
-
+	
 		$obj2 = new VersionedTest_Subclass();
 		// Check that the Version column is added as a full-fledged column
 		$this->assertType('Int', $obj2->dbObject('Version'));
+	}
+
+	function testPublishCreateNewVersion() {
+		$page1 = $this->objFromFixture('Page', 'page1');
+		$page1->Content = 'orig';
+		$page1->write();
+		$oldVersion = $page1->Version;
+		$page1->publish('Stage', 'Live', false);
+		$this->assertEquals($oldVersion, $page1->Version, 'publish() with $createNewVersion=FALSE');
+		
+		$page1->Content = 'changed';
+		$page1->write();
+		$oldVersion = $page1->Version;
+		$page1->publish('Stage', 'Live', true);
+		$this->assertTrue($oldVersion < $page1->Version, 'publish() with $createNewVersion=TRUE');
+	}
+	
+	function testRollbackTo() {
+		$page1 = $this->objFromFixture('Page', 'page1');
+		$page1->Content = 'orig';
+		$page1->write();
+		$page1->publish('Stage', 'Live');
+		$origVersion = $page1->Version;
+		
+		$page1->Content = 'changed';
+		$page1->write();
+		$page1->publish('Stage', 'Live');
+		$changedVersion = $page1->Version;
+
+		$page1->doRollbackTo($origVersion);
+		$page1 = Versioned::get_one_by_stage('Page', 'Stage', $page1->ID);
+		
+		$this->assertTrue($page1->Version > $changedVersion, 'Create a new higher version number');
+		$this->assertEquals('orig', $page1->Content, 'Copies the content from the old version');
 	}
 
 }
