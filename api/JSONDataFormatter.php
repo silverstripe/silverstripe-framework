@@ -115,7 +115,7 @@ class JSONDataFormatter extends DataFormatter {
 			if($item->canView()) $jsonParts[] = $this->convertDataObject($item, $fields);
 		}
 		$json = "{\n";
-		$json .= '\"totalSize\": ';
+		$json .= '"totalSize": ';
 		$json .= (is_numeric($this->totalSize)) ? $this->totalSize : 'null';
 		$json .= ",\n";
 		$json .= "\"items\": [\n" . implode(",\n", $jsonParts) . "\n]\n";
