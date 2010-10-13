@@ -18,6 +18,11 @@ RedirectorPage:
       Title: Bad External
       RedirectionType: External
       URLSegment: bad-external
+   externalnoprefix:
+      Title: External no prefix
+      RedirectionType: External
+      URLSegment: external-no-prefix
+      ExternalURL: google.com
    badinternal:
       Title: Bad Internal
       RedirectionType: Internal

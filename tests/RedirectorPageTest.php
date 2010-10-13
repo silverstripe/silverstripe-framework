@@ -43,6 +43,11 @@ class RedirectorPageTest extends FunctionalTest {
 		$response = $this->get(Director::makeRelative($page->Link()));
 		$this->assertEquals(Director::baseURL() . "redirection-dest/", $response->getHeader("Location"));
 	}
-}
 
-?>
+	function testExternalURLGetsPrefixIfNotSet() {
+		$page = $this->objFromFixture('RedirectorPage', 'externalnoprefix');
+		$this->assertEquals($page->ExternalURL, 'http://google.com', 'onBeforeWrite has prefixed with http');
+		$page->write();
+		$this->assertEquals($page->ExternalURL, 'http://google.com', 'onBeforeWrite will not double prefix if written again!');
+	}
+}
