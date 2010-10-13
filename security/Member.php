@@ -784,9 +784,9 @@ class Member extends DataObject {
 				$columnsWithTablename[] = "$tableName.$column";
 			}
 		
-			return "CONCAT(\"".join("'".self::$title_format['sep']."'", $columnsWithTablename)."\")";
+			return "(\"".join("'".self::$title_format['sep']."'" || $columnsWithTablename)."\")";
 		} else {
-			return "CONCAT(\"$tableName\".\"Surname\", ' ', \"$tableName\".\"FirstName\")";
+			return "(\"$tableName\".\"Surname\" || ' ' || \"$tableName\".\"FirstName\")";
 		}
 	}
 
