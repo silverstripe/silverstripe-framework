@@ -893,6 +893,9 @@ class Translatable extends DataObjectDecorator implements PermissionProvider {
 		// Don't apply these modifications for normal DataObjects - they rely on CMSMain logic
 		if(!($this->owner instanceof SiteTree)) return;
 		
+		// used in CMSMain->init() to set language state when reading/writing record
+		$fields->push(new HiddenField("Locale", "Locale", $this->owner->Locale) );
+		
 		// Don't allow translation of virtual pages because of data inconsistencies (see #5000)
 		$excludedPageTypes = array('VirtualPage');
 		foreach($excludedPageTypes as $excludedPageType) {
@@ -905,9 +908,6 @@ class Translatable extends DataObjectDecorator implements PermissionProvider {
 			'CanViewType',
 			'CanEditType'
 		);
-		
-		// used in CMSMain->init() to set language state when reading/writing record
-		$fields->push(new HiddenField("Locale", "Locale", $this->owner->Locale) );
 
 		// if a language other than default language is used, we're in "translation mode",
 		// hence have to modify the original fields
