@@ -103,6 +103,25 @@ class ContentControllerTest extends FunctionalTest {
 		
 		
 	}
+	
+	public function testLinkShortcodes() {
+		$linkedPage = new SiteTree();
+		$linkedPage->URLSegment = 'linked-page';
+		$linkedPage->write();
+		$linkedPage->publish('Stage', 'Live');
+		
+		$page = new SiteTree();
+		$page->URLSegment = 'linking-page';
+		$page->Content = sprintf('<a href="[sitetree_link id=%s]">Testlink</a>', $linkedPage->ID);
+		$page->write();
+		$page->publish('Stage', 'Live');
+
+		$this->assertContains(
+			sprintf('<a href="%s">Testlink</a>', $linkedPage->Link()),
+			$this->get($page->RelativeLink())->getBody(),
+			'"sitetree_link" shortcodes get parsed properly'
+		);
+	}
 
 }
 
