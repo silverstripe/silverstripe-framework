@@ -3,7 +3,7 @@
 /**
  * Provides a simple search engine for your site based on the MySQL FULLTEXT index
  */
-class MySQLFulltextSearchable extends DataObjectDecorator {
+class FulltextSearchable extends DataObjectDecorator {
 	protected $searchFields;
 	
 	/**
@@ -18,9 +18,9 @@ class MySQLFulltextSearchable extends DataObjectDecorator {
 		if(!is_array($searchableClasses)) $searchableClasses = array($searchableClasses);
 		foreach($searchableClasses as $class) {
 			if(isset($defaultColumns[$class])) {
-				Object::add_extension($class, "MySQLFulltextSearchable('{$defaultColumns[$class]}')");
+				Object::add_extension($class, "FulltextSearchable('{$defaultColumns[$class]}')");
 			} else {
-				throw new Exception("MySQLFUlltextSearchable::enable() I don't know the default search columns for class '$class'");
+				throw new Exception("FulltextSearchable::enable() I don't know the default search columns for class '$class'");
 			}
 		}
 		
