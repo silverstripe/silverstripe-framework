@@ -37,7 +37,7 @@ class ManyManyComplexTableField extends HasManyComplexTableField {
 			$sourceField = 'Child';
 		$parentID = $this->controller->ID;
 		
-		$this->sourceJoin .= " LEFT JOIN \"$manyManyTable\" ON (\"$source\".\"ID\" = \"{$sourceField}ID\" AND \"{$this->manyManyParentClass}ID\" = '$parentID')";
+		$this->sourceJoin .= " LEFT JOIN \"$manyManyTable\" ON (\"$source\".\"ID\" = \"$manyManyTable\".\"{$sourceField}ID\" AND \"{$this->manyManyParentClass}ID\" = '$parentID')";
 		
 		$this->joinField = 'Checked';
 	}
