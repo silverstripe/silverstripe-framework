@@ -631,7 +631,7 @@ class MySQLDatabase extends SS_Database {
 		//$parts=Array('datatype'=>'float');
 		//DB::requireField($this->tableName, $this->name, "float");
 		
-		return 'float';
+		return 'float not null default ' . $values['default'];
 	}
 	
 	/**
