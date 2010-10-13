@@ -17,7 +17,9 @@ body {
 
 ul#Themes{
 	list-style: none;
-	margin: 5px;
+	margin: 0 5px 20px 5px;
+	float: left;
+	width: 320px;
 }
 	ul#Themes li {
 		clear: both;

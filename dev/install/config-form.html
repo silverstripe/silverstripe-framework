@@ -232,11 +232,13 @@
 							</div>
 							
 							<h4><em class="inlineBarText">Theme</em> <span>Step: 4 of 5</span></h4>
-							<p>You can change the theme or <a href="http://silverstripe.org/themes">download</a> another from the SilverStripe website after installation.</p>
-							<ul id="Themes">
-								<li><input type="radio" name="template" value="blackcandy" id="BlackCandy" <?php if(!isset($_POST['template']) || $_POST['template'] == 'blackcandy') {?>checked="checked"<?php }?>><label for="BlackCandy"><a href="http://silverstripe.org/blackcandy/">BlackCandy</a> - our default theme ready to use.</label></li>
-								<li><input type="radio" name="template" value="tutorial" id="EmptyTemplate" <?php if(isset($_POST['template']) && $_POST['template'] == 'tutorial') {?>checked="checked"<?php }?>><label for="EmptyTemplate">Empty template - ready to begin the <a href="http://doc.silverstripe.org/doku.php?id=tutorials" target="_blank">tutorial</a>.</label></li>
-							</ul>
+							<p class="helpText">You can change the theme or <a href="http://silverstripe.org/themes">download</a> another from the SilverStripe website after installation.</p>
+							<div class="field">
+								<ul id="Themes">
+									<li><input type="radio" name="template" value="blackcandy" id="BlackCandy" <?php if(!isset($_POST['template']) || $_POST['template'] == 'blackcandy') {?>checked="checked"<?php }?>><label for="BlackCandy"><a href="http://silverstripe.org/blackcandy/">BlackCandy</a> - our default theme ready to use.</label></li>
+									<li><input type="radio" name="template" value="tutorial" id="EmptyTemplate" <?php if(isset($_POST['template']) && $_POST['template'] == 'tutorial') {?>checked="checked"<?php }?>><label for="EmptyTemplate">Empty template - ready to begin the <a href="http://doc.silverstripe.org/doku.php?id=tutorials" target="_blank">tutorial</a>.</label></li>
+								</ul>
+							</div>
 							
 							<h4 id="install"><em class="inlineBarText">Confirm Install</em> <span>Step: 5 of 5</span></h4>
 							
@@ -249,7 +251,7 @@
 								<p id="stats-container">
 									<input type="checkbox" id="stats" name="stats" checked="checked">
 										<label for="stats">Send information about my webserver to silverstripe.org<br />
-											<small>(anonymized version information, used for statistical purposes)</small>
+											<small>(anonymous version information, used for statistical purposes)</small>
 									</label><p>
 								
 								<?php if($alreadyInstalled) { ?>
