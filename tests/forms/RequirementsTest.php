@@ -10,6 +10,8 @@ class RequirementsTest extends SapphireTest {
 	
 	static $html_template = '<html><head></head><body></body></html>';
 	
+	static $old_requirements = null;
+	
 	function testExternalUrls() {
 		$backend = new Requirements_Backend;
 		$backend->set_combined_files_enabled(true);
@@ -181,5 +183,104 @@ class RequirementsTest extends SapphireTest {
 		$backend->block(SAPPHIRE_DIR . '/tests/forms/a.css');
 		$this->assertTrue(count($backend->get_css()) == 0, "There should be nothing in required css after file has been blocked.");
 	}
-	
+
+	function testConditionalTemplateRequire() {
+		$backend = new RequirementsTest_Backend();
+		$holder = Requirements::backend();
+		Requirements::set_backend($backend);
+		$data = new ArrayData(array(
+			'FailTest' => true,
+		));
+		$data->renderWith('RequirementsTest_Conditionals');
+		$backend->assertFileIncluded('css', 'sapphire/tests/forms/RequirementsTest_a.css');
+		$backend->assertFileIncluded('js', array('sapphire/tests/forms/RequirementsTest_b.js', 'sapphire/tests/forms/RequirementsTest_c.js'));
+		$backend->assertFileNotIncluded('js', 'sapphire/tests/forms/RequirementsTest_a.js');
+		$backend->assertFileNotIncluded('css', array('sapphire/tests/forms/RequirementsTest_b.css', 'sapphire/tests/forms/RequirementsTest_c.css'));
+		$backend->clear();
+		$data = new ArrayData(array(
+			'FailTest' => false,
+		));
+		$data->renderWith('RequirementsTest_Conditionals');
+		$backend->assertFileNotIncluded('css', 'sapphire/tests/forms/RequirementsTest_a.css');
+		$backend->assertFileNotIncluded('js', array('sapphire/tests/forms/RequirementsTest_b.js', 'sapphire/tests/forms/RequirementsTest_c.js'));
+		$backend->assertFileIncluded('js', 'sapphire/tests/forms/RequirementsTest_a.js');
+		$backend->assertFileIncluded('css', array('sapphire/tests/forms/RequirementsTest_b.css', 'sapphire/tests/forms/RequirementsTest_c.css'));
+		Requirements::set_backend($holder);
+	}
+}
+
+class RequirementsTest_Backend extends Requirements_Backend implements TestOnly {
+	function assertFileIncluded($type, $files) {
+		$type = strtolower($type);
+		switch (strtolower($type)) {
+			case 'css':
+				$var = 'css';
+				$type = 'CSS';
+				break;
+			case 'js':
+			case 'javascript':
+			case 'script':
+				$var = 'javascript';
+				$type = 'JavaScript';
+				break;
+		}
+		if(is_array($files)) {
+			$failedMatches = array();
+			foreach ($files as $file) {
+				if(!array_key_exists($file, $this->$var)) {
+					$failedMatches[] = $file;
+				}
+			}
+			if(count($failedMatches) > 0) throw new PHPUnit_Framework_AssertionFailedError(
+				"Failed asserting the $type files '"
+				. implode("', '", $failedMatches)
+				. "' have exact matches in the required elements:\n'"
+				. implode("'\n'", array_keys($this->$var)) . "'"
+			);
+		} else {
+			if(!array_key_exists($files, $this->$var)) {
+				throw new PHPUnit_Framework_AssertionFailedError(
+					"Failed asserting the $type file '$files' has an exact match in the required elements:\n'"
+					. implode("'\n'", array_keys($this->$var)) . "'"
+				);
+			}
+		}
+	}
+  	
+	function assertFileNotIncluded($type, $files) {
+		$type = strtolower($type);
+		switch ($type) {
+			case 'css':
+				$var = 'css';
+				$type = 'CSS';
+				break;
+			case 'js':
+			case 'javascript':
+			case 'script':
+				$var = 'javascript';
+				$type = 'JavaScript';
+				break;
+		}
+		if(is_array($files)) {
+			$failedMatches = array();
+			foreach ($files as $file) {
+				if(array_key_exists($file, $this->$var)) {
+					$failedMatches[] = $file;
+				}
+			}
+			if(count($failedMatches) > 0) throw new PHPUnit_Framework_AssertionFailedError(
+				"Failed asserting the $type files '"
+				. implode("', '", $failedMatches)
+				. "' do not have exact matches in the required elements:\n'"
+				. implode("'\n'", array_keys($this->$var)) . "'"
+			);
+		} else {
+			if(array_key_exists($files, $this->$var)) {
+				throw new PHPUnit_Framework_AssertionFailedError(
+					"Failed asserting the $type file '$files' does not have an exact match in the required elements:\n'"
+					. implode("'\n'", array_keys($this->$var)) . "'"
+				);
+			}
+		}
+	}
 }
