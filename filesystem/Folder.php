@@ -11,7 +11,7 @@ class Folder extends File {
 
 	static $plural_name = "Folders";
 
-	static $default_sort = "Sort";
+	static $default_sort = "\"Sort\"";
 	
 	function populateDefaults() {
 		parent::populateDefaults();
