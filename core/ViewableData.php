@@ -441,7 +441,6 @@ class ViewableData extends Object implements IteratorAggregate {
 	 */
 	public function XML_val($field, $arguments = null, $cache = false) {
 		$result = $this->obj($field, $arguments, false, $cache);
-
 		return is_object($result) ? $result->forTemplate() : $result;
 	}
 	
@@ -453,24 +452,24 @@ class ViewableData extends Object implements IteratorAggregate {
 	}
 	
 	/**
-	 * Returnt he value of a field in an SQL-safe format.
+	 * Return the value of a field in an SQL-safe format.
 	 */
 	public function SQL_val($field, $arguments = null, $cache = true) {
-		return Convert::xml2sql($this->XML_val($field, $arguments, $cache));
+		return Convert::raw2sql($this->RAW_val($field, $arguments, $cache));
 	}
 	
 	/**
 	 * Return the value of a field in a JavaScript-save format.
 	 */
 	public function JS_val($field, $arguments = null, $cache = true) {
-		return Convert::xml2js($this->XML_val($field, $arguments, $cache));
+		return Convert::raw2js($this->RAW_val($field, $arguments, $cache));
 	}
 	
 	/**
 	 * Return the value of a field escaped suitable to be inserted into an XML node attribute.
 	 */
 	public function ATT_val($field, $arguments = null, $cache = true) {
-		return Convert::xml2att($this->XML_val($field, $arguments, $cache));
+		return Convert::raw2att($this->RAW_val($field, $arguments, $cache));
 	}
 	
 	/**#@-*/

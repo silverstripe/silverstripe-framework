@@ -56,6 +56,29 @@ class ViewableDataTest extends SapphireTest {
 		$this->assertEquals('casted', $newViewableData->XML_val('alwaysCasted'));
 	}
 	
+	public function testRAWVal() {
+		$data = new ViewableDataTest_Castable();
+		$data->test = 'This &amp; This';
+		$this->assertEquals($data->RAW_val('test'), 'This & This');
+	}
+	
+	public function testSQLVal() {
+		$data = new ViewableDataTest_Castable();
+		$this->assertEquals($data->SQL_val('test'), 'test');
+	}
+
+	public function testJSVal() {
+		$data = new ViewableDataTest_Castable();
+		$data->test = '"this is a test"';
+		$this->assertEquals($data->JS_val('test'), '\"this is a test\"');
+	}
+
+	public function testATTVal() {
+		$data = new ViewableDataTest_Castable();
+		$data->test = '"this is a test"';
+		$this->assertEquals($data->ATT_val('test'), '&quot;this is a test&quot;');
+	}
+
 }
 
 /**#@+
