@@ -236,7 +236,7 @@ class ViewableData extends Object implements IteratorAggregate {
 		user_error("castingHelperPair() Deprecated, use castingHelper() instead", E_USER_NOTICE);
 		return $this->castingHelper($field);
 	}
-	
+
 	/**
 	 * Return the "casting helper" (a piece of PHP code that when evaluated creates a casted value object) for a field
 	 * on this object.
@@ -248,9 +248,11 @@ class ViewableData extends Object implements IteratorAggregate {
 		if($this->hasMethod('db') && $fieldSpec = $this->db($field)) {
 			return $fieldSpec;
 		}
-		
+
 		$specs = Object::combined_static(get_class($this), 'casting');
 		if(isset($specs[$field])) return $specs[$field];
+
+		if($this->failover) return $this->failover->castingHelper($field);
 	}
 	
 	/**
