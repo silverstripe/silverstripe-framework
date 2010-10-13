@@ -197,6 +197,7 @@ class DatabaseAdmin extends Controller {
 			}
 		}
 		$conn->endSchemaUpdate();
+		ClassInfo::reset_db_cache();
 
 		if($populate) {
 			if(!$quiet) {
