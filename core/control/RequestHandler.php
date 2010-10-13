@@ -216,10 +216,15 @@ class RequestHandler extends ViewableData {
 		$action  = strtolower($action);
 		$actions = $this->allowedActions();
 		
+		// Check if the action is defined in the allowed actions as either a
+		// key or value. Note that if the action is numeric, then keys are not
+		// searched for actions to prevent actual array keys being recognised
+		// as actions.
 		if(is_array($actions)) {
-			if(array_key_exists($action, $actions) || in_array($action, $actions)) {
-				return true;
-			}
+			$isKey   = !is_numeric($action) && array_key_exists($action, $actions);
+			$isValue = in_array($action, $actions);
+
+			if($isKey || $isValue) return true;
 		}
 		
 		if(!is_array($actions) || !$this->uninherited('allowed_actions')) {
