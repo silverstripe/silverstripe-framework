@@ -25,7 +25,7 @@
 				$dialog.dialog('close');
 			};
 			
-			$dialog = parent.jQuery('<p><span class="ui-icon ui-icon-alert">' + deleteMessage + '</span></p>').dialog({
+			$dialog = parent.jQuery('<p><span class="ui-icon ui-icon-alert" style="float:left;margin-right:5px;"></span>' + deleteMessage + '</p>').dialog({
 				bgiframe: true,
 				resizable: false,
 				modal: true,
