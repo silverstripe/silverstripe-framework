@@ -465,7 +465,6 @@ HTML
 		// so we have to assume the file is required.
 		$installfiles = array(
 			'install.php',
-			'rewritetest.php',
 			'config-form.css',
 			'config-form.html',
 			'index.html'
