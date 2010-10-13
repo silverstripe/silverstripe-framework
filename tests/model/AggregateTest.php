@@ -93,13 +93,13 @@ class AggregateTest extends SapphireTest {
 	 */
 	function testBaseFieldAggregate() {
 		$this->assertEquals(
-			DataObject::Aggregate('AggregateTest_Foo')->Max('LastEdited'),
-			DataObject::get_one('AggregateTest_Foo', '', '', 'LastEdited DESC')->LastEdited
+			$this->formatDate(DataObject::Aggregate('AggregateTest_Foo')->Max('LastEdited')),
+			$this->formatDate(DataObject::get_one('AggregateTest_Foo', '', '', 'LastEdited DESC')->LastEdited)
 		);
 		
 		$this->assertEquals(
-			DataObject::Aggregate('AggregateTest_Foo')->Max('Created'),
-			DataObject::get_one('AggregateTest_Foo', '', '', 'Created DESC')->Created
+			$this->formatDate(DataObject::Aggregate('AggregateTest_Foo')->Max('Created')),
+			$this->formatDate(DataObject::get_one('AggregateTest_Foo', '', '', 'Created DESC')->Created)
 		);
 	}
 	/* */
@@ -175,4 +175,14 @@ class AggregateTest extends SapphireTest {
 	}
 	/* */
 	
+	/**
+	 * Copied from DataObject::__construct(), special case for MSSQLDatabase.
+	 * 
+	 * @param String
+	 * @return String
+	 */
+	protected function formatDate($dateStr) {
+		$dateStr = preg_replace('/:[0-9][0-9][0-9]([ap]m)$/i', ' \\1', $dateStr);
+		return date('Y-m-d H:i:s', strtotime($dateStr));
+	}
 }
