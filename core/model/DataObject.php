@@ -342,7 +342,13 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		// Set $this->record to $record, but ignore NULLs
 		$this->record = array();
 		foreach($record as $k => $v) {
-			if($v !== null) $this->record[$k] = $v;
+			// Ensure that ID is stored as a number and not a string
+			// To do: this kind of clean-up should be done on all numeric fields, in some relatively
+			// performant manner
+			if($v !== null) {
+				if($k == 'ID' && is_numeric($v)) $this->record[$k] = (int)$v;
+				else $this->record[$k] = $v;
+			}
 		}
 		$this->original = $this->record;
 
