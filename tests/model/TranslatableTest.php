@@ -95,11 +95,13 @@ class TranslatableTest extends FunctionalTest {
 		);
 		
 		// test english
-		$expected = $enPage->getTranslations()->column('Locale');
+		$expected = array('es_ES', 'fr_FR');
 		sort($expected);
+		$actual = $enPage->getTranslations()->column('Locale');
+		sort($actual);
 		$this->assertEquals(
 			$expected,
-			array('es_ES', 'fr_FR')
+			$actual
 		);
 		$this->assertNotNull($frPage->getTranslation('fr_FR'));
 		$this->assertEquals(
@@ -113,9 +115,13 @@ class TranslatableTest extends FunctionalTest {
 		);
 		
 		// test spanish
+		$actual = $esPage->getTranslations()->column('Locale');
+		sort($actual);
+		$expected = array('en_US', 'fr_FR');
+		sort($expected);
 		$this->assertEquals(
-			$esPage->getTranslations()->column('Locale'),
-			array('en_US', 'fr_FR')
+			$actual,
+			$expected
 		);
 		$this->assertNotNull($esPage->getTranslation('fr_FR'));
 		$this->assertEquals(
