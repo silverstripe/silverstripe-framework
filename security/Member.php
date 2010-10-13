@@ -113,7 +113,7 @@ class Member extends DataObject {
 	 */
 	public function populateDefaults() {
 		parent::populateDefaults();
-		$this->Locale = i18n::get_locale();
+		$this->Locale = i18n::default_locale();
 	}
 	
 	function requireDefaultRecords() {
