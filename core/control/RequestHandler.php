@@ -233,6 +233,7 @@ class RequestHandler extends ViewableData {
 	 * It will interrogate {@link self::$allowed_actions} to determine this.
 	 */
 	function checkAccessAction($action) {
+		$actionOrigCasing = $action;
 		$action            = strtolower($action);
 		$allowedActions    = $this->allowedActions();
 
@@ -262,13 +263,25 @@ class RequestHandler extends ViewableData {
 		
 		// If we get here an the action is 'index', then it hasn't been specified, which means that
 		// it should be allowed.
-		if($action == 'index') return true;
+		if($action == 'index' || empty($action)) return true;
 		
 		if($allowedActions === null || !$this->uninherited('allowed_actions')) {
 			// If no allowed_actions are provided, then we should only let through actions that aren't handled by magic methods
-			// we test this by calling the unmagic method_exists and comparing it to the magic $this->hasMethod().  This will
-			// still let through actions that are handled by templates.
-			return method_exists($this, $action) || !$this->hasMethod($action);
+			// we test this by calling the unmagic method_exists. 
+			if(method_exists($this, $action)) {
+				// Disallow any methods which aren't defined on RequestHandler or subclasses
+				// (e.g. ViewableData->getSecurityID())
+				$r = new ReflectionClass(get_class($this));
+				if($r->hasMethod($actionOrigCasing)) {
+					$m = $r->getMethod($actionOrigCasing);
+					return ($m && is_subclass_of($m->class, 'RequestHandler'));
+				} else {
+					throw new Exception("method_exists() true but ReflectionClass can't find method - PHP is b0kred");
+				}
+			}	else	if(!$this->hasMethod($action)){
+				// Return true so that a template can handle this action
+				return true;
+			}
 		}
 		
 		return false;
