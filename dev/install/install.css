@@ -96,10 +96,22 @@ table.testResults {
 }
 #Layout h4 {
 	font-size: 2em;
-	margin-top: 18px;
-	line-height: 1.4;
+	margin: 36px 0 18px 0;
+	font-weight: bold;
+	line-height: 1.8;
 	clear: left;
+	border-top: 2px solid #888;
+	text-indent: 5px;
+	width: 100%;
+	overflow: hidden;
 }
+	#Layout h4 span {
+		float: right;
+		font-size: 10px;
+		padding: 10px 10px 0 0;
+		font-weight: normal;
+		color: #888;
+	}
 
 /**
  * Requirements and test results
@@ -109,8 +121,8 @@ table.testResults {
 }
 	table.testResults td {
 		border: 1px #CCC solid;
-		border-top: none;
 		width: 400px;
+		line-height: 15px;
 		padding: 6px;
 	}
 		table.testResults tr.good {
@@ -140,6 +152,7 @@ h5.requirement {
 	border: 1px solid #ccc;
 	border-width: 0 1px 1px 1px;
 	margin: 0;
+	overflow: hidden;
 }	
 	h5.requirement span {
 		float: right;
@@ -154,7 +167,7 @@ h5.requirement {
 			color: #F03838;
 		}
 	h5.requirement a {
-		font-size: 9px;
+		font-size: 10px;
 		float: right;
 		line-height: 19px;
 		margin: 0 0 0 30px;
@@ -230,7 +243,7 @@ h5.requirement {
 		padding-left: 0;
 	}
 		#database_selection li input {
-			margin-right: 5px;;
+			margin-right: 5px;
 		}
 		#database_selection li label {
 			display: inline;
@@ -253,3 +266,27 @@ h5.requirement {
 		margin-left: 0;
 		padding-left: 0;
 	}
+
+.goodInstall {
+	padding: 0.5em;
+	background-color: #e2fee1;
+	border: 1px #43cb3e solid;
+	color: #359318;
+	overflow: hidden;
+	line-height: 18px;
+	padding: 10px;
+}
+	#Layout p.goodInstall {
+		color: #359318;
+	}
+	.goodInstall a {
+		float: right;
+		font-size: 18px;
+		padding: 0 2px 2px 0;
+		font-weight: bold;
+	}
+	
+em.inlineBarText {
+	float: left;
+	font-style: normal;
+}
