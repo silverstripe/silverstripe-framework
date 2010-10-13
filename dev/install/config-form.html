@@ -63,9 +63,9 @@
 								
 								<?php if($alreadyInstalled) { ?>
 									<p class="warning">
-										<strong>Note:</strong> It seems as though SilverStripe is already installed here.  If you ask me to install, I will overwrite
-										the <strong>.htaccess</strong> and <strong>mysite/_config.php</strong> files. 
-										<br>
+										<strong>Note:</strong> It seems as though SilverStripe is already installed here.<br />
+										If you ask me to install, I will overwrite the <strong>.htaccess</strong> and <strong>mysite/_config.php</strong> files. 
+										<br />
 									<input type="checkbox" id="ReIn" name="force_reinstall"><label for="ReIn">That's okay, please re-install SilverStripe and overwrite these files.</label>
 									</p>
 								<?php } ?>
@@ -84,12 +84,6 @@
 									</span>
 								</p>
 								
-								<h4 class="sectionHeading">Theme</h4>
-								<p>You can change the theme or <a href="http://silverstripe.org/themes">download</a> another from the SilverStripe website after installation.</p>
-								<ul id="Themes">
-									<li><input type="radio" name="template" value="blackcandy" id="BlackCandy" <?php if(!isset($_POST['template']) || $_POST['template'] == 'blackcandy') {?>checked="checked"<?php }?>><label for="BlackCandy"><a href="http://silverstripe.org/blackcandy/">BlackCandy</a> - our default theme ready to use.</label></li>
-									<li><input type="radio" name="template" value="tutorial" id="EmptyTemplate" <?php if(isset($_POST['template']) && $_POST['template'] == 'tutorial') {?>checked="checked"<?php }?>><label for="EmptyTemplate">Empty template - ready to begin the <a href="http://doc.silverstripe.org/doku.php?id=tutorials" target="_blank">tutorial</a>.</label></li>
-								</ul>
 							<?php } ?>
 			
 							<h4 class="sectionHeading">Database</h4>
@@ -237,6 +231,13 @@
 								</div>
 							</div>
 							
+							<h4 class="sectionHeading">Theme</h4>
+							<p>You can change the theme or <a href="http://silverstripe.org/themes">download</a> another from the SilverStripe website after installation.</p>
+							<ul id="Themes">
+								<li><input type="radio" name="template" value="blackcandy" id="BlackCandy" <?php if(!isset($_POST['template']) || $_POST['template'] == 'blackcandy') {?>checked="checked"<?php }?>><label for="BlackCandy"><a href="http://silverstripe.org/blackcandy/">BlackCandy</a> - our default theme ready to use.</label></li>
+								<li><input type="radio" name="template" value="tutorial" id="EmptyTemplate" <?php if(isset($_POST['template']) && $_POST['template'] == 'tutorial') {?>checked="checked"<?php }?>><label for="EmptyTemplate">Empty template - ready to begin the <a href="http://doc.silverstripe.org/doku.php?id=tutorials" target="_blank">tutorial</a>.</label></li>
+							</ul>
+							
 							<h4 class="sectionHeading">Server configuration</h4>
 							<div id="devSection" class="section">
 								<div class="fields">
@@ -257,6 +258,7 @@ else echo 'localhost
 									you will be using for development.
 								</p>
 							</div>
+							
 							
 							<div id="localeSection" class="section">
 								<div class="fields">
