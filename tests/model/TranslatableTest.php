@@ -74,9 +74,14 @@ class TranslatableTest extends FunctionalTest {
 		$esPage = $enPage->createTranslation('es_ES');
 		
 		// test french
+		
+		$array1=$frPage->getTranslations()->column('Locale');
+		$array2=array('en_US','es_ES');
+		sort($array1);
+		sort($array2);
 		$this->assertEquals(
-			$frPage->getTranslations()->column('Locale'),
-			array('en_US','es_ES')
+			$array1,
+			$array2
 		);
 		$this->assertNotNull($frPage->getTranslation('en_US'));
 		$this->assertEquals(
