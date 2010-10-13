@@ -45,10 +45,10 @@ class MigrateSiteTreeLinkingTask extends BuildTask {
 				);
 				
 				if($replaced) {
-					$page->write();
 					$links += $replaced;
 				}
 			}
+			$page->write();
 			
 			$pages++;
 		}
