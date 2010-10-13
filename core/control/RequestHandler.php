@@ -275,7 +275,7 @@ class RequestHandler extends ViewableData {
 				$r = new ReflectionClass(get_class($this));
 				if($r->hasMethod($actionOrigCasing)) {
 					$m = $r->getMethod($actionOrigCasing);
-					return ($m && is_subclass_of($m->class, 'RequestHandler'));
+					return ($m && is_subclass_of($m->getDeclaringClass()->getName(), 'RequestHandler'));
 				} else {
 					throw new Exception("method_exists() true but ReflectionClass can't find method - PHP is b0kred");
 				}
