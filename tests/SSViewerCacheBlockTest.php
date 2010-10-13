@@ -189,17 +189,22 @@ class SSViewerCacheBlockTest extends SapphireTest {
 	/**
      * @expectedException Exception
      */
-	function testErrorMessageForCacheWithinControl() {
+	function testErrorMessageForCachedWithinControlWithinCached() {
 		$this->_reset(true);
-		$this->_runtemplate('<% control Foo %><% cached %>$Bar<% end_cached %><% end_control %>');
+		$this->_runtemplate('<% cached %><% control Foo %><% cached %>$Bar<% end_cached %><% end_control %><% end_cached %>');
+	}
+
+	function testNoErrorMessageForCachedWithinControlWithinUncached() {
+		$this->_reset(true);
+		$this->_runtemplate('<% uncached %><% control Foo %><% cached %>$Bar<% end_cached %><% end_control %><% end_uncached %>');
 	}
 
 	/**
      * @expectedException Exception
      */
-	function testErrorMessageForCacheWithinIf() {
+	function testErrorMessageForCachedWithinIf() {
 		$this->_reset(true);
-		$this->_runtemplate('<% if Foo %><% cached %>$Bar<% end_cached %><% end_if %>');
+		$this->_runtemplate('<% cached %><% if Foo %><% cached %>$Bar<% end_cached %><% end_if %><% end_cached %>');
 	}
 
 	/**
