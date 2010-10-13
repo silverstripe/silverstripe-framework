@@ -506,8 +506,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * Called by Object::__construct() once per class.
 	 */
 	function defineMethods() {
-		if($this->class == 'DataObject') return;
-
 		parent::defineMethods();
 
 		// Define the extra db fields - this is only necessary for extensions added in the
@@ -520,6 +518,8 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 				user_error("DataObject::defineMethods(): Please ensure {$class}::__construct() calls parent::__construct()", E_USER_ERROR);
 			}
 		}
+
+		if($this->class == 'DataObject') return;
 
 		// Set up accessors for joined items
 		if($manyMany = $this->many_many()) {

@@ -295,7 +295,9 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	 */
 	public static function page_type_classes() {
 		$classes = ClassInfo::getValidSubClasses();
-		if($baseClassIndex = array_search('SiteTree', $classes)) unset($classes[$baseClassIndex]);
+
+		$baseClassIndex = array_search('SiteTree', $classes);
+		if($baseClassIndex !== FALSE) unset($classes[$baseClassIndex]);
 
 		$kill_ancestors = array();
 
@@ -1396,9 +1398,6 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 			// This will have the affect of preserving the versioning
 			$this->migrateVersion($this->Version);
 		}
-
-
-		parent::onBeforeWrite();
 	}
 	
 	function syncLinkTracking() {

@@ -640,7 +640,7 @@ abstract class Object {
 		$this->class = get_class($this);
 		
 		// Don't bother checking some classes that should never be extended
-		static $notExtendable = array('Object', 'ViewableData', 'DataObject', 'RequestHandler');
+		static $notExtendable = array('Object', 'ViewableData', 'RequestHandler');
 		
 		if($extensionClasses = ClassInfo::ancestry($this->class)) foreach($extensionClasses as $class) {
 			if(in_array($class, $notExtendable)) continue;

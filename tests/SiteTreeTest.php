@@ -685,6 +685,12 @@ class SiteTreeTest extends SapphireTest {
 
 	}
 	
+	function testPageTypeClasses() {
+		$classes = SiteTree::page_type_classes();
+		$this->assertNotContains('SiteTree', $classes, 'Page types do not include base class');
+		$this->assertContains('Page', $classes, 'Page types do contain subclasses');
+	}
+	
 }
 
 /**#@+
