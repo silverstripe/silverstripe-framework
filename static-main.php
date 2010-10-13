@@ -17,7 +17,6 @@ $cacheOn = true;
 $cacheDebug = false;
 $hostmapLocation = '../subsites/host-map.php';
 $homepageMapLocation = '../assets/_homepage-map.php';
-date_default_timezone_set('Pacific/Auckland');
 
 if ($cacheOn && empty($_COOKIE['bypassStaticCache'])) {
 	if (isset($_GET['cacheSubdir']) && !preg_match('/[^a-zA-Z0-9\-_]/', $_GET['cacheSubdir'])) {
