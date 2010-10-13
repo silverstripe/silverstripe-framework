@@ -89,9 +89,10 @@ class HTTP {
 	 * @param String $varname
 	 * @param String $varvalue
 	 * @param String $currentURL Relative or absolute URL (Optional).
+	 * @param String $separator Separator for http_build_query(). (Optional).
 	 * @return String Absolute URL
 	 */
-	public static function setGetVar($varname, $varvalue, $currentURL = null) {
+	public static function setGetVar($varname, $varvalue, $currentURL = null, $separator = '&amp;') {
 		$uri = $currentURL ? $currentURL : Director::makeRelative($_SERVER['REQUEST_URI']);
 
 		$isRelative = false;
@@ -111,7 +112,7 @@ class HTTP {
 		$params = array();
 		if(isset($parts['query'])) parse_str($parts['query'], $params);
 		$params[$varname] = $varvalue;
-
+		
 		// Generate URI segments and formatting
 		$scheme = (isset($parts['scheme'])) ? $parts['scheme'] : 'http';
 		$user = (isset($parts['user']) && $parts['user'] != '')  ? $parts['user'] : '';
@@ -126,7 +127,7 @@ class HTTP {
 		$path = (isset($parts['path']) && $parts['path'] != '') ? $parts['path'] : '';
 		
 		// handle URL params which are existing / new
-		$params = ($params) ?  '?' . http_build_query($params, null, '&amp;') : '';
+		$params = ($params) ?  '?' . http_build_query($params, null, $separator) : '';
 		
 		// keep fragments (anchors) intact.
 		$fragment = (isset($parts['fragment']) && $parts['fragment'] != '') ?  '#'.$parts['fragment'] : '';
