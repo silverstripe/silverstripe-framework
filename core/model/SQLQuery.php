@@ -419,12 +419,6 @@ class SQLQuery {
 	
 	/// VARIOUS TRANSFORMATIONS BELOW
 	
-	/**
-	 * Return the number of rows in this query if the limit were removed.  Useful in paged data sets.
-	 * @return int
-	 * 
-	 * TODO Respect HAVING and GROUPBY, which can affect the result-count
-	 */
 	function unlimitedRowCount( $column = null) {
 		// we can't clear the select if we're relying on its output by a HAVING clause
 		if(count($this->having)) {
@@ -432,19 +426,26 @@ class SQLQuery {
 			return $records->numRecords();
 		}
 
+		$clone = clone $this;
+		$clone->limit = null;
+		$clone->orderby = null;
+
 		// Choose a default column
 		if($column == null) {
 			if($this->groupby) {
-				$column = 'DISTINCT ' . implode(", ", $this->groupby);
+				$countQuery = new SQLQuery();
+				$countQuery->select = array("count(*)");
+				$countQuery->from = array('(' . $clone->sql() . ') as all_distinct');
+
+				return $countQuery->execute()->value();
+
 			} else {
-				$column = '*';
+				$clone->select = array("count(*)");
 			}
+		} else {
+			$clone->select = array("count($column)");
 		}
-		
-		$clone = clone $this;
-		$clone->select = array("count($column)");
-		$clone->limit = null;
-		$clone->orderby = null;
+
 		$clone->groupby = null;
 		return $clone->execute()->value();
 	}
