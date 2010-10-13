@@ -112,29 +112,31 @@ class HTTP {
 		if(isset($parts['query'])) parse_str($parts['query'], $params);
 		$params[$varname] = $varvalue;
 
-		// Recompile Uri
-		$newUri = $parts['scheme'] . '://' . (
-			isset($parts['user']) && $parts['user'] != '' && isset($parts['pass']) 
-				? $parts['user'] . ':' . $parts['pass'] . '@' 
-				: ''
-			) .
-			$parts['host'] . (
-				isset($parts['path']) && $parts['path'] != ''
-				? $parts['path']
-				: ''
-			) . (
-				($params)
-				// XHTML compliant by default
-				? '?' . http_build_query($params, null, '&amp;')
-				: ''
-			) . (
-				isset($parts['fragment']) && $parts['fragment'] != ''
-				? '#' . $parts['fragment']
-			: ''
-		);
+		// Generate URI segments and formatting
+		$scheme = (isset($parts['scheme'])) ? $parts['scheme'] : 'http';
+		$user = (isset($parts['user']) && $parts['user'] != '')  ? $parts['user'] : '';
+
+		if($user != '') {
+			// format in either user:pass@host.com or user@host.com
+			$user .= (isset($parts['pass']) && $parts['pass'] != '') ? ':' . $parts['pass'] . '@' : '@';
+		}
 		
+		$host = (isset($parts['host'])) ? $parts['host'] : '';
+		$port = (isset($parts['port']) && $parts['port'] != '') ? ':'.$parts['port'] : '';
+		$path = (isset($parts['path']) && $parts['path'] != '') ? $parts['path'] : '';
+		
+		// handle URL params which are existing / new
+		$params = ($params) ?  '?' . http_build_query($params, null, '&amp;') : '';
+		
+		// keep fragments (anchors) intact.
+		$fragment = (isset($parts['fragment']) && $parts['fragment'] != '') ?  '#'.$parts['fragment'] : '';
+		
+		// Recompile URI segments	
+		$newUri =  $scheme . '://' . $user . $host . $port . $path . $params . $fragment;
+
 		if($isRelative) return Director::makeRelative($newUri);
-		else return $newUri;
+		
+		return $newUri;
 	}
 
 	static function RAW_setGetVar($varname, $varvalue, $currentURL = null) {
