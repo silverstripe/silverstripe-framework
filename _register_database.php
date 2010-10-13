@@ -40,7 +40,7 @@ DatabaseAdapterRegistry::register(
 		'fields' => array(
 			'path' => array(
 				'title' => 'Database path<br /><small>Absolute path, writeable by the webserver user.<br />Recommended to be outside of your webroot</small>',
-				'default' => realpath(dirname($_SERVER['SCRIPT_FILENAME'])) . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR . '.sqlitedb'
+				'default' => realpath(dirname($_SERVER['SCRIPT_FILENAME'])) . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR . '.db'
 			),
 			'database' => array(
 				'title' => 'Database name', 
