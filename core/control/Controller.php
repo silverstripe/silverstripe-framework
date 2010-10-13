@@ -460,6 +460,8 @@ class Controller extends RequestHandler {
 	 * It is generally recommended to call Director::redirect() rather than calling this function directly.
 	 */
 	function redirect($url, $code=302) {
+		if(!$this->response) $this->response = new SS_HTTPResponse();
+		
 		if($this->response->getHeader('Location')) {
 			user_error("Already directed to " . $this->response->getHeader('Location') . "; now trying to direct to $url", E_USER_WARNING);
 			return;
@@ -483,13 +485,20 @@ class Controller extends RequestHandler {
 	 * @uses redirect()
 	 */
 	function redirectBack() {
-		if($this->request->requestVar('_REDIRECT_BACK_URL')) {
-			$url = $this->request->requestVar('_REDIRECT_BACK_URL');
-		} else if($this->request->getHeader('Referer')) {
-			$url = $this->request->getHeader('Referer');
-		} else {
-			$url = Director::baseURL();
+		$url = null;
+		
+		// In edge-cases, this will be called outside of a handleRequest() context; in that case,
+		// redirect to the homepage - don't break into the global state at this stage because we'll
+		// be calling from a test context or something else where the global state is inappropraite
+		if($this->request) {
+			if($this->request->requestVar('_REDIRECT_BACK_URL')) {
+				$url = $this->request->requestVar('_REDIRECT_BACK_URL');
+			} else if($this->request->getHeader('Referer')) {
+				$url = $this->request->getHeader('Referer');
+			}
 		}
+		
+		if(!$url) $url = Director::baseURL();
 
 		// absolute redirection URLs not located on this site may cause phishing
 		if(Director::is_site_url($url)) {
@@ -505,7 +514,7 @@ class Controller extends RequestHandler {
 	 * @return string If redirect() has been called, it will return the URL redirected to.  Otherwise, it will return null;
 	 */
 	function redirectedTo() {
-		return $this->response->getHeader('Location');
+		return $this->response && $this->response->getHeader('Location');
 	} 
 	
 	/**
