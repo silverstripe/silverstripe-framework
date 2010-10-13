@@ -1,7 +1,9 @@
 <?php
-
 /**
  * Provides a simple search engine for your site based on the MySQL FULLTEXT index
+ * 
+ * @package sapphire
+ * @subpackage search
  */
 class FulltextSearchable extends DataObjectDecorator {
 	protected $searchFields;

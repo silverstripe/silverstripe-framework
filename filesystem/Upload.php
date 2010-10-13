@@ -309,6 +309,11 @@ class Upload extends Controller {
 	}
 	
 }
+
+/**
+ * @package sapphire
+ * @subpackage filesystem
+ */
 class Upload_Validator {
 
 	/**
@@ -338,8 +343,6 @@ class Upload_Validator {
 	 * <code>
 	 * 	array("jpg","GIF")
 	 * </code>
-	 * 
-	 * @var array
 	 */
 	public $allowedExtensions = array();
 

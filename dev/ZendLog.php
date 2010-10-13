@@ -1,4 +1,6 @@
 <?php
+require_once 'Zend/Log.php';
+
 /**
  * Extensions to Zend_Log to make it work nicer
  * with {@link SS_Log}.
@@ -9,9 +11,6 @@
  * @package sapphire
  * @subpackage dev
  */
-
-require_once 'Zend/Log.php';
-
 class SS_ZendLog extends Zend_Log {
 
 	/**
