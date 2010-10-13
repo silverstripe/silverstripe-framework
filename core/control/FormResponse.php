@@ -84,8 +84,10 @@ class FormResponse {
 		} elseif(!empty(self::$redirect_url)) {
 			Director::redirect(self::$redirect_url);
 			return null;
-		} else {
+		} elseif(!Director::redirected_to()) {
 			Director::redirectBack();
+			return null;
+		} else {
 			return null;
 		}
 		
