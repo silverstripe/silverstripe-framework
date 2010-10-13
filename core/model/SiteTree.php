@@ -2013,7 +2013,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		if(!$original) $original = new SiteTree();
 
 		// Handle activities undertaken by decorators
-		$this->extend('onBeforePublish', $original);
+		$this->invokeWithExtensions('onBeforePublish', $original);
 		
 		//$this->PublishedByID = Member::currentUser()->ID;
 		$this->write();
@@ -2052,7 +2052,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		}
 		
 		// Handle activities undertaken by decorators
-		$this->extend('onAfterPublish', $original);
+		$this->invokeWithExtensions('onAfterPublish', $original);
 		
 		return true;
 	}
