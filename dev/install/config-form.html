@@ -66,7 +66,7 @@
 								<?php if($alreadyInstalled) { ?>
 									<p class="warning">
 										<strong>Note:</strong> It seems as though SilverStripe is already installed here.<br />
-										If you ask me to install, I will overwrite the <strong>.htaccess</strong> or <strong>web.config</strong> and <strong>mysite/_config.php</strong> files. 
+										If you ask me to install, I will overwrite the <strong>.htaccess</strong> and <strong>mysite/_config.php</strong> files. 
 										<br />
 									<input type="checkbox" id="ReIn" name="force_reinstall"><label for="ReIn">That's okay, please re-install SilverStripe and overwrite these files.</label>
 									</p>
@@ -200,18 +200,20 @@
 							
 							<?php $dbReq->showTable("Database Configuration"); ?>
 							
-							<h4 class="sectionHeading">CMS Admin Account</h4>
+							<h4>CMS Admin Account</h4>
+						
 							<div id="AdminAccount" class="section">
-								<p id="adminAcc" class="helpText">
-									We will set up the first administrator account for you automatically. You can change these details later in the "Security" section within the CMS.
-								</p>
-								<div class="fields">
-									<div class="field">
+								
+								<div class="fieldGroup">
+									<p class="helpText">We will set up the first administrator account for you automatically. You can change these details later in the "Security" section within the CMS.</p>
+									
+									<div class="field">	
 										<label for="admin_username">Email:</label>
 										<span class="middleColumn">
 											<input type="text" class="text configured-by-env" name="admin[username]" id="admin_username" value="<?php echo $adminConfig['username']; ?>" <?php if($usingEnv && defined('SS_DEFAULT_ADMIN_USERNAME')) echo 'disabled="disabled"' ?>>
 										</span>
 									</div>
+									
 									<div class="field">
 										<label for="admin_password">Password:</label>
 										<span class="middleColumn">
@@ -219,63 +221,41 @@
 										</span>
 									</div>
 								</div>
+								
+								<div class="fieldGroup">
+									<p class="helpText">
+										Determines the default "locale" settings (for dates, currencies, etc.), 
+										as well as setting the default language of the CMS interface.
+										This can be customized for any CMS user.
+										<br />
+										Caution: Not all aspects of the interface might be localized yet.
+									</p>
+									
+									<div class="field">
+										<label for="locale">Default language:</label>
+										<span class="middleColumn">
+											<select name="locale" id="locale">
+												<?php
+												$selectedLocale = isset($_POST['locale']) ? $_POST['locale'] : $defaultLocale;
+												foreach($locales as $code => $details) {
+													$selected = $code == $selectedLocale ? ' selected="true"' : '';
+													echo "<option$selected value=\"$code\">{$details[0]} - {$details[1]}</option>\n";
+												}
+												?>
+											</select> 
+										</span>
+									</div>
+								</div>
 							</div>
 							
-							<h4 class="sectionHeading">Theme</h4>
+							<h4>Theme</h4>
 							<p>You can change the theme or <a href="http://silverstripe.org/themes">download</a> another from the SilverStripe website after installation.</p>
 							<ul id="Themes">
 								<li><input type="radio" name="template" value="blackcandy" id="BlackCandy" <?php if(!isset($_POST['template']) || $_POST['template'] == 'blackcandy') {?>checked="checked"<?php }?>><label for="BlackCandy"><a href="http://silverstripe.org/blackcandy/">BlackCandy</a> - our default theme ready to use.</label></li>
 								<li><input type="radio" name="template" value="tutorial" id="EmptyTemplate" <?php if(isset($_POST['template']) && $_POST['template'] == 'tutorial') {?>checked="checked"<?php }?>><label for="EmptyTemplate">Empty template - ready to begin the <a href="http://doc.silverstripe.org/doku.php?id=tutorials" target="_blank">tutorial</a>.</label></li>
 							</ul>
 							
-							<h4 class="sectionHeading">Server configuration</h4>
-							<div id="devSection" class="section">
-								<div class="fields">
-									<div class="field">
-										<label for="devsites">Development servers:</label>
-										<span class="middleColumn">
-											<textarea name="devsites" id="devsites" class="configured-by-env" rows="5" cols="10">
-<?php if(@$_POST['devsites']) echo $_POST['devsites'];
-else echo 'localhost
-127.0.0.1'; ?></textarea>
-										</span>
-									</div>
-								</div>
-								<p id="devHelp" class="helpText">
-									SilverStripe allows you to run a site in <a href="http://doc.silverstripe.org/doku.php?id=configuration">development mode</a>.
-									This shows all error messages in the web browser instead of emailing them to the administrator, and allows
-									the database to be built without logging in as administrator. Please enter the host/domain names for servers
-									you will be using for development.
-								</p>
-							</div>
-							
-							
-							<div id="localeSection" class="section">
-								<div class="fields">
-									<div class="field">
-										<label for="locale">Default language:</label>
-										<span class="middleColumn">
-											<select name="locale" id="locale">
-	<?php
-	$selectedLocale = isset($_POST['locale']) ? $_POST['locale'] : $defaultLocale;
-	foreach($locales as $code => $details) {
-		$selected = $code == $selectedLocale ? ' selected="true"' : '';
-		echo "<option$selected value=\"$code\">{$details[0]} - {$details[1]}</option>\n";
-	}
-	?>
-											</select> 
-										</span>
-									</div>
-								</div>
-								<p id="localeHelp" class="helpText">
-									Determines the default "locale" settings (for dates, currencies, etc.), 
-									as well as setting the default language of the CMS interface.
-									This can be customized for any CMS user.
-									<br />
-									Caution: Not all aspects of the interface might be localized yet.
-								</p>
-							</div>
-
+	
 							<h4 id="requirements">Requirements</h4>
 							<?php $req->showTable(); ?>
 							
