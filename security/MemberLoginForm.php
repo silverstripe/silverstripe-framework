@@ -200,10 +200,10 @@ JS
    *                or NULL on failure.
    */
 	public function performLogin($data) {
-		if($member = MemberAuthenticator::authenticate($data, $this)) {
+		$member = call_user_func_array(array($this->authenticator_class, 'authenticate'), array($data, $this));
+		if($member) {
 			$member->LogIn(isset($data['Remember']));
 			return $member;
-
 		} else {
 			$this->extend('authenticationFailed', $data);
 			return null;
