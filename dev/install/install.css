@@ -45,6 +45,7 @@ h4.sectionHeading {
 	border: 1px #ff8e8e solid;
 	color: #f03838;
 }
+	#Container p.error { color: #f03838;}
 .warning {
 	padding: 0.5em;
 	background-color: #fcf8f2;
