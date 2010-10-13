@@ -68,10 +68,8 @@ class TransactionTest extends SapphireTest {
 				DB::getConn()->transactionRollback();
 			}
 			
-			$success=DataObject::get('Page', "\"Title\"='Read only success'");
-			
 			DB::getConn()->endTransaction();
-						
+			$success=DataObject::get('Page', "\"Title\"='Read only success'");
 			$fail=DataObject::get('Page', "\"Title\"='Read only failed'");
 			
 			//This page should be in the system
