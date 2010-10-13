@@ -57,6 +57,13 @@ class ContentNegotiator {
 	static function enable() {
 		self::$enabled = true;
 	}
+	
+	/*
+	 * Disable content negotiation for all templates, not just those with the xml header.
+	 */
+	static function disable() {
+		self::$enabled = false;
+	}
 
 	/**
 	 * Returns true if negotation is enabled for the given response.
