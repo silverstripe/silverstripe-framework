@@ -94,8 +94,12 @@ class HTTP {
 	public static function setGetVar($varname, $varvalue, $currentURL = null) {
 		$uri = $currentURL ? $currentURL : Director::makeRelative($_SERVER['REQUEST_URI']);
 
+		$isRelative = false;
 		// We need absolute URLs for parse_url()
-		if(Director::is_relative_url($uri)) $uri = Director::absoluteBaseURL() . $uri;
+		if(Director::is_relative_url($uri)) {
+			$uri = Director::absoluteBaseURL() . $uri;
+			$isRelative = true;
+		}
 
 		// try to parse uri
 		$parts = parse_url($uri);
@@ -128,8 +132,9 @@ class HTTP {
 				? '#' . $parts['fragment']
 			: ''
 		);
-
-		return $newUri;
+		
+		if($isRelative) return Director::makeRelative($newUri);
+		else return $newUri;
 	}
 
 	static function RAW_setGetVar($varname, $varvalue, $currentURL = null) {
