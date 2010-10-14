@@ -30,7 +30,7 @@ class TimeField extends TextField {
 
 	protected $config = array(
 		'showdropdown' => false,
-		'timeformat' => null,
+		'timeformat' => 'HH:mm:ss',
 		'use_strtotime' => true,
 		'datavalueformat' => 'HH:mm:ss'
 	);
@@ -47,20 +47,13 @@ class TimeField extends TextField {
 	 */
 	protected $valueObj = null;
 		
-	/**
-	 * Constructor saves the format difference. Timefields shouldn't 
-	 * have a problem with length as times can only be represented in on way.
-	 * 
-	 * @param $name string The name of the field
-	 * @param $title string The Title of the field
-	 * @param $value string the value for the field
-	 * @param $timeformat string The Time format in ISO format (see Zend_Date)
-	 */
-	function __construct($name, $title = null, $value = "",$timeformat = 'HH:mm:ss'){
-		if($timeformat) {
-			$this->setConfig('timeformat', $timeformat);
-		} else {
-			$this->setConfig('timeformat', Zend_Locale_Format::getTimeFormat($this->locale));
+	function __construct($name, $title = null, $value = ""){
+		if(!$this->locale) {
+			$this->locale = i18n::get_locale();
+		}
+		
+		if(!$this->getConfig('timeformat')) {
+			$this->setConfig('timeformat', Zend_Locale_Format::getDateFormat($this->locale));
 		}
 		
 		parent::__construct($name,$title,$value);
