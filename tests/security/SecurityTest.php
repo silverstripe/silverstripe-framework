@@ -13,15 +13,21 @@ class SecurityTest extends FunctionalTest {
 	protected $priorAuthenticators = array();
 	
 	protected $priorDefaultAuthenticator = null;
-	
+
+	protected $priorUniqueIdentifierField = null;
+
 	function setUp() {
 		// This test assumes that MemberAuthenticator is present and the default
 		$this->priorAuthenticators = Authenticator::get_authenticators();
 		$this->priorDefaultAuthenticator = Authenticator::get_default_authenticator();
-		
+
 		Authenticator::register('MemberAuthenticator');
 		Authenticator::set_default_authenticator('MemberAuthenticator');
-		
+
+		// And that the unique identified field is 'Email'
+		$this->priorUniqueIdentifierField = Member::get_unique_identifier_field();
+		Member::set_unique_identifier_field('Email');
+
 		parent::setUp();
 	}
 	
@@ -33,6 +39,9 @@ class SecurityTest extends FunctionalTest {
 			Authenticator::unregister('MemberAuthenticator');
 		}
 		Authenticator::set_default_authenticator($this->priorDefaultAuthenticator);
+
+		// Restore unique identifier field
+		Member::set_unique_identifier_field($this->priorUniqueIdentifierField);
 		
 		parent::tearDown();
 	}
