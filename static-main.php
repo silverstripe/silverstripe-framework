@@ -22,8 +22,15 @@ $cacheBaseDir = '../cache/'; // Should point to the same folder as FilesystemPub
 $hostmapLocation = '../subsites/host-map.php'; 
 $homepageMapLocation = '../assets/_homepage-map.php';
 
-if ($cacheEnabled && empty($_COOKIE['bypassStaticCache'])) {
-	
+if (
+	$cacheEnabled 
+	&& empty($_COOKIE['bypassStaticCache'])
+	// No GET params other than cache relevant config is passed (e.g. "?stage=Stage"),
+	// which would mean that we have to bypass the cache
+	&& count(array_diff(array_keys($_GET), array('url', 'cacheSubdir'))) == 0
+	// Request is not POST (which would have to be handled dynamically)
+	&& count($_POST) == 0
+) {
 	// Define system paths (copied from Core.php)
 	if(!defined('BASE_PATH')) {
 		// Assuming that this file is sapphire/static-main.php we can then determine the base path
@@ -75,6 +82,7 @@ if ($cacheEnabled && empty($_COOKIE['bypassStaticCache'])) {
 	
 	// Find file by extension (either *.html or *.php)
 	$file = preg_replace('/[^a-zA-Z0-9\/\-_]/si', '-', $file);
+
 	if (file_exists($cacheBaseDir . $cacheDir . $file . '.html')) {
 		header('X-SilverStripe-Cache: hit at '.@date('r'));
 		echo file_get_contents($cacheBaseDir . $cacheDir . $file . '.html');
