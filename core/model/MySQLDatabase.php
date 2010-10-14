@@ -1058,8 +1058,8 @@ class MySQLQuery extends SS_Query {
 		$this->handle = $handle;
 	}
 	
-	public function __destroy() {
-		mysql_free_result($this->handle);
+	public function __destruct() {
+		if(is_resource($this->handle)) mysql_free_result($this->handle);
 	}
 	
 	public function seek($row) {
