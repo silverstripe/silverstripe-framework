@@ -119,6 +119,18 @@ class DatabaseAdmin extends Controller {
 		}
 	}
 
+	/**
+	 * Build the default data, calling requireDefaultRecords on all
+	 * DataObject classes
+	 */
+	function buildDefaults() {
+		$dataClasses = ClassInfo::subclassesFor('DataObject');
+		array_shift($dataClasses);
+		foreach($dataClasses as $dataClass){
+			singleton($dataClass)->requireDefaultRecords();
+			print "Defaults loaded for $dataClass<br/>";
+		}
+	}
 
 	/**
 	 * Returns the timestamp of the time that the database was last built
