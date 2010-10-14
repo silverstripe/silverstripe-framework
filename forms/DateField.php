@@ -556,7 +556,7 @@ class DateField_View_JQuery {
 				// TODO Check for existence of locale to avoid unnecessary 404s from the CDN
 				Requirements::javascript(
 					sprintf(
-						'http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.1/i18n/jquery.ui.datepicker-%s.min.js',
+						Director::protocol().'ajax.googleapis.com/ajax/libs/jqueryui/1.8.1/i18n/jquery.ui.datepicker-%s.min.js',
 						// can be a mix between names (e.g. 'de') and combined locales (e.g. 'zh-TW')
 						$lang
 					));
