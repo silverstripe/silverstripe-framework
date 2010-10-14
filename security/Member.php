@@ -786,7 +786,7 @@ class Member extends DataObject {
 		if (self::$title_format) {
 			$columnsWithTablename = array();
 			foreach(self::$title_format['columns'] as $column) {
-				$columnsWithTablename[] = "$tableName.$column";
+				$columnsWithTablename[] = "\"$tableName\".\"$column\"";
 			}
 		
 			return "(\"".join("'".self::$title_format['sep']."'" || $columnsWithTablename)."\")";
