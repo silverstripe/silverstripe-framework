@@ -1,8 +1,12 @@
 <?php
 /**
  * Represents a large text field that contains HTML content.
+ * This behaves similarly to {@link Text}, but the template processor won't escape any HTML content within it.
  * 
- * This behaves similarly to Text, but the template processor won't escape any HTML content within it.
+ * @see HTMLVarchar
+ * @see Text
+ * @see Varchar
+ * 
  * @package sapphire
  * @subpackage model
  */

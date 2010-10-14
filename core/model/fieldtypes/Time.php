@@ -2,6 +2,13 @@
 /**
  * Represents a column in the database with the type 'Time'.
  * 
+ * Example definition via {@link DataObject::$db}:
+ * <code>
+ * static $db = array(
+ * 	"StartTime" => "Time",
+ * );
+ * </code>
+ * 
  * @todo Add localization support, see http://open.silverstripe.com/ticket/2931
  * 
  * @package sapphire
