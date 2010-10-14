@@ -3,6 +3,8 @@
 class MemoryLimitTest extends SapphireTest {
 	
 	function testIncreaseMemoryLimitTo() {
+		if(!$this->canChangeMemory()) return;
+		
 		ini_set('memory_limit', '64M');
 		
 		// It can go up
@@ -34,6 +36,8 @@ class MemoryLimitTest extends SapphireTest {
 	}
 
 	function testIncreaseTimeLimitTo() {
+		if(!$this->canChangeMemory()) return;
+		
 		set_time_limit(6000);
 		
 		// It can go up
@@ -66,5 +70,19 @@ class MemoryLimitTest extends SapphireTest {
 	function tearDown() {
 		ini_set('memory_limit', $this->origMemLimit);
 		set_time_limit($this->origTimeLimit);
+	}
+	
+	/**
+	 * Determines wether the environment generally allows
+	 * to change the memory limits, which is not always the case.
+	 * 
+	 * @return Boolean
+	 */
+	protected function canChangeMemory() {
+		$exts = get_loaded_extensions();
+		// see http://www.hardened-php.net/suhosin/configuration.html#suhosin.memory_limit
+		if(in_array('suhosin', $exts)) return false;
+		
+		return true;
 	}
 }
