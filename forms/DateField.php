@@ -444,6 +444,9 @@ JS;
 					throw new InvalidArgumentException('Date "%s" is not a valid maximum date format (%s) or strtotime() argument', $val, $format);
 				}
 				break;
+			case 'showcalendar':
+				$this->config['dateformat'] = Zend_Locale_Format::getDateFormat('en_NZ');
+				break;
 		}
 		
 		$this->config[$name] = $val;
