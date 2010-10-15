@@ -4,21 +4,35 @@
  * Tests for the File class
  */
 class FileTest extends SapphireTest {
+	
 	static $fixture_file = 'sapphire/tests/filesystem/FileTest.yml';
 	
+	function testGetExtension() {
+		$this->assertEquals('', File::get_file_extension('myfile'), 'No extension');
+		$this->assertEquals('txt', File::get_file_extension('myfile.txt'), 'Simple extension');
+		$this->assertEquals('gz', File::get_file_extension('myfile.tar.gz'), 'Double-barrelled extension only returns last bit');
+	}
+	
 	function testValidateExtension() {
-		$file = $this->objFromFixture('File', 'asdf');
-
-		// Invalid
+		Session::set('loggedInAs', null);
+		
+		$origExts = File::$allowed_extensions;
+		File::$allowed_extensions = array('txt');
+		
+		$file = $this->objFromFixture('File', 'asdf'); 
+	
+		// Invalid ext
 		$file->Name = 'asdf.php';
 		$v = $file->validate();
 		$this->assertFalse($v->valid());
 		$this->assertContains('Extension is not allowed', $v->message());
 		
-		// Valid
+		// Valid ext
 		$file->Name = 'asdf.txt';
 		$v = $file->validate();
 		$this->assertTrue($v->valid());
+		
+		File::$allowed_extensions = $origExts;
 	}
 	
 	function testLinkAndRelativeLink() {
