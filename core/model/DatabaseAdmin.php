@@ -238,7 +238,10 @@ class DatabaseAdmin extends Controller {
 			echo "OK";
 		}
 		
-		if(!$quiet) echo "<p>Database build completed!</p>";
+		if(!$quiet) {
+			echo (Director::is_cli()) ? "\n Database build completed!\n\n" :"<p>Database build completed!</p>";
+		}
+		
 		ClassInfo::reset_db_cache();
 	}
 	
