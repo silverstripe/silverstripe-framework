@@ -792,6 +792,16 @@ JS
 		$baseLink = ($this->paginationBaseLink) ? $this->paginationBaseLink : $this->Link();
 		$link = Controller::join_links($baseLink, "?ctf[{$this->Name()}][start]={$start}");
 		if($this->extraLinkParams) $link .= "&" . http_build_query($this->extraLinkParams);
+		
+		// preserve sort options
+		if(isset($_REQUEST['ctf'][$this->Name()]['sort'])) {
+			$link .= "&ctf[{$this->Name()}][sort]=" . $_REQUEST['ctf'][$this->Name()]['sort'];
+			// direction
+			if(isset($_REQUEST['ctf'][$this->Name()]['dir'])) {
+				$link .= "&ctf[{$this->Name()}][dir]=" . $_REQUEST['ctf'][$this->Name()]['dir'];
+			}
+		}
+		
 		return $link;
 	}
 	
@@ -807,6 +817,16 @@ JS
 		$baseLink = ($this->paginationBaseLink) ? $this->paginationBaseLink : $this->Link();
 		$link = Controller::join_links($baseLink, "?ctf[{$this->Name()}][start]={$start}");
 		if($this->extraLinkParams) $link .= "&" . http_build_query($this->extraLinkParams);
+		
+		// preserve sort options
+		if(isset($_REQUEST['ctf'][$this->Name()]['sort'])) {
+			$link .= "&ctf[{$this->Name()}][sort]=" . $_REQUEST['ctf'][$this->Name()]['sort'];
+			// direction
+			if(isset($_REQUEST['ctf'][$this->Name()]['dir'])) {
+				$link .= "&ctf[{$this->Name()}][dir]=" . $_REQUEST['ctf'][$this->Name()]['dir'];
+			}
+		}
+		
 		return $link;
 	}
 	
@@ -820,6 +840,16 @@ JS
 		$baseLink = ($this->paginationBaseLink) ? $this->paginationBaseLink : $this->Link();
 		$link = Controller::join_links($baseLink, "?ctf[{$this->Name()}][start]={$start}");
 		if($this->extraLinkParams) $link .= "&" . http_build_query($this->extraLinkParams);
+		
+		// preserve sort options
+		if(isset($_REQUEST['ctf'][$this->Name()]['sort'])) {
+			$link .= "&ctf[{$this->Name()}][sort]=" . $_REQUEST['ctf'][$this->Name()]['sort'];
+			// direction
+			if(isset($_REQUEST['ctf'][$this->Name()]['dir'])) {
+				$link .= "&ctf[{$this->Name()}][dir]=" . $_REQUEST['ctf'][$this->Name()]['dir'];
+			}
+		}
+		
 		return $link;
 	}
 	
@@ -834,6 +864,16 @@ JS
 		$baseLink = ($this->paginationBaseLink) ? $this->paginationBaseLink : $this->Link();
 		$link = Controller::join_links($baseLink, "?ctf[{$this->Name()}][start]={$start}");
 		if($this->extraLinkParams) $link .= "&" . http_build_query($this->extraLinkParams);
+		
+		// preserve sort options
+		if(isset($_REQUEST['ctf'][$this->Name()]['sort'])) {
+			$link .= "&ctf[{$this->Name()}][sort]=" . $_REQUEST['ctf'][$this->Name()]['sort'];
+			// direction
+			if(isset($_REQUEST['ctf'][$this->Name()]['dir'])) {
+				$link .= "&ctf[{$this->Name()}][dir]=" . $_REQUEST['ctf'][$this->Name()]['dir'];
+			}
+		}
+		
 		return $link;
 	}
 	
