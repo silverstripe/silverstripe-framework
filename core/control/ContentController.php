@@ -118,7 +118,7 @@ class ContentController extends Controller {
 				Session::clear('currentStage');
 				Session::clear('archiveDate');
 				
-				return Security::permissionFailure($this, sprintf($message, "$link?stage=Live"));
+				return Security::permissionFailure($this, sprintf($message, Controller::join_links($link, "?stage=Live")));
 			}
 		}
 
