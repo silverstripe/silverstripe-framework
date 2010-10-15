@@ -117,11 +117,9 @@ class HtmlEditorFieldTest extends FunctionalTest {
 	public function testMultiLineSaving() {
 		$sitetree = $this->objFromFixture('SiteTree', 'home');
 		$editor   = new HtmlEditorField('Content');
-		
-		$editor->setValue("<p>First Paragraph</p>\n\n<p>Second Paragraph</p>");
+		$editor->setValue("<p>First Paragraph</p><p>Second Paragraph</p>");
 		$editor->saveInto($sitetree);
-		
-		$this->assertEquals("<p>First Paragraph</p>\n\n<p>Second Paragraph</p>", $sitetree->Content);
+		$this->assertEquals("<p>First Paragraph</p><p>Second Paragraph</p>", $sitetree->Content);
 	}
 	
 	public function testSavingLinksWithoutHref() {
