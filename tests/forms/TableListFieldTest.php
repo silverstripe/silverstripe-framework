@@ -150,7 +150,6 @@ class TableListFieldTest extends SapphireTest {
 		
 		$table->addSelectOptions(array("F"=>"FieldF"));
 		$tableHTML = $table->FieldHolder();
-		
 		$p = new CSSContentParser($tableHTML);
 		$this->assertContains('rel="F"', $tableHTML);
 		$tbody = $p->getByXpath('//tbody');
