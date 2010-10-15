@@ -62,11 +62,7 @@ class ArrayLib {
 	 * @return array
 	 */
 	static function valuekey($arr) {
-		$newArr = array();
-		foreach($arr as $val) {
-			$newArr[$val] = $val;
-		}
-		return $newArr;
+		return array_combine($arr, $arr);
 	}
 	
 	/**

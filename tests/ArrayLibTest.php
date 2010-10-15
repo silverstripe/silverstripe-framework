@@ -30,4 +30,20 @@ class ArrayLibTest extends SapphireTest {
 			)
 		);
 	}
+
+	function testValuekey() {
+		$this->assertEquals(
+			ArrayLib::valuekey(
+				array(
+					'testkey1' => 'testvalue1',
+					'testkey2' => 'testvalue2'
+				)
+			),
+			array(
+				'testvalue1' => 'testvalue1',
+				'testvalue2' => 'testvalue2'
+			)
+		);
+	}
+
 }
