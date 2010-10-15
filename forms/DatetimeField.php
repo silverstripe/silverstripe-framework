@@ -91,8 +91,10 @@ class DatetimeField extends FormField {
 	function dataValue() {
 		$valDate = $this->dateField->dataValue();
 		$valTime = $this->timeField->dataValue();
-		
-		if($valDate && $valTime) {
+
+		// Only date is actually required, time is optional
+		if($valDate) {
+			if(!$valTime) $valTime = '00:00:00';
 			return $valDate . ' ' . $valTime;
 		} else {
 			// TODO 
