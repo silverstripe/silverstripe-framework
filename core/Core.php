@@ -290,6 +290,9 @@ function getTempFolder($base = null) {
  * classes.  Classes will be loaded from any PHP file within the application.
  * If your class contains an underscore, for example, Page_Controller, then the filename is
  * expected to be the stuff before the underscore.  In this case, Page.php.
+ * 
+ * Class names are converted to lowercase for lookup to adhere to PHP's case-insensitive
+ * way of dealing with them.
  */
 function __autoload($className) {
 	global $_CLASS_MANIFEST;
@@ -299,7 +302,10 @@ function __autoload($className) {
 }
 
 /**
- * Return the file where that class is stored
+ * Return the file where that class is stored.
+ * 
+ * @param String $className Case-insensitive lookup.
+ * @return String
  */
 function getClassFile($className) {
 	global $_CLASS_MANIFEST;
