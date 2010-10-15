@@ -6,6 +6,21 @@
 class FileTest extends SapphireTest {
 	static $fixture_file = 'sapphire/tests/filesystem/FileTest.yml';
 	
+	function testValidateExtension() {
+		$file = $this->objFromFixture('File', 'asdf');
+
+		// Invalid
+		$file->Name = 'asdf.php';
+		$v = $file->validate();
+		$this->assertFalse($v->valid());
+		$this->assertContains('Extension is not allowed', $v->message());
+		
+		// Valid
+		$file->Name = 'asdf.txt';
+		$v = $file->validate();
+		$this->assertTrue($v->valid());
+	}
+	
 	function testLinkAndRelativeLink() {
 		$file = $this->objFromFixture('File', 'asdf');
 		$this->assertEquals(ASSETS_DIR . '/asdfjkl.txt', $file->RelativeLink());
