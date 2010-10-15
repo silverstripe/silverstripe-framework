@@ -102,6 +102,12 @@ class ControllerTest extends FunctionalTest {
 		);
 		
 		$this->assertEquals('/admin/action', Controller::join_links('/admin', 'action'));
+
+		/* One fragment identifier is handled as you would expect */
+		$this->assertEquals("my-page?arg=var#subsection", Controller::join_links("my-page#subsection", "?arg=var"));
+
+		/* If there are multiple, it takes the last one */
+		$this->assertEquals("my-page?arg=var#second-section", Controller::join_links("my-page#subsection", "?arg=var", "#second-section"));
 	}
 	
 	/**
