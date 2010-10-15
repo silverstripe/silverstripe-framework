@@ -93,5 +93,22 @@ class TextareaField extends FormField {
 	function Type() {
 		return parent::Type() . ( $this->readonly ? ' readonly' : '' ); 
 	}
+	
+	/**
+	 * Set the number of rows in the textarea
+	 *
+	 * @param int
+	 */
+	function setRows($rows) {
+		$this->rows = $rows;
+	}
+	
+	/**
+	 * Set the number of columns in the textarea
+	 *
+	 * @return int
+	 */
+	function setColumns($cols) {
+		$this->cols = $cols;
+	}
 }
-?>
