@@ -1082,7 +1082,7 @@ class MySQLQuery extends SS_Query {
 	
 	public function nextRecord() {
 		// Coalesce rather than replace common fields.
-		if($data = mysql_fetch_row($this->handle)) {
+		if(is_resource($this->handle) && $data = mysql_fetch_row($this->handle)) {
 			foreach($data as $columnIdx => $value) {
 				$columnName = mysql_field_name($this->handle, $columnIdx);
 				// $value || !$ouput[$columnName] means that the *last* occurring value is shown
