@@ -5,6 +5,11 @@
  * Because permission codes are very granular, this lets website administrators create more
  * business-oriented units of access control - Roles - and assign those to groups.
  * 
+ * If the <b>OnlyAdminCanApply</b> property is set to TRUE, the role can only be assigned
+ * to new groups by a user with ADMIN privileges. This is a simple way to prevent users
+ * with access to {@link SecurityAdmin} (but no ADMIN privileges) to get themselves ADMIN access
+ * (which might be implied by certain roles).
+ * 
  * @package sapphire
  * @subpackage security
  */
