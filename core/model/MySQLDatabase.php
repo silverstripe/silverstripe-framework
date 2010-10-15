@@ -1073,11 +1073,11 @@ class MySQLQuery extends SS_Query {
 	}
 	
 	public function seek($row) {
-		return mysql_data_seek($this->handle, $row);
+		return is_resource($this->handle) ? mysql_data_seek($this->handle, $row) : false;
 	}
 	
 	public function numRecords() {
-		return mysql_num_rows($this->handle);
+		return is_resource($this->handle) ? mysql_num_rows($this->handle) : false;
 	}
 	
 	public function nextRecord() {
