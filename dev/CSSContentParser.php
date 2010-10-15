@@ -53,16 +53,33 @@ class CSSContentParser extends Object {
 		
 	/**
 	 * Returns a number of SimpleXML elements that match the given CSS selector.
-	 * Currently the selector engine only supports querying by tag, id, and classs
+	 * Currently the selector engine only supports querying by tag, id, and class.
+	 * See {@link getByXpath()} for a more direct selector syntax.
+	 * 
+	 * @param String $selector
+	 * @return SimpleXMLElement
 	 */
 	function getBySelector($selector) {
 		$xpath = $this->selector2xpath($selector);
-		return $this->simpleXML->xpath($xpath);
+		return $this->getByXpath($xpath);
 	}
 	
 	/**
+	 * Allows querying the content through XPATH selectors.
+	 * 
+	 * @param String $xpath SimpleXML compatible XPATH statement
+	 * @return SimpleXMLElement|false
+	 */
+	function getByXpath($xpath) {
+		return $this->simpleXML->xpath($xpath);
+	}
+		
+	/**
 	 * Converts a CSS selector into an equivalent xpath expression.
-	 * Currently the selector engine only supports querying by tag, id, and classs
+	 * Currently the selector engine only supports querying by tag, id, and class.
+	 * 
+	 * @param String $selector See {@link getBySelector()}
+	 * @return String XPath expression
 	 */
 	function selector2xpath($selector) {
 		$parts = preg_split('/\\s+/', $selector);
@@ -84,5 +101,6 @@ class CSSContentParser extends Object {
 		}
 		return $xpath;		
 	}
+
 
 }
