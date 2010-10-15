@@ -42,14 +42,18 @@ class MySQLDatabaseConfigurationHelper implements DatabaseConfigurationHelper {
 		);
 	}
 
+	public function getDatabaseVersion($databaseConfig) {
+		$conn = @mysql_connect($databaseConfig['server'], null, null);
+		return @mysql_get_server_info($conn);
+	}
+
 	/**
 	 * Ensure that the MySQL server version is at least 5.0.
 	 * @param array $databaseConfig Associative array of db configuration, e.g. "server", "username" etc
 	 * @return array Result - e.g. array('success' => true, 'error' => 'details of error')
 	 */
 	public function requireDatabaseVersion($databaseConfig) {
-		$conn = @mysql_connect($databaseConfig['server'], null, null);
-		$version = @mysql_get_server_info($conn);
+		$version = $this->getDatabaseVersion($databaseConfig);
 		$success = false;
 		$error = '';
 		if($version) {
