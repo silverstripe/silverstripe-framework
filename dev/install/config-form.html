@@ -255,12 +255,14 @@
 									</label><p>
 								
 								<?php if($alreadyInstalled) { ?>
-									<p class="warning">
-										<strong>Note:</strong> It seems as though SilverStripe is already installed here.<br />
-										If you ask me to install, I will overwrite the <strong>.htaccess</strong> and <strong>mysite/_config.php</strong> files. 
-										<br />
-									<input type="checkbox" id="ReIn" name="force_reinstall"><label for="ReIn">That's okay, please re-install SilverStripe and overwrite these files.</label>
-									</p>
+									<div class="warning">
+										<p><strong>Note:</strong> SilverStripe is already installed here.<br>
+										Installing again will overwrite the <strong><?php echo $webserverConfigFile ?></strong> and <strong>mysite/_config.php</strong> files.</p>
+										<div class="warning_actions">
+											<input type="checkbox" id="reinstall_confirmation" name="force_reinstall">
+											<label for="reinstall_confirmation">That's okay, please re-install SilverStripe and overwrite these files.</label>
+										</div>
+									</div>
 								<?php } ?>
 								
 								<p>

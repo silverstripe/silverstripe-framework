@@ -57,6 +57,13 @@ h4.sectionHeading {
 		margin-left: 5px;
 		color: #cb6a1c
 	}
+	.warning p {
+		font-size: 12px;
+		margin-bottom: 0;
+	}
+	.warning .warning_actions {
+		margin: 5px 0 5px 0;
+	}
 .good {
 	padding: 0.5em;
 	background-color: #e2fee1;
