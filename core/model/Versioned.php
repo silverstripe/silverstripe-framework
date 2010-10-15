@@ -618,10 +618,12 @@ class Versioned extends DataObjectDecorator {
 			Versioned::reading_stage("Live");
 		}
 
-		if(Versioned::current_stage() == 'Live') {
-			Cookie::set('bypassStaticCache', null, 0);
-		} else {
-			Cookie::set('bypassStaticCache', '1', 0);
+		if(!headers_sent()) {
+			if(Versioned::current_stage() == 'Live') {
+				Cookie::set('bypassStaticCache', null, 0);
+			} else {
+				Cookie::set('bypassStaticCache', '1', 0);
+			}
 		}
 	}
 	
