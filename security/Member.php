@@ -782,16 +782,18 @@ class Member extends DataObject {
 	 * @return String SQL
 	 */
 	static function get_title_sql($tableName = 'Member') {
-	
+		// This should be abstracted to SSDatabase concatOperator or similar.
+		$op = (DB::getConn() instanceof MSSQLDatabase) ? " + " : " || ";
+
 		if (self::$title_format) {
 			$columnsWithTablename = array();
 			foreach(self::$title_format['columns'] as $column) {
 				$columnsWithTablename[] = "\"$tableName\".\"$column\"";
 			}
 		
-			return "(".join(" || '".self::$title_format['sep']."' || ", $columnsWithTablename).")";
+			return "(".join(" $op '".self::$title_format['sep']."' $op ", $columnsWithTablename).")";
 		} else {
-			return "(\"$tableName\".\"Surname\" || ' ' || \"$tableName\".\"FirstName\")";
+			return "(\"$tableName\".\"Surname\" $op ' ' $op \"$tableName\".\"FirstName\")";
 		}
 	}
 
