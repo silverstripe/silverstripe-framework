@@ -42,9 +42,24 @@ class MySQLDatabaseConfigurationHelper implements DatabaseConfigurationHelper {
 		);
 	}
 
+	/**
+	 * Get the database version for the MySQL connection, given the
+	 * database parameters.
+	 * @return mixed string Version number as string | boolean FALSE on failure
+	 */
 	public function getDatabaseVersion($databaseConfig) {
-		$conn = @mysql_connect($databaseConfig['server'], null, null);
-		return @mysql_get_server_info($conn);
+		$conn = @mysql_connect($databaseConfig['server'], $databaseConfig['username'], $databaseConfig['password']);
+		if(!$conn) return false;
+		$version = @mysql_get_server_info($conn);
+		if(!$version) {
+			// fallback to trying a query
+			$result = @mysql_query("SELECT VERSION()");
+			$row = @mysql_fetch_array($result);
+			if($row && isset($row[0])) {
+				$version = trim($row[0]);
+			}
+		}
+		return $version;
 	}
 
 	/**
