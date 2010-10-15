@@ -389,15 +389,10 @@ class File extends DataObject {
 
 		// If it's changed, check for duplicates
 		if($oldName && $oldName != $name) {
-			if($dotPos = strpos($name, '.')) {
-				$base = substr($name,0,$dotPos);
-				$ext = substr($name,$dotPos);
-			} else {
-				$base = $name;
-				$ext = "";
-			}
+			$base = pathinfo($name, PATHINFO_BASENAME);
+			$ext = self::get_file_extension($name);
 			$suffix = 1;
-			while(DataObject::get_one("File", "\"Name\" = '" . addslashes($name) . "' AND \"ParentID\" = " . (int)$this->ParentID)) {
+			while(DataObject::get_one("File", "\"Name\" = '" . Convert::raw2sql($name) . "' AND \"ParentID\" = " . (int)$this->ParentID)) {
 				$suffix++;
 				$name = "$base-$suffix$ext";
 			}
@@ -440,15 +435,15 @@ class File extends DataObject {
 				$to = Director::getAbsFile($newFilename);
 
 				// Error checking
-				if(!file_exists($from)) user_error("Cannot move $oldFilename to $newFilename - $oldFilename doesn't exist", E_USER_WARNING);
-				else if(!file_exists(dirname($to))) user_error("Cannot move $oldFilename to $newFilename - " . dirname($newFilename) . " doesn't exist", E_USER_WARNING);
-				else if(!rename($from, $to)) user_error("Cannot move $oldFilename to $newFilename", E_USER_WARNING);
-
-				else $this->updateLinks($oldFilename, $newFilename);
-
-			} else {
-				$this->updateLinks($oldFilename, $newFilename);
+				if(!file_exists($from)) throw new Exception("Cannot move $oldFilename to $newFilename - $oldFilename doesn't exist");
+				if(!file_exists(dirname($to))) throw new Exception("Cannot move $oldFilename to $newFilename - " . dirname($newFilename) . " doesn't exist");
+								
+				// Rename file
+				$success = rename($from, $to);
+				if(!$success) throw new Exception("Cannot move $oldFilename to $newFilename");
 			}
+			
+			$this->updateLinks($oldFilename, $newFilename);
 		} else {
 			// If the old file doesn't exist, maybe it's already been renamed.
 			if(file_exists(Director::getAbsFile($newFilename))) $this->updateLinks($oldFilename, $newFilename);
