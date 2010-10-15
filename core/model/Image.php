@@ -333,7 +333,7 @@ class Image extends File {
 		$methodNames = $this->allMethodNames();
 		$cachedFiles = array();
 		
-		$folder = $this->ParentID ? $this->Parent()->Filename : 'assets/';
+		$folder = $this->ParentID ? $this->Parent()->Filename : ASSETS_DIR . '/';
 		$cacheDir = Director::getAbsFile($folder . '_resampled/');
 		
 		if(is_dir($cacheDir)) {

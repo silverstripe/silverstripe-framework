@@ -395,11 +395,10 @@ class Requirements_Backend {
 	public $combine_js_with_jsmin = true;
 
 	/**
-	 * By default, combined files are stored in assets/_combinedfiles.
+	 * @var string By default, combined files are stored in assets/_combinedfiles.
 	 * Set this by calling Requirements::set_combined_files_folder()
-	 * @var string
 	 */
-	protected $combinedFilesFolder = 'assets/_combinedfiles';
+	protected $combinedFilesFolder = null;
 
 	/**
 	 * Put all javascript includes at the bottom of the template
@@ -424,8 +423,18 @@ class Requirements_Backend {
 		return $this->combined_files_enabled;
 	}
 
+	/**
+	 * @param String $folder
+	 */
 	function setCombinedFilesFolder($folder) {
 		$this->combinedFilesFolder = $folder;
+	}
+	
+	/**
+	 * @return String Folder relative to the webroot
+	 */
+	function getCombinedFilesFolder() {
+		return ($this->combinedFilesFolder) ? $this->combinedFilesFolder : ASSETS_DIR . '/_combinedfiles';
 	}
 	
 	/**
@@ -849,7 +858,7 @@ class Requirements_Backend {
 	 */
 	function delete_combined_files($combinedFileName = null) {
 		$combinedFiles = ($combinedFileName) ? array($combinedFileName => null) : $this->combine_files;
-		$combinedFolder = ($this->combinedFilesFolder) ? (Director::baseFolder() . '/' . $this->combinedFilesFolder) : Director::baseFolder();
+		$combinedFolder = ($this->getCombinedFilesFolder()) ? (Director::baseFolder() . '/' . $this->combinedFilesFolder) : Director::baseFolder();
 		foreach($combinedFiles as $combinedFile => $sourceItems) {
 			$filePath = $combinedFolder . '/' . $combinedFile;
 			if(file_exists($filePath)) {
@@ -889,7 +898,7 @@ class Requirements_Backend {
 		}
 
 		// Work out the relative URL for the combined files from the base folder
-		$combinedFilesFolder = ($this->combinedFilesFolder) ? ($this->combinedFilesFolder . '/') : '';
+		$combinedFilesFolder = ($this->getCombinedFilesFolder()) ? ($this->getCombinedFilesFolder() . '/') : '';
 
 		// Figure out which ones apply to this pageview
 		$combinedFiles = array();
@@ -917,7 +926,7 @@ class Requirements_Backend {
 		$base = Director::baseFolder() . '/';
 		foreach(array_diff_key($combinedFiles, $this->blocked) as $combinedFile => $dummy) {
 			$fileList = $this->combine_files[$combinedFile];
-			$combinedFilePath = $base . $this->combinedFilesFolder . '/' . $combinedFile;
+			$combinedFilePath = $base . $combinedFilesFolder . '/' . $combinedFile;
 
 
 			// Make the folder if necessary

@@ -219,8 +219,8 @@ class ManifestBuilder {
 
 				// Skip certain directories
 				if($filename[0] == '.') continue;
-				if($filename == 'themes') continue;
-				if($filename == 'assets') continue;
+				if($filename == THEMES_DIR) continue;
+				if($filename == ASSETS_DIR) continue;
 				if(in_array($filename, $excludedFolders)) continue;
 
 				if(@is_dir("$baseDir/$filename") &&
@@ -246,7 +246,7 @@ class ManifestBuilder {
 			$themeDirs = self::get_themes("$baseDir/themes", true);
 			foreach($themeDirs as $themeDir) {
 				$themeName = strtok($themeDir, '_');
-				ManifestBuilder::getTemplateManifest($baseDir, "themes/$themeDir", $excludedFolders, $templateManifest, $cssManifest, $themeName);
+				ManifestBuilder::getTemplateManifest($baseDir, THEMES_DIR . "/$themeDir", $excludedFolders, $templateManifest, $cssManifest, $themeName);
 			}
 		}
 
