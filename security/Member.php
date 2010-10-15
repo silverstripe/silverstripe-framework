@@ -636,7 +636,7 @@ class Member extends DataObject {
 		// The test on $this->ID is used for when records are initially created.
 		// Note that this only works with cleartext passwords, as we can't rehash
 		// existing passwords.
-		if(!$this->ID || $this->isChanged('Password')) {
+		if((!$this->ID && $this->Password) || $this->isChanged('Password')) {
 			// Password was changed: encrypt the password according the settings
 			$encryption_details = Security::encrypt_password(
 				$this->Password, // this is assumed to be cleartext
@@ -644,8 +644,9 @@ class Member extends DataObject {
 				$this->PasswordEncryption,
 				$this
 			);
+
 			// Overwrite the Password property with the hashed value
-			$this->Password = $encryption_details['password'];
+;			$this->Password = $encryption_details['password'];
 			$this->Salt = $encryption_details['salt'];
 			$this->PasswordEncryption = $encryption_details['algorithm'];
 

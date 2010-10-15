@@ -52,13 +52,20 @@ class MemberTest extends FunctionalTest {
 	}
 	
 	function testDefaultPasswordEncryptionOnMember() {
-		$member = new Member();
-		$member->Password = 'mypassword';
-		$member->write();
+		$memberWithPassword = new Member();
+		$memberWithPassword->Password = 'mypassword';
+		$memberWithPassword->write();
 		$this->assertEquals(
-			$member->PasswordEncryption, 
+			$memberWithPassword->PasswordEncryption, 
 			Security::get_password_encryption_algorithm(),
-			'Password encryption is set for new member records on first write'
+			'Password encryption is set for new member records on first write (with setting "Password")'
+		);
+		
+		$memberNoPassword = new Member();
+		$memberNoPassword->write();
+		$this->assertNull(
+			$memberNoPassword->PasswordEncryption,
+			'Password encryption is not set for new member records on first write, when not setting a "Password")'
 		);
 	}
 	
@@ -68,8 +75,9 @@ class MemberTest extends FunctionalTest {
 		$member->PasswordEncryption = 'sha1_v2.4';
 		$member->write();
 		
+		$origAlgo = Security::get_password_encryption_algorithm();
 		Security::set_password_encryption_algorithm('none');
-
+	
 		$member->Password = 'mynewpassword';
 		$member->write();
 		
@@ -79,6 +87,8 @@ class MemberTest extends FunctionalTest {
 		);
 		$result = $member->checkPassword('mynewpassword');
 		$this->assertTrue($result->valid());
+		
+		Security::set_password_encryption_algorithm($origAlgo);
 	}
 	
 	function testSetPassword() {
