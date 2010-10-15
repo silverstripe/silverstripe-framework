@@ -1,8 +1,14 @@
+Folder:
+    folder1:
+        Filename: assets/ImageTest
 Image:
     imageWithTitle:
         Title: This is a image Title
-        Filename: sapphire/tests/model/testimages/test_image.png
+        Filename: assets/ImageTest/test_image.png
+        Parent: =>Folder.folder1
     imageWithoutTitle:
-        Filename: sapphire/tests/model/testimages/test_image.png
+        Filename: assets/ImageTest/test_image.png
+        Parent: =>Folder.folder1
     imageWithoutTitleContainingDots: 
-        Filename: sapphire/tests/model/testimages/test.image.with.dots.png
+        Filename: assets/ImageTest/test.image.with.dots.png
+        Parent: =>Folder.folder1
