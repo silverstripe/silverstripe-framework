@@ -1,6 +1,7 @@
 <?php
 /**
  * A collection of static methods for manipulating the filesystem. 
+ * 
  * @package sapphire
  * @subpackage filesystem
  */
@@ -13,7 +14,12 @@ class Filesystem extends Object {
 	protected static $cache_folderModTime;
 	
 	/**
-	 * Create a folder, recursively
+	 * Create a folder on the filesystem, recursively.
+	 * Uses {@link Filesystem::$folder_create_mask} to set filesystem permissions.
+	 * Use {@link Folder::findOrMake()} to create a {@link Folder} database
+	 * record automatically.
+	 * 
+	 * @param String $folder Absolute folder path
 	 */
 	static function makeFolder($folder) {
 		if(!file_exists($base = dirname($folder))) self::makeFolder($base);
@@ -21,8 +27,10 @@ class Filesystem extends Object {
 	}
 	
 	/**
-	 * Remove a directory and all subdirectories and files
-	 * @param $contentsOnly If this is true then the contents of the folder will be removed but not the folder itself
+	 * Remove a directory and all subdirectories and files.
+	 * 
+	 * @param String $folder Absolute folder path
+	 * @param Boolean $contentsOnly If this is true then the contents of the folder will be removed but not the folder itself
 	 */
 	static function removeFolder( $folder, $contentsOnly = false ) {
 		
@@ -58,10 +66,12 @@ class Filesystem extends Object {
 		echo "<p>Done!";
 	}
 	
-	/*
+	/**
 	 * Return the most recent modification time of anything in the folder.
+	 * 
 	 * @param $folder The folder, relative to the site root
 	 * @param $extensionList An option array of file extensions to limit the search to
+	 * @return String Same as filemtime() format.
 	 */
 	static function folderModTime($folder, $extensionList = null, $recursiveCall = false) {
 		//$cacheID = $folder . ',' . implode(',', $extensionList);
@@ -93,7 +103,10 @@ class Filesystem extends Object {
 	
 	/**
 	 * Returns true if the given filename is an absolute file reference.
-	 * Works on Linux and Windows
+	 * Works on Linux and Windows.
+	 * 
+	 * @param String $filename Absolute or relative filename, with or without path.
+	 * @return Boolean
 	 */
 	static function isAbsolute($filename) {
 		if($_ENV['OS'] == "Windows_NT" || $_SERVER['WINDIR']) return $filename[1] == ':' && $filename[2] == '/';
@@ -106,6 +119,9 @@ class Filesystem extends Object {
 	 * If a Folder record ID is given, all of that folder's children will be synchronised.
 	 * If the given Folder ID isn't found, or not specified at all, then everything will
 	 * be synchronised from the root folder (singleton Folder).
+	 * 
+	 * See {@link File->updateFilesystem()} to sync properties of a single database record 
+	 * back to the equivalent filesystem record.
 	 * 
 	 * @param int $folderID Folder ID to sync along with all it's children
 	 */
