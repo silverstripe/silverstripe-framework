@@ -2,27 +2,33 @@
 /**
  * Base-class for storage and retrieval of translated entities.
  * 
- * Usage PHP:
+ * Please see the {@link Translatable} extension for managing translations of database-content.
+ * 
+ * <b>Usage</b>
+ * 
+ * PHP:
  * <code>
  * _t('MyNamespace.MYENTITY', 'My default natural language value');
  * _t('MyNamespace.MYENTITY', 'My default natural language value', PR_MEDIUM, 'My explanatory context');
  * sprintf(_t('MyNamespace.MYENTITY', 'Counting %s things'), 42);
  * </code>
  * 
- * Usage Templates:
+ * Templates:
  * <code>
  * <% _t('MyNamespace.MYENTITY', 'My default natural language value') %>
  * <% sprintf(_t('MyNamespace.MYENTITY','Counting %s things'),$ThingsCount) %>
  * </code>
  *
- * Usage Javascript (see sapphire/javascript/i18n.js):
+ * Javascript (see sapphire/javascript/i18n.js):
  * <code>
  * ss.i18n._t('MyEntity.MyNamespace','My default natural language value');
  * </code>
  * 
  * File-based i18n-translations always have a "locale" (e.g. 'en_US').
- * Common language names (e.g. 'en') are mainly used in {Translatable} for
+ * Common language names (e.g. 'en') are mainly used in {@link Translatable} for
  * database-entities.
+ * 
+ * <b>Text Collection</b>
  * 
  * Features a "textcollector-mode" that parses all files with a certain extension
  * (currently *.php and *.ss) for new translatable strings. Textcollector will write
@@ -37,13 +43,14 @@
  * on the entities. So an entity stored in $lang['en_US']['AssetAdmin']['DETAILSTAB'] has to
  * in the language file cms/lang/en_US.php, as the referenced file (AssetAdmin.php) is stored
  * in the "cms" module.
- *
- * Please see the {Translatable} DataObjectDecorator for managing translations of database-content.
+ * 
+ * <b>Locales</b>
  *
  * For the i18n class, a "locale" consists of a language code plus a region code separated by an underscore, 
  * for example "de_AT" for German language ("de") in the region Austria ("AT").
  * See http://www.w3.org/International/articles/language-tags/ for a detailed description.
- *
+ * 
+ * @see http://doc.silverstripe.org/i18n
  * @see http://www.w3.org/TR/i18n-html-tech-lang
  *
  * @author Bernat Foj Capell <bernat@silverstripe.com>
@@ -58,8 +65,6 @@ class i18n extends Object {
 	protected static $current_locale = '';
 	
 	/**
-	 * This is the locale in which generated language files are (we assume US English)
-	 *
 	 * @var string
 	 */
 	protected static $default_locale = 'en_US';
@@ -1702,6 +1707,8 @@ class i18n extends Object {
 	}
 	
 	/**
+	 * This is the locale in which generated language files are (we assume US English with "en_US" by default).
+	 * 
 	 * @return String
 	 */
 	static function default_locale() {
