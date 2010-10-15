@@ -9,6 +9,10 @@
 class SiteTreePermissionsTest extends FunctionalTest {
 	static $fixture_file = "sapphire/tests/SiteTreePermissionsTest.yml";
 	
+	protected $illegalExtensions = array(
+		'SiteTree' => array('SiteTreeSubsites')
+	);
+	
 	static function set_up_once() {
 		SiteTreeTest::set_up_once();
 
