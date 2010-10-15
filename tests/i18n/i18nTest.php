@@ -213,6 +213,9 @@ class i18nTest extends SapphireTest {
 	function testRegisteredPlugin() {
 		global $lang;
 
+		// save lang state, if we don't do this we may break other tests
+		$oldLang = $lang;
+
 		$lang = array(); // clear translations
 		i18n::register_plugin("testPlugin", array("i18nTest", "translationTestPlugin"));
 
@@ -226,6 +229,8 @@ class i18nTest extends SapphireTest {
 		i18n::set_locale('de_DE');
 		$this->assertEquals(_t("i18nTestProvider.foo"), "bar_de");
 		i18n::unregister_plugin("testTranslator");
+
+		$lang = $oldLang;
 	}
 
 	static function translationTestPlugin($locale) {
