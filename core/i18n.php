@@ -1411,7 +1411,7 @@ class i18n extends Object {
 		
 		// get current locale (either default or user preference)
 		$locale = i18n::get_locale();
-		
+
 		// parse $entity into its parts
 		$entityParts = explode('.',$entity);
 		$realEntity = array_pop($entityParts);
@@ -1746,25 +1746,38 @@ class i18n extends Object {
 	 * Includes all available language files for a certain defined locale
 	 * 
 	 * @param string $locale All resources from any module in locale $locale will be loaded
+	 * @param boolean $load_plugins		If true (default), load extra translations from registered plugins
+	 * @param boolean $force_load		If true (not default), we force the inclusion. Generally this should be off
+	 * 									for performance, but enabling this is useful for interfaces like
+	 * 									CustomTranslationAdmin which need to load more than the usual locales,
+	 * 									and may need to reload them. 
 	 */
-	static function include_by_locale($locale) {
+	static function include_by_locale($locale, $load_plugins = true, $force_load = false) {
+		global $lang;
+
 		$base = Director::baseFolder();
 		$topLevel = scandir($base);
+
 		foreach($topLevel as $module) {
-			//$topLevel is the website root, some server is configurated not to allow excess website root's parent level
-			//and we don't need to check website root's parent level and websit root level for its lang folder, so we skip these 2 levels checking.
+			// $topLevel is the website root, some servers are configured not to allow excess website root's parent level
+			// and we don't need to check website root's parent level and website root level for its lang folder, so
+			// we skip these 2 levels checking.
 			if($module[0] == '.') continue;
 
 			if (
 				is_dir("$base/$module")
 				&& file_exists("$base/$module/_config.php") 
 			  && file_exists($file = "$base/$module/lang/$locale.php")
-			) { 
-				include_once($file);
+			) {
+				if ($force_load) include($file);
+				else include_once($file);
 			}
 		}
+
+		// Finally, load any translations from registered plugins
+		if ($load_plugins) self::plugins_load($locale);
 	}
-	
+
 	/**
 	 * Given a class name (a "locale namespace"), will search for its module and, if available,
 	 * will load the resources for the currently defined locale.
@@ -1810,6 +1823,92 @@ class i18n extends Object {
 		}
 		echo "Language {$this->urlParams['ID']} successfully removed";
 	}
-	
+
+	/**
+	 * This variable holds translation plugins that are invoked on a call to _t. It is a two dimensional array,
+	 * priority the first dimension and name the second, mapping to the callback.
+	 * Translations from lower priority plugins are used first, and callback is a callback for call_user_func_array.
+	 *
+	 * Callback functions are passed one parameter:
+	 * - locale string
+	 * The callback function should return an array that can be merged with $lang[$locale], overriding values read
+	 * from the language file.
+	 *
+	 * @var array
+	 */
+	private static $plugins = array();
+
+	/**
+	 * Register a named translation plug-in function.
+	 * Plug-ins are assumed to be registered before any call to _t. If registered after a call to _t
+	 * for a given local, it will not be called.
+	 * @static
+	 * @throws Exception
+	 * @param  $name		String		A unique name for the translation plug-in. If the plug-in is already registered,
+	 * 									it is replaced, including if its a different priority.
+	 * @param  $callback				A callback function as given to call_user_func_array.
+	 * @param int $priority				An integer priority, default 10.
+	 * @return void
+	 */
+	static function register_plugin($name, $callback, $priority = 10) {
+		// Validate
+		if (!is_int($priority)) throw new Exception("register_plugin expects an int priority");
+
+		// Ensure it's not there. If it is, we're replacing it. It may exist in a different priority.
+		self::unregister_plugin($name);
+
+		// Add it.
+		self::$plugins[$priority][$name] = $callback;
+	}
+
+	/**
+	 * Unregister a plugin by name.
+	 * @static
+	 * @param  $name	String		Name of previously registered plugin
+	 * @return Boolean				Returns true if remove, false if not.
+	 */
+	static function unregister_plugin($name) {
+		foreach (self::$plugins as $priority => $plugins) {
+			if (isset($plugins[$name])) unset(self::$plugins[$priority][$name]);
+		}
+	}
+
+	/**
+	 * Load any translations from registered plugins. Merges them directly into $lang.
+	 * @static
+	 * @param  $local
+	 * @param  $value
+	 * @return void
+	 */
+	static function plugins_load($locale) {
+		// sort the plugins by lowest priority (highest value) first, as each one replaces translations of the provider
+		// before it.
+		krsort(self::$plugins);
+		foreach (self::$plugins as $priority => $plugins) {
+			foreach ($plugins as $name => $callback) {
+				self::merge_locale_data($locale, call_user_func_array($callback, array($locale)));
+			}
+		}
+	}
+
+	/**
+	 * Merge an extra of language translations into $lang[$locale]. We'd use array_merge_recursive, except
+	 * it doesn't work for translations that specify priorities and comments, because they are indexed by number.
+	 * @static
+	 * @param $locale String		The locale we are merging into
+	 * @param $extra Array			An array of [locale][class][entity]=> translation, keyed on entity, that are to be
+	 * 								merged for this locale.
+	 * @return void
+	 */
+	static function merge_locale_data($locale, $extra) {
+		global $lang;
+		if (!$extra || count($extra) == 0) return;
+		foreach ($extra[$locale] as $class => $entities) {
+			foreach ($entities as $entity => $translation) {
+				$lang[$locale][$class][$entity] = $translation;
+			}
+		}
+	}
 }
+
 ?>
