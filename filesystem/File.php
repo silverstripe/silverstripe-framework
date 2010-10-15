@@ -501,7 +501,7 @@ class File extends DataObject {
 	 * @return string
 	 */
 	function getAbsoluteURL() {
-		return Director::absoluteBaseURL() . $this->getFilename();
+		return $this->getFullPath();
 	}
 	
 	/**
@@ -515,7 +515,9 @@ class File extends DataObject {
 	}
 
 	/**
-	 * Return the last 50 characters of the URL
+	 * Return the last 50 characters of the URL.
+	 * 
+	 * @deprecated 2.4
 	 */
 	function getLinkedURL() {
 		return "$this->Name";
