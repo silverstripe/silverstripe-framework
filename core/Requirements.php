@@ -834,7 +834,7 @@ class Requirements_Backend {
 		// duplicate check
 		foreach($this->combine_files as $_combinedFileName => $_files) {
 			$duplicates = array_intersect($_files, $files);
-			if($duplicates) {
+			if($duplicates && $combinedFileName != $_combinedFileName) {
 				user_error("Requirements_Backend::combine_files(): Already included files " . implode(',', $duplicates) . " in combined file '{$_combinedFileName}'", E_USER_NOTICE);
 				return false;
 			}
