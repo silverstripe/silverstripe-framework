@@ -143,6 +143,10 @@ class Form extends RequestHandler {
 	 */
 	function __construct($controller, $name, FieldSet $fields, FieldSet $actions, $validator = null) {
 		parent::__construct();
+		
+		if(!$fields instanceof FieldSet) throw new InvalidArgumentException('$fields must be a valid FieldSet instance');
+		if(!$actions instanceof FieldSet) throw new InvalidArgumentException('$fields must be a valid FieldSet instance');
+		if($validator && !$validator instanceof Validator) throw new InvalidArgumentException('$validator must be a Valdidator instance');
 
 		$fields->setForm($this);
 		$actions->setForm($this);
