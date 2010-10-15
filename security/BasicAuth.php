@@ -24,23 +24,25 @@ class BasicAuth {
 	 * 
 	 * @param string $realm
 	 * @param string|array $permissionCode
+	 * @param boolean $tryUsingSessionLogin If true, then the method with authenticate against the
+	 * session log-in if those credentials are disabled.
 	 * @return Member $member 
 	 */
-	static function requireLogin($realm, $permissionCode) {
+	static function requireLogin($realm, $permissionCode, $tryUsingSessionLogin = true) {
 		if(!Security::database_is_ready() || Director::is_cli()) return true;
-		$authenticated = false;
 		
+		$member = null;
 		if(isset($_SERVER['PHP_AUTH_USER']) && isset($_SERVER['PHP_AUTH_PW'])) {
 			$member = MemberAuthenticator::authenticate(array(
 				'Email' => $_SERVER['PHP_AUTH_USER'], 
 				'Password' => $_SERVER['PHP_AUTH_PW'],
 			), null);
-			
-			if($member || Member::currentUser()) $authenticated = true;
 		}
 		
+		if(!$member && $tryUsingSessionLogin) $member = Member::currentUser();
+		
 		// If we've failed the authentication mechanism, then show the login form
-		if(!$authenticated) {
+		if(!$member) {
 			header("WWW-Authenticate: Basic realm=\"$realm\"");
 			header($_SERVER['SERVER_PROTOCOL'] . ' 401 Unauthorized');
 
@@ -107,7 +109,9 @@ class BasicAuth {
 	 */
 	static function protect_site_if_necessary() {
 		if(self::$entire_site_protected) {
-			self::requireLogin("SilverStripe test website. Use your CMS login.", "ADMIN");
+			// The test-site protection should ignore the session log-in; otherwise it's difficult
+			// to test the log-in features of your site
+			self::requireLogin("SilverStripe test website. Use your CMS login.", "ADMIN", false);
 		}
 	}
 
