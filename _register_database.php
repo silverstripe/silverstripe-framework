@@ -4,7 +4,7 @@
 DatabaseAdapterRegistry::register(
 	array(
 		'class' => 'MySQLDatabase',
-		'title' => 'MySQL 4.1+',
+		'title' => 'MySQL 5.0+',
 		'helperPath' => 'sapphire/dev/install/MySQLDatabaseConfigurationHelper.php',
 		'supported' => function_exists('mysql_connect'),
 	)
