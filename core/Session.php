@@ -10,7 +10,69 @@
  * each with their own session.
  * 
  * The instance object is basically just a way of manipulating a set of nested maps, and isn't specific to session data.
- * This class is currently really basic and could do with a more well-thought-out implementation
+ * 
+ * <b>Saving Data</b>
+ * 
+ * You can write a value to a users session from your PHP code using the static function {@link Session::set()}. You can add this line in any function or file you wish to save the value.
+ * 
+ * <code>
+ * 	Session::set('MyValue', 6);
+ * </code>
+ * 
+ * Saves the value of "6" to the MyValue session data. You can also save arrays or serialized objects in session (but note there may be size restrictions as to how much you can save)
+ * 
+ * <code>
+ * 	// save a variable
+ * 	$var = 1;
+ * 	Session::set('MyVar', $var);
+ * 
+ * 	// saves an array
+ * 	Session::set('MyArrayOfValues', array('1','2','3'));
+ * 
+ * 	// saves an object (you'll have to unserialize it back)
+ * 	$object = new Object();
+ * 
+ * 	Session::set('MyObject', serialize($object));
+ * </code>
+ * 
+ * <b>Accessing Data</b>
+ * 
+ * Once you have saved a value to the Session you can access it by using the {@link Session::get()} function. 
+ * Like the {@link Session::set()} function you can use this anywhere in your PHP files.
+ * 
+ * The values in the comments are the values stored from the previous example.
+ * 
+ * <code>
+ * function bar() {
+ * 	$value = Session::get('MyValue'); // $value = 6
+ * 	$var   = Session::get('MyVar'); // $var = 1 
+ * 	$array = Session::get('MyArrayOfValues'); // $array = array(1,2,3)
+ * 	$object = Session::get('MyObject', unserialize($object)); // $object = Object()
+ * }
+ * </code>
+ * 
+ * You can also get all the values in the session at once. This is useful for debugging.
+ * 
+ * <code>
+ * Session::getAll(); // returns an array of all the session values.
+ * </code>
+ * 
+ * <b>Clearing Data</b>
+ * 
+ * Once you have accessed a value from the Session it doesn't automatically wipe the value from the Session, you have to specifically remove it. To clear a value you can either delete 1 session value by the name that you saved it
+ * 
+ * <code>
+ * Session::clear('MyValue'); // myvalue is no longer 6.
+ * </code>
+ * 
+ * Or you can clear every single value in the session at once. Note SilverStripe stores some of its own session data including form and page comment information. None of this is vital but clear_all will clear everything.
+ * 
+ * <code>
+ * 	Session::clearAll();
+ * </code>
+ * 
+ * @see Cookie
+ * @todo This class is currently really basic and could do with a more well-thought-out implementation.
  *
  * @package sapphire
  * @subpackage control

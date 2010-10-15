@@ -1,6 +1,22 @@
 <?php
 /**
  * Multi-line listbox field, created from a <select> tag.
+ * 
+ * <b>Usage</b>
+ * 
+ * <code>
+ * new ListboxField(
+ *    $name = "pickanumber",
+ *    $title = "Pick a number",
+ *    $source = array(
+ *       "1" => "one",
+ *       "2" => "two",
+ *       "3" => "three"
+ *    ),
+ *    $value = 1
+ * )
+ * </code> 
+ * 
  * @package forms
  * @subpackage fields-basic
  */

@@ -1,6 +1,73 @@
 <?php
 /**
  * Dropdown field, created from a <select> tag.
+ * 
+ * <b>Setting a $has_one relation</b>
+ * 
+ * Using here an example of an art gallery, with Exhibition pages, 
+ * each of which has a Gallery they belong to.  The Gallery class is also user-defined.
+ * <code>
+ * 	static $has_one = array(
+ * 		'Gallery' => 'Gallery',
+ * 	);
+ * 
+ * 	public function getCMSFields() {
+ * 		$fields = parent::getCMSFields();
+ * 		$galleries = DataObject::get('Gallery');
+ * 		if ($galleries) {
+ * 			$galleries = $galleries->toDropdownMap('ID', 'Title', '(Select one)', true);
+ * 		}
+ * 		$fields->addFieldToTab('Root.Content.Main', new DropdownField('GalleryID', 'Gallery', $galleries), 'Content');
+ * </code>
+ * 
+ * As you see, you need to put "GalleryID", rather than "Gallery" here.
+ * 
+ * <b>Populate with Array</b>
+ * 
+ * Example model defintion:
+ * <code>
+ * class MyObject extends DataObject {
+ *   static $db = array(
+ *     'Country' => "Varchar(100)"
+ *   );
+ * }			
+ * </code>
+ * 
+ * Exampe instantiation:
+ * <code>
+ * new DropdownField(
+ *   'Country',
+ *   'Country',
+ *   array(
+ *     'NZ' => 'New Zealand',
+ *     'US' => 'United States'
+ *     'GEM'=> 'Germany'
+ *   )
+ * );
+ * </code>
+ * 
+ * <b>Populate with Enum-Values</b>
+ * 
+ * You can automatically create a map of possible values from an {@link Enum} database column.
+ * 
+ * Example model definition:
+ * <code>
+ * class MyObject extends DataObject {
+ *   static $db = array(
+ *     'Country' => "Enum('New Zealand,United States,Germany','New Zealand')"
+ *   );
+ * }			
+ * </code>
+ * 
+ * Field construction:
+ * <code>
+ * new DropdownField(
+ *   'Country',
+ *   'Country',
+ *   singleton('MyObject')->dbObject('Country')->enumValues()
+ * );
+ * </code>
+ * 
  * @package forms
  * @subpackage fields-basic
  */

@@ -9,6 +9,31 @@
  * Returns a <select> tag containing all the appropriate <option> tags, with
  * <optgroup> tags around the <option> tags as required.
  * 
+ * <b>Usage</b>
+ * 
+ * <code>
+ * new GroupedDropdownField(
+ *    $name = "dropdown",
+ *    $title = "Simple Grouped Dropdown",
+ *    $source = array(
+ *       "numbers" => array(
+ *       		"1" => "1",
+ *       		"2" => "2",
+ *       		"3" => "3",
+ *       		"4" => "4"
+ *    		),
+ *       "letters" => array(
+ *       		"1" => "A",
+ *       		"2" => "B",
+ *       		"3" => "C",
+ *       		"4" => "D",
+ *       		"5" => "E",
+ *       		"6" => "F"
+ *    		)
+ *    )
+ * )
+ * </code>
+ * 
  * @package forms
  * @subpackage fields-basic
  */

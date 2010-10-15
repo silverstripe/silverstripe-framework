@@ -1,6 +1,18 @@
 <?php
 /**
  * Implements a single tab in a {@link TabSet}.
+ * 
+ * Here is a simple implementation of a Tab. Obviously, you can include as much fields 
+ * inside as you want. A tab can contain other tabs as well.
+ * 
+ * <code>
+ * new Tab(
+ * 	$title='Tab one',
+ * 	new HeaderField("A header"),
+ * 	new LiteralField("Lipsum","Lorem ipsum dolor sit amet enim.")
+ * )
+ * </code>
+ * 
  * @package forms
  * @subpackage fields-structural
  */

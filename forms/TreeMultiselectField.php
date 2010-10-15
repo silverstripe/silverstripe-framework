@@ -1,7 +1,34 @@
 <?php
 /**
  * This formfield represents many-many joins using a tree selector shown in a dropdown styled element
- * which can be added to any form usually in the CMS. 
+ * which can be added to any form usually in the CMS.
+ * 
+ * This form class allows you to represent Many-Many Joins in a handy single field. The field has javascript which generates a AJAX tree of the site structure allowing you to save selected options to a component set on a given {@link DataObject}.
+ * 
+ * <b>Saving</b>
+ * 
+ * This field saves a {@link ComponentSet} object which is present on the {@link DataObject} passed by the form, returned by calling a function with the same name as the field. The Join is updated by running setByIDList on the {@link ComponentSet}
+ * 
+ * <b>Customizing Save Behaviour</b>
+ * 
+ * Before the data is saved, you can modify the ID list sent to the {@link ComponentSet} by specifying a function on the {@link DataObject} called "onChange[fieldname](&items)". This will be passed by reference the IDlist (an array of ID's) from the Treefield to be saved to the component set. 
+ * Returning false on this method will prevent treemultiselect from saving to the {@link ComponentSet} of the given {@link DataObject}
+ * 
+ * <code>
+ * // Called when we try and set the Parents() component set
+ * // by Tree Multiselect Field in the administration.
+ * function onChangeParents(&$items) {
+ *  // This ensures this DataObject can never be a parent of itself
+ * 	if($items){
+ * 		foreach($items as $k => $id){
+ * 			if($id == $this->ID){
+ * 				unset($items[$k]);
+ * 			}
+ * 		}
+ * 	}	
+ * 	return true;
+ * }
+ * </code> 
  * 
  * @package forms
  * @subpackage fields-relational

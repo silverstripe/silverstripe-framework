@@ -1,6 +1,35 @@
 <?php
 /**
  * ComplexTableField with a radio button column, designed to edit a has_one join.
+ * 
+ * This [RelationTable](RelationTable) allows you to show a **1-to-1** or **1-to-many** relation with a group of DataObjects as a (readonly) tabular list (similiar to [ComplexTableField](ComplexTableField)). Its most useful when you want to manage the relationship itself thanks the **radio buttons** present on each line of the table.
+ * 
+ * Moreover, you have the possibility to uncheck a radio button in order to make the relation as null.
+ * 
+ * <b>Usage</b>
+ * 
+ * <code>
+ * $tablefield = new HasOneComplexTableField(
+ *     $this,
+ *     'MyOnlyFruit',
+ *     'Fruit',
+ *     array(
+ * 	'Name' => 'Name',
+ * 	'Color' => 'Color'
+ *     ),
+ *     'getCMSFields_forPopup'
+ * );
+ * </code>
+ * 
+ * **Notice** : You still have different ways to customize the popup window as in the parent-class [ComplexTableField](ComplexTableField).
+ * 
+ * This field is made to manage a **has_one** relation. In the SilverStripe relation between DataObjects, you can use this relation for **1-to-1** and **1-to-many** relations.
+ * By default, a HasOneComplexTableField manages a **1-to-many** relation. If you want to specify that the relation that you manage is a **1-to-1** relation, add this code :
+ * 
+ * <code>
+ * $tablefield->setOneToOne();
+ * </code>
+ * 
  * @package forms
  * @subpackage fields-relational
  */

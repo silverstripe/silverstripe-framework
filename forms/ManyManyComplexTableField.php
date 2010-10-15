@@ -1,6 +1,35 @@
 <?php
 /**
  * Special ComplexTableField for editing a many_many relation.
+ * 
+ * This field  allows you to show a **many-to-many** relation with a group of 
+ * DataObjects as a (readonly) tabular list (similiar to {@link ComplexTableField}). 
+ * Its most useful when you want to manage the relationship itself 
+ * thanks to the check boxes present on each line of the table.
+ * 
+ * See {@link ComplexTableField} for more documentation on the base-class.
+ * See {@link HasManyComplexTableField} for more documentation on the relation table base-class.
+ * 
+ * Note: This class relies on the fact that both sides of the relation have database tables. 
+ * If you are only creating a class as a logical extension (that is, it doesn't have any database fields), 
+ * then you will need to create a dummy static $db array because SilverStripe won't create a database 
+ * table unless needed.
+ * 
+ * <b>Usage</b>
+ * 
+ * <code>
+ * $tablefield = new ManyManyComplexTableField(
+ *     $this,
+ *     'MyFruits',
+ *     'Fruit',
+ *     array(
+ * 	'Name' => 'Name',
+ * 	'Color' => 'Color'
+ *     ),
+ *     'getCMSFields_forPopup'
+ * );
+ * </code>
+ * 
  * @package forms
  * @subpackage fields-relational
  */

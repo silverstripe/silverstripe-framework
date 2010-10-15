@@ -2,6 +2,23 @@
 /**
  * Single action button.
  * The action buttons are <input type="submit"> tags.
+ * 
+ * <b>Usage</b>
+ * 
+ * Upon clicking the button below will redirect the user to doAction under the current controller.
+ * 
+ * <code>
+ * new FormAction (
+ *    // doAction has to be a defined controller member
+ *    $action = "doAction",
+ *    $title = "Submit button"
+ * )
+ * </code>
+ * 
+ * <b>Labels</b>
+ * 
+ * By default, FormAction will use the title as the label for the left margin.  This can look redundant on the form.  If you'd rather have just the button alone with as pictured above try using {@link FormAction_WithoutLabel} instead.
+ * 
  * @package forms
  * @subpackage actions
  */

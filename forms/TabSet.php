@@ -1,8 +1,27 @@
 <?php
 /**
  * Defines a set of tabs in a form.
- * The tabs are build with our standard tabstrip javascript library.  By default, the HTML is
- * generated using FieldHolder.
+ * The tabs are build with our standard tabstrip javascript library.  
+ * By default, the HTML is generated using FieldHolder.
+ * 
+ * <b>Usage</b>
+ * 
+ * <code>
+ * new TabSet(
+ * 	$name = "TheTabSetName",
+ * 	new Tab(
+ * 		$title='Tab one',
+ * 		new HeaderField("A header"),
+ * 		new LiteralField("Lipsum","Lorem ipsum dolor sit amet enim.")
+ * 	),
+ * 	new Tab(
+ * 		$title='Tab two',
+ * 		new HeaderField("A second header"),
+ * 		new LiteralField("Lipsum","Ipsum dolor sit amet enim.")
+ * 	)
+ * )
+ * </code>
+ * 
  * @package forms
  * @subpackage fields-structural
  */

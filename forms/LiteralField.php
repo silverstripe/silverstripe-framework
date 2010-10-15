@@ -2,6 +2,15 @@
 /**
  * This field lets you put an arbitrary piece of HTML into your forms.
  * 
+ * <b>Usage</b>
+ * 
+ * <code>
+ * new LiteralField (
+ *    $name = "literalfield",
+ *    $content = '<b>some bold text</b> and <a href="http://silverstripe.com">a link</a>'
+ * )
+ * </code>
+ * 
  * @package forms
  * @subpackage fields-dataless
  */

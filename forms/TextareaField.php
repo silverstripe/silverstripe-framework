@@ -5,6 +5,18 @@
  * text field. It creates the <textarea> tag in the
  * form HTML.
  * 
+ * <b>Usage</b>
+ * 
+ * <code>
+ * new TextareaField(
+ *    $name = "description",
+ *    $title = "Description",
+ *    $rows = 8,
+ *    $cols = 3,
+ *    $value = "This is the default description"
+ * );
+ * </code>
+ * 
  * @package forms
  * @subpackage fields-basic
  */

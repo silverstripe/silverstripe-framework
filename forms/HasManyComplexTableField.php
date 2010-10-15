@@ -1,6 +1,32 @@
 <?php
 /**
  * ComplexTableField designed to edit a has_many join.
+ * 
+ * This field allows you to show a 1-to-many relation with a group of DataObjects as a (readonly) tabular list. Its most useful when you want to manage the relationship itself thanks the **check boxes** present on each line of the table.
+ * 
+ * Moreover, you can not do any mistake anymore in the relation by checking a DataObject already linked with another of the parent class.
+ * 
+ * See {@link ComplexTableField} for more documentation on the base-class.
+ * 
+ * <b>Usage</b>
+ * 
+ * <code>
+ * $tablefield = new HasManyComplexTableField(
+ *     $this,
+ *     'MyFruits',
+ *     'Fruit',
+ *     array(
+ * 	'Name' => 'Name',
+ * 	'Color' => 'Color'
+ *     ),
+ *     'getCMSFields_forPopup'
+ * );
+ * </code>
+ * 
+ * Notice: You still have different ways to customize the popup window as in the parent-class {@link ComplexTableField}.
+ * 
+ * @see http://doc.silverstripe.org/tutorial/5-dataobject-relationship-management
+ * 
  * @package forms
  * @subpackage fields-relational
  */

@@ -29,7 +29,8 @@
  * }
  * </code>
  * 
- * Supported operations:
+ * <b>Supported operations</b>
+ * 
  *  - GET /api/v1/(ClassName)/(ID) - gets a database record
  *  - GET /api/v1/(ClassName)/(ID)/(Relation) - get all of the records linked to this database record by the given reatlion
  *  - GET /api/v1/(ClassName)?(Field)=(Val)&(Field)=(Val) - searches for matching database records
@@ -43,17 +44,22 @@
  *
  *  - POST /api/v1/(ClassName)/(ID)/(MethodName) - executes a method on the given object (e.g, publish)
  * 
+ * <b>Search</b>
+ * 
  * You can trigger searches based on the fields specified on {@link DataObject::searchable_fields} and passed
  * through {@link DataObject::getDefaultSearchContext()}. Just add a key-value pair with the search-term
  * to the url, e.g. /api/v1/(ClassName)/?Title=mytitle.
  * 
- * Other url-modifiers:
+ * <b>Other url-modifiers</b>
+ * 
  * - &limit=<numeric>: Limit the result set
  * - &relationdepth=<numeric>: Displays links to existing has-one and has-many relationships to a certain depth (Default: 1)
  * - &fields=<string>: Comma-separated list of fields on the output object (defaults to all database-columns).
  *   Handy to limit output for bandwidth and performance reasons.
  * - &sort=<myfield>&dir=<asc|desc>
  * - &add_fields=<string>: Comma-separated list of additional fields, for example dynamic getters.
+ * 
+ * <b>Access control</b>
  *
  * Access control is implemented through the usual Member system with Basicauth authentication only.
  * By default, you have to bear the ADMIN permission to retrieve or send any data.
