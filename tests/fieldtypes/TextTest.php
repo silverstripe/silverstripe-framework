@@ -107,8 +107,14 @@ class TextTest extends SapphireTest {
 	function testContextSummary() {
 		$testString1 = '<p>This is some text. It is a test</p>';
 		$testKeywords1 = 'test';
+		
 		$testString2 = '<p>This is some test text. Test test what if you have multiple keywords.</p>';
 		$testKeywords2 = 'some test';
+		
+		$testString3 = '<p>A dog ate a cat while looking at a Foobar</p>';
+		$testKeyword3 = 'a';
+		$testKeyword3a = 'ate';
+
 		$textObj = DBField::create('Text', $testString1, 'Text');
 		
 		$this->assertEquals(
@@ -122,5 +128,20 @@ class TextTest extends SapphireTest {
 			'This is <span class="highlight">some</span> <span class="highlight">test</span> text. <span class="highlight">test</span> <span class="highlight">test</span> what if you have...',
 			$textObj->ContextSummary(50, $testKeywords2)
 		);
+		
+		$textObj->setValue($testString3);
+		
+		// test that it does not highlight too much (eg every a)
+		$this->assertEquals(
+			'A dog ate a cat while looking at a Foobar',
+			$textObj->ContextSummary(100, $testKeyword3)
+		);
+		
+		// it should highlight 3 letters or more.
+		$this->assertEquals(
+			'A dog <span class="highlight">ate</span> a cat while looking at a Foobar',
+			$textObj->ContextSummary(100, $testKeyword3a)
+		);
+		
 	}	
 }

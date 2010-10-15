@@ -272,6 +272,7 @@ class Text extends StringField {
 	 * @return string
 	 */
 	function ContextSummary($characters = 500, $string = false, $striphtml = true, $highlight = true, $prefix = "... ", $suffix = "...") {
+
 		if(!$string) $string = $_REQUEST['Search'];	// Use the default "Search" request variable (from SearchForm)
 
 		// Remove HTML tags so we don't have to deal with matching tags
@@ -294,8 +295,11 @@ class Text extends StringField {
 		if($highlight) {
 			// Add a span around all key words from the search term as well
 			if($stringPieces) {
+			
 				foreach($stringPieces as $stringPiece) {
-					$summary = str_ireplace($stringPiece, "<span class=\"highlight\">$stringPiece</span>", $summary);
+					if(strlen($stringPiece) > 2) {
+						$summary = str_ireplace($stringPiece, "<span class=\"highlight\">$stringPiece</span>", $summary);
+					}
 				}
 			}
 		}
