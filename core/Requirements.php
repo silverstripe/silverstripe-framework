@@ -692,10 +692,10 @@ class Requirements_Backend {
 				}
 				
 				// Put CSS at the bottom of the head			
-				$content = preg_replace("/(<\/head[^>]*>)/i", $requirements . "\\1", $content);
+				$content = preg_replace("/(<\/head>)/i", $requirements . "\\1", $content);
 			} else {
-				$content = preg_replace("/(<\/head[^>]*>)/i", $requirements . "\\1", $content);
-				$content = preg_replace("/(<\/head[^>]*>)/i", $jsRequirements . "\\1", $content);
+				$content = preg_replace("/(<\/head>)/i", $requirements . "\\1", $content);
+				$content = preg_replace("/(<\/head>)/i", $jsRequirements . "\\1", $content);
 			}
 		} 
 		
