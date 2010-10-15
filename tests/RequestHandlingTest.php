@@ -7,6 +7,23 @@
 class RequestHandlingTest extends SapphireTest {
 	static $fixture_file = null;
 	
+	// function testRequestHandlerChainingLatestParams() {
+	// 	$c = new RequestHandlingTest_Controller();
+	// 	$c->init();
+	// 	$response = $c->handleRequest(new SS_HTTPRequest('GET', 'testGoodBase1/TestForm/fields/MyField'));
+	// 	$this->assertEquals(
+	// 		$c->getRequest()->latestParams(),
+	// 		array(
+	// 			'Action' => 'fields',
+	// 			'ID' => 'MyField'
+	// 		)
+	// 	);
+	// }
+	
+	function testRequestHandlerChainingAllParams() {
+		// TODO
+	}
+	
 	function testMethodCallingOnController() {
 		/* Calling a controller works just like it always has */
 		$response = Director::test("testGoodBase1");
@@ -40,7 +57,7 @@ class RequestHandlingTest extends SapphireTest {
 		$response = Director::test("testGoodBase1/TestForm/fields/MyField" ,array("MyField" => 5));
 		$this->assertEquals("MyField posted, update to 5", $response->getBody());
 	}
-	
+		
 	function testBadBase() {
 		/* Without a double-slash indicator in the URL, the entire URL is popped off the stack.  The controller's default
 		action handlers have been designed for this to an extend: simple actions can still be called.  This is the set-up
