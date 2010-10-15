@@ -1,4 +1,4 @@
-<?php
+	<?php
 /**
  * This file is the Sapphire bootstrap.  It will get your environment ready to call Director::direct().
  *
@@ -40,7 +40,7 @@ if (!function_exists('array_fill_keys')) {
 /**
  * Include _ss_environment.php files
  */
-$envFiles = array('../_ss_environment.php', '../../_ss_environment.php', '../../../_ss_environment.php');
+$envFiles = array('_ss_environment.php', '../_ss_environment.php', '../../_ss_environment.php', '../../../_ss_environment.php');
 foreach($envFiles as $envFile) {
 	if(@file_exists($envFile)) {
 		define('SS_ENVIRONMENT_FILE', $envFile);
