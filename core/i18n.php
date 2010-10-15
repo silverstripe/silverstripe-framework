@@ -1902,7 +1902,7 @@ class i18n extends Object {
 	 */
 	static function merge_locale_data($locale, $extra) {
 		global $lang;
-		if (!$extra || count($extra) == 0) return;
+		if (!$extra || count($extra) == 0 || !isset($extra[$locale])) return;
 		foreach ($extra[$locale] as $class => $entities) {
 			foreach ($entities as $entity => $translation) {
 				$lang[$locale][$class][$entity] = $translation;
