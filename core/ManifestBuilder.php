@@ -216,6 +216,8 @@ class ManifestBuilder {
 			// have an _manifest_exclude file
 			$topLevel = scandir($baseDir);
 			foreach($topLevel as $filename) {
+
+				// Skip certain directories
 				if($filename[0] == '.') continue;
 				if($filename == 'themes') continue;
 				if($filename == 'assets') continue;
@@ -314,18 +316,32 @@ class ManifestBuilder {
 
 
 	/**
-	 * Generates the template manifest - a list of all the .SS files in the
-	 * application
+	 * Generates the template manifest - a list of all the .ss files in the
+	 * application.
+	 * 
+	 * See {@link SSViewer} for an overview on the array structure this class creates.
+	 * 
+	 * @param String $baseDir
+	 * @param String $folder
 	 */
 	private static function getTemplateManifest($baseDir, $folder, $excludedFolders, &$templateManifest, &$cssManifest, $themeName = null) {
 		$items = scandir("$baseDir/$folder");
 		if($items) foreach($items as $item) {
+			// Skip hidden files/folders
 			if(substr($item,0,1) == '.') continue;
+			
+			// Parse *.ss files
 			if(substr($item,-3) == '.ss') {
+				// Remove extension from template name
 				$templateName = substr($item, 0, -3);
+				
+				// The "type" is effectively a subfolder underneath $folder,
+				// mostly "Includes" or "Layout".
 				$templateType = substr($folder,strrpos($folder,'/')+1);
+				// The parent folder counts as type "main" 
 				if($templateType == "templates") $templateType = "main";
 
+				// Write either to theme or to non-themed array
 				if($themeName) {
 					$templateManifest[$templateName]['themes'][$themeName][$templateType] = "$baseDir/$folder/$item";
 				} else {
