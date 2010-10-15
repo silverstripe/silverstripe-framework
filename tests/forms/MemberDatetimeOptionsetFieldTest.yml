@@ -1,0 +1,6 @@
+Member:
+   noformatmember:
+      Email: noformat@test.com
+   delocalemember:
+      Email: delocalemember@test.com
+      Locale: de_DE

@@ -1,0 +1,25 @@
+input.customFormat {
+	border: 1px solid #ccc !important;
+	padding: 3px;
+	margin-left: 2px;
+}
+.formattingHelpToggle {
+	font-size: 11px;
+	padding: 3px;
+}
+.formattingHelpText {
+	margin: 5px auto;
+	color: #333;
+	padding: 5px 10px;
+	width: 90%;
+	background: #fff;
+	border: 1px solid #ccc;
+}
+	.formattingHelpText ul {
+		padding: 0;
+	}
+	.formattingHelpText li {
+		font-size: 11px;
+		color: #333;
+		margin-bottom: 2px;
+	}

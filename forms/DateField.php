@@ -78,15 +78,13 @@ class DateField extends TextField {
 		}
 		
 		if(!$this->getConfig('dateformat')) {
-			$this->setConfig('dateformat', Zend_Locale_Format::getDateFormat($this->locale));
+			$this->setConfig('dateformat', i18n::get_date_format());
 		}
 
 		parent::__construct($name, $title, $value, $form, $rightTitle);
 	}
 
 	function FieldHolder() {
-		
-		
 		return parent::FieldHolder();
 	}
 
