@@ -117,6 +117,48 @@ class VersionedTest extends SapphireTest {
 		$this->assertEquals(0, DB::query('SELECT COUNT(*) FROM "SiteTree_Live" WHERE "ID" = '.$pageID)->value());
 	}
 
+	function testWritingNewToStage() {
+		$origStage = Versioned::current_stage();
+		
+		Versioned::reading_stage("Stage");
+		$page = new Page();
+		$page->Title = "testWritingNewToStage";
+		$page->URLSegment = "testWritingNewToStage";
+		$page->write();
+		
+		$live = Versioned::get_by_stage('SiteTree', 'Live', "\"SiteTree_Live\".\"ID\"='$page->ID'");
+		$this->assertNull($live);
+		
+		$stage = Versioned::get_by_stage('SiteTree', 'Stage', "\"SiteTree\".\"ID\"='$page->ID'");
+		$this->assertNotNull($stage);
+		$this->assertEquals($stage->First()->Title, 'testWritingNewToStage');
+		
+		Versioned::reading_stage($origStage);
+	}
+
+	/**
+	 * This tests for the situation described in the ticket #5596. 
+	 * Writing new Page to live first creates a row in SiteTree table (to get the new ID), then "changes
+	 * it's mind" in Versioned and writes SiteTree_Live. It does not remove the SiteTree record though.
+	 */ 
+	function testWritingNewToLive() {
+		$origStage = Versioned::current_stage();
+		
+		Versioned::reading_stage("Live");
+		$page = new Page();
+		$page->Title = "testWritingNewToLive";
+		$page->URLSegment = "testWritingNewToLive";
+		$page->write();
+		
+		$live = Versioned::get_by_stage('SiteTree', 'Live', "\"SiteTree_Live\".\"ID\"='$page->ID'");
+		$this->assertNotNull($live->First());
+		$this->assertEquals($live->First()->Title, 'testWritingNewToLive');
+		
+		$stage = Versioned::get_by_stage('SiteTree', 'Stage', "\"SiteTree\".\"ID\"='$page->ID'");
+		$this->assertNull($stage);
+		
+		Versioned::reading_stage($origStage);
+	}
 }
 
 class VersionedTest_DataObject extends DataObject implements TestOnly {
