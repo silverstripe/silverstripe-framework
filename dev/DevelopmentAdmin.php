@@ -20,17 +20,19 @@ class DevelopmentAdmin extends Controller {
 	function init() {
 		parent::init();
 		
+		// Special case for dev/build: Defer permission checks to DatabaseAdmin->init() (see #4957)
+		$requestedDevBuild = (stripos($this->request->getURL(), 'dev/build') === 0);
+		
 		// We allow access to this controller regardless of live-status or ADMIN permission only
 		// if on CLI.  Access to this controller is always allowed in "dev-mode", or of the user is ADMIN.
-		$canAccess = (Director::isDev() || Director::is_cli() || Permission::check("ADMIN"));
-		// Special case for dev/build: Allow unauthenticated building of database, emulate DatabaseAdmin->init()
-		// permission restrictions (see #4957)
-		// TODO Decouple sub-controllers like DatabaseAdmin instead of weak URL checking
-		$requestedDevBuild = (stripos($this->request->getURL(), 'dev/build') === 0 && !Security::database_is_ready());
-		
-		if(!$canAccess && !$requestedDevBuild) {
-			return Security::permissionFailure($this);
-		}
+		$canAccess = (
+			$requestedDevBuild 
+			|| Director::isDev() 
+			|| Director::is_cli() 
+			// Its important that we don't run this check if dev/build was requested
+			|| Permission::check("ADMIN")
+		);
+		if(!$canAccess) return Security::permissionFailure($this);
 		
 		// check for valid url mapping
 		// lacking this information can cause really nasty bugs,
@@ -79,7 +81,7 @@ class DevelopmentAdmin extends Controller {
 			// This action is sake-only right now.
 			unset($actions["modules/add"]);
 			
-			$renderer = new DebugView();
+			$renderer = Object::create('DebugView');
 			$renderer->writeHeader();
 			$renderer->writeInfo("Sapphire Development Tools", Director::absoluteBaseURL());
 			$base = Director::baseURL();
@@ -103,33 +105,33 @@ class DevelopmentAdmin extends Controller {
 	}
 	
 	function tests($request) {
-		return new TestRunner();
+		return Object::create('TestRunner');
 	}
 	
 	function jstests($request) {
-		return new JSTestRunner();
+		return Object::create('JSTestRunner');
 	}
 	
 	function tasks() {
-		return new TaskRunner();
+		return Object::create('TaskRunner');
 	}
 	
 	function viewmodel() {
-		return new ModelViewer();
+		return Object::create('ModelViewer');
 	}
 	
-	function build() {
+	function build($request) {
 		if(Director::is_cli()) {
-			$da = new DatabaseAdmin();
-			$da->build();
+			$da = Object::create('DatabaseAdmin');
+			return $da->handleRequest($request);
 		} else {
-			$renderer = new DebugView();
+			$renderer = Object::create('DebugView');
 			$renderer->writeHeader();
 			$renderer->writeInfo("Environment Builder", Director::absoluteBaseURL());
 			echo "<div style=\"margin: 0 2em\">";
 
-			$da = new DatabaseAdmin();
-			$da->build();
+			$da = Object::create('DatabaseAdmin');
+			return $da->handleRequest($request);
 
 			echo "</div>";
 			$renderer->writeFooter();
@@ -143,10 +145,10 @@ class DevelopmentAdmin extends Controller {
 	 *		'build/defaults' => 'buildDefaults',
 	 */
 	function buildDefaults() {
-		$da = new DatabaseAdmin();
+		$da = Object::create('DatabaseAdmin');
 
 		if (!Director::is_cli()) {
-			$renderer = new DebugView();
+			$renderer = Object::create('DebugView');
 			$renderer->writeHeader();
 			$renderer->writeInfo("Defaults Builder", Director::absoluteBaseURL());
 			echo "<div style=\"margin: 0 2em\">";
@@ -175,7 +177,7 @@ class DevelopmentAdmin extends Controller {
 	}
 	
 	function viewcode($request) {
-		return new CodeViewer();
+		return Object::create('CodeViewer');
 	}
 }
 ?>

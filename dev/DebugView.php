@@ -11,7 +11,7 @@
  * @package sapphire
  * @subpackage dev
  */
-class DebugView {
+class DebugView extends Object {
 
 	protected static $error_types = array(
 		E_USER_ERROR => array(
