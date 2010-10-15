@@ -26,7 +26,7 @@ class SessionTest extends SapphireTest {
 		Session::set('Test', 'Test');
 		Session::set('Test-1', 'Test-1');
 		
-		Session::clearAll();
+		Session::clear_all();
 		
 		// should session get return null? The array key should probably be
 		// unset from the data array
@@ -38,7 +38,7 @@ class SessionTest extends SapphireTest {
 		Session::set('Test', 'Test');
 		Session::set('Test-2', 'Test-2');
 		
-		$session = Session::getAll();
+		$session = Session::get_all();
 		
 		$this->assertEquals($session, array('Test' => 'Test', 'Test-2' => 'Test-2'));
 	}
