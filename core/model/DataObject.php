@@ -1285,6 +1285,9 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 
 	/**
 	 * Returns a one-to-many component, as a ComponentSet.
+	 * The return value will be cached on this object instance,
+	 * but only when no related objects are found (to avoid unnecessary empty checks in the database).
+	 * If related objects exist, no caching is applied.
 	 *
 	 * @param string $componentName Name of the component
 	 * @param string $filter A filter to be inserted into the WHERE clause
@@ -1398,6 +1401,10 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 
 	/**
 	 * Returns a many-to-many component, as a ComponentSet.
+	 * The return value will be cached on this object instance,
+	 * but only when no related objects are found (to avoid unnecessary empty checks in the database).
+	 * If related objects exist, no caching is applied.
+	 * 
 	 * @param string $componentName Name of the many-many component
 	 * @return ComponentSet The set of components
 	 *
