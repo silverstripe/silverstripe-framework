@@ -8,7 +8,7 @@
  * This also allows assigning language-specific toplevel permissions for viewing and editing
  * pages, in addition to the normal `TRANSLATE_*`/`TRANSLATE_ALL` permissions.
  * 
- * 	Object::add_extension('SiteConig', 'Translatable');
+ * 	Object::add_extension('SiteConfig', 'Translatable');
  *
  * @author Tom Rix
  * @package cms
