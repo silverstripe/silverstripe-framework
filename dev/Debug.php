@@ -319,11 +319,13 @@ class Debug {
 
 		if(!headers_sent()) {
 			$currController = Controller::curr();
+			// Ensure the error message complies with the HTTP 1.1 spec
+			$msg = strip_tags(str_replace(array("\n", "\r"), '', $friendlyErrorMessage));
 			if($currController) {
 				$response = $currController->getResponse();
-				$response->setStatusCode($statusCode, $friendlyErrorMessage);
+				$response->setStatusCode($statusCode, $msg);
 			} else {
-				header($_SERVER['SERVER_PROTOCOL'] . " $statusCode $friendlyErrorMessage");
+				header($_SERVER['SERVER_PROTOCOL'] . " $statusCode $msg");
 			}
 		}
 
