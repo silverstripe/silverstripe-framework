@@ -798,7 +798,8 @@ class Versioned extends DataObjectDecorator {
 	function deleteFromStage($stage) {
 		$oldMode = Versioned::get_reading_mode();
 		Versioned::reading_stage($stage);
-		$result = $this->owner->delete();
+		$clone = clone $this->owner;
+		$result = $clone->delete();
 		Versioned::set_reading_mode($oldMode);
 		return $result;
 	}
