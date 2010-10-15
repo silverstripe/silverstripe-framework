@@ -464,10 +464,6 @@ class File extends DataObject {
 		$this->setField('Filename', $this->getRelativePath());
 	}
 
-	function setField( $field, $value ) {
-		parent::setField( $field, $value );
-	}
-
 	/**
 	 * Rewrite links to the $old file to now point to the $new file.
 	 * 
