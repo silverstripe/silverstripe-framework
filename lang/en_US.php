@@ -2,16 +2,6 @@
 
 global $lang;
 
-$lang['en_US']['Page']['PLURALNAME'] = array(
-	'Pags',
-	50,
-	'Pural name of the object, used in dropdowns and to generally identify a collection of this object in the interface'
-);
-$lang['en_US']['Page']['SINGULARNAME'] = array(
-	'Page',
-	50,
-	'Singular name of the object, used in dropdowns and to generally identify a single object in the interface'
-);
 $lang['en_US']['']['NOBACKLINKEDPAGES'] = 'There are no pages linked to this page.';
 $lang['en_US']['AdvancedSearchForm']['ALLWORDS'] = 'All Words';
 $lang['en_US']['AdvancedSearchForm']['ATLEAST'] = 'At Least One Of the Words';
@@ -409,6 +399,7 @@ $lang['en_US']['Member']['EMAIL'] = 'Email';
 $lang['en_US']['Member']['EMAILSIGNUPINTRO1'] = 'Thanks for signing up to become a new member, your details are listed below for future reference.';
 $lang['en_US']['Member']['EMAILSIGNUPINTRO2'] = 'You can login to the website using the credentials listed below';
 $lang['en_US']['Member']['EMAILSIGNUPSUBJECT'] = 'Thanks for signing up';
+$lang['en_US']['Member']['EMPTYNEWPASSWORD'] = 'The new password can\'t be empty, please try again';
 $lang['en_US']['Member']['ENTEREMAIL'] = 'Please enter an email address to get a password reset link.';
 $lang['en_US']['Member']['ERRORLOCKEDOUT'] = 'Your account has been temporarily disabled because of too many failed attempts at logging in. Please try again in 20 minutes.';
 $lang['en_US']['Member']['ERRORNEWPASSWORD'] = 'You have entered your new password differently, try again';
@@ -420,6 +411,10 @@ $lang['en_US']['Member']['INTERFACELANG'] = array(
 	'Interface Language',
 	PR_MEDIUM,
 	'Language of the CMS'
+);
+$lang['en_US']['Member']['INVALIDNEWPASSWORD'] = array(
+	'We couldn\'t accept that password: %s',
+	nl2br("\n".$isValid->starredList(
 );
 $lang['en_US']['Member']['LOGGEDINAS'] = 'You\'re logged in as %s.';
 $lang['en_US']['Member']['MOBILE'] = 'Mobile';
@@ -462,6 +457,11 @@ $lang['en_US']['Member']['USERDETAILS'] = array(
 	'Headline for formfields'
 );
 $lang['en_US']['Member']['VALIDATIONMEMBEREXISTS'] = 'A member already exists with the same %s';
+$lang['en_US']['Member']['ValidationIdentifierFailed'] = array(
+	'Can\'t overwrite existing member #%d with identical identifier (%s = %s))',
+	PR_MEDIUM,
+	'The values in brackets show a fieldname mapped to a value, usually denoting an existing email address'
+);
 $lang['en_US']['Member']['WELCOMEBACK'] = 'Welcome Back, %s';
 $lang['en_US']['Member']['YOUROLDPASSWORD'] = 'Your old password';
 $lang['en_US']['Member']['belongs_many_many_Groups'] = array(
@@ -597,6 +597,7 @@ $lang['en_US']['RemoveOrphanedPagesTask']['SELECTALL'] = 'select all';
 $lang['en_US']['RemoveOrphanedPagesTask']['UNSELECTALL'] = 'unselect all';
 $lang['en_US']['SearchForm']['GO'] = 'Go';
 $lang['en_US']['SearchForm']['SEARCH'] = 'Search';
+$lang['en_US']['SearchForm']['SearchResults'] = 'Search Results';
 $lang['en_US']['Security']['ALREADYLOGGEDIN'] = array(
 	'You don\'t have access to this page.  If you have another account that can access that page, you can <a href="%s">log in again</a>.',
 	PR_MEDIUM,

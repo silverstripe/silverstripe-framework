@@ -15,12 +15,12 @@ class ContentControllerSearchExtension extends Extension {
 	 * Site search form
 	 */
 	function SearchForm() {
-		$searchText = isset($_REQUEST['Search']) ? $_REQUEST['Search'] : 'Search';
+		$searchText = ($s = $this->owner->request->getVar('Search')) ? $s : _t('SearchForm.SEARCH', 'Search');
 		$fields = new FieldSet(
-			new TextField('Search', '', $searchText)
+			new TextField('Search', false, $searchText)
 		);
 		$actions = new FieldSet(
-			new FormAction('results', 'Search')
+			new FormAction('results', _t('SearchForm.GO', 'Go'))
 		);
 		return new SearchForm($this->owner, 'SearchForm', $fields, $actions);
 	}
@@ -36,7 +36,7 @@ class ContentControllerSearchExtension extends Extension {
 		$data = array(
 			'Results' => $form->getResults(),
 			'Query' => $form->getSearchQuery(),
-			'Title' => 'Search Results'
+			'Title' => _t('SearchForm.SearchResults', 'Search Results')
 		);
 		return $this->owner->customise($data)->renderWith(array('Page_results', 'Page'));
 	}
