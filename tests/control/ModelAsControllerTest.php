@@ -7,6 +7,8 @@ class ModelAsControllerTest extends FunctionalTest {
 	
 	protected $usesDatabase = true;
 	
+	static $fixture_file = 'sapphire/tests/ModelAsControllerTest.yml';
+	
 	protected $autoFollowRedirection = false;
 
 	protected $orig = array();
