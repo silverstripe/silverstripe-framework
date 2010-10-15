@@ -89,6 +89,11 @@ class TableListField extends FormField {
 	public $MarkableTitle = null;
 	
 	/**
+	 * @var array See {@link SelectOptions()}
+	 */
+	protected $selectOptions = array();
+	
+	/**
 	 * @var $readOnly boolean Deprecated, please use $permssions instead
 	 */
 	protected $readOnly;
@@ -1199,13 +1204,56 @@ JS
 		return $value;
 	}	 
 	 
-	/**
-	 * #########################
-	 *       Highlighting
-	 * #########################
-	 */
 	function setHighlightConditions($conditions) {
 		$this->highlightConditions = $conditions;
+	}
+	
+	/**
+	 * See {@link SelectOptions()} for introduction.
+	 * 
+	 * @param $options array Options to add, key being a unique identifier of the action,
+	 *  and value a title for the rendered link element (can contain HTML).
+	 *  The keys for 'all' and 'none' have special behaviour associated
+	 *  through TableListField.js JavaScript.
+	 *  For any other key, the JavaScript automatically checks all checkboxes contained in
+	 *  <td> elements with a matching classname.
+	 */
+	function addSelectOptions($options){
+		foreach($options as $k => $title)
+		$this->selectOptions[$k] = $title;
+	}
+	
+	/**
+	 * Remove one all more table's {@link $selectOptions}
+	 * 
+	 * @param $optionsNames array
+	 */
+	function removeSelectOptions($names){
+		foreach($names as $name){
+			unset($this->selectOptions[trim($name)]);
+		}
+	}
+	
+	/**
+	 * Return the table's {@link $selectOptions}.
+	 * Used to toggle checkboxes for each table row through button elements.
+	 * 
+	 * Requires {@link Markable()} to return TRUE.
+	 * This is only functional with JavaScript enabled.
+	 * 
+	 * @return DataObjectSet of ArrayData objects
+	 */
+	function SelectOptions(){
+		if(!$this->selectOptions) return;
+		
+		$selectOptionsSet = new DataObjectSet();
+		foreach($this->selectOptions as $k => $v) {
+			$selectOptionsSet->push(new ArrayData(array(
+				'Key' => $k,
+				'Value' => $v
+			)));
+		}
+		return $selectOptionsSet;
 	}
 }
 
@@ -1379,6 +1427,27 @@ class TableListField_Item extends ViewableData {
 			return "<input class=\"checkbox\" type=\"checkbox\" name=\"$name\" value=\"{$this->item->ID}\" disabled=\"disabled\" />";
 		else
 			return "<input class=\"checkbox\" type=\"checkbox\" name=\"$name\" value=\"{$this->item->ID}\" />";
+	}
+	
+	/**
+	 * According to {@link TableListField->selectOptions}, each record will check if the options' key on the object is true,
+	 * if it is true, add the key as a class to the record
+	 * 
+	 * @return string Value for a 'class' HTML attribute.
+	 */
+	function SelectOptionClasses(){
+		$tagArray = array('markingcheckbox');
+		$options = $this->parent->selectOptions;
+		if(!empty($options)){
+			foreach($options as $optionKey => $optionTitle){
+				if($optionKey !== 'all' && $optionKey !== 'none'){
+					if($this->$optionKey) {
+						$tagArray[] = $optionKey;
+					}
+				}
+			}
+		}
+		return implode(" ",$tagArray);
 	}
 	
 	function HighlightClasses() {
