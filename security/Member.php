@@ -789,7 +789,7 @@ class Member extends DataObject {
 				$columnsWithTablename[] = "\"$tableName\".\"$column\"";
 			}
 		
-			return "(\"".join("'".self::$title_format['sep']."'" || $columnsWithTablename)."\")";
+			return "(".join(" || '".self::$title_format['sep']."' || ", $columnsWithTablename).")";
 		} else {
 			return "(\"$tableName\".\"Surname\" || ' ' || \"$tableName\".\"FirstName\")";
 		}
