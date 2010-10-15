@@ -720,6 +720,31 @@ class Member extends DataObject {
 	}
 	
 	/**
+	 * Adds the member to a group. This will create the group if the given 
+	 * group code does not return a valid group object. 
+	 *
+	 * @param string $groupcode
+	 * @param string Title of the group
+	 */
+	public function addToGroupByCode($groupcode, $title = "") {
+		$group = DataObject::get_one('Group', "\"Code\" = '" . Convert::raw2sql($groupcode). "'");
+		
+		if($group) {
+			$this->Groups()->add($group);
+		}
+		else {
+			if(!$title) $title = $groupcode;
+			
+			$group = new Group();
+			$group->Code = $groupcode;
+			$group->Title = $title;
+			$group->write();
+			
+			$this->Groups()->add($group);
+		}
+	}
+	
+	/**
 	 * Returns true if this user is an administrator.
 	 * Administrators have access to everything.
 	 * 
