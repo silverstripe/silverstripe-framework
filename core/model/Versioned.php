@@ -801,6 +801,11 @@ class Versioned extends DataObjectDecorator {
 		$clone = clone $this->owner;
 		$result = $clone->delete();
 		Versioned::set_reading_mode($oldMode);
+
+		// Fix the version number cache (in case you go delete from stage and then check ExistsOnLive)
+		$baseClass = ClassInfo::baseDataClass($this->owner->class);
+		self::$cache_versionnumber[$baseClass][$stage][$this->owner->ID] = null;
+
 		return $result;
 	}
 	
