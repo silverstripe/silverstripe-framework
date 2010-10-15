@@ -1872,7 +1872,7 @@ class Member_DatetimeOptionsetField extends OptionsetField {
 			_t('MemberDatetimeOptionsetField.Preview', 'Preview'),
 			Zend_Date::now()->toString($value)
 		) : '';
-		$options .= "<a class=\"formattingHelpToggle\" href=\"#\">toggle formatting help</a>";
+		$options .= "<a class=\"formattingHelpToggle\" href=\"#\">" . _t('MemberDatetimeOptionsetField.TOGGLEHELP', 'Toggle formatting help') . "</a>";
 		$options .= "<div class=\"formattingHelpText\">";
 		$options .= $this->getFormattingHelpText();
 		$options .= "</div>";
