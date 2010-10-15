@@ -54,7 +54,7 @@ class MySQLDatabase extends SS_Database {
 	 *  - timezone: (optional) the timezone offset, eg: +12:00 for NZ time 
 	 */
 	public function __construct($parameters) {
-		$this->dbConn = mysql_connect($parameters['server'], $parameters['username'], $parameters['password']);
+		$this->dbConn = mysql_connect($parameters['server'], $parameters['username'], $parameters['password'], true);
 
 		if(self::$connection_charset) {
 			$this->query("SET CHARACTER SET '" . self::$connection_charset . "'"); 
