@@ -84,7 +84,7 @@ class MemoryLimitTest extends SapphireTest {
 		if(in_array('suhosin', $exts)) return false;
 
 		// We can't change memory limit in safe mode
-		if(strtolower(ini_get('safe_mode')) == 'on') return false;
+		if(ini_get('safe_mode')) return false;
 		
 		return true;
 	}
