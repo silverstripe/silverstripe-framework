@@ -43,6 +43,16 @@ class ArrayData extends ViewableData {
 		}
 	}
 	
+	/**
+	* Add or set a field on this object.
+	*
+	* @param string $field
+	* @param mixed $value
+	*/
+	public function setField($field, $value) {
+		$this->array[$field] = $value;
+	}
+	
 	public function hasField($f) {
 		return isset($this->array[$f]);
 	}

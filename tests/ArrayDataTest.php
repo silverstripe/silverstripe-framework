@@ -75,6 +75,15 @@ class ArrayDataTest extends SapphireTest {
 		$this->assertEquals("Apple", $array['a']);
 		$this->assertEquals("Banana", $array['b']);
 	}
+	
+	function testSetField() {
+		$arrayData = new ArrayData(array());
+		
+		$arrayData->setField('d', 'Delta');
+		
+		$this->assertTrue($arrayData->hasField('d'));
+		$this->assertEquals('Delta', $arrayData->getField('d'));
+	}
 
 }
 
