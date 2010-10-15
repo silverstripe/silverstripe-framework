@@ -187,12 +187,13 @@ class Director {
 		if(!$session) $session = new Session(null);
 
 		// Back up the current values of the superglobals
-		$existingRequestVars = $_REQUEST; 
-		$existingGetVars = $_GET; 
-		$existingPostVars = $_POST; 
+		$existingRequestVars = isset($_REQUEST) ? $_REQUEST : array();
+		$existingGetVars = isset($_GET) ? $_GET : array(); 
+		$existingPostVars = isset($_POST) ? $_POST : array();
 		$existingSessionVars = isset($_SESSION) ? $_SESSION : array();
-		$existingCookies = $_COOKIE;
-		$existingServer = $_SERVER;
+		$existingCookies = isset($_COOKIE) ? $_COOKIE : array();
+		$existingServer	= isset($_SERVER) ? $_SERVER : array();
+		
 		$existingCookieReportErrors = Cookie::report_errors();
 		$existingRequirementsBackend = Requirements::backend();
 
