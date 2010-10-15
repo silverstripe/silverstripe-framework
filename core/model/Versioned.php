@@ -287,12 +287,27 @@ class Versioned extends DataObjectDecorator {
 				
 					$versionIndexes = array_merge(
 						array(
-							'RecordID_Version' => '(RecordID, Version)',
+							'RecordID_Version' => 'unique (RecordID, Version)',
 							'RecordID' => true,
 							'Version' => true,
 						),
 						(array)$indexes
 					);
+				}
+				
+				// Fix data that lacks the uniqueness constraint (since this was added later and
+				// bugs meant that the constraint was validated)
+				if(DB::getConn()->hasTable("{$table}_versions")) {
+					$duplications = DB::query("SELECT MIN(\"ID\") AS \"ID\", \"RecordID\", \"Version\" 
+						FROM \"{$table}_versions\" GROUP BY \"RecordID\", \"Version\" 
+						HAVING COUNT(*) > 1");
+						
+					foreach($duplications as $dup) {
+						DB::alteration_message("Removing {$table}_versions duplicate data for "
+							."{$dup['RecordID']}/{$dup['Version']}" ,"deleted");
+						DB::query("DELETE FROM \"{$table}_versions\" WHERE \"RecordID\" = {$dup['RecordID']}
+							AND \"Version\" = {$dup['Version']} AND \"ID\" != {$dup['ID']}");
+					}
 				}
 
 				DB::requireTable("{$table}_versions", $versionFields, $versionIndexes);
@@ -334,7 +349,6 @@ class Versioned extends DataObjectDecorator {
 			
 			if($this->migratingVersion) {
 				$manipulation[$table]['fields']['Version'] = $this->migratingVersion;
-				$this->migrateVersion(null);
 			}
 
 			// If we haven't got a version #, then we're creating a new version.
@@ -387,6 +401,9 @@ class Versioned extends DataObjectDecorator {
 				unset($manipulation[$table]);
 			}
 		}
+		
+		// Clear the migration flag
+		if($this->migratingVersion) $this->migrateVersion(null);
 
 		// Add the new version # back into the data object, for accessing after this write
 		if(isset($thisVersion)) $this->owner->Version = str_replace("'","",$thisVersion);
@@ -559,7 +576,6 @@ class Versioned extends DataObjectDecorator {
 		$query->where[] = "\"{$baseTable}_versions\".\"RecordID\" = '{$this->owner->ID}'";
 		$query->orderby = ($sort) ? $sort : "\"{$baseTable}_versions\".\"LastEdited\" DESC, \"{$baseTable}_versions\".\"Version\" DESC";
 		
-
 		$records = $query->execute();
 		$versions = new DataObjectSet();
 		
