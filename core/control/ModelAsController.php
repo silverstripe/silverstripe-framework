@@ -147,14 +147,16 @@ class ModelAsController extends Controller implements NestedController {
 	 * @param int $parentID The ID of the parent of the page the URLSegment belongs to. 
 	 * @return SiteTree
 	 */
-	static function find_old_page($URLSegment,$parentID = 0) {
+	static function find_old_page($URLSegment,$parentID = 0, $ignoreNestedURLs = false) {
 		$URLSegment = Convert::raw2sql($URLSegment);
 		
+		$useParentIDFilter = SiteTree::nested_urls() && !$ignoreNestedURLs;
+				
 		// First look for a non-nested page that has a unique URLSegment and can be redirected to.
 		if(SiteTree::nested_urls()) {
 			$pages = DataObject::get(
 				'SiteTree', 
-				"\"URLSegment\" = '$URLSegment'" . ((SiteTree::nested_urls()) ? ' AND "ParentID" = ' . (int)$parentID : '')
+				"\"URLSegment\" = '$URLSegment'" . ($useParentIDFilter ? ' AND "ParentID" = ' . (int)$parentID : '')
 			);
 			if($pages && $pages->Count() == 1) return $pages->First();
 		}
@@ -163,19 +165,23 @@ class ModelAsController extends Controller implements NestedController {
 		$query = new SQLQuery (
 			'"RecordID"',
 			'"SiteTree_versions"',
-			"\"URLSegment\" = '$URLSegment' AND \"WasPublished\" = 1" . (SiteTree::nested_urls() ? ' AND "ParentID" = ' . (int)$parentID : ''),
+			"\"URLSegment\" = '$URLSegment' AND \"WasPublished\" = 1" . ($useParentIDFilter ? ' AND "ParentID" = ' . (int)$parentID : ''),
 			'"LastEdited" DESC',
 			null,
 			null,
 			1
 		);
-		
 		$record = $query->execute()->first();
-		if(!$record) return false;
 		
-		if($oldPage = DataObject::get_by_id('SiteTree', $record['RecordID'])) {
+		if($record && ($oldPage = DataObject::get_by_id('SiteTree', $record['RecordID']))) {
 			// Run the page through an extra filter to ensure that all decorators are applied.
 			if(SiteTree::get_by_link($oldPage->RelativeLink())) return $oldPage;
+		}
+		
+		// Otherwise, if nested URLs is enabled, look for a page anywhere in the site that may be
+		// left from pre-nested-URLs days
+		if(SiteTree::nested_urls() && !$ignoreNestedURLs && $parentID == 0) {
+			return self::find_old_page($URLSegment, $parentID, true);
 		}
 	}
 	
