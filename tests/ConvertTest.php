@@ -28,6 +28,19 @@ class ConvertTest extends SapphireTest {
 		$this->assertEquals('Thisissomenormaltext', Convert::raw2htmlatt($val2), 'Normal text is not escaped');
 	}
 	
+	function testHtml2raw() {
+		$val1 = 'This has a <strong>strong tag</strong>.'; 
+		$this->assertEquals('This has a *strong tag*.', Convert::xml2raw($val1), 'Strong tags are replaced with asterisks');
+		
+		$val1 = 'This has a <b class="test" style="font-weight: bold">b tag with attributes</b>.'; 
+		$this->assertEquals('This has a *b tag with attributes*.', Convert::xml2raw($val1), 'B tags with attributes are replaced with asterisks');
+		
+		$val2 = 'This has a <strong class="test" style="font-weight: bold">strong tag with attributes</STRONG>.'; 
+		$this->assertEquals('This has a *strong tag with attributes*.', Convert::xml2raw($val2), 'Strong tags with attributes are replaced with asterisks');
+	
+		
+	}
+	
 	/**
 	 * Tests {@link Convert::raw2xml()}
 	 */
