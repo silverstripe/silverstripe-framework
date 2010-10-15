@@ -62,14 +62,14 @@ class SiteTreeTest extends SapphireTest {
 			$this->assertEquals(DB::query('SELECT COUNT("ID") FROM "SiteTree"')->value(), 0);
 			
 			// Disable the creation
-			SiteTree::set_create_defaultpages(false);
+			SiteTree::set_create_default_pages(false);
 			singleton('SiteTree')->requireDefaultRecords();
 			
 			// The table should still be empty
 			$this->assertEquals(DB::query('SELECT COUNT("ID") FROM "SiteTree"')->value(), 0);
 			
 			// Enable the creation
-			SiteTree::set_create_defaultpages(true);
+			SiteTree::set_create_default_pages(true);
 			singleton('SiteTree')->requireDefaultRecords();
 			
 			// The table should now have three rows (home, about-us, contact-us)
