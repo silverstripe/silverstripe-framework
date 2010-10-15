@@ -780,7 +780,7 @@ class File extends DataObject {
 						PR_MEDIUM,
 						'Argument 1: Comma-separated list of valid extensions'
 					),
-					implode(', ',$exts)
+					wordwrap(implode(', ',$exts))
 				);
 				return new ValidationResult(false, $message);
 			}
