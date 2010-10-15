@@ -840,6 +840,45 @@ class Requirements_Backend {
 			}
 		}
 		
+		foreach($files as $index=>$file) {
+			if(is_array($file)) {
+				// Either associative array path=>path type=>type or numeric 0=>path 1=>type
+				// Otherwise, assume path is the first item
+				if (isset($file['type']) && ($file['type'] == 'css' || $file['type'] == 'javascript' || $file['type'] == 'js')) {
+					switch ($file['type']) {
+						case 'css':
+							$this->css($file['path']);
+							break;
+						default:
+							$this->javascript($file['path']);
+							break;
+					}
+					$files[$index] = $file['path'];
+				} elseif (isset($file[1]) && ($file[1] == 'css' || $file[1] == 'javascript' || $file[1] == 'js')) {
+					switch ($file[1]) {
+						case 'css':
+							$this->css($file[0]);
+							break;
+						default:
+							$this->javascript($file[0]);
+							break;
+					}
+					$files[$index] = $file[0];
+				} else {
+					$file = array_shift($file);
+				}
+			}
+			if (!is_array($file)) {
+				if(substr($file, -2) == 'js') {
+					$this->javascript($file);
+				} elseif(substr($file, -3) == 'css') {
+					$this->css($file);
+				} else {
+					user_error("Requirements_Backend::combine_files(): Couldn't guess file type for file '$file', please specify by passing using an array instead.", E_USER_NOTICE);
+				}
+			}
+		}
+		
 		$this->combine_files[$combinedFileName] = $files;
 	}
 	
