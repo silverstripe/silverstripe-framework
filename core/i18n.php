@@ -1656,6 +1656,7 @@ class i18n extends Object {
 		else {
 			global $_CLASS_MANIFEST;
 			if(strpos($name,'_') !== false) $name = strtok($name,'_');
+			$name = strtolower($name); // Necessary because of r101131
 			if(isset($_CLASS_MANIFEST[$name])) {
 				$path = str_replace('\\','/',Director::makeRelative($_CLASS_MANIFEST[$name]));
 				ereg('/([^/]+)/', $path, $module);
