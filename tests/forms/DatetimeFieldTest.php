@@ -18,6 +18,40 @@ class DatetimeFieldTest extends SapphireTest {
 		i18n::set_locale($this->originalLocale);
 	}
 
+	function testFormSaveInto() {
+		$form = new Form(
+			new Controller(), 
+			'Form',
+			new FieldSet(
+				$f = new DatetimeField('MyDatetime', null)
+			),
+			new FieldSet(
+				new FormAction('doSubmit')
+			)
+		);
+		$f->setValue(array(
+			'date' => '29/03/2003',
+			'time' => '23:59:38'
+		));
+		$m = new DatetimeFieldTest_Model();
+		$form->saveInto($m);
+		$this->assertEquals('2003-03-29 23:59:38', $m->MyDatetime);
+	}
+	
+	function testDataValue() {
+		$f = new DatetimeField('Datetime');
+		$this->assertEquals(null, $f->dataValue(), 'Empty field');
+		
+		$f = new DatetimeField('Datetime', null, '2003-03-29 23:59:38');
+		$this->assertEquals('2003-03-29 23:59:38', $f->dataValue(), 'From date/time string');
+		
+		$f = new DatetimeField('Datetime', null, '2003-03-29');
+		$this->assertEquals('2003-03-29 00:00:00', $f->dataValue(), 'From date string (no time)');
+		
+		$f = new DatetimeField('Datetime', null, array('date' => '2003-03-29', 'time' => null));
+		$this->assertEquals('2003-03-29 00:00:00', $f->dataValue(), 'From date array (no time)');
+	}
+	
 	function testConstructorWithoutArgs() {
 		$f = new DatetimeField('Datetime');
 		$this->assertEquals($f->dataValue(), null);
@@ -77,4 +111,16 @@ class DatetimeFieldTest extends SapphireTest {
 		$f = new DatetimeField('Datetime', 'Datetime', 'wrong');
 		$this->assertFalse($f->validate(new RequiredFields()));
 	}
+}
+
+/**
+ * @package sapphire
+ * @subpackage tests
+ */
+class DatetimeFieldTest_Model extends DataObject implements TestOnly {
+	
+	static $db = array(
+		'MyDatetime' => 'SS_Datetime'
+	);
+	
 }

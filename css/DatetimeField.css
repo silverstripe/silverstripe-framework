@@ -1,21 +1,14 @@
-.popupdatetime ul {
-	list-style:none;
-	padding-left:0;
-	font-size:1em;
+.datetime .middleColumn .middleColumn {
+	margin: 0;
+	padding: 0;
+	clear: none;
+	float: left;
 }
 
-.popupdatetime ul li {
-	display:inline;
+.datetime .date .middleColumn {
+	width: 20em;
 }
 
-.popupdatetime ul li .calendarpopup {
-	top: 2em;
-	left: -1px;
-	
-	padding-top: 30px;
-}
-
-.popupdatetime ul li .dropdownpopup {
-	top: 2em;
-	left: -1px;
+.datetime .time .middleColumn {
+	width: 10em;
 }
