@@ -17,6 +17,11 @@
  * )
  * </code> 
  * 
+ * @see DropdownField for a simple <select> field with a single element.
+ * @see CheckboxSetField for multiple selections through checkboxes.
+ * @see OptionsetField for single selections via radiobuttons.
+ * @see TreeDropdownField for a rich and customizeable UI that can visualize a tree of selectable elements
+ * 
  * @package forms
  * @subpackage fields-basic
  */

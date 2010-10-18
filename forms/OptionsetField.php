@@ -47,6 +47,10 @@
  * // Pass the fields to the form constructor. etc
  * </code>
  * 
+ * @see CheckboxSetField for multiple selections through checkboxes instead.
+ * @see DropdownField for a simple <select> field with a single element.
+ * @see TreeDropdownField for a rich and customizeable UI that can visualize a tree of selectable elements
+ * 
  * @package forms
  * @subpackage fields-basic
  */

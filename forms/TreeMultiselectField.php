@@ -30,6 +30,8 @@
  * }
  * </code> 
  * 
+ * @see TreeDropdownField for the sample implementation, but only allowing single selects
+ * 
  * @package forms
  * @subpackage fields-relational
  */

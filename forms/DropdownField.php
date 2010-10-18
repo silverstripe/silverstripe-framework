@@ -68,6 +68,10 @@
  * );
  * </code>
  * 
+ * @see CheckboxSetField for multiple selections through checkboxes instead.
+ * @see ListboxField for a single <select> box (with single or multiple selections).
+ * @see TreeDropdownField for a rich and customizeable UI that can visualize a tree of selectable elements
+ * 
  * @package forms
  * @subpackage fields-basic
  */
