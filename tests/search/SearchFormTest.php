@@ -42,10 +42,25 @@ class SearchFormTest extends FunctionalTest {
 
 	function testPublishedPagesMatchedByTitle() {
 		$sf = new SearchForm($this->mockController, 'SearchForm');
-
+	
 		$publishedPage = $this->objFromFixture('SiteTree', 'publicPublishedPage');
 		$publishedPage->publish('Stage', 'Live');
 		$results = $sf->getResults(null, array('Search'=>'publicPublishedPage'));
+		$this->assertContains(
+			$publishedPage->ID,
+			$results->column('ID'),
+			'Published pages are found by searchform'
+		);
+	}
+	
+	function testDoubleQuotesPublishedPagesMatchedByTitle() {
+		$sf = new SearchForm($this->mockController, 'SearchForm');
+
+		$publishedPage = $this->objFromFixture('SiteTree', 'publicPublishedPage');
+		$publishedPage->Title = "finding me";
+		$publishedPage->write();
+		$publishedPage->publish('Stage', 'Live');
+		$results = $sf->getResults(null, array('Search'=>'"finding me"'));
 		$this->assertContains(
 			$publishedPage->ID,
 			$results->column('ID'),
