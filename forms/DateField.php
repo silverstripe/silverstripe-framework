@@ -330,7 +330,7 @@ JS;
 		if(!$valid) {
 			$validator->validationError(
 				$this->name, 
-				_t('DateField.VALIDDATEFORMAT', "Please enter a valid date format (DD/MM/YYYY)."), 
+				_t('DateField.VALIDDATEFORMAT2', sprintf("Please enter a valid date format (%s).", $this->getConfig('dateformat'))), 
 				"validation", 
 				false
 			);
