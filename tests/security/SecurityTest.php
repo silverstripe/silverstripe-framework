@@ -183,6 +183,9 @@ class SecurityTest extends FunctionalTest {
 	}
 		
 	function testRepeatedLoginAttemptsLockingPeopleOut() {
+		$local = i18n::get_locale();
+		i18n::set_locale('en_US');
+
 		Member::lock_out_after_incorrect_logins(5);
 		
 		/* LOG IN WITH A BAD PASSWORD 7 TIMES */
@@ -239,6 +242,8 @@ class SecurityTest extends FunctionalTest {
 		
 		$this->doTestLoginForm('sam@silverstripe.com' , '1nitialPassword');
 		$this->assertEquals($this->session()->inst_get('loggedInAs'), $member->ID);
+
+		i18n::set_locale($local);
 	}
 	
 	function testAlternatingRepeatedLoginAttempts() {
