@@ -35,7 +35,12 @@
 									If you are having problems meeting the requirements, see the <a href="http://doc.silverstripe.org/doku.php?id=server-requirements">server requirements wiki page</a>.
 								</p>
 							<?php } else { ?>
-								<?php if($req->hasWarnings()) { ?>
+								<?php if($alreadyInstalled) { ?>
+									<div class="warning">
+										<p><strong>Note:</strong> SilverStripe is already installed here.<br>
+										If you wish to reinstall SilverStripe, please delete the <strong>mysite/_config.php</strong> file first.</p>
+									</div>
+								<?php } else if($req->hasWarnings()) { ?>
 									<p class="warning">
 										There are some issues that we recommend you look at before installing, however, you are still able to install the software.
 										Please see below for details.<br>
@@ -253,17 +258,6 @@
 										<label for="stats">Send information about my webserver to silverstripe.org<br />
 											<small>(anonymous version information, used for statistical purposes)</small>
 									</label><p>
-								
-								<?php if($alreadyInstalled) { ?>
-									<div class="warning">
-										<p><strong>Note:</strong> SilverStripe is already installed here.<br>
-										Installing again will overwrite the <strong><?php echo $webserverConfigFile ?></strong> and <strong>mysite/_config.php</strong> files.</p>
-										<div class="warning_actions">
-											<input type="checkbox" id="reinstall_confirmation" name="force_reinstall">
-											<label for="reinstall_confirmation">That's okay, please re-install SilverStripe and overwrite these files.</label>
-										</div>
-									</div>
-								<?php } ?>
 								
 								<p>
 									<?php if($alreadyInstalled) { ?>
