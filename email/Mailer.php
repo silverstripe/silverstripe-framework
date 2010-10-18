@@ -72,7 +72,7 @@ function htmlEmail($to, $from, $subject, $htmlContent, $attachedFiles = false, $
 	$headers["Content-Type"] = "text/plain; charset=\"utf-8\"";
 	$headers["Content-Transfer-Encoding"] = $plainEncoding ? $plainEncoding : "quoted-printable";
 
-	$plainPart = processHeaders($headers, ($plainEncoding == "base64") ? chunk_split(base64_encode($plainContent),60) : wordwrap($plainContent,120));
+	$plainPart = processHeaders($headers, ($plainEncoding == "base64") ? chunk_split(base64_encode($plainContent),60) : wordwrap(QuotedPrintable_encode($plainContent),120));
 
 	// Make the HTML part
 	$headers["Content-Type"] = "text/html; charset=\"utf-8\"";
@@ -83,10 +83,10 @@ function htmlEmail($to, $from, $subject, $htmlContent, $attachedFiles = false, $
 		$htmlContent =
 			"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\">\n" .
 			"<HTML><HEAD>\n" .
-			"<META http-equiv=Content-Type content=\"text/html; charset=utf-8\">\n" .
-			"<STYLE type=3Dtext/css></STYLE>\n\n".
+			"<META http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">\n" .
+			"<STYLE type=\"text/css\"></STYLE>\n\n".
 			"</HEAD>\n" .
-			"<BODY bgColor=#ffffff>\n" .
+			"<BODY bgColor=\"#ffffff\">\n" .
 				$htmlContent .
 			"\n</BODY>\n" .
 			"</HTML>";
