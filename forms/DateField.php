@@ -301,14 +301,16 @@ JS;
 	 */
 	function validateArrayValue($val) {
 		if(!is_array($val)) return false;
-
+		
+		// Validate against Zend_Date,
+		// but check for empty array keys (they're included in standard form submissions)
 		return (
 			array_key_exists('year', $val)  
-			&& Zend_Date::isDate($val['year'], 'yyyy', $this->locale)
+			&& (!$val['year'] || Zend_Date::isDate($val['year'], 'yyyy', $this->locale))
 			&& array_key_exists('month', $val)
-			&& Zend_Date::isDate($val['month'], 'MM', $this->locale)
+			&& (!$val['month'] || Zend_Date::isDate($val['month'], 'MM', $this->locale))
 			&& array_key_exists('day', $val)
-			&& Zend_Date::isDate($val['day'], 'dd', $this->locale)
+			&& (!$val['day'] || Zend_Date::isDate($val['day'], 'dd', $this->locale))
 		);
 	}
 
@@ -330,7 +332,10 @@ JS;
 		if(!$valid) {
 			$validator->validationError(
 				$this->name, 
-				_t('DateField.VALIDDATEFORMAT2', sprintf("Please enter a valid date format (%s).", $this->getConfig('dateformat'))), 
+				sprintf(
+					_t('DateField.VALIDDATEFORMAT2', "Please enter a valid date format (%s)."), 
+					$this->getConfig('dateformat')
+				), 
 				"validation", 
 				false
 			);
