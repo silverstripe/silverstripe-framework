@@ -205,7 +205,7 @@ class DateField extends TextField {
 
 		if(Validator::get_javascript_validator_handler() == 'none') return true;
 
-		if($this->showSeparateFields) {
+		if($this->getConfig('dmyfields')) {
 			$error = _t('DateField.VALIDATIONJS', 'Please enter a valid date format (DD/MM/YYYY).');
 			$error = 'Please enter a valid date format (DD/MM/YYYY) from dmy.';
 			$jsFunc =<<<JS
@@ -517,7 +517,11 @@ class DateField_View_JQuery {
 		if($this->getField()->getConfig('showcalendar')) {
 			// Inject configuration into existing HTML
 			$format = self::convert_iso_to_jquery_format($this->getField()->getConfig('dateformat'));
-			$this->getField()->addExtraClass(str_replace('"', '\'', Convert::raw2json(array('dateFormat' => $format))));
+			$conf = array(
+				'showcalendar' => true,
+				'dateFormat' => $format
+			);
+			$this->getField()->addExtraClass(str_replace('"', '\'', Convert::raw2json($conf)));
 		}
 	}
 	
