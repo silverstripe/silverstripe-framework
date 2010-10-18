@@ -146,20 +146,34 @@ class SQLQuery {
 	/**
 	 * Add a LEFT JOIN criteria to the FROM clause.
 	 * 
+	 * @param String $table Table name (unquoted)
+	 * @param String $onPredicate The "ON" SQL fragment in a "LEFT JOIN ... AS ... ON ..." statement.
+	 *  Needs to be valid (quoted) SQL.
+	 * @param String $tableAlias Optional alias which makes it easier to identify and replace joins later on
 	 * @return SQLQuery This instance 
 	 */
-	public function leftJoin($table, $onPredicate) {
-		$this->from[$table] = "LEFT JOIN \"$table\" ON $onPredicate";
+	public function leftJoin($table, $onPredicate, $tableAlias=null) {
+		if( !$tableAlias ) {
+			$tableAlias = $table;
+		}
+		$this->from[$tableAlias] = "LEFT JOIN \"$table\" AS \"$tableAlias\" ON $onPredicate";
 		return $this;
 	}
 	
 	/**
 	 * Add an INNER JOIN criteria to the FROM clause.
 	 * 
+	 * @param String $table Table name (unquoted)
+	 * @param String $onPredicate The "ON" SQL fragment in a "LEFT JOIN ... AS ... ON ..." statement.
+	 *  Needs to be valid (quoted) SQL.
+	 * @param String $tableAlias Optional alias which makes it easier to identify and replace joins later on
 	 * @return SQLQuery This instance 
 	 */
-	public function innerJoin($table, $onPredicate) {
-		$this->from[$table] = "INNER JOIN \"$table\" ON $onPredicate";
+	public function innerJoin($table, $onPredicate, $tableAlias=null) {
+		if( !$tableAlias ) {
+			$tableAlias = $table;
+		}
+		$this->from[$tableAlias] = "INNER JOIN \"$table\" AS \"$tableAlias\" ON $onPredicate";
 		return $this;
 	}
 	
