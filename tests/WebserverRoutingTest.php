@@ -26,7 +26,7 @@ class WebserverRoutingTest extends SapphireTest {
 		$info = curl_getinfo($ch);
 		
 		$this->assertEquals(curl_error($ch), '');
-		$this->assertEquals(trim($response), 'ok');
+		$this->assertTrue(in_array(trim($response), array('ok', _t('BasicAuth.ENTERINFO'))));
 		
 		curl_close($ch);
 	}
