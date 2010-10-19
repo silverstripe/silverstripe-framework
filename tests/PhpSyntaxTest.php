@@ -33,7 +33,11 @@ class PhpSyntaxTest extends SapphireTest {
 	
 	function getAllFiles($ext = 'php') {
 		// TODO: Unix only
-		$CLI_regexp = escapeshellarg("\.$ext\$");
-		return explode("\n", trim(`find .. | grep $CLI_regexp`));
+		$cmd = sprintf(
+			'find %s | grep %s', 
+			BASE_PATH,
+			escapeshellarg("\.$ext\$")
+		);
+		return explode("\n", trim(`$cmd`));
 	}
 }
