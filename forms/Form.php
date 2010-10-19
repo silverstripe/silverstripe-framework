@@ -167,7 +167,7 @@ class Form extends RequestHandler {
 		
 		// Check if CSRF protection is enabled, either on the parent controller or from the default setting. Note that
 		// method_exists() is used as some controllers (e.g. GroupTest) do not always extend from Object.
-		if(method_exists($controller, 'securityTokenEnabled')) {
+		if(method_exists($controller, 'securityTokenEnabled') || (method_exists($controller, 'hasMethod') && $controller->hasMethod('securityTokenEnabled'))) {
 			$this->security = $controller->securityTokenEnabled();
 		} else {
 			$this->security = self::$default_security;
