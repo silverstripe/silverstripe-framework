@@ -193,11 +193,19 @@ class RSSFeed extends ViewableData {
 	}
 	
 	/**
-	 * Return the content of the RSS feed
+	 * Return the content of the RSS feed.
+	 * 
+	 * Also temporarily disabled source file comments, and restores
+	 * to previous state once content has been rendered.
+	 * 
+	 * @return string
 	 */
 	function feedContent() {
+		$prevState = SSViewer::get_source_file_comments();
 		SSViewer::set_source_file_comments(false);
-		return str_replace('&nbsp;', '&#160;', $this->renderWith('RSSFeed'));
+		$content = str_replace('&nbsp;', '&#160;', $this->renderWith('RSSFeed'));
+		SSViewer::set_source_file_comments($prevState);
+		return $content;
 	}
 }
 
