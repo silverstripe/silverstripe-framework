@@ -626,15 +626,18 @@ class Versioned extends DataObjectDecorator {
 	 */
 	static function choose_site_stage() {
 		if(isset($_GET['stage'])) {
-			$_GET['stage'] = ucfirst(strtolower($_GET['stage']));
-			Session::set('readingMode', 'Stage.' . $_GET['stage']);
+			$stage = ucfirst(strtolower($_GET['stage']));
+			
+			if(!in_array($stage, array('Stage', 'Live'))) $stage = 'Live';
+
+			Session::set('readingMode', 'Stage.' . $stage);
 		}
 		if(isset($_GET['archiveDate'])) {
 			Session::set('readingMode', 'Archive.' . $_GET['archiveDate']);
 		}
 		
-		if(Session::get('readingMode')) {
-			Versioned::set_reading_mode(Session::get('readingMode'));
+		if($mode = Session::get('readingMode')) {
+			Versioned::set_reading_mode($mode);
 		} else {
 			Versioned::reading_stage("Live");
 		}
