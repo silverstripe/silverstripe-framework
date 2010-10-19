@@ -248,6 +248,8 @@ class FileTest extends SapphireTest {
 	} 
 	
 	function tearDown() {
+		parent::tearDown();
+
 		/* Remove the test files that we've created */
 		$fileIDs = $this->allFixtureIDs('File');
 		foreach($fileIDs as $fileID) {
@@ -261,9 +263,11 @@ class FileTest extends SapphireTest {
 			$folder = DataObject::get_by_id('Folder', $folderID);
 			if($folder && file_exists(BASE_PATH."/$folder->Filename")) Filesystem::removeFolder(BASE_PATH."/$folder->Filename");
 		}
-		
-		parent::tearDown();
+
+		// Remove left over folders and any files that may exist
+		if(file_exists('../assets/FileTest')) Filesystem::removeFolder('../assets/FileTest');
+		if(file_exists('../assets/FileTest-subfolder')) Filesystem::removeFolder('../assets/FileTest-subfolder');
+		if(file_exists('../assets/FileTest.txt')) unlink('../assets/FileTest.txt');
 	}
-	
-	
+
 }
