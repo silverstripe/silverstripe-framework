@@ -20,11 +20,11 @@ class NumericField extends TextField{
 		$jsFunc =<<<JS
 Behaviour.register({
 	"#$formID": {
-		validateNumericField: function(fieldName) {	
+		validateNumericField: function(fieldName) {
 				el = _CURRENT_FORM.elements[fieldName];
 				if(!el || !el.value) return true;
 				
-			 	if(el.value.match(/^\s*(\-?[0-9]+(\.[0-9]+)?\s*$)/)) { 
+			 	if(!isNaN(el.value)) {
 			 		return true;
 			 	} else {
 					validationError(el, "'" + el.value + "' $error","validation");
