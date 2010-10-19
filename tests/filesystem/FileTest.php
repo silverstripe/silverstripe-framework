@@ -149,6 +149,16 @@ class FileTest extends SapphireTest {
 		$this->assertEquals(ASSETS_PATH . '/FileTest.txt', $rootfile->getFullPath(), 'File in assets/ folder');
 	}
 	
+	function testGetURL() {
+		$rootfile = $this->objFromFixture('File', 'asdf');
+		$this->assertEquals(Director::baseURL() . $rootfile->getFilename(), $rootfile->getURL());
+	}
+	
+	function testGetAbsoluteURL() {
+		$rootfile = $this->objFromFixture('File', 'asdf');
+		$this->assertEquals(Director::absoluteBaseURL() . $rootfile->getFilename(), $rootfile->getAbsoluteURL());
+	}
+	
 	function testNameAndTitleGeneration() {
 		/* If objects are loaded into the system with just a Filename, then Name is generated but Title isn't */
 		$file = $this->objFromFixture('File', 'asdf');
