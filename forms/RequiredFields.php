@@ -100,10 +100,17 @@ JS;
 		if($this->required) {
 			foreach($this->required as $fieldName) { 
 				$formField = $fields->dataFieldByName($fieldName);
-				
-				// we need to check if $data[$fieldName] is an array (FileFiled case)
-				if(($formField && $data[$fieldName] == "") || 
-				   (is_array($data[$fieldName]) && $data[$fieldName]['name'] == "")) {
+
+				$error = true;
+				// submitted data for file upload fields come back as an array
+				if(is_array($data[$fieldName])) {
+					$error = ($data[$fieldName]) ? false : true;
+				} else {
+					// assume a string or integer
+					$error = (strlen($data[$fieldName])) ? false : true;
+				}
+
+				if($formField && $error) {
 					$errorMessage = sprintf(_t('Form.FIELDISREQUIRED', '%s is required').'.', strip_tags('"' . ($formField->Title() ? $formField->Title() : $fieldName) . '"'));
 					if($msg = $formField->getCustomValidationMessage()) {
 						$errorMessage = $msg;
