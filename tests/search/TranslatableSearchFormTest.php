@@ -21,6 +21,11 @@ class TranslatableSearchFormTest extends FunctionalTest {
 			"ContentControllerSearchExtension",
 		),
 	);
+
+	function waitUntilIndexingFinished() {
+		$db = DB::getConn();
+		if (method_exists($db, 'waitUntilIndexingFinished')) DB::getConn()->waitUntilIndexingFinished();
+	}
 	
 	function setUpOnce() {
 		// HACK Postgres doesn't refresh TSearch indexes when the schema changes after CREATE TABLE
@@ -40,6 +45,8 @@ class TranslatableSearchFormTest extends FunctionalTest {
 		// whenever a translation is created, canTranslate() is checked
 		$admin = $this->objFromFixture('Member', 'admin');
 		$admin->logIn();
+
+		$this->waitUntilIndexingFinished();
 	}
 	
 	
@@ -55,6 +62,8 @@ class TranslatableSearchFormTest extends FunctionalTest {
 		$translatedPublishedPage->write();
 		$translatedPublishedPage->publish('Stage', 'Live');
 		
+		$this->waitUntilIndexingFinished();
+
 		// Translatable::set_current_locale() can't be used because the context
 		// from the holder is not present here - we set the language explicitly
 		// through a pseudo GET variable in getResults()
