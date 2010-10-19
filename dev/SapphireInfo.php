@@ -22,8 +22,11 @@ class SapphireInfo extends Controller {
 		if(strstr($sapphireVersionFile, "/sapphire/trunk")) {
 			$sapphireVersion = "trunk";
 		} else {
-			preg_match("/sapphire\/(?:(?:branches)|(?:tags))(?:\/rc)?\/([A-Za-z0-9._-]+)\/silverstripe_version/", $sapphireVersionFile, $matches);
-			$sapphireVersion = $matches[1];
+			if(preg_match("/sapphire\/(?:(?:branches)|(?:tags))(?:\/rc)?\/([A-Za-z0-9._-]+)\/silverstripe_version/", $sapphireVersionFile, $matches)) {
+				$sapphireVersion = $matches[1];
+			} else {
+				$sapphireVersion = "unknown";
+			}
 		}
 		
 		return $sapphireVersion;
