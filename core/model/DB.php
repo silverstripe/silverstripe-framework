@@ -83,12 +83,14 @@ class DB {
 	 */
 	static function connect($databaseConfig) {
 		// This is used by TestRunner::startsession() to test up a test session using an alt
-		if(isset($_SESSION["alternativeDatabaseName"]) && $dbname = $_SESSION["alternativeDatabaseName"]) $databaseConfig['database'] = $dbname;
-		
+		if(isset($_SESSION) && !empty($_SESSION['alternativeDatabaseName'])) {
+			$databaseConfig['database'] = $_SESSION['alternativeDatabaseName'];
+		}
+
 		if(!isset($databaseConfig['type']) || empty($databaseConfig['type'])) {
 			user_error("DB::connect: Not passed a valid database config", E_USER_ERROR);
 		}
-		
+
 		self::$connection_attempted = true;
 
 		$dbClass = $databaseConfig['type'];
@@ -333,4 +335,3 @@ class DB {
 	}
 	
 }
-?>
