@@ -62,7 +62,7 @@ class Versioned extends DataObjectDecorator {
 	 * @var array $indexes_for_versions_table
 	 */
 	static $indexes_for_versions_table = array(
-		'RecordID_Version' => '(RecordID, Version)',
+		'RecordID_Version' => '(RecordID,Version)',
 		'RecordID' => true,
 		'Version' => true,
 		'AuthorID' => true,
