@@ -1,7 +1,13 @@
 Permission:
+   admin:
+      Code: ADMIN
    security-admin:
       Code: CMS_ACCESS_SecurityAdmin
 Group:
+   admingroup:
+      Title: Admin
+      Code: admin
+      Permissions: =>Permission.admin
    securityadminsgroup:
       Title: securityadminsgroup
       Code: securityadminsgroup
@@ -25,6 +31,14 @@ Group:
       Title: Memberless Group
       code: memberless
 Member:
+   admin:
+     FirstName: Admin
+     Email: admin@silverstripe.com
+     Groups: =>Group.admingroup
+   other-admin:
+     FirstName: OtherAdmin
+     Email: other-admin@silverstripe.com
+     Groups: =>Group.admingroup
    test:
       FirstName: Test
       Surname: User

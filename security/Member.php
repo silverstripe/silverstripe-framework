@@ -1280,6 +1280,13 @@ class Member extends DataObject {
 		// No member found
 		if(!($member && $member->exists())) return false;
 		
+		// If the requesting member is not an admin, but has access to manage members,
+		// he still can't edit other members with ADMIN permission.
+		// This is a bit weak, strictly speaking he shouldn't be allowed to
+		// perform any action that could change the password on a member
+		// with "higher" permissions than himself, but thats hard to determine.		
+		if(!Permission::checkMember($member, 'ADMIN') && Permission::checkMember($this, 'ADMIN')) return false;
+
 		return $this->canView($member);
 	}
 	
