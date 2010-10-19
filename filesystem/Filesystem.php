@@ -42,7 +42,7 @@ class Filesystem extends Object {
 			$dir = opendir( $folder );
 			
 			while( $file = readdir( $dir ) )
-				if( !preg_match( '/\.{1,2}$/', $file ) )
+				if( !preg_match( '/^\.{1,2}$/', $file ) )
 					self::removeFolder( $folder.'/'.$file );
 			
 			closedir($dir);
