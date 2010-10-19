@@ -45,6 +45,11 @@ class SS_HTMLValue extends ViewableData {
 	 * @return bool
 	 */
 	public function setContent($content) {
+		// Ensure that window-style newlines don't get replaced with "&#13;" entity by DOMDocument
+		if (PHP_EOL == "\n") { 
+			$content = str_replace("\r\n", PHP_EOL, $content); 
+		}
+		
 		return @$this->getDocument()->loadHTML(
 			'<html><head><meta http-equiv="content-type" content="text/html; charset=utf-8"></head>' .
 			"<body>$content</body></html>"
