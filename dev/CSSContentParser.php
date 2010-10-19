@@ -28,6 +28,7 @@ class CSSContentParser extends Object {
 				array(
 					'output-xhtml' => true,
 					'numeric-entities' => true,
+					'wrap' => 99999, // We need this to be consistent for functional test string comparisons
 				), 
 				'utf8'
 			);
