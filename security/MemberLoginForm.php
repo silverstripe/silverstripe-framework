@@ -6,6 +6,12 @@
  */
 class MemberLoginForm extends LoginForm {
 
+	/**
+	 * This field is used in the "You are logged in as %s" message
+	 * @var string
+	 */
+	public $loggedInAsField = 'FirstName';
+
 	protected $authenticator_class = 'MemberAuthenticator';
 	
 	/**
@@ -101,9 +107,8 @@ JS
 	 */
 	protected function getMessageFromSession() {
 		parent::getMessageFromSession();
-		if(($member = Member::currentUser()) &&
-				!Session::get('MemberLoginForm.force_message')) {
-			$this->message = sprintf(_t('Member.LOGGEDINAS', "You're logged in as %s."), $member->FirstName);
+		if(($member = Member::currentUser()) && !Session::get('MemberLoginForm.force_message')) {
+			$this->message = sprintf(_t('Member.LOGGEDINAS', "You're logged in as %s."), $member->{$this->loggedInAsField});
 		}
 		Session::set('MemberLoginForm.force_message', false);
 	}
