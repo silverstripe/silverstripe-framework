@@ -99,8 +99,8 @@ JS;
 		}
 		if($this->required) {
 			foreach($this->required as $fieldName) { 
-				$formField = $fields->dataFieldByName($fieldName); 
-				if($formField && !$data[$fieldName]) {
+				$formField = $fields->dataFieldByName($fieldName);
+				if($formField && !strlen($data[$fieldName])) {
 					$errorMessage = sprintf(_t('Form.FIELDISREQUIRED', '%s is required').'.', strip_tags('"' . ($formField->Title() ? $formField->Title() : $fieldName) . '"'));
 					if($msg = $formField->getCustomValidationMessage()) {
 						$errorMessage = $msg;
