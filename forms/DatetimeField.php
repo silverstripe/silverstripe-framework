@@ -72,10 +72,10 @@ class DatetimeField extends FormField {
 				if($this->dateField->getConfig('dmyfields')) {
 					$this->dateField->setValue($valueObj->toArray());
 				} else {
-					$this->dateField->setValue($valueObj->get($this->dateField->getConfig('dateformat')));
+					$this->dateField->setValue($valueObj->get($this->dateField->getConfig('dateformat'), $this->locale));
 				}
 				// set time
-				$this->timeField->setValue($valueObj->get($this->timeField->getConfig('timeformat')));
+				$this->timeField->setValue($valueObj->get($this->timeField->getConfig('timeformat'), $this->locale));
 			}
 			// Setting from form submission
 			elseif(is_array($val) && array_key_exists('date', $val) && array_key_exists('time', $val)) {
