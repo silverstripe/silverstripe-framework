@@ -129,7 +129,8 @@
 												echo '<div class="dbfields">';
 												if(isset($details['fields'])) foreach($details['fields'] as $fieldName => $fieldSpec) {
 													$fieldTitle = $fieldSpec['title'];
-													
+													$fieldType = ($fieldName == 'password') ? 'password' : 'text';
+
 													// values
 													$defaultValue = (isset($fieldSpec['default'])) ? $fieldSpec['default'] : null;
 													if($usingEnv && isset($fieldSpec['envVar']) && defined($fieldSpec['envVar'])) {
@@ -142,7 +143,7 @@
 													$attrs = array(
 														'id' => "db_{$class}_{$fieldName}",
 														'class' => 'text',
-														'type' => 'text',
+														'type' => $fieldType,
 														'name' => "db[$class][$fieldName]",
 														'value' => $value,
 													);
