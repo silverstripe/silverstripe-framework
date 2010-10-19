@@ -49,8 +49,9 @@ class CheckboxField extends FormField {
 				EXTR_SKIP);
 			$messageBlock = isset($Message) ? "<span class=\"message $MessageType\">$Message</span>" : '';
 			$Type = $this->XML_val('Type');
+			$extraClass = $this->XML_val('extraClass'); 
 			return <<<HTML
-<p id="$Name" class="field $Type">
+<p id="$Name" class="field $Type $extraClass">
 	$Field
 	<label class="right" for="{$this->id()}">$Title</label>
 	$messageBlock
