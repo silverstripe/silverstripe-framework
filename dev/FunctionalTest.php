@@ -67,6 +67,9 @@ class FunctionalTest extends SapphireTest {
 		if($this->stat('use_draft_site')) {
 			$this->useDraftSite();
 		}
+        
+        // Unprotect the site, tests are running with the assumption it's off. They will enable it on a case-by-case basis.
+        BasicAuth::protect_entire_site(false);
 	}
 
 	function tearDown() {
