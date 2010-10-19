@@ -1,8 +1,5 @@
 <?php
 require_once 'TestRunner.php';
-if(hasPhpUnit()) {
-require_once 'PHPUnit/Framework.php';
-}
 
 /**
  * Test case class for the Sapphire framework.
