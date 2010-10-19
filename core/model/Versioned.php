@@ -319,20 +319,20 @@ class Versioned extends DataObjectDecorator {
 							$count = DB::query("
 								SELECT COUNT(*) FROM \"{$table}_versions\"
 								LEFT JOIN \"{$child}_versions\" 
-									ON \"{$child}_versions\".RecordID = \"{$table}_versions\".RecordID 
-									AND \"{$child}_versions\".Version = \"{$table}_versions\".Version
-								WHERE \"{$child}_versions\".ID IS NULL
+									ON \"{$child}_versions\".\"RecordID\" = \"{$table}_versions\".\"RecordID\"
+									AND \"{$child}_versions\".\"Version\" = \"{$table}_versions\".\"Version\"
+								WHERE \"{$child}_versions\".\"ID\" IS NULL
 							")->value();
 
 							if($count > 0) {
 								DB::alteration_message("Removing orphaned versioned records", "deleted");
 								
 								$effectedIDs = DB::query("
-									SELECT \"{$table}_versions\".ID FROM \"{$table}_versions\"
+									SELECT \"{$table}_versions\".\"ID\" FROM \"{$table}_versions\"
 									LEFT JOIN \"{$child}_versions\" 
-										ON \"{$child}_versions\".RecordID = \"{$table}_versions\".RecordID 
-										AND \"{$child}_versions\".Version = \"{$table}_versions\".Version
-									WHERE \"{$child}_versions\".ID IS NULL
+										ON \"{$child}_versions\".\"RecordID\" = \"{$table}_versions\".\"RecordID\"
+										AND \"{$child}_versions\".\"Version\" = \"{$table}_versions\".\"Version\"
+									WHERE \"{$child}_versions\".\"ID\" IS NULL
 								")->column();
 
 								if(is_array($effectedIDs)) {
