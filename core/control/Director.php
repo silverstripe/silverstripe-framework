@@ -646,10 +646,11 @@ class Director {
 		if($matched && !isset($_SERVER['HTTPS'])) {
 			$destURL = str_replace('http:', 'https:', Director::absoluteURL($_SERVER['REQUEST_URI']));
 
-			if(!headers_sent()) header("Location: $destURL");
+			// This coupling to SapphireTest is necessary to test the destination URL and to not interfere with tests
 			if(SapphireTest::is_running_test()) {
 				return $destURL;
 			} else {
+				if(!headers_sent()) header("Location: $destURL");
 				die("<h1>Your browser is not accepting header redirects</h1><p>Please <a href=\"$destURL\">click here</a>");
 			}
 		} else {
