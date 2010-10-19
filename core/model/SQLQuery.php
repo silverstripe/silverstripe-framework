@@ -241,14 +241,14 @@ class SQLQuery {
 			foreach($lumpedSortParts as $i => $sortPart) {
 				$sortPart = trim($sortPart);
 				if(substr(strtolower($sortPart),-5) == ' desc') {
-					$this->select[] = substr($sortPart,0,-5) . " AS _SortColumn{$i}";
-					$newSorts[] = "_SortColumn{$i} DESC";
+					$this->select[] = substr($sortPart,0,-5) . " AS \"_SortColumn{$i}\"";
+					$newSorts[] = "\"_SortColumn{$i}\" DESC";
 				} else if(substr(strtolower($sortPart),-4) == ' asc') {
-					$this->select[] = substr($sortPart,0,-4) . " AS _SortColumn{$i}";
-					$newSorts[] = "_SortColumn{$i} ASC";
+					$this->select[] = substr($sortPart,0,-4) . " AS \"_SortColumn{$i}\"";
+					$newSorts[] = "\"_SortColumn{$i}\" ASC";
 				} else {
-					$this->select[] = "$sortPart AS _SortColumn{$i}";
-					$newSorts[] = "_SortColumn{$i} ASC";
+					$this->select[] = "$sortPart AS \"_SortColumn{$i}\"";
+					$newSorts[] = "\"_SortColumn{$i}\" ASC";
 				}
 			}
 				
