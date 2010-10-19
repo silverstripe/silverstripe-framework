@@ -8,6 +8,15 @@ class MemberTest extends FunctionalTest {
 	
 	protected $orig = array();
 	protected $local = null; 
+	
+	protected $illegalExtensions = array(
+		'Member' => array(
+			// TODO Coupling with modules, this should be resolved by automatically
+			// removing all applied extensions before a unit test
+			'ForumRole',
+			'OpenIDAuthenticatedRole'
+		)
+	);
 
 	function __construct() {
 		parent::__construct();
