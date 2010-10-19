@@ -375,7 +375,16 @@ class RestfulServer extends Controller {
 		
 		$this->getResponse()->setStatusCode(200); // Success
 		$this->getResponse()->addHeader('Content-Type', $responseFormatter->getOutputContentType());
-		$objHref = Director::absoluteURL(self::$api_base . "$obj->class/$obj->ID");
+
+		// Append the default extension for the output format to the Location header
+		// or else we'll use the default (XML)
+		$types = $responseFormatter->supportedExtensions();
+		$type = '';
+		if (count($types)) {
+			$type = ".{$types[0]}";
+		}
+
+		$objHref = Director::absoluteURL(self::$api_base . "$obj->class/$obj->ID" . $type);
 		$this->getResponse()->addHeader('Location', $objHref);
 		
 		return $responseFormatter->convertDataObject($obj);
@@ -423,7 +432,16 @@ class RestfulServer extends Controller {
 		
 			$this->getResponse()->setStatusCode(201); // Created
 			$this->getResponse()->addHeader('Content-Type', $responseFormatter->getOutputContentType());
-			$objHref = Director::absoluteURL(self::$api_base . "$obj->class/$obj->ID");
+
+			// Append the default extension for the output format to the Location header
+			// or else we'll use the default (XML)
+			$types = $responseFormatter->supportedExtensions();
+			$type = '';
+			if (count($types)) {
+				$type = ".{$types[0]}";
+			}
+
+			$objHref = Director::absoluteURL(self::$api_base . "$obj->class/$obj->ID" . $type);
 			$this->getResponse()->addHeader('Location', $objHref);
 		
 			return $responseFormatter->convertDataObject($obj);
