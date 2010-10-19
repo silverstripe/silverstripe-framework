@@ -140,6 +140,9 @@ class DateField extends TextField {
 			$this->value = null;
 			$this->valueObj = null;
 		} else {
+			// Quick fix for overzealous Zend validation, its case sensitive on month names (see #5990)
+			if(is_string($val)) $val = ucwords(strtolower($val));
+			
 			if($this->getConfig('dmyfields')) {
 				// Setting in correct locale
 				if(is_array($val) && $this->validateArrayValue($val)) {
