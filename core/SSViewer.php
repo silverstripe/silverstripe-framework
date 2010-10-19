@@ -315,7 +315,7 @@ class SSViewer {
 		$content = file_get_contents(SSViewer::getTemplateFile($identifier));
 
 		// $content = "<!-- getTemplateContent() :: identifier: $identifier -->". $content; 
-		// Adds an i18n namespace to all <% _t(...) %> calls without an existing one
+		// Adds an i18n namespace to all _t(...) calls without an existing one
 		// to avoid confusion when using the include in different contexts.
 		// Entities without a namespace are deprecated, but widely used.
 		$content = ereg_replace('<' . '% +_t\((\'([^\.\']*)\'|"([^\."]*)")(([^)]|\)[^ ]|\) +[^% ])*)\) +%' . '>', '<?= _t(\''. $identifier . '.ss' . '.\\2\\3\'\\4) ?>', $content);
