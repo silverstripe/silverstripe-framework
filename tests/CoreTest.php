@@ -13,7 +13,7 @@ class CoreTest extends SapphireTest {
 
 	public function setUp() {
 		parent::setUp();
-		$this->tempPath = $tempPath = Director::baseFolder() . '/silverstripe-cache';
+		$this->tempPath = Director::baseFolder() . '/silverstripe-cache';
 	}
 
 	public function testGetTempPathInProject() {
@@ -22,12 +22,25 @@ class CoreTest extends SapphireTest {
 		} else {
 			// A typical Windows location for where sites are stored on IIS
 			$this->assertEquals(getTempFolder('C:\\inetpub\\wwwroot\\silverstripe'), getSysTempDir() . '/silverstripe-cacheC--inetpub-wwwroot-silverstripe');
-			
+
 			// A typical Mac OS X location for where sites are stored
 			$this->assertEquals(getTempFolder('/Users/joebloggs/Sites/silverstripe'), getSysTempDir() . '/silverstripe-cache-Users-joebloggs-Sites-silverstripe');
 			
 			// A typical Linux location for where sites are stored
 			$this->assertEquals(getTempFolder('/var/www/silverstripe'), getSysTempDir() . '/silverstripe-cache-var-www-silverstripe');
+		}
+	}
+
+	public function tearDown() {
+		parent::tearDown();
+		if(file_exists(getSysTempDir() . '/silverstripe-cacheC--inetpub-wwwroot-silverstripe')) {
+			rmdir(getSysTempDir() . '/silverstripe-cacheC--inetpub-wwwroot-silverstripe');
+		}
+		if(file_exists(getSysTempDir() . '/silverstripe-cache-Users-joebloggs-Sites-silverstripe')) {
+			rmdir(getSysTempDir() . '/silverstripe-cache-Users-joebloggs-Sites-silverstripe');
+		}
+		if(file_exists(getSysTempDir() . '/silverstripe-cache-var-www-silverstripe')) {
+			rmdir(getSysTempDir() . '/silverstripe-cache-var-www-silverstripe');
 		}
 	}
 
