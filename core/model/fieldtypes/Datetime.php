@@ -14,7 +14,7 @@
  * Example definition via {@link DataObject::$db}:
  * <code>
  * static $db = array(
- *  "Expires" => "SSDatetime",
+ *  "Expires" => "SS_Datetime",
  * );
  * </code>
  * 
