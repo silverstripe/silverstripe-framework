@@ -79,20 +79,67 @@
  */
 
 class Session {
-	
+
 	/**
 	 * @var $timeout Set session timeout
 	 */
-	static protected $timeout = 0;
+	protected static $timeout = 0;
 	
-	static protected $session_ips = array();
-	
+	protected static $session_ips = array();
+
+	protected static $cookie_domain;
+
+	protected static $cookie_path;
+
 	/**
 	 * Session data
 	 */
 	protected $data = array();
-	protected $changedData = array();
 	
+	protected $changedData = array();
+
+	/**
+	 * Cookie domain, for example 'www.php.net'.
+	 * 
+	 * To make cookies visible on all subdomains then the domain
+	 * must be prefixed with a dot like '.php.net'.
+	 * 
+	 * @param string $domain The domain to set
+	 */
+	public static function set_cookie_domain($domain) {
+		self::$cookie_domain = $domain;
+	}
+
+	/**
+	 * Get the cookie domain.
+	 * @return string
+	 */
+	public static function get_cookie_domain() {
+		return self::$cookie_domain;
+	}
+
+	/**
+	 * Path to set on the domain where the session cookie will work.
+	 * Use a single slash ('/') for all paths on the domain.
+	 *
+	 * @param string $path The path to set
+	 */
+	public static function set_cookie_path($path) {
+		self::$cookie_path = $path;
+	}
+
+	/**
+	 * Get the path on the domain where the session cookie will work.
+	 * @return string
+	 */
+	public static function get_cookie_path() {
+		if(self::$cookie_path) {
+			return self::$cookie_path;
+		} else {
+			return Director::baseURL();
+		}
+	}
+
 	/**
 	 * Create a new session object, with the given starting data
 	 *
@@ -348,9 +395,16 @@ class Session {
 	 */
 	public static function start($sid = null) {
 		self::load_config();
-		
+		$path = self::get_cookie_path();
+		$domain = self::get_cookie_domain();
+
 		if(!session_id() && !headers_sent()) {
-			session_set_cookie_params(self::$timeout, Director::baseURL());
+			if($domain) {
+				session_set_cookie_params(self::$timeout, $path, $domain);
+			} else {
+				session_set_cookie_params(self::$timeout, $path);
+			}
+
 			// @ is to supress win32 warnings/notices when session wasn't cleaned up properly
 			// There's nothing we can do about this, because it's an operating system function!
 			if($sid) session_id($sid);
