@@ -90,6 +90,41 @@ class RestfulServiceTest extends SapphireTest {
 		$test1 = $connection->request('RestfulServiceTest_Controller/invalid?usetestmanifest=1&flush=1');
 		$test1->xpath("\\fail");
 	}
+	
+	function testHttpErrorWithoutCache() {
+		$connection = new RestfulService(Director::absoluteBaseURL(), 0);
+		$response = $connection->request('RestfulServiceTest_Controller/httpErrorWithoutCache?usetestmanifest=1&flush=1');
+		
+		$this->assertEquals(400, $response->getStatusCode());
+		$this->assertFalse($response->getCachedBody());
+		$this->assertContains("<error>HTTP Error</error>", $response->getBody());
+		
+	}
+	
+	function testHttpErrorWithCache() {
+		$subUrl = 'RestfulServiceTest_Controller/httpErrorWithCache?usetestmanifest=1&flush=1';
+		$connection = new RestfulService(Director::absoluteBaseURL(), 0);
+		$this->createFakeCachedResponse($connection, $subUrl); 
+		$response = $connection->request($subUrl);
+		
+		$this->assertEquals(400, $response->getStatusCode());
+		$this->assertEquals("Cache response body",$response->getCachedBody());
+		$this->assertContains("<error>HTTP Error</error>", $response->getBody());
+		
+	}
+	
+	/**
+	 * Simulate cached response file for testing error requests that are supposed to have cache files
+	 */
+	private function createFakeCachedResponse($connection, $subUrl) {
+		$fullUrl = $connection->getAbsoluteRequestURL($subUrl);
+		$cachedir = TEMP_FOLDER;	// Default silverstripe cache
+		$cache_file = md5($fullUrl);	// Encoded name of cache file
+		$cache_path = $cachedir."/xmlresponse_$cache_file";
+		$cacheResponse = new RestfulService_Response("Cache response body");
+		$store = serialize($cacheResponse);
+		file_put_contents($cache_path, $store);
+	}
 }
 
 class RestfulServiceTest_Controller extends Controller {
@@ -133,6 +168,29 @@ XML;
 XML;
 		header('Content-type: text/xml');
 		echo $out;		
+	}
+	
+	public function httpErrorWithoutCache() {
+		$out = <<<XML
+<?xml version="1.0"?>
+<test>
+	<error>HTTP Error</error>
+</test>
+XML;
+		
+		$this->response->setBody($out);
+		$this->response->setStatusCode(400); 
+		$this->response->addHeader('Content-type', 'text/xml');
+		
+		return $this->response;
+	}
+	
+	/**
+	 * The body of this method is the same as self::httpErrorWithoutCache()
+	 * but we need it for caching since caching using request url to determine path to cache file
+	 */
+	public function httpErrorWithCache() {
+		return $this->httpErrorWithoutCache();
 	}
 }
 
