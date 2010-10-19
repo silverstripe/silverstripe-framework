@@ -134,7 +134,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 		DataObject::reset();
 		SiteTree::reset();
 		Hierarchy::reset();
-		Controller::curr()->setSession(new Session(array()));
+		if(Controller::has_curr()) Controller::curr()->setSession(new Session(array()));
 		
 		$this->originalTheme = SSViewer::current_theme();
 		
@@ -401,7 +401,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 		// Stop the redirection that might have been requested in the test.
 		// Note: Ideally a clean Controller should be created for each test. 
 		// Now all tests executed in a batch share the same controller.
-		$controller = Controller::curr();
+		$controller = Controller::has_curr() ? Controller::curr() : null;
 		if ( $controller && $controller->response && $controller->response->getHeader('Location') ) {
 			$controller->response->setStatusCode(200);
 			$controller->response->removeHeader('Location');
