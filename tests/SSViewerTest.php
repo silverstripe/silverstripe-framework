@@ -341,7 +341,7 @@ after')
 				<head><% base_tag %></head>
 				<body><p>test</p><body>
 			</html>';
-		$this->assertRegExp('/<head><base href=".*"><\/base><\/head>/', $this->render($tmpl1));
+		$this->assertRegExp('/<head><base href=".*" \/><\/head>/', $this->render($tmpl1));
 			
 		// HTML4 and 5 will only have it for IE
 		$tmpl2 = '<!DOCTYPE html>
@@ -368,7 +368,7 @@ after')
 
 		$response = new SS_HTTPResponse($this->render($tmpl1));
 		$negotiator->xhtml($response);
-		$this->assertRegExp('/<head><base href=".*"><\/base><\/head>/', $response->getBody());
+		$this->assertRegExp('/<head><base href=".*" \/><\/head>/', $response->getBody());
 	}
 
 	

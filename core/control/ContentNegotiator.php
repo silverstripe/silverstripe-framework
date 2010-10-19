@@ -141,8 +141,8 @@ class ContentNegotiator {
 			$response->addHeader("Vary" , "Accept");
 
 			// Fix base tag
-			$content = preg_replace('/<base href="([^"]*)"><!--\[if[[^\]*]\]><\/base><!\[endif\]-->/', 
-				'<base href="$1"></base>', $content);
+			$content = preg_replace('/<base href="([^"]*)"><!--\[if[[^\]*]\] \/><!\[endif\]-->/', 
+				'<base href="$1" />', $content);
 			
 			$content = str_replace('&nbsp;','&#160;', $content);
 			$content = str_replace('<br>','<br />', $content);
@@ -170,7 +170,7 @@ class ContentNegotiator {
 		$hasXMLHeader = (substr($content,0,5) == '<' . '?xml' );
 
 		// Fix base tag
-		$content = preg_replace('/<base href="([^"]*)"><\/base>/', 
+		$content = preg_replace('/<base href="([^"]*)" \/>/', 
 			'<base href="$1"><!--[if lte IE 6]></base><![endif]-->', $content);
 
 		$content = ereg_replace("<\\?xml[^>]+\\?>\n?",'',$content);
