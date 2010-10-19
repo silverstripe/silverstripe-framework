@@ -453,7 +453,7 @@ class SQLQuery {
 			if($this->groupby) {
 				$countQuery = new SQLQuery();
 				$countQuery->select = array("count(*)");
-				$countQuery->from = array('(' . $clone->sql() . ') as all_distinct');
+				$countQuery->from = array('(' . $clone->sql() . ') all_distinct');
 
 				return $countQuery->execute()->value();
 
