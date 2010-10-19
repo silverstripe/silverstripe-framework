@@ -24,6 +24,11 @@ class SearchFormTest extends FunctionalTest {
 		),
 	);
 	
+	function waitUntilIndexingFinished() {
+		$db = DB::getConn();
+		if (method_exists($db, 'waitUntilIndexingFinished')) DB::getConn()->waitUntilIndexingFinished();
+	}
+	
 	function setUpOnce() {
 		// HACK Postgres doesn't refresh TSearch indexes when the schema changes after CREATE TABLE
 		if(is_a(DB::getConn(), 'PostgreSQLDatabase')) {
@@ -38,13 +43,17 @@ class SearchFormTest extends FunctionalTest {
 		
 		$holderPage = $this->objFromFixture('SiteTree', 'searchformholder');
 		$this->mockController = new ContentController($holderPage);
+		
+		$this->waitUntilIndexingFinished();
 	}
-
+	
 	function testPublishedPagesMatchedByTitle() {
 		$sf = new SearchForm($this->mockController, 'SearchForm');
 	
 		$publishedPage = $this->objFromFixture('SiteTree', 'publicPublishedPage');
 		$publishedPage->publish('Stage', 'Live');
+		
+		$this->waitUntilIndexingFinished();
 		$results = $sf->getResults(null, array('Search'=>'publicPublishedPage'));
 		$this->assertContains(
 			$publishedPage->ID,
@@ -57,10 +66,12 @@ class SearchFormTest extends FunctionalTest {
 		$sf = new SearchForm($this->mockController, 'SearchForm');
 
 		$publishedPage = $this->objFromFixture('SiteTree', 'publicPublishedPage');
-		$publishedPage->Title = "finding me";
+		$publishedPage->Title = "finding butterflies";
 		$publishedPage->write();
 		$publishedPage->publish('Stage', 'Live');
-		$results = $sf->getResults(null, array('Search'=>'"finding me"'));
+		
+		$this->waitUntilIndexingFinished();
+		$results = $sf->getResults(null, array('Search'=>'"finding butterflies"'));
 		$this->assertContains(
 			$publishedPage->ID,
 			$results->column('ID'),
