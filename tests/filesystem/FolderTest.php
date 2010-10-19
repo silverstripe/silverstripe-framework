@@ -143,7 +143,7 @@ class FolderTest extends SapphireTest {
 	 * Tests for the bug #5994 - if you don't execute get_by_id prior to the rename or move, it will fail.
 	 */
 	function testRenameFolderAndCheckTheFile() {
-		$folder1 = DataObject::get_one('Folder', 'ID='.$this->idFromFixture('Folder', 'folder1'));
+		$folder1 = DataObject::get_one('Folder', '"ID"='.$this->idFromFixture('Folder', 'folder1'));
 		
 		$folder1->Name = 'FileTest-folder1-changed';
 		$folder1->write();
