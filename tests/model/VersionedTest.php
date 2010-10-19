@@ -5,7 +5,51 @@ class VersionedTest extends SapphireTest {
 
 	protected $extraDataObjects = array(
 		'VersionedTest_DataObject',
+		'VersionedTest_Subclass'
 	);
+	
+	protected $requiredExtensions = array(
+		"VersionedTest_DataObject" => array('Versioned')
+	);
+
+	function testDeletingOrphanedVersions() {
+		$obj = new VersionedTest_Subclass();
+		$obj->ExtraField = 'Foo'; // ensure that child version table gets written
+		$obj->write();
+		$obj->publish('Stage', 'Live');
+		
+		$obj->ExtraField = 'Bar'; // ensure that child version table gets written
+		$obj->write();
+		$obj->publish('Stage', 'Live');
+	
+		$versions = DB::query("SELECT COUNT(*) FROM \"VersionedTest_Subclass_versions\" WHERE \"RecordID\" = '$obj->ID'")->value();
+	
+		$this->assertGreaterThan(0, $versions, 'At least 1 version exists in the history of the page');
+	
+		// Force orphaning of all versions created earlier, only on parent record.
+		// The child versiones table should still have the correct relationship
+		DB::query("DELETE FROM \"VersionedTest_DataObject_versions\" WHERE \"RecordID\" = $obj->ID");
+		
+		// insert a record with no primary key (ID)
+		DB::query("INSERT INTO \"VersionedTest_DataObject_versions\" (RecordID) VALUES ($obj->ID)");
+	
+		// run the script which should clean that up
+		$obj->augmentDatabase();
+	
+		$versions = DB::query("SELECT COUNT(*) FROM \"VersionedTest_Subclass_versions\" WHERE \"RecordID\" = '$obj->ID'")->value();
+		$this->assertEquals(0, $versions, 'Orphaned versions on child tables are removed');
+		
+		// test that it doesn't delete records that we need
+		$obj->write();
+		$obj->publish('Stage', 'Live');
+	
+		$count = DB::query("SELECT COUNT(*) FROM \"VersionedTest_Subclass_versions\" WHERE \"RecordID\" = '$obj->ID'")->value();
+		$obj->augmentDatabase();
+		
+		$count2 = DB::query("SELECT COUNT(*) FROM \"VersionedTest_Subclass_versions\" WHERE \"RecordID\" = '$obj->ID'")->value();
+		
+		$this->assertEquals($count, $count2);
+	}
 	
 	function testForceChangeUpdatesVersion() {
 		$obj = new VersionedTest_DataObject();
@@ -21,7 +65,7 @@ class VersionedTest extends SapphireTest {
 			"A object Version is increased when just calling forceChange() without any other changes"
 		);
 	}
-	
+
 	/**
 	 * Test Versioned::get_including_deleted()
 	 */
@@ -201,6 +245,10 @@ class VersionedTest_DataObject extends DataObject implements TestOnly {
 class VersionedTest_Subclass extends VersionedTest_DataObject implements TestOnly {
 	static $db = array(
 		"ExtraField" => "Varchar",
+	);
+	
+	static $extensions = array(
+		"Versioned('Stage', 'Live')"
 	);
 }
 
