@@ -100,11 +100,7 @@ class MySQLDatabase extends SS_Database {
 	 */
 	public function getVersion() {
 		if(!$this->mysqlVersion) {
-			$this->mysqlVersion = @mysql_get_server_info($this->dbConn);
-			// fallback to query if function doesn't give anything
-			if(!$this->mysqlVersion) {
-				$this->mysqlVersion = (float)substr(trim(ereg_replace("([A-Za-z-])", "", $this->query("SELECT VERSION()")->value())), 0, 3);
-			}
+			$this->mysqlVersion = (float)substr(trim(ereg_replace("([A-Za-z-])", "", $this->query("SELECT VERSION()")->value())), 0, 3);
 		}
 		return $this->mysqlVersion;
 	}
