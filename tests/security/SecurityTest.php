@@ -328,9 +328,8 @@ class SecurityTest extends FunctionalTest {
 	 * Helper method for the tests above
 	 */
 	function doTestLoginForm($email, $password, $backURL = 'test/link') {
-		$this->session()->inst_set('BackURL', $backURL);
-
 		$this->get('Security/logout');
+		$this->session()->inst_set('BackURL', $backURL);
 		$this->get('Security/login');
 		
 		return $this->submitForm(
@@ -342,7 +341,7 @@ class SecurityTest extends FunctionalTest {
 				'AuthenticationMethod' => 'MemberAuthenticator',
 				'action_dologin' => 1,
 			)
-		); 
+		);
 	}
 	
 	/**
