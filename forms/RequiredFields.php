@@ -103,11 +103,12 @@ JS;
 
 				$error = true;
 				// submitted data for file upload fields come back as an array
-				if(is_array($data[$fieldName])) {
-					$error = ($data[$fieldName]) ? false : true;
+				$value = isset($data[$fieldName]) ? $data[$fieldName] : null;
+				if(is_array($value)) {
+					$error = ($value) ? false : true;
 				} else {
 					// assume a string or integer
-					$error = (strlen($data[$fieldName])) ? false : true;
+					$error = (strlen($value)) ? false : true;
 				}
 
 				if($formField && $error) {
