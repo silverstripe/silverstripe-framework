@@ -51,7 +51,7 @@ class MySQLDatabase extends SS_Database {
 	 *  - username: The username to log on with
 	 *  - password: The password to log on with
 	 *  - database: The database to connect to
-	 *  - timezone: (optional) the timezone offset, eg: +12:00 for NZ time 
+	 *  - timezone: (optional) The timezone offset. For example: +12:00, "Pacific/Auckland", or "SYSTEM"
 	 */
 	public function __construct($parameters) {
 		$this->dbConn = mysql_connect($parameters['server'], $parameters['username'], $parameters['password'], true);
@@ -63,13 +63,12 @@ class MySQLDatabase extends SS_Database {
 
 		$this->active = mysql_select_db($parameters['database'], $this->dbConn);
 		$this->database = $parameters['database'];
-		if(isset($parameters['timezone'])) {	//set timezone to custom parameter 
-			mysql_query("SET SESSION time_zone='" . $parameters['timezone'] . "'"); 
-		}
+
 		if(!$this->dbConn) {
 			$this->databaseError("Couldn't connect to MySQL database");
 		}
-		
+
+		if(isset($parameters['timezone'])) $this->query(sprintf("SET SESSION time_zone = '%s'", $parameters['timezone']));
 		$this->query("SET sql_mode = 'ANSI'");
 	}
 	
