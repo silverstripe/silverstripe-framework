@@ -100,7 +100,7 @@ class TestRunner extends Controller {
 			if(!$reflection->isInstantiable()) unset($tests[$class]);
 		}
 	
-		$this->runTests($tests, false);
+		$this->runTests($tests, $coverage);
 	}
 	
 	/**
