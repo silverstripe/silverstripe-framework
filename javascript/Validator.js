@@ -1,5 +1,6 @@
 var _CURRENT_FORM;
 var _FIRST_ERRORED_FIELD = null;
+var _VALIDATIONS_REF = new Array();
 
 function initialiseForm(form, fromAnOnBlur) {
 	_CURRENT_FORM = form;
@@ -247,7 +248,7 @@ function validationError(field,message, messageClass, cacheError) {
 	_HAS_HAD_FORM_ERROR = true;
 
 	// See if the tag has a reference to the validationMessage (quicker than the one below)
-	var validationMessage = field.validationMessage;
+	var validationMessage = (typeof(_VALIDATIONS_REF[field.id]) != 'undefined')? _VALIDATIONS_REF[field.id] : null;
 
 	// Cycle through the elements to see if it has a span
 	// (for a validation or required messages)
@@ -266,7 +267,7 @@ function validationError(field,message, messageClass, cacheError) {
 	}
 
 	// Keep a reference to it
-	field.validationMessage = validationMessage;
+	_VALIDATIONS_REF[field.id] = validationMessage;
 
     // Keep a reference to the first errored field
     if(field && !_FIRST_ERRORED_FIELD) _FIRST_ERRORED_FIELD = field;
