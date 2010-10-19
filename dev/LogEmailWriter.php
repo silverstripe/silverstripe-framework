@@ -2,8 +2,7 @@
 require_once 'Zend/Log/Writer/Abstract.php';
 
 /**
- * Sends an error message to an email whenever an error occurs
- * in sapphire.
+ * Sends an error message to an email.
  * 
  * @see SS_Log for more information on using writers.
  * 
