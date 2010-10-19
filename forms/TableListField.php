@@ -1498,7 +1498,7 @@ class TableListField_Item extends ViewableData {
 			$ruleApplies = null;
 			eval('$ruleApplies = ('.$rule.');');
 			if($ruleApplies) {
-				if($condition['exclusive']) {
+				if(isset($condition['exclusive']) && $condition['exclusive']) {
 					return $condition['class'];
 				} else {
 					$classes[] = $condition['class']; 					
