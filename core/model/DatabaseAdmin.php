@@ -161,10 +161,13 @@ class DatabaseAdmin extends Controller {
 			DB::quiet();
 		} else {
 			$conn = DB::getConn();
+			// Assumes database class is like "MySQLDatabase" or "MSSQLDatabase" (suffixed with "Database")
+			$dbType = substr(get_class($conn), 0, -8);
+			$dbVersion = $conn->getVersion();
 			$databaseName = (method_exists($conn, 'currentDatabase')) ? $conn->currentDatabase() : "";
 			
-			if(Director::is_cli()) echo "\n\nBuilding Database $databaseName\n\n";
-			else echo "<h2>Building Database $databaseName</h2>";
+			if(Director::is_cli()) echo sprintf("\n\nBuilding database %s using %s %s\n\n", $databaseName, $dbType, $dbVersion);
+			else echo sprintf("<h2>Building database %s using %s %s</h2>", $databaseName, $dbType, $dbVersion);
 		}
 
 		// Set up the initial database
