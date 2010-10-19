@@ -3,7 +3,7 @@
  * Some if this is legacy code which is now present in Prototype as well,
  * but has to be kept for older scripts.
  * 
- * @author Silverstripe Ltd., http://www.silverstripe.com
+ * @author Silverstripe Ltd., http://silverstripe.com
  */
 
 // Shortcut-function (until we update to Prototye v1.5)

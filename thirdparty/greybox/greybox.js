@@ -1,7 +1,7 @@
 /****
  Last Modified: 25/08/06 20:52:59
   
- CAUTION: Modified Version to suit Silverstripe CMS (www.silverstripe.com).
+ CAUTION: Modified Version to suit Silverstripe CMS (silverstripe.com).
    Original at http://orangoo.com/labs/uploads/GreyBox_v3_46.zip
 
  GreyBox - Smart pop-up window
