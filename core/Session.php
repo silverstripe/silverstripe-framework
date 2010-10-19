@@ -188,7 +188,7 @@ class Session {
 	 * Add a value to a specific key in the session array
 	 */
 	public static function add_to_array($name, $val) {
-		return Controller::curr()->getSession()->inst_addToArray($name, $val);
+		return self::current_session()->inst_addToArray($name, $val);
 	}
 	
 	/**
@@ -198,7 +198,7 @@ class Session {
 	 * @param string $val Value
 	 */
 	public static function set($name, $val) {
-		return Controller::curr()->getSession()->inst_set($name, $val);
+		return self::current_session()->inst_set($name, $val);
 	}
 	
 	/**
@@ -207,7 +207,7 @@ class Session {
 	 * @param string $name Key to lookup
 	 */
 	public static function get($name) {
-		return Controller::curr()->getSession()->inst_get($name);
+		return self::current_session()->inst_get($name);
 	}
 	
 	/**
@@ -216,7 +216,7 @@ class Session {
 	 * @return Array
 	 */
 	public static function get_all() {
-		return Controller::curr()->getSession()->inst_getAll();
+		return self::current_session()->inst_getAll();
 	}
 	
 	/**
@@ -234,14 +234,14 @@ class Session {
 	 * @param string $name Key to lookup
 	 */
 	public static function clear($name) {
-		return Controller::curr()->getSession()->inst_clear($name);
+		return self::current_session()->inst_clear($name);
 	}
 	
 	/**
 	 * Clear all the values
 	 */
 	public static function clear_all() {
-		return Controller::curr()->getSession()->inst_clearAll();
+		return self::current_session()->inst_clearAll();
 	}
 	
 	/**
@@ -257,7 +257,18 @@ class Session {
 	 * Save all the values in our session to $_SESSION
 	 */
 	public static function save() {
-		return Controller::curr()->getSession()->inst_save();
+		return self::current_session()->inst_save();
+	}
+	
+	protected static $default_session = null;
+	
+	protected static function current_session() {
+		if(Controller::has_curr()) {
+			return Controller::curr()->getSession();
+		} else {
+			if(!self::$default_session) self::$default_session = new Session(isset($_SESSION) ? $_SESSION : array());
+			return self::$default_session;
+		}
 	}
 
 	public function inst_set($name, $val) {
