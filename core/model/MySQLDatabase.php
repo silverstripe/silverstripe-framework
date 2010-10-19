@@ -321,7 +321,10 @@ class MySQLDatabase extends SS_Database {
 	 * @param string $newName The new name of the field
 	 */
 	public function renameField($tableName, $oldName, $newName) {
-		$this->query("ALTER TABLE \"$tableName\" CHANGE \"$oldName\" \"$newName\" " . $fieldList[$oldName]);
+		$fieldList = $this->fieldList($tableName); 
+		if(array_key_exists($oldName, $fieldList)) { 
+			$this->query("ALTER TABLE \"$tableName\" CHANGE \"$oldName\" \"$newName\" " . $fieldList[$oldName]); 
+		}
 	}
 	
 	private static $_cache_collation_info = array();
