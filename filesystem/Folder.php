@@ -108,7 +108,7 @@ class Folder extends File {
 		if(file_exists($baseDir)) {
 			$actualChildren = scandir($baseDir);
 			foreach($actualChildren as $actualChild) {
-				if($actualChild[0] == '.' || $actualChild[0] == '_' || substr($actualChild,0,6) == 'Thumbs') {
+				if($actualChild[0] == '.' || $actualChild[0] == '_' || substr($actualChild,0,6) == 'Thumbs' || $actualChild == 'web.config') {
 					continue;
 				}
 
