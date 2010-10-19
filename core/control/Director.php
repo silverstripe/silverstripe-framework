@@ -605,19 +605,55 @@ class Director {
 	 }
 
 	/**
-	 * Force the site to run on SSL.  To use, call from _config.php.
+	 * Force the site to run on SSL.
 	 * 
-	 * For example:
+	 * To use, call from _config.php. For example:
 	 * <code>
 	 * if(Director::isLive()) Director::forceSSL();
 	 * </code>
+	 * 
+	 * If you don't want your entire site to be on SSL, you can pass an array of PCRE regular expression
+	 * patterns for matching relative URLs. For example:
+	 * <code>
+	 * if(Director::isLive()) Director::forceSSL(array('/^admin/', '/^Security/.*'));
+	 * </code>
+	 * 
+	 * Note that the session data will be lost when moving from HTTP to HTTPS.
+	 * It is your responsibility to ensure that this won't cause usability problems.
+	 * 
+	 * CAUTION: This does not respect the site environment mode. You should check this
+	 * as per the above examples using Director::isLive() or Director::isTest() for example.
+	 * 
+	 * @return boolean|string String of URL when unit tests running, boolean FALSE if patterns don't match request URI
 	 */
-	static function forceSSL() {
-		if((Director::protocol() != "https://") && !Director::isDev() && !Director::is_cli()) {
+	static function forceSSL($patterns = null) {
+		$matched = false;
+
+		if($patterns) {
+			// protect portions of the site based on the pattern
+			$relativeURL = self::makeRelative(Director::absoluteURL($_SERVER['REQUEST_URI']));
+			foreach($patterns as $pattern) {
+				if(preg_match($pattern, $relativeURL)) {
+					$matched = true;
+					break;
+				}
+			}
+		} else {
+			// protect the entire site
+			$matched = true;
+		}
+
+		if($matched && !isset($_SERVER['HTTPS'])) {
 			$destURL = str_replace('http:', 'https:', Director::absoluteURL($_SERVER['REQUEST_URI']));
 
-			header("Location: $destURL", true, 301);
-			die("<h1>Your browser is not accepting header redirects</h1><p>Please <a href=\"$destURL\">click here</a>");
+			header("Location: $destURL");
+			if(SapphireTest::is_running_test()) {
+				return $destURL;
+			} else {
+				die("<h1>Your browser is not accepting header redirects</h1><p>Please <a href=\"$destURL\">click here</a>");
+			}
+		} else {
+			return false;
 		}
 	}
 
