@@ -16,7 +16,7 @@ Behaviour.register({
 			var el = _CURRENT_FORM.elements[fieldName];
 			if(!el || !el.value) return true;
 
-		 	if(el.value.match(/^([a-zA-Z0-9_+\.\x27-]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/)) {
+		 	if(el.value.match(/^[a-z0-9!#$%&'*+\/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+\/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/i)) {
 		 		return true;
 		 	} else {
 				validationError(el, "$error","validation");
@@ -40,9 +40,25 @@ if(typeof fromAnOnBlur != 'undefined'){
 JS;
 	}
 	
+	/**
+	 * Validates for RFC 2822 compliant email adresses.
+	 * 
+	 * @see http://www.regular-expressions.info/email.html
+	 * @see http://www.ietf.org/rfc/rfc2822.txt
+	 * 
+	 * @param Validator $validator
+	 * @return String
+	 */
 	function validate($validator){
 		$this->value = trim($this->value);
-		if($this->value && !ereg('^([a-zA-Z0-9_+\'.-]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$', $this->value)){
+		
+		$pcrePattern = '^[a-z0-9!#$%&\'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&\'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$';
+
+
+		// PHP uses forward slash (/) to delimit start/end of pattern, so it must be escaped
+		$pregSafePattern = str_replace('/', '\\/', $pcrePattern);
+
+		if($this->value && !preg_match('/' . $pregSafePattern . '/i', $this->value)){
  			$validator->validationError(
  				$this->name,
 				_t('EmailField.VALIDATION', "Please enter an email address."),
