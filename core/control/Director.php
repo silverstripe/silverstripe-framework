@@ -615,7 +615,7 @@ class Director {
 	 * If you don't want your entire site to be on SSL, you can pass an array of PCRE regular expression
 	 * patterns for matching relative URLs. For example:
 	 * <code>
-	 * if(Director::isLive()) Director::forceSSL(array('/^admin/', '/^Security/.*'));
+	 * if(Director::isLive()) Director::forceSSL(array('/^admin/', '/^Security/'));
 	 * </code>
 	 * 
 	 * Note that the session data will be lost when moving from HTTP to HTTPS.
