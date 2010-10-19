@@ -1,4 +1,5 @@
-#!/bin/bash
+#!/usr/bin/env bash
+
 # Check for an argument
 if [ ${1:-""} = "" ]; then
 	echo "Sapphire Sake
