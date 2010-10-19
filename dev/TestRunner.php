@@ -6,6 +6,10 @@
 
 /**
  * Controller that executes PHPUnit tests.
+ * 
+ * Alternatively, you can also use the "phpunit" binary directly by
+ * pointing it to a file or folder containing unit tests.
+ * See phpunit.dist.xml in the webroot for configuration details.
  *
  * <h2>URL Options</h2>
  * - SkipTests: A comma-separated list of test classes to skip (useful when running dev/tests/all)
