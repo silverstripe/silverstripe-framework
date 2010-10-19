@@ -43,6 +43,13 @@ class WidgetArea extends DataObject {
 			$controllers->push($controller);
 		}
 
+		//assign sort field based on sort in static array in DashboardView
+		foreach($controllers as $c)	{
+			$sortOrder = DashboardView::getSortOrder($c->MetricName, $c->ClassName);
+			$c->Sort = $sortOrder;
+		}
+		$controllers->sort('Sort'); //sort ascending by 'sort' field
+
 		return $controllers;
 	}
 	
