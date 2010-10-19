@@ -86,7 +86,7 @@ class TestRunner extends Controller {
 	 * Run test classes that should be run with every commit.
 	 * Currently excludes PhpSyntaxTest
 	 */
-	function all($coverage = false) {
+	function all($request, $coverage = false) {
 		ManifestBuilder::load_test_manifest();
 		$tests = ClassInfo::subclassesFor('SapphireTest');
 		array_shift($tests);
@@ -100,7 +100,7 @@ class TestRunner extends Controller {
 			if(!$reflection->isInstantiable()) unset($tests[$class]);
 		}
 	
-		$this->runTests($tests, $coverage);
+		$this->runTests($tests, false);
 	}
 	
 	/**
@@ -117,9 +117,7 @@ class TestRunner extends Controller {
 		}
 	
 		$this->runTests($tests);
-		
 	}
-	
 	
 	/**
 	 * Browse all enabled test cases in the environment
@@ -156,9 +154,9 @@ class TestRunner extends Controller {
 	/**
 	 * Run a coverage test across all modules
 	 */
-	function coverageAll() {
+	function coverageAll($request) {
 		ManifestBuilder::load_all_classes();
-		$this->all(true);
+		$this->all($request, true);
 	}
 	
 	/**
