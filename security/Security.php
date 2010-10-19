@@ -173,7 +173,7 @@ class Security extends Controller {
 						'alreadyLoggedIn' => _t(
 							'Security.ALREADYLOGGEDIN', 
 							"You don't have access to this page.  If you have another account that "
-								. "can access that page, you can <a href=\"%s\">log in again</a>.",
+								. "can access that page, you can log in again below.",
 							PR_MEDIUM,
 							"%s will be replaced with a link to log in."
 						),
@@ -202,12 +202,14 @@ class Security extends Controller {
 				else
 					$message=$messageSet['default'];
 
-				// Replace %s with the log in link
-				$body = sprintf($message, 
-					Controller::join_links(Director::baseURL(), 'Security/login',
-					'?BackURL=' . urlencode($_SERVER['REQUEST_URI'])));
+				// Somewhat hackish way to render a login form with an error message.
+				$me = new Security();
+				$form = $me->LoginForm();
+				$form->sessionMessage($message, 'warning');
+				Session::set('MemberLoginForm.force_message',1);
+				$formText = $me->login();
 				
-				$response->setBody($body);
+				$response->setBody($formText);
 				return $response;
 
 			} else if(substr(Director::history(),0,15) == 'Security/logout') {
