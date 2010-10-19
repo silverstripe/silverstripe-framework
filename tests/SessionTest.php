@@ -35,6 +35,8 @@ class SessionTest extends SapphireTest {
 	}
 	
 	function testGetAllElements() {
+		Session::clear_all(); // Remove all session that might've been set by the test harness
+		
 		Session::set('Test', 'Test');
 		Session::set('Test-2', 'Test-2');
 		
