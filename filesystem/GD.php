@@ -9,7 +9,17 @@ class GD extends Object {
 	protected $quality;
 	
 	protected static $default_quality = 75;
-	
+
+	/**
+	 * Set the default image quality.
+	 * @param quality int A number from 0 to 100, 100 being the best quality.
+	 */
+	static function set_default_quality($quality) {
+		if(is_numeric($quality) && (int) $quality >= 0 && (int) $quality <= 100) {
+			self::$default_quality = (int) $quality;
+		}
+	}
+
 	function __construct($filename = null) {
 		// If we're working with image resampling, things could take a while.  Bump up the time-limit
 		increase_time_limit_to(300);
@@ -38,16 +48,6 @@ class GD extends Object {
 		return $this->gd;
 	}
 
-	/**
-	 * Set the default image quality.
-	 * @param quality int A number from 0 to 100, 100 being the best quality.
-	 */
-	static function set_default_quality($quality) {
-		if(is_numeric($quality) && (int) $quality >= 0 && (int) $quality <= 100) {
-			self::$default_quality = (int) $quality;
-		}
-	}
-	
 	/**
 	 * Set the image quality, used when saving JPEGs.
 	 */
