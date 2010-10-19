@@ -1060,6 +1060,8 @@ class ComplexTableField_Popup extends Form {
 		}
 		
 		parent::__construct($controller, $name, $fields, $actions, $validator);
+		
+		if(!$this->dataObject->canEdit()) $this->makeReadonly();
 	}
 
 	function forTemplate() {

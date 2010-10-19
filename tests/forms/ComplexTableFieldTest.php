@@ -38,6 +38,8 @@ class ComplexTableFieldTest extends FunctionalTest {
 	}
 	
 	function testAddingManyManyNewPlayer() {
+		$this->logInWithPermission('ADMIN');
+		
 		$team = DataObject::get_one('ComplexTableFieldTest_Team', "\"Name\" = 'The Awesome People'");
 	
 		$this->post('ComplexTableFieldTest_Controller/ManyManyForm/field/Players/AddForm', array(
@@ -57,6 +59,8 @@ class ComplexTableFieldTest extends FunctionalTest {
 	}
 	
 	function testAddingHasManyData() {
+		$this->logInWithPermission('ADMIN');
+		
 		$team = DataObject::get_one('ComplexTableFieldTest_Team', "\"Name\" = 'The Awesome People'");
 		
 		$this->post('ComplexTableFieldTest_Controller/HasManyForm/field/Sponsors/AddForm', array(
