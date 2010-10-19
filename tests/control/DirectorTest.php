@@ -5,7 +5,7 @@
  * 
  * @todo test Director::alternateBaseFolder()
  */
-class DirectorTest extends SapphireTest {
+class DirectorTest extends FunctionalTest {
 
 	function setUp() {
 		parent::setUp();
