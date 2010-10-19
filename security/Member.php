@@ -110,13 +110,12 @@ class Member extends DataObject {
 	 */
 	protected static $login_marker_cookie = null;
 
-
 	/**
 	 * Ensure the locale is set to something sensible by default.
 	 */
 	public function populateDefaults() {
 		parent::populateDefaults();
-		$this->Locale = i18n::default_locale();
+		$this->Locale = i18n::get_locale();
 	}
 	
 	function requireDefaultRecords() {
@@ -646,7 +645,7 @@ class Member extends DataObject {
 			);
 
 			// Overwrite the Password property with the hashed value
-;			$this->Password = $encryption_details['password'];
+			$this->Password = $encryption_details['password'];
 			$this->Salt = $encryption_details['salt'];
 			$this->PasswordEncryption = $encryption_details['algorithm'];
 
@@ -665,7 +664,7 @@ class Member extends DataObject {
 		if(!$this->Locale) {
 			$this->Locale = i18n::get_locale();
 		}
-
+		
 		parent::onBeforeWrite();
 	}
 	

@@ -1726,7 +1726,8 @@ class i18n extends Object {
 	}
 
 	/**
-	 * Get the current locale
+	 * Get the current locale.
+	 * Used by {@link Member::populateDefaults()}
 	 * 
 	 * @return string Current locale in the system
 	 */
