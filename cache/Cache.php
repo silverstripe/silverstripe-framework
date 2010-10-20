@@ -48,7 +48,7 @@
  * 
  * (in _config.php)
  * 
- * SS_Cache::add_backend('two-level', 'TwoLevels' array(
+ * SS_Cache::add_backend('two-level', 'TwoLevels', array(
  * 	'slow_backend' => 'File',
  * 	'fast_backend' => 'Apc',
  * 	'slow_backend_options' => array('cache_dir' => TEMP_FOLDER . DIRECTORY_SEPARATOR . 'cache')
