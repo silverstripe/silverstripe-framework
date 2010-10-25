@@ -500,7 +500,7 @@ class DateField_View_JQuery {
 	 */
 	static $locale_map = array(
 		'en_GB' => 'en-GB',
-		'en_US' => 'en-US', 
+		'en_US' => 'en', 
 		'en_NZ' => 'en-GB', 
 		'fr_CH' => 'fr-CH',
 		'pt_BR' => 'pt-BR',
