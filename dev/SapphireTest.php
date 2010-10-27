@@ -1,6 +1,8 @@
 <?php
 require_once 'TestRunner.php';
 
+PhpUnitWrapper::inst()->init();
+
 /**
  * Test case class for the Sapphire framework.
  * Sapphire unit testing is based on PHPUnit, but provides a number of hooks into our data model that make it easier to work with.
