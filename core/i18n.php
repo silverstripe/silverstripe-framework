@@ -1716,10 +1716,15 @@ class i18n extends Object {
 	}
 
 	/**
-	 * Set the current locale
-	 * See http://unicode.org/cldr/data/diff/supplemental/languages_and_territories.html for a list of possible locales
+	 * Set the current locale, used as the default for 
+	 * any localized classes, such as {@link FormField} or {@link DBField}
+	 * instances. Locales can also be persisted in {@link Member->Locale},
+	 * for example in the {@link CMSMain} interface the Member locale
+	 * overrules the global locale value set here.
 	 * 
-	 * @param string $locale Locale to be set 
+	 * See {@link Translatable::set_locale()}.
+	 * 
+	 * @param string $locale Locale to be set. See http://unicode.org/cldr/data/diff/supplemental/languages_and_territories.html for a list of possible locales.
 	 */
 	static function set_locale($locale) {
 		if ($locale) self::$current_locale = $locale;
@@ -1752,7 +1757,14 @@ class i18n extends Object {
 	}
 	
 	/**
-	 * This is the locale in which generated language files are (we assume US English with "en_US" by default).
+	 * This is the "fallback locale", in case resources with the "current locale"
+	 * (set through {@link set_locale()}) can't be found.
+	 * 
+	 * If you just want to globally read/write a different locale (e.g. in a CMS interface),
+	 * please use {@link get_locale()} and {@link set_locale()} instead.
+	 * 
+	 * For example, {@link Requirements::add_i18n_javascript()} and {@link i18n::include_by_class()}
+	 * use this "fallback locale" value to include fallback language files.
 	 * 
 	 * @return String
 	 */
@@ -1761,6 +1773,9 @@ class i18n extends Object {
 	}
 	
 	/**
+	 * See {@link default_locale()} for usage.
+	 * 
+	 * 
 	 * @param String $locale
 	 */
 	static function set_default_locale($locale) {
