@@ -613,12 +613,18 @@ class DateField_View_JQuery {
 		  '/e/' => 'N',
 		  '/D/' => '',
 		  '/w/' => '',
+			// make single "M" lowercase
 		  '/([^M])M([^M])/' => '$1m$2',
+			// make single "M" at start of line lowercase
 		  '/^M([^M])/' => 'm$1',
+				// make single "M" at end of line lowercase
 		  '/([^M])M$/' => '$1m',
+			// match exactly three capital Ms not preceeded or followed by an M
+		  '/(?<!M)MMM(?!M)/' => 'M',
+			// match exactly two capital Ms not preceeded or followed by an M
+		  '/(?<!M)MM(?!M)/' => 'mm',
+			// match four capital Ms (maximum allowed)
 		  '/MMMM/' => 'MM',
-		  '/MMM/' => 'M',
-		  '/MM/' => 'mm',
 		  '/l/' => '',
 		  '/YYYY/' => 'yy',
 		  '/yyyy/' => 'yy',
