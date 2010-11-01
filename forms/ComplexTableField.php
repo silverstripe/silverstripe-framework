@@ -749,7 +749,11 @@ class ComplexTableField_ItemRequest extends TableListField_ItemRequest {
 		return $this->renderWith($this->ctf->templatePopup);
 	}
 
-	function delete() {
+	function delete($request) {
+		// Protect against CSRF on destructive action
+		$token = $this->ctf->getForm()->getSecurityToken();
+		if(!$token->checkRequest($request)) return $this->httpError(400);
+		
 		if($this->ctf->Can('delete') !== true) {
 			return false;
 		}
