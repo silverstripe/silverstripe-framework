@@ -72,9 +72,13 @@ class FunctionalTest extends SapphireTest {
 		if($this->stat('use_draft_site')) {
 			$this->useDraftSite();
 		}
+
+		SecurityToken::disable();
 	}
 
 	function tearDown() {
+		SecurityToken::enable();
+		
 		parent::tearDown();
 		unset($this->mainSession);
 
