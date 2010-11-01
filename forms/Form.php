@@ -1064,12 +1064,23 @@ class Form extends RequestHandler {
 	}
 	
 	/**
-	 * Disable the requirement of a security token in the Form. This security protects
+	 * Disable the requirement of a security token on this form instance. This security protects
 	 * against CSRF attacks, but you should disable this if you don't want to tie 
 	 * a form to a session - eg a search form.
+	 * 
+	 * Check for token state with {@link getSecurityToken()} and {@link SecurityToken->isEnabled()}.
 	 */
 	function disableSecurityToken() {
 		$this->securityToken = new NullSecurityToken();
+	}
+	
+	/**
+	 * Enable {@link SecurityToken} protection for this form instance.
+	 * 
+	 * Check for token state with {@link getSecurityToken()} and {@link SecurityToken->isEnabled()}.
+	 */
+	function enableSecurityToken() {
+		$this->securityToken = new SecurityToken();
 	}
 	
 	/**

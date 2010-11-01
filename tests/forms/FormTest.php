@@ -300,6 +300,26 @@ class FormTest extends FunctionalTest {
 		$this->assertEquals(200, $response->getStatusCode(), 'Submission suceeds with security token');
 	}
 	
+	function testEnableSecurityToken() {
+		SecurityToken::disable();
+		$form = $this->getStubForm();
+		$this->assertFalse($form->getSecurityToken()->isEnabled());
+		$form->enableSecurityToken();
+		$this->assertTrue($form->getSecurityToken()->isEnabled());
+		
+		SecurityToken::disable(); // restore original
+	}
+	
+	function testDisableSecurityToken() {
+		SecurityToken::enable();
+		$form = $this->getStubForm();
+		$this->assertTrue($form->getSecurityToken()->isEnabled());
+		$form->disableSecurityToken();
+		$this->assertFalse($form->getSecurityToken()->isEnabled());
+		
+		SecurityToken::disable(); // restore original
+	}
+	
 	protected function getStubForm() {
 		return new Form(
 			new Controller(),
