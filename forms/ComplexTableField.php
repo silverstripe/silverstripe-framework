@@ -364,7 +364,7 @@ JS;
 
 
 	function AddLink() {
-		return $this->Link() . '/add';
+		return Controller::join_links($this->Link(), 'add');
 	}
 
 	/**
@@ -651,7 +651,7 @@ JS;
 		$message = sprintf(
 			_t('ComplexTableField.SUCCESSADD', 'Added %s %s %s'),
 			$childData->singular_name(),
-			'<a href="' . $this->Link() . '/item/' . $childData->ID . '/edit">' . $childData->Title . '</a>',
+			'<a href="' . Controller::join_links($this->Link(), 'item', $childData->ID, 'edit') . '">' . $childData->Title . '</a>',
 			$closeLink
 		);
 		
@@ -675,7 +675,7 @@ class ComplexTableField_ItemRequest extends RequestHandler {
 	);
 	
 	function Link() {
-		return $this->ctf->Link() . '/item/' . $this->itemID;
+		return Controller::join_links($this->ctf->Link(), 'item', $this->itemID);
 	}
 	
 	function __construct($ctf, $itemID) {
@@ -838,7 +838,7 @@ class ComplexTableField_ItemRequest extends RequestHandler {
 		}
 
 		$start = 0;
-		return Controller::join_links($this->Link(), "$this->methodName?ctf[start]={$start}");
+		return Controller::join_links($this->Link(), $this->methodName, "?ctf[start]={$start}");
 	}
 
 	function PopupLastLink() {
@@ -847,7 +847,7 @@ class ComplexTableField_ItemRequest extends RequestHandler {
 		}
 		
 		$start = $this->totalCount - 1;
-		return Controller::join_links($this->Link(), "$this->methodName?ctf[start]={$start}");
+		return Controller::join_links($this->Link(), $this->methodName, "?ctf[start]={$start}");
 	}
 
 	function PopupNextLink() {
@@ -856,7 +856,7 @@ class ComplexTableField_ItemRequest extends RequestHandler {
 		}
 
 		$start = $_REQUEST['ctf']['start'] + 1;
-		return Controller::join_links($this->Link(), "$this->methodName?ctf[start]={$start}");
+		return Controller::join_links($this->Link(), $this->methodName, "?ctf[start]={$start}");
 	}
 
 	function PopupPrevLink() {
@@ -865,7 +865,7 @@ class ComplexTableField_ItemRequest extends RequestHandler {
 		}
 
 		$start = $_REQUEST['ctf']['start'] - 1;
-		return Controller::join_links($this->Link(), "$this->methodName?ctf[start]={$start}");
+		return Controller::join_links($this->Link(), $this->methodName, "?ctf[start]={$start}");
 	}
 	
 	/**
@@ -888,7 +888,7 @@ class ComplexTableField_ItemRequest extends RequestHandler {
         }
 		for($i = $offset;$i <= $offset + $this->pageSize && $i <= $this->totalCount;$i++) {
             $start = $i - 1;
-			$links['link'] = Controller::join_links($this->Link() . "$this->methodName?ctf[start]={$start}");
+			$links['link'] = Controller::join_links($this->Link(), $this->methodName, "?ctf[start]={$start}");
             $links['number'] = $i;
             $links['active'] = $i == $currentItem ? false : true;
             $result->push(new ArrayData($links)); 	
@@ -988,19 +988,19 @@ class ComplexTableField_Item extends TableListField_Item {
 	}
 
 	function Link() {
-		return $this->parent->Link() . '/item/' . $this->item->ID;
+		return Controller::join_links($this->parent->Link(), 'item', $this->item->ID);
 	}
 
 	function EditLink() {
-		return $this->Link() . "/edit";
+		return Controller::join_links($this->Link(), "edit");
 	}
 
 	function ShowLink() {
-		return $this->Link() . "/show";
+		return Controller::join_links($this->Link(), "show");
 	}
 
 	function DeleteLink() {
-		return $this->Link() . "/delete";
+		return Controller::join_links($this->Link(), "delete");
 	}
 	
 	/**
