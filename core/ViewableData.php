@@ -699,12 +699,8 @@ class ViewableData extends Object implements IteratorAggregate {
 	 * @return string
 	 */
 	public function getSecurityID() {
-		if(!$id = Session::get('SecurityID')) {
-			$id = rand();
-			Session::set('SecurityID', $id);
-		}
-		
-		return $id;
+		$token = SecurityToken::inst();
+		return $token->getValue();
 	}
 	
 	/**
