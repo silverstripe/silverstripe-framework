@@ -633,6 +633,9 @@ class Hierarchy extends DataObjectDecorator {
 		$this->_cache_children = null;
 		$this->_cache_allChildrenIncludingDeleted = null;
 		$this->_cache_allChildren = null;
+		self::$marked = array();
+		self::$expanded = array();
+		self::$treeOpened = array();
 	}
 
 }
