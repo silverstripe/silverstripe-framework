@@ -59,7 +59,7 @@ class Group extends DataObject {
 				new Tab('Members', _t('SecurityAdmin.MEMBERS', 'Members'),
 					new TextField("Title", $this->fieldLabel('Title')),
 					$memberList = new MemberTableField(
-						$this,
+						(Controller::has_curr()) ? Controller::curr() : new Controller(),
 						"Members",
 						$this,
 						null,
@@ -144,7 +144,6 @@ class Group extends DataObject {
 			$rolesField->setDisabledItems($inheritedRoles->column('ID'));
 		} 
 		
-		$memberList->setController($this);
 		$memberList->setPermissions(array('edit', 'delete', 'export', 'add', 'inlineadd'));
 		$memberList->setParentClass('Group');
 		$memberList->setPopupCaption(_t('SecurityAdmin.VIEWUSER', 'View User'));
