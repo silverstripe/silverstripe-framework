@@ -520,27 +520,39 @@ class Controller extends RequestHandler {
 	}
 	
 	/**
-	 * Joins two link segments together, putting a slash between them if necessary.
-	 * Use this for building the results of Link() methods.
-	 *
-	 * If either of the links have query strings, then they will be combined and put at the end of the resulting url.
+	 * Joins two or more link segments together, putting a slash between them if necessary.
+	 * Use this for building the results of {@link Link()} methods.
+	 * If either of the links have query strings, 
+	 * then they will be combined and put at the end of the resulting url.
+	 * 
+	 * Caution: All parameters are expected to be URI-encoded already.
+	 * 
+	 * @param String 
+	 * @return String
 	 */
 	static function join_links() {
 		$args = func_get_args();
 		$result = "";
 		$querystrings = array();
+		$fragmentIdentifier = null;
 		foreach($args as $arg) {
+			// Find fragment identifier - keep the last one
+			if(strpos($arg,'#') !== false) {
+				list($arg, $fragmentIdentifier) = explode('#',$arg,2);
+			}
+			// Find querystrings
 			if(strpos($arg,'?') !== false) {
 				list($arg, $suffix) = explode('?',$arg,2);
 				$querystrings[] = $suffix;
 			}
 			if($arg) {
 				if($result && substr($result,-1) != '/' && $arg[0] != '/') $result .= "/$arg";
-				else $result .= $arg;
+				else $result .= (substr($result, -1) == '/' && $arg[0] == '/') ? ltrim($arg, '/') : $arg;
 			}
 		}
 		
 		if($querystrings) $result .= '?' . implode('&', $querystrings);
+		if($fragmentIdentifier) $result .= "#$fragmentIdentifier";
 		
 		return $result;
 	}
