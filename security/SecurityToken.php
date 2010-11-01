@@ -152,7 +152,7 @@ class SecurityToken extends Object {
 	/**
 	 * See {@link check()}.
 	 * 
-	 * @param SS_HTTPRequest $request
+	 * @param HTTPRequest $request
 	 * @return Boolean
 	 */
 	function checkRequest($request) {
@@ -223,7 +223,7 @@ class NullSecurityToken extends SecurityToken {
 	}
 	
 	/**
-	 * @param SS_HTTPRequest $request
+	 * @param HTTPRequest $request
 	 * @return Boolean
 	 */
 	function checkRequest($request) {

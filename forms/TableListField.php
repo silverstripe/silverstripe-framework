@@ -534,7 +534,11 @@ JS
 	/**
 	 * @return String
 	 */
-	function delete() {
+	function delete($request) {
+		// Protect against CSRF on destructive action
+		$token = $this->getForm()->getSecurityToken();
+		if(!$token->checkRequest($request)) return $this->httpError('400');
+		
 		if($this->Can('delete') !== true) {
 			return false;
 		}
@@ -1411,7 +1415,11 @@ class TableListField_ItemRequest extends RequestHandler {
 		parent::__construct();
 	}
 
-	function delete() {
+	function delete($request) {
+		// Protect against CSRF on destructive action
+		$token = $this->ctf->getForm()->getSecurityToken();
+		if(!$token->checkRequest($request)) return $this->httpError('400');
+		
 		if($this->ctf->Can('delete') !== true) {
 			return false;
 		}
