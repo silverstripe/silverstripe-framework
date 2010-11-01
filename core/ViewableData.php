@@ -709,6 +709,16 @@ class ViewableData extends Object implements IteratorAggregate {
 	}
 	
 	/**
+	 * Return a CSRF-preventing ID to insert into a form.
+	 *
+	 * @return string
+	 */
+	public function getSecurityID() {
+		$token = SecurityToken::inst();
+		return $token->getValue();
+	}
+	
+	/**
 	 * Returns the Security ID.
 	 * This is used to prevent CRSF attacks in forms.
 	 * @return int
