@@ -45,7 +45,7 @@ class Group extends DataObject {
 				new Tab(_t('SecurityAdmin.MEMBERS', 'Members'),
 					new TextField("Title", $this->fieldLabel('Title')),
 					$memberList = new MemberTableField(
-						$this,
+						(Controller::has_curr()) ? Controller::curr() : new Controller(),
 						"Members",
 						$this,
 						null,
@@ -101,7 +101,6 @@ class Group extends DataObject {
 			$fields->removeFieldFromTab('Root', 'IP Addresses');
 		}
 		
-		$memberList->setController($this);
 		$memberList->setPermissions(array('show', 'edit', 'delete', 'export', 'add'));
 		$memberList->setParentClass('Group');
 		$memberList->setPopupCaption(_t('SecurityAdmin.VIEWUSER', 'View User'));
