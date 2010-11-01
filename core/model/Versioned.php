@@ -285,6 +285,13 @@ class Versioned extends DataObjectDecorator {
 						(array)$fields
 					);
 				
+					//Unique indexes will not work on versioned tables, so we'll convert them to standard indexes:
+					foreach($indexes as $key=>$index){
+						if(is_array($index) && strtolower($index['type'])=='unique'){
+							$indexes[$key]['type']='index';
+						}
+					}
+					
 					$versionIndexes = array_merge(
 						array(
 							'RecordID_Version' => array('type' => 'unique', 'value' => 'RecordID,Version'),
