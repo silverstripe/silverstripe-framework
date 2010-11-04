@@ -672,7 +672,11 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 		foreach(DB::getConn()->allDatabaseNames() as $dbName) {
 			if(preg_match('/^tmpdb[0-9]+$/', $dbName)) {
 				DB::getConn()->dropDatabaseByName($dbName);
-				echo "<li>Dropped databse \"$dbName\"\n";
+				if(Director::is_cli()) {
+					echo "Dropped database \"$dbName\"" . PHP_EOL;
+				} else {
+					echo "<li>Dropped database \"$dbName\"</li>" . PHP_EOL;
+				}
 				flush();
 			}
 		}
