@@ -391,6 +391,12 @@ abstract class SS_Database {
 			}
 		}
 		
+		if(is_array($spec) && isset($spec['type'])){
+			if($spec['type']=='fulltext'){
+				$array_spec="({$spec['name']},{$spec['value']})";
+			}
+		}
+		
 		if($newTable || !isset($this->indexList[$table][$index_alt])) {
 			$this->transCreateIndex($table, $index, $spec);
 			$this->alterationMessage("Index $table.$index: created as $spec","created");
