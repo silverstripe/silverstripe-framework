@@ -111,6 +111,9 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		"Breadcrumbs" => "HTMLText",
 		"LastEdited" => "SS_Datetime",
 		"Created" => "SS_Datetime",
+		'Link' => 'Text',
+		'RelativeLink' => 'Text',
+		'AbsoluteLink' => 'Text',
 	);
 
 	static $defaults = array(
@@ -365,7 +368,10 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	/**
 	 * Return the link for this {@link SiteTree} object, with the {@link Director::baseURL()} included.
 	 *
-	 * @param string $action
+	 * @param string $action Optional controller action (method). 
+	 *  Note: URI encoding of this parameter is applied automatically through template casting,
+	 *  don't encode the passed parameter.
+	 *  Please use {@link Controller::join_links()} instead to append GET parameters.
 	 * @return string
 	 */
 	public function Link($action = null) {
@@ -375,7 +381,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	/**
 	 * Get the absolute URL for this page, including protocol and host.
 	 *
-	 * @param string $action
+	 * @param string $action See {@link Link()}
 	 * @return string
 	 */
 	public function AbsoluteLink($action = null) {
@@ -394,7 +400,8 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	 * and returned in its full form.
 	 *
 	 * @uses RootURLController::get_homepage_link()
-	 * @param string $action
+	 * 
+	 * @param string $action See {@link Link()}
 	 * @return string
 	 */
 	public function RelativeLink($action = null) {
@@ -415,12 +422,9 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 			}
 		}
 		
-		if(is_string($action)) {
-			$action = str_replace('&', '&amp;', $action);
-		} elseif($action === true) {
-			$action = null;
-		}
-		
+		// Legacy support
+		if($action === true) $action = null;
+
 		return Controller::join_links($base, '/', $action);
 	}
 	

@@ -331,6 +331,16 @@ class SiteTreeTest extends SapphireTest {
 		);
 	}
 	
+	function testRelativeLink() {
+		$about    = $this->objFromFixture('Page', 'about');
+		$staff    = $this->objFromFixture('Page', 'staff');
+		
+		$this->assertEquals('about-us/', $about->RelativeLink(), 'Matches URLSegment on top level without parameters');
+		$this->assertEquals('about-us/my-staff/', $staff->RelativeLink(), 'Matches URLSegment plus parent on second level without parameters');
+		$this->assertEquals('about-us/edit', $about->RelativeLink('edit'), 'Matches URLSegment plus parameter on top level');
+		$this->assertEquals('about-us/tom&jerry', $about->RelativeLink('tom&jerry'), 'Doesnt url encode parameter');
+	}
+	
 	function testDeleteFromStageOperatesRecursively() {
 		SiteTree::set_enforce_strict_hierarchy(false);
 		$pageAbout = $this->objFromFixture('Page', 'about');
