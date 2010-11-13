@@ -1,5 +1,9 @@
 <?php
 /**
+ * A form field that can save into a {@link Money} database field.
+ * See {@link CurrencyField} for a similiar implementation 
+ * that can save into a single float database field without indicating the currency.
+ * 
  * @author Ingo Schommer, SilverStripe Ltd. (<firstname>@silverstripe.com)
  * 
  * @package sapphire
