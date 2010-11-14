@@ -547,8 +547,9 @@ class DateField_View_JQuery {
 		if($this->getField()->getConfig('showcalendar')) {
 			Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
 			Requirements::javascript(SAPPHIRE_DIR . '/javascript/jquery_improvements.js');	
-			Requirements::css(Director::protocol().'ajax.googleapis.com/ajax/libs/jqueryui/1.8.1/themes/smoothness/jquery-ui.css');
-			Requirements::javascript(Director::protocol().'ajax.googleapis.com/ajax/libs/jqueryui/1.8.1/jquery-ui.min.js');
+			Requirements::css(THIRDPARTY_DIR . '/jquery-ui-themes/smoothness/jquery.ui.all.css');
+			Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-ui/jquery.ui.core.js');
+			Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-ui/jquery.ui.datepicker.js');
 			
 			// Include language files (if required)
 			$lang = $this->getLang();
@@ -556,7 +557,7 @@ class DateField_View_JQuery {
 				// TODO Check for existence of locale to avoid unnecessary 404s from the CDN
 				Requirements::javascript(
 					sprintf(
-						Director::protocol().'ajax.googleapis.com/ajax/libs/jqueryui/1.8.1/i18n/jquery.ui.datepicker-%s.min.js',
+						THIRDPARTY_DIR . '/jquery-ui/minified/i18n/jquery.ui.datepicker-%s.min.js',
 						// can be a mix between names (e.g. 'de') and combined locales (e.g. 'zh-TW')
 						$lang
 					));
