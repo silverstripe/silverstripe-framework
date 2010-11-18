@@ -13,7 +13,7 @@
  * The collector needs to be run whenever you make new translatable
  * entities available. Please don't alter the arrays in language tables manually.
  * 
- * Usage through URL: http://localhost/dev/tasks/i18nTextCollectorTast
+ * Usage through URL: http://localhost/dev/tasks/i18nTextCollectorTask
  * Usage through URL (module-specific): http://localhost/dev/tasks/i18nTextCollectorTask/?module=mymodule
  * Usage on CLI: sake dev/tasks/i18nTextCollectorTask
  * Usage on CLI (module-specific): sake dev/tasks/i18nTextCollectorTask module=mymodule
@@ -39,10 +39,10 @@ class i18nTextCollector extends Object {
 	public $basePath;
 	
 	/**
-	 * @var string $basePath The directory base on which the collector should create new lang folders and files.
+	 * @var string $baseSavePath The directory base on which the collector should create new lang folders and files.
 	 * Usually the webroot set through {@link Director::baseFolder()}.
 	 * Can be overwritten for testing or export purposes.
-	 * @todo Fully support changing of basePath through {@link SSViewer} and {@link ManifestBuilder}
+	 * @todo Fully support changing of baseSavePath through {@link SSViewer} and {@link ManifestBuilder}
 	 */
 	public $baseSavePath;
 	
@@ -70,6 +70,7 @@ class i18nTextCollector extends Object {
 		//Debug::message("Collecting text...", false);
 		
 		$modules = array();
+		$themeFolders = array();
 		
 		// A master string tables array (one mst per module)
 		$entitiesByModule = array();
@@ -82,14 +83,39 @@ class i18nTextCollector extends Object {
 		} else {
 			$modules = scandir($this->basePath);
 		}
+		
+		foreach($modules as $index => $module){
+			if($module != 'themes') continue;
+			else {
+				$themes = scandir($this->basePath."/themes");
+				if(count($themes)){
+					foreach($themes as $theme) {
+						if(is_dir($this->basePath."/themes/".$theme) && substr($theme,0,1) != '.' && is_dir($this->basePath."/themes/".$theme."/templates")){
+							$themeFolders[] = 'themes/'.$theme;
+						}
+					}
+				}
+				$themesInd = $index;
+			}
+		}
+		
+		if(isset($themesInd)) {
+			unset($modules[$themesInd]);
+		}
+		
+		$modules = array_merge($modules, $themeFolders);
 
 		foreach($modules as $module) {
-			// Only search for calls in folder with a _config.php file (which means they are modules)  
+			// Only search for calls in folder with a _config.php file (which means they are modules, including themes folder)  
 			$isValidModuleFolder = (
 				is_dir("$this->basePath/$module") 
 				&& is_file("$this->basePath/$module/_config.php") 
 				&& substr($module,0,1) != '.'
+			) || (
+				substr($module,0,7) == 'themes/'
+				&& is_dir("$this->basePath/$module")
 			);
+			
 			if(!$isValidModuleFolder) continue;
 			
 			// we store the master string tables 
@@ -122,7 +148,7 @@ class i18nTextCollector extends Object {
 	/**
 	 * Build the module's master string table
 	 *
-	 * @param string $module Module's name
+	 * @param string $module Module's name or 'themes'
 	 */
 	protected function processModule($module) {	
 		$entitiesArr = array();
@@ -132,7 +158,7 @@ class i18nTextCollector extends Object {
 		// Search for calls in code files if these exists
 		if(is_dir("$this->basePath/$module/code")) {
 			$fileList = $this->getFilesRecursive("$this->basePath/$module/code");
-		} else if($module == 'sapphire') {
+		} else if($module == 'sapphire' || substr($module, 0, 7) == 'themes/') {
 			// sapphire doesn't have the usual module structure, so we'll scan all subfolders
 			$fileList = $this->getFilesRecursive("$this->basePath/$module");
 		}

@@ -44,9 +44,13 @@ class i18nTextCollectorTest extends SapphireTest {
 		$_TEMPLATE_MANIFEST['i18nTestModuleInclude.ss'] = array(
 			'Includes' => $this->alternateBasePath . '/i18ntestmodule/templates/Includes/i18nTestModuleInclude.ss',
 		);
-		$_TEMPLATE_MANIFEST['i18nTestModule.ss'] = array(
-			'main' => $this->alternateBasePath . '/i18ntestmodule/templates/i18nTestModule.ss',
-			'Layout' => $this->alternateBasePath . '/i18ntestmodule/templates/Layout/i18nTestModule.ss',
+		
+		$_TEMPLATE_MANIFEST['i18nTestTheme1.ss'] = array(
+			'main' => $this->alternateBasePath . '/themes/testtheme1/templates/i18nTestTheme1.ss',
+			'Layout' => $this->alternateBasePath . '/themes/testtheme1/templates/Layout/i18nTestTheme1.ss',
+		);
+		$_TEMPLATE_MANIFEST['i18nTestTheme1Include.ss'] = array(
+			'Includes' => $this->alternateBasePath . '/themes/testtheme1/templates/Includes/i18nTestTheme1Include.ss',
 		);
 	}
 	
@@ -406,6 +410,60 @@ PHP;
 		);
 	}
 	
+	function testCollectFromThemesTemplates() {
+		$c = new i18nTextCollector();
+		
+		$templateFilePath = $this->alternateBasePath . '/themes/testtheme1/templates/Layout/i18nTestTheme1.ss';
+		$html = file_get_contents($templateFilePath);
+		$matches = $c->collectFromTemplate($html, 'themes/testtheme1', 'i18nTestTheme1.ss');
+		// all entities from i18nTestTheme1.ss
+		$this->assertEquals(
+			$matches['i18nTestTheme1.LAYOUTTEMPLATE'],
+			array('Theme1 Layout Template', null, null)
+		);
+		
+		$this->assertArrayHasKey('i18nTestTheme1.ss.LAYOUTTEMPLATENONAMESPACE', $matches);
+		$this->assertEquals(
+			$matches['i18nTestTheme1.ss.LAYOUTTEMPLATENONAMESPACE'],
+			array('Theme1 Layout Template no namespace', null, null)
+		);
+		
+		$this->assertEquals(
+			$matches['i18nTestTheme1.SPRINTFNAMESPACE'],
+			array('Theme1 My replacement: %s', null, null)
+		);
+		
+		$this->assertArrayHasKey('i18nTestTheme1.ss.SPRINTFNONAMESPACE', $matches);
+		$this->assertEquals(
+			$matches['i18nTestTheme1.ss.SPRINTFNONAMESPACE'],
+			array('Theme1 My replacement no namespace: %s', null, null)
+		);
+
+		// all entities from i18nTestTheme1Include.ss	
+		$this->assertEquals(
+			$matches['i18nTestTheme1Include.WITHNAMESPACE'],
+			array('Theme1 Include Entity with Namespace', null, null)
+		);
+		
+		$this->assertArrayHasKey('i18nTestTheme1Include.ss.NONAMESPACE', $matches);
+		$this->assertEquals(
+			$matches['i18nTestTheme1Include.ss.NONAMESPACE'],
+			array('Theme1 Include Entity without Namespace', null, null)
+		);
+		
+		
+		$this->assertEquals(
+			$matches['i18nTestTheme1Include.SPRINTFINCLUDENAMESPACE'],
+			array('Theme1 My include replacement: %s', null, null)
+		);
+		
+		$this->assertArrayHasKey('i18nTestTheme1Include.ss.SPRINTFINCLUDENONAMESPACE', $matches);
+		$this->assertEquals(
+			$matches['i18nTestTheme1Include.ss.SPRINTFINCLUDENONAMESPACE'],
+			array('Theme1 My include replacement no namespace: %s', null, null)
+		);
+	}
+	
 	function testCollectFromFilesystemAndWriteMasterTables() {
 		$defaultlocal = i18n::default_locale();
 		$local = i18n::get_locale();
@@ -426,7 +484,6 @@ PHP;
 		);
 		
 		$moduleLangFileContent = file_get_contents($moduleLangFile);
-		
 		$this->assertContains(
 			"\$lang['en_US']['i18nTestModule']['ADDITION'] = 'Addition';",
 			$moduleLangFileContent
@@ -470,6 +527,63 @@ PHP;
 		$this->assertContains(
 			"\$lang['en_US']['i18nOtherModule']['MAINTEMPLATE'] = 'Main Template Other Module';",
 			$otherModuleLangFileContent
+		);
+		
+		// testtheme1
+		$theme1LangFile = "{$this->alternateBaseSavePath}/themes/testtheme1/lang/" . $c->getDefaultLocale() . '.php';
+		$this->assertTrue(
+			file_exists($theme1LangFile),
+			'Master theme language file can be written to themes/testtheme1 /lang folder'
+		);
+		$theme1LangFileContent = file_get_contents($theme1LangFile);
+		$this->assertContains(
+			"\$lang['en_US']['i18nTestTheme1']['MAINTEMPLATE'] = 'Theme1 Main Template';",
+			$theme1LangFileContent
+		);
+		$this->assertContains(
+			"\$lang['en_US']['i18nTestTheme1']['LAYOUTTEMPLATE'] = 'Theme1 Layout Template';",
+			$theme1LangFileContent
+		);
+		$this->assertContains(
+			"\$lang['en_US']['i18nTestTheme1']['SPRINTFNAMESPACE'] = 'Theme1 My replacement: %s';",
+			$theme1LangFileContent
+		);
+		$this->assertContains(
+			"\$lang['en_US']['i18nTestTheme1.ss']['LAYOUTTEMPLATENONAMESPACE'] = 'Theme1 Layout Template no namespace';",
+			$theme1LangFileContent
+		);
+		$this->assertContains(
+			"\$lang['en_US']['i18nTestTheme1.ss']['SPRINTFNONAMESPACE'] = 'Theme1 My replacement no namespace: %s';",
+			$theme1LangFileContent
+		);
+		
+		$this->assertContains(
+			"\$lang['en_US']['i18nTestTheme1Include']['SPRINTFINCLUDENAMESPACE'] = 'Theme1 My include replacement: %s';",
+			$theme1LangFileContent
+		);
+		$this->assertContains(
+			"\$lang['en_US']['i18nTestTheme1Include']['WITHNAMESPACE'] = 'Theme1 Include Entity with Namespace';",
+			$theme1LangFileContent
+		);
+		$this->assertContains(
+			"\$lang['en_US']['i18nTestTheme1Include.ss']['NONAMESPACE'] = 'Theme1 Include Entity without Namespace';",
+			$theme1LangFileContent
+		);
+		$this->assertContains(
+			"\$lang['en_US']['i18nTestTheme1Include.ss']['SPRINTFINCLUDENONAMESPACE'] = 'Theme1 My include replacement no namespace: %s';",
+			$theme1LangFileContent
+		);
+		
+		// testtheme2
+		$theme2LangFile = "{$this->alternateBaseSavePath}/themes/testtheme2/lang/" . $c->getDefaultLocale() . '.php';
+		$this->assertTrue(
+			file_exists($theme2LangFile),
+			'Master theme language file can be written to themes/testtheme2 /lang folder'
+		);
+		$theme2LangFileContent = file_get_contents($theme2LangFile);
+		$this->assertContains(
+			"\$lang['en_US']['i18nTestTheme2']['MAINTEMPLATE'] = 'Theme2 Main Template';",
+			$theme2LangFileContent
 		);
 
 		i18n::set_locale($local);  //set the locale to the US locale expected in the asserts
