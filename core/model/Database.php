@@ -391,6 +391,8 @@ abstract class SS_Database {
 			}
 		}
 		
+		//We need to include the name of the fulltext index here so we can trigger a rebuild
+		//if either the name or the columns have changed.
 		if(is_array($spec) && isset($spec['type'])){
 			if($spec['type']=='fulltext'){
 				$array_spec="({$spec['name']},{$spec['value']})";
@@ -399,7 +401,7 @@ abstract class SS_Database {
 		
 		if($newTable || !isset($this->indexList[$table][$index_alt])) {
 			$this->transCreateIndex($table, $index, $spec);
-			$this->alterationMessage("Index $table.$index: created as $spec","created");
+			$this->alterationMessage("Index $table.$index: created as " . DB::getConn()->convertIndexSpec($spec),"created");
 		} else if($array_spec != DB::getConn()->convertIndexSpec($spec)) {
 			$this->transAlterIndex($table, $index, $spec);
 			$spec_msg=DB::getConn()->convertIndexSpec($spec);
