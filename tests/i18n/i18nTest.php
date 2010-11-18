@@ -49,10 +49,6 @@ class i18nTest extends SapphireTest {
 		$_TEMPLATE_MANIFEST['i18nTestModuleInclude.ss'] = array(
 			'Includes' => $this->alternateBasePath . '/i18ntestmodule/templates/Includes/i18nTestModuleInclude.ss',
 		);
-		$_TEMPLATE_MANIFEST['i18nTestModule.ss'] = array(
-			'main' => $this->alternateBasePath . '/i18ntestmodule/templates/i18nTestModule.ss',
-			'Layout' => $this->alternateBasePath . '/i18ntestmodule/templates/Layout/i18nTestModule.ss',
-		);
 		
 		$this->originalLocale = i18n::get_locale();
 	}
