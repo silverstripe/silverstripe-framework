@@ -1,19 +1,27 @@
 <?php
 
 class DbDatetimeTest extends FunctionalTest {
+
 	static $fixture_file = 'sapphire/tests/model/DbDatetimeTest.yml';
+
+	private static $offset = 0;					// number of seconds of php and db time are out of sync
+	private static $offset_thresholds = array(	// throw an error if the offset exceeds 30 minutes
+		E_USER_ERROR => 1800,
+		E_USER_WARNING => 60,
+		E_USER_NOTICE => 5,
+	);
 	
 	/**
 	 * Check if dates match more or less. This takes into the account the db query
 	 * can overflow to the next second giving offset readings.
 	 */
 	private function matchesRoughly($date1, $date2, $comment = '') {
-		$allowedDifference = 15; // seconds
+		$allowedDifference = 5 + abs(self::$offset); // seconds
 		
 		$time1 = is_numeric($date1) ? $date1 : strtotime($date1);
 		$time2 = is_numeric($date2) ? $date2 : strtotime($date2);
 		
-		$this->assertTrue(abs($time1-$time2)<$allowedDifference, $comment . " ($date1, $date2)");
+		$this->assertTrue(abs($time1-$time2)<$allowedDifference, $comment . " (times differ by " . abs($time1-$time2) . " seconds)");
 	}
 	
 	private function getDbNow() {
@@ -21,6 +29,18 @@ class DbDatetimeTest extends FunctionalTest {
 		return DB::query($query)->value();
 	}
 	
+	function setUpOnce() {
+		parent::setUpOnce();
+
+		self::$offset = time() - strtotime(DB::query('SELECT ' . DB::getConn()->now())->value());
+		foreach(self::$offset_thresholds as $code => $offset) {
+			if(abs(self::$offset) > $offset) {
+				trigger_error('The time of the databse is out of sync with the webserver by ' . abs(self::$offset) . ' seconds.', $code);
+				break;
+			}
+		}
+	}
+
 	function setUp() {
 		parent::setUp();
 		$this->adapter = DB::getConn();
