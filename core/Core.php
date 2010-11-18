@@ -288,39 +288,41 @@ function getSysTempDir() {
  */
 function getTempFolder($base = null) {
 	if(!$base) $base = BASE_PATH;
-	
+
 	if($base) {
 		$cachefolder = "silverstripe-cache" . str_replace(array(' ', "/", ":", "\\"), "-", $base);
 	} else {
 		$cachefolder = "silverstripe-cache";
 	}
-	
-	$ssTmp = BASE_PATH . "/silverstripe-cache";
-    if(@file_exists($ssTmp)) {
-    	return $ssTmp;
-    }
-	
-    $sysTmp = getSysTempDir();
 
-    $worked = true;
-    $ssTmp = "$sysTmp/$cachefolder";
-    if(!@file_exists($ssTmp)) {
-    	@$worked = mkdir($ssTmp);
-    }
-    if(!$worked) {
-    	$ssTmp = BASE_PATH . "/silverstripe-cache";
-    	$worked = true;
-    	if(!@file_exists($ssTmp)) {
-    		@$worked = mkdir($ssTmp);
-    	}
-    }
-    if(!$worked) {
-    	user_error("Permission problem gaining access to a temp folder. " .
-    		"Please create a folder named silverstripe-cache in the base folder "  .
-    		"of the installation and ensure it has the correct permissions", E_USER_ERROR);
-    }
-    
-    return $ssTmp;
+	$ssTmp = BASE_PATH . "/silverstripe-cache";
+	if(@file_exists($ssTmp)) {
+		return $ssTmp;
+	}
+
+	$sysTmp = getSysTempDir();
+	$worked = true;
+	$ssTmp = "$sysTmp/$cachefolder";
+
+	if(!@file_exists($ssTmp)) {
+		@$worked = mkdir($ssTmp);
+	}
+
+	if(!$worked) {
+		$ssTmp = BASE_PATH . "/silverstripe-cache";
+		$worked = true;
+		if(!@file_exists($ssTmp)) {
+			@$worked = mkdir($ssTmp);
+		}
+	}
+
+	if(!$worked) {
+		user_error("Permission problem gaining access to a temp folder. " .
+			"Please create a folder named silverstripe-cache in the base folder "  .
+			"of the installation and ensure it has the correct permissions", E_USER_ERROR);
+	}
+
+	return $ssTmp;
 }
 
 /**
