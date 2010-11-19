@@ -34,7 +34,7 @@ class DbDatetimeTest extends FunctionalTest {
 		self::$offset = time() - strtotime(DB::query('SELECT ' . DB::getConn()->now())->value());
 		foreach(self::$offset_thresholds as $code => $offset) {
 			if(abs(self::$offset) > $offset) {
-				if($code == E_USER_ERROR) {
+				if($code == E_USER_NOTICE) {
 					Debug::show('The time of the database is out of sync with the webserver by ' . abs(self::$offset) . ' seconds.');
 				} else {
 					trigger_error('The time of the database is out of sync with the webserver by ' . abs(self::$offset) . ' seconds.', $code);
