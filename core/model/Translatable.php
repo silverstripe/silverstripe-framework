@@ -771,7 +771,7 @@ class Translatable extends DataObjectDecorator implements PermissionProvider {
 		// Caution: This logic is very sensitve to infinite loops when translation status isn't determined properly
 		// If a parent for the newly written translation was existing before this
 		// onBeforeWrite() call, it will already have been linked correctly through createTranslation()
-		if($this->owner->hasField('ParentID')) {
+		if($this->owner->hasField('ParentID') && $this->owner instanceof SiteTree) {
 			if(
 				!$this->owner->ID 
 				&& $this->owner->ParentID 
