@@ -187,24 +187,15 @@ define('PR_LOW',10);
 /**
  * Ensure we have enough memory
  */
-
 increase_memory_limit_to('64M');
 
 ///////////////////////////////////////////////////////////////////////////////
 // INCLUDES
 
-/**
- * Add sapphire/parsers and sapphire/thirdparty include paths, as well as adding a fixed reference
- * to BASEPATH/sapphrie in case we chdir()
- */
-
-// Add after the "." path but before other paths (so that they take precedence over the PEAR 
-// include paths)
-set_include_path(str_replace('.' . PATH_SEPARATOR, '.' . PATH_SEPARATOR 
-	. BASE_PATH . '/sapphire' . PATH_SEPARATOR
+set_include_path(BASE_PATH . '/sapphire' . PATH_SEPARATOR
 	. BASE_PATH . '/sapphire/parsers' . PATH_SEPARATOR
 	. BASE_PATH . '/sapphire/thirdparty' . PATH_SEPARATOR
-	, get_include_path())); 
+	. get_include_path());
 
 /**
  * Sapphire class autoloader.  Requires the ManifestBuilder to work.
