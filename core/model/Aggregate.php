@@ -20,7 +20,11 @@
  * examples: Min, Max, Avg
  * 
  * Aggregates are often used as portions of a cacheblock key. They are therefore cached themselves, in the 'aggregate'
- * cache, although the invalidation logic prefers speed over keeping valid data.
+ * cache, although the invalidation logic prefers speed over keeping valid data. 
+ * The aggregate cache is cleared through {@link DataObject::flushCache()}, which in turn is called on
+ * {@link DataObject->write()} and other write operations. 
+ * This means most write operations to the database will invalidate the cache correctly.
+ * Use {@link Aggregate::flushCache()} to manually clear.
  * 
  * NOTE: The cache logic uses tags, and so a backend that supports tags is required. Currently only the File
  * backend (and the two-level backend with the File backend as the slow store) meets this requirement
@@ -98,6 +102,7 @@ class Aggregate extends ViewableData {
 		
 		$query = $this->query("$func(\"$table\".\"$attribute\")");
 		
+		// Cache results of this specific SQL query until flushCache() is triggered.
 		$cachekey = sha1($query->sql());
 		$cache = self::cache();
 		
