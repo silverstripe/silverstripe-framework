@@ -6,6 +6,10 @@
  * @subpackage control
  */
 class SS_HTTPResponse {
+	
+	/**
+	 * @var array
+	 */
 	protected static $status_codes = array(
 		100 => 'Continue',
 		101 => 'Switching Protocols',
@@ -48,6 +52,9 @@ class SS_HTTPResponse {
 		505 => 'HTTP Version Not Supported',
 	);
 	
+	/**
+	 * @var array
+	 */
 	protected static $redirect_codes = array(
 		301,
 		302,
@@ -57,7 +64,14 @@ class SS_HTTPResponse {
 		307
 	);
 	
+	/**
+	 * @var Int
+	 */
 	protected $statusCode = 200;
+	
+	/**
+	 * @var String
+	 */
 	protected $statusDescription = "OK";
 	
 	/**
@@ -77,15 +91,24 @@ class SS_HTTPResponse {
 	
 	/**
 	 * Create a new HTTP response
+	 * 
 	 * @param $body The body of the response
 	 * @param $statusCode The numeric status code - 200, 404, etc
-	 * @param $statusDescription The text to be given alongside the status code.  This can be accessed by javascript
+	 * @param $statusDescription The text to be given alongside the status code. 
+	 *  See {@link setStatusCode()} for more information.
 	 */
 	function __construct($body = null, $statusCode = null, $statusDescription = null) {
 		$this->body = $body;
 		if($statusCode) $this->setStatusCode($statusCode, $statusDescription);
 	}
 	
+	/**
+	 * @param String $code
+	 * @param String $description Optional. See {@link setStatusDescription()}.
+	 *  No newlines are allowed in the description.
+	 *  If omitted, will default to the standard HTTP description
+	 *  for the given $code value (see {@link $status_codes}).
+	 */
 	function setStatusCode($code, $description = null) {
 		if(isset(self::$status_codes[$code])) $this->statusCode = $code;
 		else user_error("Unrecognised HTTP status code '$code'", E_USER_WARNING);
@@ -94,6 +117,19 @@ class SS_HTTPResponse {
 		else $this->statusDescription = self::$status_codes[$code];
 	}
 	
+	/**
+	 * The text to be given alongside the status code ("reason phrase").
+	 * Caution: Will be overwritten by {@link setStatusCode()}.
+	 * 
+	 * @param String $description 
+	 */
+	function setStatusDescription($description) {
+		$this->statusDescription = $description;
+	}
+	
+	/**
+	 * @return Int
+	 */
 	function getStatusCode() {
 		return $this->statusCode;
 	}
@@ -102,7 +138,7 @@ class SS_HTTPResponse {
 	 * @return string Description for a HTTP status code
 	 */
 	function getStatusDescription() {
-		return $this->statusDescription;
+		return str_replace(array("\r","\n"), '', $this->statusDescription);
 	}
 	
 	/**
