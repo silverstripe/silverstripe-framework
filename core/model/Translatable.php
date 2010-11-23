@@ -1288,13 +1288,11 @@ class Translatable extends DataObjectDecorator implements PermissionProvider {
 	 * Get a list of languages with at least one element translated in (including the default language)
 	 *
 	 * @param string $className Look for languages in elements of this class
+	 * @param string $where Optional SQL WHERE statement
 	 * @return array Map of languages in the form locale => langName
 	 */
 	static function get_existing_content_languages($className = 'SiteTree', $where = '') {
 		$baseTable = ClassInfo::baseDataClass($className);
-		//We don't quote $where if it is empty:
-		if($where!='')
-			$where="\"$where\"";
 		$query = new SQLQuery("Distinct \"Locale\"","\"$baseTable\"",$where, '', "\"Locale\"");
 		$dbLangs = $query->execute()->column();
 		$langlist = array_merge((array)Translatable::default_locale(), (array)$dbLangs);
