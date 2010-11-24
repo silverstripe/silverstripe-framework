@@ -75,8 +75,13 @@ class SS_Backtrace {
 	
 	/**
 	 * Return the full function name.  If showArgs is set to true, a string representation of the arguments will be shown
+	 * 
+	 * @param Object $item
+	 * @param boolean $showArg
+	 * @param Int $argCharLimit
+	 * @return String
 	 */
-	static function full_func_name($item, $showArgs = false) {
+	static function full_func_name($item, $showArgs = false, $argCharLimit = 10000) {
 		$funcName = '';
 		if(isset($item['class'])) $funcName .= $item['class'];
 		if(isset($item['type'])) $funcName .= $item['type'];
@@ -86,7 +91,7 @@ class SS_Backtrace {
 			$args = array();
 			foreach($item['args'] as $arg) {
 				if(!is_object($arg) || method_exists($arg, '__toString')) {
-					$args[] = (string) $arg;
+					$args[] = (strlen((string)$arg) > $argCharLimit) ? substr((string)$arg, 0, $argCharLimit) . '...' : (string)$arg;
 				} else {
 					$args[] = get_class($arg);
 				}
