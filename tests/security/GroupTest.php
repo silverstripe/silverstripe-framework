@@ -14,13 +14,11 @@ class GroupTest extends FunctionalTest {
 		
 		// We will iterate over the map and build mapOuput to more easily call assertions on the result.
 		$map = Group::map();
-		foreach($map as $k => $v) {
-			$mapOutput[$k] = $v;
-		}
+		$mapOutput = $map->getItems()->map('ID', 'Title');
 		
 		$group1 = $this->objFromFixture('Group', 'group1');
 		$group2 = $this->objFromFixture('Group', 'group2');
-		
+
 		/* We have added 2 groups to our fixture.  They should both appear in $mapOutput. */
 		$this->assertEquals($mapOutput[$group1->ID], $group1->Title);
 		$this->assertEquals($mapOutput[$group2->ID], $group2->Title);
