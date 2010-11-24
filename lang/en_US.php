@@ -240,6 +240,7 @@ $lang['en_US']['File']['Title'] = 'Title';
 $lang['en_US']['FileIFrameField']['ATTACH'] = 'Attach %s';
 $lang['en_US']['FileIFrameField']['ATTACHONCESAVED'] = '%ss can be attached once you have saved the record for the first time.';
 $lang['en_US']['FileIFrameField']['DELETE'] = 'Delete %s';
+$lang['en_US']['FileIFrameField']['DISALLOWEDFILETYPE'] = 'This filetype is not allowed to be uploaded';
 $lang['en_US']['FileIFrameField']['FILE'] = 'File';
 $lang['en_US']['FileIFrameField']['FROMCOMPUTER'] = 'From your Computer';
 $lang['en_US']['FileIFrameField']['FROMFILESTORE'] = 'From the File Store';

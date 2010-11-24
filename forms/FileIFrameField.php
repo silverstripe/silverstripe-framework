@@ -175,7 +175,13 @@ class FileIFrameField extends FileField {
 		if($data['FileSource'] == 'new') {
 			$fileObject = Object::create($desiredClass);
 			
-			$this->upload->loadIntoFile($_FILES['Upload'], $fileObject, $this->folderName);
+			try {
+				$this->upload->loadIntoFile($_FILES['Upload'], $fileObject, $this->folderName);
+			} catch (Exception $e){
+				$form->sessionMessage(_t('FileIFrameField.DISALLOWEDFILETYPE', 'This filetype is not allowed to be uploaded'), 'bad');
+				Director::redirectBack();
+				return;
+			}
 			
 			if($this->upload->isError()) {
 				Director::redirectBack();
