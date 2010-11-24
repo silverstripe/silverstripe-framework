@@ -278,6 +278,10 @@ class SS_HTTPRequest implements ArrayAccess {
 		$response->addHeader("Content-Length", strlen($fileData));
 		$response->addHeader("Pragma", ""); // Necessary because IE has issues sending files over SSL
 		
+		if(strstr($_SERVER["HTTP_USER_AGENT"],"MSIE") == true) {
+			$response->addHeader('Cache-Control', 'max-age=3, must-revalidate'); // Workaround for IE6 and 7
+		}
+		
 		return $response;
 	}
 	
