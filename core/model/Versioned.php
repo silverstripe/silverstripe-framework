@@ -249,6 +249,13 @@ class Versioned extends DataObjectDecorator {
 				// Create tables for other stages			
 				foreach($this->stages as $stage) {
 					// Extra tables for _Live, etc.
+					//Change unique indexes to 'index'.  Versioned tables may run into unique indexing difficulties otherwise.
+					foreach($indexes as $key=>$index){
+						if(is_array($index) && $index['type']=='unique'){
+							$indexes[$key]['type']='index';
+						}
+					}
+					
 					if($stage != $this->defaultStage) {
 						DB::requireTable("{$table}_$stage", $fields, $indexes, false);
 					}
