@@ -48,8 +48,11 @@ class SS_LogErrorEmailFormatter implements Zend_Log_Formatter_Interface {
 
 		$relfile = Director::makeRelative($errfile);
 		if($relfile[0] == '/') $relfile = substr($relfile, 1);
+		
+		$host = @$_SERVER['HTTP_HOST'];
+		$uri = @$_SERVER['REQUEST_URI'];
 
-		$subject = "$errorType at $relfile line {$errline} (http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI])";
+		$subject = "$errorType at $relfile line {$errline} (http://{$host}{$uri})";
 
 		return array(
 			'subject' => $subject,
