@@ -83,6 +83,10 @@ if(defined('SS_DATABASE_USERNAME') && defined('SS_DATABASE_PASSWORD')) {
 			. $database 
 			. (defined('SS_DATABASE_SUFFIX') ? SS_DATABASE_SUFFIX : ''),
 	);
+	
+	// For schema enabled drivers: 
+ 	if(defined('SS_DATABASE_SCHEMA')) 
+ 		$databaseConfig["schema"] = SS_DATABASE_SCHEMA; 
 }
 
 if(defined('SS_SEND_ALL_EMAILS_TO')) {
