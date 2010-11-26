@@ -1467,7 +1467,7 @@ class i18n extends Object {
 
 		// fallback to the passed $string if no translation is present
 		$transEntity = isset($lang[$locale][$class][$realEntity]) ? $lang[$locale][$class][$realEntity] : $string;
-		
+
 		// entities can be stored in both array and literal values in the language tables
 		return (is_array($transEntity) ? $transEntity[0] : $transEntity);
 	}
@@ -1837,6 +1837,18 @@ class i18n extends Object {
 				&& file_exists("$base/$module/_config.php") 
 			  && file_exists($file = "$base/$module/lang/$locale.php")
 			) {
+				if ($force_load) include($file);
+				else include_once($file);
+			}
+		}
+		
+		// Load translations from themes
+		$themesBase = $base . '/themes';
+		foreach(scandir($themesBase) as $theme) {
+			if(
+				strpos($theme, SSViewer::current_theme()) === 0
+				&& file_exists($file = "$themesBase/$theme/lang/$locale.php")
+			) {				
 				if ($force_load) include($file);
 				else include_once($file);
 			}
