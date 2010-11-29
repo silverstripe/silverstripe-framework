@@ -11,7 +11,8 @@ class HTMLTextTest extends SapphireTest {
 	function testLimitCharacters() {
 		$cases = array(
 			'The little brown fox jumped over the lazy cow.' => 'The little brown fox...',
-			'<p>This is some text in a paragraph.</p>' => 'This is some text in...'
+			'<p>This is some text in a paragraph.</p>' => 'This is some text in...',
+			'This text contains &amp; in it' => 'This text contains &amp;...'
 		);
 		
 		foreach($cases as $originalValue => $expectedValue) {
