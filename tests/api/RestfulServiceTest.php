@@ -7,7 +7,7 @@ class RestfulServiceTest extends SapphireTest {
 		$test1url = 'RestfulServiceTest_Controller/';
 		$test1params = array(
 			'test1a' => 4352655636.76543, // number test
-			'test1b' => '$&+,/:;=?@#"\'%', // special char test. These should all get encoded
+			'test1b' => '$&+,/:;=?@#%', // special char test. These should all get encoded
 			'test1c' => 'And now for a string test' // string test
 		);
 		$connection->setQueryString($test1params);
@@ -20,7 +20,7 @@ class RestfulServiceTest extends SapphireTest {
 		$connection->setQueryString(array());
 		$test2params = array(
 			'test2a' => 767545678.76887, // number test
-			'test2b' => '%\'"@?=;:/,$', // special character checks
+			'test2b' => '%@?=;:/,$', // special character checks
 			'test2c' => 'And now for a string test', // string test
 		);
 		$test2suburl = 'RestfulServiceTest_Controller/?';
