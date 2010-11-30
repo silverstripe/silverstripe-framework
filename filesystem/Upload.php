@@ -476,7 +476,8 @@ class Upload_Validator {
 		// we don't validate for empty upload fields yet
 		if(!isset($this->tmpFile['name']) || empty($this->tmpFile['name'])) return true;
 
-		if(isset($this->tmpFile['tmp_name']) && !is_uploaded_file($this->tmpFile['tmp_name']) && !SapphireTest::is_running_test()) {
+		$isRunningTests = (class_exists('SapphireTest', false) && SapphireTest::is_running_test());
+		if(isset($this->tmpFile['tmp_name']) && !is_uploaded_file($this->tmpFile['tmp_name']) && !$isRunningTests) {
 			$this->errors[] = _t('File.NOVALIDUPLOAD', 'File is not a valid upload');
 			return false;
 		}

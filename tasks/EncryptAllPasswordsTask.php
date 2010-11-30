@@ -66,7 +66,7 @@ class EncryptAllPasswordsTask extends BuildTask {
 	 * @todo This should really be taken care of by TestRunner
 	 */
 	protected function debugMessage($msg) {
-		if(!SapphireTest::is_running_test()) {
+		if(class_exists('SapphireTest', false) && !SapphireTest::is_running_test()) {
 			Debug::message($msg);
 		}
 	}
