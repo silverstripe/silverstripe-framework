@@ -391,6 +391,7 @@ class MySQLDatabase extends SS_Database {
 					$indexSpec='unique (' . $indexSpec['value'] . ')';
 					break;
 				case 'btree':
+				case 'index':
 					$indexSpec='using btree (' . $indexSpec['value'] . ')';
 					break;
 				case 'hash':
