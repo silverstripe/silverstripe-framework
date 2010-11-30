@@ -29,12 +29,13 @@ class DatabaseAdmin extends Controller {
 		// if on CLI or with the database not ready. The latter makes it less errorprone to do an
 		// initial schema build without requiring a default-admin login.
 		// Access to this controller is always allowed in "dev-mode", or of the user is ADMIN.
+		$isRunningTests = (class_exists('SapphireTest', false) && SapphireTest::is_running_test());
 		$canAccess = (
 			Director::isDev() 
 			|| !Security::database_is_ready() 
 			// We need to ensure that DevelopmentAdminTest can simulate permission failures when running
 			// "dev/tests" from CLI. 
-			|| (Director::is_cli() && !SapphireTest::is_running_test())
+			|| (Director::is_cli() && !$isRunningTests)
 			|| Permission::check("ADMIN")
 		);
 		if(!$canAccess) {

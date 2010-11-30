@@ -12,12 +12,13 @@ class TaskRunner extends Controller {
 	
 	function init() {
 		parent::init();
-		
+
+		$isRunningTests = (class_exists('SapphireTest', false) && SapphireTest::is_running_test());
 		$canAccess = (
 			Director::isDev() 
 			// We need to ensure that DevelopmentAdminTest can simulate permission failures when running
 			// "dev/tasks" from CLI.
-			|| (Director::is_cli() && !SapphireTest::is_running_test())
+			|| (Director::is_cli() && !$isRunningTests)
 			|| Permission::check("ADMIN")
 		);
 		if(!$canAccess) return Security::permissionFailure($this);

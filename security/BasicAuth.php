@@ -44,7 +44,8 @@ class BasicAuth {
 	 * @return Member $member 
 	 */
 	static function requireLogin($realm, $permissionCode = null, $tryUsingSessionLogin = true) {
-		if(!Security::database_is_ready() || (Director::is_cli() && !SapphireTest::is_running_test())) return true;
+		$isRunningTests = (class_exists('SapphireTest', false) && SapphireTest::is_running_test());
+		if(!Security::database_is_ready() || (Director::is_cli() && !$isRunningTests)) return true;
 		
 		$member = null;
 		if(isset($_SERVER['PHP_AUTH_USER']) && isset($_SERVER['PHP_AUTH_PW'])) {
