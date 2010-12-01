@@ -30,11 +30,15 @@ class RootURLController extends Controller {
 		if(!self::$cached_homepage_link) {
 			$host       = str_replace('www.', null, $_SERVER['HTTP_HOST']);
 			$SQL_host   = Convert::raw2sql($host);
-			$candidates = DataObject::get('SiteTree', "\"HomepageForDomain\" LIKE '%$SQL_host%'");
 			
-			if($candidates) foreach($candidates as $candidate) {
-				if(preg_match('/(,|^) *' . preg_quote($host) . ' *(,|$)/', $candidate->HomepageForDomain)) {
-					self::$cached_homepage_link = trim($candidate->RelativeLink(true), '/');
+			$query = new SQLQuery (array('"ID"', '"HomepageForDomain"'), '"SiteTree"', "(\"HomepageForDomain\" LIKE '%$SQL_host%')", "\"Sort\"", null, null);
+			singleton("SiteTree")->getExtensionInstance('Versioned')->augmentSQL($query);
+			$candidates = $query->execute()->map();
+
+			if($candidates) foreach($candidates as $id => $domainString) {
+				if(preg_match('/(,|^) *' . preg_quote($host) . ' *(,|$)/', $domainString)) {
+					self::$cached_homepage_link = trim(DataObject::get_by_id('SiteTree', $id)->RelativeLink(true), '/');
+					break;
 				}
 			}
 			
