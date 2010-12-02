@@ -301,11 +301,16 @@ class RequestHandler extends ViewableData {
 	 * {@link RequestHandler::handleAction()} and returned to the user.
 	 *
 	 * @param int $errorCode
-	 * @param string $errorMessage
+	 * @param string $errorMessage Plaintext error message
 	 * @uses SS_HTTPResponse_Exception
 	 */
 	public function httpError($errorCode, $errorMessage = null) {
-		throw new SS_HTTPResponse_Exception($errorMessage, $errorCode);
+		$e = new SS_HTTPResponse_Exception($errorMessage, $errorCode);
+
+		// Error responses should always be considered plaintext, for security reasons
+		$e->getResponse()->addHeader('Content-Type', 'text/plain');
+
+		throw $e;
 	}
 	
 	/**
