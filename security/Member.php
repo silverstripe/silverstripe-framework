@@ -557,7 +557,7 @@ class Member extends DataObject {
 	static function currentUser() {
 		$id = Member::currentUserID();
 		if($id) {
-			return DataObject::get_one("Member", "\"Member\".\"ID\" = $id");
+			return DataObject::get_one("Member", "\"Member\".\"ID\" = $id", true, 1);
 		}
 	}
 
