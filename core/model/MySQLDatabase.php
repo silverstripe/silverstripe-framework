@@ -823,7 +823,7 @@ class MySQLDatabase extends SS_Database {
 		$records = DB::query($fullQuery);
 
 		foreach($records as $record)
-				$objects[] = new $record['ClassName']($record);
+			$objects[] = new $record['ClassName']($record);
 
 
 		if(isset($objects)) $doSet = new DataObjectSet($objects);
