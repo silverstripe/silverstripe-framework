@@ -57,7 +57,7 @@ class TranslatableTest extends FunctionalTest {
 		$this->assertEquals(301, $response->getStatusCode(), 'Locale GET param causes redirect if it exists');
 		$this->assertContains($translatedPage->URLSegment, $response->getHeader('Location'));
 		
-		$response = $this->get(Controller::join_links($origPage->URLSegment, '?locale=xx_XX'));
+		$response = $this->get(Controller::join_links($origPage->URLSegment, '?locale=fr_FR'));
 		$this->assertEquals(200, $response->getStatusCode(), 'Locale GET param without existing translation shows original page');
 	}
 	
