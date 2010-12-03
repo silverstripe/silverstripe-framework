@@ -257,6 +257,7 @@ class Folder extends File {
 		
 		if (move_uploaded_file($tmpFile['tmp_name'], "$base/$file$ext")) {
 			// Update with the new image
+			chmod("$base/$file$ext", Filesystem::$file_create_mask);
 			return $this->constructChild(basename($file . $ext));
 		} else {
 			if(!file_exists($tmpFile['tmp_name'])) user_error("Folder::addUploadToFolder: '$tmpFile[tmp_name]' doesn't exist", E_USER_ERROR);
