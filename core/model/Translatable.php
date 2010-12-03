@@ -268,6 +268,8 @@ class Translatable extends DataObjectDecorator implements PermissionProvider {
 	 * @param $locale String
 	 */
 	static function set_default_locale($locale) {
+		if($locale && !i18n::validate_locale($locale)) throw new InvalidArgumentException(sprintf('Invalid locale "%s"', $locale));
+		
 		$localeList = i18n::get_locale_list();
 		if(isset($localeList[$locale])) {
 			self::$default_locale = $locale;
@@ -295,6 +297,8 @@ class Translatable extends DataObjectDecorator implements PermissionProvider {
 	 * @param string $lang New reading language.
 	 */
 	static function set_current_locale($locale) {
+		if($locale && !i18n::validate_locale($locale)) throw new InvalidArgumentException(sprintf('Invalid locale "%s"', $locale));
+		
 		self::$current_locale = $locale;
 	}	
 	
@@ -308,6 +312,8 @@ class Translatable extends DataObjectDecorator implements PermissionProvider {
 	 * @return DataObject
 	 */
 	static function get_one_by_locale($class, $locale, $filter = '', $cache = false, $orderby = "") {
+		if($locale && !i18n::validate_locale($locale)) throw new InvalidArgumentException(sprintf('Invalid locale "%s"', $locale));
+		
 		$orig = Translatable::get_current_locale();
 		Translatable::set_current_locale($locale);
 		$do = DataObject::get_one($class, $filter, $cache, $orderby);
@@ -329,6 +335,8 @@ class Translatable extends DataObjectDecorator implements PermissionProvider {
 	 * @return mixed The objects matching the conditions.
 	 */
 	static function get_by_locale($class, $locale, $filter = '', $sort = '', $join = "", $limit = "", $containerClass = "DataObjectSet", $having = "") {
+		if($locale && !i18n::validate_locale($locale)) throw new InvalidArgumentException(sprintf('Invalid locale "%s"', $locale));
+		
 		$oldLang = self::get_current_locale();
 		self::set_current_locale($locale);
 		$result = DataObject::get($class, $filter, $sort, $join, $limit, $containerClass, $having);
@@ -1053,6 +1061,8 @@ class Translatable extends DataObjectDecorator implements PermissionProvider {
 	 * @return DataObjectSet
 	 */
 	function getTranslations($locale = null, $stage = null) {
+		if($locale && !i18n::validate_locale($locale)) throw new InvalidArgumentException(sprintf('Invalid locale "%s"', $locale));
+		
 		if($this->owner->exists()) {
 			// HACK need to disable language filtering in augmentSQL(), 
 			// as we purposely want to get different language
@@ -1103,6 +1113,8 @@ class Translatable extends DataObjectDecorator implements PermissionProvider {
 	 * @return DataObject Translated object
 	 */
 	function getTranslation($locale, $stage = null) {
+		if($locale && !i18n::validate_locale($locale)) throw new InvalidArgumentException(sprintf('Invalid locale "%s"', $locale));
+		
 		$translations = $this->getTranslations($locale, $stage);
 		return ($translations) ? $translations->First() : null;
 	}
@@ -1120,6 +1132,8 @@ class Translatable extends DataObjectDecorator implements PermissionProvider {
 	 * @return DataObject The translated object
 	 */
 	function createTranslation($locale) {
+		if($locale && !i18n::validate_locale($locale)) throw new InvalidArgumentException(sprintf('Invalid locale "%s"', $locale));
+		
 		if(!$this->owner->exists()) {
 			user_error('Translatable::createTranslation(): Please save your record before creating a translation', E_USER_ERROR);
 		}
@@ -1179,6 +1193,8 @@ class Translatable extends DataObjectDecorator implements PermissionProvider {
 	 * @return boolean
 	 */
 	function canTranslate($member = null, $locale) {
+		if($locale && !i18n::validate_locale($locale)) throw new InvalidArgumentException(sprintf('Invalid locale "%s"', $locale));
+		
 		if(!$member || !(is_a($member, 'Member')) || is_numeric($member)) $member = Member::currentUser();
 
 		// check for locale
@@ -1218,6 +1234,8 @@ class Translatable extends DataObjectDecorator implements PermissionProvider {
 	 * @return boolean
 	 */
 	function hasTranslation($locale) {
+		if($locale && !i18n::validate_locale($locale)) throw new InvalidArgumentException(sprintf('Invalid locale "%s"', $locale));
+		
 		return (
 			$this->owner->Locale == $locale
 			|| array_search($locale, $this->getTranslatedLocales()) !== false
