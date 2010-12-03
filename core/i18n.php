@@ -1714,6 +1714,26 @@ class i18n extends Object {
 		return (isset($module)) ? $module[1] : false;
 
 	}
+	
+	/**
+	 * Validates a "long" locale format (e.g. "en_US")
+	 * by checking it against {@link $all_locales}.
+	 * 
+	 * To add a locale to {@link $all_locales}, use the following example
+	 * in your mysite/_config.php:
+	 * <code>
+	 * i18n::$allowed_locales['xx_XX'] = '<Language name>';
+	 * </code>
+	 * 
+	 * Note: Does not check for {@link $allowed_locales}.
+	 * 
+	 * @return boolean
+	 */
+	static function validate_locale($locale) {
+		// Convert en-US to en_US
+		$locale = str_replace('-', '_', $locale);
+		return (array_key_exists($locale, self::$all_locales));
+	}
 
 	/**
 	 * Set the current locale, used as the default for 
@@ -1727,6 +1747,8 @@ class i18n extends Object {
 	 * @param string $locale Locale to be set. See http://unicode.org/cldr/data/diff/supplemental/languages_and_territories.html for a list of possible locales.
 	 */
 	static function set_locale($locale) {
+		if(!self::validate_locale($locale)) throw new InvalidArgumentException(sprintf('Invalid locale "%s"', $locale));
+		
 		if ($locale) self::$current_locale = $locale;
 	}
 
@@ -1779,6 +1801,8 @@ class i18n extends Object {
 	 * @param String $locale
 	 */
 	static function set_default_locale($locale) {
+		if(!self::validate_locale($locale)) throw new InvalidArgumentException(sprintf('Invalid locale "%s"', $locale));
+		
 		self::$default_locale = $locale;
 	}
 	
@@ -1807,6 +1831,8 @@ class i18n extends Object {
 	 * @param string $locale Locale to be loaded
 	 */
 	static function include_locale_file($module, $locale) {
+		if(!self::validate_locale($locale)) throw new InvalidArgumentException(sprintf('Invalid locale "%s"', $locale));
+		
 		if (file_exists($file = Director::getAbsFile("$module/lang/$locale.php"))) include_once($file);
 	}
 
@@ -1821,6 +1847,8 @@ class i18n extends Object {
 	 * 									and may need to reload them. 
 	 */
 	static function include_by_locale($locale, $load_plugins = true, $force_load = false) {
+		if(!self::validate_locale($locale)) throw new InvalidArgumentException(sprintf('Invalid locale "%s"', $locale));
+		
 		global $lang;
 
 		$base = Director::baseFolder();

@@ -260,6 +260,14 @@ class i18nTest extends SapphireTest {
 
 		$lang = $oldLang;
 	}
+	
+	function testValidateLocale() {
+		$this->assertTrue(i18n::validate_locale('en_US'), 'Known locale in underscore format is valid');
+		$this->assertTrue(i18n::validate_locale('en-US'), 'Known locale in dash format is valid');
+		$this->assertFalse(i18n::validate_locale('en'), 'Short lang format is not valid');
+		$this->assertFalse(i18n::validate_locale('xx_XX'), 'Unknown locale in correct format is not valid');
+		$this->assertFalse(i18n::validate_locale(''), 'Empty string is not valid');
+	}
 
 	static function translationTestPlugin($locale) {
 		$result = array();
