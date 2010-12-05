@@ -81,16 +81,17 @@ abstract class PasswordEncryptor {
 	
 	/**
 	 * Return a string value stored in the {@link Member->Salt} property.
-	 * By default uses sha1() and mt_rand();
-	 * 
 	 * Note: Only used when {@link Security::$useSalt} is TRUE.
+	 * 
+	 * @uses RandomGenerator
 	 * 
 	 * @param String $password Cleartext password
 	 * @param Member $member (Optional)
 	 * @return String Maximum of 50 characters
 	 */
 	function salt($password, $member = null) {
-		return substr(sha1(mt_rand()) . time(), 0, 50);
+		$generator = new RandomGenerator();
+		return substr($generator->generateHash('sha1'), 0, 50);
 	}
 	
 	/**
