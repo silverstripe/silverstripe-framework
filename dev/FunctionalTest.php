@@ -70,9 +70,13 @@ class FunctionalTest extends SapphireTest {
         
         // Unprotect the site, tests are running with the assumption it's off. They will enable it on a case-by-case basis.
         BasicAuth::protect_entire_site(false);
+
+		SecurityToken::disable();
 	}
 
 	function tearDown() {
+		SecurityToken::enable();
+		
 		parent::tearDown();
 		unset($this->mainSession);
 	}

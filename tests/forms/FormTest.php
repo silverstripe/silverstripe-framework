@@ -239,6 +239,72 @@ class FormTest extends FunctionalTest {
 		);
 	}
 	
+	function testGloballyDisabledSecurityTokenInheritsToNewForm() {
+		SecurityToken::enable();
+		
+		$form1 = $this->getStubForm();
+		$this->assertType('SecurityToken', $form1->getSecurityToken());
+		
+		SecurityToken::disable();
+		
+		$form2 = $this->getStubForm();
+		$this->assertType('NullSecurityToken', $form2->getSecurityToken());
+		
+		SecurityToken::enable();
+	}
+	
+	function testDisableSecurityTokenDoesntAddTokenFormField() {
+		SecurityToken::enable();
+		
+		$formWithToken = $this->getStubForm();
+		$this->assertType(
+			'HiddenField',
+			$formWithToken->Fields()->fieldByName(SecurityToken::get_default_name()),
+			'Token field added by default'
+		);
+		
+		$formWithoutToken = $this->getStubForm();
+		$formWithoutToken->disableSecurityToken();
+		$this->assertNull(
+			$formWithoutToken->Fields()->fieldByName(SecurityToken::get_default_name()),
+			'Token field not added if disableSecurityToken() is set'
+		);
+	}
+	
+	function testDisableSecurityTokenAcceptsSubmissionWithoutToken() {
+		SecurityToken::enable();
+		
+		$response = $this->get('FormTest_ControllerWithSecurityToken');
+		// can't use submitForm() as it'll automatically insert SecurityID into the POST data
+		$response = $this->post(
+			'FormTest_ControllerWithSecurityToken/Form',
+			array(
+				'Email' => 'test@test.com',
+				'action_doSubmit' => 1
+				// leaving out security token
+			)
+		);
+		$this->assertEquals(400, $response->getStatusCode(), 'Submission fails without security token');
+		
+		$response = $this->get('FormTest_ControllerWithSecurityToken');
+		$tokenEls = $this->cssParser()->getBySelector('#Form_Form_SecurityID');
+		$this->assertEquals(
+			1, 
+			count($tokenEls), 
+			'Token form field added for controller without disableSecurityToken()'
+		);
+		$token = (string)$tokenEls[0];
+		$response = $this->submitForm(
+			'Form_Form',
+			null,
+			array(
+				'Email' => 'test@test.com',
+				'SecurityID' => $token
+			)
+		);
+		$this->assertEquals(200, $response->getStatusCode(), 'Submission suceeds with security token');
+	}
+	
 	protected function getStubForm() {
 		return new Form(
 			new Controller(),
@@ -310,6 +376,57 @@ class FormTest_Controller extends Controller {
 				'SomeRequiredField'
 			)
 		);
+
+		// Disable CSRF protection for easier form submission handling
+		$form->disableSecurityToken();
+		
+		return $form;
+	}
+	
+	function FormWithSecurityToken() {
+		$form = new Form(
+			$this,
+			'FormWithSecurityToken',
+			new FieldSet(
+				new EmailField('Email')
+			),
+			new FieldSet(
+				new FormAction('doSubmit')
+			)
+		);
+
+		return $form;
+	}
+	
+	function doSubmit($data, $form, $request) {
+		$form->sessionMessage('Test save was successful', 'good');
+		return $this->redirectBack();
+	}
+}
+
+class FormTest_ControllerWithSecurityToken extends Controller {
+	static $url_handlers = array(
+		'$Action//$ID/$OtherID' => "handleAction",
+	);
+
+	protected $template = 'BlankPage';
+	
+	function Link($action = null) {
+		return Controller::join_links('FormTest_ControllerWithSecurityToken', $this->request->latestParam('Action'), $this->request->latestParam('ID'), $action);
+	}
+	
+	function Form() {
+		$form = new Form(
+			$this,
+			'Form',
+			new FieldSet(
+				new EmailField('Email')
+			),
+			new FieldSet(
+				new FormAction('doSubmit')
+			)
+		);
+
 		return $form;
 	}
 	
