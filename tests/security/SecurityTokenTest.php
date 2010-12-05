@@ -1,4 +1,4 @@
-<?
+<?php
 /**
  * @package sapphire
  * @subpackage tests
