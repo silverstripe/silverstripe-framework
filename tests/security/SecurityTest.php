@@ -340,6 +340,9 @@ class SecurityTest extends FunctionalTest {
 	}
 	
 	function testDatabaseIsReadyWithInsufficientMemberColumns() {
+		$old = Security::$force_database_is_ready;
+		Security::$force_database_is_ready = null;
+		
 		// Assumption: The database has been built correctly by the test runner,
 		// and has all columns present in the ORM
 		DB::getConn()->renameField('Member', 'Email', 'Email_renamed');
@@ -350,6 +353,8 @@ class SecurityTest extends FunctionalTest {
 		// Rebuild the database (which re-adds the Email column), and try again
 		$this->resetDBSchema(true);
 		$this->assertTrue(Security::database_is_ready());
+		
+		Security::$force_database_is_ready = $old;
 	}
 
 	/**
