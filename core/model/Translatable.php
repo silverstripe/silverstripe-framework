@@ -475,7 +475,7 @@ class Translatable extends DataObjectDecorator {
 			&& !preg_match('/("|\')Lang("|\')/', $query->getFilter())
 			//&& !$query->filtersOnFK()
 		)  {
-			$qry = sprintf('`%s`.`Locale` = \'%s\'', $baseTable, $locale);
+			$qry = sprintf('`%s`.`Locale` = \'%s\'', $baseTable, Convert::raw2sql($locale));
 			$query->where[] = $qry; 
 		}
 	}
