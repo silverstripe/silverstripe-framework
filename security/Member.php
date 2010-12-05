@@ -11,11 +11,11 @@ class Member extends DataObject {
 		'Surname' => 'Varchar',
 		'Email' => 'Varchar',
 		'Password' => 'Varchar(160)',
-		'RememberLoginToken' => 'Varchar(50)',
+		'RememberLoginToken' => 'Varchar(1024)',
 		'NumVisit' => 'Int',
 		'LastVisited' => 'SS_Datetime',
 		'Bounced' => 'Boolean', // Note: This does not seem to be used anywhere.
-		'AutoLoginHash' => 'Varchar(30)',
+		'AutoLoginHash' => 'Varchar(1024)',
 		'AutoLoginExpired' => 'SS_Datetime',
 		// This is an arbitrary code pointing to a PasswordEncryptor instance,
 		// not an actual encryption algorithm.
@@ -327,7 +327,8 @@ class Member extends DataObject {
 		$this->NumVisit++;
 
 		if($remember) {
-			$token = substr(md5(uniqid(rand(), true)), 0, 49 - strlen($this->ID));
+			$generator = new RandomGenerator();
+			$token = $generator->generateHash('sha1');
 			$this->RememberLoginToken = $token;
 			Cookie::set('alc_enc', $this->ID . ':' . $token, 90, null, null, null, true);
 		} else {
@@ -395,9 +396,9 @@ class Member extends DataObject {
 				Session::set("loggedInAs", $member->ID);
 				// This lets apache rules detect whether the user has logged in
 				if(self::$login_marker_cookie) Cookie::set(self::$login_marker_cookie, 1, 0, null, null, false, true);
-
-				$token = substr(md5(uniqid(rand(), true)), 0, 49 - strlen($member->ID));
-				$member->RememberLoginToken = $token;
+				
+				$generator = new RandomGenerator();
+				$member->RememberLoginToken = $generator->generateHash('sha1');
 				Cookie::set('alc_enc', $member->ID . ':' . $token, 90, null, null, false, true);
 
 				$member->NumVisit++;
@@ -442,8 +443,8 @@ class Member extends DataObject {
 	function generateAutologinHash($lifetime = 2) {
 
 		do {
-			$hash = substr(base_convert(md5(uniqid(mt_rand(), true)), 16, 36),
-										 0, 30);
+			$generator = new RandomGenerator();
+			$hash = $generator->generateHash('sha1');
 		} while(DataObject::get_one('Member', "\"AutoLoginHash\" = '$hash'"));
 
 		$this->AutoLoginHash = $hash;
