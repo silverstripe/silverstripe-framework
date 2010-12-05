@@ -11,12 +11,21 @@
 class RandomGenerator {
 
 	/**
+	 * Note: Returned values are not guaranteed to be crypto-safe,
+	 * depending on the used retrieval method.
+	 * 
 	 * @return string Returns a random series of bytes
 	 */
 	function generateEntropy() {
-		// mcrypt with urandom is only available on PHP 5.3 or newer
-		if(version_compare(PHP_VERSION, '5.3.0', '>=')) {
-			return mcrypt_create_iv(64, MCRYPT_DEV_URANDOM);
+		$isWin = preg_match('/WIN/', PHP_OS);
+		
+		// TODO Fails with "Could not gather sufficient random data" on IIS, temporarily disabled on windows
+		if(!$isWin) {
+			// mcrypt with urandom is only available on PHP 5.3 or newer
+			if(version_compare(PHP_VERSION, '5.3.0', '>=') && function_exists('mcrypt_create_iv')) {
+				$e = mcrypt_create_iv(64, MCRYPT_DEV_URANDOM);
+				if($e !== false) return $e;
+			}
 		}
 
 		// Fall back to SSL methods - may slow down execution by a few ms
@@ -27,7 +36,7 @@ class RandomGenerator {
 		}
 
 		// Read from the unix random number generator
-		if (is_readable('/dev/urandom') && ($h = fopen('/dev/urandom', 'rb'))) {
+		if(!$isWin && is_readable('/dev/urandom') && ($h = fopen('/dev/urandom', 'rb'))) {
 			$e = fread($h, 64);
 			fclose($h);
 			return $e;
@@ -36,7 +45,7 @@ class RandomGenerator {
 		// Warning: Both methods below are considered weak
 
 		// try to read from the windows RNG
-		if (class_exists('COM')) {
+		if($isWin && class_exists('COM')) {
 			try {
 				$comObj = new COM('CAPICOM.Utilities.1');
 				$e = base64_decode($comObj->GetRandom(64, 0));
