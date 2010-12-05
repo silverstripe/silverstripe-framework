@@ -216,17 +216,14 @@ set_include_path(str_replace('.' . PATH_SEPARATOR, '.' . PATH_SEPARATOR
  * Class names are converted to lowercase for lookup to adhere to PHP's case-insensitive
  * way of dealing with them.
  */
-function sapphire_autoload($className)
-{
+function sapphire_autoload($className) {
 	global $_CLASS_MANIFEST;
 	$lClassName = strtolower($className);
 	if(isset($_CLASS_MANIFEST[$lClassName])) include_once($_CLASS_MANIFEST[$lClassName]);
 	else if(isset($_CLASS_MANIFEST[$className])) include_once($_CLASS_MANIFEST[$className]);
-
 }
 
 spl_autoload_register('sapphire_autoload');
-
 
 require_once("core/ManifestBuilder.php");
 require_once("core/ClassInfo.php");
@@ -267,15 +264,15 @@ Debug::loadErrorHandlers();
 // HELPER FUNCTIONS
 
 function getSysTempDir() {
-    if(function_exists('sys_get_temp_dir')) {
-        $sysTmp = sys_get_temp_dir();
-    } elseif(isset($_ENV['TMP'])) {
+	if(function_exists('sys_get_temp_dir')) {
+		$sysTmp = sys_get_temp_dir();
+	} elseif(isset($_ENV['TMP'])) {
 		$sysTmp = $_ENV['TMP'];    	
-    } else {
-        $tmpFile = tempnam('adfadsfdas','');
-        unlink($tmpFile);
-        $sysTmp = dirname($tmpFile);
-    }
+	} else {
+		$tmpFile = tempnam('adfadsfdas','');
+		unlink($tmpFile);
+		$sysTmp = dirname($tmpFile);
+	}
 	return $sysTmp;
 }
 
@@ -355,7 +352,7 @@ function singleton($className) {
 	if(!isset($className)) user_error("singleton() Called without a class", E_USER_ERROR);
 	if(!is_string($className)) user_error("singleton() passed bad class_name: " . var_export($className,true), E_USER_ERROR);
 	if(!isset($_SINGLETONS[$className])) {
-	    if(!class_exists($className)) user_error("Bad class to singleton() - $className", E_USER_ERROR);
+		if(!class_exists($className)) user_error("Bad class to singleton() - $className", E_USER_ERROR);
 		$_SINGLETONS[$className] = Object::strong_create($className,null, true);
 		if(!$_SINGLETONS[$className]) user_error("singleton() Unknown class '$className'", E_USER_ERROR);
 	}
@@ -426,5 +423,3 @@ function increase_time_limit_to($timeLimit = null) {
 		}
 	}
 }
-
-?>
