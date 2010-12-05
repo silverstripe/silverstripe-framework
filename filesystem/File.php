@@ -98,6 +98,15 @@ class File extends DataObject {
 	
 	/**
 	 * @var array List of allowed file extensions, enforced through {@link validate()}.
+	 * 
+	 * Note: if you modify this, you should also change a configuration file in the assets directory.
+	 * Otherwise, the files will be able to be uploaded but they won't be able to be served by the
+	 * webserver.
+	 * 
+	 *  - If you are running Apahce you will need to change assets/.htaccess
+	 *  - If you are running IIS you will need to change assets/web.config 
+	 *
+	 * Instructions for the change you need to make are included in a comment in the config file.
 	 */
 	public static $allowed_extensions = array(
 		'','html','htm','xhtml','js','css',
