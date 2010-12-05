@@ -4,18 +4,15 @@
  * @subpackage tests
  */
 class RSSFeedTest extends SapphireTest {
-	
+
+	protected static $original_host;
+
 	function testRSSFeed() {
 		$list = new DataObjectSet();
 		$list->push(new RSSFeedTest_ItemA());
 		$list->push(new RSSFeedTest_ItemB());
 		$list->push(new RSSFeedTest_ItemC());
 
-		$origServer = $_SERVER;
-		$_SERVER['HTTP_HOST'] = 'www.example.org';
-
-		Director::setBaseURL('/');
-		
 		$rssFeed = new RSSFeed($list, "http://www.example.com", "Test RSS Feed", "Test RSS Feed Description");
 		$content = $rssFeed->feedContent();
 
@@ -44,11 +41,21 @@ class RSSFeedTest extends SapphireTest {
 		$this->assertContains('<description>ItemA AltContent</description>', $content);
 		$this->assertContains('<description>ItemB AltContent</description>', $content);
 		$this->assertContains('<description>ItemC AltContent</description>', $content);
-		
-		Director::setBaseURL(null);
-		$_SERVER = $origServer;
 	}
-	
+
+	public function setUp() {
+		parent::setUp();
+		Director::setBaseURL('/');
+		if(!self::$original_host) self::$original_host = $_SERVER['HTTP_HOST'];
+		$_SERVER['HTTP_HOST'] = 'www.example.org';
+	}
+
+	public function tearDown() {
+		parent::tearDown();
+		Director::setBaseURL(null);
+		$_SERVER['HTTP_HOST'] = self::$original_host;
+	}
+
 }
 
 class RSSFeedTest_ItemA extends ViewableData {
