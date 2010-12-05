@@ -301,8 +301,6 @@ class Security extends Controller {
 		$member = Member::currentUser();
 		if($member) $member->logOut();
 
-		Session::clear_all();
-
 		if($redirect) Director::redirectBack();
 	}
 
