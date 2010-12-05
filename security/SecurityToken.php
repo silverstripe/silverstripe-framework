@@ -200,10 +200,13 @@ class SecurityToken extends Object {
 	}
 	
 	/**
+	 * @uses RandomGenerator
+	 * 
 	 * @return String
 	 */
 	protected function generate() {
-		return rand();
+		$generator = new RandomGenerator();
+		return $generator->generateHash('sha1');
 	}
 	
 }
