@@ -823,11 +823,8 @@ class MySQLDatabase extends SS_Database {
 		$records = DB::query($fullQuery);
 
 		foreach($records as $record)
-			if(!$record['ClassName']){
-				throw new Exception("ClassName can not be null, ClassName not set for ". $record['Title']);
-			}else{
 				$objects[] = new $record['ClassName']($record);
-			}
+
 
 		if(isset($objects)) $doSet = new DataObjectSet($objects);
 		else $doSet = new DataObjectSet();
