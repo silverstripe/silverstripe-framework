@@ -60,6 +60,11 @@ class ErrorPage extends Page {
 	function requireDefaultRecords() {
 		parent::requireDefaultRecords();
 
+		// Ensure that an assets path exists before we do any error page creation
+		if(!file_exists(ASSETS_PATH)) {
+			mkdir(ASSETS_PATH);
+		}
+
 		$pageNotFoundErrorPage = DataObject::get_one('ErrorPage', "\"ErrorCode\" = '404'");
 		$pageNotFoundErrorPageExists = ($pageNotFoundErrorPage && $pageNotFoundErrorPage->exists()) ? true : false;
 		$pageNotFoundErrorPagePath = self::get_filepath_for_errorcode(404);
