@@ -49,7 +49,8 @@ class DatabaseAdapterRegistry {
 			? $config['missingExtensionText']
 			: 'The PHP extension is missing, please enable or install it.';
 
-		$moduleName = array_shift(explode('/', $config['helperPath']));
+		$path = explode('/', $config['helperPath']);
+		$moduleName = array_shift($path);
 		$missingModuleText = isset($config['missingModuleText'])
 			? $config['missingModuleText']
 			: 'The SilverStripe module, '.$moduleName.', is missing or incomplete. Please <a href="http://silverstripe.org/modules">download it</a>.';
