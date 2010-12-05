@@ -328,7 +328,8 @@ class Member extends DataObject {
 
 		if($remember) {
 			$generator = new RandomGenerator();
-			$this->RememberLoginToken = $generator->generateHash('sha1');
+			$token = $generator->generateHash('sha1');
+			$this->RememberLoginToken = $token;
 			Cookie::set('alc_enc', $this->ID . ':' . $token, 90, null, null, null, true);
 		} else {
 			$this->RememberLoginToken = null;
