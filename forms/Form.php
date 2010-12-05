@@ -441,7 +441,8 @@ class Form extends RequestHandler {
 			if(Session::get('SecurityID')) {
 				$securityID = Session::get('SecurityID');
 			} else {
-				$securityID = rand();
+				$generator = new RandomGenerator();
+				$securityID = $generator->generateHash('sha1');
 				Session::set('SecurityID', $securityID);
 			}
 			
