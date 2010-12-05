@@ -674,6 +674,9 @@ class Hierarchy extends DataObjectDecorator {
 	function flushCache() {
 		$this->_cache_children = null;
 		$this->_cache_numChildren = null;
+		self::$marked = array();
+		self::$expanded = array();
+		self::$treeOpened = array();
 	}
 	
 	function reset() {
