@@ -679,9 +679,9 @@ class Versioned extends DataObjectDecorator {
 
 		if(!headers_sent()) {
 			if(Versioned::current_stage() == 'Live') {
-				Cookie::set('bypassStaticCache', null, 0);
+				Cookie::set('bypassStaticCache', null, 0, null, null, false, true /* httponly */);
 			} else {
-				Cookie::set('bypassStaticCache', '1', 0);
+				Cookie::set('bypassStaticCache', '1', 0, null, null, false, true /* httponly */);
 			}
 		}
 	}
