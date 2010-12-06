@@ -562,13 +562,25 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		return ($this->record && $this->record['ID'] > 0);
 	}
 
+	/**
+	 * Returns TRUE if all values (other than "ID") are
+	 * considered empty (by weak boolean comparison).
+	 * Only checks for fields listed in {@link custom_database_fields()}
+	 * 
+	 * @todo Use DBField->hasValue()
+	 * 
+	 * @return boolean
+	 */
 	public function isEmpty(){
 		$isEmpty = true;
-		if($this->record){
-			foreach($this->record as $k=>$v){
-				if($k != "ID"){
-					$isEmpty = $isEmpty && !$v;
-				}
+		$customFields = self::custom_database_fields(get_class($this));
+		if($map = $this->toMap()){
+			foreach($map as $k=>$v){
+				// only look at custom fields
+				if(!array_key_exists($k, $customFields)) continue;
+				
+				$dbObj = ($v instanceof DBField) ? $v : $this->dbObject($k);
+				$isEmpty = ($isEmpty && !$dbObj->hasValue());
 			}
 		}
 		return $isEmpty;

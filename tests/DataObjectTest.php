@@ -993,6 +993,14 @@ class DataObjectTest extends SapphireTest {
 		$newObj = new DataObjectTest_SubTeam();
 		$this->assertArrayHasKey('Title', $map, 'Contains null fields');
 	}
+	
+	function testIsEmpty() {
+		$objEmpty = new DataObjectTest_Team();
+		$this->assertTrue($objEmpty->isEmpty(), 'New instance without populated defaults is empty');
+		
+		$objEmpty->Title = '0'; // 
+		$this->assertFalse($objEmpty->isEmpty(), 'Zero value in attribute considered non-empty');
+	}
 }
 
 class DataObjectTest_Player extends Member implements TestOnly {
