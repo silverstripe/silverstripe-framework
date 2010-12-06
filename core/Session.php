@@ -414,9 +414,9 @@ class Session {
 
 		if(!session_id() && !headers_sent()) {
 			if($domain) {
-				session_set_cookie_params(self::$timeout, $path, $domain);
+				session_set_cookie_params(self::$timeout, $path, $domain, false /* secure */, true /* httponly */);
 			} else {
-				session_set_cookie_params(self::$timeout, $path);
+				session_set_cookie_params(self::$timeout, $path, null, false /* secure */, true /* httponly */);
 			}
 
 			// @ is to supress win32 warnings/notices when session wasn't cleaned up properly
