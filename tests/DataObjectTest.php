@@ -976,6 +976,23 @@ class DataObjectTest extends SapphireTest {
 		
 		$this->fail('Should throw an exception');
 	}
+	
+	function testToMap() {
+		$obj = $this->objFromFixture('DataObjectTest_SubTeam', 'subteam1');
+		
+		$map = $obj->toMap();
+		
+		$this->assertArrayHasKey('ID', $map, 'Contains base fields');
+		$this->assertArrayHasKey('Title', $map, 'Contains fields from parent class');
+		$this->assertArrayHasKey('SubclassDatabaseField', $map, 'Contains fields from concrete class');
+		
+		$this->assertEquals($obj->ID, $map['ID'], 'Contains values from base fields');
+		$this->assertEquals($obj->Title, $map['Title'], 'Contains values from parent class fields');
+		$this->assertEquals($obj->SubclassDatabaseField, $map['SubclassDatabaseField'], 'Contains values from concrete class fields');
+		
+		$newObj = new DataObjectTest_SubTeam();
+		$this->assertArrayHasKey('Title', $map, 'Contains null fields');
+	}
 }
 
 class DataObjectTest_Player extends Member implements TestOnly {
