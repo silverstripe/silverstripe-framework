@@ -97,8 +97,11 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	public $destroyed = false;
 	
 	/**
-	 * Data stored in this objects database record. An array indexed
-	 * by fieldname.
+	 * Data stored in this objects database record. An array indexed by fieldname. 
+	 * 
+	 * Use {@link toMap()} if you want an array representation
+	 * of this object, as the $record array might contain lazy loaded field aliases.
+	 * 
 	 * @var array
 	 */
 	protected $record;
@@ -161,7 +164,8 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	}
 
 	/**
-	 * Return the complete map of fields on this object, including Created, LastEdited and ClassName
+	 * Return the complete map of fields on this object, including "Created", "LastEdited" and "ClassName".
+	 * See {@link custom_database_fields()} for a getter that excludes these "base fields".
 	 *
 	 * @param string $class
 	 * @return array
@@ -186,6 +190,9 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * and {@link DataObject::$has_one}. Resolves instances of {@link CompositeDBField} 
 	 * into the actual database fields, rather than the name of the field which 
 	 * might not equate a database column.
+	 * 
+	 * Does not include "base fields" like "ID", "ClassName", "Created", "LastEdited",
+	 * see {@link database_fields()}.
 	 * 
 	 * @uses CompositeDBField->compositeDatabaseFields()
 	 *
