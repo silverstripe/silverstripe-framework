@@ -426,7 +426,7 @@ class Debug {
 		echo '<pre>';
 		$offset++;
 		foreach($lines as $line) {
-			$line = htmlentities($line);
+			$line = htmlentities($line, ENT_COMPAT, 'UTF-8');
 			if ($offset == $errline) {
 				echo "<span>$offset</span> <span class=\"error\">$line</span>";
 			} else {
