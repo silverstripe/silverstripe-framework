@@ -8,6 +8,6 @@ class ContentControllerSearchExtensionTest extends SapphireTest {
 		$controller = new ContentController($page);
 		$form = $controller->SearchForm(); 
 		
-		$this->assertEquals(array('File'), $form->getClassesToSearch());
+		if (get_class($form) == 'SearchForm') $this->assertEquals(array('File'), $form->getClassesToSearch());
 	}
 }
