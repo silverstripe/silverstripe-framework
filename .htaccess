@@ -4,3 +4,6 @@
 <FilesMatch "(main|static-main|rpc)\.php$">
 	Allow from all
 </FilesMatch>
+<FilesMatch "silverstripe_version$">
+	Deny from all
+</FilesMatch>
