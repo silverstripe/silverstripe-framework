@@ -1154,6 +1154,7 @@ class Translatable extends DataObjectDecorator implements PermissionProvider {
 		$newTranslation = new $class;
 		
 		// copy all fields from owner (apart from ID)
+		var_dump($this->owner->toMap());
 		$newTranslation->update($this->owner->toMap());
 		
 		// If the object has Hierarchy extension,
