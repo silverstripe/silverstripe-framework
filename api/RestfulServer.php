@@ -549,22 +549,26 @@ class RestfulServer extends Controller {
 		// return a 401
 		$this->getResponse()->setStatusCode(401);
 		$this->getResponse()->addHeader('WWW-Authenticate', 'Basic realm="API Access"');
+		$this->getResponse()->addHeader('Content-Type', 'text/plain');
 		return "You don't have access to this item through the API.";
 	}
 
 	protected function notFound() {
 		// return a 404
 		$this->getResponse()->setStatusCode(404);
+		$this->getResponse()->addHeader('Content-Type', 'text/plain');
 		return "That object wasn't found";
 	}
 	
 	protected function methodNotAllowed() {
 		$this->getResponse()->setStatusCode(405);
+		$this->getResponse()->addHeader('Content-Type', 'text/plain');
 		return "Method Not Allowed";
 	}
 	
 	protected function unsupportedMediaType() {
 		$this->response->setStatusCode(415); // Unsupported Media Type
+		$this->getResponse()->addHeader('Content-Type', 'text/plain');
 		return "Unsupported Media Type";
 	}
 	
