@@ -11,18 +11,18 @@ class Member extends DataObject {
 		'Surname' => 'Varchar',
 		'Email' => 'Varchar',
 		'Password' => 'Varchar(160)',
-		'RememberLoginToken' => 'Varchar(40)',
+		'RememberLoginToken' => 'Varchar(50)',
 		'NumVisit' => 'Int',
 		'LastVisited' => 'SS_Datetime',
 		'Bounced' => 'Boolean', // Note: This does not seem to be used anywhere.
-		'AutoLoginHash' => 'Varchar(40)',
+		'AutoLoginHash' => 'Varchar(50)',
 		'AutoLoginExpired' => 'SS_Datetime',
 		// This is an arbitrary code pointing to a PasswordEncryptor instance,
 		// not an actual encryption algorithm.
 		// Warning: Never change this field after its the first password hashing without
 		// providing a new cleartext password as well.
 		'PasswordEncryption' => "Varchar(50)",
-		'Salt' => 'Varchar(40)',
+		'Salt' => 'Varchar(50)',
 		'PasswordExpiry' => 'Date',
 		'LockedOutUntil' => 'SS_Datetime',
 		'Locale' => 'Varchar(6)',
