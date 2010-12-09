@@ -165,7 +165,7 @@ class SecurityTest extends FunctionalTest {
 		$this->assertEquals(Director::baseURL() . 'test/link', $changedResponse->getHeader('Location'));
 	}
 	
-	function testChangePassword() {
+	function testChangePasswordForLoggedInUsers() {
 		$goodResponse = $this->doTestLoginForm('sam@silverstripe.com' , '1nitialPassword');
 		
 		// Change the password
@@ -179,6 +179,35 @@ class SecurityTest extends FunctionalTest {
 		$goodResponse = $this->doTestLoginForm('sam@silverstripe.com' , 'changedPassword');
 		$this->assertEquals(302, $goodResponse->getStatusCode());
 		$this->assertEquals(Director::baseURL() . 'test/link', $goodResponse->getHeader('Location'));
+		$this->assertEquals($this->idFromFixture('Member', 'test'), $this->session()->inst_get('loggedInAs'));
+	}
+	
+	function testChangePasswordFromLostPassword() {
+		$admin = $this->objFromFixture('Member', 'test');
+
+		$this->assertNull($admin->AutoLoginHash, 'Hash is empty before lost password');
+		
+		// Request new password by email
+		$response = $this->get('Security/lostpassword');
+		$response = $this->submitForm('MemberLoginForm_LostPasswordForm', null, array('Email' => 'sam@silverstripe.com'));
+		
+		$this->assertEmailSent('sam@silverstripe.com');
+		
+		// Load password link from email
+		$admin = DataObject::get_by_id('Member', $admin->ID);
+		$this->assertNotNull($admin->AutoLoginHash, 'Hash has been written after lost password');
+		$response = $this->get('Security/changepassword/?h=' . $admin->AutoLoginHash);
+		$this->assertEquals(302, $response->getStatusCode());
+		$this->assertEquals(Director::baseUrl() . 'Security/changepassword', $response->getHeader('Location'));
+		
+		// Follow redirection to form without hash in GET parameter
+		$response = $this->get('Security/changepassword');
+		$changedResponse = $this->doTestChangepasswordForm('1nitialPassword', 'changedPassword');
+		$this->assertEquals($this->idFromFixture('Member', 'test'), $this->session()->inst_get('loggedInAs'));
+		
+		// Check if we can login with the new password
+		$goodResponse = $this->doTestLoginForm('sam@silverstripe.com' , 'changedPassword');
+		$this->assertEquals(302, $goodResponse->getStatusCode());
 		$this->assertEquals($this->idFromFixture('Member', 'test'), $this->session()->inst_get('loggedInAs'));
 	}
 		

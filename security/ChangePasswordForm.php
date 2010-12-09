@@ -5,7 +5,7 @@
  * @subpackage security
  */
 class ChangePasswordForm extends Form {
-
+	
 	/**
 	 * Constructor
 	 *
@@ -28,7 +28,11 @@ class ChangePasswordForm extends Form {
 		
 		if(!$fields) {
 			$fields = new FieldSet();
-			if(Member::currentUser() && (!isset($_REQUEST['h']) || !Member::member_from_autologinhash($_REQUEST['h']))) {
+			
+			// Security/changepassword?h=XXX redirects to Security/changepassword
+			// without GET parameter to avoid potential HTTP referer leakage.
+			// In this case, a user is not logged in, and no 'old password' should be necessary.
+			if(Member::currentUser()) {
 				$fields->push(new PasswordField("OldPassword",_t('Member.YOUROLDPASSWORD', "Your old password")));
 			}
 
@@ -93,10 +97,9 @@ class ChangePasswordForm extends Form {
 		else if($data['NewPassword1'] == $data['NewPassword2']) {
 			$isValid = $member->changePassword($data['NewPassword1']);
 			if($isValid->valid()) {
-				$this->clearMessage();
-				$this->sessionMessage(
-					_t('Member.PASSWORDCHANGED', "Your password has been changed, and a copy emailed to you."),
-					"good");
+				$member->logIn();
+				
+				// TODO Add confirmation message to login redirect
 				Session::clear('AutoLoginHash');
 				
 				if (isset($_REQUEST['BackURL']) 
