@@ -117,8 +117,7 @@ class MySQLDatabase extends SS_Database {
 		
 		if(isset($_REQUEST['showqueries'])) {
 			$endtime = round(microtime(true) - $starttime,4);
-			if (!isset($_REQUEST['ajax'])) Debug::message("\n$sql\n{$endtime}ms\n", false);
-			else echo "\n$sql\n{$endtime}ms\n";
+			Debug::message("\n$sql\n{$endtime}ms\n", false);
 		}
 		
 		if(!$handle && $errorLevel) $this->databaseError("Couldn't run query: $sql | " . mysql_error($this->dbConn), $errorLevel);
