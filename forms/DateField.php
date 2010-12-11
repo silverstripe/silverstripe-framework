@@ -46,6 +46,17 @@ require_once 'Zend/Date.php';
  * @subpackage fields-datetime
  */
 class DateField extends TextField {
+
+	/**
+	 * @var array
+	 */
+	protected static $default_config = array(
+		'showcalendar' => false,
+		'dmyfields' => false,
+		'dmyseparator' => false,
+		'dateformat' => false,
+		'locale' => false
+	);
 	
 	/**
 	 * @var array
@@ -80,6 +91,15 @@ class DateField extends TextField {
 		
 		if(!$this->getConfig('dateformat')) {
 			$this->setConfig('dateformat', i18n::get_date_format());
+		}
+		
+		foreach (self::$default_config AS $defaultK => $defaultV) {
+			if ($defaultV) {
+				if ($defaultK=='locale')
+					$this->locale = $defaultV;
+				else
+					$this->setConfig($defaultK, $defaultV);
+			}
 		}
 
 		parent::__construct($name, $title, $value, $form, $rightTitle);
@@ -319,6 +339,19 @@ JS;
 			&& array_key_exists('day', $val)
 			&& (!$val['day'] || Zend_Date::isDate($val['day'], 'dd', $this->locale))
 		);
+	}
+	
+	/**
+	 * @param String $k
+	 * @param mixed $v
+	 * @return boolean
+	 */
+	static function set_default_config($k, $v) {
+	  if (array_key_exists($k,self::$default_config)) {
+		self::$default_config[$k]=$v;
+		return true;
+	  }
+	  return false;
 	}
 
 	/**
