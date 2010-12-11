@@ -1,6 +1,7 @@
 <?php
 /**
  * The member class which represents the users of the system
+ *
  * @package sapphire
  * @subpackage security
  */
@@ -134,6 +135,7 @@ class Member extends DataObject {
 	}
 	
 	function requireDefaultRecords() {
+		parent::requireDefaultRecords();
 		// Default groups should've been built by Group->requireDefaultRecords() already
 		
 		// Find or create ADMIN group
@@ -1960,5 +1962,4 @@ class Member_DatetimeOptionsetField extends OptionsetField {
 			return false;
 		}
 	}
-
 }
