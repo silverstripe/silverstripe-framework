@@ -533,6 +533,8 @@ class Versioned extends DataObjectDecorator {
 	 * @param createNewVersion Set this to true to create a new version number.  By default, the existing version number will be copied over.
 	 */
 	function publish($fromStage, $toStage, $createNewVersion = false) {
+		$this->owner->extend('onBeforeVersionedPublish', $fromStage, $toStage, $createNewVersion);
+		
 		$baseClass = $this->owner->class;
 		while( ($p = get_parent_class($baseClass)) != "DataObject") $baseClass = $p;
 		$extTable = $this->extendWithSuffix($baseClass);
