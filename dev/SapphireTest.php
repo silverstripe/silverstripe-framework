@@ -145,10 +145,11 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 
 		$className = get_class($this);
 		$fixtureFile = eval("return {$className}::\$fixture_file;");
-		
+		$prefix = defined('SS_DATABASE_PREFIX') ? SS_DATABASE_PREFIX : 'SS_';
+
 		// Set up fixture
 		if($fixtureFile || $this->usesDatabase || !self::using_temp_db()) {
-			if(substr(DB::getConn()->currentDatabase(),0,5) != 'tmpdb') {
+			if(substr(DB::getConn()->currentDatabase(), 0, strlen($prefix) + 5) != sprintf('%stmpdb', $prefix)) {
 				//echo "Re-creating temp database... ";
 				self::create_temp_db();
 				//echo "done.\n";
@@ -608,7 +609,8 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	 */
 	static function using_temp_db() {
 		$dbConn = DB::getConn();
-		return $dbConn && (substr($dbConn->currentDatabase(),0,5) == 'tmpdb');
+		$prefix = defined('SS_DATABASE_PREFIX') ? SS_DATABASE_PREFIX : 'SS_';
+		return $dbConn && (substr($dbConn->currentDatabase(), 0, strlen($prefix) + 5) == sprintf('%stmpdb', $prefix));
 	}
 	
 	/**
@@ -659,9 +661,10 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 		
 		// Create a temporary database
 		$dbConn = DB::getConn();
-		$dbname = 'tmpdb' . rand(1000000,9999999);
+		$prefix = defined('SS_DATABASE_PREFIX') ? SS_DATABASE_PREFIX : 'SS_';
+		$dbname = sprintf('%stmpdb', $prefix) . rand(1000000,9999999);
 		while(!$dbname || $dbConn->databaseExists($dbname)) {
-			$dbname = 'tmpdb' . rand(1000000,9999999);
+			$dbname = sprintf('%stmpdb', $prefix) . rand(1000000,9999999);
 		}
 
 		$dbConn->selectDatabase($dbname);
@@ -677,8 +680,9 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	}
 	
 	static function delete_all_temp_dbs() {
+		$prefix = defined('SS_DATABASE_PREFIX') ? SS_DATABASE_PREFIX : 'SS_';
 		foreach(DB::getConn()->allDatabaseNames() as $dbName) {
-			if(preg_match('/^tmpdb[0-9]+$/', $dbName)) {
+			if(preg_match(sprintf('/^%stmpdb[0-9]+$/', $prefix), $dbName)) {
 				DB::getConn()->dropDatabaseByName($dbName);
 				if(Director::is_cli()) {
 					echo "Dropped database \"$dbName\"" . PHP_EOL;
