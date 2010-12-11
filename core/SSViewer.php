@@ -133,6 +133,15 @@ class SSViewer {
 	}
 	
 	/**
+	 * Returns the path to the theme folder
+	 *
+	 * @return String
+	 */
+	static function get_theme_folder() {
+		return self::current_theme() ? THEMES_DIR . "/" . self::current_theme() : project();
+	}
+
+	/**
 	 * @return string
 	 */
 	static function current_custom_theme(){
