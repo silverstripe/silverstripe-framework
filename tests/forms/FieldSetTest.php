@@ -351,11 +351,7 @@ class FieldSetTest extends SapphireTest {
 			new TextField('NewField2')
 		), 'B');
 
-		$result = array();
-		foreach($fields->dataFields() as $field) {
-			$result[] = $field->Name();
-		}
-		$this->assertEquals($result, array(
+		$this->assertEquals(array_keys($fields->dataFields()), array(
 			'A',
 			'NewField1',
 			'NewField2',
