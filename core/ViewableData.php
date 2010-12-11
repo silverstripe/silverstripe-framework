@@ -22,8 +22,7 @@ class ViewableData extends Object implements IteratorAggregate {
 	 *
 	 * @var array
 	 */
-	public static $casting = array (
-		'BaseHref'   => 'Varchar',
+	public static $casting = array(
 		'CSSClasses' => 'Varchar'
 	);
 	
@@ -712,9 +711,32 @@ class ViewableData extends Object implements IteratorAggregate {
 	
 	/**
 	 * @see Director::absoluteBaseURL()
+	 *
+	 * @deprecated 3.0
 	 */
 	public function BaseHref() {
+		user_error("Please use AbsoluteBaseURL", E_USER_WARNING);
+		
+		return $this->AbsoluteBaseURL();
+	}
+	
+	/**
+	 * Returns the absolute base url
+	 *
+	 * @return string
+	 */
+	public function AbsoluteBaseURL() {
 		return Director::absoluteBaseURL();
+	}
+	
+	/**
+	 * Access the BaseURL from template: proxy the value from the Director.
+	 * Needed for building hardcoded links.
+	 *
+	 * @return string base url
+	 */
+	function BaseURL() {
+		return Director::baseURL();
 	}
 	
 	/**

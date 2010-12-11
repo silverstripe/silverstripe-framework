@@ -130,6 +130,10 @@ class ControllerTest extends FunctionalTest {
 		);
 	}
 	
+	public function testBaseURL() {
+		Director::setBaseURL('/baseurl/');
+		$this->assertEquals(Controller::BaseURL(), Director::BaseURL());
+	}
 }
 
 /**
