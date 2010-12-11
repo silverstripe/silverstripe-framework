@@ -26,8 +26,7 @@ class ContentController extends Controller {
 		'widget/$ID!' => 'handleWidget'
 	);
 	
-	public static $allowed_actions = array (
-		'PageComments',
+	public static $allowed_actions = array(
 		'successfullyinstalled',
 		'deleteinstallfiles' // secured through custom code
 	);
@@ -382,21 +381,6 @@ HTML;
 			}
 		}
 	}
-
-	/**
-	 * Returns a page comment system
-	 */
-	function PageComments() {
-		$hasComments = DB::query("SELECT COUNT(*) FROM \"PageComment\" WHERE \"PageComment\".\"ParentID\" = '". Convert::raw2sql($this->ID) . "'")->value();
-		if(($this->data() && $this->data()->ProvideComments) || ($hasComments > 0 && PageCommentInterface::$show_comments_when_disabled)) {
-			return new PageCommentInterface($this, 'PageComments', $this->data());
-		} else {
-			if(isset($_REQUEST['executeForm']) && $_REQUEST['executeForm'] == 'PageComments.PostCommentForm') {
-				echo "Comments have been disabled for this page";
-				die();
-			}
-		}
-	}
 	
 	function SiteConfig() {
 		if(method_exists($this->dataRecord, 'getSiteConfig')) {
@@ -541,5 +525,3 @@ HTML
 		);
 	}
 }
-
-?>

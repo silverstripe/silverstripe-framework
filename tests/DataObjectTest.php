@@ -16,7 +16,7 @@ class DataObjectTest extends SapphireTest {
 		'DataObjectTest_FieldlessSubTable',
 		'DataObjectTest_ValidatedObject',
 		'DataObjectTest_Player',
-		'DataObjectSetTest_TeamComment'
+		'DataObjectTest_TeamComment'
 	);
 	
 	function testDataIntegrityWhenTwoSubclassesHaveSameField() {
@@ -101,40 +101,47 @@ class DataObjectTest extends SapphireTest {
 	 */
 	function testGet() {
 		// Test getting all records of a DataObject
-		$comments = DataObject::get('PageComment');
-		$this->assertEquals(8, $comments->Count());
+		$comments = DataObject::get('DataObjectTest_TeamComment');
+		$this->assertEquals(3, $comments->Count());
 		
 		// Test WHERE clause
-		$comments = DataObject::get('PageComment', "\"Name\"='Bob'");
-		$this->assertEquals(2, $comments->Count());
+		$comments = DataObject::get('DataObjectTest_TeamComment', "\"Name\"='Bob'");
+		$this->assertEquals(1, $comments->Count());
 		foreach($comments as $comment) {
 			$this->assertEquals('Bob', $comment->Name);
 		}
 		
 		// Test sorting
-		$comments = DataObject::get('PageComment', '', '"Name" ASC');
-		$this->assertEquals(8, $comments->Count());
+		$comments = DataObject::get('DataObjectTest_TeamComment', '', "\"Name\" ASC");
+		$this->assertEquals(3, $comments->Count());
 		$this->assertEquals('Bob', $comments->First()->Name);
-		$comments = DataObject::get('PageComment', '', '"Name" DESC');
-		$this->assertEquals(8, $comments->Count());
-		$this->assertEquals('Joe', $comments->First()->Name);
+		$comments = DataObject::get('DataObjectTest_TeamComment', '', "\"Name\" DESC");
+		$this->assertEquals(3, $comments->Count());
+		$this->assertEquals('Phil', $comments->First()->Name);
 		
 		// Test join
-		$comments = DataObject::get('PageComment', "\"SiteTree\".\"Title\"='First Page'", '', 'INNER JOIN "SiteTree" ON "PageComment"."ParentID" = "SiteTree"."ID"');
+		$comments = DataObject::get(
+			'DataObjectTest_TeamComment', 
+			"\"DataObjectTest_Team\".\"Title\" = 'Team 1'", 
+			"\"Name\" ASC", 
+			"INNER JOIN \"DataObjectTest_Team\" ON \"DataObjectTest_TeamComment\".\"TeamID\" = \"DataObjectTest_Team\".\"ID\""
+		);
+			
 		$this->assertEquals(2, $comments->Count());
 		$this->assertEquals('Bob', $comments->First()->Name);
-		$this->assertEquals('Bob', $comments->Last()->Name);
+		$this->assertEquals('Joe', $comments->Last()->Name);
 		
 		// Test limit
-		$comments = DataObject::get('PageComment', '', '"Name" ASC', '', '1,2');
+		$comments = DataObject::get('DataObjectTest_TeamComment', '', "\"Name\" ASC", '', '1,2');
 		$this->assertEquals(2, $comments->Count());
-		$this->assertEquals('Bob', $comments->First()->Name);
-		$this->assertEquals('Dean', $comments->Last()->Name);
+		$this->assertEquals('Joe', $comments->First()->Name);
+		$this->assertEquals('Phil', $comments->Last()->Name);
 		
 		// Test container class
-		$comments = DataObject::get('PageComment', '', '', '', '', 'DataObjectSet');
+		$comments = DataObject::get('DataObjectTest_TeamComment', '', '', '', '', 'DataObjectSet');
 		$this->assertEquals('DataObjectSet', get_class($comments));
-		$comments = DataObject::get('PageComment', '', '', '', '', 'ComponentSet');
+		
+		$comments = DataObject::get('DataObjectTest_TeamComment', '', '', '', '', 'ComponentSet');
 		$this->assertEquals('ComponentSet', get_class($comments));
 		
 		
@@ -144,28 +151,31 @@ class DataObjectTest extends SapphireTest {
 		$this->assertEquals('Home', $page->Title);
 		
 		// Test get_one() without caching
-		$comment1 = DataObject::get_one('PageComment', "\"Name\"='Joe'", false);
+		$comment1 = DataObject::get_one('DataObjectTest_TeamComment', "\"Name\" = 'Joe'", false);
 		$comment1->Comment = "Something Else";
-		$comment2 = DataObject::get_one('PageComment', "\"Name\"='Joe'", false);
+		
+		$comment2 = DataObject::get_one('DataObjectTest_TeamComment', "\"Name\" = 'Joe'", false);
 		$this->assertNotEquals($comment1->Comment, $comment2->Comment);
 		
 		// Test get_one() with caching
-		$comment1 = DataObject::get_one('PageComment', "\"Name\"='Jane'", true);
+		$comment1 = DataObject::get_one('DataObjectTest_TeamComment', "\"Name\" = 'Bob'", true);
 		$comment1->Comment = "Something Else";
-		$comment2 = DataObject::get_one('PageComment', "\"Name\"='Jane'", true);
+		
+		$comment2 = DataObject::get_one('DataObjectTest_TeamComment', "\"Name\" = 'Bob'", true);
 		$this->assertEquals((string)$comment1->Comment, (string)$comment2->Comment);
 		
 		// Test get_one() with order by without caching
-		$comment = DataObject::get_one('PageComment', '', false, '"Name" ASC');
+		$comment = DataObject::get_one('DataObjectTest_TeamComment', '', false, "\"Name\" ASC");
 		$this->assertEquals('Bob', $comment->Name);
-		$comment = DataObject::get_one('PageComment', '', false, '"Name" DESC');
-		$this->assertEquals('Joe', $comment->Name);
+		
+		$comment = DataObject::get_one('DataObjectTest_TeamComment', '', false, "\"Name\" DESC");
+		$this->assertEquals('Phil', $comment->Name);
 		
 		// Test get_one() with order by with caching
-		$comment = DataObject::get_one('PageComment', '', true, '"Name" ASC');
+		$comment = DataObject::get_one('DataObjectTest_TeamComment', '', true, '"Name" ASC');
 		$this->assertEquals('Bob', $comment->Name);
-		$comment = DataObject::get_one('PageComment', '', true, '"Name" DESC');
-		$this->assertEquals('Joe', $comment->Name);
+		$comment = DataObject::get_one('DataObjectTest_TeamComment', '', true, '"Name" DESC');
+		$this->assertEquals('Phil', $comment->Name);
 	}
 
 	/**
@@ -188,14 +198,14 @@ class DataObjectTest extends SapphireTest {
 	 *   - Test the IDs on the DataObjects are set correctly
 	 */
 	function testHasManyRelationships() {
-		$page = $this->objFromFixture('Page', 'home');
+		$team = $this->objFromFixture('DataObjectTest_Team', 'team1');
 		
 		// Test getComponents() gets the ComponentSet of the other side of the relation
-		$this->assertTrue($page->getComponents('Comments')->Count() == 2);
+		$this->assertTrue($team->getComponents('Comments')->Count() == 2);
 		
 		// Test the IDs on the DataObjects are set correctly
-		foreach($page->getComponents('Comments') as $comment) {
-			$this->assertTrue($comment->ParentID == $page->ID);
+		foreach($team->getComponents('Comments') as $comment) {
+			$this->assertTrue($comment->TeamID == $team->ID);
 		}
 	}
 
@@ -353,26 +363,6 @@ class DataObjectTest extends SapphireTest {
 		
 		$page->write(); 
 		$this->assertFalse($page->isChanged());
-	}
-	
-	function testRandomSort() {
-		/* If we perforn the same regularly sorted query twice, it should return the same results */
-		$itemsA = DataObject::get("PageComment", "", "ID");
-		foreach($itemsA as $item) $keysA[] = $item->ID;
-
-		$itemsB = DataObject::get("PageComment", "", "ID");
-		foreach($itemsB as $item) $keysB[] = $item->ID;
-		
-		$this->assertEquals($keysA, $keysB);
-		
-		/* If we perform the same random query twice, it shouldn't return the same results */
-		$itemsA = DataObject::get("PageComment", "", DB::getConn()->random());
-		foreach($itemsA as $item) $keysA[] = $item->ID;
-
-		$itemsB = DataObject::get("PageComment", "", DB::getConn()->random());
-		foreach($itemsB as $item) $keysB[] = $item->ID;
-		
-		$this->assertNotEquals($keysA, $keysB);
 	}
 	
 	function testWriteSavesToHasOneRelations() {
@@ -994,6 +984,10 @@ class DataObjectTest_Team extends DataObject implements TestOnly {
 		'HasOneRelationship' => 'DataObjectTest_Player',
 	);
 
+	static $has_many = array(
+		'Comments' => 'DataObjectTest_TeamComment'
+	);
+	
 	static $many_many = array(
 		'Players' => 'DataObjectTest_Player'
 	);
@@ -1106,6 +1100,18 @@ class DataObjectTest_CEO extends DataObjectTest_Staff {
 	public static $belongs_to = array (
 		'Company'         => 'DataObjectTest_Company.CEO',
 		'PreviousCompany' => 'DataObjectTest_Company.PreviousCEO'
+	);
+}
+
+class DataObjectTest_TeamComment extends DataObject {
+	
+	static $db = array(
+		'Name' => "Varchar",
+		"Comment" => "Text"
+	);
+	
+	static $has_one = array(
+		'Team' 	=> 'DataObjectTest_Team'
 	);
 }
 

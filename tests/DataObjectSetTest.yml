@@ -39,7 +39,7 @@ DataObjectTest_SubTeam:
    subteam3_with_empty_fields:
       Title: Subteam 3
       
-DataObjectTest_TeamComment:
+DataObjectSetTest_TeamComment:
   comment1:
     Name: Joe
     Comment: This is a team comment by Joe

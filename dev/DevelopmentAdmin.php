@@ -129,6 +129,7 @@ class DevelopmentAdmin extends Controller {
 			$renderer->writeHeader();
 			$renderer->writeInfo("Environment Builder", Director::absoluteBaseURL());
 			echo "<div style=\"margin: 0 2em\">";
+			echo "<div class=\"status pending\"><h2 class='buildProgress'>Database is building.... Check below for any errors</h2><h2 class='buildCompleted'>Database has been built successfully</h2></div>";
 
 			$da = Object::create('DatabaseAdmin');
 			return $da->handleRequest($request);
@@ -180,4 +181,3 @@ class DevelopmentAdmin extends Controller {
 		return Object::create('CodeViewer');
 	}
 }
-?>

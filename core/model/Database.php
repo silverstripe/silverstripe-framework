@@ -636,7 +636,10 @@ abstract class SS_Database {
 	}
 	
 	/**
-	 * Show a message about database alteration
+	 * Show a message about database alteration	
+	 *
+	 * @param string message to display
+	 * @param string type one of [created|changed|repaired|obsolete|deleted|error]
 	 */
 	function alterationMessage($message,$type=""){
 		if(!$this->supressOutput) {

@@ -7,7 +7,7 @@
  */
 class DataObjectSetTest extends SapphireTest {
 	
-	static $fixture_file = 'sapphire/tests/DataObjectTest.yml';
+	static $fixture_file = 'sapphire/tests/DataObjectSetTest.yml';
 
 	protected $extraDataObjects = array(
 		'DataObjectTest_Team',
@@ -106,9 +106,9 @@ class DataObjectSetTest extends SapphireTest {
 	}
 
 	public function testMultipleOf() {
-		$comments = DataObject::get('PageComment', '', "\"ID\" ASC");
+		$comments = DataObject::get('DataObjectSetTest_TeamComment', '', "\"ID\" ASC");
 		$commArr = $comments->toArray();
-		$multiplesOf3 = 1;
+		$multiplesOf3 = 0;
 		
 		foreach($comments as $comment) {
 			if($comment->MultipleOf(3)) {
@@ -119,15 +119,11 @@ class DataObjectSetTest extends SapphireTest {
 			}
 		}
 		
-		$this->assertEquals(3, $multiplesOf3);
+		$this->assertEquals(1, $multiplesOf3);
 		
 		$this->assertFalse($commArr[0]->IsMultipleOf3);
 		$this->assertFalse($commArr[1]->IsMultipleOf3);
 		$this->assertTrue($commArr[2]->IsMultipleOf3);
-		$this->assertFalse($commArr[3]->IsMultipleOf3);
-		$this->assertFalse($commArr[4]->IsMultipleOf3);
-		$this->assertTrue($commArr[5]->IsMultipleOf3);
-		$this->assertFalse($commArr[6]->IsMultipleOf3);
 
 		foreach($comments as $comment) {
 			if($comment->MultipleOf(3, 1)) {
@@ -140,27 +136,23 @@ class DataObjectSetTest extends SapphireTest {
 		$this->assertFalse($commArr[0]->IsMultipleOf3);
 		$this->assertFalse($commArr[1]->IsMultipleOf3);
 		$this->assertTrue($commArr[2]->IsMultipleOf3);
-		$this->assertFalse($commArr[3]->IsMultipleOf3);
-		$this->assertFalse($commArr[4]->IsMultipleOf3);
-		$this->assertTrue($commArr[5]->IsMultipleOf3);
-		$this->assertFalse($commArr[6]->IsMultipleOf3);
 	}
 
 	/**
 	 * Test {@link DataObjectSet->Count()}
 	 */
 	function testCount() {
-		$comments = DataObject::get('PageComment', '', "\"ID\" ASC");
+		$comments = DataObject::get('DataObjectSetTest_TeamComment', '', "\"ID\" ASC");
 		
 		/* There are a total of 8 items in the set */
-		$this->assertEquals($comments->Count(), 8, 'There are a total of 8 items in the set');
+		$this->assertEquals($comments->Count(), 3, 'There are a total of 8 items in the set');
 	}
 
 	/**
 	 * Test {@link DataObjectSet->First()}
 	 */
 	function testFirst() {
-		$comments = DataObject::get('PageComment', '', "\"ID\" ASC");
+		$comments = DataObject::get('DataObjectSetTest_TeamComment', '', "\"ID\" ASC");
 		
 		/* The first object is Joe's comment */
 		$this->assertEquals($comments->First()->Name, 'Joe', 'The first object has a Name field value of "Joe"');
@@ -170,17 +162,17 @@ class DataObjectSetTest extends SapphireTest {
 	 * Test {@link DataObjectSet->Last()}
 	 */
 	function testLast() {
-		$comments = DataObject::get('PageComment', '', "\"ID\" ASC");
+		$comments = DataObject::get('DataObjectSetTest_TeamComment', '', "\"ID\" ASC");
 		
 		/* The last object is Dean's comment */
-		$this->assertEquals($comments->Last()->Name, 'Dean', 'The last object has a Name field value of "Dean"');
+		$this->assertEquals($comments->Last()->Name, 'Phil', 'The last object has a Name field value of "Phil"');
 	}
 	
 	/**
 	 * Test {@link DataObjectSet->map()}
 	 */
 	function testMap() {
-		$comments = DataObject::get('PageComment', '', "\"ID\" ASC");
+		$comments = DataObject::get('DataObjectSetTest_TeamComment', '', "\"ID\" ASC");
 
 		/* Now we get a map of all the PageComment records */
 		$map = $comments->map('ID', 'Title', '(Select one)');
@@ -188,31 +180,26 @@ class DataObjectSetTest extends SapphireTest {
 		$expectedMap = array(
 			'' => '(Select one)',
 			1 => 'Joe',
-			2 => 'Jane',
-			3 => 'Bob',
-			4 => 'Bob',
-			5 => 'Ernie',
-			6 => 'Jimmy',
-			7 => 'Dean',
-			8 => 'Dean'
+			2 => 'Bob',
+			3 => 'Phil'
 		);
 		
-		/* There are 9 items in the map. 8 are records. 1 is the empty value */
-		$this->assertEquals(count($map), 9, 'There are 9 items in the map. 8 are records. 1 is the empty value');
+		/* There are 9 items in the map. 3 are records. 1 is the empty value */
+		$this->assertEquals(count($map), 4, 'There are 4 items in the map. 3 are records. 1 is the empty value');
 		
 		/* We have the same map as our expected map, asserted above */
 		
 		/* toDropDownMap() is an alias of map() - let's make a map from that */
 		$map2 = $comments->toDropDownMap('ID', 'Title', '(Select one)');
 		
-		/* There are 9 items in the map. 8 are records. 1 is the empty value */
-		$this->assertEquals(count($map), 9, 'There are 9 items in the map. 8 are records. 1 is the empty value.');
+		/* There are 4 items in the map. 3 are records. 1 is the empty value */
+		$this->assertEquals(count($map), 4, 'There are 4 items in the map. 3 are records. 1 is the empty value.');
 	}
 
 	function testRemoveDuplicates() {
 		// Note that PageComment and DataObjectSetTest_TeamComment are both descendants of DataObject, and don't
 		// share an inheritance relationship below that.
-		$pageComments = DataObject::get('PageComment');
+		$pageComments = DataObject::get('DataObjectSetTest_TeamComment');
 		$teamComments = DataObject::get('DataObjectSetTest_TeamComment');
 
 		/* Test default functionality (remove by ID). We'd expect to loose all our
@@ -221,34 +208,39 @@ class DataObjectSetTest extends SapphireTest {
 		$allComments = new DataObjectSet();
 		$allComments->merge($pageComments);
 		$allComments->merge($teamComments);
-
+		
+		$this->assertEquals($allComments->Count(), 6);
+		
 		$allComments->removeDuplicates();
 
-		$this->assertEquals($allComments->Count(), 11, 'Standard functionality is to remove duplicate base class/IDs');
+		$this->assertEquals($allComments->Count(), 3, 'Standard functionality is to remove duplicate base class/IDs');
 
 		/* Now test removing duplicates based on a common field. In this case we shall
 		 * use 'Name', so we can get all the unique commentators */
-
-		$allComments = new DataObjectSet();
-		$allComments->merge($pageComments);
-		$allComments->merge($teamComments);
+	
+	
+		$comment = new DataObjectSetTest_TeamComment();
+		$comment->Name = "Bob";
+		
+		$allComments->push($comment);
+		
+		$this->assertEquals($allComments->Count(), 4);
 
 		$allComments->removeDuplicates('Name');
-
-		$this->assertEquals($allComments->Count(), 9, 'There are 9 uniquely named commentators');
+		
+		$this->assertEquals($allComments->Count(), 3, 'There are 3 uniquely named commentators');
 
 		// Ensure that duplicates are removed where the base data class is the same.
 		$mixedSet = new DataObjectSet();
 		$mixedSet->push(new SiteTree(array('ID' => 1)));
 		$mixedSet->push(new Page(array('ID' => 1)));		// dup: same base class and ID
 		$mixedSet->push(new Page(array('ID' => 1)));		// dup: more than one dup of the same object
-		$mixedSet->push(new Page(array('ID' => 2)));		// not dup: same type again, but different ID
-		$mixedSet->push(new PageComment(array('ID' => 1))); // not dup: different base type, same ID
+		$mixedSet->push(new Page(array('ID' => 2)));		// not dup: same type again, but different
 		$mixedSet->push(new SiteTree(array('ID' => 1)));	// dup: another dup, not consequetive.
 
 		$mixedSet->removeDuplicates('ID');
 
-		$this->assertEquals($mixedSet->Count(), 3, 'There are 3 unique data objects in a very mixed set');
+		$this->assertEquals($mixedSet->Count(), 2, 'There are 3 unique data objects in a very mixed set');
 	}
 
 	/**
@@ -302,9 +294,10 @@ class DataObjectSetTest extends SapphireTest {
 	 */
 	function testInsertFirst() {
 		// Get one comment
-		$comment = DataObject::get_one('PageComment', '"Name" = \'Joe\'');
+		$comment = DataObject::get_one('DataObjectSetTest_TeamComment', "\"Name\" = 'Joe'");
+		
 		// Get all other comments
-		$set = DataObject::get('PageComment', '"Name" != \'Joe\'');
+		$set = DataObject::get('DataObjectSetTest_TeamComment', '"Name" != \'Joe\'');
 		
 		// Duplicate so we can use it later without another lookup
 		$otherSet = clone $set;
@@ -327,18 +320,19 @@ class DataObjectSetTest extends SapphireTest {
 	 * Test {@link DataObjectSet->getRange()}
 	 */
 	function testGetRange() {
-		$comments = DataObject::get('PageComment', '', "\"ID\" ASC");
+		$comments = DataObject::get('DataObjectSetTest_TeamComment', '', "\"ID\" ASC");
 		
 		// Make sure we got all 8 comments
-		$this->assertEquals($comments->Count(), 8, 'Eight comments in the database.');
+		$this->assertEquals($comments->Count(), 3, 'Three comments in the database.');
 		
 		// Grab a range
-		$range = $comments->getRange(1, 5);
-		$this->assertEquals($range->Count(), 5, 'Five comments in the range.');
+		$range = $comments->getRange(1, 2);
+		$this->assertEquals($range->Count(), 2, 'Two comment in the range.');
 		
 		// And now grab a range that shouldn't be full. Remember counting starts at 0.
-		$range = $comments->getRange(7, 5);
+		$range = $comments->getRange(2, 1);
 		$this->assertEquals($range->Count(), 1, 'One comment in the range.');
+		
 		// Make sure it's the last one
 		$this->assertEquals($range->First(), $comments->Last(), 'The only item in the range should be the last one.');
 	}
@@ -350,8 +344,9 @@ class DataObjectSetTest extends SapphireTest {
 		// Test an empty set
 		$set = new DataObjectSet();
 		$this->assertFalse($set->exists(), 'Empty set doesn\'t exist.');
+		
 		// Test a non-empty set
-		$set = DataObject::get('PageComment', '', "\"ID\" ASC");
+		$set = DataObject::get('DataObjectSetTest_TeamComment', '', "\"ID\" ASC");
 		$this->assertTrue($set->exists(), 'Non-empty set does exist.');
 	}
 
@@ -388,7 +383,29 @@ class DataObjectSetTest extends SapphireTest {
 		$set->push(new ArrayData(array('Name' => 'Ted')));
 		$this->assertEquals('Ted', $set->pop()->Name);
 	}
-
+	
+	/**
+	 * Test {@link DataObjectSet->sort()}
+	 */
+	function testSort() {
+		$set = new DataObjectSet(array(
+			array('Name'=>'Object1', 'F1'=>1, 'F2'=>2, 'F3'=>3),
+			array('Name'=>'Object2', 'F1'=>2, 'F2'=>1, 'F3'=>4),
+			array('Name'=>'Object3', 'F1'=>5, 'F2'=>2, 'F3'=>2),
+		));
+		// test a single sort ASC
+		$set->sort('F3', 'ASC');
+		$this->assertEquals($set->First()->Name, 'Object3', 'Object3 should be first in the set');
+		// test a single sort DESC
+		$set->sort('F3', 'DESC');
+		$this->assertEquals($set->First()->Name, 'Object2', 'Object2 should be first in the set');
+		// test a multi sort
+		$set->sort(array('F2'=>'ASC', 'F1'=>'ASC'));
+		$this->assertEquals($set->Last()->Name, 'Object3', 'Object3 should be last in the set');
+		// test a multi sort
+		$set->sort(array('F2'=>'ASC', 'F1'=>'DESC'));
+		$this->assertEquals($set->Last()->Name, 'Object1', 'Object1 should be last in the set');
+	}
 }
 
 /**
@@ -396,12 +413,13 @@ class DataObjectSetTest extends SapphireTest {
  * @subpackage tests
  */
 class DataObjectSetTest_TeamComment extends DataObject implements TestOnly {
+		
 	static $db = array(
 		'Name' => 'Varchar',
 		'Comment' => 'Text',
-		);
+	);
+
 	static $has_one = array(
 		'Team' => 'DataObjectTest_Team',
 	);
 }
-?>

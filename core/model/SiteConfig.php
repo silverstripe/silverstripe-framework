@@ -14,6 +14,7 @@
  * @package cms
  */
 class SiteConfig extends DataObject implements PermissionProvider {
+	
 	static $db = array(
 		"Title" => "Varchar(255)",
 		"Tagline" => "Varchar(255)",
@@ -50,57 +51,11 @@ class SiteConfig extends DataObject implements PermissionProvider {
 					new DropdownField("Theme", _t('SiteConfig.THEME', 'Theme'), $this->getAvailableThemes(), '', null, _t('SiteConfig.DEFAULTTHEME', '(Use default theme)'))
 				),
 				new Tab('Access',
-					new HeaderField('WhoCanViewHeader', _t('SiteConfig.VIEWHEADER', "Who can view pages on this site?"), 2),
-					$viewersOptionsField = new OptionsetField("CanViewType"),
-					$viewerGroupsField = new TreeMultiselectField("ViewerGroups", _t('SiteTree.VIEWERGROUPS', "Viewer Groups")),
-					new HeaderField('WhoCanEditHeader', _t('SiteConfig.EDITHEADER', "Who can edit pages on this site?"), 2),
-					$editorsOptionsField = new OptionsetField("CanEditType"),
-					$editorGroupsField = new TreeMultiselectField("EditorGroups", _t('SiteTree.EDITORGROUPS', "Editor Groups")),
-					new HeaderField('WhoCanCreateTopLevelHeader', _t('SiteConfig.TOPLEVELCREATE', "Who can create pages in the root of the site?"), 2),
-					$topLevelCreatorsOptionsField = new OptionsetField("CanCreateTopLevelType"),
-					$topLevelCreatorsGroupsField = new TreeMultiselectField("CreateTopLevelGroups", _t('SiteTree.TOPLEVELCREATORGROUPS', "Top level creators"))
+					new HeaderField('WhoCanViewHeader', _t('SiteConfig.VIEWHEADER', "Who can view pages on this site?"), 2)
 				)
 			)
 		);
-		
-		$viewersOptionsSource = array();
-		$viewersOptionsSource["Anyone"] = _t('SiteTree.ACCESSANYONE', "Anyone");
-		$viewersOptionsSource["LoggedInUsers"] = _t('SiteTree.ACCESSLOGGEDIN', "Logged-in users");
-		$viewersOptionsSource["OnlyTheseUsers"] = _t('SiteTree.ACCESSONLYTHESE', "Only these people (choose from list)");
-		$viewersOptionsField->setSource($viewersOptionsSource);
-		
-		$editorsOptionsSource = array();
-		$editorsOptionsSource["LoggedInUsers"] = _t('SiteTree.EDITANYONE', "Anyone who can log-in to the CMS");
-		$editorsOptionsSource["OnlyTheseUsers"] = _t('SiteTree.EDITONLYTHESE', "Only these people (choose from list)");
-		$editorsOptionsField->setSource($editorsOptionsSource);
-		
-		$topLevelCreatorsOptionsField->setSource($editorsOptionsSource);
-		
-		// Translatable doesn't handle updateCMSFields on DataObjects,  
-		// so add it here to save the current Locale,  
-		// because onBeforeWrite does not work. 
-		if(Object::has_extension('SiteConfig',"Translatable")){ 
-			$fields->push(new HiddenField("Locale"));  
-		}
 
-		if (!Permission::check('EDIT_SITECONFIG')) {
-			$fields->makeFieldReadonly($viewersOptionsField);
-			$fields->makeFieldReadonly($viewerGroupsField);
-			$fields->makeFieldReadonly($editorsOptionsField);
-			$fields->makeFieldReadonly($editorGroupsField);
-			$fields->makeFieldReadonly($topLevelCreatorsOptionsField);
-			$fields->makeFieldReadonly($topLevelCreatorsGroupsField);
-			$fields->makeFieldReadonly($taglineField);
-			$fields->makeFieldReadonly($titleField);
-		}
-
-		if(file_exists(BASE_PATH . '/install.php')) {
-			$fields->addFieldToTab("Root.Main", new LiteralField("InstallWarningHeader", 
-				"<p class=\"message warning\">" . _t("SiteTree.REMOVE_INSTALL_WARNING", 
-				"Warning: You should remove install.php from this SilverStripe install for security reasons.")
-				. "</p>"), "Title");
-		}
-		
 		$this->extend('updateCMSFields', $fields);
 		
 		return $fields;

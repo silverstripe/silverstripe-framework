@@ -71,7 +71,6 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		"ShowInMenus" => "Boolean",
 		"ShowInSearch" => "Boolean",
 		"HomepageForDomain" => "Varchar(100)",
-		"ProvideComments" => "Boolean",
 		"Sort" => "Int",
 		"HasBrokenFile" => "Boolean",
 		"HasBrokenLink" => "Boolean",
@@ -85,10 +84,6 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 
 	static $indexes = array(
 		"URLSegment" => true,
-	);
-
-	static $has_many = array(
-		"Comments" => "PageComment"
 	);
 
 	static $many_many = array(
@@ -526,22 +521,6 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		}
 		return false;
 	}
-
-
-	/**
-	 * Returns comments on this page. This will only show comments that
-	 * have been marked as spam if "?showspam=1" is appended to the URL.
-	 *
-	 * @return DataObjectSet Comments on this page.
-	 */
-	public function Comments() {
-		$spamfilter = isset($_GET['showspam']) ? '' : "AND \"IsSpam\"=0";
-		$unmoderatedfilter = Permission::check('ADMIN') ? '' : "AND \"NeedsModeration\"=0";
-		$comments =  DataObject::get("PageComment", "\"ParentID\" = '" . Convert::raw2sql($this->ID) . "' $spamfilter $unmoderatedfilter", "\"Created\" DESC");
-		
-		return $comments ? $comments : new DataObjectSet();
-	}
-
 
 	/**
 	 * Create a duplicate of this node. Doesn't affect joined data - create a
@@ -1817,8 +1796,6 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 					),
 					new CheckboxField("ShowInMenus", $this->fieldLabel('ShowInMenus')),
 					new CheckboxField("ShowInSearch", $this->fieldLabel('ShowInSearch')),
-					/*, new TreeMultiselectField("MultipleParents", "Page appears within", "SiteTree")*/
-					new CheckboxField("ProvideComments", $this->fieldLabel('ProvideComments')),
 					new LiteralField(
 						"HomepageForDomainInfo", 
 						"<p>" . 

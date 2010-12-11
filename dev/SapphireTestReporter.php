@@ -289,7 +289,7 @@ class SapphireTestReporter implements PHPUnit_Framework_TestListener {
 			}
 		}
 		$result = ($failCount > 0) ? 'fail' : 'pass';
-		echo "<div class=\"$result\">";
+		echo "<div class=\"status $result\">";
 		echo "<h2><span>$testCount</span> tests run: <span>$passCount</span> passes, <span>$failCount</span> fails, and <span>0</span> exceptions</h2>";
 		echo "</div>";
 		
