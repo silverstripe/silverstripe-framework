@@ -91,6 +91,8 @@ class Session {
 
 	protected static $cookie_path;
 
+	protected static $cookie_secure = false;
+
 	/**
 	 * Session data
 	 */
@@ -138,6 +140,22 @@ class Session {
 		} else {
 			return Director::baseURL();
 		}
+	}
+
+	/**
+	 * Secure cookie, tells the browser to only send it over SSL.
+	 * @param boolean $secure
+	 */
+	public static function set_cookie_secure($secure) {
+		self::$cookie_secure = (bool) $secure;
+	}
+
+	/**
+	 * Get if the cookie is secure
+	 * @return boolean
+	 */
+	public static function get_cookie_secure() {
+		return (bool) self::$cookie_secure;
 	}
 
 	/**
@@ -411,12 +429,13 @@ class Session {
 		self::load_config();
 		$path = self::get_cookie_path();
 		$domain = self::get_cookie_domain();
+		$secure = self::get_cookie_secure();
 
 		if(!session_id() && !headers_sent()) {
 			if($domain) {
-				session_set_cookie_params(self::$timeout, $path, $domain, false /* secure */, true /* httponly */);
+				session_set_cookie_params(self::$timeout, $path, $domain, $secure /* secure */, true /* httponly */);
 			} else {
-				session_set_cookie_params(self::$timeout, $path, null, false /* secure */, true /* httponly */);
+				session_set_cookie_params(self::$timeout, $path, null, $secure /* secure */, true /* httponly */);
 			}
 
 			// @ is to supress win32 warnings/notices when session wasn't cleaned up properly
