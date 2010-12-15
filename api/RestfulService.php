@@ -128,7 +128,7 @@ class RestfulService extends ViewableData {
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 			curl_setopt($ch, CURLOPT_USERAGENT, $useragent);
 			curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
-			curl_setopt($ch, CURLOPT_FOLLOWLOCATION,1);
+			if(!ini_get('open_basedir')) curl_setopt($ch, CURLOPT_FOLLOWLOCATION,1);
 			curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method);
 		
 			// Add headers
