@@ -84,16 +84,8 @@ abstract class Object {
 	public static function create() {
 		$args  = func_get_args();
 		$class = self::getCustomClass(array_shift($args));
-		
-		if(version_compare(PHP_VERSION, '5.1.3', '>=')) {
-			$reflector = new ReflectionClass($class);
-			return $reflector->newInstanceArgs($args);
-		} else {
-			// we're using a PHP install that doesn't support ReflectionClass->newInstanceArgs()
-			
-			$args = $args + array_fill(0, 9, null);
-			return new $class($args[0], $args[1], $args[2], $args[3], $args[4], $args[5], $args[6], $args[7], $args[8]);
-		}
+		$reflector = new ReflectionClass($class);
+		return $reflector->newInstanceArgs($args);
 	}
 	
 	private static $_cache_inst_args = array();
@@ -224,13 +216,8 @@ abstract class Object {
 			$class = self::$strong_classes[$class];
 		}
 		
-		if(version_compare(PHP_VERSION, '5.1.3', '>=')) {
-			$reflector = new ReflectionClass($class);
-			return $reflector->newInstanceArgs($args);
-		} else {
-			$args = $args + array_fill(0, 9, null);
-			return new $class($args[0], $args[1], $args[2], $args[3], $args[4], $args[5], $args[6], $args[7], $args[8]);
-		}
+		$reflector = new ReflectionClass($class);
+		return $reflector->newInstanceArgs($args);
 	}
 	
 	/**
