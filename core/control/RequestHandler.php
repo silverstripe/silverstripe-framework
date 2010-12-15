@@ -112,9 +112,6 @@ class RequestHandler extends ViewableData {
 			if($urlHandlers) foreach($urlHandlers as $rule => $action) {
 				if(isset($_REQUEST['debug_request'])) Debug::message("Testing '$rule' with '" . $request->remaining() . "' on $this->class");
 				if($params = $request->match($rule, true)) {
-					// FIXME: This unnecessary coupling was added to fix a bug in Image_Uploader.
-					if($this instanceof Controller) $this->urlParams = $request->allParams();
-					
 					// Backwards compatible setting of url parameters, please use SS_HTTPRequest->latestParam() instead
 					//Director::setUrlParams($request->latestParams());
 				
