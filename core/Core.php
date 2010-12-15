@@ -138,14 +138,14 @@ if(!defined('BASE_PATH')) {
 	define('BASE_PATH', rtrim(dirname(dirname(dirname(__FILE__)))), DIRECTORY_SEPARATOR);
 }
 if(!defined('BASE_URL')) {
-	// Determine the base URL by comparing SCRIPT_NAME to SCRIPT_FILENAME and getting the common
-	// elements
-	if(substr($_SERVER['SCRIPT_FILENAME'],0,strlen(BASE_PATH)) == BASE_PATH) {
-		$urlSegmentToRemove = substr($_SERVER['SCRIPT_FILENAME'],strlen(BASE_PATH));
-		if(substr($_SERVER['SCRIPT_NAME'],-strlen($urlSegmentToRemove)) == $urlSegmentToRemove) {
+	// Determine the base URL by comparing SCRIPT_NAME to SCRIPT_FILENAME and getting common elements
+	$path = realpath($_SERVER['SCRIPT_FILENAME']);
+	if(substr($path, 0, strlen(BASE_PATH)) == BASE_PATH) {
+		$urlSegmentToRemove = substr($path, strlen(BASE_PATH));
+		if(substr($_SERVER['SCRIPT_NAME'], -strlen($urlSegmentToRemove)) == $urlSegmentToRemove) {
 			$baseURL = substr($_SERVER['SCRIPT_NAME'], 0, -strlen($urlSegmentToRemove));
 			define('BASE_URL', rtrim($baseURL, DIRECTORY_SEPARATOR));
-		} 
+		}
 	}
 	
 	// If that didn't work, failover to the old syntax.  Hopefully this isn't necessary, and maybe
