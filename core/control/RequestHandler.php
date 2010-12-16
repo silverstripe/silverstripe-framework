@@ -73,9 +73,13 @@ class RequestHandler extends ViewableData {
 	 * </code>
 	 */
 	static $allowed_actions = null;
-	
+	 
 	public function __construct() {
 		$this->brokenOnConstruct = false;
+
+		// Check necessary to avoid class conflicts before manifest is rebuilt
+		if(class_exists('NullHTTPRequest')) $this->request = new NullHTTPRequest();
+		
 		parent::__construct();
 	}
 	
@@ -317,8 +321,11 @@ class RequestHandler extends ViewableData {
 	
 	/**
 	 * Returns the SS_HTTPRequest object that this controller is using.
+	 * Returns a placeholder {@link NullHTTPRequest} object unless 
+	 * {@link handleAction()} or {@link handleRequest()} have been called,
+	 * which adds a reference to an actual {@link SS_HTTPRequest} object.
 	 *
-	 * @return SS_HTTPRequest
+	 * @return SS_HTTPRequest|NullHTTPRequest
 	 */
 	function getRequest() {
 		return $this->request;

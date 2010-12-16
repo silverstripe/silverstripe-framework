@@ -20,6 +20,11 @@ class RequestHandlingTest extends SapphireTest {
 	// 	);
 	// }
 	
+	function testConstructedWithNullRequest() {
+		$r = new RequestHandler();
+		$this->assertType('NullHTTPRequest', $r->getRequest());
+	}
+	
 	function testRequestHandlerChainingAllParams() {
 		// TODO
 	}
