@@ -29,14 +29,19 @@ class Convert {
 	 * @return array|string
 	 */
 	static function raw2att($val) {
-		if(is_array($val)) {
-			foreach($val as $k => $v) $val[$k] = self::raw2att($v);
-			return $val;
-		} else {
-			return str_replace(array('&','"',"'",'<','>'), array('&amp;','&quot;','&#39;','&lt;','&gt;'), $val);
-		}
+		return self::raw2xml($val);
 	}
-	
+
+	/**
+	 * Convert a value to be suitable for an HTML attribute.
+	 * 
+	 * @param string|array $val String to escape, or array of strings
+	 * @return array|string
+	 */
+	static function raw2htmlatt($val) {
+		return self::raw2att($val);
+	}
+
 	/**
 	 * Convert a value to be suitable for an HTML attribute.
 	 * 
@@ -48,14 +53,12 @@ class Convert {
 	 * @param array|string $val String to escape, or array of strings
 	 * @return array|string
 	 */
-	static function raw2htmlatt($val) {
+	static function raw2htmlname($val) {
 		if(is_array($val)) {
-			foreach($val as $k => $v) $val[$k] = self::raw2htmlatt($v);
+			foreach($val as $k => $v) $val[$k] = self::raw2htmlname($v);
 			return $val;
 		} else {
-			$val = self::raw2att($val);
-			$val = preg_replace('/[^a-zA-Z0-9\-_]*/', '', $val);
-			return $val;
+			return preg_replace('/[^a-zA-Z0-9\-_:.]+/','', $val);
 		}
 	}
 	
@@ -71,7 +74,7 @@ class Convert {
 			foreach($val as $k => $v) $val[$k] = self::raw2xml($v);
 			return $val;
 		} else {
-			return str_replace(array('&','<','>',"\n",'"',"'"), array('&amp;','&lt;','&gt;','<br />','&quot;','&#39;'), $val);
+			return htmlspecialchars($val, ENT_QUOTES, 'UTF-8');
 		}
 	}
 	
@@ -132,10 +135,7 @@ class Convert {
 		} else {
 			// More complex text needs to use html2raw instead
 			if(strpos($val,'<') !== false) return self::html2raw($val);
-			
-			$converted = str_replace(array('&amp;','&lt;','&gt;','&quot;','&apos;', '&#39;'), array('&','<','>','"',"'", "'"), $val);
-			$converted = ereg_replace('&#[0-9]+;', '', $converted);
-			return $converted;
+			else return html_entity_decode($val, ENT_QUOTES, 'UTF-8');
 		}
 	}
 	

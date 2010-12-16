@@ -22,10 +22,10 @@ class ConvertTest extends SapphireTest {
 	 */
 	function testRaw2HtmlAtt() {
 		$val1 = '<input type="text">';
-		$this->assertEquals('ltinputtypequottextquotgt', Convert::raw2htmlatt($val1), 'Special characters are escaped');
+		$this->assertEquals('&lt;input type=&quot;text&quot;&gt;', Convert::raw2htmlatt($val1), 'Special characters are escaped');
 		
 		$val2 = 'This is some normal text.';
-		$this->assertEquals('Thisissomenormaltext', Convert::raw2htmlatt($val2), 'Normal text is not escaped');
+		$this->assertEquals('This is some normal text.', Convert::raw2htmlatt($val2), 'Normal text is not escaped');
 	}
 	
 	function testHtml2raw() {
@@ -37,8 +37,6 @@ class ConvertTest extends SapphireTest {
 		
 		$val2 = 'This has a <strong class="test" style="font-weight: bold">strong tag with attributes</STRONG>.'; 
 		$this->assertEquals('This has a *strong tag with attributes*.', Convert::xml2raw($val2), 'Strong tags with attributes are replaced with asterisks');
-	
-		
 	}
 	
 	/**
@@ -50,6 +48,14 @@ class ConvertTest extends SapphireTest {
 		
 		$val2 = 'This is some normal text.';
 		$this->assertEquals('This is some normal text.', Convert::raw2xml($val2), 'Normal text is not escaped');
+
+		$val3 = "This is test\nNow on a new line.";
+		$this->assertEquals("This is test\nNow on a new line.", Convert::raw2xml($val3), 'Newlines are retained. They should not be replaced with <br /> as it is not XML valid');
+	}
+	
+	function testRaw2HtmlName() {
+		$val1 = 'test test 123';
+		$this->assertEquals('testtest123', Convert::raw2htmlname($val1));
 	}
 	
 	/**

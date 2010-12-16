@@ -54,7 +54,7 @@ class TextTest extends SapphireTest {
 	function testLimitWordCountXML() {
 		$cases = array(
 			'<p>Stuff & stuff</p>' => 'Stuff &amp;...',
-			"Stuff\nBlah Blah Blah" => "Stuff<br />Blah Blah...",
+			"Stuff\nBlah Blah Blah" => "Stuff\nBlah Blah...",
 			"Stuff<Blah Blah" => "Stuff&lt;Blah Blah",
 			"Stuff>Blah Blah" => "Stuff&gt;Blah Blah"
 		);
