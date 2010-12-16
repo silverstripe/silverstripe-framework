@@ -29,6 +29,11 @@
  * @subpackage control
  */
 class RequestHandler extends ViewableData {
+	
+	/**
+	 * @var SS_HTTPRequest $request The request object that the controller was called with.
+	 * Set in {@link handleRequest()}. Useful to generate the {}
+	 */
 	protected $request = null;
 	
 	/**
@@ -317,5 +322,15 @@ class RequestHandler extends ViewableData {
 	 */
 	function getRequest() {
 		return $this->request;
+	}
+	
+	/**
+	 * Typically the request is set through {@link handleAction()}
+	 * or {@link handleRequest()}, but in some based we want to set it manually.
+	 * 
+	 * @param SS_HTTPRequest
+	 */
+	function setRequest($request) {
+		$this->request = $request;
 	}
 }
