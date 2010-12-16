@@ -50,6 +50,12 @@ if(isset($_SERVER['argv'][2])) {
 	$_REQUEST = $_GET;
 }
 
+// Set 'url' GET parameter
+if(isset($_SERVER['argv'][1])) {
+	$_REQUEST['url'] = $_SERVER['argv'][1];
+	$_GET['url'] = $_SERVER['argv'][1];
+}
+
 /**
  * Include Sapphire's core code
  */
