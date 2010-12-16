@@ -2373,6 +2373,13 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 			$this->setField("MenuTitle", $value);
 		}
 	}
+	
+	/**
+	 * @deprecated 3.0 Use getTreeTitle()
+	 */
+	function TreeTitle() {
+		return $this->getTreeTitle();
+	}
 
 	/**
 	 * TitleWithStatus will return the title in an <ins>, <del> or

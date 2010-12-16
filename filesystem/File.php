@@ -167,7 +167,17 @@ class File extends DataObject {
 	function RelativeLink($action = null){
 		return $this->Filename;
 	}
+	
+	/**
+	 * @deprecated 3.0 Use getTreeTitle()
+	 */
+	function TreeTitle() {
+		return $this->getTreeTitle();
+	}
 
+	/**
+	 * @return string
+	 */
 	function getTreeTitle() {
 		return $this->Title;
 	}
