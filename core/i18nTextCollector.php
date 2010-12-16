@@ -400,7 +400,7 @@ class i18nTextCollector extends Object {
 					user_error('i18nTextCollector->writeMasterStringFile(): Invalid PHP language file. Error: ' . $e->toString(), E_USER_ERROR);
 				}
 				
-				fwrite($fh, "<"."?php{$eol}{$eol}global \$lang;{$eol}{$eol}" . $php . "{$eol}?".">");
+				fwrite($fh, "<"."?php{$eol}{$eol}global \$lang;{$eol}{$eol}" . $php . "{$eol}");
 				fclose($fh);
 				
 				//Debug::message("Created file: $langFolder/" . $this->defaultLocale . ".php", false);
