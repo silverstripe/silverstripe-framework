@@ -46,7 +46,7 @@ class Mailer extends Object {
 function htmlEmail($to, $from, $subject, $htmlContent, $attachedFiles = false, $customheaders = false, $plainContent = false, $inlineImages = false) {
 	if ($customheaders && is_array($customheaders) == false) {
 		echo "htmlEmail($to, $from, $subject, ...) could not send mail: improper \$customheaders passed:<BR>";
-		dieprintr($headers);
+		dieprintr($customheaders);
 	}
 
     
@@ -69,7 +69,7 @@ function htmlEmail($to, $from, $subject, $htmlContent, $attachedFiles = false, $
 	$headers["Content-Type"] = "text/plain; charset=\"utf-8\"";
 	$headers["Content-Transfer-Encoding"] = $plainEncoding ? $plainEncoding : "quoted-printable";
 
-	$plainPart = processHeaders($headers, ($plainEncoding == "base64") ? chunk_split(base64_encode($plainContent),60) : wordwrap(QuotedPrintable_encode($plainContent),120));
+	$plainPart = processHeaders($headers, ($plainEncoding == "base64") ? chunk_split(base64_encode($plainContent),60) : wordwrap(QuotedPrintable_encode($plainContent),75));
 
 	// Make the HTML part
 	$headers["Content-Type"] = "text/html; charset=\"utf-8\"";
@@ -93,7 +93,7 @@ function htmlEmail($to, $from, $subject, $htmlContent, $attachedFiles = false, $
 		$htmlPart = wrapImagesInline($htmlContent);
 	} else {
 		$headers["Content-Transfer-Encoding"] = "quoted-printable";
-		$htmlPart = processHeaders($headers, wordwrap(QuotedPrintable_encode($htmlContent),120));
+		$htmlPart = processHeaders($headers, wordwrap(QuotedPrintable_encode($htmlContent),75));
 	}
 	
 	list($messageBody, $messageHeaders) = encodeMultipart(array($plainPart,$htmlPart), "multipart/alternative");
@@ -171,7 +171,7 @@ function plaintextEmail($to, $from, $subject, $plainContent, $attachedFiles, $cu
 
 	if ($customheaders && is_array($customheaders) == false) {
 		echo "htmlEmail($to, $from, $subject, ...) could not send mail: improper \$customheaders passed:<BR>";
-		dieprintr($headers);
+		dieprintr($customheaders);
 	}
 
 	// If the subject line contains extended characters, we must encode it
