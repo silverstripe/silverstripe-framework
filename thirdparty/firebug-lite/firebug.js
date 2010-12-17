@@ -1,5 +1,5 @@
 
-if (!window.console || !console.firebug) {
+if (!window.console && !console.firebug) {
 (function()
 {
     window.console = 
