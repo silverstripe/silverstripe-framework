@@ -50,7 +50,6 @@ function htmlEmail($to, $from, $subject, $htmlContent, $attachedFiles = false, $
 	}
 
     
-	$subjectIsUnicode = (strpos($subject,"&#") !== false);
 	$bodyIsUnicode = (strpos($htmlContent,"&#") !== false);
     $plainEncoding = "";
 	
@@ -64,9 +63,7 @@ function htmlEmail($to, $from, $subject, $htmlContent, $attachedFiles = false, $
 
 	// If the subject line contains extended characters, we must encode the 
 	$subject = Convert::xml2raw($subject);
-	if(isset($subjectIsUnicode) && $subjectIsUnicode)
-		$subject = "=?UTF-8?B?" . base64_encode($subject) . "?=";
-
+	$subject = "=?UTF-8?B?" . base64_encode($subject) . "?=";
 
 	// Make the plain text part
 	$headers["Content-Type"] = "text/plain; charset=\"utf-8\"";
@@ -170,7 +167,6 @@ function htmlEmail($to, $from, $subject, $htmlContent, $attachedFiles = false, $
  * Send a plain text e-mail
  */
 function plaintextEmail($to, $from, $subject, $plainContent, $attachedFiles, $customheaders = false) {
-	$subjectIsUnicode = false;	
 	$plainEncoding = false; // Not ensurely where this is supposed to be set, but defined it false for now to remove php notices
 
 	if ($customheaders && is_array($customheaders) == false) {
@@ -178,13 +174,9 @@ function plaintextEmail($to, $from, $subject, $plainContent, $attachedFiles, $cu
 		dieprintr($headers);
 	}
 
-	if(strpos($subject,"&#") !== false) $subjectIsUnicode = true;
-
 	// If the subject line contains extended characters, we must encode it
 	$subject = Convert::xml2raw($subject);
-	if($subjectIsUnicode)
-		$subject = "=?UTF-8?B?" . base64_encode($subject) . "?=";
-
+	$subject = "=?UTF-8?B?" . base64_encode($subject) . "?=";
 
 	// Make the plain text part
 	$headers["Content-Type"] = "text/plain; charset=\"utf-8\"";
