@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Routines for IP to country resolution.
  * 
@@ -7,7 +8,9 @@
  */
 class Geoip {
 	
-	public static $default_country_code = false;
+	private static $enabled = true;
+	
+	private static $default_country_code = false;
 
 	/** 
 	 * ISO 3166 Country Codes
@@ -15,6 +18,8 @@ class Geoip {
 	 * Includes additional codes for Europe,
 	 * Asia Pacific Region,Anonymous Proxies
 	 * & Satellite Provider.
+	 *
+	 * @var array
 	 */
 	protected static $iso_3166_countryCodes = array(
 		'A1' => "Anonymous Proxy",
@@ -264,6 +269,34 @@ class Geoip {
 		'ZW' => "Zimbabwe"
 	);
 	
+	/**
+	 * Set whether the Geoip lookup should be enabled or not. Useful
+	 * to disable while testing or in environments Geoip lookup is wrong
+	 *
+	 * @param bool
+	 */
+	public static function set_enabled($bool) {
+		self::$enabled = $bool;
+	}
+	
+	/**
+	 * Return whether Geoip lookups are enabled
+	 *
+	 * @return bool
+	 */
+	public static function is_enabled() {
+		return (bool) self::$enabled;
+	}
+	
+	/**
+	 * Set the default country
+	 *
+	 * @param string $country_code
+	 */
+	public static function set_default_country_code($country_code) {
+		self::$default_country_code = $country_code;
+	}
+	
 	/** 
 	 * Find the country for an IP address.
 	 * 
@@ -278,7 +311,8 @@ class Geoip {
 	 * @param boolean $codeOnly Returns just the country code
 	 */
 	static function ip2country($address, $codeOnly = false) {
-
+		if(!self::is_enabled()) return false;
+		
 		// Return if in CLI, or you'll get this error: "sh: geoiplookup: command not found"
 		if(Director::is_cli() || !function_exists('exec')) return false;
 		
@@ -318,15 +352,30 @@ class Geoip {
 
 	/**
 	 * Returns the country code, for the current visitor
+	 *
+	 * @return string|bool
 	 */
 	static function visitor_country() {
-		if( ereg('^dev(\\.|$)', $_SERVER['HTTP_HOST']) && isset($_GET['country'])) return $_GET['country'];
-		else if(isset($_SERVER['REMOTE_ADDR'])) return Geoip::ip2country($_SERVER['REMOTE_ADDR'], true);
+		if(ereg('^dev(\\.|$)', $_SERVER['HTTP_HOST']) && isset($_GET['country'])){
+			 $code = $_GET['country'];
+		}
+		else if(isset($_SERVER['REMOTE_ADDR']) && self::is_enabled()) {
+			$code = Geoip::ip2country($_SERVER['REMOTE_ADDR'], true);
+		}	
+		  
+		// if geoip fails, lets default to default country code (if any)
+		if(!isset($code) || !$code) {
+			$code = self::$default_country_code;
+		}
+		   
+		return ($code) ? $code : false;
 	}
 	
 	/** 
 	 * Sanity Checker for this class, which helps us debug,
 	 * or ensure that its working as expected 
+	 *
+	 * @return bool
 	 */
 	static function ip2country_check() {
 		global $ss_disableFeatures;
@@ -368,6 +417,8 @@ class Geoip {
 
 	/** 
 	 * Returns an array of ISO Country Codes -> Country Names
+	 *
+	 * @return array
 	 */
 	static function getCountryDropDown() {
 		$dropdown = Geoip::$iso_3166_countryCodes;
@@ -378,4 +429,3 @@ class Geoip {
 		return $dropdown;
 	}
 }
-?>
