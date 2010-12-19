@@ -538,7 +538,12 @@ abstract class Object {
 		
 		// load statics now for DataObject classes
 		if(ClassInfo::is_subclass_of($class, 'DataObject')) {
-			DataObjectDecorator::load_extra_statics($class, $extension);
+			if(is_subclass_of($extensionClass, 'DataObjectDecorator')) {
+				DataObjectDecorator::load_extra_statics($class, $extension);
+			}
+			else {
+				user_error("$extensionClass cannot be applied to $class without being a DataObjectDecorator", E_USER_ERROR);
+			}
 		}
 	}
 
@@ -550,12 +555,26 @@ abstract class Object {
 		// _cache_statics_prepared setting must come first to prevent infinite loops when we call
 		// get_static below
 		self::$_cache_statics_prepared[$class] = true;
-
+		
 		// load statics now for DataObject classes
 		if(is_subclass_of($class, 'DataObject')) {
 			$extensions = Object::uninherited_static($class, 'extensions');
-			if($extensions) foreach($extensions as $extension) {
-				DataObjectDecorator::load_extra_statics($class, $extension);
+			
+			if($extensions) {
+				foreach($extensions as $extension) {
+					$extensionClass = $extension;
+					
+					if(preg_match('/^([^(]*)/', $extension, $matches)) {
+						$extensionClass = $matches[1];
+					}
+					
+					if(is_subclass_of($extensionClass, 'DataObjectDecorator')) {
+						DataObjectDecorator::load_extra_statics($class, $extension);
+					}
+					else {
+						user_error("$extensionClass cannot be applied to $class without being a DataObjectDecorator", E_USER_ERROR);
+					}
+				}
 			}
 		}
 	}

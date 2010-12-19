@@ -99,9 +99,9 @@ class RestfulServiceTest extends SapphireTest {
 	}
 	
 	function testHttpErrorWithoutCache() {
-		$connection = new RestfulService(Director::absoluteBaseURL(), 0);
+		$connection = new RestfulServiceTest_MockRestfulService(Director::absoluteBaseURL(), 0);
 		$response = $connection->request('RestfulServiceTest_Controller/httpErrorWithoutCache?usetestmanifest=1&flush=1');
-		
+
 		$this->assertEquals(400, $response->getStatusCode());
 		$this->assertFalse($response->getCachedBody());
 		$this->assertContains("<error>HTTP Error</error>", $response->getBody());
@@ -272,4 +272,3 @@ class RestfulServiceTest_MockRestfulService extends RestfulService {
 		return $response;
 	}
 }
-?>
