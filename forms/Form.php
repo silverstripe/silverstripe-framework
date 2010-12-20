@@ -245,17 +245,41 @@ class Form extends RequestHandler {
 		if(isset($funcName)) {
 			$this->setButtonClicked($funcName);
 		}
-
-		// First, try a handler method on the controller
+		
+		// Permission checks (first on controller, then falling back to form)
+		if(
+			// Ensure that the action is actually a button or method on the form,
+			// and not just a method on the controller.
+			$this->controller->hasMethod($funcName)
+			&& !$this->controller->checkAccessAction($funcName)
+			// If a button exists, allow it on the controller
+			&& !$this->Actions()->fieldByName('action_' . $funcName)
+		) {
+			return $this->httpError(
+				403, 
+				sprintf('Action "%s" not allowed on controller (Class: %s)', $funcName, get_class($this->controller))
+			);
+		} elseif(
+			$this->hasMethod($funcName)
+			&& !$this->checkAccessAction($funcName)
+			// No checks for button existence or $allowed_actions is performed -
+			// all form methods are callable (e.g. the legacy "callfieldmethod()")
+		) {
+			return $this->httpError(
+				403, 
+				sprintf('Action "%s" not allowed on form (Name: "%s")', $funcName, $this->Name())
+			);
+		}
+		
+		// First, try a handler method on the controller (has been checked for allowed_actions above already)
 		if($this->controller->hasMethod($funcName)) {
 			return $this->controller->$funcName($vars, $this, $request);
-
-		// Otherwise, try a handler method on the form object
-		} else {
-			if($this->hasMethod($funcName)) {
-				return $this->$funcName($vars, $this, $request);
-			}
+		// Otherwise, try a handler method on the form object.
+		} elseif($this->hasMethod($funcName)) {
+			return $this->$funcName($vars, $this, $request);
 		}
+		
+		return $this->httpError(404);
 	}
 	
 	/**
