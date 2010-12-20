@@ -1521,16 +1521,11 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	 * @return string Generated url segment
 	 */
 	function generateURLSegment($title){
-		$t = (function_exists('mb_strtolower')) ? mb_strtolower($title) : strtolower($title);
-		$t = Object::create('Transliterator')->toASCII($t);
-		$t = str_replace('&amp;','-and-',$t);
-		$t = str_replace('&','-and-',$t);
-		$t = ereg_replace('[^A-Za-z0-9]+','-',$t);
-		$t = ereg_replace('-+','-',$t);
+		$t = Convert::raw2url($title);
+		
 		if(!$t || $t == '-' || $t == '-1') {
 			$t = "page-$this->ID";
 		}
-		$t = trim($t, '-');
 		
 		// Hook for decorators
 		$this->extend('updateURLSegment', $t, $title);

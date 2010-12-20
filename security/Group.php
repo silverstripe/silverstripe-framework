@@ -313,9 +313,11 @@ class Group extends DataObject {
 	
 	/**
 	 * Overloaded to ensure the code is always descent.
+	 * 
+	 * @param string
 	 */
 	public function setCode($val){
-		$this->setField("Code",SiteTree::generateURLSegment($val));
+		$this->setField("Code", Convert::raw2url($val));
 	}
 	
 	function onBeforeWrite() {

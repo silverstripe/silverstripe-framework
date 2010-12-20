@@ -195,7 +195,12 @@ class Convert {
 	}
 	
 	/**
-	 * @uses recursiveXMLToArray()
+	 * Converts an XML string to a PHP array
+	 *
+	 * @uses {@link recursiveXMLToArray()}
+	 * @param string
+	 *
+	 * @return array
 	 */
 	static function xml2array($val) {
 		$xml = new SimpleXMLElement($val);
@@ -203,8 +208,12 @@ class Convert {
 	}
 
 	/**
-	 * Function recursively run from {@link Convert::xml2array()}
-	 * @uses SimpleXMLElement
+	 * Convert a XML string to a PHP array recursively. Do not 
+	 * call this function directly, Please use {@link Convert::xml2array()}
+	 * 
+	 * @param SimpleXMLElement
+	 * 
+	 * @return mixed
 	 */
 	protected static function recursiveXMLToArray($xml) {
 		if(is_object($xml) && get_class($xml) == 'SimpleXMLElement') {
@@ -223,11 +232,13 @@ class Convert {
 			if(isset($a)) $r['@'] = $a; // Attributes
 			return $r;
 		}
+		
 		return (string) $xml;
 	}
 	
 	/**
 	 * Create a link if the string is a valid URL
+	 *
 	 * @param string The string to linkify
 	 * @return A link to the URL if string is a URL
 	 */
@@ -335,5 +346,24 @@ class Convert {
 			$data
 		);
 	}
-
+	
+	/**
+	 * Convert a string (normally a title) to a string suitable for using in
+	 * urls and other html attributes 
+	 *
+	 * @param string 
+	 *
+	 * @return string
+	 */
+	public static function raw2url($title) {
+		$t = (function_exists('mb_strtolower')) ? mb_strtolower($title) : strtolower($title);
+		$t = Object::create('Transliterator')->toASCII($t);
+		$t = str_replace('&amp;','-and-',$t);
+		$t = str_replace('&','-and-',$t);
+		$t = ereg_replace('[^A-Za-z0-9]+','-',$t);
+		$t = ereg_replace('-+','-',$t);
+		$t = trim($t, '-');
+		
+		return $t;
+	}  
 }
