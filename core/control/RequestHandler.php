@@ -66,6 +66,12 @@ class RequestHandler extends ViewableData {
 	 *		'complexaction' '->canComplexAction' // complexaction can only be accessed if $this->canComplexAction() returns true
 	 *	);
 	 * </code>
+	 * 
+	 * Form getters count as URL actions as well, and should be included in allowed_actions.
+	 * Form actions on the other handed (first argument to {@link FormAction()} shoudl NOT be included,
+	 * these are handled separately through {@link Form->httpSubmission}. You can control access on form actions
+	 * either by conditionally removing {@link FormAction} in the form construction,
+	 * or by defining $allowed_actions in your {@link Form} class.
 	 */
 	static $allowed_actions = null;
 	

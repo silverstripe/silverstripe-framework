@@ -4,7 +4,7 @@
  * Tests for RequestHandler and SS_HTTPRequest.
  * We've set up a simple URL handling model based on 
  */
-class RequestHandlingTest extends SapphireTest {
+class RequestHandlingTest extends FunctionalTest {
 	static $fixture_file = null;
 	
 	// function testRequestHandlerChainingLatestParams() {
@@ -144,6 +144,91 @@ class RequestHandlingTest extends SapphireTest {
 		$this->assertEquals(403, $response->getStatusCode());
 	}
 	
+	function testFormActionsCanBypassAllowedActions() {
+		SecurityToken::enable();		
+		
+		$response = $this->get('RequestHandlingTest_FormActionController');
+		$this->assertEquals(200, $response->getStatusCode());
+		$tokenEls = $this->cssParser()->getBySelector('#Form_Form_SecurityID');
+		$securityId = (string)$tokenEls[0]['value'];
+		
+		$data = array('action_formaction' => 1);
+		$response = $this->post('RequestHandlingTest_FormActionController/Form', $data);
+		$this->assertEquals(400, $response->getStatusCode(),
+			'Should fail: Invocation through POST form handler, not contained in $allowed_actions, without CSRF token'
+		);
+		
+		$data = array('action_disallowedcontrollermethod' => 1, 'SecurityID' => $securityId);
+		$response = $this->post('RequestHandlingTest_FormActionController/Form', $data);
+		$this->assertEquals(403, $response->getStatusCode(), 
+			'Should fail: Invocation through POST form handler, controller action instead of form action, not contained in $allowed_actions, with CSRF token'
+		);
+		
+		$data = array('action_formaction' => 1, 'SecurityID' => $securityId);
+		$response = $this->post('RequestHandlingTest_FormActionController/Form', $data);
+		$this->assertEquals(200, $response->getStatusCode());
+		$this->assertEquals('formaction', $response->getBody(), 
+			'Should pass: Invocation through POST form handler, not contained in $allowed_actions, with CSRF token'
+		);
+		
+		$data = array('action_controlleraction' => 1, 'SecurityID' => $securityId);
+		$response = $this->post('RequestHandlingTest_FormActionController/Form', $data);
+		$this->assertEquals(200, $response->getStatusCode(), 
+			'Should pass: Invocation through POST form handler, controller action instead of form action, contained in $allowed_actions, with CSRF token'
+		);
+		
+		$data = array('action_formactionInAllowedActions' => 1);
+		$response = $this->post('RequestHandlingTest_FormActionController/Form', $data);
+		$this->assertEquals(400, $response->getStatusCode(),
+			'Should fail: Invocation through POST form handler, contained in $allowed_actions, without CSRF token'
+		);
+		
+		$data = array('action_formactionInAllowedActions' => 1, 'SecurityID' => $securityId);
+		$response = $this->post('RequestHandlingTest_FormActionController/Form', $data);
+		$this->assertEquals(200, $response->getStatusCode(),
+			'Should pass: Invocation through POST form handler, contained in $allowed_actions, with CSRF token'
+		);
+		
+		$data = array();
+		$response = $this->post('RequestHandlingTest_FormActionController/formaction', $data);
+		$this->assertEquals(404, $response->getStatusCode(),
+			'Should fail: Invocation through POST URL, not contained in $allowed_actions, without CSRF token'
+		);
+		
+		$data = array();
+		$response = $this->post('RequestHandlingTest_FormActionController/formactionInAllowedActions', $data);
+		$this->assertEquals(200, $response->getStatusCode(),
+			'Should pass: Invocation of form action through POST URL, contained in $allowed_actions, without CSRF token'
+		);
+		
+		$data = array('SecurityID' => $securityId);
+		$response = $this->post('RequestHandlingTest_FormActionController/formactionInAllowedActions', $data);
+		$this->assertEquals(200, $response->getStatusCode(),
+			'Should pass: Invocation of form action through POST URL, contained in $allowed_actions, with CSRF token'
+		);
+		
+		$data = array(); // CSRF protection doesnt kick in for direct requests
+		$response = $this->post('RequestHandlingTest_FormActionController/formactionInAllowedActions', $data);
+		$this->assertEquals(200, $response->getStatusCode(),
+			'Should pass: Invocation of form action through POST URL, contained in $allowed_actions, without CSRF token'
+		);
+		
+		SecurityToken::disable();
+	}
+	
+	function testAllowedActionsEnforcedOnForm() {
+		$data = array('action_allowedformaction' => 1);
+		$response = $this->post('RequestHandlingTest_ControllerFormWithAllowedActions/Form', $data);
+		$this->assertEquals(200, $response->getStatusCode());
+		$this->assertEquals('allowedformaction', $response->getBody());
+		
+		$data = array('action_disallowedformaction' => 1);
+		$response = $this->post('RequestHandlingTest_ControllerFormWithAllowedActions/Form', $data);
+		$this->assertEquals(403, $response->getStatusCode());
+		// Note: Looks for a specific 403 thrown by Form->httpSubmission(), not RequestHandler->handleRequest()
+		$this->assertContains('not allowed on form', $response->getBody());
+	}
+	
 }
 
 /**
@@ -230,6 +315,57 @@ class RequestHandlingTest_Controller extends Controller {
 	
 }
 
+class RequestHandlingTest_FormActionController extends Controller {
+	
+	protected $template = 'BlankPage';
+	
+	static $allowed_actions = array(
+		'controlleraction',
+		'Form',
+		'formactionInAllowedActions'
+		//'formaction', // left out, implicitly allowed through form action
+	);
+	
+	function Link($action = null) {
+		return Controller::join_links('RequestHandlingTest_FormActionController', $action);
+	}
+	
+	function controlleraction($request) {
+		return 'controlleraction';
+	}
+	
+	function disallowedcontrollermethod() {
+		return 'disallowedcontrollermethod';
+	}
+	
+	function Form() {
+		return new Form(
+			$this, 
+			"Form", 
+			new FieldSet(
+				new TextField("MyField")
+			), 
+			new FieldSet(
+				new FormAction("formaction"),
+				new FormAction('formactionInAllowedActions')
+			)
+		);
+	}
+	
+	/**
+	 * @param $data
+	 * @param $form Made optional to simulate error behaviour in "live" environment
+	 *  (missing arguments don't throw a fatal error there)
+	 */
+	function formaction($data, $form = null) {
+		return 'formaction';
+	}
+	
+	function formactionInAllowedActions($data, $form = null) {
+		return 'formactionInAllowedActions';
+	}
+}
+
 /**
  * Simple extension for the test controller
  */
@@ -314,6 +450,37 @@ class RequestHandlingTest_Form extends Form {
 
 	function handleGet($request) {
 		return "Get request on form";
+	}
+}
+
+class RequestHandlingTest_ControllerFormWithAllowedActions extends Controller {
+	
+	function Form() {
+		return new RequestHandlingTest_FormWithAllowedActions(
+			$this,
+			'Form',
+			new FieldSet(),
+			new FieldSet(
+				new FormAction('allowedformaction'),
+				new FormAction('disallowedformaction') // disallowed through $allowed_actions in form
+			)
+		);
+	}
+}
+
+class RequestHandlingTest_FormWithAllowedActions extends Form {
+
+	static $allowed_actions = array(
+		'allowedformaction' => 1,
+		'httpSubmission' => 1, // TODO This should be an exception on the parent class
+	);
+	
+	function allowedformaction() {
+		return 'allowedformaction';
+	}
+	
+	function disallowedformaction() {
+		return 'disallowedformaction';
 	}
 }
 
