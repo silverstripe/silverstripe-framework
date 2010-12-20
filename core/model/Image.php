@@ -1,6 +1,8 @@
 <?php
+
 /**
- * Represents an image attached to a page.
+ * Represents an Image
+ *
  * @package sapphire
  * @subpackage filesystem
  */
@@ -292,8 +294,8 @@ class Image extends File {
 	
 		$gd = new GD(Director::baseFolder()."/" . $this->Filename);
 		
-		
 		if($gd->hasGD()){
+
 			$generateFunc = "generate$format";		
 			if($this->hasMethod($generateFunc)){
 				$gd = $this->$generateFunc($gd, $arg1, $arg2);
@@ -302,7 +304,7 @@ class Image extends File {
 				}
 	
 			} else {
-				USER_ERROR("Image::generateFormattedImage - Image $format function not found.",E_USER_WARNING);
+				user_error("Image::generateFormattedImage - Image $format function not found.",E_USER_WARNING);
 			}
 		}
 	}
@@ -313,7 +315,7 @@ class Image extends File {
 	 */
 	function generateResizedImage($gd, $width, $height) {
 		if(is_numeric($gd) || !$gd){
-			USER_ERROR("Image::generateFormattedImage - generateResizedImage is being called by legacy code or gd is not set.",E_USER_WARNING);
+			user_error("Image::generateFormattedImage - generateResizedImage is being called by legacy code or gd is not set.",E_USER_WARNING);
 		}else{
 			return $gd->resize($width, $height);
 		}
@@ -329,6 +331,7 @@ class Image extends File {
 	
 	/**
 	 * Remove all of the formatted cached images for this image.
+	 *
 	 * @return int The number of formatted images deleted
 	 */
 	public function deleteFormattedImages() {
@@ -353,17 +356,22 @@ class Image extends File {
 			}
 		}
 		
+		$generateFuncs = array();
 		foreach($methodNames as $methodName) {
 			if(substr($methodName, 0, 8) == 'generate') {
 				$format = substr($methodName, 8);
-				$pattern = '/^' . $format . '[^\-]*\-' . $this->Name . '$/i';
-				foreach($cachedFiles as $cfile) {
-					if(preg_match($pattern, $cfile)) {
-						if(Director::fileExists($cacheDir . $cfile)) {
-							unlink($cacheDir . $cfile);
-							$numDeleted++;
-						}
-					}
+				$generateFuncs[] = $format;
+			}
+		}
+		// All generate functions may appear any number of times in the image cache name.
+		$generateFuncs = implode('|', $generateFuncs);
+		$pattern = "/^(({$generateFuncs})\d+\-)+{$this->Name}$/i";
+		
+		foreach($cachedFiles as $cfile) {
+			if(preg_match($pattern, $cfile)) {
+				if(Director::fileExists($cacheDir . $cfile)) {
+					unlink($cacheDir . $cfile);
+					$numDeleted++;
 				}
 			}
 		}
@@ -379,6 +387,7 @@ class Image extends File {
 	 */
 	function getDimensions($dim = "string") {
 		if($this->getField('Filename')) {
+
 			$imagefile = Director::baseFolder() . '/' . $this->getField('Filename');
 			if(file_exists($imagefile)) {
 				$size = getimagesize($imagefile);
@@ -432,10 +441,12 @@ class Image extends File {
  * A resized / processed {@link Image} object.
  * When Image object are processed or resized, a suitable Image_Cached object is returned, pointing to the
  * cached copy of the processed image.
+ *
  * @package sapphire
  * @subpackage filesystem
  */
 class Image_Cached extends Image {
+	
 	/**
 	 * Create a new cached image.
 	 * @param string $filename The filename of the image.
@@ -444,6 +455,7 @@ class Image_Cached extends Image {
 	 */
 	public function __construct($filename = null, $isSingleton = false) {
 		parent::__construct(array(), $isSingleton);
+		$this->ID = -1;
 		$this->Filename = $filename;
 	}
 	
@@ -451,13 +463,21 @@ class Image_Cached extends Image {
 		return $this->getField('Filename');
 	}
 	
-	// Prevent this from doing anything
+	/**
+	 * Prevent creating new tables for the cached record
+	 *
+	 * @return false
+	 */
 	public function requireTable() {
-		
-	}
+		return false;
+	}	
 	
-	public function debug() {
-		return "Image_Cached object for $this->Filename";
+	/**
+	 * Prevent writing the cached image to the database
+	 *
+	 * @throws Exception
+	 */
+	public function write($showDebug = false, $forceInsert = false, $forceWrite = false, $writeComponents = false) {
+		throw new Exception("{$this->ClassName} can not be written back to the database.");
 	}
 }
-
