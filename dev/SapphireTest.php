@@ -145,11 +145,11 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 
 		$className = get_class($this);
 		$fixtureFile = eval("return {$className}::\$fixture_file;");
-		$prefix = defined('SS_DATABASE_PREFIX') ? SS_DATABASE_PREFIX : 'SS_';
+		$prefix = defined('SS_DATABASE_PREFIX') ? SS_DATABASE_PREFIX : 'ss_';
 
 		// Set up fixture
 		if($fixtureFile || $this->usesDatabase || !self::using_temp_db()) {
-			if(substr(DB::getConn()->currentDatabase(), 0, strlen($prefix) + 5) != sprintf('%stmpdb', $prefix)) {
+			if(substr(DB::getConn()->currentDatabase(), 0, strlen($prefix) + 5) != strtolower(sprintf('%stmpdb', $prefix))) {
 				//echo "Re-creating temp database... ";
 				self::create_temp_db();
 				//echo "done.\n";
@@ -609,13 +609,10 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	 */
 	static function using_temp_db() {
 		$dbConn = DB::getConn();
-		$prefix = defined('SS_DATABASE_PREFIX') ? SS_DATABASE_PREFIX : 'SS_';
-		return $dbConn && (substr($dbConn->currentDatabase(), 0, strlen($prefix) + 5) == sprintf('%stmpdb', $prefix));
+		$prefix = defined('SS_DATABASE_PREFIX') ? SS_DATABASE_PREFIX : 'ss_';
+		return $dbConn && (substr($dbConn->currentDatabase(), 0, strlen($prefix) + 5) == strtolower(sprintf('%stmpdb', $prefix)));
 	}
 	
-	/**
-	 * @todo Make this db agnostic
-	 */
 	static function kill_temp_db() {
 		// Delete our temporary database
 		if(self::using_temp_db()) {
@@ -652,19 +649,16 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 		}
 	}
 	
-	/**
-	 * @todo Make this db agnostic
-	 */
 	static function create_temp_db() {
 		// Disable PHPUnit error handling
 		restore_error_handler();
 		
 		// Create a temporary database
 		$dbConn = DB::getConn();
-		$prefix = defined('SS_DATABASE_PREFIX') ? SS_DATABASE_PREFIX : 'SS_';
-		$dbname = sprintf('%stmpdb', $prefix) . rand(1000000,9999999);
+		$prefix = defined('SS_DATABASE_PREFIX') ? SS_DATABASE_PREFIX : 'ss_';
+		$dbname = strtolower(sprintf('%stmpdb', $prefix)) . rand(1000000,9999999);
 		while(!$dbname || $dbConn->databaseExists($dbname)) {
-			$dbname = sprintf('%stmpdb', $prefix) . rand(1000000,9999999);
+			$dbname = strtolower(sprintf('%stmpdb', $prefix)) . rand(1000000,9999999);
 		}
 
 		$dbConn->selectDatabase($dbname);
@@ -680,7 +674,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	}
 	
 	static function delete_all_temp_dbs() {
-		$prefix = defined('SS_DATABASE_PREFIX') ? SS_DATABASE_PREFIX : 'SS_';
+		$prefix = defined('SS_DATABASE_PREFIX') ? SS_DATABASE_PREFIX : 'ss_';
 		foreach(DB::getConn()->allDatabaseNames() as $dbName) {
 			if(preg_match(sprintf('/^%stmpdb[0-9]+$/', $prefix), $dbName)) {
 				DB::getConn()->dropDatabaseByName($dbName);
