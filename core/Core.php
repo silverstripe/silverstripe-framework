@@ -77,15 +77,17 @@ if(!isset($_SERVER['HTTP_HOST'])) {
 	// HTTP_HOST, REQUEST_PORT, SCRIPT_NAME, and PHP_SELF
 	if(isset($_FILE_TO_URL_MAPPING)) {
 		$fullPath = $testPath = realpath($_SERVER['SCRIPT_FILENAME']);
-		while($testPath && $testPath != "/"  && !preg_match('/^[A-Z]:\\\\$/', $testPath)) {
+		while($testPath && $testPath != '/' && !preg_match('/^[A-Z]:\\\\$/', $testPath)) {
 			if(isset($_FILE_TO_URL_MAPPING[$testPath])) {
 				$url = $_FILE_TO_URL_MAPPING[$testPath] 
-					. str_replace(DIRECTORY_SEPARATOR,'/',substr($fullPath,strlen($testPath)));
+					. str_replace(DIRECTORY_SEPARATOR, '/', substr($fullPath,strlen($testPath)));
 				
-				$_SERVER['HTTP_HOST'] = parse_url($url, PHP_URL_HOST);
-				$_SERVER['SCRIPT_NAME'] = $_SERVER['PHP_SELF'] = parse_url($url, PHP_URL_PATH);
-				$_SERVER['REQUEST_PORT'] = parse_url($url, PHP_URL_PORT);
-			    break;
+				$components = parse_url($url);
+				$_SERVER['HTTP_HOST'] = $components['host'];
+				if(!empty($components['port'])) $_SERVER['HTTP_HOST'] .= ':' . $components['port'];
+				$_SERVER['SCRIPT_NAME'] = $_SERVER['PHP_SELF'] = $components['path'];
+				if(!empty($components['port'])) $_SERVER['REQUEST_PORT'] = $components['port'];
+				break;
 			}
 			$testPath = dirname($testPath);
 		}
