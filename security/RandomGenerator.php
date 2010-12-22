@@ -36,7 +36,7 @@ class RandomGenerator {
 		}
 
 		// Read from the unix random number generator
-		if(!$isWin && is_readable('/dev/urandom') && ($h = fopen('/dev/urandom', 'rb'))) {
+		if(!$isWin && !ini_get('open_basedir') && is_readable('/dev/urandom') && ($h = fopen('/dev/urandom', 'rb'))) {
 			$e = fread($h, 64);
 			fclose($h);
 			return $e;
