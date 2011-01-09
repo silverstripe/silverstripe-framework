@@ -1,11 +1,15 @@
 <?php
+
 /**
- * A simple extension to dropdown field, pre-configured to list countries.
- * It will default to the country of the current visiotr.
+ * A simple extension to {@link DropdownField}, pre-configured to list countries.
+ * It will default to the country of the current visitor or use the default
+ * country code provided using {@link Geoip::set_default_country_code()}.
+ *
  * @package forms
  * @subpackage fields-relational
  */
 class CountryDropdownField extends DropdownField {
+	
 	protected $defaultToVisitorCountry = true;
 	
 	function __construct($name, $title = null, $source = null, $value = "", $form=null) {
@@ -21,11 +25,11 @@ class CountryDropdownField extends DropdownField {
 	
 	function Field() {
 		$source = $this->getSource();
+		
 		if($this->defaultToVisitorCountry && !$this->value || !isset($source[$this->value])) {
-			$this->value = ($vc = Geoip::visitor_country()) ? $vc : Geoip::$default_country_code;
+			$this->value = ($vc = Geoip::visitor_country()) ? $vc : Geoip::get_default_country_code();
 		}
+		
 		return parent::Field();
 	}
 }
-
-?>

@@ -289,12 +289,21 @@ class Geoip {
 	}
 	
 	/**
-	 * Set the default country
+	 * Set the default country code
 	 *
 	 * @param string $country_code
 	 */
 	public static function set_default_country_code($country_code) {
 		self::$default_country_code = $country_code;
+	}
+	
+	/**
+	 * Returns the default country code
+	 * 
+	 * @return string
+	 */
+	public static function get_default_country_code() {
+		return self::$default_country_code;
 	}
 	
 	/** 
@@ -365,7 +374,7 @@ class Geoip {
 		  
 		// if geoip fails, lets default to default country code (if any)
 		if(!isset($code) || !$code) {
-			$code = self::$default_country_code;
+			$code = self::get_default_country_code();
 		}
 		   
 		return ($code) ? $code : false;
@@ -408,6 +417,7 @@ class Geoip {
 
 	/** 
 	 * Returns the country name from the appropriate code.
+	 *
 	 * @return null|string String if country found, null if none found
 	 */
 	static function countryCode2name($code) {

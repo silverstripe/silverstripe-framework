@@ -7,5 +7,6 @@ class GeoipTest extends SapphireTest {
 		Geoip::set_enabled(false);
 		
 		$this->assertEquals('DE', Geoip::visitor_country());
+		$this->assertEquals('DE', Geoip::get_default_country_code());
 	}
 }
