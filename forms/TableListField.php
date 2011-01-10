@@ -1197,7 +1197,7 @@ JS
 			$queryPart = (isset($parentUrlParts['query'])) ? '?' . $parentUrlParts['query'] : null;
 			// Ensure that URL actions not routed through Form->httpSubmission() are protected against CSRF attacks.
 			if($form->securityTokenEnabled()) $queryPart = $token->addtoUrl($queryPart);
-			return Controller::join_links($parentUrlParts['path'], $action, $queryPart);
+			return Controller::join_links($parentUrlParts['path'], $queryPart);
 		} else {
 			// allow for instanciation of this FormField outside of a controller/form
 			// context (e.g. for unit tests)
