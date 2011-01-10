@@ -216,7 +216,26 @@ class TableListFieldTest extends SapphireTest {
 		
 		unlink($csvFileName);
 	}
-	
+
+	function testLink() {
+		// A TableListField must be inside a form for its links to be generated
+		$form = new Form(new TableListFieldTest_TestController(), "TestForm", new FieldSet(
+			new TableListField("Tester", "TableListFieldTest_Obj", array(
+				"A" => "Col A",
+				"B" => "Col B",
+				"C" => "Col C",
+				"D" => "Col D",
+				"E" => "Col E",
+			))
+		), new FieldSet());
+
+		$table = $form->dataFieldByName('Tester');
+		$this->assertEquals(
+			$table->Link('test'),
+			sprintf('TableListFieldTest_TestController/TestForm/field/Tester/test?SecurityID=%s', $form->dataFieldByName('SecurityID')->Value())
+		);
+	}
+
 	function testPreservedSortOptionsInPaginationLink() {
 		$item1 = $this->objFromFixture('TableListFieldTest_Obj', 'one');
 		$item2 = $this->objFromFixture('TableListFieldTest_Obj', 'two');
