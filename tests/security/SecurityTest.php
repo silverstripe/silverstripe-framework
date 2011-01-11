@@ -20,6 +20,9 @@ class SecurityTest extends FunctionalTest {
 		// This test assumes that MemberAuthenticator is present and the default
 		$this->priorAuthenticators = Authenticator::get_authenticators();
 		$this->priorDefaultAuthenticator = Authenticator::get_default_authenticator();
+		foreach($this->priorAuthenticators as $authenticator) {
+			Authenticator::unregister($authenticator);
+		}
 
 		Authenticator::register('MemberAuthenticator');
 		Authenticator::set_default_authenticator('MemberAuthenticator');
@@ -37,6 +40,9 @@ class SecurityTest extends FunctionalTest {
 		// MemberAuthenticator might not actually be present
 		if(!in_array('MemberAuthenticator', $this->priorAuthenticators)) {
 			Authenticator::unregister('MemberAuthenticator');
+		}
+		foreach($this->priorAuthenticators as $authenticator) {
+			Authenticator::register($authenticator);
 		}
 		Authenticator::set_default_authenticator($this->priorDefaultAuthenticator);
 
