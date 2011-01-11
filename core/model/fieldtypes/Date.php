@@ -321,7 +321,7 @@ class Date extends DBField {
 	}
 	
 	function prior_monday($fyear, $fmonth, $fday){
-	  return date ("Y-m-d", mktime (0,0,0,$fmonth,$fday-weekday($fyear, $fmonth, $fday),$fyear)); 
+	  return date ("Y-m-d", mktime (0,0,0,$fmonth,$fday-$this->weekday($fyear, $fmonth, $fday),$fyear)); 
 	}
 	
 	/**
