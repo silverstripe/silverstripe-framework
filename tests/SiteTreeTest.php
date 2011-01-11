@@ -715,7 +715,7 @@ class SiteTreeTest extends SapphireTest {
 		$this->assertNotContains('SiteTree', $classes, 'Page types do not include base class');
 		$this->assertContains('Page', $classes, 'Page types do contain subclasses');
 	}
-	
+
 }
 
 /**#@+
