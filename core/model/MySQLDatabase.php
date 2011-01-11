@@ -1,9 +1,9 @@
 <?php
 /**
  * MySQL connector class.
- * 
+ *
  * Supported indexes for {@link requireTable()}:
- * 
+ *
  * @package sapphire
  * @subpackage model
  */
@@ -13,29 +13,29 @@ class MySQLDatabase extends SS_Database {
 	 * @var resource
 	 */
 	private $dbConn;
-	
+
 	/**
 	 * True if we are connected to a database.
 	 * @var boolean
 	 */
 	private $active;
-	
+
 	/**
 	 * The name of the database.
 	 * @var string
 	 */
 	private $database;
-	
+
 	private static $connection_charset = null;
-	
+
 	private $supportsTransactions=false;
-	
+
 	/**
 	 * Sets the character set for the MySQL database connection.
-	 * 
+	 *
 	 * The character set connection should be set to 'utf8' for SilverStripe version 2.4.0 and
 	 * later.
-	 * 
+	 *
 	 * However, sites created before version 2.4.0 should leave this unset or data that isn't 7-bit
 	 * safe will be corrupted.  As such, the installer comes with this set in mysite/_config.php by
 	 * default in versions 2.4.0 and later.
@@ -43,7 +43,7 @@ class MySQLDatabase extends SS_Database {
 	public static function set_connection_charset($charset = 'utf8') {
 		self::$connection_charset = $charset;
 	}
-	
+
 	/**
 	 * Connect to a MySQL database.
 	 * @param array $parameters An map of parameters, which should include:
@@ -57,7 +57,7 @@ class MySQLDatabase extends SS_Database {
 		$this->dbConn = mysql_connect($parameters['server'], $parameters['username'], $parameters['password'], true);
 
 		if(self::$connection_charset) {
-			$this->query("SET CHARACTER SET '" . self::$connection_charset . "'"); 
+			$this->query("SET CHARACTER SET '" . self::$connection_charset . "'");
 			$this->query("SET NAMES '" . self::$connection_charset . "'");
 		}
 
@@ -71,14 +71,14 @@ class MySQLDatabase extends SS_Database {
 		if(isset($parameters['timezone'])) $this->query(sprintf("SET SESSION time_zone = '%s'", $parameters['timezone']));
 		$this->query("SET sql_mode = 'ANSI'");
 	}
-	
+
 	/**
 	 * Not implemented, needed for PDO
 	 */
 	public function getConnect($parameters) {
 		return null;
 	}
-	
+
 	/**
 	 * Returns true if this database supports collations
 	 * @return boolean
@@ -86,7 +86,7 @@ class MySQLDatabase extends SS_Database {
 	public function supportsCollations() {
 		return $this->getVersion() >= 4.1;
 	}
-	
+
 	/**
 	 * Get the version of MySQL.
 	 * @return string
@@ -94,7 +94,7 @@ class MySQLDatabase extends SS_Database {
 	public function getVersion() {
 		return mysql_get_server_info($this->dbConn);
 	}
-	
+
 	/**
 	 * Get the database server, namely mysql.
 	 * @return string
@@ -102,36 +102,36 @@ class MySQLDatabase extends SS_Database {
 	public function getDatabaseServer() {
 		return "mysql";
 	}
-	
+
 	public function query($sql, $errorLevel = E_USER_ERROR) {
 		if(isset($_REQUEST['previewwrite']) && in_array(strtolower(substr($sql,0,strpos($sql,' '))), array('insert','update','delete','replace'))) {
 			Debug::message("Will execute: $sql");
 			return;
 		}
 
-		if(isset($_REQUEST['showqueries'])) { 
+		if(isset($_REQUEST['showqueries'])) {
 			$starttime = microtime(true);
 		}
-		
+
 		$handle = mysql_query($sql, $this->dbConn);
-		
+
 		if(isset($_REQUEST['showqueries'])) {
 			$endtime = round(microtime(true) - $starttime,4);
 			Debug::message("\n$sql\n{$endtime}ms\n", false);
 		}
-		
+
 		if(!$handle && $errorLevel) $this->databaseError("Couldn't run query: $sql | " . mysql_error($this->dbConn), $errorLevel);
 		return new MySQLQuery($this, $handle);
 	}
-	
+
 	public function getGeneratedID($table) {
 		return mysql_insert_id($this->dbConn);
 	}
-	
+
 	public function isActive() {
 		return $this->active ? true : false;
 	}
-	
+
 	public function createDatabase() {
 		$this->query("CREATE DATABASE `$this->database`");
 		$this->query("USE `$this->database`");
@@ -159,14 +159,14 @@ class MySQLDatabase extends SS_Database {
 	public function dropDatabaseByName($dbName) {
 		$this->query("DROP DATABASE \"$dbName\"");
 	}
-	
+
 	/**
 	 * Returns the name of the currently selected database
 	 */
 	public function currentDatabase() {
 		return $this->database;
 	}
-	
+
 	/**
 	 * Switches to the given database.
 	 * If the database doesn't exist, you should call createDatabase() after calling selectDatabase()
@@ -188,12 +188,12 @@ class MySQLDatabase extends SS_Database {
 	}
 
 	/**
-	 * Returns a column 
+	 * Returns a column
 	 */
 	public function allDatabaseNames() {
 		return $this->query("SHOW DATABASES")->column();
 	}
-	
+
 	/**
 	 * Create a new table.
 	 * @param $tableName The name of the table
@@ -206,9 +206,9 @@ class MySQLDatabase extends SS_Database {
 	 */
 	public function createTable($table, $fields = null, $indexes = null, $options = null, $advancedOptions = null) {
 		$fieldSchemas = $indexSchemas = "";
-		
+
 		$addOptions = empty($options[get_class($this)]) ? "ENGINE=MyISAM" : $options[get_class($this)];
-		
+
 		if(!isset($fields['ID'])) $fields['ID'] = "int(11) not null auto_increment";
 		if($fields) foreach($fields as $k => $v) $fieldSchemas .= "\"$k\" $v,\n";
 		if($indexes) foreach($indexes as $k => $v) $indexSchemas .= $this->getIndexSqlDefinition($k, $v) . ",\n";
@@ -221,7 +221,7 @@ class MySQLDatabase extends SS_Database {
 				$indexSchemas
 				primary key (ID)
 			) {$addOptions}");
-		
+
 		return $table;
 	}
 
@@ -237,7 +237,7 @@ class MySQLDatabase extends SS_Database {
 	public function alterTable($tableName, $newFields = null, $newIndexes = null, $alteredFields = null, $alteredIndexes = null, $alteredOptions = null, $advancedOptions = null) {
 		$fieldSchemas = $indexSchemas = "";
 		$alterList = array();
-		
+
 		if($newFields) foreach($newFields as $k => $v) $alterList[] .= "ADD \"$k\" $v";
 		if($newIndexes) foreach($newIndexes as $k => $v) $alterList[] .= "ADD " . $this->getIndexSqlDefinition($k, $v);
 		if($alteredFields) foreach($alteredFields as $k => $v) $alterList[] .= "CHANGE \"$k\" \"$k\" $v";
@@ -245,10 +245,10 @@ class MySQLDatabase extends SS_Database {
 			$alterList[] .= "DROP INDEX \"$k\"";
 			$alterList[] .= "ADD ". $this->getIndexSqlDefinition($k, $v);
  		}
-		
+
  		$alterations = implode(",\n", $alterList);
 		$this->query("ALTER TABLE \"$tableName\" $alterations");
-		
+
 		if($alteredOptions && isset($alteredOptions[get_class($this)])) {
 			$this->query(sprintf("ALTER TABLE \"%s\" %s", $tableName, $alteredOptions[get_class($this)]));
 			DB::alteration_message(
@@ -261,9 +261,9 @@ class MySQLDatabase extends SS_Database {
 	public function renameTable($oldTableName, $newTableName) {
 		$this->query("ALTER TABLE \"$oldTableName\" RENAME \"$newTableName\"");
 	}
-	
-	
-	
+
+
+
 	/**
 	 * Checks a table's integrity and repairs it if necessary.
 	 * @var string $tableName The name of the table.
@@ -282,7 +282,7 @@ class MySQLDatabase extends SS_Database {
 			return true;
 		}
 	}
-	
+
 	/**
 	 * Helper function used by checkAndRepairTable.
 	 * @param string $sql Query to run.
@@ -297,11 +297,11 @@ class MySQLDatabase extends SS_Database {
 		}
 		return true;
 	}
-	
+
 	public function createField($tableName, $fieldName, $fieldSpec) {
 		$this->query("ALTER TABLE \"$tableName\" ADD \"$fieldName\" $fieldSpec");
 	}
-	
+
 	/**
 	 * Change the database type of the given field.
 	 * @param string $tableName The name of the tbale the field is in.
@@ -311,23 +311,23 @@ class MySQLDatabase extends SS_Database {
 	public function alterField($tableName, $fieldName, $fieldSpec) {
 		$this->query("ALTER TABLE \"$tableName\" CHANGE \"$fieldName\" \"$fieldName\" $fieldSpec");
 	}
-	
+
 	/**
 	 * Change the database column name of the given field.
-	 * 
+	 *
 	 * @param string $tableName The name of the tbale the field is in.
 	 * @param string $oldName The name of the field to change.
 	 * @param string $newName The new name of the field
 	 */
 	public function renameField($tableName, $oldName, $newName) {
-		$fieldList = $this->fieldList($tableName); 
-		if(array_key_exists($oldName, $fieldList)) { 
-			$this->query("ALTER TABLE \"$tableName\" CHANGE \"$oldName\" \"$newName\" " . $fieldList[$oldName]); 
+		$fieldList = $this->fieldList($tableName);
+		if(array_key_exists($oldName, $fieldList)) {
+			$this->query("ALTER TABLE \"$tableName\" CHANGE \"$oldName\" \"$newName\" " . $fieldList[$oldName]);
 		}
 	}
-	
+
 	private static $_cache_collation_info = array();
-	
+
 	public function fieldList($table) {
 		$fields = DB::query("SHOW FULL FIELDS IN \"$table\"");
 		foreach($fields as $field) {
@@ -335,7 +335,7 @@ class MySQLDatabase extends SS_Database {
 			if(!$field['Null'] || $field['Null'] == 'NO') {
 				$fieldSpec .= ' not null';
 			}
-			
+
 			if($field['Collation'] && $field['Collation'] != 'NULL') {
 				// Cache collation info to cut down on database traffic
 				if(!isset(self::$_cache_collation_info[$field['Collation']])) {
@@ -344,7 +344,7 @@ class MySQLDatabase extends SS_Database {
 				$collInfo = self::$_cache_collation_info[$field['Collation']];
 				$fieldSpec .= " character set $collInfo[Charset] collate $field[Collation]";
 			}
-			
+
 			if($field['Default'] || $field['Default'] === "0") {
 				if(is_numeric($field['Default']))
 					$fieldSpec .= " default " . addslashes($field['Default']);
@@ -352,15 +352,15 @@ class MySQLDatabase extends SS_Database {
 					$fieldSpec .= " default '" . addslashes($field['Default']) . "'";
 			}
 			if($field['Extra']) $fieldSpec .= " $field[Extra]";
-			
+
 			$fieldList[$field['Field']] = $fieldSpec;
 		}
 		return $fieldList;
 	}
-	
+
 	/**
 	 * Create an index on a table.
-	 * 
+	 *
 	 * @param string $tableName The name of the table.
 	 * @param string $indexName The name of the index.
 	 * @param string $indexSpec The specification of the index, see {@link SS_Database::requireIndex()} for more details.
@@ -368,15 +368,15 @@ class MySQLDatabase extends SS_Database {
 	public function createIndex($tableName, $indexName, $indexSpec) {
 		$this->query("ALTER TABLE \"$tableName\" ADD " . $this->getIndexSqlDefinition($indexName, $indexSpec));
 	}
-	
+
 	/**
 	 * This takes the index spec which has been provided by a class (ie static $indexes = blah blah)
 	 * and turns it into a proper string.
 	 * Some indexes may be arrays, such as fulltext and unique indexes, and this allows database-specific
 	 * arrays to be created. See {@link requireTable()} for details on the index format.
-	 * 
+	 *
 	 * @see http://dev.mysql.com/doc/refman/5.0/en/create-index.html
-	 * 
+	 *
 	 * @param string|array $indexSpec
 	 * @return string MySQL compatible ALTER TABLE syntax
 	 */
@@ -398,41 +398,41 @@ class MySQLDatabase extends SS_Database {
 					break;
 			}
 		}
-		
+
 		return $indexSpec;
 	}
-	
+
 	/**
 	 * @param string $indexName
 	 * @param string|array $indexSpec See {@link requireTable()} for details
 	 * @return string MySQL compatible ALTER TABLE syntax
 	 */
 	protected function getIndexSqlDefinition($indexName, $indexSpec=null) {
-	
+
 		$indexSpec=$this->convertIndexSpec($indexSpec);
-		
+
 		$indexSpec = trim($indexSpec);
 		if($indexSpec[0] != '(') list($indexType, $indexFields) = explode(' ',$indexSpec,2);
 	    else $indexFields = $indexSpec;
-	    
+
 	    if(!isset($indexType))
 			$indexType = "index";
-		
+
 		if($indexType=='using')
-			return "index \"$indexName\" using $indexFields";  
+			return "index \"$indexName\" using $indexFields";
 		else {
 			return "$indexType \"$indexName\" $indexFields";
 		}
 
 	}
-	
+
 	/**
 	 * MySQL does not need any transformations done on the index that's created, so we can just return it as-is
 	 */
 	function getDbSqlDefinition($tableName, $indexName, $indexSpec){
 		return $indexName;
 	}
-	
+
 	/**
 	 * Alter an index on a table.
 	 * @param string $tableName The name of the table.
@@ -440,24 +440,24 @@ class MySQLDatabase extends SS_Database {
 	 * @param string $indexSpec The specification of the index, see {@link SS_Database::requireIndex()} for more details.
 	 */
 	public function alterIndex($tableName, $indexName, $indexSpec) {
-		
+
 		$indexSpec=$this->convertIndexSpec($indexSpec);
-		
+
 		$indexSpec = trim($indexSpec);
 	    if($indexSpec[0] != '(') {
 	    	list($indexType, $indexFields) = explode(' ',$indexSpec,2);
 	    } else {
 	    	$indexFields = $indexSpec;
 	    }
-	    
+
 	    if(!$indexType) {
 	    	$indexType = "index";
 	    }
-    
+
 		$this->query("ALTER TABLE \"$tableName\" DROP INDEX \"$indexName\"");
 		$this->query("ALTER TABLE \"$tableName\" ADD $indexType \"$indexName\" $indexFields");
 	}
-	
+
 	/**
 	 * Return the list of indexes in a table.
 	 * @param string $table The table name.
@@ -467,10 +467,10 @@ class MySQLDatabase extends SS_Database {
 		$indexes = DB::query("SHOW INDEXES IN \"$table\"");
 		$groupedIndexes = array();
 		$indexList = array();
-		
+
 		foreach($indexes as $index) {
 			$groupedIndexes[$index['Key_name']]['fields'][$index['Seq_in_index']] = $index['Column_name'];
-			
+
 			if($index['Index_type'] == 'FULLTEXT') {
 				$groupedIndexes[$index['Key_name']]['type'] = 'fulltext ';
 			} else if(!$index['Non_unique']) {
@@ -490,7 +490,7 @@ class MySQLDatabase extends SS_Database {
 				$indexList[$index] = $details['type'] . '(' . implode(',',$details['fields']) . ')';
 			}
 		}
-		
+
 		return $indexList;
 	}
 
@@ -506,28 +506,28 @@ class MySQLDatabase extends SS_Database {
 		}
 		return $tables;
 	}
-	
+
 	/**
 	 * Return the number of rows affected by the previous operation.
-	 * @return int 
+	 * @return int
 	 */
 	public function affectedRows() {
 		return mysql_affected_rows($this->dbConn);
 	}
-	
+
 	function databaseError($msg, $errorLevel = E_USER_ERROR) {
 		// try to extract and format query
 		if(preg_match('/Couldn\'t run query: ([^\|]*)\|\s*(.*)/', $msg, $matches)) {
 			$formatter = new SQLFormatter();
 			$msg = "Couldn't run query: \n" . $formatter->formatPlain($matches[1]) . "\n\n" . $matches[2];
 		}
-		
+
 		user_error($msg, $errorLevel);
 	}
-	
+
 	/**
 	 * Return a boolean type-formatted string
-	 * 
+	 *
 	 * @param array $values Contains a tokenised list of info about this data type
 	 * @return string
 	 */
@@ -535,14 +535,14 @@ class MySQLDatabase extends SS_Database {
 		//For reference, this is what typically gets passed to this function:
 		//$parts=Array('datatype'=>'tinyint', 'precision'=>1, 'sign'=>'unsigned', 'null'=>'not null', 'default'=>$this->default);
 		//DB::requireField($this->tableName, $this->name, "tinyint(1) unsigned not null default '{$this->defaultVal}'");
-		
+
 		return 'tinyint(1) unsigned not null default ' . (int)$values['default'];
 	}
-	
+
 	/**
 	 * Return a date type-formatted string
 	 * For MySQL, we simply return the word 'date', no other parameters are necessary
-	 * 
+	 *
 	 * @param array $values Contains a tokenised list of info about this data type
 	 * @return string
 	 */
@@ -553,10 +553,10 @@ class MySQLDatabase extends SS_Database {
 
 		return 'date';
 	}
-	
+
 	/**
 	 * Return a decimal type-formatted string
-	 * 
+	 *
 	 * @param array $values Contains a tokenised list of info about this data type
 	 * @return string
 	 */
@@ -579,10 +579,10 @@ class MySQLDatabase extends SS_Database {
 
 		return 'decimal(' . $precision . ') not null' . $defaultValue;
 	}
-	
+
 	/**
 	 * Return a enum type-formatted string
-	 * 
+	 *
 	 * @param array $values Contains a tokenised list of info about this data type
 	 * @return string
 	 */
@@ -590,13 +590,13 @@ class MySQLDatabase extends SS_Database {
 		//For reference, this is what typically gets passed to this function:
 		//$parts=Array('datatype'=>'enum', 'enums'=>$this->enum, 'character set'=>'utf8', 'collate'=> 'utf8_general_ci', 'default'=>$this->default);
 		//DB::requireField($this->tableName, $this->name, "enum('" . implode("','", $this->enum) . "') character set utf8 collate utf8_general_ci default '{$this->default}'");
-		
+
 		return 'enum(\'' . implode('\',\'', $values['enums']) . '\') character set utf8 collate utf8_general_ci default \'' . $values['default'] . '\'';
 	}
-	
+
 	/**
 	 * Return a set type-formatted string
-	 * 
+	 *
 	 * @param array $values Contains a tokenised list of info about this data type
 	 * @return string
 	 */
@@ -607,11 +607,11 @@ class MySQLDatabase extends SS_Database {
 		$default = empty($values['default']) ? '' : " default '$values[default]'";
 		return 'set(\'' . implode('\',\'', $values['enums']) . '\') character set utf8 collate utf8_general_ci' . $default;
 	}
-	
+
 	/**
 	 * Return a float type-formatted string
 	 * For MySQL, we simply return the word 'date', no other parameters are necessary
-	 * 
+	 *
 	 * @param array $values Contains a tokenised list of info about this data type
 	 * @return string
 	 */
@@ -619,13 +619,13 @@ class MySQLDatabase extends SS_Database {
 		//For reference, this is what typically gets passed to this function:
 		//$parts=Array('datatype'=>'float');
 		//DB::requireField($this->tableName, $this->name, "float");
-		
+
 		return 'float not null default ' . $values['default'];
 	}
-	
+
 	/**
 	 * Return a int type-formatted string
-	 * 
+	 *
 	 * @param array $values Contains a tokenised list of info about this data type
 	 * @return string
 	 */
@@ -636,11 +636,11 @@ class MySQLDatabase extends SS_Database {
 
 		return 'int(11) not null default ' . (int)$values['default'];
 	}
-	
+
 	/**
 	 * Return a datetime type-formatted string
 	 * For MySQL, we simply return the word 'datetime', no other parameters are necessary
-	 * 
+	 *
 	 * @param array $values Contains a tokenised list of info about this data type
 	 * @return string
 	 */
@@ -651,10 +651,10 @@ class MySQLDatabase extends SS_Database {
 
 		return 'datetime';
 	}
-	
+
 	/**
 	 * Return a text type-formatted string
-	 * 
+	 *
 	 * @param array $values Contains a tokenised list of info about this data type
 	 * @return string
 	 */
@@ -662,14 +662,14 @@ class MySQLDatabase extends SS_Database {
 		//For reference, this is what typically gets passed to this function:
 		//$parts=Array('datatype'=>'mediumtext', 'character set'=>'utf8', 'collate'=>'utf8_general_ci');
 		//DB::requireField($this->tableName, $this->name, "mediumtext character set utf8 collate utf8_general_ci");
-		
+
 		return 'mediumtext character set utf8 collate utf8_general_ci';
 	}
-	
+
 	/**
 	 * Return a time type-formatted string
 	 * For MySQL, we simply return the word 'time', no other parameters are necessary
-	 * 
+	 *
 	 * @param array $values Contains a tokenised list of info about this data type
 	 * @return string
 	 */
@@ -677,13 +677,13 @@ class MySQLDatabase extends SS_Database {
 		//For reference, this is what typically gets passed to this function:
 		//$parts=Array('datatype'=>'time');
 		//DB::requireField($this->tableName, $this->name, "time");
-		
+
 		return 'time';
 	}
-	
+
 	/**
 	 * Return a varchar type-formatted string
-	 * 
+	 *
 	 * @param array $values Contains a tokenised list of info about this data type
 	 * @return string
 	 */
@@ -691,10 +691,10 @@ class MySQLDatabase extends SS_Database {
 		//For reference, this is what typically gets passed to this function:
 		//$parts=Array('datatype'=>'varchar', 'precision'=>$this->size, 'character set'=>'utf8', 'collate'=>'utf8_general_ci');
 		//DB::requireField($this->tableName, $this->name, "varchar($this->size) character set utf8 collate utf8_general_ci");
-		
+
 		return 'varchar(' . $values['precision'] . ') character set utf8 collate utf8_general_ci';
 	}
-	
+
 	/*
 	 * Return the MySQL-proprietary 'Year' datatype
 	 */
@@ -710,16 +710,16 @@ class MySQLDatabase extends SS_Database {
 	function IdColumn(){
 		return 'int(11) not null auto_increment';
 	}
-	
+
 	/**
 	 * Returns the SQL command to get all the tables in this database
 	 */
 	function allTablesSQL(){
 		return "SHOW TABLES;";
 	}
-	
+
 	/**
-	 * Returns true if the given table is exists in the current database 
+	 * Returns true if the given table is exists in the current database
 	 * NOTE: Experimental; introduced for db-abstraction and may changed before 2.4 is released.
 	 */
 	public function hasTable($table) {
@@ -735,41 +735,41 @@ class MySQLDatabase extends SS_Database {
 		// Get the enum of all page types from the SiteTree table
 		$classnameinfo = DB::query("DESCRIBE \"$tableName\" \"$fieldName\"")->first();
 		preg_match_all("/'[^,]+'/", $classnameinfo["Type"], $matches);
-		
+
 		$classes = array();
 		foreach($matches[0] as $value) {
 			$classes[] = trim($value, "'");
 		}
 		return $classes;
 	}
-	
+
 	/**
 	 * The core search engine, used by this class and its subclasses to do fun stuff.
 	 * Searches both SiteTree and File.
-	 * 
+	 *
 	 * @param string $keywords Keywords as a string.
 	 */
 	public function searchEngine($classesToSearch, $keywords, $start, $pageLength, $sortBy = "Relevance DESC", $extraFilter = "", $booleanSearch = false, $alternativeFileFilter = "", $invertedMatch = false) {
-		$fileFilter = '';	 	
+		$fileFilter = '';
 	 	$keywords = Convert::raw2sql($keywords);
 		$htmlEntityKeywords = htmlentities($keywords,ENT_NOQUOTES);
-		
+
 		$extraFilters = array('SiteTree' => '', 'File' => '');
-	 	
+
 	 	if($booleanSearch) $boolean = "IN BOOLEAN MODE";
-	
+
 	 	if($extraFilter) {
 	 		$extraFilters['SiteTree'] = " AND $extraFilter";
-	 		
+
 	 		if($alternativeFileFilter) $extraFilters['File'] = " AND $alternativeFileFilter";
 	 		else $extraFilters['File'] = $extraFilters['SiteTree'];
 	 	}
-	 	
+
 		// Always ensure that only pages with ShowInSearch = 1 can be searched
 		$extraFilters['SiteTree'] .= " AND ShowInSearch <> 0";
 
 		$limit = $start . ", " . (int) $pageLength;
-		
+
 		$notMatch = $invertedMatch ? "NOT " : "";
 		if($keywords) {
 			$match['SiteTree'] = "
@@ -777,7 +777,7 @@ class MySQLDatabase extends SS_Database {
 				+ MATCH (Title, MenuTitle, Content, MetaTitle, MetaDescription, MetaKeywords) AGAINST ('$htmlEntityKeywords' $boolean)
 			";
 			$match['File'] = "MATCH (Filename, Title, Content) AGAINST ('$keywords' $boolean) AND ClassName = 'File'";
-	
+
 			// We make the relevance search by converting a boolean mode search into a normal one
 			$relevanceKeywords = str_replace(array('*','+','-'),'',$keywords);
 			$htmlEntityRelevanceKeywords = str_replace(array('*','+','-'),'',$htmlEntityKeywords);
@@ -794,13 +794,13 @@ class MySQLDatabase extends SS_Database {
 			$queries[$class] = singleton($class)->extendedSQL($notMatch . $match[$class] . $extraFilters[$class], "");
 			$baseClasses[$class] = reset($queries[$class]->from);
 		}
-		
+
 		// Make column selection lists
 		$select = array(
 			'SiteTree' => array("ClassName","$baseClasses[SiteTree].ID","ParentID","Title","MenuTitle","URLSegment","Content","LastEdited","Created","_utf8'' AS Filename", "_utf8'' AS Name", "$relevance[SiteTree] AS Relevance", "CanViewType"),
 			'File' => array("ClassName","$baseClasses[File].ID","_utf8'' AS ParentID","Title","_utf8'' AS MenuTitle","_utf8'' AS URLSegment","Content","LastEdited","Created","Filename","Name","$relevance[File] AS Relevance","NULL AS CanViewType"),
 		);
-		
+
 		// Process queries
 		foreach($classesToSearch as $class) {
 			// There's no need to do all that joining
@@ -817,7 +817,7 @@ class MySQLDatabase extends SS_Database {
 			$totalCount += $query->unlimitedRowCount();
 		}
 		$fullQuery = implode(" UNION ", $querySQLs) . " ORDER BY $sortBy LIMIT $limit";
-		
+
 		// Get records
 		$records = DB::query($fullQuery);
 
@@ -827,25 +827,25 @@ class MySQLDatabase extends SS_Database {
 
 		if(isset($objects)) $doSet = new DataObjectSet($objects);
 		else $doSet = new DataObjectSet();
-		
+
 		$doSet->setPageLimits($start, $pageLength, $totalCount);
 		return $doSet;
 	}
-	
+
 	/**
 	 * MySQL uses NOW() to return the current date/time.
 	 */
 	function now(){
 		return 'NOW()';
 	}
-	
+
 	/*
 	 * Returns the database-specific version of the random() function
 	 */
 	function random(){
 		return 'RAND()';
 	}
-	
+
 	/*
 	 * This is a lookup table for data types.
 	 * For instance, Postgres uses 'INT', while MySQL uses 'UNSIGNED'
@@ -855,12 +855,12 @@ class MySQLDatabase extends SS_Database {
 		$values=Array(
 			'unsigned integer'=>'UNSIGNED'
 		);
-		
+
 		if(isset($values[$type]))
 			return $values[$type];
 		else return '';
 	}
-	
+
 	/*
 	 * This will return text which has been escaped in a database-friendly manner
 	 * Using PHP's addslashes method won't work in MSSQL
@@ -868,7 +868,7 @@ class MySQLDatabase extends SS_Database {
 	function addslashes($value){
 		return mysql_real_escape_string($value, $this->dbConn);
 	}
-	
+
 	/*
 	 * This changes the index name depending on database requirements.
 	 * MySQL doesn't need any changes.
@@ -892,14 +892,14 @@ class MySQLDatabase extends SS_Database {
 
 		return "(MATCH ($fieldNames) AGAINST ('$SQL_keywords' $boolean) + MATCH ($fieldNames) AGAINST ('$SQL_htmlEntityKeywords' $boolean))";
 	}
-	
+
 	/*
 	 * Does this database support transactions?
 	 */
 	public function supportsTransactions(){
 		return $this->supportsTransactions;
 	}
-	
+
 	/*
 	 * This is a quick lookup to discover if the database supports particular extensions
 	 * Currently, MySQL supports no extensions
@@ -914,22 +914,22 @@ class MySQLDatabase extends SS_Database {
 		else
 			return false;
 	}
-	
+
 	/*
 	 * Start a prepared transaction
 	 * See http://developer.postgresql.org/pgdocs/postgres/sql-set-transaction.html for details on transaction isolation options
 	 */
-	public function startTransaction($transaction_mode=false, $session_characteristics=false){
+	public function transactionStart($transaction_mode=false, $session_characteristics=false){
 		//Transactions not set up for MySQL yet
 	}
-	
+
 	/*
 	 * Create a savepoint that you can jump back to if you encounter problems
 	 */
 	public function transactionSavepoint($savepoint){
 		//Transactions not set up for MySQL yet
 	}
-	
+
 	/*
 	 * Rollback or revert to a savepoint if your queries encounter problems
 	 * If you encounter a problem at any point during a transaction, you may
@@ -938,11 +938,11 @@ class MySQLDatabase extends SS_Database {
 	public function transactionRollback($savepoint=false){
 		//Transactions not set up for MySQL yet
 	}
-	
+
 	/*
 	 * Commit everything inside this transaction so far
 	 */
-	public function endTransaction(){
+	public function transactionEnd(){
 		//Transactions not set up for MySQL yet
 	}
 
@@ -972,11 +972,11 @@ class MySQLDatabase extends SS_Database {
 		}
 
 		if($format == '%U') return "UNIX_TIMESTAMP($date)";
-		
+
 		return "DATE_FORMAT($date, '$format')";
-		
+
 	}
-	
+
 	/**
 	 * Function to return an SQL datetime expression that can be used with MySQL
 	 * used for querying a datetime addition
@@ -1041,7 +1041,7 @@ class MySQLQuery extends SS_Query {
 	 * @var MySQLDatabase
 	 */
 	private $database;
-	
+
 	/**
 	 * The internal MySQL handle that points to the result set.
 	 * @var resource
@@ -1057,19 +1057,19 @@ class MySQLQuery extends SS_Query {
 		$this->database = $database;
 		$this->handle = $handle;
 	}
-	
+
 	public function __destruct() {
 		if(is_resource($this->handle)) mysql_free_result($this->handle);
 	}
-	
+
 	public function seek($row) {
 		return is_resource($this->handle) ? mysql_data_seek($this->handle, $row) : false;
 	}
-	
+
 	public function numRecords() {
 		return is_resource($this->handle) ? mysql_num_rows($this->handle) : false;
 	}
-	
+
 	public function nextRecord() {
 		// Coalesce rather than replace common fields.
 		if(is_resource($this->handle) && $data = mysql_fetch_row($this->handle)) {
@@ -1086,8 +1086,8 @@ class MySQLQuery extends SS_Query {
 			return false;
 		}
 	}
-	
-	
+
+
 }
 
 ?>
