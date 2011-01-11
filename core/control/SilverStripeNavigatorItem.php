@@ -31,7 +31,6 @@ class SilverStripeNavigator {
 		ksort($menuPriority);
 		
 		foreach($menuPriority as $obj) {
-			
 			$text = $obj->getHTML($record);
 			if($text) $items .= $text;
 			$newMessage = $obj->getMessage($record);
@@ -162,7 +161,7 @@ class SilverStripeNavigatorItem_ArchiveLink extends SilverStripeNavigatorItem {
 			// Display the archive link if the page currently displayed in the CMS is other version than live and draft
 			$currentDraft = Versioned::get_one_by_stage('SiteTree', 'Draft', '"SiteTree"."ID" = ' . $page->ID);
 			$currentLive = Versioned::get_one_by_stage('SiteTree', 'Live', '"SiteTree"."ID" = ' . $page->ID);
-			if ($currentDraft && $page->Version!=$currentDraft->Version && $page->Version!=$currentLive->Version) {
+			if ($currentDraft && $currentLive && $page->Version != $currentDraft->Version && $page->Version != $currentLive->Version) {
 				$pageLink = $page->AbsoluteLink();
 				return "<a href=\"$pageLink?archiveDate={$page->LastEdited}\" class=\"newWindow\" target=\"site\" style=\"left : -3px;\">". _t('ContentController.ARCHIVEDSITE', 'Archived Site') ."</a>";
 			}
