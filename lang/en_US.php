@@ -850,7 +850,7 @@ $lang['en_US']['SiteTree']['SINGULARNAME'] = array(
 	'Singular name of the object, used in dropdowns and to generally identify a single object in the interface'
 );
 $lang['en_US']['SiteTree']['TABACCESS'] = 'Access';
-$lang['en_US']['SiteTree']['TABBEHAVIOUR'] = 'Behaviour';
+$lang['en_US']['SiteTree']['TABBEHAVIOUR'] = 'Behavior';
 $lang['en_US']['SiteTree']['TABCONTENT'] = 'Content';
 $lang['en_US']['SiteTree']['TABDEPENDENT'] = 'Dependent pages';
 $lang['en_US']['SiteTree']['TABMAIN'] = 'Main';

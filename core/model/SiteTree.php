@@ -1877,7 +1877,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		$tabContent->setTitle(_t('SiteTree.TABCONTENT', "Content"));
 		$tabMain->setTitle(_t('SiteTree.TABMAIN', "Main"));
 		$tabMeta->setTitle(_t('SiteTree.TABMETA', "Metadata"));
-		$tabBehaviour->setTitle(_t('SiteTree.TABBEHAVIOUR', "Behaviour"));
+		$tabBehaviour->setTitle(_t('SiteTree.TABBEHAVIOUR', "Behavior"));
 		$tabAccess->setTitle(_t('SiteTree.TABACCESS', "Access"));
 
 		if(file_exists(BASE_PATH . '/install.php')) {
