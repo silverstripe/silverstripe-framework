@@ -8,29 +8,33 @@ class DatabaseTest extends SapphireTest {
 	protected $extraDataObjects = array(
 		'DatabaseTest_MyObject',
 	);
-	
+
 	protected $usesDatabase = true;
-	
+
 	function testDontRequireField() {
 		$conn = DB::getConn();
 		$this->assertArrayHasKey(
 			'MyField',
 			$conn->fieldList('DatabaseTest_MyObject')
 		);
-		
+
 		$conn->dontRequireField('DatabaseTest_MyObject', 'MyField');
+
 		$this->assertArrayHasKey(
 			'_obsolete_MyField',
 			$conn->fieldList('DatabaseTest_MyObject'),
 			'Field is renamed to _obsolete_<fieldname> through dontRequireField()'
 		);
-		
+
 		$this->resetDBSchema(true);
 	}
-	
+
 	function testRenameField() {
 		$conn = DB::getConn();
-		
+
+		//Reset our cached fieldlists:
+		$conn->clear_cached_fieldlist();
+
 		$conn->renameField('DatabaseTest_MyObject', 'MyField', 'MyRenamedField');
 
 		$this->assertArrayHasKey(
@@ -46,7 +50,7 @@ class DatabaseTest extends SapphireTest {
 
 		$this->resetDBSchema(true);
 	}
-	
+
 	function testMySQLCreateTableOptions() {
 		if(DB::getConn() instanceof MySQLDatabase) {
 			$ret = DB::query(sprintf(
@@ -58,14 +62,14 @@ class DatabaseTest extends SapphireTest {
 			);
 		}
 	}
-	
+
 	function testSchemaUpdateChecking() {
 		$db = DB::getConn();
 
 		// Initially, no schema changes necessary
 		$db->beginSchemaUpdate();
 		$this->assertFalse($db->doesSchemaNeedUpdating());
-		
+
 		// If we make a change, then the schema will need updating
 		$db->transCreateTable("TestTable");
 		$this->assertTrue($db->doesSchemaNeedUpdating());
@@ -74,18 +78,18 @@ class DatabaseTest extends SapphireTest {
 		$db->cancelSchemaUpdate();
 		$this->assertFalse($db->doesSchemaNeedUpdating());
 	}
-	
+
 	function testHasTable() {
 		$this->assertTrue(DB::getConn()->hasTable('DatabaseTest_MyObject'));
 		$this->assertFalse(DB::getConn()->hasTable('asdfasdfasdf'));
 	}
-	
+
 }
 
 class DatabaseTest_MyObject extends DataObject implements TestOnly {
-	
+
 	static $create_table_options = array('MySQLDatabase' => 'ENGINE=InnoDB');
-	
+
 	static $db = array(
 		'MyField' => 'Varchar'
 	);
