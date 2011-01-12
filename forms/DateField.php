@@ -557,7 +557,7 @@ class DateField_View_JQuery {
 				// TODO Check for existence of locale to avoid unnecessary 404s from the CDN
 				Requirements::javascript(
 					sprintf(
-						THIRDPARTY_DIR . '/jquery-ui/minified/i18n/jquery.ui.datepicker-%s.min.js',
+						THIRDPARTY_DIR . '/jquery-ui/i18n/jquery.ui.datepicker-%s.js',
 						// can be a mix between names (e.g. 'de') and combined locales (e.g. 'zh-TW')
 						$lang
 					));
