@@ -109,5 +109,24 @@ if(class_exists('SiteTreeCMSWorkflow')) {
 			$this->assertNotContains('action_revert',$actionsArr);
 		}
 	}
+
+	function testActionsViewingOldVersion() {
+		$p = new Page();
+		$p->Content = 'test page first version';
+		$p->write();
+		$p->Content = 'new content';
+		$p->write();
+
+		// Looking at the old version, the ability to rollback to that version is available
+		$version = DB::query('SELECT `Version` FROM `SiteTree_versions` WHERE `Content` = \'test page first version\'')->value();
+		$old = Versioned::get_version('Page', $p->ID, $version);
+		$actions = $old->getCMSActions()->column('Name');
+		$this->assertNotContains('action_save', $actions);
+		$this->assertNotContains('action_publish', $actions);
+		$this->assertNotContains('action_unpublish', $actions);
+		$this->assertNotContains('action_delete', $actions);
+		$this->assertContains('action_email', $actions);
+		$this->assertContains('action_rollback', $actions);
+	}
+
 }
-?>

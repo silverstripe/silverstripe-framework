@@ -1381,10 +1381,22 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	function getCMSActions() {
 		$actions = new FieldSet();
 
+		// "readonly"/viewing version that isn't the current version of the record
+		$stageOrLiveRecord = Versioned::get_one_by_stage($this->class, Versioned::current_stage(), sprintf('`SiteTree`.ID = %d', $this->ID));
+		if($stageOrLiveRecord && $stageOrLiveRecord->Version != $this->Version) {
+			$actions->push(new FormAction('email', _t('CMSMain.EMAIL', 'Email')));
+			$actions->push(new FormAction('rollback', _t('CMSMain.ROLLBACK', 'Roll back to this version')));
+
+			// getCMSActions() can be extended with updateCMSActions() on a decorator
+			$this->extend('updateCMSActions', $actions);
+
+			return $actions;
+		}
+
 		if($this->isPublished() && $this->canPublish() && !$this->IsDeletedFromStage) {
 			// "unpublish"
 			$unpublish = FormAction::create('unpublish', _t('SiteTree.BUTTONUNPUBLISH', 'Unpublish'), 'delete');
-			$unpublish->describe(_t('SiteTree.BUTTONUNPUBLISHDESC', "Remove this page from the published site"));
+			$unpublish->describe(_t('SiteTree.BUTTONUNPUBLISHDESC', 'Remove this page from the published site'));
 			$unpublish->addExtraClass('delete');
 			$actions->push($unpublish);
 		}
@@ -1393,7 +1405,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 			if($this->isPublished() && $this->canEdit())	{
 				// "rollback"
 				$rollback = FormAction::create('rollback', _t('SiteTree.BUTTONCANCELDRAFT', 'Cancel draft changes'), 'delete');
-				$rollback->describe(_t('SiteTree.BUTTONCANCELDRAFTDESC', "Delete your draft and revert to the currently published page"));
+				$rollback->describe(_t('SiteTree.BUTTONCANCELDRAFTDESC', 'Delete your draft and revert to the currently published page'));
 				$rollback->addExtraClass('delete');
 				$actions->push($rollback);
 			}
