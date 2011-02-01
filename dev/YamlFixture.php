@@ -65,7 +65,7 @@ require_once 'thirdparty/spyc/spyc.php';
  * @package sapphire
  * @subpackage core
  * 
- * @see http://spyc.sourceforge.net/
+ * @see http://code.google.com/p/spyc/
  * 
  * @todo Write unit test for YamlFixture
  *  
