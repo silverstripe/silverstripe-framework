@@ -159,6 +159,7 @@ table.CMSList tbody td.current td {
 
 .TableListField div.utility {
 	margin-top: 1em;
+	padding: 3px 0 6px 0;
 }
 	.TableListField div.utility a {
 		text-decoration: none;
