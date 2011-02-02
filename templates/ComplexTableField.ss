@@ -71,10 +71,12 @@
 			<% end_if %>
 		</tbody>
 	</table>
-	<div class="utility">
-		<% control Utility %>
-			<span class="item"><a href="$Link" target="_blank">$Title</a></span>
-		<% end_control %>
-	</div>
+	<% if Utility %>
+		<div class="utility">
+			<% control Utility %>
+				<span class="item"><a href="$Link" target="_blank">$Title</a></span>
+			<% end_control %>
+		</div>
+	<% end_if %>
 	</div>
 </div>
