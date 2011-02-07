@@ -15,7 +15,7 @@ search-file.gif).
 We are going to add a search box on the top of the page. When a user types something in the box, they are taken to a
 results page.
 
-![](_images/searchresults-small.png)
+![](_images/searchresults-small.jpg)
 
 
 
@@ -84,7 +84,7 @@ We then just need to add the search form to the template. Add *$SearchForm* to t
 	</div>
 
 
-![](_images/searchform.png)
+![](_images/searchform.jpg)
 
 ## Showing the results
 
@@ -191,7 +191,7 @@ class.
 Then finally add ?flush=1 to the URL and you should see the new template.
 
 
-![](_images/searchresults.png)
+![](_images/searchresults.jpg)
 
 
 ## Summary

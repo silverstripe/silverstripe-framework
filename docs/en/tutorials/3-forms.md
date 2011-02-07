@@ -15,7 +15,7 @@ A UserDefinedForm is much quicker to implement, but lacks the flexibility of a c
 We will create a poll on the home page that asks the user their favourite web browser, and displays a bar graph of the
 results.
 
-![tutorial:pollresults-small.png](_images/pollresults-small.png)
+![tutorial:pollresults-small.png](_images/pollresults-small.jpg)
 
 
 ## Creating the form
@@ -168,7 +168,7 @@ Add the following code to the form style sheet:
 This CSS code will ensure that the form is formatted and positioned correctly. All going according to plan, if you visit
 [http://localhost/home?flush=1](http://localhost/home?flush=1) it should look something like below.
 
-![](_images/pollform.png)
+![](_images/pollform.jpg)
 
 
 ## Processing the form
@@ -249,7 +249,7 @@ Change the end of the 'BrowserPollForm' function so it looks like this:
 If we then open the homepage and attempt to submit the form without filling in the required fields an error will be
 shown.
 
-![](_images/validation.png)
+![](_images/validation.jpg)
 
 
 
@@ -406,7 +406,7 @@ We use the normal tactic of putting the data into an unordered list and using CS
 styles to display a bar that is sized proportionate to the number of votes the browser has received. You should now have
 a complete poll.
 
-![](_images/pollresults.png)
+![](_images/pollresults.jpg)
 
 
 ## Summary
