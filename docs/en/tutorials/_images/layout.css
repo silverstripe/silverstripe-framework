@@ -1,0 +1,435 @@
+/* Global Resetting */
+html{	
+	width: 100%;
+	height: 100%;
+	background:url(../images/body_bg.gif) repeat;
+}
+body {
+	width: 100%;
+	height: 100%;
+	font-size: 62.5%;
+	/* reset font-sizes to 1em == 10px */
+}
+* {
+	font-size: 1em;
+	/* reset font-sizes to 1em == 10px */
+	padding: 0;
+	margin: 0;
+	font-family:Verdana,Helvetica,sans-serif;
+	list-style:none;
+}
+a img{
+	border:0;
+}
+.clear{
+	clear:both;
+}
+
+/* Layout CSS */
+#Main {
+	margin:20px auto;
+	width:900px;
+}
+#Header {
+	background:url(../images/blueback.gif) bottom left repeat-x;
+	border-left:1px solid #ccc;
+	border-right:1px solid #ccc;
+	clear:left;
+}
+	#Header h1 {
+		color:#fff;
+		font-size:1.5em;
+		line-height:4.5em;
+		padding-left:20px;
+	}
+		#Menu1 {
+			padding:10px 50px 0;
+		}
+			#Menu1 li {
+				float:left;
+				margin-left:2px;
+				background:url(../images/menu1_right.gif) no-repeat right top;
+			}
+				#Menu1 li.current,
+				#Menu1 li.section {
+					background:url(../images/menu1_right_on.gif) no-repeat right top;
+				}
+				#Menu1 li a {
+					display:block;
+					color:#fff;
+					font-weight:bold;
+					font-size:1.1em;
+					text-decoration:none;
+					padding:5px 15px;
+					background:url(../images/menu1_left.gif) no-repeat left top;
+				}
+					#Menu1 li a:hover {
+						color:#d2ebff;
+					}
+					#Menu1 li.current a,
+					#Menu1 li.section a {
+						background:url(../images/menu1_left_on.gif) no-repeat left top;
+						color:#d2ebff;
+					}
+
+#ContentContainer {
+	background:#f5f5f5 url(../images/ss_watermark.gif) bottom left no-repeat;
+	padding-top:20px;
+	padding-bottom:20px;
+	overflow: auto;
+}
+
+#Banner {
+	text-align: center;
+}
+
+#Menu2 {
+	margin-left: 20px;
+	width: 17em;
+	float:left;
+	background:#f0f0f0;
+	border:1px solid #ddd;
+	padding:10px 10px 10px 10px;
+}
+	#Menu2 li {
+		padding-left:15px;
+		background:url(../images/menu2_arrow.gif) no-repeat left center;
+	}
+	#Menu2 a {
+		color:#333;
+		font-weight:bold;
+		font-size:1.1em;
+		line-height:1.6em;
+		text-decoration:none;
+	}
+	#Menu2 a:hover {
+		text-decoration:underline;
+	}
+	#Menu2 li.current a,
+	#Menu2 li.section a {
+		color:#0083C8;
+	}
+
+#Content {
+	float: left;
+	margin: 0px 20px;
+	width:70%;
+}
+
+div.breadcrumbs {
+	margin-bottom:10px;
+	font-size:1em;
+	color:#666;
+}
+div.breadcrumbs a {
+	text-decoration:none;
+}
+
+#Footer {
+	background:#015581;
+	clear:both;
+	text-align:right;
+	padding-right:20px;
+	border:1px solid #ccc;
+	border-top:0;
+}
+	#Footer span {
+		color:#ccc;
+		font-size:1.1em;
+		line-height:2em;
+		font-weight:bold;
+		padding-left:20px;
+		background:url(../images/ss_logo.gif) no-repeat;
+	}
+	#Footer a {
+		color:#fff;
+	}
+		#Footer a:hover {
+			text-decoration:none;
+		}
+
+
+/* The rest of this file is for the second tutorial */
+#NewsList,
+#StaffList {
+	background:#f0f0f0;
+	border:1px dotted #ccc;
+	padding:10px;
+}
+
+#NewsList li,
+#StaffList li {
+	margin: 0;
+	list-style-type: none;
+}
+	#NewsList li.newsDateTitle span {
+		color:#666;
+		line-height:2em;
+	}
+	#NewsList li.newsDateTitle a {
+		font-size:1.3em;
+		font-weight:bold;
+		color:#0083C8;
+		text-decoration:none;
+		padding-left:20px;
+		background:url(../images/treeicons/news-file.gif) no-repeat left center;
+	}
+		#NewsList li.newsDateTitle a:hover {
+			border-bottom:1px dotted #0083C8;
+		}
+		
+	#NewsList li.newsSummary {
+		margin-bottom:20px;
+	}
+		#NewsList li.newsSummary span {
+			font-size:1.1em;
+			line-height:1.5em;
+			color:#333;
+		}
+		#NewsList li.newsSummary a.readMoreLink {
+			color:#0083C8;
+			text-decoration:none;
+		}
+			#NewsList li.newsSummary a.readMoreLink:hover {
+				border-bottom:1px dotted #0083C8;
+			}
+
+div.newsDetails {
+	margin-bottom:10px;
+}
+
+div.newsDetails p {
+	color:#666;
+	margin:0;
+	font-size:1em;
+}
+
+div.pageComments {
+	background:#f0f0f0;
+	border:1px dotted #ccc;
+	padding:10px;
+}
+
+#StaffList .staffname { 
+	clear: both;
+	padding-left: 60px;
+	height: 1.2em;
+}
+
+#StaffList .staffphoto {
+	float: left;
+	margin-left: 3px;
+	margin-top: -1.2em;
+}     
+#StaffList .staffphoto img {
+	border:1px solid #AAA;
+}
+
+#StaffList .staffdescription {
+	margin-left: 60px;
+	margin-bottom:30px;
+}
+
+#StaffPhoto {
+	float: left;
+	margin-right: 10px;
+}
+
+#StaffPhoto img {
+	border:1px solid #AAA;
+}
+
+#PageComments {
+	list-style:none;
+	background:#e9e9e9;
+	border:1px solid #ccc;
+	border-bottom:0;
+	padding:0;
+	margin:0;
+}
+	#PageComments li {
+		list-style:none;
+		padding:5px;
+		margin:0;
+		font-size:1em;
+		border-bottom:1px dotted #bbb;
+	}
+		#PageComments li p span {
+			font-style:italic;
+		}
+		#PageComments a.deletelink {
+			font-weight:bold;
+		}
+
+			
+#PageNumbers {
+	font-weight:bold;
+	color:#333;
+	font-size:1.1em;
+	text-align:center;
+	padding:5px;
+	border:1px solid #ddd;
+	background:#e9e9e9;
+}
+#PageNumbers * {
+	padding:0 5px;
+	line-height:1.5em;
+}
+#PageNumbers a {
+	color:#0083C8;
+	text-decoration:none;
+}
+	#PageNumbers a:hover {
+		text-decoration:underline;
+	}
+
+#BrowserPoll {
+	width: 200px;
+	float: right;
+	margin-right: 20px;
+	margin-top: 20px;
+}
+#BrowserPoll h2 {
+	color:#0083C8;
+	font-size:1.2em;
+}
+#BrowserPoll ul {
+	margin: 0;	
+}
+#BrowserPoll li {
+	list-style-type: none;
+	margin: 0;
+}
+#BrowserPoll .browser {
+	color:#333;
+	line-height:1.5em;
+	font-size:1.1em;
+}
+#BrowserPoll .bar {
+	background-color: #015581;
+}
+#BrowserPoll form {
+	width:100%;
+}
+	#BrowserPoll form fieldset{
+		border:0;
+	}
+		#BrowserPoll .message {
+			color:red;
+			background:#ddd;
+			border:1px solid #ccc;
+			padding:5px;
+			margin:5px;
+		}
+		#BrowserPoll span.message {
+			width: 100%;
+		}
+		#BrowserPoll form div {
+			margin-top:10px;
+			width:100%;
+		}
+		#BrowserPoll form label {
+			font-size:1.1em;
+			color:#333;
+		}
+			#BrowserPoll form label.left {
+				float:left;
+			}
+			#BrowserPoll form label.FormHeading {
+				font-size:1.3em;
+				color:#ff7200;
+				font-weight:bold;
+			}
+		#BrowserPoll form input.text,
+		#BrowserPoll form textarea,
+		#BrowserPoll form select {
+			width:100%;
+			color:#000;
+			background:#f8f8f8;
+			border:1px solid #aaa;
+			padding:3px;
+		}
+		
+		#BrowserPoll form input.numeric {
+			width:20px;
+			background:#f0f0f0;
+			border:1px solid #aaa;
+			padding:3px;
+			color:#000;
+			margin-right:4px;
+		}
+		#BrowserPoll form input.year {
+			width:35px;
+		}
+		#BrowserPoll form p.Actions {
+			text-align:right;
+			padding:0 22px 15px 0;
+		}
+			#BrowserPoll form p.Actions input {
+				padding:2px;
+			}
+		#BrowserPoll form ul.optionset {
+			padding-top: 15px;
+			padding-left: 15px;
+		}
+			#BrowserPoll form ul.optionset li {
+				list-style-type: none;
+			}
+
+#Header form {
+	float:right;
+	width:160px;
+	margin:25px 25px 0px 25px;
+}
+	#Header form * {
+		display:inline !important;
+	}
+	#Header form div {
+	}
+	#Header form input.text {
+		width:110px;
+		color:#000;
+		background:#f0f0f0;
+		border:1px solid #aaa;
+		padding:3px;
+	}
+	#Header form input.action {
+		font-weight:bold;
+	}
+
+.searchResults h2 {
+	font-size:2.2em;
+	font-weight:normal;
+	color:#0083C8;
+	margin-bottom:15px;
+}
+.searchResults p.searchQuery {
+	color:#333;
+	margin-bottom:10px;
+}
+
+.searchResults ul#SearchResults li {
+	margin-bottom:20px;
+}
+	ul#SearchResults p {
+		font-size:1.1em;
+		font-weight:normal;
+		line-height:2em;
+		color:#333;
+	}
+	ul#SearchResults a.searchResultHeader {
+		font-size:1.3em;
+		font-weight:bold;
+		color:#0083C8;
+		text-decoration:none;
+		margin:20px 0 8px 0;
+		padding-left:20px;
+		background:url(../images/treeicons/search-file.gif) no-repeat left center;
+	}
+		ul#SearchResults a {
+			text-decoration:none;
+			color:#0083C8;
+		}
+		ul#SearchResults a:hover {
+		border-bottom:1px dotted #0083C8;
+		}
