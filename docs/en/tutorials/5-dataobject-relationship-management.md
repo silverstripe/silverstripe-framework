@@ -163,7 +163,7 @@ Now that we have created our *Project* page type and *Student* data object, letâ
 Go into the CMS and create one *Project* page for each project listed [above](#what-are-we-working-towards) under a 
 *ProjectsHolder* page named **GSOC Projects** for instance.
 
-![tutorial:gsoc-project-creation.png](_images/gsoc-project-creation.png)
+![tutorial:gsoc-project-creation.png](_images/gsoc-project-creation.jpg)
 
 As you can see in the tab panel *Student*, the adding functionality is titled *Add Student*. However, if you want to
 modify this title, you have to add this code in the *getCMSFields* method of the *Project* class :
@@ -176,7 +176,7 @@ Select now one of the *Project* page that you have created, go in the tab panel 
 listed [above](#what-are-we-working-towards) by clicking on the link **Add A Student** of your 
 *HasOneComplexTableField* table.
 
-![tutorial:gsoc-student-creation.png](_images/gsoc-student-creation.png)
+![tutorial:gsoc-student-creation.png](_images/gsoc-student-creation.jpg)
 
 After having added all the students, you will see that, in the tab panel *Student* of all the *Project* pages, the
 *HasOneComplexTableField* tables have the same content.
@@ -184,7 +184,7 @@ After having added all the students, you will see that, in the tab panel *Studen
 For each *Project* page, you can now affect **one and only one** student to it ( see the
 [list](#What_are_we_working_towards?) ).
 
-![tutorial:gsoc-project-student-selection.png](_images/gsoc-project-student-selection.png)
+![tutorial:gsoc-project-student-selection.png](_images/gsoc-project-student-selection.jpg)
 
 You will also notice, that you have the possibility to **unselect** a student which will make your *Project* page
 without any student affected to it.
@@ -321,12 +321,12 @@ Now that we have created our *Mentor* page type, go into the CMS and create one 
 [above](#what-are-we-working-towards) under a simple *Page* named
 **Mentors** for instance.
 
-![tutorial:gsoc-mentor-creation.png](_images/gsoc-mentor-creation.png)
+![tutorial:gsoc-mentor-creation.png](_images/gsoc-mentor-creation.jpg)
 
 For each *Mentor* page, you can now affect **many** students created previously ( see the
 [list](#What_are_we_working_towards?) ) by going in the tab panel *Students*.
 
-![tutorial:gsoc-mentor-student-selection.png](_images/gsoc-mentor-student-selection.png)
+![tutorial:gsoc-mentor-student-selection.png](_images/gsoc-mentor-student-selection.jpg)
 
 You will also notice, that by checking a student in a *Mentor* page, you will be unable to select him again in any other
 *Mentor* page which is the definition of a **1-to-many** relation.
@@ -432,13 +432,13 @@ Select now one of the *Project* page, go in the tab panel *Modules* and add all 
 [above](#what-are-we-working-towards) by clicking on the link **Add A
 Module** of your *ManyManyComplexTableField* table.
 
-![tutorial:gsoc-module-creation.png](_images/gsoc-module-creation.png)
+![tutorial:gsoc-module-creation.png](_images/gsoc-module-creation.jpg)
 
 For each *Project* page, you can now affect **many** modules created previously ( see the
 [list](#What_are_we_working_towards?) ) by going in the tab panel
 *Modules*.
 
-![tutorial:gsoc-project-module-selection.png](_images/gsoc-project-module-selection.png)
+![tutorial:gsoc-project-module-selection.png](_images/gsoc-project-module-selection.jpg)
 
 You will also notice, that you are able to select several times a *Module* on different *Project* pages which is the
 definition of a **many-to-many** relation.
@@ -464,7 +464,7 @@ For every kind of *Page* or *DataObject*, you can access to their relations than
 Let's start with the *ProjectsHolder* page created before. For this template, we are will display the same table than
 [above](#what-are-we-working-towards).
 
-![tutorial:gsoc-projects-table.png](_images/gsoc-projects-table.png)
+![tutorial:gsoc-projects-table.png](_images/gsoc-projects-table.jpg)
 
 *tutorial/templates/Layout/ProjectsHolder.ss*
 
@@ -562,7 +562,7 @@ We know now how to easily access and show [relations](../topics/datamodel#relati
 
 We can now do the same for every *Project* page by creating its own template.
 
-![tutorial:gsoc-project.png](_images/gsoc-project.png)
+![tutorial:gsoc-project.png](_images/gsoc-project.jpg)
 
 *tutorial/templates/Layout/Project.ss*
 
@@ -699,7 +699,7 @@ In this template, we are gonna try to access the *Project* details from a *Stude
 What we want to do is to access to the *Project* page in the same way than we have done for the other relations
 **without modifying the relations between *Page* and *DataObject* and the database structure**.
 
-![tutorial:gsoc-mentor.png](_images/gsoc-mentor.png)
+![tutorial:gsoc-mentor.png](_images/gsoc-mentor.jpg)
 
 To do so, we have to create a function in the *Student* class which will return the *Project* linked with it. Let's call
 it *MyProject* for instance.
