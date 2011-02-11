@@ -80,12 +80,12 @@ of the modules that won't be updated frequently.
 
 	cd my-silverstripe-project/
 	tools/new-project -m flat
-	
+
 <div class="notice" markdown="1">
 The `tools` scripts are just getting you started - to maintain your installation,
 you will need to learn how to add and update modules via the `git` commandline utility.
 </div>
-	
+
 ### Step 3: Committing the modules ###
 
 Regardless of using Piston or not, all files in your project will be unversioned,
@@ -95,12 +95,12 @@ and need to be added to your own repository. The commands depend on your reposit
 	cd my-silverstripe-project/
 	svn add *
 	svn commit -m "adding dependencies"
-	
+
 	# for git
 	cd my-silverstripe-project/
 	git add *
 	git commit -m "adding dependencies"
-	
+
 ### Step 4: Switch branches ###
 
 The `tools/new-project` script doesn't allow you to switch branches easily,
@@ -111,7 +111,7 @@ create your own `template.php` and adjust the paths:
 `tools/new-project --template /path/to/template.php`
 
 If your project is managed by piston, you can run a `piston import --force` to switch branches.
-	
+
 ### Step 5: Running the web-based installer ###
 
 You can now run through the web-based installer for your operating system of choice ([instructions](/installation)).
@@ -150,7 +150,7 @@ Please replace `<username>` below with your github username.
 	git clone git@github.com:<username>/sapphire.git sapphire
 	git clone git@github.com:<username>/silverstripe-cms.git cms
 	git clone git@github.com:<username>/silverstripe-blackcandy.git themes/blackcandy
-	
+
 Now you need to add the original repository as `upstream`, so you can keep your fork updated later on.
 
 	cd my-silverstripe-project
@@ -158,7 +158,7 @@ Now you need to add the original repository as `upstream`, so you can keep your 
 	(cd sapphire && git remote add upstream git://github.com/silverstripe/sapphire.git && git fetch upstream)
 	(cd cms && git remote add upstream git://github.com/silverstripe/silverstripe-cms.git && git fetch upstream)
 	(cd themes/blackcandy && git remote add upstream git://github.com/silverstripe/silverstripe-blackcandy.git)
-	
+
 Now you can learn how to [update your fork](http://help.github.com/forking/) from the `upstream` repository. You should do this regularly, at least before submitting any pull requests.
 
 Please read ["Module installation"](/topics/modules) to find out how to install additional modules like `blog` or `forum`.
@@ -167,7 +167,7 @@ Please read ["Module installation"](/topics/modules) to find out how to install 
 
 You don't need to commit the module code into the repository, as our project is only for local development.
 Changes within the module code are committed back directly to their own repository, not into the `installer` project. To the `installer` project, these modules are unversioned files (although you can explicitly add them to `.gitignore` as well).
-	
+
 ### Step 4: Switch branches ###
 
 By default, the "master" is checked out, which contains the latest code.
@@ -179,7 +179,7 @@ You can optionally select a ["release branch"](https://github.com/silverstripe/s
 	(cd cms && git checkout -b 2.4 origin/2.4)
 	(cd themes/blackcandy && git checkout -b 2.4 origin/2.4)
 	# repeat for all modules in your project...
-	
+
 After creating the local branch, you can simply switch between branches:
 
 	cd my-silverstripe-project
@@ -188,7 +188,7 @@ After creating the local branch, you can simply switch between branches:
 	(cd cms && git checkout 2.4)
 	(cd themes/blackcandy && git checkout 2.4)
 	# repeat for all modules in your project...
-	
+
 To switch back to master:
 
 	cd my-silverstripe-project
@@ -197,7 +197,7 @@ To switch back to master:
 	(cd cms && git checkout master)
 	(cd themes/blackcandy && git checkout master)
 	# repeat for all modules in your project...
-	
+
 You can't switch branches if your working copy has local changes (typically in `mysite/_config.php`).
 Either revert these changes before switching, or temporarily store them with `git stash`.
 Once you switch back you can retrieve these changes via `git stash pop` (see further [instructions on `git stash`](http://progit.org/book/ch6-3.html)).
@@ -240,7 +240,7 @@ If these plain files are managed by piston, the update process is simple:
 	# Use "svn" instead of "git" for subversion repositories
 	git add sapphire/*
 	git commit -m "udpated dependencies"
-	
+
 For file downloads without piston, you can simply download the source code again and replace it.
 
 ## Contributing changes from piston ##
