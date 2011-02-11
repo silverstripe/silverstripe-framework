@@ -58,23 +58,6 @@ have an empty repository set up, either in git or subversion.
 
 If you don't use version control, we recommend that you stick to the official [silverstripe.org/download](http://silverstripe.org/download) instead.
 
-### Additional Requirements ###
-
- * The **php commandline utility** (to run scripts in the `tools/` folder)
- * A **git client** to check out the core repositories, see ["Getting started with Git and Github"](http://help.github.com/).
- * (optional) **Piston** ([website](http://piston.rubyforge.org)): A thirdparty tool to manage files from an external repository.
-It is our recommended way to include modules when you start your own project, and still provide an easy way to update from our repository.
-You will need Ruby and the ["Rubygems"](http://rubygems.org/) package manager to install it: `gem install piston`  **MS: this is duplicated from the above section**
- * A  **webserver+database environment** to run SilverStripe (see [server requirements](/misc/server-requirements)).
-
-Note for Windows users: The installation process assumes a Linux/Unix/OSX system.
-Most commands are the same for Windows, but you will have to use the `*.bat` scripts instead for anything in the `tools/` folder
-(e.g. `tools/new-project.bat` instead of `tools/new-project`).
-
-<div class="warning" markdown="1">
-Scripts in the `tools/` folder are still under development and might change over time.
-</div>
-
 ### Step 1: Getting the installer
 
  * Create a new project repository in your own version control (we assume the working copy folder is called `my-silverstripe-project/`)
