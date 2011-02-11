@@ -3,7 +3,7 @@ class PasswordEncryptorTest extends SapphireTest {
 	function testCreateForCode() {
 		PasswordEncryptor::register('test', 'PasswordEncryptorTest_TestEncryptor');
 		$e = PasswordEncryptor::create_for_algorithm('test');
-		$this->assertType(
+		$this->assertInstanceOf(
 			'PasswordEncryptorTest_TestEncryptor',
 			$e
 		);
