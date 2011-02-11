@@ -276,6 +276,7 @@ class Director {
 					} else {
 						Director::$urlParams = $arguments;
 						$controllerObj = new $controller();
+						singleton('Injector')->inject($controllerObj);
 						$controllerObj->setSession($session);
 
 						try {

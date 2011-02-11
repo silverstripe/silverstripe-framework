@@ -233,6 +233,8 @@ require_once("core/Session.php");
  */
 ManifestBuilder::include_manifest();
 
+
+
 /**
  * ?debugmanifest=1 hook
  */

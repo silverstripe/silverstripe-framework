@@ -62,7 +62,7 @@ class ModelAsController extends Controller implements NestedController {
 		
 		try {
 			$result = $this->getNestedController();
-			
+			singleton('Injector')->inject($result);
 			if($result instanceof RequestHandler) {
 				$result = $result->handleRequest($this->request);
 			} else if(!($result instanceof SS_HTTPResponse)) {
