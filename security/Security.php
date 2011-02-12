@@ -211,9 +211,6 @@ class Security extends Controller {
 				
 				$response->setBody($formText);
 				return $response;
-
-			} else if(substr(Director::history(),0,15) == 'Security/logout') {
-				$message = $messageSet['logInAgain'] ? $messageSet['logInAgain'] : $messageSet['default'];
 			} else {
 				$message = $messageSet['default'];
 			}

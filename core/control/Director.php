@@ -42,21 +42,6 @@ class Director {
  	 */ 
 	static protected $callbacks;
 
-	function __construct() {
-		if(isset($_GET['debug_profile'])) Profiler::mark("Director", "construct");
-		Session::addToArray('history', substr($_SERVER['REQUEST_URI'], strlen(Director::baseURL())));
-		if(isset($_GET['debug_profile'])) Profiler::unmark("Director", "construct");
-	}
-
-	/**
-	 * Return a URL from this user's navigation history.
-	 * @param pagesBack The number of pages back to go.  The default, 1, returns the previous
-	 * page.
-	 */
-	static function history($pagesBack = 1) {
-		return Session::get('history.' . intval(sizeof(Session::get('history')) - $pagesBack - 1));
-	}
-
 
 	/**
 	 * Add URL matching rules to the Director.
