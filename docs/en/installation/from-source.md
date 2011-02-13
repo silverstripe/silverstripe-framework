@@ -26,7 +26,7 @@ SilverStripe core is currently hosted on [github.com/silverstripe](http://github
  * The `installer` project ([github.com/silverstripe/silverstripe-installer](http://github.com/silverstripe/silverstripe-installer))
  * The `sapphire` module ([github.com/silverstripe/sapphire](http://github.com/silverstripe/sapphire))
  * The `cms` module ([github.com/silverstripe/silverstripe-cms](http://github.com/silverstripe/silverstripe-cms))
- * A sample theme called `blackcandy` (you can remove or customize this later)
+ * A sample theme called `blackcandy` ([github.com/silverstripe-themes/silverstripe-blackcandy](http://github.com/silverstripe-themes/silverstripe-blackcandy))
 
 First, you'll have to decide what you want to do with your project: 
 
@@ -157,7 +157,7 @@ Now you need to add the original repository as `upstream`, so you can keep your 
 	(git remote add upstream git://github.com/silverstripe/silverstripe-installer.git && git fetch upstream)
 	(cd sapphire && git remote add upstream git://github.com/silverstripe/sapphire.git && git fetch upstream)
 	(cd cms && git remote add upstream git://github.com/silverstripe/silverstripe-cms.git && git fetch upstream)
-	(cd themes/blackcandy && git remote add upstream git://github.com/silverstripe/silverstripe-blackcandy.git)
+	(cd themes/blackcandy && git remote add upstream git://github.com/silverstripe-themes/silverstripe-blackcandy.git)
 
 Now you can learn how to [update your fork](http://help.github.com/forking/) from the `upstream` repository. You should do this regularly, at least before submitting any pull requests.
 
