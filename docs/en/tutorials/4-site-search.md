@@ -5,10 +5,7 @@
 This is a short tutorial demonstrating how to add search functionality to a SilverStripe site. It is recommended that
 you have completed the earlier tutorials, especially the tutorial on forms, before attempting this tutorial. While this
 tutorial will add search functionality to the site built in the previous tutorials, it should be straight forward to
-follow this tutorial on any site of your own. If you are adding the search form to the tutorial site, please get
-[this updated css file](http://doc.silverstripe.org/src/github/master/sapphire/docs/en/tutorials/_images/layout.css) and place it in *themes/tutorial/css* (as layout.css) and this
-![search file tree icon](_images/search-file.gif) search file tree icon and place it in *themes/tutorial/images/treeicons* (as
-search-file.gif).
+follow this tutorial on any site of your own. 
 
 ## What are we working towards?
 
