@@ -40,6 +40,21 @@ class TestRunner extends Controller {
 		'$TestCase' => 'only',
 	);
 	
+	static $allowed_actions = array(
+        'index',
+        'browse',
+        'coverage',
+        'startsession',
+        'endsession',
+        'cleanupdb',
+        'module',
+        'all',
+        'build',
+        'only'
+	);
+	
+	
+	
 	/**
 	 * @var Array Blacklist certain directories for the coverage report.
 	 * Filepaths are relative to the webroot, without leading slash.

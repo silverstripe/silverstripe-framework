@@ -368,7 +368,7 @@ class FormTest_Team extends DataObject implements TestOnly {
 	);
 }
 
-class FormTest_Controller extends Controller {
+class FormTest_Controller extends Controller implements TestOnly {
 	static $url_handlers = array(
 		'$Action//$ID/$OtherID' => "handleAction",
 	);
@@ -424,7 +424,7 @@ class FormTest_Controller extends Controller {
 	}
 }
 
-class FormTest_ControllerWithSecurityToken extends Controller {
+class FormTest_ControllerWithSecurityToken extends Controller implements TestOnly {
 	static $url_handlers = array(
 		'$Action//$ID/$OtherID' => "handleAction",
 	);

@@ -6,6 +6,11 @@
  * @subpackage integration
  */ 
 class VersionedRestfulServer extends Controller {
+	
+	static $allowed_actions = array( 
+		'index'
+	);
+	
 	function handleRequest($request) {
 		Versioned::reading_stage('Live');
 		$restfulserver = new RestfulServer();

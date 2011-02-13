@@ -37,7 +37,7 @@ class WebserverRoutingTest extends SapphireTest {
  * @package sapphire
  * @subpackage tests
  */
-class WebserverRoutingTest_Controller extends Controller {
+class WebserverRoutingTest_Controller extends Controller implements TestOnly {
 	function index() {
 		BasicAuth::protect_entire_site(false);
 		

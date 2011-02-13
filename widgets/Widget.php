@@ -150,6 +150,10 @@ class Widget_Controller extends Controller {
 	 */
 	protected $widget;
 	
+	static $allowed_actions = array( 
+		'editablesegment'
+	);
+	
 	function __construct($widget = null) {
 		// TODO This shouldn't be optional, is only necessary for editablesegment()
 		if($widget) {

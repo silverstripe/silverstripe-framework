@@ -134,7 +134,7 @@ class RestfulServiceTest extends SapphireTest {
 	}
 }
 
-class RestfulServiceTest_Controller extends Controller {
+class RestfulServiceTest_Controller extends Controller implements TestOnly {
 	public function init() {
 		$this->basicAuthEnabled = false;
 		parent::init();

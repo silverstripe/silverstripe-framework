@@ -23,6 +23,10 @@ define('30719',E_ALL);
  * @subpackage dev
  */
 class SapphireREPL extends Controller {
+	
+	static $allowed_actions = array(
+		'index'
+	);
 
 	public function error_handler( $errno, $errstr, $errfile, $errline, $errctx ) {
 		// Ignore unless important error
