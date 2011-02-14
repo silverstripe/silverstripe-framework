@@ -218,10 +218,8 @@ after')
 		// Dot syntax
 		$this->assertEquals('ACD',
 			$this->render('A<% if Foo.NotSet %>B<% else_if Foo.IsSet %>C<% end_if %>D'));
-
-		// Broken currently
-		//$this->assertEquals('ACD',
-		//	$this->render('A<% if Foo.Bar.NotSet %>B<% else_if Foo.Bar.IsSet %>C<% end_if %>D'));
+		$this->assertEquals('ACD',
+			$this->render('A<% if Foo.Bar.NotSet %>B<% else_if Foo.Bar.IsSet %>C<% end_if %>D'));
 
 		// Params
 		$this->assertEquals('ACD',
@@ -236,12 +234,10 @@ after')
 			$this->render('A<% if NotSet || AlsoNotSet %>B<% else_if IsSet %>C<% end_if %>D'));
 		$this->assertEquals('AD',
 			$this->render('A<% if NotSet || AlsoNotSet %>B<% else_if NotSet3 %>C<% end_if %>D'));
-
-		// Broken currently
-		//$this->assertEquals('ACD',
-		//	$this->render('A<% if NotSet || AlsoNotSet %>B<% else_if IsSet || NotSet %>C<% end_if %>D'));
-		//$this->assertEquals('AD',
-		//	$this->render('A<% if NotSet || AlsoNotSet %>B<% else_if NotSet2 || NotSet3 %>C<% end_if %>D'));
+		$this->assertEquals('ACD',
+			$this->render('A<% if NotSet || AlsoNotSet %>B<% else_if IsSet || NotSet %>C<% end_if %>D'));
+		$this->assertEquals('AD',
+			$this->render('A<% if NotSet || AlsoNotSet %>B<% else_if NotSet2 || NotSet3 %>C<% end_if %>D'));
 
 		// And
 		$this->assertEquals('ABD',
@@ -250,12 +246,10 @@ after')
 			$this->render('A<% if IsSet && NotSet %>B<% else_if IsSet %>C<% end_if %>D'));
 		$this->assertEquals('AD',
 			$this->render('A<% if NotSet && NotSet2 %>B<% else_if NotSet3 %>C<% end_if %>D'));
-
-		// Broken currently
-		//$this->assertEquals('ACD',
-		//	$this->render('A<% if IsSet && NotSet %>B<% else_if IsSet && AlsoSet %>C<% end_if %>D'));
-		//$this->assertEquals('AD',
-		//	$this->render('A<% if NotSet && NotSet2 %>B<% else_if IsSet && NotSet3 %>C<% end_if %>D'));
+		$this->assertEquals('ACD',
+			$this->render('A<% if IsSet && NotSet %>B<% else_if IsSet && AlsoSet %>C<% end_if %>D'));
+		$this->assertEquals('AD',
+			$this->render('A<% if NotSet && NotSet2 %>B<% else_if IsSet && NotSet3 %>C<% end_if %>D'));
 
 		// Equality
 		$this->assertEquals('ABC',
@@ -345,6 +339,7 @@ class SSViewerTestFixture extends ViewableData {
 
 	function __construct($name = null) {
 		$this->name = $name;
+		parent::__construct();
 	}
 	
 
