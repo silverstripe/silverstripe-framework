@@ -26,6 +26,11 @@ class SapphireSoapServer extends Controller {
 		'binary' => 'xsd:base64Binary',
 	);
 	
+	static $allowed_actions = array( 
+		'index',
+		'wsdl'
+	);
+	
 	function wsdl() {
 		$this->getResponse()->addHeader("Content-Type", "text/xml"); 
 		

@@ -7,9 +7,15 @@
  */
 class CodeViewer extends Controller {
 	
-	public static $url_handlers = array (
+	public static $url_handlers = array(
 		''       => 'browse',
 		'$Class' => 'viewClass'
+	);
+	
+	static $allowed_actions = array(
+		'index',
+		'browse',
+		'viewClass'
 	);
 	
 	/**

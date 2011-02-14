@@ -616,6 +616,10 @@ class Email extends ViewableData {
  */
 class Email_BounceHandler extends Controller {
 	
+	static $allowed_actions = array( 
+		'index'
+	);
+	
 	function init() {
 		BasicAuth::protect_entire_site(false);
 		parent::init();

@@ -10,6 +10,10 @@ class TaskRunner extends Controller {
 		'$TaskName' => 'runTask'
 	);
 	
+	static $allowed_actions = array(
+		'index'
+	);
+	
 	function init() {
 		parent::init();
 
