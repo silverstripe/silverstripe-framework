@@ -110,7 +110,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * 
 	 * @var array
 	 */
-	private $changed;
+	public $changed;
 
 	/**
 	 * The database record (in the same format as $record), before
@@ -130,13 +130,13 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * Used by onBeforeDelete() to ensure child classes call parent::onBeforeDelete()
 	 * @var boolean
 	 */
-	protected $brokenOnDelete = false;
+	public $brokenOnDelete = false;
 	
 	/**
 	 * Used by onBeforeWrite() to ensure child classes call parent::onBeforeWrite()
 	 * @var boolean
 	 */
-	protected $brokenOnWrite = false;
+	public $brokenOnWrite = false;
 	
 	/**
 	 * Should dataobjects be validated before they are written?
@@ -860,7 +860,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * 
 	 * @return A {@link ValidationResult} object
 	 */
-	protected function validate() {
+	public function validate() {
 		return new ValidationResult();
 	}
 
@@ -873,7 +873,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * 
 	 * @uses DataObjectDecorator->onBeforeWrite()
 	 */
-	protected function onBeforeWrite() {
+	public function onBeforeWrite() {
 		$this->brokenOnWrite = false;
 		
 		$dummy = null;
