@@ -50,9 +50,35 @@ class SSTemplateParseException extends Exception {
 /**
 This is the parser for the SilverStripe template language. It gets called on a string and uses a php-peg parser to match
 that string against the language structure, building up the PHP code to execute that structure as it parses
+
+The $result array that is built up as part of the parsing (see thirdparty/php-peg/README.md for more on how parsers 
+build results) has one special member, 'php', which contains the php equivalent of that part of the template tree.
+ 
+Some match rules generate alternate php, or other variations, so check the per-match documentation too.
+ 
+Terms used:
+
+Marked: A string or lookup in the template that has been explictly marked as such - lookups by prepending with "$"
+(like $Foo.Bar), strings by wrapping with single or double quotes ('Foo' or "Foo")
+ 
+Bare: The opposite of marked. An argument that has to has it's type inferred by usage and 2.4 defaults.
+Example of using a bare argument for a loop block: <% loop Foo %>
+ 
+Block: One of two SS template structures. The special characters "<%" and "%>" are used to wrap the opening and
+(required or forbidden depending on which block exactly) closing block marks.
+
+Open Block: An SS template block that doesn't wrap any content or have a closing end tag (in fact, a closing end tag is
+forbidden)
+ 
+Closed Block: An SS template block that wraps content, and requires a counterpart <% end_blockname %> tag
+
 */
 class SSTemplateParser extends Parser {
 
+	/**
+	 * @var bool - Set true by SSTemplateParser::compileString if the template should include comments intended
+	 * for debugging (template source, included files, etc)
+	 */
 	protected $includeDebuggingComments = false;
 	
 	function construct($name) {
@@ -67,11 +93,17 @@ class SSTemplateParser extends Parser {
 	Number: / [0-9]+ /
 	Value: / [A-Za-z0-9_]+ /
 
-	Arguments: :Argument ( < "," < :Argument )*
-    */
+	# CallArguments is a list of one or more comma seperated "arguments" (lookups or strings, either bare or marked)
+	# as passed to a Call within brackets
+	 
+	CallArguments: :Argument ( < "," < :Argument )*
+	*/
 
-	/** Values are bare words in templates, but strings in PHP. We rely on PHP's type conversion to back-convert strings to numbers when needed */
-	function Arguments_Argument(&$res, $sub) {
+	/** 
+	 * Values are bare words in templates, but strings in PHP. We rely on PHP's type conversion to back-convert strings 
+	 * to numbers when needed.
+	 */
+	function CallArguments_Argument(&$res, $sub) {
 		if (isset($res['php'])) $res['php'] .= ', ';
 		else $res['php'] = '';
 		
@@ -79,8 +111,16 @@ class SSTemplateParser extends Parser {
 	}
 
 	/*!*
-	Call: Method:Word ( "(" < :Arguments? > ")" )?
+	
+	# Call is a php-style function call, e.g. Method(Argument, ...). Unlike PHP, the brackets are optional if no
+	# arguments are passed
+	 
+	Call: Method:Word ( "(" < :CallArguments? > ")" )?
 
+	# A lookup is a lookup of a value on the current scope object. It's a sequence of calls seperated by "." characters
+	# This final call in the sequence needs handling specially, as different structures need different sorts of values,
+	# which require a different final method to be called to get the right return value
+	 
 	LookupStep: :Call &"."
 	LastLookupStep: :Call
 
@@ -92,12 +132,17 @@ class SSTemplateParser extends Parser {
 		$res['LookupSteps'] = array();
 	}
 	
+	/** 
+	 * The basic generated PHP of LookupStep and LastLookupStep is the same, except that LookupStep calls 'obj' to 
+	 * get the next ViewableData in the sequence, and LastLookupStep calls different methods (XML_val, hasValue, obj)
+	 * depending on the context the lookup is used in.
+	 */
 	function Lookup_AddLookupStep(&$res, $sub, $method) {
 		$res['LookupSteps'][] = $sub;
 		
 		$property = $sub['Call']['Method']['text'];
 		
-		if (isset($sub['Call']['Arguments']) && $arguments = $sub['Call']['Arguments']['php']) {
+		if (isset($sub['Call']['CallArguments']) && $arguments = $sub['Call']['CallArguments']['php']) {
 			$res['php'] .= "->$method('$property', array($arguments), true)";
 		}
 		else {
@@ -114,6 +159,10 @@ class SSTemplateParser extends Parser {
 	}
 
 	/*!*
+	
+	# Injections are where, outside of a block, a value needs to be inserted into the output. You can either
+	# just do $Foo, or {$Foo} if the surrounding text would cause a problem (e.g. {$Foo}Bar)
+	 
 	SimpleInjection: '$' :Lookup
 	BracketInjection: '{$' :Lookup "}"
 	Injection: BracketInjection | SimpleInjection
@@ -123,23 +172,57 @@ class SSTemplateParser extends Parser {
 	}
 
 	/*!*
-	DollarMarkedLookup: BracketInjection | SimpleInjection
+	 
+	# Inside a block's arguments you can still use the same format as a simple injection ($Foo). In this case
+	# it marks the argument as being a lookup, not a string (if it was bare it might still be used as a lookup,
+	# but that depends on where it's used, a la 2.4)
+	 
+	DollarMarkedLookup: SimpleInjection
 	*/
 	function DollarMarkedLookup_STR(&$res, $sub) {
 		$res['Lookup'] = $sub['Lookup'];
 	}
 
 	/*!*
+	
+	# Inside a block's arguments you can explictly mark a string by surrounding it with quotes (single or double,
+	# but they must be matching). If you do, inside the quote you can escape any character, but the only character
+	# that _needs_ escaping is the matching closing quote 
+	 
 	QuotedString: q:/['"]/   String:/ (\\\\ | \\. | [^$q\\])* /   '$q'
 	
+	# In order to support 2.4's base syntax, we also need to detect free strings - strings not surrounded by
+	# quotes, and containing spaces or punctuation, but supported as a single string. We support almost as flexible
+	# a string as 2.4 - we don't attempt to determine the closing character by context, but just break on any character
+	# which, in some context, would indicate the end of a free string, regardless of if we're actually in that context
+	# or not 
+	 
 	FreeString: /[^,)%!=|&]+/
 	
+	# An argument - either a marked value, or a bare value, prefering lookup matching on the bare value over freestring
+	# matching as long as that would give a successful parse 
+	 
 	Argument:
 		:DollarMarkedLookup |
 		:QuotedString |
 		:Lookup !(< FreeString)|
 		:FreeString
 	*/
+	
+	/**
+	 * If we get a bare value, we don't know enough to determine exactly what php would be the translation, because
+	 * we don't know if the position of use indicates a lookup or a string argument.
+	 * 
+	 * Instead, we record 'ArgumentMode' as a member of this matches results node, which can be:
+	 *   - lookup if this argument was unambiguously a lookup (marked as such)
+	 *   - string is this argument was unambiguously a string (marked as such, or impossible to parse as lookup)
+	 *   - default if this argument needs to be handled as per 2.4
+	 * 
+	 * In the case of 'default', there is no php member of the results node, but instead 'lookup_php', which
+	 * should be used by the parent if the context indicates a lookup, and 'string_php' which should be used
+	 * if the context indicates a string
+	 */
+	
 	function Argument_DollarMarkedLookup(&$res, $sub) {
 		$res['ArgumentMode'] = 'lookup';
 		$res['php'] = $sub['Lookup']['php'];
@@ -168,6 +251,9 @@ class SSTemplateParser extends Parser {
 	}
 	
 	/*!*
+	 
+	# if and else_if blocks allow basic comparisons between arguments
+	 
 	ComparisonOperator: "==" | "!=" | "="
 
 	Comparison: Argument < ComparisonOperator > Argument
@@ -188,6 +274,11 @@ class SSTemplateParser extends Parser {
 	}
 
 	/*!*
+	 
+	# If a comparison operator is not used in an if or else_if block, then the statement is a 'presence check',
+	# which checks if the argument given is present or not. For explicit strings (which were not allowed in 2.4)
+	# this falls back to simple truthiness check
+	 
 	PresenceCheck: Argument
 	*/
 	function PresenceCheck_Argument(&$res, $sub) {
@@ -203,15 +294,24 @@ class SSTemplateParser extends Parser {
 	}
 
 	/*!*	
+	 
+	# if and else_if arguments are a series of presence checks and comparisons, optionally seperated by boolean 
+	# operators 
+	 
 	IfArgumentPortion: Comparison | PresenceCheck
 	*/
 	function IfArgumentPortion_STR(&$res, $sub) {
 		$res['php'] = $sub['php'];
 	}
 
-	/*!*	
+	/*!*
+	 
+	# if and else_if arguments can be combined via these two boolean operators. No precendence overriding is supported 
+	 	
 	BooleanOperator: "||" | "&&"
 	
+	# This is the combination of the previous if and else_if argument portions 
+	 
 	IfArgument: :IfArgumentPortion ( < :BooleanOperator < :IfArgumentPortion )*
 	*/
 	function IfArgument__construct(&$res){
@@ -226,6 +326,11 @@ class SSTemplateParser extends Parser {
 	}
 
 	/*!*	
+	 
+	# ifs are handled seperately from other closed block tags, because (A) their structure is different - they
+	# can have else_if and else tags in between the if tag and the end_if tag, and (B) they have a different
+	# argument structure to every other block 
+	 
 	IfPart: '<%' < 'if' < :IfArgument > '%>' :Template?
 	ElseIfPart: '<%' < 'else_if' < :IfArgument > '%>' :Template?
 	ElsePart: '<%' < 'else' > '%>' :Template?
@@ -254,19 +359,50 @@ class SSTemplateParser extends Parser {
 	}
 
 	/*!*
-	Require: '<%' < 'require' [ Call:(Method:Word "(" < :Arguments  > ")") > '%>'
+	
+	# The require block is handled seperately to the other open blocks as the argument syntax is different
+	# - must have one call style argument, must pass arguments to that call style argument
+	 
+	Require: '<%' < 'require' [ Call:(Method:Word "(" < :CallArguments  > ")") > '%>'
 	*/
 	function Require_Call(&$res, $sub) {
-		$res['php'] = "Requirements::".$sub['Method']['text'].'('.$sub['Arguments']['php'].');';
+		$res['php'] = "Requirements::".$sub['Method']['text'].'('.$sub['CallArguments']['php'].');';
 	}
 	
 	/*!*
+	
+	# To make the block support reasonably extendable, we don't explicitly define each closed block and it's structure,
+	# but instead match against a generic <% block_name argument, ... %> pattern. Each argument is left as per the
+	# output of the Argument matcher, and the handler (see the PHPDoc block later for more on this) is responsible
+	# for pulling out the info required 
+	 
 	BlockArguments: :Argument ( < "," < :Argument)* 
 	
+	# NotBlockTag matches against any word that might come after a "<%" that the generic open and closed block handlers
+	# shouldn't attempt to match against, because they're handled by more explicit matchers 
+	 
 	NotBlockTag: "end_" | (("if" | "else_if" | "else" | "require") ] )
 	
+	# Match against closed blocks - blocks with an opening and a closing tag that surround some internal portion of
+	# template
+	 
 	ClosedBlock: '<%' < !NotBlockTag BlockName:Word ( [ :BlockArguments ] )? > Zap:'%>' :Template? '<%' < 'end_' '$BlockName' > '%>'
 	*/
+	
+	/**
+	 * As mentioned in the parser comment, block handling is kept fairly generic for extensibility. The match rule
+	 * builds up two important elements in the match result array:
+	 *   'ArgumentCount' - how many arguments were passed in the opening tag
+	 *   'Arguments' an array of the Argument match rule result arrays
+	 *
+	 * Once a block has successfully been matched against, it will then look for the actual handler, which should
+	 * be on this class (either defined or decorated on) as ClosedBlock_Handler_Name(&$res), where Name is the
+	 * tag name, first letter captialized (i.e Control, Loop, With, etc).
+	 * 
+	 * This function will be called with the match rule result array as it's first argument. It should return
+	 * the php result of this block as it's return value, or throw an error if incorrect arguments were passed.
+	 */
+	
 	function ClosedBlock__construct(&$res) {
 		$res['ArgumentCount'] = 0;
 	}
@@ -292,6 +428,9 @@ class SSTemplateParser extends Parser {
 		}
 	}
 
+	/**
+	 * This is an example of a block handler function. This one handles the control tag.
+	 */
 	function ClosedBlock_Handle_Control(&$res) {
 		if ($res['ArgumentCount'] != 1) {
 			throw new SSTemplateParseException('Either no or too many arguments in control block. Must be one argument only.', $this);
@@ -310,6 +449,10 @@ class SSTemplateParser extends Parser {
 	}
 	
 	/*!*
+	 
+	# Open blocks are handled in the same generic manner as closed blocks. There is no need to define which blocks
+	# are which - closed is tried first, and if no matching end tag is found, open is tried next
+	  
 	OpenBlock: '<%' < !NotBlockTag BlockName:Word ( [ :BlockArguments ] )? > '%>'
 	*/
 	function OpenBlock__construct(&$res) {
@@ -337,6 +480,9 @@ class SSTemplateParser extends Parser {
 		}
 	}
 	
+	/**
+	 * This is an open block handler, for the <% include %> tag
+	 */
 	function OpenBlock_Handle_Include(&$res) {
 		if ($res['ArgumentCount'] != 1) throw new SSTemplateParseException('Include takes exactly one argument', $this);
 		
@@ -355,6 +501,9 @@ class SSTemplateParser extends Parser {
 		}
 	}
 	
+	/**
+	 * This is an open block handler, for the <% debug %> utility tag
+	 */
 	function OpenBlock_Handle_Debug(&$res) {
 		if ($res['ArgumentCount'] == 0) return 'Debug::show($item);';
 		else if ($res['ArgumentCount'] == 1) {
@@ -370,17 +519,28 @@ class SSTemplateParser extends Parser {
 		}
 	}
 
+	/**
+	 * This is an open block handler, for the <% base_tag %> tag
+	 */
 	function OpenBlock_Handle_Base_tag(&$res) {
 		if ($res['ArgumentCount'] != 0) throw new SSTemplateParseException('Base_tag takes no arguments', $this);
 		return '$val .= SSViewer::get_base_tag($val);';
 	}
 
+	/**
+	 * This is an open block handler, for the <% current_page %> tag
+	 */
 	function OpenBlock_Handle_Current_page(&$res) {
 		if ($res['ArgumentCount'] != 0) throw new SSTemplateParseException('Current_page takes no arguments', $this);
 		return '$val .= $_SERVER[SCRIPT_URL];';
 	}
 	
 	/*!*
+	
+	# This is used to detect when we have a mismatched closing tag (i.e., one with no equivilent opening tag)
+	# Because of parser limitations, this can only be used at the top nesting level of a template. Other mismatched
+	# closing tags are detected as an invalid open tag  
+	 
 	MismatchedEndBlock: '<%' < 'end_' Word > '%>'
 	*/
 	function MismatchedEndBlock__finalise(&$res) {
@@ -389,6 +549,10 @@ class SSTemplateParser extends Parser {
 	}
 
 	/*!*	
+	 
+	# This is used to detect a malformed opening tag - one where the tag is opened with the "<%" characters, but
+	# the tag is not structured properly 
+	 
 	MalformedOpenTag: '<%' < !NotBlockTag Tag:Word  !( ( [ :BlockArguments ] )? > '%>' )
 	*/
 	function MalformedOpenTag__finalise(&$res) {
@@ -397,6 +561,10 @@ class SSTemplateParser extends Parser {
 	}
 	
 	/*!*
+	 
+	# This is used to detect a malformed end tag - one where the tag is opened with the "<%" characters, but
+	# the tag is not structured properly 
+	 
 	MalformedCloseTag: '<%' < Tag:('end_' :Word ) !( > '%>' )
 	*/
 	function MalformedCloseTag__finalise(&$res) {
@@ -405,10 +573,16 @@ class SSTemplateParser extends Parser {
 	}
 	
 	/*!*
+	 
+	# This is used to detect a malformed tag. It's mostly to keep the Template match rule a bit shorter
+	 
 	MalformedBlock: MalformedOpenTag | MalformedCloseTag
 	*/
 
 	/*!*
+	 
+	# This is used to remove template comments
+	 
 	Comment: "<%--" (!"--%>" /./)+ "--%>"
 	*/
 	function Comment__construct(&$res) {
@@ -416,6 +590,9 @@ class SSTemplateParser extends Parser {
 	}
 	
 	/*!*
+	
+	# Text matches anything that isn't a template command (not an injection, block of any kind or comment) 
+	 
 	Text: /
 		(
 			(\\.) |              # Any escaped character
@@ -427,6 +604,9 @@ class SSTemplateParser extends Parser {
 		)+
 		/
 
+	# Template is any structurally-complete portion of template (a full nested level in other words). It's used
+	# by the block rules to recurse
+	 
 	Template: (Comment | If | Require | ClosedBlock | OpenBlock | MalformedBlock | Injection | Text)+
 	*/
 	function Template__construct(&$res) {
@@ -455,27 +635,57 @@ class SSTemplateParser extends Parser {
 	}
 	
 	/*!*
+	
+	# TopTemplate is the same as Template, but should only be used at the top level (not nested), as it includes
+	# MismatchedEndBlock detection, which only works at the top level  
+	 
 	TopTemplate: (Comment | If | Require | ClosedBlock | OpenBlock | MalformedBlock | MismatchedEndBlock | Injection | Text)+
 	*/
+	
+	/**
+	 * The TopTemplate also includes the opening stanza to start off the template
+	 */
 	function TopTemplate__construct(&$res) {
 		$res['php'] = "<?php" . PHP_EOL;
 	}
 
+	/**
+	 * But otherwise handles producing the php the same as every other template block
+	 */
 	function TopTemplate_Text(&$res, $sub) { return $this->Template_Text($res, $sub); }
 	function TopTemplate_STR(&$res, $sub) { return $this->Template_STR($res, $sub); }
 
+	
+	/******************
+	 * Here ends the parser itself. Below are utility methods to use the parser
+	 */
+	
+	/**
+	 * Compiles some passed template source code into the php code that will execute as per the template source.
+	 * 
+	 * @static
+	 * @throws SSTemplateParseException
+	 * @param  $string - The source of the template
+	 * @param string $templateName - The name of the template, normally the filename the template source was loaded from
+	 * @param bool $includeDebuggingComments - True is debugging comments should be included in the output
+	 * @return mixed|string - The php that, when executed (via include or exec) will behave as per the template source
+	 */
 	static function compileString($string, $templateName = "", $includeDebuggingComments=false) {
+		// Construct a parser instance
 		$parser = new SSTemplateParser($string);
 		$parser->includeDebuggingComments = $includeDebuggingComments;
 
 		// Ignore UTF8 BOM at begining of string. TODO: Confirm this is needed, make sure SSViewer handles UTF (and other encodings) properly
 		if(substr($string, 0,3) == pack("CCC", 0xef, 0xbb, 0xbf)) $parser->pos = 3;
 		
+		// Match the source against the parser
 		$result =  $parser->match_TopTemplate();
 		if(!$result) throw new SSTemplateParseException('Unexpected problem parsing template', $parser);
 
+		// Get the result
 		$code = $result['php'];
 		
+		// Include top level debugging comments if desired
 		if($includeDebuggingComments && $templateName && stripos($code, "<?xml") === false) {
 			// If this template is a full HTML page, then put the comments just inside the HTML tag to prevent any IE glitches
 			if(stripos($code, "<html") !== false) {
@@ -489,7 +699,15 @@ class SSTemplateParser extends Parser {
 		return $code;
 	}
 	
+	/**
+	 * Compiles some file that contains template source code, and returns the php code that will execute as per that
+	 * source
+	 * 
+	 * @static
+	 * @param  $template - A file path that contains template source code
+	 * @return mixed|string - The php that, when executed (via include or exec) will behave as per the template source
+	 */
 	static function compileFile($template) {
-		return self::compileString(file_get_contents($template));
+		return self::compileString(file_get_contents($template), $template);
 	}
 }
