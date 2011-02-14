@@ -601,7 +601,7 @@ class Security extends Controller {
 	 * This is used in the CMS.
 	 */
 	function ping() {
-		return (Member::currentUserID());
+		return 1;
 	}
 
 

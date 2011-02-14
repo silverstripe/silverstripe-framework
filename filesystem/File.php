@@ -259,8 +259,8 @@ class File extends DataObject {
 	function canEdit($member = null) {
 		if(!$member) $member = Member::currentUser();
 		
-		$results = $this->extend('canEdit', $member);
-		if($results && is_array($results)) if(!min($results)) return false;
+		$result = $this->extendedCan('canEdit', $member);
+		if($result !== null) return $result;
 		
 		return Permission::checkMember($member, 'CMS_ACCESS_AssetAdmin');
 	}
@@ -271,8 +271,8 @@ class File extends DataObject {
 	function canCreate($member = null) {
 		if(!$member) $member = Member::currentUser();
 		
-		$results = $this->extend('canCreate', $member);
-		if($results && is_array($results)) if(!min($results)) return false;
+		$result = $this->extendedCan('canCreate', $member);
+		if($result !== null) return $result;
 		
 		return $this->canEdit($member);
 	}

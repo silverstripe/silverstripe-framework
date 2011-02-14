@@ -158,7 +158,13 @@ table.CMSList tbody td.current td {
 }
 
 .TableListField div.utility {
+	overflow: auto;
+}
+.TableListField div.utility .item {
 	margin-top: 1em;
+	padding: 3px 0 6px 0;
+	display: block;
+	float: left;
 }
 	.TableListField div.utility a {
 		text-decoration: none;

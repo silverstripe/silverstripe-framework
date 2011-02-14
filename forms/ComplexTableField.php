@@ -1006,7 +1006,6 @@ class ComplexTableField_ItemRequest extends TableListField_ItemRequest {
  * @subpackage fields-relational
  */
 class ComplexTableField_Item extends TableListField_Item {
-
 	function Link($action = null) {
 		return Controller::join_links($this->parent->Link(), '/item/', $this->item->ID, $action);
 	}

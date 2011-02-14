@@ -72,7 +72,8 @@ class ConfirmedPasswordField extends FormField {
 		$this->children = new FieldSet(
 			new PasswordField(
 				"{$name}[_Password]", 
-				(isset($title)) ? $title : _t('Member.PASSWORD')),
+				(isset($title)) ? $title : _t('Member.PASSWORD', 'Password')
+			),
 			new PasswordField(
 				"{$name}[_ConfirmPassword]",
 				(isset($titleConfirmField)) ? $titleConfirmField : _t('Member.CONFIRMPASSWORD', 'Confirm Password')

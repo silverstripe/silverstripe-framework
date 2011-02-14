@@ -984,11 +984,11 @@ class MySQLDatabase extends SS_Database {
 		}
 
 		if($format == '%U') return "UNIX_TIMESTAMP($date)";
-
+		
 		return "DATE_FORMAT($date, '$format')";
-
+		
 	}
-
+	
 	/**
 	 * Function to return an SQL datetime expression that can be used with MySQL
 	 * used for querying a datetime addition

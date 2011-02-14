@@ -25,11 +25,7 @@ class Folder extends File {
 
 	static $default_sort = "\"Sort\"";
 	
-	function populateDefaults() {
-		parent::populateDefaults();
-		
-		if(!$this->Name) $this->Name = _t('AssetAdmin.NEWFOLDER',"NewFolder");
-	}
+	static $default_sort = "\"Sort\"";
 	
 	/**
 	 * Find the given folder or create it both as {@link Folder} database records
@@ -257,7 +253,6 @@ class Folder extends File {
 		
 		if (move_uploaded_file($tmpFile['tmp_name'], "$base/$file$ext")) {
 			// Update with the new image
-			chmod("$base/$file$ext", Filesystem::$file_create_mask);
 			return $this->constructChild(basename($file . $ext));
 		} else {
 			if(!file_exists($tmpFile['tmp_name'])) user_error("Folder::addUploadToFolder: '$tmpFile[tmp_name]' doesn't exist", E_USER_ERROR);
@@ -376,6 +371,12 @@ class Folder extends File {
 		$fileList->setPopupCaption(_t('Folder.VIEWEDITASSET', "View/Edit Asset"));
 
 		$titleField = ($this->ID && $this->ID != "root") ? new TextField("Title", _t('Folder.TITLE')) : new HiddenField("Title");
+		if( $this->canEdit() ) {
+			$deleteButton = new InlineFormAction('deletemarked',_t('Folder.DELSELECTED','Delete selected files'), 'delete');
+			$deleteButton->includeDefaultJS(false);
+		} else {
+			$deleteButton = new HiddenField('deletemarked');
+		}
 
 		$fields = new FieldSet(
 			new HiddenField("Name"),

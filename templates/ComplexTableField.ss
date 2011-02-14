@@ -71,10 +71,12 @@
 			<% end_if %>
 		</tbody>
 	</table>
-	<div class="utility">
-		<% if Can(export) %>
-			<a href="$ExportLink" target="_blank"><% _t('CSVEXPORT', 'Export to CSV' ) %></a>
-		<% end_if %>
-	</div>
+	<% if Utility %>
+		<div class="utility">
+			<% control Utility %>
+				<span class="item"><a href="$Link" target="_blank">$Title</a></span>
+			<% end_control %>
+		</div>
+	<% end_if %>
 	</div>
 </div>

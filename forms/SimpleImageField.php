@@ -103,6 +103,14 @@ class SimpleImageField extends FileField {
 				'disabled' => $this->disabled
 			)
 		);
+		$html .= $this->createTag("input", 
+			array(
+				"type" => "hidden", 
+				"name" => "MAX_FILE_SIZE", 
+				"value" => $this->getValidator()->getAllowedMaxFileSize(),
+				"tabindex" => $this->getTabIndex()
+			)
+		);
 		$html .= "</div>";
 		
 		return $html;

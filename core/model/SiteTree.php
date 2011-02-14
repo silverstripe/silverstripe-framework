@@ -1674,6 +1674,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		require_once("forms/Form.php");
 		Requirements::javascript(SAPPHIRE_DIR . "/thirdparty/prototype/prototype.js");
 		Requirements::javascript(SAPPHIRE_DIR . "/thirdparty/behaviour/behaviour.js");
+		Requirements::javascript(CMS_DIR . "/javascript/SitetreeAccess.js");
 		Requirements::add_i18n_javascript(SAPPHIRE_DIR . '/javascript/lang');
 		Requirements::javascript(SAPPHIRE_DIR . '/javascript/UpdateURL.js');
 
@@ -1724,12 +1725,11 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		$dependentPagesCount = $this->DependentPagesCount();
 		if($dependentPagesCount) {
 			$dependentColumns = array(
-				'Title' => 'Title',
-				'Subsite.Title' => 'Subsite',
-				'AbsoluteLink' => 'URL',
-				'DependentLinkType' => 'Link type',
+				'Title' => $this->fieldLabel('Title'),
+				'AbsoluteLink' => _t('SiteTree.DependtPageColumnURL', 'URL'),
+				'DependentLinkType' => _t('SiteTree.DependtPageColumnLinkType', 'Link type'),
 			);
-			if(!class_exists('Subsite')) unset($dependentColumns['Subsite.Title']);
+			if(class_exists('Subsite')) $dependentColumns['Subsite.Title'] = singleton('Subsite')->i18n_singular_name();
 			
 			$dependentNote = new LiteralField('DependentNote', '<p>' . _t('SiteTree.DEPENDENT_NOTE', 'The following pages depend on this page. This includes virtual pages, redirector pages, and pages with content links.') . '</p>');
 			$dependentTable = new TableListField(
@@ -1782,13 +1782,13 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 						$this->fieldLabel('ClassName'), 
 						$this->getClassDropdown()
 					),
-					$parentIdComposite = new CompositeField(
-						new OptionsetField("ParentType", _t("SiteTree.PAGELOCATION", "Page location"), array(
-							"root" => _t("SiteTree.PARENTTYPE_ROOT", "Top-level page"),
-							"subpage" => _t("SiteTree.PARENTTYPE_SUBPAGE", "Sub-page underneath a parent page (choose below)"),
-						)),
-						$parentIDField = new TreeDropdownField("ParentID", $this->fieldLabel('ParentID'), 'SiteTree')
-					),
+					
+					new OptionsetField("ParentType", _t("SiteTree.PAGELOCATION", "Page location"), array(
+						"root" => _t("SiteTree.PARENTTYPE_ROOT", "Top-level page"),
+						"subpage" => _t("SiteTree.PARENTTYPE_SUBPAGE", "Sub-page underneath a parent page (choose below)"),
+					)),
+					$parentIDField = new TreeDropdownField("ParentID", $this->fieldLabel('ParentID'), 'SiteTree'),
+					
 					new CheckboxField("ShowInMenus", $this->fieldLabel('ShowInMenus')),
 					new CheckboxField("ShowInSearch", $this->fieldLabel('ShowInSearch')),
 					new LiteralField(
@@ -1862,8 +1862,6 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		$editorsOptionsSource["LoggedInUsers"] = _t('SiteTree.EDITANYONE', "Anyone who can log-in to the CMS");
 		$editorsOptionsSource["OnlyTheseUsers"] = _t('SiteTree.EDITONLYTHESE', "Only these people (choose from list)");
 		$editorsOptionsField->setSource($editorsOptionsSource);
-		
-		$parentIdComposite->addExtraClass('parentTypeSelector');
 
 		if(!Permission::check('SITETREE_GRANT_ACCESS')) {
 			$fields->makeFieldReadonly($viewersOptionsField);
@@ -1884,7 +1882,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		$tabContent->setTitle(_t('SiteTree.TABCONTENT', "Content"));
 		$tabMain->setTitle(_t('SiteTree.TABMAIN', "Main"));
 		$tabMeta->setTitle(_t('SiteTree.TABMETA', "Metadata"));
-		$tabBehaviour->setTitle(_t('SiteTree.TABBEHAVIOUR', "Behaviour"));
+		$tabBehaviour->setTitle(_t('SiteTree.TABBEHAVIOUR', "Behavior"));
 		$tabAccess->setTitle(_t('SiteTree.TABACCESS', "Access"));
 
 		if(file_exists(BASE_PATH . '/install.php')) {
@@ -1955,10 +1953,22 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	function getCMSActions() {
 		$actions = new FieldSet();
 
+		// "readonly"/viewing version that isn't the current version of the record
+		$stageOrLiveRecord = Versioned::get_one_by_stage($this->class, Versioned::current_stage(), sprintf('"SiteTree"."ID" = %d', $this->ID));
+		if($stageOrLiveRecord && $stageOrLiveRecord->Version != $this->Version) {
+			$actions->push(new FormAction('email', _t('CMSMain.EMAIL', 'Email')));
+			$actions->push(new FormAction('rollback', _t('CMSMain.ROLLBACK', 'Roll back to this version')));
+
+			// getCMSActions() can be extended with updateCMSActions() on a decorator
+			$this->extend('updateCMSActions', $actions);
+
+			return $actions;
+		}
+
 		if($this->isPublished() && $this->canPublish() && !$this->IsDeletedFromStage) {
 			// "unpublish"
 			$unpublish = FormAction::create('unpublish', _t('SiteTree.BUTTONUNPUBLISH', 'Unpublish'), 'delete');
-			$unpublish->describe(_t('SiteTree.BUTTONUNPUBLISHDESC', "Remove this page from the published site"));
+			$unpublish->describe(_t('SiteTree.BUTTONUNPUBLISHDESC', 'Remove this page from the published site'));
 			$unpublish->addExtraClass('delete');
 			$actions->push($unpublish);
 		}
@@ -1967,7 +1977,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 			if($this->isPublished() && $this->canEdit())	{
 				// "rollback"
 				$rollback = FormAction::create('rollback', _t('SiteTree.BUTTONCANCELDRAFT', 'Cancel draft changes'), 'delete');
-				$rollback->describe(_t('SiteTree.BUTTONCANCELDRAFTDESC', "Delete your draft and revert to the currently published page"));
+				$rollback->describe(_t('SiteTree.BUTTONCANCELDRAFTDESC', 'Delete your draft and revert to the currently published page'));
 				$rollback->addExtraClass('delete');
 				$actions->push($rollback);
 			}
@@ -2023,7 +2033,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 
 		// Handle activities undertaken by decorators
 		$this->invokeWithExtensions('onBeforePublish', $original);
-		
+		$this->Status = "Published";
 		//$this->PublishedByID = Member::currentUser()->ID;
 		$this->write();
 		$this->publish("Stage", "Live");

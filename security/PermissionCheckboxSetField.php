@@ -72,6 +72,7 @@ class PermissionCheckboxSetField extends FormField {
 
 	function Field() {
 		Requirements::css(SAPPHIRE_DIR . '/css/CheckboxSetField.css');
+		Requirements::javascript(SAPPHIRE_DIR . '/javascript/PermissionCheckboxSetField.js');
 		
 		$uninheritedCodes = array();
 		$inheritedCodes = array();

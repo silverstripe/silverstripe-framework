@@ -71,6 +71,21 @@ class TestRunner extends Controller {
 	);
 	
 	/**
+	 * @var Array Blacklist certain directories for the coverage report.
+	 * Filepaths are relative to the webroot, without leading slash.
+	 * 
+	 * @see http://www.phpunit.de/manual/current/en/appendixes.configuration.html#appendixes.configuration.blacklist-whitelist
+	 */
+	static $coverage_filter_dirs = array(
+		'cms/thirdparty',
+		'cms/tests',
+		'cms/lang',
+		'sapphire/thirdparty',
+		'sapphire/tests',
+		'sapphire/lang',
+	);
+	
+	/**
 	 * Override the default reporter with a custom configured subclass.
 	 *
 	 * @param string $reporter
@@ -173,6 +188,7 @@ class TestRunner extends Controller {
 		ManifestBuilder::load_all_classes();
 		$this->all($request, true);
 	}
+<<<<<<< HEAD
 	
 	/**
 	 * Run only a single coverage test class or a comma-separated list of tests
@@ -182,6 +198,17 @@ class TestRunner extends Controller {
 	}
 	
 	/**
+=======
+	
+	/**
+	 * Run only a single coverage test class or a comma-separated list of tests
+	 */
+	function coverageOnly($request) {
+		$this->only($request, true);
+	}
+	
+	/**
+>>>>>>> 2.4
 	 * Run coverage tests for one or more "modules".
 	 * A module is generally a toplevel folder, e.g. "mysite" or "sapphire".
 	 */
