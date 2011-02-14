@@ -61,10 +61,6 @@ class SSTemplateParser extends Parser {
 		return $result;
 	}
 	
-	function DLRBlockName() {
-		return '-none-';
-	}
-	
 	/*!* SSTemplateParser
 
 	Word: / [A-Za-z_] [A-Za-z0-9_]* /
@@ -236,10 +232,6 @@ class SSTemplateParser extends Parser {
 
 	If: IfPart ElseIfPart* ElsePart? '<%' < 'end_if' > '%>'
 	*/
-	function If__construct(&$res) {
-		$res['BlockName'] = 'if';
-	}
-	
 	function If_IfPart(&$res, $sub) {
 		$res['php'] = 
 			'if (' . $sub['IfArgument']['php'] . ') { ' . PHP_EOL .
@@ -318,7 +310,7 @@ class SSTemplateParser extends Parser {
 	}
 	
 	/*!*
-	OpenBlock: '<%' < !NotBlockTag OpenBlockName:Word ( [ :BlockArguments ] )? > '%>'
+	OpenBlock: '<%' < !NotBlockTag BlockName:Word ( [ :BlockArguments ] )? > '%>'
 	*/
 	function OpenBlock__construct(&$res) {
 		$res['ArgumentCount'] = 0;
@@ -336,7 +328,7 @@ class SSTemplateParser extends Parser {
 	}
 	
 	function OpenBlock__finalise(&$res) {
-		$blockname = $res['OpenBlockName']['text'];
+		$blockname = $res['BlockName']['text'];
 	
 		$method = 'OpenBlock_Handle_'.ucfirst(strtolower($blockname));
 		if (method_exists($this, $method)) $res['php'] = $this->$method($res);
@@ -389,7 +381,7 @@ class SSTemplateParser extends Parser {
 	}
 	
 	/*!*
-	MismatchedEndBlock: '<%' < 'end_' !'$BlockName' :Word > '%>'
+	MismatchedEndBlock: '<%' < 'end_' Word > '%>'
 	*/
 	function MismatchedEndBlock__finalise(&$res) {
 		$blockname = $res['Word']['text'];
