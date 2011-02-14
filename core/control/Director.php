@@ -122,6 +122,8 @@ class Director {
 		// Load the session into the controller
 		$session = new Session(isset($_SESSION) ? $_SESSION : null);
 		
+		singleton('Injector')->get('RequestProcessor')->preRequest($req, $session);
+		
 		$result = Director::handleRequest($req, $session);
 		$session->inst_save();
 
@@ -129,7 +131,11 @@ class Director {
 		if(is_string($result) && substr($result,0,9) == 'redirect:') {
 			$response = new SS_HTTPResponse();
 			$response->redirect(substr($result, 9));
-			$response->output();
+			
+			$res = singleton('Injector')->get('RequestProcessor')->postRequest($req, $response);
+			if ($res !== false) {
+				$response->output();
+			}
 
 		// Handle a controller
 		} else if($result) {
@@ -141,14 +147,17 @@ class Director {
 				$response->setBody($result);
 			}
 			
-			// ?debug_memory=1 will output the number of bytes of memory used for this request
-			if(isset($_REQUEST['debug_memory']) && $_REQUEST['debug_memory']) {
-				Debug::message(sprintf(
-					"Peak memory usage in bytes: %s", 
-					number_format(memory_get_peak_usage(),0)
-				));
-			} else {
-				$response->output();
+			$res = singleton('Injector')->get('RequestProcessor')->postRequest($req, $response);
+			if ($res !== false) {
+				// ?debug_memory=1 will output the number of bytes of memory used for this request
+				if(isset($_REQUEST['debug_memory']) && $_REQUEST['debug_memory']) {
+					Debug::message(sprintf(
+						"Peak memory usage in bytes: %s", 
+						number_format(memory_get_peak_usage(),0)
+					));
+				} else {
+					$response->output();
+				}
 			}
 
 			//$controllerObj->getSession()->inst_save();

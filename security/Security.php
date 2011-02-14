@@ -335,7 +335,9 @@ class Security extends Controller {
 		$tmpPage->ID = -1 * rand(1,10000000);
 
 		$controller = new Page_Controller($tmpPage);
+		singleton('Injector')->inject($controller);
 		$controller->init();
+		
 		//Controller::$currentController = $controller;
 
 		$content = '';
