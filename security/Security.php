@@ -5,6 +5,18 @@
  * @subpackage security
  */
 class Security extends Controller {
+	
+	static $allowed_actions = array( 
+	    'index', 
+	    'login', 
+	    'logout', 
+	    'basicauthlogin', 
+	    'lostpassword', 
+	    'passwordsent', 
+	    'changepassword', 
+	    'ping',
+		'LoginForm'
+ 	);
 
 	/**
 	 * Default user name. Only used in dev-mode by {@link setDefaultAdmin()}

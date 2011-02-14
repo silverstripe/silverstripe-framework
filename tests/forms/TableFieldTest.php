@@ -288,7 +288,7 @@ class TableFieldTest extends SapphireTest {
 /**
  * Stub controller
  */
-class TableFieldTest_Controller extends Controller {
+class TableFieldTest_Controller extends Controller implements TestOnly {
 	function Link($action = null) {
 		return Controller::join_links('TableFieldTest/', $action);
 	}

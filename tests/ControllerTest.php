@@ -139,7 +139,7 @@ class ControllerTest extends FunctionalTest {
 /**
  * Simple controller for testing
  */
-class ControllerTest_Controller extends Controller {
+class ControllerTest_Controller extends Controller implements TestOnly {
 	public $Content = "default content";
 	
 	function methodaction() {
@@ -156,7 +156,7 @@ class ControllerTest_Controller extends Controller {
 /**
  * Controller with an $allowed_actions value
  */
-class ControllerTest_SecuredController extends Controller {
+class ControllerTest_SecuredController extends Controller implements TestOnly {
 	static $allowed_actions = array(
 		"methodaction",
 		"adminonly" => "ADMIN",
@@ -179,7 +179,7 @@ class ControllerTest_SecuredController extends Controller {
 	}
 }
 
-class ControllerTest_FullSecuredController extends Controller {
+class ControllerTest_FullSecuredController extends Controller implements TestOnly {
 	
 	static $allowed_actions = array(
 		"*" => "ADMIN",
@@ -195,7 +195,7 @@ class ControllerTest_FullSecuredController extends Controller {
 	}
 }
 
-class ControllerTest_UnsecuredController extends ControllerTest_SecuredController {}
+class ControllerTest_UnsecuredController extends ControllerTest_SecuredController implements TestOnly {}
 
 class ControllerTest_HasAction extends Controller {
 	
@@ -210,7 +210,7 @@ class ControllerTest_HasAction extends Controller {
 	
 }
 
-class ControllerTest_HasAction_Unsecured extends ControllerTest_HasAction {
+class ControllerTest_HasAction_Unsecured extends ControllerTest_HasAction implements TestOnly {
 	
 	public function defined_action() {  }
 	

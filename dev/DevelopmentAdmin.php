@@ -17,6 +17,17 @@ class DevelopmentAdmin extends Controller {
 		'$Action//$Action/$ID' => 'handleAction',
 	);
 	
+	static $allowed_actions = array( 
+        'index', 
+        'tests', 
+        'jstests', 
+        'tasks', 
+        'viewmodel', 
+        'build', 
+        'reset', 
+        'viewcode' 
+ 	);
+	
 	function init() {
 		parent::init();
 		

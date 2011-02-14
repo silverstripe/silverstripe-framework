@@ -265,7 +265,7 @@ Director::addRules(50, array(
 /**
  * Controller for the test
  */
-class RequestHandlingTest_Controller extends Controller {
+class RequestHandlingTest_Controller extends Controller implements TestOnly {
 	static $url_handlers = array(
 		// The double-slash is need here to ensure that 
 		'$Action//$ID/$OtherID' => "handleAction",
@@ -383,7 +383,7 @@ class RequestHandlingTest_ControllerExtension extends Extension {
 /**
  * Controller for the test
  */
-class RequestHandlingTest_AllowedController extends Controller {
+class RequestHandlingTest_AllowedController extends Controller implements TestOnly  {
 	static $url_handlers = array(
 		// The double-slash is need here to ensure that 
 		'$Action//$ID/$OtherID' => "handleAction",
@@ -458,7 +458,7 @@ class RequestHandlingTest_Form extends Form {
 	}
 }
 
-class RequestHandlingTest_ControllerFormWithAllowedActions extends Controller {
+class RequestHandlingTest_ControllerFormWithAllowedActions extends Controller implements TestOnly {
 	
 	function Form() {
 		return new RequestHandlingTest_FormWithAllowedActions(
