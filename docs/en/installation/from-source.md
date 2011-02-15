@@ -76,7 +76,7 @@ This will add `sapphire`, `cms` and the `blackcandy` theme to your project.
 
 As a fallback solution, you can simply download all necessary files without any dependency management through piston.
 This is handy if you have an existing project in version control, and want a one-off snapshot
-of the modules that won't be updated frequently.
+of the modules. The only way to update this codebase later is to overwrite the whole folder, with no easy way to track and re-apply any changes made to it since.
 
 	cd my-silverstripe-project/
 	tools/new-project -m flat
