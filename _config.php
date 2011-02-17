@@ -122,3 +122,32 @@ singleton('Injector')->load(array(
 ));
 
 singleton('Injector')->addAutoProperty('logger', '#$Logger');
+
+
+// Loading this separately just to show how overriding a service
+// works.Remember, no objects are ever created until AFTER they're referenced, 
+// so we can create as many specs of 'DataService' as we want, they're stored
+// under different IDs, and only ever action instantiated if referenced
+singleton('Injector')->load(array(
+	array(
+		'class'			=> 'DataService',
+		'id'			=> 'DataServiceForProxy'		// we can use whatever name here - the object doesn't actually
+														// exist until bind time, so multiple definitions don't matter
+	),
+	array(
+		'class'			=> 'PermissionCheckAspect',
+		'constructor'	=> array(
+			'WRITE'
+		)
+	),
+	array(
+		'id'			=> 'DataService',				// overwriting the default implementation
+		'class'			=> 'AopProxyService',
+		'properties'	=> array(
+			'proxied'		=> '#$DataServiceForProxy',
+			'beforeCall'	=> array(
+				'write'			=> '#$PermissionCheckAspect'
+			)
+		)
+	)
+));
