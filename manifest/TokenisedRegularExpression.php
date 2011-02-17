@@ -6,7 +6,7 @@
  * @package sapphire
  * @subpackage core
  */ 
-class TokenisedRegularExpression extends Object {
+class TokenisedRegularExpression {
 	/**
 	 * The regular expression definition
 	 */
@@ -14,7 +14,6 @@ class TokenisedRegularExpression extends Object {
 	
 	function __construct($expression) {
 		$this->expression = $expression;
-		parent::__construct();
 	}
 	
 	function findAll($tokens) {
