@@ -1,4 +1,129 @@
 <?php
+
+/**
+ * This tracks the current scope for an SSViewer instance. It has three goals:
+ *   - Handle entering & leaving sub-scopes in loops and withs
+ *   - Track Up and Top
+ *   - (As a side effect) Inject data that needs to be available globally (used to live in ViewableData)
+ * 
+ * In order to handle up, rather than tracking it using a tree, which would involve constructing new objects
+ * for each step, we use indexes into the itemStack (which already has to exist).
+ * 
+ * Each item has three indexes associated with it
+ * 
+ *   - Pop. Which item should become the scope once the current scope is popped out of
+ *   - Up. Which item is up from this item
+ *   - Current. Which item is the first time this object has appeared in the stack
+ * 
+ * We also keep the index of the current starting point for lookups. A lookup is a sequence of obj calls -
+ * when in a loop or with tag the end result becomes the new scope, but for injections, we throw away the lookup
+ * and revert back to the original scope once we've got the value we're after
+ * 
+ */
+class SSViewer_DataPresenter {
+	
+	// The stack of previous "global" items
+	// And array of item, itemIterator, pop_index, up_index, current_index
+	private $itemStack = array(); 
+	
+	private $item; // The current "global" item (the one any lookup starts from)
+	private $itemIterator; // If we're looping over the current "global" item, here's the iterator that tracks with item we're up to
+	
+	private $popIndex; // A pointer into the item stack for which item should be scope on the next pop call
+	private $upIndex; // A pointer into the item stack for which item is "up" from this one
+	private $currentIndex; // A pointer into the item stack for which item is this one (or null if not in stack yet)
+	
+	private $localIndex;
+	
+	function __construct($item){
+		$this->item = $item;
+		$this->localIndex=0;
+		$this->itemStack[] = array($this->item, null, null, null, 0);
+	}
+	
+	function getItem(){
+		return $this->itemIterator ? $this->itemIterator->current() : $this->item;
+	}
+	
+	function resetLocalScope(){
+		list($this->item, $this->itemIterator, $this->popIndex, $this->upIndex, $this->currentIndex) = $this->itemStack[$this->localIndex];
+		array_splice($this->itemStack, $this->localIndex+1);
+	}
+	
+	function obj($name){
+		
+		switch ($name) {
+			case 'Up':
+				list($this->item, $this->itemIterator, $unused2, $this->upIndex, $this->currentIndex) = $this->itemStack[$this->upIndex];
+				break;
+			
+			case 'Top':
+				list($this->item, $this->itemIterator, $unused2, $this->upIndex, $this->currentIndex) = $this->itemStack[0];
+				break;
+			
+			default:
+				$on = $this->itemIterator ? $this->itemIterator->current() : $this->item;
+					
+				$this->item = call_user_func_array(array($on, 'obj'), func_get_args());
+				$this->itemIterator = null;
+				$this->upIndex = $this->currentIndex ? $this->currentIndex : count($this->itemStack)-1;
+				$this->currentIndex = count($this->itemStack);
+				break;
+		}
+		
+		$this->itemStack[] = array($this->item, $this->itemIterator, null, $this->upIndex, $this->currentIndex);
+		return $this;
+	}
+	
+	function pushScope(){
+		$newLocalIndex = count($this->itemStack)-1;
+		
+		$this->popIndex = $this->itemStack[$newLocalIndex][2] = $this->localIndex;
+		$this->localIndex = $newLocalIndex;
+		
+		// We normally keep any previous itemIterator around, so local $Up calls reference the right element. But
+		// once we enter a new global scope, we need to make sure we use a new one
+		$this->itemIterator = $this->itemStack[$newLocalIndex][1] = null;
+		
+		return $this;
+	}
+
+	function popScope(){
+		$this->localIndex = $this->popIndex;
+		$this->resetLocalScope();
+		
+		return $this;
+	}
+	
+	function next(){
+		if (!$this->item) return false;
+		
+		if (!$this->itemIterator) { 
+			if (is_array($this->item)) $this->itemIterator = new ArrayIterator($this->item);
+			else $this->itemIterator = $this->item->getIterator();
+			
+			$this->itemStack[$this->localIndex][1] = $this->itemIterator;
+			$this->itemIterator->rewind();
+		}
+		else {
+			$this->itemIterator->next();
+		}
+		
+		$this->resetLocalScope();
+		
+		if (!$this->itemIterator->valid()) return false;
+		return $this->itemIterator->key();
+	}
+	
+	function __call($name, $arguments) {
+		$on = $this->itemIterator ? $this->itemIterator->current() : $this->item;
+		$retval = call_user_func_array(array($on, $name), $arguments);
+		
+		$this->resetLocalScope();
+		return $retval;
+	}
+}
+
 /**
  * Parses a template file with an *.ss file extension.
  * 
@@ -422,14 +547,12 @@ class SSViewer {
 			}
 		}
 		
-		$itemStack = array();
-		$val = "";
-		$valStack = array();
+		$scope = new SSViewer_DataPresenter($item);
+		$val = ""; $valStack = array();
 		
 		include($cacheFile);
 
-		$output = $val;		
-		$output = Requirements::includeInHTML($template, $output);
+		$output = Requirements::includeInHTML($template, $val);
 		
 		array_pop(SSViewer::$topLevel);
 
@@ -528,7 +651,7 @@ class SSViewer_FromString extends SSViewer {
 			echo "</pre>";
 		}
 
-		$itemStack = array();
+		$scope = new SSViewer_DataPresenter($item);
 		$val = "";
 		$valStack = array();
 		

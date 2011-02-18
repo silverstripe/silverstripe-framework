@@ -81,12 +81,6 @@ class SSTemplateParser extends Parser {
 	 */
 	protected $includeDebuggingComments = false;
 	
-	function construct($name) {
-		$result = parent::construct($name);
-		$result['tags'] = array();
-		return $result;
-	}
-	
 	/*!* SSTemplateParser
 
 	Word: / [A-Za-z_] [A-Za-z0-9_]* /
@@ -107,7 +101,7 @@ class SSTemplateParser extends Parser {
 		if (isset($res['php'])) $res['php'] .= ', ';
 		else $res['php'] = '';
 		
-		$res['php'] .= ($sub['ArgumentMode'] == 'default') ? $sub['string_php'] : $sub['php'];
+		$res['php'] .= ($sub['ArgumentMode'] == 'default') ? $sub['string_php'] : str_replace('$$FINAL', 'XML_val', $sub['php']);
 	}
 
 	/*!*
@@ -128,7 +122,7 @@ class SSTemplateParser extends Parser {
 	*/
 	
 	function Lookup__construct(&$res) {
-		$res['php'] = '$item';
+		$res['php'] = '$scope';
 		$res['LookupSteps'] = array();
 	}
 	
@@ -155,7 +149,7 @@ class SSTemplateParser extends Parser {
 	}
 
 	function Lookup_LastLookupStep(&$res, $sub) {
-		$this->Lookup_AddLookupStep($res, $sub, 'XML_val');
+		$this->Lookup_AddLookupStep($res, $sub, '$$FINAL');
 	}
 
 	/*!*
@@ -168,7 +162,7 @@ class SSTemplateParser extends Parser {
 	Injection: BracketInjection | SimpleInjection
 	*/
 	function Injection_STR(&$res, $sub) {
-		$res['php'] = '$val .= '. $sub['Lookup']['php'] . ';';
+		$res['php'] = '$val .= '. str_replace('$$FINAL', 'XML_val', $sub['Lookup']['php']) . ';';
 	}
 
 	/*!*
@@ -261,11 +255,11 @@ class SSTemplateParser extends Parser {
 	function Comparison_Argument(&$res, $sub) {
 		if ($sub['ArgumentMode'] == 'default') {
 			if (isset($res['php'])) $res['php'] .= $sub['string_php'];
-			else $res['php'] = $sub['lookup_php'];
+			else $res['php'] = str_replace('$$FINAL', 'XML_val', $sub['lookup_php']);
 		}	
 		else {
 			if (!isset($res['php'])) $res['php'] = '';
-			$res['php'] .= $sub['php'];
+			$res['php'] .= str_replace('$$FINAL', 'XML_val', $sub['php']);
 		}
 	}
 
@@ -289,7 +283,7 @@ class SSTemplateParser extends Parser {
 			$php = ($sub['ArgumentMode'] == 'default' ? $sub['lookup_php'] : $sub['php']);
 			// TODO: kinda hacky - maybe we need a way to pass state down the parse chain so
 			// Lookup_LastLookupStep and Argument_BareWord can produce hasValue instead of XML_val
-			$res['php'] = str_replace('->XML_val', '->hasValue', $php);
+			$res['php'] = str_replace('$$FINAL', 'hasValue', $php);
 		}
 	}
 
@@ -429,9 +423,9 @@ class SSTemplateParser extends Parser {
 	}
 
 	/**
-	 * This is an example of a block handler function. This one handles the control tag.
+	 * This is an example of a block handler function. This one handles the loop tag.
 	 */
-	function ClosedBlock_Handle_Control(&$res) {
+	function ClosedBlock_Handle_Loop(&$res) {
 		if ($res['ArgumentCount'] != 1) {
 			throw new SSTemplateParseException('Either no or too many arguments in control block. Must be one argument only.', $this);
 		}
@@ -441,11 +435,39 @@ class SSTemplateParser extends Parser {
 			throw new SSTemplateParseException('Control block cant take string as argument.', $this);
 		}
 		
-		$on = str_replace('->XML_val', '->obj', ($arg['ArgumentMode'] == 'default') ? $arg['lookup_php'] : $arg['php']);
+		$on = str_replace('$$FINAL', 'obj', ($arg['ArgumentMode'] == 'default') ? $arg['lookup_php'] : $arg['php']);
 		return 
-			'array_push($itemStack, $item); if($loop = '.$on.') foreach($loop as $key => $item) {' . PHP_EOL .
+			$on . '; $scope->pushScope(); while (($key = $scope->next()) !== false) {' . PHP_EOL .
 				$res['Template']['php'] . PHP_EOL .
-			'} $item = array_pop($itemStack); ';
+			'}; $scope->popScope(); ';
+	}
+
+	/**
+	 * The deprecated closed block handler for control blocks
+	 * @deprecated
+	 */
+	function ClosedBlock_Handle_Control(&$res) {
+		return $this->ClosedBlock_Handle_Loop($res);
+	}
+	
+	/**
+	 * The closed block handler for with blocks
+	 */
+	function ClosedBlock_Handle_With(&$res) {
+		if ($res['ArgumentCount'] != 1) {
+			throw new SSTemplateParseException('Either no or too many arguments in with block. Must be one argument only.', $this);
+		}
+		
+		$arg = $res['Arguments'][0];
+		if ($arg['ArgumentMode'] == 'string') {
+			throw new SSTemplateParseException('Control block cant take string as argument.', $this);
+		}
+		
+		$on = str_replace('$$FINAL', 'obj', ($arg['ArgumentMode'] == 'default') ? $arg['lookup_php'] : $arg['php']);
+		return 
+			$on . '; $scope->pushScope();' . PHP_EOL .
+				$res['Template']['php'] . PHP_EOL .
+			'; $scope->popScope(); ';
 	}
 	
 	/*!*
@@ -492,12 +514,12 @@ class SSTemplateParser extends Parser {
 		if($this->includeDebuggingComments) { // Add include filename comments on dev sites
 			return 
 				'$val .= \'<!-- include '.$php.' -->\';'. "\n".
-				'$val .= SSViewer::parse_template('.$php.', $item);'. "\n".
+				'$val .= SSViewer::parse_template('.$php.', $scope->getItem());'. "\n".
 				'$val .= \'<!-- end include '.$php.' -->\';'. "\n";
 		}
 		else {
 			return 
-				'$val .= SSViewer::execute_template('.$php.', $item);'. "\n";
+				'$val .= SSViewer::execute_template('.$php.', $scope->getItem());'. "\n";
 		}
 	}
 	
@@ -505,7 +527,7 @@ class SSTemplateParser extends Parser {
 	 * This is an open block handler, for the <% debug %> utility tag
 	 */
 	function OpenBlock_Handle_Debug(&$res) {
-		if ($res['ArgumentCount'] == 0) return 'Debug::show($item);';
+		if ($res['ArgumentCount'] == 0) return '$scope->debug();';
 		else if ($res['ArgumentCount'] == 1) {
 			$arg = $res['Arguments'][0];
 			

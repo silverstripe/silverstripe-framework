@@ -329,6 +329,137 @@ after')
 		
 		$this->assertEquals('A A1 A1 i A1 ii A2 A3', $rationalisedResult);
 	}
+	
+	function assertEqualIgnoringWhitespace($a, $b) {
+		$this->assertEquals(preg_replace('/\s+/', '', $a), preg_replace('/\s+/', '', $b));
+	}
+	
+	/**
+	 * Test $Up works when the scope $Up refers to was entered with a "with" block
+	 */
+	function testUpInWith() {
+
+		// Data to run the loop tests on - three levels deep
+		$data = new ArrayData(array(
+			'Name' => 'Top',
+			'Foo' => new ArrayData(array(
+				'Name' => 'Foo',
+				'Bar' => new ArrayData(array(
+					'Name' => 'Bar',
+					'Baz' => new ArrayData(array(
+						'Name' => 'Baz'
+					)),
+					'Qux' => new ArrayData(array(
+						'Name' => 'Qux'
+					))
+				))
+			))
+		));
+		
+		// Basic functionality
+		$this->assertEquals('BarFoo',
+			$this->render('<% with Foo %><% with Bar %>{$Name}{$Up.Name}<% end_with %><% end_with %>', $data));
+		
+		// Two level with block, up refers to internally referenced Bar
+		$this->assertEquals('BarFoo',
+			$this->render('<% with Foo.Bar %>{$Name}{$Up.Name}<% end_with %>', $data));
+
+		// Stepping up & back down the scope tree
+		$this->assertEquals('BazBarQux',
+			$this->render('<% with Foo.Bar.Baz %>{$Name}{$Up.Name}{$Up.Qux.Name}<% end_with %>', $data));
+		
+		// Using $Up in a with block
+		$this->assertEquals('BazBarQux',
+			$this->render('<% with Foo.Bar.Baz %>{$Name}<% with $Up %>{$Name}{$Qux.Name}<% end_with %><% end_with %>', $data));
+
+		// Stepping up & back down the scope tree with with blocks
+		$this->assertEquals('BazBarQuxBarBaz',
+			$this->render('<% with Foo.Bar.Baz %>{$Name}<% with $Up %>{$Name}<% with Qux %>{$Name}<% end_with %>{$Name}<% end_with %>{$Name}<% end_with %>', $data));
+
+		// Using $Up.Up, where first $Up points to a previous scope entered using $Up, thereby skipping up to Foo 
+		$this->assertEquals('Foo',
+			$this->render('<% with Foo.Bar.Baz %><% with Up %><% with Qux %>{$Up.Up.Name}<% end_with %><% end_with %><% end_with %>', $data));
+		
+		// Using $Up.Up, where first $Up points to an Up used in a local scope lookup, should still skip to Foo 
+		$this->assertEquals('Foo',
+			$this->render('<% with Foo.Bar.Baz.Up.Qux %>{$Up.Up.Name}<% end_with %>', $data));
+	}
+	
+	/**
+	 * Test $Up works when the scope $Up refers to was entered with a "loop" block
+	 */
+	function testUpInLoop(){
+		
+		// Data to run the loop tests on - one sequence of three items, each with a subitem
+		$data = new ArrayData(array(
+			'Name' => 'Top',
+			'Foo' => new DataObjectSet(array(
+				new ArrayData(array(
+					'Name' => '1',
+					'Sub' => new ArrayData(array(
+						'Name' => 'Bar'
+					))
+				)),
+				new ArrayData(array(
+					'Name' => '2',
+					'Sub' => new ArrayData(array(
+						'Name' => 'Baz'
+					))
+				)),
+				new ArrayData(array(
+					'Name' => '3',
+					'Sub' => new ArrayData(array(
+						'Name' => 'Qux'
+					))
+				))
+			))
+		));
+
+		// Make sure inside a loop, $Up refers to the current item of the loop
+		$this->assertEqualIgnoringWhitespace(
+			'111 222 333',
+			$this->render(
+				'<% loop $Foo %>$Name<% with $Sub %>$Up.Name<% end_with %>$Name<% end_loop %>',
+				$data
+			)
+		);
+
+		// Make sure inside a loop, looping over $Up uses a separate iterator,
+		// and doesn't interfere with the original iterator
+		$this->assertEqualIgnoringWhitespace(
+			'1Bar123Bar1 2Baz123Baz2 3Qux123Qux3',
+			$this->render(
+				'<% loop $Foo %>
+					$Name
+					<% with $Sub %>
+						$Name<
+						% loop $Up %>$Name<% end_loop %>
+						$Name
+					<% end_with %>
+					$Name 
+				<% end_loop %>', 
+				$data
+			)
+		);
+		
+		// Make sure inside a loop, looping over $Up uses a separate iterator,
+		// and doesn't interfere with the original iterator or local lookups
+		$this->assertEqualIgnoringWhitespace(
+			'1 Bar1 123 1Bar 1   2 Baz2 123 2Baz 2   3 Qux3 123 3Qux 3',
+			$this->render(
+				'<% loop $Foo %>
+					$Name
+					<% with $Sub %>
+						{$Name}{$Up.Name}
+						<% loop $Up %>$Name<% end_loop %>
+						{$Up.Name}{$Name}
+					<% end_with %>
+					$Name
+				<% end_loop %>',
+				$data
+			)
+		);
+	}
 }
 
 /**
