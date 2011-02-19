@@ -66,6 +66,26 @@ class ClassInfoTest extends SapphireTest {
 		ClassInfo::ancestry(42);
 	}
 
+	/**
+	 * @covers ClassInfo::dataClassesFor()
+	 */
+	public function testDataClassesFor() {
+		$expect = array(
+			'ClassInfoTest_BaseDataClass' => 'ClassInfoTest_BaseDataClass',
+			'ClassInfoTest_HasFields'     => 'ClassInfoTest_HasFields'
+		);
+
+		$classes = array(
+			'ClassInfoTest_BaseDataClass',
+			'ClassInfoTest_NoFields',
+			'ClassInfoTest_HasFields'
+		);
+
+		foreach ($classes as $class) {
+			$this->assertEquals($expect, ClassInfo::dataClassesFor($class));
+		}
+	}
+
 }
 
 class ClassInfoTest_BaseClass extends DataObject {
@@ -78,4 +98,12 @@ class ClassInfoTest_ChildClass extends ClassInfoTest_BaseClass {
 
 class ClassInfoTest_GrandChildClass extends ClassInfoTest_ChildClass {
 	
+}
+
+class ClassInfoTest_BaseDataClass extends DataObject {
+	public static $db = array('Title' => 'Varchar');
+}
+class ClassInfoTest_NoFields extends ClassInfoTest_BaseDataClass {}
+class ClassInfoTest_HasFields extends ClassInfoTest_NoFields {
+	public static $db = array('Description' => 'Varchar');
 }

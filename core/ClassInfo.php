@@ -59,34 +59,29 @@ class ClassInfo {
 	}
 
 	/**
-	 * Return the database tables linked to this class.
-	 * Gets an array of the current class, it subclasses and its ancestors.  It then filters that list
-	 * to those with DB tables
+	 * Returns an array of the current class and all its ancestors and children
+	 * which have a DB table.
 	 * 
-	 * @param mixed $class string of the classname or instance of the class
+	 * @param string|object $class
 	 * @todo Move this into data object
 	 * @return array
 	 */
-	static function dataClassesFor($class) {
-		global $_ALL_CLASSES;
-		if (is_object($class)) $class = get_class($class);
-		
-		$dataClasses = array();
-		
-		if(!$_ALL_CLASSES['parents'][$class]) user_error("ClassInfo::dataClassesFor() no parents for $class", E_USER_WARNING);
-		foreach($_ALL_CLASSES['parents'][$class] as $subclass) {
-			if(self::hasTable($subclass)) $dataClasses[] = $subclass;
-		}
-		
-		if(self::hasTable($class)) $dataClasses[] = $class;
+	public static function dataClassesFor($class) {
+		$result = array();
 
-		if(isset($_ALL_CLASSES['children'][$class]))
-		foreach($_ALL_CLASSES['children'][$class] as $subclass)
-		{
-			if(self::hasTable($subclass)) $dataClasses[] = $subclass;
+		if (is_object($class)) {
+			$class = get_class($class);
 		}
-			
-		return $dataClasses;
+
+		$classes = array_merge(
+			self::ancestry($class),
+			self::subclassesFor($class));
+
+		foreach ($classes as $class) {
+			if (self::hasTable($class)) $result[$class] = $class;
+		}
+
+		return $result;
 	}
 
 	/**
