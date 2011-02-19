@@ -148,20 +148,31 @@ class ClassInfo {
 	}
 	
 	/**
-	 * @todo Improve documentation
+	 * Returns the passed class name along with all its parent class names in an
+	 * array, sorted with the root class first.
+	 *
+	 * @param  string $class
+	 * @param  bool $tablesOnly Only return classes that have a table in the db.
+	 * @return array
 	 */
-	static function ancestry($class, $onlyWithTables = false) {
-		global $_ALL_CLASSES;
+	public static function ancestry($class, $tablesOnly = false) {
+		$ancestry = array();
 
-		if(is_object($class)) $class = $class->class;
-		else if(!is_string($class)) user_error("Bad class value " . var_export($class, true) . " passed to ClassInfo::ancestry()", E_USER_WARNING);
-
-		$items = $_ALL_CLASSES['parents'][$class];
-		$items[$class] = $class;
-		if($onlyWithTables) foreach($items as $item) {
-			if(!DataObject::has_own_table($item)) unset($items[$item]);
+		if (is_object($class)) {
+			$class = get_class($class);
+		} elseif (!is_string($class)) {
+			throw new Exception(sprintf(
+				'Invalid class value %s, must be an object or string', var_export($class, true)
+			));
 		}
-		return $items;
+
+		do {
+			if (!$tablesOnly || DataObject::has_own_table($class)) {
+				$ancestry[$class] = $class;
+			}
+		} while ($class = get_parent_class($class));
+
+		return array_reverse($ancestry);
 	}
 
 	/**

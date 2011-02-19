@@ -46,6 +46,26 @@ class ClassInfoTest extends SapphireTest {
 		ClassInfo::baseDataClass('DataObject');
 	}
 
+	/**
+	 * @covers ClassInfo::ancestry()
+	 */
+	public function testAncestry() {
+		$ancestry = ClassInfo::ancestry('SiteTree');
+		$expect = ArrayLib::valuekey(array(
+			'Object',
+			'ViewableData',
+			'DataObject',
+			'SiteTree'
+		));
+		$this->assertEquals($expect, $ancestry);
+
+		$ancestry = ClassInfo::ancestry('SiteTree', true);
+		$this->assertEquals(array('SiteTree' => 'SiteTree'), $ancestry);
+
+		$this->setExpectedException('Exception');
+		ClassInfo::ancestry(42);
+	}
+
 }
 
 class ClassInfoTest_BaseClass extends DataObject {
