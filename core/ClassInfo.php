@@ -125,21 +125,31 @@ class ClassInfo {
 	 * @param mixed $class string of the classname or instance of the class
 	 * @return array Names of all subclasses as an associative array.
 	 */
-	static function subclassesFor($class){
+	public static function subclassesFor($class) {
 		global $_ALL_CLASSES;
-		if (is_object($class)) $class = get_class($class);
-		
-		// get all classes from the manifest
-		$subclasses = isset($_ALL_CLASSES['children'][$class]) ? $_ALL_CLASSES['children'][$class] : null;
 
-		// add the base class to the array
-		if(isset($subclasses)) {
-			array_unshift($subclasses, $class);
-		} else {
-			$subclasses[$class] = $class;
+		if (is_object($class)) {
+			$class = get_class($class);
 		}
-		
-		return $subclasses;
+
+		$parents = array($class);
+		$classes = array($class => $class);
+
+		if (!isset($_ALL_CLASSES['children'][$class])) {
+			return $classes;
+		}
+
+		while ($parent = array_shift($parents)) {
+			foreach ($_ALL_CLASSES['children'][$parent] as $class) {
+				$classes[$class] = $class;
+
+				if (isset($_ALL_CLASSES['children'][$class])) {
+					$parents[] = $class;
+				}
+			}
+		}
+
+		return $classes;
 	}
 	
 	/**

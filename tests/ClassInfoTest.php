@@ -9,7 +9,7 @@ class ClassInfoTest extends SapphireTest {
 		$this->assertEquals(
 			ClassInfo::subclassesFor('ClassInfoTest_BaseClass'),
 			array(
-				0 => 'ClassInfoTest_BaseClass',
+				'ClassInfoTest_BaseClass' => 'ClassInfoTest_BaseClass',
 				'ClassInfoTest_ChildClass' => 'ClassInfoTest_ChildClass',
 				'ClassInfoTest_GrandChildClass' => 'ClassInfoTest_GrandChildClass'
 			),
