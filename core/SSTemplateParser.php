@@ -1029,7 +1029,7 @@ class SSTemplateParser extends Parser {
 	}
 
 
-	/* ElseIfPart: '<%' < 'else_if' [ :IfArgument > '%>' :Template? */
+	/* ElseIfPart: '<%' < 'else_if' [ :IfArgument > '%>' :Template */
 	function match_ElseIfPart ($substack = array()) {
 		$result = $this->construct( "ElseIfPart" );
 		$_162 = NULL;
@@ -1053,19 +1053,12 @@ class SSTemplateParser extends Parser {
 			$_159 = new ParserExpression( $this, $substack, $result );
 			if (( $subres = $this->literal( $_159->expand('%>') ) ) !== FALSE) { $result["text"] .= $subres; }
 			else { $_162 = FALSE; break; }
-			$res_161 = $result;
-			$pos_161 = $this->pos;
 			$key = "Template"; $pos = $this->pos;
 			$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->match_Template(array_merge($substack, array($result))) ) );
 			if ($subres !== FALSE) {
 				$this->store( $result, $subres, "Template" );
 			}
-			else {
-				$result = $res_161;
-				$this->pos = $pos_161;
-				unset( $res_161 );
-				unset( $pos_161 );
-			}
+			else { $_162 = FALSE; break; }
 			$_162 = TRUE; break;
 		}
 		while(0);
@@ -1076,7 +1069,7 @@ class SSTemplateParser extends Parser {
 	}
 
 
-	/* ElsePart: '<%' < 'else' > '%>' :Template? */
+	/* ElsePart: '<%' < 'else' > '%>' :Template */
 	function match_ElsePart ($substack = array()) {
 		$result = $this->construct( "ElsePart" );
 		$_173 = NULL;
@@ -1092,19 +1085,12 @@ class SSTemplateParser extends Parser {
 			$_170 = new ParserExpression( $this, $substack, $result );
 			if (( $subres = $this->literal( $_170->expand('%>') ) ) !== FALSE) { $result["text"] .= $subres; }
 			else { $_173 = FALSE; break; }
-			$res_172 = $result;
-			$pos_172 = $this->pos;
 			$key = "Template"; $pos = $this->pos;
 			$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->match_Template(array_merge($substack, array($result))) ) );
 			if ($subres !== FALSE) {
 				$this->store( $result, $subres, "Template" );
 			}
-			else {
-				$result = $res_172;
-				$this->pos = $pos_172;
-				unset( $res_172 );
-				unset( $pos_172 );
-			}
+			else { $_173 = FALSE; break; }
 			$_173 = TRUE; break;
 		}
 		while(0);
@@ -1174,14 +1160,14 @@ class SSTemplateParser extends Parser {
 	function If_IfPart(&$res, $sub) {
 		$res['php'] = 
 			'if (' . $sub['IfArgument']['php'] . ') { ' . PHP_EOL .
-				$sub['Template']['php'] . PHP_EOL .
+				(isset($sub['Template']) ? $sub['Template']['php'] : '') . PHP_EOL .
 			'}';
 	} 
 
 	function If_ElseIfPart(&$res, $sub) {
 		$res['php'] .= 
 			'else if (' . $sub['IfArgument']['php'] . ') { ' . PHP_EOL .
-				$sub['Template']['php'] . PHP_EOL .
+				$sub['Template']['php'] . PHP_EOL . 
 			'}';
 	}
 

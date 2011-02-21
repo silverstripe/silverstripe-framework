@@ -338,22 +338,22 @@ class SSTemplateParser extends Parser {
 	# argument structure to every other block 
 	 
 	IfPart: '<%' < 'if' [ :IfArgument > '%>' :Template?
-	ElseIfPart: '<%' < 'else_if' [ :IfArgument > '%>' :Template?
-	ElsePart: '<%' < 'else' > '%>' :Template?
+	ElseIfPart: '<%' < 'else_if' [ :IfArgument > '%>' :Template
+	ElsePart: '<%' < 'else' > '%>' :Template
 
 	If: IfPart ElseIfPart* ElsePart? '<%' < 'end_if' > '%>'
 	*/
 	function If_IfPart(&$res, $sub) {
 		$res['php'] = 
 			'if (' . $sub['IfArgument']['php'] . ') { ' . PHP_EOL .
-				$sub['Template']['php'] . PHP_EOL .
+				(isset($sub['Template']) ? $sub['Template']['php'] : '') . PHP_EOL .
 			'}';
 	} 
 
 	function If_ElseIfPart(&$res, $sub) {
 		$res['php'] .= 
 			'else if (' . $sub['IfArgument']['php'] . ') { ' . PHP_EOL .
-				$sub['Template']['php'] . PHP_EOL .
+				$sub['Template']['php'] . PHP_EOL . 
 			'}';
 	}
 

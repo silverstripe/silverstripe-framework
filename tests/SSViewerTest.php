@@ -278,6 +278,10 @@ after')
 		// Else
 		$this->assertEquals('ADE',
 			$this->render('A<% if Right == Wrong %>B<% else_if RawVal != RawVal %>C<% else %>D<% end_if %>E'));
+		
+		// Empty if with else
+		$this->assertEquals('ABC',
+			$this->render('A<% if NotSet %><% else %>B<% end_if %>C'));
 	}
 
 	function testBaseTagGeneration() {
