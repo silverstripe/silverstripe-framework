@@ -278,7 +278,7 @@ class Group extends DataObject {
 	 */
 	public function collateAncestorIDs() {
 		$parent = $this;
-		while(isset($parent)) {
+		while(isset($parent) && $parent instanceof Group) {
 			$items[] = $parent->ID;
 			$parent = $parent->Parent;
 		}

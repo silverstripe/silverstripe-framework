@@ -84,6 +84,32 @@ class GroupTest extends FunctionalTest {
 		$this->assertNull(DataObject::get('Group', "\"ID\"={$adminGroup->ID}"), 'Group is removed');
 		$this->assertNull(DataObject::get('Permission',"\"GroupID\"={$adminGroup->ID}"), 'Permissions removed along with the group');
 	}
+	
+	function testCollateAncestorIDs() {
+		$parentGroup = $this->objFromFixture('Group', 'parentgroup');
+		$childGroup = $this->objFromFixture('Group', 'childgroup');
+		$orphanGroup = new Group();
+		$orphanGroup->ParentID = 99999;
+		$orphanGroup->write();
+		
+		$this->assertEquals(
+			array($parentGroup->ID), 
+			$parentGroup->collateAncestorIDs(),
+			'Root node only contains itself'
+		);
+		
+		$this->assertEquals(
+			array($childGroup->ID, $parentGroup->ID), 
+			$childGroup->collateAncestorIDs(),
+			'Contains parent nodes, with child node first'
+		);
+		
+		$this->assertEquals(
+			array($orphanGroup->ID), 
+			$orphanGroup->collateAncestorIDs(),
+			'Orphaned nodes dont contain invalid parent IDs'
+		);
+	}
 }
 
 class GroupTest_Member extends Member implements TestOnly {

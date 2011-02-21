@@ -177,19 +177,19 @@ class ObjectTest extends SapphireTest {
 		$inst = new ObjectTest_ExtensionTest();
 		$extensions = $inst->getExtensionInstances();
 		$this->assertEquals(count($extensions), 2);
-		$this->assertType(
+		$this->assertInstanceOf(
 			'ObjectTest_ExtendTest1',
 			$extensions['ObjectTest_ExtendTest1']
 		);
-		$this->assertType(
+		$this->assertInstanceOf(
 			'ObjectTest_ExtendTest2',
 			$extensions['ObjectTest_ExtendTest2']
 		);
-		$this->assertType(
+		$this->assertInstanceOf(
 			'ObjectTest_ExtendTest1',
 			$inst->getExtensionInstance('ObjectTest_ExtendTest1')
 		);
-		$this->assertType(
+		$this->assertInstanceOf(
 			'ObjectTest_ExtendTest2',
 			$inst->getExtensionInstance('ObjectTest_ExtendTest2')
 		);
