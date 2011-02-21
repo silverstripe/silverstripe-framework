@@ -228,7 +228,7 @@ class SSTemplateParser extends Parser {
 
 	function Argument_QuotedString(&$res, $sub) {
 		$res['ArgumentMode'] = 'string';
-		$res['php'] = "'" . $sub['String']['text'] . "'";
+		$res['php'] = "'" . str_replace("'", "\\'", $sub['String']['text']) . "'";
 	}
 
 	function Argument_Lookup(&$res, $sub) {
@@ -245,7 +245,7 @@ class SSTemplateParser extends Parser {
 	
 	function Argument_FreeString(&$res, $sub) {
 		$res['ArgumentMode'] = 'string';
-		$res['php'] = "'" . $sub['text'] . "'";
+		$res['php'] = "'" . str_replace("'", "\\'", $sub['text']) . "'";
 	}
 	
 	/*!*
@@ -373,6 +373,80 @@ class SSTemplateParser extends Parser {
 	*/
 	function Require_Call(&$res, $sub) {
 		$res['php'] = "Requirements::".$sub['Method']['text'].'('.$sub['CallArguments']['php'].');';
+	}
+   
+	/*!*
+	 
+	# Deprecated old-style i18n _t and sprintf(_t block tags. We support a slightly more flexible version than we used
+	# to, but just because it's easier to do so. It's strongly recommended to use the new syntax
+	 
+	# This is the core used by both syntaxes, without the block start & end tags
+	 
+	OldTPart: "_t" < "(" < QuotedString (< "," < CallArguments)? > ")"
+	
+	*/
+	function OldTPart__construct(&$res) {
+		$res['php'] = "_t(";
+	}
+	
+	function OldTPart_QuotedString(&$res, $sub) {
+		$entity = $sub['String']['text'];
+		if (strpos($entity, '.') === false) {
+			$res['php'] .= "\$scope->XML_val('I18NNamespace').'.$entity'";
+		}
+		else {
+			$res['php'] .= "'$entity'";
+		}
+	}
+	
+	function OldTPart_CallArguments(&$res, $sub) {
+		$res['php'] .= ',' . $sub['php'];
+	}
+
+	function OldTPart__finalise(&$res) {
+		$res['php'] .= ')';
+	}
+	
+	/*!*
+	 
+	# This is the old <% _t() %> tag
+	 
+	OldTTag: "<%" < OldTPart > "%>"
+	
+	*/
+	function OldTTag_OldTPart(&$res, $sub) {
+		$res['php'] = $sub['php'];
+	}
+	 	  
+	/*!*
+	 
+	# This is the old <% sprintf(_t()) %> tag
+	 
+	OldSprintfTag: "<%" < "sprintf" < "(" < OldTPart < "," < CallArguments > ")" > "%>" 
+	
+	*/
+	function OldSprintfTag__construct(&$res) {
+		$res['php'] = "sprintf(";
+	}
+	
+	function OldSprintfTag_OldTPart(&$res, $sub) {
+		$res['php'] .= $sub['php'];
+	}
+
+	function OldSprintfTag_CallArguments(&$res, $sub) {
+		$res['php'] .= ',' . $sub['php'] . ')';
+	}
+	
+	/*!*
+	
+	# This matches either the old style sprintf(_t()) or _t() tags. As well as including the output portion of the
+	# php, this rule combines all the old i18n stuff into a single match rule to make it easy to not support these tags later 
+	 
+	OldI18NTag: OldSprintfTag | OldTTag
+	 
+	*/
+	function OldI18NTag_STR(&$res, $sub) {
+		$res['php'] = '$val .= ' . $sub['php'] . ';';
 	}
 	
 	/*!*
@@ -641,7 +715,7 @@ class SSTemplateParser extends Parser {
 	# Template is any structurally-complete portion of template (a full nested level in other words). It's used
 	# by the block rules to recurse
 	 
-	Template: (Comment | If | Require | ClosedBlock | OpenBlock | MalformedBlock | Injection | Text)+
+	Template: (Comment | If | Require | OldI18NTag | ClosedBlock | OpenBlock | MalformedBlock | Injection | Text)+
 	*/
 	function Template__construct(&$res) {
 		$res['php'] = '';
@@ -673,7 +747,7 @@ class SSTemplateParser extends Parser {
 	# TopTemplate is the same as Template, but should only be used at the top level (not nested), as it includes
 	# MismatchedEndBlock detection, which only works at the top level  
 	 
-	TopTemplate: (Comment | If | Require | ClosedBlock | OpenBlock | MalformedBlock | MismatchedEndBlock | Injection | Text)+
+	TopTemplate: (Comment | If | Require | OldI18NTag | ClosedBlock | OpenBlock | MalformedBlock | MismatchedEndBlock | Injection | Text)+
 	*/
 	
 	/**

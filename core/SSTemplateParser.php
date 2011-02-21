@@ -670,7 +670,7 @@ class SSTemplateParser extends Parser {
 
 	function Argument_QuotedString(&$res, $sub) {
 		$res['ArgumentMode'] = 'string';
-		$res['php'] = "'" . $sub['String']['text'] . "'";
+		$res['php'] = "'" . str_replace("'", "\\'", $sub['String']['text']) . "'";
 	}
 
 	function Argument_Lookup(&$res, $sub) {
@@ -687,7 +687,7 @@ class SSTemplateParser extends Parser {
 	
 	function Argument_FreeString(&$res, $sub) {
 		$res['ArgumentMode'] = 'string';
-		$res['php'] = "'" . $sub['text'] . "'";
+		$res['php'] = "'" . str_replace("'", "\\'", $sub['text']) . "'";
 	}
 	
 	/* ComparisonOperator: "==" | "!=" | "=" */
@@ -1250,210 +1250,429 @@ class SSTemplateParser extends Parser {
 	function Require_Call(&$res, $sub) {
 		$res['php'] = "Requirements::".$sub['Method']['text'].'('.$sub['CallArguments']['php'].');';
 	}
+   
+	/* OldTPart: "_t" < "(" < QuotedString (< "," < CallArguments)? > ")" */
+	function match_OldTPart ($substack = array()) {
+		$result = $this->construct( "OldTPart" );
+		$_222 = NULL;
+		do {
+			$_208 = new ParserExpression( $this, $substack, $result );
+			if (( $subres = $this->literal( $_208->expand("_t") ) ) !== FALSE) { $result["text"] .= $subres; }
+			else { $_222 = FALSE; break; }
+			if (( $subres = $this->whitespace(  ) ) !== FALSE) { $result["text"] .= $subres; }
+			if (substr($this->string,$this->pos,1) == "(") {
+				$this->pos += 1;
+				$result["text"] .= "(";
+			}
+			else { $_222 = FALSE; break; }
+			if (( $subres = $this->whitespace(  ) ) !== FALSE) { $result["text"] .= $subres; }
+			$key = "QuotedString"; $pos = $this->pos;
+			$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->match_QuotedString(array_merge($substack, array($result))) ) );
+			if ($subres !== FALSE) { $this->store( $result, $subres ); }
+			else { $_222 = FALSE; break; }
+			$res_219 = $result;
+			$pos_219 = $this->pos;
+			$_218 = NULL;
+			do {
+				if (( $subres = $this->whitespace(  ) ) !== FALSE) { $result["text"] .= $subres; }
+				if (substr($this->string,$this->pos,1) == ",") {
+					$this->pos += 1;
+					$result["text"] .= ",";
+				}
+				else { $_218 = FALSE; break; }
+				if (( $subres = $this->whitespace(  ) ) !== FALSE) { $result["text"] .= $subres; }
+				$key = "CallArguments"; $pos = $this->pos;
+				$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->match_CallArguments(array_merge($substack, array($result))) ) );
+				if ($subres !== FALSE) { $this->store( $result, $subres ); }
+				else { $_218 = FALSE; break; }
+				$_218 = TRUE; break;
+			}
+			while(0);
+			if( $_218 === FALSE) {
+				$result = $res_219;
+				$this->pos = $pos_219;
+				unset( $res_219 );
+				unset( $pos_219 );
+			}
+			if (( $subres = $this->whitespace(  ) ) !== FALSE) { $result["text"] .= $subres; }
+			if (substr($this->string,$this->pos,1) == ")") {
+				$this->pos += 1;
+				$result["text"] .= ")";
+			}
+			else { $_222 = FALSE; break; }
+			$_222 = TRUE; break;
+		}
+		while(0);
+		if( $_222 === TRUE ) {
+			return $this->finalise( "OldTPart", $result );
+		}
+		if( $_222 === FALSE) { return FALSE; }
+	}
+
+
+
+	function OldTPart__construct(&$res) {
+		$res['php'] = "_t(";
+	}
+	
+	function OldTPart_QuotedString(&$res, $sub) {
+		$entity = $sub['String']['text'];
+		if (strpos($entity, '.') === false) {
+			$res['php'] .= "\$scope->XML_val('I18NNamespace').'.$entity'";
+		}
+		else {
+			$res['php'] .= "'$entity'";
+		}
+	}
+	
+	function OldTPart_CallArguments(&$res, $sub) {
+		$res['php'] .= ',' . $sub['php'];
+	}
+
+	function OldTPart__finalise(&$res) {
+		$res['php'] .= ')';
+	}
+	
+	/* OldTTag: "<%" < OldTPart > "%>" */
+	function match_OldTTag ($substack = array()) {
+		$result = $this->construct( "OldTTag" );
+		$_231 = NULL;
+		do {
+			$_224 = new ParserExpression( $this, $substack, $result );
+			if (( $subres = $this->literal( $_224->expand("<%") ) ) !== FALSE) { $result["text"] .= $subres; }
+			else { $_231 = FALSE; break; }
+			if (( $subres = $this->whitespace(  ) ) !== FALSE) { $result["text"] .= $subres; }
+			$key = "OldTPart"; $pos = $this->pos;
+			$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->match_OldTPart(array_merge($substack, array($result))) ) );
+			if ($subres !== FALSE) { $this->store( $result, $subres ); }
+			else { $_231 = FALSE; break; }
+			if (( $subres = $this->whitespace(  ) ) !== FALSE) { $result["text"] .= $subres; }
+			$_229 = new ParserExpression( $this, $substack, $result );
+			if (( $subres = $this->literal( $_229->expand("%>") ) ) !== FALSE) { $result["text"] .= $subres; }
+			else { $_231 = FALSE; break; }
+			$_231 = TRUE; break;
+		}
+		while(0);
+		if( $_231 === TRUE ) {
+			return $this->finalise( "OldTTag", $result );
+		}
+		if( $_231 === FALSE) { return FALSE; }
+	}
+
+
+
+	function OldTTag_OldTPart(&$res, $sub) {
+		$res['php'] = $sub['php'];
+	}
+	 	  
+	/* OldSprintfTag: "<%" < "sprintf" < "(" < OldTPart < "," < CallArguments > ")" > "%>"  */
+	function match_OldSprintfTag ($substack = array()) {
+		$result = $this->construct( "OldSprintfTag" );
+		$_251 = NULL;
+		do {
+			$_233 = new ParserExpression( $this, $substack, $result );
+			if (( $subres = $this->literal( $_233->expand("<%") ) ) !== FALSE) { $result["text"] .= $subres; }
+			else { $_251 = FALSE; break; }
+			if (( $subres = $this->whitespace(  ) ) !== FALSE) { $result["text"] .= $subres; }
+			$_236 = new ParserExpression( $this, $substack, $result );
+			if (( $subres = $this->literal( $_236->expand("sprintf") ) ) !== FALSE) { $result["text"] .= $subres; }
+			else { $_251 = FALSE; break; }
+			if (( $subres = $this->whitespace(  ) ) !== FALSE) { $result["text"] .= $subres; }
+			if (substr($this->string,$this->pos,1) == "(") {
+				$this->pos += 1;
+				$result["text"] .= "(";
+			}
+			else { $_251 = FALSE; break; }
+			if (( $subres = $this->whitespace(  ) ) !== FALSE) { $result["text"] .= $subres; }
+			$key = "OldTPart"; $pos = $this->pos;
+			$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->match_OldTPart(array_merge($substack, array($result))) ) );
+			if ($subres !== FALSE) { $this->store( $result, $subres ); }
+			else { $_251 = FALSE; break; }
+			if (( $subres = $this->whitespace(  ) ) !== FALSE) { $result["text"] .= $subres; }
+			if (substr($this->string,$this->pos,1) == ",") {
+				$this->pos += 1;
+				$result["text"] .= ",";
+			}
+			else { $_251 = FALSE; break; }
+			if (( $subres = $this->whitespace(  ) ) !== FALSE) { $result["text"] .= $subres; }
+			$key = "CallArguments"; $pos = $this->pos;
+			$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->match_CallArguments(array_merge($substack, array($result))) ) );
+			if ($subres !== FALSE) { $this->store( $result, $subres ); }
+			else { $_251 = FALSE; break; }
+			if (( $subres = $this->whitespace(  ) ) !== FALSE) { $result["text"] .= $subres; }
+			if (substr($this->string,$this->pos,1) == ")") {
+				$this->pos += 1;
+				$result["text"] .= ")";
+			}
+			else { $_251 = FALSE; break; }
+			if (( $subres = $this->whitespace(  ) ) !== FALSE) { $result["text"] .= $subres; }
+			$_249 = new ParserExpression( $this, $substack, $result );
+			if (( $subres = $this->literal( $_249->expand("%>") ) ) !== FALSE) { $result["text"] .= $subres; }
+			else { $_251 = FALSE; break; }
+			$_251 = TRUE; break;
+		}
+		while(0);
+		if( $_251 === TRUE ) {
+			return $this->finalise( "OldSprintfTag", $result );
+		}
+		if( $_251 === FALSE) { return FALSE; }
+	}
+
+
+
+	function OldSprintfTag__construct(&$res) {
+		$res['php'] = "sprintf(";
+	}
+	
+	function OldSprintfTag_OldTPart(&$res, $sub) {
+		$res['php'] .= $sub['php'];
+	}
+
+	function OldSprintfTag_CallArguments(&$res, $sub) {
+		$res['php'] .= ',' . $sub['php'] . ')';
+	}
+	
+	/* OldI18NTag: OldSprintfTag | OldTTag */
+	function match_OldI18NTag ($substack = array()) {
+		$result = $this->construct( "OldI18NTag" );
+		$_256 = NULL;
+		do {
+			$res_253 = $result;
+			$pos_253 = $this->pos;
+			$key = "OldSprintfTag"; $pos = $this->pos;
+			$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->match_OldSprintfTag(array_merge($substack, array($result))) ) );
+			if ($subres !== FALSE) {
+				$this->store( $result, $subres );
+				$_256 = TRUE; break;
+			}
+			$result = $res_253;
+			$this->pos = $pos_253;
+			$key = "OldTTag"; $pos = $this->pos;
+			$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->match_OldTTag(array_merge($substack, array($result))) ) );
+			if ($subres !== FALSE) {
+				$this->store( $result, $subres );
+				$_256 = TRUE; break;
+			}
+			$result = $res_253;
+			$this->pos = $pos_253;
+			$_256 = FALSE; break;
+		}
+		while(0);
+		if( $_256 === TRUE ) {
+			return $this->finalise( "OldI18NTag", $result );
+		}
+		if( $_256 === FALSE) { return FALSE; }
+	}
+
+
+
+	function OldI18NTag_STR(&$res, $sub) {
+		$res['php'] = '$val .= ' . $sub['php'] . ';';
+	}
 	
 	/* BlockArguments: :Argument ( < "," < :Argument)*  */
 	function match_BlockArguments ($substack = array()) {
 		$result = $this->construct( "BlockArguments" );
-		$_215 = NULL;
+		$_265 = NULL;
 		do {
 			$key = "Argument"; $pos = $this->pos;
 			$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->match_Argument(array_merge($substack, array($result))) ) );
 			if ($subres !== FALSE) {
 				$this->store( $result, $subres, "Argument" );
 			}
-			else { $_215 = FALSE; break; }
+			else { $_265 = FALSE; break; }
 			while (true) {
-				$res_214 = $result;
-				$pos_214 = $this->pos;
-				$_213 = NULL;
+				$res_264 = $result;
+				$pos_264 = $this->pos;
+				$_263 = NULL;
 				do {
 					if (( $subres = $this->whitespace(  ) ) !== FALSE) { $result["text"] .= $subres; }
 					if (substr($this->string,$this->pos,1) == ",") {
 						$this->pos += 1;
 						$result["text"] .= ",";
 					}
-					else { $_213 = FALSE; break; }
+					else { $_263 = FALSE; break; }
 					if (( $subres = $this->whitespace(  ) ) !== FALSE) { $result["text"] .= $subres; }
 					$key = "Argument"; $pos = $this->pos;
 					$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->match_Argument(array_merge($substack, array($result))) ) );
 					if ($subres !== FALSE) {
 						$this->store( $result, $subres, "Argument" );
 					}
-					else { $_213 = FALSE; break; }
-					$_213 = TRUE; break;
+					else { $_263 = FALSE; break; }
+					$_263 = TRUE; break;
 				}
 				while(0);
-				if( $_213 === FALSE) {
-					$result = $res_214;
-					$this->pos = $pos_214;
-					unset( $res_214 );
-					unset( $pos_214 );
+				if( $_263 === FALSE) {
+					$result = $res_264;
+					$this->pos = $pos_264;
+					unset( $res_264 );
+					unset( $pos_264 );
 					break;
 				}
 			}
-			$_215 = TRUE; break;
+			$_265 = TRUE; break;
 		}
 		while(0);
-		if( $_215 === TRUE ) {
+		if( $_265 === TRUE ) {
 			return $this->finalise( "BlockArguments", $result );
 		}
-		if( $_215 === FALSE) { return FALSE; }
+		if( $_265 === FALSE) { return FALSE; }
 	}
 
 
 	/* NotBlockTag: "end_" | (("if" | "else_if" | "else" | "require") ] ) */
 	function match_NotBlockTag ($substack = array()) {
 		$result = $this->construct( "NotBlockTag" );
-		$_242 = NULL;
+		$_292 = NULL;
 		do {
-			$res_217 = $result;
-			$pos_217 = $this->pos;
-			$_218 = new ParserExpression( $this, $substack, $result );
-			if (( $subres = $this->literal( $_218->expand("end_") ) ) !== FALSE) {
+			$res_267 = $result;
+			$pos_267 = $this->pos;
+			$_268 = new ParserExpression( $this, $substack, $result );
+			if (( $subres = $this->literal( $_268->expand("end_") ) ) !== FALSE) {
 				$result["text"] .= $subres;
-				$_242 = TRUE; break;
+				$_292 = TRUE; break;
 			}
-			$result = $res_217;
-			$this->pos = $pos_217;
-			$_240 = NULL;
+			$result = $res_267;
+			$this->pos = $pos_267;
+			$_290 = NULL;
 			do {
-				$_237 = NULL;
+				$_287 = NULL;
 				do {
-					$_235 = NULL;
+					$_285 = NULL;
 					do {
-						$res_220 = $result;
-						$pos_220 = $this->pos;
-						$_221 = new ParserExpression( $this, $substack, $result );
-						if (( $subres = $this->literal( $_221->expand("if") ) ) !== FALSE) {
+						$res_270 = $result;
+						$pos_270 = $this->pos;
+						$_271 = new ParserExpression( $this, $substack, $result );
+						if (( $subres = $this->literal( $_271->expand("if") ) ) !== FALSE) {
 							$result["text"] .= $subres;
-							$_235 = TRUE; break;
+							$_285 = TRUE; break;
 						}
-						$result = $res_220;
-						$this->pos = $pos_220;
-						$_233 = NULL;
+						$result = $res_270;
+						$this->pos = $pos_270;
+						$_283 = NULL;
 						do {
-							$res_223 = $result;
-							$pos_223 = $this->pos;
-							$_224 = new ParserExpression( $this, $substack, $result );
-							if (( $subres = $this->literal( $_224->expand("else_if") ) ) !== FALSE) {
+							$res_273 = $result;
+							$pos_273 = $this->pos;
+							$_274 = new ParserExpression( $this, $substack, $result );
+							if (( $subres = $this->literal( $_274->expand("else_if") ) ) !== FALSE) {
 								$result["text"] .= $subres;
-								$_233 = TRUE; break;
+								$_283 = TRUE; break;
 							}
-							$result = $res_223;
-							$this->pos = $pos_223;
-							$_231 = NULL;
+							$result = $res_273;
+							$this->pos = $pos_273;
+							$_281 = NULL;
 							do {
-								$res_226 = $result;
-								$pos_226 = $this->pos;
-								$_227 = new ParserExpression( $this, $substack, $result );
-								if (( $subres = $this->literal( $_227->expand("else") ) ) !== FALSE) {
+								$res_276 = $result;
+								$pos_276 = $this->pos;
+								$_277 = new ParserExpression( $this, $substack, $result );
+								if (( $subres = $this->literal( $_277->expand("else") ) ) !== FALSE) {
 									$result["text"] .= $subres;
-									$_231 = TRUE; break;
+									$_281 = TRUE; break;
 								}
-								$result = $res_226;
-								$this->pos = $pos_226;
-								$_229 = new ParserExpression( $this, $substack, $result );
-								if (( $subres = $this->literal( $_229->expand("require") ) ) !== FALSE) {
+								$result = $res_276;
+								$this->pos = $pos_276;
+								$_279 = new ParserExpression( $this, $substack, $result );
+								if (( $subres = $this->literal( $_279->expand("require") ) ) !== FALSE) {
 									$result["text"] .= $subres;
-									$_231 = TRUE; break;
+									$_281 = TRUE; break;
 								}
-								$result = $res_226;
-								$this->pos = $pos_226;
-								$_231 = FALSE; break;
+								$result = $res_276;
+								$this->pos = $pos_276;
+								$_281 = FALSE; break;
 							}
 							while(0);
-							if( $_231 === TRUE ) { $_233 = TRUE; break; }
-							$result = $res_223;
-							$this->pos = $pos_223;
-							$_233 = FALSE; break;
+							if( $_281 === TRUE ) { $_283 = TRUE; break; }
+							$result = $res_273;
+							$this->pos = $pos_273;
+							$_283 = FALSE; break;
 						}
 						while(0);
-						if( $_233 === TRUE ) { $_235 = TRUE; break; }
-						$result = $res_220;
-						$this->pos = $pos_220;
-						$_235 = FALSE; break;
+						if( $_283 === TRUE ) { $_285 = TRUE; break; }
+						$result = $res_270;
+						$this->pos = $pos_270;
+						$_285 = FALSE; break;
 					}
 					while(0);
-					if( $_235 === FALSE) { $_237 = FALSE; break; }
-					$_237 = TRUE; break;
+					if( $_285 === FALSE) { $_287 = FALSE; break; }
+					$_287 = TRUE; break;
 				}
 				while(0);
-				if( $_237 === FALSE) { $_240 = FALSE; break; }
+				if( $_287 === FALSE) { $_290 = FALSE; break; }
 				if (( $subres = $this->whitespace(  ) ) !== FALSE) { $result["text"] .= $subres; }
-				else { $_240 = FALSE; break; }
-				$_240 = TRUE; break;
+				else { $_290 = FALSE; break; }
+				$_290 = TRUE; break;
 			}
 			while(0);
-			if( $_240 === TRUE ) { $_242 = TRUE; break; }
-			$result = $res_217;
-			$this->pos = $pos_217;
-			$_242 = FALSE; break;
+			if( $_290 === TRUE ) { $_292 = TRUE; break; }
+			$result = $res_267;
+			$this->pos = $pos_267;
+			$_292 = FALSE; break;
 		}
 		while(0);
-		if( $_242 === TRUE ) {
+		if( $_292 === TRUE ) {
 			return $this->finalise( "NotBlockTag", $result );
 		}
-		if( $_242 === FALSE) { return FALSE; }
+		if( $_292 === FALSE) { return FALSE; }
 	}
 
 
 	/* ClosedBlock: '<%' < !NotBlockTag BlockName:Word ( [ :BlockArguments ] )? > Zap:'%>' :Template? '<%' < 'end_' '$BlockName' > '%>' */
 	function match_ClosedBlock ($substack = array()) {
 		$result = $this->construct( "ClosedBlock" );
-		$_269 = NULL;
+		$_319 = NULL;
 		do {
-			$_244 = new ParserExpression( $this, $substack, $result );
-			if (( $subres = $this->literal( $_244->expand('<%') ) ) !== FALSE) { $result["text"] .= $subres; }
-			else { $_269 = FALSE; break; }
+			$_294 = new ParserExpression( $this, $substack, $result );
+			if (( $subres = $this->literal( $_294->expand('<%') ) ) !== FALSE) { $result["text"] .= $subres; }
+			else { $_319 = FALSE; break; }
 			if (( $subres = $this->whitespace(  ) ) !== FALSE) { $result["text"] .= $subres; }
-			$res_247 = $result;
-			$pos_247 = $this->pos;
+			$res_297 = $result;
+			$pos_297 = $this->pos;
 			$key = "NotBlockTag"; $pos = $this->pos;
 			$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->match_NotBlockTag(array_merge($substack, array($result))) ) );
 			if ($subres !== FALSE) {
 				$this->store( $result, $subres );
-				$result = $res_247;
-				$this->pos = $pos_247;
-				$_269 = FALSE; break;
+				$result = $res_297;
+				$this->pos = $pos_297;
+				$_319 = FALSE; break;
 			}
 			else {
-				$result = $res_247;
-				$this->pos = $pos_247;
+				$result = $res_297;
+				$this->pos = $pos_297;
 			}
 			$key = "Word"; $pos = $this->pos;
 			$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->match_Word(array_merge($substack, array($result))) ) );
 			if ($subres !== FALSE) {
 				$this->store( $result, $subres, "BlockName" );
 			}
-			else { $_269 = FALSE; break; }
-			$res_253 = $result;
-			$pos_253 = $this->pos;
-			$_252 = NULL;
+			else { $_319 = FALSE; break; }
+			$res_303 = $result;
+			$pos_303 = $this->pos;
+			$_302 = NULL;
 			do {
 				if (( $subres = $this->whitespace(  ) ) !== FALSE) { $result["text"] .= $subres; }
-				else { $_252 = FALSE; break; }
+				else { $_302 = FALSE; break; }
 				$key = "BlockArguments"; $pos = $this->pos;
 				$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->match_BlockArguments(array_merge($substack, array($result))) ) );
 				if ($subres !== FALSE) {
 					$this->store( $result, $subres, "BlockArguments" );
 				}
-				else { $_252 = FALSE; break; }
+				else { $_302 = FALSE; break; }
 				if (( $subres = $this->whitespace(  ) ) !== FALSE) { $result["text"] .= $subres; }
-				else { $_252 = FALSE; break; }
-				$_252 = TRUE; break;
+				else { $_302 = FALSE; break; }
+				$_302 = TRUE; break;
 			}
 			while(0);
-			if( $_252 === FALSE) {
-				$result = $res_253;
-				$this->pos = $pos_253;
-				unset( $res_253 );
-				unset( $pos_253 );
+			if( $_302 === FALSE) {
+				$result = $res_303;
+				$this->pos = $pos_303;
+				unset( $res_303 );
+				unset( $pos_303 );
 			}
 			if (( $subres = $this->whitespace(  ) ) !== FALSE) { $result["text"] .= $subres; }
 			$substack[] = $result;
 			$result = $this->construct( "Zap" );
-			$_255 = new ParserExpression( $this, $substack, $result );
-			if (( $subres = $this->literal( $_255->expand('%>') ) ) !== FALSE) {
+			$_305 = new ParserExpression( $this, $substack, $result );
+			if (( $subres = $this->literal( $_305->expand('%>') ) ) !== FALSE) {
 				$result["text"] .= $subres;
 				$subres = $result ;
 				$result = array_pop( $substack ) ;
@@ -1461,42 +1680,42 @@ class SSTemplateParser extends Parser {
 			}
 			else {
 				$result = array_pop( $substack ) ;
-				$_269 = FALSE; break;
+				$_319 = FALSE; break;
 			}
-			$res_258 = $result;
-			$pos_258 = $this->pos;
+			$res_308 = $result;
+			$pos_308 = $this->pos;
 			$key = "Template"; $pos = $this->pos;
 			$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->match_Template(array_merge($substack, array($result))) ) );
 			if ($subres !== FALSE) {
 				$this->store( $result, $subres, "Template" );
 			}
 			else {
-				$result = $res_258;
-				$this->pos = $pos_258;
-				unset( $res_258 );
-				unset( $pos_258 );
+				$result = $res_308;
+				$this->pos = $pos_308;
+				unset( $res_308 );
+				unset( $pos_308 );
 			}
-			$_259 = new ParserExpression( $this, $substack, $result );
-			if (( $subres = $this->literal( $_259->expand('<%') ) ) !== FALSE) { $result["text"] .= $subres; }
-			else { $_269 = FALSE; break; }
+			$_309 = new ParserExpression( $this, $substack, $result );
+			if (( $subres = $this->literal( $_309->expand('<%') ) ) !== FALSE) { $result["text"] .= $subres; }
+			else { $_319 = FALSE; break; }
 			if (( $subres = $this->whitespace(  ) ) !== FALSE) { $result["text"] .= $subres; }
-			$_262 = new ParserExpression( $this, $substack, $result );
-			if (( $subres = $this->literal( $_262->expand('end_') ) ) !== FALSE) { $result["text"] .= $subres; }
-			else { $_269 = FALSE; break; }
-			$_264 = new ParserExpression( $this, $substack, $result );
-			if (( $subres = $this->literal( $_264->expand('$BlockName') ) ) !== FALSE) { $result["text"] .= $subres; }
-			else { $_269 = FALSE; break; }
+			$_312 = new ParserExpression( $this, $substack, $result );
+			if (( $subres = $this->literal( $_312->expand('end_') ) ) !== FALSE) { $result["text"] .= $subres; }
+			else { $_319 = FALSE; break; }
+			$_314 = new ParserExpression( $this, $substack, $result );
+			if (( $subres = $this->literal( $_314->expand('$BlockName') ) ) !== FALSE) { $result["text"] .= $subres; }
+			else { $_319 = FALSE; break; }
 			if (( $subres = $this->whitespace(  ) ) !== FALSE) { $result["text"] .= $subres; }
-			$_267 = new ParserExpression( $this, $substack, $result );
-			if (( $subres = $this->literal( $_267->expand('%>') ) ) !== FALSE) { $result["text"] .= $subres; }
-			else { $_269 = FALSE; break; }
-			$_269 = TRUE; break;
+			$_317 = new ParserExpression( $this, $substack, $result );
+			if (( $subres = $this->literal( $_317->expand('%>') ) ) !== FALSE) { $result["text"] .= $subres; }
+			else { $_319 = FALSE; break; }
+			$_319 = TRUE; break;
 		}
 		while(0);
-		if( $_269 === TRUE ) {
+		if( $_319 === TRUE ) {
 			return $this->finalise( "ClosedBlock", $result );
 		}
-		if( $_269 === FALSE) { return FALSE; }
+		if( $_319 === FALSE) { return FALSE; }
 	}
 
 
@@ -1592,66 +1811,66 @@ class SSTemplateParser extends Parser {
 	/* OpenBlock: '<%' < !NotBlockTag BlockName:Word ( [ :BlockArguments ] )? > '%>' */
 	function match_OpenBlock ($substack = array()) {
 		$result = $this->construct( "OpenBlock" );
-		$_284 = NULL;
+		$_334 = NULL;
 		do {
-			$_271 = new ParserExpression( $this, $substack, $result );
-			if (( $subres = $this->literal( $_271->expand('<%') ) ) !== FALSE) { $result["text"] .= $subres; }
-			else { $_284 = FALSE; break; }
+			$_321 = new ParserExpression( $this, $substack, $result );
+			if (( $subres = $this->literal( $_321->expand('<%') ) ) !== FALSE) { $result["text"] .= $subres; }
+			else { $_334 = FALSE; break; }
 			if (( $subres = $this->whitespace(  ) ) !== FALSE) { $result["text"] .= $subres; }
-			$res_274 = $result;
-			$pos_274 = $this->pos;
+			$res_324 = $result;
+			$pos_324 = $this->pos;
 			$key = "NotBlockTag"; $pos = $this->pos;
 			$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->match_NotBlockTag(array_merge($substack, array($result))) ) );
 			if ($subres !== FALSE) {
 				$this->store( $result, $subres );
-				$result = $res_274;
-				$this->pos = $pos_274;
-				$_284 = FALSE; break;
+				$result = $res_324;
+				$this->pos = $pos_324;
+				$_334 = FALSE; break;
 			}
 			else {
-				$result = $res_274;
-				$this->pos = $pos_274;
+				$result = $res_324;
+				$this->pos = $pos_324;
 			}
 			$key = "Word"; $pos = $this->pos;
 			$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->match_Word(array_merge($substack, array($result))) ) );
 			if ($subres !== FALSE) {
 				$this->store( $result, $subres, "BlockName" );
 			}
-			else { $_284 = FALSE; break; }
-			$res_280 = $result;
-			$pos_280 = $this->pos;
-			$_279 = NULL;
+			else { $_334 = FALSE; break; }
+			$res_330 = $result;
+			$pos_330 = $this->pos;
+			$_329 = NULL;
 			do {
 				if (( $subres = $this->whitespace(  ) ) !== FALSE) { $result["text"] .= $subres; }
-				else { $_279 = FALSE; break; }
+				else { $_329 = FALSE; break; }
 				$key = "BlockArguments"; $pos = $this->pos;
 				$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->match_BlockArguments(array_merge($substack, array($result))) ) );
 				if ($subres !== FALSE) {
 					$this->store( $result, $subres, "BlockArguments" );
 				}
-				else { $_279 = FALSE; break; }
+				else { $_329 = FALSE; break; }
 				if (( $subres = $this->whitespace(  ) ) !== FALSE) { $result["text"] .= $subres; }
-				else { $_279 = FALSE; break; }
-				$_279 = TRUE; break;
+				else { $_329 = FALSE; break; }
+				$_329 = TRUE; break;
 			}
 			while(0);
-			if( $_279 === FALSE) {
-				$result = $res_280;
-				$this->pos = $pos_280;
-				unset( $res_280 );
-				unset( $pos_280 );
+			if( $_329 === FALSE) {
+				$result = $res_330;
+				$this->pos = $pos_330;
+				unset( $res_330 );
+				unset( $pos_330 );
 			}
 			if (( $subres = $this->whitespace(  ) ) !== FALSE) { $result["text"] .= $subres; }
-			$_282 = new ParserExpression( $this, $substack, $result );
-			if (( $subres = $this->literal( $_282->expand('%>') ) ) !== FALSE) { $result["text"] .= $subres; }
-			else { $_284 = FALSE; break; }
-			$_284 = TRUE; break;
+			$_332 = new ParserExpression( $this, $substack, $result );
+			if (( $subres = $this->literal( $_332->expand('%>') ) ) !== FALSE) { $result["text"] .= $subres; }
+			else { $_334 = FALSE; break; }
+			$_334 = TRUE; break;
 		}
 		while(0);
-		if( $_284 === TRUE ) {
+		if( $_334 === TRUE ) {
 			return $this->finalise( "OpenBlock", $result );
 		}
-		if( $_284 === FALSE) { return FALSE; }
+		if( $_334 === FALSE) { return FALSE; }
 	}
 
 
@@ -1739,30 +1958,30 @@ class SSTemplateParser extends Parser {
 	/* MismatchedEndBlock: '<%' < 'end_' Word > '%>' */
 	function match_MismatchedEndBlock ($substack = array()) {
 		$result = $this->construct( "MismatchedEndBlock" );
-		$_295 = NULL;
+		$_345 = NULL;
 		do {
-			$_286 = new ParserExpression( $this, $substack, $result );
-			if (( $subres = $this->literal( $_286->expand('<%') ) ) !== FALSE) { $result["text"] .= $subres; }
-			else { $_295 = FALSE; break; }
+			$_336 = new ParserExpression( $this, $substack, $result );
+			if (( $subres = $this->literal( $_336->expand('<%') ) ) !== FALSE) { $result["text"] .= $subres; }
+			else { $_345 = FALSE; break; }
 			if (( $subres = $this->whitespace(  ) ) !== FALSE) { $result["text"] .= $subres; }
-			$_289 = new ParserExpression( $this, $substack, $result );
-			if (( $subres = $this->literal( $_289->expand('end_') ) ) !== FALSE) { $result["text"] .= $subres; }
-			else { $_295 = FALSE; break; }
+			$_339 = new ParserExpression( $this, $substack, $result );
+			if (( $subres = $this->literal( $_339->expand('end_') ) ) !== FALSE) { $result["text"] .= $subres; }
+			else { $_345 = FALSE; break; }
 			$key = "Word"; $pos = $this->pos;
 			$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->match_Word(array_merge($substack, array($result))) ) );
 			if ($subres !== FALSE) { $this->store( $result, $subres ); }
-			else { $_295 = FALSE; break; }
+			else { $_345 = FALSE; break; }
 			if (( $subres = $this->whitespace(  ) ) !== FALSE) { $result["text"] .= $subres; }
-			$_293 = new ParserExpression( $this, $substack, $result );
-			if (( $subres = $this->literal( $_293->expand('%>') ) ) !== FALSE) { $result["text"] .= $subres; }
-			else { $_295 = FALSE; break; }
-			$_295 = TRUE; break;
+			$_343 = new ParserExpression( $this, $substack, $result );
+			if (( $subres = $this->literal( $_343->expand('%>') ) ) !== FALSE) { $result["text"] .= $subres; }
+			else { $_345 = FALSE; break; }
+			$_345 = TRUE; break;
 		}
 		while(0);
-		if( $_295 === TRUE ) {
+		if( $_345 === TRUE ) {
 			return $this->finalise( "MismatchedEndBlock", $result );
 		}
-		if( $_295 === FALSE) { return FALSE; }
+		if( $_345 === FALSE) { return FALSE; }
 	}
 
 
@@ -1775,82 +1994,82 @@ class SSTemplateParser extends Parser {
 	/* MalformedOpenTag: '<%' < !NotBlockTag Tag:Word  !( ( [ :BlockArguments ] )? > '%>' ) */
 	function match_MalformedOpenTag ($substack = array()) {
 		$result = $this->construct( "MalformedOpenTag" );
-		$_312 = NULL;
+		$_362 = NULL;
 		do {
-			$_297 = new ParserExpression( $this, $substack, $result );
-			if (( $subres = $this->literal( $_297->expand('<%') ) ) !== FALSE) { $result["text"] .= $subres; }
-			else { $_312 = FALSE; break; }
+			$_347 = new ParserExpression( $this, $substack, $result );
+			if (( $subres = $this->literal( $_347->expand('<%') ) ) !== FALSE) { $result["text"] .= $subres; }
+			else { $_362 = FALSE; break; }
 			if (( $subres = $this->whitespace(  ) ) !== FALSE) { $result["text"] .= $subres; }
-			$res_300 = $result;
-			$pos_300 = $this->pos;
+			$res_350 = $result;
+			$pos_350 = $this->pos;
 			$key = "NotBlockTag"; $pos = $this->pos;
 			$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->match_NotBlockTag(array_merge($substack, array($result))) ) );
 			if ($subres !== FALSE) {
 				$this->store( $result, $subres );
-				$result = $res_300;
-				$this->pos = $pos_300;
-				$_312 = FALSE; break;
+				$result = $res_350;
+				$this->pos = $pos_350;
+				$_362 = FALSE; break;
 			}
 			else {
-				$result = $res_300;
-				$this->pos = $pos_300;
+				$result = $res_350;
+				$this->pos = $pos_350;
 			}
 			$key = "Word"; $pos = $this->pos;
 			$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->match_Word(array_merge($substack, array($result))) ) );
 			if ($subres !== FALSE) {
 				$this->store( $result, $subres, "Tag" );
 			}
-			else { $_312 = FALSE; break; }
-			$res_311 = $result;
-			$pos_311 = $this->pos;
-			$_310 = NULL;
+			else { $_362 = FALSE; break; }
+			$res_361 = $result;
+			$pos_361 = $this->pos;
+			$_360 = NULL;
 			do {
-				$res_306 = $result;
-				$pos_306 = $this->pos;
-				$_305 = NULL;
+				$res_356 = $result;
+				$pos_356 = $this->pos;
+				$_355 = NULL;
 				do {
 					if (( $subres = $this->whitespace(  ) ) !== FALSE) { $result["text"] .= $subres; }
-					else { $_305 = FALSE; break; }
+					else { $_355 = FALSE; break; }
 					$key = "BlockArguments"; $pos = $this->pos;
 					$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->match_BlockArguments(array_merge($substack, array($result))) ) );
 					if ($subres !== FALSE) {
 						$this->store( $result, $subres, "BlockArguments" );
 					}
-					else { $_305 = FALSE; break; }
+					else { $_355 = FALSE; break; }
 					if (( $subres = $this->whitespace(  ) ) !== FALSE) { $result["text"] .= $subres; }
-					else { $_305 = FALSE; break; }
-					$_305 = TRUE; break;
+					else { $_355 = FALSE; break; }
+					$_355 = TRUE; break;
 				}
 				while(0);
-				if( $_305 === FALSE) {
-					$result = $res_306;
-					$this->pos = $pos_306;
-					unset( $res_306 );
-					unset( $pos_306 );
+				if( $_355 === FALSE) {
+					$result = $res_356;
+					$this->pos = $pos_356;
+					unset( $res_356 );
+					unset( $pos_356 );
 				}
 				if (( $subres = $this->whitespace(  ) ) !== FALSE) { $result["text"] .= $subres; }
-				$_308 = new ParserExpression( $this, $substack, $result );
-				if (( $subres = $this->literal( $_308->expand('%>') ) ) !== FALSE) { $result["text"] .= $subres; }
-				else { $_310 = FALSE; break; }
-				$_310 = TRUE; break;
+				$_358 = new ParserExpression( $this, $substack, $result );
+				if (( $subres = $this->literal( $_358->expand('%>') ) ) !== FALSE) { $result["text"] .= $subres; }
+				else { $_360 = FALSE; break; }
+				$_360 = TRUE; break;
 			}
 			while(0);
-			if( $_310 === TRUE ) {
-				$result = $res_311;
-				$this->pos = $pos_311;
-				$_312 = FALSE; break;
+			if( $_360 === TRUE ) {
+				$result = $res_361;
+				$this->pos = $pos_361;
+				$_362 = FALSE; break;
 			}
-			if( $_310 === FALSE) {
-				$result = $res_311;
-				$this->pos = $pos_311;
+			if( $_360 === FALSE) {
+				$result = $res_361;
+				$this->pos = $pos_361;
 			}
-			$_312 = TRUE; break;
+			$_362 = TRUE; break;
 		}
 		while(0);
-		if( $_312 === TRUE ) {
+		if( $_362 === TRUE ) {
 			return $this->finalise( "MalformedOpenTag", $result );
 		}
-		if( $_312 === FALSE) { return FALSE; }
+		if( $_362 === FALSE) { return FALSE; }
 	}
 
 
@@ -1863,64 +2082,64 @@ class SSTemplateParser extends Parser {
 	/* MalformedCloseTag: '<%' < Tag:('end_' :Word ) !( > '%>' ) */
 	function match_MalformedCloseTag ($substack = array()) {
 		$result = $this->construct( "MalformedCloseTag" );
-		$_328 = NULL;
+		$_378 = NULL;
 		do {
-			$_314 = new ParserExpression( $this, $substack, $result );
-			if (( $subres = $this->literal( $_314->expand('<%') ) ) !== FALSE) { $result["text"] .= $subres; }
-			else { $_328 = FALSE; break; }
+			$_364 = new ParserExpression( $this, $substack, $result );
+			if (( $subres = $this->literal( $_364->expand('<%') ) ) !== FALSE) { $result["text"] .= $subres; }
+			else { $_378 = FALSE; break; }
 			if (( $subres = $this->whitespace(  ) ) !== FALSE) { $result["text"] .= $subres; }
 			$substack[] = $result;
 			$result = $this->construct( "Tag" );
-			$_320 = NULL;
+			$_370 = NULL;
 			do {
-				$_317 = new ParserExpression( $this, $substack, $result );
-				if (( $subres = $this->literal( $_317->expand('end_') ) ) !== FALSE) { $result["text"] .= $subres; }
-				else { $_320 = FALSE; break; }
+				$_367 = new ParserExpression( $this, $substack, $result );
+				if (( $subres = $this->literal( $_367->expand('end_') ) ) !== FALSE) { $result["text"] .= $subres; }
+				else { $_370 = FALSE; break; }
 				$key = "Word"; $pos = $this->pos;
 				$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->match_Word(array_merge($substack, array($result))) ) );
 				if ($subres !== FALSE) {
 					$this->store( $result, $subres, "Word" );
 				}
-				else { $_320 = FALSE; break; }
-				$_320 = TRUE; break;
+				else { $_370 = FALSE; break; }
+				$_370 = TRUE; break;
 			}
 			while(0);
-			if( $_320 === TRUE ) {
+			if( $_370 === TRUE ) {
 				$subres = $result ;
 				$result = array_pop( $substack ) ;
 				$this->store( $result, $subres, 'Tag' );
 			}
-			if( $_320 === FALSE) {
+			if( $_370 === FALSE) {
 				$result = array_pop( $substack ) ;
-				$_328 = FALSE; break;
+				$_378 = FALSE; break;
 			}
-			$res_327 = $result;
-			$pos_327 = $this->pos;
-			$_326 = NULL;
+			$res_377 = $result;
+			$pos_377 = $this->pos;
+			$_376 = NULL;
 			do {
 				if (( $subres = $this->whitespace(  ) ) !== FALSE) { $result["text"] .= $subres; }
-				$_324 = new ParserExpression( $this, $substack, $result );
-				if (( $subres = $this->literal( $_324->expand('%>') ) ) !== FALSE) { $result["text"] .= $subres; }
-				else { $_326 = FALSE; break; }
-				$_326 = TRUE; break;
+				$_374 = new ParserExpression( $this, $substack, $result );
+				if (( $subres = $this->literal( $_374->expand('%>') ) ) !== FALSE) { $result["text"] .= $subres; }
+				else { $_376 = FALSE; break; }
+				$_376 = TRUE; break;
 			}
 			while(0);
-			if( $_326 === TRUE ) {
-				$result = $res_327;
-				$this->pos = $pos_327;
-				$_328 = FALSE; break;
+			if( $_376 === TRUE ) {
+				$result = $res_377;
+				$this->pos = $pos_377;
+				$_378 = FALSE; break;
 			}
-			if( $_326 === FALSE) {
-				$result = $res_327;
-				$this->pos = $pos_327;
+			if( $_376 === FALSE) {
+				$result = $res_377;
+				$this->pos = $pos_377;
 			}
-			$_328 = TRUE; break;
+			$_378 = TRUE; break;
 		}
 		while(0);
-		if( $_328 === TRUE ) {
+		if( $_378 === TRUE ) {
 			return $this->finalise( "MalformedCloseTag", $result );
 		}
-		if( $_328 === FALSE) { return FALSE; }
+		if( $_378 === FALSE) { return FALSE; }
 	}
 
 
@@ -1933,33 +2152,33 @@ class SSTemplateParser extends Parser {
 	/* MalformedBlock: MalformedOpenTag | MalformedCloseTag */
 	function match_MalformedBlock ($substack = array()) {
 		$result = $this->construct( "MalformedBlock" );
-		$_333 = NULL;
+		$_383 = NULL;
 		do {
-			$res_330 = $result;
-			$pos_330 = $this->pos;
+			$res_380 = $result;
+			$pos_380 = $this->pos;
 			$key = "MalformedOpenTag"; $pos = $this->pos;
 			$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->match_MalformedOpenTag(array_merge($substack, array($result))) ) );
 			if ($subres !== FALSE) {
 				$this->store( $result, $subres );
-				$_333 = TRUE; break;
+				$_383 = TRUE; break;
 			}
-			$result = $res_330;
-			$this->pos = $pos_330;
+			$result = $res_380;
+			$this->pos = $pos_380;
 			$key = "MalformedCloseTag"; $pos = $this->pos;
 			$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->match_MalformedCloseTag(array_merge($substack, array($result))) ) );
 			if ($subres !== FALSE) {
 				$this->store( $result, $subres );
-				$_333 = TRUE; break;
+				$_383 = TRUE; break;
 			}
-			$result = $res_330;
-			$this->pos = $pos_330;
-			$_333 = FALSE; break;
+			$result = $res_380;
+			$this->pos = $pos_380;
+			$_383 = FALSE; break;
 		}
 		while(0);
-		if( $_333 === TRUE ) {
+		if( $_383 === TRUE ) {
 			return $this->finalise( "MalformedBlock", $result );
 		}
-		if( $_333 === FALSE) { return FALSE; }
+		if( $_383 === FALSE) { return FALSE; }
 	}
 
 
@@ -1968,57 +2187,57 @@ class SSTemplateParser extends Parser {
 	/* Comment: "<%--" (!"--%>" /./)+ "--%>" */
 	function match_Comment ($substack = array()) {
 		$result = $this->construct( "Comment" );
-		$_345 = NULL;
+		$_395 = NULL;
 		do {
-			$_335 = new ParserExpression( $this, $substack, $result );
-			if (( $subres = $this->literal( $_335->expand("<%--") ) ) !== FALSE) { $result["text"] .= $subres; }
-			else { $_345 = FALSE; break; }
+			$_385 = new ParserExpression( $this, $substack, $result );
+			if (( $subres = $this->literal( $_385->expand("<%--") ) ) !== FALSE) { $result["text"] .= $subres; }
+			else { $_395 = FALSE; break; }
 			$count = 0;
 			while (true) {
-				$res_342 = $result;
-				$pos_342 = $this->pos;
-				$_341 = NULL;
+				$res_392 = $result;
+				$pos_392 = $this->pos;
+				$_391 = NULL;
 				do {
-					$res_338 = $result;
-					$pos_338 = $this->pos;
-					$_337 = new ParserExpression( $this, $substack, $result );
-					if (( $subres = $this->literal( $_337->expand("--%>") ) ) !== FALSE) {
+					$res_388 = $result;
+					$pos_388 = $this->pos;
+					$_387 = new ParserExpression( $this, $substack, $result );
+					if (( $subres = $this->literal( $_387->expand("--%>") ) ) !== FALSE) {
 						$result["text"] .= $subres;
-						$result = $res_338;
-						$this->pos = $pos_338;
-						$_341 = FALSE; break;
+						$result = $res_388;
+						$this->pos = $pos_388;
+						$_391 = FALSE; break;
 					}
 					else {
-						$result = $res_338;
-						$this->pos = $pos_338;
+						$result = $res_388;
+						$this->pos = $pos_388;
 					}
-					$_339 = new ParserExpression( $this, $substack, $result );
-					if (( $subres = $this->rx( $_339->expand('/./') ) ) !== FALSE) { $result["text"] .= $subres; }
-					else { $_341 = FALSE; break; }
-					$_341 = TRUE; break;
+					$_389 = new ParserExpression( $this, $substack, $result );
+					if (( $subres = $this->rx( $_389->expand('/./') ) ) !== FALSE) { $result["text"] .= $subres; }
+					else { $_391 = FALSE; break; }
+					$_391 = TRUE; break;
 				}
 				while(0);
-				if( $_341 === FALSE) {
-					$result = $res_342;
-					$this->pos = $pos_342;
-					unset( $res_342 );
-					unset( $pos_342 );
+				if( $_391 === FALSE) {
+					$result = $res_392;
+					$this->pos = $pos_392;
+					unset( $res_392 );
+					unset( $pos_392 );
 					break;
 				}
 				$count += 1;
 			}
 			if ($count > 0) {  }
-			else { $_345 = FALSE; break; }
-			$_343 = new ParserExpression( $this, $substack, $result );
-			if (( $subres = $this->literal( $_343->expand("--%>") ) ) !== FALSE) { $result["text"] .= $subres; }
-			else { $_345 = FALSE; break; }
-			$_345 = TRUE; break;
+			else { $_395 = FALSE; break; }
+			$_393 = new ParserExpression( $this, $substack, $result );
+			if (( $subres = $this->literal( $_393->expand("--%>") ) ) !== FALSE) { $result["text"] .= $subres; }
+			else { $_395 = FALSE; break; }
+			$_395 = TRUE; break;
 		}
 		while(0);
-		if( $_345 === TRUE ) {
+		if( $_395 === TRUE ) {
 			return $this->finalise( "Comment", $result );
 		}
-		if( $_345 === FALSE) { return FALSE; }
+		if( $_395 === FALSE) { return FALSE; }
 	}
 
 
@@ -2039,8 +2258,8 @@ class SSTemplateParser extends Parser {
 / */
 	function match_Text ($substack = array()) {
 		$result = array("name"=>"Text", "text"=>"");
-		$_347 = new ParserExpression( $this, $substack, $result );
-		if (( $subres = $this->rx( $_347->expand('/
+		$_397 = new ParserExpression( $this, $substack, $result );
+		if (( $subres = $this->rx( $_397->expand('/
 (
 (\\\\.) |              # Any escaped character
 ([^<${]) |           # Any character that isn\'t <, $ or {
@@ -2057,155 +2276,173 @@ class SSTemplateParser extends Parser {
 	}
 
 
-	/* Template: (Comment | If | Require | ClosedBlock | OpenBlock | MalformedBlock | Injection | Text)+ */
+	/* Template: (Comment | If | Require | OldI18NTag | ClosedBlock | OpenBlock | MalformedBlock | Injection | Text)+ */
 	function match_Template ($substack = array()) {
 		$result = $this->construct( "Template" );
 		$count = 0;
 		while (true) {
-			$res_379 = $result;
-			$pos_379 = $this->pos;
-			$_378 = NULL;
+			$res_433 = $result;
+			$pos_433 = $this->pos;
+			$_432 = NULL;
 			do {
-				$_376 = NULL;
+				$_430 = NULL;
 				do {
-					$res_349 = $result;
-					$pos_349 = $this->pos;
+					$res_399 = $result;
+					$pos_399 = $this->pos;
 					$key = "Comment"; $pos = $this->pos;
 					$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->match_Comment(array_merge($substack, array($result))) ) );
 					if ($subres !== FALSE) {
 						$this->store( $result, $subres );
-						$_376 = TRUE; break;
+						$_430 = TRUE; break;
 					}
-					$result = $res_349;
-					$this->pos = $pos_349;
-					$_374 = NULL;
+					$result = $res_399;
+					$this->pos = $pos_399;
+					$_428 = NULL;
 					do {
-						$res_351 = $result;
-						$pos_351 = $this->pos;
+						$res_401 = $result;
+						$pos_401 = $this->pos;
 						$key = "If"; $pos = $this->pos;
 						$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->match_If(array_merge($substack, array($result))) ) );
 						if ($subres !== FALSE) {
 							$this->store( $result, $subres );
-							$_374 = TRUE; break;
+							$_428 = TRUE; break;
 						}
-						$result = $res_351;
-						$this->pos = $pos_351;
-						$_372 = NULL;
+						$result = $res_401;
+						$this->pos = $pos_401;
+						$_426 = NULL;
 						do {
-							$res_353 = $result;
-							$pos_353 = $this->pos;
+							$res_403 = $result;
+							$pos_403 = $this->pos;
 							$key = "Require"; $pos = $this->pos;
 							$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->match_Require(array_merge($substack, array($result))) ) );
 							if ($subres !== FALSE) {
 								$this->store( $result, $subres );
-								$_372 = TRUE; break;
+								$_426 = TRUE; break;
 							}
-							$result = $res_353;
-							$this->pos = $pos_353;
-							$_370 = NULL;
+							$result = $res_403;
+							$this->pos = $pos_403;
+							$_424 = NULL;
 							do {
-								$res_355 = $result;
-								$pos_355 = $this->pos;
-								$key = "ClosedBlock"; $pos = $this->pos;
-								$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->match_ClosedBlock(array_merge($substack, array($result))) ) );
+								$res_405 = $result;
+								$pos_405 = $this->pos;
+								$key = "OldI18NTag"; $pos = $this->pos;
+								$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->match_OldI18NTag(array_merge($substack, array($result))) ) );
 								if ($subres !== FALSE) {
 									$this->store( $result, $subres );
-									$_370 = TRUE; break;
+									$_424 = TRUE; break;
 								}
-								$result = $res_355;
-								$this->pos = $pos_355;
-								$_368 = NULL;
+								$result = $res_405;
+								$this->pos = $pos_405;
+								$_422 = NULL;
 								do {
-									$res_357 = $result;
-									$pos_357 = $this->pos;
-									$key = "OpenBlock"; $pos = $this->pos;
-									$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->match_OpenBlock(array_merge($substack, array($result))) ) );
+									$res_407 = $result;
+									$pos_407 = $this->pos;
+									$key = "ClosedBlock"; $pos = $this->pos;
+									$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->match_ClosedBlock(array_merge($substack, array($result))) ) );
 									if ($subres !== FALSE) {
 										$this->store( $result, $subres );
-										$_368 = TRUE; break;
+										$_422 = TRUE; break;
 									}
-									$result = $res_357;
-									$this->pos = $pos_357;
-									$_366 = NULL;
+									$result = $res_407;
+									$this->pos = $pos_407;
+									$_420 = NULL;
 									do {
-										$res_359 = $result;
-										$pos_359 = $this->pos;
-										$key = "MalformedBlock"; $pos = $this->pos;
-										$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->match_MalformedBlock(array_merge($substack, array($result))) ) );
+										$res_409 = $result;
+										$pos_409 = $this->pos;
+										$key = "OpenBlock"; $pos = $this->pos;
+										$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->match_OpenBlock(array_merge($substack, array($result))) ) );
 										if ($subres !== FALSE) {
 											$this->store( $result, $subres );
-											$_366 = TRUE; break;
+											$_420 = TRUE; break;
 										}
-										$result = $res_359;
-										$this->pos = $pos_359;
-										$_364 = NULL;
+										$result = $res_409;
+										$this->pos = $pos_409;
+										$_418 = NULL;
 										do {
-											$res_361 = $result;
-											$pos_361 = $this->pos;
-											$key = "Injection"; $pos = $this->pos;
-											$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->match_Injection(array_merge($substack, array($result))) ) );
+											$res_411 = $result;
+											$pos_411 = $this->pos;
+											$key = "MalformedBlock"; $pos = $this->pos;
+											$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->match_MalformedBlock(array_merge($substack, array($result))) ) );
 											if ($subres !== FALSE) {
 												$this->store( $result, $subres );
-												$_364 = TRUE; break;
+												$_418 = TRUE; break;
 											}
-											$result = $res_361;
-											$this->pos = $pos_361;
-											$key = "Text"; $pos = $this->pos;
-											$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->match_Text(array_merge($substack, array($result))) ) );
-											if ($subres !== FALSE) {
-												$this->store( $result, $subres );
-												$_364 = TRUE; break;
+											$result = $res_411;
+											$this->pos = $pos_411;
+											$_416 = NULL;
+											do {
+												$res_413 = $result;
+												$pos_413 = $this->pos;
+												$key = "Injection"; $pos = $this->pos;
+												$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->match_Injection(array_merge($substack, array($result))) ) );
+												if ($subres !== FALSE) {
+													$this->store( $result, $subres );
+													$_416 = TRUE; break;
+												}
+												$result = $res_413;
+												$this->pos = $pos_413;
+												$key = "Text"; $pos = $this->pos;
+												$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->match_Text(array_merge($substack, array($result))) ) );
+												if ($subres !== FALSE) {
+													$this->store( $result, $subres );
+													$_416 = TRUE; break;
+												}
+												$result = $res_413;
+												$this->pos = $pos_413;
+												$_416 = FALSE; break;
 											}
-											$result = $res_361;
-											$this->pos = $pos_361;
-											$_364 = FALSE; break;
+											while(0);
+											if( $_416 === TRUE ) { $_418 = TRUE; break; }
+											$result = $res_411;
+											$this->pos = $pos_411;
+											$_418 = FALSE; break;
 										}
 										while(0);
-										if( $_364 === TRUE ) { $_366 = TRUE; break; }
-										$result = $res_359;
-										$this->pos = $pos_359;
-										$_366 = FALSE; break;
+										if( $_418 === TRUE ) { $_420 = TRUE; break; }
+										$result = $res_409;
+										$this->pos = $pos_409;
+										$_420 = FALSE; break;
 									}
 									while(0);
-									if( $_366 === TRUE ) { $_368 = TRUE; break; }
-									$result = $res_357;
-									$this->pos = $pos_357;
-									$_368 = FALSE; break;
+									if( $_420 === TRUE ) { $_422 = TRUE; break; }
+									$result = $res_407;
+									$this->pos = $pos_407;
+									$_422 = FALSE; break;
 								}
 								while(0);
-								if( $_368 === TRUE ) { $_370 = TRUE; break; }
-								$result = $res_355;
-								$this->pos = $pos_355;
-								$_370 = FALSE; break;
+								if( $_422 === TRUE ) { $_424 = TRUE; break; }
+								$result = $res_405;
+								$this->pos = $pos_405;
+								$_424 = FALSE; break;
 							}
 							while(0);
-							if( $_370 === TRUE ) { $_372 = TRUE; break; }
-							$result = $res_353;
-							$this->pos = $pos_353;
-							$_372 = FALSE; break;
+							if( $_424 === TRUE ) { $_426 = TRUE; break; }
+							$result = $res_403;
+							$this->pos = $pos_403;
+							$_426 = FALSE; break;
 						}
 						while(0);
-						if( $_372 === TRUE ) { $_374 = TRUE; break; }
-						$result = $res_351;
-						$this->pos = $pos_351;
-						$_374 = FALSE; break;
+						if( $_426 === TRUE ) { $_428 = TRUE; break; }
+						$result = $res_401;
+						$this->pos = $pos_401;
+						$_428 = FALSE; break;
 					}
 					while(0);
-					if( $_374 === TRUE ) { $_376 = TRUE; break; }
-					$result = $res_349;
-					$this->pos = $pos_349;
-					$_376 = FALSE; break;
+					if( $_428 === TRUE ) { $_430 = TRUE; break; }
+					$result = $res_399;
+					$this->pos = $pos_399;
+					$_430 = FALSE; break;
 				}
 				while(0);
-				if( $_376 === FALSE) { $_378 = FALSE; break; }
-				$_378 = TRUE; break;
+				if( $_430 === FALSE) { $_432 = FALSE; break; }
+				$_432 = TRUE; break;
 			}
 			while(0);
-			if( $_378 === FALSE) {
-				$result = $res_379;
-				$this->pos = $pos_379;
-				unset( $res_379 );
-				unset( $pos_379 );
+			if( $_432 === FALSE) {
+				$result = $res_433;
+				$this->pos = $pos_433;
+				unset( $res_433 );
+				unset( $pos_433 );
 				break;
 			}
 			$count += 1;
@@ -2243,173 +2480,191 @@ class SSTemplateParser extends Parser {
 		$res['php'] .= $sub['php'] . PHP_EOL ;
 	}
 	
-	/* TopTemplate: (Comment | If | Require | ClosedBlock | OpenBlock | MalformedBlock | MismatchedEndBlock | Injection | Text)+ */
+	/* TopTemplate: (Comment | If | Require | OldI18NTag | ClosedBlock | OpenBlock | MalformedBlock | MismatchedEndBlock | Injection | Text)+ */
 	function match_TopTemplate ($substack = array()) {
 		$result = $this->construct( "TopTemplate" );
 		$count = 0;
 		while (true) {
-			$res_414 = $result;
-			$pos_414 = $this->pos;
-			$_413 = NULL;
+			$res_472 = $result;
+			$pos_472 = $this->pos;
+			$_471 = NULL;
 			do {
-				$_411 = NULL;
+				$_469 = NULL;
 				do {
-					$res_380 = $result;
-					$pos_380 = $this->pos;
+					$res_434 = $result;
+					$pos_434 = $this->pos;
 					$key = "Comment"; $pos = $this->pos;
 					$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->match_Comment(array_merge($substack, array($result))) ) );
 					if ($subres !== FALSE) {
 						$this->store( $result, $subres );
-						$_411 = TRUE; break;
+						$_469 = TRUE; break;
 					}
-					$result = $res_380;
-					$this->pos = $pos_380;
-					$_409 = NULL;
+					$result = $res_434;
+					$this->pos = $pos_434;
+					$_467 = NULL;
 					do {
-						$res_382 = $result;
-						$pos_382 = $this->pos;
+						$res_436 = $result;
+						$pos_436 = $this->pos;
 						$key = "If"; $pos = $this->pos;
 						$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->match_If(array_merge($substack, array($result))) ) );
 						if ($subres !== FALSE) {
 							$this->store( $result, $subres );
-							$_409 = TRUE; break;
+							$_467 = TRUE; break;
 						}
-						$result = $res_382;
-						$this->pos = $pos_382;
-						$_407 = NULL;
+						$result = $res_436;
+						$this->pos = $pos_436;
+						$_465 = NULL;
 						do {
-							$res_384 = $result;
-							$pos_384 = $this->pos;
+							$res_438 = $result;
+							$pos_438 = $this->pos;
 							$key = "Require"; $pos = $this->pos;
 							$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->match_Require(array_merge($substack, array($result))) ) );
 							if ($subres !== FALSE) {
 								$this->store( $result, $subres );
-								$_407 = TRUE; break;
+								$_465 = TRUE; break;
 							}
-							$result = $res_384;
-							$this->pos = $pos_384;
-							$_405 = NULL;
+							$result = $res_438;
+							$this->pos = $pos_438;
+							$_463 = NULL;
 							do {
-								$res_386 = $result;
-								$pos_386 = $this->pos;
-								$key = "ClosedBlock"; $pos = $this->pos;
-								$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->match_ClosedBlock(array_merge($substack, array($result))) ) );
+								$res_440 = $result;
+								$pos_440 = $this->pos;
+								$key = "OldI18NTag"; $pos = $this->pos;
+								$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->match_OldI18NTag(array_merge($substack, array($result))) ) );
 								if ($subres !== FALSE) {
 									$this->store( $result, $subres );
-									$_405 = TRUE; break;
+									$_463 = TRUE; break;
 								}
-								$result = $res_386;
-								$this->pos = $pos_386;
-								$_403 = NULL;
+								$result = $res_440;
+								$this->pos = $pos_440;
+								$_461 = NULL;
 								do {
-									$res_388 = $result;
-									$pos_388 = $this->pos;
-									$key = "OpenBlock"; $pos = $this->pos;
-									$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->match_OpenBlock(array_merge($substack, array($result))) ) );
+									$res_442 = $result;
+									$pos_442 = $this->pos;
+									$key = "ClosedBlock"; $pos = $this->pos;
+									$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->match_ClosedBlock(array_merge($substack, array($result))) ) );
 									if ($subres !== FALSE) {
 										$this->store( $result, $subres );
-										$_403 = TRUE; break;
+										$_461 = TRUE; break;
 									}
-									$result = $res_388;
-									$this->pos = $pos_388;
-									$_401 = NULL;
+									$result = $res_442;
+									$this->pos = $pos_442;
+									$_459 = NULL;
 									do {
-										$res_390 = $result;
-										$pos_390 = $this->pos;
-										$key = "MalformedBlock"; $pos = $this->pos;
-										$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->match_MalformedBlock(array_merge($substack, array($result))) ) );
+										$res_444 = $result;
+										$pos_444 = $this->pos;
+										$key = "OpenBlock"; $pos = $this->pos;
+										$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->match_OpenBlock(array_merge($substack, array($result))) ) );
 										if ($subres !== FALSE) {
 											$this->store( $result, $subres );
-											$_401 = TRUE; break;
+											$_459 = TRUE; break;
 										}
-										$result = $res_390;
-										$this->pos = $pos_390;
-										$_399 = NULL;
+										$result = $res_444;
+										$this->pos = $pos_444;
+										$_457 = NULL;
 										do {
-											$res_392 = $result;
-											$pos_392 = $this->pos;
-											$key = "MismatchedEndBlock"; $pos = $this->pos;
-											$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->match_MismatchedEndBlock(array_merge($substack, array($result))) ) );
+											$res_446 = $result;
+											$pos_446 = $this->pos;
+											$key = "MalformedBlock"; $pos = $this->pos;
+											$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->match_MalformedBlock(array_merge($substack, array($result))) ) );
 											if ($subres !== FALSE) {
 												$this->store( $result, $subres );
-												$_399 = TRUE; break;
+												$_457 = TRUE; break;
 											}
-											$result = $res_392;
-											$this->pos = $pos_392;
-											$_397 = NULL;
+											$result = $res_446;
+											$this->pos = $pos_446;
+											$_455 = NULL;
 											do {
-												$res_394 = $result;
-												$pos_394 = $this->pos;
-												$key = "Injection"; $pos = $this->pos;
-												$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->match_Injection(array_merge($substack, array($result))) ) );
+												$res_448 = $result;
+												$pos_448 = $this->pos;
+												$key = "MismatchedEndBlock"; $pos = $this->pos;
+												$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->match_MismatchedEndBlock(array_merge($substack, array($result))) ) );
 												if ($subres !== FALSE) {
 													$this->store( $result, $subres );
-													$_397 = TRUE; break;
+													$_455 = TRUE; break;
 												}
-												$result = $res_394;
-												$this->pos = $pos_394;
-												$key = "Text"; $pos = $this->pos;
-												$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->match_Text(array_merge($substack, array($result))) ) );
-												if ($subres !== FALSE) {
-													$this->store( $result, $subres );
-													$_397 = TRUE; break;
+												$result = $res_448;
+												$this->pos = $pos_448;
+												$_453 = NULL;
+												do {
+													$res_450 = $result;
+													$pos_450 = $this->pos;
+													$key = "Injection"; $pos = $this->pos;
+													$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->match_Injection(array_merge($substack, array($result))) ) );
+													if ($subres !== FALSE) {
+														$this->store( $result, $subres );
+														$_453 = TRUE; break;
+													}
+													$result = $res_450;
+													$this->pos = $pos_450;
+													$key = "Text"; $pos = $this->pos;
+													$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->match_Text(array_merge($substack, array($result))) ) );
+													if ($subres !== FALSE) {
+														$this->store( $result, $subres );
+														$_453 = TRUE; break;
+													}
+													$result = $res_450;
+													$this->pos = $pos_450;
+													$_453 = FALSE; break;
 												}
-												$result = $res_394;
-												$this->pos = $pos_394;
-												$_397 = FALSE; break;
+												while(0);
+												if( $_453 === TRUE ) { $_455 = TRUE; break; }
+												$result = $res_448;
+												$this->pos = $pos_448;
+												$_455 = FALSE; break;
 											}
 											while(0);
-											if( $_397 === TRUE ) { $_399 = TRUE; break; }
-											$result = $res_392;
-											$this->pos = $pos_392;
-											$_399 = FALSE; break;
+											if( $_455 === TRUE ) { $_457 = TRUE; break; }
+											$result = $res_446;
+											$this->pos = $pos_446;
+											$_457 = FALSE; break;
 										}
 										while(0);
-										if( $_399 === TRUE ) { $_401 = TRUE; break; }
-										$result = $res_390;
-										$this->pos = $pos_390;
-										$_401 = FALSE; break;
+										if( $_457 === TRUE ) { $_459 = TRUE; break; }
+										$result = $res_444;
+										$this->pos = $pos_444;
+										$_459 = FALSE; break;
 									}
 									while(0);
-									if( $_401 === TRUE ) { $_403 = TRUE; break; }
-									$result = $res_388;
-									$this->pos = $pos_388;
-									$_403 = FALSE; break;
+									if( $_459 === TRUE ) { $_461 = TRUE; break; }
+									$result = $res_442;
+									$this->pos = $pos_442;
+									$_461 = FALSE; break;
 								}
 								while(0);
-								if( $_403 === TRUE ) { $_405 = TRUE; break; }
-								$result = $res_386;
-								$this->pos = $pos_386;
-								$_405 = FALSE; break;
+								if( $_461 === TRUE ) { $_463 = TRUE; break; }
+								$result = $res_440;
+								$this->pos = $pos_440;
+								$_463 = FALSE; break;
 							}
 							while(0);
-							if( $_405 === TRUE ) { $_407 = TRUE; break; }
-							$result = $res_384;
-							$this->pos = $pos_384;
-							$_407 = FALSE; break;
+							if( $_463 === TRUE ) { $_465 = TRUE; break; }
+							$result = $res_438;
+							$this->pos = $pos_438;
+							$_465 = FALSE; break;
 						}
 						while(0);
-						if( $_407 === TRUE ) { $_409 = TRUE; break; }
-						$result = $res_382;
-						$this->pos = $pos_382;
-						$_409 = FALSE; break;
+						if( $_465 === TRUE ) { $_467 = TRUE; break; }
+						$result = $res_436;
+						$this->pos = $pos_436;
+						$_467 = FALSE; break;
 					}
 					while(0);
-					if( $_409 === TRUE ) { $_411 = TRUE; break; }
-					$result = $res_380;
-					$this->pos = $pos_380;
-					$_411 = FALSE; break;
+					if( $_467 === TRUE ) { $_469 = TRUE; break; }
+					$result = $res_434;
+					$this->pos = $pos_434;
+					$_469 = FALSE; break;
 				}
 				while(0);
-				if( $_411 === FALSE) { $_413 = FALSE; break; }
-				$_413 = TRUE; break;
+				if( $_469 === FALSE) { $_471 = FALSE; break; }
+				$_471 = TRUE; break;
 			}
 			while(0);
-			if( $_413 === FALSE) {
-				$result = $res_414;
-				$this->pos = $pos_414;
-				unset( $res_414 );
-				unset( $pos_414 );
+			if( $_471 === FALSE) {
+				$result = $res_472;
+				$this->pos = $pos_472;
+				unset( $res_472 );
+				unset( $pos_472 );
 				break;
 			}
 			$count += 1;

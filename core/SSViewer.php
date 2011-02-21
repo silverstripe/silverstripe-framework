@@ -20,7 +20,7 @@
  * and revert back to the original scope once we've got the value we're after
  * 
  */
-class SSViewer_DataPresenter {
+class SSViewer_Scope {
 	
 	// The stack of previous "global" items
 	// And array of item, itemIterator, pop_index, up_index, current_index
@@ -123,6 +123,44 @@ class SSViewer_DataPresenter {
 		return $retval;
 	}
 }
+
+/**
+ * This extends SSViewer_Scope to mix in data on top of what the item provides. This can be "global"
+ * data that is scope-independant (like BaseURL), or type-specific data that is layered on top cross-cut like
+ * (like $FirstLast etc).
+ * 
+ * It's separate from SSViewer_Scope to keep that fairly complex code as clean as possible.
+ */
+class SSViewer_DataPresenter extends SSViewer_Scope {
+	
+	private $extras;
+	
+	function __construct($item, $extras = null){
+		parent::__construct($item);
+		$this->extras = $extras;
+	}
+	
+	function __call($name, $arguments) {
+		$property = $arguments[0];
+		
+		if ($this->extras && array_key_exists($property, $this->extras)) {
+			
+			$this->resetLocalScope();
+			
+			$value = $this->extras[$arguments[0]];
+			
+			switch ($name) {
+				case 'hasValue':
+					return (bool)$value;
+				default:
+					return $value;
+			}
+		}
+		
+		return parent::__call($name, $arguments);
+	}
+}
+
 
 /**
  * Parses a template file with an *.ss file extension.
@@ -547,7 +585,7 @@ class SSViewer {
 			}
 		}
 		
-		$scope = new SSViewer_DataPresenter($item);
+		$scope = new SSViewer_DataPresenter($item, array('I18NNamespace' => basename($template)));
 		$val = ""; $valStack = array();
 		
 		include($cacheFile);
