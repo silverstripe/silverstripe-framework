@@ -479,7 +479,7 @@ class Versioned extends DataObjectDecorator {
 	 */
 	function canBeVersioned($table) {
 		return ClassInfo::exists($table) 
-			&& ClassInfo::is_subclass_of($table, 'DataObject')
+			&& is_subclass_of($table, 'DataObject')
 			&& DataObject::has_own_table($table);
 	}
 	
