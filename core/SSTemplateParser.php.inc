@@ -7,6 +7,10 @@ This is the uncompiled parser for the SilverStripe template language, PHP with s
 It gets run through the php-peg parser compiler to have those comments turned into code that match parts of the template language,
 producing the executable version SSTemplateParser.php
 
+To recompile after changing this file, run this from the 'sapphire/core' directory via command line:
+ 
+	php ../thirdparty/php-peg/cli.php SSTemplateParser.php.inc > SSTemplateParser.php 
+  
 See the php-peg docs for more information on the parser format, and how to convert this file into SSTemplateParser.php
 
 TODO:
