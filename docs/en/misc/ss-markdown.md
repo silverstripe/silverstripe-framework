@@ -17,9 +17,9 @@ and HTML output should still be readable with our custom markup unparsed.
 While most of the Markdown syntax is parseable by all common implementations,
 the special syntax is relying on a custom SilverStripe project that powers `http://doc.silverstripe.org`.
 
-The website a standard SilverStripe installation with the [sapphiredocs](http://open.silverstripe.org/browser/modules/sapphiredocs/trunk)
-module installed (see module [README](http://open.silverstripe.org/browser/modules/sapphiredocs/trunk/README.md) and
-[documentation](http://open.silverstripe.org/browser/modules/sapphiredocs/trunk/docs/en)).
+The website a standard SilverStripe installation with the [sapphiredocs](https://github.com/silverstripe/silverstripe-sapphiredocs/)
+module installed (see module [README](https://github.com/silverstripe/silverstripe-sapphiredocs/blob/master/README.md) and
+[documentation](https://github.com/silverstripe/silverstripe-sapphiredocs/tree/master/docs/en)).
 
 ## Syntax
 
@@ -40,8 +40,10 @@ not the webroot of the renderer project or the filesystem root.
 Don't forget the trailing slash for directory links,
 it is important to distinguish files from directories.
 
-Note: It is recommended to use absolute links over relative links
+<div class="notice" markdown='1'>
+It is recommended to use absolute links over relative links
 to make files easier to move around without changing all links.
+</div>
 
 ### API Links
 

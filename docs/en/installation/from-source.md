@@ -1,4 +1,4 @@
-# Installation from Source Control #
+# Installation from Source Control
 
 ## Introduction
 

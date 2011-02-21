@@ -1,4 +1,4 @@
-# Module Maintenance and Release Procedures #
+# Module Maintenance and Release Procedures
 
 ## Creating a module
 
@@ -45,7 +45,7 @@ your modules page on silverstripe.org
 * Be involved in our community 
     * Subscripe to our developer mailing list and be available to answer questions on the forum. 
     * Attend [irc:our weekly core discussions on IRC](irc/our weekly core discussions on IRC) as regularly as you can.
-* Create an **issue tracker** so your users can file bugs and feature requests (see ["Feedback and Bugtracking"](#feedback-and-bugtracking) below)
+* Create an **issue tracker** so your users can file bugs and feature requests (see ["Feedback and Bugtracking"](module-release-process#feedback-and-bugtracking) below)
 * Create a **roadmap** and **milestones** outlining future release planning
 
 ### Feedback and Bugtracking
@@ -188,10 +188,10 @@ export to a tar.gz.
 ### Announcing a Release or Release Candidate
 
 *  See [Producing OSS: "Announcing Releases"](http://producingoss.com/en/testing-and-releasing.html#release-announcement)
-*  Update your [documentation](#documentation) in the sourcecode, wiki and README
+*  Update your [documentation](module-release-process#documentation) in the sourcecode, wiki and README
 *  Add your release to the [silverstripe.org/modules](http://silverstripe.org/modules) listing
 *  Announce the release on [silverstripe-announce](http://groups.google.com/group/silverstripe-announce).  Include a
-[changelog](#changelogs), the download link and instructions for filing bug reports.
+[changelog](module-release-process#changelogs), the download link and instructions for filing bug reports.
 *  If this release is a major release, our [marketing guys](http://silverstripe.com/contact/) will strive to announce it
 on the main [silverstripe.com blog](http://silverstripe.com/blog) as well
 
@@ -235,8 +235,8 @@ trunk.
 
 ## See Also
 
-[Module Development](/topics/module-development)
-[Documentation Guide](contributing#writing-documentation)
-[Contributing to SilverStripe](http://silverstripe.org/contributing-to-silverstripe/)
-[Submit your Module](http://silverstripe.org/modules/manage/add)
-[subversion](subversion)
+* [Module Development](/topics/module-development)
+* [Documentation Guide](contributing#writing-documentation)
+* [Contributing to SilverStripe](http://silverstripe.org/contributing-to-silverstripe/)
+* [Submit your Module](http://silverstripe.org/modules/manage/add)
+* [subversion](subversion)
