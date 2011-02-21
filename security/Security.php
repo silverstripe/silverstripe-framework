@@ -15,7 +15,9 @@ class Security extends Controller {
 	    'passwordsent', 
 	    'changepassword', 
 	    'ping',
-		'LoginForm'
+		'LoginForm',
+		'ChangePasswordForm',
+		'LostPasswordForm',
  	);
 
 	/**

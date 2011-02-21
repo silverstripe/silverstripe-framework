@@ -346,5 +346,24 @@ class Convert {
 			$data
 		);
 	}
-
+	
+	/**
+	 * Convert a string (normally a title) to a string suitable for using in
+	 * urls and other html attributes 
+	 *
+	 * @param string 
+	 *
+	 * @return string
+	 */
+	public static function raw2url($title) {
+		$t = (function_exists('mb_strtolower')) ? mb_strtolower($title) : strtolower($title);
+		$t = Object::create('Transliterator')->toASCII($t);
+		$t = str_replace('&amp;','-and-',$t);
+		$t = str_replace('&','-and-',$t);
+		$t = ereg_replace('[^A-Za-z0-9]+','-',$t);
+		$t = ereg_replace('-+','-',$t);
+		$t = trim($t, '-');
+		
+		return $t;
+	}
 }

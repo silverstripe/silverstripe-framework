@@ -279,8 +279,8 @@ after')
 			<html>
 				<head><% base_tag %></head>
 				<body><p>test</p><body>
-			</html>');
-		$this->assertRegExp('/<head><base href=".*" \/><\/head>/', $tmpl1->process(new ViewableData()));
+			</html>';
+		$this->assertRegExp('/<head><base href=".*" \/><\/head>/', $this->render($tmpl1));
 			
 		// HTML4 and 5 will only have it for IE
 		$tmpl2 = '<!DOCTYPE html>

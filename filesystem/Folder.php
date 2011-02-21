@@ -25,8 +25,6 @@ class Folder extends File {
 
 	static $default_sort = "\"Sort\"";
 	
-	static $default_sort = "\"Sort\"";
-	
 	/**
 	 * Find the given folder or create it both as {@link Folder} database records
 	 * and on the filesystem. If necessary, creates parent folders as well.
