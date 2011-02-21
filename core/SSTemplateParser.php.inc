@@ -277,17 +277,25 @@ class SSTemplateParser extends Parser {
 	# which checks if the argument given is present or not. For explicit strings (which were not allowed in 2.4)
 	# this falls back to simple truthiness check
 	 
-	PresenceCheck: Argument
+	PresenceCheck: (Not:'not' <)? Argument
 	*/
+	function PresenceCheck__construct(&$res) {
+		$res['php'] = '';
+	}
+	
+	function PresenceCheck_Not(&$res, $sub) {
+		$res['php'] = '!';
+	}
+	
 	function PresenceCheck_Argument(&$res, $sub) {
 		if ($sub['ArgumentMode'] == 'string') {
-			$res['php'] = '((bool)'.$sub['php'].')';
+			$res['php'] .= '((bool)'.$sub['php'].')';
 		}
 		else {
 			$php = ($sub['ArgumentMode'] == 'default' ? $sub['lookup_php'] : $sub['php']);
 			// TODO: kinda hacky - maybe we need a way to pass state down the parse chain so
 			// Lookup_LastLookupStep and Argument_BareWord can produce hasValue instead of XML_val
-			$res['php'] = str_replace('$$FINAL', 'hasValue', $php);
+			$res['php'] .= str_replace('$$FINAL', 'hasValue', $php);
 		}
 	}
 
@@ -329,8 +337,8 @@ class SSTemplateParser extends Parser {
 	# can have else_if and else tags in between the if tag and the end_if tag, and (B) they have a different
 	# argument structure to every other block 
 	 
-	IfPart: '<%' < 'if' < :IfArgument > '%>' :Template?
-	ElseIfPart: '<%' < 'else_if' < :IfArgument > '%>' :Template?
+	IfPart: '<%' < 'if' [ :IfArgument > '%>' :Template?
+	ElseIfPart: '<%' < 'else_if' [ :IfArgument > '%>' :Template?
 	ElsePart: '<%' < 'else' > '%>' :Template?
 
 	If: IfPart ElseIfPart* ElsePart? '<%' < 'end_if' > '%>'

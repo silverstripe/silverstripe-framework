@@ -227,6 +227,12 @@ after')
 		$this->assertEquals('ABD',
 			$this->render('A<% if IsSet(Param) %>B<% else %>C<% end_if %>D'));
 
+		// Negation
+		$this->assertEquals('AC',
+			$this->render('A<% if not IsSet %>B<% end_if %>C'));
+		$this->assertEquals('ABC',
+			$this->render('A<% if not NotSet %>B<% end_if %>C'));
+		
 		// Or
 		$this->assertEquals('ABD',
 			$this->render('A<% if IsSet || NotSet %>B<% else_if A %>C<% end_if %>D'));
@@ -238,6 +244,14 @@ after')
 			$this->render('A<% if NotSet || AlsoNotSet %>B<% else_if IsSet || NotSet %>C<% end_if %>D'));
 		$this->assertEquals('AD',
 			$this->render('A<% if NotSet || AlsoNotSet %>B<% else_if NotSet2 || NotSet3 %>C<% end_if %>D'));
+		
+		// Negated Or
+		$this->assertEquals('ACD',
+			$this->render('A<% if not IsSet || AlsoNotSet %>B<% else_if A %>C<% end_if %>D'));
+		$this->assertEquals('ABD',
+			$this->render('A<% if not NotSet || AlsoNotSet %>B<% else_if A %>C<% end_if %>D'));
+		$this->assertEquals('ABD',
+			$this->render('A<% if NotSet || not AlsoNotSet %>B<% else_if A %>C<% end_if %>D'));
 
 		// And
 		$this->assertEquals('ABD',
@@ -432,8 +446,8 @@ after')
 				'<% loop $Foo %>
 					$Name
 					<% with $Sub %>
-						$Name<
-						% loop $Up %>$Name<% end_loop %>
+						$Name
+						<% loop $Up %>$Name<% end_loop %>
 						$Name
 					<% end_with %>
 					$Name 
