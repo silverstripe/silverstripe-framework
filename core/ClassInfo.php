@@ -177,14 +177,12 @@ class ClassInfo {
 	}
 
 	/**
-	 * Returns true if $subclass is a subclass of $parentClass.
-	 * Identical to the PHP built-in function, but faster.
+	 * @deprecated 3.0 Please use is_subclass_of.
 	 */
-	static function is_subclass_of($subclass, $parentClass) {
-		global $_ALL_CLASSES;
-		return isset($_ALL_CLASSES['parents'][$subclass][$parentClass]);
+	public static function is_subclass_of($class, $parent) {
+		return is_subclass_of($class, $parent);
 	}
-	
+
 	/**
 	 * Get all classes contained in a file.
 	 * @uses ManifestBuilder
