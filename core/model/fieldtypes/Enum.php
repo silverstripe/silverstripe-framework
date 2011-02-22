@@ -56,7 +56,7 @@ class Enum extends DBField {
 		$parts=Array('datatype'=>'enum', 'enums'=>Convert::raw2sql($this->enum), 'character set'=>'utf8', 'collate'=> 'utf8_general_ci', 'default'=>Convert::raw2sql($this->default), 'table'=>$this->tableName, 'arrayValue'=>$this->arrayValue);
 		$values=Array('type'=>'enum', 'parts'=>$parts);
 		DB::requireField($this->tableName, $this->name, $values);
-}
+	}
 	
 	/**
 	 * Return a dropdown field suitable for editing this field 
