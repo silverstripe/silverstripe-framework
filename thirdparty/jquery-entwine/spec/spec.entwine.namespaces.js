@@ -1,36 +1,38 @@
-
-describe 'Entwine'
-  describe 'Namespaces'
-    before
-      $('body').append('<div id="dom_test"></div>')
-    end
-    after
-      $('#dom_test').remove()
-    end
+describe( 'Entwine', function() {
   
-    before_each
+  beforeEach(function() {
+    $('body').append('<div id="dom_test"></div>')
+  });
+  
+  afterEach(function() {
+    $('#dom_test').remove()
+  });
+  
+  describe( 'Namespaces', function() {
+
+    beforeEach(function() {
       $.entwine.synchronous_mode();
       $.entwine.clear_all_rules()
       $('#dom_test').html('<div id="a" class="a b c"></div><div id="b" class="c d e"></div>')
-    end
-
-    it 'namespaced functions work (single definition mode)'
+    });
+    
+    it( 'namespaced functions work (single definition mode)', function() {
       $('#a').entwine('bar', function($){return{
         bar: function(){return 'a';}
       }})
-      $('#a').entwine('bar').bar().should.equal 'a'
-    end
+      expect($('#a').entwine('bar').bar()).toEqual( 'a');
+    });
     
-    it 'namespaced functions work (block definition mode)'
+    it( 'namespaced functions work (block definition mode)', function() {
       $.entwine('zap', function($){
         $('#a').entwine({
           bar: function(){return 'a';}
         })
       });
-      $('#a').entwine('zap').bar().should.equal 'a'
-    end
-    
-    it 'double-namespaced functions work (block definition mode)'
+      expect($('#a').entwine('zap').bar()).toEqual( 'a');
+    });
+      
+    it( 'double-namespaced functions work (block definition mode)', function() {
       $.entwine('zap', function($){
         $.entwine('pow', function($){
           $('#a').entwine({
@@ -38,10 +40,10 @@ describe 'Entwine'
           })
         })
       })
-      $('#a').entwine('zap.pow').bar().should.equal 'a'
-    end
+      expect($('#a').entwine('zap.pow').bar()).toEqual( 'a');
+    })
 
-    it 'revert to base namespacing work (block definition mode)'
+    it( 'revert to base namespacing work (block definition mode)', function() {
       $.entwine('zap', function($){
         $.entwine('.pow', function($){
           $('#a').entwine({
@@ -49,10 +51,10 @@ describe 'Entwine'
           })
         })
       })
-      $('#a').entwine('pow').bar().should.equal 'a'
-    end
+      expect($('#a').entwine('pow').bar()).toEqual( 'a');
+    });
     
-    it 'internal to namespace, will look up functions in namespace before in base'
+    it( 'internal to namespace, will look up functions in namespace before in base', function() {
       var res = []
       $('#a').entwine({
         foo: function(){res.push(1);},
@@ -64,12 +66,12 @@ describe 'Entwine'
       }})
       
       $('#dom_test div').bar();
-      res.should.eql [2, 1]
+      expect(res).toEqual( [2, 1]);
       $('#dom_test div').entwine('bar').bar();
-      res.should.eql [2, 1, 4, 3]
-    end
-
-    it 'internal to namespace, will look up functions in namespace before in base, even in closure'
+      expect(res).toEqual( [2, 1, 4, 3]);
+    });
+      
+    it( 'internal to namespace, will look up functions in namespace before in base, even in closure', function() {
       var res = []
       $('#a').entwine({
         foo: function(){res.push(1);},
@@ -81,12 +83,12 @@ describe 'Entwine'
       }})
       
       $('#dom_test div').bar();
-      res.should.eql [2, 1]
+      expect(res).toEqual( [2, 1]);
       $('#dom_test div').entwine('bar').bar();
-      res.should.eql [2, 1, 4, 3]
-    end
-
-    it 'internal to namespace, will look up functions in namespace before in base, even in onmatch'
+      expect(res).toEqual( [2, 1, 4, 3]);
+    });
+      
+    it( 'internal to namespace, will look up functions in namespace before in base, even in onmatch', function() {
       var res = []
       $('#a').entwine({
         foo: function(){res.push(1);},
@@ -100,13 +102,13 @@ describe 'Entwine'
       }})
       
       $('#dom_test div').bar();
-      res.should.eql [2, 1]
+      expect(res).toEqual( [2, 1]);
       
       $('#a').addClass('d');
-      res.should.eql [2, 1, 4, 3]
-    end
-    
-    it 'internal to namespace, will look up functions in base when not present in namespace'
+      expect(res).toEqual( [2, 1, 4, 3]);
+    });
+      
+    it( 'internal to namespace, will look up functions in base when not present in namespace', function() {
       var res = []
       $('#a').entwine({
         foo: function(){res.push(1);}
@@ -115,10 +117,10 @@ describe 'Entwine'
         bar: function(){res.push(2); this.foo();}
       }})
       $('#dom_test div').entwine('bar').bar();
-      res.should.eql [2, 1]
-    end
+      expect(res).toEqual( [2, 1]);
+    });
     
-    it 'internal to namespace, will not look up functions in base if present in namespace, even when not applicable to selector'
+    it( 'internal to namespace, will not look up functions in base if present in namespace, even when not applicable to selector', function() {
       var res = []
       $('#a').entwine('bar', function($){return{
         foo: function(){this.bar();}
@@ -131,10 +133,10 @@ describe 'Entwine'
       }})
       
       $('#a').entwine('bar').foo()
-      res.should.eql []
-    end
+      expect(res).toEqual( []);
+    });
     
-    it 'internal to namespace, can be directed to base namespace'
+    it( 'internal to namespace, can be directed to base namespace', function() {
       var res = []
       $('#a').entwine({
         foo: function(){res.push(1);},
@@ -145,22 +147,22 @@ describe 'Entwine'
         bar: function(){res.push(4); this.foo(); this.entwine('.').foo();}
       }})
       $('#dom_test div').bar();
-      res.should.eql [2, 1]
+      expect(res).toEqual( [2, 1]);
       $('#dom_test div').entwine('bar').bar();
-      res.should.eql [2, 1, 4, 3, 1]
-    end
+      expect(res).toEqual( [2, 1, 4, 3, 1]);
+    });
     
-    it 'internal to namespace, will look up functions in namespace called the same as a regular jQuery base function'
+    it( 'internal to namespace, will look up functions in namespace called the same as a regular jQuery base function', function() {
       var res = []
       $('#a').entwine('bar', function($){return{
         load: function(){res.push(1);},
         bar: function(){res.push(2); this.load();}
       }})
       $('#dom_test div').entwine('bar').bar();
-      res.should.eql [2, 1]
-    end
+      expect(res).toEqual( [2, 1]);
+    });
 
-    it 'internal to namespace, can be directed to regular jQuery base function'
+    it( 'internal to namespace, can be directed to regular jQuery base function', function() {
       var res = []
       $.fn.testy = function(){ res.push(1); }
       $('#a').entwine('bar', function($){return{
@@ -168,10 +170,10 @@ describe 'Entwine'
         bar: function(){res.push(2); this.entwine('.').testy();}
       }})
       $('#dom_test div').entwine('bar').bar();
-      res.should.eql [2, 1]
-    end
-    
-    it 'internal to namespace, can be directed to sub namespace'
+      expect(res).toEqual( [2, 1]);
+    });
+      
+    it( 'internal to namespace, can be directed to sub namespace', function() {
       var res = []
       $.entwine('zap', function($){
         $('#a').entwine({
@@ -185,10 +187,10 @@ describe 'Entwine'
         })
       })
       $('#dom_test div').entwine('zap').foo();
-      res.should.eql [1, 2]
-    end
+      expect(res).toEqual( [1, 2]);
+    });
 
-    it 'internal to namespace, can be directed to unrelated namespace'
+    it( 'internal to namespace, can be directed to unrelated namespace', function() {
       var res = []
       $.entwine('zap', function($){
         $('#a').entwine({
@@ -208,10 +210,10 @@ describe 'Entwine'
       })
       
       $('#dom_test div').entwine('zap').foo();
-      res.should.eql [1, 3]
-    end
+      expect(res).toEqual( [1, 3]);
+    });
 
-    it 'a function passed out of a namespace will remember its namespace'
+    it( 'a function passed out of a namespace will remember its namespace', function() {
       var res = []
       var func = function(func) {
         func.call($('#a, #b'));
@@ -221,10 +223,10 @@ describe 'Entwine'
         bar: function(){res.push(2); func(this.zap);}
       }})
       $('#dom_test #a').entwine('bar').bar();
-      res.should.eql [2, 'b', 'a']
-    end
+      expect(res).toEqual( [2, 'b', 'a']);
+    });
 
-    it 'using block functions'
+    it( 'using block functions', function() {
       var res = []
       $('#a').entwine({
         foo: function(){res.push(1);}
@@ -234,13 +236,14 @@ describe 'Entwine'
       }})
       
       $('#dom_test div').foo();
-      res.should.eql [1]
+      expect(res).toEqual( [1]);
       
       $('#dom_test div').entwine('bar', function($){ 
          $(this).foo();
       })
-      res.should.eql [1, 3]
-    end
+      expect(res).toEqual( [1, 3]);
+    });
     
-  end
-end
+  });
+  
+});

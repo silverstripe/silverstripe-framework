@@ -1,4 +1,4 @@
-/* jQuery.Entwine - Copyright 2009 Hamish Friedlander and SilverStripe. Version . */
+/* jQuery.Entwine - Copyright 2009-2011 Hamish Friedlander and SilverStripe. Version . */
 
 /* vendor/jquery.selector/jquery.class.js */
 
@@ -774,7 +774,7 @@ var console;
 		 */
 		clear_all_rules: function() { 
 			// Remove proxy functions
-			for (var k in $.fn) { if ($.fn[k].entwine) delete $.fn[k] ; }
+			for (var k in $.fn) { if ($.fn[k].isentwinemethod) delete $.fn[k]; }
 			// Remove bound events - TODO: Make this pluggable, so this code can be moved to jquery.entwine.events.js
 			$(document).unbind('.entwine');
 			// Remove namespaces, and start over again
@@ -870,38 +870,48 @@ var console;
 			}
 			else {
 				// We're in a namespace, so we build a Class that subclasses the jQuery Object Class to inject namespace functions into
-				var subfn = function(){};
-				this.injectee = subfn.prototype = new $();
 				
-				// And then we provide an overriding $ that returns objects of our new Class, and an overriding pushStack to catch further selection building
-				var bound$ = this.$ = function(a) {
-					// Try the simple way first
-					var jq = $.fn.init.apply(new subfn(), arguments);
-					if (jq instanceof subfn) return jq;
+				// jQuery 1.5 already provides a nice way to subclass, so use it
+				if ($.sub) {
+					this.$ = $.sub();
+					this.injectee = this.$.prototype;
+				}
+				// For jQuery < 1.5 we have to do it ourselves
+				else {
+					var subfn = function(){};
+					this.injectee = subfn.prototype = new $;
+				
+					// And then we provide an overriding $ that returns objects of our new Class, and an overriding pushStack to catch further selection building
+					var bound$ = this.$ = function(a) {
+						// Try the simple way first
+						var jq = $.fn.init.apply(new subfn(), arguments);
+						if (jq instanceof subfn) return jq;
 					
-					// That didn't return a bound object, so now we need to copy it
-					var rv = new subfn();
-					rv.selector = jq.selector; rv.context = jq.context; var i = rv.length = jq.length;
-					while (i--) rv[i] = jq[i];
-					return rv;
-				};
-				this.injectee.pushStack = function(elems, name, selector){
-					var ret = bound$(elems);
+						// That didn't return a bound object, so now we need to copy it
+						var rv = new subfn();
+						rv.selector = jq.selector; rv.context = jq.context; var i = rv.length = jq.length;
+						while (i--) rv[i] = jq[i];
+						return rv;
+					};
+				
+					this.injectee.pushStack = function(elems, name, selector){
+						var ret = bound$(elems);
 
-					// Add the old object onto the stack (as a reference)
-					ret.prevObject = this;
-					ret.context = this.context;
+						// Add the old object onto the stack (as a reference)
+						ret.prevObject = this;
+						ret.context = this.context;
 					
-					if ( name === "find" ) ret.selector = this.selector + (this.selector ? " " : "") + selector;
-					else if ( name )       ret.selector = this.selector + "." + name + "(" + selector + ")";
+						if ( name === "find" ) ret.selector = this.selector + (this.selector ? " " : "") + selector;
+						else if ( name )       ret.selector = this.selector + "." + name + "(" + selector + ")";
 					
-					// Return the newly-formed element set
-					return ret;
-				};
+						// Return the newly-formed element set
+						return ret;
+					};
 				
-				// Copy static functions through from $ to this.$ so e.g. $.ajax still works
-				// @bug, @cantfix: Any class functions added to $ after this call won't get mirrored through 
-				$.extend(this.$, $);
+					// Copy static functions through from $ to this.$ so e.g. $.ajax still works
+					// @bug, @cantfix: Any class functions added to $ after this call won't get mirrored through 
+					$.extend(this.$, $);
+				}
 				
 				// We override entwine to inject the name of this namespace when defining blocks inside this namespace
 				var entwine_wrapper = this.injectee.entwine = function(spacename) {
@@ -989,12 +999,12 @@ var console;
 			
 			var rule = rulelist.addRule(selector, name); rule.func = func;
 			
-			if (!this.injectee.hasOwnProperty(name) || !this.injectee[name].entwine) {
+			if (!this.injectee.hasOwnProperty(name) || !this.injectee[name].isentwinemethod) {
 				this.injectee[name] = this.build_proxy(name, this.injectee.hasOwnProperty(name) ? this.injectee[name] : null);
-				this.injectee[name].entwine = true;
+				this.injectee[name].isentwinemethod = true;
 			}
 
-			if (!this.injectee[name].entwine) {
+			if (!this.injectee[name].isentwinemethod) {
 				$.entwine.warn('Warning: Entwine function '+name+' clashes with regular jQuery function - entwine function will not be callable directly on jQuery object', $.entwine.WARN_LEVEL_IMPORTANT);
 			}
 		},

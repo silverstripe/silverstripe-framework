@@ -1,0 +1,42 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+  "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+  <title>Jasmine Test Runner</title>
+  <link rel="stylesheet" type="text/css" href="../vendor/jasmine-1.0.1/jasmine.css">
+  <script type="text/javascript" src="../vendor/jasmine-1.0.1/jasmine.js"></script>
+  <script type="text/javascript" src="../vendor/jasmine-1.0.1/jasmine-html.js"></script>
+	<script type="text/javascript" src="../vendor/jasmine-dom/jasmine-dom-matchers.js"></script>
+	<script type="text/javascript" src="../vendor/jasmine-dom/jasmine-dom-fixtures.js"></script>
+
+  <!-- include source files here... -->
+	<script src="../vendor/jquery-1.5.js"></script>
+	<script src="../vendor/jquery.selector/jquery.class.js"></script>
+	<script src="../vendor/jquery.selector/jquery.selector.js"></script>
+	<script src="../vendor/jquery.selector/jquery.selector.specifity.js"></script>
+	<script src="../vendor/jquery.selector/jquery.selector.matches.js"></script>
+	
+	<script src="../src/jquery.entwine.js"></script>
+	<script src="../src/jquery.entwine.dommaybechanged.js"></script>
+	<script src="../src/jquery.entwine.events.js"></script>
+	<script src="../src/jquery.entwine.ctors.js"></script>
+	<script src="../src/jquery.entwine.properties.js"></script>
+
+  <!-- include spec files here... -->
+  <script type="text/javascript" src="spec.entwine.basics.js"></script>
+  <script type="text/javascript" src="spec.entwine.ctors.js"></script>
+	<script type="text/javascript" src="spec.entwine.events.js"></script>
+	<script type="text/javascript" src="spec.entwine.namespaces.js"></script>
+	<script type="text/javascript" src="spec.entwine.properties.js"></script>
+	<script type="text/javascript" src="spec.entwine.super.js"></script>
+
+</head>
+<body>
+
+<script type="text/javascript">
+  jasmine.getEnv().addReporter(new jasmine.TrivialReporter());
+  jasmine.getEnv().execute();
+</script>
+
+</body>
+</html>
