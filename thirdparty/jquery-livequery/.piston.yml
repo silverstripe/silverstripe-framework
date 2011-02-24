@@ -1,8 +1,8 @@
 --- 
 format: 1
 handler: 
-  piston:remote-revision: 6522
-  piston:uuid: c715fcbe-d12f-0410-84c4-316a508785bb
+  commit: 1987c0421be543c2b62dfd74149bcfced91d5d7b
+  branch: master
 lock: false
-repository_url: http://jqueryjs.googlecode.com/svn/tags/plugins/livequery/1.0.2/
-repository_class: Piston::Svn::Repository
+repository_class: Piston::Git::Repository
+repository_url: https://github.com/brandonaaron/livequery.git
