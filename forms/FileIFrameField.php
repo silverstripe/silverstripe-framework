@@ -52,8 +52,7 @@ class FileIFrameField extends FileField {
 		Requirements::css(SAPPHIRE_DIR . '/thirdparty/jquery-ui-themes/smoothness/jquery.ui.all.css');
 		Requirements::add_i18n_javascript(SAPPHIRE_DIR . '/javascript/lang');
 		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery/jquery.js');
-		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-ui/jquery.ui.core.js');
-		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-ui/jquery.ui.dialog.js');
+		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-ui/jquery-ui.js');
 		
 		
 		if($this->form->getRecord() && $this->form->getRecord()->exists()) {

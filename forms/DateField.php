@@ -581,8 +581,7 @@ class DateField_View_JQuery {
 			Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
 			Requirements::javascript(SAPPHIRE_DIR . '/javascript/jquery_improvements.js');	
 			Requirements::css(THIRDPARTY_DIR . '/jquery-ui-themes/smoothness/jquery-ui.css');
-			Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-ui/jquery.ui.core.js');
-			Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-ui/jquery.ui.datepicker.js');
+			Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-ui/jquery-ui.js');
 			
 			// Include language files (if required)
 			$lang = $this->getLang();
