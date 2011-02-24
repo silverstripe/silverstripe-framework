@@ -149,13 +149,15 @@
 		var _dataType = s.dataType;
 
 		// This replaces the usual ajax success & complete handlers.  They are called after any on demand JS is loaded.
-		var _ondemandComplete = function(xml, status) {
-			var status = $.httpSuccess(xml) ? 'success' : 'error';
+		var _ondemandComplete = function(data, status) {
+			//var status = $.httpSuccess(xml) ? 'success' : 'error';    //rewrote success function as httpSuccess doesn't exist anymore in jQuery 1.5
+			if (typeof status == 'undefined' || status != 'success') status = 'error';
+
 			if(status == 'success') {
-				var data = jQuery.httpData(xml, _dataType);
+				//var data = jQuery.httpData(xml, _dataType); //unnecessary as data type conversion is automatically done in jQuery 1.5 using the ajaxConvert method
 				if(_success) _success(data, status);
 			}
-			if(_complete) _complete(xml, status);
+			if(_complete) _complete(data, status);
 		}
 	    
 		// We remove the success handler and take care of calling it outselves within _ondemandComplete
