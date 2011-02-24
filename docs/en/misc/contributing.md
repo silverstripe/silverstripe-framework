@@ -31,6 +31,7 @@ General guidelines:
 
 *  Adhere to our [coding conventions](coding-conventions)
 *  If your patch is extensive, discuss it first on the [silverstripe forum](http///www.silverstripe.org/forums/) (ideally before doing any serious coding)
+*  When working on existing tickets, assign them to you and provide status updates through ticket comments
 *  Check your patches against the latest "trunk" or "master", as well as the latest release. 
 Please not that the latest stable release will often not be sufficient! (of all modules)
 *  Provide complete [unit test coverage](/topics/testing) - depending on the complexity of your work, this is a required
@@ -42,6 +43,11 @@ changes
 *  Document your code inline through [PHPDoc](http://en.wikipedia.org/wiki/PHPDoc) syntax. See our 
 [API documentation](http://api.silverstripe.org/trunk) for good examples.
 * Also check and update documentation on [doc.silverstripe.org](http://doc.silverstripe.org). Check for any references to functionality deprecated or extended through your patch. Documentation changes should be included in the patch.
+* We will attribute the change to you whereever possible (git does this automatically)
+* If you get stuck, please post to the [forum](http://silverstripe.org/forum) or for deeper core problems, to the [core mailinglist](https://groups.google.com/forum/#!forum/silverstripe-dev)
+
+The core team is responsible for reviewing patches and deciding if they will make it into core.  If
+there are any problems they will assign the ticket back to you, so make sure you have an email address loaded into Trac so that it will notify you! The [Active Patches Report](http://open.silverstripe.com/report/10) will let you see where all the patches are at, and you can review outstanding "pull requests" (for [sapphire](https://github.com/silverstripe/sapphire/pulls) and [cms](https://github.com/silverstripe/silverstripe-cms/pulls)).
 
 ### Sending pull requests (for git)
 
@@ -53,7 +59,8 @@ which creates a copy that you can commit to (see github's [guide to "forking"](h
 
 Example: [Fork the blog module](https://github.com/silverstripe/silverstripe-blog)
 
-After committing your fix, you can send the module authors a so called ["pull request"](http://help.github.com/pull-requests/).
+Now you have two choices: Smaller fixes (e.g. typos) can be edited directly in the github.com web interface
+(every file view has an "edit this file" link). More commonly, you will work on a working copy on your own computer. After committing your fix, you can send the module authors a so called ["pull request"](http://help.github.com/pull-requests/).
 The module authors will get notified automatically, review your patch, and merge it back as appropriate.
 
 For new features, we recommend creating a ["feature branch"](http://progit.org/book/ch3-3.html) rather than a really big patch.
@@ -70,11 +77,6 @@ Please include in the comment the revision number that the patch is applicable f
 Only use the provided link to submit patches, as it prefills information about owner and ticket-type:
 
 [Submit a patch (requires account on open.silverstripe.org)](http://open.silverstripe.com/newticket?field_type=patch&field_owner=ischommer&attachment=1)
-
-The core team is responsible for reviewing the patches and deciding if they will make it into core.  If
-there are any problems they will assign the ticket back to you, so make sure you have an email address loaded into Trac
-so that it will notify you! The Trac report [Active Patches](http://open.silverstripe.com/report/10) will let you see
-where all the patches are at.
 
 You can create a patch file through the svn diff-command on the command-line. 
 More info in the [svn redbook](http://svnbook.red-bean.com/en/1.1/ch03s05.html#svn-ch-3-sect-5.3.2). 
