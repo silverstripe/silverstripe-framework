@@ -152,7 +152,13 @@ reviewing existing documentation, and translating the whole thing.
 Modifying documentation requires basic [PHPDoc](http://en.wikipedia.org/wiki/PHPDoc) and
 [Markdown](http://daringfireball.net/projects/markdown/)/[SSMarkdown](ss-markdown) knowledge. 
 If you have downloaded SilverStripe or a module, chances
-are that you already have the documentation files - they are kept alongside the source code.
+are that you already have the documentation files - they are kept alongside the source code (in the `docs/` subfolder).
+
+In general, you have to "[fork](http://help.github.com/forking/)" the [github.com/silverstripe/sapphire](http://github.com/silverstripe/sapphire)
+and [github.com/silverstripe/silverstripe-cms](http://github.com/silverstripe/silverstripe-cms) repositories
+and send us "[pull requests](http://help.github.com/pull-requests/)". 
+Note: Smaller edits can be performed in the github.com web interface on your fork,
+every page view should have an "edit this file" button.
 
 The [doc.silverstripe.org](http://doc.silverstripe.org) website itself is powered by a
 SilverStripe project that uses the ["sapphiredocs" module](https://github.com/silverstripe/silverstripe-sapphiredocs)
