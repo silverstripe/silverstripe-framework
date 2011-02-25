@@ -73,6 +73,15 @@ class JSMin {
 
   // -- Protected Instance Methods ---------------------------------------------
 
+
+
+  /* action -- do something! What you do is determined by the argument:
+          1   Output A. Copy B to A. Get the next B.
+          2   Copy B to A. Get the next B. (Delete A).
+          3   Get the next B. (Delete B).
+     action treats a string as a single character. Wow!
+     action recognizes a regular expression if it is preceded by ( or , or =.
+  */
   protected function action($d) {
     switch($d) {
       case 1:
@@ -107,21 +116,40 @@ class JSMin {
         if ($this->b === '/' && (
             $this->a === '(' || $this->a === ',' || $this->a === '=' ||
             $this->a === ':' || $this->a === '[' || $this->a === '!' ||
-            $this->a === '&' || $this->a === '|' || $this->a === '?')) {
+            $this->a === '&' || $this->a === '|' || $this->a === '?' ||
+            $this->a === '{' || $this->a === '}' || $this->a === ';' ||
+            $this->a === "\n" )) {
 
           $this->output .= $this->a . $this->b;
 
           for (;;) {
             $this->a = $this->get();
 
-            if ($this->a === '/') {
+            if ($this->a === '[') {
+              /*
+                inside a regex [...] set, which MAY contain a '/' itself. Example: mootools Form.Validator near line 460:
+                  return Form.Validator.getValidator('IsEmpty').test(element) || (/^(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]\.?){0,63}[a-z0-9!#$%&'*+/=?^_`{|}~-]@(?:(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)*[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\])$/i).test(element.get('value'));
+              */
+              for (;;) {
+                $this->output .= $this->a;
+                $this->a = $this->get();
+
+                if ($this->a === ']') {
+                    break;
+                } elseif ($this->a === '\\') {
+                  $this->output .= $this->a;
+                  $this->a       = $this->get();
+                } elseif (ord($this->a) <= self::ORD_LF) {
+                  throw new JSMinException('Unterminated regular expression set in regex literal.');
+                }
+              }
+            } elseif ($this->a === '/') {
               break;
             } elseif ($this->a === '\\') {
               $this->output .= $this->a;
               $this->a       = $this->get();
             } elseif (ord($this->a) <= self::ORD_LF) {
-              throw new JSMinException('Unterminated regular expression '.
-                  'literal.');
+              throw new JSMinException('Unterminated regular expression literal.');
             }
 
             $this->output .= $this->a;
@@ -138,7 +166,7 @@ class JSMin {
 
     if ($c === null) {
       if ($this->inputIndex < $this->inputLength) {
-        $c = $this->input[$this->inputIndex];
+        $c = substr($this->input, $this->inputIndex, 1);
         $this->inputIndex += 1;
       } else {
         $c = null;
@@ -156,6 +184,9 @@ class JSMin {
     return ' ';
   }
 
+  /* isAlphanum -- return true if the character is a letter, digit, underscore,
+        dollar sign, or non-ASCII character.
+  */
   protected function isAlphaNum($c) {
     return ord($c) > 126 || $c === '\\' || preg_match('/^[\w\$]$/', $c) === 1;
   }
@@ -241,6 +272,9 @@ class JSMin {
     return $this->output;
   }
 
+  /* next -- get the next character, excluding comments. peek() is used to see
+             if a '/' is followed by a '/' or '*'.
+  */
   protected function next() {
     $c = $this->get();
 

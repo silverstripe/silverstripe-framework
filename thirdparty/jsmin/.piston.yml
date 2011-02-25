@@ -1,8 +1,8 @@
 --- 
 format: 1
 handler: 
-  piston:remote-revision: 7
-  piston:uuid: d4d03eb5-ab2f-0410-8b36-bd473e2d5c71
+  commit: e71eac35ce7a0f191d199be9e35a8d12f1f999fd
+  branch: master
 lock: false
-repository_url: http://jsmin-php.googlecode.com/svn/trunk/
-repository_class: Piston::Svn::Repository
+repository_class: Piston::Git::Repository
+repository_url: https://github.com/rgrove/jsmin-php/
