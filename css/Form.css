@@ -146,3 +146,10 @@ form .message {
 .typography .ss-tabset ul {
 	margin: 0;
 }
+
+/**
+ * Containers
+ */
+.showOnClickContainer {
+	display:none; /* used to hide a container by-default when loading it so there is no "flash" as the content loads */
+}
