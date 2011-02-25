@@ -176,11 +176,11 @@ class i18nTest extends SapphireTest {
 		$viewer = new SSViewer('i18nTestModule');
 		$parsedHtml = $viewer->process(new ArrayData(array('TestProperty' => 'TestPropertyValue')));
 		$this->assertContains(
-			"Layout Template\n",
+			sprintf("Layout Template%s", PHP_EOL),
 			$parsedHtml
 		);
 		$this->assertContains(
-			"Layout Template no namespace\n",
+			sprintf("Layout Template no namespace%s", PHP_EOL),
 			$parsedHtml
 		);
 		
@@ -197,11 +197,11 @@ class i18nTest extends SapphireTest {
 		$viewer = new SSViewer('i18nTestModule');
 		$parsedHtml = $viewer->process(new ArrayData(array('TestProperty' => 'TestPropertyValue')));
 		$this->assertContains(
-			"TRANS Main Template\n",
+			sprintf("TRANS Main Template%s", PHP_EOL),
 			$parsedHtml
 		);
 		$this->assertContains(
-			"TRANS Layout Template\n",
+			sprintf("TRANS Layout Template%s", PHP_EOL),
 			$parsedHtml
 		);
 		$this->assertContains(
