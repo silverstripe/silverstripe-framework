@@ -938,29 +938,6 @@ class ComplexTableField_ItemRequest extends TableListField_ItemRequest {
 	 */
 
 	/**
-	 * Get part of class ancestry (even if popup is not subclassed it might be styled differently in css)
-	 */
-	function PopupClasses() {
-		global $_ALL_CLASSES;
-
-		$items = array();
-		$parents = isset($_ALL_CLASSES['parents'][$this->class]) ? $_ALL_CLASSES['parents'][$this->class] : null;
-		
-		if($parents) {
-			foreach($parents as $parent) {
-				if(!in_array($parent, $_ALL_CLASSES['parents']['TableListField'])) {
-					$items[] = $parent . '_Popup';
-				}
-			}
-		}
-		
-		$items[] = $this->class . '_Popup';
-
-		return implode(' ', $items);
-	}
-
-
-	/**
 	 * Returns the db-fieldname of the currently used has_one-relationship.
 	 */
 	function getParentIdName($parentClass, $childClass) {
