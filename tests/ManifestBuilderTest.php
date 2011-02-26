@@ -127,34 +127,6 @@ class ManifestBuilderTest extends SapphireTest {
 		global $project;
 	}
 
-	function testThemeRetrieval() {
-		$ds = DIRECTORY_SEPARATOR;
-		$testThemeBaseDir = TEMP_FOLDER . $ds . 'test-themes';
-		
-		if(file_exists($testThemeBaseDir)) Filesystem::removeFolder($testThemeBaseDir);
-		
-		mkdir($testThemeBaseDir);
-		mkdir($testThemeBaseDir . $ds . 'blackcandy');
-		mkdir($testThemeBaseDir . $ds . 'blackcandy_blog');
-		mkdir($testThemeBaseDir . $ds . 'darkshades');
-		mkdir($testThemeBaseDir . $ds . 'darkshades_blog');
-		
-		$this->assertEquals(array(
-			'blackcandy' => 'blackcandy',
-			'darkshades' => 'darkshades'
-		), ManifestBuilder::get_themes($testThemeBaseDir), 'Our test theme directory contains 2 themes');
-		
-		$this->assertEquals(array(
-			'blackcandy' => 'blackcandy',
-			'blackcandy_blog' => 'blackcandy_blog',
-			'darkshades' => 'darkshades',
-			'darkshades_blog' => 'darkshades_blog'
-		), ManifestBuilder::get_themes($testThemeBaseDir, true), 'Our test theme directory contains 2 themes and 2 sub-themes');
-
-		// Remove all the test themes we created
-		Filesystem::removeFolder($testThemeBaseDir);
-	}
-
 	function tearDown() { 
 		global $_CLASS_MANIFEST, $_ALL_CLASSES, $project;
 

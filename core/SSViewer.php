@@ -307,6 +307,30 @@ class SSViewer {
 	}
 
 	/**
+	 * Returns an array of theme names present in a directory.
+	 *
+	 * @param  string $path
+	 * @param  bool   $subthemes Include subthemes (default false).
+	 * @return array
+	 */
+	public static function get_themes($path = null, $subthemes = false) {
+		$path   = rtrim($path ? $path : THEMES_PATH, '/');
+		$themes = array();
+
+		if (!is_dir($path)) return $themes;
+
+		foreach (scandir($path) as $item) {
+			if ($item[0] != '.' && is_dir("$path/$item")) {
+				if ($subthemes || !strpos($item, '_')) {
+					$themes[$item] = $item;
+				}
+			}
+		}
+
+		return $themes;
+	}
+
+	/**
 	 * @return string
 	 */
 	static function current_custom_theme(){
