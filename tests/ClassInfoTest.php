@@ -4,7 +4,13 @@
  * @subpackage tests
  */
 class ClassInfoTest extends SapphireTest {
-	
+
+	public function testExists() {
+		$this->assertTrue(ClassInfo::exists('Object'));
+		$this->assertTrue(ClassInfo::exists('ClassInfoTest'));
+		$this->assertTrue(ClassInfo::exists('stdClass'));
+	}
+
 	function testSubclassesFor() {
 		$this->assertEquals(
 			ClassInfo::subclassesFor('ClassInfoTest_BaseClass'),

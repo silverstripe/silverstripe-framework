@@ -12,16 +12,16 @@ class ClassInfo {
 	 * @todo Improve documentation
 	 */
 	static function allClasses() {
-		global $_ALL_CLASSES;
-		return $_ALL_CLASSES['exists'];
+		global $_CLASS_MANIFEST;
+		return ArrayLib::valuekey(array_keys($_CLASS_MANIFEST));
 	}
 
 	/**
 	 * @todo Improve documentation
 	 */
 	static function exists($class) {
-		global $_ALL_CLASSES;
-		return isset($_ALL_CLASSES['exists'][$class]) ? $_ALL_CLASSES['exists'][$class] : null;
+		global $_CLASS_MANIFEST;
+		return class_exists($class, false) || array_key_exists(strtolower($class), $_CLASS_MANIFEST);
 	}
 
 	/**
