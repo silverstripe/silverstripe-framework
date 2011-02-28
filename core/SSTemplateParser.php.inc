@@ -85,8 +85,28 @@ class SSTemplateParser extends Parser {
 	 */
 	protected $includeDebuggingComments = false;
 	
+	/**
+	 * Override the function that constructs the result arrays to also prepare a 'php' item in the array
+	 */
+	function construct($matchrule, $name, $arguments = null) {
+		$res = parent::construct($matchrule, $name, $arguments);
+		if (!isset($res['php'])) $res['php'] = '';
+		return $res;
+	}
+	
 	/*!* SSTemplateParser
 
+	# Template is any structurally-complete portion of template (a full nested level in other words). It's the primary matcher, 
+	# and is used by all enclosing blocks, as well as a base for the top level
+	 
+	Template: (Comment | If | Require | CacheBlock | UncachedBlock | OldI18NTag | ClosedBlock | OpenBlock | MalformedBlock | Injection | Text)+
+	*/
+	function Template_STR(&$res, $sub) {
+		$res['php'] .= $sub['php'] . PHP_EOL ;
+	}
+	
+	/*!*
+	
 	Word: / [A-Za-z_] [A-Za-z0-9_]* /
 	Number: / [0-9]+ /
 	Value: / [A-Za-z0-9_]+ /
@@ -102,8 +122,7 @@ class SSTemplateParser extends Parser {
 	 * to numbers when needed.
 	 */
 	function CallArguments_Argument(&$res, $sub) {
-		if (isset($res['php'])) $res['php'] .= ', ';
-		else $res['php'] = '';
+		if (!empty($res['php'])) $res['php'] .= ', ';
 		
 		$res['php'] .= ($sub['ArgumentMode'] == 'default') ? $sub['string_php'] : str_replace('$$FINAL', 'XML_val', $sub['php']);
 	}
@@ -258,11 +277,10 @@ class SSTemplateParser extends Parser {
 	*/
 	function Comparison_Argument(&$res, $sub) {
 		if ($sub['ArgumentMode'] == 'default') {
-			if (isset($res['php'])) $res['php'] .= $sub['string_php'];
+			if (!empty($res['php'])) $res['php'] .= $sub['string_php'];
 			else $res['php'] = str_replace('$$FINAL', 'XML_val', $sub['lookup_php']);
 		}	
 		else {
-			if (!isset($res['php'])) $res['php'] = '';
 			$res['php'] .= str_replace('$$FINAL', 'XML_val', $sub['php']);
 		}
 	}
@@ -279,10 +297,6 @@ class SSTemplateParser extends Parser {
 	 
 	PresenceCheck: (Not:'not' <)? Argument
 	*/
-	function PresenceCheck__construct(&$res) {
-		$res['php'] = '';
-	}
-	
 	function PresenceCheck_Not(&$res, $sub) {
 		$res['php'] = '!';
 	}
@@ -320,9 +334,6 @@ class SSTemplateParser extends Parser {
 	 
 	IfArgument: :IfArgumentPortion ( < :BooleanOperator < :IfArgumentPortion )*
 	*/
-	function IfArgument__construct(&$res){
-		$res['php'] = '';
-	}
 	function IfArgument_IfArgumentPortion(&$res, $sub) {
 		$res['php'] .= $sub['php'];
 	}
@@ -337,9 +348,9 @@ class SSTemplateParser extends Parser {
 	# can have else_if and else tags in between the if tag and the end_if tag, and (B) they have a different
 	# argument structure to every other block 
 	 
-	IfPart: '<%' < 'if' [ :IfArgument > '%>' :Template?
-	ElseIfPart: '<%' < 'else_if' [ :IfArgument > '%>' :Template
-	ElsePart: '<%' < 'else' > '%>' :Template
+	IfPart: '<%' < 'if' [ :IfArgument > '%>' Template:$TemplateMatcher?
+	ElseIfPart: '<%' < 'else_if' [ :IfArgument > '%>' Template:$TemplateMatcher
+	ElsePart: '<%' < 'else' > '%>' Template:$TemplateMatcher
 
 	If: IfPart ElseIfPart* ElsePart? '<%' < 'end_if' > '%>'
 	*/
@@ -375,6 +386,120 @@ class SSTemplateParser extends Parser {
 		$res['php'] = "Requirements::".$sub['Method']['text'].'('.$sub['CallArguments']['php'].');';
 	}
    
+	
+	/*!*
+	
+	# Cache block arguments don't support free strings
+	
+	CacheBlockArgument:
+	   !( "if " | "unless " )
+		( 
+	      :DollarMarkedLookup |
+			:QuotedString |
+			:Lookup
+		)
+	*/
+	function CacheBlockArgument_DollarMarkedLookup(&$res, $sub) {
+		$res['php'] = $sub['Lookup']['php'];
+	}
+	
+	function CacheBlockArgument_QuotedString(&$res, $sub) {
+		$res['php'] = "'" . str_replace("'", "\\'", $sub['String']['text']) . "'";
+	}
+	
+	function CacheBlockArgument_Lookup(&$res, $sub) {
+		$res['php'] = $sub['php'];
+	}
+		
+	/*!*
+	
+	# Collects the arguments passed in to be part of the key of a cacheblock
+	 
+	CacheBlockArguments: CacheBlockArgument ( < "," < CacheBlockArgument )*
+	 
+	*/
+	function CacheBlockArguments_CacheBlockArgument(&$res, $sub) {
+		if (!empty($res['php'])) $res['php'] .= ".'_'.";
+		else $res['php'] = '';
+		
+		$res['php'] .= str_replace('$$FINAL', 'XML_val', $sub['php']);
+	}
+	
+	/*!*
+	# CacheBlockTemplate is the same as Template, but doesn't include cache blocks (because they're handled seperately)
+	 
+	CacheBlockTemplate extends Template (TemplateMatcher = CacheRestrictedTemplate); CacheBlock | UncachedBlock | => ''
+	*/
+		
+	/*!*
+	  
+	UncachedBlock: 
+		'<%' < "uncached" < CacheBlockArguments? ( < Conditional:("if"|"unless") > Condition:IfArgument )? > '%>'
+			Template:$TemplateMatcher?
+		'<%' < 'end_' ("uncached"|"cached"|"cacheblock") > '%>'
+	*/
+	function UncachedBlock_Template(&$res, $sub){
+		$res['php'] = $sub['php'];
+	}
+	
+	/*!*
+	
+	# CacheRestrictedTemplate is the same as Template, but doesn't allow cache blocks
+	 
+	CacheRestrictedTemplate extends Template
+	*/
+	function CacheRestrictedTemplate_CacheBlock(&$res, $sub) { 
+		throw new SSTemplateParseException('You cant have cache blocks nested within with, loop or control blocks that are within cache blocks', $this);
+	}
+	
+	function CacheRestrictedTemplate_UncachedBlock(&$res, $sub) { 
+		throw new SSTemplateParseException('You cant have uncache blocks nested within with, loop or control blocks that are within cache blocks', $this);
+	}
+	
+	/*!*
+	# The partial caching block
+	 
+	CacheBlock: 
+		'<%' < CacheTag:("cached"|"cacheblock") < (CacheBlockArguments)? ( < Conditional:("if"|"unless") > Condition:IfArgument )? > '%>'
+			(CacheBlock | UncachedBlock | CacheBlockTemplate)*
+		'<%' < 'end_' ("cached"|"uncached"|"cacheblock") > '%>'
+	 
+	*/
+	function CacheBlock__construct(&$res){
+		$res['subblocks'] = 0;
+	}
+	
+	function CacheBlock_CacheBlockArguments(&$res, $sub){
+		$res['key'] = !empty($sub['php']) ? $sub['php'] : '';
+	}
+	
+	function CacheBlock_Condition(&$res, $sub){
+		$res['condition'] = ($res['Conditional']['text'] == 'if' ? '(' : '!(') . $sub['php'] . ') && ';
+	}
+	
+	function CacheBlock_CacheBlock(&$res, $sub){
+		$res['php'] .= $sub['php'];
+	}
+	
+	function CacheBlock_UncachedBlock(&$res, $sub){
+		$res['php'] .= $sub['php'];
+	}
+	
+	function CacheBlock_CacheBlockTemplate(&$res, $sub){
+		// Get the block counter
+		$block = ++$res['subblocks'];
+		// Build the key for this block from the passed cache key, the block index, and the sha hash of the template itself
+		$key = "'" . sha1($sub['php']) . (isset($res['key']) && $res['key'] ? "_'.sha1(".$res['key'].")" : "'") . ".'_$block'";
+		// Get any condition
+		$condition = isset($res['condition']) ? $res['condition'] : '';
+		
+		$res['php'] .= 'if ('.$condition.'($partial = $cache->load('.$key.'))) $val .= $partial;' . PHP_EOL;
+		$res['php'] .= 'else { $oldval = $val; $val = "";' . PHP_EOL;
+		$res['php'] .= $sub['php'] . PHP_EOL;
+		$res['php'] .= $condition . ' $cache->save($val); $val = $oldval . $val;' . PHP_EOL;
+		$res['php'] .= '}';
+	}
+	
 	/*!*
 	 
 	# Deprecated old-style i18n _t and sprintf(_t block tags. We support a slightly more flexible version than we used
@@ -461,12 +586,12 @@ class SSTemplateParser extends Parser {
 	# NotBlockTag matches against any word that might come after a "<%" that the generic open and closed block handlers
 	# shouldn't attempt to match against, because they're handled by more explicit matchers 
 	 
-	NotBlockTag: "end_" | (("if" | "else_if" | "else" | "require") ] )
+	NotBlockTag: "end_" | (("if" | "else_if" | "else" | "require" | "cached" | "uncached" | "cacheblock") ] )
 	
 	# Match against closed blocks - blocks with an opening and a closing tag that surround some internal portion of
 	# template
 	 
-	ClosedBlock: '<%' < !NotBlockTag BlockName:Word ( [ :BlockArguments ] )? > Zap:'%>' :Template? '<%' < 'end_' '$BlockName' > '%>'
+	ClosedBlock: '<%' < !NotBlockTag BlockName:Word ( [ :BlockArguments ] )? > Zap:'%>' Template:$TemplateMatcher? '<%' < 'end_' '$BlockName' > '%>'
 	*/
 	
 	/**
@@ -649,7 +774,7 @@ class SSTemplateParser extends Parser {
 	# Because of parser limitations, this can only be used at the top nesting level of a template. Other mismatched
 	# closing tags are detected as an invalid open tag  
 	 
-	MismatchedEndBlock: '<%' < 'end_' Word > '%>'
+	MismatchedEndBlock: '<%' < 'end_' :Word > '%>'
 	*/
 	function MismatchedEndBlock__finalise(&$res) {
 		$blockname = $res['Word']['text'];
@@ -696,7 +821,22 @@ class SSTemplateParser extends Parser {
 	function Comment__construct(&$res) {
 		$res['php'] = '';
 	}
+		
+	/*!*
 	
+	# TopTemplate is the same as Template, but should only be used at the top level (not nested), as it includes
+	# MismatchedEndBlock detection, which only works at the top level  
+	 
+	TopTemplate extends Template (TemplateMatcher = Template); MalformedBlock => MalformedBlock | MismatchedEndBlock
+	*/
+	
+	/**
+	 * The TopTemplate also includes the opening stanza to start off the template
+	 */
+	function TopTemplate__construct(&$res) {
+		$res['php'] = "<?php" . PHP_EOL;
+	}
+
 	/*!*
 	
 	# Text matches anything that isn't a template command (not an injection, block of any kind or comment) 
@@ -711,18 +851,14 @@ class SSTemplateParser extends Parser {
 			({$[^A-Za-z_])       # {$ if not followed A-Z, a-z or _
 		)+
 		/
-
-	# Template is any structurally-complete portion of template (a full nested level in other words). It's used
-	# by the block rules to recurse
-	 
-	Template: (Comment | If | Require | OldI18NTag | ClosedBlock | OpenBlock | MalformedBlock | Injection | Text)+
 	*/
-	function Template__construct(&$res) {
-		$res['php'] = '';
-	}
-
-	function Template_Text(&$res, $sub) {
-		$text = $sub['text'];
+	
+	/**
+	 * We convert text 
+	 */
+	function Text__finalise(&$res) {
+		$text = $res['text'];
+		
 		$text = preg_replace(
 			'/href\s*\=\s*\"\#/', 
 			'href="<?= SSViewer::{dlr}options[\'rewriteHashlinks\'] ? Convert::raw2att( {dlr}_SERVER[\'REQUEST_URI\'] ) : "" ?>#', 
@@ -731,39 +867,13 @@ class SSTemplateParser extends Parser {
 
 		// TODO: using heredocs means any left over $ symbols will trigger PHP lookups, as will any escapes
 		// Will it break backwards compatibility to use ' quoted strings, and escape just the ' characters?
-		
+	
 		$res['php'] .=
 			'$val .= <<<SSVIEWER' . PHP_EOL .
 				$text . PHP_EOL .
 			'SSVIEWER;' . PHP_EOL ;				
 	}
-	
-	function Template_STR(&$res, $sub) {
-		$res['php'] .= $sub['php'] . PHP_EOL ;
-	}
-	
-	/*!*
-	
-	# TopTemplate is the same as Template, but should only be used at the top level (not nested), as it includes
-	# MismatchedEndBlock detection, which only works at the top level  
-	 
-	TopTemplate: (Comment | If | Require | OldI18NTag | ClosedBlock | OpenBlock | MalformedBlock | MismatchedEndBlock | Injection | Text)+
-	*/
-	
-	/**
-	 * The TopTemplate also includes the opening stanza to start off the template
-	 */
-	function TopTemplate__construct(&$res) {
-		$res['php'] = "<?php" . PHP_EOL;
-	}
-
-	/**
-	 * But otherwise handles producing the php the same as every other template block
-	 */
-	function TopTemplate_Text(&$res, $sub) { return $this->Template_Text($res, $sub); }
-	function TopTemplate_STR(&$res, $sub) { return $this->Template_STR($res, $sub); }
-
-	
+		
 	/******************
 	 * Here ends the parser itself. Below are utility methods to use the parser
 	 */
