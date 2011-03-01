@@ -180,10 +180,11 @@ TableListField.prototype = {
 		}
 		
 		if(el.getAttribute('href')) {
-    		new Ajax.Request( 
+			var parameter = (typeof(params) != "undefined") ? '&' + params : '';
+    		new Ajax.Request(
     			el.getAttribute('href'), 
     			{
-    				postBody: 'update=1' + (params) ? '&' + params : '',
+    				postBody: 'update=1' + parameter,
     				onComplete: function(response) {
     					Element.replace(this.id, response.responseText);
 						// reapply behaviour and reattach methods to TF container node
