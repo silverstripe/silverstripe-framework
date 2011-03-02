@@ -1,0 +1,59 @@
+body {
+  margin-top: 100px;
+  text-align: center;
+}
+
+#wrap {
+  width: 800px;
+  margin: 0 auto;
+  text-align: left;
+}
+
+#twit_search {
+  margin-bottom: 75px;
+}
+
+#twit_search form {
+  color: #555555;
+  text-align: center;
+  font-size: 150%;
+}
+
+#twit_search form input[type=text] {
+  font-size: 100%;
+  color: #555555;
+  border: 2px solid black;
+  -moz-border-radius: 2px;
+  -webkit-border-radius: 2px;
+  padding: 4px 6px;
+}
+
+#twit_search form input[type=submit] {
+  font-size: 130%;
+}
+
+#results {
+  margin: 0 auto;
+  width: 60%;
+}
+
+#results li {
+  margin: 38px 0;
+}
+
+#results img {
+  clear: both;
+  margin-right: 10px;
+  float: left;
+}
+
+#results img + p {
+  font-size: 130%;
+  color: #333333;
+}
+
+#results p.user, #results p.timestamp {
+  margin-top: 5px;
+  text-align: right;
+  font-style: italic;
+}

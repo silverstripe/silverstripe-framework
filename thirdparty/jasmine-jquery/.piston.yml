@@ -1,0 +1,8 @@
+--- 
+format: 1
+handler: 
+  commit: d840834b8792587e2410e92bfc0798a6f4a8cc27
+  branch: master
+lock: false
+repository_class: Piston::Git::Repository
+repository_url: https://github.com/velesin/jasmine-jquery.git
