@@ -806,7 +806,7 @@
 				}
 				else {
 					obj = obj.contents().filter(function() { return this.nodeType == 3; })[0];
-					return obj.nodeValue;
+					return obj ? obj.nodeValue : '';
 				}
 			},
 			set_text	: function (obj, val) {
