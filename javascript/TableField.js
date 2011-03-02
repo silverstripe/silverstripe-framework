@@ -52,6 +52,7 @@ TableField.prototype = {
 		var params = link.getAttribute("href").toQueryParams();
 		var isEmpty = true;
 		var recordID = row.getRecordId();
+		var self = this;
 		
 		// Check to see if there is a dataobject to delete first, otherwise remove the row.
 		// or: Check if a childID is set (not present on new items)
@@ -77,30 +78,28 @@ TableField.prototype = {
 		var confirmed = confirm(ss.i18n._t('TABLEFIELD.DELETECONFIRMMESSAGE', 'Are you sure you want to delete this record?'));
 		if(confirmed){
 			img.setAttribute("src",'cms/images/network-save.gif'); // TODO doesn't work
-			new Ajax.Request(
-				link.getAttribute("href"),
-				{
-					method: 'post', 
-					postBody: 'ajax=1' + ($('SecurityID') ? '&SecurityID=' + $('SecurityID').value : ''),
-					onComplete: function(response){
-						Effect.Fade(
-							row,
-							{
-								afterFinish: function(obj) {
-									// remove row from DOM
-									obj.element.parentNode.removeChild(obj.element);
-									// recalculate summary if needed (assumes that TableListField.js is present)
-									// TODO Proper inheritance
-									if(this._summarise) this._summarise();
-									// custom callback
-									if(this.callback_deleteRecord) this.callback_deleteRecord(e);
-								}.bind(this)
+			jQuery.ajax({
+				'url': link.getAttribute("href"),
+				'method': 'post', 
+				'data': {ajax: 1, 'SecurityID': $('SecurityID') ? $('SecurityID').value : null},
+				'success': function(response){
+					Effect.Fade(
+						row,
+						{
+							afterFinish: function(obj) {
+								// remove row from DOM
+								obj.element.parentNode.removeChild(obj.element);
+								// recalculate summary if needed (assumes that TableListField.js is present)
+								// TODO Proper inheritance
+								if(self._summarise) self._summarise();
+								// custom callback
+								if(self.callback_deleteRecord) self.callback_deleteRecord(e);
 							}
-						);
-					}.bind(this),
-					onFailure: ajaxErrorHandler
-				}
-			);
+						}
+					);
+				},
+				'error': ajaxErrorHandler
+			});
 		}
 		Event.stop(e);
 		return false;

@@ -195,11 +195,12 @@ TreeDropdownField.prototype = {
 		if(localeField.length) {ajaxURL += "&locale=" + localeField.val();}
 		if(this.inputTag.value) ajaxURL += '&forceValue=' + this.inputTag.value;
 		if(this.search() != null) ajaxURL += "&search=" + this.search(); 
-		new Ajax.Request(ajaxURL, {
-			method : 'get', 
-			onSuccess : after,
-			onFailure : function(response) { errorMessage("Error getting data", response); }
-		})
+		jQuery.ajax({
+			'url': ajaxURL,
+			'method' : 'get', 
+			'success' : after,
+			'error' : function(response) { errorMessage("Error getting data", response); }
+		});
 	},
 
 	search: function() {
@@ -248,9 +249,10 @@ TreeDropdownField.prototype = {
 		// ajaxExpansion is called in context of TreeNode, not Tree, so search() doesn't exist.
 		if (this.search && this.search() != null) ajaxURL += "&search=" + this.search();
 		
-		new Ajax.Request(ajaxURL, {
-			onSuccess : this.installSubtree.bind(this),
-			onFailure : function(response) { errorMessage('error loading subtree', response); }
+		jQuery.ajax({
+			'url': ajaxURL, 
+			'success' : this.installSubtree.bind(this),
+			'error' : function(response) { errorMessage('error loading subtree', response); }
 		});
 	},
 	

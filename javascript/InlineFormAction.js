@@ -6,9 +6,10 @@ Behaviour.register({
 		onclick: function() {
 			var url = jQuery('base').attr('href') + 'admin-custom/' + this.name.substring(7) + '?ID=' + $('Form_EditForm_ID').value + '&ajax=1';
 			
-			new Ajax.Request( url, {
-				onSuccess: Ajax.Evaluator,
-				onFailure: Ajax.Evaluator
+			jQuery.ajax({
+				'url': url,
+				success: Ajax.Evaluator,
+				success: Ajax.Evaluator
 			});
 			
 			return false;
