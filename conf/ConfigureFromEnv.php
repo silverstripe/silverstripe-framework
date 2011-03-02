@@ -41,6 +41,7 @@
  * 
  * Email:
  *  - SS_SEND_ALL_EMAILS_TO: If you set this define, all emails will be redirected to this address.
+ *  - SS_SEND_ALL_EMAILS_FROM: If you set this define, all emails will be send from this address.
  * 
  * @package framework
  * @subpackage core
@@ -106,6 +107,9 @@ if(defined('SS_DATABASE_USERNAME') && defined('SS_DATABASE_PASSWORD')) {
 
 if(defined('SS_SEND_ALL_EMAILS_TO')) {
 	Config::inst()->update("Email","send_all_emails_to", SS_SEND_ALL_EMAILS_TO);
+}
+if(defined('SS_SEND_ALL_EMAILS_FROM')) {
+	Config::inst()->update("Email","send_all_emails_from", SS_SEND_ALL_EMAILS_FROM);
 }
 
 if(defined('SS_DEFAULT_ADMIN_USERNAME')) {
