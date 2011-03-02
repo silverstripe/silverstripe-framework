@@ -65,6 +65,14 @@ class Enum extends StringField {
 	 * @return void
 	 */
 	public function requireField() {
+		// Remove bad data from the enum before changing the field type
+		if(DB::getConn()->hasField($this->tableName, $this->name)) {
+			$SQL_default = Convert::raw2sql($this->default);
+			$SQL_enum = Convert::raw2sql($this->enum);
+
+			DB::query("UPDATE \"$this->tableName\" SET \"$this->name\" = '$SQL_default' WHERE \"$this->name\" NOT IN ('"  .implode("','", $SQL_enum)."')");
+		}
+
 		$parts = array(
 			'datatype' => 'enum', 
 			'enums' => Convert::raw2sql($this->enum), 
