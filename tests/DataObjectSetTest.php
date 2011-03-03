@@ -406,6 +406,36 @@ class DataObjectSetTest extends SapphireTest {
 		$set->sort(array('F2'=>'ASC', 'F1'=>'DESC'));
 		$this->assertEquals($set->Last()->Name, 'Object1', 'Object1 should be last in the set');
 	}
+	
+	/**
+	 * Test {@link DataObjectSet->GroupedBy()}
+	 */
+	function testGroupedBy() {
+		$set = new DataObjectSet(array(
+			array('Name'=>'AAA'),
+			array('Name'=>'AAA'),
+			array('Name'=>'BBB'),
+			array('Name'=>'BBB'),
+			array('Name'=>'AAA'),
+			array('Name'=>'BBB'),
+			array('Name'=>'CCC'),
+			array('Name'=>'CCC')
+		));
+		$groupedSet = $set->GroupedBy('Name');
+		$this->assertEquals($groupedSet->Count(), 3);
+		
+		$this->assertEquals($groupedSet->First()->Name, 'AAA');
+		$this->assertEquals($groupedSet->First()->Children->Count(), 3);
+		$this->assertEquals($groupedSet->Last()->Name, 'CCC');
+		$this->assertEquals($groupedSet->Last()->Children->Count(), 2);
+		
+		$counter = 1;
+		foreach($groupedSet as $group) {
+			$this->assertEquals($group->Pos(), $counter);
+			$this->assertEquals($group->Name, $group->Children->First()->Name);
+			$counter++;
+		}
+	}
 }
 
 /**
