@@ -727,13 +727,14 @@ class DataObjectSet extends ViewableData implements IteratorAggregate, Countable
 	 */
 	public function GroupedBy($index, $childControl = "Children") {
 		$grouped = $this->groupBy($index);
-		$groupedAsSet = new DataObjectSet();
+		$children = array();
 		foreach($grouped as $group) {
-			$groupedAsSet->push($group->First()->customise(array(
+			$children[] = array(
+				$index => $group->First()->$index,
 				$childControl => $group
-			)));
+			);
 		}
-		return $groupedAsSet;
+		return new DataObjectSet($children);
 	}
 
 	/**
