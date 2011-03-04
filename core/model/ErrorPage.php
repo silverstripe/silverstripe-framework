@@ -32,9 +32,10 @@ class ErrorPage extends Page {
 	 * @param int $statusCode
 	 * @return SS_HTTPResponse
 	 */
-	public static function response_for($statusCode) {
+	public static function response_for($statusCode, $message=null) {
 		// first attempt to dynamically generate the error page
 		if($errorPage = DataObject::get_one('ErrorPage', "\"ErrorCode\" = $statusCode")) {
+			if($message)$errorPage->Title=$message;
 			return ModelAsController::controller_for($errorPage)->handleRequest(new SS_HTTPRequest('GET', ''));
 		}
 		

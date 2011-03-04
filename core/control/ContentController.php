@@ -206,7 +206,7 @@ class ContentController extends Controller {
 	 * @uses ErrorPage::response_for()
 	 */
 	public function httpError($code, $message = null) {
-		if($this->request->isMedia() || !$response = ErrorPage::response_for($code)) {
+		if($this->request->isMedia() || !($response = ErrorPage::response_for($code,$message))) {
 			parent::httpError($code, $message);
 		} else {
 			throw new SS_HTTPResponse_Exception($response);
