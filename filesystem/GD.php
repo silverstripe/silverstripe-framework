@@ -299,7 +299,6 @@ class GD extends Object {
 		$width = round($width);
 		$height = round($height);
 		
-		
 		$newGD = imagecreatetruecolor($width, $height);
 		
 		// Preserves transparency between images
@@ -315,24 +314,36 @@ class GD extends Object {
 			
 			$srcAR = $this->width / $this->height;
 		
+			$noresample=false;
+			
 			// Destination narrower than the source
-			if($destAR > $srcAR) {
-				$destY = 0;
-				$destHeight = $height;
-				
+			if($destAR > $srcAR && $this->width > $width) {
 				$destWidth = $height * $srcAR;
 				$destX = ($width - $destWidth) / 2;
-			
+
+				$destHeight = $height;
+				$destY = 0;
+				
 			// Destination shorter than the source
-			} else {
-				$destX = 0;
+			} elseif($this->width > $width){
 				$destWidth = $width;
+				$destX = 0;
 				
 				$destHeight = $width / $srcAR;
 				$destY = ($height - $destHeight) / 2;
+			
+			// Destination shorter and narrower than the source
+			}else {
+				$noresample=true;
+				$destX=($width-$this->width)/2;
+				$destY=($height-$this->height)/2;
 			}
 			
-			imagecopyresampled($newGD, $this->gd, $destX, $destY, 0, 0, $destWidth, $destHeight, $this->width, $this->height);
+			if($noresample)
+				imagecopy($newGD, $this->gd, $destX, $destY, 0, 0, $this->width, $this->height);
+			else
+				imagecopyresampled($newGD, $this->gd, $destX, $destY, 0, 0, $destWidth, $destHeight, $this->width, $this->height);
+				
 		}
 		$output = clone $this;
 		$output->setGD($newGD);
