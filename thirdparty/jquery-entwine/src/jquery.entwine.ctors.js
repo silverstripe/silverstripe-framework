@@ -90,12 +90,20 @@
 							// Find the ones that are gone this time
 							rem = rule.cache.not(res);
 							// And call the destructor on them
-							if (rem.length) ctors.onunmatchproxy(rem, j, dtor);
+							if (rem.length && !rule.onunmatchRunning) {
+								rule.onunmatchRunning = true;
+								ctors.onunmatchproxy(rem, j, dtor);
+								rule.onunmatchRunning = false;
+							}
 						}
 					}
 					
 					// Call the constructor on the newly matched ones
-					if (add.length && ctor) ctors.onmatchproxy(add, j, ctor);
+					if (add.length && ctor && !rule.onmatchRunning) {
+						rule.onmatchRunning = true;
+						ctors.onmatchproxy(add, j, ctor);
+						rule.onmatchRunning = false;
+					}
 					
 					// Add these matched ones to the list tracking all elements matched so far
 					matched = matched.add(res);
