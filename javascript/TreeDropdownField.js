@@ -45,36 +45,42 @@
 			},
 			setTitle: function(title) {
 				this.find('.title').text(title);
+				this.data('title', title); // separate view from storage (important for search cancellation)
 			},
 			getTitle: function() {
 				return this.find('.title').text();
 			},
 			setValue: function(val) {
-				this.find(':input').val(val);
+				this.find(':input:hidden').val(val);
 			},
 			getValue: function() {
-				return this.find(':input').val();
+				return this.find(':input:hidden').val();
 			},
-			loadTree: function() {
-				var self = this, treeHolder = $(this.getPanel()).find('.tree-holder');
-				this.addClass('loading');
-				treeHolder.load(this.attr('href'), {}, function(html, status, xhr) {
+			loadTree: function(params, callback) {
+				var self = this, panel = this.getPanel(), treeHolder = $(panel).find('.tree-holder');
+				var params = params || {};
+				panel.addClass('loading');
+				treeHolder.load(this.attr('href'), params, function(html, status, xhr) {
+					var firstLoad = true;
 					if(status == 'success') {
 						$(this)
 							.bind('loaded.jstree', function(e, data) {
 								var val = self.getValue();
 								if(val) data.inst.select_node(treeHolder.find('*[data-id=' + val + ']'));
+								firstLoad = false;
+								if(callback) callback.apply(self);
 							})
 							.jstree(self.getTreeConfig())
 							.bind('select_node.jstree', function(e, data) {
 								var node = data.rslt.obj;
 								self.setValue($(node).data('id'));
 								self.setTitle(data.inst.get_text(node));
-								self.closePanel();
+								// Avoid auto-closing panel on first load
+								if(!firstLoad) self.closePanel();
 							});
 					}
 					
-					self.removeClass('loading');
+					panel.removeClass('loading');
 				});
 			},
 			getTreeConfig: function() {
@@ -109,10 +115,102 @@
 				return this.parents('.TreeDropdownField:first');
 			}
 		});
-		$('.TreeDropdownField .editLink').entwine({
+		$('.TreeDropdownField .toggle-panel-link, .TreeDropdownField span.title').entwine({
 			onclick: function(e) {
 				this.getField().togglePanel();
+				return false;
 			}
 		});
+		
+		$('.TreeDropdownField.searchable').entwine({
+			onmatch: function() {
+				this._super();
+				
+				var title = this.data('title');
+				this.find('.title').replaceWith(
+					$('<input type="text" class="title search" />')
+				);
+				this.setTitle(title ? title : strings.searchFieldTitle);
+			},
+			setTitle: function(title) {
+				this.find('.title').val(title);
+			},
+			getTitle: function() {
+				return this.find('.title').val();
+			},
+			search: function(str, callback) {
+				this.openPanel();
+				this.loadTree({search: str}, callback);
+			},
+			cancelSearch: function() {
+				this.closePanel();
+				this.loadTree();
+				this.setTitle(this.data('title'));
+			}
+		});
+		
+		$('.TreeDropdownField.searchable input.search').entwine({
+			onkeydown: function(e) {
+				var field = this.getField();
+				if(e.keyCode == 13) {
+					// trigger search on ENTER key
+					field.search(this.val());
+					return false;
+				} else if(e.keyCode == 27) {
+					// cancel search on ESC key
+					field.cancelSearch();
+				}
+			}
+		});
+		
+		$('.TreeDropdownField.multiple').entwine({
+			getTreeConfig: function() {
+				var cfg = this._super();
+				cfg.checkbox = {override_ui: true};
+				cfg.plugins.push('checkbox');
+				cfg.ui.select_limit = -1;
+				return cfg;
+			},
+			loadTree: function(params, callback) {
+				var self = this, panel = this.getPanel(), treeHolder = $(panel).find('.tree-holder');
+				var params = params || {};
+				panel.addClass('loading');
+				treeHolder.load(this.attr('href'), params, function(html, status, xhr) {
+					var firstLoad = true;
+					if(status == 'success') {
+						$(this)
+							.bind('loaded.jstree', function(e, data) {
+								$.each(self.getValue(), function(i, val) {
+									data.inst.check_node(treeHolder.find('*[data-id=' + val + ']'));
+								});
+								firstLoad = false;
+								if(callback) callback.apply(self);
+							})
+							.jstree(self.getTreeConfig())
+							.bind('uncheck_node.jstree check_node.jstree', function(e, data) {
+								var nodes = data.inst.get_checked(null, true);
+								self.setValue($.map(nodes, function(el, i) {
+									return $(el).data('id');
+								}));
+								self.setTitle($.map(nodes, function(el, i) {
+									return data.inst.get_text(el);
+								}));
+							});
+					}
+					
+					panel.removeClass('loading');
+				});
+			},
+			getValue: function() {
+				var val = this._super();
+				return val.split(/ *, */);
+			},
+			setValue: function(val) {
+				this._super($.isArray(val) ? val.join(',') : val);
+			},
+			setTitle: function(title) {
+				this._super($.isArray(title) : title.join(', ') : val);
+			}
+		})
 	});
 }(jQuery));

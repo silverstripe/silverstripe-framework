@@ -3,7 +3,7 @@ div.TreeDropdownField {
 	height: 21px;
 }
 
-div.TreeDropdownField span.items {
+div.TreeDropdownField .title {
 	float: left;
 	overflow:hidden;
 	width: 174px;
@@ -27,7 +27,7 @@ div.TreeDropdownField .panel {
 }
 
 div.TreeDropdownField .panel.loading {
-	background: #f00;
+	background: #fff url(../images/network-save.gif) center center no-repeat;
 }
 
 div.TreeDropdownField .panel ul.tree a {
@@ -38,7 +38,7 @@ div.TreeDropdownField .panel ul.tree {
 	margin-top: 0;
 }
 
-div.TreeDropdownField a.editLink {
+div.TreeDropdownField .toggle-panel-link {
 	border:none;
 	text-decoration: none;
 	background: url(../images/TreeDropdownField_button.gif) no-repeat left top;
