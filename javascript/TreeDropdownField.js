@@ -1,22 +1,41 @@
 (function($) {
 	$.entwine('ss', function($){
 		
+		var strings = {
+			'openlink': 'Open',
+			'searchFieldTitle': '(choose or search)'
+		};
+		
 		/**
-		 * @todo Locale support
-		 * @todo Multiselect
-		 * @todo Search
+		 * @todo Locale support/form serialization
+		 * @todo Multiselect: Select items after tree load, serialize titles, override title on select but keep panel open
+		 * @todo Error display
+		 * @todo No results display for search
+		 * @todo Automatic expansion of ajax children when multiselect is triggered
+		 * @todo Automatic panel positioning based on available space (top/bottom)
+		 * @todo forceValue
+		 * @todo Automatic width
+		 * @todo Expand title height to fit all elements
 		 */
 		$('.TreeDropdownField').entwine({
 			onmatch: function() {
-				this.append('<div class="panel"><div class="tree-holder"></div></div>');
+				this.append(
+					'<span class="title"></span>' +
+					'<a href="#" title="' + strings.openLink + '" class="toggle-panel-link"></a>' +
+					'<div class="panel"><div class="tree-holder"></div></div>'
+				);
+				if(this.data('title')) this.setTitle(this.data('title'));
+			this.getPanel().hide();
+				
+				this._super();
 			},
 			getPanel: function() {
 				return this.find('.panel');
 			},
 			openPanel: function() {
-				var panel = this.getPanel();
+				var panel = this.getPanel(), tree = this.find('.tree-holder');
 				panel.show();
-				if(!panel.find('li').length) this.loadTree();
+				if(tree.is(':empty')) this.loadTree();
 			},
 			closePanel: function() {
 				this.getPanel().hide();

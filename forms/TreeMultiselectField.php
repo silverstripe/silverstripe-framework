@@ -79,22 +79,19 @@ class TreeMultiselectField extends TreeDropdownField {
 	 * formfield can contain multiple values.
 	 */
 	function Field() {
+		Requirements::add_i18n_javascript(SAPPHIRE_DIR . '/javascript/lang');
+		
+		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery/jquery.js');
+		Requirements::javascript(SAPPHIRE_DIR . '/javascript/jquery_improvements.js');
+		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-entwine/dist/jquery.entwine-dist.js');
+		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jstree/jquery.jstree.js');
+		Requirements::javascript(SAPPHIRE_DIR . '/javascript/TreeDropdownField.js');
+		
+		Requirements::css(SAPPHIRE_DIR . '/thirdparty/jquery-ui-themes/smoothness/jquery.ui.all.css');
+		Requirements::css(SAPPHIRE_DIR . '/css/TreeDropdownField.css');
+	
 		$value = '';
 		$itemList = '';
-		
-		Requirements::add_i18n_javascript(SAPPHIRE_DIR . '/javascript/lang');
-
-		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/prototype/prototype.js');
-		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/behaviour/behaviour.js');
-		Requirements::javascript(SAPPHIRE_DIR . '/javascript/tree/tree.js');
-		// needed for errorMessage()
-		Requirements::javascript(SAPPHIRE_DIR . '/javascript/LeftAndMain.js');
-		Requirements::javascript(SAPPHIRE_DIR . '/javascript/TreeSelectorField.js');
-
-		Requirements::css(SAPPHIRE_DIR . '/javascript/tree/tree.css');
-		Requirements::css(SAPPHIRE_DIR . '/css/TreeDropdownField.css');
-
-
 		$items = $this->getItems();
 
 		if($items && count($items)) {
@@ -104,16 +101,31 @@ class TreeMultiselectField extends TreeDropdownField {
 			}
 				
 			if(isset($titleArray)) {
-				$itemList = implode(", ", $titleArray);
+				$title = implode(", ", $titleArray);
 				$value = implode(",", $idArray);
 			}
+		} else {
+			$title = _t('DropdownField.CHOOSE', '(Choose)', PR_MEDIUM, 'start value of a dropdown');
 		} 
-
-		$id = $this->id();
 		
-		return <<<HTML
-			<div class="TreeDropdownField multiple" href="{$this->Link()}"><input id="$id" type="hidden" name="$this->name" value="$value" /><span class="items">$itemList</span><a href="#" title="open" class="editLink">&nbsp;</a></div>		
-HTML;
+		return $this->createTag (
+			'div',
+			array (
+				'id'    => "TreeDropdownField_{$this->id()}",
+				'class' => 'TreeDropdownField multiple' . ($this->extraClass() ? " {$this->extraClass()}" : '') . ($this->showSearch ? " searchable" : ''),
+				'href' => $this->form ? $this->Link('tree') : "",
+				'data-title' => $title,
+			),
+			$this->createTag (
+				'input',
+				array (
+					'id'    => $this->id(),
+					'type'  => 'hidden',
+					'name'  => $this->name,
+					'value' => $value
+				)
+			)
+		);
 	}
 
 	/**

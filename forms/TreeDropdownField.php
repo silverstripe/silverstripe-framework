@@ -134,8 +134,9 @@ class TreeDropdownField extends FormField {
 			'div',
 			array (
 				'id'    => "TreeDropdownField_{$this->id()}",
-				'class' => 'TreeDropdownField single' . ($this->extraClass() ? " {$this->extraClass()}" : ''),
+				'class' => 'TreeDropdownField single' . ($this->extraClass() ? " {$this->extraClass()}" : '') . ($this->showSearch ? " searchable" : ''),
 				'href' => $this->form ? $this->Link('tree') : "",
+				'data-title' => $title,
 			),
 			$this->createTag (
 				'input',
@@ -145,29 +146,6 @@ class TreeDropdownField extends FormField {
 					'name'  => $this->name,
 					'value' => $this->value
 				)
-			) . ($this->showSearch ?
-					$this->createTag(
-						'input',
-						array(
-							'class' => 'title',
-							'value' => '(Choose or type search)' 
-						)
-					) :
-					$this->createTag (
-						'span',
-						array (
-							'class' => 'items'
-						),
-						$title
-					)
-			) . $this->createTag (
-				'a',
-				array (
-					'href'  => '#',
-					'title' => 'open',
-					'class' => 'editLink'
-				),
-				'&nbsp;'
 			)
 		);
 	}
@@ -192,7 +170,7 @@ class TreeDropdownField extends FormField {
 		// Regular source specification
 		$isSubTree = false;
 
-		$this->search = Convert::Raw2SQL($request->getVar('search'));
+		$this->search = Convert::Raw2SQL($request->requestVar('search'));
 
 		$ID = (is_numeric($request->latestparam('ID'))) ? (int)$request->latestparam('ID') : (int)$request->requestVar('ID');
 		if($ID) {
