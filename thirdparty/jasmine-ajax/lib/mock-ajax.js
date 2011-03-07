@@ -81,6 +81,10 @@ function FakeXMLHttpRequest() {
       return xhr.responseHeaders[name];
     },
 
+		getAllResponseHeaders: function() {
+			return xhr.responseHeaders;
+		},
+
     responseText: null,
 
     response: function(response) {
