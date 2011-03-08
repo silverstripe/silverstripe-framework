@@ -4,8 +4,7 @@
 SilverStripe lets you customise the style of content in the CMS.  
 
 ## Usage
-This is done by setting up a CSS file called
-(projectname)/css/typography.css
+This is done by setting up a CSS file called (projectname)/css/typography.css.
 
 You also need to create a file called (projectname)/css/editor.css with the following content:
 
@@ -40,8 +39,8 @@ It's important to realise that this CSS file is included directly into the CMS s
 can alter the styling of other parts of the interface.  While this is novel, it can be dangerous and is probably not
 what you're after.
 
-The way around this is to limit all your styling selectors to elements inside something with class="typography".  The
-other half of this is to put class="typography" onto any area in your template where you would like the styling to be
+The way around this is to limit all your styling selectors to elements inside something with `class="typography"`.  The
+other half of this is to put `class="typography"` onto any area in your template where you would like the styling to be
 applied.
 
 **WRONG**
@@ -73,7 +72,7 @@ applied.
 
 
 If you would to include different styles for different sections of your site, you can use class names the same as the
-name of the data fields. This example sets up different paragraph styles for 2 HTML editor fieldsc alled Content and
+name of the data fields. This example sets up different paragraph styles for 2 HTML editor fields called Content and
 OtherContent:
 
 	:::css
@@ -89,7 +88,7 @@ OtherContent:
 ### Removing the typography class
 
 Sometimes, it's not enough to add a class, you also want to remove the typography class.  You can use the
-HTMLEditorField method setCSSClass.
+`[api:HTMLEditorField]` method setCSSClass.
 
 This example sets another CSS class typographybis:
 
@@ -104,5 +103,4 @@ This example sets another CSS class typographybis:
 	}
 
 
-This functionality will be available in the version 2.0.2 of the CMS.
-
+**Note:** This functionality will be available in the version 2.0.2 of the CMS.

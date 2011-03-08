@@ -104,7 +104,7 @@ fields are searched (e.g. "partial match", "fulltext", etc.) using `$searchable_
 ## Summary Fields
 
 Summary Fields are the columns which are shown in the `[api:TableListField]` when viewing DataObjects.  These can be
-customized for each DataObject's search results using `$summary_fields`.
+customized for each `[api:DataObject]`'s search results using `$summary_fields`.
 
    * See `[api:DataObject]`
 

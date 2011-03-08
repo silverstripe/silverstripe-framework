@@ -111,8 +111,8 @@ and whenever you upload or modify an Image through SilverStripe.
 
 If you encounter problems with images not appearing, or have mysteriously disappeared, you can try manually flushing the
 image cache.
-	
+
 	http://www.mysite.com/images/flush
-	
+
 ## API Documentation
 `[api:Image]`

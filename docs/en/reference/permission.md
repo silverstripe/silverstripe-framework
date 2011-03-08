@@ -12,7 +12,7 @@ and then select the permissions tab, and add that permission to the list.
 The simple usage, Permission::check("PERM_CODE") will detect if the currently logged in member has the given permission.
  See the API docs for more options.
 
-** Group ACLs **
+**Group ACLs**
 
 *  Call **Permission::check("MY_PERMISSION_CODE")** to see if the current user has MY_PERMISSION_CODE.
 *  MY_PERMISSION_CODE can be loaded into the Security admin on the appropriate group, using the "Permissions" tab. 
@@ -22,9 +22,9 @@ You can use whatever codes you like, but for the sanity of developers and users,
 
 ## PermissionProvider
 
-PermissionProvider is an interface which lets you define a method *providePermissions()*. This method should return a
+`[api:PermissionProvider]` is an interface which lets you define a method *providePermissions()*. This method should return a
 map of permission code names with a human readable explanation of its purpose (see
-[:permission:codes](/reference/permission)).
+[permissions:codes](/reference/permission)).
 
 	:::php
 	class Page_Controller implements PermissionProvider {

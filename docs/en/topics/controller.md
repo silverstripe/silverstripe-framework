@@ -6,7 +6,7 @@ your SilverStripe site.
 
 ## Example
 
-mysite/code/Controllers/FastFood.php
+`mysite/code/Controllers/FastFood.php`
 
 	:::php
 	<?php
@@ -20,14 +20,14 @@ mysite/code/Controllers/FastFood.php
 	?>
 
 
-mysite/_config.php
+`mysite/_config.php`
 
 	:::php
 	Director::addRules(50, array('fastfood/$Action/$ID/$Name' => 'FastFood_Controller'));
 
 
-Request for '/fastfood/order/24/cheesefries' would result in the following to the $arguments above. If needed, use
-"?flush=1" on the end of request after making any code changes to your controller.
+Request for `/fastfood/order/24/cheesefries` would result in the following to the $arguments above. If needed, use
+`?flush=1` on the end of request after making any code changes to your controller.
 
 	:::ss
 	Array
@@ -42,12 +42,12 @@ Request for '/fastfood/order/24/cheesefries' would result in the following to th
 
 In the above example the URLs were configured using the `[api:Director]` rules in the **_config.php** file. 
 Alternatively you can specify these in your Controller class via the **$url_handlers** static array (which gets
-processed by the RequestHandler).  
+processed by the `[api:RequestHandler]`).  
 
-This is useful when you want to subvert the fixed action mapping of 'fastfood/order/*' to the function **order**.  In
-the case below we also want any orders coming through '/fastfood/drivethrough/' to use the same order function.
+This is useful when you want to subvert the fixed action mapping of `fastfood/order/*` to the function **order**.  In
+the case below we also want any orders coming through `/fastfood/drivethrough/` to use the same order function.
 
-mysite/code/Controllers/FastFood.php
+`mysite/code/Controllers/FastFood.php`
 
 	:::php
 	class FastFood_Controller extends Controller {
@@ -59,15 +59,15 @@ mysite/code/Controllers/FastFood.php
 
 ## URL Patterns
 
-The RequestHandler class will parse all rules you specify against the following patterns.
+The `[api:RequestHandler]` class will parse all rules you specify against the following patterns.
 
 **A rule must always start with alphabetical ([A-Za-z]) characters or a $Variable declaration**
 
- | Pattern |							| Description | 
- | ----------- |						| --------------- | 
- | `$`       |						| **Param Variable** - Starts the name of a paramater variable, it is optional to match this unless ! is used | 
- | `!`       | 						| **Require Variable** - Placing this after a parameter variable requires data to be present for the rule to match | 
- | `//`  | 						| **Shift Point** - Declares that only variables denoted with a $ are parsed into the $params AFTER this point in the regex | 
+ | Pattern     | Description | 
+ | ----------- | --------------- | 
+ | `$`         | **Param Variable** - Starts the name of a paramater variable, it is optional to match this unless ! is used | 
+ | `!`         | **Require Variable** - Placing this after a parameter variable requires data to be present for the rule to match | 
+ | `//`        | **Shift Point** - Declares that only variables denoted with a $ are parsed into the $params AFTER this point in the regex | 
 
 ## Examples
 

@@ -93,7 +93,7 @@ by using the `$Layout` variable so it makes sense to add the .typography style a
 		$Layout
 	</div>
 
-## Designing reuseable templates
+## Designing reusable templates
 
 Although SilverStripe is ultimately flexible in how you create your templates, there's a couple of best practices. These
 will help you to design templates for modules, and make it easier for other site developers to integrate them into their
@@ -101,7 +101,7 @@ own base templates.
 
 * Most of your templates should be Layout templates
 * Build your templates as a [Theme](/topics/themes) so you can easily re-use and exchange them
-* Your layout template should include a standard markup structure (`<div id="Layout">`$Layout`</div>`)
+* Your layout template should include a standard markup structure (`<div id="Layout">$Layout</div>`)
 * Layout templates only include content that could be completely replaced by another module (e.g. a forum thread). It
 might be infeasible to do this 100%, but remember that every piece of navigation that needs to appear inside `$Layout`
 will mean that you have to customise templates when integrating the module.

@@ -2,12 +2,13 @@
 
 ## Introduction
 
-Widgets are small pieces of functionality such as showing the latest Comments or Flickr Photos. They normally display on
-the sidebar of your website. To check out a what a Widget can do watch the video http://silverstripe.org/widgets and try
-out the demo site http://silverstripe.com/assets/screencasts/SilverStripe-Blog-DragDrop-Widgets.swf
+[Widgets](http://silverstripe.org/widgets) are small pieces of functionality such as showing the latest Comments or Flickr Photos. They normally display on
+the sidebar of your website. To check out a what a [Widget](http://silverstripe.org/widgets) can do watch the
+[Widget video](http://silverstripe.com/assets/screencasts/SilverStripe-Blog-DragDrop-Widgets.swf) and try out the
+[demo site](http://demo.silverstripe.org/)
+
 
 ## How to Use A Widget
-
 
 ### Downloading and Contributing Widgets
 
@@ -15,26 +16,32 @@ out the demo site http://silverstripe.com/assets/screencasts/SilverStripe-Blog-D
 *  Upload widgets you want to share to
 [http://silverstripe.org/widgets/manage/add](http://silverstripe.org/widgets/manage/add). Make sure you read the
 packaging instructions at the bottom of the page about how to make your widget package.
+
+
 ### Installing a widget
 
 By following the "Packaging" rules below, widgets are easily installed. 
 
-*  Download the file and unzip to the main folder of your SilverStripe website, e.g. to "/widget_twitter/". The folder
+* Install the [blog module](http://www.silverstripe.org/blog-module/) (by default only the Blog has widgets enabled)
+* Download the file and unzip to the main folder of your SilverStripe website, e.g. to `/widget_<widget-name>/`. The folder
 will contain a few files, which generally won't need editing or reading.
-*  Run dev/build
-*  Login to the CMS and go to the 'Blog' page. Choose the "widgets" tab and drag n drop the new widget to activate it.
-*  Your blog will now have the widget shown.
+* Run `http://my-website.com/dev/build`
+* Login to the CMS and go to the 'Blog' page. Choose the "widgets" tab and drag n drop the new widget to activate it.
+* Your blog will now have the widget shown
 
 ### Adding widgets to other pages
 
-As of 2.2.1 this is this is a way to add widgets to other pages (by default only the Blog has widgets enabled). In the
-future releases we will hopefully make widgets part of SiteTree therefore available on every page. In the mean time you
-have to do a couple things to get a Widget to work on a page.
+<div class="notice" markdown='1'>
+As of version 2.2.1 there is a way to add widgets to other pages. In future releases we will hopefully make widgets part
+of SiteTree therefore available on every page.
+</div>
+
+You have to do a couple things to get a Widget to work on a page.
 
 First step is to add an WidgetArea to the Database to store the widget details. Then you have to edit the CMS to add a
 Widget Form to manage the widgets. An example of this is below
 
-** mysite/code/Page.php **
+**mysite/code/Page.php**
 
 	:::php
 	class Page extends SiteTree {
@@ -53,16 +60,14 @@ Widget Form to manage the widgets. An example of this is below
 	}
 
 
-Then in your Template you need to call $SideBar whereever you want to render the widget
+Then in your Template you need to call $SideBar wherever you want to render the widget
 
-Eg for blackcandy I put this above the closing `</div>`
+For example: using the blackcandy theme I put this piece of code above the closing `</div>`
 
-** themes/myThemeName/templates/Includes/Sidebar.ss **
+**themes/blackcandy/templates/Includes/Sidebar.ss**
 
 	:::ss
 	$Sidebar
-
-
 
 
 ## Writing your own widgets
@@ -180,7 +185,7 @@ To render the widget, simply include $SilverStripeFeed in your template:
 
 
 As directed in the definition of SilverStripeFeed(), the Widget will be rendered through the WidgetHolder template. This
-is pre-defined at /sapphire/templates/WidgetHolder.ss and simply consists of: 
+is pre-defined at `/sapphire/templates/WidgetHolder.ss` and simply consists of: 
 
 	:::ss
 	<div class="WidgetHolder">
@@ -190,14 +195,14 @@ is pre-defined at /sapphire/templates/WidgetHolder.ss and simply consists of:
 
 
 You can override the WidgetHolder.ss and Widget.ss templates in your theme too by adding WidgetHolder and Widget
-templates to ** themes/myThemeName/templates/Includes/ **
+templates to `themes/myThemeName/templates/Includes/`
 
 ### Changing the title of your widget
 
 To change the title of your widget, you need to override the Title() method. By default, this simply returns the $title
 variable. For example, to set your widgets title to 'Hello World!', you could use:
 
-** widgets_yourWidget/YourWidgetWidget.php **
+**widgets_yourWidget/YourWidgetWidget.php**
 
 	:::php
 	function Title() {
@@ -221,13 +226,13 @@ This returns the value inputted in the CMS, if it's set or what is in the $title
 
 ### Forms within Widgets
 
-*Requires SilverStripe 2.4 or newer*
+**Requires SilverStripe 2.4 or newer**
 
 To implement a form inside a widget, you need to implement a custom controller for your widget to return this form. Make
 sure that your controller follows the usual naming conventions, and it will be automatically picked up by the
 `[api:WidgetArea]` rendering in your *Page.ss* template.
 
-*mysite/code/MyWidget.php*
+**mysite/code/MyWidget.php**
 
 	:::php
 	class MyWidget extends Widget {
@@ -258,26 +263,27 @@ sure that your controller follows the usual naming conventions, and it will be a
 
 To output this form, modify your widget template.
 
-*mysite/templates/MyWidget.ss*
+**mysite/templates/MyWidget.ss**
 
 	:::ss
 	$Content
 	$MyFormName
 
-
-Note: The necessary controller actions are only present in subclasses of `[api:Page_Controller]`. To use
+<div class="notice" markdown='1'>
+**Note:** The necessary controller actions are only present in subclasses of `[api:Page_Controller]`. To use
 widget forms in other controller subclasses, have a look at *ContentController->handleWidget()* and
 *ContentController::$url_handlers*.
+</div>
 
 See an [alternative recipe for SilverStripe 2.3 or earlier](http://doc.silverstripe.org/old/recipes/widget-forms-2.3).
 
-##  But what if I have widgets on my blog currently??
+## But what if I have widgets on my blog currently??
 
 If you currently have a blog installed, the widget fields are going to double up on those pages (as the blog extends the
 Page class). One way to fix this is to comment out line 30 in BlogHolder.php and remove the DB entry by running a
-/db/build.
+`http://www.mysite.com/db/build`.
 
-** blog/code/BlogHolder.php **
+**blog/code/BlogHolder.php**
 
 	:::php
 	<?php
@@ -304,7 +310,7 @@ Then you can use the Widget area you defined on Page.php
 ### Packaging
 
 For a widget to be put in our official widget database they must follow this convention - If the name of your widget was
-"TwitterWidget" then:
+"YourName" then:
 
 #### File Structure for your widget
 
@@ -323,19 +329,21 @@ would understand, then make it configurable in the _config.php file.
 
 This way, the CMS remains an application designed for content authors, and not developers. 
 
-** widget_name/_config.php **
+*widget_name/_config.php*
 
 	:::php
 	<?php /*  */ ?>
 
 
-** Example Widget Structure **
+**Example Widget Structure**
+
 ![](_images/widget_demo.gif)
+
 
 #### How to make the Package
 
-*  Make a tar.gz file called widgets_flickr-0.1.tar.gz (where 0.1 is the version number).
-     * Ensure when you "unzip" the compressed file it has everything the "widgets_flickr" folder with everything inside
+*  Make a tar.gz file called widgets_YourName-0.1.tar.gz (where 0.1 is the version number).
+     * Ensure when you "unzip" the compressed file it has everything the "widgets_YourName" folder with everything inside
 it.
 *  If made official, it will be given these locations at silverstripe.com:
     * SVN location: http://svn.silverstripe.com/open/modules/widgets/flickr/trunk

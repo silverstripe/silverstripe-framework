@@ -15,8 +15,8 @@ send emails in your SilverStripe application.  Here is a simple example of how y
 	$e->send();
 
 
-Normally, the send() method would send an email using PHP's mail() function.  However, if you are running a `SapphireTest` test, then it holds off actually sending the email, and instead lets you assert that an email was sent
-using this method.
+Normally, the send() method would send an email using PHP's mail() function.  However, if you are running a `[api:SapphireTest]`
+test, then it holds off actually sending the email, and instead lets you assert that an email was sent using this method.
 
 	:::php
 	$this->assertEmailSent("someone@example.com", null, "/th.*e$/");
@@ -25,7 +25,7 @@ using this method.
 The arguments are `$to`, `$from`, `$subject`, `$body`, and can be take one of the following three forms:
 
 *  A string: match exactly that string
-*  `null`/''false'': match anything
+*  `null/false`: match anything
 *  A PERL regular expression (starting with '/'): match that regular expression
 
 ## How to use it

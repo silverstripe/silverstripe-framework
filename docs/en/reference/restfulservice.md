@@ -2,12 +2,13 @@
 
 ## Introduction
 
-RestfulService enables connecting to remote web services which supports REST interface and consume those web services
-(for example Flickr, Youtube, Amazon and etc). RestfulService can parse the XML response (sorry no JSON support)
+`[api:RestfulService]` enables connecting to remote web services which supports REST interface and consume those web services
+(for example [Flickr](http://www.flickr.com/services/api/), [Youtube](http://code.google.com/apis/youtube/overview.html), Amazon and etc). `[api:RestfulService]` can parse the XML response (sorry no JSON support)
 returned from the web service. Further it supports caching of the response, and you can customize the cache interval. 
 
-To gain the functionality you can either create a new RestfulService object or create a class extending the
-RestfulService (see `flickrservice` and `youtubeservice` modules).
+To gain the functionality you can either create a new `[api:RestfulService]` object or create a class extending the
+RestfulService (see [flickrservice](http://silverstripe.org/flickr-module/) and
+[youtubeservice](http://silverstripe.org/youtube-gallery-module/) modules).
 
 
 ## Examples
@@ -112,8 +113,8 @@ to get the value of entry node with the namespace media, use:
 
 ### Handling Errors
 
-If the web service returned an error (for example, API key not available or inadequate parameters) RestfulService could
-delgate the error handling to it's descendant class. To handle the errors define a function called errorCatch
+If the web service returned an error (for example, API key not available or inadequate parameters) `[api:RestfulService]`
+could delgate the error handling to it's descendant class. To handle the errors define a function called errorCatch
 
 	:::php
 	        /*
@@ -142,7 +143,7 @@ If you want to bypass error handling on your sub-classes you could define that i
 
 ## Other Uses
 
-### How to use RestfulService to easily embed an RSS feed
+### How to use `[api:RestfulService]` to easily embed an RSS feed
 
 `[api:RestfulService]` can be used to easily embed an RSS feed (since it's also an xml response) from a site
 such as del.icio.us

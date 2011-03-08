@@ -217,28 +217,31 @@ Maybe even a nice link saying Website Powered by SilverStripe to show your suppo
 
 A bunch of resources feel free to use to make your template awesome
 
-*  http://kuler.adobe.com - Kuler is a great color scheming tool
-*  http://blog.html.it/layoutgala/ - 40 super cool CSS layouts for you to use
-*  http://designmeltdown.com - Great gallery of websites. Browse through and get inspired. 
-*  http://validator.w3.org/ - Your template must pass 'or get near' validation. 
-*  http://famfamfam.com/lab/icons/ - free, beautiful icons.
-*  http://cssremix.com - Another CSS site gallery for inspiration. 
-*  http://www.maxdesign.com.au/presentation/process/ - a good process for creating a design
+*  [http://kuler.adobe.com](http://kuler.adobe.com) - Kuler is a great color scheming tool
+*  [http://blog.html.it/layoutgala/](http://blog.html.it/layoutgala/) - 40 super cool CSS layouts for you to use
+*  [http://designmeltdown.com](http://designmeltdown.com) - Great gallery of websites. Browse through and get inspired. 
+*  [http://validator.w3.org/](http://validator.w3.org/) - Your template must pass 'or get near' validation. 
+*  [http://famfamfam.com/lab/icons/](http://famfamfam.com/lab/icons/) - free, beautiful icons.
+*  [http://cssremix.com](http://cssremix.com) - Another CSS site gallery for inspiration. 
+*  [http://www.maxdesign.com.au/presentation/process/](http://www.maxdesign.com.au/presentation/process/) - a good process for creating a design
 
 ## Reference
 
 ### Overriding
 
 The templating system will search for the appropriate files in the following order:
-1.  mysite (or other name given to site folder)
-2.  themes
-3.  module (eg blog)
+
+1. mysite (or other name given to site folder)
+2. themes
+3. module (eg blog)
 
 So if, for example, you had a typography.css file for a module in the module folder (eg blog/css/), in the theme module
 directory (eg themes/blackcandy_blog/css/), and in your site folder (eg mysite/css/), the system would use the file
 mysite/css/typography.css
 
+<div class="notice" markdown='1'>
 Note: This only applies for CSS and template files. PHP files **do not** get overridden!
+</div>
 
 ### Requirements
 

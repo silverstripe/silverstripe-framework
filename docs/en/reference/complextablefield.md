@@ -15,7 +15,7 @@ See `[api:TableListField]`.
 
 ## Setting Parent/Child-Relations
 
-ComplexTableField tries to determine the parent-relation automatically by looking at the $has_one property on the listed
+`[api:ComplexTableField]` tries to determine the parent-relation automatically by looking at the $has_one property on the listed
 child, or the record loaded into the surrounding form (see getParentClass() and getParentIdName()). You can force a
 specific parent relation:
 
@@ -62,18 +62,18 @@ You can override this behaviour in various ways:
 
 If you don't want several functions to appear (e.g. no add-link), there's several ways:
 
-*  Use ComplexTableField->setPermissions(array("show","edit")) to limit the functionality without touching the template
+*  Use `ComplexTableField->setPermissions(array("show","edit"))` to limit the functionality without touching the template
 (more secure). Possible values are "show","edit", "delete" and "add".  
 
-*  Subclass ComplexTableField and override the rendering-mechanism
-*  Use ComplexTableField->setTemplate() and ComplexTableField->setTemplatePopup() to provide custom templates
+*  Subclass `[api:ComplexTableField]` and override the rendering-mechanism
+*  Use `ComplexTableField->setTemplate()` and `ComplexTableField->setTemplatePopup()` to provide custom templates
 
 ### Customising fields and Requirements in the popup
 
 There are several ways to customise the fields in the popup. Often you would want to display more information in the
 popup as there is more real-estate for you to play with. 
 
-ComplexTableField gives you several options to do this. You can either
+`[api:ComplexTableField]` gives you several options to do this. You can either
 
 *  Pass a FieldSet in the constructor.
 *  Pass a String in the constructor. 
@@ -83,7 +83,7 @@ The second will call the String as a method on the source class (Which should re
 Popup. 
 
 You can also customise Javascript which is loaded for the Lightbox. As Requirements::clear() is called when the popup is
-instantiated, ComplexTableField will look for a function to gather any specific requirements that you might need on your
+instantiated, `[api:ComplexTableField]` will look for a function to gather any specific requirements that you might need on your
 source class. (e.g. Inline Javascript or styling).
 
 For this, create a function called "getRequirementsForPopup". 
@@ -116,11 +116,11 @@ You'll have to do something like this in your form:
 
 You have to hack in an ID on the form, as the CMS forms have this, and front end forms usually do not.
 
-It's not a perfect solution, but it works relatively well to get a simple ComplexTableField up and running on the front
+It's not a perfect solution, but it works relatively well to get a simple `[api:ComplexTableField]` up and running on the front
 end.
 
 To come: Make it a lot more flexible so tables can be easily used on the front end. It also needs to be flexible enough
-to use a popup as well, out of the box.
+to use a popup as well, out of the box.
 
 ## Subclassing
 
@@ -144,7 +144,7 @@ Most of the time, you need to override the following methods:
 *  Find a less fragile solution for accessing this field through the main controller and ReferencedField, e.g. build a
 seperate CTF-instance (doesn't necessarly have to be connected to the original by ReferencedField)
 *  Control width/height of popup by constructor (hardcoded at the moment)
-*  Integrate search from MemberTableField.php directly on ComplexTableField
+*  Integrate search from MemberTableField.php directly on `[api:ComplexTableField]`
 *  Less performance-hungry implementation of detail-view paging (don't return all items on a single view)
 *  Use automatic has-many and many-many functions to return a ComponentSet rather than building the join manually
-*  Javascript/Ajax-Sorting (see http://www.activewidgets.com/grid/ and http://openrico.org/rico/livegrid.page)
+*  Javascript/Ajax-Sorting (see [http://www.activewidgets.com/grid/](http://www.activewidgets.com/grid/) and [http://openrico.org/rico/livegrid.page](http://openrico.org/rico/livegrid.page))
