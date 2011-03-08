@@ -106,7 +106,7 @@ The Debug class contains a number of static methods
 *  *Debug::show($myVariable)*: performs a kind of *print_r($myVariable)*, but shows it in a more useful format.
 *  *Debug::message("Wow, that's great")*: prints a short debugging message.
 *  *SS_Backtrace::backtrace()* (2.3: *Debug::backtrace()*): prints a calls-stack
-*  *Debug::sendLiveErrorsTo("sam@silverstripe.com")*: On the live site, all errors will get sent to this address.
+*  *Debug::send_errors_to("sam@silverstripe.com")*: All errors will get sent to this address.
 
 ### Error handling
 
