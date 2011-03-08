@@ -9,9 +9,9 @@ practices can be applied to other libraries as well.
 
 ## File Inclusion
 
-SilverStripe-driven code should use the `Requirements` class to manage clientside dependencies like CSS and JavaScript
+SilverStripe-driven code should use the `[api:Requirements]` class to manage clientside dependencies like CSS and JavaScript
 files, rather than including `<script>` and `<link>` tags in your templates. This has the advantage that a registry
-of requirements can be built up from different places outside of the main controller, for example included `FormField`
+of requirements can be built up from different places outside of the main controller, for example included `[api:FormField]`
 instances.
 
 See [requirements](/reference/requirements) documentation.
@@ -27,10 +27,12 @@ SilverStripe CMS uses [jQuery UI](http://ui.jquery.com) on top of jQuery.
 For any custom code developed with jQuery, you have four choices to structure it: Custom jQuery Code, a jQuery Plugin, a
 jQuery UI Widget, or a `jQuery.entwine` behaviour. We'll detail below where each solution is appropriate.
 
+<div class="hint" markdown='1'>
 **Important**: Historically we have been using [PrototypeJS](http://prototypejs.com), which is now discouraged. SilverStripe as a framework doesn't impose a choice of library. It
 tries to generate meaningful markup which you can alter with other JavaScript libraries as well. Only the CMS itself and
 certain form widgets require jQuery to function correctly. You can also use jQuery in parallel with other libraries, see
 [here](http://docs.jquery.com/Using_jQuery_with_Other_Libraries).
+</div>
 
 ### Custom jQuery Code
 
@@ -229,7 +231,7 @@ jQuery with a few lines of code.  Your jQuery code will normally end up as a ser
 
 ### Don't claim global properties
 
-Global properties are evil. They are accesible by other scripts, might be overwritten or mis-used. A popular case is the `$` shortcut in different libraries: in PrototypeJS it stands for `document.getElementByID()`, in jQuery for `jQuery()`. 
+Global properties are evil. They are accessible by other scripts, might be overwritten or misused. A popular case is the `$` shortcut in different libraries: in PrototypeJS it stands for `document.getElementByID()`, in jQuery for `jQuery()`. 
 
 	:::js
 	// you can't rely on '$' being defined outside of the closure
@@ -506,7 +508,7 @@ To generate documentation for SilverStripe code, use [JSDoc toolkit](http://code
 JavaScript, take a look at the [jsdoc cookbook](http://code.google.com/p/jsdoc-toolkit/wiki/CookBook). The `@lends`
 and `@borrows` properties are particularly useful for documenting jQuery-style code.
 
-JSDoc-toolkit is a commandline utility, see [usage](http://code.google.com/p/jsdoc-toolkit/wiki/CommandlineOptions).
+JSDoc-toolkit is a command line utility, see [usage](http://code.google.com/p/jsdoc-toolkit/wiki/CommandlineOptions).
 
 Example: jQuery.entwine
 
@@ -619,11 +621,11 @@ Here's an example of hooking the 'PageLoaded' and 'BeforeSave' methods:
 				this.observeMethod('BeforeSave', this.beforeSave);
 				this.pageLoaded(); // call pageload initially too.
 			},
-
+			
 			pageLoaded : function() {
 				alert("You loaded a page");
 			},
-
+			
 			beforeSave: function() {
 				alert("You clicked save");
 			}

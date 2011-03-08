@@ -33,7 +33,7 @@ Example:
 
 ## Subclassing a form
 
-It's the reponsibility of your subclass' constructor to call 
+It's the responsibility of your subclass' constructor to call 
 
 	:::php
 	parent::__construct()
@@ -56,6 +56,8 @@ $name must be passed - their values depend on where the form is instantiated.
 
 
 The real difference, however, is that you can then define your controller methods within the form class itself.
+
+
 ## Form Field Types
 
 There are many classes extending `[api:FormField]`. Some examples:
@@ -70,6 +72,7 @@ There are many classes extending `[api:FormField]`. Some examples:
 *  `[api:CheckboxSetField]`
 
 Full overview at [form-field-types](/reference/form-field-types)
+
 
 ### Using Form Fields
 
@@ -192,8 +195,8 @@ First of all, you need to create your form on it's own class, that way you can d
 	
 	}
 
- `forTemplate()` tells the Form class to render with a template of return value of `$this->class`, which in this case
-is *MyForm*, the name of the class. If the template doesn't exist, then it falls back to using Form.ss
+`forTemplate()` tells the `[api:Form]` class to render with a template of return value of `$this->class`, which in this case
+is *MyForm*, the name of the class. If the template doesn't exist, then it falls back to using Form.ss.
 
 *MyForm.ss* should then be placed into your *templates/Includes* directory for your project. Here is an example of
 basic customisation:
@@ -232,7 +235,7 @@ this case `TextField->Field()` or `EmailField->Field()` which returns an `<input
 for the type of field. Pass in the name of the field as the first parameter, as done above, to render it into the
 template.
 
-To find more methods, have a look at the Form class, as there is a lot of different methods of customising the form
+To find more methods, have a look at the `[api:Form]` class, as there is a lot of different methods of customising the form
 templates, for example, you could use `<% control Fields %>` instead of specifying each field manually, as we've done
 above.
 

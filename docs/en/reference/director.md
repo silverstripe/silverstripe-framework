@@ -2,7 +2,7 @@
 
 ## Introduction
 
-Director is the first step in the "execution pipeline". It parses the URL, matching it to one of a number of patterns,
+`[api:Director]` is the first step in the "execution pipeline". It parses the URL, matching it to one of a number of patterns,
 and determines the controller, action and any argument to be used. It then runs the controller, which will finally run
 the viewer and/or perform processing steps.
 
@@ -12,7 +12,7 @@ the viewer and/or perform processing steps.
 
 ## Redirection
 
-The Director class has a number of methods to facilitate 301 and 302 HTTP redirection.
+The `[api:Director]` class has a number of methods to facilitate 301 and 302 HTTP redirection.
 
 *  **Director::redirect("action-name")**: If there's no slash in the URL passed to redirect, then it is assumed that you
 want to go to a different action on the current controller.
@@ -33,8 +33,8 @@ redirectBack().
 
 You can influence the way URLs are resolved one of 2 ways
 
-1.  Adding rules to Director in `<yourproject>/_config.php` (See Default Rewrite Rules below for examples)
-2.  Adding rules in your extended Controller class via the *$url_handlers* static variable 
+1.  Adding rules to `[api:Director]` in `<yourproject>/_config.php` (See Default Rewrite Rules below for examples)
+2.  Adding rules in your extended `[api:Controller]` class via the *$url_handlers* static variable 
 
 See [controller](/topics/controller) for examples and explanations on how the rules get processed for both 1 and 2 above. 
 
@@ -56,7 +56,7 @@ SilverStripe comes with certain rewrite rules (e.g. for *admin/assets*).
 
 ## Links
 
-*  See ModelAsController class for details on controller/model-coupling
+*  See `[api:ModelAsController]` class for details on controller/model-coupling
 *  See [execution-pipeline](/reference/execution-pipeline) for custom routing
 
 ## API Documentation

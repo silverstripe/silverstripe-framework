@@ -15,7 +15,7 @@ an external SMTP server (see [PHP documentation for mail()](http://php.net/mail)
 
 By default, emails are sent in both HTML and Plaintext format.
 A plaintext representation is automatically generated from the system
-by stripping HTML markup, or transformining it where possible
+by stripping HTML markup, or transforming it where possible
 (e.g. `<strong>text</strong>` is converted to `*text*`).
 
 	:::php
@@ -35,7 +35,7 @@ The default HTML template is located in `sapphire/templates/email/GenericEmail.s
 
 **Requirements: SilverStripe 2.3+**
 
-*  Create a SS-template file called, in this example we will use 'MyEmail.ss' inside mysite/templates/email.
+*  Create a SS-template file called, in this example we will use 'MyEmail.ss' inside `mysite/templates/email`.
 *  Fill this out with the body text for your email. You can use any [SS-template syntax](/topics/templates) (e.g. `<% control %>`,
 `<% if %>`, $FirstName etc)
 *  Choose your template with **setTemplate()**
@@ -86,14 +86,14 @@ Usage:
 
 ### Administrator Emails
 
-The static function `Email::setAdminEmail()` can be called from a _config.php file to set the address that these
+The static function `Email::setAdminEmail()` can be called from a `_config.php` file to set the address that these
 emails should originate from. This address is used if the `from` field is empty.
 
 ### Redirecting Emails
 
-*  Email::send_all_emails_to($address) will redirect all emails sent to the given address.  Handy for testing!
-*  Email::cc_all_emails_to() and Email::bcc_all_emails_to() will keep the email going to its original recipients, but
-add an additional receipient in the BCC/CC header.  Good for monitoring system-generated correspondence on the live
+*  `Email::send_all_emails_to($address)` will redirect all emails sent to the given address.  Handy for testing!
+*  `Email::cc_all_emails_to()` and `Email::bcc_all_emails_to()` will keep the email going to its original recipients, but
+add an additional recipient in the BCC/CC header.  Good for monitoring system-generated correspondence on the live
 systems.
 
 	:::php
@@ -112,7 +112,7 @@ $value)**
 	..
 
 
-See http://en.wikipedia.org/wiki/E-mail#Message_header for a list of header names.
+See [Wikipedia E-mail Message header](http://en.wikipedia.org/wiki/E-mail#Message_header) for a list of header names.
 
 ### Newsletters
 

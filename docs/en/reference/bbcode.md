@@ -9,7 +9,7 @@ BBCode is used by default in the [blog](http://silverstripe.org/blog-module) and
 
 To add bbcode parsing to a template, instead of $Content use:
 
-	:::php
+	:::ss
 	$Content.Parse(BBCodeParser)
 
 

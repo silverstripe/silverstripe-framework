@@ -60,7 +60,7 @@ SilverStripe supports a simple set of conditional logic
 	<% end_if %>
 
 
-See more information on conditional logic on [templates](templates).
+See more information on conditional logic on [templates](/topics/templates).
 
 ### Site wide settings
 

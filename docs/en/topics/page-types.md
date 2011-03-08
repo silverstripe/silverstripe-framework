@@ -17,9 +17,9 @@ and use this template to lay out the basic design elements that don’t change. 
 It contains standard HTML markup, with some differences. We’ll go over these later, but for now, you can see that this
 file only generates some of the content – it sets up the `<html>` tags, deals with the `<head>` section, creates the
 first-level navigation, and then closes it all off again. See $Layout? That’s what is doing most of the work when you
-visit a page. Now take a look at mysite/templates/Layout/Page.ss. This as you can see has a lot more markup in it –
+visit a page. Now take a look at `mysite/templates/Layout/Page.ss`. This as you can see has a lot more markup in it –
 it’s what is included into $Layout when the ‘Page’ page type is rendered. Similarly,
-mysite/templates/Layout/HomePage.ss would be rendered into $Layout when the ‘HomePage’ page type is selected for the
+`mysite/templates/Layout/HomePage.ss` would be rendered into $Layout when the ‘HomePage’ page type is selected for the
 current page you’re viewing.
 
 Why do we sub-class Page for everything? The easiest way to explain this is to use the example of a search form. If we
@@ -39,7 +39,7 @@ we want to do to the CMS for this page type in here.
 Page types are created using PHP classes. If you’re not sure about how these work, [click here for a gentler
 introduction to PHP classes](http://www-128.ibm.com/developerworks/opensource/library/os-phpobj/). 
 
-We put the Page class into a file called Page.php inside mysite/code. We also put Page_Controller in here. Any other
+We put the Page class into a file called Page.php inside `mysite/code`. We also put Page_Controller in here. Any other
 classes that are based on Page – for example, the class Page_AnythingElse will also go into Page.php. Likewise, the
 StaffPage_Image class will go into StaffPage.php.
 
@@ -78,8 +78,8 @@ See [form](/topics/forms) and [tutorial:2-extending-a-basic-site](/tutorials/2-e
 
 ### removeFieldFromTab()
 
-Overloading `getCMSFields()` you can call `removeFieldFromTab()` on a `FieldSet` object. For example, if you don't
-want the MenuTitle field to show on your page, which is inherited from SiteTree.
+Overloading `getCMSFields()` you can call `removeFieldFromTab()` on a `[api:FieldSet]` object. For example, if you don't
+want the MenuTitle field to show on your page, which is inherited from `[api:SiteTree]`.
 
 	:::php
 	class StaffPage extends Page {
@@ -158,3 +158,4 @@ and [tutorial:3-forms](/tutorials/3-forms).
 	if ($stageRecord) $stageRecord->delete();
 	$liveRecord = Versioned::get_one_by_stage('SiteTree', 'Live', "SiteTree_Live.ID = $pageID");
 	if ($liveRecord) $liveRecord->delete();
+	

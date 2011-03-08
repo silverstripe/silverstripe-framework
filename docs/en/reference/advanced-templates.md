@@ -406,7 +406,7 @@ to debug.
 ## Related
 * [Templates](/topics/templates)
 * [Themes](/topics/themes)
-* [Developing Themes](theme-development)
+* [Developing Themes](/topics/theme-development)
 * [Widgets](/topics/widgets)
 * [Images](/reference/image)
 * [Built in page controls](/reference/built-in-page-controls)
