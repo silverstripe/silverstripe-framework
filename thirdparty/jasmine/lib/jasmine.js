@@ -440,8 +440,8 @@ jasmine.log = function() {
  * @param methodName
  * @returns a Jasmine spy that can be chained with all spy methods
  */
-var spyOn = function(obj, methodName) {
-  return jasmine.getEnv().currentSpec.spyOn(obj, methodName);
+var spyOn = function(obj, methodName, ignoreMethodDoesntExist) {
+  return jasmine.getEnv().currentSpec.spyOn(obj, methodName, ignoreMethodDoesntExist);
 };
 
 /**
