@@ -115,11 +115,12 @@
 		});
 		
 		describe('when field allows multiple selections', function() {
+			
 			beforeEach(function() {
-				// load fixture
+				// load fixture (check one child node, one root node)
 				$('body').append(
-					'<div id="testfield" class="TreeDropdownField multiple" href="/myurl" data-title="Root Node 1,Child Node 1">' +
-					'<input type="hidden" name="testfield" value="1,2" />' +
+					'<div id="testfield" class="TreeDropdownField multiple" href="/myurl" data-title="Root Node 2,Root Node 3">' +
+					'<input type="hidden" name="testfield" value="4,5" />' +
 					'</div>'
 				);
 		  });
@@ -129,6 +130,7 @@
 			});
 			
 			describe('when more than one item is selected', function() {
+				
 				it('doesnt close the panel', function() {
 					var f = $('#testfield'), panel = f.entwine('ss').getPanel();
 					loadTree(f);
@@ -141,32 +143,41 @@
 					var f = $('#testfield'), panel = f.entwine('ss').getPanel();
 					loadTree(f);
 					f.entwine('ss').openPanel();
-					expect(f.entwine('ss').getValue()).toEqual(['1','2']);
+					expect(f.entwine('ss').getValue()).toEqual(['4','5']);
 				});
 
-				// it('it sets the selected values on the input field', function() {
-				// 	var f = $('#testfield'), panel = f.entwine('ss').getPanel();
-				// 	loadTree(f);
-				// 	f.entwine('ss').openPanel();
-				// 	panel.find('li[data-id=2] a').click();
-				// 	panel.find('li[data-id=3] a').click();
-				// 	// '1' and '2' were preselected
-				// 	expect(f.entwine('ss').getValue()).toEqual(['1','2','3']);
-				// 	
-				// 	// Selecting an checked node will remove it from selection
-				// 	panel.find('li[data-id=2] a').click();
-				// 	expect(f.entwine('ss').getValue()).toEqual(['1','3']);
-				// });
-				// 
-				// it('it sets the selected titles', function() {
-				// 	var f = $('#testfield'), panel = f.entwine('ss').getPanel();
-				// 	loadTree(f);
-				// 	panel.find('li[data-id=2] a').click();
-				// 	panel.find('li[data-id=3] a').click();
-				// 	expect(f.entwine('ss').getTitle()).toEqual('Child node 1, Child node 2');
-				// });
+				it('it sets the selected values on the input field', function() {
+					var f = $('#testfield'), panel = f.entwine('ss').getPanel();
+					loadTree(f);
+					f.entwine('ss').openPanel();
+					
+					// TODO loaded.jstree event works with timeouts, so we have to wait before inspection
+					waits(200);
+					runs(function() {
+						panel.find('li[data-id=6] a').click();
+						// '4' and '5' were preselected
+						expect(f.entwine('ss').getValue()).toEqual(['4','5','6']);
+
+						// Selecting an checked node will remove it from selection
+						panel.find('li[data-id=4] a').click();
+						expect(f.entwine('ss').getValue()).toEqual(['5','6']);
+					});
+					
+				});
+				
+				it('it sets the selected titles', function() {
+					var f = $('#testfield'), panel = f.entwine('ss').getPanel();
+					loadTree(f);
+					
+					// TODO loaded.jstree event works with timeouts, so we have to wait before inspection
+					waits(200);
+					runs(function() {
+						panel.find('li[data-id=6] a').click();
+						expect(f.entwine('ss').getTitle()).toEqual('Root node 2, Root node 3, Root node 4');
+					});
+				});
+				
 			});
 		});
-		
 	});
 }(jQuery));
