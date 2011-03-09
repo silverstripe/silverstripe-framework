@@ -260,4 +260,33 @@ class MemberTest extends SapphireTest {
 			'Non-existant group returns false'
 		);
 	}
+
+	function testOnChangeGroups() {
+		$staffGroup = $this->objFromFixture('Group', 'staffgroup');
+		$adminGroup = $this->objFromFixture('Group', 'admingroup');
+		$staffMember = $this->objFromFixture('Member', 'staffmember');
+		$adminMember = $this->objFromFixture('Member', 'admin');
+		$newAdminGroup = new Group(array('Title' => 'newadmin'));
+		$newAdminGroup->write();
+		Permission::grant($newAdminGroup->ID, 'ADMIN');
+		$newOtherGroup = new Group(array('Title' => 'othergroup'));
+		$newOtherGroup->write();
+		
+		$this->assertTrue(
+			$staffMember->onChangeGroups(array($staffGroup->ID)),
+			'Adding existing non-admin group relation is allowed for non-admin members'
+		);
+		$this->assertTrue(
+			$staffMember->onChangeGroups(array($newOtherGroup->ID)),
+			'Adding new non-admin group relation is allowed for non-admin members'
+		);
+		$this->assertFalse(
+			$staffMember->onChangeGroups(array($newAdminGroup->ID)),
+			'Adding new admin group relation is not allowed for non-admin members'
+		);
+		$this->assertTrue(
+			$adminMember->onChangeGroups(array($newAdminGroup->ID)),
+			'Adding new admin group relation is allowed for admin members'
+		);
+	}
 }

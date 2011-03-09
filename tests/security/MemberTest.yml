@@ -1,4 +1,17 @@
+Permission:
+   admin:
+      Code: ADMIN
+   security-admin:
+      Code: CMS_ACCESS_SecurityAdmin
 Group:
+   admingroup:
+      Title: Admin
+      Code: admin
+      Permissions: =>Permission.admin
+   securityadminsgroup:
+      Title: securityadminsgroup
+      Code: securityadminsgroup
+      Permissions: =>Permission.security-admin
    staffgroup:
       Title: staffgroup
       Code: staffgroup
@@ -13,14 +26,26 @@ Group:
    ceogroup:
       Title: ceogroup
       Code: ceogroup
-      Parent: =>Group.managementgroup
+      Parent: =>Group.managementgroup 
+   memberlessgroup:
+      Title: Memberless Group
+      code: memberless
 Member:
+   admin:
+     FirstName: Admin
+     Email: admin@silverstripe.com
+     Groups: =>Group.admingroup
+   other-admin:
+     FirstName: OtherAdmin
+     Email: other-admin@silverstripe.com
+     Groups: =>Group.admingroup
    test:
       FirstName: Test
       Surname: User
       Email: sam@silverstripe.com
       Password: 1nitialPassword
       PasswordExpiry: 2030-01-01
+      Groups: =>Group.securityadminsgroup
    expiredpassword:
       FirstName: Test
       Surname: User
@@ -44,3 +69,10 @@ Member:
    ceomember:
       Email: ceomember@test.com
       Groups: =>Group.ceogroup
+   grouplessmember: 
+      FirstName: Groupless Member
+   noformatmember:
+      Email: noformat@test.com
+   delocalemember:
+      Email: delocalemember@test.com
+      Locale: de_DE
