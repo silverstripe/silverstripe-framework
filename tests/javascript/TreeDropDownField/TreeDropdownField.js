@@ -3,9 +3,32 @@
 		$.entwine.warningLevel = $.entwine.WARN_LEVEL_BESTPRACTISE;		
 		$.entwine.synchronous_mode();
 		
+		var fixtures = {
+			'tree': '<ul>' + 
+			'	<li data-id="1">' + 
+			'		<a href="#">Root node 1</a>' + 
+			'		<ul>' + 
+			'			<li data-id="2"><a href="#">Child node 1</a></li>' + 
+			'			<li data-id="3"><a href="#">Child node 2</a></li>' + 
+			'		</ul>' + 
+			'	</li>' + 
+			'	<li data-id="4"><a href="#">Root node 2</a></li>' + 
+			'	<li data-id="5"><a href="#">Root node 3</a></li>' + 
+			'	<li data-id="6"><a href="#">Root node 4</a></li>' + 
+			'</ul>',
+			'treesearch': '<ul>' +
+			'	<li data-id="1">' +
+			'		<a href="#">Root node 1</a>' +
+			'		<ul>' +
+			'			<li data-id="2"><a href="#">Child node 1</a></li>' +
+			'		</ul>' +
+			'	</li>' +
+			'</ul>'
+		}
+		
 		// helpers
 		var loadTree = function(container, html) {
-			if(!html) html = readFixtures('fixtures/tree.html');
+			if(!html) html = fixtures.tree;
 			container.entwine('ss').loadTree();
 			var request = mostRecentAjaxRequest();
 			request.response({
@@ -50,7 +73,7 @@
 				request.response({
 					status: 200,
 					contentType: 'text/html',
-					responseText: readFixtures('fixtures/tree.html')
+					responseText: fixtures.tree
 				});
 
 				expect(panel).toContain('ul');
@@ -104,7 +127,7 @@
 				request.response({
 					status: 200,
 					contentType: 'text/html',
-					responseText: readFixtures('fixtures/tree.search.html')
+					responseText: fixtures.treesearch
 				});
 		
 				expect(panel.text().match('Child node 1')).toBeTruthy();
